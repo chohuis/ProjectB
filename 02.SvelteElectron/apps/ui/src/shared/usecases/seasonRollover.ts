@@ -138,15 +138,32 @@ export function resetWorldSeasonEndGuard(): void {
   _lastWorldSeasonEndYear = -1;
 }
 
-/** 시즌 기록을 history_* 테이블에 남긴다 (순위·개인기록·포스트시즌) */
+/**
+ * 시즌 기록을 history_* 테이블에 남긴다 (순위·개인기록·포스트시즌).
+ *
+ * ⚠ **이름을 같이 남긴다.** 예전엔 ID만 넣고 볼 때마다 조회했는데, 은퇴하거나
+ * 사라진 선수는 조회가 빗나가 화면에 ID가 그대로 떴다. 과거 기록은 **그때의
+ * 사실**이라 그때 이름이 함께 남아야 한다 — 팀명이 바뀌어도 5년 전 순위표는
+ * 그 시절 이름이어야 맞다.
+ */
 export async function saveSeasonHistory(seasonYear: number) {
   const slotId = get(gameStore).currentSlotId;
   if (!slotId) return;
+
+  const teams = get(masterStore).teams ?? [];
+  const teamNameOf = (id: string) => teams.find((t) => t.id === id)?.name ?? "";
+  const entities = get(masterStore).entities ?? [];
+  const me = get(gameStore).protagonist;
+  const personNameOf = (id: string) =>
+    id === me.id ? me.name : (entities.find((e) => e.id === id)?.name ?? "");
+  const personTeamOf = (id: string) =>
+    teamNameOf(id === me.id ? (me.teamId ?? "") : (entities.find((e) => e.id === id)?.teamId ?? ""));
 
   const standingRows: object[] = [];
   for (const st of get(seasonStore).standings) {
     const groupLabel = "";
     standingRows.push({ leagueId: get(seasonStore).leagueId, teamId: st.teamId, groupLabel,
+      teamName: teamNameOf(st.teamId),
       wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
       runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
   }
@@ -156,6 +173,7 @@ export async function saveSeasonHistory(seasonYear: number) {
     if (lid === get(seasonStore).leagueId) continue;
     for (const st of (ls.standings ?? [])) {
       standingRows.push({ leagueId: lid, teamId: st.teamId, groupLabel: "",
+        teamName: teamNameOf(st.teamId),
         wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
         runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
     }
@@ -169,11 +187,13 @@ export async function saveSeasonHistory(seasonYear: number) {
       if ((stat as { type?: string }).type === "pitcher") {
         const p2 = stat as PitcherSeasonStats;
         lbStatRows.push({ leagueId: lid, playerId, statType: "pitcher",
+          playerName: personNameOf(playerId), teamName: personTeamOf(playerId),
           g: p2.g, gs: p2.gs, w: p2.w, l: p2.l, sv: p2.sv ?? 0, hd: p2.hd ?? 0,
           ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip });
       } else {
         const b2 = stat as BatterSeasonStats;
         lbStatRows.push({ leagueId: lid, playerId, statType: "batter",
+          playerName: personNameOf(playerId), teamName: personTeamOf(playerId),
           g: b2.g, pa: b2.pa, ab: b2.ab, hB: b2.h, hr: b2.hr, rbi: b2.rbi,
           sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops });
       }
@@ -184,6 +204,7 @@ export async function saveSeasonHistory(seasonYear: number) {
   }
 
   // 포스트시즌 결과 저장
+  const brackets = get(seasonStore).postseasonBrackets ?? {};
   const psRows: object[] = [];
   const psEntries = get(seasonStore).schedule.filter((e) => e.phase === "postseason");
   const finalEntry = psEntries.find((e) => e.id.startsWith("PS_FINAL_"));
@@ -193,20 +214,34 @@ export async function saveSeasonHistory(seasonYear: number) {
         .filter((e) => e.id.startsWith("PS_SEMI"))
         .flatMap((e) => [e.homeTeamId, e.awayTeamId])
     ));
+    const myLeague = get(seasonStore).leagueId;
     psRows.push({
-      leagueId: get(seasonStore).leagueId,
+      leagueId: myLeague,
       championId: finalEntry.result.winnerId,
       runnerUpId: finalEntry.result.loserId ?? "",
+      championName: teamNameOf(finalEntry.result.winnerId),
+      runnerUpName: teamNameOf(finalEntry.result.loserId ?? ""),
       playoffTeams,
+      // ⚠ **대진을 통째로 남긴다.** 지금까지 우승·준우승·진출팀 셋만 저장해서
+      // 화면이 "지난 시즌은 대진 과정이 아니라 결과만 남는다"고 쓸 수밖에
+      // 없었다. 데이터가 없어서였지 화면이 게을러서가 아니다.
+      bracket: brackets[myLeague] ?? null,
     });
   } else if (get(seasonStore).standings.length > 0) {
     const sorted = [...get(seasonStore).standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-    psRows.push({ leagueId: get(seasonStore).leagueId, championId: sorted[0].teamId, runnerUpId: "", playoffTeams: [] });
+    const myLeague = get(seasonStore).leagueId;
+    psRows.push({ leagueId: myLeague, championId: sorted[0].teamId, runnerUpId: "",
+      championName: teamNameOf(sorted[0].teamId), runnerUpName: "",
+      playoffTeams: [], bracket: brackets[myLeague] ?? null });
   }
   for (const [lid, ls] of Object.entries(get(seasonStore).leagueState)) {
     if (lid === get(seasonStore).leagueId) continue;
     const sorted = [...(ls.standings ?? [])].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-    if (sorted.length > 0) psRows.push({ leagueId: lid, championId: sorted[0].teamId, runnerUpId: "", playoffTeams: [] });
+    if (sorted.length > 0) {
+      psRows.push({ leagueId: lid, championId: sorted[0].teamId, runnerUpId: "",
+        championName: teamNameOf(sorted[0].teamId), runnerUpName: "",
+        playoffTeams: [], bracket: brackets[lid] ?? null });
+    }
   }
   if (psRows.length > 0) {
     window.projectB!.seasonSaveHistoryPostseason(JSON.stringify({ slotId, seasonYear, rows: psRows })).catch(() => {});

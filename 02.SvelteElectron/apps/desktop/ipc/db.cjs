@@ -701,6 +701,31 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v8: npc_runtime handedness/jersey_number/position_ratings_json 추가");
     })();
   }
+
+  if (currentVersion < 9) {
+    db.transaction(() => {
+      // ⚠ **과거 기록은 그때의 사실이다.** 지금까지는 ID만 남기고 이름은 볼 때마다
+      // 조회했는데, 은퇴하거나 사라진 선수는 조회가 빗나가 화면에 ID가 그대로
+      // 떴다. 팀명이 바뀌어도 5년 전 순위표가 지금 이름으로 보이는 건 틀렸다.
+      const addCol = (table, col, def) => {
+        const has = db.prepare(`SELECT name FROM pragma_table_info('${table}') WHERE name='${col}'`).get();
+        if (!has) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
+      };
+      addCol("history_standings", "team_name",   "TEXT NOT NULL DEFAULT ''");
+      addCol("history_lb_stats",  "player_name", "TEXT NOT NULL DEFAULT ''");
+      addCol("history_lb_stats",  "team_name",   "TEXT NOT NULL DEFAULT ''");
+
+      // 포스트시즌은 우승·준우승·진출팀 셋만 남아 있어 화면이 "대진 과정이 아니라
+      // 결과만 남는다"고 쓸 수밖에 없었다. 대진을 통째로 넣어 지난 시즌도 현재와
+      // 같은 대진표로 그린다.
+      addCol("history_postseason", "champion_name",  "TEXT NOT NULL DEFAULT ''");
+      addCol("history_postseason", "runner_up_name", "TEXT NOT NULL DEFAULT ''");
+      addCol("history_postseason", "bracket_json",   "TEXT NOT NULL DEFAULT ''");
+
+      db.pragma("user_version = 9");
+      console.log("[db-patch] v9: history_* 이름 컬럼 + 포스트시즌 대진 추가");
+    })();
+  }
 }
 
 // R3a-4d: dbListSlots/dbSaveSlot/dbLoadSlot(v2 game/season 블롭 세이브) 폐기

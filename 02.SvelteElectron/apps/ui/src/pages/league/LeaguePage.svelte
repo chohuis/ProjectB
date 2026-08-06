@@ -72,6 +72,8 @@
   // 히스토리 순위
   type HistStanding = {
     slot_id: string; season_year: number; league_id: string; team_id: string;
+    /** 그 시즌의 팀 이름. v9 이전 세이브엔 빈 문자열이다 */
+    team_name?: string;
     wins: number; losses: number; draws: number; win_pct: number;
     runs_for: number; runs_against: number; streak: string; last10: string;
     group_label: string;
@@ -79,9 +81,13 @@
   type HistPostseason = {
     slot_id: string; season_year: number; league_id: string;
     champion_id: string; runner_up_id: string; playoff_teams: string[];
+    champion_name?: string; runner_up_name?: string;
+    /** 대진 JSON. **빈 문자열이면 v9 이전 세이브** — "[]"와 구분해야 한다 */
+    bracket_json?: string;
   };
   type HistLbStat = {
     slot_id: string; season_year: number; league_id: string; player_id: string; stat_type: string;
+    player_name?: string; team_name?: string;
     g: number; gs: number|null; w: number|null; l: number|null; sv: number|null; hd: number|null;
     ip: number|null; er: number|null; h_p: number|null; k_p: number|null; bb_p: number|null;
     era: number|null; whip: number|null;
@@ -448,7 +454,13 @@
     if (selectedYear > 0) {
       return historyLbStats
         .filter((r) => r.league_id === lbLeagueId && r.stat_type === lbTab)
-        .map((r) => mk(r.player_id, histToStats(r)));
+        .map((r) => ({
+          id: r.player_id,
+          name: histPersonName(r.player_name, r.player_id),
+          team: r.team_name || entityTeam(r.player_id),
+          stats: histToStats(r),
+          qualified: qualifies(histToStats(r), lbQual),
+        }));
     }
     return Object.entries(lbStats)
       .filter(([, st]) => st.type === lbTab)
@@ -485,11 +497,24 @@
       || historyPostseason.some((r) => r.league_id === lid));
   $: if (psLeagueIds.length > 0 && !psLeagueIds.includes(psLeagueId)) psLeagueId = psLeagueIds[0];
 
+  /**
+   * 지난 시즌 대진 — 시즌이 끝날 때 통째로 저장한 것.
+   *
+   * 포스트시즌이 없는 리그(고교 등)는 빈 문자열이라 대진표를 안 그린다.
+   */
+  function savedBracket(row: HistPostseason | null | undefined) {
+    if (!row?.bracket_json) return null;
+    try {
+      const parsed = JSON.parse(row.bracket_json);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch { return null; }
+  }
+
   $: psRounds = selectedYear > 0
-    ? []
+    ? toRounds(savedBracket(historyPostseason.find((r) => r.league_id === psLeagueId)) ?? [])
     : toRounds($seasonStore.postseasonBrackets[psLeagueId] ?? []);
 
-  /** 과거 시즌은 대진이 아니라 결과만 남는다 — 저장하는 게 우승·준우승·진출팀뿐이다 */
+  /** 결과 요약. 대진이 저장된 시즌에도 우승/준우승 줄은 같이 보여준다 */
   $: psHistory = selectedYear > 0
     ? historyPostseason.find((r) => r.league_id === psLeagueId) ?? null
     : null;
@@ -497,6 +522,26 @@
   /** 이름이 비면 "미정" — 앞 시리즈를 기다리는 자리다 */
   function psTeam(id: string): string {
     return id ? tName(id) : "미정";
+  }
+
+  /**
+   * 과거 기록의 이름 — **저장된 것이 먼저다.**
+   *
+   * ⚠ 지금 조회로 대신하면 은퇴·이적으로 사라진 사람이 ID로 떨어진다.
+   * 저장이 어떤 이유로 비었더라도 **ID를 그대로 보여주지는 않는다** —
+   * 화면이 내부 값을 흘리면 안 된다.
+   */
+  const GONE = "(기록 없음)";
+  function histTeamName(saved: string | undefined, id: string): string {
+    if (saved) return saved;
+    const looked = $teamMap.get(id)?.name;
+    return looked ?? (id ? GONE : "미정");
+  }
+  function histPersonName(saved: string | undefined, id: string): string {
+    if (saved) return saved;
+    if (id === $gameStore.protagonist.id) return $gameStore.protagonist.name;
+    const e = $masterStore.entities.find((en) => en.id === id);
+    return e?.name ?? GONE;
   }
 </script>
 
@@ -577,7 +622,7 @@
                         {#each grp.rows as r, i}
                           <tr>
                             <td>{i + 1}</td>
-                            <td class="t-name"><TeamMark teamId={r.team_id} size={18} />{tName(r.team_id)}</td>
+                            <td class="t-name"><TeamMark teamId={r.team_id} size={18} />{histTeamName(r.team_name, r.team_id)}</td>
                             <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
                             <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
                             <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
@@ -869,16 +914,15 @@
 
         <div class="panel ps-panel">
           {#if psHistory}
-            <!-- 과거 시즌 — 저장된 건 결과뿐이다 -->
             <div class="ps-past">
               <div class="ps-champ">
                 <span class="u-label">우승</span>
-                <strong>{psTeam(psHistory.champion_id)}</strong>
+                <strong>{histTeamName(psHistory.champion_name, psHistory.champion_id)}</strong>
               </div>
               {#if psHistory.runner_up_id}
                 <div class="ps-runner">
                   <span class="u-label">준우승</span>
-                  <strong>{psTeam(psHistory.runner_up_id)}</strong>
+                  <strong>{histTeamName(psHistory.runner_up_name, psHistory.runner_up_id)}</strong>
                 </div>
               {/if}
               {#if psHistory.playoff_teams.length > 0}
@@ -887,15 +931,13 @@
                   {psHistory.playoff_teams.map((id) => psTeam(id)).join(" · ")}
                 </p>
               {/if}
-              <p class="ps-note">지난 시즌은 대진 과정이 아니라 결과만 남는다.</p>
+              <!-- 대진이 없는 리그(고교 등)는 우승 팀만 남는다 -->
             </div>
+          {/if}
 
-          {:else if psRounds.length === 0}
-            <p class="empty" style="padding:16px">
-              {selectedYear > 0 ? "이 시즌 포스트시즌 기록이 없습니다." : "아직 포스트시즌이 시작되지 않았습니다."}
-            </p>
-
-          {:else}
+          <!-- ⚠ 대진이 있을 때만 그린다. `!psHistory`로만 갈라 놓으면 결과만 남은
+               옛 세이브에서 **빈 대진표**가 그려진다 -->
+          {#if psRounds.length > 0}
             <div class="bracket">
               {#each psRounds as r}
                 <div class="br-round">
@@ -928,6 +970,10 @@
                 </div>
               {/each}
             </div>
+          {:else if !psHistory}
+            <p class="empty" style="padding:16px">
+              {selectedYear > 0 ? "이 시즌 포스트시즌 기록이 없습니다." : "아직 포스트시즌이 시작되지 않았습니다."}
+            </p>
           {/if}
         </div>
       </section>

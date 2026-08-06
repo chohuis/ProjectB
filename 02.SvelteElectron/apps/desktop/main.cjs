@@ -491,15 +491,15 @@ app.whenReady().then(() => {
       const { slotId, seasonYear, rows } = JSON.parse(p);
       const stmt = db.prepare(`
         INSERT OR REPLACE INTO history_standings
-          (slot_id, season_year, league_id, team_id, wins, losses, draws, win_pct, runs_for, runs_against, streak, last10, group_label)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          (slot_id, season_year, league_id, team_id, wins, losses, draws, win_pct, runs_for, runs_against, streak, last10, group_label, team_name)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       db.transaction(() => {
         for (const r of rows) {
           stmt.run(slotId, seasonYear, r.leagueId, r.teamId,
             r.wins ?? 0, r.losses ?? 0, r.draws ?? 0, r.winPct ?? 0,
             r.runsFor ?? 0, r.runsAgainst ?? 0, r.streak ?? "", r.last10 ?? "",
-            r.groupLabel ?? "");
+            r.groupLabel ?? "", r.teamName ?? "");
         }
       })();
       return JSON.stringify({ ok: true });
@@ -513,8 +513,9 @@ app.whenReady().then(() => {
         INSERT OR REPLACE INTO history_lb_stats
           (slot_id, season_year, league_id, player_id, stat_type,
            g, gs, w, l, sv, hd, ip, er, h_p, k_p, bb_p, era, whip,
-           pa, ab, h_b, hr, rbi, sb, bb_b, k_b, avg_v, obp, slg, ops)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           pa, ab, h_b, hr, rbi, sb, bb_b, k_b, avg_v, obp, slg, ops,
+           player_name, team_name)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       db.transaction(() => {
         for (const r of rows) {
@@ -525,7 +526,8 @@ app.whenReady().then(() => {
             r.era ?? null, r.whip ?? null,
             r.pa ?? null, r.ab ?? null, r.hB ?? null, r.hr ?? null, r.rbi ?? null,
             r.sb ?? null, r.bbB ?? null, r.kB ?? null,
-            r.avgV ?? null, r.obp ?? null, r.slg ?? null, r.ops ?? null
+            r.avgV ?? null, r.obp ?? null, r.slg ?? null, r.ops ?? null,
+            r.playerName ?? "", r.teamName ?? ""
           );
         }
       })();
@@ -569,13 +571,18 @@ app.whenReady().then(() => {
       const { slotId, seasonYear, rows } = JSON.parse(p);
       const stmt = db.prepare(`
         INSERT OR REPLACE INTO history_postseason
-          (slot_id, season_year, league_id, champion_id, runner_up_id, playoff_teams)
-        VALUES (?, ?, ?, ?, ?, ?)
+          (slot_id, season_year, league_id, champion_id, runner_up_id, playoff_teams,
+           champion_name, runner_up_name, bracket_json)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       db.transaction(() => {
         for (const r of rows) {
           stmt.run(slotId, seasonYear, r.leagueId, r.championId ?? "", r.runnerUpId ?? "",
-            JSON.stringify(r.playoffTeams ?? []));
+            JSON.stringify(r.playoffTeams ?? []),
+            r.championName ?? "", r.runnerUpName ?? "",
+            // 포스트시즌이 없는 리그(고교 등)는 빈 문자열. "[]"로 두면
+            // 화면이 빈 대진표를 그린다
+            r.bracket ? JSON.stringify(r.bracket) : "");
         }
       })();
       return JSON.stringify({ ok: true });
