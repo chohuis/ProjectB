@@ -173,7 +173,16 @@ app.whenReady().then(() => {
 
   // ── R3a: 슬롯 DB v3 (파일=슬롯) — repo:call 단일 채널 ──────────────────────
   const slotdb = require("./ipc/slotdb.cjs");
-  const slotManager = slotdb.createManager(savesDir);
+  // ⚠ 시즌 기록 세 테이블은 **slot.db가 아니라 이 공용 DB**에 `slot_id`로만
+  // 구분돼 들어 있다. 슬롯을 지우거나 새로 시작할 때 여기도 같이 비우지 않으면
+  // **새 게임이 옛 세계의 순위표를 자기 것으로 읽는다** — 실제로 지금 없는 팀
+  // 47종이 순위표에 떠 있었다.
+  const purgeSlotHistory = (slotId) => {
+    for (const t of ["history_standings", "history_lb_stats", "history_postseason"]) {
+      try { db.prepare(`DELETE FROM ${t} WHERE slot_id = ?`).run(slotId); } catch { /* 테이블이 아직 없을 수 있다 */ }
+    }
+  };
+  const slotManager = slotdb.createManager(savesDir, { onSlotReset: purgeSlotHistory });
   // 레거시 채널(npc:*/league:*)을 slotdb 커맨드로 라우팅 — 콜사이트 무수정 전환
   const v3Compat = (cmd, payload) => JSON.stringify(slotdb.dispatch(slotManager, cmd, payload));
   ipcMain.handle("repo:call", (_event, cmd, payloadJson) => {

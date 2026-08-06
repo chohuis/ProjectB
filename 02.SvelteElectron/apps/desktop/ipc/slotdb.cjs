@@ -458,10 +458,20 @@ function openSlot(savesDir, slotId) {
   return db;
 }
 
-function createManager(savesDir) {
+/**
+ * @param {object} [hooks]
+ * @param {(slotId: string) => void} [hooks.onSlotReset]
+ *   그 슬롯의 세계가 새로 시작되거나 사라질 때. **slot.db 밖에 있는 그 슬롯의
+ *   흔적**을 지우라는 신호다 — 시즌 기록 세 테이블(`history_*`)이 공용
+ *   `projectb_v2.db`에 `slot_id`로만 구분돼 들어 있어서, 여기서 안 지우면
+ *   새 게임이 **옛 세계의 순위표를 자기 것으로 읽는다.**
+ *   실제로 그렇게 됐다 — 지금 없는 팀 47종이 순위표에 떠 있었다.
+ */
+function createManager(savesDir, hooks = {}) {
   const open = new Map(); // slotId → db
   return {
     savesDir,
+    hooks,
     get(slotId) {
       let db = open.get(slotId);
       if (!db) { db = openSlot(savesDir, slotId); open.set(slotId, db); }
@@ -1131,6 +1141,8 @@ function deleteSlot(manager, slotId) {
   for (const suffix of ["", "-wal", "-shm"]) {
     try { fs.rmSync(base + suffix, { force: true }); } catch { /* ignore */ }
   }
+  // slot.db 파일만 지우면 **공용 DB의 시즌 기록이 남는다**
+  try { manager.hooks?.onSlotReset?.(slotId); } catch { /* 정리 실패가 삭제를 막지 않는다 */ }
   return { ok: true };
 }
 
@@ -1144,7 +1156,14 @@ function dispatch(manager, cmd, payload) {
     if (!fn) return { error: `[repo:call] unknown cmd: ${String(cmd)}` };
     if (!payload || typeof payload.slotId !== "string") return { error: `[repo:call] slotId required for ${cmd}` };
     const db = manager.get(payload.slotId);
-    return fn(db, payload);
+    const out = fn(db, payload);
+    // ⚠ `createSlot`은 그 슬롯의 세계를 **새로 시작**한다. slot.db 안은 스스로
+    // 비우지만 공용 DB의 시즌 기록은 그대로 남아, 새 게임이 옛 세계의 순위표를
+    // 자기 것으로 읽는다. 삭제만 훅에 걸면 "지우지 않고 덮어쓰는" 이 경로가 샌다.
+    if (cmd === "createSlot" && !out?.error) {
+      try { manager.hooks?.onSlotReset?.(payload.slotId); } catch { /* 정리 실패가 생성을 막지 않는다 */ }
+    }
+    return out;
   } catch (e) {
     return { error: String(e?.message ?? e) };
   }
