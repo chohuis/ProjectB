@@ -94,7 +94,20 @@ pub struct DraftRules {
     pub first_team_rounds: i32,
     #[serde(default)]
     pub contract: Option<DraftContractRules>,
+    /// 미지명자가 **다시 신청할 수 있는 햇수.**
+    ///
+    /// ⚠ 예전엔 이게 없어서 `age_max`(29)까지 열려 있었다. 소속이 없어진
+    /// 사람은 매년 후보로 돌아오는데, 경력의 마지막이 고교면 "고졸"로 잡혀
+    /// **29세가 '고교' 출신으로 드래프트 보드에 떴다.**
+    #[serde(default = "default_reentry_max_years")]
+    pub reentry_max_years: i32,
 }
+
+fn default_reentry_max_years() -> i32 { 2 }
+
+/// 첫 드래프트를 보는 나이. 고3은 19세, 대4는 23세다
+const FIRST_DRAFT_AGE_HS: i32 = 19;
+const FIRST_DRAFT_AGE_UNIV: i32 = 23;
 
 // ── 후보 ────────────────────────────────────────────────────────────────────
 
@@ -191,12 +204,18 @@ fn route_of(npc: &NpcSaveState, rules: &DraftRules, p: &SelectCandidatesParams) 
         // 이미 졸업해 소속이 사라진 사람 (구 세이브·시즌 종료 후 재실행 경로).
         // **마지막 경력 기록의 리그**로 고졸/대졸을 가른다 — school_id로는 못 가른다:
         // 고교 팀도 대학 팀도 refs에 schoolId가 있다
-        DRAFT_POOL_LEAGUE => Some(
-            match npc.career_history.last().map(|e| e.league_id.as_str()) {
-                Some("LEAGUE_UNIVERSITY") => DraftRoute::UniversityGraduate,
-                _ => DraftRoute::HighschoolGraduate,
-            }
-        ),
+        DRAFT_POOL_LEAGUE => {
+            let from_univ = matches!(
+                npc.career_history.last().map(|e| e.league_id.as_str()),
+                Some("LEAGUE_UNIVERSITY")
+            );
+            // ⚠ **재도전에 기한을 둔다.** 없으면 `age_max`까지 매년 돌아와
+            // 29세가 "고졸"로 보드에 뜬다. 기한이 지나면 후보가 아니고,
+            // 진로 배정(`Placer`)이 대학·독립·2군으로 보내거나 은퇴시킨다.
+            let first = if from_univ { FIRST_DRAFT_AGE_UNIV } else { FIRST_DRAFT_AGE_HS };
+            if npc.age > first + rules.reentry_max_years { return None; }
+            Some(if from_univ { DraftRoute::UniversityGraduate } else { DraftRoute::HighschoolGraduate })
+        }
         _ => None,
     }
 }
@@ -523,6 +542,39 @@ mod tests {
         let r = select(vec![hs, uv]);
         assert_eq!(r.counts[DraftRoute::HighschoolGraduate as usize], 1);
         assert_eq!(r.counts[DraftRoute::UniversityGraduate as usize], 1);
+    }
+
+    #[test]
+    fn 미지명자는_정해진_햇수까지만_다시_신청한다() {
+        // ⚠ 예전엔 `age_max`(29)까지 열려 있어 **29세가 "고졸"로 드래프트에
+        // 나왔다.** 첫 드래프트 나이(고졸 19 · 대졸 23)에서 `reentry_max_years`
+        // 만큼만 재도전한다.
+        let max = rules().reentry_max_years;
+        assert_eq!(max, 2, "픽스처가 바뀌면 아래 나이도 같이 봐야 한다");
+
+        for age in 19..=21 {
+            let n = with_last_league(npc("HS", DRAFT_POOL_LEAGUE, None, 65.0, age), "LEAGUE_HIGHSCHOOL");
+            assert_eq!(select(vec![n]).candidates.len(), 1, "고졸 {age}세는 후보여야 한다");
+        }
+        for age in 22..=29 {
+            let n = with_last_league(npc("HS", DRAFT_POOL_LEAGUE, None, 65.0, age), "LEAGUE_HIGHSCHOOL");
+            assert_eq!(select(vec![n]).candidates.len(), 0, "고졸 {age}세는 기한이 지났다");
+        }
+        for age in 23..=25 {
+            let n = with_last_league(npc("UV", DRAFT_POOL_LEAGUE, None, 65.0, age), "LEAGUE_UNIVERSITY");
+            assert_eq!(select(vec![n]).candidates.len(), 1, "대졸 {age}세는 후보여야 한다");
+        }
+        for age in 26..=29 {
+            let n = with_last_league(npc("UV", DRAFT_POOL_LEAGUE, None, 65.0, age), "LEAGUE_UNIVERSITY");
+            assert_eq!(select(vec![n]).candidates.len(), 0, "대졸 {age}세는 기한이 지났다");
+        }
+    }
+
+    #[test]
+    fn 재학생은_재수_기한과_무관하다() {
+        // 기한은 **소속이 없어진 사람**에게만 건다. 고3·대4는 나이가 어떻든 후보다
+        let hs3 = npc("HS3", "LEAGUE_HIGHSCHOOL", Some(3), 65.0, 22);
+        assert_eq!(select(vec![hs3]).candidates.len(), 1);
     }
 
     #[test]

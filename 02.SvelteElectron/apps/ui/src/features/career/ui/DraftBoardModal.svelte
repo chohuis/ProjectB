@@ -88,6 +88,22 @@
   }
 
   /**
+   * 재도전인가 — **"23세 고등학생"을 만들지 않기 위한 표시.**
+   *
+   * ⚠ 미지명자는 소속이 없어진 채 다음 해에 다시 후보가 된다. 그때 경력의
+   * 마지막이 고교라 화면이 `고교`라고 썼고, 그래서 **20~29세가 '고교' 출신**
+   * 으로 보드에 떴다. 그들은 고등학생이 아니라 미지명 재도전자다.
+   *
+   * 첫 드래프트 나이(고졸 19 · 대졸 23)를 넘긴 만큼이 재도전 햇수다 —
+   * 엔진의 `reentryMaxYears`와 같은 기준이라 둘이 어긋나지 않는다.
+   */
+  const FIRST_DRAFT_AGE = { HS: 19, UNIV: 23 } as const;
+  function redoYears(c: { originType: OriginType; age: number }): number {
+    if (c.originType === "IND") return 0;   // 독립은 소속이 있어 재도전이 아니다
+    return Math.max(0, c.age - FIRST_DRAFT_AGE[c.originType]);
+  }
+
+  /**
    * 보드에 뜨는 시점의 NPC는 **이미 지명 처리가 끝나** 소속이 2군으로 바뀌어 있다.
    * 출신은 지명 이벤트가 남긴 `fromLeagueId`에서 읽고, 졸업생이라 그게 비면
    * 마지막 경력 기록으로 폴백한다 — 현재 소속을 보면 전원 "프로 출신"이 된다.
@@ -427,8 +443,12 @@
                 </span>
                 <span class="c-ovr">{c.ovr}</span>
                 <span class="c-age">{c.age}세</span>
-                <span class="origin-badge origin-{c.originType}">{originLabel(c.originType)}</span>
-                <span class="c-origin">{c.origin}</span>
+                <span class="origin-badge origin-{c.originType}" class:redo={redoYears(c) > 0}>
+                  {redoYears(c) > 0 ? `재수 ${redoYears(c)}년` : originLabel(c.originType)}
+                </span>
+                <span class="c-origin">
+                  {redoYears(c) > 0 ? `${originLabel(c.originType)} 출신 · ${c.origin}` : c.origin}
+                </span>
                 <span class="c-pos">{c.position}</span>
                 {#if c.drafted}
                   <span class="drafted-badge">지명</span>
@@ -623,6 +643,8 @@
   .c-name { flex: 1; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .c-ovr { color: var(--ink); font-weight: 700; width: 28px; text-align: right; flex-shrink: 0; }
   .c-age { color: var(--ink-mute); font-size: 10px; width: 26px; flex-shrink: 0; }
+  /* 재도전은 출신과 다른 상태다 — 색으로 구분한다 */
+  .origin-badge.redo { background: var(--warn); color: var(--ink-on-dark); }
   .c-origin { color: var(--ink-mute); font-size: 10px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .c-pos { color: var(--ink-mute); font-size: 10px; width: 24px; flex-shrink: 0; }
 

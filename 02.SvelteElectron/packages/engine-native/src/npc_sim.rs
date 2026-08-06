@@ -1996,6 +1996,36 @@ fn calc_draft_score(npc: &NpcSaveState, meta: Option<&NamedNpcMeta>) -> f64 {
     ovr * 0.40 + edge + npc.development_rate as f64 * 0.35 + pot * 0.1 + youth
 }
 
+/// 선수 한 명에 대한 **리그 전체의 평가 편차.**
+///
+/// ⚠ 없으면 보드가 점수 순 그대로라 **상위 110명이 매년 그대로 지명되고
+/// 111위 아래는 보드에 뜨기만 하고 영영 안 뽑힌다.** 실제 드래프트는
+/// 구단마다 평가가 갈려서 그렇게 안 흐른다.
+///
+/// 라운드 노이즈(`spread`)와 다르다. 그건 매 순번 새로 뽑혀 "누가 먼저"만
+/// 흔들지만, 이건 **드래프트 내내 같은 값**이라 순위 자체를 재배열한다.
+/// 시드가 (연도, npcId)라 같은 세계를 다시 열면 같은 결과가 나온다.
+fn scout_bias(npc_id: &str, year: i32, magnitude: f64) -> f64 {
+    // ⚠ **하위 비트를 섞어야 한다.** 처음엔 `h * 131 + b`만 돌리고 비트를
+    // 잘라 썼는데, 끝 글자만 다른 ID들이 **전부 같은 편차**를 받았다
+    // (`N000`~`N005` 여섯이 모두 -3.93). 그러면 섞이지 않는다.
+    let mut h = npc_id.bytes().fold(
+        (year as u32 as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15),
+        |a, b| (a ^ b as u64).wrapping_mul(0x100_0000_01B3),   // FNV-1a
+    );
+    // splitmix64 마무리 — 인접 입력이 전혀 다른 출력이 되게
+    h ^= h >> 30; h = h.wrapping_mul(0xBF58_476D_1CE4_E5B9);
+    h ^= h >> 27; h = h.wrapping_mul(0x94D0_49BB_1331_11EB);
+    h ^= h >> 31;
+    // 0..1을 둘 겹쳐 가운데가 두꺼운 분포로 — 큰 편차는 드물게
+    let u = (h & 0xFFFF_FFFF) as f64 / 4_294_967_295.0;
+    let v = (h >> 32) as f64 / 4_294_967_295.0;
+    (u + v - 1.0) * magnitude
+}
+
+/// 평가 편차의 크기. 능력치 보정이 최대 +43쯤이라 그걸 뒤집지 않을 만큼만 준다
+const SCOUT_BIAS: f64 = 9.0;
+
 fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
     let total: f64 = weights.iter().sum();
     let mut r = rng.next() * total;
@@ -2030,8 +2060,14 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
     // 나머지는 지금처럼 대학·독립으로 흩어진다(`Placer`).
     let slots = (params.rounds as usize) * params.team_ids.len();
     let pool_size = (slots * params.pool_multiplier.max(1)).min(pool.len());
+    // ⚠ 풀 좁히기와 지명에 **같은 편차**를 먹인다. 한쪽에만 주면 보드에 오른
+    // 순서와 실제로 뽑히는 순서가 어긋나 화면이 거짓말을 한다
+    let bias_of = |id: &str| scout_bias(id, year, SCOUT_BIAS);
     let mut scored: Vec<(String, f64)> = pool.iter()
-        .map(|n| (n.npc_id.clone(), calc_draft_score(n, meta_map.get(&n.npc_id).copied())))
+        .map(|n| (
+            n.npc_id.clone(),
+            calc_draft_score(n, meta_map.get(&n.npc_id).copied()) + bias_of(&n.npc_id),
+        ))
         .collect();
     scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
     let mut remaining_ids: Vec<String> =
@@ -2057,7 +2093,7 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
             let spread = (r as f64 * 4.0).min(15.0);
             let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
-                let base = calc_draft_score(npc, meta_map.get(id).copied());
+                let base = calc_draft_score(npc, meta_map.get(id).copied()) + bias_of(id);
                 base + (rng.next() - 0.5) * spread
             }).collect();
             let idx = scored_now.iter().enumerate()
@@ -2208,8 +2244,12 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         if pick_map.contains_key(&npc.npc_id) { placer.forget(npc); }
     }
 
+    // ⚠ **그해 후보였던 사람만 보면 안 된다.** 재도전 기한이 지나 후보에서
+    // 빠진 사람은 `undrafted`에 없어서, 그것만 보면 소속 없는 채로 영영
+    // 풀에 남는다 — 화면에도 안 뜨고 나이만 먹는 유령이 된다.
+    // 풀에 있는 사람은 전부 갈 곳을 정해 준다.
     let mut undrafted_idx: Vec<(usize, f64)> = result_npcs.iter().enumerate()
-        .filter(|(_, n)| n.current_league == "LEAGUE_DRAFT_POOL" && undrafted.contains(&n.npc_id))
+        .filter(|(_, n)| n.current_league == "LEAGUE_DRAFT_POOL")
         .map(|(i, n)| (i, npc_core_ovr(n)))
         .collect();
     // 능력치 높은 순 — 좋은 선수가 먼저 자리를 잡는다
