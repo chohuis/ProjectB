@@ -36,3 +36,16 @@ export function applyTone(tone: ThemeTone, root?: HTMLElement): void {
   if (tone === "dark") el.setAttribute("data-theme", "dark");
   else el.removeAttribute("data-theme");
 }
+
+/**
+ * 움직임 줄이기를 문서에 바른다.
+ *
+ * CSS의 `prefers-reduced-motion`은 **운영체제 설정만** 본다. 앱 안에서 켠
+ * 사람도 같은 대접을 받아야 하므로 속성으로 한 번 더 건다.
+ */
+export function applyReducedMotion(on: boolean, root?: HTMLElement): void {
+  const el = root ?? (typeof document !== "undefined" ? document.documentElement : null);
+  if (!el) return;
+  if (on) el.setAttribute("data-reduce-motion", "1");
+  else el.removeAttribute("data-reduce-motion");
+}

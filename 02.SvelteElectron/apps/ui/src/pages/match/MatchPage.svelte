@@ -19,6 +19,10 @@
     type PitchResultCode, type BallInPlay,
   } from "../../shared/utils/matchResult";
   import { seasonStore } from "../../shared/stores/season";
+  import { settingsStore } from "../../shared/stores/settings";
+  import {
+    scaleMs, showsOverlay, overlayMs, reducesMotion, systemReducedMotion,
+  } from "../../shared/utils/effectTiming";
 
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -680,6 +684,15 @@
   let ballTrail: FieldPoint[] = [];
   const TRAIL_MAX = 6;
   let resultOverlay = { visible: false, text: '', color: '#ffffff' };
+  // ── 연출 설정 (S4) ────────────────────────────────────────────
+  //
+  // ⚠ **시간을 곱할 자리를 하나로 모은다.** 예전엔 1400·600·220 같은 숫자가
+  // 이 파일에 흩어져 있어 설정으로 조절할 방법이 없었다.
+  $: speed = $settingsStore.effectSpeed;
+  /** 그 연출에 쓸 시간. 설정이 "끄기"여도 0이 되지는 않는다 */
+  const ms = (base: number) => scaleMs(base, $settingsStore.effectSpeed);
+  $: lessMotion = reducesMotion($settingsStore.reduceMotion, systemReducedMotion());
+
   let overlayTimer: ReturnType<typeof setTimeout> | null = null;
   let changeAlert = { visible: false };
   let changeTimer: ReturnType<typeof setTimeout> | null = null;
@@ -914,12 +927,14 @@
   }
 
   function showResultOverlay(code: PitchResultCode) {
+    // "끄기"는 이 연출을 통째로 건너뛴다 — 100구면 2분 20초다
+    if (!showsOverlay(speed)) return;
     const entry = { text: flashLabel(code), color: flashColor(code) };
     if (overlayTimer) clearTimeout(overlayTimer);
     resultOverlay = { visible: true, ...entry };
     overlayTimer = setTimeout(() => {
       resultOverlay = { ...resultOverlay, visible: false };
-    }, 1400);
+    }, overlayMs(speed));
   }
 
   function sleep(ms: number) {
@@ -1062,7 +1077,7 @@
         const response = await window.projectB.matchNextInning();
         for (const log of response.logs) {
           pushLog(log, "log-auto");
-          await sleep(600);
+          await sleep(ms(600));
         }
         applySnapshot(response.snapshot);
         applyBatchStats(response.batchStats);
@@ -1124,10 +1139,10 @@
 
     for (const cue of cues) {
       if (cue.type === "ball_pitch") {
-        await tweenBall(clickedFieldPos, cue.duration);
+        await tweenBall(clickedFieldPos, ms(cue.duration));
       } else if (cue.type === "ball_batted" || cue.type === "ball_throw") {
         const svgTo = enginePosToSvg(cue.to);
-        await tweenBall(svgTo, cue.duration);
+        await tweenBall(svgTo, ms(cue.duration));
       } else if (cue.type === "fielder_move") {
         lastFielderMovePos = cue.position;
         const svgTo = enginePosToSvg(cue.to);
@@ -1147,7 +1162,7 @@
       }
     }
 
-    await tweenBall(activeMound, 180);
+    await tweenBall(activeMound, ms(180));
   }
 
   async function runPitch() {
@@ -1230,10 +1245,10 @@
           syncRetroPositions();
         }
       } else {
-        await tweenBall(clickedFieldPos, 220);
+        await tweenBall(clickedFieldPos, ms(220));
         showResultOverlay(resultCode);
         if (isOutInPlay(resultCode) || isHit(resultCode)) {
-          await tweenBall(getBattedTarget(resultCode), 300);
+          await tweenBall(getBattedTarget(resultCode), ms(300));
         }
         {
           await animateRetroRunners(resultCode, prevRunners);
@@ -1242,7 +1257,7 @@
           if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
           syncRetroPositions();
         }
-        await tweenBall(activeMound, 180);
+        await tweenBall(activeMound, ms(180));
       }
 
       // 경기 중 부상 처리
@@ -1270,7 +1285,7 @@
         return;
       }
     } else if (allowLocalFallback) {
-      await tweenBall(clickedFieldPos, 220);
+      await tweenBall(clickedFieldPos, ms(220));
       resultCode = rollLocalResult();
       const local = applyLocalResult(resultCode);
       resultCode = local.resolvedCode;
@@ -1302,7 +1317,7 @@
 
       showResultOverlay(resultCode);
       if (isOutInPlay(resultCode) || isHit(resultCode)) {
-        await tweenBall(getBattedTarget(resultCode), 300);
+        await tweenBall(getBattedTarget(resultCode), ms(300));
       }
       {
         await animateRetroRunners(resultCode, prevRunners);
@@ -1311,7 +1326,7 @@
         if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
         syncRetroPositions();
       }
-      await tweenBall(activeMound, 180);
+      await tweenBall(activeMound, ms(180));
     } else {
       isPitching = false;
       return;
@@ -1386,7 +1401,7 @@
       const response = await window.projectB.matchNextInning();
       for (const log of response.logs) {
         pushLog(log, "log-auto");
-        await sleep(600);
+        await sleep(ms(600));
       }
       applySnapshot(response.snapshot);
       applyBatchStats(response.batchStats);

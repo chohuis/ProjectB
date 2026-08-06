@@ -2,15 +2,16 @@
   /**
    * 환경설정.
    *
-   * ⚠ **아직 동작하지 않는 항목은 안 넣는다.** 연출 속도·창 크기·사운드는
-   * 각각 S4~S6에서 그 기능이 생길 때 붙인다. 눌러도 아무 일 없는 컨트롤은
-   * 이 프로젝트에서 반복해 나온 결함이다 (부상위험 %, 구종 슬롯에 이름 적기).
+   * ⚠ **아직 동작하지 않는 항목은 안 넣는다.** 창 크기·사운드는 S5·S6에서
+   * 그 기능이 생길 때 붙인다. 눌러도 아무 일 없는 컨트롤은 이 프로젝트에서
+   * 반복해 나온 결함이다 (부상위험 %, 구종 슬롯에 이름 적기).
    */
   import { createEventDispatcher } from "svelte";
   import { t, language, setLanguage, languageOptions } from "../../../shared/i18n";
-  import { settingsStore, type ThemeSetting } from "../../../shared/stores/settings";
+  import { settingsStore, type ThemeSetting, type EffectSpeed } from "../../../shared/stores/settings";
 
   const THEMES: ThemeSetting[] = ["light", "dark", "system"];
+  const SPEEDS: EffectSpeed[] = ["fast", "normal", "off"];
 
   export let open = false;
 
@@ -79,6 +80,43 @@
             </div>
           </div>
         </section>
+
+        <section class="u-sec">
+          <span class="u-label">{$t("settings.section.game")}</span>
+
+          <div class="row">
+            <div class="row-head">
+              <span class="row-name">{$t("settings.effectSpeed")}</span>
+              <p class="row-hint">{$t("settings.effectSpeed.hint")}</p>
+            </div>
+            <div class="seg" role="radiogroup" aria-label={$t("settings.effectSpeed")}>
+              {#each SPEEDS as sp}
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={$settingsStore.effectSpeed === sp}
+                  class:on={$settingsStore.effectSpeed === sp}
+                  on:click={() => settingsStore.patch("effectSpeed", sp)}
+                >{$t(`settings.effectSpeed.${sp}`)}</button>
+              {/each}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-head">
+              <span class="row-name">{$t("settings.reduceMotion")}</span>
+              <p class="row-hint">{$t("settings.reduceMotion.hint")}</p>
+            </div>
+            <button
+              type="button"
+              class="toggle"
+              role="switch"
+              aria-checked={$settingsStore.reduceMotion}
+              aria-label={$t("settings.reduceMotion")}
+              on:click={() => settingsStore.patch("reduceMotion", !$settingsStore.reduceMotion)}
+            ><span class="knob"></span></button>
+          </div>
+        </section>
       </div>
     </div>
   </div>
@@ -97,6 +135,31 @@
   .row + .row { border-top: 1px solid var(--line); }
   .row-head { min-width: 0; }
   .row-name { font-size: 13.5px; color: var(--ink); font-weight: 600; }
+  .row-hint { margin: 2px 0 0; font-size: 11.5px; color: var(--ink-mute); line-height: 1.4; }
+
+  /* 켜고 끄는 것 하나 — 셋 중 하나가 아니라 둘 중 하나다 */
+  .toggle {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 24px;
+    border-radius: 20px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel-sunk);
+    padding: 2px;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .toggle[aria-checked="true"] { background: var(--t-dark); border-color: var(--t-dark); justify-content: flex-end; }
+  .knob {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--panel);
+    box-shadow: 0 1px 3px -1px rgba(8, 16, 36, 0.5);
+  }
+  .toggle[aria-checked="true"] .knob { background: var(--ink-on-dark); }
 
   /* 셋 중 하나임을 모양으로 말한다 — 테두리를 나눠 쓴다 */
   .seg {

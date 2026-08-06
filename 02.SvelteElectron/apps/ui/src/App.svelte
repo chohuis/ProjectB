@@ -12,7 +12,8 @@
   import { listSlotsV3, loadGameV3 } from "./shared/repo/slotLifecycleV3";
   import { teamTokens, applyTeamTokens } from "./shared/utils/teamTheme";
   import { settingsStore } from "./shared/stores/settings";
-  import { resolveTone, applyTone, systemPrefersDark } from "./shared/utils/theme";
+  import { resolveTone, applyTone, systemPrefersDark, applyReducedMotion } from "./shared/utils/theme";
+  import { reducesMotion, systemReducedMotion } from "./shared/utils/effectTiming";
 
   // ── 팀 색을 문서 루트에 바른다 ────────────────────────────────
   //
@@ -41,6 +42,8 @@
   $: tone = resolveTone($settingsStore.theme, systemDark);
   $: applyTone(tone);
   $: applyTeamTokens(teamTokens(myTeam?.colors, tone));
+  // 운영체제 설정과 앱 설정 중 하나라도 켜져 있으면 줄인다
+  $: applyReducedMotion(reducesMotion($settingsStore.reduceMotion, systemReducedMotion()));
 
   type GamePhase = "loading" | "intro" | "slotSelect" | "create" | "playing";
   let phase: GamePhase = "loading";

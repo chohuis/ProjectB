@@ -328,3 +328,22 @@ button, input, select, textarea { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   움직임 줄이기 (S4)
+   ══════════════════════════════════════════════════════════════
+   ⚠ **`prefers-reduced-motion`만으로는 부족하다.** 그건 운영체제 설정만
+   보므로, 앱 안에서 켠 사람은 그대로 애니메이션을 맞는다.
+   `App.svelte`가 둘을 OR로 합쳐 `data-reduce-motion`을 건다.
+
+   ⚠ **0s가 아니라 0.01ms다.** 0s로 두면 `animationend`가 안 오는 브라우저가
+   있어 그걸 기다리는 코드가 멈춘다.
+   ────────────────────────────────────────────────────────────── */
+:root[data-reduce-motion="1"] *,
+:root[data-reduce-motion="1"] *::before,
+:root[data-reduce-motion="1"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
