@@ -181,6 +181,19 @@ fn route_of(npc: &NpcSaveState, rules: &DraftRules, p: &SelectCandidatesParams) 
     if npc.career_status != "active" { return None; }
     if npc.age < rules.age_min || npc.age > rules.age_max { return None; }
 
+    // ⚠ **외국인은 신인 드래프트 대상이 아니다.** KBO 드래프트는 국내 아마추어
+    // 몫이고, 외국인은 보유 한도(팀당 3명)가 걸린 별도 경로로만 들어온다.
+    //
+    // 이게 없어서 **퇴출된 용병이 독립리그로 흘러간 뒤 드래프트로 KBL에 다시
+    // 지명됐다** — 그 경로는 한도를 안 봐서 팀당 6명까지 찼다(실측).
+    //
+    //     Trevor Curtis  draft_picked LEAGUE_INDEPENDENT→LEAGUE_KBL
+    //     Brett Palmer   draft_picked LEAGUE_INDEPENDENT→LEAGUE_KBL
+    //
+    // ⚠ 국적으로 거른다 — 리그로 거르면 못 잡는다. **그 사람은 그 시점에
+    // 독립리그 소속**이고, 독립리그는 외국인 개념이 없는 리그다.
+    if npc.nationality.as_deref().unwrap_or("KOR") != "KOR" { return None; }
+
     match npc.current_league.as_str() {
         // **졸업 예정자.** 드래프트는 졸업 전(11월)에 한다 — 실제 KBO도 그렇고,
         // 그래야 관전 화면(W47)과 실제 지명이 같은 명단을 본다.
@@ -568,6 +581,21 @@ mod tests {
             let n = with_last_league(npc("UV", DRAFT_POOL_LEAGUE, None, 65.0, age), "LEAGUE_UNIVERSITY");
             assert_eq!(select(vec![n]).candidates.len(), 0, "대졸 {age}세는 기한이 지났다");
         }
+    }
+
+    #[test]
+    fn 외국인은_드래프트_후보가_아니다() {
+        // ⚠ 퇴출된 용병이 독립리그로 흘러간 뒤 **드래프트로 KBL에 다시 지명**됐다.
+        // 그 경로는 외국인 보유 한도(3명)를 안 봐서 팀당 6명까지 찼다(실측).
+        //
+        // 리그가 아니라 **국적**으로 거른다 — 그 시점 소속은 독립리그다.
+        let mut fgn = npc("FGN", "LEAGUE_INDEPENDENT", None, 70.0, 26);
+        fgn.nationality = Some("USA".into());
+        assert_eq!(select(vec![fgn]).candidates.len(), 0, "외국인이 후보가 됐다");
+
+        // 국적이 없으면 국내 선수다 — 기존 데이터가 전부 그렇다
+        let dom = npc("DOM", "LEAGUE_INDEPENDENT", None, 70.0, 26);
+        assert_eq!(select(vec![dom]).candidates.len(), 1);
     }
 
     #[test]

@@ -298,6 +298,10 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
           namedNpcs: [], seasonYear, idOffset: 0,
           pitcherRatio: rules.pitcherRatio ?? 0.45,
           talent: talentOf(rulesAll),
+          // ⚠ **안 넘기면 내장 한국식 풀이 나온다.** 실측에서 ABL·JBL 941명 중
+          // 931명이 한국 이름이었다 — 나고야 팀에 "김우찬"이 뛰었다.
+          // 정본은 규칙 파일의 `rosterRules[리그].namePool`.
+          namePool: (rules as { namePool?: unknown }).namePool,
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
         })),

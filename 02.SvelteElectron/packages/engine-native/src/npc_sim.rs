@@ -1772,7 +1772,10 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
 
     for i in 0..bulk_count as usize {
         let npc_id = format!("GEN_{}_Y{}_{:03}", params.school_id, params.season_year, params.id_offset as usize + i + 1);
-        let (name, name_en) = gen_name(&mut rng);
+        let (name, name_en) = match params.name_pool.as_ref() {
+            Some(pool) => crate::roster_gen::gen_name_from_pool(pool, &mut rng),
+            None => gen_name(&mut rng),
+        };
         // **부족한 자리부터 채운다.** 목록이 모자라면 무작위로 넘어간다 —
         // 정본은 호출측이고(그쪽만 현재 로스터를 안다), 여기선 순서대로 쓴다
         let position = match params.needed_positions.get(i) {
@@ -3575,7 +3578,7 @@ mod freshmen_ratio_tests {
             let mut pit = 0usize;
             let mut tot = 0usize;
             for i in 0..30 {
-            let out = generate_freshmen(GenerateFreshmenParams {
+            let out = generate_freshmen(GenerateFreshmenParams { name_pool: None,
                 school_id: format!("SCHOOL_HS_{i:02}"), team_id: "TEAM_T".into(),
                 annual_roster_size: 40,
                 pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,
@@ -3609,7 +3612,7 @@ mod freshmen_ratio_tests {
         // 리그 선발이 57 → 112명(팀당 11명)이 됐고, 로테이션은 5~6이라
         // 명목상 선발이 각자 짧게 던지면서 **OVR–ERA 상관이 −0.61 → −0.19**로
         // 무너졌다. 검사는 **비중**을 봐야 한다.
-        let out = generate_freshmen(GenerateFreshmenParams {
+        let out = generate_freshmen(GenerateFreshmenParams { name_pool: None,
             school_id: "SCHOOL_T".into(), team_id: "TEAM_T".into(),
             annual_roster_size: 400,
             pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,

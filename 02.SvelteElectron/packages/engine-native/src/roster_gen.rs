@@ -62,7 +62,7 @@ pub struct RosterRules {
     pub nationality: Option<String>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NamePool {
     pub surnames: Vec<String>,
@@ -71,6 +71,13 @@ pub struct NamePool {
     /// true면 서양식 "Given Sur" 형식
     #[serde(default)]
     pub western: bool,
+    /// 성과 이름 사이 구분자. **일본식은 성-이름 순에 띄어쓰기가 붙는다**
+    /// (사토 하루토). 한국식은 빈 문자열이라 붙여 쓴다(김우찬).
+    ///
+    /// ⚠ 이게 없어서 일본 리그를 만들 방법이 없었다 — `western: true`는
+    /// 이름-성 순이라 순서가 뒤집히고, `false`는 "사토하루토"가 된다.
+    #[serde(default)]
+    pub sep: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -336,6 +343,12 @@ fn pick<'a>(list: &'a [String], rng: &mut LcgRand) -> &'a str {
     &list[(rng.next() * list.len() as f64) as usize % list.len()]
 }
 
+/// 리그별 이름 풀로 이름을 만든다. `npc_sim::generate_freshmen`도 쓴다 —
+/// **해외 리그 신인이 한국 이름으로 나오던 것**을 막으려면 같은 함수여야 한다
+pub fn gen_name_from_pool(pool: &NamePool, rng: &mut LcgRand) -> (String, String) {
+    gen_name_pooled(pool, rng)
+}
+
 fn gen_name_pooled(pool: &NamePool, rng: &mut LcgRand) -> (String, String) {
     let sur = pick(&pool.surnames, rng);
     let a   = pick(&pool.given_a, rng);
@@ -344,7 +357,8 @@ fn gen_name_pooled(pool: &NamePool, rng: &mut LcgRand) -> (String, String) {
         let name = format!("{} {}", a, sur);
         (name.clone(), name)
     } else {
-        (format!("{}{}{}", sur, a, b), format!("{} {}{}", sur, a, b))
+        // 구분자는 성 뒤에만 — 한국식 이름 두 음절(`given_b`)은 계속 붙여 쓴다
+        (format!("{}{}{}{}", sur, pool.sep, a, b), format!("{} {}{}", sur, a, b))
     }
 }
 

@@ -106,7 +106,12 @@ export function buildRosterParams(
   worldSeed: number,
   teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number }[],
   rules: RosterRulesData,
-  namePool?: { surnames: string[]; givenA: string[]; givenB: string[]; western?: boolean },
+  namePool?: {
+    surnames: string[]; givenA: string[]; givenB: string[];
+    western?: boolean;
+    /** 성-이름 구분자. 일본식은 " "(사토 하루토), 한국식은 ""(김우찬) */
+    sep?: string;
+  },
   salaryRules?: unknown,
   powerRules?: unknown,
   entryRules?: unknown,
@@ -508,8 +513,14 @@ export async function activateLeagueV3(
   const existing = await slotRepo.getByLeague(slotId, leagueId);
   if (existing.length > 0) return { inserted: 0 };
 
+  // ⚠ **호출측이 안 넘기면 규칙 파일에서 읽는다.** `ensureLeagueActivatedV3`가
+  // 인자를 안 줘서 ABL·JBL 초기 로스터가 통째로 내장 한국식 이름으로 만들어졌다 —
+  // 실측 912명 중 799명이 한국 이름이었다(나고야 팀에 "김우찬").
+  // 정본은 `rosterRules[리그].namePool` 하나다.
+  const pool = namePool ?? (rules as { namePool?: typeof namePool }).namePool;
+
   const params = buildRosterParams(
-    leagueId, seasonYear, worldSeed, teams, rules, namePool,
+    leagueId, seasonYear, worldSeed, teams, rules, pool,
     rulesFile.salaryRules, rulesFile.powerRules,
     (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry,
     foreignSlotsFor(leagueId, rulesFile), rulesFile.talentRules);

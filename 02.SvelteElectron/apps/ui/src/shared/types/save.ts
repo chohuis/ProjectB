@@ -719,6 +719,9 @@ export type NpcCareerEventType =
   // 99줄이 이것이었고 그중 93줄이 대학팀이었다. 대신 여기 남겨서, 작년엔
   // 3루수였던 선수가 왜 좌익수인지 **찾아보면 나오게** 한다
   | "position_change"
+  // 외국인 용병 영입 (`foreignPlayers.ts`). **일반 FA와 구분한다** —
+  // 어디서 왔는지가 이 사건의 요점이라 `detail`에 "마이너 출신"이 들어간다
+  | "foreign_signing"
   // 대학 졸업 (Phase 9-C). 미지명이어도 학점에 따라 진로가 갈린다 —
   // 취업 경로 화면은 Phase 11 엔딩과 함께 붙이고, 여기서는 기록만 남긴다
   | "graduation";

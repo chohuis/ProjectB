@@ -9,7 +9,7 @@ import { staffModsOf } from "../../utils/staffEffects";
 import {
   SANGMU_TEAM_IDS, leagueOfTeam, activeProLeagues, activeProLeaguesWithFarm,
 } from "../../utils/ids";
-import { isForeignPlayer } from "../../utils/foreignSlots";
+import { isForeignPlayer, isForeignInQuotaLeague } from "../../utils/foreignSlots";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
@@ -238,7 +238,17 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   // 성사되면 한 팀은 4명, 상대는 2명이 되어 보유 한도가 그 자리에서 깨진다.
   // 실제 KBO에서도 시즌 중 외국인 트레이드는 사실상 없다.
   // 연봉 총액은 전원으로 계산한다 — 페이롤에서 빠지면 안 된다.
-  const tradableRows = npcRows.filter((n) => !isForeignPlayer(n.currentLeague, n.nationality));
+  //
+  // ⚠ **`isForeignPlayer(현소속, 국적)`으로는 못 잡는다.** 그건 "그 리그에서
+  // 외국인인가"라 **JBL 선수는 JBL에서 내국인**이다. 해외를 열자 그대로
+  // 통과해 KBL로 트레이드됐다(실측):
+  //
+  //     고야마 하야토  trade LEAGUE_JBL→LEAGUE_KBL
+  //     Jordan Warren  trade LEAGUE_ABL→LEAGUE_KBL
+  //
+  // 같은 함정에 FA·드래프트에서도 걸렸다. 물어야 할 건 **한도가 있는 리그에서
+  // 외국인인가**다.
+  const tradableRows = npcRows.filter((n) => !isForeignInQuotaLeague(n.nationality));
 
   const proTeams = m.teams.filter(
     (t) => t.leagueId === leagueId && t.id.endsWith("_1")
@@ -994,7 +1004,11 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     // 재배치가 그를 아무 팀에나 넣어 보유 한도가 그 자리에서 깨진다.
     // 외국인은 단년 계약이라 연차로 자격을 쌓는 신분이 아니다.
     const league = npc.currentLeague ?? "";
-    if (isForeignPlayer(league, npc.nationality)) continue;
+    // ⚠ **한도가 있는 리그 기준으로 묻는다.** `isForeignPlayer(현소속, …)`은
+    // ABL 선수를 ABL에서 내국인으로 보고 통과시킨다 — 그러면 FA가 되고,
+    // Rust 재배치의 `original_league_id` 폴백이 `LEAGUE_KBL`이라 한국으로 온다.
+    // 트레이드·드래프트에서도 같은 함정에 걸렸다.
+    if (isForeignInQuotaLeague(npc.nationality)) continue;
     const faThreshold = getFaThreshold(league);
     if ((npc.proServiceYears ?? 0) < faThreshold) continue;
 
@@ -1170,10 +1184,22 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   let _faMarketDbOk = true;
   const faMarketRows: Array<Record<string, unknown>> = [];
   {
+    // ⚠ **외국인은 일반 FA 시장에 안 들어간다.** KBO의 외국인 보유 한도(팀당
+    // 3명)는 전용 경로(`applyForeignTurnover`)가 지키는데, 해외 리그를 열면서
+    // FA 시장 목적지에 KBL을 넣자 **ABL·JBL 선수가 그 경로를 우회해 들어왔다** —
+    // 실측 팀당 최대 14명(한도 3), KBL 외국인 총 81명(정원 30).
+    //
+    // 반대 방향(한국 선수 → ABL·JBL)은 막지 않는다. 그쪽엔 보유 한도가 없고,
+    // 그게 이번에 열려는 "해외 진출" 그 자체다.
     const faApplicants = updatedNpcs.filter(
       (n) => n.careerStatus === "free_agent"
         && n.currentLeague === "LEAGUE_FREE_AGENT"
-        && proLeagues.has(n.originalLeagueId ?? ""),
+        && proLeagues.has(n.originalLeagueId ?? "")
+        // ⚠ **`isForeignPlayer(원소속, 국적)`으로 걸러선 안 된다.** 그 함수는
+        // "그 리그에서 외국인인가"를 묻는데, ABL 선수는 ABL에서 내국인이라
+        // **false가 돌아와 그대로 통과했다** — 처음 이렇게 짰다가 팀당 14명이
+        // 17명으로 늘었다. 물어야 할 건 **목적지에서 외국인인가**다.
+        && !isForeignInQuotaLeague(n.nationality),
     );
 
     if (faApplicants.length > 0) {
@@ -1206,9 +1232,15 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       // 다음을 집는데 용병은 73~94라 거의 항상 그 자리에 걸린다. 실측에서
       // 5시즌 뒤 한 팀 4명(전원 투수)·다른 팀 2명이 됐고, 총원은 30 그대로라
       // **집계로는 정상처럼 보였다.** KBO도 외국인은 보상선수 대상이 아니다.
+      //
+      // ⚠ **한도가 있는 리그 기준으로 묻는다.** `isForeignPlayer(현소속, …)`은
+      // JBL 선수를 JBL에서 내국인으로 보고 통과시킨다 — 한국 선수가 JBL 팀과
+      // 계약하면 그 팀의 일본 선수가 **보상선수로 KBL에 온다**(실측
+      // `다무라 렌 trade LEAGUE_JBL→LEAGUE_KBL`). 같은 함정에 FA·드래프트·
+      // 트레이드에서도 걸렸다 — 이 함수를 문지기로 쓰던 자리가 다섯이었다.
       const compensationPoolOf = (teamId: string) =>
         activeOf(teamId)
-          .filter((n) => !isForeignPlayer(n.currentLeague ?? "", n.nationality))
+          .filter((n) => !isForeignInQuotaLeague(n.nationality))
           .map((n) => ({ npcId: n.npcId, ovr: ovrOf(n.npcId) }));
 
       const budgets = proFirstTeams.map((t) => t.history?.budget ?? 0).filter((b) => b > 0);

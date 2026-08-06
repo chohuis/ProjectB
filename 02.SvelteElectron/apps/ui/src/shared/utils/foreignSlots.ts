@@ -69,3 +69,35 @@ export function isForeignPlayer(leagueId: string, nationality?: string): boolean
   if (!hasForeignSlots(leagueId)) return false;
   return (nationality ?? "KOR") !== homeNationalityOf(leagueId);
 }
+
+/**
+ * 이 국적이면 **외국인 보유 한도가 있는 리그**(KBL)에서 외국인인가.
+ *
+ * ⚠ `isForeignPlayer(리그, 국적)`과 묻는 게 다르다. 그건 "그 리그에서
+ * 외국인인가"라 **ABL 선수는 ABL에서 내국인이므로 false**다. FA 시장처럼
+ * 목적지가 여러 리그인 자리에서 그걸 쓰면 해외 선수가 그대로 통과한다 —
+ * 실제로 그렇게 짰다가 KBL 팀당 외국인이 14 → 17명이 됐다(실측).
+ *
+ * 한도가 있는 리그 중 **하나라도** 외국인이면 true다.
+ */
+// ⚠ **`isForeignPlayer`를 "한도 문지기"로 쓰지 마라.** 이 작업(2026-08-06)에서
+// 다섯 자리가 그렇게 쓰고 있었고 해외를 열자 전부 새어 나갔다:
+//
+//     FA 시장 · FA 자격 · 트레이드 · 보상선수 · 드래프트(Rust)
+//
+// 해외가 닫혀 있을 땐 다섯 다 정상으로 보였다 — ABL·JBL 선수가 없으니
+// 틀린 답을 낼 일이 없었다. 열자마자 KBL 팀당 외국인이 14명까지 찼다.
+//
+// 두 함수가 묻는 게 다르다:
+//
+//     isForeignPlayer(리그, 국적)     "그 리그에서 외국인인가"
+//     isForeignInQuotaLeague(국적)    "한도가 있는 리그에서 외국인인가"
+//
+// 목적지가 여러 리그이거나 KBL 한도를 지키려는 자리면 **아래 것**이다.
+export function isForeignInQuotaLeague(nationality?: string): boolean {
+  const f = foreignRules();
+  for (const lid of f?.leagues ?? []) {
+    if ((nationality ?? "KOR") !== homeNationalityOf(lid)) return true;
+  }
+  return false;
+}

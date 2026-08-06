@@ -9,9 +9,19 @@
 // ⚠ **충원을 안 하면 한 시즌마다 자리가 줄어든다.** 은퇴·부진 퇴출은
 // 일어나는데 들어오는 경로가 없으면 5년 뒤 KBL에 외국인이 사라진다.
 //
-// 어디서 데려오는가(사용자 확정): 확장팩(ABL·JBL)이 열려 있으면 거기서
-// 영입하고, 닫혀 있으면 **생성으로 대체한다.** 지금은 1차 출시 범위가
-// 국내뿐이라 항상 생성 경로다 — 해외 영입은 O-6(복귀 경로)과 함께 붙인다.
+// 어디서 데려오는가(사용자 확정 2026-08-06): **실재하는 해외 선수를 데려온다.**
+//
+// ⚠ 예전엔 무에서 만들었다 — `generateForeignPlayersNative`가 선수를 새로 찍고
+// `careerHistory: []`로 넣어서 **어디서 왔다는 기록이 아예 없었다.** 화면이
+// 국내 신인과 구분할 방법이 없었다. ABL·JBL이 열렸으므로(releaseScope.ts) 이제
+// 그 리그의 실제 선수를 이적시킨다 — "작년에 거기 있었다"가 참이 된다.
+//
+// 분포는 규칙 파일이 정본이다(`foreignRules.origin`). **마이너 출신이 대부분**이고
+// 메이저 주전급은 연봉·조건 때문에 잘 안 온다.
+//
+// ⚠ **후보가 모자라면 생성으로 채운다.** 해외가 닫혀 있거나(게이트) 그 해에
+// 조건 맞는 선수가 없으면 자리를 비우지 않는다 — 빈 슬롯이 남으면 그 팀은
+// 한 시즌을 두 명으로 뛴다.
 
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
@@ -22,6 +32,8 @@ import { loadRosterRules } from "../repo/newGameV3";
 import { isV3SlotActive } from "../repo/v3Mode";
 import { isForeignPlayer, foreignRules, primeForeignRules } from "../utils/foreignSlots";
 import { buildSalaryIndex } from "../repo/newGameV3";
+import { originRulesOf, pickForeigners, originLabel, type Candidate } from "../utils/foreignOrigin";
+import { leagueOfTeam } from "../utils/ids";
 import type { NpcSaveState } from "../types/save";
 
 /** 이 리그의 1군 팀 (팜 `_2`는 외국인을 두지 않는다) */
@@ -92,40 +104,100 @@ export async function applyForeignTurnover(
   }
 
   if (releasedIds.length > 0) {
-    // 퇴출된 용병은 **세계에서 나간다.** 국내 독립리그로 보내는 진로 배정을
-    // 태우면(방출 2단계와 같은 경로) 용병이 한국 독립리그 선수가 된다 —
-    // 그건 데이터가 아니라 사고다. 본국 복귀를 은퇴로 기록한다.
+    // ⚠ **예전엔 은퇴로 기록했다.** "본국 복귀를 은퇴로 기록한다"고 적혀
+    // 있었는데, 진짜 이유는 **갈 곳이 없어서**였다 — 해외가 닫혀 있었다.
+    // 이제 온 곳(`origin.returnLeague`)으로 돌려보낸다. 국내 독립리그로 보내는
+    // 진로 배정을 태우면 용병이 한국 독립리그 선수가 되므로 그 경로는 여전히 안 탄다.
     const rel = new Set(releasedIds);
-    for (const npcId of releasedIds) {
-      await slotRepo.retire({
-        slotId, npcId, seasonYear,
-        detail: "재계약 불가 — 본국 복귀",
-      });
+    const back = originRulesOf(F).returnLeague;
+    // 돌아갈 팀 — 그 리그에서 제일 인원이 적은 팀. 한 팀에 몰아넣지 않는다
+    const backTeams = back
+      ? get(masterStore).teams
+          .filter((t) => (leagueOfTeam(t.id) ?? t.leagueId) === back)
+          .map((t) => t.id)
+      : [];
+    const sizeOf = new Map<string, number>();
+    for (const n of g.npcs) {
+      if (n.careerStatus !== "active" || !n.currentTeam) continue;
+      sizeOf.set(n.currentTeam, (sizeOf.get(n.currentTeam) ?? 0) + 1);
     }
-    gameStore.updateNpcs(g.npcs.map((n) => rel.has(n.npcId)
-      ? {
-          ...n,
-          careerStatus: "retired" as const,
-          currentLeague: "LEAGUE_RETIRED",
-          currentTeam: "",
-          careerEvents: [
-            ...(n.careerEvents ?? []),
-            {
-              year: seasonYear,
-              eventType: "release" as const,
-              fromTeamId: n.currentTeam,
-              fromLeagueId: n.currentLeague,
-              detail: "재계약 불가 — 본국 복귀",
-            },
-          ],
-        }
-      : n));
+    const pickBackTeam = (): string | null => {
+      if (backTeams.length === 0) return null;
+      const t = backTeams.reduce((a, b) =>
+        (sizeOf.get(a) ?? 0) <= (sizeOf.get(b) ?? 0) ? a : b);
+      sizeOf.set(t, (sizeOf.get(t) ?? 0) + 1);
+      return t;
+    };
+
+    const backTo = new Map<string, string>();
+    for (const npcId of releasedIds) {
+      const t = pickBackTeam();
+      if (t) {
+        backTo.set(npcId, t);
+        await slotRepo.transfer({
+          slotId, npcId, toTeamId: t, toLeagueId: back,
+          seasonYear, category: "release",
+          detail: "재계약 불가 — 본국 복귀",
+        });
+      } else {
+        // 돌아갈 리그가 없으면(게이트가 닫혀 있으면) 예전대로 은퇴다 —
+        // 소속 없는 현역을 만들면 화면과 시뮬이 둘 다 깨진다
+        await slotRepo.retire({
+          slotId, npcId, seasonYear, detail: "재계약 불가 — 본국 복귀",
+        });
+      }
+    }
+    gameStore.updateNpcs(g.npcs.map((n) => {
+      if (!rel.has(n.npcId)) return n;
+      const t = backTo.get(n.npcId);
+      const ev = {
+        year: seasonYear,
+        eventType: "release" as const,
+        fromTeamId: n.currentTeam,
+        fromLeagueId: n.currentLeague,
+        ...(t ? { toTeamId: t, toLeagueId: back } : {}),
+        detail: "재계약 불가 — 본국 복귀",
+      };
+      return t
+        ? { ...n, currentLeague: back, currentTeam: t,
+            careerEvents: [...(n.careerEvents ?? []), ev] }
+        : { ...n, careerStatus: "retired" as const,
+            currentLeague: "LEAGUE_RETIRED", currentTeam: "",
+            careerEvents: [...(n.careerEvents ?? []), ev] };
+    }));
+    const wentBack = backTo.size;
+    if (wentBack > 0) logs.push(`[외국인] 본국 복귀 ${wentBack}명`);
   }
 
   // ── ② 빈 슬롯 충원 ───────────────────────────────────────────
   const after = get(gameStore).npcs;
   const salaryIndex = buildSalaryIndex(get(masterStore).teams);
   let signed = 0;
+
+  // 해외에서 데려올 후보. **이미 KBL에 있는 용병은 후보가 아니다**
+  const origin = originRulesOf(F);
+  const liveNow = get(npcLiveStatsStore);
+  const pool: Candidate[] = Object.keys(origin.weights).length === 0 ? [] : after
+    .filter((n) => n.careerStatus === "active"
+      && !!n.currentTeam
+      && n.currentLeague in origin.weights
+      && n.age >= (F.ageMin ?? 0) && n.age <= (F.ageMax ?? 99))
+    .map((n) => ({
+      npcId: n.npcId, league: n.currentLeague ?? "", ovr: ovrOf(n, liveNow),
+      age: n.age, playerType: n.playerType,
+    }))
+    // 규칙선(66~94)에 드는 사람만 — 아무나 데려오면 용병이 국내 신인만 못하다
+    .filter((c) => c.ovr >= (F.ovrMin ?? 0) && c.ovr <= (F.ovrMax ?? 99));
+
+  const takenFromPool = new Set<string>();
+  /** 이적시킬 사람들. 팀별로 모아 두고 루프가 끝난 뒤 한 번에 적용한다 */
+  const moves: Array<{ cand: Candidate; toTeamId: string; toLeagueId: string }> = [];
+  // 시드 난수 — 같은 세계를 다시 열면 같은 영입이어야 한다
+  let rngState = ((Number(meta.world_seed ?? 0) >>> 0) ^ (seasonYear * 2654435761)) >>> 0;
+  const rand = () => {
+    rngState = (rngState * 1664525 + 1013904223) >>> 0;
+    return rngState / 4294967296;
+  };
 
   for (const leagueId of F.leagues) {
     const requests: Array<{
@@ -142,8 +214,23 @@ export async function applyForeignTurnover(
       // 투수는 한도까지만 — 부족분을 전부 투수로 채우면 `maxPitchers`가 깨진다
       const heldPitchers = held.filter((n) => n.playerType === "pitcher").length;
       const pitchers = Math.max(0, Math.min(short, F.maxPitchers - heldPitchers));
+
+      // ── 실제 해외 선수를 먼저 데려온다 ──────────────────────
+      const picked = pickForeigners({
+        candidates: pool.filter((c) => !takenFromPool.has(c.npcId)),
+        rules: origin, pitchers, batters: short - pitchers, rand,
+      });
+      for (const c of picked) {
+        takenFromPool.add(c.npcId);
+        moves.push({ cand: c, toTeamId: teamId, toLeagueId: leagueId });
+      }
+
+      // 못 채운 만큼만 생성으로 — 자리를 비우지 않는다
+      const restP = Math.max(0, pitchers - picked.filter((c) => c.playerType === "pitcher").length);
+      const restB = Math.max(0, (short - pitchers) - picked.filter((c) => c.playerType !== "pitcher").length);
+      if (restP + restB === 0) continue;
       requests.push({
-        teamId, pitchers, batters: short - pitchers,
+        teamId, pitchers: restP, batters: restB,
         salaryIndex: salaryIndex.get(teamId),
       });
     }
@@ -200,6 +287,55 @@ export async function applyForeignTurnover(
       return next;
     });
     signed += asSave.length;
+  }
+
+  // ── ③ 해외에서 데려온 사람들을 실제로 옮긴다 ────────────────
+  //
+  // ⚠ **slot.db와 스토어를 같이 바꾼다.** 스토어만 바꾸면 다음 로드에서
+  // 그 선수가 원래 리그로 되돌아가 있고, DB만 바꾸면 이번 시즌 화면이 옛
+  // 소속으로 돈다 — 둘 다 조용히 어긋나는 종류다.
+  if (moves.length > 0) {
+    const byId = new Map(get(gameStore).npcs.map((n) => [n.npcId, n]));
+    const nextNpcs = get(gameStore).npcs.map((n) => {
+      const mv = moves.find((x) => x.cand.npcId === n.npcId);
+      if (!mv) return n;
+      return {
+        ...n,
+        currentLeague: mv.toLeagueId,
+        currentTeam: mv.toTeamId,
+        careerEvents: [
+          ...(n.careerEvents ?? []),
+          {
+            year: seasonYear,
+            eventType: "foreign_signing" as const,
+            fromTeamId: n.currentTeam,
+            fromLeagueId: n.currentLeague,
+            toTeamId: mv.toTeamId,
+            toLeagueId: mv.toLeagueId,
+            detail: `${originLabel(n.currentLeague ?? "")} 출신`,
+          },
+        ],
+      };
+    });
+    gameStore.updateNpcs(nextNpcs);
+
+    for (const mv of moves) {
+      const n = byId.get(mv.cand.npcId);
+      await slotRepo.transfer({
+        slotId, npcId: mv.cand.npcId,
+        toTeamId: mv.toTeamId, toLeagueId: mv.toLeagueId,
+        seasonYear, category: "fa",
+        detail: `외국인 영입 — ${originLabel(n?.currentLeague ?? "")} 출신`,
+      });
+    }
+    signed += moves.length;
+    const byOrigin = new Map<string, number>();
+    for (const mv of moves) {
+      const k = originLabel(mv.cand.league);
+      byOrigin.set(k, (byOrigin.get(k) ?? 0) + 1);
+    }
+    logs.push(`[외국인] 해외 영입 ${moves.length}명 (`
+      + [...byOrigin].map(([k, v]) => `${k} ${v}`).join(" · ") + ")");
   }
 
   if (signed > 0) logs.push(`[외국인] ${seasonYear} 영입 ${signed}명`);

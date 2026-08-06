@@ -2845,3 +2845,76 @@ export function rosterDiag(): Record<string, {
   }
   return out;
 }
+
+/**
+ * 외국인 용병 출신 (E 확인용).
+ *
+ * ⚠ **예전엔 무에서 만들었다** — `careerHistory: []`로 넣어서 어디서 왔다는
+ * 기록이 없었다. 이제 실재하는 해외 선수를 이적시킨다. 여기서 KBL 용병의
+ * 경력에 `foreign_signing`이 있는지, 출신이 마이너/메이저 어느 쪽인지 센다.
+ */
+export function foreignDiag(): {
+  total: number; withOrigin: number; byOrigin: Record<string, number>;
+  sample: string[];
+  overPaths: string[];
+  maxPerTeam: number; teams: number;
+  ablTotal: number; ablNationality: Record<string, number>; ablKoreanName: number;
+} {
+  const g = get(gameStore);
+  const kbl = g.npcs.filter((n) =>
+    n.careerStatus === "active"
+    && n.currentLeague === "LEAGUE_KBL"
+    && (n.nationality ?? "KOR") !== "KOR");
+  const byOrigin: Record<string, number> = {};
+  const sample: string[] = [];
+  let withOrigin = 0;
+  for (const n of kbl) {
+    const ev = [...(n.careerEvents ?? [])].reverse()
+      .find((e) => e.eventType === "foreign_signing");
+    if (!ev) continue;
+    withOrigin++;
+    const from = ev.fromLeagueId ?? "?";
+    byOrigin[from] = (byOrigin[from] ?? 0) + 1;
+    if (sample.length < 5) {
+      sample.push(`${n.name} ${n.age}세 · ${from.replace("LEAGUE_", "")} → ${n.currentTeam}`);
+    }
+  }
+  // ⚠ **보유 한도(팀당 3명)가 지켜지는가.** 게이트를 열면 ABL·JBL 선수가
+  // 일반 FA로도 KBL에 올 수 있다 — 그 경로는 외국인 한도를 안 본다
+  const perTeam = new Map<string, number>();
+  for (const n of kbl) perTeam.set(n.currentTeam, (perTeam.get(n.currentTeam) ?? 0) + 1);
+  const maxPerTeam = Math.max(0, ...perTeam.values());
+
+  // ⚠ **해외 리그 선수가 한국 이름인가.** `generateOverseasIntakeV3`가
+  // `generateFreshmenNative`를 쓰는데 거긴 서양 이름 풀이 안 간다
+  const overseas = g.npcs.filter((n) =>
+    n.careerStatus === "active"
+    && (n.currentLeague === "LEAGUE_ABL" || n.currentLeague === "LEAGUE_ABL_FARM"));
+  const natCount: Record<string, number> = {};
+  for (const n of overseas) {
+    const k = n.nationality ?? "(없음)";
+    natCount[k] = (natCount[k] ?? 0) + 1;
+  }
+  const koreanName = overseas.filter((n) => /^[가-힣]+$/.test(n.name ?? "")).length;
+
+  // ⚠ **한도를 넘긴 팀의 초과분이 어느 경로로 들어왔는가.**
+  // 경로를 모르면 고칠 곳도 모른다 — 이 작업에서 두 번 헛짚었다.
+  const overPaths: string[] = [];
+  for (const [teamId, n] of perTeam) {
+    if (n <= 3) continue;
+    for (const x of kbl.filter((y) => y.currentTeam === teamId)) {
+      const last = [...(x.careerEvents ?? [])].reverse()[0];
+      overPaths.push(
+        `${teamId.replace("TEAM_KBL_", "").padEnd(20)} ${(x.name ?? "").padEnd(18)}`
+        + ` ${last?.eventType ?? "(경력없음)"} ${last?.fromLeagueId ?? "-"}→${last?.toLeagueId ?? "-"}`,
+      );
+    }
+  }
+
+  return {
+    total: kbl.length, withOrigin, byOrigin, sample,
+    overPaths: overPaths.slice(0, 16),
+    maxPerTeam, teams: perTeam.size,
+    ablTotal: overseas.length, ablNationality: natCount, ablKoreanName: koreanName,
+  };
+}

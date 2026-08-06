@@ -281,6 +281,13 @@ pub struct GenerateFreshmenParams {
     /// 실측 6시즌 OVR 상위25% 89.3 → 82.1, 분산 22.0 → 10.7.
     #[serde(default)]
     pub talent: Option<TalentRulesPayload>,
+    /// 이름 풀. **없으면 내장 한국식 풀이 나온다.**
+    ///
+    /// ⚠ 해외 리그 신인 배정(`generateOverseasIntakeV3`)이 이걸 안 넘겨서
+    /// **ABL·JBL 941명 중 931명이 한국 이름**이었다(실측). 나고야 팀에
+    /// "김우찬"이 뛰었다. 정본은 `generation_rules.json rosterRules[리그].namePool`.
+    #[serde(default)]
+    pub name_pool: Option<crate::roster_gen::NamePool>,
 }
 
 /// `tuning::TalentRules`의 직렬화 형태. 필드가 빠지면 그 항목만 폴백을 쓴다.
