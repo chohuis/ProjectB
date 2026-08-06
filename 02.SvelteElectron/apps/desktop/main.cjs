@@ -14,6 +14,7 @@ const {
 } = require("./ipc/db.cjs");
 const matchIpc   = require("./ipc/match.cjs");
 const tuningIpc  = require("./ipc/tuning.cjs");
+const windowIpc  = require("./ipc/window.cjs");
 
 // ── asarUnpack 경로 헬퍼 ─────────────────────────────────────────
 function unpackedPath(...segments) {
@@ -210,6 +211,8 @@ app.whenReady().then(() => {
   // R3a-4d: save.cjs(v2 game/season 블롭 세이브) 폐기 — repo:call(slot.db)이 유일 경로
   matchIpc.register(ipcMain, { loadCoreModule, engineNative });
   tuningIpc.register(ipcMain, { isDev, resourceBase, tuningSchema, loadCoreModule, isPathInside });
+  // 창은 만들어진 뒤에 잡아야 한다 — 등록 시점엔 아직 없다
+  windowIpc.register(ipcMain, { getWindow: () => _mainWindow });
 
   // ── master:* ─────────────────────────────────────────────────────────────────
   ipcMain.handle("master:fetch", (_event, relPath) => {

@@ -8,10 +8,23 @@
    */
   import { createEventDispatcher } from "svelte";
   import { t, language, setLanguage, languageOptions } from "../../../shared/i18n";
-  import { settingsStore, type ThemeSetting, type EffectSpeed } from "../../../shared/stores/settings";
+  import { settingsStore, type ThemeSetting, type EffectSpeed, type WindowSize } from "../../../shared/stores/settings";
 
   const THEMES: ThemeSetting[] = ["light", "dark", "system"];
   const SPEEDS: EffectSpeed[] = ["fast", "normal", "off"];
+  const SIZES: WindowSize[] = ["1280x800", "1440x900", "1600x900", "1920x1080", "fullscreen"];
+
+  /**
+   * 창 크기는 **저장만 하는 값이 아니다** — Electron에 실제로 걸어야 한다.
+   * 웹(Vite 단독)에서는 다리가 없으므로 저장만 되고 창은 안 바뀐다.
+   */
+  async function setWindowSize(size: WindowSize) {
+    settingsStore.patch("windowSize", size);
+    await window.projectB?.windowSetSize?.(size);
+  }
+
+  const sizeLabel = (s: WindowSize) =>
+    s === "fullscreen" ? $t("settings.windowSize.fullscreen") : s.replace("x", " × ");
 
   export let open = false;
 
@@ -76,6 +89,22 @@
                   class:on={$language === option.id}
                   on:click={() => setLanguage(option.id)}
                 >{option.label}</button>
+              {/each}
+            </div>
+          </div>
+          <div class="row">
+            <div class="row-head">
+              <span class="row-name">{$t("settings.windowSize")}</span>
+            </div>
+            <div class="seg wrap" role="radiogroup" aria-label={$t("settings.windowSize")}>
+              {#each SIZES as sz}
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={$settingsStore.windowSize === sz}
+                  class:on={$settingsStore.windowSize === sz}
+                  on:click={() => setWindowSize(sz)}
+                >{sizeLabel(sz)}</button>
               {/each}
             </div>
           </div>
@@ -179,6 +208,9 @@
     cursor: pointer;
   }
   .seg button + button { border-left: 1px solid var(--line-strong); }
+  /* 창 크기는 다섯 개라 한 줄에 안 들어간다 */
+  .seg.wrap { flex-wrap: wrap; max-width: 260px; }
+  .seg.wrap button { flex: 0 0 auto; padding: 6px 10px; font-size: 11.5px; }
   .seg button:hover { background: var(--panel-sunk); }
   .seg button.on {
     background: var(--t-dark);

@@ -7,6 +7,9 @@ contextBridge.exposeInMainWorld("projectB", {
 
   // ── R2: Rust 엔진 범용 호출 — 새 Rust 함수는 등록 없이 이걸로 호출 ──────
   engine: (fnName, payload) => ipcRenderer.invoke("engine:call", fnName, payload),
+  // 창 크기 — 받아들이는 값은 main 쪽 목록이 정한다
+  windowSetSize: (size) => ipcRenderer.invoke("window:setSize", size),
+  windowGetState: () => ipcRenderer.invoke("window:getState"),
 
   // ── R3a: 슬롯 DB v3 커맨드 — 상태 변이/조회의 유일 경로 (repo 계층 전용) ──
   repo: (cmd, payload) =>

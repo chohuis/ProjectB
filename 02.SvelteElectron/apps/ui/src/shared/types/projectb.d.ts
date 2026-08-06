@@ -45,6 +45,9 @@ declare global {
       repo: (cmd: string, payload?: unknown) => Promise<string>;
 
       // ── 경기 엔진 ──────────────────────────────────────────
+      /** 창 크기 — 받아들이는 값은 main 쪽 목록(`ipc/window.cjs`)이 정한다 */
+      windowSetSize: (size: string) => Promise<{ ok: boolean; mode?: string; reason?: string; width?: number; height?: number }>;
+      windowGetState: () => Promise<{ ok: boolean; width?: number; height?: number; fullscreen?: boolean }>;
       matchStart: (request?: {
         leagueId?: string;
         matchId?: string;
