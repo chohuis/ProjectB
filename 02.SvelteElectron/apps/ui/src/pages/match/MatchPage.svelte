@@ -701,8 +701,9 @@
   $: inningHalfLabel = `${inning}회 ${half === "top" ? "초" : "말"}`;
   // 초: 원정 공격(홈 수비), 말: 홈 공격(원정 수비)
   $: fieldingTeam = (half === 'top' ? 'home' : 'away') as 'home' | 'away';
-  $: staminaColor = pitcherState.stamina > 60 ? '#37d67a' : pitcherState.stamina > 30 ? '#ffd54f' : '#ff4a4a';
-  $: mentalColor  = pitcherState.mental  > 60 ? '#5b9cf6' : pitcherState.mental  > 30 ? '#c47af5' : '#ff6b9d';
+  // 게이지 색은 의미색 토큰을 쓴다 — 밝은 지면에서 읽히는 값은 거기 있다
+  $: staminaColor = pitcherState.stamina > 60 ? 'var(--ok)' : pitcherState.stamina > 30 ? 'var(--warn)' : 'var(--bad)';
+  $: mentalColor  = pitcherState.mental  > 60 ? 'var(--ok)' : pitcherState.mental  > 30 ? 'var(--warn)' : 'var(--bad)';
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Escape") {
@@ -1920,16 +1921,17 @@
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background: #0a0f1a;
+    background: var(--panel);
     /*
-      ⚠ **뿌리가 글자색을 정한다.** 이게 없어서 "경기 화면" 제목이 안 보였다 —
-      `.scene-panel h2`에 색 규칙이 없어 전역 `--ink`(거의 검정)를 물려받았고,
-      `#0a0f1a` 위의 검정이라 배경에 묻혔다. 실행해서야 보였다.
+      S2에서 밝은 지면으로 옮겼다 (2026-08-06). 예전엔 이 화면 전체가
+      어두운 섬이었고, 뿌리에서 글자색을 안 정하면 색 규칙 없는 자식이
+      전역 `--ink`를 물려받아 사라졌다 — 그 안전망이 여기 있었다.
 
-      규칙마다 색을 적어 막는 건 새 요소가 생길 때마다 또 뚫린다.
-      **어두운 섬은 뿌리에서 한 번 정한다.**
+      ⚠ **지금 어두운 건 구장 뷰 하나뿐이다.** `BaseballField.svelte`가
+      자기 배경과 글자색을 들고 있고, 그 위에 뜨는 결과 오버레이도
+      흰 글자를 명시한다. 토큰을 물려받으면 어두운 구장 위에서 사라진다.
     */
-    color: #e4edff;
+    color: var(--ink);
     padding: 12px;
     box-sizing: border-box;
     overflow: hidden;
@@ -1957,46 +1959,46 @@
     letter-spacing: 0.06em;
     padding: 3px 10px;
     border-radius: 20px;
-    background: #1a2438;
-    color: #8fa8c8;
-    border: 1px solid #2a3a56;
+    background: var(--panel-sunk);
+    color: var(--ink);
+    border: 1px solid var(--line);
   }
   /* 등판 중일 때만 눈에 띈다 — 관전은 가만히 있는 상태다 */
   .mode-chip.on-mound {
-    background: var(--t-accent, #2a5aa8);
-    color: #ffffff;
+    background: var(--t-accent);
+    color: var(--ink-on-dark);
     border-color: transparent;
   }
-  .bar-inning { font-size: 13px; font-weight: 700; color: #d8e8ff; }
+  .bar-inning { font-size: 13px; font-weight: 700; color: var(--ink); }
   .bar-park { display: flex; gap: 6px; margin-left: auto; }
   .chip-mini {
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 4px;
-    background: #141d30;
-    color: #7e9cc4;
-    border: 1px solid #24304a;
+    background: var(--panel-sunk);
+    color: var(--ink-mid);
+    border: 1px solid var(--panel-sunk);
   }
   .exit-btn {
     background: none;
-    border: 1px solid #3a4d70;
+    border: 1px solid var(--line);
     border-radius: 6px;
-    color: #a8c0e0;
+    color: var(--ink);
     font-size: 12px;
     font-weight: 700;
     padding: 4px 12px;
     cursor: pointer;
   }
-  .exit-btn:hover { background: #1b2740; color: #e0ecff; }
+  .exit-btn:hover { background: var(--panel-sunk); color: var(--ink); }
 
   /* 관전 패널 — 조작이 없을 때 이 자리를 뭘로 채우나 */
   .watch-panel { display: grid; gap: 6px; align-content: start; }
-  .watch-note { margin: 0; font-size: 13px; color: #a8c0e0; }
+  .watch-note { margin: 0; font-size: 13px; color: var(--ink); }
   .watch-sub {
     margin: 0;
     font-size: 20px;
     font-weight: 800;
-    color: #e8f0ff;
+    color: var(--ink);
     font-variant-numeric: tabular-nums;
   }
 
@@ -2011,12 +2013,12 @@
   .ps-head h2 { margin: 0; }
   .cost-chip {
     font-size: 11px;
-    color: #8fa8c8;
+    color: var(--ink);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
   /* 남은 구수가 얼마 안 되면 눈에 띈다. **선택을 막지는 않는다** */
-  .cost-chip.thin { color: #f0b070; font-weight: 700; }
+  .cost-chip.thin { color: var(--warn); font-weight: 700; }
 
   /* ── 라인업 (U7-b) ── */
   .lineup-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
@@ -2025,21 +2027,23 @@
     align-items: baseline;
     gap: 6px;
     font-size: 11px;
-    color: #9ab4d8;
+    color: var(--ink);
     padding: 2px 4px;
     border-radius: 3px;
   }
-  .lu-no { color: #5f7ba0; min-width: 11px; font-variant-numeric: tabular-nums; }
+  .lu-no { color: var(--ink-mute); min-width: 11px; font-variant-numeric: tabular-nums; }
   .lu-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lu-empty { color: #4d5f7c; }
+  .lu-empty { color: var(--ink-mute); }
   /* 지금 타석 — 공격 중인 쪽에만 붙는다 */
+  /* 지금 타석 — 옅은 노랑 배경은 흰 지면에서 사라진다. 면을 팀 색으로 채운다 */
   .lineup-list li.at-bat {
-    background: rgba(240, 226, 122, 0.14);
-    color: #ffe27a;
+    background: var(--t-dark);
+    color: var(--ink-on-dark);
     font-weight: 700;
   }
-  .lineup-list li.at-bat .lu-no { color: #ffe27a; }
-  .lineup-list li.on-deck { color: #c2d4ee; }
+  .lineup-list li.at-bat .lu-no { color: var(--ink-on-dark); opacity: 0.75; }
+  /* 다음 타자 — 지금 타석보다 한 단계 약하게 */
+  .lineup-list li.on-deck { color: var(--ink); font-weight: 600; }
 
   /* 주자와 카운트는 한 상황의 두 축이다 — 상자 하나에 나란히 */
   .situation-body {
@@ -2063,53 +2067,53 @@
   .settings-btn {
     margin-left: auto;
     background: none;
-    border: 1px solid #2a3a56;
+    border: 1px solid var(--line);
     border-radius: 5px;
-    color: #6a8aaa;
+    color: var(--ink-mid);
     font-size: 15px;
     padding: 1px 7px;
     cursor: pointer;
     line-height: 1.5;
   }
-  .settings-btn:hover { color: #c8d8f0; border-color: #5a7aaa; }
+  .settings-btn:hover { color: var(--ink); border-color: var(--ink-mute); }
 
   .scoreboard {
     width: 100%;
     border-collapse: collapse;
-    background: #0e1523;
-    border: 1px solid #2a3550;
-    color: #edf2ff;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink);
     table-layout: fixed;
   }
 
   .scoreboard th,
   .scoreboard td {
-    border: 1px solid #2a3550;
+    border: 1px solid var(--line);
     text-align: center;
     padding: 6px 4px;
     font-size: 12px;
   }
 
   .scoreboard thead th {
-    background: #172338;
-    color: #d3ddf6;
+    background: var(--panel-sunk);
+    color: var(--ink);
     font-weight: 700;
   }
 
   .scoreboard thead th:nth-last-child(4) {
-    color: #ff4a7d;
+    color: var(--bad);
   }
 
   .scoreboard thead th:nth-last-child(-n + 3) {
-    color: #ffe27a;
+    color: var(--warn);
   }
 
   .team-col {
     width: 132px;
     text-align: left;
     padding-left: 8px;
-    background: #121c2f;
-    color: #ffffff;
+    background: var(--panel-sunk);
+    color: var(--ink);
     font-weight: 700;
   }
   .scoreboard tbody th.team-col {
@@ -2128,20 +2132,22 @@
   }
   /* R은 결과다. H·E·B보다 굵게 */
   .scoreboard td.rhe { font-variant-numeric: tabular-nums; }
-  .scoreboard td.r-col { font-weight: 800; color: #e8f0ff; }
+  .scoreboard td.r-col { font-weight: 800; color: var(--ink); }
 
   .scoreboard tbody tr:nth-child(2n) td {
-    background: #101a2c;
+    background: var(--panel-sunk);
   }
 
+  /* ⚠ 머리글(R·H·E·B)만 색으로 구분한다. 어두운 지면에서는 숫자까지 색칠해도
+     읽혔지만, 흰 바탕에서는 **0이 스물여덟 개 색칠돼** 산만해진다 */
   .scoreboard tbody td:nth-last-child(4) {
-    color: #ff3f71;
-    font-weight: 700;
+    color: var(--ink);
+    font-weight: 800;
   }
 
   .scoreboard tbody td:nth-last-child(-n + 3) {
-    color: #ffe27a;
-    font-weight: 700;
+    color: var(--ink-mid);
+    font-weight: 600;
   }
 
   .engine-grid {
@@ -2163,8 +2169,8 @@
 
   .scene-panel,
   .play-text-panel {
-    background: #0e1523;
-    border: 1px solid #2a3550;
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 12px;
     min-height: 0;
@@ -2205,8 +2211,8 @@
   .panel {
     /* ⚠ `min-height: 170px`을 뺐다. 여섯 칸이 전부 같은 높이라 카운트(램프 7개)와
        구종 선택(버튼 10개)이 같은 자리를 먹었다 (§3-3) */
-    background: #0e1523;
-    border: 1px solid #2a3550;
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 12px;
     min-height: 0;
@@ -2222,7 +2228,7 @@
   .panel h2 {
     margin: 0 0 10px;
     font-size: 16px;
-    color: #edf2ff;
+    color: var(--ink);
   }
 
   .panel-head {
@@ -2236,20 +2242,20 @@
 
   .inning-badge {
     font-size: 12px;
-    color: #b3d4ff;
-    border: 1px solid #355483;
+    color: var(--ink);
+    border: 1px solid var(--ink-mute);
     border-radius: 999px;
     padding: 4px 9px;
-    background: #101b2d;
+    background: var(--panel-sunk);
   }
 
   .pos-badge {
     font-size: 12px;
-    color: #9ed9ff;
-    border: 1px solid #2f6f9c;
+    color: var(--ink);
+    border: 1px solid var(--ink-mute);
     border-radius: 999px;
     padding: 4px 9px;
-    background: #0f2231;
+    background: var(--panel-sunk);
   }
 
   .scene-layout {
@@ -2262,9 +2268,9 @@
   }
 
   .lineup-panel {
-    border: 1px solid #2f456b;
+    border: 1px solid var(--line);
     border-radius: 8px;
-    background: #0d1628;
+    background: var(--panel);
     padding: 8px;
     overflow: hidden;
   }
@@ -2272,7 +2278,7 @@
   .lineup-panel h3 {
     margin: 0 0 8px;
     font-size: 12px;
-    color: #dce7ff;
+    color: var(--ink);
   }
 
   .lineup-panel ol {
@@ -2280,7 +2286,7 @@
     padding: 0 0 0 16px;
     display: grid;
     gap: 4px;
-    color: #bfcdea;
+    color: var(--ink);
     font-size: 11px;
   }
 
@@ -2328,8 +2334,10 @@
     display: block;
     font-size: 40px;
     font-weight: 900;
+    /* ⚠ **토큰을 쓰지 않는다.** 이 글자는 어두운 구장 그림 위에 뜬다 —
+       `--ink`(거의 검정)를 물려받으면 배경에 묻힌다 */
     color: #ffffff;
-    /* 흰 글자 + 딱 떨어지는 오프셋 — 번짐은 도트를 뭉갠다 */
+    /* 딱 떨어지는 오프셋 — 번짐은 도트를 뭉갠다 */
     text-shadow: 3px 3px 0 rgba(4, 8, 16, 0.9);
     letter-spacing: 0.6em;
     text-indent: 0.6em;
@@ -2375,8 +2383,8 @@
     position: relative;
     width: 104px;
     height: 104px;
-    background: #0a111f;
-    border: 1px solid #324362;
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 10px;
   }
 
@@ -2385,13 +2393,14 @@
     width: 16px;
     height: 16px;
     transform: rotate(45deg);
-    border: 1px solid #9ab0d9;
-    background: #23324d;
+    border: 1px solid var(--ink);
+    background: var(--panel-sunk);
   }
 
+  /* 주자가 있는 베이스. 팀과 무관한 상태라 의미색을 쓴다 */
   .base.on {
-    background: #f3ca63;
-    border-color: #ffe6a9;
+    background: var(--attn);
+    border-color: var(--ink);
   }
 
   .b2 { top: 16px; left: 52px; }
@@ -2406,8 +2415,8 @@
   }
 
   .sbo-board {
-    background: #111216;
-    border: 1px solid #3b3d45;
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 10px;
     padding: 10px;
     display: grid;
@@ -2427,7 +2436,7 @@
     font-size: 36px;
     font-weight: 700;
     line-height: 1;
-    color: #f3f6ff;
+    color: var(--ink);
   }
 
   .sbo-lamps {
@@ -2435,29 +2444,32 @@
     gap: 10px;
   }
 
+  /* ⚠ **꺼진 램프가 켜진 것처럼 보였다.** 어두운 지면에서는 회색이 "꺼짐"
+     이었는데 밝은 지면으로 옮기면서 그대로 뒀더니 흰 바탕 위의 진한 원이
+     되어 뜻이 뒤집혔다. 꺼짐은 지면보다 살짝 가라앉은 자리여야 한다. */
   .sbo-lamp {
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    border: 1px solid #3a3d46;
-    background: #595d67;
+    border: 1px solid var(--line);
+    background: var(--panel-sunk);
   }
 
   .sbo-lamp.strike.on {
-    background: #37d67a;
-    border-color: #7df0ae;
+    background: var(--ok);
+    border-color: var(--ok);
     animation: sboPulseStrike 1.8s ease-in-out infinite;
   }
 
   .sbo-lamp.count-ball.on {
-    background: #ffd54f;
-    border-color: #ffe58f;
+    background: var(--warn);
+    border-color: var(--warn);
     animation: sboPulseBall 1.8s ease-in-out infinite;
   }
 
   .sbo-lamp.out.on {
-    background: #ff2727;
-    border-color: #ff6c6c;
+    background: var(--bad);
+    border-color: var(--bad);
     animation: sboPulseOut 1.8s ease-in-out infinite;
   }
 
@@ -2477,15 +2489,15 @@
   }
 
   .sbo-label.strike {
-    color: #37d67a;
+    color: var(--ok);
   }
 
   .sbo-label.count-ball {
-    color: #ffd54f;
+    color: var(--warn);
   }
 
   .sbo-label.out {
-    color: #ff4a4a;
+    color: var(--bad);
   }
 
   .zone-canvas {
@@ -2498,10 +2510,10 @@
     width: auto;
     max-width: 180px;
     margin: 0 auto;
-    background: #21314c;
-    border: 5px solid #3a4f73;
+    background: var(--panel-sunk);
+    border: 5px solid var(--line);
     border-radius: 8px;
-    box-shadow: inset 0 0 0 1px #5f79a8;
+    box-shadow: inset 0 0 0 1px var(--ink-mute);
     position: relative;
     cursor: crosshair;
     user-select: none;
@@ -2535,7 +2547,7 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    border: 2px solid #88aef1;
+    border: 2px solid var(--ink);
     background: rgba(101, 180, 255, 0.2);
     transform: translate(-50%, -50%);
     pointer-events: none;
@@ -2552,7 +2564,7 @@
   }
 
   .zone-target-dot.ball-zone {
-    border-color: #ff7043;
+    border-color: var(--bad);
     background: rgba(255, 112, 67, 0.2);
     box-shadow: 0 0 8px rgba(255, 112, 67, 0.6);
   }
@@ -2567,7 +2579,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    border: 2px solid #ffd54f;
+    border: 2px solid var(--warn);
     background: rgba(255, 213, 79, 0.35);
     transform: translate(-50%, -50%);
     pointer-events: none;
@@ -2605,28 +2617,28 @@
     grid-template-columns: 12px minmax(0, 1fr) auto;
     align-items: center;
     gap: 7px;
-    border: 1px solid #304868;
+    border: 1px solid var(--line);
     border-radius: 7px;
-    background: #101a2d;
-    color: #e9f1ff;
+    background: var(--panel-sunk);
+    color: var(--ink);
     padding: 6px 8px;
     text-align: left;
     cursor: pointer;
     font: inherit;
     font-size: 12px;
   }
-  .slot.active { background: #2f4f85; border-color: #7ba4f0; }
+  .slot.active { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
   /* 빈칸은 누를 게 없다 — 테두리를 점선으로 두어 "아직 안 찬 자리"로 읽힌다 */
   .slot.empty {
     border-style: dashed;
-    border-color: #253148;
-    background: #0b1220;
+    border-color: var(--panel-sunk);
+    background: var(--panel);
     cursor: default;
     justify-items: center;
     grid-template-columns: 12px minmax(0, 1fr);
   }
-  .slot-no { font-size: 9.5px; color: #4d648a; font-variant-numeric: tabular-nums; }
-  .slot.active .slot-no { color: #a8c4ef; }
+  .slot-no { font-size: 9.5px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .slot.active .slot-no { color: var(--ink-on-dark); opacity: 0.72; }
   .slot-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* 글자 막대(▮▮▮▯▯)는 이름을 밀어내 "패스..."로 잘렸다 — CSS 막대가 훨씬 좁다 */
   .slot-grade {
@@ -2634,19 +2646,19 @@
     width: 22px;
     height: 3px;
     border-radius: 2px;
-    background: #23334e;
+    background: var(--panel-sunk);
     overflow: hidden;
   }
-  .slot-grade i { display: block; height: 100%; background: #7ba4f0; }
-  .slot.active .slot-grade { background: #1d3559; }
-  .slot.active .slot-grade i { background: #cfe0ff; }
+  .slot-grade i { display: block; height: 100%; background: var(--ink); }
+  .slot.active .slot-grade { background: rgba(255, 255, 255, 0.28); }
+  .slot.active .slot-grade i { background: var(--ink-on-dark); }
   .slot-lock { font-size: 11px; opacity: 0.5; }
 
   .opt-col { display: grid; align-content: start; gap: 3px; }
   .opt-label {
     font-size: 9.5px;
     letter-spacing: 0.08em;
-    color: #6d84a8;
+    color: var(--ink-mid);
     margin: 0;
   }
   .opt-label + .seg { margin-bottom: 6px; }
@@ -2654,28 +2666,28 @@
   /* 셋 중 하나임을 모양으로 말한다 — 테두리를 나눠 쓴다 */
   .seg {
     display: flex;
-    border: 1px solid #304868;
+    border: 1px solid var(--line);
     border-radius: 8px;
     overflow: hidden;
   }
   .seg button {
     flex: 1;
     border: none;
-    background: #101a2d;
-    color: #9ab4d8;
+    background: var(--panel-sunk);
+    color: var(--ink);
     font: inherit;
     font-size: 11.5px;
     padding: 8px 2px;
     cursor: pointer;
     min-width: 0;
   }
-  .seg button + button { border-left: 1px solid #263a58; }
-  .seg button.active { background: #2f4f85; color: #ffffff; font-weight: 700; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button.active { background: var(--t-dark); color: var(--ink-on-dark); font-weight: 700; }
 
   /* 상한을 글로 남긴다 — 자물쇠만으로는 "몇 개까지"가 안 전달된다 */
   .slot-count {
     font-size: 10px;
-    color: #6d84a8;
+    color: var(--ink-mid);
     margin: 4px 0 0;
     font-variant-numeric: tabular-nums;
   }
@@ -2684,30 +2696,33 @@
     width: 100%;
     border: none;
     border-radius: 10px;
-    background: linear-gradient(180deg, #4a8cf0 0%, #2e5fb5 100%);
-    color: #ffffff;
+    /* ⚠ 자동 변환이 잉크 계열로 바꿔 **눌리지 않는 버튼처럼 보였다.**
+       화면에서 가장 중요한 액션이라 팀 색으로 채운다 */
+    background: var(--t-dark);
+    color: var(--ink-on-dark);
     padding: 13px;
     font-size: 14px;
     font-weight: 800;
     letter-spacing: 0.04em;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(61, 120, 223, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+    box-shadow: 0 4px 14px -6px rgba(8, 16, 36, 0.45);
     transition: transform 0.1s, box-shadow 0.1s;
   }
 
   .execute-btn:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 6px 22px rgba(61, 120, 223, 0.6);
+    box-shadow: 0 7px 18px -6px rgba(8, 16, 36, 0.5);
   }
 
   .execute-btn:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(61, 120, 223, 0.35);
+    box-shadow: 0 2px 6px -3px rgba(8, 16, 36, 0.4);
   }
 
   .execute-btn:disabled {
     cursor: not-allowed;
-    background: linear-gradient(180deg, #2a4a7a, #1e3560);
+    background: var(--line-strong);
+    color: var(--ink-mute);
     box-shadow: none;
     animation: pitchPulse 1.2s ease-in-out infinite;
   }
@@ -2720,27 +2735,27 @@
   .mound-visit-btn {
     width: 100%;
     margin-top: 6px;
-    border: 1px solid #5a8040;
+    border: 1px solid var(--ok);
     border-radius: 8px;
-    background: linear-gradient(180deg, #3a6030 0%, #2a4a22 100%);
-    color: #a8d88a;
+    background: linear-gradient(180deg, var(--ok) 0%, rgba(31, 122, 71, 0.28) 100%);
+    color: var(--ok);
     padding: 8px;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.15s;
   }
-  .mound-visit-btn:hover { background: linear-gradient(180deg, #4a7838 0%, #365a2a 100%); }
+  .mound-visit-btn:hover { background: linear-gradient(180deg, var(--ok) 0%, var(--ok) 100%); }
 
   .engine-state {
     margin: 8px 0 0;
     font-size: 12px;
-    color: #d3a160;
+    color: var(--warn);
     text-align: center;
   }
 
   .engine-state.on {
-    color: #74d8a2;
+    color: var(--ok);
   }
 
   /* ── 타자·투수 카드 (M4) ─────────────────────────────────────
@@ -2763,17 +2778,17 @@
   }
   .flip-btn {
     flex: 0 0 auto;
-    border: 1px solid #304868;
+    border: 1px solid var(--line);
     border-radius: 20px;
-    background: #101a2d;
-    color: #9ab4d8;
+    background: var(--panel-sunk);
+    color: var(--ink);
     font: inherit;
     font-size: 10.5px;
     padding: 2px 9px;
     cursor: pointer;
   }
-  .flip-btn:hover { border-color: #7ba4f0; color: #e9f1ff; }
-  .flip-btn[aria-pressed="true"] { background: #2f4f85; border-color: #7ba4f0; color: #fff; }
+  .flip-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .flip-btn[aria-pressed="true"] { background: var(--line); border-color: var(--ink); color: #fff; }
 
   .bar-list, .line-list {
     list-style: none;
@@ -2793,24 +2808,24 @@
     grid-template-columns: 42px minmax(0, 1fr) 30px;
     align-items: center;
     gap: 8px;
-    color: #d7e4fb;
+    color: var(--ink);
     font-size: 12px;
   }
   .bar-list li.plain { grid-template-columns: 42px minmax(0, 1fr); }
   .bar-list li.plain .bv { text-align: left; }
-  .bl { color: #93aacb; }
+  .bl { color: var(--ink); }
   .bt {
     display: block;
     height: 7px;
-    background: #1a2a3f;
-    border: 1px solid #2a3d5a;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 4px;
     overflow: hidden;
   }
   .bt i {
     display: block;
     height: 100%;
-    background: #5f8fe0;
+    background: var(--ink-mid);
     transition: width 0.35s ease, background 0.35s ease;
   }
   .bv { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
@@ -2820,17 +2835,17 @@
     justify-content: space-between;
     align-items: baseline;
     gap: 8px;
-    border-bottom: 1px solid #24334d;
+    border-bottom: 1px solid var(--panel-sunk);
     padding-bottom: 5px;
-    color: #d7e4fb;
+    color: var(--ink);
     font-size: 12px;
   }
-  .line-list li span { color: #93aacb; }
+  .line-list li span { color: var(--ink); }
   .line-list li strong { font-variant-numeric: tabular-nums; }
 
   /* 값이 없을 때 0을 그리지 않는다 — 왜 비었는지를 쓴다 */
   .card-empty {
-    color: #6d84a8;
+    color: var(--ink-mid);
     font-size: 11.5px;
     border: none;
     padding: 10px 0;
@@ -2849,7 +2864,7 @@
   .change-text {
     font-size: 52px;
     font-weight: 900;
-    color: #f0f4ff;
+    color: var(--ink);
     text-shadow: 0 0 30px rgba(160, 190, 255, 0.85), 0 2px 12px rgba(0,0,0,0.9);
     animation: changeFlash 2.2s ease-out forwards;
   }
@@ -2865,13 +2880,13 @@
   .play-text-panel h2 {
     margin: 0 0 10px;
     font-size: 16px;
-    color: #edf2ff;
+    color: var(--ink);
   }
 
   .play-text-panel ul {
     margin: 0;
     padding-left: 18px;
-    color: #d3ddf6;
+    color: var(--ink);
     max-height: calc(100% - 28px);
     overflow-y: auto;
     scrollbar-width: thin;
@@ -2886,26 +2901,30 @@
     margin-bottom: 8px;
   }
 
-  .play-text-panel li.log-homerun { color: #ff6b6b; font-weight: 700; }
-  .play-text-panel li.log-hit     { color: #ffd54f; }
-  .play-text-panel li.log-strike  { color: #37d67a; }
-  .play-text-panel li.log-foul    { color: #a0b8d8; }
-  .play-text-panel li.log-ball    { color: #7a8fa8; }
-  .play-text-panel li.log-out     { color: #ff8c42; }
-  /* 병살은 삼진보다 좋은 일이다 — 아웃 주황이 아니라 제 색을 준다 */
-  .play-text-panel li.log-dp      { color: #6ee7a8; font-weight: 700; }
-  .play-text-panel li.log-walk    { color: #8ecfff; }
-  .play-text-panel li.log-auto    { color: #6a7a9a; font-style: italic; }
+  /* ── 로그 색 — **투수 시점의 좋고 나쁨** 한 축이다 ────────────
+     ⚠ 자동 변환이 안타와 아웃을 둘 다 `--warn`으로 뭉갰고 파울을 볼보다
+     진하게 만들었다(원본은 반대였다). 어두운 지면에서 쓰던 여덟 색을
+     밝은 지면의 의미색 셋 + 잉크 세 단계로 다시 배분한다. */
+  .play-text-panel li.log-homerun { color: var(--bad);  font-weight: 700; }
+  .play-text-panel li.log-hit     { color: var(--bad); }
+  .play-text-panel li.log-walk    { color: var(--warn); }
+  .play-text-panel li.log-out     { color: var(--ink-mid); }
+  .play-text-panel li.log-strike  { color: var(--ok); }
+  /* 병살은 삼진보다 좋은 일이다 — 같은 초록에 굵기로 한 단계 올린다 */
+  .play-text-panel li.log-dp      { color: var(--ok);   font-weight: 700; }
+  .play-text-panel li.log-foul    { color: var(--ink-mute); }
+  .play-text-panel li.log-ball    { color: var(--ink-mute); }
+  .play-text-panel li.log-auto    { color: var(--ink-mute); font-style: italic; }
 
   .play-text-panel li.log-separator {
     list-style: none;
     margin-left: -18px;
     text-align: center;
-    color: #4a6080;
+    color: var(--ink-mute);
     font-size: 11px;
     letter-spacing: 0.08em;
-    border-top: 1px solid #1e3050;
-    border-bottom: 1px solid #1e3050;
+    border-top: 1px solid var(--panel-sunk);
+    border-bottom: 1px solid var(--panel-sunk);
     padding: 3px 0;
     margin-bottom: 6px;
   }
@@ -2913,18 +2932,20 @@
   .scoreboard th.current-inning,
   .scoreboard td.current-inning {
     background: rgba(70, 120, 200, 0.18);
-    color: #aad0ff;
+    color: var(--ink);
   }
 
   /* 내 팀 행. **상대는 표시하지 않는다** — "내 팀 하나만 구분"은 언제나
      성립하지만 "두 팀을 서로 구분"은 238팀에서 성립하지 않는다 (§3-6) */
+  /* ⚠ **행 전체에 색을 주지 않는다.** 어두운 지면에서는 호박색 글자가
+     강조였는데 흰 바탕에서는 숫자 열여섯 개가 전부 물들어 어느 게 점수인지
+     흐려졌다. 밝은 지면에서는 **면과 왼쪽 띠**만으로 충분하다 */
   .scoreboard tr.my-team-row th,
   .scoreboard tr.my-team-row td {
-    color: #ffe27a;
-    background: rgba(255, 226, 122, 0.06);
+    background: var(--t-wash);
   }
   .scoreboard tr.my-team-row th.team-col {
-    box-shadow: inset 3px 0 0 var(--t-accent, #ffe27a);
+    box-shadow: inset 3px 0 0 var(--t-accent);
   }
 
   @media (max-width: 1280px) {
@@ -2983,7 +3004,7 @@
   .gameover-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.82);
+    background: rgba(10, 18, 38, 0.52);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2997,8 +3018,8 @@
   }
 
   .gameover-box {
-    background: #0e1a2e;
-    border: 2px solid #2a4070;
+    background: var(--panel-sunk);
+    border: 2px solid var(--line);
     border-radius: 16px;
     padding: 36px 44px;
     min-width: 320px;
@@ -3006,7 +3027,7 @@
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 24px 60px -28px rgba(8, 16, 36, 0.55);
     animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
   }
 
@@ -3018,7 +3039,7 @@
   .gameover-title {
     margin: 0;
     font-size: 22px;
-    color: #d3e4ff;
+    color: var(--ink);
     letter-spacing: 0.06em;
   }
 
@@ -3030,23 +3051,23 @@
 
   .score-label {
     font-size: 13px;
-    color: #6a8aaa;
+    color: var(--ink-mid);
   }
 
   .score-num {
     font-size: 52px;
     font-weight: 900;
-    color: #edf2ff;
+    color: var(--ink);
     line-height: 1;
     min-width: 48px;
     text-align: center;
   }
 
-  .home-score { color: #7ecfff; }
+  .home-score { color: var(--ink); }
 
   .score-sep {
     font-size: 36px;
-    color: #4a6080;
+    color: var(--ink-mute);
     font-weight: 300;
   }
 
@@ -3054,21 +3075,21 @@
     font-size: 28px;
     font-weight: 900;
     letter-spacing: 0.1em;
-    color: #7a8fa8;
+    color: var(--ink-mid);
     padding: 6px 24px;
     border-radius: 999px;
-    border: 2px solid #2a3f5c;
+    border: 2px solid var(--line);
   }
 
   .gameover-result.won {
-    color: #37d67a;
-    border-color: #2a5a3a;
+    color: var(--ok);
+    border-color: var(--ok);
     background: rgba(55, 214, 122, 0.08);
   }
 
   .gameover-result.lost {
-    color: #ff4a4a;
-    border-color: #5a2a2a;
+    color: var(--bad);
+    border-color: rgba(179, 49, 31, 0.26);
     background: rgba(255, 74, 74, 0.08);
   }
 
@@ -3089,19 +3110,19 @@
 
   .gameover-stats li span {
     font-size: 11px;
-    color: #6a8aaa;
+    color: var(--ink-mid);
   }
 
   .gameover-stats li strong {
     font-size: 20px;
     font-weight: 700;
-    color: #c8d8f0;
+    color: var(--ink);
   }
 
   .gameover-summary {
     margin: 0;
     font-size: 13px;
-    color: #7a9ab8;
+    color: var(--ink-mid);
     text-align: center;
     max-width: 280px;
     line-height: 1.5;
@@ -3111,7 +3132,7 @@
     margin: 0;
     font-size: 13px;
     font-weight: 600;
-    color: #8890a8;
+    color: var(--ink-mid);
     text-align: center;
     padding: 4px 0;
   }
@@ -3119,10 +3140,10 @@
   .gameover-exit-btn {
     margin-top: 8px;
     padding: 12px 36px;
-    background: linear-gradient(180deg, #3a6abf 0%, #2050a0 100%);
+    background: linear-gradient(180deg, var(--ink-mute) 0%, var(--ink-mute) 100%);
     border: none;
     border-radius: 10px;
-    color: #ffffff;
+    color: var(--ink);
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
@@ -3139,7 +3160,7 @@
   .post-exit-question {
     margin: 0;
     font-size: 14px;
-    color: #a0b8d4;
+    color: var(--ink);
     text-align: center;
   }
 
@@ -3166,8 +3187,8 @@
   }
 
   .watch-btn {
-    background: linear-gradient(180deg, #3a6abf 0%, #2050a0 100%);
-    color: #ffffff;
+    background: linear-gradient(180deg, var(--ink-mute) 0%, var(--ink-mute) 100%);
+    color: var(--ink);
     box-shadow: 0 4px 16px rgba(50, 100, 200, 0.4);
   }
 
@@ -3177,8 +3198,8 @@
   }
 
   .result-btn {
-    background: linear-gradient(180deg, #3a4a5e 0%, #22303f 100%);
-    color: #c8d8f0;
+    background: linear-gradient(180deg, var(--line) 0%, var(--panel-sunk) 100%);
+    color: var(--ink);
     box-shadow: 0 4px 16px rgba(20, 40, 70, 0.4);
   }
 
