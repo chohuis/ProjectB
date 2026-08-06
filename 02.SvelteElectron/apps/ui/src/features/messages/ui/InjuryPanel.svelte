@@ -1,37 +1,32 @@
 <script lang="ts">
-  import type { OffseasonMetadata } from "../../../shared/types/main";
+  import { onMount } from "svelte";
+  import type { InjuryMetadata } from "../../../shared/types/main";
   import { gameStore } from "../../../shared/stores/game";
   import { teamMap } from "../../../shared/stores/master";
-  import {
-    buildRows, countByGroup, sortRows, relationTag,
-    GROUP_ORDER, GROUP_LABEL, type OffseasonGroup, type OffseasonRow,
-  } from "../../../shared/utils/offseasonReport";
-  import { onMount } from "svelte";
-  import type { Relationship } from "../../../shared/types/relationship";
   import { slotRepo } from "../../../shared/repo/slotRepo";
+  import type { Relationship } from "../../../shared/types/relationship";
+  import { relationTag } from "../../../shared/utils/offseasonReport";
+  import {
+    buildRows, countByClass, sortRows,
+    CLASS_ORDER, CLASS_LABEL, type InjuryClass,
+  } from "../../../shared/utils/injuryReport";
+  import { INJURY_LABEL } from "../../../shared/types/save";
   import TeamMark from "../../team/ui/TeamMark.svelte";
-  import DigestCards from "./DigestCards.svelte";
   import PlayerDetailModal from "../../player/ui/PlayerDetailModal.svelte";
+  import DigestCards from "./DigestCards.svelte";
 
   /**
-   * 오프시즌 결산.
+   * 월간 부상 리포트.
    *
-   * ⚠ 예전엔 엔진이 만든 문장 213줄이 그대로 세로로 쏟아졌다. 그중 99줄이
-   * 대학팀 수비 자리 조정이었고, **852명이 은퇴한 사건은 맨 아래 한 줄**이었다.
-   * 팀은 `TEAM_UNIV_ASAN`처럼 ID로 떴다.
-   *
-   * 그래서 여기는 **숫자 → 목록**이다. 해석하는 문장을 쓰지 않는다 —
-   * 은퇴를 누르면 은퇴한 사람이 나온다.
+   * ⚠ 예전엔 한 사람당 소식 하나였다 — `부상 소식 — 임도훈 (중증)`이 매주,
+   * 사람 수만큼. 소식함이 그걸로 채워졌다.
    */
 
-  export let metadata: OffseasonMetadata;
+  export let metadata: InjuryMetadata;
 
-  /** 한 번에 그리는 행 수. 852개 DOM을 한꺼번에 만들지 않는다 */
   const PAGE = 100;
 
-  // ⚠ 고정값으로 두면 **그 종류가 0건인 시즌에 빈 목록이 선택된 채로 뜬다** —
-  // 카드는 비활성인데 그게 켜져 있어 고장으로 보인다. 내용이 있는 쪽을 연다
-  let group: OffseasonGroup | null = null;
+  let cls: InjuryClass | null = null;
   let mineOnly = false;
   let knownOnly = false;
   let shown = PAGE;
@@ -39,8 +34,6 @@
 
   $: p = $gameStore.protagonist;
 
-  // 인연은 스토어가 아니라 슬롯 DB에 있다 (PeoplePage와 같은 경로).
-  // ⚠ 못 읽어도 목록은 떠야 한다 — 인연 표시는 덤이지 본문이 아니다
   let related: Relationship[] = [];
   onMount(async () => {
     const slotId = $gameStore.currentSlotId;
@@ -48,7 +41,6 @@
     try { related = await slotRepo.getRelationships(slotId, {}); } catch { related = []; }
   });
 
-  // `personId`가 npcId와 같다 (people.md §4). 라벨 규칙은 `relationTag` 하나다
   $: relations = new Map<string, string>(
     related
       .map((r) => [r.personId, relationTag(r.kind)] as const)
@@ -61,50 +53,50 @@
     people: $gameStore.npcs.map((n) => ({
       npcId: n.npcId, name: n.name, age: n.age, position: n.position,
     })),
+    weeksLeftInSeason: metadata.weeksLeftInSeason,
     myTeamId: p.teamId,
     relations,
   });
 
-  $: counts = countByGroup(rows);
-  $: cards = GROUP_ORDER.map((g) => ({ id: g, label: GROUP_LABEL[g], count: counts[g] }));
-  // 첫 표시 종류 — 사람이 있는 첫 칸. 한 번만 정한다(고른 뒤엔 안 건드린다)
-  $: if (group === null) group = GROUP_ORDER.find((g) => counts[g] > 0) ?? "retire";
+  $: counts = countByClass(rows);
+  // 내용이 있는 첫 칸을 연다 — 빈 목록이 선택된 채로 뜨면 고장으로 보인다
+  $: if (cls === null) cls = CLASS_ORDER.find((c) => counts[c] > 0) ?? "short";
+
+  $: cards = CLASS_ORDER.map((c) => ({ id: c, label: CLASS_LABEL[c], count: counts[c] }));
   $: mineCount = rows.filter((r) => r.mine).length;
   $: knownCount = rows.filter((r) => r.relation !== null).length;
 
   $: visible = sortRows(
     rows.filter((r) =>
-      r.group === group
+      r.cls === cls
       && (!mineOnly || r.mine)
       && (!knownOnly || r.relation !== null)),
   );
 
-  // 탭·필터를 바꾸면 다시 처음부터 — 안 그러면 3건짜리 목록에 "더 보기"가 남는다
-  $: if (group || mineOnly || knownOnly) shown = PAGE;
+  $: if (cls || mineOnly || knownOnly) shown = PAGE;
 
   function teamName(id: string | null): string {
     if (!id) return "—";
     return $teamMap.get(id)?.name ?? "(사라진 팀)";
   }
 
-  function pick(g: OffseasonGroup) {
-    group = g;
+  /** 부상 이름. 표에 없으면 코드를 그대로 쓰지 않는다 */
+  function injuryName(t: string): string {
+    return (INJURY_LABEL as Record<string, string>)[t] ?? "부상";
   }
 </script>
 
-<div class="off">
-  <!-- 카드는 부상 리포트와 공유한다 — 같은 소식 규격이다 -->
+<div class="inj">
   <DigestCards
     {cards}
-    active={group}
+    active={cls}
     {mineCount} {knownCount}
     mineOn={mineOnly} knownOn={knownOnly}
-    onPick={(id) => pick(id as OffseasonGroup)}
+    onPick={(id) => (cls = id as InjuryClass)}
     onToggleMine={() => (mineOnly = !mineOnly)}
     onToggleKnown={() => (knownOnly = !knownOnly)}
   />
 
-  <!-- ── 목록 ── -->
   <table class="rows">
     <thead>
       <tr>
@@ -112,7 +104,8 @@
         <th class="c-age">나이</th>
         <th class="c-pos">POS</th>
         <th class="c-team">팀</th>
-        <th class="c-why">사유</th>
+        <th class="c-inj">부상</th>
+        <th class="c-wk">복귀</th>
       </tr>
     </thead>
     <tbody>
@@ -129,13 +122,13 @@
             {#if r.teamId}<TeamMark teamId={r.teamId} size={14} />{/if}
             <span class="tn">{teamName(r.teamId)}</span>
           </td>
-          <td class="c-why">
-            {r.reason}
-            {#if r.detail}<span class="det" title="구단 평가 점수">{r.detail}</span>{/if}
+          <td class="c-inj">{injuryName(r.injuryType)}</td>
+          <td class="c-wk u-num">
+            {#if r.cls === "retired"}—{:else}{r.weeks}주{/if}
           </td>
         </tr>
       {:else}
-        <tr><td class="empty" colspan="5">해당하는 선수가 없다</td></tr>
+        <tr><td class="empty" colspan="6">해당하는 선수가 없다</td></tr>
       {/each}
     </tbody>
   </table>
@@ -152,7 +145,7 @@
 {/if}
 
 <style>
-  .off { display: flex; flex-direction: column; gap: 10px; }
+  .inj { display: flex; flex-direction: column; gap: 10px; }
 
   .rows { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   .rows th {
@@ -164,9 +157,10 @@
   .rows tbody tr.mine { background: var(--panel-sunk); }
 
   .c-age, .c-pos { width: 44px; }
-  .c-age { text-align: right; }
-  .c-team { width: 34%; }
-  .c-why { width: 26%; }
+  .c-age, .c-wk { text-align: right; }
+  .c-wk { width: 54px; }
+  .c-team { width: 28%; display: flex; align-items: center; gap: 5px; }
+  .c-inj { width: 24%; }
 
   .c-name { color: var(--ink); }
   .dot {
@@ -178,12 +172,7 @@
     font-size: 10px; color: var(--ink-mute);
     border: 1px solid var(--line); border-radius: 2px; padding: 0 4px; margin-left: 5px;
   }
-  .c-team { display: flex; align-items: center; gap: 5px; }
   .tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .det {
-    font-size: 10.5px; color: var(--ink-mute);
-    background: var(--panel-sunk); border-radius: 2px; padding: 0 4px; margin-left: 5px;
-  }
   .empty { color: var(--ink-mute); padding: 14px 6px; }
 
   .more {

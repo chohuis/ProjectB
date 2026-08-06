@@ -137,6 +137,18 @@ export interface OffseasonMetadata {
   events: import("../utils/offseasonReport").OffseasonEvent[];
 }
 
+/**
+ * 월간 부상 리포트. 오프시즌 결산과 **같은 규격**이다 —
+ * `npcId`만 담고 이름·팀명은 화면이 조회한다.
+ */
+export interface InjuryMetadata {
+  type: "injury";
+  week: number;
+  /** "시즌 아웃" 판정의 근거. 0이면 화면이 그 등급을 안 만든다 */
+  weeksLeftInSeason: number;
+  events: import("../utils/injuryReport").InjuryEvent[];
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -147,5 +159,6 @@ export interface MessageItem {
   createdAt: string;
   readAt: string | null;
   decision?: MessageDecision;
-  metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | { type: string };
+  metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
+           | { type: string };
 }

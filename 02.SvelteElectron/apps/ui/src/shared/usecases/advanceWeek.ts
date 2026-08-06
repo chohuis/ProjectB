@@ -72,6 +72,7 @@ import {
 } from "./weekPhases/tournamentNews";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
+import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 import { canApplyToUniversity, canApplyToIndependent } from "../utils/careerTransition";
@@ -1317,6 +1318,19 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         });
       }
     }
+  }
+
+  // ── 월간 부상 리포트 ────────────────────────────────────────
+  //
+  // ⚠ **커리어 단계를 안 가린다.** 월간 순위표는 비고교 분기에만 있는데,
+  // 부상은 고교생에게도 소식이다 — 같은 학교 동료가 빠지면 내 출전이 바뀐다.
+  if (isInjuryNewsWeek(weekInYear)) {
+    const buffered = seasonStore.drainInjuryNews();
+    const news = buildInjuryNews({
+      events: buffered, weekNum, weekInYear,
+      season: get(seasonStore), monthLabel: weekToMonthLabel(weekNum),
+    });
+    if (news) gameStore.addMessage(news);
   }
 
   // ── 코치 리포트 (3주마다, 군 복무·오프시즌 제외) ──────────────

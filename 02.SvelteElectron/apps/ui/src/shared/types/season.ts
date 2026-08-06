@@ -364,6 +364,14 @@ export interface SaveSeason {
   // NPC 부상 상태 (playerId → 부상 정보)
   npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
   /**
+   * 아직 소식으로 안 나간 부상 — **월 1회 모아서 보낸다.**
+   *
+   * ⚠ `npcInjuries`에서 파생할 수 없다. 그건 *지금 다친 사람*이라
+   * 한 달 안에 낫고 만 부상은 이미 사라졌고, 부상 은퇴자는 아예 안 들어온다.
+   * 소식은 **그 달에 일어난 일**이라 따로 쌓아야 한다.
+   */
+  injuryNewsBuffer: import("../utils/injuryReport").InjuryEvent[];
+  /**
    * 국가대표 차출 — npcId → 남은 주.
    *
    * 부상과 **같은 취급**이다: 승강의 상시 콜업이 이 자리를 메운다
@@ -445,6 +453,7 @@ export function makeEmptySeason(
     ablEastTeams: [],
     ablWestTeams: [],
     npcInjuries: {},
+    injuryNewsBuffer: [],
     npcRetired: [],
     npcLiveStats: {},
     prevSeasonKblStandings: [],

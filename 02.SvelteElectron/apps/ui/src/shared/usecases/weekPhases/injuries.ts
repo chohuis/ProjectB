@@ -230,15 +230,12 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
             }],
           }));
         }
-        gameStore.addMessage({
-          id:        `msg-npc-retire-${occ.playerId}-w${weekNum}-${Date.now()}`,
-          category:  "system",
-          sender:    "리그 사무국",
-          subject:   `은퇴 소식 — ${entityName}`,
-          preview:   `${injuryLabel}로 인한 은퇴`,
-          body:      `${entityName} 선수가 ${injuryLabel}을(를) 끝으로 현역에서 은퇴를 선언했습니다.\n\n재활보다 건강한 삶을 선택한 결정을 존중합니다.${playerInfoBlock}`,
-          createdAt: `W${weekNum}`,
-          readAt:    null,
+        // ⚠ 개별 메시지를 안 보낸다 — 월간 부상 소식의 **맨 위 등급**으로 간다.
+        // 예전엔 부상 소식·은퇴 소식이 사람 수만큼 따로 날아왔다
+        seasonStore.pushInjuryNews({
+          npcId: occ.playerId, injuryType: occ.injuryType, severity: occ.severity,
+          weeks: occ.recoveryWeeks, retired: true,
+          teamId: entity?.teamId ?? "", week: weekNum,
         });
         continue; // 은퇴하면 부상 상태 등록 불필요
       }
@@ -263,18 +260,14 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     // NpcSaveState 부상 상태 갱신
     gameStore.updateNpcCareerStatus(occ.playerId, "injured");
 
-    // ── 수술 / 중증 → 리그 소식 메시지 ──────────────────────
-    if (isSurgery || occ.severity === "severe") {
-      gameStore.addMessage({
-        id:        `msg-npc-injury-${occ.playerId}-w${weekNum}-${Date.now()}`,
-        category:  "system",
-        sender:    "리그 사무국",
-        subject:   `부상 소식 — ${entityName} (${isSurgery ? "수술" : "중증"})`,
-        preview:   `${injuryLabel} / 회복 ${occ.recoveryWeeks}주`,
-        body:      `${entityName} 선수가 ${injuryLabel}으로 ${occ.recoveryWeeks}주 이탈 예정입니다.${isSurgery ? "\n\n수술이 필요한 상태로 이번 시즌 복귀는 어려울 수 있습니다." : ""}${playerInfoBlock}`,
-        createdAt: `W${weekNum}`,
-        readAt:    null,
-      });
-    }
+    // ── 월간 부상 소식 버퍼 ────────────────────────────────
+    //
+    // ⚠ **가벼운 부상도 담는다.** 예전엔 수술·중증만 보냈는데, 그러면 화면이
+    // "이번 달 부상 몇 건"을 말할 수 없다 — 심한 것만 세면 분모가 없다.
+    // 등급 분류와 표시 여부는 화면이 정한다(`injuryReport.ts`).
+    seasonStore.pushInjuryNews({
+      npcId: occ.playerId, injuryType: occ.injuryType, severity: occ.severity,
+      weeks: occ.recoveryWeeks, teamId: entity?.teamId ?? "", week: weekNum,
+    });
   }
 }

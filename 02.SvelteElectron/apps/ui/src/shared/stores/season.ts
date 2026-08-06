@@ -71,6 +71,8 @@ function createSeasonStore() {
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
         npcLiveStats: {},
+        // 없으면 빈 배열 — 이게 없으면 `pushInjuryNews`가 undefined에 스프레드한다
+        injuryNewsBuffer: season.injuryNewsBuffer ?? [],
         npcRetired: season.npcRetired ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
       });
@@ -631,6 +633,26 @@ function createSeasonStore() {
 
     setNpcInjury(playerId: string, entry: NpcInjuryEntry) {
       update((s) => NpcInjury.setNpcInjury(s, playerId, entry));
+    },
+
+    /**
+     * 부상 소식 버퍼에 쌓는다 — **월 1회 한 소식으로 나간다.**
+     *
+     * ⚠ 예전엔 여기서 바로 메시지를 만들어 보냈다. 한 사람당 하나라
+     * 소식함이 `부상 소식 — 임도훈 (중증)` 여섯 줄로 채워졌다.
+     */
+    pushInjuryNews(e: import("../utils/injuryReport").InjuryEvent) {
+      update((s) => ({ ...s, injuryNewsBuffer: [...(s.injuryNewsBuffer ?? []), e] }));
+    },
+
+    /** 버퍼를 비우고 내용을 돌려준다 — 소식을 만든 쪽이 쓴다 */
+    drainInjuryNews(): import("../utils/injuryReport").InjuryEvent[] {
+      let out: import("../utils/injuryReport").InjuryEvent[] = [];
+      update((s) => {
+        out = s.injuryNewsBuffer ?? [];
+        return { ...s, injuryNewsBuffer: [] };
+      });
+      return out;
     },
 
     clearNpcInjury(playerId: string) {
