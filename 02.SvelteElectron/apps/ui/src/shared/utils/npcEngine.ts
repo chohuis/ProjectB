@@ -1,5 +1,8 @@
 import type { MessageItem } from "../types/main";
 import type { NpcSaveState } from "../types/save";
+import {
+  buildRows, countByGroup, previewLine, type OffseasonEvent,
+} from "./offseasonReport";
 
 // ── 시즌 종료 요약 ────────────────────────────────────────────
 export interface SeasonEndSummary {
@@ -122,23 +125,36 @@ export async function runOffseasonProcessing(
     ...(foreign ?? {}),
   });
   const json = await api().npcRunOffseason(paramsJson);
-  const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);
+  const raw = parseResult<{
+    npcs: NpcSaveState[]; pendingDraft: NpcSaveState[];
+    summary: SeasonEndSummary; logs: string[]; events?: OffseasonEvent[];
+  }>(json);
   const rehydrate = (n: NpcSaveState): NpcSaveState => ({
     ...n,
     isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   });
 
-  const mailboxEntry: MessageItem | null = raw.logs.length > 0
+  // ⚠ **이름·팀명을 여기서 굳히지 않는다.** 사건은 `npcId`만 들고 있고 화면이
+  // 조회한다 — 예전엔 엔진이 문장을 조립해 보내 `TEAM_UNIV_ASAN`이 그대로 떴다.
+  const events = raw.events ?? [];
+  // 집계는 사람 수다. 이름 조회는 화면 몫이라 여기선 `people`이 비어도 맞다
+  const counts = countByGroup(buildRows({ events, people: [] }));
+
+  const mailboxEntry: MessageItem | null = events.length > 0
     ? {
         id: `msg-offseason-${Date.now()}`,
         category: "news",
         sender: "연감",
-        subject: "오프시즌 선수 동향",
-        preview: raw.logs[0],
-        body: raw.logs.join("\n"),
+        subject: "오프시즌 결산",
+        // 예전엔 `logs[0]`이라 "FA 미계약 2명"만 떴다 — 852명이 은퇴한
+        // 시즌인지 목록에서 구분이 안 됐다
+        preview: previewLine(counts),
+        // 본문은 패널이 그린다. 메타데이터를 못 읽는 경로를 위한 대비책만 둔다
+        body: previewLine(counts),
         createdAt: `Y${seasonYear}`,
         readAt: null,
+        metadata: { type: "offseason", seasonYear, events },
       }
     : null;
 
@@ -146,7 +162,13 @@ export async function runOffseasonProcessing(
     npcs:        raw.npcs.map(rehydrate),
     pendingDraft: raw.pendingDraft.map(rehydrate),
     summary:     raw.summary,
-    logs:        raw.logs,
+    // 최근 활동 로그(30칸)에 들어가는 건 **이 한 줄뿐이다.** 예전엔 개별 사건
+    // 213줄이 그대로 부어져 시즌 마지막 주 기록을 통째로 밀어냈다.
+    // ⚠ 화면 카드와 **같은 집계**를 쓴다 — Rust가 따로 세면 사건 수와 사람 수가
+    // 어긋나 활동 로그엔 "방출 1170", 화면엔 "방출 45"가 뜬다
+    logs:        events.length > 0
+      ? [`오프시즌: ${previewLine(counts)}`, ...raw.logs]
+      : raw.logs,
     mailboxEntry,
   };
 }

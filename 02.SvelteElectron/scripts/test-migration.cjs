@@ -265,6 +265,29 @@ function makeSeasonFixture() {
   mgr.closeAll();
 }
 
+// ── 9. 지금 스키마로 만든 슬롯이 목록에 뜨는가 ────────────────────
+//
+// ⚠ **불러오기가 통째로 죽어 있었다** (2026-08-06). `listSlotsV3`가
+// `schema_version === "3"`으로 못 박혀 있어서, 스키마가 v4로 오른 뒤
+// **만들어진 모든 슬롯이 목록에서 사라졌다** — 세이브 파일은 21MB로 멀쩡한데
+// 게임은 "저장된 기록이 없습니다"라고 했다.
+//
+// 한 숫자를 두 뜻으로 쓴 게 원인이다. 파일명의 "3"은 세이브 **구조 세대**고
+// `schema_version`은 마이그레이션이 늘 때마다 오르는 **번호**다.
+{
+  const src = fs.readFileSync(
+    path.join(process.cwd(), "apps/ui/src/shared/repo/slotLifecycleV3.ts"), "utf8");
+  const min = Number(/MIN_SLOT_SCHEMA = (\d+)/.exec(src)?.[1]);
+  check("목록 하한을 코드에서 읽었다", Number.isFinite(min));
+  check(`지금 스키마(v${slotdb.SCHEMA_VERSION})로 만든 슬롯이 목록에 뜬다 (하한 v${min})`,
+    slotdb.SCHEMA_VERSION >= min);
+  // 등호로 되돌아가면 다음 마이그레이션에서 또 사라진다.
+  // ⚠ **목록과 로드 두 군데다.** 목록만 고쳤을 때 슬롯은 보이는데 누르면
+  // "저장 파일을 불러오지 못했습니다"가 떴다
+  const sites = src.match(/schema_version\) >= MIN_SLOT_SCHEMA/g) ?? [];
+  check(`하한 비교가 목록·로드 두 곳 다 숫자다 (${sites.length}곳)`, sites.length === 2);
+}
+
 fs.rmSync(tmpDir, { recursive: true, force: true });
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

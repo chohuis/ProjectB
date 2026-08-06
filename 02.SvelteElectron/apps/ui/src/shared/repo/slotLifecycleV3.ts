@@ -48,11 +48,24 @@ import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
 
-/** v3 슬롯 목록 (SaveSlotScreen 기존 표시 형식으로 변환) */
+/**
+ * v3 슬롯 목록 (SaveSlotScreen 기존 표시 형식으로 변환)
+ *
+ * ⚠ **한 숫자를 두 뜻으로 쓰고 있었다.** 이 함수의 "V3"는 세이브 **구조 세대**
+ * (파일명 `slot3_*.db`)인데, `schema_version`은 마이그레이션이 하나 늘 때마다
+ * 올라가는 **번호**다. `=== "3"`으로 못 박혀 있어서 스키마가 v4로 오른 뒤
+ * **만들어진 모든 슬롯이 목록에서 사라졌다** — 세이브 파일은 멀쩡히 있는데
+ * 게임은 "저장된 기록이 없습니다"라고 했다. 즉 **불러오기가 통째로 죽어 있었다.**
+ *
+ * 그래서 숫자 비교로 바꾼다. 다음 마이그레이션에서 또 사라지지 않는다.
+ * (걸러낼 대상은 v3 **이전** 구조의 세이브뿐이고, 그건 파일명부터 다르다)
+ */
+export const MIN_SLOT_SCHEMA = 3;
+
 export async function listSlotsV3(): Promise<SaveSlotMeta[]> {
   const metas = await slotRepo.listSlots();
   return metas
-    .filter((m) => m.schema_version === "3")
+    .filter((m) => Number(m.schema_version) >= MIN_SLOT_SCHEMA)
     .map((m) => ({
       slotId: m.slotId,
       name: m.slot_name || m.slotId,
@@ -111,7 +124,9 @@ async function hydrateStoresFromSlot(slotId: string): Promise<void> {
 /** v3 슬롯 로드 — v3 슬롯이 아니면 false (레거시 폴백은 호출측) */
 export async function loadGameV3(slotId: string): Promise<boolean> {
   const meta = await slotRepo.getMeta(slotId);
-  if (meta.schema_version !== "3") return false;
+  // ⚠ 목록과 **같은 하한을 쓴다.** 예전엔 여기도 `!== "3"`이라, 목록만 고치면
+  // 슬롯이 보이는데 누르면 "저장 파일을 불러오지 못했습니다"가 떴다
+  if (!(Number(meta.schema_version) >= MIN_SLOT_SCHEMA)) return false;
 
   const game = await slotRepo.getProtagonist<SaveGame>(slotId);
   const season = await slotRepo.getSeason<SaveSeason>(slotId);

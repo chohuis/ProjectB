@@ -75,6 +75,14 @@ const COMMANDS = {
     // ⚠ `animations: "disabled"`는 애니메이션을 **되감아 멈추길 기다린다.**
     // 주자 스프라이트(`gbcBlink`)처럼 무한 반복이면 그 대기가 안 끝나 타임아웃이
     // 난다. 깜박이는 한 컷이 못 찍는 것보다 낫다 — 기다리지 않는다.
+    //
+    // 대신 앱의 "애니메이션 줄이기"를 잠깐 켠다. 이건 CSS가 즉시 반응하므로
+    // 되감기를 기다리지 않는다.
+    const hadReduce = await page.evaluate(() => {
+      const had = document.documentElement.hasAttribute("data-reduce-motion");
+      document.documentElement.setAttribute("data-reduce-motion", "");
+      return had;
+    }).catch(() => true);
     try {
       await page.screenshot({ path: f, animations: "allow", timeout: 20_000 });
       console.log("screenshot:", f);

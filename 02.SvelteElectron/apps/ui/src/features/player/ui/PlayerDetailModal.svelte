@@ -1135,7 +1135,8 @@
                               ev.eventType === "military_discharge"? "전역" :
                               ev.eventType === "draft_picked"     ? "드래프트" :
                               ev.eventType === "draft_undrafted"  ? "미지명" :
-                              ev.eventType === "retirement"       ? "은퇴" : ev.eventType
+                              ev.eventType === "retirement"       ? "은퇴" :
+                              ev.eventType === "position_change"  ? "보직" : ev.eventType
                             }</td>
                             <td>{
                               ev.eventType === "trade"
@@ -1146,6 +1147,10 @@
                                     : `${resolveTeamOrLeague(ev.fromTeamId) ?? ""} 퇴단`)
                                 : ev.eventType === "draft_picked" || ev.eventType === "draft_undrafted"
                                 ? (resolveTeamOrLeague(ev.toTeamId) ?? ev.detail ?? "")
+                                // ⚠ 예전엔 자리만 바꾸고 아무 기록도 안 남겨서, 작년엔
+                                // 3루수였던 선수가 왜 좌익수인지 알 방법이 없었다
+                                : ev.eventType === "position_change"
+                                ? `${ev.detail ?? ""}${ev.fromTeamId ? ` (${resolveTeamOrLeague(ev.fromTeamId)})` : ""}`
                                 : ev.detail ?? ""
                             }</td>
                           </tr>

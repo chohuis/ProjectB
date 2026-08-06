@@ -172,13 +172,48 @@ pub struct SeasonEndSummary {
 
 // ── 오프시즌 처리 결과 (mailboxEntry는 TS에서 생성) ──────────────────────────
 
+/// 오프시즌에 한 사람에게 일어난 일.
+///
+/// ⚠ **여기서 문장을 만들지 않는다.** 예전엔 `logs`에
+/// `format!("{} 방출 (로스터 초과 {league_id})", npc.name)`처럼 조립해 보냈고,
+/// 그 문자열이 그대로 화면에 찍혔다. 이름·팀·사유가 한 덩어리로 붙은 뒤라
+/// 화면은 **팀 ID를 이름으로 못 바꾸고, 종류별로 못 묶고, 내 팀 것만 못 골랐다.**
+/// 실제로 `LEAGUE_KBL_FARM` · `TEAM_UNIV_ASAN`이 사용자 화면에 그대로 떴다.
+///
+/// ⚠ **이름을 넣지 않는다.** 화면이 `npcId`로 조회한다 — 은퇴자도 `npcs`에
+/// 남으므로 조회된다. 이름을 여기 넣으면 개명·표기 변경이 소식에만 안 따라온다.
+///
+/// ⚠ `from_team_id`는 **반드시 여기 담는다.** 은퇴·방출은 직후에
+/// `current_team`을 비우므로, 이걸 안 남기면 어느 팀에서 나갔는지가 사라진다.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OffseasonEvent {
+    /// `retire_age` | `retire_no_team` | `release_roster` | `release_score`
+    /// | `demote` | `promote` | `fa_unsigned`
+    pub kind: String,
+    pub npc_id: String,
+    /// 사건 당시 소속. 없을 수 있다(소속이 이미 빈 사람)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub from_team_id: Option<String>,
+    /// 사유의 부가 정보. **문장이 아니라 값이다** (`"65"` 같은 점수)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub detail: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OffseasonOutput {
     pub npcs: Vec<NpcSaveState>,
     pub pending_draft: Vec<NpcSaveState>,
     pub summary: SeasonEndSummary,
+    /// 총계 몇 줄만. **개별 사건은 `events`에 있다.**
+    ///
+    /// ⚠ 예전엔 여기 213줄이 들어왔고 호출측이 `[...result.logs, ...st.logs]
+    /// .slice(0, 30)`으로 최근 활동 로그에 부었다 — **시즌 마지막 주에 뭘 했든
+    /// 전부 대학팀 수비 조정 이야기로 덮였다.**
     pub logs: Vec<String>,
+    #[serde(default)]
+    pub events: Vec<OffseasonEvent>,
 }
 
 // ── 학년 진급 결과 ─────────────────────────────────────────────────────────────

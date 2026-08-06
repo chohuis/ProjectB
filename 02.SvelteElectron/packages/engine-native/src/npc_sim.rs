@@ -738,7 +738,7 @@ fn normalize_offseason_npcs(
     npcs: Vec<NpcSaveState>,
     season_year: i32,
     summary: &mut SeasonEndSummary,
-    logs: &mut Vec<String>,
+    events: &mut Vec<OffseasonEvent>,
     rng: &mut impl Rng,
     limits: &HashMap<String, RosterLimit>,
     // 12단계 진로 배정이 돌 수 있는가. false면 방출 대신 바로 은퇴시킨다 —
@@ -765,6 +765,8 @@ fn normalize_offseason_npcs(
         let low_ovr_penalty = if ovr < 55.0 { (55.0 - ovr) * 0.01 } else { 0.0 };
         let retire_chance = (0.06 * age_over as f64 + low_ovr_penalty).min(0.72);
         if rng.gen::<f64>() < retire_chance {
+            // 소속을 비우기 전에 떠둔다 — 아래에서 `current_team`이 지워진다
+            let from_team = npc.current_team.clone();
             let history = NpcCareerEntry {
                 year: season_year,
                 league_id: npc.current_league.clone(),
@@ -791,7 +793,7 @@ fn normalize_offseason_npcs(
             npc.current_league  = "LEAGUE_RETIRED".into();
             npc.current_team    = "".into();
             summary.retired_count += 1;
-            logs.push(format!("{} retired", npc.name));
+            events.push(ev("retire_age", npc, Some(from_team), None));
         }
     }
 
@@ -845,7 +847,7 @@ fn normalize_offseason_npcs(
                     // 2군 상한이 영원히 안 걸린다 (KBL 700명의 원인)
                     match farm_league(&league_id).zip(farm_team(&npc.current_team)) {
                         Some((farm_lid, farm_tid)) => {
-                            logs.push(format!("{} → 2군 강등 ({league_id})", npc.name));
+                            events.push(ev("demote_roster", npc, Some(npc.current_team.clone()), None));
                             npc.current_league = farm_lid.clone();
                             npc.current_team   = farm_tid.clone();
                             (Some(farm_lid), Some(farm_tid))
@@ -854,12 +856,12 @@ fn normalize_offseason_npcs(
                         // 미지명자와 같은 로직으로 진로를 정한다 (독립 입단 또는 은퇴).
                         // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
                         None if can_place => {
-                            logs.push(format!("{} 방출 (로스터 초과 {league_id})", npc.name));
+                            events.push(ev("release_roster", npc, Some(npc.current_team.clone()), None));
                             npc.current_team = "".into();
                             (None, None)
                         }
                         None => {
-                            logs.push(format!("{} 은퇴 (로스터 초과 {league_id})", npc.name));
+                            events.push(ev("retire_no_team", npc, Some(npc.current_team.clone()), None));
                             npc.career_status  = "retired".into();
                             npc.current_league = "LEAGUE_RETIRED".into();
                             npc.current_team   = "".into();
@@ -878,9 +880,9 @@ fn normalize_offseason_npcs(
         }
     }
 
-    fill_first_teams(&mut next, limits, logs, is_foreign);
+    fill_first_teams(&mut next, limits, events, is_foreign);
     // 충원 **뒤에** 돈다 — 새로 올라온 선수까지 보고 남은 공백만 전환한다
-    fix_position_gaps(&mut next, logs);
+    fix_position_gaps(&mut next, season_year);
     next
 }
 
@@ -895,7 +897,7 @@ fn release_second_stage(
     npcs: &mut [NpcSaveState],
     rules: &crate::free_agency::ReleaseRules,
     limits: &HashMap<String, RosterLimit>,
-    logs: &mut Vec<String>,
+    events: &mut Vec<OffseasonEvent>,
     // 외국인은 이 경로를 타지 않는다. 방출자는 소속만 비고 진로 배정이
     // 독립 입단·은퇴를 정하는데, 용병이 국내 독립리그로 가는 건 말이 안 된다.
     // 외국인 교체는 재계약 판정 + 새 영입이 짝이다 (F-4·F-5)
@@ -976,7 +978,7 @@ fn release_second_stage(
         *cnt += 1;
         released += 1;
 
-        logs.push(format!("{} 방출 (점수 {:.0})", npcs[idx].name, score));
+        events.push(ev("release_score", &npcs[idx], Some(team.clone()), Some(format!("{score:.0}"))));
         npcs[idx].current_team = String::new();
         npcs[idx].current_salary = 0;
         npcs[idx].contract_years = 0;
@@ -992,7 +994,7 @@ fn release_second_stage(
 fn fill_first_teams(
     npcs: &mut [NpcSaveState],
     limits: &HashMap<String, RosterLimit>,
-    logs: &mut Vec<String>,
+    events: &mut Vec<OffseasonEvent>,
     // ⚠ **외국인은 2군에 못 내린다**(1군 전용 슬롯). 자리를 만들려고 투수를
     // 내릴 때 이걸 안 걸면 용병이 2군으로 밀려 보유 한도가 깨진다 —
     // 실제로 이 경로를 추가하자마자 `test:foreign`이 잡았다.
@@ -1043,10 +1045,10 @@ fn fill_first_teams(
             v
         };
 
-        let mut promote = |npcs: &mut [NpcSaveState], idx: usize, logs: &mut Vec<String>| {
+        let promote = |npcs: &mut [NpcSaveState], idx: usize, events: &mut Vec<OffseasonEvent>| {
             npcs[idx].current_league = league_id.clone();
             npcs[idx].current_team   = team_id.clone();
-            logs.push(format!("{} → 1군 승격 ({team_id})", npcs[idx].name));
+            events.push(ev("promote", &npcs[idx], Some(team_id.clone()), None));
         };
 
         // ① **야수 하한부터 채운다.** 능력치 순으로만 뽑으면 2군 상위권이
@@ -1084,7 +1086,7 @@ fn fill_first_teams(
                 let farm_lid = farm_league(&league_id);
                 for &idx in pit.iter().take(can_demote) {
                     if let (Some(fl), Some(ft)) = (farm_lid.clone(), farm_team(&team_id)) {
-                        logs.push(format!("{} → 2군 (야수 자리 확보 {team_id})", npcs[idx].name));
+                        events.push(ev("demote_fielder", &npcs[idx], Some(team_id.clone()), None));
                         npcs[idx].current_league = fl;
                         npcs[idx].current_team   = ft;
                         room += 1;
@@ -1093,7 +1095,7 @@ fn fill_first_teams(
             }
             let cands = pick_best(npcs, Some(false));
             for &idx in cands.iter().take(want.min(room)) {
-                promote(npcs, idx, logs);
+                promote(npcs, idx, events);
                 used += 1;
             }
         }
@@ -1105,10 +1107,25 @@ fn fill_first_teams(
             for &idx in cands.iter() {
                 if used >= need { break; }
                 if npcs[idx].current_team == team_id { continue; }  // ①에서 이미 올림
-                promote(npcs, idx, logs);
+                promote(npcs, idx, events);
                 used += 1;
             }
         }
+    }
+}
+
+/// 오프시즌 사건 한 건.
+///
+/// ⚠ **이름을 담지 않는다.** 화면이 `npcId`로 조회한다 — 은퇴자도 `npcs`에
+/// 남으므로 조회된다. 팀 이름도 마찬가지로 ID만 넘긴다.
+fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<String>)
+    -> OffseasonEvent
+{
+    OffseasonEvent {
+        kind:         kind.into(),
+        npc_id:       npc.npc_id.clone(),
+        from_team_id: from_team.filter(|t| !t.is_empty()),
+        detail,
     }
 }
 
@@ -1124,7 +1141,16 @@ fn fill_first_teams(
 ///
 /// **전 리그에 한 번에 적용된다** — 고교·대학·독립·프로 1군·2군의 충원 경로가
 /// 각각 다른데, 공백이 생기는 방식은 같기 때문이다.
-fn fix_position_gaps(npcs: &mut [NpcSaveState], logs: &mut Vec<String>) {
+///
+/// ⚠ **오프시즌 소식에는 안 올린다.** 이건 사건이 아니라 라인업 9명을 세우기
+/// 위한 정합성 보정이고, 대상도 "그 자리에서 능력치가 가장 낮은 사람"이라
+/// 승격도 강등도 아니다. 실측 한 시즌에서 **소식 213줄 중 99줄(46%)이
+/// 이것**이었고 그중 93줄이 대학팀이었다 — 852명이 은퇴한 시즌인데.
+///
+/// ⚠ 대신 **경력 사건으로 남긴다.** 예전엔 `position`만 바꾸고 아무 기록도
+/// 안 남겨서, 작년엔 3루수였던 선수가 왜 좌익수인지 알 방법이 없었다.
+/// 정보가 있어야 할 자리와 없어야 할 자리가 정확히 뒤바뀌어 있었다.
+fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
     // 포수가 맨 앞이다 — 전문 요원이라 0명이면 경기가 성립하지 않는다
     const FIELD: [&str; 8] = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"];
 
@@ -1165,7 +1191,16 @@ fn fix_position_gaps(npcs: &mut [NpcSaveState], logs: &mut Vec<String>) {
             pool.sort_by(|&a, &b| npc_core_ovr(&npcs[a])
                 .partial_cmp(&npc_core_ovr(&npcs[b])).unwrap_or(std::cmp::Ordering::Equal));
             let moved = pool.remove(0);
-            logs.push(format!("{} {} → {} 전환 ({team})", npcs[moved].name, npcs[moved].position, pos));
+            let was = npcs[moved].position.clone();
+            npcs[moved].career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "position_change".into(),
+                from_team_id: Some(team.clone()),
+                to_team_id: None,
+                from_league_id: None,
+                to_league_id: None,
+                detail: Some(format!("{was} → {pos}")),
+            });
             npcs[moved].position = pos.to_string();
             cnt.entry(pos.to_string()).or_default().push(moved);
         }
@@ -1193,6 +1228,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         (params.season_year as u32).wrapping_mul(3571)
     );
     let mut summary = SeasonEndSummary::default();
+    let mut events: Vec<OffseasonEvent> = Vec::new();
     let mut new_pending: Vec<NpcSaveState> = Vec::new();
     let season_year = params.season_year;
     let mut processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
@@ -1382,7 +1418,6 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         teams.dedup();
     }
 
-    let mut fa_unsigned = 0usize;
     for npc in processed.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
         // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
@@ -1399,10 +1434,12 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             .unwrap_or_default();
 
         if open.is_empty() {
-            // 미계약 — 갈 팀이 없다. 진로(독립 입단·은퇴)는 D-4가 정한다
+            // 미계약 — 갈 팀이 없다. 진로(독립 입단·은퇴)는 D-4가 정한다.
+            // ⚠ 떠난 팀은 `original_team_id`에만 남아 있다 — `current_team`은
+            // FA 전환 때 이미 비었다
+            events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
             npc.current_league = "LEAGUE_INDEPENDENT".into();
             npc.current_team   = "".into();
-            fa_unsigned += 1;
             continue;
         }
         let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
@@ -1413,14 +1450,11 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         npc.original_league_id = None;
         npc.original_team_id   = None;
     }
-    if fa_unsigned > 0 {
-        logs.push(format!("FA 미계약 {fa_unsigned}명 — 원 소속 리그에 자리가 없었다"));
-    }
 
     // 11. 은퇴 판정 + 로스터 캡
     let can_place = !params.independent_team_ids.is_empty();
     let mut after_normalize = normalize_offseason_npcs(
-        processed, season_year, &mut summary, &mut logs, &mut rng,
+        processed, season_year, &mut summary, &mut events, &mut rng,
         &params.roster_limits, can_place, &is_foreign,
     );
 
@@ -1432,9 +1466,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 11-b. 방출 2단계 — 정원 안이어도 성적·연봉으로 걸러낸다.
     // 진로 배정(12단계) **앞**에 있어야 방출자가 그 경로를 탄다
     if let Some(rr) = params.release_rules.as_ref() {
-        let n = release_second_stage(
-            &mut after_normalize, rr, &params.roster_limits, &mut logs, &is_foreign);
-        if n > 0 { logs.push(format!("방출 2단계 {n}명")); }
+        release_second_stage(
+            &mut after_normalize, rr, &params.roster_limits, &mut events, &is_foreign);
     }
 
     let mut leftover_pending = Vec::new();
@@ -1471,22 +1504,33 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             } else {
                 ("release", "방출")
             };
+            // 마지막으로 뛴 팀. 이 시점엔 소속이 이미 비어 있다
+            let last_team = after_normalize[idx].career_history.last()
+                .map(|e| e.team_id.clone());
             placer.place(&mut after_normalize[idx], season_year, event, reason, from_hs);
-            if after_normalize[idx].career_status == "retired" { quit += 1; }
+            if after_normalize[idx].career_status == "retired" {
+                quit += 1;
+                // ⚠ 예전엔 이 841명이 **맨 아래 한 줄**이었다. 대학팀 수비 조정
+                // 99줄 뒤에 "갈 팀을 못 찾아 그만둔 선수 841명" 한 줄
+                events.push(ev("retire_no_team", &after_normalize[idx], last_team, None));
+            }
         }
-        if quit > 0 {
-            summary.retired_count += quit as i32;
-            logs.push(format!("갈 팀을 못 찾아 야구를 그만둔 선수 {quit}명"));
-        }
+        if quit > 0 { summary.retired_count += quit as i32; }
     } else {
         leftover_pending = params.pending_draft;
     }
 
+    // ⚠ **요약 문장도 여기서 안 만든다.** 한 번 만들어 봤다가 화면과 숫자가
+    // 어긋났다 — Rust는 **사건**을 세는데(방출 1170) 화면은 **사람**을 센다
+    // (방출 45). 한 사람이 2군→방출→은퇴처럼 여러 사건을 겪기 때문이다.
+    // 사람 단위로 합치는 규칙은 `offseasonReport.ts` 하나뿐이어야 하므로,
+    // 요약 줄은 그쪽에서 만든다(`npcEngine.ts`).
     OffseasonOutput {
         npcs: after_normalize,
         pending_draft: [leftover_pending, new_pending].concat(),
         summary,
         logs,
+        events,
     }
 }
 
@@ -2155,7 +2199,6 @@ fn find_slot(
 pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     let pick_map: HashMap<String, &DraftPick> = params.result.picks.iter()
         .map(|p| (p.npc_id.clone(), p)).collect();
-    let undrafted: HashSet<String> = params.result.undrafted_ids.iter().cloned().collect();
 
     // Step 1: 대학/독립 팀의 현재 로스터 집계 (run_offseason 이후 상태 기준)
     let mut roster: HashMap<String, (usize, usize)> = HashMap::new(); // team -> (pitchers, batters)

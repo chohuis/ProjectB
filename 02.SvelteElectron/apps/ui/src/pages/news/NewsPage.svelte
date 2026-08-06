@@ -1,5 +1,7 @@
 <script lang="ts">
-  import type { MessageCategory, MessageItem, Top10Metadata, TrainingMetadata } from "../../shared/types/main";
+  import type {
+    MessageCategory, MessageItem, OffseasonMetadata, Top10Metadata, TrainingMetadata,
+  } from "../../shared/types/main";
   import { applyDecision } from "../../shared/usecases/decisions";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
@@ -8,6 +10,7 @@
   import { recentResults, gaugeTone } from "../../shared/utils/myStatus";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
   import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
+  import OffseasonPanel from "../../features/messages/ui/OffseasonPanel.svelte";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
   /**
@@ -278,6 +281,8 @@
                           morale={tm.morale} extraLogs={tm.extraLogs} />
       {:else if selected.metadata?.type === "top10"}
         <ProspectTop10Panel metadata={selected.metadata as Top10Metadata} />
+      {:else if selected.metadata?.type === "offseason"}
+        <OffseasonPanel metadata={selected.metadata as OffseasonMetadata} />
       {:else}
         {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
           <p>{line || " "}</p>

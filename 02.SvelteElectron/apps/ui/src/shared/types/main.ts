@@ -127,6 +127,16 @@ export interface Top10Metadata {
   columns: [Top10Column, Top10Column, Top10Column, Top10Column];
 }
 
+/**
+ * 오프시즌 결산. **`npcId`만 담고 이름·팀명은 안 담는다** —
+ * 화면이 `npcs`에서 조회한다. 이유는 `utils/offseasonReport.ts` 머리말.
+ */
+export interface OffseasonMetadata {
+  type: "offseason";
+  seasonYear: number;
+  events: import("../utils/offseasonReport").OffseasonEvent[];
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -137,5 +147,5 @@ export interface MessageItem {
   createdAt: string;
   readAt: string | null;
   decision?: MessageDecision;
-  metadata?: TrainingMetadata | Top10Metadata | { type: string };
+  metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | { type: string };
 }
