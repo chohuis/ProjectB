@@ -180,6 +180,44 @@ const COMMANDS = {
           // 선택 대기 항목이 접혀 있으면 펼친다
           const pend = document.querySelector(".item.pending");
           if (pend) { pend.click(); return "OPENED"; }
+
+          // ── 반드시 골라야 넘어가는 모달들 ──────────────────────
+          //
+          // ⚠ **닫기가 없다.** 부상 치료·진로 선택·계약은 사용자가 결정해야
+          // 하는 일이라 취소 버튼이 없고, 그래서 `.go`가 disabled로 남는다.
+          // 여기서 안 골라 주면 드라이버가 `STUCK:go가 disabled`로 멈춘다.
+          //
+          // ⚠ **클래스만 보고 아무거나 누르면 안 된다.** 진로 허브와 계약
+          // 협상의 `.opt-btn`은 결정이 아니라 **설정 토글**이라 누르면 켰다
+          // 껐다만 반복하고, 허브의 `.opt-btn.danger`는 **즉시 입대**다.
+          // 모달마다 "진행되는 버튼"을 따로 짚는다.
+
+          // 부상 치료 — 첫 번째 치료법을 고른다
+          const injury = document.querySelector(".option-card");
+          if (injury) { injury.click(); return "INJURY"; }
+
+          // 진로 허브 — 지원할 곳을 하나 켠 뒤 신청 완료.
+          // `.danger`(즉시 입대)는 절대 안 누른다
+          const hubSubmit = document.querySelector("button.submit");
+          if (hubSubmit) {
+            if (hubSubmit.disabled) {
+              const toggle = [...document.querySelectorAll("button.opt-btn")]
+                .find((b) => !b.classList.contains("danger"));
+              if (toggle) { toggle.click(); return "HUB_TOGGLE"; }
+            } else { hubSubmit.click(); return "HUB_SUBMIT"; }
+          }
+
+          // 계약 협상 — 팀 제시를 그대로 받는다 (역제안·거부는 안 고른다)
+          const acceptOffer = document.querySelector("button.btn-accept:not([disabled])");
+          if (acceptOffer) { acceptOffer.click(); return "CONTRACT"; }
+
+          // 진로 결과에서 갈 곳 고르기 — 첫 번째(대개 드래프트).
+          // ⚠ 허브(`button.submit`)와 계약(`button.btn-accept`)에도 `.opt-btn`이
+          // 있는데 그쪽은 **설정 토글**이라 여기서 누르면 무한 반복이 된다.
+          // 두 모달이 없을 때만 진로 결과로 본다.
+          const otherModal = document.querySelector("button.submit, button.btn-accept");
+          const resultPick = document.querySelector(".opt-btn:not(.danger)");
+          if (resultPick && !otherModal) { resultPick.click(); return "CAREER_PICK"; }
           // 모달의 확인/닫기류
           const btns = [...document.querySelectorAll("button")];
           const confirm = btns.find((b) => /^(확인|닫기|계속|시작|넘어가기)$/.test(b.innerText.trim()));
