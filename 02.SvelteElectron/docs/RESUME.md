@@ -6,29 +6,59 @@
 
 ---
 
-## ▶ 새 세션이 여기부터 읽는다 (2026-08-07 마감)
+## ▶ 새 세션이 여기부터 읽는다 (2026-08-08 마감)
 
-**브랜치** `extract-modals` · **원격에 푸시됨**(`origin/extract-modals`, main +310)
-**마지막 커밋** `385b61632`
+**브랜치** `extract-modals` · **원격은 `9c424b209`까지 푸시됨. 그 뒤 작업은 아직
+커밋 안 됨** (아래 "커밋 안 된 변경" 참조)
 
 ### 지금 회귀 기준선 — 이 숫자와 다르면 내가 깨뜨린 것이다
 
 ```
-cargo 186 통과 · vitest 391 통과 · tsc 6 에러 · svelte-check 50 err / 66 warn
+cargo 186 통과 · vitest 414 통과 · tsc 6 에러 · svelte-check 50 err / 66 warn
 ```
 
 ⚠ **tsc 6과 svelte-check 50은 "통과"가 아니라 기존 실패다.** 0으로 만드는 게
 목표가 아니라 **늘지 않는 게** 기준이다. 늘었으면 내 변경이 원인이다.
 
+vitest는 391 → 414로 늘었다. 증가분 23은 전부 2026-08-08에 추가한 것이다
+(pitcherRatio 3 · trimMailbox 7 · digest 13).
+
+### 커밋 안 된 변경 (2026-08-08)
+
+작업 트리에 있고 **아직 커밋 안 했다.** 회귀는 전부 통과한 상태다.
+
+```
+apps/ui/src/shared/repo/slotLifecycleV3.ts          pitcherRatio 배선
+apps/ui/src/shared/stores/game.ts                   메일함 상한·집계
+apps/ui/src/shared/usecases/advanceWeek.ts          다이제스트 호출부
+apps/ui/src/shared/usecases/devScenarios.ts         기대 항목 정리
+apps/ui/src/shared/usecases/weekPhases/digest.ts    통합 다이제스트
+apps/ui/src/shared/usecases/weekPhases/standingsNews.ts  뉴스 2종 제거
+resource/data/master/players/generation_rules.json  pitcherRatio 9리그
+scripts/measure-message-kinds.cjs                   신규 조사 도구
+scripts/measure-mailbox.cjs · scripts/perf/perfEntry.ts  계측 보강
+scripts/test-roster-balance.cjs                     리터럴 제거
+package.json                                        measure:messagekinds
++ 검사 3개 신규 (pitcherRatio · trimMailbox · digest)
+```
+
 ### 바로 해야 할 일 (순서대로)
 
 | | 할 일 | 왜 남았나 |
 |---|---|---|
-| **1** | `npm run test:careerpaths` **T9·T10·T11 재실행** | T1~T8은 통과. 셋은 **파일 편집 중에 테스트가 읽어** `PENDING_ACTION_TYPES is not defined`로 죽었다 — 판정 결함이 아니라 실행 경합이다. `--only T9` 식으로 하나씩 돌린다 |
-| **2** | **경기 전 브리핑 화면을 눈으로 확인** | 코드는 끝났고(tsc·svelte-check 통과) 렌더를 못 봤다. 경기 창의 "경기 전 브리핑" 버튼 → 창이 뜨고 닫히는지, 진행(자동/직접)이 따로 도는지 |
-| **3** | **메일함 상한** | 실측 `measure:mailbox`: **상시 50/50 · 안읽음 42건**이 밀려난다. `trimMailbox`가 `readAt`을 안 본다. 분류도 news 20 + system 26 = 46/50이라 필터가 일을 안 한다 |
-| **4** | `test:rosterbalance` 기존 실패 (`KBL_2군 포수`) | 이 작업 **전부터** 실패였다. 통과 기준으로 못 쓰는 상태라 따로 정리해야 한다 |
-| **5** | `pitcherRatio` 정본을 규칙 파일로 | 동작은 맞다(폴백 6곳 전부 0.45). 정본이 코드에 있는 게 문제 |
+| **1** | **눈으로 확인** — 경기 전 브리핑 · **새 다이제스트** | 자동 검사는 렌더를 안 덮는다. 다이제스트는 본문 레이아웃이 바뀌었다(`[내 자리]`→`[내 무대]`→`[다른 무대]`→`[나를 보는 눈]`). 고교 1학년/3학년/프로 셋을 봐야 한다 — 단계마다 섹션이 다르다 |
+| **2** | `test:rosterbalance` 기존 실패 (`KBL_2군·ABL_1군 포수 0명`) | 이 작업 **전부터** 실패였다. 통과 기준으로 못 쓰는 상태라 따로 정리해야 한다 |
+| **3** | **이야기 이벤트(`evt-*`)가 소식의 절반** | 실측: 고교 시즌당 **81.7통**(31%) · 프로 **116통**(47%). 전체의 87%가 상한에 밀려 사라진다. 묶을 대상은 아니지만 **절반이 안 읽히고 버려지는 것** 자체가 별개 문제다 |
+| **4** | 소식 통합 나머지 후보 | 대회 `tour-open`+`tour-champ`(시즌당 16) · 친선 `plan`+`result`(28) · 주인공 부상 `injury-warn`+`inj-skip` |
+
+### 2026-08-08에 끝낸 것
+
+| | 내용 |
+|---|---|
+| **T9·T10·T11** | 셋 다 **통과**. `PENDING_ACTION_TYPES` 실패는 실행 경합이 맞았다 (T9 `faMarket(sign)` 6,594만원 · T10 2047년 38세 은퇴 · T11 부상 정점 9.0%) |
+| **pitcherRatio** | 규칙 파일 9리그로 정본 이관. `neededPositions` 배선 2곳이 **기본 인자로 조용히 돌고 있었다** |
+| **메일함** | 상한 50 → **200**(사용자 확정) · `trimMailbox`가 `readAt`을 본다 · 유실 계측 신설 |
+| **소식 통합** | 네 갈래(`neighbor`·`myrank`·`hs-digest`·`standings`) → `msg-digest` 하나. 실측 **시즌당 11통** |
 
 ### ⚠ 개발 중에 절대 하지 말 것
 
@@ -44,6 +74,32 @@ resource/master.db                                          → EBUSY: unlink
 돌려야 하면 **먼저 사용자에게 알리고**, 끝나면 프로세스가 남았는지 확인한다.
 dev 서버(5174)도 마찬가지다 — 남겨두면 다음 `npm run dev`가 포트 충돌한다.
 
+### ⚠ 2026-08-08 — **계측기가 세 번 결론을 틀리게 할 뻔했다**
+
+"자(尺)가 부러진 것"이 또 나왔다. 셋 다 **판정이 아니라 재는 도구**가 틀렸고,
+그대로 믿었으면 멀쩡한 코드를 파고들었을 것이다.
+
+| 계측기 결함 | 그대로 믿었으면 |
+|---|---|
+| 시즌 차분의 단계 귀속이 **한 칸 밀림** (시즌 끝 시점 단계를 씀) | 고3 시즌이 프로로 붙어 `msg-hs-digest`가 프로에 3건. "고교 전용인데 왜 프로에?" 를 쫓았을 것 |
+| `mailboxCensus`가 **살아남은 메일함만** 셈 | 이벤트가 "22건 16종, 전부 1건씩"으로 보였다. 실제 생산은 **시즌당 116통** |
+| 소식 `id`에 **표시용 월 라벨**을 넣음 | 종류 키가 11갈래로 쪼개져 상위 목록 밖으로 밀렸다. **"다이제스트 0건"**으로 보였다 |
+
+**그래서: 숫자가 이상하면 판정보다 계측기를 먼저 의심한다.** 특히
+①단계·시점을 붙이는 코드 ②"살아남은 것"과 "만들어진 것"의 구분
+③집계 키를 만드는 규칙 — 이 셋이 반복 범인이다.
+
+### ⚠ id 유일성을 전제하지 말 것 (2026-08-08)
+
+`trimMailbox`가 `Set<id>`로 고르고 `filter(m => keepIds.has(m.id))`로 걸렀다.
+**id가 겹치면 슬롯은 하나만 쓰면서 사본이 전부 통과한다** — 실측에서 보유가
+상한 200을 넘어 237이 됐고 미결 선택지는 1건뿐이라 그걸로는 설명이 안 됐다.
+
+원래 있던 결함인데 **네 경로를 걷어내 구성이 바뀌자 비로소 드러났다**
+(프로에서 `evt` 비중 30.6% → 47.0%). 소식 `id`는 생성 지점마다 규칙이 다르다 —
+`Date.now()`를 붙이는 것, 연도를 붙이는 것, 이벤트 ID 그대로인 것이 섞여 있다.
+**위치(index)로 고른다.**
+
 ### 이 프로젝트에서 반복된 결함 형태 (전부 실제로 겪은 것)
 
 1. **정본이 둘** — 화면이 자기 표를 또 만든다. 분류·하한·색이 두 곳에 생기고 한쪽만 늘어난다
@@ -58,10 +114,15 @@ dev 서버(5174)도 마찬가지다 — 남겨두면 다음 `npm run dev`가 포
 ### 계측 도구 (판정이 아니라 숫자를 찍는다)
 
 ```
-npm run measure:devplayer    # 미지명자 진로 · 2군 구성 · 드래프트 가치 (2시즌)
-npm run measure:mailbox      # 메일함 포화 · 분류 쏠림 · 카드형 비중
-npm run check:devplayer      # 육성선수 13항목 (엔진 호출 + 배선 제거 대조군)
+npm run measure:devplayer      # 미지명자 진로 · 2군 구성 · 드래프트 가치 (2시즌)
+npm run measure:mailbox        # 메일함 포화 · 유실(누계·안읽음·분류별) · 쏠림
+npm run measure:messagekinds   # 소식 종류별 생산량 (단계별, 6시즌) ← 2026-08-08 신설
+npm run check:devplayer        # 육성선수 13항목 (엔진 호출 + 배선 제거 대조군)
 ```
+
+`measure:messagekinds`는 **메일함이 아니라 생산 시점에서** 센다. 상한에 밀려
+사라진 뒤에 세면 ①없어진 종류가 0으로 보이고 ②여러 시즌을 밀면 고교와 프로
+소식이 한 상자에 섞인다. 시즌 경계마다 차분해 그 시즌의 단계와 함께 남긴다.
 
 ⚠ **기준선 없이 통과/실패를 매기지 않는다.** 이 세션에서 하한을 추측으로
 올렸다가 1군을 굶긴 적이 있다 — 숫자를 먼저 보고 사람이 판단한다.
