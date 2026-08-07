@@ -29,8 +29,7 @@ import { facilityTierOf } from "../utils/ids";
 import { visibleLeagueIds, leaderboardLeagueIds, hasPlayedGames } from "../utils/leagueVisibility";
 import { splitByGroup } from "../utils/standingsGroups";
 import { isLeagueInScope } from "../config/releaseScope";
-import { HS_DIGEST_WEEKS, MONTHLY_STANDINGS_LEAGUES } from "./weekPhases/digest";
-import { MY_RANK_WEEKS } from "./weekPhases/standingsNews";
+import { DIGEST_WEEKS } from "./weekPhases/digest";
 
 export type ScenarioStatus = "pass" | "fail" | "skip";
 
@@ -295,15 +294,17 @@ const S_MAILBOX: Scenario = {
 
     // [이름, 본문/제목 패턴, 이번 세이브에서 나왔어야 하는가]
     const EXPECT: [string, RegExp, boolean, string][] = [
-      ["고교 분기 다이제스트", /선두|최하위|스카우트 관심/,
-        stage === "highschool" && grade >= 2 && [...HS_DIGEST_WEEKS].some((w) => w <= week),
-        "고교 2~3학년만 · W12·24·36"],
-      ["내 팀 순위 요약", /전국 \d+위|권역/,
-        stage === "highschool" && [...MY_RANK_WEEKS].some((w) => w <= week),
-        "고교 전학년 · 월 1회"],
-      ["인접권역 다이제스트", /다른 무대|권역   선두/,
-        stage === "highschool" && week >= 6,
-        "고교 전학년 · 주간"],
+      // 넷(분기 다이제스트·내 팀 순위·인접권역·월간 순위표)이 2026-08-08에
+      // `msg-digest` 하나로 합쳐졌다. 항목을 안 지우면 없어진 메시지를 계속 찾는다
+      ["야구계 소식 (통합 다이제스트)", /\[내 자리\]/,
+        [...DIGEST_WEEKS].some((w) => w <= week),
+        "커리어 전 구간 · 월 1회"],
+      ["다이제스트 — 내 무대 순위표", /\[내 무대\]/,
+        [...DIGEST_WEEKS].some((w) => w <= week),
+        "커리어 전 구간 · 월 1회"],
+      ["다이제스트 — 다른 무대", /\[다른 무대\]/,
+        stage !== "highschool" || grade >= 2,
+        "고교 1학년 제외"],
       ["고교 스카우트 데이", /스카우트 데이/,
         stage === "highschool" && (scoutWeek?.showcase?.week ?? 99) <= week,
         `고교만 · W${scoutWeek?.showcase?.week}`],
@@ -313,9 +314,6 @@ const S_MAILBOX: Scenario = {
       ["대학 올스타", /올스타/,
         stage === "university" && (scoutWeek?.allstar?.week ?? 99) <= week,
         `대학만 · W${scoutWeek?.allstar?.week}`],
-      ["월간 순위표", /순위|승률/,
-        MONTHLY_STANDINGS_LEAGUES.has(g.protagonist.leagueId) && week >= 4,
-        "고교 제외 · 4주마다"],
       ["FA 시장", /FA|자유계약/,
         stage.startsWith("pro"), "프로만"],
     ];

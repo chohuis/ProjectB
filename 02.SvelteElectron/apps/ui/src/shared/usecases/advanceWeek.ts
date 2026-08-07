@@ -61,10 +61,7 @@ import {
   getTeamProfile,
   DEFAULT_TEAM_PROFILE,
 } from "./weekPhases/market";
-import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
-import {
-  MY_RANK_WEEKS, calcMyRank, buildMyRankMessage, buildNeighborDigest,
-} from "./weekPhases/standingsNews";
+import { buildLeagueDigest, DIGEST_WEEKS, LEAGUE_NAMES } from "./weekPhases/digest";
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
 import {
@@ -1221,110 +1218,59 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // ── 타 리그 순위 메시지 ─────────────────────────────────────
-  const hsGradeForMsg = gFinal.protagonist.careerStage === "highschool"
-    ? (gFinal.protagonist.grade ?? 1)
-    : null;
-
-  if (hsGradeForMsg !== null) {
+  // ── 야구계 소식 (통합 다이제스트) ────────────────────────────
+  //
+  // **같은 성격의 소식 네 갈래를 한 통으로 합쳤다** (2026-08-08).
+  // 실측 `measure:messagekinds` 6시즌 기준 고교 62.3통/시즌 · 프로 28.0통/시즌:
+  //
+  //   msg-neighbor   고교 매주      무작위 1권역+1리그 선두 두 줄
+  //   msg-myrank     고교 월 1회    내 권역·전국 순위
+  //   msg-hs-digest  고교2~3 분기   5리그 선두/최하위 + 스카우트
+  //   msg-standings  프로 4주마다   리그당 한 통, 전체 순위표
+  //
+  // 넷이 각자 주기를 들고 있어 네 박자로 왔고, **제일 잘 만든 형식(다이제스트)이
+  // 고교 2~3학년에만** 있었다. 프로가 되면 리그당 한 통으로 다시 쪼개지면서
+  // 정작 내 리그는 안 왔다(`lid === myLeagueId`로 건너뛰었다).
+  if (DIGEST_WEEKS.has(weekInYear)) {
     const sAfterSim = get(seasonStore);
     const teamById  = new Map(mFinal.teams.map((t) => [t.id, t.name]));
-    const tName     = (id: string) => teamById.get(id) ?? id;
     // 권역 표시명은 refs의 구장 이름에서 나온다 — 손으로 표를 만들면 빠뜨린다.
     // "한라구장" 그대로면 "한라구장 3위"가 되어 어색하니 접미를 권역으로 바꾼다
     const stadiumById = new Map(mFinal.stadiums.map((x) => [x.id, x.name]));
-    const rName = (id: string) => {
-      const nm = stadiumById.get(id);
-      return nm ? `${nm.replace(/구장$/, "")}권역` : `${id.replace(/^STADIUM_/, "")}권역`;
+
+    // ⚠ 시즌이 끝난 리그는 빼야 한다 — 안 그러면 겨울에도 순위표가 온다.
+    // 기존 월간 순위표에 있던 `lastGameWeek` 게이트를 그대로 옮긴 것이다
+    const isLeagueActive = (lid: string) => {
+      const sched = sAfterSim.leagueSchedules[lid] ?? [];
+      const lastGameWeek = sched.reduce((mx, e) => Math.max(mx, e.week), 0);
+      return lastGameWeek === 0 || weekInYear <= lastGameWeek;
     };
 
-    // 고교 2~3학년 = 분기 Digest (W12·W24·W36). 1학년은 대상이 아니다 —
-    // 진로가 아직 안 걸린 학년에게 프로 순위표는 잡음이라는 판단
-    if (hsGradeForMsg >= 2 && HS_DIGEST_WEEKS.has(weekInYear)) {
-      const digest = buildHsLeagueDigest(
-        weekNum, weekInYear, hsGradeForMsg,
-        sAfterSim.leagueState, teamById,
-        gFinal.protagonist.scoutScore ?? 0,
-      );
-      if (digest) gameStore.addMessage(digest);
-    }
-
-    // ── 내 위치 뉴스 (설계 원장 D-3 #3·#4) ────────────────────
-    //
-    // **학년을 안 가린다.** 1학년도 받는다 — 오히려 1학년에게 제일 필요하다.
-    // 102교 세계에서 자기 위치를 알려주는 유일한 장치인데, 예전엔 분기
-    // 다이제스트뿐이라 첫 시즌 리그 소식이 스카우트 데이 하나였다.
-    //
-    // 새 시뮬을 돌리지 않는다 — 이미 있는 순위표만 다시 읽는다.
-    if (MY_RANK_WEEKS.has(weekInYear)) {
-      const rank = calcMyRank(sAfterSim.standings, gFinal.protagonist.teamId);
-      if (rank) {
-        gameStore.addMessage(buildMyRankMessage(
-          rank, weekNum, sAfterSim.seasonYear,
-          sAfterSim.standings.find((st) => st.teamId === gFinal.protagonist.teamId),
-          rName,
-        ));
-      }
-    }
-
-    // 주간 — 다른 권역 하나 + 다른 리그 하나. 시즌 초(전부 0-0)에는 null이 온다
-    {
-      const nd = buildNeighborDigest({
-        weekNum, seasonYear: sAfterSim.seasonYear,
-        hsStandings: sAfterSim.standings,
-        myTeamId: gFinal.protagonist.teamId,
-        leagueState: sAfterSim.leagueState,
-        teamName: tName,
-        regionName: rName,
-        rand01: [
-          eventRands[eventRands.length - 2] ?? 0.5,
-          eventRands[eventRands.length - 1] ?? 0.5,
-        ],
-      });
-      if (nd) gameStore.addMessage(nd);
-    }
-  } else {
-    // 비고교: 기존 월간 순위표 (4주마다)
-    if (weekInYear % 4 === 0) {
-      const sAfterSim = get(seasonStore);
-      const myLeagueId = gFinal.protagonist.leagueId;
-      const teamById = new Map(mFinal.teams.map((t) => [t.id, t.name]));
-      const monthLabel = weekToMonthLabel(weekNum);
-
-      for (const [lid, ls] of Object.entries(sAfterSim.leagueState)) {
-        if (lid === myLeagueId) continue;
-        if (!MONTHLY_STANDINGS_LEAGUES.has(lid)) continue;
-        const sorted = [...ls.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-        if (sorted.length === 0) continue;
-        if (!sorted.some((s) => s.wins + s.losses + s.draws > 0)) continue;
-        const lgSchedule = sAfterSim.leagueSchedules[lid] ?? [];
-        const lastGameWeek = lgSchedule.reduce((mx, e) => Math.max(mx, e.week), 0);
-        if (lastGameWeek > 0 && weekInYear > lastGameWeek) continue;
-
-        const leagueName = LEAGUE_NAMES[lid] ?? lid;
-        const lines = sorted.map((st, i) => {
-          const name = teamById.get(st.teamId) ?? st.teamId;
-          const pct = String(Math.round(st.winPct * 1000)).padStart(3, "0");
-          return `${i + 1}위  ${name}  ${st.wins}승 ${st.losses}패  .${pct}  ${st.streak}`;
-        });
-        gameStore.addMessage({
-          id: `msg-standings-${lid}-w${weekNum}-${Date.now()}`,
-          category: "system",
-          sender: "리그 사무국",
-          subject: `[${leagueName}] ${monthLabel} 순위표`,
-          preview: lines[0] ?? "",
-          body: `── ${leagueName} 순위 (${monthLabel}) ──\n${lines.join("\n")}`,
-          createdAt: `W${weekNum}`,
-          readAt: null,
-        });
-      }
-    }
+    const digest = buildLeagueDigest({
+      weekNum,
+      monthLabel: weekToMonthLabel(weekNum),
+      careerStage: gFinal.protagonist.careerStage,
+      hsGrade: gFinal.protagonist.careerStage === "highschool"
+        ? (gFinal.protagonist.grade ?? 1) : undefined,
+      myTeamId:   gFinal.protagonist.teamId,
+      myLeagueId: gFinal.protagonist.leagueId,
+      leagueState: sAfterSim.leagueState,
+      hsStandings: sAfterSim.standings,
+      teamName: (id: string) => teamById.get(id) ?? id,
+      regionName: (id: string) => {
+        const nm = stadiumById.get(id);
+        return nm ? `${nm.replace(/구장$/, "")}권역` : `${id.replace(/^STADIUM_/, "")}권역`;
+      },
+      scoutScore: gFinal.protagonist.scoutScore ?? 0,
+      isLeagueActive,
+    });
+    if (digest) gameStore.addMessage(digest);
   }
 
   // ── 월간 부상 리포트 ────────────────────────────────────────
   //
-  // ⚠ **커리어 단계를 안 가린다.** 월간 순위표는 비고교 분기에만 있는데,
-  // 부상은 고교생에게도 소식이다 — 같은 학교 동료가 빠지면 내 출전이 바뀐다.
+  // ⚠ **커리어 단계를 안 가린다.** 다이제스트도 이제 안 가리지만, 부상은
+  // 주기가 다르다 — 같은 학교 동료가 빠지면 내 출전이 바뀐다.
   if (isInjuryNewsWeek(weekInYear)) {
     const buffered = seasonStore.drainInjuryNews();
     const news = buildInjuryNews({
