@@ -4,6 +4,7 @@
   "rosterRules": {
     "LEAGUE_HIGHSCHOOL": {
       "rosterSize": 30,
+      "pitcherRatio": 0.45,
       "pitchingOvrMin": 45,
       "pitchingOvrMax": 70,
       "battingOvrMin": 45,
@@ -17,6 +18,7 @@
     },
     "LEAGUE_UNIVERSITY": {
       "rosterSize": 32,
+      "pitcherRatio": 0.45,
       "pitchingOvrMin": 52,
       "pitchingOvrMax": 76,
       "battingOvrMin": 52,
@@ -30,6 +32,7 @@
     },
     "LEAGUE_INDEPENDENT": {
       "rosterSize": 30,
+      "pitcherRatio": 0.45,
       "pitchingOvrMin": 50,
       "pitchingOvrMax": 74,
       "battingOvrMin": 50,
@@ -44,6 +47,7 @@
     },
     "LEAGUE_KBL": {
       "rosterSize": 30,
+      "pitcherRatio": 0.45,
       "_ovrMaxNote": "88 -> 84 (사용자 확정). 창단 세대만 상위권이 90대라 첫 4시즌 동안 리그가 약해지는 것처럼 보였다. 실측 15시즌: 상위25% OVR 89.9(2026) -> 84.5(2030) -> 83~85(11시즌 유지). 정상 상태가 84인데 창단만 90이었던 것이고, 창단 90 쪽이 인위적이다 - 프로를 전성기 대역에서 직접 생성했고 전원이 잠재력 92~99였다(90이상 57.2%, 파이프라인은 3%). 세계를 첫날부터 자기일관되게 만든다",
       "pitchingOvrMin": 58,
       "pitchingOvrMax": 84,
@@ -59,6 +63,7 @@
     },
     "LEAGUE_KBL_FARM": {
       "rosterSize": 34,
+      "pitcherRatio": 0.45,
       "pitchingOvrMin": 48,
       "pitchingOvrMax": 76,
       "battingOvrMin": 48,
@@ -73,6 +78,7 @@
     },
     "LEAGUE_ABL": {
       "rosterSize": 28,
+      "pitcherRatio": 0.45,
       "pitchingOvrMin": 62,
       "pitchingOvrMax": 92,
       "battingOvrMin": 62,
@@ -304,6 +310,7 @@
     },
     "LEAGUE_JBL": {
       "rosterSize": 28,
+      "pitcherRatio": 0.45,
       "pitchingOvrMin": 60,
       "pitchingOvrMax": 90,
       "battingOvrMin": 60,
@@ -514,6 +521,7 @@
     "LEAGUE_ABL_FARM": {
       "_note": "해외 팜 — 1군 규칙에서 파생. 국내 2군(rosterSize 34, 1군보다 OVR 하향)과 같은 관계",
       "rosterSize": 34,
+      "pitcherRatio": 0.45,
       "rosterMax": 34,
       "ageMin": 21,
       "ageMax": 38,
@@ -746,6 +754,7 @@
     "LEAGUE_JBL_FARM": {
       "_note": "해외 팜 — 1군 규칙에서 파생. 국내 2군(rosterSize 34, 1군보다 OVR 하향)과 같은 관계",
       "rosterSize": 34,
+      "pitcherRatio": 0.45,
       "rosterMax": 34,
       "ageMin": 20,
       "ageMax": 37,

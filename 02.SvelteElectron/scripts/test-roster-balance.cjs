@@ -85,23 +85,31 @@ const UNDER_FLOOR_RATIO = 0.05;
 // 그걸 보고 생성 경로를 파고들 뻔했다. 전 팀이 미달이면 대개 기준이 틀린 것이다.
 //
 // 기준선은 **최소 정원 × 보직 비율**이다:
-//   `rosterMin` × 0.55 = 야수   ·   `rosterMin` × 0.45 = 투수  (pitcherRatio 정본은 roster_gen.rs)
+//   `rosterMin` × (1−pitcherRatio) = 야수   ·   `rosterMin` × pitcherRatio = 투수
+//   (pitcherRatio 정본은 generation_rules.json의 리그별 값이다)
 // 거기서 부상·이동 여유 2를 뺀다 — 프로 1군 하한(생성 16 → 14)과 같은 폭이다.
 //
 // 프로 1군은 엔진이 직접 지키는 하한(`tuning.rs`의 `FIRST_TEAM_MIN_BATTERS` 14 /
 // `FIRST_TEAM_MIN_PITCHERS` 12)이 따로 있다. 여기 값은 그보다 느슨하다 —
 // 엔진 하한은 **강등·트레이드를 막는 선**이고, 여기는 부상까지 겪은 뒤의
 // 결과를 보는 선이라 여유가 있어야 한다.
-const PITCHER_RATIO = 0.45;   // roster_gen.rs `default_pitcher_ratio`
 const FLOOR_SLACK   = 2;      // 부상·이동 여유. tuning.rs가 생성값 16 → 14로 뺀 폭과 같다
 const gr = require(path.join(process.cwd(), "resource/data/master/players/generation_rules.json"));
 const floorOf = (leagueKey) => {
   const r = gr.rosterRules[leagueKey];
   if (!r) return null;
   const min = r.rosterMin ?? r.rosterSize;
+  // ⚠ **비율을 여기 적어두면 안 된다.** 예전엔 `const PITCHER_RATIO = 0.45`가
+  // 이 파일에 있었고 정본은 `roster_gen.rs`였다 — 검사가 자기 잣대를 들고
+  // 있으면 생성 비율이 바뀌어도 **검사만 옛 기준으로 통과한다.**
+  // 없으면 조용히 폴백하지 말고 죽는다. 이 프로젝트의 결함은 대부분
+  // "값이 안 넘어왔는데 기본값으로 아무 일도 안 일어남"이었다.
+  if (typeof r.pitcherRatio !== "number") {
+    throw new Error(`${leagueKey}에 pitcherRatio가 없다 — generation_rules.json이 정본이다`);
+  }
   return {
-    bat: Math.max(1, Math.floor(min * (1 - PITCHER_RATIO)) - FLOOR_SLACK),
-    pit: Math.max(1, Math.floor(min * PITCHER_RATIO)       - FLOOR_SLACK),
+    bat: Math.max(1, Math.floor(min * (1 - r.pitcherRatio)) - FLOOR_SLACK),
+    pit: Math.max(1, Math.floor(min * r.pitcherRatio)       - FLOOR_SLACK),
   };
 };
 const FLOOR = {

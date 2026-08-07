@@ -24,6 +24,21 @@ import { neededPositions } from "../utils/rosterEngine";
 const HS_MIN_PITCHERS = 8;
 
 /**
+ * 투수 비율. **정본은 `generation_rules.json`의 리그별 `pitcherRatio`다.**
+ *
+ * ⚠ 예전엔 규칙 파일에 이 값이 **아예 없어서** 0.45가 코드 여섯 군데에 각각
+ * 적혀 있었다(Rust 2 · 이 파일 3 · 검사 스크립트 1). 비율을 바꾸려면 여섯을
+ * 다 찾아야 하고, 한 곳을 놓치면 그 경로만 옛 비율로 돈다 — 실제로
+ * `generate_freshmen`의 폴백이 0.3인 채 남아 세대가 교체될수록 리그가 투수
+ * 30%로 수렴했고, 파이프라인 최상류인 고교부터 투수가 말랐다.
+ *
+ * 아래 상수는 규칙 파일에 값이 없을 때의 **최후 폴백 하나뿐**이다. 규칙 파일에
+ * 값이 있는지는 `rosterRules.pitcherRatio` 회귀가 지킨다.
+ */
+const DEFAULT_PITCHER_RATIO = 0.45;
+const pitcherRatioOf = (r: { pitcherRatio?: number }) => r.pitcherRatio ?? DEFAULT_PITCHER_RATIO;
+
+/**
  * 재능 분포를 규칙 파일에서 꺼낸다. **세 생성 경로가 같은 값을 봐야 한다** —
  * 초기 세계 생성만 분산이 있고 신입생이 고정값이면 창단 세대만 에이스가 되고
  * 리그가 해마다 얇아진다(실측 6시즌 OVR 상위25% 89.3 → 82.1).
@@ -206,12 +221,16 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         namedNpcs: [], seasonYear, idOffset: 0,
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
-        pitcherRatio: rules.pitcherRatio ?? 0.45,
+        pitcherRatio: pitcherRatioOf(rules),
         talent: talentOf(rulesFile),
         // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
         // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
+        // ⚠ **비율을 안 넘기면 `neededPositions`의 기본 인자로 돈다.** 생성
+        // 페이로드(`pitcherRatio`)만 규칙 파일을 따르고 자리 배정은 기본값을
+        // 쓰면, 규칙 파일을 바꿔도 **자리는 옛 비율로 잡힌다** — 층마다 맞는데
+        // 잇는 선이 없는 그 형태다. `minBatters`는 undefined로 기본값을 유지한다
         neededPositions: neededPositions(
-          cur, want, HS_MIN_PITCHERS),
+          cur, want, HS_MIN_PITCHERS, undefined, pitcherRatioOf(rules)),
       })),
     ) as NpcSaveState[];
     if (Array.isArray(raw)) newOnes.push(...raw);
@@ -296,14 +315,12 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
           battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
-          pitcherRatio: rules.pitcherRatio ?? 0.45,
+          pitcherRatio: pitcherRatioOf(rules),
           talent: talentOf(rulesAll),
           // ⚠ **안 넘기면 내장 한국식 풀이 나온다.** 실측에서 ABL·JBL 941명 중
           // 931명이 한국 이름이었다 — 나고야 팀에 "김우찬"이 뛰었다.
           // 정본은 규칙 파일의 `rosterRules[리그].namePool`.
           namePool: (rules as { namePool?: unknown }).namePool,
-        // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
-        // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
         })),
       ) as NpcSaveState[];
       if (!Array.isArray(raw)) continue;
@@ -434,12 +451,11 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
           potentialOvrMax: Math.max(rules.pitchingOvrMax ?? 0, rules.battingOvrMax ?? 0),
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
-          pitcherRatio: rules.pitcherRatio ?? 0.45,
+          pitcherRatio: pitcherRatioOf(rules),
           talent: talentOf(rulesFile),
-        // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
-        // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
           // 포수 0명인 팀이 여기서 메워진다 — 빈 야수 자리가 맨 앞이다
-          neededPositions: neededPositions(cur, want, dev.minPitchers ?? 0),
+          neededPositions: neededPositions(
+            cur, want, dev.minPitchers ?? 0, undefined, pitcherRatioOf(rules)),
         })),
       ) as NpcSaveState[];
       if (!Array.isArray(raw)) continue;
