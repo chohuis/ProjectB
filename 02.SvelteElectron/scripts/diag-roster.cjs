@@ -35,7 +35,7 @@ const rules = require(path.join(process.cwd(),
 
 function dump(label, app) {
   log(`\n── ${label} ──`);
-  log(`  ${"리그".padEnd(20)} 팀   최소  최대  총원   상한  야수↓ 투수↓`);
+  log(`  ${"리그".padEnd(20)} 팀   최소  최대  총원   상한  야수↓ 투수↓  투수율`);
   const d = app.rosterDiag();
   for (const [lid, v] of Object.entries(d).sort()) {
     const cap = rules[lid]?.rosterMax;
@@ -46,6 +46,7 @@ function dump(label, app) {
       + ` ${String(v.max).padStart(5)} ${String(v.total).padStart(6)}`
       + ` ${String(cap ?? "-").padStart(6)}`
       + ` ${String(v.batMin).padStart(5)} ${String(v.pitMin).padStart(5)}`
+      + ` ${String(v.pitRatio ?? 0).padStart(6)}`
       + `${over ? "  ← 정원넘김" : ""}${v.batMin < 12 ? "  ← 야수부족" : ""}`);
   }
 }

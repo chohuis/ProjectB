@@ -185,6 +185,21 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     let is_pit = |pos: &str| matches!(pos, "SP" | "RP" | "CP" | "P");
     let count_at = |pos: &str| p.active_players.iter().filter(|a| a.position == pos).count();
 
+    // ⚠ **하한이 브레이크로만 쓰이고 액셀이 없었다.**
+    //
+    // `FIRST_TEAM_MIN_PITCHERS`(12)가 세 군데에 있는데 전부 "이 아래로는 내리지
+    // 마라"다(콜다운·오프시즌 강등·트레이드). **하한 아래로 떨어진 팀을 다시
+    // 올려주는 경로가 없다** — 은퇴·FA 이탈·부상 은퇴로 한 번 빠지면 그대로다.
+    //
+    // 실측(2시즌): 리그 투수율은 0.42~0.53으로 정상인데 **1군 팀별 최소가
+    // KBL 8명 · ABL 6명**이었다. 생성이 적게 만드는 게 아니라 개별 팀이
+    // 무너진 뒤 아무도 안 세운다.
+    //
+    // ⚠ 아래 `gap_fill`은 **포지션 단위**다(포수 0명). 투수는 SP·RP에 하나씩만
+    // 있어도 자리가 안 비므로 그 경로로는 절대 안 걸린다.
+    let pitchers_now = p.active_players.iter().filter(|a| is_pit(&a.position)).count();
+    let pitcher_short = pitchers_now < crate::tuning::FIRST_TEAM_MIN_PITCHERS;
+
     for farm in &p.farm_players {
         // 외국인은 교체 대상에서 뺀다 — `replaces_player_id`는 호출측이 2군으로
         // 내리는 선수다. 외국인이 거기 걸리면 콜업 한 번에 1군 전용 원칙이 깨진다
@@ -203,6 +218,13 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
         // 부류를 안 맞추면 야수 공백을 메우려고 투수를 내려 반대쪽이 깨진다.
         // 그 자리의 마지막 한 명은 안 내린다 — 메우려다 새 공백을 만든다.
         let gap_fill = active_at_pos.is_empty();
+
+        // ⚠ **투수 하한은 최후 수단이다.** 처음엔 `gap_fill`에 묶었다가
+        // **기존 판정을 통째로 덮어썼다** — 투수가 12명 미만인 모든 팀에서
+        // 부진·부상 교체가 사라지고 회귀 4건이 깨졌다.
+        //
+        // 정상 경로가 아무도 못 찾을 때만(같은 자리에 내릴 사람이 없을 때만)
+        // 야수를 내려 투수를 채운다.
 
         // ⚠ **2군도 경기를 한다.** 1군 쪽은 `count_at >= 2`로 그 자리의 마지막
         // 한 명을 지키는데 2군 쪽엔 같은 보호가 없어서, 팀이 2군의 **마지막
@@ -275,6 +297,8 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
                 player_id: farm.id.clone(),
                 replaces_player_id: weakest.id.clone(),
                 priority_score: score,
+                // 사유를 갈라 둔다 — 화면·로그에서 "자리가 비었다"와
+                // "투수가 모자라다"는 다른 일이다
                 reason: if gap_fill { "position_gap".into() }
                         else if is_injury { "injury_replacement".into() }
                         else if slumping { "slump_replacement".into() }
@@ -283,6 +307,51 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
             });
         }
     }
+
+    // ── 투수 하한 보충 — **별도 패스다** ──────────────────────────
+    //
+    // ⚠ `FIRST_TEAM_MIN_PITCHERS`(12)가 세 군데에 있는데 전부 "이 아래로는
+    // 내리지 마라"였다(콜다운·오프시즌 강등·트레이드). **하한 아래로 떨어진
+    // 팀을 다시 올려주는 경로가 없어** 은퇴·FA 이탈로 한 번 빠지면 그대로
+    // 시즌을 났다 — 실측 1군 투수 최소 KBL 8명 · ABL 6명.
+    //
+    // ⚠ 위 루프로는 못 고친다. 같은 자리 1:1 교체라 **투수를 올리고 투수를
+    // 내려 순증이 0**이고, `position_gap`은 포지션 단위라 SP·RP에 하나씩만
+    // 있어도 안 걸린다.
+    //
+    // ⚠ **위 판정에 끼워 넣으면 안 된다.** 처음엔 `gap_fill`에 묶었다가
+    // 투수 12명 미만인 모든 팀에서 부진·부상 교체가 사라졌다(회귀 4건).
+    // 하한은 **최후 수단**이지 우선순위가 아니다 — 그래서 뒤에 따로 붙인다.
+    if pitcher_short {
+        let has_pit_candidate = candidates.iter().any(|c|
+            p.farm_players.iter().any(|f| f.id == c.player_id && is_pit(&f.position)));
+        // 이미 투수가 올라가고 있으면 그걸로 족하다
+        if !has_pit_candidate {
+            let batters_now = p.active_players.iter().filter(|a| !is_pit(&a.position)).count();
+            let farm_pit = p.farm_players.iter().filter(|f| is_pit(&f.position)).count();
+            let farm_floor = rules.farm_min_pitchers.unwrap_or(crate::tuning::FARM_MIN_PITCHERS);
+            // ⚠ 야수 하한 아래로는 안 내린다 — 이번엔 타순이 무너진다.
+            // 2군 투수 하한도 본다 — 2군도 경기를 한다.
+            if batters_now > crate::tuning::FIRST_TEAM_MIN_BATTERS && farm_pit > farm_floor {
+                let up = p.farm_players.iter()
+                    .filter(|f| is_pit(&f.position))
+                    .max_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
+                let down = p.active_players.iter()
+                    .filter(|a| !a.is_foreign && !is_pit(&a.position) && count_at(&a.position) >= 2)
+                    .min_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
+                if let (Some(up), Some(down)) = (up, down) {
+                    candidates.push(CallupCandidate {
+                        player_id: up.id.clone(),
+                        replaces_player_id: down.id.clone(),
+                        // 자리 공백(+60)보다 낮다 — 로테이션이 얇아도 경기는 성립한다
+                        priority_score: 40.0,
+                        reason: "pitcher_short".into(),
+                    });
+                }
+            }
+        }
+    }
+
     candidates.sort_by(|a, b| b.priority_score.partial_cmp(&a.priority_score).unwrap());
     EvalCallupResult { candidates }
 }
@@ -1347,6 +1416,70 @@ mod tests {
         for i in 0..min_bat  { v.push(ref_of(&format!("FB{i}"), "1B", 50.0)); }
         for i in 0..=min_pit { v.push(ref_of(&format!("FP{i}"), "RP", 50.0)); }
         v
+    }
+
+    #[test]
+    fn 투수가_하한_아래면_야수를_내려_올린다() {
+        // ⚠ **하한이 브레이크로만 쓰이고 액셀이 없었다.**
+        // `FIRST_TEAM_MIN_PITCHERS`(12)가 세 군데에 있는데 전부 "이 아래로는
+        // 내리지 마라"다. 하한 아래로 떨어진 팀을 **다시 올려주는 경로가 없어**
+        // 실측에서 1군 투수가 KBL 8명 · ABL 6명까지 갔다.
+        //
+        // ⚠ 자리 공백(`position_gap`)으로는 절대 안 걸린다 — SP·RP에 하나씩만
+        // 있어도 그 자리는 안 비기 때문이다.
+        let r = rules();
+        let mk = |id: &str, pos: &str, ovr: f64| RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+        };
+        // 투수 2명(하한 12 미달)인데 **자리는 안 비었다**. 야수는 넉넉하다
+        let mut active = vec![mk("SP_A", "SP", 70.0), mk("RP_A", "RP", 66.0)];
+        for i in 0..18 { active.push(mk(&format!("B{i}"), "1B", 50.0 + i as f64)); }
+
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: farm(&r),
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+
+        let c = res.candidates.iter().find(|c| c.reason == "pitcher_short")
+            .expect("투수가 하한 아래인데 아무도 안 올라온다");
+        // ⚠ **투수를 내리면 순증이 0이다.** 반대 부류를 내려야 총원이 는다
+        assert!(c.replaces_player_id.starts_with('B'),
+                "야수를 내려야 투수가 는다: {}", c.replaces_player_id);
+    }
+
+    #[test]
+    fn 야수_하한_아래로는_안_내린다() {
+        // ⚠ 한쪽을 채우려다 반대가 깨지는 게 이 프로젝트에서 반복됐다.
+        // 투수가 모자라도 야수가 하한이면 멈춘다 — 그 상태는 콜업으로 풀 문제가
+        // 아니다(없는 사람을 만들어야 한다).
+        let r = rules();
+        let mk = |id: &str, pos: &str| RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr: 60.0, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+        };
+        let mut active = vec![mk("SP_A", "SP"), mk("RP_A", "RP")];
+        for i in 0..crate::tuning::FIRST_TEAM_MIN_BATTERS {
+            active.push(mk(&format!("B{i}"), "1B"));
+        }
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: farm(&r),
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        assert!(res.candidates.iter().all(|c| c.reason != "pitcher_short"),
+                "야수 하한인데 야수를 내렸다");
     }
 
     #[test]

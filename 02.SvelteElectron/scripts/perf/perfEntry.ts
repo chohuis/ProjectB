@@ -2815,6 +2815,7 @@ export async function historyDiag(slotId: string, year: number): Promise<{
 export function rosterDiag(): Record<string, {
   teams: number; min: number; max: number; total: number;
   batMin: number; pitMin: number;
+  pitTotal?: number; batTotal?: number; pitRatio?: number;
 }> {
   const g = get(gameStore);
   // ⚠ **총원만 세면 안 된다.** 이 프로젝트에서 반복해 나온 결함이 "집계는
@@ -2829,7 +2830,11 @@ export function rosterDiag(): Record<string, {
     if (n.playerType === "pitcher") cur.pit++; else cur.bat++;
     byTeam.set(n.currentTeam, cur);
   }
-  const out: Record<string, { teams: number; min: number; max: number; total: number; batMin: number; pitMin: number }> = {};
+  const out: Record<string, {
+    teams: number; min: number; max: number; total: number;
+    batMin: number; pitMin: number;
+    pitTotal?: number; batTotal?: number; pitRatio?: number;
+  }> = {};
   for (const { league, n, bat, pit } of byTeam.values()) {
     const e = (out[league] ??= { teams: 0, min: 1e9, max: 0, total: 0, batMin: 1e9, pitMin: 1e9 });
     e.teams++; e.total += n;
@@ -2842,6 +2847,18 @@ export function rosterDiag(): Record<string, {
     if (e.min === 1e9) e.min = 0;
     if (e.batMin === 1e9) e.batMin = 0;
     if (e.pitMin === 1e9) e.pitMin = 0;
+  }
+  // ⚠ **비율을 같이 본다.** 최소값만 보면 "생성이 적게 만든 것"과 "만들어
+  // 놓고 어디서 빠진 것"을 구분할 수 없다. 생성은 0.45로 만든다 —
+  // 리그 비율이 0.45 근처면 생성은 정상이고 배분이 문제다.
+  for (const { league, bat, pit } of byTeam.values()) {
+    const e = out[league];
+    e.pitTotal = (e.pitTotal ?? 0) + pit;
+    e.batTotal = (e.batTotal ?? 0) + bat;
+  }
+  for (const e of Object.values(out)) {
+    const tot = (e.pitTotal ?? 0) + (e.batTotal ?? 0);
+    e.pitRatio = tot > 0 ? Math.round(((e.pitTotal ?? 0) / tot) * 1000) / 1000 : 0;
   }
   return out;
 }
