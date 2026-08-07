@@ -2083,7 +2083,9 @@ function createGameStore() {
           independentTeamIds: offDest.indIds,
           farmTeamIds: offDest.farmIds,
           rules: placementRulesFrom(
-            offRules.rosterRules, offRules.developmentPlayerRules?.salary),
+            offRules.rosterRules,
+            offRules.developmentPlayerRules?.salary,
+            offRules.developmentPlayerRules?.intakeMax),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
         foreignParamsFrom(offRules),
@@ -3121,7 +3123,9 @@ function createGameStore() {
           firstTeamRounds: draftRules.firstTeamRounds ?? 0,
           teamIndex,
           placement: placementRulesFrom(
-            rulesFile.rosterRules, rulesFile.developmentPlayerRules?.salary),
+            rulesFile.rosterRules,
+            rulesFile.developmentPlayerRules?.salary,
+            rulesFile.developmentPlayerRules?.intakeMax),
           farmTeamIds: draftDest.farmIds,
         },
       );

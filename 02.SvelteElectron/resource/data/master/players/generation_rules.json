@@ -1766,6 +1766,8 @@
     "minBatters": 12,
     "maxPerYear": 4,
     "salary": 2000,
+    "intakeMax": 10,
+    "_intakeNote": "팀당 육성선수 보유 상한. **정식 정원(rosterMax 34) 위에 얹는다** — 육성선수는 KBO에서도 정식 등록 외 인원이다. ⚠ 0이면 제도가 없는 것과 같다: 실측에서 KBL 2군 10팀이 [32,33,33,33,34,34,34,34,34,34]로 여유가 5자리였고, 그해 미지명자 1,373명 중 2군에 간 사람이 0명이었다(그만둠 919). ⚠ 반대로 크게 잡으면 2군이 육성선수로 채워져 드래프트 지명의 가치가 사라진다. 10팀 x 10 = 시즌당 최대 100명 흡수. 읽는 곳: stores/game.ts → placementRulesFrom → Rust draft.rs Placer",
     "ovrMin": 42,
     "ovrMax": 64,
     "_ovrNote": "육성선수 시작 능력치. 정식 2군(48~76)보다 낮다 — 사용자 확정 2026-08-07: '범위를 낮추되 천장은 안 낮춘다'. **천장(potentialHidden)은 그대로 76 기준으로 계산된다**(generateFreshmenNative의 potentialOvrMax). 지금은 약하지만 클 수 있는 사람이라는 뜻이고, 그게 육성선수가 프로가 되는 경로다",

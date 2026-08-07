@@ -39,6 +39,7 @@ const RULES = JSON.parse(fs.readFileSync(
 const DEV_SALARY = RULES.developmentPlayerRules.salary;
 const FARM_MAX   = RULES.rosterRules["LEAGUE_KBL_FARM"].rosterMax;
 const ROOKIE_MIN = Math.min(...RULES.draftRules.contract.byPick.map((b) => b.salary));
+const DEV_MAX    = RULES.developmentPlayerRules.intakeMax;
 
 // 2군 3팀 · 대학 1팀 · 독립 1팀
 const FARMS = ["TEAM_KBL_A_2", "TEAM_KBL_B_2", "TEAM_KBL_C_2"];
@@ -94,6 +95,7 @@ function npc(over = {}) {
     universityAnnualMax: 8,
     farmMax: FARM_MAX,
     developmentSalary: DEV_SALARY,
+    developmentMax: DEV_MAX,
   };
   // 지명 0명 — 전원이 미지명자 경로를 탄다
   const result = { picks: [], year: 2026, undraftedIds: npcs.map((n) => n.npcId) };
@@ -148,7 +150,42 @@ function npc(over = {}) {
   check("배정이 한 팀에 안 몰린다", Object.keys(perTeam).length > 1,
         `배정된 팀: ${Object.keys(perTeam).join(", ") || "(없음)"}`);
 
-  // ⑥ **배선이 죽으면 검사가 실패해야 한다.**
+  // ⑥ **육성선수는 정원 밖 인원이다.**
+  //
+  // ⚠ 이 검사가 없어서 **게이트는 통과하는데 실전은 0명**이었다. 위 ①~⑤는
+  // 빈 2군에 넣어 보므로 자리가 남아돌고, 실제 게임의 2군은 정식 로스터로
+  // 꽉 차 있다 — 실측 [32,33,33,33,34,34,34,34,34,34], 여유 5자리에
+  // 미지명자 1,373명 중 배정 0명이었다.
+  {
+    const full = FARMS.flatMap((tid) =>
+      Array.from({ length: FARM_MAX }, () => npc({
+        currentLeague: "LEAGUE_KBL_FARM", currentTeam: tid, careerHistory: [],
+      })));
+    const raw = JSON.parse(await api.engine("applyDraftNative", JSON.stringify({
+      npcs: [...full, ...npcs], result, universityTeamIds: UNIV,
+      independentTeamIds: INDIE, farmTeamIds: FARMS, placement,
+      firstTeamRounds: 0, teamIndex: {},
+    })));
+    if (raw.error) { log(`FAIL  엔진 오류(정원): ${raw.error}`); process.exit(1); }
+    // 새로 들어간 사람만 센다 — 미리 채워둔 34명은 이미 2군이다
+    const ids = new Set(npcs.map((n) => n.npcId));
+    const got = raw.filter((n) => ids.has(n.npcId) && n.currentLeague === "LEAGUE_KBL_FARM");
+    const perTeamDev = {};
+    for (const n of got) perTeamDev[n.currentTeam] = (perTeamDev[n.currentTeam] ?? 0) + 1;
+
+    check("정식 정원이 꽉 차도 육성선수는 들어간다",
+          got.length > 0,
+          `정원 ${FARM_MAX} 꽉 찬 ${FARMS.length}팀에 ${got.length}명 — intakeMax(${DEV_MAX})가 안 먹었다`);
+    check(`팀당 육성선수 상한(${DEV_MAX})을 안 넘는다`,
+          Object.values(perTeamDev).every((c) => c <= DEV_MAX),
+          JSON.stringify(perTeamDev));
+    // 무제한이면 2군이 육성선수로 채워져 드래프트 지명의 가치가 사라진다
+    check("정원 밖 인원이 무제한은 아니다",
+          got.length <= FARMS.length * DEV_MAX,
+          `${got.length}명 > ${FARMS.length}팀 x ${DEV_MAX}`);
+  }
+
+  // ⑦ **배선이 죽으면 검사가 실패해야 한다.**
   // 이게 없으면 이 검사도 "돌긴 도는데 아무것도 안 지키는" 검사가 된다 —
   // 실제로 `farmTeamIds`가 빠진 상태로 상한만 맞아 있던 게 원래 결함이다
   const withoutWiring = await send([]);
@@ -156,6 +193,70 @@ function npc(over = {}) {
   check("farmTeamIds를 빼면 2군 배정이 사라진다 (검사가 배선을 본다)",
         farmWithout === 0 && inFarm.length > 0,
         `배선 없이도 ${farmWithout}명이 2군에 갔다면 이 검사는 배선을 안 보는 것이다`);
+
+  // ⑧ **자리는 실력으로 갈린다 — 순서로 갈리면 안 된다.**
+  //
+  // ⚠ 오프시즌 배정은 방출자와 미지명 졸업생을 **한 루프**에서 돌린다.
+  // 예전엔 인덱스 순이라 기존 NPC(방출자)가 앞이고 졸업생이 뒤였고,
+  // 육성 슬롯 100개를 방출자가 연 ~95명 먹어서 **미지명자는 0명**이었다
+  // (실측 2시즌). 제도가 한쪽에만 열려 있던 것이다.
+  //
+  // `apply_draft` 쪽은 원래 능력치 순이다 — 같은 판정이 경로에 따라
+  // 기준이 달랐다. 여기서 그 둘이 같은 잣대를 쓰는지 본다.
+  {
+    const FARM1 = "TEAM_KBL_Z_2";
+    const strong = (over) => npc({
+      batting: { ovr: 78, contact: 78, power: 78, eye: 78, discipline: 78, speed: 78,
+                 baseInstinct: 78, bunting: 78, platoon: 78, fielding: 78, arm: 78,
+                 battingClutch: 78 },
+      ...over,
+    });
+    const weak = (over) => npc({
+      batting: { ovr: 40, contact: 40, power: 40, eye: 40, discipline: 40, speed: 40,
+                 baseInstinct: 40, bunting: 40, platoon: 40, fielding: 40, arm: 40,
+                 battingClutch: 40 },
+      ...over,
+    });
+    // 방출자(약함) — 기존 NPC라 배열 앞에 온다. 소속이 비어 있어야 homeless다
+    const released = Array.from({ length: 5 }, () => weak({
+      currentLeague: "LEAGUE_KBL", currentTeam: "",
+      careerHistory: [{ year: 2025, leagueId: "LEAGUE_KBL", teamId: "TEAM_KBL_Z_1",
+                        statLine: "", highlights: [] }],
+    }));
+    // 미지명 졸업생(강함) — pendingDraft로 들어가 배열 뒤에 온다
+    const grads = Array.from({ length: 5 }, () => strong({
+      currentLeague: "LEAGUE_DRAFT_POOL", currentTeam: "",
+    }));
+
+    const raw = JSON.parse(await api.engine("runOffseasonNative", JSON.stringify({
+      npcs: released, pendingDraft: grads, seasonYear: 2026, namedNpcIds: [],
+      rosterLimits: { LEAGUE_KBL: { rosterMin: 1, rosterMax: 40 },
+                      LEAGUE_KBL_FARM: { rosterMin: 1, rosterMax: 40 } },
+      universityTeamIds: [],
+      // ⚠ **독립리그 팀을 비우면 배정이 통째로 안 돈다.**
+      // `can_place = !independent_team_ids.is_empty()`라, 여기를 []로 뒀더니
+      // 2군 배정도 같이 죽어서 이 검사가 0명으로 실패했다. 팀은 주되
+      // `independentMax: 0`으로 자리를 막는다
+      independentTeamIds: ["TEAM_IND_Z"],
+      farmTeamIds: [FARM1],
+      // 자리를 **2개만** 준다 — 정식 정원 1 + 육성 2. 누가 가져가는지 갈린다
+      placement: {
+        universityMax: 0, independentMax: 0, independentAgeMax: 0,
+        universityAnnualMax: 0, farmMax: 1,
+        developmentSalary: DEV_SALARY, developmentMax: 2,
+      },
+    })));
+    if (raw.error) { log(`FAIL  엔진 오류(정렬): ${raw.error}`); process.exit(1); }
+
+    const gradIds = new Set(grads.map((n) => n.npcId));
+    const inFarm2 = (raw.npcs ?? []).filter((n) => n.currentLeague === "LEAGUE_KBL_FARM");
+    const gotGrad = inFarm2.filter((n) => gradIds.has(n.npcId)).length;
+
+    check("자리가 모자라면 능력치 높은 쪽이 가져간다",
+          inFarm2.length > 0 && gotGrad === inFarm2.length,
+          `2군 ${inFarm2.length}명 중 졸업생(OVR 78) ${gotGrad}명 — ` +
+          `나머지는 방출자(OVR 40)다. 인덱스 순으로 돌고 있다`);
+  }
 
   log(failed === 0 ? "\n통과" : `\n실패 ${failed}건`);
   process.exit(failed === 0 ? 0 : 1);

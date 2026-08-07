@@ -99,7 +99,8 @@
     "check:traits": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-traits.cjs",
     "fit:park": "node scripts/fit-park-anchors.cjs",
     "check:park": "node scripts/check-park.cjs",
-    "check:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-devplayer.cjs"
+    "check:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-devplayer.cjs",
+    "measure:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-devplayer.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

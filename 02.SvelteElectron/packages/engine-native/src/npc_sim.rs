@@ -1481,19 +1481,34 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
-            university_annual_max: None, farm_max: 0, development_salary: None,
+            university_annual_max: None, farm_max: 0,
+            development_salary: None, development_max: 0,
         });
         let mut placer = crate::draft::Placer::new(
             &after_normalize, &params.university_team_ids, &params.independent_team_ids,
             &params.farm_team_ids, rules,
         );
-        let homeless: Vec<usize> = after_normalize.iter().enumerate()
+        let mut homeless: Vec<usize> = after_normalize.iter().enumerate()
             .filter(|(i, n)| n.career_status == "active"
                 && (n.current_team.is_empty()
                     || n.current_league == crate::draft::DRAFT_POOL_LEAGUE
                     || *i >= grad_start))
             .map(|(i, _)| i)
             .collect();
+        // ⚠ **능력치 순으로 돌린다.** 예전엔 인덱스 순이었고, 기존 NPC(방출자)가
+        // 앞이고 졸업생(`idx >= grad_start`)이 뒤라 **방출자가 자리를 다 먹었다.**
+        //
+        // 실측: 육성선수 슬롯 100개(10팀 x 10)에 방출자가 연 ~95명 들어가서,
+        // 미지명 졸업생은 2군 배정이 **0명**이었다 — 제도가 한쪽에만 열렸다.
+        //
+        // `apply_draft` 쪽 배정은 원래 능력치 순이다("좋은 선수가 먼저 자리를
+        // 잡는다"). 같은 판정이 경로에 따라 기준이 달랐던 것이고, 실력으로
+        // 가르면 방출자든 신인이든 같은 잣대를 받는다.
+        homeless.sort_by(|&a, &b| {
+            npc_core_ovr(&after_normalize[b])
+                .partial_cmp(&npc_core_ovr(&after_normalize[a]))
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         let mut quit = 0usize;
         for idx in homeless {
@@ -2315,7 +2330,8 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
-            university_annual_max: None, farm_max: 0, development_salary: None,
+            university_annual_max: None, farm_max: 0,
+            development_salary: None, development_max: 0,
         }),
     );
     // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다

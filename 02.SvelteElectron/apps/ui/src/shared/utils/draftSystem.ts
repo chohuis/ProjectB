@@ -202,11 +202,23 @@ export interface PlacementRules {
    * 같으면 "지명 안 되는 게 낫다"가 된다. `check:devplayer`가 이걸 본다
    */
   developmentSalary?: number;
+  /**
+   * 팀당 육성선수 보유 상한. **정식 정원(`farmMax`) 위에 얹는다.**
+   *
+   * ⚠ **0이면 육성선수가 한 명도 안 들어간다.** 육성선수는 정원 밖 인원인데
+   * `farmMax`를 그대로 쓰면 정식 로스터가 정원을 채우는 순간 자리가 없어진다 —
+   * 실측에서 KBL 2군 10팀이 `[32,33,33,33,34,34,34,34,34,34]`로 여유가
+   * 5자리였고, 그해 미지명자 1,373명 중 2군에 간 사람이 **0명**이었다.
+   *
+   * ⚠ 반대로 무제한이면 2군이 육성선수로 채워져 드래프트 지명의 가치가 없어진다.
+   */
+  developmentMax?: number;
 }
 
 export function placementRulesFrom(
   rosterRules: Record<string, { rosterMax?: number; ageMax?: number; rosterSize?: number; gradeMax?: number }>,
   devSalary?: number,
+  devMax?: number,
 ): PlacementRules {
   const uni = rosterRules["LEAGUE_UNIVERSITY"];
   // 정원 ÷ 학년 수 — 고교 신입생 생성(`generateFreshmenV3`)의 `perYear`와 같은 계산이다
@@ -226,6 +238,7 @@ export function placementRulesFrom(
     // 상한 34가 한 번도 쓰인 적이 없다. 목록은 `ApplyDraftOptions.farmTeamIds`다
     farmMax: rosterRules["LEAGUE_KBL_FARM"]?.rosterMax ?? 34,
     developmentSalary: devSalary,
+    developmentMax: devMax ?? 0,
   };
 }
 

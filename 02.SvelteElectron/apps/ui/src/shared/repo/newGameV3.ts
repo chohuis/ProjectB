@@ -62,6 +62,8 @@ export interface GenerationRulesFile {
     minBatters?: number;
     maxPerYear?: number;
     salary?: number;
+    /** 팀당 육성선수 보유 상한 — **정식 정원 위에 얹는다**(정원 밖 인원) */
+    intakeMax?: number;
     [key: string]: unknown;
   };
   /**

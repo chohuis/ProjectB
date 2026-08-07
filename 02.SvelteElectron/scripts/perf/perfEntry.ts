@@ -2749,6 +2749,128 @@ export function farmDevProbe(): Record<string, unknown> {
 }
 
 /**
+ * 육성선수 제도 실측 — **공급을 열었더니 드래프트가 무의미해졌는가.**
+ *
+ * 배선을 고쳐(`farmTeamIds`) 미지명자가 프로 2군으로 흘러가게 했는데,
+ * 그것만 하면 2군이 두꺼워져 드래프트 지명의 가치가 떨어진다. 그래서
+ * 세 가지를 같이 본다:
+ *
+ *   ① **진로 분포** — 갈 곳이 생겼는가. 예전엔 시즌당 1,135명이 그만뒀다
+ *   ② **2군 구성** — 육성선수가 정식 로스터를 밀어냈는가
+ *   ③ **드래프트 가치** — 지명자와 육성선수가 실제로 다른 대우를 받는가
+ *
+ * ⚠ ③이 핵심이다. ①만 좋아지고 ③이 무너지면 "미지명이 나은 선택"이 되어
+ * 드래프트라는 갈림길 자체가 사라진다.
+ */
+export function devPlayerProbe(): Record<string, unknown> {
+  const npcs = get(gameStore).npcs;
+  const year = get(seasonStore).seasonYear;
+
+  // ── ① 진로 분포 (연도별) ──────────────────────────────
+  // `draft_undrafted`와 `quit_baseball`은 **같은 판정의 두 결과다**
+  // (`Placer::place`). 둘을 같이 세야 "갈 곳이 생겼는지"가 보인다
+  const route: Record<string, Record<string, number>> = {};
+  for (const n of npcs) {
+    for (const e of n.careerEvents ?? []) {
+      if (e.eventType !== "draft_undrafted" && e.eventType !== "quit_baseball") continue;
+      const y = String(e.year);
+      const dest = e.eventType === "quit_baseball" ? "그만둠" : (e.toLeagueId ?? "?");
+      route[y] ??= {};
+      route[y][dest] = (route[y][dest] ?? 0) + 1;
+    }
+  }
+
+  // ── ①-b 경로별 분포 ───────────────────────────────────
+  // ⚠ **`Placer`를 타는 경로가 둘이다** — 오프시즌(방출·미계약 FA)과
+  // 드래프트(미지명). 둘은 `event_type`이 다르고 **실행 시점도 다르다.**
+  // 합쳐서 세면 한쪽만 도는 걸 못 본다. 실제로 ①에서 2군이 0으로 보였는데
+  // 육성선수는 존재해서, 어느 경로가 도는지 구분해야 했다.
+  const byKind: Record<string, Record<string, number>> = {};
+  for (const n of npcs) {
+    for (const e of n.careerEvents ?? []) {
+      const dest = e.toLeagueId ?? (e.toTeamId ? "?팀만" : "—");
+      const k = e.eventType ?? "?";
+      // 진로 배정으로 보이는 것만 (지명·트레이드·FA는 별개 사건이다)
+      if (!/undrafted|quit|release|placed|fa_/.test(k)) continue;
+      byKind[k] ??= {};
+      byKind[k][dest] = (byKind[k][dest] ?? 0) + 1;
+    }
+  }
+
+  // ── ①-c 2군 자리 여유 ─────────────────────────────────
+  // "왜 0명인가"의 답은 자리이거나 배선이다. 자리를 안 재면 또 추측한다
+  const master = get(masterStore);
+  const kblFarmTeams = master.teams
+    .filter(t => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2"))
+    .map(t => t.id);
+  const farmMax = 34;   // rosterRules.LEAGUE_KBL_FARM.rosterMax
+  const occupancy = kblFarmTeams.map(tid => ({
+    tid,
+    n: npcs.filter(n => n.currentTeam === tid && n.careerStatus !== "retired").length,
+  }));
+  const freeSlots = occupancy.reduce((a, o) => a + Math.max(0, farmMax - o.n), 0);
+
+  // ── ② 2군 구성 ────────────────────────────────────────
+  const farm = npcs.filter(n => n.currentLeague?.endsWith("_FARM") && n.careerStatus === "active");
+  const dev  = farm.filter(n => n.developmentSince != null);
+  const perTeam = new Map<string, { all: number; dev: number }>();
+  for (const n of farm) {
+    const t = perTeam.get(n.currentTeam) ?? { all: 0, dev: 0 };
+    t.all++; if (n.developmentSince != null) t.dev++;
+    perTeam.set(n.currentTeam, t);
+  }
+  const devShares = [...perTeam.values()].map(t => t.dev / Math.max(1, t.all)).sort((a, b) => a - b);
+  const sizes = [...perTeam.values()].map(t => t.all).sort((a, b) => a - b);
+
+  // ── ③ 드래프트 가치 ───────────────────────────────────
+  // **1군에 도달했는가**로 본다. 능력치 비교만 하면 "생성 때 낮게 줬으니
+  // 낮다"는 동어반복이 된다 — 제도가 실제로 갈라놓는지는 결과가 말한다
+  const isPro1 = (n: typeof npcs[number]) =>
+    !!n.currentLeague && !n.currentLeague.endsWith("_FARM") &&
+    (n.currentLeague === "LEAGUE_KBL" || n.currentLeague === "LEAGUE_ABL" || n.currentLeague === "LEAGUE_JBL");
+  const everDrafted = (n: typeof npcs[number]) =>
+    (n.careerEvents ?? []).some(e => e.eventType === "draft_picked");
+  const everDev = (n: typeof npcs[number]) =>
+    n.developmentSince != null ||
+    (n.careerEvents ?? []).some(e =>
+      e.eventType === "draft_undrafted" && e.toLeagueId?.endsWith("_FARM"));
+
+  const draftedAll = npcs.filter(everDrafted);
+  const devAll     = npcs.filter(n => everDev(n) && !everDrafted(n));
+  const rate = (v: typeof npcs) => v.length === 0 ? null
+    : Math.round((v.filter(isPro1).length / v.length) * 100) / 100;
+  const salaryMed = (v: typeof npcs) => {
+    const s = v.map(n => n.currentSalary ?? 0).sort((a, b) => a - b);
+    return s.length ? s[Math.floor(s.length / 2)] : null;
+  };
+
+  const q = (v: number[], f: number) => v.length
+    ? Math.round(v[Math.min(v.length - 1, Math.floor(v.length * f))] * 100) / 100 : null;
+
+  return {
+    시즌: year,
+    "① 진로 분포": route,
+    "①b 경로별": byKind,
+    "①c KBL 2군 팀수": kblFarmTeams.length,
+    "①c KBL 2군 여유자리": freeSlots,
+    "①c KBL 2군 인원": occupancy.map(o => o.n).sort((a, b) => a - b),
+    "② 2군 팀수": perTeam.size,
+    "② 2군 인원": farm.length,
+    "② 육성선수": dev.length,
+    "② 팀당 인원 중앙": q(sizes, 0.5),
+    "② 팀당 인원 최대": sizes[sizes.length - 1] ?? null,
+    "② 육성 비중 중앙": q(devShares, 0.5),
+    "② 육성 비중 최대": q(devShares, 1),
+    "③ 지명자 수": draftedAll.length,
+    "③ 지명자 1군 도달률": rate(draftedAll),
+    "③ 지명자 연봉 중앙": salaryMed(draftedAll),
+    "③ 육성선수 수": devAll.length,
+    "③ 육성 1군 도달률": rate(devAll),
+    "③ 육성 연봉 중앙": salaryMed(devAll),
+  };
+}
+
+/**
  * 포스트시즌 진단 (B-0).
  *
  * ⚠ **화면에 독립리그 브래킷 하나만 뜬다.** `backgroundPostseason.ts`가

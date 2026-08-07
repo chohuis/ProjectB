@@ -80,6 +80,18 @@ describe("육성선수 계약 — 규칙 파일", () => {
     for (const b of lowered) expect(b).toContain("potentialOvrMax");
   });
 
+  it("육성선수 상한이 0이 아니다 — 0이면 제도가 없는 것과 같다", () => {
+    // ⚠ **정원 밖 인원이라 따로 있어야 한다.** 정식 정원(rosterMax)만 쓰면
+    // 2군이 꽉 찬 순간 자리가 사라진다 — 실측에서 KBL 2군 10팀 여유가
+    // 5자리였고 그해 미지명자 1,373명 중 2군에 간 사람이 0명이었다
+    const r = rules();
+    expect(r.developmentPlayerRules.intakeMax).toBeGreaterThan(0);
+    // 반대로 정식 정원만큼 받으면 2군이 육성선수로 채워져
+    // 드래프트 지명의 가치가 사라진다
+    expect(r.developmentPlayerRules.intakeMax)
+      .toBeLessThan(r.rosterRules["LEAGUE_KBL_FARM"].rosterMax);
+  });
+
   it("2군 상한이 0이 아니다 — 0이면 미지명자가 갈 곳이 없다", () => {
     // 이 값이 배선까지 살아 있는지는 `check:devplayer`가 실제 드래프트를
     // 돌려서 본다. 여기선 규칙 파일 쪽 전제만 지킨다

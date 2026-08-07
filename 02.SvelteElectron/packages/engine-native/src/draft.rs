@@ -289,6 +289,17 @@ pub struct PlacementRules {
     /// `None`이면 무계약(연봉 0·기간 0) — 배선 전 동작 그대로다
     #[serde(default)]
     pub development_salary: Option<i64>,
+    /// 팀당 육성선수 보유 상한. **정식 정원(`farm_max`) 위에 얹는다.**
+    ///
+    /// ⚠ **이게 없으면 육성선수가 한 명도 안 들어간다.** 육성선수는 정원 밖
+    /// 인원인데(KBO도 정식 등록 외로 뽑는다) `farm_max`를 그대로 쓰면 정식
+    /// 로스터가 정원을 채우는 순간 자리가 사라진다 — 실측에서 KBL 2군 10팀이
+    /// [32,33,33,33,34,34,34,34,34,34]로 **여유가 5자리**였고, 그해 미지명자
+    /// 1,373명 중 2군에 간 사람이 **0명**이었다(그만둠 919).
+    ///
+    /// 0이면 정원 밖 인원을 안 쓴다 — 구 페이로드 동작 그대로다
+    #[serde(default)]
+    pub development_max: usize,
 }
 
 /// 갈 곳 없는 선수들의 진로를 정한다.
@@ -312,6 +323,11 @@ pub struct Placer<'a> {
     specialists: std::collections::HashMap<String, usize>,
     /// 팀 → 이번 배치에서 대학이 새로 받은 인원 (학년 균형용)
     univ_intake: std::collections::HashMap<String, usize>,
+    /// 팀 → 육성선수 수. **정원 밖 인원이라 따로 센다.**
+    ///
+    /// 기존 보유분(작년 육성선수)까지 포함한다 — 이번 배치분만 세면
+    /// 해마다 상한만큼 새로 받아서 2군이 육성선수로 채워진다
+    dev_count: std::collections::HashMap<String, usize>,
     university: &'a [String],
     independent: &'a [String],
     /// 프로 2군. **방출된 프로 선수가 갈 첫 자리다** —
@@ -333,6 +349,7 @@ impl<'a> Placer<'a> {
         let frm: std::collections::HashSet<&str> = farm.iter().map(|s| s.as_str()).collect();
         let mut roster = std::collections::HashMap::new();
         let mut specialists: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut dev_count: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
         for npc in npcs {
             // ⚠ **부상자도 로스터를 차지한다.** `active`만 세면 그만큼 빈자리로
             // 착각해 정원을 넘겨 배치한다 — 실측에서 독립리그가 정원 300인데
@@ -345,8 +362,13 @@ impl<'a> Placer<'a> {
             if crate::tuning::is_specialist_position(&npc.position) {
                 *specialists.entry(npc.current_team.clone()).or_insert(0) += 1;
             }
+            // 작년까지 받아둔 육성선수도 상한에 센다
+            if npc.development_since.is_some() {
+                *dev_count.entry(npc.current_team.clone()).or_insert(0) += 1;
+            }
         }
-        Self { roster, specialists, univ_intake: std::collections::HashMap::new(),
+        Self { roster, specialists, dev_count,
+               univ_intake: std::collections::HashMap::new(),
                university, independent, farm, rules }
     }
 
@@ -380,6 +402,9 @@ impl<'a> Placer<'a> {
     fn find_slot(
         &mut self, want_pitcher: bool, position: &str,
         teams: &[String], max: usize, annual_max: Option<usize>,
+        // `dev_max`: 육성선수 상한. `Some`이면 **정원 밖 인원**으로 들어가므로
+        // `max`에 이미 더해져 있고, 여기서 그 몫만 따로 막는다
+        dev_max: Option<usize>,
     ) -> Option<String> {
         let specialist = crate::tuning::is_specialist_position(position);
         for stage in 0u8..3 {
@@ -389,6 +414,11 @@ impl<'a> Placer<'a> {
                 let (p, b) = self.roster.get(tid).copied().unwrap_or((0, 0));
                 let total = p + b;
                 if total >= max { continue; }
+                // ⚠ 정원 밖이라고 무제한이면 2군이 육성선수로 채워진다 —
+                // 그러면 드래프트 지명의 가치가 사라진다
+                if let Some(dm) = dev_max {
+                    if self.dev_count.get(tid).copied().unwrap_or(0) >= dm { continue; }
+                }
                 if let Some(am) = annual_max {
                     if self.univ_intake.get(tid).copied().unwrap_or(0) >= am { continue; }
                 }
@@ -407,6 +437,11 @@ impl<'a> Placer<'a> {
                 }
             }
             if let Some((tid, _)) = best {
+                // 육성선수 몫을 쓴 자리는 그쪽 카운터도 올린다 — 안 올리면
+                // 상한이 팀당 1명이 아니라 무제한이 된다
+                if dev_max.is_some() {
+                    *self.dev_count.entry(tid.clone()).or_insert(0) += 1;
+                }
                 let e = self.roster.entry(tid.clone()).or_insert((0, 0));
                 if want_pitcher { e.0 += 1; } else { e.1 += 1; }
                 if specialist { *self.specialists.entry(tid.clone()).or_insert(0) += 1; }
@@ -431,7 +466,7 @@ impl<'a> Placer<'a> {
         let placed = allow_university
             .then(|| self.find_slot(
                 is_pitcher, &npc.position, self.university, self.rules.university_max,
-                self.rules.university_annual_max,
+                self.rules.university_annual_max, None,
             ))
             .flatten()
             .map(|t| (t, "LEAGUE_UNIVERSITY"))
@@ -446,8 +481,20 @@ impl<'a> Placer<'a> {
                 // 현실에서도 방출된 프로 선수는 독립리그보다 **다른 팀 팜과
                 // 계약**하는 게 자연스럽다. `find_slot`이 포지션 수요를 보므로
                 // 모자란 보직으로 들어간다.
+                // ⚠ **육성선수는 정원 밖 인원이다** (KBO도 정식 등록 외로
+                // 뽑는다). 정식 정원(`farm_max`)을 그대로 쓰면 로스터가 찬
+                // 순간 자리가 없어진다 — 실측에서 KBL 2군 10팀 여유가 5자리라
+                // 그해 미지명자 1,373명 중 **2군에 간 사람이 0명**이었다.
+                //
+                // 그렇다고 무제한이면 2군이 육성선수로 채워져 드래프트 지명의
+                // 가치가 사라진다. 그래서 `development_max`만큼만 얹는다.
+                let dev_max = self.rules.development_max;
                 (self.rules.farm_max > 0)
-                    .then(|| self.find_slot(is_pitcher, &npc.position, self.farm, self.rules.farm_max, None))
+                    .then(|| self.find_slot(
+                        is_pitcher, &npc.position, self.farm,
+                        self.rules.farm_max + dev_max, None,
+                        (dev_max > 0).then_some(dev_max),
+                    ))
                     .flatten()
                     .map(|t| (t, "LEAGUE_KBL_FARM"))
             })
@@ -456,7 +503,8 @@ impl<'a> Placer<'a> {
                 // 독립 로스터가 은퇴 직전 선수로만 채워진다
                 (npc.age <= self.rules.independent_age_max)
                     .then(|| self.find_slot(
-                        is_pitcher, &npc.position, self.independent, self.rules.independent_max, None,
+                        is_pitcher, &npc.position, self.independent, self.rules.independent_max,
+                        None, None,
                     ))
                     .flatten()
                     .map(|t| (t, "LEAGUE_INDEPENDENT"))
@@ -773,7 +821,7 @@ mod tests {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             university_annual_max: None,   // 연간 상한 없음 = 기존 동작
             farm_max: 0,                   // 2군을 목적지로 안 씀 = 기존 동작
-            development_salary: None,
+            development_salary: None, development_max: 0,
         }
     }
 
@@ -796,6 +844,71 @@ mod tests {
         // 최저연봉(3000)보다 낮아야 한다 — 같으면 하위 라운드 지명이 무의미해진다
         assert_eq!(n.current_salary, 2000);
         assert_eq!(n.contract_years, 1, "육성선수는 단년이다");
+    }
+
+    #[test]
+    fn 육성선수는_정식_정원이_차도_들어간다() {
+        // ⚠ **이게 없어서 배선을 고쳐도 0명이었다.** 실측(2시즌):
+        //   KBL 2군 10팀 인원 [32,33,33,33,34,34,34,34,34,34] — 여유 5자리
+        //   그해 미지명자 1,373명 중 2군 배정 **0명**, 그만둠 919명
+        //
+        // 육성선수는 KBO에서도 **정식 등록 외** 인원이다. 정식 정원을 그대로
+        // 쓰면 로스터가 찬 순간 제도 자체가 없는 것과 같다.
+        let farm = vec!["TEAM_KBL_A_2".to_string()];
+        let rules = PlacementRules {
+            farm_max: 34, development_max: 5,
+            development_salary: Some(2000), ..placement()
+        };
+
+        // 정식 정원 34명이 이미 꽉 찬 팀
+        let full: Vec<NpcSaveState> = (0..34)
+            .map(|i| {
+                let mut n = npc(&format!("F{i}"), "LEAGUE_KBL_FARM", None, 60.0, 25);
+                n.current_team = "TEAM_KBL_A_2".into();
+                n
+            })
+            .collect();
+        let mut p = Placer::new(&full, &[], &[], &farm, rules.clone());
+
+        // 정원 밖 몫(5)만큼은 들어간다
+        for i in 0..5 {
+            let mut n = npc(&format!("D{i}"), "LEAGUE_UNIVERSITY", Some(4), 55.0, 22);
+            p.place(&mut n, 2026, "draft_undrafted", "미지명", false);
+            assert_eq!(n.current_league, "LEAGUE_KBL_FARM",
+                "정원이 찼다고 육성선수까지 막혔다 ({i}번째)");
+        }
+
+        // 그 위로는 안 들어간다 — 무제한이면 2군이 육성선수로 채워진다
+        let mut over = npc("OVER", "LEAGUE_UNIVERSITY", Some(4), 55.0, 22);
+        p.place(&mut over, 2026, "draft_undrafted", "미지명", false);
+        assert_ne!(over.current_league, "LEAGUE_KBL_FARM",
+            "육성선수 상한(5)을 넘겨 받았다");
+    }
+
+    #[test]
+    fn 작년_육성선수도_상한에_센다() {
+        // ⚠ 이번 배치분만 세면 **해마다 상한만큼 새로 받아** 2군이
+        // 육성선수로 채워진다. 그러면 드래프트 지명의 가치가 사라진다.
+        let farm = vec!["TEAM_KBL_A_2".to_string()];
+        let rules = PlacementRules {
+            farm_max: 34, development_max: 3,
+            development_salary: Some(2000), ..placement()
+        };
+        // 작년에 받아둔 육성선수 3명 (정원은 여유가 있다)
+        let existing: Vec<NpcSaveState> = (0..3)
+            .map(|i| {
+                let mut n = npc(&format!("OLD{i}"), "LEAGUE_KBL_FARM", None, 55.0, 23);
+                n.current_team = "TEAM_KBL_A_2".into();
+                n.development_since = Some(2025);
+                n
+            })
+            .collect();
+        let mut p = Placer::new(&existing, &[], &[], &farm, rules);
+
+        let mut n = npc("NEW", "LEAGUE_UNIVERSITY", Some(4), 55.0, 22);
+        p.place(&mut n, 2026, "draft_undrafted", "미지명", false);
+        assert_ne!(n.current_league, "LEAGUE_KBL_FARM",
+            "작년 육성선수를 안 세서 상한이 무의미해졌다");
     }
 
     #[test]
@@ -938,7 +1051,8 @@ mod tests {
         let indie = vec!["TEAM_IND_A".to_string()];
         let rules = PlacementRules {
             university_max: 1, independent_max: 1, independent_age_max: 31,
-            university_annual_max: None, farm_max: 0, development_salary: None,
+            university_annual_max: None, farm_max: 0,
+            development_salary: None, development_max: 0,
         };
         let mut p = Placer::new(&[], &univ, &indie, &[], rules);
 
