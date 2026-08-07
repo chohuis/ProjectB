@@ -508,34 +508,149 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
   };
 }
 
-// ── 메일함 정리: 최대 50건, 미결 선택지 메시지는 항상 보존 ────
+// ── 메일함 정리: 미결 선택지 메시지는 항상 보존 ────
 // 회귀·시나리오가 "메시지가 안 온 건가, 밀려난 건가"를 구분하려면 이 값을 알아야 한다
-export const MAX_MAILBOX = 50;
+//
+// **50 → 200 (2026-08-07, 사용자 확정).** 근거는 실측이다 —
+// `npm run measure:mailbox` 2시즌에서 **638건이 생산되고 588건이 밀려났으며
+// 그중 447건이 한 번도 안 읽힌 것**이었다. 상한 50은 주당 약 6.1건 생산 대비
+// **8주치**밖에 안 남아, 소식이 W1부터 상한에 붙은 채로 계속 사라졌다.
+// 200이면 약 33주 — 한 시즌(52주)의 대부분을 담는다.
+//
+// ⚠ **순서 수정만으로는 안 풀렸다.** `trimMailbox`가 `readAt`을 보게 고친 뒤에도
+// 유실이 453 → 447로 사실상 그대로였다(두 실행이 다른 세계라 이 차이는 잡음이다).
+// 순서는 거꾸로였던 게 맞지만 병목은 생산량 대비 상한이었다.
+export const MAX_MAILBOX = 200;
 
-function trimMailbox(mailbox: MessageItem[]): MessageItem[] {
+/**
+ * 밀려나 사라진 소식의 **누계** — 계측 전용이고 화면 로직은 읽지 않는다.
+ *
+ * ⚠ **이게 없으면 상한 정책을 평가할 수 없다.** 메일함을 들여다봐야 보이는 건
+ * *살아남은* 50건뿐이라, "소식이 애초에 안 왔다"와 "왔는데 밀려서 사라졌다"가
+ * 똑같이 보인다. 이 프로젝트는 육성선수에서 정확히 그 함정에 빠졌다 — 효과부터
+ * 재고 "실제로 몇 개 만들었나"를 안 찍어서 안 도는 건지 모자란 건지 못 갈랐다.
+ */
+export const mailboxTrimStats = {
+  /** 상한에 밀려 사라진 총 건수 */
+  dropped: 0,
+  /** 그중 **한 번도 안 읽힌** 것. 사용자가 존재 자체를 모르고 잃은 소식이다 */
+  droppedUnread: 0,
+  /** 분류별 유실 — 한 종류가 다른 종류를 밀어내는지 본다 */
+  droppedByCategory: {} as Record<string, number>,
+};
+
+export function resetMailboxTrimStats(): void {
+  mailboxTrimStats.dropped = 0;
+  mailboxTrimStats.droppedUnread = 0;
+  mailboxTrimStats.droppedByCategory = {};
+}
+
+/**
+ * 소식의 **종류 키** — `id`에서 주차·연도·타임스탬프·대문자 ID를 떼면
+ * 생성 지점이 남는다 (`msg-standings-LEAGUE_KBL-w12-171…` → `msg-standings`).
+ *
+ * ⚠ **`subject`로 묶으면 안 된다.** 문장 뱅크가 같은 종류의 제목을 여러 갈래로
+ * 만들어서 한 종류가 흩어진다. `category`는 4종뿐이라 43종을 구분 못 한다.
+ */
+export function messageKindOf(id: string): string {
+  return id
+    .replace(/-r\d+$/, "")               // 대회 라운드
+    .replace(/-[A-Z][A-Z0-9_]*/g, "")    // TOUR_/LEAGUE_/EVT_ 같은 대문자 ID
+    .replace(/-?w\d+.*$/, "")            // 주차 이후 전부
+    .replace(/-\d{4}.*$/, "")            // 연도 이후 전부
+    .replace(/-\d+$/, "")                // 남은 숫자 꼬리
+    .replace(/-+$/, "");
+}
+
+/**
+ * **생산** 시점 집계 — 종류별로 몇 통이 만들어졌나.
+ *
+ * ⚠ **살아남은 메일함을 세면 단계별 비교를 못 한다.** 상한에 밀려 사라진 뒤에
+ * 세는 것이라 ①이미 없어진 종류가 0으로 보이고 ②여러 시즌을 밀면 고교와 프로
+ * 소식이 한 메일함에 섞인다. 그래서 들어오는 자리에서 센다.
+ *
+ * 집계 지점을 `pushMailbox` 하나로 모은 이유도 같다 — `addMessage`·
+ * `addMessages`·`applyWeekEndBatch` 세 곳에 각각 넣으면 네 번째 경로가
+ * 생길 때 조용히 빠진다.
+ */
+export const mailboxProduceStats = {
+  total: 0,
+  byKind: {} as Record<string, number>,
+};
+
+export function resetMailboxProduceStats(): void {
+  mailboxProduceStats.total = 0;
+  mailboxProduceStats.byKind = {};
+}
+
+/** 들어오는 소식을 집계하고 상한을 적용한다. 메일함에 넣는 유일한 문이다 */
+function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageItem[] {
+  for (const m of incoming) {
+    mailboxProduceStats.total++;
+    const k = messageKindOf(m.id);
+    mailboxProduceStats.byKind[k] = (mailboxProduceStats.byKind[k] ?? 0) + 1;
+  }
+  return trimMailbox([...incoming, ...current]);
+}
+
+/**
+ * 상한을 넘긴 메일함을 자른다. 보존 우선순위는 **세 단계**다.
+ *
+ *   ① 미결 선택지 — 버리면 진행이 막힌다
+ *   ② 안 읽은 것 (최신순)
+ *   ③ 읽은 것 (최신순)
+ *
+ * ⚠ 예전엔 ②③ 구분이 없어 **순수 최신순**이었다. 읽은 새 소식이 안 읽은 옛
+ * 소식을 밀어냈다는 뜻이고, 그건 순서가 거꾸로다 — 읽은 것은 사용자가 이미
+ * 봤으니 버려도 잃는 게 없고, 안 읽은 것은 존재 자체를 모르고 잃는다.
+ *
+ * ⚠ **이 수정의 효과는 작다.** 실측(2시즌)에서 50칸 중 41칸이 이미 안 읽은
+ * 상태였다 — 읽은 9칸을 늦게 버리는 것이 상한 전부다. 같은 실측에서 **583건이
+ * 밀려났고 그중 453건이 안 읽은 것**이었다. 진짜 병목은 순서가 아니라
+ * 생산량 대비 상한(`MAX_MAILBOX`)이고, 그건 별도 결정이다.
+ *
+ * 안 읽은 것이 50건을 넘어도 새 소식이 밀리지 않는다 — 목록이 최신순이라
+ * ②를 최신순으로 훑으면 방금 온 소식이 먼저 자리를 잡는다.
+ */
+export function trimMailbox(mailbox: MessageItem[]): MessageItem[] {
   if (mailbox.length <= MAX_MAILBOX) return mailbox;
 
-  const keepIds = new Set<string>();
+  // ⚠ **id가 아니라 위치로 고른다.** 예전엔 `Set<id>`에 담고
+  // `filter(m => keepIds.has(m.id))`로 걸렀는데, **id가 겹치는 소식이 있으면
+  // 슬롯은 하나만 쓰면서 사본이 전부 통과했다** — 실측에서 보유가 상한 200을
+  // 넘어 237이 됐고(미결은 1건뿐이라 그걸로는 설명이 안 된다), "상한이 안
+  // 지켜진다"로 읽힐 뻔했다. 위치는 언제나 유일하다.
+  const keep = new Set<number>();
   let slots = MAX_MAILBOX;
 
-  // 미결 decision 메시지 우선 보존
-  for (const m of mailbox) {
+  const take = (pick: (m: MessageItem) => boolean) => {
+    for (let i = 0; i < mailbox.length; i++) {
+      if (slots <= 0) break;
+      if (keep.has(i) || !pick(mailbox[i])) continue;
+      keep.add(i);
+      slots--;
+    }
+  };
+
+  // ① 미결 decision — 상한을 넘겨서라도 남긴다(진행이 막히므로)
+  mailbox.forEach((m, i) => {
     if (m.decision && m.decision.selectedOptionId === null) {
-      keepIds.add(m.id);
+      keep.add(i);
       slots--;
     }
-  }
+  });
+  take((m) => m.readAt === null);   // ② 안 읽은 것
+  take(() => true);                 // ③ 나머지(읽은 것)
 
-  // 남은 슬롯에 최신 메시지 채우기 (mailbox는 최신순)
-  for (const m of mailbox) {
-    if (slots <= 0) break;
-    if (!keepIds.has(m.id)) {
-      keepIds.add(m.id);
-      slots--;
-    }
-  }
+  mailbox.forEach((m, i) => {
+    if (keep.has(i)) return;
+    mailboxTrimStats.dropped++;
+    if (m.readAt === null) mailboxTrimStats.droppedUnread++;
+    mailboxTrimStats.droppedByCategory[m.category] =
+      (mailboxTrimStats.droppedByCategory[m.category] ?? 0) + 1;
+  });
 
-  return mailbox.filter((m) => keepIds.has(m.id));
+  return mailbox.filter((_, i) => keep.has(i));
 }
 
 function updateAchievementProgress(
@@ -1114,12 +1229,12 @@ function createGameStore() {
     },
 
     addMessage(msg: MessageItem) {
-      update((s) => ({ ...s, mailbox: trimMailbox([msg, ...s.mailbox]) }));
+      update((s) => ({ ...s, mailbox: pushMailbox([msg], s.mailbox) }));
     },
 
     addMessages(msgs: MessageItem[]) {
       if (!msgs.length) return;
-      update((s) => ({ ...s, mailbox: trimMailbox([...msgs, ...s.mailbox]) }));
+      update((s) => ({ ...s, mailbox: pushMailbox(msgs, s.mailbox) }));
     },
 
     applyWeekEndBatch(batch: {
@@ -1149,7 +1264,7 @@ function createGameStore() {
         if (batch.moraleDelta && batch.moraleDelta > 0)
           p = { ...p, morale: Math.max(0, Math.min(100, p.morale + batch.moraleDelta)) };
         let mailbox = s.mailbox;
-        if (batch.messages?.length) mailbox = trimMailbox([...batch.messages, ...s.mailbox]);
+        if (batch.messages?.length) mailbox = pushMailbox(batch.messages, s.mailbox);
         let lastTop10Pitcher = s.lastTop10Pitcher;
         let lastTop10Batter  = s.lastTop10Batter;
         if (batch.top10Snapshot) {
@@ -2664,7 +2779,7 @@ function createGameStore() {
         seasonEndSummary: result.summary,
         logs: [...result.logs, ...st.logs].slice(0, 30),
         mailbox: result.mailboxEntry
-          ? trimMailbox([result.mailboxEntry, ...st.mailbox])
+          ? pushMailbox([result.mailboxEntry], st.mailbox)
           : st.mailbox,
       }));
 

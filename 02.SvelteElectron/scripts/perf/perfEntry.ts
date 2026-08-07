@@ -9,7 +9,9 @@
 
 import { get } from "svelte/store";
 import { masterStore } from "../../apps/ui/src/shared/stores/master";
-import { gameStore } from "../../apps/ui/src/shared/stores/game";
+import {
+  gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
+} from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { npcLiveStatsStore } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
@@ -2898,9 +2900,16 @@ export function mailboxProbe(): Record<string, unknown> {
   const newest = box[0]?.createdAt ?? null;
   return {
     보유: box.length,
-    상한: 50,
+    // ⚠ **여기 50을 적어두면 안 된다.** 정본은 `game.ts`의 `MAX_MAILBOX`고,
+    // 계측기가 자기 상한을 들고 있으면 상한을 바꿔도 **계측만 옛 기준으로**
+    // "상한 미도달"을 찍는다 — 판정이 아니라 잣대가 틀어지는 형태다
+    상한: MAX_MAILBOX,
     안읽음: unread,
     미결선택: undecided,
+    // 살아남은 것만 세면 "안 온 건가 밀려난 건가"를 못 가른다
+    "밀려남(누계)": mailboxTrimStats.dropped,
+    "밀려남-안읽음": mailboxTrimStats.droppedUnread,
+    "밀려남-분류별": mailboxTrimStats.droppedByCategory,
     "카드형(metadata)": withMeta,
     "카드 종류": metaTypes,
     분류별: byCat,
@@ -2908,6 +2917,51 @@ export function mailboxProbe(): Record<string, unknown> {
     최신: newest,
     최고참: oldest,
   };
+}
+
+/**
+ * 소식 **종류별** 인구조사 — 통합 후보를 찾기 위한 조사 도구.
+ *
+ * `mailboxProbe`는 `category` 4종·보낸이로만 센다. 그런데 실제 종류는 id
+ * 접두사 기준 **43종**이라, 분류로 보면 `system`·`news`에 뭉뚱그려져 **무엇이
+ * 몇 통인지가 안 보인다.** 부상 소식을 사람마다 한 통에서 월 1회 리포트로
+ * 묶었던 것과 같은 정리를 하려면 종류별 빈도가 먼저 있어야 한다.
+ *
+ * 종류는 `id`에서 뽑는다 — 주차·연도·타임스탬프를 떼면 생성 지점이 남는다
+ * (`msg-train-w12-1712...` → `msg-train`). `subject`로 묶으면 문장 뱅크가
+ * 같은 종류를 여러 갈래로 쪼개서 못 쓴다.
+ */
+export function mailboxCensus(): Record<string, unknown> {
+  const box = get(gameStore).mailbox;
+  // 종류 규칙의 정본은 `game.ts`의 `messageKindOf`다 — 여기 또 적으면 두 벌이 된다
+  const rows: Record<string, { n: number; cat: string; senders: Set<string>; meta: string | null }> = {};
+  for (const m of box) {
+    const k = messageKindOf(m.id);
+    const r = rows[k] ?? (rows[k] = { n: 0, cat: m.category, senders: new Set(), meta: null });
+    r.n++;
+    r.senders.add(m.sender);
+    const t = (m.metadata as { type?: string } | undefined)?.type;
+    if (t) r.meta = t;
+  }
+  const out = Object.entries(rows)
+    .sort((a, b) => b[1].n - a[1].n)
+    .map(([kind, r]) => ({
+      종류: kind, 건수: r.n, 분류: r.cat,
+      보낸이: [...r.senders].slice(0, 3).join("/") + (r.senders.size > 3 ? ` 외${r.senders.size - 3}` : ""),
+      카드: r.meta ?? "",
+    }));
+  return { 총건수: box.length, 종류수: out.length, 목록: out };
+}
+
+/**
+ * **생산** 누계 — 메일함에 남아 있든 밀려났든 만들어진 전부.
+ *
+ * 시즌 경계마다 이걸 찍어 **차분**하면 그 시즌에 무엇이 몇 통 왔는지가 나온다.
+ * 메일함을 훑는 `mailboxCensus`로는 못 하는 일이다 — 상한에 밀려 사라진 종류는
+ * 0으로 보이고, 여러 시즌을 밀면 고교와 프로 소식이 한 상자에 섞인다.
+ */
+export function mailboxProduceProbe(): Record<string, unknown> {
+  return { 총생산: mailboxProduceStats.total, 종류별: { ...mailboxProduceStats.byKind } };
 }
 
 /**
