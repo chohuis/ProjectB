@@ -83,8 +83,6 @@
       case "optionClause":
       case "faMarket":
         return "news";
-      case "preGameBriefing":
-        return "news";
     }
   }
 
@@ -122,7 +120,11 @@
   $: pendingRetirementAsk = $nextPendingAction?.type === "retirementAsk" ? $nextPendingAction : null;
   $: pendingInjuryTreatment  = $nextPendingAction?.type === "injuryTreatment"  ? $nextPendingAction : null;
   $: pendingConditionWarning = $nextPendingAction?.type === "conditionWarning" ? $nextPendingAction : null;
-  $: pendingPreGameBriefing  = $nextPendingAction?.type === "preGameBriefing"  ? $nextPendingAction : null;
+  // 경기 전 브리핑 — 경기 창에서 여는 읽기 전용 창. 주 진행과 무관하다
+  let briefingScheduleId: string | null = null;
+  // 경기가 끝나거나 바뀌면 닫는다 — 안 닫으면 다음 경기 창 위에 이전
+  // 브리핑이 남는다
+  $: if (!pendingGameEntry && briefingScheduleId) briefingScheduleId = null;
   // 경기 pendingAction 과 해당 일정 찾기
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
   $: pendingGameEntry = pendingGame
@@ -540,10 +542,13 @@
   <InjuryTreatmentModal action={pendingInjuryTreatment} />
 {/if}
 
-{#if pendingPreGameBriefing && currentTab === "news"}
+<!-- ⚠ **PendingAction이 아니다.** 예전엔 경기 전에 강제로 뜨는 창이라
+     매 경기 닫아야 넘어갔다 — 그 사이 쌓인 소식은 볼 기회가 없었다.
+     이제 경기 창에서 열어보는 창이고, 진행은 경기 창이 맡는다 -->
+{#if briefingScheduleId}
   <PreGameBriefingModal
-    scheduleId={pendingPreGameBriefing.scheduleId}
-    onConfirm={() => { currentTab = "news"; }}
+    scheduleId={briefingScheduleId}
+    onClose={() => (briefingScheduleId = null)}
   />
 {/if}
 
@@ -603,6 +608,7 @@
     autoRunning={autoSimRunning}
     onAutoSim={autoFinishFromEntry}
     onDirectPlay={startInteractiveMatch}
+    onOpenBriefing={() => (briefingScheduleId = pendingGameEntry.id)}
     onConfirm={confirmNoEntry}
     onSkip={skipBrokenGame}
   />

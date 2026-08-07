@@ -188,8 +188,38 @@ export type PendingAction =
       type: "conditionWarning";
       scheduleId: string;
       condition: number;
-    }
-  | { type: "preGameBriefing"; scheduleId: string };
+    };
+
+// ⚠ `preGameBriefing`은 **정지 조건이 아니다** (2026-08-07 제거). 경기 앞에
+// 강제로 뜨는 창이라 매 경기 하나를 더 닫아야 넘어갔고, 그 사이 쌓인 소식은
+// 볼 기회가 없었다. 지금은 경기 창(`GameStatusModal`)에서 여는 읽기 전용
+// 창이고, 진행은 그 창의 자동/직접 플레이 버튼이 맡는다.
+
+/**
+ * 세이브에서 되살릴 정지 조건 — `hydrateFromSlot`이 이 목록으로 거른다.
+ *
+ * ⚠ **화면이 없는 정지 조건은 세이브를 잠근다.** 큐에 남아 있으면
+ * `hasPendingAction`이 계속 true라 "다음 주 진행"이 안 먹는데, 화면엔
+ * 아무것도 안 떠서 원인이 안 보인다 — `preGameBriefing`을 뺐을 때 실제로
+ * 그렇게 됐다(W6에서 잠김).
+ *
+ * ⚠ **아래 `_assert`가 이 배열과 `PendingAction`을 붙들어 맨다.** 타입에만
+ * 추가하고 여기 빠뜨리면 그 정지 조건이 저장은 되는데 로드에서 조용히
+ * 사라진다 — 정본이 둘이 되는 그 형태다. 컴파일 에러로 잡는다.
+ */
+export const PENDING_ACTION_TYPES = [
+  "game", "message", "event",
+  "careerChoiceHub", "careerResults", "careerChoice",
+  "draftObserve", "draftNotification", "salaryNegotiation", "faMarket",
+  "trade", "optionClause",
+  "sportsUnitApplication", "militaryEnlistAsk", "retirementAsk",
+  "injuryTreatment", "conditionWarning",
+] as const;
+
+/** 타입에 있는데 위 배열에 없으면 여기서 컴파일이 깨진다 */
+type _MissingPendingType = Exclude<PendingAction["type"], typeof PENDING_ACTION_TYPES[number]>;
+const _assertNoMissingPendingType: [_MissingPendingType] extends [never] ? true : never = true;
+void _assertNoMissingPendingType;
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {

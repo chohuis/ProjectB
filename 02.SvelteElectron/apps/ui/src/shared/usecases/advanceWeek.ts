@@ -2123,12 +2123,11 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: action };
             } else {
               seasonStore.setCurrentDate(game.gameDate);
+              // 브리핑은 정지 조건이 아니다 — 위 주석 참고
               const gameAction: PendingAction = { type: "game", scheduleId: game.id };
-              const briefAction: PendingAction = { type: "preGameBriefing", scheduleId: game.id };
-              seasonStore.pushPendingAction(briefAction);
               seasonStore.pushPendingAction(gameAction);
               gameStore.save(); seasonStore.save();
-              return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: briefAction };
+              return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: gameAction };
             }
           } else {
             const entities2 = get(masterStore).entities;
@@ -2402,14 +2401,14 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           // 정상 등판
           seasonStore.setCurrentDate(game.gameDate);
 
-          // 브리핑 → 게임 순으로 push (공식·친선 모두)
-          const gameAction: PendingAction  = { type: "game", scheduleId: game.id };
-          const briefAction: PendingAction = { type: "preGameBriefing", scheduleId: game.id };
-
-          seasonStore.pushPendingAction(briefAction);
+          // ⚠ **브리핑은 더 이상 정지 조건이 아니다.** 예전엔 경기 앞에
+          // `preGameBriefing`을 같이 push해서 매 경기 창을 하나 더 닫아야
+          // 넘어갔다 — 그 사이 쌓인 소식은 볼 기회가 없었다. 지금은 경기
+          // 창에서 열어보는 창이다 (사용자 확정 2026-08-07)
+          const gameAction: PendingAction = { type: "game", scheduleId: game.id };
           seasonStore.pushPendingAction(gameAction);
           gameStore.save(); seasonStore.save();
-          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: briefAction };
+          return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: gameAction };
         }
       } else {
         const entities = get(masterStore).entities;

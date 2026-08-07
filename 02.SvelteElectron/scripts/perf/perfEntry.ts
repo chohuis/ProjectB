@@ -2871,6 +2871,46 @@ export function devPlayerProbe(): Record<string, unknown> {
 }
 
 /**
+ * 메일함 압력 — **밀려나는가, 안 오는가.**
+ *
+ * `trimMailbox`는 상한 50건이고 미결 선택지만 보존한다. **읽음 여부는 안 본다** —
+ * 안 읽은 소식도 새 소식에 밀린다. 주당 생산량이 상한에 비해 얼마나 되는지
+ * 모르면 "소식이 안 왔다"와 "밀려서 사라졌다"를 구분할 수 없다.
+ */
+export function mailboxProbe(): Record<string, unknown> {
+  const box = get(gameStore).mailbox;
+  const byCat: Record<string, number> = {};
+  const bySender: Record<string, number> = {};
+  for (const m of box) {
+    byCat[m.category] = (byCat[m.category] ?? 0) + 1;
+    bySender[m.sender] = (bySender[m.sender] ?? 0) + 1;
+  }
+  const unread = box.filter(m => m.readAt === null).length;
+  const undecided = box.filter(m => m.decision?.selectedOptionId === null).length;
+  const withMeta = box.filter(m => m.metadata).length;
+  const metaTypes: Record<string, number> = {};
+  for (const m of box) {
+    const t = (m.metadata as { type?: string } | undefined)?.type;
+    if (t) metaTypes[t] = (metaTypes[t] ?? 0) + 1;
+  }
+  // 가장 오래된 소식이 몇 주 전인가 — 상한에 걸리면 이 값이 안 늘어난다
+  const oldest = box[box.length - 1]?.createdAt ?? null;
+  const newest = box[0]?.createdAt ?? null;
+  return {
+    보유: box.length,
+    상한: 50,
+    안읽음: unread,
+    미결선택: undecided,
+    "카드형(metadata)": withMeta,
+    "카드 종류": metaTypes,
+    분류별: byCat,
+    보낸이별: bySender,
+    최신: newest,
+    최고참: oldest,
+  };
+}
+
+/**
  * 포스트시즌 진단 (B-0).
  *
  * ⚠ **화면에 독립리그 브래킷 하나만 뜬다.** `backgroundPostseason.ts`가

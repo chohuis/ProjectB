@@ -26,7 +26,6 @@
 
   $: btnLabel =
     $nextPendingAction?.type === "game"            ? "경기 대기 중" :
-    $nextPendingAction?.type === "preGameBriefing" ? "경기 전 브리핑" :
     $nextPendingAction?.type === "message"         ? "메시지 확인" :
     $nextPendingAction?.type === "event"           ? "이벤트 처리" :
     advancing ? "진행 중..." : "다음 주 진행";

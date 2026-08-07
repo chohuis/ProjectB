@@ -349,11 +349,6 @@ export async function runAutoAdvance(): Promise<void> {
           break;
         }
 
-        case "preGameBriefing":
-          seasonStore.resolvePendingAction("preGameBriefing", pa.scheduleId);
-          await seasonStore.save();
-          break;
-
         case "injuryTreatment":
           gameStore.applyInjuryTreatment("conservative");
           seasonStore.resolvePendingAction("injuryTreatment");

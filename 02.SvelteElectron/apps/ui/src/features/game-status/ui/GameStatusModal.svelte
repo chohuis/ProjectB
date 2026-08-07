@@ -35,6 +35,8 @@
 
   export let onAutoSim:    () => void = () => {};
   export let onDirectPlay: () => void = () => {};
+  /** 경기 전 브리핑 열기 — 읽기 전용 창이라 진행과 무관하다 */
+  export let onOpenBriefing: () => void = () => {};
   export let onConfirm:    () => void = () => {};
   export let onSkip:       () => void = () => {};
 
@@ -285,6 +287,13 @@
             </span>
           </div>
           <div class="ft-actions">
+            <!-- ⚠ **브리핑은 진행 버튼이 아니다.** 예전엔 경기 전에 강제로
+                 뜨는 창이라 매 경기 닫는 일이 됐다 — 이제 보고 싶을 때만
+                 연다 (사용자 확정 2026-08-07) -->
+            <button class="btn-brief" on:click={onOpenBriefing} disabled={autoRunning}>
+              경기 전 브리핑
+            </button>
+            <span class="ft-gap"></span>
             <button class="btn-auto" on:click={onAutoSim} disabled={autoRunning}>
               {autoRunning ? "시뮬 중…" : "자동 시뮬"}
             </button>
@@ -566,6 +575,24 @@
   .btn-confirm:hover { background: var(--ink-mute); }
 
   .btn-auto:disabled, .btn-play:disabled { opacity: 0.5; cursor: default; }
+
+  /* ⚠ **진행 버튼과 생김새를 다르게 한다.** 나란히 두면 "브리핑"이 진행
+     선택지로 읽혀서, 읽으려던 사람이 경기를 시작한 줄 안다. 테두리만 있는
+     보조 버튼 + 사이에 여백을 둬서 무리를 가른다 */
+  .ft-gap { width: 14px; }
+  .btn-brief {
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 16px;
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-mid);
+    transition: border-color 0.12s, color 0.12s;
+  }
+  .btn-brief:hover:not(:disabled) { border-color: var(--ink-mute); color: var(--ink); }
+  .btn-brief:disabled { opacity: 0.5; cursor: default; }
 
   .stamina-bar-wrap { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px; }
   .stamina-track { height: 6px; background: var(--panel-sunk); border-radius: 3px; overflow: hidden; }

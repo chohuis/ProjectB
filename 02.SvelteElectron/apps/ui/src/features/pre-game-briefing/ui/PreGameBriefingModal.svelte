@@ -9,7 +9,17 @@
   import type { PreGameWeather, PreGamePark } from "../../../shared/utils/matchLineupBuilder";
 
   export let scheduleId: string;
-  export let onConfirm: () => void = () => {};
+  /**
+   * 닫기. **주 진행을 여기서 건드리지 않는다.**
+   *
+   * ⚠ 예전엔 이 화면이 `PendingAction`이었다 — 경기 전에 **강제로 뜨고**
+   * "경기 준비 완료"를 눌러야 넘어갔다. 그래서 매 경기 같은 창을 닫는
+   * 일이 됐고, 그 사이 쌓인 소식은 볼 기회가 없었다.
+   *
+   * 이제는 경기 창(`GameStatusModal`)에서 **열어보는** 창이다. 진행은
+   * 경기 창의 자동/직접 플레이 버튼이 맡는다 (사용자 확정 2026-08-07).
+   */
+  export let onClose: () => void = () => {};
 
   // ── 상수 ──────────────────────────────────────────────────────
   const PITCHER_POS  = new Set(["SP", "RP", "CP"]);
@@ -221,14 +231,16 @@
     teamOpsStr = statCount > 0 ? (sumOps / statCount).toFixed(3).replace(/^0/, "") : "-";
   }
 
-  async function confirm() {
-    seasonStore.resolvePendingAction("preGameBriefing", scheduleId);
-    await seasonStore.save();
-    onConfirm();
+  function onEsc(e: KeyboardEvent) {
+    if (e.key === "Escape") onClose();
   }
 </script>
 
-<div class="briefing-overlay" role="dialog" aria-modal="true" aria-label="경기 전 브리핑">
+<svelte:window on:keydown={onEsc} />
+
+<!-- 바깥을 눌러도 닫힌다. 읽기 전용 창이라 실수로 닫혀도 잃을 게 없다 -->
+<div class="briefing-overlay" role="presentation" on:click={onClose}></div>
+<div class="briefing-wrap" role="dialog" aria-modal="true" aria-label="경기 전 브리핑">
   <div class="briefing-panel">
 
     <!-- 헤더 -->
@@ -358,9 +370,12 @@
     </div>
 
     <!-- 하단 버튼 -->
+    <!-- ⚠ **여기서 경기로 넘어가지 않는다.** 진행은 경기 창이 맡는다 —
+         한 화면이 두 가지("읽기"와 "진행")를 하면 읽으려고 열었다가
+         경기가 시작돼 버린다 -->
     <footer class="briefing-footer">
-      <button class="confirm-btn" type="button" on:click={confirm}>
-        경기 준비 완료 →
+      <button class="confirm-btn" type="button" on:click={onClose}>
+        닫기
       </button>
     </footer>
 
@@ -368,16 +383,26 @@
 </div>
 
 <style>
+  /* ⚠ **경기 창 위에 뜬다.** `GameStatusModal`이 이미 모달이므로 그보다
+     높아야 한다 — 낮으면 브리핑을 열어도 경기 창에 가려 아무 일도 안
+     일어난 것처럼 보인다 */
   .briefing-overlay {
     position: fixed;
     inset: 0;
     background: rgba(4, 8, 16, 0.88);
-    z-index: 50;
+    z-index: 120;
+  }
+  .briefing-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 121;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    pointer-events: none;   /* 바깥 클릭은 아래 오버레이가 받는다 */
   }
+  .briefing-wrap > :global(*) { pointer-events: auto; }
 
   .briefing-panel {
     /* ⚠ 뿌리가 글자색을 정한다. 안 정하면 색 규칙이 없는 자식이 전역

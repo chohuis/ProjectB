@@ -14,7 +14,11 @@ import type {
 } from "../types/season";
 import type { NpcInjuryEntry } from "../types/save";
 import type { EntityRow } from "../stores/master";
-import { makeEmptySeason, SAVE_SEASON_VERSION } from "../types/season";
+import { makeEmptySeason, PENDING_ACTION_TYPES, SAVE_SEASON_VERSION } from "../types/season";
+
+// 로드 때 거를 기준 — 정본은 `types/season.ts`의 `PENDING_ACTION_TYPES`다.
+// 화면이 없는 정지 조건이 큐에 남으면 세이브가 잠긴다(`hydrateFromSlot` 주석)
+const KNOWN_PENDING_TYPES = new Set<string>(PENDING_ACTION_TYPES);
 import { accumulateStats, migrateLeagueState, sanitizeStatsRecord, updateStandings } from "../utils/season-helpers";
 import {
   ALL_TEAMS_BY_LEAGUE,
@@ -62,6 +66,20 @@ function createSeasonStore() {
       npcLiveStatsStore.set(season.npcLiveStats ?? {});
       set({
         ...season,
+        // ⚠ **화면이 없는 정지 조건은 세이브를 잠근다.**
+        //
+        // `pendingActions`는 "이걸 처리해야 주가 넘어간다"는 큐다. 화면이
+        // 그 타입을 안 그리면 아무것도 안 뜨는데 `hasPendingAction`은 계속
+        // true라 **"다음 주 진행"이 영영 안 먹는다.**
+        //
+        // 실제로 그렇게 됐다: `preGameBriefing`을 정지 조건에서 뺐더니
+        // (2026-08-07) 그게 큐에 든 채 저장돼 있던 세이브가 W6에서 잠겼다.
+        // 화면엔 아무 변화가 없어서 "주 진행이 고장났다"로 보인다.
+        //
+        // 타입이 바뀔 때마다 세이브가 죽으면 안 되므로, **아는 타입만 남긴다.**
+        pendingActions: (season.pendingActions ?? []).filter(
+          (a) => KNOWN_PENDING_TYPES.has((a as { type?: string })?.type ?? ""),
+        ),
         stats: sanitizedStats,
         currentDate:     season.currentDate     ?? `${season.seasonYear ?? 2026}-03-01`,
         leagueSchedules: season.leagueSchedules ?? {},
@@ -394,7 +412,6 @@ function createSeasonStore() {
           if (a.type === "message")           return a.messageId  !== id;
           if (a.type === "event")             return a.eventId    !== id;
           if (a.type === "conditionWarning")  return a.scheduleId !== id;
-          if (a.type === "preGameBriefing")   return a.scheduleId !== id;
           return false;
         }),
       }));

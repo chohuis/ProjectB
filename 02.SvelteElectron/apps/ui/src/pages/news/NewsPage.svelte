@@ -7,13 +7,12 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
-  import { categoryMeta, CATEGORY_ORDER } from "../../shared/utils/messageCategory";
-  import { recentResults, gaugeTone } from "../../shared/utils/myStatus";
+  import { categoryMeta, FILTER_GROUPS } from "../../shared/utils/messageCategory";
+  import { gaugeTone } from "../../shared/utils/myStatus";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
   import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
   import OffseasonPanel from "../../features/messages/ui/OffseasonPanel.svelte";
   import InjuryPanel from "../../features/messages/ui/InjuryPanel.svelte";
-  import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
   /**
    * C1 소식 — 홈 대시보드와 수신함을 하나로 합친 화면.
@@ -29,7 +28,8 @@
    * 이미 우측 패널에 있으므로 같은 정보를 가짜 확률로 포장할 이유가 없다.
    */
 
-  type FilterId = "all" | "unread" | MessageCategory;
+  // 분류 그대로가 아니라 **묶음**이다 — 정본은 `messageCategory.ts`의 FILTER_GROUPS
+  type FilterId = "all" | "unread" | string;
 
   let activeFilter: FilterId = "all";
   let selectedId: string | null = null;
@@ -39,24 +39,24 @@
   $: p = $gameStore.protagonist;
 
   $: counts = {
-    all:     msgs.length,
-    unread:  msgs.filter((m) => m.readAt === null).length,
-    system:  msgs.filter((m) => m.category === "system").length,
-    news:    msgs.filter((m) => m.category === "news").length,
-    coach:   msgs.filter((m) => m.category === "coach").length,
-    manager: msgs.filter((m) => m.category === "manager").length,
+    all:    msgs.length,
+    unread: msgs.filter((m) => m.readAt === null).length,
+    ...Object.fromEntries(FILTER_GROUPS.map((g) => [
+      g.id, msgs.filter((m) => g.cats.includes(m.category)).length,
+    ])),
   } as Record<FilterId, number>;
 
   $: FILTERS = [
     { id: "all" as FilterId,    label: "전체" },
-    { id: "unread" as FilterId, label: "안 읽음" },
-    ...CATEGORY_ORDER.map((c) => ({ id: c as FilterId, label: categoryMeta(c).label })),
+    { id: "unread" as FilterId, label: "안읽음" },
+    ...FILTER_GROUPS.map((g) => ({ id: g.id as FilterId, label: g.label })),
   ];
 
   $: filtered = msgs.filter((m) => {
     if (activeFilter === "all")    return true;
     if (activeFilter === "unread") return m.readAt === null;
-    return m.category === activeFilter;
+    const g = FILTER_GROUPS.find((x) => x.id === activeFilter);
+    return g ? g.cats.includes(m.category) : true;
   });
 
   // 미결 선택지는 정렬과 무관하게 항상 위 — 게임이 멈춰 있는 이유이기 때문이다
@@ -85,10 +85,17 @@
       ? [{ tone: "warn" as const, text: `사기 ${p.morale} — 반등할 계기가 필요하다` }] : []),
     ...(pendingMsgs.length > 0
       ? [{ tone: "warn" as const, text: `선택을 기다리는 소식 ${pendingMsgs.length}건` }] : []),
+    // 오프시즌 일정 안내. **옆단 카드였던 것을 여기로 옮겼다** — 옆단은
+    // 상세 칸에 자리를 내줬고, 나머지 두 카드(최근 경기·예정)는 우측
+    // 패널에 같은 게 있어 지웠지만 이것만은 어디에도 없었다
+    ...(isOffseason
+      ? [{
+          tone: "info" as const,
+          text: pendingNextTeam
+            ? `${pendingNextTeam} 계약 완료 — W52에 새 시즌이 시작된다`
+            : "오프시즌 — W43 연봉협상·FA · W50 체육부대 · W52 시즌 시작",
+        }] : []),
   ];
-
-  // ── 옆단: 최근 경기 · 예정 ──
-  $: recent = recentResults($seasonStore.schedule, p.teamId, 5);
 
   $: isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
   $: hasRemainingGames = $seasonStore.schedule.some(
@@ -98,10 +105,6 @@
   $: pendingNextTeam = p.pendingNextContract
     ? ($teamMap.get(p.pendingNextContract.teamId)?.name ?? p.pendingNextContract.teamId)
     : null;
-
-  function tName(id: string): string {
-    return $teamMap.get(id)?.name ?? id;
-  }
 
   async function markAllRead() {
     gameStore.markAllMessagesRead();
@@ -156,7 +159,7 @@
     </section>
   {/if}
 
-  <div class="cols">
+  <div class="cols" class:detail-open={!!selected}>
     <!-- ── 소식 목록 ── -->
     <section class="feed u-card">
       <header class="feed-head">
@@ -207,7 +210,7 @@
                   <span class="time u-num">{msg.createdAt}</span>
                 </div>
                 <p class="subject">
-                  {#if msg.readAt === null}<span class="dot" aria-hidden="true"></span>{/if}{msg.subject}
+                  {#if msg.readAt === null}<span class="dot" aria-hidden="true"></span>{/if}<span class="subject-t">{msg.subject}</span>
                 </p>
                 <p class="preview">{msg.preview}</p>
               </button>
@@ -217,110 +220,78 @@
       </ul>
     </section>
 
-    <!-- ── 옆단 ── -->
-    <aside class="side">
-      {#if isOffseason}
-        <section class="u-card">
-          <span class="u-label">오프시즌</span>
-          {#if pendingNextTeam}
-            <p class="side-line"><b>{pendingNextTeam}</b> 계약 완료</p>
-            <p class="side-sub">W52에 새 시즌이 시작된다</p>
+    <!-- ── 상세 ── -->
+    <!-- ⚠ **옆단(최근 경기·예정)이 있던 자리다.** 그 둘은 우측 패널의
+         "최근"·"다음 경기"와 같은 걸 두 번 보여주고 있었다 — 소식 탭이
+         내비·목록·옆단·우측패널로 4단이었고 그중 하나가 중복이었다.
+         오프시즌 안내만 우측 패널에 없어서 "챙길 것"으로 옮겼다.
+
+         ⚠ **모달이 아니라 칸이다.** 상세를 오버레이로 띄우면 목록이 가려져
+         "다음 소식으로 넘어가려면 닫아야" 한다. FM식 2단은 목록을 보면서
+         고르는 게 요점이므로, 좁은 폭에서만 목록을 접는다(아래 미디어쿼리) -->
+    <section class="detail u-card" class:empty-state={!selected}>
+      {#if selected}
+        {@const cat = categoryMeta(selected.category)}
+        {@const dec = selected.decision}
+        <header class="m-head" style="--cat:{cat.accent}">
+          <button class="m-back" type="button" on:click={close} aria-label="목록으로">‹ 목록</button>
+          <span class="m-cat">{cat.label}</span>
+          <p class="m-title">{selected.subject}</p>
+        </header>
+        <p class="m-meta">{selected.sender} · {selected.createdAt}</p>
+
+        <div class="m-body">
+          {#if selected.metadata?.type === "training"}
+            {@const tm = selected.metadata as TrainingMetadata}
+            <TrainingStatBars stats={tm.stats} condition={tm.condition} fatigue={tm.fatigue}
+                              morale={tm.morale} extraLogs={tm.extraLogs} />
+          {:else if selected.metadata?.type === "top10"}
+            <ProspectTop10Panel metadata={selected.metadata as Top10Metadata} />
+          {:else if selected.metadata?.type === "offseason"}
+            <OffseasonPanel metadata={selected.metadata as OffseasonMetadata} />
+          {:else if selected.metadata?.type === "injury"}
+            <InjuryPanel metadata={selected.metadata as InjuryMetadata} />
           {:else}
-            <p class="side-sub">W43 연봉협상·FA · W50 체육부대 · W52 시즌 시작</p>
-          {/if}
-        </section>
-      {/if}
-
-      <section class="u-card">
-        <span class="u-label">최근 경기</span>
-        {#if recent.length === 0}
-          <p class="side-sub">아직 기록이 없다</p>
-        {:else}
-          <ul class="recent">
-            {#each recent as r}
-              <li>
-                <span class="wl" data-r={r.drew ? "d" : r.won ? "w" : "l"}>{r.drew ? "무" : r.won ? "승" : "패"}</span>
-                <span class="score u-num">{r.my}-{r.opp}</span>
-                <TeamMark teamId={r.opponentId} size={16} />
-                <span class="opp">{tName(r.opponentId)}</span>
-              </li>
+            {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
+              <p>{line || " "}</p>
             {/each}
-          </ul>
-        {/if}
-      </section>
+          {/if}
+        </div>
 
-      <section class="u-card">
-        <span class="u-label">예정</span>
-        {#if $gameStore.upcoming.length === 0}
-          <p class="side-sub">예정된 일정이 없다</p>
-        {:else}
-          <ul class="upcoming">
-            {#each $gameStore.upcoming.slice(0, 4) as item}<li>{item}</li>{/each}
-          </ul>
+        {#if dec}
+          <section class="dec">
+            <p class="dec-prompt">{dec.prompt}</p>
+            {#if dec.selectedOptionId === null}
+              <div class="dec-opts">
+                {#each dec.options as opt}
+                  <button class="opt" data-tone={effectTone(opt.effectHint)} type="button" on:click={() => choose(opt.id)}>
+                    <span class="opt-label">{opt.label}</span>
+                    {#if opt.effectHint}<span class="opt-hint">{opt.effectHint}</span>{/if}
+                  </button>
+                {/each}
+              </div>
+            {:else}
+              <!-- ⚠ 예전 화면은 여기에 `{:else if metadata.type === "top10"}` 가지가
+                   끼어 있어서, **TOP10 소식은 선택을 마쳐도 고른 답이 안 보였다.**
+                   본문에서 이미 그린 패널을 한 번 더 그리고 있었다 -->
+              {@const chosen = dec.options.find((o) => o.id === dec.selectedOptionId)}
+              <div class="dec-done">
+                <span class="check">✓</span>
+                <span class="done-label">{chosen?.label}</span>
+                {#if chosen?.effectHint}<span class="done-hint">{chosen.effectHint}</span>{/if}
+              </div>
+            {/if}
+          </section>
         {/if}
-      </section>
-    </aside>
+      {:else}
+        <p class="ph">읽을 소식을 왼쪽에서 고른다</p>
+        {#if pendingMsgs.length > 0}
+          <p class="ph-sub">선택을 기다리는 소식 {pendingMsgs.length}건이 맨 위에 있다</p>
+        {/if}
+      {/if}
+    </section>
   </div>
 </section>
-
-<!-- ── 상세 ── -->
-{#if selected}
-  {@const cat = categoryMeta(selected.category)}
-  {@const dec = selected.decision}
-  <div class="backdrop" role="presentation" on:click={close}></div>
-  <div class="modal" role="dialog" tabindex="-1" aria-modal="true" aria-label="소식 상세" style="--cat:{cat.accent}">
-    <header class="m-head">
-      <span class="m-cat">{cat.label}</span>
-      <p class="m-title">{selected.subject}</p>
-      <button class="m-close" type="button" on:click={close} aria-label="닫기">✕</button>
-    </header>
-    <p class="m-meta">{selected.sender} · {selected.createdAt}</p>
-
-    <div class="m-body">
-      {#if selected.metadata?.type === "training"}
-        {@const tm = selected.metadata as TrainingMetadata}
-        <TrainingStatBars stats={tm.stats} condition={tm.condition} fatigue={tm.fatigue}
-                          morale={tm.morale} extraLogs={tm.extraLogs} />
-      {:else if selected.metadata?.type === "top10"}
-        <ProspectTop10Panel metadata={selected.metadata as Top10Metadata} />
-      {:else if selected.metadata?.type === "offseason"}
-        <OffseasonPanel metadata={selected.metadata as OffseasonMetadata} />
-      {:else if selected.metadata?.type === "injury"}
-        <InjuryPanel metadata={selected.metadata as InjuryMetadata} />
-      {:else}
-        {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
-          <p>{line || " "}</p>
-        {/each}
-      {/if}
-    </div>
-
-    {#if dec}
-      <section class="dec">
-        <p class="dec-prompt">{dec.prompt}</p>
-        {#if dec.selectedOptionId === null}
-          <div class="dec-opts">
-            {#each dec.options as opt}
-              <button class="opt" data-tone={effectTone(opt.effectHint)} type="button" on:click={() => choose(opt.id)}>
-                <span class="opt-label">{opt.label}</span>
-                {#if opt.effectHint}<span class="opt-hint">{opt.effectHint}</span>{/if}
-              </button>
-            {/each}
-          </div>
-        {:else}
-          <!-- ⚠ 예전 화면은 여기에 `{:else if metadata.type === "top10"}` 가지가
-               끼어 있어서, **TOP10 소식은 선택을 마쳐도 고른 답이 안 보였다.**
-               본문에서 이미 그린 패널을 한 번 더 그리고 있었다 -->
-          {@const chosen = dec.options.find((o) => o.id === dec.selectedOptionId)}
-          <div class="dec-done">
-            <span class="check">✓</span>
-            <span class="done-label">{chosen?.label}</span>
-            {#if chosen?.effectHint}<span class="done-hint">{chosen.effectHint}</span>{/if}
-          </div>
-        {/if}
-      </section>
-    {/if}
-  </div>
-{/if}
 
 <style>
   .news {
@@ -347,10 +318,13 @@
   .alerts li::before { content: "·"; margin-right: 6px; font-weight: 700; }
   .alerts li[data-tone="bad"]::before  { color: var(--bad); }
   .alerts li[data-tone="warn"]::before { color: var(--warn); }
+  .alerts li[data-tone="info"]::before { color: var(--ink-mute); }
 
+  /* ⚠ **목록이 좁으면 안 된다.** 소제목·보낸이·미리보기가 한 줄씩 들어가므로
+     360px 아래로는 제목이 잘린다. 상세는 남는 폭을 다 쓴다 */
   .cols {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 240px;
+    grid-template-columns: minmax(320px, 400px) minmax(0, 1fr);
     gap: 10px;
     min-height: 0;
   }
@@ -364,18 +338,24 @@
     padding: 11px 12px;
   }
 
-  .feed-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-  .filters { display: flex; gap: 5px; flex-wrap: wrap; }
+  .feed-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  /* ⚠ **한 줄을 지킨다.** 2단으로 바꾸면서 목록 폭이 좁아져 칩 여섯 개가
+     두 줄로 깨졌다 — 분류를 묶어(`FILTER_GROUPS`) 다섯 개로 줄이고
+     `nowrap`으로 못 박는다. 그래도 안 들어가면 줄이 늘어나는 대신
+     칩이 줄어들어야 한다(아래 `min-width: 0`) */
+  .filters { display: flex; gap: 4px; flex-wrap: nowrap; min-width: 0; }
 
   .chip {
-    display: inline-flex; align-items: center; gap: 5px;
+    display: inline-flex; align-items: center; gap: 4px;
     border: 1px solid var(--line);
     background: var(--panel);
     color: var(--ink-mid);
     border-radius: 999px;
-    font-size: 12px;
-    padding: 4px 11px;
+    font-size: 11.5px;
+    padding: 4px 9px;
     cursor: pointer;
+    white-space: nowrap;
+    min-width: 0;
   }
   .chip:hover { border-color: var(--line-strong); }
   .chip.on { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
@@ -396,11 +376,17 @@
   .tool:hover:not(:disabled) { border-color: var(--t-dark); color: var(--t-dark); }
   .tool:disabled { opacity: 0.35; cursor: default; }
 
+  /* ⚠ **flex 자식은 min-content 밑으로 안 줄어든다.** `min-width: 0`이 없으면
+     `.item-head`의 nowrap 조각들(분류·보낸이·시각)이 min-content를 밀어올려
+     목록이 통째로 가로로 늘어난다 — 실측 폭 365에 scrollWidth 597이었고,
+     카드 글자가 칸 밖으로 삐져나왔다. `overflow-x`로 가리기만 하면 글자가
+     잘린 채 남으므로 **줄어들게** 해야 한다 */
   .list {
     list-style: none; margin: 0; padding: 0;
-    min-height: 0; overflow-y: auto;
+    min-width: 0; min-height: 0; overflow-y: auto; overflow-x: hidden;
     display: flex; flex-direction: column; gap: 6px;
   }
+  .list > li { min-width: 0; }
   .empty { color: var(--ink-mute); font-size: 13px; padding: 14px 2px; }
 
   .item {
@@ -414,79 +400,78 @@
   }
   .item:hover { background: var(--panel-sunk); }
 
-  .item-head { display: flex; align-items: baseline; gap: 7px; }
-  .cat { font-size: 10px; font-weight: 800; letter-spacing: 0.06em; color: var(--cat); }
-  .sender { font-size: 11.5px; color: var(--ink-mute); }
-  .grow { flex: 1; }
-  .time { font-size: 10.5px; color: var(--ink-mute); }
+  .item-head { display: flex; align-items: baseline; gap: 7px; min-width: 0; }
+  .cat { font-size: 10px; font-weight: 800; letter-spacing: 0.06em; color: var(--cat); flex-shrink: 0; }
+  /* 보낸이는 길 수 있다(리그 사무국·고교야구연맹) — 여기가 줄어드는 자리다 */
+  .sender {
+    font-size: 11.5px; color: var(--ink-mute);
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .grow { flex: 1; min-width: 0; }
+  .time { font-size: 10.5px; color: var(--ink-mute); flex-shrink: 0; }
 
+  /* ⚠ **말줄임은 안쪽 span이 한다.** 이 줄은 flex라 여기에 `ellipsis`를 걸면
+     안 먹는다 — 2단으로 바꾼 뒤 목록 폭이 좁아지면서 제목이 그대로 넘쳐
+     오른쪽으로 잘렸다 */
   .subject {
     margin: 0; font-size: 13.5px; color: var(--ink); font-weight: 600;
     display: flex; align-items: center; gap: 6px;
+    min-width: 0; width: 100%;
   }
+  .subject-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .item.unread .subject { font-weight: 800; }
+  /* 목록 항목 자체도 안 넘치게 — 안 막으면 긴 보낸이 이름이 카드를 늘린다 */
+  .item { min-width: 0; }
+  .item-head { min-width: 0; }
   .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cat); flex-shrink: 0; }
 
+  /* ⚠ **`width: 100%`가 있어야 한다.** `.item`이 flex column이라 자식이
+     stretch될 것 같지만, `nowrap` 텍스트는 max-content로 커진다 — 실측에서
+     이 줄만 555px이 되어 카드(365px) 밖으로 삐져나갔다. `overflow: hidden`은
+     자기 박스를 자르지 **박스가 커지는 걸 막지 않는다.**
+
+     ⚠ 짧은 미리보기(195px)는 멀쩡했다. **긴 것 하나만 터졌다** — 목록 하나만
+     보고 넘어가면 못 잡는 종류다 */
   .preview {
     margin: 0; font-size: 12px; color: var(--ink-mute);
+    min-width: 0; width: 100%;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
 
-  /* 선택 대기는 목록에서 즉시 구분돼야 한다 — 게임이 여기서 멈춰 있다 */
-  .item.pending { border-color: var(--warn); background: #FFFBF2; }
+  /* 선택 대기는 목록에서 즉시 구분돼야 한다 — 게임이 여기서 멈춰 있다.
+     ⚠ **배경을 하드코딩하면 안 된다.** `#FFFBF2`로 박아 뒀더니 어두운
+     테마에서 배경 rgb(255,251,242)에 글자 rgb(230,236,247) — **흰 바탕에
+     흰 글씨**가 되어 선택 대기 소식의 제목이 안 보였다(실측).
+     테두리와 왼쪽 띠만으로 충분히 눈에 띈다 */
+  .item.pending { border-color: var(--warn); border-left-color: var(--warn); }
   .tag-pending {
     font-size: 10px; font-weight: 800; color: #6B4200;
     background: var(--attn); border-radius: 2px; padding: 1px 6px;
   }
   .tag-done { font-size: 10px; color: var(--ok); font-weight: 700; }
 
-  /* ── 옆단 ── */
-  .side { display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow-y: auto; }
-  .side .u-card { padding: 11px 12px; }
-  .side-line { margin: 5px 0 0; font-size: 13px; color: var(--ink); }
-  .side-sub { margin: 5px 0 0; font-size: 11.5px; color: var(--ink-mute); line-height: 1.5; }
-
-  .recent { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-  .recent li { display: flex; align-items: baseline; gap: 7px; font-size: 12px; }
-  .wl {
-    width: 17px; text-align: center; font-size: 10px; font-weight: 800;
-    border-radius: 2px; padding: 1px 0; color: var(--ink-on-dark); flex-shrink: 0;
-  }
-  .wl[data-r="w"] { background: var(--ok); }
-  .wl[data-r="l"] { background: var(--bad); }
-  .wl[data-r="d"] { background: var(--ink-mute); }
-  .score { font-weight: 700; color: var(--ink); }
-  .opp { color: var(--ink-mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  .upcoming { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-  .upcoming li {
-    font-size: 11.5px; color: var(--ink-mid);
-    padding-left: 8px; border-left: 2px solid var(--line);
-  }
-
   /* ── 상세 ── */
-  .backdrop { position: fixed; inset: 0; background: rgba(10, 18, 34, 0.5); z-index: 90; }
-  .modal {
-    position: fixed; z-index: 91;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: min(760px, 92vw); max-height: 84vh;
-    background: var(--panel);
-    border-top: 4px solid var(--cat);
-    border-radius: var(--radius);
-    box-shadow: 0 24px 60px -28px rgba(8, 16, 36, 0.75);
-    padding: 16px 18px;
+  .detail {
     display: flex; flex-direction: column; gap: 8px;
+    min-height: 0;
+    padding: 14px 16px;
     color: var(--ink);
   }
+  /* 아무것도 안 골랐을 때는 안내만 가운데 — 빈 카드가 뜨면 고장으로 읽힌다 */
+  .detail.empty-state { align-items: center; justify-content: center; text-align: center; }
+  .ph { margin: 0; font-size: 13px; color: var(--ink-mute); }
+  .ph-sub { margin: 6px 0 0; font-size: 12px; color: var(--warn); font-weight: 700; }
 
   .m-head { display: flex; align-items: center; gap: 10px; }
   .m-cat { font-size: 10px; font-weight: 800; letter-spacing: 0.08em; color: var(--cat); }
   .m-title { margin: 0; flex: 1; font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
-  .m-close {
+  /* 넓은 폭에선 목록이 옆에 있으니 이 버튼이 필요 없다 — 좁을 때만 보인다 */
+  .m-back {
+    display: none;
     background: none; border: 0; cursor: pointer;
-    color: var(--ink-mute); font-size: 14px; padding: 2px 6px;
+    color: var(--ink-mute); font-size: 12px; padding: 2px 6px;
   }
-  .m-close:hover { color: var(--ink); }
+  .m-back:hover { color: var(--ink); }
 
   .m-meta { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
 
@@ -533,9 +518,14 @@
   .done-label { font-weight: 700; color: var(--ink); }
   .done-hint { font-size: 11.5px; color: var(--ink-mute); margin-left: auto; }
 
-  @media (max-width: 1280px) {
+  /* ⚠ **좁으면 두 칸이 같이 안 산다.** 목록 최소 320 + 상세 본문은
+     1100px 아래에서 둘 다 읽을 수 없게 된다. 그때는 FM처럼 **한 번에 하나만**
+     보여주고, 상세에 "목록으로" 버튼을 띄운다 — 두 칸을 억지로 욱여넣으면
+     제목이 잘리고 카드형(TOP10 표·부상 목록)이 가로로 넘친다 */
+  @media (max-width: 1100px) {
     .cols { grid-template-columns: minmax(0, 1fr); }
-    .side { flex-direction: row; overflow-x: auto; }
-    .side .u-card { flex: 1; min-width: 180px; }
+    .cols.detail-open .feed { display: none; }
+    .cols:not(.detail-open) .detail { display: none; }
+    .m-back { display: inline; }
   }
 </style>
