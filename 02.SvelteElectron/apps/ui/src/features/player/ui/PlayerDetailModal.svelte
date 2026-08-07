@@ -1088,6 +1088,21 @@
                         {#if npcService != null}
                           <div class="ci"><span>프로 경력</span><strong>{npcService}년차</strong></div>
                         {/if}
+                        <!-- 육성선수 — **정원 밖 신분이다.** 연봉만 보면 그냥 싼
+                             선수로 보이고, 1군에 못 올라가는 이유도 안 보인다 -->
+                        {#if modalNpcSave?.developmentSince != null}
+                          <div class="ci ci-full">
+                            <span>신분</span>
+                            <strong>
+                              육성선수 ({modalNpcSave.developmentSince}년 입단)
+                              <!-- ⚠ 주 → 월 변환을 여기서 새로 만들지 않는다.
+                                   정본은 `market.ts`의 `currentMonth`이고,
+                                   화면이 따로 계산하면 정본이 둘이 된다.
+                                   입단 연도라는 사실만 보이고 조건은 문구로 쓴다 -->
+                              {#if modalNpcSave.developmentSince >= _cy}· 1군 등록은 5월부터{/if}
+                            </strong>
+                          </div>
+                        {/if}
                         {#if mp?.contract?.noTrade}
                           <div class="ci"><span>노트레이드</span><strong>있음</strong></div>
                         {/if}

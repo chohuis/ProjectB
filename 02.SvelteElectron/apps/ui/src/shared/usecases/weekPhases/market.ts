@@ -10,6 +10,7 @@ import {
   SANGMU_TEAM_IDS, leagueOfTeam, activeProLeagues, activeProLeaguesWithFarm,
 } from "../../utils/ids";
 import { isForeignPlayer, isForeignInQuotaLeague } from "../../utils/foreignSlots";
+import { isRegistrable } from "../../utils/developmentPlayer";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
@@ -61,6 +62,8 @@ function buildRosterRef(
   liveStats: import("../../stores/master").NpcLiveStats,
   savedNpc?: import("../../types/save").NpcSaveState,
   perf?: object,
+  /** 육성선수 등록 판정용. 없으면 전원 등록 가능(승강 외 호출부) */
+  now?: { seasonYear: number; month: number },
 ): object {
   const p = (entity.details as EntityDetails)?.player;
   const ref = {
@@ -77,6 +80,11 @@ function buildRosterRef(
     // 외국인은 1군 전용 — 승강 판정이 이 값으로 강등·교체 후보에서 뺀다.
     // 국적만으로 판정하면 ABL(USA)·JBL(JPN) 로스터 전원이 외국인이 된다
     isForeign:        isForeignPlayer(entity.leagueId ?? "", entity.nationality),
+    // 육성선수는 입단 연도 5월까지 1군 등록이 안 된다 (KBO 규정).
+    // ⚠ 후보에서만 빠지고 2군 정원에는 그대로 센다 — `developmentPlayer.ts`
+    registrable:      now
+      ? isRegistrable(savedNpc?.developmentSince, now.seasonYear, now.month)
+      : true,
     // 성적이 없으면 undefined — Rust가 그때는 능력치만 본다
     ...(perf ? { perf } : {}),
   };
@@ -664,10 +672,11 @@ function getTeamEntityRefs(
   liveStats: import("../../stores/master").NpcLiveStats,
   namedMap: Map<string, import("../../types/save").NpcSaveState>,
   leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {},
+  now?: { seasonYear: number; month: number },
 ) {
   const build = (teamId: string) => entities
     .filter(e => e.role === "player" && e.teamId === teamId)
-    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id), seasonPerfOf(e.id, leagueStats)));
+    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id), seasonPerfOf(e.id, leagueStats), now));
   return { active: build(teamId1), farm: build(teamId2) };
 }
 
@@ -753,7 +762,8 @@ export async function processProTeamCallupCalldown(
     const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     const { active, farm } = getTeamEntityRefs(
-      teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats);
+      teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats,
+      { seasonYear: s.seasonYear, month: currentMonth });
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
     // 감독 승부처 판단이 "최근 성적을 얼마나 정확히 읽는가"를 정한다 (§7-5 F-1).
     // 낮은 감독은 이름값(OVR)만 보고 올린다
@@ -841,10 +851,18 @@ export async function processProTeamCallupCalldown(
       .filter(n => moveMap.has(n.npcId))
       .map(n => {
         const toTeam = moveMap.get(n.npcId)!;
+        const toLeague = leagueOfTeam(toTeam) ?? n.currentLeague;
         return {
           ...n,
           currentTeam: toTeam,
-          currentLeague: leagueOfTeam(toTeam) ?? n.currentLeague,
+          currentLeague: toLeague,
+          // ⚠ **1군에 등록되면 육성선수가 아니다** (KBO도 정식선수로 전환된다).
+          // 안 풀면 콜업된 뒤에도 화면에 영영 "육성선수"로 남고, 다시 강등돼도
+          // 그 신분이 따라다닌다 — 신분이 이력이 아니라 상태이기 때문이다.
+          // 1군은 `_1`이 아니라 **2군이 아닌 곳**으로 본다: 리그가 정본이다
+          ...(n.developmentSince != null && !toLeague.endsWith("_FARM")
+            ? { developmentSince: undefined }
+            : {}),
         };
       });
     if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);

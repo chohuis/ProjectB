@@ -51,6 +51,20 @@ export interface GenerationRulesFile {
    */
   foreignRules?: { leagues?: string[]; [key: string]: unknown };
   /**
+   * 육성선수 — 2군 보충 생성 조건과 **신분 조건**.
+   *
+   * `salary`는 미지명자·방출자가 2군으로 갈 때 붙는 연봉이고, 최저연봉(3000)
+   * 보다 낮아야 한다. 등록 제한(입단 연도 5월)은 `utils/developmentPlayer.ts`
+   */
+  developmentPlayerRules?: {
+    leagues?: string[];
+    minPitchers?: number;
+    minBatters?: number;
+    maxPerYear?: number;
+    salary?: number;
+    [key: string]: unknown;
+  };
+  /**
    * 재능 분포 — 천장(`potentialMult*`)과 상위 꼬리. Rust로 그대로 넘긴다.
    *
    * ⚠ **세 생성 경로가 같은 값을 받아야 한다** (초기 세계·매년 신입생·용병).

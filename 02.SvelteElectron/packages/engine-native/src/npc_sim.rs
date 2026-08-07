@@ -944,6 +944,7 @@ fn release_second_stage(
                 id: n.npc_id.clone(), position: n.position.clone(), age: n.age, ovr,
                 salary: n.current_salary, remaining_years: n.contract_years,
                 pro_service_years: n.pro_service_years.unwrap_or(0),
+                registrable: true,
                 is_prospect: n.current_team.ends_with("_2"),
                 personality: n.personality.clone(), fame: n.fame, perf: None,
                 is_foreign: false,   // 위에서 걸러졌다
@@ -1480,7 +1481,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
-            university_annual_max: None, farm_max: 0,
+            university_annual_max: None, farm_max: 0, development_salary: None,
         });
         let mut placer = crate::draft::Placer::new(
             &after_normalize, &params.university_team_ids, &params.independent_team_ids,
@@ -1843,6 +1844,8 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             name,
             name_en: Some(name_en),
             nationality:    Some("KOR".into()),
+            // 신입생은 학생이다 — 육성선수는 프로 2군에 들어갈 때만 붙는다
+            development_since: None,
             player_type:    if is_sp { "pitcher".into() } else { "batter".into() },
             position,
             grade:          Some(1),
@@ -1856,7 +1859,11 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             pitching:       Some(make_pitching(ovr_p.round(), &mut rng)),
             batting:        Some(make_batting(ovr_b.round(),  &mut rng)),
             development_rate: dev_r.round() as i32,
-            potential_hidden: (params.pitching_ovr_max.max(params.batting_ovr_max) * pot_mult)
+            // 천장은 **시작 능력치와 다른 상한**을 쓸 수 있다 — 육성선수가
+            // 그 경우다(약하게 시작하되 클 수 있어야 한다)
+            potential_hidden: (params.potential_ovr_max
+                .unwrap_or_else(|| params.pitching_ovr_max.max(params.batting_ovr_max))
+                * pot_mult)
                 .clamp(ovr_p.max(ovr_b), 99.0),
             career_history:  vec![],
             career_events:   vec![],
@@ -2308,7 +2315,7 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
-            university_annual_max: None, farm_max: 0,
+            university_annual_max: None, farm_max: 0, development_salary: None,
         }),
     );
     // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다
@@ -3609,6 +3616,7 @@ mod freshmen_ratio_tests {
                 annual_roster_size: 40,
                 pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,
                 batting_ovr_min: 45.0, batting_ovr_max: 70.0,
+                potential_ovr_max: None,   // 천장 = ovr_max (기본 동작)
                 dev_rate_min: 45.0, dev_rate_max: 75.0,
                 named_npcs: vec![], season_year: 2026, id_offset: 0,
                 needed_positions: vec![],   // 전부 폴백으로 뽑힌다
@@ -3643,6 +3651,7 @@ mod freshmen_ratio_tests {
             annual_roster_size: 400,
             pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,
             batting_ovr_min: 45.0, batting_ovr_max: 70.0,
+            potential_ovr_max: None,   // 천장 = ovr_max (기본 동작)
             dev_rate_min: 45.0, dev_rate_max: 75.0,
             named_npcs: vec![], season_year: 2026, id_offset: 0,
             needed_positions: vec![], pitcher_ratio: 0.45,
@@ -3654,6 +3663,44 @@ mod freshmen_ratio_tests {
         let want = crate::tuning::SP_SHARE_OF_PITCHERS;
         assert!((share - want).abs() < 0.08,
             "선발 비중 {share:.3} (선발 {sp} / 불펜 {rp}) — 생성은 {want}");
+    }
+
+    #[test]
+    fn 천장은_시작_능력치와_따로_준다() {
+        // 육성선수: **약하게 시작하되 클 수 있다** (사용자 확정 2026-08-07).
+        //
+        // ⚠ 천장은 `ovr_max * pot_mult`다. 그래서 시작 능력치를 낮추려고
+        // `ovr_max`를 내리면 **천장까지 같이 내려간다** — 그러면 그냥 약한
+        // 선수가 되고 육성선수가 프로가 되는 경로 자체가 없어진다.
+        let mk = |ovr_max: f64, pot: Option<f64>| generate_freshmen(GenerateFreshmenParams {
+            name_pool: None,
+            school_id: "SCHOOL_T".into(), team_id: "TEAM_T".into(),
+            annual_roster_size: 300,
+            pitching_ovr_min: 42.0, pitching_ovr_max: ovr_max,
+            batting_ovr_min: 42.0, batting_ovr_max: ovr_max,
+            potential_ovr_max: pot,
+            dev_rate_min: 45.0, dev_rate_max: 75.0,
+            named_npcs: vec![], season_year: 2026, id_offset: 0,
+            needed_positions: vec![], pitcher_ratio: 0.45,
+            talent: None,
+        });
+        let top = |v: &[NpcSaveState]| v.iter()
+            .map(|n| n.potential_hidden).fold(f64::MIN, f64::max);
+
+        // 능력치 범위를 64로 낮추고 천장 기준만 76으로 준다
+        let lowered  = mk(64.0, Some(76.0));
+        // 비교군: 천장도 같이 내려간 경우
+        let together = mk(64.0, None);
+
+        assert!(top(&lowered) > top(&together),
+            "천장을 따로 안 줬다: 분리 {:.1} vs 같이내림 {:.1}",
+            top(&lowered), top(&together));
+
+        // 시작 능력치는 실제로 낮다 — 천장만 높지 지금 강한 게 아니다
+        let ovr_of = |n: &NpcSaveState| n.pitching.as_ref().map(|p| p.ovr)
+            .unwrap_or_else(|| n.batting.as_ref().map(|b| b.ovr).unwrap_or(0.0));
+        assert!(lowered.iter().all(|n| ovr_of(n) <= 64.0),
+            "시작 능력치가 낮춘 상한을 넘었다");
     }
 }
 

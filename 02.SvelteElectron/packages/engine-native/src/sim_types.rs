@@ -142,6 +142,17 @@ pub struct NpcSaveState {
     pub potential_hidden: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pro_service_years: Option<i32>,
+    /// 육성선수로 입단한 연도. `None`이면 정식 등록 선수다.
+    ///
+    /// ⚠ **신분이지 소속이 아니다.** 2군에 있다고 육성선수가 아니고,
+    /// 정식 등록 선수도 강등되면 2군에 있는다. 리그 ID로 판정하면
+    /// 드래프트 지명자가 육성선수 대우를 받는다.
+    ///
+    /// KBO: 육성선수는 정원 밖 인원이고 최저연봉(3000만원) 보장이 없으며,
+    /// **입단 연도에는 5월 1일 이후에만** 1군 등록이 된다. 그 제한을
+    /// 거는 곳이 `registrable`이다
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub development_since: Option<i32>,
     pub career_history: Vec<NpcCareerEntry>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub career_events: Vec<NpcCareerEvent>,
@@ -248,6 +259,15 @@ pub struct GenerateFreshmenParams {
     pub batting_ovr_max: f64,
     pub dev_rate_min: f64,
     pub dev_rate_max: f64,
+    /// 천장(`potential_hidden`) 계산에 쓸 상한. 없으면 `*_ovr_max` 중 큰 값.
+    ///
+    /// ⚠ **육성선수 때문에 갈라놨다.** 천장은 `ovr_max * pot_mult`인데,
+    /// 육성선수의 시작 능력치를 낮추려고 `ovr_max`를 내리면 **천장까지 같이
+    /// 내려간다.** 그러면 "지금은 약하지만 클 수 있다"가 아니라 그냥 약한
+    /// 선수가 되고, 육성선수가 프로가 되는 경로 자체가 없어진다
+    /// (사용자 확정 2026-08-07: 범위는 낮추되 천장은 안 낮춘다)
+    #[serde(default)]
+    pub potential_ovr_max: Option<f64>,
     pub named_npcs: Vec<NpcSaveState>,
     pub season_year: i32,
     pub id_offset: i32,
@@ -1030,7 +1050,17 @@ pub struct RosterPlayerRef {
     /// 없으면 false — 구 페이로드는 전원 내국인으로 읽힌다
     #[serde(default)]
     pub is_foreign: bool,
+    /// 지금 1군에 등록할 수 있는가. 육성선수는 **입단 연도 5월 전까지** false다.
+    ///
+    /// ⚠ **2군 정원에는 그대로 센다.** 후보에서만 빼야 한다 — 아예 빼면
+    /// 2군이 얇아 보여서 육성선수를 또 만들고, 그게 다음 해에 다시 못 올라간다
+    ///
+    /// 없으면 true — 정식 등록 선수와 구 페이로드는 전부 등록 가능이다
+    #[serde(default = "default_true")]
+    pub registrable: bool,
 }
+
+fn default_true() -> bool { true }
 
 /// 승강 판정용 시즌 성적. 투수/타자 중 해당 쪽만 채워진다
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]

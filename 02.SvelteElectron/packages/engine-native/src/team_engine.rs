@@ -201,6 +201,13 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     let pitcher_short = pitchers_now < crate::tuning::FIRST_TEAM_MIN_PITCHERS;
 
     for farm in &p.farm_players {
+        // ⚠ **육성선수는 입단 연도엔 1군에 못 올라간다** (KBO: 5월 1일 이후).
+        //
+        // 여기서 빼는 건 **후보 자격뿐이다.** 위 `pitchers_now`나 아래
+        // `farm_cls` 같은 정원 계산에는 그대로 센다 — 아예 빼면 2군이 얇아
+        // 보여서 육성선수를 또 만들고, 그게 다음 해에 다시 못 올라간다.
+        if !farm.registrable { continue; }
+
         // 외국인은 교체 대상에서 뺀다 — `replaces_player_id`는 호출측이 2군으로
         // 내리는 선수다. 외국인이 거기 걸리면 콜업 한 번에 1군 전용 원칙이 깨진다
         let active_at_pos: Vec<&RosterPlayerRef> = p.active_players.iter()
@@ -333,8 +340,10 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
             // ⚠ 야수 하한 아래로는 안 내린다 — 이번엔 타순이 무너진다.
             // 2군 투수 하한도 본다 — 2군도 경기를 한다.
             if batters_now > crate::tuning::FIRST_TEAM_MIN_BATTERS && farm_pit > farm_floor {
+                // 육성선수는 여기서도 뺀다 — 하한이 급해도 등록 자체가 안 된다.
+                // `farm_pit` 정원 계산에는 위에서 그대로 셌다
                 let up = p.farm_players.iter()
-                    .filter(|f| is_pit(&f.position))
+                    .filter(|f| f.registrable && is_pit(&f.position))
                     .max_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
                 let down = p.active_players.iter()
                     .filter(|a| !a.is_foreign && !is_pit(&a.position) && count_at(&a.position) >= 2)
@@ -1318,7 +1327,7 @@ mod tests {
             // 능력치를 흩어 놓는다 — 전원 동점이면 정렬이 순서에 기대게 된다
             ovr: 50.0 + (i % 10) as f64, salary: 30_000, remaining_years: 2,
             pro_service_years: 3, is_prospect: false, personality: None,
-            fame: 0.0, perf: None, is_foreign: false,
+            fame: 0.0, perf: None, is_foreign: false, registrable: true,
         };
         (0..n_pit).map(|i| mk(i, "RP"))
             .chain((0..n_bat).map(|i| mk(i, "1B")))
@@ -1400,6 +1409,7 @@ mod tests {
             id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
             remaining_years: 2, pro_service_years: 3, is_prospect: false,
             personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
         }
     }
     /// 하한 위에 있는 2군 로스터 — 포수 한 명과 여유 인원
@@ -1432,6 +1442,7 @@ mod tests {
             id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
             remaining_years: 2, pro_service_years: 3, is_prospect: false,
             personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
         };
         // 투수 2명(하한 12 미달)인데 **자리는 안 비었다**. 야수는 넉넉하다
         let mut active = vec![mk("SP_A", "SP", 70.0), mk("RP_A", "RP", 66.0)];
@@ -1455,6 +1466,43 @@ mod tests {
     }
 
     #[test]
+    fn 육성선수는_등록_전엔_안_올라간다() {
+        // KBO: 육성선수는 **입단 연도 5월 1일 이후**에만 1군 등록이 된다.
+        //
+        // ⚠ 하한 미달이라도 예외가 아니다. 급하다고 올려주면 육성선수와
+        // 드래프트 지명자의 차이가 "연봉이 좀 낮다"만 남는다 — 그러면
+        // 미지명자를 2군에 흘려보낸 순간 드래프트 가치가 사라진다.
+        let r = rules();
+        let mk = |id: &str, pos: &str, ovr: f64| RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
+        };
+        let mut active = vec![mk("SP_A", "SP", 70.0), mk("RP_A", "RP", 66.0)];
+        for i in 0..18 { active.push(mk(&format!("B{i}"), "1B", 50.0 + i as f64)); }
+
+        // 2군 투수를 **전부** 미등록으로 돌린다. 정원 계산엔 그대로 세지만
+        // 후보로는 아무도 못 나와야 한다
+        let mut fm = farm(&r);
+        for f in fm.iter_mut() { if f.position == "RP" { f.registrable = false; } }
+
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: fm,
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+
+        assert!(res.candidates.iter().all(|c| !c.player_id.starts_with("FP")),
+                "육성선수가 등록 전에 1군으로 올라갔다: {:?}",
+                res.candidates.iter().map(|c| &c.player_id).collect::<Vec<_>>());
+    }
+
+    #[test]
     fn 야수_하한_아래로는_안_내린다() {
         // ⚠ 한쪽을 채우려다 반대가 깨지는 게 이 프로젝트에서 반복됐다.
         // 투수가 모자라도 야수가 하한이면 멈춘다 — 그 상태는 콜업으로 풀 문제가
@@ -1464,6 +1512,7 @@ mod tests {
             id: id.into(), position: pos.into(), age: 26, ovr: 60.0, salary: 30_000,
             remaining_years: 2, pro_service_years: 3, is_prospect: false,
             personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
         };
         let mut active = vec![mk("SP_A", "SP"), mk("RP_A", "RP")];
         for i in 0..crate::tuning::FIRST_TEAM_MIN_BATTERS {
@@ -1492,6 +1541,7 @@ mod tests {
             id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
             remaining_years: 2, pro_service_years: 3, is_prospect: false,
             personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
         };
         // 1군에 포수가 없다. 1루수는 셋이라 한 명 내릴 여유가 있다
         let active = vec![
@@ -1523,6 +1573,7 @@ mod tests {
             id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
             remaining_years: 2, pro_service_years: 3, is_prospect: false,
             personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
         };
         // 야수가 전부 1명씩 — 누구를 내려도 그 자리가 빈다
         let active = vec![mk("1B_A", "1B", 62.0), mk("SS_A", "SS", 60.0), mk("SP_A", "SP", 72.0)];
@@ -1548,6 +1599,7 @@ mod tests {
             id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
             remaining_years: 2, pro_service_years: 3, is_prospect: false,
             personality: None, fame: 0.0, perf: None, is_foreign: false,
+            registrable: true,
         };
         // 야수는 자리마다 1명뿐이고 투수만 남아돈다
         let active = vec![

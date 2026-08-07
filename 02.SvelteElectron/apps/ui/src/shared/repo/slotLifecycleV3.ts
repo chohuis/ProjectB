@@ -361,6 +361,8 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
   const rulesFile = await loadRosterRules();
   const dev = (rulesFile as { developmentPlayerRules?: {
     leagues?: string[]; minPitchers?: number; minBatters?: number; maxPerYear?: number;
+    /** 육성선수 시작 능력치 — 정식 2군보다 낮다. 천장은 안 낮춘다 */
+    ovrMin?: number; ovrMax?: number;
   } }).developmentPlayerRules;
   if (!dev?.leagues?.length) return 0;
 
@@ -420,8 +422,16 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
         await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
           schoolId: teamId, teamId,
           annualRosterSize: want,
-          pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
-          battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
+          // ⚠ **육성선수는 지명자보다 약하게 시작한다** (사용자 확정 2026-08-07).
+          // 안 그러면 미지명자를 2군에 흘려보낸 순간 드래프트가 무의미해진다
+          pitchingOvrMin: dev.ovrMin ?? rules.pitchingOvrMin,
+          pitchingOvrMax: dev.ovrMax ?? rules.pitchingOvrMax,
+          battingOvrMin: dev.ovrMin ?? rules.battingOvrMin,
+          battingOvrMax: dev.ovrMax ?? rules.battingOvrMax,
+          // ⚠ **천장은 안 낮춘다.** 안 넘기면 천장이 `ovrMax * pot_mult`라
+          // 시작 능력치와 같이 내려가고, "지금은 약하지만 클 수 있다"가 그냥
+          // 약한 선수가 된다 — 육성선수가 프로가 되는 경로 자체가 없어진다
+          potentialOvrMax: Math.max(rules.pitchingOvrMax ?? 0, rules.battingOvrMax ?? 0),
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
           pitcherRatio: rules.pitcherRatio ?? 0.45,

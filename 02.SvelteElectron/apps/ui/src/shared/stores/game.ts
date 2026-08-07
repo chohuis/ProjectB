@@ -2082,7 +2082,8 @@ function createGameStore() {
           universityTeamIds: offDest.univIds,
           independentTeamIds: offDest.indIds,
           farmTeamIds: offDest.farmIds,
-          rules: placementRulesFrom(offRules.rosterRules),
+          rules: placementRulesFrom(
+            offRules.rosterRules, offRules.developmentPlayerRules?.salary),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
         foreignParamsFrom(offRules),
@@ -3109,13 +3110,19 @@ function createGameStore() {
         autoLog(`[드래프트] 보드 후보 ${ordered.length}명 (지명 ${simResult.picks.length} · 미지명 ${ordered.length - simResult.picks.length})`);
       }
 
+      // ⚠ **2군 목록을 안 넘기면 미지명자가 갈 곳이 없다.** 오프시즌 경로는
+      // 넘기는데 드래프트 경로만 빠져 있어서, `farmMax: 34`가 계산은 되고
+      // 쓰이진 않았다 — 그만큼이 그대로 "야구를 그만둔다"로 갔다
+      const draftDest = draftDestinationTeams(get(masterStore).teams);
       const updatedNpcs = await applyDraftToNpcs(
         combined, simResult, universityTeamIds, independentTeamIds,
         {
           contract: draftRules.contract,
           firstTeamRounds: draftRules.firstTeamRounds ?? 0,
           teamIndex,
-          placement: placementRulesFrom(rulesFile.rosterRules),
+          placement: placementRulesFrom(
+            rulesFile.rosterRules, rulesFile.developmentPlayerRules?.salary),
+          farmTeamIds: draftDest.farmIds,
         },
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [], lastDraftYear: year }));

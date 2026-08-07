@@ -279,6 +279,16 @@ pub struct PlacementRules {
     /// 프로 2군 팀당 정원. 0이면 2군을 목적지로 안 쓴다(구 페이로드 호환)
     #[serde(default)]
     pub farm_max: usize,
+    /// 육성선수 연봉(만원). 여기로 들어온 사람은 **육성선수 신분**이다.
+    ///
+    /// ⚠ **최저연봉(3000)보다 낮아야 한다.** 같거나 높으면 드래프트로
+    /// 들어올 이유가 없어진다 — 지명은 계약금이 붙고 육성은 안 붙는데,
+    /// 연봉까지 같으면 하위 라운드 지명이 무의미해진다.
+    /// KBO 육성선수도 최저연봉 보장이 없다.
+    ///
+    /// `None`이면 무계약(연봉 0·기간 0) — 배선 전 동작 그대로다
+    #[serde(default)]
+    pub development_salary: Option<i64>,
 }
 
 /// 갈 곳 없는 선수들의 진로를 정한다.
@@ -477,6 +487,21 @@ impl<'a> Placer<'a> {
                 npc.grade = (league == "LEAGUE_UNIVERSITY").then_some(1);
                 npc.current_salary = 0;
                 npc.contract_years = 0;
+
+                // ── 육성선수 ────────────────────────────────────────
+                // 프로 2군으로 갔으면 **드래프트 지명자와 다른 신분**이다.
+                // 계약금이 없고, 연봉이 최저연봉 아래고, 단년이고, 입단
+                // 연도엔 5월까지 1군에 못 올라간다.
+                //
+                // ⚠ 소속이 아니라 신분을 남긴다. 강등된 정식 선수도 2군에
+                // 있으므로 리그 ID로 판정하면 그 사람까지 육성선수가 된다
+                if league == "LEAGUE_KBL_FARM" {
+                    if let Some(sal) = self.rules.development_salary {
+                        npc.current_salary = sal;
+                        npc.contract_years = 1;   // 단년 — 한 해 안에 증명해야 한다
+                    }
+                    npc.development_since = Some(year);
+                }
             }
             None => {
                 npc.career_events.push(NpcCareerEvent {
@@ -748,7 +773,47 @@ mod tests {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             university_annual_max: None,   // 연간 상한 없음 = 기존 동작
             farm_max: 0,                   // 2군을 목적지로 안 씀 = 기존 동작
+            development_salary: None,
         }
+    }
+
+    #[test]
+    fn 이군으로_간_사람은_육성선수다() {
+        // ⚠ 이 경로는 **배선이 빠져 한 번도 안 돌았다.** `farm_max`는 34로
+        // 계산되고 Rust 갈래도 있었는데, TS가 `farmTeamIds`를 안 넘겨서
+        // 팀 목록이 빈 배열이었다 — 상한 34가 쓰인 적이 없다.
+        let farm = vec!["TEAM_KBL_A_2".to_string()];
+        let mut p = Placer::new(&[], &[], &[], &farm, PlacementRules {
+            farm_max: 34, development_salary: Some(2000), ..placement()
+        });
+
+        // 대졸 미지명자 — 대학은 못 가고 2군으로 간다
+        let mut n = npc("U", "LEAGUE_UNIVERSITY", Some(4), 58.0, 22);
+        p.place(&mut n, 2026, "draft_undrafted", "미지명", false);
+
+        assert_eq!(n.current_league, "LEAGUE_KBL_FARM");
+        assert_eq!(n.development_since, Some(2026), "육성선수 신분이 안 붙었다");
+        // 최저연봉(3000)보다 낮아야 한다 — 같으면 하위 라운드 지명이 무의미해진다
+        assert_eq!(n.current_salary, 2000);
+        assert_eq!(n.contract_years, 1, "육성선수는 단년이다");
+    }
+
+    #[test]
+    fn 대학과_독립으로_간_사람은_육성선수가_아니다() {
+        // 신분은 **소속이 아니라 계약**이다. 2군이 아닌 곳으로 갔으면
+        // `development_since`가 붙으면 안 된다
+        let univ = vec!["TEAM_UNIV_A".to_string()];
+        let indie = vec!["TEAM_IND_A".to_string()];
+        let farm = vec!["TEAM_KBL_A_2".to_string()];
+        let mut p = Placer::new(&[], &univ, &indie, &farm, PlacementRules {
+            farm_max: 34, development_salary: Some(2000), ..placement()
+        });
+
+        let mut hs = npc("HS", DRAFT_POOL_LEAGUE, None, 60.0, 20);
+        p.place(&mut hs, 2026, "draft_undrafted", "미지명", true);
+        assert_eq!(hs.current_league, "LEAGUE_UNIVERSITY");
+        assert_eq!(hs.development_since, None);
+        assert_eq!(hs.current_salary, 0);
     }
 
     #[test]
@@ -873,7 +938,7 @@ mod tests {
         let indie = vec!["TEAM_IND_A".to_string()];
         let rules = PlacementRules {
             university_max: 1, independent_max: 1, independent_age_max: 31,
-            university_annual_max: None, farm_max: 0,
+            university_annual_max: None, farm_max: 0, development_salary: None,
         };
         let mut p = Placer::new(&[], &univ, &indie, &[], rules);
 

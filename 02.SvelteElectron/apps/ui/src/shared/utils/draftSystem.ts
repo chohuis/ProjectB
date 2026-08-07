@@ -194,10 +194,19 @@ export interface PlacementRules {
    * 야구 포기가 1,163명까지 올랐다.
    */
   universityAnnualMax: number;
+  /**
+   * 육성선수 연봉(만원). 2군으로 배정된 사람에게 붙는다.
+   *
+   * ⚠ **최저연봉(신인 계약 3000)보다 낮아야 한다.** 같거나 높으면 하위 라운드
+   * 지명이 무의미해진다 — 지명은 계약금이 붙고 육성은 안 붙는데 연봉까지
+   * 같으면 "지명 안 되는 게 낫다"가 된다. `check:devplayer`가 이걸 본다
+   */
+  developmentSalary?: number;
 }
 
 export function placementRulesFrom(
   rosterRules: Record<string, { rosterMax?: number; ageMax?: number; rosterSize?: number; gradeMax?: number }>,
+  devSalary?: number,
 ): PlacementRules {
   const uni = rosterRules["LEAGUE_UNIVERSITY"];
   // 정원 ÷ 학년 수 — 고교 신입생 생성(`generateFreshmenV3`)의 `perYear`와 같은 계산이다
@@ -211,7 +220,12 @@ export function placementRulesFrom(
     // 지명 하나뿐인데 1군이 콜업으로 계속 빼간다 — 실측 야수 29 / 투수 6,
     // 오프시즌에도 회복이 없었다. 1군의 `fill_first_teams`에 해당하는 보충
     // 경로가 2군엔 없다. 방출자·미계약 FA가 여기로 흘러가면 그 구멍이 메워진다.
+    //
+    // ⚠ **이 값만으로는 아무 일도 안 일어난다.** Rust `Placer`는 팀 목록을
+    // 따로 받는데, 드래프트 경로가 `farmTeamIds`를 안 넘겨서 빈 배열이었다 —
+    // 상한 34가 한 번도 쓰인 적이 없다. 목록은 `ApplyDraftOptions.farmTeamIds`다
     farmMax: rosterRules["LEAGUE_KBL_FARM"]?.rosterMax ?? 34,
+    developmentSalary: devSalary,
   };
 }
 
@@ -224,6 +238,14 @@ export interface ApplyDraftOptions {
   teamIndex?: Record<string, number>;
   /** 미지명자 진로 배정 상한 */
   placement?: PlacementRules;
+  /**
+   * 프로 2군 팀 목록. **이게 없으면 `placement.farmMax`가 죽은 값이다.**
+   *
+   * ⚠ Rust `Placer`는 상한과 팀 목록을 따로 받는다. 상한만 넘기면 빈 배열을
+   * 훑으므로 2군 경로가 통째로 안 돈다 — 실제로 그 상태였고, 갈 곳 없는
+   * 사람이 시즌당 1,135명씩 야구를 그만뒀다
+   */
+  farmTeamIds?: string[];
 }
 
 export async function applyDraftToNpcs(
@@ -236,6 +258,7 @@ export async function applyDraftToNpcs(
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const json = await api().npcApplyDraft(JSON.stringify({
     npcs, result, universityTeamIds, independentTeamIds,
+    farmTeamIds: opts.farmTeamIds ?? [],
     ...(opts.contract ? { contract: opts.contract } : {}),
     ...(opts.placement ? { placement: opts.placement } : {}),
     firstTeamRounds: opts.firstTeamRounds ?? 0,

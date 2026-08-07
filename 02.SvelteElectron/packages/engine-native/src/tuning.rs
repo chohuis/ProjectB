@@ -574,7 +574,11 @@ mod talent_tests {
         let hs_cap = 70.0;   // LEAGUE_HIGHSCHOOL의 ovrMax
         let mut vals = vec![];
         for i in 0..1000 {
-            let r = |k: u32| ((i as u32 * 2654435761u32).wrapping_add(k * 40503)
+            // ⚠ `wrapping_mul`이다. `*`로 두면 debug 빌드에서 i=2부터
+            // 곱셈 오버플로로 패닉한다 — **테스트 자신의 난수식 버그**라
+            // 판정이 멀쩡한데도 계속 빨간불이었다
+            let r = |k: u32| ((i as u32).wrapping_mul(2654435761u32)
+                              .wrapping_add(k.wrapping_mul(40503))
                               % 10007) as f64 / 10007.0;
             let (pot, _) = sample_talent(&t, 45.0, 75.0, r(1), r(2), r(3));
             vals.push((hs_cap * pot).round());

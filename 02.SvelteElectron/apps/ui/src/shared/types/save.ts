@@ -810,6 +810,13 @@ export interface NpcSaveState {
   batting?: BattingAttributes;
   developmentRate: number;
   proServiceYears?: number;  // 프로 입단 후 연수 (KBL/ABL FA 자격 기준: 9년)
+  /**
+   * 육성선수로 입단한 연도. `undefined`면 정식 등록 선수다.
+   *
+   * ⚠ **신분이지 소속이 아니다.** 2군에 있다고 육성선수가 아니다 — 강등된
+   * 정식 등록 선수도 2군에 있다. 판정은 `utils/developmentPlayer.ts`
+   */
+  developmentSince?: number;
   currentSalary?: number;   // 오프시즌 OVR 기반 계산 연봉 (Rust estimate_salary_and_contract)
   contractYears?: number;   // 오프시즌 OVR 기반 계산 계약 기간 (Rust estimate_salary_and_contract)
   injuryStatus?: {
