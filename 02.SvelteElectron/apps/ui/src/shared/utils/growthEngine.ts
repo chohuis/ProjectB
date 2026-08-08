@@ -73,6 +73,49 @@ export async function calcTrainingGrowth(
   return { protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta };
 }
 
+export interface TrainingPreview {
+  fatigueDelta: number;
+  conditionDelta: number;
+  projectedFatigue: number;
+  projectedCondition: number;
+  /** 지금 피로에서 걸리는 구간 승수 (1.0 / 1.5 / 2.5 / 4.0) */
+  fatigueZoneMult: number;
+  /** 예상 피로에서 걸릴 승수 — 다음 주가 더 나빠지는지 알려줄 근거 */
+  nextZoneMult: number;
+}
+
+/**
+ * 이 계획이면 이번 주에 어떻게 되는가 — **엔진에 묻는다.**
+ *
+ * ⚠ **화면이 다시 계산하지 않는다.** 예전엔 훈련 화면이 자기 식을 갖고 있었고,
+ * 슬롯 배수(0.5)도 피로 구간 승수(1.5/2.5/4.0)도 몰라서 화면은 "피로 +7"이라
+ * 하고 엔진은 −4.25를 적용했다 — **부호가 반대였다.** 실제 계산과 같은
+ * `plan_load`를 타므로 이제 구조적으로 어긋날 수 없다.
+ */
+export async function previewTraining(p: {
+  fatigue: number;
+  condition: number;
+  plan: TrainingPlanState;
+  programs: readonly import("../stores/master").TrainingProgram[];
+}): Promise<TrainingPreview | null> {
+  const raw = JSON.parse(
+    await window.projectB!.engine("previewTrainingNative", JSON.stringify(p)),
+  );
+  if (raw?.error || raw?.fatigueDelta === undefined) return null;
+  return raw as TrainingPreview;
+}
+
+/**
+ * 이번 주 부상 확률 — **`calc_injury`가 굴리는 것과 같은 식이다.**
+ * 예상 피로를 넣어 "이 계획대로 가면 N%"를 얻는다.
+ */
+export async function injuryChance(payload: Record<string, unknown>): Promise<number | null> {
+  const raw = JSON.parse(
+    await window.projectB!.engine("injuryChanceNative", JSON.stringify(payload)),
+  );
+  return typeof raw?.chance === "number" ? raw.chance : null;
+}
+
 export async function calcGameGrowth(
   protagonist: ProtagonistSave,
   won: boolean,

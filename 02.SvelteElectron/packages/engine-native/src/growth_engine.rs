@@ -394,6 +394,92 @@ fn apply_batting_xp(
 
 // ── 공개 함수 ─────────────────────────────────────────────────
 
+/// 슬롯별 (XP 배수, 피로 배수). **주 2.5/1.0 · 보조1 1.5/0.5 · 보조2 1.0/0.5**
+///
+/// ⚠ 피로 1당 XP가 주 2.50 · 보조1 3.00 · 보조2 2.00이라 **"주" 슬롯이 최적이
+/// 아니다.** 의도인지 미확정이다 (design/training.md §3-7).
+const SLOT_MULTS: [(f64, f64); 3] = [(2.5, 1.0), (1.5, 0.5), (1.0, 0.5)];
+
+/// 피로 구간 승수 — 70/80/90에서 볼록하게 뛴다. 지칠수록 같은 훈련이 더 지치게 한다.
+/// **회복 훈련에는 안 걸린다.** 실측상 43% 주에서 이 승수가 실제로 걸린다.
+pub fn fatigue_zone_mult(fatigue: f64) -> f64 {
+    if fatigue >= 90.0 { 4.0 } else if fatigue >= 80.0 { 2.5 }
+    else if fatigue >= 70.0 { 1.5 } else { 1.0 }
+}
+
+/// 이번 주 계획이 주는 **피로·컨디션 변화**. `(fatigue_delta, condition_delta)`
+///
+/// ⚠ **이것이 정본이다.** 실제 성장 계산과 훈련 화면 미리보기가 같은 함수를 쓴다.
+/// 예전엔 화면이 자기 식을 갖고 있었고 — 슬롯 배수도 구간 승수도 몰라서 —
+/// 화면은 "피로 +7"이라 하고 엔진은 −4.25를 적용했다. **부호가 반대였다.**
+pub fn plan_load(
+    fatigue: f64,
+    plan: &TrainingPlanState,
+    programs: &[ProgramDef],
+) -> (f64, f64) {
+    let slots: Vec<(Option<&str>, f64)> = [
+        plan.primary_program_id.as_deref(),
+        plan.secondary_program_id.as_deref(),
+        plan.secondary2_program_id.as_deref(),
+    ].iter().zip(SLOT_MULTS.iter()).map(|(id, (_, fat))| (*id, *fat)).collect();
+    let zone = fatigue_zone_mult(fatigue);
+
+    // 주간 자동 피로 회복 (-5): 매주 수동 처리 없이 기본 회복
+    let mut fat = -5.0f64;
+    // 주간 자동 컨디션 회복: 피로 낮을수록 더 빠르게 회복
+    let mut cond = if fatigue >= 80.0 { 1.0 } else if fatigue >= 60.0 { 3.0 } else { 5.0 };
+
+    for (id_opt, fat_mult) in slots {
+        let Some(id) = id_opt else { continue };
+        let Some(cfg) = programs.iter().find(|c| c.id == id) else { continue };
+        if cfg.fatigue_cost > 0.0 {
+            fat += cfg.fatigue_cost * fat_mult * zone;
+        } else {
+            fat += cfg.fatigue_cost * fat_mult;   // 회복 훈련: 승수 미적용
+        }
+        cond -= cfg.condition_cost * fat_mult;
+    }
+    (fat, cond)
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrainingPreviewParams {
+    pub fatigue: f64,
+    pub condition: f64,
+    pub plan: TrainingPlanState,
+    pub programs: Vec<ProgramDef>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrainingPreview {
+    pub fatigue_delta: f64,
+    pub condition_delta: f64,
+    pub projected_fatigue: f64,
+    pub projected_condition: f64,
+    /// 지금 피로에서 걸리는 구간 승수 (1.0 / 1.5 / 2.5 / 4.0)
+    pub fatigue_zone_mult: f64,
+    /// 예상 피로에서 걸릴 구간 승수 — 다음 주가 더 나빠지는지 화면이 알려줄 근거
+    pub next_zone_mult: f64,
+}
+
+/// 훈련 화면 미리보기 — **실제 계산과 같은 `plan_load`를 쓴다.**
+/// 화면이 다시 계산하면 그게 다섯 번째 정본이 된다.
+pub fn preview_training(params: TrainingPreviewParams) -> TrainingPreview {
+    let (fat_d, cond_d) = plan_load(params.fatigue, &params.plan, &params.programs);
+    let pf = (params.fatigue + fat_d).clamp(0.0, 100.0);
+    let pc = (params.condition + cond_d).clamp(0.0, 100.0);
+    TrainingPreview {
+        fatigue_delta: fat_d,
+        condition_delta: cond_d,
+        projected_fatigue: pf,
+        projected_condition: pc,
+        fatigue_zone_mult: fatigue_zone_mult(params.fatigue),
+        next_zone_mult: fatigue_zone_mult(pf),
+    }
+}
+
 pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     let p = &params.protagonist;
     let age_factor = age_train_factor(p.age.unwrap_or(25));
@@ -402,30 +488,23 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
 
     let mut pitching_gains: HashMap<String, f64> = HashMap::new();
     let mut batting_gains: HashMap<String, f64> = HashMap::new();
-    let mut fatigue_delta = 0.0f64;
-    let mut condition_delta = 0.0f64;
     let mut pitch_dev_gain = 0.0f64;
 
-    let programs: &[(Option<&str>, f64, f64)] = &[
-        (params.plan.primary_program_id.as_deref(),    2.5, 1.0),
-        (params.plan.secondary_program_id.as_deref(),  1.5, 0.5),
-        (params.plan.secondary2_program_id.as_deref(), 1.0, 0.5),
+    // 슬롯 배수는 `SLOT_MULTS`가 정본이다 — `plan_load`도 같은 걸 쓴다
+    let slot_ids = [
+        params.plan.primary_program_id.as_deref(),
+        params.plan.secondary_program_id.as_deref(),
+        params.plan.secondary2_program_id.as_deref(),
     ];
+    let programs: Vec<(Option<&str>, f64, f64)> = slot_ids.iter().zip(SLOT_MULTS.iter())
+        .map(|(id, (xp, fat))| (*id, *xp, *fat)).collect();
 
-    // 피로 구간 승수: 70/80/90 기준 볼록 곡선 (회복 훈련에는 미적용)
-    let fat_zone_mult = if p.fatigue >= 90.0 { 4.0 }
-        else if p.fatigue >= 80.0 { 2.5 }
-        else if p.fatigue >= 70.0 { 1.5 }
-        else { 1.0_f64 };
+    // ⚠ 피로·컨디션은 **`plan_load`가 정본이다.** 훈련 화면 미리보기가 같은
+    // 함수를 부른다 — 화면이 자기 식을 두면 표시와 실제가 갈린다.
+    let (mut fatigue_delta, mut condition_delta) =
+        plan_load(p.fatigue, &params.plan, &params.programs);
 
-    // 주간 자동 피로 회복 (-5): 매주 수동 처리 없이 기본 회복
-    fatigue_delta -= 5.0;
-
-    // 주간 자동 컨디션 회복: 피로 낮을수록 더 빠르게 회복
-    let condition_auto_recovery = if p.fatigue >= 80.0 { 1.0 }
-        else if p.fatigue >= 60.0 { 3.0 }
-        else { 5.0 };
-    condition_delta += condition_auto_recovery;
+    let fat_zone_mult = fatigue_zone_mult(p.fatigue);
 
     for (prog_id_opt, xp_mult, fat_mult) in programs {
         let prog_id = match prog_id_opt { Some(id) => id, None => continue };
@@ -436,12 +515,7 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
             None => continue,
         };
 
-        if cfg.fatigue_cost > 0.0 {
-            fatigue_delta += cfg.fatigue_cost * fat_mult * fat_zone_mult;
-        } else {
-            fatigue_delta += cfg.fatigue_cost * fat_mult; // 회복 훈련: 승수 미적용
-        }
-        condition_delta -= cfg.condition_cost * fat_mult;
+        // 피로·컨디션은 위에서 `plan_load`가 이미 더했다 — 여기서 또 더하면 두 배다
         if cfg.is_recovery { continue; }
 
         if cfg.is_pitch_dev {

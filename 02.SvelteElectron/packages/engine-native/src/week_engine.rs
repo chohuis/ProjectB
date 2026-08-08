@@ -197,6 +197,48 @@ fn eff_mod_for(severity: &str) -> f64 {
     }
 }
 
+/// 훈련 무리 조건 — 고강도인데 컨디션이 낮다. 부상 출처를 가르는 데도 쓴다
+pub fn is_training_overload(p: &InjuryPayload) -> bool {
+    p.training_intensity >= 0.8 && p.condition < 65.0
+}
+
+/// 이번 주 부상 발생 확률 — **주사위를 굴리기 전까지는 결정적이다.**
+///
+/// `calc_injury`가 이 값으로 굴리고, **훈련 화면 미리보기가 같은 함수를 부른다.**
+/// 화면이 자기 식을 따로 두면 표시와 실제가 갈린다 — 이 프로젝트가 이미
+/// 그걸로 당했다(피로 예상치가 엔진과 부호까지 반대였다).
+///
+/// 예전엔 같은 식이 **세 곳**에 있었다 — 여기, 전조 경고의 `next`, 그리고
+/// 훈련 화면의 `(예상피로 − 60) × 0.8`.
+pub fn injury_trigger_chance(p: &InjuryPayload, grace_week: bool) -> f64 {
+    // 볼록 곡선: 80미만=0%, 80~85=5%, 85~90=15%, 90~95=35%, 95+=60%
+    let fatigue_chance: f64 = if p.fatigue >= 95.0 { 0.60 }
+        else if p.fatigue >= 90.0 { 0.35 }
+        else if p.fatigue >= 85.0 { 0.15 }
+        else if p.fatigue >= 80.0 { 0.05 }
+        else { 0.0 };
+
+    let mut training_chance = 0.0f64;
+    if is_training_overload(p) {
+        training_chance += 0.10;
+        if p.condition < 60.0 && p.fatigue > 70.0 { training_chance += 0.10; }
+    }
+
+    // 유예 주에는 **피로 몫만** 뺀다. 훈련 무리는 다른 축이라 그대로 둔다 —
+    // "쉬라고 경고했는데 고강도 훈련을 밀어붙였다"가 면죄부가 되면 안 된다
+    let mut trigger_chance = if grace_week { training_chance }
+                             else { fatigue_chance + training_chance };
+
+    if p.has_prior_injury_same_area { trigger_chance *= 1.5; }
+    if p.prior_steroid_used.unwrap_or(false) { trigger_chance *= 1.25; }
+
+    let age_mult: f64 = if p.age >= 35 { 1.5 } else if p.age >= 32 { 1.3 } else { 1.0 };
+    trigger_chance *= age_mult;
+    // 관리 잘하는 코치진이면 덜 다친다
+    trigger_chance /= p.injury_prevention.unwrap_or(1.0).clamp(0.80, 1.30);
+    trigger_chance.min(0.80)
+}
+
 pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
     let mut rng = rand::thread_rng();
     let is_pitcher = p.player_type.as_deref().unwrap_or("pitcher") != "batter";
@@ -231,33 +273,9 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
 
         // ── 피로 + 훈련 복합 트리거 ──────────────────────────────
         if !just_occurred {
-            // 볼록 곡선: 80미만=0%, 80~85=5%, 85~90=15%, 90~95=35%, 95+=60%
-            let fatigue_chance: f64 = if p.fatigue >= 95.0 { 0.60 }
-                else if p.fatigue >= 90.0 { 0.35 }
-                else if p.fatigue >= 85.0 { 0.15 }
-                else if p.fatigue >= 80.0 { 0.05 }
-                else { 0.0 };
-
-            let training_trigger = p.training_intensity >= 0.8 && p.condition < 65.0;
-            let mut training_chance = 0.0f64;
-            if training_trigger {
-                training_chance += 0.10;
-                if p.condition < 60.0 && p.fatigue > 70.0 { training_chance += 0.10; }
-            }
-
-            // 유예 주에는 **피로 몫만** 뺀다. 훈련 무리는 다른 축이라 그대로 둔다 —
-            // "쉬라고 경고했는데 고강도 훈련을 밀어붙였다"가 면죄부가 되면 안 된다
-            let mut trigger_chance = if grace_week { training_chance }
-                                     else { fatigue_chance + training_chance };
-
-            if p.has_prior_injury_same_area { trigger_chance *= 1.5; }
-            if p.prior_steroid_used.unwrap_or(false) { trigger_chance *= 1.25; }
-
-            let age_mult: f64 = if p.age >= 35 { 1.5 } else if p.age >= 32 { 1.3 } else { 1.0 };
-            trigger_chance *= age_mult;
-            // 관리 잘하는 코치진이면 덜 다친다
-            trigger_chance /= p.injury_prevention.unwrap_or(1.0).clamp(0.80, 1.30);
-            trigger_chance = trigger_chance.min(0.80);
+            // ⚠ 확률식은 `injury_trigger_chance`에 있다 — **훈련 화면 미리보기가
+            // 같은 함수를 쓴다.** 여기 인라인으로 두면 화면이 자기 식을 또 만든다.
+            let trigger_chance = injury_trigger_chance(&p, grace_week);
 
             if trigger_chance > 0.0 && rng.gen::<f64>() < trigger_chance {
                 let tier_roll: f64 = rng.gen();
@@ -294,7 +312,7 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
                     _ => pick_light_type(is_pitcher, &mut rng),
                 };
 
-                let injury_src = if grace_week || (training_trigger && p.fatigue < 80.0) { "training" } else { "fatigue" };
+                let injury_src = if grace_week || (is_training_overload(&p) && p.fatigue < 80.0) { "training" } else { "fatigue" };
                 let severity   = severity_of(injury_type);
                 let raw_weeks  = recovery_weeks_for(injury_type, &mut rng);
                 // 시설 좋은 구단이면 복귀가 빠르다. 최소 1주는 남긴다
@@ -313,12 +331,9 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
             // risk = 다음 주도 이대로 갈 때의 실제 확률 — 예방·나이까지 반영해
             // 화면이 "위험합니다" 대신 숫자를 보여줄 수 있게 한다
             if grace_week && !just_occurred {
-                let next = ((fatigue_chance + training_chance)
-                    * if p.has_prior_injury_same_area { 1.5 } else { 1.0 }
-                    * if p.prior_steroid_used.unwrap_or(false) { 1.25 } else { 1.0 }
-                    * age_mult
-                    / p.injury_prevention.unwrap_or(1.0).clamp(0.80, 1.30))
-                    .min(0.80);
+                // ⚠ 여기 같은 식이 **세 번째로** 복제돼 있었다. 유예 주가 아닐 때의
+                // 확률이므로 `grace_week = false`로 같은 함수를 부르면 된다.
+                let next = injury_trigger_chance(&p, false);
                 warning = Some(InjuryWarningOut {
                     kind: "fatigue".to_string(),
                     fatigue: p.fatigue,

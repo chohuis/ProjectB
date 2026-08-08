@@ -2,6 +2,7 @@
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap, entitiesL10n, teamsL10n } from "../../shared/stores/master";
   import type { TrainingProgram } from "../../shared/stores/master";
+  import { previewTraining, injuryChance, type TrainingPreview } from "../../shared/utils/growthEngine";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
   import { INJURY_LABEL } from "../../shared/types/save";
   import type { TrainingPreset } from "../../shared/types/save";
@@ -227,15 +228,68 @@
   $: sub2Card = allPrograms.find((p) => p.id === selectedSub2);
   $: selectedCards = [mainCard, sub1Card, sub2Card].filter(Boolean) as ProgramCard[];
 
-  $: rawFatigueDelta = selectedCards.reduce((sum, c) => sum + c.fatigue, 0);
+  // ── 예상 결과 — **화면이 계산하지 않는다. 엔진에 묻는다.** ──────
+  //
+  // ⚠ 여기 자체 식이 셋 있었고 셋 다 엔진과 달랐다:
+  //
+  //   피로     카드 합 × 코치계수 × 시설계수 − 5
+  //            → 슬롯 배수(0.5)도 피로 구간 승수(1.5/2.5/4.0)도 몰랐다.
+  //              게다가 **엔진은 코치·시설로 피로를 안 깎는다** — 화면만의 보정이었다.
+  //              결과: 화면 "피로 +7" / 엔진 −4.25. **부호가 반대였다.**
+  //   컨디션   − max(0, 피로변화) × 0.4 + 3   → 엔진과 무관한 식
+  //   부상위험 (예상피로 − 60) × 0.8          → 엔진 판정과 무관한 식
+  //
+  // 이제 `plan_load`·`injury_trigger_chance`를 그대로 탄다.
+  let preview: TrainingPreview | null = null;
+  let projectedRisk = 0;
 
-  // ⚠ `finalRiskDelta`가 여기 있었는데 **읽는 곳이 없었다.** 카드의 `risk`가
-  // 그 죽은 값 하나만 먹였고, 실제 부상 판정은 Rust가 따로 한다. 같이 지운다.
-  $: finalFatigueDelta = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue) - 5;
+  $: void refreshPreview(selectedMain, selectedSub1, selectedSub2, realFatigue, realCondition,
+                         $masterStore.trainingPrograms);
 
-  $: projectedFatigue   = Math.max(0, Math.min(100, realFatigue   + finalFatigueDelta));
-  $: projectedCondition = Math.max(0, Math.min(100, realCondition - Math.max(0, finalFatigueDelta) * 0.4 + 3));
-  $: projectedRisk      = Math.max(0, Math.round(Math.max(0, projectedFatigue - 60) * 0.8));
+  async function refreshPreview(..._deps: unknown[]) {
+    const programs = $masterStore.trainingPrograms;
+    if (programs.length === 0) return;
+    const plan = {
+      primaryProgramId:    selectedMain,
+      secondaryProgramId:  selectedSub1,
+      secondary2ProgramId: selectedSub2,
+      recoveryProgramId:   null,
+    };
+    const pv = await previewTraining({
+      fatigue: realFatigue, condition: realCondition, plan, programs,
+    });
+    if (!pv) return;
+    preview = pv;
+
+    // 부상 확률은 **예상 피로·컨디션**으로 묻는다 — "이대로 가면 얼마인가"다
+    const chance = await injuryChance({
+      fatigue: pv.projectedFatigue,
+      consecutiveHighFatigueWeeks: protagonist.consecutiveHighFatigueWeeks ?? 0,
+      hasInjury: !!protagonist.injury,
+      playerType: protagonist.playerType,
+      age: protagonist.age,
+      condition: pv.projectedCondition,
+      trainingIntensity,
+      consecutiveLowMoraleWeeks: protagonist.consecutiveLowMoraleWeeks ?? 0,
+      hasPriorInjurySameArea: (protagonist.injuryHistory ?? []).some((h) => h.severity !== "light"),
+      priorSteroidUsed: protagonist.injury?.steroidUsed ?? false,
+      injuryPrevention: coachMod.risk,
+    });
+    if (chance !== null) projectedRisk = Math.round(chance * 100);
+  }
+
+  // ⚠ 훈련 강도의 정본은 `advanceWeek`이다 — 회복·정신 훈련을 뺀 슬롯 비율.
+  // 여기서 다르게 세면 부상 확률이 실제와 갈린다
+  const LOW_INTENSITY = new Set(["TRN_RECOVERY", "TRN_MENTAL_P", "TRN_MENTAL_B"]);
+  $: trainingIntensity = (() => {
+    const slots = [selectedMain, selectedSub1, selectedSub2].filter(Boolean) as string[];
+    if (slots.length === 0) return 0;
+    return slots.filter((id) => !LOW_INTENSITY.has(id)).length / slots.length;
+  })();
+
+  $: finalFatigueDelta  = Math.round(preview?.fatigueDelta ?? 0);
+  $: projectedFatigue   = Math.round(preview?.projectedFatigue ?? realFatigue);
+  $: projectedCondition = Math.round(preview?.projectedCondition ?? realCondition);
 
   $: recentLogs = $gameStore.logs.slice(0, 5);
 

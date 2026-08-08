@@ -503,6 +503,35 @@ pub fn calc_training_growth_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcTrainingGrowthNative/serialize", e))
 }
 
+/// 훈련 계획 미리보기 — **실제 계산과 같은 `plan_load`를 쓴다.**
+///
+/// 훈련 화면이 자기 식으로 예상치를 만들던 시절엔 슬롯 배수(0.5)도 피로 구간
+/// 승수(1.5/2.5/4.0)도 몰라서, 화면은 "피로 +7"이라 하고 엔진은 −4.25를
+/// 적용했다 — 부호가 반대였다. 화면은 이제 계산하지 않고 묻는다.
+#[napi]
+pub fn preview_training_native(params_json: String) -> String {
+    let params: growth_engine::TrainingPreviewParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("previewTrainingNative", e),
+    };
+    let result = growth_engine::preview_training(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("previewTrainingNative/serialize", e))
+}
+
+/// 이번 주 부상 확률 — **`calc_injury`가 굴리는 것과 같은 식이다.**
+/// 훈련 화면이 예상 피로로 이걸 물어 "부상위험 N%"를 낸다.
+#[napi]
+pub fn injury_chance_native(params_json: String) -> String {
+    let p: week_engine::InjuryPayload = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("injuryChanceNative", e),
+    };
+    // 유예 주는 "임계를 넘은 첫 주"라 화면 미리보기에서는 알 수 없다 — 안전하게 false
+    let chance = week_engine::injury_trigger_chance(&p, false);
+    serde_json::to_string(&serde_json::json!({ "chance": chance }))
+        .unwrap_or_else(|e| parse_err("injuryChanceNative/serialize", e))
+}
+
 /// 경기 성장 계산
 #[napi]
 pub fn calc_game_growth_native(params_json: String) -> String {

@@ -100,6 +100,26 @@ check("모든 focus가 코치 담당영역에 매핑된다", unmapped.length ===
   `매핑 없음: ${unmapped.join(", ")}`);
 for (const [f, why] of Object.entries(AREA_EXEMPT)) log(`      (예외 ${f}: ${why})`);
 
+// ── ⑤ 화면이 엔진 식을 다시 구현하지 않는가 (Phase 2) ────────
+//
+// 훈련 화면이 자체 식으로 예상 피로·컨디션·부상위험을 냈고 셋 다 엔진과
+// 달랐다. 화면은 "피로 +7", 엔진은 −4.25 — 부호가 반대였다.
+// ⚠ 주석에 남긴 옛 식까지 잡으면 "왜 없앴는지"를 못 적는다. **코드 줄만** 본다
+const codeLines = trainPage.split("\n").filter((l) => !l.trim().startsWith("//"));
+const trainCode = codeLines.join("\n");
+
+const RECOMPUTE = [
+  [/realCondition\s*-\s*Math\.max\(0,\s*finalFatigueDelta\)/, "컨디션을 화면이 다시 계산한다"],
+  [/projectedFatigue\s*-\s*60\)\s*\*\s*0\.8/, "부상위험을 화면이 다시 계산한다"],
+  [/rawFatigueDelta\s*\*\s*coachMod\.fatigue/, "피로에 화면만의 코치·시설 보정을 건다"],
+];
+for (const [re, why] of RECOMPUTE) {
+  check(`화면이 엔진 식을 복제하지 않는다 — ${why}`, !re.test(trainCode), why);
+}
+check("훈련 화면이 엔진 미리보기를 쓴다", /previewTraining\(/.test(trainCode),
+  "previewTraining을 안 부른다 — 그러면 화면이 자기 식을 갖고 있다는 뜻이다");
+check("부상위험도 엔진에서 받는다", /injuryChance\(/.test(trainCode),
+  "injuryChance를 안 부른다");
 log("");
 if (failed > 0) {
   log(`훈련 표 점검 실패 ${failed}건`);
