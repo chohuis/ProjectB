@@ -41,22 +41,51 @@ const pad = (s, n) => String(s).padEnd(n);
     const first = await app.relationProbe();
     log(`  시작   행 ${first.rows}개 · ${JSON.stringify(first.byLabel)}`);
 
+    // ⚠ **`currentWeek()`은 누적이 아니다 — 시즌마다 1로 리셋된다.**
+    // 처음엔 `if (currentWeek() >= WEEKS) break`로 썼는데, 52를 넘는 값을
+    // 요구하면 **영원히 참이 안 돼서** 가드가 소진될 때까지 돌았다.
+    // `--weeks 220`이 220주가 아니었다는 뜻이고, 그 상태로 나온 숫자에
+    // "220주"라는 이름을 붙일 뻔했다. **경과 주는 내가 센다.**
     const marks = [];
     let guard = 0;
+    let elapsed = 0;
     let lastWeek = -1;
-    while (guard++ < WEEKS * 8) {
+    // autoRun은 선택 대기·경기 대기에서 자주 선다 — 헛도는 회차가 진행한 회차보다
+    // 훨씬 많다(60주에 480회로는 47주까지밖에 못 갔다). 한도는 넉넉히 준다
+    while (guard++ < WEEKS * 40 && elapsed < WEEKS) {
       const w0 = app.currentWeek();
-      if (w0 >= WEEKS) break;
+      const s0 = app.currentSeason();
+      if (app.retired()) { log(`  (은퇴 — ${elapsed}주에서 멈춤)`); break; }
+      // ⚠ **`autoRun`만으로는 W47을 못 넘는다.** 배경 드래프트 관전과 진로
+      // 선택은 사람이 답해야 하는 정지라, 이걸 안 풀면 가드를 4,800으로
+      // 올려도 **매번 47주에서 선다** — "긴 실측"이라 이름 붙은 짧은 실측이 된다.
+      if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
+      if (await app.pushCareerForward()) continue;
+      // ⚠ 시즌 종료는 **pendingAction이 아니라 정지 사유**로 온다
+      // ("결산 화면을 확인해주세요"). pendingKind만 보면 "정지 없음"인데
+      // 진행은 안 되는 상태라 원인을 못 찾는다 — 실제로 52주에서 계속 섰다.
+      if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
       await app.autoRun();
       const w = app.currentWeek();
-      if (w === w0) continue;
-      if (w === lastWeek) continue;
+      const s = app.currentSeason();
+      if (w === w0 && s === s0) continue;
+      // 시즌이 넘어가면 주차가 되감기므로 차이가 아니라 "한 주 진행"으로 센다
+      elapsed += (s > s0) ? Math.max(1, w) : (w - w0);
+      if (w === lastWeek && s === s0) continue;
       lastWeek = w;
-      if (w % 10 === 0) {
+      if (elapsed % 20 === 0) {
         const p = await app.relationProbe();
-        marks.push({ w, ...p });
-        log(`  W${pad(w, 4)} 행 ${pad(p.rows, 4)} ${JSON.stringify(p.byLabel)}`);
+        marks.push({ elapsed, ...p });
+        log(`  누적${pad(elapsed, 4)}주 (${s} W${pad(w, 3)}) 행 ${pad(p.rows, 4)} ${JSON.stringify(p.byLabel)}`);
       }
+    }
+    // ⚠ **요청한 만큼 못 갔으면 왜인지 말한다.** 조용히 짧게 끝나면 그
+    // 숫자에 "160주"라는 이름이 붙는다 — 계측기가 거짓말을 하는 자리다.
+    log(`  경과 ${elapsed}주 · ${app.currentSeason()} W${app.currentWeek()}` +
+      ` (가드 ${guard}/${WEEKS * 40})`);
+    if (elapsed < WEEKS) {
+      log(`  ⚠ 요청 ${WEEKS}주를 못 채웠다 — 정지 ${app.pendingKind() ?? "없음"}` +
+        ` · 사유 ${app.stopReason() ?? "없음"}`);
     }
 
     const last = await app.relationProbe();
