@@ -165,10 +165,17 @@ async function inspect(where) {
 }
 
 async function shot(name) {
+  // ⚠ **파일명을 씻는다.** 주차를 못 읽으면 `?`가 들어오는데 Windows에서는
+  // 못 쓰는 글자다. 저장이 조용히 실패해서, **정작 막힌 순간의 화면만
+  // 안 남았다** — 원인을 못 보게 만드는 종류의 실패다(2026-08-08 pro1).
+  const safe = name.replace(/[<>:"/\\|?*]/g, "_");
   try {
     await page.evaluate(() => document.documentElement.setAttribute("data-reduce-motion", ""));
-    await page.screenshot({ path: path.join(SHOT_DIR, name + ".png"), timeout: 15_000 });
-  } catch { /* 한 컷 못 찍는 게 순회가 멈추는 것보다 낫다 */ }
+    await page.screenshot({ path: path.join(SHOT_DIR, safe + ".png"), timeout: 15_000 });
+  } catch (e) {
+    // 못 찍는 건 순회를 멈출 이유가 아니다. 다만 **조용히 넘기지는 않는다**
+    log(`  (캡처 실패: ${safe} — ${String(e).slice(0, 80)})`);
+  }
 }
 
 /** 주 진행 — 못 넘어가면 막힘으로 잡는다 */
@@ -228,8 +235,17 @@ async function advance(n) {
           .filter((b) => b.offsetParent && !b.disabled)
           .map((b) => b.textContent?.trim().slice(0, 14)).slice(0, 6).join(" | "),
       }));
-      add("진행막힘", `주차 ${before}`, `${state.head} · 버튼[${state.btns}]`);
-      await shot(`stuck-w${before}`);
+      // ⚠ **타이틀로 돌아간 것과 게임 안에서 막힌 것은 다른 사건이다.**
+      // 앞엣것은 앱이 리셋됐다는 뜻이라 그 뒤 순회는 전부 의미가 없다.
+      // 실제 원인은 대개 **순회 중에 소스를 고쳐서 Vite HMR이 리로드한 것**이다
+      // (2026-08-08 pro1에서 그랬다 — 앱 결함으로 오해할 뻔했다).
+      // 순회를 돌리는 동안에는 파일을 건드리지 않는다.
+      const backToTitle = /새 게임|이어하기/.test(state.btns);
+      add(backToTitle ? "타이틀복귀" : "진행막힘", `주차 ${before}`,
+        backToTitle
+          ? `앱이 슬롯 화면으로 돌아갔다 (HMR 리로드? 크래시?) · 버튼[${state.btns}]`
+          : `${state.head} · 버튼[${state.btns}]`);
+      await shot(`${backToTitle ? "reset" : "stuck"}-w${before}`);
       return false;
     }
   }

@@ -54,6 +54,25 @@ export const KBL_TEAM_IDS: readonly string[] = KBL_TEAMS;
 export const DRAFT_ROUNDS = 11;
 
 /**
+ * 전체 순번 → **그 라운드 안에서 몇 번째인가.**
+ *
+ * ⚠ **팀 수를 적지 않는다.** 이 계산이 화면마다 따로 있었고, 지명 통보 창은
+ * `pickNo % 8 || 8`이었다 — 팀이 10개인데 8로 나눴다. 전체 56번(6라운드
+ * 6순위)이 **"6라운드 8순위"**로 떴다. 보드 화면은 같은 결함을 먼저 고쳤는데
+ * 통보 창에만 옛 식이 남아 정본이 둘이 됐다.
+ *
+ * 엔진은 **10팀 정순**이다(스네이크 아님). 팀 수는 `KBL_TEAM_IDS.length`에서
+ * 온다 — 팀이 늘거나 줄면 여기는 손댈 데가 없다.
+ */
+export function pickInRound(
+  pickNo: number,
+  round: number,
+  teamCount: number = KBL_TEAM_IDS.length,
+): number {
+  return pickNo - (round - 1) * Math.max(1, teamCount);
+}
+
+/**
  * 미지명자가 갈 수 있는 팀 — **군경팀(상무)은 제외한다.**
  *
  * 상무가 독립리그 소속이라 리그로만 거르면 그대로 들어간다. 실측(D-0)에서

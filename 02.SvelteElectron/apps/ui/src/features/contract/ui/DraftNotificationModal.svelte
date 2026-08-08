@@ -1,6 +1,7 @@
 <script lang="ts">
   import { acceptDraftOffer, rejectDraftOffer } from "../../../shared/usecases/careerDecision";
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
+  import { pickInRound } from "../../../shared/utils/draftSystem";
   import type { PendingAction } from "../../../shared/types/season";
 
   export let action: Extract<PendingAction, { type: "draftNotification" }>;
@@ -45,7 +46,7 @@
     <header>
       <p class="badge">드래프트 지명 통보</p>
       <h2>{teamName}</h2>
-      <p class="pick-info">{action.round}라운드 {ordinal(action.pickNo % 8 || 8)}순위 (전체 {action.pickNo}번)</p>
+      <p class="pick-info">{action.round}라운드 {ordinal(pickInRound(action.pickNo, action.round))}순위 (전체 {action.pickNo}번)</p>
     </header>
 
     <div class="contract-card">

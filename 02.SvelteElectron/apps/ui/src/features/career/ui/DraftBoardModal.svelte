@@ -59,7 +59,7 @@
   $: nextPick = boardPicks[pickCursor];
   $: currentRound = nextPick?.round ?? 0;
   $: currentPickInRound = nextPick
-    ? nextPick.pickNo - (nextPick.round - 1) * Math.max(1, draftTeamIds.length)
+    ? pickInRound(nextPick.pickNo, nextPick.round, draftTeamIds.length)
     : 0;
   $: currentTeamId = finished ? "" : (nextPick?.teamId ?? "");
   $: totalRounds = boardPicks.length > 0 ? boardPicks[boardPicks.length - 1].round : 0;
