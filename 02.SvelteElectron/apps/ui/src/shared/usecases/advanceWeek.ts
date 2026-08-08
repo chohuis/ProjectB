@@ -1256,7 +1256,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       myTeamId:   gFinal.protagonist.teamId,
       myLeagueId: gFinal.protagonist.leagueId,
       leagueState: sAfterSim.leagueState,
-      hsStandings: sAfterSim.standings,
+      // ⚠ **내 리그 순위표는 여기 있다.** `leagueState`엔 내가 안 뛰는 리그만
+      // 들어 있어서, 거기서 읽으면 프로 다이제스트에 내 순위가 통째로 빠진다
+      myStandings: sAfterSim.standings,
       teamName: (id: string) => teamById.get(id) ?? id,
       regionName: (id: string) => {
         const nm = stadiumById.get(id);

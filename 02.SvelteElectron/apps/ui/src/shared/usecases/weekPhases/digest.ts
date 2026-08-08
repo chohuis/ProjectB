@@ -117,8 +117,21 @@ export interface DigestInput {
   myTeamId: string;
   myLeagueId: string;
   leagueState: Record<string, LeagueSeasonState>;
-  /** 고교 전국 순위 — 권역 계산에 쓴다. 비고교면 빈 배열이어도 된다 */
-  hsStandings: Standing[];
+  /**
+   * **주인공이 뛰는 리그의 순위표.** 정본은 `seasonStore.standings`다.
+   *
+   * ⚠ **`leagueState[myLeagueId]`에서 읽으면 안 된다 — 거기엔 없다.**
+   * `leagueState`는 *내가 안 뛰는* 리그들의 상태고, 내 리그는 시즌 상태
+   * 최상위(`standings`)에 따로 있다. 옛 월간 순위표가 `lid === myLeagueId`를
+   * 건너뛴 이유가 그것이었다.
+   *
+   * 처음에 이걸 `leagueState`에서 읽었더니 **프로 다이제스트에서 `[내 자리]`와
+   * `[내 무대]`가 통째로 사라졌다** — 고치겠다던 "정작 내 리그는 안 온다"를
+   * 그대로 재현했다(2026-08-08 화면에서 발견).
+   *
+   * 고교면 전국 102팀 표이고, 권역 순위는 여기서 파생한다.
+   */
+  myStandings: Standing[];
   teamName: (id: string) => string;
   regionName?: RegionNamer;
   regions?: Record<string, string[]>;
@@ -159,9 +172,9 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
 
   // ── [내 자리] ──────────────────────────────────────────────
   if (on.mine) {
-    if (isHs && input.hsStandings.length > 0) {
-      const r = calcMyRank(input.hsStandings, input.myTeamId, regions);
-      const mine = input.hsStandings.find((s) => s.teamId === input.myTeamId);
+    if (isHs && input.myStandings.length > 0) {
+      const r = calcMyRank(input.myStandings, input.myTeamId, regions);
+      const mine = input.myStandings.find((s) => s.teamId === input.myTeamId);
       if (r) {
         const topPct = Math.round((r.nationalRank / r.nationalTotal) * 100);
         headline = `${regionName(r.regionId)} ${r.regionRank}위 · 전국 ${r.nationalRank}위`;
@@ -174,7 +187,7 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
         );
       }
     } else {
-      const rows = sortStandings(input.leagueState[input.myLeagueId]?.standings ?? []);
+      const rows = sortStandings(input.myStandings);
       const idx = rows.findIndex((s) => s.teamId === input.myTeamId);
       if (idx >= 0) {
         headline = `${LEAGUE_NAMES[input.myLeagueId] ?? input.myLeagueId} ${idx + 1}위`;
@@ -194,10 +207,10 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
   // 100줄이 되고, 그건 읽히지 않는다.
   if (on.stage) {
     if (isHs) {
-      const regs = regionRankings(input.hsStandings, regions);
+      const regs = regionRankings(input.myStandings, regions);
       const mine = regs.find((r) => r.rankedTeams.includes(input.myTeamId));
-      if (mine && hasPlayed(input.hsStandings)) {
-        const byTeam = new Map(input.hsStandings.map((s) => [s.teamId, s]));
+      if (mine && hasPlayed(input.myStandings)) {
+        const byTeam = new Map(input.myStandings.map((s) => [s.teamId, s]));
         const lines = mine.rankedTeams.map((tid, i) => {
           const mark = tid === input.myTeamId ? "  ← 우리" : "";
           return `  ${i + 1}위  ${input.teamName(tid)}  ${recordOf(byTeam.get(tid))}${mark}`;
@@ -205,7 +218,7 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
         sections.push(`[내 무대] ${regionName(mine.regionId)}\n${lines.join("\n")}`);
       }
     } else {
-      const rows = sortStandings(input.leagueState[input.myLeagueId]?.standings ?? []);
+      const rows = sortStandings(input.myStandings);
       if (rows.length > 0 && hasPlayed(rows)) {
         const lines = rows.map((s, i) => {
           const mark = s.teamId === input.myTeamId ? "  ← 우리" : "";

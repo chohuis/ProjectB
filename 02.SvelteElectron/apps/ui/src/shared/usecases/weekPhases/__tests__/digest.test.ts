@@ -44,12 +44,36 @@ const base: DigestInput = {
     LEAGUE_KBL: { standings: [st("TEAM_KBL_1", 40, 20), st("TEAM_KBL_2", 20, 40)] },
     LEAGUE_UNIVERSITY: { standings: [st("TEAM_U1", 15, 5)] },
   } as unknown as DigestInput["leagueState"],
-  hsStandings: HS_STANDINGS,
+  myStandings: HS_STANDINGS,
   teamName: (id) => id.replace(/^TEAM_/, ""),
   regionName: (id) => id.replace(/^STADIUM_/, "") + "권역",
   regions: REGIONS,
   scoutScore: 62,
 };
+
+/**
+ * 프로 표본 — **실제 데이터 모양대로 만든다.**
+ *
+ * ⚠ 처음엔 주인공을 `leagueState.LEAGUE_KBL`에 넣어뒀는데 **게임은 그렇게
+ * 담지 않는다.** 내가 뛰는 리그의 순위표는 `seasonStore.standings`에 있고
+ * `leagueState`엔 *내가 안 뛰는* 리그만 들어 있다. 그 잘못된 표본 때문에
+ * 조립기가 `leagueState[myLeagueId]`를 읽고 있어도 검사가 통과했고,
+ * **실제 프로 다이제스트에서는 `[내 자리]`와 `[내 무대]`가 통째로 사라졌다.**
+ * 화면을 띄워 보고서야 찾았다.
+ */
+const KBL_STANDINGS = [
+  st("TEAM_KBL_1", 40, 20), st("TEAM_KBL_2", 30, 30), st("TEAM_KBL_3", 20, 40),
+];
+const PRO = (): DigestInput => ({
+  ...base,
+  careerStage: "pro_kbl", hsGrade: undefined,
+  myTeamId: "TEAM_KBL_2", myLeagueId: "LEAGUE_KBL",
+  myStandings: KBL_STANDINGS,
+  // 내 리그는 여기 **없다** — 그게 실제 모양이다
+  leagueState: {
+    LEAGUE_ABL: { standings: [st("TEAM_ABL_1", 30, 10)] },
+  } as unknown as DigestInput["leagueState"],
+});
 
 describe("digestTierOf", () => {
   it("고교는 학년으로 갈린다", () => {
@@ -81,32 +105,57 @@ describe("buildLeagueDigest — 섹션 노출", () => {
 
   it("프로에겐 스카우트 관심 구단이 안 나온다", () => {
     // 이미 소속이 있다
-    const m = buildLeagueDigest({
-      ...base, careerStage: "pro_kbl", hsGrade: undefined,
-      myTeamId: "TEAM_KBL_2", myLeagueId: "LEAGUE_KBL", hsStandings: [],
-    })!;
+    const m = buildLeagueDigest(PRO())!;
     expect(m.body).not.toContain("[나를 보는 눈]");
     expect(m.body).toContain("[내 무대]");
   });
 
   it("노출 표와 실제 본문이 어긋나지 않는다", () => {
     // 표만 고치고 조립 코드를 안 고치는 실수를 잡는다
-    const cases: [string, number | undefined][] = [
-      ["highschool", 1], ["highschool", 3], ["university", undefined], ["pro_kbl", undefined],
+    // ⚠ 표본이 단계마다 달라야 한다. 대학 선수는 KBL을 **안 뛰므로** KBL이
+    // `leagueState`에 있고(그래서 스카우트 섹션이 나온다), 프로 KBL 선수는
+    // 자기 리그가 거기 없다. 한 표본으로 넷을 다 보면 그 차이가 지워진다
+    const cases: [string, number | undefined, DigestInput][] = [
+      ["highschool", 1, { ...base, hsGrade: 1 }],
+      ["highschool", 3, base],
+      ["university", undefined, {
+        ...PRO(), careerStage: "university", hsGrade: undefined,
+        myLeagueId: "LEAGUE_UNIVERSITY", leagueState: base.leagueState,
+      }],
+      ["pro_kbl", undefined, PRO()],
     ];
-    for (const [stage, grade] of cases) {
+    for (const [stage, grade, input] of cases) {
       const tier = digestTierOf(stage, grade);
-      const isPro = tier === "pro" || tier === "amateur";
-      const m = buildLeagueDigest({
-        ...base, careerStage: stage, hsGrade: grade,
-        myTeamId: isPro ? "TEAM_KBL_2" : "TEAM_A2",
-        myLeagueId: isPro ? "LEAGUE_KBL" : "LEAGUE_HIGHSCHOOL",
-        hsStandings: stage === "highschool" ? HS_STANDINGS : [],
-      })!;
+      const m = buildLeagueDigest(input)!;
       expect(m, `${tier} 가 null`).not.toBeNull();
       expect(m.body.includes("[다른 무대]"), `${tier} others`).toBe(DIGEST_SECTIONS[tier].others);
       expect(m.body.includes("[나를 보는 눈]"), `${tier} scout`).toBe(DIGEST_SECTIONS[tier].scout);
     }
+  });
+
+  /**
+   * ⚠ **켜기로 한 섹션이 실제로 나오는가.** 위 검사는 `others`/`scout`만 보고
+   * `mine`/`stage`는 안 봤다 — 그 사이로 프로에서 `[내 자리]`와 `[내 무대]`가
+   * 통째로 빠진 게 지나갔다(내 리그 순위표를 `leagueState`에서 찾고 있었다).
+   */
+  it("표가 켜라고 한 섹션은 데이터가 있으면 반드시 나온다", () => {
+    for (const [name, input] of [["고교3", base], ["프로", PRO()]] as const) {
+      const tier = digestTierOf(input.careerStage, input.hsGrade);
+      const m = buildLeagueDigest(input)!;
+      expect(m, `${name} 가 null`).not.toBeNull();
+      if (DIGEST_SECTIONS[tier].mine)  expect(m.body, `${name} mine`).toContain("[내 자리]");
+      if (DIGEST_SECTIONS[tier].stage) expect(m.body, `${name} stage`).toContain("[내 무대]");
+    }
+  });
+
+  it("프로는 내 리그 순위표를 leagueState가 아니라 myStandings에서 읽는다", () => {
+    // 게임은 내가 뛰는 리그를 `leagueState`에 담지 않는다.
+    // `leagueState`를 통째로 비워도 [내 자리]·[내 무대]가 나와야 한다
+    const m = buildLeagueDigest({ ...PRO(), leagueState: {} as never })!;
+    expect(m.body).toContain("[내 자리]");
+    expect(m.body).toContain("[내 무대]");
+    expect(m.body).toContain("← 우리");
+    expect(m.preview).toContain("2위");   // 3팀 중 30승30패 = 2위
   });
 });
 
@@ -137,7 +186,7 @@ describe("buildLeagueDigest — 빈 데이터", () => {
     // 시즌 초엔 전부 0-0이다. 그때 "선두 ○○ (.000)"을 내보내면 거짓 정보다
     const zero = HS_STANDINGS.map((s) => st(s.teamId, 0, 0));
     const m = buildLeagueDigest({
-      ...base, hsStandings: zero,
+      ...base, myStandings: zero,
       leagueState: { LEAGUE_KBL: { standings: [st("TEAM_KBL_1", 0, 0)] } } as never,
     });
     if (m) {
@@ -149,7 +198,7 @@ describe("buildLeagueDigest — 빈 데이터", () => {
   it("담을 게 하나도 없으면 null이다", () => {
     // 빈 껍데기를 보내면 "소식이 왔는데 아무것도 없다"가 된다
     const m = buildLeagueDigest({
-      ...base, hsStandings: [], leagueState: {} as never,
+      ...base, myStandings: [], leagueState: {} as never,
       myTeamId: "TEAM_NONE", myLeagueId: "LEAGUE_NONE",
     });
     expect(m).toBeNull();
@@ -191,7 +240,7 @@ describe("승률 표기", () => {
     // digest.ts 안에 있던 사본은 자릿수가 밀려 `.1000`을 냈다
     const m = buildLeagueDigest({
       ...base,
-      hsStandings: [st("TEAM_A1", 12, 0), st("TEAM_A2", 8, 4), st("TEAM_A3", 0, 12)],
+      myStandings: [st("TEAM_A1", 12, 0), st("TEAM_A2", 8, 4), st("TEAM_A3", 0, 12)],
     })!;
     expect(m.body).toContain("1.000");
     expect(m.body).not.toContain(".1000");
