@@ -56,14 +56,93 @@ export function buildBatterLineup(teamId: string, entities: EntityRow[]): MatchB
   });
 }
 
-// ── 선발 투수 스탯 빌드 ──────────────────────────────────────
-export function buildStarterStats(
+// ── 상대 요약 (소식·브리핑 공용) ──────────────────────────────
+//
+// **표시용 상대 정보의 정본이다.** 경기 전 브리핑과 월간 경기 편성 소식이
+// 같은 상대를 설명하는데, 각자 계산하면 "브리핑은 66인데 예고는 61"처럼
+// 갈린다. 이 프로젝트가 반복해 겪은 "정본이 둘"이라 한 곳에 둔다.
+//
+// ⚠ 순위·성적은 **호출부가 넘긴다.** 순위표는 시즌 상태(`standings`)에 있고
+// 그건 store라 이 모듈이 직접 보면 순수 함수가 아니게 된다.
+
+export interface OpponentBrief {
+  teamId: string;
+  /** 리그(권역) 안 순위. 못 구하면 null */
+  rank: number | null;
+  total: number | null;
+  /** "8승 14패" — 못 구하면 null */
+  record: string | null;
+  /** 타선 9명 OVR 평균. 라인업을 못 만들면 null */
+  teamOvr: number | null;
+  starter: { name: string; position: string; ovr: number } | null;
+}
+
+/**
+ * 상대 팀 한 줄 요약.
+ *
+ * `starter`는 `buildStarterStats`와 **같은 선발 판정**을 쓴다 —
+ * 로테이션 휴식까지 보는 그쪽이 정본이고, 화면이 따로 "OVR 제일 높은 투수"를
+ * 고르면 실제 등판할 투수와 달라진다.
+ *
+ * ⚠ 예고 시점(월초)엔 로테이션이 확정이 아닐 수 있다. 부르는 쪽이
+ * **"선발 예상"**으로 표기해야 한다 — 확정처럼 적으면 브리핑과 어긋난다.
+ */
+export function buildOpponentBrief(
+  teamId: string,
+  entities: EntityRow[],
+  opts: {
+    rank?: number | null; total?: number | null; record?: string | null;
+    conditions?: Record<string, PlayerCondition>;
+    teamGameCount?: number;
+    leagueId?: string;
+  } = {},
+): OpponentBrief {
+  // 타선 OVR 평균 — `MatchBatterStats`엔 ovr이 없어서 엔티티에서 직접 낸다.
+  // 상위 9명을 쓴다(라인업과 같은 기준)
+  const batters = entities
+    .filter((e) => e.teamId === teamId && e.role === "player"
+      && !PITCHER_POS.includes(String(playerOf(e).position ?? "")))
+    .map((e) => Number(playerOf(e).batting?.ovr ?? 0))
+    .sort((a, b) => b - a)
+    .slice(0, 9);
+  const teamOvr = batters.length > 0
+    ? Math.round(batters.reduce((s, v) => s + v, 0) / batters.length)
+    : null;
+
+  const sp = pickStarterEntity(teamId, entities, opts.conditions, opts.teamGameCount ?? 0, opts.leagueId ?? "");
+  const p = sp ? playerOf(sp) : null;
+
+  return {
+    teamId,
+    rank:   opts.rank   ?? null,
+    total:  opts.total  ?? null,
+    record: opts.record ?? null,
+    teamOvr,
+    starter: sp && p
+      ? {
+          name: String(sp.name ?? p.name ?? sp.id),
+          position: String(p.position ?? "SP"),
+          ovr: Number(p.pitching?.ovr ?? 0),
+        }
+      : null,
+  };
+}
+
+/**
+ * 그 팀이 이번 경기에 낼 **선발 투수 한 명**을 고른다.
+ *
+ * ⚠ **판정을 다른 데서 다시 짜지 말 것.** 경기 브리핑과 월간 편성 소식이
+ * 같은 상대의 선발을 말하는데, 화면이 따로 "OVR 제일 높은 투수"를 고르면
+ * 실제 등판할 투수와 다르다 — 로테이션 휴식을 안 보기 때문이다.
+ * `buildStarterStats`와 `buildOpponentBrief`가 **이 함수 하나**를 쓴다.
+ */
+export function pickStarterEntity(
   teamId: string,
   entities: EntityRow[],
   conditions?: Record<string, PlayerCondition>,
   teamGameCount = 0,
   leagueId = "",
-): StarterStats | undefined {
+): EntityRow | undefined {
   const pitchers = entities.filter(
     (e) => e.teamId === teamId && e.role === "player" &&
       PITCHER_POS.includes(String(playerOf(e).position ?? "")),
@@ -93,7 +172,7 @@ export function buildStarterStats(
       return ga - gb;
     });
 
-  const candidate = availableSp[0] ?? fallbackSp[0]
+  return availableSp[0] ?? fallbackSp[0]
     ?? [...pitchers].sort((a, b) => {
       const ORDER: Record<string, number> = { SP: 0, RP: 1, CP: 2 };
       const da = ORDER[String(playerOf(a).position ?? "RP")] ?? 1;
@@ -101,7 +180,17 @@ export function buildStarterStats(
       if (da !== db) return da - db;
       return (playerOf(b).pitching?.ovr ?? 0) - (playerOf(a).pitching?.ovr ?? 0);
     })[0];
+}
 
+// ── 선발 투수 스탯 빌드 ──────────────────────────────────────
+export function buildStarterStats(
+  teamId: string,
+  entities: EntityRow[],
+  conditions?: Record<string, PlayerCondition>,
+  teamGameCount = 0,
+  leagueId = "",
+): StarterStats | undefined {
+  const candidate = pickStarterEntity(teamId, entities, conditions, teamGameCount, leagueId);
   if (!candidate) return undefined;
   const pit = playerOf(candidate).pitching ?? {};
   return {

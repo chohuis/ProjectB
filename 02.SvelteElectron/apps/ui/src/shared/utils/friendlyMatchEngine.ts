@@ -140,31 +140,84 @@ function teamShort(teamId: string, teamMap?: Map<string, string>): string {
   return teamMap?.get(teamId) ?? teamId;
 }
 
+/**
+ * 상대 한 줄 요약을 표시 문자열로. 없는 값은 **지어내지 않고 뺀다.**
+ *
+ * ⚠ 선발은 **"예상"**이다. 이 소식은 월초에 나가는데 로테이션은 그때 확정이
+ * 아니다 — 확정처럼 적으면 경기 전 브리핑과 어긋나고, 그게 이 프로젝트가
+ * 반복해 겪은 "표시와 동작이 다르다"의 형태다.
+ */
+function oppLines(b: import("./matchLineupBuilder").OpponentBrief | null): string[] {
+  if (!b) return [];
+  const out: string[] = [];
+  const bits: string[] = [];
+  if (b.rank != null && b.total != null) bits.push(`${b.rank}위 / ${b.total}팀`);
+  if (b.record) bits.push(b.record);
+  if (b.teamOvr != null) bits.push(`팀 OVR ${b.teamOvr}`);
+  if (bits.length) out.push(`              ${bits.join(" · ")}`);
+  if (b.starter) {
+    out.push(`              선발 예상  ${b.starter.name} (${b.starter.position} · OVR ${b.starter.ovr})`);
+  }
+  return out;
+}
+
 export function buildMonthlyNoticeMessage(
   plan: FriendlyPlan,
   officialEntries: ScheduleEntry[],
   weekNum: number,
   teamMap?: Map<string, string>,
+  /**
+   * 상대 요약 조회. **없으면 지금까지와 똑같이 날짜·상대만 나온다** —
+   * 호출부가 아직 안 넘겨도 소식이 깨지지 않는다.
+   *
+   * ⚠ 조회를 여기서 직접 하지 않는다. 순위표·엔티티는 store에 있고
+   * 이 모듈은 순수 함수로 남아야 회귀에서 쓸 수 있다.
+   */
+  briefOf?: (teamId: string) => import("./matchLineupBuilder").OpponentBrief | null,
 ): MessageItem | null {
   if (!plan.entries.length) return null;
 
-  const lines = plan.entries.map((e) => {
+  const KO_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+
+  // ⚠ **경기 단위 블록으로 묶는다.** 예전엔 한 줄씩 만들어 `.sort()`로 날짜순을
+  // 잡았는데, 상대 상세가 여러 줄이 되면 그 정렬이 **상세를 경기에서 떼어내
+  // 흩어놓는다**(들여쓴 줄이 알파벳순으로 섞인다). 블록을 정렬해야 한다.
+  type Block = { date: string; lines: string[] };
+  const blocks: Block[] = [];
+
+  for (const e of plan.entries) {
     const opp  = teamShort(e.awayTeamId, teamMap);
     const date = e.gameDate.slice(5).replace("-", "/"); // "06/11"
-    return `  ${date} (수)  친선경기  vs ${opp}`;
-  });
-
-  const KO_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
-  const officialLines = officialEntries
-    .filter((e) => !e.isFriendly)
-    .map((e) => {
-      const opp  = teamShort(e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId, teamMap);
-      const date = e.gameDate.slice(5).replace("-", "/");
-      const dow  = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
-      return `  ${date} (${dow})  공식경기  vs ${opp}`;
+    const dow  = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
+    blocks.push({
+      date: e.gameDate,
+      lines: [
+        `  ${date} (${dow})  친선  vs ${opp}`,
+        ...oppLines(briefOf?.(e.awayTeamId) ?? null),
+      ],
     });
+  }
 
-  const all = [...lines, ...officialLines].sort();
+  for (const e of officialEntries.filter((x) => !x.isFriendly)) {
+    const oppId = e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId;
+    const opp   = teamShort(oppId, teamMap);
+    const date  = e.gameDate.slice(5).replace("-", "/");
+    const dow   = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
+    blocks.push({
+      date: e.gameDate,
+      lines: [
+        `  ${date} (${dow})  공식  vs ${opp}`,
+        ...oppLines(briefOf?.(oppId) ?? null),
+      ],
+    });
+  }
+
+  blocks.sort((a, b) => a.date.localeCompare(b.date));
+  // 상세가 붙으면 블록 사이를 띄워야 읽힌다. 날짜만 있을 땐 붙여 둔다
+  const hasDetail = blocks.some((b) => b.lines.length > 1);
+  const all = hasDetail
+    ? blocks.flatMap((b, i) => (i === 0 ? b.lines : ["", ...b.lines]))
+    : blocks.flatMap((b) => b.lines);
 
   const body = [
     `[${plan.monthLabel} 경기 편성]`,
@@ -175,12 +228,31 @@ export function buildMonthlyNoticeMessage(
     "공식 기록에는 포함되지 않습니다.",
   ].join("\n");
 
+  // 미리보기는 **이번 달 최대 고비**를 짚는다. 팀 OVR이 제일 높은 상대다 —
+  // "친선 2회 편성되었습니다"는 목록에서 열어볼 이유가 안 된다
+  const officialCount = officialEntries.filter((x) => !x.isFriendly).length;
+  const toughest = blocks.length > 0
+    ? plan.entries.concat(officialEntries.filter((x) => !x.isFriendly))
+        .map((e) => {
+          const oppId = e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId;
+          return { oppId, b: briefOf?.(oppId) ?? null };
+        })
+        .filter((x) => x.b?.teamOvr != null)
+        .sort((a, b) => (b.b!.teamOvr ?? 0) - (a.b!.teamOvr ?? 0))[0]
+    : undefined;
+
+  const countText = officialCount > 0
+    ? `친선 ${plan.entries.length} · 공식 ${officialCount}`
+    : `친선경기 ${plan.entries.length}회 편성`;
+
   return {
     id:        `msg-friendly-plan-w${weekNum}-${Date.now()}`,
     category:  "manager",
     sender:    "감독",
-    subject:   `${plan.monthLabel} 친선경기 ${plan.entries.length}회 편성`,
-    preview:   `이번 달 친선경기 ${plan.entries.length}회가 편성되었습니다.`,
+    subject:   `${plan.monthLabel} 경기 편성 — ${countText}`,
+    preview:   toughest
+      ? `${teamShort(toughest.oppId, teamMap)}(팀 OVR ${toughest.b!.teamOvr})가 이번 달 최대 고비`
+      : `이번 달 친선경기 ${plan.entries.length}회가 편성되었습니다.`,
     body,
     createdAt: `W${weekNum}`,
     readAt:    null,

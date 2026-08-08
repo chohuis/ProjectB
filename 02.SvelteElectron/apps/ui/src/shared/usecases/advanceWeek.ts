@@ -15,6 +15,7 @@ import {
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
+import { buildOpponentBrief } from "../utils/matchLineupBuilder";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
 import { enlistProtagonist, dischargeProtagonist } from "./militaryDecision";
@@ -711,7 +712,29 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           e.week >= weekNum && e.week <= weekNum + 5 &&
           (e.homeTeamId === proto.teamId || e.awayTeamId === proto.teamId),
       );
-      const noticeMsg = buildMonthlyNoticeMessage(plan, officialThisMonth, weekNum, teamMap);
+      // ⚠ **`briefOf`를 안 넘기면 날짜·상대만 나온다** — 예전 소식 그대로다.
+      // 에러가 아니라 "아무 일도 안 일어남"으로 나타나는 자리라 배선을 여기 둔다.
+      // 순위·성적은 시즌 상태에서, 선발·타선은 엔티티에서 온다
+      const standRank = new Map(
+        [...sFriendly.standings]
+          .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins)
+          .map((s, i) => [s.teamId, { rank: i + 1, row: s }]),
+      );
+      const totalTeams = sFriendly.standings.length;
+      const briefOf = (teamId: string) => {
+        const hit = standRank.get(teamId);
+        return buildOpponentBrief(teamId, mFriendly.entities, {
+          rank:  hit ? hit.rank : null,
+          total: hit ? totalTeams : null,
+          record: hit
+            ? `${hit.row.wins}승 ${hit.row.losses}패${hit.row.draws ? ` ${hit.row.draws}무` : ""}`
+            : null,
+          leagueId: proto.leagueId,
+        });
+      };
+      const noticeMsg = buildMonthlyNoticeMessage(
+        plan, officialThisMonth, weekNum, teamMap, briefOf,
+      );
       if (noticeMsg) gameStore.addMessage(noticeMsg);
       logs.push(`[친선경기] ${plan.monthLabel} ${plan.entries.length}회 편성`);
     }
