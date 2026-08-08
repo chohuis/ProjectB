@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap, entitiesL10n, teamsL10n } from "../../shared/stores/master";
+  import type { TrainingProgram } from "../../shared/stores/master";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
   import { INJURY_LABEL } from "../../shared/types/save";
   import type { TrainingPreset } from "../../shared/types/save";
@@ -14,7 +15,6 @@
     focus: string;
     gains: string;
     fatigue: number;
-    risk: number;
   };
 
   type PitchCandidate = {
@@ -50,27 +50,16 @@
     1: "습득중", 2: "기초", 3: "보통", 4: "능숙", 5: "마스터",
   };
 
-  const pitcherPrograms: ProgramCard[] = [
-    { id: "TRN_VEL",       title: "구속 훈련",        focus: "구속/하체 드라이브",       gains: "구속, 스태미나",           fatigue: 14, risk: 6 },
-    { id: "TRN_CTRL_CMD",  title: "제구/커맨드 훈련", focus: "제구·커맨드 정밀도",       gains: "제구, 커맨드 (균등)",       fatigue: 8,  risk: 2 },
-    { id: "TRN_MOVEMENT",  title: "변화구 훈련",      focus: "무브먼트/구종 궤적",       gains: "무브먼트, 제구",            fatigue: 9,  risk: 3 },
-    { id: "TRN_MENTAL_P",  title: "정신 훈련",        focus: "압박 대응/집중/견제",      gains: "멘탈, 위기집중력, 견제력",  fatigue: 6,  risk: 0 },
-    { id: "TRN_STAMINA",   title: "체력 훈련",        focus: "스태미나/지구력",          gains: "스태미나, 회복력",          fatigue: 12, risk: 4 },
-    { id: "TRN_PITCH_DEV", title: "구종 개발",        focus: "구종 숙련도/신규 습득",    gains: "구종 숙련도 향상",           fatigue: 10, risk: 0 },
-  ];
-
-  const batterPrograms: ProgramCard[] = [
-    { id: "TRN_BATTING",   title: "타격 훈련",        focus: "컨택/파워 드라이브",       gains: "컨택, 장타력",              fatigue: 10, risk: 3 },
-    { id: "TRN_PLATE_EYE", title: "출루 훈련",        focus: "볼-스트라이크 판단/번트",  gains: "선구안, 극기, 번트",        fatigue: 6,  risk: 0 },
-    { id: "TRN_BASERUN",   title: "주루 훈련",        focus: "스피드/베이스러닝",        gains: "주력, 주루판단",            fatigue: 10, risk: 3 },
-    { id: "TRN_DEFENSE",   title: "수비 훈련",        focus: "글러브 워크/어깨",         gains: "수비, 어깨",                fatigue: 9,  risk: 2 },
-    { id: "TRN_MENTAL_B",  title: "정신/클러치 훈련", focus: "압박 대응/득점권 집중",    gains: "멘탈, 클러치",              fatigue: 6,  risk: 0 },
-    { id: "TRN_STAMINA",   title: "체력 훈련",        focus: "스태미나/지구력",          gains: "스태미나, 회복력",          fatigue: 12, risk: 4 },
-  ];
-
-  const recoveryPrograms: ProgramCard[] = [
-    { id: "TRN_RECOVERY", title: "컨디셔닝 회복", focus: "회복/유연성", gains: "피로 ↓, 컨디션 ↑", fatigue: -10, risk: 0 },
-  ];
+  // ⚠ **표를 여기 적지 않는다.** 예전엔 12종이 이 파일에 하드코딩돼 있었고
+  // 마스터·엔진과 값이 달라서, 화면은 "피로 +7"이라 하고 엔진은 −4.25를
+  // 적용했다(부호가 반대였다). 정본은 `training/programs.json` 하나다.
+  //
+  // ⚠ `risk`도 안 되살린다 — 화면에 표시되지도 않고 엔진 부상 판정에도
+  // 안 쓰이던 값이었다 (design/training.md §3-5).
+  const toCard = (p: TrainingProgram): ProgramCard => ({
+    id: p.id, title: p.name, focus: p.focusLabel, gains: p.gainsLabel,
+    fatigue: p.fatigueCost,
+  });
 
   const GAIN_CHIPS: Record<string, Array<{ label: string; type: "up" | "down" }>> = {
     TRN_VEL:       [{ label: "구속",    type: "up" }, { label: "스태미나", type: "up" }],
@@ -105,7 +94,13 @@
   $: realMorale     = protagonist.morale;
 
   $: isBatter = protagonist.playerType === "batter";
-  $: mainPrograms   = isBatter ? batterPrograms : pitcherPrograms;
+  // 주인공 유형에 맞는 것 + 공용. 데이터의 `playerType`이 가른다
+  $: mainPrograms   = $masterStore.trainingPrograms
+    .filter((p) => !p.isRecovery && (p.playerType === "both"
+      || p.playerType === (isBatter ? "batter" : "pitcher")))
+    .map(toCard);
+  $: recoveryPrograms = $masterStore.trainingPrograms
+    .filter((p) => p.isRecovery).map(toCard);
   $: allPrograms    = [...mainPrograms, ...recoveryPrograms];
   $: slot12Programs = allPrograms.filter((p) => p.id !== "TRN_PITCH_DEV");
 
@@ -233,10 +228,10 @@
   $: selectedCards = [mainCard, sub1Card, sub2Card].filter(Boolean) as ProgramCard[];
 
   $: rawFatigueDelta = selectedCards.reduce((sum, c) => sum + c.fatigue, 0);
-  $: rawRiskDelta    = selectedCards.reduce((sum, c) => sum + c.risk,    0);
 
+  // ⚠ `finalRiskDelta`가 여기 있었는데 **읽는 곳이 없었다.** 카드의 `risk`가
+  // 그 죽은 값 하나만 먹였고, 실제 부상 판정은 Rust가 따로 한다. 같이 지운다.
   $: finalFatigueDelta = Math.round(rawFatigueDelta * coachMod.fatigue * facilityMod.fatigue) - 5;
-  $: finalRiskDelta    = Math.round(rawRiskDelta    * coachMod.risk    * facilityMod.risk);
 
   $: projectedFatigue   = Math.max(0, Math.min(100, realFatigue   + finalFatigueDelta));
   $: projectedCondition = Math.max(0, Math.min(100, realCondition - Math.max(0, finalFatigueDelta) * 0.4 + 3));

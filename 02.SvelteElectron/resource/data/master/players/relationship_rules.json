@@ -15,9 +15,9 @@
     "apart_floor": 2
   },
   "weekly": {
-    "growth_threshold": 2.0,
+    "growth_threshold": 2,
     "quality_era": 2.5,
-    "blowup_era": 6.0,
+    "blowup_era": 6,
     "manager": {
       "win": 2,
       "loss": -2,
@@ -70,6 +70,9 @@
     "pitch_dev": "투수",
     "mentality": "멘탈",
     "stamina": "컨디셔닝",
-    "recovery": "컨디셔닝"
+    "recovery": "컨디셔닝",
+    "batting": "타격",
+    "eye": "타격",
+    "baserun": "주루"
   }
 }

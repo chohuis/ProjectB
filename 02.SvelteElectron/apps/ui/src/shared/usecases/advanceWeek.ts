@@ -417,7 +417,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     * (1 + majorEffBonus + coachEffBonus + subBonus)
     * facilityEffMod * slumpPenalty * effectiveInjuryEffMod;
 
-  const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod, myMods);
+  // ⚠ **프로그램 표를 넘긴다.** 안 넘기면 Rust 역직렬화가 실패해 오류가 난다 —
+  // 예전처럼 하드코딩된 표로 조용히 굴러가지 않는다 (정본은 programs.json)
+  const growth = await calcTrainingGrowth(
+    g.protagonist, g.trainingPlan, finalEffMod, myMods, m.trainingPrograms);
   if (subBonus > 0) {
     growth.logs.push(
       `[개인 트레이닝] 효율 +${(subBonus * 100).toFixed(1)}% (구독 ${trainingSub.byArea.length}건 · 주 ${trainingSub.weeklyCost}만원${trainingSub.inverseFactor !== 1 ? ` · 팀 시설 보정 ×${trainingSub.inverseFactor.toFixed(2)}` : ""})`,

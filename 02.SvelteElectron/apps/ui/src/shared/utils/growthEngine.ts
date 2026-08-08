@@ -13,6 +13,15 @@ export async function calcTrainingGrowth(
   efficiencyMod = 1.0,
   /** 소속팀 스태프 배수 (§7-5 F-1) */
   mods: StaffMods = NEUTRAL_MODS,
+  /**
+   * 훈련 프로그램 표 — **정본은 `training/programs.json`이고 화면·엔진이 같이 쓴다.**
+   *
+   * ⚠ 기본값을 두지 않는다. 안 넘기면 Rust 역직렬화가 실패해서 위의 `{error}`
+   * 갈래로 떨어진다 — 배선을 빠뜨렸을 때 **조용히 0이 되는 대신 터진다.**
+   * 예전엔 이 표가 Rust에 하드코딩돼 있었고, 마스터·화면과 값이 달라서
+   * 화면이 "피로 +7"이라 하고 엔진은 −4.25를 적용했다.
+   */
+  programs: readonly import("../stores/master").TrainingProgram[] = [],
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
@@ -34,6 +43,7 @@ export async function calcTrainingGrowth(
     },
     plan,
     efficiencyMod,
+    programs,
   };
 
   const raw = JSON.parse(

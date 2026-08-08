@@ -28,3 +28,6 @@ docs/reports/harness_last.json
 
 # 드라이버가 남기는 스크린샷 — 검증용이지 산출물이 아니다
 resource/logs/shots/
+# UI 순회기(scripts/ui-walk.mjs)가 남기는 캡처. 한 번 돌 때 수십 장이라
+# 커밋에 섞이면 diff가 안 읽힌다
+resource/logs/uiwalk/

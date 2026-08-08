@@ -18,13 +18,32 @@ import { primePitchCost } from "../utils/pitchCost";
 export type { CoachAttributes, CoachSpecialty };
 
 // ?? ?덈젴쨌援ъ쥌 ????????????????????????????????????????????????
+/**
+ * 훈련 프로그램 — **정본은 `resource/data/master/training/programs.json` 하나다.**
+ *
+ * 화면(훈련 카드·일정)도 엔진(Rust 성장 계산)도 여기서 읽는다. 예전엔 같은 표가
+ * 네 곳에 있었고 넷이 서로 달라서, 화면은 "피로 +7"이라 하고 엔진은 −4.25를
+ * 적용했다 — 부호가 반대였다.
+ *
+ * 게이트: `npm run check:trainingtable`
+ */
 export interface TrainingProgram {
   id: string;
   name: string;
+  /** "pitcher" | "batter" | "both" — 화면이 주인공 유형으로 거른다 */
+  playerType: "pitcher" | "batter" | "both";
+  /** 코치 담당영역 조회 키 (relationship_rules.training_area) */
   focus: string;
-  intensity: "low" | "medium" | "high";
+  focusLabel: string;
+  gainsLabel: string;
+  gainsPitching?: Record<string, number>;
+  gainsBatting?: Record<string, number>;
+  baseXp: number;
   fatigueCost: number;
-  risk: number;
+  conditionCost: number;
+  isRecovery?: boolean;
+  isPitchDev?: boolean;
+  progressPerWeek?: number;
 }
 
 export interface PitchEntry {
@@ -681,7 +700,7 @@ function createMasterStore() {
         militaryCommonData, militarySportsData, militaryGeneralData,
         manifest,
       ] = await Promise.all([
-        fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
+        fetchMaster<{ programs: TrainingProgram[] }>("training/programs.json"),
         fetchMaster<{ pitches: PitchEntry[]; maxLearned?: number }>("training/pitch_catalog.json"),
         fetchMaster<{ rules: PitchUnlockRule[] }>("training/pitch_unlock_rules.json"),
         fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; stadiums: StadiumRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(

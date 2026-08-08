@@ -33,17 +33,6 @@
   const weekLabel  = ["월","화","수","목","금","토","일"];
 
   // ── 훈련 프로그램 이름 매핑 ────────────────────────────────────
-  const PROGRAM_TITLE: Record<string, string> = {
-    TRN_CMD_BASE:  "커맨드 기초",  TRN_VEL_POWER: "구위 파워",
-    TRN_CTRL_MECH: "제구 메커니즘", TRN_MVT_PITCH: "변화구 연습",
-    TRN_MNT_FOCUS: "멘탈 집중",   TRN_STA_COND:  "체력 강화",
-    TRN_CLUTCH:    "위기집중",     TRN_HOLD:      "견제 훈련",
-    TRN_PITCH_DEV: "구종 개발",    TRN_RECOVERY:  "컨디셔닝",
-    TRN_CONTACT:   "컨택 훈련",   TRN_POWER:     "파워 훈련",
-    TRN_EYE:       "선구안",       TRN_SPEED:     "주루 훈련",
-    TRN_FIELDING:  "수비 훈련",   TRN_BUNTING:   "번트 훈련",
-    TRN_BCLUTCH:   "클러치 훈련",
-  };
 
   // ── Svelte 액션: 좌우 스와이프 → 이전/다음 ────────────────────
   function swipeNav(node: HTMLElement, onSwipe: (dir: "prev" | "next") => void) {
@@ -174,12 +163,24 @@
   }
 
   // ── 훈련 프로그램 레이블 ──────────────────────────────────────
+  //
+  // ⚠ 여기 이름표가 따로 있었는데(`PROGRAM_TITLE`) **전부 구버전 id였다.**
+  // 화면이 저장하는 id가 하나도 없어서 `?? id` 폴백이 걸렸고, 일정 화면에
+  // **`TRN_CTRL_CMD` 같은 원문이 그대로 떠 있었다.**
+  //
+  // ⚠ 그리고 `recoveryProgramId`를 읽고 있었다 — `save.ts`에 deprecated로
+  // 적힌 필드다. 슬롯은 셋(주·보조1·보조2)인데 **둘만, 그것도 죽은 필드를**
+  // 보고 있었다.
   $: trainingPrograms = (() => {
     const plan = $gameStore.trainingPlan;
+    const nameOf = (id: string | null) => {
+      if (!id) return null;
+      return $masterStore.trainingPrograms.find((p) => p.id === id)?.name ?? null;
+    };
     return [
-      plan.primaryProgramId   ? (PROGRAM_TITLE[plan.primaryProgramId]   ?? plan.primaryProgramId)   : null,
-      plan.secondaryProgramId ? (PROGRAM_TITLE[plan.secondaryProgramId] ?? plan.secondaryProgramId) : null,
-      plan.recoveryProgramId  ? (PROGRAM_TITLE[plan.recoveryProgramId]  ?? plan.recoveryProgramId)  : null,
+      nameOf(plan.primaryProgramId),
+      nameOf(plan.secondaryProgramId),
+      nameOf(plan.secondary2ProgramId),
     ].filter(Boolean) as string[];
   })();
   $: trainingTitleStr = trainingPrograms.length > 0 ? trainingPrograms.join(" · ") : "주간 훈련";
