@@ -42,6 +42,7 @@ import {
 } from "../../apps/ui/src/shared/usecases/careerDecision";
 import { facilityFactorOf, SANGMU_TEAM_IDS } from "../../apps/ui/src/shared/utils/ids";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
+import { relationLabel } from "../../apps/ui/src/shared/types/relationship";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
 
@@ -3263,5 +3264,41 @@ export async function foreignSeedDiag(slotId: string): Promise<{
     rows: mine.length, byCategory,
     years: [...years].sort(), signYears: [...signYears].sort(),
     sample, domesticRouteOnForeigner,
+  };
+}
+
+/**
+ * 관계도 실측 — **저장된 값**과 **엔진이 돌려주는 델타**를 같이 찍는다.
+ *
+ * 한쪽만 보면 못 가른다. 화면이 전원 "중립"일 때 원인은 셋이다:
+ *   ① 엔진이 델타를 안 만든다 (조건이 안 맞음)
+ *   ② 만드는데 저장이 안 된다
+ *   ③ 둘 다 되는데 값이 밴드(−10~10)를 못 넘는다
+ * `deltaCalls`/`deltaSum`이 0이면 ①, 값이 안 변하면 ②, 둘 다 돌면 ③이다.
+ */
+export async function relationProbe(): Promise<Record<string, unknown>> {
+  const slotId = get(gameStore).currentSlotId;
+  if (!slotId) return { error: "슬롯 없음" };
+  const rows = await slotRepo.getRelationships(slotId);
+  const byKind: Record<string, { n: number; min: number; max: number; sum: number }> = {};
+  const byLabel: Record<string, number> = {};
+  for (const r of rows) {
+    const k = r.kind;
+    byKind[k] ??= { n: 0, min: 999, max: -999, sum: 0 };
+    byKind[k].n++;
+    byKind[k].min = Math.min(byKind[k].min, r.value);
+    byKind[k].max = Math.max(byKind[k].max, r.value);
+    byKind[k].sum += r.value;
+    const lab = relationLabel(r.value).label;
+    byLabel[lab] = (byLabel[lab] ?? 0) + 1;
+  }
+  return {
+    rows: rows.length,
+    byKind,
+    byLabel,
+    contacts: rows.reduce<Record<string, number>>((a, r) => {
+      a[r.contact] = (a[r.contact] ?? 0) + 1; return a;
+    }, {}),
+    sample: rows.slice(0, 6).map(r => `${r.kind} ${r.personId.slice(-6)} = ${r.value} (W${r.updatedWeek})`),
   };
 }

@@ -122,7 +122,11 @@
     background: var(--panel-sunk);
   }
 
-  .opt-header { display: flex; justify-content: space-between; align-items: center; }
+  /* ⚠ `width: 100%`가 있어야 한다. `.option-card`가 `<button>`이라 브라우저
+     기본값이 flex 자식을 늘리지 않고 **내용 폭으로 줄인다** — 그러면
+     `space-between`이 나눌 여백이 없어서 라벨과 비용이 붙는다.
+     화면엔 "보존 치료 (물리치료)주당 30만원"으로 떴다 (2026-08-08 UI 순회). */
+  .opt-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
   .opt-label  { font-size: 15px; font-weight: 700; color: var(--ink); }
   .opt-cost   { font-size: 13px; color: var(--ink); }
   .opt-duration { font-size: 12px; color: var(--ink-mid); }

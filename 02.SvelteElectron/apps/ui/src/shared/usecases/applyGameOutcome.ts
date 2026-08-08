@@ -269,6 +269,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     if (scheduleEntry) {
       const officialMsg = buildOfficialResultMessage(
         scheduleEntry,
+        gBefore.protagonist.teamId,
         outcome.homeScore,
         outcome.awayScore,
         inningsPitched,

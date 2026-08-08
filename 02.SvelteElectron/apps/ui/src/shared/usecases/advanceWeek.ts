@@ -1128,8 +1128,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           draftedContext: !!gRel.schoolState.careerResults?.draftDrafted,
         });
 
+        // ⚠ **`weekNum`이 아니라 `weekNum - 1`이다.** `processWeekBoundary`는
+        // `advanceWeek()` **뒤에** `nextWeekNum`으로 불린다 — 막 들어선 주다.
+        // 그 주 경기는 아직 안 치렀으므로 `result != null`이 영원히 거짓이었고,
+        // **경기에 걸린 관계 항목이 전부 죽어 있었다.**
+        //
+        // 증상이 조용했던 이유: 훈련에 걸린 코치 관계는 멀쩡히 움직여서
+        // "관계도가 도는데 감독·동료만 안 오른다"로 보였다. 실측(2026-08-08
+        // `measure:relations`)에서 갈렸다 — 코치 −6~40, **동료 30명 전원
+        // 초기값 그대로에 갱신 주차가 W1**이었다.
+        const gameWeek = weekNum - 1;
         const myGame = sRel.schedule.find(
-          e => e.week === weekNum && e.isProtagonistGame && e.result != null,
+          e => e.week === gameWeek && e.isProtagonistGame && e.result != null,
         );
         const myResult = myGame?.result;
         const teamWon = myResult != null && myResult.winnerId === gRel.protagonist.teamId;
@@ -1213,7 +1223,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const sAfterSim = get(seasonStore);
     const teamById = new Map(mFinal.teams.map((t) => [t.id, t.name]));
 
-    const myGames = sAfterSim.schedule.filter((e) => e.week === weekNum && !e.isProtagonistGame && !!e.result);
+    // ⚠ 관계도와 **같은 한 칸 어긋남**이었다. 위 주석대로 "전주"가 맞는데
+    // 필터는 `weekNum`을 봤다 — 막 들어선 주라 결과가 없어서 이 소식은
+    // **한 통도 온 적이 없다**(실측 `measure:relations`, `league-results` 0건).
+    const myGames = sAfterSim.schedule.filter((e) => e.week === weekNum - 1 && !e.isProtagonistGame && !!e.result);
     if (myGames.length > 0) {
       const leagueName = LEAGUE_NAMES[gFinal.protagonist.leagueId] ?? gFinal.protagonist.leagueId;
       const monthLabel = weekToMonthLabel(weekNum);

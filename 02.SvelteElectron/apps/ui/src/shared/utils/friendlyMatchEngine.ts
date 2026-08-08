@@ -712,6 +712,16 @@ function getOfficialCoachCommentCP(ip: number, er: number, k: number, bb: number
 
 export function buildOfficialResultMessage(
   scheduleEntry: ScheduleEntry,
+  /**
+   * 주인공 팀. **필수다** — 없으면 홈/원정을 알 수 없다.
+   *
+   * ⚠ 예전엔 `homeTeamId !== awayTeamId`로 홈 여부를 정했는데 그건 **항상 참**이다
+   * (팀이 자기 자신과 붙을 리 없다). 그래서 원정 경기에서 점수가 뒤집히고
+   * 상대 이름 자리에 **내 팀 이름**이 들어갔다 — 화면에 실제로
+   * "공식경기 결과 — vs 북악고 (패 5:3)"으로 떴고 북악고가 내 팀이었다.
+   * 선택 인자로 두면 배선을 빠뜨려도 조용히 옛 동작으로 돌아간다.
+   */
+  myTeamId: string,
   homeScore: number,
   awayScore: number,
   ip: number,
@@ -725,10 +735,10 @@ export function buildOfficialResultMessage(
   teamMap?: Map<string, string>,
   role: PitcherRole = "SP",
 ): MessageItem {
-  const isProtHome = scheduleEntry.homeTeamId !== scheduleEntry.awayTeamId;
+  const isProtHome = scheduleEntry.homeTeamId === myTeamId;
   const myScore    = isProtHome ? homeScore : awayScore;
   const oppScore   = isProtHome ? awayScore : homeScore;
-  const oppTeamId  = scheduleEntry.awayTeamId;
+  const oppTeamId  = isProtHome ? scheduleEntry.awayTeamId : scheduleEntry.homeTeamId;
   const oppName    = teamShort(oppTeamId, teamMap);
   const resultStr  = won ? "승" : isDraw ? "무" : "패";
   const era        = ip > 0 ? Math.round((er / ip) * 9 * 100) / 100 : 99;
