@@ -8,7 +8,7 @@
 
 ## ▶ 새 세션이 여기부터 읽는다 (2026-08-08 마감)
 
-**브랜치** `extract-modals` · **마지막 커밋** `f17d500d3`
+**브랜치** `extract-modals` · **마지막 커밋** `74a1d32d0`
 
 ### 지금 회귀 기준선 — 이 숫자와 다르면 내가 깨뜨린 것이다
 
@@ -29,6 +29,8 @@ vitest 463 → 477. 증가분 14는 UI 순회에서 나온 결함의 회귀 검�
 npm run check:seasonendguard   시즌종료·드래프트 가드가 재시작을 견디는가
 npm run measure:messagekinds   소식 종류별 생산량 (단계별, 6시즌)
 npm run measure:relations      관계도가 실제로 움직이는가 (전원 중립이면 실패)
+npm run check:trainingtable    훈련 프로그램 표가 다시 늘어나면 실패
+npm run measure:training       주인공 성장·피로 궤적 · focus 배선 확인
 npm run test:sentencebank      [10]번 절이 되살아났다 (아래 참조)
 ```
 
@@ -82,6 +84,22 @@ node scripts/ui-walk.mjs --label pro3 --weeks 260
 
 주 경계 안에서 **경기 결과를 조회할 땐 항상 `weekNum - 1`이다.**
 게이트: `npm run measure:relations`, 검사: `weekBoundaryOffset.test.ts`.
+
+### 훈련 시스템 재설계 — Phase 0·1·2 완료 (2026-08-08)
+
+**설계 정본은 [design/training.md](design/training.md)다.** 진단은
+[TRAINING_ANALYSIS.md](TRAINING_ANALYSIS.md).
+
+| Phase | 결과 |
+|---|---|
+| 0 계측·기준선 | `measure:training` 신설. **focus 배선 끊김을 런타임으로 확정** |
+| 1 정본 통일 | 표 **네 곳 → `programs.json` 하나**. `trainingArea "" → 투수` |
+| 2 화면 = 엔진 | 화면 자체 식 셋 제거. 피로 표시가 엔진과 **정확히 일치** |
+
+**다음은 Phase 3 — 구종을 엔진에.** `SimPitcher`에 구종 배열이 없어서
+**배운 구종이 자동 시뮬에 안 나온다.** NPC 구종 데이터는 이미 있으니 배선
+문제다. ⚠ **리그 득점 환경이 이동한다** — `design/training.md §4`의 타격
+기준선(2026/2027 ERA 4.21)과 대조하며 조정할 것.
 
 ### 바로 해야 할 일 (순서대로)
 
