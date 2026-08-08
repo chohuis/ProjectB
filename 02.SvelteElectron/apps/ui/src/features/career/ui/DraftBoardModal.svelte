@@ -391,7 +391,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {#each displayPicks as p (p.pickNo)}
+                  <!--
+                    ⚠ **`pickNo`로 키를 잡으면 안 된다.** 주인공은 NPC 드래프트에
+                    안 들어가고 결과만 보드 중간에 끼워 넣는데(위 `boardPicks`
+                    삽입), **번호를 다시 매기지 않아 그 순번이 둘이 된다.**
+                    실제로 6R 56P 지명에서 `pickNo` 56이 두 개가 되어 Svelte가
+                    `each_key_duplicate`로 죽었다(2026-08-08, 자동 진행 중 5회).
+
+                    이 목록은 **덧붙이기만 하고 재정렬이 없다** — 키가 없어도
+                    DOM 재사용이 어긋나지 않는다. 유일성을 못 보장하는 값으로
+                    키를 잡느니 안 잡는 게 낫다.
+                  -->
+                  {#each displayPicks as p}
                     <tr class:user-row={p.candidate.isUser}>
                       <td class="td-pick">{p.pickNo}</td>
                       <td class="td-round">{p.round}</td>
