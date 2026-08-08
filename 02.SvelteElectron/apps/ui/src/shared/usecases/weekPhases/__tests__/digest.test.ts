@@ -34,6 +34,7 @@ const HS_STANDINGS = [
 
 const base: DigestInput = {
   weekNum: 12,
+  seasonYear: 2027,
   monthLabel: "6월",
   careerStage: "highschool",
   hsGrade: 3,
@@ -156,6 +157,32 @@ describe("buildLeagueDigest — 빈 데이터", () => {
 
   it("내 팀이 순위표에 없어도 죽지 않는다", () => {
     expect(() => buildLeagueDigest({ ...base, myTeamId: "TEAM_GHOST" })).not.toThrow();
+  });
+});
+
+describe("id 유일성", () => {
+  /**
+   * ⚠ **`weekNum`은 시즌마다 1로 리셋된다.** 처음엔 `msg-digest-w13`으로 뒀는데
+   * 해마다 같은 id가 다시 생겨 3시즌째에 중복이 됐고, 소식 목록이
+   * `(msg.id)`를 키로 잡기 때문에 Svelte가 `each_key_duplicate`로 죽어
+   * **세이브가 아예 안 열렸다.** 로드 화면에서 멈춘 채 원인이 안 보인다.
+   */
+  it("같은 주라도 시즌이 다르면 id가 다르다", () => {
+    const a = buildLeagueDigest({ ...base, weekNum: 13, seasonYear: 2026 })!;
+    const b = buildLeagueDigest({ ...base, weekNum: 13, seasonYear: 2027 })!;
+    expect(a.id).not.toBe(b.id);
+  });
+
+  it("한 시즌 안에서 주가 다르면 id가 다르다", () => {
+    const a = buildLeagueDigest({ ...base, weekNum: 13, seasonYear: 2026 })!;
+    const b = buildLeagueDigest({ ...base, weekNum: 18, seasonYear: 2026 })!;
+    expect(a.id).not.toBe(b.id);
+  });
+
+  it("id에 표시용 라벨을 넣지 않는다", () => {
+    // `msg-digest-3월-w13`으로 뒀더니 종류 키가 달마다 쪼개져 계측이 무너졌다
+    const m = buildLeagueDigest({ ...base, monthLabel: "6월" })!;
+    expect(m.id).not.toContain("월");
   });
 });
 

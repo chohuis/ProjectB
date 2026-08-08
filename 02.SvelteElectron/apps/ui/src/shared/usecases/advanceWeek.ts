@@ -1248,6 +1248,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
     const digest = buildLeagueDigest({
       weekNum,
+      seasonYear: sAfterSim.seasonYear,
       monthLabel: weekToMonthLabel(weekNum),
       careerStage: gFinal.protagonist.careerStage,
       hsGrade: gFinal.protagonist.careerStage === "highschool"

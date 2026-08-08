@@ -105,6 +105,11 @@ export function digestTierOf(careerStage: string, hsGrade?: number): DigestTier 
 
 export interface DigestInput {
   weekNum: number;
+  /**
+   * id를 유일하게 만드는 데 쓴다. **`weekNum`만으로는 안 된다** —
+   * 시즌마다 1로 리셋되므로 해마다 같은 id가 다시 생긴다.
+   */
+  seasonYear: number;
   /** "7월" 같은 표시용 라벨. 주기 판단은 호출부가 한다 */
   monthLabel: string;
   careerStage: string;
@@ -247,11 +252,16 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
   if (sections.length === 0) return null;
 
   return {
-    // ⚠ **id에 표시용 라벨(월 이름)을 넣지 않는다.** `msg-digest-3월-w13`으로
-    // 두었더니 종류 키가 달마다 쪼개져(`messageKindOf`가 한글 라벨은 못 벗긴다)
-    // 계측에서 한 종류가 11갈래로 흩어졌고, 각각이 상위 목록 밖으로 밀려
-    // **"다이제스트가 0건"으로 보였다.** 월은 제목과 본문에 있으면 된다.
-    id:        `msg-digest-w${input.weekNum}`,
+    // ⚠ **연도를 반드시 넣는다.** `weekNum`은 시즌마다 1로 리셋되므로
+    // `msg-digest-w13`은 **해마다 다시 생긴다.** 소식 목록이 `(msg.id)`로
+    // 키를 잡기 때문에 중복이 생기는 순간 Svelte가 `each_key_duplicate`로
+    // 죽고 **세이브를 아예 못 연다** (2026-08-08 실제로 발생 — 3시즌째에
+    // `msg-digest-w13`이 두 개가 됐다).
+    //
+    // ⚠ **표시용 라벨(월 이름)은 넣지 않는다.** `msg-digest-3월-w13`으로
+    // 뒀더니 종류 키가 달마다 쪼개져(`messageKindOf`가 한글 라벨은 못 벗긴다)
+    // 계측에서 한 종류가 11갈래로 흩어졌다. 월은 제목과 본문에 있으면 된다.
+    id:        `msg-digest-${input.seasonYear}-w${input.weekNum}`,
     category:  "system",
     sender:    "리그 사무국",
     subject:   `야구계 소식 — ${input.monthLabel}`,

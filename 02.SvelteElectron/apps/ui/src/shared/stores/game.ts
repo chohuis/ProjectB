@@ -468,12 +468,30 @@ const MAILBOX_CATEGORY_MAP: Record<string, import("../types/main").MessageCatego
 };
 const VALID_MSG_CATEGORIES = new Set(["system", "news", "coach", "manager"]);
 
+/**
+ * 세이브에서 실은 메일함을 화면이 쓸 수 있는 모양으로 만든다.
+ *
+ * ⚠ **중복 `id`를 반드시 걷어낸다.** 소식 목록이 `{#each sorted as msg (msg.id)}`로
+ * id를 키로 잡기 때문에, 중복이 하나만 있어도 Svelte가 `each_key_duplicate`로
+ * 죽고 **세이브가 아예 안 열린다** — 로드 화면에서 멈춘 채 원인이 안 보인다
+ * (2026-08-08 실제로 발생. `msg-digest-w13`이 시즌마다 재생성돼 3시즌째에
+ * 두 개가 됐다).
+ *
+ * 생성 쪽은 고쳤지만 **이미 그 상태로 저장된 세이브가 있다.** 여기서 걸러야
+ * 그것들이 다시 열린다. 소식 id는 생성 지점마다 규칙이 달라(타임스탬프·연도·
+ * 이벤트 ID 그대로) 유일성을 전제할 수 없으므로, 이 문은 계속 지킨다.
+ */
 function normalizeMailbox(mailbox: import("../types/main").MessageItem[]): import("../types/main").MessageItem[] {
-  return mailbox.map((m) => {
-    if (VALID_MSG_CATEGORIES.has(m.category)) return m;
+  const seen = new Set<string>();
+  const out: import("../types/main").MessageItem[] = [];
+  for (const m of mailbox) {
+    if (seen.has(m.id)) continue;   // 먼저 온 것(최신)을 남긴다
+    seen.add(m.id);
+    if (VALID_MSG_CATEGORIES.has(m.category)) { out.push(m); continue; }
     const mapped = MAILBOX_CATEGORY_MAP[m.category];
-    return { ...m, category: mapped ?? "system" };
-  });
+    out.push({ ...m, category: mapped ?? "system" });
+  }
+  return out;
 }
 
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
