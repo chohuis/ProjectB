@@ -67,6 +67,34 @@
 - `packages/engine-native/index.d.ts`, `index.js` 직접 편집 — `npm run build:native` 자동 생성
 - 팀/구단/리그 ID 하드코딩 맵·인라인 변환(`.replace(/^CLUB_/...)` 류) 작성 — ID 파생 규칙은 `apps/ui/src/shared/utils/ids.ts`에만 둔다 (Rust는 `npc_sim.rs`의 `farm_team()` 접미사 규칙). 팀 ID 정본은 `refs.json`
 
+## 소식(MessageItem) id 규칙 (2026-08-08)
+
+**`id`는 유일해야 한다.** 소식 목록이 `{#each sorted as msg (msg.id)}`로 id를
+키로 잡기 때문에, 중복이 하나만 생겨도 Svelte가 `each_key_duplicate`로 죽고
+**세이브가 아예 안 열린다** — 로드 화면에서 멈춘 채 화면엔 단서가 없다.
+
+```
+msg-digest-w13              ✗ weekNum은 시즌마다 1로 리셋된다 → 해마다 겹친다
+msg-digest-2027-w13         ○ 연도를 넣는다
+msg-train-w12-1712345678    ○ Date.now()
+msg-tour-open-TOUR_HS_X-2027 ○ 대상 ID + 연도
+```
+
+- **`weekNum`은 누적이 아니다.** `advanceWeek`의 `weekInYear = ((weekNum-1)%52)+1`을
+  보고 누적이라 읽기 쉬운데, 롤오버가 리셋하므로 그 모듈로는 실질적으로 무의미하다
+- **표시용 라벨(월 이름 등)을 id에 넣지 않는다.** 계측이 `messageKindOf`로 종류를
+  뽑는데 한글 라벨은 못 벗겨서 한 종류가 달마다 쪼개진다
+- **상한 로직은 id 유일성을 전제하지 않는다.** `trimMailbox`는 위치(index)로 고른다
+
+## "한 해에 한 번" 가드는 반드시 저장한다 (2026-08-08)
+
+`lastSeasonEndYear`·`lastDraftYear`가 `gameStore` 안에만 있었다. **가드가 막으려는
+결과(NPC 전원 진급·나이 +1, 드래프트 거래기록)는 slot.db에 즉시 쓰여 영구인데
+가드 자신은 세션 한정**이라, 앱을 껐다 켜면 없던 일이 됐다.
+
+새로 그런 가드를 만들면 `SaveGame`에 넣고 `fromSaveGame`에서 되살린다.
+**둘 중 하나만 하면 아무 일도 안 일어난다.** 게이트: `npm run check:seasonendguard`
+
 ## Rust에 새 게임 로직 추가 시 — 2단계 (R2에서 개정)
 
 1. `packages/engine-native/src/*.rs` — 함수 작성 + `lib.rs`에 `#[napi]` export (`#[serde(rename_all = "camelCase")]` 필수)
