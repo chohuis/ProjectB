@@ -184,7 +184,9 @@ async function advance(n) {
     const before = await page.evaluate(() =>
       document.querySelector("header")?.textContent?.match(/(\d+)주차/)?.[1] ?? "?");
     let moved = false;
-    for (let guard = 0; guard < 14 && !moved; guard++) {
+    // ⚠ 14로는 모자란다 — 선택 대기가 여러 건 쌓이면 하나씩 풀어야 하고,
+    // 그 사이 새 창이 또 뜬다. 24로 올린다(무한 루프 방지는 여전히 필요)
+    for (let guard = 0; guard < 24 && !moved; guard++) {
       await page.evaluate((turn) => {
         // ⚠ **모달이 떠 있으면 그 안에서만 누른다.** W10에서 막혔는데, 경기
         // 결과 창이 떠 있는데도 순회기가 **그 뒤의 `.item.pending`을 먼저
@@ -227,7 +229,13 @@ async function advance(n) {
         // 안 먹었나"를 못 가르면 매번 화면을 눈으로 뜯어봐야 한다.
         window.__walkTrace ??= [];
         if (cands.length === 0) { window.__walkTrace.push(`${turn}: 후보 없음`); return; }
-        const el = cands[turn % cands.length];
+        // ⚠ **선택지가 열려 있으면 무조건 그걸 누른다.** 회전은 "무엇이 막는지
+        // 모를 때" 쓰는 것이고, 열린 선택지는 누르면 반드시 하나가 해결된다.
+        // 회전에 맡겼더니 **선택 대기가 5건 쌓인 주에서** 절반만 풀고 14번을
+        // 다 썼다(pro4 2학년 W31). 관계도를 고치자 동료 이벤트가 한 주에
+        // 여러 건 몰리게 된 것이고, 그건 앱 결함이 아니라 순회기 한계였다.
+        const opt = root.querySelector("button.opt");
+        const el = (opt && opt.offsetParent) ? opt : cands[turn % cands.length];
         window.__walkTrace.push(
           `${turn}: ${el.tagName.toLowerCase()}.${(el.className || "").toString().split(" ").join(".")}` +
           ` "${(el.textContent ?? "").trim().slice(0, 24)}"`);
@@ -244,7 +252,7 @@ async function advance(n) {
         btns: [...document.querySelectorAll("button")]
           .filter((b) => b.offsetParent && !b.disabled)
           .map((b) => b.textContent?.trim().slice(0, 14)).slice(0, 6).join(" | "),
-        trace: (window.__walkTrace ?? []).slice(-14),
+        trace: (window.__walkTrace ?? []).slice(-24),
       }));
       // 14번 동안 실제로 무엇을 눌렀는지 — 이게 없으면 매번 눈으로 화면을 뜯어야 한다
       for (const t of state.trace) log(`      · ${t}`);

@@ -71,6 +71,11 @@ const pad = (s, n) => String(s).padEnd(n);
     log("  표본:");
     for (const s of last.sample ?? []) log(`    ${s}`);
 
+    // 라벨 변화가 한 주에 몰리는가 — 선택지 달린 것이 몰리면 그 주가 막힌다
+    log("");
+    log("  ── 관계 소식 몰림 ──");
+    log("    " + JSON.stringify(app.relationBurstProbe(), null, 0));
+
     // 같은 "한 칸 어긋남"이 의심되는 소식 — 전주 NPC 경기 결과
     log("");
     log("  ── 소식이 실제로 오는가 ──");

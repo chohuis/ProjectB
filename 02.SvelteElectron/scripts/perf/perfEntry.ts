@@ -3302,3 +3302,35 @@ export async function relationProbe(): Promise<Record<string, unknown>> {
     sample: rows.slice(0, 6).map(r => `${r.kind} ${r.personId.slice(-6)} = ${r.value} (W${r.updatedWeek})`),
   };
 }
+
+/**
+ * 관계 라벨 변화 소식이 **한 주에 몇 통 몰리는가.**
+ *
+ * 동료 30명이 팀 승리마다 똑같이 +1을 받는다 — 속도가 같으니 라벨 경계도
+ * 비슷한 주에 함께 넘는다. 그 중 `신뢰` 진입은 **선택지가 달린 이벤트**라
+ * 하나씩 답해야 진행된다. 몰리면 그 주가 통째로 막힌다.
+ */
+export function relationBurstProbe(): Record<string, unknown> {
+  const box = get(gameStore).mailbox;
+  const byWeek: Record<string, number> = {};
+  let withChoice = 0;
+  for (const m of box) {
+    if (!m.id.startsWith("msg-rel-")) continue;
+    const w = m.id.match(/-w(\d+)$/)?.[1] ?? "?";
+    const y = m.id.match(/-(\d{4})-w\d+$/)?.[1] ?? "?";
+    const k = `${y}w${w}`;
+    byWeek[k] = (byWeek[k] ?? 0) + 1;
+    if (m.decision) withChoice++;
+  }
+  const counts = Object.values(byWeek);
+  return {
+    총: counts.reduce((a, b) => a + b, 0),
+    주수: counts.length,
+    한주최대: counts.length ? Math.max(...counts) : 0,
+    "2통이상인주": counts.filter(c => c >= 2).length,
+    "3통이상인주": counts.filter(c => c >= 3).length,
+    선택지달린것: withChoice,
+    상위: Object.entries(byWeek).sort((a, b) => b[1] - a[1]).slice(0, 5)
+      .map(([k, v]) => `${k}:${v}통`),
+  };
+}
