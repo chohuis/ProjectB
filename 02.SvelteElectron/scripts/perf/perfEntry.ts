@@ -406,6 +406,21 @@ export async function pushCareerForward(): Promise<string | null> {
         await seasonStore.save();
         return "careerChoice(졸업→현역)";
       }
+
+      // ⚠ **고3인데 전원 탈락한 경우가 빠져 있었다.** 미지명 + 대학 불합격 +
+      // 독립 미신청이면 여기서 `null`을 돌려 조사가 영영 멈췄다 — 화면에는
+      // `CareerResultModal`의 **"전원 탈락: 현역 입대"** 버튼이 있는데
+      // 헤드리스만 그 길을 몰랐다. 앱 결함으로 오해할 뻔했다.
+      if (stage2 === "highschool") {
+        await enlistProtagonist("general");
+        gameStore.setCareerApplicationsSubmitted(false);
+        gameStore.clearCareerResults();
+        gameStore.setCareerFinalChoice("general");
+        seasonStore.resolvePendingAction("careerChoice");
+        await gameStore.save();
+        await seasonStore.save();
+        return "careerChoice(전원탈락→현역)";
+      }
       return null;
     }
 
@@ -3451,4 +3466,36 @@ export function startPitchDev(pitchId: string): void {
 export function ovrDeltaProbe(): Record<string, unknown> {
   const box = get(gameStore).logs.filter((l) => l.startsWith("[훈련]"));
   return { 훈련로그: box.length, 최근: box.slice(0, 3) };
+}
+
+/** 커리어 한 장 — 50회 조사가 회차마다 이걸 찍는다 */
+export function careerProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const p = g.protagonist;
+  const cr = g.schoolState.careerResults;
+  const ret = retired();
+  return {
+    시즌: s.seasonYear, 주차: s.currentWeek,
+    단계: p.careerStage, 나이: p.age, 학년: p.grade ?? null,
+    팀: p.teamId, 리그: p.leagueId,
+    OVR: p.pitching?.ovr ?? 0,
+    구종: (p.pitches ?? []).map((x) => `${x.id.replace("PITCH_", "")}${x.grade}`).join("/"),
+    지명: cr?.draftDrafted
+      ? `${cr.draftRound}R ${cr.draftPick}P ${cr.draftTeamId}`
+      : (cr ? "미지명" : null),
+    대학합격: cr?.universityPassed?.length ?? null,
+    독립합격: cr?.independentPassed?.length ?? null,
+    병역: p.militaryStatus, 부대: p.militaryUnit,
+    은퇴: ret ? `${ret.year} ${ret.reason}` : null,
+  };
+}
+
+/** 훈련 슬롯 3칸을 한 번에 — 조사가 계획 축을 바꿀 때 쓴다 */
+export function setTrainingSlots(slots: string[]): void {
+  gameStore.setTrainingPlan({
+    primaryProgramId:    slots[0] ?? null,
+    secondaryProgramId:  slots[1] ?? null,
+    secondary2ProgramId: slots[2] ?? null,
+  });
 }

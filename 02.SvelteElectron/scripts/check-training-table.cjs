@@ -75,7 +75,13 @@ check("일정 화면이 deprecated 필드를 안 읽는다",
 // 기본값·코치 조언이 정본에 없는 id를 쓰면 focus 조회가 조용히 죽는다.
 // **이게 이 시스템을 망가뜨린 결함이다** — 12종 중 10종이 마스터에 없었다.
 const ids = new Set(programs.map((p) => p.id));
-const usedInUi = new Set([...trainPage.matchAll(/"(TRN_[A-Z_]+)"/g)].map((m) => m[1]));
+// ⚠ 화면만 보면 안 된다. `runAutoAdvance`의 훈련 추천도 프로그램 id를
+// **하드코딩**한다 — id가 바뀌면 추천이 조용히 아무 프로그램도 안 가리킨다.
+const autoRun = read("apps/ui/src/shared/usecases/runAutoAdvance.ts");
+const usedInUi = new Set([
+  ...[...trainPage.matchAll(/"(TRN_[A-Z_]+)"/g)].map((m) => m[1]),
+  ...[...autoRun.matchAll(/"(TRN_[A-Z_]+)"/g)].map((m) => m[1]),
+]);
 const unknown = [...usedInUi].filter((id) => !ids.has(id));
 check("화면이 쓰는 id가 전부 정본에 있다", unknown.length === 0,
   `정본에 없는 id: ${unknown.join(", ")}`);
