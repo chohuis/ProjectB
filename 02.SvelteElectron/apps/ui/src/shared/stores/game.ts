@@ -513,6 +513,12 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
       potentialHidden: n.potentialHidden ?? 75,
     })),
     pendingDraft: [],
+    // ⚠ **가드를 반드시 되살린다.** 안 되살리면 `undefined`가 되어
+    // "아직 안 돌았다"로 읽히고, 시즌 종료·드래프트가 재시작마다 다시 돈다 —
+    // NPC 전원이 한 살씩 더 먹는다(`npm run check:seasonendguard`).
+    // 옛 세이브엔 필드가 없어 `undefined`인데, 그건 실제로 안 돈 것이라 맞다.
+    lastSeasonEndYear: saved.lastSeasonEndYear,
+    lastDraftYear:     saved.lastDraftYear,
     pendingAchievements: [],
     seasonEndSummary: null,
     lastTop10Pitcher: null,
@@ -846,6 +852,10 @@ function createGameStore() {
         s.protagonist, s.mailbox, s.trainingPlan,
         s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
         s.npcs, s.trainingPresets,
+        // ⚠ **반드시 같이 저장한다.** 이걸 빼면 앱을 껐다 켤 때마다
+        // 시즌 종료·드래프트가 다시 돌아 NPC 전원이 한 살씩 더 먹는다
+        // (`npm run check:seasonendguard`).
+        { lastSeasonEndYear: s.lastSeasonEndYear, lastDraftYear: s.lastDraftYear },
       );
     },
 

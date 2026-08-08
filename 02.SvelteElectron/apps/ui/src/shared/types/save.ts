@@ -901,6 +901,28 @@ export interface SaveGame {
   recentLogs: string[];  // 최근 30개 활동 로그
   recentUpcoming: string[];  // 다음 예정 이벤트 목록
   npcs: NpcSaveState[];  // NPC 런타임 상태 (Zone 0~3)
+
+  /**
+   * **한 해에 한 번만 돌아야 하는 작업의 가드.** 반드시 저장한다.
+   *
+   * ⚠ 예전엔 `gameStore` 안에만 있었다. 가드가 막으려는 결과(NPC 전원 진급·
+   * 나이 +1, 드래프트 거래기록)는 **slot.db에 즉시 쓰여 영구**인데 가드 자신은
+   * 세션 한정이라, **앱을 껐다 켜면 없던 일이 됐다.**
+   *
+   * 실측(`npm run check:seasonendguard`): 재시작 한 번에 NPC 나이가 17 → 18 →
+   * (재시작) → 19. 시즌 결산 모달은 주차가 리셋돼야 사라지는데 롤오버가
+   * 길어서, 그 도중에 앱이 닫히면 다음 실행에 모달이 다시 뜨고 또 늙는다.
+   *
+   * 옛 세이브엔 없다 — `undefined`는 "아직 안 돌았다"와 같은 뜻이라 안전하다.
+   */
+  lastSeasonEndYear?: number;
+  lastDraftYear?: number;
+}
+
+/** 저장에 넣는 "한 해 한 번" 가드 묶음 */
+export interface SaveGuards {
+  lastSeasonEndYear?: number;
+  lastDraftYear?: number;
 }
 
 export const SAVE_GAME_VERSION = 2;
@@ -916,6 +938,12 @@ export function makeSaveGame(
   recentUpcoming: string[],
   npcs: NpcSaveState[] = [],
   trainingPresets: TrainingPreset[] = [],
+  /**
+   * ⚠ **위치 인자로 늘리지 않는다.** 이미 10개라 하나 더 붙이면 호출부에서
+   * 순서가 어긋나도 타입이 안 잡는다(둘 다 optional이라 더 그렇다).
+   * 묶어서 받으면 필드가 늘어도 이 시그니처를 다시 안 고친다.
+   */
+  guards: SaveGuards = {},
 ): SaveGame {
   return {
     version: SAVE_GAME_VERSION,
@@ -930,6 +958,7 @@ export function makeSaveGame(
     recentLogs,
     recentUpcoming,
     npcs,
+    ...guards,
   };
 }
 

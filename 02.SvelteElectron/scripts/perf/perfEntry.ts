@@ -2965,6 +2965,61 @@ export function mailboxProduceProbe(): Record<string, unknown> {
 }
 
 /**
+ * **시즌 종료 중복 실행 가드가 재시작을 견디는가** (2026-08-08 조사).
+ *
+ * `processSeasonEnd`에는 `lastSeasonEndYear` 가드가 있고 주석에 위험이 적혀
+ * 있다 — *"가드가 없으면 학년이 두 번 오르고 나이가 두 살 는다."* 그런데 그
+ * 필드는 `SaveGame`에 없다. 즉 **앱을 껐다 켜면 가드가 사라진다.**
+ *
+ * 여기서는 `toSaveGame()` → `hydrateFromSlot()` 왕복으로 재시작을 그대로
+ * 재현한다(로드가 쓰는 바로 그 경로다). 가드가 살아 있으면 두 번째 호출이
+ * 아무것도 안 바꿔야 한다.
+ *
+ * ⚠ 실제 피해는 주인공 학년이 아니라 **NPC 5,600명의 나이**다. 그쪽은
+ * slot.db에 즉시 쓰이므로 되돌릴 수 없다.
+ */
+export async function seasonEndGuardProbe(): Promise<Record<string, unknown>> {
+  const year = get(seasonStore).seasonYear;
+  const sample = (): { age: number; grade: number | null; id: string }[] =>
+    get(gameStore).npcs.slice(0, 5).map((n) => ({
+      id: n.npcId, age: n.age, grade: (n as { grade?: number }).grade ?? null,
+    }));
+  const protoOf = () => {
+    const p = get(gameStore).protagonist;
+    return { grade: p.grade ?? null, age: p.age };
+  };
+
+  const before = { npc: sample(), proto: protoOf() };
+  await gameStore.processSeasonEnd(year);
+  const after1 = { npc: sample(), proto: protoOf() };
+
+  // 같은 세션에서 한 번 더 — 가드가 막아야 한다
+  await gameStore.processSeasonEnd(year);
+  const after2 = { npc: sample(), proto: protoOf() };
+
+  // **재시작 재현** — 저장했다가 다시 싣는다. 가드는 SaveGame에 없다
+  const slotId = get(gameStore).currentSlotId ?? "PROBE";
+  gameStore.hydrateFromSlot(gameStore.toSaveGame(), slotId);
+  await gameStore.processSeasonEnd(year);
+  const after3 = { npc: sample(), proto: protoOf() };
+
+  const dAge = (a: typeof before, b: typeof before) =>
+    a.npc.length && b.npc.length ? b.npc[0].age - a.npc[0].age : 0;
+
+  return {
+    연도: year,
+    "①처음": before,
+    "②1회 실행": after1,
+    "③같은 세션 재실행": after2,
+    "④재시작 후 재실행": after3,
+    "나이 증가 — 1회": dAge(before, after1),
+    "나이 증가 — 같은 세션 재실행": dAge(after1, after2),
+    "나이 증가 — 재시작 후": dAge(after2, after3),
+    판정: dAge(after2, after3) === 0 ? "가드가 재시작을 견딘다" : "재시작하면 또 돈다 (결함)",
+  };
+}
+
+/**
  * 포스트시즌 진단 (B-0).
  *
  * ⚠ **화면에 독립리그 브래킷 하나만 뜬다.** `backgroundPostseason.ts`가

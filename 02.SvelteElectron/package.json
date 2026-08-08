@@ -102,7 +102,8 @@
     "check:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-devplayer.cjs",
     "measure:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-devplayer.cjs",
     "measure:mailbox": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-mailbox.cjs",
-    "measure:messagekinds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-message-kinds.cjs"
+    "measure:messagekinds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-message-kinds.cjs",
+    "check:seasonendguard": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-seasonend-guard.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
