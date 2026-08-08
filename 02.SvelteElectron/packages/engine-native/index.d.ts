@@ -85,6 +85,24 @@ export declare function advanceAllGradesNative(paramsJson: string): string
 export declare function advanceAllAgesNative(paramsJson: string): string
 /** 주간 훈련 성장 계산 */
 export declare function calcTrainingGrowthNative(paramsJson: string): string
+/**
+ * 훈련 계획 미리보기 — **실제 계산과 같은 `plan_load`를 쓴다.**
+ *
+ * 훈련 화면이 자기 식으로 예상치를 만들던 시절엔 슬롯 배수(0.5)도 피로 구간
+ * 승수(1.5/2.5/4.0)도 몰라서, 화면은 "피로 +7"이라 하고 엔진은 −4.25를
+ * 적용했다 — 부호가 반대였다. 화면은 이제 계산하지 않고 묻는다.
+ */
+export declare function previewTrainingNative(paramsJson: string): string
+/**
+ * 이번 주 부상 확률 — **`calc_injury`가 굴리는 것과 같은 식이다.**
+ * 훈련 화면이 예상 피로로 이걸 물어 "부상위험 N%"를 낸다.
+ */
+export declare function injuryChanceNative(paramsJson: string): string
+/**
+ * 폼 무너짐 조회 — **경기에 걸리는 것과 같은 식이다.**
+ * 훈련·내 정보 화면이 "제구 −3 · 커맨드 −2"를 이걸로 띄운다.
+ */
+export declare function formPenaltyNative(paramsJson: string): string
 /** 경기 성장 계산 */
 export declare function calcGameGrowthNative(paramsJson: string): string
 /** 주인공 에이징 (시즌 종료 1회 호출) */
