@@ -185,6 +185,51 @@ async function shot(name) {
   }
 }
 
+/**
+ * 진로 신청 허브는 **커리어에 한 번만 열린다.** 그냥 지나치면 그 안의
+ * 대학·독립리그 신청 화면은 순회에서 영영 안 보인다 — 실제로 여기까지
+ * 오는 데만 3학년 W44까지 20분이 걸린다. 열렸을 때 하위 화면을 하나씩
+ * 열어 검사하고 캡처한다.
+ *
+ * ⚠ **`.danger`(군입대)는 안 연다** — 즉시 확정이라 커리어가 끝난다.
+ * ⚠ 하위 화면은 `취소`로 닫는다. `확인`을 누르면 선택이 확정된다.
+ */
+let hubToured = false;
+async function tourCareerHub() {
+  if (hubToured) return;
+  const isHub = await page.evaluate(() =>
+    [...document.querySelectorAll(".overlay")].some(
+      (e) => e.offsetParent && /진로 신청|진로 결정/.test(e.textContent ?? "")));
+  if (!isHub) return;
+  hubToured = true;
+  log("  · 진로 신청 허브 — 하위 화면을 훑는다");
+  await inspect("진로 허브");
+  await shot("hub-00-허브");
+
+  const rows = await page.evaluate(() =>
+    [...document.querySelectorAll("button.opt-btn:not(.danger)")]
+      .map((b) => (b.textContent ?? "").trim().slice(0, 20)));
+  for (let i = 0; i < rows.length; i++) {
+    const name = rows[i].replace(/[^가-힣]/g, "") || `행${i}`;
+    const opened = await page.evaluate((idx) => {
+      const bs = [...document.querySelectorAll("button.opt-btn:not(.danger)")];
+      if (!bs[idx]) return false;
+      bs[idx].click(); return true;
+    }, i);
+    if (!opened) continue;
+    await sleep(1800);
+    await inspect(`진로 허브 · ${name}`);
+    await shot(`hub-${String(i + 1).padStart(2, "0")}-${name}`);
+    // 취소로 닫는다 — 없으면 허브로 못 돌아온다
+    await page.evaluate(() => {
+      const b = [...document.querySelectorAll("button")]
+        .find((x) => x.offsetParent && (x.textContent ?? "").trim() === "취소");
+      if (b) b.click();
+    });
+    await sleep(900);
+  }
+}
+
 /** 주 진행 — 못 넘어가면 막힘으로 잡는다 */
 async function advance(n) {
   for (let i = 0; i < n; i++) {
@@ -194,6 +239,7 @@ async function advance(n) {
     // ⚠ 14로는 모자란다 — 선택 대기가 여러 건 쌓이면 하나씩 풀어야 하고,
     // 그 사이 새 창이 또 뜬다. 24로 올린다(무한 루프 방지는 여전히 필요)
     for (let guard = 0; guard < 24 && !moved; guard++) {
+      await tourCareerHub();
       await page.evaluate((turn) => {
         // ⚠ **모달이 떠 있으면 그 안에서만 누른다.** W10에서 막혔는데, 경기
         // 결과 창이 떠 있는데도 순회기가 **그 뒤의 `.item.pending`을 먼저
@@ -241,6 +287,14 @@ async function advance(n) {
               // 순회가 그대로 선다(pro2, 3학년 W16). 앱 결함이 아니라 정상 결말이다
               /다음 주 진행|경기 대기 중|메시지 확인|선택 대기|새 시즌 시작|스킵|확인|닫기|시작|은퇴한다/
                 .test(b.textContent ?? "")),
+          // ⚠ **문구를 하나씩 추가하는 건 지는 싸움이다.** `진로 선택으로 →`에서
+          // 또 "후보 없음"으로 섰다(pro7 W47). 창이 떠 있는데 아무것도 안 걸리면
+          // **그 창의 마지막 활성 버튼**을 누른다 — 주 동작은 보통 오른쪽 끝이다.
+          // `.danger`는 여기서도 제외한다(군입대 같은 즉시 확정).
+          overlay
+            ? [...overlay.querySelectorAll("button:not(.danger)")]
+                .filter((b) => b.offsetParent && !b.disabled).pop()
+            : null,
         ].filter(Boolean);
         // ⚠ **무엇을 눌렀는지 남긴다.** 막혔을 때 "후보가 없었나, 눌렀는데
         // 안 먹었나"를 못 가르면 매번 화면을 눈으로 뜯어봐야 한다.
