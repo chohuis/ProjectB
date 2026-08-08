@@ -439,6 +439,10 @@ async function advance(n) {
     } else {
       // 진행하며 주기적으로 전 탭을 훑는다
       const TABS = ["소식", "나", "팀", "리그", "인물", "일정"];
+      // ⚠ **"나" 안에 하위 탭이 또 있다.** 훈련·학업·재정·업적이 거기 있어서
+      // 좌측 탭만 훑으면 **훈련 화면을 한 번도 안 본다** — 표를 데이터로
+      // 바꾸는 작업(Phase 1)을 하고도 렌더를 못 볼 뻔했다.
+      const SUBTABS = { "나": ["훈련", "학업", "재정"] };
       const CHECK_EVERY = Math.max(4, Math.floor(WEEKS / 5));
       for (let w = 0; w < WEEKS; w += CHECK_EVERY) {
         if (!(await advance(CHECK_EVERY))) break;
@@ -460,6 +464,12 @@ async function advance(n) {
           await sleep(1200);
           await inspect(`W${wk} ${t}`);
           await shot(`w${wk}-${t}`);
+          for (const sub of SUBTABS[t] ?? []) {
+            if (!(await clickText(sub))) continue;
+            await sleep(1200);
+            await inspect(`W${wk} ${t}>${sub}`);
+            await shot(`w${wk}-${t}-${sub}`);
+          }
         }
       }
     }

@@ -183,7 +183,9 @@
       nameOf(plan.secondary2ProgramId),
     ].filter(Boolean) as string[];
   })();
-  $: trainingTitleStr = trainingPrograms.length > 0 ? trainingPrograms.join(" · ") : "주간 훈련";
+  // ⚠ `trainingTitleStr`이 여기 있었는데 **읽는 곳이 없었다.** 행 제목은
+  // `PHASE_TRAIN_LABEL`이 내고, 프로그램 이름은 `meta.programs`로 간다(582행).
+  // 죽은 변수라 지운다 — 남겨두면 "여기서 이름이 나온다"고 오해하게 된다.
 
   // ── 스케줄 항목 생성 ─────────────────────────────────────────
   // 1. 경기 항목 (주인공 경기만)
