@@ -1,4 +1,5 @@
 import { get } from "svelte/store";
+import { trainingIntensityOf } from "../utils/arsenal";
 import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
@@ -313,11 +314,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     : 1.0;
   const alreadyInjured     = !!g.protagonist.injury;
 
-  // 훈련 강도 계산: TRN_RECOVERY / TRN_MENTAL_P / TRN_MENTAL_B 제외한 슬롯 비율
-  const LOW_INTENSITY_PROGRAMS = new Set(["TRN_RECOVERY", "TRN_MENTAL_P", "TRN_MENTAL_B"]);
-  const trnSlots = [g.trainingPlan.primaryProgramId, g.trainingPlan.secondaryProgramId, g.trainingPlan.secondary2ProgramId].filter((id): id is string => !!id);
-  const highCount = trnSlots.filter(id => !LOW_INTENSITY_PROGRAMS.has(id)).length;
-  const trainingIntensity = trnSlots.length > 0 ? highCount / trnSlots.length : 0;
+  // 훈련 강도 — 정본은 `utils/arsenal.ts`의 `trainingIntensityOf` 하나다
+  const trainingIntensity = trainingIntensityOf([
+    g.trainingPlan.primaryProgramId, g.trainingPlan.secondaryProgramId,
+    g.trainingPlan.secondary2ProgramId,
+  ]);
 
   // 동일 부위 이전 부상 이력 여부 (moderate 이상)
   const hasPriorInjurySameArea = (g.protagonist.injuryHistory ?? []).some(h => h.severity !== "light");
@@ -421,6 +422,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 예전처럼 하드코딩된 표로 조용히 굴러가지 않는다 (정본은 programs.json)
   const growth = await calcTrainingGrowth(
     g.protagonist, g.trainingPlan, finalEffMod, myMods, m.trainingPrograms);
+  // 관계도가 "이번 주 성장"을 보려면 여기서 잡아 둬야 한다 — 아래에서
+  // 패치가 스토어에 반영된 뒤엔 차이를 구할 수 없다
+  const ovrDeltaThisWeek =
+    (growth.protagonistPatch.pitching?.ovr ?? g.protagonist.pitching.ovr)
+    - g.protagonist.pitching.ovr;
   if (subBonus > 0) {
     growth.logs.push(
       `[개인 트레이닝] 효율 +${(subBonus * 100).toFixed(1)}% (구독 ${trainingSub.byArea.length}건 · 주 ${trainingSub.weeklyCost}만원${trainingSub.inverseFactor !== 1 ? ` · 팀 시설 보정 ×${trainingSub.inverseFactor.toFixed(2)}` : ""})`,
@@ -1186,7 +1192,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
             completeShutout: !!myLine && myLine.ip >= 9 && myLine.er === 0,
             teamPlayed: myResult != null,
             teamWon,
-            ovrDelta: 0,
+            // ⚠ **0이 박혀 있었다.** 그래서 `growth_threshold: 2`를 영원히
+            // 못 넘었고 감독 +1 · 코치 +2 성장 보너스가 죽어 있었다.
+            // 실제 이번 주 OVR 변화를 넘긴다.
+            ovrDelta: ovrDeltaThisWeek,
             trainingDone: hasTrainingPlan,
             trainingSkipped: !hasTrainingPlan,
             trainingArea,

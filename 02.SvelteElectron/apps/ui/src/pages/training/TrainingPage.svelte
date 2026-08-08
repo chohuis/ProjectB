@@ -3,7 +3,7 @@
   import { masterStore, pitchUnlockRuleMap, entitiesL10n, teamsL10n } from "../../shared/stores/master";
   import type { TrainingProgram } from "../../shared/stores/master";
   import { previewTraining, injuryChance, formPenalty, type TrainingPreview } from "../../shared/utils/growthEngine";
-  import { developingDifficultyOf } from "../../shared/utils/arsenal";
+  import { developingDifficultyOf, trainingIntensityOf } from "../../shared/utils/arsenal";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
   import { INJURY_LABEL } from "../../shared/types/save";
   import type { TrainingPreset } from "../../shared/types/save";
@@ -300,14 +300,7 @@
     if (chance !== null) projectedRisk = Math.round(chance * 100);
   }
 
-  // ⚠ 훈련 강도의 정본은 `advanceWeek`이다 — 회복·정신 훈련을 뺀 슬롯 비율.
-  // 여기서 다르게 세면 부상 확률이 실제와 갈린다
-  const LOW_INTENSITY = new Set(["TRN_RECOVERY", "TRN_MENTAL_P", "TRN_MENTAL_B"]);
-  $: trainingIntensity = (() => {
-    const slots = [selectedMain, selectedSub1, selectedSub2].filter(Boolean) as string[];
-    if (slots.length === 0) return 0;
-    return slots.filter((id) => !LOW_INTENSITY.has(id)).length / slots.length;
-  })();
+  $: trainingIntensity = trainingIntensityOf([selectedMain, selectedSub1, selectedSub2]);
 
   $: finalFatigueDelta  = Math.round(preview?.fatigueDelta ?? 0);
   $: projectedFatigue   = Math.round(preview?.projectedFatigue ?? realFatigue);

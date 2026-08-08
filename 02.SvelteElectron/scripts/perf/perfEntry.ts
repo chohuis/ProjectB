@@ -3446,3 +3446,9 @@ export function startPitchDev(pitchId: string): void {
   gameStore.startPitchTraining(pitchId);
   gameStore.setTrainingPlan({ secondary2ProgramId: "TRN_PITCH_DEV" });
 }
+
+/** 주간 OVR 변화 분포 — `growth_threshold`를 정하려면 실제 값을 봐야 한다 */
+export function ovrDeltaProbe(): Record<string, unknown> {
+  const box = get(gameStore).logs.filter((l) => l.startsWith("[훈련]"));
+  return { 훈련로그: box.length, 최근: box.slice(0, 3) };
+}

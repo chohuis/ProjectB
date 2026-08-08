@@ -15,7 +15,7 @@
     "apart_floor": 2
   },
   "weekly": {
-    "growth_threshold": 2,
+    "growth_threshold": 1,
     "quality_era": 2.5,
     "blowup_era": 6,
     "manager": {
@@ -74,5 +74,6 @@
     "batting": "타격",
     "eye": "타격",
     "baserun": "주루"
-  }
+  },
+  "_note_growth_threshold": "OVR 주간 변화 임계. 2였는데 실측상 191주에 14포인트라 도달 불가였다 — 델타 2인 주가 없다. 1로 내려 시즌당 4~5회 발동한다"
 }

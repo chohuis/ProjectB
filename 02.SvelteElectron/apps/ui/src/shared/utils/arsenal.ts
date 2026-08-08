@@ -71,3 +71,25 @@ export function developingDifficultyOf(
   if (!trainingPitchState) return 0;
   return catalog.find((c) => c.id === trainingPitchState.id)?.formDifficulty ?? 0;
 }
+
+// ── 훈련 강도 ────────────────────────────────────────────────────
+//
+// ⚠ 이 정의가 두 곳에 있었다 — `advanceWeek`(부상 판정용)과 훈련 화면
+// (미리보기용). **Phase 2에서 내가 두 번째를 만들었다.** 정본을 하나로 모으는
+// 작업을 하면서 같은 실수를 반복한 것이라 여기 적어 둔다.
+//
+// 마스터 데이터에 `intensity: low|medium|high` 필드도 있었지만 안 쓰이고 있었고,
+// 정의가 셋이 되므로 **정본은 이 함수 하나**로 한다.
+
+/** 강도에 안 치는 프로그램 — 회복·정신 훈련 */
+const LOW_INTENSITY = new Set(["TRN_RECOVERY", "TRN_MENTAL_P", "TRN_MENTAL_B"]);
+
+/**
+ * 이번 주 훈련 강도 (0~1). 회복·정신을 뺀 슬롯 비율이다.
+ * 부상 판정(`trainingIntensity`)과 화면 미리보기가 **같은 값**을 써야 한다.
+ */
+export function trainingIntensityOf(slots: readonly (string | null | undefined)[]): number {
+  const used = slots.filter((x): x is string => !!x);
+  if (used.length === 0) return 0;
+  return used.filter((id) => !LOW_INTENSITY.has(id)).length / used.length;
+}
