@@ -104,6 +104,82 @@ export function buildMyRoundMessage(
   };
 }
 
+/**
+ * 라운드가 끝날 때마다 **진출 팀 명단**을 알린다 — 내 팀이 없어도 온다.
+ *
+ * ⚠ 예전엔 내 팀 경기(`buildMyRoundMessage`)와 우승만 왔다. 우리가 안 나간
+ * 대회는 개막·우승 두 통뿐이라 **누가 올라갔는지 알 수 없었고**, 우리가 나간
+ * 대회도 탈락한 뒤로는 깜깜했다.
+ *
+ * ⚠ **32강부터 보낸다**(사용자 확정 2026-08-08). 그 앞은 팀이 너무 많아
+ * 명단이 소식이 안 된다 — 102팀 대회면 1회전만 51경기다.
+ *
+ * ⚠ **내 팀이 그 라운드에 있으면 `null`이다.** `buildMyRoundMessage`가 이미
+ * 그 경기를 자세히 알린다 — 둘 다 보내면 같은 라운드가 두 통이 된다.
+ *
+ * `myRegionTeams`를 주면 아는 팀을 짚어준다. 없으면 명단만 낸다 —
+ * 남의 대회 8강 명단은 그것만으로는 읽을 이유가 없다.
+ */
+export function buildRoundProgressMessage(
+  def: TournamentDef,
+  bracket: TournamentBracket,
+  round: number,
+  myTeamId: string,
+  teamName: (id: string) => string,
+  weekNum: number,
+  myRegionTeams?: Set<string>,
+): MessageItem | null {
+  const fromEnd = bracket.totalRounds - round;
+  if (fromEnd > 4) return null;              // 32강(fromEnd 4)보다 앞은 안 보낸다
+  if (round === bracket.totalRounds) return null;  // 결승은 우승 소식이 맡는다
+
+  const played = bracket.matches.filter((m) => m.round === round && !m.isBye);
+  if (played.length === 0 || played.some((m) => !m.winnerTeamId)) return null;
+
+  // 내 팀 경기가 이 라운드에 있으면 `buildMyRoundMessage`가 알린다
+  if (played.some((m) => m.homeTeamId === myTeamId || m.awayTeamId === myTeamId)) return null;
+
+  const winners = played.map((m) => m.winnerTeamId!).filter(Boolean);
+  if (winners.length === 0) return null;
+
+  const nextName = roundName(round + 1, bracket.totalRounds);
+  const known = myRegionTeams
+    ? winners.filter((id) => myRegionTeams.has(id))
+    : [];
+  const fallen = myRegionTeams
+    ? played
+        .filter((m) => {
+          const loser = m.winnerTeamId === m.homeTeamId ? m.awayTeamId : m.homeTeamId;
+          return loser ? myRegionTeams.has(loser) : false;
+        })
+        .map((m) => (m.winnerTeamId === m.homeTeamId ? m.awayTeamId : m.homeTeamId))
+        .filter((x): x is string => !!x)
+    : [];
+
+  const lines = [
+    `${def.name} ${roundName(round, bracket.totalRounds)} 종료`,
+    "",
+    `■ ${nextName} 진출 ${winners.length}팀`,
+    ...winners.map((id) => `   ${teamName(id)}${known.includes(id) ? "   ← 우리 권역" : ""}`),
+  ];
+  if (fallen.length > 0) {
+    lines.push("", `■ 우리 권역 탈락   ${fallen.map(teamName).join(", ")}`);
+  }
+
+  return {
+    id: `msg-tour-round-${def.id}-r${round}-${bracket.seasonYear}`,
+    category: "news",
+    sender: def.leagueId === "LEAGUE_UNIVERSITY" ? "대학야구연맹" : "고교야구연맹",
+    subject: `${def.name} ${nextName} 진출 ${winners.length}팀`,
+    preview: known.length > 0
+      ? `우리 권역 ${known.map(teamName).join(", ")} 진출`
+      : `${teamName(winners[0])} 외 ${Math.max(0, winners.length - 1)}팀`,
+    body: lines.join("\n"),
+    createdAt: `W${weekNum}`,
+    readAt: null,
+  };
+}
+
 /** 우승 확정 — 내 팀이 아니어도 리그 소식으로 통지한다 */
 export function buildChampionMessage(
   def: TournamentDef,

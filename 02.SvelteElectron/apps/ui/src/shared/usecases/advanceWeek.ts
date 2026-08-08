@@ -16,6 +16,7 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { buildOpponentBrief } from "../utils/matchLineupBuilder";
+import { HS_REGIONS } from "../utils/leagueScheduler";
 import { buildMyBodyReport } from "./weekPhases/myBodyReport";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
@@ -67,7 +68,7 @@ import { buildLeagueDigest, DIGEST_WEEKS, LEAGUE_NAMES } from "./weekPhases/dige
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
 import {
-  buildOpenMessage, buildMyRoundMessage, buildChampionMessage,
+  buildOpenMessage, buildMyRoundMessage, buildChampionMessage, buildRoundProgressMessage,
 } from "./weekPhases/tournamentNews";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
@@ -1498,6 +1499,19 @@ async function progressTournaments(week: number): Promise<boolean> {
   );
   const tName4Tour = (id: string) =>
     get(masterStore).teams.find((t) => t.id === id)?.name ?? id;
+
+  /**
+   * 주인공 권역의 팀들 — 라운드 진출 명단에서 **아는 팀을 짚어주는** 데 쓴다.
+   *
+   * ⚠ 없으면 남의 대회 8강 명단은 그냥 모르는 이름 나열이라 읽을 이유가 없다.
+   * 고교가 아니면 빈 집합이다(권역은 고교 개념이다) — 그때는 명단만 나온다.
+   */
+  const myRegionTeamIds = (): Set<string> | undefined => {
+    for (const ids of Object.values(HS_REGIONS)) {
+      if (ids.includes(protagonistTeamId)) return new Set(ids);
+    }
+    return undefined;
+  };
   for (const o of opened) {
     if (o.bracket) seasonStore.setTournamentBracket(o.bracket);
     if (o.stage) seasonStore.setGroupStage(o.stage);
@@ -1585,6 +1599,16 @@ async function progressTournaments(week: number): Promise<boolean> {
           const mine = buildMyRoundMessage(
             def, next, r, protagonistTeamId, tName4Tour, week);
           if (mine) gameStore.addMessage(mine);
+
+          // ⚠ **내 팀이 없는 라운드도 알린다** (32강부터, 사용자 확정 2026-08-08).
+          // 예전엔 우리가 안 나간 대회는 개막·우승 두 통뿐이라 누가 올라갔는지
+          // 알 수 없었고, 나간 대회도 탈락한 뒤로는 깜깜했다.
+          // `buildRoundProgressMessage`가 내 팀 라운드면 스스로 null을 내므로
+          // 위 `mine`과 겹치지 않는다.
+          const progress = buildRoundProgressMessage(
+            def, next, r, protagonistTeamId, tName4Tour, week, myRegionTeamIds());
+          if (progress) gameStore.addMessage(progress);
+
           if (r === next.totalRounds) {
             const champ = buildChampionMessage(
               def, next, protagonistTeamId, tName4Tour, week);
