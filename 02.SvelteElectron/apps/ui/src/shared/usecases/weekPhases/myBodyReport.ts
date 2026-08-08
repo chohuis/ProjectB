@@ -1,4 +1,5 @@
 import type { MessageItem, MyBodyEvent, MyBodyMetadata } from "../../types/main";
+import { INJURY_LABEL } from "../../types/save";
 
 /**
  * 주인공 몸 상태 월간 리포트.
@@ -27,6 +28,17 @@ const SEVERITY_KO: Record<string, string> = {
 };
 
 /**
+ * 부상 타입 → 한글 이름. **정본은 `INJURY_LABEL` 하나다.**
+ *
+ * ⚠ 처음에 `injuryType`을 그대로 본문에 넣었더니 화면에 **`SHOULDER_INFLAM`이
+ * 그대로 떴다**(2026-08-08 UI 순회가 잡음). 다른 화면들은 전부 `INJURY_LABEL`을
+ * 거치는데 이 리포트만 안 거쳤다 — ID를 이름으로 바꾸는 층을 한 겹 빠뜨리면
+ * 조용히 원문이 샌다.
+ */
+const injuryKo = (t: string) =>
+  (INJURY_LABEL as Record<string, string>)[t] ?? t;
+
+/**
  * 담을 게 하나도 없으면 `null`. **빈 리포트를 보내면 "왔는데 아무것도 없다"가 된다.**
  *
  * 이름·팀명은 담지 않는다 — NPC 리포트와 같은 규격이고, 표시는 화면이 조회한다.
@@ -50,7 +62,7 @@ export function buildMyBodyReport(
 
   if (injured) {
     lines.push(
-      `  부상    ${snapshot!.injuryType}` +
+      `  부상    ${injuryKo(snapshot!.injuryType!)}` +
         (snapshot!.severity ? ` (${SEVERITY_KO[snapshot!.severity] ?? snapshot!.severity})` : ""),
       `          W${snapshot!.sinceWeek ?? "?"} 발생 · ${snapshot!.recoveryWeeksLeft}주 남음`,
       "",
@@ -79,7 +91,7 @@ export function buildMyBodyReport(
 
   // 미리보기는 **제일 나쁜 것**을 짚는다. 부상 > 결장 > 경고 순이다
   const preview = injured
-    ? `${snapshot!.injuryType} ${snapshot!.recoveryWeeksLeft}주 남음`
+    ? `${injuryKo(snapshot!.injuryType!)} ${snapshot!.recoveryWeeksLeft}주 남음`
       + (absences.length ? ` · 결장 ${absences.length}경기` : "")
     : absences.length > 0
       ? `결장 ${absences.length}경기` + (warnings.length ? ` · 피로 경고 ${warnings.length}회` : "")

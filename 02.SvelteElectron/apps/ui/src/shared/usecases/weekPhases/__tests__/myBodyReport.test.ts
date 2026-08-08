@@ -99,3 +99,27 @@ describe("호출부 배선", () => {
     expect(s).toContain("buildMyBodyReport");
   });
 });
+
+describe("부상 이름은 ID가 아니라 한글이다", () => {
+  // ⚠ 2026-08-08 UI 순회가 화면에서 "SHOULDER_INFLAM 4주 남음"을 잡았다.
+  // 다른 화면은 전부 INJURY_LABEL을 거치는데 이 리포트만 원문을 그대로 냈다.
+  const injured = () =>
+    buildMyBodyReport([], { injuryType: "SHOULDER_INFLAM", severity: "moderate", recoveryWeeksLeft: 4, sinceWeek: 10 },
+      12, 2026, "5월", () => "팀")!;
+
+  it("본문에 원문 ID가 안 남는다", () => {
+    const m = injured();
+    expect(m.body).toContain("어깨 염증");
+    expect(m.body).not.toContain("SHOULDER_INFLAM");
+  });
+
+  it("미리보기에도 안 남는다 — 목록에서 제일 먼저 보이는 자리다", () => {
+    const m = injured();
+    expect(m.preview).toContain("어깨 염증");
+    expect(m.preview).not.toContain("SHOULDER_INFLAM");
+  });
+
+  it("metadata는 ID를 그대로 둔다 — 표시가 아니라 데이터다", () => {
+    expect((injured().metadata as any).injury.injuryType).toBe("SHOULDER_INFLAM");
+  });
+});
