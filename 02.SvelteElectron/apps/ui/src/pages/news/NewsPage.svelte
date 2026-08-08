@@ -481,7 +481,16 @@
     min-height: 0; overflow-y: auto;
     font-size: 13.5px; line-height: 1.65; color: var(--ink-mid);
   }
-  .m-body :global(p) { margin: 0; }
+  /**
+   * ⚠ **`pre-wrap`이 없으면 공백 정렬이 통째로 뭉개진다.** 본문을 줄 단위
+   * `<p>`로 쪼개는데 HTML은 `<p>` 안의 연속 공백을 하나로 접는다 — 순위표처럼
+   * 들여쓰기·자릿수 맞춤에 기대는 소식이 한 덩어리 문장으로 보였다
+   * (2026-08-08 다이제스트 렌더를 눈으로 보고 발견. 자동 검사는 본문 문자열만
+   * 보므로 이걸 못 잡는다).
+   *
+   * 줄바꿈은 이미 `<p>`가 만든다 — 여기서는 **공백 보존**만 취한다.
+   */
+  .m-body :global(p) { margin: 0; white-space: pre-wrap; }
 
   .dec {
     border-top: 1px solid var(--line);
