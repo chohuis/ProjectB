@@ -3371,3 +3371,50 @@ export async function staleRelationProbe(): Promise<Record<string, unknown>> {
     표본: stale.slice(0, 4).map(r => `${r.personId.slice(-6)} = ${r.value} (lastTeam ${r.lastTeam || "-"})`),
   };
 }
+
+/**
+ * 훈련 실측용 — **주인공의 지금 상태를 한 장으로.**
+ *
+ * ⚠ `trainingArea`를 같이 낸다. 화면이 저장하는 프로그램 id 12개 중 10개가
+ * 마스터 JSON에 없어서 `focus` 조회가 `undefined`가 되고, 그러면 코치
+ * 담당영역 관계와 훈련 효율 보너스가 **조용히 안 붙는다**는 의심이 있다.
+ * 코드를 읽어 세운 가설이라 **런타임으로 확인해야 한다** — 여기가 그 자리다.
+ */
+export async function trainingProbe(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const plan = g.trainingPlan;
+  const programs = get(masterStore).trainingPrograms;
+
+  const focusOf = (id: string | null) =>
+    id ? (programs.find((pr) => pr.id === id)?.focus ?? null) : null;
+
+  const { trainingAreaOf } = await import("../../apps/ui/src/shared/usecases/relationships");
+  const primaryFocus = focusOf(plan.primaryProgramId);
+
+  return {
+    주차: get(seasonStore).currentWeek,
+    시즌: get(seasonStore).seasonYear,
+    단계: p.careerStage,
+    나이: p.age,
+    OVR: Math.round((p.pitching?.ovr ?? 0) * 10) / 10,
+    스탯: {
+      velocity: p.pitching?.velocity, command: p.pitching?.command,
+      control: p.pitching?.control, movement: p.pitching?.movement,
+      stamina: p.pitching?.stamina, mentality: p.pitching?.mentality,
+    },
+    컨디션: Math.round(p.condition), 피로: Math.round(p.fatigue),
+    // ⚠ **표본이 아니라 전수다.** `advanceWeek`이 매주 세는 카운터라
+    // `autoRun`이 여러 주를 건너뛰어도 빠지지 않는다 (피로>70 · 컨디션<60)
+    건강: p.seasonHealth ?? null,
+    계획: [plan.primaryProgramId, plan.secondaryProgramId, plan.secondary2ProgramId],
+    // ── 배선 확인 ──
+    "주 프로그램 focus": primaryFocus,               // null이면 마스터에 그 id가 없다
+    trainingArea: await trainingAreaOf(primaryFocus), // ""이면 코치 보너스가 죽는다
+    "마스터 프로그램 수": programs.length,
+    보유구종: (p.pitches ?? []).map((x) => `${x.id.replace("PITCH_", "")}:${x.grade}`),
+    개발중구종: p.trainingPitchState
+      ? `${p.trainingPitchState.id.replace("PITCH_", "")} ${Math.round(p.trainingPitchState.progress)}%`
+      : null,
+  };
+}

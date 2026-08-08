@@ -102,6 +102,7 @@
     "check:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-devplayer.cjs",
     "measure:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-devplayer.cjs",
     "check:trainingtable": "node scripts/check-training-table.cjs",
+    "measure:training": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-training.cjs",
     "measure:relations": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-relations.cjs",
     "measure:mailbox": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-mailbox.cjs",
     "measure:messagekinds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-message-kinds.cjs",
