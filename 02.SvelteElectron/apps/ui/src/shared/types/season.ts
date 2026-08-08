@@ -402,6 +402,15 @@ export interface SaveSeason {
    */
   injuryNewsBuffer: import("../utils/injuryReport").InjuryEvent[];
   /**
+   * **주인공** 몸 상태 사건 — 경고·결장. 월 1회 모아서 보낸다.
+   *
+   * NPC 부상은 위에서 이미 월간인데 **내 몸만 낱개로 왔다**(경고 한 통,
+   * 부상 결장 한 통, 컨디션 결장 한 통). 그 비대칭을 없앤다.
+   *
+   * ⚠ **부상 발생은 여기 안 쌓는다** — 다치는 순간은 사건이라 즉시 보낸다.
+   */
+  myBodyBuffer: import("./main").MyBodyEvent[];
+  /**
    * 국가대표 차출 — npcId → 남은 주.
    *
    * 부상과 **같은 취급**이다: 승강의 상시 콜업이 이 자리를 메운다
@@ -484,6 +493,7 @@ export function makeEmptySeason(
     ablWestTeams: [],
     npcInjuries: {},
     injuryNewsBuffer: [],
+    myBodyBuffer: [],
     npcRetired: [],
     npcLiveStats: {},
     prevSeasonKblStandings: [],

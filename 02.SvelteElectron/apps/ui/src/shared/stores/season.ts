@@ -91,6 +91,8 @@ function createSeasonStore() {
         npcLiveStats: {},
         // 없으면 빈 배열 — 이게 없으면 `pushInjuryNews`가 undefined에 스프레드한다
         injuryNewsBuffer: season.injuryNewsBuffer ?? [],
+        // 없으면 빈 배열 — 이게 없으면 pushMyBodyEvent 가 undefined 에 스프레드한다
+        myBodyBuffer: season.myBodyBuffer ?? [],
         npcRetired: season.npcRetired ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
       });
@@ -668,6 +670,29 @@ function createSeasonStore() {
       update((s) => {
         out = s.injuryNewsBuffer ?? [];
         return { ...s, injuryNewsBuffer: [] };
+      });
+      return out;
+    },
+
+    /**
+     * **주인공** 몸 상태 사건을 쌓는다 — 월 1회 한 소식으로 나간다.
+     *
+     * ⚠ NPC 부상은 이미 월간 리포트인데 **내 몸만 낱개로 왔다** —
+     * 경고 한 통, 부상 결장 한 통, 컨디션 결장 한 통이 따로 떴다.
+     * 그 비대칭을 없앤다.
+     *
+     * ⚠ **부상 발생 자체는 여기 안 쌓는다.** 다치는 순간은 사건이라 즉시
+     * 보내야 한다. 여기 모으는 건 경고·결장이다.
+     */
+    pushMyBodyEvent(e: import("../types/main").MyBodyEvent) {
+      update((s) => ({ ...s, myBodyBuffer: [...(s.myBodyBuffer ?? []), e] }));
+    },
+
+    drainMyBodyEvents(): import("../types/main").MyBodyEvent[] {
+      let out: import("../types/main").MyBodyEvent[] = [];
+      update((s) => {
+        out = s.myBodyBuffer ?? [];
+        return { ...s, myBodyBuffer: [] };
       });
       return out;
     },

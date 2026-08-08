@@ -16,6 +16,7 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { buildOpponentBrief } from "../utils/matchLineupBuilder";
+import { buildMyBodyReport } from "./weekPhases/myBodyReport";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
 import { enlistProtagonist, dischargeProtagonist } from "./militaryDecision";
@@ -485,19 +486,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     growth.logs.push(
       `[부상 경고] 피로 ${Math.round(injuryWarning.fatigue)} — 이대로 한 주 더 가면 ${pct}% 확률로 부상`,
     );
-    gameStore.addMessage({
-      id:        `msg-injury-warn-w${weekNum}`,
-      category:  "coach",
-      sender:    getPitchCoachName(g.protagonist.teamId, m.entities),
-      subject:   "몸 상태 경고 — 이번 주는 넘겼습니다",
-      preview:   `피로 ${Math.round(injuryWarning.fatigue)} / 다음 주 부상 위험 ${pct}%`,
-      body:
-        `피로도가 임계선을 넘었습니다. 이번 주는 별 탈 없이 지나갔지만 운이 좋았던 겁니다.\n\n`
-        + `이대로 한 주를 더 보내면 **약 ${pct}% 확률로 부상**이 옵니다.\n\n`
-        + `회복 훈련(TRN_RECOVERY)으로 슬롯을 돌리거나 등판을 걸러 피로를 떨어뜨리십시오.\n`
-        + `임계선 아래로 내려가면 이 경고는 초기화됩니다.`,
-      createdAt: `W${weekNum}`,
-      readAt:    null,
+    // ⚠ **소식을 여기서 바로 보내지 않는다.** NPC 부상은 이미 월간 리포트인데
+    // 내 몸만 낱개로 왔다 — 경고 한 통, 부상 결장 한 통, 컨디션 결장 한 통이
+    // 따로 떴다. 월말에 한 통으로 모은다(`buildMyBodyReport`).
+    seasonStore.pushMyBodyEvent({
+      week: weekNum, kind: "warning",
+      fatigue: Math.round(injuryWarning.fatigue), riskPct: pct,
     });
   }
   if (studyResult.efficiencyMod < 1.0) {
@@ -1304,6 +1298,31 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       season: get(seasonStore), monthLabel: weekToMonthLabel(weekNum),
     });
     if (news) gameStore.addMessage(news);
+
+    // ── 주인공 몸 상태 (같은 주기) ──────────────────────────────
+    //
+    // ⚠ **버퍼를 반드시 비운다.** 리포트를 안 보내도(담을 게 없어 null이어도)
+    // drain은 해야 한다 — 안 그러면 다음 달 리포트에 지난달 경고가 섞인다.
+    const myEvents = seasonStore.drainMyBodyEvents();
+    const inj = gFinal.protagonist.injury;
+    const teamByIdMB = new Map(mFinal.teams.map((t) => [t.id, t.name]));
+    const myBody = buildMyBodyReport(
+      myEvents,
+      inj
+        ? {
+            injuryType: inj.type, severity: inj.severity,
+            recoveryWeeksLeft: inj.recoveryWeeksLeft,
+            // ⚠ `InjuryState`에 **발생 주차가 없다.** 지어내지 않고 전체 기간에서
+            // 되짚는다 — 치료로 기간이 바뀌면 어긋날 수 있어 표시만 쓴다
+            sinceWeek: Math.max(1, weekNum - (inj.totalRecoveryWeeks - inj.recoveryWeeksLeft)),
+          }
+        : null,
+      weekNum,
+      sFinal.seasonYear,
+      weekToMonthLabel(weekNum),
+      (id) => teamByIdMB.get(id) ?? id,
+    );
+    if (myBody) gameStore.addMessage(myBody);
   }
 
   // ── 코치 리포트 (3주마다, 군 복무·오프시즌 제외) ──────────────
@@ -2334,13 +2353,11 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           }
           accResults.push(result);
           accLogs.push("부상으로 인해 경기 출전 불가");
-          gameStore.addMessage({
-            id: `msg-inj-skip-w${nextWeekNum}-${Date.now()}`,
-            category: "system", sender: "코칭스태프",
-            subject: "부상으로 인한 등판 회피",
-            preview: "부상 회복 중으로 이번 경기에 출전하지 않습니다.",
-            body: `부상 회복 중(${gCurrent.protagonist.injury!.recoveryWeeksLeft}주 남음)으로 이번 경기 등판을 회피했습니다.`,
-            createdAt: `W${nextWeekNum}`, readAt: null,
+          // 월간 몸 상태 리포트로 모은다 (낱개 소식 대신)
+          seasonStore.pushMyBodyEvent({
+            week: nextWeekNum, kind: "absence", reason: "injury",
+            opponentTeamId: game.homeTeamId === gCurrent.protagonist.teamId
+              ? game.awayTeamId : game.homeTeamId,
           });
         } else if (cond < 35) {
           // 컨디션 극히 낮음 → 자동 회피 + 메시지
@@ -2354,13 +2371,10 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           }
           accResults.push(result);
           accLogs.push(`컨디션 불량(${cond})으로 등판 회피`);
-          gameStore.addMessage({
-            id: `msg-cond-skip-w${nextWeekNum}-${Date.now()}`,
-            category: "system", sender: "코칭스태프",
-            subject: "컨디션 불량으로 인한 등판 회피",
-            preview: `컨디션 ${cond} — 이번 경기 등판을 회피했습니다.`,
-            body: `현재 컨디션(${cond})이 너무 낮아 코칭스태프 판단으로 이번 경기 등판을 회피했습니다.`,
-            createdAt: `W${nextWeekNum}`, readAt: null,
+          seasonStore.pushMyBodyEvent({
+            week: nextWeekNum, kind: "absence", reason: "condition", condition: cond,
+            opponentTeamId: game.homeTeamId === gCurrent.protagonist.teamId
+              ? game.awayTeamId : game.homeTeamId,
           });
         } else if (cond < 55) {
           // 컨디션 저조 → 사용자 선택 (강행/회피)

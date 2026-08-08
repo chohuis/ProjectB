@@ -149,6 +149,38 @@ export interface InjuryMetadata {
   events: import("../utils/injuryReport").InjuryEvent[];
 }
 
+/**
+ * 주인공 몸 상태 월간 리포트.
+ *
+ * ⚠ **NPC 월간 부상 리포트(`InjuryMetadata`)와 데이터가 다르다.** 그쪽은
+ * `npcId` 목록이고 이쪽은 내 부상 하나 + 결장·경고 기록이다. 규격을 억지로
+ * 합치면 화면이 둘 다 어중간하게 그린다 — **주기와 구조만 같게** 둔다.
+ *
+ * ⚠ **부상 발생은 여기 안 담는다.** 다치는 순간은 사건이라 즉시 보낸다.
+ * 여기 모으는 것은 **경고·결장·경과** — 월말에 몰아 봐도 되는 것들이다.
+ */
+export interface MyBodyEvent {
+  week: number;
+  kind: "absence" | "warning";
+  /** absence — 왜 못 나갔나 */
+  reason?: "injury" | "condition";
+  /** absence — 상대 팀. 이름은 화면이 조회한다 */
+  opponentTeamId?: string;
+  /** absence(condition) — 그때 컨디션 값 */
+  condition?: number;
+  /** warning — 그때 피로와 부상 위험 % */
+  fatigue?: number;
+  riskPct?: number;
+}
+
+export interface MyBodyMetadata {
+  type: "myBody";
+  week: number;
+  /** 월말 시점의 부상 상태. 없으면 null */
+  injury: { injuryType: string; severity: string; weeksLeft: number; sinceWeek: number } | null;
+  events: MyBodyEvent[];
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -160,5 +192,6 @@ export interface MessageItem {
   readAt: string | null;
   decision?: MessageDecision;
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
+           | MyBodyMetadata
            | { type: string };
 }
