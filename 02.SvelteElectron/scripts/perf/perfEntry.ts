@@ -3339,3 +3339,35 @@ export function relationBurstProbe(): Record<string, unknown> {
       .map(([k, v]) => `${k}:${v}통`),
   };
 }
+
+/**
+ * `together`인데 **실제로는 같은 팀이 아닌 사람**이 몇인가.
+ *
+ * `apart`로 가는 길이 `onProtagonistTeamChange` 하나뿐이라, **동료가**
+ * 졸업·이적으로 떠나는 경우를 아무도 처리하지 않는다. 그러면 떠난 사람이
+ * 계속 `together`로 남고, 주간 갱신이 `contact === "together"`만 보므로
+ * **팀 승리마다 관계가 계속 오른다** — 같이 뛰지도 않는 사람과.
+ *
+ * 화면에서는 "지금 함께 58명 / 지난 인연 0"으로 보인다(3학년 실측).
+ */
+export async function staleRelationProbe(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const slotId = g.currentSlotId;
+  if (!slotId) return { error: "슬롯 없음" };
+  const rows = await slotRepo.getRelationships(slotId, { contact: "together" });
+  const myTeam = g.protagonist.teamId;
+  const onTeam = new Set(
+    g.npcs.filter(n => n.currentTeam === myTeam).map(n => n.npcId),
+  );
+  const staffIds = new Set(get(masterStore).staffEntities.map(e => e.id));
+  const stale = rows.filter(r =>
+    r.kind === "teammate" && !onTeam.has(r.personId) && !staffIds.has(r.personId));
+  return {
+    together: rows.length,
+    동료행: rows.filter(r => r.kind === "teammate").length,
+    실제같은팀: rows.filter(r => r.kind === "teammate" && onTeam.has(r.personId)).length,
+    "떠났는데 together": stale.length,
+    "그중 값이 오른 사람": stale.filter(r => r.value > 10).length,
+    표본: stale.slice(0, 4).map(r => `${r.personId.slice(-6)} = ${r.value} (lastTeam ${r.lastTeam || "-"})`),
+  };
+}

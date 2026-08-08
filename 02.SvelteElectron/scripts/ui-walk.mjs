@@ -103,6 +103,13 @@ async function launch() {
   page.on("pageerror", (e) => {
     if (!isNoise(e.message)) consoleErrors.push("[pageerror] " + e.message.slice(0, 200));
   });
+  // ⚠ **네이티브 `alert()`가 실제로 쓰인다** (진로 허브의 드래프트 신청).
+  // 핸들러가 없으면 Playwright가 알아서 닫긴 하지만, 그러면 **무엇이 떴는지
+  // 기록이 안 남는다** — 순회기가 "왜 여기서 멈췄지"를 못 말하게 된다.
+  page.on("dialog", async (d) => {
+    log(`  (네이티브 창: ${d.type()} "${d.message().slice(0, 60)}")`);
+    await d.accept().catch(() => {});
+  });
 }
 
 const clickText = (t) => page.evaluate((txt) => {
@@ -209,6 +216,16 @@ async function advance(n) {
           // 막는 것도 안 보이는데 안 넘어가서 앱 결함처럼 보였다(W12).
           // 카드 자체가 버튼이다 — `.option-card`.
           pick("button.option-card"),
+          // ⚠ **진로 신청 허브는 `.opt`가 아니라 `.opt-btn`이다.** 안 잡혀서
+          // "후보 없음"이 24번 찍히고 3학년 W44에서 섰다(pro5) — 프로로 가는
+          // 관문이라 여기서 막히면 프로 화면은 영영 못 본다.
+          //
+          // ⚠ **`.danger`는 절대 안 누른다.** 군입대는 "즉시 확정"이라
+          // 순회기가 그걸 누르면 **매번 고교에서 커리어가 끝난다.**
+          // 되돌릴 수 없는 선택 중에서도 이건 대안이 있는 쪽이다
+          // (재기 불가 판정의 "은퇴한다"와 다르다 — 그건 외길이라 누른다).
+          pick("button.opt-btn:not(.danger)"),
+          pick("button.submit:not([disabled])"),
           overlay ? null : pick("button.item.pending"),   // 선택 대기 열기
           pick(".exit-btn"),
           // ⚠ 클래스 이름이 화면마다 다르다 — 브리핑은 `.confirm-btn`,
@@ -234,8 +251,11 @@ async function advance(n) {
         // 회전에 맡겼더니 **선택 대기가 5건 쌓인 주에서** 절반만 풀고 14번을
         // 다 썼다(pro4 2학년 W31). 관계도를 고치자 동료 이벤트가 한 주에
         // 여러 건 몰리게 된 것이고, 그건 앱 결함이 아니라 순회기 한계였다.
-        const opt = root.querySelector("button.opt");
-        const el = (opt && opt.offsetParent) ? opt : cands[turn % cands.length];
+        // ⚠ `신청 완료`도 마찬가지다. 게다가 신청 행(`.opt-btn`)은 **토글**이라
+        // 회전에 맡기면 켰다 껐다 하며 제자리를 돈다 — 열리는 즉시 눌러야 한다.
+        const sticky = [...root.querySelectorAll("button.opt, button.submit:not([disabled])")]
+          .find((b) => b.offsetParent);
+        const el = sticky ?? cands[turn % cands.length];
         window.__walkTrace.push(
           `${turn}: ${el.tagName.toLowerCase()}.${(el.className || "").toString().split(" ").join(".")}` +
           ` "${(el.textContent ?? "").trim().slice(0, 24)}"`);

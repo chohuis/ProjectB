@@ -100,6 +100,11 @@ const pad = (s, n) => String(s).padEnd(n);
     log("  표본:");
     for (const s of last.sample ?? []) log(`    ${s}`);
 
+    // 떠난 사람이 계속 `together`로 남는가 — 남으면 관계가 계속 오른다
+    log("");
+    log("  ── 떠났는데 함께로 남은 사람 ──");
+    log("    " + JSON.stringify(await app.staleRelationProbe(), null, 0));
+
     // 라벨 변화가 한 주에 몰리는가 — 선택지 달린 것이 몰리면 그 주가 막힌다
     log("");
     log("  ── 관계 소식 몰림 ──");
