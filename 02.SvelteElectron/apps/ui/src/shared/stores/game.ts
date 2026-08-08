@@ -583,6 +583,63 @@ export function resetMailboxProduceStats(): void {
   mailboxProduceStats.byKind = {};
 }
 
+/**
+ * 선택지 효과를 주인공에게 적용한다 — **효과 계산의 정본이다.**
+ *
+ * ⚠ 예전엔 `resolveDecision`(화면 선택)과 `applyEventEffect`(자동 진행)가
+ * 같은 `DecisionEffect`를 받으면서 **각자 계산을 갖고 있었고, 적용하는 필드가
+ * 달랐다**:
+ *
+ *   resolveDecision   컨디션·피로·사기·돈·명성·인기·성실·태그·XP·스탯
+ *   applyEventEffect  컨디션·피로·사기·돈·XP·스탯          ← 넷이 빠졌다
+ *
+ * 당시 데이터가 우연히 그 넷을 안 써서 안 터졌을 뿐이다. 병역 이벤트에
+ * "성실도 +5"를 하나 넣는 순간 **에러 없이 조용히 무시된다** — 이 프로젝트가
+ * 반복해 겪은 "아무 일도 안 일어남" 형태다. 계산을 한 곳에 둬서 한쪽만
+ * 고치는 일이 생기지 않게 한다.
+ *
+ * 관계도·사치품은 여기서 못 한다(slot.db·Rust 왕복이라 비동기다) —
+ * `usecases/decisions.ts`의 `applySideEffects`가 맡는다.
+ */
+export function applyEffectToProtagonist(
+  p: ProtagonistSave,
+  fx: import("../types/main").DecisionEffect,
+): ProtagonistSave {
+  const clamp = (v: number) => Math.max(0, Math.min(100, v));
+  const clampStat = (v: number) => Math.max(1, Math.min(99, v));
+
+  const pitchingXP = { ...p.pitchingXP };
+  if (fx.xp) {
+    for (const [stat, amt] of Object.entries(fx.xp)) {
+      pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
+    }
+  }
+
+  const pitching = { ...p.pitching };
+  if (fx.statDelta) {
+    for (const [stat, amt] of Object.entries(fx.statDelta)) {
+      if (stat !== "ovr" && stat in pitching) {
+        (pitching as Record<string, number>)[stat] =
+          clampStat((pitching as Record<string, number>)[stat] + amt);
+      }
+    }
+  }
+
+  return {
+    ...p,
+    condition:  clamp(p.condition + (fx.conditionDelta ?? 0)),
+    fatigue:    clamp(p.fatigue   + (fx.fatigueDelta   ?? 0)),
+    morale:     clamp(p.morale    + (fx.moraleDelta    ?? 0)),
+    money:      Math.max(0, p.money + (fx.moneyDelta ?? 0)),
+    fame:       Math.max(0, Math.min(200, p.fame       + (fx.fameDelta       ?? 0))),
+    popularity: Math.max(0, Math.min(100, p.popularity + (fx.popularityDelta ?? 0))),
+    diligence:  Math.max(1, Math.min(99,  p.diligence  + (fx.diligenceDelta  ?? 0))),
+    tags:       fx.addTag ? [...new Set([...p.tags, ...fx.addTag])] : p.tags,
+    pitchingXP,
+    pitching,
+  };
+}
+
 /** 들어오는 소식을 집계하고 상한을 적용한다. 메일함에 넣는 유일한 문이다 */
 function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageItem[] {
   for (const m of incoming) {
@@ -915,35 +972,7 @@ function createGameStore() {
 
         if (!fx) return { ...s, mailbox };
 
-        const p = s.protagonist;
-        const clamp = (v: number) => Math.max(0, Math.min(100, v));
-        const condition    = clamp(p.condition + (fx.conditionDelta ?? 0));
-        const fatigue      = clamp(p.fatigue   + (fx.fatigueDelta   ?? 0));
-        const morale       = clamp(p.morale    + (fx.moraleDelta    ?? 0));
-        const money        = Math.max(0, p.money + (fx.moneyDelta ?? 0));
-        const fame         = Math.max(0, Math.min(200, p.fame       + (fx.fameDelta       ?? 0)));
-        const popularity   = Math.max(0, Math.min(100, p.popularity + (fx.popularityDelta ?? 0)));
-        const diligence    = Math.max(1, Math.min(99,  p.diligence  + (fx.diligenceDelta  ?? 0)));
-        const tags         = fx.addTag ? [...new Set([...p.tags, ...fx.addTag])] : p.tags;
-
-        const pitchingXP = { ...p.pitchingXP };
-        if (fx.xp) {
-          for (const [stat, amt] of Object.entries(fx.xp)) {
-            pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
-          }
-        }
-
-        const clampStat = (v: number) => Math.max(1, Math.min(99, v));
-        const pitching = { ...p.pitching };
-        if (fx.statDelta) {
-          for (const [stat, amt] of Object.entries(fx.statDelta)) {
-            if (stat !== "ovr" && stat in pitching) {
-              (pitching as Record<string, number>)[stat] = clampStat((pitching as Record<string, number>)[stat] + amt);
-            }
-          }
-        }
-
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, fame, popularity, diligence, tags, pitchingXP, pitching };
+        const updated = applyEffectToProtagonist(s.protagonist, fx);
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
         };
@@ -1589,31 +1618,19 @@ function createGameStore() {
       }));
     },
 
-    // 이벤트 선택지 효과 적용
+    /**
+     * 이벤트 선택지 효과 적용 (메시지가 없는 경로 — 병역 이벤트 등).
+     *
+     * ⚠ **계산을 여기 다시 적지 않는다.** 정본은 `applyEffectToProtagonist`다.
+     * 예전엔 이 함수가 자기 계산을 갖고 있었고 명성·인기·성실·태그 넷을
+     * 빠뜨렸다 — 데이터가 우연히 그 넷을 안 써서 안 터졌을 뿐이다.
+     *
+     * ⚠ 관계도·사치품은 여기서 못 한다(비동기). 그게 필요한 경로는
+     * `usecases/decisions.ts`의 `applySideEffects`를 이어서 불러야 한다.
+     */
     applyEventEffect(effect: import("../types/main").DecisionEffect) {
       update((s) => {
-        const p = s.protagonist;
-        const clamp100 = (v: number) => Math.max(0, Math.min(100, v));
-        const clampStat = (v: number) => Math.max(1, Math.min(99, v));
-        const condition = clamp100(p.condition + (effect.conditionDelta ?? 0));
-        const fatigue   = clamp100(p.fatigue   + (effect.fatigueDelta   ?? 0));
-        const morale    = clamp100(p.morale    + (effect.moraleDelta    ?? 0));
-        const money     = Math.max(0, p.money + (effect.moneyDelta ?? 0));
-        const pitchingXP = { ...p.pitchingXP };
-        if (effect.xp) {
-          for (const [stat, amt] of Object.entries(effect.xp)) {
-            pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
-          }
-        }
-        const pitching = { ...p.pitching };
-        if (effect.statDelta) {
-          for (const [stat, amt] of Object.entries(effect.statDelta)) {
-            if (stat !== "ovr" && stat in pitching) {
-              (pitching as Record<string, number>)[stat] = clampStat((pitching as Record<string, number>)[stat] + amt);
-            }
-          }
-        }
-        const updated: ProtagonistSave = { ...p, condition, fatigue, morale, money, pitchingXP, pitching };
+        const updated = applyEffectToProtagonist(s.protagonist, effect);
         return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
       });
     },

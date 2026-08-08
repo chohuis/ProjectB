@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { applyDecision } from "./decisions";
+import { applyDecision, applySideEffects } from "./decisions";
 import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
@@ -195,8 +195,13 @@ async function handleEvent(pa: Extract<PendingAction, { type: "event" }>): Promi
   const choiceId = pickChoice(choices, p.fatigue);
   const chosen = choices.find((c) => c.id === choiceId);
 
+  // ⚠ **`applyEventEffect`만 부르면 관계도·사치품이 빠진다.** 그 둘은 slot.db·
+  // Rust 왕복이라 store 동기 패처가 못 한다 — 메시지 경로(`handleMessage`)는
+  // `applyDecision`이 이어붙여 주는데 이쪽만 안 그랬다. 필드가 늘 때 한쪽만
+  // 고쳐지는 자리라 지금 이어둔다.
   if (chosen?.effects) {
     gameStore.applyEventEffect(chosen.effects);
+    await applySideEffects(chosen.effects);
   }
 
   seasonStore.resolvePendingAction("event", pa.eventId);

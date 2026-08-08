@@ -1736,16 +1736,16 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
                    : eligibleCommon;
         const evt = pool[milCalc.eventIndex];
         if (evt) {
-          const choices = evt.choices?.map((c) => ({
-            id: c.id,
-            label: c.label,
-            effects: {
-              moraleDelta:  c.moraleDelta  ?? 0,
-              fatigueDelta: c.fatigueDelta ?? 0,
-              xp:           c.xp,
-              statDelta:    c.statDelta,
-            },
-          })) ?? [{ id: "ok", label: "확인", effects: { moraleDelta: evt.moraleDelta ?? 0, fatigueDelta: evt.fatigueDelta ?? 0 } }];
+          // ⚠ **필드를 손으로 옮겨 적지 않는다.** 예전엔 네 개(morale·fatigue·
+          // xp·statDelta)만 복사해서, 데이터에 성실도·명성을 넣어도 여기서
+          // 조용히 잘렸다. 선택지에서 표시용 두 개만 떼고 나머지는 통째로
+          // 넘긴다 — 효과 필드가 늘어도 이 줄을 다시 고칠 일이 없다.
+          const choices = evt.choices?.map(({ id, label, effectHint, ...effects }) => ({
+            id, label, effectHint, effects,
+          })) ?? [{
+            id: "ok", label: "확인",
+            effects: { moraleDelta: evt.moraleDelta ?? 0, fatigueDelta: evt.fatigueDelta ?? 0 },
+          }];
           seasonStore.pushPendingAction({
             type: "event", eventId: evt.id, title: evt.title, description: evt.description, choices,
           });

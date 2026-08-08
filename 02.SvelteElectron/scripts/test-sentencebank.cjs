@@ -168,12 +168,36 @@ ok(mismatch === 0, `관계를 말하는 힌트 전부에 실제 효과가 붙어
 console.log("\n[10] 선택지 적용 경로가 하나다");
 
 // 화면과 자동진행이 다른 함수를 부르면 관계·사치품이 한쪽에서만 돈다
-for (const f of ["apps/ui/src/pages/messages/MessagesPage.svelte",
-                 "apps/ui/src/shared/usecases/runAutoAdvance.ts"]) {
+//
+// ⚠ **이 검사가 U3 이후로 죽어 있었다** (2026-08-08 발견). `MessagesPage.svelte`가
+// `e3ec05f77`에서 `NewsPage.svelte`로 대체됐는데 경로가 그대로라 파일을 못 읽고
+// **크래시**했다 — 통과도 실패도 아니고 아예 안 돌았다. 그 사이에 지키려던
+// 함정이 실제로 벌어졌다(`applyEventEffect`가 명성·인기·성실·태그를 빠뜨렸다).
+//
+// 그래서 경로를 하드코딩하지 않고 **없으면 실패로 잡는다.**
+const DECISION_CALLERS = [
+  "apps/ui/src/pages/news/NewsPage.svelte",
+  "apps/ui/src/shared/usecases/runAutoAdvance.ts",
+];
+for (const f of DECISION_CALLERS) {
+  if (!fs.existsSync(path.join(process.cwd(), f))) {
+    ok(false, `${f} — 파일이 없다. 화면을 옮겼으면 이 목록도 같이 고칠 것`);
+    continue;
+  }
   const code = read(f);
   ok(/applyDecision/.test(code), `${path.basename(f)} — applyDecision을 쓴다`);
   ok(!/gameStore\.resolveDecision/.test(code),
      `${path.basename(f)} — store를 직접 안 부른다 (관계·사치품이 빠진다)`);
+}
+
+// `applyEventEffect`는 위 그물에 안 걸린다 — 메시지가 없는 경로(병역 이벤트)라
+// `applyDecision`을 못 쓴다. 대신 관계·사치품을 따로 이어야 한다
+{
+  const auto = read("apps/ui/src/shared/usecases/runAutoAdvance.ts");
+  const i = auto.indexOf("async function handleEvent");
+  const fn = i >= 0 ? auto.slice(i, auto.indexOf("\n}", i)) : "";
+  ok(/applySideEffects/.test(fn),
+     "handleEvent — applyEventEffect 뒤에 applySideEffects를 잇는다 (관계·사치품)");
 }
 
 const dec = read("apps/ui/src/shared/usecases/decisions.ts");

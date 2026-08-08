@@ -304,15 +304,17 @@ export interface MilitaryEvent {
   title: string;
   description: string;
   minRank?: number;
+  /**
+   * ⚠ **효과 필드를 여기 다시 나열하지 않는다.** 예전엔 `moraleDelta`·
+   * `fatigueDelta`·`xp`·`statDelta` 넷만 선언돼 있어서, 데이터에 성실도나
+   * 명성을 넣어도 **타입에 없어 파싱 단계에서 사라졌다** — 에러 없이
+   * 아무 일도 안 일어난다. 정본은 `DecisionEffect` 하나다.
+   */
   choices?: Array<{
     id: string;
     label: string;
     effectHint?: string;
-    moraleDelta?: number;
-    fatigueDelta?: number;
-    xp?: Record<string, number>;
-    statDelta?: Record<string, number>;
-  }>;
+  } & import("../types/main").DecisionEffect>;
   moraleDelta?: number;
   fatigueDelta?: number;
 }
