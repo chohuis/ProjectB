@@ -1194,7 +1194,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
         // 라벨이 바뀐 것만 알린다 — 값은 플레이어에게 보여주지 않는다
         const kindOf = new Map(deltas.flatMap(d => d.kind ? [[d.personId, d.kind] as const] : []));
-        const msgs = buildRelationMessages(deltas, weekNum, get(masterStore).entities, new Map(kindOf));
+        const msgs = buildRelationMessages(
+          deltas, weekNum, get(masterStore).entities, new Map(kindOf), sRel.seasonYear);
         if (msgs.length) gameStore.addMessages(msgs);
       } catch (e) {
         // 관계도가 못 돌아도 주간 진행 자체는 막지 않는다
@@ -2002,7 +2003,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
         if (selResult.protagonistSelected) {
           gameStore.addMessage({
-            id: `msg-sports-selected-${weekNum}`,
+            id: `msg-sports-selected-${s.seasonYear}-w${weekNum}`,
             category: "system", sender: "병무청",
             subject: "체육부대 선발 통보",
             preview: "체육부대에 선발되었습니다.",

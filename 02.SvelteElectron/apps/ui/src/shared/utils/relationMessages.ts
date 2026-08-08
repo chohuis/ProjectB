@@ -286,6 +286,15 @@ export function buildRelationMessages(
   week: number,
   entities: EntityRow[],
   kindOf: Map<string, RelationKind> = new Map(),
+  /**
+   * id를 유일하게 만든다. **`week`은 시즌마다 1로 리셋되므로 이것만으로는
+   * 부족하다** — 같은 동료의 라벨이 다음 시즌 같은 주차에 또 바뀌면 id가
+   * 겹치고, 소식 목록이 `(msg.id)`로 키를 잡아 죽는다(세이브가 아예 안 열린다).
+   *
+   * ⚠ 관계가 안 움직이던 동안(주 경계 한 칸 어긋남)에는 라벨 변화 자체가
+   * 없어서 **이 함정이 한 번도 안 터졌다.** 고치자마자 도달 가능해졌다.
+   */
+  seasonYear = 0,
 ): MessageItem[] {
   const changed = deltas.filter((d) => d.labelChanged);
   if (changed.length === 0) return [];
@@ -304,7 +313,7 @@ export function buildRelationMessages(
     const scene = sceneFor(kind, d.label);
 
     out.push({
-      id: `msg-rel-${d.personId}-w${week}`,
+      id: `msg-rel-${d.personId}-${seasonYear}-w${week}`,
       category: scene ? (kind === "coach" ? "coach" : kind === "manager" ? "manager" : "system") : "system",
       sender: scene ? name : "관계 변화",
       subject: scene ? scene.subject : `${name} — ${d.prevLabel} → ${d.label}`,
@@ -355,6 +364,8 @@ export function buildRelationMessages(
 export function buildTeamMoodMessage(
   teammateValues: number[],
   week: number,
+  /** id 유일성. week는 시즌마다 리셋된다 — 이게 없으면 해마다 같은 id가 난다 */
+  seasonYear = 0,
 ): MessageItem | null {
   if (teammateValues.length < 3) return null;
   const cold = teammateValues.filter((v) => v <= -11).length;   // 서먹 이하
@@ -367,7 +378,7 @@ export function buildTeamMoodMessage(
   if (hostile > 0) parts.push(`그중 ${hostile}명은 불신 이상`);
 
   return {
-    id: `msg-team-mood-${week}`,
+    id: `msg-team-mood-${seasonYear}-w${week}`,
     category: "system",
     sender: "팀 분위기",
     subject: severe ? `W${week} 라커룸 경고` : `W${week} 라커룸 점검`,

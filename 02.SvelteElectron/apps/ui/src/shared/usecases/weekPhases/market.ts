@@ -612,7 +612,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     const p1Name = namedMap.get(offeredId)?.name ?? m.entities.find((e) => e.id === offeredId)?.name ?? offeredId;
     const p2Name = namedMap.get(requestedId)?.name ?? m.entities.find((e) => e.id === requestedId)?.name ?? requestedId;
     gameStore.addMessage({
-      id: `msg-npc-trade-${offeredId}-${requestedId}-${weekInYear}`,
+      id: `msg-npc-trade-${offeredId}-${requestedId}-${s.seasonYear}-w${weekInYear}`,
       category: "system",
       sender: "리그 사무국",
       subject: `트레이드 성사: ${team1Name} ↔ ${team2Name}`,

@@ -360,6 +360,17 @@ async function advance(n) {
       const CHECK_EVERY = Math.max(4, Math.floor(WEEKS / 5));
       for (let w = 0; w < WEEKS; w += CHECK_EVERY) {
         if (!(await advance(CHECK_EVERY))) break;
+        // ⚠ **창이 떠 있으면 탭을 훑어도 소용없다.** 실제로 시즌 결산 창에
+        // 걸려 6장이 전부 같은 창 사진이었다(pro3 W52). 화면 검사가 통째로
+        // 비는데 발견은 0건이라 **훑은 것처럼 보인다** — 제일 나쁜 종류다.
+        for (let k = 0; k < 6; k++) {
+          const blocked = await page.evaluate(() =>
+            [...document.querySelectorAll(".overlay, .modal, [role='dialog']")]
+              .some((e) => e.offsetParent));
+          if (!blocked) break;
+          if (k === 5) { add("검사막힘", "체크포인트", "창이 안 걷혀 탭 검사를 못 했다"); }
+          await advance(1);
+        }
         const wk = await page.evaluate(() =>
           document.querySelector("header")?.textContent?.match(/(\d+)주차/)?.[1] ?? "?");
         for (const t of TABS) {
