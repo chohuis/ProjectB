@@ -1,4 +1,5 @@
 import type { EntityRow } from "../stores/master";
+import { toEngineArsenal } from "./arsenal";
 import type { MatchBatterStats, MatchFielderStats } from "../types/projectb";
 import type { PlayerCondition } from "../types/season";
 import { rotationRestGames } from "./rosterEngine";
@@ -7,6 +8,8 @@ export interface StarterStats {
   name?: string;
   command: number; velocity: number; staminaCap: number; mentalResil: number;
   control: number; movement: number; clutch: number; holdRunners: number;
+  /** 보유 구종 — 안 넘기면 엔진이 패스트볼 하나로 던진다 */
+  arsenal: import("./arsenal").EngineArsenalPitch[];
 }
 
 const PITCHER_POS = ["SP", "RP", "CP"];
@@ -203,6 +206,9 @@ export function buildStarterStats(
     movement:    pit.movement   ?? 50,
     clutch:      pit.clutch     ?? 50,
     holdRunners: pit.holdRunners ?? 50,
+    // ⚠ NPC 투수도 구종을 갖고 있다(roster_gen이 만든다). 안 넘기면 상대
+    // 에이스가 전부 패스트볼만 던지는 세계가 된다
+    arsenal:     toEngineArsenal(playerOf(candidate).pitches),
   };
 }
 

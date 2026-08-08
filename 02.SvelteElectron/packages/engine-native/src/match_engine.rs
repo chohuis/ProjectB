@@ -94,7 +94,62 @@ pub fn build_pitcher(opts: &PartialPitcherStats, cmd: f64, vel: f64, sca: f64, m
         movement:    opts.movement.unwrap_or(mvt),
         clutch:      opts.clutch.unwrap_or(clt),
         hold_runners:opts.hold_runners.unwrap_or(hr),
+        // ⚠ **빈 배열을 그대로 두지 않는다.** 비면 구종 선택이 아무것도 못 뽑고
+        // 조용히 옛 하드코딩처럼 굴러간다 — 배선 누락이 "아무 일도 안 일어남"으로
+        // 나타나는 자리다. 최소 패스트볼 하나는 보장한다.
+        arsenal: match opts.arsenal.as_ref() {
+            Some(a) if !a.is_empty() => a.clone(),
+            _ => vec![ArsenalPitch { pitch_type: PitchType::Fastball, grade: 3 }],
+        },
     }
+}
+
+/// 카운트에 맞춰 **보유 구종에서** 하나 고른다. 숙련도가 가중치다.
+///
+/// ⚠ 예전엔 `[Fastball, Fastball, Slider, Changeup]`을 하드코딩으로 뽑았다.
+/// `PitcherStats`에 구종 배열 자체가 없었으니 **배운 구종은 경기에 안 나왔고**,
+/// 너클볼을 마스터해도 던지지 않았다. 숙련도도 결과에 안 닿았다.
+///
+/// 카운트 로직은 살린다 — 볼이 몰리면 스트라이크를 넣어야 하고, 두 스트라이크면
+/// 결정구를 던진다. 다만 **무엇이 그 역할을 맡는지는 보유 구종이 정한다.**
+fn pick_from_arsenal(pit: &PitcherStats, balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchType {
+    if pit.arsenal.is_empty() { return PitchType::Fastball; }
+
+    // 볼 3개 — 제일 잘 넣는 속구 계열. 없으면 숙련도 최고
+    if balls >= 3 {
+        let fb = pit.arsenal.iter()
+            .filter(|a| matches!(a.pitch_type,
+                PitchType::Fastball | PitchType::Sinker | PitchType::Cutter))
+            .max_by_key(|a| a.grade);
+        if let Some(a) = fb { return a.pitch_type; }
+        return pit.arsenal.iter().max_by_key(|a| a.grade).unwrap().pitch_type;
+    }
+
+    // 두 스트라이크 — 결정구. 속구가 아닌 것 중 숙련도 최고를 크게 선호한다
+    if strikes == 2 {
+        let out_pitch = pit.arsenal.iter()
+            .filter(|a| !matches!(a.pitch_type, PitchType::Fastball))
+            .max_by_key(|a| a.grade);
+        if let Some(a) = out_pitch {
+            // 항상 같은 공이면 읽힌다 — 70%만 결정구로 간다
+            if rng.gen::<f64>() < 0.70 { return a.pitch_type; }
+        }
+    }
+
+    // 그 외 — 숙련도 가중 추첨
+    let total: f64 = pit.arsenal.iter().map(|a| T::grade_pick_weight(a.grade)).sum();
+    if total <= 0.0 { return pit.arsenal[0].pitch_type; }
+    let mut roll = rng.gen::<f64>() * total;
+    for a in pit.arsenal.iter() {
+        roll -= T::grade_pick_weight(a.grade);
+        if roll <= 0.0 { return a.pitch_type; }
+    }
+    pit.arsenal[pit.arsenal.len() - 1].pitch_type
+}
+
+/// 이 투수가 그 구종을 얼마나 다듬었나 — 없으면 기준(3)으로 본다
+fn grade_of(pit: &PitcherStats, t: PitchType) -> u8 {
+    pit.arsenal.iter().find(|a| a.pitch_type == t).map(|a| a.grade).unwrap_or(3)
 }
 
 fn create_manager(opts: &PartialManagerStats) -> ManagerStats {
@@ -477,8 +532,12 @@ fn calculate_pitch_quality(
     let jam_mod     = jam_pressure_modifier(state, mental, batter.batting_clutch);
     let clutch_mod  = clutch_modifier(state, pitcher.clutch);
 
+    // ⚠ **숙련도가 여기 걸린다.** 예전엔 화면에 "숙련도 4/5"라고 적어놓고
+    // 던지면 아무 차이가 없었다 — 계수가 배우는 속도에만 쓰였다.
+    let grade_bonus = T::grade_quality_bonus(grade_of(pitcher, decision.pitch_type));
+
     round2(
-        T::pitch_base(decision.pitch_type)
+        T::pitch_base(decision.pitch_type) + grade_bonus
         + T::strategy_bonus(decision.strategy)
         + T::power_bonus(decision.power)
         + location_q
@@ -1111,14 +1170,12 @@ fn pick_target(balls: u8, strikes: u8, rng: &mut impl Rng) -> XY {
 fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
     let (balls, strikes) = (state.count.balls, state.count.strikes);
     let target = pick_target(balls, strikes, rng);
-    let (pitch_type, strategy) = if balls >= 3 {
-        (PitchType::Fastball, PitchStrategy::Safe)
-    } else if strikes == 2 {
-        (PitchType::Slider, PitchStrategy::Aggressive)
-    } else {
-        let types = [PitchType::Fastball, PitchType::Fastball, PitchType::Slider, PitchType::Changeup];
-        (types[rng.gen_range(0..types.len())], PitchStrategy::Balanced)
-    };
+    // ⚠ 구종은 **보유 목록에서** 나온다. 전략(공격적/안전)만 카운트가 정한다
+    let pit = get_active_pitcher(state);
+    let pitch_type = pick_from_arsenal(pit, balls, strikes, rng);
+    let strategy = if balls >= 3 { PitchStrategy::Safe }
+        else if strikes == 2 { PitchStrategy::Aggressive }
+        else { PitchStrategy::Balanced };
     PitchDecision { pitch_type, location: target_to_zone(target), target: Some(target), strategy, power: PitchPower::Normal }
 }
 

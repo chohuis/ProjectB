@@ -508,18 +508,6 @@
     });
   }
 
-  const PITCH_ID_TO_ENGINE: Record<string, PitchType> = {
-    PITCH_FASTBALL: "fastball",
-    PITCH_SINKER: "sinker",
-    PITCH_CUTTER: "cutter",
-    PITCH_SLIDER: "slider",
-    PITCH_CURVE: "curve",
-    PITCH_CHANGEUP: "changeup",
-    PITCH_SPLITTER: "splitter",
-    PITCH_FORKBALL: "forkball",
-    PITCH_SCREWBALL: "screwball",
-    PITCH_KNUCKLEBALL: "knuckleball",
-  };
   const fallbackPitchTypes: { id: PitchType; label: string }[] = [
     { id: "fastball", label: "Fastball" }
   ];

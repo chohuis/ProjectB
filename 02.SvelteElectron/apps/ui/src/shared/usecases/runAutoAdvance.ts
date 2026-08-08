@@ -1,4 +1,5 @@
 import { get } from "svelte/store";
+import { toEngineArsenal } from "../utils/arsenal";
 import { applyDecision, applySideEffects } from "./decisions";
 import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
@@ -89,6 +90,8 @@ async function handleGame(scheduleId: string): Promise<void> {
         velocity:   p.pitching.velocity,
         staminaCap: p.pitching.stamina,
         mentalResil: p.pitching.mentality,
+        // ⚠ 이걸 안 넘기면 주인공이 배운 구종이 자동 경기에 안 나온다
+        arsenal:    toEngineArsenal(p.pitches),
       },
       role: (p.position as "SP" | "RP" | "CP") ?? "SP",
       protagonistSide: isHome ? "home" : "away",

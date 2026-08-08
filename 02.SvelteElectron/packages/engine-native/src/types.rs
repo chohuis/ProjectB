@@ -130,12 +130,32 @@ pub struct PitcherStats {
     pub movement: f64,
     pub clutch: f64,
     #[serde(rename = "holdRunners")] pub hold_runners: f64,
+    /// 보유 구종. **비면 패스트볼 하나로 던진다** (구 세이브·데이터 결손 대비).
+    ///
+    /// ⚠ 예전엔 이 필드가 아예 없었고 `auto_pick_decision`이 Fastball/Slider/
+    /// Changeup을 하드코딩으로 뽑았다 — **너클볼을 마스터해도 안 던졌다.**
+    #[serde(default)]
+    pub arsenal: Vec<ArsenalPitch>,
+}
+
+/// 보유 구종 한 종. `grade`는 1~5 숙련도다.
+///
+/// 숙련도는 **두 곳에 걸린다** (설계 확정): 선택 빈도와 공의 품질.
+/// 그래야 "주무기"가 저절로 생기고 경기 로그가 읽힌다.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub struct ArsenalPitch {
+    #[serde(rename = "type")]
+    pub pitch_type: PitchType,
+    pub grade: u8,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PartialPitcherStats {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    /// 보유 구종. 안 넘기면 패스트볼 하나로 던진다
+    #[serde(default)]
+    pub arsenal: Option<Vec<ArsenalPitch>>,
     pub command: Option<f64>,
     pub velocity: Option<f64>,
     #[serde(rename = "staminaCap")]  pub stamina_cap: Option<f64>,

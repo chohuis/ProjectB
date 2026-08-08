@@ -4,6 +4,36 @@
 use crate::types::{PitchType, PitchStrategy, PitchPower, WeatherType, ParkType};
 
 // pitchBase
+/// 숙련도(1~5) → 공의 품질 **가산**. 3이 기준(0)이다.
+///
+/// ⚠ **곱셈이 아니라 덧셈이다.** 처음에 `pitch_base × 배수`로 걸었더니
+/// 1등급 패스트볼이 매 투구마다 −7.1을 먹었다 — 품질은 여러 항의 **합**이고
+/// 다른 보정이 ±5 규모인데 혼자 그 이상을 움직였다. 실측에서 주인공 ERA가
+/// 8.78 → 19.86, 피안타 13.7 → 26.3으로 튀었다(2026-08-08).
+///
+/// ⚠ 숙련도가 **배우는 속도만** 늦추던 시절엔 결과에 아예 안 닿았다.
+/// 화면엔 "숙련도 4/5"라고 적혀 있는데 던지면 차이가 없었다는 뜻이다.
+pub fn grade_quality_bonus(grade: u8) -> f64 {
+    match grade {
+        0 | 1 => -3.0,
+        2     => -1.5,
+        3     =>  0.0,
+        4     =>  1.5,
+        _     =>  3.0,
+    }
+}
+
+/// 숙련도 → 선택 가중. 잘 다듬은 구종을 더 자주 던진다 — "주무기"가 생긴다
+pub fn grade_pick_weight(grade: u8) -> f64 {
+    match grade {
+        0 | 1 => 0.5,
+        2     => 0.8,
+        3     => 1.0,
+        4     => 1.5,
+        _     => 2.0,
+    }
+}
+
 pub fn pitch_base(t: PitchType) -> f64 {
     match t {
         PitchType::Fastball   => 59.0,
