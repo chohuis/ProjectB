@@ -223,8 +223,15 @@ async function advance(n) {
               /다음 주 진행|경기 대기 중|메시지 확인|선택 대기|새 시즌 시작|스킵|확인|닫기|시작|은퇴한다/
                 .test(b.textContent ?? "")),
         ].filter(Boolean);
-        if (cands.length === 0) return;
-        cands[turn % cands.length].click();
+        // ⚠ **무엇을 눌렀는지 남긴다.** 막혔을 때 "후보가 없었나, 눌렀는데
+        // 안 먹었나"를 못 가르면 매번 화면을 눈으로 뜯어봐야 한다.
+        window.__walkTrace ??= [];
+        if (cands.length === 0) { window.__walkTrace.push(`${turn}: 후보 없음`); return; }
+        const el = cands[turn % cands.length];
+        window.__walkTrace.push(
+          `${turn}: ${el.tagName.toLowerCase()}.${(el.className || "").toString().split(" ").join(".")}` +
+          ` "${(el.textContent ?? "").trim().slice(0, 24)}"`);
+        el.click();
       }, guard);
       await sleep(700);
       const now = await page.evaluate(() =>
@@ -237,7 +244,11 @@ async function advance(n) {
         btns: [...document.querySelectorAll("button")]
           .filter((b) => b.offsetParent && !b.disabled)
           .map((b) => b.textContent?.trim().slice(0, 14)).slice(0, 6).join(" | "),
+        trace: (window.__walkTrace ?? []).slice(-14),
       }));
+      // 14번 동안 실제로 무엇을 눌렀는지 — 이게 없으면 매번 눈으로 화면을 뜯어야 한다
+      for (const t of state.trace) log(`      · ${t}`);
+      await page.evaluate(() => { window.__walkTrace = []; });
       // ⚠ **타이틀로 돌아간 것과 게임 안에서 막힌 것은 다른 사건이다.**
       // 앞엣것은 앱이 리셋됐다는 뜻이라 그 뒤 순회는 전부 의미가 없다.
       // 실제 원인은 대개 **순회 중에 소스를 고쳐서 Vite HMR이 리로드한 것**이다

@@ -86,6 +86,27 @@ msg-tour-open-TOUR_HS_X-2027 ○ 대상 ID + 연도
   뽑는데 한글 라벨은 못 벗겨서 한 종류가 달마다 쪼개진다
 - **상한 로직은 id 유일성을 전제하지 않는다.** `trimMailbox`는 위치(index)로 고른다
 
+## 주 경계에서 경기 결과는 `weekNum - 1`이다 (2026-08-08)
+
+`processWeekBoundary(nextWeekNum)`은 `seasonStore.advanceWeek()` **뒤에** 불린다.
+인자로 받는 `weekNum`은 **막 들어선 주**이고 그 주 경기는 아직 안 치렀다.
+
+```ts
+// ✗ 이번 주 — result가 영원히 null이다
+schedule.find(e => e.week === weekNum && e.isProtagonistGame && e.result != null)
+// ○ 지난 주 — 방금 시뮬한 경기
+schedule.find(e => e.week === weekNum - 1 && e.isProtagonistGame && e.result != null)
+```
+
+**이 결함은 조용하다.** 예외도 로그도 안 난다. 실제로 두 자리가 틀려 있었고,
+감독·동료 관계가 **전 커리어에 걸쳐 한 번도 안 움직였는데** 훈련에 걸린 코치
+관계는 멀쩡해서 "관계도는 도는 것 같은데 이상하다"로만 보였다.
+리그 경기 결과 소식은 **한 통도 온 적이 없었다.**
+
+- 주 경계 안에서 `e.week === weekNum`으로 **결과를 찾으면** 의심한다
+- 게이트 `npm run measure:relations` — 관계가 전원 중립이면 실패한다
+- 검사 `weekBoundaryOffset.test.ts`가 호출 순서 전제까지 같이 못박는다
+
 ## "한 해에 한 번" 가드는 반드시 저장한다 (2026-08-08)
 
 `lastSeasonEndYear`·`lastDraftYear`가 `gameStore` 안에만 있었다. **가드가 막으려는
