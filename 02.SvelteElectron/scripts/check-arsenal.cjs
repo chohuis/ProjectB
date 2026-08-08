@@ -83,6 +83,35 @@ check("공용 변환표가 있다",
   /PITCH_ID_TO_ENGINE/.test(read("apps/ui/src/shared/utils/arsenal.ts")),
   "arsenal.ts에 정본이 없다");
 
+// ── ⑥ 폼 무너짐이 화면과 경기 **양쪽에** 가는가 (Phase 4) ────
+//
+// 한쪽만 가면 결함이다:
+//   경기에만  → 조용한 너프. 왜 못 던지는지 알 수 없다
+//   화면에만  → "표시는 있는데 효과가 없는" 값. 이 프로젝트가 이미 여러 번 당했다
+check("폼 무너짐 식이 tuning에 있다", /pub fn form_penalty/.test(tuning),
+  "식이 흩어져 있으면 화면과 경기가 갈린다");
+// ⚠ **부르는 것과 적용하는 것은 다르다.** 처음엔 `form_penalty(...)` 호출만
+// 봤는데, 결과를 안 쓰게 바꿔도 게이트가 통과했다(변이 검증에서 잡음).
+// 깎은 값이 실제로 들어가는지 본다.
+check("경기가 실제로 제구를 깎는다",
+  /command:\s*\(base_cmd - cmd_pen\)/.test(engine)
+  && /control:\s*\(base_ctl - ctl_pen\)/.test(engine),
+  "build_pitcher가 안 깎으면 폼 무너짐은 화면 장식이다");
+check("자동 경기가 개발 중 구종을 넘긴다",
+  /developingDifficulty:\s*developingDifficultyOf\(/.test(auto),
+  "안 넘기면 페널티가 조용히 사라진다");
+
+const trainPage = read("apps/ui/src/pages/training/TrainingPage.svelte");
+check("훈련 화면이 폼 교정을 표시한다", /폼 교정 중/.test(trainPage),
+  "경기에만 걸고 화면에 안 적으면 조용한 너프다");
+check("표시 하락폭도 엔진에서 받는다", /formPenalty\(/.test(trainPage),
+  "화면이 자기 식으로 적으면 표시와 실제가 갈린다");
+
+const catalog = JSON.parse(read("resource/data/master/training/pitch_catalog.json"));
+const noDiff = (catalog.pitches ?? []).filter((x) => x.formDifficulty === undefined);
+check("모든 구종에 formDifficulty가 있다", noDiff.length === 0,
+  `없는 구종: ${noDiff.map((x) => x.id).join(", ")}`);
+
 log("");
 if (failed > 0) {
   log(`구종 배선 점검 실패 ${failed}건`);

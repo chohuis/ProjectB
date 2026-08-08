@@ -156,6 +156,10 @@ pub struct PartialPitcherStats {
     /// 보유 구종. 안 넘기면 패스트볼 하나로 던진다
     #[serde(default)]
     pub arsenal: Option<Vec<ArsenalPitch>>,
+    /// **지금 익히는 중인 구종의 난이도** (0~3). 있으면 제구가 흔들린다.
+    /// `pitch_catalog.json`의 `formDifficulty`가 정본이다.
+    #[serde(default)]
+    pub developing_difficulty: Option<f64>,
     pub command: Option<f64>,
     pub velocity: Option<f64>,
     #[serde(rename = "staminaCap")]  pub stamina_cap: Option<f64>,

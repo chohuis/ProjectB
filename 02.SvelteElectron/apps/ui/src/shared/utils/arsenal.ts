@@ -56,3 +56,18 @@ export function toEngineArsenal(
   if (out.length === 0) out.push({ type: "fastball", grade: 3 });
   return out;
 }
+
+/**
+ * 지금 익히는 중인 구종의 **폼 난이도** (0~3). 정본은 `pitch_catalog.json`.
+ *
+ * ⚠ 이 값이 있으면 경기에서 제구가 실제로 흔들린다(`build_pitcher`).
+ * 안 넘기면 그 페널티가 조용히 사라진다 — 화면에는 "폼 교정 중"이 떠 있는데
+ * 경기는 멀쩡한 상태가 되고, 그게 제일 나쁜 종류의 불일치다.
+ */
+export function developingDifficultyOf(
+  trainingPitchState: { id: string } | null | undefined,
+  catalog: readonly { id: string; formDifficulty?: number }[],
+): number {
+  if (!trainingPitchState) return 0;
+  return catalog.find((c) => c.id === trainingPitchState.id)?.formDifficulty ?? 0;
+}

@@ -122,14 +122,14 @@ declare global {
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       matchRunSimpleGame: (paramsJson: string) => Promise<string>;
       matchSimulateToEntry: (request?: {
-        pitcher?: { arsenal?: { type: string; grade: number }[]; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; };
+        pitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; };
         batterMean?: number;
         role?: "SP" | "RP" | "CP";
         protagonistSide?: "home" | "away";
         opponentLineup?: MatchBatterStats[];
         myTeamLineup?: MatchBatterStats[];
-        opponentPitcher?: { arsenal?: { type: string; grade: number }[]; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
-        npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
+        opponentPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
+        npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
       }) => Promise<string>;
       matchAutoFinishFromEntry: () => Promise<string>;
       // ── 게임 저장/불러오기 ──────────────────────────────────

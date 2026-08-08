@@ -51,6 +51,8 @@ export interface PitchEntry {
   name: string;
   nameKo?: string;
   group: string;
+  /** 몸에 넣는 동안 제구가 흔들리는 정도 (0~3). 0이면 안 흔들린다 */
+  formDifficulty?: number;
   unlockRuleId: string;
 }
 

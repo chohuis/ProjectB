@@ -2,7 +2,8 @@
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap, entitiesL10n, teamsL10n } from "../../shared/stores/master";
   import type { TrainingProgram } from "../../shared/stores/master";
-  import { previewTraining, injuryChance, type TrainingPreview } from "../../shared/utils/growthEngine";
+  import { previewTraining, injuryChance, formPenalty, type TrainingPreview } from "../../shared/utils/growthEngine";
+  import { developingDifficultyOf } from "../../shared/utils/arsenal";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
   import { INJURY_LABEL } from "../../shared/types/save";
   import type { TrainingPreset } from "../../shared/types/save";
@@ -186,6 +187,27 @@
   }
 
   $: trainingPitchSt = protagonist.trainingPitchState ?? null;
+
+  // ── 폼 무너짐 ────────────────────────────────────────────────
+  //
+  // 새 구종을 몸에 넣는 동안 제구가 실제로 흔들린다. **반드시 보이게 한다** —
+  // 경기에만 걸고 화면에 안 적으면 조용한 너프가 되고, 이 프로젝트는 그
+  // 반대 방향(표시만 있고 효과 없음)으로 이미 여러 번 당했다.
+  //
+  // 하락폭은 엔진에 묻는다. 화면이 자기 식을 쓰면 또 갈린다.
+  let formPen: { command: number; control: number } = { command: 0, control: 0 };
+  $: formDifficulty = developingDifficultyOf(trainingPitchSt, $masterStore.pitchCatalog);
+  $: void refreshFormPen(formDifficulty, protagonist.pitching.control);
+  async function refreshFormPen(diff: number, ctl: number) {
+    formPen = await formPenalty(diff, ctl);
+  }
+  $: formPitchName = trainingPitchSt
+    ? ($masterStore.pitchCatalog.find((c) => c.id === trainingPitchSt!.id)?.nameKo
+       ?? trainingPitchSt!.id)
+    : "";
+  $: formWeeksLeft = trainingPitchSt
+    ? Math.max(1, Math.ceil((100 - trainingPitchSt.progress) / Math.max(1, 24 * pitchGradeFactor)))
+    : 0;
 
   $: pitchCandidates = $masterStore.pitchCatalog.map((pitch) => {
     const pitchEntry = (protagonist.pitches ?? []).find((e) => e.id === pitch.id);
@@ -553,6 +575,17 @@
           {:else if highFatWeeks >= 2}
             <div class="injury-risk-banner">
               피로 위험 구간 {highFatWeeks}주 연속 — 부상 위험 상승 중
+            </div>
+          {/if}
+
+          <!-- ⚠ **조용한 너프를 만들지 않는다.** 구종을 익히는 동안 제구가
+               실제로 깎이므로(엔진 build_pitcher) 그 사실을 여기 적는다 -->
+          {#if formPen.command > 0 || formPen.control > 0}
+            <div class="form-banner">
+              <b>폼 교정 중</b> — {formPitchName}을(를) 익히는 중입니다.
+              커맨드 −{formPen.command} · 제구 −{formPen.control}
+              <span class="form-weeks">남은 약 {formWeeksLeft}주</span>
+              <p class="form-hint">습득을 마치면 원래대로 돌아옵니다. 성적이 걸린 시기라면 오프시즌으로 미루는 것도 방법입니다.</p>
             </div>
           {/if}
 
@@ -1330,6 +1363,14 @@
 
   .inj-progress-wrap { height: 4px; background: var(--panel-sunk); border-radius: 999px; overflow: hidden; }
   .inj-progress-fill { height: 100%; border-radius: inherit; background: var(--bad); transition: width 0.3s; }
+
+  .form-banner {
+    margin: 10px 0; padding: 10px 12px; border-radius: 8px;
+    background: var(--panel-sunk); border-left: 3px solid var(--warn);
+    font-size: 13px; color: var(--ink);
+  }
+  .form-weeks { margin-left: 6px; color: var(--ink-mid); font-size: 12px; }
+  .form-hint  { margin: 6px 0 0; font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
 
   .injury-risk-banner {
     border-left: 3px solid var(--warn);

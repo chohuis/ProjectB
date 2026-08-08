@@ -3418,3 +3418,31 @@ export async function trainingProbe(): Promise<Record<string, unknown>> {
       : null,
   };
 }
+
+/**
+ * 폼 무너짐 실측 — **화면과 경기가 같은 값을 쓰는지**를 본다.
+ *
+ * 한쪽만 가면 결함이다. 경기에만 걸면 조용한 너프, 화면에만 적으면
+ * "표시는 있는데 효과가 없는" 값이 된다.
+ */
+export async function formProbe(pitchId: string): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const cat = get(masterStore).pitchCatalog;
+  const diff = cat.find((c) => c.id === pitchId)?.formDifficulty ?? 0;
+  const { formPenalty } = await import("../../apps/ui/src/shared/utils/growthEngine");
+  const pen = await formPenalty(diff, p.pitching.control);
+  return {
+    구종: pitchId, 난이도: diff,
+    현재제구: p.pitching.control, 현재커맨드: p.pitching.command,
+    하락: pen,
+    적용후: { command: Math.max(1, p.pitching.command - pen.command),
+             control: Math.max(1, p.pitching.control - pen.control) },
+  };
+}
+
+/** 구종 개발을 시작시킨다 — 화면 확인용 */
+export function startPitchDev(pitchId: string): void {
+  gameStore.startPitchTraining(pitchId);
+  gameStore.setTrainingPlan({ secondary2ProgramId: "TRN_PITCH_DEV" });
+}

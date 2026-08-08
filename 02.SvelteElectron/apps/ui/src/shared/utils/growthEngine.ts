@@ -116,6 +116,19 @@ export async function injuryChance(payload: Record<string, unknown>): Promise<nu
   return typeof raw?.chance === "number" ? raw.chance : null;
 }
 
+/**
+ * 폼 무너짐 하락폭 — **경기에 걸리는 것과 같은 식이다.**
+ * 화면이 자기 식으로 적으면 표시와 실제가 갈린다.
+ */
+export async function formPenalty(difficulty: number, control: number):
+  Promise<{ command: number; control: number }> {
+  if (difficulty <= 0) return { command: 0, control: 0 };
+  const raw = JSON.parse(
+    await window.projectB!.engine("formPenaltyNative", JSON.stringify({ difficulty, control })),
+  );
+  return { command: raw?.command ?? 0, control: raw?.control ?? 0 };
+}
+
 export async function calcGameGrowth(
   protagonist: ProtagonistSave,
   won: boolean,

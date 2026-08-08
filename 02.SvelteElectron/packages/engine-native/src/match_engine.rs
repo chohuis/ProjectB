@@ -84,13 +84,19 @@ fn narrow_inplay_out(ball: Option<&BallInPlay>, is_dp: bool) -> PitchResultCode 
 // ── 초기 상태 생성 ────────────────────────────────────────────────────────────
 
 pub fn build_pitcher(opts: &PartialPitcherStats, cmd: f64, vel: f64, sca: f64, mr: f64, ctl: f64, mvt: f64, clt: f64, hr: f64) -> PitcherStats {
+    let base_cmd = opts.command.unwrap_or(cmd);
+    let base_ctl = opts.control.unwrap_or(ctl);
+    // ⚠ **폼 무너짐이 여기서 실제로 걸린다.** 화면에만 적고 경기에 안 가면
+    // "표시는 있는데 효과가 없는" 결함이 된다 — 설계에서 못박은 조건이다.
+    let (cmd_pen, ctl_pen) = T::form_penalty(opts.developing_difficulty.unwrap_or(0.0), base_ctl);
+
     PitcherStats {
         name:        opts.name.clone(),
-        command:     opts.command.unwrap_or(cmd),
+        command:     (base_cmd - cmd_pen).max(1.0),
         velocity:    opts.velocity.unwrap_or(vel),
         stamina_cap: opts.stamina_cap.unwrap_or(sca),
         mental_resil:opts.mental_resil.unwrap_or(mr),
-        control:     opts.control.unwrap_or(ctl),
+        control:     (base_ctl - ctl_pen).max(1.0),
         movement:    opts.movement.unwrap_or(mvt),
         clutch:      opts.clutch.unwrap_or(clt),
         hold_runners:opts.hold_runners.unwrap_or(hr),

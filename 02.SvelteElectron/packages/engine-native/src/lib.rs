@@ -532,6 +532,22 @@ pub fn injury_chance_native(params_json: String) -> String {
         .unwrap_or_else(|e| parse_err("injuryChanceNative/serialize", e))
 }
 
+/// 폼 무너짐 조회 — **경기에 걸리는 것과 같은 식이다.**
+/// 훈련·내 정보 화면이 "제구 −3 · 커맨드 −2"를 이걸로 띄운다.
+#[napi]
+pub fn form_penalty_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P { difficulty: f64, control: f64 }
+    let p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("formPenaltyNative", e),
+    };
+    let (cmd, ctl) = tuning::form_penalty(p.difficulty, p.control);
+    serde_json::to_string(&serde_json::json!({ "command": cmd, "control": ctl }))
+        .unwrap_or_else(|e| parse_err("formPenaltyNative/serialize", e))
+}
+
 /// 경기 성장 계산
 #[napi]
 pub fn calc_game_growth_native(params_json: String) -> String {

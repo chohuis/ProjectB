@@ -34,6 +34,24 @@ pub fn grade_pick_weight(grade: u8) -> f64 {
     }
 }
 
+/// 새 구종을 몸에 넣는 동안 흔들리는 제구 — `(command, control)` 하락폭.
+///
+/// **정본은 여기 하나다.** 경기(`build_pitcher`)와 화면(미리보기 조회)이 같이 쓴다.
+/// 화면에만 적고 경기에 안 가면 "표시는 있는데 효과가 없는" 결함이 되고,
+/// 경기에만 걸고 화면에 안 적으면 **조용한 너프**가 된다 — 둘 다 이 프로젝트가
+/// 이미 겪은 모양이다.
+///
+/// - `difficulty` 0~3 (`pitch_catalog.json`의 `formDifficulty`). 0이면 안 흔들린다
+/// - 제구가 좋은 투수는 덜 흔들린다 — 같은 너클볼도 아무나 같지 않다
+pub fn form_penalty(difficulty: f64, control: f64) -> (f64, f64) {
+    if difficulty <= 0.0 { return (0.0, 0.0); }
+    // 제구 50이 기준. 80이면 0.7배, 30이면 1.2배로 흔들린다
+    let skill = (1.0 - (control - 50.0) / 100.0).clamp(0.70, 1.20);
+    let cmd = difficulty * 1.6 * skill;
+    let ctl = difficulty * 1.1 * skill;
+    ((cmd * 10.0).round() / 10.0, (ctl * 10.0).round() / 10.0)
+}
+
 pub fn pitch_base(t: PitchType) -> f64 {
     match t {
         PitchType::Fastball   => 59.0,
