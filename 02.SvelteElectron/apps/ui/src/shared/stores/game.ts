@@ -1365,8 +1365,21 @@ function createGameStore() {
       }));
     },
 
-    setTrainingPlan(plan: Partial<TrainingPlanState>) {
-      update((s) => ({ ...s, trainingPlan: { ...s.trainingPlan, ...plan } }));
+    /**
+     * 훈련 계획을 바꾼다.
+     *
+     * ⚠ **누가 썼는지 구분한다.** `opts.auto`면 자동 추천이고, 아니면
+     * 플레이어가 화면에서 고른 것이다. 자동 진행은 플레이어가 고른 계획을
+     * 안 건드린다 — 안 그러면 육성 방향이 매주 지워진다.
+     */
+    setTrainingPlan(plan: Partial<TrainingPlanState>, opts?: { auto?: boolean }) {
+      update((s) => ({
+        ...s,
+        trainingPlan: {
+          ...s.trainingPlan, ...plan,
+          userSet: opts?.auto ? (s.trainingPlan.userSet ?? false) : true,
+        },
+      }));
     },
 
     addTrainingPreset(preset: TrainingPreset) {

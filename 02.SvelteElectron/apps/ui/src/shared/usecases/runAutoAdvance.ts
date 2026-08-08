@@ -216,6 +216,13 @@ async function handleEvent(pa: Extract<PendingAction, { type: "event" }>): Promi
 
 // ── 훈련 추천 자동 적용 ────────────────────────────────────────
 function applyRecommendedTraining(): void {
+  // ⚠ **플레이어가 정한 계획은 안 건드린다** (사용자 확정 2026-08-09).
+  //
+  // 예전엔 매주 무조건 덮어썼다. 세 갈래(피로/사기/기본) 어디에도 구종 개발이
+  // 없어서 **자동 진행을 쓰면 구종을 영영 못 배웠다** — 육성 시뮬인데
+  // 플레이어가 고른 육성 방향이 조용히 사라졌다. 60회 조사가 이걸 잡았다.
+  if (get(gameStore).trainingPlan.userSet) return;
+
   const p = get(gameStore).protagonist;
   let primary: string, sub1: string, sub2: string;
 
@@ -231,7 +238,7 @@ function applyRecommendedTraining(): void {
     primaryProgramId:    primary,
     secondaryProgramId:  sub1,
     secondary2ProgramId: sub2,
-  });
+  }, { auto: true });
 }
 
 // ── 메인 루프 ──────────────────────────────────────────────────

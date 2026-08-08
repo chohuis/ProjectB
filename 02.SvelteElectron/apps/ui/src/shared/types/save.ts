@@ -436,6 +436,15 @@ export interface TrainingPlanState {
   secondaryProgramId: string | null;
   secondary2ProgramId: string | null;
   recoveryProgramId: string | null;  // deprecated, kept for migration
+  /**
+   * **플레이어가 직접 고른 계획인가.**
+   *
+   * ⚠ 자동 진행(`applyRecommendedTraining`)이 매주 계획을 하드코딩 추천으로
+   * 덮어썼다. 그 추천 어디에도 구종 개발이 없어서 **자동 진행을 쓰면 구종을
+   * 영영 못 배웠다** — 육성 시뮬인데 플레이어가 정한 육성 방향이 사라졌다.
+   * 이 표식이 있으면 자동 진행이 계획을 안 건드린다.
+   */
+  userSet?: boolean;
 }
 
 export interface TrainingPreset {
