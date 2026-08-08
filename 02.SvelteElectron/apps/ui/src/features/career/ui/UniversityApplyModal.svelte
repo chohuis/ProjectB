@@ -106,14 +106,23 @@
                 야구 {req?.minBaseballScore ?? 0}점 이상 {elig.meetsBaseball ? "✓" : "✗"}
               </span>
             </div>
-            <p class="meta">{selectedTeam.id}</p>
             {#if selectedTeam.profile}
+              <!-- ⚠ **있는 것만 그린다.** `TeamProfile`은 필드가 전부 optional인데
+                   `strengths.join()`을 무방비로 불러서 **238팀 전부에서 터졌다**
+                   (refs.json에 profile은 다 있지만 strengths는 하나도 없다).
+                   화면이 통째로 안 열렸고, 콘솔에만 흔적이 남았다. -->
               <div class="profile">
-                <div><span>스타일</span><strong>{selectedTeam.profile.style}</strong></div>
+                {#if selectedTeam.profile.style}
+                  <div><span>스타일</span><strong>{selectedTeam.profile.style}</strong></div>
+                {/if}
                 <div><span>난이도</span><strong>{selectedTeam.profile.difficulty ?? "-"}</strong></div>
                 <div><span>재정</span><strong>{selectedTeam.profile.funding ?? "-"}</strong></div>
-                <div class="wide"><span>강점</span><strong>{selectedTeam.profile.strengths.join(" / ")}</strong></div>
-                <div class="wide"><span>설명</span><p>{selectedTeam.profile.desc}</p></div>
+                {#if selectedTeam.profile.strengths?.length}
+                  <div class="wide"><span>강점</span><strong>{selectedTeam.profile.strengths?.join(" / ") ?? ""}</strong></div>
+                {/if}
+                {#if selectedTeam.profile.desc}
+                  <div class="wide"><span>설명</span><p>{selectedTeam.profile.desc}</p></div>
+                {/if}
               </div>
             {/if}
             <div class="stats">
