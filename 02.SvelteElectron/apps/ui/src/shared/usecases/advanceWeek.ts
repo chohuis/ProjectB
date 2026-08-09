@@ -1,6 +1,7 @@
 import { get } from "svelte/store";
 import { trainingIntensityOf } from "../utils/arsenal";
 import { seasonStore, npcLiveStatsStore } from "../stores/season";
+import { livePitchingOvrOf } from "../stores/npcLiveStats";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
@@ -886,15 +887,20 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     //
     // 또래 = 같은 해 지명 대상 고교 3학년 투수. 주인공은 뺀다 —
     // 자기 자신을 분모에 넣으면 백분위가 인원수만큼 낮게 나온다
+    //
+    // ⚠ **`npcs[].pitching`이 아니라 live를 읽는다.** 생성값은 안 자란다 —
+    // 3년을 추적해도 9종 전부 +0이다. 그걸 또래로 쓰면 **1학년 때 능력치와
+    // 3학년인 나를 비교**하게 돼서 백분위가 통째로 부풀었다
+    const liveStats = get(npcLiveStatsStore);
     const peerOvrs = g.npcs
       .filter((n) => n.playerType === "pitcher" && n.grade === 3
         && n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.npcId !== p.id)
-      .map((n) => n.pitching?.ovr ?? 0)
+      .map((n) => livePitchingOvrOf(n, liveStats))
       .filter((o) => o > 0);
     // 팀 내 투수 순위 — 나보다 나은 팀 동료 수 + 1
     const teamAceRank = 1 + g.npcs.filter((n) =>
       n.playerType === "pitcher" && n.currentTeam === p.teamId && n.npcId !== p.id
-      && (n.pitching?.ovr ?? 0) > p.pitching.ovr).length;
+      && livePitchingOvrOf(n, liveStats) > p.pitching.ovr).length;
     // 대회 활약 — 고교야구 점수(0~100)가 이미 대회·성적을 접어 놓은 값이다
     const tournamentScore = calcHsBaseballScore(p.careerRecords ?? []);
     // 스카우트가 제일 무겁게 보는 것 — 경상은 안 센다

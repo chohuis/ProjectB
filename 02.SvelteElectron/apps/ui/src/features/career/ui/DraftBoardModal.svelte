@@ -3,9 +3,12 @@
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
+  // 보드 OVR도 성장값이어야 한다 — 생성값은 3년을 지나도 안 자란다
+  import { npcLiveStatsStore, liveOvrOf } from "../../../shared/stores/npcLiveStats";
   import type { NpcSaveState } from "../../../shared/types/save";
   import {
     draftDestinationTeams,
+    pickInRound,
     type DraftBoardPick,
   } from "../../../shared/utils/draftSystem";
 
@@ -118,7 +121,7 @@
     return {
       id: npc.npcId,
       name: npc.name,
-      ovr: Math.max(npc.pitching?.ovr ?? 0, npc.batting?.ovr ?? 0),
+      ovr: liveOvrOf(npc, $npcLiveStatsStore),
       age: npc.age,
       potential: npc.developmentRate,
       isUser,

@@ -55,7 +55,7 @@ import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
-import { npcLiveStatsStore } from "./npcLiveStats";
+import { npcLiveStatsStore, liveOvrOf } from "./npcLiveStats";
 import { slotRepo } from "../repo/slotRepo";
 import { dehydrateToRepo } from "../repo/npcAdapter";
 import { SANGMU_LEAGUE_ID, SANGMU_TEAM_ID } from "../utils/ids";
@@ -3236,9 +3236,10 @@ function createGameStore() {
       // 픽별 상세 로그
       const npcInfoMap = new Map(candidateNpcs.map(n => [n.npcId, n]));
       const _draftEntries: PlayerEventEntry[] = [];
+      const _liveForLog = get(npcLiveStatsStore);
       for (const pick of simResult.picks) {
         const npc = npcInfoMap.get(pick.npcId);
-        const ovr = npc ? (npc.pitching?.ovr ?? npc.batting?.ovr ?? 0) : 0;
+        const ovr = npc ? liveOvrOf(npc, _liveForLog) : 0;
         const pos = npc?.playerType === "pitcher" ? "P" : (npc?.position ?? "?");
         const age = npc?.age ?? 0;
         const potential = npc?.developmentRate ?? 0;
@@ -3269,7 +3270,10 @@ function createGameStore() {
         // `??`로 읽으면 타자의 낮은 `pitching.ovr`이 먼저 잡혀 실제 실력보다
         // 훨씬 낮게 나온다. 실측에서 지명 1순위가 OVR 53으로, 미지명 최하위(74)
         // 보다 낮게 찍혔다. 보드(`DraftBoardModal`)는 처음부터 max를 쓴다
-        const ovrOf = (n: NpcSaveState) => Math.max(n.pitching?.ovr ?? 0, n.batting?.ovr ?? 0);
+        // ⚠ **live를 읽는다.** `npcs[].pitching`은 생성값이라 3년을 지나도 안 자란다 —
+        // 그걸로 정렬하면 지명 순서가 **1학년 때 실력** 기준이 된다
+        const _live = get(npcLiveStatsStore);
+        const ovrOf = (n: NpcSaveState) => liveOvrOf(n, _live);
         const rest = candidateNpcs
           .filter((n) => !pickedIds.has(n.npcId))
           .sort((a, b) => ovrOf(b) - ovrOf(a));

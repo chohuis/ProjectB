@@ -56,10 +56,8 @@ export function clampStat(v: number): number {
   return Math.max(1, Math.min(99, Math.round(v)));
 }
 
-export function npcCoreOvr(npc: NpcSaveState): number {
-  if (npc.playerType === "pitcher") return npc.pitching?.ovr ?? 0;
-  return npc.batting?.ovr ?? 0;
-}
+// npcCoreOvr는 제거됐다 — `npcs[].pitching`(생성값)을 읽어서 성장을 못 봤고,
+// 호출하는 데도 없었다. **지금 OVR이 필요하면 `liveOvrOf`**(stores/npcLiveStats)를 쓴다
 
 // ── IPC 헬퍼 ─────────────────────────────────────────────────
 const api = () => (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;

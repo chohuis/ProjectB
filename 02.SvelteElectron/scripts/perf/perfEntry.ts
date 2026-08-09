@@ -3499,3 +3499,106 @@ export function setTrainingSlots(slots: string[]): void {
     secondary2ProgramId: slots[2] ?? null,
   });
 }
+
+/**
+ * 또래 분포 — **주인공이 리그에서 몇 번째인가.**
+ *
+ * 드래프트가 상대평가로 바뀌면서 이게 진로를 정한다. 주인공 OVR만 보면
+ * "62면 잘 큰 것 같은데 왜 9라운드지?"를 못 푼다 — 또래가 더 높으면
+ * 62는 중위권이고 9R이 맞는 결과다.
+ */
+export function peerProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const peers = g.npcs
+    .filter((n) => n.playerType === "pitcher" && n.grade === 3
+      && n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.npcId !== p.id)
+    .map((n) => n.pitching?.ovr ?? 0)
+    .filter((o) => o > 0)
+    .sort((a, b) => a - b);
+  if (peers.length === 0) return { 또래: 0, 경고: "또래가 0명 — 백분위 폴백이 걸린다" };
+  const at = (q: number) => peers[Math.floor(peers.length * q)];
+  const below = peers.filter((o) => o < (p.pitching?.ovr ?? 0)).length;
+  return {
+    또래: peers.length,
+    또래OVR: { 최소: peers[0], p25: at(0.25), 중앙: at(0.5), p75: at(0.75), 최대: peers[peers.length - 1] },
+    주인공OVR: p.pitching?.ovr ?? 0,
+    주인공백분위: Math.round(below / peers.length * 100),
+    성장률: p.developmentRate,
+  };
+}
+
+/**
+ * 조사용 튜닝 — **안(arm)별로 주인공만 손본다.**
+ *
+ * ⚠ 세계(NPC)는 안 건드린다. 또래 분포가 같아야 안끼리 비교가 된다.
+ * OVR 가중합은 분모가 12.0이고 가중치 합도 12.0이라 **모든 스탯에 같은 값을
+ * 더하면 OVR이 그만큼 오른다** — 스탯 균형을 안 흔들면서 시작점만 옮긴다.
+ */
+export function tuneProtagonist(t: { ovrDelta?: number; devRateMult?: number }): void {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const d = t.ovrDelta ?? 0;
+  const pit = { ...p.pitching };
+  if (d !== 0) {
+    for (const k of ["velocity", "command", "control", "movement", "stamina",
+                     "mentality", "recovery", "clutch", "holdRunners"] as const) {
+      (pit as any)[k] = Math.max(1, Math.min(99, ((pit as any)[k] ?? 50) + d));
+    }
+    pit.ovr = Math.round(
+      (pit.velocity * 2.5 + pit.command * 2.5 + pit.control * 2.0
+       + pit.movement * 1.5 + pit.stamina * 1.5 + pit.mentality * 1.0
+       + pit.recovery * 0.5 + pit.clutch * 0.3 + pit.holdRunners * 0.2) / 12.0);
+  }
+  gameStore.applyWeekResult(
+    { pitching: pit, developmentRate: (p.developmentRate ?? 1) * (t.devRateMult ?? 1) } as any,
+    [`[조사] 튜닝 ovrDelta=${d} devRate×${t.devRateMult ?? 1}`], [],
+    get(seasonStore).currentWeek, get(seasonStore).seasonYear,
+  );
+}
+
+/** 능력치 9종 원값 — OVR 한 숫자로는 "무엇이 안 자랐는지"를 못 본다 */
+export function statProbe(): Record<string, number> {
+  const p = get(gameStore).protagonist.pitching;
+  return { ovr: p.ovr, 구속: p.velocity, 제구: p.command, 컨트롤: p.control,
+    무브: p.movement, 스태미나: p.stamina, 멘탈: p.mentality,
+    회복: p.recovery, 클러치: p.clutch, 견제: p.holdRunners };
+}
+
+/**
+ * NPC 성장 추적 — **id로 고정해서 따라간다.**
+ *
+ * ⚠ 리그 평균만 보면 안 된다. 늙은 선수가 은퇴하고 신인이 들어오는 것만으로도
+ * 평균이 움직여서, **아무도 안 자라도 리그가 자라는 것처럼 보인다.**
+ */
+export function npcGrowthProbe(ids?: string[]): Record<string, unknown> {
+  const g = get(gameStore);
+  const pick = g.npcs.filter((n) =>
+    n.playerType === "pitcher" && (ids ? ids.includes(n.npcId) : true));
+  const out: Record<string, unknown> = {};
+  const live = get(npcLiveStatsStore);
+  for (const n of pick) {
+    const p = n.pitching;
+    if (!p) continue;
+    const lp = live[n.npcId]?.pitching;
+    out[n.npcId] = {
+      나이: n.age, 리그: n.currentLeague, ovr: p.ovr,
+      live_ovr: lp?.ovr ?? null, live_구속: lp?.velocity ?? null, live있음: lp ? 1 : 0,
+      구속: p.velocity, 제구: p.command, 컨트롤: p.control,
+      무브: p.movement, 스태미나: p.stamina, 멘탈: p.mentality,
+      회복: p.recovery, 클러치: p.clutch, 견제: p.holdRunners,
+    };
+  }
+  return out;
+}
+
+/** 추적 대상 고르기 — 나이대별로 몇 명 */
+export function pickTrackees(): string[] {
+  const g = get(gameStore);
+  const out: string[] = [];
+  for (const age of [16, 19, 23, 27, 31]) {
+    const c = g.npcs.find((n) => n.playerType === "pitcher" && n.age === age && n.pitching);
+    if (c) out.push(c.npcId);
+  }
+  return out;
+}

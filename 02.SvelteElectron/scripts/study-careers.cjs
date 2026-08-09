@@ -36,8 +36,11 @@ const WEEKS  = arg("weeks", 440);
 const SEED0  = arg("seed", 20260810);
 const SHARDS = arg("shards", 1);
 const SHARD  = arg("shard", 0);
+const ARM    = (process.argv.indexOf("--arm")!==-1)?process.argv[process.argv.indexOf("--arm")+1]:"base";
+// 안(arm)별 주인공 튜닝 — 세계는 안 건드린다
+const ARMS = { base:{}, startovr:{ovrDelta:6}, growth:{devRateMult:1.3} };
 
-const TAG = SHARDS > 1 ? `-s${SHARD}` : "";
+const TAG = (ARM!=="base"?`-${ARM}`:"") + (SHARDS > 1 ? `-s${SHARD}` : "");
 const PROGRESS = path.join(process.cwd(), `resource/logs/career-study${TAG}.log`);
 const OUT      = path.join(process.cwd(), `resource/logs/career-study${TAG}.json`);
 fs.mkdirSync(path.dirname(PROGRESS), { recursive: true });
@@ -96,7 +99,7 @@ function randomPlan(rnd) {
 
 (async () => {
   log("");
-  log(`── 진로·훈련 분기 조사 (${RUNS}회${SHARDS > 1 ? ` · 조각 ${SHARD}/${SHARDS}` : ""}) ──`);
+  log(`── 진로·훈련 분기 조사 [${ARM}] (${RUNS}회${SHARDS > 1 ? ` · 조각 ${SHARD}/${SHARDS}` : ""}) ──`);
 
   let tmp = null;
   const rows = [];
@@ -122,6 +125,7 @@ function randomPlan(rnd) {
         draft: false, university: false, independent: false,
         enlistNow: false, rejectDraft: false, rejectTrade: false, ...pol.p,
       });
+      app.tuneProtagonist(ARMS[ARM] ?? {});
       app.setTrainingSlots(plan.slots);
       if (plan.pitch) app.startPitchDev(plan.pitch);
 

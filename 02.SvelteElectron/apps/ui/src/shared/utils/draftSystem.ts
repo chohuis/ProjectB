@@ -105,16 +105,9 @@ function parseResult<T>(json: string): T {
   return v as T;
 }
 
-// ── 드래프트 점수 계산 (TS 유지 — UI에서 직접 표시 용도) ───
-const POTENTIAL_BONUS: Record<string, number> = { S: 30, A: 20, B: 10, C: 0 };
-
-export function calcDraftScore(npc: NpcSaveState, meta?: NamedNpcMeta): number {
-  const ovr = npc.playerType === "pitcher"
-    ? (npc.pitching?.ovr ?? 40)
-    : (npc.batting?.ovr  ?? 40);
-  const potBonus = meta ? (POTENTIAL_BONUS[meta.proPotentialTier] ?? 0) : 0;
-  return ovr * 0.6 + (npc.developmentRate ?? 50) * 0.3 + potBonus * 0.1;
-}
+// calcDraftScore·POTENTIAL_BONUS는 제거됐다 — `npc.pitching.ovr`(생성값)을 읽어
+// 성장을 못 봤고, 호출하는 데가 한 곳도 없었다. 지명 점수의 정본은 Rust
+// `determine_protagonist_draft`다 — TS에 두 번째 표를 만들지 않는다
 
 // ── 후보 선정 (Rust DLL 위임 — Phase 7-1 D-2) ────────────────
 /** 후보가 어디서 왔나. `universityEarly`·`independent`는 **소속을 유지한 신청자**다 */
