@@ -2369,7 +2369,7 @@ const DRAFT_ROUNDS: i32 = 11;
 /// 이 점수 아래는 미지명. **리그 백분위 기준**이라 "리그 중하위면 못 간다"는 뜻이다.
 /// 너무 낮으면 "누구나 지명"이라 진로에 긴장이 없다 — 60회 조사에서 실제로
 /// 미지명이 0건이었다
-const UNDRAFTED_SCORE: f64 = 45.0;
+const UNDRAFTED_SCORE: f64 = 25.0;
 
 pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> ProtagonistDraftOutcome {
     // ⚠ **드래프트는 상대평가다** (사용자 확정 2026-08-09).
@@ -2395,8 +2395,10 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
 
     // ② 순수 재능 — **팀운과 무관하게 스카우트가 보는 축**(사용자 지적).
     // 백분위만 쓰면 약팀에서 대회를 못 나간 좋은 투수가 통째로 묻힌다.
-    // OVR 45~80을 0~100으로 편다.
-    let ovr_norm = ((params.pitching_ovr - 45.0) / 35.0 * 100.0).clamp(0.0, 100.0);
+    // ⚠ **척도를 실측에 맞춘다.** 처음엔 45~80으로 폈는데 고교말 OVR이
+    // 52~63이라 상한에 한참 못 미쳐 ovr_norm이 34밖에 안 나왔고,
+    // 그 탓에 **20회 전부 미지명**이 됐다. 고졸 투수의 실제 띠는 40~70이다.
+    let ovr_norm = ((params.pitching_ovr - 40.0) / 30.0 * 100.0).clamp(0.0, 100.0);
 
     // 둘 다 0~100이라 가중평균이 그대로 0~100이 된다
     let base = pct * 0.6 + ovr_norm * 0.4;
@@ -2422,7 +2424,9 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
 
     // ⚠ **구간 대신 직선이다.** 예전 식(`ceil(4 + (55-score)/5)`)은 경계 때문에
     // **4·8·10·11라운드가 도달 불가**였다 — 나오는 값이 1·2·3·5·6·7·9뿐이었다.
-    let round = (11.0 - (draft_score - UNDRAFTED_SCORE) / 5.5)
+    // 두 점을 잡아 잇는다: **리그 중위(50) → 6R · 최상위(95) → 1R.**
+    // "무난하면 중간, 에이스급이면 상위"가 사용자 확정이다.
+    let round = (6.0 - (draft_score - 50.0) * 0.111)
         .round().clamp(1.0, DRAFT_ROUNDS as f64) as i32;
     let teams = &params.team_ids;
     if teams.is_empty() {
