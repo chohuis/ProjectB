@@ -3687,3 +3687,30 @@ export function hsAwardProbe(): Record<string, unknown> {
     주인공수상: (p.careerRecords ?? []).flatMap((r: any) => (r.awards ?? []).map((a: any) => a.title ?? a.label)),
   };
 }
+
+/**
+ * 주인공 경기가 몇 개나 잡히는가 — **등판 0의 갈림길이다.**
+ *
+ * 실측(2026-08-09): 고교 3년간 시즌1 23이닝 6등판, 시즌2 6이닝 2등판, **선발 0**.
+ * 또래 상위10은 77~84이닝이다. 원인이 둘 중 하나인데 숫자 하나로 갈린다:
+ *   스케줄에 6경기만 잡힌다   → 일정 생성 문제
+ *   30~40경기 잡히는데 안 나간다 → 컨디션·로테이션 문제
+ */
+export function scheduleProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  // ⚠ 스케줄은 리그 맵이 아니라 seasonStore 최상위에 있다 — 리그 맵을 읽어
+  // 전체 0으로 나왔다. advanceWeek도 을 쓴다
+  const sched: any[] = (s as any).schedule ?? [];
+  const mine = sched.filter((e: any) => e.isProtagonistGame);
+  const done = mine.filter((e: any) => e.result != null);
+  return {
+    리그: g.protagonist.leagueId,
+    전체경기: sched.length,
+    내경기: mine.length,
+    내경기_결과있음: done.length,
+    // 팀 경기 대비 비율 — 팀이 치르는 경기 중 몇 %가 내 등판으로 잡히나
+    내팀경기: sched.filter((e: any) =>
+      e.homeTeamId === g.protagonist.teamId || e.awayTeamId === g.protagonist.teamId).length,
+  };
+}
