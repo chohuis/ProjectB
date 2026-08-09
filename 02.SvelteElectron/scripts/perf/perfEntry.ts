@@ -13,7 +13,7 @@ import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
 } from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
-import { npcLiveStatsStore } from "../../apps/ui/src/shared/stores/npcLiveStats";
+import { npcLiveStatsStore, livePitchingOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
@@ -52,8 +52,8 @@ import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
 // 하므로 여기서는 고정한다. 프리셋 수치가 바뀌어도 이 파일은 안 따라간다
 // (따라갈 필요가 없다 — 성능은 프리셋 선택에 좌우되지 않는다).
 const PITCHING = {
-  ovr: 49, velocity: 52, command: 52, control: 50, movement: 48,
-  mentality: 50, stamina: 50, recovery: 48, clutch: 45, holdRunners: 46,
+  ovr: 56, velocity: 58, command: 58, control: 56, movement: 54,
+  mentality: 56, stamina: 56, recovery: 54, clutch: 51, holdRunners: 52,
 };
 
 export interface BootResult {
@@ -3513,7 +3513,9 @@ export function peerProbe(): Record<string, unknown> {
   const peers = g.npcs
     .filter((n) => n.playerType === "pitcher" && n.grade === 3
       && n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.npcId !== p.id)
-    .map((n) => n.pitching?.ovr ?? 0)
+    // ⚠ **live를 읽는다.** 생성값은 3년을 지나도 안 자란다 — 이 계측이
+    // 바로 그걸 틀려서 '주인공 백분위 56'이라는 잘못된 수치를 보고했다
+    .map((n) => livePitchingOvrOf(n, get(npcLiveStatsStore)))
     .filter((o) => o > 0)
     .sort((a, b) => a - b);
   if (peers.length === 0) return { 또래: 0, 경고: "또래가 0명 — 백분위 폴백이 걸린다" };
@@ -3599,6 +3601,25 @@ export function pickTrackees(): string[] {
   for (const age of [16, 19, 23, 27, 31]) {
     const c = g.npcs.find((n) => n.playerType === "pitcher" && n.age === age && n.pitching);
     if (c) out.push(c.npcId);
+  }
+  return out;
+}
+
+/**
+ * 나이·리그별 성장폭 — **같은 선수를 따라간다.**
+ *
+ * ⚠ 코호트를 고정하지 않으면 은퇴·신인 유입만으로 평균이 움직여서
+ * 아무도 안 자라도 리그가 자라는 것처럼 보인다.
+ */
+export function ageGrowthSnapshot(): Record<string, { age: number; league: string; ovr: number }> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const out: Record<string, { age: number; league: string; ovr: number }> = {};
+  for (const n of g.npcs) {
+    if (n.playerType !== "pitcher") continue;
+    const ovr = livePitchingOvrOf(n, live);
+    if (ovr <= 0) continue;
+    out[n.npcId] = { age: n.age, league: n.currentLeague ?? "", ovr };
   }
   return out;
 }

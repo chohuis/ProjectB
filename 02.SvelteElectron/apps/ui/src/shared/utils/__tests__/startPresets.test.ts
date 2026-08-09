@@ -1,0 +1,90 @@
+import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+// ── 시작 프리셋은 넷 다 같은 총합이다 ────────────────────────────
+//
+// 사용자 확정(2026-08-09): **프리셋은 스탯 배분만 다르고 총합은 같다.**
+// 시작 선택이 곧 커리어 상한이 되면 이후 육성 선택의 무게가 줄어든다 —
+// 아키타입은 유불리가 아니라 취향이어야 한다.
+//
+// 실측 근거: 고교 3학년 투수 509명의 OVR 중앙이 **68**이고 하위 25%가 65다.
+// 예전 프리셋은 46~56이라 **뭘 골라도 또래 중앙 한참 아래에서 출발**했고,
+// 3년을 잘 키워도 백분위 1%였다.
+//
+// ⚠ **하네스가 이 표를 베껴 갖고 있다.** `perfEntry.ts`의 `PITCHING`이
+// 균형형과 같아야 한다 — 어긋나면 계측이 게임과 다른 주인공을 재고, 그 위에
+// 쌓은 결론이 전부 틀어진다. 실제로 그래서 "시작 49"를 게임 값으로 착각했다.
+
+const ROOT = resolve(__dirname, "../../../../../..");
+const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
+
+/** OVR 가중합 — 가중치 합이 12.0이라 분모와 같다 */
+const W: Record<string, number> = {
+  velocity: 2.5, command: 2.5, control: 2.0, movement: 1.5, stamina: 1.5,
+  mentality: 1.0, recovery: 0.5, clutch: 0.3, holdRunners: 0.2,
+};
+const ovrOf = (p: Record<string, number>) =>
+  Math.round(Object.entries(W).reduce((s, [k, w]) => s + p[k] * w, 0) / 12);
+
+/** `pitching: { ovr: 56, velocity: 58, … }` 형태를 전부 뽑는다 */
+function parsePresets(src: string): Record<string, number>[] {
+  const out: Record<string, number>[] = [];
+  for (const m of src.matchAll(/pitching:\s*\{([^}]*)\}/g)) {
+    const o: Record<string, number> = {};
+    for (const f of m[1].matchAll(/(\w+):\s*(\d+)/g)) o[f[1]] = Number(f[2]);
+    if ("velocity" in o && "holdRunners" in o) out.push(o);
+  }
+  return out;
+}
+
+describe("새 게임 시작 프리셋", () => {
+  const presets = parsePresets(read("apps/ui/src/pages/new-game/NewGamePage.svelte"));
+
+  it("프리셋이 4종 있다", () => {
+    expect(presets).toHaveLength(4);
+  });
+
+  it("적힌 ovr이 스탯에서 실제로 계산되는 값과 같다", () => {
+    // 예전엔 제구형이 `ovr: 56`인데 스탯으로는 58이었다 — 화면이 거짓말을 한다
+    for (const p of presets) expect(ovrOf(p)).toBe(p.ovr);
+  });
+
+  it("넷 다 같은 OVR이다 — 아키타입은 유불리가 아니라 취향이다", () => {
+    const ovrs = presets.map((p) => p.ovr);
+    expect(new Set(ovrs).size).toBe(1);
+  });
+
+  it("또래 중앙(68) 아래이되 하위권은 아니다 — 55~60", () => {
+    // 또래 중앙에 바로 얹으면 육성할 게 없고, 너무 낮으면 뭘 해도 바닥이다
+    for (const p of presets) {
+      expect(p.ovr).toBeGreaterThanOrEqual(55);
+      expect(p.ovr).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it("총합이 같아도 배분은 다르다 — 프리셋이 서로 구별된다", () => {
+    const sig = presets.map((p) => Object.keys(W).map((k) => p[k]).join(","));
+    expect(new Set(sig).size).toBe(4);
+
+    // 특화형 셋은 확실한 강점이 있어야 한다 — 총합이 같으니 강점이 없으면
+    // 고를 이유도 없다. **균형형은 예외다**: 튀는 스탯이 없는 게 그 정의다
+    const peaks = presets.map((p) => Math.max(...Object.keys(W).map((k) => p[k])));
+    expect(peaks.filter((v) => v >= 65)).toHaveLength(3);
+
+    // 균형형(첫 번째)은 편차가 좁다
+    const bal = Object.keys(W).map((k) => presets[0][k]);
+    expect(Math.max(...bal) - Math.min(...bal)).toBeLessThanOrEqual(12);
+  });
+
+  it("계측 하네스가 균형형과 같은 값을 쓴다", () => {
+    // 어긋나면 계측이 게임과 다른 주인공을 잰다 — 이번에 실제로 겪었다
+    const h = read("scripts/perf/perfEntry.ts");
+    const m = h.match(/const PITCHING = \{([\s\S]*?)\};/);
+    expect(m).not.toBeNull();
+    const hp: Record<string, number> = {};
+    for (const f of m![1].matchAll(/(\w+):\s*(\d+)/g)) hp[f[1]] = Number(f[2]);
+    const balanced = presets[0];   // NewGamePage의 첫 프리셋이 균형형
+    for (const k of [...Object.keys(W), "ovr"]) expect(hp[k]).toBe(balanced[k]);
+  });
+});
