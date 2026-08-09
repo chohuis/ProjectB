@@ -225,7 +225,12 @@
   async function doStartGame() {
     const preset = PRESETS[selectedPreset];
     const potentialHidden = Math.floor(Math.random() * 31) + 60;
-    const developmentRate = Math.floor(Math.random() * 16) + 55;
+    // 55~70이었다. **또래보다 느렸다** — 실측(2026-08-09)에서 주인공은 고교
+    // 3년에 +9~10인데 또래 중앙은 +12였고, 그 격차로 백분위 1%까지 밀렸다.
+    // 엔진은 `dev_factor = dev_rate / 62`로 XP에 그대로 곱하며 오차 없이 선형이다
+    // (devRate 31/62/93/124 → 주당 XP 1.48/2.96/4.43/5.91). 또래 중앙 성장에
+    // 맞추려면 약 ×1.25가 필요해 중앙을 62 → 80으로 옮긴다
+    const developmentRate = Math.floor(Math.random() * 16) + 73;
 
     const protagonist: ProtagonistSave = {
       id: "PLY_HERO",

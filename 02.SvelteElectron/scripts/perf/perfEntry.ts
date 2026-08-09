@@ -105,7 +105,7 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     positionRatings: { SP: PITCHING.ovr },
     diligence: 60,
     popularity: 10,
-    developmentRate: 62,
+    developmentRate: 80,
     potentialHidden: 75,
     growthPoints: 0,
     tags: ["정통파", "균형형"],
@@ -3620,6 +3620,32 @@ export function ageGrowthSnapshot(): Record<string, { age: number; league: strin
     const ovr = livePitchingOvrOf(n, live);
     if (ovr <= 0) continue;
     out[n.npcId] = { age: n.age, league: n.currentLeague ?? "", ovr };
+  }
+  return out;
+}
+
+/**
+ * 성장 레버 격리 — **커리어를 안 돌리고 엔진만 두 번 부른다.**
+ *
+ * ⚠ 커리어로 재면 부상·컨디션·경기 결과가 섞여서 레버 효과와 구분이 안 된다.
+ * 실제로 `devRate ×1.3`을 커리어에서 쟀더니 세 능력치가 두 안에서 **정확히
+ * 같게** 나왔는데, 같은 실행에 부상 흔적(무브 −2)이 있어 판정을 못 했다.
+ */
+export async function growthLever(devRates: number[]): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const { calcTrainingGrowth } = await import("../../apps/ui/src/shared/utils/growthEngine");
+  const out: Record<string, unknown> = {};
+  for (const dr of devRates) {
+    const p = { ...g.protagonist, developmentRate: dr, fatigue: 30, condition: 80 };
+    const r = await calcTrainingGrowth(p as any, g.trainingPlan, 1.0, undefined, m.trainingPrograms);
+    const pit = r.protagonistPatch.pitching;
+    const xp  = r.protagonistPatch.pitchingXP ?? {};
+    out[`devRate ${dr}`] = {
+      ovr: pit?.ovr, 구속: pit?.velocity, 제구: pit?.command, 컨트롤: pit?.control,
+      // 레벨업이 안 나는 주엔 XP 잔량만 는다 — 그걸 봐야 배수가 먹는지 보인다
+      잔여XP: Object.fromEntries(Object.entries(xp).map(([k, v]) => [k, Math.round((v as number) * 100) / 100])),
+    };
   }
   return out;
 }
