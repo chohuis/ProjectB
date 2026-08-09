@@ -1806,20 +1806,37 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const eligibleGeneral = m.militaryGeneralEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
       const eligibleCommon  = m.militaryCommonEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
 
-      const milCalc = JSON.parse(await window.projectB!.weekCalcMilitary(JSON.stringify({
+      // ⚠ **정수로 반올림해서 넘긴다.** Rust `MilitaryWeekPayload`는 이 값들이
+      // 전부 `u32`/`i32`인데 주인공 스탯은 소수다(피로 62.125 · 스태미나 54.3).
+      // serde가 소수를 정수로 못 받아 **호출 전체가 `{error}`로 떨어졌고**,
+      // 아래에서 그걸 확인 없이 읽어 `undefined` → **피로가 NaN이 됐다.**
+      //
+      // 그래서 **군 복무 주간 계산이 통째로 안 돌고 있었다** — 계급별 스탯
+      // 변화도, 사기·피로 변화도 전부. 전역해서 훈련 계산이 도는 순간
+      // "성장 입력이 숫자가 아니다"로 터졌다(60회 조사에서 10회, 군 경로만).
+      //
+      // 소수부는 여기서만 버린다 — 결과를 그대로 덮어쓰는 게 아니라
+      // 아래 `applyWeekResult`가 받는 값이라 누적 손실이 안 생긴다.
+      const milCalcRaw = JSON.parse(await window.projectB!.weekCalcMilitary(JSON.stringify({
         isSportsUnit,
         serviceWeeks,
-        stamina:  g.protagonist.pitching.stamina,
-        recovery: g.protagonist.pitching.recovery,
-        command:  g.protagonist.pitching.command,
-        control:  g.protagonist.pitching.control,
-        velocity: g.protagonist.pitching.velocity,
-        morale:   g.protagonist.morale,
-        fatigue:  g.protagonist.fatigue,
+        stamina:  Math.round(g.protagonist.pitching.stamina),
+        recovery: Math.round(g.protagonist.pitching.recovery),
+        command:  Math.round(g.protagonist.pitching.command),
+        control:  Math.round(g.protagonist.pitching.control),
+        velocity: Math.round(g.protagonist.pitching.velocity),
+        morale:   Math.round(g.protagonist.morale),
+        fatigue:  Math.round(g.protagonist.fatigue),
         sportsEventCount:  eligibleSports.length,
         generalEventCount: eligibleGeneral.length,
         commonEventCount:  eligibleCommon.length,
-      }))) as {
+      })));
+      // ⚠ **오류를 삼키지 않는다.** 예전엔 `{error}`가 와도 그대로 필드를 읽어
+      // undefined가 스탯에 들어갔다 — 조용히 NaN이 되는 자리다.
+      if (!milCalcRaw || milCalcRaw.error || typeof milCalcRaw.fatigue !== "number") {
+        throw new Error(`[군 복무] 주간 계산 실패: ${milCalcRaw?.error ?? JSON.stringify(milCalcRaw).slice(0, 200)}`);
+      }
+      const milCalc = milCalcRaw as {
         stamina: number; recovery: number; command: number; control: number; velocity: number;
         morale: number; fatigue: number;
         eventPool: string | null; eventIndex: number | null; rank: string;
