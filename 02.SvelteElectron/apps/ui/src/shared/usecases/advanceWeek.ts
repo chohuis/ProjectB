@@ -881,8 +881,28 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // 주인공은 NPC 드래프트 풀에 안 들어간다 — 진로 결과가 따로 정해지는 게
     // 설계다(`DraftBoardModal` 주석). 그 "따로 정하는" 호출이 빠져 있었다.
     const { determineProtagonistDraft } = await import("../utils/draftSystem");
+    // ⚠ **상대평가 입력을 모아 넘긴다.** 안 넘기면 Rust가 폴백으로 OVR을
+    // 백분위처럼 쓰고, 그건 세계 전력이 바뀌면 어긋나는 옛 동작이다.
+    //
+    // 또래 = 같은 해 지명 대상 고교 3학년 투수. 주인공은 뺀다 —
+    // 자기 자신을 분모에 넣으면 백분위가 인원수만큼 낮게 나온다
+    const peerOvrs = g.npcs
+      .filter((n) => n.playerType === "pitcher" && n.grade === 3
+        && n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.npcId !== p.id)
+      .map((n) => n.pitching?.ovr ?? 0)
+      .filter((o) => o > 0);
+    // 팀 내 투수 순위 — 나보다 나은 팀 동료 수 + 1
+    const teamAceRank = 1 + g.npcs.filter((n) =>
+      n.playerType === "pitcher" && n.currentTeam === p.teamId && n.npcId !== p.id
+      && (n.pitching?.ovr ?? 0) > p.pitching.ovr).length;
+    // 대회 활약 — 고교야구 점수(0~100)가 이미 대회·성적을 접어 놓은 값이다
+    const tournamentScore = calcHsBaseballScore(p.careerRecords ?? []);
+    // 스카우트가 제일 무겁게 보는 것 — 경상은 안 센다
+    const majorInjuries = (p.injuryHistory ?? []).filter((h) => h.severity !== "light").length;
+
     const draftOutcome = draftApplied
-      ? await determineProtagonistDraft(p.scoutScore, p.pitching.ovr, get(seasonStore).seasonYear)
+      ? await determineProtagonistDraft(p.scoutScore, p.pitching.ovr, get(seasonStore).seasonYear,
+          { peerOvrs, teamAceRank, tournamentScore, majorInjuries })
       : { drafted: false };
 
     gameStore.setCareerResults({

@@ -309,13 +309,36 @@ export async function applyDraftToNpcs(
 }
 
 // ── 주인공 드래프트 결과 결정 (Rust DLL 위임) ────────────────
+/**
+ * 주인공 지명 결과 — **상대평가다** (사용자 확정 2026-08-09).
+ *
+ *   상위픽   팀 에이스급 + 리그 최상위
+ *   중간픽   리그에서 무난한 수준
+ *   미지명   애매하거나 · 큰 부상이 있거나 · 대회에서 못했거나
+ *
+ * ⚠ **또래 분포를 꼭 넘긴다.** 안 넘기면 Rust가 폴백으로 OVR을 백분위처럼
+ * 쓰는데, 그건 세계 전력이 바뀌면 어긋나는 옛 동작이다 — 조용히 그리로
+ * 돌아가지 않게 호출부에서 반드시 채운다.
+ */
+export interface DraftContext {
+  /** 같은 해 지명 대상 투수들의 OVR */
+  peerOvrs: number[];
+  /** 팀 투수 중 내 순위 (1 = 에이스) */
+  teamAceRank?: number;
+  /** 대회 활약 0~100. 50이 평범 */
+  tournamentScore?: number;
+  /** 중등도 이상 부상 횟수 */
+  majorInjuries?: number;
+}
+
 export async function determineProtagonistDraft(
   scoutScore:  number,
   pitchingOvr: number,
   year:        number,
+  ctx:         DraftContext,
   teamIds:     readonly string[] = KBL_TEAM_IDS,
 ): Promise<ProtagonistDraftOutcome> {
-  const params = { scoutScore, pitchingOvr, year, teamIds: [...teamIds] };
+  const params = { scoutScore, pitchingOvr, year, teamIds: [...teamIds], ...ctx };
   const json = await api().npcDetermineProtagonistDraft(JSON.stringify(params));
   return parseResult<ProtagonistDraftOutcome>(json);
 }

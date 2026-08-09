@@ -435,6 +435,20 @@ pub struct ProtagonistDraftParams {
     pub pitching_ovr: f64,
     pub year: i32,
     pub team_ids: Vec<String>,
+    /// **같은 해 지명 대상 투수들의 OVR.** 드래프트는 절대값이 아니라
+    /// 상대평가다 — 세계 전력이 바뀌어도 "리그에서 몇 번째냐"는 안 흔들린다.
+    /// 비어 있으면 백분위를 못 내므로 OVR을 그대로 백분위로 쓴다(폴백).
+    #[serde(default)]
+    pub peer_ovrs: Vec<f64>,
+    /// 팀 투수 중 내 순위 (1 = 에이스). 없으면 보정 없음
+    #[serde(default)]
+    pub team_ace_rank: Option<i32>,
+    /// 대회 활약 0~100 (고교야구 점수). 50이 평범
+    #[serde(default)]
+    pub tournament_score: Option<f64>,
+    /// 중등도 이상 부상 횟수 — 스카우트가 제일 크게 보는 것
+    #[serde(default)]
+    pub major_injuries: Option<i32>,
 }
 
 // ── 체육부대 선발 ─────────────────────────────────────────────────────────────

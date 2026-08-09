@@ -2363,24 +2363,74 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     result_npcs
 }
 
+/// 드래프트 라운드 수 — TS `DRAFT_ROUNDS`와 같아야 한다 (10팀 × 11라운드)
+const DRAFT_ROUNDS: i32 = 11;
+
+/// 이 점수 아래는 미지명. **리그 백분위 기준**이라 "리그 중하위면 못 간다"는 뜻이다.
+/// 너무 낮으면 "누구나 지명"이라 진로에 긴장이 없다 — 60회 조사에서 실제로
+/// 미지명이 0건이었다
+const UNDRAFTED_SCORE: f64 = 45.0;
+
 pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> ProtagonistDraftOutcome {
-    let score = params.scout_score * 0.6 + params.pitching_ovr * 0.4;
+    // ⚠ **드래프트는 상대평가다** (사용자 확정 2026-08-09).
+    //
+    //   상위픽   팀 에이스급 + 리그 최상위
+    //   중간픽   리그에서 무난한 수준
+    //   미지명   애매하거나 · 큰 부상이 있거나 · 대회에서 못했거나
+    //
+    // 예전엔 `scout*0.6 + ovr*0.4`의 **절대값**이었다. 고교말 OVR 실측 범위가
+    // 52~63이라 OVR 기여가 4.4점 폭뿐이었고, scoutScore는 3년에 +14가 천장이라
+    // **60회 조사에서 지명 30회가 전부 9라운드**였다 — 육성 결과가 진로에
+    // 안 비쳤고, 세계 전력이 바뀌면 기준선이 통째로 어긋난다.
 
-    let round = if      score >= 82.0 { 1 }
-    else if score >= 68.0 { 2 }
-    else if score >= 55.0 { 3 }
-    else if score >= 44.0 { (4.0 + (55.0 - score) / 5.0).ceil() as i32 }
-    else if score >= 30.0 { 9 }
-    else                  { return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None }; };
+    // ① 리그 백분위 — 나보다 약한 지명 대상 투수의 비율
+    let pct = if params.peer_ovrs.is_empty() {
+        // 폴백: 또래 데이터가 안 넘어왔다. **조용히 0을 쓰면 전원 미지명이
+        // 되므로** OVR을 그대로 백분위처럼 본다
+        params.pitching_ovr
+    } else {
+        let below = params.peer_ovrs.iter().filter(|&&o| o < params.pitching_ovr).count();
+        below as f64 / params.peer_ovrs.len() as f64 * 100.0
+    };
 
-    let round = round.min(10);  // DRAFT_ROUNDS = 10
+    // ② 순수 재능 — **팀운과 무관하게 스카우트가 보는 축**(사용자 지적).
+    // 백분위만 쓰면 약팀에서 대회를 못 나간 좋은 투수가 통째로 묻힌다.
+    // OVR 45~80을 0~100으로 편다.
+    let ovr_norm = ((params.pitching_ovr - 45.0) / 35.0 * 100.0).clamp(0.0, 100.0);
+
+    // 둘 다 0~100이라 가중평균이 그대로 0~100이 된다
+    let base = pct * 0.6 + ovr_norm * 0.4;
+
+    // ③ 팀 에이스면 스카우트가 더 본다
+    let ace_bonus = match params.team_ace_rank { Some(1) => 8.0, Some(2) => 3.0, _ => 0.0 };
+
+    // ④ 대회 활약 — 50이 평범. 큰 무대에서 보여준 게 픽을 올린다.
+    // **팀운을 타는 축이라 비중을 크게 두지 않는다**
+    let tour_adj = (params.tournament_score.unwrap_or(50.0) - 50.0) * 0.30;
+
+    // ⑤ 큰 부상은 크게 깎는다 — 스카우트가 제일 무겁게 보는 항목이다
+    let injury_pen = params.major_injuries.unwrap_or(0) as f64 * 12.0;
+
+    // ⑥ 스카우트 평가는 보조축
+    let scout_adj = (params.scout_score - 30.0) * 0.20;
+
+    let draft_score = (base + ace_bonus + tour_adj + scout_adj - injury_pen).clamp(0.0, 100.0);
+
+    if draft_score < UNDRAFTED_SCORE {
+        return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None };
+    }
+
+    // ⚠ **구간 대신 직선이다.** 예전 식(`ceil(4 + (55-score)/5)`)은 경계 때문에
+    // **4·8·10·11라운드가 도달 불가**였다 — 나오는 값이 1·2·3·5·6·7·9뿐이었다.
+    let round = (11.0 - (draft_score - UNDRAFTED_SCORE) / 5.5)
+        .round().clamp(1.0, DRAFT_ROUNDS as f64) as i32;
     let teams = &params.team_ids;
     if teams.is_empty() {
         return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None };
     }
 
     let mut rng = LcgRand::new(
-        (params.year as u32).wrapping_mul(997).wrapping_add((score.round() as u32).wrapping_mul(13))
+        (params.year as u32).wrapping_mul(997).wrapping_add((draft_score.round() as u32).wrapping_mul(13))
     );
     let t_idx  = (rng.next() * teams.len() as f64) as usize % teams.len();
     let p_idx  = (rng.next() * teams.len() as f64) as usize % teams.len();
