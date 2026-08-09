@@ -102,7 +102,13 @@
           <span class="opt-label">독립리그 합격: {teamName(teamId)}</span>
         </button>
       {/each}
-      {#if !draftPassed && univPassed.length === 0 && indiePassed.length === 0}
+      <!-- ⚠ **병역을 이미 마친 사람에게 입대를 권하지 않는다.**
+           예전엔 조건이 "아무 데도 안 됐다"뿐이라, **군필자가 독립리그에서
+           갈 곳이 없으면 이 버튼이 또 떴다.** 60회 조사에서 한 커리어가
+           군 복무를 **세 번** 하는 경로가 나왔다.
+           군필·면제·현역에게는 위의 "독립리그 계속"이 남는다. -->
+      {#if !draftPassed && univPassed.length === 0 && indiePassed.length === 0
+           && $gameStore.protagonist.militaryStatus === "미필"}
         <button class="opt-btn danger" type="button" on:click={() => chooseResult("general")}>
           <span class="opt-label">전원 탈락: 현역 입대</span>
         </button>

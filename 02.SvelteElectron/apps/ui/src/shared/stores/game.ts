@@ -1948,6 +1948,11 @@ function createGameStore() {
         const extendedContract = isPro && now.contract && now.contract.remainingYears > 0
           ? { ...now.contract, remainingYears: now.contract.remainingYears + 2 }
           : now.contract;
+        // ⚠ **미필만 입대한다.** 화면 가드만 두면 다른 호출부(헤드리스·
+        // 이벤트)가 그대로 통과한다 — 실제로 조사에서 군 복무를 세 번 하는
+        // 커리어가 나왔다. 되돌릴 수 없는 상태 전이라 여기서도 막는다.
+        if (now.militaryStatus !== "미필") return s;
+
         const protagonist: ProtagonistSave = {
           ...now,
           careerStage: "military",
