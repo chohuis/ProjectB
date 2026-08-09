@@ -3706,6 +3706,7 @@ export function scheduleProbe(): Record<string, unknown> {
   const done = mine.filter((e: any) => e.result != null);
   return {
     리그: g.protagonist.leagueId,
+    포지션: g.protagonist.position, 주포지션: g.protagonist.primaryPosition, 학년: g.protagonist.grade, 나이: g.protagonist.age,
     전체경기: sched.length,
     내경기: mine.length,
     내경기_결과있음: done.length,
