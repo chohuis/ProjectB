@@ -38,7 +38,9 @@ const SHARDS = arg("shards", 1);
 const SHARD  = arg("shard", 0);
 const ARM    = (process.argv.indexOf("--arm")!==-1)?process.argv[process.argv.indexOf("--arm")+1]:"base";
 // 안(arm)별 주인공 튜닝 — 세계는 안 건드린다
-const ARMS = { base:{}, startovr:{ovrDelta:6}, growth:{devRateMult:1.3} };
+// 시작 OVR 56(현재)에서 4씩 올린다. F는 능력치 대신 선발 기회를 준다
+const ARMS = { A:{}, B:{ovrDelta:4}, C:{ovrDelta:8}, D:{ovrDelta:12}, E:{ovrDelta:16}, F:{forceStarter:true},
+               base:{}, startovr:{ovrDelta:6}, growth:{devRateMult:1.3} };
 
 const TAG = (ARM!=="base"?`-${ARM}`:"") + (SHARDS > 1 ? `-s${SHARD}` : "");
 const PROGRESS = path.join(process.cwd(), `resource/logs/career-study${TAG}.log`);
@@ -136,6 +138,7 @@ function randomPlan(rnd) {
       const teamsSeen = [start.팀];
       const stagesSeen = [start.단계];
       let atDraft = null, hsEndOvr = null, univEndOvr = null;
+      const hsSeasons = [];   // 고교 시즌별 포지션·등판·이닝
       let pitchLearned = start.구종;
 
       // ⚠ **가드를 넉넉히.** autoRun은 헛도는 회차가 진행한 회차보다 훨씬 많다
@@ -145,11 +148,16 @@ function randomPlan(rnd) {
         if (app.retired()) break;
         if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
         if (await app.pushCareerForward()) continue;
-        if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
+        if (app.isSeasonEnded()) {
+          // ⚠ **롤오버 전에 잡는다.** 넘어가면 그 시즌 기록이 초기화된다
+          if (lastStage === "highschool") hsSeasons.push(app.armProbe());
+          await app.seasonRollover(); continue;
+        }
         // ⚠ **매주 다시 넣는다.** `runAutoAdvance`의 `applyRecommendedTraining`이
         // 주마다 계획을 하드코딩 추천으로 덮어쓴다 — 그 추천에는 구종 개발이
         // 없어서, 안 되돌리면 조사의 훈련 축이 통째로 사라진다(실측으로 확인).
         app.setTrainingSlots(plan.slots);
+        if ((ARMS[ARM] ?? {}).forceStarter) app.forceStarter();
         await app.autoRun();
 
         const w = app.currentWeek(), s = app.currentSeason();
@@ -181,6 +189,7 @@ function randomPlan(rnd) {
         경로: stagesSeen.join(" → "),
         팀이동: teamsSeen.length - 1, 팀들: teamsSeen,
         최종: { 단계: end.단계, 리그: end.리그, 나이: end.나이 },
+        고교시즌: hsSeasons,
         구종: pitchLearned || "없음",
         병역: end.병역, 은퇴: end.은퇴, 중단: stopped,
       });

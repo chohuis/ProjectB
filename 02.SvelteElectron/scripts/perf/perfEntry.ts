@@ -3715,3 +3715,53 @@ export function scheduleProbe(): Record<string, unknown> {
       e.homeTeamId === g.protagonist.teamId || e.awayTeamId === g.protagonist.teamId).length,
   };
 }
+
+/**
+ * F안 — **선발 기회를 보장한다.** 능력치를 안 건드리고 악순환만 끊는다.
+ *
+ * 고리: 또래보다 약함 → 선발 못 맡음 → 경기 XP 없음 → 더 약해짐.
+ * 시작 OVR을 올리는 건 "약한 선수를 강하게" 만드는 해법이고, 이쪽은
+ * **밑바닥에서 시작하는 맛을 지키면서** 경기 XP만 확보한다.
+ */
+export function forceStarter(): void {
+  const g = get(gameStore);
+  if (g.protagonist.careerStage !== "highschool") return;
+  if (g.protagonist.position === "SP") return;
+  gameStore.setPosition("SP");
+  gameStore.setCurrentRole("1선발");
+}
+
+/** 안별 결과 — 고리가 끊겼는지 본다 */
+export function armProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const st: any = (get(seasonStore) as any).stats?.[p.id];
+  return {
+    포지션: p.position, 학년: p.grade, OVR: p.pitching?.ovr,
+    이닝: st ? Math.round((st.ip ?? 0) * 10) / 10 : 0,
+    등판: st?.g ?? 0, 선발: st?.gs ?? 0,
+    ERA: st?.era != null ? Math.round(st.era * 100) / 100 : null,
+  };
+}
+
+/** 드래프트 라운드별 지명자 OVR — **live로 읽는다** (생성값은 안 자란다) */
+export function draftRoundProbe(): Array<Record<string, unknown>> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const out: Array<Record<string, unknown>> = [];
+  for (const n of g.npcs) {
+    const ev = [...(n.careerEvents ?? [])].reverse()
+      .find((e: any) => e.eventType === "draft_picked");
+    if (!ev) continue;
+    const r = (ev as any).round ?? (ev as any).draftRound;
+    if (r == null) continue;
+    out.push({
+      round: Number(r),
+      type: n.playerType,
+      ovr: n.playerType === "pitcher"
+        ? livePitchingOvrOf(n as any, live)
+        : (live[n.npcId]?.batting?.ovr ?? n.batting?.ovr ?? 0),
+    });
+  }
+  return out;
+}
