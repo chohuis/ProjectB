@@ -13,6 +13,7 @@ import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
 } from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
+import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
 import { npcLiveStatsStore, livePitchingOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
@@ -3648,4 +3649,41 @@ export async function growthLever(devRates: number[]): Promise<Record<string, un
     };
   }
   return out;
+}
+
+/**
+ * 고교 개인 수상이 실제로 나오는가 — **최소 출전 조건이 관문이다.**
+ *
+ * ⚠ `awardRules`는 고교 리그도 대상에 넣지만 방어율왕 70이닝 · 다승왕 60이닝을
+ * 요구한다. 고교 시즌이 짧으면 **자격자가 0명이라 수상이 구조적으로 안 난다** —
+ * 그러면 드래프트에 수상을 넣어도 항상 0으로 들어온다.
+ *
+ * 그래서 "수상이 몇 건 났나"가 아니라 **"조건에 닿는 투수가 몇 명이나 있나"**를
+ * 같이 잰다. 0건일 때 원인이 갈린다: 자격자가 없는 것과 경쟁에서 진 것은 다르다.
+ */
+export function hsAwardProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const stats = leagueStatsOf(get(seasonStore), "LEAGUE_HIGHSCHOOL");
+  const ip = Object.values(stats)
+    .map((s: any) => Number(s?.pitching?.ip ?? s?.ip ?? 0))
+    .filter((v) => v > 0)
+    .sort((a, b) => b - a);
+  const myIp = Number((stats as any)[p.id]?.pitching?.ip ?? 0);
+  return {
+    투수기록수: ip.length,
+    이닝: ip.length ? { 최대: Math.round(ip[0]), 상위10: Math.round(ip[Math.min(9, ip.length - 1)]), 중앙: Math.round(ip[Math.floor(ip.length / 2)]) } : null,
+    "70이닝이상": ip.filter((v) => v >= 70).length,   // 방어율왕 자격
+    "60이닝이상": ip.filter((v) => v >= 60).length,   // 다승·탈삼진왕 자격
+    주인공이닝_리그맵: Math.round(myIp),
+    // ⚠ **주인공은 다른 맵에 있다.** 화면 5곳이 `seasonStore.stats[p.id]`를 읽는데
+    // `computeAwards`는 리그 맵만 받는다 — 그래서 후보에 아예 못 오른다
+    주인공: (() => {
+      const st: any = (get(seasonStore) as any).stats?.[p.id];
+      if (!st) return null;
+      return { 이닝: Math.round((st.ip ?? 0) * 10) / 10, 등판: st.g ?? null, 선발: st.gs ?? null,
+               승: st.w ?? null, 패: st.l ?? null, ERA: st.era != null ? Math.round(st.era * 100) / 100 : null, 탈삼진: st.k ?? null };
+    })(),
+    주인공수상: (p.careerRecords ?? []).flatMap((r: any) => (r.awards ?? []).map((a: any) => a.title ?? a.label)),
+  };
 }
