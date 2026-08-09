@@ -106,6 +106,10 @@ function randomPlan(rnd) {
     const app = boot.app;
 
     for (let i = 0; i < RUNS; i++) {
+     // ⚠ **회차 단위로 잡는다.** 예전엔 catch가 루프 **밖에** 있어서 한 회차가
+     // 터지면 **그 조각 12회가 통째로 날아갔다** — 실제로 조각 셋이 1~3회만
+     // 남기고 끝났다. 실패도 결과다: 무엇이 터졌는지 적고 다음으로 간다.
+     try {
       const idx = SHARD + i * SHARDS;           // 조각이 겹치지 않게 건너뛴다
       const seed = SEED0 + idx * 7919;
       const rnd  = rngOf(seed);
@@ -182,6 +186,12 @@ function randomPlan(rnd) {
           ` OVR ${r.OVR.시작}→${r.OVR.최종}  이동${r.팀이동}  ${pad(r.지명, 30)} 구종 ${r.구종}` +
           (r.은퇴 ? `  [은퇴 ${r.은퇴}]` : "") + (r.중단 ? `  [${r.중단}]` : ""));
       fs.writeFileSync(OUT, JSON.stringify(rows, null, 2));   // 중간에 죽어도 남는다
+     } catch (e) {
+      const msg = String((e && e.message) || e).slice(0, 200);
+      log(`  ${pad(SHARD + i * SHARDS + 1, 4)} [회차 실패] ${msg}`);
+      rows.push({ 회차: SHARD + i * SHARDS + 1, 실패: msg });
+      fs.writeFileSync(OUT, JSON.stringify(rows, null, 2));
+     }
     }
   } catch (e) {
     log(`  실패: ${e && e.stack ? e.stack : e}`);

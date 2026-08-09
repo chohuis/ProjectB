@@ -46,6 +46,25 @@ export async function calcTrainingGrowth(
     programs,
   };
 
+  // ⚠ **어느 값이 망가졌는지 여기서 말한다.** Rust는 `invalid type: null,
+  // expected f64 at line 1 column 54`라고만 하는데, 그 열 번호로 필드를
+  // 되짚는 데 여러 단계가 걸린다. 실제로 60회 조사에서 대학 3년차 시즌
+  // 롤오버마다 이 오류로 **주 진행이 통째로 막혔다**(플레이어라면 게임이 멈춘다).
+  {
+    const bad: string[] = [];
+    const chk = (name: string, v: unknown) => {
+      if (typeof v !== "number" || !Number.isFinite(v)) bad.push(`${name}=${v}`);
+    };
+    chk("developmentRate", params.protagonist.developmentRate);
+    chk("condition", params.protagonist.condition);
+    chk("fatigue", params.protagonist.fatigue);
+    chk("mods.devRate", mods.devRate);
+    if (bad.length > 0) {
+      throw new Error(`[훈련] 성장 입력이 숫자가 아니다: ${bad.join(", ")}`
+        + ` (팀 ${protagonist.teamId} · 단계 ${protagonist.careerStage})`);
+    }
+  }
+
   const raw = JSON.parse(
     await window.projectB!.growthCalcTraining(JSON.stringify(params))
   );
