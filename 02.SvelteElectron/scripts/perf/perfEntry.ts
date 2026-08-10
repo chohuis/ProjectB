@@ -4187,3 +4187,48 @@ export function resetEntryTally(): void {
   _entryTally.호출 = 0; _entryTally.진입 = 0; _entryTally.미진입 = 0; _entryTally.오류 = 0;
   _entryTally.역할 = {};
 }
+
+/**
+ * 엔진이 준 `playerLines`에 주인공이 들어 있는가 — **고치는 법이 갈린다.**
+ *
+ * `applyGameOutcome.ts:219`가 엔진 라인이 있으면 그걸 그대로 쓰고
+ * `pitcherLine`을 버린다. 그 배열에 주인공이
+ *   있으면 → 병합만 정리하면 된다(중복 방지)
+ *   없으면 → pitcherLine을 앞에 붙이고 엔진 라인에서 주인공을 빼야 한다
+ */
+const _lineTally = { 호출: 0, 라인있음: 0, 라인빔: 0, 주인공포함: 0, 주인공없음: 0, outs0: 0, outs양: 0, outs합: 0, ip분포: [] as number[] };
+let _origAutoFinish: (() => Promise<string>) | null = null;
+
+export function startLineTally(): void {
+  stopLineTally();
+  const api: any = window.projectB;
+  _origAutoFinish = api.matchAutoFinishFromEntry.bind(api);
+  api.matchAutoFinishFromEntry = async () => {
+    const raw = await _origAutoFinish!();
+    try {
+      const d = JSON.parse(raw);
+      _lineTally.호출++;
+      const lines = Array.isArray(d.playerLines) ? d.playerLines : [];
+      if (lines.length > 0) {
+        _lineTally.라인있음++;
+        const pid = get(gameStore).protagonist.id;
+        if (lines.some((l: any) => l?.playerId === pid)) _lineTally.주인공포함++;
+        else _lineTally.주인공없음++;
+      } else _lineTally.라인빔++;
+      // ⚠ 진입은 했는데 아웃이 0이면 기록이 안 남는다 — 여기가 갈림길이다
+      const o = Number(d.outsRecorded ?? 0);
+      if (o > 0) { _lineTally.outs양++; _lineTally.outs합 += o; } else _lineTally.outs0++;
+      _lineTally.ip분포.push(Math.round(o / 3 * 10) / 10);
+    } catch { /* 무시 */ }
+    return raw;
+  };
+}
+export function stopLineTally(): void {
+  if (_origAutoFinish) { (window.projectB as any).matchAutoFinishFromEntry = _origAutoFinish; _origAutoFinish = null; }
+}
+export function lineReport(): Record<string, unknown> { return { ..._lineTally }; }
+export function resetLineTally(): void {
+  _lineTally.호출 = 0; _lineTally.라인있음 = 0; _lineTally.라인빔 = 0;
+  _lineTally.주인공포함 = 0; _lineTally.주인공없음 = 0;
+  _lineTally.outs0 = 0; _lineTally.outs양 = 0; _lineTally.outs합 = 0; _lineTally.ip분포 = [];
+}
