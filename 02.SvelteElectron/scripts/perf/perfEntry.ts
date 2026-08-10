@@ -4306,3 +4306,86 @@ export function resetAmrTally(): void {
   _amrTally.호출 = 0; _amrTally.주인공포함 = 0; _amrTally.주인공없음 = 0;
   _amrTally.라인빔 = 0; _amrTally.유일id.clear();
 }
+
+/**
+ * 경기 대장 — **경기 하나마다 한 줄.** 합계로는 못 하던 구분을 한다.
+ *
+ * 이번 세션에 만든 계측은 전부 합계였다(호출 21 · 집계 14 · 포함 10).
+ * 그래서 **"안 던진 것"과 "던졌는데 유실된 것"을 끝까지 못 갈랐다.**
+ * `scheduleId`를 조인 키로 두면 한 번 돌려 표가 나오고 거기서 답이 나온다.
+ *
+ * 조인 키를 얻는 법: `handleGame`이 엔진을 부르는 시점에 그 경기의 pending이
+ * 아직 살아 있다 — 거기서 `scheduleId`를 읽는다.
+ *
+ * 기대값: 팀 경기 47 · 고교 3인 로테이션 → **약 15경기**가 정상이다.
+ * (이 기준을 이번 세션 내내 안 정해서 21도 10도 판단을 못 했다)
+ */
+type LedgerRow = {
+  id: string; week: number | null; friendly: boolean | null;
+  entry: boolean | null; outs: number | null;
+  집계: boolean; 라인에주인공: boolean | null;
+};
+const _ledger = new Map<string, LedgerRow>();
+let _origSim2: any = null, _origFin2: any = null, _origAmr2: any = null, _origFriendly: any = null;
+let _curGameId: string | null = null;
+
+function _row(id: string): LedgerRow {
+  let r = _ledger.get(id);
+  if (!r) {
+    const e = (get(seasonStore) as any).schedule?.find((x: any) => x.id === id);
+    r = { id, week: e?.week ?? null, friendly: e?.isFriendly ?? null,
+          entry: null, outs: null, 집계: false, 라인에주인공: null };
+    _ledger.set(id, r);
+  }
+  return r;
+}
+
+export function startLedger(): void {
+  stopLedger();
+  const api: any = window.projectB;
+  const ss: any = seasonStore;
+
+  _origSim2 = api.matchSimulateToEntry.bind(api);
+  api.matchSimulateToEntry = async (req: any) => {
+    // 이 시점엔 그 경기의 pending이 아직 살아 있다 — 조인 키를 여기서 얻는다
+    const pa = (get(seasonStore) as any).pendingActions?.find((a: any) => a?.type === "game");
+    _curGameId = pa?.scheduleId ?? null;
+    const raw = await _origSim2(req);
+    if (_curGameId) {
+      try { _row(_curGameId).entry = !!JSON.parse(raw).entryReached; } catch { /* 무시 */ }
+    }
+    return raw;
+  };
+
+  _origFin2 = api.matchAutoFinishFromEntry.bind(api);
+  api.matchAutoFinishFromEntry = async () => {
+    const raw = await _origFin2();
+    if (_curGameId) {
+      try { _row(_curGameId).outs = Number(JSON.parse(raw).outsRecorded ?? 0); } catch { /* 무시 */ }
+    }
+    return raw;
+  };
+
+  const mark = (scheduleId: string, result: any) => {
+    const r = _row(scheduleId);
+    r.집계 = true;
+    const pid = get(gameStore).protagonist.id;
+    const lines = Array.isArray(result?.playerLines) ? result.playerLines : [];
+    r.라인에주인공 = lines.some((l: any) => l?.playerId === pid);
+  };
+  _origAmr2 = ss.applyMatchResult.bind(ss);
+  ss.applyMatchResult = (id: string, result: any, leagueId?: string) => { mark(id, result); return _origAmr2(id, result, leagueId); };
+  _origFriendly = ss.applyFriendlyResult.bind(ss);
+  ss.applyFriendlyResult = (...a: any[]) => { mark(a[0], a[1]); return _origFriendly(...a); };
+}
+
+export function stopLedger(): void {
+  const api: any = window.projectB; const ss: any = seasonStore;
+  if (_origSim2) { api.matchSimulateToEntry = _origSim2; _origSim2 = null; }
+  if (_origFin2) { api.matchAutoFinishFromEntry = _origFin2; _origFin2 = null; }
+  if (_origAmr2) { ss.applyMatchResult = _origAmr2; _origAmr2 = null; }
+  if (_origFriendly) { ss.applyFriendlyResult = _origFriendly; _origFriendly = null; }
+}
+
+export function ledgerRows(): LedgerRow[] { return [..._ledger.values()]; }
+export function resetLedger(): void { _ledger.clear(); _curGameId = null; }
