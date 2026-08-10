@@ -3800,7 +3800,7 @@ export function draftApplyProbe(): Record<string, unknown> {
 // 고교는 3인 로테이션이라 48경기면 16선발이 나와야 하는데 실측은 7회다.
 // 절반 이상이 걸러지는데 사유가 셋이다: 부상 · 컨디션<35 · 학사경고.
 // **어느 것인지 세야 고칠 데가 정해진다.**
-const _skipTally = { 부상: 0, 컨디션: 0, 학사: 0, 등판: 0, 주간표본: 0,
+const _skipTally = { 부상: 0, 컨디션: 0, 학사: 0, 몰수: 0, 등판: 0, 주간표본: 0,
                      컨디션합: 0, 컨디션최저: 100, 피로합: 0 };
 
 /**
@@ -3823,6 +3823,7 @@ export function tallyWeek(): void {
     if (l.includes("부상으로 인해 경기 출전 불가")) _skipTally.부상++;
     else if (l.includes("등판 회피")) _skipTally.컨디션++;
     else if (l.includes("학사 경고로 인해 경기 출전 불가")) _skipTally.학사++;
+      else if (l.includes("경기 처리 오류로 자동 패배")) _skipTally.몰수++;
   }
   _lastLogHead = logs[0] ?? _lastLogHead;
 }
@@ -3857,6 +3858,7 @@ export function startSkipTally(): void {
       if (l.includes("부상으로 인해 경기 출전 불가")) _skipTally.부상++;
       else if (l.includes("등판 회피")) _skipTally.컨디션++;
       else if (l.includes("학사 경고로 인해 경기 출전 불가")) _skipTally.학사++;
+      else if (l.includes("경기 처리 오류로 자동 패배")) _skipTally.몰수++;
     }
     _lastLogHead = (g.logs as string[])[0] ?? _lastLogHead;
     _skipTally.주간표본++;
@@ -3873,7 +3875,7 @@ export function stopSkipTally(): void {
 
 export function resetSkipTally(): void {
   _lastLogHead = null;
-  Object.assign(_skipTally, { 부상: 0, 컨디션: 0, 학사: 0, 등판: 0, 주간표본: 0,
+  Object.assign(_skipTally, { 부상: 0, 컨디션: 0, 학사: 0, 몰수: 0, 등판: 0, 주간표본: 0,
                               컨디션합: 0, 컨디션최저: 100, 피로합: 0 });
 }
 
@@ -4231,4 +4233,37 @@ export function resetLineTally(): void {
   _lineTally.호출 = 0; _lineTally.라인있음 = 0; _lineTally.라인빔 = 0;
   _lineTally.주인공포함 = 0; _lineTally.주인공없음 = 0;
   _lineTally.outs0 = 0; _lineTally.outs양 = 0; _lineTally.outs합 = 0; _lineTally.ip분포 = [];
+}
+
+/**
+ * 주인공 성적이 **몇 번 쓰이는가** — 엔진 호출 30 vs 기록 10의 갈림길.
+ *
+ * 엔진 호출(=`handleGame` 진입)이 30인데 시즌 기록은 10등판이다.
+ *   기록 쓰기도 30번이면 → 누적이 덮어써진다(마지막만 남는 식)
+ *   기록 쓰기가 10번이면 → `handleGame` 30번 중 20번은 성적을 안 쓴다
+ */
+const _statWrite = { 증가횟수: 0, 마지막g: 0, ip이력: [] as number[] };
+let _unsubStat: (() => void) | null = null;
+
+export function startStatWriteTally(): void {
+  stopStatWriteTally();
+  const pid = get(gameStore).protagonist.id;
+  _unsubStat = seasonStore.subscribe((s: any) => {
+    const st = s?.stats?.[pid];
+    const g = Number(st?.g ?? 0);
+    if (g > _statWrite.마지막g) {
+      _statWrite.증가횟수 += (g - _statWrite.마지막g);
+      _statWrite.마지막g = g;
+      _statWrite.ip이력.push(Math.round(Number(st?.ip ?? 0) * 10) / 10);
+    }
+  });
+}
+export function stopStatWriteTally(): void {
+  if (_unsubStat) { _unsubStat(); _unsubStat = null; }
+}
+export function statWriteReport(): Record<string, unknown> {
+  return { g증가: _statWrite.증가횟수, 마지막g: _statWrite.마지막g, ip이력: _statWrite.ip이력 };
+}
+export function resetStatWriteTally(): void {
+  _statWrite.증가횟수 = 0; _statWrite.마지막g = 0; _statWrite.ip이력 = [];
 }
