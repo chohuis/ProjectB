@@ -4267,3 +4267,42 @@ export function statWriteReport(): Record<string, unknown> {
 export function resetStatWriteTally(): void {
   _statWrite.증가횟수 = 0; _statWrite.마지막g = 0; _statWrite.ip이력 = [];
 }
+
+/**
+ * `seasonStore.applyMatchResult` 호출을 센다 — **28 vs 11의 갈림길.**
+ *
+ * `applyGameOutcome`이 이걸 부르고, 여기서 `accumulateStats`가 돈다.
+ *   28이면 → 집계 쪽이다(주인공이 playerLines에 빠지는지 본다)
+ *   11이면 → `handleGame` 안에서 빠져나가는 자리가 있다
+ *
+ * ⚠ 가설을 넷 세워 넷 다 틀렸다. 세고 나서 말한다.
+ */
+const _amrTally = { 호출: 0, 주인공포함: 0, 주인공없음: 0, 라인빔: 0, 유일id: new Set<string>() };
+let _origAmr: any = null;
+
+export function startAmrTally(): void {
+  stopAmrTally();
+  const ss: any = seasonStore;
+  _origAmr = ss.applyMatchResult.bind(ss);
+  ss.applyMatchResult = (scheduleId: string, result: any, leagueId?: string) => {
+    _amrTally.호출++;
+    _amrTally.유일id.add(scheduleId);
+    const lines = Array.isArray(result?.playerLines) ? result.playerLines : [];
+    const pid = get(gameStore).protagonist.id;
+    if (lines.length === 0) _amrTally.라인빔++;
+    else if (lines.some((l: any) => l?.playerId === pid)) _amrTally.주인공포함++;
+    else _amrTally.주인공없음++;
+    return _origAmr(scheduleId, result, leagueId);
+  };
+}
+export function stopAmrTally(): void {
+  if (_origAmr) { (seasonStore as any).applyMatchResult = _origAmr; _origAmr = null; }
+}
+export function amrReport(): Record<string, unknown> {
+  return { 호출: _amrTally.호출, 유일경기: _amrTally.유일id.size,
+           주인공포함: _amrTally.주인공포함, 주인공없음: _amrTally.주인공없음, 라인빔: _amrTally.라인빔 };
+}
+export function resetAmrTally(): void {
+  _amrTally.호출 = 0; _amrTally.주인공포함 = 0; _amrTally.주인공없음 = 0;
+  _amrTally.라인빔 = 0; _amrTally.유일id.clear();
+}
