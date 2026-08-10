@@ -4112,3 +4112,39 @@ export async function enginePitchCost(rounds: number): Promise<Record<string, un
     "투구당 µs": Math.round(gameMs * 1000 / pitches),
   };
 }
+
+/**
+ * `game` pending이 몇 번 생기는가 — **48경기가 전부 `handleGame`에 닿는지** 가른다.
+ *
+ * 배제된 것: 스케줄(고교는 48개 전부 후보) · 부상/컨디션/학사 게이트(구독 계측 0) ·
+ * 엔진 `entryReached`(SP는 즉시 등판). 남은 갈림길이 이것이다.
+ *
+ *   48 근처면  →  엔진 안에서 걸린다
+ *   11 근처면  →  `advanceWeek`의 스케줄 순회에서 걸린다
+ *
+ * ⚠ pending은 밀어넣고 곧 소비되므로 **구독으로 본다.** 주기적으로 읽으면
+ * 사이에 생겼다 사라진 걸 통째로 놓친다(스킵 로그에서 이미 당했다).
+ */
+const _gamePending = { 생성: 0, 본id: new Set<string>() };
+let _unsubGame: (() => void) | null = null;
+
+export function startGamePendingTally(): void {
+  stopGamePendingTally();
+  _unsubGame = seasonStore.subscribe((s: any) => {
+    for (const pa of (s?.pendingActions ?? [])) {
+      if (pa?.type !== "game" || !pa.scheduleId) continue;
+      if (_gamePending.본id.has(pa.scheduleId)) continue;
+      _gamePending.본id.add(pa.scheduleId);
+      _gamePending.생성++;
+    }
+  });
+}
+export function stopGamePendingTally(): void {
+  if (_unsubGame) { _unsubGame(); _unsubGame = null; }
+}
+export function gamePendingReport(): Record<string, unknown> {
+  return { game_pending_생성: _gamePending.생성 };
+}
+export function resetGamePendingTally(): void {
+  _gamePending.생성 = 0; _gamePending.본id.clear();
+}
