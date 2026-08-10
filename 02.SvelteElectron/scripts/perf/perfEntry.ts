@@ -3950,14 +3950,44 @@ export async function engineDuel(games: number, batterMean: number, fielderMean?
     const auto = JSON.parse(await window.projectB!.matchAutoFinishFromEntry());
     if (auto.error) return { 오류: auto.error };
     const outs = auto.outsRecorded ?? 0;
-    lines.push({ ip: outs / 3, er: auto.earnedRuns ?? 0 });
+    lines.push({ ip: outs / 3, er: auto.earnedRuns ?? 0, k: auto.strikeouts ?? 0, h: auto.hitsAllowed ?? 0, bb: auto.walksAllowed ?? 0 } as any);
   }
   const ip = lines.reduce((s, l) => s + l.ip, 0);
+  const sum = (k: string) => lines.reduce((s, l: any) => s + (l[k] ?? 0), 0);
+  const per9 = (v: number) => ip > 0 ? Math.round((v * 9 / ip) * 100) / 100 : null;
   const er = lines.reduce((s, l) => s + l.er, 0);
   return {
     OVR: pit.ovr, 타자수준: batterMean, 수비수준: fielderMean ?? "기본(50)", 경기: lines.length,
     이닝: Math.round(ip * 10) / 10, 자책: er,
     ERA: ip > 0 ? Math.round((er * 9 / ip) * 100) / 100 : null,
     경기당이닝: lines.length ? Math.round((ip / lines.length) * 10) / 10 : null,
+    "K/9": per9(sum("k")), "BB/9": per9(sum("bb")), "H/9": per9(sum("h")),
   };
+}
+
+/** 리그 NPC 투수 성분 — 주인공 엔진과 어느 축이 다른지 가른다 */
+export function leagueComponents(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s: any = get(seasonStore);
+  const live = get(npcLiveStatsStore);
+  const stats = s.leagueState?.["LEAGUE_HIGHSCHOOL"]?.stats ?? {};
+  const acc: Record<string, { ip: number; k: number; bb: number; h: number; er: number; n: number }> = {};
+  for (const n of g.npcs) {
+    if (n.playerType !== "pitcher") continue;
+    const st: any = stats[n.npcId];
+    const ip = Number(st?.ip ?? 0);
+    if (ip < 20) continue;
+    const ovr = livePitchingOvrOf(n as any, live);
+    if (ovr <= 0) continue;
+    const key = `${Math.floor(ovr / 5) * 5}~`;
+    const a = (acc[key] ||= { ip: 0, k: 0, bb: 0, h: 0, er: 0, n: 0 });
+    a.ip += ip; a.k += Number(st?.k ?? 0); a.bb += Number(st?.bb ?? 0);
+    a.h += Number(st?.h ?? 0); a.er += Number(st?.er ?? 0); a.n++;
+  }
+  const out: Record<string, unknown> = {};
+  for (const k of Object.keys(acc).sort()) {
+    const a = acc[k]; const r = (v: number) => Math.round((v * 9 / a.ip) * 100) / 100;
+    out[k] = { 명: a.n, ERA: r(a.er), "K/9": r(a.k), "BB/9": r(a.bb), "H/9": r(a.h) };
+  }
+  return out;
 }
