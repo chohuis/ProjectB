@@ -4148,3 +4148,42 @@ export function gamePendingReport(): Record<string, unknown> {
 export function resetGamePendingTally(): void {
   _gamePending.생성 = 0; _gamePending.본id.clear();
 }
+
+/**
+ * `matchSimulateToEntry`의 반환을 가로채 센다 — **IPC 반환값이라 스토어를 안 거친다.**
+ *
+ * `handleGame`의 갈래는 둘뿐이고 `sim.error`는 던지면 autoRun이 멈추므로,
+ * 남는 건 `entryReached`가 false로 조용히 빠지는 것이다.
+ * 격리 측정(120경기)에서는 계속 true였으니 커리어에서만 다른 게 있다.
+ *
+ * ⚠ 앱 코드를 안 건드리려고 감싼다. 원래 함수를 그대로 부르고 결과만 본다.
+ */
+const _entryTally = { 호출: 0, 진입: 0, 미진입: 0, 오류: 0, 역할: {} as Record<string, number> };
+let _origSimToEntry: ((r: any) => Promise<string>) | null = null;
+
+export function startEntryTally(): void {
+  stopEntryTally();
+  const api: any = window.projectB;
+  _origSimToEntry = api.matchSimulateToEntry.bind(api);
+  api.matchSimulateToEntry = async (req: any) => {
+    _entryTally.호출++;
+    const role = String(req?.role ?? "?");
+    _entryTally.역할[role] = (_entryTally.역할[role] ?? 0) + 1;
+    const raw = await _origSimToEntry!(req);
+    try {
+      const d = JSON.parse(raw);
+      if (d.error) _entryTally.오류++;
+      else if (d.entryReached) _entryTally.진입++;
+      else _entryTally.미진입++;
+    } catch { /* 파싱 실패는 세지 않는다 */ }
+    return raw;
+  };
+}
+export function stopEntryTally(): void {
+  if (_origSimToEntry) { (window.projectB as any).matchSimulateToEntry = _origSimToEntry; _origSimToEntry = null; }
+}
+export function entryReport(): Record<string, unknown> { return { ..._entryTally }; }
+export function resetEntryTally(): void {
+  _entryTally.호출 = 0; _entryTally.진입 = 0; _entryTally.미진입 = 0; _entryTally.오류 = 0;
+  _entryTally.역할 = {};
+}
