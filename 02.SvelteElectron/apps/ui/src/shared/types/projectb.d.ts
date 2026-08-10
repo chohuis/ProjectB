@@ -132,6 +132,10 @@ declare global {
         protagonistSide?: "home" | "away";
         opponentLineup?: MatchBatterStats[];
         myTeamLineup?: MatchBatterStats[];
+        /** ⚠ **주인공 소속팀 야수.** 안 넘기면 엔진이 평균 50짜리 수비를 만든다
+         * (`create_default_fielders(rng, 50.0)`). 리그 실제 수비는 66 수준이라
+         * 주인공만 16점 약한 뒤를 두고 던졌다 — 120경기 실측에서 ERA 10.29 → 7.22 */
+        fielders?: MatchFielderStats[];
         opponentPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
         npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
       }) => Promise<string>;

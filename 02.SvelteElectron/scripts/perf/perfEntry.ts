@@ -13,6 +13,7 @@ import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
 } from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
+import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
 import { npcLiveStatsStore, livePitchingOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
@@ -3903,5 +3904,60 @@ export function lineupProbe(): Record<string, unknown> {
     상대팀: opp, 상대팀타자수: oppTeamBatters,
     폴백걸림: oppTeamBatters != null && oppTeamBatters < 9,
     타선OVR: ovrs.length ? { 최소: Math.min(...ovrs), 평균: Math.round(ovrs.reduce((a: number, b: number) => a + b, 0) / ovrs.length), 최대: Math.max(...ovrs) } : null,
+  };
+}
+
+/** 수비 9인 — 좌표는 화면()과 같은 값 */
+type _FPos = "C"|"1B"|"2B"|"3B"|"SS"|"LF"|"CF"|"RF"|"P";
+const _FPOS: Array<[_FPos, number, number]> = [
+  ["P",50,62],["C",50,90],["1B",78,70],["2B",63,55],["3B",22,70],
+  ["SS",37,55],["LF",18,28],["CF",50,16],["RF",82,28],
+];
+function _mkFielders(mean: number) {
+  return _FPOS.map(([position, x, y]) => ({ position, name: position, fielding: mean, arm: mean, speed: mean, x, y }));
+}
+
+/**
+ * 두 엔진 대조 — **같은 투수를 주인공 경로에 넣고 ERA를 본다.**
+ *
+ * 주인공은 투구 단위 엔진(`startMatch`→`autoSimulate…`), NPC는 경기 단위
+ * 엔진(`npcSimGame`)으로 **완전히 다른 두 경로**다. 커리어로 재면 타선·수비·
+ * 로테이션이 섞여 엔진 탓인지 구분이 안 된다 — 여기서는 `batterMean` 하나로
+ * 상대를 고정해 **엔진만** 남긴다.
+ *
+ * 기준: 같은 리그 OVR 70~ NPC 97명의 ERA 중앙값은 **3.28**이다.
+ */
+export async function engineDuel(games: number, batterMean: number, fielderMean?: number): Promise<Record<string, unknown>> {
+  const p = get(gameStore).protagonist;
+  const pit = p.pitching;
+  const lines: Array<{ ip: number; er: number }> = [];
+  for (let i = 0; i < games; i++) {
+    const raw = await window.projectB!.matchSimulateToEntry({
+      pitcher: {
+        name: p.name,
+        command: pit.command, velocity: pit.velocity,
+        staminaCap: pit.stamina, mentalResil: pit.mentality,
+        control: pit.control, movement: pit.movement,
+        clutch: pit.clutch, holdRunners: pit.holdRunners,
+        arsenal: toEngineArsenal(p.pitches),
+      },
+      role: "SP", protagonistSide: "home", batterMean,
+      ...(fielderMean != null ? { fielders: _mkFielders(fielderMean) } : {}),
+    });
+    const sim = JSON.parse(raw);
+    if (sim.error) return { 오류: sim.error };
+    if (!sim.entryReached) continue;
+    const auto = JSON.parse(await window.projectB!.matchAutoFinishFromEntry());
+    if (auto.error) return { 오류: auto.error };
+    const outs = auto.outsRecorded ?? 0;
+    lines.push({ ip: outs / 3, er: auto.earnedRuns ?? 0 });
+  }
+  const ip = lines.reduce((s, l) => s + l.ip, 0);
+  const er = lines.reduce((s, l) => s + l.er, 0);
+  return {
+    OVR: pit.ovr, 타자수준: batterMean, 수비수준: fielderMean ?? "기본(50)", 경기: lines.length,
+    이닝: Math.round(ip * 10) / 10, 자책: er,
+    ERA: ip > 0 ? Math.round((er * 9 / ip) * 100) / 100 : null,
+    경기당이닝: lines.length ? Math.round((ip / lines.length) * 10) / 10 : null,
   };
 }

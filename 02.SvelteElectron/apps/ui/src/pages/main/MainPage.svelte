@@ -193,6 +193,9 @@
                    clutch: p.pitching.clutch, holdRunners: p.pitching.holdRunners },
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
         protagonistSide: isHome ? "home" : "away",
+        // ⚠ 수비를 안 넘기면 엔진이 평균 50으로 만든다. `buildFielders`는
+        // import만 돼 있고 쓰이지 않았다 — 자기 팀 야수를 넘긴다
+        fielders: buildFielders(p.teamId, get(masterStore).entities),
         ...(opponentLineup.length >= 9 ? { opponentLineup } : { batterMean: 55 }),
         ...(myLineup.length >= 9       ? { myTeamLineup: myLineup } : {}),
         ...(opponentPitcher            ? { opponentPitcher } : {}),

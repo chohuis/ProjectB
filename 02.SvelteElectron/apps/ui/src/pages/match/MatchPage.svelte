@@ -734,7 +734,11 @@
         ? (matchContext.homeTeamId === myTeamId ? matchContext.awayTeamId : matchContext.homeTeamId)
         : "";
       const opponentLineup = opponentTeamId ? buildOpponentLineup(opponentTeamId) : [];
-      const fielders = opponentTeamId ? buildOpponentFielders(opponentTeamId) : [];
+      // ⚠ **자기 팀 수비다.** 엔진의 `fielders`는 배열 하나이고 주인공이
+      // 던지는 동안의 인플레이 타구 판정에 쓰인다(`resolve_fielding_result`) —
+      // 그때 뒤에 서는 건 소속팀 야수지 상대가 아니다. 예전엔 상대 팀을
+      // 넘기고 있었고, 자동 진행 경로는 아예 안 넘겨 평균 50이 됐다.
+      const fielders = myTeamId ? buildOpponentFielders(myTeamId) : [];
       const myLineup = myTeamId ? buildLineupForTeam(myTeamId) : [];
       const opponentPitcherStats = opponentTeamId ? buildPitcherStatsForTeam(opponentTeamId) : undefined;
       const ctx = matchContext;

@@ -9,7 +9,7 @@ import { advanceWeek } from "./advanceWeek";
 import { isRetired } from "./retirement";
 import { applyGameOutcome } from "./applyGameOutcome";
 import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types/season";
-import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilder";
+import { buildBatterLineup, buildStarterStats, buildFielders } from "../utils/matchLineupBuilder";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
 // ⚠ `draftNotification`이 여기 없으면 **프로 계약이 조용히 버려진다.**
@@ -107,6 +107,13 @@ async function handleGame(scheduleId: string): Promise<void> {
       },
       role: (p.position as "SP" | "RP" | "CP") ?? "SP",
       protagonistSide: isHome ? "home" : "away",
+      // ⚠ **수비를 넘긴다.** 안 넘기면 엔진이 평균 50짜리 수비를 만든다
+      // (`match_engine.rs`의 `create_default_fielders(rng, 50.0)`). 리그 실제
+      // 수비는 66 수준이라 주인공만 16점 약한 뒤를 두고 던졌다 — 120경기
+      // 실측(2026-08-10)에서 ERA 10.29 → 7.22였다.
+      //
+      // **자기 팀이다.** 주인공이 던지는 동안 뒤에 서는 건 소속팀 야수다.
+      fielders: buildFielders(p.teamId, ents),
       ...(oppLineup.length >= 9 ? { opponentLineup: oppLineup } : { batterMean: 55 }),
       ...(myLineup.length >= 9  ? { myTeamLineup: myLineup }    : {}),
       ...(oppPitcher             ? { opponentPitcher: oppPitcher } : {}),
