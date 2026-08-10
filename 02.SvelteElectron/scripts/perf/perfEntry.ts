@@ -3927,7 +3927,7 @@ function _mkFielders(mean: number) {
  *
  * 기준: 같은 리그 OVR 70~ NPC 97명의 ERA 중앙값은 **3.28**이다.
  */
-export async function engineDuel(games: number, batterMean: number, fielderMean?: number): Promise<Record<string, unknown>> {
+export async function engineDuel(games: number, batterMean: number, fielderMean?: number, arsenalOverride?: any[]): Promise<Record<string, unknown>> {
   const p = get(gameStore).protagonist;
   const pit = p.pitching;
   const lines: Array<{ ip: number; er: number }> = [];
@@ -3939,7 +3939,7 @@ export async function engineDuel(games: number, batterMean: number, fielderMean?
         staminaCap: pit.stamina, mentalResil: pit.mentality,
         control: pit.control, movement: pit.movement,
         clutch: pit.clutch, holdRunners: pit.holdRunners,
-        arsenal: toEngineArsenal(p.pitches),
+        arsenal: arsenalOverride ?? toEngineArsenal(p.pitches),
       },
       role: "SP", protagonistSide: "home", batterMean,
       ...(fielderMean != null ? { fielders: _mkFielders(fielderMean) } : {}),
@@ -3957,7 +3957,7 @@ export async function engineDuel(games: number, batterMean: number, fielderMean?
   const per9 = (v: number) => ip > 0 ? Math.round((v * 9 / ip) * 100) / 100 : null;
   const er = lines.reduce((s, l) => s + l.er, 0);
   return {
-    OVR: pit.ovr, 타자수준: batterMean, 수비수준: fielderMean ?? "기본(50)", 경기: lines.length,
+    OVR: pit.ovr, 타자수준: batterMean, 수비수준: fielderMean ?? "기본(50)", 구종: (arsenalOverride ?? toEngineArsenal(p.pitches)).length, 경기: lines.length,
     이닝: Math.round(ip * 10) / 10, 자책: er,
     ERA: ip > 0 ? Math.round((er * 9 / ip) * 100) / 100 : null,
     경기당이닝: lines.length ? Math.round((ip / lines.length) * 10) / 10 : null,
@@ -3990,4 +3990,84 @@ export function leagueComponents(): Record<string, unknown> {
     out[k] = { 명: a.n, ERA: r(a.er), "K/9": r(a.k), "BB/9": r(a.bb), "H/9": r(a.h) };
   }
   return out;
+}
+
+/** contact_q 밴드 분포 — 어느 구간에서 도는지 본다 */
+export async function contactBands(): Promise<Record<string, unknown>> {
+  const raw = await window.projectB!.engine("contactBandStatsNative", "{}");
+  const d = JSON.parse(raw);
+  if (d.error) return d;
+  const total = (d.bands as number[]).reduce((a, b) => a + b, 0) || 1;
+  const out: Record<string, unknown> = { 평균contactQ: d.avgContactQ, 스윙: total };
+  (d.labels as string[]).forEach((l, i) => {
+    out[l] = `${d.bands[i]} (${Math.round(d.bands[i] / total * 100)}%)`;
+  });
+  return out;
+}
+export async function resetContactBands(): Promise<void> {
+  await window.projectB!.engine("resetContactBandsNative", "{}");
+}
+
+/** NPC 투수 구종 수 분포 — 주인공(패스트볼 1개)과 대본다 */
+export function arsenalProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const cnt: Record<number, number> = {};
+  let n = 0;
+  for (const npc of g.npcs) {
+    if (npc.playerType !== "pitcher") continue;
+    const k = (npc.pitches ?? []).length;
+    cnt[k] = (cnt[k] ?? 0) + 1; n++;
+  }
+  const out: Record<string, unknown> = { 투수: n };
+  for (const k of Object.keys(cnt).map(Number).sort((a, b) => a - b))
+    out[`${k}구종`] = `${cnt[k]}명 (${Math.round(cnt[k] / n * 100)}%)`;
+  out["주인공"] = `${(g.protagonist.pitches ?? []).length}구종`;
+  return out;
+}
+
+/**
+ * 엔진 통합 타당성 — **투구 하나 비용을 잰다.**
+ *
+ * 두 엔진을 합치려면 NPC 경기도 주인공 엔진으로 돌려야 한다. 고교만 시즌당
+ * 1,275경기 × 약 300구다. 자릿수를 모르면 통합에 들어갔다 성능 벽에 부딪혀
+ * 되돌리게 된다 — **재고 나서 정한다.**
+ *
+ * ⚠ 벽시계는 같은 설정에서 2배까지 흔들린다(Phase 8 실측). 반복해서
+ * 중앙값을 쓰고, 두 엔진을 **같은 실행 안에서** 번갈아 재 환경 차이를 지운다.
+ */
+export async function enginePitchCost(rounds: number): Promise<Record<string, unknown>> {
+  const p = get(gameStore).protagonist;
+  const pit = p.pitching;
+  const rich: number[] = [];
+  const richPitches: number[] = [];
+
+  for (let i = 0; i < rounds; i++) {
+    const t0 = performance.now();
+    const raw = await window.projectB!.matchSimulateToEntry({
+      pitcher: {
+        name: p.name, command: pit.command, velocity: pit.velocity,
+        staminaCap: pit.stamina, mentalResil: pit.mentality,
+        control: pit.control, movement: pit.movement,
+        clutch: pit.clutch, holdRunners: pit.holdRunners,
+        arsenal: toEngineArsenal(p.pitches),
+      },
+      role: "SP", protagonistSide: "home", batterMean: 66,
+      fielders: _mkFielders(66),
+    });
+    const sim = JSON.parse(raw);
+    if (sim.error || !sim.entryReached) continue;
+    const auto = JSON.parse(await window.projectB!.matchAutoFinishFromEntry());
+    rich.push(performance.now() - t0);
+    richPitches.push(auto.pitchCount ?? 0);
+  }
+
+  const med = (a: number[]) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : 0; };
+  const gameMs = med(rich);
+  const pitches = med(richPitches) || 1;
+  return {
+    표본: rich.length,
+    "주인공엔진 경기당ms": Math.round(gameMs * 100) / 100,
+    "경기당 투구수(주인공분)": pitches,
+    "투구당 µs": Math.round(gameMs * 1000 / pitches),
+  };
 }

@@ -75,6 +75,23 @@ fn parse_err(fn_name: &str, e: serde_json::Error) -> String {
 }
 
 /// 초기 경기 상태 생성
+/// 계측 전용 — contact_q 밴드 분포를 읽는다 (릴리스 동작에 영향 없음)
+#[napi]
+pub fn contact_band_stats_native() -> String {
+    let (bands, avg) = match_engine::read_contact_bands();
+    serde_json::json!({
+        "bands": bands, "avgContactQ": (avg * 100.0).round() / 100.0,
+        "labels": ["72+", "60~72", "52~60", "45~52", "38~45", "<38"],
+    }).to_string()
+}
+
+/// 계측 전용 — 카운터 초기화
+#[napi]
+pub fn reset_contact_bands_native() -> String {
+    match_engine::reset_contact_bands();
+    "{\"ok\":true}".to_string()
+}
+
 #[napi]
 pub fn start_match_native(options_json: String) -> String {
     let opts: MatchStartOptions = match serde_json::from_str(&options_json) {

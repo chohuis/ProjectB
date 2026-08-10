@@ -10,6 +10,42 @@ use crate::tuning as T;
 // ── 유틸 ──────────────────────────────────────────────────────────────────────
 
 fn clamp(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
+
+// ── 계측: contact_q가 어느 밴드에서 도는가 ────────────────────────────────
+//
+// `resolve_contact`의 밴드 표는 구간마다 안타 비율이 다르다(28% ~ 40%+).
+// 표 주석은 "OVR 70 대 70 → contact_q 약 56"(28% 구간)이라 하는데 **실측
+// BABIP은 44.7%**였다 — 실제로는 더 낮은 밴드에서 돈다는 뜻이다.
+// 어느 밴드인지 모르면 표를 못 고친다. 밴드가 다섯이라 한 곳만 만지면
+// 다른 구간이 어긋난다.
+//
+// 계측 전용이라 릴리스 동작에 영향이 없다(카운터를 안 읽으면 그만이다).
+use std::cell::RefCell;
+thread_local! {
+    /// [72+, 60~72, 52~60, 45~52, 38~45, <38] 스윙 횟수
+    pub static CONTACT_BANDS: RefCell<[u64; 6]> = const { RefCell::new([0; 6]) };
+    /// contact_q 합 — 평균을 내려고 같이 쌓는다
+    pub static CONTACT_SUM: RefCell<(f64, u64)> = const { RefCell::new((0.0, 0)) };
+}
+
+fn tally_contact_band(cq: f64) {
+    let i = if cq >= 72.0 { 0 } else if cq >= 60.0 { 1 } else if cq >= 52.0 { 2 }
+            else if cq >= 45.0 { 3 } else if cq >= 38.0 { 4 } else { 5 };
+    CONTACT_BANDS.with(|b| b.borrow_mut()[i] += 1);
+    CONTACT_SUM.with(|s| { let mut m = s.borrow_mut(); m.0 += cq; m.1 += 1; });
+}
+
+/// 계측값 읽기 — (밴드별 횟수, 평균 contact_q)
+pub fn read_contact_bands() -> ([u64; 6], f64) {
+    let bands = CONTACT_BANDS.with(|b| *b.borrow());
+    let (sum, n) = CONTACT_SUM.with(|s| *s.borrow());
+    (bands, if n > 0 { sum / n as f64 } else { 0.0 })
+}
+
+pub fn reset_contact_bands() {
+    CONTACT_BANDS.with(|b| *b.borrow_mut() = [0; 6]);
+    CONTACT_SUM.with(|s| *s.borrow_mut() = (0.0, 0));
+}
 fn round1(x: f64) -> f64 { (x * 10.0).round() / 10.0 }
 fn round2(x: f64) -> f64 { (x * 100.0).round() / 100.0 }
 
@@ -1400,6 +1436,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         if umpire_strike { PitchResultCode::StrikeLook } else { PitchResultCode::Ball }
     } else {
         let cq = calculate_contact_quality(quality, &current_batter, lr.in_zone, lr.in_shadow);
+        tally_contact_band(cq);
         apply_hit_upgrade(resolve_contact(quality, cq, &current_batter, rng), current_batter.power, pre_state.weather, rng)
     };
 
