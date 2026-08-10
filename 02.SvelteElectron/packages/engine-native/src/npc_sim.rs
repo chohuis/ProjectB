@@ -2398,7 +2398,11 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
     // ⚠ **척도를 실측에 맞춘다.** 처음엔 45~80으로 폈는데 고교말 OVR이
     // 52~63이라 상한에 한참 못 미쳐 ovr_norm이 34밖에 안 나왔고,
     // 그 탓에 **20회 전부 미지명**이 됐다. 고졸 투수의 실제 띠는 40~70이다.
-    let ovr_norm = ((params.pitching_ovr - 40.0) / 30.0 * 100.0).clamp(0.0, 100.0);
+    // ⚠ **척도는 40~85다.** 예전엔 40~70이라 **OVR 70에서 이미 포화**됐다 —
+    // 또래 최대가 83인데 70 위로는 이 항이 전부 100이라, "OVR도 반영한다"가
+    // 상위권에서 작동을 멈췄다. 잘 키운 결과가 라운드로 안 이어졌다.
+    //   OVR 70 → 67 · 75 → 78 · 83 → 96
+    let ovr_norm = ((params.pitching_ovr - 40.0) / 45.0 * 100.0).clamp(0.0, 100.0);
 
     // 둘 다 0~100이라 가중평균이 그대로 0~100이 된다
     let base = pct * 0.6 + ovr_norm * 0.4;

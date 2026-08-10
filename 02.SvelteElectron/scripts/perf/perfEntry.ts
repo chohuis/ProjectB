@@ -53,8 +53,8 @@ import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
 // 하므로 여기서는 고정한다. 프리셋 수치가 바뀌어도 이 파일은 안 따라간다
 // (따라갈 필요가 없다 — 성능은 프리셋 선택에 좌우되지 않는다).
 const PITCHING = {
-  ovr: 56, velocity: 58, command: 58, control: 56, movement: 54,
-  mentality: 56, stamina: 56, recovery: 54, clutch: 51, holdRunners: 52,
+  ovr: 68, velocity: 70, command: 70, control: 68, movement: 66,
+  mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64,
 };
 
 export interface BootResult {

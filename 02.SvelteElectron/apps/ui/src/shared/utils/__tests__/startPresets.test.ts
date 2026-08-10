@@ -55,11 +55,14 @@ describe("새 게임 시작 프리셋", () => {
     expect(new Set(ovrs).size).toBe(1);
   });
 
-  it("또래 중앙(68) 아래이되 하위권은 아니다 — 55~60", () => {
-    // 또래 중앙에 바로 얹으면 육성할 게 없고, 너무 낮으면 뭘 해도 바닥이다
+  it("또래 중앙(68) 근처다 — 66~70", () => {
+    // 실측(2026-08-10) 6안 비교에서 **68이 관문**이었다:
+    //   선발배정  56→0% · 60→17% · 64→67% · 68→100%
+    //   이닝      29.7 → 33.4 → 46.4 → **60.3**  ← 수상 자격선(60) 돌파
+    // 64 이하면 선발을 못 잡아 경기 XP가 안 붙고, 수상·상위픽이 통째로 막힌다
     for (const p of presets) {
-      expect(p.ovr).toBeGreaterThanOrEqual(55);
-      expect(p.ovr).toBeLessThanOrEqual(60);
+      expect(p.ovr).toBeGreaterThanOrEqual(66);
+      expect(p.ovr).toBeLessThanOrEqual(70);
     }
   });
 
@@ -69,8 +72,11 @@ describe("새 게임 시작 프리셋", () => {
 
     // 특화형 셋은 확실한 강점이 있어야 한다 — 총합이 같으니 강점이 없으면
     // 고를 이유도 없다. **균형형은 예외다**: 튀는 스탯이 없는 게 그 정의다
-    const peaks = presets.map((p) => Math.max(...Object.keys(W).map((k) => p[k])));
-    expect(peaks.filter((v) => v >= 65)).toHaveLength(3);
+    // 특화형 셋은 균형형보다 확실히 뾰족하다. 절대값이 아니라 **균형형과의
+    // 격차**로 본다 — 프리셋 전체를 올리면 절대 기준은 매번 어긋난다
+    const peakOf = (p: Record<string, number>) => Math.max(...Object.keys(W).map((k) => p[k]));
+    const balPeak = peakOf(presets[0]);
+    expect(presets.slice(1).filter((p) => peakOf(p) >= balPeak + 5)).toHaveLength(3);
 
     // 균형형(첫 번째)은 편차가 좁다
     const bal = Object.keys(W).map((k) => presets[0][k]);
