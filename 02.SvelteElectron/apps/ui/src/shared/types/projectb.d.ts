@@ -122,7 +122,11 @@ declare global {
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       matchRunSimpleGame: (paramsJson: string) => Promise<string>;
       matchSimulateToEntry: (request?: {
-        pitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; };
+        /** ⚠ **여덟 개를 다 받는다.** 넷만 선언해 두면 호출부가 control·movement를
+         * 넘기려 해도 타입이 막고, 그대로 두면 OVR의 33%가 엔진에 안 간다 */
+        pitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string;
+          command?: number; velocity?: number; staminaCap?: number; mentalResil?: number;
+          control?: number; movement?: number; clutch?: number; holdRunners?: number; };
         batterMean?: number;
         role?: "SP" | "RP" | "CP";
         protagonistSide?: "home" | "away";

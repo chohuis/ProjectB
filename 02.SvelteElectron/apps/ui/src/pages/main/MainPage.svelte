@@ -184,8 +184,13 @@
                                 : undefined;
 
       const raw = await window.projectB!.matchSimulateToEntry({
+        // ⚠ **여덟 개를 다 넘긴다.** 넷만 넘기면 control·movement·clutch·
+        // holdRunners가 빠져 OVR의 33%가 엔진에 안 간다 — 오류 없이 조용히
+        // 기본값이 되고, 주인공 ERA가 같은 OVR NPC의 2배가 된다
         pitcher: { name: p.name, command: p.pitching.command, velocity: p.pitching.velocity,
-                   staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality },
+                   staminaCap: p.pitching.stamina, mentalResil: p.pitching.mentality,
+                   control: p.pitching.control, movement: p.pitching.movement,
+                   clutch: p.pitching.clutch, holdRunners: p.pitching.holdRunners },
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
         protagonistSide: isHome ? "home" : "away",
         ...(opponentLineup.length >= 9 ? { opponentLineup } : { batterMean: 55 }),

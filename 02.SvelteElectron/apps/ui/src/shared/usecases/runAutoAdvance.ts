@@ -85,11 +85,21 @@ async function handleGame(scheduleId: string): Promise<void> {
   try {
     const raw = await window.projectB!.matchSimulateToEntry({
       pitcher: {
+        // ⚠ **여덟 개를 다 넘긴다.** 예전엔 command·velocity·staminaCap·
+        // mentalResil 넷뿐이라 **control(가중 2.0)·movement(1.5)·clutch·
+        // holdRunners가 통째로 빠졌다** — OVR의 33%다. 전부 `Option<f64>`라
+        // 오류 없이 조용히 기본값으로 떨어졌고, 실측(2026-08-10)에서 주인공
+        // ERA가 자기 OVR 구간 중앙값의 2배였다(7.45 vs 3.35).
+        // NPC 투수(`buildStarterStats`)는 처음부터 여덟 개를 다 넘겼다.
         name:       p.name,
         command:    p.pitching.command,
         velocity:   p.pitching.velocity,
         staminaCap: p.pitching.stamina,
         mentalResil: p.pitching.mentality,
+        control:     p.pitching.control,
+        movement:    p.pitching.movement,
+        clutch:      p.pitching.clutch,
+        holdRunners: p.pitching.holdRunners,
         // ⚠ 이걸 안 넘기면 주인공이 배운 구종이 자동 경기에 안 나온다
         arsenal:    toEngineArsenal(p.pitches),
         // ⚠ 폼 무너짐 — 안 넘기면 화면엔 "폼 교정 중"인데 경기는 멀쩡해진다

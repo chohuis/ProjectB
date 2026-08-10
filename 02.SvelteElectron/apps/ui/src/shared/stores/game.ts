@@ -121,7 +121,11 @@ export interface GameStoreState {
     fatigue: number;
     morale: number;
     tags: string[];
-    pitcherStats: { command: number; velocity: number; staminaCap: number; mentalResil: number };
+    /** 경기 엔진에 넘기는 투수 능력치 — **여덟 개를 다 담는다**(OVR의 33%가 빠졌던 자리) */
+    pitcherStats: {
+      command: number; velocity: number; staminaCap: number; mentalResil: number;
+      control: number; movement: number; clutch: number; holdRunners: number;
+    };
   };
 
   // 하위 호환: 기존 $gameStore.school.* 참조 유지
@@ -311,6 +315,10 @@ function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
       velocity:   p.pitching.velocity,
       staminaCap: p.pitching.stamina,
       mentalResil: p.pitching.mentality,
+      control:     p.pitching.control,
+      movement:    p.pitching.movement,
+      clutch:      p.pitching.clutch,
+      holdRunners: p.pitching.holdRunners,
     },
   };
 }
