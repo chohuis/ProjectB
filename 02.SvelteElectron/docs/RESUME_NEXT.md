@@ -33,9 +33,20 @@ NPC 상위 10위권  77~84이닝
 C단계에서 NPC 경기까지 풀 엔진으로 돌리면 **비용이 2.5배**가 된다
 (주당 136ms → 340ms).
 
-먼저 확인할 것: `applyGameOutcome`이 정말 `scheduleId`로 중복을 막는지.
-그 다음 왜 같은 경기가 여러 번 `handleGame`에 오는지 —
-pending 재생성인지 루프 재진입인지.
+확인한 것:
+- `applyMatchResult`에 **중복 가드가 없다** — `accumulateStats`를 무조건 부른다
+- 헤드리스에서 `matchSimulateToEntry` 호출자는 **`handleGame` 하나뿐**
+  (`runAutoAdvance.ts:87`. MainPage는 헤드리스에서 안 돈다)
+
+**그러면 `handleGame` 28회와 성적 11회는 1:1이어야 하는데 안 맞는다.**
+
+**다음 한 걸음: `applyGameOutcome` 호출 횟수를 직접 센다.**
+- **28이면** → 집계 쪽이다. `teamResult.playerLines`에 주인공이 빠지는지 본다
+- **11이면** → `handleGame` 안에서 빠져나가는 자리가 있다
+
+⚠ 이 세션에 가설을 넷 세워 **넷 다 틀렸다**(프로 스케줄 · 세 게이트 ·
+entryReached · playerLines 덮어쓰기). 다섯 번째를 만들지 말고 **세고 나서
+말할 것.**
 
 ### ② ERA 7.0 vs 리그 3.2 — **유일한 실질 문제**
 
