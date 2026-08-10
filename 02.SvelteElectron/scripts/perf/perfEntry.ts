@@ -3791,3 +3791,117 @@ export function draftApplyProbe(): Record<string, unknown> {
     대학합격: (r?.universityPassed ?? []).length, 독립합격: (r?.independentPassed ?? []).length,
   };
 }
+
+// ── 등판 스킵 사유 집계 ────────────────────────────────────────
+//
+// 고교는 3인 로테이션이라 48경기면 16선발이 나와야 하는데 실측은 7회다.
+// 절반 이상이 걸러지는데 사유가 셋이다: 부상 · 컨디션<35 · 학사경고.
+// **어느 것인지 세야 고칠 데가 정해진다.**
+const _skipTally = { 부상: 0, 컨디션: 0, 학사: 0, 등판: 0, 주간표본: 0,
+                     컨디션합: 0, 컨디션최저: 100, 피로합: 0 };
+
+/**
+ * 매주 부른다 — 컨디션·피로 추이와 스킵 로그를 함께 모은다.
+ *
+ * ⚠ `gameStore.logs`는 **앞에 붙는 최근 30개**다. 매주 전체를 훑으면 같은
+ * 줄을 30번까지 다시 센다 — 직전에 본 머리를 만날 때까지만 읽는다.
+ */
+let _lastLogHead: string | null = null;
+export function tallyWeek(): void {
+  const g = get(gameStore);
+  _skipTally.주간표본++;
+  _skipTally.컨디션합 += g.protagonist.condition;
+  _skipTally.피로합   += g.protagonist.fatigue;
+  if (g.protagonist.condition < _skipTally.컨디션최저) _skipTally.컨디션최저 = g.protagonist.condition;
+
+  const logs = g.logs ?? [];
+  for (const l of logs) {
+    if (_lastLogHead != null && l === _lastLogHead) break;   // 여기부터는 이미 셌다
+    if (l.includes("부상으로 인해 경기 출전 불가")) _skipTally.부상++;
+    else if (l.includes("등판 회피")) _skipTally.컨디션++;
+    else if (l.includes("학사 경고로 인해 경기 출전 불가")) _skipTally.학사++;
+  }
+  _lastLogHead = logs[0] ?? _lastLogHead;
+}
+
+export function skipReport(): Record<string, unknown> {
+  const n = Math.max(1, _skipTally.주간표본);
+  return {
+    ...(_skipTally as any),
+    컨디션평균: Math.round(_skipTally.컨디션합 / n),
+    피로평균:   Math.round(_skipTally.피로합 / n),
+  };
+}
+
+export function resetSkipTally(): void {
+  _lastLogHead = null;
+  Object.assign(_skipTally, { 부상: 0, 컨디션: 0, 학사: 0, 등판: 0, 주간표본: 0,
+                              컨디션합: 0, 컨디션최저: 100, 피로합: 0 });
+}
+
+/**
+ * OVR 구간별 NPC 투수 ERA — **주인공만 이상한 건지 리그가 그런 건지 가른다.**
+ *
+ * ERA가 높다고 곧 결함은 아니다. 못 던지면 얻어맞는 게 맞다.
+ * 같은 OVR의 NPC와 대봐야 "주인공만 다른 저울을 쓴다"를 판정할 수 있다.
+ */
+export function eraByOvrProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s: any = get(seasonStore);
+  const live = get(npcLiveStatsStore);
+  const stats = s.leagueState?.["LEAGUE_HIGHSCHOOL"]?.stats ?? {};
+  const buckets: Record<string, number[]> = {};
+  for (const n of g.npcs) {
+    if (n.playerType !== "pitcher") continue;
+    const st: any = stats[n.npcId];
+    const ip = Number(st?.ip ?? 0);
+    if (ip < 20) continue;                       // 표본이 적으면 ERA가 튄다
+    const ovr = livePitchingOvrOf(n as any, live);
+    if (ovr <= 0) continue;
+    const key = `${Math.floor(ovr / 5) * 5}~`;
+    (buckets[key] ||= []).push(Number(st?.era ?? 0));
+  }
+  const out: Record<string, unknown> = {};
+  for (const k of Object.keys(buckets).sort()) {
+    const a = buckets[k].sort((x, y) => x - y);
+    out[k] = { 명: a.length, ERA중앙: Math.round(a[Math.floor(a.length / 2)] * 100) / 100 };
+  }
+  const p = g.protagonist;
+  const mine: any = (s as any).stats?.[p.id];
+  out["주인공"] = { OVR: p.pitching?.ovr, 이닝: Math.round((mine?.ip ?? 0) * 10) / 10,
+                   ERA: mine?.era != null ? Math.round(mine.era * 100) / 100 : null };
+  return out;
+}
+
+/**
+ * 주인공이 실제로 상대하는 타선 — **폴백이 걸리면 전 리그 최고 타자를 만난다.**
+ *
+ * `buildBatterLineup`은 팀 타자가 9명 미만이면 `entities` **전체**에서 뽑고
+ * batting OVR 내림차순으로 정렬한다. 리그 구분이 없어서 고교 투수가 프로
+ * 타자를 상대할 수 있다. 실측(2026-08-10)에서 주인공 ERA가 자기 OVR 구간
+ * 중앙값의 2배 이상이었다 — 여기가 유력하다.
+ */
+export function lineupProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const ents = get(masterStore).entities;
+  const { buildBatterLineup } = require("../../apps/ui/src/shared/utils/matchLineupBuilder");
+  const myTeamBatters = ents.filter((e: any) =>
+    e.teamId === g.protagonist.teamId && e.role === "player" &&
+    !["SP", "RP", "CP"].includes(String((e.details as any)?.player?.position ?? "")));
+  // 최근 상대 팀을 스케줄에서 하나 집는다
+  const s: any = get(seasonStore);
+  const mine = (s.schedule ?? []).filter((e: any) => e.isProtagonistGame);
+  const last = mine[mine.length - 1];
+  const opp = last ? (last.homeTeamId === g.protagonist.teamId ? last.awayTeamId : last.homeTeamId) : null;
+  const oppTeamBatters = opp ? ents.filter((e: any) =>
+    e.teamId === opp && e.role === "player" &&
+    !["SP", "RP", "CP"].includes(String((e.details as any)?.player?.position ?? ""))).length : null;
+  const lineup = opp ? buildBatterLineup(opp, ents) : [];
+  const ovrs = lineup.map((b: any) => b.ovr ?? b.contact ?? 0);
+  return {
+    내팀타자수: myTeamBatters.length,
+    상대팀: opp, 상대팀타자수: oppTeamBatters,
+    폴백걸림: oppTeamBatters != null && oppTeamBatters < 9,
+    타선OVR: ovrs.length ? { 최소: Math.min(...ovrs), 평균: Math.round(ovrs.reduce((a: number, b: number) => a + b, 0) / ovrs.length), 최대: Math.max(...ovrs) } : null,
+  };
+}
