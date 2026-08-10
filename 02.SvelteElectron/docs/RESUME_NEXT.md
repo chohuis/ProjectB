@@ -1,3 +1,61 @@
+# 재개 지점 (2026-08-11 00:10)
+
+## 원인을 찾았다 — **엔진 라인이 주인공 라인을 덮어쓴다**
+
+`applyGameOutcome.ts:219`:
+
+```ts
+let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0
+    ? outcome.playerLines                            // ← 엔진 라인을 그대로 쓴다
+    : [...(pitcherLine ? [pitcherLine] : []), ...];  // ← 주인공 라인은 여기서만
+```
+
+**엔진이 `playerLines`를 돌려주면 `pitcherLine`이 통째로 버려진다.**
+그 배열에 주인공이 들어 있으면 괜찮지만 없으면 등판 기록이 사라진다.
+
+### 계측 근거
+
+`matchSimulateToEntry`를 하네스에서 감싸 반환값을 셌다:
+
+```
+시즌2  내 경기 45 → pending 20 → 호출 20 → **진입 20** → 기록된 등판 7
+                                미진입 0 · 오류 0 · 역할 전부 SP
+```
+
+**주인공은 20경기에 실제로 등판하는데 통계엔 7경기만 남는다.**
+13경기분 투구가 사라지고 이닝도 같이 사라진다(49이닝은 7등판 기준).
+
+배제한 것:
+- `entryReached` — **항상 true다** (미진입 0)
+- `didEnter` — `outcome.protagonistEntered`를 `handleGame`이 안 넣어서 항상 true
+- 부상·컨디션·학사 게이트 — 구독 계측으로 0
+
+### 다음 작업
+
+```
+1  auto.playerLines에 주인공이 들어 있는지 센다
+     들어 있으면 → 병합 로직만 고치면 된다(중복 방지)
+     없으면      → pitcherLine을 항상 앞에 붙이고 엔진 라인에서 주인공을 뺀다
+
+2  고친 뒤 재측정 — 등판/이닝이 20/140 근처로 오는지
+     **ERA·이닝 부족의 상당 부분이 "안 던져서"가 아니라 "기록이 안 돼서"일 수
+     있다. 지금까지의 진단 전제가 바뀐다.**
+
+3  남은 구간: 스케줄 45 → pending 20 (절반이 pending이 안 된다)
+```
+
+⚠ 아래 줄이 이미 같은 문제를 알고 있다(`playerLines` 병합):
+
+```ts
+const merged = sim.result.playerLines.filter((l) => l.playerId !== protagonist.id);
+playerLines = [...(pitcherLine ? [pitcherLine] : []), ...merged];
+```
+
+**폴백 경로에는 주인공 제외 + pitcherLine 앞세우기가 있는데, 엔진이 라인을
+준 경로에는 없다.** 같은 규칙을 양쪽에 적용하면 된다.
+
+---
+
 # 재개 지점 (2026-08-10 23:15)
 
 ## 구간이 갈렸다 — **44 → 28 → 10**
