@@ -4,6 +4,7 @@ import { applyDecision, applySideEffects } from "./decisions";
 import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
+import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
 import { isRetired } from "./retirement";
@@ -232,6 +233,44 @@ async function handleEvent(pa: Extract<PendingAction, { type: "event" }>): Promi
 }
 
 // ── 훈련 추천 자동 적용 ────────────────────────────────────────
+/**
+ * 구종 개발 대상을 정한다 — **NPC와 같은 규칙이다** (`npc_sim.rs`의
+ * `npc_pitch_target` · `decide_pitch_training`).
+ *
+ * 목표 구종 수에 미달하면 **아직 없는 것 중 난이도가 낮은 것**을 배우고,
+ * 채웠으면 **등급이 제일 낮은 것**을 올린다. NPC는 미보유 중 무작위로
+ * 고르는데, 주인공은 난이도순이라 초반에 덜 헤맨다.
+ *
+ * @returns 개발할 대상이 정해졌으면 true — 그때만 `TRN_PITCH_DEV`가 의미가 있다
+ */
+function ensurePitchTraining(p: ProtagonistSave): boolean {
+  // 이미 뭔가 익히는 중이면 그대로 둔다 — 매주 바꾸면 아무것도 못 끝낸다
+  if (p.trainingPitchState) return true;
+
+  const owned = p.pitches ?? [];
+  // `npc_pitch_target("SP", velocity)`와 같은 값. 구종 수 상한은 5다
+  const target = p.position === "SP"
+    ? (p.pitching.velocity >= 70 ? 4 : 5)
+    : p.position === "CP"
+      ? (p.pitching.velocity >= 70 ? 2 : p.pitching.velocity >= 60 ? 3 : 4)
+      : (p.pitching.velocity >= 65 ? 3 : 4);
+
+  if (owned.length < target && owned.length < 5) {
+    const catalog = get(masterStore).pitchCatalog ?? [];
+    const known = new Set(owned.map((x) => x.id));
+    // 난이도 오름차순 — 쉬운 것부터 익힌다
+    const next = [...catalog]
+      .filter((c) => !known.has(c.id))
+      .sort((a, b) => (a.formDifficulty ?? 9) - (b.formDifficulty ?? 9))[0];
+    if (next) { gameStore.startPitchTraining(next.id); return true; }
+  }
+
+  // 목표를 채웠으면 등급이 제일 낮은 것을 올린다 (grade 5가 상한)
+  const lowest = [...owned].filter((x) => x.grade < 5).sort((a, b) => a.grade - b.grade)[0];
+  if (lowest) { gameStore.startPitchTraining(lowest.id); return true; }
+  return false;
+}
+
 function applyRecommendedTraining(): void {
   // ⚠ **플레이어가 정한 계획은 안 건드린다** (사용자 확정 2026-08-09).
   //
@@ -248,7 +287,16 @@ function applyRecommendedTraining(): void {
   } else if (p.morale < 50) {
     primary = "TRN_MENTAL_P"; sub1 = "TRN_CTRL_CMD"; sub2 = "TRN_RECOVERY";
   } else {
-    primary = "TRN_CTRL_CMD"; sub1 = "TRN_VEL"; sub2 = "TRN_RECOVERY";
+    // ⚠ **구종 개발을 기본에 넣는다.** 예전엔 세 갈래 어디에도 없어서
+    // 계획을 직접 안 짜면 **자동 진행이 구종을 영영 안 배웠다.**
+    //
+    // NPC는 `decide_pitch_training`으로 2~4구종까지 키운다(실측: 2구종 47% ·
+    // 3구종 46% · 4구종 5%). 주인공만 2개에 머물면 그 격차가 그대로 성적이 된다 —
+    // 구종 하나 차이가 ERA 9.07 vs 4.52였다.
+    //
+    // **NPC와 같은 규칙을 쓴다**: 목표 미달이면 새로 배우고, 채웠으면 등급을 올린다.
+    primary = "TRN_CTRL_CMD"; sub1 = "TRN_VEL";
+    sub2 = ensurePitchTraining(p) ? "TRN_PITCH_DEV" : "TRN_RECOVERY";
   }
 
   gameStore.setTrainingPlan({
