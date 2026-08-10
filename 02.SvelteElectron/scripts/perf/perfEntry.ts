@@ -3777,12 +3777,17 @@ export function draftRoundProbe(): Array<Record<string, unknown>> {
  */
 export function draftApplyProbe(): Record<string, unknown> {
   const g = get(gameStore);
-  const a: any = (g as any).careerApplications;
-  const r: any = (g.protagonist as any).careerResults;
+  // ⚠ **`schoolState` 아래다.** 스토어 최상위나 protagonist에서 찾으면
+  // 20회 전부 null이 나온다 — 실제로 두 번 헛짚었다
+  const ss: any = (g as any).schoolState ?? {};
+  const a: any = ss.careerApplications;
+  const r: any = ss.careerResults;
   return {
     신청여부: a?.draftApplied ?? null,
-    제출됨: (g as any).careerApplicationsSubmitted ?? null,
+    제출됨: ss.careerApplicationsSubmitted ?? null,
     지명됨: r?.draftDrafted ?? null,
     지명팀: r?.draftTeamId ?? null,
+    지명라운드: r?.draftRound ?? null, 지명순번: r?.draftPick ?? null,
+    대학합격: (r?.universityPassed ?? []).length, 독립합격: (r?.independentPassed ?? []).length,
   };
 }
