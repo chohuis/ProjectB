@@ -3765,3 +3765,24 @@ export function draftRoundProbe(): Array<Record<string, unknown>> {
   }
   return out;
 }
+
+/**
+ * 드래프트를 **실제로 신청했는가** — 미지명률을 읽으려면 이게 있어야 한다.
+ *
+ * ⚠ 정책명으로만 가르면 안 된다. `드래+대학`처럼 둘 다 켠 회차는 대학으로
+ * 가면서 드래프트를 안 밟을 수 있고, `지명거부`는 지명을 받고도 거부한 것이라
+ * "떨어진" 것과 완전히 다르다. 실측(2026-08-10)에서 이걸 안 갈라 **미지명
+ * 67%**가 나왔는데, 그 안에 대학 진학 5건과 지명거부 2건이 섞여 있었다.
+ * OVR 71이 "미지명"이고 OVR 68이 8R 지명으로 찍혀 순서가 뒤집혀 보였다.
+ */
+export function draftApplyProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const a: any = (g as any).careerApplications;
+  const r: any = (g.protagonist as any).careerResults;
+  return {
+    신청여부: a?.draftApplied ?? null,
+    제출됨: (g as any).careerApplicationsSubmitted ?? null,
+    지명됨: r?.draftDrafted ?? null,
+    지명팀: r?.draftTeamId ?? null,
+  };
+}

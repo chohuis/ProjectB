@@ -137,7 +137,7 @@ function randomPlan(rnd) {
       let lastTeam = start.팀, lastStage = start.단계;
       const teamsSeen = [start.팀];
       const stagesSeen = [start.단계];
-      let atDraft = null, hsEndOvr = null, univEndOvr = null;
+      let atDraft = null, hsEndOvr = null, univEndOvr = null, draftApply = null;
       const hsSeasons = [];   // 고교 시즌별 포지션·등판·이닝
       let pitchLearned = start.구종;
 
@@ -147,7 +147,16 @@ function randomPlan(rnd) {
         const w0 = app.currentWeek(), s0 = app.currentSeason();
         if (app.retired()) break;
         if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
-        if (await app.pushCareerForward()) continue;
+        // ⚠ **진로 결정 직후에 잡는다.** `pushCareerForward`가 신청·지명·수락을
+        // 전부 처리하고 continue로 빠지므로, 루프 아래에서 재면 신청 기록이
+        // 살아 있는 순간을 한 번도 안 지난다 — 실측에서 20회 전부 null이었다
+        if (await app.pushCareerForward()) {
+          const da = app.draftApplyProbe();
+          if (da.신청여부 != null || da.지명됨 != null) draftApply = { ...(draftApply ?? {}), ...da };
+          const cc = app.careerProbe();
+          if (cc.지명) atDraft = cc.지명;
+          continue;
+        }
         if (app.isSeasonEnded()) {
           // ⚠ **롤오버 전에 잡는다.** 넘어가면 그 시즌 기록이 초기화된다
           if (lastStage === "highschool") hsSeasons.push(app.armProbe());
@@ -173,6 +182,8 @@ function randomPlan(rnd) {
         }
         // 지명 결과는 계약을 수락하면 지워진다 — 보이는 즉시 잡는다
         if (c.지명) atDraft = c.지명;
+        const da = app.draftApplyProbe();
+        if (da.신청여부 != null) draftApply = da;
         if (c.구종) pitchLearned = c.구종;
       }
 
@@ -190,6 +201,7 @@ function randomPlan(rnd) {
         팀이동: teamsSeen.length - 1, 팀들: teamsSeen,
         최종: { 단계: end.단계, 리그: end.리그, 나이: end.나이 },
         고교시즌: hsSeasons,
+        드래프트신청: draftApply,
         구종: pitchLearned || "없음",
         병역: end.병역, 은퇴: end.은퇴, 중단: stopped,
       });
