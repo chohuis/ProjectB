@@ -4013,11 +4013,15 @@ export async function resetContactBands(): Promise<void> {
 /** NPC 투수 구종 수 분포 — 주인공(패스트볼 1개)과 대본다 */
 export function arsenalProbe(): Record<string, unknown> {
   const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
   const cnt: Record<number, number> = {};
   let n = 0;
   for (const npc of g.npcs) {
     if (npc.playerType !== "pitcher") continue;
-    const k = (npc.pitches ?? []).length;
+    // ⚠ **구종은 live에 실린다** (`npcAdapter.repoNpcToLiveStat`).
+    // `npc.pitches`를 읽어 "전원 0구종"이라고 잘못 보고했다 — 이번 세션
+    // 네 번째로 같은 자리를 틀렸다
+    const k = (live[npc.npcId]?.pitches ?? npc.pitches ?? []).length;
     cnt[k] = (cnt[k] ?? 0) + 1; n++;
   }
   const out: Record<string, unknown> = { 투수: n };
