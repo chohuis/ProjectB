@@ -1,5 +1,24 @@
+import { get } from "svelte/store";
 import type { ProtagonistSave, PitcherRole } from "../types/save";
 import type { EntityRow } from "../stores/master";
+import { npcLiveStatsStore } from "../stores/npcLiveStats";
+
+/**
+ * 팀 동료의 **지금** 투수 OVR — `details.player.pitching.ovr`은 생성값이다.
+ *
+ * ⚠ **성장 결과는 `npcLiveStatsStore`에만 쌓인다.** 생성값은 3년이 지나도
+ * 9종 전부 +0이다(실측 2026-08-09). 그걸로 선발 경쟁을 붙이면 **동료는 안
+ * 자라고 주인공만 자라서** 판정이 주인공에게 유리하게 기운다.
+ *
+ * 선발 배정은 절대 수치가 아니라 팀 내 경쟁이다 —
+ * `player_engine.rs`가 `나보다 나은 팀 투수가 3명 이상이면 RP`로 가른다.
+ * 비교 대상이 낡으면 그 문턱이 통째로 어긋난다.
+ */
+function livePitcherOvr(e: EntityRow, live: Record<string, { pitching?: { ovr?: number } }>): number {
+  return live[e.id]?.pitching?.ovr
+    ?? (e.details as any)?.player?.pitching?.ovr
+    ?? 0;
+}
 
 // ── 고교 투수 포지션 배정 ─────────────────────────────────────
 
@@ -8,6 +27,7 @@ export async function assignHighschoolPosition(
   entities: EntityRow[],
 ): Promise<"SP" | "RP"> {
   const myOvr = protagonist.pitching.ovr;
+  const live = get(npcLiveStatsStore);
   const teamPitcherOvrs = entities
     .filter(
       (e) =>
@@ -15,7 +35,7 @@ export async function assignHighschoolPosition(
         e.role === "player" &&
         (e.details as any)?.player?.playerType === "pitcher",
     )
-    .map((e) => (e.details as any)?.player?.pitching?.ovr ?? 0);
+    .map((e) => livePitcherOvr(e, live));
 
   const result = JSON.parse(
     await window.projectB!.pitcherAssignHighschoolPosition(
@@ -37,6 +57,7 @@ export async function assignProtagonistRole(
   roleOvrBias = 0,
 ): Promise<PitcherRole> {
   const myOvr = protagonist.pitching.ovr;
+  const live = get(npcLiveStatsStore);
   const teamSpOvrs = entities
     .filter(
       (e) =>
@@ -47,7 +68,7 @@ export async function assignProtagonistRole(
         (e.details as any)?.player?.playerType === "pitcher" &&
         (e.details as any)?.player?.position === "SP",
     )
-    .map((e) => (e.details as any)?.player?.pitching?.ovr ?? 50);
+    .map((e) => livePitcherOvr(e, live) || 50);
 
   const result = JSON.parse(
     await window.projectB!.pitcherAssignRole(
