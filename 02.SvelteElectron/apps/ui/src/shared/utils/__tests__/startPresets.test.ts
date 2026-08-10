@@ -83,6 +83,27 @@ describe("새 게임 시작 프리셋", () => {
     expect(Math.max(...bal) - Math.min(...bal)).toBeLessThanOrEqual(12);
   });
 
+  it("넷 다 구종을 둘 이상 갖는다 — 하나면 ERA가 2배가 된다", () => {
+    // 실측(2026-08-10, 투수68·타자66·수비66·60경기):
+    //   패스트볼 1개 → ERA 9.07 · H/9 14.74 · BABIP 44.7%
+    //   2구종        → ERA 4.52 · H/9  9.77
+    // 타자가 같은 공만 보면 contact_q가 48까지 내려가 밴드 표의 하위
+    // 구간(안타 33~40%)에서 돌게 된다
+    const src = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
+    const blocks = [...src.matchAll(/pitches:\s*\[([^\]]*)\]/g)].map((m) => m[1]);
+    expect(blocks).toHaveLength(4);
+    for (const b of blocks) expect((b.match(/id:/g) ?? []).length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("하네스 구종이 균형형과 같다", () => {
+    const h = read("scripts/perf/perfEntry.ts");
+    const src = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
+    const norm = (t: string) => t.replace(/\s+/g, "");
+    const first = norm(src.match(/pitches:\s*\[([^\]]*)\]/)![1]);
+    const hp = norm(h.match(/pitches:\s*\[([^\]]*)\]/)![1]);
+    expect(hp).toBe(first);
+  });
+
   it("계측 하네스가 균형형과 같은 값을 쓴다", () => {
     // 어긋나면 계측이 게임과 다른 주인공을 잰다 — 이번에 실제로 겪었다
     const h = read("scripts/perf/perfEntry.ts");

@@ -168,14 +168,18 @@
       desc: "모든 부분이 고르게 발달. 성장 방향 자유도가 가장 높음",
       tags: ["정통파", "균형형"],
       pitching: { ovr: 68, velocity: 70, command: 70, control: 68, movement: 66, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
-      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+      // ⚠ **두 구종으로 시작한다.** 하나면 타자가 같은 공만 봐서 contact_q가
+      // 48까지 내려가고 BABIP이 44.7%가 된다 — 실측(60경기)에서 ERA 9.07이었다.
+      // 둘이면 4.52로 정상권이다. 난이도 정본은 `pitch_catalog.json`
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SINKER", grade: 1 }],
     },
     power: {
       label: "파워피처",
       desc: "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
       tags: ["급성장", "파워피처"],
       pitching: { ovr: 68, velocity: 78, command: 64, control: 60, movement: 66, mentality: 68, stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
-      pitches: [{ id: "PITCH_FASTBALL", grade: 2 }],
+      // 빠른 공에 붙는 커터 (난이도1)
+      pitches: [{ id: "PITCH_FASTBALL", grade: 2 }, { id: "PITCH_CUTTER", grade: 1 }],
     },
     control: {
       label: "제구형",
@@ -189,7 +193,8 @@
       desc: "이닝이터 스타일. 멘탈과 체력이 강점, 후반까지 무너지지 않음",
       tags: ["체력형", "이닝이터"],
       pitching: { ovr: 68, velocity: 67, command: 65, control: 63, movement: 62, mentality: 77, stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
-      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+      // 땅볼로 이닝을 먹는 싱커 (난이도1)
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SINKER", grade: 1 }],
     },
   };
 

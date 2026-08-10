@@ -113,7 +113,9 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     tags: ["정통파", "균형형"],
     pitchingXP: {},
     battingXP: {},
-    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+    // ⚠ NewGamePage 균형형과 같아야 한다 — 어긋나면 계측이 게임과 다른
+    // 주인공을 잰다(이번 세션에 프리셋·능력치로 두 번 겪었다)
+    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SINKER", grade: 1 }],
     birthday: "2010-04-01",
     money: 1200,
     fame: 5,
