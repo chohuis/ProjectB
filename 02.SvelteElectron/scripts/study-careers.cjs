@@ -86,6 +86,14 @@ const PITCHES = ["PITCH_SLIDER", "PITCH_CURVE", "PITCH_CHANGEUP", "PITCH_SPLITTE
  * 조사에 아예 안 담긴다.
  */
 function randomPlan(rnd) {
+  // ⚠ **계획을 안 건드리는 갈래가 있어야 한다.** 매주 `setTrainingSlots`를
+  // 부르면 `userSet: true`가 되고 `applyRecommendedTraining`이 가드에서
+  // 빠진다 — **자동 추천 경로를 한 번도 안 탄다.** 실제로 그래서 A-2(자동
+  // 진행이 구종을 배우게 한 변경)의 효과를 20회 규모로 못 쟀다.
+  //
+  // 플레이어가 계획을 안 짜고 자동 진행만 쓰는 건 흔한 플레이라 조사에 있어야 한다.
+  if (rnd() < 0.34) return { name: "자동추천", slots: null, pitch: null };
+
   const devPitch = rnd() < 0.55;           // 절반 남짓은 구종을 배운다
   const pool = [...SLOT_POOL];
   const take = () => pool.splice(Math.floor(rnd() * pool.length), 1)[0];
@@ -128,7 +136,8 @@ function randomPlan(rnd) {
         enlistNow: false, rejectDraft: false, rejectTrade: false, ...pol.p,
       });
       app.tuneProtagonist(ARMS[ARM] ?? {});
-      app.setTrainingSlots(plan.slots);
+      // slots가 null이면 손대지 않는다 — 자동 추천이 돌게 둔다
+      if (plan.slots) app.setTrainingSlots(plan.slots);
       if (plan.pitch) app.startPitchDev(plan.pitch);
 
       const start = app.careerProbe();
@@ -165,7 +174,7 @@ function randomPlan(rnd) {
         // ⚠ **매주 다시 넣는다.** `runAutoAdvance`의 `applyRecommendedTraining`이
         // 주마다 계획을 하드코딩 추천으로 덮어쓴다 — 그 추천에는 구종 개발이
         // 없어서, 안 되돌리면 조사의 훈련 축이 통째로 사라진다(실측으로 확인).
-        app.setTrainingSlots(plan.slots);
+        if (plan.slots) app.setTrainingSlots(plan.slots);
         if ((ARMS[ARM] ?? {}).forceStarter) app.forceStarter();
         await app.autoRun();
 
