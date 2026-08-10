@@ -3836,6 +3836,41 @@ export function skipReport(): Record<string, unknown> {
   };
 }
 
+/**
+ * 스킵 사유 계수를 **구독으로** 바꾼다.
+ *
+ * ⚠ 루프에서 주기적으로 읽는 방식은 못 쓴다. `autoRun()`이 한 번에 5~7주를
+ * 진행해서 루프가 시즌당 6~8번만 돌고, 그 사이 `gameStore.logs`(최근 30개)가
+ * 넘쳐 스킵 메시지가 밀려난다 — 실제로 부상·컨디션·학사가 전부 0으로 나왔고
+ * 그건 "안 걸렸다"가 아니라 **"못 봤다"**였다.
+ *
+ * 구독은 스토어가 바뀔 때마다 불리므로 한 주치 로그도 안 놓친다.
+ */
+let _unsubTally: (() => void) | null = null;
+
+export function startSkipTally(): void {
+  stopSkipTally();
+  _unsubTally = gameStore.subscribe((g: any) => {
+    if (!g?.logs) return;
+    for (const l of g.logs as string[]) {
+      if (_lastLogHead != null && l === _lastLogHead) break;
+      if (l.includes("부상으로 인해 경기 출전 불가")) _skipTally.부상++;
+      else if (l.includes("등판 회피")) _skipTally.컨디션++;
+      else if (l.includes("학사 경고로 인해 경기 출전 불가")) _skipTally.학사++;
+    }
+    _lastLogHead = (g.logs as string[])[0] ?? _lastLogHead;
+    _skipTally.주간표본++;
+    _skipTally.컨디션합 += g.protagonist?.condition ?? 0;
+    _skipTally.피로합   += g.protagonist?.fatigue ?? 0;
+    if ((g.protagonist?.condition ?? 100) < _skipTally.컨디션최저)
+      _skipTally.컨디션최저 = g.protagonist.condition;
+  });
+}
+
+export function stopSkipTally(): void {
+  if (_unsubTally) { _unsubTally(); _unsubTally = null; }
+}
+
 export function resetSkipTally(): void {
   _lastLogHead = null;
   Object.assign(_skipTally, { 부상: 0, 컨디션: 0, 학사: 0, 등판: 0, 주간표본: 0,
