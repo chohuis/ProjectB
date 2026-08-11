@@ -1403,7 +1403,7 @@ pub fn should_protagonist_exit(state: &MatchState) -> ProtagonistExitCheck {
     let soft = if state.pitch_soft  > 0.0 { state.pitch_soft  } else { T::PROTAGONIST_PITCH_COUNT_SOFT };
 
     if pce  >= hard { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::PitchLimit) }; }
-    if stam <= T::PROTAGONIST_STAMINA_EMERGENCY { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::Stamina) }; }
+    if stam <= T::protagonist_stamina_exit() { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::Stamina) }; }
 
     let mut danger = 0.0;
     if pce >= soft { danger += 20.0 + (pce - soft) * 1.2; }

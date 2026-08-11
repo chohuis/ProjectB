@@ -164,7 +164,24 @@ pub fn league_pitch_limit(league_id: &str) -> f64 {
 pub fn league_pitch_soft(league_id: &str) -> f64 {
     league_pitch_limit(league_id) * 0.75
 }
-pub const PROTAGONIST_STAMINA_EMERGENCY: f64   = 5.0;
+/// 주인공이 마운드를 내려가는 스태미나 (사용자 확정 2026-08-12: **주인공도 교체한다**).
+///
+/// ⚠ **NPC와 같은 기준이어야 한다.** 예전엔 주인공 5 · NPC 35였다.
+/// stamina_penalty = (50 - 스태미나) x 0.18로 환산하면
+///   NPC가 내려가는 35 -> 페널티 2.7
+///   주인공이 던지는 5 -> 페널티 8.1
+/// **주인공만 페널티 8까지 던졌다.** 이게 주인공(오프셋 7)과 리그(오프셋 0)가
+/// 다른 값을 요구하던 정체다 — 같은 엔진인데 한쪽만 지쳐서 맞았다.
+///
+/// ⚠ 계측용 PB_PROT_STAMINA_EXIT 환경변수가 덮는다.
+pub const PROTAGONIST_STAMINA_EMERGENCY: f64   = 35.0;
+
+pub fn protagonist_stamina_exit() -> f64 {
+    match std::env::var("PB_PROT_STAMINA_EXIT") {
+        Ok(v) => v.parse::<f64>().unwrap_or(PROTAGONIST_STAMINA_EMERGENCY),
+        Err(_) => PROTAGONIST_STAMINA_EMERGENCY,
+    }
+}
 
 // 마운드 방문
 pub const MOUND_VISIT_MENTAL_RECOVERY: f64  = 8.0;
