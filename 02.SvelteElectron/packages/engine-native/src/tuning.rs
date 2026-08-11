@@ -296,6 +296,32 @@ pub fn pitch_skill_scale() -> f64 {
     }
 }
 
+/// 로케이션 품질을 **의도 기준**으로 볼 것인가 (1) / 착탄 기준 (0).
+///
+/// 예전 식은 착탄점의 중심거리만 봤다: location_q = -4 + dist x 5.
+/// 그런데 pick_target은 대부분 존 안을 겨냥한다(중립 +-0.8, 볼3 +-0.5).
+/// 그래서:
+///   제구 좋음 -> 목표에 정확히 꽂힌다 -> dist 작다 -> **품질 낮다**
+///   제구 나쁨 -> 흩어진다 -> 일부가 가장자리로 -> dist 크다 -> **품질 높다**
+///
+/// 흩어짐이 우연히 품질을 올려줘서, 제구가 좋을수록 손해 보는 구조였다.
+/// 실측(2026-08-11): OVR 55 -> 80에서 ERA가 오히려 나빠지고, 능력치 배수를
+/// 8배로 밀어도 방향이 안 바뀌었다.
+///
+/// 새 식은 **겨냥한 곳의 난이도 + 얼마나 정확히 꽂혔는가**로 본다.
+/// 계측용 환경변수 PB_LOC_INTENT.
+pub const LOCATION_INTENT_MODE: f64 = 0.0;
+
+pub fn location_intent_mode() -> f64 {
+    match std::env::var("PB_LOC_INTENT") {
+        Ok(v) => v.parse::<f64>().unwrap_or(LOCATION_INTENT_MODE),
+        Err(_) => LOCATION_INTENT_MODE,
+    }
+}
+
+/// 목표에서 벗어난 거리 1당 품질 하락 (의도 기준일 때만)
+pub const LOCATION_MISS_PENALTY: f64 = 6.0;
+
 pub const LOCATION_CENTER_PENALTY: f64   = -4.0;
 pub const LOCATION_DISTANCE_SCALE: f64   = 5.0;
 
