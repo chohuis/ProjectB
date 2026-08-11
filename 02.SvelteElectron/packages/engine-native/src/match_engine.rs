@@ -320,13 +320,15 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         protagonist_side,
         protagonist_pitcher, my_npc_pitcher, opponent_npc_pitcher,
         // C-1: 큐가 비면 위의 단일 투수를 그대로 쓴다 — 예전과 완전히 같다
-        my_queue: PitcherQueue {
-            pitchers: opts.my_pitchers.clone().unwrap_or_default(),
-            ..Default::default()
+        my_queue: {
+            let ps = opts.my_pitchers.clone().unwrap_or_default();
+            let mo = queue_max_outs(&ps, rng);
+            PitcherQueue { pitchers: ps, max_outs: mo, ..Default::default() }
         },
-        opponent_queue: PitcherQueue {
-            pitchers: opts.opponent_pitchers.clone().unwrap_or_default(),
-            ..Default::default()
+        opponent_queue: {
+            let ps = opts.opponent_pitchers.clone().unwrap_or_default();
+            let mo = queue_max_outs(&ps, rng);
+            PitcherQueue { pitchers: ps, max_outs: mo, ..Default::default() }
         },
         home_lineup, away_lineup,
         home_lineup_index: 0, away_lineup_index: 0,
@@ -374,6 +376,46 @@ fn is_protagonist_actively_pitching(state: &MatchState) -> bool {
 
 pub fn is_protagonist_pitching(state: &MatchState) -> bool {
     is_protagonist_actively_pitching(state)
+}
+
+/// 투수별 등판 한계(아웃) — **`npc_sim::sim_max_outs`와 같은 식이다.**
+///
+/// 두 엔진이 다른 식을 쓰면 통합 후 리그 성적이 어긋난다. 그쪽이 이미
+/// 검증된 값이라 그대로 옮긴다.
+///
+///   선발  12 + (스태미나/99)×15 ± 3   → 스태미나 99면 약 27아웃(완투)
+///   구원  3 ~ 6
+fn queue_max_outs(pitchers: &[PartialPitcherStats], rng: &mut impl Rng) -> Vec<i32> {
+    pitchers.iter().enumerate().map(|(i, p)| {
+        let stam = p.stamina_cap.unwrap_or(50.0);
+        if i == 0 { (12.0 + (stam / 99.0) * 15.0 + (rng.gen::<f64>() - 0.5) * 6.0).round() as i32 }
+        else      { 3 + (rng.gen::<f64>() * 4.0) as i32 }
+    }).collect()
+}
+
+/// 큐가 있으면 다음 투수로 바꾼다 (C-1).
+///
+/// ⚠ **큐가 비면 아무 일도 안 한다** — 예전 동작 그대로다.
+/// `get_active_pitcher`가 참조를 돌려주므로 큐를 직접 보게 하면 수명이 얽힌다.
+/// 대신 여기서 **단일 필드를 큐에서 갈아 끼운다** — 읽는 쪽은 한 줄도 안 바뀐다.
+/// 스태미나·투구수는 새 투수 기준으로 되돌린다.
+fn switch_pitcher_if_needed(state: &mut MatchState, my_side: bool) {
+    let q = if my_side { &mut state.my_queue } else { &mut state.opponent_queue };
+    if !q.should_switch() { return; }
+    q.advance();
+    let Some(next) = q.pitchers.get(q.current).cloned() else { return };
+    let built = build_pitcher(&next, 50.0, 52.0, 55.0, 48.0, 50.0, 50.0, 50.0, 50.0);
+    let name = built.name.clone().unwrap_or_else(|| "불펜".to_string());
+    if my_side {
+        state.my_npc_pitcher = built;
+        state.npc_pitcher_stamina.my = 100.0;
+        state.npc_pitcher_pitch_count.my = 0.0;
+    } else {
+        state.opponent_npc_pitcher = built;
+        state.npc_pitcher_stamina.opponent = 100.0;
+        state.npc_pitcher_pitch_count.opponent = 0.0;
+    }
+    state.logs.push(format!("[{}회] 투수 교체 — {}", state.inning, name));
 }
 
 fn get_active_pitcher(state: &MatchState) -> &PitcherStats {
@@ -1718,6 +1760,24 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         let fl = finish_log(&next_state);
         next_state.is_finished = true;
         next_state.logs.push(fl);
+    }
+
+    // ── C-1: 투수 큐 — 아웃 누적 후 한계를 넘으면 교체 ────────────────────
+    //
+    // ⚠ **3아웃 전환이 `next_outs`를 0으로 되돌리므로 증가분은 `outs_before_play`와
+    // 비교해 얻는다.** 그리고 **주인공이 던지는 동안은 큐를 안 건드린다** —
+    // 주인공 교체는 별도 경로(`protagonist_exits_game`)다.
+    {
+        // outs는 u8이라 i32로 올려 뺀다 (3아웃 전환이 0으로 되돌린 경우 포함)
+        let delta: i32 = if next_outs >= outs_before_play { (next_outs - outs_before_play) as i32 }
+                         else { (3 - outs_before_play) as i32 };
+        let ours = is_our_team_fielding(&next_state);
+        let protagonist_on_mound = ours && next_state.protagonist_has_entered && !next_state.protagonist_exited;
+        if delta > 0 && !protagonist_on_mound {
+            if ours { next_state.my_queue.outs_by_current += delta; }
+            else    { next_state.opponent_queue.outs_by_current += delta; }
+        }
+        if !protagonist_on_mound { switch_pitcher_if_needed(&mut next_state, ours); }
     }
 
     let outcome = PitchOutcome {

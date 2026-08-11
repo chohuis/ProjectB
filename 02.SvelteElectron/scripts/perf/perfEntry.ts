@@ -4323,6 +4323,7 @@ export function resetAmrTally(): void {
 type LedgerRow = {
   id: string; week: number | null; friendly: boolean | null;
   entry: boolean | null; outs: number | null;
+  엔진호출: number; 완료호출: number;   // ⚠ 같은 경기를 몇 번 시뮬하는가 (C-0)
   집계: boolean; 라인에주인공: boolean | null;
 };
 const _ledger = new Map<string, LedgerRow>();
@@ -4334,7 +4335,7 @@ function _row(id: string): LedgerRow {
   if (!r) {
     const e = (get(seasonStore) as any).schedule?.find((x: any) => x.id === id);
     r = { id, week: e?.week ?? null, friendly: e?.isFriendly ?? null,
-          entry: null, outs: null, 집계: false, 라인에주인공: null };
+          entry: null, outs: null, 엔진호출: 0, 완료호출: 0, 집계: false, 라인에주인공: null };
     _ledger.set(id, r);
   }
   return r;
@@ -4351,6 +4352,7 @@ export function startLedger(): void {
     const pa = (get(seasonStore) as any).pendingActions?.find((a: any) => a?.type === "game");
     _curGameId = pa?.scheduleId ?? null;
     const raw = await _origSim2(req);
+    if (_curGameId) _row(_curGameId).엔진호출++;
     if (_curGameId) {
       try { _row(_curGameId).entry = !!JSON.parse(raw).entryReached; } catch { /* 무시 */ }
     }
@@ -4360,6 +4362,7 @@ export function startLedger(): void {
   _origFin2 = api.matchAutoFinishFromEntry.bind(api);
   api.matchAutoFinishFromEntry = async () => {
     const raw = await _origFin2();
+    if (_curGameId) _row(_curGameId).완료호출++;
     if (_curGameId) {
       try { _row(_curGameId).outs = Number(JSON.parse(raw).outsRecorded ?? 0); } catch { /* 무시 */ }
     }
@@ -4389,3 +4392,29 @@ export function stopLedger(): void {
 
 export function ledgerRows(): LedgerRow[] { return [..._ledger.values()]; }
 export function resetLedger(): void { _ledger.clear(); _curGameId = null; }
+
+/** C-1 검증 — 큐를 넣으면 실제로 교체가 도는가 */
+export async function queueSmoke(): Promise<Record<string, unknown>> {
+  const raw = await window.projectB!.engine("startMatchNative", JSON.stringify({
+    protagonistSide: "home", role: "SP", batterMean: 66,
+    // 상대 투수진 3명 · 각 6아웃(2이닝)씩 — 9이닝이면 두 번 바뀌어야 한다
+    opponentPitchers: [
+      { name: "선발", command: 50, velocity: 52, staminaCap: 40 },
+      { name: "불펜", command: 48, velocity: 50 },
+      { name: "마무리", command: 55, velocity: 58 },
+    ],
+  }));
+  const st = JSON.parse(raw);
+  if (st.error) return { 오류: st.error };
+  const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(st)));
+  if (fin.error) return { 오류: fin.error };
+  const logs: string[] = fin.logs ?? [];
+  return {
+    큐길이: st.opponentQueue?.pitchers?.length ?? 0,
+    한계: st.opponentQueue?.maxOuts ?? null,
+    교체로그: logs.filter((l) => l.includes("투수 교체")),
+    최종투수: fin.opponentNpcPitcher?.name ?? null,
+    현재인덱스: fin.opponentQueue?.current ?? null,
+    누적아웃: fin.opponentQueue?.outsByCurrent ?? null,
+  };
+}
