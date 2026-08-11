@@ -470,7 +470,10 @@ fn swing_decision(
 fn calculate_contact_quality(pitch_q: f64, batter: &BatterStats, in_zone: bool, in_shadow: bool) -> f64 {
     let extra = (batter.contact - 50.0) * 0.20;
     let chase_penalty = if !in_zone { if in_shadow { 5.0 } else { 12.0 } } else { 0.0 };
-    round2(pitch_q - extra + chase_penalty)
+    // ⚠ **오프셋은 여기 한 곳에서만 더한다.** 밴드 표는 "동급 = 56"을
+    // 전제하는데 실측 평균이 48이다 — 표를 다시 쓰는 대신 입력을 옮긴다.
+    // 정본은 `tuning::CONTACT_Q_OFFSET`
+    round2(pitch_q - extra + chase_penalty + T::contact_q_offset())
 }
 
 fn resolve_contact(pitch_q: f64, contact_q: f64, batter: &BatterStats, rng: &mut impl Rng) -> PitchResultCode {
