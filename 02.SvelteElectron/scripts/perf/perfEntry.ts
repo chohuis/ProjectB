@@ -4575,3 +4575,26 @@ export async function lineupCompare(games: number): Promise<Record<string, unkno
     "실제 타자 컨택": real.slice(0, 9).map((b: any) => b.contact),
   };
 }
+
+/**
+ * 두 타선 구성기를 **같은 팀에** 돌려 대본다.
+ *
+ * 앞 세션에서 "주인공은 최강 9인, 리그는 정상 라인업"이라 진단했는데,
+ * 리그 쪽(`rosterEngine.buildLineup`)도 포지션별 최고 타자를 뽑는다 —
+ * 둘이 비슷하다. **같은 팀에 돌려야** 진짜 차이가 나온다.
+ */
+export async function builderCompare(teamIds: string[]): Promise<Record<string, unknown>> {
+  const ents = get(masterStore).entities;
+  const { buildBatterLineup } = await import("../../apps/ui/src/shared/utils/matchLineupBuilder");
+  const out: Record<string, unknown> = {};
+  for (const t of teamIds) {
+    const a = buildBatterLineup(t, ents);
+    const avg = (xs: number[]) => xs.length ? Math.round(xs.reduce((p, c) => p + c, 0) / xs.length) : 0;
+    out[t.replace(/^TEAM_/, "")] = {
+      인원: a.length,
+      컨택평균: avg(a.map((b: any) => b.contact ?? 0)),
+      컨택: a.slice(0, 9).map((b: any) => b.contact),
+    };
+  }
+  return out;
+}
