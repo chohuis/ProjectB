@@ -323,12 +323,12 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         my_queue: {
             let ps = opts.my_pitchers.clone().unwrap_or_default();
             let mo = queue_max_outs(&ps, rng);
-            PitcherQueue { pitchers: ps, max_outs: mo, ..Default::default() }
+            PitcherQueue { pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")), lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
         },
         opponent_queue: {
             let ps = opts.opponent_pitchers.clone().unwrap_or_default();
             let mo = queue_max_outs(&ps, rng);
-            PitcherQueue { pitchers: ps, max_outs: mo, ..Default::default() }
+            PitcherQueue { pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")), lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
         },
         home_lineup, away_lineup,
         home_lineup_index: 0, away_lineup_index: 0,
@@ -1777,6 +1777,35 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             if ours { next_state.my_queue.outs_by_current += delta; }
             else    { next_state.opponent_queue.outs_by_current += delta; }
         }
+
+        // ── C-2: 투수별 기록 누적 ────────────────────────────────────────
+        //
+        // ⚠ 지금 엔진은 주인공 것만 쌓는다(`k_since_entry` 등). 교체된 투수들의
+        // 성적이 안 남아서 통합하면 **리그 순위표가 통째로 빈다.**
+        // `sim_game`의 `PitAccum`과 같은 항목을 큐 안에 쌓는다.
+        if !protagonist_on_mound {
+            let cnt_reset = next_state.count.strikes == 0 && next_state.count.balls == 0;
+            let scored = (next_state.score.home + next_state.score.away)
+                - (state.score.home + state.score.away);
+            let q = if ours { &mut next_state.my_queue } else { &mut next_state.opponent_queue };
+            let idx = q.current;
+            if let Some(line) = q.lines.get_mut(idx) {
+                line.outs += delta;
+                line.pc += 1;
+                match result_code {
+                    PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook
+                        if cnt_reset => line.k += 1,
+                    PitchResultCode::Walk => line.bb += 1,
+                    PitchResultCode::HitSingle | PitchResultCode::HitDouble
+                    | PitchResultCode::HitTriple | PitchResultCode::HomeRun => line.h += 1,
+                    _ => {}
+                }
+                // 자책점 — 이번 투구로 늘어난 점수를 현재 투수 앞으로 단다
+                // (실책 실점 구분은 sim_game도 안 한다 — 같은 수준으로 맞춘다)
+                if scored > 0 { line.er += scored; }
+            }
+        }
+
         if !protagonist_on_mound { switch_pitcher_if_needed(&mut next_state, ours); }
     }
 

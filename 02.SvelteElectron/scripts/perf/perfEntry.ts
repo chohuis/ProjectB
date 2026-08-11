@@ -4396,7 +4396,7 @@ export function resetLedger(): void { _ledger.clear(); _curGameId = null; }
 /** C-1 검증 — 큐를 넣으면 실제로 교체가 도는가 */
 export async function queueSmoke(): Promise<Record<string, unknown>> {
   const raw = await window.projectB!.engine("startMatchNative", JSON.stringify({
-    protagonistSide: "home", role: "SP", batterMean: 66,
+    protagonistSide: "home", role: "SP", batterMean: 66, leagueId: "LEAGUE_HIGHSCHOOL",
     // 상대 투수진 3명 · 각 6아웃(2이닝)씩 — 9이닝이면 두 번 바뀌어야 한다
     opponentPitchers: [
       { name: "선발", command: 50, velocity: 52, staminaCap: 40 },
@@ -4416,5 +4416,7 @@ export async function queueSmoke(): Promise<Record<string, unknown>> {
     최종투수: fin.opponentNpcPitcher?.name ?? null,
     현재인덱스: fin.opponentQueue?.current ?? null,
     누적아웃: fin.opponentQueue?.outsByCurrent ?? null,
+    투수별기록: (fin.opponentQueue?.lines ?? []).map((l: any) =>
+      `${l.playerId} ${(l.outs/3).toFixed(1)}이닝 ${l.er}자책 ${l.h}피안타 ${l.k}K ${l.bb}BB ${l.pc}구`),
   };
 }

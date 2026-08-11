@@ -263,18 +263,53 @@ pub struct PitcherQueue {
     /// 현재 투수가 잡은 아웃
     #[serde(default)]
     pub outs_by_current: i32,
+    /// 투수별 누적 기록 (C-2). 큐와 같은 순서다 — 비면 아무것도 안 쌓는다
+    #[serde(default)]
+    pub lines: Vec<PitcherLineAccum>,
+    /// 리그 투구수 상한 (고교 105 · 그 외 120). 0이면 상한 없음
+    #[serde(default)]
+    pub pitch_limit: f64,
+}
+
+/// 투수 한 명의 경기 기록 (C-2) — `npc_sim::PitAccum`과 같은 항목이다.
+///
+/// ⚠ **지금 엔진은 주인공 것만 쌓는다**(`k_since_entry` 등). 교체된 투수들의
+/// 성적이 안 남아서, 통합하면 리그 순위표·성적표가 통째로 빈다.
+/// `sim_game`은 `PitAccum`/`BatAccum`으로 전원을 쌓아 `player_lines`를 만든다 —
+/// 그 계약을 만족해야 순위표가 안 깨진다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PitcherLineAccum {
+    pub player_id: String,
+    pub outs: i32,
+    pub er: i32,
+    pub h: i32,
+    pub k: i32,
+    pub bb: i32,
+    pub pc: i32,
+    pub risp_ab: i32,
+    pub risp_h: i32,
 }
 
 impl PitcherQueue {
     pub fn is_empty(&self) -> bool { self.pitchers.is_empty() }
-    /// 지금 투수를 바꿔야 하는가 — 한계를 넘었고 다음 투수가 있을 때만
+    /// 지금 투수를 바꿔야 하는가 — 아웃 한계 **또는 투구수 상한**을 넘었을 때.
+    ///
+    /// ⚠ **투구수도 봐야 한다.** 아웃 한계만 보면 7이닝에 114구를 던진 선발이
+    /// 그대로 남는다(실측). 고교 상한이 105구라 그 전에 내려가야 한다 —
+    /// `sim_game`은 아웃만 보지만 이쪽 엔진엔 투구수 개념이 이미 있다.
     pub fn should_switch(&self) -> bool {
+        let pitch_limit = self.pitch_limit;
         if self.pitchers.is_empty() { return false; }
         if self.current + 1 >= self.pitchers.len() { return false; }
-        match self.max_outs.get(self.current) {
+        let over_outs = match self.max_outs.get(self.current) {
             Some(&m) if m > 0 => self.outs_by_current >= m,
             _ => false,
-        }
+        };
+        let over_pitches = self.lines.get(self.current)
+            .map(|l| pitch_limit > 0.0 && l.pc as f64 >= pitch_limit)
+            .unwrap_or(false);
+        over_outs || over_pitches
     }
     pub fn advance(&mut self) {
         if self.current + 1 < self.pitchers.len() {
