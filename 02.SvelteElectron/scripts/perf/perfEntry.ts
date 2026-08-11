@@ -4605,3 +4605,45 @@ export async function builderCompare(teamIds: string[]): Promise<Record<string, 
   }
   return out;
 }
+
+/**
+ * 주인공이 **실제로 상대하는** 타선 vs **리그 경기가 쓰는** 타선.
+ *
+ * ⚠ 이걸 안 찍고 조건을 바꿔 재다가 이 프로젝트에서 같은 자리를 **세 번**
+ * 뒤집었다(구성기 비대칭 → batterMean 문제 → 다시 66이 맞음).
+ * "커리어에서 무엇을 상대하는가"가 모든 판단의 기준이다.
+ */
+export async function opponentLineupProbe(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const ents = get(masterStore).entities;
+  const s: any = get(seasonStore);
+  const { buildBatterLineup } = await import("../../apps/ui/src/shared/utils/matchLineupBuilder");
+
+  const avg = (xs: number[]) => xs.length ? Math.round(xs.reduce((p, c) => p + c, 0) / xs.length) : 0;
+  const stat = (ls: any[]) => ({
+    인원: ls.length,
+    컨택: avg(ls.map((b) => b.contact ?? 0)),
+    파워: avg(ls.map((b) => b.power ?? 0)),
+    눈:   avg(ls.map((b) => b.eye ?? 0)),
+  });
+
+  // 주인공이 만나는 상대 팀들 (스케줄에서)
+  const mine = (s.schedule ?? []).filter((e: any) => e.isProtagonistGame).slice(0, 8);
+  const oppTeams = [...new Set(mine.map((e: any) =>
+    e.homeTeamId === g.protagonist.teamId ? e.awayTeamId : e.homeTeamId))] as string[];
+
+  const oppStats = oppTeams.map((t) => stat(buildBatterLineup(t, ents)));
+  const merge = (k: "컨택" | "파워" | "눈") => avg(oppStats.map((o) => o[k]));
+
+  return {
+    "주인공이 상대하는 팀": oppTeams.length,
+    "상대 타선 평균": { 컨택: merge("컨택"), 파워: merge("파워"), 눈: merge("눈") },
+    "내 팀 타선": stat(buildBatterLineup(g.protagonist.teamId, ents)),
+    "리그 전체 타자 평균": (() => {
+      const bs = g.npcs.filter((n) => n.playerType !== "pitcher" && n.batting);
+      return { 인원: bs.length,
+               컨택: avg(bs.map((n) => n.batting!.contact ?? 0)),
+               파워: avg(bs.map((n) => n.batting!.power ?? 0)) };
+    })(),
+  };
+}
