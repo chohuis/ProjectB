@@ -3966,7 +3966,13 @@ function _mkFielders(mean: number) {
  *
  * 기준: 같은 리그 OVR 70~ NPC 97명의 ERA 중앙값은 **3.28**이다.
  */
-export async function engineDuel(games: number, batterMean: number, fielderMean?: number, arsenalOverride?: any[]): Promise<Record<string, unknown>> {
+export async function engineDuel(games: number, batterMean: number, fielderMean?: number, arsenalOverride?: any[], useRealLineup = false): Promise<Record<string, unknown>> {
+  // ⚠ **격리 조건이 커리어와 같아야 한다.** `batterMean 66`은 create_batter가
+  // 전 스탯을 66으로 만드는데, 실제 OVR 66 타자는 컨택 59에 나머지가 제각각이다.
+  // 이 차이 때문에 격리에서 고른 오프셋이 커리어에서 두 번 어긋났다.
+  const _ents = get(masterStore).entities;
+  const { buildBatterLineup: _bbl } = await import("../../apps/ui/src/shared/utils/matchLineupBuilder");
+  const _realLineup = useRealLineup ? _bbl(get(gameStore).protagonist.teamId, _ents) : [];
   const p = get(gameStore).protagonist;
   const pit = p.pitching;
   const lines: Array<{ ip: number; er: number }> = [];
@@ -3980,7 +3986,8 @@ export async function engineDuel(games: number, batterMean: number, fielderMean?
         clutch: pit.clutch, holdRunners: pit.holdRunners,
         arsenal: arsenalOverride ?? toEngineArsenal(p.pitches),
       },
-      role: "SP", protagonistSide: "home", batterMean,
+      role: "SP", protagonistSide: "home",
+      ...(_realLineup.length >= 9 ? { awayLineup: _realLineup } : { batterMean }),
       ...(fielderMean != null ? { fielders: _mkFielders(fielderMean) } : {}),
     });
     const sim = JSON.parse(raw);
