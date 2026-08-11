@@ -608,15 +608,17 @@ fn calculate_pitch_quality(
     let dist = (landing.x * landing.x + landing.y * landing.y).sqrt();
     let location_q = T::LOCATION_CENTER_PENALTY + dist * T::LOCATION_DISTANCE_SCALE;
 
-    let command_bonus  = (pitcher.command  - 50.0) * 0.10;
+    // 능력치 기여는 배수를 탄다 — 잡음을 줄인 만큼 키워 균형을 맞춘다
+    let sk = T::pitch_skill_scale();
+    let command_bonus  = (pitcher.command  - 50.0) * 0.10 * sk;
     let velocity_bonus = if decision.pitch_type == PitchType::Fastball {
-        (pitcher.velocity - 50.0) * 0.12
+        (pitcher.velocity - 50.0) * 0.12 * sk
     } else {
-        (pitcher.velocity - 50.0) * 0.03
+        (pitcher.velocity - 50.0) * 0.03 * sk
     };
-    let control_bonus  = (pitcher.control  - 50.0) * 0.06;
+    let control_bonus  = (pitcher.control  - 50.0) * 0.06 * sk;
     let movement_bonus = if decision.pitch_type != PitchType::Fastball {
-        (pitcher.movement - 50.0) * 0.08
+        (pitcher.movement - 50.0) * 0.08 * sk
     } else { 0.0 };
 
     let batter_penalty = (batter.contact    - 50.0) * 0.10
@@ -630,7 +632,8 @@ fn calculate_pitch_quality(
 
     let stamina_penalty = (50.0 - stamina).max(0.0) * 0.18;
     let mental_bonus    = (mental - 50.0) * 0.08;
-    let random_noise    = rng.gen::<f64>() * 16.0 - 8.0;
+    let noise = T::pitch_quality_noise();
+    let random_noise    = rng.gen::<f64>() * noise - noise / 2.0;
 
     let weather_mod = T::weather_quality_modifier(state.weather, decision.pitch_type);
     let park_mod    = T::park_quality_modifier(state.park);

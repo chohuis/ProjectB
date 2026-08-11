@@ -266,6 +266,36 @@ pub const DISPERSION_CONTROL_SCALE: f64  = 0.003;
 pub const DISPERSION_STAMINA_SCALE: f64  = 0.002;
 pub const DISPERSION_MENTAL_SCALE: f64   = 0.001;
 pub const SHADOW_ZONE_HALF: f64          = 0.20;
+/// 투구 품질의 **무작위 폭** (±값). 실측 2026-08-11: 16이면 능력치를 덮는다.
+///
+/// OVR 55→80(전 스탯 +25)이 pitch_q에 주는 기여는 약 **+6.8**인데
+/// 잡음 폭이 16이라 2배 이상이다. 그래서 격리에서 OVR별 ERA 곡선이
+/// 평평했다(5.73 · 5.74 · 5.69 · 5.36 · 5.93 · 7.63).
+///
+/// 리그()는 같은 구간이 4.23 → 3.32로 단조다. **전환하면 리그
+/// 전체에서 능력치와 성적이 끊어진다** — 드래프트·수상·순위가 무의미해진다.
+///
+/// ⚠ 계측용으로  환경변수가 덮는다.
+pub const PITCH_QUALITY_NOISE: f64 = 16.0;
+
+pub fn pitch_quality_noise() -> f64 {
+    match std::env::var("PB_PITCH_NOISE") {
+        Ok(v) => v.parse::<f64>().unwrap_or(PITCH_QUALITY_NOISE),
+        Err(_) => PITCH_QUALITY_NOISE,
+    }
+}
+
+/// 능력치 계수 배수 — 1.0이 예전 값이다. 잡음을 줄인 만큼 키워 균형을 맞춘다.
+/// ⚠ 계측용으로  환경변수가 덮는다.
+pub const PITCH_SKILL_SCALE: f64 = 1.0;
+
+pub fn pitch_skill_scale() -> f64 {
+    match std::env::var("PB_SKILL_SCALE") {
+        Ok(v) => v.parse::<f64>().unwrap_or(PITCH_SKILL_SCALE),
+        Err(_) => PITCH_SKILL_SCALE,
+    }
+}
+
 pub const LOCATION_CENTER_PENALTY: f64   = -4.0;
 pub const LOCATION_DISTANCE_SCALE: f64   = 5.0;
 
