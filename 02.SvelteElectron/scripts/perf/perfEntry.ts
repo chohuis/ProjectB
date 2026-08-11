@@ -4483,3 +4483,44 @@ export async function engineCompare(games: number): Promise<Record<string, unkno
     "리그 NPC 실측": { ERA: "3.2~4.0", "K/9": 8.11, "BB/9": 3.90, "H/9": 7.34 },
   };
 }
+
+/**
+ * OVR별 ERA 곡선 — **단조성이 살아 있는가.**
+ *
+ * C-4 실측에서 고교를 풀 엔진으로 돌리자 OVR–ERA 상관이 뒤집혔다
+ * (60~ 3.64 → 75~ 4.57, 잘할수록 나빠진다). 엔진 자체 문제인지 전환
+ * 배선 문제인지 여기서 갈린다 — 격리는 배선이 없다.
+ *
+ * ⚠ 능력치를 OVR 목표에 맞춰 **균등하게** 올린다. 한 스탯만 올리면
+ * 그 스탯의 기여도만 보게 된다.
+ */
+export async function ovrEraCurve(games: number, batterMean: number): Promise<Record<string, unknown>> {
+  const out: Record<string, unknown> = {};
+  for (const lvl of [55, 60, 65, 70, 75, 80]) {
+    const p = {
+      name: `OVR${lvl}`,
+      command: lvl, velocity: lvl, staminaCap: lvl, mentalResil: lvl,
+      control: lvl, movement: lvl, clutch: lvl, holdRunners: lvl,
+      // ⚠ **구종을 넘긴다.** 안 넘기면 전원 패스트볼 하나가 되고, 그 페널티가
+      // 능력치 차이를 덮어 곡선이 평평해진다(실측에서 ERA 6~7로 붕 떠 있었다)
+      arsenal: [{ type: "fastball", grade: 3 }, { type: "slider", grade: 3 },
+                { type: "changeup", grade: 2 }],
+    };
+    let outs = 0, er = 0, h = 0, k = 0, bb = 0;
+    for (let i = 0; i < games; i++) {
+      const st = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
+        protagonistSide: "home", role: "SP", batterMean, leagueId: "LEAGUE_HIGHSCHOOL",
+        opponentPitchers: [p],           // 한 명만 — 교체 없이 끝까지
+      })));
+      if (st.error) return { 오류: st.error };
+      const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(st)));
+      if (fin.error) return { 오류: fin.error };
+      for (const l of (fin.opponentQueue?.lines ?? [])) {
+        outs += l.outs ?? 0; er += l.er ?? 0; h += l.h ?? 0; k += l.k ?? 0; bb += l.bb ?? 0;
+      }
+    }
+    const r = (v: number) => outs > 0 ? Math.round((v * 27 / outs) * 100) / 100 : null;
+    out[`OVR ${lvl}`] = { 이닝: Math.round(outs / 3), ERA: r(er), "K/9": r(k), "BB/9": r(bb), "H/9": r(h) };
+  }
+  return out;
+}
