@@ -431,7 +431,7 @@ pub const SHADOW_UMPIRE_STRIKE_PROB: f64  = 0.45;
 ///
 /// ERA 숫자에 끼워 맞춘 게 아니라 **밴드 표가 전제한 56으로 입력을 되돌린**
 /// 값이다. H/9 7.73도 리그 7.34에 가장 가깝다.
-pub const CONTACT_Q_OFFSET: f64 = 7.0;
+pub const CONTACT_Q_OFFSET: f64 = 0.0;
 
 /// 환경변수가 있으면 그걸, 없으면 상수를 쓴다 (계측 전용 경로)
 pub fn contact_q_offset() -> f64 {

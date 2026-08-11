@@ -2057,6 +2057,22 @@ pub fn auto_simulate_to_game_end(state: &MatchState, rng: &mut impl Rng) -> Matc
 
     while !s.is_finished && safety > 0 {
         safety -= 1;
+
+        // ⚠ **주인공 교체 판정** (사용자 확정 2026-08-12: 주인공도 교체한다).
+        //
+        // 예전엔 이 루프가 `should_protagonist_exit`을 한 번도 안 불렀다 —
+        // 교체 판정이 `advance_game_phase`에만 있어서 자동 완주는 안 지났다.
+        // 그래서 투구수 상한을 90/75/65로 훑어도 주인공 이닝이 526/525/540으로
+        // 안 줄었다. **임계값이 아니라 판정 자체가 안 돌았다.**
+        //
+        // NPC 교체(`switch_pitcher_if_needed`)는 `step_pitch_core` 안에 이미 있다.
+        if is_protagonist_actively_pitching(&s) {
+            let exit = should_protagonist_exit(&s);
+            if exit.should_exit {
+                if let Some(reason) = exit.reason { s = protagonist_exits_game(&s, reason); }
+            }
+        }
+
         let decision = auto_pick_decision(&s, rng);
         let protagonist_pitching = is_protagonist_actively_pitching(&s);
         s = step_pitch_core(&s, &decision, protagonist_pitching, rng).next_state;
