@@ -299,6 +299,22 @@ function toEnginePitcher(p: SimPitcher): Record<string, unknown> {
   };
 }
 
+/** 타순에서 수비 9인을 만든다 — 좌표는 화면()과 같은 값 */
+const _FIELD_XY: Record<string, { x: number; y: number }> = {
+  P: { x: 50, y: 62 }, C: { x: 50, y: 90 }, "1B": { x: 78, y: 70 }, "2B": { x: 63, y: 55 },
+  "3B": { x: 22, y: 70 }, SS: { x: 37, y: 55 }, LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
+};
+function buildFieldersFromLineup(lineup: SimBatter[]): Record<string, unknown>[] {
+  const pos = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+  return pos.map((p, i) => {
+    const b = lineup[i % Math.max(1, lineup.length)];
+    // SimBatter엔 수비 능력이 없다 — 컨택을 대용으로 쓴다(리그 평균 수준을 만든다)
+    const lvl = b ? Math.round((b.contact + b.speed) / 2) : 50;
+    return { position: p, name: p, fielding: lvl, arm: lvl, speed: b?.speed ?? 50,
+             x: _FIELD_XY[p].x, y: _FIELD_XY[p].y };
+  });
+}
+
 /** SimBatter → 엔진이 받는 BatterStats */
 function toEngineBatter(b: SimBatter): Record<string, unknown> {
   return {
@@ -331,6 +347,11 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     awayLineup: params.awayLineup.map(toEngineBatter),
     myPitchers: homePitchers,
     opponentPitchers: awayPitchers,
+    // ⚠ **수비를 넘긴다.** 안 넘기면 엔진이 평균 50짜리를 만든다 —
+    // 주인공 경기는 넘기는데 리그 경기만 안 넘기면 **같은 엔진인데 두 저울**이 된다.
+    // 실측에서 수비 50 vs 66이 ERA 3점 차이였다.
+    // 타순이 곧 수비 라인업이다(리그 시뮬은 포지션을 따로 안 들고 있다)
+    fielders: buildFieldersFromLineup(params.homeLineup),
   }));
   const st = JSON.parse(startRaw);
   if (st.error) throw new Error(`[C-4] startMatch: ${st.error}`);
