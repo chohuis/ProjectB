@@ -319,6 +319,15 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         pitch_soft:  T::league_pitch_soft(opts.league_id.as_deref().unwrap_or("")),
         protagonist_side,
         protagonist_pitcher, my_npc_pitcher, opponent_npc_pitcher,
+        // C-1: 큐가 비면 위의 단일 투수를 그대로 쓴다 — 예전과 완전히 같다
+        my_queue: PitcherQueue {
+            pitchers: opts.my_pitchers.clone().unwrap_or_default(),
+            ..Default::default()
+        },
+        opponent_queue: PitcherQueue {
+            pitchers: opts.opponent_pitchers.clone().unwrap_or_default(),
+            ..Default::default()
+        },
         home_lineup, away_lineup,
         home_lineup_index: 0, away_lineup_index: 0,
         batter_mean,

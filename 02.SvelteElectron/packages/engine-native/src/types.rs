@@ -243,6 +243,47 @@ pub struct NpcPitcherTracker {
     pub opponent: f64,
 }
 
+/// 한 팀의 투수진 — 선발 → 불펜 → 마무리 순.
+///
+/// ⚠ **비어 있으면 예전 동작이다.** 기존 단일 `my_npc_pitcher` /
+/// `opponent_npc_pitcher`를 그대로 쓴다. 통합(C단계)을 한 번에 바꾸지 않고
+/// 큐가 채워진 쪽만 새 경로를 타게 해서, 어긋나면 어디서인지 좁힐 수 있게 한다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PitcherQueue {
+    /// 등판 순서대로. 0번이 선발이다
+    #[serde(default)]
+    pub pitchers: Vec<PartialPitcherStats>,
+    /// 지금 던지는 투수의 인덱스
+    #[serde(default)]
+    pub current: usize,
+    /// 투수별 최대 아웃 수 — `sim_max_outs` 상당. 비면 상한 없음
+    #[serde(default)]
+    pub max_outs: Vec<i32>,
+    /// 현재 투수가 잡은 아웃
+    #[serde(default)]
+    pub outs_by_current: i32,
+}
+
+impl PitcherQueue {
+    pub fn is_empty(&self) -> bool { self.pitchers.is_empty() }
+    /// 지금 투수를 바꿔야 하는가 — 한계를 넘었고 다음 투수가 있을 때만
+    pub fn should_switch(&self) -> bool {
+        if self.pitchers.is_empty() { return false; }
+        if self.current + 1 >= self.pitchers.len() { return false; }
+        match self.max_outs.get(self.current) {
+            Some(&m) if m > 0 => self.outs_by_current >= m,
+            _ => false,
+        }
+    }
+    pub fn advance(&mut self) {
+        if self.current + 1 < self.pitchers.len() {
+            self.current += 1;
+            self.outs_by_current = 0;
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FielderStats {
     pub position: FieldPosition,
@@ -412,6 +453,11 @@ pub struct MatchState {
     #[serde(default)]
     pub er_since_entry: u32,
 
+    /// 투수진 — **비면 예전 동작**(단일 npc 투수)이다 (C-1)
+    #[serde(default)]
+    pub my_queue: PitcherQueue,
+    #[serde(default)]
+    pub opponent_queue: PitcherQueue,
     pub npc_pitcher_stamina: NpcPitcherTracker,
     pub npc_pitcher_mental: NpcPitcherTracker,
     pub npc_pitcher_pitch_count: NpcPitcherTracker,
@@ -555,6 +601,11 @@ pub struct MatchStartOptions {
     pub weather: Option<WeatherType>,
     pub park: Option<ParkType>,
     pub fielders: Option<Vec<FielderStats>>,
+    /// 투수진 (C-1). 안 주면 예전처럼 단일 투수로 돈다
+    #[serde(default)]
+    pub my_pitchers: Option<Vec<PartialPitcherStats>>,
+    #[serde(default)]
+    pub opponent_pitchers: Option<Vec<PartialPitcherStats>>,
 }
 
 // ── 헤드리스 게임 시뮬 파라미터 ──────────────────────────────────────────────
