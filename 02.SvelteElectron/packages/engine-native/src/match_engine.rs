@@ -263,8 +263,14 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         .or(opts.pitcher.as_ref())
         .cloned()
         .unwrap_or_default();
-    let op_opts  = opts.opponent_pitcher.as_ref().cloned().unwrap_or_default();
-    let npc_opts = opts.npc_starter_pitcher.as_ref().cloned().unwrap_or_default();
+    // ⚠ **큐가 있으면 0번(선발)이 우선이다** (C-1 배선 누락 수정).
+    // 예전엔 큐를 넣어도 선발은 (없으면 기본값 50/52/55…)로
+    // 던졌다 — 큐는 교체될 때만 쓰였다. 그래서 능력치를 55든 80이든 넣어도
+    // contact_q가 54에 고정됐고 OVR–ERA 곡선이 평평했다(실측 2026-08-11).
+    let op_opts  = opts.opponent_pitchers.as_ref().and_then(|v| v.first().cloned())
+        .or_else(|| opts.opponent_pitcher.as_ref().cloned()).unwrap_or_default();
+    let npc_opts = opts.my_pitchers.as_ref().and_then(|v| v.first().cloned())
+        .or_else(|| opts.npc_starter_pitcher.as_ref().cloned()).unwrap_or_default();
 
     let protagonist_pitcher = build_pitcher(&pp_opts,  50.0, 52.0, 55.0, 48.0, 50.0, 50.0, 50.0, 50.0);
     let opponent_npc_pitcher = build_pitcher(&op_opts, 50.0, 52.0, 55.0, 48.0, 50.0, 50.0, 50.0, 50.0);

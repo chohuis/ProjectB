@@ -4506,6 +4506,7 @@ export async function ovrEraCurve(games: number, batterMean: number): Promise<Re
       arsenal: [{ type: "fastball", grade: 3 }, { type: "slider", grade: 3 },
                 { type: "changeup", grade: 2 }],
     };
+    await resetContactBands();
     let outs = 0, er = 0, h = 0, k = 0, bb = 0;
     for (let i = 0; i < games; i++) {
       const st = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
@@ -4520,7 +4521,10 @@ export async function ovrEraCurve(games: number, batterMean: number): Promise<Re
       }
     }
     const r = (v: number) => outs > 0 ? Math.round((v * 27 / outs) * 100) / 100 : null;
-    out[`OVR ${lvl}`] = { 이닝: Math.round(outs / 3), ERA: r(er), "K/9": r(k), "BB/9": r(bb), "H/9": r(h) };
+    // ⚠ **contact_q가 실제로 움직이는지 같이 찍는다.** 계측 없이 가설을 세워
+    // 네 번 틀렸다 — 안 움직이면 계수가 아니라 배선 문제다
+    const cb: any = await contactBands();
+    out[`OVR ${lvl}`] = { 이닝: Math.round(outs / 3), ERA: r(er), "K/9": r(k), "H/9": r(h), cq: cb.평균contactQ };
   }
   return out;
 }
