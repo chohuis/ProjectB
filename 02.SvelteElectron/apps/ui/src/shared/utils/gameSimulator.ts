@@ -286,7 +286,12 @@ const engineCall = (fn: string, payload: string): Promise<string> =>
 export const FULL_ENGINE_LEAGUES = new Set<string>([
   "LEAGUE_HIGHSCHOOL",   // C-4 검증 완료 (ERA 3.86 · 이닝 47.3)
   "LEAGUE_UNIVERSITY",   // C-5
-  "LEAGUE_INDEPENDENT",  // C-5
+  "LEAGUE_INDEPENDENT",  // C-5 (검증 완료)
+  // 프로 — 5인 로테이션이라 교체 로직이 더 무겁게 돈다
+  "LEAGUE_KBL",
+  "LEAGUE_KBL_FARM",
+  "LEAGUE_ABL",
+  "LEAGUE_JBL",
 ]);
 
 /** SimPitcher → 엔진이 받는 PartialPitcherStats */
