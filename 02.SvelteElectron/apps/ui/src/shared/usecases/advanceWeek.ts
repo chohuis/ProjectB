@@ -2230,6 +2230,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const sim2 = await simulateGame(game.homeTeamId, game.awayTeamId, entities2, {
                 conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
                 npcInjuries: get(seasonStore).npcInjuries,
+                // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
+                // 상한)가 통째로 안 걸린다 — 값이 있고 타입도 맞아 조용히 옛 경로로 돈다
+                leagueId: game.leagueId ?? gCurrent.protagonist.leagueId,
                 rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
                 npcLiveStats: get(npcLiveStatsStore),
                 tradeAdaptationPenalty: _tradeWeeks2 > 0
@@ -2278,6 +2281,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
               conditions, homeRotIdx, awayRotIdx, week: game.week,
               npcInjuries: get(seasonStore).npcInjuries,
+              // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
+              // 상한)가 통째로 안 걸린다 — 값이 있고 타입도 맞아 조용히 옛 경로로 돈다
+              leagueId: game.leagueId ?? gCurrent.protagonist.leagueId,
               rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
               npcLiveStats: get(npcLiveStatsStore),
               tradeAdaptationPenalty: _tradeWeeksNpc > 0
@@ -2508,6 +2514,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
             conditions, homeRotIdx, awayRotIdx, week: game.week,
             npcInjuries: get(seasonStore).npcInjuries,
+            // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
+            // 상한)가 통째로 안 걸린다 — 값이 있고 타입도 맞아 조용히 옛 경로로 돈다
+            leagueId: game.leagueId ?? gCurrent.protagonist.leagueId,
             rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
             npcLiveStats: get(npcLiveStatsStore),
             tradeAdaptationPenalty: _tradeWeeksPs > 0

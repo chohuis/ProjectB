@@ -219,7 +219,16 @@ export async function simulateGame(
     awayTeamId,
   };
 
-  const json = await api().npcSimGame(JSON.stringify(params));
+  // ── C-4: 리그별 엔진 선택 ────────────────────────────────────────
+  //
+  // 통합은 **리그 하나씩** 넓힌다. 성능이나 성적이 예상과 다르면 그 리그만
+  // 되돌린다 — 전부 한 번에 바꾸면 어디서 어긋났는지 못 찾는다.
+  //
+  // 새 경로는 주인공 경기와 **같은 엔진**(match_engine)을 쓴다. 구종·수비·
+  // 로케이션이 전부 반영되고, 두 저울이 하나가 된다.
+  const json = FULL_ENGINE_LEAGUES.has(leagueId)
+    ? await simulateWithMatchEngine(params, leagueId)
+    : await api().npcSimGame(JSON.stringify(params));
   const raw  = parseResult<{
     result: MatchResult;
     nextHomeRotIdx: number;
@@ -246,4 +255,87 @@ export async function simulateGame(
     nextAwayRotIdx:    raw.nextAwayRotIdx,
     pitcherConditions,
   };
+}
+
+
+/** `engine:call` 단일 채널 — `api()`는 인자 하나짜리 브릿지라 타입이 다르다 */
+const engineCall = (fn: string, payload: string): Promise<string> =>
+  (window as unknown as { projectB: { engine: (f: string, p: string) => Promise<string> } }).projectB.engine(fn, payload);
+
+// ── C-4: 풀 엔진 전환 ─────────────────────────────────────────────
+//
+// **이 Set 하나가 스위치다.** 리그를 넣으면 그 리그가 주인공과 같은 엔진으로
+// 돌고, 빼면 즉시 예전으로 돌아간다. 되돌림 지점을 코드에 남겨 둔다.
+//
+// 비용 근거: 주인공 엔진 투구당 31µs · 고교 리그 주당 32경기 → 약 136ms.
+// 주간 처리 14초의 1% 수준이다(그 대부분은 저장·성장·이벤트다).
+// ⚠ **지금은 비어 있다 — 전환을 되돌렸다.** C-4 실측(2026-08-11)에서
+// OVR–ERA 상관이 **뒤집혔다**:
+//
+//   전환 전  60~ 4.23 → 65~ 3.67 → 70~ 3.36 → 75~ 3.32  (잘할수록 좋다)
+//   전환 후  60~ 3.64 → 65~ 4.06 → 70~ 4.13 → 75~ 4.57  (잘할수록 나쁘다)
+//
+// 능력치가 높을수록 ERA가 나빠지면 육성·드래프트·수상이 전부 거꾸로 돈다.
+// 성능은 문제없었다(주당 +153ms, 예상 136ms와 일치).
+export const FULL_ENGINE_LEAGUES = new Set<string>([
+  // "LEAGUE_HIGHSCHOOL",
+]);
+
+/** SimPitcher → 엔진이 받는 PartialPitcherStats */
+function toEnginePitcher(p: SimPitcher): Record<string, unknown> {
+  return {
+    name: p.id,                       // 기록이 id로 돌아와야 순위표에 붙는다
+    command: p.command, velocity: p.velocity,
+    staminaCap: p.stamina, mentalResil: p.mentality ?? 50,
+    control: p.control, movement: p.movement,
+    clutch: p.clutch ?? 50, holdRunners: p.holdRunners ?? 50,
+  };
+}
+
+/** SimBatter → 엔진이 받는 BatterStats */
+function toEngineBatter(b: SimBatter): Record<string, unknown> {
+  return {
+    id: b.id, name: b.id,
+    contact: b.contact, power: b.power, eye: b.eye, discipline: b.discipline,
+    battingClutch: b.battingClutch ?? 50, platoon: 50,
+    speed: b.speed, baseInstinct: b.baseInstinct ?? 50,
+    // SimBatter엔 수비 필드가 없다 — 엔진 기본값을 쓴다
+    fielding: 50, arm: 50,
+  };
+}
+
+/**
+ * 리그 경기를 주인공 엔진으로 돌린다 (C-4).
+ *
+ * ⚠ **주인공이 없는 경기다.** `protagonistSide`는 기록 대상을 정할 뿐이고,
+ * 여기서는 양쪽 다 NPC라 큐 두 개로 전부 처리된다.
+ */
+async function simulateWithMatchEngine(params: any, leagueId: string): Promise<string> {
+  const homePitchers = [...params.homeRotation.slice(0, 1), ...params.homeBullpen,
+                        ...(params.homeCloser ? [params.homeCloser] : [])].map(toEnginePitcher);
+  const awayPitchers = [...params.awayRotation.slice(0, 1), ...params.awayBullpen,
+                        ...(params.awayCloser ? [params.awayCloser] : [])].map(toEnginePitcher);
+
+  const startRaw = await engineCall("startMatchNative", JSON.stringify({
+    leagueId,
+    protagonistSide: "home",
+    role: "SP",
+    homeLineup: params.homeLineup.map(toEngineBatter),
+    awayLineup: params.awayLineup.map(toEngineBatter),
+    myPitchers: homePitchers,
+    opponentPitchers: awayPitchers,
+  }));
+  const st = JSON.parse(startRaw);
+  if (st.error) throw new Error(`[C-4] startMatch: ${st.error}`);
+
+  const finRaw = await engineCall("simToGameEnd", startRaw);
+  const fin = JSON.parse(finRaw);
+  if (fin.error) throw new Error(`[C-4] simToGameEnd: ${fin.error}`);
+
+  return await engineCall("matchToSimResultNative", JSON.stringify({
+    state: fin,
+    homeTeamId: params.homeTeamId, awayTeamId: params.awayTeamId,
+    week: params.week, conditions: params.conditions,
+    homeRotIdx: params.homeRotIdx, awayRotIdx: params.awayRotIdx,
+  }));
 }
