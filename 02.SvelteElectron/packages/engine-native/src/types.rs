@@ -291,6 +291,25 @@ pub struct PitcherLineAccum {
     pub risp_h: i32,
 }
 
+/// 타자 한 명의 경기 기록 (C-3) — `npc_sim::BatAccum`과 같은 항목이다.
+///
+/// ⚠ **투수만 쌓으면 순위표의 절반이 빈다.** 타율·홈런·타점왕이 안 나오고
+/// 팀 득점도 선수별로 안 갈린다. `sim_game`은 `BatAccum`으로 전원을 쌓는다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BatterLineAccum {
+    pub player_id: String,
+    pub ab: i32,
+    pub h: i32,
+    pub hr: i32,
+    pub rbi: i32,
+    pub bb: i32,
+    pub k: i32,
+    pub sb: i32,
+    pub risp_ab: i32,
+    pub risp_h: i32,
+}
+
 impl PitcherQueue {
     pub fn is_empty(&self) -> bool { self.pitchers.is_empty() }
     /// 지금 투수를 바꿔야 하는가 — 아웃 한계 **또는 투구수 상한**을 넘었을 때.
@@ -488,6 +507,11 @@ pub struct MatchState {
     #[serde(default)]
     pub er_since_entry: u32,
 
+    /// 타자 기록 (C-3) — 홈/원정. 비면 아무것도 안 쌓는다
+    #[serde(default)]
+    pub home_bat_lines: Vec<BatterLineAccum>,
+    #[serde(default)]
+    pub away_bat_lines: Vec<BatterLineAccum>,
     /// 투수진 — **비면 예전 동작**(단일 npc 투수)이다 (C-1)
     #[serde(default)]
     pub my_queue: PitcherQueue,

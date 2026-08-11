@@ -288,6 +288,15 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         )
     };
 
+    // C-3: 타자 기록 — 라인업 순서와 같다. id가 없으면 순번으로 대체한다.
+    // ⚠ 라인업이 MatchState로 이동하기 **전에** 만든다
+    let _home_bat_lines: Vec<crate::types::BatterLineAccum> = home_lineup.iter().enumerate()
+        .map(|(i, b)| crate::types::BatterLineAccum {
+            player_id: b.id.clone().unwrap_or_else(|| format!("H{}", i)), ..Default::default() }).collect();
+    let _away_bat_lines: Vec<crate::types::BatterLineAccum> = away_lineup.iter().enumerate()
+        .map(|(i, b)| crate::types::BatterLineAccum {
+            player_id: b.id.clone().unwrap_or_else(|| format!("A{}", i)), ..Default::default() }).collect();
+
     let is_immediate = matches!(&entry_trigger, EntryTrigger::InningStart { inning } if *inning <= 1);
     let initial_stamina = clamp(opts.initial_stamina.unwrap_or(82.0), 0.0, 100.0);
     let initial_mental  = clamp(opts.initial_mental.unwrap_or(74.0), 0.0, 100.0);
@@ -332,6 +341,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         },
         home_lineup, away_lineup,
         home_lineup_index: 0, away_lineup_index: 0,
+        home_bat_lines: _home_bat_lines, away_bat_lines: _away_bat_lines,
         batter_mean,
         role, entry_trigger,
         protagonist_has_entered: is_immediate,
@@ -1806,6 +1816,34 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             }
         }
 
+        // ── C-3: 타자 기록 ────────────────────────────────────────────────
+        //
+        // ⚠ **투수만 쌓으면 순위표의 절반이 빈다** — 타율·홈런·타점왕이 안 나오고
+        // 팀 득점도 선수별로 안 갈린다. 타석이 끝나는 결과에서만 센다
+        // (파울·볼·헛스윙은 타석이 안 끝나므로 제외).
+        {
+            let is_top = state.half == HalfInning::Top;
+            let idx = if is_top { state.away_lineup_index } else { state.home_lineup_index };
+            let scored = (next_state.score.home + next_state.score.away)
+                - (state.score.home + state.score.away);
+            let lines = if is_top { &mut next_state.away_bat_lines } else { &mut next_state.home_bat_lines };
+            if let Some(b) = lines.get_mut(idx) {
+                use PitchResultCode::*;
+                match result_code {
+                    Walk => { b.bb += 1; }
+                    HitSingle | HitDouble | HitTriple => { b.ab += 1; b.h += 1; }
+                    HomeRun => { b.ab += 1; b.h += 1; b.hr += 1; }
+                    // 삼진은 카운트가 리셋됐을 때만 (타석 종료)
+                    StrikeSwing | StrikeLook if next_state.count.strikes == 0 && next_state.count.balls == 0 => {
+                        b.ab += 1; b.k += 1;
+                    }
+                    InplayOut | GroundOut | FlyOut | LineOut | DoublePlay | FieldingError => { b.ab += 1; }
+                    _ => {}
+                }
+                if scored > 0 { b.rbi += scored; }
+            }
+        }
+
         if !protagonist_on_mound { switch_pitcher_if_needed(&mut next_state, ours); }
     }
 
@@ -2051,4 +2089,62 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     let summary = if finish_note.contains("콜드게임") { finish_note } else { String::new() };
 
     GameSummary { home_score, away_score, strikeouts, hits, walks, at_bat_logs, summary }
+}
+
+// ── C-3: SimGameResult 어댑터 ────────────────────────────────────────────────
+//
+// `match_engine` 결과를 `sim_game`의 반환 계약으로 바꾼다. **그 계약을 그대로
+// 만족해야** 순위표·성적표·로테이션이 안 깨진다 — 리그 운영 코드 전체가
+// `SimGameResult`를 전제로 짜여 있다.
+//
+// ⚠ 이건 **변환만** 한다. 값을 만들지 않는다. 누락이 있으면 여기서 0이 아니라
+// 위(C-1·C-2)에서 안 쌓인 것이다.
+
+/// 큐·타자 기록 → `player_lines`
+fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameLine> {
+    use crate::sim_types::PlayerGameLine;
+    let mut out = Vec::new();
+    for q in [&state.my_queue, &state.opponent_queue] {
+        for l in &q.lines {
+            if l.outs == 0 && l.pc == 0 { continue; }   // 안 던진 투수는 안 넣는다
+            out.push(PlayerGameLine::Pitcher {
+                player_id: l.player_id.clone(),
+                ip: (l.outs as f64) / 3.0,
+                er: l.er, h: l.h, k: l.k, bb: l.bb, pc: l.pc,
+                // 승패는 리그 쪽이 정한다 — 여기서 만들면 두 곳이 달라진다
+                decision: String::new(),
+                risp_ab: l.risp_ab, risp_h: l.risp_h,
+            });
+        }
+    }
+    for lines in [&state.home_bat_lines, &state.away_bat_lines] {
+        for b in lines {
+            if b.ab == 0 && b.bb == 0 { continue; }     // 안 나온 타자는 안 넣는다
+            out.push(PlayerGameLine::Batter {
+                player_id: b.player_id.clone(),
+                ab: b.ab, h: b.h, hr: b.hr, rbi: b.rbi,
+                bb: b.bb, k: b.k, sb: b.sb,
+                risp_ab: b.risp_ab, risp_h: b.risp_h,
+            });
+        }
+    }
+    out
+}
+
+/// 끝난 경기 → `MatchResult` (C-3)
+pub fn to_match_result(state: &MatchState, home_team_id: &str, away_team_id: &str)
+    -> crate::sim_types::MatchResult
+{
+    let home = state.score.home;
+    let away = state.score.away;
+    let (winner, loser) = if home >= away { (home_team_id, away_team_id) }
+                          else            { (away_team_id, home_team_id) };
+    crate::sim_types::MatchResult {
+        home_score: home,
+        away_score: away,
+        winner_id: winner.to_string(),
+        loser_id:  loser.to_string(),
+        player_lines: collect_player_lines(state),
+        events: vec![],
+    }
 }

@@ -4416,6 +4416,21 @@ export async function queueSmoke(): Promise<Record<string, unknown>> {
     최종투수: fin.opponentNpcPitcher?.name ?? null,
     현재인덱스: fin.opponentQueue?.current ?? null,
     누적아웃: fin.opponentQueue?.outsByCurrent ?? null,
+    타자합계: (() => { const L=[...(fin.homeBatLines??[]),...(fin.awayBatLines??[])];
+      const sum=(k: string)=>L.reduce((a: number,b: any)=>a+(b[k]??0),0);
+      return `${L.length}명 AB ${sum("ab")} H ${sum("h")} HR ${sum("hr")} RBI ${sum("rbi")} BB ${sum("bb")} K ${sum("k")}`; })(),
+    최종스코어: (fin.score?.home ?? 0) + ":" + (fin.score?.away ?? 0),
+    어댑터: await (async () => {
+      const mr = JSON.parse(await window.projectB!.engine("matchToResultNative",
+        JSON.stringify({ state: fin, homeTeamId: "TEAM_H", awayTeamId: "TEAM_A" })));
+      if (mr.error) return { 오류: mr.error };
+      const lines = mr.playerLines ?? [];
+      const pit = lines.filter((l: any) => l.role === "pitcher");
+      const bat = lines.filter((l: any) => l.role === "batter");
+      return { 스코어: mr.homeScore + ":" + mr.awayScore, 승: mr.winnerId,
+               투수라인: pit.length, 타자라인: bat.length,
+               투수이닝합: Math.round(pit.reduce((a: number, l: any) => a + l.ip, 0) * 10) / 10 };
+    })(),
     투수별기록: (fin.opponentQueue?.lines ?? []).map((l: any) =>
       `${l.playerId} ${(l.outs/3).toFixed(1)}이닝 ${l.er}자책 ${l.h}피안타 ${l.k}K ${l.bb}BB ${l.pc}구`),
   };

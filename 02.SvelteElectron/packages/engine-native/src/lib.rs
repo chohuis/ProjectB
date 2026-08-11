@@ -92,6 +92,21 @@ pub fn reset_contact_bands_native() -> String {
     "{\"ok\":true}".to_string()
 }
 
+/// C-3 어댑터 — 끝난 경기를 리그 계약(MatchResult)으로 바꾼다.
+/// **변환만 한다.** 누락이 있으면 여기가 아니라 누적(C-1·C-2)이 안 된 것이다.
+#[napi]
+pub fn match_to_result_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P { state: types::MatchState, home_team_id: String, away_team_id: String }
+    let p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("matchToResultNative", e),
+    };
+    let r = match_engine::to_match_result(&p.state, &p.home_team_id, &p.away_team_id);
+    serde_json::to_string(&r).unwrap_or_else(|e| parse_err("matchToResultNative/serialize", e))
+}
+
 #[napi]
 pub fn start_match_native(options_json: String) -> String {
     let opts: MatchStartOptions = match serde_json::from_str(&options_json) {
