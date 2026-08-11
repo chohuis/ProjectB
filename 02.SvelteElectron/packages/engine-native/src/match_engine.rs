@@ -422,13 +422,21 @@ fn switch_pitcher_if_needed(state: &mut MatchState, my_side: bool) {
     let Some(next) = q.pitchers.get(q.current).cloned() else { return };
     let built = build_pitcher(&next, 50.0, 52.0, 55.0, 48.0, 50.0, 50.0, 50.0, 50.0);
     let name = built.name.clone().unwrap_or_else(|| "불펜".to_string());
+    // ⚠ **100으로 리셋하면 안 된다.** 구원 투수가 자기 능력과 무관하게
+    // 스태미나 100으로 들어와서, 교체하는 팀이 압도적으로 유리해졌다.
+    // 실측(2026-08-12): 같은 능력치·타선·수비에서
+    //   주인공(완투)      ERA 3.83
+    //   투수진 3명(교체)  ERA 1.65
+    // stamina_penalty = (50 - 스태미나) x 0.18이라 그대로 품질 차이가 된다.
+    // **주인공은 82에서 시작한다** — 구원도 같은 기준으로 들어와야 공평하다.
+    let fresh = built.stamina_cap.min(82.0);
     if my_side {
         state.my_npc_pitcher = built;
-        state.npc_pitcher_stamina.my = 100.0;
+        state.npc_pitcher_stamina.my = fresh;
         state.npc_pitcher_pitch_count.my = 0.0;
     } else {
         state.opponent_npc_pitcher = built;
-        state.npc_pitcher_stamina.opponent = 100.0;
+        state.npc_pitcher_stamina.opponent = fresh;
         state.npc_pitcher_pitch_count.opponent = 0.0;
     }
     state.logs.push(format!("[{}회] 투수 교체 — {}", state.inning, name));
@@ -1400,7 +1408,7 @@ pub fn should_protagonist_exit(state: &MatchState) -> ProtagonistExitCheck {
 
     // 리그별 상한 (고교 105 / 그 외 120). 구 세이브는 0이라 전역 상수로 떨어진다.
     let hard = if state.pitch_limit > 0.0 { state.pitch_limit } else { T::PROTAGONIST_PITCH_COUNT_HARD };
-    let soft = if state.pitch_soft  > 0.0 { state.pitch_soft  } else { T::PROTAGONIST_PITCH_COUNT_SOFT };
+    let soft = if state.pitch_soft  > 0.0 { state.pitch_soft  } else { T::protagonist_pitch_soft() };
 
     if pce  >= hard { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::PitchLimit) }; }
     if stam <= T::protagonist_stamina_exit() { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::Stamina) }; }

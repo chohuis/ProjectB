@@ -4647,3 +4647,47 @@ export async function opponentLineupProbe(): Promise<Record<string, unknown>> {
     })(),
   };
 }
+
+/**
+ * 주인공 ERA와 리그 ERA의 **격차** — 루프의 판정 기준(오라클).
+ *
+ * ⚠ **오라클이 틀리면 빠르게 잘못된 곳으로 수렴한다.** 이번 프로젝트에서
+ * 격리 3.73 → 커리어 7.06으로 크게 어긋난 적이 있다. 루프를 돌리기 전에
+ * 이 값이 커리어 격차를 예측하는지 반드시 확인할 것.
+ *
+ * 같은 조건으로 양쪽을 재고 차이를 돌려준다:
+ *   주인공  engineDuel (실제 상대 타선 수준 = batterMean 66 · 수비 66)
+ *   리그    같은 엔진에 NPC 투수진을 넣어 돌린 것
+ */
+export async function eraGap(games: number): Promise<Record<string, unknown>> {
+  const mine = await engineDuel(games, 66, 66);
+  // 리그 쪽 — 같은 타선·수비에 리그 평균 수준 투수(OVR 66)를 세운다
+  const leaguePitcher = {
+    name: "리그평균", command: 66, velocity: 66, staminaCap: 66, mentalResil: 66,
+    control: 66, movement: 66, clutch: 66, holdRunners: 66,
+    arsenal: [{ type: "fastball", grade: 3 }, { type: "slider", grade: 3 }],
+  };
+  let outs = 0, er = 0;
+  for (let i = 0; i < games; i++) {
+    const st = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
+      protagonistSide: "home", role: "SP", batterMean: 66, leagueId: "LEAGUE_HIGHSCHOOL",
+      // ⚠ **투수진 셋이다.** 실제 리그는 선발→불펜→마무리로 교체한다 —
+      // 한 명 완투로 재면 주인공(완투)과 조건이 같아져 격차가 사라진다
+      opponentPitchers: [leaguePitcher,
+        { ...leaguePitcher, name: "불펜", staminaCap: 45 },
+        { ...leaguePitcher, name: "마무리", staminaCap: 40 }],
+      fielders: _mkFielders(66),
+    })));
+    if (st.error) return { 오류: st.error };
+    const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(st)));
+    if (fin.error) return { 오류: fin.error };
+    for (const l of (fin.opponentQueue?.lines ?? [])) { outs += l.outs ?? 0; er += l.er ?? 0; }
+  }
+  const leagueEra = outs > 0 ? Math.round((er * 27 / outs) * 100) / 100 : null;
+  const mineEra = Number(mine.ERA ?? 0);
+  return {
+    주인공: mineEra, 리그: leagueEra,
+    격차: leagueEra != null ? Math.round((mineEra - leagueEra) * 100) / 100 : null,
+    주인공이닝: mine.이닝, 리그이닝: Math.round(outs / 3),
+  };
+}

@@ -143,7 +143,20 @@ pub const NPC_STARTER_STAMINA_LIMIT: f64       = 35.0;
 pub const NPC_STARTER_PITCH_COUNT_SOFT: f64    = 65.0;
 #[allow(dead_code)]
 pub const NPC_STARTER_PITCH_COUNT_HARD: f64    = 110.0;
+/// 주인공이 교체를 고민하기 시작하는 투구수.
+///
+/// ⚠ NPC 선발은 65구다(NPC_STARTER_PITCH_COUNT_SOFT). 주인공만 90이라
+/// **혼자 지친 채로 9이닝을 갈아 넣는다** — 그게 주인공(오프셋 7)과
+/// 리그(오프셋 0)가 다른 값을 요구하던 원인의 하나다.
+/// 계측용 PB_PROT_PITCH_SOFT 환경변수가 덮는다.
 pub const PROTAGONIST_PITCH_COUNT_SOFT: f64    = 90.0;
+
+pub fn protagonist_pitch_soft() -> f64 {
+    match std::env::var("PB_PROT_PITCH_SOFT") {
+        Ok(v) => v.parse::<f64>().unwrap_or(PROTAGONIST_PITCH_COUNT_SOFT),
+        Err(_) => PROTAGONIST_PITCH_COUNT_SOFT,
+    }
+}
 /// 리그를 모를 때 쓰는 기본 상한. 리그별 상한은 `league_pitch_limit()` (Phase 5-8)
 pub const PROTAGONIST_PITCH_COUNT_HARD: f64    = 120.0;
 
