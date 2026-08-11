@@ -4528,3 +4528,50 @@ export async function ovrEraCurve(games: number, batterMean: number): Promise<Re
   }
   return out;
 }
+
+/**
+ * 격리 대조 — **생성 타자 vs 실제 리그 라인업.**
+ *
+ * 같은 엔진인데 주인공(오프셋 7)과 리그(오프셋 0)가 다른 값을 요구한다.
+ * 수비는 배제했다(넘겨도 안 바뀜). 남은 유력 후보가 타선 구성이다:
+ * 격리는 `batterMean` 66으로 **전 스탯 균일한** 타자를 만들고,
+ * 리그는 실제 라인업(스탯이 흩어진)을 쓴다.
+ */
+export async function lineupCompare(games: number): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const ents = get(masterStore).entities;
+  const { buildBatterLineup } = await import("../../apps/ui/src/shared/utils/matchLineupBuilder");
+  const real = buildBatterLineup(g.protagonist.teamId, ents);
+
+  const pit = {
+    name: "테스트", command: 68, velocity: 68, staminaCap: 68, mentalResil: 68,
+    control: 68, movement: 68, clutch: 68, holdRunners: 68,
+    arsenal: [{ type: "fastball", grade: 3 }, { type: "slider", grade: 3 }],
+  };
+
+  const run = async (useReal: boolean) => {
+    let outs = 0, er = 0, h = 0, k = 0;
+    for (let i = 0; i < games; i++) {
+      const st = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
+        protagonistSide: "home", role: "SP", leagueId: "LEAGUE_HIGHSCHOOL",
+        opponentPitchers: [pit],
+        ...(useReal && real.length >= 9 ? { awayLineup: real } : { batterMean: 66 }),
+      })));
+      if (st.error) return { 오류: st.error };
+      const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(st)));
+      if (fin.error) return { 오류: fin.error };
+      for (const l of (fin.opponentQueue?.lines ?? [])) {
+        outs += l.outs ?? 0; er += l.er ?? 0; h += l.h ?? 0; k += l.k ?? 0;
+      }
+    }
+    const r = (v: number) => outs > 0 ? Math.round((v * 27 / outs) * 100) / 100 : null;
+    return { 이닝: Math.round(outs / 3), ERA: r(er), "K/9": r(k), "H/9": r(h) };
+  };
+
+  return {
+    "생성 타자(균일 66)": await run(false),
+    "실제 라인업": await run(true),
+    "라인업 인원": real.length,
+    "실제 타자 컨택": real.slice(0, 9).map((b: any) => b.contact),
+  };
+}
