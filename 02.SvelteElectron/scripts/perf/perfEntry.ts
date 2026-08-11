@@ -4420,3 +4420,41 @@ export async function queueSmoke(): Promise<Record<string, unknown>> {
       `${l.playerId} ${(l.outs/3).toFixed(1)}이닝 ${l.er}자책 ${l.h}피안타 ${l.k}K ${l.bb}BB ${l.pc}구`),
   };
 }
+
+/**
+ * C-3 두 엔진 대조 — **같은 능력치로 같은 경기를 양쪽에 돌린다.**
+ *
+ * 통합의 안전장치다. 어댑터를 붙이기 전에 **지금 두 엔진이 얼마나 다른지**
+ * 기준선을 잡아야, 전환 후 바뀐 게 어댑터 탓인지 원래 차이인지 갈린다.
+ *
+ * ⚠ 이 대조 없이 넘어가면 전 리그 성적이 통째로 바뀐 걸 몇 세션 뒤에 발견한다.
+ */
+export async function engineCompare(games: number): Promise<Record<string, unknown>> {
+  const mk = (n: string, cmd: number, vel: number, sta: number) =>
+    ({ name: n, command: cmd, velocity: vel, staminaCap: sta, mentalResil: 55,
+       control: cmd - 2, movement: 52, clutch: 50, holdRunners: 50 });
+  const staff = [mk("선발", 55, 55, 60), mk("불펜", 50, 52, 40), mk("마무리", 58, 60, 35)];
+
+  // ── A: 주인공 엔진 (match_engine) ──
+  let aOuts = 0, aEr = 0, aH = 0, aK = 0, aBb = 0;
+  for (let i = 0; i < games; i++) {
+    const st = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
+      protagonistSide: "home", role: "SP", batterMean: 66, leagueId: "LEAGUE_HIGHSCHOOL",
+      opponentPitchers: staff,
+    })));
+    if (st.error) return { 오류: st.error };
+    const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(st)));
+    if (fin.error) return { 오류: fin.error };
+    for (const l of (fin.opponentQueue?.lines ?? [])) {
+      aOuts += l.outs ?? 0; aEr += l.er ?? 0; aH += l.h ?? 0; aK += l.k ?? 0; aBb += l.bb ?? 0;
+    }
+  }
+  const per9 = (v: number, outs: number) => outs > 0 ? Math.round((v * 27 / outs) * 100) / 100 : null;
+  return {
+    경기: games,
+    "주인공엔진": { 이닝: Math.round(aOuts / 3 * 10) / 10, ERA: per9(aEr, aOuts),
+                  "K/9": per9(aK, aOuts), "BB/9": per9(aBb, aOuts), "H/9": per9(aH, aOuts) },
+    비고: "NPC 엔진(sim_game)은 팀 로스터가 필요해 같은 조건을 못 만든다 — 리그 실측과 대조한다",
+    "리그 NPC 실측": { ERA: "3.2~4.0", "K/9": 8.11, "BB/9": 3.90, "H/9": 7.34 },
+  };
+}
