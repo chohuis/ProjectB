@@ -4431,6 +4431,16 @@ export async function queueSmoke(): Promise<Record<string, unknown>> {
                투수라인: pit.length, 타자라인: bat.length,
                투수이닝합: Math.round(pit.reduce((a: number, l: any) => a + l.ip, 0) * 10) / 10 };
     })(),
+    전체어댑터: await (async () => {
+      const r = JSON.parse(await window.projectB!.engine("matchToSimResultNative",
+        JSON.stringify({ state: fin, homeTeamId: "TEAM_H", awayTeamId: "TEAM_A", week: 5,
+                         conditions: {}, homeRotIdx: 0, awayRotIdx: 0 })));
+      if (r.error) return { 오류: r.error };
+      const c = r.pitcherConditions ?? {};
+      return { 로테: r.nextHomeRotIdx + "/" + r.nextAwayRotIdx,
+               컨디션수: Object.keys(c).length,
+               피로: Object.entries(c).map(([k, v]: any) => k + " " + Math.round(v.fatigue)) };
+    })(),
     투수별기록: (fin.opponentQueue?.lines ?? []).map((l: any) =>
       `${l.playerId} ${(l.outs/3).toFixed(1)}이닝 ${l.er}자책 ${l.h}피안타 ${l.k}K ${l.bb}BB ${l.pc}구`),
   };

@@ -2148,3 +2148,54 @@ pub fn to_match_result(state: &MatchState, home_team_id: &str, away_team_id: &st
         events: vec![],
     }
 }
+
+/// 끝난 경기 → `SimGameResult` (C-3 완성)
+///
+/// 리그 운영 코드가 이 계약 전체를 쓴다 — `MatchResult`만으론 부족하다.
+///   `next_*_rot_idx`      다음 경기 선발이 누구인지
+///   `pitcher_conditions`  피로 누적. **안 넘기면 투수가 무한정 던진다**
+///
+/// ⚠ 피로 계수 `outs × 2.7`은 `npc_sim`과 **같은 값이다.** 다르면 한쪽
+/// 리그만 투수가 빨리 지친다.
+pub fn to_sim_game_result(
+    state: &MatchState,
+    home_team_id: &str,
+    away_team_id: &str,
+    week: i32,
+    prev_conditions: &std::collections::HashMap<String, crate::sim_types::SimPlayerCondition>,
+    home_rot_idx: usize,
+    away_rot_idx: usize,
+) -> crate::sim_types::SimGameResult {
+    use crate::sim_types::{SimGameResult, SimPlayerCondition};
+    let mut conds = std::collections::HashMap::new();
+
+    // 주인공 쪽 큐가 홈인지 원정인지는 `protagonist_side`가 정한다
+    let my_is_home = state.protagonist_side == "home";
+    for (q, is_home) in [(&state.my_queue, my_is_home), (&state.opponent_queue, !my_is_home)] {
+        let _ = is_home;
+        for l in &q.lines {
+            if l.outs == 0 && l.pc == 0 { continue; }
+            let prev = prev_conditions.get(&l.player_id).map(|c| c.fatigue).unwrap_or(100.0);
+            conds.insert(l.player_id.clone(), SimPlayerCondition {
+                fatigue: (prev - l.outs as f64 * 2.7).clamp(0.0, 100.0),
+                last_pitched_week: week,
+                pitch_outs_last: l.outs,
+            });
+        }
+    }
+
+    // 로테이션은 **쓴 투수 수만큼** 민다 — 선발이 하나만 나갔으면 +1이다
+    let used = |q: &crate::types::PitcherQueue| q.current + 1;
+    let (home_used, away_used) = if my_is_home {
+        (used(&state.my_queue), used(&state.opponent_queue))
+    } else {
+        (used(&state.opponent_queue), used(&state.my_queue))
+    };
+
+    SimGameResult {
+        result: to_match_result(state, home_team_id, away_team_id),
+        next_home_rot_idx: (home_rot_idx + home_used.min(1)) as i32,
+        next_away_rot_idx: (away_rot_idx + away_used.min(1)) as i32,
+        pitcher_conditions: conds,
+    }
+}

@@ -92,6 +92,30 @@ pub fn reset_contact_bands_native() -> String {
     "{\"ok\":true}".to_string()
 }
 
+/// C-3 어댑터(완성) — 끝난 경기를 리그 계약(SimGameResult) 전체로 바꾼다.
+/// rot_idx·pitcher_conditions까지 채운다 — 안 넘기면 투수가 무한정 던진다.
+#[napi]
+pub fn match_to_sim_result_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P {
+        state: types::MatchState,
+        home_team_id: String,
+        away_team_id: String,
+        week: i32,
+        #[serde(default)] conditions: std::collections::HashMap<String, sim_types::SimPlayerCondition>,
+        #[serde(default)] home_rot_idx: usize,
+        #[serde(default)] away_rot_idx: usize,
+    }
+    let p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("matchToSimResultNative", e),
+    };
+    let r = match_engine::to_sim_game_result(&p.state, &p.home_team_id, &p.away_team_id,
+        p.week, &p.conditions, p.home_rot_idx, p.away_rot_idx);
+    serde_json::to_string(&r).unwrap_or_else(|e| parse_err("matchToSimResultNative/serialize", e))
+}
+
 /// C-3 어댑터 — 끝난 경기를 리그 계약(MatchResult)으로 바꾼다.
 /// **변환만 한다.** 누락이 있으면 여기가 아니라 누적(C-1·C-2)이 안 된 것이다.
 #[napi]
