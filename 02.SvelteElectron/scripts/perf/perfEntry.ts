@@ -4691,3 +4691,33 @@ export async function eraGap(games: number): Promise<Record<string, unknown>> {
     주인공이닝: mine.이닝, 리그이닝: Math.round(outs / 3),
   };
 }
+
+/**
+ * 팀별 경기 수 — **대회가 넉아웃이라 일찍 지면 경기가 확 준다.**
+ *
+ * 주인공 등판이 시즌 9회뿐인데, 팀 경기 44~48 중 대부분이 연습경기다.
+ * 리그(공식) 경기가 13이면 등판률은 오히려 높다 — 진짜 병목은 경기 수다.
+ */
+export function teamGameCount(): Record<string, unknown> {
+  const s: any = get(seasonStore);
+  const g = get(gameStore);
+  const sched = (s.schedule ?? []) as any[];
+  const byTeam: Record<string, { 공식: number; 연습: number }> = {};
+  for (const e of sched) {
+    for (const t of [e.homeTeamId, e.awayTeamId]) {
+      if (!t) continue;
+      const a = (byTeam[t] ||= { 공식: 0, 연습: 0 });
+      if (e.isFriendly) a.연습++; else a.공식++;
+    }
+  }
+  const counts = Object.values(byTeam).map((v) => v.공식).sort((a, b) => a - b);
+  const mine = byTeam[g.protagonist.teamId] ?? { 공식: 0, 연습: 0 };
+  const n = counts.length || 1;
+  return {
+    팀수: counts.length,
+    "공식경기 최소": counts[0], "p25": counts[Math.floor(n * 0.25)],
+    "중앙": counts[Math.floor(n / 2)], "p75": counts[Math.floor(n * 0.75)],
+    "최대": counts[n - 1],
+    "내 팀": mine,
+  };
+}
