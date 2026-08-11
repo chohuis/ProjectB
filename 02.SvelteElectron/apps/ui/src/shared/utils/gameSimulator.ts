@@ -284,7 +284,9 @@ const engineCall = (fn: string, payload: string): Promise<string> =>
 // 능력치가 높을수록 ERA가 나빠지면 육성·드래프트·수상이 전부 거꾸로 돈다.
 // 성능은 문제없었다(주당 +153ms, 예상 136ms와 일치).
 export const FULL_ENGINE_LEAGUES = new Set<string>([
-  "LEAGUE_HIGHSCHOOL",
+  "LEAGUE_HIGHSCHOOL",   // C-4 검증 완료 (ERA 3.86 · 이닝 47.3)
+  "LEAGUE_UNIVERSITY",   // C-5
+  "LEAGUE_INDEPENDENT",  // C-5
 ]);
 
 /** SimPitcher → 엔진이 받는 PartialPitcherStats */
