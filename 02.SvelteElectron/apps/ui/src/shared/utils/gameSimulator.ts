@@ -1,3 +1,4 @@
+import { toEngineArsenal } from "./arsenal";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
 import type { MatchResult, NpcLiveStat, PlayerCondition } from "../types/season";
@@ -32,6 +33,8 @@ interface SimPitcher {
   id: string; velocity: number; movement: number; command: number;
   control: number; stamina: number; clutch: number; mentality: number;
   holdRunners: number;
+  /** 보유 구종 (C-4). npc_sim은 안 쓰지만 풀 엔진이 쓴다 — 없으면 패스트볼 하나가 된다 */
+  arsenal?: { type: string; grade: number }[];
 }
 interface SimBatter {
   id: string; contact: number; power: number; eye: number;
@@ -62,6 +65,9 @@ function toSimPitcher(
     mentality: p?.mentality ?? 50,
     // 견제력 — 도루 시도를 누른다. 안 넘기면 엔진이 50(무보정)으로 본다
     holdRunners: p?.holdRunners ?? 50,
+    // ⚠ **구종을 싣는다.** 안 실으면 풀 엔진에서 전원 패스트볼 하나가 되고,
+    // 구종 1개 페널티(ERA 2배)를 리그 전체가 먹는다
+    arsenal: toEngineArsenal(live?.pitches ?? []),
   };
 }
 
@@ -278,7 +284,7 @@ const engineCall = (fn: string, payload: string): Promise<string> =>
 // 능력치가 높을수록 ERA가 나빠지면 육성·드래프트·수상이 전부 거꾸로 돈다.
 // 성능은 문제없었다(주당 +153ms, 예상 136ms와 일치).
 export const FULL_ENGINE_LEAGUES = new Set<string>([
-  // "LEAGUE_HIGHSCHOOL",
+  "LEAGUE_HIGHSCHOOL",
 ]);
 
 /** SimPitcher → 엔진이 받는 PartialPitcherStats */
@@ -289,6 +295,7 @@ function toEnginePitcher(p: SimPitcher): Record<string, unknown> {
     staminaCap: p.stamina, mentalResil: p.mentality ?? 50,
     control: p.control, movement: p.movement,
     clutch: p.clutch ?? 50, holdRunners: p.holdRunners ?? 50,
+    arsenal: p.arsenal,
   };
 }
 
