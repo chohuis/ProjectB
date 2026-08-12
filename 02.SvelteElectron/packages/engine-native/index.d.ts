@@ -11,7 +11,23 @@ export declare function encryptSaveNative(plaintext: string): string
 export declare function decryptSaveNative(ciphertext: string): string
 /** 서명 검증 — 일치하면 true */
 export declare function verifySaveSig(snapshot: string, sig: string): boolean
-/** 초기 경기 상태 생성 */
+/**
+ * 초기 경기 상태 생성
+ * 계측 전용 — contact_q 밴드 분포를 읽는다 (릴리스 동작에 영향 없음)
+ */
+export declare function contactBandStatsNative(): string
+/** 계측 전용 — 카운터 초기화 */
+export declare function resetContactBandsNative(): string
+/**
+ * C-3 어댑터(완성) — 끝난 경기를 리그 계약(SimGameResult) 전체로 바꾼다.
+ * rot_idx·pitcher_conditions까지 채운다 — 안 넘기면 투수가 무한정 던진다.
+ */
+export declare function matchToSimResultNative(paramsJson: string): string
+/**
+ * C-3 어댑터 — 끝난 경기를 리그 계약(MatchResult)으로 바꾼다.
+ * **변환만 한다.** 누락이 있으면 여기가 아니라 누적(C-1·C-2)이 안 된 것이다.
+ */
+export declare function matchToResultNative(paramsJson: string): string
 export declare function startMatchNative(optionsJson: string): string
 /** 주인공 인터랙티브 투구 (1구) */
 export declare function stepPitchNative(stateJson: string, decisionJson: string): string
@@ -75,8 +91,6 @@ export declare function applyDraftNative(paramsJson: string): string
 export declare function bgHsGraduateDraftNative(paramsJson: string): string
 /** 주인공 드래프트 결과 결정 */
 export declare function determineProtagonistDraftNative(paramsJson: string): string
-/** 드래프트 보드 — 전체 픽 시퀀스 사전 계산 */
-export declare function runDraftBoardNative(paramsJson: string): string
 /** 주인공 학년 진급 */
 export declare function advanceProtagonistGradeNative(paramsJson: string): string
 /** HS + 대학 전체 학년 진급 (단일 호출) */

@@ -579,51 +579,14 @@ pub struct CalcEarlyEnlistResult {
     pub early_enlist_ids: Vec<String>,
 }
 
-// ── 드래프트 보드 (커리어 선택 화면) ──────────────────────────────────────────
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct DraftBoardCandidate {
-    pub id: String,
-    pub ovr: f64,
-    pub age: i32,
-    pub potential: f64,
-    pub is_user: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct DraftBoardPick {
-    pub pick_no: i32,
-    pub round: i32,
-    pub team_id: String,
-    pub candidate_id: String,
-    pub is_user: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct DraftBoardParams {
-    pub candidates: Vec<DraftBoardCandidate>,
-    pub protagonist_scout_score: f64,
-    pub protagonist_ovr: f64,
-    pub team_ids: Vec<String>,
-    pub year: i32,
-    pub rounds: i32,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct DraftBoardResult {
-    pub picks: Vec<DraftBoardPick>,
-    pub user_drafted: bool,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_round: Option<i32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_pick_no: Option<i32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub user_team_id: Option<String>,
-}
+// ── 드래프트 보드 타입 제거됨 (2026-08-12) ───────────────────────
+//
+// DraftBoardCandidate / DraftBoardPick / DraftBoardParams /
+// DraftBoardResult — run_draft_board 전용이었고 그 함수를 지웠다
+// (npc_sim.rs의 제거 주석 참고).
+//
+// TS 쪽 DraftBoardPick은 남아 있다. 이름은 같지만 다른 것이다 —
+// 그건 processNpcDraft가 남긴 지명 로그를 화면이 읽는 타입이다.
 
 // ── 게임 시뮬 파라미터 ────────────────────────────────────────────────────────
 

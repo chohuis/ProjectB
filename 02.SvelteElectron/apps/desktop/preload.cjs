@@ -97,7 +97,6 @@ contextBridge.exposeInMainWorld("projectB", {
   salaryCalcOfferedSalaryForProtagonist: (p) => ipcRenderer.invoke("engine:call", "calcOfferedSalaryForProtagonistNative",      p),
   faGenerateOffers:                      (p) => ipcRenderer.invoke("engine:call", "generateFaOffersNative",                           p),
   draftCalcDraftRank:                    (p) => ipcRenderer.invoke("engine:call", "calcDraftRankNative",                         p),
-  draftRunBoard:                         (p) => ipcRenderer.invoke("engine:call", "runDraftBoardNative",                              p),
   militaryCalcCandidates:                (p) => ipcRenderer.invoke("engine:call", "calcSportsUnitCandidatesNative",                     p),
   militaryCalcSelection:                 (p) => ipcRenderer.invoke("engine:call", "calcSportsUnitSelectionNative",                      p),
   militaryPickGeneral:                   (p) => ipcRenderer.invoke("engine:call", "pickGeneralEnlisteesNative",                        p),

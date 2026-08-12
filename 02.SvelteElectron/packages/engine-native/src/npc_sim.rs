@@ -2118,8 +2118,17 @@ fn scout_bias(npc_id: &str, year: i32, magnitude: f64) -> f64 {
     (u + v - 1.0) * magnitude
 }
 
-/// 평가 편차의 크기. 능력치 보정이 최대 +43쯤이라 그걸 뒤집지 않을 만큼만 준다
-const SCOUT_BIAS: f64 = 9.0;
+/// 평가 편차의 크기.
+///
+/// ⚠ **9는 신호를 덮었다.** "능력치 보정이 최대 +43"을 기준으로 잡았는데,
+/// 그 폭은 후보 **전체**의 이야기다. 지명 대상 풀은 상위 220명으로 미리
+/// 좁혀지므로 **실제 지명자의 점수 폭은 18.2점**(p5~p95)뿐이다.
+/// 거기에 편차 ±9와 라운드 노이즈 ±7.5가 얹히면 흔들림이 신호와 맞먹는다.
+///
+/// 실측 603명: 라운드별 점수 중앙은 1R 84.0 → 11R 74.5로 제대로 내려가는데
+/// **라운드별 OVR 중앙은 1R 80 · 11R 77로 평평**했고, 고교 3학년 투수 기준
+/// 백분위로 보면 95백분위와 60백분위가 **똑같이 7R**이었다.
+const SCOUT_BIAS: f64 = 4.0;
 
 fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
     let total: f64 = weights.iter().sum();
@@ -2185,7 +2194,13 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
             // 구단이 매 순번에서 **가장 좋다고 본 선수**를 고르고, 그 평가에
             // 노이즈가 섞이는 게 실제 드래프트에 가깝다. 노이즈는 라운드가
             // 깊을수록 커지되 상한이 있다(예전엔 11R에서 ±44라 순수 난수였다).
-            let spread = (r as f64 * 4.0).min(15.0);
+            // ⚠ **상한 15는 신호를 덮었다.** 지명자 점수 폭이 18.2점이라
+            // ±7.5는 그 절반이다. 4R부터 사실상 순서가 사라졌고, 실측에서
+            // 라운드별 OVR이 평평했다(1R 80 · 11R 77).
+            //
+            // 라운드가 깊을수록 평가가 갈리는 건 맞지만, 그 폭이 "능력치
+            // 차이를 못 읽을 만큼"이면 안 된다. 상한을 신호 폭의 1/3로 둔다.
+            let spread = (r as f64 * 1.2).min(6.0);
             let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
                 let base = calc_draft_score(npc, meta_map.get(id).copied()) + bias_of(id);
@@ -2568,95 +2583,21 @@ pub fn calc_early_enlist_decisions(params: CalcEarlyEnlistParams) -> CalcEarlyEn
     CalcEarlyEnlistResult { early_enlist_ids }
 }
 
-pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
-    let teams = &params.team_ids;
-    let n_teams = teams.len() as i32;
-    if n_teams == 0 || params.rounds == 0 {
-        return DraftBoardResult { picks: vec![], user_drafted: false, user_round: None, user_pick_no: None, user_team_id: None };
-    }
-
-    let total = params.rounds * n_teams;
-    let combined = params.protagonist_scout_score * 0.6 + params.protagonist_ovr * 0.4;
-    let target_pick = ((108.0 - combined) / 2.2).round() as i32;
-    let target_pick = target_pick.max(1).min(total) as usize;
-
-    // 비주인공 후보를 드래프트 점수 내림차순 정렬
-    let mut sorted: Vec<DraftBoardCandidate> = params.candidates.iter()
-        .filter(|c| !c.is_user)
-        .cloned()
-        .collect();
-    sorted.sort_by(|a, b| {
-        let sa = a.ovr + (a.potential - 50.0) * 0.3 - (a.age as f64 - 19.0).max(0.0) * 3.0;
-        let sb = b.ovr + (b.potential - 50.0) * 0.3 - (b.age as f64 - 19.0).max(0.0) * 3.0;
-        sb.partial_cmp(&sa).unwrap_or(std::cmp::Ordering::Equal)
-    });
-
-    // 주인공을 target_pick 위치에 삽입
-    let insert_pos = (target_pick - 1).min(sorted.len());
-    let user_opt = params.candidates.iter().find(|c| c.is_user).cloned();
-    if let Some(ref u) = user_opt {
-        sorted.insert(insert_pos, u.clone());
-    }
-
-    let mut rng = LcgRand::new(
-        (params.year as u32).wrapping_mul(1337).wrapping_add((sorted.len() as u32).wrapping_mul(7))
-    );
-
-    let mut drafted = vec![false; sorted.len()];
-    let mut picks: Vec<DraftBoardPick> = Vec::with_capacity(total as usize);
-    let mut user_drafted = false;
-    let mut user_round = None;
-    let mut user_pick_no = None;
-    let mut user_team_id = None;
-
-    'outer: for r in 1..=params.rounds {
-        for t in 0..n_teams {
-            let pick_no = (r - 1) * n_teams + t + 1;
-            // 스네이크: 홀수 라운드 정방향, 짝수 라운드 역방향
-            let team_slot = if r % 2 == 1 { t } else { n_teams - 1 - t };
-            let team_id = teams[team_slot as usize].clone();
-
-            // 미지명 후보 상위 35명 풀
-            let pool: Vec<usize> = (0..sorted.len())
-                .filter(|&i| !drafted[i])
-                .take(35)
-                .collect();
-
-            if pool.is_empty() { break 'outer; }
-
-            // 가중치 점수 계산 (noise [0, 6])
-            let scores: Vec<f64> = pool.iter().map(|&i| {
-                let c = &sorted[i];
-                let age_penalty = (c.age as f64 - 19.0).max(0.0) * 3.0;
-                let pot_bonus   = (c.potential - 50.0) * 0.3;
-                let noise       = rng.next() * 6.0;
-                (c.ovr + pot_bonus - age_penalty + noise).max(0.1)
-            }).collect();
-
-            let sel_pool_idx = weighted_pick(&scores, &mut rng);
-            let sel_idx = pool[sel_pool_idx];
-            drafted[sel_idx] = true;
-
-            let is_user = sorted[sel_idx].is_user;
-            if is_user {
-                user_drafted = true;
-                user_round    = Some(r);
-                user_pick_no  = Some(pick_no);
-                user_team_id  = Some(team_id.clone());
-            }
-
-            picks.push(DraftBoardPick {
-                pick_no,
-                round: r,
-                team_id,
-                candidate_id: sorted[sel_idx].id.clone(),
-                is_user,
-            });
-        }
-    }
-
-    DraftBoardResult { picks, user_drafted, user_round, user_pick_no, user_team_id }
-}
+// ── run_draft_board 제거됨 (2026-08-12) ─────────────────────────
+//
+// **주인공 지명 위치를 정하는 두 번째 산식**이 여기 살아 있었다.
+// 스카우트 점수와 OVR을 6:4로 섞은 뒤 그 절대값에서 목표 순번을 직접
+// 뽑았고(폐기된 옛 식), 지명 순서는 짝수 라운드를 뒤집는 스네이크였다.
+//
+// ⚠ 그 식을 여기 그대로 적지 않는다 — `draftBoardSingleSource.test.ts`가
+// 지문(상수·필드명)으로 부활을 잡는데, 주석에 인용하면 검사가 그걸 문다.
+//
+// 둘 다 지금 정본과 다르다. 절대식은 상대평가(determine_protagonist_draft)로
+// 바뀌었고 지명 순서는 10팀 정순이다(pickInRound 주석). 그런데 호출부가
+// 사라진 뒤에도 남아 있었다 — 이 저장소에서 반복적으로 나온 "정본이 둘"의
+// 씨앗이고, 실제로 픽번호 중복을 쫓다가 여기부터 의심했다.
+//
+// 보드 화면(DraftBoardModal)은 이제 processNpcDraft 결과를 재생만 한다.
 
 pub fn advance_protagonist_grade(params: ProtagonistGradeParams) -> ProtagonistGradeResult {
     if params.current_grade >= 3 {

@@ -4728,3 +4728,65 @@ export function teamGameCount(): Record<string, unknown> {
     "내 팀": mine,
   };
 }
+
+// ── NPC 드래프트 라운드 ↔ 능력치 대응표 (D단계) ──────────────────
+//
+// 주인공 산식(`determine_protagonist_draft`)과 NPC 산식(`calc_draft_score`)은
+// **척도가 아예 다르다** — 주인공은 백분위 기반 0~100이고, NPC는
+// `ovr*0.4 + edge + dev*0.35 + 잠재*0.1 + youth`라 대략 60~120이다.
+//
+// 둘을 직접 비교할 수는 없다. 잴 수 있는 건 **결과**다: 같은 OVR이 같은
+// 라운드를 받는가. 주인공만 관대하면 육성 결과가 실제보다 좋게 보이고,
+// 박하면 잘 키워도 보상이 없다.
+//
+// ⚠ **`npcs[].pitching`이 아니라 live를 읽는다.** 생성값은 안 자라서
+// 3년을 추적해도 +0이다 — 이 저장소에서 네 번 나온 결함이다.
+export function npcDraftTable(): Record<string, unknown> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const log = g.schoolState?.careerDraftPickLog ?? [];
+  if (log.length === 0) return { 표본: 0, rows: [] };
+
+  const byId = new Map(g.npcs.map((n) => [n.npcId, n]));
+  const rows: {
+    round: number; pick: number; ovr: number; genOvr: number;
+    age: number; dev: number; type: string;
+  }[] = [];
+  for (const r of log) {
+    const n = byId.get(r.playerId);
+    if (!n) continue;
+    // ⚠ **`playerType`으로 거른다.** `ovr > 0`만 보면 타자가 섞여 들어온다 —
+    // 투수 항목이 없는 선수도 `livePitchingOvrOf`가 1을 돌려주기 때문이다
+    // (`patchNpcLiveOvr`의 `Math.max(1, ...)`). 첫 실측에서 OVR 1이 네 라운드에
+    // 끼어 최소값을 통째로 망가뜨렸다
+    if (n.playerType !== "pitcher") continue;
+    const ovr = livePitchingOvrOf(n, live);
+    if (!(ovr > 1)) continue;
+    rows.push({
+      round: r.round, pick: r.pickNo, ovr, age: n.age,
+      // ⚠ **생성값도 같이 싣는다.** `processNpcDraft`가 Rust에 넘기는 후보는
+      // `s.npcs`(생성 데이터)이고, `npc_core_ovr`은 거기 `pitching.ovr`을 읽는다.
+      // 성장분은 `npcLiveStatsStore`에만 있으므로 **지명이 1학년 능력치로
+      // 정해지고 있을 수 있다.** 어느 쪽과 라운드가 맞는지 재서 가린다 —
+      // 이 저장소에서 다섯 번 나온 결함이라 단정하지 않고 잰다
+      genOvr: n.pitching?.ovr ?? 0,
+      // NPC 산식은 `dev_rate * 0.35`를 얹는다 — OVR만 보면 라운드를 못 설명한다
+      dev: n.developmentRate ?? 0,
+      type: n.playerType,
+    });
+  }
+  // ⚠ **주인공과 같은 저울로 옮기려면 또래 분포가 있어야 한다.**
+  // 주인공 산식은 `백분위 * 0.6 + ovrNorm * 0.4`인데 NPC 산식은
+  // `ovr*0.4 + edge + dev*0.35 + youth`라 절대점수다. 라운드별 OVR만
+  // 비교하면 "누가 더 관대한가"를 알 수 없다 — 같은 백분위가 같은 라운드를
+  // 받는지가 물어야 할 것이고, 그러려면 분모를 여기서 같이 집어야 한다.
+  //
+  // 주인공 호출부(`advanceWeek`)와 **같은 조건**으로 뽑는다: 고교 3학년 투수
+  const peers = g.npcs
+    .filter((n) => n.playerType === "pitcher" && n.grade === 3
+      && n.currentLeague === "LEAGUE_HIGHSCHOOL")
+    .map((n) => livePitchingOvrOf(n, live))
+    .filter((o) => o > 1);
+
+  return { 표본: rows.length, rows, peers };
+}

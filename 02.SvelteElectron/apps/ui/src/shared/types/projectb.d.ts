@@ -208,7 +208,6 @@ declare global {
       npcQueryRetiredArchive:                (p: string) => Promise<string>;
       faGenerateOffers:                      (p: string) => Promise<string>;
       draftCalcDraftRank:                    (p: string) => Promise<string>;
-      draftRunBoard:                         (p: string) => Promise<string>;
       militaryCalcCandidates:                (p: string) => Promise<string>;
       militaryCalcSelection:                 (p: string) => Promise<string>;
       militaryPickGeneral:                   (p: string) => Promise<string>;

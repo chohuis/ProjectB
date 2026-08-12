@@ -26,14 +26,6 @@ export interface DraftBoardPick {
   isUser: boolean;
 }
 
-export interface DraftBoardResult {
-  picks: DraftBoardPick[];
-  userDrafted: boolean;
-  userRound?: number;
-  userPickNo?: number;
-  userTeamId?: string;
-}
-
 export interface DraftBoardBackgroundResult {
   picks: DraftBoardPick[];
 }
@@ -382,19 +374,6 @@ export function canRetryDraft(faUnsignedWeeks: number): boolean {
   return faUnsignedWeeks === 0;
 }
 
-// ── 드래프트 보드 전체 픽 시퀀스 (Rust DLL 위임) ─────────────────
-export async function runDraftBoard(
-  candidates: DraftBoardCandidate[],
-  protagonistScoutScore: number,
-  protagonistOvr: number,
-  teamIds: string[],
-  year: number,
-  rounds: number = DRAFT_ROUNDS,
-): Promise<DraftBoardResult> {
-  const params = { candidates, protagonistScoutScore, protagonistOvr, teamIds, year, rounds };
-  const json = await api().draftRunBoard(JSON.stringify(params));
-  return parseResult<DraftBoardResult>(json);
-}
 
 // 타입 re-export
 export type { DraftPick, DraftSimResult, ProtagonistDraftOutcome };
