@@ -107,8 +107,16 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     positionRatings: { SP: PITCHING.ovr },
     diligence: 60,
     popularity: 10,
+    // ⚠ **게임의 중앙값이어야 한다.** `NewGamePage`가 `random(0..15)+73` ·
+    // `random(0..19)+80`으로 굴리므로 각각 80 · 89가 중앙이다. 하네스는
+    // 결정적이어야 해서 고정값을 쓰지만, 그 값이 게임과 어긋나면 **계측이
+    // 다른 주인공을 잰다** — `startPresets.test.ts`가 둘의 일치를 잠근다.
+    //
+    // 실제로 여기가 75(옛 중앙)로 남아 있었고, 그 시절 잠재력 범위가
+    // 60~90이라 시작부터 성장이 0.35배로 깎이는 상태를 계측이 그대로 재고
+    // 있었다. 그 위에 쌓은 "고교말 OVR 71"이 결론의 출발점이었다
     developmentRate: 80,
-    potentialHidden: 75,
+    potentialHidden: 89,
     growthPoints: 0,
     tags: ["정통파", "균형형"],
     pitchingXP: {},

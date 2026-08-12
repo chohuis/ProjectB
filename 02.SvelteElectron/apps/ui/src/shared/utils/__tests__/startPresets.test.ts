@@ -66,6 +66,69 @@ describe("새 게임 시작 프리셋", () => {
     }
   });
 
+  // ── 잠재력은 시작 스탯 위에서 시작한다 ──────────────────────
+  //
+  // `potential_cap_factor`는 `현재스탯 / 잠재력` **비율**로 XP를 깎는다.
+  // 잠재력 하한이 시작 스탯보다 낮으면 **자기 잠재력을 넘긴 채 시작**하고,
+  // 그 커리어는 1주차부터 성장이 0.10배가 된다 — 훈련을 뭘 해도 안 큰다.
+  //
+  // 실제로 그랬다. 잠재력 60~90 · 프리셋 최고 스탯 78:
+  //   시작 시점에 이미 0.35배 이하   68%
+  //   시작 시점에 이미 0.10배        39%
+  // 실측 궤적이 1학년 69 · 2학년 70 · 고교말 71 · 최대 75로, 3년에 +3이고
+  // 최대값이 잠재력 중앙에 붙었다. 같은 시기 고졸 지명자는 OVR 중앙 74다.
+  describe("잠재력 범위", () => {
+    const src = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
+    const m = src.match(/potentialHidden = Math\.floor\(Math\.random\(\) \* (\d+)\) \+ (\d+)/);
+
+    it("생성식이 있다", () => {
+      expect(m).not.toBeNull();
+    });
+
+    it("하한이 프리셋 최고 스탯보다 높다 — 넘긴 채 시작하면 안 된다", () => {
+      const floor = Number(m![2]);
+      const maxStat = Math.max(...presets.flatMap((p) => Object.keys(W).map((k) => p[k])));
+      expect(floor).toBeGreaterThan(maxStat);
+    });
+
+    it("굴리기가 성장 속도를 실제로 가른다 — 상·중·하가 다른 구간에 든다", () => {
+      const span = Number(m![1]), floor = Number(m![2]);
+      const cap = (cur: number, pot: number) => {
+        const r = cur / pot;
+        return r < 0.75 ? 1.0 : r < 0.85 ? 0.7 : r < 0.95 ? 0.35 : 0.1;
+      };
+      // 대표 스탯 70(프리셋 중앙대)이 최저·최고 굴리기에서 다른 계수를 받아야
+      // 잠재력 뽑기가 의미를 갖는다. 폭이 좁으면 전원이 같은 속도로 큰다
+      expect(cap(70, floor)).toBeLessThan(cap(70, floor + span - 1));
+    });
+
+    it("최저 굴리기도 멈추지는 않는다", () => {
+      // 0.10배는 사실상 성장 정지다. 느린 것과 죽은 것은 다르다
+      const floor = Number(m![2]);
+      expect(70 / floor).toBeLessThan(0.95);
+    });
+
+    it("하네스가 게임의 중앙값을 쓴다 — 어긋나면 다른 주인공을 잰다", () => {
+      // 하네스는 결정적이어야 해서 고정값을 쓴다. 그 값이 게임과 어긋나면
+      // 계측이 조용히 다른 선수를 재고, 그 위에 쌓은 결론이 전부 틀어진다.
+      // 실제로 여기가 옛 중앙(75)으로 남아 있었고 "고교말 OVR 71"이 거기서 나왔다
+      // `random(0..span-1) + floor`의 값은 floor ~ floor+span-1이다.
+      // 중앙은 floor + (span-1)/2 — 짝수 폭이면 반값이라 내림한다
+      const mid = (span: number, floor: number) => Math.floor(floor + (span - 1) / 2);
+      const harness = read("scripts/perf/perfEntry.ts");
+
+      const hp = harness.match(/potentialHidden: (\d+)/);
+      expect(hp).not.toBeNull();
+      expect(Number(hp![1])).toBe(mid(Number(m![1]), Number(m![2])));
+
+      // developmentRate도 같은 이유로 맞춰야 한다
+      const dm = src.match(/developmentRate = Math\.floor\(Math\.random\(\) \* (\d+)\) \+ (\d+)/);
+      expect(dm).not.toBeNull();
+      const hd = harness.match(/developmentRate: (\d+)/);
+      expect(Number(hd![1])).toBe(mid(Number(dm![1]), Number(dm![2])));
+    });
+  });
+
   it("총합이 같아도 배분은 다르다 — 프리셋이 서로 구별된다", () => {
     const sig = presets.map((p) => Object.keys(W).map((k) => p[k]).join(","));
     expect(new Set(sig).size).toBe(4);

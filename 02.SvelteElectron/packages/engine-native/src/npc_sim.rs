@@ -2384,7 +2384,19 @@ const DRAFT_ROUNDS: i32 = 11;
 /// 이 점수 아래는 미지명. **리그 백분위 기준**이라 "리그 중하위면 못 간다"는 뜻이다.
 /// 너무 낮으면 "누구나 지명"이라 진로에 긴장이 없다 — 60회 조사에서 실제로
 /// 미지명이 0건이었다
-const UNDRAFTED_SCORE: f64 = 25.0;
+/// 이 아래는 미지명.
+///
+/// ⚠ **25는 아무도 못 거르는 값이었다.** 실측에서 백분위 33·55짜리도 부상만
+/// 없으면 6~7R로 지명됐다 — 미지명 경로가 사실상 부상 하나뿐이었고, 사용자가
+/// 정한 세 갈래("상위픽 / 무난하면 중간 / 애매하면 미지명") 중 하나가 없었다.
+///
+/// 같은 세계의 NPC는 **고교 3학년 투수 4805명 중 327명(6.81%)만** 고졸로
+/// 지명된다. 백분위 93이 관문이고 그 지점의 **실측** score가 88이다.
+///
+/// 라운드 직선이 11R에서 끊기는 지점을 그대로 문턱으로 삼는다 — 어긋나면
+/// 11R이 도달 불가가 되거나(문턱이 위) 12R 이상이 미지명으로 뭉개진다
+/// (문턱이 아래). `draftRelative.test.ts`가 두 값의 일치를 잠근다.
+const UNDRAFTED_SCORE: f64 = 78.0;
 
 pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> ProtagonistDraftOutcome {
     // ⚠ **드래프트는 상대평가다** (사용자 확정 2026-08-09).
@@ -2458,8 +2470,13 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
     // ⑦ 스카우트 평가는 보조축
     let scout_adj = (params.scout_score - 30.0) * 0.20;
 
+    // ⚠ **위를 자르지 않는다.** 예전엔 `clamp(0.0, 100.0)`이었는데, `base`가
+    // 이미 0~100이고 그 위에 에이스(+8)·수상(+20)이 얹히므로 실측 원값이
+    // 105·110까지 나온다. 100에서 자르면 **그 순서가 지워져** 전부 같은
+    // 라운드로 뭉쳤다 — 실측 17건 중 3건이 정확히 100.0이었고 1R에 7건이
+    // 몰린 게 이것 때문이다.
     let draft_score =
-        (base + ace_bonus + tour_adj + award_adj + scout_adj - injury_pen).clamp(0.0, 100.0);
+        (base + ace_bonus + tour_adj + award_adj + scout_adj - injury_pen).max(0.0);
 
     let breakdown = DraftScoreBreakdown {
         percentile: pct, ovr_norm, base, ace_bonus, tour_adj, award_adj,
@@ -2474,9 +2491,32 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
 
     // ⚠ **구간 대신 직선이다.** 예전 식(`ceil(4 + (55-score)/5)`)은 경계 때문에
     // **4·8·10·11라운드가 도달 불가**였다 — 나오는 값이 1·2·3·5·6·7·9뿐이었다.
-    // 두 점을 잡아 잇는다: **리그 중위(50) → 6R · 최상위(95) → 1R.**
-    // "무난하면 중간, 에이스급이면 상위"가 사용자 확정이다.
-    let round = (6.0 - (draft_score - 50.0) * 0.111)
+    //
+    // ⚠ **앵커를 NPC 실측에 맞춘다** (2026-08-12). 예전 앵커는 "리그 중위(50)
+    // → 6R · 최상위(95) → 1R"이었는데, 그건 어림이지 잰 값이 아니었다.
+    // 같은 세계의 고졸 지명자 327명을 주인공과 **같은 분모**(고교 3학년 투수)로
+    // 재보니 주인공이 5라운드 관대했다:
+    //
+    //   백분위    NPC 실측     옛 주인공 산식
+    //   95~100      5R             1R
+    //   85~ 95      7R             2R
+    //   75~ 85      7R             3R
+    //
+    // 그리고 **고교 3학년 투수 4805명 중 고졸 지명은 327명(6.81%)** 이다 —
+    // 지명되려면 백분위 93 이상이어야 한다. 옛 문턱(25)은 백분위 33도
+    // 통과시켜서 "애매하면 미지명"이 아예 작동하지 않았다.
+    //
+    // ⚠ **앵커는 실측 score 분포 위에 놓는다.** 한 번 틀렸다: 백분위와 OVR만
+    // 더해 최대 93으로 보고 기울기를 0.81로 잡았는데, 에이스(+8)·수상(+20)이
+    // 얹혀 실제 score는 88~110이었다. 93 위가 전부 1R로 떨어져 **17건 중
+    // 7건이 1R**이 됐다.
+    //
+    // 실측 지명자의 score와 NPC 라운드를 맞춘다:
+    //   score  88 → 7R   (백분위 93 — NPC 관문)
+    //   score  98 → 3R   (백분위 97)
+    //   score 110 → 1R   (백분위 96 + 에이스 + 수상 석권)
+    // 기울기 0.40R/점, 11R에서 끊기는 지점이 78이다.
+    let round = (11.0 - (draft_score - 78.0) * 0.40)
         .round().clamp(1.0, DRAFT_ROUNDS as f64) as i32;
     let teams = &params.team_ids;
     if teams.is_empty() {
