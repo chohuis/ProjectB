@@ -19,7 +19,7 @@ import { seasonStore } from "../stores/season";
 import { loadRosterRules } from "../repo/newGameV3";
 import { finiteOr } from "../utils/payloadNum";
 import { leagueStatsOf } from "../utils/season-helpers";
-import type { PlayerSeasonStats } from "../types/save";
+import type { CareerAward, PlayerSeasonStats } from "../types/save";
 
 interface AwardDef {
   id: string;
@@ -151,12 +151,34 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   const logs: string[] = [];
   // playerId → 그 해 받은 상 이름들
   const won = new Map<string, string[]>();
+  const prot = get(gameStore).protagonist;
+  // ⚠ 주인공 수상은 **따로 모은다.** `addSeasonHighlights`가 `s.npcs`만 훑어서
+  // 주인공은 `won`에 들어가도 기록될 곳이 없다(`addProtagonistAwards` 주석 참고).
+  // 문자열 title을 다시 파싱해 되살리지 않는다 — 정본이 둘이 되면 어긋난다
+  const protAwards: CareerAward[] = [];
 
   for (const leagueId of rules.leagues) {
     // ⚠ `s.stats`로 대체하면 안 된다 — 그건 주인공 개인 기록이고 승강으로
     // 오르내리면 1군·2군이 합산돼 있다(`leagueStatsOf` 주석 참고)
-    const stats: Record<string, PlayerSeasonStats> = leagueStatsOf(s, leagueId);
-    if (Object.keys(stats).length === 0) continue;
+    const leagueOnly: Record<string, PlayerSeasonStats> = leagueStatsOf(s, leagueId);
+    if (Object.keys(leagueOnly).length === 0) continue;
+
+    // ⚠ **주인공을 후보에 넣는다.** 주인공 기록은 `s.stats[p.id]`에 따로 있고
+    // 리그 맵(`leagueState[].stats`)엔 **없다.** 그래서 어떤 부문도 이길 수
+    // 없었고 `SeasonEndModal`의 `a.playerId === pid` 필터는 영원히 빈 배열이었다.
+    //
+    // 파급이 여기서 끝나지 않는다 — `universityUtils`의 진학 점수
+    // `awards.length * 15`도 항상 0이었고, 경력 화면·인생 기록에도 주인공
+    // 수상이 한 번도 안 남았다.
+    //
+    // ⚠ **자기 리그에만 넣는다.** `s.stats`는 승강하면 1군·2군이 합산돼 있어
+    // 다른 리그 후보로 올리면 저울이 어긋난다.
+    const protStat = (s as unknown as { stats?: Record<string, PlayerSeasonStats> })
+      .stats?.[prot.id];
+    const stats: Record<string, PlayerSeasonStats> =
+      protStat && prot.leagueId === leagueId
+        ? { ...leagueOnly, [prot.id]: protStat }
+        : leagueOnly;
 
     // ⚠ **MVP는 리그별로 뽑는다.** `won`은 전 리그를 한 Map에 담으므로
     // 여기서 리그 안에서만 판정해야 한다 — 리그를 합치면 KBO MVP와 고교
@@ -168,12 +190,18 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
       list.push(w.title);
       won.set(w.playerId, list);
       inLeague.set(w.playerId, (inLeague.get(w.playerId) ?? 0) + 1);
+      if (w.playerId === prot.id) {
+        protAwards.push({ id: w.defId, label: w.label, value: w.valueText });
+      }
     }
 
     // MVP — 부문 1위를 여럿 가져간 선수. 별도 지표를 만들면 부문 수상과 어긋난다
     const multi = [...inLeague.entries()].filter(([, n]) => n >= rules.mvp.minTitles);
     if (multi.length > 0) {
-      for (const [playerId] of multi) won.get(playerId)?.push(rules.mvp.label);
+      for (const [playerId] of multi) {
+        won.get(playerId)?.push(rules.mvp.label);
+        if (playerId === prot.id) protAwards.push({ id: "mvp", label: rules.mvp.label });
+      }
     } else if (winners.length > 0) {
       // ⚠ **아무도 2부문을 못 채우는 해가 있다** (사용자 확정 2026-08-03).
       // 8부문에 자격자 100명이면 석권이 매년 나오지 않는다 — 실측 격년꼴이었다.
@@ -182,9 +210,11 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
       // 별도 지표를 만들면 부문 1위와 어긋난다(설계 원칙).
       const top = winners.reduce((a, b) => (b.dominance > a.dominance ? b : a));
       won.get(top.playerId)?.push(rules.mvp.label);
+      if (top.playerId === prot.id) protAwards.push({ id: "mvp", label: rules.mvp.label });
     }
   }
 
+  gameStore.addProtagonistAwards(seasonYear, protAwards);
   if (won.size === 0) return logs;
   gameStore.addSeasonHighlights(seasonYear, won);
 

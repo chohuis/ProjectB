@@ -319,55 +319,16 @@
 
     try {
     const now = $seasonStore.seasonYear;
-    const pid = p.id;
-    const mySeasonSt = $seasonStore.stats[pid];
 
-    // 부문 목록이 규칙 파일에서 오므로 여기 if문을 늘릴 일이 없다 —
-    // 예전엔 4개만 하드코딩돼 있어 탈삼진왕·세이브왕·타점왕·도루왕이 빠졌다
-    const protagonistAwards: CareerAward[] = seasonAwards
-      .filter((a) => a.playerId === pid)
-      .map((a) => ({ id: a.defId, label: a.label, value: a.valueText }));
+    // ⚠ **여기서 경력 기록을 만들지 않는다.** 예전엔 이 자리에 조립이 통째로
+    // 있었고, 그래서 **이 모달을 열어야만** `careerRecords`가 쌓였다 — 자동
+    // 진행에선 19시즌을 뛰어도 경력이 한 줄도 없었고, 수상은 얹을 그 해 항목이
+    // 없어 조용히 버려졌다(실측 0/30). 화면 옆의 `computeAwards`가 이미 같은
+    // 형태로 어긋난 적이 있다.
+    //
+    // 정본은 `usecases/seasonCareerRecord.ts`이고 `runSeasonRollover`가 부른다.
+    // 이 컴포넌트에 남는 건 **표시와 사용자 선택**뿐이다.
 
-    let statLine = "";
-    if (mySeasonSt?.type === "pitcher") {
-      const ps = mySeasonSt as PitcherSeasonStats;
-      statLine = `${ps.w}승 ${ps.l}패 ERA ${ps.era.toFixed(2)} ${ps.ip.toFixed(1)}이닝 ${ps.k}K`;
-    } else if (mySeasonSt?.type === "batter") {
-      const bs = mySeasonSt as BatterSeasonStats;
-      statLine = `타율 ${pct(bs.avg)} ${bs.hr}홈런 ${bs.rbi}타점`;
-    }
-
-    const gameLog: CareerGameLogEntry[] = protagonistGames
-      .filter(g => g.line != null)
-      .map(g => ({
-        week:       g.entry.week,
-        opponentId: g.oppTeamId,
-        myScore:    g.myScore,
-        oppScore:   g.oppScore,
-        ip:         g.line!.ip,
-        er:         g.line!.er,
-        h:          g.line!.h,
-        k:          g.line!.k,
-        bb:         g.line!.bb,
-        decision:   g.line!.decision,
-        pitchCount: g.line!.pitchCount,
-      }));
-
-    gameStore.appendCareerRecord({
-      year: now,
-      leagueId: p.leagueId,
-      teamId:   p.teamId,
-      rank:       myRank    > 0 ? myRank    : undefined,
-      totalTeams: totalTeams > 0 ? totalTeams : undefined,
-      wins:   myStanding?.wins,
-      losses: myStanding?.losses,
-      draws:  myStanding?.draws,
-      statLine,
-      ovr:    p.pitching.ovr,
-      awards: protagonistAwards,
-      psResult: postseasonResult?.myResult,
-      gameLog,
-    }, mySeasonSt ?? undefined);
     // ── 세계 처리는 usecase로 ─────────────────────────────────
     // 학년 진급·드래프트·오프시즌·에이징·새 시즌 초기화는 전부
     // `usecases/seasonRollover.ts`에 있다. 여기 두면 헤드리스로 못 부르고,

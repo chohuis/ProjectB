@@ -3474,12 +3474,18 @@ export function ovrDeltaProbe(): Record<string, unknown> {
 
 /** 커리어 한 장 — 50회 조사가 회차마다 이걸 찍는다 */
 export function careerProbe(): Record<string, unknown> {
+  // 수상은 에 쌓인다 — 시즌 롤오버가 얹는다
+  const _aw = (get(gameStore).protagonist.careerRecords ?? [])
+    .flatMap((r: any) => (r.awards ?? []).map((a: any) => a.title ?? a.label))
+    .filter(Boolean);
   const g = get(gameStore);
   const s = get(seasonStore);
   const p = g.protagonist;
   const cr = g.schoolState.careerResults;
   const ret = retired();
   return {
+    수상: _aw,
+    경력기록수: (get(gameStore).protagonist.careerRecords ?? []).length,
     시즌: s.seasonYear, 주차: s.currentWeek,
     단계: p.careerStage, 나이: p.age, 학년: p.grade ?? null,
     팀: p.teamId, 리그: p.leagueId,

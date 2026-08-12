@@ -8,6 +8,7 @@ import type {
   CareerDraftPickLogEntry,
   CareerFinalChoice,
   CareerResults,
+  CareerAward,
   CareerSeasonRecord,
   InjuryState,
   NpcCareerEntry,
@@ -3092,6 +3093,31 @@ function createGameStore() {
      * ⚠ 주인공은 여기서 처리하지 않는다 — `achievements`는 NPC 필드이고
      * 주인공 기록은 `careerRecord` 계열이다. 섞으면 둘 다 어긋난다.
      */
+    /**
+     * 주인공의 그 해 수상을 `careerRecords[].awards`에 얹는다.
+     *
+     * ⚠ **`addSeasonHighlights`는 `s.npcs`만 훑는다.** 주인공은 npc 목록에 없어서
+     * 부문 1위를 해도 기록이 그대로 버려졌다 — 수상 후보에서 빠져 있던 것과
+     * 짝을 이루는 뒷단 결함이고, 둘 중 하나만 고치면 여전히 0건이다.
+     *
+     * 읽는 쪽이 이미 있다: `universityUtils`의 진학 점수 `awards.length * 15`,
+     * 경력 화면, 드래프트 산식. 전부 항상 0이었다.
+     *
+     * ⚠ 그 해 항목이 **먼저 있어야 한다** — `appendCareerRecord`가 끝난 뒤에
+     * 부른다(`seasonRollover` 참고). 없으면 붙일 곳이 없어 조용히 넘어간다.
+     */
+    addProtagonistAwards(seasonYear: number, awards: CareerAward[]) {
+      if (awards.length === 0) return;
+      update((s) => {
+        const recs = s.protagonist.careerRecords ?? [];
+        const i = recs.findIndex((r) => r.year === seasonYear);
+        if (i < 0) return s;
+        const next = [...recs];
+        next[i] = { ...next[i], awards: [...(next[i].awards ?? []), ...awards] };
+        return { ...s, protagonist: { ...s.protagonist, careerRecords: next } };
+      });
+    },
+
     addSeasonHighlights(seasonYear: number, byPlayer: Map<string, string[]>) {
       update((s) => ({
         ...s,

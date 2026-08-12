@@ -210,6 +210,8 @@ function randomPlan(rnd) {
         팀이동: teamsSeen.length - 1, 팀들: teamsSeen,
         최종: { 단계: end.단계, 리그: end.리그, 나이: end.나이 },
         고교시즌: hsSeasons,
+        수상: (app.careerProbe().수상 ?? []),
+        경력기록수: (app.careerProbe().경력기록수 ?? 0),
         드래프트신청: draftApply,
         구종: pitchLearned || "없음",
         병역: end.병역, 은퇴: end.은퇴, 중단: stopped,

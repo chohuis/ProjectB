@@ -18,6 +18,7 @@ import { runSeasonEndBgProcessing } from "./runAutoAdvance";
 import { autoLog } from "../stores/autoAdvance";
 import { DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
 import { applySeasonAwards } from "./seasonAwards";
+import { applyProtagonistSeasonRecord } from "./seasonCareerRecord";
 import { bracketFinalists } from "../utils/bracket";
 import { finalistsOf } from "../utils/tournamentView";
 import { TOURNAMENTS } from "../utils/leagueTeams.generated";
@@ -79,6 +80,10 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   await seasonStore.flushAllLeagueStatsToDb(now);
   await saveSeasonHistory(now);
   await gameStore.processAllLeaguesSeasonEnd(now);  // ← 여기서 __lastOffseasonSummary 세팅
+  // ⚠ **주인공 시즌 기록은 여기서 남긴다.** 예전엔 `SeasonEndModal`이 유일한
+  // 호출부라 결산 화면을 열어야만 `careerRecords`가 쌓였고, 자동 진행에선
+  // 은퇴할 때까지 한 줄도 없었다. 수상보다 **먼저**여야 얹을 자리가 생긴다
+  applyProtagonistSeasonRecord(now);
   // 수상은 연도 기록이 만들어진 **뒤**여야 얹을 자리가 있다
   logsOf(await applySeasonAwards(now));
   await gameStore.applyAgingDecay();
