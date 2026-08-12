@@ -881,7 +881,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     //
     // 주인공은 NPC 드래프트 풀에 안 들어간다 — 진로 결과가 따로 정해지는 게
     // 설계다(`DraftBoardModal` 주석). 그 "따로 정하는" 호출이 빠져 있었다.
-    const { determineProtagonistDraft } = await import("../utils/draftSystem");
+    const { determineProtagonistDraft, hsDraftInputsOf } = await import("../utils/draftSystem");
     // ⚠ **상대평가 입력을 모아 넘긴다.** 안 넘기면 Rust가 폴백으로 OVR을
     // 백분위처럼 쓰고, 그건 세계 전력이 바뀌면 어긋나는 옛 동작이다.
     //
@@ -901,15 +901,27 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const teamAceRank = 1 + g.npcs.filter((n) =>
       n.playerType === "pitcher" && n.currentTeam === p.teamId && n.npcId !== p.id
       && livePitchingOvrOf(n, liveStats) > p.pitching.ovr).length;
-    // 대회 활약 — 고교야구 점수(0~100)가 이미 대회·성적을 접어 놓은 값이다
-    const tournamentScore = calcHsBaseballScore(p.careerRecords ?? []);
-    // 스카우트가 제일 무겁게 보는 것 — 경상은 안 센다
-    const majorInjuries = (p.injuryHistory ?? []).filter((h) => h.severity !== "light").length;
+    // 대회 활약과 수상 — **한 시즌 평균**이다. `calcHsBaseballScore`의 합계를
+    // 그대로 넘기면 Rust의 0~100 척도와 어긋난다(그 함수는 진학 판정용이다)
+    const hsInputs = hsDraftInputsOf(p.careerRecords ?? []);
+    // ⚠ **심각도별로 센다.** 예전엔 `severity !== "light"`를 한 덩어리로 넘겨서
+    // 팔꿈치 염증과 UCL 파열이 같은 무게(건당 -12, 상한 없음)였다 — 실측 감점이
+    // -252까지 갔고 30커리어 중 6명이 이 항 하나로 미지명이었다
+    const inj = p.injuryHistory ?? [];
+    const nInj = (sev: string) => inj.filter((h) => h.severity === sev).length;
 
     const draftOutcome = draftApplied
       ? await determineProtagonistDraft(p.scoutScore, p.pitching.ovr, get(seasonStore).seasonYear,
-          { peerOvrs, teamAceRank, tournamentScore, majorInjuries })
+          { peerOvrs, teamAceRank, ...hsInputs,
+            moderateInjuries: nInj("moderate"),
+            severeInjuries:   nInj("severe"),
+            surgeryInjuries:  nInj("surgery") })
       : { drafted: false };
+
+    // 계측 전용 — 산식 항이 여섯이라 합만 보면 어느 항이 미는지 못 고친다.
+    // 세이브에 넣을 값은 아니다 (`__lastOffseasonSummary`와 같은 자리)
+    (globalThis as Record<string, unknown>).__lastDraftBreakdown =
+      (draftOutcome as { breakdown?: unknown }).breakdown ?? null;
 
     gameStore.setCareerResults({
       draftDrafted: draftOutcome.drafted,

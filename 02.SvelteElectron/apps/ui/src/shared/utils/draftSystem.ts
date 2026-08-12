@@ -1,4 +1,5 @@
 import { KBL_TEAMS } from "./leagueScheduler";
+import type { CareerSeasonRecord } from "../types/save";
 import { SANGMU_TEAM_IDS } from "./ids";
 import type {
   DraftPick,
@@ -318,10 +319,50 @@ export interface DraftContext {
   peerOvrs: number[];
   /** 팀 투수 중 내 순위 (1 = 에이스) */
   teamAceRank?: number;
-  /** 대회 활약 0~100. 50이 평범 */
+  /**
+   * **고교 한 시즌 평균** 대회 점수. 미진출 10 · 4강 30 · 준우승 60 · 우승 100
+   *
+   * ⚠ 예전엔 `calcHsBaseballScore`의 **3시즌 합계**를 그대로 넘겼다. Rust는
+   * 0~100에 기준점 50으로 읽고 있어서 척도가 통째로 어긋났고, 게다가 그
+   * 합계가 `careerRecords`를 읽는데 그게 항상 비어 있어(결산 모달을 열어야만
+   * 쌓였다) **늘 0**이었다 — 전원이 똑같이 -15를 먹었다.
+   */
   tournamentScore?: number;
-  /** 중등도 이상 부상 횟수 */
-  majorInjuries?: number;
+  /** 고교 3년 부문상 수 (MVP 제외) */
+  awardTitles?: number;
+  /** 고교 3년 MVP 수 */
+  awardMvps?: number;
+  /**
+   * 부상은 **심각도로 나눠 넘긴다.** 뭉쳐 세면 팔꿈치 염증이 UCL 파열과
+   * 같은 무게가 된다 — 실측 30커리어 중 6명이 그 항 하나로 미지명이었다.
+   */
+  moderateInjuries?: number;
+  severeInjuries?: number;
+  surgeryInjuries?: number;
+}
+
+/**
+ * 고교 경력에서 드래프트 입력을 뽑는다 — **한 시즌 평균**과 수상 수.
+ *
+ * `calcHsBaseballScore`는 진학 판정용 **합계**라 그대로 쓰면 안 된다.
+ * 시즌 수로 나눠야 "3년 중 한 번 우승"과 "1년만 뛰고 우승"이 구분된다.
+ */
+export function hsDraftInputsOf(records: readonly CareerSeasonRecord[]): {
+  tournamentScore: number; awardTitles: number; awardMvps: number;
+} {
+  const hs = records.filter((r) => r.leagueId === "LEAGUE_HIGHSCHOOL");
+  if (hs.length === 0) return { tournamentScore: 20, awardTitles: 0, awardMvps: 0 };
+  let tour = 0, titles = 0, mvps = 0;
+  for (const r of hs) {
+    if (r.psResult === "champion")        tour += 100;
+    else if (r.psResult === "runnerUp")   tour += 60;
+    else if (r.psResult === "semiFinal")  tour += 30;
+    else                                  tour += 10;   // 미진출·기록없음
+    for (const a of r.awards ?? []) {
+      if (a.id === "mvp") mvps++; else titles++;
+    }
+  }
+  return { tournamentScore: tour / hs.length, awardTitles: titles, awardMvps: mvps };
 }
 
 export async function determineProtagonistDraft(

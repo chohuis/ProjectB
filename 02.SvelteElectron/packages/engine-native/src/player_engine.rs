@@ -499,7 +499,9 @@ pub fn calc_draft_rank(params: CalcDraftRankParams) -> DraftRankResult {
         year: year as i32,
         team_ids: params.kbl_team_ids,
         // 이 경로(합성 궤적)는 또래 분포를 안 만든다 — 폴백이 OVR을 백분위처럼 쓴다
-        peer_ovrs: Vec::new(), team_ace_rank: None, tournament_score: None, major_injuries: None,
+        peer_ovrs: Vec::new(), team_ace_rank: None, tournament_score: None,
+        moderate_injuries: None, severe_injuries: None, surgery_injuries: None,
+        award_titles: None, award_mvps: None,
     };
     let outcome = npc_sim::determine_protagonist_draft(draft_params);
 

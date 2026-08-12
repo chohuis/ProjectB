@@ -2410,20 +2410,51 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
     // ③ 팀 에이스면 스카우트가 더 본다
     let ace_bonus = match params.team_ace_rank { Some(1) => 8.0, Some(2) => 3.0, _ => 0.0 };
 
-    // ④ 대회 활약 — 50이 평범. 큰 무대에서 보여준 게 픽을 올린다.
-    // **팀운을 타는 축이라 비중을 크게 두지 않는다**
-    let tour_adj = (params.tournament_score.unwrap_or(50.0) - 50.0) * 0.30;
+    // ④ 대회 활약 — **한 시즌 평균**이고 미진출(10)이 평범이다.
+    // 큰 무대에서 보여준 게 픽을 올린다. **팀운을 타는 축이라 비중을 크게
+    // 두지 않는다.**
+    //
+    // ⚠ 기준점이 50이었다. 그런데 평범한 고교생은 대회 미진출이라 10점이고,
+    // 결국 **전원이 똑같이 -12를 먹는 항**이었다 — 가르는 게 아무것도 없었다.
+    let tour_adj = (params.tournament_score.unwrap_or(20.0) - 20.0) * 0.20;
 
-    // ⑤ 큰 부상은 크게 깎는다 — 스카우트가 제일 무겁게 보는 항목이다
-    let injury_pen = params.major_injuries.unwrap_or(0) as f64 * 12.0;
+    // ⑤ **개인 수상** — 대회는 팀운을 타지만 수상은 혼자 만든 결과다.
+    // 그래서 대회보다 무겁게 본다. 다만 흔치 않아야 의미가 있다:
+    // 실측 30커리어에 4명만 받았고, 그 희소성이 곧 이 항의 가치다.
+    //
+    // 상한 20 — 3년 내내 휩쓸어도 2라운드어치까지다. 백분위·OVR이 정본이고
+    // 수상은 그 위에 얹는 축이라, 이게 순위를 뒤집으면 안 된다.
+    let award_adj = (params.award_titles.unwrap_or(0) as f64 * 6.0
+        + params.award_mvps.unwrap_or(0) as f64 * 10.0).min(20.0);
 
-    // ⑥ 스카우트 평가는 보조축
+    // ⑥ 부상 — **심각도로 가른다.** 스카우트가 제일 무겁게 보는 항목이지만,
+    // 무겁게 보는 건 수술 이력이지 지나간 염증이 아니다.
+    //
+    // ⚠ 예전엔 중등도 이상을 전부 건당 -12로 뭉쳐서 셌고 상한도 없었다.
+    // 실측에서 감점이 -252까지 나왔고(그냥 0점), 30커리어 중 6명이 이 항
+    // 하나로 미지명이었다 — 팔꿈치 염증 두 번이 UCL 파열과 같은 무게였다.
+    //
+    // 상한 45 — 수술 2회면 어떤 재능이든 미지명으로 간다. 그 위로 더 깎아도
+    // 결과가 같은데 내역만 못 읽게 된다.
+    let injury_pen = (params.moderate_injuries.unwrap_or(0) as f64 * 2.0
+        + params.severe_injuries.unwrap_or(0) as f64 * 10.0
+        + params.surgery_injuries.unwrap_or(0) as f64 * 18.0).min(45.0);
+
+    // ⑦ 스카우트 평가는 보조축
     let scout_adj = (params.scout_score - 30.0) * 0.20;
 
-    let draft_score = (base + ace_bonus + tour_adj + scout_adj - injury_pen).clamp(0.0, 100.0);
+    let draft_score =
+        (base + ace_bonus + tour_adj + award_adj + scout_adj - injury_pen).clamp(0.0, 100.0);
+
+    let breakdown = DraftScoreBreakdown {
+        percentile: pct, ovr_norm, base, ace_bonus, tour_adj, award_adj,
+        scout_adj, injury_pen, total: draft_score,
+    };
 
     if draft_score < UNDRAFTED_SCORE {
-        return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None };
+        return ProtagonistDraftOutcome {
+            drafted: false, round: None, pick: None, team_id: None, breakdown,
+        };
     }
 
     // ⚠ **구간 대신 직선이다.** 예전 식(`ceil(4 + (55-score)/5)`)은 경계 때문에
@@ -2434,7 +2465,7 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
         .round().clamp(1.0, DRAFT_ROUNDS as f64) as i32;
     let teams = &params.team_ids;
     if teams.is_empty() {
-        return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None };
+        return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None, breakdown };
     }
 
     let mut rng = LcgRand::new(
@@ -2449,6 +2480,7 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
         round:   Some(round),
         pick:    Some(pick),
         team_id: Some(teams[t_idx].clone()),
+        breakdown,
     }
 }
 

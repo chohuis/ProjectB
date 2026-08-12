@@ -3486,6 +3486,7 @@ export function careerProbe(): Record<string, unknown> {
   return {
     수상: _aw,
     경력기록수: (get(gameStore).protagonist.careerRecords ?? []).length,
+    산식내역: (globalThis as Record<string, unknown>).__lastDraftBreakdown ?? null,
     시즌: s.seasonYear, 주차: s.currentWeek,
     단계: p.careerStage, 나이: p.age, 학년: p.grade ?? null,
     팀: p.teamId, 리그: p.leagueId,

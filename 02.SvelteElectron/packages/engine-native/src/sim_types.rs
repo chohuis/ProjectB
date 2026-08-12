@@ -370,6 +370,29 @@ pub struct ProtagonistDraftOutcome {
     pub pick: Option<i32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub team_id: Option<String>,
+    /// 점수 내역. **어느 항이 결과를 미는지 재기 위한 것**이다.
+    ///
+    /// 항이 여섯이라 합만 보면 못 고친다 — 실제로 백분위가 다 먹고 있는데
+    /// 대회 항을 만지는 식의 헛수고를 이걸 안 싣고 여러 번 했다.
+    /// 화면은 안 읽는다(조사·검사 전용).
+    pub breakdown: DraftScoreBreakdown,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftScoreBreakdown {
+    /// 또래 대비 백분위 0~100
+    pub percentile: f64,
+    /// OVR 정규화 0~100
+    pub ovr_norm: f64,
+    /// 둘의 가중평균
+    pub base: f64,
+    pub ace_bonus: f64,
+    pub tour_adj: f64,
+    pub award_adj: f64,
+    pub scout_adj: f64,
+    pub injury_pen: f64,
+    pub total: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -443,12 +466,36 @@ pub struct ProtagonistDraftParams {
     /// 팀 투수 중 내 순위 (1 = 에이스). 없으면 보정 없음
     #[serde(default)]
     pub team_ace_rank: Option<i32>,
-    /// 대회 활약 0~100 (고교야구 점수). 50이 평범
+    /// **고교 한 시즌 평균** 대회 점수. 미진출 10 · 4강 30 · 준우승 60 · 우승 100
+    /// (거기에 시즌 수상 1개당 +15).
+    ///
+    /// ⚠ 예전엔 "0~100, 50이 평범"이라 적어 놓고 TS가 **3시즌 합계**를 넘겼다.
+    /// 게다가 그 합계를 만드는 `calcHsBaseballScore`가 `careerRecords`를 읽는데
+    /// 그게 **항상 비어 있어서**(결산 모달을 열어야만 쌓였다) 실제로는 늘 0이
+    /// 넘어왔다 — 전원이 `(0-50)*0.3 = -15`를 똑같이 먹는, 아무것도 가르지
+    /// 못하는 항이었다.
     #[serde(default)]
     pub tournament_score: Option<f64>,
-    /// 중등도 이상 부상 횟수 — 스카우트가 제일 크게 보는 것
+    /// 고교 3년간 받은 **부문상** 수 (MVP 제외)
     #[serde(default)]
-    pub major_injuries: Option<i32>,
+    pub award_titles: Option<i32>,
+    /// 고교 3년간 받은 **MVP** 수
+    #[serde(default)]
+    pub award_mvps: Option<i32>,
+    /// 중등도 부상 — 염증·햄스트링·뇌진탕 류. 흔하고 잘 낫는다
+    ///
+    /// ⚠ 예전엔 `major_injuries` 하나로 **중등도부터 수술까지 뭉뚱그려**
+    /// 건당 -12를 먹였다. 상한도 없어서 실측 감점이 **-252**까지 갔고
+    /// (`clamp` 때문에 그냥 0점), 팔꿈치 염증 두 번이 UCL 파열과 같은 무게였다.
+    /// 실측 30커리어 중 6명이 이 항 하나로 미지명이었다.
+    #[serde(default)]
+    pub moderate_injuries: Option<i32>,
+    /// 중상 — UCL 부분파열·회전근 손상·허리 디스크·입스
+    #[serde(default)]
+    pub severe_injuries: Option<i32>,
+    /// 수술 — 스카우트가 제일 무겁게 보는 것
+    #[serde(default)]
+    pub surgery_injuries: Option<i32>,
 }
 
 // ── 체육부대 선발 ─────────────────────────────────────────────────────────────
