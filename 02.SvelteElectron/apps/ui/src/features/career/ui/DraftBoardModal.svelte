@@ -157,7 +157,7 @@
       const log = $gameStore.schoolState.careerDraftPickLog;
       boardPicks = log.map((r) => ({
         pickNo: r.pickNo, round: r.round, teamId: r.teamId,
-        candidateId: r.playerId ?? "", isUser: false,
+        candidateId: r.playerId ?? "", isUser: r.isUser === true,
       }));
 
       // 지명 순서는 실제 결과에서 읽는다 — 화면이 순서를 따로 계산하면
@@ -179,9 +179,10 @@
         if (seen.has(c.playerId)) continue;
         seen.add(c.playerId);
         const npc = npcById.get(c.playerId);
-        rows.push(npc ? buildFromNpc(npc) : {
+        // 주인공은 npcs에 없어 폴백 갈래로 온다 — 그 줄만 isUser다
+        rows.push(npc ? buildFromNpc(npc, c.playerId === heroId) : {
           id: c.playerId, name: c.playerName, ovr: c.ovr, age: c.age,
-          potential: c.potential, isUser: false, position: c.position,
+          potential: c.potential, isUser: c.playerId === heroId, position: c.position,
           origin: c.originTeamId ? getTeamName(c.originTeamId) : "-",
           originType: c.route.includes("대학") ? "UNIV" : c.route.includes("독립") ? "IND" : "HS",
           drafted: false,
@@ -202,30 +203,15 @@
       }
 
       // ── 주인공 ──
-      // 주인공은 NPC 드래프트에 안 들어간다 (진로 결과가 따로 정해진다).
-      // 지명됐다면 그 순번에 끼워 넣어 보드에 같이 보이게 한다
-      const cr = $gameStore.schoolState.careerResults;
-      if (!viewOnly && cr?.draftDrafted && cr.draftTeamId) {
-        rows.unshift({
-          id: heroId,
-          name: heroName,
-          ovr: $gameStore.protagonist.pitching.ovr,
-          age: $gameStore.protagonist.age ?? 19,
-          potential: 75,
-          isUser: true,
-          position: $gameStore.protagonist.position ?? "SP",
-          origin: getTeamName($gameStore.protagonist.teamId),
-          originType: "HS",
-          drafted: false,
-        });
-        const at = Math.max(0, Math.min(boardPicks.length, (cr.draftPick ?? 1) - 1));
-        boardPicks = [
-          ...boardPicks.slice(0, at),
-          { pickNo: cr.draftPick ?? at + 1, round: cr.draftRound ?? 1,
-            teamId: cr.draftTeamId, candidateId: heroId, isUser: true },
-          ...boardPicks.slice(at),
-        ];
-      }
+      // ⚠ **여기서 주인공을 끼워 넣지 않는다.** 예전엔 `boardPicks`에
+      // `slice(0,at) + 주인공 + slice(at)`으로 밀어 넣기만 하고 **누구도
+      // 밀어내지 않았다.** 그래서 행이 111개가 되고, 주인공이 뽑은 번호가
+      // 두 줄로 뜨고, 마지막 번호 자리는 비었다 (실측: 56 두 줄 · 111 없음).
+      //
+      // 뿌리는 주인공이 NPC 드래프트와 **같은 판 위에 없다**는 것이었다.
+      // 이제 `processNpcDraft`가 주인공을 실제 순번에 편입하고 뒤를 한 칸씩
+      // 민다 — 마지막 지명자 하나가 미지명이 된다. 보드는 그 결과를 읽기만
+      // 하면 되고, 주인공 줄은 `isUser`로 표시된다.
 
       candidates = rows;
     } finally {

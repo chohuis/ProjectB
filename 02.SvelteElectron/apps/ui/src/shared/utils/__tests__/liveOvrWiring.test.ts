@@ -90,7 +90,10 @@ describe("배선 — 드래프트가 생성값을 읽지 않는다", () => {
 
   it("지명 로그 OVR이 live를 쓴다 — 루프 밖에서 한 번만 읽는다", () => {
     const s = read("apps/ui/src/shared/stores/game.ts");
-    expect(s).toMatch(/const _liveForLog = get\(npcLiveStatsStore\);[\s\S]{0,200}liveOvrOf\(npc, _liveForLog\)/);
+    // 범위를 넉넉히 둔다 — 사이에 주석·주인공 분기가 들어와도 "루프 밖에서
+    // 한 번 읽어 안에서 쓴다"는 성질은 그대로다. 좁게 잡았더니 주인공을
+    // 보드에 편입하면서 넣은 몇 줄에 검사가 먼저 깨졌다
+    expect(s).toMatch(/const _liveForLog = get\(npcLiveStatsStore\);[\s\S]{0,600}liveOvrOf\(npc, _liveForLog\)/);
   });
 
   it("드래프트 보드 OVR이 live를 쓴다", () => {

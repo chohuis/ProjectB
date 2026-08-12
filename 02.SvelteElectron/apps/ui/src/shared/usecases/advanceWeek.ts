@@ -881,7 +881,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     //
     // 주인공은 NPC 드래프트 풀에 안 들어간다 — 진로 결과가 따로 정해지는 게
     // 설계다(`DraftBoardModal` 주석). 그 "따로 정하는" 호출이 빠져 있었다.
-    const { determineProtagonistDraft, hsDraftInputsOf } = await import("../utils/draftSystem");
+    const { determineProtagonistDraft, hsDraftInputsOf, draftOrderOf } = await import("../utils/draftSystem");
     // ⚠ **상대평가 입력을 모아 넘긴다.** 안 넘기면 Rust가 폴백으로 OVR을
     // 백분위처럼 쓰고, 그건 세계 전력이 바뀌면 어긋나는 옛 동작이다.
     //
@@ -915,7 +915,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           { peerOvrs, teamAceRank, ...hsInputs,
             moderateInjuries: nInj("moderate"),
             severeInjuries:   nInj("severe"),
-            surgeryInjuries:  nInj("surgery") })
+            surgeryInjuries:  nInj("surgery") },
+          // ⚠ **그 해 지명 순서를 넘긴다.** 안 넘기면 알파벳순 기본값이 쓰여
+          // 순번은 맞는데 그 순번의 주인이 다른 팀이 된다
+          draftOrderOf(get(seasonStore).prevSeasonKblStandings ?? []))
       : { drafted: false };
 
     // 계측 전용 — 산식 항이 여섯이라 합만 보면 어느 항이 미는지 못 고친다.

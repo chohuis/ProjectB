@@ -213,6 +213,7 @@ function randomPlan(rnd) {
         수상: (app.careerProbe().수상 ?? []),
         경력기록수: (app.careerProbe().경력기록수 ?? 0),
         산식내역: (app.careerProbe().산식내역 ?? null),
+        좌석: (app.draftSeatProbe ? app.draftSeatProbe() : null),
         드래프트신청: draftApply,
         구종: pitchLearned || "없음",
         병역: end.병역, 은퇴: end.은퇴, 중단: stopped,

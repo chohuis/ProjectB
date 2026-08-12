@@ -4799,3 +4799,40 @@ export function npcDraftTable(): Record<string, unknown> {
 
   return { 표본: rows.length, rows, peers };
 }
+
+
+// ── 드래프트 좌석 무결성 (E단계) ──────────────────────────────────
+//
+// 소스 검사로는 못 본다: 픽번호가 실제로 1..N 유일한가, 주인공이 딱 한 줄
+// 있는가, 그 줄의 팀이 그 순번의 주인인가. 예전엔 111행에 56이 두 줄이었다.
+export function draftSeatProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const log = g.schoolState?.careerDraftPickLog ?? [];
+  if (log.length === 0) return { 표본: 0 };
+  const nos = log.map((r) => r.pickNo).sort((a, b) => a - b);
+  const dup = nos.filter((v, i) => i > 0 && v === nos[i - 1]);
+  const teams = [...new Set(log.map((r) => r.teamId))];
+  const perRound = teams.length;
+  // 순번 → 팀 대응이 라운드마다 같은가 (정순이면 (pickNo-1) % 팀수가 결정한다)
+  const slotTeam = new Map<number, string>();
+  let slotMismatch = 0;
+  for (const r of log) {
+    const slot = (r.pickNo - 1) % perRound;
+    const t = slotTeam.get(slot);
+    if (t == null) slotTeam.set(slot, r.teamId);
+    else if (t !== r.teamId) slotMismatch++;
+  }
+  const mine = log.filter((r) => r.isUser);
+  return {
+    표본: log.length,
+    번호중복: dup.length,
+    빠진번호: nos.length > 0 ? (nos[nos.length - 1] - nos.length) : 0,
+    최대번호: nos[nos.length - 1] ?? 0,
+    팀수: perRound,
+    슬롯팀불일치: slotMismatch,
+    주인공줄: mine.length,
+    주인공순번: mine[0]?.pickNo ?? null,
+    주인공팀맞나: mine.length === 1
+      ? slotTeam.get((mine[0].pickNo - 1) % perRound) === mine[0].teamId : null,
+  };
+}

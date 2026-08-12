@@ -2523,18 +2523,26 @@ pub fn determine_protagonist_draft(params: ProtagonistDraftParams) -> Protagonis
         return ProtagonistDraftOutcome { drafted: false, round: None, pick: None, team_id: None, breakdown };
     }
 
+    // ⚠ **팀과 순번을 따로 굴리지 않는다.**
+    //
+    // 예전엔 `t_idx`(팀)와 `p_idx`(슬롯)를 각각 뽑아서, 화면에 "6라운드
+    // 3순위 · A팀"이라 떠도 **그 라운드 3순위의 실제 주인은 다른 팀**이었다.
+    // 지명은 순번이 팀을 정하는 것이지 둘이 따로 있는 게 아니다.
+    //
+    // 슬롯 하나만 뽑고 팀은 그 자리의 주인으로 받는다. `team_ids`는
+    // **그 해 지명 순서**여야 한다(전 시즌 성적 역순) — 알파벳순 기본값을
+    // 넘기면 순번은 맞는데 팀이 틀리는 옛 상태로 돌아간다.
     let mut rng = LcgRand::new(
         (params.year as u32).wrapping_mul(997).wrapping_add((draft_score.round() as u32).wrapping_mul(13))
     );
-    let t_idx  = (rng.next() * teams.len() as f64) as usize % teams.len();
-    let p_idx  = (rng.next() * teams.len() as f64) as usize % teams.len();
-    let pick   = (round - 1) * teams.len() as i32 + p_idx as i32 + 1;
+    let slot = (rng.next() * teams.len() as f64) as usize % teams.len();
+    let pick = (round - 1) * teams.len() as i32 + slot as i32 + 1;
 
     ProtagonistDraftOutcome {
         drafted: true,
         round:   Some(round),
         pick:    Some(pick),
-        team_id: Some(teams[t_idx].clone()),
+        team_id: Some(teams[slot].clone()),
         breakdown,
     }
 }

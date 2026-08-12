@@ -39,6 +39,7 @@ import {
   DRAFT_ROUTE_LABELS,
   KBL_TEAM_IDS,
   draftDestinationTeams,
+  draftOrderOf,
   placementRulesFrom,
 } from "../utils/draftSystem";
 import { loadRosterRules, buildSalaryIndex } from "../repo/newGameV3";
@@ -3239,10 +3240,9 @@ function createGameStore() {
 
       // 지명 순서는 **전 시즌 성적 역순**이다. 예전엔 팀 목록을 아예 안 넘겨
       // 기본값(알파벳 순)으로 돌았다 — 매년 같은 팀이 1순위를 가져갔다
-      const prevStandings = _getSeasonData?.()?.prevSeasonKblStandings ?? [];
-      const draftOrder = prevStandings.length > 0
-        ? [...prevStandings].sort((a, b) => a.winPct - b.winPct || a.wins - b.wins).map(st => st.teamId)
-        : [...KBL_TEAM_IDS];
+      // 정본은 `draftOrderOf` 하나다 — 주인공 지명도 같은 순서를 받아야
+      // 순번과 팀이 맞는다(`determine_protagonist_draft` 주석 참고)
+      const draftOrder = draftOrderOf(_getSeasonData?.()?.prevSeasonKblStandings ?? []);
       const teamIndex = Object.fromEntries(buildSalaryIndex(get(masterStore).teams));
       const univGradeMax = rulesFile.rosterRules["LEAGUE_UNIVERSITY"]?.gradeMax ?? 4;
       const hsGradeMax = rulesFile.rosterRules["LEAGUE_HIGHSCHOOL"]?.gradeMax ?? 3;
@@ -3267,22 +3267,81 @@ function createGameStore() {
         candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
       );
 
+      // ── 주인공을 보드에 끼워 넣는다 ──────────────────────────
+      //
+      // ⚠ **주인공이 NPC 드래프트와 같은 판 위에 있지 않았다.** 지명 여부는
+      // `determine_protagonist_draft`가 따로 정하고, 보드는 NPC 110명으로
+      // 꽉 차 있었다. 화면은 주인공을 그 자리에 **끼워 넣기만** 했고
+      // (`DraftBoardModal`) 누구도 밀려나지 않아서:
+      //
+      //   · 행이 111개가 되고 주인공이 뽑은 번호만 **두 줄**로 뜬다
+      //   · 마지막 번호 자리는 빈다 (실측: 56 두 줄 · 111 없음)
+      //   · 그 자리를 이미 가진 NPC도 그대로 지명 처리된다
+      //
+      // 실제 드래프트는 한 순번에 한 명이다. 주인공이 들어가면 **그 뒤가
+      // 한 칸씩 밀리고 마지막 지명자 하나가 미지명이 된다.**
+      const heroPick = s.schoolState.careerResults;
+      let displacedNpcId: string | null = null;
+      if (heroPick?.draftDrafted && heroPick.draftPick != null) {
+        const at = Math.max(0, Math.min(simResult.picks.length, heroPick.draftPick - 1));
+        // 밀려나는 사람 = 마지막 지명자. 이 사람은 미지명 경로를 타야 한다
+        if (simResult.picks.length >= (draftRules.rounds ?? DRAFT_ROUNDS) * draftOrder.length) {
+          displacedNpcId = simResult.picks[simResult.picks.length - 1]?.npcId ?? null;
+          simResult.picks.pop();
+        }
+        simResult.picks.splice(at, 0, {
+          round: heroPick.draftRound ?? 1,
+          pick: heroPick.draftPick,
+          teamId: heroPick.draftTeamId ?? draftOrder[0],
+          npcId: s.protagonist.id,
+        });
+        // 번호를 다시 매긴다 — 끼워 넣은 뒤 자리가 한 칸씩 밀렸다
+        const perRound = draftOrder.length;
+        simResult.picks = simResult.picks.map((p, i) => ({
+          ...p,
+          pick: i + 1,
+          round: Math.floor(i / perRound) + 1,
+          teamId: draftOrder[i % perRound],
+        }));
+        // 주인공의 최종 순번·팀은 **보드가 정한 값**이다 — 산식이 낸 값과
+        // 다를 수 있고(앞사람이 밀렸다), 화면·계약이 이걸 읽어야 맞는다
+        const mine = simResult.picks.find((p) => p.npcId === s.protagonist.id);
+        if (mine) {
+          this.setCareerResults({
+            ...heroPick,
+            draftRound: mine.round, draftPick: mine.pick, draftTeamId: mine.teamId,
+          });
+        }
+        // ⚠ **밀려난 사람을 미지명 목록에 넣는다.** `apply_draft`는 `picks`에
+        // 없으면 KBL로 안 옮기고, `undraftedIds`에도 없으면 진로 배정
+        // (`Placer`)도 안 탄다 — 어디에도 안 속한 채 원 소속에 남는다.
+        // 오류도 로그도 안 나는 종류라 검사로 잡는다
+        if (displacedNpcId) {
+          simResult.undraftedIds = [...simResult.undraftedIds, displacedNpcId];
+          autoLog(`[드래프트] 주인공 편입으로 마지막 지명 1건이 미지명이 됐다`);
+        }
+      }
+
       // 픽별 상세 로그
       const npcInfoMap = new Map(candidateNpcs.map(n => [n.npcId, n]));
       const _draftEntries: PlayerEventEntry[] = [];
       const _liveForLog = get(npcLiveStatsStore);
       for (const pick of simResult.picks) {
+        // ⚠ 주인공은 `npcs`에 없다 — 조회가 빗나가면 이름 자리에 `PLY_HERO`가
+        // 찍히고 OVR이 0으로 남는다. 보드에 편입한 이상 같은 줄에 제대로 뜬다
+        const isHero = pick.npcId === s.protagonist.id;
         const npc = npcInfoMap.get(pick.npcId);
-        const ovr = npc ? liveOvrOf(npc, _liveForLog) : 0;
-        const pos = npc?.playerType === "pitcher" ? "P" : (npc?.position ?? "?");
-        const age = npc?.age ?? 0;
-        const potential = npc?.developmentRate ?? 0;
+        const ovr = isHero ? s.protagonist.pitching.ovr : (npc ? liveOvrOf(npc, _liveForLog) : 0);
+        const pos = isHero ? "P" : (npc?.playerType === "pitcher" ? "P" : (npc?.position ?? "?"));
+        const age = isHero ? (s.protagonist.age ?? 0) : (npc?.age ?? 0);
+        const potential = isHero ? s.protagonist.developmentRate : (npc?.developmentRate ?? 0);
         const teamShort = pick.teamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-        const route = DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"];
-        autoLog(`  ${pick.round}R-${pick.pick}: ${npc?.name ?? pick.npcId} (${route} OVR:${ovr} ${pos} ${age}세 잠재${potential}) → ${teamShort}`);
+        const route = isHero ? DRAFT_ROUTE_LABELS.highschoolGraduate
+          : DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"];
+        autoLog(`  ${pick.round}R-${pick.pick}: ${isHero ? s.protagonist.name : (npc?.name ?? pick.npcId)} (${route} OVR:${ovr} ${pos} ${age}세 잠재${potential}) → ${teamShort}`);
         _draftEntries.push({
           npcId: pick.npcId,
-          name: npc?.name ?? pick.npcId,
+          name: isHero ? s.protagonist.name : (npc?.name ?? pick.npcId),
           toTeamId: pick.teamId,
           toLeagueId: "LEAGUE_KBL",
           detail: `${pick.round}라운드 ${pick.pick}순위 | ${route} OVR:${ovr} ${pos} ${age}세 잠재:${potential}`,
@@ -3311,14 +3370,32 @@ function createGameStore() {
         const rest = candidateNpcs
           .filter((n) => !pickedIds.has(n.npcId))
           .sort((a, b) => ovrOf(b) - ovrOf(a));
+        // ⚠ **주인공 자리를 비우지 않는다.** `npcInfoMap`엔 주인공이 없어서
+        // `filter(!!n)`이 그 줄을 통째로 떨어뜨린다 — 보드 후보 명단에
+        // 지명자가 한 명 모자라고, 그 자리를 화면이 따로 메우려다 픽번호가
+        // 어긋난다. 주인공은 NPC 형태로 얹어 같은 표에 놓는다
+        const heroRow = {
+          npcId: s.protagonist.id,
+          name: s.protagonist.name,
+          playerType: "pitcher",
+          position: s.protagonist.position ?? "SP",
+          age: s.protagonist.age ?? 0,
+          developmentRate: s.protagonist.developmentRate,
+          currentTeam: s.protagonist.teamId ?? "",
+          pitching: s.protagonist.pitching,
+        } as unknown as NpcSaveState;
         const ordered = [
-          ...simResult.picks.map((p) => npcInfoMap.get(p.npcId)).filter((n): n is NpcSaveState => !!n),
+          ...simResult.picks.map((p) =>
+            p.npcId === s.protagonist.id ? heroRow : npcInfoMap.get(p.npcId),
+          ).filter((n): n is NpcSaveState => !!n),
           ...rest,
         ].slice(0, want);
         this.setCareerDraftCandidates(ordered.map((n) => ({
           playerId: n.npcId,
           playerName: n.name,
-          ovr: Math.round(ovrOf(n)),
+          // 주인공은 live 맵에 없다 — 생성값이 곧 현재값이라 그대로 쓴다
+          ovr: Math.round(n.npcId === s.protagonist.id
+            ? s.protagonist.pitching.ovr : ovrOf(n)),
           age: n.age ?? 0,
           potential: n.developmentRate ?? 0,
           position: n.playerType === "pitcher" ? "P" : (n.position ?? "?"),
@@ -3354,8 +3431,11 @@ function createGameStore() {
         round: pick.round,
         teamId: pick.teamId,
         playerId: pick.npcId,
-        playerName: npcInfoMap.get(pick.npcId)?.name ?? pick.npcId,
-        isUser: false,
+        playerName: pick.npcId === s.protagonist.id
+          ? s.protagonist.name : (npcInfoMap.get(pick.npcId)?.name ?? pick.npcId),
+        // 화면이 이걸로 내 줄을 강조한다 — 예전엔 항상 false라 보드가
+        // 주인공을 따로 끼워 넣어야 했고 그게 픽번호 중복의 시작이었다
+        isUser: pick.npcId === s.protagonist.id,
         // 나이로는 경로를 못 가른다 — 드래프트 전에 나이가 이미 올라간다
         // (`CareerDraftPickLogEntry.route` 주석)
         route: DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"],

@@ -334,6 +334,25 @@ export interface DraftContext {
 }
 
 /**
+ * 그 해 지명 순서 — **전 시즌 성적 역순.**
+ *
+ * ⚠ **주인공 지명과 NPC 보드가 같은 순서를 써야 한다.** 이 계산이
+ * `processNpcDraft` 안에만 있어서, 주인공 쪽은 알파벳순 기본값
+ * (`KBL_TEAM_IDS`)을 받고 있었다. 순번은 맞는데 그 순번의 주인이 달라서
+ * **화면에 뜬 지명 팀이 실제 순서와 무관**했다.
+ *
+ * 성적이 없으면(첫 해) 기본 목록을 그대로 쓴다.
+ */
+export function draftOrderOf(
+  prevStandings: readonly { teamId: string; winPct: number; wins: number }[],
+): string[] {
+  if (prevStandings.length === 0) return [...KBL_TEAM_IDS];
+  return [...prevStandings]
+    .sort((a, b) => a.winPct - b.winPct || a.wins - b.wins)
+    .map((st) => st.teamId);
+}
+
+/**
  * 고교 경력에서 드래프트 입력을 뽑는다 — **한 시즌 평균**과 수상 수.
  *
  * `calcHsBaseballScore`는 진학 판정용 **합계**라 그대로 쓰면 안 된다.
