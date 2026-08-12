@@ -1679,7 +1679,7 @@
         "label": "다승왕",
         "stat": "w",
         "order": "desc",
-        "minIp": 45,
+        "minIp": 40,
         "minValue": 5
       },
       {
@@ -1687,7 +1687,7 @@
         "label": "방어율왕",
         "stat": "era",
         "order": "asc",
-        "minIp": 50,
+        "minIp": 45,
         "maxValue": 4.5
       },
       {
@@ -1695,7 +1695,7 @@
         "label": "탈삼진왕",
         "stat": "k",
         "order": "desc",
-        "minIp": 45,
+        "minIp": 40,
         "minValue": 30
       },
       {

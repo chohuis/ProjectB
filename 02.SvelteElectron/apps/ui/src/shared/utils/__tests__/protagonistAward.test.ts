@@ -126,14 +126,22 @@ describe("주인공 수상 후보", () => {
   });
 
   it("자격 이닝이 고교 시즌 길이에 맞다", () => {
-    // 팀 공식경기가 21~36으로 갈리고(넉아웃 대회) 커리어 이닝 중앙이 45 근처다.
-    // 60이면 자격자가 구조적으로 안 나온다
+    // 팀 공식경기가 21~36으로 갈리고(넉아웃 대회) 60이면 자격자가 구조적으로
+    // 안 나온다. 그래서 60 → 45로 내렸는데 **그것도 절벽 위였다.**
+    //
+    // ⚠ **자격선을 실측 중앙값에 붙이면 안 된다.** 45일 때 고교 이닝 중앙이
+    // 44.3(1학년)·32.0(2학년)이라 자격자가 표본의 절반 언저리였고, 같은
+    // seed·같은 정책인데 수상 회차가 **8/30 ↔ 1/30**으로 널뛰었다. 산식을
+    // 바꾼 탓으로 오해하기 딱 좋은 형태다 — 자격선이 분포 한가운데 있으면
+    // 아무것도 안 바뀌어도 결과가 흔들린다.
+    //
+    // 중앙값보다 아래로 내려 표본 흔들림에 안 걸리게 한다.
     const rules = JSON.parse(read("resource/data/master/players/generation_rules.json"));
     const byLabel = Object.fromEntries(
       rules.awardRules.pitcher.map((d: { label: string; minIp: number }) => [d.label, d.minIp]),
     );
-    expect(byLabel["다승왕"]).toBe(45);
-    expect(byLabel["탈삼진왕"]).toBe(45);
-    expect(byLabel["방어율왕"]).toBe(50);   // 규정이닝 성격이라 한 단계 위
+    expect(byLabel["다승왕"]).toBe(40);
+    expect(byLabel["탈삼진왕"]).toBe(40);
+    expect(byLabel["방어율왕"]).toBe(45);   // 규정이닝 성격이라 한 단계 위
   });
 });

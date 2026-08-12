@@ -401,6 +401,24 @@ pub fn is_protagonist_pitching(state: &MatchState) -> bool {
 ///
 ///   선발  12 + (스태미나/99)×15 ± 3   → 스태미나 99면 약 27아웃(완투)
 ///   구원  3 ~ 6
+/// 주인공 선발의 아웃 예산 — **`queue_max_outs`의 선발 식과 같다.**
+///
+/// ⚠ 흔들림(±3)은 빼고 쓴다. `should_protagonist_exit`은 타석마다 불리므로
+/// 난수를 넣으면 **같은 등판 안에서 예산이 매번 달라진다** — 22아웃에서
+/// 내려갈지 25아웃에서 내려갈지가 매 타석 재추첨된다.
+///
+/// 구원 등판(선발이 아닌 경우)엔 예산을 안 준다 — 0을 돌려주면 호출부가
+/// 건너뛰고, 스태미나·투구수·전술 판정이 그대로 돈다.
+fn protagonist_max_outs(state: &MatchState) -> u32 {
+    // 선발이 아니면 예산 없음. `my_queue`가 비었으면(구 세이브) 선발로 본다
+    let is_starter = state.my_queue.pitchers.is_empty() || state.my_queue.current == 0;
+    if !is_starter { return 0; }
+    // ⚠ **현재 스태미나가 아니라 상한이다.** 현재값을 쓰면 던질수록 예산이
+    // 줄어 자기 자신을 쫓아가는 식이 된다 — NPC는 `stamina_cap`으로 정한다
+    let stam = state.protagonist_pitcher.stamina_cap.max(1.0);
+    (12.0 + (stam / 99.0) * 15.0).round().max(1.0) as u32
+}
+
 fn queue_max_outs(pitchers: &[PartialPitcherStats], rng: &mut impl Rng) -> Vec<i32> {
     pitchers.iter().enumerate().map(|(i, p)| {
         let stam = p.stamina_cap.unwrap_or(50.0);
@@ -1411,6 +1429,31 @@ pub fn should_protagonist_exit(state: &MatchState) -> ProtagonistExitCheck {
     let soft = if state.pitch_soft  > 0.0 { state.pitch_soft  } else { T::protagonist_pitch_soft() };
 
     if pce  >= hard { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::PitchLimit) }; }
+
+    // ⚠ **NPC와 같은 규칙으로 내려온다** (2026-08-13).
+    //
+    // 예전엔 주인공만 스태미나 문턱(35)으로 내려왔다. 그 상수 주석은
+    // "NPC와 같은 기준"이라고 적혀 있었지만 **NPC는 스태미나 문턱을 아예
+    // 안 쓴다** — `PitcherQueue::should_switch`가 아웃카운트 예산과 투구수만
+    // 본다. 35라는 숫자가 NPC의 어떤 값과도 대응하지 않았다.
+    //
+    // 그 결과가 등판 길이 차이다:
+    //   NPC 선발  max_outs = 12 + (스태미나/99)*15  → 스태미나 60이면 7이닝
+    //   주인공    스태미나 <= 35                    → 실측 4.5이닝
+    //
+    // 이닝이 짧으니 시즌 이닝이 32~44에 머물고, 그 때문에 수상 자격선에
+    // 계속 걸렸으며 탈삼진왕·방어율왕은 210시즌 0건이었다. 볼륨이 필요한
+    // 부문에서 NPC 에이스와 싸움이 안 된다.
+    //
+    // 예산은 `queue_max_outs`의 선발 식을 그대로 쓴다 — 흔들림(±3)은 경기마다
+    // 새로 뽑으면 같은 경기 안에서 값이 바뀌므로 여기선 뺀다.
+    let budget = protagonist_max_outs(state);
+    if budget > 0 && state.outs_since_entry >= budget {
+        return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::Stamina) };
+    }
+
+    // 스태미나는 **비상 하한**으로만 남긴다 — 부상·급락으로 예산을 채우기
+    // 전에 무너지는 경우다. 여기가 정상 교체 사유였던 게 위의 결함이다
     if stam <= T::protagonist_stamina_exit() { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::Stamina) }; }
 
     let mut danger = 0.0;
