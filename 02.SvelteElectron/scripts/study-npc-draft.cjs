@@ -64,7 +64,12 @@ const log = (s) => { lines.push(s); console.log(s); fs.writeFileSync(LOG, lines.
             const pctOf = (o) =>
               peers.length === 0 ? null
                 : (peers.filter((p) => p < o).length / peers.length) * 100;
-            all.push(...t.rows.map((r) => ({ ...r, run, year, pct: pctOf(r.ovr) })));
+            // ⚠ **또래 수도 남긴다.** 지명자만 보면 "이 실력이면 몇 라운드"는
+            // 알아도 "이 실력이면 뽑히긴 하나"를 모른다. 주인공 미지명 문턱을
+            // 정하려면 **고교 3학년 투수 중 몇 명이 지명되는가**가 있어야 한다
+            all.push(...t.rows.map((r) => ({
+              ...r, run, year, pct: pctOf(r.ovr), peersN: peers.length,
+            })));
           }
         }
         log(`  ${run + 1}/${RUNS}  ${seenYears.size}개 연도 · 누적 ${all.length}명`);
@@ -117,14 +122,43 @@ const log = (s) => { lines.push(s); console.log(s); fs.writeFileSync(LOG, lines.
   // 주인공 산식은 `round = 6 - (score-50)*0.111`이고 score의 6할이 백분위다.
   // NPC가 그 백분위에서 실제로 몇 라운드를 받는지 나란히 놓으면, 어느 쪽이
   // 관대한지가 보인다. **이게 D의 결론이다.**
+  // ── 경로별 지명 수 · 고졸 지명률 ────────────────────────────
+  //
+  // 주인공 미지명 문턱을 정하려면 **고교 3학년 투수 중 몇 %가 지명되는가**가
+  // 있어야 한다. 지명자 표만으로는 "이 실력이면 몇 라운드"만 알 뿐이다.
+  {
+    const byYear = new Map();
+    for (const r of all) {
+      const k = r.run + "-" + r.year;
+      if (!byYear.has(k)) byYear.set(k, { peers: r.peersN, routes: new Map() });
+      const v = byYear.get(k);
+      v.routes.set(r.route, (v.routes.get(r.route) ?? 0) + 1);
+    }
+    log("");
+    log("연도별 경로 구성 (투수만)");
+    log("  연도       또래(고3투수)   고졸  대졸  대학재학  독립   고졸지명률");
+    let sp = 0, sh = 0;
+    for (const k of [...byYear.keys()].sort()) {
+      const v = byYear.get(k);
+      const g = (n) => v.routes.get(n) ?? 0;
+      sp += v.peers; sh += g("고졸");
+      log("  " + k.padEnd(10) + String(v.peers).padStart(6) + "        " +
+        [g("고졸"), g("대졸"), g("대학 재학"), g("독립")].map((n) => String(n).padStart(4)).join("  ") +
+        "     " + (v.peers ? (g("고졸") / v.peers * 100).toFixed(1) : "-") + "%");
+    }
+    log("");
+    log(`고교 3학년 투수 ${sp}명 중 고졸 지명 ${sh}명 = ${(sh / sp * 100).toFixed(2)}%`);
+    log(`→ 지명되려면 대략 백분위 ${(100 - sh / sp * 100).toFixed(1)} 이상`);
+  }
+
   const withPct = all.filter((x) => x.pct != null);
   if (withPct.length > 0) {
     log("");
-    log("고교 3학년 투수 백분위 → 라운드 (NPC 실측 vs 주인공 산식)");
+    log("고교 3학년 투수 백분위 → 라운드 (고졸 지명자만 · NPC 실측 vs 주인공 산식)");
     log("  백분위대       n    NPC 라운드 중앙   주인공 산식");
     const bands = [[0, 40], [40, 60], [60, 75], [75, 85], [85, 95], [95, 101]];
     for (const [lo, hi] of bands) {
-      const g2 = withPct.filter((x) => x.pct >= lo && x.pct < hi);
+      const g2 = withPct.filter((x) => x.route === "고졸" && x.pct >= lo && x.pct < hi);
       if (g2.length === 0) continue;
       const mid = (lo + hi) / 2;
       // 주인공 산식 — ovrNorm은 그 띠의 실제 OVR 중앙으로 낸다

@@ -4750,7 +4750,7 @@ export function npcDraftTable(): Record<string, unknown> {
   const byId = new Map(g.npcs.map((n) => [n.npcId, n]));
   const rows: {
     round: number; pick: number; ovr: number; genOvr: number;
-    age: number; dev: number; type: string;
+    age: number; dev: number; type: string; route: string;
   }[] = [];
   for (const r of log) {
     const n = byId.get(r.playerId);
@@ -4770,6 +4770,7 @@ export function npcDraftTable(): Record<string, unknown> {
       // 정해지고 있을 수 있다.** 어느 쪽과 라운드가 맞는지 재서 가린다 —
       // 이 저장소에서 다섯 번 나온 결함이라 단정하지 않고 잰다
       genOvr: n.pitching?.ovr ?? 0,
+      route: r.route ?? "?",
       // NPC 산식은 `dev_rate * 0.35`를 얹는다 — OVR만 보면 라운드를 못 설명한다
       dev: n.developmentRate ?? 0,
       type: n.playerType,

@@ -3356,6 +3356,9 @@ function createGameStore() {
         playerId: pick.npcId,
         playerName: npcInfoMap.get(pick.npcId)?.name ?? pick.npcId,
         isUser: false,
+        // 나이로는 경로를 못 가른다 — 드래프트 전에 나이가 이미 올라간다
+        // (`CareerDraftPickLogEntry.route` 주석)
+        route: DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"],
       }));
       update(st => ({
         ...st,

@@ -485,6 +485,17 @@ export interface CareerDraftPickLogEntry {
   playerId: string;
   playerName: string;
   isUser: boolean;
+  /**
+   * 어디서 왔나 — 고졸 · 대졸 · 대학 재학 · 독립 (`DRAFT_ROUTE_LABELS`).
+   *
+   * ⚠ **나이로는 못 가른다.** `runWorldSeasonEnd`에서 나이 증가
+   * (`processSeasonEnd`)가 드래프트보다 **먼저** 돌아서, 드래프트 시점의
+   * 고졸이 19세일 수도 20세일 수도 있다. 실제로 `age <= 19`로 갈랐더니
+   * 연도별 고졸 지명자가 11 → 0 → 0 → 36으로 널뛰었다.
+   *
+   * 옛 세이브에는 없다(선택 필드).
+   */
+  route?: string;
 }
 
 /**
