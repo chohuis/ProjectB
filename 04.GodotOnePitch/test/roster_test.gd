@@ -96,7 +96,7 @@ func test_the_rotation_does_not_move_with_condition() -> void:
 	# 선발 61명일 때 −0.63인데 96명일 때 **+0.12**(양수)까지 갔다
 	var tired: Dictionary = {}
 	for i in 5:
-		tired["SP%d" % i] = {"fatigue": 20, "last_pitched_week": 9,
+		tired["SP%d" % i] = {"freshness": 20, "last_pitched_week": 9,
 			"last_start_game_count": 9, "last_appearance_game_count": 9,
 			"consecutive_appearances": 0}
 	var rot: Array = Roster.team_rotation(_params({"conditions": tired, "current_week": 10}))

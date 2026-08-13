@@ -201,27 +201,27 @@ func test_the_result_feeds_straight_into_the_standings() -> void:
 
 func test_pitching_costs_fatigue() -> void:
 	# ⚠ 계수는 리그 시뮬과 **같은 값이다.** 다르면 한쪽 리그만 투수가 빨리 지친다
-	assert_float(MatchReport.next_fatigue(100.0, 21)).is_equal_approx(100.0 - 21.0 * 2.7, 0.001)
+	assert_float(MatchReport.next_freshness(100.0, 21)).is_equal_approx(100.0 - 21.0 * 2.7, 0.001)
 
 
 func test_fatigue_never_leaves_its_range() -> void:
 	# 음수 피로면 그 뒤 등판 판정이 통째로 무너진다
-	assert_float(MatchReport.next_fatigue(10.0, 60)).is_equal_approx(0.0, 0.001)
-	assert_float(MatchReport.next_fatigue(100.0, 0)).is_equal_approx(100.0, 0.001)
+	assert_float(MatchReport.next_freshness(10.0, 60)).is_equal_approx(0.0, 0.001)
+	assert_float(MatchReport.next_freshness(100.0, 0)).is_equal_approx(100.0, 0.001)
 
 
 func test_conditions_only_cover_pitchers_who_threw() -> void:
 	var s: Dictionary = _state({"my_pitcher_lines": [
 		_pline("P1", {"outs": 21, "pc": 95}), _pline("BENCH"),
 	]})
-	var conds: Dictionary = MatchReport.pitcher_conditions(s, {"P1": {"fatigue": 90.0}})
+	var conds: Dictionary = MatchReport.pitcher_conditions(s, {"P1": {"freshness": 90.0}})
 	assert_bool(conds.has("P1")).is_true()
 	assert_bool(conds.has("BENCH")).is_false()
-	assert_float(conds["P1"]["fatigue"]).is_equal_approx(90.0 - 21.0 * 2.7, 0.001)
+	assert_float(conds["P1"]["freshness"]).is_equal_approx(90.0 - 21.0 * 2.7, 0.001)
 
 
 func test_an_unknown_pitcher_starts_fresh() -> void:
 	# 처음 등판하는 투수는 이전 기록이 없다
 	var s: Dictionary = _state({"my_pitcher_lines": [_pline("NEW", {"outs": 9, "pc": 40})]})
 	var conds: Dictionary = MatchReport.pitcher_conditions(s, {})
-	assert_float(conds["NEW"]["fatigue"]).is_equal_approx(100.0 - 9.0 * 2.7, 0.001)
+	assert_float(conds["NEW"]["freshness"]).is_equal_approx(100.0 - 9.0 * 2.7, 0.001)

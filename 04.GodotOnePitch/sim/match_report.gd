@@ -14,9 +14,9 @@ class_name MatchReport
 ##   `Standings.apply_result`  경기 결과
 
 
-## 아웃당 피로. **리그 시뮬과 같은 값이다** — 다르면 한쪽 리그만 투수가
+## 아웃당 깎이는 신선도. **리그 시뮬과 같은 값이다** — 다르면 한쪽 리그만 투수가
 ## 빨리 지친다
-const FATIGUE_PER_OUT: float = 2.7
+const FRESHNESS_PER_OUT: float = 2.7
 
 
 ## 아웃 수를 야구식 이닝으로. **소수 이닝으로 넘기면 통산 합산이 어긋난다** —
@@ -104,8 +104,8 @@ static func to_match_result(state: Dictionary, home_team_id: String, away_team_i
 
 ## ⚠ **안 넘기면 투수가 무한정 던진다.** 범위를 벗어난 피로는 그 뒤 등판
 ## 판정을 통째로 무너뜨린다
-static func next_fatigue(previous: float, outs: int) -> float:
-	return clampf(previous - float(outs) * FATIGUE_PER_OUT, 0.0, 100.0)
+static func next_freshness(previous: float, outs: int) -> float:
+	return clampf(previous - float(outs) * FRESHNESS_PER_OUT, 0.0, 100.0)
 
 
 ## 이 경기에 던진 투수들의 다음 컨디션. **안 던진 투수는 안 건드린다**
@@ -117,6 +117,6 @@ static func pitcher_conditions(state: Dictionary, previous: Dictionary) -> Dicti
 				continue
 			var pid: String = l.get("player_id", "")
 			# 처음 등판하는 투수는 이전 기록이 없다
-			var prev: float = previous.get(pid, {}).get("fatigue", 100.0)
-			out[pid] = {"fatigue": next_fatigue(prev, int(l.get("outs", 0)))}
+			var prev: float = previous.get(pid, {}).get("freshness", 100.0)
+			out[pid] = {"freshness": next_freshness(prev, int(l.get("outs", 0)))}
 	return out

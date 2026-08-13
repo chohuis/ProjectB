@@ -14,7 +14,7 @@ class_name Roster
 ##   pitching{ovr} · batting{ovr, eye, speed, power, contact}
 ##
 ## 컨디션:
-##   fatigue · last_pitched_week · last_start_game_count
+##   freshness · last_pitched_week · last_start_game_count
 ##   last_appearance_game_count · consecutive_appearances
 
 
@@ -57,15 +57,15 @@ static func effective_ovr(base_ovr: float, condition: Dictionary, current_week: 
 	if condition.is_empty():
 		return int(base_ovr)
 
-	var fatigue: float = condition.get("fatigue", 100.0)
-	var fat_f: float = 1.00 if fatigue >= 70.0 else (0.90 if fatigue >= 50.0
-		else (0.80 if fatigue >= 30.0 else 0.65))
+	var freshness: float = condition.get("freshness", 100.0)
+	var fresh_f: float = 1.00 if freshness >= 70.0 else (0.90 if freshness >= 50.0
+		else (0.80 if freshness >= 30.0 else 0.65))
 
 	var last: int = condition.get("last_pitched_week", 0)
 	var weeks_rested: int = (current_week - last) if last > 0 else 99
 	var rest_f: float = 1.00 if weeks_rested >= 2 else (0.85 if weeks_rested == 1 else 0.55)
 
-	return int(roundf(base_ovr * fat_f * rest_f))
+	return int(roundf(base_ovr * fresh_f * rest_f))
 
 
 ## 오래 쉰 선수를 앞세우는 보정. 감독 성향이 클수록 크게 걸린다
@@ -288,10 +288,10 @@ static func team_lineup(p: Dictionary) -> Array:
 
 	var bat_score := func(e: Dictionary) -> float:
 		var c: Dictionary = conditions.get(e["id"], {})
-		var fatigue: float = c.get("fatigue", 100.0) if not c.is_empty() else 100.0
-		var fat_f: float = 1.00 if fatigue >= 70.0 else (0.90 if fatigue >= 50.0 else 0.78)
+		var freshness: float = c.get("freshness", 100.0) if not c.is_empty() else 100.0
+		var fresh_f: float = 1.00 if freshness >= 70.0 else (0.90 if freshness >= 50.0 else 0.78)
 		var last = c.get("last_appearance_game_count", null)
-		return roundf(_bat_ovr(e) * fat_f) + freshness_bonus(last, team_game_count, rotation_sense)
+		return roundf(_bat_ovr(e) * fresh_f) + freshness_bonus(last, team_game_count, rotation_sense)
 
 	# 포지션마다 제일 나은 한 명 — 포수 둘에 유격수 0명이면 수비가 안 된다
 	var used: Dictionary = {}
