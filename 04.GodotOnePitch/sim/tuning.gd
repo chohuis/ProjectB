@@ -15,6 +15,135 @@ class_name Tuning
 ## ⚠ **이주 중 밸런스는 동결이다.** 값은 원본 실측 결과 그대로다. 바꾸지 않는다.
 
 
+# ── 계측용 손잡이 ──────────────────────────────────────────────────
+#
+# 원본은 이 넷을 환경변수(`PB_*`)로 덮을 수 있게 두고 밸런스를 재고 있었다.
+# 이주 중에는 **기본값으로 굳힌다** — 두 변수를 동시에 움직이면 무엇이 원인인지
+# 못 가린다. 계측을 다시 열 때 여기에 손잡이를 붙인다.
+
+const PITCH_QUALITY_NOISE: float = 16.0
+const PITCH_SKILL_SCALE: float = 1.0
+## 밴드 표는 "동급 = 56"을 전제하는데 실측 평균이 48이다. 표를 다시 쓰는
+## 대신 **입력을 옮긴다** — 오프셋은 여기 한 곳에서만 더한다
+const CONTACT_Q_OFFSET: float = 0.0
+
+
+# ── 투구 품질 ──────────────────────────────────────────────────────
+
+## 구종별 바닥 품질
+const PITCH_BASE: Dictionary = {
+	"fastball": 59.0, "sinker": 57.0, "cutter": 56.0, "slider": 56.0,
+	"curve": 54.0, "changeup": 53.0, "splitter": 54.0, "forkball": 53.0,
+	"screwball": 52.0, "knuckleball": 50.0,
+}
+
+const STRATEGY_BONUS: Dictionary = {"aggressive": 2.0, "balanced": 0.0, "safe": -2.0}
+const POWER_BONUS: Dictionary = {"low": -1.5, "normal": 0.0, "high": 2.8}
+
+## 숙련도 → 품질.
+##
+## ⚠ **숙련도가 배우는 속도만 늦추던 시절엔 결과에 아예 안 닿았다.** 화면엔
+## "숙련도 4/5"라고 적혀 있는데 던지면 차이가 없었다.
+##
+## ⚠ 폭을 넓게 잡았다가 1등급 패스트볼이 매 투구마다 −7.1을 먹었다. 품질은
+## 여러 항의 **합**이고 다른 보정이 ±5 규모인데 혼자 그 이상을 움직였다 —
+## 주인공 ERA가 8.78 → 19.86으로 튀었다
+static func grade_quality_bonus(grade: int) -> float:
+	match grade:
+		0, 1:
+			return -3.0
+		2:
+			return -1.5
+		3:
+			return 0.0
+		4:
+			return 1.5
+		_:
+			return 3.0
+
+
+## 숙련도 → 선택 가중. 잘 다듬은 구종을 더 자주 던진다 — "주무기"가 생긴다
+static func grade_pick_weight(grade: int) -> float:
+	match grade:
+		0, 1:
+			return 0.5
+		2:
+			return 0.8
+		3:
+			return 1.0
+		4:
+			return 1.5
+		_:
+			return 2.0
+
+
+# ── 제구 흩어짐 ────────────────────────────────────────────────────
+
+const DISPERSION_BASE: float = 0.15
+const DISPERSION_CONTROL_SCALE: float = 0.003
+const DISPERSION_STAMINA_SCALE: float = 0.002
+const DISPERSION_MENTAL_SCALE: float = 0.001
+## 스트라이크존 바깥의 경계 폭 — 심판이 잡아줄 수도 있는 구간
+const SHADOW_ZONE_HALF: float = 0.20
+const SHADOW_UMPIRE_STRIKE_PROB: float = 0.45
+
+## 겨냥한 곳의 난이도. 중앙은 벌점, 구석일수록 가점
+const LOCATION_CENTER_PENALTY: float = -4.0
+const LOCATION_DISTANCE_SCALE: float = 5.0
+
+
+# ── 스윙 판단 ──────────────────────────────────────────────────────
+
+const SWING_MARGIN_BASE: float = 0.18
+const SWING_DISCIPLINE_SCALE: float = 0.003
+const SWING_EYE_SCALE: float = 0.002
+## 직구는 스윙을 부른다
+const SWING_FASTBALL_BONUS: float = 0.08
+
+
+# ── 장타 승격 ──────────────────────────────────────────────────────
+
+const HIT_UPGRADE_SINGLE_TO_DOUBLE_BASE: float = 0.18
+const HIT_UPGRADE_DOUBLE_TO_HR_BASE: float = 0.22
+
+
+# ── 날씨·구장 ──────────────────────────────────────────────────────
+
+static func weather_power_modifier(weather: String) -> float:
+	match weather:
+		"windyIn":
+			return -0.1
+		"windyOut":
+			return 0.1
+		_:
+			return 0.0
+
+
+static func weather_quality_modifier(weather: String, pitch_type: String) -> float:
+	match weather:
+		"rainy":
+			# 비에는 변화구가 더 안 든다
+			return -1.0 if pitch_type == "fastball" else -3.0
+		"windyOut":
+			return -2.0
+		"windyIn":
+			return 2.0
+		"cloudy":
+			return -0.5
+		_:
+			return 0.0
+
+
+static func park_quality_modifier(park: String) -> float:
+	match park:
+		"pitcherPark":
+			return 3.0
+		"hitterPark":
+			return -3.0
+		_:
+			return 0.0
+
+
 # ── 병살 ───────────────────────────────────────────────────────────
 
 const DOUBLE_PLAY_BASE_PROB: float = 0.22
