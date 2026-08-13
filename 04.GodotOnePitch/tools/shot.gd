@@ -46,6 +46,7 @@ func _init() -> void:
 
 const STATUS := preload("res://ui/screens/status_screen.tscn")
 const MAIN := preload("res://ui/screens/main_screen.tscn")
+const APP := preload("res://ui/app_root.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -73,5 +74,15 @@ func _build(which: String) -> Control:
 			return _main(Fixtures.main_state())
 		"main-gameday":
 			return _main(Fixtures.main_state_gameday())
+		"app":
+			var a: AppRoot = APP.instantiate()
+			a.set_state(Fixtures.main_state())
+			return a
+		"app-running":
+			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
+			var b: AppRoot = APP.instantiate()
+			b.set_state(Fixtures.main_state())
+			b.ready.connect(func() -> void: b.screen().set_progress(2, 5), CONNECT_ONE_SHOT)
+			return b
 		_:
 			return null
