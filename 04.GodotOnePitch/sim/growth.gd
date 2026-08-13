@@ -93,6 +93,33 @@ static func try_level_up(current: float, acc_xp: float, gain_xp: float) -> Dicti
 	return {"value": value, "acc_xp": xp, "leveled": leveled}
 
 
+## 모은 XP를 능력으로 바꾼다. **훈련 성장과 경기 성장이 같이 쓴다** —
+## 두 벌로 두면 같은 선수가 경로에 따라 다르게 자란다.
+##
+## ⚠ **천장은 스탯마다 따로 본다.** 하나로 묶으면 이미 다 큰 스탯이 아직
+## 낮은 스탯의 성장까지 막는다.
+##
+## `stats`·`xp_map`·`logs`를 제자리에서 고친다
+static func apply_gains(stats: Dictionary, xp_map: Dictionary, gains: Dictionary,
+		potential: float, logs: Array[String]) -> void:
+	var p: float = clampf(potential, 60.0, 99.0)
+	var speed: float = potential_speed_factor(p)
+	# 순서를 고정한다 — 사전 순회 순서가 바뀌면 로그가 흔들린다
+	var names: Array = gains.keys()
+	names.sort()
+	for stat in names:
+		var gain: float = gains[stat]
+		if gain <= 0.0:
+			continue
+		var cur: float = stats.get(stat, 0.0)
+		var adjusted: float = gain * speed * potential_cap_factor(cur, p)
+		var r: Dictionary = try_level_up(cur, xp_map.get(stat, 0.0), adjusted)
+		xp_map[stat] = r["acc_xp"]
+		if r["leveled"] > 0:
+			stats[stat] = r["value"]
+			logs.append("%s +%d" % [stat, r["leveled"]])
+
+
 ## 피로 구간 승수 — 70/80/90에서 볼록하게 뛴다.
 ##
 ## ⚠ **지칠수록 같은 훈련이 더 지치게 한다.** 이게 없으면 피로를 무시하고

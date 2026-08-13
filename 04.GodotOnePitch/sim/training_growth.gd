@@ -93,8 +93,7 @@ static func calc(player: Dictionary, plan: Dictionary, programs: Array,
 			bat_gains[stat] = bat_gains.get(stat, 0.0) + xp * cfg["gains_batting"][stat]
 
 	# ── 잠재력 보정 → 레벨업 ────────────────────────────────────
-	var potential: float = clampf(player.get("potential_hidden", 75.0), 60.0, 99.0)
-	var speed: float = Growth.potential_speed_factor(potential)
+	var potential: float = player.get("potential_hidden", 75.0)
 
 	var pitching: Dictionary = player.get("pitching", {}).duplicate()
 	var batting: Dictionary = player.get("batting", {}).duplicate()
@@ -102,8 +101,9 @@ static func calc(player: Dictionary, plan: Dictionary, programs: Array,
 	var batting_xp: Dictionary = player.get("batting_xp", {}).duplicate()
 	var logs: Array[String] = []
 
-	_apply(pitching, pitching_xp, pitch_gains, potential, speed, logs)
-	_apply(batting, batting_xp, bat_gains, potential, speed, logs)
+	# 레벨업·천장 감쇠는 가 정본이다 — 경기 성장도 같은 걸 쓴다
+	Growth.apply_gains(pitching, pitching_xp, pitch_gains, potential, logs)
+	Growth.apply_gains(batting, batting_xp, bat_gains, potential, logs)
 
 	return {
 		"pitching": pitching, "batting": batting,
@@ -113,23 +113,3 @@ static func calc(player: Dictionary, plan: Dictionary, programs: Array,
 		"pitch_dev_gain": pitch_dev_gain,
 		"logs": logs,
 	}
-
-
-## ⚠ **천장은 스탯마다 따로 본다.** 하나로 묶으면 이미 다 큰 스탯이 아직
-## 낮은 스탯의 성장까지 막는다
-static func _apply(stats: Dictionary, xp_map: Dictionary, gains: Dictionary,
-		potential: float, speed: float, logs: Array[String]) -> void:
-	# 순서를 고정한다 — 사전 순회 순서가 바뀌면 로그가 흔들린다
-	var names: Array = gains.keys()
-	names.sort()
-	for stat in names:
-		var gain: float = gains[stat]
-		if gain <= 0.0:
-			continue
-		var cur: float = stats.get(stat, 0.0)
-		var adjusted: float = gain * speed * Growth.potential_cap_factor(cur, potential)
-		var r: Dictionary = Growth.try_level_up(cur, xp_map.get(stat, 0.0), adjusted)
-		xp_map[stat] = r["acc_xp"]
-		if r["leveled"] > 0:
-			stats[stat] = r["value"]
-			logs.append("%s +%d" % [stat, r["leveled"]])
