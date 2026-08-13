@@ -24,6 +24,8 @@ const CARD := Color("1b1f28")
 const CARD_EDGE := Color("2a3040")
 const TEXT := Color("e6e9ef")
 const TEXT_DIM := Color("8b93a7")
+## 있지만 눈에 안 걸려야 하는 글자 — 볼·파울 같은 "아무 일도 안 일어난" 줄
+const TEXT_MUTE := Color("6b7386")
 const ACCENT := Color("4a9eff")
 const OK := Color("46c46b")
 const WARN := Color("e8b23a")
@@ -36,6 +38,17 @@ const SEV_COLOR := {
 	"severe": BAD,
 	"surgery": Color("c04ad0"),
 }
+
+## 투구 결과 큰 글자 — 1.4초 스쳐 지나가는 자리라 본문보다 채도가 높다.
+## 어느 코드가 어느 색인지는 `sim/match_result.gd`가 정한다
+const FLASH_HOMERUN := Color("ff4a4a")
+const FLASH_TRIPLE := Color("ff9800")
+const FLASH_HIT := Color("ffd54f")
+const FLASH_DP := Color("6ee7a8")
+const FLASH_STRIKE := Color("37d67a")
+const FLASH_ERROR := Color("ff4a4a")
+const FLASH_OUT := Color("ff8c42")
+const FLASH_PLAIN := Color("7a8fa8")
 
 # ── 여백·크기 ─────────────────────────────────────────────────────
 const PAD := 12
