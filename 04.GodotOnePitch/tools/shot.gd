@@ -45,6 +45,7 @@ func _init() -> void:
 
 
 const STATUS := preload("res://ui/screens/status_screen.tscn")
+const MAIN := preload("res://ui/screens/main_screen.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -54,11 +55,23 @@ func _screen(vm: Dictionary) -> Control:
 	return s
 
 
+## 진행 화면은 **상태를 받아 ViewModel을 거친다** — 화면이 보는 사전이
+## 실제 경로와 같아야 스크린샷이 뜻을 갖는다
+func _main(state: Dictionary) -> Control:
+	var s: MainScreen = MAIN.instantiate()
+	s.set_view_model(MainVm.build(state))
+	return s
+
+
 func _build(which: String) -> Control:
 	match which:
 		"status":
 			return _screen(Fixtures.status_vm())
 		"status-empty":
 			return _screen(Fixtures.status_vm_empty())
+		"main":
+			return _main(Fixtures.main_state())
+		"main-gameday":
+			return _main(Fixtures.main_state_gameday())
 		_:
 			return null

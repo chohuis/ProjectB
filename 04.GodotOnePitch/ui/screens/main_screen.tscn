@@ -1,0 +1,86 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/screens/main_screen.gd" id="1_main"]
+
+[node name="MainScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.074, 0.086, 0.11, 1)
+
+[node name="Pad" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Col" type="VBoxContainer" parent="Pad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="VBoxContainer" parent="Pad/Col"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="DateRow" type="HBoxContainer" parent="Pad/Col/Header"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Date" type="Label" parent="Pad/Col/Header/DateRow"]
+layout_mode = 2
+
+[node name="Weekday" type="Label" parent="Pad/Col/Header/DateRow"]
+layout_mode = 2
+
+[node name="Week" type="Label" parent="Pad/Col/Header/DateRow"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="WhoRow" type="HBoxContainer" parent="Pad/Col/Header"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Player" type="Label" parent="Pad/Col/Header/WhoRow"]
+layout_mode = 2
+
+[node name="Team" type="Label" parent="Pad/Col/Header/WhoRow"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="Tabs" type="HBoxContainer" parent="Pad/Col"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TabHost" type="VBoxContainer" parent="Pad/Col"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Footer" type="VBoxContainer" parent="Pad/Col"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="NextGame" type="Label" parent="Pad/Col/Footer"]
+layout_mode = 2
+
+[node name="Advance" type="Button" parent="Pad/Col/Footer"]
+layout_mode = 2

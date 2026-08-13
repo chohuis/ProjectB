@@ -1,0 +1,142 @@
+[
+ [
+  "탭 순서를 바꾼다 (손가락이 기억한 자리가 달라진다)",
+  "\t{\"id\": \"news\", \"label\": \"소식\"},\n\t{\"id\": \"me\", \"label\": \"나\"},",
+  "\t{\"id\": \"me\", \"label\": \"나\"},\n\t{\"id\": \"news\", \"label\": \"소식\"},"
+ ],
+ [
+  "탭을 하나 뺀다",
+  "\t{\"id\": \"schedule\", \"label\": \"일정\"},",
+  ""
+ ],
+ [
+  "요일 이름이 하루 밀린다",
+  "const WEEKDAY_NAMES: Array[String] = [\"일\", \"월\", \"화\", \"수\", \"목\", \"금\", \"토\"]",
+  "const WEEKDAY_NAMES: Array[String] = [\"월\", \"화\", \"수\", \"목\", \"금\", \"토\", \"일\"]"
+ ],
+ [
+  "요일을 달력이 아니라 주차에서 판다",
+  "\t\t\"weekday_label\": WEEKDAY_NAMES[Calendar.weekday(year, day)],",
+  "\t\t\"weekday_label\": WEEKDAY_NAMES[Calendar.day_in_week(day) % 7],"
+ ],
+ [
+  "날짜를 시즌 일차로 찍는다",
+  "\t\t\"date_label\": \"%d년 %d월 %d일\" % [date[\"year\"], date[\"month\"], date[\"day\"]],",
+  "\t\t\"date_label\": \"%d년 %d일차\" % [year, day],"
+ ],
+ [
+  "월과 일을 뒤집는다",
+  "\t\t\"date_label\": \"%d년 %d월 %d일\" % [date[\"year\"], date[\"month\"], date[\"day\"]],",
+  "\t\t\"date_label\": \"%d년 %d월 %d일\" % [date[\"year\"], date[\"day\"], date[\"month\"]],"
+ ],
+ [
+  "주차를 0부터 센다",
+  "\t\t\"week_label\": \"%d주차\" % Calendar.week_of(day),",
+  "\t\t\"week_label\": \"%d주차\" % (Calendar.week_of(day) - 1),"
+ ],
+ [
+  "안 읽은 것과 미결정을 같이 센다 (막힌 이유를 화면에서 못 본다)",
+  "\t\tif not m.get(\"read\", false):\n\t\t\tunread += 1",
+  "\t\tif not m.get(\"read\", false) or m.get(\"decision\", null) != null:\n\t\t\tunread += 1"
+ ],
+ [
+  "읽은 것을 안 읽은 것으로 센다",
+  "\t\tif not m.get(\"read\", false):",
+  "\t\tif m.get(\"read\", false):"
+ ],
+ [
+  "미결정을 안 센다",
+  "\t\tif d != null and d.get(\"selected\", null) == null:\n\t\t\tundecided += 1",
+  ""
+ ],
+ [
+  "답한 결정도 미결정으로 센다",
+  "\t\tif d != null and d.get(\"selected\", null) == null:",
+  "\t\tif d != null:"
+ ],
+ [
+  "NPC 경기를 내 등판으로 센다 (매일 오늘 등판이 된다)",
+  "\t\tif not g.get(\"is_protagonist_game\", false):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "이미 치른 경기를 다음 등판으로 센다",
+  "\t\tif g.get(\"result\", null) != null:\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "지나간 경기를 다음 등판으로 센다",
+  "\t\tif d < day:\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "제일 가까운 등판이 아니라 목록 첫 등판을 쓴다",
+  "\t\tif best < 0 or d < best:\n\t\t\tbest = d",
+  "\t\tif best < 0:\n\t\t\tbest = d"
+ ],
+ [
+  "다음 등판까지를 하루 더 센다",
+  "\treturn -1 if best < 0 else best - day",
+  "\treturn -1 if best < 0 else best - day + 1"
+ ],
+ [
+  "등판이 없어도 0일로 본다",
+  "\treturn -1 if best < 0 else best - day",
+  "\treturn maxi(best - day, 0)"
+ ],
+ [
+  "오늘 등판을 내일로 적는다",
+  "\tif days == 0:\n\t\treturn \"오늘 등판\"\n\tif days == 1:\n\t\treturn \"내일 등판\"",
+  "\tif days <= 1:\n\t\treturn \"내일 등판\""
+ ],
+ [
+  "남은 등판 없음을 안 알린다",
+  "\tif days < 0:\n\t\treturn \"남은 등판 없음\"",
+  ""
+ ],
+ [
+  "진행 일수를 출발일부터 센다 (하루 더 간다)",
+  "\tvar span: int = 0 if stop != null else DayEngine.next_stop_day(s) - day",
+  "\tvar span: int = 0 if stop != null else DayEngine.next_stop_day(s) - day + 1"
+ ],
+ [
+  "멈출 이유가 있어도 진행 버튼을 살린다",
+  "\tvar span: int = 0 if stop != null else DayEngine.next_stop_day(s) - day",
+  "\tvar span: int = DayEngine.next_stop_day(s) - day"
+ ],
+ [
+  "0일이어도 진행할 수 있다고 한다",
+  "\t\t\"can_advance\": span > 0,",
+  "\t\t\"can_advance\": span >= 0,"
+ ],
+ [
+  "하루 진행을 1일 진행으로 적는다",
+  "\tif span == 1:\n\t\treturn \"하루 진행\"",
+  ""
+ ],
+ [
+  "멈춘 이유를 화면이 다시 판단한다 (진행기와 갈린다)",
+  "\tvar stop = DayEngine.stop_reason(s)",
+  "\tvar stop = null if days_to != 0 else {\"type\": \"game\"}"
+ ],
+ [
+  "멈춘 이유를 안 싣는다",
+  "\t\t\"stop_type\": \"\" if stop == null else String(stop.get(\"type\", \"\")),",
+  "\t\t\"stop_type\": \"\","
+ ],
+ [
+  "소식 탭에 알림을 안 단다",
+  "\t\tif t[\"id\"] == \"news\":\n\t\t\tbadge = unread + undecided",
+  ""
+ ],
+ [
+  "모든 탭에 같은 알림을 단다",
+  "\t\tif t[\"id\"] == \"news\":\n\t\t\tbadge = unread + undecided",
+  "\t\tbadge = unread + undecided"
+ ],
+ [
+  "빈 상태에서 0일차를 쓴다 (달력이 음수로 간다)",
+  "\tvar day: int = maxi(int(s.get(\"day\", 1)), 1)",
+  "\tvar day: int = int(s.get(\"day\", 0))"
+ ]
+]

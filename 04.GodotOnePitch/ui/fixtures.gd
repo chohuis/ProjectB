@@ -78,3 +78,35 @@ static func status_vm_empty() -> Dictionary:
 		"season_stats": [],
 		"career": [],
 	}
+
+
+## 진행 화면용 **상태**. ViewModel이 아니라 상태다 —
+## 스크린샷도 검사도 `MainVm.build()`를 거쳐야 실제 경로와 같아진다
+static func main_state() -> Dictionary:
+	return {
+		"day": 10, "season_days": 350, "season_year": 2027,
+		"protagonist": {
+			"name": "김한결", "team_name": "제주 애월고",
+			"condition": 72.0, "injury": null, "eligibility_blocked": false,
+			"retired": false,
+		},
+		"schedule": [
+			{"id": "G15", "day": 15, "is_protagonist_game": true,
+				"home": "TEAM_A", "away": "TEAM_B", "result": null},
+			{"id": "G12", "day": 12, "is_protagonist_game": false,
+				"home": "TEAM_C", "away": "TEAM_D", "result": null},
+		],
+		"pending": [],
+		"mailbox": [
+			{"id": "M1", "read": false},
+			{"id": "M2", "read": false},
+			{"id": "M3", "read": true},
+		],
+	}
+
+
+## 등판 당일 — 진행 버튼이 잠기고 "오늘 등판"이 강조되는 상태
+static func main_state_gameday() -> Dictionary:
+	var s: Dictionary = main_state()
+	s["day"] = 15
+	return s
