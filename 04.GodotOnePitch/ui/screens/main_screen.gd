@@ -13,6 +13,7 @@ class_name MainScreen
 ## 여기서는 **탭 버튼과 내용만 만들어 붙인다.**
 
 const SCHEDULE_ROW := preload("res://ui/parts/schedule_row.tscn")
+const NEWS_ROW := preload("res://ui/parts/news_row.tscn")
 
 @onready var _bg: ColorRect = $Bg
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
@@ -29,6 +30,9 @@ const SCHEDULE_ROW := preload("res://ui/parts/schedule_row.tscn")
 signal advance_requested(days: int)
 ## 탭을 골랐다
 signal tab_selected(tab_id: String)
+## 소식 거르기를 골랐다. **어느 것이 켜졌는지는 상태가 들고 있다** —
+## 화면이 들고 있으면 진행 뒤에 사전이 새로 오면서 초기화된다
+signal news_filter_selected(filter_id: String)
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -96,12 +100,21 @@ func _rebuild() -> void:
 	_build_body()
 
 
+## ⚠ **떼고 나서 곧바로 지운다.** `queue_free`는 다음 프레임까지 살아 있어서
+## 같은 프레임에 여러 번 다시 그리면 그만큼 쌓인다 — 실측으로 검사 한 번에
+## 고아 노드 430개가 남았다. 탭을 오갈 때마다 다시 그리므로 실제로 쌓인다.
+##
+## ⚠ **즉시 해제는 "자기 시그널 안에서 자신을 지우는" 경우에 위험하다.**
+## 그래서 버튼들은 시그널을 **미뤄서** 보낸다 (`call_deferred`) — 다시 그리기가
+## 시그널 밖에서 일어나야 이게 안전하다
+func _free_child(parent: Node, child: Node) -> void:
+	parent.remove_child(child)
+	child.free()
+
+
 func _build_tabs() -> void:
-	# ⚠ **떼고 나서 지운다.** `queue_free`만 하면 다음 프레임까지 자식으로
-	# 남아서, 같은 프레임에 다시 만들면 탭이 두 줄로 찍힌다
 	for c in _tabs.get_children():
-		_tabs.remove_child(c)
-		c.queue_free()
+		_free_child(_tabs, c)
 
 	var group := ButtonGroup.new()
 	var tabs: Array = _vm.get("tabs", [])
@@ -115,7 +128,7 @@ func _build_tabs() -> void:
 		b.toggle_mode = true
 		b.button_group = group
 		b.button_pressed = (i == _tab)
-		b.pressed.connect(_on_tab.bind(i))
+		b.pressed.connect(func() -> void: _on_tab.call_deferred(i))
 		_tabs.add_child(b)
 
 
@@ -127,12 +140,13 @@ func _on_tab(i: int) -> void:
 
 func _build_body() -> void:
 	for c in _tab_host.get_children():
-		_tab_host.remove_child(c)
-		c.queue_free()
+		_free_child(_tab_host, c)
 
 	match current_tab_id():
 		"schedule":
 			_build_schedule()
+		"news":
+			_build_news()
 		_:
 			# 아직 안 옮긴 탭. **소비자 없는 자리를 미리 만들지 않는다**
 			var l := Label.new()
@@ -162,6 +176,40 @@ func _build_schedule() -> void:
 
 	for r in rows:
 		var row: ScheduleRow = SCHEDULE_ROW.instantiate()
+		_tab_host.add_child(row)
+		row.setup(r)
+
+
+## 소식 탭. 거르기 칩은 **누르면 루트에 알린다** — 어느 거르기가 켜졌는지는
+## 상태에 있고, 화면이 자기 안에 들고 있으면 진행 뒤에 초기화된다
+func _build_news() -> void:
+	var vm: Dictionary = _vm.get("news", {})
+
+	var chips := HBoxContainer.new()
+	chips.add_theme_constant_override("separation", 4)
+	_tab_host.add_child(chips)
+
+	var active: String = vm.get("active_filter", "all")
+	for f in vm.get("filters", []):
+		var b := Button.new()
+		var n: int = int(f.get("count", 0))
+		b.text = "%s %d" % [f.get("label", ""), n] if n > 0 else f.get("label", "")
+		b.toggle_mode = true
+		b.button_pressed = (f["id"] == active)
+		b.pressed.connect(func() -> void:
+			news_filter_selected.emit.call_deferred(String(f["id"])))
+		chips.add_child(b)
+
+	var rows: Array = vm.get("rows", [])
+	if rows.is_empty():
+		var empty := Label.new()
+		empty.text = "소식이 없습니다"
+		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		_tab_host.add_child(empty)
+		return
+
+	for r in rows:
+		var row: NewsRow = NEWS_ROW.instantiate()
 		_tab_host.add_child(row)
 		row.setup(r)
 

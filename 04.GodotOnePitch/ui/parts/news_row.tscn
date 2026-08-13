@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/parts/news_row.gd" id="1_row"]
+
+[node name="NewsRow" type="VBoxContainer"]
+theme_override_constants/separation = 1
+script = ExtResource("1_row")
+
+[node name="Top" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Category" type="Label" parent="Top"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+
+[node name="Subject" type="Label" parent="Top"]
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+
+[node name="Date" type="Label" parent="Top"]
+layout_mode = 2
+
+[node name="Preview" type="Label" parent="."]
+layout_mode = 2
+clip_text = true

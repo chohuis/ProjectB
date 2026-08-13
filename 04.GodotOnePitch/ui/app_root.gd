@@ -30,6 +30,15 @@ func _ready() -> void:
 	_runner.progress.connect(_on_progress)
 
 	_main.advance_requested.connect(_on_advance_requested)
+	_main.news_filter_selected.connect(_on_news_filter)
+	_refresh()
+
+
+## ⚠ **거르기 선택도 상태에 넣는다.** 화면이 자기 안에 들고 있으면 진행
+## 뒤에 새 사전이 오면서 초기화된다 — 소식을 거르고 하루 진행하면 전체로
+## 돌아가는데, 사용자는 자기가 뭘 잘못 눌렀는지 모른다
+func _on_news_filter(filter_id: String) -> void:
+	_state["news_filter"] = filter_id
 	_refresh()
 
 

@@ -257,6 +257,20 @@ func test_a_rejected_run_does_not_wipe_the_state() -> void:
 	assert_str(r.state()["protagonist"]["name"]).is_equal("김한결")
 
 
+## ⚠ **거르기 선택은 상태가 들고 있다.** 화면이 자기 안에 들고 있으면
+## 진행 뒤에 새 사전이 오면서 초기화된다 — 소식을 거르고 하루 진행하면
+## 전체로 돌아가는데, 사용자는 자기가 뭘 잘못 눌렀는지 모른다
+func test_the_news_filter_survives_advancing() -> void:
+	var r := await _mount(_state({"day": 10, "season_days": 350, "mailbox": [
+		{"id": "M1", "category": "news", "read": false, "day": 5}]}))
+	r.screen().news_filter_selected.emit("unread")
+	assert_str(r.state()["news_filter"]).is_equal("unread")
+
+	await r.advance(5)
+	assert_str(r.state()["news_filter"]).is_equal("unread")
+	assert_str(r.screen()._vm["news"]["active_filter"]).is_equal("unread")
+
+
 ## ⚠ **부른 쪽 사전을 그대로 들고 있지 않는다.** 들고 있으면 호출부(세이브·
 ## 새 게임 화면)가 자기 사전을 고칠 때 진행 중인 게임이 모르게 바뀐다.
 ##

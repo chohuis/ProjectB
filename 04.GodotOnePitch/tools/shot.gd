@@ -83,6 +83,10 @@ func _build(which: String) -> Control:
 			sc.set_state(Fixtures.main_state())
 			sc.ready.connect(func() -> void: sc.screen()._on_tab(5), CONNECT_ONE_SHOT)
 			return sc
+		"news":
+			var nw: AppRoot = APP.instantiate()
+			nw.set_state(Fixtures.main_state())
+			return nw
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

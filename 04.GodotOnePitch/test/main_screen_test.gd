@@ -222,6 +222,57 @@ func test_the_row_color_marks_the_state() -> void:
 	assert_object(ScheduleRow.status_color("upcoming", false)).is_equal(AppTheme.TEXT_DIM)
 
 
+# ── 소식 탭 ───────────────────────────────────────────────────
+
+func _mail(id: String, over: Dictionary = {}) -> Dictionary:
+	var m: Dictionary = {"id": id, "category": "news", "sender": "스포츠조선",
+		"subject": "제목 %s" % id, "preview": "미리보기", "day": 8,
+		"read": false, "decision": null}
+	m.merge(over, true)
+	return m
+
+
+func test_the_news_tab_lists_messages() -> void:
+	var s := await _mount(_vm({"mailbox": [_mail("A"), _mail("B")]}))
+	var t := _texts(s)
+	assert_array(t).contains(["· 제목 A", "· 제목 B"])
+	assert_array(t).contains(["전체 2", "안읽음 2"])
+
+
+func test_an_empty_mailbox_says_so() -> void:
+	var s := await _mount(_vm({"mailbox": []}))
+	assert_array(_texts(s)).contains(["소식이 없습니다"])
+
+
+## ⚠ **답을 안 한 결정은 표시가 붙는다.** 목록에서 바로 찾을 수 있어야
+## 진행이 왜 막혔는지 안다
+func test_an_undecided_message_is_marked() -> void:
+	var s := await _mount(_vm({"mailbox": [
+		_mail("A"), _mail("B", {"decision": {"selected": null}})]}))
+	assert_array(_texts(s)).contains(["● 제목 B"])
+
+
+## 거르기를 누르면 루트에 알린다 — 화면이 자기 안에 안 들고 있다.
+##
+## ⚠ **알림이 한 프레임 미뤄진다.** 칩이 자기 시그널 안에서 다시 그려지면
+## 자기 자신을 지우게 되므로 미뤄서 보낸다 — 검사도 기다려야 한다
+func test_a_filter_chip_announces_its_choice() -> void:
+	var s := await _mount(_vm({"mailbox": [_mail("A")]}))
+	var got: Array = []
+	s.news_filter_selected.connect(func(id: String) -> void: got.append(id))
+	# 칩 줄의 두 번째가 "안읽음"
+	var chips: HBoxContainer = s._tab_host.get_child(0)
+	(chips.get_child(1) as Button).pressed.emit()
+	await await_idle_frame()
+	assert_array(got).is_equal(["unread"])
+
+
+func test_the_row_color_marks_pending_and_unread() -> void:
+	assert_object(NewsRow.row_color(true, false)).is_equal(AppTheme.WARN)
+	assert_object(NewsRow.row_color(false, true)).is_equal(AppTheme.TEXT)
+	assert_object(NewsRow.row_color(false, false)).is_equal(AppTheme.TEXT_DIM)
+
+
 # ── 화면이 계산을 갖지 않는가 ─────────────────────────────────
 
 ## ⚠ **이게 이 검사 묶음에서 제일 중요하다.** 02 결함 상당수가 "화면이
