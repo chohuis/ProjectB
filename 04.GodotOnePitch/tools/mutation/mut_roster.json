@@ -1,0 +1,127 @@
+[
+ [
+  "프로 리그를 KBL만으로 본다 (해외가 빠진다)",
+  "\treturn league_id == \"LEAGUE_HIGHSCHOOL\" or league_id == \"LEAGUE_UNIVERSITY\" \\\n\t\tor league_id == \"LEAGUE_INDEPENDENT\"",
+  "\treturn league_id != \"LEAGUE_KBL\""
+ ],
+ [
+  "아마추어 로테이션도 5인으로 둔다",
+  "\tif league_id == \"LEAGUE_HIGHSCHOOL\" or league_id == \"LEAGUE_UNIVERSITY\":\n\t\treturn 3",
+  ""
+ ],
+ [
+  "독립 로테이션을 프로와 같게 둔다",
+  "\tif league_id == \"LEAGUE_INDEPENDENT\":\n\t\treturn 4",
+  ""
+ ],
+ [
+  "의무 휴식을 리그와 무관하게 둔다",
+  "\treturn 2 if _is_amateur(league_id) else 4",
+  "\treturn 4"
+ ],
+ [
+  "로테이션을 컨디션 반영 능력으로 뽑는다 (원본 결함 재현)",
+  "\tstarters.sort_custom(func(a, b) -> bool: return _pitch_ovr(a) > _pitch_ovr(b))",
+  "\tvar cw: int = p.get(\"current_week\", 0)\n\tvar cds: Dictionary = p.get(\"conditions\", {})\n\tstarters.sort_custom(func(a, b) -> bool: return effective_ovr(_pitch_ovr(a), cds.get(a[\"id\"], {}), cw) > effective_ovr(_pitch_ovr(b), cds.get(b[\"id\"], {}), cw))"
+ ],
+ [
+  "로테이션 크기를 안 자른다",
+  "\tfor i in mini(max_rotation, starters.size()):",
+  "\tfor i in starters.size():"
+ ],
+ [
+  "부상자를 로스터에 그대로 둔다",
+  "\t\tif not inj.get(\"is_playing_through\", false):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "부상 강행에 능력 벌점을 안 준다",
+  "\t\tvar mult: float = PLAY_THROUGH_OVR_MULT.get(inj.get(\"severity\", \"\"), 1.0)",
+  "\t\tvar mult: float = 1.0"
+ ],
+ [
+  "은퇴 선수를 로스터에 남긴다",
+  "\t\tif retired.has(e.get(\"id\", \"\")):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "복무 중인 선수를 로스터에 남긴다",
+  "\t\tif e.get(\"status\", \"active\") != \"active\":\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "다른 팀 선수도 섞는다",
+  "\t\tif e.get(\"role\", \"\") != \"player\" or e.get(\"team_id\", \"\") != team_id:",
+  "\t\tif e.get(\"role\", \"\") != \"player\":"
+ ],
+ [
+  "선수가 아닌 사람도 넣는다",
+  "\t\tif e.get(\"role\", \"\") != \"player\" or e.get(\"team_id\", \"\") != team_id:\n\t\t\tcontinue",
+  "\t\tif e.get(\"team_id\", \"\") != team_id:\n\t\t\tcontinue"
+ ],
+ [
+  "로테이션이 모자라도 불펜으로 안 채운다",
+  "\tif rotation.size() < max_rotation:\n\t\tvar current_week: int = p.get(\"current_week\", 0)",
+  "\tif false:\n\t\tvar current_week: int = p.get(\"current_week\", 0)"
+ ],
+ [
+  "회전을 안 한다 (원본 결함 재현)",
+  "\t\tvar k: int = rot_idx % base.size()\n\t\trotation = base.slice(k) + base.slice(0, k)",
+  "\t\trotation = base"
+ ],
+ [
+  "회전이 앞쪽을 버린다",
+  "\t\trotation = base.slice(k) + base.slice(0, k)",
+  "\t\trotation = base.slice(k)"
+ ],
+ [
+  "마무리를 안 정한다 (세이브가 리그 전체에서 0이 된다)",
+  "\tvar closer: String = \"\"\n\tif not cp_pool.is_empty():\n\t\tcloser = cp_pool[0][\"id\"]\n\telif not rp_sorted.is_empty():\n\t\tcloser = rp_sorted[0][\"id\"]",
+  "\tvar closer: String = \"\"\n\tif not cp_pool.is_empty():\n\t\tcloser = cp_pool[0][\"id\"]"
+ ],
+ [
+  "마무리가 로테이션에도 들어간다",
+  "\t\tif e.get(\"player_type\", \"\") != \"pitcher\" or rotation.has(e[\"id\"]):\n\t\t\tcontinue",
+  "\t\tif e.get(\"player_type\", \"\") != \"pitcher\":\n\t\t\tcontinue"
+ ],
+ [
+  "연투 제한을 없앤다",
+  "\t\telif consec < RP_MAX_CONSECUTIVE:\n\t\t\tfree_rp.append(e)",
+  "\t\telse:\n\t\t\tfree_rp.append(e)"
+ ],
+ [
+  "마무리 연투 제한을 없앤다",
+  "\t\t\tif consec < CP_MAX_CONSECUTIVE:\n\t\t\t\tfree_cp.append(e)",
+  "\t\t\tfree_cp.append(e)"
+ ],
+ [
+  "마무리를 불펜에도 남긴다",
+  "\tfor e in free_rp:\n\t\tif e[\"id\"] != closer:\n\t\t\tpool.append(e)",
+  "\tfor e in free_rp:\n\t\tpool.append(e)"
+ ],
+ [
+  "라인업이 아홉을 못 채워도 그냥 둔다 (원본 결함 재현)",
+  "\tif batters.size() < 9:\n\t\trest.sort_custom(func(a, b) -> bool: return _bat_ovr(a) > _bat_ovr(b))\n\t\tfor e in rest:\n\t\t\tif batters.size() >= 9:\n\t\t\t\tbreak\n\t\t\tbatters.append(e)",
+  ""
+ ],
+ [
+  "라인업이 아홉을 넘긴다",
+  "\t\tif picked.size() >= 9:\n\t\t\tbreak\n\n\tif picked.size() < 9:",
+  "\tif picked.size() < 9:"
+ ],
+ [
+  "남은 선수로 메울 때 중복을 안 막는다",
+  "\t\tvar remaining: Array = []\n\t\tfor e in batters:\n\t\t\tif not used.has(e[\"id\"]):\n\t\t\t\tremaining.append(e)",
+  "\t\tvar remaining: Array = batters.duplicate()"
+ ],
+ [
+  "1번 타자를 눈·발로 안 고른다",
+  "\tvar lead: Dictionary = rows[0]\n\tfor r in rows:\n\t\tif r[\"lead\"] > lead[\"lead\"]:\n\t\t\tlead = r",
+  "\tvar lead: Dictionary = rows[0]"
+ ],
+ [
+  "중심 타선을 힘·컨택으로 안 세운다",
+  "\trows.sort_custom(func(a, b) -> bool: return a[\"power\"] > b[\"power\"])",
+  ""
+ ]
+]
