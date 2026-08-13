@@ -4836,3 +4836,68 @@ export function draftSeatProbe(): Record<string, unknown> {
       ? slotTeam.get((mine[0].pickNo - 1) % perRound) === mine[0].teamId : null,
   };
 }
+
+// ── 고교 리그 투수 등판 분포 (수상 편중 조사) ────────────────────
+//
+// 주인공이 다승왕을 57시즌 중 38번 가져가는데 탈삼진왕·방어율왕은 0이다.
+// ERA 4.36으로 자격(4.5)을 절반은 통과하는데 방어율왕이 0이라는 건 **더 잘
+// 던진 NPC가 있다**는 뜻이다 — 주인공이 압도적인 게 아니라 승수만 몰린다.
+//
+// 가설: NPC 선발은 팀당 여럿이 등판을 나눠 갖는데 주인공은 혼자 던진다.
+// 그러면 같은 실력이어도 승수가 주인공에게 쌓인다. **재서 가린다.**
+export function hsPitcherLoadProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const ls = (s as unknown as { leagueState?: Record<string, { stats?: Record<string, unknown> }> })
+    .leagueState?.["LEAGUE_HIGHSCHOOL"]?.stats ?? {};
+  type P = { type: string; g: number; gs: number; w: number; ip: number; k: number; era: number };
+  const rows: P[] = Object.values(ls)
+    .filter((v): v is P => (v as P)?.type === "pitcher")
+    .map((v) => v as P);
+  if (rows.length === 0) return { 표본: 0 };
+
+  const g = get(gameStore);
+  const mine = (s as unknown as { stats?: Record<string, P> }).stats?.[g.protagonist.id];
+  const q = (a: number[], p: number) =>
+    a.slice().sort((x, y) => x - y)[Math.min(a.length - 1, Math.floor(a.length * p))] ?? 0;
+
+  // 자격선을 넘은 사람만 — 수상 후보가 실제로 몇 명인지가 핵심이다
+  const qualified = rows.filter((r) => (r.ip ?? 0) >= 40);
+  return {
+    "NPC투수": rows.length,
+    "자격40이상": qualified.length,
+    "NPC이닝중앙": q(rows.map((r) => r.ip ?? 0), 0.5),
+    "NPC등판중앙": q(rows.map((r) => r.g ?? 0), 0.5),
+    "NPC승중앙": q(rows.map((r) => r.w ?? 0), 0.5),
+    "NPC최다승": q(rows.map((r) => r.w ?? 0), 1),
+    "NPC최다K": q(rows.map((r) => r.k ?? 0), 1),
+    // ⚠ 고교 시즌에 K 184가 찍혔다. 3인 로테이션 27경기면 60~70이닝이
+    // 상한인데 그 세 배다 — 이닝을 같이 봐야 어디서 부푸는지 안다
+    "NPC최다이닝": q(rows.map((r) => r.ip ?? 0), 1),
+    "NPC최다등판": q(rows.map((r) => r.g ?? 0), 1),
+    "NPC이닝p90": q(rows.map((r) => r.ip ?? 0), 0.9),
+    // ⚠ **누구인지 잡는다.** 163이닝·32등판은 3인 로테이션 21~36경기에서
+    // 나올 수 없다. 그 사람이 정말 고교 소속인지, 팀이 어디인지를 봐야
+    // 리그 맵이 새는 건지 로테이션이 안 지켜지는 건지 갈린다
+    ...(() => {
+      let topId = "", top = -1;
+      for (const [id, v] of Object.entries(ls)) {
+        const r = v as P;
+        if (r?.type === "pitcher" && (r.ip ?? 0) > top) { top = r.ip ?? 0; topId = id; }
+      }
+      const n = g.npcs.find((x) => x.npcId === topId);
+      return {
+        "최다이닝투수": topId,
+        "그선수리그": n?.currentLeague ?? (topId === g.protagonist.id ? "주인공" : "npcs에 없음"),
+        "그선수팀": n?.currentTeam ?? "-",
+        "그선수학년": n?.grade ?? null,
+        "그선수나이": n?.age ?? null,
+      };
+    })(),
+    "NPC최저ERA": qualified.length ? q(qualified.map((r) => r.era ?? 99), 0) : null,
+    "내이닝": mine?.ip ?? null,
+    "내등판": mine?.g ?? null,
+    "내승": mine?.w ?? null,
+    "내K": mine?.k ?? null,
+    "내ERA": mine?.era ?? null,
+  };
+}

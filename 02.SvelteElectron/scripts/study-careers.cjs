@@ -168,7 +168,7 @@ function randomPlan(rnd) {
         }
         if (app.isSeasonEnded()) {
           // ⚠ **롤오버 전에 잡는다.** 넘어가면 그 시즌 기록이 초기화된다
-          if (lastStage === "highschool") hsSeasons.push(app.armProbe());
+          if (lastStage === "highschool") hsSeasons.push({ ...app.armProbe(), 등판분포: (app.hsPitcherLoadProbe ? app.hsPitcherLoadProbe() : null) });
           await app.seasonRollover(); continue;
         }
         // ⚠ **매주 다시 넣는다.** `runAutoAdvance`의 `applyRecommendedTraining`이
