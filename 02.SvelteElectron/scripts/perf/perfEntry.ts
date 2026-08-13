@@ -4901,3 +4901,55 @@ export function hsPitcherLoadProbe(): Record<string, unknown> {
     "내ERA": mine?.era ?? null,
   };
 }
+
+
+// ── 이중 집계 판별 (고교 리그) ────────────────────────────────────
+//
+// 한 투수가 팀 경기(21~36)보다 많이 등판한다(최대 37). 로테이션 인덱스는
+// 정상이라(+1/경기) 남는 설명은 **같은 경기를 두 번 집계**하는 것이다.
+//
+// 갈라내는 법: 순위표의 승+패+무 합은 "집계된 경기 수"이고, 일정에서
+// 결과가 있는 항목 수는 "실제 치른 경기 수"다. 전자가 후자의 두 배면 이중이다.
+//
+// ⚠ **일정을 양쪽 다 센다.** 주인공 리그 일정(`schedule`)과 배경 리그
+// 일정(`leagueSchedules`)에 같은 리그가 나뉘어 있을 수 있다 — 한쪽만 보면
+// "일정이 적다"로 오해하고 엉뚱한 결론을 낸다.
+export function doubleCountProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const ls = (s as unknown as {
+    leagueState?: Record<string, { standings?: { teamId: string; wins: number; losses: number; draws: number }[] }>
+  }).leagueState?.["LEAGUE_HIGHSCHOOL"];
+  const st = ls?.standings ?? [];
+  if (st.length === 0) return { "표본": 0 };
+
+  const byTeamStanding = new Map<string, number>();
+  for (const x of st) byTeamStanding.set(x.teamId, (x.wins ?? 0) + (x.losses ?? 0) + (x.draws ?? 0));
+
+  const byTeamSched = new Map<string, number>();
+  const bump = (t: string) => byTeamSched.set(t, (byTeamSched.get(t) ?? 0) + 1);
+  for (const e of s.schedule) {
+    if (!e.result || e.isFriendly) continue;
+    bump(e.homeTeamId); bump(e.awayTeamId);
+  }
+  const bg = (s as unknown as {
+    leagueSchedules?: Record<string, { homeTeamId: string; awayTeamId: string; result?: unknown; isFriendly?: boolean }[]>
+  }).leagueSchedules?.["LEAGUE_HIGHSCHOOL"] ?? [];
+  for (const e of bg) {
+    if (!e.result || e.isFriendly) continue;
+    bump(e.homeTeamId); bump(e.awayTeamId);
+  }
+
+  const rows: { standing: number; sched: number }[] = [];
+  for (const [t, n] of byTeamStanding) rows.push({ standing: n, sched: byTeamSched.get(t) ?? 0 });
+  const withSched = rows.filter((r) => r.sched > 0);
+  const mid = (a: number[]) => a.slice().sort((x, y) => x - y)[Math.floor(a.length / 2)] ?? 0;
+  const ratio = withSched.map((r) => r.standing / r.sched);
+  return {
+    "팀수": rows.length,
+    "일정있는팀": withSched.length,
+    "순위표경기중앙": mid(rows.map((r) => r.standing)),
+    "일정경기중앙": mid(withSched.map((r) => r.sched)),
+    "비율중앙": ratio.length ? Number(mid(ratio).toFixed(2)) : null,
+    "비율최대": ratio.length ? Number(Math.max(...ratio).toFixed(2)) : null,
+  };
+}
