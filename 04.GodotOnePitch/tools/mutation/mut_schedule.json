@@ -1,0 +1,77 @@
+[
+ [
+  "같은 라운드에 팀이 두 번 나온다",
+  "\t\t\t\trot[(r - i + rot.size() * 2) % rot.size()]])",
+  "\t\t\t\trot[(r + i + 1) % rot.size()]])"
+ ],
+ [
+  "고정 팀을 빼먹는다 (한 팀만 경기가 준다)",
+  "\t\tif not fixed.is_empty():\n\t\t\tpairs.append([a, fixed])",
+  ""
+ ],
+ [
+  "홀수 팀에 허수를 안 넣는다 (자기 자신과 붙는다)",
+  "\tif has_bye:\n\t\tlist.append(\"\")",
+  ""
+ ],
+ [
+  "허수를 안 걸러낸다 (빈 이름의 팀이 일정에 들어간다)",
+  "\t\tif not fixed.is_empty():",
+  "\t\tif true:"
+ ],
+ [
+  "라운드 수를 하나 줄인다",
+  "\tfor r in n - 1:",
+  "\tfor r in n - 2:"
+ ],
+ [
+  "목표 경기 수를 안 채운다",
+  "\tfor r in target:",
+  "\tfor r in target - 1:"
+ ],
+ [
+  "홈·원정을 안 뒤집는다",
+  "\t\tvar flip: bool = (r / base.size()) % 2 == 1",
+  "\t\tvar flip: bool = false"
+ ],
+ [
+  "경기를 하루에 몰아 넣는다",
+  "\t\tvar day: int = days[r * days.size() / target]",
+  "\t\tvar day: int = days[0]"
+ ],
+ [
+  "기간이 모자라도 그냥 짠다 (경기가 조용히 사라진다)",
+  "\tif days.size() < target:\n\t\tpush_error(\"[%s] 기간이 모자라다 — 경기일 %d < 목표 %d\"\n\t\t\t% [p.get(\"league_id\", \"\"), days.size(), target])\n\t\treturn []",
+  ""
+ ],
+ [
+  "요일을 안 본다",
+  "\t\tif weekdays.has(Calendar.weekday(season_year, d)):\n\t\t\tout.append(d)",
+  "\t\tout.append(d)"
+ ],
+ [
+  "기간 밖까지 경기를 잡는다",
+  "\tfor d in range(start_day, end_day + 1):",
+  "\tfor d in range(start_day, end_day + 60):"
+ ],
+ [
+  "프로가 월요일에도 경기한다",
+  "const WEEKDAYS_PRO: Array[int] = [2, 3, 4, 5, 6, 0]",
+  "const WEEKDAYS_PRO: Array[int] = [1, 2, 3, 4, 5, 6, 0]"
+ ],
+ [
+  "고교가 평일에 경기한다",
+  "const WEEKDAYS_WEEKEND: Array[int] = [6, 0]",
+  "const WEEKDAYS_WEEKEND: Array[int] = [2, 3]"
+ ],
+ [
+  "KBL 경기 수를 02와 다르게 둔다",
+  "\t\t\"games_per_team\": 144, \"start_day\": 22, \"end_day\": 190, \"weekdays\": WEEKDAYS_PRO,",
+  "\t\t\"games_per_team\": 130, \"start_day\": 22, \"end_day\": 190, \"weekdays\": WEEKDAYS_PRO,"
+ ],
+ [
+  "ABL 2군 기간을 경기 수보다 짧게 둔다",
+  "\t\t\"games_per_team\": 165, \"start_day\": 15, \"end_day\": 218, \"weekdays\": WEEKDAYS_PRO,",
+  "\t\t\"games_per_team\": 165, \"start_day\": 15, \"end_day\": 120, \"weekdays\": WEEKDAYS_PRO,"
+ ]
+]
