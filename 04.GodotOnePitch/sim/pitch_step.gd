@@ -16,6 +16,80 @@ class_name PitchStep
 ## "목록을 두 번 적으면 코드가 늘 때 빠뜨린 자리가 조용히 생긴다"고 적어 뒀다.
 
 
+## 투구 하나 전체 — 도루 → 착탄 → 스윙 → 컨택 → 타구 → 수비 → 뒤처리.
+##
+## `{state, code, quality, ball, fielding, logs}`
+static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
+	if state.get("is_finished", false):
+		return {"state": state, "code": "GAME_OVER", "quality": 0.0,
+			"ball": {}, "fielding": {}, "logs": [] as Array[String]}
+
+	var pitcher: Dictionary = state.get("pitcher", {})
+	var batter: Dictionary = state.get("batter", {})
+
+	# ① 투구 전에 주자가 뛴다
+	var steal: Dictionary = Baserunning.attempt_steals(state.get("runners", {}),
+		int(state.get("outs", 0)), pitcher.get("hold_runners", 50.0),
+		state.get("manager_steal_boost", 0.0), rng)
+
+	var pre: Dictionary = state.duplicate(true)
+	pre["runners"] = steal["runners"]
+	pre["outs"] = steal["outs"]
+	# 도루사로 이닝이 끝날 수 있다
+	if int(pre["outs"]) >= 3:
+		pre = MatchState.flip_half(pre)
+
+	# ② 착탄
+	var second_empty: bool = pre["runners"].get("second", {}).is_empty()
+	var third_empty: bool = pre["runners"].get("third", {}).is_empty()
+	var situation: Dictionary = {
+		"has_scoring": not (second_empty and third_empty),
+		"is_full_base": not pre["runners"].get("first", {}).is_empty() \
+			and not second_empty and not third_empty,
+		"is_late": int(pre.get("inning", 1)) >= int(pre.get("inning_limit", 9)) - 2,
+	}
+	var target: Vector2 = PitchOutcome.zone_to_target(int(decision.get("location", 5)))
+	var landing: Dictionary = PitchOutcome.resolve_landing(target,
+		pitcher.get("control", 50.0), pre.get("stamina", 100.0), pre.get("mental", 50.0),
+		situation, rng)
+
+	# ③ 품질
+	var ctx: Dictionary = pre.duplicate()
+	ctx["decision"] = decision
+	ctx["landing"] = landing["landing"]
+	var quality: float = PitchOutcome.pitch_quality(ctx, rng)
+
+	# ④ 스윙 → 결과 코드
+	var swing: Dictionary = PitchOutcome.swing_decision(landing["landing"],
+		decision.get("pitch_type", "fastball"), batter,
+		landing["in_zone"], landing["in_shadow"], rng)
+
+	var code: String
+	if not swing["swung"]:
+		code = "STRIKE_LOOK" if swing["umpire_strike"] else "BALL"
+	else:
+		var cq: float = PitchOutcome.contact_quality(quality, batter,
+			landing["in_zone"], landing["in_shadow"])
+		code = PitchOutcome.apply_hit_upgrade(
+			PitchOutcome.resolve_contact(quality, cq, batter, rng),
+			batter.get("power", 50.0), pre.get("weather", "sunny"), rng)
+
+	# ⑤ 타구 → 수비
+	var ball: Dictionary = BattedBall.resolve(code, decision, quality, rng)
+	var fielding: Dictionary = {}
+	if not ball.is_empty() and code == "INPLAY_OUT":
+		fielding = BattedBall.resolve_fielding(ball, pre.get("fielders", []), rng)
+		code = fielding["code"]
+
+	var out: Dictionary = apply_result(code, ball, pre, decision, rng, fielding)
+	out["quality"] = quality
+	out["ball"] = ball
+	out["fielding"] = fielding
+	out["logs"] = (steal["logs"] as Array) + (out["logs"] as Array) \
+		+ ([landing["miss_log"]] if not String(landing["miss_log"]).is_empty() else [])
+	return out
+
+
 ## 결과 코드가 정해진 뒤의 처리. `{state, code, logs}`
 ##
 ## 착탄·스윙·컨택을 거쳐 코드를 뽑는 건 `step()`이 하고, 여기는 **그 뒤**만

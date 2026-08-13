@@ -46,6 +46,17 @@ static func dispersion_sigma(control: float, stamina: float, mental: float,
 	return sigma
 
 
+## 존 번호(1~9) → 겨냥 좌표. 5가 한가운데, 7·8·9가 위쪽이다
+static func zone_to_target(location: int) -> Vector2:
+	var col: float = [-0.67, 0.0, 0.67][(location - 1) % 3] if location >= 1 and location <= 9 else 0.0
+	var row: float = 0.0
+	if location >= 7:
+		row = -0.67
+	elif location <= 3 and location >= 1:
+		row = 0.67
+	return Vector2(col, row)
+
+
 ## "zone" · "shadow" · "ball".
 ##
 ## ⚠ **두 축을 다 본다.** x만 보면 대각선으로 빠진 공이 스트라이크가 된다

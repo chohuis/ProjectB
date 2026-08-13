@@ -56,6 +56,9 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 	match task:
 		"bench:season":
 			return _bench_season(args)
+		"bench:game":
+			return GameBench.new().run(log_line, fail,
+				arg_int(args, "games", 200), arg_int(args, "seed", 20260813))
 		"bench:save":
 			return SaveBench.new().run(log_line, fail)
 		"bench:rng":
