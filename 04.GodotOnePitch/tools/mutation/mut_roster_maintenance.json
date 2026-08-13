@@ -1,0 +1,197 @@
+[
+ [
+  "해외를 리그 목록에서 뺀다 (02의 KBL 전용으로 되돌린다)",
+  "const PRO_LEAGUES: Array[String] = [\"LEAGUE_KBL\", \"LEAGUE_ABL\", \"LEAGUE_JBL\"]",
+  "const PRO_LEAGUES: Array[String] = [\"LEAGUE_KBL\"]"
+ ],
+ [
+  "팜을 프로 리그로 센다",
+  "static func is_pro_league(league_id: String) -> bool:\n\treturn PRO_LEAGUES.has(league_id)",
+  "static func is_pro_league(league_id: String) -> bool:\n\treturn league_id.begins_with(\"LEAGUE_KBL\") or PRO_LEAGUES.has(league_id)"
+ ],
+ [
+  "닫힌 리그를 안 거른다 (스위치가 안 먹는다)",
+  "\t\tif not out_of_scope.has(lid):\n\t\t\tout.append(lid)",
+  "\t\tout.append(lid)"
+ ],
+ [
+  "닫힌 리그만 남긴다",
+  "\t\tif not out_of_scope.has(lid):",
+  "\t\tif out_of_scope.has(lid):"
+ ],
+ [
+  "팜을 짝으로 안 돌린다 (2군 정리가 통째로 빠진다)",
+  "\t\tout.append(lid)\n\t\tout.append(lid + \"_FARM\")",
+  "\t\tout.append(lid)"
+ ],
+ [
+  "팜만 돌린다",
+  "\t\tout.append(lid)\n\t\tout.append(lid + \"_FARM\")",
+  "\t\tout.append(lid + \"_FARM\")"
+ ],
+ [
+  "JBL에 KBL 상한을 쓴다 (두 명이 영영 안 잘린다)",
+  "\t\"LEAGUE_JBL\": {\"min\": 26, \"max\": 32},",
+  "\t\"LEAGUE_JBL\": {\"min\": 26, \"max\": 34},"
+ ],
+ [
+  "해외 팜 하한을 0으로 둔다 (1군이 빨아들여 마른다)",
+  "\t\"LEAGUE_ABL_FARM\": {\"min\": 26, \"max\": 34},",
+  "\t\"LEAGUE_ABL_FARM\": {\"min\": 0, \"max\": 34},"
+ ],
+ [
+  "상한과 하한을 뒤집어 읽는다",
+  "\treturn int(ROSTER_LIMITS.get(league_id, {}).get(\"max\", ROSTER_MAX_FALLBACK))",
+  "\treturn int(ROSTER_LIMITS.get(league_id, {}).get(\"min\", ROSTER_MAX_FALLBACK))"
+ ],
+ [
+  "모르는 리그에 상한을 안 준다",
+  "const ROSTER_MAX_FALLBACK: int = 34",
+  "const ROSTER_MAX_FALLBACK: int = 999"
+ ],
+ [
+  "모르는 리그에 하한을 안 준다",
+  "const ROSTER_MIN_FALLBACK: int = 26",
+  "const ROSTER_MIN_FALLBACK: int = 0"
+ ],
+ [
+  "성적 가중을 없앤다 (능력치만 본다)",
+  "const FORM_WEIGHT: float = 8.0",
+  "const FORM_WEIGHT: float = 0.0"
+ ],
+ [
+  "성적 가중을 키운다 (성적이 능력치를 통째로 덮는다)",
+  "const FORM_WEIGHT: float = 8.0",
+  "const FORM_WEIGHT: float = 40.0"
+ ],
+ [
+  "방어율 기준을 바꾼다",
+  "const PITCHER_ERA_BASELINE: float = 4.50",
+  "const PITCHER_ERA_BASELINE: float = 3.00"
+ ],
+ [
+  "OPS 기준을 바꾼다",
+  "const BATTER_OPS_BASELINE: float = 0.700",
+  "const BATTER_OPS_BASELINE: float = 0.800"
+ ],
+ [
+  "투수 표본 기준을 없앤다 (1이닝 무실점이 최고 성적)",
+  "\t\tsample = clampf(float(perf.get(\"innings\", 0.0)) / maxf(PITCHER_FULL_INNINGS, 1.0),\n\t\t\t0.0, 1.0)",
+  "\t\tsample = 1.0"
+ ],
+ [
+  "야수 표본 기준을 없앤다",
+  "\t\tsample = clampf(float(perf.get(\"pa\", 0)) / maxf(BATTER_FULL_PA, 1.0), 0.0, 1.0)",
+  "\t\tsample = 1.0"
+ ],
+ [
+  "표본이 많으면 점수를 키운다",
+  "\t\tsample = clampf(float(perf.get(\"innings\", 0.0)) / maxf(PITCHER_FULL_INNINGS, 1.0),\n\t\t\t0.0, 1.0)",
+  "\t\tsample = float(perf.get(\"innings\", 0.0)) / maxf(PITCHER_FULL_INNINGS, 1.0)"
+ ],
+ [
+  "야수 표본이 많으면 점수를 키운다",
+  "\t\tsample = clampf(float(perf.get(\"pa\", 0)) / maxf(BATTER_FULL_PA, 1.0), 0.0, 1.0)",
+  "\t\tsample = float(perf.get(\"pa\", 0)) / maxf(BATTER_FULL_PA, 1.0)"
+ ],
+ [
+  "점수를 안 자른다 (성적 하나가 능력치를 덮는다)",
+  "\treturn clampf(raw * sample, -FORM_SPAN, FORM_SPAN)",
+  "\treturn raw * sample"
+ ],
+ [
+  "점수 폭을 좁힌다",
+  "const FORM_SPAN: float = 1.0",
+  "const FORM_SPAN: float = 0.3"
+ ],
+ [
+  "방어율 부호를 뒤집는다 (못 던질수록 올라간다)",
+  "\t\traw = (PITCHER_ERA_BASELINE - float(perf.get(\"era\", PITCHER_ERA_BASELINE))) \\",
+  "\t\traw = (float(perf.get(\"era\", PITCHER_ERA_BASELINE)) - PITCHER_ERA_BASELINE) \\"
+ ],
+ [
+  "OPS 부호를 뒤집는다",
+  "\t\traw = (float(perf.get(\"ops\", BATTER_OPS_BASELINE)) - BATTER_OPS_BASELINE) \\",
+  "\t\traw = (BATTER_OPS_BASELINE - float(perf.get(\"ops\", BATTER_OPS_BASELINE))) \\"
+ ],
+ [
+  "야수를 방어율로 잰다",
+  "\tvar pitcher: bool = is_pitcher(p.get(\"position\", \"\"))",
+  "\tvar pitcher: bool = true"
+ ],
+ [
+  "마무리를 야수로 본다",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"CP\", \"P\"]",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"P\"]"
+ ],
+ [
+  "포수를 투수로 본다",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"CP\", \"P\"]",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"CP\", \"P\", \"C\"]"
+ ],
+ [
+  "장기 부진 문턱을 없앤다",
+  "const SLUMP_SCORE: float = -0.5",
+  "const SLUMP_SCORE: float = -99.0"
+ ],
+ [
+  "장기 부진을 이하로 본다",
+  "\treturn score < SLUMP_SCORE",
+  "\treturn score <= SLUMP_SCORE"
+ ],
+ [
+  "2군 투수 하한을 1군에서 파생한 값으로 되돌린다",
+  "const FARM_MIN_PITCHERS: int = 8",
+  "const FARM_MIN_PITCHERS: int = 9"
+ ],
+ [
+  "2군 야수 하한을 올린다 (공백 충원이 막혀 1군 야수가 7이 된다)",
+  "const FARM_MIN_BATTERS: int = 9",
+  "const FARM_MIN_BATTERS: int = 12"
+ ],
+ [
+  "팜 하한을 안 본다 (2군이 마른다)",
+  "\treturn count > (FARM_MIN_PITCHERS if pitcher else FARM_MIN_BATTERS)",
+  "\treturn count > 0"
+ ],
+ [
+  "팜 하한을 이상으로 본다 (한 명 더 빠진다)",
+  "\treturn count > (FARM_MIN_PITCHERS if pitcher else FARM_MIN_BATTERS)",
+  "\treturn count >= (FARM_MIN_PITCHERS if pitcher else FARM_MIN_BATTERS)"
+ ],
+ [
+  "팜 하한을 투수·야수 구분 없이 본다",
+  "\t\tif is_pitcher(p.get(\"position\", \"\")) == pitcher:\n\t\t\tcount += 1",
+  "\t\tcount += 1"
+ ],
+ [
+  "없는 포지션만 채운다 (모자란 자리를 못 본다)",
+  "\t\tif short > 0:",
+  "\t\tif int(have.get(pos, 0)) == 0:"
+ ],
+ [
+  "충원할 자리를 부족한 순서로 안 준다",
+  "\tgaps.sort_custom(func(a, b) -> bool: return a[\"short\"] > b[\"short\"])",
+  ""
+ ],
+ [
+  "충원할 자리를 넉넉한 순서로 준다",
+  "\tgaps.sort_custom(func(a, b) -> bool: return a[\"short\"] > b[\"short\"])",
+  "\tgaps.sort_custom(func(a, b) -> bool: return a[\"short\"] < b[\"short\"])"
+ ],
+ [
+  "채워진 자리도 충원 목록에 넣는다",
+  "\t\tif short > 0:\n\t\t\tgaps.append({\"position\": pos, \"short\": short})",
+  "\t\tgaps.append({\"position\": pos, \"short\": short})"
+ ],
+ [
+  "투수 표본 바닥을 없앤다 (음수 이닝이 부호를 뒤집는다)",
+  "\t\tsample = clampf(float(perf.get(\"innings\", 0.0)) / maxf(PITCHER_FULL_INNINGS, 1.0),\n\t\t\t0.0, 1.0)",
+  "\t\tsample = minf(float(perf.get(\"innings\", 0.0)) / maxf(PITCHER_FULL_INNINGS, 1.0), 1.0)"
+ ],
+ [
+  "야수 표본 바닥을 없앤다",
+  "\t\tsample = clampf(float(perf.get(\"pa\", 0)) / maxf(BATTER_FULL_PA, 1.0), 0.0, 1.0)",
+  "\t\tsample = minf(float(perf.get(\"pa\", 0)) / maxf(BATTER_FULL_PA, 1.0), 1.0)"
+ ]
+]
