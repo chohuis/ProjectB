@@ -63,9 +63,38 @@ static func is_strike(code: String) -> bool:
 	return STRIKES.has(code)
 
 
+## 방망이에 맞아 타구가 생겼나.
+##
+## ⚠ 여기에 안 걸리는 결과에 타구를 만들면 **있지도 않은 수비가 돌아간다**
+static func is_in_play(code: String) -> bool:
+	return is_out_in_play(code) or is_hit(code) or code == "FIELDING_ERROR"
+
+
 ## 타석이 끝났나 — 다음 타자로 넘어가는 결과
 static func is_at_bat_over(code: String) -> bool:
-	return is_out_in_play(code) or is_hit(code) or code == "WALK" or code == "FIELDING_ERROR"
+	return is_in_play(code) or code == "WALK"
+
+
+## 중간값 `INPLAY_OUT`을 실제 타구로 좁힌다.
+##
+## ⚠ **타구 종류는 엔진이 이미 정해 놓았는데 결과 코드가 하나뿐이라 화면까지
+## 못 갔다.** 병살은 아웃이 둘이라 따로 둔다 — 색도 연출도 집계도 달라야 한다.
+##
+## 이 판정을 다른 데 또 적지 않는다. 코드가 하나 늘 때마다 빠뜨린 자리가
+## 조용히 생긴다
+static func narrow_in_play_out(ball: Dictionary, is_double_play: bool) -> String:
+	if is_double_play:
+		return "DOUBLE_PLAY"
+	match ball.get("hit_type", ""):
+		"groundBall", "bunt":
+			return "GROUND_OUT"
+		"lineDrive":
+			return "LINE_OUT"
+		"flyBall", "popup":
+			return "FLY_OUT"
+		_:
+			# 타구 정보 없이 아웃이 될 수는 없다. 그래도 오면 땅볼로 둔다
+			return "GROUND_OUT"
 
 
 # ── 문구 ───────────────────────────────────────────────────────────
