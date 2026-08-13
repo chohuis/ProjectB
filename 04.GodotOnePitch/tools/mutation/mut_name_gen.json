@@ -1,0 +1,122 @@
+[
+ [
+  "한글과 로마자를 따로 뽑는다 (김씨가 Lee가 된다)",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[(i + 1) % KO_SURNAMES_EN.size()]],"
+ ],
+ [
+  "이름 음절의 짝을 밀어 쓴다",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[(j + 1) % KO_GIVEN_A_EN.size()], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[i]],"
+ ],
+ [
+  "로마자에 한글을 넣는다 (영어 표기를 켜면 한글이 뜬다)",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s %s%s\" % [KO_SURNAMES[i], KO_GIVEN_A[j], KO_GIVEN_B[k]],"
+ ],
+ [
+  "로마자를 성-이름 순으로 쓴다",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s %s-%s\" % [KO_SURNAMES_EN[i], KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k]],"
+ ],
+ [
+  "이름 두 음절을 안 잇는다",
+  "\t\t\"en\": \"%s-%s %s\" % [KO_GIVEN_A_EN[j], KO_GIVEN_B_EN[k], KO_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s %s\" % [KO_GIVEN_A_EN[j], KO_SURNAMES_EN[i]],"
+ ],
+ [
+  "한국 이름을 띄어 쓴다",
+  "\t\t\"ko\": KO_SURNAMES[i] + KO_GIVEN_A[j] + KO_GIVEN_B[k],",
+  "\t\t\"ko\": KO_SURNAMES[i] + \" \" + KO_GIVEN_A[j] + KO_GIVEN_B[k],"
+ ],
+ [
+  "한국 이름을 두 글자로 만든다",
+  "\t\t\"ko\": KO_SURNAMES[i] + KO_GIVEN_A[j] + KO_GIVEN_B[k],",
+  "\t\t\"ko\": KO_SURNAMES[i] + KO_GIVEN_A[j],"
+ ],
+ [
+  "성 짝 배열을 짧게 만든다",
+  "\t\"Ryu\", \"Jeon\",\n]",
+  "\t\"Ryu\",\n]"
+ ],
+ [
+  "이름 첫 음절 짝을 짧게 만든다",
+  "\t\"Se\", \"Chan\",\n]",
+  "\t\"Se\",\n]"
+ ],
+ [
+  "이름 끝 음절 짝을 짧게 만든다",
+  "\t\"jae\", \"hyun\",\n]",
+  "\t\"jae\",\n]"
+ ],
+ [
+  "해외 리그를 한국 풀로 떨어뜨린다 (ABL·JBL이 한국 이름으로 찬다)",
+  "const OVERSEAS: Dictionary = {\n\t\"LEAGUE_ABL\": \"western\", \"LEAGUE_ABL_FARM\": \"western\",\n\t\"LEAGUE_JBL\": \"japanese\", \"LEAGUE_JBL_FARM\": \"japanese\",\n}",
+  "const OVERSEAS: Dictionary = {}"
+ ],
+ [
+  "ABL만 남기고 JBL을 빠뜨린다",
+  "\t\"LEAGUE_JBL\": \"japanese\", \"LEAGUE_JBL_FARM\": \"japanese\",",
+  ""
+ ],
+ [
+  "서양과 일본을 뒤바꾼다",
+  "\t\t\"western\":\n\t\t\treturn western(rng)\n\t\t\"japanese\":\n\t\t\treturn japanese(rng)",
+  "\t\t\"western\":\n\t\t\treturn japanese(rng)\n\t\t\"japanese\":\n\t\t\treturn western(rng)"
+ ],
+ [
+  "모르는 리그에 빈 이름을 준다",
+  "\t\t_:\n\t\t\treturn korean(rng)",
+  "\t\t_:\n\t\t\treturn {\"ko\": \"\", \"en\": \"\"}"
+ ],
+ [
+  "일본 이름을 안 띄어 쓴다",
+  "\t\t\"ko\": \"%s %s\" % [JP_SURNAMES[i], JP_GIVEN[j]],",
+  "\t\t\"ko\": \"%s%s\" % [JP_SURNAMES[i], JP_GIVEN[j]],"
+ ],
+ [
+  "일본 로마자를 성-이름 순으로 쓴다",
+  "\t\t\"en\": \"%s %s\" % [JP_GIVEN_EN[j], JP_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s %s\" % [JP_SURNAMES_EN[i], JP_GIVEN_EN[j]],"
+ ],
+ [
+  "일본 짝을 밀어 쓴다",
+  "\t\t\"en\": \"%s %s\" % [JP_GIVEN_EN[j], JP_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s %s\" % [JP_GIVEN_EN[j], JP_SURNAMES_EN[(i + 1) % JP_SURNAMES_EN.size()]],"
+ ],
+ [
+  "일본 로마자에 한글을 넣는다",
+  "\t\t\"en\": \"%s %s\" % [JP_GIVEN_EN[j], JP_SURNAMES_EN[i]],",
+  "\t\t\"en\": \"%s %s\" % [JP_GIVEN[j], JP_SURNAMES[i]],"
+ ],
+ [
+  "서양 한글 표기에 영문을 그대로 쓴다",
+  "\t\t\"ko\": \"%s %s\" % [EN_GIVEN_KO[j], EN_SURNAMES_KO[i]],",
+  "\t\t\"ko\": \"%s %s\" % [EN_GIVEN[j], EN_SURNAMES[i]],"
+ ],
+ [
+  "서양 한글 표기를 붙여 쓴다",
+  "\t\t\"ko\": \"%s %s\" % [EN_GIVEN_KO[j], EN_SURNAMES_KO[i]],",
+  "\t\t\"ko\": \"%s%s\" % [EN_GIVEN_KO[j], EN_SURNAMES_KO[i]],"
+ ],
+ [
+  "서양 짝을 밀어 쓴다",
+  "\t\t\"ko\": \"%s %s\" % [EN_GIVEN_KO[j], EN_SURNAMES_KO[i]],",
+  "\t\t\"ko\": \"%s %s\" % [EN_GIVEN_KO[j], EN_SURNAMES_KO[(i + 1) % EN_SURNAMES_KO.size()]],"
+ ],
+ [
+  "일본 짝 배열을 짧게 만든다",
+  "\t\"Nakajima\", \"Harada\", \"Koyama\", \"Tamura\",\n]",
+  "\t\"Nakajima\", \"Harada\", \"Koyama\",\n]"
+ ],
+ [
+  "서양 짝 배열을 짧게 만든다",
+  "\t\"트레버\", \"타일러\", \"빅터\", \"웨이드\", \"웨슬리\", \"잭\",\n]",
+  "\t\"트레버\", \"타일러\", \"빅터\", \"웨이드\", \"웨슬리\",\n]"
+ ],
+ [
+  "이름이 안 흩어진다 (전원 같은 이름)",
+  "\treturn int(rng.randf() * list.size()) % list.size()",
+  "\treturn 0"
+ ]
+]

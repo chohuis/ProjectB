@@ -139,6 +139,9 @@ static func roster(p: Dictionary) -> Array:
 	var out: Array = []
 	for i in count:
 		var pos: String = _position_at(needed, i, pit_ratio, rng)
+		# ⚠ **리그로 이름 풀을 고른다.** 부르는 쪽이 고르게 하면 빠뜨리고,
+		# 그러면 해외 리그가 한국 이름으로 찬다(02의 결함)
+		var nm: Dictionary = NameGen.for_league(p.get("league_id", ""), rng)
 		var pitcher: bool = is_pitcher(pos)
 
 		var ovr_p: float = pit_min + rng.randf() * (pit_max - pit_min)
@@ -164,6 +167,8 @@ static func roster(p: Dictionary) -> Array:
 
 		out.append({
 			"id": "GEN_%s_Y%d_%03d" % [school, year, offset + i + 1],
+			"name": nm["ko"],
+			"name_en": nm["en"],
 			"position": pos,
 			"player_type": "pitcher" if pitcher else "batter",
 			"team_id": p.get("team_id", ""),
