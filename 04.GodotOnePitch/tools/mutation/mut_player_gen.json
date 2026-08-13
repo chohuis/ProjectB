@@ -1,0 +1,187 @@
+[
+ [
+  "투수 비율을 0.30으로 되돌린다 (리그가 30%로 수렴한다)",
+  "const DEFAULT_PITCHER_RATIO: float = 0.45",
+  "const DEFAULT_PITCHER_RATIO: float = 0.30"
+ ],
+ [
+  "선발 비중을 0.55로 되돌린다 (6시즌에 57 → 112명)",
+  "const SP_SHARE_OF_PITCHERS: float = 0.45",
+  "const SP_SHARE_OF_PITCHERS: float = 0.55"
+ ],
+ [
+  "선발 비중을 충원 경로 값(0.67)으로 둔다",
+  "const SP_SHARE_OF_PITCHERS: float = 0.45",
+  "const SP_SHARE_OF_PITCHERS: float = 0.67"
+ ],
+ [
+  "투수 비율 인자를 무시한다",
+  "\tvar pit_ratio: float = p.get(\"pitcher_ratio\", DEFAULT_PITCHER_RATIO)",
+  "\tvar pit_ratio: float = DEFAULT_PITCHER_RATIO"
+ ],
+ [
+  "마무리를 투수로 안 본다",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"CP\", \"P\"]",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\"]"
+ ],
+ [
+  "포수를 투수로 본다",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"CP\", \"P\"]",
+  "const PITCHER_POSITIONS: Array[String] = [\"SP\", \"RP\", \"CP\", \"P\", \"C\"]"
+ ],
+ [
+  "시드를 학교 이름 길이로 만든다 (같은 길이가 같은 난수열)",
+  "\trng.seed = Rng.mix([\"roster\", school, p.get(\"team_id\", \"\"), year])",
+  "\trng.seed = Rng.mix([\"roster\", school.length(), year])"
+ ],
+ [
+  "시드에서 연도를 뺀다 (해마다 같은 세대)",
+  "\trng.seed = Rng.mix([\"roster\", school, p.get(\"team_id\", \"\"), year])",
+  "\trng.seed = Rng.mix([\"roster\", school, p.get(\"team_id\", \"\")])"
+ ],
+ [
+  "시드를 고정한다 (모든 학교가 같은 선수)",
+  "\trng.seed = Rng.mix([\"roster\", school, p.get(\"team_id\", \"\"), year])",
+  "\trng.seed = 12345"
+ ],
+ [
+  "부족한 자리를 안 채운다",
+  "\tif i < needed.size():\n\t\tvar want: String = String(needed[i])\n\t\tif not want.is_empty():",
+  "\tif false:\n\t\tvar want: String = String(needed[i])\n\t\tif not want.is_empty():"
+ ],
+ [
+  "빈 자리 이름을 그대로 쓴다",
+  "\t\tif not want.is_empty():",
+  "\t\tif true:"
+ ],
+ [
+  "지정된 자리가 난수를 안 써서 뒤쪽 세대가 밀린다",
+  "\tvar r_kind: float = rng.randf()\n\tvar r_pick: float = rng.randf()\n\n\tif i < needed.size():\n\t\tvar want: String = String(needed[i])\n\t\tif not want.is_empty():\n\t\t\treturn want\n",
+  "\tif i < needed.size():\n\t\tvar want: String = String(needed[i])\n\t\tif not want.is_empty():\n\t\t\treturn want\n\tvar r_kind: float = rng.randf()\n\tvar r_pick: float = rng.randf()\n"
+ ],
+ [
+  "천장 배수 상한을 없앤다",
+  "const POT_MULT_MAX: float = 1.25",
+  "const POT_MULT_MAX: float = 1.05"
+ ],
+ [
+  "꼬리를 없앤다 (전원이 같은 대역)",
+  "const TAIL_RATE: float = 0.03",
+  "const TAIL_RATE: float = 0.0"
+ ],
+ [
+  "꼬리를 흔하게 만든다",
+  "const TAIL_RATE: float = 0.03",
+  "const TAIL_RATE: float = 0.30"
+ ],
+ [
+  "꼬리에 속도를 안 준다 (천장에 못 닿는다)",
+  "const TAIL_DEV_MIN: float = 82.0",
+  "const TAIL_DEV_MIN: float = 45.0"
+ ],
+ [
+  "꼬리에 천장을 안 준다",
+  "const TAIL_POT_MULT_MIN: float = 1.28",
+  "const TAIL_POT_MULT_MIN: float = 1.05"
+ ],
+ [
+  "천장과 속도를 따로 뽑는다 (꼬리가 갈라진다)",
+  "\tif r_tail < TAIL_RATE:\n\t\treturn [\n\t\t\tTAIL_POT_MULT_MIN + r_pot * (TAIL_POT_MULT_MAX - TAIL_POT_MULT_MIN),\n\t\t\tTAIL_DEV_MIN + r_dev * (TAIL_DEV_MAX - TAIL_DEV_MIN),\n\t\t]",
+  "\tif r_tail < TAIL_RATE:\n\t\treturn [\n\t\t\tTAIL_POT_MULT_MIN + r_pot * (TAIL_POT_MULT_MAX - TAIL_POT_MULT_MIN),\n\t\t\tdev_min + r_dev * (dev_max - dev_min),\n\t\t]"
+ ],
+ [
+  "천장을 고정한다 (신입생 전원이 같은 천장)",
+  "\t\tvar potential: float = clampf(pot_base * pot_mult, cur, 99.0)",
+  "\t\tvar potential: float = clampf(pot_base * 1.15, cur, 99.0)"
+ ],
+ [
+  "천장이 현재 능력치보다 낮아질 수 있다 (성장이 즉시 멈춘다)",
+  "\t\tvar potential: float = clampf(pot_base * pot_mult, cur, 99.0)",
+  "\t\tvar potential: float = minf(pot_base * pot_mult, 99.0)"
+ ],
+ [
+  "천장이 99를 넘는다",
+  "\t\tvar potential: float = clampf(pot_base * pot_mult, cur, 99.0)",
+  "\t\tvar potential: float = maxf(pot_base * pot_mult, cur)"
+ ],
+ [
+  "세부 능력치를 OVR에 안 맞춘다 (화면과 경기력이 따로 논다)",
+  "\t\t_align(pitching, ovr_p, PITCH_WEIGHT, PITCH_DIVISOR)",
+  "\t\tpass"
+ ],
+ [
+  "맞추기를 한 번만 돈다",
+  "\tfor _pass in 3:",
+  "\tfor _pass in 1:"
+ ],
+ [
+  "맞추기가 차이를 반대로 되돌린다",
+  "\t\tvar delta: float = gap / total_weight",
+  "\t\tvar delta: float = -gap / total_weight"
+ ],
+ [
+  "맞추기가 가중치를 무시한다",
+  "\t\tvar delta: float = gap / total_weight",
+  "\t\tvar delta: float = gap"
+ ],
+ [
+  "능력치가 1~99를 벗어난다",
+  "\treturn clampf(roundf(v), 1.0, 99.0)",
+  "\treturn roundf(v)"
+ ],
+ [
+  "투구 OVR 가중치를 뒤섞는다",
+  "\t\"velocity\": 2.5, \"command\": 2.5, \"control\": 2.0, \"movement\": 1.5,",
+  "\t\"velocity\": 1.5, \"command\": 2.0, \"control\": 2.5, \"movement\": 2.5,"
+ ],
+ [
+  "투구 OVR 나눗수를 바꾼다",
+  "const PITCH_DIVISOR: float = 12.0",
+  "const PITCH_DIVISOR: float = 11.0"
+ ],
+ [
+  "플래툰을 중립이 아니라 뽑는다",
+  "\t\tbatting[\"platoon\"] = PLATOON_FIXED",
+  "\t\tpass"
+ ],
+ [
+  "투수·야수 표시를 뒤집는다",
+  "\t\t\t\"player_type\": \"pitcher\" if pitcher else \"batter\",",
+  "\t\t\t\"player_type\": \"batter\" if pitcher else \"pitcher\","
+ ],
+ [
+  "id에서 연도를 뺀다 (해마다 겹친다)",
+  "\t\t\t\"id\": \"GEN_%s_Y%d_%03d\" % [school, year, offset + i + 1],",
+  "\t\t\t\"id\": \"GEN_%s_%03d\" % [school, offset + i + 1],"
+ ],
+ [
+  "id에서 학교를 뺀다 (팀마다 겹친다)",
+  "\t\t\t\"id\": \"GEN_%s_Y%d_%03d\" % [school, year, offset + i + 1],",
+  "\t\t\t\"id\": \"GEN_Y%d_%03d\" % [year, offset + i + 1],"
+ ],
+ [
+  "나이·학년을 호출부에서 안 받는다",
+  "\t\t\t\"age\": int(p.get(\"age\", 16)),\n\t\t\t\"grade\": int(p.get(\"grade\", 1)),",
+  "\t\t\t\"age\": 16,\n\t\t\t\"grade\": 1,"
+ ],
+ [
+  "소속을 안 싣는다",
+  "\t\t\t\"team_id\": p.get(\"team_id\", \"\"),\n\t\t\t\"league_id\": p.get(\"league_id\", \"\"),",
+  "\t\t\t\"team_id\": \"\",\n\t\t\t\"league_id\": \"\","
+ ],
+ [
+  "OVR 범위 인자를 무시한다",
+  "\t\tvar ovr_p: float = pit_min + rng.randf() * (pit_max - pit_min)",
+  "\t\tvar ovr_p: float = 45.0 + rng.randf() * 25.0"
+ ],
+ [
+  "0명·음수 대신 한 명씩 더 만든다",
+  "\tfor i in count:",
+  "\tfor i in count + 1:"
+ ],
+ [
+  "갈래마다 난수 소비가 다르다 (앞 선수가 뒤를 민다)",
+  "\tif r_kind < pit_ratio:\n\t\treturn \"SP\" if r_pick < SP_SHARE_OF_PITCHERS else \"RP\"\n\treturn POSITIONS[int(r_pick * POSITIONS.size()) % POSITIONS.size()]",
+  "\tif r_kind < pit_ratio:\n\t\treturn \"SP\" if r_pick < SP_SHARE_OF_PITCHERS else \"RP\"\n\treturn POSITIONS[int(rng.randf() * POSITIONS.size()) % POSITIONS.size()]"
+ ]
+]
