@@ -14,3 +14,7 @@ run/main_scene=""
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
