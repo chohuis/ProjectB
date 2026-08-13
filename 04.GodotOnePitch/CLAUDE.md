@@ -8,18 +8,6 @@ Godot 4.6 · GDScript 단독 · PC(Steam) 우선.
 `02.SvelteElectron/`(Svelte + Electron + Rust)에서 이주 중이다. 그쪽은 **동결**이고
 읽기만 한다.
 
-## 지금 어디까지 왔나
-
-```
-P0  게이트          통과 — 시즌 시뮬 0.659초 (기준 2초)
-P1  골격            통과 — 저장·RNG·러너·화면 규약·폰트
-P2  검사 53개 이관   ← 다음
-P3  코어 시뮬 이관
-P4  계측 재구축
-P5  화면 55개
-P6  Steam 빌드
-```
-
 ## 실행
 
 ```bash
@@ -35,7 +23,7 @@ godot --script tools/shot.gd -- status
 ```
 
 ⚠ `--ignoreHeadlessMode`가 필요하다. GdUnit4가 헤드리스에서 `InputEvent`가
-전달되지 않는다고 막는데, 지금 검사는 UI 조작을 안 쓴다. **P5에서 씬 조작
+전달되지 않는다고 막는데, 지금 검사는 UI 조작을 안 쓴다. **M7에서 씬 조작
 검사를 만들면 이 전제가 깨진다** — 그때 다시 본다.
 
 ## 절대 금지
