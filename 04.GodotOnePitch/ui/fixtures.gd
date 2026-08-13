@@ -86,13 +86,34 @@ static func main_state() -> Dictionary:
 	return {
 		"day": 10, "season_days": 350, "season_year": 2027,
 		"protagonist": {
-			"name": "김한결", "team_name": "제주 애월고",
+			# ⚠ **`team_id`를 빠뜨리면 조용히 뒤집힌다.** 실제로 그랬다 —
+			# 홈 경기가 전부 "원정"이 되고 승이 패로 찍혔다. 오류도 로그도
+			# 안 나고 화면을 띄워야만 보인다
+			"name": "김한결", "team_id": "TEAM_A", "team_name": "제주 애월고",
 			"condition": 72.0, "injury": null, "eligibility_blocked": false,
 			"retired": false,
 		},
+		"team_names": {
+			"TEAM_A": "제주 애월고", "TEAM_B": "서귀포고",
+			"TEAM_C": "한림고", "TEAM_D": "제주일고",
+		},
 		"schedule": [
+			# 치른 것 · 놓친 것 · 오늘 · 예정이 한 화면에 다 보이게
+			{"id": "G03", "day": 3, "is_protagonist_game": true,
+				"home": "TEAM_A", "away": "TEAM_C",
+				"result": {"home_score": 4, "away_score": 2, "winner": "TEAM_A"}},
+			{"id": "G06", "day": 6, "is_protagonist_game": true,
+				"home": "TEAM_D", "away": "TEAM_A",
+				"result": {"home_score": 5, "away_score": 1, "winner": "TEAM_D"}},
+			{"id": "G08", "day": 8, "is_protagonist_game": true,
+				"home": "TEAM_A", "away": "TEAM_B",
+				"result": {"home_score": 2, "away_score": 2, "winner": ""}},
+			{"id": "G09", "day": 9, "is_protagonist_game": true,
+				"home": "TEAM_B", "away": "TEAM_A", "result": null},
 			{"id": "G15", "day": 15, "is_protagonist_game": true,
 				"home": "TEAM_A", "away": "TEAM_B", "result": null},
+			{"id": "G22", "day": 22, "is_protagonist_game": true,
+				"home": "TEAM_C", "away": "TEAM_A", "result": null},
 			{"id": "G12", "day": 12, "is_protagonist_game": false,
 				"home": "TEAM_C", "away": "TEAM_D", "result": null},
 		],

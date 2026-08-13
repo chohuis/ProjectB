@@ -170,6 +170,58 @@ func test_a_state_with_no_schedule_does_not_break() -> void:
 	assert_array(_texts(s)).contains(["남은 등판 없음"])
 
 
+# ── 일정 탭 ───────────────────────────────────────────────────
+
+func _open_schedule(s: MainScreen) -> void:
+	s._on_tab(5)
+	await await_idle_frame()
+
+
+func test_the_schedule_tab_lists_my_games() -> void:
+	var s := await _mount(_vm({"day": 10, "schedule": [
+		_game(12, true), _game(20, true), _game(13, false)]}))
+	await _open_schedule(s)
+	var t := _texts(s)
+	assert_array(t).contains(["3월 12일 (금)", "3월 20일 (토)"])
+	# NPC 경기는 안 보인다
+	assert_array(t).not_contains(["3월 13일 (토)"])
+
+
+func test_the_schedule_tab_shows_the_record() -> void:
+	var g := _game(5, true)
+	g["result"] = {"home_score": 3, "away_score": 1, "winner": "TEAM_A"}
+	var s := await _mount(_vm({"day": 20, "schedule": [g],
+		"protagonist": {"team_id": "TEAM_A"}}))
+	await _open_schedule(s)
+	assert_array(_texts(s)).contains(["1승 0무 0패 · 남은 경기 0", "승 3:1"])
+
+
+func test_an_empty_schedule_says_so() -> void:
+	var s := await _mount(_vm({"schedule": []}))
+	await _open_schedule(s)
+	assert_array(_texts(s)).contains(["아직 잡힌 경기가 없습니다"])
+
+
+## ⚠ **탭을 오갈 때 줄이 쌓이면 안 된다.** 떼고 나서 지워야 한다
+func test_leaving_and_returning_does_not_duplicate_rows() -> void:
+	var s := await _mount(_vm({"day": 10, "schedule": [_game(12, true)]}))
+	await _open_schedule(s)
+	var before: int = s._tab_host.get_child_count()
+	s._on_tab(0)
+	await await_idle_frame()
+	await _open_schedule(s)
+	assert_int(s._tab_host.get_child_count()).is_equal(before)
+
+
+## 색이 등급을 말한다 — 숫자만 보면 어느 게 오늘인지 모른다
+func test_the_row_color_marks_the_state() -> void:
+	assert_object(ScheduleRow.status_color("today", false)).is_equal(AppTheme.ACCENT)
+	assert_object(ScheduleRow.status_color("missed", false)).is_equal(AppTheme.WARN)
+	assert_object(ScheduleRow.status_color("done", true)).is_equal(AppTheme.OK)
+	assert_object(ScheduleRow.status_color("done", false)).is_equal(AppTheme.TEXT_DIM)
+	assert_object(ScheduleRow.status_color("upcoming", false)).is_equal(AppTheme.TEXT_DIM)
+
+
 # ── 화면이 계산을 갖지 않는가 ─────────────────────────────────
 
 ## ⚠ **이게 이 검사 묶음에서 제일 중요하다.** 02 결함 상당수가 "화면이

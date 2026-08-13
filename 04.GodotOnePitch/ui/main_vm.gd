@@ -85,6 +85,11 @@ static func build(s: Dictionary) -> Dictionary:
 		"unread_count": unread,
 		"undecided_count": undecided,
 		"tabs": _tabs(unread, undecided),
+
+		# 탭 내용도 여기서 실어 보낸다 — **화면이 상태를 다시 훑지 않는다.**
+		# 탭마다 사전을 따로 받게 하면 화면이 "어느 사전을 언제 받나"를
+		# 알아야 하고, 그 순간 화면이 배선을 갖는다
+		"schedule": ScheduleVm.build(s),
 	}
 
 

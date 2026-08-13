@@ -12,6 +12,8 @@ class_name MainScreen
 ## ⚠ 골격(배경·헤더·탭 줄·진행 버튼)은 `main_screen.tscn`에 있다.
 ## 여기서는 **탭 버튼과 내용만 만들어 붙인다.**
 
+const SCHEDULE_ROW := preload("res://ui/parts/schedule_row.tscn")
+
 @onready var _bg: ColorRect = $Bg
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
 @onready var _weekday: Label = $Pad/Col/Header/DateRow/Weekday
@@ -128,12 +130,40 @@ func _build_body() -> void:
 		_tab_host.remove_child(c)
 		c.queue_free()
 
-	# 탭 내용은 M7-3에서 붙인다. 지금은 어느 탭인지만 보여준다 —
-	# **소비자 없는 자리를 미리 만들지 않는다**
-	var l := Label.new()
-	l.text = _tab_label()
-	l.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
-	_tab_host.add_child(l)
+	match current_tab_id():
+		"schedule":
+			_build_schedule()
+		_:
+			# 아직 안 옮긴 탭. **소비자 없는 자리를 미리 만들지 않는다**
+			var l := Label.new()
+			l.text = _tab_label()
+			l.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+			_tab_host.add_child(l)
+
+
+## 일정 탭. 사전은 `ScheduleVm`이 만들어 `_vm["schedule"]`에 실려 온다 —
+## 화면이 일정을 다시 훑지 않는다
+func _build_schedule() -> void:
+	var vm: Dictionary = _vm.get("schedule", {})
+
+	var head := Label.new()
+	head.text = "%s · 남은 경기 %d" % [vm.get("record_label", "기록 없음"),
+		int(vm.get("remaining", 0))]
+	head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_tab_host.add_child(head)
+
+	var rows: Array = vm.get("rows", [])
+	if rows.is_empty():
+		var empty := Label.new()
+		empty.text = "아직 잡힌 경기가 없습니다"
+		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		_tab_host.add_child(empty)
+		return
+
+	for r in rows:
+		var row: ScheduleRow = SCHEDULE_ROW.instantiate()
+		_tab_host.add_child(row)
+		row.setup(r)
 
 
 func _tab_label() -> String:

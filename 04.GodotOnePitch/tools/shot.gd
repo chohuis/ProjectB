@@ -78,6 +78,11 @@ func _build(which: String) -> Control:
 			var a: AppRoot = APP.instantiate()
 			a.set_state(Fixtures.main_state())
 			return a
+		"schedule":
+			var sc: AppRoot = APP.instantiate()
+			sc.set_state(Fixtures.main_state())
+			sc.ready.connect(func() -> void: sc.screen()._on_tab(5), CONNECT_ONE_SHOT)
+			return sc
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

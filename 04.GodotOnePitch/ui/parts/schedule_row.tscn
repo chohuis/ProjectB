@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/parts/schedule_row.gd" id="1_row"]
+
+[node name="ScheduleRow" type="HBoxContainer"]
+theme_override_constants/separation = 8
+script = ExtResource("1_row")
+
+[node name="Date" type="Label" parent="."]
+custom_minimum_size = Vector2(88, 0)
+layout_mode = 2
+
+[node name="Opponent" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Location" type="Label" parent="."]
+custom_minimum_size = Vector2(36, 0)
+layout_mode = 2
+
+[node name="Status" type="Label" parent="."]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+horizontal_alignment = 2
