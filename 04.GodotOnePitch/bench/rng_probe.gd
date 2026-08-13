@@ -1,4 +1,5 @@
-extends SceneTree
+extends RefCounted
+class_name RngProbe
 
 ## 마지막 섞기(avalanche)가 실제로 일을 하나 — 재서 확인한다.
 ##
@@ -8,12 +9,16 @@ extends SceneTree
 ##
 ## 추측하지 말고 잰다.
 
-func _init() -> void:
-	print("── avalanche 유무 비교 ──")
+var _log: Callable
+var _fail: Callable
+
+func run(log_fn: Callable, fail_fn: Callable) -> int:
+	_log = log_fn
+	_fail = fail_fn
 	_compare("연속 정수 키", func(i: int) -> Array: return ["player", i, "potential"])
 	_compare("연속 정수만", func(i: int) -> Array: return [i])
 	_compare("긴 공통 접두사", func(i: int) -> Array: return ["PLY_HS26_HS_TEAM_%05d" % i])
-	quit()
+	return 0
 
 
 func _compare(label: String, keyfn: Callable) -> void:
@@ -26,9 +31,9 @@ func _compare(label: String, keyfn: Callable) -> void:
 		with_av.append(_first_draw(_mix(parts, true)))
 		without.append(_first_draw(_mix(parts, false)))
 
-	print("  %s" % label)
-	print("    있음  %s" % _stats(with_av))
-	print("    없음  %s" % _stats(without))
+	_log.call("  %s" % label)
+	_log.call("    있음  %s" % _stats(with_av))
+	_log.call("    없음  %s" % _stats(without))
 
 
 ## 시드로 난수기를 만들어 첫 값 — 실제로 쓰이는 방식 그대로
