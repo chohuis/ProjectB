@@ -44,11 +44,21 @@ func _init() -> void:
 	quit(0)
 
 
+const STATUS := preload("res://ui/screens/status_screen.tscn")
+
+
+## 씬을 인스턴스화하고 사전을 넣는다
+func _screen(vm: Dictionary) -> Control:
+	var s: StatusScreen = STATUS.instantiate()
+	s.set_view_model(vm)
+	return s
+
+
 func _build(which: String) -> Control:
 	match which:
 		"status":
-			return StatusScreen.new(Fixtures.status_vm())
+			return _screen(Fixtures.status_vm())
 		"status-empty":
-			return StatusScreen.new(Fixtures.status_vm_empty())
+			return _screen(Fixtures.status_vm_empty())
 		_:
 			return null

@@ -26,8 +26,13 @@ func _texts(node: Node, out: PackedStringArray = PackedStringArray()) -> PackedS
 	return out
 
 
+const STATUS := preload("res://ui/screens/status_screen.tscn")
+
+
+## 씬을 인스턴스화한다 — 화면은 씬이 정본이고 스크립트는 붙어 있을 뿐이다
 func _mount(vm: Dictionary) -> StatusScreen:
-	var s := StatusScreen.new(vm)
+	var s: StatusScreen = STATUS.instantiate()
+	s.set_view_model(vm)
 	add_child(s)
 	# `_ready`가 돌아야 자식이 생긴다
 	await await_idle_frame()
@@ -89,7 +94,7 @@ func test_screen_does_not_compute() -> void:
 	#
 	# 원본 `StatusPage.svelte`는 1,004줄인데 그중 상당수가 계산이었다.
 	# 옮기면서 그걸 같이 가져오면 같은 결함을 다시 만든다.
-	var src := FileAccess.get_file_as_string("res://ui/status_screen.gd")
+	var src := FileAccess.get_file_as_string("res://ui/screens/status_screen.gd")
 	# 시즌·연도 집계, 정렬, 누적 — 전부 ViewModel이 할 일이다
 	assert_str(src).not_contains("sort_custom")
 	assert_str(src).not_contains("filter(")
@@ -100,10 +105,10 @@ func test_screen_does_not_compute() -> void:
 
 func test_grade_color_marks_levels() -> void:
 	# 숫자만 보면 70이 좋은지 나쁜지 모른다 — 색이 등급을 말한다
-	assert_object(Parts.grade_color(90.0)).is_equal(AppTheme.ACCENT)
-	assert_object(Parts.grade_color(78.0)).is_equal(AppTheme.OK)
-	assert_object(Parts.grade_color(65.0)).is_equal(AppTheme.TEXT)
-	assert_object(Parts.grade_color(50.0)).is_equal(AppTheme.TEXT_DIM)
+	assert_object(BarRow.grade_color(90.0)).is_equal(AppTheme.ACCENT)
+	assert_object(BarRow.grade_color(78.0)).is_equal(AppTheme.OK)
+	assert_object(BarRow.grade_color(65.0)).is_equal(AppTheme.TEXT)
+	assert_object(BarRow.grade_color(50.0)).is_equal(AppTheme.TEXT_DIM)
 
 
 func test_font_is_embedded_not_system() -> void:
@@ -135,3 +140,23 @@ func test_license_ships_with_font() -> void:
 	assert_bool(FileAccess.file_exists("res://fonts/OFL.txt")).is_true()
 	var txt := FileAccess.get_file_as_string("res://fonts/OFL.txt")
 	assert_str(txt).contains("SIL OPEN FONT LICENSE")
+
+
+func test_screen_is_a_scene_not_code() -> void:
+	# ⚠ **골격은 씬이 정본이다.** 레이아웃을 코드로 다시 짜면 씬을 만든
+	# 의미가 없고, 에디터에서 열어도 빈 화면이 된다.
+	#
+	# 스크립트가 배경·스크롤·탭 컨테이너를 직접 만들면 여기서 막는다
+	var src := FileAccess.get_file_as_string("res://ui/screens/status_screen.gd")
+	assert_str(src).not_contains("ScrollContainer.new()")
+	assert_str(src).not_contains("ColorRect.new()")
+	# 부품도 씬을 인스턴스화해서 쓴다
+	assert_str(src).contains("preload(\"res://ui/parts/card.tscn\")")
+	assert_str(src).contains(".instantiate()")
+
+
+func test_part_scenes_exist() -> void:
+	for p in ["card", "info_row", "badge", "bar_row"]:
+		var path := "res://ui/parts/%s.tscn" % p
+		assert_bool(ResourceLoader.exists(path)).override_failure_message(
+			"부품 씬이 없다: %s" % path).is_true()

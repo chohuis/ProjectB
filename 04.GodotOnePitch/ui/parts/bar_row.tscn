@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/parts/bar_row.gd" id="1_bar"]
+
+[node name="BarRow" type="HBoxContainer"]
+theme_override_constants/separation = 8
+script = ExtResource("1_bar")
+
+[node name="Name" type="Label" parent="."]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+text = "이름"
+
+[node name="Bar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.001
+value = 0.5
+show_percentage = false
+
+[node name="Right" type="Label" parent="."]
+layout_mode = 2
+text = "0"

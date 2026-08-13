@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/parts/badge.gd" id="1_badge"]
+
+[node name="Badge" type="PanelContainer"]
+size_flags_horizontal = 0
+script = ExtResource("1_badge")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "배지"
