@@ -104,3 +104,34 @@ func test_grade_color_marks_levels() -> void:
 	assert_object(Parts.grade_color(78.0)).is_equal(AppTheme.OK)
 	assert_object(Parts.grade_color(65.0)).is_equal(AppTheme.TEXT)
 	assert_object(Parts.grade_color(50.0)).is_equal(AppTheme.TEXT_DIM)
+
+
+func test_font_is_embedded_not_system() -> void:
+	# ⚠ **시스템 폰트로 떨어지면 안 된다.** 기기마다 다르게 보이고, 한글
+	# 폰트가 없는 환경에서는 □□□로 깨진다. 자간·굵기가 달라 레이아웃도 밀린다.
+	#
+	# 폰트를 실수로 지우거나 경로를 바꾸면 `korean_font()`가 조용히
+	# `SystemFont`로 떨어진다 — 개발 중엔 티가 안 나고 배포본에서 터진다
+	assert_bool(ResourceLoader.exists(AppTheme.FONT_REGULAR)).override_failure_message(
+		"임베드 폰트가 없다: %s" % AppTheme.FONT_REGULAR).is_true()
+	assert_bool(ResourceLoader.exists(AppTheme.FONT_BOLD)).is_true()
+
+	var f := AppTheme.korean_font()
+	assert_bool(f is SystemFont).override_failure_message(
+		"시스템 폰트로 떨어졌다 — 임베드 폰트를 못 읽었다").is_false()
+
+
+func test_font_covers_hangul() -> void:
+	# 라틴만 있는 폰트를 잘못 넣으면 한글이 두부(□)로 나온다.
+	# 글자 폭이 0이 아닌지로 본다
+	var f := AppTheme.korean_font()
+	var w: float = f.get_string_size("능력치", HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
+	assert_float(w).is_greater(10.0)
+
+
+func test_license_ships_with_font() -> void:
+	# ⚠ OFL은 **라이선스 전문을 같이 배포**하는 게 조건이다.
+	# 파일이 빠지면 라이선스 위반이다
+	assert_bool(FileAccess.file_exists("res://fonts/OFL.txt")).is_true()
+	var txt := FileAccess.get_file_as_string("res://fonts/OFL.txt")
+	assert_str(txt).contains("SIL OPEN FONT LICENSE")
