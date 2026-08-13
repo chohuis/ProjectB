@@ -9,9 +9,17 @@ class_name Schedule
 ## 경기 수가 바뀌면 밸런스가 조용히 바뀌고, 02 실측값(리그 ERA 4점대 ·
 ## 수상 자격선 · 드래프트 앵커)과 대조가 안 된다.
 ##
-## ⚠ **02는 프로를 1~50주에 펴놨다** (주 2.9경기). 실제 KBO는 24주에 몰아서
-## 주 6경기다. 일 단위로 진행하면 그 차이가 그대로 체감된다 — 주 단위였을
-## 땐 한 번에 여러 경기가 한꺼번에 끝나서 자기 등판을 고를 수가 없었다.
+## ⚠ **일정을 압축하지 않는다** (사용자 결정). 02처럼 프로를 1~50주에 편다
+## (주 2.9경기). 실제 KBO는 24주에 몰아서 주 6경기지만, 그건 별개 문제다:
+##
+## "한 주 누르면 여러 경기가 한꺼번에 끝난다"는 **일 단위 진행이 푼다.**
+## 02 설계 문서도 원래 그렇게 적혀 있었다 — "1시즌 = 52주. 경기일·이벤트·
+## 선택 발생 시 진행 정지 → 유저 처리 → 재개"(DESIGN.md §209). 구현이
+## 주 단위였을 뿐이다.
+##
+## 압축은 밀도(등판 간격 11일 → 5일)와 **28주짜리 진짜 오프시즌**을 주지만,
+## 성장 주기 비율을 50:2 → 24:28로 뒤집고 그 오프시즌을 채울 콘텐츠가
+## 필요하다. 둘 다 확인 전이라 미룬다 — 되돌리려면 이 표의 기간만 바꾼다.
 ##
 ## 요일: 0 = 일 … 6 = 토
 
@@ -26,39 +34,47 @@ const WEEKDAYS_IND: Array[int] = [2, 5]
 ##
 ## ⚠ **기간은 경기 수를 담을 만큼 넓어야 한다.** 모자라면 경기가 잘려나가고
 ## 팀별 경기 수가 어긋난다 — 검사가 그걸 먼저 본다
+## 프로는 1~50주 = 시즌 1~350일차 (02 그대로).
+## 월요일만 쉰다 — 기간이 넓으므로 경기는 그 안에 저절로 성기게 퍼진다
 const LEAGUES: Dictionary = {
-	# 프로 1군 — 3월 말 개막
 	"LEAGUE_KBL": {
-		"games_per_team": 144, "start_day": 22, "end_day": 190, "weekdays": WEEKDAYS_PRO,
+		"games_per_team": 144, "start_day": 1, "end_day": 350, "weekdays": WEEKDAYS_PRO,
 	},
 	"LEAGUE_ABL": {
-		"games_per_team": 135, "start_day": 22, "end_day": 204, "weekdays": WEEKDAYS_PRO,
+		"games_per_team": 135, "start_day": 1, "end_day": 350, "weekdays": WEEKDAYS_PRO,
 	},
 	"LEAGUE_JBL": {
-		"games_per_team": 110, "start_day": 22, "end_day": 176, "weekdays": WEEKDAYS_PRO,
+		"games_per_team": 110, "start_day": 1, "end_day": 350, "weekdays": WEEKDAYS_PRO,
 	},
-	# 프로 2군 — 1군보다 조금 이르게 시작하고 늦게 끝난다
 	"LEAGUE_KBL_FARM": {
-		"games_per_team": 99, "start_day": 15, "end_day": 190, "weekdays": WEEKDAYS_PRO,
+		"games_per_team": 99, "start_day": 1, "end_day": 350, "weekdays": WEEKDAYS_PRO,
 	},
 	"LEAGUE_ABL_FARM": {
-		"games_per_team": 165, "start_day": 15, "end_day": 218, "weekdays": WEEKDAYS_PRO,
+		"games_per_team": 165, "start_day": 1, "end_day": 350, "weekdays": WEEKDAYS_PRO,
 	},
 	"LEAGUE_JBL_FARM": {
-		"games_per_team": 121, "start_day": 15, "end_day": 190, "weekdays": WEEKDAYS_PRO,
+		"games_per_team": 121, "start_day": 1, "end_day": 350, "weekdays": WEEKDAYS_PRO,
 	},
-	# 고교 주말리그
+	# 고교 주말리그 — 10~29주
 	"LEAGUE_HIGHSCHOOL": {
 		"games_per_team": 20, "start_day": 64, "end_day": 204, "weekdays": WEEKDAYS_WEEKEND,
 	},
-	# 대학 — 권역별 화~금
+	# 대학 — 1~10주, 권역별 화~금 (02의 `UNIV_REGULAR_*_WEEK`)
 	"LEAGUE_UNIVERSITY": {
-		"games_per_team": 9, "start_day": 22, "end_day": 92, "weekdays": WEEKDAYS_UNIV,
+		"games_per_team": 9, "start_day": 1, "end_day": 70, "weekdays": WEEKDAYS_UNIV,
 	},
-	# 독립 — 생존 리그
+	# 독립 — 10~25주 생존 리그 (02의 `SURVIVAL_STAGES`)
 	"LEAGUE_INDEPENDENT": {
-		"games_per_team": 30, "start_day": 64, "end_day": 176, "weekdays": WEEKDAYS_IND,
+		"games_per_team": 30, "start_day": 64, "end_day": 175, "weekdays": WEEKDAYS_IND,
 	},
+}
+
+## 리그별 팀 수 — 하루 부하를 재는 데 쓴다. 팀 목록 정본은 데이터 쪽이다
+const TEAM_COUNTS: Dictionary = {
+	"LEAGUE_KBL": 10, "LEAGUE_KBL_FARM": 10,
+	"LEAGUE_ABL": 16, "LEAGUE_ABL_FARM": 16,
+	"LEAGUE_JBL": 12, "LEAGUE_JBL_FARM": 12,
+	"LEAGUE_HIGHSCHOOL": 102, "LEAGUE_UNIVERSITY": 50, "LEAGUE_INDEPENDENT": 10,
 }
 
 

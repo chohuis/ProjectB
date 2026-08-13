@@ -66,12 +66,17 @@
  ],
  [
   "KBL 경기 수를 02와 다르게 둔다",
-  "\t\t\"games_per_team\": 144, \"start_day\": 22, \"end_day\": 190, \"weekdays\": WEEKDAYS_PRO,",
-  "\t\t\"games_per_team\": 130, \"start_day\": 22, \"end_day\": 190, \"weekdays\": WEEKDAYS_PRO,"
+  "\t\t\"games_per_team\": 144, \"start_day\": 1, \"end_day\": 350, \"weekdays\": WEEKDAYS_PRO,",
+  "\t\t\"games_per_team\": 130, \"start_day\": 1, \"end_day\": 350, \"weekdays\": WEEKDAYS_PRO,"
  ],
  [
   "ABL 2군 기간을 경기 수보다 짧게 둔다",
-  "\t\t\"games_per_team\": 165, \"start_day\": 15, \"end_day\": 218, \"weekdays\": WEEKDAYS_PRO,",
-  "\t\t\"games_per_team\": 165, \"start_day\": 15, \"end_day\": 120, \"weekdays\": WEEKDAYS_PRO,"
+  "\t\t\"games_per_team\": 165, \"start_day\": 1, \"end_day\": 350, \"weekdays\": WEEKDAYS_PRO,",
+  "\t\t\"games_per_team\": 165, \"start_day\": 1, \"end_day\": 120, \"weekdays\": WEEKDAYS_PRO,"
+ ],
+ [
+  "고교·대학이 같은 날 몰려도 안 본다 (하루 부하 게이트)",
+  "\t\t\"games_per_team\": 20, \"start_day\": 64, \"end_day\": 204, \"weekdays\": WEEKDAYS_WEEKEND,",
+  "\t\t\"games_per_team\": 20, \"start_day\": 64, \"end_day\": 78, \"weekdays\": WEEKDAYS_WEEKEND,"
  ]
 ]

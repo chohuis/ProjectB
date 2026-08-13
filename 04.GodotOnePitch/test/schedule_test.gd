@@ -214,6 +214,34 @@ func test_pro_leagues_play_six_days_a_week() -> void:
 		assert_int(Schedule.LEAGUES[lid]["weekdays"].size()).is_equal(6)
 
 
+func test_the_busiest_day_stays_inside_the_gate() -> void:
+	# ⚠ **하루 부하가 게이트다.** 일 단위로 진행하므로 사용자가 실제로
+	# 기다리는 건 "그날 경기 전부"다. 리그를 더하거나 기간을 좁히면 여기가
+	# 먼저 빨간불이 된다 — 한참 뒤에 27배를 발견하는 일이 없게
+	var by_day: Dictionary = {}
+	for lid in Schedule.LEAGUES:
+		var teams: Array = _teams(lid.substr(7, 3), Schedule.TEAM_COUNTS[lid])
+		for g in Schedule.build_league(lid, teams, 2026):
+			by_day[g["day"]] = int(by_day.get(g["day"], 0)) + 1
+	var worst: int = 0
+	for d in by_day:
+		worst = maxi(worst, int(by_day[d]))
+	#
+	# 실측 **83경기** (2026 시즌, 9개 리그 전부). 120경기/초이므로 0.69초다.
+	#
+	# ⚠ 압축했을 때(77경기)보다 오히려 많다 — 성기게 펴면 리그들이 어떤
+	# 날엔 몰린다. "펴면 부하가 준다"는 직관이 틀렸다
+	assert_int(worst).is_less_equal(100)
+
+
+func test_the_season_total_matches_02() -> void:
+	# ⚠ 총 경기 수가 바뀌면 리그 기록의 척도가 통째로 바뀐다
+	var total: int = 0
+	for lid in Schedule.LEAGUES:
+		total += Schedule.TEAM_COUNTS[lid] * Schedule.LEAGUES[lid]["games_per_team"] / 2
+	assert_int(total).is_equal(6396)
+
+
 func test_high_school_plays_on_weekends() -> void:
 	var wd: Array = Schedule.LEAGUES["LEAGUE_HIGHSCHOOL"]["weekdays"]
 	assert_int(wd.size()).is_equal(2)
