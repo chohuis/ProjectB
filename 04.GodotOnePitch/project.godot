@@ -1,0 +1,16 @@
+; OnePitch — Godot 이주 (P0 스파이크)
+;
+; 목적: GDScript 단독으로 시즌 시뮬을 감당하는지 재는 것. 게이트를 넘으면
+; 이 프로젝트가 본 이주의 뼈대가 된다.
+
+config_version=5
+
+[application]
+
+config/name="OnePitch"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+run/main_scene=""
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
