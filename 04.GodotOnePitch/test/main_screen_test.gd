@@ -98,6 +98,32 @@ func test_pressing_advance_reports_the_span_from_the_view_model() -> void:
 	assert_array(got).is_equal([5])
 
 
+# ── 진행 중 표시 ──────────────────────────────────────────────
+
+## ⚠ **최악의 날이 1.08초다.** 그동안 버튼이 그대로면 안 눌린 줄 알고
+## 또 누른다
+func test_it_shows_progress_while_running() -> void:
+	var s := await _mount(_vm())
+	s.set_progress(2, 5)
+	assert_array(_texts(s)).contains(["진행 중  2 / 5일"])
+	assert_bool(s._advance.disabled).is_true()
+
+
+func test_finishing_puts_the_button_back() -> void:
+	var s := await _mount(_vm())
+	s.set_progress(2, 5)
+	s.set_progress(5, 5)
+	assert_array(_texts(s)).contains(["5일 진행"])
+	assert_bool(s._advance.disabled).is_false()
+
+
+## 0일짜리 진행에 나누기가 들어가면 안 된다
+func test_a_zero_total_does_not_break() -> void:
+	var s := await _mount(_vm())
+	s.set_progress(0, 0)
+	assert_object(s).is_not_null()
+
+
 # ── 탭 ────────────────────────────────────────────────────────
 
 func test_the_first_tab_is_selected() -> void:

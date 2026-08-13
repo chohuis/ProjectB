@@ -32,6 +32,18 @@ var _vm: Dictionary = {}
 var _tab: int = 0
 
 
+## 진행 중임을 보인다. `DayRunner.progress`에 그대로 이어 붙인다.
+##
+## ⚠ **최악의 날이 1.08초다.** 그동안 버튼이 그대로면 안 눌린 줄 알고
+## 또 누른다 — 진행기가 겹친 호출을 막긴 하지만 화면이 먼저 말해야 한다
+func set_progress(done: int, total: int) -> void:
+	if total <= 0 or done >= total:
+		_rebuild()
+		return
+	_advance.disabled = true
+	_advance.text = "진행 중  %d / %d일" % [done, total]
+
+
 ## 사전을 넣는다. `_ready` 전후 어느 때든 부를 수 있다
 func set_view_model(vm: Dictionary) -> void:
 	_vm = vm

@@ -45,13 +45,15 @@ func _init() -> void:
 
 	log_line("── %s ──" % task)
 	var t0: int = Time.get_ticks_msec()
-	var code: int = _dispatch(task, args)
+	var code: int = await _dispatch(task, args)
 	log_line("")
 	log_line("경과 %.1f초 · 실패 %d" % [(Time.get_ticks_msec() - t0) / 1000.0, _failures])
 	log_line("기록 %s" % ProjectSettings.globalize_path(_log_path))
 	quit(code if code != 0 else (1 if _failures > 0 else 0))
 
 
+## ⚠ **코루틴이다.** `bench:day`가 프레임을 넘기므로 부르는 쪽도 기다려야
+## 한다 — 안 기다리면 계측이 시작만 하고 종료 코드를 먼저 낸다
 func _dispatch(task: String, args: PackedStringArray) -> int:
 	match task:
 		"bench:season":
@@ -59,6 +61,8 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 		"bench:game":
 			return GameBench.new().run(log_line, fail,
 				arg_int(args, "games", 200), arg_int(args, "seed", 20260813))
+		"bench:day":
+			return await _bench_day(args)
 		"bench:save":
 			return SaveBench.new().run(log_line, fail)
 		"bench:rng":
@@ -72,6 +76,7 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 func _print_tasks() -> void:
 	print("갈래:")
 	print("  bench:season   한 시즌 시뮬 (P0 게이트)")
+	print("  bench:day      최악의 날 — 진짜 일정·진짜 엔진·프레임 쪼개기")
 	print("  bench:save     저장·로드 성능")
 	print("  bench:rng      난수 분포")
 	print("")
@@ -182,3 +187,16 @@ static func shard_indices(total: int, shards: int, shard: int) -> PackedInt32Arr
 	return out
 
 
+
+
+## 최악의 날 — **일정이 정하는 값이지 우리가 고르는 값이 아니다**
+func _bench_day(args: PackedStringArray) -> int:
+	# ⚠ **트리에 붙이고 한 프레임 기다린다.** `_init`은 SceneTree 생성자라
+	# 그 자리에서 바로 붙이면 `get_tree()`가 아직 null이고, 프레임을 넘기려는
+	# 순간 터진다 — 계측은 0경기로 끝나고 원인은 스택 밑에 묻힌다
+	var b := DayBench.new()
+	root.add_child(b)
+	await process_frame
+	var code: int = await b.run(log_line, fail, arg_int(args, "seed", 20260813))
+	b.queue_free()
+	return code

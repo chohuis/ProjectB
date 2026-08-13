@@ -1,0 +1,102 @@
+[
+ [
+  "프레임 예산을 없앤다 (최악의 날에 화면이 얼어붙는다)",
+  "const FRAME_BUDGET_USEC: int = 8000",
+  "const FRAME_BUDGET_USEC: int = 99999999"
+ ],
+ [
+  "프레임 예산을 1μs로 둔다 (넘기는 값이 일보다 비싸다)",
+  "\t\t\tif Time.get_ticks_usec() - budget >= FRAME_BUDGET_USEC:",
+  "\t\t\tif true:"
+ ],
+ [
+  "예산을 하루 끝에만 본다 (83경기 든 날이 통째로 한 프레임)",
+  "\t\tfor g in step[\"games_today\"]:\n\t\t\tsim.call(g)\n\t\t\t# ⚠ **경기 하나마다 예산을 본다.** 하루가 끝날 때만 보면 83경기가\n\t\t\t# 든 날에 그 하루가 통째로 한 프레임이 된다 — 여기가 제일 무거운 날이다\n\t\t\tif Time.get_ticks_usec() - budget >= FRAME_BUDGET_USEC:\n\t\t\t\tprogress.emit(out[\"day\"] - start, days)\n\t\t\t\tawait get_tree().process_frame\n\t\t\t\tframes_yielded += 1\n\t\t\t\tbudget = Time.get_ticks_usec()",
+  "\t\tfor g in step[\"games_today\"]:\n\t\t\tsim.call(g)"
+ ],
+ [
+  "프레임을 넘기고 예산을 안 되감는다 (한 번 넘긴 뒤 매 경기마다 넘긴다)",
+  "\t\t\t\tbudget = Time.get_ticks_usec()",
+  "\t\t\t\tpass"
+ ],
+ [
+  "경기를 안 돌린다",
+  "\t\t\tsim.call(g)",
+  "\t\t\tpass"
+ ],
+ [
+  "경기를 두 번 돌린다 (순위표에 승패가 두 번 들어간다)",
+  "\t\t\tsim.call(g)",
+  "\t\t\tsim.call(g)\n\t\t\tsim.call(g)"
+ ],
+ [
+  "정지를 지나쳐 계속 간다 (경기를 못 치른 채 넘어간다)",
+  "\t\tif step[\"day\"] == before:\n\t\t\t# 멈췄다 — 하루도 안 나아갔다.\n\t\t\t# 이유는 아래에서 다시 묻는다 — 여기서 붙잡아 둘 필요가 없다\n\t\t\tout = step\n\t\t\tbreak",
+  "\t\tif step[\"day\"] == before:\n\t\t\tout[\"day\"] = before + 1\n\t\t\tcontinue"
+ ],
+ [
+  "하루 더 간다",
+  "\twhile out[\"day\"] < target:",
+  "\twhile out[\"day\"] <= target:"
+ ],
+ [
+  "0일을 넣어도 하루 간다",
+  "\tvar target: int = start + days",
+  "\tvar target: int = start + maxi(days, 1)"
+ ],
+ [
+  "주 경계를 목표까지 센다 (안 산 날의 성장이 붙는다)",
+  "\tout[\"weeks_crossed\"] = DayEngine.week_boundaries_crossed(start, out[\"day\"])",
+  "\tout[\"weeks_crossed\"] = DayEngine.week_boundaries_crossed(start, target)"
+ ],
+ [
+  "주 경계를 안 센다",
+  "\tout[\"weeks_crossed\"] = DayEngine.week_boundaries_crossed(start, out[\"day\"])",
+  "\tout[\"weeks_crossed\"] = 0"
+ ],
+ [
+  "겹쳐 불러도 그냥 돈다 (같은 경기를 두 번 돌린다)",
+  "\tif _running:\n\t\trejected_runs += 1\n\t\treturn {}\n\t_running = true",
+  "\t_running = true"
+ ],
+ [
+  "거절을 안 센다 (원인을 못 찾는다)",
+  "\t\trejected_runs += 1",
+  "\t\tpass"
+ ],
+ [
+  "끝나고 잠금을 안 푼다 (다음 진행이 영영 안 된다)",
+  "\t_running = false\n\treturn out",
+  "\treturn out"
+ ],
+ [
+  "진행 표시를 끝에 안 채운다 (막대가 중간에서 멈춘다)",
+  "\tprogress.emit(out[\"day\"] - start, maxi(days, 0))\n\t_running = false",
+  "\t_running = false"
+ ],
+ [
+  "진행 표시가 총량을 넘는다",
+  "\t\t\t\tprogress.emit(out[\"day\"] - start, days)",
+  "\t\t\t\tprogress.emit(out[\"day\"] - start + 10, days)"
+ ],
+ [
+  "진행 표시가 되돌아간다 (막대가 튄다)",
+  "\t\t\t\tprogress.emit(out[\"day\"] - start, days)",
+  "\t\t\t\tprogress.emit(target - out[\"day\"], days)"
+ ],
+ [
+  "넘긴 프레임을 안 센다",
+  "\t\t\t\tframes_yielded += 1",
+  "\t\t\t\tpass"
+ ],
+ [
+  "부른 쪽 상태를 제자리에서 고친다 (호출부가 모르게 바뀐다)",
+  "\tvar out: Dictionary = state.duplicate(true)",
+  "\tvar out: Dictionary = state"
+ ],
+ [
+  "멈춘 이유를 안 싣는다",
+  "\tout[\"stopped_by\"] = DayEngine.stop_reason(out)",
+  "\tout[\"stopped_by\"] = null"
+ ]
+]
