@@ -1,0 +1,77 @@
+[
+ [
+  "주 슬롯과 보조 슬롯의 부하를 같게 둔다",
+  "const SLOT_FATIGUE_MULT: Array[float] = [1.0, 0.5, 0.5]",
+  "const SLOT_FATIGUE_MULT: Array[float] = [1.0, 1.0, 1.0]"
+ ],
+ [
+  "보조2 슬롯만 다르게 둔다",
+  "const SLOT_FATIGUE_MULT: Array[float] = [1.0, 0.5, 0.5]",
+  "const SLOT_FATIGUE_MULT: Array[float] = [1.0, 0.5, 1.0]"
+ ],
+ [
+  "주간 자동 회복을 없앤다 (한 번 지치면 못 돌아온다)",
+  "const WEEKLY_AUTO_RECOVERY: float = -5.0",
+  "const WEEKLY_AUTO_RECOVERY: float = 0.0"
+ ],
+ [
+  "자동 회복의 부호를 뒤집는다",
+  "const WEEKLY_AUTO_RECOVERY: float = -5.0",
+  "const WEEKLY_AUTO_RECOVERY: float = 5.0"
+ ],
+ [
+  "컨디션 회복이 피로와 무관해진다",
+  "\tvar cond: float = 1.0 if fatigue >= 80.0 else (3.0 if fatigue >= 60.0 else 5.0)",
+  "\tvar cond: float = 5.0"
+ ],
+ [
+  "컨디션 회복 구간을 뒤집는다",
+  "\tvar cond: float = 1.0 if fatigue >= 80.0 else (3.0 if fatigue >= 60.0 else 5.0)",
+  "\tvar cond: float = 5.0 if fatigue >= 80.0 else (3.0 if fatigue >= 60.0 else 1.0)"
+ ],
+ [
+  "피로 구간 승수를 훈련에 안 건다",
+  "\t\t\tfat += cost * fat_mult * zone",
+  "\t\t\tfat += cost * fat_mult"
+ ],
+ [
+  "회복 훈련에도 구간 승수를 건다",
+  "\t\t\tfat += cost * fat_mult\n\t\tcond -= cfg.get(\"condition_cost\", 0.0) * fat_mult",
+  "\t\t\tfat += cost * fat_mult * zone\n\t\tcond -= cfg.get(\"condition_cost\", 0.0) * fat_mult"
+ ],
+ [
+  "컨디션 소모에도 구간 승수를 건다",
+  "\t\tcond -= cfg.get(\"condition_cost\", 0.0) * fat_mult",
+  "\t\tcond -= cfg.get(\"condition_cost\", 0.0) * fat_mult * zone"
+ ],
+ [
+  "컨디션 소모에 슬롯 배수를 안 건다",
+  "\t\tcond -= cfg.get(\"condition_cost\", 0.0) * fat_mult",
+  "\t\tcond -= cfg.get(\"condition_cost\", 0.0)"
+ ],
+ [
+  "미리보기가 자기 식을 갖는다 (부호가 반대였던 결함)",
+  "\tvar load: Dictionary = plan_load(fatigue, plan, programs)",
+  "\tvar load: Dictionary = {\"fatigue_delta\": 7.0, \"condition_delta\": -1.0}"
+ ],
+ [
+  "미리보기가 범위를 안 자른다",
+  "\tvar next_fatigue: float = clampf(fatigue + load[\"fatigue_delta\"], 0.0, 100.0)",
+  "\tvar next_fatigue: float = fatigue + load[\"fatigue_delta\"]"
+ ],
+ [
+  "미리보기 컨디션이 범위를 안 자른다",
+  "\t\t\"projected_condition\": clampf(condition + load[\"condition_delta\"], 0.0, 100.0),",
+  "\t\t\"projected_condition\": condition + load[\"condition_delta\"],"
+ ],
+ [
+  "다음 구간 경고를 지금 구간으로 둔다",
+  "\t\t\"next_zone_mult\": Growth.fatigue_zone_mult(next_fatigue),",
+  "\t\t\"next_zone_mult\": Growth.fatigue_zone_mult(fatigue),"
+ ],
+ [
+  "모르는 프로그램이 엉뚱한 것으로 대체된다",
+  "\tfor c in programs:\n\t\tif c.get(\"id\", \"\") == id:\n\t\t\treturn c\n\treturn {}",
+  "\tfor c in programs:\n\t\tif c.get(\"id\", \"\") == id:\n\t\t\treturn c\n\treturn programs[0] if not programs.is_empty() else {}"
+ ]
+]
