@@ -24,7 +24,10 @@ static func apply_result(
 ) -> Array:
 	var winner: String = result.get("winner_id", "")
 	var loser = result.get("loser_id", null)
-	var is_draw: bool = loser == null
+	# ⚠ **"패자 없음"의 표기가 둘이다.** 옛 세이브는 `null`, 이주한 코드는
+	# 빈 문자열을 쓴다. 한쪽만 보면 무승부가 조용히 홈팀 승리로 기록된다 —
+	# 실제로 `MatchReport`를 이을 때 여기서 걸렸다
+	var is_draw: bool = loser == null or String(loser).is_empty()
 
 	var out: Array = []
 	for s in standings:

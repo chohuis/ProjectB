@@ -78,13 +78,17 @@ func test_win_and_loss_are_recorded() -> void:
 
 
 func test_draw_counts_neither_win_nor_loss() -> void:
-	# ⚠ `loser_id`가 없으면 무승부다. 이걸 놓치면 무승부가 홈팀 승리가 된다
-	var st: Array = [_standing("A"), _standing("B")]
-	var out: Array = Standings.apply_result(st, _result(4, 4, "A", null), "A", "B")
-	for s in out:
-		assert_int(s["wins"]).is_equal(0)
-		assert_int(s["losses"]).is_equal(0)
-		assert_int(s["draws"]).is_equal(1)
+	# ⚠ `loser_id`가 없으면 무승부다. 이걸 놓치면 무승부가 홈팀 승리가 된다.
+	#
+	# **"없음"의 표기가 둘이다** — 옛 세이브는 null, 이주한 코드는 빈 문자열이다.
+	# 한쪽만 보면 절반이 조용히 승리로 기록된다
+	for absent in [null, ""]:
+		var st: Array = [_standing("A"), _standing("B")]
+		var out: Array = Standings.apply_result(st, _result(4, 4, "A", absent), "A", "B")
+		for s in out:
+			assert_int(s["wins"]).is_equal(0)
+			assert_int(s["losses"]).is_equal(0)
+			assert_int(s["draws"]).is_equal(1)
 
 
 func test_win_pct_excludes_draws() -> void:
