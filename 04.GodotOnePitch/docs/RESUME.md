@@ -2,14 +2,14 @@
 
 **이 문서가 진행 현황의 정본이다.** 코드 규칙은 `04.GodotOnePitch/CLAUDE.md`.
 
-마지막 갱신: 2026-08-13 · 커밋 `f2a88b976`
+마지막 갱신: 2026-08-13 · 커밋 `cb83364c4`
 
 ---
 
 ## 한 줄
 
 `02.SvelteElectron`(Svelte + Electron + Rust)에서 **Godot 4.6 · GDScript 단독**으로
-이주 중. P0(게이트)·P1(골격)·**M1(기반 자료구조)** 끝났다. 다음은 **M2(경기 시뮬)**.
+이주 중. P0·P1·**M1(기반 자료구조)·M2(경기 시뮬)** 끝났다. 다음은 **M3(로스터·로테이션)**.
 
 ---
 
@@ -42,7 +42,7 @@ Rust 코어 24k줄을 gdext로 살리는 안이 처음 권고였으나, 사용�
 ## 끝난 것
 
 ```
-2aa67b6ec  P0 게이트     시즌 시뮬 0.659초 (기준 2초, 여유 3배)
+2aa67b6ec  P0 게이트     시즌 0.659초 — ⚠ 뼈대로 잰 값이라 뜻이 없었다
 3c82555eb  저장          열 배열+zstd — 220배 · 18MB → 1.1MB
 bca71f885  GdUnit4       Godot 4.6 호환 확인 (웹 검색으로 검증)
 54903c0ce  시드 RNG      해시 기반 — 호출 순서와 무관
@@ -58,30 +58,67 @@ d618952b8  M1 투구 결과    match_result — 네 군데 표를 하나로 (변
 62b388427  M1 스탯 순위    leaderboard — 비율과 누적은 자격이 다르다 (변이 11건)
 34a8c7396  M1 통산 기록    career_summary — 합은 평균이 아니다 (변이 18건)
 f2a88b976  M1 야구계 소식  digest — 네 갈래를 월 1통으로 (변이 18건)
+2909a63cf  M2 주루        baserunning + Tuning — 계수를 두 모델이 나눈다 (27)
+6650c69b4  M2 타구·수비    batted_ball — 코드 좁히기는 MatchResult 하나 (23)
+e2eb679c2  M2 투구 품질    pitch_outcome — 항 열다섯, 하나가 지배하면 안 된다 (53)
+07068c864  M2 투수 교체    pitcher_switch — 예산 식은 하나다 (25)
+0669909c2  M2 경기 진행    match_state + pitch_step — 조각을 엮는다 (45)
+5828624fc  M2 결과 어댑터  match_report — 계약 검사가 무승부 어긋남을 잡았다 (28)
+28f3dd992  M2 계측        game_loop — 진짜 엔진으로 재니 게이트 27배 초과
+cb83364c4  M2 성능        제자리 수정 — 게이트 통과, 게이트를 다시 잡았다
 ```
 
-**검사 190개 통과.** 미검증 위험(성능·저장) 둘 다 해소됐다.
-**M1 기반 자료구조 끝났다** — `sim/`에 7개 모듈.
+**검사 414개 통과 · 변이 214건 전부 검출 · 게이트 둘 다 통과.**
+**M1·M2 끝났다** — `sim/`에 14개 모듈.
+
+## 성능 게이트 (실측으로 다시 잡음)
+
+```
+최악의 주 (98경기)      0.84초  기준 1.0초   ← 사용자가 실제로 기다리는 시간
+국내 한 시즌 (2,612경기) 22.4초  기준 25초    ← 시즌 통째 시뮬 + 회귀 감지
+```
+
+⚠ **P0의 "2,124경기 2초"는 두 군데가 틀렸다.** 경기 수를 적게 잡았고
+(국내만 2,612경기), **게임은 시즌을 통째로 안 돌린다** — 주 단위로 진행한다.
+
+해외 4개 리그(약 1,845경기)는 `radiusGate`가 순위표 드리프트로 돌리므로
+안 센다. 주인공이 진출하면 그때 풀 시뮬로 올라간다.
+
+⚠ **여유가 얇다** — 주 1.19배 · 시즌 1.12배. P0 때는 3배였다.
+**M3·M4에서 뭘 얹을 때마다 `bench:game`을 돌린다.** 한참 뒤에 27배를
+발견하는 일이 없게.
+
+⚠ **상태는 제자리에서 고친다.** 투구마다 복사하면 그것만으로 2.4배 느리다
+(54.3 → 22.4초). 복사본이 필요하면 **호출부가 직접 복사한다.**
+제자리로 바꿀 때 "이전 값" 비교가 조용히 무너지므로 스칼라를 먼저 붙잡는다.
 
 ---
 
 ## 남은 것
 
-### 지금: M2 경기 시뮬 (다음 차례)
+### 지금: M3 로스터·로테이션 (다음 차례)
 
-P0에서 성능을 재느라 만든 뼈대가 `sim/match_sim.gd`에 있다. 그건 **속도만
-본 것**이라 야구 규칙이 성기다 — 원본 `match_engine.rs`를 기준으로 다시 짠다.
+원본: `02.SvelteElectron/apps/ui/src/shared/utils/rosterEngine.ts`
+검사: `rotationIndex.test.ts` — **인자 자리가 밀린 결함**이 여기서 나왔다.
+소스 정규식으로는 못 잡았고 함수를 직접 부른 검사가 잡았다.
 
-원본: `02.SvelteElectron/packages/engine-native/src/match_engine.rs`
-검사: `pitcherExitRule` · `pitcherRatio` · `pitcherPayload` · `fieldersPayload` 등
+M2가 남긴 붙일 자리:
+- `PitcherSwitch`가 큐(`pitchers`·`max_outs`·`lines`)를 이미 다룬다 —
+  로스터가 오면 `GameLoop`에 교체를 끼운다
+- `GameLoop.current_pitcher`가 지금은 한 팀에 투수 하나다
 
-M1이 깔아둔 것을 쓴다 — 결과 코드·문구는 `MatchResult`, 경기 뒤 기록 누적은
-`SeasonStats`, 순위 반영은 `Standings`.
+### M2가 남긴 숙제
+
+- **프레임 쪼개기** — 최악의 주 0.84초를 "멈춤"이 아니라 진행 표시로 만든다.
+  경기 사이에 프레임을 넘기면 된다. **부르는 쪽(M6 주 진행 · M7 화면)이
+  생겨야 붙일 수 있다** — 소비자 없는 API를 미리 만들지 않았다
+- 시즌 통째로 도는 자리(오프시즌·건너뛰기)는 22초다. 진행 표시가 필요하다
+- `sim/match_sim.gd`는 P0 뼈대다. M3에서 지운다 — 지금은 `bench:season`이
+  아직 쓴다
 
 ### 그 다음 (아래에서 위로)
 
 ```
-M3  로스터·로테이션 (rosterEngine) 이번 세션 결함이 여기 — rotationIndex 검사 참고
 M4  성장·훈련
 M5  드래프트·수상
 M6  시즌 진행·오프시즌
@@ -106,39 +143,31 @@ P6  Steam 빌드·패키징
 ②를 건너뛰지 않는다. 이 저장소에서 "통과하는데 아무것도 안 보는 검사"가
 실제로 여러 번 나왔다.
 
-### 변이 검증 스크립트
+### 변이 검증
 
-`scratchpad/mutate.cjs`가 변이 목록(JSON)을 받아 하나씩 넣고 돌린 뒤 되돌린다:
+도구와 목록 17개가 **`tools/mutation/`에 있다.** 쓰는 법과 도구가 거짓말한
+세 가지는 거기 README에.
 
 ```bash
-node mutate.cjs sim/<모듈>.gd test/<모듈>_test.gd mut_<모듈>.json
-# JSON: [["설명", "원래 문자열", "바꿀 문자열"], ...]
+node tools/mutation/mutate.cjs sim/<모듈>.gd test/<모듈>_test.gd tools/mutation/mut_<모듈>.json
 ```
 
-⚠ **세 가지를 겪고 고쳤다. 셋 다 판정을 가짜로 만들었다:**
+**모듈을 고치면 목록도 같이 고친다.** 안 붙은 변이가 있으면 크게 알리고
+종료 코드 1을 낸다 — CRLF 때문에 28건 중 20건이 조용히 건너뛰어졌는데
+요약은 "8/8 검출"이던 적이 있다.
 
-- **Godot이 ANSI 색을 섞어 낸다.** 안 벗기면 요약 정규식이 안 맞아
-  "파싱 실패"가 전부 "잡힘"으로 세어진다 — 첫 실행이 가짜 7/7이었다
-- **무한 루프를 만드는 변이가 있다** (순환 참조 가드 제거). 그때 검사는
-  실패하는 게 아니라 **안 끝난다.** 제한 시간 90초를 두고 멈춤도 검출로 센다
-- **쓰자마자 돌리면 Godot이 옛 내용을 읽는 때가 있다.** 같은 변이가 실행마다
-  잡히기도 안 잡히기도 했다 — 손으로 넣고 4번 돌리면 4번 다 잡히므로
-  Godot이 아니라 스크립트 쪽이었다. 쓴 뒤 mtime을 밀고 내용을 되읽어
-  확인하며, "못 잡음"은 검사를 고치게 만드는 방향이라 한 번 더 돌려 굳힌다
+### 변이가 안 잡힌 자리 (검사가 부실했던 곳)
 
-세 번째를 고친 뒤 **M1·M2 변이 106건을 전부 다시 돌렸다.** 흔들리는 도구로
-얻은 결과는 못 믿는다.
+M1·M2에서 **16건이 처음에 안 잡혔다.** 거의 전부 같은 형태다 —
+**검사 표본이 그 분기를 안 건드렸다:**
 
-### M1에서 변이가 잡아낸 것 (검사가 부실했던 자리)
-
-변이 76건 중 **4건이 처음에 안 잡혔다.** 전부 검사 표본이 부실해서였다:
-
-| 못 잡은 변이 | 왜 | 어떻게 고쳤나 |
-|---|---|---|
-| 결승을 목록 첫 칸으로 찾기 | fixture에서 결승이 마침 첫 칸 | 목록을 뒤집는 검사 |
-| 최저 ERA를 최고 ERA로 | 이닝 문턱 넘는 시즌이 하나뿐 | 후보 둘인 검사 |
-| 내 리그를 다른 무대에 싣기 | 표본의 내 리그가 `league_state`에 없음 | 대학 표본 |
-| 권역 순위를 득점으로 안 가르기 | 표본에 승률 동률이 없음 | 6승6패 vs 4승4패 |
+| 형태 | 예 |
+|---|---|
+| 능력치를 묶어서 봄 | 선구안·눈을 같이 움직여서 한 항을 지워도 다른 항이 가림 |
+| 문턱보다 한참 아래·위 표본 | 3루 도루 문턱 88인데 표본이 80이라 문턱을 없애도 결과가 같음 |
+| 이미 다른 항으로 문턱을 넘음 | 후반 득점권 항을 빼도 이미 강판 판정이 남 |
+| 우연히 맞는 fixture | 결승이 마침 목록 첫 칸이라 "깊이로 찾는가"를 안 봄 |
+| 동등 변이 | 고쳐도 동작이 진짜 같음 — 변이 쪽을 바꿈 (3건) |
 
 **"검사가 통과한다"와 "검사가 그걸 본다"는 다르다.**
 
@@ -171,8 +200,11 @@ $G --headless -s addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a tes
 
 # 계측·벤치
 $G --headless --script tools/run.gd -- list
-$G --headless --script tools/run.gd -- bench:season
+$G --headless --script tools/run.gd -- bench:game     # 성능 게이트 — 뭘 얹을 때마다
 $G --headless --script tools/run.gd -- bench:save
+
+# 변이 검증 (모듈 하나)
+node tools/mutation/mutate.cjs sim/bracket.gd test/bracket_test.gd tools/mutation/mut_bracket.json
 
 # 화면 스크린샷 (창을 띄운다 — 헤드리스로는 못 찍는다)
 $G --script tools/shot.gd -- status
@@ -244,12 +276,15 @@ $G --headless --import
   docs/RESUME.md     이 문서 — 진행 현황 정본
   docs/shots/        화면 스크린샷
   fonts/             Pretendard + OFL.txt
-  sim/               npc_store · rng · match_sim (P0 뼈대)
+  sim/               npc_store · rng · match_sim (P0 뼈대 — M3에서 지운다)
                      standings · season_stats · match_result · bracket
-                     leaderboard · career_summary · digest       (M1)
+                     leaderboard · career_summary · digest        (M1)
+                     tuning · baserunning · batted_ball · pitch_outcome
+                     pitcher_switch · match_state · pitch_step
+                     game_loop · match_report                     (M2)
   ui/                theme · fixtures · parts/*.tscn · screens/*.tscn
-  test/              GdUnit4 검사
-  tools/             run.gd(계측) · shot.gd(스크린샷)
-  bench/             fixtures · save_bench · rng_probe
+  test/              GdUnit4 검사 · support/scripted_rng.gd
+  tools/             run.gd(계측) · shot.gd(스크린샷) · mutation/(변이 검증)
+  bench/             fixtures · game_bench · save_bench · rng_probe
   addons/gdUnit4/    6.2.1
 ```
