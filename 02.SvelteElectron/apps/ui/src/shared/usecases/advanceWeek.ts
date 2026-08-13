@@ -2204,12 +2204,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             const cond = gCurrent.protagonist.condition;
 
             if (isInjured || cond < 35) {
-              const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              const sim = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              const result = sim.result;
               if (game.isFriendly) {
                 const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-                seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+                seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
               } else {
-                seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+                seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
                 await applyPostseasonResult(game.id, result);
               }
               accResults.push(result);
@@ -2256,7 +2257,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               });
               npcResult2 = sim2.result; nextHomeRot2 = sim2.nextHomeRotIdx; nextAwayRot2 = sim2.nextAwayRotIdx; pitcherConds2 = sim2.pitcherConditions;
             } else {
-              npcResult2 = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              { const _s = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              npcResult2 = _s.result; nextHomeRot2 = _s.nextHomeRotIdx; nextAwayRot2 = _s.nextAwayRotIdx; pitcherConds2 = _s.pitcherConditions; }
             }
             if (game.isFriendly) {
               seasonStore.applyFriendlyResult(game.id, npcResult2, leagueId2, game.homeTeamId, game.awayTeamId, nextHomeRot2, nextAwayRot2, null, pitcherConds2);
@@ -2310,7 +2312,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             nextAwayRotIdx = sim.nextAwayRotIdx;
             pitcherConds   = sim.pitcherConditions;
           } else {
-            npcResult = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+            { const _s = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              npcResult = _s.result; nextHomeRotIdx = _s.nextHomeRotIdx; nextAwayRotIdx = _s.nextAwayRotIdx; pitcherConds = _s.pitcherConditions; }
           }
 
           if (game.isFriendly) {
@@ -2445,24 +2448,26 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         if (eligibilityBlocked) {
           // 학사 경고 → 자동 시뮬
           gameStore.clearEligibilityBlock();
-          const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          const sim = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              const result = sim.result;
           if (game.isFriendly) {
             const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
           } else {
-            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
             await applyPostseasonResult(game.id, result);
           }
           accResults.push(result);
           accLogs.push("학사 경고로 인해 경기 출전 불가");
         } else if (isInjured) {
           // 부상 중 → 자동 시뮬 + 메시지
-          const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          const sim = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              const result = sim.result;
           if (game.isFriendly) {
             const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
           } else {
-            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
             await applyPostseasonResult(game.id, result);
           }
           accResults.push(result);
@@ -2475,12 +2480,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           });
         } else if (cond < 35) {
           // 컨디션 극히 낮음 → 자동 회피 + 메시지
-          const result = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          const sim = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              const result = sim.result;
           if (game.isFriendly) {
             const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, (lSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0) + 1, (lSnap?.teamRotationIndex?.[game.awayTeamId] ?? 0) + 1, null);
+            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
           } else {
-            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId);
+            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
             await applyPostseasonResult(game.id, result);
           }
           accResults.push(result);
@@ -2543,7 +2549,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           nextAwayRotIdx = sim.nextAwayRotIdx;
           pitcherConds   = sim.pitcherConditions;
         } else {
-          npcResult = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+          { const _s = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
+              npcResult = _s.result; nextHomeRotIdx = _s.nextHomeRotIdx; nextAwayRotIdx = _s.nextAwayRotIdx; pitcherConds = _s.pitcherConditions; }
         }
 
         if (game.isFriendly) {

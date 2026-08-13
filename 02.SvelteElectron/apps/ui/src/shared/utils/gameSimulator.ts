@@ -198,8 +198,19 @@ export async function simulateGame(
 
   const entityMap = new Map(entities.map((e) => [e.id, e]));
 
-  const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries, rotationSize, conditions, week, homeRotIdx, leagueId, homeHandlePersonnel);
-  const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries, rotationSize, conditions, week, awayRotIdx, leagueId, awayHandlePersonnel);
+  // ⚠ **`rotIdx`와 `teamGameCount`는 다른 것이다.** 예전엔 위치 인자라
+  // `homeRotIdx`가 `teamGameCount` 자리로 들어갔고, 그 안에서 버려졌다 —
+  // 로테이션이 한 번도 안 돌아 매 경기 1번 투수가 선발이었다
+  const homeRoster = buildTeamRoster({
+    teamId: homeTeamId, entities, npcInjuries, maxRotation: rotationSize,
+    conditions, currentWeek: week, rotIdx: homeRotIdx, leagueId,
+    rotationSense: homeHandlePersonnel,
+  });
+  const awayRoster = buildTeamRoster({
+    teamId: awayTeamId, entities, npcInjuries, maxRotation: rotationSize,
+    conditions, currentWeek: week, rotIdx: awayRotIdx, leagueId,
+    rotationSense: awayHandlePersonnel,
+  });
 
   const toSimPitchers = (ids: string[]) => ids.map(id => {
     const factor = tradeAdaptationPenalty && id === tradeAdaptationPenalty.playerId

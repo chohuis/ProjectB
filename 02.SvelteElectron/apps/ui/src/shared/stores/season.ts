@@ -239,7 +239,20 @@ function createSeasonStore() {
       update((s) => ({ ...s, currentDate: date }));
     },
 
-    applyMatchResult(scheduleId: string, result: MatchResult, leagueId?: string) {
+    /**
+     * ⚠ `rot`을 안 넘기면 **로테이션이 안 돌고 피로도 안 쌓인다.**
+     * 넘기는 게 기본이고, 생략은 로테이션 개념이 없는 경기(폴백 시뮬)뿐이다.
+     */
+    applyMatchResult(
+      scheduleId: string,
+      result: MatchResult,
+      leagueId?: string,
+      rot?: {
+        nextHomeRotIdx: number;
+        nextAwayRotIdx: number;
+        pitcherConditions?: Record<string, PlayerCondition>;
+      },
+    ) {
       update((s) => {
         const entry = s.schedule.find((e) => e.id === scheduleId);
         const homeTeamId = entry?.homeTeamId ?? result.winnerId;
@@ -259,6 +272,18 @@ function createSeasonStore() {
             ...cur,
             standings: updateStandings(cur.standings, result, homeTeamId, awayTeamId),
             stats:     accumulateStats(cur.stats, result.playerLines),
+            // ⚠ **로테이션·피로를 여기서도 얹는다.** 예전엔 이 갈래만 빠져 있어서
+            // 주인공 팀 공식경기는 로테이션이 안 돌고 피로도 안 쌓였다.
+            // `applyFriendlyResult`·`applyProtagonistGroupNpcResult`는 둘 다 한다 —
+            // 세 경로가 같은 상태를 다르게 다루면 반드시 어긋난다
+            ...(rot ? {
+              teamRotationIndex: {
+                ...cur.teamRotationIndex,
+                [homeTeamId]: rot.nextHomeRotIdx,
+                [awayTeamId]: rot.nextAwayRotIdx,
+              },
+              playerConditions: { ...cur.playerConditions, ...(rot.pitcherConditions ?? {}) },
+            } : {}),
           },
         };
         return { ...s, schedule, standings, stats, leagueState };

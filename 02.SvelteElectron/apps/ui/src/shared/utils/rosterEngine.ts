@@ -494,19 +494,58 @@ function sortBattingOrder(ids: string[], entities: EntityRow[]): string[] {
 }
 
 // ── 팀 전체 로스터 한 번에 생성 ─────────────────────────────
-export function buildTeamRoster(
-  teamId: string,
-  entities: EntityRow[],
-  npcInjuries?: Record<string, NpcInjuryEntry>,
-  maxRotation = 5,
-  conditions?: Record<string, PlayerCondition>,
-  currentWeek = 0,
-  teamGameCount = 0,
-  leagueId = "",
-  rotationSense = 50,
-  npcRetired?: string[],
-): TeamRoster {
-  const rotation = getTeamRotation(teamId, entities, npcInjuries, maxRotation, conditions, currentWeek, teamGameCount, leagueId, npcRetired);
+/**
+ * ⚠ **인자를 객체로 받는다.** 예전엔 위치 인자 10개였고, 호출부가
+ * `rotIdx`를 **`teamGameCount` 자리에** 넣고 있었다:
+ *
+ *   정의  (..., currentWeek, teamGameCount, leagueId, rotationSense, ...)
+ *   호출  (..., week,        homeRotIdx,    leagueId, homeHandlePersonnel)
+ *
+ * 타입이 둘 다 number라 조용히 통과했고, `getTeamRotation`은 그 값을
+ * `void gameCount;`로 버렸다. **로테이션 인덱스는 저장되고 갱신되고
+ * 다음 경기로 넘어갔지만 쓰이는 자리가 없었다** — 그래서 배선을 따라가도
+ * 전부 정상으로 보였다.
+ *
+ * 결과: 매 경기 `rotation[0]`(OVR 1위)이 선발로 나갔다. 실측에서 한 투수가
+ * 시즌 **186이닝 · 36등판**(팀 공식경기 거의 전부)을 던졌고, 나머지 투수는
+ * 연습경기에만 나와 리그 이닝 중앙이 3.3이었다.
+ */
+export interface BuildRosterParams {
+  teamId: string;
+  entities: EntityRow[];
+  npcInjuries?: Record<string, NpcInjuryEntry>;
+  maxRotation?: number;
+  conditions?: Record<string, PlayerCondition>;
+  currentWeek?: number;
+  /** 팀이 지금까지 치른 경기 수 (휴식 판정용) */
+  teamGameCount?: number;
+  /** **이번 경기 선발이 로테이션 몇 번째인가.** 경기마다 +1 */
+  rotIdx?: number;
+  leagueId?: string;
+  rotationSense?: number;
+  npcRetired?: string[];
+}
+
+export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
+  const {
+    teamId, entities, npcInjuries, maxRotation = 5, conditions,
+    currentWeek = 0, teamGameCount = 0, rotIdx = 0,
+    leagueId = "", rotationSense = 50, npcRetired,
+  } = p;
+
+  const base = getTeamRotation(
+    teamId, entities, npcInjuries, maxRotation, conditions, currentWeek,
+    teamGameCount, leagueId, npcRetired,
+  );
+
+  // ⚠ **여기가 인덱스를 실제로 쓰는 유일한 자리다.** `getTeamRotation`은
+  // OVR 순으로 고정된 명단을 돌려준다(그건 의도다 — 매주 흔들리면 표본이
+  // 얇아져 ERA가 능력치를 못 따라간다). 그 명단을 **경기마다 회전시켜야**
+  // 선발이 돌아간다. 회전을 안 하면 1번이 매 경기 나간다.
+  const rotation = base.length > 0
+    ? [...base.slice(rotIdx % base.length), ...base.slice(0, rotIdx % base.length)]
+    : base;
+
   const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, rotationSense, npcRetired);
   const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired);
   return { rotation, bullpen, closer, lineup };
