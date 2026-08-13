@@ -144,6 +144,73 @@ static func park_quality_modifier(park: String) -> float:
 			return 0.0
 
 
+# ── 투수 교체 ──────────────────────────────────────────────────────
+#
+# ⚠ **한 엔진에 교체 규칙이 둘이면 반드시 어긋난다.** 원본에서 주인공만
+# 스태미나 문턱(35)으로 내려왔다. 그 상수 주석은 "NPC와 같은 기준"이라
+# 적혀 있었지만 NPC는 스태미나 문턱을 아예 안 쓴다 — 아웃 예산과 투구수만
+# 본다. 35라는 숫자는 NPC의 어떤 값과도 대응하지 않았다.
+#
+#   NPC 선발  12 + (스태미나/99)×15 아웃  → 스태미나 60이면 7이닝
+#   주인공    스태미나 ≤ 35               → 실측 4.5이닝
+#
+# 이닝이 짧으니 시즌 이닝이 32~44에 머물렀고 탈삼진왕·방어율왕은 210시즌
+# 0건이었다.
+
+## 선발 아웃 예산의 바닥과 기울기. **주인공과 NPC가 같이 쓴다**
+const STARTER_OUTS_BASE: float = 12.0
+const STARTER_OUTS_STAMINA_SCALE: float = 15.0
+## 경기마다 뽑는 흔들림 폭(±). **한 경기 안에서는 안 흔들린다**
+const STARTER_OUTS_WOBBLE: float = 6.0
+## 불펜은 한두 이닝이다
+const RELIEVER_OUTS_BASE: int = 3
+const RELIEVER_OUTS_SPAN: float = 4.0
+
+const NPC_STARTER_STAMINA_LIMIT: float = 35.0
+const NPC_STARTER_PITCH_COUNT_SOFT: float = 65.0
+
+## 주인공이 교체를 고민하기 시작하는 투구수.
+##
+## ⚠ NPC 선발은 65구다. 주인공만 90이라 **혼자 지친 채로 9이닝을 갈아
+## 넣는다** — 주인공과 리그가 다른 값을 요구하던 원인의 하나였다
+const PROTAGONIST_PITCH_COUNT_SOFT: float = 90.0
+## 리그를 모를 때 쓰는 기본 상한
+const PROTAGONIST_PITCH_COUNT_HARD: float = 120.0
+
+## 주인공이 마운드를 내려가는 **비상** 스태미나 하한.
+##
+## ⚠ **이건 정상 교체 사유가 아니다.** 예전엔 35였고 그게 정상 경로였다 —
+## 부상·급락으로 예산을 채우기 전에 무너지는 경우만 남긴다
+const PROTAGONIST_STAMINA_EMERGENCY: float = 15.0
+
+## 구원 투수가 들어오는 스태미나 상한.
+##
+## ⚠ **100으로 리셋하면 교체하는 팀이 압도적으로 유리해진다.** 실측(같은
+## 능력치·타선·수비): 주인공 완투 ERA 3.83 vs 투수진 3명 교체 ERA 1.65.
+## 품질 벌점이 (50 − 스태미나) × 0.18이라 그대로 차이가 된다.
+## 주인공이 82에서 시작하므로 구원도 같은 기준으로 들어온다
+const RELIEF_START_STAMINA: float = 82.0
+
+# 마운드 방문
+const MOUND_VISIT_MENTAL_RECOVERY: float = 8.0
+const MOUND_VISIT_STAMINA_RECOVERY: float = 3.0
+
+
+## 경기당 투구수 상한 — 리그별.
+##
+## 고교만 105구다. 성장기 보호 성격이고, 단판 넉아웃 전국대회에서 "에이스를
+## 아껴 쓸까 밀어붙일까" 딜레마를 만드는 장치이기도 하다
+static func league_pitch_limit(league_id: String) -> float:
+	return 105.0 if league_id == "LEAGUE_HIGHSCHOOL" else 120.0
+
+
+## 소프트 캡도 상한에 비례해 당긴다.
+##
+## ⚠ 105구 리그에서 90구 소프트캡은 여유가 15구뿐이라 사실상 하드캡과 같아진다
+static func league_pitch_soft(league_id: String) -> float:
+	return league_pitch_limit(league_id) * 0.75
+
+
 # ── 병살 ───────────────────────────────────────────────────────────
 
 const DOUBLE_PLAY_BASE_PROB: float = 0.22
