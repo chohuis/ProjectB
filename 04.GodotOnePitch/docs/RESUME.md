@@ -2,14 +2,14 @@
 
 **이 문서가 진행 현황의 정본이다.** 코드 규칙은 `04.GodotOnePitch/CLAUDE.md`.
 
-마지막 갱신: 2026-08-13 · 커밋 `92f2782be`
+마지막 갱신: 2026-08-13 · 커밋 `f2a88b976`
 
 ---
 
 ## 한 줄
 
 `02.SvelteElectron`(Svelte + Electron + Rust)에서 **Godot 4.6 · GDScript 단독**으로
-이주 중. P0(게이트)·P1(골격) 끝났고 지금은 **M1(기반 자료구조)** 이관 중.
+이주 중. P0(게이트)·P1(골격)·**M1(기반 자료구조)** 끝났다. 다음은 **M2(경기 시뮬)**.
 
 ---
 
@@ -51,30 +51,36 @@ bca71f885  GdUnit4       Godot 4.6 호환 확인 (웹 검색으로 검증)
 2d41218b6  폰트          Pretendard 임베드
 94548dac6  씬 전환        .tscn 방식
 a8ac7a6c0  문서          개발 대상을 04로 · 02는 동결
-92f2782be  M1 순위표      검사 먼저 → 로직 나중 (변이 5건)
+92f2782be  M1 순위표      standings — 승패·연승·최근10 (변이 5건)
+92afd43aa  M1 시즌 누적    season_stats — 타석은 누적이 아니라 파생 (변이 7건)
+d618952b8  M1 투구 결과    match_result — 네 군데 표를 하나로 (변이 9건)
+6a58bfd5e  M1 대진        bracket — 순서는 이름이 아니라 깊이 (변이 8건)
+62b388427  M1 스탯 순위    leaderboard — 비율과 누적은 자격이 다르다 (변이 11건)
+34a8c7396  M1 통산 기록    career_summary — 합은 평균이 아니다 (변이 18건)
+f2a88b976  M1 야구계 소식  digest — 네 갈래를 월 1통으로 (변이 18건)
 ```
 
-**검사 50개 통과.** 미검증 위험(성능·저장) 둘 다 해소됐다.
+**검사 190개 통과.** 미검증 위험(성능·저장) 둘 다 해소됐다.
+**M1 기반 자료구조 끝났다** — `sim/`에 7개 모듈.
 
 ---
 
 ## 남은 것
 
-### 지금: M1 기반 자료구조 (진행 중)
+### 지금: M2 경기 시뮬 (다음 차례)
 
-`sim/standings.gd` 끝났다. 남은 것:
+P0에서 성능을 재느라 만든 뼈대가 `sim/match_sim.gd`에 있다. 그건 **속도만
+본 것**이라 야구 규칙이 성기다 — 원본 `match_engine.rs`를 기준으로 다시 짠다.
 
-- `matchResult` — 경기 결과 자료구조
-- `bracket` — 토너먼트 대진
-- `accumulateStats` — 선수 시즌 누적 (원본 `season-helpers.ts`에 있음)
-- `leaderboard` · `careerSummary` · `digest`
+원본: `02.SvelteElectron/packages/engine-native/src/match_engine.rs`
+검사: `pitcherExitRule` · `pitcherRatio` · `pitcherPayload` · `fieldersPayload` 등
 
-원본: `02.SvelteElectron/apps/ui/src/shared/utils/`
+M1이 깔아둔 것을 쓴다 — 결과 코드·문구는 `MatchResult`, 경기 뒤 기록 누적은
+`SeasonStats`, 순위 반영은 `Standings`.
 
 ### 그 다음 (아래에서 위로)
 
 ```
-M2  경기 시뮬 (match_engine)      P0에서 뼈대는 이미 있다 (sim/match_sim.gd)
 M3  로스터·로테이션 (rosterEngine) 이번 세션 결함이 여기 — rotationIndex 검사 참고
 M4  성장·훈련
 M5  드래프트·수상
@@ -85,7 +91,7 @@ P6  Steam 빌드·패키징
 
 ---
 
-## 작업 리듬 (M1에서 확인됨)
+## 작업 리듬 (M1 7모듈에서 확인됨)
 
 **모듈 하나마다:**
 
@@ -99,6 +105,35 @@ P6  Steam 빌드·패키징
 
 ②를 건너뛰지 않는다. 이 저장소에서 "통과하는데 아무것도 안 보는 검사"가
 실제로 여러 번 나왔다.
+
+### 변이 검증 스크립트
+
+`scratchpad/mutate.cjs`가 변이 목록(JSON)을 받아 하나씩 넣고 돌린 뒤 되돌린다:
+
+```bash
+node mutate.cjs sim/<모듈>.gd test/<모듈>_test.gd mut_<모듈>.json
+# JSON: [["설명", "원래 문자열", "바꿀 문자열"], ...]
+```
+
+⚠ **두 가지를 겪고 고쳤다:**
+
+- **Godot이 ANSI 색을 섞어 낸다.** 안 벗기면 요약 정규식이 안 맞아
+  "파싱 실패"가 전부 "잡힘"으로 세어진다 — 첫 실행이 가짜 7/7이었다
+- **무한 루프를 만드는 변이가 있다** (순환 참조 가드 제거). 그때 검사는
+  실패하는 게 아니라 **안 끝난다.** 제한 시간 90초를 두고 멈춤도 검출로 센다
+
+### M1에서 변이가 잡아낸 것 (검사가 부실했던 자리)
+
+변이 76건 중 **4건이 처음에 안 잡혔다.** 전부 검사 표본이 부실해서였다:
+
+| 못 잡은 변이 | 왜 | 어떻게 고쳤나 |
+|---|---|---|
+| 결승을 목록 첫 칸으로 찾기 | fixture에서 결승이 마침 첫 칸 | 목록을 뒤집는 검사 |
+| 최저 ERA를 최고 ERA로 | 이닝 문턱 넘는 시즌이 하나뿐 | 후보 둘인 검사 |
+| 내 리그를 다른 무대에 싣기 | 표본의 내 리그가 `league_state`에 없음 | 대학 표본 |
+| 권역 순위를 득점으로 안 가르기 | 표본에 승률 동률이 없음 | 6승6패 vs 4승4패 |
+
+**"검사가 통과한다"와 "검사가 그걸 본다"는 다르다.**
 
 ---
 
@@ -202,7 +237,9 @@ $G --headless --import
   docs/RESUME.md     이 문서 — 진행 현황 정본
   docs/shots/        화면 스크린샷
   fonts/             Pretendard + OFL.txt
-  sim/               standings · npc_store · rng · match_sim
+  sim/               npc_store · rng · match_sim (P0 뼈대)
+                     standings · season_stats · match_result · bracket
+                     leaderboard · career_summary · digest       (M1)
   ui/                theme · fixtures · parts/*.tscn · screens/*.tscn
   test/              GdUnit4 검사
   tools/             run.gd(계측) · shot.gd(스크린샷)
