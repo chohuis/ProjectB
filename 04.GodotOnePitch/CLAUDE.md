@@ -1,5 +1,8 @@
 # OnePitch (Godot) — 코드 규칙
 
+**진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 어디까지 왔는지·다음에
+무엇을 하는지·확정된 결정이 거기 있다. 여기는 코드 규칙만 다룬다.
+
 Godot 4.6 · GDScript 단독 · PC(Steam) 우선.
 
 `02.SvelteElectron/`(Svelte + Electron + Rust)에서 이주 중이다. 그쪽은 **동결**이고
