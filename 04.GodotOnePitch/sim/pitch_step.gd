@@ -32,12 +32,13 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 		int(state.get("outs", 0)), pitcher.get("hold_runners", 50.0),
 		state.get("manager_steal_boost", 0.0), rng)
 
-	var pre: Dictionary = state.duplicate(true)
+	# ⚠ **제자리에서 고친다** — 복사본이 필요하면 호출부가 직접 복사한다
+	var pre: Dictionary = state
 	pre["runners"] = steal["runners"]
 	pre["outs"] = steal["outs"]
 	# 도루사로 이닝이 끝날 수 있다
 	if int(pre["outs"]) >= 3:
-		pre = MatchState.flip_half(pre)
+		MatchState.flip_half(pre)
 
 	# ② 착탄
 	var second_empty: bool = pre["runners"].get("second", {}).is_empty()
@@ -53,11 +54,8 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 		pitcher.get("control", 50.0), pre.get("stamina", 100.0), pre.get("mental", 50.0),
 		situation, rng)
 
-	# ③ 품질
-	var ctx: Dictionary = pre.duplicate()
-	ctx["decision"] = decision
-	ctx["landing"] = landing["landing"]
-	var quality: float = PitchOutcome.pitch_quality(ctx, rng)
+	# ③ 품질 — 투구·착탄은 인자로 넘긴다. 상태에 끼워 넣으면 복사가 생긴다
+	var quality: float = PitchOutcome.pitch_quality(pre, decision, landing["landing"], rng)
 
 	# ④ 스윙 → 결과 코드
 	var swing: Dictionary = PitchOutcome.swing_decision(landing["landing"],
@@ -100,10 +98,20 @@ static func apply_result(code: String, ball: Dictionary, state: Dictionary,
 	if state.get("is_finished", false):
 		return {"state": state, "code": "GAME_OVER", "logs": [] as Array[String]}
 
-	var next: Dictionary = state.duplicate(true)
+	# ⚠ **제자리에서 고친다.** 투구마다 상태를 복사하면 그것만으로 시간의
+	# 절반이 간다(실측 54.3 → 23.6초). 복사본이 필요하면 호출부가 직접 복사한다.
+	#
+	# ⚠ **그래서 "이전 값"을 먼저 붙잡아야 한다.** 안 그러면 나중에 자기
+	# 자신과 비교하게 되어 득점·타점이 전부 0이 된다 — 조용히 틀린다
+	var next: Dictionary = state
 	var logs: Array[String] = []
 	var result_code: String = code
 	var outs_before: int = int(next.get("outs", 0))
+	var score_before: int = _total_score(next)
+	var half_before: String = next.get("half", "top")
+	var strikes_before: int = int(next.get("count", {}).get("strikes", 0))
+	var side_before: int = int(next.get("score", {}).get(
+		"away" if half_before == "top" else "home", 0))
 	var count: Dictionary = next["count"]
 
 	match code:
@@ -162,12 +170,12 @@ static func apply_result(code: String, ball: Dictionary, state: Dictionary,
 	# ⚠ **아웃을 "있었다/없었다"로 세면 안 된다.** 병살은 한 타석에 둘이고
 	# 주루사도 아웃이다. 원본이 불리언이라 그 아웃들이 투수 이닝에 안 잡혔다
 	var outs_added: int = maxi(int(next["outs"]) - outs_before, 0)
-	var runs_added: int = _total_score(next) - _total_score(state)
+	var runs_added: int = _total_score(next) - score_before
 
 	next["pitch_count"] = int(next.get("pitch_count", 0)) + 1
 	_record_defense(next, fielding)
 	_record_pitcher(next, result_code, outs_added, runs_added)
-	_record_batter(next, state, result_code, outs_added)
+	_record_batter(next, result_code, strikes_before, half_before, side_before)
 	_push_pitch_type(next, decision.get("pitch_type", "fastball"))
 
 	# ⚠ **콜드게임 판정은 3아웃 전환 전이다.** 전환이 이닝을 올리고 반을
@@ -240,10 +248,13 @@ static func _record_pitcher(state: Dictionary, code: String, outs_added: int, ru
 		line["er"] = int(line.get("er", 0)) + runs_added
 
 
-## 타자 기록. **타석이 끝났을 때만** 쌓는다
-static func _record_batter(state: Dictionary, before: Dictionary, code: String, outs_added: int) -> void:
-	var is_k: bool = (code == "STRIKE_SWING" or code == "STRIKE_LOOK") \
-		and int(before.get("count", {}).get("strikes", 0)) == 2
+## 타자 기록. **타석이 끝났을 때만** 쌓는다.
+##
+## ⚠ 상태를 제자리에서 고치므로 "이전 값"은 **스칼라로 받는다.** 사전을
+## 받으면 자기 자신과 비교하게 되어 타점이 언제나 0이 된다
+static func _record_batter(state: Dictionary, code: String, strikes_before: int,
+		half_before: String, side_score_before: int) -> void:
+	var is_k: bool = (code == "STRIKE_SWING" or code == "STRIKE_LOOK") and strikes_before == 2
 	if not (is_k or MatchResult.is_at_bat_over(code)):
 		return
 
@@ -267,9 +278,9 @@ static func _record_batter(state: Dictionary, before: Dictionary, code: String, 
 		acc["k"] = int(acc["k"]) + 1
 
 	# 타점 — 이번 타석에 들어온 자기 팀 점수
-	var side: String = "away" if before.get("half", "top") == "top" else "home"
+	var side: String = "away" if half_before == "top" else "home"
 	acc["rbi"] = int(acc["rbi"]) + maxi(
-		int(state.get("score", {}).get(side, 0)) - int(before.get("score", {}).get(side, 0)), 0)
+		int(state.get("score", {}).get(side, 0)) - side_score_before, 0)
 	accum[bid] = acc
 
 

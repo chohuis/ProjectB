@@ -349,7 +349,8 @@ func test_power_and_wind_help_the_upgrade() -> void:
 # ── 투구 품질 (합) ─────────────────────────────────────────────────
 
 func _quality(o: Dictionary = {}, rolls: Array = [0.5, 0.5]) -> float:
-	return PitchOutcome.pitch_quality(_ctx(o), ScriptedRng.new(rolls))
+	var ctx: Dictionary = _ctx(o)
+	return PitchOutcome.pitch_quality(ctx, ctx["decision"], ctx["landing"], ScriptedRng.new(rolls))
 
 
 func test_better_pitchers_throw_better_pitches() -> void:

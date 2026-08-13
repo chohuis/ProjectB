@@ -1,0 +1,47 @@
+[
+ [
+  "숙련도 폭을 넓게 잡는다 (합을 지배한다)",
+  "\t\t0, 1:\n\t\t\treturn -3.0",
+  "\t\t0, 1:\n\t\t\treturn -7.0"
+ ],
+ [
+  "숙련도가 결과에 안 닿는다",
+  "\t\t4:\n\t\t\treturn 1.5\n\t\t_:\n\t\t\treturn 3.0",
+  "\t\t4:\n\t\t\treturn 0.0\n\t\t_:\n\t\t\treturn 0.0"
+ ],
+ [
+  "구종별 바닥 품질을 모두 같게 둔다",
+  "\t\"fastball\": 59.0, \"sinker\": 57.0, \"cutter\": 56.0, \"slider\": 56.0,\n\t\"curve\": 54.0, \"changeup\": 53.0, \"splitter\": 54.0, \"forkball\": 53.0,\n\t\"screwball\": 52.0, \"knuckleball\": 50.0,",
+  "\t\"fastball\": 55.0, \"sinker\": 55.0, \"cutter\": 55.0, \"slider\": 55.0,\n\t\"curve\": 55.0, \"changeup\": 55.0, \"splitter\": 55.0, \"forkball\": 55.0,\n\t\"screwball\": 55.0, \"knuckleball\": 55.0,"
+ ],
+ [
+  "비에 변화구가 더 안 든다는 규칙을 없앤다",
+  "\t\t\treturn -1.0 if pitch_type == \"fastball\" else -3.0",
+  "\t\t\treturn -1.0"
+ ],
+ [
+  "투수 구장과 타자 구장을 같게 둔다",
+  "\t\t\"pitcherPark\":\n\t\t\treturn 3.0",
+  "\t\t\"pitcherPark\":\n\t\t\treturn -3.0"
+ ],
+ [
+  "경계선 심판 확률을 1로 둔다",
+  "const SHADOW_UMPIRE_STRIKE_PROB: float = 0.45",
+  "const SHADOW_UMPIRE_STRIKE_PROB: float = 1.0"
+ ],
+ [
+  "직구 스윙 가점을 없앤다",
+  "const SWING_FASTBALL_BONUS: float = 0.08",
+  "const SWING_FASTBALL_BONUS: float = 0.0"
+ ],
+ [
+  "구석 가점을 없앤다",
+  "const LOCATION_DISTANCE_SCALE: float = 5.0",
+  "const LOCATION_DISTANCE_SCALE: float = 0.0"
+ ],
+ [
+  "장타 승격을 없앤다",
+  "const HIT_UPGRADE_SINGLE_TO_DOUBLE_BASE: float = 0.18",
+  "const HIT_UPGRADE_SINGLE_TO_DOUBLE_BASE: float = 0.0"
+ ]
+]

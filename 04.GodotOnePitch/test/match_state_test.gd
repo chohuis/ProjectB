@@ -46,10 +46,24 @@ func test_the_bottom_half_ends_the_inning() -> void:
 	assert_int(s["inning"]).is_equal(5)
 
 
-func test_flipping_does_not_mutate_the_input() -> void:
-	var s: Dictionary = _state({"outs": 3})
+func test_flipping_changes_the_state_in_place() -> void:
+	# ⚠ **제자리에서 고치는 게 규약이다.** 투구마다 상태를 복사하면 그것만으로
+	# 시간의 절반이 간다(실측 54.3 → 23.6초). 복사본이 필요하면 **호출부가
+	# 직접 복사한다** — 그걸 잊으면 전환 전 상태를 쥐고 있다고 착각한다
+	var s: Dictionary = _state({"outs": 3, "half": "top"})
+	var out: Dictionary = MatchState.flip_half(s)
+	assert_int(s["outs"]).is_equal(0)
+	assert_str(s["half"]).is_equal("bottom")
+	# 돌려주는 것도 같은 사전이다
+	assert_bool(out == s).is_true()
+
+
+func test_a_caller_that_needs_the_old_state_copies_it() -> void:
+	var s: Dictionary = _state({"outs": 3, "half": "top", "inning": 4})
+	var kept: Dictionary = s.duplicate(true)
 	MatchState.flip_half(s)
-	assert_int(s["outs"]).is_equal(3)
+	assert_int(kept["outs"]).is_equal(3)
+	assert_int(kept["inning"]).is_equal(4)
 
 
 # ── 득점 기록 ──────────────────────────────────────────────────────

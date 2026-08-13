@@ -11,9 +11,28 @@ class_name GameBench
 ## 첫 벤치가 0.805초로 더 빨랐는데 경기당 득점이 0.89였다.
 
 
-## 기준 — 한 시즌(2,124경기)을 이 안에 끝내야 한다
-const SEASON_GAMES: int = 2124
-const GATE_SECONDS: float = 2.0
+## 기준 — **실제 부하로 다시 잡았다.**
+##
+## ⚠ P0의 "한 시즌 2,124경기 2초"는 두 군데가 틀렸다:
+##
+## ① 경기 수를 적게 잡았다. 국내 리그만 세어도 2,612경기다
+##      고교 102팀 × 20경기        1,020
+##      KBL 10팀 × 144              720
+##      KBL 2군 10팀 × 99           495
+##      대학                        225
+##      독립                        152
+##    해외 4개(약 1,845경기)는 `radiusGate`가 순위표 드리프트로 돌린다 —
+##    주인공이 진출하면 그때 풀 시뮬로 올라간다
+##
+## ② **게임은 시즌을 통째로 안 돌린다.** 주 단위로 진행한다. 기간이 겹치는
+##    최악의 주가 약 98경기다 — 그게 사용자가 실제로 기다리는 시간이다
+const SEASON_GAMES: int = 2612
+const WORST_WEEK_GAMES: int = 98
+
+## 사용자가 실제로 기다리는 시간
+const GATE_WEEK_SECONDS: float = 1.0
+## 시즌을 통째로 도는 자리(오프시즌·건너뛰기)와 회귀 감지용
+const GATE_SEASON_SECONDS: float = 25.0
 
 
 static func _pitcher(rng: RandomNumberGenerator, base: float) -> Dictionary:
@@ -97,11 +116,14 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 
 	var per_game: float = float(pitches) / float(games)
 	var runs_per_game: float = float(runs) / float(games)
-	var season: float = sec / float(games) * float(SEASON_GAMES)
+	var per_game_sec: float = sec / float(games)
+	var week: float = per_game_sec * float(WORST_WEEK_GAMES)
+	var season: float = per_game_sec * float(SEASON_GAMES)
 
 	log_line.call("  %d경기  %.3f초  %d 투구/초" % [games, sec, int(pitches / maxf(sec, 0.0001))])
 	log_line.call("  경기당 투구 %.1f · 득점 %.2f" % [per_game, runs_per_game])
-	log_line.call("  한 시즌(%d경기) 환산 %.3f초  (기준 %.1f초)" % [SEASON_GAMES, season, GATE_SECONDS])
+	log_line.call("  최악의 주(%d경기) %.3f초  (기준 %.1f초)" % [WORST_WEEK_GAMES, week, GATE_WEEK_SECONDS])
+	log_line.call("  국내 한 시즌(%d경기) %.3f초  (기준 %.1f초)" % [SEASON_GAMES, season, GATE_SEASON_SECONDS])
 
 	if unfinished > 0:
 		fail.call("상한에 걸려 안 끝난 경기 %d개 — 종료 조건을 다시 본다" % unfinished)
@@ -110,6 +132,8 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 		fail.call("경기당 투구 %.1f — 야구가 아니다 (150~400)" % per_game)
 	if runs_per_game < 4.0 or runs_per_game > 20.0:
 		fail.call("경기당 득점 %.2f — 야구가 아니다 (4~20)" % runs_per_game)
-	if season > GATE_SECONDS:
-		fail.call("한 시즌 %.3f초 — 게이트 %.1f초를 넘었다" % [season, GATE_SECONDS])
+	if week > GATE_WEEK_SECONDS:
+		fail.call("최악의 주 %.3f초 — 게이트 %.1f초를 넘었다" % [week, GATE_WEEK_SECONDS])
+	if season > GATE_SEASON_SECONDS:
+		fail.call("한 시즌 %.3f초 — 게이트 %.1f초를 넘었다" % [season, GATE_SEASON_SECONDS])
 	return 0

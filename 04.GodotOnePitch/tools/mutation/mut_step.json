@@ -1,0 +1,142 @@
+[
+ [
+  "볼넷을 4볼이 아니라 3볼에 준다",
+  "\t\t\tif count[\"balls\"] >= 4:",
+  "\t\t\tif count[\"balls\"] >= 3:"
+ ],
+ [
+  "볼넷에 타자를 안 내보낸다",
+  "\t\t\t\tvar walk: Dictionary = Baserunning.advance_on_walk(next[\"runners\"], _runner_of(next))\n\t\t\t\tnext[\"runners\"] = walk[\"runners\"]\n\t\t\t\tnext = MatchState.add_runs(next, walk[\"runs\"])",
+  ""
+ ],
+ [
+  "삼진을 두 스트라이크에 준다",
+  "\t\t\tif count[\"strikes\"] >= 3:",
+  "\t\t\tif count[\"strikes\"] >= 2:"
+ ],
+ [
+  "파울로도 삼진을 잡는다",
+  "\t\t\tif int(count.get(\"strikes\", 0)) < 2:\n\t\t\t\tcount[\"strikes\"] = int(count[\"strikes\"]) + 1",
+  "\t\t\tcount[\"strikes\"] = int(count[\"strikes\"]) + 1"
+ ],
+ [
+  "병살 아웃을 하나만 센다",
+  "\t\t\tif dp[\"is_double_play\"]:\n\t\t\t\tnext[\"outs\"] = int(next[\"outs\"]) + 1\n\t\t\t\tnext[\"runners\"] = dp[\"runners\"]",
+  "\t\t\tif dp[\"is_double_play\"]:\n\t\t\t\tnext[\"runners\"] = dp[\"runners\"]"
+ ],
+ [
+  "인플레이 아웃 코드를 안 좁힌다",
+  "\t\t\tresult_code = MatchResult.narrow_in_play_out(ball, dp[\"is_double_play\"])",
+  ""
+ ],
+ [
+  "실책이 아웃으로 처리된다",
+  "\t\t\tnext[\"outs\"] = int(next[\"outs\"]) + int(adv[\"extra_outs\"])\n\t\t\tlogs.append_array(adv[\"logs\"])\n\n\t\t_:",
+  "\t\t\tnext[\"outs\"] = int(next[\"outs\"]) + 1\n\t\t\tlogs.append_array(adv[\"logs\"])\n\n\t\t_:"
+ ],
+ [
+  "안타가 카운트를 안 지운다",
+  "\t\t\t\tnext[\"count\"] = {\"balls\": 0, \"strikes\": 0}\n\t\t\t\tlogs.append_array(adv[\"logs\"])",
+  "\t\t\t\tlogs.append_array(adv[\"logs\"])"
+ ],
+ [
+  "주루사를 아웃으로 안 센다",
+  "\t\t\t\tnext[\"outs\"] = int(next[\"outs\"]) + int(adv[\"extra_outs\"])\n\t\t\t\tnext[\"count\"] = {\"balls\": 0, \"strikes\": 0}",
+  "\t\t\t\tnext[\"count\"] = {\"balls\": 0, \"strikes\": 0}"
+ ],
+ [
+  "아웃 증가분을 불리언으로 센다 (원본 결함 재현)",
+  "\tvar outs_added: int = maxi(int(next[\"outs\"]) - outs_before, 0)",
+  "\tvar outs_added: int = 1 if int(next[\"outs\"]) > outs_before else 0"
+ ],
+ [
+  "투구수를 안 올린다",
+  "\tnext[\"pitch_count\"] = int(next.get(\"pitch_count\", 0)) + 1",
+  ""
+ ],
+ [
+  "삼진을 모든 스트라이크에 센다",
+  "\tif (code == \"STRIKE_SWING\" or code == \"STRIKE_LOOK\") and count_reset:",
+  "\tif code == \"STRIKE_SWING\" or code == \"STRIKE_LOOK\":"
+ ],
+ [
+  "볼넷을 투수 기록에 안 남긴다",
+  "\telif code == \"WALK\":\n\t\tline[\"bb\"] = int(line.get(\"bb\", 0)) + 1",
+  ""
+ ],
+ [
+  "안타를 투수 기록에 안 남긴다",
+  "\telif MatchResult.is_hit(code):\n\t\tline[\"h\"] = int(line.get(\"h\", 0)) + 1",
+  ""
+ ],
+ [
+  "실점을 투수에게 안 단다",
+  "\tif runs_added > 0:\n\t\tline[\"er\"] = int(line.get(\"er\", 0)) + runs_added",
+  ""
+ ],
+ [
+  "타석이 안 끝나도 타자 기록을 쌓는다",
+  "\tif not (is_k or MatchResult.is_at_bat_over(code)):\n\t\treturn",
+  ""
+ ],
+ [
+  "볼넷을 타수로 센다",
+  "\tif code != \"WALK\":\n\t\tacc[\"ab\"] = int(acc[\"ab\"]) + 1",
+  "\tacc[\"ab\"] = int(acc[\"ab\"]) + 1"
+ ],
+ [
+  "홈런을 안타로 안 센다",
+  "\tif MatchResult.is_hit(code):\n\t\tacc[\"h\"] = int(acc[\"h\"]) + 1",
+  "\tif code == \"HIT_SINGLE\":\n\t\tacc[\"h\"] = int(acc[\"h\"]) + 1"
+ ],
+ [
+  "타점을 상대 팀 점수로 센다",
+  "\tvar side: String = \"away\" if half_before == \"top\" else \"home\"",
+  "\tvar side: String = \"home\" if half_before == \"top\" else \"away\""
+ ],
+ [
+  "삼진을 타자 기록에 안 남긴다",
+  "\tif is_k:\n\t\tacc[\"k\"] = int(acc[\"k\"]) + 1",
+  ""
+ ],
+ [
+  "구종 이력을 안 자른다",
+  "\tif last.size() > 5:\n\t\tlast.remove_at(0)",
+  ""
+ ],
+ [
+  "구종 이력을 안 쌓는다",
+  "\tlast.append(pitch_type)",
+  ""
+ ],
+ [
+  "끝난 경기도 계속 처리한다",
+  "\tif state.get(\"is_finished\", false):\n\t\treturn {\"state\": state, \"code\": \"GAME_OVER\", \"logs\": [] as Array[String]}",
+  ""
+ ],
+ [
+  "콜드 판정을 3아웃 전환 뒤로 옮긴다",
+  "\tvar cold: bool = int(next[\"outs\"]) >= 3 and MatchState.is_cold_game(next)\n\tvar cold_log: String = MatchState.finish_log(next) if cold else \"\"\n\n\tif int(next[\"outs\"]) >= 3:\n\t\tnext = MatchState.flip_half(next)",
+  "\tif int(next[\"outs\"]) >= 3:\n\t\tnext = MatchState.flip_half(next)\n\tvar cold: bool = MatchState.is_cold_game(next)\n\tvar cold_log: String = MatchState.finish_log(next) if cold else \"\""
+ ],
+ [
+  "3아웃에 이닝을 안 넘긴다",
+  "\tif int(next[\"outs\"]) >= 3:\n\t\tnext = MatchState.flip_half(next)",
+  ""
+ ],
+ [
+  "경기 종료를 안 본다",
+  "\telif MatchState.should_finish(next):\n\t\tnext[\"is_finished\"] = true\n\t\tlogs.append(MatchState.finish_log(next))",
+  ""
+ ],
+ [
+  "수비 실책과 송구 실패를 한 칸에 몬다",
+  "\telif fielding.get(\"throw_result\", \"\") == \"safe\":\n\t\td[\"throw_safes\"] = int(d.get(\"throw_safes\", 0)) + 1",
+  "\telif fielding.get(\"throw_result\", \"\") == \"safe\":\n\t\td[\"errors\"] = int(d.get(\"errors\", 0)) + 1"
+ ],
+ [
+  "송구 아웃에 보살을 안 준다",
+  "\t\td[\"assists\"] = int(d.get(\"assists\", 0)) + 1",
+  ""
+ ]
+]

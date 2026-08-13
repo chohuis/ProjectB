@@ -1,0 +1,12 @@
+[
+ [
+  "고교 투구수 상한을 프로와 같게 둔다",
+  "\treturn 105.0 if league_id == \"LEAGUE_HIGHSCHOOL\" else 120.0",
+  "\treturn 120.0"
+ ],
+ [
+  "소프트캡이 상한에 비례하지 않는다",
+  "\treturn league_pitch_limit(league_id) * 0.75",
+  "\treturn 90.0"
+ ]
+]

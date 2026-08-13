@@ -15,37 +15,37 @@ class_name MatchState
 
 ## 3아웃 전환. 주자·카운트를 비우고 반을 바꾼다.
 ##
-## **원본 사전을 안 바꾼다** — 호출부가 전환 전 상태를 아직 쓴다
+## ⚠ **제자리에서 고친다** — 받은 사전을 그대로 바꾸고 같은 것을 돌려준다.
+## 투구마다 상태를 복사하면 그것만으로 시간의 절반이 간다(실측 54.3 → 23.6초).
+## **복사본이 필요하면 호출부가 직접 복사한다.**
 static func flip_half(state: Dictionary) -> Dictionary:
-	var next: Dictionary = state.duplicate(true)
-	next["outs"] = 0
-	next["count"] = {"balls": 0, "strikes": 0}
-	next["runners"] = {"first": {}, "second": {}, "third": {}}
-	if next.get("half", "top") == "top":
-		next["half"] = "bottom"
+	state["outs"] = 0
+	state["count"] = {"balls": 0, "strikes": 0}
+	state["runners"] = {"first": {}, "second": {}, "third": {}}
+	if state.get("half", "top") == "top":
+		state["half"] = "bottom"
 	else:
-		next["half"] = "top"
-		next["inning"] = int(next.get("inning", 1)) + 1
-	return next
+		state["half"] = "top"
+		state["inning"] = int(state.get("inning", 1)) + 1
+	return state
 
 
-## 득점을 합계와 이닝 칸에 같이 넣는다.
+## 득점을 합계와 이닝 칸에 같이 넣는다. **제자리에서 고친다**
 ##
 ## ⚠ **연장은 이닝 칸보다 회차가 크다.** 그대로 색인하면 범위를 벗어난다 —
 ## 마지막 칸에 몰아 넣는다
 static func add_runs(state: Dictionary, runs: int) -> Dictionary:
 	if runs <= 0:
 		return state
-	var next: Dictionary = state.duplicate(true)
 	# 초 = 원정 공격
-	var side: String = "away" if next.get("half", "top") == "top" else "home"
-	next["score"][side] = int(next["score"].get(side, 0)) + runs
+	var side: String = "away" if state.get("half", "top") == "top" else "home"
+	state["score"][side] = int(state["score"].get(side, 0)) + runs
 
-	var col: Array = next.get("inning_scores", {}).get(side, [])
+	var col: Array = state.get("inning_scores", {}).get(side, [])
 	if not col.is_empty():
-		var idx: int = clampi(int(next.get("inning", 1)) - 1, 0, col.size() - 1)
+		var idx: int = clampi(int(state.get("inning", 1)) - 1, 0, col.size() - 1)
 		col[idx] = int(col[idx]) + runs
-	return next
+	return state
 
 
 # ── 종료 판정 ──────────────────────────────────────────────────────

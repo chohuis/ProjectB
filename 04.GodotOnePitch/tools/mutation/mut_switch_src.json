@@ -1,0 +1,117 @@
+[
+ [
+  "주인공만 다른 예산 식을 쓴다 (원본 결함 재현)",
+  "\treturn starter_max_outs(state.get(\"stamina_cap\", 50.0))",
+  "\treturn int(roundf(8.0 + (state.get(\"stamina_cap\", 50.0) / 99.0) * 10.0))"
+ ],
+ [
+  "예산에 난수를 넣는다 (타석마다 재추첨)",
+  "\treturn starter_max_outs(state.get(\"stamina_cap\", 50.0))",
+  "\treturn starter_max_outs(state.get(\"stamina_cap\", 50.0)) + (randi() % 3)"
+ ],
+ [
+  "예산을 현재 스태미나로 정한다",
+  "\treturn starter_max_outs(state.get(\"stamina_cap\", 50.0))",
+  "\treturn starter_max_outs(state.get(\"stamina\", 50.0))"
+ ],
+ [
+  "구원에게도 예산을 준다",
+  "\tif not state.get(\"is_starter\", true):\n\t\treturn 0",
+  ""
+ ],
+ [
+  "예산에 스태미나가 안 걸린다",
+  "\treturn int(maxf(roundf(Tuning.STARTER_OUTS_BASE\n\t\t+ (stam / 99.0) * Tuning.STARTER_OUTS_STAMINA_SCALE), 1.0))",
+  "\treturn int(Tuning.STARTER_OUTS_BASE)"
+ ],
+ [
+  "예산 하한을 없앤다 (안팎 둘 다)",
+  "\tvar stam: float = maxf(stamina_cap, 1.0)\n\treturn int(maxf(roundf(Tuning.STARTER_OUTS_BASE\n\t\t+ (stam / 99.0) * Tuning.STARTER_OUTS_STAMINA_SCALE), 1.0))",
+  "\tvar stam: float = stamina_cap\n\treturn int(roundf(Tuning.STARTER_OUTS_BASE\n\t\t+ (stam / 99.0) * Tuning.STARTER_OUTS_STAMINA_SCALE))"
+ ],
+ [
+  "선발과 구원의 큐 예산을 같게 둔다",
+  "\t\tif i == 0:",
+  "\t\tif false:"
+ ],
+ [
+  "큐 예산 흔들림을 없앤다",
+  "\t\t\tvar wobble: float = (rng.randf() - 0.5) * Tuning.STARTER_OUTS_WOBBLE",
+  "\t\t\tvar wobble: float = 0.0"
+ ],
+ [
+  "마지막 투수도 내보낸다",
+  "\tif current + 1 >= pitchers.size():\n\t\treturn false",
+  ""
+ ],
+ [
+  "예산 0을 '첫 아웃에 교체'로 본다",
+  "\t\tover_outs = budget > 0 and queue.get(\"outs_by_current\", 0) >= budget",
+  "\t\tover_outs = queue.get(\"outs_by_current\", 0) >= budget"
+ ],
+ [
+  "투구수 상한을 안 본다",
+  "\tif pitch_limit > 0.0 and current < lines.size():\n\t\tover_pitches = float(lines[current].get(\"pc\", 0)) >= pitch_limit",
+  ""
+ ],
+ [
+  "NPC 교체가 스태미나를 본다 (원본 결함 재현)",
+  "\treturn over_outs or over_pitches",
+  "\treturn over_outs or over_pitches or pitchers[current].get(\"stamina_cap\", 50.0) < Tuning.NPC_STARTER_STAMINA_LIMIT"
+ ],
+ [
+  "교체해도 아웃 수를 안 되돌린다",
+  "\t\tnext[\"current\"] = current + 1\n\t\tnext[\"outs_by_current\"] = 0",
+  "\t\tnext[\"current\"] = current + 1"
+ ],
+ [
+  "구원 투수가 스태미나 100으로 들어온다 (원본 결함 재현)",
+  "\treturn minf(stamina_cap, Tuning.RELIEF_START_STAMINA)",
+  "\treturn 100.0"
+ ],
+ [
+  "구원 투수의 능력 상한을 무시한다",
+  "\treturn minf(stamina_cap, Tuning.RELIEF_START_STAMINA)",
+  "\treturn Tuning.RELIEF_START_STAMINA"
+ ],
+ [
+  "등판 전에도 강판 판정을 한다",
+  "\tif not state.get(\"has_entered\", false) or state.get(\"exited\", false):\n\t\treturn {\"should_exit\": false, \"reason\": \"\"}",
+  ""
+ ],
+ [
+  "투구수 하드 상한을 안 본다",
+  "\tif pce >= hard:\n\t\treturn {\"should_exit\": true, \"reason\": \"pitch_limit\"}",
+  ""
+ ],
+ [
+  "아웃 예산 검사를 통째로 뺀다 (스태미나 문턱만 남는다)",
+  "\tvar budget: int = protagonist_max_outs(state)\n\tif budget > 0 and state.get(\"outs_since_entry\", 0) >= budget:\n\t\treturn {\"should_exit\": true, \"reason\": \"stamina\"}",
+  ""
+ ],
+ [
+  "스태미나 문턱을 정상 교체 사유로 되돌린다 (35)",
+  "\tif stam <= Tuning.PROTAGONIST_STAMINA_EMERGENCY:",
+  "\tif stam <= 35.0:"
+ ],
+ [
+  "비상 하한을 아예 없앤다",
+  "\tif stam <= Tuning.PROTAGONIST_STAMINA_EMERGENCY:\n\t\treturn {\"should_exit\": true, \"reason\": \"stamina\"}",
+  ""
+ ],
+ [
+  "감독 능력이 문턱에 안 걸린다",
+  "\tvar threshold: float = 65.0 - (tiq - 50.0) * 0.4 - ((cdec - 50.0) * 0.3 if is_late else 0.0)",
+  "\tvar threshold: float = 65.0"
+ ],
+ [
+  "소프트캡을 넘어도 위험이 안 쌓인다",
+  "\tif pce >= soft:\n\t\tdanger += 20.0 + (pce - soft) * 1.2",
+  ""
+ ],
+ [
+  "후반 득점권 위험을 안 센다",
+  "\tif has_scoring and is_late:\n\t\tdanger += 18.0",
+  ""
+ ]
+]

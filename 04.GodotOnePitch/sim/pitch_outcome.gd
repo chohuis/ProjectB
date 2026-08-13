@@ -359,11 +359,12 @@ static func apply_hit_upgrade(code: String, power: float, weather: String, rng) 
 ## 곳의 난이도 + 얼마나 정확히 꽂혔는가"로 보는 갈래가 있었지만 기본이 꺼져
 ## 있었다(계측용). 흩어짐이 품질을 올려주는 셈이라 이상하지만 **밸런스가
 ## 동결이라 그대로 옮긴다** — 이주 후에 다시 본다.
-static func pitch_quality(ctx: Dictionary, rng) -> float:
+##
+## ⚠ 투구·착탄을 **인자로 받는다.** 상태 사전에 끼워 넣으면 그걸 만들려고
+## 투구마다 복사를 하게 된다 — 실측에서 그 복사가 시간의 절반을 먹었다
+static func pitch_quality(ctx: Dictionary, decision: Dictionary, landing: Vector2, rng) -> float:
 	var pitcher: Dictionary = ctx.get("pitcher", {})
 	var batter: Dictionary = ctx.get("batter", {})
-	var decision: Dictionary = ctx.get("decision", {})
-	var landing: Vector2 = ctx.get("landing", Vector2.ZERO)
 	var pitch_type: String = decision.get("pitch_type", "fastball")
 	var is_fastball: bool = pitch_type == "fastball"
 

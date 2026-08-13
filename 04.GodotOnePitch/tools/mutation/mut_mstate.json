@@ -1,0 +1,87 @@
+[
+ [
+  "초·말과 홈·원정을 뒤바꾼다",
+  "\tvar side: String = \"away\" if state.get(\"half\", \"top\") == \"top\" else \"home\"",
+  "\tvar side: String = \"home\" if state.get(\"half\", \"top\") == \"top\" else \"away\""
+ ],
+ [
+  "득점을 이닝 칸에 안 넣는다",
+  "\tvar col: Array = state.get(\"inning_scores\", {}).get(side, [])\n\tif not col.is_empty():\n\t\tvar idx: int = clampi(int(state.get(\"inning\", 1)) - 1, 0, col.size() - 1)\n\t\tcol[idx] = int(col[idx]) + runs",
+  ""
+ ],
+ [
+  "연장 이닝 칸을 안 자른다",
+  "\t\tvar idx: int = clampi(int(state.get(\"inning\", 1)) - 1, 0, col.size() - 1)",
+  "\t\tvar idx: int = int(state.get(\"inning\", 1)) - 1"
+ ],
+ [
+  "0점도 기록한다",
+  "\tif runs <= 0:\n\t\treturn state",
+  ""
+ ],
+ [
+  "전환이 주자를 안 비운다",
+  "\tstate[\"runners\"] = {\"first\": {}, \"second\": {}, \"third\": {}}",
+  ""
+ ],
+ [
+  "전환이 카운트를 안 비운다",
+  "\tstate[\"count\"] = {\"balls\": 0, \"strikes\": 0}\n\tstate[\"runners\"]",
+  "\tstate[\"runners\"]"
+ ],
+ [
+  "말이 끝나도 이닝이 안 오른다",
+  "\t\tstate[\"inning\"] = int(state.get(\"inning\", 1)) + 1",
+  ""
+ ],
+ [
+  "전환이 제자리에서 안 고친다 (복사본을 준다)",
+  "\tstate[\"outs\"] = 0",
+  "\tstate = state.duplicate(true)\n\tstate[\"outs\"] = 0"
+ ],
+ [
+  "콜드게임을 초에도 본다",
+  "\tif state.get(\"half\", \"top\") != \"bottom\" or int(state.get(\"outs\", 0)) < 3:\n\t\treturn false",
+  ""
+ ],
+ [
+  "콜드게임 이닝 조건을 없앤다",
+  "\treturn (inning >= 5 and diff >= 10) or (inning >= 7 and diff >= 7)",
+  "\treturn diff >= 10 or diff >= 7"
+ ],
+ [
+  "7회 7점차 규칙을 없앤다",
+  "\treturn (inning >= 5 and diff >= 10) or (inning >= 7 and diff >= 7)",
+  "\treturn inning >= 5 and diff >= 10"
+ ],
+ [
+  "원정팀이 크게 이겨도 콜드가 아니다",
+  "\tvar diff: int = absi(int(score.get(\"home\", 0)) - int(score.get(\"away\", 0)))",
+  "\tvar diff: int = int(score.get(\"home\", 0)) - int(score.get(\"away\", 0))"
+ ],
+ [
+  "9회 말에 원정이 앞서도 경기를 끝낸다",
+  "\tif state.get(\"half\", \"top\") == \"bottom\" and inning >= limit and home > away:\n\t\treturn true",
+  "\tif state.get(\"half\", \"top\") == \"bottom\" and inning >= limit and home != away:\n\t\treturn true"
+ ],
+ [
+  "동점에도 경기를 끝낸다",
+  "\tif inning > limit and home != away:\n\t\treturn true",
+  "\tif inning > limit:\n\t\treturn true"
+ ],
+ [
+  "연장을 아예 안 끝낸다",
+  "\tif inning > limit and home != away:\n\t\treturn true",
+  ""
+ ],
+ [
+  "끝내기 문구를 규정 이닝으로 적는다",
+  "\t\treturn \"끝내기!\"",
+  "\t\treturn \"규정 이닝 종료\""
+ ],
+ [
+  "콜드게임 문구에 점수차를 안 적는다",
+  "\t\treturn \"콜드게임 (%d회 종료, %d점차)\" % [inning, absi(home - away)]",
+  "\t\treturn \"콜드게임\""
+ ]
+]

@@ -1,0 +1,37 @@
+[
+ [
+  "타석을 누적한다 (원본 결함 재현)",
+  "\tvar pa: int = ab + bb",
+  "\tvar pa: int = int(_num(prev.get(\"pa\"))) + ab + bb"
+ ],
+ [
+  "방어율 0이닝 가드 제거",
+  "\tif ip == 0.0 or is_nan(ip):\n\t\treturn 0.0\n\treturn roundf(er * 9.0 / ip * 100.0) / 100.0",
+  "\treturn roundf(er * 9.0 / ip * 100.0) / 100.0"
+ ],
+ [
+  "sanitize 타자 갈래를 통과만 시킨다 (원본 결함 재현)",
+  "\t\t\tb[\"pa\"] = pa",
+  "\t\t\tb[\"pa\"] = int(_num(s.get(\"pa\")))"
+ ],
+ [
+  "NaN 가드 제거",
+  "\t\treturn 0.0 if is_nan(v) else v",
+  "\t\treturn v"
+ ],
+ [
+  "누적이 원본 사전을 제자리에서 바꾼다",
+  "\tvar next: Dictionary = stats.duplicate()",
+  "\tvar next: Dictionary = stats"
+ ],
+ [
+  "장타율에서 홈런 가중을 뺀다",
+  "float(h + hr * 3) / float(ab) * 1000.0) / 1000.0 if ab > 0",
+  "float(h + hr) / float(ab) * 1000.0) / 1000.0 if ab > 0"
+ ],
+ [
+  "세이브·홀드를 같은 칸에 센다",
+  "\"hd\": int(_num(prev.get(\"hd\"))) + (1 if dec == \"HD\" else 0),",
+  "\"hd\": int(_num(prev.get(\"hd\"))) + (1 if dec == \"SV\" else 0),"
+ ]
+]
