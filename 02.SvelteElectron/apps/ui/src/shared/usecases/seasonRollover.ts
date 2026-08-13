@@ -53,9 +53,31 @@ function logsOf(lines: string[]): void {
  * 이제 정본은 여기 하나다. 롤오버와 진로 결정 양쪽에서 부르고, 연도 가드가
  * 중복 실행을 막는다.
  */
+/**
+ * 시즌 기록이 아직 온전한 **마지막 지점**에서 불리는 계측 훅.
+ *
+ * ⚠ 계측 전용이다 — 운영 코드가 여기 붙으면 안 된다.
+ *
+ * 왜 필요한가: 조사 하네스는 `isSeasonEnded()`를 보고 롤오버 직전에
+ * 스냅샷을 잡는데, **주인공 3학년은 그 갈래를 안 탄다.** W47 진로 결정
+ * 경로가 `runWorldSeasonEnd`를 직접 부르고 끝내기 때문이다. 그래서 고교
+ * **마지막 해 성적을 한 번도 못 잡았고**, 실측 표본이 늘 1·2학년뿐이었다.
+ *
+ * W47에 잡는 우회는 시즌이 5주 모자란 값을 준다(이닝 과소·ERA 노이즈).
+ * 3학년은 드래프트 직전 해라 그 해 완주 성적이 제일 중요하다.
+ */
+let _beforeSeasonEndHook: ((year: number) => void) | null = null;
+export function setBeforeSeasonEndHook(fn: ((year: number) => void) | null): void {
+  _beforeSeasonEndHook = fn;
+}
+
 export async function runWorldSeasonEnd(now: number): Promise<void> {
   if (_lastWorldSeasonEndYear === now) return;
   _lastWorldSeasonEndYear = now;
+
+  // ⚠ **가드 뒤, 처리 앞.** 가드 앞이면 같은 해에 두 번 잡히고,
+  // `processSeasonEnd` 뒤면 이미 진급·초기화가 지나 기록이 사라진다
+  try { _beforeSeasonEndHook?.(now); } catch { /* 계측이 게임을 깨지 않는다 */ }
 
   // ⓪ NPC 학년 진급·졸업·나이 — **드래프트보다 먼저**.
   //

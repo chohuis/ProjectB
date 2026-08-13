@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { buildTeamRoster } from "../rosterEngine";
-import type { EntityRow } from "../../types/master";
+import type { EntityRow } from "../../stores/master";
 
 // ── 로테이션 인덱스가 실제로 선발을 바꾼다 ─────────────────────
 //

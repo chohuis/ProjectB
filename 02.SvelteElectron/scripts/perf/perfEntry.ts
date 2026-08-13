@@ -23,7 +23,7 @@ import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/u
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
-import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
+import { runSeasonRollover, setBeforeSeasonEndHook } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import {
@@ -4952,4 +4952,39 @@ export function doubleCountProbe(): Record<string, unknown> {
     "비율중앙": ratio.length ? Number(mid(ratio).toFixed(2)) : null,
     "비율최대": ratio.length ? Number(Math.max(...ratio).toFixed(2)) : null,
   };
+}
+
+
+// ── 시즌 종료 직전 스냅샷 (계측 전용) ────────────────────────────
+//
+// ⚠ **주인공 3학년은 `isSeasonEnded()` 갈래를 안 탄다.** W47 진로 결정이
+// `runWorldSeasonEnd`를 직접 부르고 끝내기 때문이다. 하네스가 롤오버를
+// 기다렸다가 잡으면 고교 **마지막 해를 영영 못 잡는다** — 실측 표본이
+// 늘 1·2학년뿐이었고 3학년은 n=0이었다.
+//
+// W47에 잡는 우회도 안 된다. 시즌이 5주 모자란 값이라 이닝이 과소 집계되고
+// (실측 45.0 vs 52.8) ERA도 미완성 시즌 값이 된다.
+//
+// 그래서 엔진이 **기록이 온전한 마지막 지점**에서 이 훅을 부른다.
+const _seasonEndSnaps: Record<string, unknown>[] = [];
+
+/** 조사 시작 시 한 번 건다. 같은 해가 두 번 잡히지 않는다(가드 뒤에서 불린다) */
+export function armSeasonEndSnapshot(): void {
+  setBeforeSeasonEndHook((year) => {
+    const g = get(gameStore);
+    _seasonEndSnaps.push({
+      연도: year,
+      단계: g.protagonist.careerStage,
+      학년: g.protagonist.grade ?? null,
+      ...armProbe(),
+      등판분포: hsPitcherLoadProbe(),
+    });
+  });
+}
+
+/** 모아둔 스냅샷을 꺼내고 비운다 — 회차 사이에 섞이지 않게 */
+export function drainSeasonEndSnapshots(): Record<string, unknown>[] {
+  const out = [..._seasonEndSnaps];
+  _seasonEndSnaps.length = 0;
+  return out;
 }

@@ -140,6 +140,7 @@ function randomPlan(rnd) {
       if (plan.slots) app.setTrainingSlots(plan.slots);
       if (plan.pitch) app.startPitchDev(plan.pitch);
 
+      if (app.drainSeasonEndSnapshots) app.drainSeasonEndSnapshots();
       const start = app.careerProbe();
       // ⚠ 원값과 표시값을 따로 둔다. 표시용 "@N주"를 붙인 배열에 대고 중복을
       // 판정했더니 매번 다르다고 나와 같은 단계가 세 번 찍히고 팀이동이 부풀었다
@@ -150,6 +151,19 @@ function randomPlan(rnd) {
       const hsSeasons = [];   // 고교 시즌별 포지션·등판·이닝
       let pitchLearned = start.구종;
 
+      // 고교 시즌 스냅샷 — 두 경로(시즌종료·진로결정)에서 같은 걸 잡되
+      // 시즌당 한 번만 담는다. 연도로 거른다
+      const hsSnapped = new Set();
+      const needsHsSnapshot = (year) => !hsSnapped.has(year);
+      const captureHs = (a) => {
+        hsSnapped.add(a.currentSeason());
+        hsSeasons.push({
+          ...a.armProbe(),
+          등판분포: a.hsPitcherLoadProbe ? a.hsPitcherLoadProbe() : null,
+          이중집계: a.doubleCountProbe ? a.doubleCountProbe() : null,
+        });
+      };
+
       // ⚠ **가드를 넉넉히.** autoRun은 헛도는 회차가 진행한 회차보다 훨씬 많다
       let guard = 0, elapsed = 0;
       while (guard++ < WEEKS * 60 && elapsed < WEEKS) {
@@ -159,6 +173,18 @@ function randomPlan(rnd) {
         // ⚠ **진로 결정 직후에 잡는다.** `pushCareerForward`가 신청·지명·수락을
         // 전부 처리하고 continue로 빠지므로, 루프 아래에서 재면 신청 기록이
         // 살아 있는 순간을 한 번도 안 지난다 — 실측에서 20회 전부 null이었다
+        // ⚠ **3학년은 `isSeasonEnded()` 갈래를 안 탄다.** W47 진로 결정
+        // 경로가 `pushCareerForward` 안에서 롤오버까지 끝내고 continue로
+        // 빠지기 때문이다. 그래서 아래 스냅샷이 **고교 마지막 해를 한 번도
+        // 못 잡았고**, 실측 표본이 늘 1·2학년뿐이었다(3학년 n=0).
+        //
+        // 두 경로 모두에서 같은 함수로 잡고, 시즌당 한 번만 담는다.
+        if (lastStage === "highschool" && needsHsSnapshot(app.currentSeason())) {
+          const kind = app.pendingKind();
+          if (kind === "careerChoiceHub" || kind === "careerResults" || kind === "careerChoice") {
+            captureHs(app);
+          }
+        }
         if (await app.pushCareerForward()) {
           const da = app.draftApplyProbe();
           if (da.신청여부 != null || da.지명됨 != null) draftApply = { ...(draftApply ?? {}), ...da };
@@ -168,7 +194,7 @@ function randomPlan(rnd) {
         }
         if (app.isSeasonEnded()) {
           // ⚠ **롤오버 전에 잡는다.** 넘어가면 그 시즌 기록이 초기화된다
-          if (lastStage === "highschool") hsSeasons.push({ ...app.armProbe(), 등판분포: (app.hsPitcherLoadProbe ? app.hsPitcherLoadProbe() : null), 이중집계: (app.doubleCountProbe ? app.doubleCountProbe() : null) });
+          if (lastStage === "highschool" && needsHsSnapshot(app.currentSeason())) captureHs(app);
           await app.seasonRollover(); continue;
         }
         // ⚠ **매주 다시 넣는다.** `runAutoAdvance`의 `applyRecommendedTraining`이
@@ -196,6 +222,7 @@ function randomPlan(rnd) {
         if (c.구종) pitchLearned = c.구종;
       }
 
+      const seasonEndSnaps = app.drainSeasonEndSnapshots ? app.drainSeasonEndSnapshots() : [];
       const end = app.careerProbe();
       const stopped = elapsed < WEEKS
         ? `${app.retired() ? "은퇴" : "정지"} · pending ${app.pendingKind() ?? "없음"} · ${app.stopReason() ?? "사유없음"}`
@@ -210,6 +237,7 @@ function randomPlan(rnd) {
         팀이동: teamsSeen.length - 1, 팀들: teamsSeen,
         최종: { 단계: end.단계, 리그: end.리그, 나이: end.나이 },
         고교시즌: hsSeasons,
+        시즌말: seasonEndSnaps,
         수상: (app.careerProbe().수상 ?? []),
         경력기록수: (app.careerProbe().경력기록수 ?? 0),
         산식내역: (app.careerProbe().산식내역 ?? null),
