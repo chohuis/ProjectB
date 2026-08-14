@@ -47,6 +47,7 @@ func _init() -> void:
 const STATUS := preload("res://ui/screens/status_screen.tscn")
 const MAIN := preload("res://ui/screens/main_screen.tscn")
 const APP := preload("res://ui/app_root.tscn")
+const APP_ENTRY := preload("res://ui/app.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -117,6 +118,22 @@ func _build(which: String) -> Control:
 				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
 			mp.ready.connect(func() -> void: mp.screen()._on_tab(1), CONNECT_ONE_SHOT)
 			return mp
+		"title":
+			return APP_ENTRY.instantiate()
+		"title-saved":
+			# 슬롯에 세이브가 있는 상태
+			Slots.clear_all()
+			Slots.save(1, World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
+			var t2 := World.new_game({"seed": 777, "season_year": 2027,
+				"name": "박한별", "team_id": "TEAM_HS_BAEKHO"})
+			t2["day"] = 120
+			Slots.save(2, t2)
+			return APP_ENTRY.instantiate()
+		"newgame-screen":
+			var ne: App = APP_ENTRY.instantiate()
+			ne.ready.connect(func() -> void: ne.show_new_game(), CONNECT_ONE_SHOT)
+			return ne
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()
