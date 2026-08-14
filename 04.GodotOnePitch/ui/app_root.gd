@@ -31,6 +31,7 @@ func _ready() -> void:
 
 	_main.advance_requested.connect(_on_advance_requested)
 	_main.news_filter_selected.connect(_on_news_filter)
+	_main.league_selected.connect(_on_league_selected)
 	_refresh()
 
 
@@ -39,6 +40,11 @@ func _ready() -> void:
 ## 돌아가는데, 사용자는 자기가 뭘 잘못 눌렀는지 모른다
 func _on_news_filter(filter_id: String) -> void:
 	_state["news_filter"] = filter_id
+	_refresh()
+
+
+func _on_league_selected(league_id: String) -> void:
+	_state["league_tab"] = league_id
 	_refresh()
 
 

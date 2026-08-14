@@ -358,3 +358,12 @@ func test_saving_while_running_is_refused() -> void:
 	for e in refused:
 		assert_int(e).is_equal(ERR_BUSY)
 	_cleanup_save()
+
+
+## ⚠ **고른 리그도 상태가 들고 있다.** 화면이 들면 진행 뒤에 초기화된다
+func test_the_league_choice_survives_advancing() -> void:
+	var r := await _mount(_state({"day": 10, "season_days": 350}))
+	r.screen().league_selected.emit("LEAGUE_JBL")
+	assert_str(r.state()["league_tab"]).is_equal("LEAGUE_JBL")
+	await r.advance(5)
+	assert_str(r.screen()._vm["league"]["league_id"]).is_equal("LEAGUE_JBL")

@@ -100,6 +100,17 @@ func _build(which: String) -> Control:
 				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
 			ns.ready.connect(func() -> void: ns.screen()._on_tab(5), CONNECT_ONE_SHOT)
 			return ns
+		"league":
+			var lg: AppRoot = APP.instantiate()
+			lg.set_state(Fixtures.played_state(40))
+			lg.ready.connect(func() -> void: lg.screen()._on_tab(3), CONNECT_ONE_SHOT)
+			return lg
+		"team":
+			var tm: AppRoot = APP.instantiate()
+			tm.set_state(World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
+			tm.ready.connect(func() -> void: tm.screen()._on_tab(2), CONNECT_ONE_SHOT)
+			return tm
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

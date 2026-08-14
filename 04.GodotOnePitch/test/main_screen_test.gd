@@ -300,3 +300,88 @@ func test_the_view_model_does_not_know_the_screen() -> void:
 	assert_str(src).not_contains("Control")
 	assert_str(src).not_contains("Label")
 	assert_str(src).not_contains("preload")
+
+
+# ── 리그 탭 ───────────────────────────────────────────────────
+
+func _standing_game(day: int, home: String, away: String, hs: int, as_: int) -> Dictionary:
+	var winner: String = home if hs >= as_ else away
+	var loser = null if hs == as_ else (away if hs > as_ else home)
+	return {"id": "G%d" % day, "day": day, "league_id": "LEAGUE_KBL",
+		"home": home, "away": away, "is_protagonist_game": false,
+		"result": {"home_score": hs, "away_score": as_,
+			"winner_id": winner, "loser_id": loser, "player_lines": []}}
+
+
+func _open_league(s: MainScreen) -> void:
+	s._on_tab(3)
+	await await_idle_frame()
+
+
+func test_the_league_tab_shows_the_standings() -> void:
+	var s := await _mount(_vm({"day": 50, "schedule": [
+		_standing_game(1, "TEAM_A", "TEAM_B", 5, 2),
+		_standing_game(2, "TEAM_A", "TEAM_B", 4, 1),
+		_standing_game(3, "TEAM_A", "TEAM_B", 0, 3),
+	], "protagonist": {"team_id": "TEAM_A", "league_id": "LEAGUE_KBL"},
+		"team_names": {"TEAM_A": "제주", "TEAM_B": "서울"}}))
+	await _open_league(s)
+	var t := _texts(s)
+	assert_array(t).contains(["제주", "서울"])
+	assert_array(t).contains(["2승 0무 1패", "1승 0무 2패"])
+	# 승률은 앞 0을 떼고 셋째 자리까지
+	assert_array(t).contains([".667", ".333"])
+
+
+func test_the_league_tab_offers_every_league() -> void:
+	var s := await _mount(_vm({"protagonist": {"team_id": "TEAM_A",
+		"league_id": "LEAGUE_KBL"}}))
+	await _open_league(s)
+	assert_array(_texts(s)).contains(["KBL", "ABL", "JBL", "고교", "대학", "독립"])
+
+
+func test_a_league_with_no_games_says_so() -> void:
+	var s := await _mount(_vm({"protagonist": {"team_id": "TEAM_A",
+		"league_id": "LEAGUE_KBL"}, "schedule": []}))
+	await _open_league(s)
+	assert_array(_texts(s)).contains(["아직 치른 경기가 없습니다"])
+
+
+## 내 팀은 눈에 띄어야 한다 — 10팀이면 찾기 어렵다
+func test_my_row_is_highlighted() -> void:
+	assert_object(StandingRow.row_color(true)).is_equal(AppTheme.ACCENT)
+	assert_object(StandingRow.row_color(false)).is_equal(AppTheme.TEXT)
+
+
+# ── 팀 탭 ─────────────────────────────────────────────────────
+
+func test_the_team_tab_lists_the_roster() -> void:
+	var roster: Array = [
+		{"id": "P1", "name": "김투수", "position": "SP", "age": 17,
+			"pitching": {"ovr": 72.0}, "batting": {"ovr": 20.0}, "potential": 85.0},
+		{"id": "B1", "name": "이타자", "position": "SS", "age": 18,
+			"pitching": {"ovr": 10.0}, "batting": {"ovr": 66.0}, "potential": 80.0},
+	]
+	var s := await _mount(_vm({"protagonist": {"id": "P1", "team_id": "T1",
+		"team_name": "제주"}, "world": {"rosters": {"T1": roster}}}))
+	s._on_tab(2)
+	await await_idle_frame()
+
+	var t := _texts(s)
+	assert_array(t).contains(["김투수", "이타자"])
+	assert_array(t).contains(["제주 · 2명 · 투수 1 · 야수 1"])
+	# 투수는 투구 OVR, 야수는 타격 OVR
+	assert_array(t).contains(["72", "66"])
+
+
+func test_an_empty_roster_says_so() -> void:
+	var s := await _mount(_vm({"protagonist": {"team_id": "T1"},
+		"world": {"rosters": {}}}))
+	s._on_tab(2)
+	await await_idle_frame()
+	assert_array(_texts(s)).contains(["로스터가 비어 있습니다"])
+
+
+func test_i_am_highlighted_in_my_roster() -> void:
+	assert_object(PlayerRow.row_color(true)).is_equal(AppTheme.ACCENT)
+	assert_object(PlayerRow.row_color(false)).is_equal(AppTheme.TEXT)

@@ -14,6 +14,8 @@ class_name MainScreen
 
 const SCHEDULE_ROW := preload("res://ui/parts/schedule_row.tscn")
 const NEWS_ROW := preload("res://ui/parts/news_row.tscn")
+const STANDING_ROW := preload("res://ui/parts/standing_row.tscn")
+const PLAYER_ROW := preload("res://ui/parts/player_row.tscn")
 
 @onready var _bg: ColorRect = $Bg
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
@@ -33,6 +35,8 @@ signal tab_selected(tab_id: String)
 ## 소식 거르기를 골랐다. **어느 것이 켜졌는지는 상태가 들고 있다** —
 ## 화면이 들고 있으면 진행 뒤에 사전이 새로 오면서 초기화된다
 signal news_filter_selected(filter_id: String)
+## 리그를 골랐다
+signal league_selected(league_id: String)
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -147,6 +151,10 @@ func _build_body() -> void:
 			_build_schedule()
 		"news":
 			_build_news()
+		"league":
+			_build_league()
+		"team":
+			_build_team()
 		_:
 			# 아직 안 옮긴 탭. **소비자 없는 자리를 미리 만들지 않는다**
 			var l := Label.new()
@@ -176,6 +184,62 @@ func _build_schedule() -> void:
 
 	for r in rows:
 		var row: ScheduleRow = SCHEDULE_ROW.instantiate()
+		_tab_host.add_child(row)
+		row.setup(r)
+
+
+## 팀 탭. 로스터는 `TeamVm`이 정렬해 온다
+func _build_team() -> void:
+	var vm: Dictionary = _vm.get("team", {})
+
+	var head := Label.new()
+	head.text = "%s · %s" % [vm.get("team_name", ""), vm.get("summary", "")]
+	head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_tab_host.add_child(head)
+
+	var rows: Array = vm.get("rows", [])
+	if rows.is_empty():
+		var empty := Label.new()
+		empty.text = "로스터가 비어 있습니다"
+		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		_tab_host.add_child(empty)
+		return
+
+	for r in rows:
+		var row: PlayerRow = PLAYER_ROW.instantiate()
+		_tab_host.add_child(row)
+		row.setup(r)
+
+
+## 리그 탭. 순위표는 `LeagueVm`이 일정에서 매번 다시 센다 —
+## 화면이 자기 집계를 들면 경기 결과와 어긋나는 순간이 온다
+func _build_league() -> void:
+	var vm: Dictionary = _vm.get("league", {})
+
+	var chips := HBoxContainer.new()
+	chips.add_theme_constant_override("separation", 4)
+	_tab_host.add_child(chips)
+
+	var active: String = vm.get("league_id", "")
+	for l in vm.get("leagues", []):
+		var b := Button.new()
+		b.text = l.get("label", "")
+		b.toggle_mode = true
+		b.button_pressed = (l["id"] == active)
+		b.pressed.connect(func() -> void:
+			league_selected.emit.call_deferred(String(l["id"])))
+		chips.add_child(b)
+
+	var rows: Array = vm.get("rows", [])
+	if rows.is_empty():
+		var empty := Label.new()
+		empty.text = "아직 치른 경기가 없습니다"
+		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		_tab_host.add_child(empty)
+		return
+
+	for r in rows:
+		var row: StandingRow = STANDING_ROW.instantiate()
 		_tab_host.add_child(row)
 		row.setup(r)
 

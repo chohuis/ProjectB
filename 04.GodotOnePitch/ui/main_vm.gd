@@ -91,6 +91,8 @@ static func build(s: Dictionary) -> Dictionary:
 		# 알아야 하고, 그 순간 화면이 배선을 갖는다
 		"schedule": ScheduleVm.build(s),
 		"news": NewsVm.build(s),
+		"league": LeagueVm.build(s),
+		"team": TeamVm.build(s),
 	}
 
 

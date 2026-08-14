@@ -143,3 +143,18 @@ static func main_state_gameday() -> Dictionary:
 	var s: Dictionary = main_state()
 	s["day"] = 15
 	return s
+
+
+
+## ⚠ **진짜 세계를 굴린 상태.** 순위표·성적은 경기가 실제로 치러져야
+## 뜻이 있다 — 손으로 만든 사전으로 찍으면 화면만 보고 이어졌다고 믿게 된다
+static func played_state(days: int = 40) -> Dictionary:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var rng := RandomNumberGenerator.new()
+	for d in range(1, days + 1):
+		rng.seed = Rng.mix([s["seed"], "day", d])
+		MatchDay.play_day(s, d, rng)
+	s["day"] = days + 1
+	s["league_tab"] = "LEAGUE_KBL"
+	return s
