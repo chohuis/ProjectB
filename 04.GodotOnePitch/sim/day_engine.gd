@@ -159,6 +159,13 @@ static func advance_day(s: Dictionary) -> Dictionary:
 		out["weeks_crossed"] = 0
 		return out
 
+	# 대회 — **오늘 경기를 모으기 전이다.** 오늘 열리는 대회의 1라운드가
+	# 오늘 날짜로 꽂히므로, 뒤로 미루면 그 경기가 하루 늦게 잡힌다.
+	#
+	# ⚠ **여기 한 곳에서만 부른다.** `DayRunner`가 따로 부르면 두 경로가
+	# 갈리고, 그때는 어느 쪽이 맞는지 알 방법이 없다
+	TournamentRunner.run(out, day)
+
 	var games: Array = []
 	for g in out.get("schedule", []):
 		if int(g.get("day", -1)) == day and g.get("result", null) == null:

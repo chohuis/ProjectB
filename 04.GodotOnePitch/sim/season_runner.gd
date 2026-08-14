@@ -49,6 +49,13 @@ static func run(state: Dictionary) -> Dictionary:
 	var summary: Dictionary = {"graduated": 0, "drafted": 0, "undrafted": 0,
 		"retired": 0, "healed": 0, "aged": 0}
 
+	# ⓪ 올해 최종 순위를 남긴다 — **일정이 아직 이 해의 결과를 들고 있을 때.**
+	#
+	# ⚠ **개나리기는 2주에 열린다.** 그때 올해 순위표를 보면 치른 경기가
+	# 거의 없어 전 팀이 승률 0이고, 시드가 **팀ID 순**이 된다. 지난해 순위를
+	# 여기서 안 남기면 그 대회는 매년 같은 대진으로 열린다
+	TournamentRunner.remember_standings(state)
+
 	# ① 진급·졸업·나이 — **드래프트보다 먼저.** 졸업생이 풀에 있어야 한다
 	var promoted: Dictionary = Promotion.advance_grades(all_players(state), year)
 	var graduates: Array = promoted["hs_graduated"] + promoted["univ_graduated"]

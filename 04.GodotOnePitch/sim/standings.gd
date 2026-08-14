@@ -121,6 +121,10 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 		# 순위표가 뒤죽박죽이 된다
 		if g.get("league_id", "") != league_id:
 			continue
+		# ⚠ **대회 경기는 리그 순위에 안 넣는다.** 넣으면 전국대회 한 판이
+		# 리그 승률을 흔들고, 그 승률이 다음 대회 시드가 된다
+		if g.get("is_tournament", false):
+			continue
 		# 안 치른 경기는 안 센다 — 세면 개막 전에 전 팀이 승률 0으로 뜬다
 		var res = g.get("result", null)
 		if res == null:
@@ -130,6 +134,14 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 		var away: String = g.get("away", "")
 		_blank(table, home)
 		_blank(table, away)
+
+		# 득실 — 권역 시드가 동률을 이걸로 가른다
+		var hs: int = int(res.get("home_score", 0))
+		var as_: int = int(res.get("away_score", 0))
+		table[home]["runs_for"] += hs
+		table[home]["runs_against"] += as_
+		table[away]["runs_for"] += as_
+		table[away]["runs_against"] += hs
 
 		var winner = res.get("winner_id", null)
 		var loser = res.get("loser_id", null)
@@ -154,6 +166,7 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 			"team_id": tid,
 			"wins": r["wins"], "losses": r["losses"], "draws": r["draws"],
 			"win_pct": float(r["wins"]) / float(decided) if decided > 0 else 0.0,
+			"runs_for": r["runs_for"], "runs_against": r["runs_against"],
 		})
 
 	rows = sorted(rows)
@@ -164,7 +177,8 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 
 static func _blank(table: Dictionary, team_id: String) -> void:
 	if not table.has(team_id):
-		table[team_id] = {"wins": 0, "losses": 0, "draws": 0}
+		table[team_id] = {"wins": 0, "losses": 0, "draws": 0,
+			"runs_for": 0, "runs_against": 0}
 
 
 ## 순위 정렬 — 승률 → 승수. **원본을 안 바꾼다**

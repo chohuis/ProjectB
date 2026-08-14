@@ -161,8 +161,10 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       권역은 `teams.json`의 `stadium`에서 파생한다(02는 목록을 한 벌 더
       적어 뒀다). 검사 56 · 변이 69/69.
       **남은 것:**
-      - [ ] **B-4a 배선** — 대회 주에 열고, 경기를 `state.schedule`에 꽂고,
-            라운드가 끝나면 대진을 올리고, 우승팀을 기록한다
+      - [x] **B-4a 배선** — `sim/tournament_runner.gd`. `DayEngine.advance_day`가
+            **날마다** 부른다. 실측: 한 시즌에 대회 8개가 다 열리고 다 끝난다
+            (개나리 31 · 장미 31 · 무궁화 47 · 국화 101 · 패왕 23 ·
+            왕중왕 7 · 은하 31 · 여명 47 = 318경기). 검사 29 · 변이 32/32
       - [ ] **B-4b 대회 소식**(`tournamentNews` 192 · `tournamentView` 155)
       - [ ] **B-4c 독립 생존리그**(`survivalLeague.ts` 75 + `utils` 123 +
             Rust `generate_survival_stage`·`survival_cutoff`·`build_ind_ladder`).

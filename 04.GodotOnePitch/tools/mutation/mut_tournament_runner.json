@@ -1,0 +1,162 @@
+[
+ [
+  "세계에 없는 리그의 대회를 연다 (아무도 없는 대회가 일정을 채운다)",
+  "\t\tif d.is_empty() or not has_league(state, league):\n\t\t\tcontinue",
+  "\t\tif d.is_empty():\n\t\t\tcontinue"
+ ],
+ [
+  "리그를 안 가리고 팀이 있다고 한다",
+  "\tfor t in World.teams_of(league_id):\n\t\tif rosters.has(String(t[\"id\"])):\n\t\t\treturn true\n\treturn false",
+  "\treturn true"
+ ],
+ [
+  "개나리기가 지난 시즌 순위를 안 본다 (시드가 팀ID 순이 된다)",
+  "\tif String(tournament_def.get(\"seed_source\", \"\")) == \"prev_season\":\n\t\tvar last: Array = state.get(LAST_STANDINGS_KEY, {}).get(league, [])\n\t\tif not last.is_empty():\n\t\t\treturn last",
+  "\tif false:\n\t\tvar last: Array = state.get(LAST_STANDINGS_KEY, {}).get(league, [])\n\t\tif not last.is_empty():\n\t\t\treturn last"
+ ],
+ [
+  "모든 대회가 지난 시즌 순위를 본다 (올해 성적이 시드에 안 닿는다)",
+  "\tif String(tournament_def.get(\"seed_source\", \"\")) == \"prev_season\":",
+  "\tif true:"
+ ],
+ [
+  "지난 시즌 기록이 없어도 그걸 쓴다 (첫 시즌에 시드가 빈다)",
+  "\t\tif not last.is_empty():\n\t\t\treturn last",
+  "\t\treturn last"
+ ],
+ [
+  "시즌이 끝나도 순위를 안 남긴다",
+  "\tfor league in LEAGUES:\n\t\tout[league] = Standings.from_schedule(state.get(\"schedule\", []), league)",
+  "\tpass"
+ ],
+ [
+  "같은 대회를 두 번 연다",
+  "\tif not of(state, tid).is_empty():\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "조별예선이 있는 대회도 바로 본선부터 연다",
+  "\tif Tournament.has_group_stage(tournament_def):",
+  "\tif false:"
+ ],
+ [
+  "1라운드를 일정에 안 꽂는다 (아무도 안 뛴다)",
+  "\t\trec[\"bracket\"] = Tournament.generate_bracket(tournament_def, seeded, me,\n\t\t\tyear)\n\t\t_inject(state, Tournament.round_schedule(rec[\"bracket\"], 1))",
+  "\t\trec[\"bracket\"] = Tournament.generate_bracket(tournament_def, seeded, me,\n\t\t\tyear)"
+ ],
+ [
+  "예선을 일정에 안 꽂는다",
+  "\t\t_inject(state, rec[\"stage\"][\"matches\"])",
+  "\t\tpass"
+ ],
+ [
+  "같은 경기를 또 꽂는다 (치른 결과가 날아간다)",
+  "\t\tif known.has(String(m[\"id\"])):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "일정에 안 넣고 세기만 한다",
+  "\t\tschedule.append(m.duplicate())",
+  "\t\tpass"
+ ],
+ [
+  "안 치른 경기도 결과가 있다고 본다",
+  "\t\tif res == null:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "한 경기가 남았는데 라운드를 올린다",
+  "\t\tif not results.has(String(g[\"id\"])):\n\t\t\treturn false",
+  "\t\tif false:\n\t\t\treturn false"
+ ],
+ [
+  "무승부에서 아무도 안 올라간다 (대진이 거기서 멈춘다)",
+  "\t\t\tinputs.append({\"match_id\": String(g[\"id\"]),\n\t\t\t\t\"winner\": w if not w.is_empty() else String(g[\"home\"])})",
+  "\t\t\tinputs.append({\"match_id\": String(g[\"id\"]), \"winner\": w})"
+ ],
+ [
+  "패자를 승자로 올린다",
+  "\treturn String(result.get(\"winner_id\", \"\"))",
+  "\treturn String(result.get(\"loser_id\", \"\"))"
+ ],
+ [
+  "이미 끝난 대회를 또 돌린다",
+  "\tif rec.is_empty() or not String(rec[\"champion\"]).is_empty():\n\t\treturn 0",
+  "\tif rec.is_empty():\n\t\treturn 0"
+ ],
+ [
+  "라운드가 안 끝나도 계속 올린다",
+  "\t\tif not _round_done(bracket, round, results):\n\t\t\tbreak",
+  "\t\tif false:\n\t\t\tbreak"
+ ],
+ [
+  "다음 라운드를 일정에 안 꽂는다 (2라운드가 안 열린다)",
+  "\t\tif round < int(bracket[\"total_rounds\"]):\n\t\t\t_inject(state, Tournament.round_schedule(bracket, round + 1))",
+  "\t\tpass"
+ ],
+ [
+  "우승팀을 안 남긴다",
+  "\tif not champ.is_empty():\n\t\trec[\"champion\"] = champ",
+  "\tif false:\n\t\trec[\"champion\"] = champ"
+ ],
+ [
+  "우승 기록을 안 적는다",
+  "\t\tvar log: Array = state.get(LOG_KEY, [])\n\t\tlog.append({\"tournament_id\": tid,",
+  "\t\tvar log: Array = []\n\t\tlog.append({\"tournament_id\": tid,"
+ ],
+ [
+  "기록에 대회 이름이 안 붙는다",
+  "\t\t\t\"name\": String(tournament_def.get(\"name\", \"\")),",
+  "\t\t\t\"name\": \"\","
+ ],
+ [
+  "기록에 연도가 안 붙는다 (해마다 같은 줄이 된다)",
+  "\t\t\t\"season_year\": int(state.get(\"season_year\", 0)),",
+  "\t\t\t\"season_year\": 0,"
+ ],
+ [
+  "예선 한 경기가 남았는데 본선을 만든다",
+  "\t\tif res == null:\n\t\t\t# ⚠ **한 경기라도 남았으면 본선을 안 만든다.** 만들면 조 순위가\n\t\t\t# 아직 안 정해진 채로 진출팀이 정해진다\n\t\t\treturn",
+  "\t\tif res == null:\n\t\t\tcontinue"
+ ],
+ [
+  "예선 결과를 조 순위에 안 넣는다",
+  "\tTournament.apply_group_results(stage, inputs)",
+  "\tpass"
+ ],
+ [
+  "본선을 일정에 안 꽂는다",
+  "\t_inject(state, Tournament.round_schedule(rec[\"bracket\"], 1))\n\n\n## 주인공 팀이 몇 라운드까지 갔나",
+  "\n\n## 주인공 팀이 몇 라운드까지 갔나"
+ ],
+ [
+  "본선을 만들고도 만들었다고 안 적는다 (매번 다시 만든다)",
+  "\trec[\"final_built\"] = true",
+  "\tpass"
+ ],
+ [
+  "예선이 끝나도 본선을 안 만든다",
+  "\tif not rec[\"stage\"].is_empty() and not bool(rec[\"final_built\"]):\n\t\t_try_build_final(state, tournament_def, rec)",
+  "\tpass"
+ ],
+ [
+  "내가 어디까지 갔는지를 안 센다",
+  "\t\tif String(m[\"home\"]) == me or String(m[\"away\"]) == me:\n\t\t\tlast = maxi(last, int(m[\"round\"]))",
+  "\t\tpass"
+ ],
+ [
+  "이번 주에 시작하지 않는 대회도 연다",
+  "\t\tvar d: Dictionary = Tournament.at_week(week, league)\n\t\tif d.is_empty() or not has_league(state, league):\n\t\t\tcontinue\n\t\tif of(state, String(d[\"id\"])).is_empty():",
+  "\t\tvar d: Dictionary = Tournament.defs_of(league)[0]\n\t\tif not has_league(state, league):\n\t\t\tcontinue\n\t\tif of(state, String(d[\"id\"])).is_empty():"
+ ],
+ [
+  "기간이 지나면 대회를 안 민다 (결승 결과를 영영 안 읽는다)",
+  "\tfor tid in all_of(state).keys():\n\t\tvar rec: Dictionary = of(state, tid)\n\t\tif not String(rec.get(\"champion\", \"\")).is_empty():\n\t\t\tcontinue\n\t\tvar d2: Dictionary = Tournament.def_of(String(tid))",
+  "\tfor tid in all_of(state).keys():\n\t\tvar rec: Dictionary = of(state, tid)\n\t\tif not String(rec.get(\"champion\", \"\")).is_empty():\n\t\t\tcontinue\n\t\tif Tournament.at_week(week, String(rec[\"league_id\"])).is_empty():\n\t\t\tcontinue\n\t\tvar d2: Dictionary = Tournament.def_of(String(tid))"
+ ],
+ [
+  "건네받은 날짜를 무시한다",
+  "\tvar day: int = at_day if at_day > 0 else int(state.get(\"day\", 1))",
+  "\tvar day: int = int(state.get(\"day\", 1))"
+ ]
+]
