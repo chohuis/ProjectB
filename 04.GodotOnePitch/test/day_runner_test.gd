@@ -37,7 +37,9 @@ func _runner() -> DayRunner:
 ## 실행기가 보는 건 "경기 하나를 돌린다"는 계약뿐이다
 class Counter:
 	var played: Array = []
-	func sim(g: Dictionary) -> void:
+	## ⚠ 진행기가 **경기가 속한 상태를 같이 넘긴다** — 시뮬이 거기에 성적을
+	## 쌓기 때문이다. 바깥 사전에 쌓으면 진행이 끝날 때 덮어써진다
+	func sim(g: Dictionary, _s: Dictionary) -> void:
 		played.append(g["id"])
 
 
@@ -87,7 +89,7 @@ func test_it_stops_at_the_protagonist_game() -> void:
 func test_the_result_matches_the_day_engine() -> void:
 	var s := _state({"day": 1, "schedule": [_game(12, true, "MINE")]})
 	var want: Dictionary = DayEngine.advance_to(s.duplicate(true), 30)
-	var got: Dictionary = await _runner().run(s.duplicate(true), 30, func(_g): pass)
+	var got: Dictionary = await _runner().run(s.duplicate(true), 30, func(_g, _s): pass)
 	assert_int(got["day"]).is_equal(want["day"])
 	assert_int(got["weeks_crossed"]).is_equal(want["weeks_crossed"])
 
@@ -102,7 +104,7 @@ func test_a_heavy_span_yields_at_least_once() -> void:
 		games.append(_game(2 + i / 4, false, "G%d" % i))
 	var r := _runner()
 	# 시뮬 하나가 시간을 쓰는 척한다 — 예산이 차야 프레임을 넘긴다
-	var slow := func(_g: Dictionary) -> void:
+	var slow := func(_g: Dictionary, _s: Dictionary) -> void:
 		var t := Time.get_ticks_usec()
 		while Time.get_ticks_usec() - t < 300:
 			pass
@@ -113,7 +115,7 @@ func test_a_heavy_span_yields_at_least_once() -> void:
 ## 가벼우면 굳이 안 넘긴다 — 넘길 때마다 한 프레임(약 16ms)이 든다
 func test_a_light_span_does_not_yield() -> void:
 	var r := _runner()
-	await r.run(_state({"day": 1, "schedule": [_game(2, false, "A")]}), 5, func(_g): pass)
+	await r.run(_state({"day": 1, "schedule": [_game(2, false, "A")]}), 5, func(_g, _s): pass)
 	assert_int(r.frames_yielded).is_equal(0)
 
 
@@ -126,7 +128,7 @@ func test_yielding_resets_the_budget() -> void:
 		games.append(_game(2 + i / 4, false, "G%d" % i))
 	var r := _runner()
 	# 경기 하나가 예산(8ms)의 20분의 1쯤 쓴다 — 스무 경기에 한 번쯤 넘겨야 한다
-	var slow := func(_g: Dictionary) -> void:
+	var slow := func(_g: Dictionary, _s: Dictionary) -> void:
 		var t := Time.get_ticks_usec()
 		while Time.get_ticks_usec() - t < 400:
 			pass
@@ -148,7 +150,7 @@ func test_progress_only_moves_forward() -> void:
 	var games: Array = []
 	for i in 200:
 		games.append(_game(2 + i / 4, false, "G%d" % i))
-	var slow := func(_g: Dictionary) -> void:
+	var slow := func(_g: Dictionary, _s: Dictionary) -> void:
 		var t := Time.get_ticks_usec()
 		while Time.get_ticks_usec() - t < 400:
 			pass
@@ -171,7 +173,7 @@ func test_it_ends_at_full_progress() -> void:
 	var r := _runner()
 	var seen: Array = []
 	r.progress.connect(func(done: int, total: int) -> void: seen.append([done, total]))
-	await r.run(_state({"day": 1, "schedule": [_game(3, false, "A")]}), 5, func(_g): pass)
+	await r.run(_state({"day": 1, "schedule": [_game(3, false, "A")]}), 5, func(_g, _s): pass)
 	var last: Array = seen[seen.size() - 1]
 	assert_int(last[0]).is_equal(5)
 	assert_int(last[1]).is_equal(5)
@@ -193,13 +195,13 @@ func test_it_refuses_to_run_twice_at_once() -> void:
 	var s := _state({"day": 1, "schedule": games})
 
 	# 프레임을 넘기게 만들어야 겹쳐 부를 틈이 생긴다
-	var slow := func(g: Dictionary) -> void:
-		c.sim(g)
+	var slow := func(g: Dictionary, _s: Dictionary) -> void:
+		c.sim(g, _s)
 		var t := Time.get_ticks_usec()
 		while Time.get_ticks_usec() - t < 400:
 			pass
 
-	r.run.call_deferred(s, 10, func(_x): pass)
+	r.run.call_deferred(s, 10, func(_x, _y): pass)
 	await r.run(s, 70, slow)
 
 	assert_int(r.rejected_runs).is_greater(0)
@@ -209,9 +211,9 @@ func test_it_refuses_to_run_twice_at_once() -> void:
 
 func test_it_can_run_again_after_finishing() -> void:
 	var r := _runner()
-	await r.run(_state({"day": 1}), 5, func(_g): pass)
+	await r.run(_state({"day": 1}), 5, func(_g, _s): pass)
 	assert_bool(r.is_running()).is_false()
-	var out: Dictionary = await r.run(_state({"day": 6}), 5, func(_g): pass)
+	var out: Dictionary = await r.run(_state({"day": 6}), 5, func(_g, _s): pass)
 	assert_int(out["day"]).is_equal(11)
 
 
@@ -221,7 +223,7 @@ func test_it_can_run_again_after_finishing() -> void:
 ## 바뀌어서, 진행을 취소하거나 되돌릴 방법이 없어진다
 func test_it_does_not_mutate_the_callers_state() -> void:
 	var s := _state({"day": 1, "schedule": [_game(2, false, "A"), _game(3, false, "B")]})
-	await _runner().run(s, 10, func(_g): pass)
+	await _runner().run(s, 10, func(_g, _s): pass)
 	assert_int(s["day"]).is_equal(1)
 	assert_bool(s.has("stopped_by")).is_false()
 	assert_bool(s.has("weeks_crossed")).is_false()
@@ -232,7 +234,7 @@ func test_it_does_not_mutate_the_callers_state() -> void:
 ## `advance_day`가 복사본을 만들어 주므로 티가 안 난다
 func test_a_zero_day_run_does_not_mutate_the_callers_state() -> void:
 	var s := _state({"day": 5, "schedule": [_game(5, false, "A")]})
-	await _runner().run(s, 0, func(_g): pass)
+	await _runner().run(s, 0, func(_g, _s): pass)
 	assert_bool(s.has("stopped_by")).is_false()
 	assert_bool(s.has("weeks_crossed")).is_false()
 	assert_bool(s.has("games_today")).is_false()

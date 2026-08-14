@@ -453,3 +453,160 @@ func test_after_the_match_the_day_can_advance() -> void:
 	r._on_match_done()
 	assert_str(r.screen()._vm["stop_type"]).override_failure_message(
 		"경기를 끝냈는데 아직 %s로 멈춰 있다" % r.screen()._vm["stop_type"]).is_empty()
+
+
+# ── 시즌 성적이 쌓이는가 (M9-7a) ──────────────────────────────
+
+func _real_game(seed_value: int = 4242) -> Dictionary:
+	return World.new_game({"seed": seed_value, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+
+
+## ⚠ **아무도 `season_stats`를 안 채우고 있었다.** "나" 탭도 수상도 이
+## 사전을 읽는데 쌓는 자리가 없어서 화면이 늘 빈칸이었다
+func test_playing_games_fills_the_season_stats() -> void:
+	var s: Dictionary = _real_game()
+	var first: int = 999
+	for g in s["schedule"]:
+		first = mini(first, int(g["day"]))
+	s["day"] = first
+
+	var r: AppRoot = await _mount(s)
+	await r.advance(3)
+
+	var stats: Dictionary = r.state().get("season_stats", {})
+	assert_int(stats.size()).override_failure_message(
+		"경기를 치렀는데 시즌 성적이 0명이다").is_greater(0)
+
+
+## ⚠ **진행기가 상태를 복사한다.** 바깥 사전에 쌓으면 진행이 끝날 때
+## 통째로 덮어써진다 — 성장이 조용히 사라졌던 그 자리다
+func test_the_stats_survive_the_advance() -> void:
+	var s: Dictionary = _real_game()
+	var first: int = 999
+	for g in s["schedule"]:
+		first = mini(first, int(g["day"]))
+	s["day"] = first
+
+	var r: AppRoot = await _mount(s)
+	await r.advance(2)
+	var after_first: int = r.state().get("season_stats", {}).size()
+	assert_int(after_first).is_greater(0)
+
+	await r.advance(2)
+	assert_int(r.state().get("season_stats", {}).size()).override_failure_message(
+		"두 번째 진행에서 성적이 %d → %d로 줄었다"
+		% [after_first, r.state().get("season_stats", {}).size()]) \
+		.is_greater_equal(after_first)
+
+
+## 같은 선수의 기록이 경기마다 더해져야 한다 — 덮어쓰면 늘 1경기다
+func test_the_stats_add_up_over_games() -> void:
+	var s: Dictionary = _real_game()
+	var first: int = 999
+	for g in s["schedule"]:
+		first = mini(first, int(g["day"]))
+	s["day"] = first
+
+	var r: AppRoot = await _mount(s)
+	await r.advance(20)
+
+	var most: int = 0
+	for pid in r.state().get("season_stats", {}):
+		most = maxi(most, int(r.state()["season_stats"][pid].get("g", 0)))
+	assert_int(most).override_failure_message(
+		"20일을 진행했는데 최다 출전이 %d경기다 — 덮어쓰고 있다" % most) \
+		.is_greater(1)
+
+
+## ⚠ **제자리로 쌓는다.** 사전을 복사하면 하루 83경기에 58만 키다
+func test_the_stats_accumulate_in_place() -> void:
+	var stats: Dictionary = {}
+	SeasonStats.accumulate_into(stats, [
+		{"player_id": "P1", "role": "pitcher", "ip": 6.0, "er": 2.0, "k": 5},
+	])
+	assert_int(stats.size()).override_failure_message(
+		"제자리 누적인데 원본이 안 바뀐다").is_equal(1)
+
+	SeasonStats.accumulate_into(stats, [
+		{"player_id": "P1", "role": "pitcher", "ip": 7.0, "er": 1.0, "k": 8},
+	])
+	assert_int(int(stats["P1"]["g"])).is_equal(2)
+	assert_float(float(stats["P1"]["ip"])).is_equal_approx(13.0, 0.01)
+	assert_int(int(stats["P1"]["k"])).is_equal(13)
+
+
+## 새 사전을 주는 쪽과 결과가 같아야 한다 — 두 정본이 갈리면 안 된다
+func test_both_accumulators_agree() -> void:
+	var lines: Array = [
+		{"player_id": "P1", "role": "pitcher", "ip": 6.0, "er": 2.0, "k": 5},
+		{"player_id": "B1", "role": "batter", "ab": 4, "h": 2, "hr": 1},
+	]
+	var copied: Dictionary = SeasonStats.accumulate({}, lines)
+	var in_place: Dictionary = {}
+	SeasonStats.accumulate_into(in_place, lines)
+	assert_dict(in_place).is_equal(copied)
+
+
+## ⚠ **주인공 성적은 경기 화면을 거쳐야 쌓인다.** 등판일엔 진행이 멈추므로
+## 자동 시뮬이 그 경기를 안 돈다 — 자동 쪽에만 누적을 붙이면 **주인공만
+## 영영 기록이 없다.** 실제로 "나" 탭이 빈칸이었다.
+##
+## ⚠ **"오늘 등판"이 곧 실제 등판은 아니다.** `is_my_start`는 불펜을 확률로
+## 내보내는데 경기 엔진은 그걸 모른다 — M3-2의 미완성이라 여기서는
+## **주인공이 실제로 마운드에 서는 경기**를 찾아서 본다
+func _find_my_real_start(s: Dictionary) -> Dictionary:
+	var me: String = s["protagonist"]["id"]
+	for g in s["schedule"]:
+		if not g.get("is_protagonist_game", false):
+			continue
+		var probe: Dictionary = LiveMatch.open(s, g)
+		if not probe["ok"]:
+			continue
+		if String(probe["state"].get("pitcher", {}).get("id", "")) == me:
+			return g
+		var other: String = "away_pitcher" if probe["ctx"]["my_side"] == "away" \
+			else "home_pitcher"
+		if String(probe["state"].get(other, {}).get("id", "")) == me:
+			return g
+	return {}
+
+
+func test_a_hand_pitched_game_fills_my_stats() -> void:
+	# ⚠ **씨앗 777은 주인공이 선발이다.** 불펜이면 실제로 등판을 못 한다 —
+	# 투수 교체가 아직 경기에 안 붙어 있어서다(별도 결함)
+	var s: Dictionary = _real_game(777)
+	var me: String = s["protagonist"]["id"]
+	var g: Dictionary = _find_my_real_start(s)
+	assert_bool(g.is_empty()).override_failure_message(
+		"주인공이 선발로 나오는 경기가 하나도 없다").is_false()
+	s["day"] = int(g["day"])
+
+	var r: AppRoot = await _mount(s)
+	assert_str(r.open_match()).override_failure_message("등판 경기를 못 열었다").is_empty()
+
+	var m: Dictionary = r.match_state()
+	LiveMatch.finish(m["state"], m["ctx"], m["rng"])
+	r._on_match_done()
+
+	var stats: Dictionary = r.state().get("season_stats", {})
+	assert_bool(stats.has(me)).override_failure_message(
+		"손으로 던졌는데 주인공 기록이 없다 (%d명 기록됨)" % stats.size()).is_true()
+
+
+## 안 끝낸 경기를 닫으면 기록도 안 남는다 — 점수를 안 남기는 것과 같은 이유다
+func test_an_unfinished_game_leaves_no_stats() -> void:
+	var s: Dictionary = _real_game(777)
+	var me: String = s["protagonist"]["id"]
+	var g: Dictionary = _find_my_real_start(s)
+	s["day"] = int(g["day"])
+
+	var r: AppRoot = await _mount(s)
+	r.open_match()
+	var m: Dictionary = r.match_state()
+	for i in 10:
+		LiveMatch.pitch(m["state"], m["ctx"], m["rng"])
+	r._on_match_done()
+
+	assert_bool(r.state().get("season_stats", {}).has(me)).override_failure_message(
+		"안 끝낸 경기가 기록에 들어갔다").is_false()

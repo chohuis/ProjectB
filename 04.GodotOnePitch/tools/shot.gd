@@ -28,7 +28,9 @@ func _init() -> void:
 	# ⚠ **한 번 그리게 만든 뒤에 찍는다.** `process_frame`을 두 번 기다려도
 	# 실제 렌더는 아직일 수 있어서 회색 판만 나왔다. 프레임을 넉넉히 돌리고
 	# 마지막에 강제로 한 번 그린다
-	for i in 5:
+	# ⚠ **진행을 거치는 갈래가 있다.** `advance`가 프레임을 넘기므로
+	# 몇 프레임만 기다리면 진행 중인 화면을 찍는다
+	for i in 240:
 		await process_frame
 	RenderingServer.force_draw()
 
@@ -201,6 +203,28 @@ func _build(which: String) -> Control:
 				md.open_match()
 				md._on_auto(), CONNECT_ONE_SHOT)
 			return md
+		"me-played":
+			# 경기를 몇 개 치른 뒤의 "나" 탭 — 시즌 성적이 실제로 쌓였는지 본다
+			var mpl: AppRoot = APP.instantiate()
+			var mps := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			# ⚠ **주인공 등판 뒤여야 성적이 있다.** 고교 개막이 64일차라
+			# 첫날부터 진행하면 내 기록은 계속 빈칸이다
+			var mfirst: int = 999
+			for g in mps["schedule"]:
+				if g["is_protagonist_game"]:
+					mfirst = mini(mfirst, int(g["day"]))
+			mps["day"] = mfirst
+			mpl.set_state(mps)
+			mpl.ready.connect(func() -> void:
+				for i in 6:
+					await mpl.advance(30)
+				mpl.screen()._on_tab(1)
+				# "나" 탭 안의 "기록" 하위 탭 — 시즌 성적이 거기 있다
+				await mpl.get_tree().process_frame
+				for n in mpl.screen().find_children("*", "StatusScreen", true, false):
+					n._on_tab(1), CONNECT_ONE_SHOT)
+			return mpl
 		"season-end":
 			# 시즌 마지막 날로 보내 "시즌 종료"를 실제로 누른다
 			var se: AppRoot = APP.instantiate()

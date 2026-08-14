@@ -90,7 +90,9 @@ func run(log_line: Callable, fail: Callable, seed_value: int) -> int:
 	# ⚠ **람다가 잡은 지역 변수에 다시 대입하면 밖으로 안 나온다.** 사전에
 	# 담아 제자리에서 고친다 — 안 그러면 계측이 조용히 전부 0을 낸다
 	var acc: Dictionary = {"played": 0, "pitches": 0, "busy": 0}
-	var sim := func(_g: Dictionary) -> void:
+	# ⚠ 진행기가 **경기가 속한 상태를 같이 넘긴다** — 시뮬이 거기에 성적을
+	# 쌓기 때문이다. 인자 수가 어긋나면 계측이 0경기로 나온다
+	var sim := func(_g: Dictionary, _state: Dictionary) -> void:
 		var t := Time.get_ticks_usec()
 		var out: Dictionary = GameLoop.play(GameBench.make_state(rng), rng, GameBench._decide)
 		acc["busy"] += Time.get_ticks_usec() - t

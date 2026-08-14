@@ -196,6 +196,13 @@ func _on_match_done() -> void:
 			if g.get("id", "") == _match["game_id"]:
 				g["result"] = r
 
+		# ⚠ **손으로 던진 경기도 성적에 쌓인다.** 자동 시뮬 쪽에만 붙이면
+		# 내가 직접 던진 날만 기록이 빈다 — 하필 제일 중요한 경기들이다
+		if not _state.has("season_stats"):
+			_state["season_stats"] = {}
+		SeasonStats.accumulate_into(_state["season_stats"],
+			r.get("player_lines", []))
+
 	if _match_screen != null:
 		remove_child(_match_screen)
 		_match_screen.free()
@@ -252,22 +259,34 @@ func advance(days: int) -> void:
 ## ⚠ **경기마다 씨앗을 따로 뽑는다.** 흐름 하나로 이으면 어딘가에 난수
 ## 호출을 하나 추가하는 순간 그 뒤 경기가 전부 밀린다 — 이주 내내 코드를
 ## 고칠 텐데 그러면 회귀를 못 잡는다
-func _play_game(g: Dictionary) -> void:
+## ⚠ **`state`는 진행기가 돌리는 복사본이다.** 바깥 `_state`에 쌓으면
+## 진행이 끝날 때 통째로 덮어써진다 — 성장이 조용히 사라졌던 그 자리다
+func _play_game(g: Dictionary, state: Dictionary = _state) -> void:
 	games_played += 1
 
-	var world: Dictionary = _state.get("world", {})
+	var world: Dictionary = state.get("world", {})
 	if world.is_empty():
 		# 세계가 없는 상태(검사·부분 이주)에서는 자리만 채운다
 		g["result"] = {"home_score": 0, "away_score": 0, "placeholder": true}
 		return
 
 	var rng := RandomNumberGenerator.new()
-	rng.seed = Rng.mix([_state.get("seed", 0), "game", g.get("id", "")])
+	rng.seed = Rng.mix([state.get("seed", 0), "game", g.get("id", "")])
 	var out: Dictionary = MatchDay.play(world, g.get("home", ""), g.get("away", ""), rng)
 	if not out["ok"]:
 		g["result"] = {"home_score": 0, "away_score": 0, "error": out["error"]}
 		return
 	g["result"] = out["result"]
+
+	# ⚠ **여기서 안 쌓으면 시즌 성적이 영영 안 생긴다.** "나" 탭도 수상도
+	# 이 사전을 읽는데 채우는 자리가 없었다 — 화면은 늘 빈칸이었다.
+	#
+	# ⚠ **제자리로 쌓는다.** 매 경기 7,000키 사전을 복사하면 하루 83경기에
+	# 58만 키다 — 성능 여유가 1.41배뿐이라 그것만으로 게이트를 넘는다
+	if not state.has("season_stats"):
+		state["season_stats"] = {}
+	SeasonStats.accumulate_into(state["season_stats"],
+		out["result"].get("player_lines", []))
 
 
 ## 주기 처리 — 7일마다 도는 것들.

@@ -72,7 +72,10 @@ func run(state: Dictionary, days: int, sim: Callable) -> Dictionary:
 		out = step
 
 		for g in step["games_today"]:
-			sim.call(g)
+			# ⚠ **경기가 속한 상태를 같이 넘긴다.** 여기서 도는 건 복사본이라,
+			# 시뮬이 바깥 사전에 뭔가를 쌓으면 진행이 끝날 때 **통째로 덮어써진다** —
+			# 성장이 조용히 사라졌던 것과 같은 형태다
+			sim.call(g, out)
 			# ⚠ **경기 하나마다 예산을 본다.** 하루가 끝날 때만 보면 83경기가
 			# 든 날에 그 하루가 통째로 한 프레임이 된다 — 여기가 제일 무거운 날이다
 			if Time.get_ticks_usec() - budget >= FRAME_BUDGET_USEC:

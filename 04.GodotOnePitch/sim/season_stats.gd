@@ -80,6 +80,20 @@ static func accumulate(stats: Dictionary, lines: Array) -> Dictionary:
 	return next
 
 
+## 같은 일을 **제자리에서** 한다. 시즌 전체를 돌릴 때 쓴다.
+##
+## ⚠ **매 경기 사전을 통째로 복사하면 안 된다.** 선수 7,000명이면 하루
+## 83경기에 58만 키를 복사한다 — 성능 여유가 하루 1.41배뿐이라 그것만으로
+## 게이트를 넘는다. 새 사전이 필요한 자리는 `accumulate`를 쓴다
+static func accumulate_into(stats: Dictionary, lines: Array) -> void:
+	for line in lines:
+		var pid: String = line.get("player_id", "")
+		if line.get("role", "") == "pitcher":
+			stats[pid] = _accumulate_pitcher(stats.get(pid, PITCHER_ZERO), line)
+		else:
+			stats[pid] = _accumulate_batter(stats.get(pid, BATTER_ZERO), line)
+
+
 static func _accumulate_pitcher(prev: Dictionary, line: Dictionary) -> Dictionary:
 	var ip: float = _num(prev.get("ip")) + _num(line.get("ip"))
 	var er: float = _num(prev.get("er")) + _num(line.get("er"))
