@@ -1,0 +1,157 @@
+[
+ [
+  "대학이 고졸이 아닌 사람도 받는다 (대졸이 1학년으로 다시 입학한다)",
+  "\tif last_league_of(p) == HIGHSCHOOL:",
+  "\tif true:"
+ ],
+ [
+  "대학 경로가 아예 없다 (고졸 미지명자 1,310명이 매년 통째로 밀린다)",
+  "\tif last_league_of(p) == HIGHSCHOOL:",
+  "\tif false:"
+ ],
+ [
+  "마지막 소속을 안 본다 (전원이 고졸 취급)",
+  "\tvar history: Array = p.get(\"career_history\", [])\n\tif history.is_empty():\n\t\treturn \"\"\n\treturn String(history[history.size() - 1].get(\"league_id\", \"\"))",
+  "\treturn HIGHSCHOOL"
+ ],
+ [
+  "첫 소속을 본다 (대학·독립을 거쳐도 영영 고졸이다)",
+  "\treturn String(history[history.size() - 1].get(\"league_id\", \"\"))",
+  "\treturn String(history[0].get(\"league_id\", \"\"))"
+ ],
+ [
+  "2군 경로가 없다 (독립이 다 받거나 그만둔다 — 02의 실제 결함)",
+  "\tvar farm: String = find_team(world, FARM, is_pitcher, farm_limit,\n\t\tDEVELOPMENT_MAX, dev_count)\n\tif not farm.is_empty():\n\t\treturn {\"league_id\": FARM, \"team_id\": farm}",
+  ""
+ ],
+ [
+  "독립이 2군보다 먼저다 (2군 투수가 마른다)",
+  "\tvar farm_limit: int = RosterMaintenance.roster_max_of(FARM) + DEVELOPMENT_MAX",
+  "\tif int(p.get(\"age\", 0)) <= INDEPENDENT_AGE_MAX:\n\t\tvar early: String = find_team(world, INDEPENDENT, is_pitcher, INDEPENDENT_MAX)\n\t\tif not early.is_empty():\n\t\t\treturn {\"league_id\": INDEPENDENT, \"team_id\": early}\n\tvar farm_limit: int = RosterMaintenance.roster_max_of(FARM) + DEVELOPMENT_MAX"
+ ],
+ [
+  "육성 몫을 정식 정원 안에서 쓴다 (로스터가 차면 2군행이 0명이 된다)",
+  "\tvar farm_limit: int = RosterMaintenance.roster_max_of(FARM) + DEVELOPMENT_MAX",
+  "\tvar farm_limit: int = RosterMaintenance.roster_max_of(FARM)"
+ ],
+ [
+  "육성 상한이 없다 (2군이 육성선수로 채워져 드래프트가 무의미해진다)",
+  "\tvar farm: String = find_team(world, FARM, is_pitcher, farm_limit,\n\t\tDEVELOPMENT_MAX, dev_count)",
+  "\tvar farm: String = find_team(world, FARM, is_pitcher, farm_limit)"
+ ],
+ [
+  "독립 나이 상한이 없다 (독립이 은퇴 직전 선수로만 채워진다)",
+  "\tif int(p.get(\"age\", 0)) <= INDEPENDENT_AGE_MAX:",
+  "\tif true:"
+ ],
+ [
+  "대학 한 해 정원이 없다 (어느 해에 왕창 받고 4년 뒤 한꺼번에 빠진다)",
+  "\t\tvar univ: String = find_team(world, UNIVERSITY, is_pitcher,\n\t\t\tUNIVERSITY_MAX, UNIVERSITY_ANNUAL_MAX, univ_intake)",
+  "\t\tvar univ: String = find_team(world, UNIVERSITY, is_pitcher, UNIVERSITY_MAX)"
+ ],
+ [
+  "대학 한 해 정원이 팀 정원과 같다 (사실상 상한이 없다)",
+  "const UNIVERSITY_ANNUAL_MAX: int = 8",
+  "const UNIVERSITY_ANNUAL_MAX: int = 40"
+ ],
+ [
+  "육성 상한이 0이다 (제도가 없는 것과 같다 — 02의 실측 결함)",
+  "const DEVELOPMENT_MAX: int = 10",
+  "const DEVELOPMENT_MAX: int = 0"
+ ],
+ [
+  "육성선수 연봉이 최저연봉 이상이다 (하위 라운드 지명이 무의미해진다)",
+  "const DEVELOPMENT_SALARY: int = 2000",
+  "const DEVELOPMENT_SALARY: int = 3500"
+ ],
+ [
+  "정원을 안 본다 (한 팀이 무한히 받는다)",
+  "\tif World.roster_of(world, team_id).size() >= limit:\n\t\treturn false",
+  ""
+ ],
+ [
+  "한 해 정원을 안 본다",
+  "\tif annual >= 0 and int(intake.get(team_id, 0)) >= annual:\n\t\treturn false",
+  ""
+ ],
+ [
+  "보직을 안 가리고 첫 팀에 넣는다 (한 리그가 한쪽으로 쏠린다)",
+  "\t\tvar share: float = _pitcher_share(world, tid)\n\t\tvar need: float = (PlayerGen.DEFAULT_PITCHER_RATIO - share) if is_pitcher \\\n\t\t\telse (share - PlayerGen.DEFAULT_PITCHER_RATIO)\n\t\tif need > best_need:",
+  "\t\tvar need: float = 0.0\n\t\tif best.is_empty():"
+ ],
+ [
+  "투수와 야수를 거꾸로 본다 (모자란 쪽을 더 굶긴다)",
+  "\t\tvar need: float = (PlayerGen.DEFAULT_PITCHER_RATIO - share) if is_pitcher \\\n\t\t\telse (share - PlayerGen.DEFAULT_PITCHER_RATIO)",
+  "\t\tvar need: float = (share - PlayerGen.DEFAULT_PITCHER_RATIO) if is_pitcher \\\n\t\t\telse (PlayerGen.DEFAULT_PITCHER_RATIO - share)"
+ ],
+ [
+  "대학에 가도 1학년이 아니다",
+  "\tif league == UNIVERSITY:\n\t\tp[\"grade\"] = 1",
+  "\tif false:\n\t\tp[\"grade\"] = 1"
+ ],
+ [
+  "대학 유입을 안 센다 (한 해 정원이 영영 안 걸린다)",
+  "\t\tuniv_intake[tid] = int(univ_intake.get(tid, 0)) + 1",
+  ""
+ ],
+ [
+  "프로에 가도 학년이 남는다 (진급이 프로 선수를 졸업시킨다)",
+  "\telse:\n\t\tp.erase(\"grade\")",
+  ""
+ ],
+ [
+  "2군에 가도 육성선수 신분이 안 붙는다",
+  "\t\tp[\"salary\"] = DEVELOPMENT_SALARY\n\t\tp[\"contract_years\"] = 1\n\t\tp[\"development_since\"] = year",
+  ""
+ ],
+ [
+  "육성선수가 장기계약을 받는다 (한 해 안에 증명할 이유가 없어진다)",
+  "\t\tp[\"contract_years\"] = 1",
+  "\t\tp[\"contract_years\"] = 5"
+ ],
+ [
+  "육성 인원을 안 센다 (팀당 상한이 무제한이 된다)",
+  "\t\tdev_count[tid] = int(dev_count.get(tid, 0)) + 1",
+  ""
+ ],
+ [
+  "새 팀 로스터에 안 넣는다 (선수가 통째로 사라진다)",
+  "\tworld[\"rosters\"][tid].append(p)",
+  ""
+ ],
+ [
+  "갈 곳이 없어도 그만두게 안 한다 (소속 없이 떠도는 유령이 된다)",
+  "\t\tp[\"career_status\"] = \"retired\"\n\t\tp[\"league_id\"] = Promotion.RETIRED_LEAGUE\n\t\tp[\"team_id\"] = \"\"\n\t\treturn false",
+  "\t\treturn false"
+ ],
+ [
+  "그만둔 것을 경력에 안 남긴다",
+  "\t\tevents.append({\"year\": year, \"type\": QUIT_EVENT,\n\t\t\t\"from_team_id\": from_team, \"to_team_id\": \"\",\n\t\t\t\"detail\": \"%s → 야구를 그만둔다\" % reason})\n\t\tp[\"career_events\"] = events",
+  ""
+ ],
+ [
+  "이적을 경력에 안 남긴다",
+  "\tevents.append({\"year\": year, \"type\": event_type,\n\t\t\"from_team_id\": from_team, \"to_team_id\": tid,\n\t\t\"to_league_id\": league,\n\t\t\"detail\": \"%s → %s\" % [reason, LEAGUE_LABEL.get(league, league)]})\n\tp[\"career_events\"] = events",
+  ""
+ ],
+ [
+  "약한 선수부터 자리를 잡는다 (좋은 선수가 밀려난다)",
+  "\t\tif oa != ob:\n\t\t\treturn oa > ob",
+  "\t\tif oa != ob:\n\t\t\treturn oa < ob"
+ ],
+ [
+  "같은 능력치에서 순서가 흔들린다 (재현이 무너진다)",
+  "\t\treturn String(a.get(\"id\", \"\")) < String(b.get(\"id\", \"\"))",
+  "\t\treturn false"
+ ],
+ [
+  "대학 유입 카운터를 사람마다 새로 만든다 (한 해 정원이 안 걸린다)",
+  "\t\tif place(world, p, year, event_type, reason, univ_intake, dev_count):",
+  "\t\tif place(world, p, year, event_type, reason, {}, {}):"
+ ],
+ [
+  "어디로 갔는지를 안 센다 (02 기준선과 대조를 못 한다)",
+  "\t\t\tby_league[l] = int(by_league.get(l, 0)) + 1",
+  ""
+ ]
+]

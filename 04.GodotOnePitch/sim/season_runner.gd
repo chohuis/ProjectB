@@ -84,9 +84,18 @@ static func run(state: Dictionary) -> Dictionary:
 	# ⚠ **안 배정하면 드래프트 풀이 무한히 쌓인다.** 실측으로 5년에
 	# 4,221명이 소속 없이 떠다녔다. 02는 여기가 12단계 배정인데 뼈대만
 	# 옮긴다 — 세부(재수·군·해외)는 아직이다
+	# ④b 2단계 방출 — **정원 안이어도** 성적·연봉·뎁스로 걸러낸다.
+	#
+	# ⚠ **1단계(정원 초과) 뒤·진로 배정 앞이다.** 방출된 사람은 미지명자와
+	# **같은 경로**로 갈 곳을 정한다 — 02도 그렇다(실측 release → 2군 132 ·
+	# 독립 10). 뒤에 두면 그해엔 소속 없이 떠돈다
+	var cut: Dictionary = _release_second_stage(state, world, year)
+	summary["released"] = int(summary.get("released", 0)) + int(cut["released"])
+
 	var placed: Dictionary = _place_undrafted(state, world, year)
 	summary["placed"] = int(placed["placed"])
 	summary["gave_up"] = int(placed["gave_up"])
+	summary["by_league"] = placed.get("by_league", {})
 
 	# ⑤ 리그 오프시즌 — 부상 회복·은퇴
 	var rng := RandomNumberGenerator.new()
@@ -140,6 +149,17 @@ static func run(state: Dictionary) -> Dictionary:
 	var fa: Dictionary = FaRunner.run(state)
 	summary["fa_signed"] = int(fa["signings"])
 	summary["fa_unsigned"] = int(fa["unsigned"])
+	# ⚠ **미계약자를 그냥 두면 안 된다.** 계약이 0인 채로 팀에 남아 해마다
+	# 같은 사람이 시장에 나온다 — 실측에서 110~130명이 그렇게 쌓였다.
+	# 미지명자와 **같은 진로 배정**을 탄다
+	var fa_out: Dictionary = _place_fa_unsigned(world, year)
+	summary["fa_placed"] = int(fa_out["placed"])
+	summary["gave_up"] = int(summary.get("gave_up", 0)) + int(fa_out["gave_up"])
+	# 미지명자와 같은 칸에 합친다 — 진로는 한 경로다
+	var merged: Dictionary = summary.get("by_league", {})
+	for lid in fa_out.get("by_league", {}):
+		merged[lid] = int(merged.get(lid, 0)) + int(fa_out["by_league"][lid])
+	summary["by_league"] = merged
 	done.append("free_agency")
 
 	# ⑫ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
@@ -235,90 +255,154 @@ static func _run_draft(state: Dictionary, world: Dictionary, year: int) -> Dicti
 	return {"drafted": n, "undrafted": left.size()}
 
 
-## 미지명자 진로. **대학 진학 · 독립 입단 · 은퇴** — 02의 뼈대다.
+## 미지명자 진로. **대학 → 프로 2군(육성) → 독립 → 포기.**
 ##
-## ⚠ 02는 여기가 12단계 배정(재수·군·해외까지)인데 뼈대만 옮겼다.
-## 안 배정하면 드래프트 풀이 무한히 쌓인다 — 실측으로 5년에 4,221명이
-## 소속 없이 떠다녔다
+## ⚠ **판정은 `Placement`가 갖는다.** 예전엔 여기서 대학·독립 둘만 봤고,
+## 그래서 매년 900명 안팎이 야구를 그만뒀다 — **2군이 빠져 있었다.**
+## 02도 같은 결함을 겪었고(그해 미지명자 1,373명 중 2군행 0명) 원인은
+## 육성선수 몫을 정원 밖으로 안 둔 것이었다
 static func _place_undrafted(state: Dictionary, world: Dictionary,
 		year: int) -> Dictionary:
 	var pool: Array = world.get(POOL_KEY, [])
-	if pool.is_empty():
-		return {"placed": 0, "gave_up": 0}
 
-	# 좋은 선수부터 자리를 잡는다 — 남는 자리가 적으니 순서가 결과를 정한다
-	var sorted: Array = pool.duplicate()
-	sorted.sort_custom(func(a, b) -> bool:
-		return Offseason.core_ovr(a) > Offseason.core_ovr(b))
-
-	var placed: int = 0
-	var gave_up: int = 0
-	for p in sorted:
-		# ⚠ **주인공은 NPC와 같이 밀려나면 안 된다.** 능력치 순 배정에서
-		# 뒤로 밀려 자리가 없으면 은퇴하고, 그러면 **게임이 조용히 끝난다** —
-		# 실측에서 3년차에 그렇게 사라졌다. 진로는 사용자가 정한다(미이관)
+	# ⚠ **주인공은 NPC와 같이 밀려나면 안 된다.** 능력치 순 배정에서 뒤로
+	# 밀려 자리가 없으면 야구를 그만두고, 그러면 **게임이 조용히 끝난다** —
+	# 실측에서 3년차에 그렇게 사라졌다. 진로는 사용자가 정한다(미이관)
+	var mine: Array = []
+	var others: Array = []
+	for p in pool:
 		if p.get("is_protagonist", false):
-			var mine: String = _open_slot(world, UNIV_LEAGUE)
-			var mine_league: String = UNIV_LEAGUE
-			if mine.is_empty():
-				mine = _open_slot(world, INDY_LEAGUE)
-				mine_league = INDY_LEAGUE
-			if mine.is_empty():
-				# 어디도 자리가 없다 — 그래도 야구를 그만두게 두지 않는다
-				mine = String(World.teams_of(UNIV_LEAGUE)[0]["id"])
-				mine_league = UNIV_LEAGUE
-			p["team_id"] = mine
-			p["league_id"] = mine_league
-			if mine_league == UNIV_LEAGUE:
-				p["grade"] = 1
-			if not world["rosters"].has(mine):
-				world["rosters"][mine] = []
-			world["rosters"][mine].append(p)
-			placed += 1
-			continue
+			mine.append(p)
+		else:
+			others.append(p)
 
-		# ⚠ **고졸이면 대학이 먼저다.** 이게 주인공의 기본 경로이기도 하고,
-		# 안 이으면 고졸 미지명자 1,310명이 매년 통째로 사라진다. 마지막
-		# 연도 기록이 어느 리그였는지가 고졸·대졸을 가른다
-		var routes: Array = [INDY_LEAGUE]
-		if _last_league_of(p) == "LEAGUE_HIGHSCHOOL":
-			routes = [UNIV_LEAGUE, INDY_LEAGUE]
+	var out: Dictionary = Placement.place_all(world, others, year,
+		"draft_undrafted", "미지명")
 
-		var target: String = ""
-		var target_league: String = ""
-		for lid in routes:
-			target = _open_slot(world, lid)
-			if not target.is_empty():
-				target_league = lid
-				break
-
-		if target.is_empty():
-			# 갈 곳이 없다 — 여기서 야구를 그만둔다
-			p["career_status"] = "retired"
-			p["league_id"] = Promotion.RETIRED_LEAGUE
-			p["team_id"] = ""
-			gave_up += 1
-			continue
-
-		p["team_id"] = target
-		p["league_id"] = target_league
-		# 대학에 가면 1학년부터다
-		if target_league == UNIV_LEAGUE:
+	for p in mine:
+		if not Placement.place(world, p, year, "draft_undrafted", "미지명", {}, {}):
+			# 어디도 자리가 없다 — 그래도 야구를 그만두게 두지 않는다
+			var fallback: String = String(World.teams_of(UNIV_LEAGUE)[0]["id"])
+			p["career_status"] = "active"
+			p["league_id"] = UNIV_LEAGUE
+			p["team_id"] = fallback
 			p["grade"] = 1
-		var events: Array = p.get("career_events", [])
-		events.append({"year": year,
-			"type": "enrolled" if target_league == UNIV_LEAGUE else "undrafted_signed",
-			"to_team_id": target, "to_league_id": target_league,
-			"detail": "미지명 · 대학 진학" if target_league == UNIV_LEAGUE \
-				else "미지명 · 독립 입단"})
-		p["career_events"] = events
-		if not world["rosters"].has(target):
-			world["rosters"][target] = []
-		world["rosters"][target].append(p)
-		placed += 1
+			if not world["rosters"].has(fallback):
+				world["rosters"][fallback] = []
+			world["rosters"][fallback].append(p)
+		out["placed"] = int(out["placed"]) + 1
 
 	world[POOL_KEY] = []
-	return {"placed": placed, "gave_up": gave_up}
+	return out
+
+
+## 최근 성적을 0~100 평판으로. **50이 평균**이고 방출 점수가 그 기준에서
+## 모자란 만큼을 센다.
+##
+## ⚠ **기록이 없으면 50이다.** 0으로 보면 안 뛴 사람이 전부 방출 후보가 된다 —
+## 2군·신인이 통째로 갈린다
+static func _recent_rating(p: Dictionary, stats: Dictionary) -> float:
+	var s: Dictionary = stats.get(String(p.get("id", "")), {})
+	if s.is_empty():
+		return Release.PERF_BASE
+	if String(s.get("type", "")) == "pitcher":
+		var era: float = float(s.get("era", 0.0))
+		if float(s.get("ip", 0.0)) <= 0.0:
+			return Release.PERF_BASE
+		if era < 2.5:
+			return 80.0
+		if era < 3.5:
+			return 65.0
+		if era < 4.5:
+			return 50.0
+		if era < 6.0:
+			return 35.0
+		return 20.0
+	if int(s.get("ab", 0)) <= 0:
+		return Release.PERF_BASE
+	var avg: float = float(s.get("avg", 0.0))
+	if avg > 0.300:
+		return 80.0
+	if avg > 0.270:
+		return 65.0
+	if avg > 0.240:
+		return 50.0
+	if avg > 0.200:
+		return 35.0
+	return 20.0
+
+
+## 2단계 방출 — **정원 안이어도** 성적·연봉·뎁스로 걸러낸다.
+##
+## ⚠ **방출된 사람을 드래프트 풀로 보낸다.** 그래야 미지명자와 같은 진로
+## 배정을 탄다 — 팀에서 빼기만 하면 소속 없이 떠도는 유령이 된다
+static func _release_second_stage(state: Dictionary, world: Dictionary,
+		year: int) -> Dictionary:
+	# ⚠ **올해 성적을 본다.** 안 넘기면 전원이 평균(50) 취급이라 성적 항이
+	# 죽고, 남는 건 나이·연봉뿐이 된다
+	var stats: Dictionary = state.get("season_stats", {})
+	var released: int = 0
+	if not world.has(POOL_KEY):
+		world[POOL_KEY] = []
+
+	for tid in world.get("rosters", {}).keys():
+		var roster: Array = world["rosters"][tid]
+		if roster.is_empty():
+			continue
+		var league: String = String(roster[0].get("league_id", ""))
+		# **프로만이다** — 학교·독립엔 방출이 없다. `ROSTER_LIMITS`가 프로의
+		# 정본이다(`is_pro_league`는 1군만 참이라 2군을 빠뜨린다)
+		if not RosterMaintenance.ROSTER_LIMITS.has(league):
+			continue
+
+		var profile: Dictionary = TeamProfile.of(world, tid)
+		var depth: Dictionary = Release.depth_of(roster)
+		# 판정에 필요한 두 값을 붙인다 — 없으면 전원이 평균 취급이라
+		# 아무도 안 걸린다
+		for p in roster:
+			p["recent_rating"] = _recent_rating(p, stats)
+			p["market_value"] = Contract.market_value(Contract.core_ovr(p), league,
+				int(p.get("pro_service_years", 0)), int(p.get("age", 25)))
+
+		for r in Release.pick(roster, profile, depth):
+			var p: Dictionary = r["player"]
+			roster.erase(p)
+			var events: Array = p.get("career_events", [])
+			events.append({"year": year, "type": "release",
+				"from_team_id": tid, "from_league_id": league,
+				"detail": "방출 (점수 %.0f)" % r["score"]})
+			p["career_events"] = events
+			p["team_id"] = ""
+			p["league_id"] = Promotion.DRAFT_POOL
+			world[POOL_KEY].append(p)
+			released += 1
+
+	return {"released": released}
+
+
+## FA 미계약자를 진로 배정으로 보낸다.
+##
+## ⚠ **표시만 하고 두면 안 된다.** 계약이 0인 채로 팀에 남아 **해마다 같은
+## 사람이 시장에 나온다** — 실측에서 110~130명이 그렇게 쌓였다
+static func _place_fa_unsigned(world: Dictionary, year: int) -> Dictionary:
+	var waiting: Array = []
+	for tid in world.get("rosters", {}):
+		for p in world["rosters"][tid]:
+			if p.get("fa_unsigned", false) and not p.get("is_protagonist", false):
+				waiting.append(p)
+	if waiting.is_empty():
+		return {"placed": 0, "gave_up": 0}
+
+	# ⚠ **옛 팀에서 먼저 뺀다.** 안 빼면 같은 사람이 두 군데 있는다
+	for p in waiting:
+		p.erase("fa_unsigned")
+		var roster: Array = world["rosters"].get(String(p.get("team_id", "")), [])
+		for i in roster.size():
+			if roster[i] == p:
+				roster.remove_at(i)
+				break
+
+	return Placement.place_all(world, waiting, year, "fa_unsigned", "FA 미계약")
 
 
 ## 마지막 연도 기록의 리그. **고졸·대졸을 가르는 자리**다 —

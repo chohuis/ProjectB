@@ -345,7 +345,11 @@ func test_the_grades_stay_balanced_over_years() -> void:
 # ── 나가는 문이 있는가 (M9-5) ─────────────────────────────────
 
 ## ⚠ **로스터 상한이 없으면 프로가 매년 지명 수만큼 불어난다.**
-## 실측으로 8년에 7,337 → 8,216명이 됐다
+## 실측으로 8년에 7,337 → 8,216명이 됐다.
+##
+## ⚠ **2군은 육성선수 몫만큼 정원을 넘는다.** 육성선수는 KBO에서도 정식
+## 등록 외 인원이라 정원 위에 얹힌다 — 02 실측 2군도 [38,40,…,43]으로
+## 정원(34)을 넘겨 있었다. 그걸 결함으로 보면 육성 제도가 통째로 죽는다
 func test_the_pro_rosters_stay_within_their_cap() -> void:
 	var s: Dictionary = _game()
 	for i in 3:
@@ -359,8 +363,35 @@ func test_the_pro_rosters_stay_within_their_cap() -> void:
 		var league: String = String(roster[0].get("league_id", ""))
 		if not RosterMaintenance.ROSTER_LIMITS.has(league):
 			continue
+		var cap: int = RosterMaintenance.roster_max_of(league)
+		if league.ends_with("_FARM"):
+			cap += Placement.DEVELOPMENT_MAX
 		assert_int(roster.size()).override_failure_message(
-			"%s(%s)가 %d명이다 (상한 %d)" % [tid, league, roster.size(),
+			"%s(%s)가 %d명이다 (상한 %d)" % [tid, league, roster.size(), cap]) \
+			.is_less_equal(cap)
+
+
+## ⚠ **정식 로스터는 여전히 정원 안이다.** 육성선수를 빼고 세면 34를 넘으면
+## 안 된다 — 안 그러면 "육성이라서 그렇다"로 진짜 초과를 덮게 된다
+func test_the_regular_roster_still_fits() -> void:
+	var s: Dictionary = _game()
+	for i in 3:
+		s["season_year"] = 2027 + i
+		SeasonRunner.run(s)
+
+	for tid in s["world"]["rosters"]:
+		var roster: Array = s["world"]["rosters"][tid]
+		if roster.is_empty():
+			continue
+		var league: String = String(roster[0].get("league_id", ""))
+		if not RosterMaintenance.ROSTER_LIMITS.has(league):
+			continue
+		var regular: int = 0
+		for p in roster:
+			if not p.has("development_since"):
+				regular += 1
+		assert_int(regular).override_failure_message(
+			"%s(%s) 정식 로스터가 %d명이다 (상한 %d)" % [tid, league, regular,
 				RosterMaintenance.roster_max_of(league)]) \
 			.is_less_equal(RosterMaintenance.roster_max_of(league))
 
@@ -375,13 +406,25 @@ func test_the_farm_cap_is_enforced_too() -> void:
 		assert_int(int(out["summary"]["demoted"])).override_failure_message(
 			"아무도 2군으로 안 내려갔다").is_greater(0)
 
+	# ⚠ **육성선수는 정원 위에 얹힌다** — 정식 인원만 세야 상한이 뜻을 갖는다
 	var farm_total: int = 0
 	for tid in s["world"]["rosters"]:
-		if String(tid).ends_with(World.FARM_SUFFIX):
-			farm_total += s["world"]["rosters"][tid].size()
-			assert_int(s["world"]["rosters"][tid].size()).override_failure_message(
-				"%s가 %d명이다" % [tid, s["world"]["rosters"][tid].size()]) \
-				.is_less_equal(RosterMaintenance.roster_max_of("LEAGUE_KBL_FARM"))
+		if not String(tid).ends_with(World.FARM_SUFFIX):
+			continue
+		var roster: Array = s["world"]["rosters"][tid]
+		farm_total += roster.size()
+		var regular: int = 0
+		for p in roster:
+			if not p.has("development_since"):
+				regular += 1
+		assert_int(regular).override_failure_message(
+			"%s 정식 인원이 %d명이다 (전체 %d)" % [tid, regular, roster.size()]) \
+			.is_less_equal(RosterMaintenance.roster_max_of("LEAGUE_KBL_FARM"))
+		assert_int(roster.size()).override_failure_message(
+			"%s가 %d명이다 — 육성 몫(%d)까지 더해도 넘는다"
+			% [tid, roster.size(), Placement.DEVELOPMENT_MAX]) \
+			.is_less_equal(RosterMaintenance.roster_max_of("LEAGUE_KBL_FARM")
+				+ Placement.DEVELOPMENT_MAX)
 	assert_int(farm_total).is_greater(0)
 
 
@@ -406,14 +449,18 @@ func test_undrafted_highschoolers_go_to_university() -> void:
 	var s: Dictionary = _game()
 	SeasonRunner.run(s)
 
+	# 진로 배정이 남기는 사건은 `draft_undrafted`이고 목적지가 `to_league_id`다
 	var enrolled: int = 0
 	for p in SeasonRunner.all_players(s):
 		for e in p.get("career_events", []):
-			if e.get("type", "") == "enrolled":
-				enrolled += 1
-				# 대학에 가면 1학년부터다
-				assert_int(int(p["grade"])).is_equal(1)
-				assert_str(p["league_id"]).is_equal(SeasonRunner.UNIV_LEAGUE)
+			if String(e.get("type", "")) != "draft_undrafted":
+				continue
+			if String(e.get("to_league_id", "")) != SeasonRunner.UNIV_LEAGUE:
+				continue
+			enrolled += 1
+			# 대학에 가면 1학년부터다
+			assert_int(int(p["grade"])).is_equal(1)
+			assert_str(p["league_id"]).is_equal(SeasonRunner.UNIV_LEAGUE)
 	assert_int(enrolled).override_failure_message(
 		"대학에 진학한 고졸이 0명이다").is_greater(0)
 

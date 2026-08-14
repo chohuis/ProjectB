@@ -1,7 +1,10 @@
 # OnePitch (Godot) — 코드 규칙
 
-**진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 어디까지 왔는지·다음에
-무엇을 하는지·확정된 결정이 거기 있다. 여기는 코드 규칙만 다룬다.
+**남은 작업은 [docs/QUEUE.md](docs/QUEUE.md)가 정본이다.** 위에서부터 하나씩 하고
+모듈마다 체크한다 — 세션이 끊겨도 그 파일만 읽으면 이어진다.
+
+**왜 그렇게 했는지는 [docs/RESUME.md](docs/RESUME.md)에 있다.** 확정된 결정·실측
+근거·겪은 결함이 거기 있다. 여기는 코드 규칙만 다룬다.
 
 Godot 4.6 · GDScript 단독 · PC(Steam) 우선.
 

@@ -69,13 +69,18 @@ static func score_of(p: Dictionary, profile: Dictionary, perf_rating: float,
 		score += deficit * PERF_WEIGHT
 		flags |= FLAG_PERF
 
-	# ② 과지급 — 시장가의 몇 배를 받나
-	var overpay: float = float(salary) / float(maxi(market_value, 1))
-	if overpay > OVERPAY_MILD:
-		score += OVERPAY_MILD_SCORE
-		flags |= FLAG_OVERPAY
-	if overpay > OVERPAY_HEAVY:
-		score += OVERPAY_HEAVY_SCORE
+	# ② 과지급 — 시장가의 몇 배를 받나.
+	#
+	# ⚠ **시장가를 모르면 판정하지 않는다.** 0으로 나누면 INF가 나오고
+	# 그 사람은 **언제나 최대 과지급**이 된다 — 시장가를 못 구한 리그가
+	# 통째로 방출 후보가 되는 자리다
+	if market_value > 0:
+		var overpay: float = float(salary) / float(market_value)
+		if overpay > OVERPAY_MILD:
+			score += OVERPAY_MILD_SCORE
+			flags |= FLAG_OVERPAY
+		if overpay > OVERPAY_HEAVY:
+			score += OVERPAY_HEAVY_SCORE
 
 	# ③ 뎁스 — 같은 자리가 두꺼우면 밀린다
 	if depth_at_position >= DEPTH_FROM:

@@ -123,6 +123,28 @@ static func estimate(ovr: float, league_id: String, years_of_service: int,
 	return {"salary": salary, "years": contract_years}
 
 
+## 흔들림 없는 시장가. **방출 판정의 분모다** — 과지급인지 보려면 기준이
+## 흔들리면 안 된다.
+##
+## ⚠ **`estimate`와 같은 식을 써야 한다.** 두 벌로 두면 "시장가보다 싸게
+## 받는데 과지급"이 나온다
+static func market_value(ovr: float, league_id: String, years_of_service: int,
+		age: int) -> int:
+	var fixed := RandomNumberGenerator.new()
+	# 흔들기 폭의 한가운데 — `estimate`가 `randf()`를 한 번 쓰고 0.5면 배수가 1.0이다
+	fixed.seed = 0
+	var r: Dictionary = rules()
+	var mult: float = float(r.get("league_mult", {}).get(league_id, 1.0))
+	var base: float = float(r.get("ovr_base", 3000.0)) \
+		* pow(float(r.get("ovr_growth", 1.1)), ovr - float(r.get("ovr_pivot", 50.0)))
+	var from_age: int = int(r.get("aging_from_age", 34))
+	var aging: float = 1.0
+	if age > from_age:
+		aging = maxf(1.0 - float(age - from_age) * float(r.get("aging_per_year", 0.06)), 0.45)
+	var raw: float = base * service_factor(years_of_service) * aging * mult
+	return int(roundf(maxf(raw, float(r.get("min_salary", {}).get(league_id, 0.0)))))
+
+
 # ── 선수 하나에 붙이기 ────────────────────────────────────────
 
 ## 프로 리그인가. **연봉이 붙는 리그** — 학교엔 계약이 없다

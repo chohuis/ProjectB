@@ -54,10 +54,14 @@ func test_overpay_has_two_steps() -> void:
 		_profile())).is_equal(0.0)
 
 
-## 시장가가 0이어도 안 터진다 — 나누기 전에 바닥을 둔다
-func test_a_zero_market_value_does_not_crash() -> void:
-	assert_float(_score(_player({"salary": 5000, "market_value": 0}),
-		_profile())).is_greater(0.0)
+## ⚠ **시장가를 모르면 과지급을 판정하지 않는다.** 0으로 나누면 INF가 나오고
+## 그 사람은 언제나 최대 과지급이 된다 — 시장가를 못 구한 리그가 통째로
+## 방출 후보가 되는 자리다
+func test_an_unknown_market_value_is_not_an_overpay() -> void:
+	var r: Dictionary = Release.score_of(_player(), _profile(), 50.0, 1, 99999, 0)
+	assert_float(float(r["score"])).override_failure_message(
+		"시장가를 모르는데 과지급으로 봤다").is_equal(0.0)
+	assert_bool((int(r["flags"]) & Release.FLAG_OVERPAY) != 0).is_false()
 
 
 func test_a_crowded_position_pushes_you_out() -> void:
@@ -147,12 +151,22 @@ func test_a_team_cannot_gut_itself() -> void:
 		.is_equal(Release.MAX_PER_TEAM)
 
 
-## 문턱을 넘는 사람만 — 평범한 팀은 아무도 안 나간다
+## ⚠ **문턱이 높아야 뜻이 있다.** 낮추면 매년 방출이 폭증한다 —
+## **조금 걸리는 사람**으로 재야 문턱을 낮추는 변이가 잡힌다
 func test_a_healthy_team_releases_nobody() -> void:
 	var roster: Array = []
 	for i in 20:
 		roster.append(_player({"id": "P%02d" % i}))
 	assert_array(Release.pick(roster, _profile())).is_empty()
+
+	# 마흔다섯 — 점수 30점이 붙지만 문턱(55)에는 못 미친다.
+	# **문턱을 낮추는 변이는 여기서 잡힌다** — 0점짜리로만 재면 못 잡는다
+	var slightly: Array = []
+	for i in 20:
+		slightly.append(_player({"id": "Q%02d" % i, "age": 45}))
+	assert_float(_score(_player({"age": 45}), _profile())).is_equal(30.0)
+	assert_array(Release.pick(slightly, _profile())).override_failure_message(
+		"30점짜리가 방출됐다 — 문턱이 낮다").is_empty()
 
 
 ## 점수 높은 순이다 — 아무나 자르면 판정의 뜻이 없다
@@ -173,11 +187,22 @@ func test_the_protagonist_is_never_released() -> void:
 			"주인공이 방출 대상이 됐다").is_false()
 
 
-## 같은 점수면 id 순 — 없으면 재현이 무너진다
+## ⚠ **같은 점수면 id 순.** 없으면 순서가 흔들려 **같은 세이브를 다시 열 때
+## 다른 사람이 잘린다.**
+##
+## 로스터를 **id 역순으로 넣는다** — 이미 정렬된 상태로 주면 갈래를 빼도
+## 결과가 같아서 검사가 아무것도 안 본다
 func test_ties_break_on_id() -> void:
-	var picked: Array = Release.pick(_roster(6), _profile())
-	assert_str(String(picked[0]["player"]["id"])).is_equal("P00")
+	var roster: Array = []
+	for i in range(5, -1, -1):
+		roster.append(_player({"id": "P%02d" % i, "recent_rating": 10.0,
+			"salary": 15000, "market_value": 5000}))
+
+	var picked: Array = Release.pick(roster, _profile())
+	assert_str(String(picked[0]["player"]["id"])).override_failure_message(
+		"동점에서 id 순이 아니다").is_equal("P00")
 	assert_str(String(picked[1]["player"]["id"])).is_equal("P01")
+	assert_str(String(picked[2]["player"]["id"])).is_equal("P02")
 
 
 ## 자리별 인원을 센다 — 뎁스 판정의 입력이다
