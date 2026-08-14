@@ -1,68 +1,92 @@
 [
- ["회복 훈련도 XP를 준다 (피로가 두 번 계산된다)",
+ [
+  "회복 훈련도 XP를 준다 (피로가 두 번 계산된다)",
   "\t\tif cfg.get(\"is_recovery\", false):\n\t\t\tcontinue",
-  ""],
- ["구종 개발이 능력치 XP도 준다",
+  ""
+ ],
+ [
+  "구종 개발이 능력치 XP도 준다",
   "\t\t\tpitch_dev_gain += cfg.get(\"progress_per_week\", 0.0) * xp_mult \\\n\t\t\t\t* cond_factor * fat_factor * eff * grade_factor\n\t\t\tcontinue",
-  "\t\t\tpitch_dev_gain += cfg.get(\"progress_per_week\", 0.0) * xp_mult \\\n\t\t\t\t* cond_factor * fat_factor * eff * grade_factor"],
- ["나이가 훈련에 안 걸린다",
+  "\t\t\tpitch_dev_gain += cfg.get(\"progress_per_week\", 0.0) * xp_mult \\\n\t\t\t\t* cond_factor * fat_factor * eff * grade_factor"
+ ],
+ [
+  "나이가 훈련에 안 걸린다",
   "\tvar eff: float = efficiency_mod * Growth.age_train_factor(player.get(\"age\", 25))",
-  "\tvar eff: float = efficiency_mod"],
- ["효율 보정이 안 걸린다",
+  "\tvar eff: float = efficiency_mod"
+ ],
+ [
+  "효율 보정이 안 걸린다",
   "\tvar eff: float = efficiency_mod * Growth.age_train_factor(player.get(\"age\", 25))",
-  "\tvar eff: float = Growth.age_train_factor(player.get(\"age\", 25))"],
- ["슬롯 배수를 무시한다",
+  "\tvar eff: float = Growth.age_train_factor(player.get(\"age\", 25))"
+ ],
+ [
+  "슬롯 배수를 무시한다",
   "\t\tvar xp_mult: float = Training.SLOT_XP_MULT[i]",
-  "\t\tvar xp_mult: float = 1.0"],
- ["슬롯 배수를 피로 배수로 쓴다",
+  "\t\tvar xp_mult: float = 1.0"
+ ],
+ [
+  "슬롯 배수를 피로 배수로 쓴다",
   "\t\tvar xp_mult: float = Training.SLOT_XP_MULT[i]",
-  "\t\tvar xp_mult: float = Training.SLOT_FATIGUE_MULT[i]"],
- ["스탯별 가중을 무시한다",
+  "\t\tvar xp_mult: float = Training.SLOT_FATIGUE_MULT[i]"
+ ],
+ [
+  "스탯별 가중을 무시한다",
   "\t\t\tpitch_gains[stat] = pitch_gains.get(stat, 0.0) + xp * cfg[\"gains_pitching\"][stat]",
-  "\t\t\tpitch_gains[stat] = pitch_gains.get(stat, 0.0) + xp"],
- ["타격 훈련이 타격에 안 닿는다",
+  "\t\t\tpitch_gains[stat] = pitch_gains.get(stat, 0.0) + xp"
+ ],
+ [
+  "타격 훈련이 타격에 안 닿는다",
   "\t\tfor stat in cfg.get(\"gains_batting\", {}):\n\t\t\tbat_gains[stat] = bat_gains.get(stat, 0.0) + xp * cfg[\"gains_batting\"][stat]",
-  ""],
- ["같은 프로그램을 두 슬롯에 넣어도 안 쌓인다",
+  ""
+ ],
+ [
+  "같은 프로그램을 두 슬롯에 넣어도 안 쌓인다",
   "\t\t\tpitch_gains[stat] = pitch_gains.get(stat, 0.0) + xp * cfg[\"gains_pitching\"][stat]",
-  "\t\t\tpitch_gains[stat] = xp * cfg[\"gains_pitching\"][stat]"],
- ["피로·컨디션을 자기 식으로 낸다 (미리보기와 갈린다)",
+  "\t\t\tpitch_gains[stat] = xp * cfg[\"gains_pitching\"][stat]"
+ ],
+ [
+  "피로·컨디션을 자기 식으로 낸다 (미리보기와 갈린다)",
   "\tvar load: Dictionary = Training.plan_load(fatigue, plan, programs)",
-  "\tvar load: Dictionary = {\"fatigue_delta\": 7.0, \"condition_delta\": -1.0}"],
- ["잠재력 속도가 안 걸린다",
-  "\t\tvar adjusted: float = gain * speed * Growth.potential_cap_factor(cur, potential)",
-  "\t\tvar adjusted: float = gain * Growth.potential_cap_factor(cur, potential)"],
- ["천장 감쇠가 안 걸린다",
-  "\t\tvar adjusted: float = gain * speed * Growth.potential_cap_factor(cur, potential)",
-  "\t\tvar adjusted: float = gain * speed"],
- ["천장을 스탯마다가 아니라 하나로 본다",
-  "\t\tvar cur: float = stats.get(stat, 0.0)",
-  "\t\tvar cur: float = 0.0"],
- ["잠재력 범위를 안 자른다",
-  "\tvar potential: float = clampf(player.get(\"potential_hidden\", 75.0), 60.0, 99.0)",
-  "\tvar potential: float = player.get(\"potential_hidden\", 75.0)"],
- ["남은 XP를 안 이어받는다",
-  "\t\tvar r: Dictionary = Growth.try_level_up(cur, xp_map.get(stat, 0.0), adjusted)",
-  "\t\tvar r: Dictionary = Growth.try_level_up(cur, 0.0, adjusted)"],
- ["레벨업해도 능력치를 안 올린다",
-  "\t\tif r[\"leveled\"] > 0:\n\t\t\tstats[stat] = r[\"value\"]",
-  "\t\tif false:\n\t\t\tstats[stat] = r[\"value\"]"],
- ["원본 선수 사전을 제자리에서 바꾼다",
+  "\tvar load: Dictionary = {\"fatigue_delta\": 7.0, \"condition_delta\": -1.0}"
+ ],
+ [
+  "원본 선수 사전을 제자리에서 바꾼다",
   "\tvar pitching: Dictionary = player.get(\"pitching\", {}).duplicate()",
-  "\tvar pitching: Dictionary = player.get(\"pitching\", {})"],
- ["원본 XP 사전을 제자리에서 바꾼다",
+  "\tvar pitching: Dictionary = player.get(\"pitching\", {})"
+ ],
+ [
+  "원본 XP 사전을 제자리에서 바꾼다",
   "\tvar pitching_xp: Dictionary = player.get(\"pitching_xp\", {}).duplicate()",
-  "\tvar pitching_xp: Dictionary = player.get(\"pitching_xp\", {})"],
- ["구종 숙련도가 진행 속도에 안 걸린다",
+  "\tvar pitching_xp: Dictionary = player.get(\"pitching_xp\", {})"
+ ],
+ [
+  "구종 숙련도가 진행 속도에 안 걸린다",
   "\tif grade <= 1:\n\t\treturn 1.00\n\tif grade == 2:\n\t\treturn 2.0 / 3.0\n\tif grade == 3:\n\t\treturn 1.0 / 3.0\n\treturn 2.0 / 9.0",
-  "\treturn 1.00"],
- ["구종 개발이 피로에 안 걸린다",
+  "\treturn 1.00"
+ ],
+ [
+  "구종 개발이 피로에 안 걸린다",
   "\t\t\tvar fat_factor: float = maxf(1.0 - fatigue / 120.0, 0.3)",
-  "\t\t\tvar fat_factor: float = 1.0"],
- ["구종 개발 피로 하한을 없앤다",
+  "\t\t\tvar fat_factor: float = 1.0"
+ ],
+ [
+  "구종 개발 피로 하한을 없앤다",
   "\t\t\tvar fat_factor: float = maxf(1.0 - fatigue / 120.0, 0.3)",
-  "\t\t\tvar fat_factor: float = 1.0 - fatigue / 120.0"],
- ["구종 개발이 컨디션에 안 걸린다",
+  "\t\t\tvar fat_factor: float = 1.0 - fatigue / 120.0"
+ ],
+ [
+  "구종 개발이 컨디션에 안 걸린다",
   "\t\t\tvar cond_factor: float = condition / 100.0",
-  "\t\t\tvar cond_factor: float = 1.0"]
+  "\t\t\tvar cond_factor: float = 1.0"
+ ],
+ [
+  "OVR을 다시 안 낸다 (드래프트가 생성값으로 돈다)",
+  "\tPlayerGen.refresh_ovr(pitching, batting)",
+  "\tpass"
+ ],
+ [
+  "투수 OVR만 다시 낸다",
+  "\tPlayerGen.refresh_ovr(pitching, batting)",
+  "\tPlayerGen.refresh_ovr(pitching, {})"
+ ]
 ]

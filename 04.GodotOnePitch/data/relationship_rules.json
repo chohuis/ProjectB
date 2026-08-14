@@ -1,0 +1,90 @@
+{
+ "_note": "02 resource/data/master/players/relationship_rules.json 그대로. 설계 정본은 02 docs/design/people.md §4.",
+ "_label_note": "**7단계 라벨은 코드에 있다**(`sim/relationship.gd`). 경계는 튜닝 수치가 아니라 구조다 — 화면·판정·소식이 전부 그 표를 읽는다",
+ "init": {
+  "base": 0,
+  "personality_spread": 10,
+  "_note": "사용자 확정 — **중립 0 + 소폭 편차.** 처음부터 호불호가 갈려 있으면 관계를 쌓는 재미가 없다",
+  "draft_bonus": {
+   "round1": 15,
+   "round2": 8,
+   "round3plus": 3,
+   "undrafted": -5
+  },
+  "_draft_note": "감독에게만 붙는다. **지명 절차를 안 거친 맥락(고교 입학)에는 미지명 감점을 안 준다** — 안 그러면 입학하자마자 감독이 나를 싫어한다"
+ },
+ "decay": {
+  "on_move": 0.6,
+  "apart_per_season": 0.9,
+  "apart_floor": 2,
+  "_note": "사용자 확정 **감쇠 후 보존** — 값을 0쪽으로 당기고 행은 남긴다. 재회하면 그 값에서 재개된다(옛 감독을 프로에서 다시 만나는 서사)"
+ },
+ "weekly": {
+  "growth_threshold": 1,
+  "_growth_note": "OVR 주간 변화 임계. 2였는데 실측상 191주에 14포인트라 **도달 불가**였다 — 델타 2인 주가 없다. 1로 내려 시즌당 4~5회 발동한다",
+  "quality_era": 2.5,
+  "blowup_era": 6,
+  "manager": {
+   "win": 2,
+   "loss": -2,
+   "quality_start": 1,
+   "blowup": -2,
+   "complete_shutout": 5,
+   "training_skip": -1,
+   "growth": 1
+  },
+  "coach": {
+   "own_area_training": 1,
+   "training_skip": -2,
+   "growth": 2
+  },
+  "_coach_note": "**담당 영역일 때만 오른다.** 전 코치에게 매주 붙이면 코치 여섯이 다 같이 오른다",
+  "teammate": {
+   "team_win": 1,
+   "isolated_ace": -1,
+   "growth": 0
+  },
+  "_teammate_note": "`isolated_ace` — 나는 호투했는데 팀이 진 주. 에이스가 고립되는 감각",
+  "rival": {
+   "faced_and_won": 3,
+   "faced_and_lost": -1
+  },
+  "_rival_note": "**성향이 부호를 뒤집는다.** 승부욕·자존심이 센 상대는 내가 이기면 적개심이고, 품이 넓은 상대는 같은 사건이 인정이 된다"
+ },
+ "season": {
+  "manager_good": 8,
+  "manager_bad": -6,
+  "coach_good": 4,
+  "coach_bad": -3,
+  "owner_good": 6,
+  "owner_bad": -5,
+  "teammate_together": 5,
+  "_note": "**감독·코치는 개인 성적, 구단주는 팀 성적을 본다.** 구단주가 개인 성적을 보면 약팀 에이스가 항상 사랑받는다",
+  "criteria": {
+   "good_era": 3.5,
+   "bad_era": 5.5,
+   "good_rank_pct": 0.4,
+   "bad_rank_pct": 0.75
+  }
+ },
+ "effect": {
+  "manager_role_ovr_per_step": 2,
+  "coach_training_per_step": 0.02,
+  "owner_contract_per_step": 0.03,
+  "_note": "**값이 아니라 라벨 단계로 센다.** 관계값은 플레이어에게 안 보이고 라벨만 보이므로, 판정도 라벨로 해야 '각별인데 왜 안 써주지'가 안 생긴다"
+ },
+ "training_area": {
+  "command": "투수",
+  "velocity": "투수",
+  "control": "투수",
+  "movement": "투수",
+  "pitch_dev": "투수",
+  "mentality": "멘탈",
+  "stamina": "컨디셔닝",
+  "recovery": "컨디셔닝",
+  "batting": "타격",
+  "eye": "타격",
+  "baserun": "주루"
+ },
+ "_area_note": "훈련 어휘 → 코치 전문 영역. **코드에 박으면 어느 한쪽 어휘를 고쳐도 조용히 어긋난다** — 02가 감독 능력치를 3중 이름 드리프트로 못 전달한 적이 있다"
+}

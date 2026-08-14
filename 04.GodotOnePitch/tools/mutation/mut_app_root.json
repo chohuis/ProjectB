@@ -31,23 +31,23 @@
  ],
  [
   "주기 처리가 선수를 안 바꾼다",
-  "\tp[\"fatigue\"] = clampf(p.get(\"fatigue\", 0.0) + float(load[\"fatigue_delta\"]), 0.0, 100.0)",
+  "\tp[\"pitching\"] = out[\"pitching\"]\n\tp[\"batting\"] = out[\"batting\"]",
   "\tpass"
  ],
  [
   "훈련 계획이 비면 주기 처리를 건너뛴다 (자동 회복이 안 붙는다)",
-  "\tvar load: Dictionary = Training.plan_load(",
-  "\tif _state.get(\"training_plan\", {}).is_empty():\n\t\treturn\n\tvar load: Dictionary = Training.plan_load("
+  "\tvar out: Dictionary = TrainingGrowth.calc(p,\n\t\t_state.get(\"training_plan\", {}),\n\t\tTraining.programs())",
+  "\tif _state.get(\"training_plan\", {}).is_empty():\n\t\treturn\n\tvar out: Dictionary = TrainingGrowth.calc(p,\n\t\t_state.get(\"training_plan\", {}),\n\t\tTraining.programs())"
  ],
  [
   "피로가 범위를 벗어난다",
-  "\tp[\"fatigue\"] = clampf(p.get(\"fatigue\", 0.0) + float(load[\"fatigue_delta\"]), 0.0, 100.0)",
-  "\tp[\"fatigue\"] = p.get(\"fatigue\", 0.0) + float(load[\"fatigue_delta\"])"
+  "\tp[\"fatigue\"] = clampf(p.get(\"fatigue\", 0.0) + float(out[\"fatigue_delta\"]), 0.0, 100.0)",
+  "\tp[\"fatigue\"] = p.get(\"fatigue\", 0.0) + float(out[\"fatigue_delta\"])"
  ],
  [
   "피로와 컨디션을 뒤바꿔 넣는다",
-  "\tp[\"condition\"] = clampf(p.get(\"condition\", 100.0) + float(load[\"condition_delta\"]),\n\t\t0.0, 100.0)",
-  "\tp[\"condition\"] = clampf(p.get(\"condition\", 100.0) + float(load[\"fatigue_delta\"]),\n\t\t0.0, 100.0)"
+  "\tp[\"condition\"] = clampf(p.get(\"condition\", 100.0) + float(out[\"condition_delta\"]),\n\t\t0.0, 100.0)",
+  "\tp[\"condition\"] = clampf(p.get(\"condition\", 100.0) + float(out[\"fatigue_delta\"]),\n\t\t0.0, 100.0)"
  ],
  [
   "진행 결과 필드를 상태에 남긴다 (다음 진행이 옛 값을 본다)",
@@ -118,5 +118,30 @@
   "불러온 뒤 화면을 안 갱신한다",
   "\tset_state(r[\"state\"])\n\treturn \"\"",
   "\t_state = r[\"state\"]\n\treturn \"\""
+ ],
+ [
+  "관계도가 아예 안 돈다 (02가 커리어 내내 그랬다)",
+  "\tRelationshipRunner.run(_state, at_day,\n\t\tContract.core_ovr(p) - before_ovr)",
+  "\tpass"
+ ],
+ [
+  "관계도가 주 경계를 무시한다 (여러 주를 한 번에 넘기면 같은 주를 N번 산다)",
+  "\tRelationshipRunner.run(_state, at_day,\n\t\tContract.core_ovr(p) - before_ovr)",
+  "\tRelationshipRunner.run(_state, -1,\n\t\tContract.core_ovr(p) - before_ovr)"
+ ],
+ [
+  "성장분이 관계에 안 실린다",
+  "\tRelationshipRunner.run(_state, at_day,\n\t\tContract.core_ovr(p) - before_ovr)",
+  "\tRelationshipRunner.run(_state, at_day, 0.0)"
+ ],
+ [
+  "훈련 전 OVR을 훈련 뒤에 잰다 (성장분이 늘 0이다)",
+  "\tvar before_ovr: float = Contract.core_ovr(p)\n\tvar out: Dictionary = TrainingGrowth.calc(p,",
+  "\tvar out: Dictionary = TrainingGrowth.calc(p,"
+ ],
+ [
+  "카퍼스 이벤트가 주인공 뒤로 밀린다 (주인공이 없으면 세계 무대가 통째로 사라진다)",
+  "\tCampusRunner.run(_state, at_day)\n\n\tvar p: Dictionary = _state.get(\"protagonist\", {})",
+  "\tvar p: Dictionary = _state.get(\"protagonist\", {})"
  ]
 ]

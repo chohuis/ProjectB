@@ -39,6 +39,11 @@ static func _find(programs: Array, id: String) -> Dictionary:
 	return {}
 
 
+## id로 프로그램 하나. 목록을 안 들고 있는 쪽(관계도 배선)이 쓴다
+static func program(id: String) -> Dictionary:
+	return _find(programs(), id)
+
+
 ## 이번 주 계획이 주는 피로·컨디션 변화. `{fatigue_delta, condition_delta}`
 static func plan_load(fatigue: float, plan: Dictionary, programs: Array) -> Dictionary:
 	var zone: float = Growth.fatigue_zone_mult(fatigue)

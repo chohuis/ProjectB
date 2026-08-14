@@ -213,3 +213,17 @@ func test_the_result_is_always_logged() -> void:
 	assert_bool(_run()["logs"].size() > 0).is_true()
 	assert_str(_run(_player(), _game({"won": true}))["logs"][0]).contains("승리")
 	assert_str(_run(_player(), _game({"won": false, "score_diff": 9}))["logs"][0]).contains("대패")
+
+
+## ⚠ **OVR은 파생값이다.** 경기 성장도 훈련과 같이 다시 내야 한다 —
+## 한쪽만 하면 경기로 큰 만큼이 조용히 사라진다
+func test_the_ovr_is_recomputed_after_a_game() -> void:
+	var p: Dictionary = _player({"potential_hidden": 95.0})
+	p["pitching"]["ovr"] = 1.0
+	p["batting"]["ovr"] = 1.0
+	var r: Dictionary = GameGrowth.calc(p, {"won": true})
+	assert_float(float(r["pitching"]["ovr"])).override_failure_message(
+		"경기 뒤에도 OVR이 옛 값(1) 그대로다").is_equal(
+		PlayerGen.pitching_ovr(r["pitching"]))
+	assert_float(float(r["batting"]["ovr"])).is_equal(
+		PlayerGen.batting_ovr(r["batting"]))

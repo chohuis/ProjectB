@@ -407,6 +407,7 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# ⚠ **`TrainingGrowth`가 정본이다.** 예전엔 `Training.plan_load`만 불러
 	# **피로만 움직이고 능력치는 안 올랐다** — 훈련 화면에서 뭘 짜든 결과가
 	# 같았다. 피로·컨디션도 이 안에서 같은 함수로 나온다
+	var before_ovr: float = Contract.core_ovr(p)
 	var out: Dictionary = TrainingGrowth.calc(p,
 		_state.get("training_plan", {}),
 		Training.programs())
@@ -428,6 +429,14 @@ func _apply_one_week(at_day: int = -1) -> void:
 		var log: Array = _state.get("training_log", [])
 		log.append({"day": int(_state.get("day", 0)), "gains": out["logs"]})
 		_state["training_log"] = log
+
+	# 관계도 — **훈련 뒤다.** 성장분(`ovr_delta`)이 감독·코치 관계에 걸린다
+	#
+	# ⚠ **02는 여기서 주 인덱스를 하나 어긋나게 읽어 결과가 영영 `null`이었고
+	# 관계가 전 커리어에 걸쳐 한 번도 안 움직였다.** `at_day`는 방금 끝난 주의
+	# 마지막 날이다 — 여기서 자기 손으로 세지 않는다
+	RelationshipRunner.run(_state, at_day,
+		Contract.core_ovr(p) - before_ovr)
 
 
 ## 학교에 다니는 리그. **프로에는 학사가 없다**

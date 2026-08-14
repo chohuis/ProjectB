@@ -108,6 +108,24 @@ static func batting_ovr(b: Dictionary) -> float:
 	return clampf(roundf(w / BAT_DIVISOR), 1.0, 99.0)
 
 
+## 능력치가 바뀌면 OVR을 다시 낸다. **파생값이라 손으로 안 적는다.**
+##
+## ⚠ **주인공의 OVR이 생성값에 고정돼 있었다.** `TrainingGrowth`·`GameGrowth`가
+## 개별 능력치만 올리고 `ovr`은 안 건드려서, 몇 년을 훈련해도 드래프트·계약·
+## 트레이드가 보는 숫자는 **1학년 때 값** 그대로였다. NPC는
+## `NpcGrowth`가 레벨업마다 다시 냈기 때문에 **주인공만 그랬다.**
+##
+## 02가 같은 결함을 겪었다 — 실측에서 같은 투수를 3시즌(191주) 추적했더니
+## `npcLiveStats`는 +9인데 `npcs[].pitching`은 9종 전부 정확히 +0이었고,
+## **드래프트 전체가 생성값으로 돌았다.** 값이 있고 타입도 맞아서 예외가
+## 안 나고 화면엔 그럴듯한 숫자가 뜬다 — **틀렸다는 신호가 어디에도 없다.**
+static func refresh_ovr(pitching: Dictionary, batting: Dictionary) -> void:
+	if not pitching.is_empty():
+		pitching["ovr"] = pitching_ovr(pitching)
+	if not batting.is_empty():
+		batting["ovr"] = batting_ovr(batting)
+
+
 ## 로스터 하나를 만든다. **인자 사전 하나만 받는다**
 static func roster(p: Dictionary) -> Array:
 	# 0명·음수를 따로 막지 않는다 — 아래 `for`가 안 돈다

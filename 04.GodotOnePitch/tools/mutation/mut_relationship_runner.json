@@ -1,0 +1,222 @@
+[
+ [
+  "주인공 자신과도 관계를 맺는다",
+  "\t\tif String(q.get(\"id\", \"\")) == me:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "그만둔 선수도 동료로 센다",
+  "\t\tif String(q.get(\"career_status\", \"active\")) != \"active\":\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "소속이 없는데 팀 사람들을 두고 온 것으로 만든다",
+  "\tvar team: String = String(p.get(\"team_id\", \"\"))\n\tif team.is_empty():\n\t\treturn {\"created\": 0, \"reunited\": 0, \"left_behind\": 0}",
+  "\tvar team: String = String(p.get(\"team_id\", \"\"))"
+ ],
+ [
+  "이미 아는 사람을 또 만든다",
+  "\t\tif not by_id.has(pid):\n\t\t\tunknown.append(x)\n\t\t\tcontinue",
+  "\t\tunknown.append(x)\n\t\tcontinue"
+ ],
+ [
+  "재회를 안 알아본다 (헤어진 채로 남는다)",
+  "\t\tif String(row[\"contact\"]) == Relationship.CONTACT_APART:",
+  "\t\tif false:"
+ ],
+ [
+  "재회하면서 값을 다시 깎는다",
+  "\t\t\trow[\"contact\"] = Relationship.CONTACT_TOGETHER\n\t\t\trow[\"last_team\"] = team",
+  "\t\t\trow[\"contact\"] = Relationship.CONTACT_TOGETHER\n\t\t\trow[\"value\"] = 0\n\t\t\trow[\"last_team\"] = team"
+ ],
+ [
+  "팀 이동을 못 알아챈다 (관계가 옛 팀에 남는다 — 조용한 누락)",
+  "\tvar left_behind: int = _leave_stale_teams(state, team)",
+  "\tvar left_behind: int = 0"
+ ],
+ [
+  "라이벌도 팀 이동으로 헤어진다",
+  "\t\tif last.is_empty() or last == team:\n\t\t\tcontinue",
+  "\t\tif last == team:\n\t\t\tcontinue"
+ ],
+ [
+  "두고 오면서 감쇠를 안 한다",
+  "\t\tif by_id.has(pid):\n\t\t\tr[\"value\"] = int(by_id[pid])",
+  "\t\tpass"
+ ],
+ [
+  "두고 온 사람이 together로 남는다",
+  "\t\tr[\"contact\"] = Relationship.CONTACT_APART",
+  "\t\tpass"
+ ],
+ [
+  "새 관계가 처음부터 헤어진 상태다",
+  "\t\t\t\t\"contact\": Relationship.CONTACT_TOGETHER, \"specialty\": \"\",",
+  "\t\t\t\t\"contact\": Relationship.CONTACT_APART, \"specialty\": \"\","
+ ],
+ [
+  "소속을 기억 안 한다 (다음 주에 통째로 두고 온 사람이 된다)",
+  "\t\t\t\t\"met_season\": season, \"met_team\": team, \"last_team\": team,",
+  "\t\t\t\t\"met_season\": season, \"met_team\": team, \"last_team\": \"\","
+ ],
+ [
+  "훈련 영역을 둘째 칸까지 센다",
+  "\tvar primary: String = String(plan.get(\"primary\", \"\"))",
+  "\tvar primary: String = String(plan.get(\"secondary\", \"\"))"
+ ],
+ [
+  "훈련 어휘를 규칙 파일에 안 물어본다",
+  "\treturn Relationship.training_area_of(String(program.get(\"focus\", \"\")))",
+  "\treturn String(program.get(\"focus\", \"\"))"
+ ],
+ [
+  "첫 칸만 보고 나머지를 안 본다 (둘째만 채워도 거른 주가 된다)",
+  "\tfor key in [\"primary\", \"secondary\", \"secondary2\"]:",
+  "\tfor key in [\"primary\"]:"
+ ],
+ [
+  "계획이 비어도 훈련한 것으로 센다",
+  "\tvar skipped: bool = _plan_is_empty(plan)",
+  "\tvar skipped: bool = false"
+ ],
+ [
+  "아직 안 산 주를 본다 (02가 커리어 내내 겪은 결함)",
+  "\tvar from_day: int = at_day - Calendar.DAYS_PER_WEEK + 1",
+  "\tvar from_day: int = at_day + 1"
+ ],
+ [
+  "창을 안 자른다 (시즌 전체를 한 주로 본다)",
+  "\t\tif d < from_day or d > at_day:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "남의 경기를 내 경기로 센다",
+  "\t\tif String(g.get(\"home\", \"\")) != team and String(g.get(\"away\", \"\")) != team:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "아직 안 치른 경기를 결과로 센다",
+  "\t\tif result == null:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "무승부를 승리로 센다",
+  "\t\tvar my_win: bool = String(result.get(\"winner_id\", \"\")) == team \\\n\t\t\tand not String(result.get(\"loser_id\", \"\")).is_empty()",
+  "\t\tvar my_win: bool = String(result.get(\"winner_id\", \"\")) == team"
+ ],
+ [
+  "남의 줄을 내 등판으로 센다",
+  "\t\t\tif String(line.get(\"player_id\", \"\")) != me:\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "타석도 등판으로 센다",
+  "\t\t\tif String(line.get(\"role\", \"\")) != \"pitcher\":\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "야구 표기 이닝을 그냥 더한다 (6.1을 6.1로 본다)",
+  "\t\t\tvar game_outs: int = CareerSummary.innings_to_outs(\n\t\t\t\tfloat(line.get(\"ip\", 0.0)))",
+  "\t\t\tvar game_outs: int = int(float(line.get(\"ip\", 0.0)) * 3.0)"
+ ],
+ [
+  "안 던진 주의 방어율이 0이다 (호투로 잡힌다)",
+  "\t\t\"era\": (er * OUTS_PER_GAME / float(outs)) if outs > 0 else 0.0,",
+  "\t\t\"era\": (er * OUTS_PER_GAME / float(outs)) if outs > 0 else 0.01,"
+ ],
+ [
+  "완봉 기준이 낮다",
+  "\t\t\tif game_outs >= COMPLETE_GAME_OUTS and game_er == 0.0:",
+  "\t\t\tif game_outs >= 24 and game_er == 0.0:"
+ ],
+ [
+  "실점해도 완봉이다",
+  "\t\t\tif game_outs >= COMPLETE_GAME_OUTS and game_er == 0.0:",
+  "\t\t\tif game_outs >= COMPLETE_GAME_OUTS:"
+ ],
+ [
+  "이긴 경기에 안 나와도 승리로 센다",
+  "\t\t\tif my_win:\n\t\t\t\twon = true",
+  "\t\t\twon = true"
+ ],
+ [
+  "갱신 결과를 관계에 안 쓴다",
+  "\t\trow[\"value\"] = int(d[\"value\"])",
+  "\t\tpass"
+ ],
+ [
+  "라벨이 안 바뀐 것까지 소식으로 남긴다",
+  "\t\tif not bool(d[\"label_changed\"]):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "소식에 누구인지가 안 붙는다",
+  "\t\t\t\"kind\": String(row.get(\"kind\", \"\")),",
+  "\t\t\t\"kind\": \"\","
+ ],
+ [
+  "건네받은 주 경계를 무시한다",
+  "\tvar day: int = at_day if at_day > 0 else int(state.get(\"day\", 1))\n\n\treconcile(state, day)",
+  "\tvar day: int = int(state.get(\"day\", 1))\n\n\treconcile(state, day)"
+ ],
+ [
+  "소속을 안 맞춘다 (아무도 안 만난다)",
+  "\treconcile(state, day)\n\tvar rows: Array = rows_of(state)",
+  "\tvar rows: Array = rows_of(state)"
+ ],
+ [
+  "주인공이 없어도 돈다",
+  "\tif state.get(\"protagonist\", {}).is_empty():\n\t\treturn []",
+  "\tif false:\n\t\treturn []"
+ ],
+ [
+  "갱신 날짜를 안 남긴다",
+  "\t\trow[\"value\"] = int(d[\"value\"])\n\t\trow[\"updated_day\"] = at_day",
+  "\t\trow[\"value\"] = int(d[\"value\"])\n\t\trow[\"updated_day\"] = 0"
+ ],
+ [
+  "시즌 총평이 관계에 안 닿는다",
+  "\tvar deltas: Array = Relationship.season(rows, era, team_rank_pct, pitched_any)\n\t_apply(state, deltas, day)",
+  "\tvar deltas: Array = Relationship.season(rows, era, team_rank_pct, pitched_any)"
+ ],
+ [
+  "헤어진 사람의 관계도 판정에 쓴다",
+  "\t\t# 헤어진 사람이 내 보직을 정하지 않는다\n\t\tif String(r[\"contact\"]) != Relationship.CONTACT_TOGETHER:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "두고 온 사람 판정이 이미 헤어진 사람까지 다시 훑는다",
+  "\t\tif String(r[\"contact\"]) != Relationship.CONTACT_TOGETHER:\n\t\t\tcontinue\n\t\tvar last: String = String(r.get(\"last_team\", \"\"))",
+  "\t\tvar last: String = String(r.get(\"last_team\", \"\"))"
+ ],
+ [
+  "담당 아닌 코치의 관계를 훈련에 쓴다",
+  "\t\t\t\tif not coach_specialty.is_empty() \\\n\t\t\t\t\t\tand String(r.get(\"specialty\", \"\")) == coach_specialty:\n\t\t\t\t\tcoach = int(r[\"value\"])",
+  "\t\t\t\tcoach = int(r[\"value\"])"
+ ],
+ [
+  "구단주 관계를 감독 자리에 쓴다",
+  "\t\t\tRelationship.KIND_OWNER:\n\t\t\t\towner = int(r[\"value\"])",
+  "\t\t\tRelationship.KIND_OWNER:\n\t\t\t\tmanager = int(r[\"value\"])"
+ ],
+ [
+  "이미 끝난 관계를 다시 센다",
+  "\t\tif String(r[\"contact\"]) == Relationship.CONTACT_ENDED:\n\t\t\tcontinue\n\t\tr[\"contact\"] = Relationship.CONTACT_ENDED",
+  "\t\tr[\"contact\"] = Relationship.CONTACT_ENDED"
+ ],
+ [
+  "아무나 끝낸다",
+  "\t\tif not person_ids.has(String(r[\"person_id\"])):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "모르는 사람에게도 기억을 붙인다",
+  "\tif row.is_empty():\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "기억이 상한 없이 쌓인다",
+  "\trow[\"memories\"] = Relationship.trim_memories(merged)",
+  "\trow[\"memories\"] = merged"
+ ]
+]

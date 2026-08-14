@@ -862,6 +862,116 @@ func test_a_suspension_reaches_the_game_gate() -> void:
 		.is_equal("skip_academic")
 
 
+## ⚠ **대학 무대는 주인공이 없어도 선다.** 세계의 일이고, 주인공이 안
+## 불렸다는 것도 결과다 — 주인공 검사 뒤로 내리면 그게 통째로 사라진다
+func test_the_campus_stage_runs_without_a_protagonist() -> void:
+	var r: AppRoot = await _mount(_real_game(777))
+	r.state()["protagonist"] = {}
+	r._apply_one_week(32 * 7)
+
+	var log: Array = r.state().get("campus_log", [])
+	assert_int(log.size()).override_failure_message(
+		"주인공이 없다고 대학 쇼케이스가 안 열렸다").is_equal(1)
+	assert_str(String(log[0]["kind"])).is_equal("showcase")
+
+
+# ── 관계도가 실제로 도는가 (B-2) ──────────────────────────────
+
+## ⚠ **02는 주 인덱스를 하나 어긋나게 읽어 관계가 전 커리어에 걸쳐 한 번도
+## 안 움직였다.** 이 검사가 02의 게이트(`measure:relations`)를 대신한다 —
+## 관계가 전원 중립이면 실패한다
+## ⚠ **주인공 팀 경기는 진행만으로는 안 치러진다** — 정지가 걸리고 사용자가
+## 던져야 한다. 여기서는 이긴 것으로 결과를 꽂아 두고 주 경계만 돌린다.
+## 관계 배선이 보는 것은 **일정에 꽂힌 결과**이므로 그게 정본이다
+func _win_the_teams_games(s: Dictionary) -> Array:
+	var team: String = String(s["protagonist"]["team_id"])
+	var me: String = String(s["protagonist"]["id"])
+	var days: Array = []
+	for g in s["schedule"]:
+		var home: String = String(g["home"])
+		var away: String = String(g["away"])
+		if home != team and away != team:
+			continue
+		g["result"] = {
+			"home_score": 5 if home == team else 1,
+			"away_score": 1 if home == team else 5,
+			"winner_id": team, "loser_id": away if home == team else home,
+			"player_lines": [{"role": "pitcher", "player_id": me,
+				"ip": 7.0, "er": 1.0}],
+		}
+		days.append(int(g["day"]))
+	days.sort()
+	return days
+
+
+func test_relationships_move_over_a_career() -> void:
+	var s: Dictionary = _real_game(777)
+	s["training_plan"] = {"primary": "TRN_VEL"}
+	var days: Array = _win_the_teams_games(s)
+	assert_array(days).override_failure_message("주인공 팀 경기가 없다").is_not_empty()
+
+	var r: AppRoot = await _mount(s)
+	var seed_value: int = int(s.get("seed", 0))
+	# 경기가 든 주 경계를 넘긴다 — 고교는 한 시즌 20경기뿐이라 연속 넉 주로는
+	# 표본이 안 된다
+	for d in days:
+		r._apply_one_week((d - 1) / 7 * 7 + 7)
+
+	var rows: Array = RelationshipRunner.rows_of(r.state())
+	assert_int(rows.size()).override_failure_message(
+		"한 시즌을 살았는데 아는 사람이 하나도 없다").is_greater(0)
+
+	# 초기값은 성향에서 결정적으로 나온다 — 그대로면 한 번도 안 움직인 것이다
+	var moved: int = 0
+	for row in rows:
+		var init_v: int = int(Relationship.init_values(seed_value,
+			[{"person_id": row["person_id"], "kind": row["kind"]}])[0]["value"])
+		if int(row["value"]) != init_v:
+			moved += 1
+	assert_int(moved).override_failure_message(
+		"한 시즌이 지나도 관계가 초기값 그대로다 — 02가 커리어 내내 그랬다") \
+		.is_greater(0)
+
+
+## ⚠ **주인공의 OVR이 생성값에 고정돼 있었다.** 개별 능력치만 오르고
+## `ovr`은 안 바뀌어서, 몇 년을 훈련해도 드래프트·계약·트레이드가 보는 숫자는
+## **1학년 때 값** 그대로였다. NPC는 `NpcGrowth`가 다시 냈으니 주인공만 그랬다
+func test_the_protagonist_ovr_follows_the_training() -> void:
+	var s: Dictionary = _real_game(777)
+	s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
+	s["protagonist"]["potential_hidden"] = 95.0
+	var before: float = Contract.core_ovr(s["protagonist"])
+
+	var r: AppRoot = await _mount(s)
+	for w in range(1, 31):
+		r._apply_one_week(w * 7)
+
+	assert_float(Contract.core_ovr(r.state()["protagonist"])) \
+		.override_failure_message(
+			"서른 주를 훈련했는데 OVR이 %.0f 그대로다 — 02가 커리어 내내 그랬다"
+			% before).is_greater(before)
+
+
+## 성장한 주는 관계에 실린다 — 훈련 뒤에 돌아야 잡힌다
+func test_growth_reaches_the_relationship_context() -> void:
+	var s: Dictionary = _real_game(777)
+	s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
+	s["protagonist"]["potential_hidden"] = 95.0
+	var r: AppRoot = await _mount(s)
+
+	# 관계 행을 먼저 만들어 두고, 감독 자리를 손으로 넣는다
+	# (스태프는 아직 없다 — QUEUE B-2b)
+	r._apply_one_week(7)
+	var rows: Array = RelationshipRunner.rows_of(r.state())
+	rows.append({"person_id": "MGR_TEST", "kind": "manager", "value": 0,
+		"contact": "together", "specialty": "", "last_team": "", "memories": []})
+
+	for w in range(2, 32):
+		r._apply_one_week(w * 7)
+	assert_int(int(RelationshipRunner.row_of(r.state(), "MGR_TEST")["value"])) \
+		.override_failure_message("훈련으로 성장했는데 감독이 모른다").is_greater(0)
+
+
 ## 닫으면 본화면이 돌아온다 — 안 돌아오면 게임이 멈춘 것처럼 보인다
 func test_closing_training_returns_to_main() -> void:
 	var r: AppRoot = await _mount(_real_game(777))

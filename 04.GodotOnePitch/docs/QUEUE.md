@@ -64,6 +64,16 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
   파생했다 — `data/salary_rules.json`. **02는 해외 팜 연봉을 아예 안 만든다**
   (`leagueMult`에 항목이 없다). 돌려도 답이 안 나오는 부류다
 
+- ❓ **수비 훈련(`defense`)에 대응하는 코치 영역이 없다.** 02
+  `relationship_rules.json`의 `training_area`가 11종을 잇는데 `defense`만
+  빠져 있다 — 수비 훈련을 짠 주는 **어느 코치도 안 오른다.** 02 그대로
+  옮겼다. 스태프(B-2b)에 수비 코치가 있는지 보고 다시 판단한다
+
+- ❓ **라이벌을 누가 지정하나.** 관계 엔진에 라이벌 갈래가 다 있는데
+  (성향이 부호를 가르는 것까지) **04에 라이벌을 정하는 경로가 없다** —
+  `faced_rivals`가 늘 빈 목록이다. 02는 `named_npc_registry.json`과 대회
+  맞대결에서 왔다. B-4(대회)에서 붙는다
+
 ### 02가 준 기준선
 
 `measure:devplayer` 3시즌 실측 — **04가 이 근처면 맞는 것이다**
@@ -125,9 +135,20 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       — 학사 경고·시험. **1~68일차가 눈에 보이게 메워지는 첫 작업**
       `sim/academics.gd` · `sim/campus_events.gd` · `sim/campus_runner.gd`.
       실측 223명(02 기준 223) · 올스타 24 vs 24 · 캡 초과 0 · 포지션 10/10
-- [ ] **B-2** `relationships`(522)
+- [x] **B-2** `relationships`(522)
       — 감독·동료·코치. ⚠ 02는 주 경계에서 `weekNum`을 써서 **전 커리어에 걸쳐
         한 번도 안 움직였다**(결과는 `weekNum - 1`에 있다)
+      `sim/relationship.gd` · `sim/relationship_runner.gd`.
+      **지금 도는 것은 팀동료뿐이다** — 감독·코치·구단주는 B-2b가 서야 한다
+- [ ] **B-2b 스태프(감독·코치·구단주)** — B-2를 하다 드러난 **빠진 모듈.**
+      04에 스태프가 아예 없다(`state.manager`는 경기 한 판짜리 입력이다).
+      관계도 엔진은 다섯 갈래를 다 갖고 검사도 다 돼 있으니, 스태프 행이
+      생기는 순간 `RelationshipRunner.present_of`에 얹기만 하면 된다.
+      02 원본: `staff_gen.rs`(300) · `staff_lifecycle.rs`(592) ·
+      `staffGen.ts`(178) · `staffEffects.ts`(183) ·
+      `seeds/onepitch/staff_rules.toml`(242) · `players/staff_rules.json`(530).
+      ⚠ **감독 관계가 보직 배정(`role_ovr_bias`)에, 코치가 훈련 효율에,
+        구단주가 재계약 배수에 걸린다** — 셋 다 지금은 중립으로 돈다
 - [ ] **B-3** `weekPhases/injuries`(273) + `injuryNews`(78) + `myBodyReport`(135)
 - [ ] **B-4** `tournaments`(204) + `survivalLeague`(83)
 - [ ] **B-5** `finance`(331) — 개인 재정

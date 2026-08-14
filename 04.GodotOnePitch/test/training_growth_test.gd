@@ -280,3 +280,39 @@ func test_an_empty_plan_still_recovers() -> void:
 	var r: Dictionary = _run(_plan())
 	assert_bool(r["pitching_xp"].is_empty()).is_true()
 	assert_float(r["fatigue_delta"]).is_equal_approx(-5.0, 0.001)
+
+
+# ── OVR은 파생값이다 (B-2에서 드러남) ──────────────────────────
+
+## ⚠ **주인공의 OVR이 생성값에 고정돼 있었다.** 개별 능력치만 오르고 `ovr`은
+## 안 바뀌어서, 몇 년을 훈련해도 드래프트·계약·트레이드가 보는 숫자는 1학년 때
+## 값 그대로였다. NPC는 `NpcGrowth`가 다시 냈으니 **주인공만 그랬다.**
+##
+## 02도 같은 결함을 겪었다 — 3시즌(191주) 추적에서 `npcs[].pitching`이 9종
+## 전부 정확히 +0이었고 **드래프트 전체가 생성값으로 돌았다**
+func test_the_ovr_is_recomputed_after_training() -> void:
+	var p: Dictionary = _player({"potential_hidden": 95.0})
+	p["pitching"]["ovr"] = 1.0
+	p["batting"]["ovr"] = 1.0
+
+	var r: Dictionary = TrainingGrowth.calc(p, _plan("VELO"), _programs(), 1.0)
+	assert_float(float(r["pitching"]["ovr"])).override_failure_message(
+		"훈련 뒤에도 OVR이 옛 값(1) 그대로다").is_not_equal(1.0)
+	assert_float(float(r["pitching"]["ovr"])).is_equal(
+		PlayerGen.pitching_ovr(r["pitching"]))
+	assert_float(float(r["batting"]["ovr"])).is_equal(
+		PlayerGen.batting_ovr(r["batting"]))
+
+
+## 올랐으면 OVR도 오른다 — 방향이 맞아야 드래프트가 옳게 읽는다
+func test_a_higher_stat_is_a_higher_ovr() -> void:
+	var p: Dictionary = _player({"potential_hidden": 95.0})
+	var before: float = PlayerGen.pitching_ovr(p["pitching"])
+	var stats: Dictionary = p["pitching"]
+	for _i in 30:
+		var r: Dictionary = TrainingGrowth.calc(p, _plan("VELO"), _programs(), 1.0)
+		p["pitching"] = r["pitching"]
+		p["pitching_xp"] = r["pitching_xp"]
+		stats = r["pitching"]
+	assert_float(float(stats["ovr"])).override_failure_message(
+		"서른 주를 훈련했는데 OVR이 %.0f 그대로다" % before).is_greater(before)

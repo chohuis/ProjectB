@@ -489,6 +489,45 @@ ABL/ABL_FARM 21~38 · JBL/JBL_FARM 20~37
 씨앗의 주차 하나는 밖에서 구별할 길이 없어 변이 목록에서 뺐다 — 이유는
 `campus_runner.gd` 주석에 있다.
 
+### B-2 관계도 (2026-08-15)
+
+`sim/relationship.gd` · `sim/relationship_runner.gd` ·
+`data/relationship_rules.json`. 02 `relationship.rs`의 검사 12개를 옮기고
+늘렸다(42개). 7단계 라벨은 **코드가 정본이다** — 경계는 튜닝 수치가 아니라
+구조이고, 화면·판정·소식이 전부 그 표를 읽는다.
+
+**02가 이 자리에서 겪은 결함:** 주 경계 처리가 `week === weekNum`으로
+경기를 찾았는데 그 주는 **아직 안 치른 주**였다. 결과가 영영 `null`이라
+**감독·동료 관계가 전 커리어에 걸쳐 한 번도 안 움직였다.** 훈련에 걸린 코치
+관계는 멀쩡해서 "도는 것 같은데 이상하다"로만 보였다.
+
+04에서는 `at_day`가 **방금 끝난 주의 마지막 날**이다(`DayEngine.week_end_days`가
+그렇게 준다). 인덱스를 자기 손으로 안 센다. 02의 게이트(`measure:relations`)를
+`test_relationships_move_over_a_career`가 대신한다 — 관계가 **초기값 그대로면
+실패**한다.
+
+**이 작업이 드러낸 것 둘:**
+
+⚠ **주인공의 OVR이 생성값에 고정돼 있었다.** `TrainingGrowth`·`GameGrowth`가
+개별 능력치만 올리고 `ovr`은 안 건드려서, 몇 년을 훈련해도 드래프트·계약·
+트레이드가 보는 숫자는 **1학년 때 값** 그대로였다. NPC는 `NpcGrowth`가
+레벨업마다 다시 냈으니 **주인공만 그랬다.** 02가 같은 결함을 겪었고
+(`liveOvrWiring.test.ts` — 3시즌 추적에서 `npcs[].pitching`이 9종 전부 +0,
+**드래프트 전체가 생성값으로 돌았다**) 그쪽 결론이 "성장값을 먼저 본다"였다.
+`PlayerGen.refresh_ovr`을 두 성장 경로 끝에 붙였다. **밸런스 변경이 아니라
+파생값 복구다.**
+
+⚠ **04에 스태프가 없다.** 감독·코치·구단주 인물이 아예 없어서 지금 관계도가
+움직이는 것은 **팀동료뿐이다.** 엔진은 다섯 갈래를 다 갖고 검사도 다 돼
+있으니 스태프 행이 생기는 순간 `present_of`에 얹기만 하면 된다 —
+QUEUE **B-2b**로 세웠다. 그때까지 `role_ovr_bias`·`training_bonus`·
+`contract_bonus`는 중립으로 돈다.
+
+검사 1,86x개 · 고아 0. 변이 106/106 검출
+(`mut_relationship` 62 + `mut_relationship_runner` 44).
+`mut_traingrowth.json`에 있던 **옛 코드(`Growth.apply_gains` 내부)를 겨누는
+변이 6건**을 걷어냈다 — `mut_growth.json`이 같은 것을 이미 본다.
+
 ### 그 다음
 
 ```

@@ -71,4 +71,8 @@
  ["대패를 그냥 패배로 적는다",
   "\tvar result_word: String = \"경기 승리\" if won else (\"대패\" if blowout else \"경기 패배\")",
   "\tvar result_word: String = \"경기 승리\" if won else \"경기 패배\""]
+ ,
+ ["경기 성장 뒤 OVR을 다시 안 낸다 (경기로 큰 만큼이 사라진다)",
+  "\tPlayerGen.refresh_ovr(pitching, batting)",
+  "\tpass"]
 ]

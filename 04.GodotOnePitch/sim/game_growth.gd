@@ -73,6 +73,9 @@ static func calc(player: Dictionary, game: Dictionary) -> Dictionary:
 	var potential: float = player.get("potential_hidden", 75.0)
 	Growth.apply_gains(pitching, pitching_xp, pitch_gains, potential, growth_logs)
 	Growth.apply_gains(batting, batting_xp, bat_gains, potential, growth_logs)
+	# 훈련 성장과 같은 이유로 여기서도 다시 낸다 — 두 경로가 다르면
+	# 경기로 큰 만큼만 조용히 사라진다
+	PlayerGen.refresh_ovr(pitching, batting)
 
 	# ── 사기 ─────────────────────────────────────────────────────
 	var base_morale: float = 6.0 if won else (-15.0 if blowout else -8.0)

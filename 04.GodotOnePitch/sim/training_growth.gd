@@ -104,6 +104,9 @@ static func calc(player: Dictionary, plan: Dictionary, programs: Array,
 	# 레벨업·천장 감쇠는 가 정본이다 — 경기 성장도 같은 걸 쓴다
 	Growth.apply_gains(pitching, pitching_xp, pitch_gains, potential, logs)
 	Growth.apply_gains(batting, batting_xp, bat_gains, potential, logs)
+	# ⚠ **OVR은 파생값이다.** 안 다시 내면 개별 능력치만 오르고 드래프트·계약·
+	# 트레이드가 보는 숫자는 생성값에 고정된다 — 주인공만 그랬다
+	PlayerGen.refresh_ovr(pitching, batting)
 
 	return {
 		"pitching": pitching, "batting": batting,
