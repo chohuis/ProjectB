@@ -165,7 +165,10 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
             **날마다** 부른다. 실측: 한 시즌에 대회 8개가 다 열리고 다 끝난다
             (개나리 31 · 장미 31 · 무궁화 47 · 국화 101 · 패왕 23 ·
             왕중왕 7 · 은하 31 · 여명 47 = 318경기). 검사 29 · 변이 32/32
-      - [ ] **B-4b 대회 소식**(`tournamentNews` 192 · `tournamentView` 155)
+      - [x] **B-4b 대회 소식** — `sim/tournament_news.gd`. 개막·내 경기·
+            라운드 명단·우승 네 갈래가 소식함까지 닿는다. ⚠ 02는 대회가
+            데이터로만 돌아 **우승해도 아무 말이 없었다**. 검사 23 · 변이 34/34.
+            **`tournamentView`(155)는 화면이라 C에서 한다**
       - [x] **B-4c 독립 생존리그** — `sim/survival.gd` · `sim/survival_runner.gd`
             · `data/survival_rules.json`. 4단계로 좁혀 가고 **단계마다
             순위표가 리셋된다**. 실측: 90 + 56 + 6 = 152경기, 3단계 컷,

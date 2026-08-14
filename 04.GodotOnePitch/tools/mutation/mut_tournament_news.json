@@ -1,0 +1,172 @@
+[
+ [
+  "라운드 이름을 앞에서 센다 (대회마다 1라운드 이름이 같아진다)",
+  "\tvar from_end: int = total_rounds - round",
+  "\tvar from_end: int = round - 1"
+ ],
+ [
+  "라운드 이름이 늘 결승이다",
+  "\tif from_end >= 0 and from_end < ROUND_NAMES.size():\n\t\treturn ROUND_NAMES[from_end]",
+  "\treturn ROUND_NAMES[0]"
+ ],
+ [
+  "1회전 명단까지 보낸다 (102팀 대회면 51경기다)",
+  "\treturn total_rounds - round < ROUND_NAMES.size()",
+  "\treturn true"
+ ],
+ [
+  "명단을 아예 안 보낸다",
+  "\treturn total_rounds - round < ROUND_NAMES.size()",
+  "\treturn false"
+ ],
+ [
+  "리그를 안 가린다 (고교 대회를 대학연맹이 알린다)",
+  "\treturn \"대학야구연맹\" if league_id == \"LEAGUE_UNIVERSITY\" else \"고교야구연맹\"",
+  "\treturn \"고교야구연맹\""
+ ],
+ [
+  "팀 이름을 id로 보여준다",
+  "\treturn String(names.get(team_id, team_id))",
+  "\treturn team_id"
+ ],
+ [
+  "부전승도 경기로 센다",
+  "\t\tif int(m[\"round\"]) == round and not bool(m[\"is_bye\"]):",
+  "\t\tif int(m[\"round\"]) == round:"
+ ],
+ [
+  "다른 라운드 경기까지 섞는다",
+  "\t\tif int(m[\"round\"]) == round and not bool(m[\"is_bye\"]):",
+  "\t\tif not bool(m[\"is_bye\"]):"
+ ],
+ [
+  "내 팀이 나가는지를 안 본다",
+  "\tvar joined: bool = entrant_ids.has(my_team_id)",
+  "\tvar joined: bool = true"
+ ],
+ [
+  "개막 소식 id에 연도가 없다 (해마다 겹쳐 화면이 죽는다)",
+  "\t\t\"id\": \"msg-tour-open-%s-%d\" % [tournament_def[\"id\"], season_year],",
+  "\t\t\"id\": \"msg-tour-open-%s\" % tournament_def[\"id\"],"
+ ],
+ [
+  "참가 규모를 안 알린다",
+  "\t\t\"subject\": \"%d %s 개막 — %d팀 참가\"\n\t\t\t% [season_year, tournament_def[\"name\"], entrant_ids.size()],",
+  "\t\t\"subject\": \"%d %s 개막\" % [season_year, tournament_def[\"name\"]],"
+ ],
+ [
+  "소식을 읽은 것으로 보낸다",
+  "\t\t\"day\": day, \"read\": false, \"decision\": null,\n\t}\n\n\n# ── 내 경기",
+  "\t\t\"day\": day, \"read\": true, \"decision\": null,\n\t}\n\n\n# ── 내 경기"
+ ],
+ [
+  "내 경기가 아닌 것도 내 경기로 본다",
+  "\t\tif String(m[\"home\"]) == my_team_id or String(m[\"away\"]) == my_team_id:\n\t\t\tmine = m\n\t\t\tbreak",
+  "\t\tmine = m\n\t\tbreak"
+ ],
+ [
+  "아직 안 끝난 경기도 알린다",
+  "\tif mine.is_empty() or String(mine[\"winner\"]).is_empty():\n\t\treturn {}",
+  "\tif mine.is_empty():\n\t\treturn {}"
+ ],
+ [
+  "상대를 나 자신으로 적는다",
+  "\tvar opponent: String = String(mine[\"away\"]) if String(mine[\"home\"]) == my_team_id \\\n\t\telse String(mine[\"home\"])",
+  "\tvar opponent: String = String(mine[\"home\"])"
+ ],
+ [
+  "이겼는지를 안 본다 (지고도 통과한다)",
+  "\tvar won: bool = String(mine[\"winner\"]) == my_team_id",
+  "\tvar won: bool = true"
+ ],
+ [
+  "결승인지를 안 본다 (우승해도 통과라고 한다)",
+  "\tvar is_final: bool = round == total",
+  "\tvar is_final: bool = false"
+ ],
+ [
+  "우승 제목에 대회 이름을 두 번 넣는다 (02가 그랬다)",
+  "\t\thead = \"우승\" if is_final else \"%s 통과\" % rn",
+  "\t\thead = \"%s 우승\" % tournament_def[\"name\"] if is_final else \"%s 통과\" % rn"
+ ],
+ [
+  "다음 라운드를 안 알려준다",
+  "\t\ttail = \"%s를 들어올렸다.\" % tournament_def[\"flower\"] if is_final \\\n\t\t\telse \"%s에 오른다.\" % round_name(round + 1, total)",
+  "\t\ttail = \"%s를 들어올렸다.\" % tournament_def[\"flower\"]"
+ ],
+ [
+  "이겨도 탈락이라고 적는다",
+  "\t\ttail = \"여기서 대회를 마친다.\"",
+  "\t\ttail = \"다음 라운드에 오른다.\""
+ ],
+ [
+  "내 경기 소식 id에 라운드가 없다 (라운드마다 겹친다)",
+  "\t\t\"id\": \"msg-tour-my-%s-r%d-%d\" % [tournament_def[\"id\"], round,\n\t\t\tbracket[\"season_year\"]],",
+  "\t\t\"id\": \"msg-tour-my-%s-%d\" % [tournament_def[\"id\"],\n\t\t\tbracket[\"season_year\"]],"
+ ],
+ [
+  "이른 라운드 명단도 보낸다",
+  "\tif not is_listable(round, total):\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "결승 명단까지 보낸다 (우승 소식과 겹친다)",
+  "\tif round == total:\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "안 끝난 라운드 명단을 보낸다",
+  "\t\tif w.is_empty():\n\t\t\treturn {}",
+  "\t\tif w.is_empty():\n\t\t\tcontinue"
+ ],
+ [
+  "내 경기가 있는 라운드에 명단까지 보낸다 (같은 라운드가 두 통)",
+  "\t\tif String(m[\"home\"]) == my_team_id or String(m[\"away\"]) == my_team_id:\n\t\t\treturn {}",
+  "\t\tif false:\n\t\t\treturn {}"
+ ],
+ [
+  "탈락한 팀을 진출로 센다",
+  "\t\tvar loser: String = String(m[\"away\"]) if w == String(m[\"home\"]) \\\n\t\t\telse String(m[\"home\"])",
+  "\t\tvar loser: String = w"
+ ],
+ [
+  "우리 권역을 안 짚어 준다",
+  "\tfor w in winners:\n\t\tif my_region_teams.has(w):\n\t\t\tknown.append(w)",
+  "\tpass"
+ ],
+ [
+  "우리 권역 탈락을 안 알린다",
+  "\tif not fallen.is_empty():",
+  "\tif false:"
+ ],
+ [
+  "명단 소식 제목이 다음 라운드가 아니라 이번 라운드다",
+  "\t\t\"subject\": \"%s %s 진출 %d팀\" % [tournament_def[\"name\"], next_name,\n\t\t\twinners.size()],",
+  "\t\t\"subject\": \"%s %s 진출 %d팀\" % [tournament_def[\"name\"],\n\t\t\tround_name(round, total), winners.size()],"
+ ],
+ [
+  "결승을 안 찾고 아무 경기나 본다",
+  "\t\tif int(m[\"round\"]) == int(bracket[\"total_rounds\"]):\n\t\t\tfinal_match = m\n\t\t\tbreak",
+  "\t\tfinal_match = m\n\t\tbreak"
+ ],
+ [
+  "결승이 안 끝나도 우승을 알린다",
+  "\tif final_match.is_empty() or String(final_match[\"winner\"]).is_empty():\n\t\treturn {}",
+  "\tif final_match.is_empty():\n\t\treturn {}"
+ ],
+ [
+  "내가 우승해도 리그 소식을 또 보낸다",
+  "\tif champ == my_team_id:\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "준우승을 우승팀으로 적는다",
+  "\tvar runner_up: String = String(final_match[\"away\"]) \\\n\t\tif champ == String(final_match[\"home\"]) else String(final_match[\"home\"])",
+  "\tvar runner_up: String = champ"
+ ],
+ [
+  "준우승을 안 적는다",
+  "\tif not runner_up.is_empty():\n\t\tlines.append(\"   준우승  %s\" % _name_of(names, runner_up))",
+  "\tif false:\n\t\tlines.append(\"   준우승  %s\" % _name_of(names, runner_up))"
+ ]
+]

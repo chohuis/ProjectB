@@ -448,6 +448,114 @@ func test_it_uses_the_day_it_is_given() -> void:
 		.is_equal(["TOUR_HS_GAENARI"])
 
 
+# ── 소식 ──────────────────────────────────────────────────────
+
+func _mail(state: Dictionary, prefix: String) -> Array:
+	var out: Array = []
+	for m in state.get("mailbox", []):
+		if String(m["id"]).begins_with(prefix):
+			out.append(m)
+	return out
+
+
+## ⚠ **02는 대회가 데이터로만 돌았다.** 우승해도 아무 말이 없었다
+func test_the_opening_reaches_the_mailbox() -> void:
+	var s: Dictionary = _state(8, {"schedule": _league_history()})
+	TournamentRunner.run(s, 8)
+	assert_int(_mail(s, "msg-tour-open-TOUR_HS_GAENARI").size()) \
+		.override_failure_message("개막 소식이 안 왔다").is_equal(1)
+
+
+## 같은 소식이 두 번 안 온다 — 소식 목록이 id를 키로 잡아 겹치면 화면이 죽는다
+func test_a_message_is_never_sent_twice() -> void:
+	var s: Dictionary = _state(8, {"schedule": _league_history()})
+	var day: int = 8
+	for i in 20:
+		TournamentRunner.run(s, day)
+		if _play(s, "TOUR_HS_GAENARI") == 0:
+			break
+		day += 1
+	TournamentRunner.run(s, day + 1)
+
+	var seen: Dictionary = {}
+	for m in s["mailbox"]:
+		assert_bool(seen.has(String(m["id"]))).override_failure_message(
+			"%s가 소식함에 두 번 있다" % m["id"]).is_false()
+		seen[String(m["id"])] = true
+
+
+## 우승 소식이 온다
+func test_the_champion_reaches_the_mailbox() -> void:
+	var s: Dictionary = _state(8, {"schedule": _league_history()})
+	var day: int = 8
+	for i in 20:
+		TournamentRunner.run(s, day)
+		if _play(s, "TOUR_HS_GAENARI") == 0:
+			break
+		day += 1
+	TournamentRunner.run(s, day + 1)
+
+	var champ_mail: Array = _mail(s, "msg-tour-champ-TOUR_HS_GAENARI")
+	var my_mail: Array = _mail(s, "msg-tour-my-TOUR_HS_GAENARI")
+	assert_int(champ_mail.size() + my_mail.size()).override_failure_message(
+		"대회가 끝났는데 우승 소식도 내 경기 소식도 없다").is_greater(0)
+
+
+## 내가 나간 대회는 내 경기 소식이 온다
+func test_my_round_reaches_the_mailbox() -> void:
+	var s: Dictionary = _state(8, {"schedule": _league_history()})
+	# 올해 1위 팀을 내 팀으로 — 약팀이면 32강에 못 든다
+	var top: Array = []
+	for t in World.teams_of(HS):
+		top.append(String(t["id"]))
+	top.sort()
+	s["protagonist"]["team_id"] = String(top[-1])
+
+	var day: int = 8
+	for i in 20:
+		TournamentRunner.run(s, day)
+		if _play(s, "TOUR_HS_GAENARI") == 0:
+			break
+		day += 1
+	TournamentRunner.run(s, day + 1)
+
+	assert_int(_mail(s, "msg-tour-my-TOUR_HS_GAENARI").size()) \
+		.override_failure_message("대회에 나갔는데 내 경기 소식이 한 통도 없다") \
+		.is_greater(0)
+
+
+## ⚠ **소식 날짜가 그 주 경계다.** `state.day`를 쓰면 여러 날을 한 번에
+## 넘길 때 소식이 도착한 날짜로 몰린다
+func test_the_message_day_is_the_boundary() -> void:
+	var s: Dictionary = _state(8, {"schedule": _league_history()})
+	TournamentRunner.run(s, 8)
+	_play(s, "TOUR_HS_GAENARI")
+	# 상태의 날짜는 그대로 두고 다른 날짜를 건넨다
+	TournamentRunner.run(s, 13)
+
+	for m in _mail(s, "msg-tour-round-TOUR_HS_GAENARI"):
+		assert_int(int(m["day"])).override_failure_message(
+			"소식 날짜가 %d다 (건네받은 13이어야 한다)" % m["day"]).is_equal(13)
+
+
+## 라운드 명단이 온다 — 우리가 안 나간 대회도 누가 올라갔는지 보인다
+func test_the_round_list_reaches_the_mailbox() -> void:
+	var s: Dictionary = _state(8, {"schedule": _league_history()})
+	# 내 팀을 대회 밖 팀으로 둔다
+	s["protagonist"]["team_id"] = "TEAM_NOBODY"
+	var day: int = 8
+	for i in 20:
+		TournamentRunner.run(s, day)
+		if _play(s, "TOUR_HS_GAENARI") == 0:
+			break
+		day += 1
+	TournamentRunner.run(s, day + 1)
+
+	assert_int(_mail(s, "msg-tour-round-TOUR_HS_GAENARI").size()) \
+		.override_failure_message(
+			"안 나간 대회의 라운드 명단이 한 통도 안 왔다").is_greater(0)
+
+
 # ── 조별예선 ──────────────────────────────────────────────────
 
 func _univ_state() -> Dictionary:

@@ -114,7 +114,36 @@ static func open(state: Dictionary, tournament_def: Dictionary,
 		_inject(state, Tournament.round_schedule(rec["bracket"], 1))
 
 	_put(state, tid, rec)
+	# ⚠ **소식이 없으면 대회가 데이터로만 돈다.** 02가 그랬다 — 우승해도
+	# 아무 말이 없었고, 고교 시즌의 서사가 통째로 안 보였다
+	_send(state, TournamentNews.opening(tournament_def, seeded, me, at_day, year))
 	return rec
+
+
+## 소식함에 넣는다. **같은 id는 안 넣는다** — 소식 목록이 id를 키로 잡아서
+## 겹치면 화면이 죽는다(02에서 세이브가 안 열린 적이 있다)
+static func _send(state: Dictionary, message: Dictionary) -> bool:
+	if message.is_empty():
+		return false
+	var mailbox: Array = state.get("mailbox", [])
+	for m in mailbox:
+		if String(m.get("id", "")) == String(message["id"]):
+			return false
+	mailbox.append(message)
+	state["mailbox"] = mailbox
+	return true
+
+
+## 같은 권역 팀 — 라운드 명단에서 아는 이름을 짚어 준다
+static func _my_region_teams(state: Dictionary, league_id: String) -> Array:
+	var me: String = _protagonist_team(state)
+	if me.is_empty():
+		return []
+	for key in Tournament.regions_of(league_id):
+		var teams: Array = Tournament.regions_of(league_id)[key]
+		if teams.has(me):
+			return teams
+	return []
 
 
 ## 일정에 꽂는다. **이미 있는 id는 안 덮어쓴다** — 덮으면 치른 결과가 날아간다
@@ -169,7 +198,8 @@ static func _winner_of(result: Dictionary) -> String:
 
 
 ## 끝난 라운드를 올리고 다음 라운드를 일정에 꽂는다. 몇 라운드를 올렸나
-static func advance(state: Dictionary, tournament_def: Dictionary) -> int:
+static func advance(state: Dictionary, tournament_def: Dictionary,
+		at_day: int = -1) -> int:
 	var tid: String = String(tournament_def["id"])
 	var rec: Dictionary = of(state, tid)
 	if rec.is_empty() or not String(rec["champion"]).is_empty():
@@ -184,6 +214,9 @@ static func advance(state: Dictionary, tournament_def: Dictionary) -> int:
 
 	var me: String = _protagonist_team(state)
 	var results: Dictionary = _results_by_id(state)
+	var day: int = at_day if at_day > 0 else int(state.get("day", 1))
+	var names: Dictionary = state.get("team_names", {})
+	var region: Array = _my_region_teams(state, String(tournament_def["league_id"]))
 	var moved: int = 0
 
 	for round in range(1, int(bracket["total_rounds"]) + 1):
@@ -197,11 +230,19 @@ static func advance(state: Dictionary, tournament_def: Dictionary) -> int:
 				"winner": w if not w.is_empty() else String(g["home"])})
 		Tournament.advance_round(bracket, round, inputs, me)
 		moved += 1
+		# ⚠ **내 경기가 먼저다.** 내 팀이 그 라운드에 있으면 명단 소식은
+		# 스스로 물러난다 — 둘 다 보내면 같은 라운드가 두 통이 된다
+		_send(state, TournamentNews.my_round(tournament_def, bracket, round,
+			me, names, day))
+		_send(state, TournamentNews.round_progress(tournament_def, bracket,
+			round, me, names, day, region))
 		if round < int(bracket["total_rounds"]):
 			_inject(state, Tournament.round_schedule(bracket, round + 1))
 
 	var champ: String = Tournament.champion(bracket)
 	if not champ.is_empty():
+		_send(state, TournamentNews.champion(tournament_def, bracket, me,
+			names, day))
 		rec["champion"] = champ
 		var log: Array = state.get(LOG_KEY, [])
 		log.append({"tournament_id": tid,
@@ -283,7 +324,7 @@ static func run(state: Dictionary, at_day: int = -1) -> Dictionary:
 		var d2: Dictionary = Tournament.def_of(String(tid))
 		if d2.is_empty():
 			continue
-		advanced += advance(state, d2)
+		advanced += advance(state, d2, day)
 		var champ: String = String(of(state, String(tid)).get("champion", ""))
 		if not champ.is_empty():
 			finished.append({"tournament_id": String(tid), "champion": champ})

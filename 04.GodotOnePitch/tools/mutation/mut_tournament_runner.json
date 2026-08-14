@@ -96,8 +96,8 @@
  ],
  [
   "우승팀을 안 남긴다",
-  "\tif not champ.is_empty():\n\t\trec[\"champion\"] = champ",
-  "\tif false:\n\t\trec[\"champion\"] = champ"
+  "\tif not champ.is_empty():\n\t\t_send(state, TournamentNews.champion(tournament_def, bracket, me,\n\t\t\tnames, day))\n\t\trec[\"champion\"] = champ",
+  "\tif false:\n\t\t_send(state, TournamentNews.champion(tournament_def, bracket, me,\n\t\t\tnames, day))\n\t\trec[\"champion\"] = champ"
  ],
  [
   "우승 기록을 안 적는다",
@@ -158,5 +158,30 @@
   "건네받은 날짜를 무시한다",
   "\tvar day: int = at_day if at_day > 0 else int(state.get(\"day\", 1))",
   "\tvar day: int = int(state.get(\"day\", 1))"
+ ],
+ [
+  "개막 소식을 안 보낸다 (대회가 데이터로만 돈다)",
+  "\t_send(state, TournamentNews.opening(tournament_def, seeded, me, at_day, year))",
+  "\tpass"
+ ],
+ [
+  "같은 소식을 두 번 보낸다 (소식 목록이 id로 죽는다)",
+  "\tfor m in mailbox:\n\t\tif String(m.get(\"id\", \"\")) == String(message[\"id\"]):\n\t\t\treturn false",
+  "\tpass"
+ ],
+ [
+  "내 경기 소식을 안 보낸다",
+  "\t\t_send(state, TournamentNews.my_round(tournament_def, bracket, round,\n\t\t\tme, names, day))",
+  "\t\tpass"
+ ],
+ [
+  "라운드 명단을 안 보낸다",
+  "\t\t_send(state, TournamentNews.round_progress(tournament_def, bracket,\n\t\t\tround, me, names, day, region))",
+  "\t\tpass"
+ ],
+ [
+  "우승 소식을 안 보낸다",
+  "\t\t_send(state, TournamentNews.champion(tournament_def, bracket, me,\n\t\t\tnames, day))",
+  "\t\tpass"
  ]
 ]
