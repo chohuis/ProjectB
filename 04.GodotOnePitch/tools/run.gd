@@ -68,6 +68,9 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 		"measure:offseason":
 			return OffseasonMeasure.new().run(log_line, fail,
 				arg_int(args, "years", 5), arg_int(args, "seed", 20270101))
+		"measure:growth":
+			return GrowthMeasure.new().run(log_line, fail,
+				arg_int(args, "weeks", 52), arg_int(args, "seed", 20270101))
 		"bench:rng":
 			return RngProbe.new().run(log_line, fail)
 		_:

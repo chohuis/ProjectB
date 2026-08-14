@@ -60,12 +60,22 @@ const HASH_INIT: int = 5381
 static func mix(parts: Array) -> int:
 	var h: int = HASH_INIT
 	for p in parts:
-		var s: String = str(p)
-		for k in s.length():
-			h = ((h * 33) ^ s.unicode_at(k)) & MASK63
-		# 항목 사이에 구분자를 넣는다 — 안 그러면 ["ab","c"]와 ["a","bc"]가 같다
-		h = ((h * 33) ^ 0x5bf0) & MASK63
+		h = mix_into(h, str(p))
 	return h
+
+
+## 이미 만든 해시에 한 항목을 더 섞는다.
+##
+## ⚠ **뜨거운 자리에서 `mix`를 부르지 않으려고 있다.** NPC 7,000명의 주간
+## 성장이 사람마다 `mix(["npc_growth", id, year, week])`를 부르면 매번
+## 배열 하나와 `str()` 넷을 만들고 40자를 훑는다 — 앞부분(연도·주차)은
+## 그 주 내내 같은데도. 앞부분을 한 번 만들어 두고 여기로 id만 얹는다
+static func mix_into(h: int, s: String) -> int:
+	var out: int = h
+	for k in s.length():
+		out = ((out * 33) ^ s.unicode_at(k)) & MASK63
+	# 항목 사이에 구분자를 넣는다 — 안 그러면 ["ab","c"]와 ["a","bc"]가 같다
+	return ((out * 33) ^ 0x5bf0) & MASK63
 
 
 ## 이 세계에서 "무엇에 대한" 난수인지로 시드를 만든다.

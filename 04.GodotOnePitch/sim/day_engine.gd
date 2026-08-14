@@ -125,6 +125,24 @@ static func week_boundaries_crossed(from_day: int, to_day: int) -> int:
 	return Calendar.week_ends_between(from_day, to_day - 1)
 
 
+## 넘은 주 경계가 **각각 며칠이었나** — 이른 순서로.
+##
+## ⚠ **주기 처리가 "몇 번"만으로는 부족하다.** 여러 날을 한 번에 진행하면
+## 주 경계를 N번 넘는데, 그때마다 도착한 날짜를 쓰면 **같은 주를 N번 사는
+## 것**이 된다 — NPC가 같은 난수·같은 성적 창을 N번 받아서 **하루씩 간 것과
+## 결과가 달라진다.** 그 어긋남은 조용하다.
+##
+## `to_day`는 **아직 안 산 오늘**이다(`advance_to`가 그렇게 준다)
+static func week_end_days(to_day: int, weeks: int) -> PackedInt32Array:
+	# 0번·음수를 따로 막지 않는다 — 아래 `for`가 안 돈다
+	var out := PackedInt32Array()
+	# 마지막으로 지난 주 경계 — `to_day - 1`까지 살았다
+	var last: int = (to_day - 1) / Calendar.DAYS_PER_WEEK * Calendar.DAYS_PER_WEEK
+	for i in weeks:
+		out.append(last - (weeks - 1 - i) * Calendar.DAYS_PER_WEEK)
+	return out
+
+
 ## 하루 진행. 돌려주는 사전이 곧 다음 상태다.
 ##
 ## ⚠ **정지한 날엔 안 넘어간다.** 넘어가면 그 경기를 못 치른 채 지나간다.

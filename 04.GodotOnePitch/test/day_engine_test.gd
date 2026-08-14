@@ -221,6 +221,42 @@ func test_standing_still_crosses_nothing() -> void:
 	assert_int(DayEngine.week_boundaries_crossed(14, 14)).is_equal(0)
 
 
+# ── 어느 날 넘었나 ────────────────────────────────────────────
+
+## ⚠ **"몇 번"만으로는 부족하다.** 주기 처리가 그때마다 도착한 날짜를 쓰면
+## **같은 주를 N번 사는 것**이 된다 — NPC가 같은 난수·같은 성적 창을 N번
+## 받아서 하루씩 간 것과 결과가 달라진다
+func test_it_says_which_days_the_boundaries_were() -> void:
+	# 1일차에서 22일차로 갔다 = 21일을 살았다 = 7·14·21일에 넘었다
+	assert_array(Array(DayEngine.week_end_days(22, 3))).is_equal([7, 14, 21])
+	assert_array(Array(DayEngine.week_end_days(8, 1))).is_equal([7])
+	assert_array(Array(DayEngine.week_end_days(15, 1))).is_equal([14])
+	assert_array(Array(DayEngine.week_end_days(8, 0))).is_empty()
+
+	# ⚠ **도착한 날은 아직 안 산 날이다.** 21일차에 도착했으면 20일까지
+	# 살았고, 넘은 경계는 7·14다 — 21을 넣으면 오지도 않은 주가 붙는다
+	assert_array(Array(DayEngine.week_end_days(21, 2))).is_equal([7, 14])
+	assert_array(Array(DayEngine.week_end_days(7, 0))).is_empty()
+
+
+## ⚠ **하루씩 간 것과 한 번에 간 것이 같은 날들을 준다.** 다르면 그 주의
+## 성적 창과 난수가 어긋난다
+func test_the_days_match_whichever_way_you_walk() -> void:
+	var one_at_a_time: Array = []
+	for d in range(1, 60):
+		var n: int = DayEngine.week_boundaries_crossed(d, d + 1)
+		one_at_a_time.append_array(Array(DayEngine.week_end_days(d + 1, n)))
+	assert_array(one_at_a_time).is_equal(
+		Array(DayEngine.week_end_days(60, DayEngine.week_boundaries_crossed(1, 60))))
+
+
+## 넘은 날은 실제로 주 경계여야 한다 — 아무 날이나 주면 뜻이 없다
+func test_every_day_it_names_is_a_week_end() -> void:
+	for day in DayEngine.week_end_days(60, DayEngine.week_boundaries_crossed(1, 60)):
+		assert_bool(Calendar.is_week_end(day)).override_failure_message(
+			"%d일차는 주 경계가 아니다" % day).is_true()
+
+
 ## 시즌 첫 주는 1~7일차다. 그 주기 처리는 **8일차로 넘어갈 때** 돈다 —
 ## 7일차를 아직 안 살았는데 미리 돌면 하루 앞서간다
 func test_the_first_week_ends_on_day_seven() -> void:

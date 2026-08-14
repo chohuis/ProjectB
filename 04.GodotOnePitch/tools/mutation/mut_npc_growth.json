@@ -1,0 +1,302 @@
+[
+ [
+  "33세 이상도 자란다 (은퇴 직전 선수가 계속 큰다)",
+  "const AGE_FACTOR_OLD: float = 0.00",
+  "const AGE_FACTOR_OLD: float = 0.30"
+ ],
+ [
+  "나이 계수가 뒤집혔다 (노장이 신인보다 빨리 큰다)",
+  "\t[18, 1.80], [21, 1.41], [24, 0.71], [27, 0.52], [30, 0.22], [32, 0.08],",
+  "\t[18, 0.08], [21, 0.22], [24, 0.52], [27, 0.71], [30, 1.41], [32, 1.80],"
+ ],
+ [
+  "나이 구간을 위에서부터 안 찾는다",
+  "\tfor b in AGE_BANDS:\n\t\tif age <= int(b[0]):\n\t\t\treturn float(b[1])",
+  "\tfor b in AGE_BANDS:\n\t\tif age >= int(b[0]):\n\t\t\treturn float(b[1])"
+ ],
+ [
+  "10대 계수가 20대 초반과 같다 (유망주 구간이 사라진다)",
+  "\t[18, 1.80], [21, 1.41],",
+  "\t[18, 1.41], [21, 1.41],"
+ ],
+ [
+  "대학이 고교보다 낮다 (대학 후보가 5년에 220 → 1로 말라붙었던 것)",
+  "\t\"1군\": 1.00, \"2군\": 0.92, \"대학\": 1.15, \"고교\": 1.05,",
+  "\t\"1군\": 1.00, \"2군\": 0.92, \"대학\": 0.95, \"고교\": 1.05,"
+ ],
+ [
+  "리그를 시설 등급에 못 잇는다 (전 팀이 최하 등급으로 떨어졌던 것)",
+  "\t\"LEAGUE_KBL\": \"1군\", \"LEAGUE_ABL\": \"1군\", \"LEAGUE_JBL\": \"1군\",",
+  ""
+ ],
+ [
+  "2군이 1군과 같은 시설을 쓴다 (승격이 뜻을 잃는다)",
+  "\t\"LEAGUE_KBL_FARM\": \"2군\", \"LEAGUE_ABL_FARM\": \"2군\", \"LEAGUE_JBL_FARM\": \"2군\",",
+  "\t\"LEAGUE_KBL_FARM\": \"1군\", \"LEAGUE_ABL_FARM\": \"1군\", \"LEAGUE_JBL_FARM\": \"1군\","
+ ],
+ [
+  "모르는 리그를 최고 등급으로 본다",
+  "const FACILITY_DEFAULT: float = 0.85",
+  "const FACILITY_DEFAULT: float = 1.20"
+ ],
+ [
+  "시기 배수를 안 곱한다 (오프시즌이 시즌과 같다)",
+  "\treturn fac * mgr * cch * float(PHASE_TRAIN_MULT.get(phase, 1.00))",
+  "\treturn fac * mgr * cch"
+ ],
+ [
+  "오프시즌이 시즌보다 덜 자란다",
+  "\t\"offseason\": 1.50, \"preseason\": 1.25, \"postseason\": 0.85, \"season\": 1.00,\n}\n\n\nstatic func facility_factor",
+  "\t\"offseason\": 0.50, \"preseason\": 1.25, \"postseason\": 0.85, \"season\": 1.00,\n}\n\n\nstatic func facility_factor"
+ ],
+ [
+  "시설 계수를 안 태운다 (어디서 뛰든 같이 큰다)",
+  "\tvar fac: float = facility_factor(league_id)",
+  "\tvar fac: float = 1.0"
+ ],
+ [
+  "잘 던져도 못 던져도 같이 큰다",
+  "\t\tif era < 2.5:\n\t\t\treturn 1.40\n\t\tif era < 3.5:\n\t\t\treturn 1.15\n\t\tif era < 4.5:\n\t\t\treturn 1.00\n\t\tif era < 6.0:\n\t\t\treturn 0.80\n\t\treturn 0.60",
+  "\t\treturn 1.00"
+ ],
+ [
+  "ERA 구간이 뒤집혔다 (많이 맞을수록 잘 큰다)",
+  "\t\tif era < 2.5:\n\t\t\treturn 1.40",
+  "\t\tif era < 2.5:\n\t\t\treturn 0.60"
+ ],
+ [
+  "타율 구간이 뒤집혔다",
+  "\tif avg > 0.300:\n\t\treturn 1.40",
+  "\tif avg > 0.300:\n\t\treturn 0.60"
+ ],
+ [
+  "투수 성적을 타자 기준으로 읽는다 (키가 달라 늘 1.00이 된다)",
+  "\tif player_type == \"pitcher\":\n\t\tif not perf.has(\"era\"):",
+  "\tif player_type == \"batter\":\n\t\tif not perf.has(\"era\"):"
+ ],
+ [
+  "성적이 없으면 최악으로 본다 (안 뛰면 무너진다)",
+  "const NO_PERF_BASE: float = 0.70",
+  "const NO_PERF_BASE: float = 0.10"
+ ],
+ [
+  "02의 gamesPlayed 결함을 조용히 고쳤다 (실측 대조가 깨진다)",
+  "\tvar games: float = minf(float(perf.get(\"games_played\", 0)) / GAMES_FULL, 1.0)\n\treturn games * quality_factor(perf, player_type) * weight",
+  "\treturn quality_factor(perf, player_type) * weight"
+ ],
+ [
+  "시기 가중을 안 태운다",
+  "\tvar weight: float = float(PHASE_WEIGHT.get(phase, 1.00))",
+  "\tvar weight: float = 1.00"
+ ],
+ [
+  "천장에 닿아도 계속 자란다 (전 세계가 99로 수렴한다)",
+  "\tif ratio >= 1.00:\n\t\treturn 0.00",
+  ""
+ ],
+ [
+  "천장 감쇠가 없다",
+  "\tif ratio < 0.75:\n\t\treturn 1.00\n\tif ratio < 0.85:\n\t\treturn 0.70\n\tif ratio < 0.95:\n\t\treturn 0.35\n\treturn 0.10",
+  "\treturn 1.00"
+ ],
+ [
+  "잠재력이 성장 속도를 안 가른다",
+  "\treturn SPEED_BASE + (p - POT_MIN) / (POT_MAX - POT_MIN) * SPEED_SPAN",
+  "\treturn SPEED_BASE"
+ ],
+ [
+  "성장률(development_rate)을 안 본다 (누구나 같이 큰다)",
+  "\t\t* (float(npc.get(\"development_rate\", DEV_BASE)) / DEV_BASE) \\",
+  "\t\t* 1.0 \\"
+ ],
+ [
+  "나이 계수를 안 태운다",
+  "\t\t* age_factor(age) \\",
+  "\t\t* 1.0 \\"
+ ],
+ [
+  "성적을 안 태운다",
+  "\t\t* perf_factor(perf, phase, player_type) \\",
+  "\t\t* 1.0 \\"
+ ],
+ [
+  "훈련 계수를 안 태운다",
+  "\t\t* trn \\",
+  "\t\t* 1.0 \\"
+ ],
+ [
+  "20대 후반 투수가 여전히 구속을 올린다 (성장 방향이 안 바뀐다)",
+  "\t\tif age <= XP_PRIME_MAX:\n\t\t\treturn PITCH_XP_PRIME\n\t\treturn PITCH_XP_OLD",
+  "\t\treturn PITCH_XP_PRIME"
+ ],
+ [
+  "투수에게 타자 비중을 준다 (아무 스탯도 안 오른다)",
+  "static func xp_weights(player_type: String, age: int) -> Array[Array]:\n\tif player_type == \"pitcher\":",
+  "static func xp_weights(player_type: String, age: int) -> Array[Array]:\n\tif player_type == \"batter\":"
+ ],
+ [
+  "타자 비중 목록이 다르다 (번트만 는다)",
+  "\t[\"contact\", 0.35], [\"eye\", 0.25], [\"speed\", 0.20], [\"power\", 0.20]]",
+  "\t[\"bunting\", 0.35], [\"eye\", 0.25], [\"speed\", 0.20], [\"power\", 0.20]]"
+ ],
+ [
+  "XP 문턱을 안 빼고 쌓는다 (한 번 넘으면 매주 오른다)",
+  "\t\t\t\txp_map[stat] = acc - threshold",
+  "\t\t\t\txp_map[stat] = acc"
+ ],
+ [
+  "문턱이 능력치와 무관하다 (90도 40도 같은 속도로 오른다)",
+  "\t\t\tvar threshold: float = Growth.xp_threshold(cur)",
+  "\t\t\tvar threshold: float = 25.0"
+ ],
+ [
+  "30세 미만도 노화한다",
+  "\tif age < AGING_FROM:\n\t\treturn false",
+  ""
+ ],
+ [
+  "노화 시작 나이가 늦다 (30대 초반이 안 무너진다)",
+  "const AGING_FROM: int = 30",
+  "const AGING_FROM: int = 45"
+ ],
+ [
+  "감퇴를 누적하지 않고 곧바로 뺀다 (반올림에 먹혀 노화가 통째로 사라진다)",
+  "\t\tvar acc: float = float(debt.get(stat, 0.0)) \\\n\t\t\t+ float(yearly[stat]) / WEEKS_PER_YEAR * mult\n\t\tvar drop: float = floorf(acc)\n\t\tif drop >= 1.0:\n\t\t\tstats[stat] = PlayerGen.clamp_stat(float(stats[stat]) - drop)\n\t\t\tdebt[stat] = acc - drop\n\t\t\tdropped = true\n\t\telse:\n\t\t\tdebt[stat] = acc",
+  "\t\tstats[stat] = PlayerGen.clamp_stat(float(stats[stat])\n\t\t\t- float(yearly[stat]) / WEEKS_PER_YEAR * mult)"
+ ],
+ [
+  "누적분을 이월 안 한다 (매주 0에서 시작해 영영 안 걸린다)",
+  "\t\t\tdebt[stat] = acc - drop",
+  "\t\t\tdebt[stat] = 0.0"
+ ],
+ [
+  "35세 이후가 30대 초반과 같이 무너진다",
+  "\t[999, {\"velocity\": 4.00, \"stamina\": 3.50, \"recovery\": 0.80,\n\t\t\"command\": 5.00, \"control\": 4.50}],",
+  "\t[999, {\"velocity\": 1.00, \"stamina\": 0.80, \"recovery\": 0.20,\n\t\t\"command\": 0.30, \"control\": 0.30}],"
+ ],
+ [
+  "30대 중반에 제구가 구속보다 늦게 무너진다 (노장 투수의 성격이 바뀐다)",
+  "\t[35, {\"velocity\": 2.50, \"stamina\": 2.00, \"recovery\": 0.50,\n\t\t\"command\": 3.20, \"control\": 3.00}],",
+  "\t[35, {\"velocity\": 3.20, \"stamina\": 2.00, \"recovery\": 0.50,\n\t\t\"command\": 2.50, \"control\": 3.00}],"
+ ],
+ [
+  "타자 노화 표가 나이를 안 가른다",
+  "\t[35, {\"speed\": 2.00, \"power\": 1.50}],\n\t[999, {\"speed\": 3.50, \"power\": 2.80}],",
+  "\t[35, {\"speed\": 2.00, \"power\": 1.50}],\n\t[999, {\"speed\": 2.00, \"power\": 1.50}],"
+ ],
+ [
+  "성적이 노화 속도를 안 가른다",
+  "\t\tif q >= 1.15:\n\t\t\tperf_mod = AGING_PERF_GOOD\n\t\telif q < 1.00:\n\t\t\tperf_mod = AGING_PERF_BAD",
+  ""
+ ],
+ [
+  "오프시즌에도 같은 속도로 늙는다",
+  "\treturn perf_mod * (AGING_OFFSEASON if phase == \"offseason\" else 1.00)",
+  "\treturn perf_mod"
+ ],
+ [
+  "OVR을 다시 안 만든다 (세부는 자랐는데 화면·드래프트가 보는 숫자는 그대로)",
+  "\tif leveled > 0 or aged:\n\t\tstats[\"ovr\"] = PlayerGen.pitching_ovr(stats) if is_pitcher \\\n\t\t\telse PlayerGen.batting_ovr(stats)",
+  ""
+ ],
+ [
+  "투수 OVR을 타자 공식으로 만든다",
+  "\t\tstats[\"ovr\"] = PlayerGen.pitching_ovr(stats) if is_pitcher \\\n\t\t\telse PlayerGen.batting_ovr(stats)",
+  "\t\tstats[\"ovr\"] = PlayerGen.batting_ovr(stats)"
+ ],
+ [
+  "결과 두 값이 한 비트씩 밀렸다 (올린 칸 수가 절반이 된다)",
+  "\treturn (leveled << 1) | (1 if aged else 0)",
+  "\treturn leveled | (1 if aged else 0)"
+ ],
+ [
+  "노화를 결과에 안 싣는다",
+  "\treturn (leveled << 1) | (1 if aged else 0)",
+  "\treturn leveled << 1"
+ ],
+ [
+  "성적 창이 1주뿐이다 (그 주에 안 나온 선발이 통째로 빠진다)",
+  "const PERF_WEEKS: int = 4",
+  "const PERF_WEEKS: int = 1"
+ ],
+ [
+  "성적 창에 상한이 없다 (시즌 전체가 최근 성적이 된다)",
+  "\tvar from_day: int = maxi(1, to_day - PERF_WEEKS * Calendar.DAYS_PER_WEEK + 1)",
+  "\tvar from_day: int = 1"
+ ],
+ [
+  "안 치른 경기도 성적으로 센다 (미래 일정이 성적이 된다)",
+  "\t\tif result == null:\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "경기마다 따로 보고 합치지 않는다 (마지막 경기가 시즌 성적이 된다)",
+  "\t\t\t\tpit[pid] = [p[0] + float(line.get(\"er\", 0.0)),\n\t\t\t\t\tp[1] + float(line.get(\"ip\", 0.0))]",
+  "\t\t\t\tpit[pid] = [float(line.get(\"er\", 0.0)), float(line.get(\"ip\", 0.0))]"
+ ],
+ [
+  "자책과 이닝이 뒤바뀌었다",
+  "\t\t\te[\"era\"] = SeasonStats.calc_era(p[0], p[1])",
+  "\t\t\te[\"era\"] = SeasonStats.calc_era(p[1], p[0])"
+ ],
+ [
+  "안타와 타수가 뒤바뀌었다",
+  "\t\t\te[\"avg\"] = SeasonStats.calc_avg(b[0], b[1])",
+  "\t\t\te[\"avg\"] = SeasonStats.calc_avg(b[1], b[0])"
+ ],
+ [
+  "주인공도 NPC 경로로 자란다 (훈련 계획과 겹쳐 두 배 큰다)",
+  "\t\tif npc.get(\"is_protagonist\", false):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "은퇴한 사람도 자란다 (풀에 남아 계속 딸려 온다)",
+  "\t\tif String(npc.get(\"career_status\", \"active\")) == \"retired\":\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "난수가 사람이 아니라 순서에 매인다 (한 명 끼우면 뒷사람이 전부 달라진다)",
+  "\t\trng.seed = Rng.mix_into(week_key, id)",
+  "\t\trng.seed = Rng.mix_into(week_key, str(grown))"
+ ],
+ [
+  "주가 달라도 같은 난수를 쓴다 (매주 똑같은 편차)",
+  "\tvar week_key: int = Rng.mix([\"npc_growth\", year, week])",
+  "\tvar week_key: int = Rng.mix([\"npc_growth\", year])"
+ ],
+ [
+  "성적을 사람과 안 맞춘다 (남의 성적으로 자란다)",
+  "\t\t\tperf[id] if perf.has(id) else NO_PERF, rng.randf(), trn_cache[league])",
+  "\t\t\tNO_PERF, rng.randf(), trn_cache[league])"
+ ],
+ [
+  "훈련 계수 캐시가 리그를 안 가른다 (전원이 첫 사람의 리그로 자란다)",
+  "\t\tif not trn_cache.has(league):\n\t\t\ttrn_cache[league] = training_factor(league, phase)",
+  "\t\tif trn_cache.is_empty():\n\t\t\ttrn_cache[league] = training_factor(league, phase)\n\t\tleague = trn_cache.keys()[0]"
+ ],
+ [
+  "시기를 주인공 리그가 아니라 고정값으로 본다",
+  "\tvar rule: Dictionary = Schedule.LEAGUES.get(league, {})",
+  "\tvar rule: Dictionary = Schedule.LEAGUES.get(\"LEAGUE_HIGHSCHOOL\", {})"
+ ],
+ [
+  "시즌 기간 밖도 시즌으로 본다 (오프시즌이 없다)",
+  "\tif day >= int(rule[\"start_day\"]) and day <= int(rule[\"end_day\"]):\n\t\treturn \"season\"\n\treturn \"offseason\"",
+  "\treturn \"season\""
+ ],
+ [
+  "넘겨받은 날짜를 무시한다 (여러 날을 한 번에 가면 같은 주를 N번 산다)",
+  "\tvar day: int = at_day if at_day > 0 else int(state.get(\"day\", 1))",
+  "\tvar day: int = int(state.get(\"day\", 1))"
+ ],
+ [
+  "로스터를 빼먹는다 (드래프트 풀만 자란다)",
+  "\tvar people: Array = SeasonRunner.all_players(state)",
+  "\tvar people: Array = world.get(SeasonRunner.POOL_KEY, [])"
+ ],
+ [
+  "잠재력이 XP 총량을 안 가른다 (천장 감쇠만 남는다)",
+  "\t\t* speed_factor(potential) \\",
+  "\t\t* 1.0 \\"
+ ]
+]

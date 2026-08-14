@@ -750,6 +750,58 @@ func test_what_the_screen_picks_reaches_the_engine() -> void:
 		.override_failure_message("화면에서 고른 훈련이 엔진에 안 닿았다").is_greater(before)
 
 
+# ── NPC 주간 성장 배선 (M9-8) ────────────────────────────────
+
+## ⚠ **주인공만 매주 자라고 있었다.** 몇 시즌 뒤 주인공이 세계에서 혼자
+## 뛰어오르고, 드래프트 앵커·수상 자격선이 그 어긋난 분포 위에 선다
+func test_the_world_grows_with_the_weeks() -> void:
+	var s: Dictionary = _real_game(777)
+	var r: AppRoot = await _mount(s)
+	var npc: Dictionary = _some_npc(r.state())
+	var before: float = float(npc["pitching"]["ovr"])
+
+	for i in 30:
+		r._apply_one_week()
+
+	assert_float(float(npc["pitching"]["ovr"])).override_failure_message(
+		"30주를 진행했는데 NPC가 하나도 안 자랐다").is_greater(before)
+
+
+## 고교생 투수 하나 — 나이 계수가 제일 큰 구간이라 눈에 띈다.
+##
+## ⚠ **선수는 `pitching`·`batting`을 **둘 다** 들고 있다.** 타자를 집어
+## `pitching.ovr`을 보면 영영 안 움직인다 — 성장이 자기 쪽만 만지기 때문이다
+func _some_npc(state: Dictionary) -> Dictionary:
+	for p in SeasonRunner.all_players(state):
+		if p.get("is_protagonist", false):
+			continue
+		if String(p.get("league_id", "")) != "LEAGUE_HIGHSCHOOL":
+			continue
+		if String(p.get("player_type", "")) == "pitcher":
+			return p
+	return {}
+
+
+## ⚠ **하루씩 N번과 N일 한 번이 같아야 한다.** 주 경계마다 도착 날짜를 쓰면
+## 같은 주를 N번 사는 것이 되어 조용히 갈라진다
+func test_walking_day_by_day_matches_one_big_step() -> void:
+	var a: AppRoot = await _mount(_real_game(777))
+	var b: AppRoot = await _mount(_real_game(777))
+
+	for i in 21:
+		await a.advance(1)
+	await b.advance(21)
+
+	assert_int(a.state()["day"]).is_equal(b.state()["day"])
+	var an: Dictionary = _some_npc(a.state())
+	var bn: Dictionary = _some_npc(b.state())
+	assert_str(String(an["id"])).is_equal(String(bn["id"]))
+	assert_dict(an.get("pitching_xp", {})).override_failure_message(
+		"하루씩 간 것과 한 번에 간 것이 다르다").is_equal(bn.get("pitching_xp", {}))
+	assert_bool(an.get("pitching_xp", {}).is_empty()).override_failure_message(
+		"둘 다 빈 사전이라 비교가 아무것도 안 봤다").is_false()
+
+
 ## 닫으면 본화면이 돌아온다 — 안 돌아오면 게임이 멈춘 것처럼 보인다
 func test_closing_training_returns_to_main() -> void:
 	var r: AppRoot = await _mount(_real_game(777))

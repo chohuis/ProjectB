@@ -371,13 +371,22 @@ func _play_game(g: Dictionary, state: Dictionary = _state) -> void:
 ##
 ## ⚠ **시간 축만 일 단위다.** 성장·훈련·재정·관계는 02 그대로 7일마다 돈다.
 ## 밸런스를 안 건드려야 02 실측값과 대조할 수 있다
+## ⚠ **몇 번째 주 경계인지를 같이 넘긴다.** 여러 날을 한 번에 진행하면
+## 여기서 N번 도는데, 전부 도착한 날짜를 쓰면 **같은 주를 N번 사는 것**이
+## 된다 — NPC가 같은 난수·같은 성적 창을 N번 받아서 하루씩 간 것과 결과가
+## 달라진다. **어느 날이었는지는 `DayEngine`이 안다** — 여기서 세면 그게
+## 두 번째 정본이 된다
 func _apply_weekly(weeks: int) -> void:
-	for i in weeks:
+	for boundary in DayEngine.week_end_days(int(_state.get("day", 1)), weeks):
 		weekly_passes += 1
-		_apply_one_week()
+		_apply_one_week(boundary)
 
 
-func _apply_one_week() -> void:
+func _apply_one_week(at_day: int = -1) -> void:
+	# NPC는 계획 없이 자기 환경대로 자란다 — 주인공만 매주 크면 몇 시즌
+	# 뒤에 세계에서 혼자 뛰어오른다
+	NpcGrowth.run(_state, at_day)
+
 	var p: Dictionary = _state.get("protagonist", {})
 	if p.is_empty():
 		return
