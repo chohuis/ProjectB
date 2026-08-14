@@ -16,6 +16,7 @@ const SCHEDULE_ROW := preload("res://ui/parts/schedule_row.tscn")
 const NEWS_ROW := preload("res://ui/parts/news_row.tscn")
 const STANDING_ROW := preload("res://ui/parts/standing_row.tscn")
 const PLAYER_ROW := preload("res://ui/parts/player_row.tscn")
+const STATUS_SCREEN := preload("res://ui/screens/status_screen.tscn")
 
 @onready var _bg: ColorRect = $Bg
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
@@ -155,6 +156,8 @@ func _build_body() -> void:
 			_build_league()
 		"team":
 			_build_team()
+		"me":
+			_build_me()
 		_:
 			# 아직 안 옮긴 탭. **소비자 없는 자리를 미리 만들지 않는다**
 			var l := Label.new()
@@ -186,6 +189,15 @@ func _build_schedule() -> void:
 		var row: ScheduleRow = SCHEDULE_ROW.instantiate()
 		_tab_host.add_child(row)
 		row.setup(r)
+
+
+## 나 탭. **`StatusScreen`을 통째로 끼운다** — P1에서 만든 화면을 안 고친다.
+## 사전 하나만 받는 화면이라 그대로 붙는다
+func _build_me() -> void:
+	var screen: StatusScreen = STATUS_SCREEN.instantiate()
+	screen.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_tab_host.add_child(screen)
+	screen.set_view_model(_vm.get("me", {}))
 
 
 ## 팀 탭. 로스터는 `TeamVm`이 정렬해 온다

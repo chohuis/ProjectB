@@ -111,6 +111,12 @@ func _build(which: String) -> Control:
 				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
 			tm.ready.connect(func() -> void: tm.screen()._on_tab(2), CONNECT_ONE_SHOT)
 			return tm
+		"me":
+			var mp: AppRoot = APP.instantiate()
+			mp.set_state(World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
+			mp.ready.connect(func() -> void: mp.screen()._on_tab(1), CONNECT_ONE_SHOT)
+			return mp
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

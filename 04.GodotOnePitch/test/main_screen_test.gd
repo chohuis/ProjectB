@@ -385,3 +385,19 @@ func test_an_empty_roster_says_so() -> void:
 func test_i_am_highlighted_in_my_roster() -> void:
 	assert_object(PlayerRow.row_color(true)).is_equal(AppTheme.ACCENT)
 	assert_object(PlayerRow.row_color(false)).is_equal(AppTheme.TEXT)
+
+
+# ── 나 탭 ─────────────────────────────────────────────────────
+
+## ⚠ **P1에서 만든 `StatusScreen`을 안 고치고 그대로 끼운다.** 사전 하나만
+## 받는 화면이라 그게 된다 — 그 규약이 값을 하는 지점이다
+func test_the_me_tab_mounts_the_status_screen() -> void:
+	var s := await _mount(_vm({"protagonist": {"id": "ME", "name": "김한결",
+		"team_id": "T1", "team_name": "제주", "league_id": "LEAGUE_HIGHSCHOOL",
+		"pitching": {"velocity": 70.0, "command": 62.0}}}))
+	s._on_tab(1)
+	await await_idle_frame()
+
+	var t := _texts(s)
+	assert_array(t).contains(["신체 상태", "투구 능력치", "구위", "커맨드"])
+	assert_array(t).contains(["제주"])
