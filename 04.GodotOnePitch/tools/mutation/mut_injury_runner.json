@@ -1,0 +1,287 @@
+[
+ [
+  "주인공 부상을 NPC 자리에 넣는다 (경기 판정이 못 읽는다 — 두 정본)",
+  "\tif _is_me(state, player_id):\n\t\tstate[\"protagonist\"][\"injury\"] = row\n\t\treturn",
+  "\tif false:\n\t\tstate[\"protagonist\"][\"injury\"] = row\n\t\treturn"
+ ],
+ [
+  "나아도 주인공 부상 자리를 안 비운다",
+  "\tif _is_me(state, player_id):\n\t\tstate[\"protagonist\"][\"injury\"] = null\n\t\treturn",
+  "\tif false:\n\t\tstate[\"protagonist\"][\"injury\"] = null\n\t\treturn"
+ ],
+ [
+  "회복 훈련을 고강도로 센다",
+  "\t\tif bool(Training.program(pid).get(\"is_recovery\", false)):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "빈 칸도 훈련으로 센다",
+  "\t\tif pid.is_empty():\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "훈련 강도가 늘 최대다",
+  "\treturn float(filled) / float(slots.size())",
+  "\treturn 1.0"
+ ],
+ [
+  "훈련 강도가 부상 판정에 안 닿는다",
+  "\t\t\"training_intensity\": training_intensity(state),",
+  "\t\t\"training_intensity\": 0.0,"
+ ],
+ [
+  "연속 고피로 주차를 안 이어받는다 (유예가 영영이다)",
+  "\t\t\"consecutive_high_fatigue_weeks\":\n\t\t\tint(p.get(\"consecutive_high_fatigue_weeks\", 0)),",
+  "\t\t\"consecutive_high_fatigue_weeks\": 0,"
+ ],
+ [
+  "연속 고피로 주차를 안 되돌려 쓴다",
+  "\tp[\"consecutive_high_fatigue_weeks\"] = int(out[\"consecutive_high_fatigue_weeks\"])",
+  "\tpass"
+ ],
+ [
+  "부상 배수가 선수에게 안 닿는다 (다쳤는데 아무 일도 안 일어난다)",
+  "\tp[\"injury_eff_mod\"] = float(out[\"eff_mod\"])",
+  "\tp[\"injury_eff_mod\"] = 1.0"
+ ],
+ [
+  "사기 바닥 주차를 안 넘긴다 (입스가 영영 안 온다)",
+  "\t\t\"consecutive_low_morale_weeks\":\n\t\t\tint(p.get(\"consecutive_low_morale_weeks\", 0)),",
+  "\t\t\"consecutive_low_morale_weeks\": 0,"
+ ],
+ [
+  "재발 이력을 안 넘긴다",
+  "\t\t\"has_prior_injury_same_area\": bool(p.get(\"has_prior_injury\", false)),",
+  "\t\t\"has_prior_injury_same_area\": false,"
+ ],
+ [
+  "지금 부상 중인지를 안 넘긴다 (회복 중에 또 다친다)",
+  "\t\t\"has_injury\": not cur.is_empty(),",
+  "\t\t\"has_injury\": false,"
+ ],
+ [
+  "남은 주를 안 넘긴다 (회복이 안 끝난다)",
+  "\t\t\"recovery_weeks_left\": int(cur.get(\"weeks_left\", 0)),",
+  "\t\t\"recovery_weeks_left\": 99,"
+ ],
+ [
+  "다친 날을 안 남긴다",
+  "\t\t\trow[\"since_day\"] = at_day",
+  "\t\t\trow[\"since_day\"] = 0"
+ ],
+ [
+  "틱다운이 다친 날을 덮어쓴다 (몇 주째인지 알 수 없다)",
+  "\t\t\trow[\"since_day\"] = int(cur.get(\"since_day\", at_day))\n\t\t\trow[\"total_weeks\"] = int(cur.get(\"total_weeks\", inj[\"weeks_left\"]))",
+  "\t\t\trow[\"since_day\"] = at_day\n\t\t\trow[\"total_weeks\"] = int(inj[\"weeks_left\"])"
+ ],
+ [
+  "회복 중에도 소식을 또 보낸다",
+  "\t\tif bool(out[\"just_occurred\"]):\n\t\t\trow[\"since_day\"] = at_day",
+  "\t\tif true:\n\t\t\trow[\"since_day\"] = at_day"
+ ],
+ [
+  "다쳤는데 소식을 안 보낸다",
+  "\t\t\t_push_news(state, {\"player_id\": me, \"injury_type\": row[\"type\"],\n\t\t\t\t\"severity\": row[\"severity\"], \"weeks\": row[\"weeks_left\"],\n\t\t\t\t\"day\": at_day, \"mine\": true})",
+  "\t\t\tpass"
+ ],
+ [
+  "경고를 기록에 안 남긴다",
+  "\tif not out[\"warning\"].is_empty():\n\t\tvar log: Array = state.get(\"body_log\", [])",
+  "\tif false:\n\t\tvar log: Array = state.get(\"body_log\", [])"
+ ],
+ [
+  "후유증이 능력치에 안 남는다",
+  "\t\tfor stat in penalty:\n\t\t\tif pitching.has(stat):\n\t\t\t\tpitching[stat] = maxf(float(pitching[stat])\n\t\t\t\t\t+ float(penalty[stat]), 1.0)",
+  "\t\tfor stat in penalty:\n\t\t\tif false:\n\t\t\t\tpitching[stat] = maxf(float(pitching[stat])\n\t\t\t\t\t+ float(penalty[stat]), 1.0)"
+ ],
+ [
+  "후유증이 오히려 능력을 올린다",
+  "\t\t\t\tpitching[stat] = maxf(float(pitching[stat])\n\t\t\t\t\t+ float(penalty[stat]), 1.0)",
+  "\t\t\t\tpitching[stat] = maxf(float(pitching[stat])\n\t\t\t\t\t- float(penalty[stat]), 1.0)"
+ ],
+ [
+  "후유증 뒤 OVR을 다시 안 낸다 (드래프트가 흔적을 모른다)",
+  "\t\tPlayerGen.refresh_ovr(pitching, batting)",
+  "\t\tpass"
+ ],
+ [
+  "재발 이력을 안 남긴다",
+  "\tp[\"has_prior_injury\"] = true\n\t_clear(state, me)",
+  "\t_clear(state, me)"
+ ],
+ [
+  "나았는데 자리를 안 비운다",
+  "\tp[\"has_prior_injury\"] = true\n\t_clear(state, me)",
+  "\tp[\"has_prior_injury\"] = true"
+ ],
+ [
+  "완치를 기록에 안 남긴다",
+  "\tlog.append({\"day\": at_day, \"kind\": \"healed\", \"injury_type\": t,\n\t\t\"penalty\": penalty})",
+  "\tpass"
+ ],
+ [
+  "주인공이 없어도 부상 판정을 한다",
+  "\tif p.is_empty():\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "아직 안 치른 경기를 출전으로 센다",
+  "\t\tif result == null:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "출전 창을 안 자른다 (시즌 전체를 연투로 본다)",
+  "\t\tif d < from_day or d > at_day:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "출전을 경기 단위로 센다 (한 주에 두 번 나오면 2연투다)",
+  "\t\t\tout[pid][\"weeks\"][week] = true",
+  "\t\t\tout[pid][\"weeks\"][d] = true"
+ ],
+ [
+  "연투가 끊긴 뒤까지 이어 센다",
+  "\tvar w: int = this_week - 1\n\twhile weeks.has(w):\n\t\tn += 1\n\t\tw -= 1",
+  "\tfor k in weeks:\n\t\tn += 1"
+ ],
+ [
+  "연투가 이번 주부터 센다 (아직 안 산 주를 센다)",
+  "\tvar w: int = this_week - 1",
+  "\tvar w: int = this_week"
+ ],
+ [
+  "투수 보직을 안 가린다 (선발과 불펜 문턱이 같다)",
+  "\tvar pos: String = String(player.get(\"role\", player.get(\"position\", \"\")))\n\treturn pos if pos in [\"SP\", \"RP\", \"CP\"] else \"RP\"",
+  "\treturn \"RP\""
+ ],
+ [
+  "야수도 투수로 센다",
+  "\tif line_role != \"pitcher\":\n\t\treturn \"batter\"",
+  "\tif false:\n\t\treturn \"batter\""
+ ],
+ [
+  "회복이 안 줄어든다",
+  "\t\trow[\"weeks_left\"] = int(row[\"weeks_left\"]) - 1",
+  "\t\tpass"
+ ],
+ [
+  "나아도 명단에 안 돌려놓는다 (02가 빠뜨린 줄 — 47%가 영구 injured로 남았다)",
+  "\t\t\tif String(p.get(\"career_status\", STATUS_ACTIVE)) == STATUS_INJURED:\n\t\t\t\tp[\"career_status\"] = STATUS_ACTIVE",
+  "\t\t\tpass"
+ ],
+ [
+  "완치 뒤 영구 손실이 안 붙는다",
+  "\t\t\tif delta != 0.0 and not bool(row.get(\"penalty_applied\", false)):\n\t\t\t\t_apply_npc_penalty(p, delta)",
+  "\t\t\tpass"
+ ],
+ [
+  "가벼운 부상에도 영구 손실이 붙는다",
+  "\t\t\tvar delta: float = Injury.npc_ovr_penalty(String(row[\"type\"]))",
+  "\t\t\tvar delta: float = -5.0"
+ ],
+ [
+  "NPC 재발 이력을 안 남긴다",
+  "\t\t\tp[\"has_prior_injury\"] = true\n\t\tall.erase(pid)",
+  "\t\tall.erase(pid)"
+ ],
+ [
+  "나은 사람을 목록에서 안 지운다",
+  "\t\tall.erase(pid)",
+  "\t\tpass"
+ ],
+ [
+  "영구 손실이 능력을 올린다",
+  "\tstats[\"ovr\"] = maxf(float(stats.get(\"ovr\", 0.0)) + delta, 1.0)",
+  "\tstats[\"ovr\"] = maxf(float(stats.get(\"ovr\", 0.0)) - delta, 1.0)"
+ ],
+ [
+  "주인공이 NPC 경로로도 다친다 (두 번 다친다)",
+  "\t\tif pid == me or hurt.has(pid):\n\t\t\tcontinue",
+  "\t\tif hurt.has(pid):\n\t\t\tcontinue"
+ ],
+ [
+  "회복 중인 사람에게 새 부상을 얹는다",
+  "\t\tif pid == me or hurt.has(pid):\n\t\t\tcontinue",
+  "\t\tif pid == me:\n\t\t\tcontinue"
+ ],
+ [
+  "그만둔 사람도 다친다",
+  "\t\tif String(p.get(\"career_status\", STATUS_ACTIVE)) != STATUS_ACTIVE:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "연투 수를 안 넘긴다",
+  "\t\t\t\"consecutive_app\": consecutive_weeks(apps[pid][\"weeks\"], week),",
+  "\t\t\t\"consecutive_app\": 0,"
+ ],
+ [
+  "NPC 나이를 안 넘긴다",
+  "\t\t\t\"age\": int(p.get(\"age\", 25)),",
+  "\t\t\t\"age\": 25,"
+ ],
+ [
+  "참고 뛰는 사람을 명단에서 뺀다 (실제로는 뛰는데 없는 사람이 된다)",
+  "\t\tif not through and not p.is_empty():\n\t\t\tp[\"career_status\"] = STATUS_INJURED",
+  "\t\tif not p.is_empty():\n\t\t\tp[\"career_status\"] = STATUS_INJURED"
+ ],
+ [
+  "다친 사람을 명단에서 안 뺀다",
+  "\t\tif not through and not p.is_empty():\n\t\t\tp[\"career_status\"] = STATUS_INJURED",
+  "\t\tpass"
+ ],
+ [
+  "아무도 참고 안 뛴다",
+  "\t\tvar through: bool = Injury.plays_through(severity, NEUTRAL_INJURY_MGMT)",
+  "\t\tvar through: bool = false"
+ ],
+ [
+  "NPC 부상을 소식에 안 담는다",
+  "\t\t_push_news(state, {\"player_id\": pid, \"injury_type\": String(o[\"injury_type\"]),\n\t\t\t\"severity\": severity, \"weeks\": int(o[\"recovery_weeks\"]),\n\t\t\t\"day\": at_day, \"team_id\": String(p.get(\"team_id\", \"\"))})",
+  "\t\tpass"
+ ],
+ [
+  "남은 주가 음수가 된다",
+  "\treturn maxi(0, Calendar.week_of(last) - Calendar.week_of(at_day))",
+  "\treturn Calendar.week_of(last) - Calendar.week_of(at_day)"
+ ],
+ [
+  "부상이 없는 달에도 소식을 보낸다",
+  "\tif events.is_empty():\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "소식이 사람이 아니라 사건 수를 센다",
+  "\tvar rows: Array = Injury.worst_by_person(events, left)",
+  "\tvar rows: Array = events"
+ ],
+ [
+  "시즌 남은 주를 소식에 안 넘긴다 (시즌 아웃이 안 나온다)",
+  "\tvar rows: Array = Injury.worst_by_person(events, left)",
+  "\tvar rows: Array = Injury.worst_by_person(events, 0)"
+ ],
+ [
+  "소식이 매주 온다",
+  "\tif Injury.is_news_week(Calendar.week_of(day)):",
+  "\tif true:"
+ ],
+ [
+  "소식을 보내고 버퍼를 안 비운다 (다음 달에 지난달 것이 섞인다)",
+  "\t\tstate[NEWS_KEY] = []",
+  "\t\tpass"
+ ],
+ [
+  "소식을 기록에 안 남긴다",
+  "\t\t\tvar log: Array = state.get(\"injury_log\", [])\n\t\t\tlog.append(news)\n\t\t\tstate[\"injury_log\"] = log",
+  "\t\t\tpass"
+ ],
+ [
+  "씨앗에 해가 안 들어간다 (매년 같은 사람이 다친다)",
+  "\trng.seed = Rng.mix([\"injury\", int(state.get(\"season_year\", 0)),\n\t\tCalendar.week_of(day)])",
+  "\trng.seed = Rng.mix([\"injury\", Calendar.week_of(day)])"
+ ],
+ [
+  "건네받은 주 경계를 무시한다",
+  "\tvar day: int = at_day if at_day > 0 else int(state.get(\"day\", 1))",
+  "\tvar day: int = int(state.get(\"day\", 1))"
+ ]
+]

@@ -1,0 +1,151 @@
+{
+ "_note": "02 `week_engine.rs`의 부상 계산과 `types/save.ts`의 INJURY_LABEL·INJURY_SEVERITY를 그대로. 02는 표가 Rust 코드에 박혀 있었다 — 여기서는 규칙 파일이 정본이다.",
+
+ "types": {
+  "BLISTER":          {"label": "손가락 물집",       "severity": "light",    "weeks": [2, 3]},
+  "ARM_FATIGUE":      {"label": "팔 피로감",         "severity": "light",    "weeks": [2, 3]},
+  "MUSCLE_TIGHTNESS": {"label": "근육 긴장",         "severity": "light",    "weeks": [2, 3]},
+  "BACK_STIFFNESS":   {"label": "허리 뻐근함",       "severity": "light",    "weeks": [2, 3]},
+  "ANKLE_SPRAIN_L":   {"label": "발목 염좌 (경)",    "severity": "light",    "weeks": [2, 3]},
+  "ELBOW_INFLAM":     {"label": "팔꿈치 염증",       "severity": "moderate", "weeks": [4, 8]},
+  "SHOULDER_INFLAM":  {"label": "어깨 염증",         "severity": "moderate", "weeks": [4, 8]},
+  "OBLIQUE_STRAIN":   {"label": "복사근 부상",       "severity": "moderate", "weeks": [4, 8]},
+  "HAMSTRING":        {"label": "햄스트링",          "severity": "moderate", "weeks": [4, 8]},
+  "CONCUSSION":       {"label": "뇌진탕",            "severity": "moderate", "weeks": [4, 6]},
+  "ANKLE_SPRAIN_M":   {"label": "발목 염좌 (중)",    "severity": "moderate", "weeks": [4, 8]},
+  "UCL_PARTIAL":      {"label": "UCL 부분 파열",     "severity": "severe",   "weeks": [12, 20]},
+  "ROTATOR_STRAIN":   {"label": "회전근개 파열",     "severity": "severe",   "weeks": [12, 20]},
+  "BACK_HERNIATION":  {"label": "허리 디스크",       "severity": "severe",   "weeks": [12, 20]},
+  "YIPS":             {"label": "입스",              "severity": "severe",   "weeks": [10, 20]},
+  "UCL_FULL":         {"label": "UCL 완전 파열",     "severity": "surgery",  "weeks": [60, 78]},
+  "ROTATOR_FULL":     {"label": "회전근개 완전 파열","severity": "surgery",  "weeks": [52, 65]},
+  "SHOULDER_SURGERY": {"label": "어깨 관절경 수술",  "severity": "surgery",  "weeks": [30, 40]}
+ },
+ "_types_note": "회복 주는 [하한, 상한] 무작위. **수술은 한 시즌을 통째로 날린다**(52~78주) — 그게 수술이 제일 무거운 등급인 이유다",
+
+ "severity_order": ["light", "moderate", "severe", "surgery"],
+ "severity_label": {"light": "경미", "moderate": "중등도", "severe": "중증", "surgery": "수술"},
+
+ "eff_mod": {"light": 0.70, "moderate": 0.25, "severe": 0.10, "surgery": 0.00},
+ "_eff_note": "부상 중 능력 배수. 수술은 0 — 아예 못 뛴다",
+
+ "pick": {
+  "_note": "누적 확률. 02 `pick_*_type`의 갈래를 그대로 옮겼다 — 투수와 야수가 다치는 곳이 다르다",
+  "light": {
+   "pitcher": [["ARM_FATIGUE", 0.40], ["BLISTER", 0.70], ["MUSCLE_TIGHTNESS", 0.90], ["BACK_STIFFNESS", 1.00]],
+   "batter":  [["MUSCLE_TIGHTNESS", 0.30], ["BACK_STIFFNESS", 0.60], ["ANKLE_SPRAIN_L", 0.90], ["BLISTER", 1.00]]
+  },
+  "moderate": {
+   "pitcher": [["ELBOW_INFLAM", 0.40], ["SHOULDER_INFLAM", 0.80], ["OBLIQUE_STRAIN", 1.00]],
+   "batter":  [["HAMSTRING", 0.40], ["ANKLE_SPRAIN_M", 0.70], ["OBLIQUE_STRAIN", 1.00]]
+  },
+  "severe": {
+   "pitcher": [["UCL_PARTIAL", 0.50], ["ROTATOR_STRAIN", 0.90], ["BACK_HERNIATION", 1.00]],
+   "batter":  [["BACK_HERNIATION", 0.50], ["UCL_PARTIAL", 0.80], ["ROTATOR_STRAIN", 1.00]]
+  },
+  "surgery": {
+   "pitcher": [["UCL_FULL", 0.50], ["ROTATOR_FULL", 0.80], ["SHOULDER_SURGERY", 1.00]],
+   "batter":  [["UCL_FULL", 0.50], ["ROTATOR_FULL", 0.80], ["SHOULDER_SURGERY", 1.00]]
+  }
+ },
+ "veteran_pitcher_moderate": {
+  "_note": "32세 이상 투수는 팔꿈치보다 어깨가 먼저 온다 — 02가 여기만 따로 뒀다",
+  "age_min": 32,
+  "table": [["SHOULDER_INFLAM", 0.50], ["ELBOW_INFLAM", 0.80], ["OBLIQUE_STRAIN", 1.00]]
+ },
+
+ "protagonist": {
+  "_note": "주인공 부상 — 피로·훈련 무리·심리 셋이 독립된 축이다",
+  "fatigue_bands": [[95, 0.60], [90, 0.35], [85, 0.15], [80, 0.05]],
+  "_fatigue_note": "볼록 곡선. 80 미만은 0이다 — **80이 관리의 경계선**이라는 뜻이고 화면이 그 숫자를 보여준다",
+  "high_fatigue_threshold": 80,
+
+  "training_overload": {"intensity_min": 0.8, "condition_max": 65.0, "chance": 0.10},
+  "training_overload_deep": {"condition_max": 60.0, "fatigue_min": 70.0, "chance": 0.10},
+
+  "prior_same_area_mult": 1.5,
+  "steroid_mult": 1.25,
+  "age_mult": [[35, 1.5], [32, 1.3]],
+  "prevention_clamp": [0.80, 1.30],
+  "recovery_boost_clamp": [0.80, 1.30],
+  "chance_cap": 0.80,
+
+  "_grace_note": "⚠ **임계를 넘은 첫 주는 경고만 낸다.** 아무 예고 없이 시즌이 끝나면 '관리 실패'가 아니라 '재수 없음'이 된다. 다만 **훈련 무리 몫은 유예에서 빼지 않는다** — '쉬라고 경고했는데 고강도를 밀어붙였다'가 면죄부가 되면 안 된다",
+
+  "tier": {
+   "_note": "누적 확률. 피로가 높을수록·나이가 많을수록 무거운 쪽으로 간다",
+   "fatigue_90": {
+    "young": [["surgery", 0.05], ["severe", 0.25], ["moderate", 0.60], ["light", 1.00]],
+    "old":   [["surgery", 0.10], ["severe", 0.35], ["moderate", 0.65], ["light", 1.00]]
+   },
+   "fatigue_85": {
+    "young": [["severe", 0.03], ["moderate", 0.28], ["light", 1.00]],
+    "old":   [["severe", 0.06], ["moderate", 0.40], ["light", 1.00]]
+   },
+   "other": [["moderate", 0.05], ["light", 1.00]],
+   "old_age_min": 35
+  },
+
+  "yips": {
+   "_note": "심리 축 — **피로와 독립이다.** 투수만 걸린다",
+   "bands": [[8, 0.12], [5, 0.03]]
+  }
+ },
+
+ "npc": {
+  "_note": "02 `calc_npc_injuries`. 주인공과 축이 다르다 — NPC는 피로를 안 들고 **연투(consecutive_app)**로 본다",
+  "base": {"SP": 0.03, "RP": 0.02, "CP": 0.025, "batter": 0.015},
+  "consecutive": {
+   "SP":     [[5, 0.04], [3, 0.02]],
+   "RP":     [[7, 0.04], [4, 0.02]],
+   "CP":     [[7, 0.04], [4, 0.02]],
+   "batter": [[10, 0.03], [6, 0.01]]
+  },
+  "age_mult": [[35, 1.5], [32, 1.3]],
+  "prior_injury_bonus": 0.02,
+  "playing_through": {"moderate": 0.25, "light": 0.12},
+  "_playing_through_note": "참고 뛰면 크게 다친다 — 중등도로 강행하면 발생률이 0.25 얹힌다",
+  "_no_cap_note": "⚠ **천장을 안 둔다.** 02는 `min(0.80)`을 뒀는데 최악(SP · 연투 · 재발 · 중등도 강행 · 36세)을 다 겹쳐도 0.51이라 **한 번도 안 걸리는 줄**이었다",
+  "tier": [["surgery", 0.025], ["severe", 0.12], ["moderate", 0.40], ["light", 1.00]],
+  "_no_warning_note": "⚠ **NPC는 전조 경고가 없다.** 몇천 명에게 경고를 내면 로그가 그것만 남고, NPC는 어차피 손쓸 주체가 없다",
+  "playing_through_gate": {"light": 70, "moderate": 40},
+  "_gate_note": "부상 관리(컨디셔닝 코치 discipline)가 이 값보다 낮은 팀만 참고 뛰게 한다. **스태프가 없는 동안은 중립 50**이라 경미는 강행, 중등도는 안 한다",
+  "ovr_penalty": {
+   "UCL_FULL": -5, "ROTATOR_FULL": -8, "SHOULDER_SURGERY": -4,
+   "UCL_PARTIAL": -3, "ROTATOR_STRAIN": -4, "BACK_HERNIATION": -3, "YIPS": -2
+  },
+  "_ovr_note": "완치 뒤 영구 손실. **완치될 때 한 번만** 먹인다 — `permanent_penalty_applied`로 막는다"
+ },
+
+ "permanent_penalty": {
+  "_note": "주인공 완치 뒤 영구 감소. 02 `getPermanentPenalty` 그대로",
+  "ELBOW_INFLAM":     {"velocity": -1},
+  "UCL_PARTIAL":      {"velocity": -3, "command": -2},
+  "ROTATOR_STRAIN":   {"velocity": -4, "movement": -2},
+  "BACK_HERNIATION":  {"stamina": -3},
+  "UCL_FULL":         {"velocity": -4, "stamina": -3},
+  "ROTATOR_FULL":     {"velocity": -6, "movement": -5},
+  "SHOULDER_SURGERY": {"velocity": -2, "stamina": -2}
+ },
+ "penalty_by_treatment": {
+  "_note": "치료 선택이 후유증을 가른다. 02가 이 둘만 갈랐다",
+  "YIPS": {
+   "self":       {"control": -3, "command": -3},
+   "counseling": {"control": -1, "command": -1},
+   "default":    {"control": -2, "command": -2}
+  },
+  "SHOULDER_INFLAM": {
+   "steroid": {"velocity": -1},
+   "default": {}
+  }
+ },
+
+ "report": {
+  "_note": "부상 소식 — 한 달치를 모아 한 화면으로. 02는 사람마다 한 통씩 날려 소식함이 여섯 줄씩 찼다",
+  "period_weeks": 4,
+  "class_order": ["retired", "surgery", "season_out", "long", "short"],
+  "class_label": {"retired": "부상 은퇴", "surgery": "수술", "season_out": "시즌 아웃", "long": "장기", "short": "단기"},
+  "long_weeks": 8,
+  "_class_note": "⚠ **수술이 시즌 아웃보다 위다.** 이번 시즌을 날리는 데다 능력치가 영구히 깎인다. 시즌 남은 주를 모르면(0) 시즌 아웃 판정을 안 한다 — 모르는 걸 안다고 하지 않는다"
+ }
+}

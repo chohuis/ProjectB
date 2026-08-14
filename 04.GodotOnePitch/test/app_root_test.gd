@@ -875,6 +875,54 @@ func test_the_campus_stage_runs_without_a_protagonist() -> void:
 	assert_str(String(log[0]["kind"])).is_equal("showcase")
 
 
+# ── 부상이 실제로 닿는가 (B-3) ────────────────────────────────
+
+## ⚠ **다치면 훈련이 안 된다.** 배수만 상태에 두고 아무도 안 읽으면
+## 수술 중에도 평소처럼 큰다
+func test_an_injury_throttles_the_training() -> void:
+	var grown: Array = []
+	for hurt in [false, true]:
+		var s: Dictionary = _real_game(777)
+		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
+		s["protagonist"]["potential_hidden"] = 95.0
+		if hurt:
+			# 수술은 배수 0 — 60주짜리라 검사 내내 안 낫는다
+			s["protagonist"]["injury"] = {"type": "UCL_FULL",
+				"severity": "surgery", "weeks_left": 60, "total_weeks": 60,
+				"since_day": 1}
+		var before: float = float(s["protagonist"]["pitching"]["velocity"])
+
+		var r: AppRoot = await _mount(s)
+		for w in range(1, 16):
+			r._apply_one_week(w * 7)
+		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
+			- before)
+
+	assert_float(grown[0]).override_failure_message(
+		"멀쩡한데 열다섯 주를 훈련해도 안 늘었다").is_greater(0.0)
+	assert_float(grown[1]).override_failure_message(
+		"수술 중인데 멀쩡할 때(%.1f)만큼 늘었다(%.1f)" % [grown[0], grown[1]]) \
+		.is_less(grown[0])
+
+
+## 다치면 등판을 못 한다 — 판정이 이미 그 자리를 읽는다
+func test_a_hurt_protagonist_does_not_pitch() -> void:
+	var s: Dictionary = _real_game(777)
+	s["protagonist"]["fatigue"] = 99.0
+	s["protagonist"]["consecutive_high_fatigue_weeks"] = 5
+	var r: AppRoot = await _mount(s)
+
+	for w in range(1, 20):
+		r._apply_one_week(w * 7)
+		if r.state()["protagonist"].get("injury", null) != null:
+			assert_str(DayEngine.appearance_gate(r.state()["protagonist"])) \
+				.override_failure_message("다쳤는데 경기 판정이 모른다") \
+				.is_equal("skip_injury")
+			return
+	assert_bool(false).override_failure_message(
+		"피로 99로 열아홉 주를 살았는데 한 번도 안 다쳤다").is_true()
+
+
 # ── 관계도가 실제로 도는가 (B-2) ──────────────────────────────
 
 ## ⚠ **02는 주 인덱스를 하나 어긋나게 읽어 관계가 전 커리어에 걸쳐 한 번도

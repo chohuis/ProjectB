@@ -401,6 +401,11 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# 훈련 효율을 깎는다
 	_apply_academics(p, at_day)
 
+	# 부상 — **훈련보다 먼저다.** 이번 주 부상 배수가 훈련 효율에 걸리고,
+	# 판정이 보는 피로는 **이 주에 들어설 때의 피로**여야 한다. 뒤로 미루면
+	# 이번 주 훈련 부하가 이번 주 부상 판정에 들어가 한 주 앞당겨진다
+	InjuryRunner.run(_state, at_day)
+
 	# ⚠ **훈련 계획이 비어 있어도 돈다.** 주간 자동 회복(−5)이 계획과 무관하게
 	# 붙기 때문이다 — 건너뛰면 아무 훈련도 안 짠 주에 피로가 안 빠진다.
 	#
@@ -410,7 +415,10 @@ func _apply_one_week(at_day: int = -1) -> void:
 	var before_ovr: float = Contract.core_ovr(p)
 	var out: Dictionary = TrainingGrowth.calc(p,
 		_state.get("training_plan", {}),
-		Training.programs())
+		Training.programs(),
+		# ⚠ **다치면 훈련이 안 된다.** 안 이으면 값은 있는데 아무도 안 읽는
+		# 상태가 되고, 수술 중에도 평소처럼 큰다
+		float(p.get("injury_eff_mod", 1.0)))
 
 	p["pitching"] = out["pitching"]
 	p["batting"] = out["batting"]

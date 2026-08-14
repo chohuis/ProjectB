@@ -1,0 +1,372 @@
+[
+ [
+  "부상 이름이 ID로 샌다 (화면에 SHOULDER_INFLAM이 그대로 뜬다)",
+  "\treturn String(type_of(injury_type).get(\"label\", injury_type))",
+  "\treturn injury_type"
+ ],
+ [
+  "등급을 안 가린다 (전부 경미다)",
+  "\treturn String(type_of(injury_type).get(\"severity\", SEV_LIGHT))",
+  "\treturn SEV_LIGHT"
+ ],
+ [
+  "부상 중에도 멀쩡히 뛴다",
+  "\treturn float(rules().get(\"eff_mod\", {}).get(severity, 1.0))",
+  "\treturn 1.0"
+ ],
+ [
+  "등급 순서를 안 본다",
+  "\treturn rules().get(\"severity_order\", []).find(severity)",
+  "\treturn 0"
+ ],
+ [
+  "회복 기간이 늘 하한이다",
+  "\treturn rng.randi_range(int(w[0]), int(w[1]))",
+  "\treturn int(w[0])"
+ ],
+ [
+  "회복 기간이 범위를 벗어난다",
+  "\treturn rng.randi_range(int(w[0]), int(w[1]))",
+  "\treturn int(w[1]) + 5"
+ ],
+ [
+  "누적 확률표에서 늘 첫 항목을 준다",
+  "\tfor row in table:\n\t\tif roll < float(row[1]):\n\t\t\treturn String(row[0])",
+  "\tfor row in table:\n\t\tif true:\n\t\t\treturn String(row[0])"
+ ],
+ [
+  "투수와 야수가 같은 데를 다친다",
+  "\tvar side: String = \"pitcher\" if is_pitcher else \"batter\"",
+  "\tvar side: String = \"pitcher\""
+ ],
+ [
+  "등급을 무시하고 부상을 고른다",
+  "\treturn _from_table(rules().get(\"pick\", {}).get(tier, {}).get(side, []),\n\t\trng.randf())",
+  "\treturn _from_table(rules().get(\"pick\", {}).get(SEV_LIGHT, {}).get(side, []),\n\t\trng.randf())"
+ ],
+ [
+  "나이 든 투수도 팔꿈치가 먼저 온다",
+  "\tif tier == SEV_MODERATE and is_pitcher and age >= int(vet.get(\"age_min\", 99)):\n\t\treturn _from_table(vet.get(\"table\", []), rng.randf())",
+  "\tif false:\n\t\treturn _from_table(vet.get(\"table\", []), rng.randf())"
+ ],
+ [
+  "나이 배수가 안 걸린다",
+  "\tfor b in bands:\n\t\tif age >= int(b[0]):\n\t\t\treturn float(b[1])",
+  "\tfor b in bands:\n\t\tif false:\n\t\t\treturn float(b[1])"
+ ],
+ [
+  "나이 배수가 거꾸로 걸린다 (젊을수록 잘 다친다)",
+  "\t\tif age >= int(b[0]):",
+  "\t\tif age <= int(b[0]):"
+ ],
+ [
+  "피로가 낮아도 다친다 (80이라는 경계선이 사라진다)",
+  "\tfor b in _pro().get(\"fatigue_bands\", []):\n\t\tif fatigue >= float(b[0]):\n\t\t\treturn float(b[1])\n\treturn 0.0",
+  "\treturn 0.60"
+ ],
+ [
+  "피로가 아무리 높아도 안 다친다",
+  "\tfor b in _pro().get(\"fatigue_bands\", []):\n\t\tif fatigue >= float(b[0]):\n\t\t\treturn float(b[1])",
+  "\tfor b in _pro().get(\"fatigue_bands\", []):\n\t\tif false:\n\t\t\treturn float(b[1])"
+ ],
+ [
+  "훈련 강도를 안 본다 (컨디션만 낮으면 무리다)",
+  "\treturn intensity >= float(o.get(\"intensity_min\", 1.0)) \\\n\t\tand condition < float(o.get(\"condition_max\", 0.0))",
+  "\treturn condition < float(o.get(\"condition_max\", 0.0))"
+ ],
+ [
+  "컨디션을 안 본다 (고강도면 무조건 무리다)",
+  "\treturn intensity >= float(o.get(\"intensity_min\", 1.0)) \\\n\t\tand condition < float(o.get(\"condition_max\", 0.0))",
+  "\treturn intensity >= float(o.get(\"intensity_min\", 1.0))"
+ ],
+ [
+  "훈련 무리가 축으로 안 선다",
+  "\tif not is_training_overload(intensity, condition):\n\t\treturn 0.0",
+  "\treturn 0.0"
+ ],
+ [
+  "깊은 무리에 한 겹이 더 안 얹힌다",
+  "\tif condition < float(deep.get(\"condition_max\", 0.0)) \\\n\t\t\tand fatigue > float(deep.get(\"fatigue_min\", 999.0)):\n\t\tc += float(deep.get(\"chance\", 0.0))",
+  "\tif false:\n\t\tc += float(deep.get(\"chance\", 0.0))"
+ ],
+ [
+  "유예 주에 훈련 무리까지 봐준다 (고강도를 밀어붙인 게 면죄부가 된다)",
+  "\tvar chance: float = training if grace_week \\\n\t\telse fatigue_chance(fatigue) + training",
+  "\tvar chance: float = 0.0 if grace_week \\\n\t\telse fatigue_chance(fatigue) + training"
+ ],
+ [
+  "유예 주가 없다 (아무 예고 없이 시즌이 끝난다)",
+  "\tvar chance: float = training if grace_week \\\n\t\telse fatigue_chance(fatigue) + training",
+  "\tvar chance: float = fatigue_chance(fatigue) + training"
+ ],
+ [
+  "같은 곳을 또 다쳐도 그대로다",
+  "\tif bool(p.get(\"has_prior_injury_same_area\", false)):\n\t\tchance *= float(r.get(\"prior_same_area_mult\", 1.0))",
+  "\tif false:\n\t\tchance *= float(r.get(\"prior_same_area_mult\", 1.0))"
+ ],
+ [
+  "약물 이력이 안 걸린다",
+  "\tif bool(p.get(\"prior_steroid_used\", false)):\n\t\tchance *= float(r.get(\"steroid_mult\", 1.0))",
+  "\tif false:\n\t\tchance *= float(r.get(\"steroid_mult\", 1.0))"
+ ],
+ [
+  "나이가 주인공 부상에 안 걸린다",
+  "\tchance *= _age_mult(int(p.get(\"age\", 25)), r.get(\"age_mult\", []))",
+  "\tpass"
+ ],
+ [
+  "관리가 좋을수록 더 다친다 (방향이 뒤집힌다)",
+  "\tchance /= clampf(float(p.get(\"injury_prevention\", 1.0)),\n\t\tfloat(clamp_range[0]), float(clamp_range[1]))",
+  "\tchance *= clampf(float(p.get(\"injury_prevention\", 1.0)),\n\t\tfloat(clamp_range[0]), float(clamp_range[1]))"
+ ],
+ [
+  "관리 보정 폭이 안 갇힌다 (코치 하나가 부상을 없앤다)",
+  "\tchance /= clampf(float(p.get(\"injury_prevention\", 1.0)),\n\t\tfloat(clamp_range[0]), float(clamp_range[1]))",
+  "\tchance /= float(p.get(\"injury_prevention\", 1.0))"
+ ],
+ [
+  "위험도에 천장이 없다 (관리가 무의미해진다)",
+  "\treturn minf(chance, float(r.get(\"chance_cap\", 1.0)))",
+  "\treturn chance"
+ ],
+ [
+  "피로가 높아도 무거운 부상이 안 나온다",
+  "\tif fatigue >= 90.0:\n\t\treturn _from_table(t.get(\"fatigue_90\", {}).get(old, []), roll)",
+  "\tif false:\n\t\treturn _from_table(t.get(\"fatigue_90\", {}).get(old, []), roll)"
+ ],
+ [
+  "85 구간이 90 구간과 같다",
+  "\tif fatigue >= 85.0:\n\t\treturn _from_table(t.get(\"fatigue_85\", {}).get(old, []), roll)",
+  "\tif fatigue >= 85.0:\n\t\treturn _from_table(t.get(\"fatigue_90\", {}).get(old, []), roll)"
+ ],
+ [
+  "관리가 조금 늦은 것으로 커리어가 끝난다 (80~85에 수술이 생긴다)",
+  "\treturn _from_table(t.get(\"other\", []), roll)",
+  "\treturn _from_table(t.get(\"fatigue_90\", {}).get(old, []), roll)"
+ ],
+ [
+  "나이가 부상 무게에 안 걸린다",
+  "\tvar old: String = \"old\" if age >= int(t.get(\"old_age_min\", 99)) else \"young\"",
+  "\tvar old: String = \"young\""
+ ],
+ [
+  "사기가 바닥이어도 입스가 안 온다",
+  "\tfor b in _pro().get(\"yips\", {}).get(\"bands\", []):\n\t\tif low_morale_weeks >= int(b[0]):\n\t\t\treturn float(b[1])",
+  "\tfor b in _pro().get(\"yips\", {}).get(\"bands\", []):\n\t\tif false:\n\t\t\treturn float(b[1])"
+ ],
+ [
+  "잠깐 처져도 입스가 온다",
+  "\t\tif low_morale_weeks >= int(b[0]):",
+  "\t\tif true:"
+ ],
+ [
+  "야수도 입스에 걸린다",
+  "\t\tif yc > 0.0 and is_pitcher and rng.randf() < yc:",
+  "\t\tif yc > 0.0 and rng.randf() < yc:"
+ ],
+ [
+  "입스를 심리로 안 적는다",
+  "\t\t\tsource = \"psychological\"",
+  "\t\t\tsource = \"fatigue\""
+ ],
+ [
+  "시설 보정이 회복을 안 줄인다",
+  "\tvar boost: float = clampf(recovery_boost, float(c[0]), float(c[1]))\n\treturn int(roundf(float(raw_weeks) / boost))",
+  "\treturn raw_weeks"
+ ],
+ [
+  "시설 보정 폭이 안 갇힌다",
+  "\tvar boost: float = clampf(recovery_boost, float(c[0]), float(c[1]))",
+  "\tvar boost: float = recovery_boost"
+ ],
+ [
+  "유예 주 판정이 없다 (첫 주부터 판정한다)",
+  "\tvar grace: bool = high and streak == 1",
+  "\tvar grace: bool = false"
+ ],
+ [
+  "유예가 영영이다 (두 주째도 안 다친다)",
+  "\tvar grace: bool = high and streak == 1",
+  "\tvar grace: bool = high"
+ ],
+ [
+  "경고를 안 낸다",
+  "\t\t\tif grace and not just_occurred:\n\t\t\t\twarning = {\"kind\": \"fatigue\", \"fatigue\": fatigue,\n\t\t\t\t\t\"risk\": roundf(trigger_chance(p, false) * 1000.0) / 1000.0}",
+  "\t\t\tpass"
+ ],
+ [
+  "경고 숫자가 유예 주 확률이다 (다음 주 실제 위험이 아니다)",
+  "\t\t\t\t\t\"risk\": roundf(trigger_chance(p, false) * 1000.0) / 1000.0}",
+  "\t\t\t\t\t\"risk\": roundf(trigger_chance(p, true) * 1000.0) / 1000.0}"
+ ],
+ [
+  "쉬어도 연속 주차가 안 풀린다",
+  "\tvar streak: int = (int(p.get(\"consecutive_high_fatigue_weeks\", 0)) + 1) \\\n\t\tif high else 0",
+  "\tvar streak: int = int(p.get(\"consecutive_high_fatigue_weeks\", 0)) + 1"
+ ],
+ [
+  "다쳐도 연속 주차가 안 풀린다 (복귀하자마자 또 걸린다)",
+  "\t\t\"consecutive_high_fatigue_weeks\": 0 if just_occurred else streak,",
+  "\t\t\"consecutive_high_fatigue_weeks\": streak,"
+ ],
+ [
+  "다친 동안에도 새 부상 판정을 한다 (회복이 영영 안 끝난다)",
+  "\tif not bool(p.get(\"has_injury\", false)):",
+  "\tif true:"
+ ],
+ [
+  "회복이 안 줄어든다",
+  "\t\tvar left: int = maxi(int(p.get(\"recovery_weeks_left\", 1)) - 1, 0)",
+  "\t\tvar left: int = int(p.get(\"recovery_weeks_left\", 1))"
+ ],
+ [
+  "나았는데 능력이 아직 깎여 있다",
+  "\tif bool(p.get(\"has_injury\", false)) and not just_healed:",
+  "\tif bool(p.get(\"has_injury\", false)):"
+ ],
+ [
+  "NPC 연투가 안 걸린다",
+  "\tvar chance: float = base + _consecutive_bonus(role, consecutive_app)",
+  "\tvar chance: float = base"
+ ],
+ [
+  "NPC 보직을 안 가린다 (선발도 야수와 같다)",
+  "\tvar base: float = float(r.get(\"base\", {}).get(role,\n\t\tr.get(\"base\", {}).get(\"batter\", 0.0)))",
+  "\tvar base: float = float(r.get(\"base\", {}).get(\"batter\", 0.0))"
+ ],
+ [
+  "NPC 연투 문턱이 보직마다 같다",
+  "\tfor b in _npc().get(\"consecutive\", {}).get(role, []):",
+  "\tfor b in _npc().get(\"consecutive\", {}).get(\"batter\", []):"
+ ],
+ [
+  "NPC 재발 이력이 안 걸린다",
+  "\tif has_prior_injury:\n\t\tchance += float(r.get(\"prior_injury_bonus\", 0.0))",
+  "\tif false:\n\t\tchance += float(r.get(\"prior_injury_bonus\", 0.0))"
+ ],
+ [
+  "참고 뛰어도 위험이 안 는다",
+  "\tif not playing_through_severity.is_empty():\n\t\tchance += float(r.get(\"playing_through\", {}).get(\n\t\t\tplaying_through_severity, 0.0))",
+  "\tif false:\n\t\tchance += float(r.get(\"playing_through\", {}).get(\n\t\t\tplaying_through_severity, 0.0))"
+ ],
+ [
+  "NPC 나이가 안 걸린다",
+  "\treturn chance * _age_mult(age, r.get(\"age_mult\", []))",
+  "\treturn chance"
+ ],
+ [
+  "중증·수술도 참고 뛴다",
+  "\tif not gate.has(severity):\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "관리가 좋은 팀도 참고 뛴다",
+  "\treturn injury_mgmt < float(gate[severity])",
+  "\treturn true"
+ ],
+ [
+  "경미와 중등도의 문턱이 같다",
+  "\treturn injury_mgmt < float(gate[severity])",
+  "\treturn injury_mgmt < float(gate[\"light\"])"
+ ],
+ [
+  "완치 뒤 영구 손실이 없다",
+  "\treturn float(_npc().get(\"ovr_penalty\", {}).get(injury_type, 0.0))",
+  "\treturn 0.0"
+ ],
+ [
+  "NPC가 확률과 무관하게 다친다",
+  "\t\tif rng.randf() >= chance:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "NPC가 아무도 안 다친다",
+  "\t\tif rng.randf() >= chance:\n\t\t\tcontinue",
+  "\t\tif true:\n\t\t\tcontinue"
+ ],
+ [
+  "NPC 부상 등급이 늘 같다",
+  "\t\tvar tier: String = npc_tier(rng.randf())",
+  "\t\tvar tier: String = SEV_SURGERY"
+ ],
+ [
+  "NPC 부상에 등급이 안 붙는다",
+  "\t\t\t\"injury_type\": t, \"severity\": severity_of(t),",
+  "\t\t\t\"injury_type\": t, \"severity\": SEV_LIGHT,"
+ ],
+ [
+  "후유증이 없다",
+  "\treturn rules().get(\"permanent_penalty\", {}).get(injury_type, {})",
+  "\treturn {}"
+ ],
+ [
+  "치료 선택이 후유증을 안 가른다",
+  "\tif by_treatment.has(injury_type):\n\t\tvar table: Dictionary = by_treatment[injury_type]\n\t\treturn table.get(treatment_choice, table.get(\"default\", {}))",
+  "\tif by_treatment.has(injury_type):\n\t\treturn by_treatment[injury_type].get(\"default\", {})"
+ ],
+ [
+  "소식 주기가 매주다",
+  "\treturn week > 0 and week % news_period() == 0",
+  "\treturn week > 0"
+ ],
+ [
+  "0주에도 소식이 온다",
+  "\treturn week > 0 and week % news_period() == 0",
+  "\treturn week % news_period() == 0"
+ ],
+ [
+  "은퇴가 제일 무겁지 않다",
+  "\tif bool(event.get(\"retired\", false)):\n\t\treturn \"retired\"",
+  "\tif false:\n\t\treturn \"retired\""
+ ],
+ [
+  "수술을 따로 안 가린다",
+  "\tif String(event.get(\"severity\", \"\")) == SEV_SURGERY:\n\t\treturn \"surgery\"",
+  "\tif false:\n\t\treturn \"surgery\""
+ ],
+ [
+  "남은 주를 모르는데 시즌 아웃이라고 한다",
+  "\tif weeks_left_in_season > 0 and weeks >= weeks_left_in_season:",
+  "\tif weeks >= weeks_left_in_season:"
+ ],
+ [
+  "장기 문턱이 없다 (전부 단기다)",
+  "\tif weeks >= int(_report().get(\"long_weeks\", 999)):\n\t\treturn \"long\"",
+  "\tif false:\n\t\treturn \"long\""
+ ],
+ [
+  "한 사람을 두 번 센다",
+  "\t\tif not worst.has(pid) or rank <= int(worst[pid][\"rank\"]):\n\t\t\tworst[pid] = {\"event\": e, \"cls\": cls, \"rank\": rank}",
+  "\t\tworst[pid + str(e.get(\"week\", 0))] = {\"event\": e, \"cls\": cls, \"rank\": rank}"
+ ],
+ [
+  "나중 사건이 결론이다 (3주짜리 뒤에 수술이 와도 단기로 남는다)",
+  "\t\tif not worst.has(pid) or rank <= int(worst[pid][\"rank\"]):",
+  "\t\tif true:"
+ ],
+ [
+  "같은 등급이면 먼저 것을 남긴다",
+  "\t\tif not worst.has(pid) or rank <= int(worst[pid][\"rank\"]):",
+  "\t\tif not worst.has(pid) or rank < int(worst[pid][\"rank\"]):"
+ ],
+ [
+  "등급을 안 붙여 내보낸다",
+  "\t\trow[\"class\"] = String(w[\"cls\"])",
+  "\t\trow[\"class\"] = \"short\""
+ ],
+ [
+  "단기 200건이 수술 3건을 덮는다",
+  "\t\tif cls == \"short\":\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "가벼운 부상만 있는 달에 아무 말도 안 한다",
+  "\tif int(counts.get(\"short\", 0)) > 0:\n\t\treturn \"가벼운 부상 %d건\" % counts[\"short\"]",
+  "\tif false:\n\t\treturn \"가벼운 부상 %d건\" % counts[\"short\"]"
+ ],
+ [
+  "심한 순서가 아니라 뒤에서부터 적는다",
+  "\tfor c in class_order():\n\t\tvar cls: String = String(c)\n\t\tif cls == \"short\":",
+  "\tvar reversed_order: Array = class_order().duplicate()\n\treversed_order.reverse()\n\tfor c in reversed_order:\n\t\tvar cls: String = String(c)\n\t\tif cls == \"short\":"
+ ]
+]

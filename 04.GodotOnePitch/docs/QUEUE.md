@@ -149,7 +149,12 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `seeds/onepitch/staff_rules.toml`(242) · `players/staff_rules.json`(530).
       ⚠ **감독 관계가 보직 배정(`role_ovr_bias`)에, 코치가 훈련 효율에,
         구단주가 재계약 배수에 걸린다** — 셋 다 지금은 중립으로 돈다
-- [ ] **B-3** `weekPhases/injuries`(273) + `injuryNews`(78) + `myBodyReport`(135)
+- [x] **B-3** `weekPhases/injuries`(273) + `injuryNews`(78) + `myBodyReport`(135)
+      `sim/injury.gd` · `sim/injury_runner.gd` · `data/injury_rules.json`.
+      ⚠ 02는 완치 때 `careerStatus`를 `active`로 안 되돌려 **고교 3,015명 중
+        1,429명(47%)이 영구 `injured`**로 남았다 — 그 줄을 박아 뒀다.
+      **`myBodyReport`의 화면 문구는 C-6("나" 탭)에서** — 여기서는
+      `body_log`(경고·완치)와 `injury_log`(월간)를 쌓는 데까지다
 - [ ] **B-4** `tournaments`(204) + `survivalLeague`(83)
 - [ ] **B-5** `finance`(331) — 개인 재정
 - [ ] **B-6** `careerDecision`(270) · `contractDecision`(260) · `militaryDecision`(168)

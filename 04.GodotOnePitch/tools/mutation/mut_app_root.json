@@ -36,8 +36,8 @@
  ],
  [
   "훈련 계획이 비면 주기 처리를 건너뛴다 (자동 회복이 안 붙는다)",
-  "\tvar out: Dictionary = TrainingGrowth.calc(p,\n\t\t_state.get(\"training_plan\", {}),\n\t\tTraining.programs())",
-  "\tif _state.get(\"training_plan\", {}).is_empty():\n\t\treturn\n\tvar out: Dictionary = TrainingGrowth.calc(p,\n\t\t_state.get(\"training_plan\", {}),\n\t\tTraining.programs())"
+  "\tvar out: Dictionary = TrainingGrowth.calc(p,\n\t\t_state.get(\"training_plan\", {}),\n\t\tTraining.programs(),",
+  "\tif _state.get(\"training_plan\", {}).is_empty():\n\t\treturn\n\tvar out: Dictionary = TrainingGrowth.calc(p,\n\t\t_state.get(\"training_plan\", {}),\n\t\tTraining.programs(),"
  ],
  [
   "피로가 범위를 벗어난다",
@@ -143,5 +143,25 @@
   "카퍼스 이벤트가 주인공 뒤로 밀린다 (주인공이 없으면 세계 무대가 통째로 사라진다)",
   "\tCampusRunner.run(_state, at_day)\n\n\tvar p: Dictionary = _state.get(\"protagonist\", {})",
   "\tvar p: Dictionary = _state.get(\"protagonist\", {})"
+ ],
+ [
+  "부상이 아예 안 돈다",
+  "\tInjuryRunner.run(_state, at_day)",
+  "\tpass"
+ ],
+ [
+  "부상이 주 경계를 무시한다",
+  "\tInjuryRunner.run(_state, at_day)",
+  "\tInjuryRunner.run(_state, -1)"
+ ],
+ [
+  "다쳐도 훈련이 그대로다 (수술 중에도 평소처럼 큰다)",
+  "\t\tfloat(p.get(\"injury_eff_mod\", 1.0)))",
+  "\t\t1.0)"
+ ],
+ [
+  "부상이 훈련 뒤로 밀린다 (이번 주 훈련 부하가 이번 주 판정에 들어간다)",
+  "\tInjuryRunner.run(_state, at_day)\n\n\t# ⚠ **훈련 계획이 비어 있어도 돈다.**",
+  "\t# ⚠ **훈련 계획이 비어 있어도 돈다.**"
  ]
 ]
