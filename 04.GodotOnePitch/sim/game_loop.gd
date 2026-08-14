@@ -61,6 +61,15 @@ static func play(state: Dictionary, rng, decide: Callable) -> Dictionary:
 		var before_count: Dictionary = s.get("count", {}).duplicate()
 		s["batter"] = current_batter(s)
 		s["pitcher"] = current_pitcher(s)
+		# ⚠ **투수 기록을 팀별로 나눈다.** 한 줄에 쌓으면 양 팀 성적이 섞여
+		# 자책점이 두 배가 되고 상대 삼진이 내 것이 된다. 초에는 홈 투수가
+		# 던진다.
+		#
+		# 그 줄이 상태에 없으면 예전처럼 `pitcher_line` 하나로 떨어진다 —
+		# 조각 검사가 그대로 돈다
+		var side_key: String = "home_pitcher_line" if before_half == "top" \
+			else "away_pitcher_line"
+		s["pitcher_line_key"] = side_key if s.has(side_key) else "pitcher_line"
 
 		var out: Dictionary = PitchStep.step(s, decide.call(s, rng), rng)
 		s = out["state"]

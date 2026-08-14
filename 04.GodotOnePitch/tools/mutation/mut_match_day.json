@@ -1,0 +1,117 @@
+[
+ [
+  "빈 로스터로도 경기를 돌린다 (이상한 결과가 순위표에 들어간다)",
+  "\tif home.is_empty() or away.is_empty():\n\t\treturn {\"ok\": false, \"error\": \"로스터가 비었다: %s(%d) %s(%d)\"\n\t\t\t% [home_id, home.size(), away_id, away.size()],\n\t\t\t\"result\": {}, \"pitches\": 0}",
+  ""
+ ],
+ [
+  "선발이 없어도 돌린다",
+  "\tif hp.is_empty() or ap.is_empty():\n\t\treturn {\"ok\": false, \"error\": \"선발 투수가 없다\", \"result\": {}, \"pitches\": 0}",
+  ""
+ ],
+ [
+  "어댑터 모양으로 안 옮긴다 (리그 성적표가 통째로 빈다)",
+  "\t_to_report_shape(out[\"state\"])",
+  "\tpass"
+ ],
+ [
+  "투수 줄을 안 옮긴다",
+  "\tstate[\"my_pitcher_lines\"] = [state.get(\"home_pitcher_line\", {})]\n\tstate[\"opponent_pitcher_lines\"] = [state.get(\"away_pitcher_line\", {})]",
+  "\tstate[\"my_pitcher_lines\"] = []\n\tstate[\"opponent_pitcher_lines\"] = []"
+ ],
+ [
+  "타자 줄을 안 옮긴다",
+  "\tstate[\"home_bat_lines\"] = lines\n\tstate[\"away_bat_lines\"] = []",
+  "\tstate[\"home_bat_lines\"] = []\n\tstate[\"away_bat_lines\"] = []"
+ ],
+ [
+  "타자 줄에 선수 id를 안 단다",
+  "\t\tacc[\"player_id\"] = pid",
+  "\t\tpass"
+ ],
+ [
+  "타순을 9명이 아니라 4명으로 세운다",
+  "const LINEUP_SIZE: int = 9",
+  "const LINEUP_SIZE: int = 4"
+ ],
+ [
+  "타순을 능력치 순으로 안 세운다",
+  "\tbatters.sort_custom(func(a, b) -> bool:\n\t\treturn float(a[\"batting\"][\"ovr\"]) > float(b[\"batting\"][\"ovr\"]))",
+  ""
+ ],
+ [
+  "선발을 제일 약한 투수로 고른다",
+  "\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) > float(best[\"pitching\"][\"ovr\"]):",
+  "\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) < float(best[\"pitching\"][\"ovr\"]):"
+ ],
+ [
+  "선발로 야수를 세운다",
+  "\t\tif not PlayerGen.is_pitcher(p.get(\"position\", \"\")):\n\t\t\tcontinue\n\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) > float(best[\"pitching\"][\"ovr\"]):",
+  "\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) > float(best[\"pitching\"][\"ovr\"]):"
+ ],
+ [
+  "타자 능력치 키를 엔진과 다르게 준다 (조용히 약해진다)",
+  "\t\t\"contact\": b.get(\"contact\", 50.0),\n\t\t\"power\": b.get(\"power\", 50.0),",
+  "\t\t\"contact\": b.get(\"contact_rate\", 50.0),\n\t\t\"power\": b.get(\"power_rate\", 50.0),"
+ ],
+ [
+  "투수 능력치 키를 엔진과 다르게 준다",
+  "\t\t\"command\": q.get(\"command\", 50.0),\n\t\t\"velocity\": q.get(\"velocity\", 50.0),",
+  "\t\t\"command\": q.get(\"cmd\", 50.0),\n\t\t\"velocity\": q.get(\"velo\", 50.0),"
+ ],
+ [
+  "투수 스태미나를 안 넘긴다 (무한정 던진다)",
+  "\t\t\"stamina_cap\": q.get(\"stamina\", 50.0),",
+  "\t\t\"stamina_cap\": 50.0,"
+ ],
+ [
+  "투수 줄을 한 팀 것만 둔다 (양 팀 성적이 섞인다)",
+  "\t\t\"home_pitcher_line\": {\"player_id\": hp.get(\"id\", \"\"),\n\t\t\t\"outs\": 0, \"pc\": 0, \"k\": 0, \"bb\": 0, \"h\": 0, \"er\": 0},\n\t\t\"away_pitcher_line\": {\"player_id\": ap.get(\"id\", \"\"),\n\t\t\t\"outs\": 0, \"pc\": 0, \"k\": 0, \"bb\": 0, \"h\": 0, \"er\": 0},",
+  "\t\t\"pitcher_line\": {\"player_id\": hp.get(\"id\", \"\"),\n\t\t\t\"outs\": 0, \"pc\": 0, \"k\": 0, \"bb\": 0, \"h\": 0, \"er\": 0},"
+ ],
+ [
+  "투수 줄에 선수 id를 안 단다",
+  "\t\t\"home_pitcher_line\": {\"player_id\": hp.get(\"id\", \"\"),",
+  "\t\t\"home_pitcher_line\": {\"player_id\": \"\","
+ ],
+ [
+  "이미 치른 경기를 다시 돌린다 (승패가 두 번 들어간다)",
+  "\t\tif int(g.get(\"day\", -1)) != day or g.get(\"result\", null) != null:\n\t\t\tcontinue",
+  "\t\tif int(g.get(\"day\", -1)) != day:\n\t\t\tcontinue"
+ ],
+ [
+  "다른 날 경기도 돌린다",
+  "\t\tif int(g.get(\"day\", -1)) != day or g.get(\"result\", null) != null:",
+  "\t\tif g.get(\"result\", null) != null:"
+ ],
+ [
+  "결과를 일정에 안 꽂는다",
+  "\t\tg[\"result\"] = out[\"result\"]",
+  "\t\tpass"
+ ],
+ [
+  "돌린 경기 수를 안 센다",
+  "\t\tn += 1",
+  "\t\tpass"
+ ],
+ [
+  "9회가 아니라 3회에 끝낸다",
+  "\t\t\"inning_limit\": 9,",
+  "\t\t\"inning_limit\": 3,"
+ ],
+ [
+  "타순을 약한 타자부터 세운다",
+  "\t\treturn float(a[\"batting\"][\"ovr\"]) > float(b[\"batting\"][\"ovr\"]))",
+  "\t\treturn float(a[\"batting\"][\"ovr\"]) < float(b[\"batting\"][\"ovr\"]))"
+ ],
+ [
+  "타자 능력치 키 하나를 밀어 쓴다 (선구안이 수련도로)",
+  "\t\t\"eye\": b.get(\"eye\", 50.0),",
+  "\t\t\"eye\": b.get(\"discipline\", 50.0),"
+ ],
+ [
+  "투수 멘탈 키를 밀어 쓴다",
+  "\t\t\"mental_resil\": q.get(\"mentality\", 50.0),",
+  "\t\t\"mental_resil\": q.get(\"clutch\", 50.0),"
+ ]
+]

@@ -228,7 +228,13 @@ static func _record_defense(state: Dictionary, fielding: Dictionary) -> void:
 
 ## 투수 기록. **삼진은 세 번째 스트라이크에만 센다**
 static func _record_pitcher(state: Dictionary, code: String, outs_added: int, runs_added: int) -> void:
-	var line: Dictionary = state.get("pitcher_line", {})
+	# ⚠ **투수 기록을 어느 줄에 다나.** 원래 `pitcher_line` 하나였는데,
+	# 그러면 **양 팀 투수 성적이 한 줄에 섞인다** — 리그 성적표를 이을 때
+	# 드러났다(자책점이 두 배, 상대 팀 삼진이 내 것으로).
+	#
+	# 부르는 쪽이 이닝 반쪽마다 `pitcher_line_key`를 바꾼다. 안 주면
+	# 예전처럼 `pitcher_line`으로 떨어진다 — 조각 검사가 그대로 돈다
+	var line: Dictionary = state.get(state.get("pitcher_line_key", "pitcher_line"), {})
 	if line.is_empty():
 		return
 	line["pc"] = int(line.get("pc", 0)) + 1

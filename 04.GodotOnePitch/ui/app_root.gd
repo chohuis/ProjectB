@@ -130,12 +130,25 @@ func advance(days: int) -> void:
 
 ## 경기 하나. 결과를 **일정에 되꽂는다** — 안 꽂으면 다시 진행할 때 또 돌린다.
 ##
-## ⚠ 지금은 결과만 남긴다. 순위표·기록 반영(`Standings`·`SeasonStats`)은
-## 세계 생성(M8)이 팀·선수를 만든 뒤에 붙는다 — **소비자 없는 배선을
-## 미리 만들지 않는다**
+## ⚠ **경기마다 씨앗을 따로 뽑는다.** 흐름 하나로 이으면 어딘가에 난수
+## 호출을 하나 추가하는 순간 그 뒤 경기가 전부 밀린다 — 이주 내내 코드를
+## 고칠 텐데 그러면 회귀를 못 잡는다
 func _play_game(g: Dictionary) -> void:
 	games_played += 1
-	g["result"] = {"home_score": 0, "away_score": 0, "placeholder": true}
+
+	var world: Dictionary = _state.get("world", {})
+	if world.is_empty():
+		# 세계가 없는 상태(검사·부분 이주)에서는 자리만 채운다
+		g["result"] = {"home_score": 0, "away_score": 0, "placeholder": true}
+		return
+
+	var rng := RandomNumberGenerator.new()
+	rng.seed = Rng.mix([_state.get("seed", 0), "game", g.get("id", "")])
+	var out: Dictionary = MatchDay.play(world, g.get("home", ""), g.get("away", ""), rng)
+	if not out["ok"]:
+		g["result"] = {"home_score": 0, "away_score": 0, "error": out["error"]}
+		return
+	g["result"] = out["result"]
 
 
 ## 주기 처리 — 7일마다 도는 것들.
