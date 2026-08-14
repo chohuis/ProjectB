@@ -1,0 +1,157 @@
+[
+ [
+  "단계를 못 찾는다",
+  "\t\tif int(s[\"stage\"]) == stage:\n\t\t\treturn s",
+  "\t\tif false:\n\t\t\treturn s"
+ ],
+ [
+  "마지막 정규 단계를 첫 단계로 본다",
+  "\t\tlast = maxi(last, int(s[\"stage\"]))",
+  "\t\tlast = mini(last, int(s[\"stage\"]))"
+ ],
+ [
+  "단계 중간에도 새 단계를 연다",
+  "\t\tif int(s[\"start_week\"]) == week:\n\t\t\treturn int(s[\"stage\"])",
+  "\t\tif int(s[\"start_week\"]) <= week:\n\t\t\treturn int(s[\"stage\"])"
+ ],
+ [
+  "단계마다 경기 id 앞머리가 같다 (단계 구별이 사라진다)",
+  "\treturn \"INDS%d_\" % stage",
+  "\treturn \"INDS_\""
+ ],
+ [
+  "목표 경기 수를 무시한다",
+  "\t\t\"games_per_team\": int(d[\"target_games\"]),",
+  "\t\t\"games_per_team\": 4,"
+ ],
+ [
+  "단계 기간을 무시한다 (시즌 전체에 편다)",
+  "\t\t\"start_day\": (int(d[\"start_week\"]) - 1) * Calendar.DAYS_PER_WEEK + 1,\n\t\t\"end_day\": int(d[\"end_week\"]) * Calendar.DAYS_PER_WEEK,",
+  "\t\t\"start_day\": 1,\n\t\t\"end_day\": 350,"
+ ],
+ [
+  "두 팀 미만도 일정을 짠다",
+  "\tif d.is_empty() or teams.size() < 2:\n\t\treturn []",
+  "\tif false:\n\t\treturn []"
+ ],
+ [
+  "모르는 단계도 일정을 짠다",
+  "\tif d.is_empty() or teams.size() < 2:",
+  "\tif teams.size() < 2:"
+ ],
+ [
+  "경기 id에 단계가 안 들어간다",
+  "\t\t\t\"id\": \"%sY%d_%03d\" % [match_prefix(stage), season_year, i],",
+  "\t\t\t\"id\": \"INDX_Y%d_%03d\" % [season_year, i],"
+ ],
+ [
+  "내 경기를 표시 안 한다 (진행이 안 멈춘다)",
+  "\t\t\t\"is_protagonist_game\": String(g[\"home\"]) == protagonist_team_id\n\t\t\t\tor String(g[\"away\"]) == protagonist_team_id,",
+  "\t\t\t\"is_protagonist_game\": false,"
+ ],
+ [
+  "생존리그를 대회 경기로 적는다 (리그 순위에서 빠진다)",
+  "\t\t\t\"is_tournament\": false, \"survival_stage\": stage, \"result\": null,",
+  "\t\t\t\"is_tournament\": true, \"survival_stage\": stage, \"result\": null,"
+ ],
+ [
+  "다른 단계 경기까지 순위에 넣는다 (단계 리셋이 사라진다)",
+  "\t\tif not String(g.get(\"id\", \"\")).begins_with(prefix):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "안 치른 경기도 순위에 넣는다",
+  "\t\tvar res = g.get(\"result\", null)\n\t\tif res == null:\n\t\t\tcontinue",
+  "\t\tvar res = g.get(\"result\", null)\n\t\tif res == null:\n\t\t\tres = {}"
+ ],
+ [
+  "이 단계에 없는 팀도 순위에 넣는다",
+  "\t\tif not acc.has(home) or not acc.has(away):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "원정팀 득실을 뒤바꿔 적는다",
+  "\t\tacc[away][\"runs_for\"] += as_\n\t\tacc[away][\"runs_against\"] += hs",
+  "\t\tacc[away][\"runs_for\"] += hs\n\t\tacc[away][\"runs_against\"] += as_"
+ ],
+ [
+  "무승부를 홈 승리로 센다",
+  "\t\telif hs < as_:\n\t\t\tacc[away][\"wins\"] += 1\n\t\t\tacc[home][\"losses\"] += 1\n\t\telse:\n\t\t\tacc[home][\"draws\"] += 1\n\t\t\tacc[away][\"draws\"] += 1",
+  "\t\telse:\n\t\t\tacc[away][\"wins\"] += 1\n\t\t\tacc[home][\"losses\"] += 1"
+ ],
+ [
+  "무승부를 승률 분모에 넣는다",
+  "\t\tvar decided: int = int(s[\"wins\"]) + int(s[\"losses\"])",
+  "\t\tvar decided: int = int(s[\"wins\"]) + int(s[\"losses\"]) + int(s[\"draws\"])"
+ ],
+ [
+  "순위가 승률을 안 본다",
+  "\t\tif pa != pb:\n\t\t\treturn pa > pb\n\t\tvar fa: int = int(a.get(\"runs_for\", 0))",
+  "\t\tvar fa: int = int(a.get(\"runs_for\", 0))"
+ ],
+ [
+  "순위가 거꾸로다 (꼴찌가 올라간다)",
+  "\t\tif pa != pb:\n\t\t\treturn pa > pb",
+  "\t\tif pa != pb:\n\t\t\treturn pa < pb"
+ ],
+ [
+  "동률에서 다득점을 안 본다",
+  "\t\tif fa != fb:\n\t\t\treturn fa > fb",
+  "\t\tif false:\n\t\t\treturn fa > fb"
+ ],
+ [
+  "동률에서 실점을 안 본다",
+  "\t\tif aa != ab:\n\t\t\treturn aa < ab",
+  "\t\tif false:\n\t\t\treturn aa < ab"
+ ],
+ [
+  "실점이 많은 쪽이 위로 간다",
+  "\t\tif aa != ab:\n\t\t\treturn aa < ab",
+  "\t\tif aa != ab:\n\t\t\treturn aa > ab"
+ ],
+ [
+  "완전 동률에서 순서가 흔들린다 (탈락 팀이 바뀐다)",
+  "\t\treturn String(a.get(\"team_id\", \"\")) < String(b.get(\"team_id\", \"\")))",
+  "\t\treturn false)"
+ ],
+ [
+  "자르는 수를 무시한다 (아무도 안 잘린다)",
+  "\tvar n: int = maxi(advance_count, 0)",
+  "\tvar n: int = ranked.size()"
+ ],
+ [
+  "생존·탈락이 뒤바뀐다",
+  "\treturn {\"survivors\": ranked.slice(0, n), \"eliminated\": ranked.slice(n),",
+  "\treturn {\"survivors\": ranked.slice(n), \"eliminated\": ranked.slice(0, n),"
+ ],
+ [
+  "사다리 홈 시드를 무시한다",
+  "\t\tif int(s.get(\"home_seed\", 0)) > 0:\n\t\t\thome = String(final_ranking[int(s[\"home_seed\"]) - 1])",
+  "\t\tif int(s.get(\"home_seed\", 0)) > 0:\n\t\t\thome = String(final_ranking[0])"
+ ],
+ [
+  "사다리 원정 자리를 미리 채운다 (앞 시리즈 승자가 못 올라간다)",
+  "\t\tif int(s.get(\"away_seed\", 0)) > 0:\n\t\t\taway = String(final_ranking[int(s[\"away_seed\"]) - 1])",
+  "\t\taway = String(final_ranking[-1])"
+ ],
+ [
+  "챔피언결정전도 단판이다",
+  "\t\t\t\"best_of\": int(s.get(\"best_of\", 1)),",
+  "\t\t\t\"best_of\": 1,"
+ ],
+ [
+  "앞 시리즈와 안 이어진다 (사다리가 끊긴다)",
+  "\t\t\t\"next_series_id\": String(s.get(\"next\", \"\")),\n\t\t\t\"next_series_slot\": String(s.get(\"next_slot\", \"\")),",
+  "\t\t\t\"next_series_id\": \"\",\n\t\t\t\"next_series_slot\": \"\","
+ ],
+ [
+  "어디서 올라오는지를 안 적는다",
+  "\t\t\t\"away_from\": String(s.get(\"away_from\", \"\")),",
+  "\t\t\t\"away_from\": \"\","
+ ],
+ [
+  "4팀이 안 돼도 사다리를 세운다",
+  "\tif final_ranking.size() < need:\n\t\treturn []",
+  "\tif false:\n\t\treturn []"
+ ]
+]

@@ -180,6 +180,10 @@ static func build_schedule(world: Dictionary, year: int, me: Dictionary,
 		team_id: String, seed_value: int) -> Array:
 	var schedule: Array = []
 	for lid in Schedule.LEAGUES:
+		# ⚠ **독립은 여기서 안 짠다.** 4단계 생존리그라 다음 단계 참가팀이
+		# 이전 단계 결과에 달려 있다 — `SurvivalRunner`가 단계마다 짠다
+		if lid == Survival.league_id():
+			continue
 		var ids: Array = []
 		for t in teams_of(lid):
 			ids.append(t["id"])

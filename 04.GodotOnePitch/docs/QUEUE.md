@@ -166,11 +166,11 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
             (개나리 31 · 장미 31 · 무궁화 47 · 국화 101 · 패왕 23 ·
             왕중왕 7 · 은하 31 · 여명 47 = 318경기). 검사 29 · 변이 32/32
       - [ ] **B-4b 대회 소식**(`tournamentNews` 192 · `tournamentView` 155)
-      - [ ] **B-4c 독립 생존리그**(`survivalLeague.ts` 75 + `utils` 123 +
-            Rust `generate_survival_stage`·`survival_cutoff`·`build_ind_ladder`).
-            4단계로 좁혀 가고 **단계마다 순위표가 리셋된다** — 누적을 쓰면
-            1차에서 벌어놓은 승수로 3차 순위가 정해져 "매 단계 새 승부"가
-            무의미해진다
+      - [x] **B-4c 독립 생존리그** — `sim/survival.gd` · `sim/survival_runner.gd`
+            · `data/survival_rules.json`. 4단계로 좁혀 가고 **단계마다
+            순위표가 리셋된다**. 실측: 90 + 56 + 6 = 152경기, 3단계 컷,
+            최종 4팀 사다리. **세계 일정에서 독립을 뺐다** — 다음 단계
+            참가팀이 이전 결과에 달려 있다. 검사 42 · 변이 55/55
 - [ ] **B-5** `finance`(331) — 개인 재정
 - [ ] **B-6** `careerDecision`(270) · `contractDecision`(260) · `militaryDecision`(168)
       · `decisions`(121)

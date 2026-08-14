@@ -165,6 +165,9 @@ static func advance_day(s: Dictionary) -> Dictionary:
 	# ⚠ **여기 한 곳에서만 부른다.** `DayRunner`가 따로 부르면 두 경로가
 	# 갈리고, 그때는 어느 쪽이 맞는지 알 방법이 없다
 	TournamentRunner.run(out, day)
+	# 독립 생존리그 — 단계를 열고, 끝난 단계를 자르고, 사다리를 세운다.
+	# 대회와 같은 이유로 날마다 본다
+	SurvivalRunner.run(out, day)
 
 	var games: Array = []
 	for g in out.get("schedule", []):

@@ -47,6 +47,15 @@ func run(log_line: Callable, fail: Callable, seed_value: int) -> int:
 		var teams: Array = []
 		for i in int(Schedule.TEAM_COUNTS[lid]):
 			teams.append("TEAM_%s_%02d" % [lid.substr(7, 3), i])
+		# ⚠ **독립은 4단계 생존리그다.** 평평한 일정으로 재면 실제 게임과
+		# 다른 것을 재게 된다 — 게이트가 거짓말을 한다
+		if lid == Survival.league_id():
+			var alive: Array = teams.duplicate()
+			for st in Survival.stages():
+				schedule.append_array(Survival.stage_schedule(int(st["stage"]),
+					alive, season_year, ""))
+				alive = alive.slice(0, int(st["advance_count"]))
+			continue
 		schedule.append_array(Schedule.build_league(lid, teams, season_year))
 
 	# 하루에 경기가 제일 많은 날을 찾는다 — **일정이 정하는 값이지

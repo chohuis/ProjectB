@@ -63,7 +63,10 @@ const LEAGUES: Dictionary = {
 	"LEAGUE_UNIVERSITY": {
 		"games_per_team": 9, "start_day": 1, "end_day": 70, "weekdays": WEEKDAYS_UNIV,
 	},
-	# 독립 — 10~25주 생존 리그 (02의 `SURVIVAL_STAGES`)
+	# 독립 — **여기 값으로 일정을 안 짠다.** 4단계 생존리그라 다음 단계
+	# 참가팀이 이전 단계 결과에 달려 있어서 `Survival`이 단계마다 짠다
+	# (`data/survival_rules.json`이 정본). 이 줄은 리그 목록·로스터 생성이
+	# 훑는 자리라 남는다
 	"LEAGUE_INDEPENDENT": {
 		"games_per_team": 30, "start_day": 64, "end_day": 175, "weekdays": WEEKDAYS_IND,
 	},
