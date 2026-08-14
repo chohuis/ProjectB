@@ -43,7 +43,8 @@
     "#433371",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HALLA"
   },
   {
    "id": "TEAM_HS_BAEGYANG",
@@ -55,7 +56,8 @@
     "#9A5E1D",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_BAEKHO",
@@ -67,7 +69,8 @@
     "#2A6F56",
     "#7B1E2B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_BAEKSEOK",
@@ -79,7 +82,8 @@
     "#2A4A6F",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_BITGOEUL",
@@ -91,7 +95,8 @@
     "#841F3D",
     "#123A6B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_BONGUII",
@@ -103,7 +108,8 @@
     "#AA1E09",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_SEORAK_HS"
   },
   {
    "id": "TEAM_HS_BUGAK",
@@ -115,7 +121,8 @@
     "#A33376",
     "#1A3C1F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_BULMO",
@@ -127,7 +134,8 @@
     "#6A2F64",
     "#0E5A63"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_BUNDANG",
@@ -139,7 +147,8 @@
     "#CA7419",
     "#6E1F4D"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_BUNSEONG",
@@ -151,7 +160,8 @@
     "#EC800C",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_CHEONGNA",
@@ -163,7 +173,8 @@
     "#25AAB1",
     "#8A3B12"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_CHEONGRAM",
@@ -175,7 +186,8 @@
     "#D98A36",
     "#0F6B3C"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_CHEONGUN",
@@ -187,7 +199,8 @@
     "#D4260B",
     "#33296E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_CHIAK",
@@ -199,7 +212,8 @@
     "#960D36",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_SEORAK_HS"
   },
   {
    "id": "TEAM_HS_CHOKSEOK",
@@ -211,7 +225,8 @@
     "#CE3E27",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_DAEYANG",
@@ -223,7 +238,8 @@
     "#616F2A",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_DALSEONG",
@@ -235,7 +251,8 @@
     "#762B23",
     "#0E5A63"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_DONGNAE",
@@ -247,7 +264,8 @@
     "#226C91",
     "#C8102E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_DOSEONG",
@@ -259,7 +277,8 @@
     "#AB2850",
     "#0E5A63"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_EUNPYEONG",
@@ -271,7 +290,8 @@
     "#1F5A9E",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_GANGBYEON",
@@ -283,7 +303,8 @@
     "#1BC7D0",
     "#8A3B12"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_GANGJIN",
@@ -295,7 +316,8 @@
     "#873D80",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_GARAK",
@@ -307,7 +329,8 @@
     "#706629",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_GAYA",
@@ -319,7 +342,8 @@
     "#3B2183",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_GEOJE",
@@ -331,7 +355,8 @@
     "#7D951D",
     "#33296E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_GEUMGANG",
@@ -343,7 +368,8 @@
     "#9D2791",
     "#0F6B3C"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_GEUMJEONG",
@@ -355,7 +381,8 @@
     "#396496",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_GEUMO",
@@ -367,7 +394,8 @@
     "#DF6B59",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_GEUMSAN",
@@ -379,7 +407,8 @@
     "#5E818E",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_GIHEUNG",
@@ -391,7 +420,8 @@
     "#3A4F5F",
     "#8A6512"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_GIMPO",
@@ -403,7 +433,8 @@
     "#256BBB",
     "#C8102E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_GWANGAN",
@@ -415,7 +446,8 @@
     "#52379D",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_GWANGGYO",
@@ -427,7 +459,8 @@
     "#879195",
     "#C8102E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_GWANGUN",
@@ -439,7 +472,8 @@
     "#1B7FB1",
     "#C8102E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_GYEBAEK",
@@ -451,7 +485,8 @@
     "#857C42",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_GYEONGPO",
@@ -463,7 +498,8 @@
     "#E09F5A",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_SEORAK_HS"
   },
   {
    "id": "TEAM_HS_GYERIM",
@@ -475,7 +511,8 @@
     "#C31146",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_GYERYONG",
@@ -487,7 +524,8 @@
     "#69CED3",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_GYEYANG",
@@ -499,7 +537,8 @@
     "#3D96C2",
     "#8A3B12"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_HAEUN",
@@ -511,7 +550,8 @@
     "#6491C4",
     "#8A6512"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_HAHOE",
@@ -523,7 +563,8 @@
     "#20A272",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_HALLA",
@@ -535,7 +576,8 @@
     "#E26132",
     "#1A3C1F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HALLA"
   },
   {
    "id": "TEAM_HS_HANBIT",
@@ -547,7 +589,8 @@
     "#A54A9C",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_HANNAE",
@@ -559,7 +602,8 @@
     "#3B9B78",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HALLA"
   },
   {
    "id": "TEAM_HS_HANSEONG",
@@ -571,7 +615,8 @@
     "#1C478F",
     "#8A6512"
    ],
-   "power": 5
+   "power": 5,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_HONGJU",
@@ -583,7 +628,8 @@
     "#6C53B2",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_HWASUN",
@@ -595,7 +641,8 @@
     "#D9208F",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_HYEONGSAN",
@@ -607,7 +654,8 @@
     "#617E9E",
     "#0F6B3C"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_ILSAN",
@@ -619,7 +667,8 @@
     "#46B98F",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_JUNGNIM",
@@ -631,7 +680,8 @@
     "#6646BE",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_JUNGNYEONG",
@@ -643,7 +693,8 @@
     "#41CFE6",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_JUNGWON",
@@ -655,7 +706,8 @@
     "#238F1F",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_MANWOL",
@@ -667,7 +719,8 @@
     "#F55B43",
     "#0E5A63"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_MASANMAN",
@@ -679,7 +732,8 @@
     "#5C6D96",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_MISA",
@@ -691,7 +745,8 @@
     "#86A4AE",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_MONGNYEON",
@@ -703,7 +758,8 @@
     "#B3A442",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_MUDEUNG",
@@ -715,7 +771,8 @@
     "#EB1958",
     "#0E5A63"
    ],
-   "power": 5
+   "power": 5,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_MUJIN",
@@ -727,7 +784,8 @@
     "#E78C7E",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_MUNSU",
@@ -739,7 +797,8 @@
     "#D95C81",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_MUSIM",
@@ -751,7 +810,8 @@
     "#C030B1",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_MYEONGIL",
@@ -763,7 +823,8 @@
     "#3C8B39",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_NAKDONG",
@@ -775,7 +836,8 @@
     "#28A123",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_NAMAK",
@@ -787,7 +849,8 @@
     "#2256AC",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_NAMGANG",
@@ -799,7 +862,8 @@
     "#804842",
     "#0E5A63"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_NAMSAN",
@@ -811,7 +875,8 @@
     "#4CDCA7",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_ODONG",
@@ -823,7 +888,8 @@
     "#64ABCE",
     "#8A3B12"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_OREUM",
@@ -835,7 +901,8 @@
     "#2C7E96",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HALLA"
   },
   {
    "id": "TEAM_HS_OSAN",
@@ -847,7 +914,8 @@
     "#60626C",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_PALDAL",
@@ -859,7 +927,8 @@
     "#A39B69",
     "#6E1F4D"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_PALGONG",
@@ -871,7 +940,8 @@
     "#4EB2E4",
     "#8A3B12"
    ],
-   "power": 5
+   "power": 5,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_PANGYO",
@@ -883,7 +953,8 @@
     "#B3D52A",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_PUNGNAM",
@@ -895,7 +966,8 @@
     "#A36B14",
     "#6E1F4D"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_PYEONGCHON",
@@ -907,7 +979,8 @@
     "#E44BA7",
     "#1A3C1F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_PYEONGTAEK",
@@ -919,7 +992,8 @@
     "#8874C1",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_SAMJEON",
@@ -931,7 +1005,8 @@
     "#846ACB",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_SANGDANG",
@@ -943,7 +1018,8 @@
     "#8BC0DA",
     "#8A3B12"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_SANGNOK",
@@ -955,7 +1031,8 @@
     "#B54336",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_SEOGWI",
@@ -967,7 +1044,8 @@
     "#64A4E8",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HALLA"
   },
   {
    "id": "TEAM_HS_SEOLBONG",
@@ -979,7 +1057,8 @@
     "#ABC059",
     "#33296E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_SEORAK_HS"
   },
   {
    "id": "TEAM_HS_SEONGGEO",
@@ -991,7 +1070,8 @@
     "#D67DB2",
     "#0F6B3C"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_SEONGSAN",
@@ -1003,7 +1083,8 @@
     "#1F449E",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HALLA"
   },
   {
    "id": "TEAM_HS_SEORAK",
@@ -1015,7 +1096,8 @@
     "#2DACD2",
     "#8A3B12"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_SEORAK_HS"
   },
   {
    "id": "TEAM_HS_SEUNGJU",
@@ -1027,7 +1109,8 @@
     "#5FC0DD",
     "#8A3B12"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_SIHWA",
@@ -1039,7 +1122,8 @@
     "#BEB57B",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_SINCHEON",
@@ -1051,7 +1135,8 @@
     "#AEB5B7",
     "#C8102E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_SINJEONG",
@@ -1063,7 +1148,8 @@
     "#B5554A",
     "#0F6B3C"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_SONGRIM",
@@ -1075,7 +1161,8 @@
     "#70C36D",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_SUSEONG",
@@ -1087,7 +1174,8 @@
     "#D9133C",
     "#0E5A63"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_TAEBAEK",
@@ -1099,7 +1187,8 @@
     "#67CE63",
     "#33296E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_SEORAK_HS"
   },
   {
    "id": "TEAM_HS_TAEHWA",
@@ -1111,7 +1200,8 @@
     "#E96AB6",
     "#0F6B3C"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_TAEJONG",
@@ -1123,7 +1213,8 @@
     "#A3AFC2",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_TANGEUM",
@@ -1135,7 +1226,8 @@
     "#B67872",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_TONGYEONG",
@@ -1147,7 +1239,8 @@
     "#7DCA88",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAKDONG"
   },
   {
    "id": "TEAM_HS_WANSAN",
@@ -1159,7 +1252,8 @@
     "#B2CB4D",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_WOLMYEONG",
@@ -1171,7 +1265,8 @@
     "#72CAAA",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_YANGCHEON",
@@ -1183,7 +1278,8 @@
     "#EC8263",
     "#123A6B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_HANGANG"
   },
   {
    "id": "TEAM_HS_YEONGIL",
@@ -1195,7 +1291,8 @@
     "#BECE7E",
     "#33296E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_YEONGNAM",
@@ -1207,7 +1304,8 @@
     "#BF8224",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_PALGONG"
   },
   {
    "id": "TEAM_HS_YEONSU",
@@ -1219,7 +1317,8 @@
     "#CA67C0",
     "#0F6B3C"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MUJIGAE"
   },
   {
    "id": "TEAM_HS_YESAN",
@@ -1231,7 +1330,8 @@
     "#5C5E96",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_HS_YUDAL",
@@ -1243,7 +1343,8 @@
     "#398B4C",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_YEONGSAN"
   },
   {
    "id": "TEAM_HS_YUSEONG",
@@ -1255,7 +1356,8 @@
     "#5DDFBB",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GYERYONG"
   },
   {
    "id": "TEAM_IND_BUSAN_SEALIONS",
@@ -1267,7 +1369,8 @@
     "#255A74",
     "#8A3B12"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAMNYEOK"
   },
   {
    "id": "TEAM_IND_DAEGU_HAWKS",
@@ -1279,7 +1382,8 @@
     "#4B6670",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NAMNYEOK"
   },
   {
    "id": "TEAM_IND_DAEJEON_BLAZE",
@@ -1291,7 +1395,8 @@
     "#F33619",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GYEBAEK"
   },
   {
    "id": "TEAM_IND_GWANGJU_RHINOS",
@@ -1303,7 +1408,8 @@
     "#92A63F",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NAMNYEOK"
   },
   {
    "id": "TEAM_IND_INCHEON_GRIFFONS",
@@ -1315,7 +1421,8 @@
     "#1BB6D0",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GANGBYEON"
   },
   {
    "id": "TEAM_IND_PAJU_UNICORNS",
@@ -1327,7 +1434,8 @@
     "#5F37CD",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GANGBYEON"
   },
   {
    "id": "TEAM_IND_SANGMU_PHOENIX",
@@ -1339,7 +1447,8 @@
     "#AFA45D",
     "#123A6B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_CHANGGONG"
   },
   {
    "id": "TEAM_IND_SEOUL_COMETS",
@@ -1351,7 +1460,8 @@
     "#46C342",
     "#8A6512"
    ],
-   "power": 1
+   "power": 1,
+   "stadium": "STADIUM_GANGBYEON"
   },
   {
    "id": "TEAM_IND_SEOUL_RAVENS",
@@ -1363,7 +1473,8 @@
     "#2550BB",
     "#8A6512"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_GANGBYEON"
   },
   {
    "id": "TEAM_IND_WONJU_WINNERS",
@@ -1375,7 +1486,8 @@
     "#6B6C88",
     "#0F6B3C"
    ],
-   "power": 1
+   "power": 1,
+   "stadium": "STADIUM_GYEBAEK"
   },
   {
    "id": "TEAM_KBL_BUSAN_WAVES_1",
@@ -1387,7 +1499,8 @@
     "#194980",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_BUSAN_WAVES"
   },
   {
    "id": "TEAM_KBL_BUSAN_WAVES_2",
@@ -1399,7 +1512,8 @@
     "#223377",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_BUSAN_WAVES"
   },
   {
    "id": "TEAM_KBL_CHANGWON_STARS_1",
@@ -1411,7 +1525,8 @@
     "#2C9196",
     "#7B1E2B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_CHANGWON_STARS"
   },
   {
    "id": "TEAM_KBL_CHANGWON_STARS_2",
@@ -1423,7 +1538,8 @@
     "#88D1DD",
     "#7B1E2B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_CHANGWON_STARS"
   },
   {
    "id": "TEAM_KBL_DAEGU_SABERS_1",
@@ -1435,7 +1551,8 @@
     "#6F797D",
     "#C8102E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_DAEGU_SABERS"
   },
   {
    "id": "TEAM_KBL_DAEGU_SABERS_2",
@@ -1447,7 +1564,8 @@
     "#555D7F",
     "#C8102E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_DAEGU_SABERS"
   },
   {
    "id": "TEAM_KBL_DAEJEON_PHANTOMS_1",
@@ -1459,7 +1577,8 @@
     "#DC5A46",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_DAEJEON_PHANTOMS"
   },
   {
    "id": "TEAM_KBL_DAEJEON_PHANTOMS_2",
@@ -1471,7 +1590,8 @@
     "#F57B43",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_DAEJEON_PHANTOMS"
   },
   {
    "id": "TEAM_KBL_GWANGJU_PANTHERS_1",
@@ -1483,7 +1603,8 @@
     "#F49530",
     "#123A6B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_GWANGJU_PANTHERS"
   },
   {
    "id": "TEAM_KBL_GWANGJU_PANTHERS_2",
@@ -1495,7 +1616,8 @@
     "#D8870B",
     "#6E1F4D"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_GWANGJU_PANTHERS"
   },
   {
    "id": "TEAM_KBL_INCHEON_SHARKS_1",
@@ -1507,7 +1629,8 @@
     "#219FDE",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_INCHEON_SHARKS"
   },
   {
    "id": "TEAM_KBL_INCHEON_SHARKS_2",
@@ -1519,7 +1642,8 @@
     "#7794D4",
     "#C8102E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_INCHEON_SHARKS"
   },
   {
    "id": "TEAM_KBL_SEOUL_COBRAS_1",
@@ -1531,7 +1655,8 @@
     "#30C52B",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_SEOUL_COBRAS"
   },
   {
    "id": "TEAM_KBL_SEOUL_COBRAS_2",
@@ -1543,7 +1668,8 @@
     "#45D667",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_SEOUL_COBRAS"
   },
   {
    "id": "TEAM_KBL_SEOUL_GUARDIANS_1",
@@ -1555,7 +1681,8 @@
     "#AC0F30",
     "#123A6B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_SEOUL_GUARDIANS"
   },
   {
    "id": "TEAM_KBL_SEOUL_GUARDIANS_2",
@@ -1567,7 +1694,8 @@
     "#960D1E",
     "#0E5A63"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_SEOUL_GUARDIANS"
   },
   {
    "id": "TEAM_KBL_SEOUL_ROYALS_1",
@@ -1579,7 +1707,8 @@
     "#2A386F",
     "#8A6512"
    ],
-   "power": 5
+   "power": 5,
+   "stadium": "STADIUM_SEOUL_ROYALS"
   },
   {
    "id": "TEAM_KBL_SEOUL_ROYALS_2",
@@ -1591,7 +1720,8 @@
     "#192E80",
     "#C1500F"
    ],
-   "power": 5
+   "power": 5,
+   "stadium": "STADIUM_SEOUL_ROYALS"
   },
   {
    "id": "TEAM_KBL_SUWON_KNIGHTS_1",
@@ -1603,7 +1733,8 @@
     "#494E77",
     "#C8102E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_SUWON_KNIGHTS"
   },
   {
    "id": "TEAM_KBL_SUWON_KNIGHTS_2",
@@ -1615,7 +1746,8 @@
     "#54576B",
     "#8A6512"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_SUWON_KNIGHTS"
   },
   {
    "id": "TEAM_UNIV_ASAN",
@@ -1627,7 +1759,8 @@
     "#3F2A79",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_BAEKJE",
@@ -1639,7 +1772,8 @@
     "#2F6D2C",
     "#8A6512"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_BAEKSAN",
@@ -1651,7 +1785,8 @@
     "#962D1D",
     "#33296E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_BANWOL",
@@ -1663,7 +1798,8 @@
     "#AE5F09",
     "#6E1F4D"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_BISEUL",
@@ -1675,7 +1811,8 @@
     "#1F7D1C",
     "#33296E"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_BITGOEUL",
@@ -1687,7 +1824,8 @@
     "#5F5A3A",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_BUKHANSAN",
@@ -1699,7 +1837,8 @@
     "#19805A",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_BUNSEONG",
@@ -1711,7 +1850,8 @@
     "#653934",
     "#0F6B3C"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_BYEOLLAE",
@@ -1723,7 +1863,8 @@
     "#7A1F71",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_CHIAK",
@@ -1735,7 +1876,8 @@
     "#484D51",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_DALGUBEOL",
@@ -1747,7 +1889,8 @@
     "#6B8019",
     "#33296E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_GEOJE",
@@ -1759,7 +1902,8 @@
     "#7B754C",
     "#6E1F4D"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_GEUMJEONG",
@@ -1771,7 +1915,8 @@
     "#574292",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_GWANAK",
@@ -1783,7 +1928,8 @@
     "#8FAA22",
     "#7B1E2B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_GWANGGYO",
@@ -1795,7 +1941,8 @@
     "#4C2AA9",
     "#8A6512"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_GWANYANG",
@@ -1807,7 +1954,8 @@
     "#4E657E",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_GYEONGIN",
@@ -1819,7 +1967,8 @@
     "#4A7EBA",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_GYERYONG",
@@ -1831,7 +1980,8 @@
     "#53E1E9",
     "#8A3B12"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_HAEDONG",
@@ -1843,7 +1993,8 @@
     "#3D86D9",
     "#C1500F"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_HAHOE",
@@ -1855,7 +2006,8 @@
     "#1697AC",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_HALLYU",
@@ -1867,7 +2019,8 @@
     "#D03563",
     "#123A6B"
    ],
-   "power": 5
+   "power": 5,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_HANAM",
@@ -1879,7 +2032,8 @@
     "#BA1C7B",
     "#0F6B3C"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_HANGANG",
@@ -1891,7 +2045,8 @@
     "#F6AA59",
     "#6E1F4D"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_HWAHONG",
@@ -1903,7 +2058,8 @@
     "#918536",
     "#123A6B"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_HYEONGSAN",
@@ -1915,7 +2071,8 @@
     "#27C48A",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_JINWI",
@@ -1927,7 +2084,8 @@
     "#A1C026",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_NAMAK",
@@ -1939,7 +2097,8 @@
     "#E7B47E",
     "#0F6B3C"
    ],
-   "power": 1
+   "power": 1,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_NAMGANG",
@@ -1951,7 +2110,8 @@
     "#C54792",
     "#0F6B3C"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_NAMSAN",
@@ -1963,7 +2123,8 @@
     "#49AA46",
     "#7B1E2B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_ODONG",
@@ -1975,7 +2136,8 @@
     "#EF4678",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_OKCHEON",
@@ -1987,7 +2149,8 @@
     "#CD62A2",
     "#123A6B"
    ],
-   "power": 1
+   "power": 1,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_OSAN",
@@ -1999,7 +2162,8 @@
     "#98473E",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_SANGDANG",
@@ -2011,7 +2175,8 @@
     "#217DDE",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_SEOGWI",
@@ -2023,7 +2188,8 @@
     "#BB4624",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_SEONGHWAN",
@@ -2035,7 +2201,8 @@
     "#2865CA",
     "#C1500F"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_SEORAK",
@@ -2047,7 +2214,8 @@
     "#E283A0",
     "#123A6B"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_SEOSAN",
@@ -2059,7 +2227,8 @@
     "#BE47B2",
     "#8A6512"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_UNIV_SEOSEOK",
@@ -2071,7 +2240,8 @@
     "#A85F57",
     "#123A6B"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_SEUNGJU",
@@ -2083,7 +2253,8 @@
     "#DA461B",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_SIHWA",
@@ -2095,7 +2266,8 @@
     "#E9724F",
     "#33296E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_SONGDO",
@@ -2107,7 +2279,8 @@
     "#79A9D8",
     "#8A3B12"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_SOSA",
@@ -2119,7 +2292,8 @@
     "#8695AE",
     "#C8102E"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_SURI",
@@ -2131,7 +2305,8 @@
     "#215CDE",
     "#C8102E"
    ],
-   "power": 4
+   "power": 4,
+   "stadium": "STADIUM_MIREU"
   },
   {
    "id": "TEAM_UNIV_TAEHWA",
@@ -2143,7 +2318,8 @@
     "#BF71B8",
     "#0E5A63"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_TONGYEONG",
@@ -2155,7 +2331,8 @@
     "#414862",
     "#0F6B3C"
    ],
-   "power": 1
+   "power": 1,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_WANSAN",
@@ -2167,7 +2344,8 @@
     "#787C8C",
     "#0F6B3C"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_WOLMI",
@@ -2179,7 +2357,8 @@
     "#E35270",
     "#0E5A63"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_BYEOLBIT"
   },
   {
    "id": "TEAM_UNIV_YEONGCHEON",
@@ -2191,7 +2370,8 @@
     "#376CE1",
     "#C8102E"
    ],
-   "power": 1
+   "power": 1,
+   "stadium": "STADIUM_TAEJONG"
   },
   {
    "id": "TEAM_UNIV_YUDAL",
@@ -2203,7 +2383,8 @@
     "#3A3B5F",
     "#0F6B3C"
    ],
-   "power": 2
+   "power": 2,
+   "stadium": "STADIUM_NOEUL"
   },
   {
    "id": "TEAM_UNIV_YUSEONG",
@@ -2215,7 +2396,8 @@
     "#278674",
     "#C1500F"
    ],
-   "power": 3
+   "power": 3,
+   "stadium": "STADIUM_GEUMGANG_UNIV"
   },
   {
    "id": "TEAM_ABL_EMPIRE_1",
@@ -2226,7 +2408,8 @@
    "colors": [
     "#003087",
     "#e8312a"
-   ]
+   ],
+   "stadium": "엠파이어 스타디움"
   },
   {
    "id": "TEAM_ABL_EMPIRE_2",
@@ -2237,7 +2420,8 @@
    "colors": [
     "#003087",
     "#e8312a"
-   ]
+   ],
+   "stadium": "엠파이어 팜 파크"
   },
   {
    "id": "TEAM_ABL_HARBORHAWKS_1",
@@ -2248,7 +2432,8 @@
    "colors": [
     "#bd3039",
     "#0d2b56"
-   ]
+   ],
+   "stadium": "하버 볼파크"
   },
   {
    "id": "TEAM_ABL_HARBORHAWKS_2",
@@ -2259,7 +2444,8 @@
    "colors": [
     "#bd3039",
     "#0d2b56"
-   ]
+   ],
+   "stadium": "하버 팜 필드"
   },
   {
    "id": "TEAM_ABL_LAKESPIRITS_1",
@@ -2270,7 +2456,8 @@
    "colors": [
     "#003366",
     "#cc0000"
-   ]
+   ],
+   "stadium": "레이크 필드"
   },
   {
    "id": "TEAM_ABL_LAKESPIRITS_2",
@@ -2281,7 +2468,8 @@
    "colors": [
     "#003366",
     "#cc0000"
-   ]
+   ],
+   "stadium": "레이크 팜 구장"
   },
   {
    "id": "TEAM_ABL_LONESTARS_1",
@@ -2292,7 +2480,8 @@
    "colors": [
     "#003087",
     "#c0111f"
-   ]
+   ],
+   "stadium": "론스타 볼파크"
   },
   {
    "id": "TEAM_ABL_LONESTARS_2",
@@ -2303,7 +2492,8 @@
    "colors": [
     "#003087",
     "#c0111f"
-   ]
+   ],
+   "stadium": "론스타 팜 필드"
   },
   {
    "id": "TEAM_ABL_MOTORWOLVES_1",
@@ -2314,7 +2504,8 @@
    "colors": [
     "#0c2340",
     "#fa4616"
-   ]
+   ],
+   "stadium": "모터시티 파크"
   },
   {
    "id": "TEAM_ABL_MOTORWOLVES_2",
@@ -2325,7 +2516,8 @@
    "colors": [
     "#0c2340",
     "#fa4616"
-   ]
+   ],
+   "stadium": "모터울브즈 팜 구장"
   },
   {
    "id": "TEAM_ABL_WAVERIDERS_1",
@@ -2336,7 +2528,8 @@
    "colors": [
     "#00a3e0",
     "#ef3340"
-   ]
+   ],
+   "stadium": "오션뷰 파크"
   },
   {
    "id": "TEAM_ABL_WAVERIDERS_2",
@@ -2347,7 +2540,8 @@
    "colors": [
     "#00a3e0",
     "#ef3340"
-   ]
+   ],
+   "stadium": "웨이브라이더스 팜 필드"
   },
   {
    "id": "TEAM_ABL_RAINARROWS_1",
@@ -2358,7 +2552,8 @@
    "colors": [
     "#0c2c56",
     "#005c5c"
-   ]
+   ],
+   "stadium": "레인포레스트 파크"
   },
   {
    "id": "TEAM_ABL_RAINARROWS_2",
@@ -2369,7 +2564,8 @@
    "colors": [
     "#0c2c56",
     "#005c5c"
-   ]
+   ],
+   "stadium": "레인애로우스 팜 구장"
   },
   {
    "id": "TEAM_ABL_WINDBEARS_1",
@@ -2380,7 +2576,8 @@
    "colors": [
     "#002244",
     "#cc0000"
-   ]
+   ],
+   "stadium": "레이크사이드 필드"
   },
   {
    "id": "TEAM_ABL_WINDBEARS_2",
@@ -2391,7 +2588,8 @@
    "colors": [
     "#002244",
     "#cc0000"
-   ]
+   ],
+   "stadium": "윈드베어스 팜 파크"
   },
   {
    "id": "TEAM_ABL_MOUNTAINPEAKS_1",
@@ -2402,7 +2600,8 @@
    "colors": [
     "#33006f",
     "#c4ced4"
-   ]
+   ],
+   "stadium": "마운틴 에어 파크"
   },
   {
    "id": "TEAM_ABL_MOUNTAINPEAKS_2",
@@ -2413,7 +2612,8 @@
    "colors": [
     "#33006f",
     "#c4ced4"
-   ]
+   ],
+   "stadium": "마운틴픽스 팜 필드"
   },
   {
    "id": "TEAM_ABL_SPACECOMETS_1",
@@ -2424,7 +2624,8 @@
    "colors": [
     "#eb6e1f",
     "#002d62"
-   ]
+   ],
+   "stadium": "스페이스 스타디움"
   },
   {
    "id": "TEAM_ABL_SPACECOMETS_2",
@@ -2435,7 +2636,8 @@
    "colors": [
     "#eb6e1f",
     "#002d62"
-   ]
+   ],
+   "stadium": "스페이스코밋츠 팜 구장"
   },
   {
    "id": "TEAM_ABL_SUNDRAGONS_1",
@@ -2446,7 +2648,8 @@
    "colors": [
     "#003da5",
     "#ef3e42"
-   ]
+   ],
+   "stadium": "선라이즈 스타디움"
   },
   {
    "id": "TEAM_ABL_SUNDRAGONS_2",
@@ -2457,7 +2660,8 @@
    "colors": [
     "#003da5",
     "#ef3e42"
-   ]
+   ],
+   "stadium": "선드래곤스 팜 구장"
   },
   {
    "id": "TEAM_ABL_DESERTSERPENTS_1",
@@ -2468,7 +2672,8 @@
    "colors": [
     "#a71930",
     "#e3d4ad"
-   ]
+   ],
+   "stadium": "데저트 파크"
   },
   {
    "id": "TEAM_ABL_DESERTSERPENTS_2",
@@ -2479,7 +2684,8 @@
    "colors": [
     "#a71930",
     "#e3d4ad"
-   ]
+   ],
+   "stadium": "데저트서펀츠 팜 필드"
   },
   {
    "id": "TEAM_ABL_COASTALRAYS_1",
@@ -2490,7 +2696,8 @@
    "colors": [
     "#002d62",
     "#ffc425"
-   ]
+   ],
+   "stadium": "코스털 파크"
   },
   {
    "id": "TEAM_ABL_COASTALRAYS_2",
@@ -2501,7 +2708,8 @@
    "colors": [
     "#002d62",
     "#ffc425"
-   ]
+   ],
+   "stadium": "코스털레이스 팜 구장"
   },
   {
    "id": "TEAM_ABL_BAYSEALS_1",
@@ -2512,7 +2720,8 @@
    "colors": [
     "#fd5a1e",
     "#27251f"
-   ]
+   ],
+   "stadium": "베이뷰 파크"
   },
   {
    "id": "TEAM_ABL_BAYSEALS_2",
@@ -2523,7 +2732,8 @@
    "colors": [
     "#fd5a1e",
     "#27251f"
-   ]
+   ],
+   "stadium": "베이씰스 팜 필드"
   },
   {
    "id": "TEAM_ABL_RIVERCARDINALS_1",
@@ -2534,7 +2744,8 @@
    "colors": [
     "#c41e3a",
     "#0c2340"
-   ]
+   ],
+   "stadium": "리버프론트 파크"
   },
   {
    "id": "TEAM_ABL_RIVERCARDINALS_2",
@@ -2545,7 +2756,8 @@
    "colors": [
     "#c41e3a",
     "#0c2340"
-   ]
+   ],
+   "stadium": "리버카디널스 팜 구장"
   },
   {
    "id": "TEAM_ABL_PEACHTREEFALCONS_1",
@@ -2556,7 +2768,8 @@
    "colors": [
     "#ce1141",
     "#002d62"
-   ]
+   ],
+   "stadium": "피치트리 스타디움"
   },
   {
    "id": "TEAM_ABL_PEACHTREEFALCONS_2",
@@ -2567,7 +2780,8 @@
    "colors": [
     "#ce1141",
     "#002d62"
-   ]
+   ],
+   "stadium": "피치트리팰컨스 팜 필드"
   },
   {
    "id": "TEAM_JBL_CL_NEONCRANES_1",
@@ -2578,7 +2792,8 @@
    "colors": [
     "#003087",
     "#c8a822"
-   ]
+   ],
+   "stadium": "도쿄 네온 돔"
   },
   {
    "id": "TEAM_JBL_CL_NEONCRANES_2",
@@ -2589,7 +2804,8 @@
    "colors": [
     "#003087",
     "#c8a822"
-   ]
+   ],
+   "stadium": "크레인즈 팜 필드"
   },
   {
    "id": "TEAM_JBL_CL_TEMPOSTINGS_1",
@@ -2600,7 +2816,8 @@
    "colors": [
     "#002b5c",
     "#d00000"
-   ]
+   ],
+   "stadium": "오사카 템포 돔"
   },
   {
    "id": "TEAM_JBL_CL_TEMPOSTINGS_2",
@@ -2611,7 +2828,8 @@
    "colors": [
     "#002b5c",
     "#d00000"
-   ]
+   ],
+   "stadium": "스팅스 팜 구장"
   },
   {
    "id": "TEAM_JBL_CL_IRONDRAKES_1",
@@ -2622,7 +2840,8 @@
    "colors": [
     "#003da5",
     "#d40000"
-   ]
+   ],
+   "stadium": "나고야 아이언 돔"
   },
   {
    "id": "TEAM_JBL_CL_IRONDRAKES_2",
@@ -2633,7 +2852,8 @@
    "colors": [
     "#003da5",
     "#d40000"
-   ]
+   ],
+   "stadium": "드레이크스 팜 파크"
   },
   {
    "id": "TEAM_JBL_CL_TIDERAVES_1",
@@ -2644,7 +2864,8 @@
    "colors": [
     "#003087",
     "#d70000"
-   ]
+   ],
+   "stadium": "요코하마 마리나 스타디움"
   },
   {
    "id": "TEAM_JBL_CL_TIDERAVES_2",
@@ -2655,7 +2876,8 @@
    "colors": [
     "#003087",
     "#d70000"
-   ]
+   ],
+   "stadium": "레이브스 팜 구장"
   },
   {
    "id": "TEAM_JBL_CL_SILVERWOLVES_1",
@@ -2666,7 +2888,8 @@
    "colors": [
     "#005bac",
     "#c8a400"
-   ]
+   ],
+   "stadium": "고베 실버 볼파크"
   },
   {
    "id": "TEAM_JBL_CL_SILVERWOLVES_2",
@@ -2677,7 +2900,8 @@
    "colors": [
     "#005bac",
     "#c8a400"
-   ]
+   ],
+   "stadium": "울브스 팜 필드"
   },
   {
    "id": "TEAM_JBL_CL_IRONSTORMS_1",
@@ -2688,7 +2912,8 @@
    "colors": [
     "#bf0000",
     "#000000"
-   ]
+   ],
+   "stadium": "히로시마 마츠다 스타디움"
   },
   {
    "id": "TEAM_JBL_CL_IRONSTORMS_2",
@@ -2699,7 +2924,8 @@
    "colors": [
     "#bf0000",
     "#000000"
-   ]
+   ],
+   "stadium": "스톰즈 팜 구장"
   },
   {
    "id": "TEAM_JBL_PL_THUNDERFALCONS_1",
@@ -2710,7 +2936,8 @@
    "colors": [
     "#002d62",
     "#fdbb30"
-   ]
+   ],
+   "stadium": "후쿠오카 페이페이 돔"
   },
   {
    "id": "TEAM_JBL_PL_THUNDERFALCONS_2",
@@ -2721,7 +2948,8 @@
    "colors": [
     "#002d62",
     "#fdbb30"
-   ]
+   ],
+   "stadium": "팰컨즈 팜 파크"
   },
   {
    "id": "TEAM_JBL_PL_POLARBEARS_1",
@@ -2732,7 +2960,8 @@
    "colors": [
     "#002060",
     "#c8102e"
-   ]
+   ],
+   "stadium": "삿포로 돔"
   },
   {
    "id": "TEAM_JBL_PL_POLARBEARS_2",
@@ -2743,7 +2972,8 @@
    "colors": [
     "#002060",
     "#c8102e"
-   ]
+   ],
+   "stadium": "폴라베어스 팜 필드"
   },
   {
    "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
@@ -2754,7 +2984,8 @@
    "colors": [
     "#003da5",
     "#e8002d"
-   ]
+   ],
+   "stadium": "센다이 미야기 스타디움"
   },
   {
    "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
@@ -2765,7 +2996,8 @@
    "colors": [
     "#003da5",
     "#e8002d"
-   ]
+   ],
+   "stadium": "버팔로스 팜 구장"
   },
   {
    "id": "TEAM_JBL_PL_MARINESOLDIERS_1",
@@ -2776,7 +3008,8 @@
    "colors": [
     "#00205b",
     "#cf152d"
-   ]
+   ],
+   "stadium": "나가사키 마린 스타디움"
   },
   {
    "id": "TEAM_JBL_PL_MARINESOLDIERS_2",
@@ -2787,7 +3020,8 @@
    "colors": [
     "#00205b",
     "#cf152d"
-   ]
+   ],
+   "stadium": "솔저스 팜 필드"
   },
   {
    "id": "TEAM_JBL_PL_SEAGULLS_1",
@@ -2798,7 +3032,8 @@
    "colors": [
     "#005aab",
     "#ffffff"
-   ]
+   ],
+   "stadium": "니가타 씨걸 스타디움"
   },
   {
    "id": "TEAM_JBL_PL_SEAGULLS_2",
@@ -2809,7 +3044,8 @@
    "colors": [
     "#005aab",
     "#ffffff"
-   ]
+   ],
+   "stadium": "씨걸스 팜 파크"
   },
   {
    "id": "TEAM_JBL_PL_SUNS_1",
@@ -2820,7 +3056,8 @@
    "colors": [
     "#0077b6",
     "#f4a300"
-   ]
+   ],
+   "stadium": "오키나와 셀룰러 스타디움"
   },
   {
    "id": "TEAM_JBL_PL_SUNS_2",
@@ -2831,7 +3068,8 @@
    "colors": [
     "#0077b6",
     "#f4a300"
-   ]
+   ],
+   "stadium": "선즈 팜 구장"
   }
  ]
 }

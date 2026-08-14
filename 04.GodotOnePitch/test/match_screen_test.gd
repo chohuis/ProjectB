@@ -197,3 +197,127 @@ func test_the_screen_holds_no_logic() -> void:
 	# 목록도 화면이 갖지 않는다 — 사전이 준 걸 찍는다
 	assert_str(src).not_contains("fastball")
 	assert_str(src).not_contains("aggressive")
+
+
+# ── 구장 (M7-6e3) ─────────────────────────────────────────────
+
+## ⚠ **02는 프로 구장 하나가 하드코딩이었다.** 고교 경기도 대학 경기도
+## 전부 프로 구장에서 열렸다
+func test_the_park_image_follows_the_home_team() -> void:
+	var hs: MatchScreen = await _mount(_state(),
+		_ctx({"stadium_id": "STADIUM_HALLA"}))
+	assert_object(hs.get_node("Pad/Col/Field/Park").texture) \
+		.override_failure_message("구장 그림이 안 걸렸다").is_not_null()
+
+	var pro: MatchScreen = await _mount(_state(),
+		_ctx({"stadium_id": "STADIUM_SEOUL_ROYALS"}))
+	assert_object(pro.get_node("Pad/Col/Field/Park").texture) \
+		.is_not_equal(hs.get_node("Pad/Col/Field/Park").texture)
+
+
+func test_nine_defenders_are_drawn() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	assert_int(s.get_node("Pad/Col/Field/Layer").get_child_count()).is_equal(9)
+
+
+## ⚠ **좌표를 화면 크기로 옮긴다.** 그림만 늘이고 좌표를 안 늘이면
+## 수비수가 베이스에서 벗어난다
+func test_the_coordinates_scale_with_the_field() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	var f: BaseballField = s.get_node("Pad/Col/Field")
+	# 그림 비율과 같은 크기 — 여백이 없다
+	f.size = Vector2(500, 460)
+	assert_vector(f.to_screen(Vector2(1000, 920))).is_equal(Vector2(500, 460))
+	assert_vector(f.to_screen(Vector2(500, 460))).is_equal(Vector2(250, 230))
+
+
+## ⚠ **그림은 비율을 지켜 가운데 놓인다.** 남는 여백을 안 빼면 그림은
+## 가운데 좁게 있는데 수비수만 넓게 퍼져서 외야수가 관중석에 선다 —
+## 실제로 화면에서 그렇게 나왔다
+func test_the_letterbox_margin_is_taken_out() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	var f: BaseballField = s.get_node("Pad/Col/Field")
+
+	# 옆으로 넓은 자리 — 그림은 세로에 맞춰 283×260이 되고 좌우에 여백이 생긴다
+	# ⚠ 씬이 최소 높이를 갖는다 — 그보다 작게 주면 안 줄어들고 검사가 헛돈다
+	f.size = Vector2(1600, 400)
+	var r: Rect2 = f.image_rect()
+	assert_float(r.size.y).is_equal_approx(400.0, 0.5)
+	assert_float(r.size.x).is_equal_approx(400.0 * 1000.0 / 920.0, 0.5)
+	assert_float(r.position.x).override_failure_message(
+		"여백이 0이다 — 그림 폭을 Control 폭으로 잡고 있다").is_greater(1.0)
+
+	# 그림 한가운데는 그림 사각형의 한가운데다
+	assert_vector(f.to_screen(Vector2(500, 460))) \
+		.is_equal_approx(r.position + r.size * 0.5, Vector2(0.5, 0.5))
+	# 그림 왼쪽 끝은 여백 다음이다 — 0이 아니다
+	assert_float(f.to_screen(Vector2(0, 0)).x).is_equal_approx(r.position.x, 0.5)
+
+
+## 수비수가 **그림 안**에 있어야 한다. Control 안에 있어도 그림 밖이면
+## 잔디가 아니라 여백 위에 선다
+func test_the_defenders_stand_on_the_picture() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	var f: BaseballField = s.get_node("Pad/Col/Field")
+	f.size = Vector2(1600, 400)
+	f.set_view_model(f._vm)
+	await await_idle_frame()
+
+	var r: Rect2 = f.image_rect()
+	for c in f.get_node("Layer").get_children():
+		var p: Vector2 = (c as Control).position + (c as Control).size
+		assert_bool(r.has_point(p)).override_failure_message(
+			"수비수가 그림 밖에 있다: %s (그림 %s)" % [p, r]).is_true()
+
+
+## 수비수가 화면 안에 있어야 한다 — 밖으로 나가면 안 보인다
+func test_the_defenders_stay_on_screen() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	var f: Node = s.get_node("Pad/Col/Field")
+	for c in f.get_node("Layer").get_children():
+		var p: Vector2 = (c as Control).position
+		assert_float(p.x).is_between(-40.0, f.size.x)
+		assert_float(p.y).is_between(-60.0, f.size.y)
+
+
+## ⚠ **모르는 구장도 화면이 비면 안 된다.** 해외는 구장을 한글 이름으로
+## 참조하고 정의가 없다
+func test_an_unknown_stadium_still_draws() -> void:
+	var s: MatchScreen = await _mount(_state(),
+		_ctx({"stadium_id": "엠파이어 스타디움"}))
+	assert_object(s.get_node("Pad/Col/Field/Park").texture).is_not_null()
+	assert_int(s.get_node("Pad/Col/Field/Layer").get_child_count()).is_equal(9)
+
+
+## ⚠ **발밑이 좌표에 온다.** 가운데를 맞추면 선수가 베이스 위에 떠 있다
+func test_the_sprites_stand_on_their_spot() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	var f: BaseballField = s.get_node("Pad/Col/Field")
+	var by_pos: Dictionary = {}
+	for d in f._vm["defense"]:
+		by_pos[d["pos"]] = d["point"]
+
+	var kids: Array = f.get_node("Layer").get_children()
+	assert_int(kids.size()).is_equal(9)
+	for i in kids.size():
+		var c: Control = kids[i]
+		var want: Vector2 = f.to_screen(by_pos[f._vm["defense"][i]["pos"]])
+		# 아래 끝이 좌표, 가로는 가운데
+		assert_float(c.position.y + c.size.y).override_failure_message(
+			"발밑이 %.1f인데 좌표는 %.1f다" % [c.position.y + c.size.y, want.y]) \
+			.is_equal_approx(want.y, 0.6)
+		assert_float(c.position.x + c.size.x * 0.5).is_equal_approx(want.x, 0.6)
+
+
+## ⚠ **포지션마다 그림이 다르다.** 하나로 통일하면 아홉 명이 전부 투수로
+## 서 있는데, 어디가 어느 자리인지 화면에서 못 읽는다
+func test_each_position_has_its_own_sprite() -> void:
+	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
+	var seen: Array = []
+	for c in s.get_node("Pad/Col/Field/Layer").get_children():
+		var t: Texture2D = (c as TextureRect).texture
+		assert_object(t).is_not_null()
+		assert_bool(seen.has(t.resource_path)).override_failure_message(
+			"같은 그림이 두 번 쓰였다: %s" % t.resource_path).is_false()
+		seen.append(t.resource_path)
+	assert_int(seen.size()).is_equal(9)

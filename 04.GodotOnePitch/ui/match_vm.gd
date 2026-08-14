@@ -118,6 +118,10 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		"result_label": "" if not finished else "%s %d : %d %s" % [
 			home_name, home, away, away_name],
 
+		# ⚠ **구장은 홈 팀이 정한다.** 02는 프로 구장 하나가 하드코딩이라
+		# 고교 경기도 대학 경기도 전부 프로 구장에서 열렸다
+		"park": ParkVm.build(String(ctx.get("stadium_id", ""))),
+
 		"log": ctx.get("log", []),
 	}
 

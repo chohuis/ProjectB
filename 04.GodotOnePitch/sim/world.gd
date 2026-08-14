@@ -55,6 +55,17 @@ static func _load() -> Dictionary:
 	return _teams_cache
 
 
+## 팀 정의의 한 항목. **2군은 1군 것을 본다** — 같은 구단이라 구장이 같고,
+## 데이터엔 1군만 있어서 안 그러면 2군 경기가 통째로 기본값으로 떨어진다
+static func team_field(_world: Dictionary, team_id: String, key: String,
+		fallback = null):
+	var id: String = team_id.trim_suffix(FARM_SUFFIX)
+	for t in _load().get("teams", []):
+		if t.get("id", "") == id:
+			return t.get(key, fallback)
+	return fallback
+
+
 ## 그 리그의 팀들. **2군은 1군에서 파생한다** — 데이터엔 1군만 있다
 static func teams_of(league_id: String) -> Array:
 	if league_id.ends_with("_FARM"):

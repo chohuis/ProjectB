@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://ui/screens/match_screen.gd" id="1_match"]
+[ext_resource type="PackedScene" path="res://ui/parts/baseball_field.tscn" id="2_bfield"]
 
 [node name="MatchScreen" type="Control"]
 layout_mode = 3
@@ -74,6 +75,10 @@ layout_mode = 2
 
 [node name="PitcherLine" type="Label" parent="Pad/Col"]
 layout_mode = 2
+
+[node name="Field" parent="Pad/Col" instance=ExtResource("2_bfield")]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 400)
 
 [node name="Choose" type="HBoxContainer" parent="Pad/Col"]
 layout_mode = 2

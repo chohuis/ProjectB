@@ -30,6 +30,7 @@ const ZONE_CELL: Vector2 = Vector2(40, 40)
 @onready var _pitch: Button = $Pad/Col/Row/Pitch
 @onready var _auto: Button = $Pad/Col/Row/Auto
 @onready var _done: Button = $Pad/Col/Row/Done
+@onready var _field: BaseballField = $Pad/Col/Field
 @onready var _choose: HBoxContainer = $Pad/Col/Choose
 @onready var _zone_grid: GridContainer = $Pad/Col/Choose/Zone/Grid
 @onready var _ball: Button = $Pad/Col/Choose/Zone/Ball
@@ -104,6 +105,8 @@ func _rebuild() -> void:
 	_auto.text = "끝까지"
 	_auto.disabled = not can
 	_done.text = "닫기"
+
+	_field.set_view_model(_vm.get("park", {}))
 
 	_build_choice()
 	_build_log()

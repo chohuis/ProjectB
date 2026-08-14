@@ -53,6 +53,9 @@ static func open(game_state: Dictionary, game: Dictionary) -> Dictionary:
 				.get("team_id", "") else "away",
 			"home_name": team_names.get(home_id, home_id),
 			"away_name": team_names.get(away_id, away_id),
+			# ⚠ **홈 팀 구장에서 경기한다.** 02는 프로 구장 하나가 하드코딩이라
+			# 고교 경기도 대학 경기도 전부 프로 구장에서 열렸다
+			"stadium_id": String(World.team_field(world, home_id, "stadium", "")),
 			"log": [],
 		},
 		# ⚠ **경기 id로 씨앗을 만든다.** 자동 시뮬과 같은 규칙이라

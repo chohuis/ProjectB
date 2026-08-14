@@ -1,0 +1,52 @@
+[
+ [
+  "모든 구장을 프로로 본다 (고교 경기가 프로 구장에서 열린다 — 02가 그 상태였다)",
+  "\treturn String(data().get(\"tier_of\", {}).get(stadium_id, DEFAULT_TIER))",
+  "\treturn DEFAULT_TIER"
+ ],
+ [
+  "모르는 구장에 티어를 안 준다 (해외 경기 화면이 빈다)",
+  "\treturn String(data().get(\"tier_of\", {}).get(stadium_id, DEFAULT_TIER))",
+  "\treturn String(data().get(\"tier_of\", {}).get(stadium_id, \"\"))"
+ ],
+ [
+  "전용 그림이 있어도 티어 기본 그림을 쓴다 (구장 27장이 화면에 안 나온다)",
+  "\tif has_own_image(stadium_id):\n\t\treturn \"%s/%s.png\" % [IMAGE_DIR, stadium_id]",
+  ""
+ ],
+ [
+  "전용 그림이 없어도 그 이름으로 찾는다 (해외 구장에서 화면이 빈다)",
+  "\tif has_own_image(stadium_id):\n\t\treturn \"%s/%s.png\" % [IMAGE_DIR, stadium_id]\n\treturn \"%s/tier_%s.png\" % [IMAGE_DIR, tier_of(stadium_id)]",
+  "\treturn \"%s/%s.png\" % [IMAGE_DIR, stadium_id]"
+ ],
+ [
+  "그림 목록을 안 본다 (전부 있다고 친다)",
+  "\treturn data().get(\"images\", []).has(stadium_id)",
+  "\treturn true"
+ ],
+ [
+  "좌표를 티어와 무관하게 한 벌로 쓴다 (수비수가 베이스에서 벗어난다)",
+  "\treturn all.get(tier, all.get(DEFAULT_TIER, {}))",
+  "\treturn all.get(DEFAULT_TIER, {})"
+ ],
+ [
+  "x와 y를 뒤집는다",
+  "\treturn Vector2(float(d.get(\"x\", 0.0)), float(d.get(\"y\", 0.0)))",
+  "\treturn Vector2(float(d.get(\"y\", 0.0)), float(d.get(\"x\", 0.0)))"
+ ],
+ [
+  "수비 자리를 안 싣는다 (그라운드가 빈다)",
+  "\tfor d in c.get(\"defense\", []):\n\t\tdefense.append({\"pos\": String(d.get(\"pos\", \"\")), \"point\": _pt(d)})",
+  ""
+ ],
+ [
+  "수비 포지션 이름을 안 싣는다 (스프라이트를 못 고른다)",
+  "\t\tdefense.append({\"pos\": String(d.get(\"pos\", \"\")), \"point\": _pt(d)})",
+  "\t\tdefense.append({\"pos\": \"\", \"point\": _pt(d)})"
+ ],
+ [
+  "좌표계 크기를 정사각으로 본다 (세로가 눌린다)",
+  "\treturn Vector2(float(v.get(\"width\", 1000)), float(v.get(\"height\", 920)))",
+  "\treturn Vector2(float(v.get(\"width\", 1000)), float(v.get(\"width\", 1000)))"
+ ]
+]

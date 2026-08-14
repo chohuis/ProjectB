@@ -1,0 +1,47 @@
+[
+ [
+  "여백을 안 뺀다 (그림은 가운데 좁은데 수비수만 넓게 퍼진다 — 실제로 그렇게 나왔다)",
+  "\tvar drawn: Vector2 = box * minf(size.x / box.x, size.y / box.y)\n\treturn Rect2((size - drawn) * 0.5, drawn)",
+  "\treturn Rect2(Vector2.ZERO, size)"
+ ],
+ [
+  "여백을 한쪽에 몰아준다 (그림과 좌표가 어긋난다)",
+  "\treturn Rect2((size - drawn) * 0.5, drawn)",
+  "\treturn Rect2(Vector2.ZERO, drawn)"
+ ],
+ [
+  "긴 쪽에 맞춘다 (그림이 잘려 나간다)",
+  "\tvar drawn: Vector2 = box * minf(size.x / box.x, size.y / box.y)",
+  "\tvar drawn: Vector2 = box * maxf(size.x / box.x, size.y / box.y)"
+ ],
+ [
+  "좌표를 옮기지 않는다 (수비수가 왼쪽 위에 뭉친다)",
+  "\treturn r.position + Vector2(p.x / box.x * r.size.x, p.y / box.y * r.size.y)",
+  "\treturn p"
+ ],
+ [
+  "여백만큼 밀지 않는다",
+  "\treturn r.position + Vector2(p.x / box.x * r.size.x, p.y / box.y * r.size.y)",
+  "\treturn Vector2(p.x / box.x * r.size.x, p.y / box.y * r.size.y)"
+ ],
+ [
+  "스프라이트를 가운데에 맞춘다 (선수가 베이스 위에 뜬다)",
+  "\t\ts.position = to_screen(d[\"point\"]) - Vector2(sz.x * 0.5, sz.y)",
+  "\t\ts.position = to_screen(d[\"point\"]) - sz * 0.5"
+ ],
+ [
+  "수비수를 안 그린다 (그라운드가 빈다)",
+  "\tfor d in _vm.get(\"defense\", []):",
+  "\tfor d in []:"
+ ],
+ [
+  "모든 포지션에 투수 그림을 쓴다",
+  "\t\"P\": \"field_pitcher\", \"C\": \"field_catcher\",",
+  "\t\"P\": \"field_pitcher\", \"C\": \"field_pitcher\","
+ ],
+ [
+  "구장 그림을 안 건다 (회색 판이 뜬다)",
+  "\tif ResourceLoader.exists(path):\n\t\t_bg.texture = load(path)",
+  ""
+ ]
+]
