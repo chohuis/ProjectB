@@ -11,6 +11,19 @@ config/name="OnePitch"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 run/main_scene="res://ui/app.tscn"
 
+[display]
+
+; ⚠ **02와 같은 크기다.** `apps/desktop/main.cjs:87`이 1440×900 · 최소
+; 1200×720이었다. 여기 설정이 없어서 Godot 기본값(1152×648)으로 떴고,
+; 스크린샷 도구가 480×900(모바일 세로)을 강제하고 있어서 **화면을 세로
+; 기준으로 짜 왔다.** PC(Steam)가 1차 목표다.
+window/size/viewport_width=1440
+window/size/viewport_height=900
+window/size/window_width_override=1440
+window/size/window_height_override=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

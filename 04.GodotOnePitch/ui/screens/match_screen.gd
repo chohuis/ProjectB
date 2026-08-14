@@ -1,15 +1,16 @@
 extends Control
 class_name MatchScreen
 
-## 경기 화면 — M7-6e1. **뼈대만.**
+## 경기 화면 — M7-6e1~e3 · M7-8b.
 ##
 ## 원본: `pages/match/MatchPage.svelte` (3,220줄)
 ##
 ## ⚠ **여기는 계산을 안 한다.** 이닝·카운트·주자·이름표를 전부 `MatchVm`이
 ## 만든다 — 02가 3,220줄이 된 이유가 화면이 그걸 직접 읽고 만들어서다.
 ##
-## ⚠ **아직 구장 그림이 없다**(M7-6e3). 지금은 존·구종·전략까지다 —
-## **소비자 없는 자리를 미리 만들지 않는다.**
+## ⚠ **02와 같은 좌7/우5다.** `MatchPage.svelte`의 `.engine-grid`가 12칸을
+## `1/8`(구장·중계)과 나머지로 갈랐다. 04는 한동안 세로 한 줄이었는데,
+## 그건 스크린샷 도구가 480×900(모바일)을 강제한 걸 기준으로 삼았기 때문이다
 
 const LOG_LINES: int = 8
 ## 존 칸 크기. 손가락으로 누를 만해야 한다
@@ -23,20 +24,20 @@ const ZONE_CELL: Vector2 = Vector2(40, 40)
 @onready var _count: Label = $Pad/Col/SituationRow/Count
 @onready var _outs: Label = $Pad/Col/SituationRow/Outs
 @onready var _bases: Label = $Pad/Col/SituationRow/Bases
-@onready var _matchup: Label = $Pad/Col/Matchup
-@onready var _pitcher_line: Label = $Pad/Col/PitcherLine
-@onready var _log: VBoxContainer = $Pad/Col/Log
-@onready var _result: Label = $Pad/Col/Result
+@onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
+@onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
+@onready var _log: VBoxContainer = $Pad/Col/Body/Right/LogScroll/Log
+@onready var _result: Label = $Pad/Col/Body/Right/Result
 @onready var _pitch: Button = $Pad/Col/Row/Pitch
 @onready var _auto: Button = $Pad/Col/Row/Auto
 @onready var _done: Button = $Pad/Col/Row/Done
-@onready var _field: BaseballField = $Pad/Col/Field
-@onready var _choose: HBoxContainer = $Pad/Col/Choose
-@onready var _zone_grid: GridContainer = $Pad/Col/Choose/Zone/Grid
-@onready var _ball: Button = $Pad/Col/Choose/Zone/Ball
-@onready var _pitches: GridContainer = $Pad/Col/Choose/Opts/Pitches
-@onready var _strategy: HBoxContainer = $Pad/Col/Choose/Opts/Strategy
-@onready var _power: HBoxContainer = $Pad/Col/Choose/Opts/Power
+@onready var _field: BaseballField = $Pad/Col/Body/Left/Field
+@onready var _choose: HBoxContainer = $Pad/Col/Body/Left/Choose
+@onready var _zone_grid: GridContainer = $Pad/Col/Body/Left/Choose/Zone/Grid
+@onready var _ball: Button = $Pad/Col/Body/Left/Choose/Zone/Ball
+@onready var _pitches: GridContainer = $Pad/Col/Body/Left/Choose/Opts/Pitches
+@onready var _strategy: HBoxContainer = $Pad/Col/Body/Left/Choose/Opts/Strategy
+@onready var _power: HBoxContainer = $Pad/Col/Body/Left/Choose/Opts/Power
 
 ## 한 구 던진다
 signal pitch_requested

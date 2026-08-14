@@ -33,36 +33,40 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="Col" type="VBoxContainer" parent="Pad"]
+[node name="Center" type="CenterContainer" parent="Pad"]
+layout_mode = 2
+
+[node name="Col" type="VBoxContainer" parent="Pad/Center"]
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Pad/Col"]
+[node name="Title" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="Pad/Col"]
+[node name="NameLabel" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="Name" type="LineEdit" parent="Pad/Col"]
+[node name="Name" type="LineEdit" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="TeamLabel" type="Label" parent="Pad/Col"]
+[node name="TeamLabel" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="Team" type="OptionButton" parent="Pad/Col"]
+[node name="Team" type="OptionButton" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="Spacer" type="Control" parent="Pad/Col"]
+[node name="Spacer" type="Control" parent="Pad/Center/Col"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Row" type="HBoxContainer" parent="Pad/Col"]
+[node name="Row" type="HBoxContainer" parent="Pad/Center/Col"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Back" type="Button" parent="Pad/Col/Row"]
+[node name="Back" type="Button" parent="Pad/Center/Col/Row"]
 layout_mode = 2
 
-[node name="Start" type="Button" parent="Pad/Col/Row"]
+[node name="Start" type="Button" parent="Pad/Center/Col/Row"]
 layout_mode = 2
 size_flags_horizontal = 3

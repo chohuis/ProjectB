@@ -84,22 +84,22 @@ func test_a_finished_game_disables_pitching() -> void:
 ## 선택 화면이 뜨면 내가 던지는 줄 안다
 func test_the_choices_only_show_on_my_turn() -> void:
 	var mine: MatchScreen = await _mount(_state(), _ctx())
-	assert_bool(mine.get_node("Pad/Col/Choose").visible).is_true()
+	assert_bool(mine.get_node("Pad/Col/Body/Left/Choose").visible).is_true()
 
 	var theirs: MatchScreen = await _mount(_state({"pitcher": {"id": "NOT_ME"}}), _ctx())
-	assert_bool(theirs.get_node("Pad/Col/Choose").visible).is_false()
+	assert_bool(theirs.get_node("Pad/Col/Body/Left/Choose").visible).is_false()
 
 
 func test_the_strike_zone_has_nine_cells() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	assert_int(s.get_node("Pad/Col/Choose/Zone/Grid").get_child_count()).is_equal(9)
+	assert_int(s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid").get_child_count()).is_equal(9)
 
 
 ## ⚠ **내가 던질 수 있는 공만 뜬다.** 전부 뜨면 배우지 않은 공을 던지게 되고,
 ## 숙련도를 올릴 이유가 사라진다
 func test_only_my_pitches_are_offered() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	var t: PackedStringArray = _texts(s.get_node("Pad/Col/Choose/Opts/Pitches"))
+	var t: PackedStringArray = _texts(s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches"))
 	assert_int(t.size()).is_equal(2)
 	assert_str(t[0]).contains("포심")
 	assert_str(t[1]).contains("슬라이더")
@@ -110,13 +110,13 @@ func test_only_my_pitches_are_offered() -> void:
 ## 숙련도가 버튼에 뜬다 — 어느 공이 좋은지 보여야 고를 수 있다
 func test_the_grade_is_on_the_button() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	assert_str(_texts(s.get_node("Pad/Col/Choose/Opts/Pitches"))[0]).contains("4")
+	assert_str(_texts(s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches"))[0]).contains("4")
 
 
 func test_strategy_and_power_are_offered() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	assert_int(s.get_node("Pad/Col/Choose/Opts/Strategy").get_child_count()).is_equal(3)
-	assert_int(s.get_node("Pad/Col/Choose/Opts/Power").get_child_count()).is_equal(3)
+	assert_int(s.get_node("Pad/Col/Body/Left/Choose/Opts/Strategy").get_child_count()).is_equal(3)
+	assert_int(s.get_node("Pad/Col/Body/Left/Choose/Opts/Power").get_child_count()).is_equal(3)
 
 
 ## ⚠ **고른 게 눌린 채로 보여야 한다.** 안 보이면 뭘 골랐는지 모르고
@@ -124,19 +124,19 @@ func test_strategy_and_power_are_offered() -> void:
 func test_the_chosen_one_is_pressed() -> void:
 	var s: MatchScreen = await _mount(_state(),
 		_ctx({"selection": {"pitch_type": "slider", "zone": 7, "strategy": "safe"}}))
-	var pitches: Node = s.get_node("Pad/Col/Choose/Opts/Pitches")
+	var pitches: Node = s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches")
 	assert_bool((pitches.get_child(0) as Button).button_pressed).is_false()
 	assert_bool((pitches.get_child(1) as Button).button_pressed).is_true()
 
-	var grid: Node = s.get_node("Pad/Col/Choose/Zone/Grid")
+	var grid: Node = s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid")
 	assert_bool((grid.get_child(6) as Button).button_pressed).override_failure_message(
 		"7번 존을 골랐는데 안 눌려 있다").is_true()
 
 
 func test_the_intentional_ball_button_can_be_chosen() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"selection": {"zone": 0}}))
-	assert_bool((s.get_node("Pad/Col/Choose/Zone/Ball") as Button).button_pressed).is_true()
-	for c in s.get_node("Pad/Col/Choose/Zone/Grid").get_children():
+	assert_bool((s.get_node("Pad/Col/Body/Left/Choose/Zone/Ball") as Button).button_pressed).is_true()
+	for c in s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid").get_children():
 		assert_bool((c as Button).button_pressed).is_false()
 
 
@@ -149,7 +149,7 @@ func test_picking_a_pitch_emits_a_signal() -> void:
 	var got: Array = []
 	s.selection_changed.connect(func(p: Dictionary) -> void: got.append(p))
 
-	(s.get_node("Pad/Col/Choose/Opts/Pitches").get_child(1) as Button).pressed.emit()
+	(s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches").get_child(1) as Button).pressed.emit()
 	await await_idle_frame()
 	assert_array(got).is_equal([{"pitch_type": "slider"}])
 
@@ -159,7 +159,7 @@ func test_picking_a_zone_emits_a_signal() -> void:
 	var got: Array = []
 	s.selection_changed.connect(func(p: Dictionary) -> void: got.append(p))
 
-	(s.get_node("Pad/Col/Choose/Zone/Grid").get_child(2) as Button).pressed.emit()
+	(s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid").get_child(2) as Button).pressed.emit()
 	await await_idle_frame()
 	assert_array(got).is_equal([{"zone": 3}])
 
@@ -169,7 +169,7 @@ func test_picking_the_ball_zone_emits_zero() -> void:
 	var got: Array = []
 	s.selection_changed.connect(func(p: Dictionary) -> void: got.append(p))
 
-	(s.get_node("Pad/Col/Choose/Zone/Ball") as Button).pressed.emit()
+	(s.get_node("Pad/Col/Body/Left/Choose/Zone/Ball") as Button).pressed.emit()
 	await await_idle_frame()
 	assert_array(got).is_equal([{"zone": 0}])
 
@@ -206,25 +206,25 @@ func test_the_screen_holds_no_logic() -> void:
 func test_the_park_image_follows_the_home_team() -> void:
 	var hs: MatchScreen = await _mount(_state(),
 		_ctx({"stadium_id": "STADIUM_HALLA"}))
-	assert_object(hs.get_node("Pad/Col/Field/Park").texture) \
+	assert_object(hs.get_node("Pad/Col/Body/Left/Field/Park").texture) \
 		.override_failure_message("구장 그림이 안 걸렸다").is_not_null()
 
 	var pro: MatchScreen = await _mount(_state(),
 		_ctx({"stadium_id": "STADIUM_SEOUL_ROYALS"}))
-	assert_object(pro.get_node("Pad/Col/Field/Park").texture) \
-		.is_not_equal(hs.get_node("Pad/Col/Field/Park").texture)
+	assert_object(pro.get_node("Pad/Col/Body/Left/Field/Park").texture) \
+		.is_not_equal(hs.get_node("Pad/Col/Body/Left/Field/Park").texture)
 
 
 func test_nine_defenders_are_drawn() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
-	assert_int(s.get_node("Pad/Col/Field/Layer").get_child_count()).is_equal(9)
+	assert_int(s.get_node("Pad/Col/Body/Left/Field/Layer").get_child_count()).is_equal(9)
 
 
 ## ⚠ **좌표를 화면 크기로 옮긴다.** 그림만 늘이고 좌표를 안 늘이면
 ## 수비수가 베이스에서 벗어난다
 func test_the_coordinates_scale_with_the_field() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
-	var f: BaseballField = s.get_node("Pad/Col/Field")
+	var f: BaseballField = s.get_node("Pad/Col/Body/Left/Field")
 	# 그림 비율과 같은 크기 — 여백이 없다
 	f.size = Vector2(500, 460)
 	assert_vector(f.to_screen(Vector2(1000, 920))).is_equal(Vector2(500, 460))
@@ -236,7 +236,7 @@ func test_the_coordinates_scale_with_the_field() -> void:
 ## 실제로 화면에서 그렇게 나왔다
 func test_the_letterbox_margin_is_taken_out() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
-	var f: BaseballField = s.get_node("Pad/Col/Field")
+	var f: BaseballField = s.get_node("Pad/Col/Body/Left/Field")
 
 	# 옆으로 넓은 자리 — 그림은 세로에 맞춰 283×260이 되고 좌우에 여백이 생긴다
 	# ⚠ 씬이 최소 높이를 갖는다 — 그보다 작게 주면 안 줄어들고 검사가 헛돈다
@@ -258,7 +258,7 @@ func test_the_letterbox_margin_is_taken_out() -> void:
 ## 잔디가 아니라 여백 위에 선다
 func test_the_defenders_stand_on_the_picture() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
-	var f: BaseballField = s.get_node("Pad/Col/Field")
+	var f: BaseballField = s.get_node("Pad/Col/Body/Left/Field")
 	f.size = Vector2(1600, 400)
 	f.set_view_model(f._vm)
 	await await_idle_frame()
@@ -273,7 +273,7 @@ func test_the_defenders_stand_on_the_picture() -> void:
 ## 수비수가 화면 안에 있어야 한다 — 밖으로 나가면 안 보인다
 func test_the_defenders_stay_on_screen() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
-	var f: Node = s.get_node("Pad/Col/Field")
+	var f: Node = s.get_node("Pad/Col/Body/Left/Field")
 	for c in f.get_node("Layer").get_children():
 		var p: Vector2 = (c as Control).position
 		assert_float(p.x).is_between(-40.0, f.size.x)
@@ -285,14 +285,14 @@ func test_the_defenders_stay_on_screen() -> void:
 func test_an_unknown_stadium_still_draws() -> void:
 	var s: MatchScreen = await _mount(_state(),
 		_ctx({"stadium_id": "엠파이어 스타디움"}))
-	assert_object(s.get_node("Pad/Col/Field/Park").texture).is_not_null()
-	assert_int(s.get_node("Pad/Col/Field/Layer").get_child_count()).is_equal(9)
+	assert_object(s.get_node("Pad/Col/Body/Left/Field/Park").texture).is_not_null()
+	assert_int(s.get_node("Pad/Col/Body/Left/Field/Layer").get_child_count()).is_equal(9)
 
 
 ## ⚠ **발밑이 좌표에 온다.** 가운데를 맞추면 선수가 베이스 위에 떠 있다
 func test_the_sprites_stand_on_their_spot() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
-	var f: BaseballField = s.get_node("Pad/Col/Field")
+	var f: BaseballField = s.get_node("Pad/Col/Body/Left/Field")
 	var by_pos: Dictionary = {}
 	for d in f._vm["defense"]:
 		by_pos[d["pos"]] = d["point"]
@@ -314,7 +314,7 @@ func test_the_sprites_stand_on_their_spot() -> void:
 func test_each_position_has_its_own_sprite() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"stadium_id": "STADIUM_HALLA"}))
 	var seen: Array = []
-	for c in s.get_node("Pad/Col/Field/Layer").get_children():
+	for c in s.get_node("Pad/Col/Body/Left/Field/Layer").get_children():
 		var t: Texture2D = (c as TextureRect).texture
 		assert_object(t).is_not_null()
 		assert_bool(seen.has(t.resource_path)).override_failure_message(

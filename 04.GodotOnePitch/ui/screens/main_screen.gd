@@ -24,10 +24,14 @@ const STATUS_SCREEN := preload("res://ui/screens/status_screen.tscn")
 @onready var _week: Label = $Pad/Col/Header/DateRow/Week
 @onready var _player: Label = $Pad/Col/Header/WhoRow/Player
 @onready var _team: Label = $Pad/Col/Header/WhoRow/Team
-@onready var _tabs: HBoxContainer = $Pad/Col/Tabs
-@onready var _tab_host: VBoxContainer = $Pad/Col/TabHost
-@onready var _next_game: Label = $Pad/Col/Footer/NextGame
-@onready var _advance: Button = $Pad/Col/Footer/Advance
+# ⚠ **02와 같은 3단이다.** `MainPage.svelte`의 `.body`가
+# `170px | minmax(0,1fr) | 220px` — 왼쪽 세로 탭, 가운데 내용, 오른쪽 패널.
+# 04는 한동안 세로 한 줄이었는데, 그건 스크린샷 도구가 480×900(모바일)을
+# 강제한 걸 기준으로 삼았기 때문이다. PC(Steam)가 1차 목표다
+@onready var _tabs: VBoxContainer = $Pad/Col/Body/Nav/Tabs
+@onready var _tab_host: VBoxContainer = $Pad/Col/Body/Main/TabHost
+@onready var _next_game: Label = $Pad/Col/Body/Right/Footer/NextGame
+@onready var _advance: Button = $Pad/Col/Body/Right/Footer/Advance
 
 ## 진행 버튼을 눌렀다. 며칠을 갈지는 사전에 있다
 signal advance_requested(days: int)
@@ -131,6 +135,25 @@ func _free_child(parent: Node, child: Node) -> void:
 	child.free()
 
 
+## 목록을 담을 스크롤 상자.
+##
+## ⚠ **탭 호스트 자체는 스크롤하지 않는다.** 02도 `.tab-content`가
+## `overflow: hidden`이고 각 페이지가 자기 안에서 스크롤한다. 호스트를
+## 스크롤로 두면 "나" 탭처럼 **앵커로 크기를 잡는 화면이 높이 0으로 남아
+## 통째로 빈다** — 실제로 그렇게 나왔다
+func _list_box() -> VBoxContainer:
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_tab_host.add_child(scroll)
+
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 2)
+	scroll.add_child(box)
+	return box
+
+
 func _build_tabs() -> void:
 	for c in _tabs.get_children():
 		_free_child(_tabs, c)
@@ -147,6 +170,8 @@ func _build_tabs() -> void:
 		b.toggle_mode = true
 		b.button_group = group
 		b.button_pressed = (i == _tab)
+		# 세로 탭이라 글자를 왼쪽에 붙인다 — 가운데 정렬이면 줄마다 들쭉날쭉하다
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.pressed.connect(func() -> void: _on_tab.call_deferred(i))
 		_tabs.add_child(b)
 
@@ -199,9 +224,10 @@ func _build_schedule() -> void:
 		_tab_host.add_child(empty)
 		return
 
+	var box: VBoxContainer = _list_box()
 	for r in rows:
 		var row: ScheduleRow = SCHEDULE_ROW.instantiate()
-		_tab_host.add_child(row)
+		box.add_child(row)
 		row.setup(r)
 
 
@@ -231,9 +257,10 @@ func _build_team() -> void:
 		_tab_host.add_child(empty)
 		return
 
+	var box: VBoxContainer = _list_box()
 	for r in rows:
 		var row: PlayerRow = PLAYER_ROW.instantiate()
-		_tab_host.add_child(row)
+		box.add_child(row)
 		row.setup(r)
 
 
@@ -264,9 +291,10 @@ func _build_league() -> void:
 		_tab_host.add_child(empty)
 		return
 
+	var box: VBoxContainer = _list_box()
 	for r in rows:
 		var row: StandingRow = STANDING_ROW.instantiate()
-		_tab_host.add_child(row)
+		box.add_child(row)
 		row.setup(r)
 
 
@@ -298,9 +326,10 @@ func _build_news() -> void:
 		_tab_host.add_child(empty)
 		return
 
+	var box: VBoxContainer = _list_box()
 	for r in rows:
 		var row: NewsRow = NEWS_ROW.instantiate()
-		_tab_host.add_child(row)
+		box.add_child(row)
 		row.setup(r)
 
 

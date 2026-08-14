@@ -70,58 +70,80 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="Matchup" type="Label" parent="Pad/Col"]
+[node name="Body" type="HBoxContainer" parent="Pad/Col"]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
 
-[node name="PitcherLine" type="Label" parent="Pad/Col"]
+[node name="Left" type="VBoxContainer" parent="Pad/Col/Body"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 7.0
+theme_override_constants/separation = 8
 
-[node name="Field" parent="Pad/Col" instance=ExtResource("2_bfield")]
+[node name="Field" parent="Pad/Col/Body/Left" instance=ExtResource("2_bfield")]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 400)
+size_flags_vertical = 3
 
-[node name="Choose" type="HBoxContainer" parent="Pad/Col"]
+[node name="Choose" type="HBoxContainer" parent="Pad/Col/Body/Left"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Zone" type="VBoxContainer" parent="Pad/Col/Choose"]
+[node name="Zone" type="VBoxContainer" parent="Pad/Col/Body/Left/Choose"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Grid" type="GridContainer" parent="Pad/Col/Choose/Zone"]
+[node name="Grid" type="GridContainer" parent="Pad/Col/Body/Left/Choose/Zone"]
 layout_mode = 2
 theme_override_constants/h_separation = 3
 theme_override_constants/v_separation = 3
 columns = 3
 
-[node name="Ball" type="Button" parent="Pad/Col/Choose/Zone"]
+[node name="Ball" type="Button" parent="Pad/Col/Body/Left/Choose/Zone"]
 layout_mode = 2
 
-[node name="Opts" type="VBoxContainer" parent="Pad/Col/Choose"]
+[node name="Opts" type="VBoxContainer" parent="Pad/Col/Body/Left/Choose"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="Pitches" type="GridContainer" parent="Pad/Col/Choose/Opts"]
+[node name="Pitches" type="GridContainer" parent="Pad/Col/Body/Left/Choose/Opts"]
 layout_mode = 2
 theme_override_constants/h_separation = 3
 theme_override_constants/v_separation = 3
-columns = 3
+columns = 4
 
-[node name="Strategy" type="HBoxContainer" parent="Pad/Col/Choose/Opts"]
+[node name="Strategy" type="HBoxContainer" parent="Pad/Col/Body/Left/Choose/Opts"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Power" type="HBoxContainer" parent="Pad/Col/Choose/Opts"]
+[node name="Power" type="HBoxContainer" parent="Pad/Col/Body/Left/Choose/Opts"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="Log" type="VBoxContainer" parent="Pad/Col"]
+[node name="Right" type="VBoxContainer" parent="Pad/Col/Body"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.0
+theme_override_constants/separation = 8
+
+[node name="Matchup" type="Label" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+
+[node name="PitcherLine" type="Label" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+
+[node name="LogScroll" type="ScrollContainer" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Log" type="VBoxContainer" parent="Pad/Col/Body/Right/LogScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="Result" type="Label" parent="Pad/Col"]
+[node name="Result" type="Label" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 
 [node name="Row" type="HBoxContainer" parent="Pad/Col"]

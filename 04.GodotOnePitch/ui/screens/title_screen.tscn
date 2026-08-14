@@ -33,17 +33,21 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="Col" type="VBoxContainer" parent="Pad"]
+[node name="Center" type="CenterContainer" parent="Pad"]
+layout_mode = 2
+
+[node name="Col" type="VBoxContainer" parent="Pad/Center"]
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="Pad/Col"]
+[node name="Title" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="Slots" type="VBoxContainer" parent="Pad/Col"]
+[node name="Slots" type="VBoxContainer" parent="Pad/Center/Col"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="Status" type="Label" parent="Pad/Col"]
+[node name="Status" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2

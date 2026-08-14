@@ -14,7 +14,7 @@ func _init() -> void:
 
 	# ⚠ **창 크기는 `DisplayServer`로 바꾼다.** 루트 뷰포트의 `size`에 직접
 	# 넣으면 실제 창은 안 따라오고, 찍힌 그림이 기본 크기(1152×648)로 나온다
-	DisplayServer.window_set_size(Vector2i(480, 900))
+	DisplayServer.window_set_size(Vector2i(1440, 900))
 	DisplayServer.window_set_title("OnePitch — %s" % which)
 
 	var win := get_root()

@@ -8,13 +8,13 @@ class_name NewGameScreen
 ## ⚠ **여기는 계산을 안 한다.** 팀 목록·시작 가능 여부는 `NewGameVm`이 만든다.
 
 @onready var _bg: ColorRect = $Bg
-@onready var _title: Label = $Pad/Col/Title
-@onready var _name_label: Label = $Pad/Col/NameLabel
-@onready var _name: LineEdit = $Pad/Col/Name
-@onready var _team_label: Label = $Pad/Col/TeamLabel
-@onready var _team: OptionButton = $Pad/Col/Team
-@onready var _back: Button = $Pad/Col/Row/Back
-@onready var _start: Button = $Pad/Col/Row/Start
+@onready var _title: Label = $Pad/Center/Col/Title
+@onready var _name_label: Label = $Pad/Center/Col/NameLabel
+@onready var _name: LineEdit = $Pad/Center/Col/Name
+@onready var _team_label: Label = $Pad/Center/Col/TeamLabel
+@onready var _team: OptionButton = $Pad/Center/Col/Team
+@onready var _back: Button = $Pad/Center/Col/Row/Back
+@onready var _start: Button = $Pad/Center/Col/Row/Start
 
 signal start_requested(name: String, team_id: String)
 signal back_requested

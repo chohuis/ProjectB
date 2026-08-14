@@ -35,7 +35,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="Col" type="VBoxContainer" parent="Pad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="Header" type="VBoxContainer" parent="Pad/Col"]
 layout_mode = 2
@@ -66,21 +66,44 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="Tabs" type="HBoxContainer" parent="Pad/Col"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="TabHost" type="VBoxContainer" parent="Pad/Col"]
+[node name="Body" type="HBoxContainer" parent="Pad/Col"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
-[node name="Footer" type="VBoxContainer" parent="Pad/Col"]
+[node name="Nav" type="VBoxContainer" parent="Pad/Col/Body"]
+custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="NextGame" type="Label" parent="Pad/Col/Footer"]
+[node name="Tabs" type="VBoxContainer" parent="Pad/Col/Body/Nav"]
 layout_mode = 2
+theme_override_constants/separation = 4
 
-[node name="Advance" type="Button" parent="Pad/Col/Footer"]
+[node name="Main" type="VBoxContainer" parent="Pad/Col/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TabHost" type="VBoxContainer" parent="Pad/Col/Body/Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="Right" type="VBoxContainer" parent="Pad/Col/Body"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Footer" type="VBoxContainer" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/separation = 4
+
+[node name="NextGame" type="Label" parent="Pad/Col/Body/Right/Footer"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="Advance" type="Button" parent="Pad/Col/Body/Right/Footer"]
 layout_mode = 2

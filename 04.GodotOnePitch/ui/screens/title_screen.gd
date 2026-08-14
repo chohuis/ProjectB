@@ -11,9 +11,9 @@ class_name TitleScreen
 const NEW_GAME_SCREEN := preload("res://ui/screens/new_game_screen.tscn")
 
 @onready var _bg: ColorRect = $Bg
-@onready var _title: Label = $Pad/Col/Title
-@onready var _slots: VBoxContainer = $Pad/Col/Slots
-@onready var _status: Label = $Pad/Col/Status
+@onready var _title: Label = $Pad/Center/Col/Title
+@onready var _slots: VBoxContainer = $Pad/Center/Col/Slots
+@onready var _status: Label = $Pad/Center/Col/Status
 
 ## 슬롯을 골라 이어한다
 signal continue_requested(slot: int)
