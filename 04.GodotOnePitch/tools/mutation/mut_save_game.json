@@ -1,0 +1,97 @@
+[
+ [
+  "세이브 표식을 안 적는다 (아무 파일이나 세이브로 본다)",
+  "\tfh.store_32(MAGIC)\n\tfh.store_32(VERSION)",
+  "\tfh.store_32(VERSION)"
+ ],
+ [
+  "표식을 안 본다",
+  "\tif fh.get_length() < 8 or fh.get_32() != MAGIC:\n\t\tfh.close()\n\t\treturn {\"error\": \"세이브 형식이 아니다\", \"state\": {}}",
+  "\tfh.get_32()"
+ ],
+ [
+  "판을 안 본다 (더 새로운 세이브를 억지로 연다)",
+  "\tif ver > VERSION:\n\t\tfh.close()\n\t\treturn {\"error\": \"더 새로운 세이브 (v%d)\" % ver, \"state\": {}}",
+  ""
+ ],
+ [
+  "머리말 판을 안 본다",
+  "\tif ver > VERSION:\n\t\tfh.close()\n\t\treturn {\"error\": \"더 새로운 세이브 (v%d)\" % ver}",
+  ""
+ ],
+ [
+  "압축 푼 길이를 안 본다",
+  "\tif raw.size() != rawlen:\n\t\treturn {\"error\": \"세이브가 깨졌다\", \"state\": {}}",
+  ""
+ ],
+ [
+  "사전이 아닌 내용을 통과시킨다 (verify에서 터진다)",
+  "\tvar st = bytes_to_var(raw)\n\tif not (st is Dictionary):\n\t\treturn {\"error\": \"세이브 내용이 깨졌다\", \"state\": {}}",
+  "\tvar st = bytes_to_var(raw)"
+ ],
+ [
+  "필수 키를 안 본다",
+  "\tfor k in [\"day\", \"season_year\", \"protagonist\", \"schedule\"]:\n\t\tif not s.has(k):\n\t\t\treturn \"세이브에 '%s'가 없다\" % k",
+  ""
+ ],
+ [
+  "일정이 없어도 연다",
+  "\tfor k in [\"day\", \"season_year\", \"protagonist\", \"schedule\"]:",
+  "\tfor k in [\"day\", \"season_year\", \"protagonist\"]:"
+ ],
+ [
+  "0일차 세이브를 연다",
+  "\tif int(s.get(\"day\", 0)) < 1:\n\t\treturn \"시즌 일차가 %d다\" % int(s.get(\"day\", 0))",
+  ""
+ ],
+ [
+  "검증을 아예 안 부른다",
+  "\tvar err: String = verify(st)\n\tif not err.is_empty():\n\t\treturn {\"error\": err, \"state\": {}}",
+  ""
+ ],
+ [
+  "없는 파일에 빈 게임을 준다",
+  "\tif fh == null:\n\t\treturn {\"error\": \"열 수 없음: %s\" % path, \"state\": {}}",
+  "\tif fh == null:\n\t\treturn {\"error\": \"\", \"state\": {}}"
+ ],
+ [
+  "머리말을 안 적는다 (목록이 본문을 다 풀어야 한다)",
+  "\tfh.store_var(_header_of(state))",
+  "\tfh.store_var({})"
+ ],
+ [
+  "머리말에 날짜를 안 담는다",
+  "\t\t\"day\": int(s.get(\"day\", 1)),",
+  "\t\t\"day\": 1,"
+ ],
+ [
+  "머리말에 이름을 안 담는다",
+  "\t\t\"player_name\": String(p.get(\"name\", \"\")),",
+  "\t\t\"player_name\": \"\","
+ ],
+ [
+  "머리말에 팀을 안 담는다",
+  "\t\t\"team_name\": String(p.get(\"team_name\", p.get(\"team_id\", \"\"))),",
+  "\t\t\"team_name\": \"\","
+ ],
+ [
+  "머리말이 깨져도 통과시킨다",
+  "\tif not (h is Dictionary):\n\t\tfh.close()\n\t\treturn {\"error\": \"머리말이 깨졌다\", \"state\": {}}",
+  ""
+ ],
+ [
+  "부른 쪽 사전에 머리말을 남긴다",
+  "\tfh.store_var(_header_of(state))",
+  "\tstate[\"_meta\"] = _header_of(state)\n\tfh.store_var(state[\"_meta\"])"
+ ],
+ [
+  "압축을 안 한다 (파일이 17배가 된다)",
+  "\tvar packed: PackedByteArray = raw.compress(FileAccess.COMPRESSION_ZSTD)",
+  "\tvar packed: PackedByteArray = raw"
+ ],
+ [
+  "원본 길이를 안 적는다",
+  "\tfh.store_32(raw.size())\n\tfh.store_32(packed.size())",
+  "\tfh.store_32(packed.size())\n\tfh.store_32(packed.size())"
+ ]
+]

@@ -300,3 +300,61 @@ func test_the_root_does_not_recompute() -> void:
 	# 주 경계를 자기 손으로 세면 안 된다 — 세는 곳은 하나다
 	assert_str(src).not_contains("% 7")
 	assert_str(src).not_contains("/ 7")
+
+
+# ── 저장·불러오기 ─────────────────────────────────────────────
+
+const SAVE_TEST_PATH := "user://approot_test.sav"
+
+
+func _cleanup_save() -> void:
+	if FileAccess.file_exists(SAVE_TEST_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_TEST_PATH))
+
+
+## 껐다 켜도 그 자리에서 이어진다
+func test_a_game_survives_save_and_load() -> void:
+	_cleanup_save()
+	var r := await _mount(_state({"day": 10, "season_days": 350,
+		"schedule": [_game(15, true)]}))
+	await r.advance(5)
+	assert_int(r.state()["day"]).is_equal(15)
+	assert_int(r.save(SAVE_TEST_PATH)).is_equal(OK)
+
+	# 다른 게임을 띄우고 불러온다
+	var r2 := await _mount(_state({"day": 1, "season_days": 350}))
+	assert_str(r2.load_from(SAVE_TEST_PATH)).is_empty()
+	assert_int(r2.state()["day"]).is_equal(15)
+	assert_str(r2.screen()._date.text).is_equal("2027년 3월 15일")
+	_cleanup_save()
+
+
+## ⚠ **불러오기가 실패하면 지금 게임을 안 건드린다.** 세이브가 상했다고
+## 진행 중이던 게임까지 날아가면 안 된다
+func test_a_failed_load_leaves_the_current_game_alone() -> void:
+	var r := await _mount(_state({"day": 33, "season_days": 350}))
+	assert_str(r.load_from("user://no_such_save.sav")).is_not_empty()
+	assert_int(r.state()["day"]).is_equal(33)
+	assert_str(r.screen()._date.text).is_equal("2027년 4월 2일")
+
+
+## ⚠ **진행 중에는 저장하지 않는다.** 진행기가 상태를 갈아타는 도중이라
+## 반쯤 진행된 세이브가 남는다 — 불러오면 그날 경기가 사라져 있다
+func test_saving_while_running_is_refused() -> void:
+	_cleanup_save()
+	var games: Array = []
+	for i in 300:
+		games.append(_game(2 + i / 6, false, "G%d" % i))
+	var r := await _mount(_state({"day": 1, "season_days": 350, "schedule": games}))
+
+	var refused: Array = []
+	r.runner().progress.connect(func(done: int, total: int) -> void:
+		if done > 0 and done < total:
+			refused.append(r.save(SAVE_TEST_PATH)))
+	await r.advance(60)
+
+	assert_int(refused.size()).override_failure_message("진행 중 저장을 안 시도했다") \
+		.is_greater(0)
+	for e in refused:
+		assert_int(e).is_equal(ERR_BUSY)
+	_cleanup_save()

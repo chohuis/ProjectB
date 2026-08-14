@@ -42,8 +42,31 @@ func _on_news_filter(filter_id: String) -> void:
 	_refresh()
 
 
+## 세이브가 놓이는 자리. 슬롯은 M7-6(화면)에서 여러 개가 된다
+const SAVE_PATH := "user://slot1.sav"
+
+
 func state() -> Dictionary:
 	return _state
+
+
+## ⚠ **진행 중에는 저장하지 않는다.** 진행기가 상태를 갈아타는 도중이라
+## 반쯤 진행된 세이브가 남는다 — 불러오면 그날 경기가 사라져 있다
+func save(path: String = SAVE_PATH) -> Error:
+	if _runner != null and _runner.is_running():
+		return ERR_BUSY
+	return SaveGame.write(path, _state)
+
+
+## 불러오기. **실패하면 지금 게임을 안 건드린다** — 세이브가 상했다고
+## 진행 중이던 게임까지 날아가면 안 된다
+func load_from(path: String = SAVE_PATH) -> String:
+	var r: Dictionary = SaveGame.read(path)
+	var err: String = r.get("error", "")
+	if not err.is_empty():
+		return err
+	set_state(r["state"])
+	return ""
 
 
 func screen() -> MainScreen:
