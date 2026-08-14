@@ -387,6 +387,12 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# 뒤에 세계에서 혼자 뛰어오른다
 	NpcGrowth.run(_state, at_day)
 
+	# 카퍼스 이벤트 — 쇼케이스(32주)·올스타(34주).
+	#
+	# ⚠ **주인공이 없어도 돈다.** 대학 무대는 세계의 일이고, 주인공이 안
+	# 불렸다는 것도 결과다 — 아래 `p.is_empty()` 뒤로 내리면 그게 사라진다
+	CampusRunner.run(_state, at_day)
+
 	var p: Dictionary = _state.get("protagonist", {})
 	if p.is_empty():
 		return

@@ -1,0 +1,222 @@
+[
+ [
+  "최근 폼이 평가에 안 닿는다 (능력치만 본다)",
+  "\treturn float(c.get(\"ovr\", 0.0)) + float(c.get(\"form\", 0.0)) * FORM_WEIGHT",
+  "\treturn float(c.get(\"ovr\", 0.0))"
+ ],
+ [
+  "전부 북이다 (남부 도시가 없다)",
+  "\treturn \"south\" if rules().get(\"south_cities\", []).has(city) else \"north\"",
+  "\treturn \"north\""
+ ],
+ [
+  "목록에 없으면 남이다 (기본값이 뒤집힌다)",
+  "\treturn \"south\" if rules().get(\"south_cities\", []).has(city) else \"north\"",
+  "\treturn \"north\" if rules().get(\"south_cities\", []).has(city) else \"south\""
+ ],
+ [
+  "팀 추천이 제일 못하는 넷을 부른다",
+  "\t\tif ra != rb:\n\t\t\treturn ra > rb\n\t\t# ⚠ **동점 갈래가 없으면 재현이 무너진다**",
+  "\t\tif ra != rb:\n\t\t\treturn ra < rb\n\t\t# ⚠ **동점 갈래가 없으면 재현이 무너진다**"
+ ],
+ [
+  "팀 추천이 한 명뿐이다",
+  "\t\tfor c in _by_rating(by_team[tid]).slice(0, per_team):",
+  "\t\tfor c in _by_rating(by_team[tid]).slice(0, 1):"
+ ],
+ [
+  "팀 추천 경로가 없다 (명문 상위권만 모인다)",
+  "\tfor tid in team_ids:\n\t\tfor c in _by_rating(by_team[tid]).slice(0, per_team):\n\t\t\tvar id: String = String(c[\"id\"])\n\t\t\tif not taken.has(id):\n\t\t\t\ttaken[id] = true\n\t\t\t\tpicked.append({\"c\": c, \"route\": \"recommend\"})",
+  "\tpass"
+ ],
+ [
+  "주목도 상위 경로가 없다",
+  "\tfor c in rest.slice(0, maxi(int(r.get(\"top_scout_extra\", 15)), 0)):\n\t\ttaken[String(c[\"id\"])] = true\n\t\tpicked.append({\"c\": c, \"route\": \"top_scout\"})",
+  "\tpass"
+ ],
+ [
+  "구단 지명 경로가 없다 (예상 밖의 이름이 안 나온다)",
+  "\tfor i in maxi(int(r.get(\"club_picks\", 8)), 0):",
+  "\tfor i in 0:"
+ ],
+ [
+  "주목도 상위가 이미 뽑힌 사람도 다시 부른다",
+  "\tfor c in candidates:\n\t\tif not taken.has(String(c[\"id\"])):\n\t\t\trest.append(c)",
+  "\tfor c in candidates:\n\t\trest.append(c)"
+ ],
+ [
+  "구단 지명이 이미 뽑힌 사람도 다시 부른다",
+  "\tfor c in candidates:\n\t\tif not taken.has(String(c[\"id\"])):\n\t\t\tpool.append(c)",
+  "\tfor c in candidates:\n\t\tpool.append(c)"
+ ],
+ [
+  "Day2에 운이 안 섞인다 (참가가 형식이 된다)",
+  "\t\tvar day2: float = clampf(rating(c) * DAY2_SKILL + luck * 100.0 * DAY2_LUCK,",
+  "\t\tvar day2: float = clampf(rating(c) * DAY2_SKILL + luck * 0.0,"
+ ],
+ [
+  "Day2가 운뿐이다 (실력이 안 닿는다)",
+  "\t\tvar day2: float = clampf(rating(c) * DAY2_SKILL + luck * 100.0 * DAY2_LUCK,",
+  "\t\tvar day2: float = clampf(rating(c) * 0.0 + luck * 100.0 * DAY2_LUCK,"
+ ],
+ [
+  "Day2 줄이 거꾸로다 (하위 12%가 눈에 띈다)",
+  "\t\tif da != db:\n\t\t\treturn da > db",
+  "\t\tif da != db:\n\t\t\treturn da < db"
+ ],
+ [
+  "전원이 눈에 띈다",
+  "\t\t* float(r.get(\"standout_percent\", 0.12))))",
+  "\t\t* 1.0))"
+ ],
+ [
+  "아무도 눈에 안 띈다",
+  "\t\t* float(r.get(\"standout_percent\", 0.12))))",
+  "\t\t* 0.0))"
+ ],
+ [
+  "눈에 띄어도 더 받는 게 없다",
+  "\t\t\t+ float(r.get(\"standout_scout_gain\", 9.0))",
+  "\t\t\t+ 0.0"
+ ],
+ [
+  "참가만으로는 주목도를 못 받는다",
+  "\t\t\t\"scout_gain\": float(r.get(\"attend_scout_gain\", 4.0)),",
+  "\t\t\t\"scout_gain\": 0.0,"
+ ],
+ [
+  "참가만으로는 인지도를 못 받는다",
+  "\t\t\t\"fame_gain\": float(r.get(\"attend_fame_gain\", 2.0)),",
+  "\t\t\t\"fame_gain\": 0.0,"
+ ],
+ [
+  "주인공이 불렸는지 안 본다",
+  "\t\t\t\tinvited = true",
+  "\t\t\t\tinvited = false"
+ ],
+ [
+  "누구든 있으면 주인공이 불렸다고 한다",
+  "\t\tif not c.get(\"is_protagonist\", false):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "인기도가 선발에 안 닿는다 (그냥 OVR 상위 24명이 된다)",
+  "\t\t+ float(c.get(\"popularity\", 0.0)) * ALLSTAR_POPULARITY",
+  "\t\t+ 0.0"
+ ],
+ [
+  "실력이 선발에 안 닿는다 (인기 투표만 남는다)",
+  "\treturn rating(c) * ALLSTAR_SKILL \\",
+  "\treturn rating(c) * 0.0 \\"
+ ],
+ [
+  "대학당 캡이 없다 (명문 한 곳이 라인업을 통째로 채운다)",
+  "\t\tif int(per_school.get(tid, 0)) >= cap:\n\t\t\tcontinue\n\t\tper_school[tid] = int(per_school.get(tid, 0)) + 1",
+  "\t\tper_school[tid] = int(per_school.get(tid, 0)) + 1"
+ ],
+ [
+  "정원이 절반이다",
+  "\tvar size: int = int(r.get(\"squad_size\", 24))",
+  "\tvar size: int = 12"
+ ],
+ [
+  "반대편을 뽑는다 (북 vs 남이 뒤집힌다)",
+  "\t\tif String(c.get(\"region\", \"\")) == side:",
+  "\t\tif String(c.get(\"region\", \"\")) != side:"
+ ],
+ [
+  "선발 줄이 거꾸로다 (제일 약한 24명이 뽑힌다)",
+  "\t\tif sa != sb:\n\t\t\treturn sa > sb\n\t\treturn String(a.get(\"id\", \"\")) < String(b.get(\"id\", \"\")))\n\n\tvar out: Array = []",
+  "\t\tif sa != sb:\n\t\t\treturn sa < sb\n\t\treturn String(a.get(\"id\", \"\")) < String(b.get(\"id\", \"\")))\n\n\tvar out: Array = []"
+ ],
+ [
+  "빈 포지션을 안 메운다 (라인업이 안 짜인다)",
+  "\tfor pos in r.get(\"required_positions\", []):",
+  "\tfor pos in []:"
+ ],
+ [
+  "이미 찬 자리도 갈아 끼운다",
+  "\t\tif _has_position(out, String(pos)):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "동수일 때 얇게 할 자리가 반대다",
+  "\t\tif n > best_n or (n == best_n and String(p) < best):",
+  "\t\tif n > best_n or (n == best_n and String(p) > best):"
+ ],
+ [
+  "제일 두꺼운 자리가 아니라 아무 자리에서나 뺀다",
+  "\tvar best: String = \"\"\n\tvar best_n: int = 1\n\tfor p in count:",
+  "\tvar best: String = \"\"\n\tvar best_n: int = 0\n\tfor p in count:"
+ ],
+ [
+  "그 자리에서 제일 센 사람을 뺀다",
+  "\t\tif best < 0 or float(picks[i][\"score\"]) < float(picks[best][\"score\"]):",
+  "\t\tif best < 0 or float(picks[i][\"score\"]) > float(picks[best][\"score\"]):"
+ ],
+ [
+  "뺀 사람의 학교 몫이 안 돌아온다 (자기 학교 후보가 못 들어온다)",
+  "\t\tper_school[vt] = int(per_school.get(vt, 0)) - 1",
+  "\t\tpass"
+ ],
+ [
+  "캡에 막히면 그 자리를 포기한다 (02가 겪은 결함 — 1B가 빈다)",
+  "\t\t\tif int(per_school.get(tid2, 0)) >= cap:\n\t\t\t\tcontinue",
+  "\t\t\tif int(per_school.get(tid2, 0)) >= cap:\n\t\t\t\tbreak"
+ ],
+ [
+  "채울 사람이 없어도 원상복구를 안 한다 (정원이 줄어든다)",
+  "\t\tif not filled:",
+  "\t\tif false:"
+ ],
+ [
+  "쿼터가 아무 포지션이나 넣는다",
+  "\t\t\tif String(c.get(\"position\", \"\")) != String(pos):\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "전력이 결과에 안 닿는다",
+  "\tvar edge: float = clampf((_strength(north) - _strength(south)) / EDGE_DIVISOR,",
+  "\tvar edge: float = clampf((_strength(north) - _strength(north)) / EDGE_DIVISOR,"
+ ],
+ [
+  "전력 차가 뒤집혔다 (약한 쪽이 이긴다)",
+  "\tvar edge: float = clampf((_strength(north) - _strength(south)) / EDGE_DIVISOR,",
+  "\tvar edge: float = clampf((_strength(south) - _strength(north)) / EDGE_DIVISOR,"
+ ],
+ [
+  "전력 차가 점수에 안 실린다",
+  "\tvar ns: int = int(maxf(roundf(SCORE_BASE + edge * EDGE_WEIGHT\n\t\t+ rng.randf() * LUCK_RUNS), 0.0))",
+  "\tvar ns: int = int(maxf(roundf(SCORE_BASE + edge * 0.0\n\t\t+ rng.randf() * LUCK_RUNS), 0.0))"
+ ],
+ [
+  "한 판인데 운이 없다 (결과를 미리 안다)",
+  "\t\t+ rng.randf() * LUCK_RUNS), 0.0))\n\tvar ss: int = int(maxf(roundf(SCORE_BASE - edge * EDGE_WEIGHT\n\t\t+ rng.randf() * LUCK_RUNS), 0.0))",
+  "\t\t+ rng.randf() * 0.0), 0.0))\n\tvar ss: int = int(maxf(roundf(SCORE_BASE - edge * EDGE_WEIGHT\n\t\t+ rng.randf() * 0.0), 0.0))"
+ ],
+ [
+  "평균이 아니라 합계로 전력을 잰다",
+  "\treturn sum / float(picks.size())",
+  "\treturn sum"
+ ],
+ [
+  "MVP가 그날 제일 못한 사람이다",
+  "\t\tif mvp.is_empty() or float(x[\"score\"]) > float(mvp[\"score\"]):",
+  "\t\tif mvp.is_empty() or float(x[\"score\"]) < float(mvp[\"score\"]):"
+ ],
+ [
+  "MVP가 진 쪽에서도 나온다",
+  "\tif winner == \"north\":\n\t\tmvp_pool = north\n\telif winner == \"south\":\n\t\tmvp_pool = south",
+  "\tif winner == \"north\":\n\t\tmvp_pool = south\n\telif winner == \"south\":\n\t\tmvp_pool = north"
+ ],
+ [
+  "주인공이 뽑혔는지 안 본다",
+  "\t\tfor x in north:\n\t\t\tif String(x[\"id\"]) == String(c[\"id\"]):\n\t\t\t\tselected = true\n\t\t\t\tside = \"north\"",
+  "\t\tpass"
+ ],
+ [
+  "어디로 뽑혔는지를 안 가린다",
+  "\t\t\t\tside = \"north\"",
+  "\t\t\t\tside = \"south\""
+ ]
+]

@@ -1,0 +1,33 @@
+{
+ "_note": "02 generation_rules.json의 campusEvents 그대로. 키 이름만 04 규칙(snake_case)으로. 설계 근거는 02 docs/design/_ledger.md §A-9.",
+ "_role_note": "쇼케이스는 **주목도 급등 경로**, 올스타는 **선발 자체가 서사**다. 그래서 선발 규칙이 다르다 — 쇼케이스는 넓게(팀 추천 + 주목도 + 구단 지명), 올스타는 좁게 그러나 고르게(포지션 쿼터 + 대학당 캡)",
+ "showcase": {
+  "_note": "전국대학선수쇼케이스 — 8월 초 2일. Day1 워크아웃(스탯 공개) + Day2 전시경기",
+  "week": 32,
+  "per_team_recommend": 4,
+  "_recommend_note": "50교 × 4 = 200명. **팀마다 고정 인원**이라 약팀도 무대에 선다 — 순위순으로 자르면 명문 상위권만 모여 '이미 아는 이름'만 나온다",
+  "top_scout_extra": 15,
+  "club_picks": 8,
+  "_pick_note": "구단 지명은 남은 후보에서 무작위다. 이 경로가 '예상 밖의 이름'을 만든다 — 세 경로 합계 ~223명",
+  "attend_scout_gain": 4,
+  "attend_fame_gain": 2,
+  "standout_scout_gain": 9,
+  "standout_percent": 0.12,
+  "_gain_note": "참가만 해도 주목도 +4. Day2 상위 12%는 +13. 참가가 형식이 되면 안 되고, 그렇다고 나가기만 하면 드래프트 순위가 뒤집혀도 안 된다"
+ },
+ "allstar": {
+  "_note": "올스타전(북 vs 남) — 8월 중 1일, 9이닝 단판",
+  "week": 34,
+  "squad_size": 24,
+  "per_school_cap": 2,
+  "_cap_note": "**캡이 핵심이다.** 없으면 명문 한 곳이 라인업을 통째로 채워 '북 vs 남'이 아니라 'A대 vs B대'가 된다",
+  "required_positions": ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "SP", "RP"],
+  "_pos_note": "각 자리를 최소 한 명은 채운다. 점수순으로만 뽑으면 OVR이 몰리는 포지션만 남아 라인업이 안 짜인다",
+  "select_fame_gain": 6,
+  "select_popularity_gain": 8,
+  "mvp_fame_gain": 12,
+  "_gain_note": "선발되는 것 자체가 보상이라 참가 보너스가 쇼케이스보다 크다. 인기도가 선발 점수의 30%를 차지하므로 뽑히면 다음 해에 더 뽑히기 쉬워진다 — 의도한 양의 되먹임이다"
+ },
+ "_south_note": "02 campusEvents.ts의 SOUTH_CITIES. 목록에 없으면 북으로 본다 — 수도권·중부가 기본값이다",
+ "south_cities": ["부산", "대구", "광주", "울산", "창원", "전주", "여수", "포항", "진주", "목포", "순천", "김해", "제주", "경주", "통영", "마산", "구미", "안동"]
+}

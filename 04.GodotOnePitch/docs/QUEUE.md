@@ -121,8 +121,10 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 
 **주인공 커리어 — 1~68일차가 비어 있는 이유**
 
-- [ ] **B-1** `campusEvents`(412) + `weekPhases/academics`(27)
+- [x] **B-1** `campusEvents`(412) + `weekPhases/academics`(27)
       — 학사 경고·시험. **1~68일차가 눈에 보이게 메워지는 첫 작업**
+      `sim/academics.gd` · `sim/campus_events.gd` · `sim/campus_runner.gd`.
+      실측 223명(02 기준 223) · 올스타 24 vs 24 · 캡 초과 0 · 포지션 10/10
 - [ ] **B-2** `relationships`(522)
       — 감독·동료·코치. ⚠ 02는 주 경계에서 `weekNum`을 써서 **전 커리어에 걸쳐
         한 번도 안 움직였다**(결과는 `weekNum - 1`에 있다)
@@ -143,7 +145,8 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 
 - [ ] **C-1** 드래프트 보드 — B 없이도 된다 (`Draft`·`NpcDraft`가 이미 있다)
 - [ ] **C-2** 인물(관계도) ← B-2
-- [ ] **C-3** 학사 ← B-1
+- [ ] **C-3** 학사 ← B-1. `state.academic_log`·`state.campus_log`를 읽는 자리가
+      아직 없다 — 쌓이기만 하고 아무도 안 본다
 - [ ] **C-4** 재정 ← B-5
 - [ ] **C-5** 업적
 - [ ] **C-6** "나" 탭 보강(`me`)
