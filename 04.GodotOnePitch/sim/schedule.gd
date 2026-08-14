@@ -144,18 +144,64 @@ static func build(p: Dictionary) -> Array:
 		return []
 
 	var out: Array = []
+	# 팀별 홈 경기 수 — 적은 쪽에 홈을 준다
+	var home_count: Dictionary = {}
+	# 상대별 홈 경기 수 — "저 팀 구장에서만 16번"을 막는다
+	var pair_home: Dictionary = {}
 	for r in target:
 		var round_pairs: Array = base[r % base.size()]
-		# 한 바퀴 돌 때마다 홈·원정을 뒤집는다 — 안 그러면 홈 이점이 한쪽에만 간다
+		# 한 바퀴 돌 때마다 같은 상대와의 홈·원정을 바꾼다
 		var flip: bool = (r / base.size()) % 2 == 1
 		# 라운드를 기간 전체에 고르게 편다
 		var day: int = days[r * days.size() / target]
-		for pair in round_pairs:
+		for pi in round_pairs.size():
+			var pair: Array = round_pairs[pi]
+			# ⚠ **홈이 적은 쪽에 준다.** 원형 배치의 자리로 정하면 특정 팀이
+			# 늘 같은 쪽에 서고, 뒤집기를 걸어도 인덱스 주기가 맞물려 어긋난다.
+			#
+			# 실측: 뒤집기가 **바퀴 수로만** 걸려 있을 때 고교 **55팀이 홈 0경기 ·
+			# 20팀이 홈 20경기**였다 — 20경기를 전부 남의 구장에서 치렀다.
+			# 라운드 홀짝을 겹쳐 걸어 봤더니 이번엔 KBL이 80/48/64로 갈렸다
+			# (라운드 수 9와 홀짝 2가 맞물린다).
+			#
+			# ⚠ **KBL만 보면 이 결함이 안 보인다** — 144경기라 16바퀴를 돌아
+			# 원래 식으로도 정확히 반반이었다. 짧은 리그에서만 드러난다.
+			#
+			# 세는 쪽이 산수보다 확실하다. **보는 순서가 있다:**
+			#
+			# ⚠ ① **이 상대와의 홈 균형이 먼저다.** 팀 총합만 보면 총합은
+			#    49~51%로 맞는데 **상대별로는 16:0**이 된다 — "저 팀 구장에서만
+			#    16번 진다". 총합 검사로는 안 보인다.
+			# ⚠ ② 팀 전체 홈 균형.
+			# ⚠ ③ **동률이 남는다.** 늘 첫 자리를 홈으로 주면 원형 배치의
+			#    편향이 그대로 남아서 대학(9경기)이 홈 6 · 원정 3까지 갔다.
+			#    라운드와 쌍 번호로 갈라야 고르게 퍼진다
+			var x: String = pair[0]
+			var y: String = pair[1]
+			var kx: String = x + "|" + y
+			var ky: String = y + "|" + x
+			var px: int = int(pair_home.get(kx, 0))
+			var py: int = int(pair_home.get(ky, 0))
+			var hx: int = int(home_count.get(x, 0))
+			var hy: int = int(home_count.get(y, 0))
+
+			var x_is_home: bool
+			if px != py:
+				x_is_home = px < py
+			elif hx != hy:
+				x_is_home = hx < hy
+			else:
+				x_is_home = ((r + pi) % 2 == 0) != flip
+
+			var h: String = x if x_is_home else y
+			var a: String = y if x_is_home else x
+			home_count[h] = int(home_count.get(h, 0)) + 1
+			pair_home[kx if x_is_home else ky] = (px if x_is_home else py) + 1
 			out.append({
 				"league_id": p.get("league_id", ""),
 				"day": day,
-				"home": pair[1] if flip else pair[0],
-				"away": pair[0] if flip else pair[1],
+				"home": h,
+				"away": a,
 			})
 	return out
 

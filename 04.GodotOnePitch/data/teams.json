@@ -1,0 +1,2837 @@
+{
+ "version": 22,
+ "leagues": [
+  {
+   "id": "LEAGUE_HIGHSCHOOL",
+   "name": "고교 리그",
+   "nameEn": "High School League"
+  },
+  {
+   "id": "LEAGUE_UNIVERSITY",
+   "name": "대학 리그",
+   "nameEn": "University League"
+  },
+  {
+   "id": "LEAGUE_INDEPENDENT",
+   "name": "독립 리그",
+   "nameEn": "Independent League"
+  },
+  {
+   "id": "LEAGUE_KBL",
+   "name": "KBL 리그",
+   "nameEn": "KBL League"
+  },
+  {
+   "id": "LEAGUE_ABL",
+   "name": "ABL",
+   "nameEn": "ABL"
+  },
+  {
+   "id": "LEAGUE_JBL",
+   "name": "JBL",
+   "nameEn": "JBL"
+  }
+ ],
+ "teams": [
+  {
+   "id": "TEAM_HS_AEWOL",
+   "name": "애월고",
+   "name_en": "Aewol High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "제주",
+   "colors": [
+    "#433371",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_BAEGYANG",
+   "name": "백양고",
+   "name_en": "Baegyang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "전주",
+   "colors": [
+    "#9A5E1D",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_BAEKHO",
+   "name": "백호고",
+   "name_en": "Baekho High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "수원",
+   "colors": [
+    "#2A6F56",
+    "#7B1E2B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_BAEKSEOK",
+   "name": "백석고",
+   "name_en": "Baekseok High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "천안",
+   "colors": [
+    "#2A4A6F",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_BITGOEUL",
+   "name": "빛고을고",
+   "name_en": "Bitgoeul High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "광주",
+   "colors": [
+    "#841F3D",
+    "#123A6B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_BONGUII",
+   "name": "봉의고",
+   "name_en": "Bonguii High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "춘천",
+   "colors": [
+    "#AA1E09",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_BUGAK",
+   "name": "북악고",
+   "name_en": "Bugak High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#A33376",
+    "#1A3C1F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_BULMO",
+   "name": "불모고",
+   "name_en": "Bulmo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "창원",
+   "colors": [
+    "#6A2F64",
+    "#0E5A63"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_BUNDANG",
+   "name": "분당고",
+   "name_en": "Bundang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "성남",
+   "colors": [
+    "#CA7419",
+    "#6E1F4D"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_BUNSEONG",
+   "name": "분성고",
+   "name_en": "Bunseong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "김해",
+   "colors": [
+    "#EC800C",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_CHEONGNA",
+   "name": "청라고",
+   "name_en": "Cheongna High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "인천",
+   "colors": [
+    "#25AAB1",
+    "#8A3B12"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_CHEONGRAM",
+   "name": "청람고",
+   "name_en": "Cheongram High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#D98A36",
+    "#0F6B3C"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_CHEONGUN",
+   "name": "청운고",
+   "name_en": "Cheongun High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#D4260B",
+    "#33296E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_CHIAK",
+   "name": "치악고",
+   "name_en": "Chiak High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "원주",
+   "colors": [
+    "#960D36",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_CHOKSEOK",
+   "name": "촉석고",
+   "name_en": "Chokseok High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "진주",
+   "colors": [
+    "#CE3E27",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_DAEYANG",
+   "name": "대양고",
+   "name_en": "Daeyang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#616F2A",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_DALSEONG",
+   "name": "달성고",
+   "name_en": "Dalseong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대구",
+   "colors": [
+    "#762B23",
+    "#0E5A63"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_DONGNAE",
+   "name": "동래고",
+   "name_en": "Dongnae High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부산",
+   "colors": [
+    "#226C91",
+    "#C8102E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_DOSEONG",
+   "name": "도성고",
+   "name_en": "Doseong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#AB2850",
+    "#0E5A63"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_EUNPYEONG",
+   "name": "은평고",
+   "name_en": "Eunpyeong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#1F5A9E",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GANGBYEON",
+   "name": "강변고",
+   "name_en": "Gangbyeon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#1BC7D0",
+    "#8A3B12"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GANGJIN",
+   "name": "강진고",
+   "name_en": "Gangjin High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "강진",
+   "colors": [
+    "#873D80",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_GARAK",
+   "name": "가락고",
+   "name_en": "Garak High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "김해",
+   "colors": [
+    "#706629",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GAYA",
+   "name": "가야고",
+   "name_en": "Gaya High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "창원",
+   "colors": [
+    "#3B2183",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GEOJE",
+   "name": "거제고",
+   "name_en": "Geoje High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "거제",
+   "colors": [
+    "#7D951D",
+    "#33296E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_GEUMGANG",
+   "name": "금강고",
+   "name_en": "Geumgang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대전",
+   "colors": [
+    "#9D2791",
+    "#0F6B3C"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_GEUMJEONG",
+   "name": "금정고",
+   "name_en": "Geumjeong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부산",
+   "colors": [
+    "#396496",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GEUMO",
+   "name": "금오고",
+   "name_en": "Geumo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "구미",
+   "colors": [
+    "#DF6B59",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GEUMSAN",
+   "name": "금산고",
+   "name_en": "Geumsan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "금산",
+   "colors": [
+    "#5E818E",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_GIHEUNG",
+   "name": "기흥고",
+   "name_en": "Giheung High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "용인",
+   "colors": [
+    "#3A4F5F",
+    "#8A6512"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_GIMPO",
+   "name": "김포고",
+   "name_en": "Gimpo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "김포",
+   "colors": [
+    "#256BBB",
+    "#C8102E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GWANGAN",
+   "name": "광안고",
+   "name_en": "Gwangan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부산",
+   "colors": [
+    "#52379D",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GWANGGYO",
+   "name": "광교고",
+   "name_en": "Gwanggyo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "수원",
+   "colors": [
+    "#879195",
+    "#C8102E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_GWANGUN",
+   "name": "광운고",
+   "name_en": "Gwangun High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#1B7FB1",
+    "#C8102E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GYEBAEK",
+   "name": "계백고",
+   "name_en": "Gyebaek High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부여",
+   "colors": [
+    "#857C42",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_GYEONGPO",
+   "name": "경포고",
+   "name_en": "Gyeongpo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "강릉",
+   "colors": [
+    "#E09F5A",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_GYERIM",
+   "name": "계림고",
+   "name_en": "Gyerim High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "경주",
+   "colors": [
+    "#C31146",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GYERYONG",
+   "name": "계룡고",
+   "name_en": "Gyeryong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대전",
+   "colors": [
+    "#69CED3",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_GYEYANG",
+   "name": "계양고",
+   "name_en": "Gyeyang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "인천",
+   "colors": [
+    "#3D96C2",
+    "#8A3B12"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_HAEUN",
+   "name": "해운고",
+   "name_en": "Haeun High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부산",
+   "colors": [
+    "#6491C4",
+    "#8A6512"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_HAHOE",
+   "name": "하회고",
+   "name_en": "Hahoe High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "안동",
+   "colors": [
+    "#20A272",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_HALLA",
+   "name": "한라고",
+   "name_en": "Halla High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "제주",
+   "colors": [
+    "#E26132",
+    "#1A3C1F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_HANBIT",
+   "name": "한빛고",
+   "name_en": "Hanbit High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#A54A9C",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_HANNAE",
+   "name": "한내고",
+   "name_en": "Hannae High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "제주",
+   "colors": [
+    "#3B9B78",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_HANSEONG",
+   "name": "한성고",
+   "name_en": "Hanseong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#1C478F",
+    "#8A6512"
+   ],
+   "power": 5
+  },
+  {
+   "id": "TEAM_HS_HONGJU",
+   "name": "홍주고",
+   "name_en": "Hongju High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "홍성",
+   "colors": [
+    "#6C53B2",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_HWASUN",
+   "name": "화순고",
+   "name_en": "Hwasun High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "화순",
+   "colors": [
+    "#D9208F",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_HYEONGSAN",
+   "name": "형산고",
+   "name_en": "Hyeongsan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "포항",
+   "colors": [
+    "#617E9E",
+    "#0F6B3C"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_ILSAN",
+   "name": "일산고",
+   "name_en": "Ilsan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "고양",
+   "colors": [
+    "#46B98F",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_JUNGNIM",
+   "name": "죽림고",
+   "name_en": "Jungnim High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "담양",
+   "colors": [
+    "#6646BE",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_JUNGNYEONG",
+   "name": "죽령고",
+   "name_en": "Jungnyeong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "영주",
+   "colors": [
+    "#41CFE6",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_JUNGWON",
+   "name": "중원고",
+   "name_en": "Jungwon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부천",
+   "colors": [
+    "#238F1F",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_MANWOL",
+   "name": "만월고",
+   "name_en": "Manwol High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "인천",
+   "colors": [
+    "#F55B43",
+    "#0E5A63"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_MASANMAN",
+   "name": "마산만고",
+   "name_en": "Masanman High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "창원",
+   "colors": [
+    "#5C6D96",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_MISA",
+   "name": "미사고",
+   "name_en": "Misa High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "하남",
+   "colors": [
+    "#86A4AE",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_MONGNYEON",
+   "name": "목련고",
+   "name_en": "Mongnyeon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#B3A442",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_MUDEUNG",
+   "name": "무등고",
+   "name_en": "Mudeung High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "광주",
+   "colors": [
+    "#EB1958",
+    "#0E5A63"
+   ],
+   "power": 5
+  },
+  {
+   "id": "TEAM_HS_MUJIN",
+   "name": "무진고",
+   "name_en": "Mujin High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "광주",
+   "colors": [
+    "#E78C7E",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_MUNSU",
+   "name": "문수고",
+   "name_en": "Munsu High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "울산",
+   "colors": [
+    "#D95C81",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_MUSIM",
+   "name": "무심고",
+   "name_en": "Musim High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "청주",
+   "colors": [
+    "#C030B1",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_MYEONGIL",
+   "name": "명일고",
+   "name_en": "Myeongil High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#3C8B39",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_NAKDONG",
+   "name": "낙동고",
+   "name_en": "Nakdong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "구미",
+   "colors": [
+    "#28A123",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_NAMAK",
+   "name": "남악고",
+   "name_en": "Namak High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "무안",
+   "colors": [
+    "#2256AC",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_NAMGANG",
+   "name": "남강고",
+   "name_en": "Namgang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "진주",
+   "colors": [
+    "#804842",
+    "#0E5A63"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_NAMSAN",
+   "name": "남산고",
+   "name_en": "Namsan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#4CDCA7",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_ODONG",
+   "name": "오동고",
+   "name_en": "Odong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "여수",
+   "colors": [
+    "#64ABCE",
+    "#8A3B12"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_OREUM",
+   "name": "오름고",
+   "name_en": "Oreum High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "제주",
+   "colors": [
+    "#2C7E96",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_OSAN",
+   "name": "오산고",
+   "name_en": "Osan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "오산",
+   "colors": [
+    "#60626C",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_PALDAL",
+   "name": "팔달고",
+   "name_en": "Paldal High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대구",
+   "colors": [
+    "#A39B69",
+    "#6E1F4D"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_PALGONG",
+   "name": "팔공고",
+   "name_en": "Palgong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대구",
+   "colors": [
+    "#4EB2E4",
+    "#8A3B12"
+   ],
+   "power": 5
+  },
+  {
+   "id": "TEAM_HS_PANGYO",
+   "name": "판교고",
+   "name_en": "Pangyo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "성남",
+   "colors": [
+    "#B3D52A",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_PUNGNAM",
+   "name": "풍남고",
+   "name_en": "Pungnam High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "전주",
+   "colors": [
+    "#A36B14",
+    "#6E1F4D"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_PYEONGCHON",
+   "name": "평촌고",
+   "name_en": "Pyeongchon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "안양",
+   "colors": [
+    "#E44BA7",
+    "#1A3C1F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_PYEONGTAEK",
+   "name": "평택고",
+   "name_en": "Pyeongtaek High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "평택",
+   "colors": [
+    "#8874C1",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_SAMJEON",
+   "name": "삼전고",
+   "name_en": "Samjeon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#846ACB",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_SANGDANG",
+   "name": "상당고",
+   "name_en": "Sangdang High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "청주",
+   "colors": [
+    "#8BC0DA",
+    "#8A3B12"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_SANGNOK",
+   "name": "상록고",
+   "name_en": "Sangnok High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "안산",
+   "colors": [
+    "#B54336",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SEOGWI",
+   "name": "서귀고",
+   "name_en": "Seogwi High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서귀포",
+   "colors": [
+    "#64A4E8",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SEOLBONG",
+   "name": "설봉고",
+   "name_en": "Seolbong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "속초",
+   "colors": [
+    "#ABC059",
+    "#33296E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SEONGGEO",
+   "name": "성거고",
+   "name_en": "Seonggeo High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "천안",
+   "colors": [
+    "#D67DB2",
+    "#0F6B3C"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SEONGSAN",
+   "name": "성산고",
+   "name_en": "Seongsan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서귀포",
+   "colors": [
+    "#1F449E",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SEORAK",
+   "name": "설악고",
+   "name_en": "Seorak High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "춘천",
+   "colors": [
+    "#2DACD2",
+    "#8A3B12"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_SEUNGJU",
+   "name": "승주고",
+   "name_en": "Seungju High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "순천",
+   "colors": [
+    "#5FC0DD",
+    "#8A3B12"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SIHWA",
+   "name": "시화고",
+   "name_en": "Sihwa High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "시흥",
+   "colors": [
+    "#BEB57B",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SINCHEON",
+   "name": "신천고",
+   "name_en": "Sincheon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대구",
+   "colors": [
+    "#AEB5B7",
+    "#C8102E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_SINJEONG",
+   "name": "신정고",
+   "name_en": "Sinjeong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#B5554A",
+    "#0F6B3C"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_SONGRIM",
+   "name": "송림고",
+   "name_en": "Songrim High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "인천",
+   "colors": [
+    "#70C36D",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_SUSEONG",
+   "name": "수성고",
+   "name_en": "Suseong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "수원",
+   "colors": [
+    "#D9133C",
+    "#0E5A63"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_TAEBAEK",
+   "name": "태백고",
+   "name_en": "Taebaek High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "태백",
+   "colors": [
+    "#67CE63",
+    "#33296E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_TAEHWA",
+   "name": "태화고",
+   "name_en": "Taehwa High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "울산",
+   "colors": [
+    "#E96AB6",
+    "#0F6B3C"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_TAEJONG",
+   "name": "태종고",
+   "name_en": "Taejong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "부산",
+   "colors": [
+    "#A3AFC2",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_TANGEUM",
+   "name": "탄금고",
+   "name_en": "Tangeum High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "충주",
+   "colors": [
+    "#B67872",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_TONGYEONG",
+   "name": "통영고",
+   "name_en": "Tongyeong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "통영",
+   "colors": [
+    "#7DCA88",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_WANSAN",
+   "name": "완산고",
+   "name_en": "Wansan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "전주",
+   "colors": [
+    "#B2CB4D",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_WOLMYEONG",
+   "name": "월명고",
+   "name_en": "Wolmyeong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "군산",
+   "colors": [
+    "#72CAAA",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_YANGCHEON",
+   "name": "양천고",
+   "name_en": "Yangcheon High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "서울",
+   "colors": [
+    "#EC8263",
+    "#123A6B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_HS_YEONGIL",
+   "name": "영일고",
+   "name_en": "Yeongil High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "포항",
+   "colors": [
+    "#BECE7E",
+    "#33296E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_YEONGNAM",
+   "name": "영남고",
+   "name_en": "Yeongnam High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "경산",
+   "colors": [
+    "#BF8224",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_YEONSU",
+   "name": "연수고",
+   "name_en": "Yeonsu High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "인천",
+   "colors": [
+    "#CA67C0",
+    "#0F6B3C"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_YESAN",
+   "name": "예산고",
+   "name_en": "Yesan High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "예산",
+   "colors": [
+    "#5C5E96",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_HS_YUDAL",
+   "name": "유달고",
+   "name_en": "Yudal High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "목포",
+   "colors": [
+    "#398B4C",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_HS_YUSEONG",
+   "name": "유성고",
+   "name_en": "Yuseong High",
+   "league_id": "LEAGUE_HIGHSCHOOL",
+   "city": "대전",
+   "colors": [
+    "#5DDFBB",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_IND_BUSAN_SEALIONS",
+   "name": "부산 씨라이온스",
+   "name_en": "Busan Sea Lions",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "부산",
+   "colors": [
+    "#255A74",
+    "#8A3B12"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_IND_DAEGU_HAWKS",
+   "name": "대구 호크스",
+   "name_en": "Daegu Hawks",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "대구",
+   "colors": [
+    "#4B6670",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_IND_DAEJEON_BLAZE",
+   "name": "대전 블레이즈",
+   "name_en": "Daejeon Blaze",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "대전",
+   "colors": [
+    "#F33619",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_IND_GWANGJU_RHINOS",
+   "name": "광주 라이노스",
+   "name_en": "Gwangju Rhinos",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "광주",
+   "colors": [
+    "#92A63F",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_IND_INCHEON_GRIFFONS",
+   "name": "인천 그리폰스",
+   "name_en": "Incheon Griffons",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "인천",
+   "colors": [
+    "#1BB6D0",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_IND_PAJU_UNICORNS",
+   "name": "파주 유니콘스",
+   "name_en": "Paju Unicorns",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "파주",
+   "colors": [
+    "#5F37CD",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_IND_SANGMU_PHOENIX",
+   "name": "상무 피닉스",
+   "name_en": "Sangmu Phoenix",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "무연고(군소재)",
+   "colors": [
+    "#AFA45D",
+    "#123A6B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_IND_SEOUL_COMETS",
+   "name": "서울 코메츠",
+   "name_en": "Seoul Comets",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "서울",
+   "colors": [
+    "#46C342",
+    "#8A6512"
+   ],
+   "power": 1
+  },
+  {
+   "id": "TEAM_IND_SEOUL_RAVENS",
+   "name": "서울 레이븐스",
+   "name_en": "Seoul Ravens",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "서울",
+   "colors": [
+    "#2550BB",
+    "#8A6512"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_IND_WONJU_WINNERS",
+   "name": "원주 위너스",
+   "name_en": "Wonju Winners",
+   "league_id": "LEAGUE_INDEPENDENT",
+   "city": "원주",
+   "colors": [
+    "#6B6C88",
+    "#0F6B3C"
+   ],
+   "power": 1
+  },
+  {
+   "id": "TEAM_KBL_BUSAN_WAVES_1",
+   "name": "부산 웨이브스",
+   "name_en": "Busan Waves",
+   "league_id": "LEAGUE_KBL",
+   "city": "부산",
+   "colors": [
+    "#194980",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_BUSAN_WAVES_2",
+   "name": "부산 웨이브스 (2군)",
+   "name_en": "Busan Waves (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "부산",
+   "colors": [
+    "#223377",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_CHANGWON_STARS_1",
+   "name": "창원 스타스",
+   "name_en": "Changwon Stars",
+   "league_id": "LEAGUE_KBL",
+   "city": "창원",
+   "colors": [
+    "#2C9196",
+    "#7B1E2B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_CHANGWON_STARS_2",
+   "name": "창원 스타스 (2군)",
+   "name_en": "Changwon Stars (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "창원",
+   "colors": [
+    "#88D1DD",
+    "#7B1E2B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_DAEGU_SABERS_1",
+   "name": "대구 세이버스",
+   "name_en": "Daegu Sabers",
+   "league_id": "LEAGUE_KBL",
+   "city": "대구",
+   "colors": [
+    "#6F797D",
+    "#C8102E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_DAEGU_SABERS_2",
+   "name": "대구 세이버스 (2군)",
+   "name_en": "Daegu Sabers (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "대구",
+   "colors": [
+    "#555D7F",
+    "#C8102E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_DAEJEON_PHANTOMS_1",
+   "name": "대전 팬텀스",
+   "name_en": "Daejeon Phantoms",
+   "league_id": "LEAGUE_KBL",
+   "city": "대전",
+   "colors": [
+    "#DC5A46",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_KBL_DAEJEON_PHANTOMS_2",
+   "name": "대전 팬텀스 (2군)",
+   "name_en": "Daejeon Phantoms (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "대전",
+   "colors": [
+    "#F57B43",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_KBL_GWANGJU_PANTHERS_1",
+   "name": "광주 팬서스",
+   "name_en": "Gwangju Panthers",
+   "league_id": "LEAGUE_KBL",
+   "city": "광주",
+   "colors": [
+    "#F49530",
+    "#123A6B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_GWANGJU_PANTHERS_2",
+   "name": "광주 팬서스 (2군)",
+   "name_en": "Gwangju Panthers (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "광주",
+   "colors": [
+    "#D8870B",
+    "#6E1F4D"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_INCHEON_SHARKS_1",
+   "name": "인천 샤크스",
+   "name_en": "Incheon Sharks",
+   "league_id": "LEAGUE_KBL",
+   "city": "인천",
+   "colors": [
+    "#219FDE",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_INCHEON_SHARKS_2",
+   "name": "인천 샤크스 (2군)",
+   "name_en": "Incheon Sharks (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "인천",
+   "colors": [
+    "#7794D4",
+    "#C8102E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_SEOUL_COBRAS_1",
+   "name": "서울 코브라스",
+   "name_en": "Seoul Cobras",
+   "league_id": "LEAGUE_KBL",
+   "city": "서울",
+   "colors": [
+    "#30C52B",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_SEOUL_COBRAS_2",
+   "name": "서울 코브라스 (2군)",
+   "name_en": "Seoul Cobras (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "서울",
+   "colors": [
+    "#45D667",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_KBL_SEOUL_GUARDIANS_1",
+   "name": "서울 가디언스",
+   "name_en": "Seoul Guardians",
+   "league_id": "LEAGUE_KBL",
+   "city": "서울",
+   "colors": [
+    "#AC0F30",
+    "#123A6B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_SEOUL_GUARDIANS_2",
+   "name": "서울 가디언스 (2군)",
+   "name_en": "Seoul Guardians (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "서울",
+   "colors": [
+    "#960D1E",
+    "#0E5A63"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_SEOUL_ROYALS_1",
+   "name": "서울 로열스",
+   "name_en": "Seoul Royals",
+   "league_id": "LEAGUE_KBL",
+   "city": "서울",
+   "colors": [
+    "#2A386F",
+    "#8A6512"
+   ],
+   "power": 5
+  },
+  {
+   "id": "TEAM_KBL_SEOUL_ROYALS_2",
+   "name": "서울 로열스 (2군)",
+   "name_en": "Seoul Royals (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "서울",
+   "colors": [
+    "#192E80",
+    "#C1500F"
+   ],
+   "power": 5
+  },
+  {
+   "id": "TEAM_KBL_SUWON_KNIGHTS_1",
+   "name": "수원 나이츠",
+   "name_en": "Suwon Knights",
+   "league_id": "LEAGUE_KBL",
+   "city": "수원",
+   "colors": [
+    "#494E77",
+    "#C8102E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_KBL_SUWON_KNIGHTS_2",
+   "name": "수원 나이츠 (2군)",
+   "name_en": "Suwon Knights (Farm)",
+   "league_id": "LEAGUE_KBL",
+   "city": "수원",
+   "colors": [
+    "#54576B",
+    "#8A6512"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_ASAN",
+   "name": "아산대",
+   "name_en": "Asan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "아산",
+   "colors": [
+    "#3F2A79",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_BAEKJE",
+   "name": "백제대",
+   "name_en": "Baekje Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "대전",
+   "colors": [
+    "#2F6D2C",
+    "#8A6512"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_BAEKSAN",
+   "name": "백산대",
+   "name_en": "Baeksan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서울",
+   "colors": [
+    "#962D1D",
+    "#33296E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_BANWOL",
+   "name": "반월대",
+   "name_en": "Banwol Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "안산",
+   "colors": [
+    "#AE5F09",
+    "#6E1F4D"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_BISEUL",
+   "name": "비슬대",
+   "name_en": "Biseul Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "대구",
+   "colors": [
+    "#1F7D1C",
+    "#33296E"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_BITGOEUL",
+   "name": "빛고을대",
+   "name_en": "Bitgoeul Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "광주",
+   "colors": [
+    "#5F5A3A",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_BUKHANSAN",
+   "name": "북한산대",
+   "name_en": "Bukhansan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서울",
+   "colors": [
+    "#19805A",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_BUNSEONG",
+   "name": "분성대",
+   "name_en": "Bunseong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "김해",
+   "colors": [
+    "#653934",
+    "#0F6B3C"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_BYEOLLAE",
+   "name": "별내대",
+   "name_en": "Byeollae Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "남양주",
+   "colors": [
+    "#7A1F71",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_CHIAK",
+   "name": "치악대",
+   "name_en": "Chiak Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "원주",
+   "colors": [
+    "#484D51",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_DALGUBEOL",
+   "name": "달구벌대",
+   "name_en": "Dalgubeol Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "대구",
+   "colors": [
+    "#6B8019",
+    "#33296E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_GEOJE",
+   "name": "거제대",
+   "name_en": "Geoje Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "거제",
+   "colors": [
+    "#7B754C",
+    "#6E1F4D"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_GEUMJEONG",
+   "name": "금정대",
+   "name_en": "Geumjeong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "부산",
+   "colors": [
+    "#574292",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_GWANAK",
+   "name": "관악대",
+   "name_en": "Gwanak Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서울",
+   "colors": [
+    "#8FAA22",
+    "#7B1E2B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_GWANGGYO",
+   "name": "광교대",
+   "name_en": "Gwanggyo Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "수원",
+   "colors": [
+    "#4C2AA9",
+    "#8A6512"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_GWANYANG",
+   "name": "관양대",
+   "name_en": "Gwanyang Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "안양",
+   "colors": [
+    "#4E657E",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_GYEONGIN",
+   "name": "경인대",
+   "name_en": "Gyeongin Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "인천",
+   "colors": [
+    "#4A7EBA",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_GYERYONG",
+   "name": "계룡대",
+   "name_en": "Gyeryong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "대전",
+   "colors": [
+    "#53E1E9",
+    "#8A3B12"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_HAEDONG",
+   "name": "해동대",
+   "name_en": "Haedong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "부산",
+   "colors": [
+    "#3D86D9",
+    "#C1500F"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_HAHOE",
+   "name": "하회대",
+   "name_en": "Hahoe Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "안동",
+   "colors": [
+    "#1697AC",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_HALLYU",
+   "name": "한류대",
+   "name_en": "Hallyu Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서울",
+   "colors": [
+    "#D03563",
+    "#123A6B"
+   ],
+   "power": 5
+  },
+  {
+   "id": "TEAM_UNIV_HANAM",
+   "name": "하남대",
+   "name_en": "Hanam Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "하남",
+   "colors": [
+    "#BA1C7B",
+    "#0F6B3C"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_HANGANG",
+   "name": "한강대",
+   "name_en": "Hangang Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서울",
+   "colors": [
+    "#F6AA59",
+    "#6E1F4D"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_HWAHONG",
+   "name": "화홍대",
+   "name_en": "Hwahong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "수원",
+   "colors": [
+    "#918536",
+    "#123A6B"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_HYEONGSAN",
+   "name": "형산대",
+   "name_en": "Hyeongsan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "포항",
+   "colors": [
+    "#27C48A",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_JINWI",
+   "name": "진위대",
+   "name_en": "Jinwi Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "평택",
+   "colors": [
+    "#A1C026",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_NAMAK",
+   "name": "남악대",
+   "name_en": "Namak Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "무안",
+   "colors": [
+    "#E7B47E",
+    "#0F6B3C"
+   ],
+   "power": 1
+  },
+  {
+   "id": "TEAM_UNIV_NAMGANG",
+   "name": "남강대",
+   "name_en": "Namgang Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "진주",
+   "colors": [
+    "#C54792",
+    "#0F6B3C"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_NAMSAN",
+   "name": "남산대",
+   "name_en": "Namsan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서울",
+   "colors": [
+    "#49AA46",
+    "#7B1E2B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_ODONG",
+   "name": "오동대",
+   "name_en": "Odong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "여수",
+   "colors": [
+    "#EF4678",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_OKCHEON",
+   "name": "옥천대",
+   "name_en": "Okcheon Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "옥천",
+   "colors": [
+    "#CD62A2",
+    "#123A6B"
+   ],
+   "power": 1
+  },
+  {
+   "id": "TEAM_UNIV_OSAN",
+   "name": "오산대",
+   "name_en": "Osan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "오산",
+   "colors": [
+    "#98473E",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SANGDANG",
+   "name": "상당대",
+   "name_en": "Sangdang Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "청주",
+   "colors": [
+    "#217DDE",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SEOGWI",
+   "name": "서귀대",
+   "name_en": "Seogwi Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서귀포",
+   "colors": [
+    "#BB4624",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SEONGHWAN",
+   "name": "성환대",
+   "name_en": "Seonghwan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "천안",
+   "colors": [
+    "#2865CA",
+    "#C1500F"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SEORAK",
+   "name": "설악대",
+   "name_en": "Seorak Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "춘천",
+   "colors": [
+    "#E283A0",
+    "#123A6B"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SEOSAN",
+   "name": "서산대",
+   "name_en": "Seosan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "서산",
+   "colors": [
+    "#BE47B2",
+    "#8A6512"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SEOSEOK",
+   "name": "서석대",
+   "name_en": "Seoseok Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "광주",
+   "colors": [
+    "#A85F57",
+    "#123A6B"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_SEUNGJU",
+   "name": "승주대",
+   "name_en": "Seungju Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "순천",
+   "colors": [
+    "#DA461B",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SIHWA",
+   "name": "시화대",
+   "name_en": "Sihwa Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "시흥",
+   "colors": [
+    "#E9724F",
+    "#33296E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SONGDO",
+   "name": "송도대",
+   "name_en": "Songdo Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "인천",
+   "colors": [
+    "#79A9D8",
+    "#8A3B12"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_SOSA",
+   "name": "소사대",
+   "name_en": "Sosa Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "부천",
+   "colors": [
+    "#8695AE",
+    "#C8102E"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_SURI",
+   "name": "수리대",
+   "name_en": "Suri Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "수원",
+   "colors": [
+    "#215CDE",
+    "#C8102E"
+   ],
+   "power": 4
+  },
+  {
+   "id": "TEAM_UNIV_TAEHWA",
+   "name": "태화대",
+   "name_en": "Taehwa Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "울산",
+   "colors": [
+    "#BF71B8",
+    "#0E5A63"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_TONGYEONG",
+   "name": "통영대",
+   "name_en": "Tongyeong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "통영",
+   "colors": [
+    "#414862",
+    "#0F6B3C"
+   ],
+   "power": 1
+  },
+  {
+   "id": "TEAM_UNIV_WANSAN",
+   "name": "완산대",
+   "name_en": "Wansan Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "전주",
+   "colors": [
+    "#787C8C",
+    "#0F6B3C"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_UNIV_WOLMI",
+   "name": "월미대",
+   "name_en": "Wolmi Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "인천",
+   "colors": [
+    "#E35270",
+    "#0E5A63"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_YEONGCHEON",
+   "name": "영천대",
+   "name_en": "Yeongcheon Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "영천",
+   "colors": [
+    "#376CE1",
+    "#C8102E"
+   ],
+   "power": 1
+  },
+  {
+   "id": "TEAM_UNIV_YUDAL",
+   "name": "유달대",
+   "name_en": "Yudal Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "목포",
+   "colors": [
+    "#3A3B5F",
+    "#0F6B3C"
+   ],
+   "power": 2
+  },
+  {
+   "id": "TEAM_UNIV_YUSEONG",
+   "name": "유성대",
+   "name_en": "Yuseong Univ",
+   "league_id": "LEAGUE_UNIVERSITY",
+   "city": "대전",
+   "colors": [
+    "#278674",
+    "#C1500F"
+   ],
+   "power": 3
+  },
+  {
+   "id": "TEAM_ABL_EMPIRE_1",
+   "name": "뉴욕 엠파이어",
+   "name_en": "New York Empire",
+   "league_id": "LEAGUE_ABL",
+   "city": "뉴욕",
+   "colors": [
+    "#003087",
+    "#e8312a"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_EMPIRE_2",
+   "name": "뉴욕 엠파이어 팜",
+   "name_en": "New York Empire (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "뉴욕",
+   "colors": [
+    "#003087",
+    "#e8312a"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_HARBORHAWKS_1",
+   "name": "보스턴 하버호크스",
+   "name_en": "Boston HarborHawks",
+   "league_id": "LEAGUE_ABL",
+   "city": "보스턴",
+   "colors": [
+    "#bd3039",
+    "#0d2b56"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_HARBORHAWKS_2",
+   "name": "보스턴 하버호크스 팜",
+   "name_en": "Boston HarborHawks (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "보스턴",
+   "colors": [
+    "#bd3039",
+    "#0d2b56"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_LAKESPIRITS_1",
+   "name": "클리블랜드 레이크스피리츠",
+   "name_en": "Cleveland LakeSpirits",
+   "league_id": "LEAGUE_ABL",
+   "city": "클리블랜드",
+   "colors": [
+    "#003366",
+    "#cc0000"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_LAKESPIRITS_2",
+   "name": "클리블랜드 레이크스피리츠 팜",
+   "name_en": "Cleveland LakeSpirits (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "클리블랜드",
+   "colors": [
+    "#003366",
+    "#cc0000"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_LONESTARS_1",
+   "name": "댈러스 론스타스",
+   "name_en": "Dallas LoneStars",
+   "league_id": "LEAGUE_ABL",
+   "city": "댈러스",
+   "colors": [
+    "#003087",
+    "#c0111f"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_LONESTARS_2",
+   "name": "댈러스 론스타스 팜",
+   "name_en": "Dallas LoneStars (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "댈러스",
+   "colors": [
+    "#003087",
+    "#c0111f"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_MOTORWOLVES_1",
+   "name": "디트로이트 모터울브즈",
+   "name_en": "Detroit MotorWolves",
+   "league_id": "LEAGUE_ABL",
+   "city": "디트로이트",
+   "colors": [
+    "#0c2340",
+    "#fa4616"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_MOTORWOLVES_2",
+   "name": "디트로이트 모터울브즈 팜",
+   "name_en": "Detroit MotorWolves (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "디트로이트",
+   "colors": [
+    "#0c2340",
+    "#fa4616"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_WAVERIDERS_1",
+   "name": "마이애미 웨이브라이더스",
+   "name_en": "Miami WaveRiders",
+   "league_id": "LEAGUE_ABL",
+   "city": "마이애미",
+   "colors": [
+    "#00a3e0",
+    "#ef3340"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_WAVERIDERS_2",
+   "name": "마이애미 웨이브라이더스 팜",
+   "name_en": "Miami WaveRiders (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "마이애미",
+   "colors": [
+    "#00a3e0",
+    "#ef3340"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_RAINARROWS_1",
+   "name": "시애틀 레인애로우스",
+   "name_en": "Seattle RainArrows",
+   "league_id": "LEAGUE_ABL",
+   "city": "시애틀",
+   "colors": [
+    "#0c2c56",
+    "#005c5c"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_RAINARROWS_2",
+   "name": "시애틀 레인애로우스 팜",
+   "name_en": "Seattle RainArrows (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "시애틀",
+   "colors": [
+    "#0c2c56",
+    "#005c5c"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_WINDBEARS_1",
+   "name": "시카고 윈드베어스",
+   "name_en": "Chicago WindBears",
+   "league_id": "LEAGUE_ABL",
+   "city": "시카고",
+   "colors": [
+    "#002244",
+    "#cc0000"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_WINDBEARS_2",
+   "name": "시카고 윈드베어스 팜",
+   "name_en": "Chicago WindBears (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "시카고",
+   "colors": [
+    "#002244",
+    "#cc0000"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_MOUNTAINPEAKS_1",
+   "name": "덴버 마운틴픽스",
+   "name_en": "Denver MountainPeaks",
+   "league_id": "LEAGUE_ABL",
+   "city": "덴버",
+   "colors": [
+    "#33006f",
+    "#c4ced4"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_MOUNTAINPEAKS_2",
+   "name": "덴버 마운틴픽스 팜",
+   "name_en": "Denver MountainPeaks (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "덴버",
+   "colors": [
+    "#33006f",
+    "#c4ced4"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_SPACECOMETS_1",
+   "name": "휴스턴 스페이스코밋츠",
+   "name_en": "Houston SpaceComets",
+   "league_id": "LEAGUE_ABL",
+   "city": "휴스턴",
+   "colors": [
+    "#eb6e1f",
+    "#002d62"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_SPACECOMETS_2",
+   "name": "휴스턴 스페이스코밋츠 팜",
+   "name_en": "Houston SpaceComets (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "휴스턴",
+   "colors": [
+    "#eb6e1f",
+    "#002d62"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_SUNDRAGONS_1",
+   "name": "LA 선드래곤스",
+   "name_en": "Los Angeles SunDragons",
+   "league_id": "LEAGUE_ABL",
+   "city": "로스앤젤레스",
+   "colors": [
+    "#003da5",
+    "#ef3e42"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_SUNDRAGONS_2",
+   "name": "LA 선드래곤스 팜",
+   "name_en": "Los Angeles SunDragons (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "로스앤젤레스",
+   "colors": [
+    "#003da5",
+    "#ef3e42"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_DESERTSERPENTS_1",
+   "name": "피닉스 데저트서펀츠",
+   "name_en": "Phoenix DesertSerpents",
+   "league_id": "LEAGUE_ABL",
+   "city": "피닉스",
+   "colors": [
+    "#a71930",
+    "#e3d4ad"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_DESERTSERPENTS_2",
+   "name": "피닉스 데저트서펀츠 팜",
+   "name_en": "Phoenix DesertSerpents (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "피닉스",
+   "colors": [
+    "#a71930",
+    "#e3d4ad"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_COASTALRAYS_1",
+   "name": "샌디에이고 코스털레이스",
+   "name_en": "San Diego CoastalRays",
+   "league_id": "LEAGUE_ABL",
+   "city": "샌디에이고",
+   "colors": [
+    "#002d62",
+    "#ffc425"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_COASTALRAYS_2",
+   "name": "샌디에이고 코스털레이스 팜",
+   "name_en": "San Diego CoastalRays (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "샌디에이고",
+   "colors": [
+    "#002d62",
+    "#ffc425"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_BAYSEALS_1",
+   "name": "샌프란시스코 베이씰스",
+   "name_en": "San Francisco BaySeals",
+   "league_id": "LEAGUE_ABL",
+   "city": "샌프란시스코",
+   "colors": [
+    "#fd5a1e",
+    "#27251f"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_BAYSEALS_2",
+   "name": "샌프란시스코 베이씰스 팜",
+   "name_en": "San Francisco BaySeals (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "샌프란시스코",
+   "colors": [
+    "#fd5a1e",
+    "#27251f"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_RIVERCARDINALS_1",
+   "name": "세인트루이스 리버카디널스",
+   "name_en": "St. Louis RiverCardinals",
+   "league_id": "LEAGUE_ABL",
+   "city": "세인트루이스",
+   "colors": [
+    "#c41e3a",
+    "#0c2340"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_RIVERCARDINALS_2",
+   "name": "세인트루이스 리버카디널스 팜",
+   "name_en": "St. Louis RiverCardinals (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "세인트루이스",
+   "colors": [
+    "#c41e3a",
+    "#0c2340"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_PEACHTREEFALCONS_1",
+   "name": "애틀랜타 피치트리팰컨스",
+   "name_en": "Atlanta PeachtreeFalcons",
+   "league_id": "LEAGUE_ABL",
+   "city": "애틀랜타",
+   "colors": [
+    "#ce1141",
+    "#002d62"
+   ]
+  },
+  {
+   "id": "TEAM_ABL_PEACHTREEFALCONS_2",
+   "name": "애틀랜타 피치트리팰컨스 팜",
+   "name_en": "Atlanta PeachtreeFalcons (Farm)",
+   "league_id": "LEAGUE_ABL",
+   "city": "애틀랜타",
+   "colors": [
+    "#ce1141",
+    "#002d62"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_NEONCRANES_1",
+   "name": "도쿄 네온 크레인즈 1군",
+   "name_en": "Tokyo Neon Cranes (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "도쿄",
+   "colors": [
+    "#003087",
+    "#c8a822"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_NEONCRANES_2",
+   "name": "도쿄 네온 크레인즈 2군",
+   "name_en": "Tokyo Neon Cranes (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "도쿄",
+   "colors": [
+    "#003087",
+    "#c8a822"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_TEMPOSTINGS_1",
+   "name": "오사카 템포 스팅스 1군",
+   "name_en": "Osaka Tempo Stings (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "오사카",
+   "colors": [
+    "#002b5c",
+    "#d00000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_TEMPOSTINGS_2",
+   "name": "오사카 템포 스팅스 2군",
+   "name_en": "Osaka Tempo Stings (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "오사카",
+   "colors": [
+    "#002b5c",
+    "#d00000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_IRONDRAKES_1",
+   "name": "나고야 아이언 드레이크스 1군",
+   "name_en": "Nagoya Iron Drakes (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "나고야",
+   "colors": [
+    "#003da5",
+    "#d40000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_IRONDRAKES_2",
+   "name": "나고야 아이언 드레이크스 2군",
+   "name_en": "Nagoya Iron Drakes (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "나고야",
+   "colors": [
+    "#003da5",
+    "#d40000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_TIDERAVES_1",
+   "name": "요코하마 타이드 레이브스 1군",
+   "name_en": "Yokohama Tide Raves (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "요코하마",
+   "colors": [
+    "#003087",
+    "#d70000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_TIDERAVES_2",
+   "name": "요코하마 타이드 레이브스 2군",
+   "name_en": "Yokohama Tide Raves (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "요코하마",
+   "colors": [
+    "#003087",
+    "#d70000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_SILVERWOLVES_1",
+   "name": "고베 실버 울브스 1군",
+   "name_en": "Kobe Silver Wolves (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "고베",
+   "colors": [
+    "#005bac",
+    "#c8a400"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_SILVERWOLVES_2",
+   "name": "고베 실버 울브스 2군",
+   "name_en": "Kobe Silver Wolves (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "고베",
+   "colors": [
+    "#005bac",
+    "#c8a400"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_IRONSTORMS_1",
+   "name": "히로시마 아이언 스톰즈 1군",
+   "name_en": "Hiroshima Iron Storms (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "히로시마",
+   "colors": [
+    "#bf0000",
+    "#000000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_CL_IRONSTORMS_2",
+   "name": "히로시마 아이언 스톰즈 2군",
+   "name_en": "Hiroshima Iron Storms (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "히로시마",
+   "colors": [
+    "#bf0000",
+    "#000000"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_THUNDERFALCONS_1",
+   "name": "후쿠오카 썬더 팰컨즈 1군",
+   "name_en": "Fukuoka Thunder Falcons (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "후쿠오카",
+   "colors": [
+    "#002d62",
+    "#fdbb30"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_THUNDERFALCONS_2",
+   "name": "후쿠오카 썬더 팰컨즈 2군",
+   "name_en": "Fukuoka Thunder Falcons (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "후쿠오카",
+   "colors": [
+    "#002d62",
+    "#fdbb30"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_POLARBEARS_1",
+   "name": "삿포로 폴라 베어스 1군",
+   "name_en": "Sapporo Polar Bears (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "삿포로",
+   "colors": [
+    "#002060",
+    "#c8102e"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_POLARBEARS_2",
+   "name": "삿포로 폴라 베어스 2군",
+   "name_en": "Sapporo Polar Bears (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "삿포로",
+   "colors": [
+    "#002060",
+    "#c8102e"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+   "name": "센다이 스피릿 버팔로스 1군",
+   "name_en": "Sendai Spirit Buffalos (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "센다이",
+   "colors": [
+    "#003da5",
+    "#e8002d"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
+   "name": "센다이 스피릿 버팔로스 2군",
+   "name_en": "Sendai Spirit Buffalos (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "센다이",
+   "colors": [
+    "#003da5",
+    "#e8002d"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_MARINESOLDIERS_1",
+   "name": "나가사키 마린 솔저스 1군",
+   "name_en": "Nagasaki Marine Soldiers (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "나가사키",
+   "colors": [
+    "#00205b",
+    "#cf152d"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_MARINESOLDIERS_2",
+   "name": "나가사키 마린 솔저스 2군",
+   "name_en": "Nagasaki Marine Soldiers (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "나가사키",
+   "colors": [
+    "#00205b",
+    "#cf152d"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_SEAGULLS_1",
+   "name": "니가타 씨걸스 1군",
+   "name_en": "Niigata Seagulls (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "니가타",
+   "colors": [
+    "#005aab",
+    "#ffffff"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_SEAGULLS_2",
+   "name": "니가타 씨걸스 2군",
+   "name_en": "Niigata Seagulls (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "니가타",
+   "colors": [
+    "#005aab",
+    "#ffffff"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_SUNS_1",
+   "name": "오키나와 선즈 1군",
+   "name_en": "Okinawa Suns (1st)",
+   "league_id": "LEAGUE_JBL",
+   "city": "오키나와",
+   "colors": [
+    "#0077b6",
+    "#f4a300"
+   ]
+  },
+  {
+   "id": "TEAM_JBL_PL_SUNS_2",
+   "name": "오키나와 선즈 2군",
+   "name_en": "Okinawa Suns (2nd)",
+   "league_id": "LEAGUE_JBL",
+   "city": "오키나와",
+   "colors": [
+    "#0077b6",
+    "#f4a300"
+   ]
+  }
+ ]
+}

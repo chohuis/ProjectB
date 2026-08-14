@@ -30,11 +30,6 @@
   "\tfor r in target - 1:"
  ],
  [
-  "홈·원정을 안 뒤집는다",
-  "\t\tvar flip: bool = (r / base.size()) % 2 == 1",
-  "\t\tvar flip: bool = false"
- ],
- [
   "경기를 하루에 몰아 넣는다",
   "\t\tvar day: int = days[r * days.size() / target]",
   "\t\tvar day: int = days[0]"
@@ -78,5 +73,40 @@
   "고교·대학이 같은 날 몰려도 안 본다 (하루 부하 게이트)",
   "\t\t\"games_per_team\": 20, \"start_day\": 64, \"end_day\": 204, \"weekdays\": WEEKDAYS_WEEKEND,",
   "\t\t\"games_per_team\": 20, \"start_day\": 64, \"end_day\": 78, \"weekdays\": WEEKDAYS_WEEKEND,"
+ ],
+ [
+  "홈 수를 안 센다",
+  "\t\t\thome_count[h] = int(home_count.get(h, 0)) + 1",
+  "\t\t\tpass"
+ ],
+ [
+  "홈을 원형 배치 자리로 정한다 (짧은 리그가 홈 0경기)",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip",
+  "\t\t\tvar x_is_home: bool = not flip"
+ ],
+ [
+  "상대별 균형을 안 본다 (저 팀 구장에서만 16번)",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip"
+ ],
+ [
+  "팀 총합 균형을 안 본다",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip"
+ ],
+ [
+  "동률을 늘 첫 자리로 가른다 (대학이 홈 6·원정 3)",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = not flip"
+ ],
+ [
+  "홈이 많은 쪽에 또 준다",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px < py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx < hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip",
+  "\t\t\tvar x_is_home: bool\n\t\t\tif px != py:\n\t\t\t\tx_is_home = px > py\n\t\t\telif hx != hy:\n\t\t\t\tx_is_home = hx > hy\n\t\t\telse:\n\t\t\t\tx_is_home = ((r + pi) % 2 == 0) != flip"
+ ],
+ [
+  "상대별 홈 수를 안 센다",
+  "\t\t\tpair_home[kx if x_is_home else ky] = (px if x_is_home else py) + 1",
+  "\t\t\tpass"
  ]
 ]

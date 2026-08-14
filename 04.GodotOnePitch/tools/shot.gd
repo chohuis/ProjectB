@@ -87,6 +87,19 @@ func _build(which: String) -> Control:
 			var nw: AppRoot = APP.instantiate()
 			nw.set_state(Fixtures.main_state())
 			return nw
+		"newgame":
+			# ⚠ **진짜 새 게임이다.** 손으로 만든 사전이 아니라 세계 생성을
+			# 거친다 — 그래야 스크린샷이 실제 경로를 본다
+			var ng: AppRoot = APP.instantiate()
+			ng.set_state(World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
+			return ng
+		"newgame-schedule":
+			var ns: AppRoot = APP.instantiate()
+			ns.set_state(World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
+			ns.ready.connect(func() -> void: ns.screen()._on_tab(5), CONNECT_ONE_SHOT)
+			return ns
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

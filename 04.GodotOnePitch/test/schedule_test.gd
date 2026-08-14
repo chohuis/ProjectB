@@ -234,6 +234,61 @@ func test_the_busiest_day_stays_inside_the_gate() -> void:
 	assert_int(worst).is_less_equal(100)
 
 
+## ⚠ **홈과 원정이 고르게 나뉘어야 한다.** 실측으로 고교가 **홈 0 · 원정
+## 20**이었다 — 20경기를 전부 남의 구장에서 치렀다. 야구가 아니다.
+##
+## 원인은 뒤집기가 **바퀴 수로만** 걸려 있던 것이다. 한 바퀴는 팀 수만큼
+## (고교 101라운드)인데 경기는 20경기뿐이라 한 바퀴를 못 돌고, 그래서
+## 뒤집기가 한 번도 안 걸렸다. 원형 배치의 고정 자리 때문에 특정 팀이
+## 늘 같은 쪽에 선다.
+##
+## ⚠ **KBL은 멀쩡했다** — 144경기라 16바퀴를 돌아 정확히 반반이었다.
+## **긴 리그만 보면 이 결함이 안 보인다**
+func test_home_and_away_are_split_evenly() -> void:
+	for lid in Schedule.LEAGUES:
+		var teams: Array = _teams(lid.substr(7, 3), Schedule.TEAM_COUNTS[lid])
+		var home: Dictionary = {}
+		var total: Dictionary = {}
+		for g in Schedule.build_league(lid, teams, 2027):
+			home[g["home"]] = int(home.get(g["home"], 0)) + 1
+			total[g["home"]] = int(total.get(g["home"], 0)) + 1
+			total[g["away"]] = int(total.get(g["away"], 0)) + 1
+
+		for t in teams:
+			var n: int = int(total.get(t, 0))
+			if n == 0:
+				continue
+			var h: int = int(home.get(t, 0))
+			var share: float = float(h) / float(n)
+			# 실측 44~56%. 대학(9경기)이 제일 넓은데 홀수라 4/5가 최선이다
+			# (4/9 = 44%). 프로는 49~51%로 붙는다
+			assert_float(share).override_failure_message(
+				"%s의 %s: %d경기 중 홈 %d (%.0f%%)" % [lid, t, n, h, share * 100.0]) \
+				.is_between(0.43, 0.57)
+
+
+## ⚠ **같은 상대와도 홈·원정이 나뉜다.** 팀별 총합만 맞고 상대별로 쏠리면
+## "저 팀 구장에서만 16번 진다"가 된다 — 총합 검사로는 안 보인다.
+##
+## KBL은 10팀 × 144경기라 상대마다 16경기다. 홈 8 · 원정 8이 맞다
+func test_home_and_away_split_against_each_opponent() -> void:
+	var teams: Array = _teams("T", 10)
+	var pair_home: Dictionary = {}
+	var pair_total: Dictionary = {}
+	for g in Schedule.build_league("LEAGUE_KBL", teams, 2027):
+		var key: String = "%s|%s" % [g["home"], g["away"]]
+		var rev: String = "%s|%s" % [g["away"], g["home"]]
+		pair_home[key] = int(pair_home.get(key, 0)) + 1
+		pair_total[key] = int(pair_total.get(key, 0)) + 1
+		pair_total[rev] = int(pair_total.get(rev, 0)) + 1
+
+	for key in pair_total:
+		var n: int = int(pair_total[key])
+		var h: int = int(pair_home.get(key, 0))
+		assert_float(float(h) / float(n)).override_failure_message(
+			"%s: 맞대결 %d경기 중 홈 %d" % [key, n, h]).is_between(0.4, 0.6)
+
+
 func test_the_season_total_matches_02() -> void:
 	# ⚠ 총 경기 수가 바뀌면 리그 기록의 척도가 통째로 바뀐다
 	var total: int = 0
