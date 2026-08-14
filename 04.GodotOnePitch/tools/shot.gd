@@ -201,6 +201,22 @@ func _build(which: String) -> Control:
 				md.open_match()
 				md._on_auto(), CONNECT_ONE_SHOT)
 			return md
+		"season-end":
+			# 시즌 마지막 날로 보내 "시즌 종료"를 실제로 누른다
+			var se: AppRoot = APP.instantiate()
+			var sst := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			sst["day"] = int(sst["season_days"])
+			se.set_state(sst)
+			se.ready.connect(func() -> void: se._on_season_end(), CONNECT_ONE_SHOT)
+			return se
+		"season-end-before":
+			var sb: AppRoot = APP.instantiate()
+			var sbt := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			sbt["day"] = int(sbt["season_days"])
+			sb.set_state(sbt)
+			return sb
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

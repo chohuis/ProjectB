@@ -1,0 +1,142 @@
+[
+ [
+  "같은 해에 두 번 돈다 (NPC 전원이 두 학년 오른다)",
+  "\tif not SeasonEnd.should_run(last, year):\n\t\treturn {\"ran\": false, \"year\": year, \"phases\": []}",
+  ""
+ ],
+ [
+  "가드 연도를 상태에 안 남긴다 (02 결함 — 앱을 껐다 켜면 없던 일이 된다)",
+  "\tstate[\"last_world_season_end_year\"] = year",
+  ""
+ ],
+ [
+  "진급을 드래프트 뒤로 옮긴다 (졸업생이 풀에 없어 아무도 안 뽑힌다)",
+  "\tvar promoted: Dictionary = Promotion.advance_grades(all_players(state), year)",
+  "\tvar promoted: Dictionary = {\"hs_graduated\": [], \"univ_graduated\": []}"
+ ],
+ [
+  "대학 졸업생을 풀에 안 넣는다",
+  "\tvar graduates: Array = promoted[\"hs_graduated\"] + promoted[\"univ_graduated\"]",
+  "\tvar graduates: Array = promoted[\"hs_graduated\"]"
+ ],
+ [
+  "졸업생을 학교 로스터에서 안 뺀다 (한 선수가 두 군데에 있다)",
+  "\tfor tid in world.get(\"rosters\", {}):\n\t\tvar kept: Array = []\n\t\tfor p in world[\"rosters\"][tid]:\n\t\t\tif not ids.has(p.get(\"id\", \"\")):\n\t\t\t\tkept.append(p)\n\t\tworld[\"rosters\"][tid] = kept",
+  ""
+ ],
+ [
+  "지명자를 팀 로스터에 안 넣는다 (소속만 바뀌고 아무 팀에도 없다)",
+  "\t\tworld[\"rosters\"][tid].append(player)",
+  ""
+ ],
+ [
+  "은퇴자를 로스터에서 안 뺀다 (은퇴한 선수가 계속 뛴다)",
+  "\t_remove_retired(world)",
+  ""
+ ],
+ [
+  "나이를 안 올린다 (세대교체가 멈춘다)",
+  "\tPromotion.advance_ages(alive)",
+  ""
+ ],
+ [
+  "신입생을 안 채운다 (고교가 5년 만에 텅 빈다)",
+  "\tsummary[\"freshmen\"] = _intake(state, world, year)",
+  "\tsummary[\"freshmen\"] = 0"
+ ],
+ [
+  "신입생을 3학년으로 넣는다 (첫 해부터 졸업한다)",
+  "\t\t\t\t\"age\": int(r.get(\"age_base\", r[\"age\"])) + 1, \"grade\": 1,",
+  "\t\t\t\t\"age\": int(r.get(\"age_base\", r[\"age\"])) + 1, \"grade\": 3,"
+ ],
+ [
+  "미지명자를 배정 안 한다 (드래프트 풀이 무한히 쌓인다)",
+  "\tvar placed: Dictionary = _place_undrafted(state, world, year)",
+  "\tvar placed: Dictionary = {\"placed\": 0, \"gave_up\": 0}"
+ ],
+ [
+  "고졸도 대학에 안 보낸다 (매년 1,300명이 통째로 사라진다)",
+  "\t\tif _last_league_of(p) == \"LEAGUE_HIGHSCHOOL\":\n\t\t\troutes = [UNIV_LEAGUE, INDY_LEAGUE]",
+  ""
+ ],
+ [
+  "대졸도 대학으로 돌려보낸다 (영원히 대학에 남는다)",
+  "\t\tvar routes: Array = [INDY_LEAGUE]\n\t\tif _last_league_of(p) == \"LEAGUE_HIGHSCHOOL\":\n\t\t\troutes = [UNIV_LEAGUE, INDY_LEAGUE]",
+  "\t\tvar routes: Array = [UNIV_LEAGUE, INDY_LEAGUE]"
+ ],
+ [
+  "대학에 편입시키면서 학년을 안 되돌린다",
+  "\t\tif target_league == UNIV_LEAGUE:\n\t\t\tp[\"grade\"] = 1",
+  ""
+ ],
+ [
+  "로스터 상한을 안 건다 (프로가 매년 지명 수만큼 불어난다)",
+  "\tvar cap: Dictionary = _normalize_rosters(world, year)",
+  "\tvar cap: Dictionary = {\"demoted\": 0, \"released\": 0}"
+ ],
+ [
+  "2군 상한을 안 본다 (강등자가 들어와도 아무도 다시 안 본다 — KBL 700명)",
+  "\t\tif not RosterMaintenance.ROSTER_LIMITS.has(league):",
+  "\t\tif not RosterMaintenance.is_pro_league(league):"
+ ],
+ [
+  "팜을 먼저 본다 (1군 유입이 2군 상한 검사를 통과한다)",
+  "\t\tif fa != fb:\n\t\t\treturn not fa",
+  "\t\tif fa != fb:\n\t\t\treturn fa"
+ ],
+ [
+  "강등할 때 리그를 안 바꾼다 (2군에 있는데 1군으로 집계된다)",
+  "\t\t\t\tp[\"league_id\"] = farm_league",
+  ""
+ ],
+ [
+  "잘하는 선수부터 강등시킨다",
+  "\t\t\tif oa != ob:\n\t\t\t\treturn oa < ob",
+  "\t\t\tif oa != ob:\n\t\t\t\treturn oa > ob"
+ ],
+ [
+  "주인공도 강등·방출 대상에 넣는다 (사용자가 정할 일을 세계가 정한다)",
+  "\t\tfor p in roster:\n\t\t\tif not p.get(\"is_protagonist\", false):\n\t\t\t\tsorted.append(p)",
+  "\t\tsorted = roster.duplicate()"
+ ],
+ [
+  "주인공을 로스터에 안 되돌린다 (소속 없는 현역이 된다)",
+  "\t\tfor p in roster:\n\t\t\tif p.get(\"is_protagonist\", false):\n\t\t\t\tkept.append(p)",
+  ""
+ ],
+ [
+  "주인공도 NPC처럼 자리를 못 잡으면 은퇴시킨다 (게임이 조용히 끝난다)",
+  "\t\tif p.get(\"is_protagonist\", false):",
+  "\t\tif false:"
+ ],
+ [
+  "롤오버가 연도를 안 올린다 (같은 해가 반복된다)",
+  "\tstate[\"season_year\"] = year",
+  ""
+ ],
+ [
+  "롤오버가 날짜를 안 되돌린다 (첫날부터 시즌 종료가 반복된다)",
+  "\tstate[\"day\"] = 1",
+  ""
+ ],
+ [
+  "새 일정을 안 깐다 (지난 시즌 결과가 그대로 남는다)",
+  "\tstate[\"schedule\"] = World.build_schedule(state.get(\"world\", {}), year, me,\n\t\tteam_id, int(state.get(\"seed\", 0)))",
+  ""
+ ],
+ [
+  "보직을 다시 안 정한다 (팀이 바뀌어도 옛 기준으로 로테이션에 든다)",
+  "\tme[\"role\"] = Rotation.assign_position(\n\t\tfloat(me.get(\"pitching\", {}).get(\"ovr\", 0.0)), team_ovrs)",
+  ""
+ ],
+ [
+  "지난 시즌 미결정을 남긴다 (지나간 선택지가 새 해를 막는다)",
+  "\tstate[\"pending\"] = []",
+  ""
+ ],
+ [
+  "시즌이 안 끝났는데 롤오버한다",
+  "\tif not out[\"ran\"]:\n\t\treturn out",
+  ""
+ ]
+]

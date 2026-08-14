@@ -165,6 +165,37 @@ static func team_names() -> Dictionary:
 	return out
 
 
+## 한 해 일정.
+##
+## ⚠ **리그마다 짜서 합친다.** 통째로 부르면 조용히 빈 배열이 나온다.
+##
+## ⚠ **새 게임과 롤오버가 같은 함수를 쓴다.** 02는 시즌마다 일정을 짜는
+## 자리가 따로 있었고, 그래서 해가 바뀔 때만 나오는 어긋남이 생겼다
+static func build_schedule(world: Dictionary, year: int, me: Dictionary,
+		team_id: String, seed_value: int) -> Array:
+	var schedule: Array = []
+	for lid in Schedule.LEAGUES:
+		var ids: Array = []
+		for t in teams_of(lid):
+			ids.append(t["id"])
+		for g in Schedule.build_league(lid, ids, year):
+			# ⚠ **연도를 id에 넣는다.** 안 넣으면 다음 해 일정이 같은 id를
+			# 갖고, 소식·기록이 옛 경기와 겹친다
+			g["id"] = "%s_Y%d_D%d_%s_%s" % [lid, year, g["day"], g["home"], g["away"]]
+			g["result"] = null
+			g["is_protagonist_game"] = false
+			schedule.append(g)
+
+	# ⚠ **팀 경기가 곧 내 등판이 아니다.** 로테이션이 정한다 — 안 걸면
+	# 고교 20경기를 전부 던지게 되고, 그러면 피로·성장·기록이 전부 부푼다.
+	#
+	# 날짜 순으로 훑으며 내 팀의 몇 번째 경기인지 센다
+	schedule.sort_custom(func(a, b) -> bool: return int(a["day"]) < int(b["day"]))
+	mark_my_starts(schedule, world, me.get("id", ""), team_id, seed_value,
+		me.get("role", "RP"))
+	return schedule
+
+
 ## 새 게임 상태 하나. **세계·주인공·일정이 같이 온다** —
 ## 02는 리그를 게을리 켜서 셋이 어긋나는 순간이 있었다
 static func new_game(p: Dictionary) -> Dictionary:
@@ -218,24 +249,7 @@ static func new_game(p: Dictionary) -> Dictionary:
 	var names: Dictionary = team_names()
 	me["team_name"] = names.get(team_id, team_id)
 
-	# 일정 — **리그마다 짜서 합친다.** 통째로 부르면 조용히 빈 배열이 나온다
-	var schedule: Array = []
-	for lid in Schedule.LEAGUES:
-		var ids: Array = []
-		for t in teams_of(lid):
-			ids.append(t["id"])
-		for g in Schedule.build_league(lid, ids, year):
-			g["id"] = "%s_D%d_%s_%s" % [lid, g["day"], g["home"], g["away"]]
-			g["result"] = null
-			g["is_protagonist_game"] = false
-			schedule.append(g)
-
-	# ⚠ **팀 경기가 곧 내 등판이 아니다.** 로테이션이 정한다 — 안 걸면
-	# 고교 20경기를 전부 던지게 되고, 그러면 피로·성장·기록이 전부 부푼다.
-	#
-	# 날짜 순으로 훑으며 내 팀의 몇 번째 경기인지 센다
-	schedule.sort_custom(func(a, b) -> bool: return int(a["day"]) < int(b["day"]))
-	mark_my_starts(schedule, world, me["id"], team_id, seed_value, me["role"])
+	var schedule: Array = build_schedule(world, year, me, team_id, seed_value)
 
 	return {
 		"day": 1,

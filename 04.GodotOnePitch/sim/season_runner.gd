@@ -207,6 +207,29 @@ static func _place_undrafted(state: Dictionary, world: Dictionary,
 	var placed: int = 0
 	var gave_up: int = 0
 	for p in sorted:
+		# ⚠ **주인공은 NPC와 같이 밀려나면 안 된다.** 능력치 순 배정에서
+		# 뒤로 밀려 자리가 없으면 은퇴하고, 그러면 **게임이 조용히 끝난다** —
+		# 실측에서 3년차에 그렇게 사라졌다. 진로는 사용자가 정한다(미이관)
+		if p.get("is_protagonist", false):
+			var mine: String = _open_slot(world, UNIV_LEAGUE)
+			var mine_league: String = UNIV_LEAGUE
+			if mine.is_empty():
+				mine = _open_slot(world, INDY_LEAGUE)
+				mine_league = INDY_LEAGUE
+			if mine.is_empty():
+				# 어디도 자리가 없다 — 그래도 야구를 그만두게 두지 않는다
+				mine = String(World.teams_of(UNIV_LEAGUE)[0]["id"])
+				mine_league = UNIV_LEAGUE
+			p["team_id"] = mine
+			p["league_id"] = mine_league
+			if mine_league == UNIV_LEAGUE:
+				p["grade"] = 1
+			if not world["rosters"].has(mine):
+				world["rosters"][mine] = []
+			world["rosters"][mine].append(p)
+			placed += 1
+			continue
+
 		# ⚠ **고졸이면 대학이 먼저다.** 이게 주인공의 기본 경로이기도 하고,
 		# 안 이으면 고졸 미지명자 1,310명이 매년 통째로 사라진다. 마지막
 		# 연도 기록이 어느 리그였는지가 고졸·대졸을 가른다
@@ -343,9 +366,16 @@ static func _normalize_rosters(world: Dictionary, year: int) -> Dictionary:
 		if over <= 0:
 			continue
 
+		# ⚠ **주인공은 강등·방출 대상이 아니다.** 사용자가 정할 일을 세계가
+		# 대신 정하면 안 된다 — 진로·이적은 별도 화면이 맡는다(미이관)
+		var sorted: Array = []
+		for p in roster:
+			if not p.get("is_protagonist", false):
+				sorted.append(p)
+		over = mini(over, sorted.size())
+
 		# ⚠ **약한 순 → 나이 많은 순 → id 순.** 마지막 두 갈래가 없으면
 		# 같은 능력치에서 순서가 흔들려 재현이 무너진다
-		var sorted: Array = roster.duplicate()
 		sorted.sort_custom(func(a, b) -> bool:
 			var oa: float = Offseason.core_ovr(a)
 			var ob: float = Offseason.core_ovr(b)
@@ -391,9 +421,69 @@ static func _normalize_rosters(world: Dictionary, year: int) -> Dictionary:
 				world[POOL_KEY] = world.get(POOL_KEY, []) + [p]
 				released += 1
 
+		# ⚠ **주인공을 다시 넣는다.** 정렬 대상에서 뺐으므로 여기서 안 넣으면
+		# 로스터에서 통째로 사라진다 — 소속 없는 현역이 되고 화면이 깨진다
 		var kept: Array = []
+		for p in roster:
+			if p.get("is_protagonist", false):
+				kept.append(p)
 		for j in range(over, sorted.size()):
 			kept.append(sorted[j])
 		world["rosters"][tid] = kept
 
 	return {"demoted": demoted, "released": released}
+
+
+## 다음 해로 넘어간다 — **시즌 종료를 돌린 뒤에 부른다.**
+##
+## ⚠ **순서가 계약이다.** 롤오버를 먼저 하면 `SeasonEnd`의 가드가 새 연도를
+## 보고 또 돌 수 있고, 진급 판정이 한 해 어긋난다.
+##
+## ⚠ **주인공 팀이 바뀌었을 수 있다.** 졸업·진학·지명이 방금 지났으므로
+## 소속을 다시 읽는다 — 옛 팀으로 일정을 짜면 내 경기가 하나도 안 잡힌다
+static func roll_over(state: Dictionary) -> Dictionary:
+	var me: Dictionary = state.get("protagonist", {})
+	var year: int = int(state.get("season_year", 0)) + 1
+	var team_id: String = String(me.get("team_id", ""))
+
+	state["season_year"] = year
+	state["day"] = 1
+	state["season_days"] = Calendar.DAYS_PER_SEASON
+
+	# 팀 이름표를 다시 붙인다 — 진학·지명으로 바뀌었을 수 있다
+	var names: Dictionary = state.get("team_names", {})
+	me["team_name"] = names.get(team_id, team_id)
+
+	# ⚠ **보직을 다시 정한다.** 팀이 바뀌면 나보다 센 투수의 수가 달라지고,
+	# 그러면 선발이던 사람이 불펜이 된다. 안 다시 정하면 옛 팀 기준으로
+	# 로테이션에 들어가 등판이 하나도 안 잡히는 해가 생긴다
+	var team_ovrs: Array = []
+	for q in World.roster_of(state.get("world", {}), team_id):
+		if q.get("id", "") != me.get("id", "") \
+				and PlayerGen.is_pitcher(q.get("position", "")):
+			team_ovrs.append(q.get("pitching", {}).get("ovr", 0.0))
+	me["role"] = Rotation.assign_position(
+		float(me.get("pitching", {}).get("ovr", 0.0)), team_ovrs)
+	me["position"] = me["role"]
+
+	state["schedule"] = World.build_schedule(state.get("world", {}), year, me,
+		team_id, int(state.get("seed", 0)))
+
+	# 지난 시즌의 미결정은 남기지 않는다 — 지나간 선택지가 새 해를 막는다
+	state["pending"] = []
+
+	var mine: int = 0
+	for g in state["schedule"]:
+		if g.get("is_protagonist_game", false):
+			mine += 1
+	return {"year": year, "team_id": team_id, "role": me["role"],
+		"games": state["schedule"].size(), "my_starts": mine}
+
+
+## 시즌 종료 + 롤오버를 한 번에. **부르는 자리가 몇이든 여기 하나를 거친다**
+static func finish_season(state: Dictionary) -> Dictionary:
+	var out: Dictionary = run(state)
+	if not out["ran"]:
+		return out
+	out["rollover"] = roll_over(state)
+	return out

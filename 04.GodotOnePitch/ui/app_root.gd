@@ -28,6 +28,8 @@ var _match_screen: MatchScreen
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
 var weekly_passes: int = 0
+## 방금 끝낸 시즌의 결과. 결산 화면이 여기서 읽는다(M7-7)
+var last_season_end: Dictionary = {}
 
 
 func _ready() -> void:
@@ -37,6 +39,7 @@ func _ready() -> void:
 
 	_main.advance_requested.connect(_on_advance_requested)
 	_main.match_requested.connect(_on_match_requested)
+	_main.season_end_requested.connect(_on_season_end)
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
 	_refresh()
@@ -204,6 +207,13 @@ func _on_match_done() -> void:
 
 func _on_match_requested() -> void:
 	open_match()
+
+
+## 시즌을 끝내고 다음 해로. **`SeasonRunner` 하나만 거친다** —
+## 02는 이 자리가 세 분기에 각각 있었고 그중 어디도 안 타는 경로가 있었다
+func _on_season_end() -> void:
+	last_season_end = SeasonRunner.finish_season(_state)
+	_refresh()
 
 
 ## 며칠 진행한다. 실제로 몇 날 가는지는 `DayRunner`가 정한다
