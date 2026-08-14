@@ -181,6 +181,10 @@ static func new_game(p: Dictionary) -> Dictionary:
 	me["injury"] = null
 	me["eligibility_blocked"] = false
 	me["retired"] = false
+	# ⚠ **직구 하나로 시작한다.** 02 그대로 — 나머지는 훈련으로 배운다.
+	# 숙련도 3이 `PitchStep`의 기준값과 같아서, 시작 시점의 경기 결과는
+	# 배선 전과 똑같다. 훈련으로 4·5를 올릴 때 비로소 달라진다
+	me["pitches"] = [{"id": "fastball", "grade": 3}]
 
 	if world["rosters"].has(team_id):
 		world["rosters"][team_id].append(me)

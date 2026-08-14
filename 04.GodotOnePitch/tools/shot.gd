@@ -149,6 +149,45 @@ func _build(which: String) -> Control:
 				for i in 24:
 					mt._on_pitch(), CONNECT_ONE_SHOT)
 			return mt
+		"match-mine":
+			# ⚠ **주인공이 마운드에 있는 순간을 찍는다.** 등판일이라고 첫 구부터
+			# 내가 던지는 게 아니다 — 원정이면 1회말부터고, 불펜이면 한참 뒤다.
+			# 그냥 찍으면 선택 화면이 없는 그림이 나온다
+			var mm: AppRoot = APP.instantiate()
+			var st3 := World.new_game({"seed": 777, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			var me_id: String = st3["protagonist"]["id"]
+			for g in st3["schedule"]:
+				if not g["is_protagonist_game"]:
+					continue
+				var probe: Dictionary = LiveMatch.open(st3, g)
+				if not probe["ok"]:
+					continue
+				# 이 경기 어딘가에서 내가 던지나 — 실제로 돌려서 본다
+				var r := RandomNumberGenerator.new()
+				r.seed = probe["seed"]
+				var found: bool = false
+				for i in 400:
+					if String(probe["state"].get("pitcher", {}).get("id", "")) == me_id:
+						found = true
+						break
+					if LiveMatch.pitch(probe["state"], probe["ctx"], r) == "GAME_OVER":
+						break
+				if found:
+					st3["day"] = int(g["day"])
+					break
+			mm.set_state(st3)
+			mm.ready.connect(func() -> void:
+				mm.open_match()
+				while not MatchVm.build(mm.match_state()["state"],
+						mm.match_state()["ctx"])["is_my_pitch"]:
+					if mm.match_state()["state"].get("is_finished", false):
+						break
+					mm._on_pitch()
+				# 내가 던지는 상태에서 몇 구 더 — 로그와 성적이 채워진 그림이 낫다
+				for i in 6:
+					mm._on_pitch(), CONNECT_ONE_SHOT)
+			return mm
 		"match-done":
 			var md: AppRoot = APP.instantiate()
 			var st2 := World.new_game({"seed": 777, "season_year": 2027,

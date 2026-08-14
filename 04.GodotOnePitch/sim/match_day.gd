@@ -71,6 +71,10 @@ static func _pitcher(p: Dictionary) -> Dictionary:
 		"mental_resil": q.get("mentality", 50.0),
 		"hold_runners": q.get("hold_runners", 50.0),
 		"stamina_cap": q.get("stamina", 50.0),
+		# ⚠ **구종 배열을 싣는다.** 안 실으면 배운 구종이 경기에 안 나오고
+		# 숙련도가 결과에 안 닿는다 — 02가 그 상태였다.
+		# NPC는 아직 배열이 없어서 `PitchStep`의 기준값(3)으로 굴러간다
+		"pitches": p.get("pitches", []),
 	}
 
 

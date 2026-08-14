@@ -138,5 +138,25 @@
   "송구 아웃에 보살을 안 준다",
   "\t\td[\"assists\"] = int(d.get(\"assists\", 0)) + 1",
   ""
+ ],
+ [
+  "숙련도를 안 걸고 늘 기준값으로 던진다 (배운 구종이 결과에 안 닿는다)",
+  "\tpre[\"grade\"] = grade_of(pitcher, decision.get(\"pitch_type\", \"fastball\"))",
+  "\tpre[\"grade\"] = DEFAULT_GRADE"
+ ],
+ [
+  "숙련도를 뒤집어 건다 (다듬을수록 나빠진다)",
+  "\t\t\treturn int(a.get(\"grade\", DEFAULT_GRADE))",
+  "\t\t\treturn 6 - int(a.get(\"grade\", DEFAULT_GRADE))"
+ ],
+ [
+  "안 배운 구종의 기준값을 0으로 본다 (NPC가 통째로 나빠진다)",
+  "\treturn DEFAULT_GRADE",
+  "\treturn 0"
+ ],
+ [
+  "구종 배열을 안 보고 첫 항목을 쓴다 (커브를 던져도 직구 숙련도가 걸린다)",
+  "\t\tif String(a.get(\"id\", \"\")) == pitch_type:\n\t\t\treturn int(a.get(\"grade\", DEFAULT_GRADE))",
+  "\t\treturn int(a.get(\"grade\", DEFAULT_GRADE))"
  ]
 ]

@@ -44,6 +44,10 @@ static func open(game_state: Dictionary, game: Dictionary) -> Dictionary:
 		"state": state,
 		"ctx": {
 			"names": names,
+			# ⚠ **주인공이 마운드에 있을 때만 공을 고른다.** 상대가 던질 땐
+			# 고를 게 없는데 선택 화면이 뜨면 내가 던지는 줄 안다
+			"my_id": String(game_state.get("protagonist", {}).get("id", "")),
+			"me": game_state.get("protagonist", {}),
 			# 내 팀이 홈인가 원정인가 — 화면이 어느 투수 줄을 보여줄지 정한다
 			"my_side": "home" if home_id == game_state.get("protagonist", {})
 				.get("team_id", "") else "away",
@@ -58,7 +62,11 @@ static func open(game_state: Dictionary, game: Dictionary) -> Dictionary:
 
 
 ## 한 구. 상태를 **제자리에서** 고치고 무슨 일이 있었는지 돌려준다
-static func pitch(state: Dictionary, ctx: Dictionary, rng: RandomNumberGenerator) -> String:
+##
+## `decision`이 비면 자동으로 고른다 — **그래야 자동 시뮬과 같은 경기가 된다.**
+## 사용자가 구종·코스를 고르면 당연히 달라지는데, 그건 사용자가 고른 결과다
+static func pitch(state: Dictionary, ctx: Dictionary, rng: RandomNumberGenerator,
+		decision: Dictionary = {}) -> String:
 	if state.get("is_finished", false):
 		return "GAME_OVER"
 
@@ -71,7 +79,9 @@ static func pitch(state: Dictionary, ctx: Dictionary, rng: RandomNumberGenerator
 	state["pitcher_line_key"] = "home_pitcher_line" if before_half == "top" \
 		else "away_pitcher_line"
 
-	var out: Dictionary = PitchStep.step(state, MatchDay._decide(state, rng), rng)
+	var d: Dictionary = decision if not decision.is_empty() \
+		else MatchDay._decide(state, rng)
+	var out: Dictionary = PitchStep.step(state, d, rng)
 	var code: String = out["code"]
 
 	# 타석이 끝났으면 다음 타자로. **투구 전 카운트로 삼진을 가린다**
@@ -81,7 +91,9 @@ static func pitch(state: Dictionary, ctx: Dictionary, rng: RandomNumberGenerator
 		GameLoop.advance_lineup(state, before_half)
 
 	var log: Array = ctx.get("log", [])
-	log.append("%d구 %s" % [int(state.get("pitch_count", 0)), MatchVm.code_label(code)])
+	# 무슨 공을 던져 어떻게 됐는지 — 구종을 빼면 왜 맞았는지 알 수가 없다
+	log.append("%d구 %s %s" % [int(state.get("pitch_count", 0)),
+		PitchVm.pitch_label(d.get("pitch_type", "")), MatchVm.code_label(code)])
 	ctx["log"] = log
 	return code
 

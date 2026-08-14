@@ -362,3 +362,52 @@ func _state_with(base: Dictionary, o: Dictionary) -> Dictionary:
 	var d: Dictionary = base.duplicate(true)
 	d.merge(o, true)
 	return d
+
+
+# ── 숙련도가 경기까지 닿는가 (M7-6e2) ─────────────────────────
+
+## ⚠ **02가 겪은 결함이다.** 화면엔 "숙련도 4/5"라고 적혀 있는데 던지면
+## 차이가 없었다 — 원본 주석이 "배운 구종은 경기에 안 나왔고 숙련도도
+## 결과에 안 닿았다"고 적어 뒀다.
+##
+## ⚠ **`step`을 실제로 거쳐서 본다.** `pitch_quality`를 직접 부르는 검사는
+## 배선을 안 본다 — 변이 검증에서 실제로 안 잡혔다
+func _codes_with_grade(grade: int) -> Array:
+	var s: Dictionary = _state()
+	s["pitcher"]["pitches"] = [{"id": "fastball", "grade": grade}]
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 4242
+	var out: Array = []
+	for i in 60:
+		if s.get("is_finished", false):
+			break
+		out.append(PitchStep.step(s, _decision(), rng)["code"])
+	return out
+
+
+func test_the_grade_reaches_the_match() -> void:
+	assert_array(_codes_with_grade(1)).override_failure_message(
+		"숙련도 1과 5가 같은 경기다 — 배운 구종이 결과에 안 닿는다") \
+		.is_not_equal(_codes_with_grade(5))
+
+
+## ⚠ **던지는 구종의 숙련도가 걸려야 한다.** 다른 구종 것이 걸리면
+## 커브를 던져도 직구 숙련도로 계산된다
+func test_the_grade_follows_the_pitch_thrown() -> void:
+	var s: Dictionary = _state()
+	s["pitcher"]["pitches"] = [{"id": "fastball", "grade": 5},
+		{"id": "curve", "grade": 1}]
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	PitchStep.step(s, _decision({"pitch_type": "curve"}), rng)
+	assert_int(int(s["grade"])).override_failure_message(
+		"커브를 던졌는데 숙련도 %d가 걸렸다" % int(s["grade"])).is_equal(1)
+
+
+## ⚠ **NPC는 구종 배열이 없다.** 기준값이 옛 고정값(3)과 같아야 밸런스가 안 움직인다
+func test_a_pitcher_without_an_arsenal_keeps_the_old_result() -> void:
+	var s: Dictionary = _state()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	PitchStep.step(s, _decision(), rng)
+	assert_int(int(s["grade"])).is_equal(3)

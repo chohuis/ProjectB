@@ -16,6 +16,21 @@ class_name PitchStep
 ## "목록을 두 번 적으면 코드가 늘 때 빠뜨린 자리가 조용히 생긴다"고 적어 뒀다.
 
 
+## 이 투수가 그 구종을 얼마나 다듬었나 — **없으면 기준(3)으로 본다.**
+##
+## ⚠ 기준값이 예전 고정값과 같다. NPC는 아직 구종 배열이 없어서 지금과
+## 똑같이 굴러간다 — 밸런스가 동결이라 그래야 한다. 배열을 갖는 건
+## 주인공뿐이고, 훈련으로 올린 숙련도가 그때 결과에 닿는다
+const DEFAULT_GRADE: int = 3
+
+
+static func grade_of(pitcher: Dictionary, pitch_type: String) -> int:
+	for a in pitcher.get("pitches", []):
+		if String(a.get("id", "")) == pitch_type:
+			return int(a.get("grade", DEFAULT_GRADE))
+	return DEFAULT_GRADE
+
+
 ## 투구 하나 전체 — 도루 → 착탄 → 스윙 → 컨택 → 타구 → 수비 → 뒤처리.
 ##
 ## `{state, code, quality, ball, fielding, logs}`
@@ -55,6 +70,11 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 		situation, rng)
 
 	# ③ 품질 — 투구·착탄은 인자로 넘긴다. 상태에 끼워 넣으면 복사가 생긴다
+	#
+	# ⚠ **던지는 공의 숙련도를 여기서 건다.** 안 걸면 화면엔 "숙련도 4/5"라고
+	# 적혀 있는데 던지면 차이가 없다 — 02가 그 상태였고 원본 주석이
+	# "배운 구종은 경기에 안 나왔고 숙련도도 결과에 안 닿았다"고 적어 뒀다
+	pre["grade"] = grade_of(pitcher, decision.get("pitch_type", "fastball"))
 	var quality: float = PitchOutcome.pitch_quality(pre, decision, landing["landing"], rng)
 
 	# ④ 스윙 → 결과 코드

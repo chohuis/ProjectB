@@ -131,6 +131,7 @@ func open_match() -> String:
 	_match_screen.pitch_requested.connect(_on_pitch)
 	_match_screen.auto_requested.connect(_on_auto)
 	_match_screen.done_requested.connect(_on_match_done)
+	_match_screen.selection_changed.connect(_on_selection)
 	add_child(_match_screen)
 	_main.visible = false
 	_refresh_match()
@@ -158,8 +159,22 @@ func _refresh_match() -> void:
 		_match_screen.set_view_model(MatchVm.build(_match["state"], _match["ctx"]))
 
 
+## ⚠ **고른 것을 `ctx`에 넣는다.** 화면이 들고 있으면 한 구 던질 때마다
+## 새 사전이 오면서 초기화된다 — 소식 거르기와 같은 자리다
+func _on_selection(patch: Dictionary) -> void:
+	var sel: Dictionary = _match["ctx"].get("selection", {})
+	sel.merge(patch, true)
+	_match["ctx"]["selection"] = sel
+	_refresh_match()
+
+
 func _on_pitch() -> void:
-	LiveMatch.pitch(_match["state"], _match["ctx"], _match["rng"])
+	# ⚠ **내가 던질 때만 고른 공이 나간다.** 상대 투수 차례에 내 선택을
+	# 넘기면 상대가 내 구종으로 던진다
+	var vm: Dictionary = MatchVm.build(_match["state"], _match["ctx"])
+	var d: Dictionary = PitchVm.to_decision(vm["pitch"]) \
+		if vm.get("is_my_pitch", false) else {}
+	LiveMatch.pitch(_match["state"], _match["ctx"], _match["rng"], d)
 	_refresh_match()
 
 

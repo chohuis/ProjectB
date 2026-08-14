@@ -75,6 +75,42 @@ layout_mode = 2
 [node name="PitcherLine" type="Label" parent="Pad/Col"]
 layout_mode = 2
 
+[node name="Choose" type="HBoxContainer" parent="Pad/Col"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Zone" type="VBoxContainer" parent="Pad/Col/Choose"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Grid" type="GridContainer" parent="Pad/Col/Choose/Zone"]
+layout_mode = 2
+theme_override_constants/h_separation = 3
+theme_override_constants/v_separation = 3
+columns = 3
+
+[node name="Ball" type="Button" parent="Pad/Col/Choose/Zone"]
+layout_mode = 2
+
+[node name="Opts" type="VBoxContainer" parent="Pad/Col/Choose"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Pitches" type="GridContainer" parent="Pad/Col/Choose/Opts"]
+layout_mode = 2
+theme_override_constants/h_separation = 3
+theme_override_constants/v_separation = 3
+columns = 3
+
+[node name="Strategy" type="HBoxContainer" parent="Pad/Col/Choose/Opts"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="Power" type="HBoxContainer" parent="Pad/Col/Choose/Opts"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
 [node name="Log" type="VBoxContainer" parent="Pad/Col"]
 layout_mode = 2
 size_flags_vertical = 3

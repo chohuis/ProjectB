@@ -108,6 +108,13 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		"is_finished": finished,
 		# ⚠ **끝난 경기에 던지면 기록이 계속 쌓인다**
 		"can_pitch": not finished,
+
+		# ⚠ **주인공이 마운드에 있을 때만 공을 고른다.** 상대가 던질 땐
+		# 고를 게 없는데 선택 화면이 뜨면 내가 던지는 줄 안다
+		"is_my_pitch": not finished and not String(ctx.get("my_id", "")).is_empty() \
+			and String(s.get("pitcher", {}).get("id", "")) == String(ctx.get("my_id", "")),
+		"pitch": PitchVm.build(ctx.get("me", {}), ctx.get("selection", {})),
+
 		"result_label": "" if not finished else "%s %d : %d %s" % [
 			home_name, home, away, away_name],
 

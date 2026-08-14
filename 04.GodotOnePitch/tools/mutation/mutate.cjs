@@ -1,5 +1,5 @@
 // 변이 검증 — 로직을 일부러 깨뜨려 검사가 잡는지 본다.
-// 사용: node mutate.cjs <소스경로> <검사경로> <변이JSON경로>
+// 사용: node mutate.cjs <소스경로> <검사경로[,검사경로...]> <변이JSON경로>
 //       JSON: [["설명", "원래 문자열", "바꿀 문자열"], ...]
 const fs = require("fs");
 const { execFileSync } = require("child_process");
@@ -29,8 +29,11 @@ function writeAndVerify(content) {
 function runTests() {
   let out = "", timedOut = false;
   try {
+    // ⚠ **검사가 여러 벌일 수 있다.** 한 모듈이 화면·시뮬 양쪽에서 쓰이면
+    // 한 벌만 돌려서는 "못 잡음"이 사실인지 그 벌이 안 볼 뿐인지 못 가린다
+    const suites = testRel.split(",").flatMap((t) => ["-a", t.trim()]);
     out = execFileSync(GODOT, ["--headless", "-s", "addons/gdUnit4/bin/GdUnitCmdTool.gd",
-      "--ignoreHeadlessMode", "-a", testRel],
+      "--ignoreHeadlessMode", ...suites],
       { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"],
         // 무한 루프를 만드는 변이가 있다(순환 참조 가드 제거). 그때 검사는
         // 실패하는 게 아니라 안 끝난다 — 멈춤도 검출로 센다
@@ -41,7 +44,14 @@ function runTests() {
   }
   // Godot이 ANSI 색을 섞어 낸다 — 안 벗기면 요약을 못 읽고 판정이 통째로 가짜가 된다
   const plain = out.replace(/\x1b\[[0-9;]*m/g, "");
-  const m = plain.match(/Overall Summary:\s*(\d+) test cases \| (\d+) errors \| (\d+) failures/);
+  let m = plain.match(/Overall Summary:\s*(\d+) test cases \| (\d+) errors \| (\d+) failures/);
+  // 검사 한 벌만 돌리면 Godot이 `Overall Summary`를 안 낸다. **한 줄일 때만**
+  // 받는다 — 여러 줄 중 첫 줄을 집으면 나머지를 안 보고 "잡힘"이라 우긴다
+  if (!m) {
+    const stats = [...plain.matchAll(
+      /Statistics:\s*(\d+) test cases \| (\d+) errors \| (\d+) failures/g)];
+    if (stats.length === 1) m = stats[0];
+  }
   return { timedOut, m };
 }
 

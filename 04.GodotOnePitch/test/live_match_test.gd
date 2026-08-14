@@ -198,6 +198,78 @@ func test_it_knows_which_side_i_am_on() -> void:
 	fail("내 팀 경기가 없다")
 
 
+# ── 고른 공으로 던지기 (M7-6e2) ───────────────────────────────
+
+## ⚠ **고른 게 실제로 나가야 한다.** 화면에서 커브를 골랐는데 엔진이
+## 직구를 던지면, 사용자는 자기가 뭘 하는지 영영 모른다
+func test_a_chosen_pitch_is_what_gets_thrown() -> void:
+	var s: Dictionary = _game_state()
+	var m: Dictionary = LiveMatch.open(s, _first_game(s))
+	LiveMatch.pitch(m["state"], m["ctx"], _rng(m["seed"]),
+		{"pitch_type": "curve", "location": 5, "strategy": "safe", "power": "low"})
+	assert_str(String(m["ctx"]["log"][0])).override_failure_message(
+		"커브를 골랐는데 로그가 '%s'다" % m["ctx"]["log"][0]).contains("커브")
+
+
+## ⚠ **고른 공은 자동과 달라야 한다.** 넘기는 시늉만 하고 엔진이 안 읽으면
+## 무엇을 골라도 같은 경기가 나온다 — 조용히 그렇게 된다
+func test_choosing_changes_the_game() -> void:
+	var s: Dictionary = _game_state()
+	var g: Dictionary = _first_game(s)
+
+	var codes: Array = []
+	for pt in ["fastball", "curve"]:
+		var m: Dictionary = LiveMatch.open(s, g)
+		var rng := _rng(m["seed"])
+		var seq: Array = []
+		for i in 30:
+			seq.append(LiveMatch.pitch(m["state"], m["ctx"], rng,
+				{"pitch_type": pt, "location": 5, "strategy": "balanced",
+				"power": "normal"}))
+		codes.append(seq)
+	assert_array(codes[0]).override_failure_message(
+		"직구 30구와 커브 30구가 같은 결과다 — 고른 게 엔진에 안 닿는다") \
+		.is_not_equal(codes[1])
+
+
+## ⚠ **아무것도 안 고르면 자동이다.** 그래야 `자동 시뮬과 같은 경기` 계약이
+## 계속 선다 — 위쪽 검사가 그걸 본다
+func test_an_empty_decision_falls_back_to_auto() -> void:
+	var s: Dictionary = _game_state()
+	var g: Dictionary = _first_game(s)
+
+	var a: Dictionary = LiveMatch.open(s, g)
+	var ra := _rng(a["seed"])
+	var b: Dictionary = LiveMatch.open(s, g)
+	var rb := _rng(b["seed"])
+	for i in 20:
+		assert_str(LiveMatch.pitch(a["state"], a["ctx"], ra)) \
+			.is_equal(LiveMatch.pitch(b["state"], b["ctx"], rb, {}))
+
+
+## ⚠ **상대가 던질 땐 고를 게 없다.** 그때 선택 화면이 뜨면 내가 던지는 줄 안다
+func test_it_knows_when_i_am_on_the_mound() -> void:
+	var s: Dictionary = _game_state()
+	var m: Dictionary = LiveMatch.open(s, _first_game(s))
+	assert_str(String(m["ctx"]["my_id"])).is_not_empty()
+
+	# 마운드에 내가 있다고 해두면 고를 수 있어야 한다
+	m["state"]["pitcher"] = {"id": m["ctx"]["my_id"]}
+	assert_bool(MatchVm.build(m["state"], m["ctx"])["is_my_pitch"]).is_true()
+
+	m["state"]["pitcher"] = {"id": "NOT_ME"}
+	assert_bool(MatchVm.build(m["state"], m["ctx"])["is_my_pitch"]).is_false()
+
+
+## 주인공 구종이 선택지로 실린다 — 화면이 로스터를 뒤지면 안 된다
+func test_my_repertoire_reaches_the_screen() -> void:
+	var s: Dictionary = _game_state()
+	var m: Dictionary = LiveMatch.open(s, _first_game(s))
+	var vm: Dictionary = MatchVm.build(m["state"], m["ctx"])
+	assert_bool(vm["pitch"]["pitches"].is_empty()).override_failure_message(
+		"고를 구종이 하나도 없다").is_false()
+
+
 ## ⚠ **던진 공이 성적에 쌓여야 한다.** 화면에서 24구를 던졌는데 0.0이닝
 ## 0K로 뜬 적이 있다
 func test_pitching_fills_the_line_the_screen_shows() -> void:
