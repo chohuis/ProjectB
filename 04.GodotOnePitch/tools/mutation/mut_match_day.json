@@ -40,16 +40,6 @@
   ""
  ],
  [
-  "선발을 제일 약한 투수로 고른다",
-  "\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) > float(best[\"pitching\"][\"ovr\"]):",
-  "\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) < float(best[\"pitching\"][\"ovr\"]):"
- ],
- [
-  "선발로 야수를 세운다",
-  "\t\tif not PlayerGen.is_pitcher(p.get(\"position\", \"\")):\n\t\t\tcontinue\n\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) > float(best[\"pitching\"][\"ovr\"]):",
-  "\t\tif best.is_empty() or float(p[\"pitching\"][\"ovr\"]) > float(best[\"pitching\"][\"ovr\"]):"
- ],
- [
   "타자 능력치 키를 엔진과 다르게 준다 (조용히 약해진다)",
   "\t\t\"contact\": b.get(\"contact\", 50.0),\n\t\t\"power\": b.get(\"power\", 50.0),",
   "\t\t\"contact\": b.get(\"contact_rate\", 50.0),\n\t\t\"power\": b.get(\"power_rate\", 50.0),"
@@ -113,5 +103,35 @@
   "투수 멘탈 키를 밀어 쓴다",
   "\t\t\"mental_resil\": q.get(\"mentality\", 50.0),",
   "\t\t\"mental_resil\": q.get(\"clutch\", 50.0),"
+ ],
+ [
+  "선발을 로테이션이 아니라 늘 에이스로 고른다 (에이스가 전 경기)",
+  "\tvar pid: String = Rotation.starter_at(rotation, game_no)",
+  "\tvar pid: String = Rotation.starter_at(rotation, 0)"
+ ],
+ [
+  "홈·원정이 같은 경기 순번을 쓴다 (늘 같은 짝이 붙는다)",
+  "\tvar ap: Dictionary = starter_of(away, league_id, int(p.get(\"away_game_no\", 0)))",
+  "\tvar ap: Dictionary = starter_of(away, league_id, int(p.get(\"home_game_no\", 0)))"
+ ],
+ [
+  "지난 경기를 안 세고 늘 0부터 시작한다",
+  "\tvar counts: Dictionary = team_game_counts(state, day)",
+  "\tvar counts: Dictionary = {}"
+ ],
+ [
+  "안 치른 경기도 순번에 센다",
+  "\t\tif g.get(\"result\", null) == null:\n\t\t\tcontinue\n\t\tvar h: String = g.get(\"home\", \"\")",
+  "\t\tvar h: String = g.get(\"home\", \"\")"
+ ],
+ [
+  "불펜 등판을 안 본다 (로테이션 밖이면 시즌 내내 0경기)",
+  "\treturn Rotation.reliever_would_pitch({\n\t\t\"role\": Rotation.DEFAULT_RELIEF_ROLE,\n\t\t\"roll\": Rng.new(seed_value).value_for([\"relief\", game.get(\"id\", \"\")]),\n\t})",
+  "\treturn false"
+ ],
+ [
+  "선발도 불펜 판정을 받는다 (등판이 부푼다)",
+  "\tif role != \"RP\":\n\t\treturn false",
+  ""
  ]
 ]

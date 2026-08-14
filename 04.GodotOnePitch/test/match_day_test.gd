@@ -223,18 +223,72 @@ func test_a_thin_roster_still_fields_nine() -> void:
 
 
 ## ⚠ **선발은 제일 센 투수다.** 약한 쪽을 고르면 리그 방어율이 통째로 오른다
-func test_the_starter_is_the_best_pitcher() -> void:
-	var s: Dictionary = MatchDay._starter(_roster(5, 20))
+func test_the_first_game_starts_the_ace() -> void:
+	var s: Dictionary = MatchDay.starter_of(_roster(5, 20), "LEAGUE_KBL", 0)
 	assert_str(s["id"]).is_equal("P4")   # ovr 50 + i, i=4가 최고
 
 
+## ⚠ **다음 경기는 다음 선발이다.** 이게 이 모듈의 존재 이유다 —
+## 매번 제일 센 투수를 고르면 에이스가 전 경기를 던지고 나머지는 표본이 0이다
+func test_the_next_game_starts_someone_else() -> void:
+	var roster: Array = _roster(5, 20)
+	var a: Dictionary = MatchDay.starter_of(roster, "LEAGUE_KBL", 0)
+	var b: Dictionary = MatchDay.starter_of(roster, "LEAGUE_KBL", 1)
+	assert_str(b["id"]).override_failure_message(
+		"연속 두 경기에 같은 선발이 나왔다").is_not_equal(a["id"])
+
+
+## 로테이션을 한 바퀴 돌면 다시 처음으로
+func test_the_rotation_comes_back_around() -> void:
+	var roster: Array = _roster(5, 20)
+	var size: int = Rotation.size_of("LEAGUE_KBL")
+	assert_str(MatchDay.starter_of(roster, "LEAGUE_KBL", size)["id"]) \
+		.is_equal(MatchDay.starter_of(roster, "LEAGUE_KBL", 0)["id"])
+
+
 func test_the_starter_is_never_a_batter() -> void:
-	assert_bool(PlayerGen.is_pitcher(MatchDay._starter(_roster(3, 20))["position"])) \
-		.is_true()
+	for n in 6:
+		var s: Dictionary = MatchDay.starter_of(_roster(3, 20), "LEAGUE_KBL", n)
+		assert_bool(PlayerGen.is_pitcher(s["position"])).override_failure_message(
+			"%d번째 경기에 야수가 선발로 나왔다" % n).is_true()
 
 
 func test_a_roster_without_pitchers_has_no_starter() -> void:
-	assert_bool(MatchDay._starter(_roster(0, 20)).is_empty()).is_true()
+	assert_bool(MatchDay.starter_of(_roster(0, 20), "LEAGUE_KBL", 0).is_empty()).is_true()
+
+
+# ── 로테이션이 실제로 도는가 ──────────────────────────────────
+
+## ⚠ **하루치를 돌릴 때 팀별 경기 순번이 는다.** 안 늘면 로테이션이 안 돌아
+## 에이스가 전 경기를 던진다
+func test_game_counts_grow_as_days_are_played() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"team_id": "TEAM_HS_AEWOL"})
+	var day: int = _first_game_day(s)
+	assert_int(MatchDay.team_game_counts(s, day).size()).is_equal(0)
+	MatchDay.play_day(s, day, _rng(5))
+	assert_int(MatchDay.team_game_counts(s, day + 1).size()).is_greater(0)
+
+
+## ⚠ **안 치른 경기는 순번에 안 센다.** 세면 시즌 첫날부터 로테이션이
+## 한참 돌아 있는 것으로 잡힌다
+func test_unplayed_games_do_not_count() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"team_id": "TEAM_HS_AEWOL"})
+	assert_int(MatchDay.team_game_counts(s, 999).size()).is_equal(0)
+
+
+## ⚠ **홈·원정이 각자 자기 순번을 쓴다.** 하나로 쓰면 두 팀의 로테이션이
+## 같이 돌아 늘 같은 짝이 붙는다
+func test_home_and_away_rotate_independently() -> void:
+	var roster: Array = _roster(5, 20)
+	var seen: Dictionary = {}
+	for n in 5:
+		var hp: Dictionary = MatchDay.starter_of(roster, "LEAGUE_KBL", n)
+		var ap: Dictionary = MatchDay.starter_of(roster, "LEAGUE_KBL", 0)
+		seen["%s|%s" % [hp["id"], ap["id"]]] = true
+	assert_int(seen.size()).override_failure_message(
+		"홈 순번이 바뀌어도 짝이 안 달라진다").is_equal(5)
 
 
 # ── 거절 이유를 구분하는가 ────────────────────────────────────
@@ -251,6 +305,7 @@ func test_a_roster_without_pitchers_says_so() -> void:
 	var out: Dictionary = MatchDay.play(w, "A", "B", _rng())
 	assert_bool(out["ok"]).is_false()
 	assert_str(out["error"]).contains("선발")
+
 
 
 # ── 능력치가 실제로 넘어가는가 ────────────────────────────────
@@ -419,3 +474,180 @@ func test_stamina_reaches_the_engine() -> void:
 			"clutch": 60.0, "hold_runners": 60.0}})
 	assert_float(p["stamina_cap"]).override_failure_message(
 		"스태미나 88을 넘겼는데 엔진엔 %.0f" % p["stamina_cap"]).is_equal(88.0)
+
+
+# ── 내 등판 판정 ──────────────────────────────────────────────
+
+func _my_world() -> Dictionary:
+	var roster: Array = _roster(5, 20)
+	roster.append({"id": "ME", "position": "SP",
+		"pitching": {"ovr": 99.0, "stamina": 60.0, "velocity": 60.0,
+			"command": 60.0, "control": 60.0, "movement": 60.0,
+			"mentality": 60.0, "clutch": 50.0, "hold_runners": 50.0},
+		"batting": {"ovr": 20.0, "contact": 20.0, "power": 20.0, "eye": 20.0,
+			"discipline": 20.0, "speed": 20.0, "base_instinct": 20.0,
+			"batting_clutch": 20.0}})
+	return {"rosters": {"T1": roster}}
+
+
+func _g(id: String, home: String = "T1", away: String = "T2") -> Dictionary:
+	return {"id": id, "day": 1, "league_id": "LEAGUE_KBL",
+		"home": home, "away": away, "result": null}
+
+
+## ⚠ **선발은 로테이션 차례에만 나온다.** 5인 로테이션 1위면 0·5·10번째다
+func test_a_starter_pitches_on_its_turn_only() -> void:
+	var w: Dictionary = _my_world()
+	for n in 10:
+		var want: bool = (n % 5 == 0)
+		assert_bool(MatchDay.is_my_start(w, _g("G%d" % n), "ME", "T1", n, 1, "SP")) \
+			.override_failure_message("%d번째 경기 등판 판정이 틀렸다" % n).is_equal(want)
+
+
+## ⚠ **선발이 불펜 판정을 또 받으면 등판이 부푼다.** 실측 20경기 중 17번
+## (로테이션은 7번)
+func test_a_starter_never_pitches_off_its_turn() -> void:
+	var w: Dictionary = _my_world()
+	var off: int = 0
+	for n in 50:
+		if n % 5 == 0:
+			continue
+		if MatchDay.is_my_start(w, _g("G%d" % n), "ME", "T1", n, 1, "SP"):
+			off += 1
+	assert_int(off).override_failure_message(
+		"차례가 아닌데 %d번 등판했다" % off).is_equal(0)
+
+
+## ⚠ **불펜은 로테이션 밖에서도 나온다.** 안 나오면 시즌 내내 등판 0이다
+func test_a_reliever_pitches_off_the_rotation() -> void:
+	var w: Dictionary = _my_world()
+	var n_pitched: int = 0
+	for n in 50:
+		if MatchDay.is_my_start(w, _g("G%d" % n), "RP_ME", "T1", n, 7, "RP"):
+			n_pitched += 1
+	assert_int(n_pitched).override_failure_message(
+		"불펜이 50경기 중 %d번 등판 — 중간계투는 17번쯤이다" % n_pitched) \
+		.is_between(10, 25)
+
+
+## 남의 경기엔 안 나온다
+func test_i_do_not_pitch_in_other_teams_games() -> void:
+	var w: Dictionary = _my_world()
+	assert_bool(MatchDay.is_my_start(w, _g("G1", "T3", "T4"), "ME", "T1", 0, 1, "SP")) \
+		.is_false()
+
+
+## ⚠ **같은 씨앗이면 같은 판정.** 02는 불펜에 `thread_rng()`를 써서 매번 달랐다
+func test_the_relief_call_is_reproducible() -> void:
+	var w: Dictionary = _my_world()
+	for n in 20:
+		var a: bool = MatchDay.is_my_start(w, _g("G%d" % n), "RP_ME", "T1", n, 7, "RP")
+		var b: bool = MatchDay.is_my_start(w, _g("G%d" % n), "RP_ME", "T1", n, 7, "RP")
+		assert_bool(b).is_equal(a)
+
+
+## ⚠ **하루치를 돌리면 팀별 순번이 늘어 로테이션이 실제로 돈다.**
+## 안 늘면 에이스가 전 경기를 던진다
+func test_starters_change_across_days() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"team_id": "TEAM_HS_AEWOL"})
+	var team: String = World.teams_of("LEAGUE_KBL")[0]["id"]
+
+	# ⚠ **그 팀이 실제로 경기하는 날만 센다.** 일정이 성기게 퍼져 있어서
+	# 날짜를 세면 그 팀이 안 뛰는 날이 섞인다 — 처음에 그렇게 써서 헛짚었다
+	var my_days: Array = []
+	for g in s["schedule"]:
+		if g["home"] == team or g["away"] == team:
+			var d: int = int(g["day"])
+			if not my_days.has(d):
+				my_days.append(d)
+	my_days.sort()
+
+	var seen: Dictionary = {}
+	for i in 5:
+		var day: int = my_days[i]
+		var counts: Dictionary = MatchDay.team_game_counts(s, day)
+		var sp: Dictionary = MatchDay.starter_of(
+			World.roster_of(s["world"], team), "LEAGUE_KBL", int(counts.get(team, 0)))
+		seen[sp.get("id", "")] = true
+		MatchDay.play_day(s, day, _rng(day))
+	assert_int(seen.size()).override_failure_message(
+		"첫 다섯 경기에 선발이 %d명뿐 — 5인 로테이션이면 다섯이다" % seen.size()) \
+		.is_equal(5)
+
+
+## ⚠ **`play_day`가 실제로 순번을 넘기는지는 결과로 봐야 한다.**
+## `starter_of`를 직접 부르는 검사는 그 배선을 안 본다 — 실제로 변이 셋이
+## 그렇게 빠져나갔다.
+##
+## 돌린 경기의 투수 줄에 실린 id가 로테이션대로 바뀌어야 한다
+func test_play_day_actually_rotates_the_starters() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"team_id": "TEAM_HS_AEWOL"})
+	var team: String = World.teams_of("LEAGUE_KBL")[0]["id"]
+
+	var my_days: Array = []
+	for g in s["schedule"]:
+		if g["home"] == team or g["away"] == team:
+			var d: int = int(g["day"])
+			if not my_days.has(d):
+				my_days.append(d)
+	my_days.sort()
+
+	var seen: Dictionary = {}
+	for i in 5:
+		var day: int = my_days[i]
+		MatchDay.play_day(s, day, _rng(day))
+		for g in s["schedule"]:
+			if int(g["day"]) != day:
+				continue
+			if g["home"] != team and g["away"] != team:
+				continue
+			var res = g.get("result", null)
+			if res == null:
+				continue
+			# 홈이면 첫 투수 줄, 원정이면 둘째
+			var idx: int = 0 if g["home"] == team else 1
+			var pitchers: Array = []
+			for l in res["player_lines"]:
+				if l["role"] == "pitcher":
+					pitchers.append(l["player_id"])
+			if pitchers.size() > idx:
+				seen[pitchers[idx]] = true
+
+	assert_int(seen.size()).override_failure_message(
+		"다섯 경기에 선발이 %d명뿐 — `play_day`가 순번을 안 넘긴다" % seen.size()) \
+		.is_equal(5)
+
+
+## ⚠ **홈·원정이 각자 순번을 쓴다.** 하나로 쓰면 두 팀 로테이션이 같이 돌아
+## 늘 같은 짝이 붙는다 — 맞대결에서 매번 같은 투수전이 된다
+func test_home_and_away_use_their_own_game_numbers() -> void:
+	# ⚠ **양 팀 id를 갈라야 한다.** 같은 로스터를 두 번 쓰면 홈·원정 투수가
+	# 같은 이름이라 순번이 섞여도 안 보인다 — 처음에 그렇게 써서 못 잡았다
+	var away: Array = []
+	for p in _roster(5, 20):
+		var q: Dictionary = p.duplicate(true)
+		q["id"] = "A_" + String(p["id"])
+		away.append(q)
+	var w: Dictionary = {"rosters": {"H": _roster(5, 20), "A": away}}
+	var pairs: Dictionary = {}
+	for n in 5:
+		var out: Dictionary = MatchDay.play(w, "H", "A", _rng(n), {
+			"league_id": "LEAGUE_KBL",
+			"home_game_no": n,
+			"away_game_no": 0,   # 원정은 늘 1선발
+		})
+		var pitchers: Array = []
+		for l in out["result"]["player_lines"]:
+			if l["role"] == "pitcher":
+				pitchers.append(l["player_id"])
+		pairs["%s|%s" % [pitchers[0], pitchers[1]]] = true
+		# ⚠ **원정은 순번을 0으로 고정했으니 늘 1선발이어야 한다.** 짝의
+		# 가짓수만 세면 둘이 나란히 바뀌어도 5가지라 안 걸린다
+		assert_str(pitchers[1]).override_failure_message(
+			"원정 순번을 0으로 고정했는데 %d번째 경기에 %s가 나왔다" % [n, pitchers[1]]) \
+			.is_equal("A_P4")
+	assert_int(pairs.size()).override_failure_message(
+		"홈 순번을 바꿔도 짝이 %d가지뿐 — 순번을 따로 안 쓴다" % pairs.size()) \
+		.is_equal(5)

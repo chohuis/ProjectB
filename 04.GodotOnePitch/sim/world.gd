@@ -114,6 +114,22 @@ static func build(p: Dictionary) -> Dictionary:
 	return {"seed": seed_value, "season_year": year, "rosters": rosters}
 
 
+## 일정에 **주인공 등판**을 표시한다. 로테이션이 정하고, 팀 경기 순번으로 돈다.
+##
+## ⚠ **일정이 날짜 순이어야 한다.** 아니면 경기 순번이 뒤죽박죽이 되어
+## 로테이션이 무의미해진다
+static func mark_my_starts(schedule: Array, world: Dictionary,
+		my_id: String, my_team: String, seed_value: int = 0,
+		role: String = "RP") -> void:
+	var n: int = 0
+	for g in schedule:
+		if g.get("home", "") != my_team and g.get("away", "") != my_team:
+			continue
+		g["is_protagonist_game"] = MatchDay.is_my_start(world, g, my_id, my_team,
+			n, seed_value, role)
+		n += 1
+
+
 static func roster_of(world: Dictionary, team_id: String) -> Array:
 	return world.get("rosters", {}).get(team_id, [])
 
@@ -169,6 +185,16 @@ static func new_game(p: Dictionary) -> Dictionary:
 	if world["rosters"].has(team_id):
 		world["rosters"][team_id].append(me)
 
+	# ⚠ **보직을 정한다.** 팀에서 나보다 센 투수가 둘 이하면 선발이다 —
+	# 로테이션 인원(고교 3인)과 맞물린 규칙이라 어긋나면 선발로 배정됐는데
+	# 로테이션엔 못 드는 선수가 생긴다
+	var team_ovrs: Array = []
+	for q in roster_of(world, team_id):
+		if q.get("id", "") != me["id"] and PlayerGen.is_pitcher(q.get("position", "")):
+			team_ovrs.append(q["pitching"]["ovr"])
+	me["role"] = Rotation.assign_position(me["pitching"]["ovr"], team_ovrs)
+	me["position"] = me["role"]
+
 	var names: Dictionary = team_names()
 	me["team_name"] = names.get(team_id, team_id)
 
@@ -180,9 +206,16 @@ static func new_game(p: Dictionary) -> Dictionary:
 			ids.append(t["id"])
 		for g in Schedule.build_league(lid, ids, year):
 			g["id"] = "%s_D%d_%s_%s" % [lid, g["day"], g["home"], g["away"]]
-			g["is_protagonist_game"] = (g["home"] == team_id or g["away"] == team_id)
 			g["result"] = null
+			g["is_protagonist_game"] = false
 			schedule.append(g)
+
+	# ⚠ **팀 경기가 곧 내 등판이 아니다.** 로테이션이 정한다 — 안 걸면
+	# 고교 20경기를 전부 던지게 되고, 그러면 피로·성장·기록이 전부 부푼다.
+	#
+	# 날짜 순으로 훑으며 내 팀의 몇 번째 경기인지 센다
+	schedule.sort_custom(func(a, b) -> bool: return int(a["day"]) < int(b["day"]))
+	mark_my_starts(schedule, world, me["id"], team_id, seed_value, me["role"])
 
 	return {
 		"day": 1,

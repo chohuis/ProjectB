@@ -1,0 +1,102 @@
+[
+ [
+  "프로 로테이션을 고교와 같게 둔다",
+  "\t\treturn 4\n\treturn 5",
+  "\t\treturn 4\n\treturn 3"
+ ],
+ [
+  "고교 로테이션을 프로와 같게 둔다 (등판이 3분의 1로 준다)",
+  "\t\treturn 3\n\tif league_id.begins_with(\"LEAGUE_INDEPENDENT\"):",
+  "\t\treturn 5\n\tif league_id.begins_with(\"LEAGUE_INDEPENDENT\"):"
+ ],
+ [
+  "독립 리그를 프로로 본다",
+  "\tif league_id.begins_with(\"LEAGUE_INDEPENDENT\"):\n\t\treturn 4",
+  ""
+ ],
+ [
+  "센 선발부터 안 넣는다",
+  "\tvar by_ovr := func(a, b) -> bool:\n\t\treturn float(a[\"pitching\"][\"ovr\"]) > float(b[\"pitching\"][\"ovr\"])",
+  "\tvar by_ovr := func(a, b) -> bool:\n\t\treturn float(a[\"pitching\"][\"ovr\"]) < float(b[\"pitching\"][\"ovr\"])"
+ ],
+ [
+  "선발과 불펜을 안 가른다",
+  "\t\tif p.get(\"position\", \"\") == \"SP\":\n\t\t\tstarters.append(p)\n\t\telse:\n\t\t\tothers.append(p)",
+  "\t\tstarters.append(p)"
+ ],
+ [
+  "선발이 모자라도 불펜에서 안 채운다",
+  "\tfor p in others:\n\t\tif out.size() >= want:\n\t\t\tbreak\n\t\tout.append(p[\"id\"])",
+  ""
+ ],
+ [
+  "야수도 로테이션에 넣는다",
+  "\t\tif not PlayerGen.is_pitcher(p.get(\"position\", \"\")):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "로테이션 인원을 안 지킨다 (선발이 불어난다)",
+  "\tfor p in starters:\n\t\tif out.size() >= want:\n\t\t\tbreak\n\t\tout.append(p[\"id\"])",
+  "\tfor p in starters:\n\t\tout.append(p[\"id\"])"
+ ],
+ [
+  "로테이션이 안 돈다 (에이스가 전 경기를 던진다)",
+  "\treturn rotation[posmod(game_no, rotation.size())]",
+  "\treturn rotation[0]"
+ ],
+ [
+  "빈 로테이션에서 죽는다",
+  "\tif rotation.is_empty():\n\t\treturn \"\"",
+  ""
+ ],
+ [
+  "보직 문턱을 로테이션과 어긋나게 둔다 (선발인데 로테이션엔 없다)",
+  "\treturn \"SP\" if higher <= 2 else \"RP\"",
+  "\treturn \"SP\" if higher <= 5 else \"RP\""
+ ],
+ [
+  "전원을 불펜으로 배정한다",
+  "\treturn \"SP\" if higher <= 2 else \"RP\"",
+  "\treturn \"RP\""
+ ],
+ [
+  "나보다 약한 투수도 위로 센다",
+  "\t\tif float(o) > my_ovr:\n\t\t\thigher += 1",
+  "\t\thigher += 1"
+ ],
+ [
+  "마무리와 중간계투의 등판 확률을 같게 둔다",
+  "\t\"마무리\": 0.55, \"셋업맨\": 0.45, \"중간계투\": 0.35,",
+  "\t\"마무리\": 0.35, \"셋업맨\": 0.35, \"중간계투\": 0.35,"
+ ],
+ [
+  "모르는 역할도 나온다",
+  "\tvar base: float = RELIEVER_CHANCE.get(p.get(\"role\", DEFAULT_RELIEF_ROLE), 0.0)",
+  "\tvar base: float = RELIEVER_CHANCE.get(p.get(\"role\", DEFAULT_RELIEF_ROLE), 0.35)"
+ ],
+ [
+  "많이 던진 다음 경기에도 그대로 나온다",
+  "\tvar rest_penalty: float = 0.30 if outs_last >= 18 \\\n\t\telse (0.65 if outs_last >= 9 else 1.0)",
+  "\tvar rest_penalty: float = 1.0"
+ ],
+ [
+  "의무 휴식을 안 본다 (주말 연투가 막히지 않는다)",
+  "\tif int(p.get(\"rest_days\", 0)) < required_rest_days(int(p.get(\"last_pitch_count\", 0))):\n\t\treturn false",
+  ""
+ ],
+ [
+  "의무 휴식 일수를 투구 수와 무관하게 둔다",
+  "\tif pitch_count >= 50:\n\t\treturn 3\n\tif pitch_count >= 30:\n\t\treturn 2\n\tif pitch_count >= 15:\n\t\treturn 1\n\treturn 0",
+  "\treturn 0"
+ ],
+ [
+  "휴식을 이하로 본다 (하루 덜 쉬고 나온다)",
+  "\tif int(p.get(\"rest_days\", 0)) < required_rest_days(int(p.get(\"last_pitch_count\", 0))):",
+  "\tif int(p.get(\"rest_days\", 0)) < required_rest_days(int(p.get(\"last_pitch_count\", 0))) - 1:"
+ ],
+ [
+  "불펜이 아예 안 나온다 (시즌 내내 등판 0)",
+  "\treturn float(p.get(\"roll\", 1.0)) < base * rest_penalty",
+  "\treturn false"
+ ]
+]

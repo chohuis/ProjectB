@@ -32,14 +32,15 @@ static func _lineup(players: Array) -> Array:
 	return batters.slice(0, LINEUP_SIZE)
 
 
-static func _starter(players: Array) -> Dictionary:
-	var best: Dictionary = {}
+## 그 팀의 이번 경기 선발. **로테이션이 정한다** — 매번 제일 센 투수를
+## 고르면 에이스가 전 경기를 던지고 나머지는 표본이 0이 된다
+static func starter_of(players: Array, league_id: String, game_no: int) -> Dictionary:
+	var rotation: Array = Rotation.build(players, league_id)
+	var pid: String = Rotation.starter_at(rotation, game_no)
 	for p in players:
-		if not PlayerGen.is_pitcher(p.get("position", "")):
-			continue
-		if best.is_empty() or float(p["pitching"]["ovr"]) > float(best["pitching"]["ovr"]):
-			best = p
-	return best
+		if p.get("id", "") == pid:
+			return p
+	return {}
 
 
 ## 경기 엔진이 먹는 타자 사전. **키 이름이 엔진과 같아야 한다** —
@@ -88,7 +89,7 @@ static func _decide(_state: Dictionary, rng) -> Dictionary:
 ## ⚠ **로스터가 비면 안 돌린다.** 억지로 돌리면 빈 타순으로 돌아 이상한
 ## 결과가 순위표에 들어간다
 static func play(world: Dictionary, home_id: String, away_id: String,
-		rng: RandomNumberGenerator) -> Dictionary:
+		rng: RandomNumberGenerator, p: Dictionary = {}) -> Dictionary:
 	var home: Array = World.roster_of(world, home_id)
 	var away: Array = World.roster_of(world, away_id)
 	if home.is_empty() or away.is_empty():
@@ -96,8 +97,11 @@ static func play(world: Dictionary, home_id: String, away_id: String,
 			% [home_id, home.size(), away_id, away.size()],
 			"result": {}, "pitches": 0}
 
-	var hp: Dictionary = _starter(home)
-	var ap: Dictionary = _starter(away)
+	# ⚠ **팀마다 자기 경기 순번을 쓴다.** 하나로 쓰면 홈·원정의 로테이션이
+	# 같이 돌아서 늘 같은 짝이 붙는다
+	var league_id: String = p.get("league_id", "")
+	var hp: Dictionary = starter_of(home, league_id, int(p.get("home_game_no", 0)))
+	var ap: Dictionary = starter_of(away, league_id, int(p.get("away_game_no", 0)))
 	if hp.is_empty() or ap.is_empty():
 		return {"ok": false, "error": "선발 투수가 없다", "result": {}, "pitches": 0}
 
@@ -175,13 +179,74 @@ static func _make_state(home: Array, away: Array,
 ## ⚠ **이미 치른 경기는 건너뛴다.** 다시 돌리면 순위표에 승패가 두 번 들어간다
 static func play_day(state: Dictionary, day: int, rng: RandomNumberGenerator) -> int:
 	var world: Dictionary = state.get("world", {})
+	var counts: Dictionary = team_game_counts(state, day)
 	var n: int = 0
 	for g in state.get("schedule", []):
 		if int(g.get("day", -1)) != day or g.get("result", null) != null:
 			continue
-		var out: Dictionary = play(world, g.get("home", ""), g.get("away", ""), rng)
+		var home: String = g.get("home", "")
+		var away: String = g.get("away", "")
+		var out: Dictionary = play(world, home, away, rng, {
+			"league_id": g.get("league_id", ""),
+			"home_game_no": int(counts.get(home, 0)),
+			"away_game_no": int(counts.get(away, 0)),
+		})
 		if not out["ok"]:
 			continue
 		g["result"] = out["result"]
+		# 같은 날 같은 팀이 두 경기를 하는 일정이 없으므로 여기서 순번을
+		# 더 세지 않는다 — 더블헤더가 생기면 그때 붙인다
 		n += 1
 	return n
+
+
+## 그날 **전까지** 각 팀이 몇 경기를 치렀나.
+##
+## ⚠ **인덱스를 상태에 안 들고 매번 센다.** 들고 있으면 저장·불러오기와
+## 어긋나고, 하루 진행과 여러 날 진행이 달라진다 — 02가 그 인덱스 때문에
+## 인자 자리가 밀린 결함을 겪었다
+static func team_game_counts(state: Dictionary, before_day: int) -> Dictionary:
+	var out: Dictionary = {}
+	for g in state.get("schedule", []):
+		if int(g.get("day", -1)) >= before_day:
+			continue
+		if g.get("result", null) == null:
+			continue
+		var h: String = g.get("home", "")
+		var a: String = g.get("away", "")
+		out[h] = int(out.get(h, 0)) + 1
+		out[a] = int(out.get(a, 0)) + 1
+	return out
+
+
+## 이 경기에 주인공이 나오나. **일정의 `is_protagonist_game`이 이걸로 정해진다**
+##
+## ⚠ **로테이션에 못 들어도 나온다.** 불펜으로 나온다 — 안 그러면 주인공이
+## 시즌 내내 한 경기도 못 던진다. 실제로 그 상태가 나왔다(고교 20경기 중 0).
+##
+## ⚠ **02는 불펜 판정에 `thread_rng()`를 썼다.** 같은 세이브·같은 시드라도
+## 결과가 매번 달랐다 — 여기서는 경기 id로 시드를 만든다
+static func is_my_start(world: Dictionary, game: Dictionary, my_id: String,
+		my_team: String, game_no: int, seed_value: int = 0,
+		role: String = "RP") -> bool:
+	var home: String = game.get("home", "")
+	var away: String = game.get("away", "")
+	if home != my_team and away != my_team:
+		return false
+	var roster: Array = World.roster_of(world, my_team)
+	if roster.is_empty():
+		return false
+
+	var league_id: String = game.get("league_id", "")
+	if Rotation.starter_at(Rotation.build(roster, league_id), game_no) == my_id:
+		return true
+
+	# ⚠ **선발은 로테이션 차례에만 나온다.** 보직을 안 보면 선발이 쉬는
+	# 날에도 불펜으로 나와서 등판이 부푼다 — 실측 20경기 중 17번(로테이션은 7번)
+	if role != "RP":
+		return false
+
+	return Rotation.reliever_would_pitch({
+		"role": Rotation.DEFAULT_RELIEF_ROLE,
+		"roll": Rng.new(seed_value).value_for(["relief", game.get("id", "")]),
+	})

@@ -193,3 +193,79 @@ func test_a_new_game_feeds_the_view_model() -> void:
 	assert_str(vm["date_label"]).is_equal("2027년 3월 1일")
 	assert_str(vm["player_name"]).is_equal("김한결")
 	assert_str(vm["team_name"]).is_not_empty()
+
+
+# ── 로테이션 (M3-2) ───────────────────────────────────────────
+
+func _my_starts(s: Dictionary) -> Array:
+	var team_id: String = s["protagonist"]["team_id"]
+	var out: Array = []
+	for g in s["schedule"]:
+		if (g["home"] == team_id or g["away"] == team_id) and g["is_protagonist_game"]:
+			out.append(int(g["day"]))
+	out.sort()
+	return out
+
+
+func _team_games(s: Dictionary) -> int:
+	var team_id: String = s["protagonist"]["team_id"]
+	var n: int = 0
+	for g in s["schedule"]:
+		if g["home"] == team_id or g["away"] == team_id:
+			n += 1
+	return n
+
+
+## ⚠ **팀 경기가 곧 내 등판이 아니다.** 붙이기 전에는 고교 20경기를 전부
+## 던졌고, 그러면 피로·성장·기록이 통째로 부푼다
+func test_i_do_not_start_every_team_game() -> void:
+	var s: Dictionary = World.new_game({"seed": 777, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var team: int = _team_games(s)
+	var mine: int = _my_starts(s).size()
+	assert_int(team).is_equal(20)
+	assert_int(mine).override_failure_message(
+		"팀 %d경기 중 %d번 등판 — 3인 로테이션이면 7번쯤이다" % [team, mine]) \
+		.is_between(4, 9)
+
+
+## ⚠ **한 경기도 못 던지면 게임이 안 된다.** 로테이션만 붙이고 불펜을
+## 안 붙였을 때 실제로 등판 0이 나왔다
+func test_i_always_pitch_at_least_a_few_times() -> void:
+	for seed_v in [20270101, 777, 55555, 31337, 999]:
+		var s: Dictionary = World.new_game({"seed": seed_v, "season_year": 2027,
+			"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+		assert_int(_my_starts(s).size()).override_failure_message(
+			"씨앗 %d에서 등판 0 — 시즌 내내 한 경기도 못 던진다" % seed_v) \
+			.is_greater(2)
+
+
+## ⚠ **선발은 고르게 나온다.** 3인 로테이션이면 세 경기마다 한 번이다
+func test_a_starter_pitches_on_a_regular_cycle() -> void:
+	var s: Dictionary = World.new_game({"seed": 777, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	assert_str(s["protagonist"]["role"]).is_equal("SP")
+	var days: Array = _my_starts(s)
+	for i in range(1, days.size()):
+		# 고교는 주말리그(토·일)라 세 경기 = 3주 = 21일
+		assert_int(days[i] - days[i - 1]).override_failure_message(
+			"등판 간격이 %d일 — 3인 로테이션이면 21일이다" % (days[i] - days[i - 1])) \
+			.is_equal(21)
+
+
+## 보직이 상태에 실린다 — 화면과 성장이 이걸 본다
+func test_my_role_is_assigned() -> void:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	assert_array(["SP", "RP"]).contains([s["protagonist"]["role"]])
+	assert_str(s["protagonist"]["position"]).is_equal(s["protagonist"]["role"])
+
+
+## ⚠ **같은 씨앗이면 같은 등판표.** 아니면 조사가 재현이 안 된다 —
+## 02는 불펜 판정에 `thread_rng()`를 써서 매번 달랐다
+func test_the_same_seed_gives_the_same_starts() -> void:
+	var a: Dictionary = World.new_game({"seed": 31337, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var b: Dictionary = World.new_game({"seed": 31337, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	assert_array(_my_starts(a)).is_equal(_my_starts(b))
