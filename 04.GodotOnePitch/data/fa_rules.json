@@ -1,0 +1,26 @@
+{
+ "_note": "02 resource/data/master/players/generation_rules.json의 faRules 그대로. 키 이름만 04 규칙(snake_case)으로.",
+ "eligible_years": {
+  "LEAGUE_KBL": 5,
+  "LEAGUE_ABL": 6,
+  "LEAGUE_JBL": 4,
+  "default": 9
+ },
+ "_grades_note": "리그 연봉 순위 백분위로 등급을 매긴다. A/B는 보호선수 밖에서 보상선수 1명 + 보상금, C는 보상금만. money_pct는 직전 연봉 대비 %(KBO 규정과 같은 구조)",
+ "grades": [
+  {"grade": "A", "until_percent": 30, "protected_count": 20, "money_pct": 200},
+  {"grade": "B", "until_percent": 60, "protected_count": 25, "money_pct": 100},
+  {"grade": "C", "until_percent": 100, "protected_count": 0, "money_pct": 150}
+ ],
+ "market_weeks": 4,
+ "_market_weeks_note": "이 주 안에 계약 못 하면 미계약 — 진로 배정(독립·은퇴)으로 넘어간다",
+ "release": {
+  "_note": "방출 2단계. 1단계는 로스터 초과분, 2단계는 정원 안이어도 성적·연봉·뎁스로 걸러내는 판정이다",
+  "score_threshold": 55,
+  "_threshold_note": "방출 점수가 이보다 높으면 후보. 낮추면 매년 방출이 폭증한다",
+  "max_per_team": 3,
+  "_max_per_team_note": "한 시즌에 한 팀이 방출할 수 있는 최대 인원. 없으면 성적 나쁜 해에 팀이 통째로 갈린다",
+  "owner_relation_weight": 0.4,
+  "_owner_note": "구단주 관계(-100~100) × 이 값만큼 방출 점수를 깎는다. 관계 100이면 −40점. 관계도는 주인공 기준 1:N이라 주인공에게만 적용된다"
+ }
+}

@@ -107,6 +107,66 @@ static func update_last10(current: String, result: String) -> String:
 	return expanded.substr(maxi(0, expanded.length() - 10))
 
 
+## 일정에서 순위표를 만든다. **치른 경기만 센다.**
+##
+## ⚠ **여기가 정본이다.** 예전엔 `LeagueVm`만 이 계산을 갖고 있었고,
+## 그래서 **시뮬 쪽에서 최종 순위를 알 방법이 없었다** — 구단 성향 갱신처럼
+## 순위가 입력인 자리가 화면을 부를 수는 없다. 두 벌로 두면 언젠가 갈린다.
+##
+## 돌려주는 줄: `team_id · wins · losses · draws · win_pct · rank`
+static func from_schedule(schedule: Array, league_id: String) -> Array:
+	var table: Dictionary = {}
+	for g in schedule:
+		# ⚠ **다른 리그가 섞이면 안 된다.** 하루 83경기가 도는데 다 세면
+		# 순위표가 뒤죽박죽이 된다
+		if g.get("league_id", "") != league_id:
+			continue
+		# 안 치른 경기는 안 센다 — 세면 개막 전에 전 팀이 승률 0으로 뜬다
+		var res = g.get("result", null)
+		if res == null:
+			continue
+
+		var home: String = g.get("home", "")
+		var away: String = g.get("away", "")
+		_blank(table, home)
+		_blank(table, away)
+
+		var winner = res.get("winner_id", null)
+		var loser = res.get("loser_id", null)
+		# ⚠ **패자가 없으면 무승부다.** 표기가 둘(`null`·빈 문자열)이라
+		# 한쪽만 보면 무승부가 조용히 홈 승리로 기록된다
+		if loser == null or String(loser).is_empty():
+			table[home]["draws"] += 1
+			table[away]["draws"] += 1
+		else:
+			_blank(table, String(winner))
+			_blank(table, String(loser))
+			table[String(winner)]["wins"] += 1
+			table[String(loser)]["losses"] += 1
+
+	var rows: Array = []
+	for tid in table:
+		var r: Dictionary = table[tid]
+		# ⚠ **무승부는 승률 분모에서 뺀다** — 야구의 관례다. 안 그러면
+		# 무승부가 많은 팀이 순위에서 밀린다
+		var decided: int = int(r["wins"]) + int(r["losses"])
+		rows.append({
+			"team_id": tid,
+			"wins": r["wins"], "losses": r["losses"], "draws": r["draws"],
+			"win_pct": float(r["wins"]) / float(decided) if decided > 0 else 0.0,
+		})
+
+	rows = sorted(rows)
+	for i in rows.size():
+		rows[i]["rank"] = i + 1
+	return rows
+
+
+static func _blank(table: Dictionary, team_id: String) -> void:
+	if not table.has(team_id):
+		table[team_id] = {"wins": 0, "losses": 0, "draws": 0}
+
+
 ## 순위 정렬 — 승률 → 승수. **원본을 안 바꾼다**
 ##
 ## ⚠ 화면이 정렬해 보여주는데 그게 원본을 바꾸면 저장까지 흔들린다

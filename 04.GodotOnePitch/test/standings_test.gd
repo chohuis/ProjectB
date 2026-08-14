@@ -149,3 +149,73 @@ func test_sort_does_not_mutate_input() -> void:
 	]
 	Standings.sorted(st)
 	assert_str(st[0]["team_id"]).is_equal("A")
+
+
+# ── 일정에서 순위표 (M9-10) ───────────────────────────────────
+#
+# ⚠ **여기가 정본이다.** 예전엔 `LeagueVm`만 이 계산을 갖고 있어서 시뮬 쪽에서
+# 최종 순위를 알 방법이 없었다 — 구단 성향 갱신이 그걸 입력으로 쓴다.
+
+func _g(league: String, home: String, away: String, winner, loser) -> Dictionary:
+	return {"league_id": league, "day": 1, "home": home, "away": away,
+		"result": null if winner == null else {"winner_id": winner, "loser_id": loser}}
+
+
+func test_it_builds_a_table_from_the_schedule() -> void:
+	var rows: Array = Standings.from_schedule([
+		_g("L1", "A", "B", "A", "B"),
+		_g("L1", "A", "C", "A", "C"),
+		_g("L1", "B", "C", "B", "C"),
+	], "L1")
+	assert_int(rows.size()).is_equal(3)
+	assert_str(rows[0]["team_id"]).is_equal("A")
+	assert_int(rows[0]["wins"]).is_equal(2)
+	assert_int(rows[0]["rank"]).is_equal(1)
+	assert_str(rows[2]["team_id"]).is_equal("C")
+	assert_int(rows[2]["losses"]).is_equal(2)
+	assert_int(rows[2]["rank"]).is_equal(3)
+
+
+## ⚠ **다른 리그가 섞이면 안 된다.** 하루 83경기가 도는데 다 세면 뒤죽박죽이다
+func test_it_only_counts_its_own_league() -> void:
+	var rows: Array = Standings.from_schedule([
+		_g("L1", "A", "B", "A", "B"),
+		_g("L2", "X", "Y", "X", "Y"),
+	], "L1")
+	assert_int(rows.size()).is_equal(2)
+	for r in rows:
+		assert_str(String(r["team_id"])).is_not_equal("X")
+
+
+## 안 치른 경기는 안 센다 — 세면 개막 전에 전 팀이 승률 0으로 뜬다
+func test_unplayed_games_do_not_count() -> void:
+	assert_array(Standings.from_schedule([_g("L1", "A", "B", null, null)], "L1")).is_empty()
+
+
+## ⚠ **패자가 없으면 무승부다.** 표기가 둘(`null`·빈 문자열)이라 한쪽만
+## 보면 무승부가 조용히 홈 승리로 기록된다
+func test_a_draw_is_a_draw_either_way() -> void:
+	for empty in [null, ""]:
+		var rows: Array = Standings.from_schedule([
+			{"league_id": "L1", "day": 1, "home": "A", "away": "B",
+				"result": {"winner_id": "", "loser_id": empty}},
+		], "L1")
+		assert_int(rows.size()).is_equal(2)
+		for r in rows:
+			assert_int(r["draws"]).override_failure_message(
+				"무승부가 승패로 기록됐다").is_equal(1)
+			assert_int(r["wins"]).is_equal(0)
+
+
+## 무승부는 승률 분모에서 뺀다 — 야구의 관례다
+func test_draws_leave_the_win_pct_alone() -> void:
+	var rows: Array = Standings.from_schedule([
+		_g("L1", "A", "B", "A", "B"),
+		{"league_id": "L1", "day": 1, "home": "A", "away": "B",
+			"result": {"winner_id": "", "loser_id": null}},
+	], "L1")
+	assert_float(rows[0]["win_pct"]).is_equal(1.0)
+
+
+func test_an_empty_schedule_is_an_empty_table() -> void:
+	assert_array(Standings.from_schedule([], "L1")).is_empty()

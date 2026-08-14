@@ -34,54 +34,13 @@ static func build(s: Dictionary) -> Dictionary:
 	var my_team: String = p.get("team_id", "")
 	var names: Dictionary = s.get("team_names", {})
 
-	var table: Dictionary = {}
-	for g in s.get("schedule", []):
-		# ⚠ **다른 리그가 섞이면 안 된다.** 하루 83경기가 도는데 다 세면
-		# 순위표가 뒤죽박죽이 된다
-		if g.get("league_id", "") != league_id:
-			continue
-		# 안 치른 경기는 안 센다 — 세면 개막 전에 전 팀이 승률 0으로 뜬다
-		var res = g.get("result", null)
-		if res == null:
-			continue
-
-		var home: String = g.get("home", "")
-		var away: String = g.get("away", "")
-		_ensure(table, home)
-		_ensure(table, away)
-
-		var winner = res.get("winner_id", null)
-		var loser = res.get("loser_id", null)
-		# ⚠ **패자가 없으면 무승부다.** 표기가 둘(`null`·빈 문자열)이라
-		# 한쪽만 보면 무승부가 조용히 홈 승리로 기록된다
-		if loser == null or String(loser).is_empty():
-			table[home]["draws"] += 1
-			table[away]["draws"] += 1
-		else:
-			table[String(winner)]["wins"] += 1
-			table[String(loser)]["losses"] += 1
-
-	var rows: Array = []
-	for tid in table:
-		var r: Dictionary = table[tid]
-		# ⚠ **무승부는 승률 분모에서 뺀다** — 야구의 관례다. 안 그러면
-		# 무승부가 많은 팀이 순위에서 밀린다
-		var decided: int = int(r["wins"]) + int(r["losses"])
-		rows.append({
-			"team_id": tid,
-			"name": names.get(tid, tid),
-			"wins": r["wins"], "losses": r["losses"], "draws": r["draws"],
-			"win_pct": float(r["wins"]) / float(decided) if decided > 0 else 0.0,
-			"is_mine": tid == my_team,
-		})
-
-	rows.sort_custom(func(a, b) -> bool:
-		if not is_equal_approx(a["win_pct"], b["win_pct"]):
-			return a["win_pct"] > b["win_pct"]
-		return int(a["wins"]) > int(b["wins"]))
-
-	for i in rows.size():
-		rows[i]["rank"] = i + 1
+	# ⚠ **순위 계산은 `Standings`가 갖는다.** 여기 있으면 시뮬 쪽에서
+	# 최종 순위를 알 방법이 없다 — 구단 성향 갱신이 그걸 입력으로 쓴다.
+	# 화면은 이름과 "내 팀"만 얹는다
+	var rows: Array = Standings.from_schedule(s.get("schedule", []), league_id)
+	for r in rows:
+		r["name"] = names.get(r["team_id"], r["team_id"])
+		r["is_mine"] = r["team_id"] == my_team
 
 	var leagues: Array = []
 	for lid in LEAGUE_LABELS:
@@ -95,6 +54,3 @@ static func build(s: Dictionary) -> Dictionary:
 	}
 
 
-static func _ensure(table: Dictionary, team_id: String) -> void:
-	if not table.has(team_id):
-		table[team_id] = {"wins": 0, "losses": 0, "draws": 0}

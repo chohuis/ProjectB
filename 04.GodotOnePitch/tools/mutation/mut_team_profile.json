@@ -1,0 +1,167 @@
+[
+ [
+  "기본값이 0이다 (안정성 0 · 성적압박 0으로 판정이 쏠린다)",
+  "\t\"owner_spending_willingness\": 50.0, \"stability\": 50.0,",
+  "\t\"owner_spending_willingness\": 0.0, \"stability\": 0.0,"
+ ],
+ [
+  "성향 항목이 빠졌다 (읽는 쪽이 조용히 0을 본다)",
+  "\t\"medical_quality\": 50.0, \"farm_investment\": 50.0,",
+  "\t\"medical_quality\": 50.0,"
+ ],
+ [
+  "기본값을 복사 안 하고 그대로 준다 (한 팀을 고치면 전 팀이 바뀐다)",
+  "\treturn DEFAULT.duplicate()",
+  "\treturn DEFAULT"
+ ],
+ [
+  "성향을 통째로 덮어쓴다 (고친 항목만 남는다)",
+  "\tcur.merge(values, true)\n\tworld[KEY][team_id] = cur",
+  "\tworld[KEY][team_id] = values"
+ ],
+ [
+  "고친 성향을 저장 안 한다 (매번 중립으로 돌아간다)",
+  "\tworld[KEY][team_id] = cur",
+  ""
+ ],
+ [
+  "우승해도 압박이 안 풀린다",
+  "const CHAMPION_DELTA: float = -20.0",
+  "const CHAMPION_DELTA: float = 0.0"
+ ],
+ [
+  "우승이 오히려 압박을 올린다",
+  "const CHAMPION_DELTA: float = -20.0",
+  "const CHAMPION_DELTA: float = 20.0"
+ ],
+ [
+  "상위권도 압박이 오른다",
+  "const CONTENDER_DELTA: float = -5.0",
+  "const CONTENDER_DELTA: float = 5.0"
+ ],
+ [
+  "하위권이 중위권만큼만 오른다 (두 시즌 뒤에도 buyer 문턱을 못 넘는다)",
+  "const BOTTOM_DELTA: float = 8.0",
+  "const BOTTOM_DELTA: float = 2.0"
+ ],
+ [
+  "연속 실패를 안 센다",
+  "\t\tdelta = BOTTOM_DELTA * patience_mult + float(consecutive_missed) * MISSED_STEP",
+  "\t\tdelta = BOTTOM_DELTA * patience_mult"
+ ],
+ [
+  "참을성이 내려가는 쪽에도 걸린다 (참을성 있는 구단은 우승해도 안 풀린다)",
+  "\tif won_championship:\n\t\tdelta = CHAMPION_DELTA\n\telif final_standing <= CONTENDER_RANK:\n\t\tdelta = CONTENDER_DELTA",
+  "\tif won_championship:\n\t\tdelta = CHAMPION_DELTA * patience_mult\n\telif final_standing <= CONTENDER_RANK:\n\t\tdelta = CONTENDER_DELTA * patience_mult"
+ ],
+ [
+  "참을성이 압박을 안 누른다",
+  "\tvar patience_mult: float = 1.0 - (owner_patience / 100.0) * PATIENCE_SPAN",
+  "\tvar patience_mult: float = 1.0"
+ ],
+ [
+  "참을성이 거꾸로 걸린다 (참을성 있는 구단이 더 조급하다)",
+  "\tvar patience_mult: float = 1.0 - (owner_patience / 100.0) * PATIENCE_SPAN",
+  "\tvar patience_mult: float = 1.0 + (owner_patience / 100.0) * PATIENCE_SPAN"
+ ],
+ [
+  "중위권 경계가 없다 (전원이 하위권 취급)",
+  "\telif final_standing <= total_teams / 2:\n\t\tdelta = MIDDLE_DELTA * patience_mult",
+  ""
+ ],
+ [
+  "압박이 0~100을 안 지킨다 (buyer 판정이 영영 참이 된다)",
+  "\treturn {\"pressure\": clampf(current + delta, 0.0, 100.0), \"delta\": delta}",
+  "\treturn {\"pressure\": current + delta, \"delta\": delta}"
+ ],
+ [
+  "스카우팅이 저절로 안 오른다",
+  "const SCOUT_BASE: float = 1.0",
+  "const SCOUT_BASE: float = 0.0"
+ ],
+ [
+  "예산이 스카우팅에 안 닿는다",
+  "\tvar delta: float = SCOUT_BASE + budget_ratio * SCOUT_BUDGET_WEIGHT \\",
+  "\tvar delta: float = SCOUT_BASE + 0.0 \\"
+ ],
+ [
+  "연속 진출 보너스에 상한이 없다 (강팀이 영원히 벌어진다)",
+  "\t\t+ minf(float(consecutive_playoffs) * SCOUT_PLAYOFF_STEP, SCOUT_PLAYOFF_CAP) \\",
+  "\t\t+ float(consecutive_playoffs) * SCOUT_PLAYOFF_STEP \\"
+ ],
+ [
+  "스카우팅이 100을 넘는다",
+  "\treturn {\"quality\": minf(current + delta, 100.0), \"delta\": delta}",
+  "\treturn {\"quality\": current + delta, \"delta\": delta}"
+ ],
+ [
+  "FA 자격 연수가 리그와 무관하다 (표가 두 곳이던 결함)",
+  "\t\"LEAGUE_KBL\": 5, \"LEAGUE_ABL\": 6, \"LEAGUE_JBL\": 4,",
+  "\t\"LEAGUE_KBL\": 5, \"LEAGUE_ABL\": 5, \"LEAGUE_JBL\": 5,"
+ ],
+ [
+  "프로가 아닌 리그도 FA가 있다",
+  "const FA_YEARS_DEFAULT: int = 9",
+  "const FA_YEARS_DEFAULT: int = 5"
+ ],
+ [
+  "buyer 문턱이 없다 (전원이 buyer가 된다)",
+  "const BUYER_PRESSURE: float = 60.0",
+  "const BUYER_PRESSURE: float = 0.0"
+ ],
+ [
+  "buyer 문턱이 너무 높다 (02와 똑같이 0팀이 된다)",
+  "const BUYER_PRESSURE: float = 60.0",
+  "const BUYER_PRESSURE: float = 200.0"
+ ],
+ [
+  "순위를 안 본다 (꼴찌도 buyer가 된다)",
+  "\tvar pct: float = float(rank) / float(total_teams)\n\treturn pct <= BUYER_RANK_PCT \\\n\t\tand float(of(world, team_id)[\"win_now_pressure\"]) > BUYER_PRESSURE",
+  "\treturn float(of(world, team_id)[\"win_now_pressure\"]) > BUYER_PRESSURE"
+ ],
+ [
+  "성적 압박을 안 본다 (전 팀이 50이던 02와 같은 상태)",
+  "\treturn pct <= BUYER_RANK_PCT \\\n\t\tand float(of(world, team_id)[\"win_now_pressure\"]) > BUYER_PRESSURE",
+  "\treturn pct <= BUYER_RANK_PCT"
+ ],
+ [
+  "상위권도 seller가 된다",
+  "\treturn float(rank) / float(total_teams) > 1.0 - BUYER_RANK_PCT \\\n\t\tand not is_buyer(world, team_id, rank, total_teams)",
+  "\treturn true"
+ ],
+ [
+  "팀이 0일 때 seller 판정이 참이 된다 (없는 리그가 통째로 매도자다)",
+  "\tif total_teams <= 0:\n\t\treturn false\n\treturn float(rank) / float(total_teams) > 1.0 - BUYER_RANK_PCT \\",
+  "\treturn float(rank) / float(total_teams) > 1.0 - BUYER_RANK_PCT \\"
+ ],
+ [
+  "프로가 아닌 리그에도 구단 성향을 붙인다",
+  "const PRO_LEAGUES: Array[String] = [\"LEAGUE_KBL\", \"LEAGUE_ABL\", \"LEAGUE_JBL\"]",
+  "const PRO_LEAGUES: Array[String] = [\"LEAGUE_KBL\", \"LEAGUE_ABL\", \"LEAGUE_JBL\", \"LEAGUE_HIGHSCHOOL\"]"
+ ],
+ [
+  "1위를 우승으로 안 본다 (아무도 압박이 안 풀린다)",
+  "\t\t\t\t0, int(row[\"rank\"]) == 1)",
+  "\t\t\t\t0, false)"
+ ],
+ [
+  "순위를 안 넘긴다 (전 팀이 같은 대우를 받는다)",
+  "\t\t\t\tint(row[\"rank\"]), rows.size(),",
+  "\t\t\t\t1, rows.size(),"
+ ],
+ [
+  "갱신 결과를 저장 안 한다 (매년 50으로 돌아간다)",
+  "\t\t\tpatch(world, tid, {\n\t\t\t\t\"win_now_pressure\": r[\"pressure\"],\n\t\t\t\t\"scouting_quality\": s[\"quality\"],\n\t\t\t})",
+  ""
+ ],
+ [
+  "스카우팅을 갱신 안 한다",
+  "\t\t\t\t\"scouting_quality\": s[\"quality\"],",
+  ""
+ ],
+ [
+  "지금 압박을 안 읽고 늘 50에서 시작한다 (해마다 초기화된다)",
+  "\t\t\t\tfloat(cur[\"win_now_pressure\"]), float(cur[\"owner_patience\"]),",
+  "\t\t\t\t50.0, float(cur[\"owner_patience\"]),"
+ ]
+]

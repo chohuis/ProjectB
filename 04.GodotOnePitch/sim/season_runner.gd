@@ -119,7 +119,16 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["aged"] = alive.size()
 	done.append("aging")
 
-	# ⑨ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
+	# ⑨ 구단 성향 — **팀이 개성을 갖는 유일한 경로.**
+	#
+	# ⚠ 02는 이걸 구현해 놓고 아무도 안 불렀다. 전 팀이 정확히 50이라
+	# 트레이드 buyer 조건(`상위 30% · 압박 > 60`)을 **구조적으로 아무도
+	# 못 넘었고**, 실측 트레이드가 9 → 8 → 2 → 1 → 1 → 0으로 말랐다.
+	# 승강·방출·FA 입찰도 같은 프로필을 읽으므로 전부 중립 판단이었다
+	summary["profiles"] = TeamProfile.update_all(state)
+	done.append("team_profiles")
+
+	# ⑩ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
 	# 텅 비었다(졸업만 하고 들어오는 사람이 없다)
 	summary["freshmen"] = _intake(state, world, year)
 	done.append("background")
