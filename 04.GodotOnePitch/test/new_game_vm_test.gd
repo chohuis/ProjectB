@@ -65,7 +65,7 @@ func test_the_same_seed_makes_the_same_protagonist() -> void:
 		"team_id": "TEAM_HS_AEWOL"})
 	var b: Dictionary = NewGameVm.start({"seed": 42, "name": "박한별",
 		"team_id": "TEAM_HS_AEWOL"})
-	assert_float(a["protagonist"]["potential"]).is_equal(b["protagonist"]["potential"])
+	assert_float(a["protagonist"]["potential_hidden"]).is_equal(b["protagonist"]["potential_hidden"])
 	assert_float(a["protagonist"]["development_rate"]) \
 		.is_equal(b["protagonist"]["development_rate"])
 	assert_float(a["protagonist"]["pitching"]["ovr"]) \

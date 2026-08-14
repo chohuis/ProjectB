@@ -376,9 +376,9 @@ func test_my_row_is_highlighted() -> void:
 func test_the_team_tab_lists_the_roster() -> void:
 	var roster: Array = [
 		{"id": "P1", "name": "김투수", "position": "SP", "age": 17,
-			"pitching": {"ovr": 72.0}, "batting": {"ovr": 20.0}, "potential": 85.0},
+			"pitching": {"ovr": 72.0}, "batting": {"ovr": 20.0}, "potential_hidden": 85.0},
 		{"id": "B1", "name": "이타자", "position": "SS", "age": 18,
-			"pitching": {"ovr": 10.0}, "batting": {"ovr": 66.0}, "potential": 80.0},
+			"pitching": {"ovr": 10.0}, "batting": {"ovr": 66.0}, "potential_hidden": 80.0},
 	]
 	var s := await _mount(_vm({"protagonist": {"id": "P1", "team_id": "T1",
 		"team_name": "제주"}, "world": {"rosters": {"T1": roster}}}))

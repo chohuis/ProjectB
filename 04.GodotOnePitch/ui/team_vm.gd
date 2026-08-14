@@ -31,7 +31,7 @@ static func build(s: Dictionary) -> Dictionary:
 			# 20으로 떠서 팀이 전부 약해 보인다
 			"ovr": float(x.get("pitching", {}).get("ovr", 0.0)) if pitcher
 				else float(x.get("batting", {}).get("ovr", 0.0)),
-			"potential": float(x.get("potential", 0.0)),
+			"potential": float(x.get("potential_hidden", 0.0)),
 			"is_pitcher": pitcher,
 			"is_me": x.get("id", "") == me,
 		})

@@ -81,3 +81,37 @@ static func preview(fatigue: float, condition: float, plan: Dictionary,
 		# 보면 벼랑 바로 앞에서 아무 경고가 없다
 		"next_zone_mult": Growth.fatigue_zone_mult(next_fatigue),
 	}
+
+
+# ── 프로그램 데이터 (M7-9) ────────────────────────────────────
+
+const PROGRAMS_PATH: String = "res://data/training_programs.json"
+
+## 파일을 한 번만 읽는다
+static var _programs_cache: Array = []
+
+
+## 훈련 프로그램 12종. **02 `programs.json` 그대로다** — 키 이름만 04 규칙.
+##
+## ⚠ **이게 없으면 훈련 화면이 빈칸이고 성장이 0이다.** 계획을 짜도
+## `_find`가 아무것도 못 찾아서 조용히 아무 일도 안 일어난다
+static func programs() -> Array:
+	if not _programs_cache.is_empty():
+		return _programs_cache
+	var f := FileAccess.open(PROGRAMS_PATH, FileAccess.READ)
+	if f == null:
+		push_error("훈련 프로그램을 못 읽는다: %s" % PROGRAMS_PATH)
+		return []
+	var parsed = JSON.parse_string(f.get_as_text())
+	_programs_cache = parsed.get("programs", []) if parsed is Dictionary else []
+	return _programs_cache
+
+
+## 그 선수가 할 수 있는 훈련. **`both`는 누구나 할 수 있다**
+static func programs_for(player_type: String) -> Array:
+	var out: Array = []
+	for p in programs():
+		var t: String = String(p.get("player_type", "both"))
+		if t == "both" or t == player_type:
+			out.append(p)
+	return out

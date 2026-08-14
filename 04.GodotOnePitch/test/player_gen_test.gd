@@ -326,7 +326,7 @@ func test_a_pitcher_is_marked_as_one() -> void:
 func test_potentials_are_not_all_the_same() -> void:
 	var seen: Dictionary = {}
 	for p in _bulk(60):
-		seen[roundf(p["potential"])] = true
+		seen[roundf(p["potential_hidden"])] = true
 	assert_int(seen.size()).override_failure_message("천장이 고정돼 있다").is_greater(10)
 
 
@@ -355,7 +355,7 @@ func test_the_tail_gets_both_ceiling_and_speed() -> void:
 			if p["development_rate"] >= 82.0:
 				found = true
 				# 천장이 평범한 무리(최대 배수 1.25)를 넘어야 한다
-				assert_float(p["potential"]).is_greater(70.0 * 1.25)
+				assert_float(p["potential_hidden"]).is_greater(70.0 * 1.25)
 	assert_bool(found).override_failure_message("꼬리가 하나도 안 나왔다").is_true()
 
 
@@ -367,7 +367,7 @@ func test_the_tail_gets_both_ceiling_and_speed() -> void:
 func test_the_ceiling_is_never_below_the_current_ovr() -> void:
 	for p in _bulk(60):
 		var cur: float = maxf(p["pitching"]["ovr"], p["batting"]["ovr"])
-		assert_float(p["potential"]).is_greater_equal(cur)
+		assert_float(p["potential_hidden"]).is_greater_equal(cur)
 
 
 func test_a_low_ceiling_cap_is_pulled_up_to_the_current_ovr() -> void:
@@ -376,15 +376,15 @@ func test_a_low_ceiling_cap_is_pulled_up_to_the_current_ovr() -> void:
 			"batting_ovr_min": 70.0, "batting_ovr_max": 78.0,
 			"potential_ovr_max": 40.0}):
 		var cur: float = maxf(p["pitching"]["ovr"], p["batting"]["ovr"])
-		assert_float(p["potential"]).override_failure_message(
-			"천장 %.1f < 현재 %.1f — 성장이 즉시 멈춘다" % [p["potential"], cur]) \
+		assert_float(p["potential_hidden"]).override_failure_message(
+			"천장 %.1f < 현재 %.1f — 성장이 즉시 멈춘다" % [p["potential_hidden"], cur]) \
 			.is_greater_equal(cur)
 
 
 func test_the_ceiling_never_exceeds_ninety_nine() -> void:
 	for p in _bulk(40, {"pitching_ovr_min": 90.0, "pitching_ovr_max": 99.0,
 			"batting_ovr_min": 90.0, "batting_ovr_max": 99.0}):
-		assert_float(p["potential"]).is_less_equal(99.0)
+		assert_float(p["potential_hidden"]).is_less_equal(99.0)
 
 
 func test_growth_speed_stays_in_range() -> void:

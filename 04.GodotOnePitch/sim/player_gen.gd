@@ -191,7 +191,11 @@ static func roster(p: Dictionary) -> Array:
 			"career_status": "active",
 			"pitching": pitching,
 			"batting": batting,
-			"potential": potential,
+			# ⚠ **키 이름이 `potential_hidden`이다.** `Growth`·`TrainingGrowth`·
+			# `GameGrowth`·`NpcStore`가 전부 그걸 읽는다 — `potential`로 넣으면
+			# **모든 선수가 기본값 75로 취급돼 성장이 통째로 멈춘다.**
+			# 실측에서 구속 79인 주인공이 여덟 주를 훈련해도 안 올랐다
+			"potential_hidden": potential,
 			"development_rate": dev,
 			"fatigue": 0.0,
 			"condition": 100.0,

@@ -248,6 +248,26 @@ func _build(which: String) -> Control:
 			sbt["day"] = int(sbt["season_days"])
 			sb.set_state(sbt)
 			return sb
+		"training":
+			# 실제 새 게임에서 훈련 화면을 연다 — 손으로 만든 사전이 아니다
+			var tr: AppRoot = APP.instantiate()
+			tr.set_state(World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
+			tr.ready.connect(func() -> void: tr._on_training(), CONNECT_ONE_SHOT)
+			return tr
+		"training-picking":
+			# 슬롯을 눌러 고르는 중 — 선택지가 실제로 뜨는지 본다
+			var tp: AppRoot = APP.instantiate()
+			var tps := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			# 이미 짜둔 계획이 있는 상태 — 비우기 버튼도 같이 본다
+			tps["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_MOVEMENT"}
+			tps["protagonist"]["fatigue"] = 66.0
+			tp.set_state(tps)
+			tp.ready.connect(func() -> void:
+				tp._on_training()
+				tp.training_screen()._on_slot("secondary2"), CONNECT_ONE_SHOT)
+			return tp
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()

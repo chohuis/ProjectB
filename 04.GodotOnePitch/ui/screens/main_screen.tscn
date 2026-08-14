@@ -101,6 +101,9 @@ layout_mode = 2
 size_flags_vertical = 10
 theme_override_constants/separation = 4
 
+[node name="Training" type="Button" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+
 [node name="NextGame" type="Label" parent="Pad/Col/Body/Right/Footer"]
 layout_mode = 2
 autowrap_mode = 3

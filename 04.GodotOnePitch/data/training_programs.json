@@ -1,0 +1,184 @@
+{
+ "_note": "02 resource/data/master/training/programs.json에서 그대로. 키 이름만 04 규칙(snake_case)으로.",
+ "programs": [
+  {
+   "id": "TRN_VEL",
+   "name": "구속 훈련",
+   "player_type": "pitcher",
+   "focus": "velocity",
+   "focus_label": "구속/하체 드라이브",
+   "gains_label": "구속, 스태미나",
+   "base_xp": 4,
+   "fatigue_cost": 5.5,
+   "condition_cost": 6,
+   "gains_pitching": {
+    "velocity": 1,
+    "stamina": 0.3
+   }
+  },
+  {
+   "id": "TRN_CTRL_CMD",
+   "name": "제구/커맨드 훈련",
+   "player_type": "pitcher",
+   "focus": "control",
+   "focus_label": "제구·커맨드 정밀도",
+   "gains_label": "제구, 커맨드 (균등)",
+   "base_xp": 3,
+   "fatigue_cost": 3,
+   "condition_cost": 3,
+   "gains_pitching": {
+    "control": 1,
+    "command": 1
+   }
+  },
+  {
+   "id": "TRN_MOVEMENT",
+   "name": "변화구 훈련",
+   "player_type": "pitcher",
+   "focus": "movement",
+   "focus_label": "무브먼트/구종 궤적",
+   "gains_label": "무브먼트, 제구",
+   "base_xp": 3.2,
+   "fatigue_cost": 3.5,
+   "condition_cost": 4,
+   "gains_pitching": {
+    "movement": 1,
+    "control": 0.3
+   }
+  },
+  {
+   "id": "TRN_MENTAL_P",
+   "name": "정신 훈련",
+   "player_type": "pitcher",
+   "focus": "mentality",
+   "focus_label": "압박 대응/집중/견제",
+   "gains_label": "멘탈, 위기집중력, 견제력",
+   "base_xp": 2.8,
+   "fatigue_cost": 2.5,
+   "condition_cost": 2,
+   "gains_pitching": {
+    "mentality": 1,
+    "clutch": 0.4,
+    "holdRunners": 0.2
+   }
+  },
+  {
+   "id": "TRN_STAMINA",
+   "name": "체력 훈련",
+   "player_type": "both",
+   "focus": "stamina",
+   "focus_label": "스태미나/지구력",
+   "gains_label": "스태미나, 회복력",
+   "base_xp": 3.8,
+   "fatigue_cost": 5,
+   "condition_cost": 5,
+   "gains_pitching": {
+    "stamina": 1,
+    "recovery": 0.3
+   }
+  },
+  {
+   "id": "TRN_PITCH_DEV",
+   "name": "구종 개발",
+   "player_type": "pitcher",
+   "focus": "pitch_dev",
+   "focus_label": "구종 숙련도/신규 습득",
+   "gains_label": "구종 숙련도 향상",
+   "base_xp": 0,
+   "fatigue_cost": 4,
+   "condition_cost": 2,
+   "is_pitch_dev": true,
+   "progress_per_week": 24
+  },
+  {
+   "id": "TRN_BATTING",
+   "name": "타격 훈련",
+   "player_type": "batter",
+   "focus": "batting",
+   "focus_label": "컨택/파워 드라이브",
+   "gains_label": "컨택, 장타력",
+   "base_xp": 3.5,
+   "fatigue_cost": 4,
+   "condition_cost": 4,
+   "gains_batting": {
+    "contact": 1,
+    "power": 0.8
+   }
+  },
+  {
+   "id": "TRN_PLATE_EYE",
+   "name": "출루 훈련",
+   "player_type": "batter",
+   "focus": "eye",
+   "focus_label": "볼-스트라이크 판단/번트",
+   "gains_label": "선구안, 극기, 번트",
+   "base_xp": 2.8,
+   "fatigue_cost": 2.5,
+   "condition_cost": 2,
+   "gains_batting": {
+    "eye": 1,
+    "discipline": 0.4,
+    "bunting": 0.25
+   }
+  },
+  {
+   "id": "TRN_BASERUN",
+   "name": "주루 훈련",
+   "player_type": "batter",
+   "focus": "baserun",
+   "focus_label": "스피드/베이스러닝",
+   "gains_label": "주력, 주루판단",
+   "base_xp": 3.2,
+   "fatigue_cost": 4,
+   "condition_cost": 4,
+   "gains_batting": {
+    "speed": 1,
+    "baseInstinct": 0.3
+   }
+  },
+  {
+   "id": "TRN_DEFENSE",
+   "name": "수비 훈련",
+   "player_type": "batter",
+   "focus": "defense",
+   "focus_label": "글러브 워크/어깨",
+   "gains_label": "수비, 어깨",
+   "base_xp": 3,
+   "fatigue_cost": 3.5,
+   "condition_cost": 3,
+   "gains_batting": {
+    "fielding": 1,
+    "arm": 0.3
+   }
+  },
+  {
+   "id": "TRN_MENTAL_B",
+   "name": "정신/클러치 훈련",
+   "player_type": "batter",
+   "focus": "mentality",
+   "focus_label": "압박 대응/득점권 집중",
+   "gains_label": "멘탈, 클러치",
+   "base_xp": 2.8,
+   "fatigue_cost": 2.5,
+   "condition_cost": 2,
+   "gains_pitching": {
+    "mentality": 1
+   },
+   "gains_batting": {
+    "battingClutch": 0.6
+   }
+  },
+  {
+   "id": "TRN_RECOVERY",
+   "name": "컨디셔닝 회복",
+   "player_type": "both",
+   "focus": "recovery",
+   "focus_label": "회복/유연성",
+   "gains_label": "피로 ↓, 컨디션 ↑",
+   "base_xp": 0,
+   "fatigue_cost": -10,
+   "condition_cost": -16,
+   "is_recovery": true
+  }
+ ]
+}

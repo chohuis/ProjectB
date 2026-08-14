@@ -30,6 +30,7 @@ const STATUS_SCREEN := preload("res://ui/screens/status_screen.tscn")
 # 강제한 걸 기준으로 삼았기 때문이다. PC(Steam)가 1차 목표다
 @onready var _tabs: VBoxContainer = $Pad/Col/Body/Nav/Tabs
 @onready var _tab_host: VBoxContainer = $Pad/Col/Body/Main/TabHost
+@onready var _training: Button = $Pad/Col/Body/Right/Training
 @onready var _next_game: Label = $Pad/Col/Body/Right/Footer/NextGame
 @onready var _advance: Button = $Pad/Col/Body/Right/Footer/Advance
 
@@ -46,6 +47,8 @@ signal league_selected(league_id: String)
 signal match_requested
 ## 시즌을 끝내고 다음 해로 넘어간다
 signal season_end_requested
+## 훈련 계획을 짠다
+signal training_requested
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -81,6 +84,7 @@ func _ready() -> void:
 	theme = AppTheme.build()
 	_bg.color = AppTheme.BG
 	_advance.pressed.connect(_on_advance)
+	_training.pressed.connect(func() -> void: training_requested.emit.call_deferred())
 	_rebuild()
 
 
@@ -105,6 +109,7 @@ func _rebuild() -> void:
 	_team.text = _vm.get("team_name", "")
 	_team.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
 
+	_training.text = "훈련 계획"
 	_next_game.text = _vm.get("next_game_label", "")
 	# 오늘 등판이면 눈에 띄게 — 사용자가 기다린 날이다
 	_next_game.add_theme_color_override("font_color",

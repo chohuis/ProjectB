@@ -1,0 +1,82 @@
+[
+ [
+  "고른 슬롯을 화면이 계속 들고 있는다 (고른 뒤에도 목록이 안 접힌다)",
+  "\t\t\t_filling = \"\"\n\t\t\tslot_changed.emit.call_deferred({\"slot_id\": slot, \"program_id\": pid}))",
+  "\t\t\tslot_changed.emit.call_deferred({\"slot_id\": slot, \"program_id\": pid}))"
+ ],
+ [
+  "슬롯을 눌러도 안 열린다 (아무것도 못 고른다)",
+  "\t_filling = \"\" if _filling == slot_id else slot_id",
+  "\t_filling = \"\""
+ ],
+ [
+  "다시 눌러도 안 접힌다",
+  "\t_filling = \"\" if _filling == slot_id else slot_id",
+  "\t_filling = slot_id"
+ ],
+ [
+  "고를 게 없어도 목록을 늘 띄운다 (안내가 안 나온다)",
+  "\tif _filling.is_empty():",
+  "\tif false:"
+ ],
+ [
+  "고른 프로그램 대신 늘 빈 값을 보낸다 (골라도 안 들어간다)",
+  "\t\tvar pid: String = String(o[\"id\"])",
+  "\t\tvar pid: String = \"\""
+ ],
+ [
+  "어느 슬롯에 넣는지를 안 보낸다 (늘 1순위에 들어간다)",
+  "\t\tvar slot: String = _filling",
+  "\t\tvar slot: String = \"primary\""
+ ],
+ [
+  "비우기 버튼이 슬롯 id를 안 보낸다",
+  "\t\t\t\tslot_changed.emit.call_deferred({\"slot_id\": sid, \"program_id\": \"\"}))",
+  "\t\t\t\tslot_changed.emit.call_deferred({\"slot_id\": \"\", \"program_id\": \"\"}))"
+ ],
+ [
+  "채운 슬롯에 비우기 버튼이 안 붙는다 (한 번 넣으면 못 뺀다)",
+  "\t\tif not String(s[\"program_id\"]).is_empty():",
+  "\t\tif false:"
+ ],
+ [
+  "빈 슬롯에도 비우기가 붙는다 (지울 게 없는데 버튼이 있다)",
+  "\t\tif not String(s[\"program_id\"]).is_empty():",
+  "\t\tif true:"
+ ],
+ [
+  "슬롯 줄을 지우지 않고 쌓는다 (누를 때마다 세 줄이 늘어난다)",
+  "func _build_slots() -> void:\n\t_free_all(_slots)",
+  "func _build_slots() -> void:"
+ ],
+ [
+  "선택지를 지우지 않고 쌓는다",
+  "func _build_options() -> void:\n\t_free_all(_options)",
+  "func _build_options() -> void:"
+ ],
+ [
+  "닫기 버튼이 신호를 안 보낸다 (훈련 화면에서 못 나온다)",
+  "\t_done.pressed.connect(func() -> void: done_requested.emit.call_deferred())",
+  ""
+ ],
+ [
+  "지금 상태를 안 보여준다 (얼마나 지쳤는지 모르고 계획을 짠다)",
+  "\t_state_label.text = \"피로 %s · 컨디션 %s\" % [_vm.get(\"fatigue_label\", \"\"),\n\t\t_vm.get(\"condition_label\", \"\")]",
+  "\t_state_label.text = \"\""
+ ],
+ [
+  "이번 주 변화를 안 보여준다",
+  "\t_delta.text = String(_vm.get(\"delta_label\", \"\"))",
+  "\t_delta.text = \"\""
+ ],
+ [
+  "다음 주 예상을 안 보여준다 (벼랑을 못 본다)",
+  "\t_projected.text = String(_vm.get(\"projected_label\", \"\"))",
+  "\t_projected.text = \"\""
+ ],
+ [
+  "선택지에 비용을 안 찍는다",
+  "\t\tb.text = \"%s — %s  (%s)\" % [o[\"label\"], o[\"gains\"], o[\"cost\"]]",
+  "\t\tb.text = String(o[\"label\"])"
+ ]
+]

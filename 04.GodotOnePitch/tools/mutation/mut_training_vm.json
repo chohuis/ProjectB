@@ -1,0 +1,152 @@
+[
+ [
+  "슬롯 키가 엔진과 다르다 (계획을 짜도 아무 일도 안 일어난다)",
+  "\t{\"id\": \"secondary2\", \"label\": \"3순위\", \"mult\": \"XP 1.0배\"},",
+  "\t{\"id\": \"tertiary\", \"label\": \"3순위\", \"mult\": \"XP 1.0배\"},"
+ ],
+ [
+  "슬롯이 둘뿐이다 (3순위를 못 채운다)",
+  "\t{\"id\": \"secondary2\", \"label\": \"3순위\", \"mult\": \"XP 1.0배\"},\n",
+  ""
+ ],
+ [
+  "슬롯 배수 이름표가 뒤집혔다 (1순위가 제일 낮아 보인다)",
+  "\t{\"id\": \"primary\", \"label\": \"1순위\", \"mult\": \"XP 2.5배\"},",
+  "\t{\"id\": \"primary\", \"label\": \"1순위\", \"mult\": \"XP 1.0배\"},"
+ ],
+ [
+  "고른 훈련을 슬롯에 안 싣는다 (골라도 비어 보인다)",
+  "\t\tvar chosen: String = String(plan.get(s[\"id\"], \"\"))",
+  "\t\tvar chosen: String = \"\""
+ ],
+ [
+  "슬롯이 이름만 있고 id가 없다 (눌러도 어느 슬롯인지 모른다)",
+  "\t\t\t\"program_id\": chosen,",
+  "\t\t\t\"program_id\": \"\","
+ ],
+ [
+  "선수 타입을 안 가린다 (투수에게 타격 훈련을 권한다)",
+  "\tvar programs: Array = Training.programs_for(String(p.get(\"player_type\", \"pitcher\")))",
+  "\tvar programs: Array = Training.programs()"
+ ],
+ [
+  "누구에게나 투수 훈련만 준다",
+  "\tvar programs: Array = Training.programs_for(String(p.get(\"player_type\", \"pitcher\")))",
+  "\tvar programs: Array = Training.programs_for(\"pitcher\")"
+ ],
+ [
+  "선택지에 비용을 안 싣는다 (무엇이 비싼지 모른 채 고른다)",
+  "\t\t\t\"cost\": \"피로 %+.1f · 컨디션 %+.1f\" % [\n\t\t\t\tfloat(c.get(\"fatigue_cost\", 0.0)), -float(c.get(\"condition_cost\", 0.0))],",
+  "\t\t\t\"cost\": \"\","
+ ],
+ [
+  "비용 두 값이 뒤바뀌었다",
+  "\t\t\t\tfloat(c.get(\"fatigue_cost\", 0.0)), -float(c.get(\"condition_cost\", 0.0))],",
+  "\t\t\t\t-float(c.get(\"condition_cost\", 0.0)), float(c.get(\"fatigue_cost\", 0.0))],"
+ ],
+ [
+  "컨디션 비용 부호를 안 뒤집는다 (회복 훈련이 `컨디션 −-16.0`으로 나온다)",
+  "\t\t\t\tfloat(c.get(\"fatigue_cost\", 0.0)), -float(c.get(\"condition_cost\", 0.0))],",
+  "\t\t\t\tfloat(c.get(\"fatigue_cost\", 0.0)), float(c.get(\"condition_cost\", 0.0))],"
+ ],
+ [
+  "선택지에 무엇이 오르는지 안 적는다",
+  "\t\t\t\"gains\": String(c.get(\"gains_label\", \"\")),",
+  "\t\t\t\"gains\": \"\","
+ ],
+ [
+  "미리보기가 엔진을 안 거치고 자기 식을 쓴다 (02의 부호 반대 결함)",
+  "\tvar pv: Dictionary = Training.preview(fatigue, condition, plan, Training.programs())",
+  "\tvar pv: Dictionary = {\"fatigue_delta\": -5.0, \"condition_delta\": 5.0,\n\t\t\"projected_fatigue\": fatigue - 5.0, \"projected_condition\": condition + 5.0}"
+ ],
+ [
+  "미리보기에 지금 피로를 안 넘긴다 (구간 승수가 늘 1.0이 된다)",
+  "\tvar pv: Dictionary = Training.preview(fatigue, condition, plan, Training.programs())",
+  "\tvar pv: Dictionary = Training.preview(0.0, condition, plan, Training.programs())"
+ ],
+ [
+  "미리보기에 계획을 안 넘긴다 (무엇을 넣어도 값이 같다)",
+  "\tvar pv: Dictionary = Training.preview(fatigue, condition, plan, Training.programs())",
+  "\tvar pv: Dictionary = Training.preview(fatigue, condition, {}, Training.programs())"
+ ],
+ [
+  "미리보기에 프로그램을 안 넘긴다 (비용이 늘 0이 된다)",
+  "\tvar pv: Dictionary = Training.preview(fatigue, condition, plan, Training.programs())",
+  "\tvar pv: Dictionary = Training.preview(fatigue, condition, plan, [])"
+ ],
+ [
+  "이번 주 변화에 부호를 안 붙인다 (+와 −를 못 가린다)",
+  "\t\t\"delta_label\": \"이번 주 피로 %+.1f · 컨디션 %+.1f\" % [",
+  "\t\t\"delta_label\": \"이번 주 피로 %.1f · 컨디션 %.1f\" % ["
+ ],
+ [
+  "이번 주 변화 두 값이 뒤바뀌었다",
+  "\t\t\tfloat(pv[\"fatigue_delta\"]), float(pv[\"condition_delta\"])],",
+  "\t\t\tfloat(pv[\"condition_delta\"]), float(pv[\"fatigue_delta\"])],"
+ ],
+ [
+  "다음 주를 지금 값으로 찍는다 (계획을 넣어도 예상이 안 변한다)",
+  "\tvar next_zone: Dictionary = zone_of(float(pv[\"projected_fatigue\"]))",
+  "\tvar next_zone: Dictionary = zone_of(fatigue)"
+ ],
+ [
+  "다음 주 구간 경고를 안 본다 (벼랑 앞에서 아무 말이 없다)",
+  "\t\t\"warns\": bool(next_zone[\"warn\"]) and not bool(zone[\"warn\"]),",
+  "\t\t\"warns\": false,"
+ ],
+ [
+  "이미 지쳤을 때도 또 경고한다 (경고가 늘 켜져 있어 뜻이 없다)",
+  "\t\t\"warns\": bool(next_zone[\"warn\"]) and not bool(zone[\"warn\"]),",
+  "\t\t\"warns\": bool(next_zone[\"warn\"]),"
+ ],
+ [
+  "지친 상태를 안 알린다",
+  "\t\t\"is_tired\": bool(zone[\"warn\"]),",
+  "\t\t\"is_tired\": false,"
+ ],
+ [
+  "지금 구간이 아니라 다음 구간으로 지침을 판단한다",
+  "\t\t\"is_tired\": bool(zone[\"warn\"]),",
+  "\t\t\"is_tired\": bool(next_zone[\"warn\"]),"
+ ],
+ [
+  "피로 구간 경계가 한 칸씩 밀렸다 (70에서 여전히 괜찮다고 한다)",
+  "\t{\"at\": 70.0, \"label\": \"피곤\", \"warn\": true},",
+  "\t{\"at\": 75.0, \"label\": \"피곤\", \"warn\": true},"
+ ],
+ [
+  "탈진 직전 구간이 없다 (90에서도 매우 피곤이라고만 한다)",
+  "\t{\"at\": 90.0, \"label\": \"탈진 직전\", \"warn\": true},\n",
+  ""
+ ],
+ [
+  "피곤 구간이 경고가 아니다",
+  "\t{\"at\": 70.0, \"label\": \"피곤\", \"warn\": true},",
+  "\t{\"at\": 70.0, \"label\": \"피곤\", \"warn\": false},"
+ ],
+ [
+  "괜찮음도 경고로 본다 (늘 빨갛다)",
+  "\t{\"at\": 0.0, \"label\": \"괜찮음\", \"warn\": false},",
+  "\t{\"at\": 0.0, \"label\": \"괜찮음\", \"warn\": true},"
+ ],
+ [
+  "구간을 위에서부터 안 찾는다 (전부 괜찮음이 된다)",
+  "\tfor z in ZONE_LABEL:\n\t\tif fatigue >= float(z[\"at\"]):\n\t\t\treturn z",
+  "\tfor z in ZONE_LABEL:\n\t\tif fatigue <= float(z[\"at\"]):\n\t\t\treturn z"
+ ],
+ [
+  "피로 이름표에 구간을 안 적는다 (숫자만 보고 판단해야 한다)",
+  "\t\t\"fatigue_label\": \"%.0f (%s)\" % [fatigue, zone[\"label\"]],",
+  "\t\t\"fatigue_label\": \"%.0f\" % fatigue,"
+ ],
+ [
+  "빈 슬롯을 빈 문자열로 보여준다 (누를 자리가 안 보인다)",
+  "\tif id.is_empty():\n\t\treturn \"비움\"",
+  "\tif id.is_empty():\n\t\treturn \"\""
+ ],
+ [
+  "슬롯에 프로그램 이름 대신 id를 찍는다",
+  "\t\t\treturn String(c.get(\"name\", id))",
+  "\t\t\treturn id"
+ ]
+]

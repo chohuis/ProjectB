@@ -610,3 +610,154 @@ func test_an_unfinished_game_leaves_no_stats() -> void:
 
 	assert_bool(r.state().get("season_stats", {}).has(me)).override_failure_message(
 		"안 끝낸 경기가 기록에 들어갔다").is_false()
+
+
+# ── 훈련이 실제로 능력치를 올리는가 (M7-9a) ───────────────────
+
+## ⚠ **훈련해도 능력치가 안 올랐다.** `_apply_one_week`가 `Training.plan_load`만
+## 불러 **피로만 움직였다** — 훈련 화면에서 뭘 짜든 결과가 같았다
+func test_training_actually_raises_the_stats() -> void:
+	var s: Dictionary = _real_game(777)
+	# 구속 훈련을 1슬롯에
+	s["training_plan"] = {"primary": "TRN_VEL"}
+	# 천장에 여유를 준다 — 여기서 보려는 건 배선이지 천장 감쇠가 아니다
+	s["protagonist"]["potential_hidden"] = 95.0
+	var before: float = float(s["protagonist"]["pitching"]["velocity"])
+
+	var r: AppRoot = await _mount(s)
+	# 여러 주를 돌려야 레벨업 문턱을 넘는다
+	for i in 8:
+		r._apply_one_week()
+
+	assert_float(float(r.state()["protagonist"]["pitching"]["velocity"])) \
+		.override_failure_message("여덟 주를 훈련했는데 구속이 %.1f 그대로다" % before) \
+		.is_greater(before)
+
+
+## ⚠ **훈련 프로그램이 실려야 한다.** 없으면 `_find`가 아무것도 못 찾아
+## 조용히 아무 일도 안 일어난다
+func test_the_training_programs_are_loaded() -> void:
+	assert_int(Training.programs().size()).override_failure_message(
+		"훈련 프로그램이 0개다").is_equal(12)
+	for p in Training.programs():
+		assert_str(String(p.get("id", ""))).is_not_empty()
+		assert_float(float(p.get("base_xp", 0.0))).is_greater_equal(0.0)
+
+
+## 투수는 투수 훈련만 — `both`는 누구나 한다
+func test_programs_are_filtered_by_player_type() -> void:
+	var pit: Array = Training.programs_for("pitcher")
+	assert_int(pit.size()).is_greater(0)
+	for p in pit:
+		assert_bool(String(p["player_type"]) in ["pitcher", "both"]) \
+			.override_failure_message("투수에게 %s 훈련이 떴다" % p["id"]).is_true()
+
+	var bat: Array = Training.programs_for("batter")
+	for p in bat:
+		assert_bool(String(p["player_type"]) in ["batter", "both"]).is_true()
+
+
+## 계획이 비어도 주간 회복(−5)은 돈다 — 안 그러면 아무 훈련도 안 짠 주에
+## 피로가 안 빠진다
+func test_an_empty_plan_still_recovers() -> void:
+	var s: Dictionary = _real_game(777)
+	s["protagonist"]["fatigue"] = 50.0
+	s["training_plan"] = {}
+
+	var r: AppRoot = await _mount(s)
+	r._apply_one_week()
+	assert_float(float(r.state()["protagonist"]["fatigue"])).override_failure_message(
+		"빈 계획인데 피로가 안 빠졌다").is_less(50.0)
+
+
+## 훈련하면 지친다 — 공짜로 크면 훈련을 고를 이유가 없다
+func test_training_costs_fatigue() -> void:
+	var s: Dictionary = _real_game(777)
+	s["protagonist"]["fatigue"] = 20.0
+	s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_STAMINA"}
+
+	var r: AppRoot = await _mount(s)
+	r._apply_one_week()
+	assert_float(float(r.state()["protagonist"]["fatigue"])).override_failure_message(
+		"두 칸을 훈련했는데 피로가 안 늘었다").is_greater(20.0)
+
+
+## 무엇이 올랐는지 기록에 남는다 — 소식이 그걸 읽는다
+func test_the_gains_are_logged() -> void:
+	var s: Dictionary = _real_game(777)
+	s["training_plan"] = {"primary": "TRN_VEL"}
+	s["protagonist"]["potential_hidden"] = 95.0
+
+	var r: AppRoot = await _mount(s)
+	for i in 8:
+		r._apply_one_week()
+
+	assert_bool(r.state().get("training_log", []).is_empty()).override_failure_message(
+		"능력치가 올랐는데 기록이 없다").is_false()
+
+
+# ── 훈련 화면 배선 (M7-9b) ────────────────────────────────────
+
+## ⚠ **계획은 상태가 들고 있다.** 화면이 들면 진행 뒤에 새 사전이 오면서
+## 초기화된다 — 소식 거르기가 그랬다
+func test_the_plan_lands_in_the_state() -> void:
+	var r: AppRoot = await _mount(_real_game(777))
+	r._on_training()
+	await await_idle_frame()
+	assert_object(r.training_screen()).is_not_null()
+
+	r._on_training_slot({"slot_id": "primary", "program_id": "TRN_VEL"})
+	assert_str(String(r.state().get("training_plan", {}).get("primary", ""))
+		).is_equal("TRN_VEL")
+
+	# 진행해도 남아 있어야 한다
+	r._apply_one_week()
+	assert_str(String(r.state().get("training_plan", {}).get("primary", ""))
+		).override_failure_message("한 주 지나자 계획이 사라졌다").is_equal("TRN_VEL")
+
+
+## 비우면 슬롯이 지워진다 — 빈 문자열이 남으면 `_find`가 헛돈다
+func test_clearing_a_slot_removes_it() -> void:
+	var s: Dictionary = _real_game(777)
+	s["training_plan"] = {"primary": "TRN_VEL"}
+	var r: AppRoot = await _mount(s)
+
+	r._on_training_slot({"slot_id": "primary", "program_id": ""})
+	assert_bool(r.state().get("training_plan", {}).has("primary")).is_false()
+
+
+## 화면이 고른 것이 실제 성장에 닿는가 — 화면과 엔진 사이가 끊기면
+## 계획을 짜도 아무 일도 안 일어난다
+func test_what_the_screen_picks_reaches_the_engine() -> void:
+	var s: Dictionary = _real_game(777)
+	s["protagonist"]["potential_hidden"] = 95.0
+	var before: float = float(s["protagonist"]["pitching"]["velocity"])
+
+	var r: AppRoot = await _mount(s)
+	r._on_training()
+	await await_idle_frame()
+	# 화면 버튼을 실제로 누른다
+	r.training_screen()._on_slot("primary")
+	await await_idle_frame()
+	var opts: Node = r.training_screen().get_node("Pad/Center/Col/Options")
+	(opts.get_child(0) as Button).pressed.emit()
+	await await_idle_frame()
+	r._on_training_done()
+
+	for i in 8:
+		r._apply_one_week()
+	assert_float(float(r.state()["protagonist"]["pitching"]["velocity"])) \
+		.override_failure_message("화면에서 고른 훈련이 엔진에 안 닿았다").is_greater(before)
+
+
+## 닫으면 본화면이 돌아온다 — 안 돌아오면 게임이 멈춘 것처럼 보인다
+func test_closing_training_returns_to_main() -> void:
+	var r: AppRoot = await _mount(_real_game(777))
+	r._on_training()
+	await await_idle_frame()
+	assert_bool(r.get_node("Main").visible).is_false()
+
+	r._on_training_done()
+	await await_idle_frame()
+	assert_bool(r.get_node("Main").visible).is_true()
+	assert_object(r.training_screen()).is_null()

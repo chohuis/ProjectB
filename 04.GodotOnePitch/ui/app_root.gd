@@ -15,6 +15,7 @@ class_name AppRoot
 
 const MATCH_SCREEN := preload("res://ui/screens/match_screen.tscn")
 const SEASON_END_SCREEN := preload("res://ui/screens/season_end_screen.tscn")
+const TRAINING_SCREEN := preload("res://ui/screens/training_screen.tscn")
 
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
@@ -28,6 +29,9 @@ var _match_screen: MatchScreen
 
 ## 결산 화면. 시즌이 끝나면 뜨고, 닫으면 다음 해가 시작된다
 var _season_screen: SeasonEndScreen
+
+## 훈련 계획 화면
+var _training_screen: TrainingScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -44,6 +48,7 @@ func _ready() -> void:
 	_main.advance_requested.connect(_on_advance_requested)
 	_main.match_requested.connect(_on_match_requested)
 	_main.season_end_requested.connect(_on_season_end)
+	_main.training_requested.connect(_on_training)
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
 	_refresh()
@@ -237,6 +242,42 @@ func _on_season_end() -> void:
 	_main.visible = false
 
 
+## 훈련 계획을 연다. **계획은 상태가 들고 있다** — 화면이 들면 진행 뒤에
+## 새 사전이 오면서 초기화된다
+func _on_training() -> void:
+	_training_screen = TRAINING_SCREEN.instantiate()
+	_training_screen.slot_changed.connect(_on_training_slot)
+	_training_screen.done_requested.connect(_on_training_done)
+	add_child(_training_screen)
+	_training_screen.set_view_model(TrainingVm.build(_state))
+	_main.visible = false
+
+
+func training_screen() -> TrainingScreen:
+	return _training_screen
+
+
+func _on_training_slot(patch: Dictionary) -> void:
+	var plan: Dictionary = _state.get("training_plan", {})
+	var pid: String = String(patch.get("program_id", ""))
+	if pid.is_empty():
+		plan.erase(String(patch.get("slot_id", "")))
+	else:
+		plan[String(patch.get("slot_id", ""))] = pid
+	_state["training_plan"] = plan
+	if _training_screen != null:
+		_training_screen.set_view_model(TrainingVm.build(_state))
+
+
+func _on_training_done() -> void:
+	if _training_screen != null:
+		remove_child(_training_screen)
+		_training_screen.free()
+		_training_screen = null
+	_main.visible = true
+	_refresh()
+
+
 func season_screen() -> SeasonEndScreen:
 	return _season_screen
 
@@ -342,12 +383,29 @@ func _apply_one_week() -> void:
 		return
 
 	# ⚠ **훈련 계획이 비어 있어도 돈다.** 주간 자동 회복(−5)이 계획과 무관하게
-	# 붙기 때문이다 — 건너뛰면 아무 훈련도 안 짠 주에 피로가 안 빠진다
-	var load: Dictionary = Training.plan_load(
-		p.get("fatigue", 0.0),
+	# 붙기 때문이다 — 건너뛰면 아무 훈련도 안 짠 주에 피로가 안 빠진다.
+	#
+	# ⚠ **`TrainingGrowth`가 정본이다.** 예전엔 `Training.plan_load`만 불러
+	# **피로만 움직이고 능력치는 안 올랐다** — 훈련 화면에서 뭘 짜든 결과가
+	# 같았다. 피로·컨디션도 이 안에서 같은 함수로 나온다
+	var out: Dictionary = TrainingGrowth.calc(p,
 		_state.get("training_plan", {}),
-		_state.get("training_programs", []))
+		Training.programs())
 
-	p["fatigue"] = clampf(p.get("fatigue", 0.0) + float(load["fatigue_delta"]), 0.0, 100.0)
-	p["condition"] = clampf(p.get("condition", 100.0) + float(load["condition_delta"]),
+	p["pitching"] = out["pitching"]
+	p["batting"] = out["batting"]
+	p["pitching_xp"] = out["pitching_xp"]
+	p["batting_xp"] = out["batting_xp"]
+	p["fatigue"] = clampf(p.get("fatigue", 0.0) + float(out["fatigue_delta"]), 0.0, 100.0)
+	p["condition"] = clampf(p.get("condition", 100.0) + float(out["condition_delta"]),
 		0.0, 100.0)
+
+	# 구종 숙련도 진행 — 쌓이면 등급이 오른다(훈련 화면이 그걸 보여준다)
+	if float(out.get("pitch_dev_gain", 0.0)) > 0.0:
+		p["pitch_dev"] = float(p.get("pitch_dev", 0.0)) + float(out["pitch_dev_gain"])
+
+	# 무엇이 올랐는지 — 소식이 이걸 읽는다
+	if not out["logs"].is_empty():
+		var log: Array = _state.get("training_log", [])
+		log.append({"day": int(_state.get("day", 0)), "gains": out["logs"]})
+		_state["training_log"] = log
