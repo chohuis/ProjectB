@@ -27,18 +27,22 @@ const FARM_SUFFIX := "_2"
 ##
 ## ⚠ **리그마다 대역이 달라야 승격·강등이 뜻을 갖는다.** 같으면 어느 리그에
 ## 있든 같은 선수라 올라갈 이유가 없다
+## ⚠ **무학년 리그는 `age`가 범위다.** 한 값으로 두면 **프로가 전원 동갑**이
+## 되고, 노화·은퇴·세대교체가 전부 같은 해에 뭉텅이로 온다 — 실측에서
+## 30세 이상이 **0명**이었고 은퇴가 9년 뒤에 갑자기 시작했다.
+## 값은 02 `generation_rules.json`의 `ageMin`/`ageMax` 그대로다
 const RULES: Dictionary = {
 	# ⚠ **학년제 리그는 `grade_max`·`age_base`를 준다.** 02 값 그대로 —
 	# 학년을 안 흩으면 세계가 전원 1학년으로 시작해 3년간 졸업생이 0명이다
-	"LEAGUE_HIGHSCHOOL": {"size": 30, "ovr": [45.0, 70.0], "dev": [45.0, 75.0], "age": 16, "grade": 1, "grade_max": 3, "age_base": 16},
-	"LEAGUE_UNIVERSITY": {"size": 32, "ovr": [52.0, 76.0], "dev": [45.0, 72.0], "age": 19, "grade": 1, "grade_max": 4, "age_base": 19},
-	"LEAGUE_INDEPENDENT": {"size": 30, "ovr": [50.0, 74.0], "dev": [40.0, 70.0], "age": 24, "grade": 0},
-	"LEAGUE_KBL": {"size": 30, "ovr": [58.0, 84.0], "dev": [40.0, 70.0], "age": 26, "grade": 0},
-	"LEAGUE_KBL_FARM": {"size": 34, "ovr": [48.0, 76.0], "dev": [50.0, 80.0], "age": 23, "grade": 0},
-	"LEAGUE_ABL": {"size": 28, "ovr": [62.0, 92.0], "dev": [40.0, 70.0], "age": 27, "grade": 0},
-	"LEAGUE_ABL_FARM": {"size": 34, "ovr": [50.0, 80.0], "dev": [40.0, 70.0], "age": 24, "grade": 0},
-	"LEAGUE_JBL": {"size": 28, "ovr": [60.0, 90.0], "dev": [40.0, 70.0], "age": 26, "grade": 0},
-	"LEAGUE_JBL_FARM": {"size": 34, "ovr": [48.0, 78.0], "dev": [40.0, 70.0], "age": 23, "grade": 0},
+	"LEAGUE_HIGHSCHOOL": {"size": 30, "ovr": [45.0, 70.0], "dev": [45.0, 75.0], "age": [16, 16], "grade": 1, "grade_max": 3, "age_base": 16},
+	"LEAGUE_UNIVERSITY": {"size": 32, "ovr": [52.0, 76.0], "dev": [45.0, 72.0], "age": [19, 19], "grade": 1, "grade_max": 4, "age_base": 19},
+	"LEAGUE_INDEPENDENT": {"size": 30, "ovr": [50.0, 74.0], "dev": [40.0, 70.0], "age": [20, 31], "grade": 0},
+	"LEAGUE_KBL": {"size": 30, "ovr": [58.0, 84.0], "dev": [40.0, 70.0], "age": [20, 37], "grade": 0},
+	"LEAGUE_KBL_FARM": {"size": 34, "ovr": [48.0, 76.0], "dev": [50.0, 80.0], "age": [20, 29], "grade": 0},
+	"LEAGUE_ABL": {"size": 28, "ovr": [62.0, 92.0], "dev": [40.0, 70.0], "age": [21, 38], "grade": 0},
+	"LEAGUE_ABL_FARM": {"size": 34, "ovr": [50.0, 80.0], "dev": [40.0, 70.0], "age": [21, 38], "grade": 0},
+	"LEAGUE_JBL": {"size": 28, "ovr": [60.0, 90.0], "dev": [40.0, 70.0], "age": [20, 37], "grade": 0},
+	"LEAGUE_JBL_FARM": {"size": 34, "ovr": [48.0, 78.0], "dev": [40.0, 70.0], "age": [20, 37], "grade": 0},
 }
 
 ## 파일을 한 번만 읽는다 — 238팀을 매 호출마다 파싱하면 검사가 기어간다
@@ -121,7 +125,8 @@ static func build(p: Dictionary) -> Dictionary:
 				"pitching_ovr_min": r["ovr"][0], "pitching_ovr_max": r["ovr"][1],
 				"batting_ovr_min": r["ovr"][0], "batting_ovr_max": r["ovr"][1],
 				"dev_rate_min": r["dev"][0], "dev_rate_max": r["dev"][1],
-				"age": r["age"], "grade": r["grade"],
+				"age_min": r["age"][0], "age_max": r["age"][1],
+				"grade": r["grade"],
 				"grade_max": r.get("grade_max", 0), "age_base": r.get("age_base", 0),
 			})
 
@@ -218,7 +223,7 @@ static func new_game(p: Dictionary) -> Dictionary:
 		"dev_rate_min": r["dev"][0], "dev_rate_max": r["dev"][1],
 		# ⚠ **주인공은 1학년으로 시작한다.** 학년제 배분을 넘기면 첫 게임부터
 		# 3학년일 수 있고, 그러면 육성할 시간이 없다
-		"age": int(r.get("age_base", r["age"])) + 1, "grade": 1,
+		"age": int(r.get("age_base", r["age"][0])) + 1, "grade": 1,
 	})[0]
 	me["id"] = "PLY_PROTAGONIST"
 	me["name"] = p.get("name", me["name"])

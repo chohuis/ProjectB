@@ -159,6 +159,54 @@ func test_a_new_game_puts_the_protagonist_on_a_team() -> void:
 	assert_bool(mine).override_failure_message("주인공이 자기 팀 로스터에 없다").is_true()
 
 
+## ⚠ **주인공은 1학년으로 시작한다.** 학년제 배분(`i % grade_max`)을 그대로
+## 태우면 첫 게임부터 3학년일 수 있고, 그러면 육성할 시간이 없다
+func test_the_protagonist_starts_as_a_freshman() -> void:
+	var s: Dictionary = World.new_game({"seed": 5, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	assert_int(int(s["protagonist"]["grade"])).is_equal(1)
+	assert_int(int(s["protagonist"]["age"])).is_equal(17)
+
+
+## ⚠ **세계에 노장이 있어야 한다.** 무학년 리그가 한 나이면 프로가 전원
+## 동갑이 되고, 노화·은퇴·세대교체가 전부 같은 해에 뭉텅이로 온다 —
+## 실측에서 30세 이상이 **0명**이었고 은퇴가 9년 뒤에 갑자기 시작했다
+func test_the_world_has_players_of_every_age() -> void:
+	var s: Dictionary = World.new_game({"seed": 5, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+
+	var buckets: Dictionary = {}
+	for tid in s["world"]["rosters"]:
+		for p in s["world"]["rosters"][tid]:
+			buckets[int(p.get("age", 0)) / 5 * 5] = true
+
+	for want in [15, 20, 25, 30, 35]:
+		assert_bool(buckets.has(want)).override_failure_message(
+			"%d~%d세가 세계에 한 명도 없다" % [want, want + 4]).is_true()
+
+
+## 리그마다 나이 범위가 다르다 — 2군이 1군보다 젊어야 유망주 자리다
+func test_each_league_keeps_its_own_age_range() -> void:
+	var s: Dictionary = World.new_game({"seed": 5, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+
+	var by_league: Dictionary = {}
+	for tid in s["world"]["rosters"]:
+		for p in s["world"]["rosters"][tid]:
+			var l: String = String(p.get("league_id", ""))
+			var e: Array = by_league.get(l, [999, 0])
+			by_league[l] = [mini(e[0], int(p["age"])), maxi(e[1], int(p["age"]))]
+
+	# 02 `generation_rules.json`의 `ageMin`/`ageMax` 그대로
+	assert_array(by_league["LEAGUE_KBL"]).is_equal([20, 37])
+	assert_array(by_league["LEAGUE_KBL_FARM"]).is_equal([20, 29])
+	assert_array(by_league["LEAGUE_INDEPENDENT"]).is_equal([20, 31])
+	assert_array(by_league["LEAGUE_ABL"]).is_equal([21, 38])
+	# 학년제는 학년이 정한다
+	assert_array(by_league["LEAGUE_HIGHSCHOOL"]).is_equal([17, 19])
+	assert_array(by_league["LEAGUE_UNIVERSITY"]).is_equal([20, 23])
+
+
 func test_a_new_game_starts_on_day_one() -> void:
 	var s: Dictionary = World.new_game({"seed": 5, "season_year": 2027})
 	assert_int(s["day"]).is_equal(1)

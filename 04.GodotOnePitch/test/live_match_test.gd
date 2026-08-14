@@ -97,12 +97,26 @@ func test_pitching_after_the_end_does_nothing() -> void:
 
 # ── 끝까지 ────────────────────────────────────────────────────
 
+## ⚠ **투구 수를 좁게 못 박지 않는다.** 실측 138~214구인데 [150,400]으로
+## 걸어 뒀더니 **세계 생성이 바뀔 때마다 이 검사가 깨졌다** — 검사가 보려는
+## 건 "끝까지 갔나"이지 특정 경기의 투구 수가 아니다.
+##
+## 대신 **끝났다는 것의 뜻**을 본다: 9회를 채웠고, 안전장치에 안 걸렸다
 func test_finishing_ends_the_game() -> void:
 	var s: Dictionary = _game_state()
 	var m: Dictionary = LiveMatch.open(s, _first_game(s))
 	var n: int = LiveMatch.finish(m["state"], m["ctx"], _rng(m["seed"]))
+
 	assert_bool(m["state"]["is_finished"]).is_true()
-	assert_int(n).is_between(150, 400)
+	# 콜드게임이 5회부터 있으므로 하한은 거기다 — 9회를 못 박으면
+	# 정상적인 콜드게임에서 검사가 깨진다
+	assert_int(int(m["state"]["inning"])).override_failure_message(
+		"%s회에서 끝났다" % m["state"]["inning"]).is_greater_equal(5)
+	# ⚠ **안전장치로 끝나면 안 된다.** `MAX_PITCHES`에 닿아 멈춘 것을
+	# "끝났다"로 읽으면 무한 루프를 통과시킨다
+	assert_int(n).override_failure_message(
+		"안전장치(%d구)까지 갔다" % GameLoop.MAX_PITCHES).is_less(GameLoop.MAX_PITCHES)
+	assert_int(n).is_greater(100)
 
 
 func test_the_finished_game_becomes_a_result() -> void:

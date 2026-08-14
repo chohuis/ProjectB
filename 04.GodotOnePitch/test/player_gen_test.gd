@@ -420,6 +420,41 @@ func test_age_and_grade_come_from_the_caller() -> void:
 	assert_int(p["grade"]).is_equal(2)
 
 
+# ── 나이가 흩어지는가 ─────────────────────────────────────────
+
+## ⚠ **무학년 리그를 한 나이로 만들면 프로가 전원 동갑이다.** 그러면
+## 노화·은퇴·세대교체가 **전부 같은 해에 뭉텅이로** 온다 — 실측에서
+## 세계에 30세 이상이 **0명**이었고 은퇴가 9년 뒤에 갑자기 시작했다
+func test_a_pro_roster_spreads_its_ages() -> void:
+	var ages: Dictionary = {}
+	for p in _bulk(300, {"league_id": "LEAGUE_KBL", "age_min": 20, "age_max": 37}):
+		ages[int(p["age"])] = true
+		assert_int(int(p["age"])).is_between(20, 37)
+
+	assert_int(ages.size()).override_failure_message(
+		"300명이 나이 %d종류뿐이다" % ages.size()).is_greater(12)
+	# 양끝이 실제로 나온다 — 안 나오면 범위가 좁아진 것이다
+	assert_bool(ages.has(20)).is_true()
+	assert_bool(ages.has(37)).is_true()
+
+
+## 학년제 리그는 학년이 나이를 정한다 — 범위를 넘겨도 그쪽이 이긴다
+func test_a_graded_league_still_follows_the_grade() -> void:
+	var ages: Dictionary = {}
+	for p in _bulk(60, {"grade_max": 3, "age_base": 16,
+			"age_min": 20, "age_max": 37}):
+		ages[int(p["age"])] = true
+	assert_array(ages.keys()).contains([17, 18, 19])
+	assert_int(ages.size()).override_failure_message(
+		"학년제인데 나이가 학년을 안 따라간다").is_equal(3)
+
+
+## 범위를 안 주면 한 값이다 — 신입생·주인공이 그 경로다
+func test_a_single_age_still_works() -> void:
+	for p in _bulk(20, {"age": 24}):
+		assert_int(int(p["age"])).is_equal(24)
+
+
 # ── 터지지 않기 ───────────────────────────────────────────────
 
 func test_zero_players_is_an_empty_roster() -> void:

@@ -160,8 +160,8 @@
   "\t\t\t\"id\": \"GEN_Y%d_%03d\" % [year, offset + i + 1],"
  ],
  [
-  "나이·학년을 호출부에서 안 받는다",
-  "\t\t\t\"age\": int(p.get(\"age\", 16)),\n\t\t\t\"grade\": int(p.get(\"grade\", 1)),",
+  "나이·학년을 선수에 안 싣는다 (전원이 같은 나이로 나온다)",
+  "\t\t\t\"age\": age,\n\t\t\t\"grade\": grade,",
   "\t\t\t\"age\": 16,\n\t\t\t\"grade\": 1,"
  ],
  [
@@ -183,5 +183,25 @@
   "갈래마다 난수 소비가 다르다 (앞 선수가 뒤를 민다)",
   "\tif r_kind < pit_ratio:\n\t\treturn \"SP\" if r_pick < SP_SHARE_OF_PITCHERS else \"RP\"\n\treturn POSITIONS[int(r_pick * POSITIONS.size()) % POSITIONS.size()]",
   "\tif r_kind < pit_ratio:\n\t\treturn \"SP\" if r_pick < SP_SHARE_OF_PITCHERS else \"RP\"\n\treturn POSITIONS[int(rng.randf() * POSITIONS.size()) % POSITIONS.size()]"
+ ],
+ [
+  "무학년 리그가 한 나이다 (프로가 전원 동갑 — 은퇴가 한 해에 몰린다)",
+  "\t\t\tage = rng.randi_range(age_min, age_max)",
+  "\t\t\tage = age_min"
+ ],
+ [
+  "나이 상한을 안 본다 (전원이 하한이다)",
+  "\tvar age_max: int = int(p.get(\"age_max\", age_min))",
+  "\tvar age_max: int = age_min"
+ ],
+ [
+  "나이 하한을 안 본다",
+  "\tvar age_min: int = int(p.get(\"age_min\", p.get(\"age\", 16)))",
+  "\tvar age_min: int = 16"
+ ],
+ [
+  "학년제인데도 범위에서 뽑는다 (고교생이 37세가 된다)",
+  "\t\tif grade_max > 0:\n\t\t\tgrade = (i % grade_max) + 1\n\t\t\tage = age_base + grade\n\t\telse:",
+  "\t\tif false:\n\t\t\tgrade = (i % grade_max) + 1\n\t\t\tage = age_base + grade\n\t\telse:"
  ]
 ]

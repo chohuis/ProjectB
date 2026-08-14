@@ -61,15 +61,24 @@ func run(log_line: Callable, fail: Callable, weeks: int = 52,
 	# 30세 이상이 0명이라 노화가 도는지 여기선 못 본다.
 	# **세계 생성 쪽 빚이고 검사(`npc_growth_test`)가 대신 본다**
 	var old: int = 0
+	var in_debt: int = 0
 	for p in SeasonRunner.all_players(s):
-		if int(p.get("age", 0)) >= NpcGrowth.AGING_FROM:
-			old += 1
+		if int(p.get("age", 0)) < NpcGrowth.AGING_FROM:
+			continue
+		old += 1
+		if not p.get("aging_debt", {}).is_empty():
+			in_debt += 1
+	log_line.call("")
+	log_line.call("30세 이상 %d명 · 노화 빚이 쌓인 사람 %d명" % [old, in_debt])
 	if old == 0:
-		log_line.call("")
-		log_line.call("⚠ 30세 이상 0명 — 노화를 잴 대상이 세계에 없다.")
-		log_line.call("  리그마다 나이가 한 값이라 프로가 전원 동갑이다(생성 쪽 빚).")
-	elif aged == 0:
-		fail.call("30세 이상 %d명인데 %d주 동안 노화가 한 건도 없다" % [old, weeks])
+		fail.call("30세 이상이 0명이다 — 세계 생성이 나이를 안 흩었다")
+		return 0
+	# ⚠ **한 칸 내리는 데 11~21주가 걸린다.** 주당 감퇴가 1보다 작아서
+	# 빚으로 쌓이기 때문이다 — 짧게 돌리면 "안 내렸다"가 정상이다
+	if in_debt == 0:
+		fail.call("30세 이상 %d명인데 노화 빚이 하나도 안 쌓였다" % old)
+	elif weeks >= 26 and aged == 0:
+		fail.call("30세 이상 %d명인데 %d주 동안 한 번도 안 내렸다" % [old, weeks])
 	return 0
 
 

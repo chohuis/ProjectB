@@ -348,7 +348,7 @@ static func _intake(state: Dictionary, world: Dictionary, year: int) -> int:
 				"batting_ovr_min": r["ovr"][0], "batting_ovr_max": r["ovr"][1],
 				"dev_rate_min": r["dev"][0], "dev_rate_max": r["dev"][1],
 				# 신입생은 **전원 1학년**이다 — 학년제 배분을 넘기면 안 된다
-				"age": int(r.get("age_base", r["age"])) + 1, "grade": 1,
+				"age": int(r.get("age_base", r["age"][0])) + 1, "grade": 1,
 			})
 			world["rosters"][tid] = roster + fresh
 			made += fresh.size()

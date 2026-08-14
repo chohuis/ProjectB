@@ -141,14 +141,22 @@ static func roster(p: Dictionary) -> Array:
 	# 드래프트가 안 돈다. 나이도 학년을 따라간다(`age_base + grade`)
 	var grade_max: int = int(p.get("grade_max", 0))
 	var age_base: int = int(p.get("age_base", 0))
+	# 무학년(프로·독립)은 범위에서 뽑는다
+	var age_min: int = int(p.get("age_min", p.get("age", 16)))
+	var age_max: int = int(p.get("age_max", age_min))
 
 	var out: Array = []
 	for i in count:
 		var grade: int = int(p.get("grade", 0))
-		var age: int = int(p.get("age", 16))
+		var age: int
 		if grade_max > 0:
 			grade = (i % grade_max) + 1
 			age = age_base + grade
+		else:
+			# ⚠ **한 값으로 두면 프로가 전원 동갑이다.** 노화·은퇴·세대교체가
+			# 전부 같은 해에 뭉텅이로 오고, 실측에서 30세 이상이 **0명**이었다.
+			# 02 `roster_gen.rs`가 `age_min + rand * (span + 1)`로 균등하게 뽑는다
+			age = rng.randi_range(age_min, age_max)
 
 		var pos: String = _position_at(needed, i, pit_ratio, rng)
 		# ⚠ **리그로 이름 풀을 고른다.** 부르는 쪽이 고르게 하면 빠뜨리고,

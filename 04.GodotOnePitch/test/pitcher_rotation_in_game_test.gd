@@ -187,29 +187,46 @@ func test_a_relief_protagonist_actually_pitches() -> void:
 ## 꽉 찬 채로 나와서 **교체하는 팀이 압도적으로 유리해졌다** — 02 실측
 ## 주인공 완투 ERA 3.83 vs 투수진 3명 교체 1.65.
 ## 선발도 82에서 시작하므로 구원도 같은 기준이어야 공평하다
+## ⚠ **경기 하나에 매달리지 않는다.** 예전엔 첫 경기만 봤는데, 그 경기에서
+## 홈 선발이 완투하면 검사가 아무것도 못 본 채 실패했다 — 세계 생성이
+## 바뀔 때마다 깨지는 자리다. 여러 경기를 훑어 **교체가 일어나는 경기**를 본다
 func test_a_reliever_does_not_come_in_fresh() -> void:
 	var s: Dictionary = _game()
-	var g: Dictionary = _any_game(s)
-	var m: Dictionary = LiveMatch.open(s, g)
-	var rng := _rng(m["seed"])
+	var checked: int = 0
 
-	var switched: bool = false
-	for i in 400:
-		var before: int = int(m["state"]["home_queue"]["current"])
-		LiveMatch.pitch(m["state"], m["ctx"], rng)
-		if int(m["state"]["home_queue"]["current"]) == before:
+	for g in _early_games(s, 12):
+		var m: Dictionary = LiveMatch.open(s, g)
+		if not m["ok"]:
 			continue
+		var rng := _rng(m["seed"])
 
-		switched = true
-		var cap: float = float(m["state"]["home_pitcher"].get("stamina_cap", 50.0))
-		assert_float(float(m["state"]["home_stamina"])).override_failure_message(
-			"구원이 스태미나 %.1f로 들어왔다 (상한 %.1f · 기준 %.1f 이하)"
-			% [float(m["state"]["home_stamina"]), cap, Tuning.RELIEF_START_STAMINA]) \
-			.is_less_equal(Tuning.RELIEF_START_STAMINA)
-		break
+		while not m["state"].get("is_finished", false):
+			var before: int = int(m["state"]["home_queue"]["current"])
+			LiveMatch.pitch(m["state"], m["ctx"], rng)
+			if int(m["state"]["home_queue"]["current"]) == before:
+				continue
 
-	assert_bool(switched).override_failure_message(
-		"400구를 던졌는데 교체가 한 번도 없다").is_true()
+			checked += 1
+			var cap: float = float(m["state"]["home_pitcher"].get("stamina_cap", 50.0))
+			assert_float(float(m["state"]["home_stamina"])).override_failure_message(
+				"구원이 스태미나 %.1f로 들어왔다 (상한 %.1f · 기준 %.1f 이하)"
+				% [float(m["state"]["home_stamina"]), cap, Tuning.RELIEF_START_STAMINA]) \
+				.is_less_equal(Tuning.RELIEF_START_STAMINA)
+			break
+
+	assert_int(checked).override_failure_message(
+		"경기 12개에서 교체가 한 번도 없다").is_greater(0)
+
+
+## 이른 날짜의 경기 몇 개. **id 순으로 고정한다** — 일정 배열 순서에
+## 기대면 정렬이 바뀔 때 검사가 다른 경기를 본다
+func _early_games(s: Dictionary, count: int) -> Array:
+	var out: Array = []
+	for g in s["schedule"]:
+		if int(g["day"]) <= 3:
+			out.append(g)
+	out.sort_custom(func(a, b) -> bool: return String(a["id"]) < String(b["id"]))
+	return out.slice(0, count)
 
 
 ## 교체된 뒤에도 **선발의 기록은 그대로 남는다** — 줄이 나뉜 이유다
