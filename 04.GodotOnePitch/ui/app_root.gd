@@ -14,6 +14,7 @@ class_name AppRoot
 ## 검사가 "센 만큼 정확히 돌렸나"와 "하루씩 간 것과 같나"를 둘 다 본다.
 
 const MATCH_SCREEN := preload("res://ui/screens/match_screen.tscn")
+const SEASON_END_SCREEN := preload("res://ui/screens/season_end_screen.tscn")
 
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
@@ -24,6 +25,9 @@ var _runner: DayRunner
 ## 지금 열려 있는 경기. 없으면 빈 사전
 var _match: Dictionary = {}
 var _match_screen: MatchScreen
+
+## 결산 화면. 시즌이 끝나면 뜨고, 닫으면 다음 해가 시작된다
+var _season_screen: SeasonEndScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -220,6 +224,29 @@ func _on_match_requested() -> void:
 ## 02는 이 자리가 세 분기에 각각 있었고 그중 어디도 안 타는 경로가 있었다
 func _on_season_end() -> void:
 	last_season_end = SeasonRunner.finish_season(_state)
+	if not last_season_end.get("ran", false):
+		_refresh()
+		return
+
+	# ⚠ **결산을 보여준 뒤에 다음 해로 넘어간다.** 안 보여주면 한 시즌이
+	# 통째로 사라진 것처럼 느껴진다 — 사용자가 한 해 동안 한 일이 거기 있다
+	_season_screen = SEASON_END_SCREEN.instantiate()
+	_season_screen.done_requested.connect(_on_season_end_done)
+	add_child(_season_screen)
+	_season_screen.set_view_model(SeasonEndVm.build(last_season_end.get("digest", {})))
+	_main.visible = false
+
+
+func season_screen() -> SeasonEndScreen:
+	return _season_screen
+
+
+func _on_season_end_done() -> void:
+	if _season_screen != null:
+		remove_child(_season_screen)
+		_season_screen.free()
+		_season_screen = null
+	_main.visible = true
 	_refresh()
 
 

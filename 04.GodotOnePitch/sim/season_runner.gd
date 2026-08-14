@@ -513,5 +513,9 @@ static func finish_season(state: Dictionary) -> Dictionary:
 	var out: Dictionary = run(state)
 	if not out["ran"]:
 		return out
+
+	# ⚠ **결산을 롤오버 전에 찍는다.** 롤오버가 순위표와 성적을 비우므로
+	# 그 뒤에 만들면 결산이 통째로 빈 화면이 된다
+	out["digest"] = SeasonHistory.digest(state, int(out["year"]), out["summary"])
 	out["rollover"] = roll_over(state)
 	return out

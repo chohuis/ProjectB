@@ -166,3 +166,43 @@ static func protagonist_record(state: Dictionary, year: int) -> Dictionary:
 	records.append(record)
 	me["career_records"] = records
 	return record
+
+
+## 결산 화면이 읽는 사전. **롤오버 전에 찍는다** —
+##
+## ⚠ **롤오버가 순위표와 성적을 비운다.** 새 일정이 깔리고 `season_stats`가
+## 초기화되므로, 그 뒤에 만들면 결산이 통째로 빈 화면이 된다
+static func digest(state: Dictionary, year: int, summary: Dictionary) -> Dictionary:
+	var me: Dictionary = state.get("protagonist", {})
+	var league_id: String = String(me.get("league_id", ""))
+
+	var record: Dictionary = {}
+	for r in me.get("career_records", []):
+		if int(r.get("year", 0)) == year:
+			record = r
+
+	var awards: Dictionary = state.get("season_awards", {}).get(str(year), {})
+	var my_league_awards: Dictionary = awards.get(league_id, {})
+
+	# 내가 받은 것 — 이름을 화면이 다시 찾지 않게 여기서 고른다
+	var mine: Array = []
+	for a in my_league_awards.get("awards", []):
+		if String(a.get("player_id", "")) == String(me.get("id", "")):
+			mine.append(String(a.get("title", a.get("label", ""))))
+	for pid in my_league_awards.get("mvp", []):
+		if String(pid) == String(me.get("id", "")):
+			mine.append("MVP")
+
+	return {
+		"year": year,
+		"summary": summary,
+		"league_id": league_id,
+		"team_id": String(me.get("team_id", "")),
+		"team_name": String(me.get("team_name", "")),
+		"my_record": record,
+		"my_awards": mine,
+		"awards": my_league_awards,
+		# 순위표는 화면이 쓰는 것과 **같은 함수**로 만든다 — 두 벌이 되면
+		# 결산과 리그 탭이 다른 순위를 보여준다
+		"standings": LeagueVm.build(state),
+	}

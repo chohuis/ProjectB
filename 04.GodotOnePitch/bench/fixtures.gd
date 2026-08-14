@@ -48,3 +48,4 @@ static func make_league(rng: RandomNumberGenerator, teams: int) -> Array:
 	for t in teams:
 		out.append(make_team(rng))
 	return out
+

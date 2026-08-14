@@ -810,3 +810,40 @@ func test_the_new_phases_are_in_the_canonical_order() -> void:
 	assert_array(phases).contains(["season_history", "protagonist_record", "awards"])
 	assert_int(phases.find("season_history")).is_less(phases.find("awards"))
 	assert_int(phases.find("protagonist_record")).is_less(phases.find("awards"))
+
+
+## ⚠ **결산을 롤오버 전에 찍는다.** 롤오버가 순위표와 성적을 비우므로
+## 그 뒤에 만들면 결산이 통째로 빈 화면이 된다
+func test_the_digest_is_taken_before_the_rollover() -> void:
+	var s: Dictionary = _game_with_stats()
+	# 순위표가 있으려면 치른 경기가 있어야 한다
+	var played: int = 0
+	for g in s["schedule"]:
+		if g.get("league_id", "") != "LEAGUE_HIGHSCHOOL" or played >= 40:
+			continue
+		g["result"] = {"home_score": 5, "away_score": 2,
+			"winner_id": g["home"], "loser_id": g["away"], "player_lines": []}
+		played += 1
+
+	var out: Dictionary = SeasonRunner.finish_season(s)
+	var d: Dictionary = out.get("digest", {})
+	assert_bool(d.is_empty()).override_failure_message("결산이 비었다").is_false()
+	assert_int(int(d["year"])).is_equal(2027)
+	assert_bool(d["standings"].get("rows", []).is_empty()).override_failure_message(
+		"결산 순위표가 비었다 — 롤오버 뒤에 찍고 있다").is_false()
+	assert_bool(d["my_record"].is_empty()).override_failure_message(
+		"결산에 내 기록이 없다").is_false()
+
+
+## 결산이 화면 사전으로 이어진다 — 계약 검사다
+func test_the_digest_feeds_the_screen() -> void:
+	var s: Dictionary = _game_with_stats()
+	var out: Dictionary = SeasonRunner.finish_season(s)
+	var vm: Dictionary = SeasonEndVm.build(out["digest"])
+
+	assert_bool(vm["has_data"]).is_true()
+	assert_str(vm["title"]).contains("2027")
+	assert_bool(vm["summary_rows"].is_empty()).override_failure_message(
+		"한 해에 있었던 일이 비었다").is_false()
+	assert_str(vm["my_line"]).override_failure_message(
+		"결산에 내 성적 줄이 없다").is_not_empty()

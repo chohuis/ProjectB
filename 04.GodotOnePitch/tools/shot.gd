@@ -50,6 +50,7 @@ const STATUS := preload("res://ui/screens/status_screen.tscn")
 const MAIN := preload("res://ui/screens/main_screen.tscn")
 const APP := preload("res://ui/app_root.tscn")
 const APP_ENTRY := preload("res://ui/app.tscn")
+const SEASON_END := preload("res://ui/screens/season_end_screen.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -234,6 +235,12 @@ func _build(which: String) -> Control:
 			se.set_state(sst)
 			se.ready.connect(func() -> void: se._on_season_end(), CONNECT_ONE_SHOT)
 			return se
+		"season-digest":
+			# ⚠ **화면 확인은 fixture로 한다.** 진짜 시즌을 돌리면 등판일마다
+			# 멈춰서 스크린샷 전에 안 끝난다 — 진짜 데이터로 도는지는 검사가 본다
+			var sd: SeasonEndScreen = SEASON_END.instantiate()
+			sd.set_view_model(SeasonEndVm.build(Fixtures.season_digest()))
+			return sd
 		"season-end-before":
 			var sb: AppRoot = APP.instantiate()
 			var sbt := World.new_game({"seed": 20270101, "season_year": 2027,

@@ -158,3 +158,40 @@ static func played_state(days: int = 40) -> Dictionary:
 	s["day"] = days + 1
 	s["league_tab"] = "LEAGUE_KBL"
 	return s
+
+
+## 결산 화면용 사전. **스크린샷 확인에 쓴다** — 진짜 시즌을 돌리면
+## 등판일마다 멈춰서 스크린샷 전에 안 끝난다
+static func season_digest() -> Dictionary:
+	return {
+		"year": 2027,
+		"summary": {"graduated": 1420, "drafted": 110, "placed": 400,
+			"gave_up": 900, "demoted": 110, "released": 110, "freshmen": 1420,
+			"retired": 0},
+		"league_id": "LEAGUE_HIGHSCHOOL",
+		"team_id": "TEAM_HS_AEWOL", "team_name": "애월고",
+		"my_record": {"year": 2027, "ovr": 63,
+			"stat_line": "7승 2패 ERA 2.31 88.0이닝 91K",
+			"game_log": [
+				{"day": 69, "opponent_id": "유성고", "my_score": 5, "opp_score": 2,
+					"ip": 6.0, "er": 2.0, "h": 5.0, "k": 7.0, "bb": 1.0, "pc": 95},
+				{"day": 78, "opponent_id": "백호고", "my_score": 1, "opp_score": 4,
+					"ip": 5.1, "er": 4.0, "h": 8.0, "k": 3.0, "bb": 3.0, "pc": 88},
+				{"day": 91, "opponent_id": "한라고", "my_score": 7, "opp_score": 0,
+					"ip": 9.0, "er": 0.0, "h": 3.0, "k": 12.0, "bb": 0.0, "pc": 108},
+			]},
+		"my_awards": ["MVP", "탈삼진 (91)"],
+		"awards": {"awards": [
+			{"label": "다승", "player_id": "김한결", "value_text": "7"},
+			{"label": "평균자책", "player_id": "박도윤", "value_text": "1.87"},
+			{"label": "탈삼진", "player_id": "김한결", "value_text": "91"},
+		], "mvp": ["김한결"]},
+		"standings": {"rows": [
+			{"team_id": "TEAM_X", "team_name": "유성고", "wins": 15, "losses": 5,
+				"draws": 0, "pct_label": ".750"},
+			{"team_id": "TEAM_HS_AEWOL", "team_name": "애월고", "wins": 12,
+				"losses": 8, "draws": 0, "pct_label": ".600"},
+			{"team_id": "TEAM_Y", "team_name": "백호고", "wins": 8, "losses": 12,
+				"draws": 0, "pct_label": ".400"},
+		]},
+	}
