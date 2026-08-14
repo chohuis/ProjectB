@@ -415,12 +415,19 @@ func test_the_two_teams_pitchers_are_kept_apart() -> void:
 	for l in out["result"]["player_lines"]:
 		if l["role"] == "pitcher":
 			pitchers.append(l)
+	# 교체가 붙어 투수가 여럿이다 — **줄이 겹치면 안 된다**
 	assert_int(pitchers.size()).override_failure_message(
-		"투수 줄이 %d개 — 양 팀이면 2개다" % pitchers.size()).is_equal(2)
-	assert_str(pitchers[0]["player_id"]).is_not_equal(pitchers[1]["player_id"])
+		"투수 줄이 %d개다" % pitchers.size()).is_greater_equal(2)
+	var seen: Dictionary = {}
+	for l in pitchers:
+		assert_bool(seen.has(l["player_id"])).override_failure_message(
+			"%s의 줄이 두 개다" % l["player_id"]).is_false()
+		seen[l["player_id"]] = true
 
-	# 자책점 합이 실제 득점과 맞아야 한다 — 섞이면 두 배가 된다
-	var er: float = float(pitchers[0]["er"]) + float(pitchers[1]["er"])
+	# 자책점 합이 실제 득점과 맞아야 한다 — 섞이거나 새면 여기서 드러난다
+	var er: float = 0.0
+	for l in pitchers:
+		er += float(l["er"])
 	var runs: float = float(out["result"]["home_score"]) + float(out["result"]["away_score"])
 	assert_float(er).override_failure_message(
 		"자책점 합 %.0f, 득점 합 %.0f" % [er, runs]).is_equal(runs)
@@ -638,16 +645,28 @@ func test_home_and_away_use_their_own_game_numbers() -> void:
 			"home_game_no": n,
 			"away_game_no": 0,   # 원정은 늘 1선발
 		})
-		var pitchers: Array = []
-		for l in out["result"]["player_lines"]:
-			if l["role"] == "pitcher":
-				pitchers.append(l["player_id"])
-		pairs["%s|%s" % [pitchers[0], pitchers[1]]] = true
+		# ⚠ **교체가 붙어 투수가 여럿이다.** 줄 순서로 선발을 판정하면 안 된다 —
+		# 로테이션에 직접 물어본다
+		var home_starter: String = MatchDay.starter_of(
+			w["rosters"]["H"], "LEAGUE_KBL", n).get("id", "")
+		var away_starter: String = MatchDay.starter_of(away, "LEAGUE_KBL", 0).get("id", "")
+		pairs["%s|%s" % [home_starter, away_starter]] = true
+
 		# ⚠ **원정은 순번을 0으로 고정했으니 늘 1선발이어야 한다.** 짝의
 		# 가짓수만 세면 둘이 나란히 바뀌어도 5가지라 안 걸린다
-		assert_str(pitchers[1]).override_failure_message(
-			"원정 순번을 0으로 고정했는데 %d번째 경기에 %s가 나왔다" % [n, pitchers[1]]) \
+		assert_str(away_starter).override_failure_message(
+			"원정 순번을 0으로 고정했는데 %d번째 경기에 %s가 나왔다" % [n, away_starter]) \
 			.is_equal("A_P4")
+
+		# 그 선발이 실제로 그 경기에 나왔는지도 본다 — 판정만 맞고 안 나오면
+		# 뜻이 없다(불펜 주인공이 그랬다)
+		var appeared: Array = []
+		for l in out["result"]["player_lines"]:
+			if l["role"] == "pitcher":
+				appeared.append(l["player_id"])
+		assert_array(appeared).override_failure_message(
+			"선발 %s·%s가 경기에 안 나왔다" % [home_starter, away_starter]) \
+			.contains([home_starter, away_starter])
 	assert_int(pairs.size()).override_failure_message(
 		"홈 순번을 바꿔도 짝이 %d가지뿐 — 순번을 따로 안 쓴다" % pairs.size()) \
 		.is_equal(5)

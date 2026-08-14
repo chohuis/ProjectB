@@ -64,9 +64,16 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 			and not second_empty and not third_empty,
 		"is_late": int(pre.get("inning", 1)) >= int(pre.get("inning_limit", 9)) - 2,
 	}
+	# ⚠ **스태미나·멘탈이 팀별이다.** 하나로 두면 한 팀 투수가 지칠 때
+	# 상대 투수도 같이 지친다 — 02는 `npc_pitcher_stamina.my`/`.opponent`다.
+	# 팀별 값이 없으면 예전처럼 하나로 떨어진다(조각 검사가 그대로 돈다)
+	var side: String = _side_of(pre)
+	pre["stamina"] = _stat_of(pre, side, "stamina", 100.0)
+	pre["mental"] = _stat_of(pre, side, "mental", 50.0)
+
 	var target: Vector2 = PitchOutcome.zone_to_target(int(decision.get("location", 5)))
 	var landing: Dictionary = PitchOutcome.resolve_landing(target,
-		pitcher.get("control", 50.0), pre.get("stamina", 100.0), pre.get("mental", 50.0),
+		pitcher.get("control", 50.0), pre["stamina"], pre["mental"],
 		situation, rng)
 
 	# ③ 품질 — 투구·착탄은 인자로 넘긴다. 상태에 끼워 넣으면 복사가 생긴다
@@ -99,7 +106,15 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 		fielding = BattedBall.resolve_fielding(ball, pre.get("fielders", []), rng)
 		code = fielding["code"]
 
+	var outs_before: int = int(pre.get("outs", 0))
 	var out: Dictionary = apply_result(code, ball, pre, decision, rng, fielding)
+
+	# ⑥ 스태미나·멘탈. **던진 쪽만 움직인다**
+	#
+	# ⚠ **이게 없어서 스태미나가 경기 내내 82로 고정이었다.** 지친 투수가
+	# 안 나빠졌고 `pitch_quality`의 `stamina_penalty`가 영영 0이었다
+	_drain(pre, side, code, decision, pitcher, outs_before)
+
 	out["quality"] = quality
 	out["ball"] = ball
 	out["fielding"] = fielding
@@ -317,3 +332,44 @@ static func _push_pitch_type(state: Dictionary, pitch_type: String) -> void:
 	if last.size() > 5:
 		last.remove_at(0)
 	state["last_pitch_types"] = last
+
+
+# ── 팀별 스태미나·멘탈 (M2-6) ─────────────────────────────────
+
+## 지금 수비 중인 쪽. **초에는 홈이 던진다**
+static func _side_of(state: Dictionary) -> String:
+	return "home" if state.get("half", "top") == "top" else "away"
+
+
+## 팀별 값. 없으면 예전처럼 하나로 떨어진다 — 조각 검사가 그대로 돈다
+static func _stat_of(state: Dictionary, side: String, key: String,
+		fallback: float) -> float:
+	var team_key: String = "%s_%s" % [side, key]
+	if state.has(team_key):
+		return float(state[team_key])
+	return float(state.get(key, fallback))
+
+
+## 한 구 뒤의 스태미나·멘탈. **던진 쪽만 움직인다**
+static func _drain(state: Dictionary, side: String, code: String,
+		decision: Dictionary, pitcher: Dictionary, outs_before: int) -> void:
+	var cap: float = float(pitcher.get("stamina_cap", 50.0))
+	var now: float = _stat_of(state, side, "stamina", 100.0)
+	var next_stamina: float = clampf(
+		now - Tuning.stamina_loss(decision, cap, now), 0.0, 100.0)
+
+	# 이닝이 바뀌면 멘탈이 조금 돌아온다
+	var inning_changed: bool = int(state.get("outs", 0)) == 0 and outs_before > 0
+	var next_mental: float = clampf(
+		_stat_of(state, side, "mental", 50.0)
+		+ Tuning.mental_delta(code, float(pitcher.get("mental_resil", 50.0)),
+			inning_changed), 0.0, 100.0)
+
+	var stamina_key: String = "%s_stamina" % side
+	var mental_key: String = "%s_mental" % side
+	if state.has(stamina_key):
+		state[stamina_key] = next_stamina
+		state[mental_key] = next_mental
+	else:
+		state["stamina"] = next_stamina
+		state["mental"] = next_mental

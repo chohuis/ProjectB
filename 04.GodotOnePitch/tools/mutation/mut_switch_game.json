@@ -1,0 +1,42 @@
+[
+ [
+  "교체를 안 한다 (선발이 완투하고 불펜이 영영 안 나온다)",
+  "\tif not PitcherSwitch.should_switch(q):\n\t\treturn false",
+  "\treturn false"
+ ],
+ [
+  "아웃을 줄에서 안 읽는다 (예산이 영영 안 찬다)",
+  "\tif cur < lines.size():\n\t\tq[\"outs_by_current\"] = int(lines[cur].get(\"outs\", 0))",
+  ""
+ ],
+ [
+  "구원 스태미나를 100으로 리셋한다 (교체하는 팀이 압도적으로 유리해진다)",
+  "\tstate[\"%s_stamina\" % side] = PitcherSwitch.relief_start_stamina(\n\t\tfloat(p.get(\"stamina_cap\", 50.0)))",
+  "\tstate[\"%s_stamina\" % side] = 100.0"
+ ],
+ [
+  "교체해도 투수를 안 바꾼다 (줄만 넘어가고 능력치는 선발 것)",
+  "\tstate[\"%s_pitcher\" % side] = p",
+  "\tstate[\"%s_pitcher\" % side] = pitchers[0]"
+ ],
+ [
+  "교체 뒤 큐를 상태에 안 넣는다 (다음 판정이 옛 큐를 본다)",
+  "\tstate[qkey] = next_q",
+  ""
+ ],
+ [
+  "현재 투수 대신 늘 0번을 마운드에 세운다 (교체가 무의미해진다)",
+  "\tvar i: int = int(q.get(\"current\", 0))\n\tvar pitchers: Array = q.get(\"pitchers\", [])\n\tvar lines: Array = q.get(\"lines\", [])",
+  "\tvar i: int = 0\n\tvar pitchers: Array = q.get(\"pitchers\", [])\n\tvar lines: Array = q.get(\"lines\", [])"
+ ],
+ [
+  "줄을 투수별이 아니라 팀별 하나로 (구원 자책점이 선발 것이 된다)",
+  "\tstate[\"active_pitcher_line\"] = lines[i]\n\tstate[\"pitcher_line_key\"] = \"active_pitcher_line\"",
+  "\tstate[\"pitcher_line_key\"] = \"%s_pitcher_line\" % side"
+ ],
+ [
+  "수비 중인 쪽을 뒤집는다 (초에 원정 투수가 던진다)",
+  "\tvar side: String = \"home\" if half == \"top\" else \"away\"\n\tvar qkey: String = \"%s_queue\" % side\n\n\tif not state.has(qkey):",
+  "\tvar side: String = \"away\" if half == \"top\" else \"home\"\n\tvar qkey: String = \"%s_queue\" % side\n\n\tif not state.has(qkey):"
+ ]
+]

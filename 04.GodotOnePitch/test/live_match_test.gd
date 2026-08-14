@@ -132,11 +132,19 @@ func test_pitching_by_hand_matches_the_auto_sim() -> void:
 	var by_hand: Dictionary = LiveMatch.to_result(m["state"], g["home"], g["away"])
 
 	var counts: Dictionary = MatchDay.team_game_counts(s, int(g["day"]))
+	# ⚠ **등판 예약도 같이 넘겨야 같은 경기다.** 안 넘기면 불펜 순서가
+	# 달라져 다른 경기가 된다 — 실제 호출부(·)는 넘긴다
+	var my_team: String = s["protagonist"]["team_id"]
+	var relief: String = ""
+	if g.get("is_protagonist_game", false):
+		relief = String(s["protagonist"]["id"])
 	var auto: Dictionary = MatchDay.play(s["world"], g["home"], g["away"],
 		_rng(m["seed"]), {
 			"league_id": g.get("league_id", ""),
 			"home_game_no": int(counts.get(g["home"], 0)),
 			"away_game_no": int(counts.get(g["away"], 0)),
+			"home_relief": relief if g["home"] == my_team else "",
+			"away_relief": relief if g["away"] == my_team else "",
 		})["result"]
 
 	assert_int(by_hand["home_score"]).override_failure_message(

@@ -272,7 +272,17 @@ func _play_game(g: Dictionary, state: Dictionary = _state) -> void:
 
 	var rng := RandomNumberGenerator.new()
 	rng.seed = Rng.mix([state.get("seed", 0), "game", g.get("id", "")])
-	var out: Dictionary = MatchDay.play(world, g.get("home", ""), g.get("away", ""), rng)
+	# ⚠ **오늘 등판하기로 한 주인공을 불펜 앞에 세운다.** 안 넘기면
+	# "오늘 등판"이 화면에만 뜨고 실제로는 안 나온다
+	var relief: String = ""
+	if g.get("is_protagonist_game", false):
+		relief = String(state.get("protagonist", {}).get("id", ""))
+	var my_team: String = String(state.get("protagonist", {}).get("team_id", ""))
+	var out: Dictionary = MatchDay.play(world, g.get("home", ""), g.get("away", ""), rng, {
+		"league_id": g.get("league_id", ""),
+		"home_relief": relief if g.get("home", "") == my_team else "",
+		"away_relief": relief if g.get("away", "") == my_team else "",
+	})
 	if not out["ok"]:
 		g["result"] = {"home_score": 0, "away_score": 0, "error": out["error"]}
 		return

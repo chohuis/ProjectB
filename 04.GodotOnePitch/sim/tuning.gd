@@ -292,3 +292,68 @@ static func steal_third_probs(speed: float, instinct: float, hold_factor: float,
 		STEAL_3B_SUCCESS_BASE + (speed - STEAL_3B_SUCCESS_PIVOT) * STEAL_3B_SUCCESS_SCALE,
 		STEAL_3B_SUCCESS_MIN, STEAL_3B_SUCCESS_MAX)
 	return [attempt, success]
+
+
+# ── 스태미나·멘탈 소모 (M2-6) ────────────────────────────────────
+
+## 한 구에 드는 스태미나. 02 값 그대로다.
+##
+## ⚠ **이게 없어서 스태미나가 경기 내내 82로 고정이었다.** 지친 투수가
+## 안 나빠졌고, `pitch_quality`의 `stamina_penalty`가 영영 0이었다
+const STAMINA_BASE: float = 0.45
+const STAMINA_AGGRESSIVE_BONUS: float = 0.12
+const STAMINA_FASTBALL_BONUS: float = 0.10
+const STAMINA_POWER_COST: Dictionary = {"low": 0.05, "normal": 0.15, "high": 0.30}
+
+## 스태미나 상한이 높으면 덜 지친다. **±15%를 안 넘는다**
+const STAMINA_CAP_BASE: float = 55.0
+const STAMINA_CAP_SCALE: float = 0.005
+const STAMINA_CAP_SPAN: float = 0.15
+
+## 40 아래로 떨어지면 가속도가 붙는다
+const STAMINA_FATIGUE_FLOOR: float = 40.0
+const STAMINA_FATIGUE_SCALE: float = 0.025
+
+## 이닝을 끝내면 조금 회복한다
+const MENTAL_RECOVERY_INNING_END: float = 1.5
+
+## 멘탈 회복력이 높으면 덜 흔들린다
+const MENTAL_RESIL_BASE: float = 50.0
+const MENTAL_RESIL_SCALE: float = 0.004
+const MENTAL_RESIL_SPAN: float = 0.15
+
+## 결과별 멘탈 변화. 02 값 그대로다
+const MENTAL_DELTA: Dictionary = {
+	"STRIKE_LOOK": 0.5, "STRIKE_SWING": 0.5,
+	"INPLAY_OUT": 0.8, "GROUND_OUT": 0.8, "FLY_OUT": 0.8, "LINE_OUT": 0.8,
+	# 아웃 두 개를 한 번에 잡았다. 0.8을 두 번 준 셈으로 둔다
+	"DOUBLE_PLAY": 1.6,
+	"FIELDING_ERROR": -1.2,
+	"BALL": -0.4, "FOUL": -0.1, "WALK": -0.9,
+	"HIT_SINGLE": -1.0, "HIT_DOUBLE": -1.4, "HIT_TRIPLE": -1.8,
+	"HOME_RUN": -2.4,
+}
+
+
+## 한 구에 빠지는 스태미나
+static func stamina_loss(decision: Dictionary, stamina_cap: float,
+		current: float) -> float:
+	var cost: float = STAMINA_BASE \
+		+ (STAMINA_AGGRESSIVE_BONUS if decision.get("strategy", "") == "aggressive" else 0.0) \
+		+ (STAMINA_FASTBALL_BONUS if decision.get("pitch_type", "") == "fastball" else 0.0) \
+		+ float(STAMINA_POWER_COST.get(decision.get("power", "normal"), 0.15))
+	var cap_factor: float = 1.0 - clampf((stamina_cap - STAMINA_CAP_BASE) * STAMINA_CAP_SCALE,
+		-STAMINA_CAP_SPAN, STAMINA_CAP_SPAN)
+	var fatigue: float = 1.0
+	if current < STAMINA_FATIGUE_FLOOR:
+		fatigue = 1.0 + (STAMINA_FATIGUE_FLOOR - current) * STAMINA_FATIGUE_SCALE
+	return cost * cap_factor * fatigue
+
+
+## 한 구에 움직이는 멘탈. **이닝을 끝냈으면 회복이 붙는다**
+static func mental_delta(code: String, mental_resil: float,
+		inning_changed: bool) -> float:
+	var factor: float = 1.0 - clampf((mental_resil - MENTAL_RESIL_BASE) * MENTAL_RESIL_SCALE,
+		-MENTAL_RESIL_SPAN, MENTAL_RESIL_SPAN)
+	return float(MENTAL_DELTA.get(code, 0.0)) * factor \
+		+ (MENTAL_RECOVERY_INNING_END if inning_changed else 0.0)

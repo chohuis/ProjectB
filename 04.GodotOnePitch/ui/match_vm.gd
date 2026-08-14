@@ -55,7 +55,7 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 	# 24구를 던져도 0으로 뜬다 — 실제로 화면에서 그렇게 나왔다.
 	# 내 팀이 어느 쪽인지는 `ctx`가 알려준다
 	var side: String = ctx.get("my_side", "home")
-	var line: Dictionary = s.get("%s_pitcher_line" % side, s.get("pitcher_line", {}))
+	var line: Dictionary = _my_line(s, side, String(ctx.get("my_id", "")))
 
 	var home: int = int(score.get("home", 0))
 	var away: int = int(score.get("away", 0))
@@ -149,3 +149,28 @@ static func _bases(on1: bool, on2: bool, on3: bool) -> String:
 	if nums.is_empty():
 		return "주자 없음"
 	return "·".join(PackedStringArray(nums)) + "루"
+
+
+## 화면에 보일 투수 줄.
+##
+## ⚠ **교체가 붙은 뒤로 줄이 큐 안에 있다.** 팀 줄(`home_pitcher_line`)만
+## 읽으면 40구를 던져도 0으로 뜬다 — 실제로 그렇게 나왔다.
+##
+## ⚠ **내 줄을 우선한다.** 내가 던진 뒤 교체됐어도 화면엔 내 성적이 남아야
+## 한다 — 지금 마운드에 선 사람 줄을 보여주면 내 기록이 사라진다
+static func _my_line(state: Dictionary, side: String, my_id: String) -> Dictionary:
+	var q: Dictionary = state.get("%s_queue" % side, {})
+	var lines: Array = q.get("lines", [])
+
+	if not my_id.is_empty():
+		for l in lines:
+			if String(l.get("player_id", "")) == my_id:
+				return l
+
+	# 내가 안 던졌으면 지금 마운드에 선 사람 것
+	var i: int = int(q.get("current", 0))
+	if i < lines.size():
+		return lines[i]
+
+	# 큐가 없으면 예전 경로 — 조각 검사가 그대로 돈다
+	return state.get("%s_pitcher_line" % side, state.get("pitcher_line", {}))

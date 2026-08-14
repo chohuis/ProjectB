@@ -109,7 +109,16 @@ static func play(world: Dictionary, home_id: String, away_id: String,
 	if hp.is_empty() or ap.is_empty():
 		return {"ok": false, "error": "선발 투수가 없다", "result": {}, "pitches": 0}
 
-	var state: Dictionary = _make_state(home, away, hp, ap)
+	# ⚠ **오늘 등판하기로 한 사람을 불펜 앞에 세운다.** 안 넘기면 "오늘 등판"이
+	# 화면에만 뜨고 실제로는 안 나온다
+	# ⚠ **큐 전용 난수를 따로 쓴다.** 경기 난수기로 큐를 만들면 그만큼 흐름이
+	# 밀려서 **손으로 던진 경기와 자동 시뮬이 갈린다** — 실제로 갈렸다.
+	# 난수 흐름을 하나로 두지 않는다는 규칙이 여기서도 그대로다
+	var queue_rng := RandomNumberGenerator.new()
+	queue_rng.seed = Rng.mix(["queue", home_id, away_id,
+		int(p.get("home_game_no", 0)), int(p.get("away_game_no", 0))])
+	var state: Dictionary = _make_state(home, away, hp, ap, queue_rng,
+		String(p.get("home_relief", "")), String(p.get("away_relief", "")))
 	var out: Dictionary = GameLoop.play(state, rng, MatchDay._decide)
 	_to_report_shape(out["state"])
 
@@ -130,8 +139,12 @@ static func play(world: Dictionary, home_id: String, away_id: String,
 ## ⚠ 투수 교체가 붙으면 엔진이 여러 줄을 쌓게 되고, 그때 이 옮기기는
 ## 배열을 그대로 넘기는 것으로 줄어든다
 static func _to_report_shape(state: Dictionary) -> void:
-	state["my_pitcher_lines"] = [state.get("home_pitcher_line", {})]
-	state["opponent_pitcher_lines"] = [state.get("away_pitcher_line", {})]
+	# 큐가 있으면 **투수별 줄이 거기 다 있다.** 없으면 예전처럼 팀 줄 하나 —
+	# 조각 검사가 그대로 돈다
+	state["my_pitcher_lines"] = state.get("home_queue", {}).get("lines",
+		[state.get("home_pitcher_line", {})])
+	state["opponent_pitcher_lines"] = state.get("away_queue", {}).get("lines",
+		[state.get("away_pitcher_line", {})])
 
 	# ⚠ **홈·원정을 안 가른다.** `MatchReport`가 두 배열을 훑어 하나로 합치므로
 	# 어디에 넣든 같다 — 가르는 줄을 두면 "여기서 갈린다"고 오해하게 된다.
@@ -145,8 +158,75 @@ static func _to_report_shape(state: Dictionary) -> void:
 	state["away_bat_lines"] = []
 
 
+## 난수를 안 받은 호출부(조각 검사)용. **경기 결과가 흔들리면 안 되므로
+## 고정 씨앗이다** — 진짜 경기는 자기 난수기를 넘긴다
+static func _fixed_rng() -> RandomNumberGenerator:
+	var r := RandomNumberGenerator.new()
+	r.seed = 20260814
+	return r
+
+
+## 그 팀의 투수진. **선발이 맨 앞이고 나머지는 능력 순**이다.
+##
+## ⚠ **선발을 빼먹으면 안 된다.** 큐의 0번이 마운드에 서는 사람이라
+## 어긋나면 경기 시작부터 다른 사람이 던진다
+static func bullpen_of(roster: Array, starter: Dictionary,
+		first_relief: String = "") -> Array:
+	var out: Array = [starter]
+	var rest: Array = []
+	var wanted: Dictionary = {}
+	for p in roster:
+		if p.get("id", "") == starter.get("id", ""):
+			continue
+		if not PlayerGen.is_pitcher(p.get("position", "")):
+			continue
+		if p.get("id", "") == first_relief:
+			wanted = p
+			continue
+		rest.append(p)
+	rest.sort_custom(func(a, b) -> bool:
+		return float(a.get("pitching", {}).get("ovr", 0.0)) \
+			> float(b.get("pitching", {}).get("ovr", 0.0)))
+
+	# ⚠ **오늘 등판하기로 한 사람을 맨 앞에 둔다.** 능력 순으로만 세우면
+	# 주인공(OVR 51)이 뒤로 밀려 **화면엔 "오늘 등판"이 뜨는데 실제로는
+	# 시즌 내내 한 경기도 안 나온다** — 실측 9경기 중 0경기였다
+	if not wanted.is_empty():
+		out.append(wanted)
+		out.append_array(rest.slice(0, maxi(BULLPEN_SIZE - 1, 0)))
+	else:
+		out.append_array(rest.slice(0, BULLPEN_SIZE))
+	return out
+
+
+## 불펜에 몇 명까지 태우나. 02는 로스터 전체를 넣지만 그러면 큐가 30명이 되고
+## `queue_max_outs`가 그만큼 난수를 뽑는다 — 실제로 쓰이는 건 앞의 몇이다
+const BULLPEN_SIZE: int = 6
+
+
+## 투수 큐 하나. `PitcherSwitch`가 먹는 모양이다
+static func _queue_of(roster: Array, starter: Dictionary, rng,
+		first_relief: String = "") -> Dictionary:
+	var pitchers: Array = bullpen_of(roster, starter, first_relief)
+	var mapped: Array = []
+	var lines: Array = []
+	for p in pitchers:
+		mapped.append(_pitcher(p))
+		lines.append({"player_id": p.get("id", ""),
+			"outs": 0, "pc": 0, "k": 0, "bb": 0, "h": 0, "er": 0})
+	return {
+		"pitchers": mapped,
+		"current": 0,
+		"max_outs": PitcherSwitch.queue_max_outs(mapped, rng),
+		"outs_by_current": 0,
+		"lines": lines,
+		"pitch_limit": 0.0,
+	}
+
+
 static func _make_state(home: Array, away: Array,
-		hp: Dictionary, ap: Dictionary) -> Dictionary:
+		hp: Dictionary, ap: Dictionary, rng = null,
+		home_relief: String = "", away_relief: String = "") -> Dictionary:
 	var home_lineup: Array = []
 	for p in _lineup(home):
 		home_lineup.append(_batter(p))
@@ -165,7 +245,18 @@ static func _make_state(home: Array, away: Array,
 		"home_lineup": home_lineup, "away_lineup": away_lineup,
 		"home_index": 0, "away_index": 0,
 		"home_pitcher": _pitcher(hp), "away_pitcher": _pitcher(ap),
+
+		# ⚠ **스태미나를 팀별로 둔다.** 하나로 두면 한 팀 투수가 지칠 때
+		# 상대 투수도 같이 지친다 — 02는 `npc_pitcher_stamina.my`/`.opponent`다.
+		# 시작값 82는 02 그대로이고, 구원도 같은 기준으로 들어온다
+		"home_stamina": 82.0, "away_stamina": 82.0,
+		"home_mental": 60.0, "away_mental": 60.0,
+		# 조각 검사와 옛 경로가 아직 읽는다 — 팀별 값이 없으면 여기로 떨어진다
 		"stamina": 82.0, "mental": 60.0, "grade": 3,
+
+		# 투수진. **선발이 0번**이고 교체는 여기서 다음 사람을 꺼낸다
+		"home_queue": _queue_of(home, hp, rng if rng != null else _fixed_rng(), home_relief),
+		"away_queue": _queue_of(away, ap, rng if rng != null else _fixed_rng(), away_relief),
 		"fielders": [], "last_pitch_types": [],
 		"weather": "sunny", "park": "neutral",
 		"defense": {"errors": 0, "assists": 0, "throw_outs": 0, "throw_safes": 0},
@@ -190,10 +281,18 @@ static func play_day(state: Dictionary, day: int, rng: RandomNumberGenerator) ->
 			continue
 		var home: String = g.get("home", "")
 		var away: String = g.get("away", "")
+		# ⚠ **오늘 등판하기로 한 주인공을 불펜 앞에 세운다.** 안 넘기면
+		# "오늘 등판"이 화면에만 뜨고 실제로는 안 나온다
+		var relief: String = ""
+		if g.get("is_protagonist_game", false):
+			relief = String(state.get("protagonist", {}).get("id", ""))
+		var my_team: String = String(state.get("protagonist", {}).get("team_id", ""))
 		var out: Dictionary = play(world, home, away, rng, {
 			"league_id": g.get("league_id", ""),
 			"home_game_no": int(counts.get(home, 0)),
 			"away_game_no": int(counts.get(away, 0)),
+			"home_relief": relief if home == my_team else "",
+			"away_relief": relief if away == my_team else "",
 		})
 		if not out["ok"]:
 			continue

@@ -32,11 +32,24 @@ static func open(game_state: Dictionary, game: Dictionary) -> Dictionary:
 	for p in home + away:
 		names[p.get("id", "")] = p.get("name", p.get("id", ""))
 
-	var state: Dictionary = MatchDay._make_state(home, away, hp, ap)
+	# ⚠ **주인공이 오늘 등판하기로 했으면 불펜 앞에 세운다.** 안 그러면
+	# 능력 순으로 밀려 화면에만 "오늘 등판"이 뜨고 실제로는 안 나온다
+	var me_id: String = String(game_state.get("protagonist", {}).get("id", ""))
+	var my_team: String = String(game_state.get("protagonist", {}).get("team_id", ""))
+	var relief: String = me_id if game.get("is_protagonist_game", false) else ""
+	# ⚠ **자동 시뮬과 같은 큐 씨앗을 쓴다.** 다르면 불펜 순서가 갈려
+	# 손으로 던진 경기와 기록에 남는 경기가 달라진다
+	var counts_q: Dictionary = counts
+	var rng_q := RandomNumberGenerator.new()
+	rng_q.seed = Rng.mix(["queue", home_id, away_id,
+		int(counts_q.get(home_id, 0)), int(counts_q.get(away_id, 0))])
+	var state: Dictionary = MatchDay._make_state(home, away, hp, ap, rng_q,
+		relief if home_id == my_team else "",
+		relief if away_id == my_team else "")
 	# ⚠ **첫 투구 전에도 누구 대 누구인지 보여야 한다.** `GameLoop`은 매
 	# 투구마다 세팅하므로 던지기 전엔 비어 있다 — 화면이 빈칸으로 뜬다
 	state["batter"] = GameLoop.current_batter(state)
-	state["pitcher"] = GameLoop.current_pitcher(state)
+	GameLoop.bind_pitcher(state, state.get("half", "top"))
 
 	var team_names: Dictionary = game_state.get("team_names", {})
 	return {
@@ -78,9 +91,9 @@ static func pitch(state: Dictionary, ctx: Dictionary, rng: RandomNumberGenerator
 	var before_half: String = state.get("half", "top")
 	var before_count: Dictionary = state.get("count", {}).duplicate()
 	state["batter"] = GameLoop.current_batter(state)
-	state["pitcher"] = GameLoop.current_pitcher(state)
-	state["pitcher_line_key"] = "home_pitcher_line" if before_half == "top" \
-		else "away_pitcher_line"
+	# ⚠ **자동 시뮬과 같은 함수를 쓴다.** 두 경로가 각자 투수를 고르면
+	# 손으로 던진 경기와 기록에 남는 경기가 갈린다
+	GameLoop.bind_pitcher(state, before_half)
 
 	var d: Dictionary = decision if not decision.is_empty() \
 		else MatchDay._decide(state, rng)
@@ -92,6 +105,7 @@ static func pitch(state: Dictionary, ctx: Dictionary, rng: RandomNumberGenerator
 	var is_k: bool = (code == "STRIKE_SWING" or code == "STRIKE_LOOK") and was_two
 	if is_k or MatchResult.is_at_bat_over(code):
 		GameLoop.advance_lineup(state, before_half)
+		GameLoop.switch_if_needed(state, before_half)
 
 	var log: Array = ctx.get("log", [])
 	# 무슨 공을 던져 어떻게 됐는지 — 구종을 빼면 왜 맞았는지 알 수가 없다
