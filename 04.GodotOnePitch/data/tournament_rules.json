@@ -1,0 +1,51 @@
+{
+ "_note": "02 resource/data/seeds/onepitch/tournaments.csv 그대로. 설계 근거는 02 docs/design의 02_고교.md §4-2 · 03_대학.md §4-1~2.",
+
+ "_region_note": "**권역은 구장에서 파생한다.** `data/teams.json`의 `stadium`이 곧 권역이고, 02는 그걸 `leagueTeams.generated.ts`에 한 벌 더 적어 뒀다 — 두 벌이 되면 언젠가 갈린다. 고교 102팀이 8권역(6~20팀), 대학 50팀이 5조(10팀 균등)다",
+
+ "tournaments": [
+  {"id": "TOUR_HS_GAENARI", "league_id": "LEAGUE_HIGHSCHOOL", "name": "개나리기", "flower": "개나리",
+   "start_week": 2, "end_week": 3, "total_slots": 32, "wildcard_slots": 8,
+   "seed_source": "prev_season", "order": 1},
+  {"id": "TOUR_HS_JANGMI", "league_id": "LEAGUE_HIGHSCHOOL", "name": "장미기", "flower": "장미",
+   "start_week": 14, "end_week": 15, "total_slots": 32, "wildcard_slots": 8,
+   "seed_source": "first_half", "order": 2},
+  {"id": "TOUR_HS_MUGUNGHWA", "league_id": "LEAGUE_HIGHSCHOOL", "name": "무궁화기", "flower": "무궁화",
+   "start_week": 20, "end_week": 22, "total_slots": 48, "wildcard_slots": 12,
+   "seed_source": "first_half", "order": 3},
+  {"id": "TOUR_HS_GUKHWA", "league_id": "LEAGUE_HIGHSCHOOL", "name": "국화기", "flower": "국화",
+   "start_week": 31, "end_week": 34, "total_slots": 102, "wildcard_slots": 0,
+   "seed_source": "open", "order": 4},
+  {"id": "TOUR_HS_PAEWANG", "league_id": "LEAGUE_HIGHSCHOOL", "name": "패왕기", "flower": "왕중왕",
+   "start_week": 40, "end_week": 41, "total_slots": 24, "wildcard_slots": 0,
+   "seed_source": "second_half", "order": 5},
+
+  {"id": "TOUR_UNIV_WANGJUNGWANG", "league_id": "LEAGUE_UNIVERSITY", "name": "왕중왕전", "flower": "왕중왕",
+   "start_week": 11, "end_week": 12, "total_slots": 8, "wildcard_slots": 3,
+   "seed_source": "first_half", "per_group_slots": 1, "wildcard_max_group_rank": 2,
+   "auto_seeds_first": true, "order": 1},
+  {"id": "TOUR_UNIV_EUNHA", "league_id": "LEAGUE_UNIVERSITY", "name": "은하기", "flower": "은하",
+   "start_week": 14, "end_week": 17, "total_slots": 24, "wildcard_slots": 4,
+   "seed_source": "first_half", "per_group_slots": 4,
+   "group_count": 8, "advance_per_group": 1, "qualify_weeks": 2, "order": 2},
+  {"id": "TOUR_UNIV_YEOMYEONG", "league_id": "LEAGUE_UNIVERSITY", "name": "여명기", "flower": "여명",
+   "start_week": 18, "end_week": 21, "total_slots": 20, "wildcard_slots": 5,
+   "seed_source": "first_half", "per_group_slots": 3,
+   "group_count": 4, "advance_per_group": 2, "qualify_weeks": 2, "order": 3}
+ ],
+
+ "_slots_note": "부전승은 따로 규칙을 안 만든다 — **표준 시드 순서(1↔N, 2↔N−1 …)에서 빈 시드가 곧 부전승**이고, 그 수가 기획서 표와 정확히 맞는다: 48팀 → 64대진·부전승 16 · 102팀 → 128대진·부전승 26 · 24팀 → 32대진·부전승 8",
+
+ "_quota_note": "⚠ **권역마다 같은 수를 뽑으면 안 된다.** 기획서는 12권역 기준으로 '권역당 상위 2'를 썼는데 실제 세계는 8권역이고 크기가 6~20으로 갈린다 — 그러면 6팀 권역은 상위 4팀(67%)이 전국대회에 나가고 20팀 권역은 20%만 나간다. **권역 크기 비례 배분**(최대잔여법, 권역당 최소 1)으로 푼다",
+
+ "_seed_note": "⚠ **자동 진출이 와일드카드보다 늘 위는 아니다.** 강한 권역 3위가 약한 권역 1위보다 셀 수 있어서 고교는 승률로 통합 정렬한다. 대학 왕중왕전만 기획서가 '조 1위 5팀 상위 시드(부전승 우선), WC 3팀 하위 시드'라고 못 박아서 `auto_seeds_first`를 켠다",
+
+ "_group_note": "⚠ **조 편성은 시드를 무시하고 섞는다.** 기획서가 '완전 랜덤 추첨(시드 없음)'이라 했고 그게 '죽음의 조' 드라마의 근거다. 다만 세계는 시드 결정성이 원칙이라 **시드 기반 결정적 셔플**을 쓴다 — 플레이어에겐 여전히 예측 불가고, 세이브를 다시 열면 같은 조가 나온다",
+
+ "group_labels": ["A", "B", "C", "D", "E", "F", "G", "H"],
+
+ "survival": {
+  "_note": "02 usecases/survivalLeague.ts · utils/survivalLeague.ts. 여기서는 아직 안 옮겼다 — QUEUE B-4b",
+  "_todo": true
+ }
+}

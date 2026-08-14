@@ -1,0 +1,347 @@
+[
+ [
+  "대회 순서를 안 지킨다 (패왕기가 먼저 열린다)",
+  "\tout.sort_custom(func(a, b) -> bool: return int(a[\"order\"]) < int(b[\"order\"]))",
+  "\tout.reverse()"
+ ],
+ [
+  "리그를 안 가린다 (고교 대회에 대학이 나온다)",
+  "\t\tif String(d[\"league_id\"]) == league_id:",
+  "\t\tif true:"
+ ],
+ [
+  "대회 기간을 안 본다 (아무 주에나 열린다)",
+  "\t\tif week >= int(d[\"start_week\"]) and week <= int(d[\"end_week\"]):",
+  "\t\tif true:"
+ ],
+ [
+  "대회가 끝난 뒤에도 열린다",
+  "\t\tif week >= int(d[\"start_week\"]) and week <= int(d[\"end_week\"]):",
+  "\t\tif week >= int(d[\"start_week\"]):"
+ ],
+ [
+  "권역을 구장으로 안 가른다 (전국이 한 권역이다)",
+  "\t\tvar key: String = String(t.get(\"stadium\", \"\"))",
+  "\t\tvar key: String = \"ALL\""
+ ],
+ [
+  "권역 순위가 승률을 안 본다",
+  "\t\tif pa != pb:\n\t\t\treturn pa > pb",
+  "\t\tif false:\n\t\t\treturn pa > pb"
+ ],
+ [
+  "권역 순위가 거꾸로다 (꼴찌가 1위다)",
+  "\t\tif pa != pb:\n\t\t\treturn pa > pb",
+  "\t\tif pa != pb:\n\t\t\treturn pa < pb"
+ ],
+ [
+  "동률에서 다득점을 안 본다",
+  "\t\tif fa != fb:\n\t\t\treturn fa > fb",
+  "\t\tif false:\n\t\t\treturn fa > fb"
+ ],
+ [
+  "동률에서 실점을 안 본다",
+  "\t\tif aa != ab:\n\t\t\treturn aa < ab",
+  "\t\tif false:\n\t\t\treturn aa < ab"
+ ],
+ [
+  "실점이 적은 쪽이 아래로 간다",
+  "\t\tif aa != ab:\n\t\t\treturn aa < ab",
+  "\t\tif aa != ab:\n\t\t\treturn aa > ab"
+ ],
+ [
+  "권역을 ID 순으로 안 놓는다 (시드가 흔들린다)",
+  "\tvar ids: Array = regions.keys()\n\tids.sort()",
+  "\tvar ids: Array = regions.keys()\n\tids.reverse()"
+ ],
+ [
+  "권역 크기를 안 본다 (전부 같은 수를 뽑는다)",
+  "\t\tvar exact: float = float(size) * float(auto_slots) / float(total_teams)",
+  "\t\tvar exact: float = float(auto_slots) / float(regions.size())"
+ ],
+ [
+  "작은 권역이 통째로 빠진다",
+  "\t\tvar base: int = clampi(int(floorf(exact)), 1, size)",
+  "\t\tvar base: int = clampi(int(floorf(exact)), 0, size)"
+ ],
+ [
+  "권역 인원이 실제 팀 수를 넘는다",
+  "\t\tvar base: int = clampi(int(floorf(exact)), 1, size)",
+  "\t\tvar base: int = maxi(int(floorf(exact)), 1)"
+ ],
+ [
+  "남은 자리를 안 나눈다 (참가팀이 모자란다)",
+  "\twhile assigned < auto_slots and not remainders.is_empty():",
+  "\twhile false:"
+ ],
+ [
+  "남은 자리를 소수부와 무관하게 나눈다",
+  "\tremainders.sort_custom(func(a, b) -> bool:\n\t\tif float(a[0]) != float(b[0]):\n\t\t\treturn float(a[0]) > float(b[0])\n\t\treturn String(a[1]) < String(b[1]))",
+  "\tremainders.reverse()"
+ ],
+ [
+  "조당 고정 인원을 무시한다",
+  "\tif per_group_slots > 0:",
+  "\tif false:"
+ ],
+ [
+  "조당 고정 인원이 조 크기를 넘는다",
+  "\t\t\tquota[String(r[\"region_id\"])] = mini(per_group_slots,\n\t\t\t\t(r[\"ranked_teams\"] as Array).size())",
+  "\t\t\tquota[String(r[\"region_id\"])] = per_group_slots"
+ ],
+ [
+  "와일드카드 자리를 안 뺀다 (참가팀이 넘친다)",
+  "\tvar auto_slots: int = maxi(total_slots - wildcard_slots, 0)",
+  "\tvar auto_slots: int = total_slots"
+ ],
+ [
+  "와일드카드를 안 뽑는다",
+  "\tvar wildcards: Array = pool.slice(0, wildcard_slots)",
+  "\tvar wildcards: Array = []"
+ ],
+ [
+  "와일드카드 후보 제한이 없다 (조 꼴찌도 후보다)",
+  "\t\tvar upto: int = list.size() if max_rank <= 0 else mini(max_rank, list.size())",
+  "\t\tvar upto: int = list.size()"
+ ],
+ [
+  "자동 진출한 팀이 와일드카드 후보에도 든다",
+  "\t\tif upto > q:\n\t\t\tpool.append_array(list.slice(q, upto))",
+  "\t\tpool.append_array(list.slice(0, upto))"
+ ],
+ [
+  "와일드카드를 승률로 안 고른다",
+  "\tpool.sort_custom(by_strength)\n\tvar wildcards: Array = pool.slice(0, wildcard_slots)",
+  "\tvar wildcards: Array = pool.slice(0, wildcard_slots)"
+ ],
+ [
+  "왕중왕전에서 조 1위 블록이 위로 안 간다",
+  "\tif bool(tournament_def.get(\"auto_seeds_first\", false)):",
+  "\tif false:"
+ ],
+ [
+  "고교도 자동 시드를 늘 위에 둔다 (약한 권역 1위가 강한 권역 3위보다 위다)",
+  "\tif bool(tournament_def.get(\"auto_seeds_first\", false)):",
+  "\tif true:"
+ ],
+ [
+  "시드 순서가 표준이 아니다 (1번과 2번이 1라운드에 만난다)",
+  "\t\t\tnext.append(s)\n\t\t\tnext.append(n + 1 - s)",
+  "\t\t\tnext.append(s)\n\t\t\tnext.append(s + order.size())"
+ ],
+ [
+  "라운드가 1-based다 (결승이 당겨지고 1·2라운드가 겹친다)",
+  "\tvar day: int = 0 if total_rounds <= 1 else (round * last) / (total_rounds - 1)",
+  "\tvar day: int = 0 if total_rounds <= 1 else ((round + 1) * last) / total_rounds"
+ ],
+ [
+  "대회 기간을 하루로 본다 (전 라운드가 같은 날이다)",
+  "\tvar span_days: int = (maxi(end_week - start_week, 0) + 1) * Calendar.DAYS_PER_WEEK",
+  "\tvar span_days: int = 1"
+ ],
+ [
+  "주차·요일을 일차로 잘못 옮긴다",
+  "\treturn (week - 1) * Calendar.DAYS_PER_WEEK + day_offset + 1",
+  "\treturn week * Calendar.DAYS_PER_WEEK + day_offset"
+ ],
+ [
+  "대진 크기를 2의 거듭제곱으로 안 올린다",
+  "\twhile bracket_size < n:\n\t\tbracket_size *= 2",
+  "\tbracket_size = n"
+ ],
+ [
+  "부전승 수를 안 센다",
+  "\t\t\"total_rounds\": total_rounds, \"bye_count\": maxi(bracket_size - n, 0),",
+  "\t\t\"total_rounds\": total_rounds, \"bye_count\": 0,"
+ ],
+ [
+  "부전승이 하위 시드에게 간다 (강팀이 한 경기 더 한다)",
+  "\t\t\t\thome = String(seeded_teams[hs]) if hs < n else \"\"\n\t\t\t\taway = String(seeded_teams[as_]) if as_ < n else \"\"",
+  "\t\t\t\thome = String(seeded_teams[bracket_size - 1 - hs]) if bracket_size - 1 - hs < n else \"\"\n\t\t\t\taway = String(seeded_teams[bracket_size - 1 - as_]) if bracket_size - 1 - as_ < n else \"\""
+ ],
+ [
+  "부전승을 안 알아본다",
+  "\t\t\tvar is_bye: bool = round == 0 and (home.is_empty() or away.is_empty())",
+  "\t\t\tvar is_bye: bool = false"
+ ],
+ [
+  "부전승에 승자가 없다 (아무도 안 올라간다)",
+  "\t\t\tif is_bye:\n\t\t\t\twinner = home if not home.is_empty() else away",
+  "\t\t\tif false:\n\t\t\t\twinner = home if not home.is_empty() else away"
+ ],
+ [
+  "부전승도 내 경기로 표시한다 (안 치르는 경기에 진행이 멈춘다)",
+  "\t\t\t\t\"is_protagonist_game\": mine and not is_bye,",
+  "\t\t\t\t\"is_protagonist_game\": mine,"
+ ],
+ [
+  "내 경기를 표시 안 한다 (진행이 안 멈춘다)",
+  "\t\t\t\t\"is_protagonist_game\": mine and not is_bye,",
+  "\t\t\t\t\"is_protagonist_game\": false,"
+ ],
+ [
+  "1라운드 부전승을 안 올린다 (2라운드가 영영 안 채워진다)",
+  "\tpropagate_round(bracket, 1, protagonist_team_id)\n\treturn bracket",
+  "\treturn bracket"
+ ],
+ [
+  "2라운드부터도 팀을 미리 넣는다",
+  "\t\t\tif round == 0:",
+  "\t\t\tif true:"
+ ],
+ [
+  "승자가 엉뚱한 자리로 올라간다",
+  "\t\tvar next: Dictionary = _match_at(bracket, round + 1, int(m[\"slot\"]) / 2)",
+  "\t\tvar next: Dictionary = _match_at(bracket, round + 1, int(m[\"slot\"]))"
+ ],
+ [
+  "승자가 늘 홈으로 간다 (두 명이 한 자리에 겹친다)",
+  "\t\tif int(m[\"slot\"]) % 2 == 0:\n\t\t\tnext[\"home\"] = winner\n\t\telse:\n\t\t\tnext[\"away\"] = winner",
+  "\t\tnext[\"home\"] = winner"
+ ],
+ [
+  "다음 라운드 내 경기 표시를 안 갱신한다",
+  "\t\tnext[\"is_protagonist_game\"] = String(next[\"home\"]) == protagonist_team_id \\\n\t\t\tor String(next[\"away\"]) == protagonist_team_id",
+  "\t\tpass"
+ ],
+ [
+  "참가 안 한 팀도 이길 수 있다 (대진이 조용히 오염된다)",
+  "\t\t\tif String(m[\"home\"]) == w or String(m[\"away\"]) == w:\n\t\t\t\tm[\"winner\"] = w",
+  "\t\t\tm[\"winner\"] = w"
+ ],
+ [
+  "결과를 안 반영한다",
+  "\t\t\tif String(m[\"home\"]) == w or String(m[\"away\"]) == w:\n\t\t\t\tm[\"winner\"] = w",
+  "\t\t\tpass"
+ ],
+ [
+  "우승팀을 결승이 아닌 데서 찾는다",
+  "\t\tif int(m[\"round\"]) == int(bracket.get(\"total_rounds\", 0)):",
+  "\t\tif int(m[\"round\"]) == 1:"
+ ],
+ [
+  "대진이 안 정해진 경기도 내보낸다",
+  "\t\tif String(m[\"home\"]).is_empty() or String(m[\"away\"]).is_empty():\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "다른 라운드 경기까지 섞어 내보낸다",
+  "\t\tif int(m[\"round\"]) != round:\n\t\t\tcontinue\n\t\t# 부전승은 한쪽이 비어 있으므로 아래 검사에 같이 걸린다",
+  "\t\t# 부전승은 한쪽이 비어 있으므로 아래 검사에 같이 걸린다"
+ ],
+ [
+  "대회 경기라고 표시 안 한다",
+  "\t\t\t\"is_tournament\": true})",
+  "\t\t\t\"is_tournament\": false})"
+ ],
+ [
+  "조별예선이 있는지를 안 가린다",
+  "\treturn int(tournament_def.get(\"group_count\", 0)) > 0 \\\n\t\tand int(tournament_def.get(\"advance_per_group\", 0)) > 0 \\\n\t\tand int(tournament_def.get(\"qualify_weeks\", 0)) > 0",
+  "\treturn int(tournament_def.get(\"group_count\", 0)) > 0"
+ ],
+ [
+  "홀수 조에서 빈자리를 상대로 넣는다",
+  "\t\t\tif a.is_empty() or b.is_empty():\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "라운드로빈이 한 바퀴를 안 돈다 (같은 상대와만 만난다)",
+  "\t\tvar last = list.pop_back()\n\t\tlist.insert(1, last)",
+  "\t\tpass"
+ ],
+ [
+  "조 추첨이 시드 순서 그대로다 ('죽음의 조'가 없다)",
+  "\tfor i in range(pool.size() - 1, 0, -1):\n\t\tvar j: int = rng.randi_range(0, i)\n\t\tvar tmp = pool[i]\n\t\tpool[i] = pool[j]\n\t\tpool[j] = tmp",
+  "\tpass"
+ ],
+ [
+  "조 추첨이 세계 시드를 안 탄다",
+  "\trng.seed = Rng.mix([\"group_draw\", world_seed, tournament_def[\"id\"], season_year])",
+  "\trng.seed = Rng.mix([\"group_draw\", tournament_def[\"id\"], season_year])"
+ ],
+ [
+  "대회마다 같은 추첨이 나온다",
+  "\trng.seed = Rng.mix([\"group_draw\", world_seed, tournament_def[\"id\"], season_year])",
+  "\trng.seed = Rng.mix([\"group_draw\", world_seed, season_year])"
+ ],
+ [
+  "조를 하나만 만든다",
+  "\tvar n_groups: int = maxi(int(tournament_def.get(\"group_count\", 1)), 1)",
+  "\tvar n_groups: int = 1"
+ ],
+ [
+  "한 조에 몰아넣는다",
+  "\t\tgroups[i % n_groups][\"teams\"].append(String(pool[i]))",
+  "\t\tgroups[0][\"teams\"].append(String(pool[i]))"
+ ],
+ [
+  "조 순위표를 안 만든다",
+  "\t\tfor t in g[\"teams\"]:\n\t\t\tg[\"standings\"].append({\"team_id\": String(t), \"wins\": 0, \"losses\": 0,\n\t\t\t\t\"draws\": 0, \"runs_for\": 0, \"runs_against\": 0})",
+  "\t\tpass"
+ ],
+ [
+  "예선이 대회 기간을 넘는다",
+  "\t\t\tvar week: int = mini(start_week + int(roundf(float(ri) * step)), end_week)",
+  "\t\t\tvar week: int = start_week + ri * 2"
+ ],
+ [
+  "예선 기간을 대회 전체로 잡는다 (본선과 겹친다)",
+  "\tvar end_week: int = start_week \\\n\t\t+ maxi(int(tournament_def.get(\"qualify_weeks\", 1)) - 1, 0)",
+  "\tvar end_week: int = int(tournament_def[\"end_week\"])"
+ ],
+ [
+  "예선에서 내 경기를 표시 안 한다",
+  "\t\t\t\t\t\"is_protagonist_game\": String(pair[0]) == protagonist_team_id\n\t\t\t\t\t\tor String(pair[1]) == protagonist_team_id,",
+  "\t\t\t\t\t\"is_protagonist_game\": false,"
+ ],
+ [
+  "예선 결과가 순위에 안 닿는다",
+  "\t\t\t\tif tid == home:\n\t\t\t\t\t_add_result(st, hs, as_)\n\t\t\t\telif tid == away:\n\t\t\t\t\t_add_result(st, as_, hs)",
+  "\t\t\t\tpass"
+ ],
+ [
+  "원정팀 점수를 뒤바꿔 적는다",
+  "\t\t\t\telif tid == away:\n\t\t\t\t\t_add_result(st, as_, hs)",
+  "\t\t\t\telif tid == away:\n\t\t\t\t\t_add_result(st, hs, as_)"
+ ],
+ [
+  "모르는 경기 결과도 반영한다",
+  "\t\tif m.is_empty():\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "무승부를 승리로 센다",
+  "\telif my_runs < their_runs:\n\t\tst[\"losses\"] = int(st[\"losses\"]) + 1\n\telse:\n\t\tst[\"draws\"] = int(st[\"draws\"]) + 1",
+  "\telse:\n\t\tst[\"losses\"] = int(st[\"losses\"]) + 1"
+ ],
+ [
+  "조 순위가 승률을 안 본다",
+  "\t\tif pa != pb:\n\t\t\treturn pa > pb\n\t\tvar da: int = int(a[\"runs_for\"]) - int(a[\"runs_against\"])",
+  "\t\tvar da: int = int(a[\"runs_for\"]) - int(a[\"runs_against\"])"
+ ],
+ [
+  "조 순위가 득실차를 안 본다",
+  "\t\tif da != db:\n\t\t\treturn da > db",
+  "\t\tif false:\n\t\t\treturn da > db"
+ ],
+ [
+  "조 순위가 다득점을 안 본다",
+  "\t\tif int(a[\"runs_for\"]) != int(b[\"runs_for\"]):\n\t\t\treturn int(a[\"runs_for\"]) > int(b[\"runs_for\"])",
+  "\t\tif false:\n\t\t\treturn int(a[\"runs_for\"]) > int(b[\"runs_for\"])"
+ ],
+ [
+  "조 1위 블록이 먼저 안 온다 (조 1위끼리 1라운드에 만난다)",
+  "\tfor pos in int(stage.get(\"advance_per_group\", 1)):\n\t\tfor g in stage.get(\"groups\", []):",
+  "\tfor g in stage.get(\"groups\", []):\n\t\tfor pos in int(stage.get(\"advance_per_group\", 1)):"
+ ],
+ [
+  "조당 진출 수를 무시한다 (한 명만 올라간다)",
+  "\tfor pos in int(stage.get(\"advance_per_group\", 1)):",
+  "\tfor pos in 1:"
+ ],
+ [
+  "본선이 예선과 같은 주에 시작한다",
+  "\td[\"start_week\"] = int(tournament_def[\"start_week\"]) \\\n\t\t+ int(tournament_def.get(\"qualify_weeks\", 0))",
+  "\td[\"start_week\"] = int(tournament_def[\"start_week\"])"
+ ]
+]

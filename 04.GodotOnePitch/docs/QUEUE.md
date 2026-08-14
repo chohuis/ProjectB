@@ -155,7 +155,20 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         1,429명(47%)이 영구 `injured`**로 남았다 — 그 줄을 박아 뒀다.
       **`myBodyReport`의 화면 문구는 C-6("나" 탭)에서** — 여기서는
       `body_log`(경고·완치)와 `injury_log`(월간)를 쌓는 데까지다
-- [ ] **B-4** `tournaments`(204) + `survivalLeague`(83)
+- [~] **B-4** `tournaments`(204) + `survivalLeague`(83)
+      **엔진만 끝났다** — `sim/tournament.gd` · `data/tournament_rules.json`.
+      대회 8종(고교 5 · 대학 3) · 시드 배정 · 부전승 · 조별예선 · 본선.
+      권역은 `teams.json`의 `stadium`에서 파생한다(02는 목록을 한 벌 더
+      적어 뒀다). 검사 56 · 변이 69/69.
+      **남은 것:**
+      - [ ] **B-4a 배선** — 대회 주에 열고, 경기를 `state.schedule`에 꽂고,
+            라운드가 끝나면 대진을 올리고, 우승팀을 기록한다
+      - [ ] **B-4b 대회 소식**(`tournamentNews` 192 · `tournamentView` 155)
+      - [ ] **B-4c 독립 생존리그**(`survivalLeague.ts` 75 + `utils` 123 +
+            Rust `generate_survival_stage`·`survival_cutoff`·`build_ind_ladder`).
+            4단계로 좁혀 가고 **단계마다 순위표가 리셋된다** — 누적을 쓰면
+            1차에서 벌어놓은 승수로 3차 순위가 정해져 "매 단계 새 승부"가
+            무의미해진다
 - [ ] **B-5** `finance`(331) — 개인 재정
 - [ ] **B-6** `careerDecision`(270) · `contractDecision`(260) · `militaryDecision`(168)
       · `decisions`(121)
