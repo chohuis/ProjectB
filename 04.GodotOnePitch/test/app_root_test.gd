@@ -367,3 +367,89 @@ func test_the_league_choice_survives_advancing() -> void:
 	assert_str(r.state()["league_tab"]).is_equal("LEAGUE_JBL")
 	await r.advance(5)
 	assert_str(r.screen()._vm["league"]["league_id"]).is_equal("LEAGUE_JBL")
+
+
+# ── 경기 화면 ─────────────────────────────────────────────────
+
+func _game_day_state() -> Dictionary:
+	var s: Dictionary = World.new_game({"seed": 777, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	for g in s["schedule"]:
+		if g["is_protagonist_game"]:
+			s["day"] = int(g["day"])
+			break
+	return s
+
+
+func test_a_game_day_opens_the_match() -> void:
+	var r := await _mount(_game_day_state())
+	assert_str(r.open_match()).is_empty()
+	assert_object(r.match_screen()).is_not_null()
+	# 경기 중엔 진행 화면이 안 보인다
+	assert_bool(r.screen().visible).is_false()
+
+
+func test_a_quiet_day_has_no_match_to_open() -> void:
+	var r := await _mount(_state({"day": 5, "season_days": 350}))
+	assert_str(r.open_match()).is_not_empty()
+
+
+func test_pitching_advances_the_match() -> void:
+	var r := await _mount(_game_day_state())
+	r.open_match()
+	var before: int = int(r.match_state()["state"]["pitch_count"])
+	r._on_pitch()
+	assert_int(int(r.match_state()["state"]["pitch_count"])).is_greater(before)
+
+
+## ⚠ **끝낸 경기만 결과를 남긴다.** 도중에 닫고 결과를 남기면 그때까지의
+## 점수가 순위표에 들어간다
+func test_finishing_a_match_records_the_result() -> void:
+	var s: Dictionary = _game_day_state()
+	var r := await _mount(s)
+	r.open_match()
+	var gid: String = r.match_state()["game_id"]
+	r._on_auto()
+	r._on_match_done()
+
+	for g in r.state()["schedule"]:
+		if g["id"] == gid:
+			assert_object(g["result"]).override_failure_message(
+				"끝낸 경기에 결과가 없다").is_not_null()
+			return
+	fail("경기를 못 찾았다")
+
+
+func test_closing_an_unfinished_match_records_nothing() -> void:
+	var r := await _mount(_game_day_state())
+	r.open_match()
+	var gid: String = r.match_state()["game_id"]
+	r._on_pitch()
+	r._on_match_done()
+
+	for g in r.state()["schedule"]:
+		if g["id"] == gid:
+			assert_object(g["result"]).override_failure_message(
+				"도중에 닫았는데 결과가 남았다").is_null()
+			return
+	fail("경기를 못 찾았다")
+
+
+## 닫으면 진행 화면으로 돌아온다
+func test_closing_the_match_returns_to_the_main_screen() -> void:
+	var r := await _mount(_game_day_state())
+	r.open_match()
+	r._on_match_done()
+	assert_object(r.match_screen()).is_null()
+	assert_bool(r.screen().visible).is_true()
+
+
+## ⚠ **경기를 끝내면 그날이 더 이상 정지 사유가 아니다.** 아니면 닫자마자
+## 다시 "경기 시작"이 뜬다
+func test_after_the_match_the_day_can_advance() -> void:
+	var r := await _mount(_game_day_state())
+	r.open_match()
+	r._on_auto()
+	r._on_match_done()
+	assert_str(r.screen()._vm["stop_type"]).override_failure_message(
+		"경기를 끝냈는데 아직 %s로 멈춰 있다" % r.screen()._vm["stop_type"]).is_empty()

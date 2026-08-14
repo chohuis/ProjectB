@@ -13,11 +13,17 @@ class_name AppRoot
 ## 한 번 더 돌면 성장이 2배, 건너뛰면 0인데 **오류도 로그도 안 난다.**
 ## 검사가 "센 만큼 정확히 돌렸나"와 "하루씩 간 것과 같나"를 둘 다 본다.
 
+const MATCH_SCREEN := preload("res://ui/screens/match_screen.tscn")
+
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
 
 var _state: Dictionary = {}
 var _runner: DayRunner
+
+## 지금 열려 있는 경기. 없으면 빈 사전
+var _match: Dictionary = {}
+var _match_screen: MatchScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -30,6 +36,7 @@ func _ready() -> void:
 	_runner.progress.connect(_on_progress)
 
 	_main.advance_requested.connect(_on_advance_requested)
+	_main.match_requested.connect(_on_match_requested)
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
 	_refresh()
@@ -101,6 +108,87 @@ func _on_progress(done: int, total: int) -> void:
 
 func _on_advance_requested(days: int) -> void:
 	await advance(days)
+
+
+## 등판 경기를 연다. **닫을 때까지 진행이 멈춘다** — 그게 "등판일에 멈춘다"의 뜻이다
+func open_match() -> String:
+	var g: Dictionary = _my_game_today()
+	if g.is_empty():
+		return "오늘 등판이 없다"
+
+	var m: Dictionary = LiveMatch.open(_state, g)
+	if not m["ok"]:
+		return m["error"]
+
+	m["game_id"] = g.get("id", "")
+	m["home"] = g.get("home", "")
+	m["away"] = g.get("away", "")
+	m["rng"] = RandomNumberGenerator.new()
+	m["rng"].seed = m["seed"]
+	_match = m
+
+	_match_screen = MATCH_SCREEN.instantiate()
+	_match_screen.pitch_requested.connect(_on_pitch)
+	_match_screen.auto_requested.connect(_on_auto)
+	_match_screen.done_requested.connect(_on_match_done)
+	add_child(_match_screen)
+	_main.visible = false
+	_refresh_match()
+	return ""
+
+
+func match_screen() -> MatchScreen:
+	return _match_screen
+
+
+func match_state() -> Dictionary:
+	return _match
+
+
+func _my_game_today() -> Dictionary:
+	var day: int = int(_state.get("day", 0))
+	for g in _state.get("schedule", []):
+		if int(g.get("day", -1)) == day and g.get("is_protagonist_game", false) 				and g.get("result", null) == null:
+			return g
+	return {}
+
+
+func _refresh_match() -> void:
+	if _match_screen != null:
+		_match_screen.set_view_model(MatchVm.build(_match["state"], _match["ctx"]))
+
+
+func _on_pitch() -> void:
+	LiveMatch.pitch(_match["state"], _match["ctx"], _match["rng"])
+	_refresh_match()
+
+
+func _on_auto() -> void:
+	LiveMatch.finish(_match["state"], _match["ctx"], _match["rng"])
+	_refresh_match()
+
+
+## ⚠ **경기를 안 끝내고 닫으면 결과를 안 남긴다.** 남기면 도중까지의
+## 점수가 순위표에 들어간다 — 다시 열어 이어서 던지면 된다
+func _on_match_done() -> void:
+	if _match["state"].get("is_finished", false):
+		var r: Dictionary = LiveMatch.to_result(_match["state"],
+			_match["home"], _match["away"])
+		for g in _state.get("schedule", []):
+			if g.get("id", "") == _match["game_id"]:
+				g["result"] = r
+
+	if _match_screen != null:
+		remove_child(_match_screen)
+		_match_screen.free()
+		_match_screen = null
+	_match = {}
+	_main.visible = true
+	_refresh()
+
+
+func _on_match_requested() -> void:
+	open_match()
 
 
 ## 며칠 진행한다. 실제로 몇 날 가는지는 `DayRunner`가 정한다

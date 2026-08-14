@@ -78,8 +78,26 @@ func test_no_unread_leaves_the_tab_plain() -> void:
 
 # ── 진행 버튼 ─────────────────────────────────────────────────
 
-func test_the_button_is_disabled_when_stopped() -> void:
+## ⚠ **등판일엔 진행이 아니라 경기다.** "0일 진행"으로 두면 눌러도 아무
+## 일이 안 일어나고 사용자는 게임이 멈춘 줄 안다
+func test_a_game_day_offers_to_play_the_match() -> void:
 	var s := await _mount(_vm({"day": 15}))
+	assert_str(s._advance.text).is_equal("경기 시작")
+	assert_bool(s._advance.disabled).is_false()
+
+
+func test_pressing_it_on_a_game_day_opens_the_match() -> void:
+	var s := await _mount(_vm({"day": 15}))
+	var got: Array = []
+	s.match_requested.connect(func() -> void: got.append(true))
+	s._advance.pressed.emit()
+	assert_int(got.size()).is_equal(1)
+
+
+## 경기가 아닌 이유로 멈췄으면 버튼이 잠긴다
+func test_the_button_is_disabled_when_stopped_by_something_else() -> void:
+	var s := await _mount(_vm({"day": 10, "mailbox": [
+		{"id": "M1", "read": true, "decision": {"selected": null}}]}))
 	assert_bool(s._advance.disabled).is_true()
 
 

@@ -38,6 +38,8 @@ signal tab_selected(tab_id: String)
 signal news_filter_selected(filter_id: String)
 ## 리그를 골랐다
 signal league_selected(league_id: String)
+## 오늘 등판 경기를 연다
+signal match_requested
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -77,6 +79,9 @@ func _ready() -> void:
 
 
 func _on_advance() -> void:
+	if _vm.get("stop_type", "") == "game":
+		match_requested.emit()
+		return
 	advance_requested.emit(int(_vm.get("advance_days", 0)))
 
 
@@ -95,6 +100,15 @@ func _rebuild() -> void:
 	# 오늘 등판이면 눈에 띄게 — 사용자가 기다린 날이다
 	_next_game.add_theme_color_override("font_color",
 		AppTheme.ACCENT if int(_vm.get("next_game_in", -1)) == 0 else AppTheme.TEXT_DIM)
+
+	# ⚠ **등판일엔 진행이 아니라 경기다.** 같은 버튼에 "0일 진행"을 두면
+	# 눌러도 아무 일이 안 일어나고, 사용자는 게임이 멈춘 줄 안다
+	if _vm.get("stop_type", "") == "game":
+		_advance.text = "경기 시작"
+		_advance.disabled = false
+		_build_tabs()
+		_build_body()
+		return
 
 	_advance.text = _vm.get("advance_label", "")
 	# ⚠ **누를 수 있는지도 사전이 정한다.** 화면이 "0일이면 막자"고 다시

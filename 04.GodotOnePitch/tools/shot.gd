@@ -134,6 +134,34 @@ func _build(which: String) -> Control:
 			var ne: App = APP_ENTRY.instantiate()
 			ne.ready.connect(func() -> void: ne.show_new_game(), CONNECT_ONE_SHOT)
 			return ne
+		"match":
+			# 등판일까지 진행한 뒤 경기를 열고 몇 구 던진다
+			var mt: AppRoot = APP.instantiate()
+			var st := World.new_game({"seed": 777, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			for g in st["schedule"]:
+				if g["is_protagonist_game"]:
+					st["day"] = int(g["day"])
+					break
+			mt.set_state(st)
+			mt.ready.connect(func() -> void:
+				mt.open_match()
+				for i in 24:
+					mt._on_pitch(), CONNECT_ONE_SHOT)
+			return mt
+		"match-done":
+			var md: AppRoot = APP.instantiate()
+			var st2 := World.new_game({"seed": 777, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			for g in st2["schedule"]:
+				if g["is_protagonist_game"]:
+					st2["day"] = int(g["day"])
+					break
+			md.set_state(st2)
+			md.ready.connect(func() -> void:
+				md.open_match()
+				md._on_auto(), CONNECT_ONE_SHOT)
+			return md
 		"app-running":
 			# 진행 중 표시 — 실제로 그 상태를 만들어 찍는다
 			var b: AppRoot = APP.instantiate()
