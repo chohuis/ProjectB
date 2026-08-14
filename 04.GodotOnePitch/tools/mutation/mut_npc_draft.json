@@ -1,0 +1,117 @@
+[
+ [
+  "보드를 안 좁힌다 (후보 전원에서 뽑으면 최고 유망주 지명 확률이 9%였다)",
+  "const POOL_MULTIPLIER: int = 2",
+  "const POOL_MULTIPLIER: int = 1000"
+ ],
+ [
+  "보드를 지명 수만큼만 (미지명이 사라진다)",
+  "const POOL_MULTIPLIER: int = 2",
+  "const POOL_MULTIPLIER: int = 1"
+ ],
+ [
+  "스카우트 편차를 없앤다 (상위 110명이 매년 그대로 지명된다)",
+  "const SCOUT_BIAS: float = 4.0",
+  "const SCOUT_BIAS: float = 0.0"
+ ],
+ [
+  "라운드 노이즈 상한을 없앤다 (11R이 순수 난수가 된다)",
+  "const SPREAD_CAP: float = 6.0",
+  "const SPREAD_CAP: float = 44.0"
+ ],
+ [
+  "나이 프리미엄을 없앤다 (보드 220명 중 고졸이 5명까지 줄었다)",
+  "\tvar youth: float = maxf(\n\t\tYOUTH_BASE - float(maxi(int(npc.get(\"age\", YOUTH_AGE)) - YOUTH_AGE, 0)) * YOUTH_STEP,\n\t\tYOUTH_FLOOR)",
+  "\tvar youth: float = 0.0"
+ ],
+ [
+  "나이 프리미엄을 두 배로 (OVR 55 19세가 1순위, OVR 82 26세가 미지명이 됐다)",
+  "const YOUTH_BASE: float = 14.0",
+  "const YOUTH_BASE: float = 28.0"
+ ],
+ [
+  "나이 프리미엄에 바닥이 없다 (노장이 무한히 깎인다)",
+  "\t\tYOUTH_FLOOR)",
+  "\t\t-999.0)"
+ ],
+ [
+  "능력치 보정을 없앤다 (잘하는 선수를 안 뽑는다)",
+  "\tvar edge: float = pow(maxf(ovr - EDGE_BASE, 0.0) / EDGE_SCALE, 2.0) * EDGE_WEIGHT",
+  "\tvar edge: float = 0.0"
+ ],
+ [
+  "성장률을 안 본다",
+  "\t\t+ float(npc.get(\"development_rate\", 0.0)) * DEV_WEIGHT + youth",
+  "\t\t+ youth"
+ ],
+ [
+  "점수 순이 아니라 목록 순으로 보드를 만든다",
+  "\tranked.sort_custom(func(a, b) -> bool: return float(base[a]) > float(base[b]))",
+  ""
+ ],
+ [
+  "낮은 점수부터 보드에 올린다",
+  "\tranked.sort_custom(func(a, b) -> bool: return float(base[a]) > float(base[b]))",
+  "\tranked.sort_custom(func(a, b) -> bool: return float(base[a]) < float(base[b]))"
+ ],
+ [
+  "최고점이 아니라 첫 번째를 뽑는다 (라운드가 평평해진다)",
+  "\t\t\t\tif s > best_score:\n\t\t\t\t\tbest_score = s\n\t\t\t\t\tbest = i",
+  ""
+ ],
+ [
+  "최저점을 뽑는다",
+  "\t\t\t\tif s > best_score:",
+  "\t\t\t\tif s < best_score:"
+ ],
+ [
+  "뽑은 선수를 목록에서 안 지운다 (한 명이 여러 번 뽑힌다)",
+  "\t\t\tremaining.remove_at(best)",
+  ""
+ ],
+ [
+  "라운드가 깊어져도 노이즈가 안 커진다",
+  "\t\tvar spread: float = minf(float(r) * SPREAD_PER_ROUND, SPREAD_CAP)",
+  "\t\tvar spread: float = 0.0"
+ ],
+ [
+  "순번을 라운드마다 1부터 다시 센다",
+  "\t\t\t\t\"pick\": (r - 1) * team_ids.size() + t + 1,",
+  "\t\t\t\t\"pick\": t + 1,"
+ ],
+ [
+  "보드에 못 든 사람을 미지명에서 뺀다 (아무도 안 남는다)",
+  "\treturn {\"picks\": picks, \"undrafted_ids\": remaining + excluded, \"board\": board}",
+  "\treturn {\"picks\": picks, \"undrafted_ids\": remaining, \"board\": board}"
+ ],
+ [
+  "지명 편차를 매번 새로 뽑는다 (보드 순서와 실제 지명이 어긋난다)",
+  "\t\tbase[id] = score_of(c) + scout_bias(id, year)",
+  "\t\tbase[id] = score_of(c)"
+ ],
+ [
+  "해가 바뀌어도 편차가 같다 (매년 같은 순서로 지명된다)",
+  "\tr.seed = Rng.mix([\"scout\", year, npc_id])",
+  "\tr.seed = Rng.mix([\"scout\", npc_id])"
+ ],
+ [
+  "편차를 한 번만 뽑는다 (가운데가 두꺼운 분포가 사라진다)",
+  "\treturn (r.randf() + r.randf() - 1.0) * magnitude",
+  "\treturn (r.randf() - 0.5) * magnitude * 2.0"
+ ],
+ [
+  "지명을 선수에게 안 적는다 (소속이 안 바뀐다)",
+  "\t\tnpc[\"team_id\"] = team",
+  ""
+ ],
+ [
+  "지명 리그를 안 바꾼다 (프로에 갔는데 아직 드래프트 풀 소속이다)",
+  "\t\tnpc[\"league_id\"] = league_of.get(team, \"\")",
+  ""
+ ],
+ [
+  "지명을 경력 사건으로 안 남긴다",
+  "\t\tnpc[\"career_events\"] = events",
+  ""
+ ]
+]

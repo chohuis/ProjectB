@@ -1,0 +1,77 @@
+[
+ [
+  "34세부터 은퇴시킨다 (전성기 선수가 사라진다)",
+  "const RETIRE_FROM_AGE: int = 35",
+  "const RETIRE_FROM_AGE: int = 34"
+ ],
+ [
+  "나이 계단을 두 배로 (노장이 한꺼번에 사라진다)",
+  "const AGE_STEP: float = 0.06",
+  "const AGE_STEP: float = 0.12"
+ ],
+ [
+  "능력치 벌점을 없앤다 (못하는 선수가 안 그만둔다)",
+  "\tvar penalty: float = maxf(LOW_OVR - ovr, 0.0) * LOW_OVR_STEP",
+  "\tvar penalty: float = 0.0"
+ ],
+ [
+  "능력치 벌점에 바닥이 없다 (특급이 오래 뛰는 게 아니라 영원히 뛴다)",
+  "\tvar penalty: float = maxf(LOW_OVR - ovr, 0.0) * LOW_OVR_STEP",
+  "\tvar penalty: float = (LOW_OVR - ovr) * LOW_OVR_STEP"
+ ],
+ [
+  "상한을 없앤다 (노장이 한 해에 전멸한다)",
+  "\treturn minf(AGE_STEP * float(age - (RETIRE_FROM_AGE - 1)) + penalty, RETIRE_CAP)",
+  "\treturn AGE_STEP * float(age - (RETIRE_FROM_AGE - 1)) + penalty"
+ ],
+ [
+  "젊은 선수도 은퇴 판정을 받는다",
+  "\tif age < RETIRE_FROM_AGE:\n\t\treturn 0.0",
+  ""
+ ],
+ [
+  "투수를 타격 OVR로 본다 (판정이 뒤집힌다)",
+  "\tif p.get(\"player_type\", \"\") == \"pitcher\":\n\t\treturn float(p.get(\"pitching\", {}).get(\"ovr\", 0.0))",
+  ""
+ ],
+ [
+  "부상이 안 낫는다 (02의 결함 — 시즌 중 고교의 47%가 injured였다)",
+  "\t\t\tnpc[\"career_status\"] = \"active\"\n\t\t\thealed += 1\n\t\t\tcontinue",
+  "\t\t\tcontinue"
+ ],
+ [
+  "낫는 해에 은퇴 판정도 받는다 (02 순서와 다르다)",
+  "\t\t\thealed += 1\n\t\t\tcontinue",
+  "\t\t\thealed += 1"
+ ],
+ [
+  "소속을 비운 뒤에 사건을 남긴다 (어디서 은퇴했는지가 사라진다)",
+  "\t\tvar from_team: String = String(npc.get(\"team_id\", \"\"))",
+  "\t\tvar from_team: String = \"\""
+ ],
+ [
+  "은퇴를 경력 사건으로 안 남긴다 (경력 화면에 안 뜬다)",
+  "\t\tnpc[\"career_events\"] = events",
+  ""
+ ],
+ [
+  "은퇴 연도 기록을 안 남긴다",
+  "\t\tnpc[\"career_history\"] = Promotion.push_year_once(",
+  "\t\tvar _unused: Array = Promotion.push_year_once("
+ ],
+ [
+  "은퇴자를 리그에서 안 빼낸다 (은퇴한 선수가 계속 뛴다)",
+  "\t\tnpc[\"league_id\"] = RETIRED_LEAGUE",
+  ""
+ ],
+ [
+  "은퇴자가 팀에 남는다",
+  "\t\tnpc[\"team_id\"] = \"\"",
+  ""
+ ],
+ [
+  "이미 은퇴한 선수를 다시 잡는다",
+  "\t\tif npc.get(\"career_status\", \"\") != \"active\":\n\t\t\tcontinue",
+  ""
+ ]
+]

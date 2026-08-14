@@ -136,8 +136,20 @@ static func roster(p: Dictionary) -> Array:
 	# (약하게 시작하되 클 수 있어야 한다)
 	var pot_base: float = p.get("potential_ovr_max", maxf(pit_max, bat_max))
 
+	# ⚠ **학년을 고르게 흩는다.** 02가 `(i % grade_max) + 1`로 배분한다 —
+	# 안 흩으면 세계가 전원 1학년으로 시작해 **3년 동안 졸업생이 0명**이고
+	# 드래프트가 안 돈다. 나이도 학년을 따라간다(`age_base + grade`)
+	var grade_max: int = int(p.get("grade_max", 0))
+	var age_base: int = int(p.get("age_base", 0))
+
 	var out: Array = []
 	for i in count:
+		var grade: int = int(p.get("grade", 0))
+		var age: int = int(p.get("age", 16))
+		if grade_max > 0:
+			grade = (i % grade_max) + 1
+			age = age_base + grade
+
 		var pos: String = _position_at(needed, i, pit_ratio, rng)
 		# ⚠ **리그로 이름 풀을 고른다.** 부르는 쪽이 고르게 하면 빠뜨리고,
 		# 그러면 해외 리그가 한국 이름으로 찬다(02의 결함)
@@ -174,8 +186,8 @@ static func roster(p: Dictionary) -> Array:
 			"team_id": p.get("team_id", ""),
 			"league_id": p.get("league_id", ""),
 			"school_id": school,
-			"age": int(p.get("age", 16)),
-			"grade": int(p.get("grade", 1)),
+			"age": age,
+			"grade": grade,
 			"career_status": "active",
 			"pitching": pitching,
 			"batting": batting,

@@ -1,0 +1,88 @@
+extends RefCounted
+class_name Promotion
+
+## 학년 진급·졸업·나이 — M9-1.
+##
+## 원본: `packages/engine-native/src/npc_sim.rs`의 `advance_all_grades` ·
+## `advance_all_ages`
+##
+## ⚠ **드래프트보다 먼저 돈다.** 졸업생이 드래프트 풀에 있어야 뽑을
+## 사람이 있다 — 순서는 `SeasonEnd.PHASES`가 정본이다.
+
+## 졸업생이 모이는 자리. 드래프트가 여기서 뽑는다
+const DRAFT_POOL: String = "LEAGUE_DRAFT_POOL"
+const RETIRED_LEAGUE: String = "LEAGUE_RETIRED"
+
+## 학년이 있는 리그와 졸업 학년. **고교 3년 · 대학 4년**
+const SCHOOL_LEAGUES: Dictionary = {
+	"LEAGUE_HIGHSCHOOL": 3,
+	"LEAGUE_UNIVERSITY": 4,
+}
+
+
+## 같은 해를 두 번 넣지 않는다.
+##
+## ⚠ **02는 연도 기록을 네 곳이 각자 썼고 방어가 한 곳에만 있었다.** 그래서
+## 고교생은 같은 해가 두 줄로 남았다. 경력 화면과 **드래프트 경로 판정**
+## (마지막 기록으로 고졸·대졸을 가른다)이 이 배열을 읽으므로 중복은 그대로
+## 오작동이 된다
+static func push_year_once(history: Array, entry: Dictionary) -> Array:
+	for h in history:
+		if int(h.get("year", 0)) == int(entry.get("year", 0)):
+			return history
+	history.append(entry)
+	return history
+
+
+## 한 해 진급. `{updated, hs_graduated, univ_graduated}`
+##
+## ⚠ **부상 중이어도 학년은 오른다.** 02는 `active`만 진급시켜서 부상
+## 선수가 학년이 안 오르고 졸업도 안 됐다 — 나이만 매 시즌 +1 되어
+## 20~21세 고교생이 쌓였다. 자리를 비우는 건 은퇴뿐이다
+static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
+	var updated: Array = []
+	var hs_graduated: Array = []
+	var univ_graduated: Array = []
+
+	for npc in npcs:
+		var league: String = String(npc.get("league_id", ""))
+		if not SCHOOL_LEAGUES.has(league) \
+				or npc.get("career_status", "") == "retired" \
+				or npc.get("grade", null) == null:
+			updated.append(npc)
+			continue
+
+		var grade: int = int(npc["grade"])
+		var entry: Dictionary = {
+			"year": season_year,
+			"league_id": league,
+			"team_id": npc.get("team_id", ""),
+			"stat_line": "-",
+			"highlights": [],
+		}
+		npc["career_history"] = push_year_once(npc.get("career_history", []), entry)
+
+		if grade >= int(SCHOOL_LEAGUES[league]):
+			npc["grade"] = null
+			npc["league_id"] = DRAFT_POOL
+			if league == "LEAGUE_HIGHSCHOOL":
+				hs_graduated.append(npc)
+			else:
+				univ_graduated.append(npc)
+		else:
+			npc["grade"] = grade + 1
+			updated.append(npc)
+
+	return {"updated": updated, "hs_graduated": hs_graduated,
+		"univ_graduated": univ_graduated}
+
+
+## 전원 나이 +1. **진급 뒤에 돈다** — 먼저 올리면 졸업 판정이 한 살 많은
+## 선수를 본다
+static func advance_ages(npcs: Array) -> Array:
+	for n in npcs:
+		if n.get("career_status", "") == "retired" \
+				or n.get("league_id", "") == RETIRED_LEAGUE:
+			continue
+		n["age"] = int(n.get("age", 0)) + 1
+	return npcs

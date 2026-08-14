@@ -1,0 +1,82 @@
+[
+ [
+  "고교가 4학년에 졸업한다 (한 해가 늘어난다)",
+  "\t\"LEAGUE_HIGHSCHOOL\": 3,",
+  "\t\"LEAGUE_HIGHSCHOOL\": 4,"
+ ],
+ [
+  "대학이 3학년에 졸업한다 (한 해가 사라진다)",
+  "\t\"LEAGUE_UNIVERSITY\": 4,",
+  "\t\"LEAGUE_UNIVERSITY\": 3,"
+ ],
+ [
+  "졸업생을 드래프트 풀로 안 보낸다 (뽑을 사람이 없다)",
+  "\t\t\tnpc[\"league_id\"] = DRAFT_POOL",
+  ""
+ ],
+ [
+  "졸업했는데 학년을 남긴다",
+  "\t\t\tnpc[\"grade\"] = null",
+  ""
+ ],
+ [
+  "고교 졸업생을 대학 졸업생으로 센다 (진로 판정이 뒤집힌다)",
+  "\t\t\tif league == \"LEAGUE_HIGHSCHOOL\":\n\t\t\t\ths_graduated.append(npc)\n\t\t\telse:\n\t\t\t\tuniv_graduated.append(npc)",
+  "\t\t\tuniv_graduated.append(npc)"
+ ],
+ [
+  "진급을 안 한다 (영원히 1학년)",
+  "\t\t\tnpc[\"grade\"] = grade + 1",
+  "\t\t\tnpc[\"grade\"] = grade"
+ ],
+ [
+  "두 학년씩 오른다",
+  "\t\t\tnpc[\"grade\"] = grade + 1",
+  "\t\t\tnpc[\"grade\"] = grade + 2"
+ ],
+ [
+  "부상 선수를 진급에서 뺀다 (20세 고교생이 쌓인다 — 02가 그랬다)",
+  "\t\t\t\tor npc.get(\"career_status\", \"\") == \"retired\" \\",
+  "\t\t\t\tor npc.get(\"career_status\", \"\") != \"active\" \\"
+ ],
+ [
+  "은퇴자도 진급시킨다",
+  "\t\t\t\tor npc.get(\"career_status\", \"\") == \"retired\" \\",
+  "\t\t\t\tor false \\"
+ ],
+ [
+  "연도 기록을 안 남긴다 (경력 화면이 빈다)",
+  "\t\tnpc[\"career_history\"] = push_year_once(npc.get(\"career_history\", []), entry)",
+  ""
+ ],
+ [
+  "같은 해를 두 번 넣는다 (02의 결함 — 드래프트 경로 판정이 오작동한다)",
+  "\tfor h in history:\n\t\tif int(h.get(\"year\", 0)) == int(entry.get(\"year\", 0)):\n\t\t\treturn history",
+  ""
+ ],
+ [
+  "연도 기록에 소속을 안 적는다 (어디서 뛰었는지가 사라진다)",
+  "\t\t\t\"team_id\": npc.get(\"team_id\", \"\"),",
+  "\t\t\t\"team_id\": \"\","
+ ],
+ [
+  "연도 기록에 리그를 안 적는다 (고졸·대졸을 못 가른다)",
+  "\t\t\t\"league_id\": league,",
+  "\t\t\t\"league_id\": \"\","
+ ],
+ [
+  "나이를 안 올린다 (세대교체가 멈춘다)",
+  "\t\tn[\"age\"] = int(n.get(\"age\", 0)) + 1",
+  ""
+ ],
+ [
+  "은퇴자도 나이를 센다 (은퇴 나이가 기록에 안 남는다)",
+  "\t\tif n.get(\"career_status\", \"\") == \"retired\" \\\n\t\t\t\tor n.get(\"league_id\", \"\") == RETIRED_LEAGUE:\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "프로도 학년을 올린다 (없는 학년이 생긴다)",
+  "\t\tif not SCHOOL_LEAGUES.has(league) \\",
+  "\t\tif false \\"
+ ]
+]
