@@ -1,0 +1,107 @@
+[
+ [
+  "자리를 안 세고 늘 열어 둔다 (정원 넘은 팀이 영입한다)",
+  "\treturn maxi(RosterMaintenance.roster_max_of(league_id) - roster.size(), 0)",
+  "\treturn 99"
+ ],
+ [
+  "자리가 음수로 간다",
+  "\treturn maxi(RosterMaintenance.roster_max_of(league_id) - roster.size(), 0)",
+  "\treturn RosterMaintenance.roster_max_of(league_id) - roster.size()"
+ ],
+ [
+  "주인공이 보상선수가 된다 (사용자가 정할 일을 세계가 정한다)",
+  "\t\tif p.get(\"is_protagonist\", false):\n\t\t\tcontinue\n\t\tif p.get(\"is_foreign\", false):\n\t\t\tcontinue",
+  "\t\tif p.get(\"is_foreign\", false):\n\t\t\tcontinue"
+ ],
+ [
+  "외국인이 보상선수가 된다 (매 FA마다 용병이 한 명씩 옮긴다)",
+  "\t\tif p.get(\"is_foreign\", false):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "보상 후보의 값을 투구 OVR로만 본다 (보상선수가 늘 투수다)",
+  "\t\tout.append({\"id\": String(p.get(\"id\", \"\")), \"ovr\": Contract.core_ovr(p)})",
+  "\t\tout.append({\"id\": String(p.get(\"id\", \"\")), \"ovr\": float(p.get(\"pitching\", {}).get(\"ovr\", 0.0))})"
+ ],
+ [
+  "주인공이 FA 시장에 나온다",
+  "\t\t\tif p.get(\"is_protagonist\", false):\n\t\t\t\tcontinue\n\t\t\tif Contract.is_fa_eligible(p):",
+  "\t\t\tif Contract.is_fa_eligible(p):"
+ ],
+ [
+  "자격을 안 보고 전원을 시장에 올린다",
+  "\t\t\tif Contract.is_fa_eligible(p):\n\t\t\t\tout.append(p)",
+  "\t\t\tout.append(p)"
+ ],
+ [
+  "다른 리그 선수도 섞인다",
+  "\t\t\tif String(p.get(\"league_id\", \"\")) != league_id:\n\t\t\t\tcontinue",
+  ""
+ ],
+ [
+  "리그 연봉을 안 모은다 (전원이 중간 백분위가 되어 A등급이 사라진다)",
+  "\t\t\tif String(p.get(\"league_id\", \"\")) == league_id and p.has(\"salary\"):\n\t\t\t\tout.append(int(p[\"salary\"]))",
+  "\t\t\tpass"
+ ],
+ [
+  "옮길 때 옛 팀에서 안 뺀다 (같은 선수가 두 군데 있는다)",
+  "\t\t\troster.remove_at(i)",
+  ""
+ ],
+ [
+  "옮길 때 새 팀에 안 넣는다 (선수가 통째로 사라진다)",
+  "\t\t\trosters[to_team].append(p)",
+  ""
+ ],
+ [
+  "소속을 안 바꾼다 (옮겨도 옛 팀 소속으로 집계된다)",
+  "\t\t\tp[\"team_id\"] = to_team\n\t\t\tp[\"league_id\"] = to_league",
+  ""
+ ],
+ [
+  "새 계약을 안 붙인다 (매년 같은 사람이 다시 FA가 된다)",
+  "\t\tp[\"salary\"] = int(s[\"salary\"])\n\t\tp[\"contract_years\"] = int(s[\"years\"])",
+  ""
+ ],
+ [
+  "계약 연수만 안 붙인다",
+  "\t\tp[\"contract_years\"] = int(s[\"years\"])",
+  ""
+ ],
+ [
+  "이적을 경력에 안 남긴다",
+  "\t\tvar events: Array = p.get(\"career_events\", [])\n\t\tevents.append({\"year\": int(state.get(\"season_year\", 0)), \"type\": \"fa_signed\",",
+  "\t\tvar events: Array = []\n\t\tevents.append({\"year\": int(state.get(\"season_year\", 0)), \"type\": \"fa_signed\","
+ ],
+ [
+  "보상선수를 실제로 안 옮긴다",
+  "\t\t\tvar c: Dictionary = _move(world, comp, String(s[\"from_team_id\"]), league_id)",
+  "\t\t\tvar c: Dictionary = {}"
+ ],
+ [
+  "미계약을 표시 안 한다 (진로 배정이 못 찾는다)",
+  "\t\t\t\tp[\"fa_unsigned\"] = true",
+  "\t\t\t\tpass"
+ ],
+ [
+  "성적 압박을 입찰에 안 넘긴다 (전 팀이 같은 세기로 부른다)",
+  "\t\t\t\"win_now_pressure\": float(TeamProfile.of(world, tid)[\"win_now_pressure\"]),",
+  "\t\t\t\"win_now_pressure\": 50.0,"
+ ],
+ [
+  "예산 지수를 안 자른다 (구단주 성향 하나가 시장을 지배한다)",
+  "\t\t\t\"budget_index\": clampf(\n\t\t\t\tfloat(TeamProfile.of(world, tid)[\"owner_spending_willingness\"]) / 50.0,\n\t\t\t\t0.8, 1.35),",
+  "\t\t\t\"budget_index\": float(TeamProfile.of(world, tid)[\"owner_spending_willingness\"]) / 50.0,"
+ ],
+ [
+  "리그를 흐름 하나로 이어 돌린다 (앞 리그의 자격자 수가 뒤 리그를 민다)",
+  "\tfor lid in TeamProfile.PRO_LEAGUES:\n\t\t# ⚠ **리그마다 다른 흐름이다.** 하나로 두면 리그 하나에 자격자가\n\t\t# 하나 늘고 줄 때마다 다른 리그의 결과가 통째로 밀린다\n\t\trng.seed = Rng.mix([\"fa\", lid, state.get(\"seed\", 0),\n\t\t\tstate.get(\"season_year\", 0)])",
+  "\trng.seed = Rng.mix([\"fa\", state.get(\"seed\", 0), state.get(\"season_year\", 0)])\n\tfor lid in TeamProfile.PRO_LEAGUES:"
+ ],
+ [
+  "리그 하나만 돌린다 (해외 FA가 영영 안 열린다)",
+  "\tfor lid in TeamProfile.PRO_LEAGUES:",
+  "\tfor lid in [\"LEAGUE_KBL\"]:"
+ ]
+]

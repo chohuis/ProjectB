@@ -1,0 +1,37 @@
+{
+ "_note": "02 generation_rules.json의 salaryRules 그대로. 키 이름만 04 규칙(snake_case)으로.",
+ "_comment": "연봉 = base(OVR) × 연차계수 × 나이보정 × 팀지수 × 리그배수, 리그별 최저연봉으로 바닥. 단위 만원",
+ "ovr_pivot": 50,
+ "ovr_growth": 1.1,
+ "ovr_base": 3000,
+ "service": [
+  {"until": 2, "factor": 0.4, "_note": "신인·저연차 — 구단이 정한다"},
+  {"until": 6, "factor": 0.7, "_note": "연봉조정 신청 전"},
+  {"until": 11, "factor": 1.0, "_note": "FA 자격권"},
+  {"until": 99, "factor": 1.1, "_note": "베테랑 프리미엄"}
+ ],
+ "aging_from_age": 34,
+ "aging_per_year": 0.06,
+ "team_index_min": 0.8,
+ "team_index_max": 1.35,
+ "jitter": 0.1,
+ "league_mult": {
+  "LEAGUE_KBL": 1.0,
+  "LEAGUE_KBL_FARM": 0.3,
+  "LEAGUE_INDEPENDENT": 0.14,
+  "LEAGUE_ABL": 3.5,
+  "LEAGUE_ABL_FARM": 1.05,
+  "LEAGUE_JBL": 2.0,
+  "LEAGUE_JBL_FARM": 0.6
+ },
+ "_league_mult_note": "해외 팜은 02에 없다 — 1군의 0.3배(국내 1군:2군과 같은 비)로 파생했다. 02는 해외 팜 선수의 연봉을 아예 안 만들었다",
+ "min_salary": {
+  "LEAGUE_KBL": 3000,
+  "LEAGUE_KBL_FARM": 3000,
+  "LEAGUE_INDEPENDENT": 1200,
+  "LEAGUE_ABL": 8000,
+  "LEAGUE_ABL_FARM": 2400,
+  "LEAGUE_JBL": 6000,
+  "LEAGUE_JBL_FARM": 1800
+ }
+}

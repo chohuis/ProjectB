@@ -46,8 +46,22 @@ func test_the_phase_list_is_exactly_this() -> void:
 		"awards",
 		"aging",
 		"team_profiles",
+		"contracts",
+		"free_agency",
 		"background",
 	])
+
+
+## ⚠ **계약 갱신이 FA보다 먼저다.** 안 줄이면 아무도 계약이 끝나지 않아
+## 시장이 영영 비어 있다
+func test_contracts_run_before_free_agency() -> void:
+	assert_int(_at("contracts")).is_less(_at("free_agency"))
+
+
+## ⚠ **FA는 구단 성향 뒤다.** 입찰이 성적 압박과 구단주 씀씀이를 읽는다 —
+## 앞에 두면 전 팀이 중립값으로 입찰한다
+func test_free_agency_runs_after_the_profiles() -> void:
+	assert_int(_at("team_profiles")).is_less(_at("free_agency"))
 
 
 func test_phase_ids_are_unique() -> void:

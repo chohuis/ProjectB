@@ -16,7 +16,7 @@ func run(log_line: Callable, _fail: Callable, years: int = 5,
 	log_line.call("시즌 종료 계측 — %d해 · 씨앗 %d" % [years, seed_value])
 	log_line.call("선수 %d명으로 시작" % SeasonRunner.all_players(s).size())
 	log_line.call("")
-	log_line.call("  해   졸업   지명  미지명  강등  방출   은퇴  독립  포기    총원")
+	log_line.call("  해   졸업   지명  미지명  강등  방출   은퇴  독립  포기   FA  미계약    총원")
 
 	var year: int = 2027
 	for i in years:
@@ -25,10 +25,11 @@ func run(log_line: Callable, _fail: Callable, years: int = 5,
 		var out: Dictionary = SeasonRunner.run(s)
 		var ms: float = float(Time.get_ticks_usec() - t0) / 1000.0
 		var m: Dictionary = out["summary"]
-		log_line.call("%6d %6d %6d %7d %5d %5d %6d %5d %5d %7d  (%.0fms)" % [
+		log_line.call("%6d %6d %6d %7d %5d %5d %6d %5d %5d %4d %6d %7d  (%.0fms)" % [
 			year, m["graduated"], m["drafted"], m["undrafted"],
 			m.get("demoted", 0), m.get("released", 0), m["retired"],
 			m.get("placed", 0), m.get("gave_up", 0),
+			m.get("fa_signed", 0), m.get("fa_unsigned", 0),
 			SeasonRunner.all_players(s).size(), ms,
 		])
 		year += 1

@@ -66,6 +66,15 @@ const PHASES: Array[Dictionary] = [
 	# 구조적으로 0팀**이었다 — 실측 트레이드 9 → 8 → 2 → 1 → 1 → 0
 	{"id": "team_profiles", "label": "구단 성향 갱신", "optional": false},
 
+	# 계약 — 연차가 오르고 계약이 한 해 줄어든다.
+	#
+	# ⚠ **FA보다 먼저다.** 안 줄이면 아무도 계약이 끝나지 않아 시장이 영영
+	# 비어 있다. 계약이 없는 사람(신인·이적자)에게는 여기서 붙인다
+	{"id": "contracts", "label": "계약 갱신", "optional": false},
+
+	# FA — **구단 성향 뒤다.** 입찰이 성적 압박과 구단주 씀씀이를 읽는다
+	{"id": "free_agency", "label": "FA", "optional": false},
+
 	# 배경 리그 마무리
 	{"id": "background", "label": "배경 처리", "optional": false},
 ]

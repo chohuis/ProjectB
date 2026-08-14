@@ -128,7 +128,21 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["profiles"] = TeamProfile.update_all(state)
 	done.append("team_profiles")
 
-	# ⑩ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
+	# ⑩ 계약 — **연차가 오르고 계약이 한 해 줄어든다.**
+	#
+	# ⚠ **FA보다 먼저다.** 안 줄이면 아무도 계약이 끝나지 않아 시장이 영영
+	# 비어 있다. 계약이 없는 사람(신인·이적자)에게는 여기서 붙인다
+	Contract.advance_year(all_players(state))
+	summary["contracts"] = Contract.ensure_world(state)
+	done.append("contracts")
+
+	# ⑪ FA — **구단 성향 뒤다.** 입찰이 성적 압박을 읽는다
+	var fa: Dictionary = FaRunner.run(state)
+	summary["fa_signed"] = int(fa["signings"])
+	summary["fa_unsigned"] = int(fa["unsigned"])
+	done.append("free_agency")
+
+	# ⑫ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
 	# 텅 비었다(졸업만 하고 들어오는 사람이 없다)
 	summary["freshmen"] = _intake(state, world, year)
 	done.append("background")

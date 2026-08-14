@@ -1,0 +1,142 @@
+[
+ [
+  "입단 경로 비중이 뒤집혔다 (대졸이 고졸보다 많아진다 — 02의 실제 결함)",
+  "const ENTRY_WEIGHT_HS: float = 55.0\nconst ENTRY_WEIGHT_UNIV: float = 30.0",
+  "const ENTRY_WEIGHT_HS: float = 30.0\nconst ENTRY_WEIGHT_UNIV: float = 55.0"
+ ],
+ [
+  "전원이 고졸 입단이다 (연차 분포가 사라진다)",
+  "\tt -= ENTRY_WEIGHT_HS\n\tif t <= 0.0:\n\t\treturn ENTRY_HS_AGE",
+  "\treturn ENTRY_HS_AGE"
+ ],
+ [
+  "독립 입단이 한 나이에 몰린다",
+  "\tvar span: int = ENTRY_INDIE_MAX - ENTRY_INDIE_MIN\n\treturn ENTRY_INDIE_MIN + int(r2 * float(span + 1))",
+  "\treturn ENTRY_INDIE_MIN"
+ ],
+ [
+  "연차가 음수가 된다 (스물 이전 입단이 −1년차를 만든다)",
+  "\treturn maxi(age - entry_age(r, r2), 0)",
+  "\treturn age - entry_age(r, r2)"
+ ],
+ [
+  "나이가 연차에 안 닿는다 (전원 같은 연차)",
+  "\treturn maxi(age - entry_age(r, r2), 0)",
+  "\treturn maxi(25 - entry_age(r, r2), 0)"
+ ],
+ [
+  "연차 구간을 아래에서부터 찾는다 (전원이 베테랑 프리미엄)",
+  "\tfor b in rules().get(\"service\", []):\n\t\tif years <= int(b[\"until\"]):\n\t\t\treturn float(b[\"factor\"])",
+  "\tfor b in rules().get(\"service\", []):\n\t\tif years >= int(b[\"until\"]):\n\t\t\treturn float(b[\"factor\"])"
+ ],
+ [
+  "연봉 곡선이 선형이다 (FA 등급이 사실상 무작위가 된다)",
+  "\tvar base: float = float(r.get(\"ovr_base\", 3000.0)) \\\n\t\t* pow(float(r.get(\"ovr_growth\", 1.1)), ovr - float(r.get(\"ovr_pivot\", 50.0)))",
+  "\tvar base: float = float(r.get(\"ovr_base\", 3000.0)) * ovr / 50.0"
+ ],
+ [
+  "연차가 연봉에 안 닿는다",
+  "\tvar svc: float = service_factor(years_of_service)",
+  "\tvar svc: float = 1.0"
+ ],
+ [
+  "노장이 안 깎인다",
+  "\tif age > from_age:\n\t\taging = maxf(1.0 - float(age - from_age) * float(r.get(\"aging_per_year\", 0.06)), 0.45)",
+  ""
+ ],
+ [
+  "노장 깎임에 하한이 없다 (마흔 넘어 0이 된다)",
+  "\t\taging = maxf(1.0 - float(age - from_age) * float(r.get(\"aging_per_year\", 0.06)), 0.45)",
+  "\t\taging = 1.0 - float(age - from_age) * float(r.get(\"aging_per_year\", 0.06))"
+ ],
+ [
+  "팀 예산 지수를 안 자른다 (지수 하나가 리그를 망친다)",
+  "\tvar team: float = clampf(team_index, float(r.get(\"team_index_min\", 0.8)),\n\t\tfloat(r.get(\"team_index_max\", 1.35)))",
+  "\tvar team: float = team_index"
+ ],
+ [
+  "팀 사정을 안 본다",
+  "\tvar raw: float = base * svc * aging * team * mult * jitter",
+  "\tvar raw: float = base * svc * aging * mult * jitter"
+ ],
+ [
+  "리그 배수를 안 본다 (ABL과 2군 연봉이 같아진다)",
+  "\tvar mult: float = float(r.get(\"league_mult\", {}).get(league_id, 1.0))",
+  "\tvar mult: float = 1.0"
+ ],
+ [
+  "최저연봉 바닥이 없다 (아래쪽 연봉이 0에 뭉친다)",
+  "\tvar salary: int = int(roundf(maxf(raw, floor_salary)))",
+  "\tvar salary: int = int(roundf(raw))"
+ ],
+ [
+  "계약 연수가 능력과 무관하다",
+  "\tif ovr >= 75.0:\n\t\tcontract_years = 3 + int(rng.randf() * 3.0)\n\telif ovr >= 68.0:\n\t\tcontract_years = 2 + int(rng.randf() * 3.0)\n\telif ovr >= 55.0:\n\t\tcontract_years = 1 + int(rng.randf() * 2.0)\n\telse:\n\t\tcontract_years = 1",
+  "\tcontract_years = 2"
+ ],
+ [
+  "학교 선수에게도 계약을 붙인다 (고교생이 연봉을 받는다)",
+  "\tif not has_contract(league):\n\t\treturn false",
+  ""
+ ],
+ [
+  "이미 있는 계약을 덮어쓴다 (해마다 연봉이 초기화된다)",
+  "\tif p.has(\"salary\"):\n\t\treturn false",
+  ""
+ ],
+ [
+  "야수도 투구 OVR로 연봉을 정한다",
+  "\tif String(p.get(\"player_type\", \"pitcher\")) == \"pitcher\":\n\t\treturn float(p.get(\"pitching\", {}).get(\"ovr\", 0.0))\n\treturn float(p.get(\"batting\", {}).get(\"ovr\", 0.0))",
+  "\treturn float(p.get(\"pitching\", {}).get(\"ovr\", 0.0))"
+ ],
+ [
+  "연차를 연봉 뒤에 정한다 (연차가 연봉의 입력인데 늦다)",
+  "\tvar svc: int = service_years(age, rng.randf(), rng.randf())\n\tvar c: Dictionary = estimate(core_ovr(p), league, svc, age, team_index, rng)",
+  "\tvar c: Dictionary = estimate(core_ovr(p), league, 0, age, team_index, rng)\n\tvar svc: int = service_years(age, rng.randf(), rng.randf())"
+ ],
+ [
+  "씨앗을 팀과 안 섞는다 (모든 팀이 같은 연봉표를 갖는다)",
+  "\t\trng.seed = Rng.mix([\"contract\", tid, seed_value])",
+  "\t\trng.seed = Rng.mix([\"contract\", seed_value])"
+ ],
+ [
+  "해가 지나도 계약이 안 줄어든다 (아무도 FA가 안 된다)",
+  "\t\tp[\"contract_years\"] = maxi(int(p.get(\"contract_years\", 1)) - 1, 0)",
+  ""
+ ],
+ [
+  "계약 연수가 음수로 간다",
+  "\t\tp[\"contract_years\"] = maxi(int(p.get(\"contract_years\", 1)) - 1, 0)",
+  "\t\tp[\"contract_years\"] = int(p.get(\"contract_years\", 1)) - 1"
+ ],
+ [
+  "해가 지나도 연차가 안 오른다",
+  "\t\tp[\"pro_service_years\"] = int(p.get(\"pro_service_years\", 0)) + 1",
+  ""
+ ],
+ [
+  "계약 없는 사람에게도 연차를 붙인다 (고교생이 프로 연차를 갖는다)",
+  "\t\tif not p.has(\"salary\"):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "계약이 남아 있어도 FA가 된다 (매년 전원이 시장에 나온다)",
+  "\tif int(p.get(\"contract_years\", 1)) > 0:\n\t\treturn false",
+  ""
+ ],
+ [
+  "연차를 안 본다 (신인도 FA가 된다)",
+  "\treturn int(p.get(\"pro_service_years\", 0)) \\\n\t\t>= TeamProfile.fa_eligibility_years(String(p.get(\"league_id\", \"\")))",
+  "\treturn true"
+ ],
+ [
+  "자격 연수가 리그와 무관하다",
+  "\t\t>= TeamProfile.fa_eligibility_years(String(p.get(\"league_id\", \"\")))",
+  "\t\t>= 5"
+ ],
+ [
+  "계약이 없는 사람도 FA가 된다 (고교생이 FA로 나온다)",
+  "\tif not p.has(\"salary\"):\n\t\treturn false\n\tif int(p.get(\"contract_years\", 1)) > 0:",
+  "\tif int(p.get(\"contract_years\", 1)) > 0:"
+ ]
+]

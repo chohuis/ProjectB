@@ -1,0 +1,122 @@
+[
+ [
+  "연봉 백분위가 뒤집혔다 (최저연봉이 A등급을 받아 보상선수가 딸려 간다)",
+  "\t\tif int(s) > salary:\n\t\t\tbetter += 1",
+  "\t\tif int(s) < salary:\n\t\t\tbetter += 1"
+ ],
+ [
+  "리그 연봉을 모를 때 최고 등급으로 본다",
+  "\tif sorted_desc.is_empty():\n\t\treturn 50.0",
+  "\tif sorted_desc.is_empty():\n\t\treturn 0.0"
+ ],
+ [
+  "등급 구간을 위에서부터 안 찾는다 (전원이 C등급)",
+  "\tfor g in table:\n\t\tif percentile <= float(g[\"until_percent\"]):\n\t\t\treturn g",
+  "\tfor g in table:\n\t\tif percentile >= float(g[\"until_percent\"]):\n\t\t\treturn g"
+ ],
+ [
+  "구간 밖이면 등급이 없다 (`resolve`가 빈 사전을 읽다 터진다)",
+  "\treturn FALLBACK_GRADE",
+  "\treturn {}"
+ ],
+ [
+  "폼을 안 본다 (최근에 잘한 선수가 뒤로 밀린다)",
+  "\treturn float(p.get(\"ovr\", 0.0)) + float(p.get(\"form\", 0.0)) * FORM_WEIGHT",
+  "\treturn float(p.get(\"ovr\", 0.0))"
+ ],
+ [
+  "약한 선수부터 팀을 고른다 (좋은 선수가 자리를 못 얻는다)",
+  "\tpool.sort_custom(func(a, b) -> bool: return rating(a) > rating(b))",
+  "\tpool.sort_custom(func(a, b) -> bool: return rating(a) < rating(b))"
+ ],
+ [
+  "순서를 안 매긴다",
+  "\tpool.sort_custom(func(a, b) -> bool: return rating(a) > rating(b))",
+  ""
+ ],
+ [
+  "자리가 없는 팀도 입찰한다 (정원 넘은 팀이 영입한다)",
+  "\t\t\tif int(t.get(\"open_slots\", 0)) <= 0:\n\t\t\t\tcontinue",
+  ""
+ ],
+ [
+  "원소속 프리미엄이 없다 (FA가 거의 항상 팀을 옮긴다)",
+  "const HOME_BONUS: float = 0.15",
+  "const HOME_BONUS: float = 0.0"
+ ],
+ [
+  "성적 압박이 입찰에 안 닿는다",
+  "\t\t\t\t* (1.0 + float(t.get(\"win_now_pressure\", 0.0)) / PRESSURE_DIVISOR) \\",
+  "\t\t\t\t* 1.0 \\"
+ ],
+ [
+  "예산이 입찰에 안 닿는다",
+  "\t\t\tvar bid: float = float(t.get(\"budget_index\", 1.0)) \\",
+  "\t\t\tvar bid: float = 1.0 \\"
+ ],
+ [
+  "제일 낮은 입찰이 이긴다",
+  "\t\t\tif bid > best_bid:",
+  "\t\t\tif bid < best_bid:"
+ ],
+ [
+  "계약이 성사돼도 자리가 안 줄어든다 (한 팀이 전원을 데려간다)",
+  "\t\tif by_id.has(best_id):\n\t\t\tby_id[best_id][\"open_slots\"] = int(by_id[best_id][\"open_slots\"]) - 1",
+  ""
+ ],
+ [
+  "입찰 세기가 연봉에 안 닿는다",
+  "\t\tvar salary: int = int(roundf(float(p.get(\"salary\", 0))\n\t\t\t* (SALARY_BASE + best_bid * SALARY_BID_WEIGHT)))",
+  "\t\tvar salary: int = int(p.get(\"salary\", 0))"
+ ],
+ [
+  "나이가 계약 연수를 안 가른다",
+  "\t\tvar years: int = 1 if age >= 34 else (2 if age >= 31 else 3)",
+  "\t\tvar years: int = 3"
+ ],
+ [
+  "나이 구간이 뒤집혔다 (노장이 장기계약을 받는다)",
+  "\t\tvar years: int = 1 if age >= 34 else (2 if age >= 31 else 3)",
+  "\t\tvar years: int = 3 if age >= 34 else (2 if age >= 31 else 1)"
+ ],
+ [
+  "재계약에도 보상이 붙는다 (자기 선수를 잡을 때마다 하나를 잃는다)",
+  "\t\tif best_id != from_team:",
+  "\t\tif true:"
+ ],
+ [
+  "보상금이 등급과 무관하다",
+  "\t\t\tcomp_money = int(roundf(float(p.get(\"salary\", 0))\n\t\t\t\t* float(grade[\"money_pct\"]) / 100.0))",
+  "\t\t\tcomp_money = 0"
+ ],
+ [
+  "C등급도 보상선수를 낸다",
+  "\t\t\tif protected_count > 0 and by_id.has(best_id):",
+  "\t\t\tif by_id.has(best_id):"
+ ],
+ [
+  "보호선수를 안 지킨다 (팀 최고 선수가 보상으로 나간다)",
+  "\t\t\t\tif roster.size() > protected_count:\n\t\t\t\t\tcomp_id = String(roster[protected_count][\"id\"])",
+  "\t\t\t\tif roster.size() > 0:\n\t\t\t\t\tcomp_id = String(roster[0][\"id\"])"
+ ],
+ [
+  "보상선수를 능력 순으로 안 고른다",
+  "\t\t\t\troster.sort_custom(func(a, b) -> bool:\n\t\t\t\t\treturn float(a[\"ovr\"]) > float(b[\"ovr\"]))",
+  ""
+ ],
+ [
+  "같은 사람이 두 번 보상선수가 된다",
+  "\t\t\t\t\tif not taken.has(String(r[\"id\"])):\n\t\t\t\t\t\troster.append(r)",
+  "\t\t\t\t\troster.append(r)"
+ ],
+ [
+  "보상선수가 빠진 팀에 자리가 안 생긴다 (로스터가 마른다)",
+  "\t\tif not comp_id.is_empty() and by_id.has(from_team):\n\t\t\tby_id[from_team][\"open_slots\"] = int(by_id[from_team].get(\"open_slots\", 0)) + 1",
+  ""
+ ],
+ [
+  "자리가 없어도 미계약으로 안 남긴다 (조용히 사라진다)",
+  "\t\tif best_id.is_empty():\n\t\t\tunsigned.append(String(p[\"id\"]))\n\t\t\tcontinue",
+  "\t\tif best_id.is_empty():\n\t\t\tcontinue"
+ ]
+]
