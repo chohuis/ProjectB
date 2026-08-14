@@ -162,7 +162,16 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["by_league"] = merged
 	done.append("free_agency")
 
-	# ⑫ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
+	# ⑫ 트레이드 — **FA 뒤다.** 시장에서 못 채운 자리를 거래로 메운다.
+	#
+	# ⚠ 구단 성향이 서야 buyer/seller가 갈린다 — 02는 전 팀이 중립이라
+	# **buyer가 구조적으로 0팀**이었고 거래가 9 → 8 → 2 → 1 → 1 → 0으로 말랐다
+	var trades: Dictionary = TradeRunner.run(state)
+	summary["trades"] = int(trades["done"])
+	summary["trade_moved"] = int(trades["moved"])
+	done.append("trades")
+
+	# ⑬ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
 	# 텅 비었다(졸업만 하고 들어오는 사람이 없다)
 	summary["freshmen"] = _intake(state, world, year)
 	done.append("background")

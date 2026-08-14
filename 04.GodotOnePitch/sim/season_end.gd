@@ -75,6 +75,12 @@ const PHASES: Array[Dictionary] = [
 	# FA — **구단 성향 뒤다.** 입찰이 성적 압박과 구단주 씀씀이를 읽는다
 	{"id": "free_agency", "label": "FA", "optional": false},
 
+	# 트레이드 — **FA 뒤다.** 시장에서 못 채운 자리를 거래로 메운다.
+	#
+	# ⚠ 구단 성향이 서야 buyer/seller가 갈린다 — 02는 전 팀이 중립이라
+	# buyer가 구조적으로 0팀이었고 거래가 9 → 8 → 2 → 1 → 1 → 0으로 말랐다
+	{"id": "trades", "label": "트레이드", "optional": false},
+
 	# 배경 리그 마무리
 	{"id": "background", "label": "배경 처리", "optional": false},
 ]

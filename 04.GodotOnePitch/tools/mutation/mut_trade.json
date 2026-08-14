@@ -1,0 +1,187 @@
+[
+ [
+  "유망주를 나이로 가른다 (늦게 들어온 사람이 영영 유망주가 아니다)",
+  "\treturn int(a.get(\"service_years\", 0)) <= PROSPECT_SERVICE",
+  "\treturn int(a.get(\"age\", 30)) <= 23"
+ ],
+ [
+  "유망주 경계가 없다 (전원이 유망주)",
+  "const PROSPECT_SERVICE: int = 2",
+  "const PROSPECT_SERVICE: int = 99"
+ ],
+ [
+  "유망주도 자리 수에 센다 (유망주만 많은 팀이 주전을 내놓는다)",
+  "\t\tif String(p.get(\"position\", \"\")) == pos and not is_prospect(p):\n\t\t\tn += 1",
+  "\t\tif String(p.get(\"position\", \"\")) == pos:\n\t\t\tn += 1"
+ ],
+ [
+  "동점에서 순서가 흔들린다 (재현이 무너진다)",
+  "\t\t\treturn oa > ob\n\t\t# ⚠ **동점 갈래가 없으면 재현이 무너진다**\n\t\treturn String(a.get(\"id\", \"\")) < String(b.get(\"id\", \"\")))",
+  "\t\t\treturn oa > ob\n\t\treturn false)"
+ ],
+ [
+  "약한 순 정렬을 뒤집기로 만든다 (동점 갈래까지 뒤집혀 제일 큰 id가 뽑힌다)",
+  "\tvar out: Array = players.duplicate()\n\tout.sort_custom(func(a, b) -> bool:\n\t\tvar oa: float = float(a.get(\"ovr\", 0.0))\n\t\tvar ob: float = float(b.get(\"ovr\", 0.0))\n\t\tif oa != ob:\n\t\t\treturn oa < ob\n\t\treturn String(a.get(\"id\", \"\")) < String(b.get(\"id\", \"\")))\n\treturn out",
+  "\tvar out: Array = _by_ovr_desc(players)\n\tout.reverse()\n\treturn out"
+ ],
+ [
+  "계약 만료 선점이 없다 (FA로 잃기 전에 못 바꾼다)",
+  "\tout.append_array(_expiring(a_id, b_id, a_players, b_players))\n\tout.append_array(_expiring(b_id, a_id, b_players, a_players))",
+  ""
+ ],
+ [
+  "한쪽만 계약 만료를 본다",
+  "\tout.append_array(_expiring(b_id, a_id, b_players, a_players))",
+  ""
+ ],
+ [
+  "계약이 남아 있어도 내놓는다",
+  "\t\tif int(p.get(\"contract_years\", 99)) > EXPIRING_YEARS:\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "계약 만료 문턱이 없다 (잡선수까지 오간다)",
+  "const EXPIRING_MIN_SCORE: float = 75.0",
+  "const EXPIRING_MIN_SCORE: float = 0.0"
+ ],
+ [
+  "계약 만료 대가로 유망주가 아닌 사람을 받는다",
+  "\t\t\tif is_prospect(q) and float(q.get(\"ovr\", 0.0)) >= EXPIRING_PROSPECT_OVR:",
+  "\t\t\tif float(q.get(\"ovr\", 0.0)) >= EXPIRING_PROSPECT_OVR:"
+ ],
+ [
+  "자리가 남는지 안 본다 (아무 자리나 거래한다)",
+  "\t\tif a_cnt >= SURPLUS_COUNT and b_cnt <= DEFICIT_COUNT:",
+  "\t\tif true:"
+ ],
+ [
+  "한쪽 팀만 제안한다",
+  "\t\telif b_cnt >= SURPLUS_COUNT and a_cnt <= DEFICIT_COUNT:\n\t\t\tout.append_array(_surplus(b, a, b_players, a_players, pos, b_mode))",
+  ""
+ ],
+ [
+  "남는 자리의 주전을 내놓는다",
+  "\tvar offer: Dictionary = _by_ovr_asc(mine)[0]",
+  "\tvar offer: Dictionary = _by_ovr_desc(mine)[0]"
+ ],
+ [
+  "seller가 유망주를 안 받는다",
+  "\tif mode == \"seller\":",
+  "\tif false:"
+ ],
+ [
+  "seller가 유망주를 하나만 받는다",
+  "const SELLER_BUNDLE_SIZE: int = 2",
+  "const SELLER_BUNDLE_SIZE: int = 1"
+ ],
+ [
+  "seller가 값이 안 맞아도 거래한다 (한쪽이 손해를 본다)",
+  "\t\t\tif absf(float(offer[\"ovr\"]) - bundle_val) < SELLER_GAP_MAX:",
+  "\t\t\tif true:"
+ ],
+ [
+  "buyer가 즉시전력을 안 요구한다",
+  "\tif mode == \"buyer\":",
+  "\tif false:"
+ ],
+ [
+  "buyer가 유망주도 받는다 (지금 이기려는 팀이 미래를 산다)",
+  "\t\t\tif is_prospect(q):\n\t\t\t\tcontinue",
+  ""
+ ],
+ [
+  "buyer가 나이를 안 본다",
+  "\t\t\tif float(q.get(\"ovr\", 0.0)) >= BUYER_TARGET_OVR \\\n\t\t\t\t\tand int(q.get(\"age\", 99)) <= BUYER_TARGET_AGE_MAX:",
+  "\t\t\tif float(q.get(\"ovr\", 0.0)) >= BUYER_TARGET_OVR:"
+ ],
+ [
+  "buyer 문턱이 없다",
+  "const BUYER_MIN_SCORE: float = 90.0",
+  "const BUYER_MIN_SCORE: float = 0.0"
+ ],
+ [
+  "중립 거래가 없다 (전 팀이 중립인 리그에서 거래가 0건이 된다)",
+  "\tif not want_pos.is_empty():",
+  "\tif false:"
+ ],
+ [
+  "중립이 상대의 남는 자리를 안 본다 (아무 자리나 요구한다)",
+  "\t\tif _count_at(surplus_players, p2) <= DEFICIT_COUNT \\\n\t\t\t\tand _count_at(deficit_players, p2) >= SURPLUS_COUNT:",
+  "\t\tif true:"
+ ],
+ [
+  "중립 문턱이 없다",
+  "const NEUTRAL_MIN_SCORE: float = 60.0",
+  "const NEUTRAL_MIN_SCORE: float = 0.0"
+ ],
+ [
+  "성적 압박이 높아도 미래를 산다",
+  "\tif float(surplus_team.get(\"win_now_pressure\", 50.0)) < REBUILD_PRESSURE \\\n\t\t\tand mode != \"buyer\":",
+  "\tif true:"
+ ],
+ [
+  "buyer도 유망주 번들을 산다",
+  "\t\t\tand mode != \"buyer\":",
+  "\t\t\tand true:"
+ ],
+ [
+  "능력이 자산 값에 안 닿는다",
+  "\tvar v: float = float(a.get(\"ovr\", 0.0)) * OVR_WEIGHT",
+  "\tvar v: float = 50.0 * OVR_WEIGHT"
+ ],
+ [
+  "안정성 높은 구단이 전성기를 안 높인다",
+  "\t\tif age >= PRIME_AGE_MIN and age <= PRIME_AGE_MAX:\n\t\t\tv *= PRIME_BONUS",
+  ""
+ ],
+ [
+  "안정성 높은 구단이 어린 선수를 안 낮춘다",
+  "\t\tif age < YOUNG_AGE:\n\t\t\tv *= YOUNG_PENALTY",
+  ""
+ ],
+ [
+  "육성 지향이 어린 선수를 안 높인다",
+  "\t\tif age <= YOUNG_AGE:\n\t\t\tv *= DEV_YOUNG_BONUS",
+  ""
+ ],
+ [
+  "육성 지향이 노장을 안 낮춘다",
+  "\t\tif age > DEV_OLD_AGE:\n\t\t\tv *= DEV_OLD_PENALTY",
+  ""
+ ],
+ [
+  "성적 압박이 즉시전력을 안 높인다",
+  "\t\tif float(a.get(\"ovr\", 0.0)) >= NOW_OVR and age >= NOW_AGE:\n\t\t\tv *= NOW_BONUS",
+  ""
+ ],
+ [
+  "성적 압박이 유망주를 안 낮춘다",
+  "\t\tif is_prospect(a):\n\t\t\tv *= PROSPECT_PENALTY",
+  ""
+ ],
+ [
+  "모자란 자리를 안 쳐준다",
+  "\tif needs.has(String(a.get(\"position\", \"\"))):\n\t\tv += NEED_BONUS",
+  ""
+ ],
+ [
+  "연봉이 값을 안 깎는다 (팀들이 연봉만 주고받는다)",
+  "\treturn v - burden * BURDEN_WEIGHT",
+  "\treturn v"
+ ],
+ [
+  "주고받는 방향이 뒤집혔다 (손해 보는 거래를 받아들인다)",
+  "\tvar net: float = get_val - give",
+  "\tvar net: float = give - get_val"
+ ],
+ [
+  "받아들일 확률이 0~1을 벗어난다",
+  "\treturn {\"net\": net, \"accept_probability\": clampf(\n\t\tACCEPT_BASE + net / ACCEPT_SCALE, ACCEPT_MIN, ACCEPT_MAX)}",
+  "\treturn {\"net\": net, \"accept_probability\": ACCEPT_BASE + net / ACCEPT_SCALE}"
+ ],
+ [
+  "무엇이든 받아들인다",
+  "const ACCEPT_THRESHOLD: float = 0.35",
+  "const ACCEPT_THRESHOLD: float = 0.0"
+ ]
+]

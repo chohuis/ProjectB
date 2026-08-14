@@ -109,9 +109,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       — FA 미계약자도 같은 경로를 탄다
 - [x] **A-4** 2단계 방출 — 정원 안이어도 성적·연봉·뎁스·나이로 거른다
       — 방출자는 드래프트 풀로 보내 미지명자와 같은 경로를 탄다(02도 그렇다)
-- [ ] **A-5** 트레이드
-      — 원본: `team_engine.rs`의 `generate_trade_proposals`(390줄) · `eval_trade_value`
-      — 구단 성향이 섰으니 buyer/seller가 이제 실제로 갈린다
+- [x] **A-5** 트레이드 — 다섯 갈래 · 실측 연 15건(리그당 상한 5 × 3리그)
+      — 계약 만료 선점 · seller(유망주 번들) · buyer(즉시전력) · 중립 맞교환 ·
+        리빌딩 번들. `TeamProfile`이 모드를 정한다
+      — ⚠ **못 옮긴 갈래 둘** — 04에 데이터가 없다:
+        · **부상 긴급 보강** — 자리별 부상자 목록(`injured_positions`)이 필요하다
+        · **선수 야망 이적** — `personality.ambition`이 필요하다
+        B 단계에서 부상·성격이 붙으면 그때 갈래를 늘린다
 
 ## B. 미이관 usecases
 

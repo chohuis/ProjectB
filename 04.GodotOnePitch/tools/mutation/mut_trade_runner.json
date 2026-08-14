@@ -1,0 +1,132 @@
+[
+ [
+  "주인공을 자산 풀에 넣는다 (세계가 진로를 대신 정한다)",
+  "\t\tif p.get(\"is_protagonist\", false):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "야수도 투구 OVR로 값이 매겨진다 (야수가 늘 헐값이다)",
+  "\t\t\t\"ovr\": Contract.core_ovr(p),",
+  "\t\t\t\"ovr\": float(p.get(\"pitching\", {}).get(\"ovr\", 0.0)),"
+ ],
+ [
+  "연차를 안 싣는다 (전원이 유망주가 된다)",
+  "\t\t\t\"service_years\": int(p.get(\"pro_service_years\", 0)),",
+  "\t\t\t\"service_years\": 0,"
+ ],
+ [
+  "계약 연수를 안 싣는다 (계약 만료 선점이 전원에게 걸린다)",
+  "\t\t\t\"contract_years\": int(p.get(\"contract_years\", 0)),",
+  "\t\t\t\"contract_years\": 0,"
+ ],
+ [
+  "연봉을 안 싣는다 (가치 평가에서 연봉 부담이 사라진다)",
+  "\t\t\t\"salary\": int(p.get(\"salary\", 0)),\n\t\t\t\"contract_years\": int(p.get(\"contract_years\", 0)),",
+  "\t\t\t\"salary\": 0,\n\t\t\t\"contract_years\": int(p.get(\"contract_years\", 0)),"
+ ],
+ [
+  "연봉 총액을 안 센다",
+  "\t\tn += int(p.get(\"salary\", 0))",
+  "\t\tpass"
+ ],
+ [
+  "모자란 자리를 거꾸로 본다 (남아도는 자리를 더 달라고 한다)",
+  "\t\tif n <= Trade.DEFICIT_COUNT:\n\t\t\tout.append(pos)",
+  "\t\tif n > Trade.DEFICIT_COUNT:\n\t\t\tout.append(pos)"
+ ],
+ [
+  "유망주도 자리 수에 센다",
+  "\t\t\tif String(a[\"position\"]) == pos and not Trade.is_prospect(a):",
+  "\t\t\tif String(a[\"position\"]) == pos:"
+ ],
+ [
+  "전 팀이 중립이다 (02에서 거래가 마른 모습)",
+  "\tif TeamProfile.is_buyer(world, team_id, rank, total):\n\t\treturn \"buyer\"\n\tif TeamProfile.is_seller(world, team_id, rank, total):\n\t\treturn \"seller\"",
+  ""
+ ],
+ [
+  "buyer 판정을 안 본다",
+  "\tif TeamProfile.is_buyer(world, team_id, rank, total):\n\t\treturn \"buyer\"",
+  ""
+ ],
+ [
+  "seller 판정을 안 본다",
+  "\tif TeamProfile.is_seller(world, team_id, rank, total):\n\t\treturn \"seller\"",
+  ""
+ ],
+ [
+  "이득이 작은 제안부터 본다 (좋은 거래가 밀린다)",
+  "\t\tif not is_equal_approx(x[\"score\"], y[\"score\"]):\n\t\t\treturn x[\"score\"] > y[\"score\"]",
+  "\t\tif not is_equal_approx(x[\"score\"], y[\"score\"]):\n\t\t\treturn x[\"score\"] < y[\"score\"]"
+ ],
+ [
+  "한 해에 같은 사람이 여러 번 옮긴다",
+  "\t\tvar ids: Array = p[\"offering_ids\"] + p[\"requesting_ids\"]\n\t\tvar already: bool = false\n\t\tfor id in ids:\n\t\t\tif moved_ids.has(id):\n\t\t\t\talready = true\n\t\tif already:\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "옮긴 사람을 기록 안 한다 (한 해 한 번 규칙이 죽는다)",
+  "\t\t\t\tmoved_ids[String(id)] = true\n\t\tfor id in p[\"requesting_ids\"]:",
+  "\t\tfor id in p[\"requesting_ids\"]:"
+ ],
+ [
+  "리그 거래 상한이 없다 (하루에 리그가 통째로 갈린다)",
+  "\t\tif done >= MAX_PER_LEAGUE:\n\t\t\tbreak",
+  ""
+ ],
+ [
+  "정원을 안 본다 (번들 거래가 로스터를 밀어 올린다)",
+  "\t\tif not _fits(world, from_id, to_id, league_id,\n\t\t\t\tp[\"requesting_ids\"].size() - p[\"offering_ids\"].size()):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "정원을 한쪽만 본다",
+  "\tif World.roster_of(world, to_id).size() - delta > limit:\n\t\treturn false",
+  ""
+ ],
+ [
+  "정원 변화 방향이 뒤집혔다",
+  "\tif World.roster_of(world, from_id).size() + delta > limit:\n\t\treturn false\n\tif World.roster_of(world, to_id).size() - delta > limit:\n\t\treturn false",
+  "\tif World.roster_of(world, from_id).size() - delta > limit:\n\t\treturn false\n\tif World.roster_of(world, to_id).size() + delta > limit:\n\t\treturn false"
+ ],
+ [
+  "받는 쪽의 판단을 안 묻는다 (무엇이든 성사된다)",
+  "\t\tif not Trade.accepts(giving, receiving, TeamProfile.of(world, to_id),\n\t\t\t\tint(ctx[to_id][\"payroll\"]), ctx[to_id][\"needs\"]):\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "제안한 쪽이 판단한다 (자기가 하고 싶은 걸 자기가 승인한다)",
+  "\t\tif not Trade.accepts(giving, receiving, TeamProfile.of(world, to_id),\n\t\t\t\tint(ctx[to_id][\"payroll\"]), ctx[to_id][\"needs\"]):",
+  "\t\tif not Trade.accepts(giving, receiving, TeamProfile.of(world, from_id),\n\t\t\t\tint(ctx[from_id][\"payroll\"]), ctx[from_id][\"needs\"]):"
+ ],
+ [
+  "옛 팀에서 안 뺀다 (같은 선수가 두 군데 있는다)",
+  "\t\troster.remove_at(i)",
+  ""
+ ],
+ [
+  "새 팀에 안 넣는다 (선수가 통째로 사라진다)",
+  "\t\tworld[\"rosters\"][to_team].append(p)",
+  ""
+ ],
+ [
+  "소속을 안 바꾼다 (옮겨도 옛 팀 소속으로 집계된다)",
+  "\t\tp[\"team_id\"] = to_team\n\t\tp[\"league_id\"] = league_id",
+  ""
+ ],
+ [
+  "트레이드를 경력에 안 남긴다",
+  "\t\tvar events: Array = p.get(\"career_events\", [])\n\t\tevents.append({\"year\": year, \"type\": \"trade\",",
+  "\t\tvar events: Array = []\n\t\tevents.append({\"year\": year, \"type\": \"trade\","
+ ],
+ [
+  "해가 바뀌어도 '올해 옮긴 사람'을 안 비운다 (둘째 해부터 거래가 0건이 된다)",
+  "\tstate[\"traded_this_year\"] = {}\n\n\tvar total: Dictionary",
+  "\tvar total: Dictionary"
+ ],
+ [
+  "해외 리그를 안 돌린다 (ABL·JBL 거래가 영영 없다)",
+  "\tfor lid in TeamProfile.PRO_LEAGUES:",
+  "\tfor lid in [\"LEAGUE_KBL\"]:"
+ ]
+]

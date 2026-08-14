@@ -48,8 +48,16 @@ func test_the_phase_list_is_exactly_this() -> void:
 		"team_profiles",
 		"contracts",
 		"free_agency",
+		"trades",
 		"background",
 	])
+
+
+## ⚠ **트레이드는 FA 뒤다.** 시장에서 못 채운 자리를 거래로 메운다 —
+## 앞에 두면 FA로 채울 자리를 거래로 먼저 메워 시장이 얇아진다
+func test_trades_run_after_free_agency() -> void:
+	assert_int(_at("free_agency")).is_less(_at("trades"))
+	assert_int(_at("team_profiles")).is_less(_at("trades"))
 
 
 ## ⚠ **계약 갱신이 FA보다 먼저다.** 안 줄이면 아무도 계약이 끝나지 않아

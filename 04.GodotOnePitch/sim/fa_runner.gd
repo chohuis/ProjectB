@@ -113,7 +113,14 @@ static func run_league(state: Dictionary, league_id: String,
 		league_salaries(world, league_id), rng)
 
 	var moved: int = 0
+	var limit: int = RosterMaintenance.roster_max_of(league_id)
 	for s in out["signings"]:
+		# ⚠ **모형과 세계가 벌어질 수 있다.** `FaMarket`은 자리 수를 자기
+		# 장부로 세는데, 원소속을 떠난 사람이 비운 자리를 그 장부가 모른다 —
+		# 보상선수가 그 자리를 채우면 장부에만 자리가 하나 더 생긴다.
+		# **옮기기 전에 진짜 로스터를 본다**
+		if World.roster_of(world, String(s["to_team_id"])).size() >= limit:
+			continue
 		var p: Dictionary = _move(world, String(s["id"]), String(s["to_team_id"]),
 			league_id)
 		if p.is_empty():
