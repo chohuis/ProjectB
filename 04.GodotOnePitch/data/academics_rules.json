@@ -1,0 +1,30 @@
+{
+ "_note": "02 generation_rules.json의 academicsRules 그대로. 키 이름만 04 규칙(snake_case)으로. 코드에 같은 수치를 다시 적지 않는다 — 02 Phase 7에서 그 결함만 15건 나왔다.",
+ "university": {
+  "gpa_max": 4.5,
+  "graduation_gpa": 2.0,
+  "warning_gpa": 1.75,
+  "_warning_note": "학기 GPA가 warning_gpa 미만이면 경고 단계 +1, 이상이면 −1 (0 미만으로 안 내려간다)",
+  "warning_effects": [
+   {"level": 1, "training_eff_mod": 0.9, "blocks_games": false, "repeats": false, "label": "학사 경고"},
+   {"level": 2, "training_eff_mod": 0.85, "blocks_games": true, "repeats": false, "label": "출전 정지"},
+   {"level": 3, "training_eff_mod": 0.85, "blocks_games": true, "repeats": true, "label": "유급"}
+  ],
+  "study_mode_gpa": {
+   "_note": "주당 학업 품질 0~1. 학기 학점 = 평균 품질 × gpa_max × 전공배수. 주차 수로 나누므로 학기 길이가 달라도 공정하다",
+   "focus": 0.85,
+   "normal": 0.55,
+   "rest": 0.3,
+   "sleep": 0.05
+  }
+ },
+ "_majors_note": "전공은 각각 다른 축을 준다. 전부 훈련효율만 주면 고를 이유가 없다",
+ "majors": {
+  "체육교육": {"training_eff_bonus": 0.03, "xp_bonus": {"mentality": 0.15}, "injury_mod": 1.0, "gpa_gain_mult": 1.0, "coach_path": true},
+  "스포츠과학": {"training_eff_bonus": 0.03, "xp_bonus": {"recovery": 0.2}, "injury_mod": 0.88, "gpa_gain_mult": 1.0, "coach_path": false},
+  "일반전공": {"training_eff_bonus": 0.0, "xp_bonus": {}, "injury_mod": 1.0, "gpa_gain_mult": 1.5, "career_net": true}
+ },
+ "_exam_note": "02 master.db 이벤트 EVT_HS_MIDTERM/FINAL · EVT_UNIV_MIDTERM/FINAL의 week_eq 값. 고교·대학이 같은 주다",
+ "midterm_week": 11,
+ "final_week": 38
+}

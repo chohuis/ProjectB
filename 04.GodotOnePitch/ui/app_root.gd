@@ -391,6 +391,10 @@ func _apply_one_week(at_day: int = -1) -> void:
 	if p.is_empty():
 		return
 
+	# 학사 — **학교에 다니는 동안만.** 시험 주에 학기가 확정되고, 경고가
+	# 훈련 효율을 깎는다
+	_apply_academics(p, at_day)
+
 	# ⚠ **훈련 계획이 비어 있어도 돈다.** 주간 자동 회복(−5)이 계획과 무관하게
 	# 붙기 때문이다 — 건너뛰면 아무 훈련도 안 짠 주에 피로가 안 빠진다.
 	#
@@ -418,3 +422,36 @@ func _apply_one_week(at_day: int = -1) -> void:
 		var log: Array = _state.get("training_log", [])
 		log.append({"day": int(_state.get("day", 0)), "gains": out["logs"]})
 		_state["training_log"] = log
+
+
+## 학교에 다니는 리그. **프로에는 학사가 없다**
+const SCHOOL_LEAGUES: Array[String] = ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY"]
+
+
+## 한 주의 학사. **학교에 다니는 동안만 돈다.**
+##
+## ⚠ **시험 주에 학기를 확정한다.** 02는 대학 시험 트리거가 없어 학기
+## 확정이 죽은 코드였다 — 학점이 영영 안 매겨졌다
+func _apply_academics(p: Dictionary, at_day: int) -> void:
+	if not SCHOOL_LEAGUES.has(String(p.get("league_id", ""))):
+		return
+
+	var school: Dictionary = _state.get("school", {})
+	if school.is_empty():
+		school = {"major": "", "study_mode": "normal", "warning_level": 0}
+	Academics.study_week(school)
+
+	var day: int = at_day if at_day > 0 else int(_state.get("day", 1))
+	var exam: String = Academics.exam_at_day(day)
+	if not exam.is_empty():
+		var r: Dictionary = Academics.close_semester(school)
+		# 학사 경고는 소식으로 알린다 — 조용히 훈련만 깎이면 원인을 모른다
+		var log: Array = _state.get("academic_log", [])
+		log.append({"day": day, "exam": exam, "gpa": r["gpa"],
+			"warning_level": r["warning_level"], "label": r["label"]})
+		_state["academic_log"] = log
+		# ⚠ **출전 정지가 경기 판정에 닿아야 한다.** 안 이으면 경고가
+		# 훈련만 깎고 경기에는 아무 일도 안 일어난다
+		p["eligibility_blocked"] = bool(r["blocked"])
+
+	_state["school"] = school

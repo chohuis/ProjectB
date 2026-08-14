@@ -802,6 +802,66 @@ func test_walking_day_by_day_matches_one_big_step() -> void:
 		"둘 다 빈 사전이라 비교가 아무것도 안 봤다").is_false()
 
 
+# ── 학사 배선 (B-1) ──────────────────────────────────────────
+
+## ⚠ **학교에 다니는 동안만 돈다.** 프로에 학사가 붙으면 은퇴할 때까지
+## 시험을 본다
+func test_school_only_runs_at_school() -> void:
+	var s: Dictionary = _real_game(777)
+	var r: AppRoot = await _mount(s)
+	for i in 3:
+		r._apply_one_week()
+	assert_bool(r.state().has("school")).override_failure_message(
+		"고교생인데 학사가 안 돈다").is_true()
+
+	var pro: Dictionary = _real_game(777)
+	pro["protagonist"]["league_id"] = "LEAGUE_KBL"
+	var r2: AppRoot = await _mount(pro)
+	for i in 3:
+		r2._apply_one_week()
+	assert_bool(r2.state().has("school")).override_failure_message(
+		"프로인데 학사가 돈다").is_false()
+
+
+## ⚠ **시험 주에 학기가 확정된다.** 02는 대학 시험 트리거가 없어 학점이
+## 영영 안 매겨졌다 — 학기 확정이 죽은 코드였다
+func test_the_exam_week_closes_the_semester() -> void:
+	var r: AppRoot = await _mount(_real_game(777))
+	# 1~10주는 공부만 쌓인다
+	for w in range(1, 11):
+		r._apply_one_week(w * 7)
+	assert_bool(r.state().get("academic_log", []).is_empty()).override_failure_message(
+		"시험 전인데 학기가 확정됐다").is_true()
+	assert_int(int(r.state()["school"]["study_weeks"])).is_equal(10)
+
+	# 11주 = 중간고사
+	r._apply_one_week(11 * 7)
+	var log: Array = r.state().get("academic_log", [])
+	assert_int(log.size()).override_failure_message(
+		"시험 주인데 학기가 안 끝났다").is_equal(1)
+	assert_str(String(log[0]["exam"])).is_equal("midterm")
+	assert_int(int(r.state()["school"]["study_weeks"])).override_failure_message(
+		"학기를 비우지 않았다").is_equal(0)
+
+
+## ⚠ **출전 정지가 경기 판정에 닿아야 한다.** 안 이으면 경고가 훈련만 깎고
+## 경기에는 아무 일도 안 일어난다
+func test_a_suspension_reaches_the_game_gate() -> void:
+	var s: Dictionary = _real_game(777)
+	s["school"] = {"major": "체육교육", "study_mode": "sleep", "warning_level": 1}
+	var r: AppRoot = await _mount(s)
+
+	# 자면서 한 학기를 보내면 2단계 = 출전 정지
+	for w in range(1, 12):
+		r._apply_one_week(w * 7)
+
+	assert_int(int(r.state()["school"]["warning_level"])).is_equal(2)
+	assert_bool(r.state()["protagonist"].get("eligibility_blocked", false)) \
+		.override_failure_message("출전 정지인데 경기 판정이 모른다").is_true()
+	assert_str(DayEngine.appearance_gate(r.state()["protagonist"])) \
+		.is_equal("skip_academic")
+
+
 ## 닫으면 본화면이 돌아온다 — 안 돌아오면 게임이 멈춘 것처럼 보인다
 func test_closing_training_returns_to_main() -> void:
 	var r: AppRoot = await _mount(_real_game(777))

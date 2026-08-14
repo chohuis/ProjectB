@@ -1,0 +1,147 @@
+[
+ [
+  "시험 주가 02와 다르다 (학기 확정이 엉뚱한 주에 돈다)",
+  "\treturn int(rules().get(\"midterm_week\", 11))",
+  "\treturn 15"
+ ],
+ [
+  "기말이 없다 (한 해에 학기가 하나뿐)",
+  "\tif week == final_week():\n\t\treturn \"final\"",
+  ""
+ ],
+ [
+  "아무 주나 시험이다 (매주 학기가 확정된다)",
+  "\tif week == midterm_week():\n\t\treturn \"midterm\"",
+  "\tif true:\n\t\treturn \"midterm\""
+ ],
+ [
+  "공부 방식이 품질을 안 가른다 (고를 이유가 없다)",
+  "\treturn float(university().get(\"study_mode_gpa\", {}).get(mode, 0.55))",
+  "\treturn 0.55"
+ ],
+ [
+  "모르는 방식을 0으로 본다 (옛 세이브가 통째로 유급된다)",
+  "\treturn float(university().get(\"study_mode_gpa\", {}).get(mode, 0.55))",
+  "\treturn float(university().get(\"study_mode_gpa\", {}).get(mode, 0.0))"
+ ],
+ [
+  "주차 수를 안 센다 (긴 학기가 무조건 높은 학점이 된다)",
+  "\tschool[\"study_weeks\"] = int(school.get(\"study_weeks\", 0)) + 1",
+  ""
+ ],
+ [
+  "품질을 안 쌓는다 (공부해도 학점이 그대로다)",
+  "\tschool[\"study_quality_sum\"] = float(school.get(\"study_quality_sum\", 0.0)) \\\n\t\t+ study_quality(String(school.get(\"study_mode\", \"normal\")))",
+  ""
+ ],
+ [
+  "평균이 아니라 합계로 학점을 낸다",
+  "\tvar avg: float = float(school.get(\"study_quality_sum\", 0.0)) / float(weeks)",
+  "\tvar avg: float = float(school.get(\"study_quality_sum\", 0.0))"
+ ],
+ [
+  "전공 배수를 안 태운다 (일반전공이 이득을 못 본다)",
+  "\treturn avg * float(university().get(\"gpa_max\", 4.5)) \\\n\t\t* float(major.get(\"gpa_gain_mult\", 1.0))",
+  "\treturn avg * float(university().get(\"gpa_max\", 4.5))"
+ ],
+ [
+  "만점을 안 곱한다 (학점이 0~1에 머문다)",
+  "\treturn avg * float(university().get(\"gpa_max\", 4.5)) \\",
+  "\treturn avg * 1.0 \\"
+ ],
+ [
+  "공부한 주가 없는데도 학점을 낸다 (0으로 나눈다)",
+  "\tif weeks <= 0:\n\t\treturn 0.0",
+  ""
+ ],
+ [
+  "경고가 내려가지 않는다 (한 학기 실수로 커리어가 끝난다)",
+  "\treturn maxi(current - 1, 0)",
+  "\treturn current"
+ ],
+ [
+  "경고가 음수로 간다 (한 번 잘하면 영영 안 걸린다)",
+  "\treturn maxi(current - 1, 0)",
+  "\treturn current - 1"
+ ],
+ [
+  "경고 경계가 뒤집혔다 (잘할수록 경고를 받는다)",
+  "\tif gpa < float(university().get(\"warning_gpa\", 1.75)):\n\t\treturn current + 1",
+  "\tif gpa > float(university().get(\"warning_gpa\", 1.75)):\n\t\treturn current + 1"
+ ],
+ [
+  "경고 경계가 없다 (아무도 안 걸린다)",
+  "\tif gpa < float(university().get(\"warning_gpa\", 1.75)):",
+  "\tif false:"
+ ],
+ [
+  "단계를 위에서부터 찾는다 (3단계가 1단계 효과를 받는다)",
+  "\tfor e in university().get(\"warning_effects\", []):\n\t\tif level >= int(e[\"level\"]):\n\t\t\tbest = e",
+  "\tfor e in university().get(\"warning_effects\", []):\n\t\tif level >= int(e[\"level\"]) and best.is_empty():\n\t\t\tbest = e"
+ ],
+ [
+  "0단계에도 효과가 붙는다",
+  "\t\tif level >= int(e[\"level\"]):",
+  "\t\tif true:"
+ ],
+ [
+  "경고가 훈련을 안 깎는다 (공부를 안 하는 게 늘 최선이 된다)",
+  "\tvar base: float = float(eff.get(\"training_eff_mod\", 1.0))",
+  "\tvar base: float = 1.0"
+ ],
+ [
+  "전공 보너스를 안 준다",
+  "\treturn base + float(major_of(String(school.get(\"major\", \"\"))).get(\n\t\t\"training_eff_bonus\", 0.0))",
+  "\treturn base"
+ ],
+ [
+  "전공 보너스가 경고를 덮는다 (곱으로 걸어 경고가 흐려진다)",
+  "\treturn base + float(major_of(String(school.get(\"major\", \"\"))).get(\n\t\t\"training_eff_bonus\", 0.0))",
+  "\treturn base * (1.0 + float(major_of(String(school.get(\"major\", \"\"))).get(\n\t\t\"training_eff_bonus\", 0.0)))"
+ ],
+ [
+  "출전 정지가 없다 (경고가 경기에 안 닿는다)",
+  "\treturn bool(warning_effect(int(school.get(\"warning_level\", 0)))\n\t\t.get(\"blocks_games\", false))",
+  "\treturn false"
+ ],
+ [
+  "누적 학점을 안 쌓는다 (마지막 학기만 잘 봐도 졸업한다)",
+  "\tschool[\"gpa_total\"] = float(school.get(\"gpa_total\", 0.0)) + gpa\n\tschool[\"gpa_terms\"] = terms\n\tschool[\"gpa\"] = float(school[\"gpa_total\"]) / float(terms)",
+  "\tschool[\"gpa_terms\"] = terms\n\tschool[\"gpa\"] = gpa"
+ ],
+ [
+  "학기를 안 비운다 (나중 학기의 공부가 점점 의미를 잃는다)",
+  "\tschool[\"study_quality_sum\"] = 0.0\n\tschool[\"study_weeks\"] = 0",
+  ""
+ ],
+ [
+  "경고 단계를 저장 안 한다 (매 학기 0에서 시작한다)",
+  "\tschool[\"warning_level\"] = level",
+  ""
+ ],
+ [
+  "졸업 기준이 없다 (학점과 무관하게 졸업한다)",
+  "\treturn float(school.get(\"gpa\", 0.0)) >= float(\n\t\tuniversity().get(\"graduation_gpa\", 2.0))",
+  "\treturn true"
+ ],
+ [
+  "졸업 기준이 뒤집혔다",
+  "\treturn float(school.get(\"gpa\", 0.0)) >= float(",
+  "\treturn float(school.get(\"gpa\", 0.0)) <= float("
+ ],
+ [
+  "전공 목록 순서가 흔들린다 (화면이 매번 다르게 뜬다)",
+  "\tout.sort()",
+  ""
+ ],
+ [
+  "모르는 전공에 기본 효과를 준다",
+  "\treturn rules().get(\"majors\", {}).get(name, {})",
+  "\treturn rules().get(\"majors\", {}).get(name, {\"training_eff_bonus\": 0.5, \"injury_mod\": 0.5})"
+ ],
+ [
+  "전공 부상 배수를 안 본다 (스포츠과학이 뜻을 잃는다)",
+  "\treturn float(major_of(String(school.get(\"major\", \"\"))).get(\"injury_mod\", 1.0))",
+  "\treturn 1.0"
+ ]
+]
