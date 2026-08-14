@@ -34,6 +34,8 @@ func run(log_line: Callable, _fail: Callable, years: int = 5,
 		year += 1
 
 	log_line.call("")
+	_awards_table(log_line, s)
+	log_line.call("")
 	_age_table(log_line, s)
 	_grade_table(log_line, s)
 	return 0
@@ -70,3 +72,19 @@ func _grade_table(log_line: Callable, s: Dictionary) -> void:
 	keys.sort()
 	for k in keys:
 		log_line.call("  %s학년  %5d" % [k, by_grade[k]])
+
+
+## 수상이 실제로 나오나. **리그마다 나와야 한다** — 합쳐 뽑으면
+## 프로 MVP와 고교 MVP가 같은 저울에 올라간다
+func _awards_table(log_line: Callable, s: Dictionary) -> void:
+	log_line.call("수상 (마지막 해)")
+	var years: Array = s.get("season_awards", {}).keys()
+	if years.is_empty():
+		log_line.call("  없음 — 시즌 성적이 안 쌓였다")
+		return
+	years.sort()
+	var last: Dictionary = s["season_awards"][years[-1]]
+	for lid in last:
+		var mvp: Array = last[lid].get("mvp", [])
+		log_line.call("  %-20s 부문 %2d개 · MVP %d명"
+			% [lid, last[lid].get("awards", []).size(), mvp.size()])

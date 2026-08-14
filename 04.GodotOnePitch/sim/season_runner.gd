@@ -62,7 +62,15 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["undrafted"] = int(draft["undrafted"])
 	done.append("npc_draft")
 
-	# ③ 로스터 상한 — **초과분을 2군으로, 자리가 없으면 방출.**
+	# ③ 시즌 기록 — **오프시즌이 로스터를 흩기 전이어야 한다.**
+	#
+	# ⚠ 진급이 이미 만들어 둔 줄에 성적만 채운다. 새로 만들면 한 해가
+	# 두 줄이 되고, 경력 화면과 드래프트 경로 판정이 그 배열을 읽는다
+	var stats: Dictionary = state.get("season_stats", {})
+	summary["recorded"] = SeasonHistory.apply(all_players(state), stats, year)
+	done.append("season_history")
+
+	# ④ 로스터 상한 — **초과분을 2군으로, 자리가 없으면 방출.**
 	#
 	# ⚠ **드래프트 뒤·진로 배정 앞이다.** 신인이 들어와 정원이 넘치고,
 	# 밀려난 사람은 미지명자와 **같은 로직**으로 진로를 정한다.
@@ -89,13 +97,29 @@ static func run(state: Dictionary) -> Dictionary:
 	_remove_retired(world)
 	done.append("league_offseason")
 
-	# ⑥ 나이 — **진급 뒤다.** 먼저 올리면 졸업 판정이 한 살 많은 선수를 본다
+	# ⑥ 주인공 시즌 기록 — **자동 진행에서도 쌓인다.**
+	#
+	# ⚠ 02는 결산 화면이 유일한 호출부라 화면을 열어야만 쌓였고, 자동
+	# 진행에선 은퇴할 때까지 한 줄도 없었다
+	var mine: Dictionary = SeasonHistory.protagonist_record(state, year)
+	summary["my_record"] = 0 if mine.is_empty() else 1
+	done.append("protagonist_record")
+
+	# ⑦ 수상 — **기록이 만들어진 뒤여야 얹을 자리가 있다**
+	var awards: Dictionary = SeasonHistory.awards_of(all_players(state), stats)
+	var all_awards: Dictionary = state.get("season_awards", {})
+	all_awards[str(year)] = awards
+	state["season_awards"] = all_awards
+	summary["awarded"] = SeasonHistory.attach_awards(all_players(state), awards, year)
+	done.append("awards")
+
+	# ⑧ 나이 — **진급 뒤다.** 먼저 올리면 졸업 판정이 한 살 많은 선수를 본다
 	var alive: Array = all_players(state)
 	Promotion.advance_ages(alive)
 	summary["aged"] = alive.size()
 	done.append("aging")
 
-	# ⑦ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
+	# ⑨ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
 	# 텅 비었다(졸업만 하고 들어오는 사람이 없다)
 	summary["freshmen"] = _intake(state, world, year)
 	done.append("background")
@@ -471,6 +495,10 @@ static func roll_over(state: Dictionary) -> Dictionary:
 
 	# 지난 시즌의 미결정은 남기지 않는다 — 지나간 선택지가 새 해를 막는다
 	state["pending"] = []
+
+	# ⚠ **시즌 성적을 비운다.** 안 비우면 지난 시즌 기록이 다음 해에 섞여
+	# 수상·기록이 통째로 어긋난다 — 통산은 가 들고 있다
+	state["season_stats"] = {}
 
 	var mine: int = 0
 	for g in state["schedule"]:

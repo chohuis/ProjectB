@@ -699,3 +699,114 @@ func test_the_role_follows_the_new_team() -> void:
 	assert_str(String(me["role"])).override_failure_message(
 		"혼자인 팀인데 보직이 %s다 — 보직을 다시 안 정한다" % me["role"]) \
 		.is_equal("SP")
+
+
+# ── 기록·수상이 도는가 (M9-7b) ────────────────────────────────
+
+func _game_with_stats() -> Dictionary:
+	var s: Dictionary = _game()
+	var stats: Dictionary = {}
+	var n: int = 0
+	for p in SeasonRunner.all_players(s):
+		# 리그마다 표본이 있어야 수상이 나온다
+		stats[p["id"]] = {"type": "pitcher", "g": 20, "w": 5 + (n % 15),
+			"l": 3, "era": 1.5 + float(n % 30) * 0.15, "ip": 120.0 + float(n % 40),
+			"k": 80 + (n % 90), "bb": 30, "h": 90, "er": 30, "whip": 1.1}
+		n += 1
+	s["season_stats"] = stats
+	return s
+
+
+## ⚠ **02는 결산 화면이 유일한 호출부였다.** 화면을 열어야만 기록이 쌓였고
+## 자동 진행에선 은퇴할 때까지 한 줄도 없었다
+func test_the_season_is_written_into_career_history() -> void:
+	var s: Dictionary = _game_with_stats()
+	var out: Dictionary = SeasonRunner.run(s)
+	assert_int(int(out["summary"]["recorded"])).override_failure_message(
+		"연도 기록이 0명이다").is_greater(0)
+
+	var with_line: int = 0
+	for p in SeasonRunner.all_players(s):
+		for h in p.get("career_history", []):
+			if int(h.get("year", 0)) == 2027 and String(h.get("stat_line", "")) != "-":
+				with_line += 1
+	assert_int(with_line).override_failure_message(
+		"성적이 적힌 연도 기록이 없다").is_greater(0)
+
+
+## ⚠ **한 해가 두 줄이 되면 안 된다.** 진급이 만든 줄에 성적만 채운다
+func test_no_year_is_recorded_twice() -> void:
+	var s: Dictionary = _game_with_stats()
+	SeasonRunner.run(s)
+	for p in SeasonRunner.all_players(s):
+		var years: Dictionary = {}
+		for h in p.get("career_history", []):
+			var y: int = int(h.get("year", 0))
+			assert_bool(years.has(y)).override_failure_message(
+				"%s의 %d년이 두 줄이다" % [p["id"], y]).is_false()
+			years[y] = true
+
+
+func test_awards_are_computed_and_saved() -> void:
+	var s: Dictionary = _game_with_stats()
+	var out: Dictionary = SeasonRunner.run(s)
+
+	var saved: Dictionary = s.get("season_awards", {}).get("2027", {})
+	assert_bool(saved.is_empty()).override_failure_message(
+		"수상이 하나도 안 나왔다").is_false()
+	assert_int(int(out["summary"]["awarded"])).is_greater(0)
+
+
+## ⚠ **리그를 합치면 프로 MVP와 고교 MVP가 같은 저울에 올라간다**
+func test_awards_stay_within_their_league() -> void:
+	var s: Dictionary = _game_with_stats()
+	SeasonRunner.run(s)
+
+	var league_of: Dictionary = {}
+	for p in SeasonRunner.all_players(s):
+		league_of[p["id"]] = String(p.get("league_id", ""))
+
+	var saved: Dictionary = s["season_awards"]["2027"]
+	assert_int(saved.size()).override_failure_message(
+		"리그가 %d개뿐이다 — 합쳐서 뽑고 있다" % saved.size()).is_greater(1)
+
+
+## 주인공 기록이 자동 진행에서도 쌓인다
+func test_the_protagonist_record_is_written() -> void:
+	var s: Dictionary = _game_with_stats()
+	var out: Dictionary = SeasonRunner.run(s)
+	assert_int(int(out["summary"]["my_record"])).is_equal(1)
+	assert_int(s["protagonist"]["career_records"].size()).is_equal(1)
+	assert_int(int(s["protagonist"]["career_records"][0]["year"])).is_equal(2027)
+
+
+## ⚠ **새 시즌엔 성적을 비운다.** 안 비우면 지난 시즌 기록이 다음 해에
+## 섞여 수상·기록이 통째로 어긋난다
+func test_the_stats_reset_for_the_new_season() -> void:
+	var s: Dictionary = _game_with_stats()
+	SeasonRunner.finish_season(s)
+	assert_int(s.get("season_stats", {}).size()).override_failure_message(
+		"롤오버 뒤에도 지난 시즌 성적이 %d명 남았다" % s["season_stats"].size()) \
+		.is_equal(0)
+
+
+## 두 해를 굴리면 경력이 두 줄 — 세 줄이 되면 어딘가 두 번 쓴다
+func test_two_seasons_leave_two_career_rows() -> void:
+	var s: Dictionary = _game_with_stats()
+	SeasonRunner.finish_season(s)
+	s["season_stats"] = {s["protagonist"]["id"]: {"type": "pitcher", "g": 20,
+		"w": 8, "l": 4, "era": 2.1, "ip": 140.0, "k": 120, "bb": 30, "h": 100,
+		"er": 33, "whip": 1.0}}
+	SeasonRunner.finish_season(s)
+
+	assert_int(s["protagonist"]["career_records"].size()).override_failure_message(
+		"두 시즌인데 경력이 %d줄이다" % s["protagonist"]["career_records"].size()) \
+		.is_equal(2)
+
+
+## 순서가 `SeasonEnd`와 어긋나면 안 된다 — 새 단계도 그 안에 있어야 한다
+func test_the_new_phases_are_in_the_canonical_order() -> void:
+	var phases: Array = SeasonRunner.run(_game_with_stats())["phases"]
+	assert_array(phases).contains(["season_history", "protagonist_record", "awards"])
+	assert_int(phases.find("season_history")).is_less(phases.find("awards"))
+	assert_int(phases.find("protagonist_record")).is_less(phases.find("awards"))

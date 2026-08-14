@@ -1,0 +1,77 @@
+[
+ [
+  "타율에서 앞의 0을 안 뗀다 (0.312로 뜬다)",
+  "\treturn (\"%.3f\" % v).trim_prefix(\"0\")",
+  "\treturn \"%.3f\" % v"
+ ],
+ [
+  "투수 줄에 승패를 안 적는다",
+  "\t\treturn \"%d승 %d패 ERA %.2f %.1f이닝 %dK\" % [",
+  "\t\treturn \"ERA %.2f %.1f이닝 %dK — %d %d\" % ["
+ ],
+ [
+  "타자 줄을 투수 줄로 낸다 (야수가 승패를 갖는다)",
+  "\tif st.get(\"type\", \"\") == \"pitcher\":",
+  "\tif true:"
+ ],
+ [
+  "안 뛴 선수에게도 줄을 준다 (0.00 방어율이 1위가 된다)",
+  "\t\tif st.is_empty():\n\t\t\tcontinue",
+  ""
+ ],
+ [
+  "진급이 만든 줄을 안 찾고 새로 만든다 (한 해가 두 줄이 된다)",
+  "\t\tvar found: Dictionary = {}\n\t\tfor h in history:\n\t\t\tif int(h.get(\"year\", 0)) == year:\n\t\t\t\tfound = h\n\t\t\t\tbreak",
+  "\t\tvar found: Dictionary = {}"
+ ],
+ [
+  "이미 있는 줄에 성적을 안 채운다 (영영 '-'로 남는다)",
+  "\t\t\tfound[\"stat_line\"] = stat_line_of(st)",
+  "\t\t\tpass"
+ ],
+ [
+  "수상을 리그별로 안 나눈다 (프로 MVP와 고교 MVP가 같은 저울에)",
+  "\t\tvar lid: String = String(p.get(\"league_id\", \"\"))",
+  "\t\tvar lid: String = \"ALL\""
+ ],
+ [
+  "MVP를 안 뽑는다",
+  "\t\tout[lid] = {\"awards\": winners, \"mvp\": Awards.mvp_ids(by_league[lid])}",
+  "\t\tout[lid] = {\"awards\": winners, \"mvp\": []}"
+ ],
+ [
+  "수상을 연도 기록에 안 얹는다 (경력 화면에 안 뜬다)",
+  "\t\t\t\th[\"highlights\"] = got\n\t\t\t\tn += 1\n\t\t\t\tbreak",
+  "\t\t\t\tn += 1\n\t\t\t\tbreak"
+ ],
+ [
+  "수상을 아무 해에나 얹는다 (지난해 기록이 올해 수상으로 덮인다)",
+  "\t\tfor h in p.get(\"career_history\", []):\n\t\t\tif int(h.get(\"year\", 0)) == year:\n\t\t\t\th[\"highlights\"] = got",
+  "\t\tfor h in p.get(\"career_history\", []):\n\t\t\tif true:\n\t\t\t\th[\"highlights\"] = got"
+ ],
+ [
+  "주인공 기록을 한 해에 두 번 남긴다 (연도 선택·은퇴 결산이 어긋난다)",
+  "\tfor r in records:\n\t\tif int(r.get(\"year\", 0)) == year:\n\t\t\treturn {}",
+  ""
+ ],
+ [
+  "안 치른 경기도 등판 기록에 넣는다 (예정만으로 기록이 생긴다)",
+  "\t\tif not g.get(\"is_protagonist_game\", false) or g.get(\"result\", null) == null:",
+  "\t\tif not g.get(\"is_protagonist_game\", false):"
+ ],
+ [
+  "남의 등판을 내 기록에 넣는다",
+  "\t\t\tif l.get(\"player_id\", \"\") != me.get(\"id\", \"\") \\\n\t\t\t\t\tor l.get(\"role\", \"\") != \"pitcher\":\n\t\t\t\tcontinue",
+  ""
+ ],
+ [
+  "홈·원정을 안 가른다 (내 점수와 상대 점수가 뒤집힌다)",
+  "\t\t\tvar is_home: bool = g.get(\"home\", \"\") == team_id",
+  "\t\t\tvar is_home: bool = false"
+ ],
+ [
+  "주인공 기록에 성적 줄을 안 넣는다",
+  "\t\t\"stat_line\": stat_line_of(st),",
+  "\t\t\"stat_line\": \"\","
+ ]
+]
