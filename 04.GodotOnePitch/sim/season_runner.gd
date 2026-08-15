@@ -216,6 +216,12 @@ static func _move_to_pool(world: Dictionary, graduates: Array) -> void:
 		world["rosters"][tid] = kept
 
 	for g in graduates:
+		# ⚠ **어디서 왔는지를 박아 둔다.** 풀에 들어가면 `league_id`가
+		# `LEAGUE_DRAFT_POOL`로 덮여서, 나중에 드래프트 보드가 출신을 물으면
+		# **전원이 "재수"**로 나온다 — 스크린샷에서 실제로 그렇게 보였다.
+		# 두 해째 후보(진짜 재수생)는 이미 박혀 있으므로 안 덮는다
+		if not g.has("origin_league_id"):
+			g["origin_league_id"] = String(g.get("league_id", ""))
 		g["team_id"] = ""
 	world[POOL_KEY] = world.get(POOL_KEY, []) + graduates
 

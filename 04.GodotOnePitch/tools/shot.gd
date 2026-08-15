@@ -51,6 +51,7 @@ const MAIN := preload("res://ui/screens/main_screen.tscn")
 const APP := preload("res://ui/app_root.tscn")
 const APP_ENTRY := preload("res://ui/app.tscn")
 const SEASON_END := preload("res://ui/screens/season_end_screen.tscn")
+const DRAFT_BOARD := preload("res://ui/screens/draft_board_screen.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -241,6 +242,21 @@ func _build(which: String) -> Control:
 			var sd: SeasonEndScreen = SEASON_END.instantiate()
 			sd.set_view_model(SeasonEndVm.build(Fixtures.season_digest()))
 			return sd
+		"draft-board":
+			# ⚠ **진짜 세계로 연다.** 손으로 만든 사전이면 "라운드가 열한 개다"
+			# 같은 실제 모양을 못 본다 — 시즌을 한 번 끝내 진짜 지명을 만든다
+			var db: DraftBoardScreen = DRAFT_BOARD.instantiate()
+			var dbs := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			for g in dbs["schedule"]:
+				g["result"] = {"home_score": 3, "away_score": 1, "winner": g["home"]}
+			SeasonRunner.finish_season(dbs)
+			db.set_view_model(DraftBoardVm.build(dbs, 2027))
+			return db
+		"draft-board-empty":
+			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
+			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
+			return de
 		"season-end-before":
 			var sb: AppRoot = APP.instantiate()
 			var sbt := World.new_game({"seed": 20270101, "season_year": 2027,

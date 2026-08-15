@@ -6,7 +6,7 @@
  ],
  [
   "어디서 왔는지를 안 남긴다",
-  "\t\t\"from_league_id\": String(p.get(\"league_id\", \"\")),",
+  "\t\t\"from_league_id\": String(p.get(\"origin_league_id\",\n\t\t\tp.get(\"league_id\", \"\"))),",
   "\t\t\"from_league_id\": \"\","
  ],
  [
@@ -58,5 +58,10 @@
   "기록이 상태에 안 남는다",
   "\tstate[KEY] = all\n\treturn rows.size()",
   "\treturn rows.size()"
+ ],
+ [
+  "풀에 들어간 뒤의 리그를 출신으로 읽는다 (전원이 재수가 된다)",
+  "\t\t\"from_league_id\": String(p.get(\"origin_league_id\",\n\t\t\tp.get(\"league_id\", \"\"))),",
+  "\t\t\"from_league_id\": String(p.get(\"league_id\", \"\")),"
  ]
 ]

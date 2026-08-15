@@ -64,6 +64,14 @@ static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
 
 		if grade >= int(SCHOOL_LEAGUES[league]):
 			npc["grade"] = null
+			# ⚠ **덮기 전에 어디서 왔는지를 박아 둔다.** 여기서 안 남기면
+			# 드래프트 보드가 출신을 물을 때 **전원이 "재수"**로 나온다 —
+			# 화면을 띄워 보고 알았다.
+			#
+			# **매번 덮어쓰는 게 맞다.** 고교를 나와 대학에 갔다가 지명되면
+			# 그 사람의 출신은 대학이다 — 첫 졸업만 남기면 4년 뒤에도
+			# "고교"로 뜬다
+			npc["origin_league_id"] = league
 			npc["league_id"] = DRAFT_POOL
 			if league == "LEAGUE_HIGHSCHOOL":
 				hs_graduated.append(npc)

@@ -83,6 +83,37 @@ func test_someone_off_the_board_is_not_listed() -> void:
 	assert_array(DraftLog.of(s, 2030)["missed"]).is_empty()
 
 
+## ⚠ **드래프트 시점엔 후보 전원이 `LEAGUE_DRAFT_POOL`이다.** 지금 리그를
+## 읽으면 **전원이 "재수"**로 나온다 — 화면을 띄워 보고 알았다
+func test_the_origin_survives_the_draft_pool() -> void:
+	var s: Dictionary = _state()
+	var p: Dictionary = _cand("A", 80.0, "LEAGUE_DRAFT_POOL")
+	p["origin_league_id"] = "LEAGUE_HIGHSCHOOL"
+	DraftLog.record(s, 2030, [{"round": 1, "pick": 1, "team_id": "T1",
+		"npc_id": "A"}], ["A"], [], {"A": p})
+	assert_str(String(DraftLog.of(s, 2030)["picks"][0]["from_league_id"])
+		).override_failure_message(
+		"풀에 들어간 뒤라 출신이 '재수'로 덮였다").is_equal("LEAGUE_HIGHSCHOOL")
+
+
+## ⚠ **진짜 세계에서도 출신이 갈려야 한다.** 전원이 한 갈래면 그 줄이
+## 아무것도 안 알려준다
+func test_the_real_board_shows_more_than_one_origin() -> void:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	for g in s["schedule"]:
+		g["result"] = {"home_score": 3, "away_score": 1, "winner": g["home"]}
+	SeasonRunner.finish_season(s)
+
+	var origins: Dictionary = {}
+	for r in DraftBoardVm.build(s, 2027)["rounds"]:
+		for p in r["picks"]:
+			origins[String(p["origin"])] = true
+	assert_int(origins.size()).override_failure_message(
+		"지명자 출신이 %s 하나뿐이다 — 고교·대학·독립 구분이 사라졌다"
+		% str(origins.keys())).is_greater(1)
+
+
 func test_an_unknown_pick_is_skipped() -> void:
 	var s: Dictionary = _state()
 	DraftLog.record(s, 2030, [{"round": 1, "pick": 1, "team_id": "T1",

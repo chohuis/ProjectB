@@ -1,0 +1,7 @@
+[
+ [
+  "졸업할 때 출신을 안 박는다 (보드에서 전원이 \"재수\"가 된다)",
+  "\t\t\tnpc[\"origin_league_id\"] = league",
+  "\t\t\tpass"
+ ]
+]

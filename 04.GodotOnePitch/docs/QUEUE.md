@@ -321,9 +321,16 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 
 ⚠ **색·여백을 화면에 직접 적지 않는다.** `AppTheme`에서만 가져온다.
 
-- [ ] **C-1** 드래프트 보드 — B 없이도 된다 (`Draft`·`NpcDraft`가 이미 있다).
-      **B-10c `runDraftBoardBackground`(32)를 여기서 같이 옮긴다** — 보드를
-      여는 그 자리에서 배경 후보를 만드는 코드다
+- [x] **C-1** 드래프트 보드 — `sim/draft_log.gd` · `ui/draft_board_vm.gd` ·
+      `ui/screens/draft_board_screen.{tscn,gd}`. **B-10c도 같이 끝났다.**
+      ⚠ 02는 보드가 **자기 후보 풀로 자체 시뮬을 또 돌려** 화면에서 본 지명과
+      실제 소속이 어긋났다. 04는 드래프트가 하나뿐인데 결과를 **쓰고 버리고
+      있었다** — `DraftLog`가 지명 당일 값을 박아 남기고 보드는 재생만 한다.
+      ⚠ **화면을 띄워서 결함을 하나 잡았다** — 출신이 전원 "재수"였다.
+      졸업생이 풀에 들어갈 때 `league_id`가 덮여서 고교·대학·독립 구분이
+      통째로 사라졌다. `origin_league_id`를 졸업 시점에 박는다.
+      실측: 후보 1,420 · 보드 220 · 지명 110(11라운드 × 10팀).
+      검사 35 · 변이 17/17 + 12/12 + 1/1
 - [ ] **C-2** 인물(관계도) ← B-2 · B-2b · B-2c.
       읽을 것: `RelationshipRunner.rows_of` · `Staff.of` · `Staff.mods_of`.
       **스태프가 늙고 바뀌므로 화면이 해마다 달라진다**

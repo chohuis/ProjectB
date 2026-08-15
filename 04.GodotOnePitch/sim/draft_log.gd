@@ -41,7 +41,11 @@ static func snapshot_of(p: Dictionary) -> Dictionary:
 		"position": String(p.get("position", "")),
 		"ovr": Contract.core_ovr(p),
 		"age": int(p.get("age", 0)),
-		"from_league_id": String(p.get("league_id", "")),
+		# ⚠ **박아 둔 출신을 먼저 본다.** 드래프트 시점엔 후보 전원이
+		# `LEAGUE_DRAFT_POOL`이라 지금 리그를 읽으면 **전원이 "재수"**가 된다 —
+		# 화면을 띄워 보고 알았다
+		"from_league_id": String(p.get("origin_league_id",
+			p.get("league_id", ""))),
 		"is_protagonist": bool(p.get("is_protagonist", false)),
 	}
 
