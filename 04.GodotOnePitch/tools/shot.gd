@@ -14,7 +14,10 @@ func _init() -> void:
 
 	# ⚠ **창 크기는 `DisplayServer`로 바꾼다.** 루트 뷰포트의 `size`에 직접
 	# 넣으면 실제 창은 안 따라오고, 찍힌 그림이 기본 크기(1152×648)로 나온다
-	DisplayServer.window_set_size(Vector2i(1440, 900))
+	# ⚠ **구장은 1:1로 띄운다.** 축소된 그림으로는 좌표가 몇 px 어긋났는지를
+	# 못 잰다 — 눈으로 "위쪽에 걸려 있다"까지만 보이고 수치가 안 나온다
+	DisplayServer.window_set_size(Vector2i(1000, 920) if which.begins_with("park")
+		else Vector2i(1440, 900))
 	DisplayServer.window_set_title("OnePitch — %s" % which)
 
 	var win := get_root()
@@ -259,6 +262,15 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
+		"park", "park-pro":
+			# ⚠ **1:1로 띄운다** — 좌표가 viewbox 단위(1000×920)와 같은 크기로
+			# 그려져야 "그림보다 몇 px 위인가"를 잴 수 있다 (D-6)
+			var pk: BaseballField = preload(
+				"res://ui/parts/baseball_field.tscn").instantiate()
+			pk.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			pk.set_view_model(ParkVm.build(
+				"" if which == "park" else "STADIUM_PRO"))
+			return pk
 		"retire-ask", "retire-summary":
 			# ⚠ **진짜 커리어로 연다.** 통산이 비어 있으면 결산이 뜻이 없다 —
 			# 몇 해를 실제로 쌓아 은퇴 시점을 만든다
