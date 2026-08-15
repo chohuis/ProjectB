@@ -1,0 +1,36 @@
+{
+  "_note": "은퇴 판정 정본. 02 generation_rules.json의 retirementRules와 team_engine.rs의 eval_retirement_suggestion을 합쳤다. 값은 02 그대로",
+  "_note2": "NPC와 주인공이 같은 표를 쓴다. 따로 두면 \"NPC는 36세에 은퇴하는데 나는 45세까지 뛴다\"가 되고, 그걸 맞추려고 표를 두 번 관리하게 된다",
+
+  "surgery": {
+    "_note": "수술급 부상이 났을 때 그 자리에서 굴리는 은퇴 확률. 나이가 먼저고, 젊어도 재수술이면 높다",
+    "age_high": 36,
+    "chance_high": 0.65,
+    "age_mid": 33,
+    "chance_mid": 0.35,
+    "prior_surgery_chance": 0.4,
+    "base_chance": 0.05
+  },
+
+  "pressure": {
+    "_note": "구단 관점에서 은퇴를 권할 상황인가. 점수 합이 suggest_at을 넘으면 권한다 — 강제하지 않는다",
+    "age_hard": 38,
+    "age_hard_score": 40.0,
+    "age_soft": 35,
+    "age_soft_step": 8.0,
+    "trend_steep": -3.0,
+    "trend_steep_score": 20.0,
+    "trend_mild": -1.5,
+    "trend_mild_score": 10.0,
+    "overpay_ratio": 1.5,
+    "overpay_score": 15.0,
+    "prospect_score": 10.0,
+    "discipline_over": 70.0,
+    "discipline_score": 8.0,
+    "stability_over": 70.0,
+    "fame_over": 30.0,
+    "loyalty_score": -10.0,
+    "suggest_at": 40.0,
+    "urgency_divisor": 100.0
+  }
+}

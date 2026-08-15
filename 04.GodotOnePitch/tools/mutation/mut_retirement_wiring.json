@@ -1,0 +1,17 @@
+[
+ [
+  "주 경계에서 은퇴를 안 물어본다 (은퇴 모듈이 죽은 코드가 된다)",
+  "\tvar asked: String = Retirement.check(state, at_day, rng)",
+  "\tvar asked: String = \"\""
+ ],
+ [
+  "은퇴 판정 씨앗이 연도와 안 섞인다 (해마다 같은 답이 나온다)",
+  "\trng.seed = Rng.mix([\"retire\", int(state.get(\"seed\", 0)),\n\t\tint(state.get(\"season_year\", 0)), at_day])",
+  "\trng.seed = Rng.mix([\"retire\", int(state.get(\"seed\", 0)), at_day])"
+ ],
+ [
+  "은퇴한 선수에게 계속 물어본다",
+  "\tif p.is_empty() or bool(p.get(\"retired\", false)):\n\t\treturn {}",
+  "\tif p.is_empty():\n\t\treturn {}"
+ ]
+]

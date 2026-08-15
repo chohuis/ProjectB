@@ -42,8 +42,19 @@ static func run(state: Dictionary, at_day: int) -> Dictionary:
 	if String(p.get("career_stage", "")) == "military":
 		return {"military": _serve(state, at_day)}
 
+	# 은퇴 — 부상 강제와 노쇠 압박. **묻기만 한다**
+	#
+	# ⚠ **02엔 주인공 은퇴 경로가 아예 없었다.** 목표 커리어가 15~20시즌인
+	# 게임인데 끝나지 않았다
+	var rng := RandomNumberGenerator.new()
+	# ⚠ **연도와 날짜를 같이 섞는다.** 씨앗만 쓰면 몇 해가 지나 같은 날에
+	# 다시 수술을 받아도 **똑같은 답**이 나온다
+	rng.seed = Rng.mix(["retire", int(state.get("seed", 0)),
+		int(state.get("season_year", 0)), at_day])
+	var asked: String = Retirement.check(state, at_day, rng)
+
 	var week: int = Calendar.week_of(at_day)
-	var out: Dictionary = {"opened": false, "results": {}}
+	var out: Dictionary = {"opened": false, "results": {}, "retirement": asked}
 	if _should_open(state, p, week):
 		Pending.push_once(state, {"type": "career_choice_hub"})
 		out["opened"] = true

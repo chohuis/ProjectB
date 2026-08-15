@@ -211,7 +211,15 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         대기줄에 든 것이 전부 날을 멈추므로 구분이 아직 필요 없다.
         02가 여기서 잃은 것: 지명 통보·계약 셋·트레이드가 "알림성"으로 분류돼
         **조용히 버려졌다**(2031년 만료 계약이 2038년까지 남았다)
-- [ ] **B-7** `retirement`(228) — 주인공 은퇴
+- [x] **B-7** `retirement`(228) — 주인공 은퇴. `sim/retirement.gd` ·
+      `data/retirement_rules.json`. **커리어가 끝날 수 있게 됐다** —
+      02는 은퇴 기록을 남기는 두 곳이 전부 NPC였고 주인공을 은퇴시키는
+      코드가 어디에도 없었다(목표가 15~20시즌인 게임인데 안 끝났다).
+      갈래 셋: 자발 · 노쇠·계약 불발 · 부상 강제. **판정은 NPC와 같은 표**를
+      쓰고 결과를 **강제하지 않는다**(묻고 고르는 건 사용자다).
+      `CareerRunner`가 매주 부른다 — 수술은 그 주에, 노쇠는 시즌 마지막 주에.
+      검사 37 · 변이 39/39 + 배선 3/3.
+      **남은 것:** 은퇴 확인 화면과 인생 기록 엔딩은 C에서
 - [ ] **B-8** `nationalTeam`(311)
 - [ ] **B-9** `foreignPlayers`(343)
 - [ ] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
