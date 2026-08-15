@@ -44,6 +44,11 @@ func _rebuild() -> void:
 		_choices.remove_child(c)
 		c.free()
 
+	# ⚠ **모양은 둘뿐이다.** 하나 고르기(`one`)와 여러 개 켜고 제출하기
+	# (`many`) — 결정 종류가 늘어도 화면은 이 둘을 안 넘는다
+	if String(_vm.get("kind", "one")) == "many":
+		_build_many()
+		return
 	for ch in _vm.get("choices", []):
 		var b := Button.new()
 		b.text = String(ch["label"])
@@ -53,3 +58,27 @@ func _rebuild() -> void:
 		b.pressed.connect(func() -> void:
 			chosen.emit.call_deferred(String(ch["id"])))
 		_choices.add_child(b)
+
+
+## 여러 개를 켜고 한 번에 낸다. **고른 것을 id에 담아 올린다** —
+## 화면이 상태를 들고 있지 않게 하려는 것이다
+func _build_many() -> void:
+	var boxes: Array = []
+	for ch in _vm.get("choices", []):
+		var c := CheckBox.new()
+		c.text = String(ch["label"])
+		c.focus_mode = Control.FOCUS_NONE
+		c.set_meta("choice_id", String(ch["id"]))
+		_choices.add_child(c)
+		boxes.append(c)
+
+	var submit := Button.new()
+	submit.text = String(_vm.get("submit_label", "제출"))
+	submit.focus_mode = Control.FOCUS_NONE
+	submit.pressed.connect(func() -> void:
+		var picked: Array = []
+		for c in boxes:
+			if (c as CheckBox).button_pressed:
+				picked.append(String((c as CheckBox).get_meta("choice_id")))
+		chosen.emit.call_deferred("submit:%s" % ",".join(PackedStringArray(picked))))
+	_choices.add_child(submit)

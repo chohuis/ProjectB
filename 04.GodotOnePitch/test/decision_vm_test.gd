@@ -43,13 +43,22 @@ func test_nothing_pending_means_no_question() -> void:
 	assert_bool(DecisionVm.build(_state()).is_empty()).is_true()
 
 
-## ⚠ **아직 화면이 없는 결정을 받았다고 하면 안 된다** — 답을 못 하는
-## 화면이 뜨고 대기줄은 그대로 남는다
-func test_an_unhandled_decision_is_not_claimed() -> void:
+## ⚠ **자기 화면이 있는 결정은 안 받는다.** 은퇴는 화면이 결산으로
+## 바뀌는 특별한 흐름이라 `RetirementVm`이 받는다 — 여기서도 받으면
+## 두 화면이 같은 결정을 두고 다툰다
+func test_retirement_is_left_to_its_own_screen() -> void:
 	var s: Dictionary = _state()
-	Pending.push_once(s, {"type": "fa_market"})
+	Pending.push_once(s, {"type": "retirement_ask", "reason": "decline"})
 	assert_bool(DecisionVm.is_asking(s)).override_failure_message(
-		"아직 안 만든 결정을 받는다고 한다").is_false()
+		"은퇴를 결정 화면이 가로챈다").is_false()
+	assert_bool(RetirementVm.is_asking(s)).is_true()
+
+
+## 모르는 결정도 안 받는다 — 답을 못 하는 화면이 뜨고 대기줄은 그대로 남는다
+func test_an_unknown_decision_is_not_claimed() -> void:
+	var s: Dictionary = _state()
+	Pending.push_once(s, {"type": "무언가_새로운_결정"})
+	assert_bool(DecisionVm.is_asking(s)).is_false()
 
 
 ## 받는 목록은 `AutoAdvance`가 멈추는 목록 안에 있어야 한다 —
@@ -63,7 +72,7 @@ func test_every_handled_type_is_a_stopping_one() -> void:
 ## 앞에 다른 결정이 있어도 받을 수 있는 것을 찾는다
 func test_it_finds_a_handled_one_behind_others() -> void:
 	var s: Dictionary = _state()
-	Pending.push_once(s, {"type": "fa_market"})
+	Pending.push_once(s, {"type": "무언가_새로운_결정"})
 	Pending.push_once(s, {"type": "draft_observe"})
 	assert_str(String(DecisionVm.build(s)["type"])).is_equal("draft_observe")
 
@@ -306,6 +315,109 @@ func test_an_option_clause_can_go_either_way() -> void:
 			).is_equal(int(pick[1]))
 
 
+# ── 진로 지원 (여러 곳) ───────────────────────────────────────
+
+## ⚠ **지원할 수 있는 무대만 보여준다.** 대학생에게 "대학 지원"을 띄우면
+## 두 번 입학이고, 엔진이 거절해서 아무 일도 안 일어난다
+func test_a_university_student_is_not_offered_university() -> void:
+	var s: Dictionary = _state({"career_stage": "university"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+	for id in _ids(DecisionVm.build(s)):
+		assert_str(String(id)).override_failure_message(
+			"대학생에게 대학 지원을 띄운다").not_contains("university:")
+
+
+func test_a_highschooler_can_apply_everywhere() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+	var vm: Dictionary = DecisionVm.build(s)
+	assert_str(String(vm["kind"])).is_equal("many")
+	assert_bool(_ids(vm).has("draft")).is_true()
+	var has_univ: bool = false
+	for id in _ids(vm):
+		if String(id).begins_with("university:"):
+			has_univ = true
+	assert_bool(has_univ).is_true()
+
+
+## 켜 놓은 것을 한 번에 낸다
+func test_submitting_sends_every_pick() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+
+	assert_bool(DecisionVm.apply(s,
+		"submit:university:TEAM_UNIV_A,university:TEAM_UNIV_B,draft", 300)
+		).is_true()
+	var apps: Dictionary = CareerDecision.of(s).get("applications", {})
+	assert_int(apps["university_choices"].size()).is_equal(2)
+	assert_bool(apps["draft_applied"]).is_true()
+	assert_bool(Pending.has(s, "career_choice_hub")).override_failure_message(
+		"제출했는데 지원 화면이 대기줄에 남았다").is_false()
+
+
+## ⚠ **아무것도 안 고르고 내도 답이다** — 막으면 대기줄이 안 풀린다
+func test_submitting_nothing_is_still_an_answer() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+	assert_bool(DecisionVm.apply(s, "submit:", 300)).is_true()
+	assert_bool(Pending.has(s, "career_choice_hub")).is_false()
+
+
+## ⚠ **제출이 아닌 답은 안 받는다.** 받으면 엉뚱한 id 하나에 빈 지원서가
+## 조용히 제출되고, 그 해 진로가 통째로 날아간다
+func test_a_non_submit_answer_is_refused() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+	assert_bool(DecisionVm.apply(s, "draft", 300)).override_failure_message(
+		"제출이 아닌 답을 받았다").is_false()
+	assert_bool(Pending.has(s, "career_choice_hub")).override_failure_message(
+		"안 받았다면서 지원 화면을 치웠다").is_true()
+
+
+func test_independent_picks_go_to_the_independent_list() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+	DecisionVm.apply(s, "submit:independent:TEAM_IND_A", 300)
+	var apps: Dictionary = CareerDecision.of(s).get("applications", {})
+	assert_int(apps["independent_choices"].size()).override_failure_message(
+		"독립 지원이 대학 쪽으로 갔다").is_equal(1)
+
+
+# ── FA 시장 ───────────────────────────────────────────────────
+
+## ⚠ **제안을 만드는 곳이 04에 없다.** 없는 선택지를 지어내지 않는다 —
+## 지금은 기다리는 길만 준다. 그래도 대기줄은 풀려야 한다
+func test_an_empty_fa_market_still_lets_me_move_on() -> void:
+	var s: Dictionary = _state({"contract_years": 0})
+	Pending.push_once(s, {"type": "fa_market"})
+	var vm: Dictionary = DecisionVm.build(s)
+	assert_str(String(vm["body"])).contains("없습니다")
+	assert_array(_ids(vm)).is_equal(["wait"])
+
+	assert_bool(DecisionVm.apply(s, "wait", 300)).is_true()
+	assert_bool(Pending.has(s, "fa_market")).override_failure_message(
+		"기다린다고 했는데 FA가 대기줄에 남았다").is_false()
+
+
+## 제안이 생기면 그걸 고를 수 있다 — 만드는 곳이 붙었을 때를 위해
+func test_an_offer_can_be_signed() -> void:
+	var s: Dictionary = _state({"contract_years": 0})
+	s["fa_offers"] = [{"team_id": "TEAM_KBL_B", "league_id": "LEAGUE_KBL",
+		"salary": 24000, "duration_years": 3, "signing_bonus": 5000}]
+	Pending.push_once(s, {"type": "fa_market"})
+
+	assert_str(String(DecisionVm.build(s)["body"])).contains("1건")
+	assert_bool(DecisionVm.apply(s, "offer:0", 300)).is_true()
+	assert_int(int(s[ContractDecision.NEXT_KEY]["salary"])
+		).override_failure_message("보여준 연봉과 다르게 계약됐다").is_equal(24000)
+
+
+func test_a_bogus_offer_index_is_refused() -> void:
+	var s: Dictionary = _state({"contract_years": 0})
+	Pending.push_once(s, {"type": "fa_market"})
+	assert_bool(DecisionVm.apply(s, "offer:7", 300)).is_false()
+
+
 # ── 화면 ──────────────────────────────────────────────────────
 
 func _open(s: Dictionary) -> DecisionScreen:
@@ -335,6 +447,29 @@ func test_redrawing_does_not_pile_up_buttons() -> void:
 	screen.set_view_model(DecisionVm.build(s))
 	await await_idle_frame()
 	assert_int(box.get_child_count()).is_equal(before)
+
+
+## ⚠ **여러 개 고르는 화면은 켠 것을 id에 담아 올린다** — 화면이 상태를
+## 들고 있으면 다시 그릴 때 고른 게 사라진다
+func test_the_many_screen_sends_what_was_ticked() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	Pending.push_once(s, {"type": "career_choice_hub"})
+	var screen: DecisionScreen = await _open(s)
+
+	var got: Array = []
+	screen.chosen.connect(func(id: String) -> void: got.append(id))
+	var box: VBoxContainer = screen.get_node("Pad/Center/Col/Choices")
+	for c in box.get_children():
+		if c is CheckBox and String(c.get_meta("choice_id")) == "draft":
+			(c as CheckBox).button_pressed = true
+	for c in box.get_children():
+		if c is Button and not (c is CheckBox):
+			(c as Button).pressed.emit()
+	await await_idle_frame()
+
+	assert_array(got).is_not_empty()
+	assert_str(String(got[0])).override_failure_message(
+		"켠 것이 안 담겼다: %s" % got).contains("draft")
 
 
 func test_the_screen_holds_no_logic() -> void:

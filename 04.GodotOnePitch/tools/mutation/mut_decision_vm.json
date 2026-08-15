@@ -60,6 +60,56 @@
   "\t\t\t\treturn false"
  ],
  [
+  "대학생에게도 대학 지원을 띄운다 (두 번 입학이라 엔진이 거절한다)",
+  "\tif CareerPath.can_apply_university(stage):\n\t\tfor t in _teams(\"LEAGUE_UNIVERSITY\"):",
+  "\tif true:\n\t\tfor t in _teams(\"LEAGUE_UNIVERSITY\"):"
+ ],
+ [
+  "드래프트 신청을 선택지에 안 넣는다",
+  "\tchoices.append({\"id\": \"draft\", \"label\": \"신인 드래프트 신청\"})",
+  "\tpass"
+ ],
+ [
+  "지원 화면을 하나만 고르는 모양으로 만든다",
+  "\t\"갈 곳을 고릅니다. 여러 곳에 동시에 낼 수 있습니다.\", choices, \"many\")",
+  "\t\t\"갈 곳을 고릅니다. 여러 곳에 동시에 낼 수 있습니다.\", choices)"
+ ],
+ [
+  "고른 것을 안 보고 늘 빈 지원을 낸다",
+  "\t\t\"draft\": draft, \"university_choices\": univ,\n\t\t\"independent_choices\": indie}).is_empty()",
+  "\t\t\"draft\": false, \"university_choices\": [],\n\t\t\"independent_choices\": []}).is_empty()"
+ ],
+ [
+  "독립 지원을 대학 쪽에 넣는다",
+  "\t\telif parts[0] == \"independent\":\n\t\t\tindie.append(parts[1])",
+  "\t\telif parts[0] == \"independent\":\n\t\t\tuniv.append(parts[1])"
+ ],
+ [
+  "제출이 아닌 것도 제출로 받는다",
+  "\tif not choice_id.begins_with(\"submit:\"):\n\t\treturn false",
+  "\tpass"
+ ],
+ [
+  "FA에서 기다릴 길을 안 준다 (그 자리에서 영영 안 풀린다)",
+  "\tchoices.append({\"id\": \"wait\", \"label\": \"한 해 더 기다린다\"})",
+  "\tpass"
+ ],
+ [
+  "없는 제안 번호도 받아 준다",
+  "\t\t\t\tif i < 0 or i >= offers.size():\n\t\t\t\t\treturn false",
+  "\t\t\t\tif false:\n\t\t\t\t\treturn false"
+ ],
+ [
+  "제안을 골라도 늘 기다린다",
+  "\t\t\tif choice_id.begins_with(\"offer:\"):",
+  "\t\t\tif false:"
+ ],
+ [
+  "보여준 연봉과 다르게 FA 계약한다",
+  "\t\t\t\treturn ContractDecision.sign_fa_offer(state, o,\n\t\t\t\t\tint(o.get(\"salary\", 0)), at_day)",
+  "\t\t\t\treturn ContractDecision.sign_fa_offer(state, o, 0, at_day)"
+ ],
+ [
   "떨어진 대학도 선택지로 둔다 (누르면 엔진이 거절하는 버튼)",
   "\tfor t in r.get(\"university_passed\", []):",
   "\tfor t in [\"TEAM_UNIV_X\"]:"

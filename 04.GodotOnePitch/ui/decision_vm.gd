@@ -18,9 +18,14 @@ class_name DecisionVm
 ## 여기서 받는 결정. **`AutoAdvance.STOPPING`의 부분집합이다** —
 ## 아직 안 만든 것은 목록에 없고, 그건 `pending_kinds` 검사가 지킨다
 const HANDLED: Array[String] = [
-	"career_results", "career_choice", "draft_observe", "draft_notification",
-	"salary_negotiation", "option_clause", "trade",
+	"career_choice_hub", "career_results", "career_choice",
+	"draft_observe", "draft_notification",
+	"salary_negotiation", "option_clause", "fa_market", "trade",
 ]
+
+## 한 번에 몇 곳까지 지원하나 — 화면이 보여주는 후보 수.
+## 실제 상한은 `CareerDecision._clip`이 정본이다
+const APPLY_SHOWN: int = 6
 
 
 static func blocking(state: Dictionary) -> Dictionary:
@@ -47,8 +52,12 @@ static func build(state: Dictionary) -> Dictionary:
 			return _observe(state, a)
 		"draft_notification":
 			return _draft(state, a)
+		"career_choice_hub":
+			return _hub(state, a)
 		"career_choice":
 			return _choice(state, a)
+		"fa_market":
+			return _fa(state, a)
 		"salary_negotiation":
 			return _salary(state, a)
 		"option_clause":
@@ -59,8 +68,66 @@ static func build(state: Dictionary) -> Dictionary:
 
 
 static func _of(t: String, title: String, body: String,
-		choices: Array) -> Dictionary:
-	return {"type": t, "title": title, "body": body, "choices": choices}
+		choices: Array, kind: String = "one") -> Dictionary:
+	return {"type": t, "title": title, "body": body, "choices": choices,
+		"kind": kind, "submit_label": "제출한다"}
+
+
+## 지원할 곳 고르기 — **여러 곳을 동시에 낸다.**
+##
+## ⚠ **지원할 수 있는 무대만 보여준다.** 대학생에게 "대학 지원"을 띄우면
+## 두 번 입학이 되고, 엔진(`can_apply_university`)이 거절해서 아무 일도
+## 안 일어난다 — 왜 안 되는지는 화면에 안 나온다
+static func _hub(state: Dictionary, _a: Dictionary) -> Dictionary:
+	var stage: String = String(state.get("protagonist", {}).get(
+		"career_stage", ""))
+	var choices: Array = []
+	if CareerPath.can_apply_university(stage):
+		for t in _teams("LEAGUE_UNIVERSITY"):
+			choices.append({"id": "university:%s" % t["id"],
+				"label": "%s 지원" % t["name"]})
+	if CareerPath.can_apply_independent(stage):
+		for t in _teams("LEAGUE_INDEPENDENT"):
+			if not CareerPath.is_applicable_independent(String(t["id"])):
+				continue
+			choices.append({"id": "independent:%s" % t["id"],
+				"label": "%s 입단 지원" % t["name"]})
+	choices.append({"id": "draft", "label": "신인 드래프트 신청"})
+
+	return _of("career_choice_hub", "진로 지원",
+		"갈 곳을 고릅니다. 여러 곳에 동시에 낼 수 있습니다.", choices, "many")
+
+
+static func _teams(league_id: String) -> Array:
+	var out: Array = []
+	for t in World.teams_of(league_id):
+		out.append(t)
+		if out.size() >= APPLY_SHOWN:
+			break
+	return out
+
+
+## FA 시장.
+##
+## ⚠ **제안을 만드는 곳이 04에 없다.** `sign_fa_offer`는 offer를 인자로
+## 받는데 그 offer를 세우는 코드가 없다 — `fa_market`을 대기줄에 올리는
+## 자리만 셋이다. 그래서 지금은 기다리는 길만 준다. **없는 선택지를
+## 지어내지 않는다** — 지어내면 그게 두 번째 정본이 된다
+static func _fa(state: Dictionary, _a: Dictionary) -> Dictionary:
+	var offers: Array = state.get("fa_offers", [])
+	var choices: Array = []
+	for i in offers.size():
+		var o: Dictionary = offers[i]
+		choices.append({"id": "offer:%d" % i,
+			"label": "%s · 연봉 %s · %d년" % [
+				_team(state, String(o.get("team_id", ""))),
+				FinanceVm.won(int(o.get("salary", 0))),
+				int(o.get("duration_years", 1))]})
+	choices.append({"id": "wait", "label": "한 해 더 기다린다"})
+
+	var body: String = "들어온 제안이 없습니다." if offers.is_empty() \
+		else "제안 %d건이 들어왔습니다." % offers.size()
+	return _of("fa_market", "FA 시장", body, choices)
 
 
 static func _results(state: Dictionary, _a: Dictionary) -> Dictionary:
@@ -185,8 +252,20 @@ static func apply(state: Dictionary, choice_id: String, at_day: int) -> bool:
 				return CareerDecision.accept_draft_offer(state, a)
 			return not CareerDecision.reject_draft_offer(state, a,
 				at_day).is_empty()
+		"career_choice_hub":
+			return _apply_hub(state, choice_id)
 		"career_choice":
 			return _apply_choice(state, choice_id)
+		"fa_market":
+			if choice_id.begins_with("offer:"):
+				var offers: Array = state.get("fa_offers", [])
+				var i: int = int(choice_id.substr(6))
+				if i < 0 or i >= offers.size():
+					return false
+				var o: Dictionary = offers[i]
+				return ContractDecision.sign_fa_offer(state, o,
+					int(o.get("salary", 0)), at_day)
+			return ContractDecision.wait_fa_market(state) > 0
 		"salary_negotiation":
 			if choice_id == "sign":
 				return ContractDecision.sign_negotiated(state, a,
@@ -213,6 +292,32 @@ static func _contract_of(a: Dictionary) -> Dictionary:
 		"team_id": String(a.get("team_id", "")),
 		"league_id": String(a.get("league_id", "")),
 	}
+
+
+## 켜 놓은 것들을 한 번에 낸다. `submit:university:U1,draft` 꼴이다.
+##
+## ⚠ **아무것도 안 고르고 내면 그것도 답이다** — 아무 데도 지원 안 하고
+## 지금 자리에 남는 길이다. 막으면 대기줄이 그 자리에서 안 풀린다
+static func _apply_hub(state: Dictionary, choice_id: String) -> bool:
+	if not choice_id.begins_with("submit:"):
+		return false
+	var univ: Array = []
+	var indie: Array = []
+	var draft: bool = false
+	for one in choice_id.substr(7).split(",", false):
+		if one == "draft":
+			draft = true
+			continue
+		var parts: PackedStringArray = one.split(":", true, 1)
+		if parts.size() < 2:
+			continue
+		if parts[0] == "university":
+			univ.append(parts[1])
+		elif parts[0] == "independent":
+			indie.append(parts[1])
+	return not CareerDecision.submit_applications(state, {
+		"draft": draft, "university_choices": univ,
+		"independent_choices": indie}).is_empty()
 
 
 ## `university:TEAM_X` 처럼 갈래와 팀을 한 id에 담는다 — 화면이
