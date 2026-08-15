@@ -495,11 +495,25 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         지워져 잠긴 객체가 된다. 이 자리만 `queue_free`.
         검사 28 · 변이 16/16 + 7/7
 
-      ❓ **나머지 결정 아홉은 아직 화면이 없다.** 대기줄에 쌓이는 열 종류
-      중 은퇴만 받는 자리가 생겼다 — `career_choice_hub`·`career_results`·
-      `career_choice`·`draft_observe`·`draft_notification`·`salary_negotiation`·
-      `option_clause`·`fa_market`·`trade`가 남았다. **B-11 자동 진행 화면
-      배선과 같은 자리다.**
+      **결정 화면 넷을 이었다** (`ui/decision_vm.gd` ·
+      `ui/screens/decision_screen.{tscn,gd}`) — `career_results` ·
+      `draft_observe` · `draft_notification` · `trade`.
+      ⚠ **종류마다 화면을 만들지 않는다.** 결정은 "무엇을 묻고 · 고를 것이
+      무엇인가" 하나로 같다 — 종류마다 만들면 열 개가 되고 새 결정이
+      생길 때마다 또 하나가 필요해진다. 배선표는 `DecisionVm.apply` 하나다.
+      ⚠ **결정은 줄줄이 온다**(결과 → 최종 선택 → 지명 통보). 하나 답하고
+      화면을 닫으면 다음 것이 대기줄에 남은 채로 진행이 막힌다 — 같은
+      화면이 다음 것을 이어받는다.
+      ⚠ **`HANDLED`에 없는 결정은 안 받는다** — 답을 못 하는 화면이 뜨고
+      대기줄은 그대로 남는다. 검사가 `HANDLED`가 전부 `AutoAdvance.STOPPING`
+      안에 있는지도 본다.
+      검사 22 · 변이 14/14
+
+      ❓ **결정 다섯이 아직 남았다** — `career_choice_hub`(여러 곳 지원:
+      다중 선택 UI가 필요하다) · `career_choice`(진학/드래프트/독립 갈래) ·
+      `salary_negotiation` · `option_clause` · `fa_market`(제안 목록에서
+      고른다). 앞의 넷과 같은 화면에 얹으면 된다 — `DecisionVm`에 갈래를
+      더하고 `HANDLED`에 넣는다.
       ❓ **인생 기록을 "나" 탭에서 다시 여는 길이 없다.** 화면은
       `set_summary`로 혼자 열리게 만들어 뒀다 — 버튼만 붙이면 된다
 

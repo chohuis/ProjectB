@@ -17,6 +17,7 @@ const MATCH_SCREEN := preload("res://ui/screens/match_screen.tscn")
 const SEASON_END_SCREEN := preload("res://ui/screens/season_end_screen.tscn")
 const TRAINING_SCREEN := preload("res://ui/screens/training_screen.tscn")
 const RETIREMENT_SCREEN := preload("res://ui/screens/retirement_screen.tscn")
+const DECISION_SCREEN := preload("res://ui/screens/decision_screen.tscn")
 
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
@@ -34,6 +35,7 @@ var _season_screen: SeasonEndScreen
 ## 훈련 계획 화면
 var _training_screen: TrainingScreen
 var _retire_screen: RetirementScreen
+var _decision_screen: DecisionScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -334,6 +336,41 @@ func _on_retirement_done() -> void:
 	_refresh()
 
 
+## 결정을 묻는다.
+##
+## ⚠ **밀어넣는 코드는 있는데 받는 자리가 없었다** — 은퇴 말고 아홉이
+## 그랬다. 대기줄에 올라간 채 아무도 안 받으면 `AutoAdvance`가 그 자리에서
+## 안 풀리고 커리어가 막힌다
+func _open_decision() -> void:
+	if _decision_screen != null:
+		return
+	_decision_screen = DECISION_SCREEN.instantiate()
+	_decision_screen.chosen.connect(_on_decision)
+	add_child(_decision_screen)
+	_decision_screen.set_view_model(DecisionVm.build(_state))
+	_main.visible = false
+
+
+func decision_screen() -> DecisionScreen:
+	return _decision_screen
+
+
+## ⚠ **답한 뒤에 또 있는지 본다.** 결정은 줄줄이 온다(진로 결과 → 최종
+## 선택 → 지명 통보) — 하나 답하고 화면을 닫으면 다음 것이 다시 대기줄에
+## 남은 채로 진행이 막힌다
+func _on_decision(choice_id: String) -> void:
+	DecisionVm.apply(_state, choice_id, int(_state.get("day", 1)))
+	if DecisionVm.is_asking(_state):
+		_decision_screen.set_view_model(DecisionVm.build(_state))
+		return
+	if _decision_screen != null:
+		remove_child(_decision_screen)
+		_decision_screen.queue_free()
+		_decision_screen = null
+	_main.visible = true
+	_refresh()
+
+
 func season_screen() -> SeasonEndScreen:
 	return _season_screen
 
@@ -378,9 +415,11 @@ func advance(days: int) -> void:
 	_refresh()
 
 	# ⚠ **물어봤으면 띄운다.** 대기줄에 올려 놓고 받는 자리가 없으면
-	# 자동 진행이 "은퇴 여부 결정"에서 멈춘 채 영영 안 풀린다
+	# 자동 진행이 그 자리에서 멈춘 채 영영 안 풀린다
 	if RetirementVm.is_asking(_state):
 		_open_retirement()
+	elif DecisionVm.is_asking(_state):
+		_open_decision()
 
 
 ## 경기 하나. 결과를 **일정에 되꽂는다** — 안 꽂으면 다시 진행할 때 또 돌린다.

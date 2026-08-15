@@ -1,0 +1,72 @@
+[
+ [
+  "아직 화면이 없는 결정도 받는다고 한다 (답을 못 하는 화면이 뜬다)",
+  "\t\tif HANDLED.has(String(a.get(\"type\", \"\"))):\n\t\t\treturn a",
+  "\t\treturn a"
+ ],
+ [
+  "받을 게 없는데 묻는다",
+  "\treturn not blocking(state).is_empty()",
+  "\treturn true"
+ ],
+ [
+  "지명 통보에 거부를 안 준다 (지명받고도 계약 없이 고교에 남는다)",
+  "\t\t{\"id\": \"accept\", \"label\": \"계약한다\"},\n\t\t{\"id\": \"reject\", \"label\": \"거부한다\"},",
+  "\t\t{\"id\": \"accept\", \"label\": \"계약한다\"},"
+ ],
+ [
+  "지명 라운드·순위를 안 알려준다",
+  "\t\t\"%s가 %d라운드 %d순위로 지명했습니다.\" % [team,\n\t\t\tint(a.get(\"round\", 0)), int(a.get(\"pick\", 0))],",
+  "\t\t\"%s가 지명했습니다.\" % team,"
+ ],
+ [
+  "계약금을 안 알려준다",
+  "\t\t\"계약금 %s · 연봉 %s\" % [\n\t\t\tFinanceVm.won(int(a.get(\"signing_bonus\", 0))),\n\t\t\tFinanceVm.won(int(a.get(\"salary\", 0)))],",
+  "\t\t\"\","
+ ],
+ [
+  "노트레이드가 없는데 거부를 준다 (누를 수 없는 버튼)",
+  "\tif bool(state.get(\"protagonist\", {}).get(\"no_trade\", false)):\n\t\tchoices.append({\"id\": \"reject\", \"label\": \"거부한다 (노트레이드)\"})",
+  "\tchoices.append({\"id\": \"reject\", \"label\": \"거부한다 (노트레이드)\"})"
+ ],
+ [
+  "노트레이드가 있어도 거부를 안 준다",
+  "\tif bool(state.get(\"protagonist\", {}).get(\"no_trade\", false)):\n\t\tchoices.append({\"id\": \"reject\", \"label\": \"거부한다 (노트레이드)\"})",
+  "\tpass"
+ ],
+ [
+  "어디로 가는지를 안 알려준다",
+  "\tvar body: String = \"%s로 트레이드됩니다.\\n%s\" % [to_team,",
+  "\tvar body: String = \"%s%s\" % [\"\","
+ ],
+ [
+  "고른 것과 상관없이 늘 수락한다 (지명)",
+  "\t\t\tif choice_id == \"accept\":\n\t\t\t\treturn CareerDecision.accept_draft_offer(state, a)",
+  "\t\t\tif true:\n\t\t\t\treturn CareerDecision.accept_draft_offer(state, a)"
+ ],
+ [
+  "고른 것과 상관없이 늘 수락한다 (트레이드)",
+  "\t\t\tif choice_id == \"accept\":\n\t\t\t\treturn ContractDecision.accept_trade(state, a)",
+  "\t\t\tif true:\n\t\t\t\treturn ContractDecision.accept_trade(state, a)"
+ ],
+ [
+  "지명을 수락해도 아무 일도 안 일어난다",
+  "\t\t\t\treturn CareerDecision.accept_draft_offer(state, a)",
+  "\t\t\t\treturn false"
+ ],
+ [
+  "트레이드를 수락해도 팀이 안 바뀐다",
+  "\t\t\t\treturn ContractDecision.accept_trade(state, a)",
+  "\t\t\t\treturn false"
+ ],
+ [
+  "드래프트 관전을 치우지 않는다 (그 자리에서 영영 안 풀린다)",
+  "\t\t\treturn Pending.resolve(state, \"draft_observe\")",
+  "\t\t\treturn true"
+ ],
+ [
+  "진로 결과를 확인해도 안 넘어간다",
+  "\t\t\treturn CareerDecision.confirm_results(state)",
+  "\t\t\treturn true"
+ ]
+]
