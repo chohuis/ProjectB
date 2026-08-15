@@ -48,6 +48,8 @@ signal major_picked(name: String)
 ## 04는 둘 다 읽는 코드만 있고 세우는 데가 없었다
 signal sponsor_signed(category_id: String)
 signal subscription_toggled(area_id: String)
+## 인생 기록을 다시 본다 — 은퇴 뒤에도, 현역일 때도
+signal life_record_requested
 ## 하위 탭을 옮겼다. **부모가 자리를 기억한다** — 이 화면은 상태가 바뀔
 ## 때마다 통째로 새로 만들어지기 때문이다
 signal tab_changed(index: int)
@@ -477,6 +479,15 @@ func _season_card() -> Card:
 
 func _career_card() -> Card:
 	var c := _card("시즌별 성적")
+
+	# ⚠ **인생 기록을 다시 볼 길을 둔다.** 은퇴하는 그 순간이 첫 관람이고,
+	# 그 뒤로는 여기가 유일한 입구다 — 없으면 결산을 한 번 보고 못 본다
+	var life := Button.new()
+	life.text = "인생 기록"
+	life.focus_mode = Control.FOCUS_NONE
+	life.pressed.connect(func() -> void: life_record_requested.emit.call_deferred())
+	c.body.add_child(life)
+
 	var rows: Array = _vm.get("career", [])
 	if rows.is_empty():
 		var l := Label.new()

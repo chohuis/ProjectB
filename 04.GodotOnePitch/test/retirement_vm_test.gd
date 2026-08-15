@@ -351,6 +351,42 @@ func test_the_recorded_reason_matches_the_question() -> void:
 		).is_equal("injury")
 
 
+## ⚠ **은퇴 뒤에도 다시 볼 수 있어야 한다.** 은퇴하는 순간이 첫 관람이고
+## 그 뒤로는 "나" 탭의 커리어가 유일한 입구다 — 없으면 결산을 한 번 보고
+## 못 본다
+func test_the_life_record_can_be_reopened_from_the_me_tab() -> void:
+	var s: Dictionary = World.new_game({"seed": 777, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var r: AppRoot = APP.instantiate()
+	add_child(r)
+	r.set_state(s)
+	await await_idle_frame()
+
+	r.screen()._on_tab(1)
+	await await_idle_frame()
+	var status: StatusScreen = r.screen().find_children(
+		"*", "StatusScreen", true, false)[0]
+	for i in StatusVm.TABS.size():
+		if String(StatusVm.TABS[i]["id"]) == "career":
+			status._on_tab(i)
+	await await_idle_frame()
+
+	var pressed: bool = false
+	for b in r.find_children("*", "Button", true, false):
+		if String((b as Button).text) == "인생 기록":
+			(b as Button).pressed.emit()
+			pressed = true
+			break
+	assert_bool(pressed).override_failure_message(
+		"커리어 탭에 인생 기록을 여는 자리가 없다").is_true()
+
+	await await_idle_frame()
+	await await_idle_frame()
+	assert_object(r.retirement_screen()).override_failure_message(
+		"눌렀는데 인생 기록이 안 열렸다").is_not_null()
+	assert_str(_joined(r.retirement_screen())).contains("인생 기록")
+
+
 func test_the_screen_holds_no_logic() -> void:
 	var src := FileAccess.get_file_as_string(
 		"res://ui/screens/retirement_screen.gd")

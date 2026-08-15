@@ -58,6 +58,8 @@ signal major_picked(name: String)
 ## 재정에서 고른 것 — 스폰서 계약·개인 트레이닝 구독
 signal sponsor_signed(category_id: String)
 signal subscription_toggled(area_id: String)
+## 인생 기록을 다시 본다
+signal life_record_requested
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -286,6 +288,8 @@ func _build_me() -> void:
 		func(c: String) -> void: sponsor_signed.emit.call_deferred(c))
 	screen.subscription_toggled.connect(
 		func(a: String) -> void: subscription_toggled.emit.call_deferred(a))
+	screen.life_record_requested.connect(
+		func() -> void: life_record_requested.emit.call_deferred())
 	# ⚠ **하위 탭 자리를 여기서 기억한다.** 학업에서 뭘 고르면 상태가
 	# 바뀌고 이 화면이 통째로 새로 만들어지는데, 안 되돌려 놓으면
 	# 고를 때마다 "능력치"로 튕겨 나간다

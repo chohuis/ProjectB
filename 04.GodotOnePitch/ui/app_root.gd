@@ -59,6 +59,7 @@ func _ready() -> void:
 	_main.major_picked.connect(_on_major)
 	_main.sponsor_signed.connect(_on_sponsor)
 	_main.subscription_toggled.connect(_on_subscription)
+	_main.life_record_requested.connect(_open_life_record)
 	_refresh()
 
 
@@ -302,6 +303,18 @@ func _open_retirement() -> void:
 	add_child(_retire_screen)
 	_retire_screen.set_ask(RetirementVm.build_ask(_state),
 		RetirementVm.build_summary(_state))
+	_main.visible = false
+
+
+## 인생 기록을 다시 본다. **은퇴 뒤에도, 현역일 때도** 같은 화면이다 —
+## 은퇴하는 순간이 첫 관람이고 그 뒤로는 여기가 입구다
+func _open_life_record() -> void:
+	if _retire_screen != null:
+		return
+	_retire_screen = RETIREMENT_SCREEN.instantiate()
+	_retire_screen.done_requested.connect(_on_retirement_done)
+	add_child(_retire_screen)
+	_retire_screen.set_summary(RetirementVm.build_summary(_state))
 	_main.visible = false
 
 

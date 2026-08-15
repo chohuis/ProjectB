@@ -1,0 +1,12 @@
+[
+ [
+  "인생 기록을 다시 열 자리를 안 만든다 (한 번 보고 못 본다)",
+  "\tlife.pressed.connect(func() -> void: life_record_requested.emit.call_deferred())\n\tc.body.add_child(life)",
+  "\tpass"
+ ],
+ [
+  "눌러도 신호를 안 올린다",
+  "\tlife.pressed.connect(func() -> void: life_record_requested.emit.call_deferred())",
+  "\tpass"
+ ]
+]
