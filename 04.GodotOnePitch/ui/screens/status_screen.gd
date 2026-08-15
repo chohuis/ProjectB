@@ -129,6 +129,7 @@ func _rebuild_tab() -> void:
 		"career": _tab_host.add_child(_career_card())
 		"academics": _build_academics()
 		"finance": _build_finance()
+		"achievements": _build_achievements()
 
 
 # ── 부품 만들기 ────────────────────────────────────────────────────
@@ -362,6 +363,42 @@ func _trend_card(tr: Dictionary) -> Card:
 			"%s  →  %s" % [String(r["net"]), String(r["money"])],
 			AppTheme.BAD if bool(r["down"]) else AppTheme.TEXT))
 	return c
+
+
+# ── 업적 탭 (C-5) ──────────────────────────────────────────────────
+#
+# ⚠ **화면이 달성 판정을 안 한다.** 판정은 주 경계에서 끝난다 — 02는 이
+# 화면이 지표를 직접 계산해서, 화면을 안 열면 진행도가 낡은 채로 남았다.
+
+func _build_achievements() -> void:
+	var a: Dictionary = _vm.get("achievements", {})
+	if int(a.get("unlocked", 0)) == 0:
+		var head := _card(String(a.get("summary", "")))
+		head.body.add_child(_row("", String(a.get("empty", "")), AppTheme.TEXT_MUTE))
+		_tab_host.add_child(head)
+	else:
+		var head2 := _card(String(a.get("summary", "")))
+		head2.body.add_child(_bar("달성", float(a.get("unlocked", 0))
+			/ maxf(float(a.get("total", 1)), 1.0),
+			"%d / %d" % [int(a.get("unlocked", 0)), int(a.get("total", 0))],
+			AppTheme.OK))
+		_tab_host.add_child(head2)
+
+	for g in a.get("groups", []):
+		var c := _card(String(g["label"]))
+		for r in g["rows"]:
+			c.body.add_child(_achievement_row(r))
+		_tab_host.add_child(c)
+
+
+func _achievement_row(r: Dictionary) -> Control:
+	var done: bool = bool(r["unlocked"])
+	# 딴 것은 언제 땄는지가, 못 딴 것은 얼마나 남았는지가 오른쪽에 온다
+	var right: String = String(r["detail"])
+	if done and not String(r["reward"]).is_empty():
+		right = "%s · %s" % [right, String(r["reward"])]
+	return _row(String(r["title"]), right,
+		AppTheme.OK if done else AppTheme.TEXT_DIM)
 
 
 # ── 카드 ───────────────────────────────────────────────────────────

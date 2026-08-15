@@ -1,0 +1,87 @@
+[
+ [
+  "아직 못 만든 업적(blocked)도 판정한다",
+  "\t\tif String(d.get(\"status\", \"\")) == \"active\":\n\t\t\tout.append(d)",
+  "\t\tout.append(d)"
+ ],
+ [
+  "연도 기록을 해로 안 묶는다 (끝난 시즌이 두 번 세어진다)",
+  "\t\t\tby_year[int(h.get(\"year\", 0))] = st",
+  "\t\t\tby_year[str(h)] = st"
+ ],
+ [
+  "숫자 없는 옛 줄도 통산에 넣는다",
+  "\t\tif st is Dictionary and not (st as Dictionary).is_empty():",
+  "\t\tif true:"
+ ],
+ [
+  "아직 안 끝난 올해를 통산에서 뺀다 (첫 시즌엔 아무것도 안 열린다)",
+  "\tif not live.is_empty():\n\t\tby_year[int(state.get(\"season_year\", 0))] = live",
+  "\tpass"
+ ],
+ [
+  "올해를 따로 더한다 (해로 안 묶으니 시즌 말에 두 배가 된다)",
+  "\tif not live.is_empty():\n\t\tby_year[int(state.get(\"season_year\", 0))] = live",
+  "\tif not live.is_empty():\n\t\tby_year[-1] = live"
+ ],
+ [
+  "통산을 안 합친다",
+  "\t\tfor key in out:\n\t\t\tout[key] = int(out[key]) + int(roundf(float(st.get(key, 0))))",
+  "\t\tpass"
+ ],
+ [
+  "내 팀이 아니라 아무 팀의 승수를 본다",
+  "\t\tif String(row.get(\"team_id\", \"\")) == team:\n\t\t\treturn int(row.get(\"wins\", 0))",
+  "\t\treturn int(row.get(\"wins\", 0))"
+ ],
+ [
+  "순위표를 상태에서 읽는다 (04는 일정에서 파생한다 — 영영 0이 된다)",
+  "\tfor row in Standings.from_schedule(state.get(\"schedule\", []),\n\t\t\tString(p.get(\"league_id\", \"\"))):",
+  "\tfor row in state.get(\"standings\", []):"
+ ],
+ [
+  "안 읽은 소식도 읽었다고 센다",
+  "\t\tif bool(m.get(\"read\", false)):\n\t\t\tn += 1",
+  "\t\tn += 1"
+ ],
+ [
+  "훈련한 주를 성장 기록 수로 센다 (안 오른 주가 통째로 빠진다)",
+  "\t\t\"training_weeks\": int(state.get(\"protagonist\", {}).get(\n\t\t\t\"training_weeks\", 0)),",
+  "\t\t\"training_weeks\": state.get(\"training_log\", []).size(),"
+ ],
+ [
+  "목표에 못 미쳐도 열어 준다",
+  "\t\tif current >= int(d[\"target\"]):",
+  "\t\tif true:"
+ ],
+ [
+  "목표를 정확히 채우면 안 열어 준다 (경계에서 하나가 샌다)",
+  "\t\tif current >= int(d[\"target\"]):",
+  "\t\tif current > int(d[\"target\"]):"
+ ],
+ [
+  "이미 딴 업적이 값이 떨어지면 풀린다 (팀 승수는 해마다 0이 된다)",
+  "\t\tif not String(row.get(\"unlocked_at\", \"\")).is_empty():\n\t\t\trow[\"progress\"] = maxi(int(row.get(\"progress\", 0)), current)\n\t\t\truntime[id] = row\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "이미 딴 것을 매주 새로 땄다고 한다",
+  "\t\tif not String(row.get(\"unlocked_at\", \"\")).is_empty():\n\t\t\trow[\"progress\"] = maxi(int(row.get(\"progress\", 0)), current)\n\t\t\truntime[id] = row\n\t\t\tcontinue",
+  "\t\tif not String(row.get(\"unlocked_at\", \"\")).is_empty():\n\t\t\trow[\"progress\"] = maxi(int(row.get(\"progress\", 0)), current)\n\t\t\truntime[id] = row"
+ ],
+ [
+  "언제 땄는지를 안 남긴다",
+  "\t\t\truntime[id] = {\"progress\": current, \"unlocked_at\": label}",
+  "\t\t\truntime[id] = {\"progress\": current, \"unlocked_at\": \"?\"}"
+ ],
+ [
+  "아직 못 딴 것의 진행도를 안 남긴다",
+  "\t\t\truntime[id] = {\"progress\": current, \"unlocked_at\": \"\"}",
+  "\t\t\truntime[id] = {\"progress\": 0, \"unlocked_at\": \"\"}"
+ ],
+ [
+  "달성 상태를 상태에 안 쓴다",
+  "\tstate[STATE_KEY] = runtime\n\treturn fresh",
+  "\treturn fresh"
+ ]
+]

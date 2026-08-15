@@ -56,6 +56,7 @@ static func build(s: Dictionary) -> Dictionary:
 		"tabs": _tabs(academics),
 		"academics": academics,
 		"finance": FinanceVm.build(s),
+		"achievements": AchievementsVm.build(s),
 	}
 
 
@@ -69,6 +70,7 @@ const TABS: Array[Dictionary] = [
 	{"id": "season", "label": "기록"},
 	{"id": "career", "label": "커리어"},
 	{"id": "finance", "label": "재정"},
+	{"id": "achievements", "label": "업적"},
 ]
 
 

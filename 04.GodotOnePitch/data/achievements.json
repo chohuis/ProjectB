@@ -1,0 +1,51 @@
+{
+ "_note": "02 resource/data/master/achievements/achievements.json 그대로. id·제목·목표치를 안 바꿨다. 키 이름만 04 규칙(snake_case)으로",
+ "_metric_note": "02 metricKey → 04 metric. winsTotal은 **팀 순위표의 그 시즌 승수**이고 gamesWonTotal이 개인 커리어 승이다 — 제목('20승 달성')은 개인처럼 읽히지만 02가 그렇게 셌다. 밸런스 동결이라 그대로 옮기고 검사로 못 박는다",
+ "_reward_note": "02에서 reward는 **표시만 하고 적용하지 않는다** — 화면이 태그로 찍을 뿐 어디에도 안 걸린다. 그대로 옮긴다",
+ "_kakao_note": "ACH_SOCIAL_FIRST_KAKAO를 active → blocked로 바꿨다. **02에서도 영영 안 열리는 업적이었다** — status는 active인데 metricKey(kakaoFirstContact)를 computeMetrics가 안 만들어서 늘 0이었다. 04엔 카톡 자체가 없다. id·제목·목표치는 그대로 두고 '아직 잴 데가 없다'는 뜻의 blocked로 옮긴다",
+ "version": 2,
+ "achievements": [
+  {"id": "ACH_BASEBALL_FIRST_WIN", "title": "첫 승리", "category": "baseball", "status": "active", "metric": "team_wins", "target": 1, "hidden": false, "reward": "명성 +1"},
+  {"id": "ACH_BASEBALL_5_WINS", "title": "5승 달성", "category": "baseball", "status": "active", "metric": "team_wins", "target": 5, "hidden": false, "reward": "명성 +2"},
+  {"id": "ACH_BASEBALL_10_WINS", "title": "10승 달성", "category": "baseball", "status": "active", "metric": "team_wins", "target": 10, "hidden": false, "reward": "명성 +3"},
+  {"id": "ACH_BASEBALL_20_WINS", "title": "20승 달성", "category": "baseball", "status": "active", "metric": "team_wins", "target": 20, "hidden": false, "reward": "명성 +5"},
+  {"id": "ACH_BASEBALL_30_WINS", "title": "30승 달성", "category": "baseball", "status": "active", "metric": "team_wins", "target": 30, "hidden": false, "reward": "명성 +8"},
+  {"id": "ACH_BASEBALL_50_WINS", "title": "50승 달성", "category": "baseball", "status": "active", "metric": "team_wins", "target": 50, "hidden": false, "reward": "명성 +15"},
+
+  {"id": "ACH_BASEBALL_FIRST_WIN_CAREER", "title": "커리어 첫 승", "category": "baseball", "status": "active", "metric": "career_wins", "target": 1, "hidden": false, "reward": "자신감 +1"},
+  {"id": "ACH_BASEBALL_10_WINS_CAREER", "title": "커리어 10승", "category": "baseball", "status": "active", "metric": "career_wins", "target": 10, "hidden": false, "reward": "명성 +3"},
+  {"id": "ACH_BASEBALL_30_WINS_CAREER", "title": "커리어 30승", "category": "baseball", "status": "active", "metric": "career_wins", "target": 30, "hidden": false, "reward": "명성 +8"},
+
+  {"id": "ACH_BASEBALL_FIRST_STRIKEOUT", "title": "첫 삼진", "category": "baseball", "status": "active", "metric": "career_strikeouts", "target": 1, "hidden": false, "reward": "명성 +1"},
+  {"id": "ACH_BASEBALL_10_STRIKEOUTS", "title": "삼진 10개", "category": "baseball", "status": "active", "metric": "career_strikeouts", "target": 10, "hidden": false, "reward": "명성 +1"},
+  {"id": "ACH_BASEBALL_50_STRIKEOUTS", "title": "50삼진", "category": "baseball", "status": "active", "metric": "career_strikeouts", "target": 50, "hidden": false, "reward": "명성 +3"},
+  {"id": "ACH_BASEBALL_100_STRIKEOUTS", "title": "백삼진", "category": "baseball", "status": "active", "metric": "career_strikeouts", "target": 100, "hidden": false, "reward": "명성 +5"},
+  {"id": "ACH_BASEBALL_200_STRIKEOUTS", "title": "200삼진", "category": "baseball", "status": "active", "metric": "career_strikeouts", "target": 200, "hidden": false, "reward": "명성 +10"},
+  {"id": "ACH_BASEBALL_500_STRIKEOUTS", "title": "탈삼진 기계", "category": "baseball", "status": "active", "metric": "career_strikeouts", "target": 500, "hidden": false, "reward": "명성 +20"},
+
+  {"id": "ACH_BASEBALL_FIRST_SAVE", "title": "첫 세이브", "category": "baseball", "status": "active", "metric": "career_saves", "target": 1, "hidden": false, "reward": "명성 +2"},
+  {"id": "ACH_BASEBALL_5_SAVES", "title": "세이브 5회", "category": "baseball", "status": "active", "metric": "career_saves", "target": 5, "hidden": false, "reward": "명성 +3"},
+  {"id": "ACH_BASEBALL_10_SAVES", "title": "세이브 10회", "category": "baseball", "status": "active", "metric": "career_saves", "target": 10, "hidden": false, "reward": "명성 +5"},
+  {"id": "ACH_BASEBALL_30_SAVES", "title": "믿을 수 있는 마무리", "category": "baseball", "status": "active", "metric": "career_saves", "target": 30, "hidden": false, "reward": "명성 +12"},
+
+  {"id": "ACH_BASEBALL_FIRST_GAME", "title": "첫 출전", "category": "baseball", "status": "active", "metric": "career_games", "target": 1, "hidden": false, "reward": "경험 +1"},
+  {"id": "ACH_BASEBALL_5_GAMES", "title": "5경기 출전", "category": "baseball", "status": "active", "metric": "career_games", "target": 5, "hidden": false, "reward": "명성 +1"},
+  {"id": "ACH_BASEBALL_10_GAMES", "title": "10경기 출전", "category": "baseball", "status": "active", "metric": "career_games", "target": 10, "hidden": false, "reward": "명성 +2"},
+  {"id": "ACH_BASEBALL_20_GAMES", "title": "20경기 출전", "category": "baseball", "status": "active", "metric": "career_games", "target": 20, "hidden": false, "reward": "명성 +3"},
+  {"id": "ACH_BASEBALL_50_GAMES", "title": "50경기 출전", "category": "baseball", "status": "active", "metric": "career_games", "target": 50, "hidden": false, "reward": "명성 +8"},
+  {"id": "ACH_BASEBALL_100_GAMES", "title": "백 경기", "category": "baseball", "status": "active", "metric": "career_games", "target": 100, "hidden": false, "reward": "명성 +15"},
+
+  {"id": "ACH_GROWTH_WEEK_10", "title": "훈련 10주", "category": "growth", "status": "active", "metric": "training_weeks", "target": 10, "hidden": false, "reward": "훈련 효율 +1%"},
+  {"id": "ACH_GROWTH_WEEK_26", "title": "반년 훈련", "category": "growth", "status": "active", "metric": "training_weeks", "target": 26, "hidden": false, "reward": "훈련 효율 +2%"},
+  {"id": "ACH_GROWTH_WEEK_52", "title": "1년 훈련", "category": "growth", "status": "active", "metric": "training_weeks", "target": 52, "hidden": false, "reward": "잠재력 +1"},
+  {"id": "ACH_GROWTH_WEEK_104", "title": "2년 훈련", "category": "growth", "status": "active", "metric": "training_weeks", "target": 104, "hidden": false, "reward": "잠재력 +2"},
+  {"id": "ACH_GROWTH_WEEK_156", "title": "3년 훈련", "category": "growth", "status": "active", "metric": "training_weeks", "target": 156, "hidden": false, "reward": "잠재력 +3"},
+
+  {"id": "ACH_SOCIAL_FIRST_KAKAO", "title": "첫 카톡", "category": "social", "status": "blocked", "metric": "kakao_first_contact", "target": 1, "hidden": false, "reward": "관계도 +1"},
+  {"id": "ACH_SOCIAL_MESSAGES_10", "title": "메시지 확인", "category": "social", "status": "active", "metric": "messages_read", "target": 10, "hidden": false, "reward": "관계도 +1"},
+  {"id": "ACH_SOCIAL_MESSAGES_50", "title": "메시지 확인왕", "category": "social", "status": "active", "metric": "messages_read", "target": 50, "hidden": false, "reward": "관계도 +3"},
+  {"id": "ACH_SOCIAL_MESSAGES_100", "title": "소통의 달인", "category": "social", "status": "active", "metric": "messages_read", "target": 100, "hidden": false, "reward": "관계도 +5"},
+
+  {"id": "ACH_HIDDEN_RELATIONSHIP_1", "title": "첫 고백", "category": "hidden", "status": "blocked", "metric": "relationship_step", "target": 1, "hidden": true, "reward": "특수 이벤트 해금"}
+ ]
+}

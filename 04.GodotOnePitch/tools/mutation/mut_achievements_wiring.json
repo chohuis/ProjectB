@@ -1,0 +1,17 @@
+[
+ [
+  "주 경계에서 업적을 안 본다 (자동 진행이면 은퇴할 때까지 하나도 안 열린다)",
+  "\tAchievements.check(_state, at_day)",
+  "\tpass"
+ ],
+ [
+  "훈련한 주를 안 센다",
+  "\tif not _state.get(\"training_plan\", {}).is_empty():\n\t\tp[\"training_weeks\"] = int(p.get(\"training_weeks\", 0)) + 1",
+  "\tpass"
+ ],
+ [
+  "훈련 계획이 비어도 훈련한 주로 센다",
+  "\tif not _state.get(\"training_plan\", {}).is_empty():\n\t\tp[\"training_weeks\"] = int(p.get(\"training_weeks\", 0)) + 1",
+  "\tp[\"training_weeks\"] = int(p.get(\"training_weeks\", 0)) + 1"
+ ]
+]

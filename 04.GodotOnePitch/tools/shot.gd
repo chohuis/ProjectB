@@ -258,6 +258,28 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
+		"achievements":
+			# ⚠ **진짜로 몇 주를 돌린다.** 손으로 만든 사전이면 진행도가
+			# 실제로 쌓이는지, 딴 것과 안 딴 것이 섞여 보이는지를 못 본다
+			var ah: AppRoot = APP.instantiate()
+			var ast2 := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			ast2["training_plan"] = {"primary": "TRN_VEL"}
+			# ⚠ **경기를 실제로 치러야 야구 업적이 움직인다.** `_apply_one_week`만
+			# 돌리면 경기가 안 치러져 야구 쪽이 전부 0으로 남는다 — 실제로 그랬다
+			var afirst: int = 999
+			for g in ast2["schedule"]:
+				afirst = mini(afirst, int(g["day"]))
+			ast2["day"] = afirst
+			ah.set_state(ast2)
+			ah.ready.connect(func() -> void:
+				for i in 6:
+					await ah.advance(30)
+				ah.screen()._on_tab(1)
+				await ah.get_tree().process_frame
+				for n in ah.screen().find_children("*", "StatusScreen", true, false):
+					n.select_tab(4), CONNECT_ONE_SHOT)
+			return ah
 		"finance", "finance-bottom":
 			# ⚠ **프로로 연다.** 학생은 스폰서가 안 붙어서(아마추어 규정)
 			# 화면의 절반이 안 뜬다 — 둘 다 보려면 프로여야 한다

@@ -485,11 +485,22 @@ func _apply_one_week(at_day: int = -1) -> void:
 	if float(out.get("pitch_dev_gain", 0.0)) > 0.0:
 		p["pitch_dev"] = float(p.get("pitch_dev", 0.0)) + float(out["pitch_dev_gain"])
 
+	# ⚠ **훈련한 주를 센다.** 아래 `training_log`로는 못 센다 — 그건
+	# "뭔가 오른 주"만 남아서, 능력치가 안 오른 주는 줄이 없다
+	if not _state.get("training_plan", {}).is_empty():
+		p["training_weeks"] = int(p.get("training_weeks", 0)) + 1
+
 	# 무엇이 올랐는지 — 소식이 이걸 읽는다
 	if not out["logs"].is_empty():
 		var log: Array = _state.get("training_log", [])
 		log.append({"day": int(_state.get("day", 0)), "gains": out["logs"]})
 		_state["training_log"] = log
+
+	# 업적 — **훈련 뒤다.** 이번 주 훈련까지 세고 나서 판정한다.
+	#
+	# ⚠ **주 경계마다 돈다.** 02도 그랬다(`advanceWeek`) — 화면을 열어야만
+	# 달성되면 자동 진행에서는 은퇴할 때까지 하나도 안 열린다
+	Achievements.check(_state, at_day)
 
 	# 관계도 — **훈련 뒤다.** 성장분(`ovr_delta`)이 감독·코치 관계에 걸린다
 	#

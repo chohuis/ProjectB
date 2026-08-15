@@ -1,0 +1,62 @@
+[
+ [
+  "아직 못 만든 업적도 목록에 넣는다 (몇 개 중 몇 개가 거짓말이 된다)",
+  "\t\tif not bool(row[\"available\"]):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "딴 개수를 안 센다",
+  "\t\tif bool(row[\"unlocked\"]):\n\t\t\tunlocked += 1",
+  "\t\tpass"
+ ],
+ [
+  "전체 개수를 안 센다",
+  "\t\ttotal += 1",
+  "\t\tpass"
+ ],
+ [
+  "갈래 순서를 안 정한다 (야구가 맨 위가 아니게 된다)",
+  "\tfor cat in CATEGORY_ORDER:\n\t\tif groups.has(cat):",
+  "\tfor cat in []:\n\t\tif groups.has(cat):"
+ ],
+ [
+  "달성 요약을 안 만든다",
+  "\t\t\"summary\": \"%d / %d 달성\" % [unlocked, total],",
+  "\t\t\"summary\": \"\","
+ ],
+ [
+  "진행도가 목표를 넘어간다 (막대가 칸을 뚫는다)",
+  "\tvar progress: int = mini(int(row.get(\"progress\", 0)), target)",
+  "\tvar progress: int = int(row.get(\"progress\", 0))"
+ ],
+ [
+  "달성 여부를 안 본다",
+  "\tvar done: bool = not String(row.get(\"unlocked_at\", \"\")).is_empty()",
+  "\tvar done: bool = false"
+ ],
+ [
+  "안 딴 것에도 보상을 보여준다",
+  "\t\t\"reward\": String(d.get(\"reward\", \"\")) if done else \"\",",
+  "\t\t\"reward\": String(d.get(\"reward\", \"\")),"
+ ],
+ [
+  "딴 것에 보상을 안 보여준다",
+  "\t\t\"reward\": String(d.get(\"reward\", \"\")) if done else \"\",",
+  "\t\t\"reward\": \"\","
+ ],
+ [
+  "언제 땄는지를 안 보여준다",
+  "\t\t\"detail\": String(row.get(\"unlocked_at\", \"\")) if done \\",
+  "\t\t\"detail\": \"\" if done \\"
+ ],
+ [
+  "얼마나 남았는지를 안 보여준다",
+  "\t\t\telse \"%d / %d\" % [progress, target],",
+  "\t\t\telse \"\","
+ ],
+ [
+  "다 딴 것도 비율이 1이 안 된다",
+  "\t\t\"ratio\": 1.0 if done else (float(progress) / float(target) \\",
+  "\t\t\"ratio\": 0.0 if done else (float(progress) / float(target) \\"
+ ]
+]

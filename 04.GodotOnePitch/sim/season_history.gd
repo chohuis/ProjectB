@@ -54,12 +54,17 @@ static func apply(players: Array, stats: Dictionary, year: int) -> int:
 				"league_id": p.get("league_id", ""),
 				"team_id": p.get("team_id", ""),
 				"stat_line": stat_line_of(st),
+				# ⚠ **숫자도 같이 남긴다.** 문자열 요약만 두면 통산을 셀 길이
+				# 없다 — `season_stats`는 해가 바뀌면 비워지고, 업적·인생 기록이
+				# 통산을 물으면 그때 답할 게 아무것도 안 남는다
+				"stats": st.duplicate(true),
 				"highlights": [],
 			})
 			p["career_history"] = history
 		else:
 			# ⚠ **진급이 만든 줄에 성적만 채운다.** 새로 만들면 두 줄이 된다
 			found["stat_line"] = stat_line_of(st)
+			found["stats"] = st.duplicate(true)
 		n += 1
 	return n
 
