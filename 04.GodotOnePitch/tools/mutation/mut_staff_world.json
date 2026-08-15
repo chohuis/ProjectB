@@ -1,0 +1,7 @@
+[
+ [
+  "새 게임 첫날에 스태프가 없다 (고교 3년이 통째로 팀동료만 있는 세계다)",
+  "\tStaff.ensure_world(state)\n\treturn state",
+  "\treturn state"
+ ]
+]

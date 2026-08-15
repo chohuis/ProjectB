@@ -260,7 +260,7 @@ static func new_game(p: Dictionary) -> Dictionary:
 
 	var schedule: Array = build_schedule(world, year, me, team_id, seed_value)
 
-	return {
+	var state: Dictionary = {
 		"day": 1,
 		"season_days": Calendar.DAYS_PER_SEASON,
 		"season_year": year,
@@ -272,3 +272,8 @@ static func new_game(p: Dictionary) -> Dictionary:
 		"pending": [],
 		"mailbox": [],
 	}
+
+	# ⚠ **첫날부터 감독이 있어야 한다.** 시즌이 바뀔 때만 세우면 1년차
+	# 내내 관계도가 팀동료만 돈다 — 고교 3년이 통째로 그 상태가 된다
+	Staff.ensure_world(state)
+	return state

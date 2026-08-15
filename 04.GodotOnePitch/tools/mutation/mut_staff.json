@@ -1,0 +1,137 @@
+[
+ [
+  "씀씀이 등급을 위에서부터 읽는다 (전 구단이 부유해진다)",
+  "\tfor i in range(tiers.size() - 1, -1, -1):\n\t\tif willingness <= float(tiers[i].get(\"until\", 100)):\n\t\t\treturn tiers[i]",
+  "\tfor i in range(tiers.size()):\n\t\tif willingness <= float(tiers[i].get(\"until\", 100)):\n\t\t\treturn tiers[i]"
+ ],
+ [
+  "씀씀이가 코치 수를 안 바꾼다",
+  "\tvar lo: int = int(tier.get(\"coach_min\", 0))\n\tvar hi: int = int(tier.get(\"coach_max\", 0))",
+  "\tvar lo: int = 4\n\tvar hi: int = 6"
+ ],
+ [
+  "코치를 한 명도 안 둔다",
+  "\tvar count: int = lo + int(rng.randf() * float(hi - lo + 1))",
+  "\tvar count: int = 0"
+ ],
+ [
+  "감독이 안 생긴다",
+  "\tout.append(manager)",
+  "\tpass"
+ ],
+ [
+  "구단주가 안 생긴다",
+  "\tout.append(owner)",
+  "\tpass"
+ ],
+ [
+  "리그가 스태프 수준을 안 올린다 (고교와 KBL 감독이 같다)",
+  "\treturn float(r.get(\"league_bonus\", {}).get(league_id, 0)) \\\n\t\t+ power * float(r.get(\"power_per_star\", 0))",
+  "\treturn power * float(r.get(\"power_per_star\", 0))"
+ ],
+ [
+  "전력★이 스태프 수준을 안 올린다",
+  "\treturn float(r.get(\"league_bonus\", {}).get(league_id, 0)) \\\n\t\t+ power * float(r.get(\"power_per_star\", 0))",
+  "\treturn float(r.get(\"league_bonus\", {}).get(league_id, 0))"
+ ],
+ [
+  "씀씀이가 구단주의 예산·시설에 안 얹힌다",
+  "\t\tvar extra: float = float(tier.get(s, 0))",
+  "\t\tvar extra: float = 0.0"
+ ],
+ [
+  "능력치가 범위를 벗어난다",
+  "\treturn clampf(center + n * spread + bonus,\n\t\tfloat(r.get(\"stat_min\", 1)), float(r.get(\"stat_max\", 99)))",
+  "\treturn center + n * spread + bonus"
+ ],
+ [
+  "코치에게 전문 분야가 없다 (훈련 종목과 못 잇는다)",
+  "\t\t\tcoach[\"specialty\"] = String(sp[\"name\"])",
+  "\t\t\tcoach[\"specialty\"] = \"\""
+ ],
+ [
+  "전문 분야가 능력치를 안 민다",
+  "\t\t\t\tcoach[\"stats\"][s2] = minf(float(coach[\"stats\"][s2])\n\t\t\t\t\t+ float(cspec.get(\"specialty_boost\", 0)),\n\t\t\t\t\tfloat(r.get(\"stat_max\", 99)))",
+  "\t\t\t\tpass"
+ ],
+ [
+  "씨앗이 팀과 안 섞인다 (전 구단이 같은 감독이다)",
+  "\t\t\trng.seed = Rng.mix([\"staff\", team_id, seed_value])",
+  "\t\t\trng.seed = Rng.mix([\"staff\", seed_value])"
+ ],
+ [
+  "이미 있어도 다시 세운다 (관계가 쌓인 감독이 매번 남이 된다)",
+  "\t\t\tif not all.get(team_id, []).is_empty():\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "세운 스태프가 세계에 안 남는다",
+  "\tworld[KEY] = all\n\treturn n",
+  "\treturn n"
+ ],
+ [
+  "해외 리그에도 스태프를 세운다",
+  "\tfor league_id in rules().get(\"leagues\", []):",
+  "\tfor league_id in [\"LEAGUE_HIGHSCHOOL\", \"LEAGUE_UNIVERSITY\", \"LEAGUE_INDEPENDENT\", \"LEAGUE_KBL\", \"LEAGUE_ABL\"]:"
+ ],
+ [
+  "가운데(50)가 1.0이 아니다 (스태프를 붙이는 순간 세계가 통째로 세진다)",
+  "\tvar norm: float = clampf((value - float(e.get(\"pivot\", 50.0)))\n\t\t/ float(e.get(\"span\", 40.0)), -clamp_to, clamp_to)",
+  "\tvar norm: float = clampf(value / float(e.get(\"span\", 40.0)), -clamp_to, clamp_to)"
+ ],
+ [
+  "능력치 방향이 뒤집힌다 (못하는 코치가 더 낫다)",
+  "\treturn 1.0 + amount * norm",
+  "\treturn 1.0 - amount * norm"
+ ],
+ [
+  "끝값이 폭주한다 (능력치 99가 배수를 두 배로 만든다)",
+  "\tvar norm: float = clampf((value - float(e.get(\"pivot\", 50.0)))\n\t\t/ float(e.get(\"span\", 40.0)), -clamp_to, clamp_to)",
+  "\tvar norm: float = (value - float(e.get(\"pivot\", 50.0)))\n\t\t/ float(e.get(\"span\", 40.0))"
+ ],
+ [
+  "스태프가 없는데 중립이 아니다",
+  "\tfor s in all_stat_names():\n\t\tout[String(s)] = NEUTRAL",
+  "\tfor s in all_stat_names():\n\t\tout[String(s)] = 0.0"
+ ],
+ [
+  "감독 능력치를 안 읽는다",
+  "\t\tif role == ROLE_MANAGER or role == ROLE_OWNER:\n\t\t\tfor s in stats_names(role):\n\t\t\t\tif p.get(\"stats\", {}).has(s):\n\t\t\t\t\tout[String(s)] = float(p[\"stats\"][s])",
+  "\t\tif false:\n\t\t\tfor s in stats_names(role):\n\t\t\t\tif p.get(\"stats\", {}).has(s):\n\t\t\t\t\tout[String(s)] = float(p[\"stats\"][s])"
+ ],
+ [
+  "코치를 평균이 아니라 마지막 사람으로 본다",
+  "\t\t\tif n > 0:\n\t\t\t\tout[String(s)] = total / float(n)",
+  "\t\t\tif n > 0:\n\t\t\t\tout[String(s)] = total"
+ ],
+ [
+  "내 자리의 코치를 안 찾는다 (투수가 타격 코치에게 배운다)",
+  "\t\t\tif not specialty.is_empty() and String(p.get(\"specialty\", \"\")) == specialty:\n\t\t\t\tpicked = p",
+  "\t\t\tif false:\n\t\t\t\tpicked = p"
+ ],
+ [
+  "그 분야 코치가 없어도 팀 평균으로 안 떨어진다",
+  "\tvar source: Array = [picked] if not picked.is_empty() else coaches",
+  "\tvar source: Array = [picked]"
+ ],
+ [
+  "구단주 신뢰가 코치에 안 걸린다 (다섯 번째 능력치가 죽는다)",
+  "\tif trust != 1.0:\n\t\tfor s in stats_names(ROLE_COACH):",
+  "\tif false:\n\t\tfor s in stats_names(ROLE_COACH):"
+ ],
+ [
+  "훈련 계수가 다른 능력치를 본다",
+  "\t\t\"training\": factor_of(\"teaching\", s[\"teaching\"]),",
+  "\t\t\"training\": factor_of(\"patience\", s[\"patience\"]),"
+ ],
+ [
+  "부상 억제가 다른 능력치를 본다",
+  "\t\t\"injury_prevention\": factor_of(\"discipline\", s[\"discipline\"]),",
+  "\t\t\"injury_prevention\": 1.0,"
+ ],
+ [
+  "투수와 야수가 같은 코치를 본다",
+  "\treturn \"투수\" if player_type == \"pitcher\" else \"타격\"",
+  "\treturn \"투수\""
+ ]
+]

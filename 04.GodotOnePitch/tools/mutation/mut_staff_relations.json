@@ -1,0 +1,17 @@
+[
+ [
+  "관계도가 스태프를 안 본다 (감독·코치가 커리어 내내 안 나타난다)",
+  "\tfor s in Staff.of(state.get(\"world\", {}), team):\n\t\tout.append({",
+  "\tfor s in []:\n\t\tout.append({"
+ ],
+ [
+  "스태프의 역할을 안 실어 보낸다 (전원이 팀동료가 된다)",
+  "\t\t\t\"kind\": String(s.get(\"role\", \"\")),",
+  "\t\t\t\"kind\": Relationship.KIND_TEAMMATE,"
+ ],
+ [
+  "코치 전문 분야가 관계 행까지 안 간다 (훈련 종목과 못 잇는다)",
+  "\t\t\t\"specialty\": String(specialty_of.get(String(row[\"person_id\"]), \"\")),",
+  "\t\t\t\"specialty\": \"\","
+ ]
+]

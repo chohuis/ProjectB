@@ -439,10 +439,25 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# ⚠ **다치면 훈련이 안 된다** — 값만 두고 아무도 안 읽으면 수술 중에도
 	# 평소처럼 큰다. **구독한 개인 트레이닝도 여기 얹힌다** — 안 이으면
 	# 매주 돈만 나가고 아무 일도 안 일어난다
+	#
+	# ⚠ **코치가 훈련 효율에 걸린다.** 스태프가 없으면 중립(1.0)이라
+	# 지금까지와 같게 돈다 — 좋은 코치를 데려온 팀이 실제로 더 큰다.
+	# 팀마다 다른 유일한 축이라 안 이으면 스태프가 장식이 된다
+	# ⚠ **내 자리의 코치를 먼저 본다.** 투수에게는 투수 코치가 정본이다 —
+	# 없으면 팀 코치 평균으로 떨어진다
+	var staff: Dictionary = Staff.mods_of(_state.get("world", {}),
+		String(p.get("team_id", "")), Staff.specialty_for(
+			String(p.get("player_type", "pitcher"))))
+	#
+	# ⚠ **곱하지 않고 더한다.** 04는 훈련 효율을 덧셈으로 합치는 구조고,
+	# 곱하면 부상 배수까지 같이 늘어난다. 그리고 중립 코치(50)면 더하는 값이
+	# 정확히 0이라 **지금까지의 수가 그대로 남는다** — 밸런스가 동결이라
+	# 그게 중요하다
 	var efficiency: float = float(p.get("injury_eff_mod", 1.0)) \
 		+ Finance.total_training_bonus(
 			_state.get("training_subscriptions", []),
-			float(p.get("team_facility", 1.0)))
+			float(p.get("team_facility", 1.0))) \
+		+ (float(staff["training"]) - 1.0)
 	var out: Dictionary = TrainingGrowth.calc(p,
 		_state.get("training_plan", {}),
 		Training.programs(), efficiency)

@@ -1,0 +1,90 @@
+{
+  "_note": "스태프(감독·코치·구단주) 정본. 02 players/staff_rules.json의 rules를 그대로 옮겼다. 키 이름만 04 규칙(snake_case)으로",
+  "_note2": "수치를 코드에 다시 적지 않는다 — 02 Phase 7에서 그 결함만 15건 나왔다",
+
+  "leagues": ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+    "LEAGUE_KBL"],
+  "_leagues_note": "국내만이다. 해외는 진출 전까지 안 만든다",
+
+  "spending_tiers": [
+    {"until": 100, "id": "부유", "coach_min": 6, "coach_max": 8,
+      "budget_support": 18, "facility_investment": 14},
+    {"until": 74, "id": "안정", "coach_min": 4, "coach_max": 6,
+      "budget_support": 5, "facility_investment": 4},
+    {"until": 49, "id": "알뜰", "coach_min": 2, "coach_max": 4,
+      "budget_support": -6, "facility_investment": -5},
+    {"until": 24, "id": "궁핍", "coach_min": 0, "coach_max": 2,
+      "budget_support": -18, "facility_investment": -15}
+  ],
+  "_spending_note": "02는 재정 등급이 팀 데이터에 있었다. 04엔 그 축이 없어 TeamProfile.owner_spending_willingness(0~100)에서 낸다 — 새 축을 만들면 정본이 둘이 된다. 표를 위에서부터 읽어 처음 걸리는 것",
+
+  "league_bonus": {
+    "LEAGUE_HIGHSCHOOL": 0,
+    "LEAGUE_UNIVERSITY": 4,
+    "LEAGUE_INDEPENDENT": 2,
+    "LEAGUE_KBL": 10
+  },
+  "power_per_star": 3,
+
+  "manager": {
+    "age_min": 38, "age_max": 66,
+    "experience_min": 0, "experience_max": 25,
+    "stat_center": 52, "stat_spread": 14,
+    "stats": ["tactical_iq", "bullpen_read", "offense_mind", "motivator",
+      "clutch_decision"],
+    "risk_min": 30, "risk_max": 75,
+    "styles": ["데이터 중심", "직감형", "노장 중용", "육성 우선", "공격 지향",
+      "수비 조직", "불펜 운영형", "선수단 소통형", "규율 엄격"]
+  },
+
+  "coach": {
+    "age_min": 30, "age_max": 62,
+    "experience_min": 0, "experience_max": 22,
+    "stat_center": 50, "stat_spread": 15,
+    "stats": ["teaching", "analysis", "communication", "discipline", "leadership"],
+    "specialties": [
+      {"name": "투수", "boost": ["teaching", "analysis"]},
+      {"name": "타격", "boost": ["teaching", "communication"]},
+      {"name": "주루", "boost": ["communication", "discipline"]},
+      {"name": "컨디셔닝", "boost": ["discipline", "leadership"]},
+      {"name": "멘탈", "boost": ["communication", "leadership"]},
+      {"name": "전력분석", "boost": ["analysis", "teaching"]}
+    ],
+    "specialty_boost": 8
+  },
+
+  "owner": {
+    "age_min": 45, "age_max": 75,
+    "tenure_min": 0, "tenure_max": 30,
+    "stat_center": 50, "stat_spread": 16,
+    "stats": ["budget_support", "patience", "pr_influence",
+      "facility_investment", "staff_trust"],
+    "styles": ["투자 적극", "안정 지향", "성적 지상", "육성 중시", "무관심",
+      "간섭형"]
+  },
+
+  "effects": {
+    "_note": "능력치 → 배수. 1 + amount × (v − pivot) / span. span 40 · amount 0.15면 능력치 30에서 0.925, 70에서 1.075 — 두 팀의 차이가 15%다",
+    "pivot": 50,
+    "span": 40,
+    "clamp": 1.25,
+    "_clamp_note": "0이나 99 같은 끝값이 폭주하지 않게 자른다",
+    "amounts": {
+      "motivator": 0.15,
+      "clutch_decision": 0.2,
+      "teaching": 0.15,
+      "analysis": 0.12,
+      "communication": 0.18,
+      "discipline": 0.2,
+      "leadership": 0.14,
+      "budget_support": 0.12,
+      "patience": 0.3,
+      "pr_influence": 0.25,
+      "facility_investment": 0.16,
+      "staff_trust": 0.1
+    }
+  },
+
+  "stat_min": 1,
+  "stat_max": 99
+}

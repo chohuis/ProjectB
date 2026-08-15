@@ -162,29 +162,25 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         한 번도 안 움직였다**(결과는 `weekNum - 1`에 있다)
       `sim/relationship.gd` · `sim/relationship_runner.gd`.
       **지금 도는 것은 팀동료뿐이다** — 감독·코치·구단주는 B-2b가 서야 한다
-- [ ] **B-2b 스태프(감독·코치·구단주)** — B-2를 하다 드러난 **빠진 모듈.**
-      04에 스태프가 아예 없다(`state.manager`는 경기 한 판짜리 입력이다).
-      관계도 엔진은 다섯 갈래를 다 갖고 검사도 다 돼 있으니, 스태프 행이
-      생기는 순간 `RelationshipRunner.present_of`에 얹기만 하면 된다.
-      02 원본: `staff_gen.rs`(300) · `staff_lifecycle.rs`(592) ·
-      `staffGen.ts`(178) · `staffEffects.ts`(183) ·
-      `seeds/onepitch/staff_rules.toml`(242) · `players/staff_rules.json`(530).
-      ⚠ **감독 관계가 보직 배정(`role_ovr_bias`)에, 코치가 훈련 효율에,
-        구단주가 재계약 배수에 걸린다** — 셋 다 지금은 중립으로 돈다.
-
-      **`players/staff_rules.json`을 읽어 본 결과** (다음 세션이 다시 안 파도 되게):
-      `{rules, namePools}` 두 덩어리. `rules`는 아홉 갈래다 —
-      `world`(국내 4리그) · `coach_count`(재정 등급별 0~8명) ·
-      `league_bonus`(고교 0 · 대학 4 · 독립 2 · KBL 10) ·
-      `power_bonus`(전력★당 3) · `manager`(능력 5종 · 성향 9종 ·
-      나이 38~66) · `coach`(능력 5종 · 전문 6종 — 투수·타격·주루·
-      컨디셔닝·멘탈·전력분석 · 나이 30~62) · `owner`(능력 5종 · 성향 6종 ·
-      재정 등급 보정) · `lifecycle`(은퇴표·성장·경질·영입·강등) ·
-      `effects`(pivot 50 · span 40).
-      ⚠ **수치를 코드에 다시 적지 않는다** — 02 Phase 7에서 그 결함만 15건.
-      ⚠ **04엔 재정 등급(`부유`/`안정`/`알뜰`/`궁핍`)이 없다.**
-      `TeamProfile.owner_spending_willingness`(0~100)에서 파생하는 게
-      제일 가깝다 — 새 축을 만들면 정본이 둘이 된다
+- [~] **B-2b 스태프(감독·코치·구단주)** — B-2를 하다 드러난 **빠진 모듈.**
+      **생성·효과·관계 배선은 끝났다** — `sim/staff.gd` · `data/staff_rules.json`.
+      팀마다 감독 1 · 구단주 1 · 코치 0~8(씀씀이가 정한다). 리그·전력★이
+      수준을 올리고, 전문 분야가 그 코치의 두 능력치를 민다.
+      15종 → 계수 10종의 **배선표를 한 곳에만** 적었다(02는 소비처가 각자
+      파고들어 **15종 중 14종이 아무 계산에도 안 닿았다**).
+      구단주 신뢰가 코치 실효치를 민다 — 다섯 번째 능력치의 유일한 소비처.
+      ⚠ **04엔 재정 등급이 없어** `TeamProfile.owner_spending_willingness`에서
+      냈다(부유 ≥75 · 안정 ≥50 · 알뜰 ≥25 · 궁핍).
+      ⚠ **훈련 효율에 곱하지 않고 더한다** — 04는 덧셈으로 합치는 구조고,
+      중립 코치(50)면 더하는 값이 0이라 **지금까지의 수가 그대로 남는다**.
+      검사 32 · 변이 26/26 + 배선 4/4 + `app_root` 40/40.
+      **남은 것 — B-2c 스태프 생애주기**(`staff_lifecycle.rs` 592):
+      은퇴표·성장·경질·영입·강등. 지금은 한 번 세운 스태프가 늙지도
+      바뀌지도 않는다. 규칙은 `staff_rules.json`의 `lifecycle`에 이미 있다
+      **아직 안 이은 계수 둘** — 값은 이미 나오는데 읽는 자리가 없다:
+      · **감독 → 보직 배정**(`Rotation.assign_position`에 `callup` 계수)
+      · **구단주 → 재계약 배수**(`Contract`·`FaMarket`에 `budget` 계수)
+      C에서 화면이 그 값을 보여줄 때 같이 잇는다
 - [x] **B-3** `weekPhases/injuries`(273) + `injuryNews`(78) + `myBodyReport`(135)
       `sim/injury.gd` · `sim/injury_runner.gd` · `data/injury_rules.json`.
       ⚠ 02는 완치 때 `careerStatus`를 `active`로 안 되돌려 **고교 3,015명 중

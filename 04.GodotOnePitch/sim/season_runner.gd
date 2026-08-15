@@ -612,6 +612,12 @@ static func roll_over(state: Dictionary) -> Dictionary:
 	state["day"] = 1
 	state["season_days"] = Calendar.DAYS_PER_SEASON
 
+	# 스태프 — 감독·코치·구단주. **이미 있으면 다시 안 만든다**
+	#
+	# ⚠ 없으면 관계도가 팀동료만 돈다 — 보직 배정·훈련 효율·재계약이
+	# 전부 중립으로 돌아간다
+	Staff.ensure_world(state)
+
 	# 외국인 순환 — 재계약 불가는 본국으로, 빈 자리는 해외에서 채운다.
 	#
 	# ⚠ **은퇴·로스터 정리가 끝난 뒤다.** 그래야 빈 자리를 정확히 센다.

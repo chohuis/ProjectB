@@ -66,6 +66,19 @@ static func present_of(state: Dictionary) -> Array:
 			continue
 		out.append({"person_id": String(q.get("id", "")),
 			"kind": Relationship.KIND_TEAMMATE})
+
+	# 스태프 — 감독·코치·구단주.
+	#
+	# ⚠ **이게 없으면 관계도가 팀동료만 돈다.** 엔진은 다섯 갈래를 다 갖고
+	# 검사도 다 돼 있는데 **행이 생기는 자리가 없어서** 감독·코치가 커리어
+	# 내내 안 나타났다 — 보직 배정·훈련 효율·재계약이 전부 중립으로 돌았다
+	for s in Staff.of(state.get("world", {}), team):
+		out.append({
+			"person_id": String(s.get("id", "")),
+			"kind": String(s.get("role", "")),
+			# 코치는 전문 분야가 있어야 훈련 종목과 이어진다
+			"specialty": String(s.get("specialty", "")),
+		})
 	return out
 
 
@@ -111,12 +124,20 @@ static func reconcile(state: Dictionary, at_day: int, draft_round: int = 0,
 	if not unknown.is_empty():
 		var season: int = int(state.get("season_year", 0))
 		var seed_value: int = int(state.get("seed", 0))
+		# ⚠ **전문 분야를 같이 옮긴다.** 여기서 빈 문자열로 못박으면
+		# `effects_of(state, 전문분야)`가 영영 아무 코치도 못 찾는다 —
+		# 훈련 종목과 코치를 잇는 유일한 끈이다
+		var specialty_of: Dictionary = {}
+		for x in unknown:
+			specialty_of[String(x["person_id"])] = String(x.get("specialty", ""))
+
 		for row in Relationship.init_values(seed_value, unknown, draft_round,
 				drafted_context):
 			created.append({
 				"person_id": String(row["person_id"]),
 				"kind": String(row["kind"]), "value": int(row["value"]),
-				"contact": Relationship.CONTACT_TOGETHER, "specialty": "",
+				"contact": Relationship.CONTACT_TOGETHER,
+				"specialty": String(specialty_of.get(String(row["person_id"]), "")),
 				"met_season": season, "met_team": team, "last_team": team,
 				"memories": [], "updated_day": at_day,
 			})

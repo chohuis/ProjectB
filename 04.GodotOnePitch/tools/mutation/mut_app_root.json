@@ -193,5 +193,10 @@
   "구독이 훈련에 안 얹힌다 (매주 돈만 나간다)",
   "\t\t+ Finance.total_training_bonus(\n\t\t\t_state.get(\"training_subscriptions\", []),\n\t\t\tfloat(p.get(\"team_facility\", 1.0)))",
   "\t\t+ 0.0"
+ ],
+ [
+  "코치가 훈련 효율에 안 걸린다 (스태프가 장식이 된다)",
+  "\t\t+ (float(staff[\"training\"]) - 1.0)",
+  "\t\t+ 0.0"
  ]
 ]

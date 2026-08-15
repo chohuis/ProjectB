@@ -904,6 +904,10 @@ func test_a_subscription_reaches_the_training() -> void:
 		var s: Dictionary = _real_game(777)
 		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
 		s["protagonist"]["potential_hidden"] = 95.0
+		# ⚠ **여기서 재려는 것은 구독이다.** 코치가 같은 축에 얹히므로
+		# 그대로 두면 좋은 코치가 붙은 팀에서 둘이 같은 성장 칸에 떨어져
+		# 구독의 차이가 지워진다 — 스태프 효과는 스태프 검사가 본다
+		s["world"]["staff"] = {}
 		if subscribed:
 			s["training_subscriptions"] = [
 				{"area_id": "PITCH", "tier": 2},
@@ -1016,6 +1020,18 @@ func test_relationships_move_over_a_career() -> void:
 	assert_int(rows.size()).override_failure_message(
 		"한 시즌을 살았는데 아는 사람이 하나도 없다").is_greater(0)
 
+	# ⚠ **주 경계 날짜로 기록돼야 한다.** `at_day`를 무시하고 오늘 날짜를
+	# 쓰면 여러 주를 한 번에 넘길 때 **같은 주를 N번 사는 것**이 된다 —
+	# 02가 주 인덱스를 하나 어긋나게 읽어 관계가 영영 안 움직인 그 계열이다
+	var last_boundary: int = (int(days[days.size() - 1]) - 1) / 7 * 7 + 7
+	var stamped: bool = false
+	for row in rows:
+		if int(row.get("updated_day", 0)) == last_boundary:
+			stamped = true
+	assert_bool(stamped).override_failure_message(
+		"관계 갱신 날짜가 주 경계(%d)가 아니다 — 오늘 날짜를 썼다" % last_boundary
+	).is_true()
+
 	# 초기값은 성향에서 결정적으로 나온다 — 그대로면 한 번도 안 움직인 것이다
 	var moved: int = 0
 	for row in rows:
@@ -1061,6 +1077,37 @@ func test_the_career_path_opens_at_the_week_boundary() -> void:
 	assert_bool(Pending.has(r.state(), "career_choice_hub")
 		).override_failure_message(
 		"졸업반의 진로 지원이 주 경계에서 안 열렸다 — 배선이 끊겼다").is_true()
+
+
+## ⚠ **코치가 훈련 효율에 실제로 걸린다.** 안 이으면 스태프가 장식이다 —
+## 좋은 코치를 붙인 팀과 아무도 없는 팀이 똑같이 큰다
+func test_the_coach_reaches_the_weekly_training() -> void:
+	var grown: Array = []
+	for good_coach in [false, true]:
+		var s: Dictionary = _real_game(777)
+		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
+		s["protagonist"]["potential_hidden"] = 95.0
+		var team: String = String(s["protagonist"]["team_id"])
+		s["world"]["staff"] = {}
+		if good_coach:
+			var stats: Dictionary = {}
+			for k in Staff.stats_names(Staff.ROLE_COACH):
+				stats[String(k)] = 99.0
+			s["world"]["staff"][team] = [{"id": "ACE_COACH", "name": "명코치",
+				"role": Staff.ROLE_COACH, "team_id": team,
+				"league_id": "LEAGUE_HIGHSCHOOL", "age": 45,
+				"stats": stats, "specialty": "투수"}]
+		var before: float = float(s["protagonist"]["pitching"]["velocity"])
+
+		var r: AppRoot = await _mount(s)
+		for w in range(1, 31):
+			r._apply_one_week(w * 7)
+		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
+			- before)
+
+	assert_float(grown[1]).override_failure_message(
+		"명코치를 붙였는데 아무도 없는 팀(%.2f)과 같이 컸다(%.2f)"
+		% [grown[0], grown[1]]).is_greater(grown[0])
 
 
 ## ⚠ **국가대표도 주 경계에서 돈다.** 안 이으면 세계에서 제일 큰 사건이
