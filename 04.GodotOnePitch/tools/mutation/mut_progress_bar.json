@@ -1,0 +1,22 @@
+[
+ [
+  "진행 막대를 안 띄운다 (24초 동안 숫자만 오른다)",
+  "\t_progress.visible = true\n\t_progress.max_value = total\n\t_progress.value = done",
+  "\tpass"
+ ],
+ [
+  "막대를 안 채운다 (늘 0에 머문다)",
+  "\t_progress.value = done",
+  "\t_progress.value = 0"
+ ],
+ [
+  "얼마나 가는지를 안 본다 (막대가 늘 꽉 찬다)",
+  "\t_progress.max_value = total",
+  "\t_progress.max_value = done"
+ ],
+ [
+  "다른 이유로 다시 그려도 막대가 남는다 (\"아직 도는 중\"으로 읽힌다)",
+  "\t_progress.visible = false\n\t_date.text = _vm.get(\"date_label\", \"\")",
+  "\t_date.text = _vm.get(\"date_label\", \"\")"
+ ]
+]

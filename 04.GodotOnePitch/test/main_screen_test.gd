@@ -142,6 +142,40 @@ func test_a_zero_total_does_not_break() -> void:
 	assert_object(s).is_not_null()
 
 
+## ⚠ **한 번에 162일까지 간다** — 2,095경기 24초다(실측). 글자만 바뀌면
+## 그동안 숫자만 오르고 얼마나 남았는지가 안 보인다
+func test_a_long_advance_shows_a_bar() -> void:
+	var s := await _mount(_vm())
+	var bar: ProgressBar = s.get_node("Pad/Col/Body/Right/Footer/Progress")
+	assert_bool(bar.visible).override_failure_message(
+		"진행 전인데 막대가 떠 있다").is_false()
+
+	s.set_progress(40, 162)
+	assert_bool(bar.visible).override_failure_message(
+		"162일을 가는데 막대가 안 뜬다").is_true()
+	assert_float(bar.value / bar.max_value).is_equal_approx(40.0 / 162.0, 0.001)
+
+
+func test_the_bar_goes_away_when_it_finishes() -> void:
+	var s := await _mount(_vm())
+	var bar: ProgressBar = s.get_node("Pad/Col/Body/Right/Footer/Progress")
+	s.set_progress(40, 162)
+	s.set_progress(162, 162)
+	assert_bool(bar.visible).override_failure_message(
+		"진행이 끝났는데 막대가 남았다").is_false()
+
+
+## ⚠ **다른 이유로 다시 그려도 막대가 안 남는다** — 진행 중이 아닌데
+## 막대가 떠 있으면 "아직 도는 중"으로 읽힌다
+func test_a_redraw_clears_the_bar() -> void:
+	var s := await _mount(_vm())
+	var bar: ProgressBar = s.get_node("Pad/Col/Body/Right/Footer/Progress")
+	s.set_progress(40, 162)
+	s.set_view_model(_vm())
+	await await_idle_frame()
+	assert_bool(bar.visible).is_false()
+
+
 # ── 탭 ────────────────────────────────────────────────────────
 
 func test_the_first_tab_is_selected() -> void:

@@ -538,7 +538,11 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `NpcGrowth.perf_factor`에 그대로 옮겼고 검사가 못 박아 뒀다
 - [ ] **D-3** NPC 구종 배열 — NPC는 구종이 없어 `PitchStep.grade_of`가 기본값 3
 - [ ] **D-4** `calc_pitching_ovr` OVR 재계산 (P0 뼈대 제거는 D-1에서 같이 했다)
-- [ ] **D-5** 시즌 22초 진행 표시
+- [x] **D-5** 긴 진행의 표시 — `MainScreen`에 진행 막대.
+      **한 번에 162일 · 2,095경기 · 24초를 간다**(D-8 실측). 글자만
+      바뀌면 그동안 숫자만 오르고 얼마나 남았는지가 안 보인다.
+      죽은 줄 하나를 안 남겼다 — 끝날 때 막대를 치우는 건 `_rebuild`가
+      이미 한다. 변이 4/4
 - [ ] **D-6** 02 좌표의 마운드·1루·3루가 구장 그림보다 30~50px 위
 - [ ] **D-7** 주인공 경로와 NPC 경로의 성장 표가 둘이다
       (천장 감쇠 0.10 vs 0.00 · 나이 계수의 뜻이 다르다). **이주가 끝난 뒤** 합친다

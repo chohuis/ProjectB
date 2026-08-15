@@ -34,6 +34,7 @@ const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 @onready var _training: Button = $Pad/Col/Body/Right/Training
 @onready var _next_game: Label = $Pad/Col/Body/Right/Footer/NextGame
 @onready var _advance: Button = $Pad/Col/Body/Right/Footer/Advance
+@onready var _progress: ProgressBar = $Pad/Col/Body/Right/Footer/Progress
 
 ## 진행 버튼을 눌렀다. 며칠을 갈지는 사전에 있다
 signal advance_requested(days: int)
@@ -68,13 +69,21 @@ var _me_tab: int = 0
 ## 진행 중임을 보인다. `DayRunner.progress`에 그대로 이어 붙인다.
 ##
 ## ⚠ **최악의 날이 1.08초다.** 그동안 버튼이 그대로면 안 눌린 줄 알고
-## 또 누른다 — 진행기가 겹친 호출을 막긴 하지만 화면이 먼저 말해야 한다
+## 또 누른다 — 진행기가 겹친 호출을 막긴 하지만 화면이 먼저 말해야 한다.
+##
+## ⚠ **한 번에 162일까지 간다.** 다음 등판까지 진행하면 2,095경기 · 24초다
+## (실측 `bench:season`). 글자만 바뀌면 24초 동안 숫자만 오르는 화면이라
+## 얼마나 남았는지가 안 보인다 — 막대가 그걸 말한다
 func set_progress(done: int, total: int) -> void:
+	# 끝났으면 다시 그린다 — 막대는 `_rebuild`가 치운다
 	if total <= 0 or done >= total:
 		_rebuild()
 		return
 	_advance.disabled = true
 	_advance.text = "진행 중  %d / %d일" % [done, total]
+	_progress.visible = true
+	_progress.max_value = total
+	_progress.value = done
 
 
 ## 사전을 넣는다. `_ready` 전후 어느 때든 부를 수 있다
@@ -110,6 +119,9 @@ func _on_advance() -> void:
 
 
 func _rebuild() -> void:
+	# ⚠ **진행 중이 아니면 막대를 치운다.** 남아 있으면 "아직 도는 중"으로
+	# 읽힌다 — 다시 그리는 이유는 진행 말고도 여럿이다
+	_progress.visible = false
 	_date.text = _vm.get("date_label", "")
 	_weekday.text = "(%s)" % _vm.get("weekday_label", "") if _vm.has("weekday_label") else ""
 	_weekday.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
