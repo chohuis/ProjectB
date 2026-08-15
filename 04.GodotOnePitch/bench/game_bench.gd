@@ -11,28 +11,59 @@ class_name GameBench
 ## 첫 벤치가 0.805초로 더 빨랐는데 경기당 득점이 0.89였다.
 
 
-## 기준 — **실제 부하로 다시 잡았다.**
+## 기준 — **04의 진행 모델로 다시 잡았다.**
 ##
-## ⚠ P0의 "한 시즌 2,124경기 2초"는 두 군데가 틀렸다:
+## ⚠ **"최악의 주 98경기"는 02의 전제였다.** 02는 주 단위로 진행했지만
+## 04는 **하루씩** 간다(`DayRunner`가 하루를 밟으며 8ms마다 프레임을 넘긴다).
+## 04에 "한 주"라는 단위가 없는데 그 단위로 게이트를 걸고 있었다.
 ##
-## ① 경기 수를 적게 잡았다. 국내 리그만 세어도 2,612경기다
-##      고교 102팀 × 20경기        1,020
-##      KBL 10팀 × 144              720
-##      KBL 2군 10팀 × 99           495
-##      대학                        225
-##      독립                        152
-##    해외 4개(약 1,845경기)는 `radiusGate`가 순위표 드리프트로 돌린다 —
-##    주인공이 진출하면 그때 풀 시뮬로 올라간다
+## ⚠ **경기 수를 곱셈으로 만들지 않는다.** 예전엔 `경기당 시간 × 98`,
+## `× 2612`로 냈는데 그 98과 2612가 어디서 온 수인지 코드가 모른다.
+## 여기서는 **진짜 일정에서 센다** — 일정이 바뀌면 게이트도 따라 바뀐다.
 ##
-## ② **게임은 시즌을 통째로 안 돌린다.** 주 단위로 진행한다. 기간이 겹치는
-##    최악의 주가 약 98경기다 — 그게 사용자가 실제로 기다리는 시간이다
-const SEASON_GAMES: int = 2612
-const WORST_WEEK_GAMES: int = 98
+## 04에서 사용자가 실제로 기다리는 것은 둘이다:
+##   ① **최악의 하루** — 한 덩어리로 느껴질 수 있는 최대(`bench:day`가 진짜로 돈다)
+##   ② **진행 버튼 한 번** — 다음 등판까지가 최대 162일·2,095경기다.
+##      프레임 쪼개기와 진행 표시가 붙지만 그래도 총 대기는 총 대기다
+const GATE_DAY_SECONDS: float = 1.0
+const GATE_ADVANCE_SECONDS: float = 25.0
 
-## 사용자가 실제로 기다리는 시간
-const GATE_WEEK_SECONDS: float = 1.0
-## 시즌을 통째로 도는 자리(오프시즌·건너뛰기)와 회귀 감지용
-const GATE_SEASON_SECONDS: float = 25.0
+
+## 진짜 일정의 모양 — 최악의 하루와 가장 긴 한 번 진행.
+##
+## ⚠ **여기서 세지 않으면 게이트가 상수로 굳는다.** 일정이 바뀌어도
+## 숫자가 안 따라오면 그 게이트는 언젠가 아무것도 안 지킨다
+static func schedule_shape(seed_value: int) -> Dictionary:
+	var s: Dictionary = World.new_game({"seed": seed_value,
+		"season_year": 2027, "name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var total_days: int = int(s.get("season_days", 0))
+
+	var per_day: Dictionary = {}
+	for g in s.get("schedule", []):
+		var d: int = int(g.get("day", 0))
+		per_day[d] = int(per_day.get(d, 0)) + 1
+
+	var worst_day: int = 0
+	for d in per_day:
+		worst_day = maxi(worst_day, int(per_day[d]))
+
+	var advance_games: int = 0
+	var advance_days: int = 0
+	var day: int = 1
+	while day <= total_days:
+		s["day"] = day
+		var span: int = maxi(DayEngine.next_stop_day(s) - day + 1, 1)
+		var games: int = 0
+		for d in range(day, mini(day + span, total_days + 1)):
+			games += int(per_day.get(d, 0))
+		if games > advance_games:
+			advance_games = games
+			advance_days = span
+		day += span
+
+	return {"total": s.get("schedule", []).size(), "season_days": total_days,
+		"worst_day": worst_day, "advance_games": advance_games,
+		"advance_days": advance_days}
 
 
 static func _pitcher(rng: RandomNumberGenerator, base: float) -> Dictionary:
@@ -117,13 +148,18 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 	var per_game: float = float(pitches) / float(games)
 	var runs_per_game: float = float(runs) / float(games)
 	var per_game_sec: float = sec / float(games)
-	var week: float = per_game_sec * float(WORST_WEEK_GAMES)
-	var season: float = per_game_sec * float(SEASON_GAMES)
+	var shape: Dictionary = schedule_shape(seed_value)
+	var worst_day: float = per_game_sec * float(shape["worst_day"])
+	var advance: float = per_game_sec * float(shape["advance_games"])
 
 	log_line.call("  %d경기  %.3f초  %d 투구/초" % [games, sec, int(pitches / maxf(sec, 0.0001))])
 	log_line.call("  경기당 투구 %.1f · 득점 %.2f" % [per_game, runs_per_game])
-	log_line.call("  최악의 주(%d경기) %.3f초  (기준 %.1f초)" % [WORST_WEEK_GAMES, week, GATE_WEEK_SECONDS])
-	log_line.call("  국내 한 시즌(%d경기) %.3f초  (기준 %.1f초)" % [SEASON_GAMES, season, GATE_SEASON_SECONDS])
+	log_line.call("  일정 %d경기 · %d일" % [shape["total"], shape["season_days"]])
+	log_line.call("  최악의 하루(%d경기) %.3f초  (기준 %.1f초)" % [
+		shape["worst_day"], worst_day, GATE_DAY_SECONDS])
+	log_line.call("  가장 긴 한 번 진행(%d일 %d경기) %.3f초  (기준 %.1f초)" % [
+		shape["advance_days"], shape["advance_games"], advance,
+		GATE_ADVANCE_SECONDS])
 
 	if unfinished > 0:
 		fail.call("상한에 걸려 안 끝난 경기 %d개 — 종료 조건을 다시 본다" % unfinished)
@@ -132,8 +168,10 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 		fail.call("경기당 투구 %.1f — 야구가 아니다 (150~400)" % per_game)
 	if runs_per_game < 4.0 or runs_per_game > 20.0:
 		fail.call("경기당 득점 %.2f — 야구가 아니다 (4~20)" % runs_per_game)
-	if week > GATE_WEEK_SECONDS:
-		fail.call("최악의 주 %.3f초 — 게이트 %.1f초를 넘었다" % [week, GATE_WEEK_SECONDS])
-	if season > GATE_SEASON_SECONDS:
-		fail.call("한 시즌 %.3f초 — 게이트 %.1f초를 넘었다" % [season, GATE_SEASON_SECONDS])
+	if worst_day > GATE_DAY_SECONDS:
+		fail.call("최악의 하루 %.3f초 — 게이트 %.1f초를 넘었다" % [
+			worst_day, GATE_DAY_SECONDS])
+	if advance > GATE_ADVANCE_SECONDS:
+		fail.call("가장 긴 한 번 진행 %.3f초 — 게이트 %.1f초를 넘었다" % [
+			advance, GATE_ADVANCE_SECONDS])
 	return 0

@@ -108,8 +108,7 @@ func _print_tasks() -> void:
 ## 게이트는 250~330이었다 — 두 값이 다른 게 아니라 **다른 엔진의 값**이었다.
 func _bench_season(args: PackedStringArray) -> int:
 	return GameBench.new().run(log_line, fail,
-		arg_int(args, "games", GameBench.SEASON_GAMES),
-		arg_int(args, "seed", 20260813))
+		arg_int(args, "games", 800), arg_int(args, "seed", 20270101))
 
 
 # ── 공통 ───────────────────────────────────────────────────────────
