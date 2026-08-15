@@ -35,6 +35,8 @@ static func build(s: Dictionary) -> Dictionary:
 	var p: Dictionary = s.get("protagonist", {})
 	var league_id: String = p.get("league_id", "")
 
+	var academics: Dictionary = AcademicsVm.build(s)
+
 	var pitching: Array = []
 	var q: Dictionary = p.get("pitching", {})
 	for pair in PITCHING_LABELS:
@@ -51,7 +53,32 @@ static func build(s: Dictionary) -> Dictionary:
 		"season_title": "%d년 시즌 누적" % int(s.get("season_year", 0)),
 		"season_stats": _season_stats(s, p.get("id", "")),
 		"career": s.get("career", []),
+		"tabs": _tabs(academics),
+		"academics": academics,
 	}
+
+
+## "나" 탭의 하위 탭. **화면이 목록을 갖지 않는다** — 무대에 따라 달라지므로
+const TABS: Array[Dictionary] = [
+	{"id": "attributes", "label": "능력치"},
+	{"id": "season", "label": "기록"},
+	{"id": "career", "label": "커리어"},
+]
+
+
+## ⚠ **학업은 학교에 다닐 때만 뜬다.** 02도 그랬다(`navVisibility.academics`)
+## — 프로에게 학점 탭을 띄우면 은퇴할 때까지 빈 화면이 하나 붙어 있는다.
+##
+## ⚠ **"학교에 다니나"를 여기서 다시 판정하지 않는다.** `AcademicsVm`이
+## 이미 답을 냈다 — 두 곳이 각자 판정하면 언젠가 갈리고, 그때 탭은 있는데
+## 안이 비어 있는 상태가 된다
+static func _tabs(academics: Dictionary) -> Array:
+	var out: Array = []
+	for t in TABS:
+		out.append(t.duplicate())
+	if bool(academics.get("at_school", false)):
+		out.append({"id": "academics", "label": "학업"})
+	return out
 
 
 static func _injury(inj) -> Dictionary:

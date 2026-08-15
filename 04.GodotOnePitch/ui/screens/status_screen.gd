@@ -41,23 +41,39 @@ func set_view_model(vm: Dictionary) -> void:
 		_rebuild()
 
 
+## 학업에서 고른 것. **루트가 상태에 쓴다** — 화면이 직접 안 고친다
+signal study_mode_picked(mode: String)
+signal major_picked(name: String)
+## 하위 탭을 옮겼다. **부모가 자리를 기억한다** — 이 화면은 상태가 바뀔
+## 때마다 통째로 새로 만들어지기 때문이다
+signal tab_changed(index: int)
+
+
 func _ready() -> void:
 	theme = AppTheme.build()
 	_bg.color = AppTheme.BG
-
-	_build_tabs()
 	_rebuild()
 
 
+## ⚠ **탭 목록을 사전에서 받는다.** 무대에 따라 달라지므로(학업은 학교에
+## 다닐 때만) 소스에 박아 두면 화면이 "지금 어느 무대인가"를 알아야 한다
 func _build_tabs() -> void:
+	for c in _tabs.get_children():
+		_tabs.remove_child(c)
+		c.free()
+
+	var tabs: Array = _vm.get("tabs", [])
+	# ⚠ **탭이 줄면 고른 자리가 사라진다.** 학업 탭에 있다가 졸업하면
+	# 없는 탭을 그리려다 빈 화면이 된다
+	_tab = clampi(_tab, 0, maxi(tabs.size() - 1, 0))
+
 	var group := ButtonGroup.new()
-	var labels := PackedStringArray(["능력치", "기록", "커리어"])
-	for i in labels.size():
+	for i in tabs.size():
 		var b := Button.new()
-		b.text = labels[i]
+		b.text = String(tabs[i].get("label", ""))
 		b.toggle_mode = true
 		b.button_group = group
-		b.button_pressed = (i == 0)
+		b.button_pressed = (i == _tab)
 		b.focus_mode = Control.FOCUS_NONE
 		var idx := i
 		b.pressed.connect(func() -> void: _on_tab(idx))
@@ -66,7 +82,24 @@ func _build_tabs() -> void:
 
 func _on_tab(i: int) -> void:
 	_tab = i
+	tab_changed.emit(i)
 	_rebuild_tab()
+
+
+## 부모가 자리를 되돌려 놓는다. **넘치면 잘린다** — 무대가 바뀌어 탭이
+## 줄었을 수 있다
+func select_tab(i: int) -> void:
+	_tab = i
+	if is_node_ready():
+		_build_tabs()
+		_rebuild_tab()
+
+
+func current_tab_id() -> String:
+	var tabs: Array = _vm.get("tabs", [])
+	if _tab < 0 or _tab >= tabs.size():
+		return ""
+	return String(tabs[_tab].get("id", ""))
 
 
 func _rebuild() -> void:
@@ -78,16 +111,19 @@ func _rebuild() -> void:
 	_col.move_child(_col.get_child(_col.get_child_count() - 1), 0)
 	_col.add_child(_contract_card())
 	_col.move_child(_col.get_child(_col.get_child_count() - 1), 1)
+	_build_tabs()
 	_rebuild_tab()
 
 
 func _rebuild_tab() -> void:
 	for c in _tab_host.get_children():
-		c.queue_free()
-	match _tab:
-		0: _tab_host.add_child(_pitching_card())
-		1: _tab_host.add_child(_season_card())
-		2: _tab_host.add_child(_career_card())
+		_tab_host.remove_child(c)
+		c.free()
+	match current_tab_id():
+		"attributes": _tab_host.add_child(_pitching_card())
+		"season": _tab_host.add_child(_season_card())
+		"career": _tab_host.add_child(_career_card())
+		"academics": _build_academics()
 
 
 # ── 부품 만들기 ────────────────────────────────────────────────────
@@ -114,6 +150,114 @@ func _bar(label: String, ratio: float, right: String, c: Color) -> BarRow:
 	var b: BarRow = BAR_ROW.instantiate()
 	b.setup(label, ratio, right, c)
 	return b
+
+
+# ── 학업 탭 (C-3) ──────────────────────────────────────────────────
+#
+# ⚠ **이 탭이 `study_mode`와 `major`를 쓰는 쪽이다.** 04는 둘 다 읽는
+# 코드만 있고 세우는 데가 없어서 전 커리어가 "normal" 고정이었다.
+# 화면은 고른 것을 신호로만 내고, 상태에 쓰는 건 루트가 한다.
+
+## ⚠ **"학교에 다니나"를 여기서 다시 묻지 않는다.** 학업 탭 자체가
+## 학교에 다닐 때만 생기므로(`StatusVm._tabs`), 여기 가드를 두면
+## 영영 안 도는 갈래가 하나 남는다
+func _build_academics() -> void:
+	var a: Dictionary = _vm.get("academics", {})
+	_tab_host.add_child(_academic_summary_card(a))
+	# 아직 안 고른 전공을 제일 앞에 세운다 — 되돌릴 수 없는 선택이다
+	if bool(a.get("major", {}).get("selectable", false)):
+		_tab_host.add_child(_major_card(a["major"]))
+	_tab_host.add_child(_study_card(a["study"]))
+	if not a.get("semesters", []).is_empty():
+		_tab_host.add_child(_semester_card(a["semesters"]))
+	if not a.get("campus", []).is_empty():
+		_tab_host.add_child(_campus_card(a["campus"]))
+
+
+func _academic_summary_card(a: Dictionary) -> Card:
+	var c := _card("%s 학업" % String(a.get("stage", "")))
+	var gpa: Dictionary = a.get("gpa", {})
+	var warn: Dictionary = a.get("warning", {})
+
+	c.body.add_child(_row("누적 학점", String(gpa.get("label", "")),
+		AppTheme.OK if bool(gpa.get("graduates", false)) else AppTheme.TEXT))
+	if not String(gpa.get("note", "")).is_empty():
+		c.body.add_child(_row("졸업 자격", String(gpa["note"]),
+			AppTheme.OK if bool(gpa.get("graduates", false)) else AppTheme.WARN))
+
+	var major: Dictionary = a.get("major", {})
+	c.body.add_child(_row("전공", String(major.get("name", "")),
+		AppTheme.TEXT if bool(major.get("picked", false)) else AppTheme.TEXT_DIM))
+	if not String(major.get("effect", "")).is_empty():
+		c.body.add_child(_row("전공 효과", String(major["effect"]), AppTheme.TEXT_DIM))
+
+	# 경고가 훈련을 깎는 것이 학사의 무게다 — 몇 %인지 같이 보여준다
+	if int(warn.get("level", 0)) > 0:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", AppTheme.GAP)
+		row.add_child(_badge(String(warn.get("label", "")),
+			AppTheme.BAD if bool(warn.get("blocked", false)) else AppTheme.WARN))
+		var t := Label.new()
+		t.text = String(warn.get("training_label", ""))
+		t.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		row.add_child(t)
+		c.body.add_child(row)
+	else:
+		c.body.add_child(_row("학업 상태", "정상", AppTheme.OK))
+
+	c.body.add_child(_row("다음 시험", String(a.get("exam", {}).get("line", "")),
+		AppTheme.TEXT_DIM))
+	return c
+
+
+func _major_card(major: Dictionary) -> Card:
+	var c := _card("전공 선택")
+	c.body.add_child(_row("", String(major.get("hint", "")), AppTheme.TEXT_DIM))
+	for m in major.get("options", []):
+		var b := Button.new()
+		b.text = "%s   %s" % [String(m["name"]), String(m["desc"])]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.focus_mode = Control.FOCUS_NONE
+		# ⚠ **미뤄서 보낸다.** 루트가 상태를 고치면 이 화면이 다시 그려지는데,
+		# 바로 보내면 자기를 부른 버튼을 지우려다 잠긴 객체가 된다
+		b.pressed.connect(func() -> void:
+			major_picked.emit.call_deferred(String(m["name"])))
+		c.body.add_child(b)
+	return c
+
+
+func _study_card(study: Dictionary) -> Card:
+	var c := _card("주간 학업")
+	c.body.add_child(_row("", String(study.get("hint", "")), AppTheme.TEXT_DIM))
+	for o in study.get("options", []):
+		var b := Button.new()
+		b.text = "%s%s   %s" % ["▸ " if bool(o["current"]) else "   ",
+			String(o["name"]), String(o["effect"])]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.focus_mode = Control.FOCUS_NONE
+		b.disabled = bool(o["current"])
+		b.pressed.connect(func() -> void:
+			study_mode_picked.emit.call_deferred(String(o["id"])))
+		c.body.add_child(b)
+	return c
+
+
+func _semester_card(semesters: Array) -> Card:
+	var c := _card("학기 기록")
+	for s in semesters:
+		c.body.add_child(_row("%s%s" % [String(s["title"]),
+			"  %s" % String(s["label"]) if not String(s["label"]).is_empty() else ""],
+			String(s["gpa_label"]),
+			AppTheme.WARN if bool(s["warned"]) else AppTheme.TEXT))
+	return c
+
+
+func _campus_card(campus: Array) -> Card:
+	var c := _card("대학 무대")
+	for e in campus:
+		c.body.add_child(_row(String(e["title"]), String(e["line"]),
+			AppTheme.OK if bool(e["selected"]) else AppTheme.TEXT_MUTE))
+	return c
 
 
 # ── 카드 ───────────────────────────────────────────────────────────

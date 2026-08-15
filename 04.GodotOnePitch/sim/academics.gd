@@ -65,6 +65,20 @@ static func exam_at_day(day: int) -> String:
 	return exam_at(Calendar.week_of(day))
 
 
+## 다음 시험. `{exam, weeks_left}` — 이번 주가 시험이면 `weeks_left`가 0이다.
+##
+## ⚠ **화면이 주차를 자기 손으로 세지 않게 한다.** 시험 주차를 화면에
+## 옮겨 적는 순간 표가 둘이 되고, 규칙 파일을 고쳐도 화면만 안 따라온다
+static func next_exam(week: int) -> Dictionary:
+	if week <= midterm_week():
+		return {"exam": "midterm", "weeks_left": midterm_week() - week}
+	if week <= final_week():
+		return {"exam": "final", "weeks_left": final_week() - week}
+	# 기말이 지났다 — 해를 넘겨 다음 중간고사다
+	return {"exam": "midterm",
+		"weeks_left": Calendar.WEEKS_PER_SEASON - week + midterm_week()}
+
+
 # ── 주간 학업 ─────────────────────────────────────────────────
 
 ## 한 주의 학업 품질 (0~1). 모르는 방식은 보통으로 본다

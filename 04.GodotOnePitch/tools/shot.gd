@@ -258,6 +258,29 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
+		"academics":
+			# ⚠ **진짜 세계로, 진짜 탭으로 연다.** 한 학기를 실제로 돌려
+			# 학점·경고·학기 기록이 쌓인 뒤를 본다
+			var ac: AppRoot = APP.instantiate()
+			var ast := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			ast["protagonist"]["league_id"] = "LEAGUE_UNIVERSITY"
+			ac.set_state(ast)
+			ac.ready.connect(func() -> void:
+				# ⚠ **주 처리를 직접 돌린다.** `advance`로 가면 등판일마다
+				# 멈춰서 중간고사(11주)에 닿기 전에 스크린샷이 끝난다 —
+				# 실제로 2주차에서 멈췄다(`season-digest`와 같은 이유).
+				# ⚠ **날짜를 옮기고 사전을 다시 만든다.** `_apply_one_week`은
+				# 둘 다 안 건드려서 그냥 찍으면 1주차 그림이 나온다
+				for w in range(1, 13):
+					ac._apply_one_week(w * 7)
+				ac.state()["day"] = 12 * 7
+				ac._refresh()
+				ac.screen()._on_tab(1)
+				await ac.get_tree().process_frame
+				for n in ac.screen().find_children("*", "StatusScreen", true, false):
+					n.select_tab(3), CONNECT_ONE_SHOT)
+			return ac
 		"people":
 			# ⚠ **진짜 세계로, 진짜 탭으로 연다.** 손으로 만든 사전이면 코치가
 			# 몇 명인지 이름이 붙는지 같은 실제 모양을 못 본다

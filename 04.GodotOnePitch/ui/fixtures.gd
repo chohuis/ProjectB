@@ -58,6 +58,19 @@ static func status_vm() -> Dictionary:
 			{"year": 2027, "team": "제주 애월고", "stat_line": "4승 4패 ERA 4.88 52.8이닝 41K", "awards": []},
 			{"year": 2026, "team": "제주 애월고", "stat_line": "3승 5패 ERA 4.54 54.0이닝 38K", "awards": []},
 		],
+		# 하위 탭 목록도 사전이 정한다 — 학업은 학교에 다닐 때만 뜬다
+		"tabs": StatusVm.TABS + [{"id": "academics", "label": "학업"}],
+		"academics": AcademicsVm.build({
+			"day": 7 * 30, "season_year": 2028,
+			"protagonist": {"id": "ME", "league_id": "LEAGUE_UNIVERSITY"},
+			"school": {"major": "체육교육", "study_mode": "focus",
+				"warning_level": 1, "gpa": 2.35, "gpa_terms": 3},
+			"academic_log": [
+				{"day": 77, "year": 2028, "exam": "midterm", "gpa": 1.4,
+					"warning_level": 1, "label": "학사 경고"},
+			],
+			"campus_log": [{"day": 224, "kind": "showcase", "selected": true}],
+		}),
 	}
 
 
@@ -77,6 +90,8 @@ static func status_vm_empty() -> Dictionary:
 		],
 		"season_stats": [],
 		"career": [],
+		"tabs": StatusVm.TABS,
+		"academics": AcademicsVm.build({"protagonist": {"id": "ME"}}),
 	}
 
 

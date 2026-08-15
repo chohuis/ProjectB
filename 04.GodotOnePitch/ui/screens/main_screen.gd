@@ -50,9 +50,16 @@ signal match_requested
 signal season_end_requested
 ## 훈련 계획을 짠다
 signal training_requested
+## 학업에서 고른 것 — "나" 탭 안의 학업 탭에서 올라온다.
+## **상태에 쓰는 건 루트가 한다**
+signal study_mode_picked(mode: String)
+signal major_picked(name: String)
 
 var _vm: Dictionary = {}
 var _tab: int = 0
+## "나" 탭 안에서 어느 하위 탭을 보고 있었나. **`StatusScreen`은 상태가
+## 바뀔 때마다 통째로 새로 만들어지므로 자리를 여기가 들고 있어야 한다**
+var _me_tab: int = 0
 
 
 ## 진행 중임을 보인다. `DayRunner.progress`에 그대로 이어 붙인다.
@@ -251,8 +258,22 @@ func _build_schedule() -> void:
 func _build_me() -> void:
 	var screen: StatusScreen = STATUS_SCREEN.instantiate()
 	screen.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# 학업에서 고른 것을 루트까지 올린다 — 상태에 쓰는 건 루트가 한다.
+	#
+	# ⚠ **여기서도 미뤄서 보낸다.** 루트가 상태를 고치면 이 화면이 다시
+	# 그려지면서 방금 신호를 쏜 `StatusScreen`을 지운다 — 그대로 이으면
+	# 자기 신호 안에서 자신이 지워져 잠긴 객체가 된다
+	screen.study_mode_picked.connect(
+		func(m: String) -> void: study_mode_picked.emit.call_deferred(m))
+	screen.major_picked.connect(
+		func(n: String) -> void: major_picked.emit.call_deferred(n))
+	# ⚠ **하위 탭 자리를 여기서 기억한다.** 학업에서 뭘 고르면 상태가
+	# 바뀌고 이 화면이 통째로 새로 만들어지는데, 안 되돌려 놓으면
+	# 고를 때마다 "능력치"로 튕겨 나간다
+	screen.tab_changed.connect(func(i: int) -> void: _me_tab = i)
 	_tab_host.add_child(screen)
 	screen.set_view_model(_vm.get("me", {}))
+	screen.select_tab(_me_tab)
 
 
 ## 인물 탭. **`PeopleScreen`을 통째로 끼운다** — "나" 탭과 같은 방식이다

@@ -1,0 +1,87 @@
+[
+ [
+  "탭 목록을 사전에서 안 받고 늘 셋만 만든다 (학업 탭이 영영 안 뜬다)",
+  "\tvar tabs: Array = _vm.get(\"tabs\", [])",
+  "\tvar tabs: Array = StatusVm.TABS"
+ ],
+ [
+  "탭이 줄어도 고른 자리를 안 자른다 (졸업하면 빈 화면이 된다)",
+  "\t_tab = clampi(_tab, 0, maxi(tabs.size() - 1, 0))",
+  "\tpass"
+ ],
+ [
+  "탭을 다시 만들 때 옛 버튼을 안 지운다",
+  "\tfor c in _tabs.get_children():\n\t\t_tabs.remove_child(c)\n\t\tc.free()",
+  "\tpass"
+ ],
+ [
+  "고른 탭에 표시를 안 한다",
+  "\t\tb.button_pressed = (i == _tab)",
+  "\t\tb.button_pressed = (i == 0)"
+ ],
+ [
+  "이미 고른 전공을 또 고르라고 띄운다",
+  "\tif bool(a.get(\"major\", {}).get(\"selectable\", false)):\n\t\t_tab_host.add_child(_major_card(a[\"major\"]))",
+  "\t_tab_host.add_child(_major_card(a[\"major\"]))"
+ ],
+ [
+  "전공 선택 카드를 아예 안 띄운다",
+  "\tif bool(a.get(\"major\", {}).get(\"selectable\", false)):\n\t\t_tab_host.add_child(_major_card(a[\"major\"]))",
+  "\tpass"
+ ],
+ [
+  "주간 학업 카드를 안 띄운다 (고를 데가 없어진다)",
+  "\t_tab_host.add_child(_study_card(a[\"study\"]))",
+  "\tpass"
+ ],
+ [
+  "학기 기록을 안 띄운다",
+  "\tif not a.get(\"semesters\", []).is_empty():\n\t\t_tab_host.add_child(_semester_card(a[\"semesters\"]))",
+  "\tpass"
+ ],
+ [
+  "대학 무대 기록을 안 띄운다",
+  "\tif not a.get(\"campus\", []).is_empty():\n\t\t_tab_host.add_child(_campus_card(a[\"campus\"]))",
+  "\tpass"
+ ],
+ [
+  "누적 학점을 안 찍는다",
+  "\tc.body.add_child(_row(\"누적 학점\", String(gpa.get(\"label\", \"\")),",
+  "\tc.body.add_child(_row(\"누적 학점\", \"\","
+ ],
+ [
+  "다음 시험을 안 찍는다",
+  "\tc.body.add_child(_row(\"다음 시험\", String(a.get(\"exam\", {}).get(\"line\", \"\")),",
+  "\tc.body.add_child(_row(\"다음 시험\", \"\","
+ ],
+ [
+  "경고를 받아도 정상이라고 찍는다",
+  "\tif int(warn.get(\"level\", 0)) > 0:",
+  "\tif false:"
+ ],
+ [
+  "경고가 훈련을 얼마나 깎는지 안 찍는다",
+  "\t\tt.text = String(warn.get(\"training_label\", \"\"))",
+  "\t\tt.text = \"\""
+ ],
+ [
+  "고른 학업 모드를 상태에 안 알린다",
+  "\t\tb.pressed.connect(func() -> void:\n\t\t\tstudy_mode_picked.emit.call_deferred(String(o[\"id\"])))",
+  "\t\tpass"
+ ],
+ [
+  "고른 전공을 상태에 안 알린다",
+  "\t\tb.pressed.connect(func() -> void:\n\t\t\tmajor_picked.emit.call_deferred(String(m[\"name\"])))",
+  "\t\tpass"
+ ],
+ [
+  "하위 탭을 옮긴 걸 부모에게 안 알린다 (고를 때마다 능력치로 튕긴다)",
+  "\ttab_changed.emit(i)",
+  "\tpass"
+ ],
+ [
+  "부모가 되돌려 준 자리를 안 받는다",
+  "func select_tab(i: int) -> void:\n\t_tab = i",
+  "func select_tab(i: int) -> void:\n\t_tab = _tab"
+ ]
+]

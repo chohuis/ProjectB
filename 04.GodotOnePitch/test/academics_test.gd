@@ -51,6 +51,33 @@ func test_the_exam_weeks_match_02() -> void:
 	assert_str(Academics.exam_at_day(266)).is_equal("final")
 
 
+## ⚠ **화면이 주차를 자기 손으로 세지 않게 한다** — 옮겨 적으면 표가 둘이 된다
+func test_the_next_exam_counts_down() -> void:
+	assert_str(String(Academics.next_exam(1)["exam"])).is_equal("midterm")
+	assert_int(int(Academics.next_exam(1)["weeks_left"])).is_equal(10)
+	assert_str(String(Academics.next_exam(20)["exam"])).is_equal("final")
+	assert_int(int(Academics.next_exam(20)["weeks_left"])).is_equal(18)
+
+
+## 시험 주에는 D-0이다 — "다음 주"라고 쓰면 오늘 보는 시험이 사라진다
+func test_the_exam_week_itself_is_zero_weeks_away() -> void:
+	assert_int(int(Academics.next_exam(11)["weeks_left"])).is_equal(0)
+	assert_str(String(Academics.next_exam(11)["exam"])).is_equal("midterm")
+	assert_int(int(Academics.next_exam(38)["weeks_left"])).is_equal(0)
+	assert_str(String(Academics.next_exam(38)["exam"])).is_equal("final")
+
+
+## ⚠ **기말이 지나면 해를 넘긴다.** 안 넘기면 39주부터 남은 주가 음수가 된다
+func test_after_the_final_it_wraps_to_next_year() -> void:
+	var after: Dictionary = Academics.next_exam(50)
+	assert_str(String(after["exam"])).is_equal("midterm")
+	assert_int(int(after["weeks_left"])).override_failure_message(
+		"기말이 지났는데 남은 주가 %d다" % after["weeks_left"]).is_equal(13)
+	for w in range(1, Calendar.WEEKS_PER_SEASON + 1):
+		assert_int(int(Academics.next_exam(w)["weeks_left"])
+			).override_failure_message("%d주에 남은 주가 음수다" % w).is_greater_equal(0)
+
+
 # ── 주간 학업 ─────────────────────────────────────────────────
 
 ## 공부 방식이 품질을 가른다 — 안 가르면 고를 이유가 없다

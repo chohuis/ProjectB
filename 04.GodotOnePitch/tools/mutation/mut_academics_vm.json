@@ -1,0 +1,147 @@
+[
+ [
+  "프로에게도 학업이 있다고 한다",
+  "\tvar at_school: bool = STAGE_LABEL.has(league)",
+  "\tvar at_school: bool = true"
+ ],
+ [
+  "무대 이름을 안 붙인다 (고교와 대학이 같은 화면이 된다)",
+  "\t\t\"stage\": String(STAGE_LABEL.get(league, \"\")),",
+  "\t\t\"stage\": \"\","
+ ],
+ [
+  "한 학기도 안 끝났는데 0.00 학점을 만든다 (신입생이 낙제로 보인다)",
+  "\tif terms <= 0:\n\t\treturn {\"has\": false,",
+  "\tif false:\n\t\treturn {\"has\": false,"
+ ],
+ [
+  "졸업 자격을 안 본다",
+  "\tvar ok: bool = Academics.can_graduate(school)",
+  "\tvar ok: bool = true"
+ ],
+ [
+  "졸업까지 얼마나 남았는지를 안 알려준다",
+  "\t\t\"note\": \"졸업 자격 충족\" if ok else \"졸업까지 %.2f 부족\" % (need - gpa),",
+  "\t\t\"note\": \"졸업 자격 충족\" if ok else \"\","
+ ],
+ [
+  "출전 정지를 안 알린다",
+  "\t\t\"blocked\": bool(eff.get(\"blocks_games\", false)),",
+  "\t\t\"blocked\": false,"
+ ],
+ [
+  "경고 단계 이름을 안 준다",
+  "\t\t\"label\": String(eff.get(\"label\", \"정상\")),",
+  "\t\t\"label\": \"정상\","
+ ],
+ [
+  "경고가 훈련을 얼마나 깎는지를 안 보여준다 (그게 학사의 무게다)",
+  "\t\t\"training_label\": \"훈련 효율 %d%%\" % int(roundf(\n\t\t\tAcademics.training_mod(school) * 100.0)),",
+  "\t\t\"training_label\": \"훈련 효율 100%\","
+ ],
+ [
+  "시험 주차를 화면이 자기 손으로 센다",
+  "\tvar n: Dictionary = Academics.next_exam(week)",
+  "\tvar n: Dictionary = {\"exam\": \"midterm\", \"weeks_left\": 10}"
+ ],
+ [
+  "이번 주가 시험인데 D-0이라고만 쓴다",
+  "\t\t\"line\": \"이번 주가 %s입니다\" % EXAM_LABEL.get(String(n[\"exam\"]), \"\") \\\n\t\t\tif left == 0 else",
+  "\t\t\"line\": \"\" if false else"
+ ],
+ [
+  "고교생에게도 전공을 고르게 한다",
+  "\t\t\"selectable\": league == \"LEAGUE_UNIVERSITY\" and name.is_empty(),",
+  "\t\t\"selectable\": name.is_empty(),"
+ ],
+ [
+  "이미 고른 전공을 또 고르게 한다 (되돌릴 수 없는 선택이다)",
+  "\t\t\"selectable\": league == \"LEAGUE_UNIVERSITY\" and name.is_empty(),",
+  "\t\t\"selectable\": league == \"LEAGUE_UNIVERSITY\","
+ ],
+ [
+  "되돌릴 수 없다는 걸 안 알린다",
+  "\t\t\"hint\": MAJOR_HINT,",
+  "\t\t\"hint\": \"\","
+ ],
+ [
+  "전공을 골랐는지 안 본다",
+  "\t\t\"picked\": not name.is_empty(),",
+  "\t\t\"picked\": false,"
+ ],
+ [
+  "전공 목록을 규칙 파일에서 안 만든다",
+  "\tfor m in Academics.majors():\n\t\toptions.append({\"name\": String(m), \"desc\": _major_desc(String(m))})",
+  "\tpass"
+ ],
+ [
+  "전공의 부상 효과를 안 보여준다",
+  "\tvar inj: float = float(m.get(\"injury_mod\", 1.0))\n\tif inj != 1.0:\n\t\tparts.append(\"부상 %+d%%\" % int(roundf((inj - 1.0) * 100.0)))",
+  "\tpass"
+ ],
+ [
+  "전공의 학점 배수를 안 보여준다",
+  "\tvar gpa: float = float(m.get(\"gpa_gain_mult\", 1.0))\n\tif gpa != 1.0:\n\t\tparts.append(\"학점 ×%.1f\" % gpa)",
+  "\tpass"
+ ],
+ [
+  "전공의 훈련 보너스를 안 보여준다",
+  "\tvar train: float = float(m.get(\"training_eff_bonus\", 0.0))\n\tif train != 0.0:\n\t\tparts.append(\"훈련 %+d%%\" % int(roundf(train * 100.0)))",
+  "\tpass"
+ ],
+ [
+  "지금 고른 학업 모드를 표시 안 한다",
+  "\t\t\t\"current\": mode == current,",
+  "\t\t\t\"current\": false,"
+ ],
+ [
+  "학업 모드 하나를 빠뜨린다",
+  "\tfor id in MODE_ORDER:",
+  "\tfor id in [\"focus\", \"normal\", \"rest\"]:"
+ ],
+ [
+  "학점만 보여주고 훈련 대가를 숨긴다 (그러면 늘 집중이다)",
+  "\t\t\t\"effect\": \"학점 %.2f · 훈련 %d%%\" % [Academics.study_quality(mode),\n\t\t\t\tint(roundf(Academics.study_training(mode) * 100.0))],",
+  "\t\t\t\"effect\": \"학점 %.2f\" % Academics.study_quality(mode),"
+ ],
+ [
+  "훈련 대가를 규칙이 아니라 고정값으로 쓴다",
+  "\t\t\t\tint(roundf(Academics.study_training(mode) * 100.0))],",
+  "\t\t\t\t100],"
+ ],
+ [
+  "학업 모드를 안 정했을 때 아무거나 본다",
+  "\tvar current: String = String(school.get(\"study_mode\", \"normal\"))",
+  "\tvar current: String = String(school.get(\"study_mode\", \"focus\"))"
+ ],
+ [
+  "학기를 옛것부터 늘어놓는다 (마지막 시험이 맨 밑으로 간다)",
+  "\tfor e in state.get(\"academic_log\", []):\n\t\tout.push_front({",
+  "\tfor e in state.get(\"academic_log\", []):\n\t\tout.append({"
+ ],
+ [
+  "학기에 지금 연도를 붙인다 (3년 전 중간고사가 올해 것이 된다)",
+  "\t\t\t\"title\": \"%d년 %s\" % [int(e.get(\"year\", 0)),",
+  "\t\t\t\"title\": \"%d년 %s\" % [int(state.get(\"season_year\", 0)),"
+ ],
+ [
+  "경고받은 학기를 표시 안 한다",
+  "\t\t\t\"warned\": int(e.get(\"warning_level\", 0)) > 0,",
+  "\t\t\t\"warned\": false,"
+ ],
+ [
+  "안 뽑힌 무대를 안 보여준다 (무대가 없는 것처럼 보인다)",
+  "\tfor e in state.get(\"campus_log\", []):",
+  "\tfor e in state.get(\"campus_log\", []):\n\t\tif not bool(e.get(\"selected\", false)):\n\t\t\tcontinue"
+ ],
+ [
+  "무대 종류를 한글로 안 바꾼다",
+  "\t\t\t\"title\": String(CAMPUS_LABEL.get(kind, kind)),",
+  "\t\t\t\"title\": kind,"
+ ],
+ [
+  "무대를 옛것부터 늘어놓는다",
+  "\t\tout.push_front({\n\t\t\t\"title\": String(CAMPUS_LABEL.get(kind, kind)),",
+  "\t\tout.append({\n\t\t\t\"title\": String(CAMPUS_LABEL.get(kind, kind)),"
+ ]
+]

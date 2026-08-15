@@ -51,6 +51,8 @@ func _ready() -> void:
 	_main.training_requested.connect(_on_training)
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
+	_main.study_mode_picked.connect(_on_study_mode)
+	_main.major_picked.connect(_on_major)
 	_refresh()
 
 
@@ -523,6 +525,27 @@ func _apply_finance(p: Dictionary, at_day: int) -> Dictionary:
 const SCHOOL_LEAGUES: Array[String] = ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY"]
 
 
+## 이번 주부터 이렇게 공부한다.
+##
+## ⚠ **여기가 `study_mode`를 쓰는 유일한 자리다.** 없을 땐 읽는 코드만
+## 있어서 전 커리어가 "normal" 고정이었고 나머지 셋은 도달 불가였다
+func _on_study_mode(mode: String) -> void:
+	var school: Dictionary = _state.get("school", {})
+	school["study_mode"] = mode
+	_state["school"] = school
+	_refresh()
+
+
+## 전공을 고른다. **한 번뿐이다** — 이미 골랐으면 아무 일도 없다
+func _on_major(name: String) -> void:
+	var school: Dictionary = _state.get("school", {})
+	if not String(school.get("major", "")).is_empty():
+		return
+	school["major"] = name
+	_state["school"] = school
+	_refresh()
+
+
 ## 한 주의 학사. **학교에 다니는 동안만 돈다.** 이번 주 훈련 효율에
 ## 더할 값을 돌려준다 — 학적이 없으면 0이다.
 ##
@@ -547,7 +570,10 @@ func _apply_academics(p: Dictionary, at_day: int) -> float:
 		var r: Dictionary = Academics.close_semester(school)
 		# 학사 경고는 소식으로 알린다 — 조용히 훈련만 깎이면 원인을 모른다
 		var log: Array = _state.get("academic_log", [])
-		log.append({"day": day, "exam": exam, "gpa": r["gpa"],
+		# ⚠ **연도를 같이 남긴다.** 학사 화면이 학기를 줄 세우는데, 연도가
+		# 없으면 3년 전 중간고사가 올해 것으로 뜬다
+		log.append({"day": day, "year": int(_state.get("season_year", 0)),
+			"exam": exam, "gpa": r["gpa"],
 			"warning_level": r["warning_level"], "label": r["label"]})
 		_state["academic_log"] = log
 		# ⚠ **출전 정지가 경기 판정에 닿아야 한다.** 안 이으면 경고가
