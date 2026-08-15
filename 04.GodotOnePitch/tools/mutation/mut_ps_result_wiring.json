@@ -1,0 +1,7 @@
+[
+ [
+  "그 해 성적이 경력에 안 적힌다 (입시·드래프트가 읽을 값이 빈다)",
+  "\t\t\"ps_result\": Postseason.result_for(state, team_id, league_id),",
+  "\t\t\"ps_result\": \"\","
+ ]
+]

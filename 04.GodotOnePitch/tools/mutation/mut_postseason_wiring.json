@@ -1,0 +1,7 @@
+[
+ [
+  "시즌이 끝나도 포스트시즌이 안 열린다 (프로에 한국시리즈가 영영 없다)",
+  "\tvar ps: Dictionary = Postseason.run_background(state)",
+  "\tvar ps: Dictionary = {\"leagues\": []}"
+ ]
+]

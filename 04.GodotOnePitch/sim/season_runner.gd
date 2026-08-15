@@ -178,7 +178,15 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["trade_moved"] = int(trades["moved"])
 	done.append("trades")
 
-	# ⑬ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
+	# ⑬ 배경 리그 포스트시즌 — **주인공이 없는 리그의 우승팀을 정한다.**
+	#
+	# ⚠ 없으면 프로에 한국시리즈가 아예 없다 — `ps_result`가 영영 안 채워지고,
+	# 그건 진로 판정·수상·인생 기록이 읽는 값이다. 고교 시절에 "그해 프로
+	# 우승팀"이 없는 세계가 된다
+	var ps: Dictionary = Postseason.run_background(state)
+	summary["postseason"] = ps["leagues"].size()
+
+	# ⑭ 신입생 충원 — **없으면 세계가 마른다.** 실측으로 고교가 5년 만에
 	# 텅 비었다(졸업만 하고 들어오는 사람이 없다)
 	summary["freshmen"] = _intake(state, world, year)
 	done.append("background")

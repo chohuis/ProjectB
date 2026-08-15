@@ -154,13 +154,18 @@ static func protagonist_record(state: Dictionary, year: int) -> Dictionary:
 			})
 			break
 
+	var league_id: String = String(me.get("league_id", ""))
 	var record: Dictionary = {
 		"year": year,
-		"league_id": me.get("league_id", ""),
+		"league_id": league_id,
 		"team_id": team_id,
 		"stat_line": stat_line_of(st),
 		"ovr": float(me.get("pitching", {}).get("ovr", 0.0)),
 		"awards": [],
+		# ⚠ **그 해 어디까지 갔나.** 읽는 쪽이 셋인데(대학 입시·드래프트
+		# 판정·인생 기록) **채우는 자리가 없어서 전원이 미진출이었다** —
+		# 고교 우승이 입시에 한 점도 안 실렸다
+		"ps_result": Postseason.result_for(state, team_id, league_id),
 		"game_log": log,
 	}
 	records.append(record)

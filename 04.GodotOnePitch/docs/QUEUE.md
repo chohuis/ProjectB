@@ -249,7 +249,25 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       **다르게 한 것:** 02는 새 게임 시점에 이미 외국인이 있다(`roster_gen.rs`).
       04는 **첫 시즌 롤오버가 채운다** — 초기 로스터 생성을 안 건드리므로
       밸런스 대조가 안 흔들린다. 대신 1년차 KBL엔 외국인이 없다
-- [ ] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
+- [~] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
+      — 셋을 읽어 보니 성격이 달랐다. 나눠 적는다:
+      - [x] **B-10a** `proSeason`(62) — **옮길 게 없다.** 02는 "계약이 성립했으니
+            다음 시즌을 프로로 연다"가 세 곳(롤오버·지명 수락·즉시 계약)에
+            복제돼 있었고 각자 리그 분기를 적어서 **한 경로로 들어간 시즌만
+            일정이 비는** 결함이 났다. 04는 `SeasonRunner.roll_over` 하나가
+            `World.build_schedule`을 부르는 구조라 정본이 이미 하나다 —
+            같은 문제를 만들 자리가 없다
+      - [x] **B-10b 프로 포스트시즌 엔진** — B-10을 하다 드러난 **빠진 모듈.**
+            `sim/postseason.gd`. 1군 5강 와일드카드(4위 1승 어드밴티지) ·
+            2군 단판 사다리 · 배경 리그 자동 진행.
+            ⚠ **`ps_result`가 죽은 필드였다** — 읽는 곳이 셋인데(대학 입시 ·
+            드래프트 판정 · 인생 기록) **쓰는 곳이 없어 전원이 미진출**이었고,
+            고교 우승이 입시에 한 점도 안 실렸다. 이제
+            `SeasonHistory.protagonist_record`가 프로는 포스트시즌에서,
+            학교는 그 해 대회 중 **제일 멀리 간 것**에서 낸다.
+            검사 47 · 변이 49/49 + 배선 2/2
+      - [ ] **B-10c** `runDraftBoardBackground`(32) — **C-1(드래프트 보드) 화면
+            지원이다.** 보드를 여는 그 자리에서 같이 옮긴다
 - [ ] **B-11** `runAutoAdvance`(491)
 
 ## C. 화면
