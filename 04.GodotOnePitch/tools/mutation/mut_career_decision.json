@@ -1,0 +1,337 @@
+[
+ [
+  "지망 수 제한이 사라진다",
+  "\t\tif out.size() >= MAX_CHOICES:\n\t\t\tbreak",
+  "\t\tif false:\n\t\t\tbreak"
+ ],
+ [
+  "지망을 하나만 받는다",
+  "const MAX_CHOICES: int = 3",
+  "const MAX_CHOICES: int = 1"
+ ],
+ [
+  "대학생이 대학에 원서를 낸다 (두 번 입학)",
+  "\tif CareerPath.can_apply_university(stage):\n\t\tuniv = _clip(opts.get(\"university_choices\", []))",
+  "\tif true:\n\t\tuniv = _clip(opts.get(\"university_choices\", []))"
+ ],
+ [
+  "프로가 독립리그에 원서를 낸다",
+  "\tif CareerPath.can_apply_independent(stage):\n\t\tindie = _clip(opts.get(\"independent_choices\", []))",
+  "\tif true:\n\t\tindie = _clip(opts.get(\"independent_choices\", []))"
+ ],
+ [
+  "원서를 내도 안 낸 것으로 남는다",
+  "\tc[\"submitted\"] = true\n\tc[\"results\"] = {}\n\tPending.resolve(state, \"career_choice_hub\")",
+  "\tc[\"results\"] = {}\n\tPending.resolve(state, \"career_choice_hub\")"
+ ],
+ [
+  "원서를 냈는데 지원 화면이 다시 열린다",
+  "\tPending.resolve(state, \"career_choice_hub\")\n\treturn apps",
+  "\treturn apps"
+ ],
+ [
+  "백분위 분모에 나를 넣는다 (인원수만큼 낮게 나온다)",
+  "\t\t\tif String(q.get(\"id\", \"\")) == me:\n\t\t\t\tcontinue\n\t\t\tif String(q.get(\"league_id\", \"\")) != league:",
+  "\t\t\tif false:\n\t\t\t\tcontinue\n\t\t\tif String(q.get(\"league_id\", \"\")) != league:"
+ ],
+ [
+  "다른 리그 선수가 또래에 섞인다",
+  "\t\t\tif String(q.get(\"league_id\", \"\")) != league:\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "다른 학년이 또래에 섞인다",
+  "\t\t\tif grade > 0 and int(q.get(\"grade\", 0)) != grade:\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "야수가 투수 또래에 섞인다",
+  "\t\t\tif not PlayerGen.is_pitcher(String(q.get(\"position\", \"\"))):\n\t\t\t\tcontinue\n\t\t\ttotal += 1",
+  "\t\t\tif false:\n\t\t\t\tcontinue\n\t\t\ttotal += 1"
+ ],
+ [
+  "백분위를 거꾸로 센다 (못할수록 높다)",
+  "\t\t\tif Contract.core_ovr(q) < mine:\n\t\t\t\tbelow += 1",
+  "\t\t\tif Contract.core_ovr(q) > mine:\n\t\t\t\tbelow += 1"
+ ],
+ [
+  "또래가 없으면 최하로 본다 (세계가 얇으면 전원 미지명이다)",
+  "\treturn 50.0 if total == 0 else float(below) / float(total) * 100.0",
+  "\treturn 0.0 if total == 0 else float(below) / float(total) * 100.0"
+ ],
+ [
+  "팀 순위가 나보다 못한 사람까지 센다",
+  "\t\tif Contract.core_ovr(q) > mine:\n\t\t\trank += 1",
+  "\t\tif Contract.core_ovr(q) >= mine:\n\t\t\trank += 1"
+ ],
+ [
+  "팀 에이스 순위가 0부터 시작한다",
+  "\tvar rank: int = 1\n\tfor q in World.roster_of",
+  "\tvar rank: int = 0\n\tfor q in World.roster_of"
+ ],
+ [
+  "대회 성적이 평균이 아니라 합이다 (한 해 더 다닌 사람이 유리하다)",
+  "\treturn {\"tournament_score\": tour / float(seasons),",
+  "\treturn {\"tournament_score\": tour,"
+ ],
+ [
+  "대학·프로 성적이 고교 대회 점수에 섞인다",
+  "\t\tif String(rec.get(\"league_id\", \"\")) != \"LEAGUE_HIGHSCHOOL\":\n\t\t\tcontinue\n\t\tseasons += 1",
+  "\t\tif false:\n\t\t\tcontinue\n\t\tseasons += 1"
+ ],
+ [
+  "고교 기록이 없으면 대회 점수가 0이 된다",
+  "\t\treturn {\"tournament_score\": Draft.TOURNAMENT_BASE,",
+  "\t\treturn {\"tournament_score\": 0.0,"
+ ],
+ [
+  "MVP와 그 밖의 수상이 뒤바뀐다",
+  "\t\t\tif String(a.get(\"id\", \"\")) == \"mvp\":\n\t\t\t\tmvps += 1\n\t\t\telse:\n\t\t\t\ttitles += 1",
+  "\t\t\tif String(a.get(\"id\", \"\")) == \"mvp\":\n\t\t\t\ttitles += 1\n\t\t\telse:\n\t\t\t\tmvps += 1"
+ ],
+ [
+  "부상 경고가 부상 이력으로 세어진다",
+  "\t\tif String(row.get(\"kind\", \"\")) != \"healed\":\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "부상 심각도를 안 가른다",
+  "\t\tout[sev] = int(out.get(sev, 0)) + 1",
+  "\t\tout[\"moderate\"] = int(out.get(\"moderate\", 0)) + 1"
+ ],
+ [
+  "주목도가 드래프트 판정에 안 닿는다",
+  "\t\t\"scout_score\": float(p.get(\"scout_score\", CampusRunner.BASE_SCOUT_SCORE)),",
+  "\t\t\"scout_score\": CampusRunner.BASE_SCOUT_SCORE,"
+ ],
+ [
+  "원서를 안 내도 결과가 나온다",
+  "\tif not bool(c.get(\"submitted\", false)):\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "결과를 볼 때마다 다시 뽑는다 (지명 순위가 바뀐다)",
+  "\tif prev is Dictionary and not prev.is_empty():\n\t\treturn prev",
+  "\tif false:\n\t\treturn prev"
+ ],
+ [
+  "드래프트에 신청 안 해도 지명된다",
+  "\tif bool(apps.get(\"draft_applied\", false)):\n\t\tdraft_out = Draft.evaluate",
+  "\tif true:\n\t\tdraft_out = Draft.evaluate"
+ ],
+ [
+  "학점이 입시에 안 닿는다 (전원이 최하 등급으로 지원한다)",
+  "\t\t\"gpa\": float(state.get(\"school\", {}).get(\"gpa\", 0.0)),",
+  "\t\t\"gpa\": 0.0,"
+ ],
+ [
+  "고교 야구 성적이 입시에 안 닿는다",
+  "\t\t\"hs_baseball_score\": CareerPath.hs_baseball_score(\n\t\t\tstate.get(\"protagonist\", {}).get(\"career_records\", [])),",
+  "\t\t\"hs_baseball_score\": 0,"
+ ],
+ [
+  "결과가 정해졌는데 아무도 안 물어본다",
+  "\tPending.push_once(state, {\"type\": \"career_results\"})\n\treturn results",
+  "\treturn results"
+ ],
+ [
+  "결과 확인이 최종 선택으로 안 이어진다",
+  "\tPending.push_once(state, {\"type\": \"career_choice\"})\n\treturn true",
+  "\treturn true"
+ ],
+ [
+  "결과 화면이 안 닫힌다",
+  "\tif not Pending.resolve(state, \"career_results\"):\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "4학년이 한 해 더 다닌다 (5학년이 생긴다)",
+  "\tif stage == \"university\" and CareerPath.is_university_final_year(\n\t\t\tint(p.get(\"grade\", 0)), int(p.get(\"university_week\", 0))):",
+  "\tif false:"
+ ],
+ [
+  "학점이 모자라도 졸업한다",
+  "\t\tif Academics.can_graduate(state.get(\"school\", {})):",
+  "\t\tif true:"
+ ],
+ [
+  "유급인데 진로 결정이 안 풀린다 (같은 주가 무한 반복된다)",
+  "\t\tif Academics.can_graduate(state.get(\"school\", {})):\n\t\t\t_graduate(state, p)\n\t\t\treturn false",
+  "\t\t_graduate(state, p)\n\t\treturn false"
+ ],
+ [
+  "고교생이 진로를 안 정하고 계속한다",
+  "\telif stage != \"university\" and stage != \"independent\":\n\t\treturn false",
+  "\telif false:\n\t\treturn false"
+ ],
+ [
+  "4년을 관리한 결과가 아무 데도 안 남는다",
+  "\t\t\t_graduate(state, p)",
+  "\t\t\tpass"
+ ],
+ [
+  "지명 안 됐는데 계약 통보가 뜬다",
+  "\tif not bool(r.get(\"drafted\", false)):\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "계약 통보가 떠도 진로 선택이 남는다",
+  "\tPending.resolve(state, \"career_choice\")\n\tvar action: Dictionary = {",
+  "\tvar action: Dictionary = {"
+ ],
+ [
+  "대학생이 대학 대안을 받는다 (거부하면 두 번 입학이다)",
+  "\t\t\"alt_university_team_id\": _first(r.get(\"university_passed\", []))\n\t\t\tif CareerPath.can_apply_university(String(p.get(\"career_stage\", \"\"))) else \"\",",
+  "\t\t\"alt_university_team_id\": _first(r.get(\"university_passed\", [])),"
+ ],
+ [
+  "거부할 때 갈 곳이 통보에 안 담긴다",
+  "\t\t\"alt_independent_team_id\": _first(r.get(\"independent_passed\", [])),",
+  "\t\t\"alt_independent_team_id\": \"\","
+ ],
+ [
+  "계약 통보가 대기줄에 안 선다",
+  "\tPending.push_once(state, action)\n\tc[\"final_choice\"] = \"draft\"",
+  "\tc[\"final_choice\"] = \"draft\""
+ ],
+ [
+  "지명 순위 구간을 한 칸 밀려 읽는다",
+  "\t\tif pick_no <= int(x[\"until_pick\"]):",
+  "\t\tif pick_no < int(x[\"until_pick\"]):"
+ ],
+ [
+  "표 밖의 순위가 계약을 못 받는다",
+  "\tvar row: Dictionary = rows[rows.size() - 1]",
+  "\tvar row: Dictionary = {\"salary\": 0, \"bonus\": 0}"
+ ],
+ [
+  "구단 씀씀이 배수에 띠가 없다",
+  "\tvar idx: float = clampf(index, float(r.get(\"team_index_min\", 0.85)),\n\t\tfloat(r.get(\"team_index_max\", 1.15)))",
+  "\tvar idx: float = index"
+ ],
+ [
+  "신인 연봉에 구단 사정이 붙는다 (규정상 균일이다)",
+  "\t\t\"salary\": int(row[\"salary\"]),",
+  "\t\t\"salary\": int(roundf(float(row[\"salary\"]) * idx)),"
+ ],
+ [
+  "계약금이 지명 순위를 안 본다",
+  "\t\t\"signing_bonus\": int(roundf(float(row[\"bonus\"]) * idx / 100.0)) * 100,",
+  "\t\t\"signing_bonus\": int(roundf(float(rows[rows.size() - 1][\"bonus\"]) * idx / 100.0)) * 100,"
+ ],
+ [
+  "중립 구단이 가운데가 아니다",
+  "\treturn lo + (hi - lo) * clampf(w / 100.0, 0.0, 1.0)",
+  "\treturn lo + (hi - lo) * clampf(w / 50.0, 0.0, 1.0)"
+ ],
+ [
+  "대학생이 대학에 두 번 입학한다",
+  "\tvar allowed: bool = CareerPath.can_apply_university(stage) \\\n\t\tif kind == \"university\" else CareerPath.can_transition(stage, kind)",
+  "\tvar allowed: bool = CareerPath.can_transition(stage, kind)"
+ ],
+ [
+  "학적 역행을 안 막는다",
+  "\tif not allowed:\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "진학해도 진로 선택이 남는다",
+  "\tPending.resolve(state, \"career_choice\")\n\n\tif kind == \"university\":",
+  "\n\tif kind == \"university\":"
+ ],
+ [
+  "재학 주차가 안 시작된다 (학년이 영영 안 오른다)",
+  "\t\tp[\"university_week\"] = 1\n\t\tp[\"grade\"] = 1",
+  "\t\tp[\"grade\"] = 1"
+ ],
+ [
+  "독립리그에 들어갔는데 계약 이야기가 없다",
+  "\t\tPending.push_once(state, independent_offer(state, team_id))\n\treturn true",
+  "\treturn true"
+ ],
+ [
+  "독립 제안이 1년 고정이 아니다",
+  "\t\t\"min_duration_years\": years, \"max_duration_years\": years,",
+  "\t\t\"min_duration_years\": 1, \"max_duration_years\": 5,"
+ ],
+ [
+  "독립 제안이 실력을 안 본다",
+  "\t\t\"offered_salary\": maxi(int(r.get(\"floor\", 800)),\n\t\t\tint(roundf((ovr - float(r.get(\"ovr_base\", 40))) * float(r.get(\"per_ovr\", 60))))),",
+  "\t\t\"offered_salary\": int(r.get(\"floor\", 800)),"
+ ],
+ [
+  "독립 제안에 바닥이 없다 (연봉이 0 아래로 간다)",
+  "\t\t\"offered_salary\": maxi(int(r.get(\"floor\", 800)),\n\t\t\tint(roundf((ovr - float(r.get(\"ovr_base\", 40))) * float(r.get(\"per_ovr\", 60))))),",
+  "\t\t\"offered_salary\": int(roundf((ovr - float(r.get(\"ovr_base\", 40))) * float(r.get(\"per_ovr\", 60)))),"
+ ],
+ [
+  "거부해도 계약 통보가 남는다",
+  "\tPending.resolve(state, \"draft_notification\")\n\tvar p: Dictionary = state.get(\"protagonist\", {})\n\tvar stage: String = String(p.get(\"career_stage\", \"\"))",
+  "\tvar p: Dictionary = state.get(\"protagonist\", {})\n\tvar stage: String = String(p.get(\"career_stage\", \"\"))"
+ ],
+ [
+  "대학생이 거부하고 대학에 또 들어간다",
+  "\tif not univ.is_empty() and CareerPath.can_apply_university(stage):",
+  "\tif not univ.is_empty():"
+ ],
+ [
+  "거부하면 대학 대안을 건너뛴다",
+  "\tif not univ.is_empty() and CareerPath.can_apply_university(stage):",
+  "\tif false:"
+ ],
+ [
+  "독립 대안이 있어도 입대한다",
+  "\tif not indie.is_empty():\n\t\t_move_to(state, p, \"independent\", INDEPENDENT, indie)",
+  "\tif false:\n\t\t_move_to(state, p, \"independent\", INDEPENDENT, indie)"
+ ],
+ [
+  "갈 곳이 없는데 입대도 안 한다 (허공에 남는다)",
+  "\tMilitary.enlist(state, \"general\", at_day)\n\tc[\"final_choice\"] = \"general\"",
+  "\tc[\"final_choice\"] = \"general\""
+ ],
+ [
+  "거부하고 독립으로 갔는데 계약 이야기가 없다",
+  "\t\tPending.push_once(state, independent_offer(state, indie))\n\t\treturn \"independent\"",
+  "\t\treturn \"independent\""
+ ],
+ [
+  "계약을 받아도 프로가 아니다",
+  "\t_move_to(state, p, \"pro_kbl\", league, String(action.get(\"team_id\", \"\")))",
+  "\t_move_to(state, p, \"independent\", league, String(action.get(\"team_id\", \"\")))"
+ ],
+ [
+  "계약을 받아도 연봉이 안 붙는다",
+  "\tp[\"salary\"] = int(action.get(\"salary\", 0))\n\tp[\"contract_years\"] = int(action.get(\"duration_years\", 0))",
+  "\tp[\"contract_years\"] = int(action.get(\"duration_years\", 0))"
+ ],
+ [
+  "계약 연수가 안 붙는다",
+  "\tp[\"contract_years\"] = int(action.get(\"duration_years\", 0))\n\tp[\"signing_bonus\"]",
+  "\tp[\"signing_bonus\"]"
+ ],
+ [
+  "계약금이 자산이 안 된다 (화면에만 있는 숫자다)",
+  "\tp[\"money\"] = int(p.get(\"money\", 0)) + int(action.get(\"signing_bonus\", 0))",
+  "\tp[\"money\"] = int(p.get(\"money\", 0))"
+ ],
+ [
+  "지명이 경력에 안 남는다",
+  "\t_add_event(p, {\n\t\t\"year\": int(state.get(\"season_year\", 0)), \"type\": \"drafted\",",
+  "\tif false: _add_event(p, {\n\t\t\"year\": int(state.get(\"season_year\", 0)), \"type\": \"drafted\","
+ ],
+ [
+  "계약을 받아도 통보가 안 닫힌다",
+  "\tPending.resolve(state, \"draft_notification\")\n\treturn true",
+  "\treturn true"
+ ],
+ [
+  "무대를 옮겨도 소속이 그대로다",
+  "\tp[\"league_id\"] = league\n\tp[\"team_id\"] = team_id",
+  "\tpass"
+ ],
+ [
+  "프로가 학년을 달고 다닌다",
+  "\tif stage != \"university\" and stage != \"highschool\":\n\t\tp.erase(\"grade\")",
+  "\tif false:\n\t\tp.erase(\"grade\")"
+ ]
+]

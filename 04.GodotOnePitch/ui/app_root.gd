@@ -397,6 +397,13 @@ func _apply_one_week(at_day: int = -1) -> void:
 	if p.is_empty():
 		return
 
+	# 진로 — 지원이 열리고 결과가 나오고 복무가 흐른다.
+	#
+	# ⚠ **이 한 줄이 없으면 진로 모듈 전체가 아무도 안 부르는 코드다.**
+	# 02가 겪은 결함 대부분이 그 자리였다 — 주인공은 지명될 수 없었고
+	# 프로 콘텐츠 전부가 도달 불가였다
+	CareerRunner.run(_state, at_day)
+
 	# 학사 — **학교에 다니는 동안만.** 시험 주에 학기가 확정되고, 경고가
 	# 훈련 효율을 깎는다
 	_apply_academics(p, at_day)

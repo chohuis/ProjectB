@@ -2,10 +2,9 @@ extends GdUnitTestSuite
 
 ## 결정 대기줄 — 세계가 멈추고 사용자에게 묻는 자리. B-6b.
 ##
-## ⚠ **02는 이 줄을 자동 진행이 조용히 비웠다.** "결과가 상태에 남지 않는
-## 알림성"이라는 분류에 계약·트레이드가 들어 있어서, 자동으로 지나가면
-## **지명 통보만 사라지고 고교에 남고**, **트레이드 통보만 사라지고 팀은
-## 그대로**였다. 실측 25시즌에서 2031년에 만료된 계약이 2038년까지 남았다.
+## ⚠ **줄은 이미 있던 `state["pending"]` 하나다.** `DayEngine.stop_reason`이
+## 읽고 `SeasonRunner`가 해마다 비운다 — 새 키를 만들면 "멈추는 이유"의
+## 정본이 둘이 되고, 한쪽에만 넣은 결정은 영영 안 물어본다.
 
 
 func _state() -> Dictionary:
@@ -94,77 +93,38 @@ func test_the_plain_push_allows_many() -> void:
 	assert_int(Pending.all(s).size()).is_equal(2)
 
 
-# ── 멈추는 결정 ───────────────────────────────────────────────
+# ── 날을 멈춘다 ───────────────────────────────────────────────
 
-## ⚠ **커리어가 갈리는 지점은 자동 진행이 대신 결정하면 안 된다.**
-## 02는 지명 통보가 이 목록에 없어서 `default:`가 그냥 해소했고,
-## **지명을 받고도 계약이 안 된 채 고교에 남았다**
-func test_the_career_forks_stop_the_world() -> void:
-	for t in ["career_choice_hub", "career_results", "career_choice",
-			"draft_observe", "draft_notification", "retirement_ask"]:
-		assert_bool(Pending.is_stopping(t)).override_failure_message(
-			"%s 가 자동 진행을 안 멈춘다" % t).is_true()
-
-
-## ⚠ **계약 셋도 같은 계열이다.** 예전엔 "dev 도구"라며 그냥 버렸다 —
-## 자동 진행으로 지나가면 재계약 제안이 사라지고 계약이 만료된 채 남는다
-func test_the_contract_decisions_stop_the_world() -> void:
-	for t in ["salary_negotiation", "option_clause", "fa_market"]:
-		assert_bool(Pending.is_stopping(t)).override_failure_message(
-			"%s 가 자동 진행을 안 멈춘다 — 계약이 조용히 버려진다" % t).is_true()
-
-
-## ⚠ **트레이드는 소속이 바뀐다.** 02는 "결과가 상태에 남지 않는 알림성"으로
-## 분류해 그냥 해소했고, 통보만 사라지고 팀은 그대로였다
-func test_a_trade_stops_the_world() -> void:
-	assert_bool(Pending.is_stopping("trade")).override_failure_message(
-		"트레이드 통보가 조용히 버려진다 — 팀이 그대로 남는다").is_true()
-
-
-func test_a_routine_notice_does_not_stop_the_world() -> void:
-	for t in ["game", "message", "injury_treatment", "military_enlist_ask"]:
-		assert_bool(Pending.is_stopping(t)).override_failure_message(
-			"%s 때문에 자동 진행이 멈춘다" % t).is_false()
-
-
-func test_the_blocking_one_is_found_behind_routine_notices() -> void:
+## ⚠ **줄에 넣으면 그날이 멈춘다.** `DayEngine`이 다른 키를 읽고 있으면
+## 넣어도 아무 일이 안 일어난다 — 물어보지 않은 결정이 조용히 남는다
+func test_what_the_queue_holds_stops_the_day() -> void:
 	var s: Dictionary = _state()
-	Pending.push(s, {"type": "game", "game_id": "A"})
-	Pending.push(s, {"type": "message", "message_id": "M"})
-	Pending.push(s, {"type": "draft_notification", "team_id": "T"})
-	assert_str(String(Pending.blocking(s)["type"])).override_failure_message(
-		"알림 뒤에 숨은 결정을 못 찾는다").is_equal("draft_notification")
+	s["protagonist"] = {"retired": false}
+	s["season_days"] = 200
+	assert_object(DayEngine.stop_reason(s)).override_failure_message(
+		"줄이 비었는데 날이 멈췄다").is_null()
 
-
-func test_nothing_blocks_when_there_is_only_routine() -> void:
-	var s: Dictionary = _state()
-	Pending.push(s, {"type": "game", "game_id": "A"})
-	assert_dict(Pending.blocking(s)).is_empty()
-
-
-## 사람이 읽을 이름 — 자동 진행이 "왜 멈췄는지"를 적는다
-func test_a_stopping_decision_has_a_name() -> void:
-	assert_str(Pending.label_of("draft_notification")).is_not_empty()
-	assert_str(Pending.label_of("salary_negotiation")).is_not_empty()
-	assert_str(Pending.label_of("draft_notification")).override_failure_message(
-		"두 결정의 이름이 같다 — 어느 것 때문에 멈췄는지 못 가린다"
-	).is_not_equal(Pending.label_of("salary_negotiation"))
-
-
-## 이름이 없는 종류도 무언가는 돌려준다 — 빈 문자열이면 "정지: " 만 뜬다
-func test_an_unnamed_decision_still_says_something() -> void:
-	assert_str(Pending.label_of("something_new")).is_not_empty()
+	Pending.push(s, {"type": "career_choice"})
+	var r = DayEngine.stop_reason(s)
+	assert_object(r).override_failure_message(
+		"대기줄에 넣었는데 날이 안 멈춘다 — 넣는 키와 읽는 키가 다르다"
+	).is_not_null()
+	assert_str(String(r["type"])).is_equal("career_choice")
 
 
 # ── 상태에 남는다 ─────────────────────────────────────────────
 
 ## ⚠ **줄이 상태에 있어야 세이브를 넘어 산다.** 02는 "한 해에 한 번" 가드를
 ## 스토어에만 두고 세이브에 안 넣어서, 앱을 껐다 켜면 없던 일이 됐다
+## ⚠ **자리를 `pending`으로 못 박는다.** `World.new_game`과 픽스처가 그 이름을
+## 글자 그대로 적어 두고, 옛 세이브도 거기 들어 있다 — 키를 옮기면 이미 쌓인
+## 결정이 통째로 안 보인다
 func test_the_queue_lives_in_the_state() -> void:
 	var s: Dictionary = _state()
 	Pending.push(s, {"type": "fa_market"})
-	assert_bool(s.has(Pending.KEY)).override_failure_message(
-		"대기줄이 상태 밖에 있다 — 세이브를 넘어 못 산다").is_true()
+	assert_bool(s.has("pending")).override_failure_message(
+		"대기줄이 state[\"pending\"]이 아닌 데 쌓인다 — 옛 세이브의 결정이 사라진다"
+	).is_true()
 
 	var reopened: Dictionary = s.duplicate(true)
 	assert_bool(Pending.has(reopened, "fa_market")).is_true()

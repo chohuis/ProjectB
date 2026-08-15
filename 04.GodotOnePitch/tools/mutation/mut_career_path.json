@@ -25,9 +25,14 @@
   "\treturn int(rules().get(\"tiers\", {}).get(\"C\", {}).get(\"scout_bonus\", 0))"
  ],
  [
-  "등급 경계가 열린 구간이 된다 (석차 4%가 2등급이다)",
-  "\t\tif pct <= float(cuts[i]):",
-  "\t\tif pct < float(cuts[i]):"
+  "등급 경계가 열린 구간이 된다 (만점자가 2등급이다)",
+  "\t\tif gpa >= float(cuts[i]):",
+  "\t\tif gpa > float(cuts[i]):"
+ ],
+ [
+  "학점을 거꾸로 읽는다 (만점자가 9등급이다)",
+  "\t\tif gpa >= float(cuts[i]):",
+  "\t\tif gpa <= float(cuts[i]):"
  ],
  [
   "등급이 0부터 시작한다",
@@ -36,13 +41,8 @@
  ],
  [
   "제일 낮은 등급이 하나 모자라다",
-  "\treturn cuts.size() + 1\n\n\n## 석차백분율 → 4.5 만점 학점",
-  "\treturn cuts.size()\n\n\n## 석차백분율 → 4.5 만점 학점"
- ],
- [
-  "학점 표를 한 칸 밀려 읽는다",
-  "\treturn float(table[mini(pct_to_grade(pct) - 1, table.size() - 1)])",
-  "\treturn float(table[mini(pct_to_grade(pct), table.size() - 1)])"
+  "\treturn cuts.size() + 1\n\n\n# ── 고교 야구 점수",
+  "\treturn cuts.size()\n\n\n# ── 고교 야구 점수"
  ],
  [
   "대학·프로 성적이 고교 입시 점수에 섞인다",

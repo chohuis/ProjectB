@@ -54,9 +54,11 @@ static func appearance_gate(p: Dictionary) -> String:
 ## 미결정 메시지가 경기보다 **먼저**인 게 중요하다 — 답을 안 한 결정이
 ## 남았는데 경기로 넘어가면 그 결정은 영영 못 한다
 static func stop_reason(s: Dictionary):
-	var pending: Array = s.get("pending", [])
-	if not pending.is_empty():
-		return pending[0]
+	# ⚠ **대기줄은 `Pending`이 정본이다.** 여기서 키를 직접 읽으면 넣는 쪽과
+	# 읽는 쪽이 갈릴 수 있다 — 갈리면 물어보지 않은 결정이 조용히 남는다
+	var head: Dictionary = Pending.next(s)
+	if not head.is_empty():
+		return head
 
 	var p: Dictionary = s.get("protagonist", {})
 	if p.get("retired", false):

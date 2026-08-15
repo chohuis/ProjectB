@@ -181,9 +181,12 @@ static func _heal_protagonist(state: Dictionary, p: Dictionary, me: String,
 	p["has_prior_injury"] = true
 	_clear(state, me)
 
+	# ⚠ **등급을 같이 남긴다.** 드래프트가 부상 이력을 심각도로 가르는데
+	# (수술 −18 · 중상 −10 · 중등도 −2), 자리를 비우고 나면 여기 말고는
+	# 그 등급이 남는 데가 없다 — 안 남기면 부상 항이 늘 0이다
 	var log: Array = state.get("body_log", [])
 	log.append({"day": at_day, "kind": "healed", "injury_type": t,
-		"penalty": penalty})
+		"severity": String(cur.get("severity", "")), "penalty": penalty})
 	state["body_log"] = log
 
 

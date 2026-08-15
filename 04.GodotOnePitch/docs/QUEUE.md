@@ -69,6 +69,22 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
   빠져 있다 — 수비 훈련을 짠 주는 **어느 코치도 안 오른다.** 02 그대로
   옮겼다. 스태프(B-2b)에 수비 코치가 있는지 보고 다시 판단한다
 
+- ❓ **02의 독립리그 지망 순서가 주석과 코드가 어긋난다.** 주석은 "위로
+  지원할수록 조금 어렵다"인데 코드(`cut = min_ovr - penalty`, `penalty =
+  [0, -2, -4]`)는 **뒤 지망이 더 어렵다.** 밸런스 동결이라 코드 쪽을 옮기고
+  검사로 못 박았다(`career_path_test.test_a_later_choice_is_a_little_harder`)
+
+- ❓ **04 학사엔 석차백분율이 없다.** 02는 석차→9등급과 석차→학점 두 표를
+  따로 뒀는데 04는 학점만 만든다. 두 표를 합쳐 **학점→등급** 하나로 뒀다 —
+  값은 02 그대로다(4.5→1 · 4.2→2 · … · 1.5→8). 석차 표를 그대로 옮기면
+  아무도 안 먹이는 죽은 코드가 된다
+
+- ❓ **주인공 지명률이 NPC 실측보다 높다.** 02 앵커는 "고교 3학년 투수
+  4,805명 중 고졸 지명 327명 = 6.81%"인데 `measure:career` 60커리어에서
+  **17%**가 나왔다. 주인공은 `World.new_game`이 만드는 사람이라 또래
+  분포의 가운데가 아니다 — 산식은 NPC와 같은 것을 쓰므로 **밸런스가 아니라
+  생성 분포의 문제로 본다.** 이주 후에 주인공 생성 분포를 잴 때 다시 본다
+
 - ❓ **라이벌을 누가 지정하나.** 관계 엔진에 라이벌 갈래가 다 있는데
   (성향이 부호를 가르는 것까지) **04에 라이벌을 정하는 경로가 없다** —
   `faced_rivals`가 늘 빈 목록이다. 02는 `named_npc_registry.json`과 대회
@@ -180,8 +196,21 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ 단위는 전부 만원 — 02는 치료비만 원 단위라 **한 주에 자산이 0이 됐다**.
       검사 45 · 변이 47/47.
       **남은 것:** 스폰서 계약 화면·투자 선택 화면은 C에서 (지금은 엔진만) — 개인 재정
-- [ ] **B-6** `careerDecision`(270) · `contractDecision`(260) · `militaryDecision`(168)
-      · `decisions`(121)
+- [x] **B-6** `careerDecision`(270) · `contractDecision`(260) · `militaryDecision`(168)
+      — `sim/career_path.gd` · `career_decision.gd` · `career_runner.gd` ·
+        `contract_decision.gd` · `military.gd` · `pending.gd` · `data/career_rules.json`.
+      **주인공이 처음으로 프로에 갈 수 있게 됐다.** 02에는 `draftDrafted`를 true로
+      만드는 곳이 **어디에도 없어서** 프로 콘텐츠 전부가 도달 불가였다.
+      실측(`measure:career` 60커리어): 진학 75% · 지명 17% · 독립 7% · 입대 2%,
+      지명 라운드 중앙 7R · 계약금 중앙 4,000만원.
+      검사 52+19+23+57+26+18 · 변이 49/10/29/66/39/17 + 배선 1/1 · 38/38.
+      **남은 것:**
+      - `decisions`(121, 이벤트 선택지 효과 적용)은 **C에서** — 선택지 화면이
+        서야 부를 데가 생긴다. 관계·사치품 효과는 `Relationship`·`Finance`에 이미 있다
+      - **자동 진행 정지 목록**(02 `STOP_PENDING`)은 **B-11에서.** 04는 지금
+        대기줄에 든 것이 전부 날을 멈추므로 구분이 아직 필요 없다.
+        02가 여기서 잃은 것: 지명 통보·계약 셋·트레이드가 "알림성"으로 분류돼
+        **조용히 버려졌다**(2031년 만료 계약이 2038년까지 남았다)
 - [ ] **B-7** `retirement`(228) — 주인공 은퇴
 - [ ] **B-8** `nationalTeam`(311)
 - [ ] **B-9** `foreignPlayers`(343)

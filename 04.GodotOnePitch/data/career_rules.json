@@ -20,8 +20,8 @@
   },
   "_tiers_note": "C의 야구 문턱이 0이 아니라 4다 — 50팀 중 23팀이 C라 0이면 절반이 무조건 합격이다",
 
-  "grade_cuts": [4, 11, 23, 40, 60, 77, 89, 96],
-  "gpa45": [4.5, 4.2, 3.8, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0],
+  "gpa_grade_cuts": [4.5, 4.2, 3.8, 3.5, 3.0, 2.5, 2.0, 1.5],
+  "_gpa_grade_note": "02는 석차백분율→9등급과 석차백분율→GPA(4.5) 두 표를 따로 뒀다. 04 학사는 석차를 아예 안 만들고 GPA만 만들므로 두 표를 합쳐 GPA→등급 하나로 뒀다 — 값은 02 그대로다(4.5→1 · 4.2→2 · 3.8→3 · 3.5→4 · 3.0→5 · 2.5→6 · 2.0→7 · 1.5→8 · 그 아래 9). 석차 표를 그대로 옮기면 아무도 안 먹이는 죽은 코드가 된다",
 
   "admission": {
     "both": 70.0,
@@ -51,6 +51,31 @@
     "semi_final": 30,
     "not_qualified": 10,
     "per_award": 15
+  },
+
+  "draft_contract": {
+    "_note": "KBO 신인 규정: 연봉은 최저연봉으로 균일하고 차등은 계약금이 진다. 02의 옛 TS 표는 1순위 연봉 9000만원(규정 위반)에 하위 지명 1500만원(최저연봉 3000 미달)이었다. 단위 만원",
+    "duration_years": 3,
+    "by_pick": [
+      {"until_pick": 1, "salary": 3000, "bonus": 50000},
+      {"until_pick": 4, "salary": 3000, "bonus": 30000},
+      {"until_pick": 10, "salary": 3000, "bonus": 20000},
+      {"until_pick": 20, "salary": 3000, "bonus": 12000},
+      {"until_pick": 40, "salary": 3000, "bonus": 7000},
+      {"until_pick": 70, "salary": 3000, "bonus": 4000},
+      {"until_pick": 9999, "salary": 3000, "bonus": 2000}
+    ],
+    "team_index_min": 0.85,
+    "team_index_max": 1.15,
+    "_team_index_note": "구단의 씀씀이를 계약금에만 곱한다. 연봉은 규정상 균일이라 안 곱한다"
+  },
+
+  "independent_offer": {
+    "_note": "독립리그 입단은 1년 단기 계약 고정이다. 02 careerDecision.ts 그대로",
+    "floor": 800,
+    "per_ovr": 60,
+    "ovr_base": 40,
+    "duration_years": 1
   },
 
   "sangmu_team_id": "TEAM_IND_SANGMU_PHOENIX"

@@ -1,0 +1,7 @@
+[
+ [
+  "해가 바뀌어도 서명해 둔 계약이 발효 안 된다 (배선이 끊긴다)",
+  "\tContractDecision.apply_pending_next_contract(state)\n\n\tvar year: int",
+  "\n\tvar year: int"
+ ]
+]

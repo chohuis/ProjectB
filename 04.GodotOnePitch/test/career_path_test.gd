@@ -75,47 +75,40 @@ func test_the_tier_decides_the_scout_bonus() -> void:
 	assert_int(CareerPath.scout_bonus_of_power(1)).is_less(0)
 
 
-# ── 석차백분율 ────────────────────────────────────────────────
+# ── 학업 등급 ─────────────────────────────────────────────────
 
-## ⚠ **낮을수록 좋은 값이다.** 뒤집어 읽으면 전교 1등이 9등급이 된다
-func test_the_percentile_becomes_a_nine_step_grade() -> void:
-	assert_int(CareerPath.pct_to_grade(1.0)).is_equal(1)
-	assert_int(CareerPath.pct_to_grade(4.0)).is_equal(1)
-	assert_int(CareerPath.pct_to_grade(4.1)).is_equal(2)
-	assert_int(CareerPath.pct_to_grade(11.0)).is_equal(2)
-	assert_int(CareerPath.pct_to_grade(23.0)).is_equal(3)
-	assert_int(CareerPath.pct_to_grade(40.0)).is_equal(4)
-	assert_int(CareerPath.pct_to_grade(60.0)).is_equal(5)
-	assert_int(CareerPath.pct_to_grade(77.0)).is_equal(6)
-	assert_int(CareerPath.pct_to_grade(89.0)).is_equal(7)
-	assert_int(CareerPath.pct_to_grade(96.0)).is_equal(8)
-	assert_int(CareerPath.pct_to_grade(96.1)).is_equal(9)
-	assert_int(CareerPath.pct_to_grade(100.0)).is_equal(9)
+## ⚠ **학점은 높을수록 좋고 등급은 낮을수록 좋다** — 방향이 반대다.
+## 뒤집어 읽으면 만점자가 9등급이 된다.
+##
+## 값은 02의 두 표(석차→등급 · 석차→학점)를 합친 것이다
+func test_the_gpa_becomes_a_nine_step_grade() -> void:
+	assert_int(CareerPath.grade_of_gpa(4.5)).is_equal(1)
+	assert_int(CareerPath.grade_of_gpa(4.49)).is_equal(2)
+	assert_int(CareerPath.grade_of_gpa(4.2)).is_equal(2)
+	assert_int(CareerPath.grade_of_gpa(3.8)).is_equal(3)
+	assert_int(CareerPath.grade_of_gpa(3.5)).is_equal(4)
+	assert_int(CareerPath.grade_of_gpa(3.0)).is_equal(5)
+	assert_int(CareerPath.grade_of_gpa(2.5)).is_equal(6)
+	assert_int(CareerPath.grade_of_gpa(2.0)).is_equal(7)
+	assert_int(CareerPath.grade_of_gpa(1.5)).is_equal(8)
+	assert_int(CareerPath.grade_of_gpa(1.49)).is_equal(9)
+	assert_int(CareerPath.grade_of_gpa(0.0)).is_equal(9)
 
 
-func test_a_better_rank_never_gives_a_worse_grade() -> void:
-	var prev: int = 0
-	for i in range(0, 101):
-		var g: int = CareerPath.pct_to_grade(float(i))
+func test_a_better_gpa_never_gives_a_worse_grade() -> void:
+	var prev: int = 99
+	for i in range(0, 46):
+		var gpa: float = float(i) / 10.0
+		var g: int = CareerPath.grade_of_gpa(gpa)
 		assert_int(g).override_failure_message(
-			"석차 %d%%에서 등급이 거꾸로 갔다 (%d → %d)" % [i, prev, g]).is_greater_equal(prev)
+			"학점 %.1f에서 등급이 거꾸로 갔다 (%d → %d)" % [gpa, prev, g]).is_less_equal(prev)
 		prev = g
 
 
-func test_the_percentile_becomes_a_gpa() -> void:
-	assert_float(CareerPath.to_gpa45(1.0)).is_equal_approx(4.5, 0.001)
-	assert_float(CareerPath.to_gpa45(23.0)).is_equal_approx(3.8, 0.001)
-	assert_float(CareerPath.to_gpa45(60.0)).is_equal_approx(3.0, 0.001)
-	assert_float(CareerPath.to_gpa45(100.0)).is_equal_approx(1.0, 0.001)
-
-
-func test_a_better_rank_never_gives_a_worse_gpa() -> void:
-	var prev: float = 999.0
-	for i in range(0, 101):
-		var g: float = CareerPath.to_gpa45(float(i))
-		assert_float(g).override_failure_message(
-			"석차 %d%%에서 학점이 거꾸로 갔다" % i).is_less_equal(prev)
-		prev = g
+## 졸업 기준(2.0)이 중간 언저리다 — 그보다 못하면 대학 문이 좁아진다
+func test_the_graduation_line_is_a_middling_grade() -> void:
+	assert_int(CareerPath.grade_of_gpa(2.0)).is_greater(4)
+	assert_int(CareerPath.grade_of_gpa(2.0)).is_less(9)
 
 
 # ── 고교 야구 점수 ────────────────────────────────────────────
@@ -376,9 +369,9 @@ func test_the_independent_chance_stays_in_its_band() -> void:
 # ── 입시 판정 ─────────────────────────────────────────────────
 
 func _apply(univ: Array, indie: Array, seed_value: int = 1,
-		ovr: float = 60.0, pct: float = 30.0, bb: float = 120.0) -> Dictionary:
+		ovr: float = 60.0, gpa: float = 3.5, bb: float = 120.0) -> Dictionary:
 	return CareerPath.admissions({
-		"ovr": ovr, "avg_pct": pct, "hs_baseball_score": bb,
+		"ovr": ovr, "gpa": gpa, "hs_baseball_score": bb,
 		"university_choices": univ, "independent_choices": indie,
 	}, _rng(seed_value))
 
@@ -397,8 +390,8 @@ func test_a_safe_university_takes_a_good_player() -> void:
 func test_the_top_university_turns_away_a_weak_application() -> void:
 	var passed: int = 0
 	for s in range(40):
-		# 석차 90%(9등급) · 야구 0점 — 둘 다 미달
-		if not _apply(["TEAM_UNIV_HALLYU"], [], s + 1, 60.0, 99.0, 0.0
+		# 학점 1.0(9등급) · 야구 0점 — 둘 다 미달
+		if not _apply(["TEAM_UNIV_HALLYU"], [], s + 1, 60.0, 1.0, 0.0
 			)["university_passed"].is_empty():
 			passed += 1
 	assert_int(passed).override_failure_message(
@@ -411,10 +404,10 @@ func test_a_top_university_is_much_harder_than_a_safe_one() -> void:
 	var safe: int = 0
 	var top: int = 0
 	for s in range(60):
-		if not _apply(["TEAM_UNIV_NAMAK"], [], s + 1, 60.0, 30.0, 30.0
+		if not _apply(["TEAM_UNIV_NAMAK"], [], s + 1, 60.0, 3.5, 30.0
 			)["university_passed"].is_empty():
 			safe += 1
-		if not _apply(["TEAM_UNIV_HALLYU"], [], s + 1, 60.0, 30.0, 30.0
+		if not _apply(["TEAM_UNIV_HALLYU"], [], s + 1, 60.0, 3.5, 30.0
 			)["university_passed"].is_empty():
 			top += 1
 	assert_int(safe - top).override_failure_message(
@@ -512,10 +505,10 @@ func test_a_real_university_uses_its_own_power_star() -> void:
 	var weak: int = 0
 	var strong: int = 0
 	for s in range(60):
-		if not _apply(["TEAM_UNIV_BAEKJE"], [], s + 1, 60.0, 50.0, 20.0
+		if not _apply(["TEAM_UNIV_BAEKJE"], [], s + 1, 60.0, 3.0, 20.0
 			)["university_passed"].is_empty():
 			weak += 1
-		if not _apply(["TEAM_UNIV_BAEKJE"], [], s + 1, 60.0, 3.0, 300.0
+		if not _apply(["TEAM_UNIV_BAEKJE"], [], s + 1, 60.0, 4.5, 300.0
 			)["university_passed"].is_empty():
 			strong += 1
 	assert_int(strong).override_failure_message(

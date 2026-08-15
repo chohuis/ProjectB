@@ -1,0 +1,147 @@
+[
+ [
+  "군 복무를 몇 번이든 한다",
+  "\treturn String(p.get(\"military_status\", STATUS_UNSERVED)) == STATUS_UNSERVED",
+  "\treturn true"
+ ],
+ [
+  "입대해도 소속 리그가 그대로다 (군인이 고교 경기를 뛴다)",
+  "\tp[\"league_id\"] = LEAGUE\n\tp[\"team_id\"] = \"\"",
+  "\tp[\"team_id\"] = \"\""
+ ],
+ [
+  "입대해도 팀이 그대로 남는다",
+  "\tp[\"league_id\"] = LEAGUE\n\tp[\"team_id\"] = \"\"",
+  "\tp[\"league_id\"] = LEAGUE"
+ ],
+ [
+  "입대해도 단계가 안 바뀐다",
+  "\tp[\"career_stage\"] = \"military\"",
+  "\tpass"
+ ],
+ [
+  "떠나온 자리를 안 남긴다 (프로가 돌아갈 곳을 잃는다)",
+  "\tp[\"military_hiatus_team_id\"] = String(p.get(\"team_id\", \"\"))\n\tp[\"military_hiatus_league_id\"] = String(p.get(\"league_id\", \"\"))",
+  "\tp[\"military_hiatus_team_id\"] = \"\"\n\tp[\"military_hiatus_league_id\"] = \"\""
+ ],
+ [
+  "이미 만료된 계약이 되살아난다",
+  "\tif _has_contract_stage(stage) and int(p.get(\"contract_years\", 0)) > 0:",
+  "\tif _has_contract_stage(stage):"
+ ],
+ [
+  "계약이 군 복무 동안 그냥 흐른다",
+  "\t\tp[\"contract_years\"] = int(p[\"contract_years\"]) + CONTRACT_HOLD_YEARS",
+  "\t\tp[\"contract_years\"] = int(p[\"contract_years\"])"
+ ],
+ [
+  "입대했는데 아무 말이 없다",
+  "\t_send(state, {\n\t\t\"id\": \"msg-military-enlist-%d\" % year,",
+  "\tif false: _send(state, {\n\t\t\"id\": \"msg-military-enlist-%d\" % year,"
+ ],
+ [
+  "입대가 경력에 안 남는다",
+  "\t_add_event(p, {\n\t\t\"year\": year, \"type\": \"military_enlist\",",
+  "\tif false: _add_event(p, {\n\t\t\"year\": year, \"type\": \"military_enlist\","
+ ],
+ [
+  "민간인의 주차도 복무로 센다",
+  "\tif String(p.get(\"career_stage\", \"\")) != \"military\":\n\t\treturn 0\n\tp[\"military_service_weeks\"]",
+  "\tif false:\n\t\treturn 0\n\tp[\"military_service_weeks\"]"
+ ],
+ [
+  "복무 주차가 안 쌓인다",
+  "\tp[\"military_service_weeks\"] = int(p.get(\"military_service_weeks\", 0)) + 1",
+  "\tp[\"military_service_weeks\"] = int(p.get(\"military_service_weeks\", 0))"
+ ],
+ [
+  "복무가 안 끝나도 전역한다",
+  "\tif not is_service_done(p):\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "복무가 한 시즌으로 끝난다 (세계가 1년만 흐른다)",
+  "const SERVICE_WEEKS: int = 100",
+  "const SERVICE_WEEKS: int = 52"
+ ],
+ [
+  "전역해도 복무 주차가 안 되돌아간다 (두 번 전역한다)",
+  "\tp[\"military_service_weeks\"] = 0\n\tp[\"military_recovery_weeks\"]",
+  "\tp[\"military_recovery_weeks\"]"
+ ],
+ [
+  "학교로 돌아간다 (21세가 고등학교에 재입학한다)",
+  "\tif hiatus == \"highschool\" or hiatus == \"university\" or hiatus.is_empty():\n\t\tstage = \"independent\"",
+  "\tif hiatus.is_empty():\n\t\tstage = \"independent\""
+ ],
+ [
+  "프로가 전역하면 독립리그로 떨어진다",
+  "\tvar stage: String = hiatus\n\tif hiatus == \"highschool\"",
+  "\tvar stage: String = \"independent\"\n\tif hiatus == \"highschool\""
+ ],
+ [
+  "전역자의 행선지에 상무가 들어간다",
+  "\t\tif CareerPath.is_applicable_independent(id):\n\t\t\tids.append(id)",
+  "\t\tids.append(id)"
+ ],
+ [
+  "전역했는데 갈 팀이 없다",
+  "\t\tp[\"team_id\"] = String(dest[0]) if not dest.is_empty() else \"\"",
+  "\t\tp[\"team_id\"] = \"\""
+ ],
+ [
+  "프로가 전역해도 원래 팀으로 안 돌아간다",
+  "\t\tp[\"league_id\"] = String(p.get(\"military_hiatus_league_id\", \"\"))\n\t\tp[\"team_id\"] = String(p.get(\"military_hiatus_team_id\", \"\"))",
+  "\t\tp[\"league_id\"] = \"\"\n\t\tp[\"team_id\"] = \"\""
+ ],
+ [
+  "전역자가 학년을 달고 다닌다",
+  "\tp.erase(\"grade\")",
+  "\tpass"
+ ],
+ [
+  "다녀온 부대가 안 남는다 (상무·현역 구분이 사라진다)",
+  "\tp[\"military_served_unit\"] = unit",
+  "\tp[\"military_served_unit\"] = \"\""
+ ],
+ [
+  "전역했는데 복무 중으로 남는다",
+  "\tp[\"military_status\"] = STATUS_DONE",
+  "\tp[\"military_status\"] = STATUS_SERVING"
+ ],
+ [
+  "체육부대와 현역의 복귀 적응이 같다",
+  "\tp[\"military_recovery_weeks\"] = RECOVERY_SPORTS if unit == \"sports\" \\\n\t\telse RECOVERY_GENERAL",
+  "\tp[\"military_recovery_weeks\"] = RECOVERY_GENERAL"
+ ],
+ [
+  "잔여 계약이 있어도 FA 시장으로 간다",
+  "\tif int(p.get(\"contract_years\", 0)) > 0:",
+  "\tif false:"
+ ],
+ [
+  "복귀 협상이 원래 팀이 아닌 데서 열린다",
+  "\t\t\t\"team_id\": String(p[\"team_id\"]),\n\t\t\t\"league_id\": String(p[\"league_id\"]),\n\t\t\t\"offered_salary\"",
+  "\t\t\t\"team_id\": \"\",\n\t\t\t\"league_id\": String(p[\"league_id\"]),\n\t\t\t\"offered_salary\""
+ ],
+ [
+  "복귀 협상인지 첫 계약인지 구분이 없다",
+  "\t\t\t\"context\": \"military_return\",",
+  "\t\t\t\"context\": \"initial\","
+ ],
+ [
+  "계약도 없는데 시장이 안 열린다 (무소속으로 남는다)",
+  "\t\tPending.push_once(state, {\"type\": \"fa_market\"})",
+  "\t\tpass"
+ ],
+ [
+  "전역이 경력에 안 남는다",
+  "\t_add_event(p, {\n\t\t\"year\": year, \"type\": \"military_discharge\",",
+  "\tif false: _add_event(p, {\n\t\t\"year\": year, \"type\": \"military_discharge\","
+ ],
+ [
+  "전역했는데 아무 말이 없다",
+  "\t_send(state, {\n\t\t\"id\": \"msg-military-discharge-%d\" % year,",
+  "\tif false: _send(state, {\n\t\t\"id\": \"msg-military-discharge-%d\" % year,"
+ ]
+]

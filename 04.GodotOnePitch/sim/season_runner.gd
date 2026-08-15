@@ -590,6 +590,13 @@ static func _normalize_rosters(world: Dictionary, year: int) -> Dictionary:
 ## 소속을 다시 읽는다 — 옛 팀으로 일정을 짜면 내 경기가 하나도 안 잡힌다
 static func roll_over(state: Dictionary) -> Dictionary:
 	var me: Dictionary = state.get("protagonist", {})
+
+	# ⚠ **서명해 둔 다음 계약이 여기서 발효된다.** 재계약·FA는 시즌 도중에
+	# 소속을 바꾸지 않는다(그러면 그해 성적이 두 팀에 걸린다) — 대신 넣어
+	# 두고 새 해가 열릴 때 적용한다. **여기서 안 부르면 서명한 계약이
+	# 영영 발효 안 된다**
+	ContractDecision.apply_pending_next_contract(state)
+
 	var year: int = int(state.get("season_year", 0)) + 1
 	var team_id: String = String(me.get("team_id", ""))
 
@@ -617,7 +624,7 @@ static func roll_over(state: Dictionary) -> Dictionary:
 		team_id, int(state.get("seed", 0)))
 
 	# 지난 시즌의 미결정은 남기지 않는다 — 지나간 선택지가 새 해를 막는다
-	state["pending"] = []
+	Pending.clear(state)
 
 	# ⚠ **시즌 성적을 비운다.** 안 비우면 지난 시즌 기록이 다음 해에 섞여
 	# 수상·기록이 통째로 어긋난다 — 통산은 가 들고 있다

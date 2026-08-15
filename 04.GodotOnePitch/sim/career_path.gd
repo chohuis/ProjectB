@@ -66,23 +66,20 @@ static func scout_bonus_of_power(power) -> int:
 	return int(rules().get("tiers", {}).get(tier_of_power(power), {}).get("scout_bonus", 0))
 
 
-# ── 석차백분율 ────────────────────────────────────────────────
+# ── 학업 등급 ─────────────────────────────────────────────────
 
-## 석차백분율 → 9등급. **낮을수록 좋은 값이다**
-static func pct_to_grade(pct: float) -> int:
-	var cuts: Array = rules().get("grade_cuts", [])
+## 학점 → 9등급. **1이 제일 좋다** — 학점과 방향이 반대다.
+##
+## ⚠ 02는 석차백분율에서 등급을 냈다. 04 학사는 석차를 안 만들고 학점만
+## 만들어서, 02의 두 표(석차→등급 · 석차→학점)를 합쳐 하나로 뒀다 —
+## 값은 그대로고 중간 다리만 없앴다. 석차 표를 그대로 옮기면 아무도
+## 안 먹이는 죽은 코드가 된다
+static func grade_of_gpa(gpa: float) -> int:
+	var cuts: Array = rules().get("gpa_grade_cuts", [])
 	for i in range(cuts.size()):
-		if pct <= float(cuts[i]):
+		if gpa >= float(cuts[i]):
 			return i + 1
 	return cuts.size() + 1
-
-
-## 석차백분율 → 4.5 만점 학점
-static func to_gpa45(pct: float) -> float:
-	var table: Array = rules().get("gpa45", [])
-	if table.is_empty():
-		return 0.0
-	return float(table[mini(pct_to_grade(pct) - 1, table.size() - 1)])
 
 
 # ── 고교 야구 점수 ────────────────────────────────────────────
@@ -253,7 +250,7 @@ static func independent_chance(power, ovr: float, order: int) -> float:
 
 ## 지원 결과. `{university_passed, independent_passed}`
 ##
-## `inp`: `{ovr, avg_pct, hs_baseball_score, university_choices, independent_choices}`
+## `inp`: `{ovr, gpa, hs_baseball_score, university_choices, independent_choices}`
 ##
 ## ⚠ **요건을 팀 id로 받아 여기서 낸다.** 02는 값(요건)과 대상(팀 목록)을
 ## 따로 넘겼고, 층마다 맞는데 잇는 선이 빠진 결함이 거기서 여러 번 나왔다
@@ -261,7 +258,7 @@ static func independent_chance(power, ovr: float, order: int) -> float:
 ## ⚠ **난수 흐름이 하나다.** 대학·독립이 각자 새 난수를 만들면 지원 조합이
 ## 뭐든 한쪽 결과가 늘 같아진다
 static func admissions(inp: Dictionary, rng: RandomNumberGenerator) -> Dictionary:
-	var academic_grade: int = pct_to_grade(float(inp.get("avg_pct", 50.0)))
+	var academic_grade: int = grade_of_gpa(float(inp.get("gpa", 0.0)))
 	var baseball: float = float(inp.get("hs_baseball_score", 0.0))
 	var ovr: float = float(inp.get("ovr", 0.0))
 

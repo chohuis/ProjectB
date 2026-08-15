@@ -1047,6 +1047,34 @@ func test_the_protagonist_ovr_follows_the_training() -> void:
 			% before).is_greater(before)
 
 
+## ⚠ **진로가 주 경계에서 실제로 열린다.** 안 이으면 진로 모듈 전체가
+## 아무도 안 부르는 코드다 — 02가 겪은 결함 대부분이 그 자리였고, 실제로
+## 주인공은 지명될 수 없었으며 프로 콘텐츠 전부가 도달 불가였다
+func test_the_career_path_opens_at_the_week_boundary() -> void:
+	var s: Dictionary = _real_game(4242)
+	s["protagonist"]["career_stage"] = "highschool"
+	s["protagonist"]["grade"] = CareerRunner.HS_FINAL_GRADE
+	var r: AppRoot = await _mount(s)
+
+	var hub_day: int = int(CareerRunner.HUB_WEEK["highschool"]) * 7
+	r._apply_one_week(hub_day)
+	assert_bool(Pending.has(r.state(), "career_choice_hub")
+		).override_failure_message(
+		"졸업반의 진로 지원이 주 경계에서 안 열렸다 — 배선이 끊겼다").is_true()
+
+
+## 복무도 주 경계에서 흐른다 — 안 이으면 영원히 군대에 있는다
+func test_the_service_weeks_tick_at_the_week_boundary() -> void:
+	var s: Dictionary = _real_game(4242)
+	var r: AppRoot = await _mount(s)
+	Military.enlist(r.state(), "general", 1)
+
+	r._apply_one_week(70)
+	r._apply_one_week(77)
+	assert_int(int(r.state()["protagonist"]["military_service_weeks"])
+		).override_failure_message("복무 주차가 주 경계에서 안 흐른다").is_equal(2)
+
+
 ## 성장한 주는 관계에 실린다 — 훈련 뒤에 돌아야 잡힌다
 func test_growth_reaches_the_relationship_context() -> void:
 	var s: Dictionary = _real_game(777)

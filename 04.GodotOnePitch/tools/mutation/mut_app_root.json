@@ -1,5 +1,10 @@
 [
  [
+  "진로가 주 경계에서 안 돈다 (진로 모듈 전체가 죽은 코드가 된다)",
+  "\tCareerRunner.run(_state, at_day)",
+  "\tpass"
+ ],
+ [
   "주기 처리를 새 상태 앞에서 돌린다 (성장이 통째로 사라진다)",
   "\t_state = out\n\t# ⚠ **센 만큼 돌린다.** `weeks_crossed`를 무시하고 자기 손으로 다시 세면\n\t# 그게 두 번째 정본이 된다\n\t_apply_weekly(weeks)",
   "\t_apply_weekly(weeks)\n\t_state = out"
