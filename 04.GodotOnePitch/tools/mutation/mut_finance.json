@@ -1,0 +1,237 @@
+[
+ [
+  "프로 리그마다 다른 표를 쓴다",
+  "\tvar key: String = \"pro\" if is_pro(career_stage) else career_stage",
+  "\tvar key: String = career_stage"
+ ],
+ [
+  "독립리그를 프로로 센다 (스폰서가 붙는다)",
+  "\treturn PRO_STAGES.has(career_stage)",
+  "\treturn PRO_STAGES.has(career_stage) or career_stage == \"independent\""
+ ],
+ [
+  "독립리그를 학생으로 센다 (급여에 세금이 안 붙는다)",
+  "\treturn STUDENT_STAGES.has(career_stage)",
+  "\treturn STUDENT_STAGES.has(career_stage) or career_stage == \"independent\""
+ ],
+ [
+  "누진세가 아니라 단일세율이다 (실수령이 줄어드는 구간이 생긴다)",
+  "\t\tvar span: float = maxf(cap - prev, 0.0)\n\t\tvar taxed: float = minf(remaining, span)",
+  "\t\tvar span: float = maxf(cap - prev, 0.0)\n\t\tvar taxed: float = remaining if span > 0.0 else 0.0"
+ ],
+ [
+  "최고구간에 상한이 생긴다 (고액 연봉에 세금이 안 붙는다)",
+  "\t\tvar cap: float = INF if until <= 0.0 else until",
+  "\t\tvar cap: float = until"
+ ],
+ [
+  "기타소득을 누진으로 매긴다 (계약금 받은 신인이 파산한다)",
+  "\treturn int(roundf(float(gross)\n\t\t* float(rules().get(\"tax\", {}).get(\"other_income_rate\", 0.0))))",
+  "\treturn annual_tax(gross)"
+ ],
+ [
+  "구독 단계를 안 가린다 (1단계도 상시 값으로 낸다)",
+  "\t\t\tif int(t[\"tier\"]) == int(s[\"tier\"]):\n\t\t\t\tcost += int(t[\"weekly_cost\"])\n\t\t\t\tbreak",
+  "\t\t\tcost += int(t[\"weekly_cost\"])\n\t\t\tbreak"
+ ],
+ [
+  "학생도 연봉을 받는다",
+  "\tvar salary_annual: int = maxi(int(p.get(\"salary\", 0)), 0) if pro else 0",
+  "\tvar salary_annual: int = maxi(int(p.get(\"salary\", 0)), 0)"
+ ],
+ [
+  "연봉을 월할로 나눈다",
+  "\t\tvar w: int = int(roundf(float(salary_annual) / wpy))",
+  "\t\tvar w: int = int(roundf(float(salary_annual) / wpm))"
+ ],
+ [
+  "무대 지원금을 연할로 나눈다 (용돈이 1/12이 된다)",
+  "\t\tvar w3: int = int(roundf(float(stage[\"income\"]) / wpm))",
+  "\t\tvar w3: int = int(roundf(float(stage[\"income\"]) / wpy))"
+ ],
+ [
+  "학생에게도 세금을 매긴다 (용돈에 세금이 붙는다)",
+  "\tvar exempt: bool = bool(rules().get(\"tax\", {}).get(\"student_exempt\", false)) \\\n\t\tand is_student(stage_id)",
+  "\tvar exempt: bool = false"
+ ],
+ [
+  "누구에게도 세금을 안 매긴다",
+  "\tif not exempt:",
+  "\tif false:"
+ ],
+ [
+  "스폰서를 연봉에 합산해 누진으로 매긴다",
+  "\t\ttax_annual = annual_tax(salary_annual) + other_income_tax(sponsor_annual)",
+  "\t\ttax_annual = annual_tax(salary_annual + sponsor_annual)"
+ ],
+ [
+  "세금이 지출에 안 잡힌다",
+  "\tvar expense_weekly: int = tax_weekly",
+  "\tvar expense_weekly: int = 0"
+ ],
+ [
+  "생활비가 안 빠진다",
+  "\t\texpense.append({\"label\": \"생활비\", \"amount\": w4})\n\t\texpense_weekly += w4",
+  "\t\texpense.append({\"label\": \"생활비\", \"amount\": w4})"
+ ],
+ [
+  "구독료가 안 빠진다",
+  "\t\texpense.append({\"label\": \"개인 트레이닝 구독\", \"amount\": sub_cost})\n\t\texpense_weekly += sub_cost",
+  "\t\texpense.append({\"label\": \"개인 트레이닝 구독\", \"amount\": sub_cost})"
+ ],
+ [
+  "치료비가 안 빠진다",
+  "\t\texpense.append({\"label\": \"부상 치료비\", \"amount\": treatment})\n\t\texpense_weekly += treatment",
+  "\t\texpense.append({\"label\": \"부상 치료비\", \"amount\": treatment})"
+ ],
+ [
+  "0인 줄까지 다 적는다 (화면이 빈칸으로 찬다)",
+  "\tif treatment > 0:\n\t\texpense.append({\"label\": \"부상 치료비\", \"amount\": treatment})",
+  "\tif true:\n\t\texpense.append({\"label\": \"부상 치료비\", \"amount\": treatment})"
+ ],
+ [
+  "순현금이 수입 그대로다 (지출이 안 빠진다)",
+  "\t\t\"net_weekly\": gross_weekly - expense_weekly,",
+  "\t\t\"net_weekly\": gross_weekly,"
+ ],
+ [
+  "연 환산에 무대 지원금이 빠진다",
+  "\tvar gross_annual: int = salary_annual + sponsor_annual \\\n\t\t+ int(roundf(float(stage.get(\"income\", 0)) * 12.0))",
+  "\tvar gross_annual: int = salary_annual + sponsor_annual"
+ ],
+ [
+  "실효세율을 0으로 나눈다",
+  "\t\t\"effective_tax_rate\": (roundf(float(tax_annual) / float(gross_annual)\n\t\t\t* 1000.0) / 1000.0) if gross_annual > 0 else 0.0,",
+  "\t\t\"effective_tax_rate\": roundf(float(tax_annual) / float(gross_annual)\n\t\t\t* 1000.0) / 1000.0,"
+ ],
+ [
+  "팀 자원 반비례가 거꾸로다 (명문에서 구독이 더 잘 듣는다)",
+  "\treturn clampf(1.0 + (1.0 - team_facility) * strength,\n\t\tfloat(c[0]), float(c[1]))",
+  "\treturn clampf(1.0 - (1.0 - team_facility) * strength,\n\t\tfloat(c[0]), float(c[1]))"
+ ],
+ [
+  "반비례 폭이 안 갇힌다 (좋은 팀에 가면 구독이 무의미해진다)",
+  "\treturn clampf(1.0 + (1.0 - team_facility) * strength,\n\t\tfloat(c[0]), float(c[1]))",
+  "\treturn 1.0 + (1.0 - team_facility) * strength"
+ ],
+ [
+  "반비례를 아예 안 건다",
+  "\tif strength <= 0.0:\n\t\treturn 1.0",
+  "\treturn 1.0"
+ ],
+ [
+  "구독 단계를 안 가리고 보너스를 준다",
+  "\t\t\tif int(t[\"tier\"]) != int(s[\"tier\"]):\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "실효 보너스에 반비례를 안 먹인다",
+  "\t\t\t\t\"effective\": float(t[\"bonus\"]) * inverse})",
+  "\t\t\t\t\"effective\": float(t[\"bonus\"])})"
+ ],
+ [
+  "합계 상한이 없다 (돈으로 성장을 산다)",
+  "\t\tif total > cap:\n\t\t\tvar scale: float = cap / total\n\t\t\tfor a in by_area:\n\t\t\t\ta[\"effective\"] = float(a[\"effective\"]) * scale",
+  "\t\tpass"
+ ],
+ [
+  "상한을 넘든 말든 늘 깎는다 (반비례가 통째로 사라진다)",
+  "\t\tif total > cap:\n\t\t\tvar scale: float = cap / total",
+  "\t\tif true:\n\t\t\tvar scale: float = cap / total"
+ ],
+ [
+  "학생에게도 스폰서가 붙는다 (아마추어 규정 위반)",
+  "\tif bool(r.get(\"pro_only\", false)) and not is_pro(career_stage):\n\t\treturn {\"offers\": [], \"total_annual\": 0, \"capped\": false}",
+  "\tif false:\n\t\treturn {\"offers\": [], \"total_annual\": 0, \"capped\": false}"
+ ],
+ [
+  "최저연봉 하한이 없다 (2군 신인은 광고가 0이다)",
+  "\tvar base: float = float(maxi(salary, int(r.get(\"min_salary_base\", 0))))",
+  "\tvar base: float = float(salary)"
+ ],
+ [
+  "명성 문턱을 안 본다 (무명에게 전국구 광고가 붙는다)",
+  "\t\tif fame < float(cat[\"fame_min\"]):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "이미 계약한 카테고리를 또 준다",
+  "\t\tif signed_ids.has(String(cat[\"id\"])):\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "카테고리 안에서 보간을 안 한다 (명성이 계단이 된다)",
+  "\t\tvar t: float = 1.0 if span <= 0.0 \\\n\t\t\telse clampf((fame - float(cat[\"fame_min\"])) / span, 0.0, 1.0)",
+  "\t\tvar t: float = 0.0"
+ ],
+ [
+  "홍보력 폭이 안 갇힌다 (구단 하나가 광고를 지배한다)",
+  "\tvar pr: float = clampf(pr_mod, float(c[0]), float(c[1]))",
+  "\tvar pr: float = pr_mod"
+ ],
+ [
+  "홍보력이 오퍼에 안 닿는다",
+  "\t\tvar annual: int = int(roundf(base * pct * pr))",
+  "\t\tvar annual: int = int(roundf(base * pct))"
+ ],
+ [
+  "스폰서 상한이 없다 (광고가 연봉을 넘어 야구가 부업이 된다)",
+  "\tif capped:",
+  "\tif false:"
+ ],
+ [
+  "상한에 걸렸다고 안 알린다",
+  "\tvar capped: bool = total > cap and cap > 0",
+  "\tvar capped: bool = false"
+ ],
+ [
+  "학생에게도 투자 화면을 띄운다",
+  "\tif bool(r.get(\"pro_only\", false)) and not is_pro(career_stage):\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "현금이 없어도 투자 화면을 띄운다 (신인에게 조롱이 된다)",
+  "\treturn cash >= int(r.get(\"min_cash\", 0))",
+  "\treturn true"
+ ],
+ [
+  "손실 하한이 없다 (원금이 통째로 사라진다)",
+  "\t\trate = maxf(float(opt[\"mean\"]) + float(opt[\"sd\"]) * z, float(opt[\"floor\"]))",
+  "\t\trate = float(opt[\"mean\"]) + float(opt[\"sd\"]) * z"
+ ],
+ [
+  "위험도가 수익률에 안 닿는다 (전부 평균만 나온다)",
+  "\t\trate = maxf(float(opt[\"mean\"]) + float(opt[\"sd\"]) * z, float(opt[\"floor\"]))",
+  "\t\trate = float(opt[\"mean\"])"
+ ],
+ [
+  "모르는 상품이 원금을 삼킨다",
+  "\t\treturn {\"option_id\": option_id, \"name\": \"-\", \"principal\": amount,\n\t\t\t\"rate\": 0.0, \"profit\": 0, \"payout\": amount}",
+  "\t\treturn {\"option_id\": option_id, \"name\": \"-\", \"principal\": amount,\n\t\t\t\"rate\": 0.0, \"profit\": 0, \"payout\": 0}"
+ ],
+ [
+  "동료에게 쓴 돈이 관계에 안 닿는다",
+  "\t\t\t\"relation_delta\": roundf(units\n\t\t\t\t* float(r.get(\"teammate_relation_per_cost\", 0.0)) * 100.0\n\t\t\t\t* 100.0) / 100.0}",
+  "\t\t\t\"relation_delta\": 0.0}"
+ ],
+ [
+  "동료에게 써도 명성이 오른다",
+  "\t\treturn {\"cost\": cost, \"fame_delta\": 0.0,",
+  "\t\treturn {\"cost\": cost, \"fame_delta\": 1.0,"
+ ],
+ [
+  "성격이 명성 부호를 안 가른다 (누구든 씀씀이가 화제다)",
+  "\tvar sign: float = -1.0 if diligence >= float(\n\t\tr.get(\"self_fame_split_diligence\", 999.0)) else 1.0",
+  "\tvar sign: float = 1.0"
+ ],
+ [
+  "성격 부호가 거꾸로다 (성실한 선수가 씀씀이로 유명해진다)",
+  "\tvar sign: float = -1.0 if diligence >= float(\n\t\tr.get(\"self_fame_split_diligence\", 999.0)) else 1.0",
+  "\tvar sign: float = 1.0 if diligence >= float(\n\t\tr.get(\"self_fame_split_diligence\", 999.0)) else -1.0"
+ ],
+ [
+  "자기 소비도 관계를 올린다",
+  "\treturn {\"cost\": cost, \"relation_delta\": 0.0,",
+  "\treturn {\"cost\": cost, \"relation_delta\": 6.0,"
+ ]
+]

@@ -875,6 +875,53 @@ func test_the_campus_stage_runs_without_a_protagonist() -> void:
 	assert_str(String(log[0]["kind"])).is_equal("showcase")
 
 
+# ── 재정이 실제로 도는가 (B-5) ────────────────────────────────
+
+## ⚠ **자산이 실제로 움직인다.** 02는 화면 컴포넌트가 OVR·사기로 수입을
+## 즉석 계산해 **자산과 무관한 숫자**를 보여줬다
+func test_the_money_actually_moves() -> void:
+	var s: Dictionary = _real_game(777)
+	s["protagonist"]["money"] = 1200
+	var r: AppRoot = await _mount(s)
+	for w in range(1, 11):
+		r._apply_one_week(w * 7)
+
+	var money: int = int(r.state()["protagonist"]["money"])
+	assert_int(money).override_failure_message(
+		"열 주를 살았는데 자산이 1,200 그대로다").is_not_equal(1200)
+	# 고교생은 매주 흑자다 — 용돈이 생활비보다 많다
+	assert_int(money).override_failure_message(
+		"고교생인데 열 주 만에 자산이 줄었다").is_greater(1200)
+	assert_int(r.state()["finance_log"].size()).is_equal(10)
+	assert_int(int(r.state()["finance_log"][-1]["money"])).is_equal(money)
+
+
+## ⚠ **구독한 개인 트레이닝이 훈련에 얹힌다.** 안 이으면 매주 돈만 나가고
+## 아무 일도 안 일어난다
+func test_a_subscription_reaches_the_training() -> void:
+	var grown: Array = []
+	for subscribed in [false, true]:
+		var s: Dictionary = _real_game(777)
+		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
+		s["protagonist"]["potential_hidden"] = 95.0
+		if subscribed:
+			s["training_subscriptions"] = [
+				{"area_id": "PITCH", "tier": 2},
+				{"area_id": "PHYSICAL", "tier": 2},
+				{"area_id": "MENTAL", "tier": 2}]
+		var before: float = float(s["protagonist"]["pitching"]["velocity"])
+
+		var r: AppRoot = await _mount(s)
+		for w in range(1, 31):
+			r._apply_one_week(w * 7)
+		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
+			- before)
+
+	assert_float(grown[1]).override_failure_message(
+		"3분야를 구독했는데 안 한 것(%.2f)과 같이 컸다(%.2f)" % [grown[0], grown[1]]) \
+		.is_greater(grown[0])
+
+
 # ── 부상이 실제로 닿는가 (B-3) ────────────────────────────────
 
 ## ⚠ **다치면 훈련이 안 된다.** 배수만 상태에 두고 아무도 안 읽으면
@@ -1016,8 +1063,15 @@ func test_growth_reaches_the_relationship_context() -> void:
 
 	for w in range(2, 32):
 		r._apply_one_week(w * 7)
-	assert_int(int(RelationshipRunner.row_of(r.state(), "MGR_TEST")["value"])) \
-		.override_failure_message("훈련으로 성장했는데 감독이 모른다").is_greater(0)
+	var value: int = int(RelationshipRunner.row_of(r.state(), "MGR_TEST")["value"])
+	assert_int(value).override_failure_message(
+		"훈련으로 성장했는데 감독이 모른다").is_greater(0)
+
+	# ⚠ **성장분은 변화지 절대값이 아니다.** 훈련 전 OVR을 안 재고 0에서
+	# 빼면 **매주** 성장 가산이 붙는다 — 서른 주면 +30이다
+	assert_int(value).override_failure_message(
+		"서른 주에 감독 관계가 %d 올랐다 — 성장분이 아니라 OVR 절대값을 봤다"
+		% value).is_less(15)
 
 
 ## 닫으면 본화면이 돌아온다 — 안 돌아오면 게임이 멈춘 것처럼 보인다

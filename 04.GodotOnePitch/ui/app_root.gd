@@ -406,6 +406,12 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# 이번 주 훈련 부하가 이번 주 부상 판정에 들어가 한 주 앞당겨진다
 	InjuryRunner.run(_state, at_day)
 
+	# 재정 — **자산이 실제로 움직인다.**
+	#
+	# ⚠ **화면이 자기 식으로 계산하면 안 된다.** 02는 컴포넌트 안에서
+	# OVR·사기로 수입을 즉석 계산해 **자산과 무관한 숫자**를 보여줬다
+	_apply_finance(p, at_day)
+
 	# ⚠ **훈련 계획이 비어 있어도 돈다.** 주간 자동 회복(−5)이 계획과 무관하게
 	# 붙기 때문이다 — 건너뛰면 아무 훈련도 안 짠 주에 피로가 안 빠진다.
 	#
@@ -413,12 +419,17 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# **피로만 움직이고 능력치는 안 올랐다** — 훈련 화면에서 뭘 짜든 결과가
 	# 같았다. 피로·컨디션도 이 안에서 같은 함수로 나온다
 	var before_ovr: float = Contract.core_ovr(p)
+
+	# ⚠ **다치면 훈련이 안 된다** — 값만 두고 아무도 안 읽으면 수술 중에도
+	# 평소처럼 큰다. **구독한 개인 트레이닝도 여기 얹힌다** — 안 이으면
+	# 매주 돈만 나가고 아무 일도 안 일어난다
+	var efficiency: float = float(p.get("injury_eff_mod", 1.0)) \
+		+ Finance.total_training_bonus(
+			_state.get("training_subscriptions", []),
+			float(p.get("team_facility", 1.0)))
 	var out: Dictionary = TrainingGrowth.calc(p,
 		_state.get("training_plan", {}),
-		Training.programs(),
-		# ⚠ **다치면 훈련이 안 된다.** 안 이으면 값은 있는데 아무도 안 읽는
-		# 상태가 되고, 수술 중에도 평소처럼 큰다
-		float(p.get("injury_eff_mod", 1.0)))
+		Training.programs(), efficiency)
 
 	p["pitching"] = out["pitching"]
 	p["batting"] = out["batting"]
@@ -445,6 +456,29 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# 마지막 날이다 — 여기서 자기 손으로 세지 않는다
 	RelationshipRunner.run(_state, at_day,
 		Contract.core_ovr(p) - before_ovr)
+
+
+## 한 주의 재정. **자산이 실제로 움직인다** — 안 이으면 수입·지출이
+## 화면에만 있고 자산은 시작값 그대로다
+func _apply_finance(p: Dictionary, at_day: int) -> Dictionary:
+	var out: Dictionary = Finance.weekly({
+		"career_stage": String(p.get("career_stage",
+			Finance.PRO_STAGES[0] if Contract.has_contract(
+				String(p.get("league_id", ""))) else "highschool")),
+		"salary": int(p.get("salary", 0)),
+		"sponsor_annual": int(p.get("sponsor_annual", 0)),
+		"subscriptions": _state.get("training_subscriptions", []),
+		"treatment_weekly": int(p.get("treatment_weekly", 0)),
+	})
+	p["money"] = int(p.get("money", 0)) + int(out["net_weekly"])
+
+	# 무슨 돈이 오갔는지 — 재정 화면이 이걸 읽는다
+	var log: Array = _state.get("finance_log", [])
+	log.append({"day": at_day, "net": int(out["net_weekly"]),
+		"gross": int(out["gross_weekly"]), "expense": int(out["expense_weekly"]),
+		"money": int(p["money"])})
+	_state["finance_log"] = log
+	return out
 
 
 ## 학교에 다니는 리그. **프로에는 학사가 없다**

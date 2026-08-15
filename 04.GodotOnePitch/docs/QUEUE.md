@@ -174,7 +174,12 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
             순위표가 리셋된다**. 실측: 90 + 56 + 6 = 152경기, 3단계 컷,
             최종 4팀 사다리. **세계 일정에서 독립을 뺐다** — 다음 단계
             참가팀이 이전 결과에 달려 있다. 검사 42 · 변이 55/55
-- [ ] **B-5** `finance`(331) — 개인 재정
+- [x] **B-5** `finance`(331) — `sim/finance.gd` · `data/finance_rules.json`.
+      수입·누진세·스폰서·구독·투자·사치품. **자산이 매주 실제로 움직인다**
+      (`p.money` + `finance_log`)이고 **구독이 훈련 효율에 얹힌다**.
+      ⚠ 단위는 전부 만원 — 02는 치료비만 원 단위라 **한 주에 자산이 0이 됐다**.
+      검사 45 · 변이 47/47.
+      **남은 것:** 스폰서 계약 화면·투자 선택 화면은 C에서 (지금은 엔진만) — 개인 재정
 - [ ] **B-6** `careerDecision`(270) · `contractDecision`(260) · `militaryDecision`(168)
       · `decisions`(121)
 - [ ] **B-7** `retirement`(228) — 주인공 은퇴
