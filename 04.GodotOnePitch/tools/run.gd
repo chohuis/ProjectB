@@ -84,7 +84,7 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 
 func _print_tasks() -> void:
 	print("갈래:")
-	print("  bench:season   한 시즌 시뮬 (P0 게이트)")
+	print("  bench:season   한 시즌 시뮬 — 진짜 엔진 (2,612경기)")
 	print("  bench:day      최악의 날 — 진짜 일정·진짜 엔진·프레임 쪼개기")
 	print("  bench:save     저장·로드 성능")
 	print("  bench:rng      난수 분포")
@@ -97,45 +97,19 @@ func _print_tasks() -> void:
 
 # ── 갈래 ───────────────────────────────────────────────────────────
 
+## 한 시즌 — **진짜 엔진으로 잰다.**
+##
+## ⚠ **이 갈래는 P0 뼈대(`MatchSim`)로 재고 있었다.** 던져버릴 스파이크
+## 이식본에 합성 로스터를 물려 놓고 "시즌 0.6초"라고 불렀는데, **게임이
+## 실제로 돌리는 엔진이 아니었다.** `GameBench` 주석에 "다시 재지 않으면
+## 그 0.659초는 아무 뜻이 없다"고 적혀 있었는데 그대로 남아 있었다.
+##
+## ⚠ **경기당 투구가 왜 다른지도 여기서 풀린다**(D-1). 실측 167구인데
+## 게이트는 250~330이었다 — 두 값이 다른 게 아니라 **다른 엔진의 값**이었다.
 func _bench_season(args: PackedStringArray) -> int:
-	var games: int = arg_int(args, "games", 2124)
-	var seed_value: int = arg_int(args, "seed", 20260813)
-	var sim := MatchSim.new()
-	var rng := RandomNumberGenerator.new()
-	rng.seed = seed_value
-
-	var rosters: Array = BenchFixtures.make_league(rng, 102)
-
-	# 예열 — 첫 호출은 스크립트 컴파일이 섞인다
-	for i in 20:
-		var w: Array = rosters[i % 102]
-		var l: Array = rosters[(i + 1) % 102]
-		sim.sim_game(w[0], l[0], w[1], l[1], i)
-
-	var t0: int = Time.get_ticks_usec()
-	var pitches: int = 0
-	var runs: int = 0
-	for g in games:
-		var h: Array = rosters[g % 102]
-		var a: Array = rosters[(g * 7 + 3) % 102]
-		var r: PackedInt32Array = sim.sim_game(h[0], a[0], h[1], a[1], g)
-		runs += r[0] + r[1]
-		pitches += r[2]
-	var sec: float = (Time.get_ticks_usec() - t0) / 1_000_000.0
-
-	log_line("  %d경기  %.3f초  %d 투구/초" % [games, sec, int(pitches / maxf(sec, 0.0001))])
-	log_line("  경기당 투구 %.1f · 득점 %.2f" % [float(pitches) / games, float(runs) / games])
-
-	# 빠르기만 하고 야구가 아니면 의미 없다
-	var pg: float = float(pitches) / games
-	var rg: float = float(runs) / games
-	if pg < 150.0 or pg > 400.0:
-		fail("경기당 투구 %.1f — 정상 250~330" % pg)
-	if rg < 3.0 or rg > 20.0:
-		fail("경기당 득점 %.2f — 정상 6~12" % rg)
-	if sec > 2.0:
-		fail("게이트 2.0초 초과")
-	return 0
+	return GameBench.new().run(log_line, fail,
+		arg_int(args, "games", GameBench.SEASON_GAMES),
+		arg_int(args, "seed", 20260813))
 
 
 # ── 공통 ───────────────────────────────────────────────────────────
