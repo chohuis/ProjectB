@@ -170,7 +170,21 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `staffGen.ts`(178) · `staffEffects.ts`(183) ·
       `seeds/onepitch/staff_rules.toml`(242) · `players/staff_rules.json`(530).
       ⚠ **감독 관계가 보직 배정(`role_ovr_bias`)에, 코치가 훈련 효율에,
-        구단주가 재계약 배수에 걸린다** — 셋 다 지금은 중립으로 돈다
+        구단주가 재계약 배수에 걸린다** — 셋 다 지금은 중립으로 돈다.
+
+      **`players/staff_rules.json`을 읽어 본 결과** (다음 세션이 다시 안 파도 되게):
+      `{rules, namePools}` 두 덩어리. `rules`는 아홉 갈래다 —
+      `world`(국내 4리그) · `coach_count`(재정 등급별 0~8명) ·
+      `league_bonus`(고교 0 · 대학 4 · 독립 2 · KBL 10) ·
+      `power_bonus`(전력★당 3) · `manager`(능력 5종 · 성향 9종 ·
+      나이 38~66) · `coach`(능력 5종 · 전문 6종 — 투수·타격·주루·
+      컨디셔닝·멘탈·전력분석 · 나이 30~62) · `owner`(능력 5종 · 성향 6종 ·
+      재정 등급 보정) · `lifecycle`(은퇴표·성장·경질·영입·강등) ·
+      `effects`(pivot 50 · span 40).
+      ⚠ **수치를 코드에 다시 적지 않는다** — 02 Phase 7에서 그 결함만 15건.
+      ⚠ **04엔 재정 등급(`부유`/`안정`/`알뜰`/`궁핍`)이 없다.**
+      `TeamProfile.owner_spending_willingness`(0~100)에서 파생하는 게
+      제일 가깝다 — 새 축을 만들면 정본이 둘이 된다
 - [x] **B-3** `weekPhases/injuries`(273) + `injuryNews`(78) + `myBodyReport`(135)
       `sim/injury.gd` · `sim/injury_runner.gd` · `data/injury_rules.json`.
       ⚠ 02는 완치 때 `careerStatus`를 `active`로 안 되돌려 **고교 3,015명 중
