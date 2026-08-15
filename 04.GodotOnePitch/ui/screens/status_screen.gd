@@ -44,6 +44,10 @@ func set_view_model(vm: Dictionary) -> void:
 ## 학업에서 고른 것. **루트가 상태에 쓴다** — 화면이 직접 안 고친다
 signal study_mode_picked(mode: String)
 signal major_picked(name: String)
+## 재정에서 고른 것. **여기가 스폰서 계약·구독을 쓰는 쪽이다** —
+## 04는 둘 다 읽는 코드만 있고 세우는 데가 없었다
+signal sponsor_signed(category_id: String)
+signal subscription_toggled(area_id: String)
 ## 하위 탭을 옮겼다. **부모가 자리를 기억한다** — 이 화면은 상태가 바뀔
 ## 때마다 통째로 새로 만들어지기 때문이다
 signal tab_changed(index: int)
@@ -124,6 +128,7 @@ func _rebuild_tab() -> void:
 		"season": _tab_host.add_child(_season_card())
 		"career": _tab_host.add_child(_career_card())
 		"academics": _build_academics()
+		"finance": _build_finance()
 
 
 # ── 부품 만들기 ────────────────────────────────────────────────────
@@ -257,6 +262,105 @@ func _campus_card(campus: Array) -> Card:
 	for e in campus:
 		c.body.add_child(_row(String(e["title"]), String(e["line"]),
 			AppTheme.OK if bool(e["selected"]) else AppTheme.TEXT_MUTE))
+	return c
+
+
+# ── 재정 탭 (C-4) ──────────────────────────────────────────────────
+#
+# ⚠ **여기서 계산하지 않는다.** 02는 이 화면이 OVR·사기로 수입을 즉석
+# 계산했고 그 숫자가 실제 `money`와 아무 관계가 없었다.
+#
+# ⚠ **가계부·예산 배분이 없다** (02 설계 §7.3). 지출은 구독 토글과
+# 이벤트 선택으로만 한다.
+
+func _build_finance() -> void:
+	var f: Dictionary = _vm.get("finance", {})
+	_tab_host.add_child(_finance_overview_card(f))
+	_tab_host.add_child(_ledger_card(f["ledger"]))
+	_tab_host.add_child(_sponsor_card(f["sponsor"]))
+	_tab_host.add_child(_subscription_card(f["training"]))
+	if bool(f.get("trend", {}).get("has", false)):
+		_tab_host.add_child(_trend_card(f["trend"]))
+
+
+func _finance_overview_card(f: Dictionary) -> Card:
+	var c := _card("%s · 보유 자산 %s" % [String(f.get("stage_label", "")),
+		String(f.get("money_label", ""))])
+	for k in f.get("kpi", []):
+		var tone: String = String(k.get("tone", ""))
+		c.body.add_child(_row(String(k["label"]), String(k["value"]),
+			AppTheme.OK if tone == "up" else \
+			(AppTheme.BAD if tone == "down" else AppTheme.TEXT)))
+	return c
+
+
+func _ledger_card(l: Dictionary) -> Card:
+	var c := _card("주간 수입 · 지출")
+	c.body.add_child(_row("", String(l.get("note", "")), AppTheme.TEXT_DIM))
+	var income: Array = l.get("income", [])
+	if income.is_empty():
+		c.body.add_child(_row(String(l["income_empty"]), "-", AppTheme.TEXT_MUTE))
+	for i in income:
+		c.body.add_child(_row(String(i["label"]), String(i["value"]), AppTheme.OK))
+	var expense: Array = l.get("expense", [])
+	if expense.is_empty():
+		c.body.add_child(_row(String(l["expense_empty"]), "-", AppTheme.TEXT_MUTE))
+	for e in expense:
+		c.body.add_child(_row(String(e["label"]), String(e["value"]), AppTheme.BAD))
+	return c
+
+
+func _sponsor_card(sp: Dictionary) -> Card:
+	var c := _card("스폰서")
+	c.body.add_child(_row("", String(sp.get("annual_label", "")), AppTheme.TEXT_DIM))
+	var active: Array = sp.get("active", [])
+	if active.is_empty():
+		c.body.add_child(_row(String(sp["active_empty"]), "-", AppTheme.TEXT_MUTE))
+	for s in active:
+		c.body.add_child(_row(String(s["name"]), String(s["value"])))
+
+	c.body.add_child(_row("", String(sp.get("note", "")), AppTheme.TEXT_DIM))
+	for o in sp.get("offers", []):
+		var b := Button.new()
+		b.text = "계약   %s   %s" % [String(o["name"]), String(o["value"])]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.focus_mode = Control.FOCUS_NONE
+		# ⚠ **미뤄서 보낸다.** 루트가 상태를 고치면 이 화면이 다시 그려지는데,
+		# 바로 보내면 자기를 부른 버튼을 지우려다 잠긴 객체가 된다
+		b.pressed.connect(func() -> void:
+			sponsor_signed.emit.call_deferred(String(o["category_id"])))
+		c.body.add_child(b)
+	return c
+
+
+func _subscription_card(t: Dictionary) -> Card:
+	var c := _card("개인 트레이닝")
+	for r in t.get("rows", []):
+		var b := Button.new()
+		b.text = "%s   %s   %s%s" % [String(r["action"]), String(r["name"]),
+			String(r["tier_label"]),
+			"  %s" % String(r["effect"]) if not String(r["effect"]).is_empty() else ""]
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.focus_mode = Control.FOCUS_NONE
+		b.pressed.connect(func() -> void:
+			subscription_toggled.emit.call_deferred(String(r["area_id"])))
+		c.body.add_child(b)
+	c.body.add_child(_row(String(t.get("weekly_cost", "")),
+		String(t.get("note", "")), AppTheme.TEXT_DIM))
+	var facility: String = String(t.get("facility_note", ""))
+	if not facility.is_empty():
+		c.body.add_child(_row("", facility, AppTheme.TEXT_DIM))
+	return c
+
+
+## `finance_log`를 읽는 자리는 여기뿐이다 — 매주 쌓기만 하고 아무도 안 봤다
+func _trend_card(tr: Dictionary) -> Card:
+	var c := _card("자산 추이")
+	c.body.add_child(_row("", String(tr.get("note", "")), AppTheme.TEXT_DIM))
+	for r in tr.get("rows", []):
+		c.body.add_child(_row("%d주" % int(r["week"]),
+			"%s  →  %s" % [String(r["net"]), String(r["money"])],
+			AppTheme.BAD if bool(r["down"]) else AppTheme.TEXT))
 	return c
 
 

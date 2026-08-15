@@ -1,0 +1,52 @@
+[
+ [
+  "재정 탭을 아예 안 그린다",
+  "\t\t\"finance\": _build_finance()",
+  "\t\t\"finance\": pass"
+ ],
+ [
+  "주간 원장을 안 띄운다",
+  "\t_tab_host.add_child(_ledger_card(f[\"ledger\"]))",
+  "\tpass"
+ ],
+ [
+  "스폰서 카드를 안 띄운다",
+  "\t_tab_host.add_child(_sponsor_card(f[\"sponsor\"]))",
+  "\tpass"
+ ],
+ [
+  "구독 카드를 안 띄운다 (구독할 데가 없어진다)",
+  "\t_tab_host.add_child(_subscription_card(f[\"training\"]))",
+  "\tpass"
+ ],
+ [
+  "기록이 없는데 자산 추이를 띄운다",
+  "\tif bool(f.get(\"trend\", {}).get(\"has\", false)):\n\t\t_tab_host.add_child(_trend_card(f[\"trend\"]))",
+  "\t_tab_host.add_child(_trend_card(f[\"trend\"]))"
+ ],
+ [
+  "자산 추이를 아예 안 띄운다",
+  "\tif bool(f.get(\"trend\", {}).get(\"has\", false)):\n\t\t_tab_host.add_child(_trend_card(f[\"trend\"]))",
+  "\tpass"
+ ],
+ [
+  "보유 자산을 머리글에 안 쓴다",
+  "\tvar c := _card(\"%s · 보유 자산 %s\" % [String(f.get(\"stage_label\", \"\")),\n\t\tString(f.get(\"money_label\", \"\"))])",
+  "\tvar c := _card(\"재정\")"
+ ],
+ [
+  "계약 버튼을 안 만든다 (스폰서가 영영 안 생긴다)",
+  "\t\tb.pressed.connect(func() -> void:\n\t\t\tsponsor_signed.emit.call_deferred(String(o[\"category_id\"])))",
+  "\t\tpass"
+ ],
+ [
+  "구독 버튼을 안 만든다",
+  "\t\tb.pressed.connect(func() -> void:\n\t\t\tsubscription_toggled.emit.call_deferred(String(r[\"area_id\"])))",
+  "\t\tpass"
+ ],
+ [
+  "버튼 글자에 무슨 일이 나는지를 안 쓴다",
+  "\t\tb.text = \"%s   %s   %s%s\" % [String(r[\"action\"]), String(r[\"name\"]),",
+  "\t\tb.text = \"%s%s%s%s\" % [\"\", String(r[\"name\"]),"
+ ]
+]

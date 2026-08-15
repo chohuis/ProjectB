@@ -1,0 +1,162 @@
+[
+ [
+  "1억을 10000만원으로만 쓴다 (자릿수를 세게 만든다)",
+  "\tif abs_v >= 10000:",
+  "\tif false:"
+ ],
+ [
+  "억 단위에서 소수를 버린다 (2.5억이 2억으로 뜬다)",
+  "\t\treturn \"%d억\" % int(eok) if is_equal_approx(eok, roundf(eok)) \\\n\t\t\telse \"%.2f억\" % eok",
+  "\t\treturn \"%d억\" % int(eok)"
+ ],
+ [
+  "부호를 안 붙인다 (적자가 흑자로 보인다)",
+  "\treturn \"%s%s\" % [\"+\" if v >= 0 else \"\", won(v)]",
+  "\treturn won(v)"
+ ],
+ [
+  "무대 이름을 안 붙인다",
+  "\t\t\"stage_label\": String(STAGE_LABEL.get(\n\t\t\tString(p.get(\"league_id\", \"\")), \"프로\")),",
+  "\t\t\"stage_label\": \"\","
+ ],
+ [
+  "계약이 있어도 학생 무대로 계산한다 (프로 연봉이 수입에서 사라진다)",
+  "\tif Contract.has_contract(String(p.get(\"league_id\", \"\"))):\n\t\treturn Finance.PRO_STAGES[0]",
+  "\tif false:\n\t\treturn Finance.PRO_STAGES[0]"
+ ],
+ [
+  "끝난 계약까지 수입으로 넣는다",
+  "\t\t\"sponsor_annual\": Finance.sponsor_annual(sponsors, year),",
+  "\t\t\"sponsor_annual\": Finance.sponsor_annual(sponsors, 0),"
+ ],
+ [
+  "구독료를 주간 계산에 안 넘긴다 (돈만 나가고 원장엔 안 뜬다)",
+  "\t\t\"subscriptions\": subs,",
+  "\t\t\"subscriptions\": [],"
+ ],
+ [
+  "적자 주를 표시 안 한다",
+  "\t\t\t\"tone\": \"up\" if net >= 0 else \"down\"},",
+  "\t\t\t\"tone\": \"up\"},"
+ ],
+ [
+  "세금을 안 내는데 세율을 찍는다 (학생이 0.0%로 뜬다)",
+  "\t\t\t\"value\": \"%.1f%%\" % (rate * 100.0) if int(weekly[\"tax_annual\"]) > 0 \\\n\t\t\t\telse \"비과세\", \"tone\": \"\"},",
+  "\t\t\t\"value\": \"%.1f%%\" % (rate * 100.0), \"tone\": \"\"},"
+ ],
+ [
+  "스폰서 건수를 안 센다",
+  "\t\t\t\"value\": \"%d건\" % Finance.active_sponsors(sponsors, year).size(),",
+  "\t\t\t\"value\": \"0건\","
+ ],
+ [
+  "세금이 어디로 갔는지 안 말한다",
+  "\t\t\"note\": \"세금은 수령 시 원천징수됩니다 — 순현금은 세후입니다.\" \\\n\t\t\tif int(weekly[\"tax_annual\"]) > 0 else \"학생·군 무대는 과세하지 않습니다.\",",
+  "\t\t\"note\": \"\","
+ ],
+ [
+  "학생인데 원천징수됐다고 말한다",
+  "\t\t\tif int(weekly[\"tax_annual\"]) > 0 else \"학생·군 무대는 과세하지 않습니다.\",",
+  "\t\t\tif true else \"학생·군 무대는 과세하지 않습니다.\","
+ ],
+ [
+  "지출을 원장에 안 싣는다",
+  "\tfor e in weekly[\"expense\"]:\n\t\texpense.append({\"label\": String(e[\"label\"]), \"value\": won(int(e[\"amount\"]))})",
+  "\tpass"
+ ],
+ [
+  "자산 추이를 안 만든다 (finance_log를 읽는 자리가 다시 사라진다)",
+  "\tvar log: Array = state.get(\"finance_log\", [])",
+  "\tvar log: Array = []"
+ ],
+ [
+  "추이를 옛것부터 늘어놓는다 (이번 주가 맨 밑으로 간다)",
+  "\tfor i in range(log.size() - 1, from - 1, -1):",
+  "\tfor i in range(from, log.size()):"
+ ],
+ [
+  "한 시즌 상한을 안 둔다 (은퇴 무렵이면 천 줄이 넘는다)",
+  "\tvar from: int = maxi(log.size() - TREND_WEEKS, 0)",
+  "\tvar from: int = 0"
+ ],
+ [
+  "적자 주를 표시 안 한다 (추이)",
+  "\t\t\t\"down\": int(e.get(\"net\", 0)) < 0,",
+  "\t\t\t\"down\": false,"
+ ],
+ [
+  "첫 주가 들어서기 전이 아니라 끝난 뒤에서 잰다 (한 주가 빠진다)",
+  "\tvar before: int = int(log[from].get(\"money\", 0)) - int(log[from].get(\"net\", 0))",
+  "\tvar before: int = int(log[from].get(\"money\", 0))"
+ ],
+ [
+  "끝난 계약도 계약 중으로 보여준다",
+  "\tfor s in Finance.active_sponsors(sponsors, year):\n\t\tactive.append({",
+  "\tfor s in sponsors:\n\t\tactive.append({"
+ ],
+ [
+  "이미 계약한 카테고리를 또 제안한다",
+  "\tvar signed_ids: Array = []\n\tfor s in Finance.active_sponsors(sponsors, year):\n\t\tsigned_ids.append(String(s.get(\"category_id\", \"\")))",
+  "\tvar signed_ids: Array = []"
+ ],
+ [
+  "명성을 안 보고 제안을 만든다",
+  "\tvar out: Dictionary = Finance.sponsor_offers(fame, int(p.get(\"salary\", 0)),",
+  "\tvar out: Dictionary = Finance.sponsor_offers(99.0, int(p.get(\"salary\", 0)),"
+ ],
+ [
+  "아마추어에게 왜 제안이 없는지를 안 말한다",
+  "\tif not Finance.is_pro(stage):\n\t\treturn \"학생·독립 무대에는 스폰서가 붙지 않습니다 (아마추어 규정).\"",
+  "\tif false:\n\t\treturn \"학생·독립 무대에는 스폰서가 붙지 않습니다 (아마추어 규정).\""
+ ],
+ [
+  "얼마나 유명해져야 하는지를 안 알려준다",
+  "\t\treturn \"지금 명성(%d)으로 들어온 제안이 없습니다. 가장 낮은 문턱은 명성 %d입니다.\" \\\n\t\t\t% [int(roundf(fame)), int(lowest)]",
+  "\t\treturn \"\""
+ ],
+ [
+  "문턱을 규칙이 아니라 제일 높은 것으로 읽는다",
+  "\t\t\tlowest = minf(lowest, float(cat.get(\"fame_min\", 999.0)))",
+  "\t\t\tlowest = maxf(lowest if lowest < 999.0 else 0.0, float(cat.get(\"fame_min\", 0.0)))"
+ ],
+ [
+  "미구독 분야에 효과를 적는다",
+  "\t\t\t\"effect\": \"\" if tier <= 0 else \"효율 +%.1f%% · 주 %s\" % [",
+  "\t\t\t\"effect\": \"효율 +%.1f%% · 주 %s\" % ["
+ ],
+ [
+  "버튼 글자가 늘 \"구독\"이다 (마지막 단계에서 해지되는 걸 모른다)",
+  "\t\t\t\"action\": \"구독\" if tier <= 0 \\\n\t\t\t\telse (\"해지\" if tier >= tiers.size() else \"상향\"),",
+  "\t\t\t\"action\": \"구독\","
+ ],
+ [
+  "마지막 단계에서도 상향이라고 쓴다",
+  "\t\t\t\telse (\"해지\" if tier >= tiers.size() else \"상향\"),",
+  "\t\t\t\telse \"상향\","
+ ],
+ [
+  "구독 안 한 분야를 목록에서 뺀다 (구독할 데가 없어진다)",
+  "\tfor a in Finance.training_areas():",
+  "\tfor a in []:"
+ ],
+ [
+  "주간 구독료 합계를 안 낸다",
+  "\t\t\"weekly_cost\": \"주간 구독료 합계 %s\" % won(int(bonus[\"weekly_cost\"])),",
+  "\t\t\"weekly_cost\": \"\","
+ ],
+ [
+  "시설 보정을 안 알린다 (약팀 지명이 순수한 페널티로만 보인다)",
+  "\t\t\"facility_note\": \"\" if is_equal_approx(inverse, 1.0) \\",
+  "\t\t\"facility_note\": \"\" if true \\"
+ ],
+ [
+  "마지막 단계에서 눌러도 해지가 안 된다",
+  "\treturn 0 if cur >= tiers.size() else cur + 1",
+  "\treturn cur + 1"
+ ],
+ [
+  "구독을 눌러도 단계가 안 오른다",
+  "\treturn 0 if cur >= tiers.size() else cur + 1",
+  "\treturn cur"
+ ]
+]

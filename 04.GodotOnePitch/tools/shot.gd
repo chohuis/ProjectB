@@ -258,6 +258,36 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
+		"finance", "finance-bottom":
+			# ⚠ **프로로 연다.** 학생은 스폰서가 안 붙어서(아마추어 규정)
+			# 화면의 절반이 안 뜬다 — 둘 다 보려면 프로여야 한다
+			var fi: AppRoot = APP.instantiate()
+			var fst := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			fst["protagonist"]["league_id"] = "LEAGUE_KBL"
+			fst["protagonist"]["career_stage"] = "pro"
+			fst["protagonist"]["salary"] = 12000
+			fst["protagonist"]["fame"] = 62.0
+			fst["protagonist"]["money"] = 34000
+			fi.set_state(fst)
+			fi.ready.connect(func() -> void:
+				# 구독을 켜고 몇 주를 돌려 자산 추이를 만든다
+				fi._on_subscription("PITCH")
+				for w in range(1, 9):
+					fi._apply_one_week(w * 7)
+				fi.state()["day"] = 8 * 7
+				fi._refresh()
+				fi.screen()._on_tab(1)
+				await fi.get_tree().process_frame
+				for n in fi.screen().find_children("*", "StatusScreen", true, false):
+					n.select_tab(3)
+					# ⚠ **아래쪽도 눈으로 본다.** 한 화면에 안 들어가는 카드가
+					# 있으면 안 본 채로 "됐다"고 하게 된다
+					if which == "finance-bottom":
+						await fi.get_tree().process_frame
+						n.get_node("Scroll").scroll_vertical = 99999
+				, CONNECT_ONE_SHOT)
+			return fi
 		"academics":
 			# ⚠ **진짜 세계로, 진짜 탭으로 연다.** 한 학기를 실제로 돌려
 			# 학점·경고·학기 기록이 쌓인 뒤를 본다

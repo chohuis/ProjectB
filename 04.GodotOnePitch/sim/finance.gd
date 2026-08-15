@@ -304,6 +304,40 @@ static func sponsor_offers(fame: float, salary: int, career_stage: String,
 	return {"offers": offers, "total_annual": total, "capped": capped}
 
 
+## 지금 유효한 계약만 골라 연 합계를 낸다.
+##
+## ⚠ **`sponsor_annual`을 따로 들고 있지 않는다.** 계약 목록이 정본이다 —
+## 합계를 별도 칸에 두면 계약이 끝난 해에 한쪽만 줄어들고, 그 어긋남은
+## 조용하다(주간 수입은 그대로인데 스폰서 목록은 비어 있다)
+static func sponsor_annual(sponsors: Array, season_year: int) -> int:
+	var total: int = 0
+	for s in sponsors:
+		if int(s.get("until_season", 0)) >= season_year:
+			total += maxi(int(s.get("annual", 0)), 0)
+	return total
+
+
+## 지금 유효한 계약들
+static func active_sponsors(sponsors: Array, season_year: int) -> Array:
+	var out: Array = []
+	for s in sponsors:
+		if int(s.get("until_season", 0)) >= season_year:
+			out.append(s)
+	return out
+
+
+## 오퍼를 계약으로 바꾼다. **몇 해까지인지를 여기서 정한다** —
+## 화면이 계산하면 화면과 엔진이 갈린다
+static func sign_sponsor(offer: Dictionary, season_year: int) -> Dictionary:
+	return {
+		"category_id": String(offer.get("category_id", "")),
+		"name": String(offer.get("name", "")),
+		"annual": int(offer.get("annual", 0)),
+		"until_season": season_year + maxi(int(offer.get("term_years", 1)), 1) - 1,
+		"since_season": season_year,
+	}
+
+
 # ── 투자 ──────────────────────────────────────────────────────
 
 static func investment_options() -> Array:

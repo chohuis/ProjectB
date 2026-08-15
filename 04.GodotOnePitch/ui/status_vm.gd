@@ -55,14 +55,20 @@ static func build(s: Dictionary) -> Dictionary:
 		"career": s.get("career", []),
 		"tabs": _tabs(academics),
 		"academics": academics,
+		"finance": FinanceVm.build(s),
 	}
 
 
-## "나" 탭의 하위 탭. **화면이 목록을 갖지 않는다** — 무대에 따라 달라지므로
+## "나" 탭의 하위 탭. **화면이 목록을 갖지 않는다** — 무대에 따라 달라지므로.
+##
+## ⚠ **재정은 아마추어도 연다.** 02가 그랬다 — 스폰서가 안 붙는 것과
+## 용돈·구독은 별개 축이고, 화면이 "학생에겐 스폰서가 안 붙습니다"를
+## 직접 말한다. 숨기면 왜 없는지를 알 길이 없다
 const TABS: Array[Dictionary] = [
 	{"id": "attributes", "label": "능력치"},
 	{"id": "season", "label": "기록"},
 	{"id": "career", "label": "커리어"},
+	{"id": "finance", "label": "재정"},
 ]
 
 

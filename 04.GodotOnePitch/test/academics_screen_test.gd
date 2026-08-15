@@ -85,10 +85,15 @@ func test_leaving_school_falls_back_to_a_real_tab() -> void:
 	screen.set_view_model(StatusVm.build(_state({}, "LEAGUE_KBL")))
 	await await_idle_frame()
 	# ⚠ **빈 문자열도 실패다.** 자리를 안 자르면 없는 탭을 가리켜
-	# 내용이 통째로 안 그려진다 — 화면만 보면 "커리어"는 탭 이름으로 남아 있다
-	assert_str(screen.current_tab_id()).override_failure_message(
+	# 내용이 통째로 안 그려진다 — 화면만 보면 탭 이름은 그대로 남아 있다.
+	# **어느 탭인지를 박아 두지 않는다** — 탭이 하나 늘면 그때마다 깨진다
+	var ids: Array = []
+	for t in StatusVm.build(_state({}, "LEAGUE_KBL"))["tabs"]:
+		ids.append(String(t["id"]))
+	assert_bool(ids.has(screen.current_tab_id())).override_failure_message(
 		"졸업했는데 없는 탭(\"%s\")을 가리키고 있다" % screen.current_tab_id()
-		).is_equal("career")
+		).is_true()
+	assert_str(screen.current_tab_id()).is_not_equal("academics")
 
 
 ## ⚠ **탭을 다시 만들 때 옛 버튼을 지운다.** 진행할 때마다 사전이 새로 오는데

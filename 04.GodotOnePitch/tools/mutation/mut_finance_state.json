@@ -1,0 +1,42 @@
+[
+ [
+  "고른 스폰서를 상태에 안 쓴다 (계약이 영영 안 생긴다)",
+  "\t\tsponsors.append(Finance.sign_sponsor(o, year))\n\t\tp[\"sponsors\"] = sponsors",
+  "\t\tpass"
+ ],
+ [
+  "제안에 없는 카테고리도 계약해 준다",
+  "\t\tif String(o[\"category_id\"]) != category_id:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "이미 계약한 것을 또 계약할 수 있다",
+  "\tfor s in Finance.active_sponsors(sponsors, year):\n\t\tsigned_ids.append(String(s.get(\"category_id\", \"\")))",
+  "\tpass"
+ ],
+ [
+  "계약 기간을 안 정한다 (계약이 그 해에 바로 끝난다)",
+  "\t\tsponsors.append(Finance.sign_sponsor(o, year))",
+  "\t\tsponsors.append({\"category_id\": String(o[\"category_id\"]),\n\t\t\t\"name\": String(o[\"name\"]), \"annual\": int(o[\"annual\"]),\n\t\t\t\"until_season\": year - 1})"
+ ],
+ [
+  "구독을 상태에 안 쓴다 (누르면 아무 일도 안 일어난다)",
+  "\t_state[\"training_subscriptions\"] = next",
+  "\tpass"
+ ],
+ [
+  "해지해도 줄이 남는다 (미구독인데 목록에 있는 상태)",
+  "\tif tier > 0:\n\t\tnext.append({\"area_id\": area_id, \"tier\": tier})",
+  "\tnext.append({\"area_id\": area_id, \"tier\": tier})"
+ ],
+ [
+  "같은 분야가 두 줄이 된다",
+  "\tfor s in subs:\n\t\tif String(s.get(\"area_id\", \"\")) != area_id:\n\t\t\tnext.append(s)",
+  "\tfor s in subs:\n\t\tnext.append(s)"
+ ],
+ [
+  "끝난 계약도 주간 수입에 넣는다 (스폰서는 없는데 돈은 들어온다)",
+  "\t\t\"sponsor_annual\": Finance.sponsor_annual(p.get(\"sponsors\", []),\n\t\t\tint(_state.get(\"season_year\", 0))),",
+  "\t\t\"sponsor_annual\": Finance.sponsor_annual(p.get(\"sponsors\", []), 0),"
+ ]
+]

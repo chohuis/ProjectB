@@ -53,6 +53,8 @@ func _ready() -> void:
 	_main.league_selected.connect(_on_league_selected)
 	_main.study_mode_picked.connect(_on_study_mode)
 	_main.major_picked.connect(_on_major)
+	_main.sponsor_signed.connect(_on_sponsor)
+	_main.subscription_toggled.connect(_on_subscription)
 	_refresh()
 
 
@@ -506,7 +508,10 @@ func _apply_finance(p: Dictionary, at_day: int) -> Dictionary:
 			Finance.PRO_STAGES[0] if Contract.has_contract(
 				String(p.get("league_id", ""))) else "highschool")),
 		"salary": int(p.get("salary", 0)),
-		"sponsor_annual": int(p.get("sponsor_annual", 0)),
+		# ⚠ **계약 목록이 정본이다.** 합계를 따로 들고 있으면 계약이 끝난
+		# 해에 수입만 그대로 남는다
+		"sponsor_annual": Finance.sponsor_annual(p.get("sponsors", []),
+			int(_state.get("season_year", 0))),
 		"subscriptions": _state.get("training_subscriptions", []),
 		"treatment_weekly": int(p.get("treatment_weekly", 0)),
 	})
@@ -519,6 +524,55 @@ func _apply_finance(p: Dictionary, at_day: int) -> Dictionary:
 		"money": int(p["money"])})
 	_state["finance_log"] = log
 	return out
+
+
+## 스폰서와 계약한다.
+##
+## ⚠ **여기가 스폰서를 세우는 유일한 자리다.** 없을 땐 `sponsor_offers`가
+## 계산만 하고 아무 데도 안 닿아서 계약이 한 건도 안 생겼다.
+##
+## ⚠ **금액을 화면이 아니라 지금 다시 낸다.** 화면이 들고 있던 오퍼를
+## 그대로 받으면, 그 사이에 명성이 바뀌어도 옛 금액으로 계약된다
+func _on_sponsor(category_id: String) -> void:
+	var p: Dictionary = _state.get("protagonist", {})
+	if p.is_empty():
+		return
+	var year: int = int(_state.get("season_year", 0))
+	var sponsors: Array = p.get("sponsors", [])
+	var signed_ids: Array = []
+	for s in Finance.active_sponsors(sponsors, year):
+		signed_ids.append(String(s.get("category_id", "")))
+
+	var out: Dictionary = Finance.sponsor_offers(float(p.get("fame", 0.0)),
+		int(p.get("salary", 0)), FinanceVm._stage_of(p),
+		Staff.mods_of(_state.get("world", {}),
+			String(p.get("team_id", "")))["fame"], signed_ids)
+	for o in out["offers"]:
+		if String(o["category_id"]) != category_id:
+			continue
+		sponsors.append(Finance.sign_sponsor(o, year))
+		p["sponsors"] = sponsors
+		_refresh()
+		return
+
+
+## 개인 트레이닝 구독을 한 단계 올린다. **마지막에서 누르면 해지다.**
+##
+## ⚠ **여기가 `training_subscriptions`를 세우는 유일한 자리다.** 없을 땐
+## 읽는 곳이 둘인데 쓰는 곳이 없어서 영영 빈 배열이었다
+func _on_subscription(area_id: String) -> void:
+	var subs: Array = _state.get("training_subscriptions", [])
+	var tier: int = FinanceVm.next_tier(subs, area_id)
+
+	var next: Array = []
+	for s in subs:
+		if String(s.get("area_id", "")) != area_id:
+			next.append(s)
+	# 0단계는 해지다 — 줄을 남기면 "미구독인데 목록에 있는" 상태가 된다
+	if tier > 0:
+		next.append({"area_id": area_id, "tier": tier})
+	_state["training_subscriptions"] = next
+	_refresh()
 
 
 ## 학교에 다니는 리그. **프로에는 학사가 없다**
