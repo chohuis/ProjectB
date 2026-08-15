@@ -85,6 +85,12 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
   분포의 가운데가 아니다 — 산식은 NPC와 같은 것을 쓰므로 **밸런스가 아니라
   생성 분포의 문제로 본다.** 이주 후에 주인공 생성 분포를 잴 때 다시 본다
 
+- ❓ **해외 리그 선수 이름이 한국식이다.** 02는 용병 이름을 서양식 풀
+  (`namePool.western`)로 만들었는데 04의 `NameGen`엔 그 갈래가 없다 —
+  ABL·JBL 선수도 한국 이름을 달고 있고, 영입하면 KBL에 한국 이름의
+  "외국인"이 생긴다. 국적·출신은 기록에 남으니 판정은 맞지만 **화면에서
+  어색하다.** 이름은 C(화면)에서 같이 본다
+
 - ❓ **라이벌을 누가 지정하나.** 관계 엔진에 라이벌 갈래가 다 있는데
   (성향이 부호를 가르는 것까지) **04에 라이벌을 정하는 경로가 없다** —
   `faced_rivals`가 늘 빈 목록이다. 02는 `named_npc_registry.json`과 대회
@@ -231,7 +237,18 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       검사 51 · 변이 53/53 + 배선 1/1.
       **남은 것:** 차출 중 자리 메우기(승강 상시 콜업)는 B-10에서 —
       `NationalRunner.is_called_up`이 그 문을 열어 뒀다
-- [ ] **B-9** `foreignPlayers`(343)
+- [x] **B-9** `foreignPlayers`(343) — `sim/foreign.gd` · `data/foreign_rules.json`.
+      보유 3명·투수 2명. 시즌이 바뀔 때 재계약 판정(OVR 73 · 36세) →
+      못 미치면 **온 곳으로 돌려보내고** 빈 자리를 해외에서 채운다.
+      ⚠ **한도 문지기는 국적이다** — "그 리그에서 외국인인가"로 물으면
+      ABL 선수가 ABL에서 내국인이라 그냥 통과한다(02에서 그 자리가 다섯).
+      ⚠ 02는 용병을 **무에서 찍어** 어디서 왔다는 기록이 없었다 —
+      04는 ABL 팜(85%)·ABL(10%)·JBL(5%)에서 실제 선수를 데려온다.
+      실측: 진짜 세계에서 KBL 10팀 × 3명 정원이 다 찬다.
+      검사 32 · 변이 31/31 + 배선 1/1.
+      **다르게 한 것:** 02는 새 게임 시점에 이미 외국인이 있다(`roster_gen.rs`).
+      04는 **첫 시즌 롤오버가 채운다** — 초기 로스터 생성을 안 건드리므로
+      밸런스 대조가 안 흔들린다. 대신 1년차 KBL엔 외국인이 없다
 - [ ] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
 - [ ] **B-11** `runAutoAdvance`(491)
 

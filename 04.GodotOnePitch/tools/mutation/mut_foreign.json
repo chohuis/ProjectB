@@ -1,0 +1,157 @@
+[
+ [
+  "한도 문지기가 리그를 본다 (ABL 선수가 ABL에서 내국인이라 그냥 통과한다)",
+  "static func is_foreign_in_quota_league(nationality: String) -> bool:\n\treturn nationality != home_nationality()",
+  "static func is_foreign_in_quota_league(nationality: String) -> bool:\n\treturn true"
+ ],
+ [
+  "아무도 외국인이 아니다",
+  "static func is_foreign_in_quota_league(nationality: String) -> bool:\n\treturn nationality != home_nationality()",
+  "static func is_foreign_in_quota_league(nationality: String) -> bool:\n\treturn false"
+ ],
+ [
+  "자기 리그에서도 외국인으로 세어진다",
+  "\tif not quota_leagues().has(league_id):\n\t\treturn false\n\treturn is_foreign_in_quota_league(nationality)",
+  "\treturn is_foreign_in_quota_league(nationality)"
+ ],
+ [
+  "박아 둔 국적을 무시하고 리그로 다시 읽는다",
+  "\tvar n: String = String(p.get(\"nationality\", \"\"))\n\tif not n.is_empty():\n\t\treturn n",
+  "\tvar n: String = String(p.get(\"nationality\", \"\"))\n\tif false:\n\t\treturn n"
+ ],
+ [
+  "국적을 못 내면 전원 외국인이 된다",
+  "\treturn String(rules().get(\"league_nationality\", {}).get(\n\t\tString(p.get(\"league_id\", \"\")), home_nationality()))",
+  "\treturn String(rules().get(\"league_nationality\", {}).get(\n\t\tString(p.get(\"league_id\", \"\")), \"\"))"
+ ],
+ [
+  "은퇴한 선수도 보유 인원으로 센다",
+  "\t\tif String(p.get(\"career_status\", \"active\")) != \"active\":\n\t\t\tcontinue\n\t\tif is_foreign_in_quota_league(nationality_of(p)):",
+  "\t\tif false:\n\t\t\tcontinue\n\t\tif is_foreign_in_quota_league(nationality_of(p)):"
+ ],
+ [
+  "재계약이 능력치를 안 본다 (쪽박 용병이 계속 남는다)",
+  "\treturn Contract.core_ovr(p) >= float(r.get(\"ovr_min\", 73)) \\\n\t\tand int(p.get(\"age\", 99)) <= int(r.get(\"age_max\", 36))",
+  "\treturn int(p.get(\"age\", 99)) <= int(r.get(\"age_max\", 36))"
+ ],
+ [
+  "재계약이 나이를 안 본다",
+  "\treturn Contract.core_ovr(p) >= float(r.get(\"ovr_min\", 73)) \\\n\t\tand int(p.get(\"age\", 99)) <= int(r.get(\"age_max\", 36))",
+  "\treturn Contract.core_ovr(p) >= float(r.get(\"ovr_min\", 73))"
+ ],
+ [
+  "이미 KBL에 있는 선수를 다시 영입한다",
+  "\tif not origin_weights().has(String(p.get(\"league_id\", \"\"))):\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "영입 능력치 띠가 사라진다 (용병이 국내 신인만 못하다)",
+  "\treturn ovr >= float(r.get(\"ovr_min\", 0)) and ovr <= float(r.get(\"ovr_max\", 99))",
+  "\treturn true"
+ ],
+ [
+  "영입 상한이 사라진다",
+  "\treturn ovr >= float(r.get(\"ovr_min\", 0)) and ovr <= float(r.get(\"ovr_max\", 99))",
+  "\treturn ovr >= float(r.get(\"ovr_min\", 0))"
+ ],
+ [
+  "나이 띠가 사라진다",
+  "\tif age < int(r.get(\"age_min\", 0)) or age > int(r.get(\"age_max\", 99)):\n\t\treturn false",
+  "\tif false:\n\t\treturn false"
+ ],
+ [
+  "은퇴한 선수도 영입 후보가 된다",
+  "\tif String(p.get(\"career_status\", \"active\")) != \"active\":\n\t\treturn false\n\tif not origin_weights()",
+  "\tif false:\n\t\treturn false\n\tif not origin_weights()"
+ ],
+ [
+  "출신 가중치를 무시하고 균등하게 뽑는다 (메이저 주전급이 무더기로 온다)",
+  "\t\tvar w: float = float(weights.get(String(p.get(\"league_id\", \"\")), 0.0))\n\t\tif w <= 0.0:\n\t\t\tcontinue",
+  "\t\tvar w: float = 1.0\n\t\tif w <= 0.0:\n\t\t\tcontinue"
+ ],
+ [
+  "뽑을 때 자리를 안 본다 (투수를 뽑았는데 야수가 온다)",
+  "\t\tif PlayerGen.is_pitcher(String(p.get(\"position\", \"\"))) != want_pitcher:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "뽑힌 사람이 후보에 남는다 (한 사람이 여러 팀에 간다)",
+  "\t\t\treturn pool.pop_at(int(x[\"i\"]))",
+  "\t\t\treturn pool[int(x[\"i\"])]"
+ ],
+ [
+  "첫 해에도 재계약 판정을 한다 (계약한 시즌을 못 뛰고 잘린다)",
+  "\tif not first_run:\n\t\t_release(state, world, year, out)",
+  "\t_release(state, world, year, out)"
+ ],
+ [
+  "해마다 첫 해로 친다 (재계약 판정이 영영 안 돈다)",
+  "\tstate[\"foreign_turnover_year\"] = year",
+  "\tpass"
+ ],
+ [
+  "충원을 아예 안 한다 (한 시즌마다 자리가 줄어든다)",
+  "\t_fill(state, world, year, rng, out)",
+  "\tpass"
+ ],
+ [
+  "순환 씨앗에 세계가 안 섞인다 (모든 세계가 같은 용병을 데려온다)",
+  "\trng.seed = Rng.mix([\"foreign\", int(state.get(\"seed\", 0)), year])",
+  "\trng.seed = Rng.mix([\"foreign\", year])"
+ ],
+ [
+  "재계약선을 넘어도 자른다",
+  "\t\t\t\tif can_renew(p):\n\t\t\t\t\tcontinue",
+  "\t\t\t\tif false:\n\t\t\t\t\tcontinue"
+ ],
+ [
+  "보유 한도를 안 본다 (팀마다 무한정 데려온다)",
+  "\t\t\tvar short: int = per_team() - held.size()\n\t\t\tif short <= 0:\n\t\t\t\tcontinue",
+  "\t\t\tvar short: int = per_team()\n\t\t\tif short <= 0:\n\t\t\t\tcontinue"
+ ],
+ [
+  "투수 한도가 사라진다 (부족분을 전부 투수로 채운다)",
+  "\t\t\tvar want_pitchers: int = clampi(max_pitchers() - held_pitchers, 0, short)",
+  "\t\t\tvar want_pitchers: int = short"
+ ],
+ [
+  "이미 보유한 투수를 안 센다",
+  "\t\t\tvar want_pitchers: int = clampi(max_pitchers() - held_pitchers, 0, short)",
+  "\t\t\tvar want_pitchers: int = clampi(max_pitchers(), 0, short)"
+ ],
+ [
+  "국적을 안 박는다 (KBL로 옮긴 순간 내국인이 된다)",
+  "\tp[\"nationality\"] = nationality_of(p)\n\tp[\"is_foreign\"] = true",
+  "\tp[\"is_foreign\"] = true"
+ ],
+ [
+  "외국인 표시를 안 한다 (FA 보상에서 용병이 뽑혀 나간다)",
+  "\tp[\"nationality\"] = nationality_of(p)\n\tp[\"is_foreign\"] = true",
+  "\tp[\"nationality\"] = nationality_of(p)"
+ ],
+ [
+  "옛 팀에서 안 빼고 새 팀에만 넣는다 (같은 선수가 두 팀에 있다)",
+  "\tfor i in range(from_list.size()):\n\t\tif from_list[i] == p:\n\t\t\tfrom_list.remove_at(i)\n\t\t\tbreak",
+  "\tif false:\n\t\tpass"
+ ],
+ [
+  "옮겨도 소속이 안 바뀐다",
+  "\tp[\"team_id\"] = to_team\n\tp[\"league_id\"] = to_league",
+  "\tpass"
+ ],
+ [
+  "어디서 왔는지가 안 남는다",
+  "\tvar events: Array = p.get(\"career_events\", [])\n\tevents.append(ev)\n\tp[\"career_events\"] = events",
+  "\tvar events: Array = p.get(\"career_events\", [])\n\tp[\"career_events\"] = events"
+ ],
+ [
+  "온 리그를 기록에 안 담는다",
+  "\tev[\"from_league_id\"] = String(p.get(\"league_id\", \"\"))",
+  "\tev[\"from_league_id\"] = \"\""
+ ],
+ [
+  "복귀자를 한 팀에 몰아넣는다",
+  "\tfor id in team_ids:\n\t\tvar n: int = World.roster_of(world, String(id)).size()\n\t\tif n < best_n:",
+  "\tfor id in team_ids:\n\t\tvar n: int = World.roster_of(world, String(id)).size()\n\t\tif false:"
+ ]
+]

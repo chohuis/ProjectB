@@ -1,0 +1,39 @@
+{
+  "_note": "외국인 선수 정본. KBO 기준 보유 3명·투수 최대 2명. 02 generation_rules.json의 foreignRules를 옮겼다",
+  "_note2": "1군만이다. 2군에 두면 보유 한도 계산이 흐려지고, 실제 KBO도 외국인은 1군 등록이 원칙이다",
+
+  "leagues": ["LEAGUE_KBL"],
+  "per_team": 3,
+  "max_pitchers": 2,
+  "ovr_min": 66,
+  "ovr_max": 94,
+  "_ovr_note": "폭이 넓은 건 의도다(사용자 확정) — 대박/쪽박 편차. 어떤 팀은 에이스를, 어떤 팀은 실패작을 데려온다",
+  "age_min": 25,
+  "age_max": 34,
+
+  "renew": {
+    "_note": "시즌 종료 재계약 판정. 이 선에 못 미치면 퇴출하고 그 자리를 새로 채운다 — 그래야 쪽박 용병이 한 해 만에 갈리고 팀 전력이 움직인다. ovr_min은 영입 하한(66)보다 높아야 실제로 교체가 일어난다",
+    "ovr_min": 73,
+    "age_max": 36
+  },
+
+  "origin": {
+    "_note": "용병이 어디서 오는가. 마이너(팜) 출신이 대부분이다 — 메이저 주전급은 연봉·조건 때문에 KBO에 잘 안 온다(사용자 확정)",
+    "_note2": "02는 예전에 무에서 생성했다. 어디서 왔다는 기록이 없어 화면이 국내 신인과 구분을 못 했다 — 실재하는 해외 선수를 데려온다",
+    "weights": {
+      "LEAGUE_ABL_FARM": 85,
+      "LEAGUE_ABL": 10,
+      "LEAGUE_JBL": 5
+    },
+    "_return_note": "재계약 불가 시 돌아가는 곳. 02는 예전에 은퇴로 기록해 세계에서 지웠다 — 갈 곳이 없어서였다",
+    "return_league": "LEAGUE_ABL_FARM"
+  },
+
+  "league_nationality": {
+    "_note": "온 리그가 국적을 정한다. 영입하는 순간 국적을 선수에게 박아 둔다 — 안 박으면 KBL로 옮긴 순간 리그가 KBL이라 내국인으로 읽힌다",
+    "LEAGUE_ABL": "USA",
+    "LEAGUE_ABL_FARM": "USA",
+    "LEAGUE_JBL": "JPN"
+  },
+  "home_nationality": "KOR"
+}

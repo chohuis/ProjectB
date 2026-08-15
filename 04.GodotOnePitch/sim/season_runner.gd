@@ -604,6 +604,13 @@ static func roll_over(state: Dictionary) -> Dictionary:
 	state["day"] = 1
 	state["season_days"] = Calendar.DAYS_PER_SEASON
 
+	# 외국인 순환 — 재계약 불가는 본국으로, 빈 자리는 해외에서 채운다.
+	#
+	# ⚠ **은퇴·로스터 정리가 끝난 뒤다.** 그래야 빈 자리를 정확히 센다.
+	# ⚠ **충원을 안 하면 한 시즌마다 자리가 줄어든다** — 퇴출은 일어나는데
+	# 들어오는 경로가 없으면 몇 해 뒤 KBL에 외국인이 사라진다
+	Foreign.turnover(state, year)
+
 	# 팀 이름표를 다시 붙인다 — 진학·지명으로 바뀌었을 수 있다
 	var names: Dictionary = state.get("team_names", {})
 	me["team_name"] = names.get(team_id, team_id)
