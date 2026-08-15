@@ -1,0 +1,62 @@
+[
+ [
+  "지명 당일이 아니라 지금 능력치를 남긴다 (보드가 그날과 다른 숫자를 보여준다)",
+  "\t\t\"ovr\": Contract.core_ovr(p),",
+  "\t\t\"ovr\": 0.0"
+ ],
+ [
+  "어디서 왔는지를 안 남긴다",
+  "\t\t\"from_league_id\": String(p.get(\"league_id\", \"\")),",
+  "\t\t\"from_league_id\": \"\","
+ ],
+ [
+  "후보에 없는 사람도 지명 목록에 넣는다",
+  "\t\tif who == null:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "지명 순번을 안 남긴다",
+  "\t\trow[\"pick\"] = int(p[\"pick\"])",
+  "\t\trow[\"pick\"] = 0"
+ ],
+ [
+  "지명 라운드를 안 남긴다",
+  "\t\trow[\"round\"] = int(p[\"round\"])",
+  "\t\trow[\"round\"] = 0"
+ ],
+ [
+  "어느 팀이 뽑았는지를 안 남긴다",
+  "\t\trow[\"team_id\"] = String(p[\"team_id\"])",
+  "\t\trow[\"team_id\"] = \"\""
+ ],
+ [
+  "보드에 못 든 사람까지 미지명 목록에 넣는다",
+  "\t\tif who2 != null and board.has(String(id)):",
+  "\t\tif who2 != null:"
+ ],
+ [
+  "미지명자를 아예 안 남긴다",
+  "\t\t\tmissed.append(snapshot_of(who2))",
+  "\t\t\tpass"
+ ],
+ [
+  "보드 크기를 안 남긴다 (몇 명 중 몇 명인지가 사라진다)",
+  "\t\t\"board_size\": board.size(),",
+  "\t\t\"board_size\": 0,"
+ ],
+ [
+  "후보 수를 안 남긴다",
+  "\t\t\"candidates\": by_id.size(),",
+  "\t\t\"candidates\": 0,"
+ ],
+ [
+  "해마다 덮어쓴다 (지난해 보드가 사라진다)",
+  "\tvar all: Dictionary = all_of(state)\n\tall[str(year)] = {",
+  "\tvar all: Dictionary = {}\n\tall[str(year)] = {"
+ ],
+ [
+  "기록이 상태에 안 남는다",
+  "\tstate[KEY] = all\n\treturn rows.size()",
+  "\treturn rows.size()"
+ ]
+]

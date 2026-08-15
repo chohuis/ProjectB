@@ -1,0 +1,87 @@
+[
+ [
+  "라운드로 안 묶는다 (전부 한 덩어리로 쏟아진다)",
+  "\t\tif not by_round.has(r):\n\t\t\tby_round[r] = []\n\t\t\trounds.append(r)",
+  "\t\tif true:\n\t\t\tby_round[r] = []\n\t\t\trounds.append(r)"
+ ],
+ [
+  "순번으로 안 세운다 (라운드가 섞인다)",
+  "\tsorted_picks.sort_custom(func(a, b) -> bool:\n\t\treturn int(a.get(\"pick\", 0)) < int(b.get(\"pick\", 0)))",
+  "\tsorted_picks.sort_custom(func(a, b) -> bool:\n\t\treturn int(a.get(\"pick\", 0)) > int(b.get(\"pick\", 0)))"
+ ],
+ [
+  "기록 원본을 뒤집는다 (저장까지 흔들린다)",
+  "\tvar sorted_picks: Array = picks.duplicate()",
+  "\tvar sorted_picks: Array = picks"
+ ],
+ [
+  "라운드 이름표가 없다",
+  "\t\t\t\"label\": \"%d라운드\" % r,",
+  "\t\t\t\"label\": \"\","
+ ],
+ [
+  "안 열린 드래프트도 열린 것으로 보여준다",
+  "\tif log.is_empty():\n\t\treturn {",
+  "\tif false:\n\t\treturn {"
+ ],
+ [
+  "화면이 팀 이름을 못 받는다 (id가 그대로 뜬다)",
+  "\t\t\"team_name\": String(names.get(team_id, team_id)),",
+  "\t\t\"team_name\": \"\","
+ ],
+ [
+  "이름 없는 팀이 빈칸이 된다",
+  "\t\t\"team_name\": String(names.get(team_id, team_id)),",
+  "\t\t\"team_name\": String(names.get(team_id, \"\")),"
+ ],
+ [
+  "미지명자가 0순위로 찍힌다 (1순위보다 위로 읽힌다)",
+  "\t\t\"pick_label\": \"%d순위\" % int(p.get(\"pick\", 0)) \\\n\t\t\tif int(p.get(\"pick\", 0)) > 0 else \"미지명\",",
+  "\t\t\"pick_label\": \"%d순위\" % int(p.get(\"pick\", 0)),"
+ ],
+ [
+  "어디서 왔는지가 안 뜬다 (국내 신인과 구분이 안 된다)",
+  "\t\t\"origin\": _origin_label(String(p.get(\"from_league_id\", \"\"))),",
+  "\t\t\"origin\": \"\","
+ ],
+ [
+  "모르는 리그가 빈칸이 된다",
+  "\treturn String(ORIGIN_LABELS.get(league_id, \"기타\"))",
+  "\treturn String(ORIGIN_LABELS.get(league_id, \"\"))"
+ ],
+ [
+  "고교와 대학이 같은 이름표를 받는다",
+  "\t\"LEAGUE_UNIVERSITY\": \"대학\",",
+  "\t\"LEAGUE_UNIVERSITY\": \"고교\","
+ ],
+ [
+  "경쟁이 안 보인다 (지명 수만 뜬다)",
+  "\t\t\"summary\": \"후보 %d명 · 보드 %d명 · 지명 %d명\" % [\n\t\t\tint(log.get(\"candidates\", 0)), int(log.get(\"board_size\", 0)),\n\t\t\tsorted_picks.size()],",
+  "\t\t\"summary\": \"지명 %d명\" % sorted_picks.size(),"
+ ],
+ [
+  "미지명자를 안 보여준다",
+  "\tfor m in log.get(\"missed\", []):\n\t\tmissed.append(_row(m, names, me))",
+  "\tpass"
+ ],
+ [
+  "내가 어디서 뽑혔는지를 안 짚어 준다",
+  "\t\tif String(p.get(\"id\", \"\")) == me or bool(p.get(\"is_protagonist\", false)):\n\t\t\tmy_pick = _row(p, names, me)",
+  "\t\tif false:\n\t\t\tmy_pick = _row(p, names, me)"
+ ],
+ [
+  "아무나 나로 표시된다",
+  "\tvar mine: bool = String(p.get(\"id\", \"\")) == me \\\n\t\tor bool(p.get(\"is_protagonist\", false))",
+  "\tvar mine: bool = true"
+ ],
+ [
+  "팀 수를 0으로 센다 (나누기에서 터진다)",
+  "\treturn maxi(best, 1)",
+  "\treturn best"
+ ],
+ [
+  "1라운드가 아닌 지명까지 팀 수로 센다",
+  "\t\tif int(p.get(\"round\", 0)) == 1:\n\t\t\tbest += 1",
+  "\t\tbest += 1"
+ ]
+]

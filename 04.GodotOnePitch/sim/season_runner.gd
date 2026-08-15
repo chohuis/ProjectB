@@ -254,6 +254,14 @@ static func _run_draft(state: Dictionary, world: Dictionary, year: int) -> Dicti
 		by_id[p.get("id", "")] = p
 
 	var out: Dictionary = NpcDraft.run(pool, teams, year)
+
+	# ⚠ **결과를 남긴다 — 보드가 재생할 것이 이것 하나여야 한다.**
+	# 02는 관전 보드가 자기 후보 풀로 자체 시뮬을 또 돌려서 **화면에서 본
+	# 지명과 실제 소속이 어긋났다.** 남기는 자리는 여기, 지명을 적용하기
+	# **전**이다 — 적용하면 선수의 소속·능력치가 그날 값이 아니게 된다
+	DraftLog.record(state, year, out["picks"], out["board"],
+		out["undrafted_ids"], by_id)
+
 	var n: int = NpcDraft.apply(out["picks"], by_id, league_of, year)
 
 	# 지명된 선수를 팀 로스터로 옮긴다 — 안 옮기면 소속만 바뀌고
