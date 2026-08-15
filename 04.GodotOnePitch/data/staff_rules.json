@@ -85,6 +85,55 @@
     }
   },
 
+  "lifecycle": {
+    "_note": "02 staff_rules.json의 lifecycle 그대로. 은퇴표는 '이 나이 이하면 이 확률(%)' — 위에서부터 처음 걸리는 것",
+    "retire": {
+      "manager": [
+        {"until": 59, "chance": 0}, {"until": 63, "chance": 6},
+        {"until": 67, "chance": 14}, {"until": 71, "chance": 30},
+        {"until": 200, "chance": 100}
+      ],
+      "coach": [
+        {"until": 56, "chance": 0}, {"until": 60, "chance": 7},
+        {"until": 64, "chance": 16}, {"until": 68, "chance": 32},
+        {"until": 200, "chance": 100}
+      ],
+      "owner": [
+        {"until": 69, "chance": 0}, {"until": 74, "chance": 5},
+        {"until": 79, "chance": 12}, {"until": 200, "chance": 100}
+      ]
+    },
+
+    "growth": {
+      "_note": "젊으면 오르고 늙으면 깎인다. 한 해에 능력치 두 개만 움직인다 — 전부 움직이면 한 시즌에 사람이 바뀐다",
+      "peak_age": 50,
+      "young_gain": 1,
+      "plateau_gain": 0,
+      "decline_age": 62,
+      "decline_loss": 1,
+      "stats_per_season": 2,
+      "cap": 95,
+      "floor": 20
+    },
+
+    "firing": {
+      "_note": "구단주 인내가 몇 시즌을 기다리는지를 정한다. 감독이 잘리면 코치도 일부 같이 나간다",
+      "threshold": [
+        {"patience_until": 29, "seasons": 1},
+        {"patience_until": 69, "seasons": 2},
+        {"patience_until": 200, "seasons": 3}
+      ],
+      "coach_fallout_ratio": 0.34
+    },
+
+    "hiring": {
+      "_note": "빈 자리는 아래 리그에서 데려온다. 02가 용병을 무에서 찍어 출신 기록이 없던 것과 같은 함정이라, 여기서도 실재하는 사람을 먼저 본다",
+      "scout_min_avg": 58,
+      "league_order": ["LEAGUE_KBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+        "LEAGUE_HIGHSCHOOL"]
+    }
+  },
+
   "stat_min": 1,
   "stat_max": 99
 }

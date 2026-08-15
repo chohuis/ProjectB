@@ -1,0 +1,152 @@
+[
+ [
+  "은퇴표를 아래에서부터 읽는다 (젊어도 그만둔다)",
+  "\tfor row in rules().get(\"retire\", {}).get(role, []):\n\t\tif age <= int(row[\"until\"]):\n\t\t\treturn float(row[\"chance\"]) / 100.0",
+  "\tvar rows: Array = rules().get(\"retire\", {}).get(role, [])\n\tfor i in range(rows.size() - 1, -1, -1):\n\t\tif age <= int(rows[i][\"until\"]):\n\t\t\treturn float(rows[i][\"chance\"]) / 100.0"
+ ],
+ [
+  "아무도 안 그만둔다 (아흔 살 감독이 남는다)",
+  "\t\tif age <= int(row[\"until\"]):\n\t\t\treturn float(row[\"chance\"]) / 100.0\n\treturn 1.0",
+  "\t\tif age <= int(row[\"until\"]):\n\t\t\treturn 0.0\n\treturn 0.0"
+ ],
+ [
+  "자리마다 은퇴 나이가 같아진다 (구단주가 감독처럼 일찍 떠난다)",
+  "\tfor row in rules().get(\"retire\", {}).get(role, []):",
+  "\tfor row in rules().get(\"retire\", {}).get(\"manager\", []):"
+ ],
+ [
+  "젊어도 안 자란다",
+  "\tif age < int(g.get(\"peak_age\", 50)):\n\t\tstep = float(g.get(\"young_gain\", 1))",
+  "\tif false:\n\t\tstep = float(g.get(\"young_gain\", 1))"
+ ],
+ [
+  "늙어도 안 깎인다",
+  "\telif age >= int(g.get(\"decline_age\", 62)):\n\t\tstep = -float(g.get(\"decline_loss\", 1))",
+  "\telif false:\n\t\tstep = -float(g.get(\"decline_loss\", 1))"
+ ],
+ [
+  "늙으면 오히려 자란다",
+  "\t\tstep = -float(g.get(\"decline_loss\", 1))",
+  "\t\tstep = float(g.get(\"decline_loss\", 1))"
+ ],
+ [
+  "전성기에도 움직인다 (마흔에 전원 만점이 된다)",
+  "\tif step == 0.0:\n\t\treturn 0",
+  "\tif false:\n\t\treturn 0"
+ ],
+ [
+  "한 해에 능력치가 전부 움직인다 (한 시즌 만에 사람이 바뀐다)",
+  "\tvar want: int = mini(int(g.get(\"stats_per_season\", 2)), names.size())",
+  "\tvar want: int = names.size()"
+ ],
+ [
+  "늘 같은 자리만 자란다 (뒤쪽 능력치가 영영 안 큰다)",
+  "\t\tvar idx: int = int(rng.randf() * float(pool.size())) % pool.size()\n\t\tvar key: String = String(pool.pop_at(idx))",
+  "\t\tvar key: String = String(pool.pop_at(0))"
+ ],
+ [
+  "같은 능력치를 두 번 민다 (실제로는 하나만 움직인다)",
+  "\t\tvar key: String = String(pool.pop_at(idx))",
+  "\t\tvar key: String = String(pool[idx])"
+ ],
+ [
+  "성장에 천장·바닥이 없다",
+  "\t\tperson[\"stats\"][key] = clampf(float(person[\"stats\"].get(key, 50.0)) + step,\n\t\t\tfloat(g.get(\"floor\", 20)), float(g.get(\"cap\", 95)))",
+  "\t\tperson[\"stats\"][key] = float(person[\"stats\"].get(key, 50.0)) + step"
+ ],
+ [
+  "참을성 있는 구단주도 한 해 만에 자른다",
+  "\tfor row in rules().get(\"firing\", {}).get(\"threshold\", []):\n\t\tif patience <= float(row[\"patience_until\"]):\n\t\t\treturn int(row[\"seasons\"])",
+  "\tfor row in rules().get(\"firing\", {}).get(\"threshold\", []):\n\t\tif true:\n\t\t\treturn int(row[\"seasons\"])"
+ ],
+ [
+  "성적이 나빠도 안 자른다",
+  "static func should_fire(patience: float, bad_seasons: int) -> bool:\n\treturn bad_seasons >= patience_seasons(patience)",
+  "static func should_fire(patience: float, bad_seasons: int) -> bool:\n\treturn false"
+ ],
+ [
+  "잘한 해에도 자른다 (감독이 매년 바뀐다)",
+  "static func should_fire(patience: float, bad_seasons: int) -> bool:\n\treturn bad_seasons >= patience_seasons(patience)",
+  "static func should_fire(patience: float, bad_seasons: int) -> bool:\n\treturn true"
+ ],
+ [
+  "한 해가 지나도 나이를 안 먹는다",
+  "\t\t\t\tp[\"age\"] = int(p.get(\"age\", 50)) + 1",
+  "\t\t\t\tpass"
+ ],
+ [
+  "은퇴 판정을 아예 안 굴린다",
+  "\t\t\t\tif rng.randf() < retire_chance(role, int(p[\"age\"])):",
+  "\t\t\t\tif false:"
+ ],
+ [
+  "씨앗에 연도가 안 섞인다 (해마다 같은 사람이 그만둔다)",
+  "\t\t\trng.seed = Rng.mix([\"staff_life\", team_id, year, seed_value])",
+  "\t\t\trng.seed = Rng.mix([\"staff_life\", team_id, seed_value])"
+ ],
+ [
+  "구단주 인내를 안 본다",
+  "\tif not should_fire(float(profile.get(\"owner_patience\", 50.0)), bad):\n\t\treturn []",
+  "\tif false:\n\t\treturn []"
+ ],
+ [
+  "감독을 잘라도 기대치가 그대로다 (새 감독이 오자마자 또 잘린다)",
+  "\tTeamProfile.patch(world, team_id, {\"bad_seasons\": 0})",
+  "\tpass"
+ ],
+ [
+  "감독이 잘려도 코치는 그대로다 (사단이 안 움직인다)",
+  "\tfor i in range(mini(n, coaches.size())):\n\t\tout.append(coaches[i])",
+  "\tpass"
+ ],
+ [
+  "떠난 기록이 안 남는다",
+  "\tvar events: Array = p.get(\"career_events\", [])\n\tevents.append({\"year\": year, \"type\": \"staff_leave\",",
+  "\tvar events: Array = p.get(\"career_events\", [])\n\tif false: events.append({\"year\": year, \"type\": \"staff_leave\","
+ ],
+ [
+  "빈 자리를 안 채운다 (감독 없는 팀이 생긴다)",
+  "\t\tstaff.append(found)\n\t\tn += 1",
+  "\t\tn += 1"
+ ],
+ [
+  "자리가 차 있어도 또 뽑는다 (감독이 둘이 된다)",
+  "\t\tif role == Staff.ROLE_MANAGER and has_manager:\n\t\t\tcontinue\n\t\tif role == Staff.ROLE_OWNER and has_owner:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "위 리그에서 데려온다 (승진이 아니라 강등이다)",
+  "\tfor i in range(here + 1, order.size()):",
+  "\tfor i in range(0, here):"
+ ],
+ [
+  "아무나 데려온다 (수준 문턱이 없다)",
+  "\t\t\t\tif _average(p) < min_avg:\n\t\t\t\t\tcontinue",
+  "\t\t\t\tif false:\n\t\t\t\t\tcontinue"
+ ],
+ [
+  "자리와 상관없이 데려온다 (코치를 감독으로 앉힌다)",
+  "\t\t\t\tif String(p.get(\"role\", \"\")) != role:\n\t\t\t\t\tcontinue",
+  "\t\t\t\tif false:\n\t\t\t\t\tcontinue"
+ ],
+ [
+  "옛 팀에서 안 빼고 새 팀에만 넣는다 (같은 사람이 두 팀에 있다)",
+  "\tfor i in range(from_list.size()):\n\t\tif from_list[i] == p:\n\t\t\tfrom_list.remove_at(i)\n\t\t\tbreak",
+  "\tif false:\n\t\tpass"
+ ],
+ [
+  "옮겨도 소속이 안 바뀐다",
+  "\tp[\"team_id\"] = to_team\n\tp[\"league_id\"] = to_league",
+  "\tpass"
+ ],
+ [
+  "어디서 왔는지가 안 남는다",
+  "\tevents.append({\"year\": year, \"type\": \"staff_hired\",",
+  "\tif false: events.append({\"year\": year, \"type\": \"staff_hired\","
+ ],
+ [
+  "새로 만든 사람이 떠난 사람과 같은 id를 갖는다",
+  "\t\t\tp[\"id\"] = \"%s_%s_%d\" % [team_id, role.substr(0, 3).to_upper(), year]",
+  "\t\t\tpass"
+ ]
+]

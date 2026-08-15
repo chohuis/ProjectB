@@ -618,6 +618,12 @@ static func roll_over(state: Dictionary) -> Dictionary:
 	# 전부 중립으로 돌아간다
 	Staff.ensure_world(state)
 
+	# 스태프 생애주기 — 늙고 · 그만두고 · 잘리고 · 새 사람이 온다.
+	#
+	# ⚠ **안 돌리면 감독이 영원히 그대로다.** 15~20시즌짜리 게임에서
+	# 인물 화면이 같은 배역만 보여주게 된다
+	StaffLifecycle.run(state, year)
+
 	# 외국인 순환 — 재계약 불가는 본국으로, 빈 자리는 해외에서 채운다.
 	#
 	# ⚠ **은퇴·로스터 정리가 끝난 뒤다.** 그래야 빈 자리를 정확히 센다.
