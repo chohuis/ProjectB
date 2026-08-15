@@ -509,11 +509,23 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       안에 있는지도 본다.
       검사 22 · 변이 14/14
 
-      ❓ **결정 다섯이 아직 남았다** — `career_choice_hub`(여러 곳 지원:
-      다중 선택 UI가 필요하다) · `career_choice`(진학/드래프트/독립 갈래) ·
-      `salary_negotiation` · `option_clause` · `fa_market`(제안 목록에서
-      고른다). 앞의 넷과 같은 화면에 얹으면 된다 — `DecisionVm`에 갈래를
-      더하고 `HANDLED`에 넣는다.
+      **셋을 더 얹었다** — `career_choice` · `salary_negotiation` ·
+      `option_clause`. 화면은 안 고쳤다(갈래와 검사만 늘었다).
+      ⚠ **붙은 곳만 선택지가 된다** — 떨어진 대학을 두면 누르면 엔진이
+      거절하는 버튼이 되고 사용자는 왜 안 되는지를 모른다. 아무 데도
+      안 붙어도 "지금 자리에 남는다"는 늘 있다.
+      ⚠ **갈래와 팀을 한 id에 담는다**(`university:TEAM_X`) — 화면이
+      선택지마다 다른 모양을 갖지 않게. 갈래를 안 읽으면 독립을 골라도
+      대학에 가는데, 팀만 맞고 리그가 다르면 조용히 틀린다.
+      ⚠ **보여준 조건 그대로 계약된다** — 화면이 숫자를 다시 지어내면
+      "보여준 것과 다른 계약"이 된다(02가 반복해서 겪은 자리).
+      검사 32 · 변이 27/27
+
+      ❓ **결정 둘이 남았다 — 둘 다 지금 틀을 넓혀야 한다**
+      - `fa_market` — 선택지가 **제안 목록**에서 나온다(`sign_fa_offer`는
+        offer와 salary를 받는다). 지금 틀은 고정 선택지만 만든다
+      - `career_choice_hub` — **여러 곳을 동시에 고르는** 화면이다
+        (`submit_applications(state, opts)`). 지금 틀은 하나만 고른다
       ❓ **인생 기록을 "나" 탭에서 다시 여는 길이 없다.** 화면은
       `set_summary`로 혼자 열리게 만들어 뒀다 — 버튼만 붙이면 된다
 

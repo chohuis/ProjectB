@@ -60,6 +60,71 @@
   "\t\t\t\treturn false"
  ],
  [
+  "떨어진 대학도 선택지로 둔다 (누르면 엔진이 거절하는 버튼)",
+  "\tfor t in r.get(\"university_passed\", []):",
+  "\tfor t in [\"TEAM_UNIV_X\"]:"
+ ],
+ [
+  "붙은 대학을 선택지에 안 넣는다",
+  "\tfor t in r.get(\"university_passed\", []):\n\t\tchoices.append({\"id\": \"university:%s\" % t,",
+  "\tfor t in []:\n\t\tchoices.append({\"id\": \"university:%s\" % t,"
+ ],
+ [
+  "지명됐는데 프로에 갈 선택지를 안 준다",
+  "\tif bool(r.get(\"drafted\", false)):\n\t\tchoices.append({\"id\": \"draft\", \"label\": \"프로에 간다\"})",
+  "\tpass"
+ ],
+ [
+  "지명 안 됐는데 프로에 가라고 한다",
+  "\tif bool(r.get(\"drafted\", false)):\n\t\tchoices.append({\"id\": \"draft\", \"label\": \"프로에 간다\"})",
+  "\tchoices.append({\"id\": \"draft\", \"label\": \"프로에 간다\"})"
+ ],
+ [
+  "아무 데도 안 붙었을 때 갈 길이 없다",
+  "\tchoices.append({\"id\": \"continue\", \"label\": \"지금 자리에 남는다\"})",
+  "\tpass"
+ ],
+ [
+  "재계약 금액을 안 알려준다",
+  "\t\t\"연봉 %s · %d년\" % [FinanceVm.won(int(a.get(\"offered_salary\", 0))),\n\t\t\tint(a.get(\"duration_years\", 1))],",
+  "\t\t\"\","
+ ],
+ [
+  "보여준 것과 다른 금액으로 계약한다",
+  "\t\t\"salary\": int(a.get(\"offered_salary\", 0)),",
+  "\t\t\"salary\": 0,"
+ ],
+ [
+  "계약 연수를 안 넘긴다",
+  "\t\t\"years\": int(a.get(\"duration_years\", 1)),",
+  "\t\t\"years\": 1,"
+ ],
+ [
+  "재계약을 거절해도 늘 계약한다",
+  "\t\t\tif choice_id == \"sign\":\n\t\t\t\treturn ContractDecision.sign_negotiated(state, a,\n\t\t\t\t\t_contract_of(a), at_day)",
+  "\t\t\tif true:\n\t\t\t\treturn ContractDecision.sign_negotiated(state, a,\n\t\t\t\t\t_contract_of(a), at_day)"
+ ],
+ [
+  "옵션을 뭘 고르든 늘 행사한다",
+  "\t\t\t\tchoice_id == \"exercise\").is_empty()",
+  "\t\t\t\ttrue).is_empty()"
+ ],
+ [
+  "옵션 금액을 안 알려준다",
+  "\t\t\"행사하면 연봉 %s로 한 해 더 뜁니다.\" % FinanceVm.won(\n\t\t\tint(a.get(\"next_salary\", 0))),",
+  "\t\t\"\","
+ ],
+ [
+  "선택지 id에서 팀을 안 꺼낸다 (어디로 가든 같은 데로 간다)",
+  "\treturn CareerDecision.choose_school_or_independent(state,\n\t\tparts[0], parts[1])",
+  "\treturn CareerDecision.choose_school_or_independent(state,\n\t\tparts[0], \"\")"
+ ],
+ [
+  "갈래를 안 보고 늘 진학으로 본다",
+  "\t\tparts[0], parts[1])",
+  "\t\t\"university\", parts[1])"
+ ],
+ [
   "드래프트 관전을 치우지 않는다 (그 자리에서 영영 안 풀린다)",
   "\t\t\treturn Pending.resolve(state, \"draft_observe\")",
   "\t\t\treturn true"

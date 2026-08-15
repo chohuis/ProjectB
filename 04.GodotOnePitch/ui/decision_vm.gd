@@ -18,7 +18,8 @@ class_name DecisionVm
 ## 여기서 받는 결정. **`AutoAdvance.STOPPING`의 부분집합이다** —
 ## 아직 안 만든 것은 목록에 없고, 그건 `pending_kinds` 검사가 지킨다
 const HANDLED: Array[String] = [
-	"career_results", "draft_observe", "draft_notification", "trade",
+	"career_results", "career_choice", "draft_observe", "draft_notification",
+	"salary_negotiation", "option_clause", "trade",
 ]
 
 
@@ -46,6 +47,12 @@ static func build(state: Dictionary) -> Dictionary:
 			return _observe(state, a)
 		"draft_notification":
 			return _draft(state, a)
+		"career_choice":
+			return _choice(state, a)
+		"salary_negotiation":
+			return _salary(state, a)
+		"option_clause":
+			return _option(state, a)
 		"trade":
 			return _trade(state, a)
 	return {}
@@ -75,6 +82,58 @@ static func _results(state: Dictionary, _a: Dictionary) -> Dictionary:
 static func _observe(_state: Dictionary, _a: Dictionary) -> Dictionary:
 	return _of("draft_observe", "드래프트",
 		"오늘 신인 드래프트가 열립니다.", [{"id": "ok", "label": "지켜본다"}])
+
+
+## 진로 최종 선택 — **붙은 곳만 선택지가 된다.**
+##
+## ⚠ **떨어진 곳을 선택지로 두지 않는다.** 누르면 엔진이 거절하는 버튼이
+## 되고, 사용자는 왜 안 되는지를 모른다
+static func _choice(state: Dictionary, _a: Dictionary) -> Dictionary:
+	var r: Dictionary = CareerDecision.of(state).get("results", {})
+	var choices: Array = []
+	if bool(r.get("drafted", false)):
+		choices.append({"id": "draft", "label": "프로에 간다"})
+	for t in r.get("university_passed", []):
+		choices.append({"id": "university:%s" % t,
+			"label": "%s에 진학한다" % _team(state, String(t))})
+	for t in r.get("independent_passed", []):
+		choices.append({"id": "independent:%s" % t,
+			"label": "%s에 입단한다" % _team(state, String(t))})
+	# 아무 데도 안 붙어도 길이 하나는 있어야 한다 — 그게 재수다
+	choices.append({"id": "continue", "label": "지금 자리에 남는다"})
+	return _of("career_choice", "진로 최종 선택",
+		"어디로 갈지 정합니다. 되돌릴 수 없습니다.", choices)
+
+
+## 재계약 — **얼마를 주는지 먼저 말한다**
+static func _salary(state: Dictionary, a: Dictionary) -> Dictionary:
+	var body: String = "\n".join([
+		"%s가 재계약을 제안했습니다." % _team(state, String(a.get("team_id", ""))),
+		"연봉 %s · %d년" % [FinanceVm.won(int(a.get("offered_salary", 0))),
+			int(a.get("duration_years", 1))],
+	])
+	return _of("salary_negotiation", "재계약 협상", body, [
+		{"id": "sign", "label": "계약한다"},
+		{"id": "reject", "label": "거절한다"},
+	])
+
+
+## 옵션 조항 — 구단이 행사하면 한 해 더, 아니면 계약이 끝난다
+static func _option(state: Dictionary, a: Dictionary) -> Dictionary:
+	var body: String = "\n".join([
+		"%s의 옵션 조항입니다." % _team(state, String(a.get("team_id", ""))),
+		"행사하면 연봉 %s로 한 해 더 뜁니다." % FinanceVm.won(
+			int(a.get("next_salary", 0))),
+	])
+	return _of("option_clause", "옵션 조항", body, [
+		{"id": "exercise", "label": "행사한다"},
+		{"id": "decline", "label": "행사하지 않는다"},
+	])
+
+
+static func _team(state: Dictionary, team_id: String) -> String:
+	return String(World.team_field(state.get("world", {}), team_id,
+		"name", team_id))
 
 
 ## ⚠ **거부할 수 있다.** 02는 지명 통보가 알림이라 거부가 없었고,
@@ -126,8 +185,45 @@ static func apply(state: Dictionary, choice_id: String, at_day: int) -> bool:
 				return CareerDecision.accept_draft_offer(state, a)
 			return not CareerDecision.reject_draft_offer(state, a,
 				at_day).is_empty()
+		"career_choice":
+			return _apply_choice(state, choice_id)
+		"salary_negotiation":
+			if choice_id == "sign":
+				return ContractDecision.sign_negotiated(state, a,
+					_contract_of(a), at_day)
+			return not ContractDecision.reject_negotiated(state, a,
+				at_day).is_empty()
+		"option_clause":
+			return not ContractDecision.apply_option_clause(state, a,
+				choice_id == "exercise").is_empty()
 		"trade":
 			if choice_id == "accept":
 				return ContractDecision.accept_trade(state, a)
 			return ContractDecision.reject_trade(state)
 	return false
+
+
+## ⚠ **제안한 조건을 그대로 계약으로 만든다.** 화면이 숫자를 다시 지어내면
+## "보여준 것과 다른 계약"이 된다 — 02가 반복해서 겪은 자리다
+static func _contract_of(a: Dictionary) -> Dictionary:
+	return {
+		"salary": int(a.get("offered_salary", 0)),
+		"years": int(a.get("duration_years", 1)),
+		"signing_bonus": int(a.get("signing_bonus", 0)),
+		"team_id": String(a.get("team_id", "")),
+		"league_id": String(a.get("league_id", "")),
+	}
+
+
+## `university:TEAM_X` 처럼 갈래와 팀을 한 id에 담는다 — 화면이
+## 선택지마다 다른 모양을 갖지 않게 하려는 것이다
+static func _apply_choice(state: Dictionary, choice_id: String) -> bool:
+	if choice_id == "draft":
+		return not CareerDecision.choose_draft(state).is_empty()
+	if choice_id == "continue":
+		return CareerDecision.continue_current_stage(state)
+	var parts: PackedStringArray = choice_id.split(":", true, 1)
+	if parts.size() < 2:
+		return false
+	return CareerDecision.choose_school_or_independent(state,
+		parts[0], parts[1])

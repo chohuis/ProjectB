@@ -186,6 +186,126 @@ func test_observing_the_draft_clears_itself() -> void:
 	assert_bool(DecisionVm.is_asking(s)).is_false()
 
 
+# ── 진로 최종 선택 ────────────────────────────────────────────
+
+## ⚠ **붙은 곳만 선택지가 된다.** 떨어진 곳을 두면 누르면 엔진이 거절하는
+## 버튼이 되고, 사용자는 왜 안 되는지를 모른다
+func test_only_the_passed_places_are_offered() -> void:
+	var s: Dictionary = _state()
+	s["career"] = {"results": {"university_passed": ["TEAM_UNIV_A"],
+		"independent_passed": [], "drafted": false}}
+	Pending.push_once(s, {"type": "career_choice"})
+
+	var ids: Array = _ids(DecisionVm.build(s))
+	assert_bool(ids.has("university:TEAM_UNIV_A")).is_true()
+	assert_bool(ids.has("draft")).override_failure_message(
+		"지명 안 됐는데 프로에 가라고 한다").is_false()
+
+
+## 아무 데도 안 붙어도 길이 하나는 있어야 한다 — 그게 재수다
+func test_there_is_always_a_way_forward() -> void:
+	var s: Dictionary = _state()
+	s["career"] = {"results": {"university_passed": [],
+		"independent_passed": [], "drafted": false}}
+	Pending.push_once(s, {"type": "career_choice"})
+	assert_array(_ids(DecisionVm.build(s))).is_equal(["continue"])
+
+
+func test_a_drafted_player_can_go_pro() -> void:
+	var s: Dictionary = _state()
+	s["career"] = {"results": {"university_passed": [],
+		"independent_passed": [], "drafted": true, "draft_pick": 14,
+		"draft_team_id": "TEAM_KBL_A"}}
+	Pending.push_once(s, {"type": "career_choice"})
+	assert_bool(_ids(DecisionVm.build(s)).has("draft")).is_true()
+
+	assert_bool(DecisionVm.apply(s, "draft", 300)).is_true()
+	assert_bool(Pending.has(s, "draft_notification")).override_failure_message(
+		"프로를 골랐는데 지명 통보가 안 왔다").is_true()
+
+
+## ⚠ **갈래와 팀을 한 id에 담는다** — 화면이 선택지마다 다른 모양을
+## 갖지 않게 하려는 것이다
+func test_choosing_a_school_reads_the_team_out_of_the_id() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	s["career"] = {"results": {"university_passed": ["TEAM_UNIV_A"],
+		"independent_passed": [], "drafted": false}}
+	Pending.push_once(s, {"type": "career_choice"})
+
+	assert_bool(DecisionVm.apply(s, "university:TEAM_UNIV_A", 300)).is_true()
+	assert_str(String(s["protagonist"]["team_id"])).is_equal("TEAM_UNIV_A")
+	assert_str(String(s["protagonist"]["league_id"])).is_equal("LEAGUE_UNIVERSITY")
+
+
+## ⚠ **갈래도 id에서 읽는다.** 늘 진학으로 보면 독립리그를 골라도
+## 대학에 간다 — 팀만 맞고 리그가 다르면 조용히 틀린다
+func test_choosing_independent_goes_to_the_independent_league() -> void:
+	var s: Dictionary = _state({"career_stage": "highschool"})
+	s["career"] = {"results": {"university_passed": [],
+		"independent_passed": ["TEAM_IND_A"], "drafted": false}}
+	Pending.push_once(s, {"type": "career_choice"})
+
+	assert_bool(DecisionVm.apply(s, "independent:TEAM_IND_A", 300)).is_true()
+	assert_str(String(s["protagonist"]["league_id"])).override_failure_message(
+		"독립을 골랐는데 %s로 갔다" % s["protagonist"]["league_id"]
+		).is_equal("LEAGUE_INDEPENDENT")
+
+
+# ── 재계약 · 옵션 ─────────────────────────────────────────────
+
+func _renewal(s: Dictionary) -> void:
+	Pending.push_once(s, {"type": "salary_negotiation", "team_id": "TEAM_KBL_A",
+		"league_id": "LEAGUE_KBL", "offered_salary": 9500,
+		"duration_years": 2, "signing_bonus": 0, "context": "renewal"})
+
+
+func test_a_renewal_says_the_money_first() -> void:
+	var s: Dictionary = _state()
+	_renewal(s)
+	assert_str(String(DecisionVm.build(s)["body"])).contains("9500만")
+	assert_array(_ids(DecisionVm.build(s))).is_equal(["sign", "reject"])
+
+
+## ⚠ **보여준 조건 그대로 계약된다.** 화면이 숫자를 다시 지어내면
+## "보여준 것과 다른 계약"이 된다 — 02가 반복해서 겪은 자리다
+func test_the_signed_contract_matches_the_offer() -> void:
+	var s: Dictionary = _state({"contract_years": 0, "pro_service_years": 3})
+	_renewal(s)
+	assert_bool(DecisionVm.apply(s, "sign", 300)).is_true()
+
+	var next: Dictionary = s.get(ContractDecision.NEXT_KEY, {})
+	var salary: int = int(next.get("salary", s["protagonist"].get("salary", 0)))
+	assert_int(salary).override_failure_message(
+		"9500을 보여주고 %d로 계약했다" % salary).is_equal(9500)
+	assert_int(int(next.get("years", 0))).override_failure_message(
+		"2년을 보여주고 %d년으로 계약했다" % next.get("years", 0)).is_equal(2)
+
+
+## ⚠ **거절했는데 계약이 생기면 안 된다** — 대기줄만 보면 두 갈래가
+## 똑같이 비어서 "늘 계약한다"가 안 걸린다
+func test_rejecting_a_renewal_signs_nothing() -> void:
+	var s: Dictionary = _state({"contract_years": 0})
+	_renewal(s)
+	DecisionVm.apply(s, "reject", 300)
+	assert_bool(Pending.has(s, "salary_negotiation")).override_failure_message(
+		"거절했는데 협상이 남았다").is_false()
+	assert_bool(s.has(ContractDecision.NEXT_KEY)).override_failure_message(
+		"거절했는데 계약이 생겼다").is_false()
+
+
+func test_an_option_clause_can_go_either_way() -> void:
+	for pick in [["exercise", 1], ["decline", 0]]:
+		var s: Dictionary = _state({"contract_years": 1})
+		Pending.push_once(s, {"type": "option_clause", "team_id": "TEAM_KBL_A",
+			"next_salary": 9000})
+		assert_str(String(DecisionVm.build(s)["body"])).contains("9000만")
+
+		DecisionVm.apply(s, String(pick[0]), 300)
+		assert_int(int(s["protagonist"]["contract_years"])
+			).override_failure_message("%s를 골랐는데 계약 연수가 다르다" % pick[0]
+			).is_equal(int(pick[1]))
+
+
 # ── 화면 ──────────────────────────────────────────────────────
 
 func _open(s: Dictionary) -> DecisionScreen:
