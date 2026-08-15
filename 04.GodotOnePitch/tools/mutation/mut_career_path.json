@@ -1,0 +1,247 @@
+[
+ [
+  "전력★이 범위를 벗어나면 무조건 최하 등급이다 (강팀이 요건 없이 통과한다)",
+  "\treturn \"S\" if p > 5 else \"D\"",
+  "\treturn \"D\""
+ ],
+ [
+  "전력★이 없는 팀을 최하 등급으로 본다 (02가 49개 대학을 놓친 자리다)",
+  "\t\tpower = r.get(\"default_power\", 3)",
+  "\t\tpower = 1"
+ ],
+ [
+  "등급표를 한 칸 밀려 읽는다",
+  "\tvar key: String = str(p)",
+  "\tvar key: String = str(p + 1)"
+ ],
+ [
+  "학업 문턱과 야구 문턱이 바뀐다",
+  "\t\t\"min_academic_grade\": int(t.get(\"min_academic_grade\", 9)),\n\t\t\"min_baseball_score\": int(t.get(\"min_baseball_score\", 0)),",
+  "\t\t\"min_academic_grade\": int(t.get(\"min_baseball_score\", 9)),\n\t\t\"min_baseball_score\": int(t.get(\"min_academic_grade\", 0)),"
+ ],
+ [
+  "스카우트 보너스가 대학 등급을 안 본다 (어디를 가든 같다)",
+  "\treturn int(rules().get(\"tiers\", {}).get(tier_of_power(power), {}).get(\"scout_bonus\", 0))",
+  "\treturn int(rules().get(\"tiers\", {}).get(\"C\", {}).get(\"scout_bonus\", 0))"
+ ],
+ [
+  "등급 경계가 열린 구간이 된다 (석차 4%가 2등급이다)",
+  "\t\tif pct <= float(cuts[i]):",
+  "\t\tif pct < float(cuts[i]):"
+ ],
+ [
+  "등급이 0부터 시작한다",
+  "\t\t\treturn i + 1\n\treturn cuts.size() + 1",
+  "\t\t\treturn i\n\treturn cuts.size() + 1"
+ ],
+ [
+  "제일 낮은 등급이 하나 모자라다",
+  "\treturn cuts.size() + 1\n\n\n## 석차백분율 → 4.5 만점 학점",
+  "\treturn cuts.size()\n\n\n## 석차백분율 → 4.5 만점 학점"
+ ],
+ [
+  "학점 표를 한 칸 밀려 읽는다",
+  "\treturn float(table[mini(pct_to_grade(pct) - 1, table.size() - 1)])",
+  "\treturn float(table[mini(pct_to_grade(pct), table.size() - 1)])"
+ ],
+ [
+  "대학·프로 성적이 고교 입시 점수에 섞인다",
+  "\t\tif String(rec.get(\"league_id\", \"\")) != \"LEAGUE_HIGHSCHOOL\":\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "수상이 입시 점수에 안 실린다",
+  "\t\ttotal += rec.get(\"awards\", []).size() * int(r.get(\"per_award\", 0))",
+  "\t\ttotal += 0"
+ ],
+ [
+  "성적과 무관하게 우승 점수를 준다",
+  "\t\ttotal += int(r.get(String(rec.get(\"ps_result\", \"\")), 0))",
+  "\t\ttotal += int(r.get(\"champion\", 0))"
+ ],
+ [
+  "상무만 지원할 수 있다",
+  "\treturn team_id != sangmu_team_id()",
+  "\treturn team_id == sangmu_team_id()"
+ ],
+ [
+  "독립리그 컷을 전력★이 정확히 맞을 때만 준다 (★5 팀이 최하 컷이 된다)",
+  "\t\tif p >= int(row[0]):",
+  "\t\tif p == int(row[0]):"
+ ],
+ [
+  "같은 단계 유지가 전이로 막힌다",
+  "\tif from == to:\n\t\treturn true",
+  "\tif false:\n\t\treturn true"
+ ],
+ [
+  "독립 소속이 대학에 입학할 수 있다",
+  "\t\"independent\": [\"pro\", \"pro_kbl\", \"pro_abl\", \"pro_jbl\", \"military\"],",
+  "\t\"independent\": [\"university\", \"pro\", \"pro_kbl\", \"pro_abl\", \"pro_jbl\", \"military\"],"
+ ],
+ [
+  "군 복무 중에 프로로 갈 수 있다",
+  "\t\"military\": [],",
+  "\t\"military\": [\"pro_kbl\"],"
+ ],
+ [
+  "프로에서 고교로 돌아갈 수 있다",
+  "\t\"pro_kbl\": [\"pro\", \"pro_kbl\", \"pro_abl\", \"pro_jbl\", \"independent\", \"military\"],",
+  "\t\"pro_kbl\": [\"pro\", \"pro_kbl\", \"pro_abl\", \"pro_jbl\", \"independent\", \"military\", \"highschool\"],"
+ ],
+ [
+  "프로끼리 오가는 길이 막힌다",
+  "\t\"pro_kbl\": [\"pro\", \"pro_kbl\", \"pro_abl\", \"pro_jbl\", \"independent\", \"military\"],\n\t\"pro_abl\"",
+  "\t\"pro_kbl\": [\"pro\", \"pro_kbl\", \"military\"],\n\t\"pro_abl\""
+ ],
+ [
+  "통과한 전이도 이유를 붙인다",
+  "\tif can_transition(from, to):\n\t\treturn \"\"",
+  "\tif can_transition(from, to):\n\t\treturn \"통과\""
+ ],
+ [
+  "전역 경로의 이유가 뭉뚱그려진다",
+  "\tif from == \"military\":\n\t\treturn \"전역은 입대 전 단계 복원 경로로만\"",
+  "\tif from == \"military\":\n\t\treturn \"불가\""
+ ],
+ [
+  "대학 진학 거부 이유가 학적을 안 짚는다",
+  "\tif to == \"university\":\n\t\treturn \"%s → 대학 진학 불가 (학적 역행)\" % from",
+  "\tif to == \"university\":\n\t\treturn \"%s → 진학 불가\" % from"
+ ],
+ [
+  "대학생도 대학에 지원할 수 있다",
+  "\treturn stage == \"highschool\"\n\n\n## 독립리그에 지원할 수 있는 단계인가",
+  "\treturn stage == \"highschool\" or stage == \"university\"\n\n\n## 독립리그에 지원할 수 있는 단계인가"
+ ],
+ [
+  "대학생이 독립리그에 지원 못 한다",
+  "\treturn stage == \"highschool\" or stage == \"university\"\n\n\n# ── 대학 학년",
+  "\treturn stage == \"highschool\"\n\n\n# ── 대학 학년"
+ ],
+ [
+  "재학 주차를 1부터가 아니라 0부터 센다 (1학년 마지막 주가 2학년이다)",
+  "\t\treturn mini((university_week - 1) / 52 + 1, UNIVERSITY_FINAL_GRADE)",
+  "\t\treturn mini(university_week / 52 + 1, UNIVERSITY_FINAL_GRADE)"
+ ],
+ [
+  "5학년이 생긴다",
+  "\t\treturn mini((university_week - 1) / 52 + 1, UNIVERSITY_FINAL_GRADE)",
+  "\t\treturn (university_week - 1) / 52 + 1"
+ ],
+ [
+  "학년 필드가 재학 주차를 이긴다 (02가 7년째 대학생을 만든 자리다)",
+  "\tif university_week >= 1:",
+  "\tif university_week >= 1 and grade < 1:"
+ ],
+ [
+  "마지막 학년 판정이 한 해 이르다",
+  "\treturn university_grade_of(grade, university_week) >= UNIVERSITY_FINAL_GRADE",
+  "\treturn university_grade_of(grade, university_week) >= UNIVERSITY_FINAL_GRADE - 1"
+ ],
+ [
+  "학업 요건을 거꾸로 본다 (성적이 나쁠수록 붙는다)",
+  "\tvar meets_academic: bool = academic_grade <= int(req[\"min_academic_grade\"])",
+  "\tvar meets_academic: bool = academic_grade >= int(req[\"min_academic_grade\"])"
+ ],
+ [
+  "야구 요건을 거꾸로 본다",
+  "\tvar meets_baseball: bool = baseball_score >= float(req[\"min_baseball_score\"])",
+  "\tvar meets_baseball: bool = baseball_score <= float(req[\"min_baseball_score\"])"
+ ],
+ [
+  "합격률에 상한이 없다 (성적 하나로 확정이 된다)",
+  "\t\treturn minf(float(a.get(\"both\", 70.0)) + a_bonus + b_bonus,\n\t\t\tfloat(a.get(\"cap\", 92.0)))",
+  "\t\treturn float(a.get(\"both\", 70.0)) + a_bonus + b_bonus"
+ ],
+ [
+  "야구 점수 보탬에 천장이 없다 (학업이 뜻을 잃는다)",
+  "\t\tvar b_bonus: float = minf(\n\t\t\t(baseball_score - float(req[\"min_baseball_score\"]))\n\t\t\t\t/ float(a.get(\"baseball_bonus_divisor\", 20.0)),\n\t\t\tfloat(a.get(\"baseball_bonus_max\", 10.0)))",
+  "\t\tvar b_bonus: float = (baseball_score - float(req[\"min_baseball_score\"]))\\\n\t\t\t/ float(a.get(\"baseball_bonus_divisor\", 20.0))"
+ ],
+ [
+  "학업 보탬이 안 붙는다 (같은 등급이면 성적이 더 좋아도 같다)",
+  "\t\tvar a_bonus: float = maxf(float(req[\"min_academic_grade\"]) - float(academic_grade),\n\t\t\t0.0) * float(a.get(\"academic_bonus_per_grade\", 3.0))",
+  "\t\tvar a_bonus: float = 0.0"
+ ],
+ [
+  "학업만 충족과 야구만 충족이 뒤바뀐다",
+  "\tif meets_academic:\n\t\treturn float(a.get(\"academic_only\", 28.0))\n\tif meets_baseball:\n\t\treturn float(a.get(\"baseball_only\", 22.0))",
+  "\tif meets_academic:\n\t\treturn float(a.get(\"baseball_only\", 28.0))\n\tif meets_baseball:\n\t\treturn float(a.get(\"academic_only\", 22.0))"
+ ],
+ [
+  "둘 다 미달인데 한쪽만 미달과 같다",
+  "\treturn float(a.get(\"neither\", 8.0))",
+  "\treturn float(a.get(\"baseball_only\", 8.0))"
+ ],
+ [
+  "한참 모자라도 흔들림으로 뚫린다",
+  "\tif ovr < cut - float(r.get(\"hopeless_margin\", 10.0)):",
+  "\tif ovr < cut - 1000.0:"
+ ],
+ [
+  "컷에 못 미치면 무조건 떨어진다 (아슬아슬한 지원이 사라진다)",
+  "\tif ovr < cut - float(r.get(\"hopeless_margin\", 10.0)):",
+  "\tif ovr < cut:"
+ ],
+ [
+  "지망 순서 보탬의 부호가 뒤집힌다",
+  "\tvar cut: float = float(indie_cut_of_power(power)) - penalty",
+  "\tvar cut: float = float(indie_cut_of_power(power)) + penalty"
+ ],
+ [
+  "지망 순서를 아예 안 본다",
+  "\tvar cut: float = float(indie_cut_of_power(power)) - penalty",
+  "\tvar cut: float = float(indie_cut_of_power(power))"
+ ],
+ [
+  "OVR과 컷의 차를 거꾸로 본다 (못할수록 잘 붙는다)",
+  "\treturn clampf(float(r.get(\"base\", 36.0)) + (ovr - cut) * float(r.get(\"slope\", 3.2)),",
+  "\treturn clampf(float(r.get(\"base\", 36.0)) + (cut - ovr) * float(r.get(\"slope\", 3.2)),"
+ ],
+ [
+  "독립리그 확률에 띠가 없다",
+  "\treturn clampf(float(r.get(\"base\", 36.0)) + (ovr - cut) * float(r.get(\"slope\", 3.2)),\n\t\tfloat(r.get(\"min\", 12.0)), float(r.get(\"max\", 96.0)))",
+  "\treturn float(r.get(\"base\", 36.0)) + (ovr - cut) * float(r.get(\"slope\", 3.2))"
+ ],
+ [
+  "입시가 대학의 전력★을 안 본다 (안전 지원과 상향 지원이 같다)",
+  "\t\tvar power = World.team_field({}, String(team_id), \"power\", null)",
+  "\t\tvar power = 3"
+ ],
+ [
+  "합격 판정이 뒤집힌다",
+  "\t\tif rng.randf() * 100.0 < university_chance(power, academic_grade, baseball):",
+  "\t\tif rng.randf() * 100.0 > university_chance(power, academic_grade, baseball):"
+ ],
+ [
+  "지원 안 한 대학이 결과에 들어간다",
+  "\t\t\tuniv_passed.append(String(team_id))",
+  "\t\t\tuniv_passed.append(String(team_id))\n\t\telse:\n\t\t\tuniv_passed.append(\"TEAM_UNIV_HALLYU\")"
+ ],
+ [
+  "상무를 걸러내지 않는다",
+  "\t\tif is_applicable_independent(String(team_id)):\n\t\t\tindie_choices.append(String(team_id))",
+  "\t\tindie_choices.append(String(team_id))"
+ ],
+ [
+  "독립 판정이 자기 난수를 새로 만든다 (지원 조합과 무관해진다)",
+  "\tvar indie_passed: Array = []\n\tfor i in range(indie_choices.size()):",
+  "\tvar indie_passed: Array = []\n\trng = RandomNumberGenerator.new()\n\trng.seed = 12345\n\tfor i in range(indie_choices.size()):"
+ ],
+ [
+  "독립 입단을 대학 산식으로 판정한다",
+  "\t\tif rng.randf() * 100.0 < independent_chance(power2, ovr, i):",
+  "\t\tif rng.randf() * 100.0 < university_chance(power2, academic_grade, baseball):"
+ ],
+ [
+  "독립 지망 순서를 상무를 빼기 전 자리로 센다",
+  "\t\tif rng.randf() * 100.0 < independent_chance(power2, ovr, i):",
+  "\t\tif rng.randf() * 100.0 < independent_chance(power2, ovr, i + inp.get(\"independent_choices\", []).size() - indie_choices.size()):"
+ ],
+ [
+  "독립 판정이 팀의 전력★을 안 본다",
+  "\t\tvar power2 = World.team_field({}, String(indie_choices[i]), \"power\", null)",
+  "\t\tvar power2 = 2"
+ ]
+]

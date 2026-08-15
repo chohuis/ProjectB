@@ -1,0 +1,57 @@
+{
+  "_note": "진로 — 대학 요건·입시 확률·독립리그 컷. 원본은 02의 universityUtils.ts와 week_engine.rs calc_hs_admissions. 밸런스 동결이라 값을 그대로 옮겼다",
+
+  "power_tier": {
+    "5": "S",
+    "4": "A",
+    "3": "B",
+    "2": "C",
+    "1": "D"
+  },
+  "_power_tier_note": "표에 없는 전력★은 5보다 크면 S, 아니면 D. 값이 아예 없는 팀은 가운데(전력★ 3 = B)로 본다 — 02는 여기서 49개 대학을 등급 없이 떨어뜨려 전부 무조건 합격이었다",
+  "default_power": 3,
+
+  "tiers": {
+    "S": {"min_academic_grade": 4, "min_baseball_score": 40, "scout_bonus": 15},
+    "A": {"min_academic_grade": 5, "min_baseball_score": 25, "scout_bonus": 8},
+    "B": {"min_academic_grade": 6, "min_baseball_score": 12, "scout_bonus": 3},
+    "C": {"min_academic_grade": 7, "min_baseball_score": 4, "scout_bonus": 0},
+    "D": {"min_academic_grade": 9, "min_baseball_score": 0, "scout_bonus": -3}
+  },
+  "_tiers_note": "C의 야구 문턱이 0이 아니라 4다 — 50팀 중 23팀이 C라 0이면 절반이 무조건 합격이다",
+
+  "grade_cuts": [4, 11, 23, 40, 60, 77, 89, 96],
+  "gpa45": [4.5, 4.2, 3.8, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0],
+
+  "admission": {
+    "both": 70.0,
+    "academic_bonus_per_grade": 3.0,
+    "baseball_bonus_divisor": 20.0,
+    "baseball_bonus_max": 10.0,
+    "cap": 92.0,
+    "academic_only": 28.0,
+    "baseball_only": 22.0,
+    "neither": 8.0
+  },
+
+  "independent": {
+    "cuts": [[4, 54], [3, 49], [2, 44], [1, 39]],
+    "order_penalty": [0.0, -2.0, -4.0],
+    "_order_penalty_note": "cut = min_ovr - penalty 라서 뒤 지망일수록 컷이 높다. 02 주석은 반대로 적혀 있는데(위로 지원할수록 어렵다) 코드가 이렇다 — 밸런스 동결이라 코드를 옮겼다",
+    "hopeless_margin": 10.0,
+    "base": 36.0,
+    "slope": 3.2,
+    "min": 12.0,
+    "max": 96.0
+  },
+
+  "hs_baseball": {
+    "champion": 100,
+    "runner_up": 60,
+    "semi_final": 30,
+    "not_qualified": 10,
+    "per_award": 15
+  },
+
+  "sangmu_team_id": "TEAM_IND_SANGMU_PHOENIX"
+}
