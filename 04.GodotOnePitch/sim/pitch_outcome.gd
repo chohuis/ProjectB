@@ -46,13 +46,29 @@ static func dispersion_sigma(control: float, stamina: float, mental: float,
 	return sigma
 
 
-## 존 번호(1~9) → 겨냥 좌표. 5가 한가운데, 7·8·9가 위쪽이다
+## 존 밖(거르기)을 겨냥할 때의 좌표.
+##
+## ⚠ **그림자 밖이어야 볼이 된다.** 경계에 걸치면 심판이 잡아 주고,
+## 그러면 "거르기"가 거르기가 아니다
+const BALL_TARGET: Vector2 = Vector2(1.0 + Tuning.SHADOW_ZONE_HALF + 0.35, 0.0)
+
+
+## 존 번호(1~9) → 겨냥 좌표. 5가 한가운데, 7·8·9가 위쪽이다.
+## **0은 존 밖(거르기)이다** — `PitchVm.BALL_ZONE`과 같은 약속이다.
+##
+## ⚠ **0을 한가운데로 보내고 있었다.** 범위 밖은 전부 `(0, 0)`으로
+## 떨어져서, "존 밖 (거르기)"를 고르면 **정중앙 공**이 갔다. 화면은
+## 거른다고 말하는데 실제로는 한복판이었다.
+## 리그 경기도 같은 자리로 샜다 — 볼이 4개 쌓일 일이 없어
+## **9이닝당 볼넷이 0.0이었다**(02는 3.3). `docs/PARITY.md` 축 1
 static func zone_to_target(location: int) -> Vector2:
-	var col: float = [-0.67, 0.0, 0.67][(location - 1) % 3] if location >= 1 and location <= 9 else 0.0
+	if location < 1 or location > 9:
+		return BALL_TARGET
+	var col: float = [-0.67, 0.0, 0.67][(location - 1) % 3]
 	var row: float = 0.0
 	if location >= 7:
 		row = -0.67
-	elif location <= 3 and location >= 1:
+	elif location <= 3:
 		row = 0.67
 	return Vector2(col, row)
 

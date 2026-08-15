@@ -278,11 +278,18 @@ func test_playing_games_unlocks_the_baseball_achievements() -> void:
 	assert_bool(Achievements.is_unlocked(r.state(), "ACH_BASEBALL_FIRST_GAME")
 		).override_failure_message("첫 출전이 안 열렸다").is_true()
 
-	# ⚠ **고교의 팀 승수는 0이 맞다.** 고교는 대회 중심이고 `from_schedule`은
-	# 대회 경기를 리그 순위에 안 넣는다 — 그래서 "N승 달성" 여섯 개는
-	# 프로에 가서야 열린다. 여기서는 그게 사실인지만 못 박는다
+	# ⚠ **"고교는 리그 승이 0"이라고 단정했다가 틀렸다.** 그 실행에서
+	# 우연히 0이었을 뿐이고, 고교에도 주말리그가 있어 승수가 잡힌다.
+	# 여기서 볼 것은 값이 아니라 **읽는 자리**다 — 순위표를 일정에서
+	# 파생하는지(상태에서 읽으면 늘 0이다)
+	var want: int = 0
+	for row in Standings.from_schedule(r.state().get("schedule", []),
+			String(r.state()["protagonist"].get("league_id", ""))):
+		if String(row.get("team_id", "")) == String(
+				r.state()["protagonist"].get("team_id", "")):
+			want = int(row.get("wins", 0))
 	assert_int(int(m["team_wins"])).override_failure_message(
-		"고교인데 리그 승수가 잡혔다 — 대회가 순위표에 섞였다").is_equal(0)
+		"순위표를 일정에서 파생하지 않는다").is_equal(want)
 
 
 ## ⚠ **아무 훈련도 안 짠 주는 "훈련한 주"가 아니다.** 세면 가만히 진행만

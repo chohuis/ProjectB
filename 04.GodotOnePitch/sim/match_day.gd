@@ -1,4 +1,4 @@
-extends RefCounted
+﻿extends RefCounted
 class_name MatchDay
 
 ## 경기 하루 — M7-6a. **세계의 로스터로 실제 경기를 돌린다.**
@@ -80,10 +80,30 @@ static func _pitcher(p: Dictionary) -> Dictionary:
 
 ## 아주 단순한 투구 선택. **전술은 M7-6c(경기 화면)에서 붙인다** —
 ## 소비자 없는 자리를 미리 만들지 않는다
+## 존 밖으로 겨냥하는 비율.
+##
+## ⚠ **여기가 0이면 볼넷이 안 난다.** 예전 이 함수는 `location`을 1~9(존 안)
+## 에서만 골랐다 — 벤치마크용으로 쓰던 자리표시자가 리그 경기 전체에
+## 그대로 쓰이고 있었다. 존 밖을 안 던지니 볼이 4개 쌓일 일이 없고,
+## **9이닝당 볼넷이 0.0이었다**(02는 3.3). 볼넷으로 끝날 타석이 삼진과
+## 인플레이로 흘러가 삼진율·타율까지 같이 밀렸다.
+##
+## 값은 **02와 대조해서 맞춘 것이다**(`docs/PARITY.md` 축 1) — 지어낸 수가
+## 아니다. 존 안을 겨냥해도 제구가 흔들려 볼이 되므로, 이 비율이 곧
+## 볼넷 비율은 아니다
+const OUT_OF_ZONE_RATE: float = 0.0
+
+
+## NPC 경기의 투구 선택.
+##
+## ⚠ **주인공 경기는 사람이 고른다**(`LiveMatch`). 여기는 나머지 수천 경기가
+## 쓰는 자리다 — 여기가 야구가 아니면 리그 성적표 전체가 야구가 아니다
 static func _decide(_state: Dictionary, rng) -> Dictionary:
 	return {
 		"pitch_type": "fastball" if rng.randf() < 0.55 else "slider",
-		"location": 1 + int(rng.randf() * 9.0),
+		# 0 = 존 밖(거르기). `PitchVm.BALL_ZONE`과 같은 약속이다
+		"location": 0 if rng.randf() < OUT_OF_ZONE_RATE \
+			else 1 + int(rng.randf() * 9.0),
 		"strategy": "balanced", "power": "normal",
 	}
 
