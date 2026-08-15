@@ -1,0 +1,12 @@
+[
+ [
+  "내 몸 리포트를 소식함에 안 넣는다 (경고도 완치도 영영 안 보인다)",
+  "\t\tvar body: Dictionary = BodyReport.message_of(state, day)\n\t\tif not body.is_empty():\n\t\t\tvar mailbox: Array = state.get(\"mailbox\", [])\n\t\t\tmailbox.append(body)\n\t\t\tstate[\"mailbox\"] = mailbox",
+  "\t\tpass"
+ ],
+ [
+  "소식 주가 아닌데도 매주 보낸다 (월간의 뜻이 없어진다)",
+  "\tif Injury.is_news_week(Calendar.week_of(day)):",
+  "\tif true:"
+ ]
+]

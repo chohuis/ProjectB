@@ -1,0 +1,82 @@
+[
+ [
+  "담을 게 없어도 리포트를 보낸다 (\"왔는데 아무것도 없다\"가 된다)",
+  "\tif warnings == 0 and healed.is_empty() and not hurt:\n\t\treturn {}",
+  "\tif false:\n\t\treturn {}"
+ ],
+ [
+  "다쳐 있어도 사건이 없으면 아무 말도 안 한다",
+  "\tif warnings == 0 and healed.is_empty() and not hurt:",
+  "\tif warnings == 0 and healed.is_empty():"
+ ],
+ [
+  "지난달 것을 또 담는다 (경고가 매달 누적으로 뜬다)",
+  "\t\tif int(e.get(\"day\", 0)) <= since:\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "NPC 소식과 다른 주기로 묶는다",
+  "\tvar since: int = at_day - Injury.news_period() * Calendar.DAYS_PER_WEEK",
+  "\tvar since: int = at_day - Calendar.DAYS_PER_WEEK"
+ ],
+ [
+  "경고를 안 센다",
+  "\t\t\t\twarnings += 1",
+  "\t\t\t\tpass"
+ ],
+ [
+  "완치를 안 담는다",
+  "\t\t\t\thealed.append(e)",
+  "\t\t\t\tpass"
+ ],
+ [
+  "다 나은 부상을 아직 다쳤다고 한다",
+  "\tvar hurt: bool = not now.is_empty() and int(now.get(\"weeks_left\", 0)) > 0",
+  "\tvar hurt: bool = not now.is_empty()"
+ ],
+ [
+  "월말 부상 요약을 안 싣는다",
+  "\t\t\"injury\": _injury_row(now) if hurt else {},",
+  "\t\t\"injury\": {},"
+ ],
+ [
+  "부상 id를 이름으로 안 바꾼다 (SHOULDER_INFLAM이 그대로 뜬다)",
+  "\t\t\t\"name\": Injury.label_of(String(e.get(\"injury_type\", \"\"))),",
+  "\t\t\t\"name\": String(e.get(\"injury_type\", \"\")),"
+ ],
+ [
+  "본문에서도 부상 id를 그대로 쓴다",
+  "\t\tvar name: String = Injury.label_of(String(e.get(\"injury_type\", \"\")))",
+  "\t\tvar name: String = String(e.get(\"injury_type\", \"\"))"
+ ],
+ [
+  "후유증이 남았는지를 안 본다",
+  "\t\t\t\"has_penalty\": not (e.get(\"penalty\", {}) as Dictionary).is_empty(),",
+  "\t\t\t\"has_penalty\": false,"
+ ],
+ [
+  "후유증이 남았는데 그냥 복귀했다고만 한다",
+  "\t\tif not (e.get(\"penalty\", {}) as Dictionary).is_empty():\n\t\t\tout.append(\"%s에서 복귀했습니다. 후유증이 남았습니다.\" % name)",
+  "\t\tif false:\n\t\t\tout.append(\"%s에서 복귀했습니다. 후유증이 남았습니다.\" % name)"
+ ],
+ [
+  "경고 횟수를 본문에 안 쓴다",
+  "\t\tout.append(\"피로 경고 %d회 — 이대로면 다칩니다.\" % warnings)",
+  "\t\tpass"
+ ],
+ [
+  "소식 id에 연도를 안 넣는다 (해마다 겹쳐 세이브가 안 열린다)",
+  "\t\t\"id\": \"msg-body-%d-w%d\" % [year, Calendar.week_of(at_day)],",
+  "\t\t\"id\": \"msg-body-w%d\" % Calendar.week_of(at_day),"
+ ],
+ [
+  "미리보기를 안 만든다",
+  "\t\t\"preview\": String(lines[0]) if not lines.is_empty() else \"\",",
+  "\t\t\"preview\": \"\","
+ ],
+ [
+  "읽은 것으로 넣는다 (안 읽었는데 안 읽음 표시가 없다)",
+  "\t\t\"day\": at_day, \"read\": false, \"decision\": null,",
+  "\t\t\"day\": at_day, \"read\": true, \"decision\": null,"
+ ]
+]

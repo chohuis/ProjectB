@@ -149,11 +149,23 @@ func test_team_wins_are_zero_before_any_game() -> void:
 	assert_int(Achievements.team_wins(_state())).is_equal(0)
 
 
+## ⚠ **소식함은 `mailbox`다.** `news`를 읽었다가 늘 0이었고 메시지 업적
+## 셋이 통째로 안 열렸다 — 이름이 비슷한 키는 조용히 틀린다
 func test_read_messages_are_counted() -> void:
-	var s: Dictionary = _state({"news": [
+	var s: Dictionary = _state({"mailbox": [
 		{"id": "a", "read": true}, {"id": "b", "read": false},
 		{"id": "c", "read": true}]})
-	assert_int(Achievements.messages_read(s)).is_equal(2)
+	assert_int(Achievements.messages_read(s)).override_failure_message(
+		"소식함을 못 읽는다 — 화면이 쓰는 키는 mailbox다").is_equal(2)
+
+
+## 진짜 소식함으로 확인한다 — 화면이 읽는 그 사전이어야 한다
+func test_it_reads_the_same_mailbox_the_screen_does() -> void:
+	var s: Dictionary = _state({"mailbox": [
+		{"id": "a", "category": "news", "subject": "제목", "read": true}]})
+	assert_int(NewsVm.build(s)["rows"].size()).override_failure_message(
+		"화면이 읽는 소식함과 업적이 읽는 소식함이 다르다").is_equal(1)
+	assert_int(Achievements.messages_read(s)).is_equal(1)
 
 
 ## ⚠ **`training_log`로는 못 센다.** 그건 "뭔가 오른 주"만 남는다 —

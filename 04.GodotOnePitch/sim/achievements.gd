@@ -103,9 +103,12 @@ static func team_wins(state: Dictionary) -> int:
 	return 0
 
 
+## ⚠ **소식함은 `mailbox`다.** `news`를 읽었다가 늘 0이었다 — 메시지
+## 업적 셋이 통째로 안 열렸다. 이름이 비슷한 키를 잘못 짚으면 오류도
+## 로그도 없이 "아무 일도 안 일어남"으로 나타난다
 static func messages_read(state: Dictionary) -> int:
 	var n: int = 0
-	for m in state.get("news", []):
+	for m in state.get("mailbox", []):
 		if bool(m.get("read", false)):
 			n += 1
 	return n

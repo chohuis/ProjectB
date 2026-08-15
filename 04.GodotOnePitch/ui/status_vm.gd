@@ -26,9 +26,8 @@ const LEAGUE_SHORT: Dictionary = {
 	"LEAGUE_ABL": "ABL", "LEAGUE_JBL": "JBL",
 }
 
-const SEVERITY_LABELS: Dictionary = {
-	"light": "경상", "moderate": "중등도", "severe": "중상", "surgery": "수술",
-}
+## 심각도 이름의 정본은 `Injury.SEVERITY_LABELS`다 — 화면에도 소식에도
+## 같은 말이 떠야 하므로 여기 다시 적지 않는다
 
 
 static func build(s: Dictionary) -> Dictionary:
@@ -95,7 +94,7 @@ static func _injury(inj) -> Dictionary:
 	var d: Dictionary = (inj as Dictionary).duplicate()
 	var sev: String = String(d.get("severity", ""))
 	# 모르는 심각도를 빈칸으로 두지 않는다 — 새 등급이 붙은 걸 아무도 모른다
-	d["severity_label"] = SEVERITY_LABELS.get(sev, sev)
+	d["severity_label"] = Injury.severity_label(sev)
 	return d
 
 

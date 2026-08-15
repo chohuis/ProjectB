@@ -65,6 +65,17 @@ static func eff_mod_of(severity: String) -> float:
 
 
 ## 등급이 얼마나 무거운가. 큰 쪽이 무겁다
+## 심각도 한글 이름. **표는 여기 하나다** — 화면에도 소식에도 같은 말이
+## 떠야 한다. 예전엔 이게 `StatusVm`에만 있어서 엔진이 쓰려면 표가 둘이 됐다
+const SEVERITY_LABELS: Dictionary = {
+	"light": "경상", "moderate": "중등도", "severe": "중상", "surgery": "수술",
+}
+
+
+static func severity_label(severity: String) -> String:
+	return String(SEVERITY_LABELS.get(severity, severity))
+
+
 static func severity_rank(severity: String) -> int:
 	return rules().get("severity_order", []).find(severity)
 

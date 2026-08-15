@@ -380,4 +380,13 @@ static func run(state: Dictionary, at_day: int = -1) -> Dictionary:
 		# 담을 게 없어도 버퍼는 비운다 — 안 비우면 다음 달에 지난달 것이 섞인다
 		state[NEWS_KEY] = []
 
+		# ⚠ **내 몸도 같은 주기로 한 통에 담는다.** 04는 `body_log`를 쌓기만
+		# 하고 읽는 곳이 진로 판정 하나뿐이라 경고도 완치도 플레이어에게는
+		# 한 번도 안 보였다 — NPC 부상은 월간인데 내 몸만 안 왔다
+		var body: Dictionary = BodyReport.message_of(state, day)
+		if not body.is_empty():
+			var mailbox: Array = state.get("mailbox", [])
+			mailbox.append(body)
+			state["mailbox"] = mailbox
+
 	return {"protagonist": mine, "npc": npc, "news": news}
