@@ -1,0 +1,122 @@
+[
+ [
+  "개막 주가 아니어도 대표팀을 뽑는다",
+  "\tif t.is_empty() or week != int(t.get(\"week\", -1)):\n\t\treturn {}",
+  "\tif t.is_empty():\n\t\treturn {}"
+ ],
+ [
+  "대회 도중에 차출이 풀린다",
+  "\t\tif week < int(duty.get(\"end_week\", 0)):\n\t\t\treturn {}",
+  "\t\tif false:\n\t\t\treturn {}"
+ ],
+ [
+  "대회가 영영 안 끝난다",
+  "\t\tif week < int(duty.get(\"end_week\", 0)):\n\t\t\treturn {}",
+  "\t\tif true:\n\t\t\treturn {}"
+ ],
+ [
+  "끝나는 주가 개막 주와 같다 (대회가 한 주 만에 끝난다)",
+  "\t\t\"end_week\": int(t.get(\"week\", 0)) + maxi(int(t.get(\"duration_weeks\", 1)), 1),",
+  "\t\t\"end_week\": int(t.get(\"week\", 0)),"
+ ],
+ [
+  "발탁이 소식에 안 뜬다 (02가 로그로만 냈다)",
+  "\t_send(state, _squad_news(state, t, picked, at_day, year))",
+  "\tpass"
+ ],
+ [
+  "차출이 상태에 안 남는다 (승강이 자리를 못 메운다)",
+  "\tstate[KEY] = {\n\t\t\"tournament\": t,",
+  "\tvar unused: Dictionary = {\n\t\t\"tournament\": t,"
+ ],
+ [
+  "대회가 끝나도 차출이 안 풀린다 (대표팀이 영영 복귀 안 한다)",
+  "\tstate[KEY] = {}\n\treturn res",
+  "\treturn res"
+ ],
+ [
+  "대회 결과가 소식에 안 뜬다",
+  "\t_send(state, _result_news(t, res, squad.size(),\n\t\tbool(duty.get(\"protagonist_selected\", false)), at_day, year))",
+  "\tpass"
+ ],
+ [
+  "입상해도 면제가 안 붙는다 (대회가 데이터로만 돈다)",
+  "\tif bool(res[\"exemption\"]):\n\t\tgrant_exemption(state, squad, year, String(t.get(\"name\", \"\")))",
+  "\tif false:\n\t\tgrant_exemption(state, squad, year, String(t.get(\"name\", \"\")))"
+ ],
+ [
+  "입상 안 해도 면제를 준다",
+  "\tif bool(res[\"exemption\"]):\n\t\tgrant_exemption(state, squad, year, String(t.get(\"name\", \"\")))",
+  "\tif true:\n\t\tgrant_exemption(state, squad, year, String(t.get(\"name\", \"\")))"
+ ],
+ [
+  "면제 씨앗에 세계가 안 섞인다 (모든 세계가 같은 성적이다)",
+  "\trng.seed = Rng.mix([\"national\", int(state.get(\"seed\", 0)), year,\n\t\tString(t.get(\"id\", \"\"))])",
+  "\trng.seed = Rng.mix([\"national\", year, String(t.get(\"id\", \"\"))])"
+ ],
+ [
+  "면제가 군필을 덮는다 (기록이 뒤집힌다)",
+  "\t\tif String(p.get(\"military_status\", \"미필\")) != \"미필\":\n\t\t\tcontinue",
+  "\t\tif false:\n\t\t\tcontinue"
+ ],
+ [
+  "면제를 줘도 상태가 안 바뀐다",
+  "\t\tp[\"military_status\"] = EXEMPT_STATUS",
+  "\t\tpass"
+ ],
+ [
+  "면제가 경력에 안 남는다",
+  "\t\tevents.append({\"year\": year, \"type\": \"military_exemption\",",
+  "\t\tif false: events.append({\"year\": year, \"type\": \"military_exemption\","
+ ],
+ [
+  "면제 대상이 대표팀 밖으로 샌다",
+  "\tvar want: Dictionary = {}\n\tfor id in ids:\n\t\twant[String(id)] = true",
+  "\tvar want: Dictionary = {}\n\tfor id in ids:\n\t\twant[String(id)] = true\n\twant[\"N001\"] = true"
+ ],
+ [
+  "주인공은 면제를 못 받는다",
+  "\tif want.has(String(me.get(\"id\", \"\"))):\n\t\tout.append(me)",
+  "\tif false:\n\t\tout.append(me)"
+ ],
+ [
+  "외국인이 한국 대표 후보가 된다",
+  "\t\t\tif String(p.get(\"nationality\", \"KOR\")) != \"KOR\":\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "국적 없는 옛 세이브가 후보에서 빠진다",
+  "\t\t\tif String(p.get(\"nationality\", \"KOR\")) != \"KOR\":\n\t\t\t\tcontinue",
+  "\t\t\tif String(p.get(\"nationality\", \"\")) != \"KOR\":\n\t\t\t\tcontinue"
+ ],
+ [
+  "복무 중인 선수도 대표로 뽑는다",
+  "\t\t\tif String(p.get(\"military_status\", \"미필\")) == SERVING_STATUS:\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "은퇴한 선수도 대표로 뽑는다",
+  "\t\t\tif String(p.get(\"career_status\", \"active\")) != \"active\":\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "학교·독립 선수도 대표 후보가 된다",
+  "\t\t\tif not NationalTeam.POOL_LEAGUES.has(String(p.get(\"league_id\", \"\"))):\n\t\t\t\tcontinue",
+  "\t\t\tif false:\n\t\t\t\tcontinue"
+ ],
+ [
+  "성적이 후보에 안 실린다 (능력치만 보고 뽑는다)",
+  "\t\t\t\t\"form\": NationalTeam.form_of(stats.get(id, {})),",
+  "\t\t\t\t\"form\": 0.0,"
+ ],
+ [
+  "주인공을 못 알아본다",
+  "\t\t\t\t\"is_protagonist\": id == me and not me.is_empty(),",
+  "\t\t\t\t\"is_protagonist\": false,"
+ ],
+ [
+  "차출 여부를 아무나 참으로 본다",
+  "\treturn duty_of(state).get(\"squad\", []).has(player_id)",
+  "\treturn true"
+ ]
+]

@@ -1,5 +1,10 @@
 [
  [
+  "국가대표가 주 경계에서 안 돈다 (세계에서 제일 큰 사건이 안 뜬다)",
+  "\tNationalRunner.run(_state, at_day)",
+  "\tpass"
+ ],
+ [
   "진로가 주 경계에서 안 돈다 (진로 모듈 전체가 죽은 코드가 된다)",
   "\tCareerRunner.run(_state, at_day)",
   "\tpass"
@@ -146,8 +151,8 @@
  ],
  [
   "카퍼스 이벤트가 주인공 뒤로 밀린다 (주인공이 없으면 세계 무대가 통째로 사라진다)",
-  "\tCampusRunner.run(_state, at_day)\n\n\tvar p: Dictionary = _state.get(\"protagonist\", {})",
-  "\tvar p: Dictionary = _state.get(\"protagonist\", {})"
+  "\tCampusRunner.run(_state, at_day)\n\n\t# 국가대표",
+  "\t# 국가대표"
  ],
  [
   "부상이 아예 안 돈다",
@@ -166,8 +171,8 @@
  ],
  [
   "부상이 훈련 뒤로 밀린다 (이번 주 훈련 부하가 이번 주 판정에 들어간다)",
-  "\tInjuryRunner.run(_state, at_day)\n\n\t# 재정",
-  "\t# 재정"
+  "\tInjuryRunner.run(_state, at_day)\n\n\t# 진로",
+  "\t# 진로"
  ],
  [
   "재정이 아예 안 돈다 (자산이 시작값 그대로다)",

@@ -220,7 +220,17 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `CareerRunner`가 매주 부른다 — 수술은 그 주에, 노쇠는 시즌 마지막 주에.
       검사 37 · 변이 39/39 + 배선 3/3.
       **남은 것:** 은퇴 확인 화면과 인생 기록 엔딩은 C에서
-- [ ] **B-8** `nationalTeam`(311)
+- [x] **B-8** `nationalTeam`(311) — `sim/national_team.gd` ·
+      `sim/national_runner.gd` · `data/international_rules.json`.
+      **경기는 시뮬하지 않는다**(사용자 확정) — 대표팀 전력으로 순위를 확률
+      산출하고 그 순위가 병역 면제를 정한다. 4년 주기 셋(올림픽 3위 이내 ·
+      아시안게임 우승만 · 월드컵 면제 없음)이 `year_mod`로 안 겹친다.
+      ⚠ 02는 **국적을 안 봐서 KBL 외국인이 한국 대표로 뽑혔다**(외국인은
+      병역이 "면제"라 병역 조건을 그냥 통과한다).
+      ⚠ 02는 대회를 **로그로만** 내서 발탁도 메달도 면제도 화면에 없었다.
+      검사 51 · 변이 53/53 + 배선 1/1.
+      **남은 것:** 차출 중 자리 메우기(승강 상시 콜업)는 B-10에서 —
+      `NationalRunner.is_called_up`이 그 문을 열어 뒀다
 - [ ] **B-9** `foreignPlayers`(343)
 - [ ] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
 - [ ] **B-11** `runAutoAdvance`(491)

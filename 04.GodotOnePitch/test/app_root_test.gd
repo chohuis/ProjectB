@@ -1063,6 +1063,20 @@ func test_the_career_path_opens_at_the_week_boundary() -> void:
 		"졸업반의 진로 지원이 주 경계에서 안 열렸다 — 배선이 끊겼다").is_true()
 
 
+## ⚠ **국가대표도 주 경계에서 돈다.** 안 이으면 세계에서 제일 큰 사건이
+## 아무 데도 안 뜬다 — 02가 그 상태였다(로그로만 냈다)
+func test_the_national_squad_is_picked_at_the_week_boundary() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2028,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var r: AppRoot = await _mount(s)
+
+	var week: int = int(NationalTeam.tournament_of(2028)["week"])
+	r._apply_one_week((week - 1) * Calendar.DAYS_PER_WEEK + 1)
+	assert_array(NationalRunner.duty_of(r.state()).get("squad", [])
+		).override_failure_message(
+		"국가대표가 주 경계에서 안 뽑혔다 — 배선이 끊겼다").is_not_empty()
+
+
 ## 복무도 주 경계에서 흐른다 — 안 이으면 영원히 군대에 있는다
 func test_the_service_weeks_tick_at_the_week_boundary() -> void:
 	var s: Dictionary = _real_game(4242)

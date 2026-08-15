@@ -1,0 +1,7 @@
+[
+ [
+  "2군이 후보에서 빠진다",
+  "const POOL_LEAGUES: Array[String] = [\"LEAGUE_KBL\", \"LEAGUE_KBL_FARM\"]",
+  "const POOL_LEAGUES: Array[String] = [\"LEAGUE_KBL\"]"
+ ]
+]
