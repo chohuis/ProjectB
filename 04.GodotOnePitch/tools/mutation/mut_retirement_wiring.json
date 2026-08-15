@@ -1,17 +1,37 @@
 [
  [
-  "주 경계에서 은퇴를 안 물어본다 (은퇴 모듈이 죽은 코드가 된다)",
-  "\tvar asked: String = Retirement.check(state, at_day, rng)",
-  "\tvar asked: String = \"\""
+  "물어봤는데 안 띄운다 (자동 진행이 그 자리에서 영영 안 풀린다)",
+  "\tif RetirementVm.is_asking(_state):\n\t\t_open_retirement()",
+  "\tpass"
  ],
  [
-  "은퇴 판정 씨앗이 연도와 안 섞인다 (해마다 같은 답이 나온다)",
-  "\trng.seed = Rng.mix([\"retire\", int(state.get(\"seed\", 0)),\n\t\tint(state.get(\"season_year\", 0)), at_day])",
-  "\trng.seed = Rng.mix([\"retire\", int(state.get(\"seed\", 0)), at_day])"
+  "은퇴를 눌러도 커리어가 안 끝난다",
+  "\tRetirement.retire(_state, String(ask.get(\"reason\",\n\t\tRetirement.REASON_DECLINE)), int(_state.get(\"day\", 1)))",
+  "\tpass"
  ],
  [
-  "은퇴한 선수에게 계속 물어본다",
-  "\tif p.is_empty() or bool(p.get(\"retired\", false)):\n\t\treturn {}",
-  "\tif p.is_empty():\n\t\treturn {}"
+  "사유를 안 보고 늘 노쇠로 적는다",
+  "\tvar ask: Dictionary = RetirementVm.ask_of(_state)\n\tRetirement.retire(_state, String(ask.get(\"reason\",",
+  "\tvar ask: Dictionary = {}\n\tRetirement.retire(_state, String(ask.get(\"reason\","
+ ],
+ [
+  "은퇴가 확정되기 전에 결산을 만든다 (마지막 시즌과 사유가 빠진다)",
+  "\tRetirement.retire(_state, String(ask.get(\"reason\",\n\t\tRetirement.REASON_DECLINE)), int(_state.get(\"day\", 1)))\n\t# ⚠ **은퇴가 확정된 뒤에 결산을 다시 만든다** — 마지막 시즌과 은퇴\n\t# 사유가 빠진 채로 나오면 인생 기록이 아니다\n\tif _retire_screen != null:\n\t\t_retire_screen.set_summary(RetirementVm.build_summary(_state))",
+  "\tif _retire_screen != null:\n\t\t_retire_screen.set_summary(RetirementVm.build_summary(_state))\n\tRetirement.retire(_state, String(ask.get(\"reason\",\n\t\tRetirement.REASON_DECLINE)), int(_state.get(\"day\", 1)))"
+ ],
+ [
+  "한 해 더 뛴다고 해도 질문이 안 치워진다",
+  "\tRetirement.keep_playing(_state)",
+  "\tpass"
+ ],
+ [
+  "한 해 더 뛴다고 했는데 은퇴시킨다",
+  "\tRetirement.keep_playing(_state)\n\t_on_retirement_done()",
+  "\tRetirement.retire(_state, Retirement.REASON_DECLINE,\n\t\tint(_state.get(\"day\", 1)))\n\t_on_retirement_done()"
+ ],
+ [
+  "화면을 두 번 띄운다",
+  "\tif _retire_screen != null:\n\t\treturn\n\t_retire_screen = RETIREMENT_SCREEN.instantiate()",
+  "\t_retire_screen = RETIREMENT_SCREEN.instantiate()"
  ]
 ]

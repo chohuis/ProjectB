@@ -467,7 +467,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ❓ **보상(`reward`)은 표시만 한다** — 02도 그랬다("명성 +1"이 태그일
       뿐 어디에도 안 걸린다). 이주 중에 새로 걸지 않았다.
       ❓ **새로 딴 업적을 소식으로 안 알린다** — 02도 상태에만 적었다.
-- [ ] **C-6** "나" 탭 보강(`me`) — **셋 중 하나 끝냈다**
+- [x] **C-6** "나" 탭 보강(`me`) — 셋 다 끝났다
       - [x] **`myBodyReport`** — `sim/body_report.gd`. 04는 `body_log`를
         쌓기만 하고 읽는 곳이 진로 판정 하나뿐이라 **경고도 완치도
         플레이어에게 한 번도 안 보였다.** NPC 부상은 월간인데 내 몸만
@@ -481,10 +481,27 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         `state["news"]`를 읽고 있었다. 04의 소식함은 `mailbox`라 늘 0이었고
         메시지 업적 셋이 통째로 안 열렸다. 이름이 비슷한 키는 조용히 틀린다.
         검사 18 · 변이 16/16 + 2/2
-      - [ ] **은퇴 확인** — `Retirement._ask`가 `retirement_ask`를 대기줄에
-        넣는데 **띄우는 화면이 없다.** 결정 화면 배선(B-11)과 같이 봐야 한다
-      - [ ] **인생 기록 엔딩** — 은퇴 뒤 커리어 요약. `career_history`가
-        이제 숫자(`stats`)도 들고 있어서(C-5) 통산을 낼 수 있다
+      - [x] **은퇴 확인 · 인생 기록** — `ui/retirement_vm.gd` ·
+        `ui/screens/retirement_screen.{tscn,gd}`.
+        ⚠ **`retirement_ask`를 밀어넣는 코드는 있는데 받는 자리가 없었다** —
+        02가 그랬고 04도 그대로였다. 대기줄에 올라간 채 아무도 안 받아서
+        자동 진행이 "은퇴 여부 결정"에서 안 풀리고, `Retirement.retire`도
+        호출부가 없어 **커리어가 영영 안 끝났다.**
+        ⚠ **사유에 따라 선택지가 다르다** — 부상(재기 불가)은 거절이 없다.
+        누를 수 없는 버튼을 띄우지 않는다.
+        ⚠ **은퇴를 누르면 그 화면이 결산으로 바뀐다** — "결산을 봤는가"
+        플래그를 세이브에 안 만들려는 것이다(02 그대로).
+        ⚠ **여기서는 즉시 해제가 위험하다** — 화면이 자기 신호 안에서
+        지워져 잠긴 객체가 된다. 이 자리만 `queue_free`.
+        검사 28 · 변이 16/16 + 7/7
+
+      ❓ **나머지 결정 아홉은 아직 화면이 없다.** 대기줄에 쌓이는 열 종류
+      중 은퇴만 받는 자리가 생겼다 — `career_choice_hub`·`career_results`·
+      `career_choice`·`draft_observe`·`draft_notification`·`salary_negotiation`·
+      `option_clause`·`fa_market`·`trade`가 남았다. **B-11 자동 진행 화면
+      배선과 같은 자리다.**
+      ❓ **인생 기록을 "나" 탭에서 다시 여는 길이 없다.** 화면은
+      `set_summary`로 혼자 열리게 만들어 뒀다 — 버튼만 붙이면 된다
 
 ### C에서 같이 이을 것 (엔진은 이미 있다)
 

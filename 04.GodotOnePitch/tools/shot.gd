@@ -53,6 +53,7 @@ const APP_ENTRY := preload("res://ui/app.tscn")
 const SEASON_END := preload("res://ui/screens/season_end_screen.tscn")
 const DRAFT_BOARD := preload("res://ui/screens/draft_board_screen.tscn")
 const PEOPLE := preload("res://ui/screens/people_screen.tscn")
+const RETIREMENT := preload("res://ui/screens/retirement_screen.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -258,6 +259,40 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
+		"retire-ask", "retire-summary":
+			# ⚠ **진짜 커리어로 연다.** 통산이 비어 있으면 결산이 뜻이 없다 —
+			# 몇 해를 실제로 쌓아 은퇴 시점을 만든다
+			var rt: RetirementScreen = RETIREMENT.instantiate()
+			var rst := World.new_game({"seed": 20270101, "season_year": 2038,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			var rp: Dictionary = rst["protagonist"]
+			rp["age"] = 36
+			rp["league_id"] = "LEAGUE_KBL"
+			rp["career_history"] = []
+			for y in range(2030, 2038):
+				rp["career_history"].append({
+					"year": y, "team_id": "TEAM_KBL_JEJU",
+					"stat_line": "%d승 %d패 ERA %.2f" % [12 - (y - 2030),
+						6 + (y - 2030), 3.10 + (y - 2030) * 0.2],
+					"stats": {"type": "pitcher", "g": 28,
+						"w": 12 - (y - 2030), "sv": 0, "k": 140.0 - (y - 2030) * 8},
+					"highlights": ["다승왕"] if y == 2031 else [],
+				})
+			rp["career_events"] = [
+				{"year": 2030, "type": "drafted", "detail": "1라운드 3순위 지명"},
+				{"year": 2034, "type": "trade", "detail": "트레이드 이적"},
+			]
+			Pending.push_once(rst, {"type": "retirement_ask",
+				"reason": Retirement.REASON_DECLINE,
+				"label": String(Retirement.LABELS[Retirement.REASON_DECLINE]),
+				"day": 350})
+			if which == "retire-summary":
+				Retirement.retire(rst, Retirement.REASON_DECLINE, 350)
+				rt.set_summary(RetirementVm.build_summary(rst))
+			else:
+				rt.set_ask(RetirementVm.build_ask(rst),
+					RetirementVm.build_summary(rst))
+			return rt
 		"achievements":
 			# ⚠ **진짜로 몇 주를 돌린다.** 손으로 만든 사전이면 진행도가
 			# 실제로 쌓이는지, 딴 것과 안 딴 것이 섞여 보이는지를 못 본다

@@ -16,6 +16,7 @@ class_name AppRoot
 const MATCH_SCREEN := preload("res://ui/screens/match_screen.tscn")
 const SEASON_END_SCREEN := preload("res://ui/screens/season_end_screen.tscn")
 const TRAINING_SCREEN := preload("res://ui/screens/training_screen.tscn")
+const RETIREMENT_SCREEN := preload("res://ui/screens/retirement_screen.tscn")
 
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
@@ -32,6 +33,7 @@ var _season_screen: SeasonEndScreen
 
 ## 훈련 계획 화면
 var _training_screen: TrainingScreen
+var _retire_screen: RetirementScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -282,6 +284,56 @@ func _on_training_done() -> void:
 	_refresh()
 
 
+## 은퇴를 묻는다.
+##
+## ⚠ **`retirement_ask`를 밀어넣는 코드는 있는데 받는 자리가 없었다.**
+## 02가 그랬고 04도 그대로였다 — 대기줄에 올라간 채 아무도 안 받아서
+## 자동 진행이 "은퇴 여부 결정"에서 멈춘 채 안 풀리고, `Retirement.retire`도
+## 호출부가 없어 **커리어가 영영 안 끝났다**
+func _open_retirement() -> void:
+	if _retire_screen != null:
+		return
+	_retire_screen = RETIREMENT_SCREEN.instantiate()
+	_retire_screen.retire_requested.connect(_on_retire)
+	_retire_screen.keep_playing_requested.connect(_on_keep_playing)
+	_retire_screen.done_requested.connect(_on_retirement_done)
+	add_child(_retire_screen)
+	_retire_screen.set_ask(RetirementVm.build_ask(_state),
+		RetirementVm.build_summary(_state))
+	_main.visible = false
+
+
+func retirement_screen() -> RetirementScreen:
+	return _retire_screen
+
+
+func _on_retire() -> void:
+	var ask: Dictionary = RetirementVm.ask_of(_state)
+	Retirement.retire(_state, String(ask.get("reason",
+		Retirement.REASON_DECLINE)), int(_state.get("day", 1)))
+	# ⚠ **은퇴가 확정된 뒤에 결산을 다시 만든다** — 마지막 시즌과 은퇴
+	# 사유가 빠진 채로 나오면 인생 기록이 아니다
+	if _retire_screen != null:
+		_retire_screen.set_summary(RetirementVm.build_summary(_state))
+
+
+func _on_keep_playing() -> void:
+	Retirement.keep_playing(_state)
+	_on_retirement_done()
+
+
+## ⚠ **여기서는 즉시 해제가 위험하다.** 이 화면이 쏜 신호 안에서 그 화면을
+## 지우게 되므로 "잠긴 객체"가 된다 — 미뤄서 지운다. 매 줄마다 다시 그리는
+## 자리가 아니라 화면 하나를 한 번 닫는 자리라 고아가 쌓이지도 않는다
+func _on_retirement_done() -> void:
+	if _retire_screen != null:
+		remove_child(_retire_screen)
+		_retire_screen.queue_free()
+		_retire_screen = null
+	_main.visible = true
+	_refresh()
+
+
 func season_screen() -> SeasonEndScreen:
 	return _season_screen
 
@@ -324,6 +376,11 @@ func advance(days: int) -> void:
 	# 그게 두 번째 정본이 된다
 	_apply_weekly(weeks)
 	_refresh()
+
+	# ⚠ **물어봤으면 띄운다.** 대기줄에 올려 놓고 받는 자리가 없으면
+	# 자동 진행이 "은퇴 여부 결정"에서 멈춘 채 영영 안 풀린다
+	if RetirementVm.is_asking(_state):
+		_open_retirement()
 
 
 ## 경기 하나. 결과를 **일정에 되꽂는다** — 안 꽂으면 다시 진행할 때 또 돌린다.
