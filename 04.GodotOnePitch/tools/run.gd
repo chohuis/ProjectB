@@ -61,6 +61,9 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 		"bench:game":
 			return GameBench.new().run(log_line, fail,
 				arg_int(args, "games", 200), arg_int(args, "seed", 20260813))
+		"measure:engine":
+			return EngineMeasure.new().run(log_line, fail,
+				arg_int(args, "games", 400), arg_int(args, "seed", 20260813))
 		"bench:day":
 			return await _bench_day(args)
 		"bench:save":
@@ -85,6 +88,7 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 func _print_tasks() -> void:
 	print("갈래:")
 	print("  bench:season   한 시즌 시뮬 — 진짜 엔진 (2,612경기)")
+	print("  measure:engine 경기 엔진 분포 — 02 audit-engine과 대조용")
 	print("  bench:day      최악의 날 — 진짜 일정·진짜 엔진·프레임 쪼개기")
 	print("  bench:save     저장·로드 성능")
 	print("  bench:rng      난수 분포")
