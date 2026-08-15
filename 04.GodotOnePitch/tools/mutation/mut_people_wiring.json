@@ -1,0 +1,7 @@
+[
+ [
+  "인물 탭에 관계도를 안 끼운다 (탭을 눌러도 안내 문구만 뜬다)",
+  "\t\t\"people\":\n\t\t\t_build_people()",
+  "\t\t\"people\":\n\t\t\tpass"
+ ]
+]

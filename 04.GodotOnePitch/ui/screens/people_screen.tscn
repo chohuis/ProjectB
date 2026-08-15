@@ -1,0 +1,93 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/screens/people_screen.gd" id="1_pp"]
+
+[node name="PeopleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pp")
+
+[node name="Bg" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.074, 0.086, 0.11, 1)
+
+[node name="Pad" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Col" type="VBoxContainer" parent="Pad"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Sub" type="Label" parent="Pad/Col"]
+layout_mode = 2
+
+[node name="Empty" type="Label" parent="Pad/Col"]
+layout_mode = 2
+
+[node name="Cols" type="HBoxContainer" parent="Pad/Col"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="Left" type="VBoxContainer" parent="Pad/Col/Cols"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Head" type="Label" parent="Pad/Col/Cols/Left"]
+layout_mode = 2
+
+[node name="Empty" type="Label" parent="Pad/Col/Cols/Left"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Pad/Col/Cols/Left"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Body" type="VBoxContainer" parent="Pad/Col/Cols/Left/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Right" type="VBoxContainer" parent="Pad/Col/Cols"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Head" type="Label" parent="Pad/Col/Cols/Right"]
+layout_mode = 2
+
+[node name="Empty" type="Label" parent="Pad/Col/Cols/Right"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Pad/Col/Cols/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Body" type="VBoxContainer" parent="Pad/Col/Cols/Right/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Note" type="Label" parent="Pad/Col/Cols/Right"]
+layout_mode = 2
+autowrap_mode = 2

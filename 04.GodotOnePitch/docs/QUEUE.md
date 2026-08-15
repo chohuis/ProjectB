@@ -60,6 +60,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 
 ### 묻어 둔 질문
 
+- ❓ **관계 기억(`memories`)을 각인하는 곳이 아무 데도 없다 — 02에도 없었다.**
+  02의 `addRelationMemory`는 호출자가 **0개**이고, 그런데도 `PeoplePage`는
+  기억 목록을 그렸다(영원히 빈 목록이었다). 04도 `RelationshipRunner.add_memory`
+  를 검사만 부른다. **인물 화면에서 뺐다** — 아무도 안 쓰는 데이터를 그리는
+  자리를 만들면 죽은 갈래가 된다. 각인 시점(데뷔전·완봉·방출·배신)을 정하는
+  건 설계 결정이라 이주 중에 만들지 않는다. 정하면 그때 화면에 붙인다
+
 - ❓ **해외 팜 리그 연봉 배수**가 02에 없다. 국내 1군:2군 비(0.3배)로
   파생했다 — `data/salary_rules.json`. **02는 해외 팜 연봉을 아예 안 만든다**
   (`leagueMult`에 항목이 없다). 돌려도 답이 안 나오는 부류다
@@ -331,9 +338,22 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       통째로 사라졌다. `origin_league_id`를 졸업 시점에 박는다.
       실측: 후보 1,420 · 보드 220 · 지명 110(11라운드 × 10팀).
       검사 35 · 변이 17/17 + 12/12 + 1/1
-- [ ] **C-2** 인물(관계도) ← B-2 · B-2b · B-2c.
-      읽을 것: `RelationshipRunner.rows_of` · `Staff.of` · `Staff.mods_of`.
-      **스태프가 늙고 바뀌므로 화면이 해마다 달라진다**
+- [x] **C-2** 인물(관계도) — `ui/people_vm.gd` ·
+      `ui/screens/people_screen.{tscn,gd}` · `AppTheme.TONE_COLOR`.
+      **"인물" 탭 자리는 있었고 안내 문구만 떠 있었다** — `MainVm`이
+      `PeopleVm.build`를 실어 보내고 `MainScreen`이 "나" 탭처럼 통째로 끼운다.
+      ⚠ **관계값 숫자를 화면에 안 보낸다.** VM이 내보내는 행에 `value` 자체가
+      없고, 7단계 라벨 알약 색이 유일한 눈금이다(`TONE_COLOR` 일곱 색은
+      서로 달라야 한다 — 검사가 본다).
+      ⚠ **헤어진 사람에게는 효과 문장을 안 붙인다** — `effects_of`가 접촉
+      중인 관계만 세므로 "출전 기회에서 유리합니다"를 찍으면 없는 효과를
+      약속하는 것이다. 지난 인연에는 언제 만났는지를 남긴다.
+      ⚠ **코치 전문 분야를 라벨에 붙인다** — 한 팀에 여덟 명까지라
+      안 붙이면 여덟 줄이 전부 "코치"다.
+      실측: `PeopleVm.build`가 관계 마흔 줄에 선수 9,600명 이름을 매번
+      담아 **6.45ms**였다(다시 그릴 때마다 돈다) — 필요한 id만 담고 다
+      찾으면 끝내서 **1.28ms**. `MainVm.build` 13.06 → 6.89ms.
+      검사 55 · 변이 30/30 + 22/22 + 1/1 + 2/2
 - [ ] **C-3** 학사 ← B-1. `state.academic_log`·`state.campus_log`를 읽는 자리가
       아직 없다 — 쌓이기만 하고 아무도 안 본다
 - [ ] **C-4** 재정 ← B-5. 읽을 것: `state.finance_log`(주마다 순현금·자산).

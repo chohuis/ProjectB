@@ -39,6 +39,19 @@ const SEV_COLOR := {
 	"surgery": Color("c04ad0"),
 }
 
+## 관계 7단계 — **숫자를 안 보여주는 게 인물 화면의 원칙**이라 색이 곧 수치다.
+## 적대에서 각별까지 한 방향으로 흐르게 하고 양 끝만 꽉 채운다.
+## 어느 값이 어느 색조인지는 `sim/relationship.gd`의 `LABELS`가 정한다
+const TONE_COLOR := {
+	"hostile": BAD,
+	"distrust": Color("c98a80"),
+	"cold": TEXT_MUTE,
+	"neutral": TEXT_DIM,
+	"friendly": Color("7fb0e8"),
+	"trusted": Color("6fc48d"),
+	"close": OK,
+}
+
 ## 투구 결과 큰 글자 — 1.4초 스쳐 지나가는 자리라 본문보다 채도가 높다.
 ## 어느 코드가 어느 색인지는 `sim/match_result.gd`가 정한다
 const FLASH_HOMERUN := Color("ff4a4a")

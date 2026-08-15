@@ -1,0 +1,152 @@
+[
+ [
+  "헤어진 사람도 지금 함께 칸에 넣는다",
+  "\t\tif String(r.get(\"contact\", Relationship.CONTACT_TOGETHER)) \\\n\t\t\t\t== Relationship.CONTACT_TOGETHER:",
+  "\t\tif true:"
+ ],
+ [
+  "역할 순서를 안 본다 (감독이 동료 서른 명 밑에 묻힌다)",
+  "\t\tif int(a[\"_rank\"]) != int(b[\"_rank\"]):\n\t\t\treturn int(a[\"_rank\"]) < int(b[\"_rank\"])",
+  "\t\tif false:\n\t\t\treturn false"
+ ],
+ [
+  "같은 역할을 나쁜 쪽부터 줄 세운다",
+  "\t\treturn int(a[\"_sort\"]) > int(b[\"_sort\"]))",
+  "\t\treturn int(a[\"_sort\"]) < int(b[\"_sort\"]))"
+ ],
+ [
+  "지난 인연을 진한 순서가 아니라 값 순서로 줄 세운다 (적대가 맨 밑으로)",
+  "\t\treturn absi(int(a[\"_sort\"])) > absi(int(b[\"_sort\"])))",
+  "\t\treturn int(a[\"_sort\"]) > int(b[\"_sort\"]))"
+ ],
+ [
+  "관계값을 행에 그대로 남긴다 (화면이 언젠가 찍는다)",
+  "\tfor r in together + past:\n\t\tr.erase(\"_rank\")\n\t\tr.erase(\"_sort\")",
+  "\tfor r in together + past:\n\t\tr.erase(\"_rank\")\n\t\tr[\"value\"] = r[\"_sort\"]\n\t\tr.erase(\"_sort\")"
+ ],
+ [
+  "관계가 없어도 있다고 한다",
+  "\t\t\"has_data\": not rows.is_empty(),",
+  "\t\t\"has_data\": true,"
+ ],
+ [
+  "칸마다 몇 명인지를 안 센다",
+  "\t\t\"together\": {\"label\": \"지금 함께\", \"count\": together.size(),",
+  "\t\t\"together\": {\"label\": \"지금 함께\", \"count\": 0,"
+ ],
+ [
+  "지난 인연 수를 안 센다",
+  "\t\t\"past\": {\"label\": \"지난 인연\", \"count\": past.size(),",
+  "\t\t\"past\": {\"label\": \"지난 인연\", \"count\": 0,"
+ ],
+ [
+  "감쇠 안내를 안 준다",
+  "\t\t\t\"empty\": EMPTY_PAST, \"note\": NOTE_PAST, \"rows\": past},",
+  "\t\t\t\"empty\": EMPTY_PAST, \"note\": \"\", \"rows\": past},"
+ ],
+ [
+  "지금 팀만 훑는다 (다른 팀으로 간 옛 동료가 이름 없는 줄이 된다)",
+  "\tfor tid in world.get(\"rosters\", {}):",
+  "\tfor tid in [\"T1\"]:"
+ ],
+ [
+  "한 팀만 보고 그만둔다 (찾을 게 남았는데 끝낸다)",
+  "\t\tif out.size() == wanted.size():\n\t\t\treturn out\n\treturn out",
+  "\t\treturn out\n\treturn out"
+ ],
+ [
+  "스태프 이름을 안 찾는다 (감독·코치가 전부 역할명으로 뜬다)",
+  "\tfor tid in staff:\n\t\tfor s in staff[tid]:\n\t\t\tvar sid: String = String(s.get(\"id\", \"\"))\n\t\t\tif wanted.has(sid):\n\t\t\t\tout[sid] = String(s.get(\"name\", \"\"))",
+  "\tpass"
+ ],
+ [
+  "선수 이름을 안 찾는다",
+  "\t\t\tif wanted.has(pid):\n\t\t\t\tout[pid] = String(p.get(\"name\", \"\"))",
+  "\t\t\tpass"
+ ],
+ [
+  "라벨을 값에서 안 낸다",
+  "\t\t\"label\": Relationship.label_of(value),",
+  "\t\t\"label\": \"중립\","
+ ],
+ [
+  "색조를 값에서 안 낸다",
+  "\t\t\"tone\": Relationship.tone_of(value),",
+  "\t\t\"tone\": \"neutral\","
+ ],
+ [
+  "헤어진 사람에게도 효과 문장을 붙인다 (없는 효과를 약속한다)",
+  "\t\t\"detail\": _effect_of(kind, value) if active \\\n\t\t\telse (\"%d년에 만남\" % met if met > 0 else \"\"),",
+  "\t\t\"detail\": _effect_of(kind, value),"
+ ],
+ [
+  "언제 만났는지를 안 남긴다",
+  "\t\t\"detail\": _effect_of(kind, value) if active \\\n\t\t\telse (\"%d년에 만남\" % met if met > 0 else \"\"),",
+  "\t\t\"detail\": _effect_of(kind, value) if active else \"\","
+ ],
+ [
+  "만난 해를 모르는데도 만났다고 쓴다",
+  "\t\t\telse (\"%d년에 만남\" % met if met > 0 else \"\"),",
+  "\t\t\telse (\"%d년에 만남\" % met),"
+ ],
+ [
+  "끝난 관계를 표시 안 한다",
+  "\tvar ended: bool = String(r.get(\"contact\", Relationship.CONTACT_TOGETHER)) \\\n\t\t== Relationship.CONTACT_ENDED",
+  "\tvar ended: bool = false"
+ ],
+ [
+  "이름이 없어도 빈칸으로 둔다",
+  "\treturn \"(%s)\" % String(KIND_LABEL.get(kind, \"인물\"))",
+  "\treturn \"\""
+ ],
+ [
+  "세계에 있는 이름을 안 쓴다",
+  "\tvar found: String = String(names.get(pid, \"\"))\n\tif not found.is_empty():\n\t\treturn found",
+  "\tvar found: String = \"\"\n\tif not found.is_empty():\n\t\treturn found"
+ ],
+ [
+  "코치 전문 분야를 안 붙인다 (여덟 줄이 전부 \"코치\"가 된다)",
+  "\tif not specialty.is_empty():\n\t\tout += \" · %s\" % specialty",
+  "\tif false:\n\t\tout += \" · %s\" % specialty"
+ ],
+ [
+  "전문 분야가 없는 코치에도 구분자를 붙인다",
+  "\tif not specialty.is_empty():\n\t\tout += \" · %s\" % specialty",
+  "\tout += \" · %s\" % specialty"
+ ],
+ [
+  "은퇴 표시를 안 붙인다",
+  "\tif ended:\n\t\tout += \" · 은퇴\"",
+  "\tif false:\n\t\tout += \" · 은퇴\""
+ ],
+ [
+  "역할을 한글로 안 바꾼다",
+  "\tvar out: String = String(KIND_LABEL.get(kind, kind))",
+  "\tvar out: String = kind"
+ ],
+ [
+  "모르는 역할을 맨 위로 올린다",
+  "\treturn KIND_ORDER.size() if i < 0 else i",
+  "\treturn i"
+ ],
+ [
+  "중립인데 효과가 있다고 한다",
+  "\tif step == 0:\n\t\treturn EFFECT_NEUTRAL",
+  "\tif false:\n\t\treturn EFFECT_NEUTRAL"
+ ],
+ [
+  "라벨이 아니라 부호로 가른다 (중립 +2가 \"유리합니다\"로 뜬다)",
+  "\tvar step: int = Relationship.label_step(value)\n\tif step == 0:\n\t\treturn EFFECT_NEUTRAL",
+  "\tvar step: int = value\n\tif step == 0:\n\t\treturn EFFECT_NEUTRAL"
+ ],
+ [
+  "좋을 때와 나쁠 때가 같은 문장이다",
+  "\tvar table: Dictionary = EFFECT_UP if step > 0 else EFFECT_DOWN",
+  "\tvar table: Dictionary = EFFECT_UP"
+ ],
+ [
+  "나쁜 쪽만 쓴다",
+  "\tvar table: Dictionary = EFFECT_UP if step > 0 else EFFECT_DOWN",
+  "\tvar table: Dictionary = EFFECT_DOWN"
+ ]
+]

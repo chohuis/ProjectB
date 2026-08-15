@@ -17,6 +17,7 @@ const NEWS_ROW := preload("res://ui/parts/news_row.tscn")
 const STANDING_ROW := preload("res://ui/parts/standing_row.tscn")
 const PLAYER_ROW := preload("res://ui/parts/player_row.tscn")
 const STATUS_SCREEN := preload("res://ui/screens/status_screen.tscn")
+const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 
 @onready var _bg: ColorRect = $Bg
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
@@ -209,6 +210,8 @@ func _build_body() -> void:
 			_build_team()
 		"me":
 			_build_me()
+		"people":
+			_build_people()
 		_:
 			# 아직 안 옮긴 탭. **소비자 없는 자리를 미리 만들지 않는다**
 			var l := Label.new()
@@ -250,6 +253,14 @@ func _build_me() -> void:
 	screen.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_tab_host.add_child(screen)
 	screen.set_view_model(_vm.get("me", {}))
+
+
+## 인물 탭. **`PeopleScreen`을 통째로 끼운다** — "나" 탭과 같은 방식이다
+func _build_people() -> void:
+	var screen: PeopleScreen = PEOPLE_SCREEN.instantiate()
+	screen.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_tab_host.add_child(screen)
+	screen.set_view_model(_vm.get("people", {}))
 
 
 ## 팀 탭. 로스터는 `TeamVm`이 정렬해 온다

@@ -1,0 +1,112 @@
+[
+ [
+  "관계가 없는데 빈 두 칸을 띄운다",
+  "\t_cols.visible = has",
+  "\t_cols.visible = true"
+ ],
+ [
+  "관계가 없는데 안내를 안 띄운다",
+  "\t_empty.visible = not has",
+  "\t_empty.visible = false"
+ ],
+ [
+  "두 칸을 뒤바꾼다 (헤어진 사람이 지금 함께로 뜬다)",
+  "\t_side(_left_head, _left_empty, _left_body, left, true)\n\t_side(_right_head, _right_empty, _right_body, right, false)",
+  "\t_side(_left_head, _left_empty, _left_body, right, true)\n\t_side(_right_head, _right_empty, _right_body, left, false)"
+ ],
+ [
+  "지난 인연 칸을 아예 안 그린다",
+  "\t_side(_right_head, _right_empty, _right_body, right, false)",
+  "\tpass"
+ ],
+ [
+  "지난 인연도 눌러야 보이게 한다 (안 눌러도 되는 걸 접는다)",
+  "\t_side(_right_head, _right_empty, _right_body, right, false)",
+  "\t_side(_right_head, _right_empty, _right_body, right, true)"
+ ],
+ [
+  "지금 함께 칸을 안 접는다 (서른 줄이 다 펼쳐진다)",
+  "\t_side(_left_head, _left_empty, _left_body, left, true)",
+  "\t_side(_left_head, _left_empty, _left_body, left, false)"
+ ],
+ [
+  "헤어진 사람이 없는데 감쇠 안내가 뜬다",
+  "\t_note.visible = not right.get(\"rows\", []).is_empty()",
+  "\t_note.visible = true"
+ ],
+ [
+  "감쇠 안내를 안 찍는다",
+  "\t_note.text = String(right.get(\"note\", \"\"))",
+  "\t_note.text = \"\""
+ ],
+ [
+  "칸 머리글에 몇 명인지를 안 쓴다",
+  "\thead.text = \"%s %d\" % [String(side.get(\"label\", \"\")), int(side.get(\"count\", 0))]",
+  "\thead.text = String(side.get(\"label\", \"\"))"
+ ],
+ [
+  "칸 이름을 안 쓴다",
+  "\thead.text = \"%s %d\" % [String(side.get(\"label\", \"\")), int(side.get(\"count\", 0))]",
+  "\thead.text = \"%d\" % int(side.get(\"count\", 0))"
+ ],
+ [
+  "빈 칸인데 안내를 안 띄운다",
+  "\tempty.visible = rows.is_empty()",
+  "\tempty.visible = false"
+ ],
+ [
+  "차 있는 칸에도 빈 안내를 띄운다",
+  "\tempty.visible = rows.is_empty()",
+  "\tempty.visible = true"
+ ],
+ [
+  "다시 열 때 줄을 안 지운다 (고아가 쌓인다)",
+  "\t_free_all(body)\n\tfor r in rows:",
+  "\tfor r in rows:"
+ ],
+ [
+  "이름을 안 찍는다",
+  "\tname_label.text = String(r[\"name\"])",
+  "\tname_label.text = \"\""
+ ],
+ [
+  "역할을 안 찍는다",
+  "\tkind.text = String(r[\"kind_label\"])",
+  "\tkind.text = \"\""
+ ],
+ [
+  "7단계 라벨을 안 찍는다",
+  "\tbadge.setup(String(r[\"label\"]),\n\t\tAppTheme.TONE_COLOR.get(String(r[\"tone\"]), AppTheme.TEXT_DIM))",
+  "\tbadge.setup(\"\",\n\t\tAppTheme.TONE_COLOR.get(String(r[\"tone\"]), AppTheme.TEXT_DIM))"
+ ],
+ [
+  "효과를 안 눌러도 다 펼쳐 놓는다",
+  "\tif _open_id == pid:\n\t\t_detail(body, r)",
+  "\t_detail(body, r)"
+ ],
+ [
+  "눌러도 안 펼쳐진다",
+  "\tif _open_id == pid:\n\t\t_detail(body, r)",
+  "\tif false:\n\t\t_detail(body, r)"
+ ],
+ [
+  "눌린 줄을 기억하지 않는다",
+  "\t_open_id = \"\" if _open_id == pid else pid",
+  "\t_open_id = \"\""
+ ],
+ [
+  "한 번 펼치면 다시 눌러도 안 접힌다",
+  "\t_open_id = \"\" if _open_id == pid else pid",
+  "\t_open_id = pid"
+ ],
+ [
+  "다시 열어도 지난번에 펼친 줄이 펼쳐진 채다",
+  "\t_vm = vm\n\t_open_id = \"\"",
+  "\t_vm = vm"
+ ],
+ [
+  "설명 줄을 아예 안 붙인다",
+  "\tvar text: String = String(r[\"detail\"])\n\tif text.is_empty():\n\t\treturn",
+  "\tvar text: String = \"\"\n\tif text.is_empty():\n\t\treturn"
+ ]
+]

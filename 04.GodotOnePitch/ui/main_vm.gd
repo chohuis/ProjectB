@@ -94,6 +94,7 @@ static func build(s: Dictionary) -> Dictionary:
 		"league": LeagueVm.build(s),
 		"team": TeamVm.build(s),
 		"me": StatusVm.build(s),
+		"people": PeopleVm.build(s),
 	}
 
 

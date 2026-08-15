@@ -52,6 +52,7 @@ const APP := preload("res://ui/app_root.tscn")
 const APP_ENTRY := preload("res://ui/app.tscn")
 const SEASON_END := preload("res://ui/screens/season_end_screen.tscn")
 const DRAFT_BOARD := preload("res://ui/screens/draft_board_screen.tscn")
+const PEOPLE := preload("res://ui/screens/people_screen.tscn")
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -257,6 +258,32 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
+		"people":
+			# ⚠ **진짜 세계로, 진짜 탭으로 연다.** 손으로 만든 사전이면 코치가
+			# 몇 명인지 이름이 붙는지 같은 실제 모양을 못 본다
+			var pp: AppRoot = APP.instantiate()
+			var pst := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			RelationshipRunner.reconcile(pst, 7)
+			# ⚠ **처음엔 전원이 중립이다** — 규칙이 그렇다(편차 ±10은 중립 폭
+			# 안이다). 그대로 찍으면 알약 일곱 색 중 하나만 보이므로 시즌
+			# 총평을 몇 번 돌려 실제로 갈라지게 한다
+			for i in 3:
+				RelationshipRunner.run_season(pst, 2.20, 0.05, true, 7)
+			# ⚠ **두 칸을 다 본다.** 팀을 옮기면 옛 사람들이 "지난 인연"으로
+			# 간다 — `reconcile`이 소속 바뀜을 스스로 알아본다
+			for t in World.teams_of("LEAGUE_HIGHSCHOOL"):
+				if String(t["id"]) != String(pst["protagonist"]["team_id"]):
+					pst["protagonist"]["team_id"] = String(t["id"])
+					break
+			RelationshipRunner.reconcile(pst, 14)
+			pp.set_state(pst)
+			pp.ready.connect(func() -> void: pp.screen()._on_tab(4), CONNECT_ONE_SHOT)
+			return pp
+		"people-empty":
+			var pe: PeopleScreen = PEOPLE.instantiate()
+			pe.set_view_model(PeopleVm.build({"protagonist": {}}))
+			return pe
 		"season-end-before":
 			var sb: AppRoot = APP.instantiate()
 			var sbt := World.new_game({"seed": 20270101, "season_year": 2027,
