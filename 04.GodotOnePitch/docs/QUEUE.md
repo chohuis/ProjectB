@@ -354,8 +354,35 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       담아 **6.45ms**였다(다시 그릴 때마다 돈다) — 필요한 id만 담고 다
       찾으면 끝내서 **1.28ms**. `MainVm.build` 13.06 → 6.89ms.
       검사 55 · 변이 30/30 + 22/22 + 1/1 + 2/2
-- [ ] **C-3** 학사 ← B-1. `state.academic_log`·`state.campus_log`를 읽는 자리가
-      아직 없다 — 쌓이기만 하고 아무도 안 본다
+- [ ] **C-3** 학사 ← B-1. **화면 하나가 아니다 — 끊긴 배선이 다섯이다**
+      (C-2를 끝내고 02와 대조하며 확인. 2026-08-15)
+
+      02에서 학업은 **"나" 탭의 하위 탭**이다(`ME_ORDER`) — 고교·대학일 때만
+      보인다(`navVisibility.academics`). 04의 `StatusScreen`은 하위 탭
+      셋(능력치·기록·커리어)이 **소스에 박혀 있다** — 목록을 `StatusVm`에서
+      받게 바꿔야 무대에 따라 숨길 수 있다.
+
+      ⚠ **이 화면이 쓰는 쪽이다.** 아래 둘은 **04에서 아무도 안 쓴다** —
+      읽는 코드만 있고 세우는 데가 없다(`ps_result`와 같은 모양):
+      - `school["study_mode"]` — 게임이 한 번도 안 바꾼다. **전 커리어가
+        "normal"(품질 0.55) 고정**이라 집중·휴식·수면 넷이 다 죽어 있다
+      - `school["major"]` — 안 고른다. `major_of("")`가 빈 사전이라
+        **전공 표 셋(체육교육·스포츠과학·일반전공)이 통째로 도달 불가**다
+
+      ⚠ **학사가 훈련·부상에 안 닿는다.** `Academics`에서 운영 코드가 부르는
+      건 `study_week`·`exam_at_day`·`close_semester` **셋뿐**이다:
+      - `training_mod` — 호출자 0. **학사 경고가 훈련을 안 깎는다**
+        ("경고가 훈련을 깎는다 — 그게 학사의 무게다"라고 주석에 적혀 있다)
+      - `injury_mod` — 호출자 0. 스포츠과학 부상 −12%가 안 걸린다
+      - `xp_bonus` — 호출자 0. 전공 XP 보너스가 안 걸린다
+      (`can_graduate`는 `CareerDecision`이 쓴다 · `eligibility_blocked`는
+      `DayEngine.appearance_gate`가 쓴다 — 이 둘은 이어져 있다)
+
+      화면이 읽을 것: `state.school`(gpa·warning_level·major·study_mode) ·
+      `state.academic_log`(학기 확정 기록) · `state.campus_log`(쇼케이스·올스타) ·
+      `Academics.exam_at_day`로 다음 시험까지 D-N주.
+      **04엔 과목·석차백분율이 없다** — 02의 "과목별 현황"(국영수사과)은
+      옮길 대상이 아니다(묻어 둔 질문 참고)
 - [ ] **C-4** 재정 ← B-5. 읽을 것: `state.finance_log`(주마다 순현금·자산).
       **스폰서 계약·투자 선택 화면도 여기서** (엔진은 `Finance`에 다 있다)
 - [ ] **C-5** 업적
