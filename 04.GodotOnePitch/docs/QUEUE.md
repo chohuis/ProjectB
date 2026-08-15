@@ -369,12 +369,24 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       - `school["major"]` — 안 고른다. `major_of("")`가 빈 사전이라
         **전공 표 셋(체육교육·스포츠과학·일반전공)이 통째로 도달 불가**다
 
-      ⚠ **학사가 훈련·부상에 안 닿는다.** `Academics`에서 운영 코드가 부르는
-      건 `study_week`·`exam_at_day`·`close_semester` **셋뿐**이다:
-      - `training_mod` — 호출자 0. **학사 경고가 훈련을 안 깎는다**
-        ("경고가 훈련을 깎는다 — 그게 학사의 무게다"라고 주석에 적혀 있다)
-      - `injury_mod` — 호출자 0. 스포츠과학 부상 −12%가 안 걸린다
-      - `xp_bonus` — 호출자 0. 전공 XP 보너스가 안 걸린다
+      - [x] **학사가 훈련에 닿는다** (2026-08-15 · 엔진 절반 끝냄).
+        `Academics.training_delta`를 `AppRoot`의 훈련 효율에 더한다.
+        ⚠ **학업 모드의 대가를 02에서 가져왔다** — 04는 `study_mode_gpa`만
+        옮겨 와서 **집중 수업이 학점만 올리는 공짜 선택**이었다. 02
+        `STUDY_MODE_EFFECTS.efficiencyMod`(focus 0.70 · normal 0.85 ·
+        rest 1.00 · sleep 1.05)를 `study_mode_training`으로 그대로 옮겼다.
+        ⚠ **이건 실제로 수가 움직인 변경이다.** 기본값 `normal`이 −0.15라
+        **학교에 다니는 모든 주의 성장이 15% 낮아진다.** 02가 갖고 있던
+        규칙을 복원한 것이라 이주로 보지만, 밸런스 동결 중에 수가 움직인
+        유일한 자리이므로 여기 적어 둔다. `measure:career`는 그대로다
+        (75/17/7/2 · 7R · 4,000만원) — 다만 그 계측은 `CareerRunner`만
+        돌리고 주간 훈련을 안 거치므로 **이 변경을 재는 계측이 아니다**.
+        (기존 구독 검사가 이때 깨졌다 — 두 쪽이 잠재력 천장에서 만나
+        2.00으로 같아졌다. 천장에 여유를 줘서 고쳤고, 구독 차이는 그대로 있다)
+      - ❓ **`injury_mod`·`xp_bonus`는 안 이었다 — 02도 안 썼다.**
+        02가 규칙 파일과 타입에 갖고 있으면서 읽는 자리는
+        `trainingEffBonus` 하나뿐이다(`advanceWeek.ts:281`). 이으면 기능
+        추가이자 밸런스 변경이라 이주 중엔 안 한다
       (`can_graduate`는 `CareerDecision`이 쓴다 · `eligibility_blocked`는
       `DayEngine.appearance_gate`가 쓴다 — 이 둘은 이어져 있다)
 

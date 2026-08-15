@@ -72,6 +72,15 @@ static func study_quality(mode: String) -> float:
 	return float(university().get("study_mode_gpa", {}).get(mode, 0.55))
 
 
+## 그 방식이 훈련 효율을 얼마나 남기나 (1.0 = 그대로).
+##
+## ⚠ **학업 모드는 대가가 있어야 선택이 된다.** 집중 수업이 학점만 올리고
+## 아무것도 안 뺏으면 늘 집중이다 — 02는 이 축을 갖고 있었는데(`STUDY_MODE_
+## EFFECTS.efficiencyMod`) 04로 넘어올 때 학점 표만 왔다
+static func study_training(mode: String) -> float:
+	return float(university().get("study_mode_training", {}).get(mode, 0.85))
+
+
 ## 그 주의 학업을 쌓는다. **제자리에서 고친다.**
 ##
 ## ⚠ **주차 수도 같이 센다.** 평균을 내야 학기 길이가 달라도 공정하다 —
@@ -121,6 +130,15 @@ static func training_mod(school: Dictionary) -> float:
 	# 전공 보너스는 경고와 별개 축이다
 	return base + float(major_of(String(school.get("major", ""))).get(
 		"training_eff_bonus", 0.0))
+
+
+## 학사가 이번 주 훈련 효율에 더하는 값. **중립이면 정확히 0이다.**
+##
+## ⚠ **04는 훈련 효율을 덧셈으로 합친다.** 곱하면 부상 배수까지 같이
+## 늘어난다 — 스태프 계수도 같은 규칙으로 들어간다
+static func training_delta(school: Dictionary) -> float:
+	return (training_mod(school) - 1.0) \
+		+ (study_training(String(school.get("study_mode", "normal"))) - 1.0)
 
 
 ## 경기에 못 나가나 — 2단계부터다

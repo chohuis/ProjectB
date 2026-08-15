@@ -862,6 +862,71 @@ func test_a_suspension_reaches_the_game_gate() -> void:
 		.is_equal("skip_academic")
 
 
+## ⚠ **학사가 훈련에 닿는다.** `Academics.training_mod`는 만들어 놓고
+## **아무도 안 불렀다** — "경고가 훈련을 깎는다, 그게 학사의 무게다"라고
+## 주석에 적혀 있는데 경고를 받아도 훈련은 그대로였다
+func test_an_academic_warning_cuts_training() -> void:
+	var grown: Array = []
+	for level in [0, 2]:
+		grown.append(await _grew_at_school(
+			{"major": "", "study_mode": "normal", "warning_level": level}))
+
+	assert_float(grown[1]).override_failure_message(
+		"학사 경고 2단계(%.3f)인데 정상(%.3f)과 똑같이 컸다" % [grown[1], grown[0]]
+		).is_less(grown[0])
+
+
+## 30주를 학교에 다니며 구속이 얼마나 올랐나.
+##
+## ⚠ **`core_ovr`로는 못 잰다** — 반올림된 파생값이라 0.15배 차이가 열 주에
+## 한 칸도 안 움직인다.
+##
+## ⚠ **천장에 붙으면 두 쪽이 같은 값으로 만난다.** 시작 구속을 낮게 잡아
+## 30주 내내 여유를 둔다 — 안 그러면 효율을 깎아도 결과가 같아서
+## "배선이 됐다"는 거짓 통과가 난다
+func _grew_at_school(school: Dictionary,
+		league: String = "LEAGUE_HIGHSCHOOL") -> float:
+	var s: Dictionary = _real_game(777)
+	s["protagonist"]["league_id"] = league
+	s["protagonist"]["potential_hidden"] = 99.0
+	s["protagonist"]["pitching"]["velocity"] = 40.0
+	s["training_plan"] = {"primary": "TRN_VEL"}
+	if not school.is_empty():
+		s["school"] = school
+	var before: float = float(s["protagonist"]["pitching"]["velocity"])
+
+	var r: AppRoot = await _mount(s)
+	for w in range(1, 31):
+		r._apply_one_week(w * 7)
+	return float(r.state()["protagonist"]["pitching"]["velocity"]) - before
+
+
+## ⚠ **학업 모드가 훈련을 대가로 받는다.** 안 이으면 집중 수업이 학점만
+## 올리고 아무것도 안 뺏어서 **고를 이유가 없는 선택**이 된다
+func test_the_study_mode_costs_training() -> void:
+	var grown: Array = []
+	for mode in ["focus", "sleep"]:
+		grown.append(await _grew_at_school(
+			{"major": "", "study_mode": mode, "warning_level": 0}))
+
+	assert_float(grown[0]).override_failure_message(
+		"집중 수업(%.3f)이 수업 중 수면(%.3f)만큼 컸다 — 대가가 없다"
+		% [grown[0], grown[1]]).is_less(grown[1])
+
+
+## ⚠ **프로에는 학사가 없다.** 학적이 없는 단계에서 학업 모드가 훈련에
+## 걸리면, 02가 실제로 겪은 대로 프로 선수에게 "주간 효율 85%"가 붙는다
+func test_a_pro_is_not_taxed_by_studies() -> void:
+	# 한쪽에만 최악의 학사를 얹는다 — 프로면 아무 일도 없어야 한다
+	var taxed: float = await _grew_at_school(
+		{"major": "", "study_mode": "focus", "warning_level": 3}, "LEAGUE_KBL")
+	var clean: float = await _grew_at_school({}, "LEAGUE_KBL")
+
+	assert_float(taxed).override_failure_message(
+		"프로인데 학사가 훈련을 깎았다 (%.3f vs %.3f)" % [taxed, clean]
+		).is_equal_approx(clean, 0.0001)
+
+
 ## ⚠ **대학 무대는 주인공이 없어도 선다.** 세계의 일이고, 주인공이 안
 ## 불렸다는 것도 결과다 — 주인공 검사 뒤로 내리면 그게 통째로 사라진다
 func test_the_campus_stage_runs_without_a_protagonist() -> void:
@@ -903,7 +968,11 @@ func test_a_subscription_reaches_the_training() -> void:
 	for subscribed in [false, true]:
 		var s: Dictionary = _real_game(777)
 		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
-		s["protagonist"]["potential_hidden"] = 95.0
+		# ⚠ **천장에 여유를 둔다.** 잠재력에 붙으면 두 쪽이 같은 값으로
+		# 만나서 구독의 차이가 지워진다 — 학사가 훈련 효율에 얹히면서
+		# 실제로 둘 다 정확히 2.00으로 떨어졌다
+		s["protagonist"]["potential_hidden"] = 99.0
+		s["protagonist"]["pitching"]["velocity"] = 40.0
 		# ⚠ **여기서 재려는 것은 구독이다.** 코치가 같은 축에 얹히므로
 		# 그대로 두면 좋은 코치가 붙은 팀에서 둘이 같은 성장 칸에 떨어져
 		# 구독의 차이가 지워진다 — 스태프 효과는 스태프 검사가 본다

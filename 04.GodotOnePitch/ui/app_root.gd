@@ -405,7 +405,7 @@ func _apply_one_week(at_day: int = -1) -> void:
 
 	# 학사 — **학교에 다니는 동안만.** 시험 주에 학기가 확정되고, 경고가
 	# 훈련 효율을 깎는다
-	_apply_academics(p, at_day)
+	var academic_eff: float = _apply_academics(p, at_day)
 
 	# 부상 — **훈련보다 먼저다.** 이번 주 부상 배수가 훈련 효율에 걸리고,
 	# 판정이 보는 피로는 **이 주에 들어설 때의 피로**여야 한다. 뒤로 미루면
@@ -453,11 +453,18 @@ func _apply_one_week(at_day: int = -1) -> void:
 	# 곱하면 부상 배수까지 같이 늘어난다. 그리고 중립 코치(50)면 더하는 값이
 	# 정확히 0이라 **지금까지의 수가 그대로 남는다** — 밸런스가 동결이라
 	# 그게 중요하다
+	#
+	# ⚠ **학사도 여기 걸린다.** `Academics.training_mod`는 만들어 놓고
+	# **아무도 안 불렀다** — 경고를 받아도 훈련은 그대로였고, 그러면
+	# 학사가 경기 출전 정지 하나뿐인 시스템이 된다. 학업 모드의 대가도
+	# 같이 걸린다 — 안 걸면 집중 수업이 학점만 올리는 공짜 선택이 된다.
+	# **학교에 다닐 때만 0이 아니다**
 	var efficiency: float = float(p.get("injury_eff_mod", 1.0)) \
 		+ Finance.total_training_bonus(
 			_state.get("training_subscriptions", []),
 			float(p.get("team_facility", 1.0))) \
-		+ (float(staff["training"]) - 1.0)
+		+ (float(staff["training"]) - 1.0) \
+		+ academic_eff
 	var out: Dictionary = TrainingGrowth.calc(p,
 		_state.get("training_plan", {}),
 		Training.programs(), efficiency)
@@ -516,13 +523,18 @@ func _apply_finance(p: Dictionary, at_day: int) -> Dictionary:
 const SCHOOL_LEAGUES: Array[String] = ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY"]
 
 
-## 한 주의 학사. **학교에 다니는 동안만 돈다.**
+## 한 주의 학사. **학교에 다니는 동안만 돈다.** 이번 주 훈련 효율에
+## 더할 값을 돌려준다 — 학적이 없으면 0이다.
 ##
 ## ⚠ **시험 주에 학기를 확정한다.** 02는 대학 시험 트리거가 없어 학기
 ## 확정이 죽은 코드였다 — 학점이 영영 안 매겨졌다
-func _apply_academics(p: Dictionary, at_day: int) -> void:
+##
+## ⚠ **프로에는 학사가 없다.** 02는 프로 선수에게도 주간 학업이 돌아
+## `efficiencyMod`가 훈련에 곱해지고 "[학업] 주간 효율 85%" 로그까지
+## 남았다 — 학적이 없는 단계에서 학업 상태는 뜻이 없다
+func _apply_academics(p: Dictionary, at_day: int) -> float:
 	if not SCHOOL_LEAGUES.has(String(p.get("league_id", ""))):
-		return
+		return 0.0
 
 	var school: Dictionary = _state.get("school", {})
 	if school.is_empty():
@@ -543,3 +555,4 @@ func _apply_academics(p: Dictionary, at_day: int) -> void:
 		p["eligibility_blocked"] = bool(r["blocked"])
 
 	_state["school"] = school
+	return Academics.training_delta(school)

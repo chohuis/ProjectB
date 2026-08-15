@@ -16,6 +16,14 @@
    "normal": 0.55,
    "rest": 0.3,
    "sleep": 0.05
+  },
+  "study_mode_training": {
+   "_note": "02 academicsEngine.ts STUDY_MODE_EFFECTS.efficiencyMod 그대로. 학업 모드가 훈련 효율을 대가로 받는다 — 이 축이 없으면 집중 수업이 학점만 올리고 아무것도 안 뺏어서 고를 이유가 없는 선택이 된다",
+   "_note2": "02 AcademicsPage에는 75%/90%라고 적혀 있는데 표는 0.70/0.85다. 화면 문구 쪽이 낡았다 — 표를 옮긴다",
+   "focus": 0.70,
+   "normal": 0.85,
+   "rest": 1.00,
+   "sleep": 1.05
   }
  },
  "_majors_note": "전공은 각각 다른 축을 준다. 전부 훈련효율만 주면 고를 이유가 없다",

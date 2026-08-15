@@ -1,0 +1,17 @@
+[
+ [
+  "학사를 훈련 효율에 안 얹는다 (경고를 받아도 훈련은 그대로다)",
+  "\t\t+ (float(staff[\"training\"]) - 1.0) \\\n\t\t+ academic_eff",
+  "\t\t+ (float(staff[\"training\"]) - 1.0)"
+ ],
+ [
+  "프로에게도 학업 대가를 물린다 (학적이 없는데 주간 효율 85%)",
+  "\tif not SCHOOL_LEAGUES.has(String(p.get(\"league_id\", \"\"))):\n\t\treturn 0.0",
+  "\tif not SCHOOL_LEAGUES.has(String(p.get(\"league_id\", \"\"))):\n\t\treturn Academics.training_delta(_state.get(\"school\", {\"study_mode\": \"normal\"}))"
+ ],
+ [
+  "학사가 늘 중립이라고 본다",
+  "\treturn Academics.training_delta(school)",
+  "\treturn 0.0"
+ ]
+]

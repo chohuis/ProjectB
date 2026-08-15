@@ -1,0 +1,27 @@
+[
+ [
+  "학업 모드가 훈련을 안 뺏는다 (집중 수업이 공짜가 된다)",
+  "\treturn (training_mod(school) - 1.0) \\\n\t\t+ (study_training(String(school.get(\"study_mode\", \"normal\"))) - 1.0)",
+  "\treturn (training_mod(school) - 1.0)"
+ ],
+ [
+  "학사 경고가 훈련을 안 깎는다",
+  "\treturn (training_mod(school) - 1.0) \\\n\t\t+ (study_training(String(school.get(\"study_mode\", \"normal\"))) - 1.0)",
+  "\treturn (study_training(String(school.get(\"study_mode\", \"normal\"))) - 1.0)"
+ ],
+ [
+  "곱해서 합친다 (04는 덧셈 규칙이고 중립이 0이어야 한다)",
+  "\treturn (training_mod(school) - 1.0) \\\n\t\t+ (study_training(String(school.get(\"study_mode\", \"normal\"))) - 1.0)",
+  "\treturn training_mod(school) * study_training(String(school.get(\"study_mode\", \"normal\")))"
+ ],
+ [
+  "모르는 학업 모드를 공짜로 본다",
+  "\treturn float(university().get(\"study_mode_training\", {}).get(mode, 0.85))",
+  "\treturn float(university().get(\"study_mode_training\", {}).get(mode, 1.0))"
+ ],
+ [
+  "학업 모드 표를 안 읽고 늘 그대로 둔다",
+  "\treturn float(university().get(\"study_mode_training\", {}).get(mode, 0.85))",
+  "\treturn 1.0"
+ ]
+]

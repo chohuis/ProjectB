@@ -54,6 +54,85 @@ func test_the_exam_weeks_match_02() -> void:
 # ── 주간 학업 ─────────────────────────────────────────────────
 
 ## 공부 방식이 품질을 가른다 — 안 가르면 고를 이유가 없다
+## ⚠ **학업 모드는 훈련 효율을 대가로 받는다.** 이게 없으면 고를 이유가
+## 없다 — 집중이 학점만 올리고 아무것도 안 뺏으면 늘 집중이다.
+## 02 `STUDY_MODE_EFFECTS.efficiencyMod` 그대로
+func test_the_study_mode_costs_training() -> void:
+	assert_float(Academics.study_training(  "focus")).is_equal(0.70)
+	assert_float(Academics.study_training( "normal")).is_equal(0.85)
+	assert_float(Academics.study_training(   "rest")).is_equal(1.00)
+	assert_float(Academics.study_training(  "sleep")).is_equal(1.05)
+
+
+## 학점이 오르는 순서와 훈련 효율이 내리는 순서가 **정확히 반대**다 —
+## 어느 쪽도 공짜가 아니어야 선택이 된다
+func test_study_gpa_and_training_trade_off() -> void:
+	var modes: Array = ["sleep", "rest", "normal", "focus"]
+	for i in range(1, modes.size()):
+		var lo: String = String(modes[i - 1])
+		var hi: String = String(modes[i])
+		assert_float(Academics.study_quality(hi)).override_failure_message(
+			"%s가 %s보다 학점을 덜 준다" % [hi, lo]
+			).is_greater(Academics.study_quality(lo))
+		assert_float(Academics.study_training(hi)).override_failure_message(
+			"%s가 %s보다 훈련을 덜 뺏는다 — 그러면 늘 %s다" % [hi, lo, hi]
+			).is_less(Academics.study_training(lo))
+
+
+func test_an_unknown_study_mode_costs_nothing_extra() -> void:
+	assert_float(Academics.study_training("몰라")).is_equal(0.85)
+
+
+# ── 훈련 효율에 더할 값 ───────────────────────────────────────
+
+## ⚠ **04는 훈련 효율을 덧셈으로 합친다.** 아무 일도 없으면 정확히 0이어야
+## 지금까지의 수가 그대로 남는다 — 밸런스가 동결이라 그게 중요하다
+func test_a_quiet_semester_adds_nothing() -> void:
+	assert_float(Academics.training_delta(
+		{"major": "", "study_mode": "rest", "warning_level": 0})
+		).is_equal_approx(0.0, 0.0001)
+
+
+func test_a_warning_shows_up_in_the_delta() -> void:
+	assert_float(Academics.training_delta(
+		{"major": "", "study_mode": "rest", "warning_level": 1})
+		).is_equal_approx(-0.10, 0.0001)
+
+
+func test_the_study_mode_shows_up_in_the_delta() -> void:
+	assert_float(Academics.training_delta(
+		{"major": "", "study_mode": "focus", "warning_level": 0})
+		).is_equal_approx(-0.30, 0.0001)
+
+
+## ⚠ **곱하지 않고 더한다.** 곱하면 경고 0.9 × 집중 0.70 = 0.63이라
+## 둘 다 걸렸을 때 덧셈(−0.40)보다 덜 아프다 — 그리고 부상 배수까지
+## 같이 늘어난다
+func test_the_two_axes_add_up_rather_than_multiply() -> void:
+	var both: float = Academics.training_delta(
+		{"major": "", "study_mode": "focus", "warning_level": 1})
+	# 곱하면 0.9 × 0.70 − 1 = −0.37이다. 이 값이 −0.40이면 더한 것이다
+	assert_float(both).override_failure_message(
+		"두 축을 곱해서 합쳤다 (%.4f) — 덧셈(−0.40)보다 덜 아프다" % both
+		).is_equal_approx(-0.40, 0.0001)
+
+
+## 전공 보너스도 같은 축에 들어간다 — `training_mod`가 이미 합쳐서 준다
+func test_the_major_bonus_shows_up_in_the_delta() -> void:
+	var plain: float = Academics.training_delta(
+		{"major": "일반전공", "study_mode": "rest", "warning_level": 0})
+	var sport: float = Academics.training_delta(
+		{"major": "체육교육", "study_mode": "rest", "warning_level": 0})
+	assert_float(sport).override_failure_message(
+		"전공 훈련 보너스가 훈련 효율에 안 닿는다").is_greater(plain)
+
+
+## 학업 모드를 안 정했으면 보통으로 본다 — 세이브에 없을 수 있다
+func test_a_missing_study_mode_falls_to_normal() -> void:
+	assert_float(Academics.training_delta({"warning_level": 0})
+		).is_equal_approx(Academics.study_training("normal") - 1.0, 0.0001)
+
+
 func test_the_study_mode_sets_the_quality() -> void:
 	assert_float(Academics.study_quality("focus")).is_equal(0.85)
 	assert_float(Academics.study_quality("normal")).is_equal(0.55)
