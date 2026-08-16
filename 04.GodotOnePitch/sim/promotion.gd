@@ -34,13 +34,17 @@ static func push_year_once(history: Array, entry: Dictionary) -> Array:
 	return history
 
 
-## 한 해 진급. `{updated, hs_graduated, univ_graduated}`
+## 한 해 진급. `{hs_graduated, univ_graduated}`
+##
+## ⚠ **사전을 제자리에서 고친다.** 학년이 오른 사람 목록(`updated`)을 같이
+## 돌려주고 있었는데 **부르는 곳이 안 읽었다**(`season_runner.gd:60`은
+## 졸업생 둘만 쓴다). 배열에 뭘 담든 결과가 같아 변이가 안 잡혔고,
+## 그게 죽은 갈래라는 증거였다
 ##
 ## ⚠ **부상 중이어도 학년은 오른다.** 02는 `active`만 진급시켜서 부상
 ## 선수가 학년이 안 오르고 졸업도 안 됐다 — 나이만 매 시즌 +1 되어
 ## 20~21세 고교생이 쌓였다. 자리를 비우는 건 은퇴뿐이다
 static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
-	var updated: Array = []
 	var hs_graduated: Array = []
 	var univ_graduated: Array = []
 
@@ -49,7 +53,6 @@ static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
 		if not SCHOOL_LEAGUES.has(league) \
 				or npc.get("career_status", "") == "retired" \
 				or npc.get("grade", null) == null:
-			updated.append(npc)
 			continue
 
 		var grade: int = int(npc["grade"])
@@ -73,7 +76,6 @@ static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
 			# ⚠ **학년은 위에서 이미 올렸다.** 주인공도 학년은 올라야 한다 —
 			# 거르는 것은 졸업 뒤 소속 배정뿐이다
 			if bool(npc.get("is_protagonist", false)):
-				updated.append(npc)
 				continue
 			npc["grade"] = null
 			# ⚠ **덮기 전에 어디서 왔는지를 박아 둔다.** 여기서 안 남기면
@@ -91,9 +93,8 @@ static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
 				univ_graduated.append(npc)
 		else:
 			npc["grade"] = grade + 1
-			updated.append(npc)
 
-	return {"updated": updated, "hs_graduated": hs_graduated,
+	return {"hs_graduated": hs_graduated,
 		"univ_graduated": univ_graduated}
 
 

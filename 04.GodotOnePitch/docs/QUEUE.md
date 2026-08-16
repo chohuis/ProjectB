@@ -749,7 +749,25 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       돌려주는 `updated`를 **아무도 안 쓴다**(`season_runner.gd:60`이
       `hs_graduated`·`univ_graduated`만 읽는다). 아래 P-8d 참조.
 
-- [ ] **P-8d `advance_grades`의 `updated` 반환이 죽어 있다**
+- [x] **P-8d `advance_grades`의 `updated` 반환이 죽어 있던 것** —
+      2026-08-16 지웠다. 검사 11곳을 사전 직접 보기로 바꿨다
+      (`_run([n])` 뒤 `n["grade"]`). 변이 3/3.
+
+- [x] **P-8c(a) 계측이 진로 결정에 답을 안 해 커리어가 멈추던 것** —
+      2026-08-16 고침. `career_choice_hub` 하나만 답하고 있었는데
+      흐름이 셋이다: 지원 → **결과 확인**(`career_results`) →
+      **최종 선택**(`career_choice`). 뒤 둘이 안 풀려 3학년에 섰다.
+      고친 뒤 2029년에 `university/LEAGUE_UNIVERSITY`로 **stage와 리그가
+      함께** 바뀌고 대기줄도 빈다.
+
+- [ ] **P-8c(b) 등판이 여전히 10경기다**
+      진로가 풀린 뒤에도 그대로다 — 대학에 가서도 첫 해 몫만 쌓인다.
+      ⚠ **입력을 센다**: `MatchDay.play`가 게이트(`skip_injury`)를 보고
+      주인공을 안 내보내는지, `is_protagonist_game`이 **새 시즌 일정에
+      다시 붙는지**. `World.build_schedule`이 해마다 다시 도는지부터 본다.
+      라이벌이 5명에서 안 느는 것(02는 8명)이 여기 걸려 있다.
+
+- [ ] ~~P-8d `advance_grades`의 `updated` 반환이 죽어 있다~~ (원래 기록)
       **읽는 곳을 다 셌다(2026-08-16):**
       · 게임 코드 — **없다.** `season_runner.gd:60`이 `hs_graduated`와
         `univ_graduated`만 쓴다

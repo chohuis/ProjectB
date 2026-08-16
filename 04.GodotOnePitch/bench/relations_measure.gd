@@ -98,9 +98,21 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			s["day"] = day
 			# 진로 물음이 떠 있으면 지명을 고른다 — 안 고르면 커리어가
 			# 고교에서 멈춰 프로 관계(구단주)가 영영 안 생긴다
+			# 진로 결정 셋을 차례로 답한다 — **한 주에 하나씩 열린다.**
+			#
+			# ⚠ **`career_choice_hub`만 답하면 3학년에서 멈춘다.** 결과 확인과
+			# 최종 선택이 남아 대기줄이 안 풀리고, 커리어가 그 자리에 선다 —
+			# 실측에서 2029·2030년에 `career_results`가 떠 있었다
 			if Pending.has(s, "career_choice_hub"):
 				CareerDecision.submit_applications(s, {"draft": true,
 					"university_choices": ["TEAM_UNIV_BAEKJE"]})
+			elif Pending.has(s, "career_results"):
+				CareerDecision.confirm_results(s)
+			elif Pending.has(s, "career_choice"):
+				# 지명이 되면 프로로, 아니면 대학으로 — 화면이 주는 선택지 순서다
+				if CareerDecision.choose_draft(s).is_empty():
+					CareerDecision.choose_school_or_independent(s, "university",
+						"TEAM_UNIV_BAEKJE")
 			# ⚠ **입력을 센다.** 코치는 담당 영역 훈련과 성장으로만 오른다 —
 			# 산식을 의심하기 전에 그 둘이 몇 번 걸리는지 본다.
 			# `WeekRunner` **앞**에서 재야 그 주의 성장분이 잡힌다

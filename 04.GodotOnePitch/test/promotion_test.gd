@@ -24,13 +24,13 @@ func _run(npcs: Array, year: int = 2027) -> Dictionary:
 # ── 진급 ──────────────────────────────────────────────────────
 
 func test_a_highschooler_moves_up_a_grade() -> void:
-	var out: Dictionary = _run([_npc({"grade": 1})])
-	assert_int(int(out["updated"][0]["grade"])).is_equal(2)
+	var n: Dictionary = _npc({"grade": 1})
+	_run([n])
+	assert_int(int(n["grade"])).is_equal(2)
 
 
 func test_a_third_year_graduates() -> void:
 	var out: Dictionary = _run([_npc({"grade": 3})])
-	assert_array(out["updated"]).is_empty()
 	assert_int(out["hs_graduated"].size()).is_equal(1)
 
 
@@ -44,7 +44,8 @@ func test_a_graduate_lands_in_the_draft_pool() -> void:
 
 func test_a_university_player_graduates_after_four_years() -> void:
 	var u: Dictionary = _npc({"league_id": "LEAGUE_UNIVERSITY", "grade": 3, "age": 20})
-	assert_int(int(_run([u])["updated"][0]["grade"])).is_equal(4)
+	_run([u])
+	assert_int(int(u["grade"])).is_equal(4)
 
 	var u4: Dictionary = _npc({"league_id": "LEAGUE_UNIVERSITY", "grade": 4, "age": 21})
 	var out: Dictionary = _run([u4])
@@ -63,20 +64,24 @@ func test_a_university_third_year_does_not_graduate() -> void:
 ## 선수가 학년이 안 오르고 졸업도 안 됐다 — 나이만 매 시즌 +1 되어
 ## 20~21세 고교생이 쌓였다. 자리를 비우는 건 은퇴뿐이다
 func test_an_injured_player_still_moves_up() -> void:
-	var out: Dictionary = _run([_npc({"career_status": "injured", "grade": 2})])
-	assert_int(int(out["updated"][0]["grade"])).override_failure_message(
+	var n: Dictionary = _npc({"career_status": "injured", "grade": 2})
+	_run([n])
+	assert_int(int(n["grade"])).override_failure_message(
 		"부상 선수가 진급을 못 했다 — 20세 고교생이 쌓인다").is_equal(3)
 
 
 func test_a_retired_player_stays_put() -> void:
-	var out: Dictionary = _run([_npc({"career_status": "retired", "grade": 2})])
-	assert_int(int(out["updated"][0]["grade"])).is_equal(2)
+	var n: Dictionary = _npc({"career_status": "retired", "grade": 2})
+	_run([n])
+	assert_int(int(n["grade"])).is_equal(2)
 
 
 ## 프로는 학년이 없다 — 건드리지 않는다
 func test_a_pro_is_left_alone() -> void:
-	var out: Dictionary = _run([_npc({"league_id": "LEAGUE_KBL", "grade": 0})])
-	assert_int(out["updated"].size()).is_equal(1)
+	var n: Dictionary = _npc({"league_id": "LEAGUE_KBL", "grade": 0})
+	var out: Dictionary = _run([n])
+	assert_int(int(n["grade"])).override_failure_message(
+		"프로의 학년을 건드렸다").is_equal(0)
 	assert_array(out["hs_graduated"]).is_empty()
 	assert_array(out["univ_graduated"]).is_empty()
 
@@ -84,8 +89,9 @@ func test_a_pro_is_left_alone() -> void:
 # ── 연도 기록 ─────────────────────────────────────────────────
 
 func test_each_year_leaves_a_record() -> void:
-	var out: Dictionary = _run([_npc({"grade": 1})], 2027)
-	var h: Array = out["updated"][0]["career_history"]
+	var n: Dictionary = _npc({"grade": 1})
+	_run([n], 2027)
+	var h: Array = n["career_history"]
 	assert_int(h.size()).is_equal(1)
 	assert_int(int(h[0]["year"])).is_equal(2027)
 	assert_str(h[0]["league_id"]).is_equal("LEAGUE_HIGHSCHOOL")
@@ -99,7 +105,8 @@ func test_each_year_leaves_a_record() -> void:
 func test_the_same_year_is_not_written_twice() -> void:
 	var n: Dictionary = _npc({"grade": 1, "career_history": [
 		{"year": 2027, "league_id": "LEAGUE_HIGHSCHOOL", "team_id": "TEAM_A"}]})
-	var h: Array = _run([n], 2027)["updated"][0]["career_history"]
+	_run([n], 2027)
+	var h: Array = n["career_history"]
 	assert_int(h.size()).override_failure_message(
 		"같은 해가 %d줄이다" % h.size()).is_equal(1)
 
@@ -157,7 +164,10 @@ func test_a_full_school_career_takes_seven_years() -> void:
 	# 고교 3년
 	for i in 3:
 		var out: Dictionary = _run(pool, year)
-		pool = out["updated"] + out["hs_graduated"] + out["univ_graduated"]
+		# 졸업생은 반환으로, 재학생은 제자리로 남는다 — 둘을 합쳐 다음 해로
+		var still: Array = pool.filter(
+			func(x): return x.get("grade", null) != null)
+		pool = out["hs_graduated"] + out["univ_graduated"] + still
 		pool = Promotion.advance_ages(pool)
 		year += 1
 	assert_str(pool[0]["league_id"]).is_equal(Promotion.DRAFT_POOL)
@@ -167,7 +177,6 @@ func test_a_full_school_career_takes_seven_years() -> void:
 
 func test_an_empty_roster_does_not_break() -> void:
 	var out: Dictionary = _run([])
-	assert_array(out["updated"]).is_empty()
 	assert_array(out["hs_graduated"]).is_empty()
 	assert_array(out["univ_graduated"]).is_empty()
 
@@ -194,8 +203,9 @@ func _me(o: Dictionary = {}) -> Dictionary:
 
 ## 주인공도 학년은 오른다
 func test_the_protagonist_still_moves_up_a_grade() -> void:
-	var out: Dictionary = _run([_me({"grade": 1})])
-	assert_int(int(out["updated"][0]["grade"])).override_failure_message(
+	var me: Dictionary = _me({"grade": 1})
+	_run([me])
+	assert_int(int(me["grade"])).override_failure_message(
 		"주인공 학년이 안 올랐다").is_equal(2)
 
 
