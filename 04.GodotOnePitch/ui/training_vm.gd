@@ -86,6 +86,79 @@ static func build(state: Dictionary) -> Dictionary:
 
 		"delta_label": "이번 주 피로 %+.1f · 컨디션 %+.1f" % [
 			float(pv["fatigue_delta"]), float(pv["condition_delta"])],
+
+		# ⚠ **구종을 고르는 자리가 아예 없었다** (F-1). 02엔 훈련 화면에
+		# 구종 탭이 있었다(보유 · 습득 중 · 해금 가능 · 조건 미충족).
+		# 04는 성장 축 자체가 죽어 있어서 화면도 없었다
+		"pitch": _pitch(p, plan),
+	}
+
+
+## 능력치 이름표. **`StatusVm.PITCHING_LABELS`가 정본이다** — 해금 문턱을
+## "command 52"가 아니라 "커맨드 52"로 말해야 한다
+static func _stat_label(stat: String) -> String:
+	for pair in StatusVm.PITCHING_LABELS:
+		if String(pair[0]) == stat:
+			return String(pair[1])
+	return stat
+
+
+## 구종 — 지금 배우는 것과 고를 수 있는 것.
+##
+## ⚠ **못 고르는 것도 남긴다.** 02도 "조건 미충족"을 따로 보여줬다 —
+## 빼 버리면 무엇을 올려야 열리는지 알 길이 없다.
+##
+## ⚠ **문턱을 숫자로 말한다.** "조건 미충족"만 뜨면 뭘 해야 하는지 모른다
+static func _pitch(p: Dictionary, plan: Dictionary) -> Dictionary:
+	var rows: Array = []
+	for c in PitchDev.choices(p):
+		var why: String = ""
+		match String(c["why"]):
+			"mastered":
+				why = "이미 마스터"
+			"full":
+				why = "구종은 %d개까지" % PitchDev.max_learned()
+			"locked":
+				var parts := PackedStringArray()
+				for cond in c.get("unlock", []):
+					parts.append("%s %d" % [_stat_label(String(cond.get("stat", ""))),
+						int(cond.get("value", 0))])
+				why = "필요: " + " · ".join(parts)
+		rows.append({
+			"id": c["id"], "name": c["name"], "grade": c["grade"],
+			"owned": c["owned"], "can_train": c["can_train"], "why": why,
+			# 별로 보여준다 — 숫자 5는 등급인지 개수인지 헷갈린다
+			"grade_label": "★".repeat(int(c["grade"])) if bool(c["owned"]) else "",
+		})
+
+	var ts: Dictionary = p.get("training_pitch_state", {})
+	var learning: Dictionary = {}
+	if not ts.is_empty():
+		var id: String = String(ts.get("id", ""))
+		learning = {
+			"id": id,
+			"name": String(PitchDev.entry_of(id).get("name", id)),
+			"progress": float(ts.get("progress", 0.0)),
+			"label": "%s %d%%" % [String(PitchDev.entry_of(id).get("name", id)),
+				int(float(ts.get("progress", 0.0)))],
+		}
+
+	# ⚠ **계획에 구종 개발이 없으면 진행이 안 된다.** 구종을 골라 놓고
+	# 훈련 슬롯을 안 채우면 영원히 0%인데 화면이 아무 말도 안 하면
+	# "골랐는데 왜 안 늘지"가 된다
+	var planned: bool = false
+	for key in ["primary", "secondary", "secondary2"]:
+		var prog: Dictionary = Training.program(String(plan.get(key, "")))
+		if bool(prog.get("is_pitch_dev", false)):
+			planned = true
+			break
+
+	return {
+		"rows": rows,
+		"learning": learning,
+		"planned": planned,
+		"note": "" if planned or learning.is_empty()
+			else "훈련 슬롯에 '구종 개발'을 넣어야 진행됩니다.",
 	}
 
 

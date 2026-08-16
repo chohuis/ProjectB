@@ -18,10 +18,16 @@ class_name TrainingScreen
 @onready var _projected: Label = $Pad/Center/Col/Projected
 @onready var _slots: VBoxContainer = $Pad/Center/Col/Slots
 @onready var _options: VBoxContainer = $Pad/Center/Col/Options
+@onready var _pitch_title: Label = $Pad/Center/Col/PitchTitle
+@onready var _pitches: VBoxContainer = $Pad/Center/Col/Pitches
 @onready var _done: Button = $Pad/Center/Col/Row/Done
+
+const ACTION_ROW := preload("res://ui/parts/action_row.tscn")
 
 ## 슬롯에 프로그램을 넣었다. `{slot_id, program_id}` — 빈 문자열이면 비움
 signal slot_changed(patch: Dictionary)
+## 어느 구종을 배울지 골랐다 — **상태에 쓰는 건 루트가 한다**
+signal pitch_picked(pitch_id: String)
 ## 훈련 화면을 닫는다
 signal done_requested
 
@@ -75,6 +81,7 @@ func _rebuild() -> void:
 	_done.text = "닫기"
 	_build_slots()
 	_build_options()
+	_build_pitches()
 
 
 func _build_slots() -> void:
@@ -137,3 +144,52 @@ func _build_options() -> void:
 			_filling = ""
 			slot_changed.emit.call_deferred({"slot_id": slot, "program_id": pid}))
 		_options.add_child(b)
+
+
+## 구종 — 지금 배우는 것과 고를 수 있는 것. F-1.
+##
+## ⚠ **04엔 이 자리가 아예 없었다.** 성장 축 자체가 죽어 있어서
+## 고를 화면도 없었다. 02는 훈련 화면에 구종 탭을 뒀다.
+##
+## ⚠ **못 고르는 것도 남긴다.** 빼 버리면 무엇을 올려야 열리는지 알 길이 없다
+func _build_pitches() -> void:
+	_free_all(_pitches)
+	var pitch: Dictionary = _vm.get("pitch", {})
+	if pitch.is_empty():
+		_pitch_title.visible = false
+		return
+	_pitch_title.visible = true
+	_pitch_title.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+
+	var learning: Dictionary = pitch.get("learning", {})
+	if not learning.is_empty():
+		var bar: BarRow = preload("res://ui/parts/bar_row.tscn").instantiate()
+		_pitches.add_child(bar)
+		bar.setup("습득 중", float(learning["progress"]) / 100.0,
+			String(learning["label"]), AppTheme.ACCENT)
+
+		# ⚠ **구종만 골라 두면 진행이 안 된다.** 훈련 슬롯에 '구종 개발'이
+		# 없으면 영원히 그 %에 멈춰 있는데, 화면이 침묵하면 "골랐는데 왜
+		# 안 늘지"가 된다
+		var note: String = String(pitch.get("note", ""))
+		if not note.is_empty():
+			var warn := Label.new()
+			warn.text = note
+			warn.add_theme_color_override("font_color", AppTheme.WARN)
+			warn.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			_pitches.add_child(warn)
+
+	for r in pitch.get("rows", []):
+		var b: ActionRow = ACTION_ROW.instantiate()
+		_pitches.add_child(b)
+		var action: String = "다듬기" if bool(r["owned"]) else "배우기"
+		var right: String = String(r["grade_label"])
+		if not bool(r["can_train"]):
+			action = ""
+			right = String(r["why"])
+		b.setup(action, String(r["name"]), right,
+			AppTheme.TEXT if bool(r["can_train"]) else AppTheme.TEXT_MUTE)
+		b.disabled = not bool(r["can_train"])
+		var pid: String = String(r["id"])
+		b.pressed.connect(func() -> void:
+			pitch_picked.emit.call_deferred(pid))

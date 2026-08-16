@@ -31,6 +31,7 @@ godot --script tools/shot.gd -- <이름>     # 창이 뜬다 — 헤드리스 �
 | `status-injury` | "나" 탭 — **진짜로 다치고 나은 뒤의 부상 이력** (U-1) | — |
 | `status-military` | "나" 탭 — **복무 중.** `Military.enlist`를 실제로 거친다 (U-2) | — |
 | `settings` | 설정 — 창 크기 · 전체화면 (U-4) | — |
+| `training-pitch` | 훈련 — **구종 고르기.** 습득 중 막대 · 문턱 숫자 (F-1) | — |
 | `main` | 진행 화면 (fixture) | 63,158 |
 | `main-gameday` | 진행 화면 — 등판일 | 62,085 |
 | `app` | AppRoot 기본 (탭 0 = 소식) | 63,158 |

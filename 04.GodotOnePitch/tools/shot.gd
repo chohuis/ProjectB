@@ -496,6 +496,24 @@ func _build(which: String) -> Control:
 				"name": "김한결", "team_id": "TEAM_HS_AEWOL"}))
 			tr.ready.connect(func() -> void: tr._on_training(), CONNECT_ONE_SHOT)
 			return tr
+		"training-pitch":
+			# 구종 고르기 (F-1). **커맨드를 올려 둔다** — 새 게임 주인공은 48이라
+			# 슬라이더가 잠겨 있어서, 그대로 찍으면 목록이 전부 회색이다
+			var tp2: AppRoot = APP.instantiate()
+			var tps2 := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			tps2["protagonist"]["pitching"]["command"] = 60.0
+			tps2["training_plan"] = {"primary": "TRN_PITCH_DEV"}
+			PitchDev.start(tps2["protagonist"], "slider")
+			for w in range(1, 5):
+				WeekRunner.run(tps2, w * 7)
+			# ⚠ **배우는 도중도 봐야 한다.** 다 배우고 나면 진행 막대가 사라져서
+			# "습득 중" 자리가 그림에 안 남는다 — 하나를 더 걸어 둔다
+			PitchDev.start(tps2["protagonist"], "curve")
+			WeekRunner.run(tps2, 5 * 7)
+			tp2.set_state(tps2)
+			tp2.ready.connect(func() -> void: tp2._on_training(), CONNECT_ONE_SHOT)
+			return tp2
 		"training-picking":
 			# 슬롯을 눌러 고르는 중 — 선택지가 실제로 뜨는지 본다
 			var tp: AppRoot = APP.instantiate()

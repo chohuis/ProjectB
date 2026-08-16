@@ -145,10 +145,14 @@ static func run(state: Dictionary, at_day: int = -1) -> void:
 	p["condition"] = clampf(p.get("condition", 100.0)
 		+ float(out["condition_delta"]), 0.0, 100.0)
 
-	# 구종 숙련도 진행 — 쌓이면 등급이 오른다(훈련 화면이 그걸 보여준다)
-	if float(out.get("pitch_dev_gain", 0.0)) > 0.0:
-		p["pitch_dev"] = float(p.get("pitch_dev", 0.0)) \
-			+ float(out["pitch_dev_gain"])
+	# 구종 숙련도 진행 — 100을 넘으면 배우거나 등급이 오른다.
+	#
+	# ⚠ **예전엔 `p["pitch_dev"]`라는 키에 쌓기만 했다.** 읽는 곳이 0건이었고
+	# 어느 구종을 배우는 중인지도 없어서, 얼마를 쌓아도 아무 일이 안 일어났다 —
+	# 소비처(`pitch_step`·`training_growth`)는 다 있는데 생산처가 없었다
+	var learned: Array = PitchDev.advance(p, float(out.get("pitch_dev_gain", 0.0)))
+	if not learned.is_empty():
+		out["logs"] = (out["logs"] as Array) + learned
 
 	# ⚠ **훈련한 주를 센다.** 아래 `training_log`로는 못 센다 — 그건
 	# "뭔가 오른 주"만 남아서, 능력치가 안 오른 주는 줄이 없다

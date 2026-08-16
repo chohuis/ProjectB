@@ -95,6 +95,9 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 		"measure:career":
 			return CareerMeasure.new().run(log_line, fail,
 				arg_int(args, "careers", 60), arg_int(args, "seed", 20270101))
+		"measure:pitch":
+			return PitchMeasure.new().run(log_line, fail,
+				arg_int(args, "careers", 12), arg_int(args, "seed", 20270101))
 		"bench:rng":
 			return RngProbe.new().run(log_line, fail)
 		_:
@@ -111,6 +114,7 @@ func _print_tasks() -> void:
 	print("  bench:save     저장·로드 성능")
 	print("  bench:rng      난수 분포")
 	print("  measure:career 졸업반 진로 — 지명·진학·독립·입대 분포")
+	print("  measure:pitch  구종 습득 — 몇 해에 몇 개까지 배우나 (F-1)")
 	print("  measure:growth NPC 주간 성장")
 	print("  measure:offseason 오프시즌")
 	print("")

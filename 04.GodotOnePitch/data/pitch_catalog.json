@@ -1,0 +1,43 @@
+{
+  "_source": "02 resource/data/master/training/pitch_catalog.json · pitch_unlock_rules.json",
+  "_note_id": "04는 짧은 키를 쓴다(fastball). 02의 PITCH_FASTBALL과 같은 것이고, 엔진(batted_ball·pitch_step)이 이미 이 키로 돈다",
+  "_note_form": "form_difficulty: 새 구종을 몸에 넣는 동안 제구가 흔들리는 정도(0~3). 0은 이미 몸에 있는 것",
+  "_note_unlock": "unlock은 02 pitch_unlock_rules.json 그대로다. 값을 여기서 바꾸지 않는다",
+
+  "max_learned": 5,
+
+  "pitches": [
+    { "id": "fastball", "name": "포심", "group": "fastball",
+      "form_difficulty": 0, "unlock": [] },
+
+    { "id": "sinker", "name": "싱커", "group": "fastball",
+      "form_difficulty": 1, "unlock": [{ "stat": "velocity", "value": 68 }] },
+
+    { "id": "cutter", "name": "커터", "group": "fastball",
+      "form_difficulty": 1,
+      "unlock": [{ "stat": "command", "value": 52 }, { "stat": "velocity", "value": 68 }] },
+
+    { "id": "slider", "name": "슬라이더", "group": "breaking",
+      "form_difficulty": 2, "unlock": [{ "stat": "command", "value": 52 }] },
+
+    { "id": "curve", "name": "커브", "group": "breaking",
+      "form_difficulty": 2, "unlock": [{ "stat": "movement", "value": 50 }] },
+
+    { "id": "changeup", "name": "체인지업", "group": "offspeed",
+      "form_difficulty": 2, "unlock": [{ "stat": "mentality", "value": 50 }] },
+
+    { "id": "splitter", "name": "스플리터", "group": "offspeed",
+      "form_difficulty": 2, "unlock": [{ "stat": "control", "value": 52 }] },
+
+    { "id": "forkball", "name": "포크볼", "group": "offspeed",
+      "form_difficulty": 2,
+      "unlock": [{ "stat": "control", "value": 58 }, { "stat": "movement", "value": 52 }] },
+
+    { "id": "screwball", "name": "스크루볼", "group": "offspeed",
+      "form_difficulty": 3,
+      "unlock": [{ "stat": "movement", "value": 62 }, { "stat": "command", "value": 55 }] },
+
+    { "id": "knuckleball", "name": "너클볼", "group": "special",
+      "form_difficulty": 3, "unlock": [{ "stat": "command", "value": 65 }] }
+  ]
+}

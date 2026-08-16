@@ -259,6 +259,7 @@ func _on_season_end() -> void:
 func _on_training() -> void:
 	_training_screen = TRAINING_SCREEN.instantiate()
 	_training_screen.slot_changed.connect(_on_training_slot)
+	_training_screen.pitch_picked.connect(_on_pitch_picked)
 	_training_screen.done_requested.connect(_on_training_done)
 	add_child(_training_screen)
 	_training_screen.set_view_model(TrainingVm.build(_state))
@@ -277,6 +278,24 @@ func _on_training_slot(patch: Dictionary) -> void:
 	else:
 		plan[String(patch.get("slot_id", ""))] = pid
 	_state["training_plan"] = plan
+	if _training_screen != null:
+		_training_screen.set_view_model(TrainingVm.build(_state))
+
+
+## 어느 구종을 배울지 골랐다 — F-1.
+##
+## ⚠ **엔진이 한 번 더 막는다.** `PitchDev.start`가 잠긴 구종·정원 초과를
+## 거른다 — 02는 화면에만 가드가 있어서 다른 호출부가 그대로 통과했다.
+##
+## ⚠ **같은 것을 다시 누르면 접는다.** 잘못 골랐을 때 되돌릴 길이 없으면
+## 그 주가 통째로 날아간다
+func _on_pitch_picked(pitch_id: String) -> void:
+	var p: Dictionary = _state.get("protagonist", {})
+	var ts: Dictionary = p.get("training_pitch_state", {})
+	if String(ts.get("id", "")) == pitch_id:
+		PitchDev.cancel(p)
+	else:
+		PitchDev.start(p, pitch_id)
 	if _training_screen != null:
 		_training_screen.set_view_model(TrainingVm.build(_state))
 
