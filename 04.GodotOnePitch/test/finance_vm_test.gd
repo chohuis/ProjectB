@@ -356,7 +356,7 @@ func test_a_real_run_fills_the_trend() -> void:
 	r.set_state(s)
 	await await_idle_frame()
 	for w in range(1, 6):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	var vm: Dictionary = FinanceVm.build(r.state())
 	assert_bool(vm["trend"]["has"]).override_failure_message(

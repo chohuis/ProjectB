@@ -442,42 +442,10 @@ func advance(days: int) -> void:
 ## 고칠 텐데 그러면 회귀를 못 잡는다
 ## ⚠ **`state`는 진행기가 돌리는 복사본이다.** 바깥 `_state`에 쌓으면
 ## 진행이 끝날 때 통째로 덮어써진다 — 성장이 조용히 사라졌던 그 자리다
+## 경기 하나. **판단은 `GameSim`이 한다** — 여기는 화면이 세는 것만 더한다
 func _play_game(g: Dictionary, state: Dictionary = _state) -> void:
 	games_played += 1
-
-	var world: Dictionary = state.get("world", {})
-	if world.is_empty():
-		# 세계가 없는 상태(검사·부분 이주)에서는 자리만 채운다
-		g["result"] = {"home_score": 0, "away_score": 0, "placeholder": true}
-		return
-
-	var rng := RandomNumberGenerator.new()
-	rng.seed = Rng.mix([state.get("seed", 0), "game", g.get("id", "")])
-	# ⚠ **오늘 등판하기로 한 주인공을 불펜 앞에 세운다.** 안 넘기면
-	# "오늘 등판"이 화면에만 뜨고 실제로는 안 나온다
-	var relief: String = ""
-	if g.get("is_protagonist_game", false):
-		relief = String(state.get("protagonist", {}).get("id", ""))
-	var my_team: String = String(state.get("protagonist", {}).get("team_id", ""))
-	var out: Dictionary = MatchDay.play(world, g.get("home", ""), g.get("away", ""), rng, {
-		"league_id": g.get("league_id", ""),
-		"home_relief": relief if g.get("home", "") == my_team else "",
-		"away_relief": relief if g.get("away", "") == my_team else "",
-	})
-	if not out["ok"]:
-		g["result"] = {"home_score": 0, "away_score": 0, "error": out["error"]}
-		return
-	g["result"] = out["result"]
-
-	# ⚠ **여기서 안 쌓으면 시즌 성적이 영영 안 생긴다.** "나" 탭도 수상도
-	# 이 사전을 읽는데 채우는 자리가 없었다 — 화면은 늘 빈칸이었다.
-	#
-	# ⚠ **제자리로 쌓는다.** 매 경기 7,000키 사전을 복사하면 하루 83경기에
-	# 58만 키다 — 성능 여유가 1.41배뿐이라 그것만으로 게이트를 넘는다
-	if not state.has("season_stats"):
-		state["season_stats"] = {}
-	SeasonStats.accumulate_into(state["season_stats"],
-		out["result"].get("player_lines", []))
+	GameSim.play(g, state)
 
 
 ## 주기 처리 — 7일마다 도는 것들.
@@ -492,165 +460,8 @@ func _play_game(g: Dictionary, state: Dictionary = _state) -> void:
 func _apply_weekly(weeks: int) -> void:
 	for boundary in DayEngine.week_end_days(int(_state.get("day", 1)), weeks):
 		weekly_passes += 1
-		_apply_one_week(boundary)
+		WeekRunner.run(_state, boundary)
 
-
-func _apply_one_week(at_day: int = -1) -> void:
-	# NPC는 계획 없이 자기 환경대로 자란다 — 주인공만 매주 크면 몇 시즌
-	# 뒤에 세계에서 혼자 뛰어오른다
-	NpcGrowth.run(_state, at_day)
-
-	# 카퍼스 이벤트 — 쇼케이스(32주)·올스타(34주).
-	#
-	# ⚠ **주인공이 없어도 돈다.** 대학 무대는 세계의 일이고, 주인공이 안
-	# 불렸다는 것도 결과다 — 아래 `p.is_empty()` 뒤로 내리면 그게 사라진다
-	CampusRunner.run(_state, at_day)
-
-	# 국가대표 — 발탁·차출·결과·면제.
-	#
-	# ⚠ **주인공이 없어도 돈다.** 세계의 일이고, 내가 안 뽑혔다는 것도
-	# 결과다 — 아래 `p.is_empty()` 뒤로 내리면 그게 사라진다
-	NationalRunner.run(_state, at_day)
-
-	var p: Dictionary = _state.get("protagonist", {})
-	if p.is_empty():
-		return
-
-	# 학사 — **학교에 다니는 동안만.** 시험 주에 학기가 확정되고, 경고가
-	# 훈련 효율을 깎는다
-	var academic_eff: float = _apply_academics(p, at_day)
-
-	# 부상 — **훈련보다 먼저다.** 이번 주 부상 배수가 훈련 효율에 걸리고,
-	# 판정이 보는 피로는 **이 주에 들어설 때의 피로**여야 한다. 뒤로 미루면
-	# 이번 주 훈련 부하가 이번 주 부상 판정에 들어가 한 주 앞당겨진다
-	InjuryRunner.run(_state, at_day)
-
-	# 승강 — **부상 뒤다.** 이번 주에 다친 사람이 비운 자리를 이번 주에
-	# 메워야 한다. 앞에 두면 한 주 늦게 메우고, 그동안 1군이 빈 채로 돈다
-	#
-	# ⚠ **이 한 줄이 없으면 승강이 통째로 안 돈다.** 판정과 값은 다 있는데
-	# 부르는 곳이 검사뿐이었다 — 02는 시즌 145건인데 04는 0건이었다
-	PromotionRunner.run(_state, at_day)
-
-	# 진로 — 지원이 열리고 결과가 나오고 복무가 흐르고 은퇴를 묻는다.
-	#
-	# ⚠ **이 한 줄이 없으면 진로 모듈 전체가 아무도 안 부르는 코드다.**
-	# 02가 겪은 결함 대부분이 그 자리였다 — 주인공은 지명될 수 없었고
-	# 프로 콘텐츠 전부가 도달 불가였다.
-	#
-	# ⚠ **부상보다 뒤다.** 수술급 부상이 난 그 주에 은퇴를 묻는데,
-	# 앞에 두면 이번 주 부상을 다음 주에 보게 된다
-	CareerRunner.run(_state, at_day)
-
-	# 재정 — **자산이 실제로 움직인다.**
-	#
-	# ⚠ **화면이 자기 식으로 계산하면 안 된다.** 02는 컴포넌트 안에서
-	# OVR·사기로 수입을 즉석 계산해 **자산과 무관한 숫자**를 보여줬다
-	_apply_finance(p, at_day)
-
-	# ⚠ **훈련 계획이 비어 있어도 돈다.** 주간 자동 회복(−5)이 계획과 무관하게
-	# 붙기 때문이다 — 건너뛰면 아무 훈련도 안 짠 주에 피로가 안 빠진다.
-	#
-	# ⚠ **`TrainingGrowth`가 정본이다.** 예전엔 `Training.plan_load`만 불러
-	# **피로만 움직이고 능력치는 안 올랐다** — 훈련 화면에서 뭘 짜든 결과가
-	# 같았다. 피로·컨디션도 이 안에서 같은 함수로 나온다
-	var before_ovr: float = Contract.core_ovr(p)
-
-	# ⚠ **다치면 훈련이 안 된다** — 값만 두고 아무도 안 읽으면 수술 중에도
-	# 평소처럼 큰다. **구독한 개인 트레이닝도 여기 얹힌다** — 안 이으면
-	# 매주 돈만 나가고 아무 일도 안 일어난다
-	#
-	# ⚠ **코치가 훈련 효율에 걸린다.** 스태프가 없으면 중립(1.0)이라
-	# 지금까지와 같게 돈다 — 좋은 코치를 데려온 팀이 실제로 더 큰다.
-	# 팀마다 다른 유일한 축이라 안 이으면 스태프가 장식이 된다
-	# ⚠ **내 자리의 코치를 먼저 본다.** 투수에게는 투수 코치가 정본이다 —
-	# 없으면 팀 코치 평균으로 떨어진다
-	var staff: Dictionary = Staff.mods_of(_state.get("world", {}),
-		String(p.get("team_id", "")), Staff.specialty_for(
-			String(p.get("player_type", "pitcher"))))
-	#
-	# ⚠ **곱하지 않고 더한다.** 04는 훈련 효율을 덧셈으로 합치는 구조고,
-	# 곱하면 부상 배수까지 같이 늘어난다. 그리고 중립 코치(50)면 더하는 값이
-	# 정확히 0이라 **지금까지의 수가 그대로 남는다** — 밸런스가 동결이라
-	# 그게 중요하다
-	#
-	# ⚠ **학사도 여기 걸린다.** `Academics.training_mod`는 만들어 놓고
-	# **아무도 안 불렀다** — 경고를 받아도 훈련은 그대로였고, 그러면
-	# 학사가 경기 출전 정지 하나뿐인 시스템이 된다. 학업 모드의 대가도
-	# 같이 걸린다 — 안 걸면 집중 수업이 학점만 올리는 공짜 선택이 된다.
-	# **학교에 다닐 때만 0이 아니다**
-	var efficiency: float = float(p.get("injury_eff_mod", 1.0)) \
-		+ Finance.total_training_bonus(
-			_state.get("training_subscriptions", []),
-			float(p.get("team_facility", 1.0))) \
-		+ (float(staff["training"]) - 1.0) \
-		+ academic_eff
-	var out: Dictionary = TrainingGrowth.calc(p,
-		_state.get("training_plan", {}),
-		Training.programs(), efficiency)
-
-	p["pitching"] = out["pitching"]
-	p["batting"] = out["batting"]
-	p["pitching_xp"] = out["pitching_xp"]
-	p["batting_xp"] = out["batting_xp"]
-	p["fatigue"] = clampf(p.get("fatigue", 0.0) + float(out["fatigue_delta"]), 0.0, 100.0)
-	p["condition"] = clampf(p.get("condition", 100.0) + float(out["condition_delta"]),
-		0.0, 100.0)
-
-	# 구종 숙련도 진행 — 쌓이면 등급이 오른다(훈련 화면이 그걸 보여준다)
-	if float(out.get("pitch_dev_gain", 0.0)) > 0.0:
-		p["pitch_dev"] = float(p.get("pitch_dev", 0.0)) + float(out["pitch_dev_gain"])
-
-	# ⚠ **훈련한 주를 센다.** 아래 `training_log`로는 못 센다 — 그건
-	# "뭔가 오른 주"만 남아서, 능력치가 안 오른 주는 줄이 없다
-	if not _state.get("training_plan", {}).is_empty():
-		p["training_weeks"] = int(p.get("training_weeks", 0)) + 1
-
-	# 무엇이 올랐는지 — 소식이 이걸 읽는다
-	if not out["logs"].is_empty():
-		var log: Array = _state.get("training_log", [])
-		log.append({"day": int(_state.get("day", 0)), "gains": out["logs"]})
-		_state["training_log"] = log
-
-	# 업적 — **훈련 뒤다.** 이번 주 훈련까지 세고 나서 판정한다.
-	#
-	# ⚠ **주 경계마다 돈다.** 02도 그랬다(`advanceWeek`) — 화면을 열어야만
-	# 달성되면 자동 진행에서는 은퇴할 때까지 하나도 안 열린다
-	Achievements.check(_state, at_day)
-
-	# 관계도 — **훈련 뒤다.** 성장분(`ovr_delta`)이 감독·코치 관계에 걸린다
-	#
-	# ⚠ **02는 여기서 주 인덱스를 하나 어긋나게 읽어 결과가 영영 `null`이었고
-	# 관계가 전 커리어에 걸쳐 한 번도 안 움직였다.** `at_day`는 방금 끝난 주의
-	# 마지막 날이다 — 여기서 자기 손으로 세지 않는다
-	RelationshipRunner.run(_state, at_day,
-		Contract.core_ovr(p) - before_ovr)
-
-
-## 한 주의 재정. **자산이 실제로 움직인다** — 안 이으면 수입·지출이
-## 화면에만 있고 자산은 시작값 그대로다
-func _apply_finance(p: Dictionary, at_day: int) -> Dictionary:
-	var out: Dictionary = Finance.weekly({
-		"career_stage": String(p.get("career_stage",
-			Finance.PRO_STAGES[0] if Contract.has_contract(
-				String(p.get("league_id", ""))) else "highschool")),
-		"salary": int(p.get("salary", 0)),
-		# ⚠ **계약 목록이 정본이다.** 합계를 따로 들고 있으면 계약이 끝난
-		# 해에 수입만 그대로 남는다
-		"sponsor_annual": Finance.sponsor_annual(p.get("sponsors", []),
-			int(_state.get("season_year", 0))),
-		"subscriptions": _state.get("training_subscriptions", []),
-		"treatment_weekly": int(p.get("treatment_weekly", 0)),
-	})
-	p["money"] = int(p.get("money", 0)) + int(out["net_weekly"])
-
-	# 무슨 돈이 오갔는지 — 재정 화면이 이걸 읽는다
-	var log: Array = _state.get("finance_log", [])
-	log.append({"day": at_day, "net": int(out["net_weekly"]),
-		"gross": int(out["gross_weekly"]), "expense": int(out["expense_weekly"]),
-		"money": int(p["money"])})
-	_state["finance_log"] = log
-	return out
 
 
 ## 스폰서와 계약한다.
@@ -702,8 +513,6 @@ func _on_subscription(area_id: String) -> void:
 	_refresh()
 
 
-## 학교에 다니는 리그. **프로에는 학사가 없다**
-const SCHOOL_LEAGUES: Array[String] = ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY"]
 
 
 ## 이번 주부터 이렇게 공부한다.
@@ -725,41 +534,3 @@ func _on_major(name: String) -> void:
 	school["major"] = name
 	_state["school"] = school
 	_refresh()
-
-
-## 한 주의 학사. **학교에 다니는 동안만 돈다.** 이번 주 훈련 효율에
-## 더할 값을 돌려준다 — 학적이 없으면 0이다.
-##
-## ⚠ **시험 주에 학기를 확정한다.** 02는 대학 시험 트리거가 없어 학기
-## 확정이 죽은 코드였다 — 학점이 영영 안 매겨졌다
-##
-## ⚠ **프로에는 학사가 없다.** 02는 프로 선수에게도 주간 학업이 돌아
-## `efficiencyMod`가 훈련에 곱해지고 "[학업] 주간 효율 85%" 로그까지
-## 남았다 — 학적이 없는 단계에서 학업 상태는 뜻이 없다
-func _apply_academics(p: Dictionary, at_day: int) -> float:
-	if not SCHOOL_LEAGUES.has(String(p.get("league_id", ""))):
-		return 0.0
-
-	var school: Dictionary = _state.get("school", {})
-	if school.is_empty():
-		school = {"major": "", "study_mode": "normal", "warning_level": 0}
-	Academics.study_week(school)
-
-	var day: int = at_day if at_day > 0 else int(_state.get("day", 1))
-	var exam: String = Academics.exam_at_day(day)
-	if not exam.is_empty():
-		var r: Dictionary = Academics.close_semester(school)
-		# 학사 경고는 소식으로 알린다 — 조용히 훈련만 깎이면 원인을 모른다
-		var log: Array = _state.get("academic_log", [])
-		# ⚠ **연도를 같이 남긴다.** 학사 화면이 학기를 줄 세우는데, 연도가
-		# 없으면 3년 전 중간고사가 올해 것으로 뜬다
-		log.append({"day": day, "year": int(_state.get("season_year", 0)),
-			"exam": exam, "gpa": r["gpa"],
-			"warning_level": r["warning_level"], "label": r["label"]})
-		_state["academic_log"] = log
-		# ⚠ **출전 정지가 경기 판정에 닿아야 한다.** 안 이으면 경고가
-		# 훈련만 깎고 경기에는 아무 일도 안 일어난다
-		p["eligibility_blocked"] = bool(r["blocked"])
-
-	_state["school"] = school
-	return Academics.training_delta(school)

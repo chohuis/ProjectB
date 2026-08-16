@@ -43,21 +43,30 @@ func _one(seed_value: int, years: int) -> Dictionary:
 	s["training_plan"] = {"primary": "velocity", "secondary": "control",
 		"secondary2": "stamina"}
 
+	# ⚠ **주간 처리를 여기서 다시 짜지 않는다.** `WeekRunner.run`이 화면과
+	# 같은 함수다 — 계측이 순서를 베끼면 그게 두 번째 정본이고 언젠가 갈린다.
+	# 예전엔 `CareerRunner`와 `RelationshipRunner`만 골라 불렀는데, 그러면
+	# 훈련·부상·승강이 빠져서 **관계가 움직일 맥락 자체가 안 생겼다**
 	var year: int = 2027
 	for y in years:
 		s["season_year"] = year
 		for w in range(1, Calendar.WEEKS_PER_SEASON + 1):
 			var day: int = w * Calendar.DAYS_PER_WEEK
+			# 경기를 실제로 돌린다 — 동료·라이벌은 `team_played`·`won`을
+			# 읽으므로 경기가 없으면 영영 0이다
+			var out: Dictionary = DayEngine.advance_to(s, Calendar.DAYS_PER_WEEK)
+			for g in out.get("games_today", []):
+				GameSim.play(g, out)
+			out.erase("games_today")
+			out.erase("weeks_crossed")
+			s = out
 			s["day"] = day
-			var before: float = Contract.core_ovr(p)
-			CareerRunner.run(s, day)
 			# 진로 물음이 떠 있으면 지명을 고른다 — 안 고르면 커리어가
 			# 고교에서 멈춰 프로 관계(구단주)가 영영 안 생긴다
 			if Pending.has(s, "career_choice_hub"):
 				CareerDecision.submit_applications(s, {"draft": true,
 					"university_choices": ["TEAM_UNIV_BAEKJE"]})
-			# ⚠ `app_root.gd:619`와 같은 자리·같은 인자
-			RelationshipRunner.run(s, day, Contract.core_ovr(p) - before)
+			WeekRunner.run(s, day)
 		SeasonRunner.run(s)
 		year += 1
 	return s

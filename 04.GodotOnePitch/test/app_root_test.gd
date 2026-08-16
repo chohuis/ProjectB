@@ -614,7 +614,7 @@ func test_an_unfinished_game_leaves_no_stats() -> void:
 
 # ── 훈련이 실제로 능력치를 올리는가 (M7-9a) ───────────────────
 
-## ⚠ **훈련해도 능력치가 안 올랐다.** `_apply_one_week`가 `Training.plan_load`만
+## ⚠ **훈련해도 능력치가 안 올랐다.** `WeekRunner.run`가 `Training.plan_load`만
 ## 불러 **피로만 움직였다** — 훈련 화면에서 뭘 짜든 결과가 같았다
 func test_training_actually_raises_the_stats() -> void:
 	var s: Dictionary = _real_game(777)
@@ -627,7 +627,7 @@ func test_training_actually_raises_the_stats() -> void:
 	var r: AppRoot = await _mount(s)
 	# 여러 주를 돌려야 레벨업 문턱을 넘는다
 	for i in 8:
-		r._apply_one_week()
+		WeekRunner.run(r.state())
 
 	assert_float(float(r.state()["protagonist"]["pitching"]["velocity"])) \
 		.override_failure_message("여덟 주를 훈련했는데 구속이 %.1f 그대로다" % before) \
@@ -665,7 +665,7 @@ func test_an_empty_plan_still_recovers() -> void:
 	s["training_plan"] = {}
 
 	var r: AppRoot = await _mount(s)
-	r._apply_one_week()
+	WeekRunner.run(r.state())
 	assert_float(float(r.state()["protagonist"]["fatigue"])).override_failure_message(
 		"빈 계획인데 피로가 안 빠졌다").is_less(50.0)
 
@@ -677,7 +677,7 @@ func test_training_costs_fatigue() -> void:
 	s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_STAMINA"}
 
 	var r: AppRoot = await _mount(s)
-	r._apply_one_week()
+	WeekRunner.run(r.state())
 	assert_float(float(r.state()["protagonist"]["fatigue"])).override_failure_message(
 		"두 칸을 훈련했는데 피로가 안 늘었다").is_greater(20.0)
 
@@ -690,7 +690,7 @@ func test_the_gains_are_logged() -> void:
 
 	var r: AppRoot = await _mount(s)
 	for i in 8:
-		r._apply_one_week()
+		WeekRunner.run(r.state())
 
 	assert_bool(r.state().get("training_log", []).is_empty()).override_failure_message(
 		"능력치가 올랐는데 기록이 없다").is_false()
@@ -711,7 +711,7 @@ func test_the_plan_lands_in_the_state() -> void:
 		).is_equal("TRN_VEL")
 
 	# 진행해도 남아 있어야 한다
-	r._apply_one_week()
+	WeekRunner.run(r.state())
 	assert_str(String(r.state().get("training_plan", {}).get("primary", ""))
 		).override_failure_message("한 주 지나자 계획이 사라졌다").is_equal("TRN_VEL")
 
@@ -745,7 +745,7 @@ func test_what_the_screen_picks_reaches_the_engine() -> void:
 	r._on_training_done()
 
 	for i in 8:
-		r._apply_one_week()
+		WeekRunner.run(r.state())
 	assert_float(float(r.state()["protagonist"]["pitching"]["velocity"])) \
 		.override_failure_message("화면에서 고른 훈련이 엔진에 안 닿았다").is_greater(before)
 
@@ -761,7 +761,7 @@ func test_the_world_grows_with_the_weeks() -> void:
 	var before: float = float(npc["pitching"]["ovr"])
 
 	for i in 30:
-		r._apply_one_week()
+		WeekRunner.run(r.state())
 
 	assert_float(float(npc["pitching"]["ovr"])).override_failure_message(
 		"30주를 진행했는데 NPC가 하나도 안 자랐다").is_greater(before)
@@ -810,7 +810,7 @@ func test_school_only_runs_at_school() -> void:
 	var s: Dictionary = _real_game(777)
 	var r: AppRoot = await _mount(s)
 	for i in 3:
-		r._apply_one_week()
+		WeekRunner.run(r.state())
 	assert_bool(r.state().has("school")).override_failure_message(
 		"고교생인데 학사가 안 돈다").is_true()
 
@@ -818,7 +818,7 @@ func test_school_only_runs_at_school() -> void:
 	pro["protagonist"]["league_id"] = "LEAGUE_KBL"
 	var r2: AppRoot = await _mount(pro)
 	for i in 3:
-		r2._apply_one_week()
+		WeekRunner.run(r2.state())
 	assert_bool(r2.state().has("school")).override_failure_message(
 		"프로인데 학사가 돈다").is_false()
 
@@ -829,13 +829,13 @@ func test_the_exam_week_closes_the_semester() -> void:
 	var r: AppRoot = await _mount(_real_game(777))
 	# 1~10주는 공부만 쌓인다
 	for w in range(1, 11):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 	assert_bool(r.state().get("academic_log", []).is_empty()).override_failure_message(
 		"시험 전인데 학기가 확정됐다").is_true()
 	assert_int(int(r.state()["school"]["study_weeks"])).is_equal(10)
 
 	# 11주 = 중간고사
-	r._apply_one_week(11 * 7)
+	WeekRunner.run(r.state(), 11 * 7)
 	var log: Array = r.state().get("academic_log", [])
 	assert_int(log.size()).override_failure_message(
 		"시험 주인데 학기가 안 끝났다").is_equal(1)
@@ -853,7 +853,7 @@ func test_a_suspension_reaches_the_game_gate() -> void:
 
 	# 자면서 한 학기를 보내면 2단계 = 출전 정지
 	for w in range(1, 12):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	assert_int(int(r.state()["school"]["warning_level"])).is_equal(2)
 	assert_bool(r.state()["protagonist"].get("eligibility_blocked", false)) \
@@ -897,7 +897,7 @@ func _grew_at_school(school: Dictionary,
 
 	var r: AppRoot = await _mount(s)
 	for w in range(1, 31):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 	return float(r.state()["protagonist"]["pitching"]["velocity"]) - before
 
 
@@ -932,7 +932,7 @@ func test_a_pro_is_not_taxed_by_studies() -> void:
 func test_the_campus_stage_runs_without_a_protagonist() -> void:
 	var r: AppRoot = await _mount(_real_game(777))
 	r.state()["protagonist"] = {}
-	r._apply_one_week(32 * 7)
+	WeekRunner.run(r.state(), 32 * 7)
 
 	var log: Array = r.state().get("campus_log", [])
 	assert_int(log.size()).override_failure_message(
@@ -949,7 +949,7 @@ func test_the_money_actually_moves() -> void:
 	s["protagonist"]["money"] = 1200
 	var r: AppRoot = await _mount(s)
 	for w in range(1, 11):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	var money: int = int(r.state()["protagonist"]["money"])
 	assert_int(money).override_failure_message(
@@ -986,7 +986,7 @@ func test_a_subscription_reaches_the_training() -> void:
 
 		var r: AppRoot = await _mount(s)
 		for w in range(1, 31):
-			r._apply_one_week(w * 7)
+			WeekRunner.run(r.state(), w * 7)
 		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
 			- before)
 
@@ -1014,7 +1014,7 @@ func test_an_injury_throttles_the_training() -> void:
 
 		var r: AppRoot = await _mount(s)
 		for w in range(1, 16):
-			r._apply_one_week(w * 7)
+			WeekRunner.run(r.state(), w * 7)
 		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
 			- before)
 
@@ -1033,7 +1033,7 @@ func test_a_hurt_protagonist_does_not_pitch() -> void:
 	var r: AppRoot = await _mount(s)
 
 	for w in range(1, 20):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 		if r.state()["protagonist"].get("injury", null) != null:
 			assert_str(DayEngine.appearance_gate(r.state()["protagonist"])) \
 				.override_failure_message("다쳤는데 경기 판정이 모른다") \
@@ -1083,7 +1083,7 @@ func test_relationships_move_over_a_career() -> void:
 	# 경기가 든 주 경계를 넘긴다 — 고교는 한 시즌 20경기뿐이라 연속 넉 주로는
 	# 표본이 안 된다
 	for d in days:
-		r._apply_one_week((d - 1) / 7 * 7 + 7)
+		WeekRunner.run(r.state(), (d - 1) / 7 * 7 + 7)
 
 	var rows: Array = RelationshipRunner.rows_of(r.state())
 	assert_int(rows.size()).override_failure_message(
@@ -1124,7 +1124,7 @@ func test_the_protagonist_ovr_follows_the_training() -> void:
 
 	var r: AppRoot = await _mount(s)
 	for w in range(1, 31):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	assert_float(Contract.core_ovr(r.state()["protagonist"])) \
 		.override_failure_message(
@@ -1142,7 +1142,7 @@ func test_the_career_path_opens_at_the_week_boundary() -> void:
 	var r: AppRoot = await _mount(s)
 
 	var hub_day: int = int(CareerRunner.HUB_WEEK["highschool"]) * 7
-	r._apply_one_week(hub_day)
+	WeekRunner.run(r.state(), hub_day)
 	assert_bool(Pending.has(r.state(), "career_choice_hub")
 		).override_failure_message(
 		"졸업반의 진로 지원이 주 경계에서 안 열렸다 — 배선이 끊겼다").is_true()
@@ -1170,7 +1170,7 @@ func test_the_coach_reaches_the_weekly_training() -> void:
 
 		var r: AppRoot = await _mount(s)
 		for w in range(1, 31):
-			r._apply_one_week(w * 7)
+			WeekRunner.run(r.state(), w * 7)
 		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
 			- before)
 
@@ -1187,7 +1187,7 @@ func test_the_national_squad_is_picked_at_the_week_boundary() -> void:
 	var r: AppRoot = await _mount(s)
 
 	var week: int = int(NationalTeam.tournament_of(2028)["week"])
-	r._apply_one_week((week - 1) * Calendar.DAYS_PER_WEEK + 1)
+	WeekRunner.run(r.state(), (week - 1) * Calendar.DAYS_PER_WEEK + 1)
 	assert_array(NationalRunner.duty_of(r.state()).get("squad", [])
 		).override_failure_message(
 		"국가대표가 주 경계에서 안 뽑혔다 — 배선이 끊겼다").is_not_empty()
@@ -1199,8 +1199,8 @@ func test_the_service_weeks_tick_at_the_week_boundary() -> void:
 	var r: AppRoot = await _mount(s)
 	Military.enlist(r.state(), "general", 1)
 
-	r._apply_one_week(70)
-	r._apply_one_week(77)
+	WeekRunner.run(r.state(), 70)
+	WeekRunner.run(r.state(), 77)
 	assert_int(int(r.state()["protagonist"]["military_service_weeks"])
 		).override_failure_message("복무 주차가 주 경계에서 안 흐른다").is_equal(2)
 
@@ -1214,13 +1214,13 @@ func test_growth_reaches_the_relationship_context() -> void:
 
 	# 관계 행을 먼저 만들어 두고, 감독 자리를 손으로 넣는다
 	# (스태프는 아직 없다 — QUEUE B-2b)
-	r._apply_one_week(7)
+	WeekRunner.run(r.state(), 7)
 	var rows: Array = RelationshipRunner.rows_of(r.state())
 	rows.append({"person_id": "MGR_TEST", "kind": "manager", "value": 0,
 		"contact": "together", "specialty": "", "last_team": "", "memories": []})
 
 	for w in range(2, 32):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 	var value: int = int(RelationshipRunner.row_of(r.state(), "MGR_TEST")["value"])
 	assert_int(value).override_failure_message(
 		"훈련으로 성장했는데 감독이 모른다").is_greater(0)

@@ -288,7 +288,7 @@ func test_a_real_semester_reaches_the_screen() -> void:
 	r.set_state(s)
 	await await_idle_frame()
 	for w in range(1, 12):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	var vm: Dictionary = AcademicsVm.build(r.state())
 	assert_array(vm["semesters"]).override_failure_message(

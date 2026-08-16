@@ -246,14 +246,14 @@ func test_advancing_weeks_unlocks_achievements() -> void:
 	r.set_state(s)
 	await await_idle_frame()
 	for w in range(1, 12):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	assert_bool(Achievements.is_unlocked(r.state(), "ACH_GROWTH_WEEK_10")
 		).override_failure_message(
 		"열한 주를 훈련했는데 '훈련 10주'가 안 열렸다 — 배선이 끊겼다").is_true()
 
 
-## ⚠ **경기를 치러야 야구 업적이 열린다.** `_apply_one_week`만 돌리면
+## ⚠ **경기를 치러야 야구 업적이 열린다.** `WeekRunner.run`만 돌리면
 ## 경기가 안 치러져서 야구 쪽은 전부 0으로 남는다 — 스크린샷이 그랬다.
 ## 여기서는 진짜로 경기를 치러 지표가 실제로 움직이는지 본다
 func test_playing_games_unlocks_the_baseball_achievements() -> void:
@@ -303,7 +303,7 @@ func test_a_week_without_a_plan_is_not_a_training_week() -> void:
 	r.set_state(s)
 	await await_idle_frame()
 	for w in range(1, 12):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 
 	assert_int(int(r.state()["protagonist"].get("training_weeks", 0))
 		).override_failure_message("훈련을 안 짰는데 훈련한 주로 셌다").is_equal(0)

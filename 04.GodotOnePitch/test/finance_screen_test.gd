@@ -122,7 +122,7 @@ func test_the_trend_appears_after_a_few_weeks() -> void:
 	assert_str(_joined(r)).not_contains("자산 추이")
 
 	for w in range(1, 4):
-		r._apply_one_week(w * 7)
+		WeekRunner.run(r.state(), w * 7)
 	r._refresh()
 	await await_idle_frame()
 	assert_str(_joined(r)).override_failure_message(
@@ -158,7 +158,7 @@ func test_a_subscription_costs_money_every_week() -> void:
 	var r: AppRoot = await _app(_state({"money": 5000}))
 	await _press(r, "구독   투구 역학")
 	var before: int = int(r.state()["protagonist"]["money"])
-	r._apply_one_week(7)
+	WeekRunner.run(r.state(), 7)
 	var spent: int = before - int(r.state()["protagonist"]["money"])
 	assert_int(spent).override_failure_message(
 		"구독했는데 주간 지출이 안 늘었다").is_greater(0)
@@ -239,7 +239,7 @@ func test_an_expired_sponsor_stops_paying() -> void:
 		add_child(r)
 		r.set_state(s)
 		await await_idle_frame()
-		r._apply_one_week(7)
+		WeekRunner.run(r.state(), 7)
 		nets.append(int(r.state()["finance_log"][-1]["net"]))
 
 	assert_int(nets[1]).override_failure_message(
