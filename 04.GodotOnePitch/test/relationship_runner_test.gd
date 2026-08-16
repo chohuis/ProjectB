@@ -522,3 +522,72 @@ func test_memories_are_capped() -> void:
 			strong = true
 	assert_bool(strong).override_failure_message(
 		"데뷔전이 평범한 최근 기억에 밀렸다").is_true()
+
+
+# ── 라이벌 ────────────────────────────────────────────────────
+#
+# ⚠ **`faced_rivals`가 늘 빈 배열이었다.** 읽는 곳은 있는데 채우는 곳이
+# 없어서 **라이벌이 0명**이었다 — 02는 커리어 하나에 8명이 생긴다.
+
+
+## 그 경기에 상대 선발을 세운 일정
+func _game_with_rival(day: int, won: bool, rival_ip: float = 8.0) -> Dictionary:
+	var g: Dictionary = _game(day, won)
+	g["result"]["player_lines"].append({"role": "pitcher",
+		"player_id": "B_1", "ip": rival_ip, "er": 3.0})
+	return g
+
+
+## ⚠ **사건이 관계의 시작이다.** `reconcile`은 같은 팀만 보므로 라이벌 행을
+## 못 만든다 — 이 자리가 없으면 산식이 아무 행도 못 찾는다
+func test_facing_a_starter_creates_a_rival() -> void:
+	var s: Dictionary = _state({"schedule": [_game_with_rival(70, true)]})
+	RelationshipRunner.run(s, 70)
+	var kinds: Dictionary = {}
+	for r in RelationshipRunner.rows_of(s):
+		kinds[String(r["person_id"])] = String(r["kind"])
+	assert_str(String(kinds.get("B_1", ""))).override_failure_message(
+		"맞붙은 상대 선발이 라이벌로 안 생겼다").is_equal(Relationship.KIND_RIVAL)
+
+
+## ⚠ **불펜을 먼저 넣는다.** 선발을 먼저 두면 "이닝 최다"가 아니라
+## "처음 만난 투수"를 잡아도 검사가 통과한다 — 실제로 그 변이를 놓쳤다
+func test_only_the_opposing_starter_becomes_a_rival() -> void:
+	var g: Dictionary = _game(70, true)
+	g["result"]["player_lines"].append({"role": "pitcher",
+		"player_id": "B_2", "ip": 1.0, "er": 0.0})
+	g["result"]["player_lines"].append({"role": "pitcher",
+		"player_id": "B_1", "ip": 8.0, "er": 3.0})
+	var s: Dictionary = _state({"schedule": [g]})
+	RelationshipRunner.run(s, 70)
+	for r in RelationshipRunner.rows_of(s):
+		if String(r["kind"]) == Relationship.KIND_RIVAL:
+			assert_str(String(r["person_id"])).override_failure_message(
+				"불펜까지 라이벌로 잡았다").is_equal("B_1")
+
+
+## ⚠ **내가 던진 경기만 맞대결이다.** 벤치에 앉은 날의 상대 선발은 아니다
+func test_a_game_i_did_not_pitch_makes_no_rival() -> void:
+	var g: Dictionary = _game(70, true, {"pitched": false})
+	g["result"]["player_lines"] = [{"role": "pitcher",
+		"player_id": "B_1", "ip": 9.0, "er": 0.0}]
+	var s: Dictionary = _state({"schedule": [g]})
+	RelationshipRunner.run(s, 70)
+	for r in RelationshipRunner.rows_of(s):
+		assert_str(String(r["kind"])).override_failure_message(
+			"안 던진 경기의 상대가 라이벌이 됐다"
+		).is_not_equal(Relationship.KIND_RIVAL)
+
+
+## 같은 상대를 다시 만나도 행이 하나다
+func test_meeting_the_same_rival_twice_makes_one_row() -> void:
+	var s: Dictionary = _state({"schedule": [
+		_game_with_rival(70, true), _game_with_rival(77, false)]})
+	RelationshipRunner.run(s, 70)
+	RelationshipRunner.run(s, 77)
+	var n: int = 0
+	for r in RelationshipRunner.rows_of(s):
+		if String(r["person_id"]) == "B_1":
+			n += 1
+	assert_int(n).override_failure_message(
+		"같은 라이벌 행이 %d개다" % n).is_equal(1)

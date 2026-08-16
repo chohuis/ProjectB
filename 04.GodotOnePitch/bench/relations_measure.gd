@@ -29,6 +29,19 @@ static func _stat(vals: Array) -> String:
 	return "값 %d ~ %d (평균 %.1f)" % [lo, hi, sum / float(vals.size())]
 
 
+## 오늘까지의 미처리 주인공 경기를 돌린다 — 사용자가 '자동'을 누른 자리
+static func _play_my_pending(state: Dictionary) -> void:
+	var day: int = int(state.get("day", 0))
+	for g in state.get("schedule", []):
+		if int(g.get("day", -1)) > day:
+			continue
+		if not g.get("is_protagonist_game", false):
+			continue
+		if g.get("result", null) != null:
+			continue
+		GameSim.play(g, state)
+
+
 func _one(seed_value: int, years: int) -> Dictionary:
 	var s: Dictionary = World.new_game({"seed": seed_value, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
@@ -54,9 +67,15 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			var day: int = w * Calendar.DAYS_PER_WEEK
 			# 경기를 실제로 돌린다 — 동료·라이벌은 `team_played`·`won`을
 			# 읽으므로 경기가 없으면 영영 0이다
+			# ⚠ **등판일에는 진행이 멈춘다**(`DayEngine.stop_reason`). 화면은
+			# 거기서 경기 화면을 띄우고 사용자가 던지거나 '자동'을 누른다 —
+			# 계측엔 사용자가 없으니 **그 경기를 자동으로 돌리고 계속 간다.**
+			# 안 그러면 주인공 경기가 영영 `result: null`로 남아 **등판이
+			# 0경기**가 되고, 라이벌·개인 성적이 통째로 안 생긴다
 			var out: Dictionary = DayEngine.advance_to(s, Calendar.DAYS_PER_WEEK)
 			for g in out.get("games_today", []):
 				GameSim.play(g, out)
+			_play_my_pending(out)
 			out.erase("games_today")
 			out.erase("weeks_crossed")
 			s = out
@@ -77,6 +96,30 @@ func run(log_line: Callable, _fail: Callable, seed_value: int,
 	var s: Dictionary = _one(seed_value, years)
 	log_line.call("  씨앗 %d · %d해 굴림 (%d년까지)"
 		% [seed_value, years, 2027 + years - 1])
+
+	# ⚠ **입력이 있는지부터 본다.** 라이벌은 내가 던진 경기에서만 생긴다 —
+	# 등판이 0이면 관계 산식이 아니라 등판 경로를 봐야 한다
+	var me: String = String(s.get("protagonist", {}).get("id", ""))
+	var appearances: int = 0
+	var opponents: int = 0
+	for g in s.get("schedule", []):
+		var result = g.get("result", null)
+		if result == null:
+			continue
+		var mine: bool = false
+		var others: int = 0
+		for line in result.get("player_lines", []):
+			if String(line.get("role", "")) != "pitcher":
+				continue
+			if String(line.get("player_id", "")) == me:
+				mine = true
+			else:
+				others += 1
+		if mine:
+			appearances += 1
+			opponents += others
+	log_line.call("  주인공 등판 %d경기 · 그 경기의 상대 투수 줄 %d개"
+		% [appearances, opponents])
 
 	var by_kind: Dictionary = {}
 	var by_label: Dictionary = {}

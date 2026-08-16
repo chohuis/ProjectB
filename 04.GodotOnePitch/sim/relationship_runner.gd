@@ -212,6 +212,7 @@ static func context_of(state: Dictionary, at_day: int,
 	var shutout: bool = false
 	var er: float = 0.0
 	var outs: int = 0
+	var faced: Array = []
 
 	for g in state.get("schedule", []):
 		var d: int = int(g.get("day", -1))
@@ -229,12 +230,29 @@ static func context_of(state: Dictionary, at_day: int,
 		if my_win:
 			team_won = true
 
+		# 맞대결 상대 = **실제로 나와 맞붙어 던진 투수**.
+		#
+		# ⚠ **상대 선발 하나만 잡는다.** 불펜까지 라이벌로 세면 관계가
+		# 폭증한다 — 02가 이닝 최다 한 명으로 자른 이유가 그것이다.
+		#
+		# ⚠ **역할이 아니라 실측으로 잡는다.** 02의 옛 코드는 시나리오에
+		# 박아 둔 `emotionRole="rival"` id를 봐서 **고교에서만 돌았다**
+		var best_id: String = ""
+		var best_outs: int = -1
+		var pitched_here: bool = false
+
 		for line in result.get("player_lines", []):
-			if String(line.get("player_id", "")) != me:
-				continue
 			if String(line.get("role", "")) != "pitcher":
 				continue
+			if String(line.get("player_id", "")) != me:
+				var outs_of: int = CareerSummary.innings_to_outs(
+					float(line.get("ip", 0.0)))
+				if outs_of > best_outs:
+					best_outs = outs_of
+					best_id = String(line.get("player_id", ""))
+				continue
 			pitched = true
+			pitched_here = true
 			# ⚠ **이닝은 야구 표기(6.1 = 6⅓)다.** 그냥 더하면 어긋난다
 			var game_outs: int = CareerSummary.innings_to_outs(
 				float(line.get("ip", 0.0)))
@@ -246,6 +264,12 @@ static func context_of(state: Dictionary, at_day: int,
 			if game_outs >= COMPLETE_GAME_OUTS and game_er == 0.0:
 				shutout = true
 
+		# ⚠ **내가 던진 그 경기만 맞대결이다.** 주 누적(`pitched`)으로 보면
+		# 한 번이라도 던진 주에는 벤치에 앉은 날의 상대 선발까지 라이벌이
+		# 된다 — 02도 그 경기의 `myLine`이 있을 때만 잡는다
+		if pitched_here and not best_id.is_empty() and not faced.has(best_id):
+			faced.append(best_id)
+
 	var plan: Dictionary = state.get("training_plan", {})
 	var skipped: bool = _plan_is_empty(plan)
 	return {
@@ -256,9 +280,7 @@ static func context_of(state: Dictionary, at_day: int,
 		"ovr_delta": ovr_delta,
 		"training_done": not skipped, "training_skipped": skipped,
 		"training_area": training_area_of(state),
-		# ⚠ **라이벌은 아직 없다.** 04에 라이벌 지정 경로가 없어서 늘 빈
-		# 목록이다 — 붙는 순간 여기만 채우면 관계 쪽은 그대로 돈다
-		"faced_rivals": [],
+		"faced_rivals": faced,
 	}
 
 
@@ -294,6 +316,44 @@ static func _log(state: Dictionary, deltas: Array, at_day: int,
 		state[LOG_KEY] = log
 
 
+## 처음 맞붙은 상대의 행을 만든다. **사건이 관계의 시작이다**(02 확정).
+##
+## ⚠ **`reconcile`이 못 만든다.** 그쪽은 같은 팀에 있는 사람만 본다 —
+## 라이벌은 상대 팀이라 영영 안 걸린다. 그래서 이 자리가 없으면
+## `_rival_weekly`가 아무 행도 못 찾아 **라이벌이 0명으로 남는다.**
+##
+## ⚠ **`contact`는 `together`다.** 맞대결은 지금 일어난 일이라 감쇠 대상이
+## 아니다 — `apart`로 두면 만든 그 주부터 식는다
+static func _meet_rivals(state: Dictionary, faced: Array) -> int:
+	if faced.is_empty():
+		return 0
+	var known: Dictionary = _index(state)
+	var fresh: Array = []
+	for pid in faced:
+		if not known.has(String(pid)):
+			fresh.append({"person_id": String(pid),
+				"kind": Relationship.KIND_RIVAL})
+	if fresh.is_empty():
+		return 0
+
+	var p: Dictionary = state.get("protagonist", {})
+	var season: int = int(state.get("season_year", 0))
+	var rows: Array = []
+	# 지명 보정은 안 건다 — 감독에게만 붙는 값이라 라이벌엔 뜻이 없다
+	for row in Relationship.init_values(int(state.get("seed", 0)), fresh):
+		rows.append({
+			"person_id": String(row["person_id"]),
+			"kind": String(row["kind"]), "value": int(row["value"]),
+			"contact": Relationship.CONTACT_TOGETHER,
+			"specialty": "", "met_season": season,
+			"met_team": String(p.get("team_id", "")),
+			"last_team": String(p.get("team_id", "")),
+			"memories": [], "updated_day": int(state.get("day", 0)),
+		})
+	_append(state, rows)
+	return rows.size()
+
+
 ## 한 주의 관계 갱신. 소속 맞추기 → 맥락 → 갱신.
 ##
 ## `relation_mod`는 코치 소통력(스태프가 붙으면 채운다) — 없으면 중립
@@ -304,11 +364,13 @@ static func run(state: Dictionary, at_day: int = -1, ovr_delta: float = 0.0,
 	var day: int = at_day if at_day > 0 else int(state.get("day", 1))
 
 	reconcile(state, day)
+	var ctx: Dictionary = context_of(state, day, ovr_delta)
+	_meet_rivals(state, ctx.get("faced_rivals", []))
+
 	var rows: Array = rows_of(state)
 	if rows.is_empty():
 		return []
 
-	var ctx: Dictionary = context_of(state, day, ovr_delta)
 	var deltas: Array = Relationship.weekly(int(state.get("seed", 0)), rows,
 		ctx, relation_mod)
 	_apply(state, deltas, day)
