@@ -268,11 +268,15 @@ func _renewal(s: Dictionary) -> void:
 		"duration_years": 2, "signing_bonus": 0, "context": "renewal"})
 
 
+## ⚠ **F-2b에서 협상이 됐다.** 예전엔 "계약한다 / 거절한다" 둘뿐이라
+## 구단이 부른 금액을 받거나 걷어차는 것 말고 할 게 없었다 — 협상이
+## 아니라 통보다. 이제 역제안이 붙는다
 func test_a_renewal_says_the_money_first() -> void:
 	var s: Dictionary = _state()
 	_renewal(s)
 	assert_str(String(DecisionVm.build(s)["body"])).contains("9500만")
-	assert_array(_ids(DecisionVm.build(s))).is_equal(["sign", "reject"])
+	assert_array(_ids(DecisionVm.build(s))).is_equal(
+		["sign", "counter", "reject"])
 
 
 ## ⚠ **보여준 조건 그대로 계약된다.** 화면이 숫자를 다시 지어내면
@@ -286,8 +290,15 @@ func test_the_signed_contract_matches_the_offer() -> void:
 	var salary: int = int(next.get("salary", s["protagonist"].get("salary", 0)))
 	assert_int(salary).override_failure_message(
 		"9500을 보여주고 %d로 계약했다" % salary).is_equal(9500)
-	assert_int(int(next.get("years", 0))).override_failure_message(
-		"2년을 보여주고 %d년으로 계약했다" % next.get("years", 0)).is_equal(2)
+	# ⚠ **엔진이 읽는 키로 본다.** 예전엔 `years`를 봤는데 그건 화면이
+	# 쓰던 이름이고 `_apply_contract`는 `duration_years`를 읽는다
+	# (`contract_decision.gd:32·82`) — **검사가 자기가 쓴 키를 다시 보고
+	# 통과했고, 실제로는 계약 연수가 0으로 서명되고 있었다.**
+	# 증상은 F-7(만료 물음)이 붙고 나서야 드러난다: 재계약을 하자마자
+	# 만료 상태라 매년 다시 물어본다
+	assert_int(int(next.get("duration_years", 0))).override_failure_message(
+		"2년을 보여주고 %d년으로 계약했다" % next.get("duration_years", 0)
+		).is_equal(2)
 
 
 ## ⚠ **거절했는데 계약이 생기면 안 된다** — 대기줄만 보면 두 갈래가

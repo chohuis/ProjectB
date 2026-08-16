@@ -40,7 +40,8 @@ static func is_asking(state: Dictionary) -> bool:
 
 
 ## 화면이 받는 사전. 물어볼 게 없으면 `{}`
-static func build(state: Dictionary) -> Dictionary:
+## `terms`는 협상 화면이 고른 조건이다 — 다시 그릴 때 그대로 넘긴다
+static func build(state: Dictionary, terms: Dictionary = {}) -> Dictionary:
 	var a: Dictionary = blocking(state)
 	if a.is_empty():
 		return {}
@@ -59,7 +60,7 @@ static func build(state: Dictionary) -> Dictionary:
 		"fa_market":
 			return _fa(state, a)
 		"salary_negotiation":
-			return _salary(state, a)
+			return _salary(state, a, terms)
 		"option_clause":
 			return _option(state, a)
 		"trade":
@@ -172,17 +173,62 @@ static func _choice(state: Dictionary, _a: Dictionary) -> Dictionary:
 		"어디로 갈지 정합니다. 되돌릴 수 없습니다.", choices)
 
 
-## 재계약 — **얼마를 주는지 먼저 말한다**
-static func _salary(state: Dictionary, a: Dictionary) -> Dictionary:
+## 재계약 협상 — F-2b.
+##
+## ⚠ **04는 "계약한다 / 거절한다" 둘뿐이었다.** 구단이 부른 금액을 그대로
+## 받거나 걷어차는 것 말고 할 수 있는 게 없었다 — **협상이 아니라 통보다.**
+##
+## ⚠ **산식은 `Negotiation`이 정본이다.** 여기서 다시 계산하면 화면에 뜬
+## 확률과 실제 판정이 갈린다
+static func _salary(state: Dictionary, a: Dictionary,
+		terms: Dictionary = {}) -> Dictionary:
+	var n: Dictionary = negotiation_of(state, a, terms)
 	var body: String = "\n".join([
 		"%s가 재계약을 제안했습니다." % _team(state, String(a.get("team_id", ""))),
-		"연봉 %s · %d년" % [FinanceVm.won(int(a.get("offered_salary", 0))),
+		"팀 제시  %s · %d년" % [FinanceVm.won(int(n["effective"])),
 			int(a.get("duration_years", 1))],
+		"내 요청  %s · %d년   (총액 %s)" % [FinanceVm.won(int(n["requested"])),
+			int(n["duration_years"]), FinanceVm.won(int(n["total_value"]))],
 	])
-	return _of("salary_negotiation", "재계약 협상", body, [
-		{"id": "sign", "label": "계약한다"},
+	var d: Dictionary = _of("salary_negotiation", "재계약 협상", body, [
+		{"id": "sign", "label": "제시안대로 계약한다"},
+		{"id": "counter", "label": "역제안한다", "enabled": n["can_counter"]},
 		{"id": "reject", "label": "거절한다"},
-	])
+	], "negotiate")
+	d["negotiation"] = n
+	return d
+
+
+## 지금 조건으로 협상 한 벌을 낸다.
+##
+## ⚠ **구단주 관계와 지갑이 협상 폭을 정한다.** `Relationship.effects`의
+## `contract_bonus`는 **소비처가 0건이었다** — 만들어만 놓고 아무도 안
+## 읽었다. 여기가 그 자리다
+static func negotiation_of(state: Dictionary, a: Dictionary,
+		terms: Dictionary) -> Dictionary:
+	var t: Dictionary = {
+		"ratio": 0.0,
+		"duration_years": int(a.get("duration_years", 1)),
+		"base_duration": int(a.get("duration_years", 1)),
+		"no_trade": false, "team_option": 0, "player_option": 0,
+	}
+	t.merge(terms, true)
+
+	var owner_bonus: float = float(RelationshipRunner.effects_of(state).get(
+		"contract_bonus", 0.0))
+	var budget: float = float(Staff.mods_of(state.get("world", {}),
+		String(a.get("team_id", ""))).get("budget", 1.0))
+	# ⚠ **`market_value`(NPC 계약 생성용)가 아니다.** 그쪽은 OVR 곡선·연차·
+	# 나이로 내는 다른 식이라 협상 화면에 쓰면 "시장가 대비 277%"가 뜬다 —
+	# 실제로 그렇게 찍혔다. 02도 여기선 `calcMarketSalary`를 쓴다
+	var p: Dictionary = state.get("protagonist", {})
+	var market: int = Contract.protagonist_market(p)
+
+	var out: Dictionary = Negotiation.build(a, t, owner_bonus, budget, market)
+	out["min_duration_years"] = int(a.get("min_duration_years", 1))
+	out["max_duration_years"] = int(a.get("max_duration_years", 3))
+	out["ratio"] = float(t["ratio"])
+	return out
 
 
 ## 옵션 조항 — 구단이 행사하면 한 해 더, 아니면 계약이 끝난다
@@ -238,7 +284,9 @@ static func _trade(state: Dictionary, a: Dictionary) -> Dictionary:
 
 ## 고른 것을 엔진에 넘긴다. **여기가 유일한 배선표다** —
 ## 화면이 종류별로 엔진을 직접 부르면 그게 두 번째 정본이 된다
-static func apply(state: Dictionary, choice_id: String, at_day: int) -> bool:
+## `terms`는 협상 화면이 고른 조건이다 — 다른 결정은 안 쓴다
+static func apply(state: Dictionary, choice_id: String, at_day: int,
+		terms: Dictionary = {}) -> bool:
 	var a: Dictionary = blocking(state)
 	if a.is_empty():
 		return false
@@ -270,6 +318,14 @@ static func apply(state: Dictionary, choice_id: String, at_day: int) -> bool:
 			if choice_id == "sign":
 				return ContractDecision.sign_negotiated(state, a,
 					_contract_of(a), at_day)
+			# ⚠ **역제안은 문턱 안일 때만 성사된다** (F-2b). 화면이 버튼을
+			# 막지만 여기서도 본다 — 두 곳이 다르면 화면을 우회해 통과한다
+			if choice_id == "counter":
+				var n: Dictionary = negotiation_of(state, a, terms)
+				if not bool(n["can_counter"]):
+					return false
+				return ContractDecision.sign_negotiated(state, a,
+					_counter_contract_of(a, n), at_day)
 			return not ContractDecision.reject_negotiated(state, a,
 				at_day).is_empty()
 		"option_clause":
@@ -284,10 +340,27 @@ static func apply(state: Dictionary, choice_id: String, at_day: int) -> bool:
 
 ## ⚠ **제안한 조건을 그대로 계약으로 만든다.** 화면이 숫자를 다시 지어내면
 ## "보여준 것과 다른 계약"이 된다 — 02가 반복해서 겪은 자리다
+## 역제안이 성사됐을 때의 계약 — **화면에 뜬 그 숫자다.**
+##
+## ⚠ **여기서 다시 계산하지 않는다.** 화면이 보여준 요청액과 다른 값으로
+## 서명되면 "보여준 것과 다른 계약"이 된다 — 02가 반복해서 겪은 자리다
+static func _counter_contract_of(a: Dictionary, n: Dictionary) -> Dictionary:
+	return {
+		"salary": int(n["requested"]),
+		"duration_years": int(n["duration_years"]),
+		"signing_bonus": int(a.get("signing_bonus", 0)),
+		"team_id": String(a.get("team_id", "")),
+		"league_id": String(a.get("league_id", "")),
+		"no_trade": bool(n.get("no_trade", false)),
+		"team_option_years": int(n.get("team_option", 0)),
+		"player_option_years": int(n.get("player_option", 0)),
+	}
+
+
 static func _contract_of(a: Dictionary) -> Dictionary:
 	return {
 		"salary": int(a.get("offered_salary", 0)),
-		"years": int(a.get("duration_years", 1)),
+		"duration_years": int(a.get("duration_years", 1)),
 		"signing_bonus": int(a.get("signing_bonus", 0)),
 		"team_id": String(a.get("team_id", "")),
 		"league_id": String(a.get("league_id", "")),

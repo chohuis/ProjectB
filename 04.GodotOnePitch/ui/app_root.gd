@@ -38,6 +38,8 @@ var _season_screen: SeasonEndScreen
 var _training_screen: TrainingScreen
 var _retire_screen: RetirementScreen
 var _decision_screen: DecisionScreen
+## 협상 화면이 고른 조건 (F-2b). **결정 하나가 끝나면 비운다**
+var _decision_terms: Dictionary = {}
 ## 선수 상세 (F-4a)
 var _detail_screen: PlayerDetailScreen
 ## 팀 상세 (F-4b)
@@ -494,7 +496,10 @@ func _open_decision() -> void:
 		return
 	_decision_screen = DECISION_SCREEN.instantiate()
 	_decision_screen.chosen.connect(_on_decision)
+	# 협상 조건이 바뀌면 사전을 다시 만든다 (F-2b) — 화면이 산식을 갖지 않는다
+	_decision_screen.terms_changed.connect(_on_decision_terms)
 	add_child(_decision_screen)
+	_decision_terms = {}
 	_decision_screen.set_view_model(DecisionVm.build(_state))
 	_main.visible = false
 
@@ -583,8 +588,20 @@ func _close_team_detail() -> void:
 ## ⚠ **답한 뒤에 또 있는지 본다.** 결정은 줄줄이 온다(진로 결과 → 최종
 ## 선택 → 지명 통보) — 하나 답하고 화면을 닫으면 다음 것이 다시 대기줄에
 ## 남은 채로 진행이 막힌다
+## 협상 조건이 바뀌었다 — 새 조건으로 사전을 다시 만든다 (F-2b)
+func _on_decision_terms(terms: Dictionary) -> void:
+	if _decision_screen == null:
+		return
+	_decision_terms = terms
+	_decision_screen.set_view_model(DecisionVm.build(_state, terms))
+
+
 func _on_decision(choice_id: String) -> void:
-	DecisionVm.apply(_state, choice_id, int(_state.get("day", 1)))
+	DecisionVm.apply(_state, choice_id, int(_state.get("day", 1)),
+		_decision_terms)
+	# ⚠ **조건을 비운다.** 다음 결정이 지난 협상의 슬라이더 값을 물려받으면
+	# 안 만진 조건으로 계약이 나간다
+	_decision_terms = {}
 	if DecisionVm.is_asking(_state):
 		_decision_screen.set_view_model(DecisionVm.build(_state))
 		return

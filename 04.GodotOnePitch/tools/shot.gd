@@ -70,6 +70,7 @@ const PEOPLE := preload("res://ui/screens/people_screen.tscn")
 const RETIREMENT := preload("res://ui/screens/retirement_screen.tscn")
 const PLAYER_DETAIL := preload("res://ui/screens/player_detail_screen.tscn")
 const TEAM_DETAIL := preload("res://ui/screens/team_detail_screen.tscn")
+const DECISION := preload("res://ui/screens/decision_screen.tscn")
 
 
 ## 주인공이 아닌 팀동료 하나. **주인공을 찍으면 "나" 탭으로 가야 하는
@@ -107,6 +108,31 @@ func _build(which: String) -> Control:
 			return _main(Fixtures.main_state())
 		"main-gameday":
 			return _main(Fixtures.main_state_gameday())
+		# 계약 협상 (F-2b). **04는 "계약한다 / 거절한다" 둘뿐이었다**
+		"negotiation":
+			var ns: Dictionary = World.new_game({"seed": 20270101,
+				"season_year": 2031, "name": "김한결",
+				"team_id": "TEAM_HS_AEWOL"})
+			var np: Dictionary = ns["protagonist"]
+			np["league_id"] = "LEAGUE_KBL"
+			np["team_id"] = "TEAM_KBL_SEOUL_ROYALS_1"
+			np["salary"] = 20000
+			np["pro_service_years"] = 5
+			np["age"] = 27
+			np["fame"] = 40.0
+			# ⚠ **제시액을 손으로 박지 않는다.** 박으면 시장가와 동떨어져
+			# "시장가 대비 391%" 같은 값이 뜬다 — 구단이 실제로 내게 한다
+			np["salary"] = Contract.protagonist_market(np)
+			Pending.push(ns, {
+				"type": "salary_negotiation",
+				"team_id": "TEAM_KBL_SEOUL_ROYALS_1", "league_id": "LEAGUE_KBL",
+				"offered_salary": ContractDecision.offer_salary_for(ns, np),
+				"duration_years": 2,
+				"min_duration_years": 1, "max_duration_years": 3,
+				"signing_bonus": 5000, "context": "renewal"})
+			var ds: DecisionScreen = DECISION.instantiate()
+			ds.set_view_model(DecisionVm.build(ns, {"ratio": 0.08}))
+			return ds
 		# 팀 상세 (F-4b · F-3b). **구단 성향 열두 축이 F-3으로 살았다** —
 		# 그 전엔 아홉 축이 50이라 모든 팀이 같은 그림이었다
 		"team-detail":

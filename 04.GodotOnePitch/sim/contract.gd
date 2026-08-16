@@ -80,6 +80,26 @@ static func season_rating(stats: Dictionary) -> float:
 		+ k_score * float(r.get("w_k", 0.25))
 
 
+## 주인공의 시장가(만원) — 구단주 성향을 안 탄 값.
+##
+## 원본: `player_engine.rs:263-266`의 `calc_market_salary`.
+## OVR 50 · 명성 0 · KBL이면 1800, OVR 80이면 8400 (02 검사가 못 박은 값).
+##
+## ⚠ **`market_value`(NPC 계약 생성용)와 다른 식이다.** 그쪽은 OVR 곡선·
+## 연차·나이로 내고 이쪽은 평평한 선형이다 — 협상 화면에서 그쪽을 쓰면
+## **"시장가 대비 277%"** 같은 값이 뜬다(실제로 그렇게 찍혔다).
+## 02도 협상 화면에서 이 식을 쓴다(`calcMarketSalary`)
+static func protagonist_market(p: Dictionary) -> int:
+	var r: Dictionary = rules().get("protagonist_offer", {})
+	var ovr: float = float(p.get("pitching", {}).get("ovr", 0.0))
+	var mult: float = float(r.get("league_mult", {}).get(
+		String(p.get("league_id", "")), r.get("league_mult_default", 1.0)))
+	return int(roundf((float(r.get("base_flat", 1800.0))
+		+ maxf(ovr - float(r.get("ovr_pivot", 50.0)), 0.0)
+			* float(r.get("ovr_step", 220.0))
+		+ float(p.get("fame", 0.0)) * float(r.get("fame_step", 28.0))) * mult))
+
+
 ## 구단이 주인공에게 내미는 재계약 연봉(만원).
 ##
 ## `budget_mod`는 구단주 성향 계수다 — `Staff.mods_of(...)["budget"]`.
@@ -92,15 +112,8 @@ static func season_rating(stats: Dictionary) -> float:
 static func protagonist_offer(p: Dictionary, stats: Dictionary,
 		budget_mod: float = 1.0) -> int:
 	var r: Dictionary = rules().get("protagonist_offer", {})
-	var ovr: float = float(p.get("pitching", {}).get("ovr", 0.0))
-	var mult: float = float(r.get("league_mult", {}).get(
-		String(p.get("league_id", "")), r.get("league_mult_default", 1.0)))
-
-	var market: float = (float(r.get("base_flat", 1800.0))
-		+ maxf(ovr - float(r.get("ovr_pivot", 50.0)), 0.0)
-			* float(r.get("ovr_step", 220.0))
-		+ float(p.get("fame", 0.0)) * float(r.get("fame_step", 28.0))
-		) * mult * clampf(budget_mod, OFFER_BUDGET_MIN, OFFER_BUDGET_MAX)
+	var market: float = float(protagonist_market(p)) \
+		* clampf(budget_mod, OFFER_BUDGET_MIN, OFFER_BUDGET_MAX)
 
 	var current: float = float(p.get("salary", 0))
 	if current <= 0.0:

@@ -340,3 +340,37 @@ func test_the_season_record_actually_reaches_the_offer() -> void:
 	assert_int(b).override_failure_message(
 		"잘 던진 해(%d)와 기록 없는 해(%d)의 오퍼가 같다 — 성적이 안 넘어간다"
 			% [b, a]).is_greater(a)
+
+
+## ⚠ **02 검사가 못 박은 값이다** (`player_engine.rs:713-731`).
+## OVR 50 · 명성 0 · KBL → 1800 · OVR 80 → 8400 · ABL은 3.5배
+func test_the_market_price_matches_the_original() -> void:
+	var flat: Dictionary = {"league_id": "LEAGUE_KBL", "fame": 0.0,
+		"pitching": {"ovr": 50.0}}
+	assert_int(Contract.protagonist_market(flat)).is_equal(1800)
+
+	var good: Dictionary = {"league_id": "LEAGUE_KBL", "fame": 0.0,
+		"pitching": {"ovr": 80.0}}
+	assert_int(Contract.protagonist_market(good)).is_equal(8400)
+
+	var abl: Dictionary = {"league_id": "LEAGUE_ABL", "fame": 0.0,
+		"pitching": {"ovr": 50.0}}
+	assert_int(Contract.protagonist_market(abl)).is_equal(6300)
+
+
+## ⚠ **NPC 계약 생성용 `market_value`와 다른 식이다.** 섞으면 협상 화면에
+## "시장가 대비 277%"가 뜬다 — 실제로 그렇게 찍혔다
+func test_the_two_market_formulas_are_not_the_same() -> void:
+	var p: Dictionary = _pro()
+	assert_int(Contract.protagonist_market(p)).is_not_equal(
+		Contract.market_value(Contract.core_ovr(p), "LEAGUE_KBL",
+			int(p["pro_service_years"]), int(p["age"])))
+
+
+## 오퍼는 그 시장가 위에 선다 — 구단주 계수만 곱해진다
+func test_the_offer_uses_that_market_price() -> void:
+	var p: Dictionary = _pro()
+	p.erase("salary")
+	# 지금 연봉이 없으면 blended가 정확히 시장가가 된다
+	assert_int(Contract.protagonist_offer(p, {}, 1.0)).is_equal(
+		Contract.protagonist_market(p))
