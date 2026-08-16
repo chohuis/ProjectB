@@ -342,6 +342,83 @@ godot --headless --script tools/run.gd -- measure:offseason
 
 ---
 
+# 축 6. 진급(1군↔2군 승강) — ✗ **04에 인시즌 승강이 없다**
+
+02 `measure:promotion`을 돌리고 04에서 대응을 찾다가, **판정은 옮겼는데 부르는
+곳이 없다**는 걸 발견했다. 값 차이가 아니라 **미이관**이다.
+
+## 02 실측
+
+```
+1군 300명 · 2군 340명
+시즌 26주 · 정기 7회 · 상시 19회
+총 이동 145건 (정기 137 · 상시 8)
+움직인 선수 133명 / 전체 640명
+이동 횟수 분포: 1회 126명 · 2회 3명 · 3회 3명 · 4회 1명
+왕복(방향 전환) 12회 · 최다 3회
+시즌 4회 이상 오르내린 선수: 1명
+```
+
+## 04는 0건이다
+
+`sim/roster_maintenance.gd`에 판정 조각이 다 있다 — `form_score` ·
+`is_slumping` · `farm_can_send_up` · `needed_positions` ·
+`FORM_WEIGHT 8.0` · `SLUMP_SCORE -0.5` · `PITCHER_ERA_BASELINE 4.50` ·
+`BATTER_OPS_BASELINE 0.700`. 값은 02와 같다.
+
+**부르는 곳이 검사뿐이다.** 전체를 훑어 확인했다:
+
+| 함수 | 부르는 곳 |
+|---|---|
+| `form_score` | `test/roster_maintenance_test.gd` |
+| `is_slumping` | `test/roster_maintenance_test.gd` |
+| `farm_can_send_up` | `test/roster_maintenance_test.gd` |
+
+(`campus_events.gd`·`fa_market.gd`의 `FORM_WEIGHT`와 `player_gen.gd`의
+`needed_positions`는 **이름만 같은 다른 모듈 것**이다 — 세어 넣으면 안 된다.)
+
+04의 주간 경로(`ui/app_root.gd`)는 `CampusRunner` · `InjuryRunner` ·
+`RelationshipRunner` 셋만 돈다. `FaRunner` · `TradeRunner`는 `season_runner`의
+오프시즌 몫이다. **승강 러너가 아예 없다.**
+
+`season_runner.gd:515-603`에 정원 초과 강등·방출이 있지만 **오프시즌 1회**고
+상한을 넘긴 인원을 잘라내는 것이다 — 02가 매주 하는 성적 기반 승강과 다른 일이다.
+
+## 그래서 04에서 벌어지는 일
+
+시즌 중에 1군이 고정된다. 2군에서 잘하는 선수가 올라오지 않고, 1군에서
+부진한 선수가 내려가지 않는다. **부상으로 자리가 비어도 안 메운다** —
+02가 `injury_replacement` 사유로 처리하던 자리다.
+
+## 옮겨야 하는 것 (근거 위치까지)
+
+| 것 | 02 위치 | 크기 |
+|---|---|---|
+| 콜업 후보 판정 | `packages/engine-native/src/team_engine.rs:178` | 189줄 |
+| 콜다운 후보 판정 | `packages/engine-native/src/team_engine.rs:397` | 69줄 |
+| 주간 구동 | `apps/ui/src/shared/usecases/weekPhases/market.ts:693-830` | — |
+
+**주기는 `market.ts:693-706`이 정본이다** (계측 스크립트의 근사가 아니라):
+
+- **월 첫 주 = 정기** — 콜업 + 콜다운을 같이 돌린다. 팀당 콜업 2 · 콜다운 2
+- **나머지 주 = 상시** — **빈 자리 메우기만.** 팀당 1명, 사유가
+  `injury_replacement` · `slump_replacement`인 것만
+
+⚠ **04는 일 단위다.** "월 첫 주"를 그대로 옮길 수 없다 — 날짜 기준으로
+같은 빈도가 나오는 자리를 잡아야 한다.
+
+⚠ **지어낼 값은 없다.** `promotionRules` 여덟 값이 04에 이미 있고, 점수 가중
+(부상 +50 · 공백 +60 · 부진 +20 · 투수하한 40 · 문턱 `10 − winNowPressure×0.05`)이
+전부 `team_engine.rs` 주석에 근거와 함께 적혀 있다.
+
+⚠ **투수 하한 보충은 별도 패스다.** 02는 이걸 `gap_fill`에 묶었다가 투수 12명
+미만인 모든 팀에서 부진·부상 교체가 사라져 회귀 4건이 깨졌다. 뒤에 따로 붙인다.
+
+**판정: ✗ — 다음 반복에서 옮긴다.** 밸런스 동결과 무관하다(수치를 바꾸는 게
+아니라 안 도는 시스템을 옮기는 것이다).
+
+---
+
 # 남은 축
 
 | 축 | 02 | 04 | 상태 |
