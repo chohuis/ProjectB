@@ -55,6 +55,8 @@ func run(state: Dictionary, days: int, sim: Callable) -> Dictionary:
 	frames_yielded = 0
 
 	var out: Dictionary = state.duplicate(true)
+	# ⚠ **깊은 복사가 주인공 참조를 끊는다.** 안 이으면 로스터 쪽만 자란다
+	World.relink_protagonist(out)
 	var start: int = out.get("day", 0)
 	var target: int = start + days
 	var budget: int = Time.get_ticks_usec()

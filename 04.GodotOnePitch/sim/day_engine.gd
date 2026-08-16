@@ -152,6 +152,8 @@ static func week_end_days(to_day: int, weeks: int) -> PackedInt32Array:
 ## 여기 안 들어온다
 static func advance_day(s: Dictionary) -> Dictionary:
 	var out: Dictionary = s.duplicate(true)
+	# ⚠ **깊은 복사가 주인공 참조를 끊는다.** 안 이으면 로스터 쪽만 자란다
+	World.relink_protagonist(out)
 	var day: int = out.get("day", 0)
 
 	var stop = stop_reason(out)
@@ -189,6 +191,8 @@ static func advance_day(s: Dictionary) -> Dictionary:
 ## **멈춘 날까지만** 센다 — 안 산 날의 성장이 붙으면 조용히 앞서간다
 static func advance_to(s: Dictionary, days: int) -> Dictionary:
 	var out: Dictionary = s.duplicate(true)
+	# ⚠ **깊은 복사가 주인공 참조를 끊는다.** 안 이으면 로스터 쪽만 자란다
+	World.relink_protagonist(out)
 	var start: int = out.get("day", 0)
 	# 음수 일수를 따로 막지 않는다 — 목표가 지금보다 앞이면 루프가 안 돈다
 	var target: int = start + days

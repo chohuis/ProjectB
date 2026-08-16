@@ -160,6 +160,36 @@ static func roster_of(world: Dictionary, team_id: String) -> Array:
 	return world.get("rosters", {}).get(team_id, [])
 
 
+## 주인공 참조를 로스터 쪽에 다시 건다. **깊은 복사 뒤에 부른다.**
+##
+## ⚠ **주인공이 두 벌로 갈렸다.** `new_game`은 로스터에 같은 참조를 넣는데
+## (`world["rosters"][team_id].append(me)`), 진행이 `duplicate(true)`로
+## 상태를 복사하면 그 참조가 끊긴다 — `state["protagonist"]`와 로스터 속
+## 주인공이 **서로 다른 사전**이 된다.
+##
+## 시즌 종료는 로스터를 훑으므로(`all_players` → `Promotion.advance_grades`)
+## **학년·졸업이 로스터에서만 일어나고** 화면과 판정이 읽는 `protagonist`는
+## 영원히 고교 1학년으로 남았다. 실측 3해: 로스터 속 나는 1→2→3학년으로
+## 올라 졸업까지 했는데 `protagonist`는 계속 1학년이었다.
+##
+## ⚠ **값을 옮기지 않는다.** 두 사전을 맞추는 코드를 쓰면 그게 세 번째
+## 정본이 된다 — **정본은 로스터고 `protagonist`는 그 참조다.**
+##
+## ⚠ **로스터에 없으면 그대로 둔다.** 졸업·방출로 소속이 빈 순간이 있고,
+## 그때 `protagonist`를 지우면 주인공이 사라진다
+static func relink_protagonist(state: Dictionary) -> bool:
+	var me: Dictionary = state.get("protagonist", {})
+	if me.is_empty():
+		return false
+	# 소속이 비면 아래 조회가 빈 배열을 준다 — 따로 막지 않는다
+	for p in roster_of(state.get("world", {}),
+			String(me.get("team_id", ""))):
+		if bool(p.get("is_protagonist", false)):
+			state["protagonist"] = p
+			return true
+	return false
+
+
 static func all_players(world: Dictionary) -> Array:
 	var out: Array = []
 	for tid in world.get("rosters", {}):

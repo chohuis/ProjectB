@@ -317,3 +317,81 @@ func test_the_same_seed_gives_the_same_starts() -> void:
 	var b: Dictionary = World.new_game({"seed": 31337, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 	assert_array(_my_starts(a)).is_equal(_my_starts(b))
+
+
+# ── 주인공이 한 사람인가 ──────────────────────────────────────
+#
+# ⚠ **주인공이 두 벌로 갈렸다.** `new_game`은 로스터에 같은 참조를 넣는데
+# 진행이 상태를 깊은 복사하면(`duplicate(true)`) 둘이 다른 사전이 된다.
+# 시즌 종료는 로스터를 훑으므로 **학년·졸업이 로스터에서만 일어나고**
+# 화면이 읽는 `protagonist`는 영원히 고교 1학년으로 남았다.
+#
+# ⚠ **조용히 틀린다.** 날짜는 가고 경기도 치러지는데 주인공만 안 자란다.
+
+
+## 로스터 속 주인공 — 없으면 빈 사전
+func _me_in_roster(s: Dictionary) -> Dictionary:
+	for p in World.roster_of(s.get("world", {}),
+			String(s.get("protagonist", {}).get("team_id", ""))):
+		if bool(p.get("is_protagonist", false)):
+			return p
+	return {}
+
+
+func test_the_protagonist_starts_as_one_person() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	assert_bool(is_same(_me_in_roster(s), s["protagonist"])).override_failure_message(
+		"세계를 만들자마자 주인공이 두 벌이다").is_true()
+
+
+## ⚠ **깊은 복사가 참조를 끊는 건 언어 동작이라 검사할 것이 아니다.**
+## 검사할 것은 **끊긴 걸 다시 잇는 자리가 실제로 잇는가**다
+func test_relinking_makes_the_protagonist_one_person_again() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var copy: Dictionary = s.duplicate(true)
+	assert_bool(is_same(_me_in_roster(copy), copy["protagonist"])) \
+		.override_failure_message(
+		"날것 복사인데 참조가 이어져 있다 — 이 검사가 아무것도 안 본다").is_false()
+
+	assert_bool(World.relink_protagonist(copy)).is_true()
+	assert_bool(is_same(_me_in_roster(copy), copy["protagonist"])) \
+		.override_failure_message(
+		"다시 이었는데도 주인공이 두 벌이다").is_true()
+
+
+## ⚠ **소속이 비면 그대로 둔다.** 졸업·방출로 팀이 없는 순간이 있고,
+## 그때 지우면 주인공이 사라진다
+func test_relinking_keeps_the_protagonist_when_there_is_no_team() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	s["protagonist"]["team_id"] = ""
+	assert_bool(World.relink_protagonist(s)).is_false()
+	assert_bool(s.get("protagonist", {}).is_empty()).override_failure_message(
+		"소속이 비었다고 주인공을 지웠다").is_false()
+
+
+## 진행을 실제로 거쳐도 한 사람이어야 한다 — **여기가 게임이 도는 경로다**
+func test_the_protagonist_stays_one_person_after_advancing() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var out: Dictionary = DayEngine.advance_to(s, Calendar.DAYS_PER_WEEK)
+	assert_bool(is_same(_me_in_roster(out), out["protagonist"])) \
+		.override_failure_message(
+		"한 주 진행하니 주인공이 두 벌이 됐다").is_true()
+
+
+## ⚠ **로스터 쪽만 자라던 증상 자체를 본다.** 참조가 이어져 있으면
+## 로스터를 고친 것이 `protagonist`에도 보여야 한다
+func test_changing_the_roster_copy_is_visible_on_the_protagonist() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var out: Dictionary = DayEngine.advance_to(s, Calendar.DAYS_PER_WEEK)
+	var mine: Dictionary = _me_in_roster(out)
+	assert_bool(mine.is_empty()).override_failure_message(
+		"로스터에서 주인공을 못 찾는다").is_false()
+	mine["grade"] = 3
+	assert_int(int(out["protagonist"].get("grade", 0))) \
+		.override_failure_message(
+		"로스터의 학년을 올렸는데 주인공은 그대로다 — 두 벌이다").is_equal(3)
