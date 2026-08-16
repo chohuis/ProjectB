@@ -402,19 +402,27 @@ static func _apply_season_relations(state: Dictionary, stats: Dictionary,
 	var era: float = SeasonStats.calc_era(float(mine.get("er", 0.0)), ip)
 	var pitched_any: bool = ip > 0.0
 
-	# 순위표가 없거나 내 팀이 없으면 가운데(0.5)로 둔다 — 없는 성적을
-	# 좋게도 나쁘게도 읽지 않는다
-	var rank_pct: float = 0.5
 	var rows: Array = Standings.from_schedule(state.get("schedule", []),
 		String(p.get("league_id", "")))
-	if rows.size() > 1:
-		for i in rows.size():
-			if String(rows[i].get("team_id", "")) == String(p.get("team_id", "")):
-				rank_pct = float(i) / float(rows.size() - 1)
-				break
+	RelationshipRunner.run_season(state, era,
+		rank_pct_of(rows, String(p.get("team_id", ""))),
+		pitched_any, int(state.get("day", 1)))
 
-	RelationshipRunner.run_season(state, era, rank_pct, pitched_any,
-		int(state.get("day", 1)))
+
+## 순위표에서 내 자리를 0.0(1위)~1.0(꼴찌)으로 환산한다.
+##
+## ⚠ **등수를 그대로 넘기지 않는다.** 리그마다 팀 수가 달라 같은 3위가
+## 다른 뜻이 된다 — 10팀의 3위와 32팀의 3위는 같은 성적이 아니다.
+##
+## ⚠ **순위표가 없거나 내 팀이 없으면 가운데(0.5)다.** 없는 성적을 좋게도
+## 나쁘게도 읽지 않는다
+static func rank_pct_of(rows: Array, team_id: String) -> float:
+	if rows.size() <= 1:
+		return 0.5
+	for i in rows.size():
+		if String(rows[i].get("team_id", "")) == team_id:
+			return float(i) / float(rows.size() - 1)
+	return 0.5
 
 
 ## 배정을 탄다 — 팀에서 빼기만 하면 소속 없이 떠도는 유령이 된다

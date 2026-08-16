@@ -173,3 +173,45 @@ func test_the_measurement_hook_is_optional() -> void:
 	assert_bool(SeasonEnd.PHASES[0].get("optional", false)).is_true()
 	for i in range(1, SeasonEnd.PHASES.size()):
 		assert_bool(SeasonEnd.PHASES[i].get("optional", false)).is_false()
+
+
+# ── 순위 환산 ─────────────────────────────────────────────────
+#
+# ⚠ **구단주 관계가 이 값을 먹는다**(`Relationship._team_grade`).
+# 등수를 그대로 넘기면 리그마다 팀 수가 달라 같은 3위가 다른 뜻이 된다 —
+# 10팀의 3위와 32팀의 3위는 같은 성적이 아니다.
+#
+# ⚠ **이 검사는 여기 있다.** `season_runner_test`는 한 해를 실제로 굴려서
+# 느리고, 변이가 타임아웃으로 "잡힘" 처리돼 검출인지 갈리지 않았다
+
+
+func _rows(ids: Array) -> Array:
+	var out: Array = []
+	for id in ids:
+		out.append({"team_id": String(id)})
+	return out
+
+
+func test_the_top_team_is_zero_and_the_bottom_is_one() -> void:
+	var rows: Array = _rows(["A", "B", "C", "D", "E"])
+	assert_float(SeasonRunner.rank_pct_of(rows, "A")).is_equal(0.0)
+	assert_float(SeasonRunner.rank_pct_of(rows, "E")).is_equal(1.0)
+
+
+## ⚠ **팀 수가 달라도 같은 등수가 같은 값이면 안 된다.** 3위를
+## 두 리그에서 재 본다 — 5팀에선 0.5, 9팀에선 0.25다
+func test_the_same_rank_differs_by_league_size() -> void:
+	var small: float = SeasonRunner.rank_pct_of(
+		_rows(["A", "B", "C", "D", "E"]), "C")
+	var big: float = SeasonRunner.rank_pct_of(
+		_rows(["A", "B", "C", "D", "E", "F", "G", "H", "I"]), "C")
+	assert_float(small).override_failure_message(
+		"5팀 3위가 %.2f · 9팀 3위가 %.2f — 팀 수를 안 본다" % [small, big]
+	).is_not_equal(big)
+
+
+## 순위표가 없거나 내 팀이 없으면 가운데다 — 없는 성적을 좋게도 나쁘게도
+## 읽지 않는다
+func test_an_unknown_team_lands_in_the_middle() -> void:
+	assert_float(SeasonRunner.rank_pct_of(_rows(["A", "B"]), "NOPE")).is_equal(0.5)
+	assert_float(SeasonRunner.rank_pct_of([], "A")).is_equal(0.5)
