@@ -282,7 +282,10 @@ static func _move(world: Dictionary, p: Dictionary, to_team: String,
 ## 있는 것으로 보이고, 관계도가 어느 쪽을 가리키는지 알 수 없게 된다
 static func _make(team_id: String, league_id: String, role: String,
 		power: float, year: int, rng: RandomNumberGenerator) -> Dictionary:
-	for p in Staff.build_team(team_id, league_id, power, 50.0, rng):
+	# ⚠ **씀씀이를 여기서 중립으로 박지 않는다.** 50.0을 박아 두고 있었는데,
+	# 그러면 궁핍한 구단의 구단주가 은퇴하면 후임이 갑자기 중립이 된다
+	for p in Staff.build_team(team_id, league_id, power,
+			Staff.resource_of(team_id), rng):
 		if String(p.get("role", "")) == role:
 			p["id"] = "%s_%s_%d" % [team_id, role.substr(0, 3).to_upper(), year]
 			return p

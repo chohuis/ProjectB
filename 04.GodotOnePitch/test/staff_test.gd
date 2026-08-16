@@ -36,32 +36,43 @@ func _flat(names: Array, value: float) -> Dictionary:
 
 # ── 씀씀이 등급 ───────────────────────────────────────────────
 
-## ⚠ **02는 재정 등급이 팀 데이터에 있었다.** 04엔 그 축이 없어 구단 성향에서
-## 낸다 — 새 축을 만들면 정본이 둘이 되고 언젠가 갈린다
-func test_the_spending_tier_comes_from_the_club_profile() -> void:
-	assert_str(String(Staff.spending_tier(90.0)["id"])).is_equal("부유")
-	assert_str(String(Staff.spending_tier(60.0)["id"])).is_equal("안정")
-	assert_str(String(Staff.spending_tier(40.0)["id"])).is_equal("알뜰")
-	assert_str(String(Staff.spending_tier(10.0)["id"])).is_equal("궁핍")
+## ⚠ **재정 등급은 팀 데이터가 정본이다.** 한동안 구단 성향에서 냈는데,
+## 성향을 짓는 코드가 없어 **238팀 전부가 '안정' 하나**였다
+func test_the_spending_tier_comes_from_the_team_data() -> void:
+	for id in ["부유", "안정", "알뜰", "궁핍"]:
+		assert_str(String(Staff.tier_of(id)["id"])).is_equal(id)
 
 
-## 중립(50)은 가운데다 — 아무 성향도 없는 팀이 극단으로 가면 안 된다
-func test_a_neutral_club_lands_in_the_middle() -> void:
-	assert_str(String(Staff.spending_tier(50.0)["id"])).is_equal("안정")
+## 등급이 없는 팀은 02와 같이 '안정'으로 떨어진다
+func test_a_team_without_a_grade_lands_in_the_middle() -> void:
+	assert_str(String(Staff.tier_of("")["id"])).is_equal("안정")
+
+
+## ⚠ **팀 데이터가 실제로 네 등급을 다 갖고 있다.** 표만 있고 데이터가
+## 한 등급뿐이면 아래 검사들이 통과해도 게임에선 아무 차이가 없다 —
+## 실제로 그랬다(부유 0 · 궁핍 0)
+func test_the_world_actually_has_every_grade() -> void:
+	var seen: Dictionary = {}
+	for lid in Staff.rules().get("leagues", []):
+		for t in World.teams_of(String(lid)):
+			seen[String(t.get("resource", Staff.DEFAULT_RESOURCE))] = true
+	for id in ["부유", "안정", "알뜰", "궁핍"]:
+		assert_bool(seen.has(id)).override_failure_message(
+			"'%s' 구단이 세계에 하나도 없다" % id).is_true()
 
 
 ## ⚠ **부유한 팀이 코치를 더 둔다.** 그게 팀 개성이 훈련 효율로 드러나는
 ## 유일한 경로다
 func test_a_rich_club_hires_more_coaches() -> void:
-	assert_int(int(Staff.spending_tier(90.0)["coach_min"])).is_greater(
-		int(Staff.spending_tier(10.0)["coach_max"]))
+	assert_int(int(Staff.tier_of("부유")["coach_min"])).is_greater(
+		int(Staff.tier_of("궁핍")["coach_max"]))
 
 
 # ── 세우기 ────────────────────────────────────────────────────
 
-func _built(power: float = 3.0, willingness: float = 90.0,
+func _built(power: float = 3.0, resource: String = "부유",
 		league: String = "LEAGUE_KBL", seed_value: int = 1) -> Array:
-	return Staff.build_team("T1", league, power, willingness, _rng(seed_value))
+	return Staff.build_team("T1", league, power, resource, _rng(seed_value))
 
 
 func _roles_of(staff: Array) -> Dictionary:
@@ -84,9 +95,9 @@ func test_the_coach_count_follows_the_spending() -> void:
 	var rich: int = 0
 	var poor: int = 0
 	for i in range(20):
-		rich += int(_roles_of(_built(3.0, 90.0, "LEAGUE_KBL", i + 1)).get(
+		rich += int(_roles_of(_built(3.0, "부유", "LEAGUE_KBL", i + 1)).get(
 			Staff.ROLE_COACH, 0))
-		poor += int(_roles_of(_built(3.0, 10.0, "LEAGUE_KBL", i + 1)).get(
+		poor += int(_roles_of(_built(3.0, "궁핍", "LEAGUE_KBL", i + 1)).get(
 			Staff.ROLE_COACH, 0))
 	assert_int(rich).override_failure_message(
 		"부유 %d명 · 궁핍 %d명 — 씀씀이가 코치 수를 안 바꾼다" % [rich, poor]
@@ -99,10 +110,10 @@ func test_a_higher_league_gets_better_staff() -> void:
 	var pro: float = 0.0
 	var school: float = 0.0
 	for i in range(20):
-		for s in _built(3.0, 90.0, "LEAGUE_KBL", i + 1):
+		for s in _built(3.0, "부유", "LEAGUE_KBL", i + 1):
 			if String(s["role"]) == Staff.ROLE_MANAGER:
 				pro += float(s["stats"]["tactical_iq"])
-		for s2 in _built(3.0, 90.0, "LEAGUE_HIGHSCHOOL", i + 1):
+		for s2 in _built(3.0, "부유", "LEAGUE_HIGHSCHOOL", i + 1):
 			if String(s2["role"]) == Staff.ROLE_MANAGER:
 				school += float(s2["stats"]["tactical_iq"])
 	assert_float(pro).override_failure_message(
@@ -115,10 +126,10 @@ func test_a_stronger_club_gets_better_staff() -> void:
 	var strong: float = 0.0
 	var weak: float = 0.0
 	for i in range(20):
-		for s in _built(5.0, 50.0, "LEAGUE_KBL", i + 1):
+		for s in _built(5.0, "안정", "LEAGUE_KBL", i + 1):
 			if String(s["role"]) == Staff.ROLE_MANAGER:
 				strong += float(s["stats"]["tactical_iq"])
-		for s2 in _built(1.0, 50.0, "LEAGUE_KBL", i + 1):
+		for s2 in _built(1.0, "안정", "LEAGUE_KBL", i + 1):
 			if String(s2["role"]) == Staff.ROLE_MANAGER:
 				weak += float(s2["stats"]["tactical_iq"])
 	assert_float(strong).is_greater(weak)
@@ -137,7 +148,7 @@ func test_a_mid_club_gets_no_power_bonus() -> void:
 	var sum: float = 0.0
 	var n: int = 0
 	for i in range(120):
-		for s in _built(3.0, 50.0, "LEAGUE_HIGHSCHOOL", i + 1):
+		for s in _built(3.0, "안정", "LEAGUE_HIGHSCHOOL", i + 1):
 			if String(s["role"]) == Staff.ROLE_MANAGER:
 				sum += float(s["stats"]["tactical_iq"])
 				n += 1
@@ -155,7 +166,7 @@ func test_a_weak_club_is_pulled_below_the_league_center() -> void:
 	var sum: float = 0.0
 	var n: int = 0
 	for i in range(120):
-		for s in _built(1.0, 50.0, "LEAGUE_HIGHSCHOOL", i + 1):
+		for s in _built(1.0, "안정", "LEAGUE_HIGHSCHOOL", i + 1):
 			if String(s["role"]) == Staff.ROLE_MANAGER:
 				sum += float(s["stats"]["tactical_iq"])
 				n += 1
@@ -167,10 +178,10 @@ func test_a_generous_owner_has_a_bigger_budget() -> void:
 	var rich: float = 0.0
 	var poor: float = 0.0
 	for i in range(20):
-		for s in _built(3.0, 90.0, "LEAGUE_KBL", i + 1):
+		for s in _built(3.0, "부유", "LEAGUE_KBL", i + 1):
 			if String(s["role"]) == Staff.ROLE_OWNER:
 				rich += float(s["stats"]["budget_support"])
-		for s2 in _built(3.0, 10.0, "LEAGUE_KBL", i + 1):
+		for s2 in _built(3.0, "궁핍", "LEAGUE_KBL", i + 1):
 			if String(s2["role"]) == Staff.ROLE_OWNER:
 				poor += float(s2["stats"]["budget_support"])
 	assert_float(rich).is_greater(poor)
@@ -196,7 +207,7 @@ func test_a_specialty_actually_boosts_its_own_pair() -> void:
 	var n_p: int = 0
 	var n_r: int = 0
 	for i in range(40):
-		for s in _built(3.0, 90.0, "LEAGUE_KBL", i + 1):
+		for s in _built(3.0, "부유", "LEAGUE_KBL", i + 1):
 			if String(s["role"]) != Staff.ROLE_COACH:
 				continue
 			match String(s.get("specialty", "")):
@@ -221,7 +232,7 @@ func test_the_stats_stay_in_range() -> void:
 	var lo: float = float(Staff.rules()["stat_min"])
 	var hi: float = float(Staff.rules()["stat_max"])
 	for i in range(20):
-		for s in _built(5.0, 90.0, "LEAGUE_KBL", i + 1):
+		for s in _built(5.0, "부유", "LEAGUE_KBL", i + 1):
 			for k in s["stats"]:
 				assert_float(float(s["stats"][k])).override_failure_message(
 					"%s 의 %s 가 %.1f다" % [s["role"], k, s["stats"][k]]
@@ -235,7 +246,7 @@ func test_the_clamp_is_actually_reached() -> void:
 	var touched: bool = false
 	# 명문 1군에 씀씀이 최고 — 보정이 가장 세게 얹히는 자리
 	for i in range(60):
-		for s in _built(5.0, 100.0, "LEAGUE_KBL", i + 1):
+		for s in _built(5.0, "부유", "LEAGUE_KBL", i + 1):
 			for k in s["stats"]:
 				if is_equal_approx(float(s["stats"][k]), hi):
 					touched = true

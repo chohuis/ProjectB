@@ -63,19 +63,36 @@ static func of(world: Dictionary, team_id: String) -> Array:
 	return all_of(world).get(team_id, [])
 
 
-## 구단의 씀씀이 등급. **표를 위에서부터 처음 걸리는 것으로 읽는다**
+## 재정 등급이 없는 팀의 기본값. 02 `test-staff-gen.cjs:32`의
+## `t.traits?.resource ?? "안정"` 그대로
+const DEFAULT_RESOURCE: String = "안정"
+
+
+## 구단의 씀씀이 등급. **팀 데이터의 재정 등급이 정본이다.**
 ##
-## ⚠ 02는 재정 등급이 팀 데이터에 있었다. 04엔 그 축이 없어 구단 성향에서
-## 낸다 — **새 축을 만들면 정본이 둘이 되고 언젠가 갈린다**
-static func spending_tier(willingness: float) -> Dictionary:
-	var tiers: Array = rules().get("spending_tiers", [])
-	if tiers.is_empty():
-		return {}
-	# **아래에서부터** 처음 걸리는 것 — 궁핍(24) · 알뜰(49) · 안정(74) · 부유(100)
-	for i in range(tiers.size() - 1, -1, -1):
-		if willingness <= float(tiers[i].get("until", 100)):
-			return tiers[i]
-	return tiers[0]
+## ⚠ **한동안 구단 성향(`owner_spending_willingness`)에서 냈다.** 이주 때
+## `teams.json`이 02의 `traits`를 안 가져와서 그 축이 없다고 보고 대신
+## 쓴 것인데, 성향을 **짓는 코드가 없어** 전 구단이 기본값 50으로 남았다.
+## 그래서 **238팀 전부가 '안정' 하나**였다 — 부유 0 · 궁핍 0(02는 14 · 7).
+##
+## 02의 `traits.resource`를 그대로 옮겨 왔다. 여기가 정본이고 성향에서
+## 파생하지 않는다 — **새 축을 만들면 정본이 둘이 되고 언젠가 갈린다**
+static func tier_of(resource: String) -> Dictionary:
+	for t in rules().get("spending_tiers", []):
+		if String(t.get("id", "")) == resource:
+			return t
+	return tier_of(DEFAULT_RESOURCE) if resource != DEFAULT_RESOURCE else {}
+
+
+## 그 팀의 재정 등급. **읽는 자리를 하나로 둔다** — 부르는 쪽마다
+## `teams.json`을 파고들면 기본값이 제각각이 된다(`_make`가 50.0을 박아
+## 두고 있었다)
+static func resource_of(team_id: String) -> String:
+	for lid in rules().get("leagues", []):
+		for t in World.teams_of(String(lid)):
+			if String(t["id"]) == team_id:
+				return String(t.get("resource", DEFAULT_RESOURCE))
+	return DEFAULT_RESOURCE
 
 
 ## 능력치 하나를 굴린다. **리그와 전력★이 수준을 올린다** —
@@ -123,10 +140,10 @@ static func _person(role: String, team_id: String, league_id: String,
 ## ⚠ **코치 수가 구단 씀씀이를 탄다.** 궁핍한 팀은 코치가 없을 수도 있다 —
 ## 그게 팀 개성이 훈련 효율로 드러나는 유일한 경로다
 static func build_team(team_id: String, league_id: String, power: float,
-		willingness: float, rng: RandomNumberGenerator) -> Array:
+		resource: String, rng: RandomNumberGenerator) -> Array:
 	var r: Dictionary = rules()
 	var bonus: float = _bonus(league_id, power)
-	var tier: Dictionary = spending_tier(willingness)
+	var tier: Dictionary = tier_of(resource)
 	var out: Array = []
 
 	# 감독
@@ -199,8 +216,8 @@ static func ensure_world(state: Dictionary) -> int:
 			rng.seed = Rng.mix(["staff", team_id, seed_value])
 			var made: Array = build_team(team_id, String(league_id),
 				float(t.get("power", 2)),
-				float(TeamProfile.of(world, team_id).get(
-					"owner_spending_willingness", 50.0)), rng)
+				String(t.get("resource", DEFAULT_RESOURCE)), rng)
+
 			all[team_id] = made
 			n += made.size()
 

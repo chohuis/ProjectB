@@ -32,11 +32,12 @@ func run(log_line: Callable, _fail: Callable, seed_value: int) -> int:
 
 	# 팀 전력★을 id로 찾을 수 있게 미리 모은다
 	var power_of: Dictionary = {}
-	var league_of: Dictionary = {}
+	var resource_of: Dictionary = {}
 	for lid in Staff.rules().get("leagues", []):
 		for t in World.teams_of(String(lid)):
 			power_of[String(t["id"])] = float(t.get("power", 2))
-			league_of[String(t["id"])] = String(lid)
+			resource_of[String(t["id"])] = String(
+				t.get("resource", Staff.DEFAULT_RESOURCE))
 
 	var by_league: Dictionary = {}
 	var hs_strong: Array = []
@@ -63,15 +64,13 @@ func run(log_line: Callable, _fail: Callable, seed_value: int) -> int:
 					elif star <= 2.0:
 						hs_weak.append(iq)
 			elif role == "owner":
-				var w: float = float(TeamProfile.of(world, tid).get(
-					"owner_spending_willingness", 50.0))
 				var support: float = float(stats.get("budget_support", 0.0))
-				# 씀씀이 등급이 정본이다 — 문턱을 계측이 다시 적으면 둘이 된다
-				var tier: String = String(Staff.spending_tier(w).get("id", ""))
-				if tier == "부유":
-					rich.append(support)
-				elif tier == "궁핍":
-					poor.append(support)
+				# 팀 데이터의 재정 등급이 정본이다 — 계측이 다시 셈하면 둘이 된다
+				match String(resource_of.get(tid, Staff.DEFAULT_RESOURCE)):
+					"부유":
+						rich.append(support)
+					"궁핍":
+						poor.append(support)
 
 	log_line.call("")
 	log_line.call("리그별 감독 평균 전술안목")
