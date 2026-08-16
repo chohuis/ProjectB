@@ -655,6 +655,18 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       04는 172명(1군만) — 2군 선수의 훈련 보정이 통째로 중립이다.
       근거·표는 `docs/PARITY.md` 축 8.
 
+- [ ] ⚠ **P-7 주간 파이프라인이 화면 층에 있다** (축 9) — **동결과 무관**
+      `DayRunner`가 `ui/day_runner.gd`의 Node고, 그 반복을 도는 것은
+      `app_root.gd`다(`auto_advance.gd` 주석이 그렇게 적어 뒀다).
+      그래서 **헤드리스가 커리어 하나를 끝까지 못 굴린다.**
+      실측: 관계 계측이 감독·코치·구단주는 재는데 **동료·라이벌이 0**이다.
+      둘 다 `team_played`·`pitched`·`won`을 읽는데 경기가 안 돌아서다.
+      02는 `advanceWeek`가 usecase라 스크립트가 그대로 불렀다.
+      ⚠ 계측이 `app_root`의 주간 반복을 베끼면 안 된다 — 축 7에서 fixture를
+      직접 지었다가 이적 0%가 나왔다. **주간 반복을 `sim/`으로 내리는 일이다.**
+      풀리면 축 9를 잴 수 있고, 같은 이유로 지금 못 짜는 검사들도 열린다.
+      근거·표는 `docs/PARITY.md` 축 9.
+
 ## E. P6 Steam 빌드·패키징
 
 - [ ] (이주가 끝난 뒤)
