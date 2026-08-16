@@ -78,34 +78,22 @@ static func _pitcher(p: Dictionary) -> Dictionary:
 	}
 
 
-## 아주 단순한 투구 선택. **전술은 M7-6c(경기 화면)에서 붙인다** —
-## 소비자 없는 자리를 미리 만들지 않는다
-## 존 밖으로 겨냥하는 비율.
+## NPC 경기의 투구 선택 — **`PitchAi`가 정본이다.** P-1.
 ##
-## ⚠ **여기가 0이면 볼넷이 안 난다.** 예전 이 함수는 `location`을 1~9(존 안)
-## 에서만 골랐다 — 벤치마크용으로 쓰던 자리표시자가 리그 경기 전체에
-## 그대로 쓰이고 있었다. 존 밖을 안 던지니 볼이 4개 쌓일 일이 없고,
-## **9이닝당 볼넷이 0.0이었다**(02는 3.3). 볼넷으로 끝날 타석이 삼진과
-## 인플레이로 흘러가 삼진율·타율까지 같이 밀렸다.
+## ⚠ **여기 있던 것은 벤치마크용 자리표시자였다.** `GameBench._decide`와 같은
+## 코드였고 주석도 "성능을 재는 게 목적이라 전술은 안 넣는다"였는데, 그게
+## **리그 경기 수천 개**를 돌렸다. `OUT_OF_ZONE_RATE`가 0이라 존 밖을 한 번도
+## 안 던졌고 **9이닝당 볼넷이 0.0**이었다(02는 3.3). 볼넷으로 끝날 타석이
+## 삼진과 인플레이로 흘러가 삼진율·타율까지 같이 밀렸다.
 ##
-## 값은 **02와 대조해서 맞춘 것이다**(`docs/PARITY.md` 축 1) — 지어낸 수가
-## 아니다. 존 안을 겨냥해도 제구가 흔들려 볼이 되므로, 이 비율이 곧
-## 볼넷 비율은 아니다
-const OUT_OF_ZONE_RATE: float = 0.0
-
-
-## NPC 경기의 투구 선택.
+## ⚠ **상태를 버리고 있었다.** 인자가 `(_state, rng)`인데 통째로 안 썼다 —
+## 카운트도 투수도 안 보니 볼 3개든 스트라이크 2개든 같은 공이었고,
+## **배운 구종은 마운드에 안 나왔다.**
 ##
 ## ⚠ **주인공 경기는 사람이 고른다**(`LiveMatch`). 여기는 나머지 수천 경기가
 ## 쓰는 자리다 — 여기가 야구가 아니면 리그 성적표 전체가 야구가 아니다
-static func _decide(_state: Dictionary, rng) -> Dictionary:
-	return {
-		"pitch_type": "fastball" if rng.randf() < 0.55 else "slider",
-		# 0 = 존 밖(거르기). `PitchVm.BALL_ZONE`과 같은 약속이다
-		"location": 0 if rng.randf() < OUT_OF_ZONE_RATE \
-			else 1 + int(rng.randf() * 9.0),
-		"strategy": "balanced", "power": "normal",
-	}
+static func _decide(state: Dictionary, rng) -> Dictionary:
+	return PitchAi.decide(state, rng)
 
 
 ## 경기 하나. `{ok, error, result, pitches}`

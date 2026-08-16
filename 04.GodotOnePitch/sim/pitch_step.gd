@@ -71,7 +71,12 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 	pre["stamina"] = _stat_of(pre, side, "stamina", 100.0)
 	pre["mental"] = _stat_of(pre, side, "mental", 50.0)
 
-	var target: Vector2 = PitchOutcome.zone_to_target(int(decision.get("location", 5)))
+	# ⚠ **좌표가 있으면 그걸 쓴다** (P-1). 존 번호만 보면 `zone_to_target`이
+	# 아홉 칸 대표값으로 되돌려서 **코너도 유인구도 다 뭉갠다** — 존 밖이
+	# 아예 표현이 안 돼서 볼넷이 영원히 0이었다.
+	# 좌표가 없는 호출부(사용자 투구·옛 검사)는 예전 그대로 돈다
+	var target: Vector2 = decision["target"] if decision.get("target") is Vector2 \
+		else PitchOutcome.zone_to_target(int(decision.get("location", 5)))
 	var landing: Dictionary = PitchOutcome.resolve_landing(target,
 		pitcher.get("control", 50.0), pre["stamina"], pre["mental"],
 		situation, rng)
