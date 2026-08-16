@@ -61,6 +61,9 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 		"bench:game":
 			return GameBench.new().run(log_line, fail,
 				arg_int(args, "games", 200), arg_int(args, "seed", 20260813))
+		"measure:fa":
+			return FaMeasure.new().run(log_line, fail,
+				arg_int(args, "seed", 20270101), arg_int(args, "warmup", 6))
 		"measure:finance":
 			return FinanceMeasure.new().run(log_line, fail,
 				arg_int(args, "seed", 20260813))
