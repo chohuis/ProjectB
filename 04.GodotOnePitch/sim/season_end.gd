@@ -45,6 +45,10 @@ const PHASES: Array[Dictionary] = [
 	# 시즌 성적을 연도 기록으로 굳힌다. 오프시즌이 로스터를 흩기 전이어야 한다
 	{"id": "season_history", "label": "시즌 기록 저장", "optional": false},
 
+	# 시즌 관계 — **성적이 굳은 뒤다.** 앞에 두면 지난해 성적으로 잰다.
+	# 구단주는 주간 항목이 없고 여기서만 오르내린다
+	{"id": "season_relations", "label": "시즌 관계", "optional": false},
+
 	# 전 리그 오프시즌 — 승강·FA·방출·트레이드·은퇴
 	{"id": "league_offseason", "label": "리그 오프시즌", "optional": false},
 

@@ -41,6 +41,7 @@ func test_the_phase_list_is_exactly_this() -> void:
 		"advance_grades",
 		"npc_draft",
 		"season_history",
+		"season_relations",
 		"league_offseason",
 		"protagonist_record",
 		"awards",

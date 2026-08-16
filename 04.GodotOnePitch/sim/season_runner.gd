@@ -77,6 +77,15 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["recorded"] = SeasonHistory.apply(all_players(state), stats, year)
 	done.append("season_history")
 
+	# ③b 시즌 관계 — **성적이 확정된 뒤다.** 앞에 두면 지난해 성적으로 잰다.
+	#
+	# ⚠ **이 한 줄이 없으면 구단주가 한 번도 안 움직인다.** 구단주는 주간
+	# 항목이 없고 시즌 성적으로만 오르내리는데(`Relationship.season`)
+	# `run_season`을 부르는 곳이 없었다 — 실측 02 +11.0 vs 04 0.0.
+	# 감독·코치·동료도 시즌 몫을 여기서 받는다
+	_apply_season_relations(state, stats, year)
+	done.append("season_relations")
+
 	# ④ 로스터 상한 — **초과분을 2군으로, 자리가 없으면 방출.**
 	#
 	# ⚠ **드래프트 뒤·진로 배정 앞이다.** 신인이 들어와 정원이 넘치고,
@@ -373,6 +382,41 @@ static func _recent_rating(p: Dictionary, stats: Dictionary) -> float:
 ## 2단계 방출 — **정원 안이어도** 성적·연봉·뎁스로 걸러낸다.
 ##
 ## ⚠ **방출된 사람을 드래프트 풀로 보낸다.** 그래야 미지명자와 같은 진로
+## 시즌 관계 — 구단주·감독·코치·동료가 한 해 성적을 받는다.
+##
+## ⚠ **넷을 지어내지 않는다.** 전부 정본에서 얻는다:
+##   `era`           `season_stats`의 내 줄 → `SeasonStats.calc_era`
+##   `team_rank_pct` `Standings.from_schedule`의 내 리그 순위표
+##   `pitched_any`   내 줄에 이닝이 있나
+##
+## ⚠ **순위는 0.0(1위)~1.0(꼴찌)다.** 등수를 그대로 넘기면 리그마다 팀 수가
+## 달라서 같은 3위가 다른 뜻이 된다
+static func _apply_season_relations(state: Dictionary, stats: Dictionary,
+		year: int) -> void:
+	var p: Dictionary = state.get("protagonist", {})
+	if p.is_empty():
+		return
+
+	var mine: Dictionary = stats.get(String(p.get("id", "")), {})
+	var ip: float = float(mine.get("ip", 0.0))
+	var era: float = SeasonStats.calc_era(float(mine.get("er", 0.0)), ip)
+	var pitched_any: bool = ip > 0.0
+
+	# 순위표가 없거나 내 팀이 없으면 가운데(0.5)로 둔다 — 없는 성적을
+	# 좋게도 나쁘게도 읽지 않는다
+	var rank_pct: float = 0.5
+	var rows: Array = Standings.from_schedule(state.get("schedule", []),
+		String(p.get("league_id", "")))
+	if rows.size() > 1:
+		for i in rows.size():
+			if String(rows[i].get("team_id", "")) == String(p.get("team_id", "")):
+				rank_pct = float(i) / float(rows.size() - 1)
+				break
+
+	RelationshipRunner.run_season(state, era, rank_pct, pitched_any,
+		int(state.get("day", 1)))
+
+
 ## 배정을 탄다 — 팀에서 빼기만 하면 소속 없이 떠도는 유령이 된다
 static func _release_second_stage(state: Dictionary, world: Dictionary,
 		year: int) -> Dictionary:

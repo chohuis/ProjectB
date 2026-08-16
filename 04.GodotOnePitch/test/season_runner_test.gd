@@ -894,3 +894,44 @@ func test_the_digest_feeds_the_screen() -> void:
 		"한 해에 있었던 일이 비었다").is_false()
 	assert_str(vm["my_line"]).override_failure_message(
 		"결산에 내 성적 줄이 없다").is_not_empty()
+
+
+# ── 시즌 관계 ─────────────────────────────────────────────────
+#
+# ⚠ **`RelationshipRunner.run_season`을 아무도 안 불렀다.** 함수와 값은
+# 있는데 부르는 곳이 없어서 — P-4·P-7b와 같은 형태 — **구단주가 한 번도
+# 안 움직였다.** 구단주는 주간 항목이 없고 시즌 성적으로만 오르내린다.
+# 실측: 02는 커리어 하나에 +11.0인데 04는 0.0이었다.
+
+
+## 관계 행이 있는 상태를 만든다 — 없으면 `run_season`이 빈손으로 돌아간다
+func _with_relations(s: Dictionary) -> Dictionary:
+	RelationshipRunner.reconcile(s, int(s.get("day", 1)))
+	return s
+
+
+## ⚠ **구단주는 팀 성적으로만 움직인다**(`_season_together`). 개인 성적을
+## 보면 약팀 에이스가 항상 사랑받는다 — 그래서 1위(0.0)를 넘겨야 걸린다
+func test_a_winning_season_moves_the_owner_relation() -> void:
+	var s: Dictionary = _game()
+	s["relationships"] = [{"person_id": "OWNER_1",
+		"kind": Relationship.KIND_OWNER, "value": 0,
+		"contact": Relationship.CONTACT_TOGETHER,
+		"specialty": "", "last_team": "", "memories": []}]
+
+	RelationshipRunner.run_season(s, 2.50, 0.0, true, 100)
+	assert_int(int(RelationshipRunner.row_of(s, "OWNER_1")["value"])) \
+		.override_failure_message(
+		"1위로 끝났는데 구단주 관계가 0 그대로다").is_greater(0)
+
+
+## ⚠ **시즌 종료가 그 함수를 실제로 불러야 한다.** 산식만 맞고 배선이
+## 없으면 게임에선 한 번도 안 돈다 — 그게 P-9였다.
+##
+## 배선은 `SeasonEnd.PHASES`의 `season_relations`와
+## `test_the_phases_follow_the_canonical_order`가 지킨다 — `run`이 실제로
+## 밟은 단계만 `done`에 담기므로, 안 부르면 그 검사가 깨진다.
+##
+## ⚠ **관계 기록으로는 못 본다.** `_log`가 **라벨이 바뀐 것만** 남기고,
+## 새 게임 한 해로는 순위표가 비어 팀 등급이 0이라 델타가 안 난다 —
+## 그게 옳은 동작이라 여기서 볼 것이 없다

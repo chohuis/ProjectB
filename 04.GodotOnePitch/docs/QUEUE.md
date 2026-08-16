@@ -768,7 +768,28 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ 일정은 해마다 제대로 다시 만들어진다 — `build_schedule`을 부르는
       곳을 세어 확인했다.
 
-- [ ] 🔴 **P-9 `RelationshipRunner.run_season`을 아무도 안 부른다**
+- [x] 🔴 **P-9 `run_season`을 아무도 안 부르던 것** — 2026-08-16 이식
+      `SeasonEnd.PHASES`에 `season_relations`를 넣고 `SeasonRunner`가
+      `season_history` **뒤에** 부른다 — 성적이 굳은 뒤라야 그해 것으로 잰다.
+      넷을 정본에서 얻는다(지어내지 않았다): `era`는 `season_stats`의 내 줄 →
+      `SeasonStats.calc_era`, `team_rank_pct`는 `Standings.from_schedule`의
+      내 리그 순위(0.0=1위~1.0=꼴찌), `pitched_any`는 내 줄의 이닝.
+      순위표가 없으면 0.5로 둔다 — 없는 성적을 좋게도 나쁘게도 안 읽는다.
+      ⚠ **변이 검증이 무의미했다.** 셋 다 "잡힘(멈춤)"으로 나왔는데
+      90초 타임아웃이라 변이 때문인지 알 수 없다 — `season_runner_test`가
+      원래 오래 걸린다. **다시 재야 한다**(아래 P-9b).
+      ⚠ 검사 하나를 지웠다. 관계 기록으로 배선을 보려 했는데 `_log`가
+      **라벨이 바뀐 것만** 남기고, 새 게임 한 해로는 순위표가 비어 팀 등급이
+      0이라 델타가 안 난다 — 그게 옳은 동작이라 볼 것이 없었다.
+      배선은 `PHASES`와 `done` 목록이 지킨다.
+
+- [ ] **P-9b P-9 변이 검증을 다시 재라**
+      `season_runner_test`가 90초를 넘겨 변이 셋이 전부 타임아웃으로
+      "잡힘" 처리됐다. 변이 때문인지 느려서인지 갈리지 않는다.
+      ⚠ `mutate.cjs`의 대기 시간을 늘리거나, **더 빠른 검사 파일**을
+      대상으로 잡는다(`season_end_test.gd`는 단계 목록만 봐서 빠르다).
+
+- [ ] ~~🔴 P-9 `RelationshipRunner.run_season`을 아무도 안 부른다~~ (원래 기록)
       **P-4·P-7b와 같은 패턴이다** — 함수와 값은 있는데 부르는 곳이 없다.
       전체를 훑어 확인했다: `sim/` · `ui/` · `bench/` 어디에도 없다.
       구단주는 **주간 항목이 없고 시즌 성적으로만 움직인다**
