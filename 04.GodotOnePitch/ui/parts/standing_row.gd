@@ -1,14 +1,17 @@
-extends HBoxContainer
+extends Button
 class_name StandingRow
 
-## 순위표 한 줄.
+## 순위표 한 줄. **누르면 팀 상세가 열린다** (F-4b).
 ##
 ## ⚠ **색을 여기서 고르지 않는다.** `AppTheme`에서 가져온다.
+##
+## ⚠ **자식은 클릭을 안 먹는다.** `mouse_filter`를 무시로 두지 않으면
+## 라벨이 눌림을 가로채 버튼이 안 눌린다(`action_row.gd`가 같은 함정을 적어 뒀다).
 
-@onready var _rank: Label = $Rank
-@onready var _name: Label = $Name
-@onready var _record: Label = $Record
-@onready var _pct: Label = $Pct
+@onready var _rank: Label = $Pad/Row/Rank
+@onready var _name: Label = $Pad/Row/Name
+@onready var _record: Label = $Pad/Row/Record
+@onready var _pct: Label = $Pad/Row/Pct
 
 var _row: Dictionary = {}
 
@@ -29,7 +32,12 @@ func _ready() -> void:
 
 
 func _apply() -> void:
-	if _row.is_empty():
+	if _rank == null:
+		_rank = get_node_or_null("Pad/Row/Rank")
+		_name = get_node_or_null("Pad/Row/Name")
+		_record = get_node_or_null("Pad/Row/Record")
+		_pct = get_node_or_null("Pad/Row/Pct")
+	if _row.is_empty() or _rank == null:
 		return
 	var mine: bool = _row.get("is_mine", false)
 	var c: Color = row_color(mine)

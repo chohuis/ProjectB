@@ -19,6 +19,7 @@ const TRAINING_SCREEN := preload("res://ui/screens/training_screen.tscn")
 const RETIREMENT_SCREEN := preload("res://ui/screens/retirement_screen.tscn")
 const DECISION_SCREEN := preload("res://ui/screens/decision_screen.tscn")
 const PLAYER_DETAIL_SCREEN := preload("res://ui/screens/player_detail_screen.tscn")
+const TEAM_DETAIL_SCREEN := preload("res://ui/screens/team_detail_screen.tscn")
 
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
@@ -37,8 +38,10 @@ var _season_screen: SeasonEndScreen
 var _training_screen: TrainingScreen
 var _retire_screen: RetirementScreen
 var _decision_screen: DecisionScreen
-## 선수 상세 (F-4)
+## 선수 상세 (F-4a)
 var _detail_screen: PlayerDetailScreen
+## 팀 상세 (F-4b)
+var _team_screen: TeamDetailScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -65,6 +68,7 @@ func _ready() -> void:
 	_main.subscription_toggled.connect(_on_subscription)
 	_main.life_record_requested.connect(_open_life_record)
 	_main.player_selected.connect(_open_player_detail)
+	_main.team_selected.connect(_open_team_detail)
 	_refresh()
 
 
@@ -527,6 +531,51 @@ func _close_player_detail() -> void:
 	remove_child(_detail_screen)
 	_detail_screen.queue_free()
 	_detail_screen = null
+	# ⚠ **팀 상세에서 열었으면 그리로 돌아간다.** 진행 화면으로 튕기면
+	# 보던 팀을 다시 찾아 들어가야 한다
+	if _team_screen != null:
+		_team_screen.visible = true
+		return
+	_main.visible = true
+	_refresh()
+
+
+## 팀 상세를 연다 — F-4b. **리그 표에서 누르면 온다**
+func _open_team_detail(team_id: String) -> void:
+	if _team_screen != null:
+		return
+	var vm: Dictionary = TeamDetailVm.build(_state, team_id)
+	if vm.is_empty():
+		return
+	_team_screen = TEAM_DETAIL_SCREEN.instantiate()
+	_team_screen.closed.connect(_close_team_detail)
+	# 팀에서 사람으로 들어가는 길 — 없으면 로스터가 다시 "이름과 숫자"다
+	_team_screen.player_selected.connect(_open_player_from_team)
+	add_child(_team_screen)
+	_team_screen.set_view_model(vm)
+	_main.visible = false
+
+
+func team_detail_screen() -> TeamDetailScreen:
+	return _team_screen
+
+
+## ⚠ **팀 상세를 덮고 연다.** 닫으면 팀 상세로 돌아간다
+func _open_player_from_team(player_id: String) -> void:
+	if _team_screen != null:
+		_team_screen.visible = false
+	_open_player_detail(player_id)
+	# 주인공이면 "나" 탭으로 갔다 — 팀 상세는 접고 진행 화면을 보인다
+	if _detail_screen == null:
+		_close_team_detail()
+
+
+func _close_team_detail() -> void:
+	if _team_screen == null:
+		return
+	remove_child(_team_screen)
+	_team_screen.queue_free()
+	_team_screen = null
 	_main.visible = true
 	_refresh()
 

@@ -68,6 +68,8 @@ signal subscription_toggled(area_id: String)
 signal life_record_requested
 ## 로스터에서 선수를 눌렀다 — 상세를 연다 (F-4)
 signal player_selected(player_id: String)
+## 리그 표에서 팀을 눌렀다 — 상세를 연다 (F-4b)
+signal team_selected(team_id: String)
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -488,6 +490,10 @@ func _build_league() -> void:
 		var row: StandingRow = STANDING_ROW.instantiate()
 		box.add_child(row)
 		row.setup(r)
+		# ⚠ **누르면 팀 상세가 열린다** (F-4b). 리그 표가 유일한 입구다 —
+		# 없으면 다른 팀이 어떤 구단인지 볼 방법이 없다
+		var tid: String = String(r.get("team_id", ""))
+		row.pressed.connect(func() -> void: team_selected.emit(tid))
 
 
 ## 소식 탭. 거르기 칩은 **누르면 루트에 알린다** — 어느 거르기가 켜졌는지는

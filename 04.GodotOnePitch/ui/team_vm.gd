@@ -13,15 +13,34 @@ static func build(s: Dictionary) -> Dictionary:
 	var p: Dictionary = s.get("protagonist", {})
 	var team_id: String = p.get("team_id", "")
 	var me: String = p.get("id", "")
-	var roster: Array = World.roster_of(s.get("world", {}), team_id)
+	var rows: Array = rows_of(s.get("world", {}), team_id, me)
+
+	var pitchers: int = 0
+	for r in rows:
+		if r["is_pitcher"]:
+			pitchers += 1
+
+	var batters: int = rows.size() - pitchers
+	return {
+		"team_name": p.get("team_name", team_id),
+		"rows": rows,
+		"pitchers": pitchers,
+		"batters": batters,
+		# ⚠ **구성을 숫자로 보여준다.** 02에서 포수 0명·투수 미달이 반복해서
+		# 나왔는데 화면에 안 보이면 아무도 모른다
+		"summary": "%d명 · 투수 %d · 야수 %d" % [rows.size(), pitchers, batters],
+	}
+
+
+## 한 팀의 로스터 줄. **팀 탭과 팀 상세가 같은 것을 봐야 한다** (F-4b) —
+## 두 벌로 두면 같은 팀이 두 화면에서 다르게 정렬되고 OVR도 갈린다
+static func rows_of(world: Dictionary, team_id: String, me: String) -> Array:
+	var roster: Array = World.roster_of(world, team_id)
 
 	var rows: Array = []
-	var pitchers: int = 0
 	for x in roster:
 		var pos: String = x.get("position", "")
 		var pitcher: bool = PlayerGen.is_pitcher(pos)
-		if pitcher:
-			pitchers += 1
 		rows.append({
 			"id": x.get("id", ""),
 			"name": x.get("name", ""),
@@ -42,14 +61,4 @@ static func build(s: Dictionary) -> Dictionary:
 		if a["is_pitcher"] != b["is_pitcher"]:
 			return a["is_pitcher"]
 		return a["ovr"] > b["ovr"])
-
-	var batters: int = rows.size() - pitchers
-	return {
-		"team_name": p.get("team_name", team_id),
-		"rows": rows,
-		"pitchers": pitchers,
-		"batters": batters,
-		# ⚠ **구성을 숫자로 보여준다.** 02에서 포수 0명·투수 미달이 반복해서
-		# 나왔는데 화면에 안 보이면 아무도 모른다
-		"summary": "%d명 · 투수 %d · 야수 %d" % [rows.size(), pitchers, batters],
-	}
+	return rows

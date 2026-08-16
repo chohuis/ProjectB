@@ -69,6 +69,7 @@ const DRAFT_BOARD := preload("res://ui/screens/draft_board_screen.tscn")
 const PEOPLE := preload("res://ui/screens/people_screen.tscn")
 const RETIREMENT := preload("res://ui/screens/retirement_screen.tscn")
 const PLAYER_DETAIL := preload("res://ui/screens/player_detail_screen.tscn")
+const TEAM_DETAIL := preload("res://ui/screens/team_detail_screen.tscn")
 
 
 ## 주인공이 아닌 팀동료 하나. **주인공을 찍으면 "나" 탭으로 가야 하는
@@ -106,6 +107,15 @@ func _build(which: String) -> Control:
 			return _main(Fixtures.main_state())
 		"main-gameday":
 			return _main(Fixtures.main_state_gameday())
+		# 팀 상세 (F-4b · F-3b). **구단 성향 열두 축이 F-3으로 살았다** —
+		# 그 전엔 아홉 축이 50이라 모든 팀이 같은 그림이었다
+		"team-detail":
+			var ts: Dictionary = World.new_game({"seed": 20270101,
+				"season_year": 2027, "name": "김한결",
+				"team_id": "TEAM_HS_AEWOL"})
+			var td: TeamDetailScreen = TEAM_DETAIL.instantiate()
+			td.set_view_model(TeamDetailVm.build(ts, "TEAM_KBL_SEOUL_ROYALS_1"))
+			return td
 		# 선수 상세 (F-4a). **진짜 세계에서 뽑는다** — 가짜 사전으로 찍으면
 		# 이름표가 새는지·OVR이 0인지를 못 본다(F-5에서 둘 다 실제로 났다)
 		"player-detail":
