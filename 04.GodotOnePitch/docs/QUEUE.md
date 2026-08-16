@@ -48,7 +48,8 @@
 |---|---|---|
 | ✅ **F-1** | **구종 습득 시스템.** `world.gd:280`이 직구 하나를 박고 끝이었고 `week_runner`는 진행률을 **아무도 안 읽는 `p["pitch_dev"]`**에 쌓았다 — 소비처(`pitch_step`·`training_growth`)는 다 있는데 생산처가 없었다. → `sim/pitch_dev.gd` + `data/pitch_catalog.json`(**02 표 그대로**) + 훈련 화면 구종 칸 | 검사 20 · **변이 8/8** · 캡처 `training-pitch` |
 | ⬜ **F-1b** | 구종 계측을 **다른 훈련과 섞어** 다시 돌린다. 지금 계측은 8해 내내 구종 개발만 1순위로 두는 극단이라 전부 5등급이 된다 — 실제 플레이의 배분에서 몇 개까지 가는지를 알아야 값을 판단할 수 있다 | |
-| ⬜ **F-2** | 계약 협상 틀 넓히기 — `decision_vm`의 `kind`에 `"negotiate"`를 더한다. 02는 슬라이더 ±20% · 옵션 셋 · 수락 가능성 막대 · 역제안이 있는데 04는 "계약한다/거절한다" 둘이다 | |
+| 🔶 **F-2** | **계약 협상.** 04는 "계약한다/거절한다" 둘뿐이었다 — 협상이 아니라 통보다. → `sim/negotiation.gd`(02 `ContractNegotiationModal.svelte:58-88` 값 그대로: ±20% · 문턱 1.15배 · 기간 3%/해 · 노트레이드 0.95 · 옵션 ±/∓ · 확률 95 − 초과×400). **계산은 끝났고 화면이 남았다** | 검사 16 · **변이 14/14** |
+| ⬜ **F-2b** | 협상 **화면** — `decision_vm`의 `kind`에 `"negotiate"`, 슬라이더·옵션·수락 가능성 막대·역제안 버튼. `Negotiation.build`가 줄 것은 다 준다. `owner_bonus`는 `Relationship.effects`에서, `budget_mod`는 `Staff.mods_of(...)["budget"]`에서 온다 | |
 | ✅ **F-3** | **`TeamProfile` 초기화.** 축 열둘 중 아홉이 영원히 50이었다 — `update_all`은 둘만 갱신하고 **만드는 쪽이 없었다.** 그래서 **buyer가 구조적으로 0팀**(문턱 60, 전부 50)이라 02가 트레이드를 잃은 그 자리에 04도 있었다. → `data/team_profiles.json`(ABL 16 = 02 값 그대로) + `TeamProfile.derive`(KBL, **파생 규칙은 02 ABL 16팀에서 쟀다**) + `spread_of`(JBL, 축이 없어 02 분포를 시드로 흩는다) + `World.build`가 부른다 | 검사 17 · **변이 13/13** |
 | ⬜ **F-3b** | 팀 평가 **화면** — F-3으로 축이 살았으니 이제 보여줄 게 있다. F-4b(팀 상세)와 한 덩어리로 본다 | |
 | ✅ **F-4a** | **선수 상세.** 로스터 줄이 `HBoxContainer`라 **아무것도 안 눌렸다** — 서른 줄이 뜨는데 한 줄이 주는 게 포지션·이름·나이·OVR 넷이라 트레이드도 드래프트도 "이름과 숫자 하나"로 판단해야 했다. → `ui/player_detail_vm.gd` + `player_detail_screen`. `PlayerRow`를 `Button`으로. **주인공을 누르면 "나" 탭으로 보낸다**(두 화면이 같은 사람을 다르게 그리면 안 된다). 캡처가 **팀 이름이 `TEAM_HS_AEWOL`로 새는 것**을 잡았다 — `team_name`은 주인공만 갖는 키다 | 검사 27 · **변이 10/10 + 6/6** · 캡처 `player-detail` |
