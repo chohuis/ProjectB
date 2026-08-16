@@ -77,10 +77,21 @@ static func starter_at(rotation: Array, game_no: int) -> String:
 ## ⚠ **로테이션 인원과 맞물린다.** 고교는 3인이므로 "나보다 센 투수 둘
 ## 이하" = 팀 3위 안이다. 이 둘이 어긋나면 **선발로 배정됐는데 로테이션에는
 ## 못 드는** 선수가 생기고, 그러면 한 경기도 못 던진다
-static func assign_position(my_ovr: float, team_pitcher_ovrs: Array) -> String:
+## `ovr_bias`는 **감독이 나를 어떻게 보는가**다 — F-2c.
+##
+## ⚠ **실력이 아니다.** 같은 OVR이라도 감독과 신뢰가 두터우면 선발 경쟁에서
+## 앞선다(02 `player_engine.rs:101-102` 주석 그대로). 0이면 예전 동작과
+## 정확히 같으므로 밸런스가 안 움직인다.
+##
+## ⚠ **`Relationship.effects`의 `role_ovr_bias`가 여기서 처음 쓰인다** —
+## 만들어만 놓고 소비처가 0건이었다
+static func assign_position(my_ovr: float, team_pitcher_ovrs: Array,
+		ovr_bias: float = 0.0) -> String:
+	# 감독이 보는 나 = 실제 OVR + 관계 보정. 순위 비교에 이 값을 쓴다
+	var seen: float = my_ovr + ovr_bias
 	var higher: int = 0
 	for o in team_pitcher_ovrs:
-		if float(o) > my_ovr:
+		if float(o) > seen:
 			higher += 1
 	return "SP" if higher <= 2 else "RP"
 

@@ -710,8 +710,16 @@ static func roll_over(state: Dictionary) -> Dictionary:
 		if q.get("id", "") != me.get("id", "") \
 				and PlayerGen.is_pitcher(q.get("position", "")):
 			team_ovrs.append(q.get("pitching", {}).get("ovr", 0.0))
+	# ⚠ **감독이 나를 어떻게 보는가도 자리를 가른다** (F-2c). 실력이 아니라
+	# 관계다 — 같은 OVR이라도 신뢰가 두터우면 선발 경쟁에서 앞선다.
+	# `Relationship.effects`의 `role_ovr_bias`는 만들어만 놓고 **소비처가
+	# 0건이었다.**
+	#
+	# ⚠ **새 게임 생성(`world.gd:301`)에는 안 넘긴다** — 그 시점엔 관계가
+	# 아직 없어서 편향이 늘 0이다. 넘기면 절대 안 걸리는 죽은 인자가 된다
 	me["role"] = Rotation.assign_position(
-		float(me.get("pitching", {}).get("ovr", 0.0)), team_ovrs)
+		float(me.get("pitching", {}).get("ovr", 0.0)), team_ovrs,
+		float(RelationshipRunner.effects_of(state).get("role_ovr_bias", 0.0)))
 	me["position"] = me["role"]
 
 	state["schedule"] = World.build_schedule(state.get("world", {}), year, me,

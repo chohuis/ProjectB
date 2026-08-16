@@ -1,0 +1,11 @@
+[
+ ["감독 편향을 무시한다 (role_ovr_bias가 다시 소비처 0건)",
+  "\tvar seen: float = my_ovr + ovr_bias",
+  "\tvar seen: float = my_ovr"],
+ ["편향의 부호를 뒤집는다 (신뢰가 두터울수록 밀려난다)",
+  "\tvar seen: float = my_ovr + ovr_bias",
+  "\tvar seen: float = my_ovr - ovr_bias"],
+ ["선발 문턱을 바꾼다",
+  "\treturn \"SP\" if higher <= 2 else \"RP\"",
+  "\treturn \"SP\" if higher <= 1 else \"RP\""]
+]

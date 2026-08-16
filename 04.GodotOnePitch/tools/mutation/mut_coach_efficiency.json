@@ -1,0 +1,37 @@
+[
+ [
+  "코치 관계를 안 더한다 (training_bonus가 다시 소비처 0건)",
+  "\treturn clampf(training_factor - 1.0 + relation_bonus,\n\t\tCOACH_BONUS_MIN, COACH_BONUS_MAX)",
+  "\treturn clampf(training_factor - 1.0,\n\t\tCOACH_BONUS_MIN, COACH_BONUS_MAX)"
+ ],
+ [
+  "하한을 안 자른다 (02보다 더 깊이 내려간다)",
+  "\treturn clampf(training_factor - 1.0 + relation_bonus,\n\t\tCOACH_BONUS_MIN, COACH_BONUS_MAX)",
+  "\treturn training_factor - 1.0 + relation_bonus"
+ ],
+ [
+  "하한 값을 02와 다르게 잡는다",
+  "const COACH_BONUS_MIN: float = -0.15",
+  "const COACH_BONUS_MIN: float = -0.30"
+ ],
+ [
+  "상한 값을 02와 다르게 잡는다",
+  "const COACH_BONUS_MAX: float = 0.25",
+  "const COACH_BONUS_MAX: float = 0.10"
+ ],
+ [
+  "중립 코치가 0이 아니게 된다 (밸런스가 통째로 움직인다)",
+  "\treturn clampf(training_factor - 1.0 + relation_bonus,",
+  "\treturn clampf(training_factor + relation_bonus,"
+ ],
+ [
+  "프로그램 id를 어휘로 그대로 넘긴다 (어느 코치도 안 걸린다)",
+  "\tfor prog in Training.programs():\n\t\tif String(prog.get(\"id\", \"\")) == id:\n\t\t\treturn Relationship.training_area_of(String(prog.get(\"focus\", \"\")))\n\treturn \"\"",
+  "\treturn Relationship.training_area_of(id)"
+ ],
+ [
+  "훈련 어휘 대신 프로그램 이름을 본다 (표에 없어 늘 빈 문자열)",
+  "\t\t\treturn Relationship.training_area_of(String(prog.get(\"focus\", \"\")))",
+  "\t\t\treturn Relationship.training_area_of(String(prog.get(\"name\", \"\")))"
+ ]
+]

@@ -28,6 +28,48 @@ const SCHOOL_LEAGUES: Array[String] = [
 ]
 
 
+## 코치가 훈련 효율에 더하는 몫 — F-2c. **02 값 그대로**
+## (`advanceWeek.ts:302-303`).
+##
+## ⚠ **능력치와 관계를 더한 뒤 한 번에 자른다.** 02 주석 그대로 —
+## "각각 clamp하면 상한이 두 배가 된다".
+##
+## ⚠ **04엔 이 clamp가 아예 없었다.** 코치 능력치 몫만 그대로 더했고
+## (`factor_of` 범위가 ±0.1875) 관계 몫은 **소비처가 0건이었다.**
+## 02를 덜 옮긴 자리다.
+##
+## `training_factor`는 `Staff.mods_of(...)["training"]`(1.0이 중립),
+## `relation_bonus`는 `Relationship.effects`의 `training_bonus`다
+const COACH_BONUS_MIN: float = -0.15
+const COACH_BONUS_MAX: float = 0.25
+
+
+static func coach_efficiency(training_factor: float,
+		relation_bonus: float) -> float:
+	return clampf(training_factor - 1.0 + relation_bonus,
+		COACH_BONUS_MIN, COACH_BONUS_MAX)
+
+
+## 이번 주 1순위 훈련을 봐 주는 코치의 전문분야 — F-2c.
+##
+## ⚠ **매핑은 훈련 어휘(`focus`)로 한다.** `training_area` 표의 키가
+## `velocity`·`batting` 같은 어휘이지 `TRN_VEL` 같은 프로그램 id가 아니다 —
+## id를 그대로 넘기면 **표에 없어서 늘 빈 문자열이 되고, 그러면 어느 코치도
+## 안 걸린다.** 실제로 그렇게 짰다가 검사가 잡았다.
+##
+## 계획이 없거나 표에 없는 어휘면 `""`다 — 그 주는 코치 관계가 0이다.
+##
+## ⚠ **빈 id를 따로 막지 않는다.** 아래 루프가 못 찾고 `""`를 주므로
+## 결과가 같다 — 막는 줄을 두면 **절대 안 걸리는 죽은 가드**가 된다
+## (변이가 등가로 나와서 잡았다)
+static func primary_coach_area(state: Dictionary) -> String:
+	var id: String = String(state.get("training_plan", {}).get("primary", ""))
+	for prog in Training.programs():
+		if String(prog.get("id", "")) == id:
+			return Relationship.training_area_of(String(prog.get("focus", "")))
+	return ""
+
+
 ## 여러 주를 한 번에. **어느 날이었는지는 `DayEngine`이 안다** — 여기서
 ## 세면 그게 두 번째 정본이 된다.
 ##
@@ -126,11 +168,18 @@ static func run(state: Dictionary, at_day: int = -1) -> void:
 	# 학사가 경기 출전 정지 하나뿐인 시스템이 된다. 학업 모드의 대가도
 	# 같이 걸린다 — 안 걸면 집중 수업이 학점만 올리는 공짜 선택이 된다.
 	# **학교에 다닐 때만 0이 아니다**
+	# ⚠ **코치 몫은 능력치와 관계를 더한 뒤 한 번에 자른다** (F-2c).
+	# 02 주석 그대로: "각각 clamp하면 상한이 두 배가 된다".
+	# 관계 쪽(`training_bonus`)은 만들어만 놓고 **소비처가 0건이었다**
+	var coach: float = coach_efficiency(float(staff["training"]),
+		float(RelationshipRunner.effects_of(state,
+			primary_coach_area(state)).get("training_bonus", 0.0)))
+
 	var efficiency: float = float(p.get("injury_eff_mod", 1.0)) \
 		+ Finance.total_training_bonus(
 			state.get("training_subscriptions", []),
 			float(p.get("team_facility", 1.0))) \
-		+ (float(staff["training"]) - 1.0) \
+		+ coach \
 		+ academic_eff
 	var out: Dictionary = TrainingGrowth.calc(p,
 		state.get("training_plan", {}),
