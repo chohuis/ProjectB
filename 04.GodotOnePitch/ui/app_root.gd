@@ -113,6 +113,9 @@ func runner() -> DayRunner:
 
 func set_state(s: Dictionary) -> void:
 	_state = s.duplicate(true)
+	# ⚠ **깊은 복사가 주인공 참조를 끊는다.** 세이브를 불러오는 것도 여기를
+	# 지나므로, 안 이으면 불러온 게임에서 로스터 쪽만 자란다
+	World.relink_protagonist(_state)
 	if is_node_ready():
 		_refresh()
 

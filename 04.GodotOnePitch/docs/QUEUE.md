@@ -735,7 +735,35 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ **`==`로는 못 잡는다.** GDScript 사전 `==`는 값 비교라 내용이 같으면
       참이다. `is_same`으로 봐야 참조 동일성이 잡힌다 — 처음에 `==`로 써서
       검사 셋이 헛통과했다.
-      ⚠ **오래된 세이브**는 아직 안 봤다. 불러올 때 다시 잇는지 확인할 것.
+      **세이브 로드도 같은 자리였다(같은 날 고침).** `app_root.set_state`가
+      `duplicate(true)`를 해서 불러온 게임에서 다시 갈렸다 — 거기서도
+      `relink_protagonist`를 부른다. 검사 둘을 붙였다.
+
+- [ ] **P-8b `career_stage`가 리그를 안 따라간다** (P-8 고친 뒤 드러남)
+      4해 실측에서 **진학은 된다** — 2030년에 `league_id`가
+      `LEAGUE_UNIVERSITY`로 바뀐다. 그런데 `career_stage`는 여전히
+      `"highschool"`이다.
+
+      ```
+      2029년 highschool/LEAGUE_HIGHSCHOOL · 학년 3 · 대기 ["career_results"]
+      2030년 highschool/LEAGUE_UNIVERSITY · 학년 1 · 대기 ["career_results"]
+      ```
+
+      ⚠ `career_stage`를 읽는 곳이 많다(재정 `Finance.weekly`의 무대별
+      수입·지출, 학사 `SCHOOL_LEAGUES`, FA 자격…). 리그와 어긋나면
+      **대학생이 고교 생활비를 쓴다.**
+      ⚠ **`career_results` 대기가 안 풀린 채로 다음 해로 넘어간다** —
+      계측이 그 결정에 답을 안 해서인지, 결정이 소비되지 않아서인지
+      먼저 가른다(입력부터 재라).
+
+- [ ] **P-8c 4해를 굴려도 등판이 10경기다**
+      P-8 고친 뒤에도 그대로다. 일정엔 매년 내 경기가 10개씩 잡히는데
+      실제 등판은 첫 해 몫만 쌓인다.
+      ⚠ 계측은 매주 `_play_my_pending`으로 미처리 주인공 경기를 돌린다 —
+      그런데도 안 는다. `MatchDay.play`가 게이트(`skip_injury`)를 보고
+      주인공을 안 내보내는지, `is_protagonist_game`이 새 시즌 일정에
+      다시 붙는지 **부르는 곳을 실제로 세라.**
+      라이벌이 5명에서 안 느는 것(02는 8명)이 여기 걸려 있다.
 
 - [ ] ~~🔴 P-8 주인공이 두 벌로 갈린다 — 진행할 때마다~~ (아래는 원래 기록)
       **04 결함이다. 계측 fixture 문제가 아니다.** 자취 실측:

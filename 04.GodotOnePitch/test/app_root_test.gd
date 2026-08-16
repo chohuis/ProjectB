@@ -1243,3 +1243,42 @@ func test_closing_training_returns_to_main() -> void:
 	await await_idle_frame()
 	assert_bool(r.get_node("Main").visible).is_true()
 	assert_object(r.training_screen()).is_null()
+
+
+# ── 주인공이 한 사람인가 ──────────────────────────────────────
+#
+# ⚠ **`set_state`도 깊은 복사를 한다.** 진행 경로는 고쳤는데 여기가 남으면
+# 세이브를 불러오거나 새 상태를 넣을 때마다 주인공이 다시 두 벌이 된다 —
+# 로스터 쪽만 자라고 화면이 읽는 `protagonist`는 그대로 남는다
+
+
+func _me_in_roster_of(r: AppRoot) -> Dictionary:
+	var s: Dictionary = r.state()
+	for p in World.roster_of(s.get("world", {}),
+			String(s.get("protagonist", {}).get("team_id", ""))):
+		if bool(p.get("is_protagonist", false)):
+			return p
+	return {}
+
+
+func test_setting_a_state_keeps_the_protagonist_one_person() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var r: AppRoot = await _mount(s)
+	assert_bool(is_same(_me_in_roster_of(r), r.state()["protagonist"])) \
+		.override_failure_message(
+		"상태를 넣자마자 주인공이 두 벌이 됐다").is_true()
+
+
+## 로스터를 고친 것이 주인공에게 보여야 한다 — **증상 자체를 본다**
+func test_a_loaded_game_grows_the_protagonist() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var r: AppRoot = await _mount(s)
+	var mine: Dictionary = _me_in_roster_of(r)
+	assert_bool(mine.is_empty()).override_failure_message(
+		"로스터에서 주인공을 못 찾는다").is_false()
+	mine["grade"] = 3
+	assert_int(int(r.state()["protagonist"].get("grade", 0))) \
+		.override_failure_message(
+		"로스터의 학년을 올렸는데 주인공은 그대로다 — 두 벌이다").is_equal(3)
