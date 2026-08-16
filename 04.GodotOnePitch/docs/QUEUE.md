@@ -57,7 +57,7 @@
 | ✅ **F-5** | **경기 전 브리핑.** 04는 "지금 무슨 일이 벌어지나"(점수·이닝·카운트·주자)는 다 보여주는데 **상대 타자가 이름 한 줄**이라 승부처인지를 알 수 없었다 → `ui/briefing_vm.gd`(02 `threatLevel` 문턱 그대로) + `match_screen._build_briefing()` | 검사 13 · **변이 9/9** · 캡처 `match-briefing` |
 | ⬜ **F-5b** | **상대 타선에 투수가 낀다.** 캡처에 4번 RP · 6번 RP · 1B 셋이 찍혔다 — `MatchDay`가 타순을 짤 때 포지션을 안 본다. 브리핑이 그걸 눈에 보이게 만들었다(전엔 이름 한 줄이라 몰랐다) | |
 | ⬜ **F-6** | 투구 방향 · 투구 폼 · 생년월일 — `sim/world.gd`에 축 자체가 없다 | |
-| ⬜ **F-7** | **주인공 재계약 오퍼 연봉을 내는 코드가 없다.** `salary_negotiation`을 만드는 두 곳이 이미 있는 값을 옮겨 담을 뿐이고, `Contract.estimate`는 NPC 생성에서만 쓰인다. 02 식은 `player_engine.rs:296-311`. **스태프 `budget` 계수(구단주)가 붙을 유일한 자리**이고, 지금 그 계수는 소비처가 0건이다 | |
+| ✅ **F-7** | **주인공 재계약 오퍼.** 금액을 내는 코드가 아예 없었고(두 곳이 이미 있는 값을 옮겨 담을 뿐), **계약이 0이 됐을 때 물어보는 코드도 없었다** — 02가 "2031년 만료 계약이 2038년까지 남은" 그 자리다. → `Contract.protagonist_offer`·`season_rating`(02 `player_engine.rs:282-311` 그대로) + `ContractDecision.ask_on_expiry` + `SeasonRunner.finish_season`이 부른다. **스태프 `budget` 계수가 여기서 처음 쓰인다** | 검사 24 · **변이 10/10 + 8/8** |
 | ⬜ **F-8** | **선택지가 든 소식을 만드는 곳이 없다.** `mailbox`의 `decision`을 채우는 건 `fixtures.gd`뿐인데, `DayEngine.stop_reason`은 그걸 보고 진행을 막고 자동 진행은 대신 답한다 — **읽는 쪽만 셋, 채우는 쪽 0.** 02는 `usecases/decisions.ts`(121줄) | |
 
 **F-3 조사 (2026-08-17) — 시작하기 전에 읽는다.**

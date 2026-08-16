@@ -161,6 +161,7 @@ static func run(state: Dictionary) -> Dictionary:
 	summary["contracts"] = Contract.ensure_world(state)
 	done.append("contracts")
 
+
 	# ⑪ FA — **구단 성향 뒤다.** 입찰이 성적 압박을 읽는다
 	var fa: Dictionary = FaRunner.run(state)
 	summary["fa_signed"] = int(fa["signings"])
@@ -741,4 +742,14 @@ static func finish_season(state: Dictionary) -> Dictionary:
 	# 그 뒤에 만들면 결산이 통째로 빈 화면이 된다
 	out["digest"] = SeasonHistory.digest(state, int(out["year"]), out["summary"])
 	out["rollover"] = roll_over(state)
+
+	# ⚠ **계약이 끝났으면 물어본다** (F-7). 04는 계약을 매년 줄이기만 하고
+	# (`Contract.advance_year`) 0이 됐을 때 물어보는 코드가 **어디에도
+	# 없었다** — 무소속인 채로 다음 해가 온다. 02가 이 자리에서 재계약
+	# 제안을 잃어 **2031년에 만료된 계약이 2038년까지 남았다**(25시즌 실측).
+	#
+	# ⚠ **롤오버 뒤여야 한다.** `roll_over`가 마지막에 `Pending.clear`로
+	# 지난 시즌의 미결정을 비우므로, 앞에서 물으면 **방금 넣은 재계약이
+	# 그 자리에서 지워진다** — 실제로 그렇게 짰다가 검사가 잡았다
+	out["contract_asked"] = ContractDecision.ask_on_expiry(state)
 	return out

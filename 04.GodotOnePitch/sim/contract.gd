@@ -30,6 +30,89 @@ static func rules() -> Dictionary:
 	return _rules_cache
 
 
+# ── 주인공 재계약 오퍼 (F-7) ──────────────────────────────────
+#
+# ⚠ **04엔 이 식이 아예 없었다.** `salary_negotiation` pending을 만드는 두
+# 곳(`contract_decision.gd:144` · `military.gd:189`)이 **이미 있는 값을
+# 그대로 옮겨 담을 뿐**이었고, 아래 `estimate`는 NPC 계약 생성에서만 쓰인다.
+#
+# ⚠ **그래서 스태프 `budget` 계수(구단주)가 소비처 0건이었다.**
+# `Staff.mods_of`가 만들어 주는데 읽는 곳이 없었다 — 여기가 그 자리다.
+#
+# 원본: `player_engine.rs:282-311` · 호출부는 `advanceWeek.ts:1017-1030`(W43)
+
+## 구단주 계수 상한선 — 02 Rust의 `clamp(0.80, 1.25)`.
+## **안 가두면 지갑 큰 구단 하나가 연봉 체계를 통째로 흔든다**
+static var OFFER_BUDGET_MIN: float = float(rules().get(
+	"protagonist_offer", {}).get("budget_min", 0.80))
+static var OFFER_BUDGET_MAX: float = float(rules().get(
+	"protagonist_offer", {}).get("budget_max", 1.25))
+## 최저선 — 없으면 못 던진 해에 0원 계약이 나온다
+static var OFFER_FLOOR: int = int(float(rules().get(
+	"protagonist_offer", {}).get("floor", 1500.0)))
+
+
+## 시즌 평점 0~100. **기록이 없으면 50이다.**
+##
+## ⚠ **한 이닝도 안 던졌으면 기록이 없는 것과 같다.** 0으로 나누면 방어율이
+## 무한이 되고 오퍼가 최저선으로 떨어진다 — 다치거나 2군에 있던 해가 그렇다
+static func season_rating(stats: Dictionary) -> float:
+	var r: Dictionary = rules().get("season_rating", {})
+	var no_record: float = float(r.get("no_record", 50.0))
+	var ip: float = float(stats.get("ip", 0.0))
+	if stats.is_empty() or ip <= 0.0:
+		return no_record
+
+	var lo: float = float(r.get("score_min", 20.0))
+	var hi: float = float(r.get("score_max", 100.0))
+	var era_score: float = clampf(float(r.get("era_base", 100.0))
+		- (float(stats.get("era", 0.0)) - float(r.get("era_pivot", 2.0)))
+		* float(r.get("era_step", 18.0)), lo, hi)
+	var whip_score: float = clampf(float(r.get("whip_base", 100.0))
+		- (float(stats.get("whip", 0.0)) - float(r.get("whip_pivot", 1.0)))
+		* float(r.get("whip_step", 55.0)), lo, hi)
+	var k9: float = float(stats.get("k", 0)) / ip * 9.0
+	var k_score: float = clampf(float(r.get("k_base", 40.0))
+		+ k9 * float(r.get("k_step", 6.0)), lo, hi)
+
+	return era_score * float(r.get("w_era", 0.45)) \
+		+ whip_score * float(r.get("w_whip", 0.3)) \
+		+ k_score * float(r.get("w_k", 0.25))
+
+
+## 구단이 주인공에게 내미는 재계약 연봉(만원).
+##
+## `budget_mod`는 구단주 성향 계수다 — `Staff.mods_of(...)["budget"]`.
+##
+## ⚠ **시장가에만 곱한다.** 지금 연봉은 이미 계약된 값이라 구단주가 못
+## 바꾼다 (02 주석 그대로).
+##
+## ⚠ **지금 연봉이 없으면 시장가를 쓴다.** 0으로 두면 첫 계약이 시장가의
+## 40%로 떨어진다
+static func protagonist_offer(p: Dictionary, stats: Dictionary,
+		budget_mod: float = 1.0) -> int:
+	var r: Dictionary = rules().get("protagonist_offer", {})
+	var ovr: float = float(p.get("pitching", {}).get("ovr", 0.0))
+	var mult: float = float(r.get("league_mult", {}).get(
+		String(p.get("league_id", "")), r.get("league_mult_default", 1.0)))
+
+	var market: float = (float(r.get("base_flat", 1800.0))
+		+ maxf(ovr - float(r.get("ovr_pivot", 50.0)), 0.0)
+			* float(r.get("ovr_step", 220.0))
+		+ float(p.get("fame", 0.0)) * float(r.get("fame_step", 28.0))
+		) * mult * clampf(budget_mod, OFFER_BUDGET_MIN, OFFER_BUDGET_MAX)
+
+	var current: float = float(p.get("salary", 0))
+	if current <= 0.0:
+		current = market
+
+	var perf: float = 1.0 + (season_rating(stats) - 50.0) \
+		* float(r.get("perf_step", 0.012))
+	var blended: float = current * perf * float(r.get("current_weight", 0.6)) \
+		+ market * float(r.get("market_weight", 0.4))
+	return int(roundf(maxf(blended, float(OFFER_FLOOR))))
+
+
 # ── 입단 나이 ─────────────────────────────────────────────────
 
 ## 고졸 20 · 대졸 24 · 독립 25~27. **비중은 고졸 55 · 대졸 30 · 독립 15**

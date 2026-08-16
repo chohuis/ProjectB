@@ -5,10 +5,26 @@
  "ovr_growth": 1.1,
  "ovr_base": 3000,
  "service": [
-  {"until": 2, "factor": 0.4, "_note": "신인·저연차 — 구단이 정한다"},
-  {"until": 6, "factor": 0.7, "_note": "연봉조정 신청 전"},
-  {"until": 11, "factor": 1.0, "_note": "FA 자격권"},
-  {"until": 99, "factor": 1.1, "_note": "베테랑 프리미엄"}
+  {
+   "until": 2,
+   "factor": 0.4,
+   "_note": "신인·저연차 — 구단이 정한다"
+  },
+  {
+   "until": 6,
+   "factor": 0.7,
+   "_note": "연봉조정 신청 전"
+  },
+  {
+   "until": 11,
+   "factor": 1,
+   "_note": "FA 자격권"
+  },
+  {
+   "until": 99,
+   "factor": 1.1,
+   "_note": "베테랑 프리미엄"
+  }
  ],
  "aging_from_age": 34,
  "aging_per_year": 0.06,
@@ -16,12 +32,12 @@
  "team_index_max": 1.35,
  "jitter": 0.1,
  "league_mult": {
-  "LEAGUE_KBL": 1.0,
+  "LEAGUE_KBL": 1,
   "LEAGUE_KBL_FARM": 0.3,
   "LEAGUE_INDEPENDENT": 0.14,
   "LEAGUE_ABL": 3.5,
   "LEAGUE_ABL_FARM": 1.05,
-  "LEAGUE_JBL": 2.0,
+  "LEAGUE_JBL": 2,
   "LEAGUE_JBL_FARM": 0.6
  },
  "_league_mult_note": "해외 팜은 02에 없다 — 1군의 0.3배(국내 1군:2군과 같은 비)로 파생했다. 02는 해외 팜 선수의 연봉을 아예 안 만들었다",
@@ -33,5 +49,42 @@
   "LEAGUE_ABL_FARM": 2400,
   "LEAGUE_JBL": 6000,
   "LEAGUE_JBL_FARM": 1800
+ },
+ "protagonist_offer": {
+  "_note": "02 player_engine.rs:282-311 calc_offered_salary_for_protagonist 그대로. 주인공 재계약 오퍼 전용이다.",
+  "_why_two_tables": "league_mult가 위와 다르다(독립 0.35 vs 0.14). 02도 두 벌이었다 — 위는 NPC 계약 생성(Contract.estimate)용이고 이것은 주인공 오퍼용이다. 원래 별개 식이라 각자의 배수를 쓴다.",
+  "base_flat": 1800,
+  "ovr_pivot": 50,
+  "ovr_step": 220,
+  "fame_step": 28,
+  "league_mult": {
+   "LEAGUE_ABL": 3.5,
+   "LEAGUE_JBL": 2,
+   "LEAGUE_INDEPENDENT": 0.35
+  },
+  "league_mult_default": 1,
+  "budget_min": 0.8,
+  "budget_max": 1.25,
+  "perf_step": 0.012,
+  "current_weight": 0.6,
+  "market_weight": 0.4,
+  "floor": 1500
+ },
+ "season_rating": {
+  "_note": "02 player_engine.rs:230-236 calc_season_rating_inner 그대로.",
+  "era_base": 100,
+  "era_pivot": 2,
+  "era_step": 18,
+  "whip_base": 100,
+  "whip_pivot": 1,
+  "whip_step": 55,
+  "k_base": 40,
+  "k_step": 6,
+  "score_min": 20,
+  "score_max": 100,
+  "w_era": 0.45,
+  "w_whip": 0.3,
+  "w_k": 0.25,
+  "no_record": 50
  }
 }

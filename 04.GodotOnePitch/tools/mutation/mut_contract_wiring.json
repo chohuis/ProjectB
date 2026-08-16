@@ -1,7 +1,26 @@
 [
- [
-  "해가 바뀌어도 서명해 둔 계약이 발효 안 된다 (배선이 끊긴다)",
-  "\tContractDecision.apply_pending_next_contract(state)\n\n\tvar year: int",
-  "\n\tvar year: int"
- ]
+ ["계약이 끝나도 안 물어본다 (무소속으로 다음 해가 온다 — F-7 이전 상태)",
+  "static func ask_on_expiry(state: Dictionary) -> bool:\n\tvar p: Dictionary = state.get(\"protagonist\", {})",
+  "static func ask_on_expiry(state: Dictionary) -> bool:\n\tif true:\n\t\treturn false\n\tvar p: Dictionary = state.get(\"protagonist\", {})"],
+ ["계약이 남았는데도 묻는다 (계약이 뜻을 잃는다)",
+  "\tif int(p.get(\"contract_years\", 1)) > 0:\n\t\treturn false",
+  ""],
+ ["FA 자격을 안 본다 (시장에 나갈 길이 없다)",
+  "\tif Contract.is_fa_eligible(p):\n\t\treturn Pending.push_once(state, {\"type\": \"fa_market\"})",
+  ""],
+ ["학교 선수에게도 재계약을 묻는다",
+  "\tif not p.has(\"salary\") or not Contract.has_contract(\n\t\t\tString(p.get(\"league_id\", \"\"))):\n\t\treturn false",
+  ""],
+ ["은퇴한 선수에게도 묻는다 (은퇴 화면과 계약 화면이 같이 뜬다)",
+  "\tif p.is_empty() or bool(p.get(\"retired\", false)):\n\t\treturn false",
+  "\tif p.is_empty():\n\t\treturn false"],
+ ["오퍼 금액을 안 낸다 (0원으로 제안이 간다 — F-7 이전 상태)",
+  "\t\t\"offered_salary\": offer_salary_for(state, p),\n\t\t\"duration_years\": 1, \"min_duration_years\": 1, \"max_duration_years\": 3,\n\t\t\"signing_bonus\": 0,\n\t\t\"context\": \"renewal\",\n\t})\n\n\n## 구단이 지금 내밀 재계약 연봉(만원) — F-7.",
+  "\t\t\"offered_salary\": 0,\n\t\t\"duration_years\": 1, \"min_duration_years\": 1, \"max_duration_years\": 3,\n\t\t\"signing_bonus\": 0,\n\t\t\"context\": \"renewal\",\n\t})\n\n\n## 구단이 지금 내밀 재계약 연봉(만원) — F-7."],
+ ["구단주 성향을 안 넘긴다 (budget 계수가 또 죽는다)",
+  "\treturn Contract.protagonist_offer(p, stats, float(mods.get(\"budget\", 1.0)))",
+  "\treturn Contract.protagonist_offer(p, stats, 1.0)"],
+ ["시즌 성적을 안 넘긴다 (잘 던진 해가 반영 안 된다)",
+  "\tvar stats: Dictionary = state.get(\"season_stats\", {}).get(\n\t\tString(p.get(\"id\", \"\")), {})",
+  "\tvar stats: Dictionary = {}"]
 ]

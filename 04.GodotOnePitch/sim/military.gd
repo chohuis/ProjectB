@@ -190,7 +190,9 @@ static func discharge(state: Dictionary, at_day: int) -> bool:
 			"type": "salary_negotiation",
 			"team_id": String(p["team_id"]),
 			"league_id": String(p["league_id"]),
-			"offered_salary": int(p.get("salary", 0)),
+			# ⚠ **구단이 금액을 다시 낸다** (F-7). 옛 연봉을 그대로 주면
+			# 2년 복무 동안 성장한 것도, 구단주가 바뀐 것도 반영이 안 된다
+			"offered_salary": ContractDecision.offer_salary_for(state, p),
 			"duration_years": maxi(int(p.get("contract_years", 1)), 1),
 			"min_duration_years": 1, "max_duration_years": 2,
 			"signing_bonus": 0,

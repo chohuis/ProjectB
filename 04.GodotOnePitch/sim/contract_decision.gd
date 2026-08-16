@@ -145,12 +145,64 @@ static func apply_option_clause(state: Dictionary, action: Dictionary,
 		"type": "salary_negotiation",
 		"team_id": String(p.get("team_id", "")),
 		"league_id": String(p.get("league_id", "")),
-		"offered_salary": int(action.get("next_salary", 0)),
+		# ⚠ **금액을 구단이 낸다** (F-7). 예전엔 `action["next_salary"]`를
+		# 그대로 옮겨 담았는데 **그 키를 채우는 곳이 없어서 늘 0이었다**
+		"offered_salary": offer_salary_for(state, p),
 		"duration_years": 1, "min_duration_years": 1, "max_duration_years": 3,
 		"signing_bonus": 0,
 		"context": "renewal",
 	})
 	return "salary_negotiation"
+
+
+## 계약이 끝났으면 물어본다 — F-7. 물어봤으면 `true`.
+##
+## ⚠ **04는 계약을 매년 줄이기만 했다**(`Contract.advance_year`). 0이 됐을
+## 때 물어보는 코드가 **어디에도 없었다** — 무소속인 채로 다음 해가 온다.
+##
+## ⚠ **02가 이 자리에서 크게 데었다.** 재계약 제안이 사라져서 **2031년에
+## 만료된 계약이 2038년까지 남았다**(25시즌 실측).
+##
+## ⚠ **FA 자격이 있으면 시장이다.** 재계약만 물으면 시장에 나갈 길이 없고,
+## 시장만 열면 자격 없는 선수가 무소속이 된다
+static func ask_on_expiry(state: Dictionary) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	if p.is_empty() or bool(p.get("retired", false)):
+		return false
+	# 학교·독립엔 계약이 없다 — 고교생에게 재계약을 물으면 안 된다
+	if not p.has("salary") or not Contract.has_contract(
+			String(p.get("league_id", ""))):
+		return false
+	if int(p.get("contract_years", 1)) > 0:
+		return false
+
+	if Contract.is_fa_eligible(p):
+		return Pending.push_once(state, {"type": "fa_market"})
+
+	return Pending.push_once(state, {
+		"type": "salary_negotiation",
+		"team_id": String(p.get("team_id", "")),
+		"league_id": String(p.get("league_id", "")),
+		"offered_salary": offer_salary_for(state, p),
+		"duration_years": 1, "min_duration_years": 1, "max_duration_years": 3,
+		"signing_bonus": 0,
+		"context": "renewal",
+	})
+
+
+## 구단이 지금 내밀 재계약 연봉(만원) — F-7.
+##
+## ⚠ **금액을 내는 자리는 여기 하나다.** 재계약과 전역 복귀가 각자 계산하면
+## 같은 선수에게 다른 금액이 나가고, 어느 쪽이 맞는지 알 방법이 없다.
+##
+## ⚠ **구단주 성향이 여기서 쓰인다.** `Staff.mods_of(...)["budget"]`은
+## 만들어만 놓고 **소비처가 0건이었다**
+static func offer_salary_for(state: Dictionary, p: Dictionary) -> int:
+	var mods: Dictionary = Staff.mods_of(state.get("world", {}),
+		String(p.get("team_id", "")))
+	var stats: Dictionary = state.get("season_stats", {}).get(
+		String(p.get("id", "")), {})
+	return Contract.protagonist_offer(p, stats, float(mods.get("budget", 1.0)))
 
 
 # ── FA 시장 ───────────────────────────────────────────────────
