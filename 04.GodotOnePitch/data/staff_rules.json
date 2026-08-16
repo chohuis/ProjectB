@@ -25,6 +25,8 @@
     "LEAGUE_KBL": 10
   },
   "power_per_star": 3,
+ "power_center": 3,
+ "_power_note": "전력★은 중심에서 잰다. 02 staff_gen.rs:227의 (team.power - 3) * per_star 그대로 — ★3이 0이고 ★1은 -6이다",
 
   "manager": {
     "age_min": 38, "age_max": 66,
@@ -134,6 +136,7 @@
     }
   },
 
-  "stat_min": 1,
-  "stat_max": 99
+  "_stat_range_note": "02 staff_gen.rs의 clamp(v, 20, 95) 그대로. 능력치 굴림도 전문 보정도 같은 폭으로 자른다",
+ "stat_min": 20,
+  "stat_max": 95
 }

@@ -124,6 +124,44 @@ func test_a_stronger_club_gets_better_staff() -> void:
 	assert_float(strong).is_greater(weak)
 
 
+## ⚠ **전력★은 중심에서 재는 값이지 절대량이 아니다.**
+##
+## 위 검사는 "강팀 > 약팀"만 봐서 **중심이 어긋나도 통과한다** — 실제로
+## `- power_center`가 빠진 채 통과하고 있었고, 실측에서 리그 넷이 전부
+## +8~+16 부풀어 있었다(고교 감독 51.3 → 60.9).
+##
+## ★3은 보정 0이라 감독 평균이 **리그 보정 + 능력 중심**에 붙어야 한다.
+func test_a_mid_club_gets_no_power_bonus() -> void:
+	var center: float = float(Staff.rules()["manager"]["stat_center"])
+	var bonus: float = float(Staff.rules()["league_bonus"]["LEAGUE_HIGHSCHOOL"])
+	var sum: float = 0.0
+	var n: int = 0
+	for i in range(120):
+		for s in _built(3.0, 50.0, "LEAGUE_HIGHSCHOOL", i + 1):
+			if String(s["role"]) == Staff.ROLE_MANAGER:
+				sum += float(s["stats"]["tactical_iq"])
+				n += 1
+	# 굴림이 삼각분포라 표본 120으로 ±2 안에 든다. ★3에 per_star(3)가
+	# 통째로 얹히면 3점이 밀려 이 폭을 벗어난다
+	assert_float(sum / float(n)).is_between(center + bonus - 2.0,
+		center + bonus + 2.0)
+
+
+## ★1 약팀은 **깎여야 한다** — 중심이 빠지면 여기서도 덤을 받는다
+func test_a_weak_club_is_pulled_below_the_league_center() -> void:
+	var center: float = float(Staff.rules()["manager"]["stat_center"])
+	var bonus: float = float(Staff.rules()["league_bonus"]["LEAGUE_HIGHSCHOOL"])
+	var per_star: float = float(Staff.rules()["power_per_star"])
+	var sum: float = 0.0
+	var n: int = 0
+	for i in range(120):
+		for s in _built(1.0, 50.0, "LEAGUE_HIGHSCHOOL", i + 1):
+			if String(s["role"]) == Staff.ROLE_MANAGER:
+				sum += float(s["stats"]["tactical_iq"])
+				n += 1
+	assert_float(sum / float(n)).is_less(center + bonus - per_star)
+
+
 ## ⚠ **씀씀이가 구단주의 예산·시설에 그대로 얹힌다**
 func test_a_generous_owner_has_a_bigger_budget() -> void:
 	var rich: float = 0.0
@@ -176,13 +214,33 @@ func test_a_specialty_actually_boosts_its_own_pair() -> void:
 	).is_greater(running / float(n_r))
 
 
+## ⚠ **1~99로 보면 아무것도 안 본다.** 02는 `clamp(v, 20, 95)`로 자르는데
+## 04는 1~99로 자르고 있었고, 이 검사가 1~99를 보고 있어서 통과했다.
+## **규칙 파일이 정본이다** — 값을 여기 다시 적으면 둘이 된다
 func test_the_stats_stay_in_range() -> void:
+	var lo: float = float(Staff.rules()["stat_min"])
+	var hi: float = float(Staff.rules()["stat_max"])
 	for i in range(20):
 		for s in _built(5.0, 90.0, "LEAGUE_KBL", i + 1):
 			for k in s["stats"]:
 				assert_float(float(s["stats"][k])).override_failure_message(
 					"%s 의 %s 가 %.1f다" % [s["role"], k, s["stats"][k]]
-				).is_between(1.0, 99.0)
+				).is_between(lo, hi)
+
+
+## 자르는 폭이 실제로 **닿는다.** 넓혀 놓으면 이 검사가 먼저 깨진다 —
+## 02와 같은 20~95인지 여기서 못 박는다
+func test_the_clamp_is_actually_reached() -> void:
+	var hi: float = float(Staff.rules()["stat_max"])
+	var touched: bool = false
+	# 명문 1군에 씀씀이 최고 — 보정이 가장 세게 얹히는 자리
+	for i in range(60):
+		for s in _built(5.0, 100.0, "LEAGUE_KBL", i + 1):
+			for k in s["stats"]:
+				if is_equal_approx(float(s["stats"][k]), hi):
+					touched = true
+	assert_bool(touched).override_failure_message(
+		"상한 %.0f에 아무도 안 닿는다 — 폭이 넓어졌나" % hi).is_true()
 
 
 ## ⚠ **팀마다 다른 감독이다.** 씨앗을 팀과 안 섞으면 전 구단이 같은 사람이다.

@@ -89,10 +89,18 @@ static func _roll(center: float, spread: float, bonus: float,
 		float(r.get("stat_min", 1)), float(r.get("stat_max", 99)))
 
 
+## 리그·전력이 만든 보정.
+##
+## ⚠ **전력★은 중심에서 재는 값이지 절대량이 아니다.** 02는
+## `(team.power - 3) * per_star`로 ★3을 0에 둔다(`staff_gen.rs:227`).
+## 04는 `- 3`을 빠뜨려 **모든 팀이 +3~+15를 덤으로 받았다** — 실측에서
+## 고교 감독 전술안목이 02의 51.3 대신 60.9였고, 리그 넷이 전부 +8~+16
+## 부풀어 있었다. ★1 약팀은 −6이어야 하는데 +3을 받고 있었다
 static func _bonus(league_id: String, power: float) -> float:
 	var r: Dictionary = rules()
 	return float(r.get("league_bonus", {}).get(league_id, 0)) \
-		+ power * float(r.get("power_per_star", 0))
+		+ (power - float(r.get("power_center", 3))) \
+			* float(r.get("power_per_star", 0))
 
 
 static func _person(role: String, team_id: String, league_id: String,
