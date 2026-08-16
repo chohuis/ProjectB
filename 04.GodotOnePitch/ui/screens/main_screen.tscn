@@ -115,6 +115,14 @@ autowrap_mode = 3
 [node name="Advance" type="Button" parent="Pad/Col/Body/Right/Footer"]
 layout_mode = 2
 
+[node name="Auto" type="Button" parent="Pad/Col/Body/Right/Footer"]
+layout_mode = 2
+
+[node name="AutoStop" type="Label" parent="Pad/Col/Body/Right/Footer"]
+layout_mode = 2
+autowrap_mode = 3
+visible = false
+
 [node name="Progress" type="ProgressBar" parent="Pad/Col/Body/Right/Footer"]
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2

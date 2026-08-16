@@ -207,6 +207,36 @@ func test_an_empty_queue_just_advances() -> void:
 	assert_str(String(AutoAdvance.next_step(_state())["kind"])).is_equal("advance")
 
 
+## ⚠ **진행을 막는 게 대기줄만이 아니다.** 미결정 소식은 `mailbox`에
+## 있고 `Pending`엔 없다 — 대기줄만 보면 `next_step`이 "가도 된다"고
+## 하는데 `DayEngine`은 하루도 안 민다. **자동 진행이 그 자리에서 상한까지
+## 헛돈다** (진행 버튼도 같은 이유로 막혀 있다: `main_vm.gd:70`)
+func test_an_undecided_message_blocks_the_advance() -> void:
+	var s: Dictionary = _state({"mailbox": [
+		{"id": "M1", "read": false,
+			"decision": {"selected": null, "choices": [
+				{"id": "go", "label": "훈련한다"}, {"id": "rest", "label": "휴식한다"}]}},
+	]})
+	# 전제부터 못 박는다 — `DayEngine`이 실제로 여기서 멈춘다
+	assert_str(String(DayEngine.stop_reason(s)["type"])).is_equal("message")
+	var step: Dictionary = AutoAdvance.next_step(s)
+	assert_str(String(step["kind"])).override_failure_message(
+		"미결정 소식을 못 보고 진행하라고 했다 — 자동 진행이 헛돈다").is_equal("answer")
+	assert_str(String(step["action"]["type"])).is_equal("message")
+
+
+## 등판일도 마찬가지다 — `schedule`에 있지 `Pending`엔 없다
+func test_a_start_day_blocks_the_advance() -> void:
+	var s: Dictionary = _state({"schedule": [
+		{"id": "G1", "day": 10, "is_protagonist_game": true, "result": null},
+	]})
+	assert_str(String(DayEngine.stop_reason(s)["type"])).is_equal("game")
+	var step: Dictionary = AutoAdvance.next_step(s)
+	assert_str(String(step["kind"])).override_failure_message(
+		"등판일을 못 보고 진행하라고 했다").is_equal("answer")
+	assert_str(String(step["action"]["type"])).is_equal("game")
+
+
 ## ⚠ **헛도는 것을 막는 상한이 있다.** 없으면 세이브 하나 때문에 게임이 멈춘다
 func test_there_is_a_step_limit() -> void:
 	assert_int(AutoAdvance.MAX_STEPS).is_greater(0)
@@ -229,9 +259,43 @@ func _answer_nothing(_s: Dictionary, _action: Dictionary) -> void:
 	pass
 
 
+## 프레임을 넘기며 하루를 민다 — **화면 쪽 진행이 이 모양이다**(`DayRunner`)
+func _step_a_day_slowly(s: Dictionary) -> void:
+	await await_idle_frame()
+	s["day"] = int(s["day"]) + 1
+
+
+## ⚠ **한 걸음이 끝날 때까지 기다려야 한다.** 화면 쪽 진행은 프레임을
+## 넘기며 도는 코루틴이라, 안 기다리면 **한 걸음이 끝나기 전에 다음 걸음이
+## 시작된다** — 날이 안 가고 상한까지 헛돈다.
+##
+## ⚠ **동기 진행으로는 이걸 못 본다.** `_step_a_day`는 즉시 끝나서
+## `await`가 있으나 없으나 결과가 같다 — 변이가 등가가 됐던 자리다
+func test_it_waits_for_a_coroutine_step() -> void:
+	var s: Dictionary = _state({"day": 360, "season_days": 364})
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day_slowly, _answer)
+	assert_int(int(s["day"])).override_failure_message(
+		"코루틴 진행을 안 기다렸다 — 날이 %d에서 멈췄다" % s["day"]).is_equal(364)
+	assert_str(String(out["stopped"]["reason"])).is_equal("season_end")
+
+
+## 답하는 쪽도 마찬가지다 — 자동 진행이 등판을 대신 돌릴 때가 그 모양이다
+func _answer_slowly(s: Dictionary, action: Dictionary) -> void:
+	await await_idle_frame()
+	Pending.resolve(s, String(action.get("type", "")))
+
+
+func test_it_waits_for_a_coroutine_answer() -> void:
+	var s: Dictionary = _state({"day": 362, "season_days": 364})
+	Pending.push(s, {"type": "message", "message_id": "M1"})
+	await AutoAdvance.run(s, _step_a_day, _answer_slowly)
+	assert_array(Pending.all(s)).override_failure_message(
+		"코루틴 답을 안 기다렸다 — 알림이 줄에 남았다").is_empty()
+
+
 func test_it_runs_until_the_season_ends() -> void:
 	var s: Dictionary = _state({"day": 360, "season_days": 364})
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer)
 	assert_str(String(out["stopped"]["reason"])).is_equal("season_end")
 	assert_int(int(s["day"])).is_equal(364)
 
@@ -241,7 +305,7 @@ func test_it_answers_the_routine_and_keeps_going() -> void:
 	var s: Dictionary = _state({"day": 360, "season_days": 364})
 	Pending.push(s, {"type": "message", "message_id": "M1"})
 	Pending.push(s, {"type": "message", "message_id": "M2"})
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer)
 	assert_array(Pending.all(s)).override_failure_message(
 		"알림이 줄에 남았다").is_empty()
 	assert_str(String(out["stopped"]["reason"])).is_equal("season_end")
@@ -257,7 +321,7 @@ func test_it_stops_at_a_decision() -> void:
 	var s: Dictionary = _state()
 	Pending.push(s, {"type": "message", "message_id": "M1"})
 	Pending.push(s, {"type": "draft_notification", "team_id": "T"})
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer)
 	assert_str(String(out["stopped"]["reason"])).is_equal("draft_notification")
 	assert_bool(Pending.has(s, "draft_notification")).override_failure_message(
 		"멈췄다면서 결정을 치웠다").is_true()
@@ -267,7 +331,7 @@ func test_it_stops_at_a_decision() -> void:
 ## 지나가면 사용자가 손쓸 데가 없다
 func test_it_stops_at_a_stop_week() -> void:
 	var s: Dictionary = _state({"day": 39 * 7, "season_days": 364})
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer)
 	assert_str(String(out["stopped"]["reason"])).override_failure_message(
 		"정지 주차를 그냥 지나쳤다").is_equal("stop_week")
 	assert_int(int(out["stopped"]["week"])).is_equal(40)
@@ -276,8 +340,8 @@ func test_it_stops_at_a_stop_week() -> void:
 ## 같은 자리에서 두 번은 안 멈춘다 — 그러면 그 주 뒤로 못 나아간다
 func test_it_moves_past_a_stop_week() -> void:
 	var s: Dictionary = _state({"day": 39 * 7, "season_days": 364})
-	AutoAdvance.run(s, _step_a_day, _answer)
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer)
+	await AutoAdvance.run(s, _step_a_day, _answer)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer)
 	# 다음 정지 주차(51)까지는 간다 — 40주에 다시 걸리면 못 나아간다
 	assert_int(int(out["stopped"].get("week", 0))).override_failure_message(
 		"같은 정지 주차(40)에 다시 걸려 못 나아간다").is_not_equal(40)
@@ -289,7 +353,7 @@ func test_it_moves_past_a_stop_week() -> void:
 func test_a_stuck_queue_hits_the_limit() -> void:
 	var s: Dictionary = _state()
 	Pending.push(s, {"type": "message", "message_id": "M1"})
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer_nothing, 20)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer_nothing, 20)
 	assert_str(String(out["stopped"]["reason"])).is_equal("max_steps")
 	assert_int(int(out["steps"])).is_equal(20)
 
@@ -297,7 +361,7 @@ func test_a_stuck_queue_hits_the_limit() -> void:
 func test_a_retired_player_stops_the_run_immediately() -> void:
 	var s: Dictionary = _state()
 	s["protagonist"]["retired"] = true
-	var out: Dictionary = AutoAdvance.run(s, _step_a_day, _answer)
+	var out: Dictionary = await AutoAdvance.run(s, _step_a_day, _answer)
 	assert_str(String(out["stopped"]["reason"])).is_equal("retired")
 	assert_int(int(out["steps"])).override_failure_message(
 		"은퇴했는데 하루라도 갔다").is_equal(0)

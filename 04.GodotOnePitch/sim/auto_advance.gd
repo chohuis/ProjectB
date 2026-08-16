@@ -50,6 +50,8 @@ const LABELS: Dictionary = {
 	"trade": "트레이드 통보",
 	"game": "등판",
 	"message": "소식 확인",
+	"retired": "은퇴",
+	"season_end": "시즌 종료",
 }
 
 ## 여기 오면 멈춘다 — 시즌이 끝나 가는 자리를 그냥 지나치지 않는다
@@ -141,21 +143,28 @@ static func _find(choices: Array, words: Array) -> String:
 static func next_step(state: Dictionary) -> Dictionary:
 	var p: Dictionary = state.get("protagonist", {})
 	if bool(p.get("retired", false)):
-		return {"kind": "stop", "reason": "retired", "label": "은퇴"}
+		return {"kind": "stop", "reason": "retired", "label": label_of("retired")}
 	if int(state.get("day", 0)) >= int(state.get("season_days", 0)):
-		return {"kind": "stop", "reason": "season_end", "label": "시즌 종료"}
+		return {"kind": "stop", "reason": "season_end", "label": label_of("season_end")}
 
+	# ⚠ **대기줄 전체를 훑는다.** 아래 `stop_reason`은 줄의 **머리 하나**만
+	# 보므로, 멈춰야 할 결정이 알림 뒤에 숨어 있으면 못 본다
 	var block: Dictionary = blocking(state)
 	if not block.is_empty():
-		var t: String = String(block["type"])
-		return {"kind": "stop", "reason": t, "label": label_of(t), "action": block}
+		var bt: String = String(block["type"])
+		return {"kind": "stop", "reason": bt, "label": label_of(bt), "action": block}
 
-	var head: Dictionary = Pending.next(state)
-	if not head.is_empty():
-		return {"kind": "answer", "action": head,
-			"label": label_of(String(head.get("type", "")))}
+	# ⚠ **진행을 막는 게 대기줄만이 아니다.** 미결정 소식은 `mailbox`에,
+	# 등판은 `schedule`에 있다 — 대기줄만 보면 여기서 "가도 된다"고 하는데
+	# `DayEngine`은 하루도 안 민다. **자동 진행이 그 자리에서 상한까지
+	# 헛돈다.** 무엇이 날을 막는지는 `DayEngine.stop_reason`이 정본이고,
+	# 진행 버튼도 그걸 본다(`main_vm.gd:70`) — 여기서 따로 세면 갈린다
+	var stop = DayEngine.stop_reason(state)
+	if stop == null:
+		return {"kind": "advance"}
 
-	return {"kind": "advance"}
+	var t: String = String(stop.get("type", ""))
+	return {"kind": "answer", "action": stop, "label": label_of(t)}
 
 
 # ── 돌린다 ────────────────────────────────────────────────────
@@ -168,6 +177,12 @@ static func next_step(state: Dictionary) -> Dictionary:
 ##
 ## ⚠ **상한이 있다.** `answer`가 줄을 안 줄이면 여기서 영원히 돈다 —
 ## 세이브 하나 때문에 게임이 멈추면 안 된다
+##
+## ⚠ **`advance`·`answer`가 코루틴이어도 된다.** 화면 쪽 진행은
+## `DayRunner`가 프레임을 넘기며 도는 코루틴이라 안 기다리면 **한 걸음이
+## 끝나기 전에 다음 걸음이 시작된다.** 동기 함수를 넘겨도 그대로 돈다
+## (재서 확인했다). 대신 `run` 자체가 코루틴이 되므로 부르는 쪽은 `await`를
+## 붙여야 하고, 안 붙이면 파스 오류가 난다 — 조용히 어긋나지 않는다
 static func run(state: Dictionary, advance: Callable, answer: Callable,
 		max_steps: int = MAX_STEPS) -> Dictionary:
 	var steps: int = 0
@@ -179,13 +194,13 @@ static func run(state: Dictionary, advance: Callable, answer: Callable,
 
 		steps += 1
 		if kind == "answer":
-			answer.call(state, step["action"])
+			await answer.call(state, step["action"])
 			continue
 
 		# ⚠ **지나친 정지 주차를 잡는다.** 진행 뒤에 물어야 한다 —
 		# 앞에서 물으면 그 주에 들어서기 전에 멈춘다
 		var before: int = Calendar.week_of(int(state.get("day", 1)))
-		advance.call(state)
+		await advance.call(state)
 		var week: int = stop_week_between(before,
 			Calendar.week_of(int(state.get("day", 1))))
 		if week > 0:

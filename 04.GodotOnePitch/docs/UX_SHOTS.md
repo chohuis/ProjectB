@@ -11,7 +11,10 @@ godot --script tools/shot.gd -- <이름>     # 창이 뜬다 — 헤드리스 �
 크기: 1440×900 (구장만 1000×920 — 좌표를 1:1로 재려고 그렇다)
 
 **39갈래 전부 찍혔다. 못 찍은 갈래는 없다.**
-(U-1에서 `status-injury`가 하나 늘어 **40갈래**가 됐다.)
+그 뒤로 `status-injury`(U-1) · `status-military`(U-2b) · `settings`(U-4) ·
+`training-pitch`(F-1) · `match-briefing`(F-5) · `player-detail`(F-4a)이 붙었다.
+**갈래 목록의 정본은 `tools/shot.gd`의 `match`문이다** — 여기 개수를 적으면
+하나 붙일 때마다 어긋난다.
 
 ⚠ **부상은 그냥 돌려선 안 난다.** `status-injury`가 120주를 돌려도 빈 화면이
 나왔다 — 피로를 95로 물려야 5주 만에 다치고 낫는다. **"안 나오는 것"과
@@ -32,6 +35,8 @@ godot --script tools/shot.gd -- <이름>     # 창이 뜬다 — 헤드리스 �
 | `status-military` | "나" 탭 — **복무 중.** `Military.enlist`를 실제로 거친다 (U-2) | — |
 | `settings` | 설정 — 창 크기 · 전체화면 (U-4) | — |
 | `training-pitch` | 훈련 — **구종 고르기.** 습득 중 막대 · 문턱 숫자 (F-1) | — |
+| `match-briefing` | 경기 전 — **상대 선발·타선·주의사항** (F-5) | — |
+| `player-detail` | 선수 상세 — **로스터 줄을 눌러 연다** (F-4a) | — |
 | `main` | 진행 화면 (fixture) | 63,158 |
 | `main-gameday` | 진행 화면 — 등판일 | 62,085 |
 | `app` | AppRoot 기본 (탭 0 = 소식) | 63,158 |

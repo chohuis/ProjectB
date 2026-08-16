@@ -1282,3 +1282,5 @@ func test_a_loaded_game_grows_the_protagonist() -> void:
 	assert_int(int(r.state()["protagonist"].get("grade", 0))) \
 		.override_failure_message(
 		"로스터의 학년을 올렸는데 주인공은 그대로다 — 두 벌이다").is_equal(3)
+
+

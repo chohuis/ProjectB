@@ -36,10 +36,14 @@ const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 @onready var _training: Button = $Pad/Col/Body/Right/Training
 @onready var _next_game: Label = $Pad/Col/Body/Right/Footer/NextGame
 @onready var _advance: Button = $Pad/Col/Body/Right/Footer/Advance
+@onready var _auto: Button = $Pad/Col/Body/Right/Footer/Auto
+@onready var _auto_stop: Label = $Pad/Col/Body/Right/Footer/AutoStop
 @onready var _progress: ProgressBar = $Pad/Col/Body/Right/Footer/Progress
 
 ## 진행 버튼을 눌렀다. 며칠을 갈지는 사전에 있다
 signal advance_requested(days: int)
+## 자동 진행을 눌렀다 — 다음 결정까지 간다 (B-11)
+signal auto_requested
 ## 탭을 골랐다
 signal tab_selected(tab_id: String)
 ## 소식 거르기를 골랐다. **어느 것이 켜졌는지는 상태가 들고 있다** —
@@ -62,6 +66,8 @@ signal sponsor_signed(category_id: String)
 signal subscription_toggled(area_id: String)
 ## 인생 기록을 다시 본다
 signal life_record_requested
+## 로스터에서 선수를 눌렀다 — 상세를 연다 (F-4)
+signal player_selected(player_id: String)
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -90,6 +96,17 @@ func set_progress(done: int, total: int) -> void:
 	_progress.value = done
 
 
+## 자동 진행이 왜 멈췄는지 — B-11.
+##
+## ⚠ **안 말하면 "눌렀는데 조금 가다 섰다"가 된다.** 사용자는 게임이
+## 고장 난 줄 안다. 다음에 다시 그릴 때 사라진다(`_rebuild`) — 지난번
+## 이유가 남아 있으면 방금 멈춘 것처럼 읽힌다
+func set_auto_stop(label: String) -> void:
+	_auto_stop.text = "자동 진행 정지 — %s" % label if not label.is_empty() else ""
+	_auto_stop.visible = not label.is_empty()
+	_auto_stop.add_theme_color_override("font_color", AppTheme.ACCENT)
+
+
 ## 사전을 넣는다. `_ready` 전후 어느 때든 부를 수 있다
 func set_view_model(vm: Dictionary) -> void:
 	_vm = vm
@@ -108,6 +125,7 @@ func _ready() -> void:
 	theme = AppTheme.build()
 	_bg.color = AppTheme.BG
 	_advance.pressed.connect(_on_advance)
+	_auto.pressed.connect(func() -> void: auto_requested.emit())
 	_training.pressed.connect(func() -> void: training_requested.emit.call_deferred())
 	_rebuild()
 
@@ -156,6 +174,13 @@ func _rebuild() -> void:
 	# ⚠ **진행 중이 아니면 막대를 치운다.** 남아 있으면 "아직 도는 중"으로
 	# 읽힌다 — 다시 그리는 이유는 진행 말고도 여럿이다
 	_progress.visible = false
+	# 정지 사유도 같이 치운다 — 지난번 이유가 남아 있으면 방금 멈춘 것처럼 읽힌다
+	_auto_stop.visible = false
+
+	# ⚠ **경기 시작·시즌 종료 갈래에서도 세운다.** 아래 이른 반환 뒤에
+	# 두면 등판일에 자동 진행 버튼의 글자가 안 바뀐다
+	_auto.text = _vm.get("auto_label", "")
+	_auto.disabled = not bool(_vm.get("can_auto", false))
 	_date.text = _vm.get("date_label", "")
 	_weekday.text = "(%s)" % _vm.get("weekday_label", "") if _vm.has("weekday_label") else ""
 	_weekday.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
@@ -302,6 +327,19 @@ func _on_tab(i: int) -> void:
 	_build_body()
 
 
+## 탭 하나를 연다. **주인공을 누르면 "나" 탭으로 보낸다**(F-4) —
+## 그쪽이 정본이고, 두 화면이 같은 사람을 다르게 그리면 안 된다
+func show_tab(tab_id: String) -> bool:
+	var tabs: Array = _vm.get("tabs", [])
+	for i in tabs.size():
+		if String(tabs[i].get("id", "")) == tab_id:
+			if _tab != i:
+				_on_tab(i)
+				_build_tabs()
+			return true
+	return false
+
+
 func _build_body() -> void:
 	for c in _tab_host.get_children():
 		_free_child(_tab_host, c)
@@ -412,6 +450,10 @@ func _build_team() -> void:
 		var row: PlayerRow = PLAYER_ROW.instantiate()
 		box.add_child(row)
 		row.setup(r)
+		# ⚠ **누르면 상세가 열린다** (F-4). 예전엔 아무것도 안 눌려서
+		# 로스터 서른 줄이 "이름과 숫자 하나"로만 판단해야 했다
+		var pid: String = String(r.get("id", ""))
+		row.pressed.connect(func() -> void: player_selected.emit(pid))
 
 
 ## 리그 탭. 순위표는 `LeagueVm`이 일정에서 매번 다시 센다 —

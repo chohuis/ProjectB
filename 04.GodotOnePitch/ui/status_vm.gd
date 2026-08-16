@@ -49,12 +49,12 @@ static func build(s: Dictionary) -> Dictionary:
 		"league_short": LEAGUE_SHORT.get(league_id, league_id),
 		"injury": _injury(p.get("injury", null)),
 		"injury_history": _injury_history(s),
-		"military": _military(p),
+		"military": military_of(p),
 		"contract": s.get("contract", {}),
 		"pitches": s.get("pitches", []),
 		"pitching": pitching,
 		"season_title": "%d년 시즌 누적" % int(s.get("season_year", 0)),
-		"season_stats": _season_stats(s, p.get("id", "")),
+		"season_stats": season_stats_of(s, p.get("id", "")),
 		"career": s.get("career", []),
 		"tabs": _tabs(academics),
 		"academics": academics,
@@ -114,7 +114,14 @@ static func _injury(inj) -> Dictionary:
 static func team_name_of(p: Dictionary) -> String:
 	if String(p.get("military_status", "")) == Military.STATUS_SERVING:
 		return Military.unit_label(String(p.get("military_unit", "")))
-	return String(p.get("team_name", p.get("team_id", "")))
+	var name: String = String(p.get("team_name", ""))
+	if not name.is_empty():
+		return name
+	# ⚠ **NPC 사전엔 `team_name`이 없다.** 주인공만 들고 있어서, 그대로
+	# `team_id`로 떨어지면 선수 상세에 `TEAM_HS_AEWOL`이 뜬다 —
+	# **실제로 그렇게 찍혔다.** 이름표를 한 겹 빠뜨리면 조용히 원문이 샌다
+	var team_id: String = String(p.get("team_id", ""))
+	return String(World.team_field({}, team_id, "name", team_id))
 
 
 ## 병역 — 입대·복무·전역이 보이는 유일한 자리. U-2.
@@ -131,7 +138,7 @@ static func team_name_of(p: Dictionary) -> String:
 ##
 ## ⚠ **미필이면 빈 사전이다.** 대부분의 커리어에서 기본값이라 늘 띄우면
 ## 아무 뜻이 없는 줄이 하나 붙어 있는다
-static func _military(p: Dictionary) -> Dictionary:
+static func military_of(p: Dictionary) -> Dictionary:
 	var status: String = String(p.get("military_status", Military.STATUS_UNSERVED))
 	if status == Military.STATUS_UNSERVED:
 		return {}
@@ -186,7 +193,7 @@ static func _injury_history(s: Dictionary) -> Array:
 
 ## ⚠ **기록이 없으면 빈 목록이다.** 0으로 채우면 안 뛴 선수가 0.00 방어율로
 ## 뜬다 — 02가 그랬고 신인이 리그 1위처럼 보였다
-static func _season_stats(s: Dictionary, player_id: String) -> Array:
+static func season_stats_of(s: Dictionary, player_id: String) -> Array:
 	var all: Dictionary = s.get("season_stats", {})
 	if not all.has(player_id):
 		return []

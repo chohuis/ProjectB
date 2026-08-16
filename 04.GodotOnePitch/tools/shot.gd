@@ -68,6 +68,17 @@ const SEASON_END := preload("res://ui/screens/season_end_screen.tscn")
 const DRAFT_BOARD := preload("res://ui/screens/draft_board_screen.tscn")
 const PEOPLE := preload("res://ui/screens/people_screen.tscn")
 const RETIREMENT := preload("res://ui/screens/retirement_screen.tscn")
+const PLAYER_DETAIL := preload("res://ui/screens/player_detail_screen.tscn")
+
+
+## 주인공이 아닌 팀동료 하나. **주인공을 찍으면 "나" 탭으로 가야 하는
+## 화면이라** 상세가 안 열린다 — 캡처가 빈 화면이 된다
+func _other_player(state: Dictionary) -> String:
+	var p: Dictionary = state.get("protagonist", {})
+	for x in World.roster_of(state.get("world", {}), String(p.get("team_id", ""))):
+		if String(x.get("id", "")) != String(p.get("id", "")):
+			return String(x.get("id", ""))
+	return ""
 
 
 ## 씬을 인스턴스화하고 사전을 넣는다
@@ -95,6 +106,15 @@ func _build(which: String) -> Control:
 			return _main(Fixtures.main_state())
 		"main-gameday":
 			return _main(Fixtures.main_state_gameday())
+		# 선수 상세 (F-4a). **진짜 세계에서 뽑는다** — 가짜 사전으로 찍으면
+		# 이름표가 새는지·OVR이 0인지를 못 본다(F-5에서 둘 다 실제로 났다)
+		"player-detail":
+			var st: Dictionary = World.new_game({"seed": 20270101,
+				"season_year": 2027, "name": "김한결",
+				"team_id": "TEAM_HS_AEWOL"})
+			var pd: PlayerDetailScreen = PLAYER_DETAIL.instantiate()
+			pd.set_view_model(PlayerDetailVm.build(st, _other_player(st)))
+			return pd
 		"app":
 			var a: AppRoot = APP.instantiate()
 			a.set_state(Fixtures.main_state())

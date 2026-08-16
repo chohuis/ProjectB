@@ -1,0 +1,20 @@
+[
+ ["자동 진행 버튼을 안 잇는다 — 눌러도 아무 일이 안 난다",
+  "\t_main.auto_requested.connect(_on_auto_requested)",
+  ""],
+ ["멈춘 이유를 화면에 안 띄운다",
+  "\t_main.set_auto_stop(String(out.get(\"stopped\", {}).get(\"label\", \"\")))",
+  ""],
+ ["상태 사전을 갈아친다 — 자동 진행이 옛 사전을 본다",
+  "func _swap_state(out: Dictionary) -> void:\n\t_state.clear()\n\t_state.merge(out, true)",
+  "func _swap_state(out: Dictionary) -> void:\n\t_state = out"],
+ ["자동으로 넘긴 등판을 기록에 안 남긴다",
+  "\tLiveMatch.finish(m[\"state\"], m[\"ctx\"], m[\"rng\"])\n\t_record_match(m)",
+  "\tLiveMatch.finish(m[\"state\"], m[\"ctx\"], m[\"rng\"])"],
+ ["한 걸음이 하루뿐이다 — 다음 정지까지 안 간다",
+  "\tvar span: int = DayEngine.next_stop_day(s) - int(s.get(\"day\", 1))\n\tawait advance(maxi(span, 1))",
+  "\tawait advance(1)"],
+ ["자동 진행 뒤에 결정 화면을 안 띄운다",
+  "\tif RetirementVm.is_asking(_state):\n\t\t_open_retirement()\n\telif DecisionVm.is_asking(_state):\n\t\t_open_decision()\n\treturn out",
+  "\treturn out"]
+]

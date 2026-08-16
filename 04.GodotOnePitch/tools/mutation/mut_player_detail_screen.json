@@ -1,0 +1,20 @@
+[
+ ["능력치 카드를 안 그린다",
+  "\tvar c: Card = _card(\"투구 능력치\" if _vm.get(\"is_pitcher\", false) else \"타격 능력치\")\n\tfor r in rows:",
+  "\tvar c: Card = _card(\"투구 능력치\" if _vm.get(\"is_pitcher\", false) else \"타격 능력치\")\n\tfor r in []:"],
+ ["OVR을 머리줄에 안 넣는다 (상세를 여는 이유의 절반이다)",
+  "\tparts.append(\"OVR %d\" % int(_vm.get(\"ovr\", 0)))",
+  ""],
+ ["금액을 여기서 따로 찍는다 (재정 화면과 다른 모양이 된다)",
+  "\t_info(c, \"연봉\", FinanceVm.won(int(con.get(\"salary\", 0))))",
+  "\t_info(c, \"연봉\", \"%d만원\" % int(con.get(\"salary\", 0)))"],
+ ["빈 계약도 카드를 만든다",
+  "\tif con.is_empty():\n\t\treturn\n\tvar c: Card = _card(\"계약\")",
+  "\tvar c: Card = _card(\"계약\")"],
+ ["못 찾은 선수에 아무 말도 안 한다",
+  "\t\t_name.text = \"선수를 찾을 수 없습니다\"",
+  "\t\t_name.text = \"\""],
+ ["다시 그릴 때 옛 카드를 안 치운다 (선수를 바꿔도 앞 선수가 남는다)",
+  "\tfor c in _body.get_children():\n\t\tc.queue_free()",
+  ""]
+]

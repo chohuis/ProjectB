@@ -107,6 +107,13 @@ static func main_state() -> Dictionary:
 			"name": "김한결", "team_id": "TEAM_A", "team_name": "제주 애월고",
 			"condition": 72.0, "injury": null, "eligibility_blocked": false,
 			"retired": false,
+			# ⚠ **능력치가 없으면 캡처에 OVR 0이 뜬다.** U-3에서 "내 능력치를
+			# 어디에서도 안 보여준다"고 붙인 자리인데, 픽스처가 비어 있어서
+			# **띄워 봐도 되는지 안 되는지를 알 수 없었다** — 실제로 0으로
+			# 찍혀 있었다. 포지션도 있어야 투수 OVR로 갈린다
+			"position": "SP", "fatigue": 34.0,
+			"pitching": {"ovr": 61.0, "velocity": 70.0, "control": 68.0,
+				"command": 66.0, "movement": 62.0, "stamina": 64.0, "mental": 60.0},
 		},
 		"team_names": {
 			"TEAM_A": "제주 애월고", "TEAM_B": "서귀포고",

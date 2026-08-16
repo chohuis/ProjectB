@@ -1,0 +1,14 @@
+[
+ ["정지 사유를 안 치운다 — 지난번 이유가 방금 멈춘 것처럼 읽힌다",
+  "\t_auto_stop.visible = false\n\n\t# ⚠ **경기 시작·시즌 종료 갈래에서도 세운다.**",
+  "\n\t# ⚠ **경기 시작·시즌 종료 갈래에서도 세운다.**"],
+ ["한 걸음도 못 가도 버튼이 살아 있다",
+  "\t_auto.disabled = not bool(_vm.get(\"can_auto\", false))",
+  "\t_auto.disabled = false"],
+ ["정지 사유를 안 보인다",
+  "\t_auto_stop.visible = not label.is_empty()",
+  "\t_auto_stop.visible = false"],
+ ["정지 사유에 무엇 때문인지가 빠진다",
+  "\t_auto_stop.text = \"자동 진행 정지 — %s\" % label if not label.is_empty() else \"\"",
+  "\t_auto_stop.text = \"자동 진행 정지\" if not label.is_empty() else \"\""]
+]

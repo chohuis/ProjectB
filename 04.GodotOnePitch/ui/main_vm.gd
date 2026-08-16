@@ -37,6 +37,10 @@ const NAV_BREAK_AFTER: String = "me"
 
 const WEEKDAY_NAMES: Array[String] = ["일", "월", "화", "수", "목", "금", "토"]
 
+## 자동 진행 버튼 — **어디까지 가는지를 글자가 말한다.** "자동 진행"이라고만
+## 쓰면 시즌 끝까지 가는 줄 안다
+const AUTO_LABEL: String = "다음 결정까지"
+
 
 static func build(s: Dictionary) -> Dictionary:
 	var day: int = maxi(int(s.get("day", 1)), 1)
@@ -107,6 +111,14 @@ static func build(s: Dictionary) -> Dictionary:
 		"advance_days": span,
 		"advance_label": _advance_label(span),
 		"can_advance": span > 0,
+
+		# 자동 진행 — B-11. **다음 결정까지 간다.**
+		#
+		# ⚠ **한 걸음도 못 갈 때 막는다.** `next_step`이 `stop`이면 눌러도
+		# 그 자리에서 되돌아오므로, 살아 있으면 "눌렀는데 아무 일도 안 났다"가
+		# 된다 — 진행 버튼이 같은 이유로 막힌다(위 `span`)
+		"auto_label": AUTO_LABEL,
+		"can_auto": String(AutoAdvance.next_step(s).get("kind", "stop")) != "stop",
 
 		"stop_type": "" if stop == null else String(stop.get("type", "")),
 

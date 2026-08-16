@@ -26,6 +26,9 @@ function writeAndVerify(content) {
   if (fs.readFileSync(SRC, "utf8") !== content) throw new Error("파일 쓰기가 반영 안 됨");
 }
 
+// 한 번 돌리는 데 얼마나 기다려 주나. **원본을 재서 정한다** — 아래 참조.
+let timeoutMs = 90_000;
+
 function runTests() {
   let out = "", timedOut = false;
   try {
@@ -37,7 +40,7 @@ function runTests() {
       { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"],
         // 무한 루프를 만드는 변이가 있다(순환 참조 가드 제거). 그때 검사는
         // 실패하는 게 아니라 안 끝난다 — 멈춤도 검출로 센다
-        timeout: 90_000, killSignal: "SIGKILL" });
+        timeout: timeoutMs, killSignal: "SIGKILL" });
   } catch (e) {
     out = (e.stdout || "") + (e.stderr || "");
     timedOut = e.killed === true || e.signal === "SIGKILL";
@@ -55,6 +58,38 @@ function runTests() {
   return { timedOut, m };
 }
 
+// ⚠ **원본이 얼마나 걸리는지 먼저 잰다.** 상한이 고정 90초였을 때,
+// 원본이 그보다 느린 검사에서는 **모든 변이가 "잡힘(멈춤)"이 되어 100%로
+// 보였다** — `app_root_test`가 6분 19초라 배선 변이 6건이 전부 가짜로
+// 잡혔다. 검출률이 높게 나올수록 의심할 이유가 없어져서 그냥 넘어가게
+// 되는, 제일 나쁜 형태의 거짓말이다.
+//
+// ⚠ **검사를 쪼개는 것으로는 안 풀린다.** 진짜로 느린 검사가 있다
+// (세계를 만들고 한 시즌을 굴린다). 상한을 **원본의 세 배**로 잡으면
+// 무한 루프는 여전히 걸리고 느린 검사도 판정할 수 있다
+{
+  // ⚠ **기준선을 잴 때는 상한을 넉넉히 둔다.** 여기에 최종 상한을 쓰면
+  // 느린 검사가 "원본이 안 끝난다"로 거부돼서 아무것도 못 잰다
+  timeoutMs = 1_200_000;
+  const t0 = Date.now();
+  const base = runTests();
+  const secs = (Date.now() - t0) / 1000;
+  if (base.timedOut) {
+    console.error(`✗ 원본 검사가 20분 안에 안 끝난다 (${testRel}).`);
+    process.exit(2);
+  }
+  if (!base.m) {
+    console.error(`✗ 원본 검사의 요약을 못 읽었다 — 판정이 전부 가짜가 된다`);
+    process.exit(2);
+  }
+  if (Number(base.m[2]) + Number(base.m[3]) > 0) {
+    console.error(`✗ 원본 검사가 이미 실패한다 — 변이 판정이 전부 가짜가 된다`);
+    process.exit(2);
+  }
+  timeoutMs = Math.max(90_000, Math.ceil(secs * 3) * 1000);
+  console.log(`원본 ${secs.toFixed(1)}초 · 통과 — 상한을 ${timeoutMs / 1000}초로 잡는다\n`);
+}
+
 let ok = 0, judged = 0, skipped = 0;
 try {
   for (const [name, from, to] of mutations) {
@@ -70,7 +105,7 @@ try {
       r = runTests();
     }
 
-    if (r.timedOut) { judged++; ok++; console.log(`○ 잡힘(멈춤)  ${name}  — 90초 안에 안 끝남`); continue; }
+    if (r.timedOut) { judged++; ok++; console.log(`○ 잡힘(멈춤)  ${name}  — ${timeoutMs / 1000}초 안에 안 끝남`); continue; }
     if (!r.m) { console.log(`? 판정불가  ${name}`); continue; }
     judged++;
     const caught = Number(r.m[2]) + Number(r.m[3]) > 0;

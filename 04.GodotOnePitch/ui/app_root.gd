@@ -18,6 +18,7 @@ const SEASON_END_SCREEN := preload("res://ui/screens/season_end_screen.tscn")
 const TRAINING_SCREEN := preload("res://ui/screens/training_screen.tscn")
 const RETIREMENT_SCREEN := preload("res://ui/screens/retirement_screen.tscn")
 const DECISION_SCREEN := preload("res://ui/screens/decision_screen.tscn")
+const PLAYER_DETAIL_SCREEN := preload("res://ui/screens/player_detail_screen.tscn")
 
 @onready var _main: MainScreen = $Main
 @onready var _runner_host: Node = $Runner
@@ -36,6 +37,8 @@ var _season_screen: SeasonEndScreen
 var _training_screen: TrainingScreen
 var _retire_screen: RetirementScreen
 var _decision_screen: DecisionScreen
+## 선수 상세 (F-4)
+var _detail_screen: PlayerDetailScreen
 
 ## 검사와 계측이 보는 값 — 무슨 일이 일어났는지 밖에서 셀 수 있어야 한다
 var games_played: int = 0
@@ -50,6 +53,7 @@ func _ready() -> void:
 	_runner.progress.connect(_on_progress)
 
 	_main.advance_requested.connect(_on_advance_requested)
+	_main.auto_requested.connect(_on_auto_requested)
 	_main.match_requested.connect(_on_match_requested)
 	_main.season_end_requested.connect(_on_season_end)
 	_main.training_requested.connect(_on_training)
@@ -60,6 +64,7 @@ func _ready() -> void:
 	_main.sponsor_signed.connect(_on_sponsor)
 	_main.subscription_toggled.connect(_on_subscription)
 	_main.life_record_requested.connect(_open_life_record)
+	_main.player_selected.connect(_open_player_detail)
 	_refresh()
 
 
@@ -112,12 +117,23 @@ func runner() -> DayRunner:
 
 
 func set_state(s: Dictionary) -> void:
-	_state = s.duplicate(true)
+	_swap_state(s.duplicate(true))
+	if is_node_ready():
+		_refresh()
+
+
+## 상태를 통째로 갈아끼운다. **사전 참조는 그대로 둔다.**
+##
+## ⚠ **`_state = out`으로 갈아타면 안 된다.** 자동 진행(B-11)은 이 사전
+## 하나를 들고 도는데, 한 걸음마다 루트가 새 사전으로 갈아타면 그쪽은
+## **옛 사전을 계속 본다** — 날짜가 영원히 안 움직이는 것처럼 보이고
+## 상한까지 헛돈 뒤 "최대 반복 초과"로 멈춘다. 원인을 찾기 어려운 형태다
+func _swap_state(out: Dictionary) -> void:
+	_state.clear()
+	_state.merge(out, true)
 	# ⚠ **깊은 복사가 주인공 참조를 끊는다.** 세이브를 불러오는 것도 여기를
 	# 지나므로, 안 이으면 불러온 게임에서 로스터 쪽만 자란다
 	World.relink_protagonist(_state)
-	if is_node_ready():
-		_refresh()
 
 
 ## ⚠ **화면이 자기 사전을 따로 만들지 않는다.** 루트가 만든 것 하나를
@@ -132,6 +148,10 @@ func _on_progress(done: int, total: int) -> void:
 
 func _on_advance_requested(days: int) -> void:
 	await advance(days)
+
+
+func _on_auto_requested() -> void:
+	await auto_advance()
 
 
 ## 등판 경기를 연다. **닫을 때까지 진행이 멈춘다** — 그게 "등판일에 멈춘다"의 뜻이다
@@ -210,19 +230,7 @@ func _on_auto() -> void:
 ## ⚠ **경기를 안 끝내고 닫으면 결과를 안 남긴다.** 남기면 도중까지의
 ## 점수가 순위표에 들어간다 — 다시 열어 이어서 던지면 된다
 func _on_match_done() -> void:
-	if _match["state"].get("is_finished", false):
-		var r: Dictionary = LiveMatch.to_result(_match["state"],
-			_match["home"], _match["away"])
-		for g in _state.get("schedule", []):
-			if g.get("id", "") == _match["game_id"]:
-				g["result"] = r
-
-		# ⚠ **손으로 던진 경기도 성적에 쌓인다.** 자동 시뮬 쪽에만 붙이면
-		# 내가 직접 던진 날만 기록이 빈다 — 하필 제일 중요한 경기들이다
-		if not _state.has("season_stats"):
-			_state["season_stats"] = {}
-		SeasonStats.accumulate_into(_state["season_stats"],
-			r.get("player_lines", []))
+	_record_match(_match)
 
 	if _match_screen != null:
 		remove_child(_match_screen)
@@ -231,6 +239,107 @@ func _on_match_done() -> void:
 	_match = {}
 	_main.visible = true
 	_refresh()
+
+
+## 다음 결정까지 자동으로 간다 — B-11. `{stopped, steps}`.
+##
+## ⚠ **`AutoAdvance`는 정책만 갖고 있었다.** `run`을 부르는 곳이 검사밖에
+## 없어서, "무엇 앞에서 멈추나"를 실컷 정해 놓고 게임에서는 한 번도 안
+## 돌았다 — 만들어 놓고 안 이은 자리다.
+##
+## ⚠ **02는 이걸 개발자 도구에만 뒀다**(`MainPage.svelte:477`, DevToolsHub
+## 경유). 04엔 그 허브가 없어 그대로 옮기면 화면을 하나 새로 만들어야 하고,
+## **실제로 쓸모 있는 자리는 진행 버튼 옆이다** — 다음 등판까지 하루씩
+## 누르는 게 지금 유일한 방법이다. 그래서 메인 진행 줄에 붙였다
+func auto_advance() -> Dictionary:
+	var out: Dictionary = await AutoAdvance.run(_state, _auto_step, _auto_answer)
+	_refresh()
+	# ⚠ **왜 멈췄는지를 말한다.** 안 말하면 "눌렀는데 조금 가다 섰다"가 되고,
+	# 사용자는 게임이 고장 난 줄 안다
+	_main.set_auto_stop(String(out.get("stopped", {}).get("label", "")))
+
+	# ⚠ **자동 진행 뒤에도 물어본 건 띄운다.** `advance()`가 하는 것과 같다 —
+	# 여기만 빠뜨리면 결정이 대기줄에 오른 채 화면이 안 뜬다
+	if RetirementVm.is_asking(_state):
+		_open_retirement()
+	elif DecisionVm.is_asking(_state):
+		_open_decision()
+	return out
+
+
+## 한 걸음 진행. **며칠 갈지는 `DayEngine`이 정한다** — 여기서 세면
+## 진행 버튼과 갈린다
+func _auto_step(s: Dictionary) -> void:
+	var span: int = DayEngine.next_stop_day(s) - int(s.get("day", 1))
+	await advance(maxi(span, 1))
+
+
+## 대신 답한다. **날을 막는 것 중 커리어가 안 갈리는 것들**이다 —
+## 무엇이 여기 오는지는 `AutoAdvance.STOPPING`이 정한다
+func _auto_answer(s: Dictionary, action: Dictionary) -> void:
+	match String(action.get("type", "")):
+		"game":
+			_auto_play_my_game(String(action.get("schedule_id", "")))
+		"message":
+			_auto_answer_message(s, String(action.get("message_id", "")))
+
+
+## 내 등판을 화면 없이 끝까지 돌린다.
+##
+## ⚠ **결과를 남기는 길은 `_record_match` 하나다.** 여기서 따로 꽂으면
+## 자동으로 넘긴 등판만 성적이 비거나 순위표가 갈린다
+func _auto_play_my_game(schedule_id: String) -> void:
+	var g: Dictionary = _my_game_today()
+	if g.is_empty():
+		return
+	var m: Dictionary = LiveMatch.open(_state, g)
+	if not m["ok"]:
+		# 열 수 없는 경기다 — 붙잡고 있으면 자동 진행이 여기서 헛돈다
+		g["result"] = {}
+		return
+	m["game_id"] = g.get("id", schedule_id)
+	m["home"] = g.get("home", "")
+	m["away"] = g.get("away", "")
+	m["rng"] = RandomNumberGenerator.new()
+	m["rng"].seed = m["seed"]
+	LiveMatch.finish(m["state"], m["ctx"], m["rng"])
+	_record_match(m)
+
+
+## 소식 결정을 대신 고른다 — **지침 정도는 피로다**(`AutoAdvance.pick_choice`).
+##
+## ⚠ **늘 첫 번째를 고르면 자동 진행이 피로를 무시하고 부상으로 간다**
+func _auto_answer_message(s: Dictionary, message_id: String) -> void:
+	for m in s.get("mailbox", []):
+		if String(m.get("id", "")) != message_id:
+			continue
+		var d = m.get("decision", null)
+		if d == null:
+			return
+		m["read"] = true
+		d["selected"] = AutoAdvance.pick_choice(d.get("choices", []),
+			float(s.get("protagonist", {}).get("fatigue", 50.0)))
+		return
+
+
+## 끝난 경기를 일정과 시즌 성적에 남긴다.
+##
+## ⚠ **자동 진행도 여기를 지난다.** 손으로 던진 경기와 자동으로 넘긴
+## 경기가 다른 길로 기록되면, 자동 진행으로 지나간 등판만 성적이 비거나
+## 순위표가 갈린다 — **두 정본을 만들지 않는다**
+func _record_match(m: Dictionary) -> void:
+	if not m.get("state", {}).get("is_finished", false):
+		return
+	var r: Dictionary = LiveMatch.to_result(m["state"], m["home"], m["away"])
+	for g in _state.get("schedule", []):
+		if g.get("id", "") == m["game_id"]:
+			g["result"] = r
+
+	# ⚠ **손으로 던진 경기도 성적에 쌓인다.** 자동 시뮬 쪽에만 붙이면
+	# 내가 직접 던진 날만 기록이 빈다 — 하필 제일 중요한 경기들이다
+	if not _state.has("season_stats"):
+		_state["season_stats"] = {}
+	SeasonStats.accumulate_into(_state["season_stats"], r.get("player_lines", []))
 
 
 func _on_match_requested() -> void:
@@ -390,6 +499,38 @@ func decision_screen() -> DecisionScreen:
 	return _decision_screen
 
 
+## 선수 상세를 연다 — F-4.
+##
+## ⚠ **주인공은 "나" 탭으로 보낸다.** 그쪽이 훨씬 자세하고, 두 화면이 같은
+## 사람을 다르게 그리면 어느 쪽이 맞는지 알 수 없다
+func _open_player_detail(player_id: String) -> void:
+	if _detail_screen != null:
+		return
+	var vm: Dictionary = PlayerDetailVm.build(_state, player_id)
+	if vm.get("is_me", false):
+		_main.show_tab("me")
+		return
+	_detail_screen = PLAYER_DETAIL_SCREEN.instantiate()
+	_detail_screen.closed.connect(_close_player_detail)
+	add_child(_detail_screen)
+	_detail_screen.set_view_model(vm)
+	_main.visible = false
+
+
+func player_detail_screen() -> PlayerDetailScreen:
+	return _detail_screen
+
+
+func _close_player_detail() -> void:
+	if _detail_screen == null:
+		return
+	remove_child(_detail_screen)
+	_detail_screen.queue_free()
+	_detail_screen = null
+	_main.visible = true
+	_refresh()
+
+
 ## ⚠ **답한 뒤에 또 있는지 본다.** 결정은 줄줄이 온다(진로 결과 → 최종
 ## 선택 → 지명 통보) — 하나 답하고 화면을 닫으면 다음 것이 다시 대기줄에
 ## 남은 채로 진행이 막힌다
@@ -443,7 +584,7 @@ func advance(days: int) -> void:
 	# 성장이 통째로 사라진다 — `DayRunner`가 시작할 때 상태를 복사하므로,
 	# 옛 사전을 고쳐 봐야 여기서 덮어써진다. **조용히 틀린다:** 날짜는
 	# 멀쩡히 가고 경기도 치러지는데 능력치만 안 움직인다
-	_state = out
+	_swap_state(out)
 	# ⚠ **센 만큼 돌린다.** `weeks_crossed`를 무시하고 자기 손으로 다시 세면
 	# 그게 두 번째 정본이 된다
 	_apply_weekly(weeks)
