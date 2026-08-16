@@ -16,6 +16,17 @@ class_name RelationsMeasure
 ## ⚠ **여기서 판정하지 않는다.** 02 값과 나란히 놓는 건 사람이 한다
 
 
+## 코치가 오르는 두 조건이 몇 번 걸렸나
+var _grew_weeks: int = 0
+var _area_weeks: int = 0
+var _areas: Dictionary = {}
+
+
+static func _growth_threshold() -> float:
+	return float(Relationship.rules().get("weekly", {})
+		.get("growth_threshold", 1.0))
+
+
 static func _stat(vals: Array) -> String:
 	if vals.is_empty():
 		return "-"
@@ -53,8 +64,12 @@ func _one(seed_value: int, years: int) -> Dictionary:
 	# ⚠ **훈련 계획을 세워야 한다.** 안 세우면 매주 `training_skip`이 걸려
 	# 코치 −2 · 감독 −1이 191주 쌓인다 — 처음에 안 세우고 재서 코치 평균이
 	# **−81.5**로 바닥에 붙었다(02는 +29). 04 결함이 아니라 fixture가 빈 것이다
-	s["training_plan"] = {"primary": "velocity", "secondary": "control",
-		"secondary2": "stamina"}
+	# ⚠ **프로그램 id를 넣는다.** 처음엔 focus 이름("velocity")을 넣었는데
+	# `Training.program()`이 못 찾아 **훈련이 통째로 안 돌았다** — 성장 임계를
+	# 넘는 주 0, 훈련 영역이 정해진 주 0이라 코치가 안 올랐다.
+	# 계획이 비어 보이지 않아서 `training_skip`도 안 걸리는, 조용한 자리다
+	s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD",
+		"secondary2": ""}
 
 	# ⚠ **주간 처리를 여기서 다시 짜지 않는다.** `WeekRunner.run`이 화면과
 	# 같은 함수다 — 계측이 순서를 베끼면 그게 두 번째 정본이고 언젠가 갈린다.
@@ -85,7 +100,18 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			if Pending.has(s, "career_choice_hub"):
 				CareerDecision.submit_applications(s, {"draft": true,
 					"university_choices": ["TEAM_UNIV_BAEKJE"]})
+			# ⚠ **입력을 센다.** 코치는 담당 영역 훈련과 성장으로만 오른다 —
+			# 산식을 의심하기 전에 그 둘이 몇 번 걸리는지 본다.
+			# `WeekRunner` **앞**에서 재야 그 주의 성장분이 잡힌다
+			var before_ovr: float = Contract.core_ovr(s["protagonist"])
+			var area: String = RelationshipRunner.training_area_of(s)
 			WeekRunner.run(s, day)
+			var delta: float = Contract.core_ovr(s["protagonist"]) - before_ovr
+			if delta >= _growth_threshold():
+				_grew_weeks += 1
+			if not area.is_empty():
+				_area_weeks += 1
+				_areas[area] = int(_areas.get(area, 0)) + 1
 		SeasonRunner.run(s)
 		year += 1
 	return s
@@ -120,6 +146,12 @@ func run(log_line: Callable, _fail: Callable, seed_value: int,
 			opponents += others
 	log_line.call("  주인공 등판 %d경기 · 그 경기의 상대 투수 줄 %d개"
 		% [appearances, opponents])
+	var area_line: String = ""
+	for a in _areas:
+		area_line += "%s %d · " % [a, _areas[a]]
+	log_line.call("  성장 임계(%.0f) 넘은 주 %d · 훈련 영역이 정해진 주 %d  [%s]"
+		% [_growth_threshold(), _grew_weeks, _area_weeks,
+			area_line.trim_suffix(" · ")])
 
 	var by_kind: Dictionary = {}
 	var by_label: Dictionary = {}
