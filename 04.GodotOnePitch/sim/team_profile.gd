@@ -38,6 +38,161 @@ const PRO_LEAGUES: Array[String] = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]
 const KEY: String = "team_profiles"
 
 
+# ── 초기화 (F-3) ──────────────────────────────────────────────
+#
+# ⚠ **04도 02와 같은 자리에서 눌려 있었다.** `update_all`이 열둘 중 둘만
+# 갱신하고 나머지 열은 채우는 곳이 없어서 **아홉 축이 영원히 50**이었다.
+# 위 주석이 적어 둔 "전 팀이 기본값" 상태가 04에서도 이어지고 있었다.
+#
+# ⚠ **02의 팀과 04의 팀이 같지 않다.** 실측:
+#
+#   ABL 16 — 02와 id가 전부 같다          → 02 값을 그대로 (`data/team_profiles.json`)
+#   KBL 10 — 대응 0. `power`·`resource`가 있다 → `derive()`
+#   JBL 12 — 대응 0. 축이 하나도 없고 02엔 리그 자체가 없다 → `spread_of()`
+
+const DATA_PATH: String = "res://data/team_profiles.json"
+
+## 프로 1군 id는 전부 이걸로 끝난다 — 2군은 같은 자리에 `_2`가 온다
+const FIRST_SUFFIX: String = "_1"
+
+static var _data: Dictionary = {}
+
+
+## 02에서 그대로 온 성향표. **ABL 16팀뿐이다** — 나머지는 파생한다
+static func data() -> Dictionary:
+	if _data.is_empty():
+		var f := FileAccess.open(DATA_PATH, FileAccess.READ)
+		if f == null:
+			push_error("team_profiles.json을 못 읽었다")
+			return {}
+		_data = JSON.parse_string(f.get_as_text()).get("profiles", {})
+	return _data
+
+
+## 파생 규칙 — **02 ABL 16팀에서 잰 것이다.** 지어낸 값이 아니다.
+##
+## prestige 하나가 일곱 축을 거의 결정한다(|r| 0.96~0.99). 아래 기울기는
+## 그 회귀에서 나온 값이고, 중심은 02 ABL 평균이다.
+const P_MEAN: float = 57.2
+const SLOPE_DEVELOPMENT: float = -0.779
+const SLOPE_PATIENCE: float = -0.595
+const SLOPE_WIN_NOW: float = 0.827
+const SLOPE_SCOUTING: float = 0.769
+const SLOPE_MARKET: float = 0.905
+const SLOPE_MEDICAL: float = 0.810
+
+const MEAN_DEVELOPMENT: float = 53.3
+const MEAN_PATIENCE: float = 56.7
+const MEAN_WIN_NOW: float = 47.8
+const MEAN_SCOUTING: float = 61.4
+const MEAN_MARKET: float = 57.8
+const MEAN_MEDICAL: float = 60.7
+
+## ⚠ **넷은 팀 세기와 무관하다.** 02 24팀에서 표준편차가 3~5이고 prestige
+## 상관이 0.10~0.76이다 — 세기를 따라 흔들면 **없는 구조를 만드는 것**이다.
+## 값은 02 24팀 평균
+const FLAT: Dictionary = {
+	"stability": 62.2, "discipline": 60.4,
+	"clubhouse_culture": 61.1, "farm_investment": 55.3,
+}
+
+## 지갑은 `resource`가 정한다 — 02 `budgetTier`가 그 축의 원천이다
+## (small 36.5 · mid 56.4 · large 79.5). 04 표기는 넷이라 궁핍을 더 낮게 둔다
+const SPENDING_BY_RESOURCE: Dictionary = {
+	"궁핍": 30.0, "알뜰": 36.5, "안정": 56.4, "부유": 79.5,
+}
+const SPENDING_DEFAULT: float = 56.4
+
+## 전력★(1~5)을 위상으로. **02 프로 리그의 prestige 범위 36~88 그대로다**
+const POWER_MIN: int = 1
+const POWER_MAX: int = 5
+const PRESTIGE_MIN: float = 36.0
+const PRESTIGE_MAX: float = 88.0
+
+
+static func prestige_of_power(power: int) -> float:
+	var t: float = float(clampi(power, POWER_MIN, POWER_MAX) - POWER_MIN) \
+		/ float(POWER_MAX - POWER_MIN)
+	return PRESTIGE_MIN + t * (PRESTIGE_MAX - PRESTIGE_MIN)
+
+
+## 전력★과 재정 등급에서 열두 축을 낸다.
+##
+## ⚠ **축마다 제일 가까운 원천을 쓴다.** 지갑은 `resource`, 나머지는
+## 위상(`power`)에서. 하나로 몰면 재정 등급이 아무 뜻이 없어진다
+static func derive(power: int, resource: String) -> Dictionary:
+	var prestige: float = prestige_of_power(power)
+	var d: float = prestige - P_MEAN
+	var out: Dictionary = {
+		"prestige": prestige,
+		"owner_spending_willingness": float(
+			SPENDING_BY_RESOURCE.get(resource, SPENDING_DEFAULT)),
+		"development_focus": MEAN_DEVELOPMENT + SLOPE_DEVELOPMENT * d,
+		"owner_patience": MEAN_PATIENCE + SLOPE_PATIENCE * d,
+		"win_now_pressure": MEAN_WIN_NOW + SLOPE_WIN_NOW * d,
+		"scouting_quality": MEAN_SCOUTING + SLOPE_SCOUTING * d,
+		"market_appeal": MEAN_MARKET + SLOPE_MARKET * d,
+		"medical_quality": MEAN_MEDICAL + SLOPE_MEDICAL * d,
+	}
+	out.merge(FLAT, true)
+	# ⚠ **여기서 가두지 않는다.** `prestige_of_power`가 이미 36~88로 가두고
+	# 기울기가 1보다 작아서 **어떤 입력으로도 1~99를 안 벗어난다** — 변이로
+	# 확인했다(clamp를 지워도 검사가 전부 통과했다). 죽은 가드를 두면
+	# 산식이 틀려도 clamp가 덮어서 검사가 못 잡는다.
+	# 범위는 `test_every_derived_axis_stays_in_range`가 지킨다
+	return out
+
+
+## 축이 하나도 없는 리그(JBL)를 시드로 흩는다.
+##
+## ⚠ **전부 중립으로 두면 12팀이 구분이 안 된다** — FA·승강·방출이
+## 똑같이 움직인다. 02엔 JBL 리그 자체가 없어 가져올 값이 없으므로
+## **02가 만든 위상 분포(36~88)를 흩는 것**으로 대신한다. 값을 정하는 게
+## 아니라 분포를 쓰는 것이다.
+##
+## ⚠ **`randf()`를 쓰지 않는다.** 새 게임마다 다른 리그가 되면 회귀를
+## 못 잡는다 — 시드와 팀 id로 정해진다
+static func spread_of(world_seed: int, team_id: String) -> Dictionary:
+	var r: float = Rng.new(world_seed).value_for(["team_profile", team_id])
+	var power: int = POWER_MIN + int(r * float(POWER_MAX - POWER_MIN + 1))
+	power = clampi(power, POWER_MIN, POWER_MAX)
+	# 재정도 같이 흩는다 — 위상만 갈리면 지갑이 전부 같아진다
+	var r2: float = Rng.new(world_seed).value_for(["team_resource", team_id])
+	var grades: Array = ["알뜰", "안정", "안정", "부유"]
+	return derive(power, String(grades[clampi(int(r2 * 4.0), 0, 3)]))
+
+
+## 프로 팀 전부에 성향을 세운다. **세계를 만들 때 한 번 부른다.**
+##
+## ⚠ **여기를 안 부르면 아홉 축이 영원히 50이다.** `update_all`은 이미
+## 있는 값을 갱신할 뿐 만들지 않는다 — 만드는 쪽이 없으면 갱신할 것도 없다
+static func init_all(world: Dictionary, world_seed: int) -> int:
+	var table: Dictionary = data()
+	var n: int = 0
+	for lid in PRO_LEAGUES:
+		for t in World.teams_of(lid):
+			var id: String = String(t["id"])
+			var p: Dictionary
+			if table.has(id):
+				p = (table[id] as Dictionary).duplicate()
+				p.erase("resource")
+			elif t.has("power"):
+				p = derive(int(t["power"]), String(t.get("resource", "")))
+			else:
+				p = spread_of(world_seed, id)
+			patch(world, id, p)
+			# ⚠ **2군도 세운다.** 같은 구단이니 같은 성향이다 — 안 세우면
+			# 승강 판정이 1군과 2군에서 다르게 움직인다.
+			#
+			# ⚠ **2군 id는 `_1`을 `_2`로 바꾼 것이지 `_2`를 덧붙인 게
+			# 아니다.** 붙이면 `..._1_2`가 되어 실재하지 않는 팀에 성향을
+			# 세우고 진짜 2군은 중립으로 남는다 — 처음에 그렇게 짰다
+			patch(world, id.trim_suffix(FIRST_SUFFIX) + World.FARM_SUFFIX,
+				p.duplicate())
+			n += 1
+	return n
+
+
 ## 그 팀의 성향. 없으면 중립 한 벌을 **새로 만들어** 준다
 static func of(world: Dictionary, team_id: String) -> Dictionary:
 	var all: Dictionary = world.get(KEY, {})

@@ -1,0 +1,67 @@
+[
+ [
+  "초기화를 아예 안 한다 (아홉 축이 영원히 50 — F-3 이전 상태)",
+  "static func init_all(world: Dictionary, world_seed: int) -> int:\n\tvar table: Dictionary = data()",
+  "static func init_all(world: Dictionary, world_seed: int) -> int:\n\tif true:\n\t\treturn 0\n\tvar table: Dictionary = data()"
+ ],
+ [
+  "02 값을 무시하고 전부 파생한다 (ABL이 02와 다른 게임이 된다)",
+  "\t\t\tif table.has(id):\n\t\t\t\tp = (table[id] as Dictionary).duplicate()\n\t\t\t\tp.erase(\"resource\")\n\t\t\telif t.has(\"power\"):",
+  "\t\t\tif false:\n\t\t\t\tp = {}\n\t\t\telif t.has(\"power\"):"
+ ],
+ [
+  "축이 없는 리그를 중립으로 둔다 (JBL 12팀이 구분이 안 된다)",
+  "\t\t\telse:\n\t\t\t\tp = spread_of(world_seed, id)",
+  "\t\t\telse:\n\t\t\t\tp = DEFAULT.duplicate()"
+ ],
+ [
+  "2군을 안 세운다 (승강 판정이 1군과 2군에서 다르게 움직인다)",
+  "\t\t\tpatch(world, id.trim_suffix(FIRST_SUFFIX) + World.FARM_SUFFIX,\n\t\t\t\tp.duplicate())",
+  ""
+ ],
+ [
+  "2군 id를 덧붙여 만든다 (실재하지 않는 팀에 세우고 진짜 2군은 중립)",
+  "\t\t\tpatch(world, id.trim_suffix(FIRST_SUFFIX) + World.FARM_SUFFIX,",
+  "\t\t\tpatch(world, id + World.FARM_SUFFIX,"
+ ],
+ [
+  "육성·인내 기울기의 부호를 뒤집는다 (02에서 잰 방향과 반대)",
+  "const SLOPE_DEVELOPMENT: float = -0.779\nconst SLOPE_PATIENCE: float = -0.595",
+  "const SLOPE_DEVELOPMENT: float = 0.779\nconst SLOPE_PATIENCE: float = 0.595"
+ ],
+ [
+  "성적압박을 위상에서 안 낸다 (buyer가 다시 0팀이 된다)",
+  "\t\t\"win_now_pressure\": MEAN_WIN_NOW + SLOPE_WIN_NOW * d,",
+  "\t\t\"win_now_pressure\": MEAN_WIN_NOW,"
+ ],
+ [
+  "좁은 띠 넷도 팀 세기를 따라가게 한다 (없는 구조를 만든다)",
+  "\tout.merge(FLAT, true)",
+  "\tfor fk in FLAT:\n\t\tout[fk] = float(FLAT[fk]) + d * 0.5"
+ ],
+ [
+  "지갑이 재정 등급을 안 본다 (FA에서 모든 팀이 같은 값을 부른다)",
+  "\t\t\"owner_spending_willingness\": float(\n\t\t\tSPENDING_BY_RESOURCE.get(resource, SPENDING_DEFAULT)),",
+  "\t\t\"owner_spending_willingness\": SPENDING_DEFAULT,"
+ ],
+ [
+  "흩는 데 시드를 안 쓴다 (같은 시드가 다른 세계를 준다)",
+  "\tvar r: float = Rng.new(world_seed).value_for([\"team_profile\", team_id])",
+  "\tvar r: float = randf()"
+ ],
+ [
+  "흩을 때 팀을 안 가른다 (JBL 12팀이 전부 같아진다)",
+  "\tvar r: float = Rng.new(world_seed).value_for([\"team_profile\", team_id])",
+  "\tvar r: float = Rng.new(world_seed).value_for([\"team_profile\"])"
+ ],
+ [
+  "학교·독립에도 구단 성향을 붙인다",
+  "\tfor lid in PRO_LEAGUES:",
+  "\tfor lid in Schedule.LEAGUES:"
+ ],
+ [
+  "위상 범위를 02가 아닌 값으로 좁힌다 (약팀이 안 약해져 buyer/seller가 안 갈린다)",
+  "const PRESTIGE_MIN: float = 36.0\nconst PRESTIGE_MAX: float = 88.0",
+  "const PRESTIGE_MIN: float = 48.0\nconst PRESTIGE_MAX: float = 62.0"
+ ]
+]

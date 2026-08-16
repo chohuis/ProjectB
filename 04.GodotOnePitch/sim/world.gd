@@ -137,7 +137,16 @@ static func build(p: Dictionary) -> Dictionary:
 				"grade_max": r.get("grade_max", 0), "age_base": r.get("age_base", 0),
 			})
 
-	return {"seed": seed_value, "season_year": year, "rosters": rosters}
+	var world: Dictionary = {"seed": seed_value, "season_year": year,
+		"rosters": rosters}
+
+	# ⚠ **구단 성향을 여기서 세운다** (F-3). 안 세우면 `TeamProfile.of`가
+	# 늘 중립 한 벌을 주고 **열둘 중 아홉이 영원히 50**이다 —
+	# `update_all`은 있는 값을 갱신할 뿐 만들지 않는다. 02가 이걸 구현해
+	# 놓고 아무도 안 불러서 buyer가 구조적으로 0팀이 됐고, 04도 같은
+	# 자리에서 눌려 있었다
+	TeamProfile.init_all(world, seed_value)
+	return world
 
 
 ## 일정에 **주인공 등판**을 표시한다. 로테이션이 정하고, 팀 경기 순번으로 돈다.
