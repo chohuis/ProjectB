@@ -62,9 +62,29 @@ func _app(s: Dictionary) -> AppRoot:
 	return r
 
 
+## 버튼 하나가 이고 있는 글자 — **자기 `text`와 자식 라벨을 합친다.**
+##
+## ⚠ **`ActionRow`는 글자를 자식 라벨에 나눠 담는다.** 한 문자열로 이어 붙이면
+## 이름 길이에 따라 값이 줄마다 다른 자리에서 시작하기 때문이다(U-10).
+## 그래서 `Button.text`만 보면 못 찾는다
+func _button_text(b: Button) -> String:
+	var parts := PackedStringArray([b.text])
+	for l in b.find_children("*", "Label", true, false):
+		parts.append((l as Label).text)
+	return _squash(" ".join(parts))
+
+
+## ⚠ **띄어쓰기를 하나로 눌러 견준다.** 예전 버튼은 `"구독   투구 역학"`처럼
+## 공백 셋으로 칸을 흉내 냈고 검사가 그 서식을 문자열에 박아 뒀다 —
+## 칸을 진짜 칸으로 바꾸자 검사 열넷이 한꺼번에 깨졌다. **서식은 검사가 볼
+## 것이 아니다**
+func _squash(s: String) -> String:
+	return " ".join(s.split(" ", false))
+
+
 func _press(r: Node, needle: String) -> void:
 	for b in r.find_children("*", "Button", true, false):
-		if String((b as Button).text).contains(needle):
+		if _button_text(b as Button).contains(_squash(needle)):
 			(b as Button).pressed.emit()
 			await await_idle_frame()
 			await await_idle_frame()

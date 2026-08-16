@@ -51,3 +51,7 @@ theme_override_constants/separation = 6
 
 [node name="Status" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
+
+[node name="Settings" type="Button" parent="Pad/Center/Col"]
+layout_mode = 2
+text = "설정"

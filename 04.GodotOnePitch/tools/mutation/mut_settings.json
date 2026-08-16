@@ -1,0 +1,14 @@
+[
+ ["설정을 저장 안 한다 (세션에만 살고 다시 켜면 기본값)",
+  "\tc.save(PATH)\n\tapply()\n\n\nstatic func set_fullscreen",
+  "\tapply()\n\n\nstatic func set_fullscreen"],
+ ["크기를 골라도 전체화면이 안 풀린다 (눌러도 화면이 그대로다)",
+  "\tc.set_value(\"window\", \"fullscreen\", false)",
+  ""],
+ ["기본 크기를 잊는다 (파일이 없으면 0×0)",
+  "\tvar w: int = int(c.get_value(\"window\", \"width\", DEFAULT_SIZE.x))\n\tvar h: int = int(c.get_value(\"window\", \"height\", DEFAULT_SIZE.y))",
+  "\tvar w: int = int(c.get_value(\"window\", \"width\", 0))\n\tvar h: int = int(c.get_value(\"window\", \"height\", 0))"],
+ ["낮은 창을 고를 수 있게 한다 (3단이 눌린다)",
+  "\tVector2i(1280, 720), Vector2i(1600, 900), Vector2i(1920, 1080),",
+  "\tVector2i(1024, 600), Vector2i(1600, 900), Vector2i(1920, 1080),"]
+]

@@ -1,0 +1,14 @@
+[
+ ["라벨 칸을 예전 폭(44)으로 되돌린다 — 네 글자가 넘쳐 막대가 계단이 된다",
+  "custom_minimum_size = Vector2(76, 0)\nlayout_mode = 2\nclip_text = true\ntext = \"이름\"",
+  "custom_minimum_size = Vector2(44, 0)\nlayout_mode = 2\nclip_text = true\ntext = \"이름\""],
+ ["라벨 칸 폭을 아예 없앤다",
+  "custom_minimum_size = Vector2(76, 0)\nlayout_mode = 2\nclip_text = true\ntext = \"이름\"",
+  "layout_mode = 2\nclip_text = true\ntext = \"이름\""],
+ ["값 칸 폭을 없앤다 — 자릿수가 바뀌면 막대 끝이 움직인다",
+  "custom_minimum_size = Vector2(52, 0)\nlayout_mode = 2\nhorizontal_alignment = 2\ntext = \"0\"",
+  "layout_mode = 2\nhorizontal_alignment = 2\ntext = \"0\""],
+ ["값을 왼쪽에 붙인다 — 숫자가 들쭉날쭉해진다",
+  "custom_minimum_size = Vector2(52, 0)\nlayout_mode = 2\nhorizontal_alignment = 2\ntext = \"0\"",
+  "custom_minimum_size = Vector2(52, 0)\nlayout_mode = 2\ntext = \"0\""]
+]

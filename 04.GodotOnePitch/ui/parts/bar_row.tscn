@@ -7,8 +7,9 @@ theme_override_constants/separation = 8
 script = ExtResource("1_bar")
 
 [node name="Name" type="Label" parent="."]
-custom_minimum_size = Vector2(44, 0)
+custom_minimum_size = Vector2(76, 0)
 layout_mode = 2
+clip_text = true
 text = "이름"
 
 [node name="Bar" type="ProgressBar" parent="."]
@@ -22,5 +23,7 @@ value = 0.5
 show_percentage = false
 
 [node name="Right" type="Label" parent="."]
+custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
+horizontal_alignment = 2
 text = "0"

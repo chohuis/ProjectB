@@ -453,3 +453,61 @@ func test_the_me_tab_mounts_the_status_screen() -> void:
 	var t := _texts(s)
 	assert_array(t).contains(["신체 상태", "투구 능력치", "구위", "커맨드"])
 	assert_array(t).contains(["제주"])
+
+
+# ── 스페이스로 진행 (U-5) ─────────────────────────────────────
+#
+# ⚠ **04엔 키보드가 0건이었다.** `_unhandled_input`·`_input(`·`InputEventKey`·
+# `KEY_SPACE`가 하나도 없었다 — 02는 스페이스로 주를 넘긴다
+# (`TopHeader.svelte:55-61`). 04는 마우스만이었다.
+#
+# ⚠ **판정 함수를 직접 부른다.** 헤드리스에서는 `InputEvent`가 안 오므로
+# (`--ignoreHeadlessMode`를 쓰는 이유가 그것이다) 키를 눌러 볼 수가 없다.
+# 함수로 뽑아 두면 **화면 검사를 헤드리스 밖으로 안 내보내고도** 볼 수 있다 —
+# 내보내면 CI가 갈린다.
+
+
+func test_space_advances() -> void:
+	var s := await _mount(_vm())
+	var days: Array = []
+	s.advance_requested.connect(func(d: int) -> void: days.append(d))
+	assert_bool(s.handle_key(KEY_SPACE, false)).is_true()
+	assert_int(days.size()).is_equal(1)
+
+
+## ⚠ **글자를 치는 중이면 안 먹는다.** 이름에 빈칸을 넣다가 한 주가
+## 넘어가면 안 된다 — 02도 입력칸에서 막았다
+func test_space_does_nothing_while_typing() -> void:
+	var s := await _mount(_vm())
+	var days: Array = []
+	s.advance_requested.connect(func(d: int) -> void: days.append(d))
+	assert_bool(s.handle_key(KEY_SPACE, true)).is_false()
+	assert_array(days).is_empty()
+
+
+func test_other_keys_do_nothing() -> void:
+	var s := await _mount(_vm())
+	assert_bool(s.handle_key(KEY_A, false)).is_false()
+
+
+## ⚠ **누를 수 없을 땐 키로도 안 된다.** 버튼이 막혔는데 키로는 되면
+## 두 입구가 다른 말을 한다
+func test_space_respects_a_blocked_advance() -> void:
+	var vm: Dictionary = _vm()
+	vm["can_advance"] = false
+	vm["stop_type"] = ""
+	var s := await _mount(vm)
+	var days: Array = []
+	s.advance_requested.connect(func(d: int) -> void: days.append(d))
+	assert_bool(s.handle_key(KEY_SPACE, false)).is_false()
+	assert_array(days).is_empty()
+
+
+## 등판일엔 진행이 아니라 경기다 — 키도 같은 곳으로 간다
+func test_space_starts_the_game_on_a_game_day() -> void:
+	var vm: Dictionary = _vm({"day": 15})
+	var s := await _mount(vm)
+	var opened: Array = []
+	s.match_requested.connect(func() -> void: opened.append(1))
+	assert_bool(s.handle_key(KEY_SPACE, false)).is_true()
+	assert_int(opened.size()).is_equal(1)

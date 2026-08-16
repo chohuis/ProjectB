@@ -69,6 +69,54 @@ func test_missing_keys_do_not_break() -> void:
 	assert_array(_texts(s)).contains(["신체 상태"])
 
 
+## ⚠ **후유증이 남았는지를 이력 줄이 말해야 한다** (U-1). 나은 게 곧
+## 원래대로는 아니다 — 능력치가 영구히 깎였는데 화면이 침묵하면 왜 약해졌는지
+## 알 길이 없다
+func test_a_lasting_penalty_shows_on_the_history_row() -> void:
+	var vm: Dictionary = Fixtures.status_vm()
+	vm["injury_history"] = [
+		{"year": 2027, "week": 18, "name": "어깨 염증", "severity": "severe",
+			"severity_label": "중상", "has_penalty": true}]
+	var s := await _mount(vm)
+	assert_array(_texts(s)).contains(["중상 · 후유증"])
+
+
+# ── 병역 (U-2) ────────────────────────────────────────────────
+
+func _serving_vm() -> Dictionary:
+	var vm: Dictionary = Fixtures.status_vm()
+	vm["military"] = {"status": "현역", "serving": true, "unit_label": "체육부대",
+		"enlist_year": 2033, "weeks_served": 40, "weeks_total": 100,
+		"weeks_left": 60}
+	return vm
+
+
+## ⚠ **전역까지 몇 주 남았는지가 이 카드의 요점이다.** 그게 안 보여서
+## "입대하면 영원히 군대에 있다"를 아무도 못 알아봤다
+func test_serving_shows_the_weeks_left() -> void:
+	var s := await _mount(_serving_vm())
+	var t := _texts(s)
+	assert_array(t).contains(["병역", "현역", "체육부대", "60주 남음"])
+	assert_array(t).contains(["2033년"])
+
+
+## 다녀온 뒤엔 남은 주를 안 보여준다 — "0주 남음"이면 아직 복무 중처럼 읽힌다
+func test_a_finished_service_hides_the_countdown() -> void:
+	var vm: Dictionary = Fixtures.status_vm()
+	vm["military"] = {"status": "군필", "serving": false, "unit_label": "일반병",
+		"enlist_year": 2033, "weeks_served": 0, "weeks_total": 100,
+		"weeks_left": 0}
+	var t := _texts(await _mount(vm))
+	assert_array(t).contains(["병역", "군필"])
+	assert_array(t).not_contains(["0주 남음"])
+
+
+## ⚠ **미필이면 카드가 아예 없다.** 대부분의 커리어에서 기본값이라 늘 띄우면
+## 아무 뜻이 없는 줄이 하나 붙어 있는다
+func test_an_unserved_player_has_no_military_card() -> void:
+	assert_array(_texts(await _mount(Fixtures.status_vm()))).not_contains(["병역"])
+
+
 func test_tabs_switch_content() -> void:
 	var s := await _mount(Fixtures.status_vm())
 	assert_array(_texts(s)).contains(["투구 능력치"])

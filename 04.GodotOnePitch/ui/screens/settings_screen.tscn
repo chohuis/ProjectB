@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/screens/settings_screen.gd" id="1_set"]
+
+[node name="SettingsScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_set")
+
+[node name="Bg" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Pad" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Center" type="CenterContainer" parent="Pad"]
+layout_mode = 2
+
+[node name="Col" type="VBoxContainer" parent="Pad/Center"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+text = "설정"
+
+[node name="SizeLabel" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+text = "창 크기"
+
+[node name="Sizes" type="VBoxContainer" parent="Pad/Center/Col"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Fullscreen" type="CheckBox" parent="Pad/Center/Col"]
+layout_mode = 2
+text = "전체화면"
+
+[node name="Back" type="Button" parent="Pad/Center/Col"]
+layout_mode = 2
+text = "돌아가기"

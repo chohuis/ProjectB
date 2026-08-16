@@ -148,7 +148,8 @@ static func run_protagonist(state: Dictionary, at_day: int,
 
 	if not out["warning"].is_empty():
 		var log: Array = state.get("body_log", [])
-		log.append({"day": at_day, "kind": "warning",
+		log.append({"day": at_day, "year": int(state.get("season_year", 0)),
+			"kind": "warning",
 			"fatigue": float(out["warning"]["fatigue"]),
 			"risk": float(out["warning"]["risk"])})
 		state["body_log"] = log
@@ -184,8 +185,11 @@ static func _heal_protagonist(state: Dictionary, p: Dictionary, me: String,
 	# ⚠ **등급을 같이 남긴다.** 드래프트가 부상 이력을 심각도로 가르는데
 	# (수술 −18 · 중상 −10 · 중등도 −2), 자리를 비우고 나면 여기 말고는
 	# 그 등급이 남는 데가 없다 — 안 남기면 부상 항이 늘 0이다
+	# ⚠ **해를 같이 남긴다.** `day`는 시즌마다 1로 돌아가므로 날짜만으로는
+	# 몇 해 것인지 알 수 없다 — 이력 화면이 옛 부상을 전부 올해로 띄운다
 	var log: Array = state.get("body_log", [])
-	log.append({"day": at_day, "kind": "healed", "injury_type": t,
+	log.append({"day": at_day, "year": int(state.get("season_year", 0)),
+		"kind": "healed", "injury_type": t,
 		"severity": String(cur.get("severity", "")), "penalty": penalty})
 	state["body_log"] = log
 

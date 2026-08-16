@@ -11,6 +11,7 @@ class_name App
 const TITLE := preload("res://ui/screens/title_screen.tscn")
 const NEW_GAME := preload("res://ui/screens/new_game_screen.tscn")
 const APP_ROOT := preload("res://ui/app_root.tscn")
+const SETTINGS := preload("res://ui/screens/settings_screen.tscn")
 
 ## 지금 고른 슬롯. 저장할 때 어디에 쓸지 정한다
 var _slot: int = 1
@@ -19,6 +20,9 @@ var _current: Control
 
 func _ready() -> void:
 	theme = AppTheme.build()
+	# ⚠ **저장된 창 크기를 켤 때 물린다.** 안 하면 설정이 그 세션에만 살고
+	# 다시 켜면 기본값으로 돌아간다 — 고른 적이 없는 것처럼 보인다
+	Settings.apply()
 	show_title()
 
 
@@ -39,14 +43,34 @@ func show_title() -> void:
 	var t: TitleScreen = TITLE.instantiate()
 	t.continue_requested.connect(_on_continue)
 	t.new_game_requested.connect(_on_new_game)
+	t.settings_requested.connect(show_settings)
 	_swap(t)
+
+
+func show_settings() -> void:
+	var s: SettingsScreen = SETTINGS.instantiate()
+	s.back_requested.connect(show_title)
+	_swap(s)
 
 
 func show_new_game() -> void:
 	var n: NewGameScreen = NEW_GAME.instantiate()
+	# ⚠ **찬 슬롯이면 시작이 곧 덮어쓰기다** (U-7). `_on_start`가
+	# `Slots.save`로 옛 세이브를 지우는데 버튼엔 "시작"이라고만 적혀 있었다 —
+	# **되돌릴 수 없는 유일한 동작**이다. `_swap` 전에 넣는다(`_ready`가 읽는다)
+	n.overwrite = _slot_taken(_slot)
 	n.start_requested.connect(_on_start)
 	n.back_requested.connect(show_title)
 	_swap(n)
+
+
+## 그 슬롯에 세이브가 있나. **깨진 슬롯도 있는 것으로 센다** —
+## 못 읽는다고 덮어써도 되는 건 아니다
+func _slot_taken(slot: int) -> bool:
+	for row in Slots.list():
+		if int(row["slot"]) == slot:
+			return not bool(row["empty"])
+	return false
 
 
 ## 게임을 띄운다. **상태는 `AppRoot`가 든다**

@@ -38,6 +38,18 @@ const STATUS_SERVING: String = "현역"
 const STATUS_DONE: String = "군필"
 
 
+## 복무 형태 이름. **여기가 정본이다** — 소식에도 화면에도 같은 말이 떠야 한다.
+##
+## ⚠ **모르는 값을 빈칸으로 두지 않는다.** 형태가 늘었는데 화면이 조용히
+## 비면 아무도 모른다
+static func unit_label(unit: String) -> String:
+	if unit == "sports":
+		return "체육부대"
+	if unit.is_empty():
+		return ""
+	return "일반병"
+
+
 ## 아직 안 다녀왔나. **되돌릴 수 없는 전이라 여기서도 막는다** —
 ## 02는 화면에만 가드가 있어서 다른 호출부가 그대로 통과했고,
 ## **군 복무를 세 번 하는 커리어**가 실제로 나왔다
@@ -80,7 +92,7 @@ static func enlist(state: Dictionary, unit: String, at_day: int) -> bool:
 	p["league_id"] = LEAGUE
 	p["team_id"] = ""
 
-	var label: String = "체육부대 입대" if unit == "sports" else "일반병 입대"
+	var label: String = "%s 입대" % unit_label(unit)
 	_add_event(p, {
 		"year": year, "type": "military_enlist",
 		"from_team_id": String(p["military_hiatus_team_id"]),

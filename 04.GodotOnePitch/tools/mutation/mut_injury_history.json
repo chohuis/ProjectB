@@ -1,0 +1,20 @@
+[
+ ["최근 것이 위인 정렬을 없앤다 (제일 오래된 부상이 맨 위에 온다)",
+  "\tout.reverse()\n\treturn out",
+  "\treturn out"],
+ ["경고도 이력에 넣는다 (다칠 뻔한 것이 다친 것으로 센다)",
+  "\t\tif String(e.get(\"kind\", \"\")) != \"healed\":\n\t\t\tcontinue",
+  ""],
+ ["해를 오늘 것으로 채운다 (옛 부상이 전부 올해가 된다)",
+  "\t\t\t\"year\": int(e.get(\"year\", 0)),",
+  "\t\t\t\"year\": int(s.get(\"season_year\", 0)),"],
+ ["후유증 표시를 죽인다 (능력치가 깎였는데 화면이 침묵한다)",
+  "\t\t\t\"has_penalty\": not (e.get(\"penalty\", {}) as Dictionary).is_empty(),",
+  "\t\t\t\"has_penalty\": false,"],
+ ["부상 이름을 원문 id로 둔다 (elbow_inflammation이 화면에 뜬다)",
+  "\t\t\t\"name\": Injury.label_of(String(e.get(\"injury_type\", \"\"))),",
+  "\t\t\t\"name\": String(e.get(\"injury_type\", \"\")),"],
+ ["이력을 통째로 안 만든다 (예전 상태 — 카드가 안 뜬다)",
+  "\tfor e in s.get(\"body_log\", []):",
+  "\tfor e in []:"]
+]

@@ -89,6 +89,26 @@ func test_an_unseeded_game_still_records_its_seed() -> void:
 	assert_int(s["seed"]).is_not_equal(0)
 
 
+# ── 덮어쓰기 (U-7) ────────────────────────────────────────────
+#
+# ⚠ **시작을 누르는 순간 `Slots.save`가 옛 세이브를 지운다** (`app.gd:81`).
+# 04에서 **되돌릴 수 없는 유일한 동작**인데 버튼엔 "시작"이라고만 적혀 있었다.
+# 타이틀은 찬 슬롯에서 "덮어쓰기"라고 말하는데(`title_screen.gd:73-74`)
+# 새 게임 화면에 들어오면 그 말이 사라졌다.
+
+
+func test_an_empty_slot_just_starts() -> void:
+	var vm: Dictionary = NewGameVm.build()
+	assert_bool(vm["overwrite"]).is_false()
+	assert_str(vm["start_label"]).is_equal("시작")
+
+
+func test_a_taken_slot_says_it_will_overwrite() -> void:
+	var vm: Dictionary = NewGameVm.build({"overwrite": true})
+	assert_bool(vm["overwrite"]).is_true()
+	assert_str(vm["start_label"]).is_equal("덮어쓰고 시작")
+
+
 func test_the_view_model_does_not_know_the_screen() -> void:
 	var src := FileAccess.get_file_as_string("res://ui/new_game_vm.gd")
 	assert_str(src).not_contains("Control")

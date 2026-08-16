@@ -14,6 +14,7 @@ class_name MainScreen
 
 const SCHEDULE_ROW := preload("res://ui/parts/schedule_row.tscn")
 const NEWS_ROW := preload("res://ui/parts/news_row.tscn")
+const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
 const STANDING_ROW := preload("res://ui/parts/standing_row.tscn")
 const PLAYER_ROW := preload("res://ui/parts/player_row.tscn")
 const STATUS_SCREEN := preload("res://ui/screens/status_screen.tscn")
@@ -31,6 +32,7 @@ const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 # 강제한 걸 기준으로 삼았기 때문이다. PC(Steam)가 1차 목표다
 @onready var _tabs: VBoxContainer = $Pad/Col/Body/Nav/Tabs
 @onready var _tab_host: VBoxContainer = $Pad/Col/Body/Main/TabHost
+@onready var _me: VBoxContainer = $Pad/Col/Body/Right/Me
 @onready var _training: Button = $Pad/Col/Body/Right/Training
 @onready var _next_game: Label = $Pad/Col/Body/Right/Footer/NextGame
 @onready var _advance: Button = $Pad/Col/Body/Right/Footer/Advance
@@ -110,6 +112,36 @@ func _ready() -> void:
 	_rebuild()
 
 
+## 스페이스로 진행한다 — U-5. 02도 그랬다(`TopHeader.svelte:55-61`).
+##
+## ⚠ **판정을 함수로 뽑는다.** 헤드리스에서는 `InputEvent`가 안 오므로
+## (`--ignoreHeadlessMode`를 쓰는 이유가 그것이다) 검사가 키를 못 눌러 본다.
+## 여기를 직접 부르면 **화면 검사를 헤드리스 밖으로 안 내보내고도** 볼 수 있다 —
+## 내보내면 CI가 갈린다.
+##
+## ⚠ **글자를 치는 중이면 안 먹는다.** 02도 입력칸에서 막았다(`:58`) —
+## 이름에 빈칸을 넣다가 한 주가 넘어가면 안 된다.
+##
+## ⚠ **누를 수 없을 땐 안 먹는다.** 버튼이 막혀 있는데 키로는 되면
+## 두 입구가 다른 말을 한다
+func handle_key(keycode: int, typing: bool) -> bool:
+	if typing or keycode != KEY_SPACE:
+		return false
+	if _advance.disabled:
+		return false
+	_on_advance()
+	return true
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if key == null or not key.pressed or key.echo:
+		return
+	var focus: Control = get_viewport().gui_get_focus_owner()
+	if handle_key(key.keycode, focus is LineEdit or focus is TextEdit):
+		get_viewport().set_input_as_handled()
+
+
 func _on_advance() -> void:
 	match _vm.get("stop_type", ""):
 		"game":
@@ -133,6 +165,8 @@ func _rebuild() -> void:
 	_player.text = _vm.get("player_name", "")
 	_team.text = _vm.get("team_name", "")
 	_team.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+
+	_build_my_status()
 
 	_training.text = "훈련 계획"
 	_next_game.text = _vm.get("next_game_label", "")
@@ -158,6 +192,44 @@ func _rebuild() -> void:
 
 	_build_tabs()
 	_build_body()
+
+
+## 오른쪽 칸 맨 위 — **내가 지금 어떤 상태인가** (U-3).
+##
+## ⚠ **OVR을 어디에서도 안 보여줬다.** 내 능력치를 보려면 팀 탭 로스터에서
+## 내 줄을 찾아야 했다. 피로는 훈련 화면에만 있었다.
+##
+## ⚠ **02가 이 자리를 왜 만들었는지 적어 뒀다** (`RightPanel.svelte:12-16`):
+## "항상 보여야 하는 건 지금 내가 던질 수 있는 상태인가 · 다음 경기가
+## 언제인가 · 우리 팀이 몇 위인가 셋이고, **그 셋이 전부 다른 화면에 흩어져
+## 있었다**". 04는 그중 다음 경기 하나만 남아 있었다
+func _build_my_status() -> void:
+	for c in _me.get_children():
+		_free_child(_me, c)
+	if not _vm.has("ovr"):
+		return
+
+	var ovr := Label.new()
+	ovr.text = "OVR %d" % int(_vm.get("ovr", 0))
+	ovr.add_theme_font_size_override("font_size", AppTheme.FONT_TITLE)
+	ovr.add_theme_color_override("font_color",
+		BarRow.grade_color(float(_vm.get("ovr", 0))))
+	_me.add_child(ovr)
+
+	var cond: BarRow = BAR_ROW.instantiate()
+	_me.add_child(cond)
+	cond.setup("컨디션", float(_vm.get("condition", 0)) / 100.0,
+		"%d" % int(_vm.get("condition", 0)),
+		BarRow.grade_color(float(_vm.get("condition", 0))))
+
+	# ⚠ **피로는 방향이 반대다.** 100이 탈진이다 — 색을 능력치처럼 고르면
+	# 지친 선수가 파랗게 뜬다. 구간 이름표는 `TrainingVm`이 정본이다
+	var fat: BarRow = BAR_ROW.instantiate()
+	_me.add_child(fat)
+	var f: int = int(_vm.get("fatigue", 0))
+	fat.setup("피로", float(f) / 100.0,
+		String(_vm.get("fatigue_zone", "")),
+		AppTheme.BAD if f >= 80 else (AppTheme.WARN if f >= 70 else AppTheme.OK))
 
 
 ## ⚠ **떼고 나서 곧바로 지운다.** `queue_free`는 다음 프레임까지 살아 있어서
@@ -211,6 +283,17 @@ func _build_tabs() -> void:
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.pressed.connect(func() -> void: _on_tab.call_deferred(i))
 		_tabs.add_child(b)
+		# ⚠ **"나"와 "세계"를 가르는 선 — 그 탭 뒤에 온다.** 글자를 안 늘리면서
+		# 성격이 갈리는 걸 보여준다. 어디서 가를지는 사전이 정한다
+		# (`main_vm.NAV_BREAK_AFTER`) — 화면이 다시 판정하지 않는다.
+		#
+		# ⚠ **마지막 탭 뒤엔 안 긋는다.** 목록 끝에 뜬 선은 가르는 게 아니라
+		# 덜 그린 것처럼 보인다
+		if bool(t.get("break_after", false)) and i < tabs.size() - 1:
+			var line := ColorRect.new()
+			line.color = AppTheme.CARD_EDGE
+			line.custom_minimum_size = Vector2(0, 1)
+			_tabs.add_child(line)
 
 
 func _on_tab(i: int) -> void:

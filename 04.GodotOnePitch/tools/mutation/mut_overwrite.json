@@ -1,0 +1,11 @@
+[
+ ["슬롯 상태를 화면에 안 넘긴다 (사전만 맞고 배선이 없다)",
+  "\tn.overwrite = _slot_taken(_slot)",
+  ""],
+ ["찬 슬롯을 빈 것으로 본다",
+  "\t\t\treturn not bool(row[\"empty\"])",
+  "\t\t\treturn false"],
+ ["슬롯 번호를 안 가린다 (1번이 차면 전부 덮어쓰기가 된다)",
+  "\t\tif int(row[\"slot\"]) == slot:\n\t\t\treturn not bool(row[\"empty\"])",
+  "\t\tif not bool(row[\"empty\"]):\n\t\t\treturn true"]
+]

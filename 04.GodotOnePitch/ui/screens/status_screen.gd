@@ -24,6 +24,7 @@ const CARD := preload("res://ui/parts/card.tscn")
 const INFO_ROW := preload("res://ui/parts/info_row.tscn")
 const BADGE := preload("res://ui/parts/badge.tscn")
 const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
+const ACTION_ROW := preload("res://ui/parts/action_row.tscn")
 
 @onready var _bg: ColorRect = $Bg
 @onready var _col: VBoxContainer = $Scroll/Col
@@ -117,6 +118,11 @@ func _rebuild() -> void:
 	_col.move_child(_col.get_child(_col.get_child_count() - 1), 0)
 	_col.add_child(_contract_card())
 	_col.move_child(_col.get_child(_col.get_child_count() - 1), 1)
+	# ⚠ **병역은 다녀왔거나 다니는 중일 때만 낀다.** 미필이 기본값이라 늘
+	# 띄우면 아무 뜻이 없는 줄이 하나 붙어 있는다
+	if not (_vm.get("military", {}) as Dictionary).is_empty():
+		_col.add_child(_military_card())
+		_col.move_child(_col.get_child(_col.get_child_count() - 1), 2)
 	_build_tabs()
 	_rebuild_tab()
 
@@ -324,30 +330,29 @@ func _sponsor_card(sp: Dictionary) -> Card:
 
 	c.body.add_child(_row("", String(sp.get("note", "")), AppTheme.TEXT_DIM))
 	for o in sp.get("offers", []):
-		var b := Button.new()
-		b.text = "계약   %s   %s" % [String(o["name"]), String(o["value"])]
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.focus_mode = Control.FOCUS_NONE
+		# ⚠ **글자를 한 문자열로 이어 붙이지 않는다.** 이름 길이가 다르면
+		# 금액이 줄마다 다른 자리에서 시작한다 — 제안 셋이 그렇게 어긋나 있었다
+		var b: ActionRow = ACTION_ROW.instantiate()
+		c.body.add_child(b)
+		b.setup("계약", String(o["name"]), String(o["value"]))
 		# ⚠ **미뤄서 보낸다.** 루트가 상태를 고치면 이 화면이 다시 그려지는데,
 		# 바로 보내면 자기를 부른 버튼을 지우려다 잠긴 객체가 된다
 		b.pressed.connect(func() -> void:
 			sponsor_signed.emit.call_deferred(String(o["category_id"])))
-		c.body.add_child(b)
 	return c
 
 
 func _subscription_card(t: Dictionary) -> Card:
 	var c := _card("개인 트레이닝")
 	for r in t.get("rows", []):
-		var b := Button.new()
-		b.text = "%s   %s   %s%s" % [String(r["action"]), String(r["name"]),
-			String(r["tier_label"]),
-			"  %s" % String(r["effect"]) if not String(r["effect"]).is_empty() else ""]
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.focus_mode = Control.FOCUS_NONE
+		var b: ActionRow = ACTION_ROW.instantiate()
+		c.body.add_child(b)
+		var right: String = String(r["tier_label"])
+		if not String(r["effect"]).is_empty():
+			right += "  %s" % String(r["effect"])
+		b.setup(String(r["action"]), String(r["name"]), right)
 		b.pressed.connect(func() -> void:
 			subscription_toggled.emit.call_deferred(String(r["area_id"])))
-		c.body.add_child(b)
 	c.body.add_child(_row(String(t.get("weekly_cost", "")),
 		String(t.get("note", "")), AppTheme.TEXT_DIM))
 	var facility: String = String(t.get("facility_note", ""))
@@ -433,9 +438,15 @@ func _body_card() -> Card:
 		t.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
 		c.body.add_child(t)
 		for h in history:
+			# ⚠ **후유증이 남았는지를 같이 말한다.** 나은 게 곧 원래대로는
+			# 아니다 — 능력치가 영구히 깎였는데 화면이 침묵하면 왜 약해졌는지
+			# 알 길이 없다
+			var right: String = String(h.get("severity_label", ""))
+			if bool(h.get("has_penalty", false)):
+				right += " · 후유증"
 			c.body.add_child(_row(
 				"%d년 %d주  %s" % [h.get("year", 0), h.get("week", 0), h.get("name", "")],
-				h.get("severity_label", ""),
+				right,
 				AppTheme.SEV_COLOR.get(h.get("severity", "light"), AppTheme.TEXT_DIM),
 			))
 	return c
@@ -451,6 +462,43 @@ func _contract_card() -> Card:
 	c.body.add_child(_row("연봉", ct.get("salary_text", "-")))
 	c.body.add_child(_row("잔여 기간", ct.get("remaining_text", "-")))
 	c.body.add_child(_row("FA 자격", ct.get("fa_text", "-")))
+	return c
+
+
+## 병역 카드 — U-2.
+##
+## ⚠ **`sim/military.gd`가 매주 도는데 볼 자리가 하나도 없었다.** 입대하면
+## 전역이 언제인지 알 길이 없었다. 02는 네 자리에서 보여줬다.
+##
+## ⚠ **02가 이 자리에서 크게 데었다** — 전역 분기가 도달할 수 없는 자리에
+## 있어서 입대하면 영원히 군대에 있었다(실측 700주 · 13.5년). 04는 그 결함을
+## 고쳤지만 화면이 없어서, 같은 증상이 다시 나도 알아볼 방법이 없었다
+func _military_card() -> Card:
+	var m: Dictionary = _vm.get("military", {})
+	var c := _card("병역")
+
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", AppTheme.GAP)
+	head.add_child(_badge(String(m.get("status", "")),
+		AppTheme.WARN if bool(m.get("serving", false)) else AppTheme.OK))
+	var unit: String = String(m.get("unit_label", ""))
+	if not unit.is_empty():
+		var u := Label.new()
+		u.text = unit
+		u.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		head.add_child(u)
+	c.body.add_child(head)
+
+	if int(m.get("enlist_year", 0)) > 0:
+		c.body.add_child(_row("입대", "%d년" % int(m["enlist_year"])))
+
+	# ⚠ **남은 주가 이 카드의 요점이다.** 다녀온 뒤엔 안 보여준다 —
+	# "0주 남음"이 뜨면 아직 복무 중처럼 읽힌다
+	if bool(m.get("serving", false)):
+		var served: int = int(m.get("weeks_served", 0))
+		var total: int = maxi(1, int(m.get("weeks_total", 1)))
+		c.body.add_child(_bar("복무", float(served) / float(total),
+			"%d주 남음" % int(m.get("weeks_left", 0)), AppTheme.WARN))
 	return c
 
 

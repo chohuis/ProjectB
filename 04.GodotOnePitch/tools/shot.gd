@@ -12,12 +12,6 @@ func _init() -> void:
 	var args := OS.get_cmdline_user_args()
 	var which: String = args[0] if args.size() > 0 else "status"
 
-	# ⚠ **창 크기는 `DisplayServer`로 바꾼다.** 루트 뷰포트의 `size`에 직접
-	# 넣으면 실제 창은 안 따라오고, 찍힌 그림이 기본 크기(1152×648)로 나온다
-	# ⚠ **구장은 1:1로 띄운다.** 축소된 그림으로는 좌표가 몇 px 어긋났는지를
-	# 못 잰다 — 눈으로 "위쪽에 걸려 있다"까지만 보이고 수치가 안 나온다
-	DisplayServer.window_set_size(Vector2i(1000, 920) if which.begins_with("park")
-		else Vector2i(1440, 900))
 	DisplayServer.window_set_title("OnePitch — %s" % which)
 
 	var win := get_root()
@@ -28,12 +22,29 @@ func _init() -> void:
 		return
 	win.add_child(screen)
 
+	# ⚠ **창 크기는 `DisplayServer`로 바꾼다.** 루트 뷰포트의 `size`에 직접
+	# 넣으면 실제 창은 안 따라오고, 찍힌 그림이 기본 크기(1152×648)로 나온다.
+	#
+	# ⚠ **구장은 1:1로 띄운다.** 축소된 그림으로는 좌표가 몇 px 어긋났는지를
+	# 못 잰다 — 눈으로 "위쪽에 걸려 있다"까지만 보이고 수치가 안 나온다.
+	#
+	# ⚠ **프레임을 돌린 뒤에 정한다.** `App._ready`가 저장된 설정을 창에
+	# 물리므로(U-4), 먼저 정하면 그게 덮어써서 **캡처 크기가 사용자 설정에
+	# 따라 달라진다** — 바이트를 견줘 결함을 잡아 온 방식이 통째로 무너진다.
+	# 실측: 먼저 정했더니 1440이 아니라 1600으로 찍혔다
+	var want := Vector2i(1000, 920) if which.begins_with("park") \
+		else Vector2i(1440, 900)
+
 	# ⚠ **한 번 그리게 만든 뒤에 찍는다.** `process_frame`을 두 번 기다려도
 	# 실제 렌더는 아직일 수 있어서 회색 판만 나왔다. 프레임을 넉넉히 돌리고
 	# 마지막에 강제로 한 번 그린다
 	# ⚠ **진행을 거치는 갈래가 있다.** `advance`가 프레임을 넘기므로
 	# 몇 프레임만 기다리면 진행 중인 화면을 찍는다
 	for i in 240:
+		await process_frame
+
+	DisplayServer.window_set_size(want)
+	for i in 8:
 		await process_frame
 	RenderingServer.force_draw()
 
@@ -139,6 +150,11 @@ func _build(which: String) -> Control:
 			t2["day"] = 120
 			Slots.save(2, t2)
 			return APP_ENTRY.instantiate()
+		"settings":
+			# ⚠ **창 크기를 바꿀 유일한 자리** (U-4). 04엔 설정이 아예 없었다
+			var st: App = APP_ENTRY.instantiate()
+			st.ready.connect(func() -> void: st.show_settings(), CONNECT_ONE_SHOT)
+			return st
 		"newgame-screen":
 			var ne: App = APP_ENTRY.instantiate()
 			ne.ready.connect(func() -> void: ne.show_new_game(), CONNECT_ONE_SHOT)
@@ -232,6 +248,57 @@ func _build(which: String) -> Control:
 				for n in mpl.screen().find_children("*", "StatusScreen", true, false):
 					n._on_tab(1), CONNECT_ONE_SHOT)
 			return mpl
+		"status-injury":
+			# ⚠ **부상 이력 카드가 진짜 게임에서 뜨는지 본다** (U-1).
+			# 예전엔 `injury_history`를 아무도 안 채워서 이 카드가 영영 안 붙었다 —
+			# fixture 캡처(`status`)에는 보였기 때문에 눈으로는 못 잡았다.
+			#
+			# ⚠ **다치고 낫기까지 기다린다.** 부상은 무작위라 몇 주로는 안 나온다.
+			# 이력에 한 줄이 생길 때까지 돌리고, 안 생기면 그대로 찍는다 —
+			# 그것도 결과다
+			var si: AppRoot = APP.instantiate()
+			var sis := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			# ⚠ **피로를 높게 물린다.** 그냥 돌리면 120주를 가도 안 다친다 —
+			# 실제로 그렇게 나왔고 캡처가 빈 채로 찍혔다. 부상 확률은 피로를
+			# 보므로 벼랑 위에 올려 둬야 이 경로가 돈다
+			var healed_at: int = 0
+			for w in range(1, 121):
+				sis["protagonist"]["fatigue"] = 95.0
+				WeekRunner.run(sis, w * 7)
+				for e in sis.get("body_log", []):
+					if String(e.get("kind", "")) == "healed":
+						healed_at = w
+						break
+				if healed_at > 0:
+					sis["day"] = w * 7
+					break
+			print("부상 완치 주차: %d · body_log %d줄" % [
+				healed_at, sis.get("body_log", []).size()])
+			si.set_state(sis)
+			# ⚠ **`_refresh()`를 덧부르지 않는다.** `set_state`가 이미 그린다 —
+			# 덧부르면 탭 강조가 0번으로 돌아가 "소식이 켜졌는데 나 탭이 보이는"
+			# 그림이 나온다
+			si.ready.connect(func() -> void:
+				si.screen()._on_tab(1), CONNECT_ONE_SHOT)
+			return si
+		"status-military":
+			# ⚠ **복무 중인 "나" 탭** (U-2). `Military.enlist`를 실제로 거친다 —
+			# 손으로 사전을 만들면 어느 키를 안 채우는지가 안 드러난다
+			var sm: AppRoot = APP.instantiate()
+			var sms := World.new_game({"seed": 20270101, "season_year": 2033,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			var smp: Dictionary = sms["protagonist"]
+			smp["age"] = 24
+			smp["league_id"] = "LEAGUE_KBL"
+			smp["career_stage"] = "pro"
+			Military.enlist(sms, "sports", 7)
+			# 40주쯤 복무한 시점 — 남은 주가 보이는 자리다
+			smp["military_service_weeks"] = 40
+			sm.set_state(sms)
+			sm.ready.connect(func() -> void:
+				sm.screen()._on_tab(1), CONNECT_ONE_SHOT)
+			return sm
 		"season-end":
 			# 시즌 마지막 날로 보내 "시즌 종료"를 실제로 누른다
 			var se: AppRoot = APP.instantiate()

@@ -134,7 +134,10 @@ func _build_season() -> void:
 	_heading("수상")
 	var awards: Array = _vm.get("award_rows", [])
 	if awards.is_empty():
-		_line("수상자가 없습니다", AppTheme.TEXT_MUTE)
+		# ⚠ **왜 비었는지를 말한다** (U-9). "수상자가 없습니다"만 있으면
+		# 버그인지 아직인지를 못 가른다 — `awards.gd:149`가 "아무도 두 부문을
+		# 못 채우는 해가 있다"고 적어 뒀듯 **이게 정상인 해가 실제로 있다**
+		_line("자격선을 넘은 선수가 없습니다", AppTheme.TEXT_MUTE)
 	for a in awards:
 		var right: String = String(a["player_id"])
 		if not String(a["value"]).is_empty():

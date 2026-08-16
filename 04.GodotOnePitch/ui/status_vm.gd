@@ -20,10 +20,13 @@ const PITCHING_LABELS: Array[Array] = [
 	["recovery", "회복"], ["clutch", "위기관리"], ["hold_runners", "주자견제"],
 ]
 
+## ⚠ **복무 리그도 넣는다** (U-2b). 없으면 화면에 `LEAGUE_MILITARY`가
+## 원문 그대로 뜬다 — 이름표를 한 겹 빠뜨리면 조용히 id가 샌다
 const LEAGUE_SHORT: Dictionary = {
 	"LEAGUE_HIGHSCHOOL": "고교", "LEAGUE_UNIVERSITY": "대학",
 	"LEAGUE_INDEPENDENT": "독립", "LEAGUE_KBL": "KBL",
 	"LEAGUE_ABL": "ABL", "LEAGUE_JBL": "JBL",
+	"LEAGUE_MILITARY": "복무",
 }
 
 ## 심각도 이름의 정본은 `Injury.SEVERITY_LABELS`다 — 화면에도 소식에도
@@ -42,10 +45,11 @@ static func build(s: Dictionary) -> Dictionary:
 		pitching.append({"name": pair[1], "value": float(q.get(pair[0], 0.0))})
 
 	return {
-		"team_name": p.get("team_name", p.get("team_id", "")),
+		"team_name": team_name_of(p),
 		"league_short": LEAGUE_SHORT.get(league_id, league_id),
 		"injury": _injury(p.get("injury", null)),
-		"injury_history": s.get("injury_history", []),
+		"injury_history": _injury_history(s),
+		"military": _military(p),
 		"contract": s.get("contract", {}),
 		"pitches": s.get("pitches", []),
 		"pitching": pitching,
@@ -96,6 +100,88 @@ static func _injury(inj) -> Dictionary:
 	# 모르는 심각도를 빈칸으로 두지 않는다 — 새 등급이 붙은 걸 아무도 모른다
 	d["severity_label"] = Injury.severity_label(sev)
 	return d
+
+
+## 소속 이름 — U-2b.
+##
+## ⚠ **복무 중엔 팀이 없다.** `Military.enlist`가 `team_id`를 비우는데
+## `team_name`은 안 지운다 — 그래서 계약 카드가 **옛 소속(애월고)을 그대로**
+## 띄웠다. `status-military` 캡처에서 나왔다.
+##
+## ⚠ **이름을 지우지 않고 여기서 가린다.** 상태에서 지우면 전역할 때
+## 돌아갈 곳의 이름이 사라진다 — `military_hiatus_team_id`가 팀을 기억하지
+## 이름까지 기억하진 않는다
+static func team_name_of(p: Dictionary) -> String:
+	if String(p.get("military_status", "")) == Military.STATUS_SERVING:
+		return Military.unit_label(String(p.get("military_unit", "")))
+	return String(p.get("team_name", p.get("team_id", "")))
+
+
+## 병역 — 입대·복무·전역이 보이는 유일한 자리. U-2.
+##
+## ⚠ **`sim/military.gd`가 매주 도는데 볼 자리가 하나도 없었다.**
+## 02는 넷에서 보여줬다(병역 카드 · 상시 패널 · 사이드바 카운트다운 ·
+## 우측 패널). 04는 넷 다 없어서 **입대하면 전역이 언제인지 알 길이 없었다.**
+##
+## ⚠ 02가 이 자리에서 크게 데었다 — 전역 분기가 도달할 수 없는 자리에 있어서
+## **입대하면 영원히 군대에 있었다**(실측 700주 · 13.5년). 04는 그 결함을
+## 고쳤지만 화면을 안 옮겼다. **같은 증상이 다시 나면 알아볼 방법이 없다.**
+##
+## ⚠ **총 기간을 여기 다시 적지 않는다.** `Military.SERVICE_WEEKS`가 정본이다.
+##
+## ⚠ **미필이면 빈 사전이다.** 대부분의 커리어에서 기본값이라 늘 띄우면
+## 아무 뜻이 없는 줄이 하나 붙어 있는다
+static func _military(p: Dictionary) -> Dictionary:
+	var status: String = String(p.get("military_status", Military.STATUS_UNSERVED))
+	if status == Military.STATUS_UNSERVED:
+		return {}
+	var serving: bool = status == Military.STATUS_SERVING
+	var served: int = int(p.get("military_service_weeks", 0))
+	return {
+		"status": status,
+		"serving": serving,
+		"unit_label": Military.unit_label(String(p.get(
+			"military_unit" if serving else "military_served_unit", ""))),
+		"enlist_year": int(p.get("military_enlist_year", 0)),
+		"weeks_served": served,
+		"weeks_total": Military.SERVICE_WEEKS,
+		# 채우고도 안 넘어간 주가 있으면 음수가 된다 — 0에서 멈춘다
+		"weeks_left": maxi(0, Military.SERVICE_WEEKS - served) if serving else 0,
+	}
+
+
+## 부상 이력 — **`body_log`가 정본이다.** U-1.
+##
+## ⚠ **예전엔 `s["injury_history"]`를 읽었는데 그 키를 아무도 안 채웠다.**
+## 화면은 그 키로 카드를 만들고(`status_screen.gd:428-440`) 쓰는 곳은
+## `Fixtures`뿐이라, **캡처에는 이력이 보이는데 진짜 게임에서는 카드가 아예
+## 안 붙었다.** 읽는 쪽만 있고 채우는 쪽이 없는 자리였다(P-12와 같은 모양).
+##
+## ⚠ **경고는 이력이 아니다.** `body_log`엔 `warning`도 쌓이는데 그건 "다칠
+## 뻔했다"이지 다친 게 아니다 — 섞으면 이력이 부풀어 오른다.
+##
+## ⚠ **최근 것이 위다.** 로그는 시간 순으로 쌓이므로 그대로 쓰면 제일 오래된
+## 부상이 맨 위에 온다.
+##
+## ⚠ **해는 로그에 적힌 것을 쓴다.** 날짜는 시즌마다 1로 돌아가므로 지금
+## 연도로 채우면 옛 부상이 전부 올해가 된다
+static func _injury_history(s: Dictionary) -> Array:
+	var out: Array = []
+	for e in s.get("body_log", []):
+		if String(e.get("kind", "")) != "healed":
+			continue
+		var sev: String = String(e.get("severity", ""))
+		out.append({
+			"year": int(e.get("year", 0)),
+			"week": Calendar.week_of(int(e.get("day", 0))),
+			"name": Injury.label_of(String(e.get("injury_type", ""))),
+			"severity": sev,
+			"severity_label": Injury.severity_label(sev),
+			# 나은 게 곧 원래대로는 아니다 — 후유증이 남았는지가 요점이다
+			"has_penalty": not (e.get("penalty", {}) as Dictionary).is_empty(),
+		})
+	out.reverse()
+	return out
 
 
 ## ⚠ **기록이 없으면 빈 목록이다.** 0으로 채우면 안 뛴 선수가 0.00 방어율로

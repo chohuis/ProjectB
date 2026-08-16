@@ -27,11 +27,19 @@ static func build(s: Dictionary = {}) -> Dictionary:
 	var name: String = s.get("name", DEFAULT_NAME)
 	var team_id: String = s.get("team_id", teams[0]["id"] if not teams.is_empty() else "")
 
+	# ⚠ **찬 슬롯이면 시작 버튼이 그렇게 말해야 한다** (U-7). 시작을 누르는
+	# 순간 `Slots.save`가 옛 세이브를 지운다 — **되돌릴 수 없는 유일한 동작**인데
+	# 버튼엔 "시작"이라고만 적혀 있었다. 타이틀에서 "덮어쓰기"를 누르고 들어와도
+	# 여기서는 그 말이 사라진다
+	var overwrite: bool = bool(s.get("overwrite", false))
+
 	return {
 		"name": name,
 		"team_id": team_id,
 		"teams": teams,
 		"seed": int(s.get("seed", 0)),
+		"overwrite": overwrite,
+		"start_label": "덮어쓰고 시작" if overwrite else "시작",
 		# ⚠ **이름이 비면 시작할 수 없다.** 빈 이름으로 만들면 화면 곳곳이
 		# 빈칸이 되고 원인을 못 찾는다
 		"can_start": not name.strip_edges().is_empty() and not team_id.is_empty(),

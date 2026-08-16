@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/parts/action_row.gd" id="1_action"]
+
+[node name="ActionRow" type="Button"]
+custom_minimum_size = Vector2(0, 30)
+focus_mode = 0
+script = ExtResource("1_action")
+
+[node name="Pad" type="MarginContainer" type_hint="" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="Row" type="HBoxContainer" parent="Pad"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="Action" type="Label" parent="Pad/Row"]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+mouse_filter = 2
+text = "계약"
+
+[node name="Name" type="Label" parent="Pad/Row"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+clip_text = true
+text = "이름"
+
+[node name="Value" type="Label" parent="Pad/Row"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+mouse_filter = 2
+horizontal_alignment = 2
+text = "값"

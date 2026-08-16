@@ -98,6 +98,156 @@ func test_an_unknown_severity_falls_back_to_its_id() -> void:
 	assert_str(StatusVm.build(s)["injury"]["severity_label"]).is_equal("weird")
 
 
+# ── 부상 이력 (U-1) ───────────────────────────────────────────
+#
+# ⚠ **`injury_history`를 아무도 안 채우고 있었다.** 화면이 그 키로 카드를
+# 만드는데 상태에 쓰는 곳이 `Fixtures`뿐이라, 캡처에는 이력이 보이는데
+# **진짜 게임에서는 카드가 아예 안 붙었다.** 실제 기록은 `body_log`에 있다.
+
+
+func _healed(day: int, year: int, t: String, sev: String,
+		penalty: Dictionary = {}) -> Dictionary:
+	return {"day": day, "year": year, "kind": "healed",
+		"injury_type": t, "severity": sev, "penalty": penalty}
+
+
+func test_a_healed_injury_becomes_a_history_row() -> void:
+	var s: Dictionary = _state({"body_log": [
+		_healed(120, 2027, "BLISTER", "moderate")]})
+	var rows: Array = StatusVm.build(s)["injury_history"]
+	assert_int(rows.size()).is_equal(1)
+	assert_int(rows[0]["year"]).is_equal(2027)
+	assert_int(rows[0]["week"]).is_equal(Calendar.week_of(120))
+	assert_str(rows[0]["severity_label"]).is_equal(
+		Injury.severity_label("moderate"))
+	# 이름은 id가 아니라 사람이 읽는 말이어야 한다
+	assert_str(rows[0]["name"]).is_equal(Injury.label_of("BLISTER"))
+
+
+## ⚠ **경고는 이력이 아니다.** `body_log`엔 `warning`도 쌓이는데 그건
+## "다칠 뻔했다"이지 다친 게 아니다 — 섞으면 이력이 부풀어 오른다
+func test_a_fatigue_warning_is_not_a_history_row() -> void:
+	var s: Dictionary = _state({"body_log": [
+		{"day": 100, "year": 2027, "kind": "warning", "fatigue": 90.0, "risk": 0.3},
+		_healed(120, 2027, "ARM_FATIGUE", "light")]})
+	var rows: Array = StatusVm.build(s)["injury_history"]
+	assert_int(rows.size()).is_equal(1)
+	assert_str(rows[0]["name"]).is_equal(Injury.label_of("ARM_FATIGUE"))
+
+
+## ⚠ **최근 것이 위다.** 로그는 시간 순으로 쌓이므로 그대로 쓰면 제일 오래된
+## 부상이 맨 위에 온다
+func test_the_newest_injury_comes_first() -> void:
+	var s: Dictionary = _state({"body_log": [
+		_healed(40, 2026, "ARM_FATIGUE", "light"),
+		_healed(120, 2027, "BLISTER", "moderate")]})
+	var rows: Array = StatusVm.build(s)["injury_history"]
+	assert_int(rows[0]["year"]).is_equal(2027)
+	assert_int(rows[1]["year"]).is_equal(2026)
+
+
+## ⚠ **해가 로그에 있어야 한다.** 날짜는 시즌마다 1로 돌아가므로 `day`만으로는
+## 몇 해 것인지 알 수 없다 — 지금 연도로 채우면 옛 부상이 전부 올해가 된다
+func test_the_year_comes_from_the_log_not_from_today() -> void:
+	var s: Dictionary = _state({"season_year": 2030, "body_log": [
+		_healed(40, 2026, "ARM_FATIGUE", "light")]})
+	assert_int(StatusVm.build(s)["injury_history"][0]["year"]).is_equal(2026)
+
+
+## ⚠ **나은 게 곧 원래대로는 아니다.** 후유증이 남았는지가 이력의 요점이다
+func test_a_lasting_penalty_is_marked() -> void:
+	var s: Dictionary = _state({"body_log": [
+		_healed(40, 2026, "ARM_FATIGUE", "light"),
+		_healed(120, 2027, "MUSCLE_TIGHTNESS", "surgery", {"velocity": -3.0})]})
+	var rows: Array = StatusVm.build(s)["injury_history"]
+	assert_bool(rows[0]["has_penalty"]).is_true()
+	assert_bool(rows[1]["has_penalty"]).is_false()
+
+
+func test_no_body_log_is_an_empty_history() -> void:
+	assert_array(StatusVm.build(_state())["injury_history"]).is_empty()
+
+
+# ── 병역 (U-2) ────────────────────────────────────────────────
+#
+# ⚠ **`sim/military.gd`가 매주 도는데 볼 자리가 하나도 없었다.**
+# 02는 네 자리에서 보여줬다(병역 카드 · 상시 패널 · 사이드바 카운트다운 ·
+# 우측 패널). 04는 넷 다 없어서 **입대하면 전역이 언제인지 알 길이 없었다.**
+#
+# ⚠ 02가 이 자리에서 크게 데었다 — 전역 분기가 도달할 수 없는 자리에 있어서
+# **입대하면 영원히 군대에 있었다**(실측 700주 · 13.5년). 04는 그 결함을
+# 고쳤지만 화면을 안 옮겼다. 같은 증상이 다시 나면 알아볼 방법이 없다.
+
+
+## 안 다녀왔으면 카드를 안 만든다 — 미필은 대부분의 커리어에서 기본값이라
+## 늘 띄우면 아무 뜻이 없는 줄이 하나 붙어 있는다
+func test_an_unserved_player_has_no_military_card() -> void:
+	assert_bool(StatusVm.build(_state())["military"].is_empty()).is_true()
+
+
+func test_serving_shows_how_much_is_left() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"military_status": "현역", "military_unit": "sports",
+		"military_service_weeks": 40, "military_enlist_year": 2033})})
+	var m: Dictionary = StatusVm.build(s)["military"]
+	assert_str(m["status"]).is_equal("현역")
+	assert_int(m["weeks_served"]).is_equal(40)
+	# **남은 주가 이 카드의 요점이다** — 전역이 언제인지를 못 보던 자리다
+	assert_int(m["weeks_left"]).is_equal(Military.SERVICE_WEEKS - 40)
+	assert_int(m["enlist_year"]).is_equal(2033)
+
+
+## ⚠ **총 기간을 화면에 다시 적지 않는다.** `Military.SERVICE_WEEKS`가 정본이다
+func test_the_total_comes_from_the_rule() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"military_status": "현역", "military_service_weeks": 0})})
+	assert_int(StatusVm.build(s)["military"]["weeks_total"]).is_equal(
+		Military.SERVICE_WEEKS)
+
+
+## ⚠ **복무를 채우고도 안 넘기면 남은 주가 음수가 된다** — 0에서 멈춘다
+func test_an_overrun_does_not_go_negative() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"military_status": "현역",
+		"military_service_weeks": Military.SERVICE_WEEKS + 5})})
+	assert_int(StatusVm.build(s)["military"]["weeks_left"]).is_equal(0)
+
+
+## ⚠ **복무 중엔 팀이 없다** (U-2b). `Military.enlist`가 `team_id`를 비우는데
+## `team_name`은 안 지운다 — 계약 카드가 옛 소속을 그대로 띄웠다
+func test_serving_does_not_show_the_old_team() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"team_name": "제주 애월고", "military_status": "현역",
+		"military_unit": "sports", "military_service_weeks": 10})})
+	assert_str(StatusVm.build(s)["team_name"]).is_equal("체육부대")
+
+
+## ⚠ **이름을 상태에서 지우지 않는다.** 전역할 때 돌아갈 곳의 이름이 사라진다
+func test_a_discharged_player_shows_the_team_again() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"team_name": "제주 애월고", "military_status": "군필"})})
+	assert_str(StatusVm.build(s)["team_name"]).is_equal("제주 애월고")
+
+
+## ⚠ **복무 리그에도 이름표가 있어야 한다** — 없으면 `LEAGUE_MILITARY`가
+## 원문 그대로 뜬다
+func test_the_military_league_has_a_label() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"league_id": "LEAGUE_MILITARY", "military_status": "현역"})})
+	assert_str(StatusVm.build(s)["league_short"]).is_equal("복무")
+
+
+## 다녀온 뒤에도 카드가 남는다 — "군필"은 커리어의 사실이다
+func test_a_finished_service_still_shows() -> void:
+	var s: Dictionary = _state({"protagonist": _me({
+		"military_status": "군필", "military_served_unit": "general",
+		"military_enlist_year": 2033})})
+	var m: Dictionary = StatusVm.build(s)["military"]
+	assert_str(m["status"]).is_equal("군필")
+	# 다녀왔으면 남은 주를 안 보여준다 — 0주 남았다고 뜨면 아직 복무 중 같다
+	assert_bool(m["serving"]).is_false()
+
+
 # ── 시즌 기록 ─────────────────────────────────────────────────
 
 func test_the_season_title_shows_the_year() -> void:

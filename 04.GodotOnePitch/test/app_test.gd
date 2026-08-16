@@ -163,3 +163,38 @@ func test_the_app_does_not_hold_game_state() -> void:
 	assert_str(src).not_contains("MainVm")
 	assert_str(src).not_contains("DayEngine")
 	assert_str(src).not_contains("Calendar.")
+
+
+# ── 덮어쓰기 경고 (U-7) ───────────────────────────────────────
+#
+# ⚠ **시작을 누르면 `Slots.save`가 옛 세이브를 지운다.** 04에서 되돌릴 수 없는
+# 유일한 동작인데 버튼엔 "시작"이라고만 적혀 있었다. 타이틀은 찬 슬롯에서
+# "덮어쓰기"라고 말하는데, 새 게임 화면에 들어오면 그 말이 사라졌다.
+#
+# ⚠ **사전만 고치면 아무 일도 안 일어난다.** `App`이 슬롯 상태를 화면에
+# 넘겨야 한다 — 그 배선을 여기서 본다
+
+
+func test_a_fresh_slot_says_start() -> void:
+	var a := await _mount()
+	a._on_new_game(1)
+	await await_idle_frame()
+	assert_array(_texts(a)).contains(["시작"])
+	assert_array(_texts(a)).not_contains(["덮어쓰고 시작"])
+
+
+func test_a_taken_slot_says_it_will_overwrite() -> void:
+	Slots.save(1, _new_game())
+	var a := await _mount()
+	a._on_new_game(1)
+	await await_idle_frame()
+	assert_array(_texts(a)).contains(["덮어쓰고 시작"])
+
+
+## ⚠ **슬롯마다 따로 본다.** 1번이 찼다고 2번이 덮어쓰기가 되면 안 된다
+func test_another_slot_is_still_fresh() -> void:
+	Slots.save(1, _new_game())
+	var a := await _mount()
+	a._on_new_game(2)
+	await await_idle_frame()
+	assert_array(_texts(a)).not_contains(["덮어쓰고 시작"])

@@ -14,11 +14,14 @@ const NEW_GAME_SCREEN := preload("res://ui/screens/new_game_screen.tscn")
 @onready var _title: Label = $Pad/Center/Col/Title
 @onready var _slots: VBoxContainer = $Pad/Center/Col/Slots
 @onready var _status: Label = $Pad/Center/Col/Status
+@onready var _settings: Button = $Pad/Center/Col/Settings
 
 ## 슬롯을 골라 이어한다
 signal continue_requested(slot: int)
 ## 새 게임을 시작한다
 signal new_game_requested(slot: int)
+## 설정을 연다 — **창 크기가 여기 말고는 바꿀 데가 없다** (U-4)
+signal settings_requested
 
 
 func _ready() -> void:
@@ -28,6 +31,8 @@ func _ready() -> void:
 	_title.add_theme_font_size_override("font_size", AppTheme.FONT_TITLE + 6)
 	_status.text = ""
 	_status.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+	_settings.pressed.connect(func() -> void:
+		settings_requested.emit.call_deferred())
 	refresh()
 
 

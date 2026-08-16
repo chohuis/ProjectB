@@ -1,0 +1,14 @@
+[
+ ["글자 치는 중에도 스페이스가 먹는다 (이름에 빈칸을 넣다 주가 넘어간다)",
+  "\tif typing or keycode != KEY_SPACE:",
+  "\tif keycode != KEY_SPACE:"],
+ ["아무 키나 먹는다",
+  "\tif typing or keycode != KEY_SPACE:",
+  "\tif typing and false:"],
+ ["막힌 진행도 키로는 뚫린다 (두 입구가 다른 말을 한다)",
+  "\tif _advance.disabled:\n\t\treturn false",
+  ""],
+ ["키를 먹고 아무 일도 안 한다",
+  "\t_on_advance()\n\treturn true",
+  "\treturn true"]
+]

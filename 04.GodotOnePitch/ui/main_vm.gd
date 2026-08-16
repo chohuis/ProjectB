@@ -28,6 +28,13 @@ const TABS: Array[Dictionary] = [
 	{"id": "schedule", "label": "일정"},
 ]
 
+## "나"와 "세계"를 가르는 자리 — 이 탭 **뒤에** 선이 온다.
+##
+## ⚠ **02가 같은 자리에 뒀다** (`navVisibility`의 `NAV_GROUP_BREAK_AFTER`).
+## 그쪽 주석: "글자를 안 늘리면서 성격이 갈리는 걸 보여준다". 앞 둘은 나에
+## 관한 것이고 뒤 넷은 세계에 관한 것이다
+const NAV_BREAK_AFTER: String = "me"
+
 const WEEKDAY_NAMES: Array[String] = ["일", "월", "화", "수", "목", "금", "토"]
 
 
@@ -70,8 +77,29 @@ static func build(s: Dictionary) -> Dictionary:
 		"day": day,
 		"season_days": season_days,
 
-		"team_name": p.get("team_name", p.get("team_id", "")),
+		# ⚠ **복무 중엔 팀이 없다** (U-2b). `Military.enlist`가 `team_id`를
+		# 비우는데 `team_name`은 안 지운다 — 헤더가 옛 소속을 그대로 띄웠다.
+		# **"나" 탭과 같은 말을 해야 한다** — 두 자리가 다르면 어느 쪽이
+		# 맞는지 알 수 없다
+		"team_name": StatusVm.team_name_of(p),
 		"player_name": p.get("name", ""),
+
+		# ⚠ **OVR을 어디에서도 안 보여줬다** (U-3). `ui/` 전체에서 `ovr`을
+		# 쓰는 곳이 지명 후보 줄과 로스터 줄 둘뿐이라, **내 능력치를 보려면
+		# 팀 탭 로스터에서 내 줄을 찾아야 했다.** 02는 껍데기 우측에 상시로
+		# 뒀다(`RightPanel.svelte:74-77`).
+		#
+		# ⚠ **투수는 투구 OVR이다.** 안 가르면 투수가 타격 20으로 떠서
+		# 갑자기 약해 보인다 — `team_vm.gd:30-31`이 같은 이유로 가른다
+		"ovr": _ovr_of(p),
+
+		# ⚠ **02가 "항상 보여야 한다"고 꼽은 셋 중 둘이 여기 있다** —
+		# 컨디션과 피로. 나머지 하나(다음 경기)는 아래에 있다.
+		# 예전엔 피로가 훈련 화면에만 있었다
+		"condition": roundi(float(p.get("condition", 0.0))),
+		"fatigue": roundi(float(p.get("fatigue", 0.0))),
+		"fatigue_zone": String(TrainingVm.zone_of(
+			float(p.get("fatigue", 0.0)))["label"]),
 
 		"next_game_in": days_to,
 		"next_game_label": _start_label(days_to),
@@ -135,11 +163,22 @@ static func _advance_label(span: int) -> String:
 	return "%d일 진행" % span
 
 
+## 주인공 OVR. **투수는 투구 쪽, 야수는 타격 쪽** — `team_vm.gd:30-31`과 같다
+static func _ovr_of(p: Dictionary) -> int:
+	if p.is_empty():
+		return 0
+	var pitcher: bool = PlayerGen.is_pitcher(String(p.get("position", "")))
+	var src: Dictionary = p.get("pitching", {}) if pitcher else p.get("batting", {})
+	return roundi(float(src.get("ovr", 0.0)))
+
+
 static func _tabs(unread: int, undecided: int) -> Array:
 	var out: Array = []
 	for t in TABS:
 		var badge: int = 0
 		if t["id"] == "news":
 			badge = unread + undecided
-		out.append({"id": t["id"], "label": t["label"], "badge": badge})
+		out.append({"id": t["id"], "label": t["label"], "badge": badge,
+			# 화면이 "어디가 나이고 어디가 세계인가"를 다시 판정하지 않는다
+			"break_after": t["id"] == NAV_BREAK_AFTER})
 	return out

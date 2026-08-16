@@ -244,6 +244,68 @@ func test_the_tabs_match_the_original() -> void:
 
 ## ⚠ **소식 탭에만 단다.** 전부에 달면 알림이 아무 뜻이 없어진다 —
 ## 어디를 눌러야 하는지가 알림의 존재 이유다
+# ── 내 상태 (U-3) ─────────────────────────────────────────────
+#
+# ⚠ **OVR을 어디에서도 안 보여줬다.** `ui/` 전체에서 `ovr`을 쓰는 곳이 지명
+# 후보 줄과 로스터 줄 둘뿐이라 **내 능력치를 보려면 팀 탭 로스터에서 내 줄을
+# 찾아야 했다.** 피로는 훈련 화면에만 있었다.
+#
+# ⚠ 02가 이 자리를 왜 만들었는지 적어 뒀다 — "항상 보여야 하는 건 지금 내가
+# 던질 수 있는 상태인가 · 다음 경기가 언제인가 · 우리 팀이 몇 위인가 셋이고,
+# 그 셋이 전부 다른 화면에 흩어져 있었다"(`RightPanel.svelte:12-16`).
+
+
+## ⚠ **복무 중엔 헤더도 옛 소속을 안 띄운다** (U-2b). **"나" 탭과 같은 말을
+## 해야 한다** — 두 자리가 다르면 어느 쪽이 맞는지 알 수 없다
+func test_the_header_hides_the_old_team_while_serving() -> void:
+	var p: Dictionary = {"name": "김한결", "position": "SP",
+		"pitching": {"ovr": 60.0}, "team_name": "제주 애월고",
+		"military_status": "현역", "military_unit": "sports"}
+	var vm: Dictionary = MainVm.build(_state({"protagonist": p}))
+	assert_str(vm["team_name"]).is_equal(StatusVm.team_name_of(p))
+	assert_str(vm["team_name"]).is_not_equal("제주 애월고")
+
+
+## ⚠ **투수는 투구 OVR이다.** 안 가르면 투수가 타격 20으로 떠서 갑자기
+## 약해 보인다 — `team_vm.gd:30-31`이 같은 이유로 가른다
+func test_a_pitcher_shows_the_pitching_ovr() -> void:
+	var vm: Dictionary = MainVm.build(_state({"protagonist": {
+		"name": "김한결", "position": "SP",
+		"pitching": {"ovr": 71.0}, "batting": {"ovr": 22.0}}}))
+	assert_int(vm["ovr"]).is_equal(71)
+
+
+func test_condition_and_fatigue_come_along() -> void:
+	var vm: Dictionary = MainVm.build(_state({"protagonist": {
+		"name": "김한결", "position": "SP", "pitching": {"ovr": 60.0},
+		"condition": 72.4, "fatigue": 83.6}}))
+	assert_int(vm["condition"]).is_equal(72)
+	assert_int(vm["fatigue"]).is_equal(84)
+
+
+## ⚠ **피로 구간 이름표를 여기서 다시 적지 않는다.** `TrainingVm`이 정본이다 —
+## 두 곳이 각자 정하면 훈련 화면과 껍데기가 다른 말을 한다
+func test_the_fatigue_zone_comes_from_the_training_rule() -> void:
+	var vm: Dictionary = MainVm.build(_state({"protagonist": {
+		"name": "김한결", "position": "SP", "pitching": {"ovr": 60.0},
+		"fatigue": 92.0}}))
+	assert_str(vm["fatigue_zone"]).is_equal(
+		String(TrainingVm.zone_of(92.0)["label"]))
+
+
+## ⚠ **"나"와 "세계"를 가르는 선** (U-6). 02가 같은 자리에 뒀다 —
+## 앞 둘은 나에 관한 것이고 뒤 넷은 세계에 관한 것이다.
+##
+## ⚠ **어디서 가를지는 사전이 정한다.** 화면이 다시 판정하면 탭 순서를
+## 바꿨을 때 선만 옛 자리에 남는다
+func test_one_tab_carries_the_group_break() -> void:
+	var broke: Array = []
+	for t in MainVm.build(_state())["tabs"]:
+		if bool(t.get("break_after", false)):
+			broke.append(t["id"])
+	assert_array(broke).is_equal([MainVm.NAV_BREAK_AFTER])
+
+
 func test_only_the_news_tab_carries_the_unread_badge() -> void:
 	var vm: Dictionary = MainVm.build(_state({"mailbox": [
 		{"id": "M1", "read": false}, {"id": "M2", "read": false}]}))
