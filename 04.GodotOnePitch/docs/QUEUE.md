@@ -783,6 +783,25 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       0이라 델타가 안 난다 — 그게 옳은 동작이라 볼 것이 없었다.
       배선은 `PHASES`와 `done` 목록이 지킨다.
 
+- [ ] 🔴 **P-12 승강 판정이 성적을 못 본다 — `perf`를 아무도 안 채운다**
+      계측에 경기를 붙였는데도 **상시 승강이 0건**이었다. 원인을 팠다:
+      `RosterMaintenance.form_score`가 `p["perf"]`를 읽는데
+      **`sim/` 전체에서 그 키를 쓰는 곳이 `roster_maintenance.gd` 하나**다 —
+      **채우는 곳이 없다.**
+      · `PromotionRunner.run_team`이 `_split`으로 로스터 사전을 그대로
+        넘긴다. 02는 `getTeamEntityRefs`가 라이브 스탯을 붙여 넘겼다
+        (`market.ts:766`)
+      · 그래서 `form_score`가 늘 0이고, `is_slumping`이 참이 안 되며,
+        **상시 사유(`slump_replacement`)가 영영 안 난다**
+      · 부상 사유(`injury_replacement`)도 `npc_injuries`에 중등도 이상이
+        쌓여야 하는데 **26주로는 안 쌓이는지** 따로 세야 한다
+      ⚠ **성적이 안 보이면 정기 승강도 능력치만 본다.** `rated()`가
+        `ovr + form_score × 8`인데 뒤 항이 늘 0이다 — 02가 "성적이
+        능력치를 뒤집되 완전히 무시하진 않는" 지점으로 잡은 가중 8이
+        **통째로 죽어 있다.** 정기 140건도 그래서 OVR 순서대로다
+      · 옮길 것: `season_stats`(또는 최근 N경기)를 로스터 사전의 `perf`로
+        붙이는 자리. **02가 어디서 어떤 창으로 잘랐는지 먼저 읽는다**
+
 - [ ] **P-10 축 9를 값 대 값으로 대조하려면 커리어를 끝까지 굴려야 한다**
       02는 커리어 하나(고교~은퇴)를 재고 04 계측은 4해뿐이다. 관계는
       시간이 쌓일수록 커지므로 **지금 표로는 크기를 비교할 수 없다** —

@@ -55,7 +55,19 @@ func run(log_line: Callable, _fail: Callable, seed_value: int) -> int:
 
 	for w in range(1, SEASON_WEEKS + 1):
 		var day: int = w * Calendar.DAYS_PER_WEEK
+
+		# ⚠ **경기를 실제로 돌린다.** 상시 승강은 부상 대체·부진 대체 사유만
+		# 받는데, 경기가 없으면 `npc_injuries`가 비고 `perf`도 없다 —
+		# 처음엔 이걸 빼고 재서 **상시가 0건**으로 나왔다.
+		# `measure:relations`와 같은 경로다
+		var step: Dictionary = DayEngine.advance_to(s, Calendar.DAYS_PER_WEEK)
+		for g in step.get("games_today", []):
+			GameSim.play(g, step)
+		step.erase("games_today")
+		step.erase("weeks_crossed")
+		s = step
 		s["day"] = day
+
 		var out: Dictionary = PromotionRunner.run(s, day)
 		var regular: bool = bool(out["regular"])
 		if regular:
@@ -63,13 +75,17 @@ func run(log_line: Callable, _fail: Callable, seed_value: int) -> int:
 		else:
 			urgent_runs += 1
 
+		# ⚠ **세계를 매주 다시 잡는다.** `advance_to`가 상태를 깊은 복사하므로
+		# 위에서 잡아 둔 `world`는 그 순간 옛 사전이 된다 — 그걸 세면
+		# 첫 주 이후 아무 이동도 안 잡힌다
+		var now_world: Dictionary = s.get("world", {})
 		# 이번 주에 소속이 바뀐 사람을 센다
 		var now: Dictionary = {}
 		for league_id in RosterMaintenance.active_pro_leagues():
 			for t in World.teams_of(league_id):
-				for p in World.roster_of(world, String(t["id"])):
+				for p in World.roster_of(now_world, String(t["id"])):
 					now[String(p["id"])] = false
-				for p2 in World.roster_of(world,
+				for p2 in World.roster_of(now_world,
 						String(t["id"]) + World.FARM_SUFFIX):
 					now[String(p2["id"])] = true
 		for pid in now:
