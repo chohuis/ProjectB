@@ -760,7 +760,27 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       고친 뒤 2029년에 `university/LEAGUE_UNIVERSITY`로 **stage와 리그가
       함께** 바뀌고 대기줄도 빈다.
 
-- [ ] **P-8c(b) 등판이 여전히 10경기다**
+- [x] **P-8c(b) 등판이 10경기로 보이던 것** — 2026-08-16 계측 문제였다
+      **04 결함이 아니다.** `state["schedule"]`은 시즌을 넘길 때 통째로
+      덮어써지는데(`season_runner.gd:664`) 계측이 **끝나고 한 번만** 셌다 —
+      그래서 늘 마지막 해 것만 남았다. **10경기는 한 시즌 등판 수**였다.
+      시즌을 넘기기 전에 세어 누적하도록 고쳤다.
+      ⚠ 일정은 해마다 제대로 다시 만들어진다 — `build_schedule`을 부르는
+      곳을 세어 확인했다.
+
+- [ ] 🔴 **P-9 `RelationshipRunner.run_season`을 아무도 안 부른다**
+      **P-4·P-7b와 같은 패턴이다** — 함수와 값은 있는데 부르는 곳이 없다.
+      전체를 훑어 확인했다: `sim/` · `ui/` · `bench/` 어디에도 없다.
+      구단주는 **주간 항목이 없고 시즌 성적으로만 움직인다**
+      (`Relationship.season`). 그래서 실측이 02의 +11.0인데 04는 0.0이다.
+      · 붙일 자리는 `SeasonRunner` 안이다 — `run_season(state, era,
+        team_rank_pct, pitched_any, at_day)`가 시즌 성적과 팀 순위를 받는다
+      ⚠ 그 넷을 **어디서 얻는지 먼저 센다.** 계측이 지어내면 안 된다 —
+        시즌 성적은 `season_stats`, 순위는 `Standings.from_schedule`이
+        정본인지 확인한다
+      ⚠ 검사를 먼저 써서 실패를 본 뒤 고친다
+
+- [ ] ~~P-8c(b) 등판이 여전히 10경기다~~ (원래 기록)
       진로가 풀린 뒤에도 그대로다 — 대학에 가서도 첫 해 몫만 쌓인다.
       ⚠ **입력을 센다**: `MatchDay.play`가 게이트(`skip_injury`)를 보고
       주인공을 안 내보내는지, `is_protagonist_game`이 **새 시즌 일정에

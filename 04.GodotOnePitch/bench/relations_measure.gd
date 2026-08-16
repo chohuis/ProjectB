@@ -22,6 +22,32 @@ var _area_weeks: int = 0
 var _areas: Dictionary = {}
 var _trace: Array[String] = []
 
+## ⚠ **입력이 있는지부터 본다.** 라이벌은 내가 던진 경기에서만 생긴다 —
+## 등판이 0이면 관계 산식이 아니라 등판 경로를 봐야 한다
+var _appearances: int = 0
+var _opponents: int = 0
+
+
+## 지금 일정에서 주인공 등판을 세어 누적한다. **시즌을 넘기기 전에 부른다**
+func _count_appearances(s: Dictionary) -> void:
+	var me: String = String(s.get("protagonist", {}).get("id", ""))
+	for g in s.get("schedule", []):
+		var result = g.get("result", null)
+		if result == null:
+			continue
+		var mine: bool = false
+		var others: int = 0
+		for line in result.get("player_lines", []):
+			if String(line.get("role", "")) != "pitcher":
+				continue
+			if String(line.get("player_id", "")) == me:
+				mine = true
+			else:
+				others += 1
+		if mine:
+			_appearances += 1
+			_opponents += others
+
 
 static func _growth_threshold() -> float:
 	return float(Relationship.rules().get("weekly", {})
@@ -144,6 +170,12 @@ func _one(seed_value: int, years: int) -> Dictionary:
 				int(inj.get("weeks_left", 0))]) if inj is Dictionary else "없음",
 			str(pend) if not pend.is_empty() else "없음"])
 
+		# ⚠ **해마다 세어 누적한다.** `state["schedule"]`은 시즌 넘길 때
+		# 통째로 덮어써지므로(`season_runner.gd:664`) 끝나고 한 번 세면
+		# **마지막 해 것만** 남는다 — "4해에 10경기"로 읽혀 등판이 안 느는
+		# 줄 알았는데, 10경기는 **한 시즌 등판 수**였다
+		_count_appearances(s)
+
 		var season_out: Dictionary = SeasonRunner.run(s)
 		# ⚠ **로스터 쪽 주인공을 따로 본다.** `all_players`는 로스터를 훑는데,
 		# 사전이 두 벌이면 로스터만 오르고 `state["protagonist"]`는 그대로다
@@ -165,29 +197,10 @@ func run(log_line: Callable, _fail: Callable, seed_value: int,
 	log_line.call("  씨앗 %d · %d해 굴림 (%d년까지)"
 		% [seed_value, years, 2027 + years - 1])
 
-	# ⚠ **입력이 있는지부터 본다.** 라이벌은 내가 던진 경기에서만 생긴다 —
-	# 등판이 0이면 관계 산식이 아니라 등판 경로를 봐야 한다
-	var me: String = String(s.get("protagonist", {}).get("id", ""))
-	var appearances: int = 0
-	var opponents: int = 0
-	for g in s.get("schedule", []):
-		var result = g.get("result", null)
-		if result == null:
-			continue
-		var mine: bool = false
-		var others: int = 0
-		for line in result.get("player_lines", []):
-			if String(line.get("role", "")) != "pitcher":
-				continue
-			if String(line.get("player_id", "")) == me:
-				mine = true
-			else:
-				others += 1
-		if mine:
-			appearances += 1
-			opponents += others
+	# 마지막 해 몫을 마저 센다 — 위 루프는 시즌을 넘기기 직전에만 센다
+	_count_appearances(s)
 	log_line.call("  주인공 등판 %d경기 · 그 경기의 상대 투수 줄 %d개"
-		% [appearances, opponents])
+		% [_appearances, _opponents])
 	for t in _trace:
 		log_line.call("    %s" % t)
 	var area_line: String = ""
