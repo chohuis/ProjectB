@@ -20,6 +20,7 @@ class_name RelationsMeasure
 var _grew_weeks: int = 0
 var _area_weeks: int = 0
 var _areas: Dictionary = {}
+var _trace: Array[String] = []
 
 
 static func _growth_threshold() -> float:
@@ -112,6 +113,18 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			if not area.is_empty():
 				_area_weeks += 1
 				_areas[area] = int(_areas.get(area, 0)) + 1
+		# ⚠ **해마다 어디 있는지 찍는다.** 4해를 굴렸는데 등판이 1해와 같은
+		# 10경기였다 — 어느 해부터 안 뛰는지 모르면 산식을 엉뚱하게 뒤진다
+		var pp: Dictionary = s.get("protagonist", {})
+		var mine: int = 0
+		for g in s.get("schedule", []):
+			if g.get("is_protagonist_game", false):
+				mine += 1
+		_trace.append("%d년 %s/%s 소속 %s · 일정에 내 경기 %d · 게이트 %s" % [
+			year, String(pp.get("career_stage", "?")),
+			String(pp.get("league_id", "?")), String(pp.get("team_id", "-")),
+			mine, DayEngine.appearance_gate(pp)])
+
 		SeasonRunner.run(s)
 		year += 1
 	return s
@@ -146,6 +159,8 @@ func run(log_line: Callable, _fail: Callable, seed_value: int,
 			opponents += others
 	log_line.call("  주인공 등판 %d경기 · 그 경기의 상대 투수 줄 %d개"
 		% [appearances, opponents])
+	for t in _trace:
+		log_line.call("    %s" % t)
 	var area_line: String = ""
 	for a in _areas:
 		area_line += "%s %d · " % [a, _areas[a]]
