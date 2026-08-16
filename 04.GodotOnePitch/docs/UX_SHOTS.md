@@ -100,6 +100,38 @@ P-7에서 주간 처리를 `app_root._apply_one_week` → `WeekRunner.run`으로
 02는 `SidebarNav` + `TopHeader` + `RightPanel`의 3분할 껍데기가 늘 떠 있다
 (`features/main-layout/`, `features/navigation/`). **보고서 "탐색" 축에서 다룬다.**
 
+## PDF로 낼 때 (`UX_REPORT.pdf` — 27쪽 · 1.4MB)
+
+도구를 확인한 결과: **pandoc 없음 · wkhtmltopdf 없음.** Chrome · node는 있다.
+
+```
+① 캡처 17장을 1100px JPEG(q82)로 줄인다   PowerShell + System.Drawing
+   → 원본 3.4MB가 720KB가 된다
+② UX_REPORT.md → HTML                     node (작은 변환기)
+③ HTML → PDF                              chrome --headless --print-to-pdf
+```
+
+⚠ **Chrome headless는 웹폰트를 PDF에 안 박는다.** 실측으로 확인했다 —
+`file://` src도, 4MB짜리 data URI도, `--headless=new`도 전부 `ArialMT`로
+떨어졌다. **04가 쓰는 Pretendard는 못 넣는다.**
+
+시스템 폰트 `Malgun Gothic`은 정상 임베드된다(`BaseFont /MalgunGothic` 확인).
+**폰트 지정을 안 하면 본문이 굴림체(`GulimChe`)로 떨어지므로 첫 자리에 둔다.**
+
+⚠ **`--print-to-pdf`에 상대 경로를 주면 "액세스가 거부되었습니다"로 실패한다.**
+절대 경로를 준다. 그런데 **실패해도 옛 파일이 남아 있으면 성공한 것처럼 보인다**
+— 만들기 전에 지우고, 만든 뒤 `/Type /Page` 개수와 `/BaseFont`를 확인한다.
+
+만드는 스크립트는 scratchpad에 뒀다(`resize.ps1` · `build.js`) — 저장소에
+안 넣는다. 다시 만들 일이 있으면 위 세 단계를 그대로 밟는다.
+
+**PDF에 넣은 캡처 17장**: `title-saved` · `main` · `app-running` · `status` ·
+`status-empty` · `team` · `league` · `people` · `people-empty` · `training` ·
+`finance` · `finance-bottom` · `match-mine` · `draft-board` · `season-digest` ·
+`retire-summary` · `park-hs`
+
+나머지 22장은 안 넣었다 — 위 목록에 전부 있고 `tools/shot.gd`로 다시 찍는다.
+
 ## 캡처 스크립트
 
 `scratchpad/shots.ps1`로 39갈래를 한 번에 돌렸다.
