@@ -101,6 +101,7 @@
     "check:park": "node scripts/check-park.cjs",
     "check:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-devplayer.cjs",
     "measure:devplayer": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-devplayer.cjs",
+    "study:careers": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/study-careers.cjs",
     "check:arsenal": "node scripts/check-arsenal.cjs",
     "check:trainingtable": "node scripts/check-training-table.cjs",
     "measure:training": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-training.cjs",

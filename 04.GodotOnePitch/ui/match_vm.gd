@@ -122,6 +122,11 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		# 고교 경기도 대학 경기도 전부 프로 구장에서 열렸다
 		"park": ParkVm.build(String(ctx.get("stadium_id", ""))),
 
+		# ⚠ **누구를 상대하는지 첫 공 전에 보여준다** (F-5). 04는 "지금 무슨
+		# 일이 벌어지는가"는 다 보여주는데 상대 타자가 이름 한 줄이라
+		# 승부처인지 아닌지를 알 수가 없었다. 던지기 시작하면 사라진다
+		"briefing": BriefingVm.build(s, ctx),
+
 		"log": ctx.get("log", []),
 	}
 

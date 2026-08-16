@@ -24,6 +24,7 @@ const ZONE_CELL: Vector2 = Vector2(40, 40)
 @onready var _count: Label = $Pad/Col/SituationRow/Count
 @onready var _outs: Label = $Pad/Col/SituationRow/Outs
 @onready var _bases: Label = $Pad/Col/SituationRow/Bases
+@onready var _briefing: VBoxContainer = $Pad/Col/Body/Right/Briefing
 @onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
 @onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
 @onready var _log: VBoxContainer = $Pad/Col/Body/Right/LogScroll/Log
@@ -67,6 +68,7 @@ func _ready() -> void:
 
 
 func _rebuild() -> void:
+	_build_briefing()
 	_away.text = "%s %d" % [_vm.get("away_name", ""), int(_vm.get("away_score", 0))]
 	_home.text = "%d %s" % [int(_vm.get("home_score", 0)), _vm.get("home_name", "")]
 	_score.text = "—"
@@ -196,3 +198,57 @@ func _build_log() -> void:
 			AppTheme.TEXT if i == lines.size() - 1 else AppTheme.TEXT_MUTE)
 		l.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
 		_log.add_child(l)
+
+
+## 경기 전 브리핑 — 상대 선발과 타선. F-5.
+##
+## ⚠ **04는 "누구를 상대하는가"를 못 보여줬다.** 점수·이닝·카운트·주자는
+## 다 뜨는데 상대 타자가 이름 한 줄이라 승부처인지 아닌지를 알 수가 없었다.
+##
+## ⚠ **첫 공을 던지면 사라진다.** 사전이 그때 빈 사전을 준다 — 화면이
+## "이제 지울까"를 다시 판정하지 않는다
+func _build_briefing() -> void:
+	for c in _briefing.get_children():
+		_briefing.remove_child(c)
+		c.free()
+
+	var b: Dictionary = _vm.get("briefing", {})
+	if b.is_empty():
+		_briefing.visible = false
+		return
+	_briefing.visible = true
+
+	var st: Dictionary = b.get("starter", {})
+	var head := Label.new()
+	head.text = "상대 선발  %s (%s)  OVR %d" % [st.get("name", ""),
+		st.get("position", ""), int(st.get("ovr", 0))]
+	head.add_theme_color_override("font_color", AppTheme.ACCENT)
+	_briefing.add_child(head)
+
+	var stat := Label.new()
+	stat.text = "구위 %d · 무브먼트 %d · 커맨드 %d" % [int(st.get("velocity", 0)),
+		int(st.get("movement", 0)), int(st.get("command", 0))]
+	stat.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	stat.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	_briefing.add_child(stat)
+
+	var title := Label.new()
+	title.text = "상대 타선"
+	title.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_briefing.add_child(title)
+
+	for r in b.get("lineup", []):
+		var row: InfoRow = preload("res://ui/parts/info_row.tscn").instantiate()
+		_briefing.add_child(row)
+		var right: String = "%d" % int(r["ovr"])
+		if not String(r["note"]).is_empty():
+			right = "%s  %s" % [String(r["note"]), right]
+		# 위험한 타자를 눈에 띄게 — 문구만 있으면 표를 다 읽어야 안다
+		var threat: int = int(r["threat"])
+		var c: Color = AppTheme.TEXT
+		if threat == 2:
+			c = AppTheme.BAD
+		elif threat == 1:
+			c = AppTheme.WARN
+		row.setup("%d. %s %s" % [int(r["order"]), String(r["position"]),
+			String(r["name"])], right, c)

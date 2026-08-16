@@ -56,6 +56,10 @@ static func _batter(p: Dictionary) -> Dictionary:
 		"speed": b.get("speed", 50.0),
 		"instinct": b.get("base_instinct", 50.0),
 		"batting_clutch": b.get("batting_clutch", 50.0),
+		# ⚠ **OVR과 포지션을 싣는다** (F-5). 브리핑이 "어떤 타자인가"를
+		# 말하려면 필요하다 — 없으면 화면에 OVR이 전부 0이고 포지션이 빈칸이다
+		"ovr": b.get("ovr", 0.0),
+		"position": p.get("position", ""),
 	}
 
 
@@ -71,6 +75,10 @@ static func _pitcher(p: Dictionary) -> Dictionary:
 		"mental_resil": q.get("mentality", 50.0),
 		"hold_runners": q.get("hold_runners", 50.0),
 		"stamina_cap": q.get("stamina", 50.0),
+		# ⚠ **OVR과 보직을 싣는다** (F-5). 브리핑이 상대 선발을 소개하려면
+		# 필요하다 — 없으면 "OVR 0"으로 뜬다
+		"ovr": q.get("ovr", 0.0),
+		"position": p.get("position", ""),
 		# ⚠ **구종 배열을 싣는다.** 안 실으면 배운 구종이 경기에 안 나오고
 		# 숙련도가 결과에 안 닿는다 — 02가 그 상태였다.
 		# NPC는 아직 배열이 없어서 `PitchStep`의 기준값(3)으로 굴러간다

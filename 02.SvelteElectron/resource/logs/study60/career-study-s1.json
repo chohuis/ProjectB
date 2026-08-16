@@ -1,0 +1,367 @@
+[
+  {
+    "회차": 2,
+    "정책": "프로직행",
+    "훈련": "구종(CHANGEUP)",
+    "슬롯": [
+      "TRN_VEL",
+      "TRN_MOVEMENT",
+      "TRN_PITCH_DEV"
+    ],
+    "개발구종": "PITCH_CHANGEUP",
+    "seed": 20268729,
+    "경과주": 451,
+    "OVR": {
+      "시작": 49,
+      "고교말": 55,
+      "대학말": null,
+      "최종": 58
+    },
+    "지명": "9R 82P TEAM_KBL_BUSAN_WAVES_1",
+    "경로": "highschool → pro_kbl@191주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_KBL_BUSAN_WAVES_1@191주",
+      "TEAM_KBL_GWANGJU_PANTHERS_1@406주"
+    ],
+    "최종": {
+      "단계": "pro_kbl",
+      "리그": "LEAGUE_KBL",
+      "나이": 25
+    },
+    "구종": "FASTBALL1/CHANGEUP1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 7,
+    "정책": "대학+독립",
+    "훈련": "스탯만",
+    "슬롯": [
+      "TRN_STAMINA",
+      "TRN_VEL",
+      "TRN_CTRL_CMD"
+    ],
+    "개발구종": "-",
+    "seed": 20308324,
+    "경과주": 450,
+    "OVR": {
+      "시작": 49,
+      "고교말": 53,
+      "대학말": 54,
+      "최종": 50
+    },
+    "지명": "미지명",
+    "경로": "highschool → university@155주 → independent@242주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_UNIV_BAEKSAN@155주",
+      "TEAM_IND_BUSAN_SEALIONS@242주"
+    ],
+    "최종": {
+      "단계": "independent",
+      "리그": "LEAGUE_INDEPENDENT",
+      "나이": 24
+    },
+    "구종": "FASTBALL1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 12,
+    "실패": "[autoRun] 오류: [훈련] 성장 입력이 숫자가 아니다: fatigue=NaN (팀 TEAM_IND_GWANGJU_RHINOS · 단계 independent)\n2031 W1 | [훈련] 성장 입력이 숫자가 아니다: fatigue=NaN (팀 TEAM_IND_GWANGJU_RHINOS · 단계 independent)\nError: [훈련] 성장 입력이 숫"
+  },
+  {
+    "회차": 17,
+    "정책": "지명거부",
+    "훈련": "구종(CHANGEUP)",
+    "슬롯": [
+      "TRN_MENTAL_P",
+      "TRN_VEL",
+      "TRN_PITCH_DEV"
+    ],
+    "개발구종": "PITCH_CHANGEUP",
+    "seed": 20387514,
+    "경과주": 446,
+    "OVR": {
+      "시작": 49,
+      "고교말": 53,
+      "대학말": 51,
+      "최종": 37
+    },
+    "지명": "9R 86P TEAM_KBL_BUSAN_WAVES_1",
+    "경로": "highschool → university@155주 → military@243주 → independent@346주 → military@394주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_UNIV_ASAN@155주",
+      "TEAM_IND_BUSAN_SEALIONS@346주"
+    ],
+    "최종": {
+      "단계": "military",
+      "리그": "LEAGUE_INDEPENDENT",
+      "나이": 24
+    },
+    "구종": "FASTBALL1/CHANGEUP1",
+    "병역": "현역",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 22,
+    "정책": "독립우선",
+    "훈련": "스탯만",
+    "슬롯": [
+      "TRN_RECOVERY",
+      "TRN_VEL",
+      "TRN_CTRL_CMD"
+    ],
+    "개발구종": "-",
+    "seed": 20427109,
+    "경과주": 450,
+    "OVR": {
+      "시작": 49,
+      "고교말": 63,
+      "대학말": null,
+      "최종": 72
+    },
+    "지명": "미지명",
+    "경로": "highschool → independent@190주",
+    "팀이동": 1,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_IND_BUSAN_SEALIONS@190주"
+    ],
+    "최종": {
+      "단계": "independent",
+      "리그": "LEAGUE_INDEPENDENT",
+      "나이": 24
+    },
+    "구종": "FASTBALL1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 27,
+    "실패": "[autoRun] 오류: [훈련] 성장 입력이 숫자가 아니다: fatigue=NaN (팀 TEAM_IND_PAJU_UNICORNS · 단계 independent)\n2031 W1 | [훈련] 성장 입력이 숫자가 아니다: fatigue=NaN (팀 TEAM_IND_PAJU_UNICORNS · 단계 independent)\nError: [훈련] 성장 입력이 숫자가"
+  },
+  {
+    "회차": 32,
+    "정책": "드래+대학",
+    "훈련": "구종(CHANGEUP)",
+    "슬롯": [
+      "TRN_STAMINA",
+      "TRN_VEL",
+      "TRN_PITCH_DEV"
+    ],
+    "개발구종": "PITCH_CHANGEUP",
+    "seed": 20506299,
+    "경과주": 451,
+    "OVR": {
+      "시작": 49,
+      "고교말": 53,
+      "대학말": null,
+      "최종": 56
+    },
+    "지명": "9R 81P TEAM_KBL_BUSAN_WAVES_1",
+    "경로": "highschool → pro_kbl@191주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_KBL_BUSAN_WAVES_1@191주",
+      "TEAM_KBL_SUWON_KNIGHTS_1@406주"
+    ],
+    "최종": {
+      "단계": "pro_kbl",
+      "리그": "LEAGUE_KBL",
+      "나이": 25
+    },
+    "구종": "FASTBALL1/CHANGEUP1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 37,
+    "정책": "전부신청",
+    "훈련": "스탯만",
+    "슬롯": [
+      "TRN_VEL",
+      "TRN_MENTAL_P",
+      "TRN_RECOVERY"
+    ],
+    "개발구종": "-",
+    "seed": 20545894,
+    "경과주": 451,
+    "OVR": {
+      "시작": 49,
+      "고교말": 58,
+      "대학말": null,
+      "최종": 69
+    },
+    "지명": "9R 87P TEAM_KBL_INCHEON_SHARKS_1",
+    "경로": "highschool → pro_kbl@191주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_KBL_INCHEON_SHARKS_1@191주",
+      "TEAM_KBL_BUSAN_WAVES_1@406주"
+    ],
+    "최종": {
+      "단계": "pro_kbl",
+      "리그": "LEAGUE_KBL",
+      "나이": 25
+    },
+    "구종": "FASTBALL1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 42,
+    "정책": "드래+독립",
+    "훈련": "구종(CUTTER)",
+    "슬롯": [
+      "TRN_MENTAL_P",
+      "TRN_MOVEMENT",
+      "TRN_PITCH_DEV"
+    ],
+    "개발구종": "PITCH_CUTTER",
+    "seed": 20585489,
+    "경과주": 451,
+    "OVR": {
+      "시작": 49,
+      "고교말": 55,
+      "대학말": null,
+      "최종": 61
+    },
+    "지명": "9R 84P TEAM_KBL_BUSAN_WAVES_1",
+    "경로": "highschool → pro_kbl@191주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_KBL_BUSAN_WAVES_1@191주",
+      "TEAM_KBL_CHANGWON_STARS_1@406주"
+    ],
+    "최종": {
+      "단계": "pro_kbl",
+      "리그": "LEAGUE_KBL",
+      "나이": 25
+    },
+    "구종": "FASTBALL1/CUTTER1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 47,
+    "정책": "프로직행",
+    "훈련": "구종(CHANGEUP)",
+    "슬롯": [
+      "TRN_CTRL_CMD",
+      "TRN_MENTAL_P",
+      "TRN_PITCH_DEV"
+    ],
+    "개발구종": "PITCH_CHANGEUP",
+    "seed": 20625084,
+    "경과주": 451,
+    "OVR": {
+      "시작": 49,
+      "고교말": 58,
+      "대학말": null,
+      "최종": 63
+    },
+    "지명": "9R 82P TEAM_KBL_BUSAN_WAVES_1",
+    "경로": "highschool → pro_kbl@191주",
+    "팀이동": 2,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_KBL_BUSAN_WAVES_1@191주",
+      "TEAM_KBL_SEOUL_ROYALS_1@406주"
+    ],
+    "최종": {
+      "단계": "pro_kbl",
+      "리그": "LEAGUE_KBL",
+      "나이": 25
+    },
+    "구종": "FASTBALL1/CHANGEUP1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 52,
+    "정책": "대학+독립",
+    "훈련": "스탯만",
+    "슬롯": [
+      "TRN_MOVEMENT",
+      "TRN_MENTAL_P",
+      "TRN_RECOVERY"
+    ],
+    "개발구종": "-",
+    "seed": 20664679,
+    "경과주": 450,
+    "OVR": {
+      "시작": 49,
+      "고교말": 58,
+      "대학말": null,
+      "최종": 68
+    },
+    "지명": "미지명",
+    "경로": "highschool → independent@190주",
+    "팀이동": 1,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_IND_BUSAN_SEALIONS@190주"
+    ],
+    "최종": {
+      "단계": "independent",
+      "리그": "LEAGUE_INDEPENDENT",
+      "나이": 24
+    },
+    "구종": "FASTBALL1",
+    "병역": "미필",
+    "은퇴": null,
+    "중단": null
+  },
+  {
+    "회차": 57,
+    "정책": "대학우선",
+    "훈련": "구종(CUTTER)",
+    "슬롯": [
+      "TRN_RECOVERY",
+      "TRN_MOVEMENT",
+      "TRN_PITCH_DEV"
+    ],
+    "개발구종": "PITCH_CUTTER",
+    "seed": 20704274,
+    "경과주": 451,
+    "OVR": {
+      "시작": 49,
+      "고교말": 58,
+      "대학말": 61,
+      "최종": 54
+    },
+    "지명": "미지명",
+    "경로": "highschool → university@155주 → military@399주",
+    "팀이동": 1,
+    "팀들": [
+      "TEAM_HS_AEWOL",
+      "TEAM_UNIV_BAEKJE@155주"
+    ],
+    "최종": {
+      "단계": "military",
+      "리그": "LEAGUE_UNIVERSITY",
+      "나이": 24
+    },
+    "구종": "FASTBALL1/CUTTER1",
+    "병역": "현역",
+    "은퇴": null,
+    "중단": null
+  }
+]

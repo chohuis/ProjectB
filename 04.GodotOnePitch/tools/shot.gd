@@ -174,6 +174,19 @@ func _build(which: String) -> Control:
 				for i in 24:
 					mt._on_pitch(), CONNECT_ONE_SHOT)
 			return mt
+		"match-briefing":
+			# 경기 전 브리핑 (F-5). **첫 공을 안 던진 상태로 찍는다** —
+			# 던지면 사라지는 자리라 `match` 갈래로는 안 잡힌다
+			var mb: AppRoot = APP.instantiate()
+			var mbs := World.new_game({"seed": 777, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			for g in mbs["schedule"]:
+				if g["is_protagonist_game"]:
+					mbs["day"] = int(g["day"])
+					break
+			mb.set_state(mbs)
+			mb.ready.connect(func() -> void: mb.open_match(), CONNECT_ONE_SHOT)
+			return mb
 		"match-mine":
 			# ⚠ **주인공이 마운드에 있는 순간을 찍는다.** 등판일이라고 첫 구부터
 			# 내가 던지는 게 아니다 — 원정이면 1회말부터고, 불펜이면 한참 뒤다.
