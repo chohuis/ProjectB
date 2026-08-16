@@ -132,7 +132,17 @@ func _one(seed_value: int, years: int) -> Dictionary:
 				int(inj.get("weeks_left", 0))]) if inj is Dictionary else "없음",
 			str(pend) if not pend.is_empty() else "없음"])
 
-		SeasonRunner.run(s)
+		var season_out: Dictionary = SeasonRunner.run(s)
+		# ⚠ **로스터 쪽 주인공을 따로 본다.** `all_players`는 로스터를 훑는데,
+		# 사전이 두 벌이면 로스터만 오르고 `state["protagonist"]`는 그대로다
+		var in_roster: String = "못 찾음"
+		for pl in World.roster_of(s.get("world", {}),
+				String(pp.get("team_id", ""))):
+			if bool(pl.get("is_protagonist", false)):
+				in_roster = "학년 %s%s" % [str(pl.get("grade", "-")),
+					"" if pl == pp else " (다른 사전!)"]
+		_trace.append("     → 시즌종료 ran=%s · 로스터 속 나: %s" % [
+			str(season_out.get("ran", "?")), in_roster])
 		year += 1
 	return s
 
