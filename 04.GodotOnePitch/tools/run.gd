@@ -64,6 +64,9 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 		"measure:relations":
 			return RelationsMeasure.new().run(log_line, fail,
 				arg_int(args, "seed", 20270101), arg_int(args, "years", 4))
+		"measure:promotion":
+			return PromotionMeasure.new().run(log_line, fail,
+				arg_int(args, "seed", 20270101))
 		"measure:staff":
 			return StaffMeasure.new().run(log_line, fail,
 				arg_int(args, "seed", 20270101))

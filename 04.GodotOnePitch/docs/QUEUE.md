@@ -612,7 +612,19 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 - [ ] **P-2 탈삼진이 02보다 많다** — 9이닝당 11.3 vs 7.4. 볼넷과 별개다
 - [ ] **P-3 안타가 많고 장타가 적다** — 타율 .251 vs .230 · 홈런 1.6 vs 2.7
 
-- [ ] ⚠ **P-4 인시즌 1군↔2군 승강이 통째로 미이관이다** (축 6)
+- [x] **P-4 인시즌 1군↔2군 승강** — 2026-08-16 이식
+      `sim/promotion_runner.gd`를 만들고 `app_root`의 주 경계에 달았다.
+      판정은 `RosterMaintenance.eval_callup`·`eval_calldown`으로 옮겼다.
+      주기는 근사 없이 — 02의 "월 첫 주"를 `Calendar.date_of`의 달 변화로
+      가른다(04엔 진짜 달력이 있다). 실측 26주에 140건.
+      ⚠ **상시 경로가 아직 0건이다.** 부상 대체·부진 대체 사유만 받는데
+      계측이 경기를 안 돌려 `npc_injuries`가 비고 `perf`가 없다 —
+      **P-7이 풀어야 확인된다.**
+      검사 16개 · 변이 8/8. 초과 3명으로 재다가 변이를 놓쳤다(02 결함이
+      `over.max(3)`이라 초과가 3이면 결과가 같다) — 1·2·5로 고쳤다.
+      근거·표는 `docs/PARITY.md` 축 6.
+
+- [ ] ~~P-4 인시즌 1군↔2군 승강이 통째로 미이관이다~~ (아래는 원래 기록)
       **동결과 무관하다** — 수치를 바꾸는 게 아니라 안 도는 시스템을 옮긴다.
       `roster_maintenance.gd`에 판정 조각(`form_score`·`is_slumping`·
       `farm_can_send_up`)과 값이 다 있는데 **부르는 곳이 검사뿐이다.**
