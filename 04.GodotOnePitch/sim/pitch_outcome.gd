@@ -167,77 +167,77 @@ static func resolve_contact(pitch_q: float, contact_q: float, batter: Dictionary
 	var hit_bonus: float = clampf((60.0 - pitch_q) * 0.003
 		+ (batter.get("power", 50.0) - 50.0) * 0.002, -0.12, 0.20)
 
-	# 투수 완승 — 헛스윙 50 / 파울 30 / 인플레이 20 (그중 안타 15%)
+	# 투수 완승 — 헛스윙 35 / 파울 45 / 인플레이 20 (그중 안타 10%)
 	if contact_q >= 72.0:
-		if roll < 0.50:
+		if roll < 0.24:
 			return "STRIKE_SWING"
 		if roll < 0.80:
 			return "FOUL"
-		return "INPLAY_OUT" if roll < 0.97 else "HIT_SINGLE"
+		return "INPLAY_OUT" if roll < 0.98 else "HIT_SINGLE"
 
-	# 헛스윙 32 / 파울 33 / 인플레이 35 (안타 22%)
+	# 헛스윙 22 / 파울 43 / 인플레이 35 (안타 16%)
 	if contact_q >= 60.0:
-		if roll < 0.32:
+		if roll < 0.14:
 			return "STRIKE_SWING"
 		if roll < 0.65:
 			return "FOUL"
-		return "INPLAY_OUT" if roll < 0.92 else "HIT_SINGLE"
+		return "INPLAY_OUT" if roll < 0.945 else "HIT_SINGLE"
 
-	# 헛스윙 22 / 파울 35 / 인플레이 43 (안타 28%)
+	# 헛스윙 15 / 파울 42 / 인플레이 43 (안타 19%)
 	if contact_q >= 52.0:
-		if roll < 0.22:
+		if roll < 0.09:
 			return "STRIKE_SWING"
 		if roll < 0.57:
 			return "FOUL"
-		return "INPLAY_OUT" if roll < 0.88 else "HIT_SINGLE"
+		return "INPLAY_OUT" if roll < 0.92 else "HIT_SINGLE"
 
-	# 헛스윙 15 / 파울 35 / 인플레이 50 (안타 33%)
+	# 헛스윙 10 / 파울 40 / 인플레이 50 (안타 23%)
 	if contact_q >= 45.0:
-		if roll < 0.15:
+		if roll < 0.055:
 			return "STRIKE_SWING"
 		if roll < 0.50:
 			return "FOUL"
-		if roll < clampf(0.835 - hit_bonus, 0.62, 0.92):
+		if roll < clampf(0.885 - hit_bonus, 0.62, 0.95):
 			return "INPLAY_OUT"
-		return "HIT_SINGLE" if roll < clampf(0.95 - hit_bonus * 0.5, 0.90, 0.98) else "HIT_DOUBLE"
+		return "HIT_SINGLE" if roll < clampf(0.97 - hit_bonus * 0.5, 0.90, 0.99) else "HIT_DOUBLE"
 
-	# 헛스윙 10 / 파울 32 / 인플레이 58 (안타 40%)
+	# 헛스윙 7 / 파울 35 / 인플레이 58 (안타 28%)
 	if contact_q >= 38.0:
-		if roll < 0.10:
+		if roll < 0.04:
 			return "STRIKE_SWING"
 		if roll < 0.42:
 			return "FOUL"
-		if roll < clampf(0.768 - hit_bonus, 0.55, 0.87):
+		if roll < clampf(0.840 - hit_bonus, 0.55, 0.92):
 			return "INPLAY_OUT"
-		if roll < clampf(0.93 - hit_bonus * 0.5, 0.87, 0.97):
+		if roll < clampf(0.955 - hit_bonus * 0.5, 0.87, 0.98):
 			return "HIT_SINGLE"
-		return "HIT_DOUBLE" if roll < clampf(0.98 - hit_bonus * 0.3, 0.95, 0.99) else "HIT_TRIPLE"
+		return "HIT_DOUBLE" if roll < clampf(0.985 - hit_bonus * 0.3, 0.95, 0.995) else "HIT_TRIPLE"
 
-	# 헛스윙 6 / 파울 28 / 인플레이 66 (안타 50%)
+	# 헛스윙 6 / 파울 28 / 인플레이 66 (안타 35%)
 	if contact_q >= 32.0:
-		if roll < 0.06:
+		if roll < 0.03:
 			return "STRIKE_SWING"
 		if roll < 0.34:
 			return "FOUL"
-		if roll < clampf(0.67 - hit_bonus, 0.45, 0.78):
+		if roll < clampf(0.75 - hit_bonus, 0.45, 0.85):
 			return "INPLAY_OUT"
-		if roll < clampf(0.87 - hit_bonus * 0.5, 0.80, 0.93):
+		if roll < clampf(0.90 - hit_bonus * 0.5, 0.80, 0.95):
 			return "HIT_SINGLE"
-		if roll < clampf(0.95 - hit_bonus * 0.3, 0.92, 0.97):
+		if roll < clampf(0.955 - hit_bonus * 0.3, 0.92, 0.975):
 			return "HIT_DOUBLE"
-		return "HIT_TRIPLE" if roll < clampf(0.98 + hit_bonus * 0.2, 0.97, 0.99) else "HOME_RUN"
+		return "HIT_TRIPLE" if roll < clampf(0.948 + hit_bonus * 0.2, 0.93, 0.97) else "HOME_RUN"
 
-	# 통타 — 파울 22 / 인플레이 78 (안타 62%). **헛스윙이 없다.**
+	# 통타 — 파울 22 / 인플레이 78 (안타 46%). **헛스윙이 없다.**
 	# 여기서도 100%는 아니다
 	if roll < 0.22:
 		return "FOUL"
-	if roll < clampf(0.535 - hit_bonus, 0.35, 0.66):
+	if roll < clampf(0.63 - hit_bonus, 0.35, 0.74):
 		return "INPLAY_OUT"
-	if roll < clampf(0.78 - hit_bonus * 0.5, 0.68, 0.86):
+	if roll < clampf(0.83 - hit_bonus * 0.5, 0.68, 0.90):
 		return "HIT_SINGLE"
-	if roll < clampf(0.90 - hit_bonus * 0.3, 0.86, 0.94):
+	if roll < clampf(0.925 - hit_bonus * 0.3, 0.86, 0.955):
 		return "HIT_DOUBLE"
-	return "HIT_TRIPLE" if roll < clampf(0.94 + hit_bonus * 0.2, 0.92, 0.96) else "HOME_RUN"
+	return "HIT_TRIPLE" if roll < clampf(0.902 + hit_bonus * 0.2, 0.88, 0.93) else "HOME_RUN"
 
 
 # ── 보정 항 ────────────────────────────────────────────────────────
