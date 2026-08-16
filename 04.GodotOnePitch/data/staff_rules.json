@@ -3,8 +3,9 @@
   "_note2": "수치를 코드에 다시 적지 않는다 — 02 Phase 7에서 그 결함만 15건 나왔다",
 
   "leagues": ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
-    "LEAGUE_KBL"],
+    "LEAGUE_KBL", "LEAGUE_KBL_FARM"],
   "_leagues_note": "국내만이다. 해외는 진출 전까지 안 만든다",
+  "_farm_note": "2군도 감독·코치를 갖는다. 빠져 있어서 2군 선수의 훈련 보정이 통째로 중립이었다 — 02는 감독 182명인데 04는 172명이었다",
 
   "spending_tiers": [
     {"until": 100, "id": "부유", "coach_min": 6, "coach_max": 8,
@@ -22,8 +23,10 @@
     "LEAGUE_HIGHSCHOOL": 0,
     "LEAGUE_UNIVERSITY": 4,
     "LEAGUE_INDEPENDENT": 2,
-    "LEAGUE_KBL": 10
+    "LEAGUE_KBL": 10,
+    "LEAGUE_KBL_FARM": 10
   },
+  "_farm_bonus_note": "02는 2군이 LEAGUE_KBL 안의 행이라 1군과 같은 +10을 받는다. 04는 리그 id가 갈리므로 여기 같은 값을 적어 둔다 — 낮추면 02와 갈린다",
   "power_per_star": 3,
  "power_center": 3,
  "_power_note": "전력★은 중심에서 잰다. 02 staff_gen.rs:227의 (team.power - 3) * per_star 그대로 — ★3이 0이고 ★1은 -6이다",

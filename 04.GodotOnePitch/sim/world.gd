@@ -83,6 +83,13 @@ static func teams_of(league_id: String) -> Array:
 				"name": "%s 2군" % t["name"],
 				"league_id": league_id,
 				"parent_id": t["id"],
+				# ⚠ **전력★·재정 등급을 같이 싣는다.** 안 실으면 읽는 쪽이
+				# 기본값으로 떨어져 **2군 전체가 ★2 · 안정 하나**가 된다 —
+				# 스태프가 그렇게 뭉개져 있었다(2군 감독이 아예 없었다).
+				# 데이터의 `_2` 행과 부모를 38쌍 대조하니 두 값이 **전부
+				# 같다** — 파생으로 얻는 값이 데이터와 어긋나지 않는다
+				"power": t.get("power", 2),
+				"resource": t.get("resource", ""),
 			})
 		return out
 

@@ -286,6 +286,55 @@ func test_the_overseas_leagues_get_no_staff() -> void:
 			"해외 리그 %s 에 스태프가 생겼다" % t["id"]).is_empty()
 
 
+## ⚠ **2군도 감독·코치를 갖는다.** 빠져 있어서 2군 선수의 훈련 보정이
+## 통째로 중립이었다 — 02는 감독 182명인데 04는 172명이었다
+func test_the_farm_teams_get_staff_too() -> void:
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2030,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var farm: Array = World.teams_of("LEAGUE_KBL_FARM")
+	assert_int(farm.size()).is_greater(0)
+	for t in farm:
+		assert_array(Staff.of(s["world"], String(t["id"]))
+			).override_failure_message(
+			"2군 %s 에 스태프가 없다" % t["id"]).is_not_empty()
+
+
+## ⚠ **2군 감독이 1군과 같은 수준이다.** 02는 2군이 `LEAGUE_KBL` 안의
+## 행이라 1군과 같은 리그 보정을 받는다 — 04는 리그 id가 갈리므로 보정을
+## 따로 적어야 하고, 빠뜨리면 2군만 조용히 10점 낮아진다.
+##
+## **값을 여기 다시 적지 않는다** — 1군과 견준다
+func test_the_farm_manager_matches_the_first_team_level() -> void:
+	var first: float = 0.0
+	var farm: float = 0.0
+	for i in range(60):
+		for s in _built(3.0, "안정", "LEAGUE_KBL", i + 1):
+			if String(s["role"]) == Staff.ROLE_MANAGER:
+				first += float(s["stats"]["tactical_iq"])
+		for s2 in _built(3.0, "안정", "LEAGUE_KBL_FARM", i + 1):
+			if String(s2["role"]) == Staff.ROLE_MANAGER:
+				farm += float(s2["stats"]["tactical_iq"])
+	assert_float(farm / 60.0).override_failure_message(
+		"1군 감독 %.1f · 2군 감독 %.1f — 2군만 수준이 다르다"
+		% [first / 60.0, farm / 60.0]
+	).is_between(first / 60.0 - 2.0, first / 60.0 + 2.0)
+
+
+## ⚠ **파생 사전이 전력★·재정 등급을 실어야 한다.** 안 실으면 읽는 쪽이
+## 기본값으로 떨어져 **2군 전체가 ★2 · 안정 하나**가 된다.
+##
+## 데이터의 `_2` 행과 부모가 두 값 다 같으므로 부모에서 실어도 어긋나지 않는다
+func test_a_farm_team_carries_its_parents_grade() -> void:
+	var seen: Dictionary = {}
+	for t in World.teams_of("LEAGUE_KBL_FARM"):
+		assert_bool(t.has("power")).override_failure_message(
+			"2군 %s 에 전력★이 없다" % t["id"]).is_true()
+		seen[String(t.get("resource", ""))] = true
+	assert_int(seen.size()).override_failure_message(
+		"2군 재정 등급이 %d종뿐이다 — 부모 값이 안 실렸다" % seen.size()
+	).is_greater(1)
+
+
 ## ⚠ **이미 있으면 다시 안 만든다.** 다시 만들면 관계가 쌓인 감독이
 ## 매번 남이 된다
 func test_the_staff_is_built_only_once() -> void:
