@@ -120,10 +120,17 @@ func _one(seed_value: int, years: int) -> Dictionary:
 		for g in s.get("schedule", []):
 			if g.get("is_protagonist_game", false):
 				mine += 1
-		_trace.append("%d년 %s/%s 소속 %s · 일정에 내 경기 %d · 게이트 %s" % [
+		var pend: Array = []
+		for q in s.get("pending", []):
+			pend.append(String(q.get("type", "?")))
+		var inj = pp.get("injury", null)
+		_trace.append("%d년 %s/%s · 학년 %s · 내 경기 %d · 게이트 %s · 부상 %s · 대기 %s" % [
 			year, String(pp.get("career_stage", "?")),
-			String(pp.get("league_id", "?")), String(pp.get("team_id", "-")),
-			mine, DayEngine.appearance_gate(pp)])
+			String(pp.get("league_id", "?")), str(pp.get("grade", "-")),
+			mine, DayEngine.appearance_gate(pp),
+			("%s %d주" % [String(inj.get("type", "?")),
+				int(inj.get("weeks_left", 0))]) if inj is Dictionary else "없음",
+			str(pend) if not pend.is_empty() else "없음"])
 
 		SeasonRunner.run(s)
 		year += 1

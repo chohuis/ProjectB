@@ -733,17 +733,29 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       2029년 highschool/LEAGUE_HIGHSCHOOL · 일정에 내 경기 10 · 게이트 skip_injury
       ```
 
-      **둘 다 실측이다:**
-      · **진급이 안 된다** — 3해 뒤에도 `career_stage`가 `highschool`이고
-        리그도 그대로다. 일정엔 매년 내 경기가 10개씩 잡힌다
-      · **게이트가 `skip_injury`로 잠겨 있다** — 부상이 안 낫는다.
-        그래서 등판이 첫 해 10경기 뒤로 0이고, 라이벌이 5명에서 안 는다
-      ⚠ 회복 경로 자체는 있다(`injury_runner.gd:182`의 `_clear`).
-        **부르는 조건**을 봐야 한다 — `_tick_npcs`는 주석이 명시하듯
-        주인공을 안 건드린다("주인공은 여기 없다").
-      ⚠ **계측이 진로 물음에 답을 안 해서일 수도 있다.** `career_choice_hub`만
-        처리하고 있다 — 다른 결정이 대기줄에 쌓여 막고 있는지 먼저 센다.
-        입력부터 재라는 규칙이 여기에도 걸린다.
+      **대기줄과 부상을 같이 찍어 좁혔다:**
+
+      ```
+      2027년 학년 1 · 내 경기 10 · skip_injury · SHOULDER_INFLAM 1주 · 대기 없음
+      2028년 학년 1 · 내 경기 10 · skip_injury · OBLIQUE_STRAIN 3주 · 대기 없음
+      2029년 학년 1 · 내 경기 10 · skip_injury · SHOULDER_SURGERY 14주 · 대기 없음
+      ```
+
+      **처음 읽기 둘이 틀렸다:**
+      · **대기줄은 비어 있다** — 결정이 막고 있는 게 아니다
+      · **부상은 해마다 종류가 다르다** — 회복은 돌고 있고 매년 새로
+        다치는 것이다. `skip_injury`는 그 시점 상태일 뿐이라
+        "부상이 안 낫는다"는 틀린 읽기였다
+
+      **남은 하나 — 학년이 1에 고정돼 있다.** 3해를 굴렸는데 `grade`가
+      안 오르니 졸업 판정에 영영 안 걸리고, 그래서 고교를 못 벗어난다.
+
+      **다음 한 걸음:** `SeasonRunner.run(s)`의 반환을 찍는다.
+      `{ran: false}`면 시즌 종료가 아예 안 도는 것이고, `ran: true`인데
+      학년이 그대로면 `Promotion.advance_grades`가 주인공을 못 보는 것이다.
+      ⚠ `all_players`는 `world.rosters`를 훑는다(`season_runner.gd:27`).
+      주인공은 `world["rosters"][team_id].append(me)`로 들어가므로
+      (`world.gd:253`) 같은 참조여야 하는데, **그게 참인지부터 확인한다.**
       같이 볼 것: **구단주 −5.0**(02는 +11.0). 구단주는 주간 항목이 없고
       시즌 성적으로만 움직인다 — `run_season`이 도는지부터 확인한다.
 
