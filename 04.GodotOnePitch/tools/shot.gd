@@ -262,14 +262,23 @@ func _build(which: String) -> Control:
 			var de: DraftBoardScreen = DRAFT_BOARD.instantiate()
 			de.set_view_model(DraftBoardVm.build({"protagonist": {}}, 2027))
 			return de
-		"park", "park-pro":
+		"park", "park-pro", "park-univ", "park-hs":
 			# ⚠ **1:1로 띄운다** — 좌표가 viewbox 단위(1000×920)와 같은 크기로
 			# 그려져야 "그림보다 몇 px 위인가"를 잴 수 있다 (D-6)
 			var pk: BaseballField = preload(
 				"res://ui/parts/baseball_field.tscn").instantiate()
 			pk.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			pk.set_view_model(ParkVm.build(
-				"" if which == "park" else "STADIUM_PRO"))
+			# ⚠ **실재하는 구장 id를 넣는다.** 예전엔 `STADIUM_PRO`를 넣었는데
+			# `parks.json`의 `tier_of` 27개에 그런 id가 없어서 기본값(프로)으로
+			# 떨어졌다 — `park`와 **바이트까지 같은 그림**이 나왔다.
+			# 티어가 셋이니 셋을 다 찍어야 좌표 대조(D-6)가 뜻을 갖는다
+			var park_ids := {
+				"park": "",                              # 미지정 → 프로 기본 그림
+				"park-pro": "STADIUM_SEOUL_GUARDIANS",   # 전용 그림이 있는 프로
+				"park-univ": "STADIUM_GEUMGANG_UNIV",
+				"park-hs": "STADIUM_SEORAK_HS",
+			}
+			pk.set_view_model(ParkVm.build(String(park_ids[which])))
 			return pk
 		"retire-ask", "retire-summary":
 			# ⚠ **진짜 커리어로 연다.** 통산이 비어 있으면 결산이 뜻이 없다 —
@@ -312,7 +321,7 @@ func _build(which: String) -> Control:
 			var ast2 := World.new_game({"seed": 20270101, "season_year": 2027,
 				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 			ast2["training_plan"] = {"primary": "TRN_VEL"}
-			# ⚠ **경기를 실제로 치러야 야구 업적이 움직인다.** `_apply_one_week`만
+			# ⚠ **경기를 실제로 치러야 야구 업적이 움직인다.** `WeekRunner.run`만
 			# 돌리면 경기가 안 치러져 야구 쪽이 전부 0으로 남는다 — 실제로 그랬다
 			var afirst: int = 999
 			for g in ast2["schedule"]:
@@ -343,7 +352,7 @@ func _build(which: String) -> Control:
 				# 구독을 켜고 몇 주를 돌려 자산 추이를 만든다
 				fi._on_subscription("PITCH")
 				for w in range(1, 9):
-					fi._apply_one_week(w * 7)
+					WeekRunner.run(fi.state(), w * 7)
 				fi.state()["day"] = 8 * 7
 				fi._refresh()
 				fi.screen()._on_tab(1)
@@ -369,10 +378,10 @@ func _build(which: String) -> Control:
 				# ⚠ **주 처리를 직접 돌린다.** `advance`로 가면 등판일마다
 				# 멈춰서 중간고사(11주)에 닿기 전에 스크린샷이 끝난다 —
 				# 실제로 2주차에서 멈췄다(`season-digest`와 같은 이유).
-				# ⚠ **날짜를 옮기고 사전을 다시 만든다.** `_apply_one_week`은
+				# ⚠ **날짜를 옮기고 사전을 다시 만든다.** `WeekRunner.run`은
 				# 둘 다 안 건드려서 그냥 찍으면 1주차 그림이 나온다
 				for w in range(1, 13):
-					ac._apply_one_week(w * 7)
+					WeekRunner.run(ac.state(), w * 7)
 				ac.state()["day"] = 12 * 7
 				ac._refresh()
 				ac.screen()._on_tab(1)
