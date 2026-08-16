@@ -525,6 +525,37 @@ func _build(which: String) -> Control:
 				for n in ac.screen().find_children("*", "StatusScreen", true, false):
 					n.select_tab(3), CONNECT_ONE_SHOT)
 			return ac
+		# 관계 일곱 색을 한 화면에 (U-8). **자연스럽게 굴려선 다 안 나온다** —
+		# 새 게임 첫 해엔 중립·우호뿐이라 이웃이 갈리는지를 못 본다.
+		# 라벨 구간마다 값을 하나씩 박아 일곱을 나란히 세운다
+		"people-tones":
+			var tr: AppRoot = APP.instantiate()
+			var tst := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			RelationshipRunner.reconcile(tst, 7)
+			# ⚠ **동료 행에만 박는다.** 감독·코치·구단주는 정렬 그룹이 달라
+			# 위로 올라가므로, 앞에서부터 박으면 일곱이 흩어져 나란히 안 선다
+			var mates: Array = []
+			for r in RelationshipRunner.rows_of(tst):
+				if String(r.get("kind", "")) == "teammate":
+					mates.append(r)
+			# 각 라벨 구간의 한가운데 값 — `Relationship.LABELS` 순서대로
+			var picks: Array = [-80, -45, -20, 0, 22, 50, 82]
+			var kept: Array = []
+			for i in mini(picks.size(), mates.size()):
+				mates[i]["value"] = picks[i]
+				kept.append(mates[i])
+			# ⚠ **나머지 동료를 치운다.** 목록이 값 내림차순이라 음수 셋이
+			# 35명 뒤로 밀려 한 화면에 안 들어온다 — 일곱만 남겨 나란히 세운다
+			var slim: Array = []
+			for r in RelationshipRunner.rows_of(tst):
+				if String(r.get("kind", "")) != "teammate" or kept.has(r):
+					slim.append(r)
+			tst[RelationshipRunner.STATE_KEY] = slim
+			tr.set_state(tst)
+			tr.ready.connect(func() -> void:
+				tr.screen().show_tab("people"), CONNECT_ONE_SHOT)
+			return tr
 		"people":
 			# ⚠ **진짜 세계로, 진짜 탭으로 연다.** 손으로 만든 사전이면 코치가
 			# 몇 명인지 이름이 붙는지 같은 실제 모양을 못 본다
