@@ -227,6 +227,17 @@ static func run(state: Dictionary, at_day: int = -1) -> void:
 	# 마지막 날이다 — 여기서 자기 손으로 세지 않는다
 	RelationshipRunner.run(state, at_day, Contract.core_ovr(p) - before_ovr)
 
+	# 코치 리포트 — **선택지가 든 소식을 만드는 유일한 자리** (F-8).
+	#
+	# ⚠ **04엔 `decision`이 든 소식을 만드는 곳이 없었다.** 채우는 건
+	# `fixtures.gd`뿐인데 읽는 쪽은 셋이다 — `DayEngine.stop_reason`이
+	# 진행을 막고, `AutoAdvance.pick_choice`가 대신 답하고, `NewsVm`이
+	# 걸러 낸다. **셋 다 실제 게임에서 한 번도 안 돌았다.**
+	#
+	# ⚠ **맨 뒤다.** 이번 주 훈련·경기·관계가 다 끝난 뒤의 상태를 보고
+	# 권고해야 한다 — 앞에 두면 지난주 몸 상태로 조언한다
+	CoachReport.push(state, Calendar.week_of(at_day), at_day)
+
 
 ## 한 주의 재정. **자산이 실제로 움직인다** — 안 이으면 수입·지출이
 ## 화면에만 있고 자산은 시작값 그대로다

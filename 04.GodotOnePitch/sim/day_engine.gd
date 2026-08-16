@@ -72,8 +72,16 @@ static func stop_reason(s: Dictionary):
 		var d = m.get("decision", null)
 		# ⚠ `decision`이 없는 소식은 결정할 게 없는 소식이다 — `null`인
 		# `selected`와 헷갈리면 일반 소식마다 멈춘다
-		if d != null and d.get("selected", null) == null:
-			return {"type": "message", "message_id": m.get("id", "")}
+		if d == null or d.get("selected", null) != null:
+			continue
+		# ⚠ **모든 선택지가 날을 막지는 않는다.** 코치 리포트(F-8)는 답을
+		# 안 해도 다음 주가 온다 — 02도 그렇다(`pendingAction`을 안 민다).
+		# 막게 두면 **같은 28일이 22일과 29일로 갈린다**: 04는 주간 처리가
+		# 진행이 끝난 뒤 몰려 돌아서, 한 번에 가면 리포트가 나중에 생기고
+		# 하루씩 가면 도중에 생긴다
+		if not bool(d.get("blocking", true)):
+			continue
+		return {"type": "message", "message_id": m.get("id", "")}
 
 	for g in s.get("schedule", []):
 		if int(g.get("day", -1)) != day:

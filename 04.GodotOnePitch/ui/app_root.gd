@@ -315,6 +315,9 @@ func _auto_play_my_game(schedule_id: String) -> void:
 ## 소식 결정을 대신 고른다 — **지침 정도는 피로다**(`AutoAdvance.pick_choice`).
 ##
 ## ⚠ **늘 첫 번째를 고르면 자동 진행이 피로를 무시하고 부상으로 간다**
+## ⚠ **고른 뒤엔 `CoachReport.apply`를 거친다** (F-8). 여기서 `selected`를
+## 직접 쓰면 **효과가 안 걸린다** — 자동 진행으로 지나간 주만 조언이
+## 공짜가 된다. 적용하는 자리는 하나여야 한다
 func _auto_answer_message(s: Dictionary, message_id: String) -> void:
 	for m in s.get("mailbox", []):
 		if String(m.get("id", "")) != message_id:
@@ -322,9 +325,13 @@ func _auto_answer_message(s: Dictionary, message_id: String) -> void:
 		var d = m.get("decision", null)
 		if d == null:
 			return
-		m["read"] = true
-		d["selected"] = AutoAdvance.pick_choice(d.get("choices", []),
+		var picked: String = AutoAdvance.pick_choice(d.get("choices", []),
 			float(s.get("protagonist", {}).get("fatigue", 50.0)))
+		if CoachReport.apply(s, message_id, picked):
+			return
+		# 효과 표가 없는 소식이다 — 답만 남기고 넘어간다
+		m["read"] = true
+		d["selected"] = picked
 		return
 
 
