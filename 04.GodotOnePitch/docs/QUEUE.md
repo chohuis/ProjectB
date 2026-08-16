@@ -739,7 +739,35 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `duplicate(true)`를 해서 불러온 게임에서 다시 갈렸다 — 거기서도
       `relink_protagonist`를 부른다. 검사 둘을 붙였다.
 
-- [ ] **P-8b `career_stage`가 리그를 안 따라간다** (P-8 고친 뒤 드러남)
+- [ ] 🔴 **P-8b 주인공이 NPC 진로 배정을 탄다** (원인 규명 2026-08-16)
+      **P-8이 만든 게 아니라 P-8이 드러낸 것이다.** 전에는 로스터 쪽만
+      바뀌고 `protagonist`는 안 봐서 안 보였다.
+
+      `Promotion.advance_grades`가 **`is_protagonist`를 안 본다**
+      (`promotion.gd:42~90`). 주인공이 로스터에 있으니 NPC와 똑같이 처리된다 —
+      학년이 오르고(그건 맞다), 졸업하면 `league_id`를 `DRAFT_POOL`로 바꾸고,
+      그다음 `Placement`가 대학으로 보낸다.
+
+      **그 경로는 `career_stage`를 안 건드린다.** 주인공 무대를 옮기는
+      정본은 `CareerDecision._move_to`(`career_decision.gd:489`)로,
+      거기선 stage·league·team을 **함께** 바꾼다. NPC 경로는 리그만 바꾼다.
+
+      그래서 2030년에 `league_id`는 `LEAGUE_UNIVERSITY`인데
+      `career_stage`는 `"highschool"`로 남는다.
+      ⚠ `career_stage`를 읽는 곳이 파일 9개다 — 재정 `Finance.weekly`의
+      무대별 수입·지출, 학사 `SCHOOL_LEAGUES`, FA 자격.
+      **대학생이 고교 생활비를 쓴다.**
+
+      **고칠 방향**: 주인공의 진로는 `CareerRunner`/`CareerDecision`이
+      정본이다(`career_choice_hub` → `career_results`). NPC 진로 배정이
+      주인공을 **걸러야** 한다 — `advance_grades`와 `Placement` 양쪽.
+      ⚠ **학년은 걸러선 안 된다.** 주인공도 학년은 올라야 한다 —
+      거르는 것은 **졸업 뒤 소속 배정**이다. 두 일을 한 함수가 하고 있으니
+      가르는 자리를 먼저 정한다.
+      ⚠ `career_results` 대기가 안 풀린 채 다음 해로 넘어가는 것도 같이 본다.
+      · 검사를 먼저 써서 실패를 본 뒤 고친다
+
+- [ ] ~~P-8b `career_stage`가 리그를 안 따라간다~~ (아래는 원래 기록)
       4해 실측에서 **진학은 된다** — 2030년에 `league_id`가
       `LEAGUE_UNIVERSITY`로 바뀐다. 그런데 `career_stage`는 여전히
       `"highschool"`이다.
