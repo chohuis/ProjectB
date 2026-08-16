@@ -13,8 +13,9 @@
 | `TeamDetailModal`(871) vs 04 `team`·`league` 탭 | ✅ |
 | `StatusPage`(927) — **04 "나" 탭의 진짜 짝** | ✅ |
 | `ContractNegotiationModal`(330) vs `decision_vm._salary` | ✅ |
-| `PreGameBriefingModal`(640) · `GameStatusModal`(526) | ⬜ |
-| 나머지 pages 11개 · 소식 카드 다섯 | ⬜ |
+| `PreGameBriefingModal`(640) · `GameStatusModal`(526) | ✅ |
+| `TrainingPage`(1245) vs 04 `training_vm`(79) | ✅ |
+| 나머지 pages 9개 · 소식 카드 다섯 · `SeasonEndModal` · `CareerEndScreen` | ⬜ |
 
 ---
 
@@ -275,9 +276,118 @@ MainScreen                                (main_screen.tscn)
 조각 3의 제안은 "결정 화면을 다시 쪼개자"가 아니라 **"협상 한 종류에만 입력
 위젯을 붙일 수 있게 틀을 넓히자"**가 된다.
 
+---
+
+## 4. 경기 — 04엔 **경기 전 브리핑이 통째로 없다**
+
+### 02 `PreGameBriefingModal` (640줄)
+
+```
+헤더    W<주차> · 홈/원정 · "경기 전 브리핑" · vs <상대 팀>
+날씨    라벨 + 조언 문구        (:262-267)
+구장    라벨 + 조언 문구        (:268-272)
+상대 선발  이름 · SP · 좌완/우완 · OVR 배지
+        구속 · 무브 · 제구
+        ERA · W-L · G · K · BB   (없으면 "시즌 데이터 없음")   (:276-321)
+상대 타선  팀 OVR · 팀 타율 · 팀 OPS
+        표 — 번 · 이름 · 포지션 · 좌/우 · OVR · 성적 · **주의사항**
+        줄마다 `threat-<등급>` 색이 붙는다                     (:324-360)
+```
+
+**"이 경기를 어떻게 던질까"를 정할 재료를 통째로 준다.**
+
+### 02 `GameStatusModal` (526줄) — 내가 안 던지는 경기
+
+```
+친선경기 칩 · "등판 없음" 칩
+타자 표 — 선수 · 타율 · 안타 · 볼넷 · 타점
+투수 현황 · 경기 흐름
+버튼 — 직접 플레이 / 패배 처리 후 건너뛰기 / 확인
+```
+
+### 04 `match_vm.gd`가 넘기는 것 전부 (`:78-125`)
+
+```
+home_name away_name home_score away_score
+inning inning_label balls strikes count_label outs
+on_first on_second on_third bases_label
+batter_name pitcher_name
+pitcher_ip pitcher_k pitcher_bb pitcher_h pitcher_er pitcher_pc
+pitcher_line_label
+is_finished can_pitch is_my_pitch pitch result_label park log
+```
+
+| 02 | 04 |
+|---|---|
+| 경기 전 브리핑 화면 | **✗ 없다** |
+| 날씨 · 구장 조언 | ✗ |
+| 상대 선발 스카우팅 (OVR·구속·무브·제구·시즌 성적) | ✗ |
+| 상대 타선 표 (OVR·성적·**주의사항**·위협 등급 색) | ✗ — `batter_name` **이름 한 줄** |
+| 경기 중 타자 표 · 투수 현황 · 경기 흐름 | 부분 — 내 투구 기록 + `log` |
+| 직접 플레이 / 건너뛰기 갈래 | ○ `can_pitch` · 자동 진행 |
+| 구장 그림 | ○ `park` (02 `BaseballField` 213줄과 짝) |
+
+**04는 "지금 무슨 일이 벌어지는가"는 다 보여주는데 "누구를 상대하는가"를 안
+보여준다.** 타자는 이름뿐이라 승부처인지 아닌지를 알 수 없다.
+
+⚠ 이게 **P-1~P-3(경기 엔진)과 붙어 있다.** 존 밖 좌표·NPC 투구 문제가
+동결 해제 후 대상이라, 브리핑도 같은 묶음으로 가는 게 맞다. 조각 3에서
+"동결 해제 후"로 낸다 — 지금 붙이면 엔진이 바뀔 때 다시 손봐야 한다.
+
+---
+
+## 5. 훈련 — 04가 예보를 더 잘하고, 구종 습득이 통째로 없다
+
+### 02 `TrainingPage` (1245줄) — 탭 셋
+
+| 탭 | 담은 것 | 줄 |
+|---|---|---|
+| **계획** | 훈련 슬롯 · 예상 결과 | `:585, 671` |
+| **구종** | 보유 구종(N개) · **신규 습득 훈련중** · **해금 가능(N)** · **조건 미충족(N)** | `:721-802` |
+| **위험** | 현재 상태 · **경고 룰** · 훈련 히스토리 · 최근 활동 | `:832-877` |
+
+### 04 `training_vm.gd` (79줄) — 한 화면
+
+```
+슬롯 셋      1순위 XP 2.5배 · 2순위 1.5배 · 3순위 1.0배
+선택지       이름 · focus · gains · "피로 +N · 컨디션 +N"
+지금         "피로 82 (매우 피곤)" · "컨디션 55"
+이번 주      "이번 주 피로 +6.0 · 컨디션 -3.0"
+다음 주      "다음 주 피로 88 (매우 피곤) · 컨디션 51"
+warns        구간이 지금은 괜찮은데 다음 주에 나빠지면 true
+```
+
+| 02 | 04 |
+|---|---|
+| 훈련 슬롯 · 예상 결과 | ○ |
+| **구종 탭** — 보유/습득중/해금 가능/조건 미충족 | **✗ 통째로 없다** |
+| 위험 탭 — 경고 룰 · 훈련 히스토리 · 최근 활동 | 부분 — 구간 라벨 하나 |
+| — | **다음 주 예보 + `warns`** |
+
+**04가 앞선 자리 셋**
+
+`training_vm.gd:79-80`:
+> **다음 주에 더 나빠지는지를 화면이 말해야 한다.** 지금 구간만 보면 벼랑 바로
+> 앞에서 아무 경고가 없다
+
+`training_vm.gd:8-10`:
+> **미리보기와 실제가 같은 함수를 쓴다.** `Training.preview`가 `plan_load`를
+> 부르고 주간 처리도 같은 값을 쓴다 — 두 벌이 되면 "화면엔 −8인데 실제로는
+> −12"가 된다
+
+`training_vm.gd:61-62`:
+> **선수에게 일어나는 변화로 적는다.** 데이터는 "비용"이라 회복 훈련이 음수인데,
+> 그대로 넣으면 `피로 +-10.0`이 된다
+
+⚠ **구종 습득이 04에 있는지는 따로 봐야 한다.** 화면이 없는 것과 시스템이
+없는 것은 다르다 — `status_vm`이 `pitches`를 넘기므로 **구종은 있다.**
+늘리는 길이 있는지는 다음 턴에 `sim/`에서 확인한다.
+
 ### 아직 안 본 것
 
-`PreGameBriefingModal`(640) · `GameStatusModal`(526)이 04에 대응이 있는지.
+pages 나머지(`people` · `news` · `schedule` · `finance` · `academics` ·
+`achievements` · `match` · `new-game` · `league`) · 소식 카드 다섯 ·
+`SeasonEndModal`(1060) · `CareerEndScreen`(266)
 
 ---
 
