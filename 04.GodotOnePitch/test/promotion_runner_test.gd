@@ -216,6 +216,64 @@ func test_a_foreign_player_never_goes_down() -> void:
 			"외국인을 2군에 내렸다").is_not_equal("FOREIGN")
 
 
+# ── 성적이 판정에 닿는가 ─────────────────────────────────────
+#
+# ⚠ **`perf`를 아무도 안 채웠다.** `form_score`가 읽는 키인데 `sim/` 전체에서
+# 쓰는 곳이 `roster_maintenance.gd` 하나였다 — 그래서 `rated()`의
+# `form_score × 8` 항이 늘 0이고 **승강이 능력치만 봤다.**
+# 02가 "성적이 능력치를 뒤집되 완전히 무시하진 않는" 지점으로 잡은 가중이다.
+#
+# 02는 시즌 누계를 그대로 넘긴다 — 창을 안 자른다(`market.ts:39` `seasonPerfOf`)
+
+
+func test_a_season_line_becomes_perf() -> void:
+	var p: Dictionary = _player("P1", "SP", 60.0)
+	PromotionRunner.attach_perf([p], {"P1": {"type": "pitcher",
+		"g": 20, "ip": 120.0, "era": 2.10, "whip": 1.05}})
+	assert_float(float(p["perf"]["era"])).is_equal(2.10)
+	assert_float(float(p["perf"]["innings"])).override_failure_message(
+		"이닝을 안 넘겼다 — 표본 항이 죽어 성적이 0으로 눌린다").is_equal(120.0)
+
+
+func test_a_batter_line_becomes_perf() -> void:
+	var p: Dictionary = _player("B1", "1B", 60.0)
+	PromotionRunner.attach_perf([p], {"B1": {"type": "batter",
+		"g": 100, "pa": 400, "ops": 0.910}})
+	assert_float(float(p["perf"]["ops"])).is_equal(0.910)
+	assert_float(float(p["perf"]["pa"])).is_equal(400.0)
+
+
+## 기록이 없으면 빈 사전이다 — 없는 성적을 좋게도 나쁘게도 읽지 않는다
+func test_a_player_without_stats_gets_an_empty_perf() -> void:
+	var p: Dictionary = _player("P1", "SP", 60.0)
+	PromotionRunner.attach_perf([p], {})
+	assert_bool((p["perf"] as Dictionary).is_empty()).is_true()
+
+
+## ⚠ **이게 이 축의 요점이다.** 같은 능력치면 성적이 갈라야 한다 —
+## 부진한 1군이 호투한 2군에게 자리를 내준다
+func test_a_slumping_first_teamer_loses_the_spot() -> void:
+	var active: Array = _active(60.0)
+	var farm: Array = _farm(60.0)
+	# 성적 없이는 안 올라온다(문턱을 못 넘는다)
+	assert_array(RosterMaintenance.eval_callup(
+		_neutral(), farm, active, [])).is_empty()
+
+	# 1군 하나가 크게 부진하고 2군 하나가 호투했다 — 능력치는 그대로다
+	PromotionRunner.attach_perf(active, {"SP0": {"type": "pitcher",
+		"g": 20, "ip": 100.0, "era": 9.00, "whip": 2.00}})
+	PromotionRunner.attach_perf(farm, {"FSP0": {"type": "pitcher",
+		"g": 20, "ip": 100.0, "era": 1.00, "whip": 0.80}})
+
+	var picked: Array = RosterMaintenance.eval_callup(
+		_neutral(), farm, active, [])
+	assert_int(picked.size()).override_failure_message(
+		"성적이 크게 갈렸는데 아무도 안 올라온다 — 성적이 판정에 안 닿는다"
+	).is_greater(0)
+	assert_str(String(picked[0]["player_id"])).is_equal("FSP0")
+	assert_str(String(picked[0]["replaces_player_id"])).is_equal("SP0")
+
+
 # ── 주기 ──────────────────────────────────────────────────────
 
 ## ⚠ **주 경계가 아니면 아무것도 안 한다.** 매일 돌리면 02의 7배가 된다

@@ -83,6 +83,36 @@ static func _move(world: Dictionary, player_id: String, from_team: String,
 	return false
 
 
+## 시즌 성적을 승강 판정이 읽는 모양으로 붙인다.
+##
+## ⚠ **이걸 안 붙이면 승강이 능력치만 본다.** `RosterMaintenance.form_score`가
+## `p["perf"]`를 읽는데 채우는 곳이 없어서 `rated()`의 `form_score × 8` 항이
+## 늘 0이었다 — 02가 "성적이 능력치를 뒤집되 완전히 무시하진 않는" 지점으로
+## 잡은 가중이 통째로 죽어 있었다.
+##
+## ⚠ **시즌 누계를 그대로 쓴다.** 02도 창을 안 자른다
+## (`market.ts:39` `seasonPerfOf`). 최근 N경기로 바꾸면 그게 두 번째 규칙이 된다.
+##
+## ⚠ **기록이 없으면 빈 사전이다.** `form_score`가 표본 0으로 읽어 0을 주므로
+## 판정이 능력치만 보게 된다 — 없는 성적을 좋게도 나쁘게도 읽지 않는다
+static func attach_perf(roster: Array, stats: Dictionary) -> void:
+	for p in roster:
+		var st = stats.get(String(p.get("id", "")), null)
+		if not (st is Dictionary):
+			p["perf"] = {}
+			continue
+		var s: Dictionary = st
+		if String(s.get("type", "")) == "pitcher":
+			p["perf"] = {"games": int(s.get("g", 0)),
+				"innings": float(s.get("ip", 0.0)),
+				"era": float(s.get("era", 0.0)),
+				"whip": float(s.get("whip", 0.0))}
+		else:
+			p["perf"] = {"games": int(s.get("g", 0)),
+				"pa": float(s.get("pa", 0.0)),
+				"ops": float(s.get("ops", 0.0))}
+
+
 ## 한 팀의 한 주. `{callups, calldowns}`
 static func run_team(state: Dictionary, team_id: String, league_id: String,
 		urgent_only: bool) -> Dictionary:
@@ -92,6 +122,12 @@ static func run_team(state: Dictionary, team_id: String, league_id: String,
 	var farm: Array = pair["farm"]
 	if active.is_empty() or farm.is_empty():
 		return {"callups": 0, "calldowns": 0}
+
+	# ⚠ **판정 전에 성적을 붙인다.** 안 붙이면 `form_score`가 늘 0이라
+	# 승강이 능력치만 본다
+	var stats: Dictionary = state.get("season_stats", {})
+	attach_perf(active, stats)
+	attach_perf(farm, stats)
 
 	var farm_league: String = league_id + "_FARM"
 	var profile: Dictionary = TeamProfile.of(world, team_id)
