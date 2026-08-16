@@ -170,3 +170,49 @@ func test_an_empty_roster_does_not_break() -> void:
 	assert_array(out["updated"]).is_empty()
 	assert_array(out["hs_graduated"]).is_empty()
 	assert_array(out["univ_graduated"]).is_empty()
+
+
+# ── 주인공은 NPC 진로를 안 탄다 ───────────────────────────────
+#
+# ⚠ **주인공이 로스터에 있어서 NPC와 똑같이 처리됐다.** 졸업하면 여기가
+# `league_id`를 `DRAFT_POOL`로 바꾸고 `Placement`가 대학으로 보내는데,
+# **그 경로는 `career_stage`를 안 건드린다** — 실측에서 리그는
+# `LEAGUE_UNIVERSITY`인데 stage는 `"highschool"`로 남았다.
+#
+# 주인공 무대를 옮기는 정본은 `CareerDecision._move_to`다. 거기선
+# stage·league·team을 **함께** 바꾼다.
+#
+# ⚠ **학년은 걸러선 안 된다.** 주인공도 학년은 올라야 한다 —
+# 거를 것은 **졸업 뒤 소속 배정**이다
+
+
+func _me(o: Dictionary = {}) -> Dictionary:
+	var d: Dictionary = _npc({"id": "PLY_PROTAGONIST", "is_protagonist": true})
+	d.merge(o, true)
+	return d
+
+
+## 주인공도 학년은 오른다
+func test_the_protagonist_still_moves_up_a_grade() -> void:
+	var out: Dictionary = _run([_me({"grade": 1})])
+	assert_int(int(out["updated"][0]["grade"])).override_failure_message(
+		"주인공 학년이 안 올랐다").is_equal(2)
+
+
+## ⚠ **졸업해도 세계가 소속을 정하지 않는다.** 그건 진로 결정이 할 일이다
+func test_the_protagonist_is_not_swept_into_the_draft_pool() -> void:
+	var me: Dictionary = _me({"grade": 3})
+	var out: Dictionary = _run([me])
+	assert_array(out["hs_graduated"]).override_failure_message(
+		"주인공이 NPC 졸업 배정에 실렸다").is_empty()
+	assert_str(String(me["league_id"])).override_failure_message(
+		"주인공 리그를 세계가 바꿨다 — 진로 결정이 할 일이다"
+	).is_equal("LEAGUE_HIGHSCHOOL")
+
+
+## ⚠ **NPC는 그대로 졸업해야 한다.** 주인공만 거른다
+func test_npcs_still_graduate_alongside_the_protagonist() -> void:
+	var out: Dictionary = _run([_me({"grade": 3}), _npc({"id": "N2", "grade": 3})])
+	assert_int(out["hs_graduated"].size()).override_failure_message(
+		"주인공을 거르면서 NPC까지 걸렀다").is_equal(1)
+	assert_str(String(out["hs_graduated"][0]["id"])).is_equal("N2")

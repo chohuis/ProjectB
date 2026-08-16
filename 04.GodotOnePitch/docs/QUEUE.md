@@ -739,7 +739,23 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `duplicate(true)`를 해서 불러온 게임에서 다시 갈렸다 — 거기서도
       `relink_protagonist`를 부른다. 검사 둘을 붙였다.
 
-- [ ] 🔴 **P-8b 주인공이 NPC 진로 배정을 탄다** (원인 규명 2026-08-16)
+- [x] 🔴 **P-8b 주인공이 NPC 진로 배정을 타던 것** — 2026-08-16 고침
+      `Promotion.advance_grades`가 졸업 갈래에서 주인공을 거른다.
+      **학년은 그대로 올린다** — 거르는 것은 졸업 뒤 소속 배정뿐이다.
+      고친 뒤 실측: 주인공이 3학년에 머물고 리그가 안 바뀌며
+      `career_results` 대기가 뜬다 — **세계가 소속을 안 정하고 결정을
+      기다린다.** 그게 옳은 동작이다.
+      검사 셋 · 변이 2/3. 못 잡은 하나는 등가다 — `advance_grades`가
+      돌려주는 `updated`를 **아무도 안 쓴다**(`season_runner.gd:60`이
+      `hs_graduated`·`univ_graduated`만 읽는다). 아래 P-8d 참조.
+
+- [ ] **P-8d `advance_grades`의 `updated` 반환이 죽어 있다**
+      부르는 곳이 `hs_graduated`·`univ_graduated`만 읽는다. 세 값 중 하나가
+      아무 데도 안 닿으니 거기 뭘 넣든 결과가 같다 — 변이가 그걸 드러냈다.
+      ⚠ **지우기 전에 확인한다.** 화면·계측이 읽는지 먼저 세고, 안 쓰면
+      지운다(죽은 갈래를 두지 않는다).
+
+- [ ] ~~🔴 P-8b 주인공이 NPC 진로 배정을 탄다~~ (아래는 원래 기록)
       **P-8이 만든 게 아니라 P-8이 드러낸 것이다.** 전에는 로스터 쪽만
       바뀌고 `protagonist`는 안 봐서 안 보였다.
 

@@ -63,6 +63,18 @@ static func advance_grades(npcs: Array, season_year: int) -> Dictionary:
 		npc["career_history"] = push_year_once(npc.get("career_history", []), entry)
 
 		if grade >= int(SCHOOL_LEAGUES[league]):
+			# ⚠ **주인공의 소속은 세계가 정하지 않는다.** 진로 결정이
+			# 정본이다(`CareerDecision._move_to` — 거기선 무대·리그·팀을
+			# **함께** 바꾼다). 여기서 같이 쓸어 담으면 리그만 바뀌고
+			# `career_stage`가 안 따라가서, 실측에서 리그는
+			# `LEAGUE_UNIVERSITY`인데 무대는 `"highschool"`로 남았다 —
+			# 그 값을 읽는 곳이 파일 아홉이라 **대학생이 고교 생활비를 쓴다.**
+			#
+			# ⚠ **학년은 위에서 이미 올렸다.** 주인공도 학년은 올라야 한다 —
+			# 거르는 것은 졸업 뒤 소속 배정뿐이다
+			if bool(npc.get("is_protagonist", false)):
+				updated.append(npc)
+				continue
 			npc["grade"] = null
 			# ⚠ **덮기 전에 어디서 왔는지를 박아 둔다.** 여기서 안 남기면
 			# 드래프트 보드가 출신을 물을 때 **전원이 "재수"**로 나온다 —
