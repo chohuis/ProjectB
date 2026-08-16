@@ -750,10 +750,19 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `hs_graduated`·`univ_graduated`만 읽는다). 아래 P-8d 참조.
 
 - [ ] **P-8d `advance_grades`의 `updated` 반환이 죽어 있다**
-      부르는 곳이 `hs_graduated`·`univ_graduated`만 읽는다. 세 값 중 하나가
-      아무 데도 안 닿으니 거기 뭘 넣든 결과가 같다 — 변이가 그걸 드러냈다.
-      ⚠ **지우기 전에 확인한다.** 화면·계측이 읽는지 먼저 세고, 안 쓰면
-      지운다(죽은 갈래를 두지 않는다).
+      **읽는 곳을 다 셌다(2026-08-16):**
+      · 게임 코드 — **없다.** `season_runner.gd:60`이 `hs_graduated`와
+        `univ_graduated`만 쓴다
+      · 검사 — `test/promotion_test.gd`에 **11곳**
+      `advance_grades`는 npc 사전을 **제자리에서** 고치므로(`npc["grade"] =
+      grade + 1`) 그 배열엔 정보가 없다. 편의일 뿐이다.
+
+      **지우려면 검사 11곳을 사전 직접 보기로 바꿔야 한다.** 한 번 시작했다가
+      컨텍스트가 모자라 되돌렸다 — **반쯤 고친 채로 두는 게 더 나쁘다.**
+      다음에 할 때는 이것만 한 덩어리로 잡는다:
+      `_run([n])["updated"][0]["grade"]` → `_run([n])` 뒤 `n["grade"]`.
+      ⚠ 검사가 인라인으로 `_run([...])["updated"][0]`을 쓰는 자리가 많아
+      변수로 빼는 손질이 같이 든다.
 
 - [ ] ~~🔴 P-8b 주인공이 NPC 진로 배정을 탄다~~ (아래는 원래 기록)
       **P-8이 만든 게 아니라 P-8이 드러낸 것이다.** 전에는 로스터 쪽만
