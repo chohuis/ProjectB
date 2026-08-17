@@ -21,7 +21,7 @@
 | 04 화면·부품 (`ui/screens` 14 + `ui/*_vm` 22 + `ui/parts` 11) | **47** |
 | 판정 `있다` | **34** |
 | 판정 `부분` | **11** |
-| 판정 `없다` | **8** |
+| 판정 `없다` | **5** (첫 조사 8 → 병역 셋을 `부분`으로 정정) |
 | 판정 `일부러 안 옮김` (→ 후보로 재검토) | **3** |
 | 04에만 있는 것 (지우지 않는다) | **2** |
 
@@ -97,10 +97,31 @@
 | `main-layout/TopHeader` (188) | — | 화면만. **UI 방향 U-3** |
 | `main-layout/RightPanel` (266) | — | 화면만. **UI 방향 U-4** |
 | `team/TeamMark` (31) | — | 화면만. **UI 방향 U-1** |
-| `military/MilitaryStatusPanel` (127) | ✅ `career_path`·`career_runner` | **화면만 없다** — 싸다 |
-| `military/SportsUnitApplicationModal` (93) | ✅ 같은 곳 | **화면만 없다** |
-| `military/MilitaryEnlistAskModal` (69) | ✅ `military_enlist` 대기 타입이 있다 | **화면만 없다** |
 | `injury/InjuryTreatmentModal` (134) | ❓ `injury_treat` 검색 0건 | **엔진부터 확인** |
+
+### 2-3b. 병역 셋 — **"없다"가 아니라 "부분"이었다** (2026-08-18 정정)
+
+🔴 **처음 조사에서 셋 다 "화면만 없다"로 적었는데 틀렸다.** 04엔
+`StatusVm.military_of`가 이미 있고 `status_screen`이 그린다(U-2에서 넣었다).
+**파일 이름으로 대응시킨 탓이다** — 이 문서가 스스로 경고한 "부분이 제일
+위험하다"에 내가 걸렸다.
+
+| 02가 보여주는 것 | 04 | |
+|---|---|---|
+| 부대(체육/일반) | ✅ `unit_label` | |
+| 남은 기간(주) | ✅ `weeks_left` | |
+| 입대 연도 | ✅ `enlist_year` (02엔 없다) | 04에만 |
+| **계급** (이병 ≤8주 · 일병 ≤34 · 상병 ≤60 · 병장) | ❌ | **없다** |
+| **복무 진행 %** | ❌ (`weeks_served`/`weeks_total`은 있다) | 계산만 하면 된다 |
+| 계약 +2년 배지 | ❌ | 04에 그 축이 있는지 확인 |
+| 컨디션·피로 | ✅ 상태 화면 위쪽에 이미 있다 | 자리만 다르다 |
+
+⚠ **계급 문턱 넷은 02 `MilitaryStatusPanel.svelte:12-18`에 있다** — 지어낼 게 없다.
+
+`SportsUnitApplicationModal`·`MilitaryEnlistAskModal`은 **엔진이 돈다**
+(`sim/military.gd`가 체육부대를 갈라 쓰고 `military_enlist` 대기 타입이 있다).
+**04가 그 둘을 어디서 묻는지 세는 게 먼저다** — `decision_screen` 갈래에
+없으므로 자동으로 정해지고 있을 수 있다.
 | `game-status/GameStatusModal` (599) | ❓ 검색 0건 | **무엇을 보여주는지부터 읽는다** |
 
 ### 2-4. 소식 패널 — **부분** (5)
