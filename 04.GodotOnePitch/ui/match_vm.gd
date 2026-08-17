@@ -125,6 +125,16 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		# 보여줘서 **스태미나가 바닥인지 모르고 계속 던지게 됐다** —
 		# 데이터는 `game_loop.gd:149-151`이 이미 들고 있었다.
 		# ⚠ **내 쪽 것을 읽는다** — 팀을 안 가리면 상대 투수 체력이 뜬다
+		# ⚠ **투구 중엔 다음 타자를 알 길이 없었다** (M-2). 브리핑(F-5)이
+		# 상대 타선 아홉을 보여주지만 **첫 공 전에만 뜨고 사라진다** —
+		# 데이터는 `game_loop.gd:20-26`이 이미 들고 있었다
+		"away_lineup_title": "원정 라인업",
+		"home_lineup_title": "홈 라인업",
+		"away_lineup": lineup_rows(s.get("away_lineup", []),
+			int(s.get("away_index", 0)), s.get("half", "top") == "top", names),
+		"home_lineup": lineup_rows(s.get("home_lineup", []),
+			int(s.get("home_index", 0)), s.get("half", "top") != "top", names),
+
 		"has_pitcher_vitals": s.has("%s_stamina" % side),
 		"pitcher_stamina": float(s.get("%s_stamina" % side, 0.0)),
 		"pitcher_mental": float(s.get("%s_mental" % side, 0.0)),
@@ -155,6 +165,32 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 
 		"log": ctx.get("log", []),
 	}
+
+
+## 한 팀의 타순 — M-2. `[{no, name, is_at_bat, is_on_deck}]`
+##
+## ⚠ **공격 중인 팀만 타석 표시가 있다** — 02 `MatchPage:144-145`가
+## `half === "top" ? … : -1`이다. 수비 중인 팀에 "지금 타석"을 찍으면
+## 이닝이 바뀐 걸 못 알아챈다.
+##
+## ⚠ **인덱스가 타순 길이를 넘는다.** 한 바퀴 돌면 3·4·5…가 되므로 `%`가
+## 없으면 그 순간 아무도 타석에 없다 — 02도 `% Math.max(1, len)`이다
+static func lineup_rows(lineup: Array, index: int, batting: bool,
+		names: Dictionary) -> Array:
+	var out: Array = []
+	var n: int = lineup.size()
+	if n == 0:
+		return out
+	var at: int = (index % n) if batting else -1
+	for i in n:
+		out.append({
+			"no": i + 1,
+			"name": _name_of(names, lineup[i]),
+			"is_at_bat": i == at,
+			# 마지막 타자 다음은 첫 타자다
+			"is_on_deck": at >= 0 and i == (at + 1) % n,
+		})
+	return out
 
 
 static func _name_of(names: Dictionary, player: Dictionary) -> String:

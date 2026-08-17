@@ -142,6 +142,20 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 2
 
+[node name="Lineups" type="HBoxContainer" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Away" type="VBoxContainer" parent="Pad/Col/Body/Right/Lineups"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
+[node name="Home" type="VBoxContainer" parent="Pad/Col/Body/Right/Lineups"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 1
+
 [node name="LogScroll" type="ScrollContainer" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 size_flags_vertical = 3

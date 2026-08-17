@@ -1,0 +1,52 @@
+[
+ [
+  "수비 중인 팀에도 타석 표시를 한다 (이닝이 바뀐 걸 못 알아챈다)",
+  "\tvar at: int = (index % n) if batting else -1",
+  "\tvar at: int = index % n"
+ ],
+ [
+  "인덱스를 안 돌린다 (한 바퀴 돌면 아무도 타석에 없다)",
+  "\tvar at: int = (index % n) if batting else -1",
+  "\tvar at: int = index if batting else -1"
+ ],
+ [
+  "다음 타자가 한 바퀴를 안 돈다 (9번 다음이 비어 있다)",
+  "\t\t\t\"is_on_deck\": at >= 0 and i == (at + 1) % n,",
+  "\t\t\t\"is_on_deck\": at >= 0 and i == at + 1,"
+ ],
+ [
+  "다음 타자를 안 표시한다",
+  "\t\t\t\"is_on_deck\": at >= 0 and i == (at + 1) % n,",
+  "\t\t\t\"is_on_deck\": false,"
+ ],
+ [
+  "수비 중인 팀에도 다음 타자를 표시한다",
+  "\t\t\t\"is_on_deck\": at >= 0 and i == (at + 1) % n,",
+  "\t\t\t\"is_on_deck\": i == (maxi(at, 0) + 1) % n,"
+ ],
+ [
+  "타순 번호가 0부터다",
+  "\t\t\t\"no\": i + 1,",
+  "\t\t\t\"no\": i,"
+ ],
+ [
+  "이름을 안 붙이고 id를 그대로 낸다 (화면에 PLY_… 가 뜬다)",
+  "\t\t\t\"name\": _name_of(names, lineup[i]),",
+  "\t\t\t\"name\": String(lineup[i].get(\"id\", \"\")),"
+ ],
+ [
+  "홈 타순이 원정 것을 본다 (양쪽이 같아진다)",
+  "\t\t\"home_lineup\": lineup_rows(s.get(\"home_lineup\", []),\n\t\t\tint(s.get(\"home_index\", 0)), s.get(\"half\", \"top\") != \"top\", names),",
+  "\t\t\"home_lineup\": lineup_rows(s.get(\"away_lineup\", []),\n\t\t\tint(s.get(\"away_index\", 0)), s.get(\"half\", \"top\") != \"top\", names),"
+ ],
+ [
+  "말에도 원정이 공격이다 (반쪽이 뒤집힌다)",
+  "\t\t\tint(s.get(\"away_index\", 0)), s.get(\"half\", \"top\") == \"top\", names),",
+  "\t\t\tint(s.get(\"away_index\", 0)), true, names),"
+ ],
+ [
+  "제목이 02와 다르다",
+  "\t\t\"away_lineup_title\": \"원정 라인업\",",
+  "\t\t\"away_lineup_title\": \"어웨이\","
+ ]
+]

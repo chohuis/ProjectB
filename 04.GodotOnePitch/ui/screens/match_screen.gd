@@ -31,6 +31,8 @@ const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
 @onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
 @onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
 @onready var _vitals: VBoxContainer = $Pad/Col/Body/Right/Vitals
+@onready var _away_lineup: VBoxContainer = $Pad/Col/Body/Right/Lineups/Away
+@onready var _home_lineup: VBoxContainer = $Pad/Col/Body/Right/Lineups/Home
 @onready var _log: VBoxContainer = $Pad/Col/Body/Right/LogScroll/Log
 @onready var _result: Label = $Pad/Col/Body/Right/Result
 @onready var _pitch: Button = $Pad/Col/Row/Pitch
@@ -116,8 +118,50 @@ func _rebuild() -> void:
 	_field.set_view_model(_vm.get("park", {}))
 
 	_build_vitals()
+	_build_lineups()
 	_build_choice()
 	_build_log()
+
+
+## 양 팀 타순 — M-2. **투구 중에 다음 타자를 볼 수 있어야 한다** —
+## 브리핑(F-5)은 첫 공 전에만 뜨고 사라진다.
+##
+## ⚠ **02는 구장 양옆에 둔다.** 04는 구장 그림이 폭을 다 쓰므로 오른쪽 열에
+## 나란히 놓았다 — **픽셀이 아니라 구조를 맞춘다**(CLAUDE.md 이주 원칙)
+func _build_lineups() -> void:
+	_fill_lineup(_away_lineup, String(_vm.get("away_lineup_title", "")),
+		_vm.get("away_lineup", []))
+	_fill_lineup(_home_lineup, String(_vm.get("home_lineup_title", "")),
+		_vm.get("home_lineup", []))
+
+
+func _fill_lineup(host: VBoxContainer, title: String, rows: Array) -> void:
+	for c in host.get_children():
+		host.remove_child(c)
+		c.free()
+	if rows.is_empty():
+		return
+
+	var head := Label.new()
+	head.text = title
+	head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	head.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	host.add_child(head)
+
+	for r in rows:
+		var l := Label.new()
+		l.text = "%d. %s" % [int(r.get("no", 0)), String(r.get("name", ""))]
+		l.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		# ⚠ **지금 타석이 제일 눈에 띄어야 한다.** 다음 타자는 그 다음이고,
+		# 나머지는 배경이다 — 셋을 같은 색으로 두면 목록이 벽이 된다
+		if bool(r.get("is_at_bat", false)):
+			l.text = "▸ " + l.text
+			l.add_theme_color_override("font_color", AppTheme.ACCENT)
+		elif bool(r.get("is_on_deck", false)):
+			l.add_theme_color_override("font_color", AppTheme.TEXT)
+		else:
+			l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		host.add_child(l)
 
 
 ## 투수 체력·멘탈 — M-1. **교체 판단의 입력이다.**
