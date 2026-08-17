@@ -1,0 +1,23 @@
+[
+	["로스터를 아예 안 옮긴다",
+		"\t_move_roster(state, p, from_team, team_id)",
+		"\tpass"],
+	["새 팀에 안 넣는다",
+		"\trosters[to_team].append(p)",
+		"\tpass"],
+	["옛 팀에서 안 뺀다",
+		"\t\t\told.remove_at(i)",
+		"\t\t\tpass"],
+	["복사본을 넣는다",
+		"\trosters[to_team].append(p)",
+		"\trosters[to_team].append(p.duplicate(true))"],
+	["주인공이 아니어도 옮긴다",
+		"\tif not bool(p.get(\"is_protagonist\", false)) or from_team == to_team:",
+		"\tif from_team == to_team:"],
+	["같은 팀이어도 또 넣는다",
+		"\tif not bool(p.get(\"is_protagonist\", false)) or from_team == to_team:",
+		"\tif not bool(p.get(\"is_protagonist\", false)):"],
+	["옮기기 전 팀을 뒤에 읽는다",
+		"\tvar from_team: String = String(p.get(\"team_id\", \"\"))",
+		"\tvar from_team: String = team_id"]
+]

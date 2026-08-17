@@ -488,6 +488,7 @@ static func team_index(world: Dictionary, team_id: String) -> float:
 ## 무대를 옮긴다. **전이표를 이미 통과한 뒤에만 부른다**
 static func _move_to(state: Dictionary, p: Dictionary, stage: String,
 		league: String, team_id: String) -> void:
+	var from_team: String = String(p.get("team_id", ""))
 	p["career_stage"] = stage
 	p["league_id"] = league
 	p["team_id"] = team_id
@@ -496,6 +497,40 @@ static func _move_to(state: Dictionary, p: Dictionary, stage: String,
 	if stage != "university" and stage != "highschool":
 		p.erase("grade")
 		p.erase("university_week")
+	_move_roster(state, p, from_team, team_id)
+
+
+## 🔴 **로스터도 같이 옮긴다** (P-14).
+##
+## 20해를 굴렸더니 대학 진학 시즌부터 **18해 연속 주인공을 못 찾았다** —
+## 여기서 `team_id`만 바꾸고 로스터를 안 건드렸기 때문이다.
+##
+## ⚠ **04는 주인공도 로스터에 산다**(`world.gd:280`). `relink_protagonist`가
+## **새 팀 로스터에서** 찾으므로 안 넣으면 영영 못 찾고, 못 찾으면 학년·성장·
+## 관계가 전부 그 위에 선다. 02는 주인공을 로스터 밖에 뒀으므로 대응 코드가
+## 없다 — **04 자기 규칙을 04가 안 지키던 것이다.**
+##
+## ⚠ **양쪽 배열을 같이 고친다.** 한쪽만 하면 같은 사람이 두 팀에 있거나
+## 통째로 사라진다 — `FaRunner._move`가 같은 자리에 그렇게 적어 뒀다.
+##
+## ⚠ **주인공만이다.** NPC 이동은 `FaRunner._move`·승강이 따로 맡는다
+static func _move_roster(state: Dictionary, p: Dictionary,
+		from_team: String, to_team: String) -> void:
+	if not bool(p.get("is_protagonist", false)) or from_team == to_team:
+		return
+	var rosters: Dictionary = state.get("world", {}).get("rosters", {})
+	var id: String = String(p.get("id", ""))
+
+	var old: Array = rosters.get(from_team, [])
+	for i in range(old.size() - 1, -1, -1):
+		if String(old[i].get("id", "")) == id:
+			old.remove_at(i)
+
+	# ⚠ **같은 사전을 넣는다.** 복사본이면 로스터 쪽과 `protagonist` 쪽이
+	# 갈려서 한쪽만 자란다 — 04가 이미 한 번 데인 자리다
+	if not rosters.has(to_team):
+		rosters[to_team] = []
+	rosters[to_team].append(p)
 
 
 static func _first(list) -> String:
