@@ -30,6 +30,7 @@ const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
 @onready var _briefing: VBoxContainer = $Pad/Col/Body/Right/Briefing
 @onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
 @onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
+@onready var _situation: HBoxContainer = $Pad/Col/Body/Right/Situation
 @onready var _vitals: VBoxContainer = $Pad/Col/Body/Right/Vitals
 @onready var _away_lineup: VBoxContainer = $Pad/Col/Body/Right/Lineups/Away
 @onready var _home_lineup: VBoxContainer = $Pad/Col/Body/Right/Lineups/Home
@@ -117,6 +118,7 @@ func _rebuild() -> void:
 
 	_field.set_view_model(_vm.get("park", {}))
 
+	_build_situation()
 	_build_vitals()
 	_build_lineups()
 	_build_choice()
@@ -162,6 +164,17 @@ func _fill_lineup(host: VBoxContainer, title: String, rows: Array) -> void:
 		else:
 			l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		host.add_child(l)
+
+
+## 주자와 카운트 — M-3. **한 상황의 두 축이라 한 판에 둔다**(02 주석).
+## 글자로만 두면 "2사 만루"를 읽는 데 눈이 두 번 움직인다
+func _build_situation() -> void:
+	for c in _situation.get_children():
+		_situation.remove_child(c)
+		c.free()
+	var board := SituationBoard.new()
+	_situation.add_child(board)
+	board.setup(_vm)
 
 
 ## 투수 체력·멘탈 — M-1. **교체 판단의 입력이다.**

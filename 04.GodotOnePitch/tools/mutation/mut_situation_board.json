@@ -1,0 +1,47 @@
+[
+ [
+  "볼 램프가 셋이 아니다 (02는 S2 · B3 · O2다)",
+  "const LAMP_COUNT: Dictionary = {\"strike\": 2, \"ball\": 3, \"out\": 2}",
+  "const LAMP_COUNT: Dictionary = {\"strike\": 2, \"ball\": 2, \"out\": 2}"
+ ],
+ [
+  "스트라이크와 아웃 색이 바뀐다 (뜻이 뒤집힌다)",
+  "const LAMP_COLOR: Dictionary = {\"strike\": \"ok\", \"ball\": \"warn\", \"out\": \"bad\"}",
+  "const LAMP_COLOR: Dictionary = {\"strike\": \"bad\", \"ball\": \"warn\", \"out\": \"ok\"}"
+ ],
+ [
+  "카운트가 하나 밀린다 (0에서 첫 램프가 켜진다)",
+  "\treturn _count_of(kind) > index",
+  "\treturn _count_of(kind) >= index"
+ ],
+ [
+  "볼과 스트라이크를 바꿔 읽는다",
+  "\t\t\"strike\":\n\t\t\treturn int(_vm.get(\"strikes\", 0))\n\t\t\"ball\":\n\t\t\treturn int(_vm.get(\"balls\", 0))",
+  "\t\t\"strike\":\n\t\t\treturn int(_vm.get(\"balls\", 0))\n\t\t\"ball\":\n\t\t\treturn int(_vm.get(\"strikes\", 0))"
+ ],
+ [
+  "다이아몬드가 세로로 뒤집힌다 (2루가 아래, 홈이 위)",
+  "\t\t\"second\": Vector2(box.x * 0.5, box.y * 0.2),",
+  "\t\t\"second\": Vector2(box.x * 0.5, box.y * 0.8),"
+ ],
+ [
+  "1루와 3루가 바뀐다 (3루 주자가 1루에 서 보인다)",
+  "\t\t\"third\": Vector2(box.x * 0.2, box.y * 0.5),\n\t\t\"first\": Vector2(box.x * 0.8, box.y * 0.5),",
+  "\t\t\"third\": Vector2(box.x * 0.8, box.y * 0.5),\n\t\t\"first\": Vector2(box.x * 0.2, box.y * 0.5),"
+ ],
+ [
+  "2루가 가로 중앙을 벗어난다 (02의 비대칭을 그대로 옮긴 꼴)",
+  "\t\t\"second\": Vector2(box.x * 0.5, box.y * 0.2),",
+  "\t\t\"second\": Vector2(box.x * 0.62, box.y * 0.2),"
+ ],
+ [
+  "홈에도 주자가 선다",
+  "\treturn bool(_vm.get(\"on_%s\" % base, false))",
+  "\treturn bool(_vm.get(\"on_%s\" % base, true))"
+ ],
+ [
+  "주자 표시가 늘 꺼져 있다 (다이아몬드가 죽는다)",
+  "\treturn bool(_vm.get(\"on_%s\" % base, false))",
+  "\treturn false"
+ ]
+]
