@@ -118,11 +118,16 @@ func _rebuild() -> void:
 	_col.move_child(_col.get_child(_col.get_child_count() - 1), 0)
 	_col.add_child(_contract_card())
 	_col.move_child(_col.get_child(_col.get_child_count() - 1), 1)
+	var at: int = 2
+	if _has_profile():
+		_col.add_child(_profile_card())
+		_col.move_child(_col.get_child(_col.get_child_count() - 1), at)
+		at += 1
 	# ⚠ **병역은 다녀왔거나 다니는 중일 때만 낀다.** 미필이 기본값이라 늘
 	# 띄우면 아무 뜻이 없는 줄이 하나 붙어 있는다
 	if not (_vm.get("military", {}) as Dictionary).is_empty():
 		_col.add_child(_military_card())
-		_col.move_child(_col.get_child(_col.get_child_count() - 1), 2)
+		_col.move_child(_col.get_child(_col.get_child_count() - 1), at)
 	_build_tabs()
 	_rebuild_tab()
 
@@ -450,6 +455,36 @@ func _body_card() -> Card:
 				AppTheme.SEV_COLOR.get(h.get("severity", "light"), AppTheme.TEXT_DIM),
 			))
 	return c
+
+
+## 선수 정보 — F-6b. 02는 `PlayerDetailModal:590-596`에서 이름 밑에
+## 생일과 투구 방향을 붙인다.
+##
+## ⚠ **빈 줄은 안 만든다.** 옛 세이브엔 축이 없다 — 없는 것과 고른 것이
+## 구분돼야 한다. 셋 다 비면 카드 자체가 안 뜬다
+func _profile_card() -> Card:
+	var c := _card("선수 정보")
+	var birthday: String = String(_vm.get("birthday", ""))
+	if not birthday.is_empty():
+		c.body.add_child(_row("생년월일", birthday))
+	var hand: String = String(_vm.get("handedness", ""))
+	var form: String = String(_vm.get("pitching_form", ""))
+	if not hand.is_empty() or not form.is_empty():
+		var parts := PackedStringArray()
+		if not hand.is_empty():
+			parts.append(hand)
+		if not form.is_empty():
+			parts.append(form)
+		c.body.add_child(_row("투구", " · ".join(parts)))
+	return c
+
+
+## 보여줄 게 하나라도 있나. **빈 카드를 띄우면 데이터가 없는 건지
+## 안 온 건지 알 수 없다**
+func _has_profile() -> bool:
+	return not (String(_vm.get("birthday", "")).is_empty()
+		and String(_vm.get("handedness", "")).is_empty()
+		and String(_vm.get("pitching_form", "")).is_empty())
 
 
 func _contract_card() -> Card:

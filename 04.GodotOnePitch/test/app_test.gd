@@ -79,7 +79,7 @@ func test_starting_a_game_saves_it_immediately() -> void:
 	var a := await _mount()
 	a._on_new_game(2)
 	await await_idle_frame()
-	a._on_start("박한별", "TEAM_HS_AEWOL")
+	a._on_start({"name": "박한별", "team_id": "TEAM_HS_AEWOL"})
 	await await_idle_frame()
 
 	assert_bool(a.current() is AppRoot).is_true()

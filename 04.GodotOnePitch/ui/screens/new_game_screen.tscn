@@ -56,6 +56,36 @@ layout_mode = 2
 [node name="Team" type="OptionButton" parent="Pad/Center/Col"]
 layout_mode = 2
 
+[node name="HandLabel" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="Hand" type="OptionButton" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="FormLabel" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="Form" type="OptionButton" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="FormDesc" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="BirthLabel" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="BirthRow" type="HBoxContainer" parent="Pad/Center/Col"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Month" type="OptionButton" parent="Pad/Center/Col/BirthRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Day" type="OptionButton" parent="Pad/Center/Col/BirthRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="Spacer" type="Control" parent="Pad/Center/Col"]
 layout_mode = 2
 size_flags_vertical = 3

@@ -1,0 +1,95 @@
+extends GdUnitTestSuite
+
+## 새 게임 화면의 방향 · 폼 · 생년월일 입력 — F-6b.
+##
+## ⚠ **화면에서 고른 것이 세이브까지 가는지를 본다.** ViewModel만 검사하면
+## 위젯이 안 붙어 있어도 통과한다 — 지금까지 죽은 배선을 열두 개 찾았는데
+## 절반이 그 모양이었다.
+
+const NEW_GAME := preload("res://ui/screens/new_game_screen.tscn")
+
+
+func _mount() -> NewGameScreen:
+	var n: NewGameScreen = NEW_GAME.instantiate()
+	add_child(n)
+	await await_idle_frame()
+	return n
+
+
+func _opts(b: OptionButton) -> PackedStringArray:
+	var out := PackedStringArray()
+	for i in b.item_count:
+		out.append(b.get_item_text(i))
+	return out
+
+
+func test_방향과_폼_고르는_자리가_있다() -> void:
+	var n: NewGameScreen = await _mount()
+	assert_array(_opts(n._hand)).is_equal(["우투", "좌투"])
+	assert_array(_opts(n._form)).is_equal(["오버핸드", "사이드암", "언더스로"])
+
+
+func test_고른_폼의_설명이_바뀐다() -> void:
+	var n: NewGameScreen = await _mount()
+	# 02 `formOptions`의 설명 그대로
+	assert_str(n._form_desc.text).contains("표준 릴리스")
+	n._form.selected = 2
+	n._update()
+	assert_str(n._form_desc.text).contains("타이밍 파괴형")
+
+
+func test_달을_바꾸면_없는_날이_사라진다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._month.selected = 0  # 1월
+	n._fill_days()
+	assert_int(n._day.item_count).is_equal(31)
+	n._month.selected = 1  # 2월 — 2010은 평년이다
+	n._fill_days()
+	assert_int(n._day.item_count).is_equal(28)
+
+
+## ⚠ **31일을 고른 채 2월로 옮기면 28일로 당겨져야 한다.**
+## 02가 그렇게 한다 — 안 하면 2월 31일이 저장된다
+func test_넘치는_날은_그_달_마지막으로_당긴다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._month.selected = 0
+	n._fill_days()
+	n._day.selected = 30  # 31일
+	n._month.selected = 1
+	n._fill_days()
+	assert_int(n._day.selected).is_equal(27)  # 28일
+	assert_int(int(n.current_profile()["birth_day"])).is_equal(28)
+
+
+## 배선의 끝 — 고른 것이 실제 세이브에 들어가나
+func test_고른_것이_주인공에게_간다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._name.text = "박한별"
+	n._hand.selected = 1        # 좌투
+	n._form.selected = 1        # 사이드암
+	n._month.selected = 6       # 7월
+	n._fill_days()
+	n._day.selected = 8         # 9일
+
+	var p: Dictionary = n.current_profile()
+	p["seed"] = 4242
+	var me: Dictionary = NewGameVm.start(p).get("protagonist", {})
+	assert_str(String(me["name"])).is_equal("박한별")
+	assert_str(String(me["handedness"])).is_equal("L")
+	assert_str(String(me["pitching_form"])).is_equal("sidearm")
+	assert_str(String(me["birthday"])).is_equal("2010-07-09")
+
+
+## 화면이 만든 사전 그대로 신호가 나가나 — 두 벌이면 요약과 세이브가 갈린다
+func test_시작_신호가_고른_것을_그대로_들고_간다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._hand.selected = 1
+	n._month.selected = 11
+	n._fill_days()
+	var got: Array = []
+	n.start_requested.connect(func(profile: Dictionary) -> void: got.append(profile))
+	n._on_start()
+	await await_idle_frame()
+	assert_int(got.size()).is_equal(1)
+	assert_str(String(got[0]["handedness"])).is_equal("L")
+	assert_int(int(got[0]["birth_month"])).is_equal(12)

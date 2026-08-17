@@ -33,6 +33,27 @@ const LEAGUE_SHORT: Dictionary = {
 ## 같은 말이 떠야 하므로 여기 다시 적지 않는다
 
 
+## 사람이 읽는 투구 폼. **없으면 빈칸이다** — 옛 세이브엔 축이 없고,
+## "오버핸드"로 채우면 없는 것과 고른 것이 안 갈린다.
+##
+## ⚠ **`threeQuarter`도 빈칸이다.** 02 타입과 라벨 표에는 있지만 고를 수
+## 없는 값이라 `NewGameVm.FORM_OPTIONS`에 안 옮겼다 — 여기서 이름을 주면
+## 두 곳이 갈린다
+static func form_label(raw: String) -> String:
+	for f in NewGameVm.FORM_OPTIONS:
+		if f[0] == raw:
+			return f[1]
+	return ""
+
+
+## `2010-07-09` → `2010년 7월 9일`. **꼴이 아니면 빈칸이다**
+static func birthday_label(raw: String) -> String:
+	var parts: PackedStringArray = raw.split("-")
+	if parts.size() != 3:
+		return ""
+	return "%d년 %d월 %d일" % [int(parts[0]), int(parts[1]), int(parts[2])]
+
+
 static func build(s: Dictionary) -> Dictionary:
 	var p: Dictionary = s.get("protagonist", {})
 	var league_id: String = p.get("league_id", "")
@@ -47,6 +68,11 @@ static func build(s: Dictionary) -> Dictionary:
 	return {
 		"team_name": team_name_of(p),
 		"league_short": LEAGUE_SHORT.get(league_id, league_id),
+		"birthday": birthday_label(String(p.get("birthday", ""))),
+		# 주인공은 투수다 — "투"를 붙인다
+		"handedness": PlayerDetailVm.handedness_label(
+			String(p.get("handedness", "")), true),
+		"pitching_form": form_label(String(p.get("pitching_form", ""))),
 		"injury": _injury(p.get("injury", null)),
 		"injury_history": _injury_history(s),
 		"military": military_of(p),

@@ -15,6 +15,49 @@ const START_LEAGUE := "LEAGUE_HIGHSCHOOL"
 
 const DEFAULT_NAME := "김한결"
 
+## 투구 방향 — 02 `handednessOptions`. **"S"(양투)는 고를 수 없다** —
+## 라벨 표(`handednessLabel`)에만 남아 있는 죽은 값이다
+const HANDEDNESS_OPTIONS: Array[Array] = [["R", "우투"], ["L", "좌투"]]
+
+## 투구 폼 — 02 `formOptions`. **셋이다.** 타입과 라벨 표에는
+## `threeQuarter`가 있는데 선택지에 없다 — 고를 수 없으니 안 옮겼다.
+##
+## ⚠ **02에서도 이 값은 저장만 되고 아무 데도 안 쓰인다.** 설명이 능력치
+## 이야기를 하지만(`구위 손실, 무브먼트 극대화`) 시뮬에 안 먹인다 —
+## 표시용 축이다. 그걸 바꾸는 건 이주가 아니라 새 밸런스다
+const FORM_OPTIONS: Array[Array] = [
+	["overhand", "오버핸드", "표준 릴리스. 낙차 있는 직구와 커브에 유리"],
+	["sidearm", "사이드암", "횡방향 무브먼트 특화. 동일 손 타자 봉쇄"],
+	["underhand", "언더스로", "타이밍 파괴형. 구위 손실, 무브먼트 극대화"],
+]
+
+## 생년은 고정이다 — 02가 `2010-MM-DD`로 박아 뒀다.
+## 04도 시작 2027년에 17세라 2010이 맞는다(우연이 아니라 같은 값이다)
+const BIRTH_YEAR: int = 2010
+const DEFAULT_BIRTH_MONTH: int = 4
+const DEFAULT_BIRTH_DAY: int = 1
+
+## 02 `DAYS_IN_MONTH` — **윤년을 안 본다.** 2010은 평년이라 2월이 28일이다
+const DAYS_IN_MONTH: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+
+static func days_in_month(month: int) -> int:
+	return DAYS_IN_MONTH[clampi(month, 1, 12) - 1]
+
+
+## 그 달에 있는 날로 당긴다 — 02 `$: if (birthDay > maxDay) birthDay = maxDay`.
+##
+## ⚠ **정본은 여기 하나다.** `build`와 `birthday_of`가 각자 당기면 한쪽이
+## 등가가 되고, 그때 2월 31일 같은 생일이 조용히 저장된다
+static func clamped_day(month: int, day: int) -> int:
+	return clampi(day, 1, days_in_month(month))
+
+
+## `2010-07-09` 꼴. 02 `birthdayStr`가 두 자리로 채운다
+static func birthday_of(month: int, day: int) -> String:
+	var m: int = clampi(month, 1, 12)
+	return "%d-%02d-%02d" % [BIRTH_YEAR, m, clamped_day(m, day)]
+
 
 static func build(s: Dictionary = {}) -> Dictionary:
 	var teams: Array = []
@@ -33,10 +76,28 @@ static func build(s: Dictionary = {}) -> Dictionary:
 	# 여기서는 그 말이 사라진다
 	var overwrite: bool = bool(s.get("overwrite", false))
 
+	var hands: Array = []
+	for h in HANDEDNESS_OPTIONS:
+		hands.append({"value": h[0], "label": h[1]})
+	var forms: Array = []
+	for f in FORM_OPTIONS:
+		forms.append({"value": f[0], "label": f[1], "desc": f[2]})
+
+	var month: int = clampi(int(s.get("birth_month", DEFAULT_BIRTH_MONTH)), 1, 12)
+	var day: int = clamped_day(month, int(s.get("birth_day", DEFAULT_BIRTH_DAY)))
+
 	return {
 		"name": name,
 		"team_id": team_id,
 		"teams": teams,
+		"handedness": String(s.get("handedness", HANDEDNESS_OPTIONS[0][0])),
+		"handedness_options": hands,
+		"pitching_form": String(s.get("pitching_form", FORM_OPTIONS[0][0])),
+		"form_options": forms,
+		"birth_month": month,
+		"birth_day": day,
+		"birth_day_max": days_in_month(month),
+		"birthday": birthday_of(month, day),
 		"seed": int(s.get("seed", 0)),
 		"overwrite": overwrite,
 		"start_label": "덮어쓰고 시작" if overwrite else "시작",
@@ -59,4 +120,11 @@ static func start(p: Dictionary) -> Dictionary:
 		"name": String(p.get("name", DEFAULT_NAME)).strip_edges(),
 		"team_id": p.get("team_id", ""),
 		"league_id": START_LEAGUE,
+		# ⚠ **주인공은 고른 대로다.** 안 넘기면 `PlayerGen.roster`가 id 해시로
+		# 뽑은 방향이 남아 조용히 다른 손잡이가 된다
+		"handedness": String(p.get("handedness", HANDEDNESS_OPTIONS[0][0])),
+		"pitching_form": String(p.get("pitching_form", FORM_OPTIONS[0][0])),
+		"birthday": birthday_of(
+			int(p.get("birth_month", DEFAULT_BIRTH_MONTH)),
+			int(p.get("birth_day", DEFAULT_BIRTH_DAY))),
 	})

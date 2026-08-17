@@ -1,0 +1,12 @@
+[
+ [
+  "ViewModel이 Label 노드를 만든다 (화면이 VM에 새어 든다)",
+  "static func days_in_month(month: int) -> int:",
+  "static func _leak() -> Label:\n\treturn Label.new()\n\n\nstatic func days_in_month(month: int) -> int:"
+ ],
+ [
+  "ViewModel이 Control을 받는다",
+  "static func days_in_month(month: int) -> int:",
+  "static func _leak(c: Control) -> void:\n\tc.queue_free()\n\n\nstatic func days_in_month(month: int) -> int:"
+ ]
+]

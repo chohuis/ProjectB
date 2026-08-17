@@ -61,6 +61,7 @@ func _init() -> void:
 
 
 const STATUS := preload("res://ui/screens/status_screen.tscn")
+const NEW_GAME := preload("res://ui/screens/new_game_screen.tscn")
 const MAIN := preload("res://ui/screens/main_screen.tscn")
 const APP := preload("res://ui/app_root.tscn")
 const APP_ENTRY := preload("res://ui/app.tscn")
@@ -104,6 +105,16 @@ func _build(which: String) -> Control:
 			return _screen(Fixtures.status_vm())
 		"status-empty":
 			return _screen(Fixtures.status_vm_empty())
+		# 선수 정보 카드 (F-6b). **진짜 새 게임으로 만든다** — 픽스처에
+		# 손으로 박으면 배선이 죽어도 화면엔 나온다
+		"status-profile":
+			return _screen(StatusVm.build(NewGameVm.start({
+				"seed": 20270101, "season_year": 2027, "name": "김한결",
+				"team_id": "TEAM_HS_AEWOL", "handedness": "L",
+				"pitching_form": "sidearm", "birth_month": 7, "birth_day": 9})))
+		# 새 게임 화면 (F-6b) — 방향 · 폼 · 생년월일 입력
+		"new-game":
+			return NEW_GAME.instantiate()
 		"main":
 			return _main(Fixtures.main_state())
 		"main-gameday":

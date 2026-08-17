@@ -1,0 +1,42 @@
+[
+ [
+  "생년이 02와 다르다 (2010 -> 2009)",
+  "const BIRTH_YEAR: int = 2010",
+  "const BIRTH_YEAR: int = 2009"
+ ],
+ [
+  "2월이 윤년이다 (02 DAYS_IN_MONTH는 28이다)",
+  "const DAYS_IN_MONTH: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]",
+  "const DAYS_IN_MONTH: Array[int] = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]"
+ ],
+ [
+  "없는 날짜를 안 당긴다 (2월 31일이 저장된다)",
+  "\treturn clampi(day, 1, days_in_month(month))",
+  "\treturn day"
+ ],
+ [
+  "기본 생일이 02와 다르다 (4월 1일 -> 1월 1일)",
+  "const DEFAULT_BIRTH_MONTH: int = 4",
+  "const DEFAULT_BIRTH_MONTH: int = 1"
+ ],
+ [
+  "죽은 값 threeQuarter를 선택지에 넣는다",
+  "\t[\"sidearm\", \"사이드암\", \"횡방향 무브먼트 특화. 동일 손 타자 봉쇄\"],",
+  "\t[\"threeQuarter\", \"스리쿼터\", \"\"],\n\t[\"sidearm\", \"사이드암\", \"횡방향 무브먼트 특화. 동일 손 타자 봉쇄\"],"
+ ],
+ [
+  "양투를 고를 수 있게 한다 (02 선택지엔 없다)",
+  "const HANDEDNESS_OPTIONS: Array[Array] = [[\"R\", \"우투\"], [\"L\", \"좌투\"]]",
+  "const HANDEDNESS_OPTIONS: Array[Array] = [[\"R\", \"우투\"], [\"L\", \"좌투\"], [\"S\", \"양투\"]]"
+ ],
+ [
+  "start가 고른 값을 안 넘긴다 (화면과 세이브가 갈린다)",
+  "\t\t\"handedness\": String(p.get(\"handedness\", HANDEDNESS_OPTIONS[0][0])),",
+  ""
+ ],
+ [
+  "build가 날을 안 당긴다 (화면 표시가 어긋난다)",
+  "\tvar day: int = clamped_day(month, int(s.get(\"birth_day\", DEFAULT_BIRTH_DAY)))",
+  "\tvar day: int = int(s.get(\"birth_day\", DEFAULT_BIRTH_DAY))"
+ ]
+]

@@ -278,6 +278,12 @@ static func new_game(p: Dictionary) -> Dictionary:
 	me["id"] = "PLY_PROTAGONIST"
 	me["name"] = p.get("name", me["name"])
 	me["is_protagonist"] = true
+	# ⚠ **고른 값이 생성값을 덮는다.** `PlayerGen.roster`가 id 해시로 방향을
+	# 뽑아 두었으므로, 안 덮으면 화면에서 고른 손잡이가 조용히 무시된다.
+	# `pitching_form`은 **표시용**이다 — 02도 저장만 하고 시뮬에 안 먹인다
+	me["handedness"] = p.get("handedness", me.get("handedness", "R"))
+	me["pitching_form"] = p.get("pitching_form", "overhand")
+	me["birthday"] = p.get("birthday", "")
 	me["fatigue"] = 0.0
 	me["condition"] = 100.0
 	me["injury"] = null

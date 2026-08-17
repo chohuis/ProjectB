@@ -98,8 +98,8 @@ func _on_continue(slot: int) -> void:
 	show_game(r["state"])
 
 
-func _on_start(player_name: String, team_id: String) -> void:
-	var state: Dictionary = NewGameVm.start({"name": player_name, "team_id": team_id})
+func _on_start(profile: Dictionary) -> void:
+	var state: Dictionary = NewGameVm.start(profile)
 	# ⚠ **만들자마자 저장한다.** 안 하면 첫 진행 전에 껐을 때 슬롯이 비어
 	# 있고, 사용자는 새 게임을 만든 기억만 남는다
 	Slots.save(_slot, state)

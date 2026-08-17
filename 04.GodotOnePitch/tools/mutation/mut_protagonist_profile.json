@@ -1,0 +1,17 @@
+[
+ [
+  "고른 방향을 안 쓴다 — NPC 규칙(id 해시)이 그대로 남는다",
+  "\tme[\"handedness\"] = p.get(\"handedness\", me.get(\"handedness\", \"R\"))",
+  ""
+ ],
+ [
+  "투구 폼을 안 넣는다 (축이 죽는다)",
+  "\tme[\"pitching_form\"] = p.get(\"pitching_form\", \"overhand\")",
+  ""
+ ],
+ [
+  "생년월일을 안 넣는다",
+  "\tme[\"birthday\"] = p.get(\"birthday\", \"\")",
+  ""
+ ]
+]
