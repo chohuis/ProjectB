@@ -192,6 +192,12 @@ static func resolve_contact(pitch_q: float, contact_q: float, batter: Dictionary
 		return "INPLAY_OUT" if roll < 0.92 else "HIT_SINGLE"
 
 	# 헛스윙 10 / 파울 40 / 인플레이 50 (안타 23%)
+	#
+	# ⚠ **여기에도 홈런을 둔다** (P-2b). 홈런이 `contact_q < 38` 두 밴드에만
+	# 있어서 **타율과 홈런을 같은 손잡이로 못 움직였다** — F-5b에서 타순을
+	# 고쳐 타율이 02 쪽으로 오자 홈런은 오히려 −22% → −33%로 멀어졌다.
+	# 밴드에 닿는 타석 자체가 줄어서다. 이 표는 02에서 옮긴 것이 아니라
+	# 04가 실측으로 만든 것이라 옮겨올 값이 없다 — **구조를 고치고 잰다**
 	if contact_q >= 45.0:
 		if roll < 0.055:
 			return "STRIKE_SWING"
@@ -199,7 +205,9 @@ static func resolve_contact(pitch_q: float, contact_q: float, batter: Dictionary
 			return "FOUL"
 		if roll < clampf(0.885 - hit_bonus, 0.62, 0.95):
 			return "INPLAY_OUT"
-		return "HIT_SINGLE" if roll < clampf(0.97 - hit_bonus * 0.5, 0.90, 0.99) else "HIT_DOUBLE"
+		if roll < clampf(0.965 - hit_bonus * 0.5, 0.90, 0.985):
+			return "HIT_SINGLE"
+		return "HIT_DOUBLE" if roll < 0.99 else "HOME_RUN"
 
 	# 헛스윙 7 / 파울 35 / 인플레이 58 (안타 28%)
 	if contact_q >= 38.0:
