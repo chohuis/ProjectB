@@ -42,6 +42,19 @@ static func tier_of(stadium_id: String) -> String:
 	return String(data().get("tier_of", {}).get(stadium_id, DEFAULT_TIER))
 
 
+## 사람이 읽는 구장 이름 — F-4c. 원본: `refs.json`의 `stadiums`
+## (02 `TeamDetailModal.svelte:41-42`가 그 표를 찾아 쓴다).
+##
+## ⚠ **국내 182팀의 구장이 전부 `STADIUM_SEOUL_ROYALS` 꼴로 화면에 샜다.**
+## 이름 표를 안 옮겨서다 — 02 refs.json에 27개가 다 있었다.
+##
+## ⚠ **폴백은 원문 그대로다.** 실측(238팀)에서 182팀이 표에 있고 56팀이
+## 해외 한글 이름이며 **표에 없는 id꼴은 0팀**이다. 그래서 02의
+## `id.replace(/^STADIUM_/, "")` 갈래는 04에선 절대 안 도는 죽은 코드다
+static func name_of(stadium_id: String) -> String:
+	return String(data().get("names", {}).get(stadium_id, stadium_id))
+
+
 ## 전용 그림이 있나. 없으면 티어 기본 그림을 쓴다
 static func has_own_image(stadium_id: String) -> bool:
 	return data().get("images", []).has(stadium_id)

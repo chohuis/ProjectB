@@ -49,7 +49,7 @@ static func build(state: Dictionary, team_id: String) -> Dictionary:
 		"id": team_id,
 		"name": name,
 		"city": String(World.team_field({}, team_id, "city", "")),
-		"stadium": _stadium_name(String(World.team_field({}, team_id, "stadium", ""))),
+		"stadium": ParkVm.name_of(String(World.team_field({}, team_id, "stadium", ""))),
 		"league_label": String(StatusVm.LEAGUE_SHORT.get(league_id, league_id)),
 		# 내 팀이면 그렇다고 말한다 — 리그 표에서 눌러 들어오면 헷갈린다
 		"is_mine": team_id == String(state.get("protagonist", {}).get("team_id", "")),
@@ -57,27 +57,6 @@ static func build(state: Dictionary, team_id: String) -> Dictionary:
 		"profile": _profile(world, team_id),
 		"roster": TeamVm.rows_of(world, team_id, me),
 	}
-
-
-## 사람이 읽는 구장 이름. **id 형태면 빈 문자열이다.**
-##
-## ⚠ **국내 182팀의 구장이 전부 `STADIUM_SEOUL_ROYALS` 꼴이다** — 이름
-## 데이터가 아예 없다(해외 56팀만 "엠파이어 스타디움"처럼 이름이 있다).
-## 그대로 쓰면 화면에 원문이 샌다 — **캡처에서 실제로 그렇게 찍혔다.**
-## 이름이 생기기 전까지는 줄을 안 만드는 게 낫다. ⬜ F-4c로 적어 뒀다
-## ⚠ **`to_upper()`로 가리면 안 된다.** 한글은 대문자가 자기 자신이라
-## "엠파이어 스타디움"까지 id로 판정된다 — 실제로 그렇게 지웠다.
-## **ASCII 대문자·숫자·밑줄만으로 된 것**이 id다
-static func _stadium_name(raw: String) -> String:
-	if raw.is_empty():
-		return ""
-	for i in raw.length():
-		var c: int = raw.unicode_at(i)
-		var ascii_id: bool = (c >= 65 and c <= 90) \
-			or (c >= 48 and c <= 57) or c == 95
-		if not ascii_id:
-			return raw
-	return ""
 
 
 ## 이번 시즌 성적. **`Standings`가 정본이다** — 화면이 일정에서 다시 세면

@@ -1,0 +1,17 @@
+[
+ [
+  "이름 표를 안 본다 — id를 그대로 돌려준다 (182팀이 화면에 샌다)",
+  "\treturn String(data().get(\"names\", {}).get(stadium_id, stadium_id))",
+  "\treturn stadium_id"
+ ],
+ [
+  "폴백이 빈 문자열 — 해외 56팀의 구장이 사라진다",
+  "\treturn String(data().get(\"names\", {}).get(stadium_id, stadium_id))",
+  "\treturn String(data().get(\"names\", {}).get(stadium_id, \"\"))"
+ ],
+ [
+  "다른 표를 본다 — tier_of를 이름으로 쓴다",
+  "data().get(\"names\", {})",
+  "data().get(\"tier_of\", {})"
+ ]
+]

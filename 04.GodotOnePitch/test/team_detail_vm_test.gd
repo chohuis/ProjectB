@@ -286,18 +286,16 @@ func test_a_player_opens_over_the_team_and_returns_to_it() -> void:
 	assert_bool(r.team_detail_screen().visible).is_true()
 
 
-## ⚠ **국내 182팀의 구장이 전부 `STADIUM_SEOUL_ROYALS` 꼴이다** — 이름
-## 데이터가 아예 없다. 그대로 쓰면 화면에 원문이 샌다(**캡처에서 실제로
-## 그렇게 찍혔다** — F-5·F-4a에 이어 세 번째다)
+## ⚠ **국내 182팀의 구장이 전부 `STADIUM_SEOUL_ROYALS` 꼴로 샜다** —
+## 이름 표를 안 옮겨서다(**캡처에서 실제로 그렇게 찍혔다** — F-5·F-4a에
+## 이어 세 번째다). F-4c에서 02 refs.json의 27개를 옮겼다.
+## 값을 못 박는다 — `World.team_field`에서 끌어오면 아무것도 안 본다
 func test_a_raw_stadium_id_does_not_leak() -> void:
 	var vm: Dictionary = TeamDetailVm.build(_state(), TEAM)
-	assert_str(String(vm["stadium"])).override_failure_message(
-		"구장이 원문 id로 샌다: %s" % vm["stadium"]).is_empty()
+	assert_str(String(vm["stadium"])).is_equal("로열파크")
 
 
-## 해외 팀은 이름이 있으니 보여준다 — 있는 것까지 감추면 안 된다
+## 해외 팀은 표에 없다. 원문이 곧 사람이 읽는 이름이므로 그대로 나온다
 func test_a_real_stadium_name_is_kept() -> void:
 	var vm: Dictionary = TeamDetailVm.build(_state(), "TEAM_ABL_EMPIRE_1")
-	assert_str(String(vm["stadium"])).is_equal(
-		String(World.team_field({}, "TEAM_ABL_EMPIRE_1", "stadium", "")))
-	assert_str(String(vm["stadium"])).is_not_empty()
+	assert_str(String(vm["stadium"])).is_equal("엠파이어 스타디움")
