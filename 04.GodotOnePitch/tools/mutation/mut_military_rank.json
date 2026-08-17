@@ -1,0 +1,14 @@
+[
+	["문턱을 안 본다",
+		"\t\tif weeks <= int(b[0]):",
+		"\t\tif false:"],
+	["첫 칸만 본다",
+		"\t\tif weeks <= int(b[0]):\n\t\t\treturn String(b[1])",
+		"\t\treturn String(b[1])"],
+	["경계를 하나 밀어 놓는다",
+		"const RANK_BANDS: Array[Array] = [[8, \"이병\"], [34, \"일병\"], [60, \"상병\"]]",
+		"const RANK_BANDS: Array[Array] = [[9, \"이병\"], [35, \"일병\"], [61, \"상병\"]]"],
+	["병장이 안 온다",
+		"\treturn RANK_TOP",
+		"\treturn \"상병\""]
+]

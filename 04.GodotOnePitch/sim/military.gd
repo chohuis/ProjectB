@@ -40,6 +40,25 @@ const STATUS_DONE: String = "군필"
 
 ## 복무 형태 이름. **여기가 정본이다** — 소식에도 화면에도 같은 말이 떠야 한다.
 ##
+## 복무 주차 → 계급. **02 `MilitaryStatusPanel.svelte:12-18` 값 그대로다.**
+##
+## ⚠ **여기 두는 이유는 정본을 하나로 두려는 것이다.** 화면에 두면 나중에
+## 소식·인물 화면이 각자 문턱을 적게 되고 한쪽이 조용히 갈린다.
+##
+## ⚠ **`SERVICE_WEEKS`(100)보다 문턱이 낮다.** 02는 복무가 72주였는데 04는
+## 100주다 — **문턱을 04에 맞춰 늘리지 않았다.** 늘리면 그건 02 값이 아니라
+## 내가 정한 값이 된다. 병장으로 39주를 보내는 게 지금 모습이다
+const RANK_BANDS: Array[Array] = [[8, "이병"], [34, "일병"], [60, "상병"]]
+const RANK_TOP: String = "병장"
+
+
+static func rank_of(weeks: int) -> String:
+	for b in RANK_BANDS:
+		if weeks <= int(b[0]):
+			return String(b[1])
+	return RANK_TOP
+
+
 ## ⚠ **모르는 값을 빈칸으로 두지 않는다.** 형태가 늘었는데 화면이 조용히
 ## 비면 아무도 모른다
 static func unit_label(unit: String) -> String:

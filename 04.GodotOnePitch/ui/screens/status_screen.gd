@@ -516,6 +516,10 @@ func _military_card() -> Card:
 	head.add_theme_constant_override("separation", AppTheme.GAP)
 	head.add_child(_badge(String(m.get("status", "")),
 		AppTheme.WARN if bool(m.get("serving", false)) else AppTheme.OK))
+	# 계급 — 02는 부대 배지 앞에 둔다. 복무 중일 때만 온다
+	var rank: String = String(m.get("rank", ""))
+	if not rank.is_empty():
+		head.add_child(_badge(rank, AppTheme.ACCENT))
 	var unit: String = String(m.get("unit_label", ""))
 	if not unit.is_empty():
 		var u := Label.new()

@@ -118,10 +118,26 @@
 
 ⚠ **계급 문턱 넷은 02 `MilitaryStatusPanel.svelte:12-18`에 있다** — 지어낼 게 없다.
 
-`SportsUnitApplicationModal`·`MilitaryEnlistAskModal`은 **엔진이 돈다**
-(`sim/military.gd`가 체육부대를 갈라 쓰고 `military_enlist` 대기 타입이 있다).
-**04가 그 둘을 어디서 묻는지 세는 게 먼저다** — `decision_screen` 갈래에
-없으므로 자동으로 정해지고 있을 수 있다.
+### 🔴 체육부대가 도달 불가다 — **열여덟 번째 죽은 배선** (2026-08-18)
+
+`sim/military.gd`는 체육부대를 **네 곳**에서 갈라 쓴다:
+`unit_label`(`:65`) · 입대 소식 문구(`:130`) · **복귀 적응 주차**
+(`RECOVERY_SPORTS`, `:179`) · 전역 소식(`:232`).
+그런데 **`"sports"`로 입대시키는 곳이 하나도 없다** —
+`career_decision.gd:413`이 `Military.enlist(state, "general", at_day)`
+**하나만** 부른다. 게다가 그 자리는 "갈 곳이 없을 때의 마지막 갈래"다.
+
+| 02 | 04 |
+|---|---|
+| `SportsUnitApplicationModal` — 상무에 **지원한다** | ❌ 지원하는 자리가 없다 |
+| `MilitaryEnlistAskModal` — 입대할지 **묻는다** | ❌ 조용히 정한다 |
+
+⚠ **02가 사용자에게 묻던 것을 04가 대신 정하고 있다.** 화면이 없는 게 아니라
+**선택 자체가 없다.** 그래서 체육부대의 이점(복귀 적응이 빠르다)이 게임에
+한 번도 안 나타난다.
+
+⚠ **여기는 "화면만 붙이면 되는" 일이 아니다.** 자격 조건(성적·나이·`career_stage`)을
+02에서 읽어 와야 하고 `decision_screen`에 갈래가 둘 는다. **따로 뗀다.**
 | `game-status/GameStatusModal` (599) | ❓ 검색 0건 | **무엇을 보여주는지부터 읽는다** |
 
 ### 2-4. 소식 패널 — **부분** (5)

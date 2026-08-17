@@ -176,6 +176,9 @@ static func military_of(p: Dictionary) -> Dictionary:
 		"unit_label": Military.unit_label(String(p.get(
 			"military_unit" if serving else "military_served_unit", ""))),
 		"enlist_year": int(p.get("military_enlist_year", 0)),
+		# ⚠ **복무 중일 때만이다.** 전역자에게 "병장"은 지금 뜻이 아니라
+		# 지난 뜻이다 — 남겨 두면 아직 군대에 있는 것처럼 읽힌다
+		"rank": Military.rank_of(served) if serving else "",
 		"weeks_served": served,
 		"weeks_total": Military.SERVICE_WEEKS,
 		# 채우고도 안 넘어간 주가 있으면 음수가 된다 — 0에서 멈춘다
