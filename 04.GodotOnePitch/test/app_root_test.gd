@@ -965,6 +965,7 @@ func test_the_money_actually_moves() -> void:
 ## 아무 일도 안 일어난다
 func test_a_subscription_reaches_the_training() -> void:
 	var grown: Array = []
+	var xps: Array = []
 	for subscribed in [false, true]:
 		var s: Dictionary = _real_game(777)
 		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
@@ -987,12 +988,19 @@ func test_a_subscription_reaches_the_training() -> void:
 		var r: AppRoot = await _mount(s)
 		for w in range(1, 31):
 			WeekRunner.run(r.state(), w * 7)
+		# ⚠ **능력치는 칸으로 떨어진다.** 차이가 다음 칸을 못 넘기면 두 쪽이
+		# 같은 값으로 만나 구독 효과가 지워진다 — F-9에서 시작 컨디션이
+		# 80으로 내려가자 실제로 둘 다 5.00에 멈췄다. **남은 XP로 가른다**
 		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
 			- before)
+		xps.append(float(r.state()["protagonist"].get("pitching_xp", {})
+			.get("velocity", 0.0)))
 
-	assert_float(grown[1]).override_failure_message(
-		"3분야를 구독했는데 안 한 것(%.2f)과 같이 컸다(%.2f)" % [grown[0], grown[1]]) \
-		.is_greater(grown[0])
+	var same: bool = is_equal_approx(grown[0], grown[1])
+	assert_bool(grown[1] > grown[0] or (same and xps[1] > xps[0])) \
+		.override_failure_message(
+			"3분야를 구독했는데 안 한 것(%.2f·XP %.2f)과 같이 컸다(%.2f·XP %.2f)"
+			% [grown[0], xps[0], grown[1], xps[1]]).is_true()
 
 
 # ── 부상이 실제로 닿는가 (B-3) ────────────────────────────────
@@ -1152,6 +1160,7 @@ func test_the_career_path_opens_at_the_week_boundary() -> void:
 ## 좋은 코치를 붙인 팀과 아무도 없는 팀이 똑같이 큰다
 func test_the_coach_reaches_the_weekly_training() -> void:
 	var grown: Array = []
+	var xps: Array = []
 	for good_coach in [false, true]:
 		var s: Dictionary = _real_game(777)
 		s["training_plan"] = {"primary": "TRN_VEL", "secondary": "TRN_CTRL_CMD"}
@@ -1171,12 +1180,18 @@ func test_the_coach_reaches_the_weekly_training() -> void:
 		var r: AppRoot = await _mount(s)
 		for w in range(1, 31):
 			WeekRunner.run(r.state(), w * 7)
+		# ⚠ **능력치는 칸으로 떨어진다** — 위 구독 검사와 같은 이유로
+		# 같은 칸에 멈추면 남은 XP로 가른다
 		grown.append(float(r.state()["protagonist"]["pitching"]["velocity"])
 			- before)
+		xps.append(float(r.state()["protagonist"].get("pitching_xp", {})
+			.get("velocity", 0.0)))
 
-	assert_float(grown[1]).override_failure_message(
-		"명코치를 붙였는데 아무도 없는 팀(%.2f)과 같이 컸다(%.2f)"
-		% [grown[0], grown[1]]).is_greater(grown[0])
+	var same: bool = is_equal_approx(grown[0], grown[1])
+	assert_bool(grown[1] > grown[0] or (same and xps[1] > xps[0])) \
+		.override_failure_message(
+			"명코치를 붙였는데 아무도 없는 팀(%.2f·XP %.2f)과 같이 컸다(%.2f·XP %.2f)"
+			% [grown[0], xps[0], grown[1], xps[1]]).is_true()
 
 
 ## ⚠ **국가대표도 주 경계에서 돈다.** 안 이으면 세계에서 제일 큰 사건이

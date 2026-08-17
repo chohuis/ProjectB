@@ -284,8 +284,14 @@ static func new_game(p: Dictionary) -> Dictionary:
 	me["handedness"] = p.get("handedness", me.get("handedness", "R"))
 	me["pitching_form"] = p.get("pitching_form", "overhand")
 	me["birthday"] = p.get("birthday", "")
-	me["fatigue"] = 0.0
-	me["condition"] = 100.0
+	# ⚠ **02와 값이 달랐다** (F-9). 04는 `0`·`100`으로 시작했는데 02
+	# `NewGamePage:280-281`은 `10`·`80`이다 — 팔팔한 채로 시작하면 첫 몇 주
+	# 훈련 효율이 02보다 높다(`Growth.week_xp`가 둘 다 읽는다)
+	me["fatigue"] = 10.0
+	me["condition"] = 80.0
+	# ⚠ **명성도 채우는 쪽이 없었다** (F-9). `Contract`가 스폰서 수입의 입력으로
+	# 읽는데 `get("fame", 0.0)`에 기대고 있었다 — 02 `NewGamePage:298`이 5다
+	me["fame"] = 5.0
 	# ⚠ **사기 축이 통째로 비어 있었다** (F-1b). 읽는 쪽은 셋인데
 	# (`CoachReport` · `GameGrowth` · `AutoTraining`) **채우는 쪽이 없어서**
 	# `get("morale", …)`의 기본값에 기대고 있었다 — 자동 훈련은 그래서

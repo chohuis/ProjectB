@@ -1,0 +1,62 @@
+[
+ [
+  "안 나온 경기도 적용한다 (벤치에 앉아 있어도 큰다)",
+  "\tif line.is_empty():\n\t\treturn false",
+  ""
+ ],
+ [
+  "무승부를 승리로 읽는다 (홈 무승부마다 사기가 오른다)",
+  "\tvar won: bool = not draw and String(result.get(\"winner_id\", \"\")) == my_team",
+  "\tvar won: bool = String(result.get(\"winner_id\", \"\")) == my_team"
+ ],
+ [
+  "누가 이겼든 승리로 친다",
+  "\tvar won: bool = not draw and String(result.get(\"winner_id\", \"\")) == my_team",
+  "\tvar won: bool = not draw"
+ ],
+ [
+  "점수차를 안 본다 (대패가 접전 패배와 같아진다)",
+  "\t\t\"score_diff\": absi(int(result.get(\"home_score\", 0))\n\t\t\t- int(result.get(\"away_score\", 0))),",
+  "\t\t\"score_diff\": 0,"
+ ],
+ [
+  "탈삼진을 안 넘긴다 (명성이 안 는다)",
+  "\t\t\"strikeouts\": int(line.get(\"k\", 0)) if String(line.get(\"role\", \"\")) == \"pitcher\" else 0,",
+  "\t\t\"strikeouts\": 0,"
+ ],
+ [
+  "타자 줄의 삼진당한 수를 탈삼진으로 센다",
+  "\t\t\"strikeouts\": int(line.get(\"k\", 0)) if String(line.get(\"role\", \"\")) == \"pitcher\" else 0,",
+  "\t\t\"strikeouts\": int(line.get(\"k\", 0)),"
+ ],
+ [
+  "스태프 사기 계수를 안 건다 (감독 동기부여가 죽는다)",
+  "\t\t\"morale_mod\": float(mods.get(\"morale\", 1.0)),",
+  "\t\t\"morale_mod\": 1.0,"
+ ],
+ [
+  "스태프 명성 계수를 안 건다 (구단주 홍보력이 죽는다)",
+  "\t\t\"fame_mod\": float(mods.get(\"fame\", 1.0)),",
+  "\t\t\"fame_mod\": 1.0,"
+ ],
+ [
+  "계산 결과를 주인공에 안 옮긴다 (배선이 죽는다)",
+  "\tfor k in PATCH_KEYS:\n\t\tp[k] = out[k]",
+  ""
+ ],
+ [
+  "명성을 델타가 아니라 덮어쓴다 (다른 경로가 쌓은 것이 지워진다)",
+  "\tp[\"fame\"] = maxf(float(p.get(\"fame\", 0.0)) + float(out.get(\"fame_delta\", 0)), 0.0)",
+  "\tp[\"fame\"] = maxf(float(out.get(\"fame_delta\", 0)), 0.0)"
+ ],
+ [
+  "피로·컨디션을 안 옮긴다 (경기를 아무리 해도 안 지친다)",
+  "\t\"fatigue\", \"condition\", \"morale\",",
+  "\t\"morale\","
+ ],
+ [
+  "능력치 경험치를 안 옮긴다 (경기로 안 큰다)",
+  "\t\"pitching\", \"batting\", \"pitching_xp\", \"batting_xp\",",
+  "\t\"pitching\", \"batting\","
+ ]
+]

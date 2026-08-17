@@ -355,6 +355,11 @@ func _record_match(m: Dictionary) -> void:
 		_state["season_stats"] = {}
 	SeasonStats.accumulate_into(_state["season_stats"], r.get("player_lines", []))
 
+	# ⚠ **경기 뒤 성장이 통째로 죽어 있었다** (F-9). `GameGrowth`를 아무도
+	# 안 불러서 능력·사기·명성·피로가 한 경기도 안 움직였다.
+	# **식은 `MatchOutcome`이 갖는다** — 여기 적으면 자동 진행 경로와 갈린다
+	MatchOutcome.apply(_state, r)
+
 
 func _on_match_requested() -> void:
 	open_match()
