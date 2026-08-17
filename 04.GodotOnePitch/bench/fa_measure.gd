@@ -90,8 +90,11 @@ func _market(log_line: Callable, seed_value: int, warmup: int) -> void:
 
 		var rng := RandomNumberGenerator.new()
 		rng.seed = Rng.mix(["fa", lid, seed_value, year])
+		# ⚠ **분모는 프로 전체다** (P-5). 여기가 `run_league`를 복제한
+		# 자리라 게임 쪽을 고쳐도 계측이 안 따라왔다 — 실제로 한 번 놓쳤다.
+		# ⬜ **계측이 게임 경로를 복제하는 것 자체가 빚이다**(QUEUE P-5c)
 		var out: Dictionary = FaMarket.resolve(market_players, teams,
-			FaRunner.league_salaries(world, lid), rng)
+			FaRunner.pro_salaries(world), rng)
 
 		for sign in out.get("signings", []):
 			signed += 1

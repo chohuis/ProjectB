@@ -1,0 +1,11 @@
+[
+	["리그 하나만 본다",
+		"\t\tout.append_array(league_salaries(world, lid))",
+		"\t\tout.append_array(league_salaries(world, \"LEAGUE_KBL\"))"],
+	["아무것도 안 모은다",
+		"\t\tout.append_array(league_salaries(world, lid))",
+		"\t\tpass"],
+	["시장이 다시 리그 하나만 받는다",
+		"\t\tpro_salaries(world), rng)",
+		"\t\tleague_salaries(world, league_id), rng)"]
+]

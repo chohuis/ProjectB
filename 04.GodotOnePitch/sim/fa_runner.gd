@@ -46,7 +46,21 @@ static func eligible_of(world: Dictionary, league_id: String) -> Array:
 	return out
 
 
-## 그 리그의 모든 연봉 — 등급 백분위의 분모다
+## **프로 전체**의 연봉 — 등급 백분위의 분모다.
+##
+## ⚠ **리그 하나만 보면 안 된다** (P-5). 02가 그 자리에 이유를 적어 뒀다
+## (`weekPhases/market.ts:1279`) — "연봉 기준선도 프로 전체에서, 리그 하나만
+## 보면 해외 시세가 안 잡힌다". 04는 리그별로 봤고, FA 자격자는 근속 쌓인
+## 베테랑이라 **자기 리그 안에서 전부 상위 30%에 들어 A등급만 나왔다.**
+## `protected_count 25`(B)와 `0`(C) 갈래가 도달 불가였다
+static func pro_salaries(world: Dictionary) -> Array:
+	var out: Array = []
+	for lid in TeamProfile.PRO_LEAGUES:
+		out.append_array(league_salaries(world, lid))
+	return out
+
+
+## 그 리그의 모든 연봉. **분모로는 쓰지 않는다** — `pro_salaries`가 분모다
 static func league_salaries(world: Dictionary, league_id: String) -> Array:
 	var out: Array = []
 	for tid in world.get("rosters", {}):
@@ -110,7 +124,7 @@ static func run_league(state: Dictionary, league_id: String,
 		})
 
 	var out: Dictionary = FaMarket.resolve(market_players, teams,
-		league_salaries(world, league_id), rng)
+		pro_salaries(world), rng)
 
 	var moved: int = 0
 	var limit: int = RosterMaintenance.roster_max_of(league_id)
