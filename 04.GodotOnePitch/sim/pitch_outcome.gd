@@ -219,7 +219,15 @@ static func resolve_contact(pitch_q: float, contact_q: float, batter: Dictionary
 			return "INPLAY_OUT"
 		if roll < clampf(0.955 - hit_bonus * 0.5, 0.87, 0.98):
 			return "HIT_SINGLE"
-		return "HIT_DOUBLE" if roll < clampf(0.985 - hit_bonus * 0.3, 0.95, 0.995) else "HIT_TRIPLE"
+		# ⚠ **여기에 홈런이 없어서 밴드 순서가 뒤집혀 있었다** (P-2c).
+		# 45 밴드(투수가 더 이긴 공)에는 홈런이 있는데 38 밴드에는 없었다 —
+		# 타자에게 유리할수록 장타가 늘어야 하는데 그 반대였다.
+		# ⚠ **3루타가 아니라 2루타를 가른다.** 실험②에서 3루타를 갈랐더니
+		# 볼넷이 6%p 밀렸다(세 시드 모두) — 3루타 구간은 그대로 두고 2루타에서
+		# 뗀다
+		if roll < clampf(0.978 - hit_bonus * 0.3, 0.94, 0.988):
+			return "HIT_DOUBLE"
+		return "HOME_RUN" if roll < 0.985 else "HIT_TRIPLE"
 
 	# 헛스윙 6 / 파울 28 / 인플레이 66 (안타 35%)
 	if contact_q >= 32.0:
