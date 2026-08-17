@@ -240,11 +240,26 @@ static func context_of(state: Dictionary, at_day: int,
 		var best_id: String = ""
 		var best_outs: int = -1
 		var pitched_here: bool = false
+		# ⚠ **내 팀 투수는 상대가 아니다** (P-11). `player_lines`는 양 팀 줄을
+		# 합쳐 놓아 어느 쪽인지가 사라진다 — 그래서 **우리 불펜이 나보다 많이
+		# 던지면 그가 "라이벌"로 잡혔다.** 한 해 실측에서 아홉 번 중 다섯 번이
+		# 그랬고, 그 자리를 뺏기는 만큼 **진짜 상대 선발이 안 잡혔다.**
+		#
+		# ⚠ **02도 같은 결함이 있다**(`advanceWeek.ts:1215-1222`는
+		# `playerId !== protagonist.id`만 본다). 하지만 "라이벌"이라는 말 자체가
+		# 상대편을 뜻한다 — 이건 옮길 값이 아니라 명백한 결함이라 고쳤다.
+		#
+		var mates: Dictionary = {}
+		for mate in World.roster_of(state.get("world", {}), team):
+			mates[String(mate.get("id", ""))] = true
 
 		for line in result.get("player_lines", []):
 			if String(line.get("role", "")) != "pitcher":
 				continue
-			if String(line.get("player_id", "")) != me:
+			var pid: String = String(line.get("player_id", ""))
+			if pid != me and mates.has(pid):
+				continue
+			if pid != me:
 				var outs_of: int = CareerSummary.innings_to_outs(
 					float(line.get("ip", 0.0)))
 				if outs_of > best_outs:
