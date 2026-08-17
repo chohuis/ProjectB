@@ -133,11 +133,13 @@ const GAMES_FULL: float = 5.0
 
 
 ## ⚠ **02는 `gamesPlayed`를 늘 1로 넣었다.** 그래서 `games` 항이 언제나
-## 0.2이고, 성적이 **있는** 선수의 기준값이 0.2×품질(최대 0.28)로 성적이
-## **없는** 선수의 0.70보다 낮다 — 뛰면 손해다.
+## 0.2였고, 성적이 **있는** 선수의 기준값이 0.2×품질(최대 0.28)로 성적이
+## **없는** 선수의 0.70보다 낮았다 — **뛰면 손해였다.**
 ##
-## 뒤집힌 게 맞다고 보지만 **밸런스 동결이라 그대로 옮긴다.** 이주 뒤에
-## 볼 목록에 있다. 여기서 고치면 02 실측값과 대조가 안 된다
+## ✅ **2026-08-17에 고쳤다** (D-2). 밸런스 동결이 풀린 뒤이고, **값을 새로
+## 정한 게 아니라 04가 이미 갖고 있던 출전 수를 안 읽고 있던 것**이다
+## (`perf_window`가 경기 줄을 순회하면서 세지를 않았다).
+## **02의 명백한 결함까지 물려받지 않는다** — P-11과 같은 판단이다
 static func perf_factor(perf: Dictionary, phase: String, player_type: String) -> float:
 	var weight: float = float(PHASE_WEIGHT.get(phase, 1.00))
 	if perf.is_empty():
@@ -420,25 +422,28 @@ static func perf_window(schedule: Array, to_day: int) -> Dictionary:
 		for line in result.get("player_lines", []):
 			var pid: String = String(line.get("player_id", ""))
 			if String(line.get("role", "")) == "pitcher":
-				var p: Array = pit.get(pid, [0.0, 0.0])
+				var p: Array = pit.get(pid, [0.0, 0.0, 0])
 				pit[pid] = [p[0] + float(line.get("er", 0.0)),
-					p[1] + float(line.get("ip", 0.0))]
+					p[1] + float(line.get("ip", 0.0)), int(p[2]) + 1]
 			else:
-				var b: Array = bat.get(pid, [0.0, 0.0])
+				var b: Array = bat.get(pid, [0.0, 0.0, 0])
 				bat[pid] = [b[0] + float(line.get("h", 0.0)),
-					b[1] + float(line.get("ab", 0.0))]
+					b[1] + float(line.get("ab", 0.0)), int(b[2]) + 1]
 
 	var out: Dictionary = {}
+	# ⚠ **02는 `gamesPlayed`를 늘 1로 넣었다** — 그래서 `games` 항이 언제나
+	# 0.2였고 **뛴 선수가 안 뛴 선수보다 못 컸다**(D-2). 04는 일정에 진짜
+	# 출전 줄이 있으므로 센다 — **지어내는 값이 아니라 이미 있는 값을 안
+	# 읽고 있던 것**이다. P-11과 같은 판단이다
 	for pid in pit:
 		var p: Array = pit[pid]
-		# ⚠ **02가 `gamesPlayed`를 늘 1로 넣는다.** `perf_factor` 주석 참고
-		var e: Dictionary = {"games_played": 1}
+		var e: Dictionary = {"games_played": int(p[2])}
 		if p[1] > 0.0:
 			e["era"] = SeasonStats.calc_era(p[0], p[1])
 		out[pid] = e
 	for pid in bat:
 		var b: Array = bat[pid]
-		var e: Dictionary = {"games_played": 1}
+		var e: Dictionary = {"games_played": int(b[2])}
 		if b[1] > 0.0:
 			e["avg"] = SeasonStats.calc_avg(b[0], b[1])
 		out[pid] = e

@@ -1,0 +1,20 @@
+[
+	["다시 늘 1로 센다 (투수)",
+		"\t\tvar e: Dictionary = {\"games_played\": int(p[2])}",
+		"\t\tvar e: Dictionary = {\"games_played\": 1}"],
+	["다시 늘 1로 센다 (타자)",
+		"\t\tvar e: Dictionary = {\"games_played\": int(b[2])}",
+		"\t\tvar e: Dictionary = {\"games_played\": 1}"],
+	["투수 출전을 안 센다",
+		"\t\t\t\t\tp[1] + float(line.get(\"ip\", 0.0)), int(p[2]) + 1]",
+		"\t\t\t\t\tp[1] + float(line.get(\"ip\", 0.0)), int(p[2])]"],
+	["타자 출전을 안 센다",
+		"\t\t\t\t\tb[1] + float(line.get(\"ab\", 0.0)), int(b[2]) + 1]",
+		"\t\t\t\t\tb[1] + float(line.get(\"ab\", 0.0)), int(b[2])]"],
+	["성적이 없어도 기준값을 안 준다",
+		"\t\treturn NO_PERF_BASE * weight",
+		"\t\treturn 0.0"],
+	["출전 수를 안 자른다",
+		"\tvar games: float = minf(float(perf.get(\"games_played\", 0)) / GAMES_FULL, 1.0)",
+		"\tvar games: float = float(perf.get(\"games_played\", 0)) / GAMES_FULL"]
+]

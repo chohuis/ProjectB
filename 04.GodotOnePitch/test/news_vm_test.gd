@@ -191,6 +191,9 @@ func test_an_empty_mailbox_does_not_break() -> void:
 
 
 func test_the_view_model_does_not_know_the_screen() -> void:
-	var src := FileAccess.get_file_as_string("res://ui/news_vm.gd")
-	assert_str(src).not_contains("Control")
-	assert_str(src).not_contains("Label")
+	# ⚠ **`not_contains`로는 못 본다** (D-8) — 대소문자를 무시하고 주석까지
+	# 코드로 본다
+	for node in ["Control", "Label"]:
+		assert_bool(CodeText.lacks("res://ui/news_vm.gd", node)) \
+			.override_failure_message("ViewModel이 화면 노드를 안다: %s" % node) \
+			.is_true()

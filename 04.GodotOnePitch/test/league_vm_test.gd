@@ -222,9 +222,12 @@ func test_a_season_with_no_games_yet_is_empty() -> void:
 
 
 func test_the_view_model_does_not_know_the_screen() -> void:
-	var src := FileAccess.get_file_as_string("res://ui/league_vm.gd")
-	assert_str(src).not_contains("Control")
-	assert_str(src).not_contains("Label")
+	# ⚠ **`not_contains`로는 못 본다** (D-8) — 대소문자를 무시하고 주석까지
+	# 코드로 본다. 사전 키 `"label"`이 `Label` 노드로 잡혀 거짓 실패가 난다
+	for node in ["Control", "Label"]:
+		assert_bool(CodeText.lacks("res://ui/league_vm.gd", node)) \
+			.override_failure_message("ViewModel이 화면 노드를 안다: %s" % node) \
+			.is_true()
 
 
 ## ⚠ **패자 표기가 둘이다** — 옛 세이브는 `null`, 이주한 코드는 빈 문자열.

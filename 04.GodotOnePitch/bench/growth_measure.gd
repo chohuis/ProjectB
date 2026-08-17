@@ -14,7 +14,7 @@ class_name GrowthMeasure
 
 
 func run(log_line: Callable, fail: Callable, weeks: int = 52,
-		seed_value: int = 20270101) -> int:
+		seed_value: int = 20270101, play_games: bool = false) -> int:
 	var s: Dictionary = World.new_game({"seed": seed_value, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 	var people: int = SeasonRunner.all_players(s).size()
@@ -29,8 +29,20 @@ func run(log_line: Callable, fail: Callable, weeks: int = 52,
 	var leveled: int = 0
 	var aged: int = 0
 	for w in weeks:
-		# ⚠ **경기 없이 돈다.** 여기서 재려는 건 성장 자체의 비용이다 —
-		# 경기까지 넣으면 `bench:day`와 같은 것을 두 번 재게 된다
+		# ⚠ **기본은 경기 없이 돈다.** 여기서 재려는 건 성장 자체의 비용이다 —
+		# 경기까지 넣으면 `bench:day`와 같은 것을 두 번 재게 된다.
+		#
+		# ⚠ **그런데 그러면 성적 항이 영영 안 걸린다** (D-2, 2026-08-17).
+		# `perf_window`는 치른 경기 줄을 읽는데 경기가 없으니 늘 빈 사전이고,
+		# 성장은 **전부 `NO_PERF_BASE` 갈래로만** 돈다 — 실제 게임과 다른
+		# 경로를 재고 있었다. `--games`로 진짜 경로를 켠다
+		if play_games:
+			var day_out: Dictionary = DayEngine.advance_to(s, Calendar.DAYS_PER_WEEK)
+			for g in day_out.get("games_today", []):
+				GameSim.play(g, day_out)
+			day_out.erase("games_today")
+			day_out.erase("weeks_crossed")
+			s = day_out
 		s["day"] = (w + 1) * Calendar.DAYS_PER_WEEK
 		var t0: int = Time.get_ticks_usec()
 		var out: Dictionary = NpcGrowth.run(s)

@@ -90,8 +90,11 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 			return OffseasonMeasure.new().run(log_line, fail,
 				arg_int(args, "years", 5), arg_int(args, "seed", 20270101))
 		"measure:growth":
+			# `--games 1`이면 경기를 실제로 치르고 잰다 — 안 켜면 성적 항이
+			# 영영 안 걸려 실제 게임과 다른 경로를 잰다(D-2)
 			return GrowthMeasure.new().run(log_line, fail,
-				arg_int(args, "weeks", 52), arg_int(args, "seed", 20270101))
+				arg_int(args, "weeks", 52), arg_int(args, "seed", 20270101),
+				arg_int(args, "games", 0) != 0)
 		"measure:career":
 			return CareerMeasure.new().run(log_line, fail,
 				arg_int(args, "careers", 60), arg_int(args, "seed", 20270101))

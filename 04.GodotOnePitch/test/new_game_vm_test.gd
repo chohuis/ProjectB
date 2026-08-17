@@ -114,20 +114,11 @@ func test_a_taken_slot_says_it_will_overwrite() -> void:
 ##     `Label` 노드로 잡는다. ViewModel이 문구를 주는 건 04 규칙에 맞는 쪽이다
 ##   · **주석을 코드로 봤다** — 02의 `handednessLabel`을 근거로 인용한 것까지
 ##     걸렸다. 근거를 못 적게 만드는 검사는 잘못됐다
-## 코드 줄만 보고, `String.find`로 대소문자를 가린다
+## 코드 줄만 보고, `String.find`로 대소문자를 가린다.
+## ⚠ **여기 있던 복사본을 `CodeText`로 옮겼다** (D-8) — 같은 오탐이 네 곳에
+## 더 있었고, 고치는 자리가 다섯이면 그중 하나는 반드시 빠진다
 func test_the_view_model_does_not_know_the_screen() -> void:
-	var code: String = _code_only("res://ui/new_game_vm.gd")
-	assert_int(code.find("Control")).override_failure_message(
-		"ViewModel이 화면 노드를 안다: Control").is_equal(-1)
-	assert_int(code.find("Label")).override_failure_message(
-		"ViewModel이 화면 노드를 안다: Label").is_equal(-1)
-
-
-## 주석을 뺀 소스. **문자열 안의 `#`은 안 가린다** — 이 파일엔 없고,
-## 있으면 그 줄이 잘려 검사가 더 느슨해질 뿐 거짓 통과를 만들진 않는다
-func _code_only(path: String) -> String:
-	var out := PackedStringArray()
-	for line in FileAccess.get_file_as_string(path).split("\n"):
-		var at: int = line.find("#")
-		out.append(line if at < 0 else line.substr(0, at))
-	return "\n".join(out)
+	for node in ["Control", "Label"]:
+		assert_bool(CodeText.lacks("res://ui/new_game_vm.gd", node)) \
+			.override_failure_message("ViewModel이 화면 노드를 안다: %s" % node) \
+			.is_true()

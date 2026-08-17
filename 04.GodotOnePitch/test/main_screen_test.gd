@@ -333,16 +333,16 @@ func test_the_row_color_marks_pending_and_unread() -> void:
 ##
 ## 원본 `MainPage.svelte`는 859줄이고 그중 상당수가 계산이었다
 func test_the_screen_does_not_compute() -> void:
-	var src := FileAccess.get_file_as_string("res://ui/screens/main_screen.gd")
-	# 집계·정렬·필터는 ViewModel이 할 일이다
-	assert_str(src).not_contains("sort_custom")
-	assert_str(src).not_contains("filter(")
-	# 날짜·주차를 화면이 다시 파면 안 된다
-	assert_str(src).not_contains("Calendar.")
-	# 진행 판단도 마찬가지 — 사전에 이미 답이 있다
-	assert_str(src).not_contains("DayEngine.")
-	# 스토어를 직접 읽으면 안 된다
-	assert_str(src).not_contains("NpcStore")
+	# ⚠ **`not_contains`로는 못 본다** (D-8) — 대소문자를 무시하고 **주석까지
+	# 코드로 본다.** 여기는 특히 위험하다: 주석에 "정렬은 ViewModel이 한다"고
+	# 적으면서 `sort_custom`을 인용하면 그것만으로 걸린다
+	#
+	# 집계·정렬·필터는 ViewModel이 할 일이고, 날짜·주차를 화면이 다시 파면
+	# 안 되고, 진행 판단도 사전에 이미 답이 있고, 스토어는 직접 읽지 않는다
+	for symbol in ["sort_custom", "filter(", "Calendar.", "DayEngine.", "NpcStore"]:
+		assert_bool(CodeText.lacks("res://ui/screens/main_screen.gd", symbol)) \
+			.override_failure_message("화면이 계산을 갖고 있다: %s" % symbol) \
+			.is_true()
 
 
 ## ⚠ **`MainVm`은 반대로 화면을 몰라야 한다.** 알면 두 방향 의존이 생겨

@@ -725,9 +725,33 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       더 붙으면 바로 넘는다. **회귀가 나면 그때 최적화한다** —
       먼저 볼 곳: `GameLoop.play` 루프 안의 사전 할당 · `MatchDay.bullpen_of`
       호출 빈도 · 투구마다 `Dictionary` 조회
-- [ ] **D-2** 02의 `gamesPlayed`가 늘 1이라 **뛰면 성장에 손해**다.
-      `NpcGrowth.perf_factor`에 그대로 옮겼고 검사가 못 박아 뒀다
-- [ ] **D-3** NPC 구종 배열 — NPC는 구종이 없어 `PitchStep.grade_of`가 기본값 3
+- [x] **D-2** 02의 `gamesPlayed`가 늘 1이라 **뛰면 성장에 손해**였다 —
+      2026-08-17 고침. 성적이 **있는** 선수가 0.2×품질(≤0.28)이고 성적이
+      **없는** 선수가 0.70이었다.
+      **값을 새로 정한 게 아니다** — `perf_window`가 경기 줄을 순회하면서
+      출전 수를 세지 않고 `1`을 박아 넣고 있었다. 04는 일정에 진짜 출전
+      줄이 있다. **02의 명백한 결함까지 물려받지 않는다**(P-11과 같은 판단).
+      ⚠ **재려다 계측 결함을 하나 더 찾았다.** `measure:growth`가 **경기를
+      안 치르고** 돌아서 `perf`가 늘 빈 사전이었다 — 성장이 전부
+      `NO_PERF_BASE` 갈래로만 돌았고, **고치기 전과 후가 한 칸도 안 달랐다.**
+      `--games 1`을 붙여 진짜 경로를 켰다.
+      실측(20주 · 경기 켬): **62,993칸 → 66,434칸 (+5.5%)** ·
+      사람당 한 해 8.59 → 9.05칸. 검사 8 · **변이 6/6**
+- [ ] **D-3** NPC 구종 배열 — **02도 처음엔 비어 있다. 갈리는 건 성장이다**
+      (2026-08-17 대조로 좁혔다)
+      04의 NPC는 `pitches`가 없어 `PitchAi.pick_from_arsenal`이 **늘 포심을
+      돌려준다** — 캡처 로그가 "1구 포심 · 2구 포심 … 6구 포심"이다. 그래서
+      `pitch_pattern_modifier`(같은 구종 반복 벌점)가 **NPC 경기 내내 걸린다.**
+      ⚠ **초기 생성이 문제가 아니다.** 02의 NPC도 `pitches`가 빈 채로
+      시작하고 `toEngineArsenal`이 `[{fastball, 3}]`로 떨어진다 — 04와 같다.
+      갈리는 건 **주간 성장**이다: 02 `npc_sim.rs:2833-2877`의
+      `decide_pitch_training`이 해마다 구종을 늘린다.
+      값은 02에 다 있다 — 목표 개수 `npc_pitch_target`(SP 4~5 · CP 2~4 ·
+      RP 3~4, 구속으로 갈린다) · 주당 진행 `pitch_progress_per_week`
+      (발견→1: 8주 · 1→2: 8주 · 2→3: 12주 · 3→4: 24주) ·
+      자격(33세 미만 · `ovr/potential >= 0.70` · 새 구종은 29세 미만).
+      ⚠ **밸런스에 닿는다** — 숙련도가 `grade_quality_bonus`로 결과에 걸리므로
+      붙이면 `measure:engine`을 전·후로 잰다. **따로 본다**
 - [ ] **D-4** `calc_pitching_ovr` OVR 재계산 (P0 뼈대 제거는 D-1에서 같이 했다)
 - [x] **D-5** 긴 진행의 표시 — `MainScreen`에 진행 막대.
       **한 번에 162일 · 2,095경기 · 24초를 간다**(D-8 실측). 글자만
@@ -752,13 +776,17 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       화면 좌표라 **밸런스 동결에는 안 걸린다**
 - [ ] **D-7** 주인공 경로와 NPC 경로의 성장 표가 둘이다
       (천장 감쇠 0.10 vs 0.00 · 나이 계수의 뜻이 다르다). **이주가 끝난 뒤** 합친다
-- [ ] **D-8** "화면을 모른다" 검사가 소스 **전체 문자열**을 본다.
-      `not_contains`가 **대소문자를 무시하고**(사전 키 `"label"`을 `Label` 노드로
-      잡는다) **주석까지 코드로 본다**(02 심볼을 근거로 인용하면 걸린다).
-      F-6b에서 `new_game_vm_test`가 실제로 그렇게 막았고 거기만 고쳤다
-      (`_code_only` + `String.find`). 같은 패턴이 `league_vm_test:226` ·
-      `match_vm_test:210` · `news_vm_test:195` · `main_screen_test:352`에도 있다 —
-      지금은 통과 중이라 급하지 않다
+- [x] **D-8** "화면을 모른다" 검사가 소스 **전체 문자열**을 보던 것 —
+      2026-08-17 고침. `not_contains`가 **대소문자를 무시하고**(사전 키
+      `"label"`을 `Label` 노드로 잡는다) **주석까지 코드로 본다**(02 심볼을
+      근거로 인용하면 걸린다). F-6b에서 `new_game_vm_test`가 실제로 그렇게
+      막혔고 **거기만** 고쳐 뒀었다.
+      → `test/support/code_text.gd`(`CodeText.lacks`)로 **정본을 하나로**
+      모으고 다섯 자리를 전부 그걸 쓰게 했다(`new_game_vm_test`의 사본도
+      지웠다 — 고칠 자리가 다섯이면 그중 하나는 반드시 빠진다).
+      ⚠ **양쪽을 다 확인했다**: 주석에 `sort_custom`을 인용해도 통과하고
+      (거짓 실패 없음), 진짜로 `sort_custom`·`Calendar.`·`NpcStore`를 넣으면
+      **3/3 잡힌다**(거짓 통과 없음)
 
 ## P. 02 대조에서 나온 것 (`docs/PARITY.md`)
 

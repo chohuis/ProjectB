@@ -206,9 +206,12 @@ func test_an_empty_state_does_not_break() -> void:
 
 
 func test_the_view_model_does_not_know_the_screen() -> void:
-	var src := FileAccess.get_file_as_string("res://ui/match_vm.gd")
-	assert_str(src).not_contains("Control")
-	assert_str(src).not_contains("Label")
+	# ⚠ **`not_contains`로는 못 본다** (D-8) — 대소문자를 무시하고 주석까지
+	# 코드로 본다. 02 심볼을 근거로 인용하면 그것만으로 걸린다
+	for node in ["Control", "Label"]:
+		assert_bool(CodeText.lacks("res://ui/match_vm.gd", node)) \
+			.override_failure_message("ViewModel이 화면 노드를 안다: %s" % node) \
+			.is_true()
 
 
 ## ⚠ **투수 줄이 팀별로 나뉘어 있다.** `pitcher_line` 하나를 읽으면
