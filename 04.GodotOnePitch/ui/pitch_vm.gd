@@ -59,7 +59,29 @@ static func repertoire(p: Dictionary) -> Array:
 	return out
 
 
-static func build(p: Dictionary, sel: Dictionary = {}) -> Dictionary:
+## 구종 칸 — M-6. 배운 것 뒤에 **빈 칸이 상한까지** 이어진다.
+## 원본: `pitchSlots.ts:38-53`.
+##
+## ⚠ **빈 칸에 구종 이름을 적지 않는다**(02 주석) — 슬롯은 특정 구종의
+## 자리가 아니라 **조건을 채운 것 중 아무거나 들어갈 칸**이다. 이름을 적으면
+## 화면이 없는 규칙을 지어내는 것이 된다.
+##
+## ⚠ **상한을 넘으면 넘은 대로 보여준다** — 잘라 내면 "왜 여섯 번째 공이
+## 안 보이지"가 된다
+static func slots_of(pitches: Array) -> Array:
+	var out: Array = []
+	for i in pitches.size():
+		out.append({"no": i + 1, "learned": true,
+			"id": String(pitches[i]["id"]), "label": String(pitches[i]["label"]),
+			"grade": int(pitches[i]["grade"])})
+	for i in range(pitches.size(), PitchDev.max_learned()):
+		out.append({"no": i + 1, "learned": false,
+			"id": "", "label": "", "grade": 0})
+	return out
+
+
+static func build(p: Dictionary, sel: Dictionary = {},
+		stamina: float = -1.0) -> Dictionary:
 	var pitches: Array = repertoire(p)
 
 	var pitch_id: String = sel.get("pitch_type", "")
@@ -82,8 +104,25 @@ static func build(p: Dictionary, sel: Dictionary = {}) -> Dictionary:
 	for k in POWER_LABEL:
 		powers.append({"id": k, "label": POWER_LABEL[k]})
 
+	# ⚠ **소모 식은 `Tuning`이 정본이다** — 여기서 다시 더하면 화면과 엔진이
+	# 갈린다. 02도 같은 규칙 파일을 읽는다(`pitchCost.ts:55-64`).
+	# **스태미나가 낮아도 구종을 막지 않는다** — 엔진이 그렇게 안 막고,
+	# 02는 그 자리에 "화면이 없는 규칙을 지어내는 것"이라고 적어 뒀다
+	var cost: float = Tuning.STAMINA_BASE \
+		+ (Tuning.STAMINA_AGGRESSIVE_BONUS if strategy == "aggressive" else 0.0) \
+		+ (Tuning.STAMINA_FASTBALL_BONUS if pitch_id == "fastball" else 0.0) \
+		+ float(Tuning.STAMINA_POWER_COST.get(power, 0.15))
+
 	return {
 		"pitches": pitches,
+		# 구종 칸 — M-6. **빈 칸까지 보여줘야 "몇 개 더 배울 수 있나"가 보인다**
+		"slots": slots_of(pitches),
+		"slot_label": "%d/%d" % [pitches.size(), PitchDev.max_learned()],
+		"cost": cost,
+		# ⚠ **스태미나를 모르면 남은 구수도 모른다.** 0으로 두면 "이제 못
+		# 던진다"로 읽힌다 — 모르는 것과 바닥인 것을 가른다
+		"has_pitches_left": stamina >= 0.0 and cost > 0.0,
+		"pitches_left": int(floor(stamina / cost)) if stamina >= 0.0 and cost > 0.0 else 0,
 		"pitch_type": pitch_id,
 		"pitch_label": pitch_label(pitch_id),
 		"zone": zone,

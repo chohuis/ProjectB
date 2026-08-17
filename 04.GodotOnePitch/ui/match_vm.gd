@@ -156,7 +156,10 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		# 고를 게 없는데 선택 화면이 뜨면 내가 던지는 줄 안다
 		"is_my_pitch": not finished and not String(ctx.get("my_id", "")).is_empty() \
 			and String(s.get("pitcher", {}).get("id", "")) == String(ctx.get("my_id", "")),
-		"pitch": PitchVm.build(ctx.get("me", {}), ctx.get("selection", {})),
+		# ⚠ **스태미나를 넘긴다** (M-6) — 남은 구수를 계산하려면 필요하다.
+		# 없으면 `-1`이고 화면이 그 줄을 안 만든다
+		"pitch": PitchVm.build(ctx.get("me", {}), ctx.get("selection", {}),
+			float(s.get("%s_stamina" % side, -1.0))),
 
 		# ⚠ **내가 안 던질 때 화면이 아무 말도 안 했다** (M-4). 선택 화면을
 		# 접기만 하고 **접고 나서 설명을 안 했다** — 02는 그 자리에

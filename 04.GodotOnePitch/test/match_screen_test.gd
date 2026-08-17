@@ -97,20 +97,33 @@ func test_the_strike_zone_has_nine_cells() -> void:
 
 ## ⚠ **내가 던질 수 있는 공만 뜬다.** 전부 뜨면 배우지 않은 공을 던지게 되고,
 ## 숙련도를 올릴 이유가 사라진다
+## ⚠ **빈 칸과 소모 줄이 같이 붙는다**(M-6) — 버튼만 세면 안 된다.
+## 배운 둘만 **누를 수 있어야** 하고, 안 배운 공은 이름조차 안 나온다
 func test_only_my_pitches_are_offered() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	var t: PackedStringArray = _texts(s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches"))
-	assert_int(t.size()).is_equal(2)
-	assert_str(t[0]).contains("포심")
-	assert_str(t[1]).contains("슬라이더")
-	for x in t:
+	var host: Node = s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches")
+	var buttons: Array = []
+	for c in host.get_children():
+		if c is Button:
+			buttons.append((c as Button).text)
+	assert_int(buttons.size()).override_failure_message(
+		"고를 수 있는 구종이 %d개다: %s" % [buttons.size(), str(buttons)]).is_equal(2)
+	assert_str(String(buttons[0])).contains("포심")
+	assert_str(String(buttons[1])).contains("슬라이더")
+	for x in _texts(host):
 		assert_str(x).not_contains("너클볼")
 
 
-## 숙련도가 버튼에 뜬다 — 어느 공이 좋은지 보여야 고를 수 있다
+## 숙련도가 버튼에 뜬다 — 어느 공이 좋은지 보여야 고를 수 있다.
+##
+## ⚠ **숫자가 아니라 점 다섯 칸이다**(M-6) — 02는 막대인데 04는 자리가
+## 좁아 칸으로 뒀다. 4등급이면 채운 점 넷 · 빈 점 하나
 func test_the_grade_is_on_the_button() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	assert_str(_texts(s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches"))[0]).contains("4")
+	var first: String = _texts(
+		s.get_node("Pad/Col/Body/Left/Choose/Opts/Pitches"))[0]
+	assert_str(first).contains("●●●●○")
+	assert_str(first).contains("포심")
 
 
 func test_strategy_and_power_are_offered() -> void:

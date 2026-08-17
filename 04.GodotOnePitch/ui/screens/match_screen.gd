@@ -297,13 +297,55 @@ func _build_choice() -> void:
 
 	_build_zone(int(pick.get("zone", 5)))
 
-	_fill(_pitches, pick.get("pitches", []), pick.get("pitch_type", ""),
-		func(id: String) -> void: selection_changed.emit({"pitch_type": id}),
-		func(x: Dictionary) -> String: return "%s %d" % [x["label"], int(x["grade"])])
+	_build_slots(pick)
 	_fill(_strategy, pick.get("strategies", []), pick.get("strategy", ""),
 		func(id: String) -> void: selection_changed.emit({"strategy": id}))
 	_fill(_power, pick.get("powers", []), pick.get("power", ""),
 		func(id: String) -> void: selection_changed.emit({"power": id}))
+
+
+## 구종 칸 — M-6. **배운 것 뒤에 빈 칸이 상한까지 이어진다.**
+##
+## ⚠ **스태미나로 구종을 흐리게 만들지 않는다** — 엔진이 그렇게 안 막는다.
+## 02가 그 자리에 "화면이 없는 규칙을 지어내는 것이고 이미 부상위험 %에서
+## 그 실수를 했다"고 적어 뒀다. 대신 **실제로 있는 것**(선택별 소모)을 띄운다
+func _build_slots(pick: Dictionary) -> void:
+	for c in _pitches.get_children():
+		_pitches.remove_child(c)
+		c.free()
+
+	var chosen: String = String(pick.get("pitch_type", ""))
+	for s in pick.get("slots", []):
+		if not bool(s.get("learned", false)):
+			# ⚠ **빈 칸에 구종 이름을 적지 않는다** — 특정 구종의 자리가 아니다
+			var empty := Label.new()
+			empty.text = "%d  🔒" % int(s.get("no", 0))
+			empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+			empty.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			_pitches.add_child(empty)
+			continue
+
+		var b := Button.new()
+		b.toggle_mode = true
+		b.button_pressed = String(s.get("id", "")) == chosen
+		# 숙련도를 막대 대신 칸으로 — 좁은 자리라 5칸이 막대보다 잘 읽힌다
+		var g: int = int(s.get("grade", 0))
+		b.text = "%d %s  %s" % [int(s.get("no", 0)), String(s.get("label", "")),
+			"●".repeat(g) + "○".repeat(maxi(PitchDev.MAX_GRADE - g, 0))]
+		var id: String = String(s.get("id", ""))
+		b.pressed.connect(func() -> void:
+			selection_changed.emit({"pitch_type": id}))
+		_pitches.add_child(b)
+
+	# 선택별 소모와 남은 구수 — 02 `:1707-1711`
+	var cost := Label.new()
+	var text: String = "이 선택 %.2f/구" % float(pick.get("cost", 0.0))
+	if bool(pick.get("has_pitches_left", false)):
+		text += "  ·  약 %d구" % int(pick.get("pitches_left", 0))
+	cost.text = text
+	cost.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	cost.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	_pitches.add_child(cost)
 
 
 ## 스트라이크존 3×3. **위가 1~3이다** — 야구 존 번호가 그렇다

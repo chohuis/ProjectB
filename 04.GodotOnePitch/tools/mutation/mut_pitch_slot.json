@@ -1,0 +1,57 @@
+[
+ [
+  "빈 칸을 안 만든다 (몇 개 더 배울 수 있나가 안 보인다)",
+  "\tfor i in range(pitches.size(), PitchDev.max_learned()):\n\t\tout.append({\"no\": i + 1, \"learned\": false,\n\t\t\t\"id\": \"\", \"label\": \"\", \"grade\": 0})",
+  ""
+ ],
+ [
+  "빈 칸에 구종 이름을 적는다 (02 주석이 막은 자리)",
+  "\t\tout.append({\"no\": i + 1, \"learned\": false,\n\t\t\t\"id\": \"\", \"label\": \"\", \"grade\": 0})",
+  "\t\tout.append({\"no\": i + 1, \"learned\": false,\n\t\t\t\"id\": \"knuckleball\", \"label\": \"너클볼\", \"grade\": 0})"
+ ],
+ [
+  "빈 칸도 배운 것으로 표시한다",
+  "\t\tout.append({\"no\": i + 1, \"learned\": false,\n\t\t\t\"id\": \"\", \"label\": \"\", \"grade\": 0})",
+  "\t\tout.append({\"no\": i + 1, \"learned\": true,\n\t\t\t\"id\": \"\", \"label\": \"\", \"grade\": 0})"
+ ],
+ [
+  "칸 번호가 0부터다",
+  "\t\tout.append({\"no\": i + 1, \"learned\": true,\n\t\t\t\"id\": String(pitches[i][\"id\"]), \"label\": String(pitches[i][\"label\"]),\n\t\t\t\"grade\": int(pitches[i][\"grade\"])})",
+  "\t\tout.append({\"no\": i, \"learned\": true,\n\t\t\t\"id\": String(pitches[i][\"id\"]), \"label\": String(pitches[i][\"label\"]),\n\t\t\t\"grade\": int(pitches[i][\"grade\"])})"
+ ],
+ [
+  "상한을 넘으면 잘라 낸다 (여섯 번째 공이 사라진다)",
+  "\tfor i in pitches.size():",
+  "\tfor i in mini(pitches.size(), PitchDev.max_learned()):"
+ ],
+ [
+  "칸 수 표기가 상한을 안 본다",
+  "\t\t\"slot_label\": \"%d/%d\" % [pitches.size(), PitchDev.max_learned()],",
+  "\t\t\"slot_label\": \"%d/%d\" % [pitches.size(), pitches.size()],"
+ ],
+ [
+  "직구 보너스를 빼먹는다 (소모가 Tuning과 갈린다)",
+  "\t\t+ (Tuning.STAMINA_FASTBALL_BONUS if pitch_id == \"fastball\" else 0.0) \\",
+  ""
+ ],
+ [
+  "공격적 보너스를 빼먹는다",
+  "\t\t+ (Tuning.STAMINA_AGGRESSIVE_BONUS if strategy == \"aggressive\" else 0.0) \\",
+  ""
+ ],
+ [
+  "힘 소모를 안 더한다",
+  "\t\t+ float(Tuning.STAMINA_POWER_COST.get(power, 0.15))",
+  "\t\t+ 0.0"
+ ],
+ [
+  "스태미나를 몰라도 남은 구수를 낸다 (0구로 보인다)",
+  "\t\t\"has_pitches_left\": stamina >= 0.0 and cost > 0.0,",
+  "\t\t\"has_pitches_left\": true,"
+ ],
+ [
+  "남은 구수를 올림한다 (02는 내림이다)",
+  "\t\t\"pitches_left\": int(floor(stamina / cost)) if stamina >= 0.0 and cost > 0.0 else 0,",
+  "\t\t\"pitches_left\": int(ceil(stamina / cost)) if stamina >= 0.0 and cost > 0.0 else 0,"
+ ]
+]
