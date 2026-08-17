@@ -1,0 +1,17 @@
+[
+	["안 준 것도 센다",
+		"\t\tif tally != null:",
+		"\t\tif true:"],
+	["세는 걸 잊는다",
+		"\t\t\ttally[c] = int(tally.get(c, 0)) + 1",
+		"\t\t\tpass"],
+	["결과 코드 대신 구종을 센다",
+		"\t\t\tvar c: String = out[\"code\"]",
+		"\t\t\tvar c: String = \"FIXED\""],
+	["착탄 구역을 안 센다",
+		"\t\t\ttally[z] = int(tally.get(z, 0)) + 1",
+		"\t\t\tpass"],
+	["구역을 늘 존으로 센다",
+		"\t\t\tvar z: String = \"zone:\" + PitchOutcome.zone_of(s[\"last_landing\"])",
+		"\t\t\tvar z: String = \"zone:elsewhere\""]
+]

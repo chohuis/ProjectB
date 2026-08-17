@@ -44,10 +44,15 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 		fail.call("로스터가 있는 팀이 %d개다" % teams.size())
 		return 1
 
+	# ⚠ **결과 줄로는 못 세는 것이 있다** (P-2d). 탈삼진 `k`는 헛스윙·루킹을
+	# 합쳐 놓고, 파울은 어디에도 안 남는다 — 04가 02보다 삼진이 21% 많은 게
+	# 헛스윙 때문인지 파울이 타석을 늘려서인지를 **투구를 세야** 가른다
+	var tally: Dictionary = {}
+
 	for g in games:
 		var out: Dictionary = MatchDay.play(world,
 			String(teams[g % teams.size()]),
-			String(teams[(g * 7 + 3) % teams.size()]), rng)
+			String(teams[(g * 7 + 3) % teams.size()]), rng, {"tally": tally})
 		if not bool(out.get("ok", false)):
 			continue
 		var res: Dictionary = out["result"]
@@ -90,6 +95,47 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 		log_line.call("  타석당 삼진율      %.2f" % (k / float(pa)))
 		log_line.call("  타석당 볼넷율      %.2f" % (bb / float(pa)))
 	log_line.call("  경기당 홈런(양팀)   %.1f" % (float(hr) / gf))
+
+	# ── 02 ② `match_engine.rs`와 대조하는 세 비율 ──────────────────
+	#
+	# ⚠ **9이닝당 값으로 02와 대조하면 안 된다** (P-2d, 2026-08-17).
+	# 그 값들(탈삼진 7.4 등)은 02 감사의 **① `npc_sim.rs`** 것이고, 그건
+	# 투구를 한 개도 안 굴리는 시즌 모델이다. 04에 대응하는 건 **②
+	# `match_engine.rs`**인데 02는 이닝을 안 돌려줘서 **비율로만** 낸다.
+	# 02 감사가 그 셋에 기대 구간까지 적어 뒀으므로 그대로 옮긴다
+	var evt: float = h + k + bb
+	if evt > 0.0:
+		log_line.call("  ── 02 ② match_engine 대조 ──")
+		log_line.call("  피안타/(피안타+삼진) %.2f   (02 0.54 · 기대 0.45~0.62)"
+			% (h / (h + k)))
+		log_line.call("  볼넷/전체사건       %.2f   (02 0.13 · 기대 0.08~0.20)"
+			% (bb / evt))
+		log_line.call("  삼진/전체사건       %.2f   (02 0.40 · 기대 0.25~0.45)"
+			% (k / evt))
+
+	# 투구당 결과 코드 — 02 `resolve_contact` 표와 나란히 놓는다
+	var codes: Array = []
+	var zones: Array = []
+	for c in tally:
+		if String(c).begins_with("zone:"):
+			zones.append(c)
+		else:
+			codes.append(c)
+	var total: int = 0
+	for c in codes:
+		total += int(tally[c])
+	if total > 0:
+		if pa > 0:
+			log_line.call("  타석당 투구        %.2f" % (float(total) / float(pa)))
+		log_line.call("  ── 투구 %d개의 결과 ──" % total)
+		codes.sort_custom(func(a, b) -> bool: return int(tally[a]) > int(tally[b]))
+		for c in codes:
+			log_line.call("  %-14s %6d  %5.1f%%"
+				% [c, int(tally[c]), float(tally[c]) * 100.0 / float(total)])
+		zones.sort_custom(func(a, b) -> bool: return int(tally[a]) > int(tally[b]))
+		for z in zones:
+			log_line.call("  %-14s %6d  %5.1f%%"
+				% [z, int(tally[z]), float(tally[z]) * 100.0 / float(total)])
 
 	# ⚠ **여기서 판정하지 않는다.** 대조는 사람이 02 값과 나란히 놓고 한다 —
 	# 04만의 기대 구간을 여기 적으면 그게 두 번째 기준이 된다

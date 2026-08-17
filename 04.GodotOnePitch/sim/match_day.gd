@@ -159,7 +159,9 @@ static func play(world: Dictionary, home_id: String, away_id: String,
 		int(p.get("home_game_no", 0)), int(p.get("away_game_no", 0))])
 	var state: Dictionary = _make_state(home, away, hp, ap, queue_rng,
 		String(p.get("home_relief", "")), String(p.get("away_relief", "")))
-	var out: Dictionary = GameLoop.play(state, rng, MatchDay._decide)
+	# `p["tally"]`를 주면 투구당 결과 코드를 센다 — 계측 전용(P-2d)
+	var out: Dictionary = GameLoop.play(state, rng, MatchDay._decide,
+		p.get("tally", null))
 	_to_report_shape(out["state"])
 
 	return {

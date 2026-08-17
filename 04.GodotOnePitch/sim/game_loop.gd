@@ -46,7 +46,15 @@ static func current_pitcher(state: Dictionary) -> Dictionary:
 
 
 ## 경기를 끝까지 돌린다. `{state, pitches}`
-static func play(state: Dictionary, rng, decide: Callable) -> Dictionary:
+##
+## `tally`를 주면 **투구당 결과 코드**를 거기에 센다 — 계측 전용이다.
+## ⚠ **결과 줄로는 못 세는 것이 있다.** 헛스윙·파울·루킹은 어디에도
+## 안 남고 `k` 하나로 합쳐진다 — P-2d(탈삼진 +21%)가 파울 때문인지
+## 루킹 때문인지 가르려면 투구를 세야 한다
+## ⚠ **기본값을 `{}`로 두지 않는다** — 빈 사전을 받으면 "안 센다"와
+## "아직 아무것도 안 셌다"가 구분이 안 된다. 안 쓸 땐 `null`이다
+static func play(state: Dictionary, rng, decide: Callable,
+		tally = null) -> Dictionary:
 	var s: Dictionary = state
 	var pitches: int = 0
 
@@ -69,6 +77,13 @@ static func play(state: Dictionary, rng, decide: Callable) -> Dictionary:
 		var out: Dictionary = PitchStep.step(s, decide.call(s, rng), rng)
 		s = out["state"]
 		pitches += 1
+		if tally != null:
+			var c: String = out["code"]
+			tally[c] = int(tally.get(c, 0)) + 1
+			# 착탄이 존·그림자·볼 중 어디였나. **M-7이 좌표를 남긴 덕에
+			# 배선 없이 센다** — 이 비율이 02보다 높다는 것이 P-2d의 가정이다
+			var z: String = "zone:" + PitchOutcome.zone_of(s["last_landing"])
+			tally[z] = int(tally.get(z, 0)) + 1
 
 		# 타석이 끝났으면 다음 타자로. **투구 전 카운트로 삼진을 가린다**
 		var was_two_strikes: bool = int(before_count.get("strikes", 0)) == 2
