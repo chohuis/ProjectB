@@ -114,6 +114,13 @@ static func step(state: Dictionary, decision: Dictionary, rng) -> Dictionary:
 	var outs_before: int = int(pre.get("outs", 0))
 	var out: Dictionary = apply_result(code, ball, pre, decision, rng, fielding)
 
+	# ⚠ **착탄 좌표를 남긴다** (M-7). 여기서 쓰고 버려서 **화면이 마지막 공이
+	# 어디 떨어졌는지 못 보여줬다** — M-0 대조표에서 04에 진짜로 없던 유일한
+	# 데이터다. 존 기준(`|x| <= 1`이 스트라이크)이고 `last_pitch_types`와 같은
+	# 방식으로 둔다.
+	# ⚠ **`ball`이 아니다** — 그건 맞은 타구고 안 맞으면 비어 있다
+	(out["state"] as Dictionary)["last_landing"] = landing["landing"]
+
 	# ⑥ 스태미나·멘탈. **던진 쪽만 움직인다**
 	#
 	# ⚠ **이게 없어서 스태미나가 경기 내내 82로 고정이었다.** 지친 투수가

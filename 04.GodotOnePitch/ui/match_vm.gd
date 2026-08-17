@@ -61,6 +61,29 @@ static func innings_label(outs: int) -> String:
 	return "%d.%d" % [outs / 3, outs % 3]
 
 
+## 존 캔버스 안에서 스트라이크존 박스가 차지하는 자리 —
+## 02 `MatchPage.svelte:279-281`이 "캔버스 x 10~90%, y 8~92%"라고 못 박았다.
+## **캔버스가 존보다 넓다** — 그래야 빠진 공이 경계에 붙지 않고 밖에 찍힌다
+const ZONE_BOX_MIN: Vector2 = Vector2(0.10, 0.08)
+const ZONE_BOX_SIZE: Vector2 = Vector2(0.80, 0.84)
+
+
+## 착탄(존 기준 `-1~1`)을 캔버스 비율로 — 02 `landingToPct`(`:267-272`).
+##
+## ⚠ **0~1로 자르지 않는다.** 자르면 크게 빠진 공이 경계에 붙어
+## "아슬아슬했다"로 보인다
+static func landing_pct(landing: Vector2) -> Vector2:
+	return ZONE_BOX_MIN + (landing + Vector2.ONE) * 0.5 * ZONE_BOX_SIZE
+
+
+## 캔버스 비율을 존 격자 기준 좌표로. 04는 격자가 **곧 스트라이크존 박스**라
+## 캔버스는 그보다 넓고 원점이 격자 밖에 있다 —
+## **화면이 이 계산을 갖지 않게** 여기서 한다
+static func landing_point(box_size: Vector2, pct: Vector2) -> Vector2:
+	var canvas: Vector2 = box_size / ZONE_BOX_SIZE
+	return canvas * (pct - ZONE_BOX_MIN)
+
+
 ## `ctx`는 화면이 모르는 바깥 정보 — 팀 이름·선수 이름·로그
 static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 	var names: Dictionary = ctx.get("names", {})
@@ -160,6 +183,11 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		# 없으면 `-1`이고 화면이 그 줄을 안 만든다
 		"pitch": PitchVm.build(ctx.get("me", {}), ctx.get("selection", {}),
 			float(s.get("%s_stamina" % side, -1.0))),
+
+		# ⚠ **첫 공 전에는 없다** (M-7). 0,0으로 채우면 안 던졌는데 한가운데
+		# 점이 찍힌다 — 모르는 것과 한가운데를 가른다
+		"has_last_landing": s.has("last_landing"),
+		"last_landing_pct": landing_pct(s.get("last_landing", Vector2.ZERO)),
 
 		# ⚠ **내가 안 던질 때 화면이 아무 말도 안 했다** (M-4). 선택 화면을
 		# 접기만 하고 **접고 나서 설명을 안 했다** — 02는 그 자리에

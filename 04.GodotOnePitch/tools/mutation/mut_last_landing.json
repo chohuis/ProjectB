@@ -1,0 +1,11 @@
+[
+	["착탄을 안 남긴다",
+		"\t(out[\"state\"] as Dictionary)[\"last_landing\"] = landing[\"landing\"]",
+		"\tpass"],
+	["착탄 대신 겨냥한 곳을 남긴다",
+		"(out[\"state\"] as Dictionary)[\"last_landing\"] = landing[\"landing\"]",
+		"(out[\"state\"] as Dictionary)[\"last_landing\"] = target"],
+	["착탄을 늘 한가운데로 남긴다",
+		"(out[\"state\"] as Dictionary)[\"last_landing\"] = landing[\"landing\"]",
+		"(out[\"state\"] as Dictionary)[\"last_landing\"] = Vector2.ZERO"]
+]

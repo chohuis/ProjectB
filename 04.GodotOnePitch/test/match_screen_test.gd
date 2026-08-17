@@ -92,7 +92,7 @@ func test_the_choices_only_show_on_my_turn() -> void:
 
 func test_the_strike_zone_has_nine_cells() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx())
-	assert_int(s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid").get_child_count()).is_equal(9)
+	assert_int(s.get_node("Pad/Col/Body/Left/Choose/Zone/Box/Grid").get_child_count()).is_equal(9)
 
 
 ## ⚠ **내가 던질 수 있는 공만 뜬다.** 전부 뜨면 배우지 않은 공을 던지게 되고,
@@ -141,7 +141,7 @@ func test_the_chosen_one_is_pressed() -> void:
 	assert_bool((pitches.get_child(0) as Button).button_pressed).is_false()
 	assert_bool((pitches.get_child(1) as Button).button_pressed).is_true()
 
-	var grid: Node = s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid")
+	var grid: Node = s.get_node("Pad/Col/Body/Left/Choose/Zone/Box/Grid")
 	assert_bool((grid.get_child(6) as Button).button_pressed).override_failure_message(
 		"7번 존을 골랐는데 안 눌려 있다").is_true()
 
@@ -149,7 +149,7 @@ func test_the_chosen_one_is_pressed() -> void:
 func test_the_intentional_ball_button_can_be_chosen() -> void:
 	var s: MatchScreen = await _mount(_state(), _ctx({"selection": {"zone": 0}}))
 	assert_bool((s.get_node("Pad/Col/Body/Left/Choose/Zone/Ball") as Button).button_pressed).is_true()
-	for c in s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid").get_children():
+	for c in s.get_node("Pad/Col/Body/Left/Choose/Zone/Box/Grid").get_children():
 		assert_bool((c as Button).button_pressed).is_false()
 
 
@@ -172,7 +172,7 @@ func test_picking_a_zone_emits_a_signal() -> void:
 	var got: Array = []
 	s.selection_changed.connect(func(p: Dictionary) -> void: got.append(p))
 
-	(s.get_node("Pad/Col/Body/Left/Choose/Zone/Grid").get_child(2) as Button).pressed.emit()
+	(s.get_node("Pad/Col/Body/Left/Choose/Zone/Box/Grid").get_child(2) as Button).pressed.emit()
 	await await_idle_frame()
 	assert_array(got).is_equal([{"zone": 3}])
 

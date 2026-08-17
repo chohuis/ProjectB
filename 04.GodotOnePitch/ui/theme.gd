@@ -142,6 +142,17 @@ static func pill_style(c: Color) -> StyleBoxFlat:
 	return s
 
 
+## 마지막 투구 착탄 점 — 02 `.zone-last-dot`(테두리 `--warn` · 속은 35%).
+## 12px 원이라 반지름을 절반으로 둔다
+static func dot_style(edge: Color, fill: Color) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(fill, 0.35)
+	s.border_color = edge
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(6)
+	return s
+
+
 ## 화면 전체에 씌우는 테마. **여기서만 만든다**
 static func build() -> Theme:
 	var t := Theme.new()

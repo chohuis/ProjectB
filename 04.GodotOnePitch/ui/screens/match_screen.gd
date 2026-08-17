@@ -47,7 +47,9 @@ const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
 @onready var _done: Button = $Pad/Col/Row/Done
 @onready var _field: BaseballField = $Pad/Col/Body/Left/Field
 @onready var _choose: HBoxContainer = $Pad/Col/Body/Left/Choose
-@onready var _zone_grid: GridContainer = $Pad/Col/Body/Left/Choose/Zone/Grid
+@onready var _zone_box: Control = $Pad/Col/Body/Left/Choose/Zone/Box
+@onready var _zone_grid: GridContainer = $Pad/Col/Body/Left/Choose/Zone/Box/Grid
+@onready var _zone_dot: Panel = $Pad/Col/Body/Left/Choose/Zone/Box/Dot
 @onready var _ball: Button = $Pad/Col/Body/Left/Choose/Zone/Ball
 @onready var _pitches: GridContainer = $Pad/Col/Body/Left/Choose/Opts/Pitches
 @onready var _strategy: HBoxContainer = $Pad/Col/Body/Left/Choose/Opts/Strategy
@@ -296,6 +298,7 @@ func _build_choice() -> void:
 		return
 
 	_build_zone(int(pick.get("zone", 5)))
+	_place_dot()
 
 	_build_slots(pick)
 	_fill(_strategy, pick.get("strategies", []), pick.get("strategy", ""),
@@ -372,6 +375,21 @@ func _build_zone(chosen: int) -> void:
 	_ball.button_pressed = chosen == PitchVm.BALL_ZONE
 	if not _ball.pressed.is_connected(_on_ball):
 		_ball.pressed.connect(_on_ball)
+
+
+## 마지막 공이 떨어진 자리 — 02 `zone-last-dot`(`:1656-1657` · `:2584-2595`).
+##
+## ⚠ **안 던졌으면 안 찍는다.** 한가운데에 찍으면 안 던진 것과 한가운데로
+## 던진 것이 같아 보인다.
+## ⚠ **자리 계산은 `MatchVm`이 한다** — 화면이 계산을 갖지 않는다
+func _place_dot() -> void:
+	_zone_dot.visible = bool(_vm.get("has_last_landing", false))
+	if not _zone_dot.visible:
+		return
+	_zone_dot.position = MatchVm.landing_point(_zone_box.size,
+		_vm.get("last_landing_pct", Vector2(0.5, 0.5))) - _zone_dot.size * 0.5
+	_zone_dot.add_theme_stylebox_override("panel",
+		AppTheme.dot_style(AppTheme.WARN, AppTheme.FLASH_HIT))
 
 
 func _on_ball() -> void:

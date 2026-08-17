@@ -1,0 +1,23 @@
+[
+	["존 여백을 안 둔다",
+		"const ZONE_BOX_MIN: Vector2 = Vector2(0.10, 0.08)",
+		"const ZONE_BOX_MIN: Vector2 = Vector2(0.0, 0.0)"],
+	["존 박스가 캔버스를 다 쓴다",
+		"const ZONE_BOX_SIZE: Vector2 = Vector2(0.80, 0.84)",
+		"const ZONE_BOX_SIZE: Vector2 = Vector2(1.0, 1.0)"],
+	["착탄을 0~1로 자른다",
+		"\treturn ZONE_BOX_MIN + (landing + Vector2.ONE) * 0.5 * ZONE_BOX_SIZE",
+		"\treturn (ZONE_BOX_MIN + (landing + Vector2.ONE) * 0.5 * ZONE_BOX_SIZE).clampf(0.0, 1.0)"],
+	["-1~1을 안 옮기고 그대로 쓴다",
+		"\treturn ZONE_BOX_MIN + (landing + Vector2.ONE) * 0.5 * ZONE_BOX_SIZE",
+		"\treturn ZONE_BOX_MIN + landing * 0.5 * ZONE_BOX_SIZE"],
+	["캔버스 여백을 안 빼고 자리를 잡는다",
+		"\treturn canvas * (pct - ZONE_BOX_MIN)",
+		"\treturn canvas * pct"],
+	["격자 크기를 캔버스로 그냥 쓴다",
+		"\tvar canvas: Vector2 = box_size / ZONE_BOX_SIZE",
+		"\tvar canvas: Vector2 = box_size"],
+	["안 던져도 점을 찍는다",
+		"\t\t\"has_last_landing\": s.has(\"last_landing\"),",
+		"\t\t\"has_last_landing\": true,"]
+]
