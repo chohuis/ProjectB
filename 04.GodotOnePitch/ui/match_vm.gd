@@ -40,6 +40,22 @@ static func code_label(code: String) -> String:
 	return CODE_LABEL.get(code, code)
 
 
+## 체력·멘탈 색 단계 문턱 — 02 `MatchPage.svelte:706-707` 그대로
+const VITAL_GOOD_ABOVE: float = 60.0
+const VITAL_WARN_ABOVE: float = 30.0
+
+
+## 값이 어느 단계인가. **색이 아니라 단계 이름을 준다** — 색은 `AppTheme`가
+## 고른다(화면 55개에 색을 흩으면 톤을 바꿀 때 반드시 몇 개가 빠진다).
+##
+## ⚠ **경기 중 스태미나는 100 = 쌩쌩이다**(`CLAUDE.md`의 두 축 — `freshness`와
+## 같은 방향, 주인공 `fatigue`와 반대). 뒤집어 읽으면 지친 투수가 팔팔해 보인다
+static func vital_level(value: float) -> String:
+	if value > VITAL_GOOD_ABOVE:
+		return "ok"
+	return "warn" if value > VITAL_WARN_ABOVE else "bad"
+
+
 ## 아웃 수를 야구식 이닝 표기로. **20아웃은 6.67이 아니라 6.2다**
 static func innings_label(outs: int) -> String:
 	return "%d.%d" % [outs / 3, outs % 3]
@@ -104,6 +120,16 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		"pitcher_line_label": "%s이닝 %dK %dBB %dH %d자책" % [innings_label(outs),
 			int(line.get("k", 0)), int(line.get("bb", 0)),
 			int(line.get("h", 0)), int(line.get("er", 0))],
+
+		# ⚠ **교체 판단의 입력인데 화면에 없었다** (M-1). 04는 이닝·삼진만
+		# 보여줘서 **스태미나가 바닥인지 모르고 계속 던지게 됐다** —
+		# 데이터는 `game_loop.gd:149-151`이 이미 들고 있었다.
+		# ⚠ **내 쪽 것을 읽는다** — 팀을 안 가리면 상대 투수 체력이 뜬다
+		"has_pitcher_vitals": s.has("%s_stamina" % side),
+		"pitcher_stamina": float(s.get("%s_stamina" % side, 0.0)),
+		"pitcher_mental": float(s.get("%s_mental" % side, 0.0)),
+		"pitcher_stamina_level": vital_level(float(s.get("%s_stamina" % side, 0.0))),
+		"pitcher_mental_level": vital_level(float(s.get("%s_mental" % side, 0.0))),
 
 		"is_finished": finished,
 		# ⚠ **끝난 경기에 던지면 기록이 계속 쌓인다**

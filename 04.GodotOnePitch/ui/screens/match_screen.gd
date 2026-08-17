@@ -16,6 +16,9 @@ const LOG_LINES: int = 8
 ## 존 칸 크기. 손가락으로 누를 만해야 한다
 const ZONE_CELL: Vector2 = Vector2(40, 40)
 
+## 부품은 씬으로 쓴다 — 화면이 색을 직접 고르지 않게 하려는 것이다
+const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
+
 @onready var _bg: ColorRect = $Bg
 @onready var _away: Label = $Pad/Col/ScoreRow/Away
 @onready var _score: Label = $Pad/Col/ScoreRow/Score
@@ -27,6 +30,7 @@ const ZONE_CELL: Vector2 = Vector2(40, 40)
 @onready var _briefing: VBoxContainer = $Pad/Col/Body/Right/Briefing
 @onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
 @onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
+@onready var _vitals: VBoxContainer = $Pad/Col/Body/Right/Vitals
 @onready var _log: VBoxContainer = $Pad/Col/Body/Right/LogScroll/Log
 @onready var _result: Label = $Pad/Col/Body/Right/Result
 @onready var _pitch: Button = $Pad/Col/Row/Pitch
@@ -111,8 +115,36 @@ func _rebuild() -> void:
 
 	_field.set_view_model(_vm.get("park", {}))
 
+	_build_vitals()
 	_build_choice()
 	_build_log()
+
+
+## 투수 체력·멘탈 — M-1. **교체 판단의 입력이다.**
+##
+## ⚠ **축이 없으면 줄을 안 만든다.** 0으로 그리면 "모르는 것"이 "바닥"으로
+## 보인다 — 옛 세이브가 그렇다.
+##
+## ⚠ **색은 `AppTheme`가 고른다.** 화면은 단계 이름만 넘긴다
+func _build_vitals() -> void:
+	# ⚠ **`queue_free`가 아니라 `free`다.** 검사는 프레임을 안 돌리므로
+	# 큐에 넣은 것이 처리되지 않고 **고아로 남는다** — 24개가 그렇게 났다.
+	# 이 저장소의 다른 화면도 전부 `remove_child` + `free`다
+	for c in _vitals.get_children():
+		_vitals.remove_child(c)
+		c.free()
+	if not bool(_vm.get("has_pitcher_vitals", false)):
+		return
+
+	for row in [
+		["체력", "pitcher_stamina", "pitcher_stamina_level"],
+		["멘탈", "pitcher_mental", "pitcher_mental_level"],
+	]:
+		var v: float = float(_vm.get(row[1], 0.0))
+		var bar: BarRow = BAR_ROW.instantiate()
+		_vitals.add_child(bar)
+		bar.setup(String(row[0]), v / 100.0, "%d" % roundi(v),
+			AppTheme.vital_color(String(_vm.get(row[2], ""))))
 
 
 ## 구종·코스·전략. **주인공이 마운드에 있을 때만 보인다** — 상대가 던질 땐

@@ -1,0 +1,42 @@
+[
+ [
+  "좋음 문턱이 02와 다르다 (60 -> 40)",
+  "const VITAL_GOOD_ABOVE: float = 60.0",
+  "const VITAL_GOOD_ABOVE: float = 40.0"
+ ],
+ [
+  "주의 문턱이 02와 다르다 (30 -> 10)",
+  "const VITAL_WARN_ABOVE: float = 30.0",
+  "const VITAL_WARN_ABOVE: float = 10.0"
+ ],
+ [
+  "경계값이 뒤집힌다 (초과가 아니라 이상)",
+  "\tif value > VITAL_GOOD_ABOVE:\n\t\treturn \"ok\"\n\treturn \"warn\" if value > VITAL_WARN_ABOVE else \"bad\"",
+  "\tif value >= VITAL_GOOD_ABOVE:\n\t\treturn \"ok\"\n\treturn \"warn\" if value >= VITAL_WARN_ABOVE else \"bad\""
+ ],
+ [
+  "축을 뒤집어 읽는다 (지친 투수가 팔팔해 보인다)",
+  "\tif value > VITAL_GOOD_ABOVE:\n\t\treturn \"ok\"\n\treturn \"warn\" if value > VITAL_WARN_ABOVE else \"bad\"",
+  "\tif value < VITAL_WARN_ABOVE:\n\t\treturn \"ok\"\n\treturn \"warn\" if value < VITAL_GOOD_ABOVE else \"bad\""
+ ],
+ [
+  "내 쪽이 아니라 늘 홈 것을 읽는다 (원정일 때 상대 체력이 뜬다)",
+  "\t\t\"pitcher_stamina\": float(s.get(\"%s_stamina\" % side, 0.0)),",
+  "\t\t\"pitcher_stamina\": float(s.get(\"home_stamina\", 0.0)),"
+ ],
+ [
+  "축이 없어도 있다고 한다 (모르는 것이 바닥으로 보인다)",
+  "\t\t\"has_pitcher_vitals\": s.has(\"%s_stamina\" % side),",
+  "\t\t\"has_pitcher_vitals\": true,"
+ ],
+ [
+  "멘탈을 체력으로 읽는다 (두 축이 같은 값이 된다)",
+  "\t\t\"pitcher_mental\": float(s.get(\"%s_mental\" % side, 0.0)),",
+  "\t\t\"pitcher_mental\": float(s.get(\"%s_stamina\" % side, 0.0)),"
+ ],
+ [
+  "단계를 안 싣는다 (화면이 색을 못 고른다)",
+  "\t\t\"pitcher_stamina_level\": vital_level(float(s.get(\"%s_stamina\" % side, 0.0))),",
+  "\t\t\"pitcher_stamina_level\": \"ok\","
+ ]
+]

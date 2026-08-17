@@ -31,6 +31,16 @@ const OK := Color("46c46b")
 const WARN := Color("e8b23a")
 const BAD := Color("e05c5c")
 
+## 체력·멘탈 같은 "높을수록 좋은" 축의 단계 색 — M-1.
+## **어느 값이 어느 단계인지는 `MatchVm.vital_level`이 정한다** — 여기선
+## 이름을 색으로만 바꾼다(문턱이 두 곳에 있으면 한쪽이 조용히 갈린다)
+const VITAL_COLOR := {"ok": OK, "warn": WARN, "bad": BAD}
+
+
+static func vital_color(level: String) -> Color:
+	return VITAL_COLOR.get(level, TEXT_DIM)
+
+
 ## 부상 심각도 — 값이 아니라 뜻으로 이름 붙인다
 const SEV_COLOR := {
 	"light": OK,
