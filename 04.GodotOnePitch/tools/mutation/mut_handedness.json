@@ -1,0 +1,32 @@
+[
+ [
+  "투수·야수 문턱을 하나로 합친다 (02는 0.30과 0.35로 다르다)",
+  "\tvar threshold: float = LEFT_PITCHER if pitcher else LEFT_BATTER",
+  "\tvar threshold: float = LEFT_PITCHER"
+ ],
+ [
+  "좌완 비율이 02와 다르다 (0.30 -> 0.50)",
+  "const LEFT_PITCHER: float = 0.30",
+  "const LEFT_PITCHER: float = 0.50"
+ ],
+ [
+  "좌타 비율이 02와 다르다 (0.35 -> 0.20)",
+  "const LEFT_BATTER: float = 0.35",
+  "const LEFT_BATTER: float = 0.20"
+ ],
+ [
+  "전원 우완 (방향 축이 죽는다)",
+  "\treturn \"L\" if r.randf() < threshold else \"R\"",
+  "\treturn \"R\""
+ ],
+ [
+  "선수마다 안 달라진다 — id를 안 섞는다",
+  "\tr.seed = Rng.mix([\"handedness\", player_id])",
+  "\tr.seed = Rng.mix([\"handedness\"])"
+ ],
+ [
+  "선수 사전에 안 넣는다 (배선이 죽는다)",
+  "\t\t\t\"handedness\": handedness_of(pid, pitcher),",
+  ""
+ ]
+]

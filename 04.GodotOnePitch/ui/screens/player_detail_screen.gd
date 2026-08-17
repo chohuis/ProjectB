@@ -88,6 +88,9 @@ func _head_line() -> String:
 	var age: int = int(_vm.get("age", 0))
 	if age > 0:
 		parts.append("%d세" % age)
+	var hand: String = String(_vm.get("handedness", ""))
+	if not hand.is_empty():
+		parts.append(hand)
 	parts.append("OVR %d" % int(_vm.get("ovr", 0)))
 	return "  ·  ".join(parts)
 

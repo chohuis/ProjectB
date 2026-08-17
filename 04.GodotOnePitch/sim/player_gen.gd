@@ -40,6 +40,10 @@ const SP_SHARE_OF_PITCHERS: float = 0.45
 ## **상류가 마르면 하류에서 아무리 퍼도 안 찬다**
 const DEFAULT_PITCHER_RATIO: float = 0.45
 
+## 좌완·좌타 비율 — 02 `roster_gen.rs:558`. **투수와 야수가 다르다**
+const LEFT_PITCHER: float = 0.30
+const LEFT_BATTER: float = 0.35
+
 ## 재능 분포. **천장 배수와 성장 속도를 같이 뽑는다** — 예전엔 속도만 균등
 ## 난수였고 천장은 고정이라 신입생 전원이 같은 천장이었다
 const POT_MULT_MIN: float = 1.05
@@ -84,6 +88,22 @@ const BAT_WEIGHT: Dictionary = {
 const BAT_DIVISOR: float = 11.8
 ## 플래툰은 능력이 아니라 성향이라 중립 고정이다 — OVR 공식엔 들어간다
 const PLATOON_FIXED: float = 50.0
+
+
+## 투수 30% 좌완 · 야수 35% 좌타 — 02 `roster_gen.rs:558` · `:727` 그대로.
+##
+## ⚠ **흐름 난수를 쓰지 않는다.** 02는 능력치 뒤에서 `rng.next()`를 한 번 더
+## 뽑는데, 04에서 그러면 **그 뒤 모든 난수가 한 칸씩 밀려** 세계가 통째로
+## 달라진다 — 지금까지 쌓은 실측이 전부 무효가 된다. 선수 id로 해시를
+## 만들면 순서와 무관하고 분포는 같다.
+##
+## ⚠ **"S"(양손)는 없다.** 02 NPC 생성에 그 갈래가 없다 — `NewGamePage`의
+## 선택지도 R·L 둘뿐이고 라벨 표에만 S가 남아 있다
+static func handedness_of(player_id: String, pitcher: bool) -> String:
+	var threshold: float = LEFT_PITCHER if pitcher else LEFT_BATTER
+	var r := RandomNumberGenerator.new()
+	r.seed = Rng.mix(["handedness", player_id])
+	return "L" if r.randf() < threshold else "R"
 
 
 static func is_pitcher(position: String) -> bool:
@@ -203,12 +223,15 @@ static func roster(p: Dictionary) -> Array:
 		var cur: float = maxf(pitching["ovr"], batting["ovr"])
 		var potential: float = clampf(pot_base * pot_mult, cur, 99.0)
 
+		var pid: String = "GEN_%s_Y%d_%03d" % [school, year, offset + i + 1]
+
 		out.append({
-			"id": "GEN_%s_Y%d_%03d" % [school, year, offset + i + 1],
+			"id": pid,
 			"name": nm["ko"],
 			"name_en": nm["en"],
 			"position": pos,
 			"player_type": "pitcher" if pitcher else "batter",
+			"handedness": handedness_of(pid, pitcher),
 			"team_id": p.get("team_id", ""),
 			"league_id": p.get("league_id", ""),
 			"school_id": school,

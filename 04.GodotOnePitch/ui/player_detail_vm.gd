@@ -34,6 +34,18 @@ const BATTING_LABELS: Array[Array] = [
 ]
 
 
+## 사람이 읽는 투구·타격 방향. 02 i18n의 `entity.handedness.L/R`이 "좌"/"우"이고
+## `NewGamePage:334`가 거기에 "투"를 붙인다 — 야수는 던지는 손이 아니라
+## 서는 쪽이 중요하므로 "타"를 붙인다.
+##
+## ⚠ **없으면 빈 문자열이다.** 옛 세이브에는 이 축이 없다 — "우투"로 채우면
+## 실제로 없는 것과 오른손인 것이 구분되지 않는다
+static func handedness_label(raw: String, pitcher: bool) -> String:
+	if raw != "L" and raw != "R":
+		return ""
+	return ("좌" if raw == "L" else "우") + ("투" if pitcher else "타")
+
+
 ## 선수 하나. 못 찾으면 `{}`.
 ##
 ## ⚠ **로스터가 정본이다.** 여기서 세계를 다시 훑어 자기 목록을 만들면
@@ -63,6 +75,7 @@ static func build(state: Dictionary, player_id: String) -> Dictionary:
 		"ovr": int(roundf(float(p.get("pitching", {}).get("ovr", 0.0)) if pitcher
 			else float(p.get("batting", {}).get("ovr", 0.0)))),
 		"is_pitcher": pitcher,
+		"handedness": handedness_label(String(p.get("handedness", "")), pitcher),
 		# 주인공이면 "나" 탭이 정본이다 — 화면이 그리로 보낸다
 		"is_me": player_id == me,
 		"stats": _stats(p, pitcher),
