@@ -286,13 +286,37 @@ static func _tick_npcs(state: Dictionary, by_id: Dictionary) -> int:
 	return done.size()
 
 
+## 후유증을 **세부 능력치에** 먹인다.
+##
+## ⚠ **`ovr`만 깎으면 다음 성장 주에 지워졌다** (D-4). `NpcGrowth`는 능력치가
+## 오르거나 노화가 걸리면 `stats`에서 **OVR을 다시 만든다** — 그 순간 후유증이
+## 사라지고, 후유증은 `penalty_applied`로 **한 번만** 먹이므로 영영 안 돌아온다.
+## 02도 같은 자리에서 능력치를 깎고 나서 OVR을 다시 만든다
+## (`advanceWeek.ts:516-533`).
+##
+## ⚠ **어느 능력치를 얼마나 깎을지는 지어내지 않는다.** `pitching_ovr`은 가중
+## 평균이라 **전부 같은 비율로 줄이면 OVR도 같은 비율로 준다** — 목표 OVR에
+## 맞는 비율 하나면 되고, 표를 새로 만들 필요가 없다
+## ⚠ **`delta == 0`을 여기서 다시 막지 않는다.** 부르는 자리가 이미
+## `if delta != 0.0`으로 거른다 — 여기 또 두면 **아무 때도 안 걸리는 가드**다
 static func _apply_npc_penalty(p: Dictionary, delta: float) -> void:
-	var key: String = "pitching" \
-		if String(p.get("player_type", "pitcher")) == "pitcher" else "batting"
-	var stats: Dictionary = p.get(key, {})
+	var is_pitcher: bool = String(p.get("player_type", "pitcher")) == "pitcher"
+	var stats: Dictionary = p.get("pitching" if is_pitcher else "batting", {})
 	if stats.is_empty():
 		return
-	stats["ovr"] = maxf(float(stats.get("ovr", 0.0)) + delta, 1.0)
+
+	var before: float = float(stats.get("ovr", 0.0))
+	if before <= 0.0:
+		return
+	var ratio: float = maxf(before + delta, 1.0) / before
+	# ⚠ **`ovr` 칸을 따로 건너뛰지 않는다** — 바로 아래에서 다시 만들므로
+	# 건너뛰든 말든 같다. 아무 때도 안 걸리는 갈래를 두지 않는다
+	for k in stats:
+		if stats[k] is float or stats[k] is int:
+			stats[k] = maxf(float(stats[k]) * ratio, 1.0)
+
+	stats["ovr"] = PlayerGen.pitching_ovr(stats) if is_pitcher \
+		else PlayerGen.batting_ovr(stats)
 
 
 static func _new_npc_injuries(state: Dictionary, by_id: Dictionary, me: String,
