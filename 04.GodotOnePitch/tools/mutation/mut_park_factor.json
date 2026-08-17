@@ -1,0 +1,22 @@
+[
+ [
+  "성향 표를 안 본다 (id를 그대로 돌려준다)",
+  "\treturn String(data().get(\"factors\", {}).get(stadium_id, \"\"))",
+  "\treturn stadium_id"
+ ],
+ [
+  "표에 없으면 중립으로 채운다 (해외 구장에 없는 성향이 생긴다)",
+  "\treturn String(data().get(\"factors\", {}).get(stadium_id, \"\"))",
+  "\treturn String(data().get(\"factors\", {}).get(stadium_id, \"중립\"))"
+ ],
+ [
+  "다른 표를 본다 (이름을 성향으로 쓴다)",
+  "\treturn String(data().get(\"factors\", {}).get(stadium_id, \"\"))",
+  "\treturn String(data().get(\"names\", {}).get(stadium_id, \"\"))"
+ ],
+ [
+  "늘 중립이다 (구장이 다 같아진다)",
+  "\treturn String(data().get(\"factors\", {}).get(stadium_id, \"\"))",
+  "\treturn \"중립\""
+ ]
+]

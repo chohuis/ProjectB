@@ -55,6 +55,21 @@ static func name_of(stadium_id: String) -> String:
 	return String(data().get("names", {}).get(stadium_id, stadium_id))
 
 
+## 구장 성향 — "타자친화" · "투수친화" · "중립" (F-4d).
+## 원본: `refs.json`의 `stadiums[].parkFactor` · 02 `NewGamePage:644`가 표시한다.
+##
+## ⚠ **표시용이다. 경기 엔진에 안 먹인다.** 02도 안 먹인다 —
+## `parkFactor`는 타입 정의와 새 게임 화면 둘뿐이고 **Rust 엔진엔 0건**이다.
+## 엔진의 `park`(`match_engine.rs:373`·`:680`)는 다른 축인데 그쪽도 죽어
+## 있다: 값을 넘기는 `MatchPage:763`의 `matchPark`가 `"neutral"`로 시작해
+## snapshot으로만 갱신되므로(`:655`·`:865`) **늘 중립이다.** 문자열을
+## `ParkType`으로 바꾸는 코드도 없다. **먹이는 건 이주가 아니라 새 밸런스다.**
+##
+## ⚠ **표에 없으면 빈 문자열이다** — 해외 구장은 성향이 없다
+static func factor_of(stadium_id: String) -> String:
+	return String(data().get("factors", {}).get(stadium_id, ""))
+
+
 ## 전용 그림이 있나. 없으면 티어 기본 그림을 쓴다
 static func has_own_image(stadium_id: String) -> bool:
 	return data().get("images", []).has(stadium_id)

@@ -81,7 +81,10 @@ func _head_line() -> String:
 		parts.append(city)
 	var stadium: String = String(_vm.get("stadium", ""))
 	if not stadium.is_empty():
-		parts.append(stadium)
+		# 구장 성향을 이름 옆에 붙인다 — 02 `NewGamePage:644`와 같은 자리다.
+		# **없으면 이름만** (해외 구장은 성향이 없다)
+		var factor: String = String(_vm.get("park_factor", ""))
+		parts.append(stadium if factor.is_empty() else "%s(%s)" % [stadium, factor])
 	if bool(_vm.get("is_mine", false)):
 		parts.append("내 팀")
 	return "  ·  ".join(parts)

@@ -50,6 +50,9 @@ static func build(state: Dictionary, team_id: String) -> Dictionary:
 		"name": name,
 		"city": String(World.team_field({}, team_id, "city", "")),
 		"stadium": ParkVm.name_of(String(World.team_field({}, team_id, "stadium", ""))),
+		# 구장 성향 — F-4d. **표시용이다**(02도 엔진엔 안 먹인다)
+		"park_factor": ParkVm.factor_of(
+			String(World.team_field({}, team_id, "stadium", ""))),
 		"league_label": String(StatusVm.LEAGUE_SHORT.get(league_id, league_id)),
 		# 내 팀이면 그렇다고 말한다 — 리그 표에서 눌러 들어오면 헷갈린다
 		"is_mine": team_id == String(state.get("protagonist", {}).get("team_id", "")),
