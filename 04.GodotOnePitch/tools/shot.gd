@@ -267,6 +267,30 @@ func _build(which: String) -> Control:
 			mb.set_state(mbs)
 			mb.ready.connect(func() -> void: mb.open_match(), CONNECT_ONE_SHOT)
 			return mb
+		# 관전 중 (M-4). **내가 안 던지는 순간을 찍는다** — 상대 공격이
+		# 끝나 우리가 치는 동안이다. 그때 화면이 무슨 말을 하는지가 요점이라
+		# `match-mine`(내가 던지는 순간)으로는 안 잡힌다
+		"match-watch":
+			var mw: AppRoot = APP.instantiate()
+			var mws := World.new_game({"seed": 777, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			var mw_id: String = mws["protagonist"]["id"]
+			for g in mws["schedule"]:
+				if g["is_protagonist_game"]:
+					mws["day"] = int(g["day"])
+					break
+			mw.set_state(mws)
+			mw.ready.connect(func() -> void:
+				mw.open_match()
+				# 내가 안 던지는 상태가 될 때까지 — 상대 투수 차례가 온다
+				for i in 400:
+					var st: Dictionary = mw.match_state()["state"]
+					if st.get("is_finished", false):
+						break
+					if String(st.get("pitcher", {}).get("id", "")) != mw_id:
+						break
+					mw._on_pitch(), CONNECT_ONE_SHOT)
+			return mw
 		"match-mine":
 			# ⚠ **주인공이 마운드에 있는 순간을 찍는다.** 등판일이라고 첫 구부터
 			# 내가 던지는 게 아니다 — 원정이면 1회말부터고, 불펜이면 한참 뒤다.

@@ -30,6 +30,9 @@ const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
 @onready var _briefing: VBoxContainer = $Pad/Col/Body/Right/Briefing
 @onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
 @onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
+@onready var _watch: VBoxContainer = $Pad/Col/Body/Right/Watch
+@onready var _watch_note: Label = $Pad/Col/Body/Right/Watch/WatchNote
+@onready var _watch_sub: Label = $Pad/Col/Body/Right/Watch/WatchSub
 @onready var _situation: HBoxContainer = $Pad/Col/Body/Right/Situation
 @onready var _vitals: VBoxContainer = $Pad/Col/Body/Right/Vitals
 @onready var _away_lineup: VBoxContainer = $Pad/Col/Body/Right/Lineups/Away
@@ -118,6 +121,7 @@ func _rebuild() -> void:
 
 	_field.set_view_model(_vm.get("park", {}))
 
+	_build_watch()
 	_build_situation()
 	_build_vitals()
 	_build_lineups()
@@ -164,6 +168,21 @@ func _fill_lineup(host: VBoxContainer, title: String, rows: Array) -> void:
 		else:
 			l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		host.add_child(l)
+
+
+## 관전 중 안내 — M-4. **접었으면 왜 접혔는지 말해야 한다.**
+##
+## ⚠ 04는 `is_my_pitch`로 선택 화면을 접기만 하고 **대신 뜨는 말이
+## 없었다** — 빈 자리만 남아 "내가 뭘 해야 하는데 안 되나"로 읽힌다
+func _build_watch() -> void:
+	_watch.visible = bool(_vm.get("is_watching", false))
+	if not _watch.visible:
+		return
+	_watch_note.text = String(_vm.get("watch_note", ""))
+	_watch_note.add_theme_color_override("font_color", AppTheme.TEXT)
+	_watch_sub.text = String(_vm.get("watch_sub", ""))
+	_watch_sub.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_watch_sub.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
 
 
 ## 주자와 카운트 — M-3. **한 상황의 두 축이라 한 판에 둔다**(02 주석).

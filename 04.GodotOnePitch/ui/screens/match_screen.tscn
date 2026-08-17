@@ -138,6 +138,16 @@ layout_mode = 2
 [node name="PitcherLine" type="Label" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 
+[node name="Watch" type="VBoxContainer" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="WatchNote" type="Label" parent="Pad/Col/Body/Right/Watch"]
+layout_mode = 2
+
+[node name="WatchSub" type="Label" parent="Pad/Col/Body/Right/Watch"]
+layout_mode = 2
+
 [node name="Situation" type="HBoxContainer" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 

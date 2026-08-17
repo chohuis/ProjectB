@@ -1,0 +1,47 @@
+[
+ [
+  "안 던진 것과 교체된 것을 안 가른다 (늘 교체됐다고 한다)",
+  "\t\t\"watch_note\": \"교체돼 벤치에 있다.\" if _has_pitched(s, side,\n\t\t\tString(ctx.get(\"my_id\", \"\"))) else \"아직 등판하지 않았다.\",",
+  "\t\t\"watch_note\": \"교체돼 벤치에 있다.\","
+ ],
+ [
+  "늘 아직 안 던졌다고 한다",
+  "\t\t\"watch_note\": \"교체돼 벤치에 있다.\" if _has_pitched(s, side,\n\t\t\tString(ctx.get(\"my_id\", \"\"))) else \"아직 등판하지 않았다.\",",
+  "\t\t\"watch_note\": \"아직 등판하지 않았다.\","
+ ],
+ [
+  "폴백이 있는 _my_line으로 판단한다 (안 던졌는데 교체됐다고 한다)",
+  "\t\t\"watch_note\": \"교체돼 벤치에 있다.\" if _has_pitched(s, side,\n\t\t\tString(ctx.get(\"my_id\", \"\"))) else \"아직 등판하지 않았다.\",",
+  "\t\t\"watch_note\": \"교체돼 벤치에 있다.\" if int(line.get(\"pc\", 0)) > 0 else \"아직 등판하지 않았다.\","
+ ],
+ [
+  "줄만 있으면 던진 것으로 친다 (한 구도 안 던졌는데 교체됐다고 한다)",
+  "\t\t\treturn int(l.get(\"pc\", 0)) > 0",
+  "\t\t\treturn true"
+ ],
+ [
+  "던져도 안 던진 것으로 친다",
+  "\t\t\treturn int(l.get(\"pc\", 0)) > 0",
+  "\t\t\treturn false"
+ ],
+ [
+  "끝난 경기도 등판 중이다 (끝났는데 던지라고 한다)",
+  "\t\t\"is_watching\": finished or String(s.get(\"pitcher\", {}).get(\"id\", \"\")) \\\n\t\t\t!= String(ctx.get(\"my_id\", \"\")),",
+  "\t\t\"is_watching\": String(s.get(\"pitcher\", {}).get(\"id\", \"\")) != String(ctx.get(\"my_id\", \"\")),"
+ ],
+ [
+  "늘 관전이다 (내가 던져도 선택 화면 대신 관전이 뜬다)",
+  "\t\t\"is_watching\": finished or String(s.get(\"pitcher\", {}).get(\"id\", \"\")) \\\n\t\t\t!= String(ctx.get(\"my_id\", \"\")),",
+  "\t\t\"is_watching\": true,"
+ ],
+ [
+  "모드 라벨이 뒤집힌다",
+  "\t\t\"mode_label\": \"등판 중\" if (not finished and String(\n\t\t\ts.get(\"pitcher\", {}).get(\"id\", \"\")) == String(ctx.get(\"my_id\", \"\"))) \\\n\t\t\telse \"관전\",",
+  "\t\t\"mode_label\": \"관전\" if (not finished and String(\n\t\t\ts.get(\"pitcher\", {}).get(\"id\", \"\")) == String(ctx.get(\"my_id\", \"\"))) \\\n\t\t\telse \"등판 중\","
+ ],
+ [
+  "관전 중에 이닝·점수를 안 준다 (상황을 모른 채 본다)",
+  "\t\t\"watch_sub\": \"%d회%s · %d : %d\" % [inning,\n\t\t\tHALF_LABEL.get(s.get(\"half\", \"top\"), \"초\"), home, away],",
+  "\t\t\"watch_sub\": \"\","
+ ]
+]

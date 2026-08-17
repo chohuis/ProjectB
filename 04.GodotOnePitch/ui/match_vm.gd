@@ -151,6 +151,24 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 			and String(s.get("pitcher", {}).get("id", "")) == String(ctx.get("my_id", "")),
 		"pitch": PitchVm.build(ctx.get("me", {}), ctx.get("selection", {})),
 
+		# ⚠ **내가 안 던질 때 화면이 아무 말도 안 했다** (M-4). 선택 화면을
+		# 접기만 하고 **접고 나서 설명을 안 했다** — 02는 그 자리에
+		# "비활성화가 아니라 접는 것"이라는 근거까지 적어 뒀다(`:1776`).
+		# ⚠ **아직 안 던진 것과 교체된 것은 다르다** — 하나로 뭉치면
+		# "왜 내가 안 나오지"와 "이미 내 몫은 끝났다"가 구분이 안 된다
+		"is_watching": finished or String(s.get("pitcher", {}).get("id", "")) \
+			!= String(ctx.get("my_id", "")),
+		"mode_label": "등판 중" if (not finished and String(
+			s.get("pitcher", {}).get("id", "")) == String(ctx.get("my_id", ""))) \
+			else "관전",
+		# ⚠ **`line`을 쓰면 안 된다.** `_my_line`은 내 줄이 없으면 **지금
+		# 마운드에 선 사람 것으로 폴백**한다 — 그걸 보면 한 구도 안 던진
+		# 내가 "교체돼 벤치에" 있는 것이 된다. 폴백 없이 내 줄만 본다
+		"watch_note": "교체돼 벤치에 있다." if _has_pitched(s, side,
+			String(ctx.get("my_id", ""))) else "아직 등판하지 않았다.",
+		"watch_sub": "%d회%s · %d : %d" % [inning,
+			HALF_LABEL.get(s.get("half", "top"), "초"), home, away],
+
 		"result_label": "" if not finished else "%s %d : %d %s" % [
 			home_name, home, away, away_name],
 
@@ -216,6 +234,23 @@ static func _bases(on1: bool, on2: bool, on3: bool) -> String:
 	if nums.is_empty():
 		return "주자 없음"
 	return "·".join(PackedStringArray(nums)) + "루"
+
+
+## 내가 이 경기에서 한 구라도 던졌나 — M-4.
+##
+## ⚠ **`_my_line`으로는 못 판단한다.** 그쪽은 내 줄이 없으면 지금 마운드에
+## 선 사람 것으로 폴백하므로, 한 구도 안 던진 내가 "교체돼 벤치에" 있는
+## 것이 된다. **폴백 없이 내 줄만 본다.**
+##
+## ⚠ **줄만 있고 안 던진 경우가 있다** — 로스터에 이름만 올라간 상태다.
+## `pc > 0`이라야 실제로 던진 것이다
+static func _has_pitched(state: Dictionary, side: String, my_id: String) -> bool:
+	if my_id.is_empty():
+		return false
+	for l in state.get("%s_queue" % side, {}).get("lines", []):
+		if String(l.get("player_id", "")) == my_id:
+			return int(l.get("pc", 0)) > 0
+	return false
 
 
 ## 화면에 보일 투수 줄.
