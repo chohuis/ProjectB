@@ -138,6 +138,20 @@ layout_mode = 2
 [node name="PitcherLine" type="Label" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 
+[node name="BatterHead" type="HBoxContainer" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+
+[node name="BatterTitle" type="Label" parent="Pad/Col/Body/Right/BatterHead"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BatterFlip" type="Button" parent="Pad/Col/Body/Right/BatterHead"]
+layout_mode = 2
+
+[node name="BatterCard" type="VBoxContainer" parent="Pad/Col/Body/Right"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
 [node name="Watch" type="VBoxContainer" parent="Pad/Col/Body/Right"]
 layout_mode = 2
 theme_override_constants/separation = 2

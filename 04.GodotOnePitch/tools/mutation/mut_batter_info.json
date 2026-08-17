@@ -1,0 +1,52 @@
+[
+ [
+  "클러치 키를 지어낸다 (그 줄이 조용히 기본값이 된다 — F-4a에서 겪었다)",
+  "\t[\"batting_clutch\", \"클러치\"], [\"speed\", \"주력\"],",
+  "\t[\"clutch\", \"클러치\"], [\"speed\", \"주력\"],"
+ ],
+ [
+  "능력치가 셋뿐이다 (02가 '화면은 셋만 읽었다'고 적어 둔 그 상태)",
+  "\t[\"contact\", \"컨택\"], [\"power\", \"파워\"], [\"eye\", \"선구\"],\n\t[\"batting_clutch\", \"클러치\"], [\"speed\", \"주력\"],",
+  "\t[\"contact\", \"컨택\"], [\"power\", \"파워\"], [\"eye\", \"선구\"],"
+ ],
+ [
+  "없는 능력치도 0으로 줄을 만든다",
+  "\t\tif batter.has(pair[0]):\n\t\t\tout.append({\"label\": pair[1], \"value\": float(batter[pair[0]])})",
+  "\t\tout.append({\"label\": pair[1], \"value\": float(batter.get(pair[0], 0.0))})"
+ ],
+ [
+  "기록이 없어도 0으로 채운 줄을 낸다 (안 뛴 것과 못 친 것이 안 갈린다)",
+  "\tif int(stats.get(\"pa\", 0)) <= 0:\n\t\treturn []",
+  ""
+ ],
+ [
+  "타수가 0인데 타율을 계산한다 (볼넷만 골랐는데 .000이 뜬다)",
+  "\tvar has_ab: bool = int(stats.get(\"ab\", 0)) > 0",
+  "\tvar has_ab: bool = true"
+ ],
+ [
+  "비율 표기가 앞의 0을 안 뗀다 (야구 표기가 아니다)",
+  "\tif absf(v) < 1.0:\n\t\ts = s.substr(1)",
+  ""
+ ],
+ [
+  "1을 넘어도 0을 뗀다 (OPS 1.024가 .024가 된다)",
+  "\tif absf(v) < 1.0:\n\t\ts = s.substr(1)",
+  "\ts = s.substr(1)"
+ ],
+ [
+  "시즌 줄 순서가 02와 다르다",
+  "\t\t{\"label\": \"홈런\", \"value\": \"%d\" % int(stats.get(\"hr\", 0))},\n\t\t{\"label\": \"타점\", \"value\": \"%d\" % int(stats.get(\"rbi\", 0))},",
+  "\t\t{\"label\": \"타점\", \"value\": \"%d\" % int(stats.get(\"rbi\", 0))},\n\t\t{\"label\": \"홈런\", \"value\": \"%d\" % int(stats.get(\"hr\", 0))},"
+ ],
+ [
+  "홈런 자리에 타점을 낸다",
+  "\t\t{\"label\": \"홈런\", \"value\": \"%d\" % int(stats.get(\"hr\", 0))},",
+  "\t\t{\"label\": \"홈런\", \"value\": \"%d\" % int(stats.get(\"rbi\", 0))},"
+ ],
+ [
+  "타자 사전이 아니라 빈 것을 본다 (카드가 늘 비어 있다)",
+  "\t\t\"batter_bars\": batter_bars(s.get(\"batter\", {})),",
+  "\t\t\"batter_bars\": batter_bars({}),"
+ ]
+]

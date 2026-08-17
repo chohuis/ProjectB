@@ -69,6 +69,9 @@ static func open(game_state: Dictionary, game: Dictionary) -> Dictionary:
 			# ⚠ **홈 팀 구장에서 경기한다.** 02는 프로 구장 하나가 하드코딩이라
 			# 고교 경기도 대학 경기도 전부 프로 구장에서 열렸다
 			"stadium_id": String(World.team_field(world, home_id, "stadium", "")),
+			# ⚠ **타자 카드 뒷면이 이걸 읽는다** (M-5). 없으면 "기록 없음"이
+			# 뜨는데, 그건 **진짜 기록이 없을 때만** 나와야 한다
+			"season_stats": game_state.get("season_stats", {}),
 			"log": [],
 		},
 		# ⚠ **경기 id로 씨앗을 만든다.** 자동 시뮬과 같은 규칙이라

@@ -109,6 +109,13 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 		# ⚠ **이름을 화면이 찾지 않는다.** id만 주면 화면이 로스터를 뒤져야
 		# 하고, 그게 02에서 화면이 계산을 갖게 된 경로다
 		"batter_name": _name_of(names, s.get("batter", {})),
+
+		# ⚠ **04는 이름만 보여줬다** (M-5). 브리핑(F-5)이 상대 타선의 OVR·태그를
+		# 주지만 **첫 공 전에만 뜨고 사라진다** — 던지는 중엔 지금 상대가
+		# 어떤 타자인지 알 방법이 없었다
+		"batter_bars": batter_bars(s.get("batter", {})),
+		"batter_season": batter_season(ctx.get("season_stats", {}).get(
+			String(s.get("batter", {}).get("id", "")), {})),
 		"pitcher_name": _name_of(names, s.get("pitcher", {})),
 
 		"pitcher_ip": innings_label(outs),
@@ -183,6 +190,53 @@ static func build(s: Dictionary, ctx: Dictionary = {}) -> Dictionary:
 
 		"log": ctx.get("log", []),
 	}
+
+
+## 타석에서 의미 있는 능력치 — 02 `statCard.ts:38-44` 그대로.
+##
+## ⚠ **열 개를 다 늘어놓으면 무엇을 봐야 할지가 사라진다**(02 주석).
+## 그 주석은 반대 실수도 적어 뒀다 — "엔진은 처음부터 열 개를 보내고
+## 있었는데 **화면은 셋만 읽었다**".
+##
+## ⚠ **키 이름을 지어내면 그 줄이 조용히 빠진다** — F-4a에서 `clutch`로
+## 적었다가 실제 키가 `batting_clutch`인 것을 뒤늦게 찾았다
+const BATTER_KEYS: Array[Array] = [
+	["contact", "컨택"], ["power", "파워"], ["eye", "선구"],
+	["batting_clutch", "클러치"], ["speed", "주력"],
+]
+
+
+## `.298` — **야구 표기는 앞의 0을 뗀다**(02 `rate3`). 1을 넘으면 안 뗀다
+static func rate3(v: float) -> String:
+	var s: String = "%.3f" % absf(v)
+	if absf(v) < 1.0:
+		s = s.substr(1)
+	return ("-" if v < 0.0 else "") + s
+
+
+## 능력치 막대 — **값이 없는 항목은 아예 뺀다**(02 `batterBars`)
+static func batter_bars(batter: Dictionary) -> Array:
+	var out: Array = []
+	for pair in BATTER_KEYS:
+		if batter.has(pair[0]):
+			out.append({"label": pair[1], "value": float(batter[pair[0]])})
+	return out
+
+
+## 카드 뒷면 — **기록이 없으면 빈 배열이다.** 화면이 "기록 없음"을 쓴다.
+## 0으로 채우면 "안 뛴 것"과 "못 친 것"이 구분되지 않는다(02 머리말)
+static func batter_season(stats: Dictionary) -> Array:
+	if int(stats.get("pa", 0)) <= 0:
+		return []
+	# ⚠ **타석은 있는데 타수가 0일 수 있다**(볼넷만 골랐다) — 02도 따로 본다
+	var has_ab: bool = int(stats.get("ab", 0)) > 0
+	return [
+		{"label": "타율", "value": rate3(float(stats.get("avg", 0.0))) if has_ab else "-"},
+		{"label": "OPS", "value": rate3(float(stats.get("ops", 0.0))) if has_ab else "-"},
+		{"label": "홈런", "value": "%d" % int(stats.get("hr", 0))},
+		{"label": "타점", "value": "%d" % int(stats.get("rbi", 0))},
+		{"label": "경기", "value": "%d" % int(stats.get("g", 0))},
+	]
 
 
 ## 한 팀의 타순 — M-2. `[{no, name, is_at_bat, is_on_deck}]`

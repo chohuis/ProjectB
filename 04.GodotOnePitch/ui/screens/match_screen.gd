@@ -30,6 +30,9 @@ const BAR_ROW := preload("res://ui/parts/bar_row.tscn")
 @onready var _briefing: VBoxContainer = $Pad/Col/Body/Right/Briefing
 @onready var _matchup: Label = $Pad/Col/Body/Right/Matchup
 @onready var _pitcher_line: Label = $Pad/Col/Body/Right/PitcherLine
+@onready var _batter_title: Label = $Pad/Col/Body/Right/BatterHead/BatterTitle
+@onready var _batter_flip: Button = $Pad/Col/Body/Right/BatterHead/BatterFlip
+@onready var _batter_card: VBoxContainer = $Pad/Col/Body/Right/BatterCard
 @onready var _watch: VBoxContainer = $Pad/Col/Body/Right/Watch
 @onready var _watch_note: Label = $Pad/Col/Body/Right/Watch/WatchNote
 @onready var _watch_sub: Label = $Pad/Col/Body/Right/Watch/WatchSub
@@ -61,6 +64,9 @@ signal selection_changed(patch: Dictionary)
 
 var _vm: Dictionary = {}
 
+## 타자 카드 뒷면인가 — M-5. **표시 상태라 화면이 든다**(계산이 아니다)
+var _batter_flipped: bool = false
+
 
 func set_view_model(vm: Dictionary) -> void:
 	_vm = vm
@@ -74,6 +80,10 @@ func _ready() -> void:
 	_pitch.pressed.connect(func() -> void: pitch_requested.emit.call_deferred())
 	_auto.pressed.connect(func() -> void: auto_requested.emit.call_deferred())
 	_done.pressed.connect(func() -> void: done_requested.emit.call_deferred())
+	# ⚠ **뒤집기는 표시 상태다** — 진행 없이 다시 그리기만 한다
+	_batter_flip.pressed.connect(func() -> void:
+		_batter_flipped = not _batter_flipped
+		_build_batter_card())
 	_rebuild()
 
 
@@ -121,6 +131,7 @@ func _rebuild() -> void:
 
 	_field.set_view_model(_vm.get("park", {}))
 
+	_build_batter_card()
 	_build_watch()
 	_build_situation()
 	_build_vitals()
@@ -168,6 +179,59 @@ func _fill_lineup(host: VBoxContainer, title: String, rows: Array) -> void:
 		else:
 			l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		host.add_child(l)
+
+
+## 지금 상대하는 타자 — M-5. **앞면 능력치 / 뒷면 시즌 성적**(02와 같다).
+##
+## ⚠ **뒷면은 실제 기록만 그린다** — 없으면 0이 아니라 "기록 없음"이다.
+## 0으로 채우면 "안 뛴 것"과 "못 친 것"이 구분되지 않는다
+func _build_batter_card() -> void:
+	for c in _batter_card.get_children():
+		_batter_card.remove_child(c)
+		c.free()
+
+	var name: String = String(_vm.get("batter_name", ""))
+	_batter_title.text = name
+	_batter_title.add_theme_color_override("font_color", AppTheme.TEXT)
+	_batter_flip.text = "능력치" if _batter_flipped else "성적"
+	_batter_flip.visible = not name.is_empty()
+
+	if _batter_flipped:
+		var lines: Array = _vm.get("batter_season", [])
+		if lines.is_empty():
+			_batter_card.add_child(_dim_label("이번 시즌 기록 없음"))
+			return
+		for l in lines:
+			var row := HBoxContainer.new()
+			var left := Label.new()
+			left.text = String(l["label"])
+			left.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+			left.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			var right := Label.new()
+			right.text = String(l["value"])
+			right.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			row.add_child(left)
+			row.add_child(right)
+			_batter_card.add_child(row)
+		return
+
+	var bars: Array = _vm.get("batter_bars", [])
+	if bars.is_empty():
+		_batter_card.add_child(_dim_label("타자 정보를 기다리는 중"))
+		return
+	for b in bars:
+		var bar: BarRow = BAR_ROW.instantiate()
+		_batter_card.add_child(bar)
+		bar.setup_stat(String(b["label"]), float(b["value"]))
+
+
+func _dim_label(text: String) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+	l.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	return l
 
 
 ## 관전 중 안내 — M-4. **접었으면 왜 접혔는지 말해야 한다.**
