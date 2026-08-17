@@ -14,6 +14,12 @@ func _init() -> void:
 
 	DisplayServer.window_set_title("OnePitch — %s" % which)
 
+	# ⚠ **게임이 켤 때 하는 것을 여기서도 한다.** 안 하면 저장된 톤을 무시하고
+	# 늘 기본 색으로 찍혀서 **캡처가 실제 화면과 다르다** — 밝은 톤을 넣고도
+	# 어두운 캡처를 보고 "안 걸렸나" 했다. 계측이 게임 경로를 안 재는 것과
+	# 같은 형태다
+	App.apply_theme()
+
 	var win := get_root()
 	var screen: Control = _build(which)
 	if screen == null:

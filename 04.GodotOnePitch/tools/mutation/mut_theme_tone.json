@@ -1,0 +1,23 @@
+[
+	["모르는 톤도 건다",
+		"\tif p.is_empty():\n\t\treturn",
+		"\tif false:\n\t\treturn"],
+	["바탕만 바꾸고 글자는 안 바꾼다",
+		"\tTEXT = Color(p[\"TEXT\"])",
+		"\tpass"],
+	["카드를 바탕과 같게 만든다",
+		"\tCARD = Color(p[\"CARD\"])",
+		"\tCARD = Color(p[\"BG\"])"],
+	["톤 이름을 안 남긴다",
+		"\ttone = new_tone",
+		"\tpass"],
+	["단계 색이 톤을 안 탄다",
+		"\t\t\"ok\":\n\t\t\treturn OK",
+		"\t\t\"ok\":\n\t\t\treturn Color(\"46c46b\")"],
+	["부상 색이 톤을 안 탄다",
+		"\t\t\"moderate\":\n\t\t\treturn WARN",
+		"\t\t\"moderate\":\n\t\t\treturn Color(\"e8b23a\")"],
+	["밝은 값이 02 것이 아니다",
+		"\t\t\"BG\": \"f6f8fb\"",
+		"\t\t\"BG\": \"ffffff\""]
+]

@@ -34,6 +34,14 @@ theme_override_constants/separation = 10
 layout_mode = 2
 text = "설정"
 
+[node name="ThemeLabel" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+text = "화면 톤"
+
+[node name="Themes" type="HBoxContainer" parent="Pad/Center/Col"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
 [node name="SizeLabel" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 text = "창 크기"

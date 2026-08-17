@@ -34,14 +34,53 @@ static func _cfg() -> ConfigFile:
 
 
 ## 지금 설정. **파일이 정본이다**
+## 톤 설정 세 갈래 — 02 `settings.ts:16`과 같은 이름·같은 뜻.
+##
+## ⚠ **`system`이 기본이다.** 02도 그렇고, 껐다 켰을 때 OS가 밝은데 게임만
+## 어두우면 "설정을 잃어버렸나"로 읽힌다
+const THEMES: Array[String] = ["light", "dark", "system"]
+const DEFAULT_THEME: String = "system"
+
+const THEME_LABEL: Dictionary = {
+	"light": "밝게", "dark": "어둡게", "system": "시스템 따름",
+}
+
+
 static func of() -> Dictionary:
 	var c: ConfigFile = _cfg()
 	var w: int = int(c.get_value("window", "width", DEFAULT_SIZE.x))
 	var h: int = int(c.get_value("window", "height", DEFAULT_SIZE.y))
+	var t: String = String(c.get_value("look", "theme", DEFAULT_THEME))
 	return {
 		"size": Vector2i(w, h),
 		"fullscreen": bool(c.get_value("window", "fullscreen", false)),
+		# ⚠ **모르는 값이 오면 기본으로 되돌린다.** 설정 파일은 사람이
+		# 고칠 수 있고, 오타 하나로 색이 통째로 빈 사전이 되면 안 된다
+		"theme": t if THEMES.has(t) else DEFAULT_THEME,
 	}
+
+
+static func set_theme(theme: String) -> void:
+	if not THEMES.has(theme):
+		return
+	var c: ConfigFile = _cfg()
+	c.set_value("look", "theme", theme)
+	c.save(PATH)
+
+
+## 설정값 → 실제 톤. `system`이면 OS에 묻는다 — 02 `resolveTone`과 같은 자리
+static func resolve_tone(theme: String, system_dark: bool) -> String:
+	if theme == "light":
+		return "light"
+	if theme == "dark":
+		return "dark"
+	return "dark" if system_dark else "light"
+
+
+## OS가 어두운 쪽인가. **Godot이 못 알려주면 어두움으로 둔다** —
+## 04가 지금까지 어두웠으므로 모를 때 화면이 안 바뀌는 쪽이 놀랍지 않다
+static func system_dark() -> bool:
+	return not DisplayServer.is_dark_mode_supported() or DisplayServer.is_dark_mode()
 
 
 static func set_size(size: Vector2i) -> void:

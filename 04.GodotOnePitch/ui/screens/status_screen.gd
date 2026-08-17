@@ -425,7 +425,7 @@ func _body_card() -> Card:
 		var sev: String = inj.get("severity", "light")
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", AppTheme.GAP)
-		row.add_child(_badge(inj.get("severity_label", sev), AppTheme.SEV_COLOR.get(sev, AppTheme.WARN)))
+		row.add_child(_badge(inj.get("severity_label", sev), AppTheme.sev_color(sev, AppTheme.WARN)))
 		var nm := Label.new()
 		nm.text = inj.get("name", "")
 		row.add_child(nm)
@@ -452,7 +452,7 @@ func _body_card() -> Card:
 			c.body.add_child(_row(
 				"%d년 %d주  %s" % [h.get("year", 0), h.get("week", 0), h.get("name", "")],
 				right,
-				AppTheme.SEV_COLOR.get(h.get("severity", "light"), AppTheme.TEXT_DIM),
+				AppTheme.sev_color(String(h.get("severity", "light"))),
 			))
 	return c
 

@@ -12,12 +12,17 @@ class_name SettingsScreen
 
 @onready var _bg: ColorRect = $Bg
 @onready var _title: Label = $Pad/Center/Col/Title
+@onready var _theme_label: Label = $Pad/Center/Col/ThemeLabel
+@onready var _themes: HBoxContainer = $Pad/Center/Col/Themes
 @onready var _size_label: Label = $Pad/Center/Col/SizeLabel
 @onready var _sizes: VBoxContainer = $Pad/Center/Col/Sizes
 @onready var _fullscreen: CheckBox = $Pad/Center/Col/Fullscreen
 @onready var _back: Button = $Pad/Center/Col/Back
 
 signal back_requested
+## 화면 톤이 바뀌었다. **`App`이 화면을 다시 만든다** — 색은 `_ready`에서
+## 한 번 집어 가므로 값만 바꿔서는 눈에 안 보인다
+signal tone_changed
 
 
 func _ready() -> void:
@@ -25,6 +30,7 @@ func _ready() -> void:
 	_bg.color = AppTheme.BG
 	_title.add_theme_font_size_override("font_size", AppTheme.FONT_TITLE + 4)
 	_size_label.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_theme_label.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
 	_back.pressed.connect(func() -> void: back_requested.emit.call_deferred())
 	_fullscreen.toggled.connect(func(on: bool) -> void:
 		Settings.set_fullscreen(on)
@@ -34,6 +40,8 @@ func _ready() -> void:
 
 func _rebuild() -> void:
 	var now: Dictionary = Settings.of()
+
+	_build_themes(String(now["theme"]))
 
 	for c in _sizes.get_children():
 		_sizes.remove_child(c)
@@ -57,3 +65,27 @@ func _rebuild() -> void:
 		_sizes.add_child(b)
 
 	_fullscreen.set_pressed_no_signal(bool(now["fullscreen"]))
+
+
+## 화면 톤 세 갈래 — 02 `SettingsModal`의 radiogroup과 같은 셋.
+##
+## ⚠ **여기서 색을 바꾸고 끝나지 않는다.** 화면들은 `_ready`에서 색을 한 번
+## 집어 가므로 **다시 그려야** 보인다 — `theme_changed`를 올려 `App`이 맡는다
+func _build_themes(chosen: String) -> void:
+	for c in _themes.get_children():
+		_themes.remove_child(c)
+		c.free()
+
+	var group := ButtonGroup.new()
+	for id in Settings.THEMES:
+		var b := Button.new()
+		b.text = String(Settings.THEME_LABEL.get(id, id))
+		b.toggle_mode = true
+		b.button_group = group
+		b.focus_mode = Control.FOCUS_NONE
+		b.button_pressed = id == chosen
+		var theme_id: String = id
+		b.pressed.connect(func() -> void:
+			Settings.set_theme(theme_id)
+			tone_changed.emit.call_deferred())
+		_themes.add_child(b)

@@ -19,11 +19,23 @@ var _current: Control
 
 
 func _ready() -> void:
+	# ⚠ **톤을 먼저 건다.** `AppTheme.build()`가 지금 색으로 테마를 만들므로
+	# 순서가 뒤바뀌면 첫 화면만 옛 톤으로 뜬다
+	apply_theme()
 	theme = AppTheme.build()
 	# ⚠ **저장된 창 크기를 켤 때 물린다.** 안 하면 설정이 그 세션에만 살고
 	# 다시 켜면 기본값으로 돌아간다 — 고른 적이 없는 것처럼 보인다
 	Settings.apply()
 	show_title()
+
+
+## 저장된 설정 → 실제 톤 → `AppTheme`.
+##
+## ⚠ **`system`을 푸는 곳은 여기 하나다.** 화면이 각자 풀면 OS 설정이 바뀌는
+## 순간 화면마다 다른 톤이 된다
+static func apply_theme() -> void:
+	AppTheme.apply_tone(Settings.resolve_tone(
+		String(Settings.of()["theme"]), Settings.system_dark()))
 
 
 func current() -> Control:
@@ -50,6 +62,12 @@ func show_title() -> void:
 func show_settings() -> void:
 	var s: SettingsScreen = SETTINGS.instantiate()
 	s.back_requested.connect(show_title)
+	# ⚠ **톤이 바뀌면 설정 화면 자신도 다시 만든다.** 색은 `_ready`에서 한 번
+	# 집어 가므로 값만 바꾸면 **고른 사람 눈에는 아무 일도 안 일어난다**
+	s.tone_changed.connect(func() -> void:
+		apply_theme()
+		theme = AppTheme.build()
+		show_settings.call_deferred())
 	_swap(s)
 
 

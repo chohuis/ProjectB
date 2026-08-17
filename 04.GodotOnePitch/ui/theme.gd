@@ -19,35 +19,97 @@ class_name AppTheme
 ## 나올 수 있고, 3MB는 Steam 배포에서 문제가 안 된다.
 
 # ── 색 ────────────────────────────────────────────────────────────
-const BG := Color("13161c")
-const CARD := Color("1b1f28")
-const CARD_EDGE := Color("2a3040")
-const TEXT := Color("e6e9ef")
-const TEXT_DIM := Color("8b93a7")
+# ⚠ **`const`가 아니라 `static var`다.** 톤을 바꾸면 값이 갈린다.
+# 화면 231곳이 `AppTheme.BG` 꼴로 읽는데 **읽는 쪽은 한 글자도 안 바뀐다** —
+# 그게 "색은 여기서만 정한다"를 지켜 온 값이다.
+#
+# ⚠ **어두운 값은 04가 쓰던 그대로, 밝은 값은 02 `styles.css`에서 그대로**
+# 가져왔다(U5에서 02가 전역을 밝게 뒤집으며 정한 값이다). 지어낸 색은 없다.
+static var BG := Color("13161c")
+static var CARD := Color("1b1f28")
+static var CARD_EDGE := Color("2a3040")
+static var TEXT := Color("e6e9ef")
+static var TEXT_DIM := Color("8b93a7")
 ## 있지만 눈에 안 걸려야 하는 글자 — 볼·파울 같은 "아무 일도 안 일어난" 줄
-const TEXT_MUTE := Color("6b7386")
-const ACCENT := Color("4a9eff")
-const OK := Color("46c46b")
-const WARN := Color("e8b23a")
-const BAD := Color("e05c5c")
+static var TEXT_MUTE := Color("6b7386")
+static var ACCENT := Color("4a9eff")
+static var OK := Color("46c46b")
+static var WARN := Color("e8b23a")
+static var BAD := Color("e05c5c")
+
+## 두 톤의 값. **키가 위 이름과 같아야 한다** — `apply_tone`이 이름으로 건다
+const PALETTE: Dictionary = {
+	# 04가 쓰던 값
+	"dark": {
+		"BG": "13161c", "CARD": "1b1f28", "CARD_EDGE": "2a3040",
+		"TEXT": "e6e9ef", "TEXT_DIM": "8b93a7", "TEXT_MUTE": "6b7386",
+		"ACCENT": "4a9eff", "OK": "46c46b", "WARN": "e8b23a", "BAD": "e05c5c",
+	},
+	# 02 `styles.css`의 밝은 값 그대로
+	# surface / panel / line / ink / ink-mute / ok / warn / bad
+	"light": {
+		"BG": "f6f8fb", "CARD": "ffffff", "CARD_EDGE": "dde3ee",
+		"TEXT": "0f1d3d", "TEXT_DIM": "5a6478", "TEXT_MUTE": "8791a5",
+		"ACCENT": "1e3050", "OK": "1f7a47", "WARN": "9a6510", "BAD": "b3311f",
+	},
+}
+
+## 지금 톤. `apply_tone`만 바꾼다
+static var tone: String = "dark"
+
+
+## 톤을 건다. **`Settings.resolve_tone`이 정한 값을 받는다** —
+## 여기서 다시 `system`을 풀면 정본이 둘이 된다
+static func apply_tone(new_tone: String) -> void:
+	var p: Dictionary = PALETTE.get(new_tone, {})
+	if p.is_empty():
+		return
+	tone = new_tone
+	BG = Color(p["BG"])
+	CARD = Color(p["CARD"])
+	CARD_EDGE = Color(p["CARD_EDGE"])
+	TEXT = Color(p["TEXT"])
+	TEXT_DIM = Color(p["TEXT_DIM"])
+	TEXT_MUTE = Color(p["TEXT_MUTE"])
+	ACCENT = Color(p["ACCENT"])
+	OK = Color(p["OK"])
+	WARN = Color(p["WARN"])
+	BAD = Color(p["BAD"])
+
 
 ## 체력·멘탈 같은 "높을수록 좋은" 축의 단계 색 — M-1.
 ## **어느 값이 어느 단계인지는 `MatchVm.vital_level`이 정한다** — 여기선
-## 이름을 색으로만 바꾼다(문턱이 두 곳에 있으면 한쪽이 조용히 갈린다)
-const VITAL_COLOR := {"ok": OK, "warn": WARN, "bad": BAD}
-
-
+## 이름을 색으로만 바꾼다(문턱이 두 곳에 있으면 한쪽이 조용히 갈린다).
+##
+## ⚠ **사전을 미리 만들어 두지 않는다.** 톤이 바뀌면 그 사전이 옛 색을
+## 들고 남는다 — 매번 지금 값을 읽는다
 static func vital_color(level: String) -> Color:
-	return VITAL_COLOR.get(level, TEXT_DIM)
+	match level:
+		"ok":
+			return OK
+		"warn":
+			return WARN
+		"bad":
+			return BAD
+	return TEXT_DIM
 
 
-## 부상 심각도 — 값이 아니라 뜻으로 이름 붙인다
-const SEV_COLOR := {
-	"light": OK,
-	"moderate": WARN,
-	"severe": BAD,
-	"surgery": Color("c04ad0"),
-}
+## 부상 심각도 — 값이 아니라 뜻으로 이름 붙인다.
+##
+## ⚠ **사전 상수로 두면 톤이 바뀌어도 옛 색을 들고 남는다.** `const`는 한 번만
+## 만들어지므로 그 안의 `OK`·`WARN`·`BAD`가 처음 톤에 굳는다 — 함수로 바꿔
+## 매번 지금 값을 읽는다. 수술색은 톤과 무관한 고정색이다
+static func sev_color(severity: String, fallback: Color = TEXT_DIM) -> Color:
+	match severity:
+		"light":
+			return OK
+		"moderate":
+			return WARN
+		"severe":
+			return BAD
+		"surgery":
+			return Color("c04ad0")
+	return fallback
 
 ## 관계 7단계 — **숫자를 안 보여주는 게 인물 화면의 원칙**이라 색이 곧 수치다.
 ## 적대에서 각별까지 한 방향으로 흐르게 하고 양 끝만 꽉 채운다.
