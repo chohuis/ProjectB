@@ -286,6 +286,12 @@ static func new_game(p: Dictionary) -> Dictionary:
 	me["birthday"] = p.get("birthday", "")
 	me["fatigue"] = 0.0
 	me["condition"] = 100.0
+	# ⚠ **사기 축이 통째로 비어 있었다** (F-1b). 읽는 쪽은 셋인데
+	# (`CoachReport` · `GameGrowth` · `AutoTraining`) **채우는 쪽이 없어서**
+	# `get("morale", …)`의 기본값에 기대고 있었다 — 자동 훈련은 그래서
+	# 여덟 해 내내 "사기가 낮다" 갈래만 돌았다. 02 `NewGamePage:282`가 70이다.
+	# ⚠ **`fatigue`·`condition`은 02와 다르다**(02는 10 · 80) — F-9에 적었다
+	me["morale"] = 70.0
 	me["injury"] = null
 	me["eligibility_blocked"] = false
 	me["retired"] = false

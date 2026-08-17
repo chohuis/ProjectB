@@ -31,16 +31,21 @@ static func _pick(p: Dictionary) -> String:
 	return hone
 
 
-func _one(seed_value: int) -> Dictionary:
+func _one(seed_value: int, mixed: bool) -> Dictionary:
 	var s: Dictionary = World.new_game({"seed": seed_value, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
-	s["training_plan"] = {"primary": "TRN_PITCH_DEV"}
+	if not mixed:
+		s["training_plan"] = {"primary": "TRN_PITCH_DEV", "user_set": true}
 	var p: Dictionary = s["protagonist"]
 
 	var learned: int = 0
 	var first_week: int = 0
 	for w in range(1, YEARS * WEEKS_PER_YEAR + 1):
-		if (p.get("training_pitch_state", {}) as Dictionary).is_empty():
+		# **섞어 돌리는 쪽은 게임이 실제로 쓰는 정책을 쓴다** — 계획도 대상도
+		# `AutoTraining`이 정한다. 여기서 따로 고르면 그게 두 번째 정본이 된다
+		if mixed:
+			AutoTraining.apply(s)
+		elif (p.get("training_pitch_state", {}) as Dictionary).is_empty():
 			var pick: String = _pick(p)
 			if not pick.is_empty():
 				PitchDev.start(p, pick)
@@ -56,23 +61,26 @@ func _one(seed_value: int) -> Dictionary:
 	var grades: Array = []
 	for e in p.get("pitches", []):
 		grades.append(int(e.get("grade", 0)))
+	var q: Dictionary = p.get("pitching", {})
 	return {"count": (p.get("pitches", []) as Array).size(),
 		"learned": learned, "first_week": first_week, "grades": grades,
-		"command": float(p.get("pitching", {}).get("command", 0.0))}
+		"command": float(q.get("command", 0.0)),
+		"velocity": float(q.get("velocity", 0.0)),
+		"ovr": float(q.get("ovr", 0.0))}
 
 
-func run(log_line: Callable, _fail: Callable, careers: int = 12,
-		seed_value: int = 20270101) -> int:
-	log_line.call("구종 습득 계측 — %d커리어 · %d해 · 씨앗 %d" % [
-		careers, YEARS, seed_value])
-	log_line.call("")
+func _report(log_line: Callable, title: String, careers: int,
+		seed_value: int, mixed: bool) -> void:
+	log_line.call("── %s" % title)
 
 	var counts: Array = []
 	var firsts: Array = []
+	var ovrs: Array = []
 	var grade_hist: Dictionary = {}
 	for i in range(careers):
-		var out: Dictionary = _one(seed_value + i * 101)
+		var out: Dictionary = _one(seed_value + i * 101, mixed)
 		counts.append(int(out["count"]))
+		ovrs.append(float(out["ovr"]))
 		if int(out["first_week"]) > 0:
 			firsts.append(int(out["first_week"]))
 		for g in out["grades"]:
@@ -94,4 +102,23 @@ func run(log_line: Callable, _fail: Callable, careers: int = 12,
 	for k in keys:
 		parts.append("%d등급 %d개" % [k, grade_hist[k]])
 	log_line.call("  숙련도 분포 — %s" % " · ".join(parts))
+
+	# ⚠ **투구 OVR을 같이 잰다.** 구종 개수만 보면 "한 축만 8년 돌린 대가"가
+	# 안 보인다 — 섞어 돌린 쪽이 왜 나은지는 여기서 갈린다
+	ovrs.sort()
+	log_line.call("  8해 뒤 투구 OVR — 최소 %.1f · 중앙 %.1f · 최대 %.1f" % [
+		ovrs[0], ovrs[ovrs.size() / 2], ovrs[-1]])
+	log_line.call("")
+
+
+## ⚠ **F-1은 구종 개발만 1순위로 두는 극단을 쟀다.** 실제 플레이는 그렇게
+## 안 한다 — 한 축만 여덟 해 돌리면 능력치가 안 큰다. F-1b에서 **게임이
+## 실제로 쓰는 정책**(`AutoTraining`)으로 다시 재고 둘을 나란히 낸다
+func run(log_line: Callable, _fail: Callable, careers: int = 12,
+		seed_value: int = 20270101) -> int:
+	log_line.call("구종 습득 계측 — %d커리어 · %d해 · 씨앗 %d" % [
+		careers, YEARS, seed_value])
+	log_line.call("")
+	_report(log_line, "구종 개발만 1순위 (F-1 · 극단)", careers, seed_value, false)
+	_report(log_line, "자동 추천 배분 (F-1b · AutoTraining)", careers, seed_value, true)
 	return 0

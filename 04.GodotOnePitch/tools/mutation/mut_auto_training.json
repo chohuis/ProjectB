@@ -1,0 +1,72 @@
+[
+ [
+  "피로 문턱이 02와 다르다 (70 -> 85)",
+  "const FATIGUE_HIGH: float = 70.0",
+  "const FATIGUE_HIGH: float = 85.0"
+ ],
+ [
+  "사기 문턱이 02와 다르다 (50 -> 30)",
+  "const MORALE_LOW: float = 50.0",
+  "const MORALE_LOW: float = 30.0"
+ ],
+ [
+  "피로보다 사기를 먼저 본다 (탈진한 채로 멘탈을 돌린다)",
+  "\tif float(p.get(\"fatigue\", 0.0)) >= FATIGUE_HIGH:\n\t\tprimary = RECOVERY\n\t\tsub1 = MENTAL\n\t\tsub2 = CTRL",
+  "\tif false:\n\t\tprimary = RECOVERY\n\t\tsub1 = MENTAL\n\t\tsub2 = CTRL\n\telif float(p.get(\"fatigue\", 0.0)) >= FATIGUE_HIGH and float(p.get(\"morale\", 50.0)) >= MORALE_LOW:\n\t\tprimary = RECOVERY\n\t\tsub1 = MENTAL\n\t\tsub2 = CTRL"
+ ],
+ [
+  "기본 갈래에서 구종 개발이 빠진다 (02가 크게 데었던 자리다)",
+  "\t\tsub2 = PITCH_DEV if ensure_pitch_target(p) else RECOVERY",
+  "\t\tsub2 = RECOVERY"
+ ],
+ [
+  "대상을 안 정하고 프로그램만 건다 (슬롯이 통째로 빈다)",
+  "\t\tsub2 = PITCH_DEV if ensure_pitch_target(p) else RECOVERY",
+  "\t\tsub2 = PITCH_DEV"
+ ],
+ [
+  "사용자가 정한 계획을 덮어쓴다 (고른 육성 방향이 사라진다)",
+  "\tif bool(plan.get(\"user_set\", false)):\n\t\treturn",
+  ""
+ ],
+ [
+  "익히는 중인데 대상을 다시 고른다 (매주 갈아타 아무것도 못 끝낸다)",
+  "\tif not (p.get(\"training_pitch_state\", {}) as Dictionary).is_empty():\n\t\treturn true",
+  ""
+ ],
+ [
+  "SP 목표가 구속을 안 본다 (02는 70 이상이면 4개다)",
+  "\t\treturn 4 if velocity >= SP_FAST_VELOCITY else 5",
+  "\t\treturn 5"
+ ],
+ [
+  "CP 중간 문턱이 없다 (02는 60에서 한 번 더 갈린다)",
+  "\t\treturn 3 if velocity >= CP_MID_VELOCITY else 4",
+  "\t\treturn 4"
+ ],
+ [
+  "RP 문턱이 02와 다르다 (65 -> 55)",
+  "const RP_FAST_VELOCITY: float = 65.0",
+  "const RP_FAST_VELOCITY: float = 55.0"
+ ],
+ [
+  "어려운 것부터 잡는다 (02는 난이도 오름차순이다)",
+  "\t\t\tif best.is_empty() or int(c[\"form_difficulty\"]) < int(best[\"form_difficulty\"]):",
+  "\t\t\tif best.is_empty() or int(c[\"form_difficulty\"]) > int(best[\"form_difficulty\"]):"
+ ],
+ [
+  "목표를 채워도 계속 새로 배운다 (등급을 안 올린다)",
+  "\tif owned < target:",
+  "\tif true:"
+ ],
+ [
+  "사기 기본값이 다른 모듈과 다르다 (50 -> 0: 축이 빈 세이브가 늘 사기 낮음이 된다)",
+  "\telif float(p.get(\"morale\", 50.0)) < MORALE_LOW:",
+  "\telif float(p.get(\"morale\", 0.0)) < MORALE_LOW:"
+ ],
+ [
+  "잠긴 구종도 고른다 (04는 PitchDev.start가 막아 그 주가 통째로 빈다)",
+  "\t\t\tif bool(c[\"owned\"]) or not bool(c[\"can_train\"]):",
+  "\t\t\tif bool(c[\"owned\"]):"
+ ]
+]

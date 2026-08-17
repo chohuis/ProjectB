@@ -187,6 +187,16 @@ static func run(state: Dictionary, advance: Callable, answer: Callable,
 		max_steps: int = MAX_STEPS) -> Dictionary:
 	var steps: int = 0
 	while steps < max_steps:
+		# ⚠ **훈련 계획을 여기서 세운다** (F-1b). 04엔 이게 없어서 자동
+		# 진행이 여덟 해를 굴려도 훈련을 하나도 안 했다. 매 걸음 부르는 건
+		# 02 `runAutoAdvance`와 같다 — 피로·사기가 오르내리므로 한 번 정하고
+		# 두면 탈진한 채로 구속을 올린다. **사용자가 정한 계획은 안 건드린다.**
+		#
+		# ⚠ **`next_step`에 넣었다가 검사 셋이 깨졌다.** 그건 "지금 할 일이
+		# 뭐냐"를 묻는 조회 함수라 화면도 부른다 — **물어보기만 해도 계획이
+		# 덮였다.** 상태를 바꾸는 일은 루프 본체에 둔다(02도 그렇다)
+		AutoTraining.apply(state)
+
 		var step: Dictionary = next_step(state)
 		var kind: String = String(step["kind"])
 		if kind == "stop":
