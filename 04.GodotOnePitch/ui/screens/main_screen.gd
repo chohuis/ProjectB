@@ -70,6 +70,9 @@ signal life_record_requested
 signal player_selected(player_id: String)
 ## 리그 표에서 팀을 눌렀다 — 상세를 연다 (F-4b)
 signal team_selected(team_id: String)
+## 소식의 선택지를 골랐다 (F-8b). **효과는 루트가 건다** —
+## 화면이 상태를 직접 고치면 자동 진행이 고른 답과 다른 일이 벌어진다
+signal news_decision_picked(message_id: String, choice_id: String)
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -529,6 +532,52 @@ func _build_news() -> void:
 		var row: NewsRow = NEWS_ROW.instantiate()
 		box.add_child(row)
 		row.setup(r)
+		_build_news_decision(box, r)
+
+
+## 소식에 붙는 선택지 — F-8b.
+##
+## ⚠ **여기가 답하는 유일한 입구다.** 코치 리포트는 날을 안 막으므로
+## (`blocking: false`) 자동 진행이 볼 일이 없다 — 이 버튼이 없으면
+## **아무도 답할 수 없고 조언이 소식함에 쌓이기만 한다.**
+##
+## ⚠ **화면이 상태를 직접 고치지 않는다.** 누른 것만 올리고 효과는
+## `CoachReport.apply` 하나가 건다
+func _build_news_decision(box: VBoxContainer, row: Dictionary) -> void:
+	var picked: String = String(row.get("selected_label", ""))
+	if not picked.is_empty():
+		var done := Label.new()
+		done.text = "  → %s" % picked
+		done.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		box.add_child(done)
+
+	# ⚠ **여기서 "답했으니 그만"을 다시 판단하지 않는다.** 답한 소식엔
+	# `NewsVm`이 빈 목록을 준다 — 화면이 또 막으면 그게 두 번째 정본이 되고,
+	# 변이로 확인하니 **VM 쪽 가드가 등가가 되어 검사가 아무것도 안 봤다**
+	var choices: Array = row.get("choices", [])
+	if choices.is_empty():
+		return
+
+	var prompt: String = String(row.get("prompt", ""))
+	if not prompt.is_empty():
+		var ask := Label.new()
+		ask.text = "  %s" % prompt
+		ask.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		box.add_child(ask)
+
+	var mid: String = String(row.get("id", ""))
+	for c in choices:
+		var b := Button.new()
+		b.text = String(c.get("label", ""))
+		if not String(c.get("hint", "")).is_empty():
+			b.text += "   (%s)" % c["hint"]
+		b.focus_mode = Control.FOCUS_NONE
+		var cid: String = String(c.get("id", ""))
+		# ⚠ **미뤄서 보낸다.** 루트가 상태를 고치면 이 목록이 다시 그려지는데,
+		# 바로 보내면 자기를 부른 버튼을 지우려다 잠긴 객체가 된다
+		b.pressed.connect(func() -> void:
+			news_decision_picked.emit.call_deferred(mid, cid))
+		box.add_child(b)
 
 
 func _tab_label() -> String:

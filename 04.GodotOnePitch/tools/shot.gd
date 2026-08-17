@@ -108,6 +108,19 @@ func _build(which: String) -> Control:
 			return _main(Fixtures.main_state())
 		"main-gameday":
 			return _main(Fixtures.main_state_gameday())
+		# 코치 리포트 (F-8 · F-8b). **선택지가 든 소식을 만드는 곳이 없었다**
+		"news-decision":
+			var cr: AppRoot = APP.instantiate()
+			var cs := World.new_game({"seed": 20270101, "season_year": 2027,
+				"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+			# 피로를 물려 회복 갈래가 나오게 한다 — 기본 상태로는 "루틴 유지"만 뜬다
+			cs["protagonist"]["fatigue"] = 72.0
+			cs["day"] = 21
+			CoachReport.push(cs, 3, 21)
+			cr.set_state(cs)
+			cr.ready.connect(func() -> void:
+				cr.screen().show_tab("news"), CONNECT_ONE_SHOT)
+			return cr
 		# 계약 협상 (F-2b). **04는 "계약한다 / 거절한다" 둘뿐이었다**
 		"negotiation":
 			var ns: Dictionary = World.new_game({"seed": 20270101,

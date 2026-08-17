@@ -40,6 +40,31 @@ static func _is_decided(m: Dictionary) -> bool:
 	return d != null and d.get("selected", null) != null
 
 
+## 화면이 그릴 선택지 — F-8b. 결정이 없으면 빈 사전.
+##
+## ⚠ **답한 소식은 고른 것을 보여준다.** 뭘 골랐는지 나중에 알 수 없으면
+## 지난 결정을 되짚을 방법이 없다
+static func _decision_of(m: Dictionary) -> Dictionary:
+	var d = m.get("decision", null)
+	if d == null:
+		return {}
+	var picked = d.get("selected", null)
+	var label: String = ""
+	if picked != null:
+		for c in d.get("choices", []):
+			if String(c.get("id", "")) == String(picked):
+				label = String(c.get("label", ""))
+	return {
+		"prompt": String(d.get("prompt", "")),
+		# ⚠ **답했으면 선택지를 안 준다.** 화면이 버튼을 또 그리면 두 번
+		# 눌러 효과를 두 번 받는다 — `CoachReport.apply`가 막지만 화면에
+		# 눌리는 버튼이 남아 있으면 "왜 안 되지"가 된다
+		"choices": [] if picked != null else d.get("choices", []),
+		"selected": picked,
+		"selected_label": label,
+	}
+
+
 static func build(s: Dictionary) -> Dictionary:
 	var year: int = s.get("season_year", 2026)
 	var mailbox: Array = s.get("mailbox", [])
@@ -102,6 +127,10 @@ static func build(s: Dictionary) -> Dictionary:
 			"pending": is_pending,
 			"decided": _is_decided(m),
 		}
+		# ⚠ **선택지를 같이 싣는다** (F-8b). `pending` 표시만으론 화면이
+		# 그릴 게 없어서 **답할 방법이 없었다** — 코치 리포트는 날을 안
+		# 막으므로 자동 진행도 안 답한다. 여기가 유일한 입구다
+		row.merge(_decision_of(m), true)
 		if is_pending:
 			pending.append(row)
 		else:

@@ -13,7 +13,7 @@ godot --script tools/shot.gd -- <이름>     # 창이 뜬다 — 헤드리스 �
 **39갈래 전부 찍혔다. 못 찍은 갈래는 없다.**
 그 뒤로 `status-injury`(U-1) · `status-military`(U-2b) · `settings`(U-4) ·
 `training-pitch`(F-1) · `match-briefing`(F-5) · `player-detail`(F-4a) ·
-`team-detail`(F-4b) · `negotiation`(F-2b) · `people-tones`(U-8)가 붙었다.
+`team-detail`(F-4b) · `negotiation`(F-2b) · `people-tones`(U-8) · `news-decision`(F-8b)이 붙었다.
 **갈래 목록의 정본은 `tools/shot.gd`의 `match`문이다** — 여기 개수를 적으면
 하나 붙일 때마다 어긋난다.
 
@@ -41,6 +41,7 @@ godot --script tools/shot.gd -- <이름>     # 창이 뜬다 — 헤드리스 �
 | `team-detail` | 팀 상세 — **구단 성향 열두 축** · 선수단 (F-4b · F-3b) | — |
 | `negotiation` | 재계약 협상 — 슬라이더 · 옵션 · 수락 가능성 · 역제안 (F-2b) | — |
 | `people-tones` | 인물 — **관계 일곱 색을 나란히** (U-8) | — |
+| `news-decision` | 소식 — **코치 리포트와 선택지 버튼** (F-8 · F-8b) | — |
 | `main` | 진행 화면 (fixture) | 63,158 |
 | `main-gameday` | 진행 화면 — 등판일 | 62,085 |
 | `app` | AppRoot 기본 (탭 0 = 소식) | 63,158 |

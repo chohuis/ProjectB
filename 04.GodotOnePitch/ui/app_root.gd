@@ -71,6 +71,7 @@ func _ready() -> void:
 	_main.life_record_requested.connect(_open_life_record)
 	_main.player_selected.connect(_open_player_detail)
 	_main.team_selected.connect(_open_team_detail)
+	_main.news_decision_picked.connect(_on_news_decision)
 	_refresh()
 
 
@@ -513,6 +514,15 @@ func _open_decision() -> void:
 
 func decision_screen() -> DecisionScreen:
 	return _decision_screen
+
+
+## 소식의 선택지를 골랐다 — F-8b.
+##
+## ⚠ **효과를 거는 자리는 `CoachReport.apply` 하나다.** 여기서 상태를
+## 직접 고치면 자동 진행이 고른 답과 다른 일이 벌어진다
+func _on_news_decision(message_id: String, choice_id: String) -> void:
+	if CoachReport.apply(_state, message_id, choice_id):
+		_refresh()
 
 
 ## 선수 상세를 연다 — F-4.
