@@ -21,15 +21,39 @@ const LINEUP_SIZE: int = 9
 
 ## 그 팀의 타순과 선발. **`Roster`가 정본이다** — 여기서 따로 고르면
 ## 편성 규칙이 두 벌이 된다
+## ⚠ **야수를 먼저 세우고, 모자라면 투수로 채운다** (F-5b).
+## 02 `rosterEngine.ts:406-423` 그대로다.
+##
+## ⚠ **예전엔 "정렬이 같은 일을 한다"고 안 걸렀는데 틀렸다.** 투수의 타격이
+## 야수보다 낮다는 전제가 진짜 세계에선 안 맞는다 — **112팀 전부** 타순에
+## 투수가 끼었고 심하면 다섯 명이었다. 검사는 통과했는데, 가짜 로스터가
+## 투수 타격 20 · 야수 40+이라 정렬만으로 걸러졌기 때문이다.
+## 브리핑(F-5)이 화면에 4번 RP를 띄워서 눈에 보였다.
+##
+## ⚠ **모자랄 때 채우는 것은 필요하다.** 여덟 명짜리 타순으로 돌면 타석이
+## 9/8배로 부풀어 **능력치가 아니라 출전량이 성적을 만든다** — 02가 실측으로
+## 겪었다(경기당 7.1타석, 정상 4.7). 실제 야구도 야수가 모자라면 투수를
+## 세운다
 static func _lineup(players: Array) -> Array:
-	# ⚠ **투수를 따로 거르지 않는다.** 정렬이 같은 일을 한다 — 투수의 타격
-	# 능력치가 야수보다 낮으므로 저절로 뒤로 밀린다. 거르는 줄을 두면
-	# **야수가 아홉이 안 되는 팀**(2군 극단)에서 빈 타순이 되고, 그걸 막으려고
-	# 또 채우는 줄을 붙이게 된다 — 둘 다 정렬 하나로 없어진다
-	var batters: Array = players.duplicate()
-	batters.sort_custom(func(a, b) -> bool:
-		return float(a["batting"]["ovr"]) > float(b["batting"]["ovr"]))
-	return batters.slice(0, LINEUP_SIZE)
+	var fielders: Array = []
+	var pitchers: Array = []
+	for p in players:
+		if PlayerGen.is_pitcher(String(p.get("position", ""))):
+			pitchers.append(p)
+		else:
+			fielders.append(p)
+
+	var by_batting := func(a, b) -> bool:
+		return float(a["batting"]["ovr"]) > float(b["batting"]["ovr"])
+	fielders.sort_custom(by_batting)
+	if fielders.size() >= LINEUP_SIZE:
+		return fielders.slice(0, LINEUP_SIZE)
+
+	# 타격이 나은 투수부터 채운다 — 아무나 세우면 비상 상황이 더 나빠진다
+	pitchers.sort_custom(by_batting)
+	var out: Array = fielders
+	out.append_array(pitchers.slice(0, LINEUP_SIZE - fielders.size()))
+	return out
 
 
 ## 그 팀의 이번 경기 선발. **로테이션이 정한다** — 매번 제일 센 투수를

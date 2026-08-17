@@ -670,3 +670,88 @@ func test_home_and_away_use_their_own_game_numbers() -> void:
 	assert_int(pairs.size()).override_failure_message(
 		"홈 순번을 바꿔도 짝이 %d가지뿐 — 순번을 따로 안 쓴다" % pairs.size()) \
 		.is_equal(5)
+
+
+# ── 타순에 투수가 끼면 안 된다 (F-5b) ────────────────────────
+
+## 투수 타격이 야수보다 **높은** 로스터. **위 `_roster`는 투수 20 · 야수 40+라
+## 정렬만으로 걸러져서 아무것도 안 봤다** — 진짜 세계는 그렇지 않다
+func _roster_with_hitting_pitchers(pitchers: int, batters: int) -> Array:
+	var out: Array = []
+	for i in pitchers:
+		out.append({"id": "P%d" % i, "position": "SP",
+			"pitching": {"ovr": 50.0 + i, "stamina": 60.0, "velocity": 60.0,
+				"command": 60.0, "control": 60.0, "movement": 60.0,
+				"mentality": 60.0, "clutch": 50.0, "hold_runners": 50.0},
+			# 야수보다 높다
+			"batting": {"ovr": 70.0 + i, "contact": 60.0, "power": 60.0,
+				"eye": 60.0, "discipline": 60.0, "speed": 60.0,
+				"base_instinct": 60.0, "batting_clutch": 60.0}})
+	for i in batters:
+		out.append({"id": "B%d" % i, "position": "1B",
+			"pitching": {"ovr": 10.0, "stamina": 10.0, "velocity": 10.0,
+				"command": 10.0, "control": 10.0, "movement": 10.0,
+				"mentality": 10.0, "clutch": 10.0, "hold_runners": 10.0},
+			"batting": {"ovr": 40.0 + i, "contact": 60.0, "power": 60.0,
+				"eye": 60.0, "discipline": 60.0, "speed": 60.0,
+				"base_instinct": 60.0, "batting_clutch": 60.0}})
+	return out
+
+
+## ⚠ **야수가 넉넉하면 투수는 한 명도 안 선다.** 예전 주석은 "정렬이 같은
+## 일을 한다"고 했는데 **틀렸다** — 진짜 세계에서 112팀 전부 타순에 투수가
+## 끼었고 심하면 다섯 명이었다. 브리핑(F-5)이 그걸 눈에 보이게 만들었다
+func test_no_pitcher_bats_when_there_are_enough_fielders() -> void:
+	for p in MatchDay._lineup(_roster_with_hitting_pitchers(10, 15)):
+		assert_bool(PlayerGen.is_pitcher(String(p.get("position", ""))
+			)).override_failure_message(
+			"야수가 15명인데 타순에 투수 %s가 섰다" % p["id"]).is_false()
+
+
+## ⚠ **모자라면 투수로 채운다** (02 `rosterEngine.ts:418-423` 그대로).
+## 여덟 명짜리 타순으로 돌면 타석이 9/8배로 부풀어 **능력치가 아니라
+## 출전량이 성적을 만든다** — 02가 실측으로 겪었다(경기당 7.1타석)
+func test_a_short_roster_fills_up_with_pitchers() -> void:
+	var line: Array = MatchDay._lineup(_roster_with_hitting_pitchers(10, 5))
+	assert_int(line.size()).is_equal(9)
+	var pitchers: int = 0
+	for p in line:
+		if PlayerGen.is_pitcher(String(p.get("position", ""))):
+			pitchers += 1
+	assert_int(pitchers).override_failure_message(
+		"야수 5명 + 투수 4명이어야 하는데 투수가 %d명이다" % pitchers).is_equal(4)
+
+
+## 채울 때도 **타격이 나은 투수부터**다 — 아무나 세우면 비상 상황이
+## 더 나빠진다
+func test_the_filling_pitchers_are_the_better_hitters() -> void:
+	var line: Array = MatchDay._lineup(_roster_with_hitting_pitchers(10, 5))
+	var ids := PackedStringArray()
+	for p in line:
+		if PlayerGen.is_pitcher(String(p.get("position", ""))):
+			ids.append(String(p["id"]))
+	# 타격 ovr이 70+i이므로 i가 큰 쪽이 낫다
+	assert_array(ids).contains(["P9", "P8", "P7", "P6"])
+
+
+## ⚠ **진짜 세계에서 확인한다.** 가짜 로스터는 능력치 분포가 달라서
+## 이 결함을 못 봤다 — 112팀 전부가 걸려 있었는데도
+func test_no_real_team_puts_a_pitcher_in_the_lineup() -> void:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var w: Dictionary = s.get("world", {})
+	var bad: int = 0
+	var checked: int = 0
+	for lid in ["LEAGUE_HIGHSCHOOL", "LEAGUE_KBL"]:
+		for t in World.teams_of(lid):
+			var roster: Array = World.roster_of(w, String(t["id"]))
+			if roster.size() < 9:
+				continue
+			checked += 1
+			for p in MatchDay._lineup(roster):
+				if PlayerGen.is_pitcher(String(p.get("position", ""))):
+					bad += 1
+					break
+	assert_int(checked).is_greater(50)
+	assert_int(bad).override_failure_message(
+		"%d팀 중 %d팀이 타순에 투수를 세운다" % [checked, bad]).is_equal(0)
