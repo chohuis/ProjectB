@@ -351,6 +351,12 @@ static func investment_option(option_id: String) -> Dictionary:
 	return {}
 
 
+## 투자에 필요한 최소 현금 — **화면이 이유를 말할 때 쓴다.**
+## 여기서 안 내면 화면이 숫자를 또 적게 되고 언젠가 갈린다
+static func invest_min_cash() -> int:
+	return int(rules().get("investment", {}).get("min_cash", 0))
+
+
 ## 투자 화면이 뜨나. **생활비도 빠듯한 신인에게 투자 화면을 띄우면 조롱이다**
 static func can_invest(cash: int, career_stage: String) -> bool:
 	var r: Dictionary = rules().get("investment", {})

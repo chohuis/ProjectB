@@ -67,7 +67,43 @@ static func build(state: Dictionary) -> Dictionary:
 		"trend": _trend(state),
 		"sponsor": _sponsor(state, p, stage, sponsors, year),
 		"training": _training(subs, facility),
+		"investment": _investment(p, stage),
 	}
+
+
+## 시즌말 투자 — 02 `FinancePage`의 `<h3>투자</h3>` 절.
+##
+## 🔴 **엔진만 있고 부르는 곳이 없었다.** `Finance.investment_options` ·
+## `can_invest` · `resolve_investment`가 다 있고 규칙 파일에 세 갈래와 값까지
+## 있는데 **넷 다 아무도 안 불렀다** — 형태 ②를 다섯 번째 만난 자리다.
+##
+## ⚠ **위험을 같이 적는다.** 기대 수익만 보면 사업이 늘 나아 보인다 —
+## `floor`가 최대 손실률이다.
+##
+## ⚠ **못 하면 이유를 말한다.** 빈 칸은 고장으로 보인다
+static func _investment(p: Dictionary, stage: String) -> Dictionary:
+	var cash: int = int(p.get("money", 0))
+	var can: bool = Finance.can_invest(cash, stage)
+
+	var options: Array = []
+	for o in Finance.investment_options():
+		var sd: float = float(o.get("sd", 0.0))
+		options.append({
+			"id": String(o.get("id", "")),
+			"name": String(o.get("name", "")),
+			"desc": String(o.get("desc", "")),
+			"mean_label": "기대 %+.0f%%" % (float(o.get("mean", 0.0)) * 100.0),
+			# 흔들림이 0이면 "확정"이라 적는다 — `-0%`는 뜻이 없다
+			"risk_label": "확정" if sd <= 0.0 \
+				else "최대 %.0f%%" % (float(o.get("floor", 0.0)) * 100.0),
+		})
+
+	var reason: String = ""
+	if not can:
+		reason = "프로 무대에서만 할 수 있습니다." if not Finance.is_pro(stage) \
+			else "현금이 %s 이상이어야 합니다." % won(Finance.invest_min_cash())
+	return {"can": can, "reason": reason, "cash_label": won(cash),
+		"options": options}
 
 
 ## 재정은 무대 이름을 리그에서 낸다 — `career_stage`는 프로만 갈래가 있다
