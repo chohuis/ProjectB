@@ -332,6 +332,20 @@ msg.is_empty()`를 뒀는데 **도달할 수가 없어 변이가 안 잡혔다.*
 
 **쓰는 쪽을 만들면 읽는 쪽이 있는지 센다.**
 
+##### ④ 오프시즌 결산 — **죽은 출력이 아니었다** (성급했다)
+
+`SeasonRunner`가 **소식함에 한 통도 안 넣는다**(`mailbox`가 그 파일에
+한 번도 안 나온다)기에 넷째인 줄 알았는데, **끝까지 따라가 보니 아니었다** —
+`finish_season`의 결과가 `AppRoot.last_season_end`로 가고 **결산 화면**
+(`ui/screens/season_end_screen.tscn`)이 그걸 읽는다(`app_root.gd:391-400`).
+
+**04는 오프시즌 결산을 소식이 아니라 전용 화면으로 낸다.** 02의
+`OffseasonPanel`에 대응하는 자리가 이미 있는 것이고, PORT_GAP이 이걸
+"화면만 없다"로 적어 둔 것이 **틀렸다**.
+
+⚠ **"소식함에 안 넣는다"가 곧 "죽었다"는 아니다.** 04엔 소식 말고도
+읽는 자리가 있다 — **읽는 쪽을 셀 때 화면까지 센다.**
+
 성능 — 주간 경로를 또 건드려 단독으로 셋: **0.956 · 0.952 · 0.980초**
 (붙이기 전 0.899~0.912). 다이제스트가 **약 +0.05초**. 자체 보고선 3초 안이다.
 
@@ -344,7 +358,7 @@ msg.is_empty()`를 뒀는데 **도달할 수가 없어 변이가 안 잡혔다.*
 |---|---|---|
 | `messages/InjuryPanel` (183) | ✅ `injury_runner` | ⬜ 본문은 열린다. 카드형은 없다 |
 | `messages/ProspectTop10Panel` (181) | ❓ | ⬜ **02 쪽부터 확인** |
-| `messages/OffseasonPanel` (194) | ✅ `sim/offseason.gd` | ⬜ 본문은 열린다. 카드형은 없다 |
+| `messages/OffseasonPanel` (194) | ✅ `sim/offseason.gd` | ✅ **04는 화면으로 낸다** — 아래 |
 | `messages/DigestCards` (89) | ✅ `sim/digest.gd` | 위 둘의 부품 |
 | `messages/TrainingStatBars` (152) | ✅ `training_vm` | **부분** |
 
