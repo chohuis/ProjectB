@@ -178,10 +178,20 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			elif Pending.has(s, "military_enlist_ask"):
 				CareerDecision.answer_enlist(s, false, day)
 			elif Pending.has(s, "career_choice"):
-				# 지명이 되면 프로로, 아니면 대학으로 — 화면이 주는 선택지 순서다
-				if CareerDecision.choose_draft(s).is_empty():
-					CareerDecision.choose_school_or_independent(s, "university",
-						"TEAM_UNIV_BAEKJE")
+				# 🔴 **화면이 내는 선택지를 그대로 쓴다** (P-42).
+				# 예전엔 "지명이 안 되면 대학"으로 박아 뒀는데, 대학 4학년이
+				# 다시 대학에 가는 것이라 **학적 역행 가드에 막혀** 대기줄에
+				# 쌓였다 — 진로가 열려도 답이 안 됐다.
+				# `DecisionVm.build`가 그때의 실제 선택지를 낸다
+				var d: Dictionary = DecisionVm.build(s)
+				var ids: Array = []
+				for ch in d.get("choices", []):
+					ids.append(String(ch.get("id", "")))
+				# ⚠ **프로가 있으면 프로다** — 계측이 재려는 관계(구단주·감독)와
+				# 라이벌은 프로에 가야 표본이 생긴다
+				if not ids.is_empty():
+					DecisionVm.apply(s,
+						"draft" if ids.has("draft") else String(ids[0]), day)
 			# ⚠ **입력을 센다.** 코치는 담당 영역 훈련과 성장으로만 오른다 —
 			# 산식을 의심하기 전에 그 둘이 몇 번 걸리는지 본다.
 			# `WeekRunner` **앞**에서 재야 그 주의 성장분이 잡힌다

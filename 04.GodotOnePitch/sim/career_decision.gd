@@ -31,9 +31,23 @@ const INDEPENDENT: String = "LEAGUE_INDEPENDENT"
 
 static func of(state: Dictionary) -> Dictionary:
 	if not state.has(KEY):
-		state[KEY] = {"applications": {}, "submitted": false,
-			"results": {}, "final_choice": ""}
+		state[KEY] = _blank()
 	return state[KEY]
+
+
+static func _blank() -> Dictionary:
+	return {"applications": {}, "submitted": false,
+		"results": {}, "final_choice": ""}
+
+
+## 진로 기록을 비운다 — **무대를 옮길 때 부른다** (P-42).
+##
+## ⚠ **사전을 갈아끼우지 않고 안을 비운다.** 화면·계측이 `of(state)`로 받은
+## 참조를 들고 있을 수 있다 — 갈아끼우면 그쪽은 옛 사전을 본다
+static func reset_decision(state: Dictionary) -> void:
+	var c: Dictionary = of(state)
+	for k in _blank():
+		c[k] = _blank()[k]
 
 
 # ── 지원 ──────────────────────────────────────────────────────
@@ -531,6 +545,19 @@ static func team_index(world: Dictionary, team_id: String) -> float:
 static func _move_to(state: Dictionary, p: Dictionary, stage: String,
 		league: String, team_id: String) -> void:
 	var from_team: String = String(p.get("team_id", ""))
+	# 🔴 **진로 기록을 통째로 비운다** (P-42). 안 비우면 고교에서 채운
+	# `results`가 그대로 남아 `CareerRunner._should_open`의
+	# "결과가 있으면 안 연다"에 **매년 걸린다** — 실측 20해에서 주인공이
+	# 2032년부터 15해를 대학 4학년에 멈춰 있었다.
+	#
+	# ⚠ **02가 같은 증상을 겪고 적어 뒀다**(`game.ts:1768`):
+	# "실측: 2032 진학 → 2038까지 7년째 대학생(29세), 매년 W42 진로 허브만
+	# 반복." 02는 무대를 옮길 때 `careerApplications`·`careerResults`·
+	# `careerApplicationsSubmitted`·`careerFinalChoice`를 다 비운다.
+	#
+	# ⚠ **여기가 정본이다** — 무대가 바뀌는 길이 셋(지명 수락·진학·독립)인데
+	# 각자 비우면 하나를 빠뜨린다. 02가 그 실수를 했다
+	reset_decision(state)
 	p["career_stage"] = stage
 	p["league_id"] = league
 	p["team_id"] = team_id
