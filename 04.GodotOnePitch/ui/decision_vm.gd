@@ -406,8 +406,21 @@ static func _draft(state: Dictionary, a: Dictionary) -> Dictionary:
 static func _trade(state: Dictionary, a: Dictionary) -> Dictionary:
 	var to_team: String = String(World.team_field(state.get("world", {}),
 		String(a.get("to_team_id", "")), "name", String(a.get("to_team_id", ""))))
-	var body: String = "%s로 트레이드됩니다.\n%s" % [to_team,
-		String(a.get("reason", ""))]
+	# 🔴 **받아오는 선수를 안 보여줬다.** 02는 이름·OVR·포지션·연봉을 싣는다
+	# (`market.ts:553-560` · `TradeModal`의 두 칸 표) — **뭘 받는지 모르면
+	# 받아들일지 정할 수가 없다.** 04는 목적지 팀 이름만 냈다
+	var lines: Array[String] = ["%s로 트레이드됩니다." % to_team]
+	var reason: String = String(a.get("reason", ""))
+	if not reason.is_empty():
+		lines.append(reason)
+	if not String(a.get("received_id", "")).is_empty():
+		lines.append("")
+		lines.append("상대가 보내는 선수")
+		lines.append("  %s  %s  OVR %d  연봉 %s" % [
+			a.get("received_name", ""), a.get("received_position", ""),
+			int(a.get("received_ovr", 0)),
+			FinanceVm.won(int(a.get("received_salary", 0)))])
+	var body: String = "\n".join(lines)
 	var choices: Array = [{"id": "accept", "label": "받아들인다"}]
 	if bool(state.get("protagonist", {}).get("no_trade", false)):
 		choices.append({"id": "reject", "label": "거부한다 (노트레이드)"})

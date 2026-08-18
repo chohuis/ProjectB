@@ -17,10 +17,18 @@ const ONE_MOVE_PER_YEAR: bool = true
 
 ## 로스터를 트레이드 자산으로. **주인공은 빼지 않는다** — 02도 자산 풀에
 ## 넣는데, 실제로 옮길 때만 막는다(진로는 사용자가 정한다)
+## 🔴 **주인공을 빼고 있었다.** 그래서 제안에 실릴 수가 없었고 `trade`
+## 결정 갈래가 **도달 불가**였다 — 화면도 받는 코드도 `AutoAdvance` 항목도
+## 다 있는데 게임에 한 번도 안 나타났다(체육부대와 같은 모양).
+##
+## **02는 주인공을 자산으로 넣는다** — `market.ts:351-368` `protagonistAsset`.
+##
+## ⚠ **노트레이드 조항이 있으면 뺀다.** 02도 `noTrade`를 본다 — 조항을
+## 따 놓고 여전히 팔려 가면 협상 화면의 그 토글이 장식이 된다
 static func assets_of(roster: Array) -> Array:
 	var out: Array = []
 	for p in roster:
-		if p.get("is_protagonist", false):
+		if p.get("is_protagonist", false) and bool(p.get("no_trade", false)):
 			continue
 		out.append({
 			"id": String(p.get("id", "")),
@@ -161,6 +169,25 @@ static func run_league(state: Dictionary, league_id: String) -> Dictionary:
 		# 옮기기 전에 양쪽을 따로 확인하지 않는다 — **`moved_ids`가 이미
 		# 막는다.** 한 번 옮긴 사람은 다음 제안에서 걸러지므로 여기서
 		# "못 찾는" 경우가 안 생긴다. 가드를 두면 죽은 코드가 된다
+		# 🔴 **주인공이 끼면 조용히 옮기지 않고 묻는다.** 02도 그렇다.
+		# 자산에서 빼 두던 시절엔 여기까지 올 수 없어 가드가 필요 없었는데,
+		# 이제 실리므로 갈라야 한다
+		var me_id: String = String(state.get("protagonist", {}).get("id", ""))
+		if not me_id.is_empty() and (p["offering_ids"].has(me_id) \
+				or p["requesting_ids"].has(me_id)):
+			var mine_offered: bool = p["offering_ids"].has(me_id)
+			var dest: String = to_id if mine_offered else from_id
+			# 주고받는 상대 하나를 고른다 — 02도 한 명을 대표로 보여준다
+			var back: Array = p["requesting_ids"] if mine_offered \
+				else p["offering_ids"]
+			if not back.is_empty():
+				offer_protagonist(state, dest, String(back[0]),
+					String(p.get("reason", "")),
+					int(state.get("season_year", 0)))
+				moved_ids[me_id] = true
+				done += 1
+			continue
+
 		for id in p["offering_ids"]:
 			if _move(world, String(id), from_id, to_id, league_id,
 					int(state.get("season_year", 0))):
@@ -187,6 +214,44 @@ static func _fits(world: Dictionary, from_id: String, to_id: String,
 		return false
 	if World.roster_of(world, to_id).size() - delta > limit:
 		return false
+	return true
+
+
+## 주인공이 낀 거래를 **묻는다**. 02 `market.ts:543-560`.
+##
+## 🔴 **조용히 옮기지 않는다.** 02는 `pushPendingAction({type: "trade"})`로
+## 띄우고 **받아오는 선수의 이름·OVR·포지션·연봉**을 같이 싣는다 —
+## 뭘 받는지 모르면 받아들일지 정할 수가 없다.
+##
+## ⚠ **답하기 전에는 안 옮긴다.** 미리 옮기면 물음이 장식이 된다
+static func offer_protagonist(state: Dictionary, to_team: String,
+		receiving_id: String, reason: String, year: int) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	if p.is_empty() or bool(p.get("no_trade", false)):
+		return false
+
+	var world: Dictionary = state.get("world", {})
+	var got: Dictionary = {}
+	for q in World.roster_of(world, to_team):
+		if String(q.get("id", "")) == receiving_id:
+			got = q
+			break
+
+	Pending.push_once(state, {
+		"type": "trade",
+		"from_team_id": String(p.get("team_id", "")),
+		"to_team_id": to_team,
+		"to_league_id": String(World.team_field(world, to_team, "league_id",
+			String(p.get("league_id", "")))),
+		"reason": reason,
+		"year": year,
+		# ⚠ **받아오는 선수를 같이 싣는다** — 02가 그렇게 한다
+		"received_id": receiving_id,
+		"received_name": String(got.get("name", receiving_id)),
+		"received_ovr": int(roundf(Contract.core_ovr(got))),
+		"received_position": String(got.get("position", "")),
+		"received_salary": int(got.get("salary", 0)),
+	})
 	return true
 
 

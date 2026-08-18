@@ -286,6 +286,12 @@ static func accept_trade(state: Dictionary, action: Dictionary) -> bool:
 		"detail": String(action.get("reason", "")),
 	})
 	p["career_events"] = events
+
+	# 🔴 **로스터도 같이 옮긴다** — P-14와 똑같은 자리다.
+	# `team_id`만 바꾸고 배열을 안 건드리면 `relink_protagonist`가 새 팀
+	# 로스터에서 못 찾고, 못 찾으면 성장·관계·기록이 전부 그 위에 선다.
+	# 주인공이 트레이드될 길이 없어서 이 결함이 안 드러나 있었다
+	CareerDecision.move_roster(state, p, from_team, to_team)
 	Pending.resolve(state, "trade")
 	return true
 

@@ -539,7 +539,7 @@ static func _move_to(state: Dictionary, p: Dictionary, stage: String,
 	if stage != "university" and stage != "highschool":
 		p.erase("grade")
 		p.erase("university_week")
-	_move_roster(state, p, from_team, team_id)
+	move_roster(state, p, from_team, team_id)
 
 
 ## 🔴 **로스터도 같이 옮긴다** (P-14).
@@ -556,7 +556,7 @@ static func _move_to(state: Dictionary, p: Dictionary, stage: String,
 ## 통째로 사라진다 — `FaRunner._move`가 같은 자리에 그렇게 적어 뒀다.
 ##
 ## ⚠ **주인공만이다.** NPC 이동은 `FaRunner._move`·승강이 따로 맡는다
-static func _move_roster(state: Dictionary, p: Dictionary,
+static func move_roster(state: Dictionary, p: Dictionary,
 		from_team: String, to_team: String) -> void:
 	if not bool(p.get("is_protagonist", false)) or from_team == to_team:
 		return
