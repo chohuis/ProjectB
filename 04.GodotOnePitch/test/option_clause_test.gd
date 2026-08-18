@@ -191,21 +191,96 @@ func test_해가_바뀌면_다시_묻는다() -> void:
 		"해가 바뀌었는데 안 묻는다").is_true()
 
 
-## 🔴 **구단은 잘하는 선수만 잡는다.** 늘 행사하면 문턱이 장식이 된다 —
-## 02는 시즌 평점이 문턱을 넘는지로 가른다
+## 🔴 **구단은 그 해 성적으로 정한다 — OVR이 아니다.**
+##
+## 처음엔 OVR로 뒀는데 `Contract.season_rating`이 04의 정본이었다
+## (02 `calcSeasonRating` 대응). OVR로 재면 **한 해 부진해도 옵션이
+## 그대로 행사된다.**
+func _with_stats(era: float, whip: float, ip: float) -> Dictionary:
+	var s: Dictionary = _state({"contract_years": 1, "team_option_years": 1})
+	s["season_stats"] = {"ME": {"type": "pitcher", "ip": ip, "era": era,
+		"whip": whip, "k": ip * 1.0}}
+	return s
+
+
 func test_못하면_구단이_옵션을_안_쓴다() -> void:
-	var s: Dictionary = _state({"contract_years": 1, "team_option_years": 1,
-		"pitching": {"ovr": 40.0}})
+	var s: Dictionary = _with_stats(6.50, 1.70, 120.0)
+	assert_float(Contract.season_rating(s["season_stats"]["ME"])) \
+		.override_failure_message("픽스처가 나쁜 성적이 아니다").is_less(60.0)
 	ContractDecision.check_option_clause(s, int(s["day"]))
 	assert_bool(bool(DecisionVm.blocking(s).get("exercised", true))) \
 		.override_failure_message(
-			"OVR 40인데 구단이 옵션을 행사했다 — 문턱이 장식이다").is_false()
+			"방어율 6.50인데 구단이 옵션을 행사했다 — 문턱이 장식이다").is_false()
 
 
-## 잘하면 잡는다
 func test_잘하면_구단이_옵션을_쓴다() -> void:
-	var s: Dictionary = _state({"contract_years": 1, "team_option_years": 1,
-		"pitching": {"ovr": 85.0}})
+	var s: Dictionary = _with_stats(1.20, 0.85, 180.0)
+	assert_float(Contract.season_rating(s["season_stats"]["ME"])) \
+		.override_failure_message("픽스처가 좋은 성적이 아니다").is_greater(80.0)
 	ContractDecision.check_option_clause(s, int(s["day"]))
 	assert_bool(bool(DecisionVm.blocking(s).get("exercised", false))) \
-		.override_failure_message("OVR 85인데 구단이 안 잡는다").is_true()
+		.override_failure_message("방어율 1.20인데 구단이 안 잡는다").is_true()
+
+
+## ⚠ **기록이 없으면 50이다** — 문턱 아래라 안 행사된다.
+## 한 해도 안 뛴 사람을 붙잡을 이유가 없다
+func test_기록이_없으면_안_쓴다() -> void:
+	var s: Dictionary = _state({"contract_years": 1, "team_option_years": 1})
+	ContractDecision.check_option_clause(s, int(s["day"]))
+	assert_bool(bool(DecisionVm.blocking(s).get("exercised", true))).is_false()
+
+
+## 🔴 **문턱은 팀 성향이 정한다** — 02 `75 - winNowPressure/100*25`.
+## 성적 압박이 큰 팀은 낮은 기준에도 행사한다
+func test_성적_압박이_문턱을_낮춘다() -> void:
+	var calm: Dictionary = {"team_profiles": {"TEAM_X": {
+		"win_now_pressure": 0.0}}}
+	var hot: Dictionary = {"team_profiles": {"TEAM_X": {
+		"win_now_pressure": 100.0}}}
+	assert_float(ContractDecision.option_threshold(hot, "TEAM_X")) \
+		.override_failure_message(
+			"성적 압박이 큰 팀의 문턱이 더 낮아야 한다") \
+		.is_less(ContractDecision.option_threshold(calm, "TEAM_X"))
+
+
+## 02 값 그대로 — 압박 0이면 75, 100이면 50
+func test_문턱이_02_값이다() -> void:
+	assert_float(ContractDecision.option_threshold(
+		{"team_profiles": {"T": {"win_now_pressure": 0.0}}}, "T")) \
+		.is_equal_approx(75.0, 0.01)
+	assert_float(ContractDecision.option_threshold(
+		{"team_profiles": {"T": {"win_now_pressure": 100.0}}}, "T")) \
+		.is_equal_approx(50.0, 0.01)
+
+
+## 🔴 **문턱이 실제 판정에 닿아야 한다.**
+##
+## `option_threshold`만 따로 재면 그 값을 안 쓰고 상수로 굳혀도 안 잡힌다
+## (변이가 살아남았다). **같은 성적인데 팀만 다를 때 갈리는지**를 본다.
+##
+## 평점 65 언저리 — 압박 0인 팀(문턱 75)은 안 잡고, 압박 100인 팀(문턱 50)은
+## 잡는다
+func test_팀에_따라_같은_성적이_갈린다() -> void:
+	# ⚠ **값을 지어내지 않았다** — `tools/_tmp_*.gd`로 찍어 보고 골랐다.
+	# ERA 3.60은 80.4라 둘 다 잡고, 4.60이 68.7로 사이다
+	var stats: Dictionary = {"type": "pitcher", "ip": 150.0, "era": 4.60,
+		"whip": 1.42, "k": 130.0}
+	var rating: float = Contract.season_rating(stats)
+	assert_float(rating).override_failure_message(
+		"픽스처 평점 %.1f — 50과 75 사이여야 갈린다" % rating).is_between(50.0, 75.0)
+
+	var out: Array = []
+	for pressure in [0.0, 100.0]:
+		var s: Dictionary = _state({"contract_years": 1, "team_option_years": 1,
+			"team_id": "TEAM_OPT"})
+		s["season_stats"] = {"ME": stats}
+		s["world"] = {"team_profiles": {"TEAM_OPT": {
+			"win_now_pressure": pressure}}}
+		ContractDecision.check_option_clause(s, int(s["day"]))
+		out.append(bool(DecisionVm.blocking(s).get("exercised", false)))
+
+	assert_bool(out[0]).override_failure_message(
+		"압박 0인 팀(문턱 75)이 평점 %.1f를 잡았다" % rating).is_false()
+	assert_bool(out[1]).override_failure_message(
+		"압박 100인 팀(문턱 50)이 평점 %.1f를 안 잡았다 — 문턱이 안 쓰인다"
+		% rating).is_true()

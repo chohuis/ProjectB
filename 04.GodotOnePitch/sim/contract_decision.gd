@@ -146,10 +146,22 @@ const OPTION_ASKED_KEY: String = "option_clause_asked_year"
 ## **통보**한다. 사용자가 고르는 건 선수 옵션뿐이다 — 화면이 그걸 구분해야
 ## 한다. 여기서 `exercised`를 같이 실어 보낸다.
 ##
-## ⚠ **문턱은 팀 성향이 정한다** — 02는 `75 - winNowPressure/100*25`다.
-## 04는 `TeamProfile`에 그 축이 있는지 아직 안 봤으므로 **가운데(75)로 둔다**.
-## ⬜ 축을 찾으면 여기만 고친다
+## 문턱은 **팀 성향이 정한다** — 02 `75 - winNowPressure/100*25`
+## (`advanceWeek.ts:1063`). 성적 압박이 큰 팀은 낮은 기준에도 행사한다.
+##
+## ✅ **04에도 `win_now_pressure`가 있었다**(`TeamProfile.DEFAULT`).
+## 처음엔 "축이 있는지 안 봤다"며 가운데(75)로 뒀는데 **찾아보니 있었다** —
+## 없다고 적기 전에 먼저 센다
 const OPTION_BASE_THRESHOLD: float = 75.0
+const OPTION_PRESSURE_SPAN: float = 25.0
+
+
+## 그 팀이 옵션을 행사할 문턱
+static func option_threshold(world: Dictionary, team_id: String) -> float:
+	var pressure: float = float(TeamProfile.of(world, team_id).get(
+		"win_now_pressure", 50.0))
+	return OPTION_BASE_THRESHOLD \
+		- roundf(pressure / 100.0 * OPTION_PRESSURE_SPAN)
 
 
 static func check_option_clause(state: Dictionary, at_day: int) -> bool:
@@ -180,7 +192,8 @@ static func check_option_clause(state: Dictionary, at_day: int) -> bool:
 	if team_opt > 0:
 		action["option_type"] = "team"
 		# 구단이 정한다 — 시즌 평점이 문턱을 넘으면 행사한다
-		action["exercised"] = _season_rating(state, p) >= OPTION_BASE_THRESHOLD
+		action["exercised"] = _season_rating(state, p) >= option_threshold(
+			state.get("world", {}), String(p.get("team_id", "")))
 	else:
 		action["option_type"] = "player"
 		action["exercised"] = false
@@ -190,11 +203,16 @@ static func check_option_clause(state: Dictionary, at_day: int) -> bool:
 
 ## 시즌 평점 — 구단이 옵션을 행사할지 가르는 값.
 ##
-## ⚠ **없는 축을 지어내지 않는다.** 04는 OVR이 그 해 실력의 정본이므로
-## 그걸 쓴다 — 02의 `calcSeasonRating`은 성적 가중이 더 두껍지만 04엔
-## 그 조립기가 없다. ⬜ 성적 기반 평점이 생기면 여기만 고친다
+## ✅ **`Contract.season_rating`이 04의 정본이다**(02 `calcSeasonRating` 대응).
+## 처음엔 "04엔 그 조립기가 없다"며 OVR로 뒀는데 **찾아보니 있었다** —
+## 그쪽은 그 해 **성적**으로 재고 재계약 제시액도 그걸 쓴다.
+## OVR로 재면 **한 해 부진해도 옵션이 그대로 행사된다.**
+##
+## ⚠ **기록이 없으면 50이다**(`contract.gd:55`) — 문턱 아래라 안 행사된다.
+## 그게 맞다: 한 해도 안 뛴 사람을 붙잡을 이유가 없다
 static func _season_rating(state: Dictionary, p: Dictionary) -> float:
-	return Contract.core_ovr(p)
+	return Contract.season_rating(
+		state.get("season_stats", {}).get(String(p.get("id", "")), {}))
 
 
 static func apply_option_clause(state: Dictionary, action: Dictionary,
