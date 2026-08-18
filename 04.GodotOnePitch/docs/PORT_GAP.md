@@ -356,8 +356,35 @@
 | ③ 빨간불 | ✅ |
 | ④ 로직 | ✅ `Military.should_ask_sports_unit` · `should_ask_enlist` · `mark_sports_unit_asked` · `mark_enlist_asked` (커밋 `3410dc7a8`) |
 | 자동 `enlist` 걷어내기 | ✅ `career_decision.gd`가 `military_pending`을 돌려준다 |
-| ⑤ **배선** | ⬜ **여기부터다** |
-| ⑥ 실측 · ⑦ 변이 · ⑧ 전체 검사 | ⬜ |
+| ⑤ **배선** | ✅ 넷 다 (커밋 `2372f2ff2`) |
+| ⑥ 실측 · ⑦ 변이 | ⬜ **여기부터다** |
+| ⑧ 전체 검사 | ✅ 3,529개 · 실패 0 · 고아 0 |
+
+**⑤에서 정본 목록 둘을 빠뜨릴 뻔했다.** `DecisionVm.build`의 `match`에만
+갈래를 넣고 **`HANDLED`에 안 넣으면** `blocking`이 안 골라 **화면이 영영
+안 뜬다** — `retirement_ask`와 똑같은 모양이다. 기존 검사가 **`STOPPING`**
+(자동 진행 정지)도 같이 넣어야 한다고 잡았다. **`HANDLED` · `STOPPING` ·
+`LABELS` 셋이 같이 가는 자리다.**
+
+#### ⬜ 상무 선발 결과 — 02 값을 다 읽어 왔다
+
+02 `advanceWeek.ts:2034-2090` · `utils/militaryRules.ts:34-43`.
+**시즌 마지막 주에 `sports_unit_applied`인 사람의 당락을 가른다.**
+
+| 값 | 02 | 근거 |
+|---|---|---|
+| 연간 선발 | **13명** | `rosterSize 26 / serviceYears 2`(24개월) |
+| 한 팀 최대 | **3명** | `maxPerTeam` |
+| 지원자 풀 | 주인공 + NPC 후보 상위 30 | `militaryCalcCandidates` |
+| 붙으면 | `Military.enlist(state, "sports", day)` | |
+| 떨어지면 | **곧바로 입대 확인을 묻는다**(`reason: "rejected"`) + `mark_enlist_asked` | |
+
+⚠ **02가 그 자리에 누수를 적어 뒀다** — 주인공 선발(W52)과 NPC 선발(오프시즌)이
+**별개 추첨**이라 둘 다 뽑히면 그해 입대가 정원 +1이고, 상무는 로스터 캡이
+안 걸려 **해마다 쌓인다.** 04는 한 자리에서 뽑아 이 누수를 안 물려받는다.
+
+⚠ **떨어진 뒤 곧바로 묻는 흐름을 빠뜨리지 마라.** 안 이으면 지원했다가
+떨어진 사람은 그해에 아무 일도 안 일어난다.
 
 **⑤ 배선에 남은 것 넷:**
 
