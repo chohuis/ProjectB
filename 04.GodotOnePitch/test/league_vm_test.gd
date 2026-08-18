@@ -249,3 +249,140 @@ func test_a_team_with_only_draws_has_zero_win_pct() -> void:
 		assert_float(r["win_pct"]).override_failure_message(
 			"승패 0인데 승률이 %s다" % r["win_pct"]).is_equal(0.0)
 		assert_bool(is_nan(r["win_pct"])).is_false()
+
+
+# ── 스탯 순위 ────────────────────────────────────────────────────
+
+## 진짜 세계에 진짜 성적을 넣는다 — 손으로 만든 사전이면 로스터·리그가
+## 안 맞아 표가 통째로 빈다(다이제스트에서 그 함정을 세 번 밟았다)
+func _played_world(games: int = 120) -> Dictionary:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var n: int = 0
+	for g in s["schedule"]:
+		if String(g.get("league_id", "")) != "LEAGUE_HIGHSCHOOL":
+			continue
+		GameSim.play(g, s)
+		n += 1
+		if n >= games:
+			break
+	s["league_tab"] = "LEAGUE_HIGHSCHOOL"
+	return s
+
+
+## 🔴 **`Leaderboard` 147줄을 아무도 안 불렀다** — 리그 1위가 누구인지
+## 볼 방법이 없었다(형태 ② — 일곱 번째)
+func test_스탯_순위가_나온다() -> void:
+	var lb: Dictionary = LeagueVm.build(_played_world())["leaderboard"]
+	var rows: Array = lb["rows"]
+	assert_int(rows.size()).override_failure_message(
+		"경기를 치렀는데 스탯 순위가 비었다").is_greater(0)
+	assert_str(String(rows[0]["name"])).is_not_empty()
+	assert_str(String(rows[0]["team"])).is_not_empty()
+	assert_str(String(rows[0]["value"])).is_not_empty()
+	assert_int(int(rows[0]["rank"])).is_equal(1)
+
+
+## 부문을 고를 수 있다 — 투수·타자 양쪽
+func test_투수와_타자를_가른다() -> void:
+	var s: Dictionary = _played_world()
+	s["league_stat_side"] = "batter"
+	var lb: Dictionary = LeagueVm.build(s)["leaderboard"]
+	assert_str(String(lb["side"])).is_equal("batter")
+	var keys: Array = []
+	for c in lb["categories"]:
+		keys.append(String(c["key"]))
+	assert_array(keys).contains(["hr"])
+	assert_array(keys).override_failure_message(
+		"타자 부문에 투수 부문이 섞였다").not_contains(["era"])
+
+
+## 고른 부문으로 정렬된다 — 탈삼진 1위가 진짜 1위여야 한다
+func test_고른_부문으로_줄_세운다() -> void:
+	var s: Dictionary = _played_world()
+	s["league_stat_key"] = "k"
+	var rows: Array = LeagueVm.build(s)["leaderboard"]["rows"]
+	assert_int(rows.size()).is_greater(1)
+	for i in range(1, rows.size()):
+		assert_bool(int(rows[i - 1]["value"]) >= int(rows[i]["value"])) \
+			.override_failure_message("탈삼진이 %s 다음에 %s다"
+				% [rows[i - 1]["value"], rows[i]["value"]]).is_true()
+
+
+## 평균자책점은 낮은 쪽이 위다 — 방향이 부문마다 다르다
+func test_평균자책점은_낮은_쪽이_위다() -> void:
+	var s: Dictionary = _played_world()
+	s["league_stat_key"] = "era"
+	var rows: Array = LeagueVm.build(s)["leaderboard"]["rows"]
+	assert_int(rows.size()).is_greater(1)
+	assert_bool(float(rows[0]["value"]) <= float(rows[1]["value"])) \
+		.override_failure_message("1위 %s가 2위 %s보다 높다"
+			% [rows[0]["value"], rows[1]["value"]]).is_true()
+
+
+## ⚠ **자격을 같이 적는다** — 1이닝 던진 신인이 0.00으로 1위가 되면
+## 왜 빠졌는지 설명할 방법이 없다
+func test_비율_부문은_자격을_말한다() -> void:
+	var s: Dictionary = _played_world()
+	s["league_stat_key"] = "era"
+	assert_str(String(LeagueVm.build(s)["leaderboard"]["note"])) \
+		.contains("규정")
+	# 누적 부문은 자격이 없다 — 그 문구도 없어야 한다
+	s["league_stat_key"] = "k"
+	assert_str(String(LeagueVm.build(s)["leaderboard"]["note"])).is_empty()
+
+
+## 자격 미달은 비율 부문에서 빠진다.
+##
+## ⚠ **첫 검사는 이걸 못 잡았다** — 두 부문 다 열 명으로 잘려서 크기가
+## 같았다. **아무도 자격이 안 되는 시즌 초반**을 세워야 갈린다
+func test_자격_미달은_비율_부문에_안_낀다() -> void:
+	var s: Dictionary = _played_world(6)
+	s["league_stat_key"] = "era"
+	var era_rows: Array = LeagueVm.build(s)["leaderboard"]["rows"]
+	s["league_stat_key"] = "k"
+	var k_rows: Array = LeagueVm.build(s)["leaderboard"]["rows"]
+
+	assert_int(k_rows.size()).override_failure_message(
+		"여섯 경기를 치렀는데 탈삼진 순위가 비었다").is_greater(0)
+	assert_int(era_rows.size()).override_failure_message(
+		"규정 이닝을 못 채운 시즌 초반인데 평균자책점 순위에 %d명이 있다"
+		% era_rows.size()).is_less(k_rows.size())
+
+## 몇 명까지만 — 표가 리그 전체가 되면 못 읽는다
+func test_열_명까지만_보여준다() -> void:
+	assert_int((LeagueVm.build(_played_world())["leaderboard"]["rows"] as Array)
+		.size()).is_less_equal(LeagueVm.STAT_ROWS)
+
+
+## 아직 아무도 안 뛰었으면 그렇게 말한다 — 빈 칸은 고장으로 보인다
+func test_기록이_없으면_그렇게_말한다() -> void:
+	var lb: Dictionary = LeagueVm.build(_state([]))["leaderboard"]
+	assert_int((lb["rows"] as Array).size()).is_equal(0)
+	assert_str(String(lb["empty_note"])).is_not_empty()
+
+
+## 그 리그 선수만 든다 — `season_stats`엔 리그가 없어서 로스터로 가른다.
+##
+## ⚠ **첫 검사가 이걸 못 잡았다.** 고교 경기만 돌린 픽스처라 다른 리그엔
+## 성적이 아예 없었고, 무대를 섞어도 섞일 것이 없었다 —
+## **모든 리그를 돌린 상태**라야 갈린다
+func test_그_리그_선수만_든다() -> void:
+	var s: Dictionary = Fixtures.played_state(30)
+	# ⚠ **대학으로 본다.** KBL로 보면 섞이는 쪽도 KBL이라 표가 그대로고,
+	# 고교는 이 픽스처 30일 안에 경기가 한 판도 없다(찍어서 확인했다 —
+	# 30일에 대학 100 · ABL 96 · KBL 60이고 고교는 0이다)
+	s["league_tab"] = "LEAGUE_UNIVERSITY"
+	# 누적 부문으로 본다 — 30일이면 규정 이닝을 채운 선수가 적다
+	s["league_stat_key"] = "k"
+	var names: Array = []
+	for t in World.teams_of("LEAGUE_UNIVERSITY"):
+		names.append(String(t["name"]))
+
+	var rows: Array = LeagueVm.build(s)["leaderboard"]["rows"]
+	assert_int(rows.size()).override_failure_message(
+		"30일을 돌렸는데 스탯 순위가 비었다 — 픽스처가 게임 경로를 안 탄다") \
+		.is_greater(0)
+	for r in rows:
+		assert_bool(names.has(String(r["team"]))).override_failure_message(
+			"대학 순위에 %s 소속 %s가 있다" % [r["team"], r["name"]]).is_true()

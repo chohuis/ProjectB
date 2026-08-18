@@ -173,10 +173,13 @@ static func main_state_gameday() -> Dictionary:
 static func played_state(days: int = 40) -> Dictionary:
 	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
-	var rng := RandomNumberGenerator.new()
-	for d in range(1, days + 1):
-		rng.seed = Rng.mix([s["seed"], "day", d])
-		MatchDay.play_day(s, d, rng)
+	# ⚠ **게임이 실제로 타는 경로로 굴린다.** MatchDay.play_day를 직접
+	# 부르면 시즌 성적이 안 쌓인다 — 그걸 쌓는 것은 GameSim.play다.
+	# 그래서 스탯 순위 화면이 픽스처에선 늘 비어 있었다
+	for g in s["schedule"]:
+		if int(g.get("day", 0)) > days:
+			continue
+		GameSim.play(g, s)
 	s["day"] = days + 1
 	s["league_tab"] = "LEAGUE_KBL"
 	return s

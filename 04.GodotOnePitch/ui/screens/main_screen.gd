@@ -51,6 +51,12 @@ signal tab_selected(tab_id: String)
 signal news_filter_selected(filter_id: String)
 ## 리그를 골랐다
 signal league_selected(league_id: String)
+
+## 스탯 순위에서 투수·타자를 갈랐다
+signal stat_side_selected(side: String)
+
+## 스탯 순위 부문을 골랐다
+signal stat_category_selected(key: String)
 ## 오늘 등판 경기를 연다
 signal match_requested
 ## 시즌을 끝내고 다음 해로 넘어간다
@@ -283,10 +289,15 @@ func _free_child(parent: Node, child: Node) -> void:
 ## `overflow: hidden`이고 각 페이지가 자기 안에서 스크롤한다. 호스트를
 ## 스크롤로 두면 "나" 탭처럼 **앵커로 크기를 잡는 화면이 높이 0으로 남아
 ## 통째로 빈다** — 실제로 그렇게 나왔다
-func _list_box() -> VBoxContainer:
+## 가 false면 내용만큼만 차지한다 — 한 탭에 상자가 둘이면
+## 위 상자가 아래 것을 화면 바닥까지 밀어낸다
+func _list_box(expand: bool = true) -> VBoxContainer:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL if expand \
+		else Control.SIZE_SHRINK_BEGIN
+	if not expand:
+		scroll.custom_minimum_size = Vector2(0, 300)
 	_tab_host.add_child(scroll)
 
 	var box := VBoxContainer.new()
@@ -390,6 +401,7 @@ func _build_schedule() -> void:
 		empty.text = "아직 잡힌 경기가 없습니다"
 		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		_tab_host.add_child(empty)
+		_build_leaderboard(vm)
 		return
 
 	var box: VBoxContainer = _list_box()
@@ -491,7 +503,7 @@ func _build_league() -> void:
 		_tab_host.add_child(empty)
 		return
 
-	var box: VBoxContainer = _list_box()
+	var box: VBoxContainer = _list_box(false)
 	for r in rows:
 		var row: StandingRow = STANDING_ROW.instantiate()
 		box.add_child(row)
@@ -500,6 +512,8 @@ func _build_league() -> void:
 		# 없으면 다른 팀이 어떤 구단인지 볼 방법이 없다
 		var tid: String = String(r.get("team_id", ""))
 		row.pressed.connect(func() -> void: team_selected.emit(tid))
+
+	_build_leaderboard(vm)
 
 
 ## 소식 탭. 거르기 칩은 **누르면 루트에 알린다** — 어느 거르기가 켜졌는지는
@@ -654,3 +668,81 @@ func _tab_label() -> String:
 	if _tab < 0 or _tab >= tabs.size():
 		return ""
 	return tabs[_tab].get("label", "")
+
+
+## 스탯 순위 — 02 `LeaguePage`의 두 번째 탭.
+##
+## 🔴 **`Leaderboard` 147줄을 아무도 안 불렀다** — 리그 1위가 누구인지 볼
+## 방법이 없었다. 순위표 아래에 붙인다(같은 리그를 보는 자리다)
+func _build_leaderboard(vm: Dictionary) -> void:
+	var lb: Dictionary = vm.get("leaderboard", {})
+	if lb.is_empty():
+		return
+
+	var head := Label.new()
+	head.text = "스탯 순위"
+	head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	head.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	_tab_host.add_child(head)
+
+	var sides := HBoxContainer.new()
+	sides.add_theme_constant_override("separation", 4)
+	_tab_host.add_child(sides)
+	for s in lb.get("sides", []):
+		var b := Button.new()
+		b.text = String(s["label"])
+		b.toggle_mode = true
+		b.button_pressed = String(s["id"]) == String(lb.get("side", ""))
+		var sid: String = String(s["id"])
+		b.pressed.connect(func() -> void:
+			stat_side_selected.emit.call_deferred(sid))
+		sides.add_child(b)
+
+	var cats := HBoxContainer.new()
+	cats.add_theme_constant_override("separation", 4)
+	_tab_host.add_child(cats)
+	for c in lb.get("categories", []):
+		var b := Button.new()
+		b.text = String(c["label"])
+		b.toggle_mode = true
+		b.button_pressed = String(c["key"]) == String(lb.get("key", ""))
+		var key: String = String(c["key"])
+		b.pressed.connect(func() -> void:
+			stat_category_selected.emit.call_deferred(key))
+		cats.add_child(b)
+
+	if not String(lb.get("note", "")).is_empty():
+		var note := Label.new()
+		note.text = String(lb["note"])
+		note.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		note.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		_tab_host.add_child(note)
+
+	var rows: Array = lb.get("rows", [])
+	if rows.is_empty():
+		var empty := Label.new()
+		empty.text = String(lb.get("empty_note", ""))
+		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		_tab_host.add_child(empty)
+		return
+
+	var box: VBoxContainer = _list_box()
+	for r in rows:
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		box.add_child(row)
+
+		var left := Label.new()
+		left.text = "%d  %s  %s" % [int(r["rank"]), String(r["name"]),
+			String(r["team"])]
+		left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		# 내가 끼어 있으면 눈에 띄어야 한다 — 그게 이 표를 여는 이유다
+		left.add_theme_color_override("font_color",
+			AppTheme.ACCENT if bool(r["is_mine"]) else AppTheme.TEXT)
+		row.add_child(left)
+
+		var value := Label.new()
+		value.text = String(r["value"])
+		value.add_theme_color_override("font_color",
+			AppTheme.ACCENT if bool(r["is_mine"]) else AppTheme.TEXT)
+		row.add_child(value)

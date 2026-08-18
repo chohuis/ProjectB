@@ -64,6 +64,8 @@ func _ready() -> void:
 	_main.training_requested.connect(_on_training)
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
+	_main.stat_side_selected.connect(_on_stat_side)
+	_main.stat_category_selected.connect(_on_stat_category)
 	_main.study_mode_picked.connect(_on_study_mode)
 	_main.major_picked.connect(_on_major)
 	_main.sponsor_signed.connect(_on_sponsor)
@@ -105,6 +107,20 @@ func _on_news_closed() -> void:
 
 func _on_league_selected(league_id: String) -> void:
 	_state["league_tab"] = league_id
+	_refresh()
+
+## 스탯 순위에서 고른 것. **상태가 든다** — 화면이 들면 진행 뒤에 초기화된다.
+##
+## ⚠ **투수·타자를 바꾸면 부문도 비운다** — 투수 부문 키를 든 채 타자로
+## 가면 아무 부문도 안 맞아 표가 빈다
+func _on_stat_side(side: String) -> void:
+	_state["league_stat_side"] = side
+	_state.erase("league_stat_key")
+	_refresh()
+
+
+func _on_stat_category(key: String) -> void:
+	_state["league_stat_key"] = key
 	_refresh()
 
 
