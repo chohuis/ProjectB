@@ -45,7 +45,9 @@ func _state(week: int) -> Dictionary:
 			i % 3 != 0))
 	return {
 		"day": day, "season_year": 2027, "season_days": Calendar.DAYS_PER_SEASON,
-		"protagonist": {"id": "ME", "career_stage": "highschool", "hs_grade": 3,
+		# ⚠ **04는 학년을 `grade`로 든다.** `hs_grade`는 `Digest.build`의
+		# 입력 이름이다 — 헷갈려서 `hs_grade`로 읽다가 늘 0이 됐다
+		"protagonist": {"id": "ME", "career_stage": "highschool", "grade": 3,
 			"team_id": "TEAM_HS_AEWOL", "league_id": "LEAGUE_HIGHSCHOOL",
 			"injury": null},
 		"schedule": schedule,
@@ -110,6 +112,16 @@ func test_내_순위표를_먹인다() -> void:
 	assert_int(body.find("9승 3패")).override_failure_message(
 		"내 팀 전적(9승 3패)이 본문에 없다 — 내 순위표가 안 먹혔다\n%s"
 		% body).is_greater(-1)
+
+
+## 🔴 **04는 학년을 `grade`로 든다.** `hs_grade`로 읽어서 늘 0이었고
+## 3학년인데도 `tier_of`가 `hs1`로 갈렸다 — 실을 섹션이 달라진다
+func test_학년을_제대로_읽는다() -> void:
+	var day: int = (_digest_week() - 1) * Calendar.DAYS_PER_WEEK + 1
+	assert_int(int(DigestRunner.input_of(_state(_digest_week()), day)["hs_grade"])) \
+		.override_failure_message(
+			"학년이 0으로 넘어간다 — 04는 `grade`인데 `hs_grade`로 읽었다") \
+		.is_equal(3)
 
 
 ## ⚠ **내 리그가 `[다른 무대]`에 또 나오면 안 된다.** 조립기가 빼 주긴

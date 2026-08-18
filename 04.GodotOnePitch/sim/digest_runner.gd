@@ -48,8 +48,12 @@ static func input_of(state: Dictionary, at_day: int) -> Dictionary:
 		"week_num": Calendar.week_of(at_day),
 		"season_year": year,
 		"month_label": "%d월" % int(date["month"]),
-		"career_stage": String(p.get("career_stage", "")),
-		"hs_grade": int(p.get("hs_grade", 0)),
+		"career_stage": CareerPath.stage_of(p),
+		# 🔴 **04는 학년을 `grade`로 든다.** `hs_grade`는 `Digest.build`의
+		# 입력 이름일 뿐이다 — 주인공에서 그 이름으로 읽어서 **늘 0**이었고,
+		# 그래서 3학년인데도 `tier_of`가 `hs1`로 갈렸다.
+		# **02 이름과 04 이름을 헷갈린 자리다**
+		"hs_grade": int(p.get("grade", 0)),
 		"my_team_id": String(p.get("team_id", "")),
 		"my_league_id": my_league,
 		"my_standings": Standings.from_schedule(schedule, my_league),

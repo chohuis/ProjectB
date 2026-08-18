@@ -147,6 +147,36 @@ const TRANSITION: Dictionary = {
 }
 
 
+## 리그로 단계를 되찾는 표 — `career_stage`가 아직 없을 때 쓴다
+const STAGE_OF_LEAGUE: Dictionary = {
+	"LEAGUE_HIGHSCHOOL": "highschool",
+	"LEAGUE_UNIVERSITY": "university",
+	"LEAGUE_INDEPENDENT": "independent",
+	"LEAGUE_KBL": "pro_kbl",
+	"LEAGUE_ABL": "pro_abl",
+	"LEAGUE_JBL": "pro_jbl",
+}
+
+
+## 지금 어느 단계인가. **여기가 정본이다.**
+##
+## 🔴 **새 게임 주인공에겐 `career_stage`가 없다.** `World.new_game`이 그 칸을
+## 안 채우고, `career_decision`이 **처음 진로를 정할 때 비로소** 넣는다
+## (`career_decision.gd:534`). 그래서 `p.get("career_stage", "")`로 읽는 쪽은
+## **고교 3년 내내 빈 문자열을 본다.**
+##
+## 실제로 둘이 그렇게 막혀 있었다 — 유망주 랭킹은 `!= "highschool"`에
+## 걸려 한 통도 안 왔고, 다이제스트는 계층이 `hs1`/`hs23`이 아닌 쪽으로
+## 갈렸다. **검사 픽스처가 `career_stage`를 직접 넣어서 안 보였다.**
+##
+## ⚠ **리그가 곧 단계다** — 그게 세계에 실제로 있는 값이다
+static func stage_of(p: Dictionary) -> String:
+	var stage: String = String(p.get("career_stage", ""))
+	if not stage.is_empty():
+		return stage
+	return String(STAGE_OF_LEAGUE.get(String(p.get("league_id", "")), ""))
+
+
 static func can_transition(from: String, to: String) -> bool:
 	if from == to:
 		return true                       # 재계약·팀 이동은 전이가 아니다
