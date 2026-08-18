@@ -7,6 +7,7 @@ class_name ScheduleRow
 ## 화면 55개에 색을 흩으면 톤을 바꿀 때 반드시 몇 개는 빠진다.
 
 @onready var _date: Label = $Date
+@onready var _mark: Control = $Mark
 @onready var _opponent: Label = $Opponent
 @onready var _location: Label = $Location
 @onready var _status: Label = $Status
@@ -51,6 +52,19 @@ func _apply() -> void:
 
 	_date.text = "%s (%s)" % [_row.get("date_label", ""), _row.get("weekday_label", "")]
 	_date.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+
+	# 상대 팀 마크 — U-1. **사전이 없으면 안 그린다**
+	if _mark != null:
+		for c in _mark.get_children():
+			_mark.remove_child(c)
+			c.free()
+		var spec: Dictionary = _row.get("mark", {})
+		if not spec.is_empty():
+			var tm := TeamMark.new()
+			tm.set_anchors_preset(Control.PRESET_FULL_RECT)
+			tm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_mark.add_child(tm)
+			tm.setup(spec)
 
 	_opponent.text = _row.get("opponent", "")
 

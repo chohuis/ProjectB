@@ -77,6 +77,8 @@ static func build(s: Dictionary) -> Dictionary:
 			"date_label": "%d월 %d일" % [date["month"], date["day"]],
 			"weekday_label": WEEKDAY_NAMES[Calendar.weekday(year, gd)],
 			"opponent": names.get(foe, foe),
+			# 상대 마크 — 화면이 색을 고르지 않게 사전으로 준다 (U-1)
+			"mark": TeamMarkVm.build(String(foe)),
 			"location": "홈" if is_home else "원정",
 			"status": status,
 			"result_label": label,

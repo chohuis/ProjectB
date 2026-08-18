@@ -208,3 +208,27 @@ func test_the_view_model_does_not_know_the_screen() -> void:
 	var src := FileAccess.get_file_as_string("res://ui/schedule_vm.gd")
 	assert_str(src).not_contains("Control")
 	assert_str(src).not_contains("Label")
+
+
+# ── 상대 팀 마크 (U-1) ───────────────────────────────────────────
+
+## 일정에서도 상대가 마크로 갈린다 — 이름만 보면 비슷한 학교가 섞인다
+func test_상대_마크가_줄에_실린다() -> void:
+	var rows: Array = _rows(_state({"schedule": [
+		{"id": "G1", "day": 12, "home": "TEAM_A", "away": "TEAM_B",
+			"is_protagonist_game": true, "result": null}]}))
+	assert_int(rows.size()).is_equal(1)
+	var mark: Dictionary = rows[0]["mark"]
+	# 상대 팀이다 — 내 팀이 아니다
+	assert_str(String(mark["team_id"])).is_equal("TEAM_B")
+	assert_array(TeamMarkVm.SHELLS).contains([String(mark["shell"])])
+
+
+## 진짜 팀이면 그 팀 색이 온다 — 화면이 색을 고르지 않는다
+func test_마크_색이_팀_데이터에서_온다() -> void:
+	var rows: Array = _rows(_state({"schedule": [
+		{"id": "G1", "day": 12, "home": "TEAM_HS_AEWOL",
+			"away": "TEAM_HS_HALLA", "is_protagonist_game": true,
+			"result": null}], "protagonist": {"team_id": "TEAM_HS_AEWOL"}}))
+	var colors: Array = World.team_field({}, "TEAM_HS_HALLA", "colors", [])
+	assert_str(String(rows[0]["mark"]["primary"])).is_equal(String(colors[0]))
