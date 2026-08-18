@@ -113,7 +113,18 @@ static func update_last10(current: String, result: String) -> String:
 ## 그래서 **시뮬 쪽에서 최종 순위를 알 방법이 없었다** — 구단 성향 갱신처럼
 ## 순위가 입력인 자리가 화면을 부를 수는 없다. 두 벌로 두면 언젠가 갈린다.
 ##
-## 돌려주는 줄: `team_id · wins · losses · draws · win_pct · rank`
+## 돌려주는 줄: `team_id · wins · losses · draws · win_pct · rank ·
+## streak · last10`
+##
+## ⚠ **연승·최근10을 여기서도 센다** (U-4). 예전엔 누적 갱신 경로에만
+## 있어서 화면이 읽으면 늘 빈 값이었다 — 04는 순위표를 일정에서 파생하므로
+## 그 경로에도 있어야 한다
+
+
+## 최근 몇 경기를 보여주나 — 02도 열이다
+const LAST10_LEN: int = 10
+
+
 static func from_schedule(schedule: Array, league_id: String) -> Array:
 	var table: Dictionary = {}
 	for g in schedule:
@@ -156,6 +167,17 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 			table[String(winner)]["wins"] += 1
 			table[String(loser)]["losses"] += 1
 
+		# 연승·최근10 — U-4. **같은 순회 안에서 센다**(뜨거운 자리다).
+		#
+		# ⚠ **일정이 날짜순이라 그대로 이어 붙이면 된다** — 따로 정렬하면
+		# 하루 83경기에서 비용이 는다
+		if loser == null or String(loser).is_empty():
+			_mark(table[home], "D")
+			_mark(table[away], "D")
+		else:
+			_mark(table[String(winner)], "W")
+			_mark(table[String(loser)], "L")
+
 	var rows: Array = []
 	for tid in table:
 		var r: Dictionary = table[tid]
@@ -167,6 +189,9 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 			"wins": r["wins"], "losses": r["losses"], "draws": r["draws"],
 			"win_pct": float(r["wins"]) / float(decided) if decided > 0 else 0.0,
 			"runs_for": r["runs_for"], "runs_against": r["runs_against"],
+			# 화면이 쓰는 두 값 — 02 우측 패널도 이 둘을 띄운다
+			"streak": String(r.get("streak", "")),
+			"last10": String(r.get("last10", "")),
 		})
 
 	rows = sorted(rows)
@@ -175,10 +200,24 @@ static func from_schedule(schedule: Array, league_id: String) -> Array:
 	return rows
 
 
+## 한 경기 결과를 그 팀 줄에 이어 붙인다 — U-4.
+##
+## ⚠ **일정이 날짜순이라 순서를 안 고친다.** 최근 열 경기는 뒤에서 열 개다.
+##
+## ⚠ **연승 표기는 `update_streak`과 같은 꼴이다**("W3"·"L2") — 두 경로가
+## 다른 꼴을 내면 화면이 어느 쪽인지 몰라 둘 다 처리해야 한다
+static func _mark(row: Dictionary, mark: String) -> void:
+	var last10: String = String(row.get("last10", "")) + mark
+	if last10.length() > LAST10_LEN:
+		last10 = last10.substr(last10.length() - LAST10_LEN)
+	row["last10"] = last10
+	row["streak"] = update_streak(String(row.get("streak", "")), mark)
+
+
 static func _blank(table: Dictionary, team_id: String) -> void:
 	if not table.has(team_id):
 		table[team_id] = {"wins": 0, "losses": 0, "draws": 0,
-			"runs_for": 0, "runs_against": 0}
+			"runs_for": 0, "runs_against": 0, "streak": "", "last10": ""}
 
 
 ## 순위 정렬 — 승률 → 승수. **원본을 안 바꾼다**
