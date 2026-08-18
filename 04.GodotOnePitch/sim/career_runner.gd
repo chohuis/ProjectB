@@ -110,13 +110,14 @@ static func _sports_result(state: Dictionary, at_day: int) -> String:
 		return ""
 
 	var me_id: String = String(p.get("id", ""))
-	var pool: Array = [{"id": me_id, "ovr": Contract.core_ovr(p),
-		"team_id": String(p.get("team_id", ""))}]
-	for q in _sports_rivals(state, me_id):
-		pool.append(q)
+	# 🔴 **여기서 따로 뽑지 않는다.** 예전엔 주인공 경로가 자기 풀을 만들어
+	# 자기 정원으로 뽑았다 — 그러면 NPC 경로와 **정원이 갈라진다**(02의 결함).
+	# `Military.resolve_sports_unit`이 한 해에 한 번만 뽑고, 먼저 부른 쪽이
+	# 뽑아 두면 여기서는 그 명단을 읽기만 한다
+	var picked: Array = Military.resolve_sports_unit(state)
 
 	p.erase("sports_unit_applied")
-	if Military.select_sports_unit(pool, me_id):
+	if picked.has(me_id):
 		Military.enlist(state, "sports", at_day)
 		return "sports_unit_selected"
 

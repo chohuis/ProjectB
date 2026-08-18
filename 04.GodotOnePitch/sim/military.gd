@@ -204,31 +204,147 @@ static func sports_annual_intake() -> int:
 	return maxi(1, int(roundf(float(SPORTS_ROSTER) / float(SPORTS_SERVICE_YEARS))))
 
 
-## 지원자 중 내가 뽑히나. `applicants`는 `[{id, ovr, team_id}, …]`.
+## 지원자 풀에 NPC를 몇 명까지 넣나 — 02 `advanceWeek.ts:2052` `topN: 29`.
+##
+## 🔴 **04는 미필 프로 전원(수천 명)을 넣고 있었다.** 정원 13에 수천 명을
+## 세우면 주인공은 **사실상 못 붙는다** — 02는 상위 29명만 부른다
+## (`NPC 29 + 주인공 1 = 30명 풀`이라고 주석까지 달려 있다).
+## 그래서 02는 30 중 13(43%)인데 04는 7,000 중 13(0.2%)이었다
+const SPORTS_APPLICANT_TOP: int = 29
+
+
+## 체육부대 선발 — 02 `npc_sim.rs:2014-2048` `select_sports_unit_ids` 그대로.
+##
+## `candidates`는 `[{id, ovr, team_id, position}, …]`. 돌려주는 건 **뽑힌 id들**.
 ##
 ## ⚠ **난수를 안 쓴다.** 02도 OVR 순으로 자른다 — 여기서 추첨을 넣으면
 ## 그건 02 값이 아니라 내가 정한 규칙이 된다.
 ##
-## ⚠ **한 팀 상한을 먼저 본다.** 안 보면 강팀 하나가 정원을 독식한다
-static func select_sports_unit(applicants: Array, me_id: String) -> bool:
-	var ranked: Array = applicants.duplicate()
+## ⚠ **두 단계고 순서가 뜻을 갖는다:**
+##  · **Phase 1** — 그해 전역자가 비운 포지션을 먼저 채운다. **팀당 상한을
+##    안 본다** — 자리를 비워 두는 것보다 한 팀에서 둘 데려오는 게 낫다는 판단
+##  · **Phase 2** — 남은 자리를 OVR 순으로. **여기서만 팀당 상한을 본다**
+##    (안 보면 강팀 하나가 정원을 독식한다)
+static func select_sports_unit_ids(candidates: Array, vacating: Array,
+		max_total: int, max_per_team: int) -> Array:
+	var ranked: Array = candidates.duplicate()
 	ranked.sort_custom(func(a, b) -> bool:
 		return float(a.get("ovr", 0.0)) > float(b.get("ovr", 0.0)))
 
+	var selected: Dictionary = {}
+
+	# Phase 1 — 전역 공백 채우기. 한 포지션은 한 번만 메운다.
+	#
+	# 🔴 **02는 여기를 정원으로 안 막는다. 04는 막는다.**
+	# 02는 `select_sports_unit_ids` 호출부가 **하나뿐이고 거기서 `&[]`를
+	# 넘긴다**(`npc_sim.rs:2567`) — 즉 02에서 Phase 1은 **한 번도 안 돈다.**
+	# 안 도는 코드라 정원을 넘든 말든 티가 안 났다.
+	#
+	# 04는 진짜 전역 포지션을 먹인다. 그랬더니 **되먹임이 생겼다** —
+	# 전역 26 → 공백 26 → Phase 1이 26 선발 → 두 해 뒤 전역 26.
+	# 실측에서 상무 복무 인원이 정원(13×2년=26)의 배가 넘는 **58명**이 됐다.
+	# 공백을 정원만큼만 본다 — Phase 1의 뜻(빈자리 우선)은 남고 정원은 지킨다
+	var left: Array = vacating.duplicate()
+	if left.size() > max_total:
+		left.resize(max_total)
+	for c in ranked:
+		if left.is_empty():
+			break
+		var idx: int = left.find(String(c.get("position", "")))
+		if idx >= 0:
+			selected[String(c.get("id", ""))] = true
+			left.remove_at(idx)
+
+	# Phase 2 — 잔여를 OVR 순으로
 	var per_team: Dictionary = {}
-	var taken: int = 0
-	var cap: int = sports_annual_intake()
-	for a in ranked:
-		if taken >= cap:
-			return false
-		var t: String = String(a.get("team_id", ""))
-		if int(per_team.get(t, 0)) >= SPORTS_MAX_PER_TEAM:
+	for c in ranked:
+		if selected.size() >= max_total:
+			break
+		var cid: String = String(c.get("id", ""))
+		if selected.has(cid):
+			continue
+		var t: String = String(c.get("team_id", ""))
+		if int(per_team.get(t, 0)) >= max_per_team:
 			continue
 		per_team[t] = int(per_team.get(t, 0)) + 1
-		taken += 1
-		if String(a.get("id", "")) == me_id:
-			return true
-	return false
+		selected[cid] = true
+
+	return selected.keys()
+
+
+## 지원자 중 내가 뽑히나. `applicants`는 `[{id, ovr, team_id, position}, …]`.
+##
+## ⚠ **정원은 `min(연간 정원, 지원자 수)`다** — 02 `advanceWeek.ts:2069`.
+## 지원자가 정원보다 적으면 전원이 붙는다
+static func select_sports_unit(applicants: Array, me_id: String,
+		vacating: Array = []) -> bool:
+	return select_sports_unit_ids(applicants, vacating,
+		mini(sports_annual_intake(), applicants.size()),
+		SPORTS_MAX_PER_TEAM).has(me_id)
+
+
+## 올해 뽑힌 명단이 여기 남는다. **해를 같이 적는다** — 안 적으면 이듬해에
+## 작년 명단을 그대로 읽는다
+const SPORTS_PICK_KEY: String = "sports_unit_picked"
+const SPORTS_PICK_YEAR_KEY: String = "sports_unit_picked_year"
+
+
+## 🔴 **한 해의 체육부대 명단은 하나뿐이다.** 주인공 경로와 NPC 경로가 따로
+## 뽑으면 **정원이 샌다** — 02가 실제로 그렇다(`selectedIds`를 받아 놓고
+## NPC에는 안 쓴다). PORT_GAP에 "02의 명백한 결함까지 물려받지 않는다"로
+## 적어 둔 자리다.
+##
+## 그래서 여기가 **유일한 선발 자리**다. 먼저 부른 쪽이 뽑고, 나중에 부른
+## 쪽은 같은 명단을 읽는다.
+##
+## ⚠ **`NpcMilitary`가 먼저 불러야 Phase 1이 산다** — 전역 공백 포지션은
+## 그쪽만 안다(`WeekRunner`에서 NPC 병역이 커리어보다 앞선다)
+static func resolve_sports_unit(state: Dictionary, vacating: Array = []) -> Array:
+	var year: int = int(state.get("season_year", 0))
+	if int(state.get(SPORTS_PICK_YEAR_KEY, -1)) == year:
+		return state.get(SPORTS_PICK_KEY, [])
+
+	var pool: Array = sports_candidates(state, "")
+	var p: Dictionary = state.get("protagonist", {})
+	if bool(p.get("sports_unit_applied", false)):
+		pool.append({"id": String(p.get("id", "")), "ovr": Contract.core_ovr(p),
+			"team_id": String(p.get("team_id", "")),
+			"position": String(p.get("position", ""))})
+
+	var ids: Array = select_sports_unit_ids(pool, vacating,
+		mini(sports_annual_intake(), pool.size()), SPORTS_MAX_PER_TEAM)
+	state[SPORTS_PICK_YEAR_KEY] = year
+	state[SPORTS_PICK_KEY] = ids
+	return ids
+
+
+## 지원자 풀 — 미필이고 학생이 아닌 프로 선수 **상위 `SPORTS_APPLICANT_TOP`명**.
+##
+## ⚠ **자르는 자리가 여기다.** 부르는 쪽마다 자르게 두면 주인공 경로와
+## NPC 경로가 서로 다른 풀로 겨루게 된다 — 그러면 정원이 뜻을 잃는다
+static func sports_candidates(state: Dictionary, exclude_id: String) -> Array:
+	var out: Array = []
+	var world: Dictionary = state.get("world", {})
+	for tid in world.get("rosters", {}):
+		for q in world["rosters"][tid]:
+			if String(q.get("id", "")) == exclude_id:
+				continue
+			if bool(q.get("is_protagonist", false)):
+				continue
+			if String(q.get("military_status", STATUS_UNSERVED)) != STATUS_UNSERVED:
+				continue
+			var stage: String = String(q.get("career_stage", ""))
+			if stage == "highschool" or stage == "university" or stage == "military":
+				continue
+			out.append({"id": String(q.get("id", "")),
+				"ovr": Contract.core_ovr(q), "team_id": String(tid),
+				"position": String(q.get("position", ""))})
+
+	out.sort_custom(func(a, b) -> bool:
+		return float(a["ovr"]) > float(b["ovr"]))
+	if out.size() > SPORTS_APPLICANT_TOP:
+		out.resize(SPORTS_APPLICANT_TOP)
+	return out
 
 
 ## ⚠ **모르는 값을 빈칸으로 두지 않는다.** 형태가 늘었는데 화면이 조용히

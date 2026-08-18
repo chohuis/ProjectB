@@ -110,8 +110,10 @@ static func serving_count(state: Dictionary) -> int:
 ## ⚠ **한 해에 `WEEKS_PER_SEASON`만큼 복무한다.** 주마다 세면 주간 처리가
 ## 그만큼 무거워지고, `Military.SERVICE_WEEKS`(100)는 두 시즌이라 해 단위로
 ## 세도 같은 곳에 떨어진다
-static func _serve_year(state: Dictionary) -> int:
-	var back: int = 0
+## ⚠ **전역자의 포지션을 돌려준다** — 02 `select_sports_unit_ids`의 Phase 1이
+## "그해 전역자가 비운 자리"를 먼저 채운다. 개수만 세면 그 단계가 죽는다
+static func _serve_year(state: Dictionary) -> Array:
+	var vacating: Array = []
 	for q in _serving(state):
 		var served: int = int(q.get("military_service_weeks", 0)) \
 			+ Calendar.WEEKS_PER_SEASON
@@ -120,10 +122,39 @@ static func _serve_year(state: Dictionary) -> int:
 			q["military_served_unit"] = String(q.get("military_unit", ""))
 			q["military_unit"] = ""
 			q["military_service_weeks"] = 0
-			back += 1
+			vacating.append(String(q.get("position", "")))
 		else:
 			q["military_service_weeks"] = served
-	return back
+	return vacating
+
+
+## 몇 명 전역했나 — 계측·검사가 이걸로 본다
+static func discharged_count(state: Dictionary) -> int:
+	return _serve_year(state).size()
+
+
+## 체육부대로 간 NPC 수. **주인공과 정원을 나눠 쓴다** —
+## `Military.resolve_sports_unit`이 유일한 선발 자리다.
+##
+## ⚠ **주인공은 여기서 안 보낸다.** 뽑혔는지 여부만 명단에 남고, 실제로
+## 보내는 건 사용자 답을 받은 `CareerRunner`다
+static func _run_sports(state: Dictionary, vacating: Array, year: int) -> int:
+	var picked: Array = Military.resolve_sports_unit(state, vacating)
+	if picked.is_empty():
+		return 0
+
+	var want: Dictionary = {}
+	for id in picked:
+		want[String(id)] = true
+
+	var gone: int = 0
+	for q in _pool(state):
+		if not want.has(String(q.get("id", ""))):
+			continue
+		_enlist_npc(q, year)
+		q["military_unit"] = "sports"
+		gone += 1
+	return gone
 
 
 ## 한 해분. **시즌 마지막 주에만 돈다** — 아무 때나 입대시키면 시즌 도중에
@@ -137,16 +168,21 @@ static func run(state: Dictionary, at_day: int) -> int:
 
 	# ⚠ **전역을 먼저 돌린다.** 뒤에 두면 올해 입대한 사람이 그 자리에서
 	# 한 해를 채운 것으로 잡힌다
-	_serve_year(state)
+	var vacating: Array = _serve_year(state)
 
 	var year: int = int(state.get("season_year", 0))
 	var seed_value: int = int(state.get("seed", 0))
+
+	# ⚠ **체육부대를 일반병보다 먼저 뽑는다.** 뒤에 두면 상위권이 이미
+	# 일반병으로 가 버려 **체육부대 정원이 하위권으로 채워진다** —
+	# 02는 상위 29명이 지원자 풀이다
+	var gone: int = _run_sports(state, vacating, year)
+
 	var pool: Array = _pool(state)
 	var ranked: Array = pool.duplicate()
 	ranked.sort_custom(func(a, b) -> bool:
 		return Contract.core_ovr(a) > Contract.core_ovr(b))
 
-	var gone: int = 0
 	for i in ranked.size():
 		var q: Dictionary = ranked[i]
 		var r := RandomNumberGenerator.new()
