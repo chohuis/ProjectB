@@ -790,8 +790,16 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       더 어긋날 수 있다 — 사람이 1:1 그림을 보며 맞추는 게 빠르고 정확하다.
       도구는 있다: `godot --script tools/shot.gd -- park`.
       화면 좌표라 **밸런스 동결에는 안 걸린다**
-- [ ] **D-7** 주인공 경로와 NPC 경로의 성장 표가 둘이다
-      (천장 감쇠 0.10 vs 0.00 · 나이 계수의 뜻이 다르다). **이주가 끝난 뒤** 합친다
+- [x] 🔴 **D-7** 주인공 경로와 NPC 경로의 성장 표가 둘이다 —
+      2026-08-19 **판정: 합치면 안 된다. 02도 둘이다**
+      원래 "이주가 끝난 뒤 합친다"고 적어 뒀는데, **P-45에서 02를 다시 읽으니
+      02가 일부러 갈라 놓은 것**이었다:
+      · 주경 `growth_engine.rs:186` `potential_cap_factor` — **soft cap**
+        (`ratio >= 1.00` 갈래가 없다 · 0.10이 끝)
+      · NPC `npc_sim.rs:2676` `potential_cap` — **hard cap**(천장 0.00)
+      02 검사도 그 전제 위에 선다(`startPresets.test.ts:71` "1주차부터 0.10배").
+      → **합치지 않는다.** 두 표가 일부러 다르다는 것을 `growth_test.gd`가
+      검사 3으로 못 박았다(변이 4/4). ⚠ 나이 계수도 같이 다시 본 뒤에 판단한다
 - [x] **D-8** "화면을 모른다" 검사가 소스 **전체 문자열**을 보던 것 —
       2026-08-17 고침. `not_contains`가 **대소문자를 무시하고**(사전 키
       `"label"`을 `Label` 노드로 잡는다) **주석까지 코드로 본다**(02 심볼을
@@ -812,7 +820,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       0.0에서 3.4가 됐다**(02는 3.3).
       ⚠ **이 항목이 끝난 뒤에도 한동안 미완으로 남아 있었다** — 2026-08-17
       목록 정리에서 발견했다. 아래는 원래 기록.
-- [ ] ~~⚠ **P-1 NPC 투구 선택이 벤치마크용 자리표시자다**~~ (축 1)
+- [x] ~~⚠ **P-1 NPC 투구 선택이 벤치마크용 자리표시자다**~~ (축 1)
       `MatchDay._decide`가 `location`을 **1~9(존 안)에서만** 고른다 —
       `GameBench._decide`와 같은 코드고 주석도 "성능을 재는 게 목적이라
       전술은 안 넣는다"다. 그게 **리그 경기 수천 개**에 쓰인다.
@@ -888,7 +896,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `over.max(3)`이라 초과가 3이면 결과가 같다) — 1·2·5로 고쳤다.
       근거·표는 `docs/PARITY.md` 축 6.
 
-- [ ] ~~P-4 인시즌 1군↔2군 승강이 통째로 미이관이다~~ (아래는 원래 기록)
+- [x] ~~P-4 인시즌 1군↔2군 승강이 통째로 미이관이다~~ (아래는 원래 기록)
       **동결과 무관하다** — 수치를 바꾸는 게 아니라 안 도는 시스템을 옮긴다.
       `roster_maintenance.gd`에 판정 조각(`form_score`·`is_slumping`·
       `farm_can_send_up`)과 값이 다 있는데 **부르는 곳이 검사뿐이다.**
@@ -949,7 +957,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       `run_league`에 "적용하지 않는다" 갈래를 두거나, 짓는 부분을 함수 하나로
       빼서 둘이 같이 부르게 한다. ⚠ **같은 형태를 F-1에서도 겪었다**
 
-- [ ] ~~P-5 (원래 기록)~~ — 동결 해제 후
+- [x] ~~P-5 (원래 기록)~~ — 동결 해제 후
       등급 표는 02와 글자 그대로 같다(A 30%/보호20/보상200 · B 60%/25/100 ·
       C 100%/0/150). 갈리는 건 풀이다 — FA 자격자가 전부 근속 쌓인
       베테랑이라 연봉 백분위가 다 상위 30% 안에 든다.
@@ -980,7 +988,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       02는 2군이 `LEAGUE_KBL` 안의 행이라 1군과 같은 보정을 받는다.
       감독 182 · 구단주 182 · 부유 14 · 궁핍 7로 **02와 일치**한다.
 
-- [ ] ~~P-6 팀 성향이 한 번도 생성되지 않는다~~ (아래는 원래 기록)
+- [x] ~~P-6 팀 성향이 한 번도 생성되지 않는다~~ (아래는 원래 기록)
       ⚠ **여전히 참이다** — `TeamProfile`은 아직 아무도 안 짓는다.
       다만 스태프는 이제 팀 데이터를 읽으므로 여기 안 걸린다.
       **남은 소비처는 FA 입찰 `budget_index`와 승강 `win_now_pressure`다.**
@@ -1101,7 +1109,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       **같은 능력치에서 부진한 1군이 호투한 2군에게 자리를 내주는가**.
       마지막 것이 이 축의 요점이다.
 
-- [ ] ~~🔴 P-12 승강 판정이 성적을 못 본다~~ (원래 기록)
+- [x] ~~🔴 P-12 승강 판정이 성적을 못 본다~~ (원래 기록)
       계측에 경기를 붙였는데도 **상시 승강이 0건**이었다. 원인을 팠다:
       `RosterMaintenance.form_score`가 `p["perf"]`를 읽는데
       **`sim/` 전체에서 그 키를 쓰는 곳이 `roster_maintenance.gd` 하나**다 —
@@ -1313,13 +1321,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ **못 잡은 변이가 "검사가 약하다"가 아니라 "검사가 없다"였다.**
         느린 파일에 묻혀 있어서 안 보였다.
 
-- [ ] ~~P-9b P-9 변이 검증을 다시 재라~~ (원래 기록)
+- [x] ~~P-9b P-9 변이 검증을 다시 재라~~ (원래 기록)
       `season_runner_test`가 90초를 넘겨 변이 셋이 전부 타임아웃으로
       "잡힘" 처리됐다. 변이 때문인지 느려서인지 갈리지 않는다.
       ⚠ `mutate.cjs`의 대기 시간을 늘리거나, **더 빠른 검사 파일**을
       대상으로 잡는다(`season_end_test.gd`는 단계 목록만 봐서 빠르다).
 
-- [ ] ~~🔴 P-9 `RelationshipRunner.run_season`을 아무도 안 부른다~~ (원래 기록)
+- [x] ~~🔴 P-9 `RelationshipRunner.run_season`을 아무도 안 부른다~~ (원래 기록)
       **P-4·P-7b와 같은 패턴이다** — 함수와 값은 있는데 부르는 곳이 없다.
       전체를 훑어 확인했다: `sim/` · `ui/` · `bench/` 어디에도 없다.
       구단주는 **주간 항목이 없고 시즌 성적으로만 움직인다**
@@ -1331,14 +1339,14 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         정본인지 확인한다
       ⚠ 검사를 먼저 써서 실패를 본 뒤 고친다
 
-- [ ] ~~P-8c(b) 등판이 여전히 10경기다~~ (원래 기록)
+- [x] ~~P-8c(b) 등판이 여전히 10경기다~~ (원래 기록)
       진로가 풀린 뒤에도 그대로다 — 대학에 가서도 첫 해 몫만 쌓인다.
       ⚠ **입력을 센다**: `MatchDay.play`가 게이트(`skip_injury`)를 보고
       주인공을 안 내보내는지, `is_protagonist_game`이 **새 시즌 일정에
       다시 붙는지**. `World.build_schedule`이 해마다 다시 도는지부터 본다.
       라이벌이 5명에서 안 느는 것(02는 8명)이 여기 걸려 있다.
 
-- [ ] ~~P-8d `advance_grades`의 `updated` 반환이 죽어 있다~~ (원래 기록)
+- [x] ~~P-8d `advance_grades`의 `updated` 반환이 죽어 있다~~ (원래 기록)
       **읽는 곳을 다 셌다(2026-08-16):**
       · 게임 코드 — **없다.** `season_runner.gd:60`이 `hs_graduated`와
         `univ_graduated`만 쓴다
@@ -1353,7 +1361,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ 검사가 인라인으로 `_run([...])["updated"][0]`을 쓰는 자리가 많아
       변수로 빼는 손질이 같이 든다.
 
-- [ ] ~~🔴 P-8b 주인공이 NPC 진로 배정을 탄다~~ (아래는 원래 기록)
+- [x] ~~🔴 P-8b 주인공이 NPC 진로 배정을 탄다~~ (아래는 원래 기록)
       **P-8이 만든 게 아니라 P-8이 드러낸 것이다.** 전에는 로스터 쪽만
       바뀌고 `protagonist`는 안 봐서 안 보였다.
 
@@ -1381,7 +1389,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ `career_results` 대기가 안 풀린 채 다음 해로 넘어가는 것도 같이 본다.
       · 검사를 먼저 써서 실패를 본 뒤 고친다
 
-- [ ] ~~P-8b `career_stage`가 리그를 안 따라간다~~ (아래는 원래 기록)
+- [x] ~~P-8b `career_stage`가 리그를 안 따라간다~~ (아래는 원래 기록)
       4해 실측에서 **진학은 된다** — 2030년에 `league_id`가
       `LEAGUE_UNIVERSITY`로 바뀐다. 그런데 `career_stage`는 여전히
       `"highschool"`이다.
@@ -1398,16 +1406,30 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       계측이 그 결정에 답을 안 해서인지, 결정이 소비되지 않아서인지
       먼저 가른다(입력부터 재라).
 
-- [ ] **P-8c 4해를 굴려도 등판이 10경기다**
-      P-8 고친 뒤에도 그대로다. 일정엔 매년 내 경기가 10개씩 잡히는데
-      실제 등판은 첫 해 몫만 쌓인다.
+- [ ] **P-8c 프로에 가도 등판이 10경기다** — 2026-08-19 **증상이 바뀌었다**
+      🔴 **원래 증상("등판이 안 는다")은 해결됐다.** 20해 계측에서 등판이
+      해마다 쌓인다(12해 154경기). **P-8·P-14·P-44가 그 사슬이었다.**
+      **남은 것은 크기다**: 프로 KBL 팀이 **144경기인데 등판이 10**이다.
+      ⚠ **엔진은 맞다 — 찍어서 확인했다**:
+      ```
+      팀 144경기 · 등판 29 · 로스터 31명 · 로테 5인 · 내가 로테에 true
+      ```
+      `mark_my_starts`도 `build_schedule` 안에서 제대로 불린다
+      (`world.gd:249`), 시즌 롤오버도 `me["role"]`을 정해 넘긴다
+      (`season_runner.gd:726-731`).
+      → **남은 후보는 `Rotation.assign_position`이 주인공을 RP로 배정하는
+      것**이다. RP면 로테이션에 못 들고 불펜 판정만 받아 10경기가 된다.
+      ⚠ **02와 견주고 판정한다** — OVR 81이 KBL에서 불펜인 것이 02에서도
+      그런지 먼저 본다. **결함이라 부르기 전에 02가 그런지 확인한다**
+      (P-45에서 그 순서를 안 지켜 한 번 틀렸다)
+      (아래는 원래 기록)
       ⚠ 계측은 매주 `_play_my_pending`으로 미처리 주인공 경기를 돌린다 —
       그런데도 안 는다. `MatchDay.play`가 게이트(`skip_injury`)를 보고
       주인공을 안 내보내는지, `is_protagonist_game`이 새 시즌 일정에
       다시 붙는지 **부르는 곳을 실제로 세라.**
       라이벌이 5명에서 안 느는 것(02는 8명)이 여기 걸려 있다.
 
-- [ ] ~~🔴 P-8 주인공이 두 벌로 갈린다 — 진행할 때마다~~ (아래는 원래 기록)
+- [x] ~~🔴 P-8 주인공이 두 벌로 갈린다 — 진행할 때마다~~ (아래는 원래 기록)
       **04 결함이다. 계측 fixture 문제가 아니다.** 자취 실측:
 
       ```
@@ -1440,7 +1462,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 - [x] **P-7d 학년이 안 오르던 것** — 2026-08-16 원인 규명 → P-8
       아래는 좁혀 간 기록이다. 결론은 P-8이다.
 
-- [ ] ⚠ ~~P-7d 커리어가 고교에서 안 나가고 부상이 안 낫는다~~ (축 9)
+- [x] ⚠ ~~P-7d 커리어가 고교에서 안 나가고 부상이 안 낫는다~~ (축 9)
       계측에 해마다 커리어 상태를 찍어 좁혔다. 3해를 굴린 결과:
 
       ```
@@ -1475,14 +1497,14 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       같이 볼 것: **구단주 −5.0**(02는 +11.0). 구단주는 주간 항목이 없고
       시즌 성적으로만 움직인다 — `run_season`이 도는지부터 확인한다.
 
-- [ ] ~~P-7c 코치 관계가 낮다~~ (아래는 원래 기록)
+- [x] ~~P-7c 코치 관계가 낮다~~ (아래는 원래 기록)
       코치는 담당 영역 훈련(+1)과 성장(+2)으로 오른다. 규칙 값은 02와
       같으니(축 9 표) **도는 횟수**를 볼 일이다.
       `growth_threshold 1`을 넘는 주가 몇 번인지 재 본다 — 02 주석에
       근거가 있다("2였는데 실측상 191주에 14포인트라 도달 불가였다").
       ⚠ 수치를 더 좋게 만들지 않는다. 계수를 지어내면 멈추고 올린다.
 
-- [ ] ~~P-7b 라이벌이 0명 · 코치 관계가 낮다~~ (아래는 원래 기록)
+- [x] ~~P-7b 라이벌이 0명 · 코치 관계가 낮다~~ (아래는 원래 기록)
       P-7로 재게 되니 남은 차이가 드러났다.
       · **라이벌 0명** (02는 8명 평균 3.8) — `faced_and_won`이 붙는 자리를
         확인해야 한다
@@ -1491,7 +1513,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ 규칙 값은 02와 같다(축 9 표). 산식이 아니라 **도는 횟수**를 본다.
       ⚠ `measure:relations`가 590초 걸린다 — 자주 돌릴 것은 못 된다
 
-- [ ] ~~P-7 주간 파이프라인이 화면 층에 있다~~ (아래는 원래 기록)
+- [x] ~~P-7 주간 파이프라인이 화면 층에 있다~~ (아래는 원래 기록)
       `DayRunner`가 `ui/day_runner.gd`의 Node고, 그 반복을 도는 것은
       `app_root.gd`다(`auto_advance.gd` 주석이 그렇게 적어 뒀다).
       그래서 **헤드리스가 커리어 하나를 끝까지 못 굴린다.**
