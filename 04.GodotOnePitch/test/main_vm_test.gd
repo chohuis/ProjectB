@@ -362,3 +362,21 @@ func test_고교는_권역_순위도_낸다() -> void:
 	assert_bool(rank.is_empty()).is_false()
 	assert_str(String(rank["region_label"])).override_failure_message(
 		"고교인데 권역 순위가 없다").contains("구장")
+
+
+## 헤더가 소속팀 마크를 쓴다 — U-3. 02 `TopHeader`도 마크를 띄운다
+func test_헤더가_팀_id를_낸다() -> void:
+	var s: Dictionary = MainVm.build(_state({
+		"protagonist": {"team_id": "TEAM_HS_AEWOL", "name": "김한결",
+			"condition": 80.0, "injury": null, "retired": false,
+			"eligibility_blocked": false}}))
+	assert_str(String(s["team_id"])).is_equal("TEAM_HS_AEWOL")
+
+
+## ⚠ **복무 중엔 팀이 없다** — 마크도 안 뜬다(빈 문자열)
+func test_소속이_없으면_팀_id가_빈다() -> void:
+	var s: Dictionary = MainVm.build(_state({
+		"protagonist": {"name": "김한결", "condition": 80.0,
+			"injury": null, "retired": false,
+			"eligibility_blocked": false}}))
+	assert_str(String(s["team_id"])).is_empty()

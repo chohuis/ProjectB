@@ -65,6 +65,12 @@ size_flags_horizontal = 10
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="Mark" type="Control" parent="Pad/Col/Header/WhoRow"]
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
 [node name="Player" type="Label" parent="Pad/Col/Header/WhoRow"]
 layout_mode = 2
 

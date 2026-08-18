@@ -25,6 +25,7 @@ const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
 @onready var _weekday: Label = $Pad/Col/Header/DateRow/Weekday
 @onready var _week: Label = $Pad/Col/Header/DateRow/Week
+@onready var _header_mark: Control = $Pad/Col/Header/WhoRow/Mark
 @onready var _player: Label = $Pad/Col/Header/WhoRow/Player
 @onready var _team: Label = $Pad/Col/Header/WhoRow/Team
 # ⚠ **02와 같은 3단이다.** `MainPage.svelte`의 `.body`가
@@ -206,6 +207,19 @@ func _rebuild() -> void:
 	_team.text = _vm.get("team_name", "")
 	# 소속팀 색 — U-2. **주색이 아니라 어둡게 보정한 값이다**(L*26/32).
 	# 02도 헤더엔 보정색을 쓴다 — 그대로 쓰면 130팀에서 흰 글씨가 죽는다
+	# 소속팀 마크 — U-3. 02 헤더도 마크를 띄운다.
+	# ⚠ **02의 등번호는 안 옮긴다** — 04엔 그 데이터가 없다
+	for c in _header_mark.get_children():
+		_header_mark.remove_child(c)
+		c.free()
+	var my_team: String = String(_vm.get("team_id", ""))
+	if not my_team.is_empty():
+		var hm := TeamMark.new()
+		hm.set_anchors_preset(Control.PRESET_FULL_RECT)
+		hm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_header_mark.add_child(hm)
+		hm.setup(TeamMarkVm.build(my_team))
+
 	_team_band.color = AppTheme.TEAM_DARK
 	# 팀 이름은 강조색으로 — 어두운 띠 위에서 읽힌다
 	_team.add_theme_color_override("font_color", AppTheme.TEAM_GOLD)

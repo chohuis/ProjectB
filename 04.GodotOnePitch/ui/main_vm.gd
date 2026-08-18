@@ -87,6 +87,8 @@ static func build(s: Dictionary) -> Dictionary:
 		# 맞는지 알 수 없다
 		"team_name": StatusVm.team_name_of(p),
 		"player_name": p.get("name", ""),
+		# 헤더 마크가 쓴다 (U-3) — 화면이 상태를 직접 읽지 않는다
+		"team_id": String(p.get("team_id", "")),
 
 		# ⚠ **OVR을 어디에서도 안 보여줬다** (U-3). `ui/` 전체에서 `ovr`을
 		# 쓰는 곳이 지명 후보 줄과 로스터 줄 둘뿐이라, **내 능력치를 보려면
