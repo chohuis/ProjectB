@@ -166,7 +166,12 @@ static func _sports_unit(state: Dictionary, _a: Dictionary) -> Dictionary:
 	var p: Dictionary = state.get("protagonist", {})
 	var body: String = "이번 시즌 체육부대 입대 후보가 거론되고 있습니다.\n" \
 		+ "신청하면 시즌 마지막 주에 선발 결과가 나옵니다.\n\n" \
-		+ "체육부대는 복무 중에도 실전 감각을 유지해 **복귀 적응이 짧습니다**.\n" \
+		# ⚠ **마크다운을 쓰지 않는다.** 04 결정 화면은 `Label`이라 `**`가
+		# 글자 그대로 찍힌다 — 캡처에서 그렇게 나왔다. 문서 습관이 화면에
+		# 샌 것이고, 강조는 문장 순서로 한다
+		+ "체육부대는 복무 중에도 실전 감각을 유지합니다.\n" \
+		+ "복귀 적응이 %d주로, 일반병(%d주)보다 짧습니다.\n" \
+			% [Military.RECOVERY_SPORTS, Military.RECOVERY_GENERAL] \
 		+ "현재 OVR %d" % int(roundf(Contract.core_ovr(p)))
 	return _of("sports_unit_apply", "체육부대 입대 신청", body,
 		[{"id": "apply", "label": "신청하기"},

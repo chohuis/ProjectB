@@ -139,6 +139,21 @@ func _build(which: String) -> Control:
 				cr.screen().show_tab("news"), CONNECT_ONE_SHOT)
 			return cr
 		# 계약 협상 (F-2b). **04는 "계약한다 / 거절한다" 둘뿐이었다**
+		# 병역 물음 둘 — 04는 여태 조용히 정했다. 02는 묻는다
+		"sports-unit", "enlist":
+			var ms: Dictionary = World.new_game({"seed": 20270101,
+				"season_year": 2033, "name": "김한결",
+				"team_id": "TEAM_HS_AEWOL"})
+			var mp: Dictionary = ms["protagonist"]
+			mp["league_id"] = "LEAGUE_KBL"
+			mp["team_id"] = "TEAM_KBL_SEOUL_ROYALS_1"
+			mp["career_stage"] = "pro"
+			mp["age"] = 26 if which == "sports-unit" else 28
+			Pending.push(ms, {"type": "sports_unit_apply" \
+				if which == "sports-unit" else "military_enlist_ask"})
+			var mds: DecisionScreen = DECISION.instantiate()
+			mds.set_view_model(DecisionVm.build(ms))
+			return mds
 		"negotiation":
 			var ns: Dictionary = World.new_game({"seed": 20270101,
 				"season_year": 2031, "name": "김한결",

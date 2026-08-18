@@ -347,3 +347,13 @@ func test_마지막_주가_아니면_결과가_없다() -> void:
 	CareerRunner.run(s, MID_DAY)
 	assert_bool(bool(s["protagonist"]["sports_unit_applied"])) \
 		.override_failure_message("6월인데 선발 결과가 났다").is_true()
+
+
+## ⚠ **화면 문구에 마크다운을 쓰지 않는다.** 04 결정 화면은 `Label`이라
+## `**`가 글자 그대로 찍힌다 — 캡처에서 그렇게 나왔다.
+## 문서 습관이 화면으로 새는 자리라 **갈래 전부**를 본다
+func test_결정_문구에_마크다운이_없다() -> void:
+	var code: String = CodeText.of("res://ui/decision_vm.gd")
+	assert_int(code.find("**")).override_failure_message(
+		"결정 화면 문구에 `**`가 있다 — Label은 그걸 글자로 찍는다") \
+		.is_equal(-1)
