@@ -846,6 +846,29 @@ func _build_league_extras(vm: Dictionary) -> void:
 					AppTheme.TEXT if bool(row["done"]) else AppTheme.TEXT_DIM)
 				line.add_child(right)
 
+
+	# 진행 중 대회 — 🔴 대진이 살아 있는데 보여주는 자리가 없었다.
+	# **내 경기만** 낸다 — 32강을 다 그리면 못 읽는다
+	for t in vm.get("live_tournaments", []):
+		_section_title("%s  %s" % [String(t["name"]), String(t["round_label"])])
+		for row in t["rows"]:
+			var line := HBoxContainer.new()
+			line.add_theme_constant_override("separation", 8)
+			_tab_host.add_child(line)
+
+			var left := Label.new()
+			left.text = String(row["label"])
+			left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			line.add_child(left)
+
+			var right := Label.new()
+			right.text = String(row["value"])
+			# 이긴 경기는 눈에 띄게 — 어디까지 올라왔는지가 한눈에 보인다
+			right.add_theme_color_override("font_color",
+				AppTheme.ACCENT if bool(row["won"]) else \
+				(AppTheme.TEXT if bool(row["done"]) else AppTheme.TEXT_DIM))
+			line.add_child(right)
+
 	var tour: Dictionary = vm.get("tournaments", {})
 	_section_title("대회")
 	var rows: Array = tour.get("rows", [])

@@ -502,3 +502,64 @@ func test_대회_기록은_몇_줄만() -> void:
 	s["tournament_log"] = log
 	assert_int((LeagueVm.build(s)["tournaments"]["rows"] as Array).size()) \
 		.is_equal(LeagueVm.TOURNAMENT_ROWS)
+
+
+# ── 진행 중 대회 ─────────────────────────────────────────────────
+
+func _live_state(matches: Array, champion: String = "") -> Dictionary:
+	var s: Dictionary = _ps_state([])
+	s["protagonist"] = {"team_id": "TEAM_A", "league_id": "LEAGUE_KBL"}
+	s["tournaments"] = {"TOUR_HS_GAENARI": {
+		"tournament_id": "TOUR_HS_GAENARI", "champion": champion,
+		"bracket": {"bracket_size": 32, "total_rounds": 5, "matches": matches}}}
+	return s
+
+
+## 🔴 **대진이 살아 있는데 보여주는 자리가 없었다**(형태 ③)
+func test_진행_중_대회의_내_경기가_나온다() -> void:
+	var s: Dictionary = _live_state([
+		{"id": "M1", "round": 1, "home": "TEAM_A", "away": "TEAM_B",
+			"winner": "TEAM_A"},
+		{"id": "M2", "round": 2, "home": "TEAM_C", "away": "TEAM_A",
+			"winner": ""},
+		# 남의 경기는 안 낸다 — 32강을 다 그리면 못 읽는다
+		{"id": "M3", "round": 1, "home": "TEAM_B", "away": "TEAM_C",
+			"winner": "TEAM_B"},
+	])
+	var live: Array = LeagueVm.build(s)["live_tournaments"]
+	assert_int(live.size()).is_equal(1)
+	var rows: Array = live[0]["rows"]
+	assert_int(rows.size()).override_failure_message(
+		"내 경기만 둘이어야 하는데 %d줄이다" % rows.size()).is_equal(2)
+	assert_str(String(rows[0]["value"])).is_equal("승")
+	assert_bool(bool(rows[0]["won"])).is_true()
+	# 아직 안 붙은 경기는 "예정"
+	assert_str(String(rows[1]["value"])).is_equal("예정")
+	assert_bool(bool(rows[1]["done"])).is_false()
+
+
+## 진 경기도 적는다 — 어디서 떨어졌는지가 기록이다
+func test_진_경기도_적는다() -> void:
+	var s: Dictionary = _live_state([
+		{"id": "M1", "round": 3, "home": "TEAM_A", "away": "TEAM_B",
+			"winner": "TEAM_B"}])
+	var rows: Array = LeagueVm.build(s)["live_tournaments"][0]["rows"]
+	assert_str(String(rows[0]["value"])).is_equal("패")
+	assert_bool(bool(rows[0]["won"])).is_false()
+	assert_bool(bool(rows[0]["done"])).is_true()
+
+
+## ⚠ **끝난 대회는 여기 안 낸다** — 그건 아래 기록 절이다
+func test_끝난_대회는_진행_중에_없다() -> void:
+	var s: Dictionary = _live_state([
+		{"id": "M1", "round": 1, "home": "TEAM_A", "away": "TEAM_B",
+			"winner": "TEAM_A"}], "TEAM_A")
+	assert_int((LeagueVm.build(s)["live_tournaments"] as Array).size()).is_equal(0)
+
+
+## 내가 안 나가는 대회는 안 낸다 — 남의 대진은 읽을 이유가 없다
+func test_내가_없는_대회는_안_낸다() -> void:
+	var s: Dictionary = _live_state([
+		{"id": "M1", "round": 1, "home": "TEAM_B", "away": "TEAM_C",
+			"winner": "TEAM_B"}])
+	assert_int((LeagueVm.build(s)["live_tournaments"] as Array).size()).is_equal(0)

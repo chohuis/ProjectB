@@ -56,6 +56,7 @@ static func build(s: Dictionary) -> Dictionary:
 		"leaderboard": _leaderboard(s, league_id),
 		"postseason": _postseason(s, league_id),
 		"tournaments": _tournaments(s),
+		"live_tournaments": _live_tournaments(s),
 	}
 
 
@@ -235,3 +236,50 @@ static func _tournaments(s: Dictionary) -> Dictionary:
 			break
 	return {"rows": rows,
 		"empty_note": "아직 끝난 대회가 없습니다" if rows.is_empty() else ""}
+
+
+## 진행 중 대회 — 02 `LeaguePage`의 대회 탭이 대진표를 그린다.
+##
+## 🔴 **04는 끝난 대회 기록만 냈다.** `state["tournaments"]`에 대진이
+## 살아 있는데(라운드·경기·승자) 보여주는 자리가 없었다.
+##
+## ⚠ **포스트시즌 대진과 구조가 다르다** — 그쪽은 `Bracket`의 시리즈 배열이고
+## 대회는 `{bracket_size, total_rounds, matches[]}`다. **찍어 보고 맞췄다.**
+##
+## ⚠ **내가 어디까지 왔는지가 요점이다** — 32강 대진을 다 그리면 못 읽는다.
+## **내 경기만** 라운드 순으로 낸다
+static func _live_tournaments(s: Dictionary) -> Array:
+	var names: Dictionary = s.get("team_names", {})
+	var me: String = String(s.get("protagonist", {}).get("team_id", ""))
+	var out: Array = []
+	for tid in s.get("tournaments", {}):
+		var rec: Dictionary = s["tournaments"][tid]
+		if not String(rec.get("champion", "")).is_empty():
+			continue
+		var bracket: Dictionary = rec.get("bracket", {})
+		var rows: Array = []
+		for m in bracket.get("matches", []):
+			if String(m.get("home", "")) != me and String(m.get("away", "")) != me:
+				continue
+			var foe: String = String(m.get("away", "")) \
+				if String(m.get("home", "")) == me else String(m.get("home", ""))
+			var winner: String = String(m.get("winner", ""))
+			var mark: String = ""
+			if not winner.is_empty():
+				mark = "승" if winner == me else "패"
+			rows.append({
+				"label": "%d라운드  %s" % [int(m.get("round", 0)),
+					String(names.get(foe, foe)) if not foe.is_empty() else "부전승"],
+				"value": mark if not mark.is_empty() else "예정",
+				"won": mark == "승",
+				"done": not mark.is_empty(),
+			})
+		if rows.is_empty():
+			continue
+		out.append({
+			"name": String(Tournament.def_of(tid).get("name", tid)),
+			"round_label": "%d강 · %d라운드" % [int(bracket.get("bracket_size", 0)),
+				int(bracket.get("total_rounds", 0))],
+			"rows": rows,
+		})
+	return out
