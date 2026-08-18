@@ -52,6 +52,7 @@ static func build(state: Dictionary) -> Dictionary:
 		"gpa": _gpa(school),
 		"warning": _warning(school),
 		"exam": _exam(week),
+		"progress": _progress(school),
 		"major": _major(school, league),
 		"study": _study(school),
 		"semesters": _semesters(state),
@@ -78,6 +79,43 @@ static func _gpa(school: Dictionary) -> Dictionary:
 		# 졸업 자격이 이 화면의 뜻이다 — 학점 자체는 수단이다
 		"note": "졸업 자격 충족" if ok else "졸업까지 %.2f 부족" % (need - gpa),
 	}
+
+## 이번 학기가 어떻게 가고 있나 — 02 `<h3>시험 준비 현황</h3>`의 누적 게이지.
+##
+## 🔴 **쌓기만 하고 아무도 안 읽었다**(형태 ③ — 여섯 번째).
+## `Academics.study_week`이 매주 `study_quality_sum`·`study_weeks`를 쌓는데
+## 읽는 곳이 `semester_gpa` 하나뿐이었다 — 그건 **학기가 끝나야** 돈다.
+## 학기 중엔 지금 몇 점으로 가고 있는지 볼 방법이 전혀 없었다.
+##
+## ⚠ **02와 축이 다르다.** 02는 0~100 누적 점수고 04는 학점(0~4.5)이다.
+## **04 축으로 적는다** — 02 게이지를 흉내 내면 화면과 엔진이 갈린다.
+##
+## ⚠ **문턱을 같이 적는다.** 경고선(1.75)과 졸업선(2.0)을 모르면 2.1이
+## 좋은 건지 나쁜 건지 알 수 없다
+static func _progress(school: Dictionary) -> Dictionary:
+	var weeks: int = int(school.get("study_weeks", 0))
+	var warn_at: float = float(Academics.university().get("warning_gpa", 1.75))
+	if weeks <= 0:
+		return {"has": false,
+			"label": "이번 학기는 아직 수업이 없습니다",
+			"note": "", "warn": false, "weeks": 0}
+
+	var projected: float = Academics.semester_gpa(school)
+	var last: float = float(school.get("last_semester_gpa", -1.0))
+	var note: String = "경고선 %.2f · 졸업선 %.2f" % [warn_at,
+		float(Academics.university().get("graduation_gpa", 2.0))]
+	if last >= 0.0:
+		note += "   직전 학기 %.2f" % last
+	return {
+		"has": true,
+		"weeks": weeks,
+		"projected": projected,
+		# ⚠ **"예상"이라고 적는다** — 남은 주에 따라 바뀐다
+		"label": "이번 학기 예상 학점 %.2f  (%d주 수강)" % [projected, weeks],
+		"note": note,
+		"warn": projected < warn_at,
+	}
+
 
 
 static func _warning(school: Dictionary) -> Dictionary:

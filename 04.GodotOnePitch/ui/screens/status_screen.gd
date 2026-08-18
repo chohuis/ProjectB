@@ -226,6 +226,14 @@ func _academic_summary_card(a: Dictionary) -> Card:
 
 	c.body.add_child(_row("다음 시험", String(a.get("exam", {}).get("line", "")),
 		AppTheme.TEXT_DIM))
+
+	# 🔴 **이번 학기가 어떻게 가고 있는지 볼 자리가 없었다** — 매주 쌓이던
+	# study_quality_sum을 학기가 끝나야만 읽었다
+	var pg: Dictionary = a.get("progress", {})
+	c.body.add_child(_row("이번 학기", String(pg.get("label", "")),
+		AppTheme.BAD if bool(pg.get("warn", false)) else AppTheme.TEXT))
+	if not String(pg.get("note", "")).is_empty():
+		c.body.add_child(_row("", String(pg["note"]), AppTheme.TEXT_DIM))
 	return c
 
 

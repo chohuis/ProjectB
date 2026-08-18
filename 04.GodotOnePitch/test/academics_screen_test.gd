@@ -252,3 +252,15 @@ func test_the_screen_holds_no_academic_logic() -> void:
 	assert_str(src).not_contains(".filter(")
 	# 학사 규칙을 화면이 직접 읽지 않는다 — `AcademicsVm`이 끝낸다
 	assert_str(src).not_contains("Academics.")
+
+
+## 🔴 **뷰모델에 실어도 화면이 안 읽으면 없는 것과 같다**(형태 ①)
+func test_화면이_이번_학기를_보여준다() -> void:
+	var screen: StatusScreen = await _open_academics(_state(
+		{"study_weeks": 6, "study_quality_sum": 3.0, "last_semester_gpa": 2.5}))
+	var joined: String = _joined(screen)
+	assert_str(joined).override_failure_message(
+		"이번 학기 진행이 화면에 없다").contains("이번 학기")
+	assert_str(joined).contains("예상 학점")
+	assert_str(joined).contains("경고선")
+	assert_str(joined).contains("2.50")

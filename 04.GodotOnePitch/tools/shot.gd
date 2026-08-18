@@ -80,6 +80,17 @@ const TEAM_DETAIL := preload("res://ui/screens/team_detail_screen.tscn")
 const DECISION := preload("res://ui/screens/decision_screen.tscn")
 
 
+## 탭 번호를 이름으로 찾는다 — 박아 두면 탭이 늘 때 조용히 다른 화면을 찍는다.
+## ⚠ **엔 학업이 없다** — 학교에 다닐 때만 붙는다
+static func _tab_index(state: Dictionary, id: String) -> int:
+	var tabs: Array = StatusVm.build(state)["tabs"]
+	for i in tabs.size():
+		if String(tabs[i]["id"]) == id:
+			return i
+	return 0
+
+
+
 ## 주인공이 아닌 팀동료 하나. **주인공을 찍으면 "나" 탭으로 가야 하는
 ## 화면이라** 상세가 안 열린다 — 캡처가 빈 화면이 된다
 func _other_player(state: Dictionary) -> String:
@@ -647,7 +658,9 @@ func _build(which: String) -> Control:
 				ac.screen()._on_tab(1)
 				await ac.get_tree().process_frame
 				for n in ac.screen().find_children("*", "StatusScreen", true, false):
-					n.select_tab(3), CONNECT_ONE_SHOT)
+					# ⚠ **번호를 박지 않는다.** 탭이 늘면서 3번이 재정으로 밀렸고
+					# 학업 대신 재정을 찍고 있었다 — 이름으로 찾는다
+					n.select_tab(_tab_index(ac.state(), "academics")), CONNECT_ONE_SHOT)
 			return ac
 		# 관계 일곱 색을 한 화면에 (U-8). **자연스럽게 굴려선 다 안 나온다** —
 		# 새 게임 첫 해엔 중립·우호뿐이라 이웃이 갈리는지를 못 본다.

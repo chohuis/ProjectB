@@ -296,3 +296,56 @@ func test_a_real_semester_reaches_the_screen() -> void:
 	assert_str(String(vm["semesters"][0]["title"])).contains("2027")
 	assert_bool(vm["gpa"]["has"]).override_failure_message(
 		"학기가 끝났는데 학점이 없다고 한다").is_true()
+
+
+# ── 이번 학기 진행 ───────────────────────────────────────────────
+
+## 🔴 **매주 쌓기만 하고 학기가 끝나야 읽었다**(형태 ③).
+## 학기 중엔 지금 몇 점으로 가고 있는지 볼 방법이 전혀 없었다
+func test_이번_학기_예상_학점을_낸다() -> void:
+	var school: Dictionary = {"study_weeks": 6, "study_quality_sum": 3.0}
+	var pg: Dictionary = AcademicsVm.build(_state(school))["progress"]
+	assert_bool(bool(pg["has"])).is_true()
+	assert_int(int(pg["weeks"])).is_equal(6)
+	# 엔진이 내는 값과 같아야 한다 — 화면이 따로 계산하면 갈린다
+	assert_float(float(pg["projected"])).is_equal_approx(
+		Academics.semester_gpa(school), 0.001)
+	assert_str(String(pg["label"])).contains("예상")
+
+
+## ⚠ **문턱을 같이 적는다** — 경고선·졸업선을 모르면 2.1이 좋은지 모른다
+func test_문턱을_같이_적는다() -> void:
+	var pg: Dictionary = AcademicsVm.build(
+		_state({"study_weeks": 4, "study_quality_sum": 2.0}))["progress"]
+	assert_str(String(pg["note"])).contains("경고선")
+	assert_str(String(pg["note"])).contains("졸업선")
+
+
+## 직전 학기가 있으면 같이 보여준다 — 나아지고 있는지가 그 자리다
+func test_직전_학기를_같이_보여준다() -> void:
+	var pg: Dictionary = AcademicsVm.build(_state(
+		{"study_weeks": 4, "study_quality_sum": 2.0,
+			"last_semester_gpa": 3.14}))["progress"]
+	assert_str(String(pg["note"])).contains("3.14")
+
+
+## 경고선 아래면 그렇다고 말한다
+func test_경고선_아래면_경고한다() -> void:
+	# 품질 0.2 × 6주 → 평균 0.2 → 0.9학점. 경고선 1.75 아래다
+	var low: Dictionary = AcademicsVm.build(_state(
+		{"study_weeks": 6, "study_quality_sum": 1.2}))["progress"]
+	assert_bool(bool(low["warn"])).override_failure_message(
+		"예상 %.2f인데 경고가 없다" % float(low["projected"])).is_true()
+
+	var high: Dictionary = AcademicsVm.build(_state(
+		{"study_weeks": 6, "study_quality_sum": 4.2}))["progress"]
+	assert_bool(bool(high["warn"])).is_false()
+
+
+## 아직 수업이 없으면 그렇게 말한다 — 0.00으로 찍으면 낙제로 보인다
+func test_수업이_없으면_그렇게_말한다() -> void:
+	var pg: Dictionary = AcademicsVm.build(_state())["progress"]
+	assert_bool(bool(pg["has"])).is_false()
+	assert_str(String(pg["label"])).contains("아직")
+	assert_bool(bool(pg["warn"])).override_failure_message(
+		"수업도 없는데 경고를 띄운다").is_false()
