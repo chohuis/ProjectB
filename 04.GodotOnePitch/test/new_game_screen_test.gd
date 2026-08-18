@@ -153,3 +153,54 @@ func test_고른_학교가_시작까지_간다() -> void:
 	var s: Dictionary = NewGameVm.start({"seed": 7, "season_year": 2027,
 		"name": "김한결", "team_id": picked})
 	assert_str(String(s["protagonist"]["team_id"])).is_equal(picked)
+
+
+# ── 능력치 프리셋 ────────────────────────────────────────────────
+
+## 🔴 **고르는 자리가 통째로 없었다** — 04는 무작위 능력치로 시작했다
+func test_유형_고르는_자리가_있다() -> void:
+	var n: NewGameScreen = await _mount()
+	assert_array(_opts(n._preset)).is_equal(["균형형", "파워피처", "제구형", "체력형"])
+
+
+## 고른 유형의 능력치와 구종이 화면에 나온다 — 숫자 없이 못 고른다
+func test_고른_유형의_근거가_보인다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._preset.selected = 1
+	n._fill_preset()
+	await await_idle_frame()
+	assert_str(n._preset_desc.text).contains("속도")
+	assert_str(n._preset_stats.text).override_failure_message(
+		"능력치가 안 보인다: %s" % n._preset_stats.text).contains("구위 78")
+	assert_str(n._preset_stats.text).override_failure_message(
+		"구종이 안 보인다: %s" % n._preset_stats.text).contains("커터")
+
+
+## 유형을 바꾸면 설명도 바뀐다
+func test_유형을_바꾸면_설명이_바뀐다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._preset.selected = 0
+	n._fill_preset()
+	var first: String = n._preset_stats.text
+	n._preset.selected = 2
+	n._fill_preset()
+	await await_idle_frame()
+	assert_str(n._preset_stats.text).override_failure_message(
+		"유형을 바꿨는데 능력치가 그대로다").is_not_equal(first)
+
+
+## 고른 유형이 세이브까지 간다
+func test_고른_유형이_시작까지_간다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._preset.selected = 1
+	n._fill_preset()
+	await await_idle_frame()
+
+	var got: Array = []
+	n.start_requested.connect(func(p: Dictionary) -> void: got.append(p))
+	n._on_start()
+	await await_millis(50)
+	assert_str(String(got[0]["preset"])).is_equal("power")
+
+	var s: Dictionary = NewGameVm.start(got[0])
+	assert_float(float(s["protagonist"]["pitching"]["velocity"])).is_equal(78.0)

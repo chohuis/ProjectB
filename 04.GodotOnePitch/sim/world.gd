@@ -287,6 +287,16 @@ static func new_game(p: Dictionary) -> Dictionary:
 	# ⚠ **02와 값이 달랐다** (F-9). 04는 `0`·`100`으로 시작했는데 02
 	# `NewGamePage:280-281`은 `10`·`80`이다 — 팔팔한 채로 시작하면 첫 몇 주
 	# 훈련 효율이 02보다 높다(`Growth.week_xp`가 둘 다 읽는다)
+	# ⚠ **프리셋이 생성값을 덮는다** (P-35). 02는 새 게임에서 유형 넷 중
+	# 하나를 고르게 하고 그 값이 주인공의 시작 능력치다 — 04는 그 단계가
+	# 통째로 없어서 `PlayerGen.roster`의 무작위 값을 그대로 썼다.
+	#
+	# ⚠ **넷 다 OVR 68이다.** 유형이 갈리는 것이지 세기가 갈리는 게 아니다.
+	#
+	# 프리셋을 안 주면 균형형이다 — 02에도 "고르지 않음"은 없다
+	var preset: Dictionary = p.get("preset", NewGameVm.PRESETS[0])
+	for k in preset.get("pitching", {}):
+		me["pitching"][k] = float(preset["pitching"][k])
 	me["fatigue"] = 10.0
 	me["condition"] = 80.0
 	# ⚠ **명성도 채우는 쪽이 없었다** (F-9). `Contract`가 스폰서 수입의 입력으로
@@ -301,10 +311,14 @@ static func new_game(p: Dictionary) -> Dictionary:
 	me["injury"] = null
 	me["eligibility_blocked"] = false
 	me["retired"] = false
-	# ⚠ **직구 하나로 시작한다.** 02 그대로 — 나머지는 훈련으로 배운다.
-	# 숙련도 3이 `PitchStep`의 기준값과 같아서, 시작 시점의 경기 결과는
-	# 배선 전과 똑같다. 훈련으로 4·5를 올릴 때 비로소 달라진다
-	me["pitches"] = [{"id": "fastball", "grade": 3}]
+	# ⚠ **두 구종으로 시작한다** (P-35). 04는 직구 하나였고 주석엔 "02 그대로"라고
+	# 적혀 있었다 — **틀린 주석이었다.** 02가 그 자리에 근거를 적어 뒀다:
+	# "하나면 타자가 같은 공만 봐서 contact_q가 48까지 내려가고 BABIP이 44.7%가
+	# 된다 — 실측(60경기)에서 ERA 9.07이었다. 둘이면 4.52로 정상권이다."
+	#
+	# ⚠ **숙련도도 02 값이다**(1~2). 04는 직구를 3으로 주고 있었는데 그건
+	# `PitchStep`의 기준값이지 02가 준 값이 아니다 — 02보다 후했다
+	me["pitches"] = preset.get("pitches", []).duplicate(true)
 
 	if world["rosters"].has(team_id):
 		world["rosters"][team_id].append(me)

@@ -15,6 +15,10 @@ class_name NewGameScreen
 @onready var _regions: ItemList = $Pad/Center/Col/Pick/Regions
 @onready var _teams: ItemList = $Pad/Center/Col/Pick/Teams
 @onready var _detail: VBoxContainer = $Pad/Center/Col/Pick/Detail
+@onready var _preset_label: Label = $Pad/Center/Col/PresetLabel
+@onready var _preset: OptionButton = $Pad/Center/Col/Preset
+@onready var _preset_desc: Label = $Pad/Center/Col/PresetDesc
+@onready var _preset_stats: Label = $Pad/Center/Col/PresetStats
 @onready var _hand_label: Label = $Pad/Center/Col/HandLabel
 @onready var _hand: OptionButton = $Pad/Center/Col/Hand
 @onready var _form_label: Label = $Pad/Center/Col/FormLabel
@@ -53,6 +57,11 @@ func _ready() -> void:
 	_team_label.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
 	_back.text = "돌아가기"
 
+	_preset_label.text = "유형"
+	_preset_label.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_preset_desc.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_preset_desc.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	_preset_stats.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
 	_hand_label.text = "투구 방향"
 	_hand_label.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
 	_form_label.text = "투구 폼"
@@ -66,6 +75,8 @@ func _ready() -> void:
 	_name.text = _vm["name"]
 	_region_id = String(_vm["region_id"])
 	_team_id = String(_vm["team_id"])
+	for p in _vm["presets"]:
+		_preset.add_item(String(p["label"]))
 	for h in _vm["handedness_options"]:
 		_hand.add_item(h["label"])
 	for f in _vm["form_options"]:
@@ -76,6 +87,7 @@ func _ready() -> void:
 	_fill_days()
 
 	_name.text_changed.connect(func(_t: String) -> void: _update())
+	_preset.item_selected.connect(func(_i: int) -> void: _fill_preset(); _update())
 	_hand.item_selected.connect(func(_i: int) -> void: _update())
 	_form.item_selected.connect(func(_i: int) -> void: _update())
 	# ⚠ **달을 바꾸면 날 목록이 바뀐다.** 2월에 31일이 남아 있으면 안 된다
@@ -115,6 +127,7 @@ func current_profile() -> Dictionary:
 			if _hand.selected >= 0 and _hand.selected < hands.size() else "R",
 		"pitching_form": String(forms[_form.selected]["value"]) \
 			if _form.selected >= 0 and _form.selected < forms.size() else "overhand",
+		"preset": current_preset_id(),
 		"birth_month": _month.selected + 1,
 		"birth_day": _day.selected + 1,
 	}
@@ -229,4 +242,29 @@ func _refresh_pick() -> void:
 	_fill_regions()
 	_fill_teams()
 	_fill_detail()
+	_fill_preset()
 	_update()
+
+
+## 고른 유형이 어떤 투수인가. **숫자는 ViewModel이 만든다**
+func _fill_preset() -> void:
+	var list: Array = _vm.get("presets", [])
+	var i: int = _preset.selected
+	if i < 0 or i >= list.size():
+		return
+	var p: Dictionary = list[i]
+	_preset_desc.text = String(p["desc"])
+	var parts := PackedStringArray()
+	for r in p["rows"]:
+		parts.append("%s %d" % [String(r["label"]), int(r["value"])])
+	# 구종을 같이 적는다 — 능력치만 보면 왜 제구형이 체인지업을 받는지 안 보인다
+	_preset_stats.text = "%s   구종  %s" % [" · ".join(parts),
+		String(p["pitch_label"])]
+
+
+func current_preset_id() -> String:
+	var list: Array = _vm.get("presets", [])
+	var i: int = _preset.selected
+	if i < 0 or i >= list.size():
+		return ""
+	return String(list[i]["id"])

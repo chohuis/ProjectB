@@ -71,6 +71,18 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
+[node name="PresetLabel" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="Preset" type="OptionButton" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="PresetDesc" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="PresetStats" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
 [node name="HandLabel" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 

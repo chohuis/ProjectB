@@ -44,6 +44,96 @@ const DAYS_IN_MONTH: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 3
 const POWER_MAX: int = 5
 
 
+## 능력치 프리셋 — 02 `NewGamePage:162-197`이 정본. **값은 02 그대로다.**
+##
+## 🔴 **04엔 이 단계가 통째로 없었다.** `PlayerGen.roster`가 리그 범위 안에서
+## 무작위로 만든 능력치를 그대로 썼다 — 어떤 투수로 시작할지 고를 방법이
+## 없었고, 같은 씨앗이라도 무엇이 나올지 화면에서 못 봤다.
+##
+## ⚠ **넷 다 OVR 68이다.** 유형이 갈리는 것이지 세기가 갈리는 게 아니다 —
+## 한쪽이 세면 고르는 게 아니라 정답이 된다.
+##
+## 🔴 **02는 두 구종으로 시작한다.** 04는 직구 하나였고 주석엔 "02 그대로"라고
+## 적혀 있었다 — **틀린 주석이었다.** 02가 그 자리에 근거를 적어 뒀다:
+##
+## > 하나면 타자가 같은 공만 봐서 contact_q가 48까지 내려가고 BABIP이
+## > 44.7%가 된다 — 실측(60경기)에서 ERA 9.07이었다. 둘이면 4.52로 정상권이다.
+##
+## ⚠ **숙련도 축은 둘이 같다** — 02 `save.ts:114`가 `1=습득중 2=기초 3=보통
+## 4=능숙 5=마스터`, 04 `PitchDev.MAX_GRADE`도 5다. 그래서 02의 1·2를
+## 그대로 옮긴다(04는 직구를 3으로 주고 있었다 — 02보다 후했다).
+const PRESETS: Array[Dictionary] = [
+	{
+		"id": "balanced", "label": "균형형",
+		"desc": "모든 부분이 고르게 발달. 성장 방향 자유도가 가장 높음",
+		"pitching": {"ovr": 68, "velocity": 70, "command": 70, "control": 68,
+			"movement": 66, "mentality": 68, "stamina": 68, "recovery": 66,
+			"clutch": 63, "hold_runners": 64},
+		"pitches": [{"id": "fastball", "grade": 1}, {"id": "sinker", "grade": 1}],
+	},
+	{
+		"id": "power", "label": "파워피처",
+		"desc": "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
+		"pitching": {"ovr": 68, "velocity": 78, "command": 64, "control": 60,
+			"movement": 66, "mentality": 68, "stamina": 70, "recovery": 63,
+			"clutch": 67, "hold_runners": 66},
+		"pitches": [{"id": "fastball", "grade": 2}, {"id": "cutter", "grade": 1}],
+	},
+	{
+		"id": "control", "label": "제구형",
+		"desc": "커맨드와 제구로 타자를 요리. 체인지업으로 타이밍을 뺏기 시작",
+		"pitching": {"ovr": 68, "velocity": 57, "command": 78, "control": 75,
+			"movement": 66, "mentality": 68, "stamina": 62, "recovery": 65,
+			"clutch": 65, "hold_runners": 62},
+		"pitches": [{"id": "fastball", "grade": 1}, {"id": "changeup", "grade": 1}],
+	},
+	{
+		"id": "stamina", "label": "체력형",
+		"desc": "이닝이터 스타일. 멘탈과 체력이 강점, 후반까지 무너지지 않음",
+		"pitching": {"ovr": 68, "velocity": 67, "command": 65, "control": 63,
+			"movement": 62, "mentality": 77, "stamina": 78, "recovery": 78,
+			"clutch": 61, "hold_runners": 61},
+		"pitches": [{"id": "fastball", "grade": 1}, {"id": "sinker", "grade": 1}],
+	},
+]
+
+## 프리셋 카드에 적는 능력치 — **경기에 쓰이는 순서대로**(02 `statRows`)
+const PRESET_ROWS: Array[Array] = [
+	["velocity", "구위"], ["command", "커맨드"], ["control", "제구"],
+	["movement", "무브먼트"], ["mentality", "멘탈"], ["stamina", "스태미나"],
+]
+
+
+## 프리셋 하나. 모르는 id면 첫 번째(균형형)
+static func preset_of(preset_id: String) -> Dictionary:
+	for p in PRESETS:
+		if String(p["id"]) == preset_id:
+			return p
+	return PRESETS[0]
+
+
+## 화면이 그릴 프리셋 넷. **숫자를 화면이 다시 적지 않는다**
+static func presets() -> Array:
+	var out: Array = []
+	for p in PRESETS:
+		var rows: Array = []
+		for pair in PRESET_ROWS:
+			rows.append({"label": String(pair[1]),
+				"value": int(p["pitching"][pair[0]])})
+		var names: Array = []
+		for e in p["pitches"]:
+			names.append("%s %d" % [PitchVm.pitch_label(String(e["id"])),
+				int(e["grade"])])
+		out.append({
+			"id": String(p["id"]), "label": String(p["label"]),
+			"desc": String(p["desc"]), "rows": rows,
+			# ⚠ **구종을 같이 적는다.** 능력치만 보면 왜 제구형이 체인지업을
+			# 받는지 안 보인다 — 02도 카드에 구종을 그린다
+			"pitch_label": " · ".join(PackedStringArray(names)),
+		})
+	return out
+
+
 ## 권역 목록. **02는 권역을 먼저 고르게 한다** — `NewGamePage:52`:
 ##
 ## > 고교는 8권역 주말리그라 **어느 지역에서 시작하느냐가 라이벌·일정을
@@ -163,6 +253,7 @@ static func build(s: Dictionary = {}) -> Dictionary:
 	# 버튼엔 "시작"이라고만 적혀 있었다. 타이틀에서 "덮어쓰기"를 누르고 들어와도
 	# 여기서는 그 말이 사라진다
 	var overwrite: bool = bool(s.get("overwrite", false))
+	var preset: Dictionary = preset_of(String(s.get("preset", "")))
 
 	var hands: Array = []
 	for h in HANDEDNESS_OPTIONS:
@@ -181,6 +272,8 @@ static func build(s: Dictionary = {}) -> Dictionary:
 		"regions": region_list,
 		"region_teams": region_teams,
 		"team_detail": team_detail(team_id),
+		"preset": String(preset["id"]),
+		"presets": presets(),
 		"handedness": String(s.get("handedness", HANDEDNESS_OPTIONS[0][0])),
 		"handedness_options": hands,
 		"pitching_form": String(s.get("pitching_form", FORM_OPTIONS[0][0])),
@@ -215,6 +308,8 @@ static func start(p: Dictionary) -> Dictionary:
 		# 뽑은 방향이 남아 조용히 다른 손잡이가 된다
 		"handedness": String(p.get("handedness", HANDEDNESS_OPTIONS[0][0])),
 		"pitching_form": String(p.get("pitching_form", FORM_OPTIONS[0][0])),
+		# 능력치 프리셋 — 02는 여기서 고른 유형이 주인공을 정한다
+		"preset": preset_of(String(p.get("preset", ""))),
 		"birthday": birthday_of(
 			int(p.get("birth_month", DEFAULT_BIRTH_MONTH)),
 			int(p.get("birth_day", DEFAULT_BIRTH_DAY))),

@@ -151,13 +151,21 @@ func test_the_same_seed_makes_the_same_protagonist() -> void:
 		.is_equal(b["protagonist"]["pitching"]["ovr"])
 
 
+## ⚠ **옛 검사가 OVR로 씨앗 차이를 쟀다** — 이제 OVR은 프리셋이 정한다
+## (넷 다 68). **뜻은 맞다** — 씨앗이 다르면 다른 주인공이 나와야 한다.
+## 재는 축을 옮긴다: 잠재력과 성장률은 여전히 씨앗이 정한다
 func test_a_different_seed_makes_a_different_protagonist() -> void:
 	var a: Dictionary = NewGameVm.start({"seed": 1, "name": "박한별",
 		"team_id": "TEAM_HS_AEWOL"})
 	var b: Dictionary = NewGameVm.start({"seed": 2, "name": "박한별",
 		"team_id": "TEAM_HS_AEWOL"})
+	assert_float(a["protagonist"]["potential_hidden"]) \
+		.override_failure_message("씨앗이 달라도 잠재력이 같다") \
+		.is_not_equal(b["protagonist"]["potential_hidden"])
+	# 시작 능력치는 같아야 한다 — 유형을 골랐는데 씨앗이 그것을 흔들면
+	# 고른 뜻이 없어진다
 	assert_float(a["protagonist"]["pitching"]["ovr"]) \
-		.is_not_equal(b["protagonist"]["pitching"]["ovr"])
+		.is_equal(b["protagonist"]["pitching"]["ovr"])
 
 
 ## ⚠ **씨앗을 안 주면 뽑되, 그 값이 세이브에 남아야 한다.** 안 남으면
@@ -201,3 +209,103 @@ func test_the_view_model_does_not_know_the_screen() -> void:
 		assert_bool(CodeText.lacks("res://ui/new_game_vm.gd", node)) \
 			.override_failure_message("ViewModel이 화면 노드를 안다: %s" % node) \
 			.is_true()
+
+
+# ── 능력치 프리셋 ────────────────────────────────────────────────
+
+## 🔴 **04엔 이 단계가 통째로 없었다** — `PlayerGen`이 무작위로 만든
+## 능력치를 그대로 썼다. 02는 유형 넷 중 하나를 고르게 한다
+func test_유형이_넷이다() -> void:
+	var list: Array = NewGameVm.presets()
+	assert_int(list.size()).is_equal(4)
+	var labels: Array = []
+	for p in list:
+		labels.append(String(p["label"]))
+	assert_array(labels).is_equal(["균형형", "파워피처", "제구형", "체력형"])
+
+
+## ⚠ **넷 다 OVR 68이다.** 한쪽이 세면 고르는 게 아니라 정답이 된다
+func test_유형은_세기가_아니라_방향이다() -> void:
+	for p in NewGameVm.PRESETS:
+		assert_int(int(p["pitching"]["ovr"])).override_failure_message(
+			"%s의 OVR이 68이 아니다" % p["label"]).is_equal(68)
+
+
+## 02 값 그대로 — 파워피처는 구위 78 · 제구 60
+func test_값이_02_그대로다() -> void:
+	var power: Dictionary = NewGameVm.preset_of("power")["pitching"]
+	assert_int(int(power["velocity"])).is_equal(78)
+	assert_int(int(power["control"])).is_equal(60)
+	var control: Dictionary = NewGameVm.preset_of("control")["pitching"]
+	assert_int(int(control["command"])).is_equal(78)
+	assert_int(int(control["velocity"])).is_equal(57)
+
+
+## 🔴 **02는 두 구종으로 시작한다.** 04는 직구 하나였다
+func test_두_구종으로_시작한다() -> void:
+	for p in NewGameVm.PRESETS:
+		assert_int((p["pitches"] as Array).size()).override_failure_message(
+			"%s가 구종 %d개로 시작한다 — 02는 둘이다"
+			% [p["label"], (p["pitches"] as Array).size()]).is_equal(2)
+		assert_str(String(p["pitches"][0]["id"])).is_equal("fastball")
+		# 유형마다 둘째 구종이 다르다 — 그게 유형을 만든다
+		assert_str(String(p["pitches"][1]["id"])).is_not_equal("fastball")
+
+
+## 숙련도도 02 값이다 — 04는 직구를 3(보통)으로 주고 있었다
+func test_숙련도가_02_값이다() -> void:
+	assert_int(int(NewGameVm.preset_of("balanced")["pitches"][0]["grade"])).is_equal(1)
+	assert_int(int(NewGameVm.preset_of("power")["pitches"][0]["grade"])).is_equal(2)
+
+
+## 모르는 유형은 균형형 — 고르지 않은 채로 시작할 수는 없다
+func test_모르는_유형은_균형형이다() -> void:
+	assert_str(String(NewGameVm.preset_of("")["id"])).is_equal("balanced")
+	assert_str(String(NewGameVm.preset_of("NOPE")["id"])).is_equal("balanced")
+
+
+## 카드에 능력치와 구종이 같이 적힌다 — 숫자 없이 고를 수 없다
+func test_카드에_근거가_붙는다() -> void:
+	for p in NewGameVm.presets():
+		assert_int((p["rows"] as Array).size()).is_equal(6)
+		assert_str(String(p["desc"])).is_not_empty()
+		assert_str(String(p["pitch_label"])).override_failure_message(
+			"%s에 구종이 안 적혔다" % p["label"]).is_not_empty()
+	# 제구형은 체인지업을 받는다 — 설명이 그 이야기를 한다
+	var control: Dictionary = {}
+	for p in NewGameVm.presets():
+		if String(p["id"]) == "control":
+			control = p
+	assert_str(String(control["pitch_label"])).contains("체인지업")
+
+
+# ── 프리셋이 주인공까지 가나 ──────────────────────────────────────
+
+## 🔴 **여기가 요점이다.** 고른 유형이 세이브의 능력치여야 한다
+func test_고른_유형이_주인공이_된다() -> void:
+	var s: Dictionary = NewGameVm.start({"seed": 5, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL", "preset": "power"})
+	var pit: Dictionary = s["protagonist"]["pitching"]
+	assert_float(float(pit["velocity"])).is_equal(78.0)
+	assert_float(float(pit["control"])).is_equal(60.0)
+	assert_int((s["protagonist"]["pitches"] as Array).size()).is_equal(2)
+	assert_str(String(s["protagonist"]["pitches"][1]["id"])).is_equal("cutter")
+
+
+## 유형이 다르면 주인공도 다르다 — 같은 씨앗이라도
+func test_유형이_다르면_주인공이_다르다() -> void:
+	var a: Dictionary = NewGameVm.start({"seed": 5, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL", "preset": "power"})
+	var b: Dictionary = NewGameVm.start({"seed": 5, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL", "preset": "control"})
+	assert_float(float(a["protagonist"]["pitching"]["velocity"])) \
+		.override_failure_message("유형을 바꿨는데 구위가 같다") \
+		.is_not_equal(float(b["protagonist"]["pitching"]["velocity"]))
+
+
+## 유형을 안 주면 균형형으로 시작한다 — 무작위로 두지 않는다
+func test_안_고르면_균형형으로_시작한다() -> void:
+	var s: Dictionary = NewGameVm.start({"seed": 9, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	assert_float(float(s["protagonist"]["pitching"]["velocity"])).is_equal(70.0)
+	assert_int((s["protagonist"]["pitches"] as Array).size()).is_equal(2)
