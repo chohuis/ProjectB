@@ -155,7 +155,11 @@ func test_the_innings_add_up() -> void:
 ## ⚠ **이게 사용자가 겪던 증상이다.** 주인공이 불펜이면 화면엔 "오늘 등판"이
 ## 뜨는데 실제로는 시즌 내내 한 경기도 안 나왔다
 func test_a_relief_protagonist_actually_pitches() -> void:
-	var s: Dictionary = _game(4242)
+	# ⚠ **센 학교라야 불펜이 된다** (P-35). 프리셋이 붙기 전에는 주인공 OVR이
+	# 무작위라 애월고에서도 불펜이 나왔는데, 이제 넷 다 68이라 약한 학교에선
+	# 늘 선발이다 — 한성고(전력 5)에서 이 씨앗이 불펜이다. 찍어서 골랐다
+	var s: Dictionary = World.new_game({"seed": 4242, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_HANSEONG"})
 	assert_str(String(s["protagonist"]["role"])).override_failure_message(
 		"이 씨앗의 주인공이 불펜이 아니다 — 검사가 헛돈다").is_equal("RP")
 

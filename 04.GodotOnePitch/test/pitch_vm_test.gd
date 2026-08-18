@@ -226,15 +226,22 @@ func test_a_pitcher_without_an_arsenal_uses_the_baseline() -> void:
 		{"pitches": [{"id": "fastball", "grade": 5}]}, "curve")).is_equal(3)
 
 
-## 주인공은 직구 하나·숙련도 3으로 시작한다 — 02 그대로
-func test_the_protagonist_starts_with_one_fastball() -> void:
+## 주인공은 **두 구종**으로 시작한다 — 02 프리셋이 정본이다(P-35).
+##
+## ⚠ **옛 검사가 "직구 하나·숙련도 3 — 02 그대로"라고 못 박고 있었다.**
+## 02를 열어 보니 넷 다 두 구종이고 숙련도는 1~2다. 3은 `PitchStep`의
+## 기준값이지 02가 준 값이 아니었다 — **주석과 검사가 같이 틀렸다**
+func test_the_protagonist_starts_with_the_preset_arsenal() -> void:
 	var s: Dictionary = World.new_game({"seed": 99, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 	var r: Array = PitchVm.repertoire(s["protagonist"])
-	assert_int(r.size()).is_equal(1)
+	assert_int(r.size()).override_failure_message(
+		"구종 %d개로 시작한다 — 02는 둘이다" % r.size()).is_equal(2)
 	assert_str(r[0]["id"]).is_equal("fastball")
+	# 균형형이 기본이다 — 포심 1 · 싱커 1
+	assert_str(r[1]["id"]).is_equal("sinker")
 	assert_int(r[0]["grade"]).override_failure_message(
-		"주인공 시작 숙련도가 %d다 — 02는 3이다" % r[0]["grade"]).is_equal(3)
+		"시작 숙련도가 %d다 — 02 균형형은 1이다" % r[0]["grade"]).is_equal(1)
 
 
 ## ⚠ **투수의 구종 배열이 경기까지 가야 한다.** 능력치만 옮기고 배열을
@@ -243,7 +250,11 @@ func test_the_arsenal_reaches_the_match() -> void:
 	var s: Dictionary = World.new_game({"seed": 99, "season_year": 2027,
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 	var mapped: Dictionary = MatchDay._pitcher(s["protagonist"])
-	assert_int(PitchStep.grade_of(mapped, "fastball")).is_equal(3)
+	# 프리셋이 준 숙련도가 그대로 가야 한다 — 기준값(3)으로 덮이면 고른 뜻이 없다
+	assert_int(PitchStep.grade_of(mapped, "fastball")).is_equal(1)
+	# 둘째 구종도 간다 — 하나만 옮기면 유형이 경기에서 사라진다
+	assert_int(PitchStep.grade_of(mapped, "sinker")).override_failure_message(
+		"둘째 구종이 경기까지 안 갔다").is_equal(1)
 
 
 func test_the_view_model_does_not_know_the_screen() -> void:
