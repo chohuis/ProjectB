@@ -196,3 +196,39 @@ func test_주간_처리를_굴리면_온다() -> void:
 			found = true
 	assert_bool(found).override_failure_message(
 		"주간 처리를 굴렸는데 다이제스트가 안 왔다").is_true()
+
+
+# ── 이름 ─────────────────────────────────────────────────────────
+
+## 🔴 **이름을 안 먹여서 본문에 id가 그대로 찍혔다** — `HS_AEWOL`.
+## `Digest`는 일부러 표를 안 갖는다("이름은 호출부가 넘긴다") — **넘기는
+## 쪽이 없었다.** 02가 같은 자리에서 `YEONGSAN권역`을 찍은 적이 있다
+func test_팀_이름이_사람_이름이다() -> void:
+	var s: Dictionary = _state(_digest_week())
+	var body: String = String(DigestRunner.run(s).get("body", ""))
+	assert_str(body).override_failure_message(
+		"본문에 팀 이름이 없다:\n%s" % body).contains("애월고")
+	assert_int(body.find("HS_AEWOL")).override_failure_message(
+		"본문에 팀 id가 그대로 찍혔다:\n%s" % body).is_equal(-1)
+
+
+## 권역도 사람 이름이다 — 구장 이름이 곧 권역 이름이다
+func test_권역_이름이_사람_이름이다() -> void:
+	var s: Dictionary = _state(_digest_week())
+	var body: String = String(DigestRunner.run(s).get("body", ""))
+	assert_str(body).override_failure_message(
+		"본문에 권역 이름이 없다:\n%s" % body).contains("한라구장")
+	assert_int(body.find("HALLA")).override_failure_message(
+		"본문에 구장 id가 그대로 찍혔다:\n%s" % body).is_equal(-1)
+
+
+## 표가 통째로 온다 — 상대 팀도 이름으로 나와야 한다
+func test_이름표를_통째로_먹인다() -> void:
+	var input: Dictionary = DigestRunner.input_of(_state(_digest_week()),
+		(_digest_week() - 1) * Calendar.DAYS_PER_WEEK + 1)
+	assert_int((input["team_names"] as Dictionary).size()) \
+		.override_failure_message("팀 이름표가 비었다").is_greater(100)
+	assert_str(String(input["team_names"].get("TEAM_HS_HALLA", ""))) \
+		.is_equal("한라고")
+	assert_int((input["region_names"] as Dictionary).size()) \
+		.override_failure_message("권역 이름표가 비었다").is_greater(0)

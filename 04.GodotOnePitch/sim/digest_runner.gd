@@ -68,9 +68,35 @@ static func input_of(state: Dictionary, at_day: int) -> Dictionary:
 		# 파생한다(`teams.json`의 `stadium`이 정본). 없는 줄 알고 빈 사전을
 		# 줄 뻔했다
 		"regions": Tournament.regions_of(my_league),
-		"region_names": state.get("region_names", {}),
+		# 🔴 **이름을 안 먹여서 소식 본문에 id가 그대로 찍혔다** —
+		# `HS_AEWOL  HALLA 1위 / 6팀`. `Digest`는 일부러 표를 안 갖는다
+		# (`digest.gd:104`가 "손으로 표를 만들지 않는다. 이름은 호출부가
+		# 넘긴다"고 적어 뒀다) — **넘기는 쪽이 없었다.** 02가 같은 자리에서
+		# `YEONGSAN권역`을 찍은 적이 있다.
+		#
+		# ⚠ **둘 다 04에 있다** — 팀 이름은 `World.team_names()`,
+		# 구장 이름은 `ParkVm.name_of`(`parks.json`의 27개).
+		#
+		# ⚠ **상태에 든 `team_names`를 안 쓰고 데이터에서 다시 낸다.**
+		# 손으로 만든 상태(검사·계측)가 그 키를 빠뜨리면 소식이 조용히
+		# id로 나온다 — 표는 데이터에서 늘 같게 나오니 여기서 낸다
+		"team_names": World.team_names(),
+		"region_names": _region_names(my_league),
 		"scout_score": int(p.get("scout_score", 0)),
 	}
+
+
+## 그 리그 권역의 사람 이름. **구장이 곧 권역이다**(`Tournament.regions_of`).
+##
+## ⚠ **없는 구장은 안 담는다** — 폴백은 `Digest`가 갖고 있고, 빈 문자열을
+## 담으면 이름이 사라진 채로 줄이 나온다
+static func _region_names(league_id: String) -> Dictionary:
+	var out: Dictionary = {}
+	for stadium_id in Tournament.regions_of(league_id):
+		var label: String = ParkVm.name_of(String(stadium_id))
+		if label != String(stadium_id):
+			out[stadium_id] = label
+	return out
 
 
 ## 한 주. **다이제스트 주에만 실제로 돈다.**
