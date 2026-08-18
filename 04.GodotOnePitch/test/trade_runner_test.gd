@@ -106,9 +106,33 @@ func _count(state: Dictionary, id: String) -> int:
 
 # ── 자산 ──────────────────────────────────────────────────────
 
-## ⚠ **주인공은 자산 풀에서 뺀다.** 진로는 사용자가 정한다
-func test_the_protagonist_is_not_an_asset() -> void:
+## 🔴 **옛 약속을 갈아끼웠다** (P-24).
+##
+## 여기는 "주인공은 자산 풀에서 뺀다 — 진로는 사용자가 정한다"였다.
+## **그 이유는 맞았는데 방법이 틀렸다** — 빼 버리니 `trade` 결정 갈래가
+## **도달 불가**가 됐다(화면·받는 코드·`AutoAdvance` 항목이 다 있는데
+## 게임에 한 번도 안 나타났다).
+##
+## **02는 주인공을 자산으로 넣고 걸리면 묻는다**(`market.ts:351-368`,
+## `:543-560`). 그래야 "진로는 사용자가 정한다"가 **실제로** 지켜진다 —
+## 빼는 게 아니라 **묻는 것**이 사용자가 정하는 방법이다.
+##
+## ⚠ **노트레이드 조항이 있으면 그때 뺀다.**
+func test_the_protagonist_is_an_asset_but_gets_asked() -> void:
 	var roster: Array = [_player("ME", {"is_protagonist": true}), _player("N1")]
+	var ids: Array = []
+	for a in TradeRunner.assets_of(roster):
+		ids.append(String(a["id"]))
+	assert_bool(ids.has("ME")).override_failure_message(
+		"주인공이 자산에 없다 — 제안에 실릴 수가 없어 `trade`가 도달 불가가 된다") \
+		.is_true()
+
+
+## 노트레이드 조항이 있으면 뺀다 — 조항을 따 놓고 팔려 가면 장식이 된다
+func test_a_no_trade_clause_removes_the_protagonist() -> void:
+	var roster: Array = [
+		_player("ME", {"is_protagonist": true, "no_trade": true}),
+		_player("N1")]
 	var ids: Array = []
 	for a in TradeRunner.assets_of(roster):
 		ids.append(String(a["id"]))

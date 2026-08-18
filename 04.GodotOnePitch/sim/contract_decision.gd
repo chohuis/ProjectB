@@ -84,6 +84,14 @@ static func _apply_contract(p: Dictionary, contract: Dictionary) -> void:
 	# 계약금은 그 자리에서 자산이 된다 — 안 더하면 화면에만 있는 숫자다
 	p["money"] = int(p.get("money", 0)) + int(contract.get("signing_bonus", 0))
 
+	# 🔴 **옵션·노트레이드를 안 옮기고 있었다.** 협상 화면에서 고를 수 있고
+	# `Negotiation`이 연봉 배수까지 곱하는데 **선수에게 안 남아서** 계약이
+	# 끝날 때 볼 근거가 사라졌다 — `option_clause` 결정이 도달 불가였던
+	# 뿌리다. 노트레이드도 같은 자리라 트레이드 때 못 막았다
+	p["team_option_years"] = int(contract.get("team_option_years", 0))
+	p["player_option_years"] = int(contract.get("player_option_years", 0))
+	p["no_trade"] = bool(contract.get("no_trade", false))
+
 
 ## 계약을 거절한다. 다음에 무슨 일이 일어나는지를 돌려준다.
 ##
@@ -124,6 +132,71 @@ static func reject_negotiated(state: Dictionary, action: Dictionary,
 ## 뒀다. 한쪽만 고치면 "구단 옵션으로 들어온 해만 FA가 안 열린다"가 된다.
 ##
 ## ⚠ **다음을 안 밀어 주면 계약이 만료된 채 아무 일도 안 일어난다**
+## 옵션 조항을 한 해에 한 번 올린 것으로 표시하는 자리
+const OPTION_ASKED_KEY: String = "option_clause_asked_year"
+
+
+## 계약 마지막 해에 옵션 조항을 **묻는다** — 02 `advanceWeek.ts:1057-1070`.
+##
+## 🔴 **04엔 이 자리가 없어서 `option_clause`가 도달 불가였다.**
+## 받는 쪽(`_option`)도 해소하는 쪽(`apply_option_clause`)도 다 있는데
+## 대기줄에 올리는 곳이 하나도 없었다 — 체육부대와 같은 모양.
+##
+## ⚠ **구단 옵션은 구단이 정한다.** 02는 시즌 평점이 문턱을 넘는지로 가르고
+## **통보**한다. 사용자가 고르는 건 선수 옵션뿐이다 — 화면이 그걸 구분해야
+## 한다. 여기서 `exercised`를 같이 실어 보낸다.
+##
+## ⚠ **문턱은 팀 성향이 정한다** — 02는 `75 - winNowPressure/100*25`다.
+## 04는 `TeamProfile`에 그 축이 있는지 아직 안 봤으므로 **가운데(75)로 둔다**.
+## ⬜ 축을 찾으면 여기만 고친다
+const OPTION_BASE_THRESHOLD: float = 75.0
+
+
+static func check_option_clause(state: Dictionary, at_day: int) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	if p.is_empty() or bool(p.get("retired", false)):
+		return false
+	if int(p.get("contract_years", 0)) != 1:
+		return false
+
+	var team_opt: int = int(p.get("team_option_years", 0))
+	var player_opt: int = int(p.get("player_option_years", 0))
+	if team_opt <= 0 and player_opt <= 0:
+		return false
+
+	var year: int = int(state.get("season_year", 0))
+	if int(p.get(OPTION_ASKED_KEY, -1)) == year:
+		return false
+	p[OPTION_ASKED_KEY] = year
+
+	var next_salary: int = offer_salary_for(state, p)
+	var action: Dictionary = {
+		"type": "option_clause",
+		"team_id": String(p.get("team_id", "")),
+		"league_id": String(p.get("league_id", "")),
+		"next_salary": next_salary,
+		"day": at_day,
+	}
+	if team_opt > 0:
+		action["option_type"] = "team"
+		# 구단이 정한다 — 시즌 평점이 문턱을 넘으면 행사한다
+		action["exercised"] = _season_rating(state, p) >= OPTION_BASE_THRESHOLD
+	else:
+		action["option_type"] = "player"
+		action["exercised"] = false
+	Pending.push_once(state, action)
+	return true
+
+
+## 시즌 평점 — 구단이 옵션을 행사할지 가르는 값.
+##
+## ⚠ **없는 축을 지어내지 않는다.** 04는 OVR이 그 해 실력의 정본이므로
+## 그걸 쓴다 — 02의 `calcSeasonRating`은 성적 가중이 더 두껍지만 04엔
+## 그 조립기가 없다. ⬜ 성적 기반 평점이 생기면 여기만 고친다
+static func _season_rating(state: Dictionary, p: Dictionary) -> float:
+	return Contract.core_ovr(p)
+
+
 static func apply_option_clause(state: Dictionary, action: Dictionary,
 		exercised: bool) -> String:
 	var p: Dictionary = state.get("protagonist", {})

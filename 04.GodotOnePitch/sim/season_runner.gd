@@ -760,4 +760,13 @@ static func finish_season(state: Dictionary) -> Dictionary:
 	# 지난 시즌의 미결정을 비우므로, 앞에서 물으면 **방금 넣은 재계약이
 	# 그 자리에서 지워진다** — 실제로 그렇게 짰다가 검사가 잡았다
 	out["contract_asked"] = ContractDecision.ask_on_expiry(state)
+
+	# 옵션 조항 — 🔴 **`option_clause`가 도달 불가였다.** 받는 쪽도 해소하는
+	# 쪽도 다 있는데 대기줄에 올리는 곳이 하나도 없었다(체육부대와 같은 모양).
+	#
+	# ⚠ **재계약 물음 다음이다.** 02도 계약 마지막 해에 먼저 옵션을 가른
+	# 뒤 그 결과로 FA·재계약이 갈린다 — `apply_option_clause`가 미행사일 때
+	# `fa_market`으로 잇는다
+	out["option_asked"] = ContractDecision.check_option_clause(state,
+		int(state.get("day", Calendar.DAYS_PER_SEASON)))
 	return out

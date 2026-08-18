@@ -366,13 +366,33 @@ static func negotiation_of(state: Dictionary, a: Dictionary,
 
 
 ## 옵션 조항 — 구단이 행사하면 한 해 더, 아니면 계약이 끝난다
+## 🔴 **구단 옵션을 사용자가 고르게 두고 있었다.** 그건 구단이 정한다 —
+## 02는 시즌 평점이 문턱을 넘는지로 갈라 **통보**하고, 사용자가 고르는 건
+## **선수 옵션**뿐이다(`advanceWeek.ts:1060-1070`).
+##
+## ⚠ **통보에 선택지를 두면 "고를 수 있다"는 거짓말이 된다** — 무엇을 눌러도
+## 같은 일이 일어난다
 static func _option(state: Dictionary, a: Dictionary) -> Dictionary:
-	var body: String = "\n".join([
-		"%s의 옵션 조항입니다." % _team(state, String(a.get("team_id", ""))),
-		"행사하면 연봉 %s로 한 해 더 뜁니다." % FinanceVm.won(
-			int(a.get("next_salary", 0))),
-	])
-	return _of("option_clause", "옵션 조항", body, [
+	var team: String = _team(state, String(a.get("team_id", "")))
+	var money: String = FinanceVm.won(int(a.get("next_salary", 0)))
+	var is_team: bool = String(a.get("option_type", "team")) == "team"
+
+	if is_team:
+		var on: bool = bool(a.get("exercised", false))
+		var body: String = "\n".join([
+			"%s의 구단 옵션입니다." % team,
+			"구단이 옵션을 행사했습니다. 연봉 %s로 한 해 더 뜁니다." % money \
+				if on else "구단이 옵션을 행사하지 않았습니다.",
+			"" if on else "계약이 끝납니다.",
+		])
+		return _of("option_clause", "구단 옵션", body,
+			[{"id": "exercise" if on else "decline", "label": "확인"}])
+
+	return _of("option_clause", "선수 옵션", "\n".join([
+		"%s와의 선수 옵션입니다." % team,
+		"행사하면 연봉 %s로 한 해 더 뜁니다." % money,
+		"행사하지 않으면 계약이 끝나고 FA가 됩니다.",
+	]), [
 		{"id": "exercise", "label": "행사한다"},
 		{"id": "decline", "label": "행사하지 않는다"},
 	])
