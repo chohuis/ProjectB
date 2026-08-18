@@ -408,11 +408,19 @@ static func reject_draft_offer(state: Dictionary, action: Dictionary,
 		Pending.push_once(state, independent_offer(state, indie))
 		return "independent"
 
-	# 갈 곳이 없다 — 현역 입대. **입대 처리는 `Military`가 정본이다**
-	# (02는 이 경로가 오프시즌을 빠뜨려 그해 세계가 정체됐다)
-	Military.enlist(state, "general", at_day)
-	c["final_choice"] = "general"
-	return "general"
+	# 갈 곳이 없다 — 병역이 남는다.
+	#
+	# 🔴 **여기서 조용히 입대시키지 않는다** (2026-08-18, 사용자 확정).
+	# 예전엔 `Military.enlist(state, "general", at_day)`를 바로 불렀는데,
+	# 02는 **입대할지 묻고**(`MilitaryEnlistAskModal`) **상무에 지원할지도
+	# 묻는다**(`SportsUnitApplicationModal`). 04가 대신 정하면 사용자가
+	# 고를 것을 잃고, **체육부대 갈래는 영영 안 걸린다** — `sim/military.gd`가
+	# 네 곳에서 `"sports"`를 갈라 쓰는데 입구가 없었다.
+	#
+	# 이제 `Military.should_ask_*`가 때를 정하고 대기줄이 물으며
+	# 입대 처리는 사용자의 답을 받은 뒤에 돈다.
+	c["final_choice"] = "military_pending"
+	return "military_pending"
 
 
 ## 지명 계약을 **수락**한다. 프로가 된다

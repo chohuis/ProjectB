@@ -59,6 +59,94 @@ static func rank_of(weeks: int) -> String:
 	return RANK_TOP
 
 
+# ── 언제 묻나 ─────────────────────────────────────────────────
+#
+# 02 `advanceWeek.ts:1952-2135`. **04는 지금까지 안 물었다** — 갈 곳이 없을 때
+# `career_decision`이 조용히 현역으로 보냈다. 02는 둘을 묻는다.
+#
+# ⚠ **02의 주차를 그대로 안 옮긴다.** 02는 `weekInYear` 50·52로 재는데 04엔
+# 진짜 달력이 있다(3월 1일 시작 · 364일). **뜻으로 옮긴다:**
+#   W50(시즌 종료 3주 전) → **2월 첫 주**
+#   W52(시즌 마지막 주)   → **시즌 마지막 주** (`DAYS_PER_SEASON`에서 파생)
+# 주차 숫자를 여기 적으면 시즌 길이가 바뀔 때 조용히 어긋난다.
+#
+# ⚠🔴 **가드 둘이 없으면 게임이 얼어붙는다.** 물음은 주를 안 넘기고 대기줄만
+# 밀어넣으므로 "물었다"를 기억하지 않으면 다음 진행에서 조건이 또 참이 된다.
+# 02가 실측으로 두 번 겪었다 — 매년 그 주에서 멈췄고, 다른 하나는 2038년에
+# 자동 진행이 1000회 반복 상한에 걸렸다. **04는 자동 진행이 "다음 결정까지"
+# 가므로 거기서 무한히 선다.**
+
+## 02 `age <= 27`
+const SPORTS_UNIT_MAX_AGE: int = 27
+## 02 `age >= 28` — 입영 기간 만료
+const ENLIST_AGE: int = 28
+## 체육부대 후보가 공개되는 달. 02의 W50이 04 달력에서 2월 첫 주다
+const SPORTS_UNIT_MONTH: int = 2
+
+## "물었다"를 해마다 기억하는 자리. **이게 없으면 얼어붙는다**
+const SPORTS_ASKED_KEY: String = "sports_unit_prompted_year"
+const ENLIST_ASKED_KEY: String = "military_asked_year"
+
+
+## 병역이 아직 남아 있나 — 02 `:1959-1961`의 공통 전제.
+##
+## ⚠ **고교생은 뺀다.** 안 빼면 고교 3년 내내 해마다 묻는다
+static func _open(p: Dictionary) -> bool:
+	if String(p.get("military_status", STATUS_UNSERVED)) != STATUS_UNSERVED:
+		return false
+	var stage: String = String(p.get("career_stage", ""))
+	return stage != "military" and stage != "highschool"
+
+
+static func _same_year(p: Dictionary, key: String, state: Dictionary) -> bool:
+	return int(p.get(key, 0)) == int(state.get("season_year", 0))
+
+
+## 체육부대 지원을 물을 때인가 — 02 W50.
+static func should_ask_sports_unit(state: Dictionary) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	if not _open(p) or int(p.get("age", 0)) > SPORTS_UNIT_MAX_AGE:
+		return false
+	if _same_year(p, SPORTS_ASKED_KEY, state):
+		return false
+	var d: Dictionary = Calendar.date_of(int(state.get("season_year", 0)),
+		int(state.get("day", 0)))
+	return int(d["month"]) == SPORTS_UNIT_MONTH \
+		and int(d["day"]) <= Calendar.DAYS_PER_WEEK
+
+
+## 입대할지 물을 때인가 — 02 W52.
+##
+## ⚠ **체육부대에 지원했으면 안 묻는다**(02 "미신청"). 결과를 기다리는
+## 중인데 현역 입대를 물으면 방금 한 선택이 없던 일이 된다
+static func should_ask_enlist(state: Dictionary) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	if not _open(p) or int(p.get("age", 0)) < ENLIST_AGE:
+		return false
+	if bool(p.get("sports_unit_applied", false)):
+		return false
+	if _same_year(p, ENLIST_ASKED_KEY, state):
+		return false
+	return int(state.get("day", 0)) \
+		> Calendar.DAYS_PER_SEASON - Calendar.DAYS_PER_WEEK
+
+
+## 물었다고 적는다. **답을 어느 쪽으로 하든 그해엔 다시 안 묻는다** —
+## "미룬다"가 상태를 안 바꾸므로 이걸 안 적으면 같은 자리를 무한히 돈다
+static func mark_sports_unit_asked(state: Dictionary) -> void:
+	_mark(state, SPORTS_ASKED_KEY)
+
+
+static func mark_enlist_asked(state: Dictionary) -> void:
+	_mark(state, ENLIST_ASKED_KEY)
+
+
+static func _mark(state: Dictionary, key: String) -> void:
+	var p: Dictionary = state.get("protagonist", {})
+	if not p.is_empty():
+		p[key] = int(state.get("season_year", 0))
+
+
 ## ⚠ **모르는 값을 빈칸으로 두지 않는다.** 형태가 늘었는데 화면이 조용히
 ## 비면 아무도 모른다
 static func unit_label(unit: String) -> String:

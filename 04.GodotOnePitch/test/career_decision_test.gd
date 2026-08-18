@@ -625,13 +625,19 @@ func test_rejecting_falls_back_to_the_independent_league() -> void:
 
 ## ⚠ **갈 곳이 없으면 현역 입대다.** 02는 이 경로가 오프시즌을 빠뜨려
 ## 그해 세계가 통째로 정체됐다 — 입대 처리는 `Military` 하나가 정본이다
-func test_rejecting_with_nowhere_to_go_means_the_army() -> void:
+## ⚠ **이 검사가 옛 약속을 못 박고 있었다** (2026-08-18에 고침).
+## 예전엔 "갈 곳이 없으면 곧 입대"였고 `career_stage`가 바로 `military`가 됐다.
+## 이제 **묻는다** — 02가 그렇게 하고 04도 그래야 한다(사용자 확정).
+## 여기서 무대를 바꾸면 사용자가 답하기도 전에 군대에 가 있다
+func test_rejecting_with_nowhere_to_go_leaves_the_army_pending() -> void:
 	var s: Dictionary = _drafted_state()
 	var a: Dictionary = CareerDecision.choose_draft(s)
 	a["alt_university_team_id"] = ""
 	a["alt_independent_team_id"] = ""
-	assert_str(CareerDecision.reject_draft_offer(s, a, 300)).is_equal("general")
-	assert_str(String(s["protagonist"]["career_stage"])).is_equal("military")
+	assert_str(CareerDecision.reject_draft_offer(s, a, 300)) \
+		.is_equal("military_pending")
+	assert_str(String(s["protagonist"]["career_stage"])).override_failure_message(
+		"묻기도 전에 군대에 가 있다").is_not_equal("military")
 
 
 ## ⚠ **대학 재학생은 대학 대안이 있어도 안 간다** — 두 번 입학이다
