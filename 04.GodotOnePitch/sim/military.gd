@@ -397,6 +397,14 @@ static func enlist(state: Dictionary, unit: String, at_day: int) -> bool:
 	p["military_service_weeks"] = 0
 	p["military_enlist_year"] = year
 	p["league_id"] = LEAGUE
+	# 🔴 **로스터에서도 뺀다** (P-44). `team_id`만 비우면 옛 팀 로스터에
+	# 그대로 남아 **군인이 리그 경기에 나온다.** P-14와 같은 결함이 이
+	# 경로에 남아 있었다 — 실측에서 병역 이후 12해 내내 "로스터 속 나:
+	# 못 찾음"이었다(주인공이 두 군데 갈려 있었다).
+	#
+	# ⚠ **04는 주인공도 로스터에 산다**(`world.gd:280`). 02엔 대응 코드가
+	# 없다 — 02는 주인공을 로스터 밖에 둔다
+	CareerDecision.move_roster(state, p, String(p.get("team_id", "")), "")
 	p["team_id"] = ""
 
 	var label: String = "%s 입대" % unit_label(unit)
@@ -472,6 +480,7 @@ static func discharge(state: Dictionary, at_day: int) -> bool:
 	# 달고 다니고 결산 화면 머리글이 그걸 먼저 읽는다
 	p.erase("grade")
 
+	var from_team: String = String(p.get("team_id", ""))
 	if stage == "independent":
 		p["league_id"] = "LEAGUE_INDEPENDENT"
 		var dest: Array = discharge_teams()
@@ -479,6 +488,10 @@ static func discharge(state: Dictionary, at_day: int) -> bool:
 	else:
 		p["league_id"] = String(p.get("military_hiatus_league_id", ""))
 		p["team_id"] = String(p.get("military_hiatus_team_id", ""))
+	# 🔴 **로스터에 다시 넣는다** (P-44). 안 넣으면 `relink_protagonist`가
+	# 새 팀에서 못 찾고, 동료·라이벌·성장이 전부 그 위에 선다 —
+	# 실측 rival이 −2~0(평균 −0.3)으로 눌려 있었다
+	CareerDecision.move_roster(state, p, from_team, String(p["team_id"]))
 	p["team_name"] = String(World.team_field({}, String(p["team_id"]), "name",
 		p["team_id"]))
 

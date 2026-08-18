@@ -1190,7 +1190,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       **해마다의 OVR**을 같이 내면 한눈에 갈린다.
       ⚠ **계측이 세는 것과 사람이 궁금한 것이 다르면 그 숫자는 함정이다**
 
-- [ ] 🔴 **P-44 병역·전역 경로가 로스터를 안 옮긴다** (2026-08-19 실측)
+- [x] 🔴 **P-44 병역·전역 경로가 로스터를 안 옮긴다** — 2026-08-19 고침
+      `Military.enlist`·`discharge`가 `CareerDecision.move_roster`를 부른다.
+      `move_roster`는 갈 팀이 없으면 빼기만 한다(빈 이름 유령 팀 방지).
+      실측 12해 — **커리어가 처음으로 프로까지 갔다**(2037~2038 KBL) ·
+      manager·owner가 셋으로 늘었다. 검사 6 · 변이 4/5.
+      ⬜ **rival은 아직 −2~0(평균 −0.3)** — P-13을 20해로 다시 잰다.
+      (아래는 처음 잡을 때의 관찰)
       P-43을 고쳐 커리어가 움직이자 드러났다 — **병역 이후 12해 내내
       "로스터 속 나: 못 찾음"**이다(military → independent 전부).
       **P-14와 같은 계열**: 그때는 `CareerDecision._move_to`가 `team_id`만

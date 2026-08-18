@@ -619,6 +619,12 @@ static func move_roster(state: Dictionary, p: Dictionary,
 		if String(old[i].get("id", "")) == id:
 			old.remove_at(i)
 
+	# ⚠ **갈 팀이 없으면 빼기만 한다** (P-44). 입대는 `team_id`가 ""라
+	# 그대로 넣으면 **빈 이름의 유령 팀**이 생기고, 로스터를 훑는 코드가
+	# 그걸 본다
+	if to_team.is_empty():
+		return
+
 	# ⚠ **같은 사전을 넣는다.** 복사본이면 로스터 쪽과 `protagonist` 쪽이
 	# 갈려서 한쪽만 자란다 — 04가 이미 한 번 데인 자리다
 	if not rosters.has(to_team):
