@@ -225,11 +225,16 @@ static func run(state: Dictionary, at_day: int = -1) -> void:
 	if not state.get("training_plan", {}).is_empty():
 		p["training_weeks"] = int(p.get("training_weeks", 0)) + 1
 
-	# 무엇이 올랐는지 — 소식이 이걸 읽는다
+	# 무엇이 올랐는지 — 소식이 이걸 읽는다.
+	#
+	# 🔴 **오래 안 읽었다.** 이 주석이 "소식이 읽는다"고 적혀 있었는데
+	# **읽는 곳이 없었다** — 무엇이 얼마나 늘었는지 볼 자리가 없었다.
+	# `TrainingReport`가 그 자리다
 	if not out["logs"].is_empty():
 		var log: Array = state.get("training_log", [])
 		log.append({"day": int(state.get("day", 0)), "gains": out["logs"]})
 		state["training_log"] = log
+		TrainingReport.send(state, int(state.get("day", 0)))
 
 	# 업적 — **훈련 뒤다.** 이번 주 훈련까지 세고 나서 판정한다.
 	#
