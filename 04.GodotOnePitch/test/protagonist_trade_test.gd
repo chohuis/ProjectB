@@ -162,3 +162,63 @@ func test_노트레이드면_묻지도_않는다() -> void:
 ## 여덟 시드에서 0번 걸렸다. 드문 게 결함은 아니지만 **검사가 못 보는
 ## 것은 결함이다.** `Trade.propose`를 직접 불러 제안을 만든 뒤
 ## 그 제안으로 `run`의 안쪽을 타는 검사를 다음에 세운다.
+
+
+## 🔴 **`run` 안의 주인공 갈래** — P-24b에서 못 타던 자리.
+##
+## ⚠ **앞서 세 번 빗나간 이유는 상대 팀이 `..._WAVES_2`였기 때문이다.**
+## 04는 2군을 `LEAGUE_*_FARM`으로 파생하므로 `World.teams_of("LEAGUE_KBL")`에
+## `_2`가 **아예 없다** — 짝이 서지 않았다. **다른 구단의 1군**을 쓰면 선다.
+##
+## ⚠ **흉내 내지 말고 `run_league` 안에서 찍어서 알아냈다** —
+## 손으로 짝 루프를 흉내 낸 계측이 세 번 다 틀렸다.
+func test_run_league가_주인공_갈래를_탄다() -> void:
+	var A: String = "TEAM_KBL_BUSAN_WAVES_1"
+	var B: String = "TEAM_KBL_CHANGWON_STARS_1"
+	var me: Dictionary = _pro("ME", 80.0, A, true)
+	me["contract_years"] = Trade.EXPIRING_YEARS
+
+	var mate: Dictionary = _pro("A1", 50.0, A)
+	mate["contract_years"] = 3
+	var prospect: Dictionary = _pro("B1", 66.0, B)
+	prospect["pro_service_years"] = Trade.PROSPECT_SERVICE
+	prospect["contract_years"] = 4
+	var mate2: Dictionary = _pro("B2", 52.0, B)
+
+	var s: Dictionary = {
+		"day": 300, "season_year": 2031, "seed": 7,
+		"protagonist": me, "pending": [], "mailbox": [], "schedule": [],
+		"world": {"rosters": {A: [me, mate], B: [prospect, mate2]}},
+	}
+	var r: Dictionary = TradeRunner.run_league(s, "LEAGUE_KBL")
+	assert_int(int(r["proposed"])).override_failure_message(
+		"제안이 안 섰다 — 계약 만료 선점 조건을 다시 본다").is_greater(0)
+	assert_bool(Pending.has(s, "trade")).override_failure_message(
+		"주인공이 낀 거래인데 안 물었다 — 조용히 팔려 간다").is_true()
+	assert_str(String(s["protagonist"]["team_id"])).override_failure_message(
+		"묻고서 벌써 옮겼다").is_equal(A)
+	assert_int(int(r["moved"])).override_failure_message(
+		"물었는데 사람이 움직였다").is_equal(0)
+
+
+## 받아오는 선수가 실제로 실린다 — `run` 경로에서도
+func test_run_league가_받는_선수를_싣는다() -> void:
+	var A: String = "TEAM_KBL_BUSAN_WAVES_1"
+	var B: String = "TEAM_KBL_CHANGWON_STARS_1"
+	var me: Dictionary = _pro("ME", 80.0, A, true)
+	me["contract_years"] = Trade.EXPIRING_YEARS
+	var prospect: Dictionary = _pro("B1", 66.0, B)
+	prospect["pro_service_years"] = Trade.PROSPECT_SERVICE
+	prospect["contract_years"] = 4
+
+	var s: Dictionary = {
+		"day": 300, "season_year": 2031, "seed": 7,
+		"protagonist": me, "pending": [], "mailbox": [], "schedule": [],
+		"world": {"rosters": {
+			A: [me, _pro("A1", 50.0, A)],
+			B: [prospect, _pro("B2", 52.0, B)]}},
+	}
+	TradeRunner.run_league(s, "LEAGUE_KBL")
+	var body: String = String(DecisionVm.build(s).get("body", ""))
+	assert_int(body.find("선수B1")).override_failure_message(
+		"받아오는 선수가 화면에 없다: %s" % body).is_greater(-1)

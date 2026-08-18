@@ -421,10 +421,18 @@ func test_independent_picks_go_to_the_independent_list() -> void:
 
 # ── FA 시장 ───────────────────────────────────────────────────
 
-## ⚠ **제안을 만드는 곳이 04에 없다.** 없는 선택지를 지어내지 않는다 —
-## 지금은 기다리는 길만 준다. 그래도 대기줄은 풀려야 한다
+## 🔴 **옛 약속을 갈아끼웠다** (P-27).
+##
+## 여기는 *"제안을 만드는 곳이 04에 없다 — 지금은 기다리는 길만 준다"*였다.
+## **이제 `FaOffers`가 만든다.** 옛 검사의 뜻은 둘이었는데 갈라서 옮긴다:
+##  · **제안이 없어도 대기줄은 풀린다** — 아래 그대로 산다
+##  · "본문에 '없습니다'" · "선택지가 `wait` 하나" — **이제 틀린 약속이다**
+##
+## ⚠ **제안이 정말 없는 상태를 만들어 본다** — 부를 팀이 없는 리그면
+## `FaOffers.generate`가 빈 배열을 낸다
 func test_an_empty_fa_market_still_lets_me_move_on() -> void:
-	var s: Dictionary = _state({"contract_years": 0})
+	var s: Dictionary = _state({"contract_years": 0,
+		"league_id": "LEAGUE_NONE", "team_id": "TEAM_NONE"})
 	Pending.push_once(s, {"type": "fa_market"})
 	var vm: Dictionary = DecisionVm.build(s)
 	assert_str(String(vm["body"])).contains("없습니다")
@@ -433,6 +441,22 @@ func test_an_empty_fa_market_still_lets_me_move_on() -> void:
 	assert_bool(DecisionVm.apply(s, "wait", 300)).is_true()
 	assert_bool(Pending.has(s, "fa_market")).override_failure_message(
 		"기다린다고 했는데 FA가 대기줄에 남았다").is_false()
+
+
+## 제안이 있으면 **고를 수 있어야 한다** — P-27이 붙인 자리
+func test_a_real_fa_market_offers_teams() -> void:
+	var s: Dictionary = _state({"contract_years": 0,
+		"league_id": "LEAGUE_KBL", "team_id": "TEAM_KBL_BUSAN_WAVES_1"})
+	Pending.push_once(s, {"type": "fa_market"})
+	var ids: Array = _ids(DecisionVm.build(s))
+	var picks: int = 0
+	for id in ids:
+		if String(id).begins_with("offer:"):
+			picks += 1
+	assert_int(picks).override_failure_message(
+		"FA 화면에 제안이 없다 — 기다리는 길뿐이다: %s" % str(ids)).is_greater(0)
+	assert_bool(ids.has("wait")).override_failure_message(
+		"기다리는 길이 사라졌다").is_true()
 
 
 ## 제안이 생기면 그걸 고를 수 있다 — 만드는 곳이 붙었을 때를 위해
