@@ -190,18 +190,56 @@ static func _fa(state: Dictionary, _a: Dictionary) -> Dictionary:
 	return _of("fa_market", "FA 시장", body, choices)
 
 
+## 진로 결과 — 02 `CareerResultsModal`(242) + `CareerResultModal`(133).
+##
+## 🔴 **04는 세 줄이었고 지명 결과가 통째로 빠져 있었다:**
+##  · `"대학 합격 N곳"` — **어디에 붙었는지 안 알려준다.** 바로 다음
+##    화면(`career_choice`)에서 골라야 하는데 이름이 없으면 고를 수가 없다
+##  · `"드래프트 신청이 받아들여졌습니다."` — **그건 신청 수리지 결과가
+##    아니다.** 몇 라운드에 어느 팀이 뽑았는지가 없었다. `results`에
+##    `drafted`·`draft_team_id`·`draft_round`·`draft_pick`이 다 있는데
+##    화면이 안 읽었다
+##
+## 02처럼 **칸을 나눠** 낸다 — 드래프트 · 대학 · 독립리그
 static func _results(state: Dictionary, _a: Dictionary) -> Dictionary:
 	var c: Dictionary = CareerDecision.of(state)
 	var r: Dictionary = c.get("results", {})
-	var lines: Array = []
+	var lines: Array[String] = []
+
+	# [드래프트]
+	lines.append("[드래프트]")
+	if bool(r.get("drafted", false)):
+		var pick: int = int(r.get("draft_pick", 0))
+		lines.append("  %s  %d라운드 %d순위" % [
+			_team(state, String(r.get("draft_team_id", ""))),
+			int(r.get("draft_round", 0)), pick])
+	elif bool(r.get("draft_applied", true)):
+		# ⚠ **"미지명"을 분명히 말한다.** 02도 그 자리를 빨갛게 낸다 —
+		# 아무 말이 없으면 신청을 안 한 것인지 떨어진 것인지 모른다
+		lines.append("  미지명")
+	else:
+		lines.append("  신청하지 않았습니다.")
+
+	# [대학 지원]
+	lines.append("")
+	lines.append("[대학 지원]")
 	var passed: Array = r.get("university_passed", [])
-	lines.append("대학 합격 %d곳" % passed.size() if not passed.is_empty() \
-		else "대학은 모두 불합격했습니다.")
+	if passed.is_empty():
+		lines.append("  전원 불합격")
+	else:
+		for t in passed:
+			lines.append("  %s 합격" % _team(state, String(t)))
+
+	# [독립리그 지원]
+	lines.append("")
+	lines.append("[독립리그 지원]")
 	var indie: Array = r.get("independent_passed", [])
-	if not indie.is_empty():
-		lines.append("독립리그 합격 %d곳" % indie.size())
-	if bool(r.get("draft_eligible", false)):
-		lines.append("드래프트 신청이 받아들여졌습니다.")
+	if indie.is_empty():
+		lines.append("  전원 불합격")
+	else:
+		for t in indie:
+			lines.append("  %s 합격" % _team(state, String(t)))
+
 	return _of("career_results", "진로 결과", "\n".join(lines),
 		[{"id": "ok", "label": "확인"}])
 

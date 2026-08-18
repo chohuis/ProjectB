@@ -179,7 +179,7 @@ func test_confirming_the_results_moves_to_the_choice() -> void:
 		"independent_passed": [], "draft_eligible": true}}
 	Pending.push_once(s, {"type": "career_results"})
 
-	assert_str(String(DecisionVm.build(s)["body"])).contains("대학 합격")
+	assert_str(String(DecisionVm.build(s)["body"])).contains("U1 합격")
 	assert_bool(DecisionVm.apply(s, "ok", 300)).is_true()
 	assert_bool(Pending.has(s, "career_results")).override_failure_message(
 		"확인했는데 결과가 대기줄에 남았다").is_false()
