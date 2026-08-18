@@ -313,6 +313,18 @@ func _build_my_status() -> void:
 			reg.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 			_me.add_child(reg)
 
+		# 연승·최근10 — 🔴 `Standings`가 내는데 아무 화면도 안 읽었다
+		var streak: String = String(rank.get("streak_label", ""))
+		if not streak.is_empty():
+			var st := Label.new()
+			st.text = "%s   최근 %s" % [streak, String(rank.get("last10_label", ""))]
+			st.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			# 연승은 초록, 연패는 빨강 — 한눈에 흐름이 보인다
+			st.add_theme_color_override("font_color",
+				AppTheme.OK if streak.ends_with("연승") else \
+				(AppTheme.BAD if streak.ends_with("연패") else AppTheme.TEXT_DIM))
+			_me.add_child(st)
+
 
 
 ## ⚠ **떼고 나서 곧바로 지운다.** `queue_free`는 다음 프레임까지 살아 있어서

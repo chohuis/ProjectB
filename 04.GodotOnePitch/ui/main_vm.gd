@@ -258,5 +258,25 @@ static func _my_rank(s: Dictionary) -> Dictionary:
 		# ⚠ **는 을 안 낸다** — 승률은 여기서 만든다.
 		# 처음에 있는 줄 알고 빈 문자열을 냈다(실측이 잡았다)
 		"pct_label": ("%.3f" % float(mine.get("win_pct", 0.0))).trim_prefix("0"),
+		# 🔴 **연승·최근10을 아무 화면도 안 읽었다**(형태 ①).
+		# `Standings`가 `streak`("W3")과 `last10`("WWLWL")을 내는데
+		# `ui/` 전체에서 그 키를 읽는 곳이 0이었다. 02는 우측 패널에 띄운다
+		"streak_label": _streak_label(String(mine.get("streak", ""))),
+		"last10_label": String(mine.get("last10", "")),
 		"region_label": region_label,
 	}
+
+## 연승·연패를 사람 말로 — 02도 "3연승"처럼 적는다.
+## 는 "W3"·"L2" 꼴로 낸다
+static func _streak_label(streak: String) -> String:
+	if streak.length() < 2:
+		return ""
+	var n: String = streak.substr(1)
+	match streak[0]:
+		"W":
+			return "%s연승" % n
+		"L":
+			return "%s연패" % n
+		"D":
+			return "%s무" % n
+	return ""

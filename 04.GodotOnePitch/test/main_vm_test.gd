@@ -380,3 +380,35 @@ func test_소속이_없으면_팀_id가_빈다() -> void:
 			"injury": null, "retired": false,
 			"eligibility_blocked": false}}))
 	assert_str(String(s["team_id"])).is_empty()
+
+
+## ⚠ **`Standings.from_schedule`은 연승·최근10을 안 낸다.**
+## `standings.gd`에 `streak`("W3")·`last10`("WWLWL")이 있지만 그건
+## **누적 갱신 경로**(`update_streak`)의 것이고, 04는 순위표를 **일정에서
+## 파생**한다(`from_schedule`) — 그 경로엔 없다.
+##
+## 🔴 **있는 줄 알고 키를 읽었다가 빈 값이 나왔다**(실측이 잡았다).
+## `from_schedule`이 그것도 세게 하는 것이 옳지만 그건 sim 변경이라
+## 따로 연다 — **지금은 값이 있으면 그리고, 없으면 안 그린다**
+func test_연승은_아직_그_경로에_없다() -> void:
+	var s: Dictionary = Fixtures.played_state(40)
+	s["protagonist"]["team_id"] = "TEAM_KBL_BUSAN_WAVES_1"
+	s["protagonist"]["league_id"] = "LEAGUE_KBL"
+	var rank: Dictionary = MainVm.build(s)["my_rank"]
+	# 순위·승패는 나온다
+	assert_str(String(rank["rank_label"])).contains("위 /")
+	# 연승은 아직 안 나온다 — **빈 줄을 지어내지 않는다**
+	assert_str(String(rank["streak_label"])).override_failure_message(
+		"연승이 나온다면 `from_schedule`이 바뀐 것이다 — 검사를 갱신한다") \
+		.is_empty()
+
+
+## 사람 말로 적는다 — 02도 "3연승"처럼 쓴다.
+## **값이 오면 바로 쓸 수 있게 해 둔다**
+func test_연승을_사람_말로_적는다() -> void:
+	assert_str(MainVm._streak_label("W3")).is_equal("3연승")
+	assert_str(MainVm._streak_label("L2")).is_equal("2연패")
+	assert_str(MainVm._streak_label("D1")).is_equal("1무")
+	# 빈 값·모르는 값은 안 적는다 — 지어낸 줄을 만들지 않는다
+	assert_str(MainVm._streak_label("")).is_empty()
+	assert_str(MainVm._streak_label("X9")).is_empty()
