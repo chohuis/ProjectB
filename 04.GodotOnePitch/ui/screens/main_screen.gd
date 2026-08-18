@@ -275,6 +275,31 @@ func _build_my_status() -> void:
 		String(_vm.get("fatigue_zone", "")),
 		AppTheme.BAD if f >= 80 else (AppTheme.WARN if f >= 70 else AppTheme.OK))
 
+	# 내 팀 순위 — U-4. **02는 우측 패널에 늘 띄운다.**
+	# 리그 탭을 열어야만 순위를 아는 건 그 값을 숨긴 것과 같다
+	var rank: Dictionary = _vm.get("my_rank", {})
+	if not rank.is_empty():
+		var head := Label.new()
+		head.text = String(rank["rank_label"])
+		# 소속팀 색으로 — 내 팀 이야기라는 것이 한눈에 보인다 (U-2)
+		head.add_theme_color_override("font_color", AppTheme.TEAM_GOLD)
+		_me.add_child(head)
+
+		var rec := Label.new()
+		rec.text = "%s  %s" % [String(rank["record_label"]),
+			String(rank["pct_label"])]
+		rec.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		rec.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		_me.add_child(rec)
+
+		if not String(rank["region_label"]).is_empty():
+			var reg := Label.new()
+			reg.text = String(rank["region_label"])
+			reg.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			reg.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+			_me.add_child(reg)
+
+
 
 ## ⚠ **떼고 나서 곧바로 지운다.** `queue_free`는 다음 프레임까지 살아 있어서
 ## 같은 프레임에 여러 번 다시 그리면 그만큼 쌓인다 — 실측으로 검사 한 번에

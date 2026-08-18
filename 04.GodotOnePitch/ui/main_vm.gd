@@ -105,6 +105,8 @@ static func build(s: Dictionary) -> Dictionary:
 		"fatigue_zone": String(TrainingVm.zone_of(
 			float(p.get("fatigue", 0.0)))["label"]),
 
+		# 내 팀 순위 — U-4. 02는 우측 패널에 늘 띄운다
+		"my_rank": _my_rank(s),
 		"next_game_in": days_to,
 		"next_game_label": _start_label(days_to),
 
@@ -194,3 +196,65 @@ static func _tabs(unread: int, undecided: int) -> Array:
 			# 화면이 "어디가 나이고 어디가 세계인가"를 다시 판정하지 않는다
 			"break_after": t["id"] == NAV_BREAK_AFTER})
 	return out
+
+
+## 우측 패널의 내 팀 순위 — U-4. 02 `RightPanel`이 늘 띄운다.
+##
+## 🔴 **04 우측 패널엔 순위가 없었다.** 리그 탭을 열어야만 내 팀이 몇 위인지
+## 알 수 있었다 — 02는 그걸 **항상 보이는 자리**에 뒀다.
+##
+## ⚠ **04에 다 있는 값이다** — 순위는 `Standings.from_schedule`이 일정에서
+## 파생하고, 권역은 `Tournament.regions_of`가 구장에서 낸다.
+##
+## ⚠ **아직 안 치렀으면 안 만든다** — 0승 0패를 띄우면 꼴찌로 보인다
+static func _my_rank(s: Dictionary) -> Dictionary:
+	var p: Dictionary = s.get("protagonist", {})
+	var team: String = String(p.get("team_id", ""))
+	var league: String = String(p.get("league_id", ""))
+	if team.is_empty() or league.is_empty():
+		return {}
+
+	var rows: Array = Standings.from_schedule(s.get("schedule", []), league)
+	if rows.is_empty():
+		return {}
+
+	var rank: int = 0
+	var mine: Dictionary = {}
+	for i in rows.size():
+		if String(rows[i].get("team_id", "")) == team:
+			rank = i + 1
+			mine = rows[i]
+	if rank <= 0:
+		return {}
+
+	# 권역 순위 — 고교는 그게 라이벌이다(02도 같이 띄운다)
+	# ⚠ **권역은 고교만이다.** 프로는 구장이 팀마다 하나라 "1위 / 1팀"이 뜬다
+	# — 실측이 잡았다. 02도 권역을 고교에만 쓴다
+	var region_label: String = ""
+	var regions: Dictionary = {}
+	if league == "LEAGUE_HIGHSCHOOL":
+		regions = Tournament.regions_of(league)
+	for stadium_id in regions:
+		if not (regions[stadium_id] as Array).has(team):
+			continue
+		var in_region: int = 0
+		var my_place: int = 0
+		for row in rows:
+			if not (regions[stadium_id] as Array).has(String(row["team_id"])):
+				continue
+			in_region += 1
+			if String(row["team_id"]) == team:
+				my_place = in_region
+		if my_place > 0:
+			region_label = "%s %d위 / %d팀" % [ParkVm.name_of(String(stadium_id)),
+				my_place, in_region]
+
+	return {
+		"rank_label": "%d위 / %d팀" % [rank, rows.size()],
+		"record_label": "%d승 %d무 %d패" % [int(mine.get("wins", 0)),
+			int(mine.get("draws", 0)), int(mine.get("losses", 0))],
+		# ⚠ **는 을 안 낸다** — 승률은 여기서 만든다.
+		# 처음에 있는 줄 알고 빈 문자열을 냈다(실측이 잡았다)
+		"pct_label": ("%.3f" % float(mine.get("win_pct", 0.0))).trim_prefix("0"),
+		"region_label": region_label,
+	}

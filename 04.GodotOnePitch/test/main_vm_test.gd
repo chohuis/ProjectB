@@ -318,3 +318,47 @@ func test_only_the_news_tab_carries_the_unread_badge() -> void:
 			assert_int(t["badge"]).override_failure_message(
 				"%s 탭에 알림이 달렸다" % t["id"]).is_equal(0)
 	assert_bool(seen).is_true()
+
+
+# ── 내 팀 순위 (U-4) ─────────────────────────────────────────────
+
+## 🔴 **04 우측 패널엔 순위가 없었다** — 리그 탭을 열어야만 알 수 있었다.
+## 02는 늘 보이는 자리에 둔다
+func test_우측_패널이_내_팀_순위를_낸다() -> void:
+	var s: Dictionary = Fixtures.played_state(40)
+	s["protagonist"]["team_id"] = "TEAM_KBL_BUSAN_WAVES_1"
+	s["protagonist"]["league_id"] = "LEAGUE_KBL"
+	var rank: Dictionary = MainVm.build(s)["my_rank"]
+	assert_bool(rank.is_empty()).override_failure_message(
+		"경기를 치렀는데 순위가 안 나온다").is_false()
+	assert_str(String(rank["rank_label"])).contains("위 /")
+	assert_str(String(rank["record_label"])).contains("승")
+	assert_str(String(rank["pct_label"])).is_not_empty()
+
+
+## ⚠ **아직 안 치렀으면 안 만든다** — 0승 0패를 띄우면 꼴찌로 보인다
+func test_안_치렀으면_순위가_없다() -> void:
+	var s: Dictionary = {"day": 1, "season_days": 350, "season_year": 2027,
+		"schedule": [], "pending": [], "mailbox": [],
+		"protagonist": {"team_id": "TEAM_KBL_BUSAN_WAVES_1",
+			"league_id": "LEAGUE_KBL", "condition": 80.0, "injury": null,
+			"retired": false, "eligibility_blocked": false}}
+	assert_bool((MainVm.build(s)["my_rank"] as Dictionary).is_empty()).is_true()
+
+
+## 고교는 권역 순위도 같이 낸다 — 거기가 라이벌이다
+func test_고교는_권역_순위도_낸다() -> void:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var n: int = 0
+	for g in s["schedule"]:
+		if String(g.get("league_id", "")) != "LEAGUE_HIGHSCHOOL":
+			continue
+		GameSim.play(g, s)
+		n += 1
+		if n >= 60:
+			break
+	var rank: Dictionary = MainVm.build(s)["my_rank"]
+	assert_bool(rank.is_empty()).is_false()
+	assert_str(String(rank["region_label"])).override_failure_message(
+		"고교인데 권역 순위가 없다").contains("구장")
