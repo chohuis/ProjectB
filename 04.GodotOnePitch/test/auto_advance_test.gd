@@ -48,11 +48,29 @@ func test_a_trade_stops_the_world() -> void:
 		"트레이드 통보가 조용히 버려진다 — 팀이 그대로 남는다").is_true()
 
 
-## 경기·소식은 대신 답할 수 있다 — 그건 결과가 상태에 남는 결정이 아니다
+## 경기·소식은 대신 답할 수 있다 — 그건 결과가 상태에 남는 결정이 아니다.
+##
+## 🔴 **`injury_treatment`를 여기서 뺐다** (P-30).
+##
+## 이 목록이 쓰인 때(`b3f7f4cd0`)에는 **그런 갈래가 아예 없었다** —
+## "알림성"의 예로 이름만 적어 둔 것이다. 그런데 P-30에서 실제로 만들고 보니
+## **치료 선택은 결과가 상태에 남는다**: 후유증(제구 -3 vs -1) · 회복 주차 ·
+## 치료비 · 스테로이드의 재발 확률이 다 갈린다.
+##
+## ⚠ **안 멈추면 자동 진행이 그냥 지나가고 물음은 대기줄에 남는다** —
+## `retirement_ask`가 04에서 딱 그 상태였다. **아래 검사가 그걸 못 박는다.**
 func test_a_routine_notice_does_not_stop_the_world() -> void:
-	for t in ["game", "message", "event", "injury_treatment"]:
+	for t in ["game", "message", "event"]:
 		assert_bool(AutoAdvance.is_stopping(t)).override_failure_message(
 			"%s 때문에 자동 진행이 멈춘다" % t).is_false()
+
+
+## ⚠ **치료 선택은 멈춘다.** 후유증·비용·재발 확률이 갈리는 결정이다
+func test_an_injury_treatment_stops_the_world() -> void:
+	assert_bool(AutoAdvance.is_stopping("injury_treatment")) \
+		.override_failure_message(
+			"치료 선택을 자동 진행이 지나간다 — 물음이 대기줄에 영영 남는다") \
+		.is_true()
 
 
 ## ⚠ **알림 뒤에 숨은 결정을 찾는다.** 줄의 맨 앞만 보면 경기 뒤에 있는
