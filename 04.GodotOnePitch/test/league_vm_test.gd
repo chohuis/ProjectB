@@ -386,3 +386,119 @@ func test_그_리그_선수만_든다() -> void:
 	for r in rows:
 		assert_bool(names.has(String(r["team"]))).override_failure_message(
 			"대학 순위에 %s 소속 %s가 있다" % [r["team"], r["name"]]).is_true()
+
+
+# ── 포스트시즌 · 대회 ────────────────────────────────────────────
+
+## 시리즈 한 칸 — `Bracket`이 쓰는 모양 그대로
+func _series(id: String, round_label: String, home: String, away: String,
+		hw: int = 0, aw: int = 0, winner: String = "",
+		next_id: String = "") -> Dictionary:
+	return {"id": id, "round": round_label, "best_of": 5,
+		"home_team_id": home, "away_team_id": away,
+		"home_wins": hw, "away_wins": aw, "winner": winner,
+		"next_series_id": next_id, "next_series_slot": "home"}
+
+
+func _ps_state(series: Array, league: String = "LEAGUE_KBL") -> Dictionary:
+	return {"season_year": 2027, "day": 100,
+		"protagonist": {"team_id": "A", "league_id": league},
+		"schedule": [], "league_tab": league,
+		"team_names": {"A": "제주", "B": "서울", "C": "부산"},
+		"postseason": {league: series}}
+
+
+## 🔴 **`Postseason.run_background`가 시즌말마다 도는데 볼 자리가 없었다**
+## (형태 ③). `Bracket.to_rounds`가 화면용 모양까지 내주는데 아무도 안 불렀다
+func test_포스트시즌_대진이_나온다() -> void:
+	var ps: Dictionary = LeagueVm.build(_ps_state([
+		_series("S1", "플레이오프", "B", "C", 3, 1, "B", "S2"),
+		_series("S2", "한국시리즈", "A", "B", 4, 2, "A"),
+	]))["postseason"]
+	assert_bool(bool(ps["has"])).is_true()
+	# 먼저 하는 라운드가 앞이다
+	var labels: Array = []
+	for r in ps["rounds"]:
+		labels.append(String(r["label"]))
+	assert_array(labels).is_equal(["플레이오프", "한국시리즈"])
+	assert_str(String(ps["champion"])).override_failure_message(
+		"우승 팀이 이름으로 안 나온다: %s" % ps["champion"]).is_equal("제주")
+
+
+## 아직 안 붙은 시리즈는 "대기"다 — 0-0으로 찍으면 이미 진 것처럼 보인다
+func test_안_붙은_시리즈는_대기다() -> void:
+	var ps: Dictionary = LeagueVm.build(_ps_state([
+		_series("S1", "플레이오프", "B", "", 0, 0, ""),
+	]))["postseason"]
+	var row: Dictionary = ps["rounds"][0]["rows"][0]
+	assert_str(String(row["value"])).is_equal("대기")
+	assert_bool(bool(row["done"])).is_false()
+
+
+## 내 팀이 낀 시리즈는 표시된다 — 그게 이 표를 여는 이유다
+func test_내_시리즈를_가른다() -> void:
+	var ps: Dictionary = LeagueVm.build(_ps_state([
+		_series("S1", "플레이오프", "B", "C", 3, 0, "B", "S2"),
+		_series("S2", "한국시리즈", "A", "B", 1, 2, ""),
+	]))["postseason"]
+	var mine: int = 0
+	for r in ps["rounds"]:
+		for row in r["rows"]:
+			if bool(row["is_mine"]):
+				mine += 1
+	assert_int(mine).override_failure_message(
+		"내 팀이 낀 시리즈를 안 가른다").is_equal(1)
+
+
+## 시리즈 형식을 적는다 — 단판인지 5전 3선승인지가 결과를 읽는 기준이다
+func test_시리즈_형식을_적는다() -> void:
+	var ps: Dictionary = LeagueVm.build(_ps_state([
+		_series("S1", "한국시리즈", "A", "B", 4, 2, "A"),
+	]))["postseason"]
+	assert_str(String(ps["rounds"][0]["rows"][0]["note"])).is_equal("5전 3선승")
+
+
+## 포스트시즌이 없으면 왜 없는지 말한다 — 빈 칸은 고장으로 보인다
+func test_포스트시즌이_없으면_그렇게_말한다() -> void:
+	var ps: Dictionary = LeagueVm.build(_ps_state([]))["postseason"]
+	assert_bool(bool(ps["has"])).is_false()
+	assert_str(String(ps["note"])).is_not_empty()
+
+
+## 🔴 **`tournament_log`에 쌓이는데 읽는 곳이 없었다**
+func test_대회_기록이_나온다() -> void:
+	var s: Dictionary = _ps_state([])
+	s["tournament_log"] = [
+		{"tournament_id": "T1", "name": "봄철리그", "season_year": 2026,
+			"champion": "B", "protagonist_reached": "8강"},
+		{"tournament_id": "T2", "name": "황금사자기", "season_year": 2027,
+			"champion": "A", "protagonist_reached": "우승"},
+	]
+	var rows: Array = LeagueVm.build(s)["tournaments"]["rows"]
+	assert_int(rows.size()).is_equal(2)
+	# 최근 것이 위로
+	assert_str(String(rows[0]["label"])).contains("2027")
+	assert_str(String(rows[0]["label"])).contains("황금사자기")
+	assert_str(String(rows[0]["value"])).contains("제주")
+	# ⚠ **우리가 어디까지 갔는지가 요점이다** — 우승 팀만 적으면 남의 기록이다
+	assert_str(String(rows[0]["note"])).contains("우승")
+	assert_str(String(rows[1]["note"])).contains("8강")
+
+
+## 기록이 없으면 그렇게 말한다
+func test_대회_기록이_없으면_그렇게_말한다() -> void:
+	var t: Dictionary = LeagueVm.build(_ps_state([]))["tournaments"]
+	assert_int((t["rows"] as Array).size()).is_equal(0)
+	assert_str(String(t["empty_note"])).is_not_empty()
+
+
+## 길어도 몇 줄만 — 20해를 돌리면 표가 화면을 넘는다
+func test_대회_기록은_몇_줄만() -> void:
+	var s: Dictionary = _ps_state([])
+	var log: Array = []
+	for i in 30:
+		log.append({"tournament_id": "T%d" % i, "name": "대회",
+			"season_year": 2000 + i, "champion": "A", "protagonist_reached": ""})
+	s["tournament_log"] = log
+	assert_int((LeagueVm.build(s)["tournaments"]["rows"] as Array).size()) \
+		.is_equal(LeagueVm.TOURNAMENT_ROWS)

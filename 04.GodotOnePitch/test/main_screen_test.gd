@@ -511,3 +511,50 @@ func test_space_starts_the_game_on_a_game_day() -> void:
 	s.match_requested.connect(func() -> void: opened.append(1))
 	assert_bool(s.handle_key(KEY_SPACE, false)).is_true()
 	assert_int(opened.size()).is_equal(1)
+
+
+# ── 포스트시즌 · 대회 절이 화면에 붙나 ──────────────────────────
+
+func _ps_vm(over: Dictionary = {}) -> Dictionary:
+	var s: Dictionary = {"day": 50, "schedule": [],
+		"protagonist": {"team_id": "TEAM_A", "league_id": "LEAGUE_KBL"},
+		"team_names": {"TEAM_A": "제주", "TEAM_B": "서울"},
+		"league_tab": "LEAGUE_KBL"}
+	s.merge(over, true)
+	return _vm(s)
+
+
+## 🔴 **뷰모델에 실어도 화면이 안 그리면 없는 것과 같다**(형태 ①)
+func test_화면이_포스트시즌을_그린다() -> void:
+	var s := await _mount(_ps_vm({"postseason": {"LEAGUE_KBL": [
+		{"id": "S1", "round": "한국시리즈", "best_of": 7,
+			"home_team_id": "TEAM_A", "away_team_id": "TEAM_B",
+			"home_wins": 4, "away_wins": 1, "winner": "TEAM_A",
+			"next_series_id": "", "next_series_slot": ""}]}}))
+	await _open_league(s)
+	var joined: String = "\n".join(_texts(s))
+	assert_str(joined).override_failure_message(
+		"포스트시즌 절이 화면에 없다").contains("포스트시즌")
+	assert_str(joined).contains("한국시리즈")
+	assert_str(joined).contains("우승  제주")
+	assert_str(joined).contains("4 - 1")
+
+
+## 대회 기록도 화면에 나온다
+func test_화면이_대회_기록을_그린다() -> void:
+	var s := await _mount(_ps_vm({"tournament_log": [
+		{"tournament_id": "T1", "name": "황금사자기", "season_year": 2027,
+			"champion": "TEAM_A", "protagonist_reached": "4강"}]}))
+	await _open_league(s)
+	var joined: String = "\n".join(_texts(s))
+	assert_str(joined).contains("황금사자기")
+	assert_str(joined).contains("4강")
+
+
+## 아직 없으면 왜 없는지 말한다 — 빈 칸은 고장으로 보인다
+func test_없으면_왜_없는지_말한다() -> void:
+	var s := await _mount(_ps_vm())
+	await _open_league(s)
+	var joined: String = "\n".join(_texts(s))
+	assert_str(joined).contains("아직 포스트시즌이 없습니다")
+	assert_str(joined).contains("아직 끝난 대회가 없습니다")

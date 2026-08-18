@@ -401,7 +401,6 @@ func _build_schedule() -> void:
 		empty.text = "아직 잡힌 경기가 없습니다"
 		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		_tab_host.add_child(empty)
-		_build_leaderboard(vm)
 		return
 
 	var box: VBoxContainer = _list_box()
@@ -501,6 +500,8 @@ func _build_league() -> void:
 		empty.text = "아직 치른 경기가 없습니다"
 		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		_tab_host.add_child(empty)
+		_build_leaderboard(vm)
+		_build_league_extras(vm)
 		return
 
 	var box: VBoxContainer = _list_box(false)
@@ -514,6 +515,7 @@ func _build_league() -> void:
 		row.pressed.connect(func() -> void: team_selected.emit(tid))
 
 	_build_leaderboard(vm)
+	_build_league_extras(vm)
 
 
 ## 소식 탭. 거르기 칩은 **누르면 루트에 알린다** — 어느 거르기가 켜졌는지는
@@ -746,3 +748,81 @@ func _build_leaderboard(vm: Dictionary) -> void:
 		value.add_theme_color_override("font_color",
 			AppTheme.ACCENT if bool(r["is_mine"]) else AppTheme.TEXT)
 		row.add_child(value)
+
+
+## 포스트시즌 · 대회 — 02 `LeaguePage`의 셋째·넷째 탭.
+##
+## 🔴 **엔진은 시즌말마다 도는데 볼 자리가 없었다** — 소식으로 한 번
+## 흘러가고 끝이었다. 리그 탭에 이어 붙인다(같은 무대를 보는 자리다)
+func _build_league_extras(vm: Dictionary) -> void:
+	var ps: Dictionary = vm.get("postseason", {})
+	_section_title("포스트시즌")
+	if not bool(ps.get("has", false)):
+		_muted(String(ps.get("note", "")))
+	else:
+		if not String(ps.get("champion", "")).is_empty():
+			var champ := Label.new()
+			champ.text = "우승  %s" % String(ps["champion"])
+			champ.add_theme_color_override("font_color", AppTheme.ACCENT)
+			_tab_host.add_child(champ)
+		for r in ps.get("rounds", []):
+			var head := Label.new()
+			head.text = String(r["label"])
+			head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+			head.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+			_tab_host.add_child(head)
+			for row in r["rows"]:
+				var line := HBoxContainer.new()
+				line.add_theme_constant_override("separation", 8)
+				_tab_host.add_child(line)
+
+				var left := Label.new()
+				left.text = "%s  %s" % [String(row["label"]), String(row["note"])]
+				left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				# 내 팀이 낀 시리즈가 먼저 보여야 한다
+				left.add_theme_color_override("font_color",
+					AppTheme.ACCENT if bool(row["is_mine"]) else AppTheme.TEXT)
+				line.add_child(left)
+
+				var right := Label.new()
+				right.text = String(row["value"])
+				right.add_theme_color_override("font_color",
+					AppTheme.TEXT if bool(row["done"]) else AppTheme.TEXT_DIM)
+				line.add_child(right)
+
+	var tour: Dictionary = vm.get("tournaments", {})
+	_section_title("대회")
+	var rows: Array = tour.get("rows", [])
+	if rows.is_empty():
+		_muted(String(tour.get("empty_note", "")))
+		return
+	for row in rows:
+		var line := HBoxContainer.new()
+		line.add_theme_constant_override("separation", 8)
+		_tab_host.add_child(line)
+
+		var left := Label.new()
+		left.text = String(row["label"])
+		left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		line.add_child(left)
+
+		var right := Label.new()
+		# 우리가 어디까지 갔는지가 요점이다 — 우승 팀만 적으면 남의 기록이다
+		right.text = "%s   %s" % [String(row["value"]), String(row["note"])]
+		right.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		line.add_child(right)
+
+
+func _section_title(text: String) -> void:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	l.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	_tab_host.add_child(l)
+
+
+func _muted(text: String) -> void:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+	_tab_host.add_child(l)

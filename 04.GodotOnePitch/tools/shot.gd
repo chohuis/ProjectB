@@ -273,6 +273,29 @@ func _build(which: String) -> Control:
 			lg.set_state(Fixtures.played_state(40))
 			lg.ready.connect(func() -> void: lg.screen()._on_tab(3), CONNECT_ONE_SHOT)
 			return lg
+		"league-postseason":
+			# 포스트시즌·대회 절을 눈으로 본다.
+			#
+			# ⚠ **대진을 손으로 안 만든다** — `Postseason.build`+`resolve_others`가
+			# 게임에서 쓰는 그 함수다. 손으로 만들면 라운드 이름·시드가 실제와
+			# 달라지고, 화면만 보고 "됐다"고 믿게 된다
+			var lp: AppRoot = APP.instantiate()
+			var lps := Fixtures.played_state(60)
+			var standings: Array = Standings.from_schedule(lps["schedule"],
+				"LEAGUE_KBL")
+			var bracket: Array = Postseason.build("LEAGUE_KBL", standings)
+			var prng := RandomNumberGenerator.new()
+			prng.seed = 20270101
+			Postseason.resolve_others(bracket, "", prng)
+			lps["postseason"] = {"LEAGUE_KBL": bracket}
+			lps["tournament_log"] = [
+				{"tournament_id": "T1", "name": "황금사자기", "season_year": 2027,
+					"champion": String(World.teams_of("LEAGUE_KBL")[0]["id"]),
+					"protagonist_reached": "4강"}]
+			lp.set_state(lps)
+			lp.ready.connect(func() -> void: lp.screen()._on_tab(3),
+				CONNECT_ONE_SHOT)
+			return lp
 		"team":
 			var tm: AppRoot = APP.instantiate()
 			tm.set_state(World.new_game({"seed": 20270101, "season_year": 2027,

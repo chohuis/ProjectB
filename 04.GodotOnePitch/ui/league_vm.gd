@@ -52,6 +52,8 @@ static func build(s: Dictionary) -> Dictionary:
 		"leagues": leagues,
 		"rows": rows,
 		"leaderboard": _leaderboard(s, league_id),
+		"postseason": _postseason(s, league_id),
+		"tournaments": _tournaments(s),
 	}
 
 
@@ -71,6 +73,9 @@ const STAT_SIDES: Array[Dictionary] = [
 
 ## 한 부문에 몇 명까지 — 02는 표 전체를 스크롤하지만 04는 카드다
 const STAT_ROWS: int = 10
+
+## 대회 기록을 몇 줄까지 — 최근 것부터
+const TOURNAMENT_ROWS: int = 8
 
 
 ## 그 리그 선수들의 시즌 성적. **로스터에서 리그를 가른다** —
@@ -152,3 +157,79 @@ static func _leaderboard(s: Dictionary, league_id: String) -> Dictionary:
 		"note": "비율 부문은 규정 이닝·타석을 넘은 선수만 듭니다" \
 			if String(cat.get("kind", "")) == "rate" else "",
 	}
+
+
+## 포스트시즌 — 02 `LeaguePage`의 네 번째 탭.
+##
+## 🔴 **`Postseason.run_background`가 시즌말마다 도는데 화면이 없었다.**
+## `state["postseason"]`에 리그별 대진이 쌓이고 `Bracket.to_rounds`가
+## **화면용 모양까지 내주는데 아무도 안 불렀다**(형태 ③).
+##
+## ⚠ **끝난 시리즈만 결과를 적는다.** 진행 전이면 "대기"라고 적는다 —
+## 0-0으로 찍으면 이미 진 것처럼 보인다
+static func _postseason(s: Dictionary, league_id: String) -> Dictionary:
+	var all: Dictionary = s.get("postseason", {})
+	var series: Array = all.get(league_id, [])
+	if series.is_empty():
+		return {"has": false, "note": "아직 포스트시즌이 없습니다", "rounds": []}
+
+	var names: Dictionary = s.get("team_names", {})
+	var my_team: String = String(s.get("protagonist", {}).get("team_id", ""))
+	var rounds: Array = []
+	for r in Bracket.to_rounds(series):
+		var rows: Array = []
+		for x in r["series"]:
+			var home: String = String(x.get("home_team_id", ""))
+			var away: String = String(x.get("away_team_id", ""))
+			var state_id: String = Bracket.series_state(x)
+			var right: String = "대기"
+			if state_id != "waiting":
+				right = "%d - %d" % [int(x.get("home_wins", 0)),
+					int(x.get("away_wins", 0))]
+			rows.append({
+				"label": "%s  vs  %s" % [String(names.get(home, home)),
+					String(names.get(away, away))],
+				"value": right,
+				"note": Bracket.best_of_label(int(x.get("best_of", 1))),
+				"done": state_id == "done",
+				"winner": String(names.get(String(x.get("winner", "")),
+					String(x.get("winner", "")))),
+				"is_mine": home == my_team or away == my_team,
+			})
+		rounds.append({"label": String(r["label"]), "rows": rows})
+
+	var champ: String = Bracket.champion(series)
+	return {
+		"has": true,
+		"note": "",
+		"rounds": rounds,
+		# 우승이 안 났으면 그 줄을 안 만든다 — 빈 이름이 뜨면 고장으로 보인다
+		"champion": String(names.get(champ, champ)) if not champ.is_empty() else "",
+	}
+
+
+## 대회 — 02 `LeaguePage`의 세 번째 탭.
+##
+## 🔴 **`tournament_log`에 우승·내 성적이 쌓이는데 읽는 곳이 없었다.**
+## 소식으로 한 번 흘러가고 끝이라, 지난 대회를 되짚을 자리가 없었다.
+##
+## ⚠ **내가 어디까지 갔는지가 요점이다** — 우승 팀만 적으면 남의 기록이다
+static func _tournaments(s: Dictionary) -> Dictionary:
+	var log: Array = s.get("tournament_log", [])
+	var names: Dictionary = s.get("team_names", {})
+	var rows: Array = []
+	# 최근 것을 위로
+	for i in range(log.size() - 1, -1, -1):
+		var e: Dictionary = log[i]
+		var champ: String = String(e.get("champion", ""))
+		var reached: String = String(e.get("protagonist_reached", ""))
+		rows.append({
+			"label": "%d년 %s" % [int(e.get("season_year", 0)),
+				String(e.get("name", ""))],
+			"value": "우승 %s" % String(names.get(champ, champ)),
+			"note": "우리 %s" % reached if not reached.is_empty() else "",
+		})
+		if rows.size() >= TOURNAMENT_ROWS:
+			break
+	return {"rows": rows,
+		"empty_note": "아직 끝난 대회가 없습니다" if rows.is_empty() else ""}
