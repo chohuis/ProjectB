@@ -151,6 +151,59 @@ func test_시즌_마지막_주에만_돈다() -> void:
 		"6월인데 NPC가 입대했다").is_equal(before)
 
 
+## 🔴 **순위 백분위가 뒤집혀 있었다.** 02 `game.ts:2725`는 OVR을 오름차순으로
+## 늘어놓고 `idx / len`을 쓴다 — **못하는 사람이 0에 가깝다.** 04는 내림차순에
+## 같은 식을 써서 **리그 최고 선수가 조기 입대 확률이 제일 높았다.**
+##
+## ⚠ **판정 함수만 부르면 안 잡힌다** — 뒤집힌 건 `run`이 백분위를 만드는
+## 자리다. 끝까지 굴려서 **누가 갔나**를 본다
+func test_잘하는_사람이_덜_간다() -> void:
+	var rosters: Dictionary = {}
+	for i in 60:
+		rosters["T%d" % i] = [{
+			# ⚠ **나이를 24로 둔다 — 순위 말고는 아무 항도 안 걸리게.**
+			# 27로 두면 나이 항(0.20)이 확률을 받쳐 줘서 순위 항을 통째로
+			# 죽여도(중립 1.0) 사람이 계속 입대한다 — 변이가 안 잡혔다.
+			# 순위만 남기면 그 항이 죽는 순간 **아무도 안 간다**
+			"id": "N%d" % i, "age": 24, "career_stage": "pro", "position": "SP",
+			"military_status": Military.STATUS_UNSERVED,
+			# OVR 20~79. 아래쪽이 더 많이 가야 한다
+			"pitching": {"ovr": 20.0 + float(i)}, "contract_years": 3,
+		}]
+	var s: Dictionary = {"protagonist": {"id": "ME", "is_protagonist": true},
+		"season_year": 2033, "seed": 11, "world": {"rosters": rosters}}
+	NpcMilitary.run(s, Calendar.DAYS_PER_SEASON)
+
+	# ⚠ **개수로 재면 안 된다.** 체육부대가 상위 13명을 먼저 데려가서
+	# 두 무리 크기가 달라진다 — 큰 쪽이 그냥 이긴다. 실제로 이 픽스처가
+	# 뒤집힌 코드도 통과시켰다(변이 0/2). **평균으로 잰다**
+	var gone: Array[float] = []
+	var stay: Array[float] = []
+	for i in 60:
+		var q: Dictionary = s["world"]["rosters"]["T%d" % i][0]
+		# 체육부대는 잘하는 쪽이 뽑히는 게 맞다 — 그쪽은 아예 뺀다
+		if String(q.get("military_unit", "")) == "sports" \
+				or String(q.get("military_served_unit", "")) == "sports":
+			continue
+		var ovr: float = 20.0 + float(i)
+		if String(q.get("military_status", "")) == Military.STATUS_UNSERVED:
+			stay.append(ovr)
+		else:
+			gone.append(ovr)
+
+	assert_int(gone.size()).override_failure_message("아무도 안 갔다") \
+		.is_greater(0)
+	var m_gone: float = 0.0
+	for v in gone:
+		m_gone += v / float(gone.size())
+	var m_stay: float = 0.0
+	for v in stay:
+		m_stay += v / float(stay.size())
+	assert_float(m_gone).override_failure_message(
+		"간 사람 평균 OVR %.1f · 남은 사람 %.1f — 잘하는 쪽이 더 갔다"
+		% [m_gone, m_stay]).is_less(m_stay)
+
+
 ## 배선의 끝 — 주간 처리가 부르나
 func test_주간_처리가_부른다() -> void:
 	var src := FileAccess.get_file_as_string("res://sim/week_runner.gd")

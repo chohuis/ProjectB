@@ -188,14 +188,26 @@ static func run(state: Dictionary, at_day: int) -> int:
 		var r := RandomNumberGenerator.new()
 		r.seed = Rng.mix(["npc_enlist", seed_value, year,
 			String(q.get("id", ""))])
-		# 순위 백분위 — 0이 최상위다
-		var pct: float = float(i) / float(maxi(ranked.size(), 1))
+		# 🔴 **순위 백분위는 0이 최하위다. 04는 이게 뒤집혀 있었다.**
+		#
+		# 02 `game.ts:2725`는 OVR을 **오름차순**(`a - b`)으로 늘어놓고
+		# `idx / len`을 쓴다 — 못하는 사람이 0에 가깝다. 그래야
+		# `rank < RANK_LOW → +0.35`가 **주전 경쟁에서 밀린 사람**에게 붙는다
+		# (`npc_military.gd`의 그 상수 주석도 "주전 경쟁에서 밀림"이다).
+		#
+		# 04는 내림차순으로 세워 놓고 같은 식을 썼다. 그래서 **리그 최고
+		# 선수가 조기 입대 확률이 제일 높았다.** 실측에서 체육부대 커트라인이
+		# 91 → 70으로 단조 감소한 원인이 이것이다 — 상위권이 계속 빠졌다.
+		# 처음엔 "세계가 마르는 쪽"으로 보고 D-3에 미뤘는데 틀린 판단이었다
+		var pct: float = float(ranked.size() - 1 - i) / float(maxi(ranked.size(), 1))
 		var prob: float = early_enlist_prob({
 			"age": int(q.get("age", 0)),
 			"ovr_rank_pct": pct,
-			# ⚠ **출장 시간이 04엔 아직 없다.** 없는 값을 지어내는 대신
-			# 중립(1.0)으로 두어 **그 항이 안 걸리게** 한다 — 0으로 두면
-			# 전원이 벤치로 잡혀 확률이 통째로 부푼다. ⬜ P-18b
+			# ✅ **02도 상수를 박아 넣는다** — `game.ts:2740`이
+			# `playingTimePct: 0.5`다. 0.5는 `TIME_MID`(0.35)보다 커서
+			# **02에서도 이 항은 한 번도 안 걸린다.** 04의 중립 1.0과
+			# 결과가 같으니 축을 만들 필요가 없다 (P-18b 닫음).
+			# ⚠ 0으로 두면 전원이 벤치로 잡혀 확률이 통째로 부푼다
 			"playing_time_pct": 1.0,
 			"contract_years_left": int(q.get("contract_years", 99)),
 		})

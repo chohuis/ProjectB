@@ -212,19 +212,44 @@ func test_상무에_간_사람은_일반병이_안_된다() -> void:
 				"복무 중인데 부대가 비었다 — 덮어썼다").is_not_empty()
 
 
-## ⚠ **전역자 포지션이 Phase 1로 흘러야 한다.** 개수만 세면 그 단계가 죽는다
-func test_전역이_포지션을_돌려준다() -> void:
-	var s: Dictionary = _world(3)
-	for tid in s["world"]["rosters"]:
-		var q: Dictionary = s["world"]["rosters"][tid][0]
-		q["military_status"] = Military.STATUS_SERVING
-		q["military_service_weeks"] = Military.SERVICE_WEEKS
-		q["position"] = "CL"
+## ⚠ **전역자 포지션이 Phase 1로 흘러야 한다.**
+##
+## ⚠ **소스에 `vacating`이 있는지로 재면 안 된다** — 빈 배열을 넘기게
+## 바꿔도 그 글자는 그대로 남아 변이가 안 잡힌다(실제로 놓쳤다).
+## **CL 자리를 비워 놓고, OVR이 낮은 CL이 높은 SP를 제치는지** 본다
+func test_전역_공백이_Phase1로_흐른다() -> void:
+	var rosters: Dictionary = {}
+	# 전역할 CL 열넷 — 이만큼 자리가 빈다
+	for i in 14:
+		rosters["D%d" % i] = [{
+			"id": "D%d" % i, "age": 24, "career_stage": "pro", "position": "CL",
+			"military_status": Military.STATUS_SERVING, "military_unit": "sports",
+			"military_service_weeks": Military.SERVICE_WEEKS,
+			"pitching": {"ovr": 50.0}, "contract_years": 3}]
+	# 미필 — SP가 잘하고 CL이 못한다. 공백을 보면 CL이 먼저다
+	for i in 20:
+		rosters["S%d" % i] = [{
+			"id": "S%d" % i, "age": 24, "career_stage": "pro", "position": "SP",
+			"military_status": Military.STATUS_UNSERVED,
+			"pitching": {"ovr": 90.0 - i}, "contract_years": 3}]
+	for i in 5:
+		rosters["C%d" % i] = [{
+			"id": "C%d" % i, "age": 24, "career_stage": "pro", "position": "CL",
+			"military_status": Military.STATUS_UNSERVED,
+			"pitching": {"ovr": 40.0 - i}, "contract_years": 3}]
+
+	var s: Dictionary = {"protagonist": {"id": "ME", "is_protagonist": true},
+		"season_year": 2033, "seed": 3, "world": {"rosters": rosters}}
 	NpcMilitary.run(s, Calendar.DAYS_PER_SEASON)
-	var src := CodeText.of("res://sim/npc_military.gd")
-	assert_int(src.find("vacating")).override_failure_message(
-		"전역 포지션을 아무 데도 안 넘긴다 — Phase 1이 영영 안 걸린다") \
-		.is_greater(-1)
+
+	var picked: Array = s.get(Military.SPORTS_PICK_KEY, [])
+	var cl: int = 0
+	for id in picked:
+		if String(id).begins_with("C"):
+			cl += 1
+	assert_int(cl).override_failure_message(
+		"CL 자리가 열넷 비었는데 OVR 40짜리 CL이 %d명만 뽑혔다 — 전역 공백이 "
+		% cl + "Phase 1로 안 흘렀다 (뽑힌 명단 %s)" % str(picked)).is_greater(0)
 
 
 ## 배선의 끝 — 주인공 경로가 **자기 정원으로 따로 뽑지 않는다**
