@@ -43,7 +43,9 @@ func test_고교_권역_안에서는_안_겹친다() -> void:
 		var tid: String = String(t["id"])
 		var g: String = TeamMarkVm.group_of(tid)
 		var m: Dictionary = _mark(tid)
-		var pair: String = "%s/%d" % [m["shell"], int(m["band"])]
+		# ⚠ **문양이 들어오면서 재는 축이 늘었다** — 옛 검사는 (외곽,띠)만 봐서
+		# 문양이 다른 팀들을 겹쳤다고 잡았다. **뜻은 그대로다**
+		var pair: String = "%s/%s/%d" % [m["shell"], m["motif"], int(m["band"])]
 		if not by_region.has(g):
 			by_region[g] = []
 		assert_bool(by_region[g].has(pair)).override_failure_message(
@@ -51,20 +53,19 @@ func test_고교_권역_안에서는_안_겹친다() -> void:
 		by_region[g].append(pair)
 
 
-## ⚠ **대학은 겹친다** — 50팀인데 조합이 20뿐이다.
-## **문양 12종을 옮기면 60으로 늘어난다.** 지금 상태를 검사가 적어 둔다
-func test_대학은_아직_겹친다() -> void:
+## ⚠ **대학도 이제 안 겹친다** — 문양 12종을 넣어 5×12×4=240조합이다.
+## 문양을 넣기 전에는 20조합뿐이라 30개가 겹쳤다
+func test_대학도_안_겹친다() -> void:
 	var seen: Array = []
 	var dup: int = 0
 	for t in World.teams_of("LEAGUE_UNIVERSITY"):
 		var m: Dictionary = _mark(String(t["id"]))
-		var pair: String = "%s/%d" % [m["shell"], int(m["band"])]
+		var pair: String = "%s/%s/%d" % [m["shell"], m["motif"], int(m["band"])]
 		if seen.has(pair):
 			dup += 1
 		seen.append(pair)
 	assert_int(dup).override_failure_message(
-		"대학에서 겹치는 수가 %d다 — 조합이 20뿐이라 30이어야 한다" % dup) \
-		.is_equal(30)
+		"대학에서 %d개가 겹친다 — 240조합이라 0이어야 한다" % dup).is_equal(0)
 
 
 ## 색은 데이터가 정한다 — 화면이 고르지 않는다

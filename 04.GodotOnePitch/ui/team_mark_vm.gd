@@ -21,6 +21,12 @@ class_name TeamMarkVm
 const SHELLS: Array[String] = ["shield", "circle", "hex", "wedge", "rhomb"]
 const BANDS: int = 4
 
+## 02 `MOTIF_ORDER`. **04는 이 중 여섯만 그린다**(곡선 문양은 아직) —
+## 안 그리는 자리도 배정에는 남긴다. 02와 같은 눈금이라야 나중에 채울 때
+## 팀마다 문양이 안 바뀐다
+const MOTIFS: Array[String] = ["seam", "bats", "star", "bolt", "mount",
+	"wave", "ring", "arrow", "wing", "flame", "anchor", "crown"]
+
 ## 색이 없는 팀 — 04에만 있는 특수 팀(상무 등)이 그렇다
 const FALLBACK_PRIMARY: String = "#2b3a55"
 const FALLBACK_ACCENT: String = "#cbd5e1"
@@ -68,7 +74,9 @@ static func slot_of(team_id: String) -> int:
 	keys.sort()
 	var i: int = keys.find(key)
 	# 그룹을 못 찾으면 해시로 — 02도 배정표에 없는 팀엔 폴백을 쓴다
-	return i if i >= 0 else absi(Rng.mix(["mark", key])) % (SHELLS.size() * BANDS)
+	if i >= 0:
+		return i
+	return absi(Rng.mix(["mark", key])) % (SHELLS.size() * MOTIFS.size() * BANDS)
 
 
 ## 화면이 그릴 마크 한 벌
@@ -80,7 +88,10 @@ static func build(team_id: String) -> Dictionary:
 		# ⚠ **외곽과 띠를 다른 눈금으로 돌린다** — 같은 눈금이면 5팀마다
 		# 같은 짝이 나온다
 		"shell": SHELLS[slot % SHELLS.size()],
-		"band": (slot / SHELLS.size()) % BANDS,
+		# ⚠ **02와 같은 눈금이다** — 외곽·문양·띠가 서로 다른 주기로 돈다.
+		# 5 × 12 × 4 = 240조합이라 대학 50팀도 안 겹친다
+		"motif": MOTIFS[(slot / SHELLS.size()) % MOTIFS.size()],
+		"band": (slot / (SHELLS.size() * MOTIFS.size())) % BANDS,
 		"primary": String(colors[0]) if colors.size() > 0 else FALLBACK_PRIMARY,
 		"accent": String(colors[1]) if colors.size() > 1 else FALLBACK_ACCENT,
 	}

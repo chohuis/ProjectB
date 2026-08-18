@@ -30,6 +30,7 @@ var _team_id: String = ""
 var _primary: Color = Color("2b3a55")
 var _accent: Color = Color("cbd5e1")
 var _shell: String = "shield"
+var _motif: String = ""
 var _band: int = 0
 
 
@@ -41,6 +42,7 @@ func _init() -> void:
 func setup(spec: Dictionary) -> void:
 	_team_id = String(spec.get("team_id", ""))
 	_shell = String(spec.get("shell", "shield"))
+	_motif = String(spec.get("motif", ""))
 	_band = int(spec.get("band", 0))
 	_primary = Color(String(spec.get("primary", "#2b3a55")))
 	_accent = Color(String(spec.get("accent", "#cbd5e1")))
@@ -137,3 +139,70 @@ func _draw() -> void:
 	draw_colored_polygon(shell, _primary)
 	for poly in _band_polygons(shell):
 		draw_colored_polygon(poly, _accent)
+	_draw_motif(shell)
+
+
+## 문양 열둘 — 02 `MOTIF`. **좌표는 02 SVG 그대로다.**
+##
+## ⚠ **채운 도형(`fill`)은 다각형으로, 선 도형(`stroke`)은 선으로 그린다.**
+## 02가 그렇게 나눠 뒀고, Godot도 `draw_colored_polygon`과 `draw_polyline`이
+## 따로다 — 선을 다각형으로 흉내 내면 굵기가 크기마다 어긋난다.
+##
+## ⚠ **문양은 언제나 흰색이다**(02 주석). 국내 172팀은 보조색 위에서도
+## 흰색이 읽힌다는 것을 검사가 본다
+const MOTIFS: Array[String] = ["seam", "bats", "star", "bolt", "mount",
+	"wave", "ring", "arrow", "wing", "flame", "anchor", "crown"]
+
+## 채운 도형 — 02 `MOTIF`의 `<path fill="#FFF">` 좌표 그대로
+const MOTIF_FILLS: Dictionary = {
+	"star": [[50, 28], [58, 47], [79, 48], [62, 61], [68, 81], [50, 69],
+		[32, 81], [38, 61], [21, 48], [42, 47]],
+	"bolt": [[56, 26], [32, 57], [46, 57], [42, 80], [68, 47], [53, 47]],
+	"mount": [[22, 72], [38, 42], [48, 58], [60, 34], [80, 72]],
+	"arrow": [[50, 26], [72, 50], [58, 50], [58, 76], [42, 76], [42, 50],
+		[28, 50]],
+}
+
+## 날개는 네 조각이다 — 02도 `<path>` 넷이다
+const MOTIF_WING: Array = [
+	[[50, 34], [74, 46], [68, 54], [50, 48]],
+	[[50, 48], [72, 60], [64, 68], [50, 62]],
+	[[50, 34], [26, 46], [32, 54], [50, 48]],
+	[[50, 48], [28, 60], [36, 68], [50, 62]],
+]
+
+## 선 도형 — `[점들, 굵기, 닫힘]`. 02 `stroke-width` 그대로
+const MOTIF_LINES: Dictionary = {
+	"bats": [[[[33, 71], [67, 33]], 7, false], [[[67, 71], [33, 33]], 7, false]],
+	"anchor": [[[[50, 34], [50, 78]], 6, false], [[[34, 44], [66, 44]], 6, false]],
+}
+
+
+## 문양 하나를 그린다. **못 옮긴 문양은 안 그린다** — 02 SVG에 곡선(`C`·`Q`)이
+## 있는 것들(seam · wave · flame · ring · crown)은 다각형으로 바꾸면 형태가
+## 달라진다. **지어내는 대신 비워 둔다** — 그 자리는 외곽·띠만으로 갈린다
+func _draw_motif(shell: PackedVector2Array) -> void:
+	var white := Color(1, 1, 1)
+	if MOTIF_FILLS.has(_motif):
+		draw_colored_polygon(_poly(MOTIF_FILLS[_motif]), white)
+		return
+	if _motif == "wing":
+		for part in MOTIF_WING:
+			draw_colored_polygon(_poly(part), white)
+		return
+	if MOTIF_LINES.has(_motif):
+		for line in MOTIF_LINES[_motif]:
+			draw_polyline(_poly(line[0]), white, _scaled(float(line[1])), true)
+
+
+## 02 좌표 배열을 이 칸으로
+func _poly(points: Array) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for p in points:
+		out.append(_pt(float(p[0]), float(p[1])))
+	return out
+
+
+## 선 굵기도 같이 줄인다 — 안 줄이면 22px에서 문양이 뭉갠다
+func _scaled(w: float) -> float:
+	return maxf(w / BOX.x * size.x, 1.0)
