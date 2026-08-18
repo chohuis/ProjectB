@@ -209,6 +209,26 @@ func _build(which: String) -> Control:
 			var nw: AppRoot = APP.instantiate()
 			nw.set_state(Fixtures.main_state())
 			return nw
+		"news-detail":
+			# 🔴 **본문을 볼 길이 없던 자리다.** `sim/` 여덟 파일 열여섯
+			# 자리가 여러 줄 본문을 쓰는데 04는 미리보기만 그렸다.
+			# ⚠ **갈래가 그 상태를 못 잡으면 갈래를 새로 만든다**
+			var nd: AppRoot = APP.instantiate()
+			var st: Dictionary = Fixtures.main_state()
+			var lines: Array[String] = [
+				"2033년 체육부대 입대 후보로 거론되는 명단입니다.",
+				"실제 신청자는 다를 수 있습니다.", ""]
+			for i in 12:
+				lines.append("%d위  선수%02d  OVR %d" % [i + 1, i, 92 - i])
+			st["mailbox"] = [{
+				"id": "SHOT1", "category": "news", "sender": "스포츠조선",
+				"subject": "2033 체육부대 입대 후보 루머",
+				"preview": "이번 시즌 체육부대 후보가 거론되고 있습니다.",
+				"body": "\n".join(lines), "day": 300, "read": false,
+				"decision": null}]
+			st["news_open_id"] = "SHOT1"
+			nd.set_state(st)
+			return nd
 		"newgame":
 			# ⚠ **진짜 새 게임이다.** 손으로 만든 사전이 아니라 세계 생성을
 			# 거친다 — 그래야 스크린샷이 실제 경로를 본다

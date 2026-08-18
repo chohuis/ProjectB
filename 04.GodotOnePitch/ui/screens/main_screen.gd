@@ -73,6 +73,9 @@ signal team_selected(team_id: String)
 ## 소식의 선택지를 골랐다 (F-8b). **효과는 루트가 건다** —
 ## 화면이 상태를 직접 고치면 자동 진행이 고른 답과 다른 일이 벌어진다
 signal news_decision_picked(message_id: String, choice_id: String)
+## 소식 본문 열기·닫기 — 🔴 04엔 본문을 볼 길이 아예 없었다
+signal news_opened(message_id: String)
+signal news_closed()
 
 var _vm: Dictionary = {}
 var _tab: int = 0
@@ -504,6 +507,14 @@ func _build_league() -> void:
 func _build_news() -> void:
 	var vm: Dictionary = _vm.get("news", {})
 
+	# 🔴 **본문을 여는 길이 없었다.** `sim/` 여덟 파일 열여섯 자리가 여러 줄
+	# 본문을 쓰는데 04는 미리보기 한 줄만 그렸다 — 체육부대 후보 30인
+	# 명단도 서른세 줄을 쓰고 아무도 못 읽었다
+	var detail: Dictionary = vm.get("detail", {})
+	if not detail.is_empty():
+		_build_news_detail(detail)
+		return
+
 	var chips := HBoxContainer.new()
 	chips.add_theme_constant_override("separation", 4)
 	_tab_host.add_child(chips)
@@ -532,7 +543,65 @@ func _build_news() -> void:
 		var row: NewsRow = NEWS_ROW.instantiate()
 		box.add_child(row)
 		row.setup(r)
+		row.opened.connect(func(id: String) -> void:
+			news_opened.emit.call_deferred(id))
 		_build_news_decision(box, r)
+
+
+## 소식 하나를 펼친다. 02 `NewsPage.svelte:236-258`.
+##
+## ⚠ **나가는 길을 먼저 만든다.** 없으면 상세에 갇힌다 —
+## 02도 머리에 "‹ 목록"을 둔다.
+##
+## ⚠ **본문은 줄째로 그린다.** 한 `Label`에 통째로 넣으면 서른 줄짜리
+## 명단이 한 줄로 뭉쳐 못 읽는다
+func _build_news_detail(d: Dictionary) -> void:
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 8)
+	_tab_host.add_child(head)
+
+	var back := Button.new()
+	back.text = "‹ 목록"
+	back.pressed.connect(func() -> void: news_closed.emit.call_deferred())
+	head.add_child(back)
+
+	var cat := Label.new()
+	cat.text = String(d.get("category_label", ""))
+	cat.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+	head.add_child(cat)
+
+	var box: VBoxContainer = _list_box()
+
+	var subject := Label.new()
+	subject.text = String(d.get("subject", ""))
+	subject.add_theme_color_override("font_color", AppTheme.TEXT)
+	box.add_child(subject)
+
+	var meta := Label.new()
+	meta.text = "%s · %s" % [d.get("sender", ""), d.get("date_label", "")]
+	meta.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+	meta.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	box.add_child(meta)
+
+	# ⚠ **본문 줄을 따로 담는다.** 다른 줄과 섞으면 검사가 **줄 단위**를 못
+	# 본다 — 통째로 한 `Label`에 넣은 변이가 살아남았다(글자는 다 있으니까).
+	# 여기 자식 수가 본문 줄 수와 같아야 한다
+	var body_box := VBoxContainer.new()
+	body_box.name = "NewsBody"
+	body_box.add_theme_constant_override("separation", 1)
+	box.add_child(body_box)
+
+	for line in String(d.get("body", "")).split("\n"):
+		var l := Label.new()
+		# ⚠ **빈 줄도 자리를 남긴다** — 문단 사이가 붙으면 명단이 안 읽힌다.
+		# 빈 `Label`은 높이가 0이라 사라진다
+		l.text = line if not line.is_empty() else " "
+		l.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		body_box.add_child(l)
+
+	# 상세에서도 답할 수 있어야 한다 — 목록으로 나가야만 답할 수 있으면
+	# 열어 본 사람이 길을 잃는다
+	_build_news_decision(box, d)
 
 
 ## 소식에 붙는 선택지 — F-8b.

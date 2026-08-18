@@ -6,8 +6,14 @@ class_name NewsRow
 ## ⚠ **색을 여기서 고르지 않는다.** `AppTheme`에서 가져온다 — 화면 55개에
 ## 색을 흩으면 톤을 바꿀 때 반드시 몇 개는 빠진다.
 
+## 🔴 **본문을 열 길이 없었다.** 줄이 전부 `Label`이라 눌리지 않았고,
+## `sim/` 여덟 파일 **열여섯 자리가 쓰는 여러 줄 본문이 전부 묻혀 있었다** —
+## 체육부대 후보 30인 명단도 서른세 줄을 쓰고 아무도 못 읽었다.
+## 02는 목록에서 누르면 본문이 열린다(`NewsPage.svelte:243-258`)
+signal opened(id: String)
+
 @onready var _category: Label = $Top/Category
-@onready var _subject: Label = $Top/Subject
+@onready var _subject: Button = $Top/Subject
 @onready var _date: Label = $Top/Date
 @onready var _preview: Label = $Preview
 
@@ -28,6 +34,8 @@ func setup(row: Dictionary) -> void:
 
 
 func _ready() -> void:
+	_subject.pressed.connect(func() -> void:
+		opened.emit.call_deferred(String(_row.get("id", ""))))
 	_apply()
 
 

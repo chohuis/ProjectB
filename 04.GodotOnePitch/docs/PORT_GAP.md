@@ -235,16 +235,57 @@
 (진로 결정이므로). 검사로 못 박는다.
 | `game-status/GameStatusModal` (599) | ❓ 검색 0건 | **무엇을 보여주는지부터 읽는다** |
 
-### 2-4. 소식 패널 — **부분** (5)
+### 2-4. 소식 패널 — 🔴 **적어 놓은 게 틀렸다** (5)
 
-02는 소식 목록 안에 카드형 패널을 끼워 넣는다. 04는 글자 줄만 있다.
+**04 화면을 띄워 보고 02 원본을 열어 보니 둘 다 달랐다.**
+
+#### 틀린 것 ① — `DigestCards`는 독립 패널이 아니다
+
+`InjuryPanel`·`OffseasonPanel`이 **같이 쓰는 부품**이다
+(`InjuryPanel.svelte:16,90` · `OffseasonPanel.svelte:13,97`).
+"패널 넷"이 아니라 **패널 셋 + 공용 카드 띠**다.
+
+#### 틀린 것 ② 🔴 — **04는 본문을 아예 못 읽었다**
+
+02의 저 다섯은 전부 **`NewsPage.svelte:243-258`의 본문 상세 갈래**다.
+`selected.metadata.type`으로 갈라 붙고, 아무것도 안 걸리면 본문을 줄째로
+찍는다. **04엔 그 상세가 통째로 없었다** — `news_vm.build`가 `preview`만
+싣고 `body`는 화면까지 넘어가지도 않았다.
+
+**`sim/` 여덟 파일 열여섯 자리가 여러 줄 본문을 쓴다** —
+`digest` · `coach_report` · `body_report` · `contract_decision` ·
+`military` · `national_runner` · `retirement` · `tournament_news`.
+**전부 묻혀 있었다.** 지난 세션에 넣은 체육부대 후보 30인 명단도
+서른세 줄을 쓰고 아무도 못 읽었다. **바로 앞 항목에서 죽은 출력을 만든 것이다.**
+
+✅ **고쳤다** — 목록 줄을 누르면 본문이 펼쳐진다.
+`news_vm`이 `body`와 `detail`을 싣고, `main_screen`이 머리(‹ 목록 · 분류) ·
+제목 · 보낸이·날짜 · **본문을 줄째로** 그린다. 여는 것이 읽음 표시다.
+**상세에서도 답할 수 있다**(04에서 소식 선택지는 답하는 유일한 입구다).
+
+검사 16(`test/news_detail_test.gd`) · **변이 7/7 + 5/5 + 2/2** ·
+캡처 `news-detail`(새 갈래).
+
+⚠ **겪은 것 셋** — ① 검사에서 `render()`라는 **없는 함수를 지어냈다**
+(진짜는 `set_view_model` + `MainVm.build`). ② 선택지 키를 `options`로
+지어냈다(진짜는 `choices`). ③ **GdUnit은 실패가 나면 그 파일의 남은 검사를
+안 돈다** — 15개 중 8개만 돌았는데 개수를 안 봤으면 못 알아챘다.
+
+⚠ **글자가 다 있는지로만 재면 안 된다.** 본문을 통째로 한 `Label`에 넣는
+변이가 **살아남았다**(글자는 다 있으니까). 본문 줄을 `NewsBody` 상자에 따로
+담아 **줄 수와 자리**를 보게 고쳤다.
+
+#### 남은 것 — 패널 셋
+
+이제 본문이 열리므로 **패널은 그 위에 얹는 층**이다. 04 소식은 아직
+`metadata`를 안 싣는다.
 
 | 02 | 04 엔진 | 판정 |
 |---|---|---|
-| `messages/DigestCards` (89) | ✅ `sim/digest.gd` | **화면만 없다** |
-| `messages/InjuryPanel` (183) | ✅ `injury_runner` | **화면만 없다** |
-| `messages/ProspectTop10Panel` (181) | ✅ `retirement`·`trade`에 관련 축 | **확인 필요** |
-| `messages/OffseasonPanel` (194) | ✅ `sim/offseason.gd` | **화면만 없다** |
+| `messages/InjuryPanel` (183) | ✅ `injury_runner` | ⬜ 본문은 열린다. 카드형은 없다 |
+| `messages/ProspectTop10Panel` (181) | ❓ | ⬜ **02 쪽부터 확인** |
+| `messages/OffseasonPanel` (194) | ✅ `sim/offseason.gd` | ⬜ 본문은 열린다. 카드형은 없다 |
+| `messages/DigestCards` (89) | ✅ `sim/digest.gd` | 위 둘의 부품 |
 | `messages/TrainingStatBars` (152) | ✅ `training_vm` | **부분** |
 
 ### 2-5. 개발자 도구 — **일부러 안 옮김** (4)

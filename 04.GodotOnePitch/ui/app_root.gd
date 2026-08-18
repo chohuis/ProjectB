@@ -72,6 +72,8 @@ func _ready() -> void:
 	_main.player_selected.connect(_open_player_detail)
 	_main.team_selected.connect(_open_team_detail)
 	_main.news_decision_picked.connect(_on_news_decision)
+	_main.news_opened.connect(_on_news_opened)
+	_main.news_closed.connect(_on_news_closed)
 	_refresh()
 
 
@@ -80,6 +82,24 @@ func _ready() -> void:
 ## 돌아가는데, 사용자는 자기가 뭘 잘못 눌렀는지 모른다
 func _on_news_filter(filter_id: String) -> void:
 	_state["news_filter"] = filter_id
+	_refresh()
+
+
+## 소식 본문을 편다. **여는 것이 읽음 표시다** — 02도 연 글은 읽음이다.
+##
+## ⚠ **답을 안 한 결정도 읽음이 된다.** 그래도 목록에서 안 사라진다 —
+## `news_vm`이 미결정을 위로 올리고 `markable`에서 빼기 때문이다
+func _on_news_opened(message_id: String) -> void:
+	_state["news_open_id"] = message_id
+	for m in _state.get("mailbox", []):
+		if String(m.get("id", "")) == message_id:
+			m["read"] = true
+			break
+	_refresh()
+
+
+func _on_news_closed() -> void:
+	_state.erase("news_open_id")
 	_refresh()
 
 

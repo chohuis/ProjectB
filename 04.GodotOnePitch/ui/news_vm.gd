@@ -118,6 +118,11 @@ static func build(s: Dictionary) -> Dictionary:
 			"date_label": "%d월 %d일" % [date["month"], date["day"]],
 			"subject": m.get("subject", ""),
 			"preview": m.get("preview", ""),
+			# 🔴 **본문이 여기까지 안 왔다.** 그래서 `sim/` 여덟 파일
+			# 열여섯 자리가 쓰는 여러 줄 본문이 **전부 묻혀 있었다**.
+			# ⚠ 없으면 빈칸으로 둔다 — 미리보기로 때우면 "본문이 있다"와
+			# "없다"를 못 가른다
+			"body": m.get("body", ""),
 			"sender": m.get("sender", ""),
 			"category": cat,
 			# 모르는 분류에 빈칸을 주지 않는다 — 분류가 늘었을 때 화면이
@@ -158,7 +163,44 @@ static func build(s: Dictionary) -> Dictionary:
 		"oldest_first": oldest_first,
 		"markable_count": markable,
 		"duplicate_ids": dupes,
+		"detail": _detail(s, mailbox, year),
 	}
+
+
+## 열어 둔 소식 하나. 02 `NewsPage.svelte:236-258`.
+##
+## ⚠ **거른 목록이 아니라 소식함 전체에서 찾는다.** 거른 쪽에서 찾으면
+## "뉴스"를 열어 둔 채 거르개를 "시스템"으로 바꾸는 순간 **읽던 글이 사라진다**.
+##
+## ⚠ **없는 id면 빈 상세를 띄우지 않는다** — 지워진 소식을 가리킨 채 남으면
+## 화면이 빈 껍데기가 된다
+static func _detail(s: Dictionary, mailbox: Array, year: int) -> Dictionary:
+	var open_id: String = String(s.get("news_open_id", ""))
+	if open_id.is_empty():
+		return {}
+
+	for m in mailbox:
+		if String(m.get("id", "")) != open_id:
+			continue
+		var day: int = int(m.get("day", 0))
+		var date: Dictionary = Calendar.date_of(year, maxi(day, 1))
+		var cat: String = String(m.get("category", ""))
+		var d: Dictionary = {
+			"id": open_id,
+			"subject": m.get("subject", ""),
+			"sender": m.get("sender", ""),
+			"category": cat,
+			"category_label": CATEGORY_LABEL.get(cat, cat),
+			"date_label": "%d월 %d일" % [date["month"], date["day"]],
+			"body": m.get("body", ""),
+			# 상세에서도 답할 수 있어야 한다 — 목록으로 나가야만 답할 수
+			# 있으면 열어 본 사람이 길을 잃는다
+			"pending": _is_pending(m),
+			"decided": _is_decided(m),
+		}
+		d.merge(_decision_of(m), true)
+		return d
+	return {}
 
 
 static func _passes(_m: Dictionary, active: String, unread: bool, cat: String) -> bool:
