@@ -1282,3 +1282,51 @@ P-24의 남은 변이 하나("안 묻고 조용히 옮긴다")를 잡으러 파�
 
 ⚠ **시간을 정해 두고 물러났다** — 한 변이에 매달려 남은 항목을 미루는 것보다
 정확히 적고 넘어가는 편이 낫다.
+
+---
+
+## P-27 — FA 제안 생성기가 04에 **없다** 🔴 ⬜ (다음 항목)
+
+04 `decision_vm.gd`의 주석이 *"제안을 만드는 곳이 04에 없다"*고 적어 뒀는데
+**맞았다.** 그리고 **02에는 있다** — 없는 게 아니라 안 옮긴 것이다.
+
+| | 02 | 04 |
+|---|---|---|
+| 리그 전체 FA(NPC) | ✅ | ✅ `FaMarket.resolve` · `FaRunner` |
+| **주인공에게 오는 제안** | ✅ `generateFaOffers` → Rust `generate_fa_offers` | ❌ **없다** |
+
+그래서 `fa_market` 화면이 **"기다린다" 하나만** 준다 — 04는 FA가 돼도
+고를 게 없다.
+
+### 02 산식 (`player_engine.rs:354-410`) — 옮길 값
+
+```
+base   = 1800 + max(ovr - 50, 0) * 220 + fame * 28
+market = base * league_salary_mult(league)      # ABL 3.5 · JBL 2.0 · 독립 0.35 · 그 밖 1.0
+drop   = max(1 - 미계약주 * 0.04, 0.72)
+
+팀마다:
+  win_mult   = 1 + (win_now_pressure - 50)/100 * 0.30
+               ※ 여유(cap-payroll)/cap < 0.15면 × 0.6
+  year_bias  = stability > 65 ? +1 : stability < 35 ? -1 : 0
+  bonus_mult = 0.08 + market_appeal/100 * 0.12
+  noise 폭   = (100 - scouting_quality)/100 * 0.25
+  salary     = market * (0.85 + r*0.35) * win_mult * (1 + noise) * drop
+  duration   = clamp(rand(1..4) + year_bias, 1, 5)
+  계약금     = salary * (bonus_mult + r*0.08)
+  구단옵션 35% · 선수옵션 25% · 노트레이드 20%
+
+제안 수 = rand(3..5), 같은 리그 · 자기 팀 제외
+```
+
+⚠ **04 축이 다 있다** — `TeamProfile`에 `win_now_pressure` · `stability` ·
+`market_appeal` · `scouting_quality`가 있고 `payroll_of`도 있다.
+(P-25b에서 **"없다"고 적기 전에 세라**를 배웠다.)
+
+🔴 **02가 실측으로 겪은 함정을 같이 옮긴다** — `faEngine.ts:36-41`:
+*"KBL은 1군(`_1`)과 2군(`_2`)이 **같은 leagueId**를 쓴다. 그대로 넘기면
+FA 제안에 2군이 섞이고 실제로 그리로 이적한다(실측: `..._STARS_2`와 3년 계약)."*
+**04도 `_1`/`_2`가 같은 `league_id`다**(이번에 확인했다). 1군만 거른다.
+
+⚠ **`rand::thread_rng()`를 그대로 옮기지 않는다** — 04는 `Rng`를 거친다.
+같은 세이브를 다시 열면 같은 제안이 와야 한다.
