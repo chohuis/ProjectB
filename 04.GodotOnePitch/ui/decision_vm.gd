@@ -441,20 +441,58 @@ static func _team(state: Dictionary, team_id: String) -> String:
 
 ## ⚠ **거부할 수 있다.** 02는 지명 통보가 알림이라 거부가 없었고,
 ## 그래서 지명을 받고도 계약 없이 고교에 남는 상태가 생겼다
+## 지명 통보 — 02 `DraftNotificationModal`(112줄).
+##
+## 🔴 **04는 팀·순위·계약금·연봉 넷만 냈다.** 02는 **계약 기간·총 계약액**과
+## **거부하면 어디로 가는지**를 같이 낸다 — 되돌릴 수 없는 선택인데
+## 04는 **모르고 누르게** 했다.
+##
+## ⚠ **대안은 액션에 이미 실려 있었다**(`alt_university_team_id` ·
+## `alt_independent_team_id`) — 엔진(`reject_draft_offer`)이 그걸로 갈린다.
+## **화면만 안 읽었다.**
 static func _draft(state: Dictionary, a: Dictionary) -> Dictionary:
 	var team: String = String(World.team_field(state.get("world", {}),
 		String(a.get("team_id", "")), "name", String(a.get("team_id", ""))))
-	var body: String = "\n".join([
+	var salary: int = int(a.get("salary", 0))
+	var years: int = int(a.get("duration_years", 1))
+	var bonus: int = int(a.get("signing_bonus", 0))
+
+	var lines: Array[String] = [
 		"%s가 %d라운드 %d순위로 지명했습니다." % [team,
 			int(a.get("round", 0)), int(a.get("pick", 0))],
-		"계약금 %s · 연봉 %s" % [
-			FinanceVm.won(int(a.get("signing_bonus", 0))),
-			FinanceVm.won(int(a.get("salary", 0)))],
-	])
-	return _of("draft_notification", "지명 통보", body, [
+		"연봉 %s · %d년 · 계약금 %s" % [FinanceVm.won(salary), years,
+			FinanceVm.won(bonus)],
+		# ⚠ **총액을 따로 낸다** — 연봉만 보면 크기를 못 가늠한다
+		"총 계약액 %s" % FinanceVm.won(salary * years + bonus),
+		"",
+		"구단 제시 조건입니다. 협상은 할 수 없습니다.",
+		"",
+		_reject_note(state, a),
+	]
+	return _of("draft_notification", "지명 통보", "\n".join(lines), [
 		{"id": "accept", "label": "계약한다"},
 		{"id": "reject", "label": "거부한다"},
 	])
+
+
+## 거부하면 어디로 가나 — **엔진과 같은 순서로 본다**
+## (`reject_draft_offer`: 대학 → 독립 → 병역).
+##
+## ⚠ **대학 대안은 고교생만이다** — 대학 재학생에게 말하면 두 번 입학이고
+## 엔진은 그 갈래를 안 탄다. 화면이 엔진보다 관대하면 거짓말이 된다
+static func _reject_note(state: Dictionary, a: Dictionary) -> String:
+	var stage: String = CareerPath.stage_of(state.get("protagonist", {}))
+	var univ: String = String(a.get("alt_university_team_id", ""))
+	if not univ.is_empty() and CareerPath.can_apply_university(stage):
+		return "거부하면 %s로 진학합니다." % _team(state, univ)
+
+	var indie: String = String(a.get("alt_independent_team_id", ""))
+	if not indie.is_empty():
+		return "거부하면 %s에 입단합니다." % _team(state, indie)
+
+	# ⚠ 04는 여기서 조용히 입대시키지 않고 **묻는다**(병역 항목) —
+	# 그래도 "갈 곳이 없다"는 건 알려야 고를 수 있다
+	return "거부하면 갈 곳이 없습니다. 대안 없이 병역을 묻게 됩니다."
 
 
 ## ⚠ **거부는 노트레이드 조항이 있을 때만이다** — 없으면 선택지를
