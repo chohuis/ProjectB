@@ -387,6 +387,52 @@ static func build_news(state: Dictionary, at_day: int) -> Dictionary:
 		"rows": rows, "total": rows.size()}
 
 
+## 월간 부상 리포트를 **소식 한 통**으로.
+##
+## 🔴 **`build_news`가 만든 것을 아무도 안 읽고 있었다.** 줄·집계·미리보기를
+## 다 만들어 `state["injury_log"]`에 넣는데 **`injury_log`를 읽는 코드가
+## 하나도 없었다**(쓰는 자리 하나뿐). 바로 아래 세 줄에서 `BodyReport`는
+## `mailbox`로 가는데 이것만 빠졌다.
+##
+## ⚠ **이번 루프에서 같은 모양을 두 번째 만났다** — 소식 본문도 열여섯
+## 자리가 쓰기만 하고 읽는 쪽이 없었다.
+##
+## ⚠ **id에 달을 넣는다.** 안 넣으면 겹쳐서 소식함에서 하나가 조용히 사라진다.
+##
+## ⚠ **이미 만든 것을 넘길 수 있다.** `run`은 `build_news`를 이미 불렀는데
+## 여기서 또 부르면 **버퍼를 비우는 줄이 위로 올라가는 순간 둘이 갈린다** —
+## 그걸 막으려고 뒀던 `if not msg.is_empty()` 가드는 **도달할 수 없었다**
+## (변이가 안 잡혔다). 가드를 두는 대신 **갈릴 수 없게** 만든다
+static func news_message(state: Dictionary, at_day: int,
+		built: Dictionary = {}) -> Dictionary:
+	var news: Dictionary = built if not built.is_empty() \
+		else build_news(state, at_day)
+	if news.is_empty():
+		return {}
+
+	var lines: Array[String] = [String(news["preview"]), ""]
+	# ⚠ **사람을 줄로 적는다.** 집계만 있으면 누가 다쳤는지 모른다 —
+	# 02도 `InjuryPanel`에서 한 사람씩 편다
+	var rows: Array = news["rows"]
+	rows.sort_custom(func(a, b) -> bool:
+		return int(a.get("weeks", 0)) > int(b.get("weeks", 0)))
+	for r in rows:
+		lines.append("%s  %s  %d주" % [
+			Injury.class_label(String(r.get("class", ""))),
+			r.get("name", r.get("player_id", "")),
+			int(r.get("weeks", 0))])
+
+	var year: int = int(state.get("season_year", 0))
+	return {
+		"id": "msg-injury-%d-w%d" % [year, Calendar.week_of(at_day)],
+		"category": "injury", "sender": "의무팀",
+		"subject": "%d월 부상 리포트" % Calendar.date_of(year, maxi(at_day, 1))["month"],
+		"preview": String(news["preview"]),
+		"body": "\n".join(lines),
+		"day": at_day, "read": false, "decision": null,
+	}
+
+
 ## 한 주 전체. **소식 주에 버퍼를 비운다**
 static func run(state: Dictionary, at_day: int = -1) -> Dictionary:
 	var day: int = at_day if at_day > 0 else int(state.get("day", 1))
@@ -401,12 +447,25 @@ static func run(state: Dictionary, at_day: int = -1) -> Dictionary:
 	var news: Dictionary = {}
 	if Injury.is_news_week(Calendar.week_of(day)):
 		news = build_news(state, day)
+		# 담을 게 없어도 버퍼는 비운다 — 안 비우면 다음 달에 지난달 것이 섞인다.
+		#
+		# ⚠ **읽은 자리에서 바로 비운다.** 아래로 내려 두면 소식을 만드는
+		# 쪽이 버퍼를 다시 읽어도 되어 버려서, **다시 읽는 실수가 아무 티도
+		# 안 난다**(변이가 안 잡혔다). 여기서 비우면 `news`를 넘기는 길만 남는다
+		state[NEWS_KEY] = []
 		if not news.is_empty():
 			var log: Array = state.get("injury_log", [])
 			log.append(news)
 			state["injury_log"] = log
-		# 담을 게 없어도 버퍼는 비운다 — 안 비우면 다음 달에 지난달 것이 섞인다
-		state[NEWS_KEY] = []
+			# 🔴 **여기가 빠져 있었다.** 기록만 쌓고 소식함에 안 넣어서
+			# 월간 부상 리포트를 아무도 못 봤다 — `injury_log`를 읽는
+			# 코드가 하나도 없었다
+			# ⚠ **이미 만든 `news`를 넘긴다.** 여기서 다시 만들면 버퍼를
+			# 비우는 줄이 위로 올라가는 순간 둘이 갈린다 — 그걸 막는
+			# 가드는 도달할 수가 없어 죽은 가드가 된다
+			var mail: Array = state.get("mailbox", [])
+			mail.append(news_message(state, day, news))
+			state["mailbox"] = mail
 
 		# ⚠ **내 몸도 같은 주기로 한 통에 담는다.** 04는 `body_log`를 쌓기만
 		# 하고 읽는 곳이 진로 판정 하나뿐이라 경고도 완치도 플레이어에게는

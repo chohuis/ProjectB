@@ -95,6 +95,11 @@ static func run(state: Dictionary, at_day: int = -1) -> void:
 	# 시즌 마지막 주에만 실제로 돈다 — 안쪽에서 그 날을 본다
 	NpcMilitary.run(state, at_day)
 
+	# 야구계 소식 — 🔴 **`sim/digest.gd` 362줄을 아무도 안 불렀다.**
+	# 부르는 곳이 자기 검사 하나뿐이라 플레이어에게 한 번도 안 왔다.
+	# 다이제스트 주에만 실제로 돈다 — 안쪽에서 그 주를 본다
+	DigestRunner.run(state, at_day)
+
 	# 캠퍼스 이벤트 — 쇼케이스(32주)·올스타(34주).
 	#
 	# ⚠ **주인공이 없어도 돈다.** 대학 무대는 세계의 일이고, 주인공이 안
