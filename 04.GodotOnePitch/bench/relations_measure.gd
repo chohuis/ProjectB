@@ -153,8 +153,26 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			# 최종 선택이 남아 대기줄이 안 풀리고, 커리어가 그 자리에 선다 —
 			# 실측에서 2029·2030년에 `career_results`가 떠 있었다
 			if Pending.has(s, "career_choice_hub"):
-				CareerDecision.submit_applications(s, {"draft": true,
-					"university_choices": ["TEAM_UNIV_BAEKJE"]})
+				# 🔴 **화면이 내는 목록에서 고른다** (P-43b). 예전엔
+				# `TEAM_UNIV_BAEKJE` 하나를 박아 뒀는데 `MAX_CHOICES`는 셋이다
+				# — 하나만 넣으면 떨어질 확률이 세 배로 커지고, 실제로
+				# **12해 내내 고교 3학년**인 실행이 나왔다.
+				#
+				# ⚠ **화면과 같은 함수로 낸다**(`DecisionVm.apply`) — 계측이
+				# 제 손으로 원서를 지으면 그게 두 번째 정본이다
+				var hub: Dictionary = DecisionVm.build(s)
+				var picks: Array = []
+				var univ_n: int = 0
+				for ch in hub.get("choices", []):
+					var cid: String = String(ch.get("id", ""))
+					if cid == "draft":
+						picks.append(cid)
+					elif cid.begins_with("university:") \
+							and univ_n < CareerDecision.MAX_CHOICES:
+						picks.append(cid)
+						univ_n += 1
+				if not picks.is_empty():
+					DecisionVm.apply(s, "submit:" + ",".join(picks), day)
 			elif Pending.has(s, "career_results"):
 				CareerDecision.confirm_results(s)
 			# 🔴 **여기 없는 물음은 대기줄을 막는다** (P-13). 20해를 굴렸더니
