@@ -327,20 +327,49 @@ static func _observe(_state: Dictionary, _a: Dictionary) -> Dictionary:
 ## ⚠ **떨어진 곳을 선택지로 두지 않는다.** 누르면 엔진이 거절하는 버튼이
 ## 되고, 사용자는 왜 안 되는지를 모른다
 static func _choice(state: Dictionary, _a: Dictionary) -> Dictionary:
+	var p: Dictionary = state.get("protagonist", {})
+	var world: Dictionary = state.get("world", {})
 	var r: Dictionary = CareerDecision.of(state).get("results", {})
 	var choices: Array = []
+
+	# 🔴 **`"프로에 간다"`뿐이라 어느 팀인지 몰랐다.** 02는
+	# `드래프트 지명: {팀} / {N}R {M}순위`로 적는다 — 되돌릴 수 없는 선택이다
 	if bool(r.get("drafted", false)):
-		choices.append({"id": "draft", "label": "프로에 간다"})
+		choices.append({"id": "draft",
+			"label": "프로에 간다 — %s  %d라운드 %d순위" % [
+				_team(state, String(r.get("draft_team_id", ""))),
+				int(r.get("draft_round", 0)), int(r.get("draft_pick", 0))]})
+
+	# ⚠ **지원 화면(P-21b)과 같은 정보를 붙인다** — 되돌릴 수 없이 정하는
+	# 자리라 오히려 더 필요하다
 	for t in r.get("university_passed", []):
 		choices.append({"id": "university:%s" % t,
-			"label": "%s에 진학한다" % _team(state, String(t))})
+			"label": "%s에 진학한다%s" % [_team(state, String(t)),
+				_squad_note(world, String(t), p)]})
 	for t in r.get("independent_passed", []):
 		choices.append({"id": "independent:%s" % t,
-			"label": "%s에 입단한다" % _team(state, String(t))})
-	# 아무 데도 안 붙어도 길이 하나는 있어야 한다 — 그게 재수다
-	choices.append({"id": "continue", "label": "지금 자리에 남는다"})
+			"label": "%s에 입단한다%s" % [_team(state, String(t)),
+				_squad_note(world, String(t), p)]})
+
+	# 아무 데도 안 붙어도 길이 하나는 있어야 한다.
+	#
+	# 🔴 **`"지금 자리에 남는다"`가 무엇을 뜻하는지 안 말했다.** 02는
+	# 무대마다 다르게 적는다 — 대학은 **진급**, 독립은 **계속**이다
+	choices.append({"id": "continue", "label": _stay_label(p)})
+
 	return _of("career_choice", "진로 최종 선택",
 		"어디로 갈지 정합니다. 되돌릴 수 없습니다.", choices)
+
+
+## 남는다는 게 무슨 뜻인가 — 02 `CareerResultModal:79-88`
+static func _stay_label(p: Dictionary) -> String:
+	match CareerPath.stage_of(p):
+		"university":
+			return "다음 학년으로 진급한다 (%d학년)" % (int(p.get("grade", 0)) + 1)
+		"independent":
+			return "독립리그에서 계속 뛴다"
+	# 고교 졸업반이 여기 오면 갈 곳이 없다 — 재수다
+	return "지금 자리에 남는다"
 
 
 ## 재계약 협상 — F-2b.
