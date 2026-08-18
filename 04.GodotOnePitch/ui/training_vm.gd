@@ -26,6 +26,10 @@ const ZONE_LABEL: Array[Dictionary] = [
 ]
 
 
+## 훈련 이력을 몇 줄 보여주나 — 02는 최근 몇 개만 낸다
+const HISTORY_ROWS: int = 6
+
+
 static func zone_of(fatigue: float) -> Dictionary:
 	for z in ZONE_LABEL:
 		if fatigue >= float(z["at"]):
@@ -91,7 +95,53 @@ static func build(state: Dictionary) -> Dictionary:
 		# 구종 탭이 있었다(보유 · 습득 중 · 해금 가능 · 조건 미충족).
 		# 04는 성장 축 자체가 죽어 있어서 화면도 없었다
 		"pitch": _pitch(p, plan),
+		"rules": _rules(p),
+		"history": _history(state),
 	}
+
+## 경고 룰 — 02 `TrainingPage`의 `<h3>경고 룰</h3>` 절.
+##
+## 🔴 **04엔 이 절이 없었다.** 피로 70·85가 XP를 얼마나 깎는지, 사기가
+## 오래 바닥이면 무슨 일이 나는지 **어디에서도 볼 수 없었다** — 훈련은
+## 그 문턱을 피하는 게임인데 문턱이 안 보이면 고를 근거가 없다.
+##
+## ⚠ **숫자를 여기 다시 적지 않는다.** `Growth.FATIGUE_BANDS`와
+## `Injury.yips_bands()`를 그대로 읽는다 — 규칙이 바뀌면 안내도 같이 바뀐다
+static func _rules(p: Dictionary) -> Dictionary:
+	var rows: Array = []
+	for b in Growth.FATIGUE_BANDS:
+		rows.append({"label": "피로 %d 이상" % int(b[0]),
+			"value": "훈련 효율 %.0f%%" % (float(b[1]) * 100.0)})
+	for b in Injury.yips_bands():
+		rows.append({"label": "사기 저하 %d주 연속" % int(b[0]),
+			"value": "입스 위험 %.0f%%" % (float(b[1]) * 100.0)})
+
+	# 지금 내가 어디에 서 있나. **규칙만 적으면 남 얘기로 읽힌다**
+	var weeks: int = int(p.get("consecutive_low_morale_weeks", 0))
+	var risk: float = Injury.yips_chance(weeks)
+	var status: String = "정상 — 입스 위험 없음"
+	if risk > 0.0:
+		status = "사기 저하 %d주차 — 입스 위험 %.0f%%" % [weeks, risk * 100.0]
+	elif weeks > 0:
+		status = "사기 저하 %d주차" % weeks
+	return {"rows": rows, "status": status, "warn": risk > 0.0}
+
+
+## 훈련 이력 — 02 `<h3>훈련 히스토리</h3>`.
+##
+## ⚠ **`training_log`는 이미 쌓이고 있었다**(P-31에서 소식이 읽게 했다).
+## 훈련 화면에서도 보여준다 — 무엇이 올랐는지 되돌아볼 자리가 여기다.
+##
+## ⚠ **최근 것을 위로, 여섯 줄까지.** 다 보여주면 화면이 로그창이 된다
+static func _history(state: Dictionary) -> Array:
+	var log: Array = state.get("training_log", [])
+	var out: Array = []
+	for i in range(log.size() - 1, -1, -1):
+		out.append(String(log[i]).replace("[훈련] ", ""))
+		if out.size() >= HISTORY_ROWS:
+			break
+	return out
+
 
 
 ## 능력치 이름표. **`StatusVm.PITCHING_LABELS`가 정본이다** — 해금 문턱을

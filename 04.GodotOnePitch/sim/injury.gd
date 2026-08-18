@@ -201,6 +201,11 @@ static func yips_chance(low_morale_weeks: int) -> float:
 	return 0.0
 
 
+## 입스가 오는 문턱 — `[사기 낮은 주, 확률]`. **화면이 이 표를 읽는다**
+static func yips_bands() -> Array:
+	return _pro().get("yips", {}).get("bands", [])
+
+
 ## 회복 주 보정 — 시설 좋은 구단이면 복귀가 빠르다.
 ##
 ## ⚠ **발생 시점에만 건다.** 틱다운에도 걸면 두 번 깎인다

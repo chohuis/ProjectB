@@ -206,3 +206,40 @@ func test_the_done_button_emits() -> void:
 	(s.get_node("Pad/Center/Col/Row/Done") as Button).pressed.emit()
 	await await_idle_frame()
 	assert_array(got).is_equal([true])
+
+
+# ── 경고 룰 · 훈련 이력 ──────────────────────────────────────────
+
+## 🔴 **뷰모델에 실어도 화면이 안 그리면 없는 것과 같다**(형태 ①)
+func test_화면이_경고_룰을_그린다() -> void:
+	var s: TrainingScreen = await _mount(_state())
+	var joined: String = "\n".join(_texts(s))
+	assert_str(joined).override_failure_message(
+		"경고 룰이 화면에 없다").contains("경고 룰")
+	assert_str(joined).contains("피로 85 이상")
+	assert_str(joined).contains("입스")
+
+
+## 사기가 오래 바닥이면 화면이 그렇게 말한다
+func test_입스_위험을_화면이_말한다() -> void:
+	var st: Dictionary = _state()
+	st["protagonist"]["consecutive_low_morale_weeks"] = 9
+	var s: TrainingScreen = await _mount(st)
+	assert_str("\n".join(_texts(s))).override_failure_message(
+		"9주 연속인데 화면이 아무 말도 안 한다").contains("입스 위험")
+
+
+## 훈련 이력이 화면에 나온다 — 쌓기만 하던 로그다
+func test_화면이_훈련_이력을_그린다() -> void:
+	var st: Dictionary = _state()
+	st["training_log"] = ["[훈련] 3주 커맨드 +0.4"]
+	var s: TrainingScreen = await _mount(st)
+	var joined: String = "\n".join(_texts(s))
+	assert_str(joined).contains("훈련 이력")
+	assert_str(joined).contains("3주 커맨드 +0.4")
+
+
+## 기록이 없으면 없다고 말한다
+func test_이력이_없으면_그렇게_말한다() -> void:
+	var s: TrainingScreen = await _mount(_state())
+	assert_str("\n".join(_texts(s))).contains("아직 훈련 기록이 없습니다")

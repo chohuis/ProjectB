@@ -70,6 +70,20 @@ text = "구종"
 layout_mode = 2
 theme_override_constants/separation = 2
 
+[node name="RulesTitle" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="Rules" type="VBoxContainer" parent="Pad/Center/Col"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="HistoryTitle" type="Label" parent="Pad/Center/Col"]
+layout_mode = 2
+
+[node name="History" type="VBoxContainer" parent="Pad/Center/Col"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
 [node name="Row" type="HBoxContainer" parent="Pad/Center/Col"]
 layout_mode = 2
 theme_override_constants/separation = 6

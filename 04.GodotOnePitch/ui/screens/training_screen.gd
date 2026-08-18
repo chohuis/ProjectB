@@ -20,6 +20,10 @@ class_name TrainingScreen
 @onready var _options: VBoxContainer = $Pad/Center/Col/Options
 @onready var _pitch_title: Label = $Pad/Center/Col/PitchTitle
 @onready var _pitches: VBoxContainer = $Pad/Center/Col/Pitches
+@onready var _rules_title: Label = $Pad/Center/Col/RulesTitle
+@onready var _rules: VBoxContainer = $Pad/Center/Col/Rules
+@onready var _history_title: Label = $Pad/Center/Col/HistoryTitle
+@onready var _history: VBoxContainer = $Pad/Center/Col/History
 @onready var _done: Button = $Pad/Center/Col/Row/Done
 
 const ACTION_ROW := preload("res://ui/parts/action_row.tscn")
@@ -79,9 +83,18 @@ func _rebuild() -> void:
 		AppTheme.WARN if bool(_vm.get("warns", false)) else AppTheme.TEXT_DIM)
 
 	_done.text = "닫기"
+	_rules_title.text = "경고 룰"
+	_rules_title.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_rules_title.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	_history_title.text = "훈련 이력"
+	_history_title.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_history_title.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+
 	_build_slots()
 	_build_options()
 	_build_pitches()
+	_build_rules()
+	_build_history()
 
 
 func _build_slots() -> void:
@@ -193,3 +206,58 @@ func _build_pitches() -> void:
 		var pid: String = String(r["id"])
 		b.pressed.connect(func() -> void:
 			pitch_picked.emit.call_deferred(pid))
+
+
+## 경고 룰 — **훈련은 문턱을 피하는 게임인데 문턱이 안 보였다**
+func _build_rules() -> void:
+	_free_all(_rules)
+	var r: Dictionary = _vm.get("rules", {})
+	for row in r.get("rows", []):
+		_pair_into(_rules, String(row["label"]), String(row["value"]),
+			AppTheme.TEXT_DIM)
+	var status := Label.new()
+	status.text = String(r.get("status", ""))
+	status.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	# 지금 걸려 있으면 눈에 띄어야 한다
+	status.add_theme_color_override("font_color",
+		AppTheme.BAD if bool(r.get("warn", false)) else AppTheme.OK)
+	_rules.add_child(status)
+
+
+## 훈련 이력 — `training_log`에 이미 쌓이던 것이다
+func _build_history() -> void:
+	_free_all(_history)
+	var rows: Array = _vm.get("history", [])
+	if rows.is_empty():
+		var empty := Label.new()
+		empty.text = "아직 훈련 기록이 없습니다"
+		empty.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
+		_history.add_child(empty)
+		return
+	for line in rows:
+		var l := Label.new()
+		l.text = String(line)
+		l.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		l.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		_history.add_child(l)
+
+
+func _pair_into(parent: VBoxContainer, left: String, right: String,
+		color: Color) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	parent.add_child(row)
+
+	var a := Label.new()
+	a.text = left
+	a.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	a.add_theme_color_override("font_color", color)
+	a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(a)
+
+	var b := Label.new()
+	b.text = right
+	b.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	b.add_theme_color_override("font_color", color)
+	row.add_child(b)

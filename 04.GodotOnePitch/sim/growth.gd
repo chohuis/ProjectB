@@ -57,6 +57,12 @@ static func age_train_factor(age: int) -> float:
 	return 0.45
 
 
+## 피로가 XP를 깎는 문턱. **화면이 이 표를 그대로 읽는다** —
+## 숫자를 화면에 다시 적으면 규칙이 바뀔 때 안내가 거짓말이 된다.
+##
+## ⚠ **높은 쪽부터다.** 순서를 뒤집으면 85에서도 0.65가 걸린다
+const FATIGUE_BANDS: Array[Array] = [[85.0, 0.35], [70.0, 0.65]]
+
 ## 한 주에 버는 XP.
 ##
 ## ⚠ **`fatigue`는 100 = 탈진이다.** 85 이상이면 0.35배까지 떨어진다 —
@@ -66,13 +72,11 @@ static func age_train_factor(age: int) -> float:
 static func week_xp(base: float, condition: float, fatigue: float,
 		dev_rate: float, diligence: float) -> float:
 	var cond_factor: float = condition / 100.0
-	var fat_factor: float
-	if fatigue >= 85.0:
-		fat_factor = 0.35
-	elif fatigue >= 70.0:
-		fat_factor = 0.65
-	else:
-		fat_factor = maxf(1.0 - fatigue / 200.0, 0.80)
+	var fat_factor: float = maxf(1.0 - fatigue / 200.0, 0.80)
+	for b in FATIGUE_BANDS:
+		if fatigue >= float(b[0]):
+			fat_factor = float(b[1])
+			break
 	var dev_factor: float = dev_rate / 62.0
 	var diligence_factor: float = 0.6 + (diligence / 99.0) * 0.8
 	return base * cond_factor * fat_factor * dev_factor * diligence_factor

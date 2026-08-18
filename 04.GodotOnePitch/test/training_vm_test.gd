@@ -14,6 +14,13 @@ func _p(over: Dictionary = {}) -> Dictionary:
 	return p
 
 
+## 경고 룰·이력은 상태를 통째로 본다 — 로그가 상태에 있다
+func _state(over: Dictionary = {}) -> Dictionary:
+	var s: Dictionary = {"protagonist": _p(), "training_plan": {}}
+	s.merge(over, true)
+	return s
+
+
 func _vm(plan: Dictionary = {}, over: Dictionary = {}) -> Dictionary:
 	return TrainingVm.build({"protagonist": _p(over), "training_plan": plan})
 
@@ -158,3 +165,81 @@ func test_the_projection_is_clamped() -> void:
 	assert_str(String(_vm({"primary": "TRN_RECOVERY"}, {"fatigue": 2.0,
 		"condition": 99.0})["projected_label"])).is_equal(
 		"다음 주 피로 0 (괜찮음) · 컨디션 100")
+
+
+# ── 경고 룰 · 훈련 이력 ──────────────────────────────────────────
+
+## 🔴 **04엔 이 절이 없었다.** 훈련은 문턱을 피하는 게임인데 피로 70·85가
+## XP를 얼마나 깎는지 **어디에서도 볼 수 없었다**
+func test_경고_룰이_문턱을_말한다() -> void:
+	var r: Dictionary = TrainingVm.build(_state())["rules"]
+	var joined: String = ""
+	for row in r["rows"]:
+		joined += "%s %s / " % [row["label"], row["value"]]
+	assert_str(joined).override_failure_message(
+		"피로 문턱이 안 적혔다: %s" % joined).contains("피로 85 이상")
+	assert_str(joined).contains("피로 70 이상")
+	# 얼마나 깎이는지도 같이 — 문턱만 알면 피할 이유가 안 보인다
+	assert_str(joined).contains("35%")
+	assert_str(joined).contains("65%")
+
+
+## ⚠ **숫자를 화면이 다시 적지 않는다** — 엔진 표를 그대로 읽는다
+func test_문턱이_엔진_표에서_온다() -> void:
+	var rows: Array = TrainingVm.build(_state())["rules"]["rows"]
+	# 피로 밴드 수 + 입스 밴드 수
+	assert_int(rows.size()).is_equal(
+		Growth.FATIGUE_BANDS.size() + Injury.yips_bands().size())
+
+
+## 사기가 오래 바닥이면 입스가 온다 — 그 문턱도 적는다
+func test_입스_문턱도_적는다() -> void:
+	var joined: String = ""
+	for row in TrainingVm.build(_state())["rules"]["rows"]:
+		joined += "%s %s / " % [row["label"], row["value"]]
+	assert_str(joined).override_failure_message(
+		"입스 문턱이 없다: %s" % joined).contains("입스")
+	assert_str(joined).contains("사기 저하")
+
+
+## ⚠ **규칙만 적으면 남 얘기로 읽힌다** — 지금 내가 어디 서 있는지 말한다
+func test_지금_내_상태를_말한다() -> void:
+	var safe: Dictionary = TrainingVm.build(_state())["rules"]
+	assert_str(String(safe["status"])).contains("정상")
+	assert_bool(bool(safe["warn"])).is_false()
+
+	var s: Dictionary = _state()
+	s["protagonist"]["consecutive_low_morale_weeks"] = 9
+	var bad: Dictionary = TrainingVm.build(s)["rules"]
+	assert_str(String(bad["status"])).override_failure_message(
+		"9주 연속인데 %s라고 한다" % bad["status"]).contains("9주차")
+	assert_str(String(bad["status"])).contains("입스 위험")
+	assert_bool(bool(bad["warn"])).is_true()
+
+
+## 훈련 이력 — `training_log`에 이미 쌓이던 것이다(P-31)
+func test_훈련_이력이_보인다() -> void:
+	var s: Dictionary = _state()
+	s["training_log"] = ["[훈련] 1주 커맨드 +0.4", "[훈련] 2주 구위 +0.3"]
+	var rows: Array = TrainingVm.build(s)["history"]
+	assert_int(rows.size()).is_equal(2)
+	# 최근 것이 위로 — 방금 한 훈련이 제일 먼저 보여야 한다
+	assert_str(String(rows[0])).contains("2주")
+	# 화면에 태그를 그대로 내보내지 않는다
+	assert_int(String(rows[0]).find("[훈련]")).is_equal(-1)
+
+
+## 길어도 몇 줄만 — 다 보여주면 화면이 로그창이 된다
+func test_이력은_몇_줄만_보여준다() -> void:
+	var s: Dictionary = _state()
+	var log: Array = []
+	for i in 30:
+		log.append("[훈련] %d주 구위 +0.1" % i)
+	s["training_log"] = log
+	assert_int((TrainingVm.build(s)["history"] as Array).size()) \
+		.is_equal(TrainingVm.HISTORY_ROWS)
+
+
+## 기록이 없으면 없다고 말한다 — 빈 칸은 고장으로 보인다
+func test_이력이_없으면_비어_있다() -> void:
+	assert_int((TrainingVm.build(_state())["history"] as Array).size()).is_equal(0)
