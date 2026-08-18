@@ -296,6 +296,34 @@ func _build(which: String) -> Control:
 			lp.ready.connect(func() -> void: lp.screen()._on_tab(3),
 				CONNECT_ONE_SHOT)
 			return lp
+		"team-marks":
+			# 문양 열둘 × 외곽 다섯을 한 판에 — **눈으로 봐야 정한다**.
+			# 22px에서 뭉개지는 문양이 있으면 여기서 드러난다
+			var tm_root := Control.new()
+			tm_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+			var tm_bg := ColorRect.new()
+			tm_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+			tm_bg.color = AppTheme.BG
+			tm_root.add_child(tm_bg)
+
+			var grid := GridContainer.new()
+			grid.columns = 12
+			grid.position = Vector2(40, 40)
+			grid.add_theme_constant_override("h_separation", 10)
+			grid.add_theme_constant_override("v_separation", 10)
+			tm_root.add_child(grid)
+			# 위 줄은 22px(목록 크기) · 아래 줄은 64px(크게 봤을 때)
+			for px in [22, 64]:
+				for motif in TeamMark.MOTIFS:
+					var cell := TeamMark.new()
+					# ⚠ **min만 주면 눌린다** — 그리기가 를 보므로 둘 다 준다
+					cell.custom_minimum_size = Vector2(px, px)
+					cell.size = Vector2(px, px)
+					cell.setup({"team_id": "T", "shell": "shield",
+						"motif": motif, "band": 0,
+						"primary": "#194980", "accent": "#C1500F"})
+					grid.add_child(cell)
+			return tm_root
 		"team":
 			var tm: AppRoot = APP.instantiate()
 			tm.set_state(World.new_game({"seed": 20270101, "season_year": 2027,

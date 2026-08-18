@@ -161,6 +161,9 @@ const MOTIF_FILLS: Dictionary = {
 	"mount": [[22, 72], [38, 42], [48, 58], [60, 34], [80, 72]],
 	"arrow": [[50, 26], [72, 50], [58, 50], [58, 76], [42, 76], [42, 50],
 		[28, 50]],
+	# ⚠ **crown은 곡선이 아니었다** — 02를 열어 보니 다각형이다
+	"crown": [[24, 72], [20, 38], [34, 50], [50, 28], [66, 50], [80, 38],
+		[76, 72]],
 }
 
 ## 날개는 네 조각이다 — 02도 `<path>` 넷이다
@@ -193,6 +196,8 @@ func _draw_motif(shell: PackedVector2Array) -> void:
 	if MOTIF_LINES.has(_motif):
 		for line in MOTIF_LINES[_motif]:
 			draw_polyline(_poly(line[0]), white, _scaled(float(line[1])), true)
+		return
+	_draw_curved_motif()
 
 
 ## 02 좌표 배열을 이 칸으로
@@ -206,3 +211,64 @@ func _poly(points: Array) -> PackedVector2Array:
 ## 선 굵기도 같이 줄인다 — 안 줄이면 22px에서 문양이 뭉갠다
 func _scaled(w: float) -> float:
 	return maxf(w / BOX.x * size.x, 1.0)
+
+
+## 곡선 문양 — 02 SVG의 `C`·`Q`를 Godot 그리기로 옮긴다.
+##
+## ⚠ **crown은 곡선이 아니었다** — `<path fill>` 다각형이라 위 표로 갔다.
+## **02를 열어 보고 알았다**(안 열었으면 "곡선이라 못 옮긴다"로 남을 뻔했다).
+##
+## ⚠ **원은 `draw_arc`가 정확하다** — 다각형으로 근사하면 22px에서 각이 진다
+func _draw_curved_motif() -> void:
+	var white := Color(1, 1, 1)
+	match _motif:
+		"ring":
+			# 02: 원 하나 + 가운데 점
+			draw_arc(_pt(50, 52), _r(20), 0.0, TAU, 24, white, _scaled(9), true)
+			draw_circle(_pt(50, 52), _r(5), white)
+		"seam":
+			# 02: 원 + 좌우 실밥 두 줄
+			draw_arc(_pt(50, 52), _r(21), 0.0, TAU, 24, white, _scaled(5), true)
+			draw_polyline(_bezier(Vector2(36, 38), Vector2(44, 46),
+				Vector2(44, 58), Vector2(36, 66)), white, _scaled(6), true)
+			draw_polyline(_bezier(Vector2(64, 38), Vector2(56, 46),
+				Vector2(56, 58), Vector2(64, 66)), white, _scaled(6), true)
+		"wave":
+			# 02: 물결 두 줄(`Q`의 반복)
+			for base in [60.0, 74.0]:
+				var pts := PackedVector2Array()
+				for i in 17:
+					var t: float = float(i) / 16.0
+					pts.append(_pt(24.0 + 56.0 * t,
+						base - 7.0 * sin(t * TAU * 1.5)))
+				draw_polyline(pts, white, _scaled(7), true)
+		"flame":
+			# 02: 위가 뾰족하고 아래가 둥근 불꽃
+			var flame := PackedVector2Array([_pt(50, 24)])
+			flame.append_array(_bezier(Vector2(50, 24), Vector2(62, 40),
+				Vector2(70, 46), Vector2(70, 60)))
+			flame.append_array(_bezier(Vector2(70, 60), Vector2(70, 74),
+				Vector2(61, 82), Vector2(50, 82)))
+			flame.append_array(_bezier(Vector2(50, 82), Vector2(39, 82),
+				Vector2(30, 74), Vector2(30, 60)))
+			flame.append_array(_bezier(Vector2(30, 60), Vector2(30, 46),
+				Vector2(38, 40), Vector2(50, 24)))
+			draw_colored_polygon(flame, white)
+
+
+## 3차 베지어를 점으로 — 02 SVG의 `C`가 그것이다
+func _bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2,
+		steps: int = 10) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	for i in range(steps + 1):
+		var t: float = float(i) / float(steps)
+		var u: float = 1.0 - t
+		var p: Vector2 = p0 * (u * u * u) + p1 * (3.0 * u * u * t) \
+			+ p2 * (3.0 * u * t * t) + p3 * (t * t * t)
+		out.append(_pt(p.x, p.y))
+	return out
+
+
+## 02 좌표의 반지름을 이 칸으로 — 가로세로 비가 달라 작은 쪽에 맞춘다
+func _r(v: float) -> float:
+	return v / BOX.x * minf(size.x, size.y)
