@@ -198,6 +198,8 @@ static func team_detail(team_id: String) -> Dictionary:
 	return {
 		"id": team_id,
 		"name": name,
+		# 팀 마크 — 02도 팀 고르기에 크게 띄운다(96px) (U-1)
+		"mark": TeamMarkVm.build(team_id),
 		"rows": [
 			{"label": "연고", "value": String(World.team_field({}, team_id, "city", "-"))},
 			# 구장 성향은 표시용이다 — 02도 엔진엔 안 먹인다

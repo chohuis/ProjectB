@@ -309,3 +309,12 @@ func test_안_고르면_균형형으로_시작한다() -> void:
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 	assert_float(float(s["protagonist"]["pitching"]["velocity"])).is_equal(70.0)
 	assert_int((s["protagonist"]["pitches"] as Array).size()).is_equal(2)
+
+
+## 팀 고르기에도 마크가 온다 — 02도 여기에 크게 띄운다(96px)
+func test_학교_상세에_마크가_온다() -> void:
+	var d: Dictionary = NewGameVm.team_detail("TEAM_HS_AEWOL")
+	var mark: Dictionary = d["mark"]
+	assert_str(String(mark["team_id"])).is_equal("TEAM_HS_AEWOL")
+	var colors: Array = World.team_field({}, "TEAM_HS_AEWOL", "colors", [])
+	assert_str(String(mark["primary"])).is_equal(String(colors[0]))

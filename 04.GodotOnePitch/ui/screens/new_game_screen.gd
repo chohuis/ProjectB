@@ -189,10 +189,24 @@ func _fill_detail() -> void:
 	if d.is_empty():
 		return
 
+	# 마크를 이름 옆에 — 고르는 자리라 크게 띄운다
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 8)
+	_detail.add_child(top)
+
+	var spec: Dictionary = d.get("mark", {})
+	if not spec.is_empty():
+		var tm := TeamMark.new()
+		tm.custom_minimum_size = Vector2(40, 40)
+		tm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		top.add_child(tm)
+		tm.setup(spec)
+
 	var head := Label.new()
 	head.text = String(d["name"])
 	head.add_theme_color_override("font_color", AppTheme.ACCENT)
-	_detail.add_child(head)
+	head.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(head)
 
 	for r in d.get("rows", []):
 		var row := HBoxContainer.new()
