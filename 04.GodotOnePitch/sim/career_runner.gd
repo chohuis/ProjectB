@@ -76,7 +76,10 @@ static func run(state: Dictionary, at_day: int) -> Dictionary:
 ## ⚠ **둘을 같은 주에 안 묻는다.** 체육부대는 2월 첫 주, 입대 확인은 시즌
 ## 마지막 주라 겹치지 않지만, 겹치면 상무를 먼저 본다 — 지원해 놓고 현역
 ## 입대를 묻는 건 방금 한 선택을 없던 일로 만든다
-static func _ask_military(state: Dictionary, _at_day: int) -> String:
+static func _ask_military(state: Dictionary, at_day: int) -> String:
+	var picked: String = _sports_result(state, at_day)
+	if not picked.is_empty():
+		return picked
 	if Military.should_ask_sports_unit(state):
 		Pending.push_once(state, {"type": "sports_unit_apply"})
 		return "sports_unit_apply"
@@ -84,6 +87,60 @@ static func _ask_military(state: Dictionary, _at_day: int) -> String:
 		Pending.push_once(state, {"type": "military_enlist_ask"})
 		return "military_enlist_ask"
 	return ""
+
+
+## 상무 선발 결과 — 시즌 마지막 주. 02 `advanceWeek.ts:2034-2090`.
+##
+## ⚠ **떨어지면 곧바로 입대 확인을 묻는다.** 안 이으면 지원했다가 떨어진
+## 사람은 그해에 아무 일도 안 일어난다 — 02도 `reason: "rejected"`로 잇는다.
+##
+## ⚠ **`sports_unit_applied`를 지운다.** 안 지우면 다음 해에 `should_ask_enlist`가
+## "지원 중"으로 보고 영영 입대를 안 묻는다
+static func _sports_result(state: Dictionary, at_day: int) -> String:
+	var p: Dictionary = state.get("protagonist", {})
+	if not bool(p.get("sports_unit_applied", false)):
+		return ""
+	if at_day <= Calendar.DAYS_PER_SEASON - Calendar.DAYS_PER_WEEK:
+		return ""
+
+	var me_id: String = String(p.get("id", ""))
+	var pool: Array = [{"id": me_id, "ovr": Contract.core_ovr(p),
+		"team_id": String(p.get("team_id", ""))}]
+	for q in _sports_rivals(state, me_id):
+		pool.append(q)
+
+	p.erase("sports_unit_applied")
+	if Military.select_sports_unit(pool, me_id):
+		Military.enlist(state, "sports", at_day)
+		return "sports_unit_selected"
+
+	Military.mark_enlist_asked(state)
+	Pending.push_once(state, {"type": "military_enlist_ask",
+		"reason": "rejected"})
+	return "sports_unit_rejected"
+
+
+## 같이 겨루는 사람들 — 미필이고 학생이 아닌 프로 선수.
+##
+## ⚠ **주인공만 넣고 뽑으면 늘 붙는다.** 겨룰 상대가 없으면 정원 13이
+## 아무 뜻이 없다
+static func _sports_rivals(state: Dictionary, me_id: String) -> Array:
+	var out: Array = []
+	var world: Dictionary = state.get("world", {})
+	for tid in world.get("rosters", {}):
+		for q in world["rosters"][tid]:
+			if String(q.get("id", "")) == me_id:
+				continue
+			if String(q.get("military_status", Military.STATUS_UNSERVED)) \
+					!= Military.STATUS_UNSERVED:
+				continue
+			var stage: String = String(q.get("career_stage", ""))
+			if stage == "highschool" or stage == "university" \
+					or stage == "military":
+				continue
+			out.append({"id": String(q.get("id", "")),
+				"ovr": Contract.core_ovr(q), "team_id": String(tid)})
+	return out
 
 
 ## 복무 한 주. 기간을 채웠으면 전역까지 여기서 한다.

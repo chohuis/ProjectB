@@ -228,3 +228,48 @@ func test_결정_화면이_둘을_받는다() -> void:
 			"결정 화면이 %s를 모른다" % t).is_false()
 		assert_int((vm["choices"] as Array).size()).override_failure_message(
 			"%s에 선택지가 둘이 아니다" % t).is_equal(2)
+
+
+# ── 상무 선발 결과 ────────────────────────────────────────────
+
+func _pool(n: int, ovr: float, team: String = "T") -> Array:
+	var out: Array = []
+	for i in n:
+		out.append({"id": "N%d" % i, "ovr": ovr, "team_id": "%s%d" % [team, i]})
+	return out
+
+
+## 02 `rosterSize 26 / serviceYears 2`
+func test_연간_선발이_열셋이다() -> void:
+	assert_int(Military.sports_annual_intake()).is_equal(13)
+
+
+## OVR이 높으면 붙는다 — 02도 OVR 순으로 자른다
+func test_잘하면_붙는다() -> void:
+	var pool: Array = _pool(20, 50.0)
+	pool.append({"id": "ME", "ovr": 90.0, "team_id": "MINE"})
+	assert_bool(Military.select_sports_unit(pool, "ME")).is_true()
+
+
+## 정원 밖이면 떨어진다
+func test_정원_밖이면_떨어진다() -> void:
+	var pool: Array = _pool(20, 90.0)
+	pool.append({"id": "ME", "ovr": 40.0, "team_id": "MINE"})
+	assert_bool(Military.select_sports_unit(pool, "ME")).is_false()
+
+
+## ⚠ **한 팀 상한이 없으면 강팀이 정원을 독식한다**
+func test_한_팀이_넷을_못_넣는다() -> void:
+	var pool: Array = []
+	for i in 5:
+		pool.append({"id": "S%d" % i, "ovr": 90.0 - i, "team_id": "SAME"})
+	pool.append({"id": "ME", "ovr": 60.0, "team_id": "MINE"})
+	# 같은 팀에서 셋만 들어가므로 남은 자리에 내가 든다
+	assert_bool(Military.select_sports_unit(pool, "ME")).override_failure_message(
+		"한 팀이 정원을 독식했다").is_true()
+
+
+## 지원자가 정원보다 적으면 다 붙는다
+func test_지원자가_적으면_다_붙는다() -> void:
+	assert_bool(Military.select_sports_unit(
+		[{"id": "ME", "ovr": 30.0, "team_id": "MINE"}], "ME")).is_true()

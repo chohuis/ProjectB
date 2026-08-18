@@ -147,6 +147,53 @@ static func _mark(state: Dictionary, key: String) -> void:
 		p[key] = int(state.get("season_year", 0))
 
 
+# ── 상무 선발 ─────────────────────────────────────────────────
+#
+# 02 `utils/militaryRules.ts:34-43` — **정원은 파생값이다**:
+#   연간 선발 = `rosterSize / serviceYears` = 26 / 2 = **13**
+#   한 팀 최대 = **3**
+#
+# ⚠ **02의 누수는 안 물려받는다.** 02는 주인공(W52)과 NPC(오프시즌)를 **별개로
+# 추첨**해서 둘 다 뽑히면 그해 입대가 정원 +1이고, 상무는 `career_status`가
+# `military`라 오프시즌 로스터 캡이 안 걸려 **해마다 쌓인다** — 02가 그 자리에
+# 그렇게 적어 뒀다. 04는 **한 자리에서 한 번만** 뽑는다.
+
+const SPORTS_ROSTER: int = 26
+const SPORTS_SERVICE_YEARS: int = 2
+const SPORTS_MAX_PER_TEAM: int = 3
+
+
+static func sports_annual_intake() -> int:
+	return maxi(1, int(roundf(float(SPORTS_ROSTER) / float(SPORTS_SERVICE_YEARS))))
+
+
+## 지원자 중 내가 뽑히나. `applicants`는 `[{id, ovr, team_id}, …]`.
+##
+## ⚠ **난수를 안 쓴다.** 02도 OVR 순으로 자른다 — 여기서 추첨을 넣으면
+## 그건 02 값이 아니라 내가 정한 규칙이 된다.
+##
+## ⚠ **한 팀 상한을 먼저 본다.** 안 보면 강팀 하나가 정원을 독식한다
+static func select_sports_unit(applicants: Array, me_id: String) -> bool:
+	var ranked: Array = applicants.duplicate()
+	ranked.sort_custom(func(a, b) -> bool:
+		return float(a.get("ovr", 0.0)) > float(b.get("ovr", 0.0)))
+
+	var per_team: Dictionary = {}
+	var taken: int = 0
+	var cap: int = sports_annual_intake()
+	for a in ranked:
+		if taken >= cap:
+			return false
+		var t: String = String(a.get("team_id", ""))
+		if int(per_team.get(t, 0)) >= SPORTS_MAX_PER_TEAM:
+			continue
+		per_team[t] = int(per_team.get(t, 0)) + 1
+		taken += 1
+		if String(a.get("id", "")) == me_id:
+			return true
+	return false
+
+
 ## ⚠ **모르는 값을 빈칸으로 두지 않는다.** 형태가 늘었는데 화면이 조용히
 ## 비면 아무도 모른다
 static func unit_label(unit: String) -> String:
