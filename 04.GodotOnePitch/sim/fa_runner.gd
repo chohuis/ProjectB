@@ -135,29 +135,10 @@ static func run_league(state: Dictionary, league_id: String,
 	if players.is_empty():
 		return {"signings": 0, "unsigned": 0, "moved": 0}
 
-	var market_players: Array = []
-	for p in players:
-		market_players.append({
-			"id": String(p["id"]), "name": String(p.get("name", "")),
-			"from_team_id": String(p.get("team_id", "")),
-			"ovr": Contract.core_ovr(p), "age": int(p.get("age", 27)),
-			"salary": int(p.get("salary", 0)), "form": 0.0,
-		})
-
-	var teams: Array = []
-	for t in World.teams_of(league_id):
-		var tid: String = String(t["id"])
-		teams.append({
-			"team_id": tid,
-			# 예산 지수는 아직 없다 — 구단주 씀씀이로 대신한다.
-			# **모양은 02 그대로다**(0.8~1.35), 재정이 붙으면 값만 바뀐다
-			"budget_index": clampf(
-				float(TeamProfile.of(world, tid)["owner_spending_willingness"]) / 50.0,
-				0.8, 1.35),
-			"win_now_pressure": float(TeamProfile.of(world, tid)["win_now_pressure"]),
-			"open_slots": open_slots_of(world, tid, league_id),
-			"roster": compensation_pool(world, tid),
-		})
+	# 🔴 **조립을 여기서 다시 짓지 않는다** (P-5c). 계측이 부르는 것과 같은
+	# 함수다 — 갈리면 게임을 고쳐도 계측이 안 따라온다
+	var market_players: Array = market_players_of(world, league_id)
+	var teams: Array = market_teams_of(world, league_id)
 
 	var out: Dictionary = FaMarket.resolve(market_players, teams,
 		pro_salaries(world), rng)

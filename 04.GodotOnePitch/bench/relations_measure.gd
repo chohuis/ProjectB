@@ -17,6 +17,11 @@ class_name RelationsMeasure
 
 
 ## 코치가 오르는 두 조건이 몇 번 걸렸나
+##
+## ⚠ **이 숫자는 "성장량"이 아니다** (P-16b). "한 주에 core OVR이 1칸 넘게
+## 오른 주"의 개수다 — 매주 0.9씩 꾸준히 오르면 여기는 **20해 내내 0**이다.
+## 실제로 그 0을 "성장이 막혔다"로 읽어 P-16을 잘못 세웠다.
+## **OVR 시작→끝을 같이 낸다** — 아래 `_ovr_start`·`_ovr_by_year`
 var _grew_weeks: int = 0
 var _area_weeks: int = 0
 var _areas: Dictionary = {}
@@ -26,6 +31,17 @@ var _trace: Array[String] = []
 ## 등판이 0이면 관계 산식이 아니라 등판 경로를 봐야 한다
 var _appearances: int = 0
 var _opponents: int = 0
+
+## 🔴 **사람이 궁금한 것은 "얼마나 컸나"다** (P-16b).
+## 시작 OVR과 해마다의 OVR을 그대로 낸다 — 이게 있으면 `_grew_weeks`가 0이어도
+## 성장이 도는지 한눈에 갈린다
+var _ovr_start: float = 0.0
+var _ovr_by_year: Array[float] = []
+
+## ⚠ **줄어드는 OVR의 원인 후보를 같이 낸다** (P-16b).
+## 잠재력 천장에 붙어 있으면 성장이 0이고, 부상으로 쉰 주가 많으면 훈련이
+## 통째로 빠진다 — 둘을 안 내면 "성장 산식이 이상하다"로 잘못 읽는다
+var _hurt_weeks: int = 0
 
 
 ## 지금 일정에서 주인공 등판을 세어 누적한다. **시즌을 넘기기 전에 부른다**
@@ -85,9 +101,16 @@ func _one(seed_value: int, years: int) -> Dictionary:
 		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
 	var p: Dictionary = s["protagonist"]
 	p["career_stage"] = "highschool"
+	_ovr_start = Contract.core_ovr(p)
 	p["grade"] = 1
 	s["school"] = {"gpa": 3.2, "major": "체육교육"}
 
+	# 🔴 **첫 주 계획만 넣는다** — 매주는 `AutoTraining.apply`가 갱신한다.
+	# 이걸 박아만 두고 갱신을 안 걸었더니 **피로가 95를 넘어도 고강도를 계속
+	# 밀어서 6해 중 247주(79%)를 부상으로 보냈다.** 그 상태의 OVR 하락을
+	# "성장 산식이 이상하다"로 읽을 뻔했다 — `AutoAdvance.run`이 매 걸음
+	# 부르는 것과 같은 자리다(형태 ⑦)
+	#
 	# ⚠ **훈련 계획을 세워야 한다.** 안 세우면 매주 `training_skip`이 걸려
 	# 코치 −2 · 감독 −1이 191주 쌓인다 — 처음에 안 세우고 재서 코치 평균이
 	# **−81.5**로 바닥에 붙었다(02는 +29). 04 결함이 아니라 fixture가 빈 것이다
@@ -142,6 +165,14 @@ func _one(seed_value: int, years: int) -> Dictionary:
 			# ⚠ **입력을 센다.** 코치는 담당 영역 훈련과 성장으로만 오른다 —
 			# 산식을 의심하기 전에 그 둘이 몇 번 걸리는지 본다.
 			# `WeekRunner` **앞**에서 재야 그 주의 성장분이 잡힌다
+			# ⚠ **낫고도 사전이 남는다** — 있는지가 아니라 `weeks_left`를 본다
+			var cur_inj = (s["protagonist"] as Dictionary).get("injury", null)
+			if cur_inj is Dictionary and int(cur_inj.get("weeks_left", 0)) > 0:
+				_hurt_weeks += 1
+			# 🔴 **게임의 자동 진행과 같은 자리다** (`auto_advance.gd:205`).
+			# 피로·사기가 오르내리므로 한 번 정하고 두면 탈진한 채로 구속을
+			# 올린다 — 실제로 그래서 부상이 79%였다
+			AutoTraining.apply(s)
 			var before_ovr: float = Contract.core_ovr(s["protagonist"])
 			var area: String = RelationshipRunner.training_area_of(s)
 			WeekRunner.run(s, day)
@@ -154,18 +185,32 @@ func _one(seed_value: int, years: int) -> Dictionary:
 		# ⚠ **해마다 어디 있는지 찍는다.** 4해를 굴렸는데 등판이 1해와 같은
 		# 10경기였다 — 어느 해부터 안 뛰는지 모르면 산식을 엉뚱하게 뒤진다
 		var pp: Dictionary = s.get("protagonist", {})
+		# ⚠ **"내 경기"는 등판 수지 팀 경기 수가 아니다** (P-17).
+		# 둘을 같이 안 내면 "대학이 해마다 9경기"가 리그 크기 문제로 읽힌다 —
+		# 실제로는 고교 20경기 중 등판 9였고 그 9가 우연히 같았다
 		var mine: int = 0
+		var team_games: int = 0
+		var my_team: String = String(pp.get("team_id", ""))
 		for g in s.get("schedule", []):
+			if String(g.get("home", "")) == my_team 					or String(g.get("away", "")) == my_team:
+				team_games += 1
 			if g.get("is_protagonist_game", false):
 				mine += 1
 		var pend: Array = []
 		for q in s.get("pending", []):
 			pend.append(String(q.get("type", "?")))
 		var inj = pp.get("injury", null)
-		_trace.append("%d년 %s/%s · 학년 %s · 내 경기 %d · 게이트 %s · 부상 %s · 대기 %s" % [
-			year, String(pp.get("career_stage", "?")),
+		# ⚠ **OVR을 해마다 남긴다** — 어느 해에 멈췄는지는 합계로는 안 보인다
+		_ovr_by_year.append(Contract.core_ovr(pp))
+		_trace.append("%d년 OVR %.1f/%.0f · %s/%s · 학년 %s · 팀 %d경기 중 등판 %d · 게이트 %s · 부상 %s · 대기 %s" % [
+			year, Contract.core_ovr(pp),
+			# 🔴 **키는 `potential_hidden`이다** — `potential`로 읽어 6해 내내
+			# 0이 찍혔다. 계측이 게임의 계약을 모르던 자리(형태 ⑦)가 또 나왔고,
+			# 이번엔 **P-16b가 낸 줄이 스스로 그걸 드러냈다**
+			float(pp.get("potential_hidden", 0.0)),
+			String(pp.get("career_stage", "?")),
 			String(pp.get("league_id", "?")), str(pp.get("grade", "-")),
-			mine, DayEngine.appearance_gate(pp),
+			team_games, mine, DayEngine.appearance_gate(pp),
 			("%s %d주" % [String(inj.get("type", "?")),
 				int(inj.get("weeks_left", 0))]) if inj is Dictionary else "없음",
 			str(pend) if not pend.is_empty() else "없음"])
@@ -206,7 +251,20 @@ func run(log_line: Callable, _fail: Callable, seed_value: int,
 	var area_line: String = ""
 	for a in _areas:
 		area_line += "%s %d · " % [a, _areas[a]]
-	log_line.call("  성장 임계(%.0f) 넘은 주 %d · 훈련 영역이 정해진 주 %d  [%s]"
+	# 🔴 **성장은 이 줄로 읽는다** (P-16b) — 아래 "임계 넘은 주"가 아니다
+	var ovr_end: float = _ovr_by_year[-1] if not _ovr_by_year.is_empty() 		else _ovr_start
+	var by_year: String = ""
+	for i in _ovr_by_year.size():
+		by_year += "%d년 %.1f · " % [2027 + i, _ovr_by_year[i]]
+	log_line.call("  OVR %.1f → %.1f (%+.1f · 해마다 %+.1f)"
+		% [_ovr_start, ovr_end, ovr_end - _ovr_start,
+			(ovr_end - _ovr_start) / float(maxi(1, _ovr_by_year.size()))])
+	log_line.call("    %s" % by_year.trim_suffix(" · "))
+	log_line.call("    부상으로 쉰 주 %d / %d주" % [_hurt_weeks,
+		_ovr_by_year.size() * Calendar.WEEKS_PER_SEASON])
+	# ⚠ **아래는 "한 주에 1칸 넘은 주"의 개수다** — 0이어도 성장은 돈다.
+	# 코치 관계가 그 조건을 보므로 남겨 두지만, 성장의 척도로 읽으면 안 된다
+	log_line.call("  코치 조건 — 한 주에 %.0f칸 넘은 주 %d · 훈련 영역이 정해진 주 %d  [%s]"
 		% [_growth_threshold(), _grew_weeks, _area_weeks,
 			area_line.trim_suffix(" · ")])
 
