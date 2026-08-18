@@ -60,8 +60,44 @@ static func run(state: Dictionary, at_day: int) -> Dictionary:
 		Pending.push_once(state, {"type": "career_choice_hub"})
 		out["opened"] = true
 	elif week >= RESULT_WEEK:
+		# 🔴 **드래프트 관전이 도달 불가였다.** 화면(`_observe`)도 해소하는
+		# 쪽도 `AutoAdvance` 항목도 다 있는데 **대기줄에 올리는 곳이 없었다** —
+		# 체육부대와 같은 모양(마지막 하나였다).
+		#
+		# 02도 **결과와 같은 주(W47)**에 올린다(`advanceWeek.ts:948-956`) —
+		# 진로 대기가 없을 때만. `RESULT_WEEK`가 이미 그 주다.
+		#
+		# ⚠ **결과보다 먼저 올린다.** 결과를 보여준 뒤에 "오늘 드래프트가
+		# 열립니다"를 띄우면 순서가 거꾸로다
+		out["observed"] = _observe_draft(state)
 		out["results"] = _decide(state)
 	return out
+
+
+## 드래프트 관전을 올린다 — 02 `advanceWeek.ts:948-956`.
+##
+## ⚠ **드래프트를 신청한 사람에게만.** 안 낸 사람에게 "오늘 드래프트가
+## 열립니다"는 남의 일이다 — 02는 진로 대기가 없을 때만 올려서 같은 뜻이 된다.
+##
+## ⚠ **한 해에 한 번.** `RESULT_WEEK` 이후 매주 도는 자리라 안 막으면
+## 해마다 여러 번 뜬다
+const OBSERVE_ASKED_KEY: String = "draft_observe_year"
+
+
+static func _observe_draft(state: Dictionary) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	if p.is_empty():
+		return false
+	var c: Dictionary = CareerDecision.of(state)
+	if not bool(c.get("applications", {}).get("draft_applied", false)):
+		return false
+
+	var year: int = int(state.get("season_year", 0))
+	if int(p.get(OBSERVE_ASKED_KEY, -1)) == year:
+		return false
+	p[OBSERVE_ASKED_KEY] = year
+	Pending.push_once(state, {"type": "draft_observe"})
+	return true
 
 
 ## 병역을 물을 때면 대기줄에 올린다 — 02 `advanceWeek.ts:1952-2135`.

@@ -313,17 +313,42 @@ func test_rejecting_a_renewal_signs_nothing() -> void:
 		"거절했는데 계약이 생겼다").is_false()
 
 
-func test_an_option_clause_can_go_either_way() -> void:
+## 🔴 **옛 약속을 갈아끼웠다** (P-25).
+##
+## 여기는 `option_type` 없이 올려 놓고 "행사/미행사를 사용자가 고른다"를
+## 봤다. **구단 옵션은 구단이 정한다** — 02는 시즌 평점으로 갈라 **통보**하고
+## (`advanceWeek.ts:1060-1070`) 사용자가 고르는 건 **선수 옵션**뿐이다.
+##
+## 옛 검사의 뜻("두 갈래로 갈린다")은 **선수 옵션**에서 그대로 산다
+func test_a_player_option_can_go_either_way() -> void:
 	for pick in [["exercise", 1], ["decline", 0]]:
 		var s: Dictionary = _state({"contract_years": 1})
 		Pending.push_once(s, {"type": "option_clause", "team_id": "TEAM_KBL_A",
-			"next_salary": 9000})
+			"option_type": "player", "exercised": false, "next_salary": 9000})
 		assert_str(String(DecisionVm.build(s)["body"])).contains("9000만")
 
 		DecisionVm.apply(s, String(pick[0]), 300)
 		assert_int(int(s["protagonist"]["contract_years"])
 			).override_failure_message("%s를 골랐는데 계약 연수가 다르다" % pick[0]
 			).is_equal(int(pick[1]))
+
+
+## 구단 옵션은 **통보**다 — 결과가 이미 정해져 있고 확인만 한다
+func test_a_team_option_is_a_notice() -> void:
+	for one in [[true, 1], [false, 0]]:
+		var s: Dictionary = _state({"contract_years": 1})
+		Pending.push_once(s, {"type": "option_clause", "team_id": "TEAM_KBL_A",
+			"option_type": "team", "exercised": bool(one[0]),
+			"next_salary": 9000})
+		var d: Dictionary = DecisionVm.build(s)
+		assert_int(int(d["choices"].size())).override_failure_message(
+			"구단 옵션인데 고르게 한다").is_equal(1)
+
+		DecisionVm.apply(s, String(d["choices"][0]["id"]), 300)
+		assert_int(int(s["protagonist"]["contract_years"])
+			).override_failure_message(
+			"구단이 %s했는데 계약 연수가 다르다" % ("행사" if one[0] else "미행사")
+			).is_equal(int(one[1]))
 
 
 # ── 진로 지원 (여러 곳) ───────────────────────────────────────

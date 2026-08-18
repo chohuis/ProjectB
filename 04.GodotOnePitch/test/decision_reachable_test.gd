@@ -28,11 +28,12 @@ const HAS_ENTRY: Array[String] = [
 	"career_results", "career_choice_hub", "career_choice",
 	"draft_notification", "salary_negotiation", "fa_market", "trade",
 	"sports_unit_apply", "military_enlist_ask", "option_clause",
+	"draft_observe",
 ]
 
 ## 🔴 **입구가 없는 갈래.** 고칠 때마다 여기서 뺀다 —
 ## 목록이 줄지 않으면 아무것도 안 고친 것이다
-const NO_ENTRY: Array[String] = ["draft_observe"]
+const NO_ENTRY: Array[String] = []
 
 
 func _sources() -> String:
