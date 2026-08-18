@@ -161,3 +161,56 @@ func test_띠_없음은_안_그린다() -> void:
 	mark.setup({"team_id": "T", "shell": "hex", "band": 0,
 		"primary": "#194980", "accent": "#C1500F"})
 	assert_int(mark._band_polygons(mark._shell_points()).size()).is_equal(0)
+
+
+# ── 대비 ─────────────────────────────────────────────────────────
+
+## ⚠ **02가 무엇을 재는지 읽고 나서 세웠다.**
+## `scripts/check-teamcolors.cjs:15`가 정본이다 —
+## **"보조색 위에 흰 글씨 — 대비 4.5:1 이상"**. 주색이 아니다.
+##
+## 🔴 **처음엔 주색에 4.5:1을 걸었다가 101팀 미달이 나왔다.** 02 규칙을
+## 잘못 읽은 것이었다 — **04 데이터를 02 규칙이라 착각한 검사**가 될 뻔했다.
+##
+## ⚠ **국내만 잰다.** 02도 그렇다 — 해외(ABL·JBL)는 실제 구단 색을 그대로
+## 써서 밝은 색이 섞여 있다(실측: 238팀 중 50팀 미달, 전부 해외).
+## 국내 172팀은 **전부 통과**한다
+const DOMESTIC: Array[String] = ["LEAGUE_KBL", "LEAGUE_HIGHSCHOOL",
+	"LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT"]
+
+
+func _white_ratio(c: Color) -> float:
+	var l: float = 0.2126 * _lin(c.r) + 0.7152 * _lin(c.g) + 0.0722 * _lin(c.b)
+	return 1.05 / (l + 0.05)
+
+
+func _lin(v: float) -> float:
+	return v / 12.92 if v <= 0.03928 else pow((v + 0.055) / 1.055, 2.4)
+
+
+## 보조색 위의 흰 글씨가 읽힌다 — 마크에 흰 문양을 얹을 자리다
+func test_국내_보조색_위에서_흰색이_읽힌다() -> void:
+	var bad: Array = []
+	for lid in DOMESTIC:
+		for t in World.teams_of(lid):
+			var m: Dictionary = TeamMarkVm.build(String(t["id"]))
+			var r: float = _white_ratio(Color(String(m["accent"])))
+			if r < 4.5:
+				bad.append("%s %s %.2f" % [t["id"], m["accent"], r])
+	assert_int(bad.size()).override_failure_message(
+		"보조색 위에서 흰 글씨가 안 읽히는 국내 팀 %d개: %s"
+		% [bad.size(), ", ".join(PackedStringArray(bad.slice(0, 5)))]).is_equal(0)
+
+
+## ⚠ **해외는 안 잰다** — 실제 구단 색이라 밝은 것이 섞여 있다.
+## 그 사실을 검사가 적어 둔다(모르고 규칙을 넓히면 데이터를 고치게 된다)
+func test_해외는_밝은_색이_섞여_있다() -> void:
+	var bad: int = 0
+	for lid in ["LEAGUE_ABL", "LEAGUE_JBL"]:
+		for t in World.teams_of(lid):
+			var m: Dictionary = TeamMarkVm.build(String(t["id"]))
+			if _white_ratio(Color(String(m["accent"]))) < 4.5:
+				bad += 1
+	assert_int(bad).override_failure_message(
+		"해외 미달이 %d팀이다 — 데이터가 바뀌었으면 이 검사를 다시 본다" % bad) \
+		.is_greater(0)
