@@ -41,6 +41,8 @@ static func build(s: Dictionary) -> Dictionary:
 	for r in rows:
 		r["name"] = names.get(r["team_id"], r["team_id"])
 		r["is_mine"] = r["team_id"] == my_team
+		# 팀 마크 — 화면이 색을 고르지 않게 사전으로 준다 (U-1)
+		r["mark"] = TeamMarkVm.build(String(r["team_id"]))
 
 	var leagues: Array = []
 	for lid in LEAGUE_LABELS:
