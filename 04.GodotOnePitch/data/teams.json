@@ -45,7 +45,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HALLA",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BAEGYANG",
@@ -59,7 +84,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_MUDEUNG",
+      "desc": "호남, 최강 vs 도전자"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BAEKHO",
@@ -73,7 +129,38 @@
    ],
    "power": 4,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 270000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_SONGRIM",
+      "desc": "경기·인천, 투수 명문 vs 수비 조직력"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BAEKSEOK",
@@ -87,7 +174,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BITGOEUL",
@@ -101,7 +213,39 @@
    ],
    "power": 4,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 460000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-4",
+      "competition": "고교 국화기",
+      "result": "우승"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BONGUII",
@@ -115,7 +259,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_SEORAK_HS",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BUGAK",
@@ -129,7 +298,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HANGANG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 14
+     },
+     {
+      "season": "S-2",
+      "rank": 15
+     },
+     {
+      "season": "S-3",
+      "rank": 16
+     },
+     {
+      "season": "S-4",
+      "rank": 13
+     },
+     {
+      "season": "S-5",
+      "rank": 14
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BULMO",
@@ -143,7 +337,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BUNDANG",
@@ -157,7 +376,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 14
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_BUNSEONG",
@@ -171,7 +415,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 13
+     },
+     {
+      "season": "S-5",
+      "rank": 14
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_CHEONGNA",
@@ -185,7 +454,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_CHEONGRAM",
@@ -199,7 +493,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_CHEONGUN",
@@ -213,7 +532,55 @@
    ],
    "power": 4,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 270000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-3",
+      "competition": "고교 개나리기",
+      "result": "우승"
+     },
+     {
+      "season": "S-5",
+      "competition": "고교 국화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-2",
+      "competition": "고교 패왕기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_HANSEONG",
+      "desc": "서울 최강 명문 더비"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_CHIAK",
@@ -227,7 +594,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_SEORAK_HS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_CHOKSEOK",
@@ -241,7 +633,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 16
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 13
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_DAEYANG",
@@ -255,7 +672,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_DALSEONG",
@@ -269,7 +711,32 @@
    ],
    "power": 4,
    "stadium": "STADIUM_PALGONG",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 460000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_DONGNAE",
@@ -283,7 +750,32 @@
    ],
    "power": 4,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 460000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_DOSEONG",
@@ -297,7 +789,38 @@
    ],
    "power": 4,
    "stadium": "STADIUM_HANGANG",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 460000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_YANGCHEON",
+      "desc": "서울, 인접 지역 중상위권 라이벌(둘 다 손저작 아님)"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_EUNPYEONG",
@@ -311,7 +834,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GANGBYEON",
@@ -325,7 +873,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GANGJIN",
@@ -339,7 +912,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 13
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GARAK",
@@ -353,7 +951,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GAYA",
@@ -367,7 +990,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 118000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_HAEUN",
+      "desc": "부산 vs 창원, 격차 좁혀가는 신흥 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GEOJE",
@@ -381,7 +1035,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 13
+     },
+     {
+      "season": "S-4",
+      "rank": 14
+     },
+     {
+      "season": "S-5",
+      "rank": 15
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GEUMGANG",
@@ -395,7 +1074,45 @@
    ],
    "power": 4,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 270000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-2",
+      "competition": "고교 무궁화기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_PALGONG",
+      "desc": "대구·경북 vs 충청 전통 명문 자존심"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GEUMJEONG",
@@ -409,7 +1126,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GEUMO",
@@ -423,7 +1165,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GEUMSAN",
@@ -437,7 +1204,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GIHEUNG",
@@ -451,7 +1243,32 @@
    ],
    "power": 4,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 270000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GIMPO",
@@ -465,7 +1282,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 13
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GWANGAN",
@@ -479,7 +1321,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GWANGGYO",
@@ -493,7 +1360,32 @@
    ],
    "power": 4,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 460000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GWANGUN",
@@ -507,7 +1399,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GYEBAEK",
@@ -521,7 +1438,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GYEONGPO",
@@ -535,7 +1477,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_SEORAK_HS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GYERIM",
@@ -549,7 +1516,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GYERYONG",
@@ -563,7 +1555,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_GYEYANG",
@@ -577,7 +1594,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HAEUN",
@@ -591,7 +1633,45 @@
    ],
    "power": 4,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 270000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-2",
+      "competition": "고교 장미기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_GAYA",
+      "desc": "부산 vs 창원, 격차 좁혀가는 신흥 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HAHOE",
@@ -605,7 +1685,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_PALGONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HALLA",
@@ -619,7 +1724,38 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HALLA",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "budget": 40000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_SEORAK",
+      "desc": "강원 vs 제주, 변방 언더독 동병상련"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HANBIT",
@@ -633,7 +1769,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 13
+     },
+     {
+      "season": "S-2",
+      "rank": 14
+     },
+     {
+      "season": "S-3",
+      "rank": 15
+     },
+     {
+      "season": "S-4",
+      "rank": 16
+     },
+     {
+      "season": "S-5",
+      "rank": 13
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HANNAE",
@@ -647,7 +1808,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HALLA",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HANSEONG",
@@ -661,7 +1847,75 @@
    ],
    "power": 5,
    "stadium": "STADIUM_HANGANG",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 500000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-5",
+      "competition": "고교 개나리기",
+      "result": "우승"
+     },
+     {
+      "season": "S-2",
+      "competition": "고교 개나리기",
+      "result": "우승"
+     },
+     {
+      "season": "S-4",
+      "competition": "고교 장미기",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "고교 장미기",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "고교 무궁화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-2",
+      "competition": "고교 국화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-5",
+      "competition": "고교 패왕기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_CHEONGUN",
+      "desc": "서울 최강 명문 더비"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HONGJU",
@@ -675,7 +1929,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HWASUN",
@@ -689,7 +1968,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 13
+     },
+     {
+      "season": "S-5",
+      "rank": 14
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_HYEONGSAN",
@@ -703,7 +2007,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_ILSAN",
@@ -717,7 +2046,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_JUNGNIM",
@@ -731,7 +2085,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 14
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_JUNGNYEONG",
@@ -745,7 +2124,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_JUNGWON",
@@ -759,7 +2163,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MANWOL",
@@ -773,7 +2202,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 13
+     },
+     {
+      "season": "S-2",
+      "rank": 14
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MASANMAN",
@@ -787,7 +2241,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 14
+     },
+     {
+      "season": "S-2",
+      "rank": 15
+     },
+     {
+      "season": "S-3",
+      "rank": 16
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MISA",
@@ -801,7 +2280,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 15
+     },
+     {
+      "season": "S-2",
+      "rank": 16
+     },
+     {
+      "season": "S-3",
+      "rank": 17
+     },
+     {
+      "season": "S-4",
+      "rank": 18
+     },
+     {
+      "season": "S-5",
+      "rank": 19
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MONGNYEON",
@@ -815,7 +2319,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HANGANG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 16
+     },
+     {
+      "season": "S-2",
+      "rank": 13
+     },
+     {
+      "season": "S-3",
+      "rank": 14
+     },
+     {
+      "season": "S-4",
+      "rank": 15
+     },
+     {
+      "season": "S-5",
+      "rank": 16
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MUDEUNG",
@@ -829,7 +2358,75 @@
    ],
    "power": 5,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 500000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-4",
+      "competition": "고교 개나리기",
+      "result": "우승"
+     },
+     {
+      "season": "S-5",
+      "competition": "고교 장미기",
+      "result": "우승"
+     },
+     {
+      "season": "S-4",
+      "competition": "고교 무궁화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "고교 무궁화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "고교 국화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "고교 패왕기",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "고교 패왕기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_BAEGYANG",
+      "desc": "호남, 최강 vs 도전자"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MUJIN",
@@ -843,7 +2440,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MUNSU",
@@ -857,7 +2479,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 15
+     },
+     {
+      "season": "S-2",
+      "rank": 16
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MUSIM",
@@ -871,7 +2518,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_MYEONGIL",
@@ -885,7 +2557,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_NAKDONG",
@@ -899,7 +2596,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_NAMAK",
@@ -913,7 +2635,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 13
+     },
+     {
+      "season": "S-2",
+      "rank": 14
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_NAMGANG",
@@ -927,7 +2674,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_NAMSAN",
@@ -941,7 +2713,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_ODONG",
@@ -955,7 +2752,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 13
+     },
+     {
+      "season": "S-3",
+      "rank": 14
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_OREUM",
@@ -969,7 +2791,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HALLA",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_OSAN",
@@ -983,7 +2830,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 16
+     },
+     {
+      "season": "S-2",
+      "rank": 17
+     },
+     {
+      "season": "S-3",
+      "rank": 18
+     },
+     {
+      "season": "S-4",
+      "rank": 19
+     },
+     {
+      "season": "S-5",
+      "rank": 20
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_PALDAL",
@@ -997,7 +2869,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_PALGONG",
@@ -1011,7 +2908,65 @@
    ],
    "power": 5,
    "stadium": "STADIUM_PALGONG",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 500000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-1",
+      "competition": "고교 개나리기",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "고교 장미기",
+      "result": "우승"
+     },
+     {
+      "season": "S-5",
+      "competition": "고교 무궁화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "고교 국화기",
+      "result": "우승"
+     },
+     {
+      "season": "S-4",
+      "competition": "고교 패왕기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_GEUMGANG",
+      "desc": "대구·경북 vs 충청 전통 명문 자존심"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_PANGYO",
@@ -1025,7 +2980,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_PUNGNAM",
@@ -1039,7 +3019,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_PYEONGCHON",
@@ -1053,7 +3058,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 18
+     },
+     {
+      "season": "S-2",
+      "rank": 19
+     },
+     {
+      "season": "S-3",
+      "rank": 20
+     },
+     {
+      "season": "S-4",
+      "rank": 15
+     },
+     {
+      "season": "S-5",
+      "rank": 16
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_PYEONGTAEK",
@@ -1067,7 +3097,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 13
+     },
+     {
+      "season": "S-5",
+      "rank": 14
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SAMJEON",
@@ -1081,7 +3136,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SANGDANG",
@@ -1095,7 +3175,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SANGNOK",
@@ -1109,7 +3214,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 19
+     },
+     {
+      "season": "S-2",
+      "rank": 20
+     },
+     {
+      "season": "S-3",
+      "rank": 15
+     },
+     {
+      "season": "S-4",
+      "rank": 16
+     },
+     {
+      "season": "S-5",
+      "rank": 17
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SEOGWI",
@@ -1123,7 +3253,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HALLA",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SEOLBONG",
@@ -1137,7 +3292,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_SEORAK_HS",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SEONGGEO",
@@ -1151,7 +3331,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SEONGSAN",
@@ -1165,7 +3370,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HALLA",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SEORAK",
@@ -1179,7 +3409,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_SEORAK_HS",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 118000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_HALLA",
+      "desc": "강원 vs 제주, 변방 언더독 동병상련"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SEUNGJU",
@@ -1193,7 +3454,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 13
+     },
+     {
+      "season": "S-4",
+      "rank": 14
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SIHWA",
@@ -1207,7 +3493,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 20
+     },
+     {
+      "season": "S-2",
+      "rank": 15
+     },
+     {
+      "season": "S-3",
+      "rank": 16
+     },
+     {
+      "season": "S-4",
+      "rank": 17
+     },
+     {
+      "season": "S-5",
+      "rank": 18
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SINCHEON",
@@ -1221,7 +3532,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SINJEONG",
@@ -1235,7 +3571,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 15
+     },
+     {
+      "season": "S-2",
+      "rank": 16
+     },
+     {
+      "season": "S-3",
+      "rank": 13
+     },
+     {
+      "season": "S-4",
+      "rank": 14
+     },
+     {
+      "season": "S-5",
+      "rank": 15
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SONGRIM",
@@ -1249,7 +3610,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 118000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 13
+     },
+     {
+      "season": "S-4",
+      "rank": 14
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_BAEKHO",
+      "desc": "경기·인천, 투수 명문 vs 수비 조직력"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_SUSEONG",
@@ -1263,7 +3655,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 13
+     },
+     {
+      "season": "S-3",
+      "rank": 14
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_TAEBAEK",
@@ -1277,7 +3694,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_SEORAK_HS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_TAEHWA",
@@ -1291,7 +3733,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_TAEJONG",
@@ -1305,7 +3772,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 13
+     },
+     {
+      "season": "S-2",
+      "rank": 14
+     },
+     {
+      "season": "S-3",
+      "rank": 15
+     },
+     {
+      "season": "S-4",
+      "rank": 16
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_TANGEUM",
@@ -1319,7 +3811,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_TONGYEONG",
@@ -1333,7 +3850,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAKDONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 13
+     },
+     {
+      "season": "S-3",
+      "rank": 14
+     },
+     {
+      "season": "S-4",
+      "rank": 15
+     },
+     {
+      "season": "S-5",
+      "rank": 16
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_WANSAN",
@@ -1347,7 +3889,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_WOLMYEONG",
@@ -1361,7 +3928,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YANGCHEON",
@@ -1375,7 +3967,38 @@
    ],
    "power": 4,
    "stadium": "STADIUM_HANGANG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 270000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_HS_DOSEONG",
+      "desc": "서울, 인접 지역 중상위권 라이벌(둘 다 손저작 아님)"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YEONGIL",
@@ -1389,7 +4012,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_PALGONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 102000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YEONGNAM",
@@ -1403,7 +4051,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_PALGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YEONSU",
@@ -1417,7 +4090,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MUJIGAE",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 17
+     },
+     {
+      "season": "S-2",
+      "rank": 18
+     },
+     {
+      "season": "S-3",
+      "rank": 19
+     },
+     {
+      "season": "S-4",
+      "rank": 20
+     },
+     {
+      "season": "S-5",
+      "rank": 15
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YESAN",
@@ -1431,7 +4129,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 210000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YUDAL",
@@ -1445,7 +4168,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_YEONGSAN",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_HS_YUSEONG",
@@ -1459,7 +4207,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GYERYONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 240000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_BUSAN_SEALIONS",
@@ -1473,7 +4246,33 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAMNYEOK",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2018,
+    "budget": 700000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_DAEGU_HAWKS",
@@ -1487,7 +4286,33 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NAMNYEOK",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2013,
+    "budget": 1400000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_DAEJEON_BLAZE",
@@ -1501,7 +4326,40 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GYEBAEK",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2014,
+    "budget": 800000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-2",
+      "competition": "독립 챔피언결정전",
+      "result": "준우승"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_GWANGJU_RHINOS",
@@ -1515,7 +4373,33 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NAMNYEOK",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2012,
+    "budget": 1600000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_INCHEON_GRIFFONS",
@@ -1529,7 +4413,39 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GANGBYEON",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2019,
+    "budget": 800000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_IND_SEOUL_COMETS",
+      "desc": "둘 다 도전형 배경팀, 지역 접점 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_PAJU_UNICORNS",
@@ -1543,7 +4459,40 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GANGBYEON",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2016,
+    "budget": 700000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-4",
+      "competition": "독립 챔피언결정전",
+      "result": "준우승"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_SANGMU_PHOENIX",
@@ -1557,7 +4506,59 @@
    ],
    "power": 4,
    "stadium": "STADIUM_CHANGGONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2011,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-5",
+      "competition": "독립 챔피언결정전",
+      "result": "우승"
+     },
+     {
+      "season": "S-4",
+      "competition": "독립 챔피언결정전",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "독립 챔피언결정전",
+      "result": "준우승"
+     },
+     {
+      "season": "S-2",
+      "competition": "독립 챔피언결정전",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "독립 챔피언결정전",
+      "result": "준우승"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_SEOUL_COMETS",
@@ -1571,7 +4572,39 @@
    ],
    "power": 1,
    "stadium": "STADIUM_GANGBYEON",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2017,
+    "budget": 600000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_IND_INCHEON_GRIFFONS",
+      "desc": "둘 다 도전형 배경팀, 지역 접점 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_SEOUL_RAVENS",
@@ -1585,7 +4618,50 @@
    ],
    "power": 4,
    "stadium": "STADIUM_GANGBYEON",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2015,
+    "budget": 1800000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-5",
+      "competition": "독립 챔피언결정전",
+      "result": "준우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "독립 챔피언결정전",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "독립 챔피언결정전",
+      "result": "우승"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_IND_WONJU_WINNERS",
@@ -1599,7 +4675,33 @@
    ],
    "power": 1,
    "stadium": "STADIUM_GYEBAEK",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "founded_year": 2020,
+    "budget": 260000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_BUSAN_WAVES_1",
@@ -1613,7 +4715,39 @@
    ],
    "power": 3,
    "stadium": "STADIUM_BUSAN_WAVES",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1984,
+    "budget": 21000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_GWANGJU_PANTHERS_1",
+      "desc": "호남 vs 영남 전통 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_BUSAN_WAVES_2",
@@ -1627,7 +4761,10 @@
    ],
    "power": 3,
    "stadium": "STADIUM_BUSAN_WAVES",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1984
+   }
   },
   {
    "id": "TEAM_KBL_CHANGWON_STARS_1",
@@ -1641,7 +4778,39 @@
    ],
    "power": 4,
    "stadium": "STADIUM_CHANGWON_STARS",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "founded_year": 2008,
+    "budget": 33000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_DAEGU_SABERS_1",
+      "desc": "영남 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_CHANGWON_STARS_2",
@@ -1655,7 +4824,10 @@
    ],
    "power": 4,
    "stadium": "STADIUM_CHANGWON_STARS",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "founded_year": 2008
+   }
   },
   {
    "id": "TEAM_KBL_DAEGU_SABERS_1",
@@ -1669,7 +4841,39 @@
    ],
    "power": 3,
    "stadium": "STADIUM_DAEGU_SABERS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2000,
+    "budget": 21000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_CHANGWON_STARS_1",
+      "desc": "영남 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_DAEGU_SABERS_2",
@@ -1683,7 +4887,10 @@
    ],
    "power": 3,
    "stadium": "STADIUM_DAEGU_SABERS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2000
+   }
   },
   {
    "id": "TEAM_KBL_DAEJEON_PHANTOMS_1",
@@ -1697,7 +4904,39 @@
    ],
    "power": 2,
    "stadium": "STADIUM_DAEJEON_PHANTOMS",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2018,
+    "budget": 12000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_SUWON_KNIGHTS_1",
+      "desc": "신흥 데이터야구 vs 리빌딩, 세대 대비"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_DAEJEON_PHANTOMS_2",
@@ -1711,7 +4950,10 @@
    ],
    "power": 2,
    "stadium": "STADIUM_DAEJEON_PHANTOMS",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "founded_year": 2018
+   }
   },
   {
    "id": "TEAM_KBL_GWANGJU_PANTHERS_1",
@@ -1725,7 +4967,46 @@
    ],
    "power": 4,
    "stadium": "STADIUM_GWANGJU_PANTHERS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1986,
+    "budget": 23000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-5",
+      "competition": "한국시리즈",
+      "result": "준우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_BUSAN_WAVES_1",
+      "desc": "호남 vs 영남 전통 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_GWANGJU_PANTHERS_2",
@@ -1739,7 +5020,10 @@
    ],
    "power": 4,
    "stadium": "STADIUM_GWANGJU_PANTHERS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1986
+   }
   },
   {
    "id": "TEAM_KBL_INCHEON_SHARKS_1",
@@ -1753,7 +5037,39 @@
    ],
    "power": 3,
    "stadium": "STADIUM_INCHEON_SHARKS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1994,
+    "budget": 21000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_SEOUL_COBRAS_1",
+      "desc": "수도권 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_INCHEON_SHARKS_2",
@@ -1767,7 +5083,10 @@
    ],
    "power": 3,
    "stadium": "STADIUM_INCHEON_SHARKS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1994
+   }
   },
   {
    "id": "TEAM_KBL_SEOUL_COBRAS_1",
@@ -1781,7 +5100,39 @@
    ],
    "power": 3,
    "stadium": "STADIUM_SEOUL_COBRAS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1998,
+    "budget": 21000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_INCHEON_SHARKS_1",
+      "desc": "수도권 라이벌"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_SEOUL_COBRAS_2",
@@ -1795,7 +5146,10 @@
    ],
    "power": 3,
    "stadium": "STADIUM_SEOUL_COBRAS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1998
+   }
   },
   {
    "id": "TEAM_KBL_SEOUL_GUARDIANS_1",
@@ -1809,7 +5163,56 @@
    ],
    "power": 4,
    "stadium": "STADIUM_SEOUL_GUARDIANS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1990,
+    "budget": 23000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-4",
+      "competition": "한국시리즈",
+      "result": "준우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "한국시리즈",
+      "result": "우승"
+     },
+     {
+      "season": "S-2",
+      "competition": "한국시리즈",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_SEOUL_ROYALS_1",
+      "desc": "서울 더비 — 최강 자금력 vs 투수왕국"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_SEOUL_GUARDIANS_2",
@@ -1823,7 +5226,10 @@
    ],
    "power": 4,
    "stadium": "STADIUM_SEOUL_GUARDIANS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 1990
+   }
   },
   {
    "id": "TEAM_KBL_SEOUL_ROYALS_1",
@@ -1837,7 +5243,61 @@
    ],
    "power": 5,
    "stadium": "STADIUM_SEOUL_ROYALS",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "founded_year": 1982,
+    "budget": 35000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-5",
+      "competition": "한국시리즈",
+      "result": "우승"
+     },
+     {
+      "season": "S-4",
+      "competition": "한국시리즈",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "한국시리즈",
+      "result": "준우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "한국시리즈",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_SEOUL_GUARDIANS_1",
+      "desc": "서울 더비 — 최강 자금력 vs 투수왕국"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_SEOUL_ROYALS_2",
@@ -1851,7 +5311,10 @@
    ],
    "power": 5,
    "stadium": "STADIUM_SEOUL_ROYALS",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "founded_year": 1982
+   }
   },
   {
    "id": "TEAM_KBL_SUWON_KNIGHTS_1",
@@ -1865,7 +5328,51 @@
    ],
    "power": 4,
    "stadium": "STADIUM_SUWON_KNIGHTS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2013,
+    "budget": 23000000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-2",
+      "competition": "한국시리즈",
+      "result": "준우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "한국시리즈",
+      "result": "준우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_KBL_DAEJEON_PHANTOMS_1",
+      "desc": "신흥 데이터야구 vs 리빌딩, 세대 대비"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_KBL_SUWON_KNIGHTS_2",
@@ -1879,7 +5386,10 @@
    ],
    "power": 4,
    "stadium": "STADIUM_SUWON_KNIGHTS",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "founded_year": 2013
+   }
   },
   {
    "id": "TEAM_UNIV_ASAN",
@@ -1893,7 +5403,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BAEKJE",
@@ -1907,7 +5442,50 @@
    ],
    "power": 4,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1360000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-3",
+      "competition": "대학 왕중왕전",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "대학 여명기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_SEOSEOK",
+      "desc": "충청 vs 호남 지역 자존심"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BAEKSAN",
@@ -1921,7 +5499,50 @@
    ],
    "power": 4,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1360000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-4",
+      "competition": "대학 왕중왕전",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "대학 여명기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_HALLYU",
+      "desc": "서울, 프로 배출 명문 vs 학업+야구 엘리트"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BANWOL",
@@ -1935,7 +5556,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 9
+     },
+     {
+      "season": "S-2",
+      "rank": 10
+     },
+     {
+      "season": "S-3",
+      "rank": 11
+     },
+     {
+      "season": "S-4",
+      "rank": 12
+     },
+     {
+      "season": "S-5",
+      "rank": 13
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BISEUL",
@@ -1949,7 +5595,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NOEUL",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BITGOEUL",
@@ -1963,7 +5634,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NOEUL",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_WANSAN",
+      "desc": "호남, 인접 지역 중위권 라이벌(둘 다 손저작 아님)"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BUKHANSAN",
@@ -1977,7 +5679,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BUNSEONG",
@@ -1991,7 +5718,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_BYEOLLAE",
@@ -2005,7 +5757,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_CHIAK",
@@ -2019,7 +5796,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "budget": 280000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_GYEONGIN",
+      "desc": "둘 다 지역거점 언더독, 만년 하위권 동지"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_DALGUBEOL",
@@ -2033,7 +5841,50 @@
    ],
    "power": 4,
    "stadium": "STADIUM_NOEUL",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 2300000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-2",
+      "competition": "대학 은하기",
+      "result": "우승"
+     },
+     {
+      "season": "S-5",
+      "competition": "대학 여명기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_HAEDONG",
+      "desc": "대구 vs 부산, 영남 더비"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GEOJE",
@@ -2047,7 +5898,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GEUMJEONG",
@@ -2061,7 +5937,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GWANAK",
@@ -2075,7 +5976,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GWANGGYO",
@@ -2089,7 +6015,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GWANYANG",
@@ -2103,7 +6054,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 13
+     },
+     {
+      "season": "S-2",
+      "rank": 14
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 9
+     },
+     {
+      "season": "S-5",
+      "rank": 10
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GYEONGIN",
@@ -2117,7 +6093,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MIREU",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 640000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_CHIAK",
+      "desc": "둘 다 지역거점 언더독, 만년 하위권 동지"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_GYERYONG",
@@ -2131,7 +6138,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HAEDONG",
@@ -2145,7 +6177,45 @@
    ],
    "power": 4,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1360000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-2",
+      "competition": "대학 여명기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_DALGUBEOL",
+      "desc": "대구 vs 부산, 영남 더비"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HAHOE",
@@ -2159,7 +6229,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HALLYU",
@@ -2173,7 +6268,70 @@
    ],
    "power": 5,
    "stadium": "STADIUM_MIREU",
-   "resource": "부유"
+   "resource": "부유",
+   "history": {
+    "budget": 2500000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-5",
+      "competition": "대학 왕중왕전",
+      "result": "우승"
+     },
+     {
+      "season": "S-2",
+      "competition": "대학 왕중왕전",
+      "result": "우승"
+     },
+     {
+      "season": "S-5",
+      "competition": "대학 은하기",
+      "result": "우승"
+     },
+     {
+      "season": "S-3",
+      "competition": "대학 은하기",
+      "result": "우승"
+     },
+     {
+      "season": "S-1",
+      "competition": "대학 은하기",
+      "result": "우승"
+     },
+     {
+      "season": "S-4",
+      "competition": "대학 여명기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_BAEKSAN",
+      "desc": "서울, 프로 배출 명문 vs 학업+야구 엘리트"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HANAM",
@@ -2187,7 +6345,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HANGANG",
@@ -2201,7 +6384,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HWAHONG",
@@ -2215,7 +6423,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_HYEONGSAN",
@@ -2229,7 +6462,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NOEUL",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_JINWI",
@@ -2243,7 +6501,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 10
+     },
+     {
+      "season": "S-2",
+      "rank": 11
+     },
+     {
+      "season": "S-3",
+      "rank": 12
+     },
+     {
+      "season": "S-4",
+      "rank": 13
+     },
+     {
+      "season": "S-5",
+      "rank": 14
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_NAMAK",
@@ -2257,7 +6540,32 @@
    ],
    "power": 1,
    "stadium": "STADIUM_NOEUL",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "budget": 160000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_NAMGANG",
@@ -2271,7 +6579,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_NAMSAN",
@@ -2285,7 +6618,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_MIREU",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_ODONG",
@@ -2299,7 +6657,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NOEUL",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_OKCHEON",
@@ -2313,7 +6696,32 @@
    ],
    "power": 1,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "budget": 160000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 8
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_OSAN",
@@ -2327,7 +6735,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 11
+     },
+     {
+      "season": "S-2",
+      "rank": 12
+     },
+     {
+      "season": "S-3",
+      "rank": 13
+     },
+     {
+      "season": "S-4",
+      "rank": 14
+     },
+     {
+      "season": "S-5",
+      "rank": 8
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SANGDANG",
@@ -2341,7 +6774,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 4
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 6
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SEOGWI",
@@ -2355,7 +6813,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SEONGHWAN",
@@ -2369,7 +6852,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 4
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SEORAK",
@@ -2383,7 +6891,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SEOSAN",
@@ -2397,7 +6930,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SEOSEOK",
@@ -2411,7 +6969,45 @@
    ],
    "power": 4,
    "stadium": "STADIUM_NOEUL",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1360000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-4",
+      "competition": "대학 은하기",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_BAEKJE",
+      "desc": "충청 vs 호남 지역 자존심"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SEUNGJU",
@@ -2425,7 +7021,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NOEUL",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 6
+     },
+     {
+      "season": "S-3",
+      "rank": 4
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 6
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SIHWA",
@@ -2439,7 +7060,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1080000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 8
+     },
+     {
+      "season": "S-2",
+      "rank": 9
+     },
+     {
+      "season": "S-3",
+      "rank": 10
+     },
+     {
+      "season": "S-4",
+      "rank": 11
+     },
+     {
+      "season": "S-5",
+      "rank": 12
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SONGDO",
@@ -2453,7 +7099,38 @@
    ],
    "power": 4,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1360000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 1
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 1
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 1
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_SURI",
+      "desc": "인천 vs 수원, 수도권 실전 강호 대결"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SOSA",
@@ -2467,7 +7144,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 12
+     },
+     {
+      "season": "S-2",
+      "rank": 13
+     },
+     {
+      "season": "S-3",
+      "rank": 14
+     },
+     {
+      "season": "S-4",
+      "rank": 8
+     },
+     {
+      "season": "S-5",
+      "rank": 9
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_SURI",
@@ -2481,7 +7183,45 @@
    ],
    "power": 4,
    "stadium": "STADIUM_MIREU",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1360000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 1
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 1
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ],
+    "titles": [
+     {
+      "season": "S-1",
+      "competition": "대학 왕중왕전",
+      "result": "우승"
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_SONGDO",
+      "desc": "인천 vs 수원, 수도권 실전 강호 대결"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_TAEHWA",
@@ -2495,7 +7235,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_TONGYEONG",
@@ -2509,7 +7274,32 @@
    ],
    "power": 1,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "budget": 160000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 7
+     },
+     {
+      "season": "S-2",
+      "rank": 7
+     },
+     {
+      "season": "S-3",
+      "rank": 7
+     },
+     {
+      "season": "S-4",
+      "rank": 7
+     },
+     {
+      "season": "S-5",
+      "rank": 7
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_WANSAN",
@@ -2523,7 +7313,38 @@
    ],
    "power": 3,
    "stadium": "STADIUM_NOEUL",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 3
+     },
+     {
+      "season": "S-2",
+      "rank": 2
+     },
+     {
+      "season": "S-3",
+      "rank": 3
+     },
+     {
+      "season": "S-4",
+      "rank": 2
+     },
+     {
+      "season": "S-5",
+      "rank": 3
+     }
+    ],
+    "rivals": [
+     {
+      "with": "TEAM_UNIV_BITGOEUL",
+      "desc": "호남, 인접 지역 중위권 라이벌(둘 다 손저작 아님)"
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_WOLMI",
@@ -2537,7 +7358,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_BYEOLBIT",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 14
+     },
+     {
+      "season": "S-2",
+      "rank": 8
+     },
+     {
+      "season": "S-3",
+      "rank": 9
+     },
+     {
+      "season": "S-4",
+      "rank": 10
+     },
+     {
+      "season": "S-5",
+      "rank": 11
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_YEONGCHEON",
@@ -2551,7 +7397,32 @@
    ],
    "power": 1,
    "stadium": "STADIUM_TAEJONG",
-   "resource": "궁핍"
+   "resource": "궁핍",
+   "history": {
+    "budget": 160000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 5
+     },
+     {
+      "season": "S-2",
+      "rank": 5
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 5
+     },
+     {
+      "season": "S-5",
+      "rank": 5
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_YUDAL",
@@ -2565,7 +7436,32 @@
    ],
    "power": 2,
    "stadium": "STADIUM_NOEUL",
-   "resource": "알뜰"
+   "resource": "알뜰",
+   "history": {
+    "budget": 560000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 6
+     },
+     {
+      "season": "S-2",
+      "rank": 4
+     },
+     {
+      "season": "S-3",
+      "rank": 5
+     },
+     {
+      "season": "S-4",
+      "rank": 6
+     },
+     {
+      "season": "S-5",
+      "rank": 4
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_UNIV_YUSEONG",
@@ -2579,7 +7475,32 @@
    ],
    "power": 3,
    "stadium": "STADIUM_GEUMGANG_UNIV",
-   "resource": "안정"
+   "resource": "안정",
+   "history": {
+    "budget": 1220000000,
+    "season_ranks": [
+     {
+      "season": "S-1",
+      "rank": 2
+     },
+     {
+      "season": "S-2",
+      "rank": 3
+     },
+     {
+      "season": "S-3",
+      "rank": 2
+     },
+     {
+      "season": "S-4",
+      "rank": 3
+     },
+     {
+      "season": "S-5",
+      "rank": 2
+     }
+    ]
+   }
   },
   {
    "id": "TEAM_ABL_EMPIRE_1",

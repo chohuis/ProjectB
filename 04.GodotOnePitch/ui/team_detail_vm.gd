@@ -58,8 +58,62 @@ static func build(state: Dictionary, team_id: String) -> Dictionary:
 		"is_mine": team_id == String(state.get("protagonist", {}).get("team_id", "")),
 		"standing": _standing(state, team_id, league_id),
 		"profile": _profile(world, team_id),
+		# 구단 역사 — E. 02 `refs.json`에서 온다
+		"history": _history(team_id),
 		"roster": TeamVm.rows_of(world, team_id, me),
 	}
+
+
+## 구단 역사 — E. `{founded, budget, ranks[], titles[]}`. 없으면 `{}`
+##
+## 원본: 02 `refs.json`의 `teams[].history`.
+##
+## 🔴 **04는 238팀을 다 갖고도 이 데이터가 없었다.** 이 파일 머리글이 그
+## 사실을 적어 뒀다 — "02의 '팀 평가'는 이걸로 못 옮긴다".
+##
+## ⚠ **02에 없는 것은 안 만든다.** 창단연도는 30팀 · 예산은 171팀 · 과거
+## 성적은 172팀 · 우승은 22팀에만 있다. **빈 칸을 0으로 채우면 화면이
+## 그 0을 진짜 값으로 읽는다** — "창단 0년"이 뜬다
+##
+## ⚠ **예산은 억 단위로 접는다.** 원본이 원 단위(1억 = 100000000)라
+## 그대로 띄우면 화면에 열 자리가 뜬다
+static func _history(team_id: String) -> Dictionary:
+	var h: Dictionary = World.team_field({}, team_id, "history", {})
+	if h.is_empty():
+		return {}
+
+	var out: Dictionary = {}
+	# ⚠ **라벨을 값에 넣지 않는다.** 화면이 "창단"을 이미 붙이는데 값에도
+	# 넣었더니 캡처에 "운영예산 운영예산 350억"으로 찍혔다 — **눈으로 봤다**
+	if h.get("founded_year", null) != null:
+		out["founded"] = "%d년" % int(h["founded_year"])
+	var budget: float = float(h.get("budget", 0))
+	if budget > 0.0:
+		# 🔴 **억 단위 정수로 접으면 고교가 "0억"이 된다.** 02 실측 —
+		# 고교 예산은 0.40억 ~ 5.00억이고 프로는 120억 ~ 350억이다.
+		# **소수점은 필요할 때만 붙인다**(210.0억은 어색하다)
+		var eok: float = budget / 100000000.0
+		out["budget"] = "%s억" % (str(int(eok)) 			if is_equal_approx(eok, roundf(eok)) else "%.1f" % eok)
+
+	# 과거 다섯 시즌 — **최근이 위다**(02 `S-1`이 직전 시즌이다)
+	var ranks: Array = []
+	for r in h.get("season_ranks", []):
+		ranks.append({"label": String(r.get("season", "")),
+			"rank": "%d위" % int(r.get("rank", 0))})
+	if not ranks.is_empty():
+		out["ranks"] = ranks
+
+	# ⚠ **준우승도 여기 담긴다.** 전부 "우승" 라벨로 내보냈더니 캡처에
+	# "우승 — S-3 한국시리즈 준우승"이 떴다. **결과를 라벨로 옮긴다**
+	var titles: Array = []
+	for t in h.get("titles", []):
+		titles.append({
+			"label": String(t.get("result", "")),
+			"text": "%s %s" % [t.get("season", ""), t.get("competition", "")],
+		})
+	if not titles.is_empty():
+		out["titles"] = titles
+	return out
 
 
 ## 이번 시즌 성적. **`Standings`가 정본이다** — 화면이 일정에서 다시 세면

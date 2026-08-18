@@ -68,6 +68,7 @@ func _rebuild() -> void:
 
 	_build_standing()
 	_build_profile()
+	_build_history()
 	_build_roster()
 
 
@@ -122,6 +123,25 @@ func _build_profile() -> void:
 		var row: BarRow = BAR_ROW.instantiate()
 		c.body.add_child(row)
 		row.setup_stat(String(r["name"]), float(r["value"]))
+
+
+## 구단 역사 — E. 창단 · 예산 · 과거 다섯 시즌 · 우승.
+##
+## ⚠ **없는 팀이 더 많다.** 238팀 중 창단연도는 30팀에만 있다 —
+## 빈 카드를 띄우면 "고장난 화면"으로 읽힌다. **있는 것만 그린다**
+func _build_history() -> void:
+	var h: Dictionary = _vm.get("history", {})
+	if h.is_empty():
+		return
+	var c: Card = _card("구단 역사")
+	if h.has("founded"):
+		_info(c, "창단", String(h["founded"]))
+	if h.has("budget"):
+		_info(c, "운영예산", String(h["budget"]))
+	for r in h.get("ranks", []):
+		_info(c, String(r["label"]), String(r["rank"]))
+	for t in h.get("titles", []):
+		_info(c, String(t["label"]), String(t["text"]))
 
 
 func _build_roster() -> void:

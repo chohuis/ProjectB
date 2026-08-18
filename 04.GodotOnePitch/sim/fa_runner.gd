@@ -99,6 +99,18 @@ static func league_salaries(world: Dictionary, league_id: String) -> Array:
 	return out
 
 
+## 그 팀의 예산 지수 — 02 `market.ts:1265`.
+##
+## ⚠ **예산이 없으면 평균으로 친다**(02의 `?? avgBudget`) — 1.0이 된다.
+## 0으로 두면 그 팀이 FA를 한 명도 못 부른다
+static func _budget_index(team_id: String, avg: float) -> float:
+	if avg <= 0.0:
+		return 1.0
+	var b: float = float(World.team_field({}, team_id, "history", {})
+		.get("budget", 0))
+	return (b if b > 0.0 else avg) / avg
+
+
 ## 선수를 팀 사이로 옮긴다. **양쪽 배열을 같이 고쳐야 한다** —
 ## 한쪽만 하면 같은 선수가 두 군데 있거나 통째로 사라진다
 static func _move(world: Dictionary, player_id: String, to_team: String,
@@ -138,8 +150,30 @@ static func market_players_of(world: Dictionary) -> Array:
 
 
 ## 시장에 들어오는 구단 — **게임과 계측이 같이 부른다** (P-5c)
+## 프로 1군의 평균 운영예산 — 예산 지수의 분모다 (E).
+##
+## 🔴 **02는 이 값으로 입찰 세기를 정한다**(`market.ts:1263-1272`):
+## `budgetIndex = 그 팀 예산 / 평균 예산`. 04는 예산 데이터가 없어서
+## 구단주 씀씀이로 대신하고 있었다 — 이제 02 데이터가 들어왔다.
+##
+## ⚠ **예산이 없는 팀은 분모에서 뺀다**(02도 `filter(b => b > 0)`).
+## 해외(ABL·JBL)는 02 원본에 예산이 없다 — 넣으면 평균이 반토막 난다
+static func avg_budget() -> float:
+	var sum: float = 0.0
+	var n: int = 0
+	for lid in TeamProfile.PRO_LEAGUES:
+		for t in World.teams_of(lid):
+			var b: float = float(World.team_field({}, String(t["id"]),
+				"history", {}).get("budget", 0))
+			if b > 0.0:
+				sum += b
+				n += 1
+	return sum / float(n) if n > 0 else 1.0
+
+
 static func market_teams_of(world: Dictionary) -> Array:
 	var out: Array = []
+	var avg: float = avg_budget()
 	# ⚠ **상무는 따로 안 뻐다** — 독립 리그 소속이라 `PRO_LEAGUES`에 없다.
 	# 02는 프로 안에 두고 `SANGMU_TEAM_IDS`로 뿬다(04는 구조가 다르다)
 	for lid in TeamProfile.PRO_LEAGUES:
@@ -149,11 +183,14 @@ static func market_teams_of(world: Dictionary) -> Array:
 				"team_id": tid,
 				# 리그마다 정원이 다르다 — 옮길 때도 이걸 본다
 				"league_id": lid,
-				# 예산 지수는 아직 없다 — 구단주 쓰씨씨이로 대신한다.
-				# **모양은 02 그대로다**(0.8~1.35), 재정이 붙으면 값만 바뀐다
-				"budget_index": clampf(
-					float(TeamProfile.of(world, tid)["owner_spending_willingness"]) / 50.0,
-					0.8, 1.35),
+				# 🔴 **02 식 그대로다** — `예산 / 평균 예산`
+				# (`market.ts:1265`). 예산이 없는 팀은 평균으로 친다(02와 같다):
+				# 해외 리그는 02 원본에 예산이 없어 전부 1.0이 된다.
+				#
+				# ⚠ **clamp를 안 건다.** 예전엔 구단주 씀씀이를 0.8~1.35로
+				# 죄어 썼는데 02엔 그 상한이 없다 — 씌우면 부자 구단이
+				# 부자답게 못 부른다
+				"budget_index": _budget_index(tid, avg),
 				"win_now_pressure": float(TeamProfile.of(world, tid)["win_now_pressure"]),
 				"open_slots": open_slots_of(world, tid, lid),
 				"roster": compensation_pool(world, tid),
