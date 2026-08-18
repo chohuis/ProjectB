@@ -81,6 +81,12 @@ static func _ask_military(state: Dictionary, at_day: int) -> String:
 	if not picked.is_empty():
 		return picked
 	if Military.should_ask_sports_unit(state):
+		# ⚠ **소식도 같이 넣는다** (사용자 지적). 02는 후보 명단을 소식함에
+		# 넣고 나서 모달을 띄운다(`advanceWeek.ts:2012-2025`) — 물음만 띄우면
+		# **나중에 "그때 뭐였지"를 되짚을 자리가 없다.** 04 소식은 지나간
+		# 결정을 다시 읽는 유일한 자리다
+		Military.send_sports_candidates(state, _sports_rivals(state,
+			String(state.get("protagonist", {}).get("id", ""))), at_day)
 		Pending.push_once(state, {"type": "sports_unit_apply"})
 		return "sports_unit_apply"
 	if Military.should_ask_enlist(state):

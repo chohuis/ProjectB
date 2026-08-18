@@ -161,6 +161,43 @@ static func _mark(state: Dictionary, key: String) -> void:
 const SPORTS_ROSTER: int = 26
 const SPORTS_SERVICE_YEARS: int = 2
 const SPORTS_MAX_PER_TEAM: int = 3
+## 소식에 몇 명까지 적나 — 02도 30인 명단을 낸다
+const SPORTS_RUMOR_TOP: int = 30
+
+
+## 체육부대 후보 루머 — 02 `advanceWeek.ts:2012-2025`.
+##
+## ⚠ **물음만 띄우면 나중에 되짚을 자리가 없다.** 04에서 지나간 결정을 다시
+## 읽는 곳은 소식함뿐이다 — 02도 명단을 소식으로 넣고 나서 모달을 띄운다.
+##
+## ⚠ **"실제 신청자는 다를 수 있다"를 적는다.** 이건 루머지 확정 명단이
+## 아니다 — 02가 그 문장을 넣어 뒀다
+static func send_sports_candidates(state: Dictionary, rivals: Array,
+		at_day: int) -> void:
+	var year: int = int(state.get("season_year", 0))
+	var ranked: Array = rivals.duplicate()
+	ranked.sort_custom(func(a, b) -> bool:
+		return float(a.get("ovr", 0.0)) > float(b.get("ovr", 0.0)))
+
+	var lines: Array[String] = [
+		"%d년 체육부대 입대 후보로 거론되는 명단입니다." % year,
+		"실제 신청자는 다를 수 있습니다.",
+		"",
+	]
+	for i in mini(ranked.size(), SPORTS_RUMOR_TOP):
+		lines.append("%d위  %s  OVR %d" % [i + 1,
+			String(ranked[i].get("id", "")), int(roundf(ranked[i].get("ovr", 0.0)))])
+	if ranked.is_empty():
+		lines.append("아직 거론되는 이름이 없습니다.")
+
+	_send(state, {
+		"id": "msg-sports-candidates-%d" % year,
+		"category": "news", "sender": "스포츠조선",
+		"subject": "%d 체육부대 입대 후보 루머" % year,
+		"preview": "이번 시즌 체육부대 후보가 거론되고 있습니다.",
+		"body": "\n".join(lines),
+		"day": at_day, "read": false, "decision": null,
+	})
 
 
 static func sports_annual_intake() -> int:
