@@ -147,8 +147,84 @@ func test_소스에_주차_숫자가_없다() -> void:
 # ── 배선 ──────────────────────────────────────────────────────
 
 ## ⚠ **자동 `enlist`를 남기지 않는다.** 물어 놓고 답을 안 기다리면 그 물음이
-## 장식이 된다 — `retirement_ask`가 04에서 딱 그 상태였다
+## 장식이 된다 — `retirement_ask`가 04에서 딱 그 상태였다.
+## **답을 받는 `answer_enlist` 안에서만 부른다**
 func test_진로가_조용히_입대시키지_않는다() -> void:
 	var code: String = CodeText.of("res://sim/career_decision.gd")
-	assert_int(code.find("Military.enlist(")).override_failure_message(
-		"진로 결정이 아직 조용히 입대시킨다").is_equal(-1)
+	var at: int = code.find("Military.enlist(")
+	assert_int(at).override_failure_message(
+		"입대를 아무 데서도 안 부른다").is_greater(-1)
+	assert_int(code.rfind("answer_enlist", at)).override_failure_message(
+		"answer_enlist 밖에서 입대시킨다 — 묻기 전에 군대에 간다").is_greater(-1)
+
+
+## 주간 처리가 물음을 대기줄에 올리나 — 안 올리면 없는 것과 같다
+func test_주간_처리가_대기줄에_올린다() -> void:
+	var s: Dictionary = _s(_p(), SPORTS_DAY)
+	s["seed"] = 1
+	CareerRunner.run(s, SPORTS_DAY)
+	assert_bool(Pending.has(s, "sports_unit_apply")).override_failure_message(
+		"2월인데 상무 물음이 대기줄에 없다").is_true()
+
+
+## ⚠🔴 **여기가 얼어붙는 자리다.** 답하면 그해엔 다시 안 올라온다
+func test_답하면_그해엔_다시_안_묻는다() -> void:
+	var s: Dictionary = _s(_p(), SPORTS_DAY)
+	s["seed"] = 1
+	CareerRunner.run(s, SPORTS_DAY)
+	CareerDecision.answer_sports_unit(s, false)
+	CareerRunner.run(s, SPORTS_DAY)
+	assert_bool(Pending.has(s, "sports_unit_apply")).override_failure_message(
+		"거절했는데 같은 해에 또 묻는다 — 02가 여기서 얼어붙었다").is_false()
+
+
+## "이번엔 아니오"도 물었다로 친다 — 상태를 안 바꾸는 답이 함정이다
+## ⚠ **물음을 올린 뒤에 답한다.** `answer_*`는 대기줄에 없으면 아무것도
+## 안 한다 — 안 물은 것에 답할 수는 없다
+func test_거절도_물었다로_친다() -> void:
+	var s: Dictionary = _s(_p(), SPORTS_DAY)
+	Pending.push_once(s, {"type": "sports_unit_apply"})
+	CareerDecision.answer_sports_unit(s, false)
+	assert_bool(bool(s["protagonist"].get("sports_unit_applied", false))) \
+		.is_false()
+	assert_bool(Military.should_ask_sports_unit(s)).is_false()
+
+
+func test_신청하면_표시가_남는다() -> void:
+	var s: Dictionary = _s(_p(), SPORTS_DAY)
+	Pending.push_once(s, {"type": "sports_unit_apply"})
+	CareerDecision.answer_sports_unit(s, true)
+	assert_bool(bool(s["protagonist"]["sports_unit_applied"])).is_true()
+
+
+## 미뤄도 물었다로 친다 — 02가 2038년에 1000회 상한에 걸린 자리다
+func test_미뤄도_물었다로_친다() -> void:
+	var s: Dictionary = _s(_p({"age": 28}), LAST_WEEK_DAY)
+	Pending.push_once(s, {"type": "military_enlist_ask"})
+	CareerDecision.answer_enlist(s, false, LAST_WEEK_DAY)
+	assert_str(String(s["protagonist"].get("career_stage", ""))) \
+		.override_failure_message("미룬다고 했는데 입대했다").is_not_equal("military")
+	assert_bool(Military.should_ask_enlist(s)).override_failure_message(
+		"미뤘는데 같은 해에 또 묻는다").is_false()
+
+
+func test_입대한다고_하면_입대한다() -> void:
+	var s: Dictionary = _s(_p({"age": 28}), LAST_WEEK_DAY)
+	Pending.push_once(s, {"type": "military_enlist_ask"})
+	CareerDecision.answer_enlist(s, true, LAST_WEEK_DAY)
+	assert_str(String(s["protagonist"]["military_status"])) \
+		.is_equal(Military.STATUS_SERVING)
+
+
+## 결정 화면이 갈래 둘을 그리나
+func test_결정_화면이_둘을_받는다() -> void:
+	# ⚠ **`build`는 대기줄에서 스스로 읽는다** — 물음을 넘기는 게 아니라
+	# 올려 둔 뒤 부른다. 두 번째 인자는 계약 조건이다
+	for t in ["sports_unit_apply", "military_enlist_ask"]:
+		var s: Dictionary = _s(_p({"age": 28}), LAST_WEEK_DAY)
+		Pending.push_once(s, {"type": t})
+		var vm: Dictionary = DecisionVm.build(s)
+		assert_bool(vm.is_empty()).override_failure_message(
+			"결정 화면이 %s를 모른다" % t).is_false()
+		assert_int((vm["choices"] as Array).size()).override_failure_message(
+			"%s에 선택지가 둘이 아니다" % t).is_equal(2)

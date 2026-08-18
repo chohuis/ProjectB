@@ -21,7 +21,13 @@ const HANDLED: Array[String] = [
 	"career_choice_hub", "career_results", "career_choice",
 	"draft_observe", "draft_notification",
 	"salary_negotiation", "option_clause", "fa_market", "trade",
+	"sports_unit_apply", "military_enlist_ask",
 ]
+
+## ⚠ **`HANDLED`가 정본이다.** `build`의 `match`에만 넣고 여기 안 넣으면
+## `blocking`이 그 물음을 안 골라서 **화면이 영영 안 뜬다** — 대기줄에는
+## 올라가 있는데 아무도 안 받는, `retirement_ask`와 똑같은 모양이다.
+## 병역을 붙이면서 실제로 그럴 뻔했고 검사가 잡았다
 
 ## 한 번에 몇 곳까지 지원하나 — 화면이 보여주는 후보 수.
 ## 실제 상한은 `CareerDecision._clip`이 정본이다
@@ -65,6 +71,10 @@ static func build(state: Dictionary, terms: Dictionary = {}) -> Dictionary:
 			return _option(state, a)
 		"trade":
 			return _trade(state, a)
+		"sports_unit_apply":
+			return _sports_unit(state, a)
+		"military_enlist_ask":
+			return _enlist(state, a)
 	return {}
 
 
@@ -145,6 +155,38 @@ static func _results(state: Dictionary, _a: Dictionary) -> Dictionary:
 		lines.append("드래프트 신청이 받아들여졌습니다.")
 	return _of("career_results", "진로 결과", "\n".join(lines),
 		[{"id": "ok", "label": "확인"}])
+
+
+## 상무 지원 — 02 `SportsUnitApplicationModal`.
+##
+## ⚠ **이점을 글로 말한다.** 체육부대는 복귀 적응이 짧은데(`RECOVERY_SPORTS`)
+## 그걸 안 적으면 "왜 지원하나"를 사용자가 모른다 — 02도 후보 루머와 현재
+## OVR을 같이 보여준다
+static func _sports_unit(state: Dictionary, _a: Dictionary) -> Dictionary:
+	var p: Dictionary = state.get("protagonist", {})
+	var body: String = "이번 시즌 체육부대 입대 후보가 거론되고 있습니다.\n" \
+		+ "신청하면 시즌 마지막 주에 선발 결과가 나옵니다.\n\n" \
+		+ "체육부대는 복무 중에도 실전 감각을 유지해 **복귀 적응이 짧습니다**.\n" \
+		+ "현재 OVR %d" % int(roundf(Contract.core_ovr(p)))
+	return _of("sports_unit_apply", "체육부대 입대 신청", body,
+		[{"id": "apply", "label": "신청하기"},
+		{"id": "decline", "label": "이번엔 아니오"}])
+
+
+## 입대 확인 — 02 `MilitaryEnlistAskModal`.
+##
+## ⚠ **미루면 무슨 일이 생기는지 적는다.** 02는 "입영 기간 만료"라고만 하는데
+## 04는 미룬 뒤 다음 해에 다시 묻는다 — 그걸 말해야 고를 수 있다
+static func _enlist(state: Dictionary, _a: Dictionary) -> Dictionary:
+	var p: Dictionary = state.get("protagonist", {})
+	var body: String = "입영 기간이 다가왔습니다. (만 %d세)\n" \
+		% int(p.get("age", 0)) \
+		+ "복무는 %d주이고, 다녀오면 원래 팀으로 돌아갑니다.\n\n" \
+		% Military.SERVICE_WEEKS \
+		+ "미루면 다음 해에 다시 묻습니다."
+	return _of("military_enlist_ask", "입대", body,
+		[{"id": "enlist", "label": "입대한다"},
+		{"id": "defer", "label": "미룬다"}])
 
 
 static func _observe(_state: Dictionary, _a: Dictionary) -> Dictionary:

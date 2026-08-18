@@ -54,13 +54,36 @@ static func run(state: Dictionary, at_day: int) -> Dictionary:
 	var asked: String = Retirement.check(state, at_day, rng)
 
 	var week: int = Calendar.week_of(at_day)
-	var out: Dictionary = {"opened": false, "results": {}, "retirement": asked}
+	var out: Dictionary = {"opened": false, "results": {}, "retirement": asked,
+		"military_ask": _ask_military(state, at_day)}
 	if _should_open(state, p, week):
 		Pending.push_once(state, {"type": "career_choice_hub"})
 		out["opened"] = true
 	elif week >= RESULT_WEEK:
 		out["results"] = _decide(state)
 	return out
+
+
+## 병역을 물을 때면 대기줄에 올린다 — 02 `advanceWeek.ts:1952-2135`.
+##
+## 🔴 **04는 지금까지 안 물었다.** `career_decision`이 갈 곳이 없을 때 조용히
+## 현역으로 보냈다 — 02는 **입대할지 묻고 상무에 지원할지도 묻는다**.
+##
+## ⚠ **여기서 `mark_*_asked`를 부르지 않는다.** 답을 받는 쪽이 부른다 —
+## 여기서 적으면 대기줄에 올리자마자 "물었다"가 되어 **화면이 뜨기도 전에
+## 그해가 닫힌다.**
+##
+## ⚠ **둘을 같은 주에 안 묻는다.** 체육부대는 2월 첫 주, 입대 확인은 시즌
+## 마지막 주라 겹치지 않지만, 겹치면 상무를 먼저 본다 — 지원해 놓고 현역
+## 입대를 묻는 건 방금 한 선택을 없던 일로 만든다
+static func _ask_military(state: Dictionary, _at_day: int) -> String:
+	if Military.should_ask_sports_unit(state):
+		Pending.push_once(state, {"type": "sports_unit_apply"})
+		return "sports_unit_apply"
+	if Military.should_ask_enlist(state):
+		Pending.push_once(state, {"type": "military_enlist_ask"})
+		return "military_enlist_ask"
+	return ""
 
 
 ## 복무 한 주. 기간을 채웠으면 전역까지 여기서 한다.

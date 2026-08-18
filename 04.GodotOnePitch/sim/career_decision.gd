@@ -241,6 +241,40 @@ static func _kbl_team_ids() -> Array:
 
 
 ## 결과를 다 봤다 → 최종 선택으로
+# ── 병역 ──────────────────────────────────────────────────────
+#
+# 🔴 **04는 지금까지 안 물었다.** 02는 둘을 묻는다 —
+# `SportsUnitApplicationModal`(상무 지원) · `MilitaryEnlistAskModal`(입대 확인).
+#
+# ⚠🔴 **어느 쪽으로 답하든 `mark_*_asked`를 부른다.** "미룬다"·"이번엔
+# 아니오"는 상태를 안 바꾸므로, 안 적으면 다음 진행에서 조건이 또 참이 되어
+# **같은 자리를 무한히 돈다.** 02가 실측으로 두 번 겪었다 — 매년 그 주에서
+# 멈췄고, 다른 하나는 2038년에 자동 진행이 1000회 반복 상한에 걸렸다.
+
+## 상무에 지원한다 / 안 한다. 결과는 시즌 마지막 주에 나온다
+static func answer_sports_unit(state: Dictionary, apply: bool) -> bool:
+	if not Pending.resolve(state, "sports_unit_apply"):
+		return false
+	var p: Dictionary = state.get("protagonist", {})
+	if apply:
+		p["sports_unit_applied"] = true
+	Military.mark_sports_unit_asked(state)
+	return true
+
+
+## 입대한다 / 미룬다.
+##
+## ⚠ **입대 처리는 `Military`가 정본이다.** 02도 그 자리에 "네 경로가 각자
+## 적고 있었고 그중 둘이 오프시즌 처리를 빠뜨렸다"고 적어 뒀다
+static func answer_enlist(state: Dictionary, enlist: bool, at_day: int) -> bool:
+	if not Pending.resolve(state, "military_enlist_ask"):
+		return false
+	Military.mark_enlist_asked(state)
+	if enlist:
+		Military.enlist(state, "general", at_day)
+	return true
+
+
 static func confirm_results(state: Dictionary) -> bool:
 	if not Pending.resolve(state, "career_results"):
 		return false
