@@ -54,6 +54,10 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
+[node name="Invest" type="VBoxContainer" parent="Pad/Center/Col"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
 [node name="Row" type="HBoxContainer" parent="Pad/Center/Col"]
 layout_mode = 2
 theme_override_constants/separation = 6

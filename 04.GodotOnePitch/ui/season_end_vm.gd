@@ -18,12 +18,14 @@ const TABS: Array[Dictionary] = [
 ]
 
 
-static func build(digest: Dictionary) -> Dictionary:
+static func build(digest: Dictionary, p: Dictionary = {}) -> Dictionary:
 	if digest.is_empty():
 		return {"year": 0, "title": "", "tabs": TABS, "has_data": false,
 			"summary_rows": [], "standings": [], "my_rank_label": "",
 			"team_row": {}, "my_line": "", "my_awards": [], "game_log": [],
-			"award_rows": []}
+			"award_rows": [],
+			"investment": {"show": false, "done": false,
+				"options": [], "amounts": []}}
 
 	var year: int = int(digest.get("year", 0))
 	var standings: Array = digest.get("standings", {}).get("rows", [])
@@ -61,6 +63,57 @@ static func build(digest: Dictionary) -> Dictionary:
 		"my_ovr": int(record.get("ovr", 0)),
 		"my_awards": digest.get("my_awards", []),
 		"game_log": _game_log(record.get("game_log", [])),
+
+		# ── 시즌말 투자 ──
+		"investment": _investment(p, year),
+	}
+
+
+## 시즌말 투자 — 02 `SeasonEndModal`의 `<h4>시즌말 투자</h4>` 절.
+##
+## ⚠ **여기가 유일한 투자 시점이다**(02 주석 그대로). 상시 화면에 두면 매주
+## 눌러보는 도박이 되고, 재정 화면은 이력만 본다.
+##
+## ⚠ **못 하는 사람에겐 아예 안 보인다.** 다른 화면은 "왜 못 하나"를 적지만
+## 여기는 규칙 파일이 적어 둔 대로다 — **생활비도 빠듯한 신인에게 투자
+## 화면을 띄우면 조롱이다.** 이유는 재정 화면이 말한다
+static func _investment(p: Dictionary, year: int) -> Dictionary:
+	var done: Dictionary = Finance.investment_of_season(p, year)
+	if not done.is_empty():
+		var profit: int = int(done.get("profit", 0))
+		return {"show": true, "done": true, "options": [], "amounts": [],
+			"name": String(done.get("name", "")),
+			"result_label": "%s 투자 → %s (%+.1f%%)" % [
+				FinanceVm.won(int(done.get("principal", 0))),
+				FinanceVm.signed_won(profit),
+				float(done.get("rate", 0.0)) * 100.0],
+			"note": "자산에 반영됐습니다." if profit >= 0 \
+				else "손실이 자산에서 차감됐습니다.",
+			"gain": profit >= 0}
+
+	var cash: int = int(p.get("money", 0))
+	if not Finance.can_invest(cash, Finance.career_stage_of(p)):
+		return {"show": false, "done": false, "options": [], "amounts": []}
+
+	var options: Array = []
+	for o in Finance.investment_options():
+		var sd: float = float(o.get("sd", 0.0))
+		options.append({
+			"id": String(o.get("id", "")),
+			"name": String(o.get("name", "")),
+			"desc": String(o.get("desc", "")),
+			# ⚠ **위험을 같이 적는다.** 기대 수익만 보면 사업이 늘 나아 보인다
+			"stat_label": "기대 %+.0f%% · %s" % [float(o.get("mean", 0.0)) * 100.0,
+				"확정" if sd <= 0.0 \
+					else "최대 %.0f%%" % (float(o.get("floor", 0.0)) * 100.0)],
+		})
+	return {
+		"show": true, "done": false,
+		"title": "시즌말 투자",
+		"cash_label": FinanceVm.won(cash),
+		"warn": "고위험 선택지는 원금을 잃을 수 있습니다.",
+		"amounts": Finance.investment_amounts(cash),
+		"options": options,
 	}
 
 

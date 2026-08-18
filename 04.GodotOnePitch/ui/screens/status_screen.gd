@@ -293,6 +293,7 @@ func _build_finance() -> void:
 	_tab_host.add_child(_ledger_card(f["ledger"]))
 	_tab_host.add_child(_sponsor_card(f["sponsor"]))
 	_tab_host.add_child(_subscription_card(f["training"]))
+	_tab_host.add_child(_investment_card(f["investment"]))
 	if bool(f.get("trend", {}).get("has", false)):
 		_tab_host.add_child(_trend_card(f["trend"]))
 
@@ -363,6 +364,28 @@ func _subscription_card(t: Dictionary) -> Card:
 	var facility: String = String(t.get("facility_note", ""))
 	if not facility.is_empty():
 		c.body.add_child(_row("", facility, AppTheme.TEXT_DIM))
+	return c
+
+
+## 투자 — **이력만 본다.** 고르는 자리는 결산 화면이다.
+##
+## 🔴 **뷰모델에 실어 놓고 화면이 안 읽던 자리다**(형태 ①). P-32에서 절을
+## 만들고도 여기 한 줄을 안 붙여서 화면엔 여전히 아무것도 없었다
+func _investment_card(iv: Dictionary) -> Card:
+	var c := _card("투자")
+	c.body.add_child(_row("", String(iv.get("note", "")), AppTheme.TEXT_DIM))
+	var rows: Array = iv.get("rows", [])
+	if rows.is_empty():
+		c.body.add_child(_row("아직 굴린 것이 없습니다", "-", AppTheme.TEXT_MUTE))
+	for r in rows:
+		c.body.add_child(_row(String(r["label"]), String(r["value"]),
+			AppTheme.OK if bool(r["gain"]) else AppTheme.BAD))
+	if not rows.is_empty():
+		c.body.add_child(_row("누적 손익", String(iv.get("total_label", "")),
+			AppTheme.OK if bool(iv.get("total_gain", true)) else AppTheme.BAD))
+	# 못 하는 이유는 늘 적는다 — 결산에서 왜 안 떴는지가 여기서 풀린다
+	if not bool(iv.get("can", false)):
+		c.body.add_child(_row("", String(iv.get("reason", "")), AppTheme.TEXT_MUTE))
 	return c
 
 

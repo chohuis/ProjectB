@@ -71,46 +71,53 @@ static func build(state: Dictionary) -> Dictionary:
 	}
 
 
-## 시즌말 투자 — 02 `FinancePage`의 `<h3>투자</h3>` 절.
+## 투자 — 02 `FinancePage`의 `<h3>투자</h3>` 절.
 ##
 ## 🔴 **엔진만 있고 부르는 곳이 없었다.** `Finance.investment_options` ·
 ## `can_invest` · `resolve_investment`가 다 있고 규칙 파일에 세 갈래와 값까지
 ## 있는데 **넷 다 아무도 안 불렀다** — 형태 ②를 다섯 번째 만난 자리다.
 ##
-## ⚠ **위험을 같이 적는다.** 기대 수익만 보면 사업이 늘 나아 보인다 —
-## `floor`가 최대 손실률이다.
+## ⚠ **여기는 고르는 자리가 아니다.** 굴리는 것은 결산 화면에서 한 해에 한
+## 번뿐이고(`SeasonEndVm`) 여기서는 지금까지의 결과만 본다 — 02가 같다.
+## 상시 화면에 두면 매주 눌러보는 도박이 된다.
 ##
 ## ⚠ **못 하면 이유를 말한다.** 빈 칸은 고장으로 보인다
 static func _investment(p: Dictionary, stage: String) -> Dictionary:
 	var cash: int = int(p.get("money", 0))
 	var can: bool = Finance.can_invest(cash, stage)
 
-	var options: Array = []
-	for o in Finance.investment_options():
-		var sd: float = float(o.get("sd", 0.0))
-		options.append({
-			"id": String(o.get("id", "")),
-			"name": String(o.get("name", "")),
-			"desc": String(o.get("desc", "")),
-			"mean_label": "기대 %+.0f%%" % (float(o.get("mean", 0.0)) * 100.0),
-			# 흔들림이 0이면 "확정"이라 적는다 — `-0%`는 뜻이 없다
-			"risk_label": "확정" if sd <= 0.0 \
-				else "최대 %.0f%%" % (float(o.get("floor", 0.0)) * 100.0),
+	var rows: Array = []
+	var total: int = 0
+	var log: Array = Finance.investments_of(p)
+	# 최근 것을 위로 — 결산에서 방금 고른 것이 제일 먼저 보여야 한다
+	for i in range(log.size() - 1, -1, -1):
+		var e: Dictionary = log[i]
+		var profit: int = int(e.get("profit", 0))
+		total += profit
+		rows.append({
+			"label": "%d년 %s" % [int(e.get("season", 0)),
+				String(e.get("name", ""))],
+			"value": "%s → %s (%+.1f%%)" % [won(int(e.get("principal", 0))),
+				signed_won(profit), float(e.get("rate", 0.0)) * 100.0],
+			"gain": profit >= 0,
 		})
 
 	var reason: String = ""
 	if not can:
 		reason = "프로 무대에서만 할 수 있습니다." if not Finance.is_pro(stage) \
-			else "현금이 %s 이상이어야 합니다." % won(Finance.invest_min_cash())
+			else "현금이 %s 이상이어야 선택지가 열립니다." % won(
+				Finance.invest_min_cash())
 	return {"can": can, "reason": reason, "cash_label": won(cash),
-		"options": options}
+		"note": "투자는 시즌 결산 화면에서 한 해에 한 번 고릅니다.",
+		"rows": rows,
+		"total_label": signed_won(total) if not rows.is_empty() else "",
+		"total_gain": total >= 0}
 
 
-## 재정은 무대 이름을 리그에서 낸다 — `career_stage`는 프로만 갈래가 있다
+## 재정은 무대 이름을 리그에서 낸다 — `career_stage`는 프로만 갈래가 있다.
+## **엔진도 같은 함수를 본다**(`Finance.stage_of`)
 static func _stage_of(p: Dictionary) -> String:
-	if Contract.has_contract(String(p.get("league_id", ""))):
-		return Finance.PRO_STAGES[0]
-	return String(p.get("career_stage", "highschool"))
+	return Finance.career_stage_of(p)
 
 
 static func _kpi(p: Dictionary, weekly: Dictionary, sponsors: Array,

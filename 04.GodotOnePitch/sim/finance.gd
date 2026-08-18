@@ -393,6 +393,97 @@ static func resolve_investment(option_id: String, amount: int,
 		"profit": profit, "payout": amount + profit}
 
 
+## 재정이 보는 무대. **리그에서 낸다.**
+##
+## 🔴 **화면과 엔진이 다른 축으로 가르면 조용히 갈린다.** `career_stage`는
+## 프로 안에서만 갈래가 있어(`pro_kbl` 등) 대학·독립을 못 가른다. 재정
+## 화면이 그래서 리그로 갈랐는데 엔진이 `career_stage`를 보면 **화면엔 안
+## 뜨는데 눌리는 자리**가 생긴다. 두 쪽이 이 함수 하나만 본다
+static func career_stage_of(p: Dictionary) -> String:
+	if Contract.has_contract(String(p.get("league_id", ""))):
+		return PRO_STAGES[0]
+	return String(p.get("career_stage", "highschool"))
+
+
+## 시즌말에 굴릴 금액 세 갈래 — 02 결산 모달의 `1/4 · 1/2 · 전액`.
+##
+## ⚠ **기본이 1/4이다**(첫 칸). 전액을 기본으로 두면 실수로 다 넣는다
+const INVEST_DIVISORS: Array[Dictionary] = [
+	{"id": "quarter", "label": "1/4", "div": 4},
+	{"id": "half", "label": "1/2", "div": 2},
+	{"id": "all", "label": "전액", "div": 1},
+]
+
+
+## ⚠ **100원 단위로 내린다.** `1,237,419원을 굴립니다`는 고르는 손을 멈추게
+## 한다. 최소 현금 아래로는 안 내려가고 가진 돈은 안 넘는다
+static func investment_amounts(cash: int) -> Array:
+	var floor_amount: int = invest_min_cash()
+	var out: Array = []
+	for d in INVEST_DIVISORS:
+		var raw: int = int(floor(float(cash) / float(d["div"]) / 100.0)) * 100
+		out.append({"id": String(d["id"]), "label": String(d["label"]),
+			"amount": clampi(maxi(raw, floor_amount), 0, cash)})
+	return out
+
+
+static func investments_of(p: Dictionary) -> Array:
+	return p.get("investments", [])
+
+
+## 그 해에 이미 굴렸나. **한 해에 한 번뿐이다** — 되풀이되면 결산이
+## 도박판이 된다
+static func investment_of_season(p: Dictionary, season_year: int) -> Dictionary:
+	for e in investments_of(p):
+		if int(e.get("season", 0)) == season_year:
+			return e
+	return {}
+
+
+## 시즌말 투자를 상태에 반영한다.
+##
+## 🔴 **엔진만 있고 부르는 곳이 없었다** — `resolve_investment`가 규칙·값·
+## 정규분포까지 다 갖췄는데 아무도 안 불렀다. 굴릴 자리가 결산 화면이다
+## (02도 거기 하나뿐이다 — 상시 화면에 두면 매주 눌러보는 도박이 된다).
+##
+## ⚠ **원금은 그대로 있고 손익만 자산에 얹는다**(02와 같다). 원금을 뺐다가
+## 넣으면 같은 결과인데 중간에 파산 판정을 스칠 수 있다.
+##
+## ⚠ **씨앗을 해와 갈래로 만든다.** 02는 `thread_rng`라 같은 세이브를 다시
+## 열면 결과가 달랐다 — 04는 재현된다
+static func apply_investment(state: Dictionary, option_id: String,
+		amount: int, season_year: int) -> Dictionary:
+	var p: Dictionary = state.get("protagonist", {})
+	if p.is_empty():
+		return {}
+	if not investment_of_season(p, season_year).is_empty():
+		return {}
+
+	var cash: int = int(p.get("money", 0))
+	if not can_invest(cash, career_stage_of(p)):
+		return {}
+	var amt: int = clampi(amount, 0, cash)
+	if amt <= 0:
+		return {}
+	# 없는 갈래면 상태를 안 건드린다 — 0원 이력이 남으면 그 해를 잃는다.
+	# ⚠ `resolve_investment`는 없는 갈래에도 **그 id를 그대로 되돌려준다** —
+	# 돌려받은 id로는 못 가른다
+	if investment_option(option_id).is_empty():
+		return {}
+
+	var rng := RandomNumberGenerator.new()
+	rng.seed = Rng.mix(["invest", season_year, option_id])
+	var res: Dictionary = resolve_investment(option_id, amt, rng)
+
+	p["money"] = maxi(cash + int(res["profit"]), 0)
+	var log: Array = investments_of(p)
+	log.append({"season": season_year, "option_id": String(res["option_id"]),
+		"name": String(res["name"]), "principal": int(res["principal"]),
+		"rate": float(res["rate"]), "profit": int(res["profit"])})
+	p["investments"] = log
+	return res
+
+
 # ── 사치품 ────────────────────────────────────────────────────
 
 const LUXURY_UNIT: float = 100.0

@@ -12,13 +12,19 @@ class_name SeasonEndScreen
 @onready var _title: Label = $Pad/Center/Col/Title
 @onready var _tabs: HBoxContainer = $Pad/Center/Col/Tabs
 @onready var _body: VBoxContainer = $Pad/Center/Col/Body
+@onready var _invest: VBoxContainer = $Pad/Center/Col/Invest
 @onready var _done: Button = $Pad/Center/Col/Row/Done
 
 ## 결산을 닫는다
 signal done_requested
 
+## 시즌말 투자를 골랐다 — 정산은 `Finance.apply_investment`가 한다
+signal invest_requested(option_id: String, amount: int)
+
 var _vm: Dictionary = {}
 var _tab: int = 0
+# 기본은 1/4이다 — 전액을 기본으로 두면 실수로 다 넣는다
+var _amount_id: String = "quarter"
 
 
 func set_view_model(vm: Dictionary) -> void:
@@ -49,6 +55,7 @@ func _rebuild() -> void:
 
 	_build_tabs()
 	_build_body()
+	_build_invest()
 
 
 ## ⚠ **떼고 나서 곧바로 지운다.** `queue_free`는 다음 프레임까지 살아 있어서
@@ -178,3 +185,113 @@ func _build_personal() -> void:
 		_pair("%d일차 %s %s" % [int(e["day"]), String(e["opponent_id"]),
 			String(e["score_label"])], String(e["line_label"]),
 			AppTheme.ACCENT if bool(e["won"]) else AppTheme.TEXT_DIM)
+
+
+## 시즌말 투자 — **탭 밖에 둔다.**
+##
+## ⚠ 한 해에 한 번뿐인 선택을 탭 안에 숨기면 못 보고 결산을 넘긴다.
+## 02는 모달이 한 줄 스크롤이라 자연히 보였는데 04는 탭이 셋이다
+func _build_invest() -> void:
+	_free_all(_invest)
+	var v: Dictionary = _vm.get("investment", {})
+	if not bool(v.get("show", false)):
+		return
+
+	if bool(v.get("done", false)):
+		var head := Label.new()
+		head.text = "투자 결과"
+		head.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		_invest.add_child(head)
+
+		var line := Label.new()
+		line.text = "%s  %s" % [String(v.get("name", "")),
+			String(v.get("result_label", ""))]
+		line.add_theme_color_override("font_color",
+			AppTheme.ACCENT if bool(v.get("gain", true)) else AppTheme.BAD)
+		_invest.add_child(line)
+
+		var note := Label.new()
+		note.text = String(v.get("note", ""))
+		note.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		note.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		_invest.add_child(note)
+		return
+
+	var title := Label.new()
+	title.text = String(v.get("title", ""))
+	title.add_theme_color_override("font_color", AppTheme.ACCENT)
+	_invest.add_child(title)
+
+	var lead := Label.new()
+	lead.text = "보유 현금 %s원 중 %s원을 굴립니다.  %s" % [
+		String(v.get("cash_label", "")), _amount_label(), String(v.get("warn", ""))]
+	lead.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+	lead.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_invest.add_child(lead)
+
+	var amounts := HBoxContainer.new()
+	amounts.add_theme_constant_override("separation", 6)
+	_invest.add_child(amounts)
+	var group := ButtonGroup.new()
+	for a in v.get("amounts", []):
+		var b := Button.new()
+		b.text = String(a["label"])
+		b.toggle_mode = true
+		b.button_group = group
+		b.button_pressed = (String(a["id"]) == _amount_id)
+		var id: String = String(a["id"])
+		b.pressed.connect(func() -> void: _on_amount.call_deferred(id))
+		amounts.add_child(b)
+
+	var opts := HBoxContainer.new()
+	opts.add_theme_constant_override("separation", 6)
+	_invest.add_child(opts)
+	for o in v.get("options", []):
+		var col := VBoxContainer.new()
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		opts.add_child(col)
+
+		var b := Button.new()
+		b.text = String(o["name"])
+		var oid: String = String(o["id"])
+		b.pressed.connect(func() -> void: _on_invest.call_deferred(oid))
+		col.add_child(b)
+
+		var stat := Label.new()
+		stat.text = String(o["stat_label"])
+		stat.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		stat.add_theme_color_override("font_color", AppTheme.TEXT)
+		col.add_child(stat)
+
+		var desc := Label.new()
+		desc.text = String(o["desc"])
+		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		desc.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		desc.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		col.add_child(desc)
+
+
+## 지금 고른 금액. **화면은 고른 것만 들고 계산은 안 한다** — 금액은
+## `Finance.investment_amounts`가 이미 만들어 뒀다
+func _current_amount() -> int:
+	for a in _vm.get("investment", {}).get("amounts", []):
+		if String(a["id"]) == _amount_id:
+			return int(a["amount"])
+	return 0
+
+
+func _amount_label() -> String:
+	return FinanceVm.won(_current_amount())
+
+
+func _on_amount(id: String) -> void:
+	_amount_id = id
+	_build_invest()
+
+
+func _on_invest(option_id: String) -> void:
+	var amount: int = _current_amount()
+	if amount <= 0:
+		return
+	invest_requested.emit(option_id, amount)

@@ -487,6 +487,23 @@ func _build(which: String) -> Control:
 			var sd: SeasonEndScreen = SEASON_END.instantiate()
 			sd.set_view_model(SeasonEndVm.build(Fixtures.season_digest()))
 			return sd
+		"season-invest":
+			# 시즌말 투자 절 — 프로 · 현금 5000만. **탭 밖에 붙는다**
+			var si: SeasonEndScreen = SEASON_END.instantiate()
+			si.set_view_model(SeasonEndVm.build(Fixtures.season_digest(),
+				{"career_stage": "pro_kbl", "league_id": "LEAGUE_KBL",
+					"money": 5000}))
+			return si
+		"season-invest-done":
+			# 굴린 뒤 — 결과만 남고 선택지가 사라진다
+			var sj: SeasonEndScreen = SEASON_END.instantiate()
+			var jp: Dictionary = {"career_stage": "pro_kbl",
+				"league_id": "LEAGUE_KBL", "money": 5000}
+			var js: Dictionary = {"protagonist": jp}
+			Finance.apply_investment(js, "VENTURE", 1200,
+				int(Fixtures.season_digest().get("year", 2027)))
+			sj.set_view_model(SeasonEndVm.build(Fixtures.season_digest(), jp))
+			return sj
 		"draft-board":
 			# ⚠ **진짜 세계로 연다.** 손으로 만든 사전이면 "라운드가 열한 개다"
 			# 같은 실제 모양을 못 본다 — 시즌을 한 번 끝내 진짜 지명을 만든다
@@ -587,6 +604,9 @@ func _build(which: String) -> Control:
 			fst["protagonist"]["salary"] = 12000
 			fst["protagonist"]["fame"] = 62.0
 			fst["protagonist"]["money"] = 34000
+			# 굴린 이력이 있어야 투자 절이 빈 칸이 아니다.
+			# ⚠ set_state가 사전을 복제한다 — **넘기기 전에** 넣어야 한다
+			Finance.apply_investment(fst, "FUND", 3400, 2026)
 			fi.set_state(fst)
 			fi.ready.connect(func() -> void:
 				# 구독을 켜고 몇 주를 돌려 자산 추이를 만든다

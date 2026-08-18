@@ -397,8 +397,10 @@ func _on_season_end() -> void:
 	# 통째로 사라진 것처럼 느껴진다 — 사용자가 한 해 동안 한 일이 거기 있다
 	_season_screen = SEASON_END_SCREEN.instantiate()
 	_season_screen.done_requested.connect(_on_season_end_done)
+	_season_screen.invest_requested.connect(_on_invest)
 	add_child(_season_screen)
-	_season_screen.set_view_model(SeasonEndVm.build(last_season_end.get("digest", {})))
+	_season_screen.set_view_model(SeasonEndVm.build(
+		last_season_end.get("digest", {}), _state.get("protagonist", {})))
 	_main.visible = false
 
 
@@ -657,6 +659,19 @@ func _on_decision(choice_id: String) -> void:
 
 func season_screen() -> SeasonEndScreen:
 	return _season_screen
+
+
+## 시즌말 투자. **정산은 sim이 한다** — 화면은 무엇을 얼마나 골랐는지만 준다.
+##
+## 굴린 해는 방금 끝난 시즌이다 — 롤오버가 이미 돌아서
+## state.season_year는 다음 해다
+func _on_invest(option_id: String, amount: int) -> void:
+	var year: int = int(last_season_end.get("year", 0))
+	if Finance.apply_investment(_state, option_id, amount, year).is_empty():
+		return
+	if _season_screen != null:
+		_season_screen.set_view_model(SeasonEndVm.build(
+			last_season_end.get("digest", {}), _state.get("protagonist", {})))
 
 
 func _on_season_end_done() -> void:

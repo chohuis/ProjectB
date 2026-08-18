@@ -74,26 +74,60 @@ func test_재정_화면이_투자를_낸다() -> void:
 	assert_bool(vm.has("investment")).override_failure_message(
 		"재정 화면에 투자가 없다 — 산식은 다 있는데 부르는 곳이 없었다") \
 		.is_true()
-	assert_int(int(vm["investment"].get("options", []).size())) \
-		.override_failure_message("투자 갈래가 안 나온다").is_equal(3)
+	assert_bool(vm["investment"].has("rows")).is_true()
 
 
-## 갈래마다 이름·설명·기대 수익이 붙는다 — 값 없이 고를 수 없다
-func test_갈래에_근거가_붙는다() -> void:
-	for o in FinanceVm.build(_state())["investment"]["options"]:
-		assert_str(String(o.get("name", ""))).is_not_empty()
-		assert_str(String(o.get("desc", ""))).is_not_empty()
-		assert_str(String(o.get("mean_label", ""))).override_failure_message(
-			"기대 수익이 없다 — 이름만 보고 고를 수 없다").is_not_empty()
+## ⚠ **여기는 고르는 자리가 아니다.** 02도 결산에서 한 해에 한 번만 고른다 —
+## 상시 화면에 두면 매주 눌러보는 도박이 된다
+func test_재정_화면은_고르는_자리가_아니다() -> void:
+	var inv: Dictionary = FinanceVm.build(_state())["investment"]
+	assert_bool(inv.has("options")).override_failure_message(
+		"재정 화면에서 투자를 고를 수 있다 — 결산에서만 골라야 한다").is_false()
+	assert_str(String(inv.get("note", ""))).override_failure_message(
+		"어디서 고르는지 안 알려준다").contains("결산")
 
 
-## ⚠ **위험도 적는다.** 기대 수익만 보면 사업이 늘 나아 보인다
-func test_위험을_적는다() -> void:
-	var joined: String = ""
-	for o in FinanceVm.build(_state())["investment"]["options"]:
-		joined += String(o.get("risk_label", "")) + " "
-	assert_int(joined.find("-")).override_failure_message(
-		"최대 손실이 없다 — 사업이 늘 나아 보인다: %s" % joined).is_greater(-1)
+## 굴린 것이 줄로 나온다 — 원금 · 손익 · 수익률
+func test_이력이_줄로_나온다() -> void:
+	var s: Dictionary = _state()
+	Finance.apply_investment(s, "DEPOSIT", 2000, 2033)
+	var inv: Dictionary = FinanceVm.build(s)["investment"]
+	var rows: Array = inv["rows"]
+	assert_int(rows.size()).override_failure_message(
+		"굴렸는데 이력이 안 보인다").is_equal(1)
+	assert_str(String(rows[0]["label"])).contains("2033")
+	assert_str(String(rows[0]["label"])).contains("예금")
+	assert_str(String(rows[0]["value"])).contains("→")
+	assert_str(String(rows[0]["value"])).contains("%")
+	assert_bool(bool(rows[0]["gain"])).is_true()
+
+
+## 최근 것이 위로 — 결산에서 방금 고른 것이 제일 먼저 보여야 한다
+func test_최근이_위로_온다() -> void:
+	var s: Dictionary = _state()
+	Finance.apply_investment(s, "DEPOSIT", 1000, 2033)
+	Finance.apply_investment(s, "FUND", 1000, 2034)
+	var rows: Array = FinanceVm.build(s)["investment"]["rows"]
+	assert_int(rows.size()).is_equal(2)
+	assert_str(String(rows[0]["label"])).override_failure_message(
+		"최근 것이 위가 아니다: %s" % rows[0]["label"]).contains("2034")
+
+
+## 누적 손익 — 한 해만 보면 잘한 판단인지 알 수 없다
+func test_누적_손익을_낸다() -> void:
+	var s: Dictionary = _state()
+	Finance.apply_investment(s, "DEPOSIT", 2000, 2033)
+	var inv: Dictionary = FinanceVm.build(s)["investment"]
+	assert_str(String(inv["total_label"])).override_failure_message(
+		"누적 손익이 없다").is_not_empty()
+	assert_bool(bool(inv["total_gain"])).is_true()
+
+
+## 아직 아무것도 안 굴렸으면 줄이 없다 — 지어낸 0원 줄을 넣지 않는다
+func test_이력이_없으면_비어_있다() -> void:
+	var inv: Dictionary = FinanceVm.build(_state())["investment"]
+	assert_int((inv["rows"] as Array).size()).is_equal(0)
+	assert_str(String(inv["total_label"])).is_empty()
 
 
 ## 못 하는 상태면 이유를 말한다 — 빈 칸은 고장으로 보인다
@@ -106,9 +140,12 @@ func test_못_하면_이유를_말한다() -> void:
 
 ## 화면 문구에 마크다운을 쓰지 않는다
 func test_마크다운을_안_쓴다() -> void:
-	var joined: String = ""
-	for o in FinanceVm.build(_state())["investment"]["options"]:
-		joined += String(o.get("desc", "")) + String(o.get("mean_label", ""))
+	var s: Dictionary = _state()
+	Finance.apply_investment(s, "VENTURE", 1000, 2033)
+	var inv: Dictionary = FinanceVm.build(s)["investment"]
+	var joined: String = String(inv["note"]) + String(inv["reason"])
+	for r in inv["rows"]:
+		joined += String(r["label"]) + String(r["value"])
 	assert_int(joined.find("**")).is_equal(-1)
 
 

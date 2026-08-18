@@ -305,3 +305,38 @@ func test_the_screen_holds_no_finance_logic() -> void:
 	assert_str(src).not_contains("Finance.")
 	assert_str(src).not_contains("sort_custom")
 	assert_str(src).not_contains(".filter(")
+
+
+# ── 투자 절 ──────────────────────────────────────────────────────
+
+## 🔴 **뷰모델에 실었는데 화면이 안 읽던 자리**(형태 ①). P-32에서 절을
+## 만들고도 카드를 안 붙여 화면엔 여전히 아무것도 없었다
+func test_재정_탭에_투자_카드가_있다() -> void:
+	var s: Dictionary = _state({"money": 5000})
+	var screen: StatusScreen = await _open(s)
+	assert_str(_joined(screen)).override_failure_message(
+		"재정 탭에 투자 카드가 없다").contains("투자")
+
+
+## 굴린 것이 줄로 보인다 — 원금 · 손익 · 수익률
+func test_굴린_것이_재정_탭에_보인다() -> void:
+	var s: Dictionary = _state({"money": 5000, "league_id": "LEAGUE_KBL",
+		"career_stage": "pro_kbl"})
+	Finance.apply_investment(s, "DEPOSIT", 2000, 2027)
+	var joined: String = _joined(await _open(s))
+	assert_str(joined).override_failure_message(
+		"굴린 이력이 화면에 없다").contains("2027년 예금")
+	assert_str(joined).contains("누적 손익")
+
+
+## 아직 안 굴렸으면 왜 비었는지 말한다 — 빈 칸은 고장으로 보인다
+func test_이력이_없으면_왜_비었는지_말한다() -> void:
+	var joined: String = _joined(await _open(_state({"money": 5000})))
+	assert_str(joined).contains("아직 굴린 것이 없습니다")
+
+
+## 어디서 고르는지 알려준다 — 재정 탭엔 고르는 버튼이 없다
+func test_어디서_고르는지_알려준다() -> void:
+	var joined: String = _joined(await _open(_state({"money": 5000})))
+	assert_str(joined).override_failure_message(
+		"재정 탭에서 투자를 어디서 고르는지 안 알려준다").contains("결산")
