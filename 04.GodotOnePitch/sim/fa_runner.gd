@@ -91,6 +91,42 @@ static func _move(world: Dictionary, player_id: String, to_team: String,
 	return {}
 
 
+## 시장에 올릴 선수 목록 — **게임과 계측이 같이 부른다** (P-5c).
+##
+## 🔴 **계측이 이 조립을 손으로 복제하고 있었다.** 그래서 게임 쪽 분모를
+## 고쳤는데 계측이 안 따라와 **"고쳤는데 그대로"로 한 번 읽혔다.**
+## 조립을 여기 한 곳에 두면 두 경로가 갈릴 수 없다
+static func market_players_of(world: Dictionary, league_id: String) -> Array:
+	var out: Array = []
+	for p in eligible_of(world, league_id):
+		out.append({
+			"id": String(p["id"]), "name": String(p.get("name", "")),
+			"from_team_id": String(p.get("team_id", "")),
+			"ovr": Contract.core_ovr(p), "age": int(p.get("age", 27)),
+			"salary": int(p.get("salary", 0)), "form": 0.0,
+		})
+	return out
+
+
+## 시장에 들어오는 구단 — **게임과 계측이 같이 부른다** (P-5c)
+static func market_teams_of(world: Dictionary, league_id: String) -> Array:
+	var out: Array = []
+	for t in World.teams_of(league_id):
+		var tid: String = String(t["id"])
+		out.append({
+			"team_id": tid,
+			# 예산 지수는 아직 없다 — 구단주 씀씀이로 대신한다.
+			# **모양은 02 그대로다**(0.8~1.35), 재정이 붙으면 값만 바뀐다
+			"budget_index": clampf(
+				float(TeamProfile.of(world, tid)["owner_spending_willingness"]) / 50.0,
+				0.8, 1.35),
+			"win_now_pressure": float(TeamProfile.of(world, tid)["win_now_pressure"]),
+			"open_slots": open_slots_of(world, tid, league_id),
+			"roster": compensation_pool(world, tid),
+		})
+	return out
+
+
 ## 한 리그의 FA를 정산해 세계에 적용한다. `{signings, unsigned, moved}`
 static func run_league(state: Dictionary, league_id: String,
 		rng: RandomNumberGenerator) -> Dictionary:

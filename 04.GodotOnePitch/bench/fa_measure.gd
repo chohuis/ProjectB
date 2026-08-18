@@ -63,31 +63,11 @@ func _market(log_line: Callable, seed_value: int, warmup: int) -> void:
 		if eligible.is_empty():
 			continue
 
-		# ⚠ **`run_league`가 짓는 그대로 짓는다.** 처음엔 로스터를 훑어
-		# `{team_id, open_slots, roster}`만 넣었는데, `budget_index`와
-		# `win_now_pressure`가 빠져 **모든 팀이 똑같이 부르고 원소속 프리미엄
-		# +0.15만 남았다** — 이적 0%가 나왔다. 04가 아니라 fixture가 틀렸다
-		var market_players: Array = []
-		for p in eligible:
-			market_players.append({
-				"id": String(p["id"]), "name": String(p.get("name", "")),
-				"from_team_id": String(p.get("team_id", "")),
-				"ovr": Contract.core_ovr(p), "age": int(p.get("age", 27)),
-				"salary": int(p.get("salary", 0)), "form": 0.0,
-			})
-		var teams: Array = []
-		for t in World.teams_of(lid):
-			var tid: String = String(t["id"])
-			teams.append({
-				"team_id": tid,
-				"budget_index": clampf(float(TeamProfile.of(world, tid)
-					["owner_spending_willingness"]) / 50.0, 0.8, 1.35),
-				"win_now_pressure": float(TeamProfile.of(world, tid)
-					["win_now_pressure"]),
-				"open_slots": FaRunner.open_slots_of(world, tid, lid),
-				"roster": FaRunner.compensation_pool(world, tid),
-			})
-
+		# 🔴 **여기가 `run_league`를 복제하던 자리다**(P-5c). 게임 쪽 분모를
+		# 고쳤는데 계측이 안 따라와 "고쳤는데 그대로"로 한 번 읽혔다 —
+		# **이제 게임과 같은 함수를 부른다.** 갈릴 수가 없다
+		var market_players: Array = FaRunner.market_players_of(world, lid)
+		var teams: Array = FaRunner.market_teams_of(world, lid)
 		var rng := RandomNumberGenerator.new()
 		rng.seed = Rng.mix(["fa", lid, seed_value, year])
 		# ⚠ **분모는 프로 전체다** (P-5). 여기가 `run_league`를 복제한

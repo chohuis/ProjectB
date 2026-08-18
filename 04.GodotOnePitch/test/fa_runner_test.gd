@@ -392,3 +392,38 @@ func test_every_pro_league_runs() -> void:
 		"KBL 하나만 돌았다").is_equal(2)
 	assert_int(int(_find(s, "J1")["contract_years"])).override_failure_message(
 		"JBL 자격자가 계약을 못 받았다").is_greater(0)
+
+
+# ── 계측과 게임이 같은 조립을 쓴다 (P-5c) ───────────────────────
+
+## 🔴 **계측이 `run_league`의 조립을 복제하고 있었다.** 게임 쪽 분모를
+## 고쳤는데 계측이 안 따라와 **"고쳤는데 그대로"로 한 번 읽혔다.**
+## 조립을 한 함수로 빼서 둘이 같이 부른다 — **갈릴 수가 없다**
+func test_시장_조립이_한_곳이다() -> void:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var world: Dictionary = s["world"]
+	var teams: Array = FaRunner.market_teams_of(world, "LEAGUE_KBL")
+	assert_int(teams.size()).is_greater(0)
+	# 02가 요구한 축이 다 있다 — 하나라도 빠지면 모든 팀이 똑같이 부른다
+	for t in teams:
+		assert_bool(t.has("budget_index")).override_failure_message(
+			"예산 지수가 빠졌다 — 빠지면 이적이 0%가 된다").is_true()
+		assert_bool(t.has("win_now_pressure")).is_true()
+		assert_bool(t.has("open_slots")).is_true()
+		assert_bool(t.has("roster")).is_true()
+
+
+## 선수 목록도 한 곳이다 — 자격 판정이 두 벌이면 분모가 갈린다
+func test_선수_목록도_한_곳이다() -> void:
+	var s: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	var world: Dictionary = s["world"]
+	var players: Array = FaRunner.market_players_of(world, "LEAGUE_KBL")
+	# 자격자 수와 같아야 한다 — 여기서 또 거르면 두 경로가 갈린다
+	assert_int(players.size()).is_equal(
+		FaRunner.eligible_of(world, "LEAGUE_KBL").size())
+	for p in players:
+		assert_bool(p.has("ovr")).is_true()
+		assert_bool(p.has("salary")).is_true()
+		assert_bool(p.has("from_team_id")).is_true()
