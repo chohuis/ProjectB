@@ -15,9 +15,10 @@ extends GdUnitTestSuite
 ## (`NewsPage.svelte:253` · `InjuryPanel.svelte:19-23`).
 
 
-func _hurt(id: String, weeks: int) -> Dictionary:
+func _hurt(id: String, weeks: int, team: String = "TEAM_A") -> Dictionary:
 	return {"player_id": id, "name": "선수%s" % id, "weeks": weeks,
-		"severity": "중증" if weeks >= 8 else "경미", "team_id": "TEAM_A"}
+		"severity": "중증" if weeks >= 8 else "경미", "team_id": team,
+		"position": "SP", "age": 24}
 
 
 func _state(events: Array) -> Dictionary:
@@ -142,3 +143,70 @@ func test_기록도_같이_쌓인다() -> void:
 			break
 	assert_int(int(s.get("injury_log", []).size())).override_failure_message(
 		"기록이 안 쌓인다").is_greater(0)
+
+
+# ── 02 `InjuryPanel`이 하던 일 ────────────────────────────────────
+
+## 🔴 **이름이 없으면 id가 그대로 찍힌다.**
+##
+## 실측에서 `GEN_TEAM_KBL_DAEJEON_PHANTOMS_1_20270101_Y2027_025`가 나왔다 —
+## `_push_news`가 이름을 안 담았기 때문이다. **02도 같은 결함을 겪고 고쳤다**
+## (`top10Engine.ts:62-66` "표에 없는 팀이 ID로 찍혔다").
+func test_사건이_이름을_담는다() -> void:
+	var src := CodeText.of("res://sim/injury_runner.gd")
+	assert_int(src.find("\"name\": String(p.get(\"name\", \"\"))")) \
+		.override_failure_message(
+			"부상 사건이 이름을 안 담는다 — 본문에 원본 id가 찍힌다") \
+		.is_greater(-1)
+
+
+## ⚠ **되찾지 말고 그때 담는다.** 나중에 id로 찾으면 복무·은퇴로 로스터를
+## 떠난 사람을 못 찾는다
+func test_이름이_본문에_찍힌다() -> void:
+	var s: Dictionary = _state([_hurt("N1", 10)])
+	var body: String = String(InjuryRunner.news_message(s, 100).get("body", ""))
+	assert_int(body.find("선수N1")).is_greater(-1)
+	assert_int(body.find("SP")).override_failure_message(
+		"포지션이 없다").is_greater(-1)
+
+
+## 🔴 **실측에서 한 달치가 114명이었다.** 통째로 내면 못 읽는다 —
+## 02는 등급 카드로 거르고 100명씩 끊는다(`InjuryPanel`의 `PAGE`)
+func test_긴_목록을_자르고_나머지를_센다() -> void:
+	var events: Array = []
+	for i in 60:
+		events.append(_hurt("N%d" % i, 10))
+	var body: String = String(InjuryRunner.news_message(
+		_state(events), 100).get("body", ""))
+	var rows: int = 0
+	for line in body.split("\n"):
+		if line.contains("주") and line.contains("선수"):
+			rows += 1
+	assert_int(rows).override_failure_message(
+		"본문에 %d줄이 들어갔다 — 상한 %d를 안 봤다" % [rows, InjuryRunner.BODY_ROWS]) \
+		.is_equal(InjuryRunner.BODY_ROWS)
+	assert_int(body.find("그 밖 %d명" % (60 - InjuryRunner.BODY_ROWS))) \
+		.override_failure_message("자르고 나머지를 안 셌다 — 조용히 사라진다") \
+		.is_greater(-1)
+
+
+## ⚠ **내 팀이 위로 온다.** 02는 `내 팀` 칩으로 거른다 — 전 리그에서
+## 부상자가 나오는데 관련성을 못 가리면 읽을 이유가 없다
+func test_내_팀이_위로_온다() -> void:
+	var events: Array = []
+	# 남의 팀 중상 스물, 내 팀 경상 하나
+	for i in 20:
+		events.append(_hurt("남%d" % i, 30, "TEAM_OTHER"))
+	events.append(_hurt("우리", 2, "TEAM_A"))
+
+	var s: Dictionary = _state(events)
+	var lines: PackedStringArray = String(InjuryRunner.news_message(s, 100) \
+		.get("body", "")).split("\n")
+	var mine_at: int = -1
+	for i in lines.size():
+		if lines[i].contains("선수우리"):
+			mine_at = i
+	assert_int(mine_at).override_failure_message(
+		"내 팀 부상자가 잘려 나갔다 — 남의 팀 중상에 밀렸다").is_greater(-1)
+	assert_bool(lines[mine_at].begins_with("● ")).override_failure_message(
+		"내 팀 표시가 없다").is_true()

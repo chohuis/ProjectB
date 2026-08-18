@@ -21,6 +21,12 @@ const STATE_KEY: String = "injuries"
 ## 한 달치 소식 버퍼
 const NEWS_KEY: String = "injury_news"
 
+## 본문에 몇 줄까지 — 02 `InjuryPanel`의 `PAGE = 100`에 대응한다.
+##
+## ⚠ **02는 거르개가 있어 100줄이 견딘다.** 04 본문은 글자뿐이라 더 짧다 —
+## 실측에서 한 달치가 **114명**이었다
+const BODY_ROWS: int = 20
+
 const STATUS_ACTIVE: String = "active"
 const STATUS_INJURED: String = "injured"
 
@@ -356,9 +362,18 @@ static func _new_npc_injuries(state: Dictionary, by_id: Dictionary, me: String,
 		# 빠지는데 실제로는 뛰고 있다
 		if not through and not p.is_empty():
 			p["career_status"] = STATUS_INJURED
+		# 🔴 **이름을 같이 담는다.** 안 담았더니 월간 부상 리포트에
+		# `GEN_TEAM_KBL_DAEJEON_PHANTOMS_1_20270101_Y2027_025` 같은 **원본 ID가
+		# 그대로 찍혔다** — 02도 같은 결함을 겪고 고쳤다
+		# (`top10Engine.ts:62-66` "표에 없는 팀이 ID로 찍혔다").
+		#
+		# ⚠ **그 사람이 여기 이미 있다**(`p`) — 나중에 id로 되찾으려면
+		# 복무·은햇로 로스터를 떠난 사람을 못 찾는다
 		_push_news(state, {"player_id": pid, "injury_type": String(o["injury_type"]),
 			"severity": severity, "weeks": int(o["recovery_weeks"]),
-			"day": at_day, "team_id": String(p.get("team_id", ""))})
+			"day": at_day, "team_id": String(p.get("team_id", "")),
+			"name": String(p.get("name", "")), "age": int(p.get("age", 0)),
+			"position": String(p.get("position", ""))})
 	return occurred
 
 
@@ -413,14 +428,39 @@ static func news_message(state: Dictionary, at_day: int,
 	var lines: Array[String] = [String(news["preview"]), ""]
 	# ⚠ **사람을 줄로 적는다.** 집계만 있으면 누가 다쳤는지 모른다 —
 	# 02도 `InjuryPanel`에서 한 사람씩 편다
+	#
+	# 🔴 **실측에서 114줄이 통째로 나왔다.** 02는 그래서 등급 카드로 거르고
+	# 100명씩 끊어 보여준다(`InjuryPanel`의 `PAGE`). 04 본문은 글자라
+	# 거르개가 없으니 **상한을 두고 나머지를 센다**.
+	#
+	# ⚠ **내 팀을 위로 올린다.** 02는 `내 팀` 칩으로 거른다 — 전 리그에서
+	# 부상자가 나오는데 관련성을 못 가리면 읽을 이유가 없다
+	var my_team: String = String(state.get("protagonist", {}).get("team_id", ""))
 	var rows: Array = news["rows"]
 	rows.sort_custom(func(a, b) -> bool:
+		var am: bool = String(a.get("team_id", "")) == my_team
+		var bm: bool = String(b.get("team_id", "")) == my_team
+		if am != bm:
+			return am
 		return int(a.get("weeks", 0)) > int(b.get("weeks", 0)))
-	for r in rows:
-		lines.append("%s  %s  %d주" % [
+
+	var names: Dictionary = state.get("team_names", {})
+	for i in mini(rows.size(), BODY_ROWS):
+		var r: Dictionary = rows[i]
+		var tid: String = String(r.get("team_id", ""))
+		# 🔴 **이름이 없으면 id가 그대로 찍힌다.** 실측에서
+		# `GEN_TEAM_KBL_DAEJEON_PHANTOMS_1_20270101_Y2027_025`가 나왔다 —
+		# 02도 같은 결함을 겪고 고쳤다(`top10Engine.ts:62-66`)
+		lines.append("%s%s  %s  %s  %s  %d주" % [
+			"● " if tid == my_team else "  ",
 			Injury.class_label(String(r.get("class", ""))),
 			r.get("name", r.get("player_id", "")),
+			r.get("position", ""),
+			names.get(tid, tid),
 			int(r.get("weeks", 0))])
+	if rows.size() > BODY_ROWS:
+		lines.append("")
+		lines.append("그 밖 %d명." % (rows.size() - BODY_ROWS))
 
 	var year: int = int(state.get("season_year", 0))
 	return {
