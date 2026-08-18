@@ -154,6 +154,21 @@ func _build(which: String) -> Control:
 			var mds: DecisionScreen = DECISION.instantiate()
 			mds.set_view_model(DecisionVm.build(ms))
 			return mds
+		"career-apply":
+			# 🔴 **04는 "○○ 지원" 한 줄 버튼이 전부였고 50곳 중 6곳만 보였다.**
+			# 02는 대학마다 자격·프로필·로스터를 보여준다
+			# (`UniversityApplyModal` 214줄)
+			var cs: Dictionary = World.new_game({"seed": 20270101,
+				"season_year": 2029, "name": "김한결",
+				"team_id": "TEAM_HS_AEWOL"})
+			cs["school"] = {"gpa": 3.2}
+			cs["protagonist"]["career_records"] = [
+				{"league_id": "LEAGUE_HIGHSCHOOL", "ps_result": "8강",
+					"awards": []}]
+			Pending.push(cs, {"type": "career_choice_hub"})
+			var cd: DecisionScreen = DECISION.instantiate()
+			cd.set_view_model(DecisionVm.build(cs))
+			return cd
 		"negotiation":
 			var ns: Dictionary = World.new_game({"seed": 20270101,
 				"season_year": 2031, "name": "김한결",

@@ -29,9 +29,10 @@ const HANDLED: Array[String] = [
 ## 올라가 있는데 아무도 안 받는, `retirement_ask`와 똑같은 모양이다.
 ## 병역을 붙이면서 실제로 그럴 뻔했고 검사가 잡았다
 
-## 한 번에 몇 곳까지 지원하나 — 화면이 보여주는 후보 수.
-## 실제 상한은 `CareerDecision._clip`이 정본이다
-const APPLY_SHOWN: int = 6
+## 🔴 **`APPLY_SHOWN = 6`을 지웠다.** 대학 50곳 중 앞 여섯만 보여
+## **44곳이 도달 불가**였다. 화면에 스크롤이 없어 그렇게 둔 것인데
+## 스크롤을 넣었으니 이유가 없어졌다 — **죽은 상수를 남기지 않는다.**
+## 한 번에 몇 곳까지 **내는지**는 `CareerDecision._clip`이 정본이다
 
 
 static func blocking(state: Dictionary) -> Dictionary:
@@ -89,32 +90,80 @@ static func _of(t: String, title: String, body: String,
 ## ⚠ **지원할 수 있는 무대만 보여준다.** 대학생에게 "대학 지원"을 띄우면
 ## 두 번 입학이 되고, 엔진(`can_apply_university`)이 거절해서 아무 일도
 ## 안 일어난다 — 왜 안 되는지는 화면에 안 나온다
+## 진로 지원 — 02 `CareerChoiceHubModal`(181) + `UniversityApplyModal`(214)
+## + `IndependentApplyModal`(167).
+##
+## 🔴 **04는 "○○ 지원"이라는 한 줄 버튼이 전부였다.** 02는 대학마다
+## **자격 충족(성적·야구) · 팀 프로필(난이도·재정) · 로스터**를 보여준다.
+## 04엔 고를 근거가 하나도 없어서 **아무 데나 찍는 것과 같았다** —
+## "합쳐 놓은 것"이 곧 "옮긴 것"은 아니다.
+##
+## ⚠ **산식을 여기서 다시 세지 않는다.** `CareerPath.university_chance`가
+## 정본이다 — 다시 세면 뜬 확률과 실제 판정이 갈린다. 협상 화면이 같은
+## 이유로 `Negotiation`을 그대로 쓴다
 static func _hub(state: Dictionary, _a: Dictionary) -> Dictionary:
-	var stage: String = String(state.get("protagonist", {}).get(
-		"career_stage", ""))
+	var p: Dictionary = state.get("protagonist", {})
+	var stage: String = CareerPath.stage_of(p)
+	var academic: int = CareerPath.grade_of_gpa(
+		float(state.get("school", {}).get("gpa", 0.0)))
+	var baseball: float = float(CareerPath.hs_baseball_score(
+		p.get("career_records", [])))
+
 	var choices: Array = []
 	if CareerPath.can_apply_university(stage):
 		for t in _teams("LEAGUE_UNIVERSITY"):
+			var power = World.team_field({}, String(t["id"]), "power", null)
+			var req: Dictionary = CareerPath.requirement_of_power(power)
+			var bonus: int = CareerPath.scout_bonus_of_power(power)
 			choices.append({"id": "university:%s" % t["id"],
-				"label": "%s 지원" % t["name"]})
+				# ⚠ **전력과 스카우트 가산을 같이 적는다.** 확률만 보면
+				# 약한 대학이 늘 유리해 보인다 — 강한 곳일수록 가산이 크다
+				"label": "%s  전력 %s · 합격 %d%% · 스카우트 %+d  (요구 학업 %d등급 · 야구 %d)"
+					% [t["name"], req["tier"],
+					roundi(CareerPath.university_chance(power, academic, baseball)),
+					bonus, int(req["min_academic_grade"]),
+					int(req["min_baseball_score"])]})
 	if CareerPath.can_apply_independent(stage):
+		var order: int = 0
 		for t in _teams("LEAGUE_INDEPENDENT"):
 			if not CareerPath.is_applicable_independent(String(t["id"])):
 				continue
+			var ipow = World.team_field({}, String(t["id"]), "power", null)
 			choices.append({"id": "independent:%s" % t["id"],
-				"label": "%s 입단 지원" % t["name"]})
+				"label": "%s  입단 %d%%" % [t["name"],
+					roundi(CareerPath.independent_chance(ipow,
+						Contract.core_ovr(p), order))]})
+			order += 1
 	choices.append({"id": "draft", "label": "신인 드래프트 신청"})
 
-	return _of("career_choice_hub", "진로 지원",
-		"갈 곳을 고릅니다. 여러 곳에 동시에 낼 수 있습니다.", choices, "many")
+	# ⚠ **내 값을 머리에 적는다.** 학업 등급과 야구 점수를 모르면 확률이
+	# 왜 그런지 알 수 없다. **학업은 1등급이 제일 좋다** — 학점과 방향이 반대다
+	var body: String = "\n".join([
+		"갈 곳을 고릅니다. 여러 곳에 동시에 낼 수 있습니다.",
+		"",
+		"내 학업 %d등급 (1이 최상) · 야구 점수 %d" % [academic, int(baseball)],
+	])
+	return _of("career_choice_hub", "진로 지원", body, choices, "many")
 
 
+## 🔴 **앞에서 여섯 곳만 잘라 냈다.** 대학이 **50곳**인데 가나다순 앞
+## 여섯만 보여서 **44곳은 영영 지원할 수 없었다** — 화면에 스크롤이 없어
+## 그렇게 둔 것이다. 스크롤을 넣었으니 **전부 보여준다.**
+##
+## ⚠ **강한 곳부터 세운다.** 가나다순은 고를 근거가 아니다 — 02는 목록에서
+## 골라 상세를 보는 두 칸 구조라 순서가 덜 중요했다
 static func _teams(league_id: String) -> Array:
 	var out: Array = []
 	for t in World.teams_of(league_id):
 		out.append(t)
-		if out.size() >= APPLY_SHOWN:
-			break
+	out.sort_custom(func(a, b) -> bool:
+		var pa = World.team_field({}, String(a["id"]), "power", null)
+		var pb = World.team_field({}, String(b["id"]), "power", null)
+		var fa: float = float(pa) if pa != null else 0.0
+		var fb: float = float(pb) if pb != null else 0.0
+		if not is_equal_approx(fa, fb):
+			return fa > fb
+		return String(a["id"]) < String(b["id"]))
 	return out
 
 

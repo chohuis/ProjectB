@@ -13,7 +13,10 @@ class_name DecisionScreen
 @onready var _bg: ColorRect = $Bg
 @onready var _title: Label = $Pad/Center/Col/Title
 @onready var _body: Label = $Pad/Center/Col/Body
-@onready var _choices: VBoxContainer = $Pad/Center/Col/Choices
+## 🔴 **선택지가 스크롤 안에 있다.** 없을 때는 화면에 들어가는 만큼만
+## 보여주려고 `APPLY_SHOWN = 6`으로 잘랐는데, 대학이 **50곳**이라
+## **44곳은 영영 지원할 수 없었다** — 가나다순 앞에서 조용히 잘렸다
+@onready var _choices: VBoxContainer = $Pad/Center/Col/Scroll/Choices
 
 ## 고른 것의 id
 signal chosen(choice_id: String)

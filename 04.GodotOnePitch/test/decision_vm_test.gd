@@ -453,7 +453,7 @@ func test_redrawing_does_not_pile_up_buttons() -> void:
 	var s: Dictionary = _state()
 	_drafted(s)
 	var screen: DecisionScreen = await _open(s)
-	var box: VBoxContainer = screen.get_node("Pad/Center/Col/Choices")
+	var box: VBoxContainer = screen.get_node("Pad/Center/Col/Scroll/Choices")
 	var before: int = box.get_child_count()
 	screen.set_view_model(DecisionVm.build(s))
 	await await_idle_frame()
@@ -469,7 +469,7 @@ func test_the_many_screen_sends_what_was_ticked() -> void:
 
 	var got: Array = []
 	screen.chosen.connect(func(id: String) -> void: got.append(id))
-	var box: VBoxContainer = screen.get_node("Pad/Center/Col/Choices")
+	var box: VBoxContainer = screen.get_node("Pad/Center/Col/Scroll/Choices")
 	for c in box.get_children():
 		if c is CheckBox and String(c.get_meta("choice_id")) == "draft":
 			(c as CheckBox).button_pressed = true

@@ -48,6 +48,13 @@ layout_mode = 2
 layout_mode = 2
 autowrap_mode = 2
 
-[node name="Choices" type="VBoxContainer" parent="Pad/Center/Col"]
+[node name="Scroll" type="ScrollContainer" parent="Pad/Center/Col"]
+custom_minimum_size = Vector2(0, 460)
 layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Choices" type="VBoxContainer" parent="Pad/Center/Col/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
