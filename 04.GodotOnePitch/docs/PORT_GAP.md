@@ -346,10 +346,39 @@
 **캡처가 안 끝나면 `Get-Process`로 확인하고 거둔다.** 파스 오류가 난 뒤
 캡처를 다시 걸 때는 **앞엣것이 살아 있는지 먼저 본다.**
 
+### 🔴 병역 물음 — **여기까지 했다** (2026-08-18)
+
+| 단계 | 상태 |
+|---|---|
+| ① 02 원본 읽기 | ✅ 조건·가드를 위에 적었다 |
+| 04 달력 환산 | ✅ W50 → 2월 첫 주 · W52 → 시즌 마지막 주 |
+| ② 검사 15개 | ✅ `test/military_ask_test.gd` |
+| ③ 빨간불 | ✅ |
+| ④ 로직 | ✅ `Military.should_ask_sports_unit` · `should_ask_enlist` · `mark_sports_unit_asked` · `mark_enlist_asked` (커밋 `3410dc7a8`) |
+| 자동 `enlist` 걷어내기 | ✅ `career_decision.gd`가 `military_pending`을 돌려준다 |
+| ⑤ **배선** | ⬜ **여기부터다** |
+| ⑥ 실측 · ⑦ 변이 · ⑧ 전체 검사 | ⬜ |
+
+**⑤ 배선에 남은 것 넷:**
+
+1. **대기줄에 올리는 자리** — 주간 처리에서 `Military.should_ask_*`를 보고
+   `Pending.push_once`. **답을 받으면 어느 쪽이든 `mark_*_asked`를 부른다**
+2. **`decision_vm`에 갈래 둘** — `sports_unit_apply`(신청하기 / 이번엔 아니오) ·
+   `military_enlist_ask`(입대한다 / 미룬다). 다른 아홉과 같은 꼴
+3. **답 처리** — 상무는 `sports_unit_applied` 표시 후 **시즌 마지막 주에 결과**,
+   입대는 `Military.enlist(state, unit, day)`. **입대 처리는 `Military`가 정본**
+4. **자동 진행이 여기서 멈추는지 검사로 못 박는다**
+
+⚠ **`career_decision.gd`가 지금 `military_pending`만 돌려주고 아무도 안 받는다.**
+배선을 끝내기 전까지는 **"갈 곳이 없는" 커리어가 병역 없이 떠 있다** — 이 상태로
+두면 `retirement_ask`와 같은 자리가 된다. **배선이 이 항목의 절반이다.**
+
+⚠ **끝나면 체육부대를 실측한다** — `RECOVERY_SPORTS`가 한 번도 안 걸린 값이다.
+상무를 고른 커리어를 굴려 복귀 적응이 실제로 짧은지 잰다.
+
 ### 다음에 할 것 (값싼 순서)
 
-1. 🔴 **체육부대 지원 · 입대 확인** — 선택 자체가 없다. 자격 조건을 02에서
-   읽어 오고 `decision_screen` 갈래를 둘 늘린다
+1. 🔴 **병역 물음의 배선** — 바로 위 넷
 2. **소식 패널 넷** — 다이제스트 · 부상 · 유망주 Top10 · 오프시즌.
    **엔진이 이미 돈다**(`sim/digest.gd` · `injury_runner` · `sim/offseason.gd`)
 3. **결정 화면 아홉 갈래를 02 모달과 하나씩 대조** — 표·비교·근거가
