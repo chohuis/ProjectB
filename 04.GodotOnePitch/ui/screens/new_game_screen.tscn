@@ -53,8 +53,23 @@ layout_mode = 2
 [node name="TeamLabel" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2
 
-[node name="Team" type="OptionButton" parent="Pad/Center/Col"]
+[node name="Pick" type="HBoxContainer" parent="Pad/Center/Col"]
+custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Regions" type="ItemList" parent="Pad/Center/Col/Pick"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Teams" type="ItemList" parent="Pad/Center/Col/Pick"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Detail" type="VBoxContainer" parent="Pad/Center/Col/Pick"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
 [node name="HandLabel" type="Label" parent="Pad/Center/Col"]
 layout_mode = 2

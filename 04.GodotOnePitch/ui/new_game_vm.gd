@@ -40,6 +40,89 @@ const DEFAULT_BIRTH_DAY: int = 1
 ## 02 `DAYS_IN_MONTH` — **윤년을 안 본다.** 2010은 평년이라 2월이 28일이다
 const DAYS_IN_MONTH: Array[int] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
+## 고교 전력의 최댓값 — `teams.json` 실측(102팀: 2가 43 · 3이 45 · 4가 11 · 5가 3)
+const POWER_MAX: int = 5
+
+
+## 권역 목록. **02는 권역을 먼저 고르게 한다** — `NewGamePage:52`:
+##
+## > 고교는 8권역 주말리그라 **어느 지역에서 시작하느냐가 라이벌·일정을
+## > 정한다** — 102개를 한 줄로 늘어놓으면 그 구조가 안 보이고 고르기도 어렵다.
+##
+## ⚠ **04는 드롭다운 하나에 102개를 넣고 있었다.**
+##
+## ⚠ **04에 권역이 있다** — `Tournament.regions_of`가 구장에서 파생한다.
+## 이름은 `ParkVm.name_of`(`parks.json`)
+static func regions() -> Array:
+	var out: Array = []
+	for stadium_id in Tournament.regions_of(START_LEAGUE):
+		var ids: Array = Tournament.regions_of(START_LEAGUE)[stadium_id]
+		out.append({
+			"id": String(stadium_id),
+			"label": ParkVm.name_of(String(stadium_id)),
+			"count": ids.size(),
+			"count_label": "%d개 학교" % ids.size(),
+		})
+	out.sort_custom(func(a, b) -> bool: return a["label"] < b["label"])
+	return out
+
+
+## 그 권역의 학교. **센 학교부터** — 02도 난이도 내림차순으로 준다
+## (04엔 `difficulty`가 없어 같은 축인 `power`로 정렬한다)
+static func teams_in(region_id: String) -> Array:
+	var ids: Array = Tournament.regions_of(START_LEAGUE).get(region_id, [])
+	var out: Array = []
+	for id in ids:
+		out.append({
+			"id": String(id),
+			"name": String(World.team_field({}, String(id), "name", id)),
+			"city": String(World.team_field({}, String(id), "city", "")),
+			"power": float(World.team_field({}, String(id), "power", 0)),
+		})
+	out.sort_custom(func(a, b) -> bool:
+		if not is_equal_approx(a["power"], b["power"]):
+			return a["power"] > b["power"]
+		return a["name"] < b["name"])
+	return out
+
+
+## 그 학교가 있는 권역
+static func region_of(team_id: String) -> String:
+	return String(World.team_field({}, team_id, "stadium", ""))
+
+
+## 고른 학교의 상세. **04에 있는 것만 낸다.**
+##
+## ⚠ 02는 여기에 창단연도·운영예산·과거 5시즌 성적·우승 이력·스타일 배지·
+## 태그·강점까지 붙인다 — **04 `teams.json`에 그 데이터가 없다**(id·이름·
+## 도시·색·구장·전력·재정뿐). 지어내지 않는다
+static func team_detail(team_id: String) -> Dictionary:
+	if team_id.is_empty():
+		return {}
+	var name: String = String(World.team_field({}, team_id, "name", ""))
+	if name.is_empty():
+		return {}
+	var stadium_id: String = String(World.team_field({}, team_id, "stadium", ""))
+	var region_ids: Array = Tournament.regions_of(START_LEAGUE).get(stadium_id, [])
+	var power: int = int(roundf(float(World.team_field({}, team_id, "power", 0))))
+	return {
+		"id": team_id,
+		"name": name,
+		"rows": [
+			{"label": "연고", "value": String(World.team_field({}, team_id, "city", "-"))},
+			# 구장 성향은 표시용이다 — 02도 엔진엔 안 먹인다
+			{"label": "구장", "value": "%s · %s" % [ParkVm.name_of(stadium_id),
+				ParkVm.factor_of(stadium_id)]},
+			{"label": "권역", "value": "%s · %d개 학교" % [
+				ParkVm.name_of(stadium_id), region_ids.size()]},
+			# ⚠ **전력은 등급이 아니라 눈금이다** — 02의 난이도 다섯 칸과 달리
+			# 04는 2~5의 숫자다. 최대를 같이 적어야 3이 센지 약한지 알 수 있다
+			{"label": "전력", "value": "%d / %d" % [power, POWER_MAX]},
+			{"label": "재정", "value": String(
+				World.team_field({}, team_id, "resource", "-"))},
+		],
+	}
+
 
 static func days_in_month(month: int) -> int:
 	return DAYS_IN_MONTH[clampi(month, 1, 12) - 1]
@@ -60,15 +143,20 @@ static func birthday_of(month: int, day: int) -> String:
 
 
 static func build(s: Dictionary = {}) -> Dictionary:
-	var teams: Array = []
-	for t in World.teams_of(START_LEAGUE):
-		teams.append({"id": t["id"], "name": t["name"]})
-	# ⚠ **이름 순으로 준다.** 데이터 순서는 아무 뜻이 없고, 102팀에서
-	# 자기 학교를 찾으려면 순서가 있어야 한다
-	teams.sort_custom(func(a, b) -> bool: return a["name"] < b["name"])
-
+	# 권역을 먼저 고르고 그 안에서 학교를 고른다 — 02와 같은 2단이다
+	var region_list: Array = regions()
 	var name: String = s.get("name", DEFAULT_NAME)
-	var team_id: String = s.get("team_id", teams[0]["id"] if not teams.is_empty() else "")
+
+	# ⚠ **학교가 정해져 있으면 권역은 거기서 따라온다.** 둘을 따로 들면
+	# 권역 A를 보면서 권역 B의 학교로 시작하는 순간이 생긴다
+	var team_id: String = String(s.get("team_id", ""))
+	var region_id: String = region_of(team_id) if not team_id.is_empty() \
+		else String(s.get("region_id", ""))
+	if region_id.is_empty() and not region_list.is_empty():
+		region_id = String(region_list[0]["id"])
+	var region_teams: Array = teams_in(region_id)
+	if team_id.is_empty() and not region_teams.is_empty():
+		team_id = String(region_teams[0]["id"])
 
 	# ⚠ **찬 슬롯이면 시작 버튼이 그렇게 말해야 한다** (U-7). 시작을 누르는
 	# 순간 `Slots.save`가 옛 세이브를 지운다 — **되돌릴 수 없는 유일한 동작**인데
@@ -89,7 +177,10 @@ static func build(s: Dictionary = {}) -> Dictionary:
 	return {
 		"name": name,
 		"team_id": team_id,
-		"teams": teams,
+		"region_id": region_id,
+		"regions": region_list,
+		"region_teams": region_teams,
+		"team_detail": team_detail(team_id),
 		"handedness": String(s.get("handedness", HANDEDNESS_OPTIONS[0][0])),
 		"handedness_options": hands,
 		"pitching_form": String(s.get("pitching_form", FORM_OPTIONS[0][0])),

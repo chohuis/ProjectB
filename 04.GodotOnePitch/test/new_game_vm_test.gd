@@ -6,19 +6,102 @@ extends GdUnitTestSuite
 ## 매번 달랐다. 여기서는 씨앗 하나가 주인공까지 정한다.
 
 
+## ⚠ **옛 검사가 옛 약속을 못 박고 있었다** — `vm["teams"]`에 102개가 한
+## 줄로 있는지 봤다. 02는 권역을 먼저 고르게 하고(그 이유가 02 주석에
+## 있다) 04도 그렇게 바꿨다. **뜻은 맞다** — 102개를 다 고를 수 있어야
+## 한다. 세는 자리만 옮긴다
 func test_it_offers_high_school_teams() -> void:
-	var vm: Dictionary = NewGameVm.build()
-	assert_int(vm["teams"].size()).is_equal(102)
-	for t in vm["teams"]:
-		assert_str(t["name"]).is_not_empty()
+	var total: int = 0
+	for r in NewGameVm.regions():
+		var teams: Array = NewGameVm.teams_in(String(r["id"]))
+		assert_int(teams.size()).override_failure_message(
+			"%s 권역이 비었다" % r["label"]).is_greater(0)
+		total += teams.size()
+		for t in teams:
+			assert_str(String(t["name"])).is_not_empty()
+	assert_int(total).override_failure_message(
+		"고를 수 있는 학교가 %d개다 — 102개여야 한다" % total).is_equal(102)
 
 
-## ⚠ **이름 순이다.** 102팀에서 자기 학교를 찾으려면 순서가 있어야 한다
-func test_the_team_list_is_sorted_by_name() -> void:
-	var teams: Array = NewGameVm.build()["teams"]
+## ⚠ **찾을 수 있는 순서여야 한다** — 옛 검사의 뜻이 그것이었다.
+## 권역은 이름 순이고, 그 안의 학교는 **센 학교부터**다(02도 난이도
+## 내림차순으로 준다)
+func test_the_lists_are_in_a_findable_order() -> void:
+	var regions: Array = NewGameVm.regions()
+	for i in range(1, regions.size()):
+		assert_bool(String(regions[i - 1]["label"]) <= String(regions[i]["label"])) \
+			.override_failure_message("권역이 이름 순이 아니다").is_true()
+
+	var teams: Array = NewGameVm.teams_in(String(regions[0]["id"]))
 	for i in range(1, teams.size()):
-		assert_bool(teams[i - 1]["name"] <= teams[i]["name"]) \
-			.override_failure_message("팀 목록이 이름 순이 아니다").is_true()
+		assert_bool(float(teams[i - 1]["power"]) >= float(teams[i]["power"])) \
+			.override_failure_message("학교가 전력 순이 아니다: %s(%d) 다음에 %s(%d)"
+				% [teams[i - 1]["name"], int(teams[i - 1]["power"]),
+					teams[i]["name"], int(teams[i]["power"])]).is_true()
+
+
+## 학교를 안 고르고 들어와도 첫 학교가 골라져 있다 — **빈 칸으로 시작하면
+## 시작 버튼이 잠기고 왜 잠겼는지 안 보인다**
+func test_a_school_is_picked_for_me() -> void:
+	var vm: Dictionary = NewGameVm.build({"team_id": ""})
+	assert_str(String(vm["team_id"])).is_not_empty()
+	assert_bool(bool(vm["can_start"])).is_true()
+
+
+## 그래도 학교가 없으면 못 시작한다 — 없는 권역을 주면 목록이 빈다
+func test_no_team_blocks_the_start() -> void:
+	var vm: Dictionary = NewGameVm.build({"region_id": "STADIUM_NOWHERE"})
+	assert_str(String(vm["team_id"])).is_empty()
+	assert_bool(bool(vm["can_start"])).is_false()
+
+
+# ── 권역 2단 ─────────────────────────────────────────────────────
+
+## 🔴 **04는 드롭다운 하나에 102개를 넣고 있었다.** 02는 권역을 먼저
+## 고르게 한다 — "고교는 권역이 라이벌·일정을 정한다"
+func test_regions_come_first() -> void:
+	var regions: Array = NewGameVm.regions()
+	assert_int(regions.size()).override_failure_message(
+		"권역이 %d개다 — 8개여야 한다" % regions.size()).is_equal(8)
+	for r in regions:
+		# 이름이 id면 표를 안 읽은 것이다
+		assert_bool(String(r["label"]).begins_with("STADIUM_")) \
+			.override_failure_message("권역 이름이 id다: %s" % r["label"]).is_false()
+		assert_str(String(r["count_label"])).contains("개 학교")
+
+
+## 고른 학교의 권역이 따라온다 — 둘을 따로 들면 권역 A를 보면서
+## 권역 B의 학교로 시작하는 순간이 생긴다
+func test_the_region_follows_the_school() -> void:
+	var vm: Dictionary = NewGameVm.build({"team_id": "TEAM_HS_AEWOL"})
+	assert_str(String(vm["region_id"])).is_equal("STADIUM_HALLA")
+	var ids: Array = []
+	for t in vm["region_teams"]:
+		ids.append(String(t["id"]))
+	assert_array(ids).contains(["TEAM_HS_AEWOL"])
+
+
+## 학교 상세 — **04에 있는 것만 낸다.** 02의 창단·예산·과거 성적은
+## `teams.json`에 없다
+func test_the_school_detail_says_what_it_is() -> void:
+	var d: Dictionary = NewGameVm.team_detail("TEAM_HS_AEWOL")
+	assert_str(String(d["name"])).is_equal("애월고")
+	var labels: Array = []
+	var joined: String = ""
+	for r in d["rows"]:
+		labels.append(String(r["label"]))
+		joined += String(r["value"]) + " "
+	assert_array(labels).is_equal(["연고", "구장", "권역", "전력", "재정"])
+	assert_str(joined).contains("제주")
+	assert_str(joined).contains("한라구장")
+	# 전력은 눈금이다 — 최대를 같이 안 적으면 3이 센지 약한지 모른다
+	assert_str(joined).contains("/ %d" % NewGameVm.POWER_MAX)
+
+
+## 없는 학교엔 상세가 없다 — 지어낸 빈 칸을 그리지 않는다
+func test_an_unknown_school_has_no_detail() -> void:
+	assert_bool(NewGameVm.team_detail("TEAM_NOPE").is_empty()).is_true()
+	assert_bool(NewGameVm.team_detail("").is_empty()).is_true()
 
 
 func test_it_starts_with_a_default_name_and_team() -> void:
@@ -33,10 +116,6 @@ func test_it_starts_with_a_default_name_and_team() -> void:
 func test_an_empty_name_blocks_the_start() -> void:
 	assert_bool(NewGameVm.build({"name": ""})["can_start"]).is_false()
 	assert_bool(NewGameVm.build({"name": "   "})["can_start"]).is_false()
-
-
-func test_no_team_blocks_the_start() -> void:
-	assert_bool(NewGameVm.build({"team_id": ""})["can_start"]).is_false()
 
 
 # ── 시작 ──────────────────────────────────────────────────────

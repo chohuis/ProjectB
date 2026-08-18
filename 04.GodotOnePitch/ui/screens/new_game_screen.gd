@@ -12,7 +12,9 @@ class_name NewGameScreen
 @onready var _name_label: Label = $Pad/Center/Col/NameLabel
 @onready var _name: LineEdit = $Pad/Center/Col/Name
 @onready var _team_label: Label = $Pad/Center/Col/TeamLabel
-@onready var _team: OptionButton = $Pad/Center/Col/Team
+@onready var _regions: ItemList = $Pad/Center/Col/Pick/Regions
+@onready var _teams: ItemList = $Pad/Center/Col/Pick/Teams
+@onready var _detail: VBoxContainer = $Pad/Center/Col/Pick/Detail
 @onready var _hand_label: Label = $Pad/Center/Col/HandLabel
 @onready var _hand: OptionButton = $Pad/Center/Col/Hand
 @onready var _form_label: Label = $Pad/Center/Col/FormLabel
@@ -28,6 +30,10 @@ signal start_requested(profile: Dictionary)
 signal back_requested
 
 var _vm: Dictionary = {}
+
+## 고른 권역·학교. **화면은 고른 것만 들고 목록은 ViewModel이 만든다**
+var _region_id: String = ""
+var _team_id: String = ""
 
 ## 이 슬롯에 세이브가 있나 — 있으면 시작이 곧 덮어쓰기다.
 ##
@@ -58,8 +64,8 @@ func _ready() -> void:
 
 	_vm = NewGameVm.build({"overwrite": overwrite})
 	_name.text = _vm["name"]
-	for t in _vm["teams"]:
-		_team.add_item(t["name"])
+	_region_id = String(_vm["region_id"])
+	_team_id = String(_vm["team_id"])
 	for h in _vm["handedness_options"]:
 		_hand.add_item(h["label"])
 	for f in _vm["form_options"]:
@@ -75,9 +81,11 @@ func _ready() -> void:
 	# ⚠ **달을 바꾸면 날 목록이 바뀐다.** 2월에 31일이 남아 있으면 안 된다
 	_month.item_selected.connect(func(_i: int) -> void: _fill_days(); _update())
 	_day.item_selected.connect(func(_i: int) -> void: _update())
+	_regions.item_selected.connect(func(i: int) -> void: _on_region.call_deferred(i))
+	_teams.item_selected.connect(func(i: int) -> void: _on_team.call_deferred(i))
 	_back.pressed.connect(func() -> void: back_requested.emit.call_deferred())
 	_start.pressed.connect(_on_start)
-	_update()
+	_refresh_pick()
 
 
 ## 그 달에 있는 날만 남긴다. **고른 날이 넘치면 마지막 날로 당긴다** —
@@ -92,11 +100,7 @@ func _fill_days() -> void:
 
 
 func current_team_id() -> String:
-	var teams: Array = _vm.get("teams", [])
-	var i: int = _team.selected
-	if i < 0 or i >= teams.size():
-		return ""
-	return teams[i]["id"]
+	return _team_id
 
 
 ## 화면이 고른 것 전부. **`start_requested`와 `_update`가 같은 사전을 쓴다** —
@@ -135,3 +139,94 @@ func _update() -> void:
 
 func _on_start() -> void:
 	start_requested.emit.call_deferred(current_profile())
+
+
+## 권역과 학교를 다시 그린다. **2단이다** — 02가 그렇게 고르게 한 이유가
+## 주석에 있다: 고교는 권역이 라이벌과 일정을 정한다.
+##
+## ⚠ **한 줄에 102개를 늘어놓지 않는다.** 04는 드롭다운 하나였다
+func _fill_regions() -> void:
+	_regions.clear()
+	var list: Array = _vm.get("regions", [])
+	for i in list.size():
+		_regions.add_item("%s  %s" % [String(list[i]["label"]),
+			String(list[i]["count_label"])])
+		if String(list[i]["id"]) == _region_id:
+			_regions.select(i)
+
+
+func _fill_teams() -> void:
+	_teams.clear()
+	var list: Array = _vm.get("region_teams", [])
+	for i in list.size():
+		# 센 학교부터 나온다 — 전력을 같이 적어야 그 순서가 보인다
+		_teams.add_item("%s  전력 %d" % [String(list[i]["name"]),
+			int(list[i]["power"])])
+		if String(list[i]["id"]) == _team_id:
+			_teams.select(i)
+
+
+## 고른 학교가 어떤 곳인가. **04에 있는 것만 낸다** — 02의 창단·예산·
+## 과거 성적은 `teams.json`에 없다
+func _fill_detail() -> void:
+	for c in _detail.get_children():
+		_detail.remove_child(c)
+		c.free()
+	var d: Dictionary = _vm.get("team_detail", {})
+	if d.is_empty():
+		return
+
+	var head := Label.new()
+	head.text = String(d["name"])
+	head.add_theme_color_override("font_color", AppTheme.ACCENT)
+	_detail.add_child(head)
+
+	for r in d.get("rows", []):
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		_detail.add_child(row)
+
+		var a := Label.new()
+		a.text = String(r["label"])
+		a.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		a.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		a.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(a)
+
+		var b := Label.new()
+		b.text = String(r["value"])
+		b.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		row.add_child(b)
+
+
+## 권역을 바꾸면 그 안의 첫 학교로 간다. **학교를 안 비운다** —
+## 비우면 시작 버튼이 잠기고 왜 잠겼는지 안 보인다
+func _on_region(i: int) -> void:
+	var list: Array = _vm.get("regions", [])
+	if i < 0 or i >= list.size():
+		return
+	_region_id = String(list[i]["id"])
+	_team_id = ""
+	_refresh_pick()
+
+
+func _on_team(i: int) -> void:
+	var list: Array = _vm.get("region_teams", [])
+	if i < 0 or i >= list.size():
+		return
+	_team_id = String(list[i]["id"])
+	_refresh_pick()
+
+
+## 고른 것을 ViewModel에 다시 물어 그린다 — **화면이 목록을 만들지 않는다**
+func _refresh_pick() -> void:
+	var p: Dictionary = current_profile()
+	p["overwrite"] = overwrite
+	p["region_id"] = _region_id
+	_vm = NewGameVm.build(p)
+	_region_id = String(_vm.get("region_id", _region_id))
+	_team_id = String(_vm.get("team_id", _team_id))
+	_fill_regions()
+	_fill_teams()
+	_fill_detail()
+	_update()

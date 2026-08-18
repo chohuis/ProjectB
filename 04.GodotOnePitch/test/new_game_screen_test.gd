@@ -93,3 +93,63 @@ func test_시작_신호가_고른_것을_그대로_들고_간다() -> void:
 	assert_int(got.size()).is_equal(1)
 	assert_str(String(got[0]["handedness"])).is_equal("L")
 	assert_int(int(got[0]["birth_month"])).is_equal(12)
+
+
+# ── 권역 2단 ─────────────────────────────────────────────────────
+
+## 🔴 **드롭다운 하나에 102개가 들어 있었다.** 02는 권역을 먼저 고르게 한다
+func test_권역과_학교를_따로_고른다() -> void:
+	var n: NewGameScreen = await _mount()
+	assert_int(n._regions.item_count).override_failure_message(
+		"권역 목록이 %d칸이다 — 8칸이어야 한다" % n._regions.item_count).is_equal(8)
+	assert_bool(n._teams.item_count > 0).is_true()
+	assert_bool(n._teams.item_count < 102).override_failure_message(
+		"학교 목록에 102개가 다 들어 있다 — 권역으로 안 갈렸다").is_true()
+
+
+## 권역을 바꾸면 학교 목록이 따라 바뀐다
+func test_권역을_바꾸면_학교가_바뀐다() -> void:
+	var n: NewGameScreen = await _mount()
+	var before: String = n._teams.get_item_text(0)
+	var before_team: String = n.current_team_id()
+
+	# 첫 권역이 아닌 칸을 고른다
+	n._on_region(1)
+	await await_idle_frame()
+	assert_str(n._teams.get_item_text(0)).override_failure_message(
+		"권역을 바꿨는데 학교 목록이 그대로다").is_not_equal(before)
+	assert_str(n.current_team_id()).override_failure_message(
+		"권역을 바꿨는데 고른 학교가 그대로다").is_not_equal(before_team)
+
+
+## 학교를 고르면 상세가 따라온다 — **04에 있는 것만 낸다**
+func test_학교를_고르면_상세가_나온다() -> void:
+	var n: NewGameScreen = await _mount()
+	var joined: String = ""
+	for l in n._detail.find_children("*", "Label", true, false):
+		joined += (l as Label).text + "\n"
+	assert_str(joined).override_failure_message(
+		"상세가 비었다").contains("연고")
+	assert_str(joined).contains("전력")
+	assert_str(joined).contains("권역")
+
+
+## 고른 학교가 세이브까지 간다 — 목록에서 고른 것이 그대로 시작 신호에 실린다
+func test_고른_학교가_시작까지_간다() -> void:
+	var n: NewGameScreen = await _mount()
+	n._on_team(1)
+	await await_idle_frame()
+	var picked: String = n.current_team_id()
+	assert_str(picked).is_not_empty()
+
+	var got: Array = []
+	n.start_requested.connect(func(p: Dictionary) -> void: got.append(p))
+	n._on_start()
+	await await_millis(50)
+	assert_int(got.size()).is_equal(1)
+	assert_str(String(got[0]["team_id"])).override_failure_message(
+		"고른 학교가 시작 신호에 안 실렸다").is_equal(picked)
+
+	var s: Dictionary = NewGameVm.start({"seed": 7, "season_year": 2027,
+		"name": "김한결", "team_id": picked})
+	assert_str(String(s["protagonist"]["team_id"])).is_equal(picked)
