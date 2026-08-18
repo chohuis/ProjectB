@@ -378,6 +378,23 @@ static func grow_one(npc: Dictionary, phase: String, perf: Dictionary,
 			else:
 				xp_map[stat] = acc
 
+	# ── 구종 (D-3) ────────────────────────────────────────────────
+	# 🔴 **04엔 이 자리가 통째로 없었다.** 그래서 NPC는 영영 `pitches`가
+	# 비었고 마운드에서 늘 포심만 던졌다 — 같은 구종 반복 벌점이 NPC 경기
+	# 내내 걸렸다. 02는 `npc_sim.rs:3112-3155`가 해마다 구종을 늘린다.
+	#
+	# ⚠ **순서가 뜻이다** — 이번 주 몫을 먼저 굴리고, 비었을 때만 다음 대상을
+	# 정한다. 뒤집으면 정한 주에 바로 한 주가 지나가 8주가 7주가 된다
+	if is_pitcher:
+		NpcPitchDev.advance_week(npc)
+		# ⚠ **대상은 오프시즌에만 정한다**(02와 같다). 시즌 중에 갈아타면
+		# 아무것도 못 끝낸다 — 8주짜리를 4주마다 바꾸면 영영 안 는다
+		if phase == "offseason" 				and (npc.get("pitch_training", {}) as Dictionary).is_empty():
+			var next_pitch: Dictionary = NpcPitchDev.decide(npc,
+				PitchDev.catalog_ids())
+			if not next_pitch.is_empty():
+				npc["pitch_training"] = next_pitch
+
 	var aged: bool = false
 	if age >= AGING_FROM:
 		var debt: Dictionary

@@ -13,6 +13,53 @@ class_name GrowthMeasure
 ## 이런 계측으로 잡았다.
 
 
+## NPC가 구종을 몇 개나 갖고 있나 — D-3.
+##
+## 🔴 **이걸 안 내면 구종 성장이 도는지 알 수가 없다.** 04는 NPC `pitches`가
+## 늘 비어서 마운드에서 포심만 던졌는데, 계측이 OVR만 내니 아무도 몰랐다
+## (형태 ③ — 쌓고 안 읽는다).
+##
+## ⚠ **29세 이상으로 시작한 투수는 영영 0개다** — 새 구종은 나이가 막고
+## 올릴 것도 없다. **02도 그렇다.** 그래서 "0개인 사람"을 따로 센다
+static func _pitch_table(log_line: Callable, s: Dictionary,
+		fail: Callable) -> void:
+	var by_count: Dictionary = {}
+	var pitchers: int = 0
+	var young_empty: int = 0
+	var in_training: int = 0
+	var grades: Dictionary = {}
+	for p in SeasonRunner.all_players(s):
+		if String(p.get("player_type", "")) != "pitcher":
+			continue
+		pitchers += 1
+		var n: int = (p.get("pitches", []) as Array).size()
+		by_count[n] = int(by_count.get(n, 0)) + 1
+		if n == 0 and int(p.get("age", 0)) < NpcPitchDev.NEW_PITCH_AGE_MAX:
+			young_empty += 1
+		if not (p.get("pitch_training", {}) as Dictionary).is_empty():
+			in_training += 1
+		for e in p.get("pitches", []):
+			var g: int = int(e.get("grade", 0))
+			grades[g] = int(grades.get(g, 0)) + 1
+
+	var line: String = ""
+	for n in range(0, NpcPitchDev.MAX_PITCHES + 1):
+		line += "%d개 %d명 · " % [n, int(by_count.get(n, 0))]
+	log_line.call("")
+	log_line.call("NPC 구종 (투수 %d명)" % pitchers)
+	log_line.call("  %s" % line.trim_suffix(" · "))
+	var gl: String = ""
+	for g in range(1, NpcPitchDev.MAX_GRADE + 1):
+		gl += "숙련도%d %d · " % [g, int(grades.get(g, 0))]
+	log_line.call("  %s" % gl.trim_suffix(" · "))
+	log_line.call("  익히는 중 %d명 · 29세 미만인데 0개 %d명"
+		% [in_training, young_empty])
+
+	# ⚠ **한 명도 안 배웠으면 배선이 끊긴 것이다.** 실측 없이 "돈다"고 못 한다
+	if int(by_count.get(0, 0)) == pitchers:
+		fail.call("투수 %d명 전원이 구종 0개다 — 구종 성장이 안 돈다" % pitchers)
+
+
 func run(log_line: Callable, fail: Callable, weeks: int = 52,
 		seed_value: int = 20270101, play_games: bool = false) -> int:
 	var s: Dictionary = World.new_game({"seed": seed_value, "season_year": 2027,
@@ -59,6 +106,7 @@ func run(log_line: Callable, fail: Callable, weeks: int = 52,
 	log_line.call("")
 	_ovr_table(log_line, s, "%d주 뒤" % weeks)
 	_age_growth_table(log_line, s)
+	_pitch_table(log_line, s, fail)
 
 	# ⚠ **주간 처리는 프레임 쪼개기 밖이다.** 하루 진행(게이트 1.0초)에
 	# 얹히는 값이라 여기서 크면 그대로 멈칫거림이 된다

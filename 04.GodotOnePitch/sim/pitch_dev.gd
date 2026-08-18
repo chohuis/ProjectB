@@ -44,6 +44,20 @@ static func catalog() -> Array:
 	return data().get("pitches", [])
 
 
+## 카탈로그의 id만 — 02 `params.pitch_catalog_ids`에 해당한다.
+##
+## ⚠ **한 번 만들고 들고 있는다.** NPC 주간 성장이 9,603명마다 부르는 자리라
+## 매번 배열을 새로 지으면 그것만으로 주간 처리가 무거워진다
+static var _catalog_ids: Array[String] = []
+
+
+static func catalog_ids() -> Array[String]:
+	if _catalog_ids.is_empty():
+		for e in catalog():
+			_catalog_ids.append(String(e.get("id", "")))
+	return _catalog_ids
+
+
 static func max_learned() -> int:
 	return int(data().get("max_learned", 5))
 
