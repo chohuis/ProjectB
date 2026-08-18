@@ -75,6 +75,42 @@ static func apply_tone(new_tone: String) -> void:
 	OK = Color(p["OK"])
 	WARN = Color(p["WARN"])
 	BAD = Color(p["BAD"])
+	# ⚠ **톤이 바뀌면 팀 색도 다시 뽑는다** — 헤더 목표 명도가 톤마다 다르다
+	# (밝은 톤 L*26 · 어두운 톤 L*32)
+	apply_team(team_id)
+
+
+## 소속팀 색 — U-2. 02 `applyTeamTokens`가 하던 일이다.
+##
+## > 유니폼 안의 핵심은 **소속팀이 바뀌면 화면 색이 바뀐다**는 것이다.
+## > 색이 **한 곳에서만** 계산돼야 공짜로 얻어진다. (02 주석)
+##
+## ⚠ **화면은 여전히 `AppTheme`만 본다** — 팀 색을 화면이 직접 읽으면
+## 이적 한 번에 화면 쉰 개를 고쳐야 한다. 계산은 `TeamTheme`이,
+## 보관은 여기가 한다.
+##
+## ⚠ **헤더는 팀 주색이 아니라 어둡게 보정한 값이다**(L*26/32) —
+## 그대로 쓰면 238팀 중 130팀에서 흰 글씨가 죽는다
+static var TEAM_DARK := Color(TeamTheme.DEFAULT_PRIMARY)
+static var TEAM_ACCENT := Color(TeamTheme.DEFAULT_PRIMARY)
+static var TEAM_GOLD := Color("79b0ff")
+static var TEAM_STRIPE := Color(0, 0, 0, 0)
+static var TEAM_WASH := Color(0, 0, 0, 0)
+
+## 지금 색을 내준 팀 — 같은 팀이면 다시 계산하지 않는다
+static var team_id: String = ""
+
+
+## 소속팀을 건다. **새 게임·이적·톤 변경 때 부른다**
+static func apply_team(new_team_id: String) -> void:
+	team_id = new_team_id
+	var t: Dictionary = TeamTheme.of_team(new_team_id, tone)
+	TEAM_DARK = t["dark"]
+	TEAM_ACCENT = t["accent"]
+	TEAM_GOLD = t["gold"]
+	TEAM_STRIPE = t["stripe"]
+	TEAM_WASH = t["wash"]
+
 
 
 ## 체력·멘탈 같은 "높을수록 좋은" 축의 단계 색 — M-1.

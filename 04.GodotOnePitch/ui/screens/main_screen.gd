@@ -21,6 +21,7 @@ const STATUS_SCREEN := preload("res://ui/screens/status_screen.tscn")
 const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 
 @onready var _bg: ColorRect = $Bg
+@onready var _team_band: ColorRect = $Pad/Col/Header/TeamBand
 @onready var _date: Label = $Pad/Col/Header/DateRow/Date
 @onready var _weekday: Label = $Pad/Col/Header/DateRow/Weekday
 @onready var _week: Label = $Pad/Col/Header/DateRow/Week
@@ -203,7 +204,11 @@ func _rebuild() -> void:
 
 	_player.text = _vm.get("player_name", "")
 	_team.text = _vm.get("team_name", "")
-	_team.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	# 소속팀 색 — U-2. **주색이 아니라 어둡게 보정한 값이다**(L*26/32).
+	# 02도 헤더엔 보정색을 쓴다 — 그대로 쓰면 130팀에서 흰 글씨가 죽는다
+	_team_band.color = AppTheme.TEAM_DARK
+	# 팀 이름은 강조색으로 — 어두운 띠 위에서 읽힌다
+	_team.add_theme_color_override("font_color", AppTheme.TEAM_GOLD)
 
 	_build_my_status()
 

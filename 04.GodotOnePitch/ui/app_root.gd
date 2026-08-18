@@ -182,6 +182,11 @@ func _swap_state(out: Dictionary) -> void:
 ## ⚠ **화면이 자기 사전을 따로 만들지 않는다.** 루트가 만든 것 하나를
 ## 넘긴다 — 두 벌이 되면 하나만 갱신되는 순간이 온다
 func _refresh() -> void:
+	# 소속팀 색 — U-2. **이적하면 화면 색이 따라 바뀐다**(02와 같다).
+	# 같은 팀이면 다시 계산하지 않는다
+	var my_team: String = String(_state.get("protagonist", {}).get("team_id", ""))
+	if my_team != AppTheme.team_id:
+		AppTheme.apply_team(my_team)
 	_main.set_view_model(MainVm.build(_state))
 
 
