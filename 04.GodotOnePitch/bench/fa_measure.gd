@@ -44,47 +44,27 @@ func _market(log_line: Callable, seed_value: int, warmup: int) -> void:
 	# ⚠ **새 세계 첫 해엔 FA가 0명이다.** 계약이 방금 만들어져 근속연수가
 	# 안 쌓였다 — 굴리지 않고 재면 "04는 FA가 없다"로 잘못 읽힌다
 	var year: int = 2027
+	# 🔴 **마지막 해의 결과를 붙든다** (P-5b). 예전엔 warmup을 다 돌린 뒤
+	# 계측이 **제 손으로 시장을 다시 돌렸는데**, 게임이 이미 계약을 마쳐
+	# 자격자가 0이라 "계약 0명"이 나왔다 — **끝난 시장을 재고 있었다.**
+	# 지금은 게임이 낸 것을 그대로 읽는다
+	var last: Dictionary = {}
 	for i in warmup:
 		s["season_year"] = year
-		SeasonRunner.run(s)
+		# ⚠ **`summary`가 안에 있다** — `{ran, year, phases, summary}`다.
+		# 찍어 보고 썼다(겉을 읽으면 조용히 0이 나온다)
+		last = SeasonRunner.run(s).get("summary", {})
 		year += 1
 	log_line.call("  %d해 굴린 뒤 (%d년)" % [warmup, year])
 
 	var world: Dictionary = s.get("world", {})
 
-	var signed: int = 0
-	var unsigned: int = 0
-	var moved: int = 0
-	var comp: int = 0
-	var by_grade: Dictionary = {}
-
-	for lid in TeamProfile.PRO_LEAGUES:
-		var eligible: Array = FaRunner.eligible_of(world, lid)
-		if eligible.is_empty():
-			continue
-
-		# 🔴 **여기가 `run_league`를 복제하던 자리다**(P-5c). 게임 쪽 분모를
-		# 고쳤는데 계측이 안 따라와 "고쳤는데 그대로"로 한 번 읽혔다 —
-		# **이제 게임과 같은 함수를 부른다.** 갈릴 수가 없다
-		var market_players: Array = FaRunner.market_players_of(world, lid)
-		var teams: Array = FaRunner.market_teams_of(world, lid)
-		var rng := RandomNumberGenerator.new()
-		rng.seed = Rng.mix(["fa", lid, seed_value, year])
-		# ⚠ **분모는 프로 전체다** (P-5). 여기가 `run_league`를 복제한
-		# 자리라 게임 쪽을 고쳐도 계측이 안 따라왔다 — 실제로 한 번 놓쳤다.
-		# ⬜ **계측이 게임 경로를 복제하는 것 자체가 빚이다**(QUEUE P-5c)
-		var out: Dictionary = FaMarket.resolve(market_players, teams,
-			FaRunner.pro_salaries(world), rng)
-
-		for sign in out.get("signings", []):
-			signed += 1
-			var g: String = String(sign.get("grade", "?"))
-			by_grade[g] = int(by_grade.get(g, 0)) + 1
-			if String(sign["to_team_id"]) != String(sign["from_team_id"]):
-				moved += 1
-				if not String(sign["compensation_id"]).is_empty():
-					comp += 1
-		unsigned += (out.get("unsigned", []) as Array).size()
+	# 게임이 마지막 해에 실제로 낸 값이다 — 계측이 다시 계산하지 않는다
+	var signed: int = int(last.get("fa_signed", 0))
+	var unsigned: int = int(last.get("fa_unsigned", 0))
+	var moved: int = int(last.get("fa_moved", 0))
+	var comp: int = int(last.get("fa_compensations", 0))
+	var by_grade: Dictionary = last.get("fa_grades", {})
 
 	var grades: Array = by_grade.keys()
 	grades.sort()
@@ -93,11 +73,16 @@ func _market(log_line: Callable, seed_value: int, warmup: int) -> void:
 		line += "%s:%d " % [g, by_grade[g]]
 	log_line.call("  계약 %d명 · 미계약 %d명 · 등급 %s"
 		% [signed, unsigned, line.strip_edges()])
-	log_line.call("  이적 %d명 중 보상선수 발생 %d명" % [moved, comp])
+	# ⚠ **`moved`는 옮김 처리 수다** — 보상선수 이동도 세고 원소속 재계약도
+	# 센다. 그대로 나누면 "이적 103%"·"이적 100%"가 나온다(둘 다 찍혔다).
+	# 팀을 실제로 바꾼 수는 `fa_transfers`가 따로 낸다
+	var fa_moved: int = int(last.get("fa_transfers", 0))
+	log_line.call("  FA 이적 %d명 · 보상선수 이동 %d명 (합 %d)"
+		% [fa_moved, comp, moved])
 	if signed > 0:
 		log_line.call("  (비율 — 이적 %.0f%% · 이적 중 보상 %.0f%%)"
-			% [float(moved) / float(signed) * 100.0,
-				(float(comp) / float(moved) * 100.0) if moved > 0 else 0.0])
+			% [float(fa_moved) / float(signed) * 100.0,
+				(float(comp) / float(fa_moved) * 100.0) if fa_moved > 0 else 0.0])
 
 
 ## ③ 방출 점수 — 02와 같은 fixture

@@ -7,7 +7,7 @@ extends GdUnitTestSuite
 ## **게임이 아니라 계측 자신**이 된다. 그리고 그 숫자로 게임을 판정한다.
 ##
 ## 실제로 두 번 크게 걸렸다:
-##   · FA — 계측이 `run_league`의 시장 조립을 복제했다. 게임 쪽 분모를
+##   · FA — 계측이 `run_market`의 시장 조립을 복제했다. 게임 쪽 분모를
 ##     고쳤는데 계측이 안 따라와 "고쳤는데 그대로"로 읽혔다
 ##   · 관계 — 계측이 `AutoTraining.apply`를 안 불렀다. 첫 주 계획이 그대로
 ##     굳어 피로가 95를 넘어도 고강도를 밀었고, **6해 중 79%가 부상**이었다.
@@ -44,24 +44,43 @@ func test_관계_계측이_훈련_계획을_갱신한다() -> void:
 		.contains("AutoTraining.apply")
 
 
-## 🔴 **FA 계측이 시장 조립을 복제하지 않는다** — 게임과 같은 함수를 부른다
-func test_fa_계측이_시장_조립을_복제하지_않는다() -> void:
+## 🔴 **FA 계측은 시장을 다시 돌리지 않는다** (P-5b).
+##
+## 예전엔 조립만 게임 함수를 쓰고 `FaMarket.resolve`는 계측이 직접 불렀다.
+## 그런데 warmup을 다 돌린 뒤에 부르니 **게임이 이미 계약을 마쳐 자격자가
+## 0이었고, "계약 0명"이 나왔다** — 끝난 시장을 재고 있었다.
+##
+## 지금은 `SeasonRunner.run`이 낸 값을 그대로 읽는다. **게임이 한 것을
+## 읽으므로 갈릴 수가 없다** — 조립을 같이 쓰는 것보다 강한 약속이다
+func test_fa_계측이_게임이_낸_값을_읽는다() -> void:
 	var src: String = _code("res://bench/fa_measure.gd")
-	for fn in ["market_players_of", "market_teams_of"]:
+	assert_str(src).override_failure_message(
+		"FA 계측이 시장을 제 손으로 돌린다 — warmup 뒤엔 자격자가 0이라" +
+		" \"계약 0명\"이 나온다") 		.not_contains("FaMarket.resolve")
+	assert_str(src).override_failure_message(
+		"FA 계측이 게임의 시즌 종료를 안 탄다").contains("SeasonRunner.run")
+	for k in ["fa_signed", "fa_grades", "fa_transfers"]:
 		assert_str(src).override_failure_message(
-			"FA 계측이 FaRunner.%s를 안 부른다 — 조립을 복제하면 게임 쪽을" % fn +
-			" 고쳐도 계측이 안 따라온다") \
-			.contains("FaRunner.%s" % fn)
+			"계측이 %s를 안 읽는다 — 게임이 낸 값을 버리고 다시 센다" % k) 			.contains(k)
 
 
-## ⚠ **게임 쪽에도 그 함수가 있어야 한다.** 계측만 부르고 `run_league`가
+## ⚠ **게임이 그 값을 실제로 담아야 한다.** 계측만 읽고 게임이 안 담으면
+## 조용히 0이 된다 — `summary`가 안에 있는 걸 몰라 실제로 0이 나왔다
+func test_시즌_종료가_fa_결과를_담는다() -> void:
+	var src: String = _code("res://sim/season_runner.gd")
+	for k in ["fa_grades", "fa_transfers", "fa_compensations"]:
+		assert_str(src).override_failure_message(
+			"시즌 종료가 %s를 안 담는다" % k).contains(k)
+
+
+## ⚠ **게임 쪽에도 그 함수가 있어야 한다.** 계측만 부르고 `run_market`이
 ## 제 손으로 지으면 한 곳으로 모은 뜻이 사라진다
 func test_게임도_같은_함수를_쓴다() -> void:
 	var src: String = _code("res://sim/fa_runner.gd")
 	for fn in ["market_players_of(", "market_teams_of("]:
 		# 정의 한 번 + `run_league`가 부르는 것 한 번 = 최소 두 번
 		assert_int(src.count(fn)).override_failure_message(
-			"fa_runner.gd에 %s가 %d번뿐이다 — run_league가 안 부른다"
+			"fa_runner.gd에 %s가 %d번뿐이다 — run_market이 안 부른다"
 			% [fn, src.count(fn)]).is_greater_equal(2)
 
 

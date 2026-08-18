@@ -25,7 +25,13 @@ static func compensation_pool(world: Dictionary, team_id: String) -> Array:
 	for p in World.roster_of(world, team_id):
 		if p.get("is_protagonist", false):
 			continue
-		if p.get("is_foreign", false):
+		# 🔴 **국적으로 묻는다. 그 선수의 지금 리그로 묻지 않는다** (P-5b).
+		# 02가 이 자리에 함정을 적어 뒀다 — `is_foreign`은 "그 리그에서
+		# 외국인인가"라 **JBL 팀의 일본 선수를 내국인으로 통과시킨다.**
+		# 시장이 프로 한 판이 되면서 한국 선수가 JBL 팀과 계약할 수 있게
+		# 됐고, 그러면 그 팀의 일본 선수가 **보상선수로 KBL에 온다.**
+		# 02는 같은 함정에 FA·드래프트·트레이드에서 걸렸다(문지기 자리 다섯)
+		if Foreign.is_foreign_in_quota_league(Foreign.nationality_of(p)):
 			continue
 		out.append({"id": String(p.get("id", "")), "ovr": Contract.core_ovr(p)})
 	return out
@@ -43,6 +49,29 @@ static func eligible_of(world: Dictionary, league_id: String) -> Array:
 				continue
 			if Contract.is_fa_eligible(p):
 				out.append(p)
+	return out
+
+
+## **프로 전체**의 FA 자격자 — 시장은 한 판이다 (P-5b).
+##
+## 🔴 **04는 `for lid in PRO_LEAGUES: run_league`라 리그를 넘는 이적이
+## 아예 없었다.** 02 `market.ts:1241`은 `activeProLeagues()`의 1군을
+## **한 판에** 넣는다 — 그 자리에 이유도 적혀 있다: "KBL 팀만 넘기고 있었다.
+## Rust FA 오퍼에는 ABL·JBL 경로가 있는데 목적지 팀을 안 주니 **NPC가
+## 해외로 갈 방법이 없었다.**"
+static func pro_eligible_of(world: Dictionary) -> Array:
+	var out: Array = []
+	for lid in TeamProfile.PRO_LEAGUES:
+		out.append_array(eligible_of(world, lid))
+	return out
+
+
+## 팀 → 리그. 시장이 한 판이라 **옮길 때 목적지의 리그를 알아야 한다**
+static func _league_index(world: Dictionary) -> Dictionary:
+	var out: Dictionary = {}
+	for lid in TeamProfile.PRO_LEAGUES:
+		for t in World.teams_of(lid):
+			out[String(t["id"])] = lid
 	return out
 
 
@@ -96,9 +125,9 @@ static func _move(world: Dictionary, player_id: String, to_team: String,
 ## 🔴 **계측이 이 조립을 손으로 복제하고 있었다.** 그래서 게임 쪽 분모를
 ## 고쳤는데 계측이 안 따라와 **"고쳤는데 그대로"로 한 번 읽혔다.**
 ## 조립을 여기 한 곳에 두면 두 경로가 갈릴 수 없다
-static func market_players_of(world: Dictionary, league_id: String) -> Array:
+static func market_players_of(world: Dictionary) -> Array:
 	var out: Array = []
-	for p in eligible_of(world, league_id):
+	for p in pro_eligible_of(world):
 		out.append({
 			"id": String(p["id"]), "name": String(p.get("name", "")),
 			"from_team_id": String(p.get("team_id", "")),
@@ -109,43 +138,74 @@ static func market_players_of(world: Dictionary, league_id: String) -> Array:
 
 
 ## 시장에 들어오는 구단 — **게임과 계측이 같이 부른다** (P-5c)
-static func market_teams_of(world: Dictionary, league_id: String) -> Array:
+static func market_teams_of(world: Dictionary) -> Array:
 	var out: Array = []
-	for t in World.teams_of(league_id):
-		var tid: String = String(t["id"])
-		out.append({
-			"team_id": tid,
-			# 예산 지수는 아직 없다 — 구단주 씀씀이로 대신한다.
-			# **모양은 02 그대로다**(0.8~1.35), 재정이 붙으면 값만 바뀐다
-			"budget_index": clampf(
-				float(TeamProfile.of(world, tid)["owner_spending_willingness"]) / 50.0,
-				0.8, 1.35),
-			"win_now_pressure": float(TeamProfile.of(world, tid)["win_now_pressure"]),
-			"open_slots": open_slots_of(world, tid, league_id),
-			"roster": compensation_pool(world, tid),
-		})
+	# ⚠ **상무는 따로 안 뻐다** — 독립 리그 소속이라 `PRO_LEAGUES`에 없다.
+	# 02는 프로 안에 두고 `SANGMU_TEAM_IDS`로 뿬다(04는 구조가 다르다)
+	for lid in TeamProfile.PRO_LEAGUES:
+		for t in World.teams_of(lid):
+			var tid: String = String(t["id"])
+			out.append({
+				"team_id": tid,
+				# 리그마다 정원이 다르다 — 옮길 때도 이걸 본다
+				"league_id": lid,
+				# 예산 지수는 아직 없다 — 구단주 쓰씨씨이로 대신한다.
+				# **모양은 02 그대로다**(0.8~1.35), 재정이 붙으면 값만 바뀐다
+				"budget_index": clampf(
+					float(TeamProfile.of(world, tid)["owner_spending_willingness"]) / 50.0,
+					0.8, 1.35),
+				"win_now_pressure": float(TeamProfile.of(world, tid)["win_now_pressure"]),
+				"open_slots": open_slots_of(world, tid, lid),
+				"roster": compensation_pool(world, tid),
+			})
 	return out
 
 
-## 한 리그의 FA를 정산해 세계에 적용한다. `{signings, unsigned, moved}`
-static func run_league(state: Dictionary, league_id: String,
+## 프로 전체의 FA를 **한 판**으로 정산해 세계에 적용한다 (P-5b).
+## `{signings, unsigned, moved}`
+##
+## 🔴 **예전엔 리그마다 따로 돌렸다.** 그래서 리그를 넘는 이적이 아예 없었고,
+## 02가 그 자리에 적어 둔 "NPC가 해외로 갈 방법이 없었다"를 04가 그대로
+## 갖고 있었다. 02 `market.ts:1241`은 프로 1군을 한 판에 넣는다
+static func run_market(state: Dictionary,
 		rng: RandomNumberGenerator) -> Dictionary:
 	var world: Dictionary = state.get("world", {})
-	var players: Array = eligible_of(world, league_id)
+	var players: Array = pro_eligible_of(world)
 	if players.is_empty():
-		return {"signings": 0, "unsigned": 0, "moved": 0}
+		return {"signings": 0, "unsigned": 0, "moved": 0,
+			"grades": {}, "compensations": 0, "transfers": 0}
 
 	# 🔴 **조립을 여기서 다시 짓지 않는다** (P-5c). 계측이 부르는 것과 같은
 	# 함수다 — 갈리면 게임을 고쳐도 계측이 안 따라온다
-	var market_players: Array = market_players_of(world, league_id)
-	var teams: Array = market_teams_of(world, league_id)
+	var market_players: Array = market_players_of(world)
+	var teams: Array = market_teams_of(world)
+	# 목적지의 리그 — **선수가 리그를 넘으므로 정원도 목적지 것으로 본다**
+	var league_of: Dictionary = _league_index(world)
 
 	var out: Dictionary = FaMarket.resolve(market_players, teams,
 		pro_salaries(world), rng)
 
 	var moved: int = 0
-	var limit: int = RosterMaintenance.roster_max_of(league_id)
+	# ⚠ **등급·보상 수를 같이 낸다** (P-5b). 계측이 이걸 못 읽어서 **끝난
+	# 시장을 제 손으로 다시 돌렸고**, 게임이 이미 계약을 마친 뒤라 "계약 0명"이
+	# 나왔다 — 계측이 게임 경로를 안 타던 자리가 또 하나였다(형태 ⑦)
+	var by_grade: Dictionary = {}
+	var comps: int = 0
+	# ⚠ **`moved`는 옮김 처리 수라 원소속 재계약도 센다.** 실제로 팀을
+	# 바꾼 수는 따로 세야 한다 — 안 그러면 계측이 "이적 100%"로 찍는다
+	var transfers: int = 0
 	for s in out["signings"]:
+		var g: String = String(s.get("grade", "?"))
+		by_grade[g] = int(by_grade.get(g, 0)) + 1
+		if String(s["to_team_id"]) != String(s["from_team_id"]):
+			transfers += 1
+		if not String(s["compensation_id"]).is_empty():
+			comps += 1
+		# ⚠ **정원은 목적지 리그 것이다.** 한 판이 되면서 KBL 선수가 JBL
+		# 팀과 계약할 수 있게 됐는데, 그때 KBL 정원으로 재면 어긋난다
+		var to_league: String = String(league_of.get(
+			String(s["to_team_id"]), ""))
+		var limit: int = RosterMaintenance.roster_max_of(to_league)
 		# ⚠ **모형과 세계가 벌어질 수 있다.** `FaMarket`은 자리 수를 자기
 		# 장부로 세는데, 원소속을 떠난 사람이 비운 자리를 그 장부가 모른다 —
 		# 보상선수가 그 자리를 채우면 장부에만 자리가 하나 더 생긴다.
@@ -153,7 +213,7 @@ static func run_league(state: Dictionary, league_id: String,
 		if World.roster_of(world, String(s["to_team_id"])).size() >= limit:
 			continue
 		var p: Dictionary = _move(world, String(s["id"]), String(s["to_team_id"]),
-			league_id)
+			to_league)
 		if p.is_empty():
 			continue
 		moved += 1
@@ -170,7 +230,10 @@ static func run_league(state: Dictionary, league_id: String,
 
 		var comp: String = String(s["compensation_id"])
 		if not comp.is_empty():
-			var c: Dictionary = _move(world, comp, String(s["from_team_id"]), league_id)
+			# ⚠ **보상선수는 원소속으로 간다** — 그 팀의 리그를 쓴다.
+			# 목적지 리그를 쓰면 KBL 선수가 JBL 소속으로 기록된다
+			var c: Dictionary = _move(world, comp, String(s["from_team_id"]),
+				String(league_of.get(String(s["from_team_id"]), to_league)))
 			if not c.is_empty():
 				moved += 1
 				var ce: Array = c.get("career_events", [])
@@ -188,23 +251,20 @@ static func run_league(state: Dictionary, league_id: String,
 				p["fa_unsigned"] = true
 
 	return {"signings": out["signings"].size(), "unsigned": out["unsigned"].size(),
-		"moved": moved}
+		"moved": moved, "grades": by_grade, "compensations": comps,
+		"transfers": transfers}
 
 
 ## 프로 리그 전부. 시즌 종료가 부른다
 static func run(state: Dictionary) -> Dictionary:
 	var world: Dictionary = state.get("world", {})
 	if world.is_empty():
-		return {"signings": 0, "unsigned": 0, "moved": 0}
+		return {"signings": 0, "unsigned": 0, "moved": 0,
+			"grades": {}, "compensations": 0, "transfers": 0}
 
+	# ⚠ **흐름이 하나다** (P-5b). 시장이 한 판이라 리그별로 가를 수가 없다 —
+	# 나누면 같은 팀이 세 번 나와 자리를 세 번 채운다
 	var rng := RandomNumberGenerator.new()
-	var total: Dictionary = {"signings": 0, "unsigned": 0, "moved": 0}
-	for lid in TeamProfile.PRO_LEAGUES:
-		# ⚠ **리그마다 다른 흐름이다.** 하나로 두면 리그 하나에 자격자가
-		# 하나 늘고 줄 때마다 다른 리그의 결과가 통째로 밀린다
-		rng.seed = Rng.mix(["fa", lid, state.get("seed", 0),
-			state.get("season_year", 0)])
-		var r: Dictionary = run_league(state, lid, rng)
-		for k in total:
-			total[k] = int(total[k]) + int(r[k])
-	return total
+	rng.seed = Rng.mix(["fa", state.get("seed", 0),
+		state.get("season_year", 0)])
+	return run_market(state, rng)

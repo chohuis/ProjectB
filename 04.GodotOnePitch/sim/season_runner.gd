@@ -166,6 +166,11 @@ static func run(state: Dictionary) -> Dictionary:
 	var fa: Dictionary = FaRunner.run(state)
 	summary["fa_signed"] = int(fa["signings"])
 	summary["fa_unsigned"] = int(fa["unsigned"])
+	# ⚠ **계측이 이걸 읽는다** — 안 담으면 계측이 끝난 시장을 다시 돌린다
+	summary["fa_moved"] = int(fa.get("moved", 0))
+	summary["fa_grades"] = fa.get("grades", {})
+	summary["fa_compensations"] = int(fa.get("compensations", 0))
+	summary["fa_transfers"] = int(fa.get("transfers", 0))
 	# ⚠ **미계약자를 그냥 두면 안 된다.** 계약이 0인 채로 팀에 남아 해마다
 	# 같은 사람이 시장에 나온다 — 실측에서 110~130명이 그렇게 쌓였다.
 	# 미지명자와 **같은 진로 배정**을 탄다

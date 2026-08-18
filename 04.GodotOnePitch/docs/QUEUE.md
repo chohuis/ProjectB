@@ -927,7 +927,11 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ **02의 "A:19 B:18 C:23"으로 판정하지 않았다** — 그건 검사 fixture 값이다
       검사 7 · **변이 3/3**
 
-- [ ] **P-5b FA 시장이 04는 리그별 세 판, 02는 프로 전체 한 판이다**
+- [x] **P-5b FA 시장이 04는 리그별 세 판, 02는 프로 전체 한 판이다** — 2026-08-19 고침
+      `run_league` → `run_market` 한 판. to_league·정원·보상선수 국적까지 같이.
+      실측 6해 — 계약 387명(A:164 B:153 C:70) · 이적 80% · 보상 4%.
+      ⚠ P-5c의 "계약 8명"은 계측이 끝난 시장을 다시 돌린 값이었다.
+      검사 30 · 변이 4/5(다섯째는 open_slots가 먼저 막아 표면화 안 됨).
       02 `market.ts:1241-1266`은 `activeProLeagues()`의 1군 팀을 **한 판에**
       넣는다 — 한국 선수가 JBL 팀과 계약하는 경로가 실제로 있고, 02는 그때
       **보상선수가 리그를 건너오는 함정**까지 적어 뒀다("같은 함정에 FA·
@@ -1139,6 +1143,10 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       **먹이는 자리가 없던 게 아니라 주인공이 로스터에 없어서 안 걸렸다.**
       ⚠ **아직 작다.** 20해를 다시 굴려 teammate(평균 41.5)와 견줄 크기가
       되는지 본다 — 그때까지 열어 둔다
+      🔴 **2026-08-19 20해를 굴렸는데 못 쟀다.** 주인공이 2032년부터 15해를
+      대학 4학년에 멈춰 있다 — 계측이 `draft_observe`·`sports_unit_apply`·
+      `military_enlist_ask`를 안 답한다. 그 상태의 rival 0.0은 판정에 못 쓴다.
+      **계측이 커리어를 프로까지 밀어야 20해가 뜻을 갖는다**(P-16b 계열)
 
 - [x] 🔴 **P-14 대학 진학 뒤 주인공이 로스터에서 사라지던 것** — 2026-08-18 고침
       `CareerDecision._move_to`가 `p["team_id"]`만 바꾸고 **로스터를 안
