@@ -163,6 +163,67 @@ static func run_protagonist(state: Dictionary, at_day: int,
 	return out
 
 
+## 고를 게 있으면 **묻는다**.
+##
+## ⚠ **엔진만 만들면 또 도달 불가다** — 결정 화면 대조에서 본 형태 ②.
+## 02가 가르는 부상 둘에서만 뜬다
+static func ask_treatment(state: Dictionary) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	var cur = p.get("injury", null)
+	if not (cur is Dictionary):
+		return false
+	if not String(cur.get("treatment_choice", "")).is_empty():
+		return false
+	var t: String = String(cur.get("type", ""))
+	if Injury.treatments_for(t).is_empty():
+		return false
+	Pending.push_once(state, {"type": "injury_treatment", "injury_type": t})
+	return true
+
+
+## 치료를 고른다 — 02 `InjuryTreatmentModal`.
+##
+## 🔴 **고르는 자리가 없어서 `treatment_choice`가 늘 빈 문자열이었다.**
+## `_heal_protagonist`가 그걸 읽어 후유증을 가르는데 늘 `default`로 떨어졌고,
+## `trigger_chance`가 읽는 `prior_steroid_used`도 아무도 안 채웠다 —
+## **스테로이드의 대가가 게임에 한 번도 안 나타났다.**
+##
+## ⚠ **한 번만 고른다.** 다시 고르면 비용만 또 빠진다.
+## ⚠ **02가 가르는 부상 둘만이다** — 나머지는 고를 게 없다
+static func choose_treatment(state: Dictionary, choice: String) -> bool:
+	var p: Dictionary = state.get("protagonist", {})
+	var cur = p.get("injury", null)
+	if cur == null or not (cur is Dictionary):
+		return false
+	if not String(cur.get("treatment_choice", "")).is_empty():
+		return false
+
+	var t: String = String(cur.get("type", ""))
+	var opt: Dictionary = Injury.treatment_of(t, choice)
+	if opt.is_empty():
+		return false
+
+	cur["treatment_choice"] = choice
+
+	# 회복이 줄거나 는다. **0 아래로는 안 간다**
+	var delta: int = int(opt.get("weeks_delta", 0))
+	if delta != 0:
+		cur["weeks_left"] = maxi(int(cur.get("weeks_left", 0)) + delta, 0)
+
+	# 주당 비용은 재정 화면이 읽는다 — 완치 때 `_heal_protagonist`가 지운다
+	p["treatment_weekly"] = int(opt.get("cost_weekly", 0))
+
+	var once: int = int(opt.get("cost_once", 0))
+	if once > 0:
+		p["money"] = int(p.get("money", 0)) - once
+
+	# ⚠ **뒤에 값을 치른다.** `Injury.trigger_chance`가 이걸 읽어 이후
+	# 부상 확률을 올린다 — 안 남기면 대가 없는 선택이 된다
+	if choice == "steroid":
+		p["prior_steroid_used"] = true
+	return true
+
+
 ## 완치 — 후유증을 먹이고 자리를 비운다.
 ##
 ## ⚠ **다시 다칠 확률이 오른 채로 남는다.** 그게 `has_prior_injury`다
@@ -186,6 +247,9 @@ static func _heal_protagonist(state: Dictionary, p: Dictionary, me: String,
 		PlayerGen.refresh_ovr(pitching, batting)
 
 	p["has_prior_injury"] = true
+	# ⚠ **치료비를 끊는다.** 안 끊으면 다 나은 뒤에도 재정 화면에서
+	# 주마다 계속 빠진다 — 화면이 읽는 값이라 조용히 새는 자리다
+	p["treatment_weekly"] = 0
 	_clear(state, me)
 
 	# ⚠ **등급을 같이 남긴다.** 드래프트가 부상 이력을 심각도로 가르는데
@@ -483,6 +547,10 @@ static func run(state: Dictionary, at_day: int = -1) -> Dictionary:
 
 	var mine: Dictionary = run_protagonist(state, day, rng)
 	var npc: Dictionary = run_npcs(state, day, rng)
+
+	# 🔴 **치료를 고를 자리가 없었다** — 후유증 표도 재정의 치료비 줄도
+	# 다 있는데 아무도 안 채웠다. 02는 부상이 나면 모달로 묻는다
+	ask_treatment(state)
 
 	var news: Dictionary = {}
 	if Injury.is_news_week(Calendar.week_of(day)):

@@ -32,7 +32,7 @@ const STOPPING: Array[String] = [
 	# 계약 — 지명 통보는 멈추는데 재계약은 안 멈출 이유가 없다
 	"salary_negotiation", "option_clause", "fa_market",
 	# 트레이드 — 소속이 바뀌고, 노트레이드 조항이 있으면 거부도 가능하다
-	"trade",
+	"trade", "injury_treatment",
 	# 병역 — 커리어가 2년 가까이 멈추는 결정이다. 자동으로 정하면 안 된다.
 	# ⚠ **04는 여기까지 아예 안 물었다** — `career_decision`이 갈 곳이 없을 때
 	# 조용히 현역으로 보냈다. 02는 둘을 묻는다
@@ -52,6 +52,7 @@ const LABELS: Dictionary = {
 	"option_clause": "옵션 조항 확인",
 	"fa_market": "FA 시장",
 	"trade": "트레이드 통보",
+	"injury_treatment": "부상 치료 선택",
 	"sports_unit_apply": "체육부대 입대 신청",
 	"military_enlist_ask": "입대 여부 결정",
 	"game": "등판",

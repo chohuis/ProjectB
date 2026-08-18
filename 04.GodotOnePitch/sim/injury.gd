@@ -359,6 +359,26 @@ static func calc_npc(players: Array, rng: RandomNumberGenerator) -> Array:
 
 # ── 후유증 ────────────────────────────────────────────────────
 
+## 그 부상에 고를 수 있는 치료 — 02 `InjuryTreatmentModal:19-35`.
+##
+## 🔴 **고르는 자리가 04에 없었다.** 후유증 표(`penalty_by_treatment`)도
+## 그걸 읽는 `permanent_penalty`도 재정의 `treatment_weekly` 줄도 다 있는데
+## **아무도 안 채웠다** — 결정 화면 대조에서 본 형태 ②③ 그대로다.
+##
+## ⚠ **02가 가르는 부상 둘만이다.** 나머지는 빈 배열 — **없는 선택을
+## 지어내면 그게 두 번째 정본이 된다**
+static func treatments_for(injury_type: String) -> Array:
+	return rules().get("treatment", {}).get(injury_type, [])
+
+
+## 고른 갈래 하나. 없으면 빈 사전
+static func treatment_of(injury_type: String, choice: String) -> Dictionary:
+	for o in treatments_for(injury_type):
+		if String(o.get("id", "")) == choice:
+			return o
+	return {}
+
+
 ## 완치 뒤 영구 감소. **치료 선택이 후유증을 가르는 부상이 둘 있다**
 static func permanent_penalty(injury_type: String,
 		treatment_choice: String = "") -> Dictionary:

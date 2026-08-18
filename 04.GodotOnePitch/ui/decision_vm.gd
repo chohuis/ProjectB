@@ -21,7 +21,7 @@ const HANDLED: Array[String] = [
 	"career_choice_hub", "career_results", "career_choice",
 	"draft_observe", "draft_notification",
 	"salary_negotiation", "option_clause", "fa_market", "trade",
-	"sports_unit_apply", "military_enlist_ask",
+	"sports_unit_apply", "military_enlist_ask", "injury_treatment",
 ]
 
 ## ⚠ **`HANDLED`가 정본이다.** `build`의 `match`에만 넣고 여기 안 넣으면
@@ -76,6 +76,8 @@ static func build(state: Dictionary, terms: Dictionary = {}) -> Dictionary:
 			return _sports_unit(state, a)
 		"military_enlist_ask":
 			return _enlist(state, a)
+		"injury_treatment":
+			return _treatment(state, a)
 	return {}
 
 
@@ -315,6 +317,39 @@ static func _enlist(state: Dictionary, _a: Dictionary) -> Dictionary:
 	return _of("military_enlist_ask", "입대", body,
 		[{"id": "enlist", "label": "입대한다"},
 		{"id": "defer", "label": "미룬다"}])
+
+
+## 부상 치료 선택 — 02 `InjuryTreatmentModal`(134줄).
+##
+## 🔴 **고르는 자리가 04에 없었다.** 후유증 표도 그걸 읽는 코드도 재정의
+## 치료비 줄도 다 있는데 **아무도 안 채웠다.**
+##
+## ⚠ **갈래마다 기간·비용·대가를 적는다** — 02가 그렇게 한다. 값만 보면
+## 싼 쪽이 늘 나아 보인다
+static func _treatment(state: Dictionary, a: Dictionary) -> Dictionary:
+	var p: Dictionary = state.get("protagonist", {})
+	var inj = p.get("injury", null)
+	var t: String = String(a.get("injury_type", ""))
+	var weeks: int = int(inj.get("weeks_left", 0)) if inj is Dictionary else 0
+
+	var choices: Array = []
+	for o in Injury.treatments_for(t):
+		var cost: String = "비용 없음"
+		if int(o.get("cost_weekly", 0)) > 0:
+			cost = "주당 %s" % FinanceVm.won(int(o["cost_weekly"]))
+		elif int(o.get("cost_once", 0)) > 0:
+			cost = "일시금 %s" % FinanceVm.won(int(o["cost_once"]))
+		var span: String = "기간 그대로"
+		var d: int = int(o.get("weeks_delta", 0))
+		if d != 0:
+			span = "%d주 %s" % [absi(d), "단축" if d < 0 else "연장"]
+		choices.append({"id": String(o["id"]),
+			"label": "%s — %s · %s · %s" % [o.get("label", ""), span, cost,
+				o.get("note", "")]})
+
+	return _of("injury_treatment", "부상 치료",
+		"%s. 회복까지 %d주 남았습니다.\n어떻게 치료할지 정합니다."
+			% [Injury.label_of(t), weeks], choices)
 
 
 static func _observe(_state: Dictionary, _a: Dictionary) -> Dictionary:
@@ -605,6 +640,10 @@ static func apply(state: Dictionary, choice_id: String, at_day: int,
 			if choice_id == "accept":
 				return ContractDecision.accept_trade(state, a)
 			return ContractDecision.reject_trade(state)
+		"injury_treatment":
+			if not InjuryRunner.choose_treatment(state, choice_id):
+				return false
+			return Pending.resolve(state, "injury_treatment")
 	return false
 
 
