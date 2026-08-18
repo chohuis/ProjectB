@@ -177,6 +177,16 @@ static func service_factor(years: int) -> float:
 ## ⚠ **OVR 곡선이 선형이 아니다.** 상위 몇 명이 시장을 지배하는 게 실제에
 ## 가깝다 — 선형으로 두면 리그 연봉 순위 백분위가 밋밋해져서 **FA 등급이
 ## 사실상 무작위**가 된다
+## 리그 연봉 배수 — **여기가 정본이다.**
+##
+## ⚠ **부르는 쪽마다 표를 다시 적지 않는다** — FA 제안이 그 배수를 써야 하는데
+## 거기서 복사하면 언젠가 갈린다(ABL 3.5 · JBL 2.0)
+static func league_mult(league_id: String) -> float:
+	var r: Dictionary = rules()
+	return float(r.get("league_mult", {}).get(league_id,
+		r.get("league_mult_default", 1.0)))
+
+
 static func estimate(ovr: float, league_id: String, years_of_service: int,
 		age: int, team_index: float, rng: RandomNumberGenerator) -> Dictionary:
 	var r: Dictionary = rules()

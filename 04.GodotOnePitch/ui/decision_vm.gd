@@ -174,6 +174,13 @@ static func _teams(league_id: String) -> Array:
 ## 자리만 셋이다. 그래서 지금은 기다리는 길만 준다. **없는 선택지를
 ## 지어내지 않는다** — 지어내면 그게 두 번째 정본이 된다
 static func _fa(state: Dictionary, _a: Dictionary) -> Dictionary:
+	# 🔴 **제안을 만드는 곳이 없어서 늘 빈 목록이었다** — FA가 돼도
+	# "한 해 더 기다린다" 하나뿐이었다. `FaOffers`가 그 자리다(P-27).
+	#
+	# ⚠ **여기서 만들고 상태에 남긴다.** 화면을 다시 그릴 때마다 새로
+	# 만들면 **볼 때마다 제안이 바뀐다** — 고르는 사이에 값이 달라진다
+	if not state.has("fa_offers"):
+		state["fa_offers"] = FaOffers.generate(state)
 	var offers: Array = state.get("fa_offers", [])
 	var choices: Array = []
 	for i in offers.size():

@@ -311,6 +311,12 @@ static func sign_fa_offer(state: Dictionary, offer: Dictionary, salary: int,
 		"salary": salary,
 		"duration_years": int(offer.get("duration_years", 1)),
 		"signing_bonus": int(offer.get("signing_bonus", 0)),
+		# ⚠ **제안에 붙은 조항을 계약으로 옮긴다.** P-25에서 협상 쪽이 같은
+		# 자리에서 새고 있었다 — FA 제안도 옵션·노트레이드를 싣는데
+		# 안 옮기면 계약 끝에 볼 근거가 사라진다
+		"team_option_years": int(offer.get("team_option_years", 0)),
+		"player_option_years": int(offer.get("player_option_years", 0)),
+		"no_trade": bool(offer.get("no_trade", false)),
 	}
 	state[NEXT_KEY] = contract
 
@@ -345,6 +351,9 @@ static func sign_fa_offer(state: Dictionary, offer: Dictionary, salary: int,
 static func wait_fa_market(state: Dictionary) -> int:
 	var p: Dictionary = state.get("protagonist", {})
 	p["fa_unsigned_weeks"] = int(p.get("fa_unsigned_weeks", 0)) + 1
+	# ⚠ **기다렸으면 제안을 버린다.** 안 버리면 다음에 같은 제안이 그대로
+	# 떠서 기다릴 이유가 없다 — 값이 미계약 주에 따라 떨어져야 한다
+	state.erase("fa_offers")
 	Pending.resolve(state, "fa_market")
 	return int(p["fa_unsigned_weeks"])
 
