@@ -186,3 +186,45 @@ func test_the_two_axes_point_opposite_ways() -> void:
 	var fresh: int = Roster.effective_ovr(80.0, {"freshness": 90.0, "last_pitched_week": 0}, 10)
 	var worn: int = Roster.effective_ovr(80.0, {"freshness": 10.0, "last_pitched_week": 0}, 10)
 	assert_bool(fresh > worn).is_true()
+
+# ── 주인공과 NPC의 상한 표는 일부러 다르다 (P-45) ────────────────
+
+## 🔴 **두 표를 통일하고 싶어지면 여기를 읽어라.** 02도 둘로 나뉘어 있다:
+##
+##   주인공  `growth_engine.rs:186 potential_cap_factor` — **soft cap**
+##           `ratio >= 1.00` 갈래가 **없다.** 0.10이 끝이라 천장을 넘어도
+##           아주 조금씩 계속 자란다
+##   NPC     `npc_sim.rs:2676 potential_cap` — **hard cap**
+##           `ratio >= 1.00`이면 **0.00.** 잠재력을 안 넘는다
+##
+## 🔴 **실제로 한 번 잘못 읽었다** (2026-08-19). 20해 실측에서 주인공이
+## OVR 81 / 잠재력 76이 되자 "04가 02 값을 바꿔 놓았다"고 판단했는데,
+## **NPC 표를 주인공 표와 견준 것**이었다. 02 주인공 표에는 그 갈래가
+## 원래 없다 — **04가 맞게 옮겨 놓았다.**
+##
+## ⚠ 02 검사도 그 전제 위에 서 있다(`startPresets.test.ts:71`) —
+## "잠재력을 넘긴 채 시작하면 1주차부터 **0.10배**가 된다". 0.00이면
+## 그 문장이 성립하지 않는다
+func test_주인공은_천장을_넘어도_조금씩_자란다() -> void:
+	assert_float(Growth.potential_cap_factor(81.0, 76.0)).override_failure_message(
+		"주인공 상한이 천장에서 0이 됐다 — 02 growth_engine.rs는 soft cap이다") \
+		.is_equal_approx(0.10, 0.001)
+
+
+## ⚠ **NPC는 안 넘는다** — 02 `npc_sim.rs`가 hard cap이다
+func test_npc는_천장을_안_넘는다() -> void:
+	assert_float(NpcGrowth.potential_cap(81.0, 76.0)).override_failure_message(
+		"NPC 상한이 천장에서 0이 아니다 — 02 npc_sim.rs는 hard cap이다") \
+		.is_equal(0.00)
+	assert_float(NpcGrowth.potential_cap(76.0, 76.0)).is_equal(0.00)
+
+
+## 🔴 **천장 아래에서는 두 표가 같다.** 여기가 갈리면 주인공과 NPC의
+## 성장 속도가 달라져 그 격차가 그대로 성적이 된다
+func test_천장_아래에서는_두_표가_같다() -> void:
+	for pair in [[50.0, 90.0], [72.0, 90.0], [81.0, 90.0], [89.0, 90.0]]:
+		var a: float = Growth.potential_cap_factor(pair[0], pair[1])
+		var b: float = NpcGrowth.potential_cap(pair[0], pair[1])
+		assert_float(a).override_failure_message(
+			"%.0f/%.0f — 주인공 %.2f · NPC %.2f" % [pair[0], pair[1], a, b]) \
+			.is_equal_approx(b, 0.001)
