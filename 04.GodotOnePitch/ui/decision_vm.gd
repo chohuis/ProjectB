@@ -90,6 +90,32 @@ static func _of(t: String, title: String, body: String,
 ## ⚠ **지원할 수 있는 무대만 보여준다.** 대학생에게 "대학 지원"을 띄우면
 ## 두 번 입학이 되고, 엔진(`can_apply_university`)이 거절해서 아무 일도
 ## 안 일어난다 — 왜 안 되는지는 화면에 안 나온다
+## 그 팀이 어떤 곳인가 — 02 `UniversityApplyModal`의 **프로필 + 로스터**.
+##
+## 🔴 **P-21에서 자격·확률까지는 붙였는데 "어떤 팀인지"가 없었다.**
+## 02는 스타일·난이도·재정·강점·설명 + 로스터(총 인원·선수 수·명단)를 낸다.
+##
+## ⚠ **04에 없는 축은 지어내지 않는다** — 대학 팀에 `power`·`resource`·
+## `stadium`은 있고 `style`·`desc`·`strengths`는 **없다**(세어 봤다).
+## 있는 것만 낸다: **재정 성향**(`resource`)과 **로스터**.
+##
+## ⚠ **인원보다 같은 자리 경쟁자가 중요하다.** 32명 중 투수가 몇인지가
+## "가면 뛸 수 있나"를 가른다 — 02도 명단에 포지션을 적는다
+static func _squad_note(world: Dictionary, team_id: String,
+		p: Dictionary) -> String:
+	var roster: Array = World.roster_of(world, team_id)
+	if roster.is_empty():
+		return ""
+	var kind: String = String(p.get("player_type", "pitcher"))
+	var same: int = 0
+	for q in roster:
+		if String(q.get("player_type", "pitcher")) == kind:
+			same += 1
+	var res: String = String(World.team_field({}, team_id, "resource", ""))
+	return "  [%s%d명 · 같은 자리 %d]" % [
+		"%s · " % res if not res.is_empty() else "", roster.size(), same]
+
+
 ## 진로 지원 — 02 `CareerChoiceHubModal`(181) + `UniversityApplyModal`(214)
 ## + `IndependentApplyModal`(167).
 ##
@@ -109,6 +135,7 @@ static func _hub(state: Dictionary, _a: Dictionary) -> Dictionary:
 	var baseball: float = float(CareerPath.hs_baseball_score(
 		p.get("career_records", [])))
 
+	var world: Dictionary = state.get("world", {})
 	var choices: Array = []
 	if CareerPath.can_apply_university(stage):
 		for t in _teams("LEAGUE_UNIVERSITY"):
@@ -118,11 +145,12 @@ static func _hub(state: Dictionary, _a: Dictionary) -> Dictionary:
 			choices.append({"id": "university:%s" % t["id"],
 				# ⚠ **전력과 스카우트 가산을 같이 적는다.** 확률만 보면
 				# 약한 대학이 늘 유리해 보인다 — 강한 곳일수록 가산이 크다
-				"label": "%s  전력 %s · 합격 %d%% · 스카우트 %+d  (요구 학업 %d등급 · 야구 %d)"
+				"label": "%s  전력 %s · 합격 %d%% · 스카우트 %+d  (요구 학업 %d등급 · 야구 %d)%s"
 					% [t["name"], req["tier"],
 					roundi(CareerPath.university_chance(power, academic, baseball)),
 					bonus, int(req["min_academic_grade"]),
-					int(req["min_baseball_score"])]})
+					int(req["min_baseball_score"]),
+					_squad_note(world, String(t["id"]), p)]})
 	if CareerPath.can_apply_independent(stage):
 		var order: int = 0
 		for t in _teams("LEAGUE_INDEPENDENT"):
@@ -130,9 +158,10 @@ static func _hub(state: Dictionary, _a: Dictionary) -> Dictionary:
 				continue
 			var ipow = World.team_field({}, String(t["id"]), "power", null)
 			choices.append({"id": "independent:%s" % t["id"],
-				"label": "%s  입단 %d%%" % [t["name"],
+				"label": "%s  입단 %d%%%s" % [t["name"],
 					roundi(CareerPath.independent_chance(ipow,
-						Contract.core_ovr(p), order))]})
+						Contract.core_ovr(p), order)),
+					_squad_note(world, String(t["id"]), p)]})
 			order += 1
 	choices.append({"id": "draft", "label": "신인 드래프트 신청"})
 
