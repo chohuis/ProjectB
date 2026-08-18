@@ -258,13 +258,17 @@ func test_정원_밖이면_떨어진다() -> void:
 	assert_bool(Military.select_sports_unit(pool, "ME")).is_false()
 
 
-## ⚠ **한 팀 상한이 없으면 강팀이 정원을 독식한다**
-func test_한_팀이_넷을_못_넣는다() -> void:
+## ⚠ **한 팀 상한이 없으면 강팀이 정원을 독식한다.**
+##
+## ⚠ **같은 팀을 정원만큼 채워야 갈린다** — 다섯만 넣으면 상한이 없어도
+## 정원(13) 안에 다 들어가 내 자리가 남는다. 실제로 그 픽스처로는 변이가
+## 안 잡혔다
+func test_한_팀이_정원을_독식하지_못한다() -> void:
 	var pool: Array = []
-	for i in 5:
+	for i in Military.sports_annual_intake():
 		pool.append({"id": "S%d" % i, "ovr": 90.0 - i, "team_id": "SAME"})
 	pool.append({"id": "ME", "ovr": 60.0, "team_id": "MINE"})
-	# 같은 팀에서 셋만 들어가므로 남은 자리에 내가 든다
+	# 같은 팀에서 셋만 들어가므로 남은 열 자리 중 하나가 내 것이다
 	assert_bool(Military.select_sports_unit(pool, "ME")).override_failure_message(
 		"한 팀이 정원을 독식했다").is_true()
 
@@ -273,3 +277,73 @@ func test_한_팀이_넷을_못_넣는다() -> void:
 func test_지원자가_적으면_다_붙는다() -> void:
 	assert_bool(Military.select_sports_unit(
 		[{"id": "ME", "ovr": 30.0, "team_id": "MINE"}], "ME")).is_true()
+
+
+# ── 배선을 실제로 굴린다 ──────────────────────────────────────
+#
+# ⚠ **판정만 재던 검사로는 배선 변이가 하나도 안 잡혔다**(7 중 1).
+# `Military.should_ask_*`를 직접 부르는 것과 `CareerRunner.run`을 지나 대기줄에
+# 올라오는 것은 다른 질문이다.
+
+## ⚠ **한 팀에 몰아넣으면 안 된다.** 한 팀 상한(3)이 오히려 나를 보호해서
+## 정원 밖으로 안 밀린다 — 실제로 그 픽스처로 검사가 틀렸다.
+## **팀을 흩어야 정원이 진짜로 찬다**
+func _rivals(n: int, ovr: float) -> Dictionary:
+	var out: Dictionary = {}
+	for i in n:
+		out["T%d" % i] = [{"id": "N%d" % i, "ovr": ovr,
+			"pitching": {"ovr": ovr}, "career_stage": "pro",
+			"military_status": Military.STATUS_UNSERVED}]
+	return out
+
+
+func test_주간_처리가_입대도_올린다() -> void:
+	var s: Dictionary = _s(_p({"age": 28}), LAST_WEEK_DAY)
+	s["seed"] = 1
+	CareerRunner.run(s, LAST_WEEK_DAY)
+	assert_bool(Pending.has(s, "military_enlist_ask")).override_failure_message(
+		"시즌 마지막 주에 스물여덟인데 입대를 안 묻는다").is_true()
+
+
+## 지원했으면 시즌 마지막 주에 결과가 난다
+func test_지원자는_결과가_난다() -> void:
+	var s: Dictionary = _s(_p({"sports_unit_applied": true}), LAST_WEEK_DAY)
+	s["seed"] = 1
+	CareerRunner.run(s, LAST_WEEK_DAY)
+	assert_bool(bool(s["protagonist"].get("sports_unit_applied", false))) \
+		.override_failure_message("결과가 났는데 지원 표시가 남아 있다 — 다음 해가 막힌다") \
+		.is_false()
+
+
+## 겨룰 상대가 없으면 붙는다 — 배선이 풀을 안 모으면 이게 늘 참이라
+## 아래 "떨어진다" 검사와 짝을 이뤄야 갈린다
+func test_상대가_없으면_붙는다() -> void:
+	var s: Dictionary = _s(_p({"sports_unit_applied": true}), LAST_WEEK_DAY)
+	s["seed"] = 1
+	CareerRunner.run(s, LAST_WEEK_DAY)
+	assert_str(String(s["protagonist"]["military_status"])) \
+		.is_equal(Military.STATUS_SERVING)
+
+
+## ⚠ **여기가 "겨룰 상대를 안 모은다" 변이를 잡는 자리다.**
+## 나보다 잘하는 사람이 정원만큼 있으면 떨어지고, **곧바로 입대를 묻는다**
+func test_상대가_많으면_떨어지고_입대를_묻는다() -> void:
+	var s: Dictionary = _s(_p({"sports_unit_applied": true, "age": 24}),
+		LAST_WEEK_DAY)
+	s["seed"] = 1
+	s["world"]["rosters"] = _rivals(Military.sports_annual_intake() + 5, 99.0)
+	CareerRunner.run(s, LAST_WEEK_DAY)
+	assert_str(String(s["protagonist"]["military_status"])) \
+		.override_failure_message("정원 밖인데 상무에 갔다") \
+		.is_equal(Military.STATUS_UNSERVED)
+	assert_bool(Pending.has(s, "military_enlist_ask")).override_failure_message(
+		"떨어졌는데 아무 일도 안 일어난다").is_true()
+
+
+## 시즌 마지막 주가 아니면 결과를 안 낸다 — 지원 표시가 그대로 남는다
+func test_마지막_주가_아니면_결과가_없다() -> void:
+	var s: Dictionary = _s(_p({"sports_unit_applied": true}), MID_DAY)
+	s["seed"] = 1
+	CareerRunner.run(s, MID_DAY)
+	assert_bool(bool(s["protagonist"]["sports_unit_applied"])) \
+		.override_failure_message("6월인데 선발 결과가 났다").is_true()

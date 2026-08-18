@@ -1,0 +1,23 @@
+[
+	["대기줄에 안 올린다 (상무)",
+		"\t\tPending.push_once(state, {\"type\": \"sports_unit_apply\"})",
+		"\t\tpass"],
+	["대기줄에 안 올린다 (입대)",
+		"\t\tPending.push_once(state, {\"type\": \"military_enlist_ask\"})",
+		"\t\tpass"],
+	["선발 결과를 안 본다",
+		"\tvar picked: String = _sports_result(state, at_day)",
+		"\tvar picked: String = \"\""],
+	["떨어져도 입대를 안 묻는다",
+		"\tPending.push_once(state, {\"type\": \"military_enlist_ask\",\n\t\t\"reason\": \"rejected\"})",
+		"\tpass"],
+	["지원 표시를 안 지운다",
+		"\tp.erase(\"sports_unit_applied\")",
+		"\tpass"],
+	["시즌 마지막 주가 아니어도 결과를 낸다",
+		"\tif at_day <= Calendar.DAYS_PER_SEASON - Calendar.DAYS_PER_WEEK:\n\t\treturn \"\"",
+		"\tif false:\n\t\treturn \"\""],
+	["겨룰 상대를 안 모은다",
+		"\tfor q in _sports_rivals(state, me_id):\n\t\tpool.append(q)",
+		"\tpass"]
+]
