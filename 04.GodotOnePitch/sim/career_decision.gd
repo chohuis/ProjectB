@@ -326,6 +326,30 @@ static func continue_current_stage(state: Dictionary) -> bool:
 	return true
 
 
+## 갈 곳이 하나도 없어 병역으로 간다 — P-43.
+##
+## 🔴 **02의 "전원 탈락: 현역 입대"다**(`CareerResultModal.svelte:108-112`).
+## 고교 졸업반은 대학·독립·지명이 전부 떨어지면 남는 길이 이것뿐이다 —
+## 04는 그때 `continue`("지금 자리에 남는다")를 줬는데 엔진이 그걸 안 받아서
+## **같은 물음이 해마다 다시 떴다**(실측 12해 내내 고교 3학년).
+##
+## ⚠ **"조용히 입대시키지 않는다"(사용자 확정)와 안 부딪힌다** — 여기는
+## **사용자가 선택지를 눌러서** 오는 자리다. `Military.should_ask_enlist`가
+## 묻는 자리(프로·독립의 W52)와는 다르다.
+##
+## ⚠ **`Military.enlist`가 자격을 다시 본다** — 군필이면 `false`다.
+## 02는 화면에만 가드가 있어서 **군 복무를 세 번 하는 커리어**가 나왔다
+static func enlist_after_failing(state: Dictionary, at_day: int) -> bool:
+	if not Military.enlist(state, "general", at_day):
+		return false
+	var c: Dictionary = of(state)
+	c["submitted"] = false
+	c["results"] = {}
+	c["final_choice"] = "general"
+	Pending.resolve(state, "career_choice")
+	return true
+
+
 ## 졸업. **기록만 남긴다** — 취업 경로 화면은 엔딩과 같이 만든다.
 ## 4년을 관리한 결과가 여기서 처음 뜻을 갖는다
 static func _graduate(state: Dictionary, p: Dictionary) -> void:

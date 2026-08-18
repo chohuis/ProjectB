@@ -211,13 +211,21 @@ func test_only_the_passed_places_are_offered() -> void:
 		"지명 안 됐는데 프로에 가라고 한다").is_false()
 
 
-## 아무 데도 안 붙어도 길이 하나는 있어야 한다 — 그게 재수다
+## 아무 데도 안 붙어도 길이 하나는 있어야 한다.
+##
+## 🔴 **그 길이 "재수"가 아니었다** (P-43). 02는 고교 졸업반에게 진급도
+## 재수도 안 준다 — **"전원 탈락: 현역 입대"** 하나다
+## (`CareerResultModal.svelte:108-112`). 04는 `continue`를 줬는데 엔진이
+## 그걸 안 받아서(`continue_current_stage`가 고교면 `false`) **같은 물음이
+## 해마다 다시 떴고, 실측 12해 내내 고교 3학년이었다.**
+## **뜻은 그대로다 — 길이 하나는 있어야 한다**
 func test_there_is_always_a_way_forward() -> void:
 	var s: Dictionary = _state()
 	s["career"] = {"results": {"university_passed": [],
 		"independent_passed": [], "drafted": false}}
 	Pending.push_once(s, {"type": "career_choice"})
-	assert_array(_ids(DecisionVm.build(s))).is_equal(["continue"])
+	assert_array(_ids(DecisionVm.build(s))).override_failure_message(
+		"고교 졸업반이 전원 탈락했는데 병역이 아닌 걸 준다") 		.is_equal(["military"])
 
 
 func test_a_drafted_player_can_go_pro() -> void:

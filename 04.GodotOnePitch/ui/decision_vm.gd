@@ -389,8 +389,32 @@ static func _choice(state: Dictionary, _a: Dictionary) -> Dictionary:
 	# 아무 데도 안 붙어도 길이 하나는 있어야 한다.
 	#
 	# 🔴 **`"지금 자리에 남는다"`가 무엇을 뜻하는지 안 말했다.** 02는
-	# 무대마다 다르게 적는다 — 대학은 **진급**, 독립은 **계속**이다
-	choices.append({"id": "continue", "label": _stay_label(p)})
+	# 무대마다 다르게 적는다 — 대학은 **진급**, 독립은 **계속**이다.
+	#
+	# 🔴 **그리고 무대를 안 가리고 늘 붙였다** (P-43). 엔진은 이미 가린다 —
+	# `continue_current_stage`가 대학·독립이 아니면 `false`를 돌려주고
+	# 대기줄도 안 푼다. **고교 졸업반이 그걸 고르면 아무 일도 안 일어나고
+	# 같은 물음이 다음 해에 또 떴다** — 실측 12해 내내 고교 3학년이었다.
+	#
+	# 02는 `canContinue`(대학)·`canContinueIndie`(독립)로 가른다
+	# (`CareerResultModal.svelte:77-88`)
+	var stage: String = CareerPath.stage_of(p)
+	if stage == "university" or stage == "independent":
+		choices.append({"id": "continue", "label": _stay_label(p)})
+	elif choices.is_empty() and Military.is_eligible(p):
+		# 🔴 **전원 탈락 — 02의 "전원 탈락: 현역 입대"다.**
+		#
+		# ⚠ **04의 "조용히 입대시키지 않는다"(사용자 확정)와 안 부딪힌다** —
+		# 02도 조용히 보내지 않는다. **사용자가 이 선택지를 눌러서** 간다.
+		# `Military.should_ask_enlist`는 여기 못 온다(`_open`이 고교를
+		# 막고 `ENLIST_AGE`가 28이라 열여덟에는 안 뜬다)
+		#
+		# ⚠ **군필에게는 안 권한다.** 02가 그 자리에 적어 뒀다 — "60회
+		# 조사에서 한 커리어가 군 복무를 **세 번** 했다"
+		choices.append({"id": "military", "label": "전원 탈락 — 현역 입대"})
+	else:
+		# 갈 곳도 병역도 없다 — 화면이 빈 물음을 띄우면 얼어붙는다
+		choices.append({"id": "continue", "label": _stay_label(p)})
 
 	return _of("career_choice", "진로 최종 선택",
 		"어디로 갈지 정합니다. 되돌릴 수 없습니다.", choices)
@@ -608,7 +632,7 @@ static func apply(state: Dictionary, choice_id: String, at_day: int,
 		"career_choice_hub":
 			return _apply_hub(state, choice_id)
 		"career_choice":
-			return _apply_choice(state, choice_id)
+			return _apply_choice(state, choice_id, at_day)
 		"fa_market":
 			if choice_id.begins_with("offer:"):
 				var offers: Array = state.get("fa_offers", [])
@@ -704,9 +728,12 @@ static func _apply_hub(state: Dictionary, choice_id: String) -> bool:
 
 ## `university:TEAM_X` 처럼 갈래와 팀을 한 id에 담는다 — 화면이
 ## 선택지마다 다른 모양을 갖지 않게 하려는 것이다
-static func _apply_choice(state: Dictionary, choice_id: String) -> bool:
+static func _apply_choice(state: Dictionary, choice_id: String,
+		at_day: int = 0) -> bool:
 	if choice_id == "draft":
 		return not CareerDecision.choose_draft(state).is_empty()
+	if choice_id == "military":
+		return CareerDecision.enlist_after_failing(state, at_day)
 	if choice_id == "continue":
 		return CareerDecision.continue_current_stage(state)
 	var parts: PackedStringArray = choice_id.split(":", true, 1)
