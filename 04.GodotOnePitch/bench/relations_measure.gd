@@ -157,6 +157,26 @@ func _one(seed_value: int, years: int) -> Dictionary:
 					"university_choices": ["TEAM_UNIV_BAEKJE"]})
 			elif Pending.has(s, "career_results"):
 				CareerDecision.confirm_results(s)
+			# 🔴 **여기 없는 물음은 대기줄을 막는다** (P-13). 20해를 굴렸더니
+			# 주인공이 **2032년부터 15해를 대학 4학년에 멈춰** 있었다 —
+			# `draft_observe`·`sports_unit_apply`·`military_enlist_ask`가
+			# 계속 떠 있는데 계측이 안 답했다. 그 상태의 라이벌 0.0을
+			# "라이벌이 안 큰다"로 읽을 뻔했다(형태 ⑦).
+			#
+			# ⚠ **화면과 같은 함수로 답한다**(`DecisionVm.apply`) — 계측이
+			# 제 손으로 대기줄을 지우면 그게 두 번째 정본이다
+			elif Pending.has(s, "draft_observe"):
+				DecisionVm.apply(s, "", day)
+			# 지명을 받으면 받는다 — 프로에 가야 프로 관계가 생긴다
+			elif Pending.has(s, "draft_notification"):
+				DecisionVm.apply(s, "accept", day)
+			# ⚠ **상무에 지원하지 않고 입대를 미룬다.** 계측이 재려는 건
+			# 관계이므로 커리어가 2년 멈추면 표본이 그만큼 준다.
+			# **한 번 물으면 표시가 남아** 같은 자리를 다시 돌지 않는다
+			elif Pending.has(s, "sports_unit_apply"):
+				CareerDecision.answer_sports_unit(s, false)
+			elif Pending.has(s, "military_enlist_ask"):
+				CareerDecision.answer_enlist(s, false, day)
 			elif Pending.has(s, "career_choice"):
 				# 지명이 되면 프로로, 아니면 대학으로 — 화면이 주는 선택지 순서다
 				if CareerDecision.choose_draft(s).is_empty():
