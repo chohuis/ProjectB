@@ -125,9 +125,11 @@ func _one(seed_value: int, years: int) -> Dictionary:
 	# 같은 함수다 — 계측이 순서를 베끼면 그게 두 번째 정본이고 언젠가 갈린다.
 	# 예전엔 `CareerRunner`와 `RelationshipRunner`만 골라 불렀는데, 그러면
 	# 훈련·부상·승강이 빠져서 **관계가 움직일 맥락 자체가 안 생겼다**
-	var year: int = 2027
+	# 🔴 **연도는 롤오버가 소유한다** (P-46). 예전엔 여기서 직접 올렸는데,
+	# `finish_season`이 올린 값을 덮어써서 **한 해가 어긋나고 그 해 일정이
+	# 사라졌다**(팀 0경기). 여기서는 읽기만 한다
 	for y in years:
-		s["season_year"] = year
+		var year: int = int(s.get("season_year", 0))
 		for w in range(1, Calendar.WEEKS_PER_SEASON + 1):
 			var day: int = w * Calendar.DAYS_PER_WEEK
 			# 경기를 실제로 돌린다 — 동료·라이벌은 `team_played`·`won`을
@@ -295,7 +297,14 @@ func _one(seed_value: int, years: int) -> Dictionary:
 		# 줄 알았는데, 10경기는 **한 시즌 등판 수**였다
 		_count_appearances(s)
 
-		var season_out: Dictionary = SeasonRunner.run(s)
+		# 🔴 **화면과 같은 함수다**(`app_root.gd:412`). `run`만 부르면
+		# **롤오버가 안 돌아 보직 재배정도 일정 재생성도 없다** — P-8c로
+		# 고친 `assign_pro_role`이 계측에 안 닿았다.
+		#
+		# ⚠ **독립리그는 `SurvivalRunner`가 채운다**(`day_engine.gd:182`).
+		# 롤오버는 독립 일정을 안 짜지만(`world.gd:229`), 다음 해 주간 루프에서
+		# `DayEngine`이 돌며 단계마다 편성한다 — **화면도 같은 순서다**
+		var season_out: Dictionary = SeasonRunner.finish_season(s)
 		# ⚠ **로스터 쪽 주인공을 따로 본다.** `all_players`는 로스터를 훑는데,
 		# 사전이 두 벌이면 로스터만 오르고 `state["protagonist"]`는 그대로다
 		var in_roster: String = "못 찾음"
@@ -306,7 +315,6 @@ func _one(seed_value: int, years: int) -> Dictionary:
 					"" if pl == pp else " (다른 사전!)"]
 		_trace.append("     → 시즌종료 ran=%s · 로스터 속 나: %s" % [
 			str(season_out.get("ran", "?")), in_roster])
-		year += 1
 	return s
 
 
