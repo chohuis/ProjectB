@@ -3510,3 +3510,45 @@ Pending: [draft_observe, career_choice_hub]
 `CareerDecision.of(s)["applications"]`에 대학이 담기는지 **찍는다.**
 ⚠ **`picks`가 비어 있을 수도 있다** — hub 선택지의 id 모양이
 `university:TEAM_X`가 맞는지 먼저 본다.
+
+### P-43b — 원서는 들어간다. 갈리는 건 **지명 여부**다 (2026-08-19)
+
+네 자리를 순서대로 찍었다:
+
+```
+[P1] type=career_choice_hub
+     picks=["university:TEAM_UNIV_HALLYU", "…BAEKJE", "…BAEKSAN", "draft"]
+[P2] apply=true
+[P3] submitted=true
+     apps={draft_applied: true, university_choices: [셋], independent_choices: []}
+[P4] results={drafted: true, draft_round: 9, draft_pick: 84,
+              university_passed: [], independent_passed: []}
+```
+
+**원서는 제대로 들어간다.** id 모양도 맞고 `apply`도 `true`다.
+
+🔴 **그런데 `university_passed`가 비었다.** 드래프트를 빼고 대학만 넣으면:
+
+```
+[P4] results={drafted: false, university_passed: ["TEAM_UNIV_BAEKJE"]}
+```
+
+→ **지명되면 대학 판정을 아예 안 한다.**
+
+⚠ **02 화면은 둘을 같이 낸다** — `CareerResultModal.svelte:88-98`이
+`draftPassed` 버튼과 `univPassed` 버튼을 **나란히** 그린다. 사용자가
+"프로에 갈까 대학에 갈까"를 고르는 자리다. 04는 지명되는 순간 대학이
+목록에서 사라져 **그 선택이 없어진다.**
+
+## ⬜ P-47 — 지명되면 대학 합격 판정이 사라진다
+
+`CareerDecision.build_results`가 `drafted`일 때 `university_passed`를
+비워 낸다(실측). **02는 둘 다 낸다**(화면이 나란히 그린다).
+
+⚠ **02 엔진도 그런지 먼저 확인한다** — 화면이 둘을 그린다는 것은 엔진이
+둘을 낸다는 뜻이지만, **결함이라 부르기 전에 02 코드를 읽는다**
+(P-45에서 그 순서를 안 지켜 한 번 틀렸다).
+
+⚠ **이것이 계측이 대학에 안 가는 이유인지는 아직 모른다** — 계측
+트레이스는 프로가 아니라 **독립리그**로 갔다. 지명을 받았다면 프로로
+갔어야 한다. **그 해의 결과를 찍어서 본다.**

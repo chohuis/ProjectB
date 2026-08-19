@@ -1262,6 +1262,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       들어가는 이유다.
       → `_choice`가 무대를 보고 갈래를 낸다 + 전원 탈락·미필이면 현역 입대.
 
+- [ ] **P-47 지명되면 대학 합격 판정이 사라진다** (2026-08-19 실측)
+      `build_results`가 `drafted`일 때 `university_passed`를 비워 낸다.
+      드래프트를 빼고 대학만 넣으면 `["TEAM_UNIV_BAEKJE"]`가 나온다.
+      **02 화면은 둘을 나란히 그린다**(`CareerResultModal.svelte:88-98`) —
+      "프로냐 대학이냐"를 고르는 자리인데 04는 그 선택이 없어진다.
+      ⚠ **02 엔진도 그런지 먼저 읽는다.**
+
 - [ ] **P-46 계측이 시즌 종료를 게임처럼 못 탄다** (2026-08-19)
       `relations_measure`가 `SeasonRunner.run`만 불러 **롤오버가 안 돈다**
       (보직 재배정·일정 재생성 없음) — P-8c 같은 롤오버 안의 고침을 못 본다.
