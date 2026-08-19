@@ -351,7 +351,6 @@ static func _meet_rivals(state: Dictionary, faced: Array) -> int:
 	if fresh.is_empty():
 		return 0
 
-	var p: Dictionary = state.get("protagonist", {})
 	var season: int = int(state.get("season_year", 0))
 	var rows: Array = []
 	# 지명 보정은 안 건다 — 감독에게만 붙는 값이라 라이벌엔 뜻이 없다
@@ -361,8 +360,14 @@ static func _meet_rivals(state: Dictionary, faced: Array) -> int:
 			"kind": String(row["kind"]), "value": int(row["value"]),
 			"contact": Relationship.CONTACT_TOGETHER,
 			"specialty": "", "met_season": season,
-			"met_team": String(p.get("team_id", "")),
-			"last_team": String(p.get("team_id", "")),
+			# 🔴 **팀을 안 적는다** (02 `relationships.ts:270`도 빈 문자열이다).
+			# 라이벌은 **소속으로 만난 사이가 아니다** — 여기에 내 팀을 적으면
+			# 내가 이적하는 순간 `_leave_stale_teams`가 "두고 온 사람"으로 잡아
+			# 감쇠시키고 `apart`로 넘긴다. 그러면 `weekly`가 건너뛰고
+			# `reconcile`은 같은 팀 사람만 보므로 **되돌릴 자리가 없다** —
+			# 그 뒤로 몇 번을 맞붙어도 값이 영영 안 움직인다.
+			# 20해 실측이 그 모습이었다(라이벌 21명 · 전부 0)
+			"met_team": "", "last_team": "",
 			"memories": [], "updated_day": int(state.get("day", 0)),
 		})
 	_append(state, rows)

@@ -550,6 +550,52 @@ func test_facing_a_starter_creates_a_rival() -> void:
 		"맞붙은 상대 선발이 라이벌로 안 생겼다").is_equal(Relationship.KIND_RIVAL)
 
 
+## 🔴 **만들어진 라이벌 행에 팀이 안 적혀 있다** (P-13 · 02
+## `relationships.ts:270`도 빈 문자열이다).
+##
+## ⚠ **위의 `test_a_rival_is_not_left_behind`가 이걸 못 잡았다.**
+## 그쪽은 `last_team: ""`를 **손으로 넣은 fixture**로 확인한다 — 정작 행을
+## **만드는 자리**가 내 팀을 채우고 있었는데도 초록불이었다(형태 ⑦).
+## 그래서 여기서는 게임 경로로 만든 행을 본다
+func test_a_created_rival_carries_no_team() -> void:
+	var s: Dictionary = _state({"schedule": [_game_with_rival(70, true)]})
+	RelationshipRunner.run(s, 70)
+	var row: Dictionary = RelationshipRunner.row_of(s, "B_1")
+	assert_str(String(row.get("last_team", "?"))).override_failure_message(
+		"라이벌에 팀이 적혔다(%s) — 이적하면 두고 온 사람으로 잡힌다"
+		% row.get("last_team", "?")).is_empty()
+	assert_str(String(row.get("met_team", "?"))).is_empty()
+
+
+## 🔴 **이적해도 라이벌은 안 헤어진다** (P-13).
+##
+## 20해 실측에서 **라이벌 21명이 전부 0**이었다. 라이벌 행에 내 팀이
+## 적혀 있어서 이적 한 번에 `_leave_stale_teams`가 "두고 온 사람"으로 잡아
+## 감쇠시키고 `apart`로 넘겼고, `reconcile`은 **같은 팀 사람만 보므로**
+## 되돌릴 자리가 없었다 — 그 뒤로 몇 번을 맞붙어도 값이 안 움직였다.
+##
+## 커리어는 고교 → 대학 → 독립 → 프로로 여러 번 옮긴다. 즉 라이벌은
+## **거의 첫 팀에서만** 자랐다
+func test_a_rival_survives_a_transfer_through_the_game_path() -> void:
+	var s: Dictionary = _state({"schedule": [_game_with_rival(70, true)]})
+	RelationshipRunner.run(s, 70)
+	var before: int = int(RelationshipRunner.row_of(s, "B_1")["value"])
+
+	# 제3의 팀으로 옮긴다 — TEAM_B로 가면 라이벌이 동료가 되어 딴 이야기다
+	s["protagonist"]["team_id"] = "TEAM_C"
+	s["world"]["rosters"]["TEAM_C"] = [_mate("C_1", "TEAM_C")]
+	s["schedule"] = []
+	RelationshipRunner.run(s, 77)
+
+	var row: Dictionary = RelationshipRunner.row_of(s, "B_1")
+	assert_str(String(row["contact"])).override_failure_message(
+		"이적하니 라이벌이 헤어진 사이가 됐다 — 다시 맞붙어도 값이 안 움직인다") \
+		.is_equal(Relationship.CONTACT_TOGETHER)
+	assert_int(int(row["value"])).override_failure_message(
+		"이적 감쇠가 라이벌한테 걸렸다 (%d → %d)" % [before, int(row["value"])]) \
+		.is_equal(before)
+
+
 ## ⚠ **불펜을 먼저 넣는다.** 선발을 먼저 두면 "이닝 최다"가 아니라
 ## "처음 만난 투수"를 잡아도 검사가 통과한다 — 실제로 그 변이를 놓쳤다
 func test_only_the_opposing_starter_becomes_a_rival() -> void:
