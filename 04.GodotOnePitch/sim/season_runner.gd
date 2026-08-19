@@ -116,7 +116,14 @@ static func run(state: Dictionary) -> Dictionary:
 	# ⑤ 리그 오프시즌 — 부상 회복·은퇴
 	var rng := RandomNumberGenerator.new()
 	rng.seed = Rng.mix([state.get("seed", 0), "offseason", year])
-	var off: Dictionary = Offseason.run(all_players(state), year, rng)
+	var players: Array = all_players(state)
+	# 🔴 **누가 그만뒀는지 남긴다** (G-6).
+	# ⚠ **`Offseason`이 담는다** — 그쪽이 `team_id`를 지우므로 여기서는
+	# 떠난 팀을 알 수 없다.
+	# ⚠ **`input`은 후보 수다** — "몇 명 중 몇이 그만뒀나"를 읽으려면 분모가 있어야 한다
+	var gone: Array = []
+	var off: Dictionary = Offseason.run(players, year, rng, gone)
+	EventLog.push("retire", year, gone, players.size())
 	summary["retired"] = off["retired"].size()
 	summary["healed"] = int(off["healed"])
 	_remove_retired(world)
@@ -283,7 +290,12 @@ static func _run_draft(state: Dictionary, world: Dictionary, year: int) -> Dicti
 	DraftLog.record(state, year, out["picks"], out["board"],
 		out["undrafted_ids"], by_id)
 
-	var n: int = NpcDraft.apply(out["picks"], by_id, league_of, year)
+	# 🔴 **누가 어디로 지명됐는지 남긴다** (G-6). `apply`가 `npc`를 쥐고
+	# 있으므로 거기서 담고 여기서 적는다.
+	# ⚠ **`input`은 후보 수다** — "몇 명 중 몇이 지명됐나"
+	var picked_log: Array = []
+	var n: int = NpcDraft.apply(out["picks"], by_id, league_of, year, picked_log)
+	EventLog.push("draft", year, picked_log, pool.size())
 
 	# 지명된 선수를 팀 로스터로 옮긴다 — 안 옮기면 소속만 바뀌고
 	# 실제로는 아무 팀에도 없다

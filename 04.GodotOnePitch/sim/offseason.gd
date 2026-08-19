@@ -40,7 +40,11 @@ static func retire_chance(age: int, ovr: float) -> float:
 ##
 ## ⚠ **부상은 시즌이 끝나면 낫는다.** 02는 완치돼도 상태가 안 풀리는 결함이
 ## 있어서 시즌 중 고교의 47%가 injured였다
-static func run(npcs: Array, season_year: int, rng) -> Dictionary:
+## `log_into`를 주면 **은퇴한 사람 한 줄**을 담는다 (G-6).
+## ⚠ **여기서 담아야 한다** — 아래에서 `team_id`를 지우므로 부르는 쪽은
+## 떠난 팀을 알 길이 없다
+static func run(npcs: Array, season_year: int, rng,
+		log_into: Array = []) -> Dictionary:
 	var retired: Array = []
 	var healed: int = 0
 
@@ -80,6 +84,9 @@ static func run(npcs: Array, season_year: int, rng) -> Dictionary:
 
 		npc["career_status"] = "retired"
 		npc["league_id"] = RETIRED_LEAGUE
+		log_into.append(EventLog.entry(String(npc.get("id", "")),
+			String(npc.get("name", "")), EventLog.detail_of(npc),
+			from_team))
 		npc["team_id"] = ""
 		retired.append(npc)
 

@@ -66,6 +66,23 @@ static func label_of(type: String) -> String:
 	return String(LABELS.get(type, type))
 
 
+## 사람 한 줄에 붙일 요약 — 02가 "OVR:75 SP 28세" 꼴로 적는다.
+##
+## 🔴 **두 벌이 돌아다니고 있었다** — `trade_runner`와 `npc_military`가
+## 각자 `_detail_of`를 갖고 있었고 **OVR을 재는 방법도 달랐다**(한쪽은
+## `pitching`/`batting`을 직접 비교, 한쪽은 `Contract.core_ovr`).
+## 여기로 모은다 — **`core_ovr`가 정본이다**(투타를 아우르는 자리가 거기다).
+static func detail_of(p: Dictionary) -> String:
+	var out: String = "OVR:%d" % int(roundf(Contract.core_ovr(p)))
+	var pos: String = String(p.get("position", ""))
+	if not pos.is_empty():
+		out += " %s" % pos
+	var age: int = int(p.get("age", 0))
+	if age > 0:
+		out += " %d세" % age
+	return out
+
+
 ## 사람 한 줄. 02 `PlayerEventEntry` 그대로다.
 ##
 ## `detail`은 02가 "OVR:75 SP 28세 → 3500만/2년" 꼴로 적는다 — **무슨 일이

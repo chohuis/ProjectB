@@ -198,3 +198,32 @@ func test_a_retired_player_with_a_stale_league_is_skipped() -> void:
 	assert_array(Offseason.run([n], 2027, AlwaysRng.new())["retired"]).is_empty()
 	assert_int(n["career_events"].size()).override_failure_message(
 		"이미 은퇴한 선수에게 은퇴 사건이 또 붙었다").is_equal(0)
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+
+## 🔴 **여기서 담아야 한다.** 아래에서 `team_id`를 지우므로 부르는 쪽은
+## **떠난 팀을 알 길이 없다** — 실제로 `season_runner`에서 담았다가
+## "떠난 팀이 안 적혔다"로 걸렸다
+func test_은퇴자를_담는다() -> void:
+	var n: Dictionary = _npc({"name": "김투수", "position": "SP", "age": 40})
+	var gone: Array = []
+	Offseason.run([n], 2027, AlwaysRng.new(), gone)
+
+	assert_int(gone.size()).override_failure_message(
+		"은퇴했는데 한 줄도 안 담겼다").is_equal(1)
+	assert_str(String(gone[0]["name"])).is_equal("김투수")
+	assert_str(String(gone[0]["from_team"])).override_failure_message(
+		"떠난 팀이 안 적혔다 — team_id를 지운 뒤라 나중엔 못 읽는다") \
+		.is_equal("TEAM_A")
+	assert_str(String(gone[0]["detail"])).override_failure_message(
+		"능력을 안 적었다").contains("OVR")
+
+
+## 안 그만두면 안 담는다
+func test_현역은_안_담는다() -> void:
+	var gone: Array = []
+	Offseason.run([_npc({"name": "김투수", "age": 40})], 2027,
+		NeverRng.new(), gone)
+	assert_array(gone).override_failure_message(
+		"현역인데 은퇴 기록이 남았다").is_empty()

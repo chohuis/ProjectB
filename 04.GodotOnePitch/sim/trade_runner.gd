@@ -260,24 +260,6 @@ static func offer_protagonist(state: Dictionary, to_team: String,
 
 
 ## 선수를 옮긴다. **양쪽 배열을 같이 고쳐야 한다**
-## 사람 한 줄에 붙일 요약 — 02가 "OVR:75 SP 28세" 꼴로 적는다 (G-6).
-## **누가 어디로 갔는지만으로는 그게 큰 이적인지 모른다**
-static func _detail_of(pl: Dictionary) -> String:
-	var ovr: float = maxf(
-		float(pl.get("pitching", {}).get("ovr", 0.0)),
-		float(pl.get("batting", {}).get("ovr", 0.0)))
-	if ovr <= 0.0:
-		ovr = float(pl.get("ovr", 0.0))
-	var out: String = "OVR:%d" % int(roundf(ovr))
-	var pos: String = String(pl.get("position", ""))
-	if not pos.is_empty():
-		out += " %s" % pos
-	var age: int = int(pl.get("age", 0))
-	if age > 0:
-		out += " %d세" % age
-	return out
-
-
 ## `log_into`를 주면 **옮긴 사람 한 줄**을 담는다 (G-6).
 ## ⚠ **이름·능력을 아는 곳이 여기뿐이다** — 부르는 쪽은 id만 들고 있다
 static func _move(world: Dictionary, player_id: String, from_team: String,
@@ -293,7 +275,7 @@ static func _move(world: Dictionary, player_id: String, from_team: String,
 		roster.remove_at(i)
 		# ⚠ **덮어쓰기 전에 담는다** — 뒤에서 읽으면 from과 to가 같아진다
 		log_into.append(EventLog.entry(player_id,
-			String(p.get("name", player_id)), _detail_of(p),
+			String(p.get("name", player_id)), EventLog.detail_of(p),
 			from_team, to_team, String(p.get("league_id", "")), league_id))
 		p["team_id"] = to_team
 		p["league_id"] = league_id

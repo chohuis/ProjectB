@@ -9,7 +9,11 @@ extends GdUnitTestSuite
 
 
 func _c(id: String, ovr: float, age: int = 19, dev: float = 60.0) -> Dictionary:
-	return {"id": id, "age": age, "development_rate": dev,
+	# ⚠ **실제 후보엔 이름과 포지션이 있다**(`player_gen`이 만든다).
+	# fixture가 빠뜨리면 기록 검사가 "이름이 비었다"로 걸린다 —
+	# 이번 회차에 라이벌·병역에 이어 **세 번째**다
+	return {"id": id, "name": "후보%s" % id, "position": "SP",
+		"age": age, "development_rate": dev,
 		"player_type": "pitcher", "pitching": {"ovr": ovr}, "batting": {"ovr": 0.0},
 		"league_id": Promotion.DRAFT_POOL, "team_id": "", "career_events": []}
 
@@ -376,3 +380,55 @@ func test_a_candidate_without_events_still_gets_one() -> void:
 	assert_bool(c.has("career_events")).override_failure_message(
 		"경력 사건이 아예 안 달렸다").is_true()
 	assert_int(c["career_events"].size()).is_equal(1)
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+
+## 🔴 **누가 어디로 지명됐는지 남는다.** 개수만 반환하면 자동 진행을
+## 돌려도 "지명 110건"까지만 보이고 누구인지 알 길이 없다
+func test_a_draft_pick_is_written_to_the_log() -> void:
+	var pool: Array = _pool(50)
+	var by_id: Dictionary = {}
+	for c in pool:
+		by_id[c["id"]] = c
+	var out: Dictionary = NpcDraft.run(pool, _teams(10), 2027)
+	var league_of: Dictionary = {}
+	for t in _teams(10):
+		league_of[t] = "LEAGUE_KBL"
+
+	var picked: Array = []
+	NpcDraft.apply(out["picks"], by_id, league_of, 2027, picked)
+
+	assert_int(picked.size()).override_failure_message(
+		"지명이 한 줄도 안 담겼다").is_greater(0)
+	var who: Dictionary = picked[0]
+	assert_str(String(who["name"])).override_failure_message(
+		"이름이 비었다").is_not_empty()
+	assert_str(String(who["to_team"])).override_failure_message(
+		"간 팀이 안 적혔다").is_not_empty()
+	# 02는 라운드·순위를 적는다 — 1라운드와 8라운드는 다른 일이다
+	assert_str(String(who["detail"])).override_failure_message(
+		"라운드·순위가 없다: %s" % who["detail"]).contains("라운드")
+	assert_str(String(who["detail"])).contains("순위")
+	assert_str(String(who["detail"])).contains("OVR")
+
+
+## ⚠ **지명 전 리그를 적는다.** `league_id`를 덮어쓴 뒤에 읽으면
+## from과 to가 같아져 "고교에서 프로로 갔다"가 안 보인다
+func test_the_draft_keeps_the_league_he_came_from() -> void:
+	var pool: Array = _pool(50)
+	var by_id: Dictionary = {}
+	for c in pool:
+		by_id[c["id"]] = c
+	var out: Dictionary = NpcDraft.run(pool, _teams(10), 2027)
+	var league_of: Dictionary = {}
+	for t in _teams(10):
+		league_of[t] = "LEAGUE_KBL"
+
+	var picked: Array = []
+	NpcDraft.apply(out["picks"], by_id, league_of, 2027, picked)
+	var who: Dictionary = picked[0]
+	assert_str(String(who["to_league"])).is_equal("LEAGUE_KBL")
+	assert_str(String(who["from_league"])).override_failure_message(
+		"떠난 리그와 간 리그가 같다 — 덮어쓴 뒤에 읽었다") \
+		.is_not_equal(String(who["to_league"]))

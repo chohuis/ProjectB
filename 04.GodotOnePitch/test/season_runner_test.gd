@@ -935,3 +935,38 @@ func test_a_winning_season_moves_the_owner_relation() -> void:
 ## ⚠ **관계 기록으로는 못 본다.** `_log`가 **라벨이 바뀐 것만** 남기고,
 ## 새 게임 한 해로는 순위표가 비어 팀 등급이 0이라 델타가 안 난다 —
 ## 그게 옳은 동작이라 여기서 볼 것이 없다
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+
+## 🔴 **누가 그만뒀는지 남는다.** 개수만 세면 자동 진행을 돌려도
+## "은퇴 12건"까지만 보이고 누구인지 알 길이 없다.
+## ⚠ **시즌 롤오버를 실제로 돌린다** — 기록은 `finish_season`이 남긴다
+func test_a_retirement_is_written_to_the_log() -> void:
+	EventLog.clear()
+	var s: Dictionary = _game()
+	var out: Dictionary = SeasonRunner.finish_season(s)
+	assert_bool(out["ran"]).is_true()
+
+	var evs: Array = []
+	for e in EventLog.all():
+		if String(e["type"]) == "retire":
+			evs.append(e)
+	if evs.is_empty():
+		# 은퇴자가 0명인 해도 있다 — 그때는 줄이 없는 것이 맞다
+		assert_int(int(s.get("last_summary", {}).get("retired", 0))) \
+			.override_failure_message(
+				"은퇴자가 있는데 기록이 없다").is_equal(0)
+		return
+
+	var who: Dictionary = evs[0]["players"][0]
+	assert_str(String(who["name"])).override_failure_message(
+		"이름이 비었다 — id만 남으면 화면에서 못 읽는다").is_not_empty()
+	assert_str(String(who["detail"])).override_failure_message(
+		"능력을 안 적었다").contains("OVR")
+	assert_str(String(who["from_team"])).override_failure_message(
+		"떠난 팀이 안 적혔다").is_not_empty()
+	# ⚠ **`input`은 후보 수다** — "몇 명 중 몇이 그만뒀나"
+	assert_int(int(evs[0]["counts"]["input"])).override_failure_message(
+		"분모가 처리 수와 같다 — 몇 중 몇인지 안 읽힌다") \
+		.is_greater(evs[0]["players"].size())

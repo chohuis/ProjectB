@@ -148,8 +148,10 @@ static func run(candidates: Array, team_ids: Array, year: int,
 
 
 ## 지명 결과를 선수에게 적는다. **팀·리그를 바꾸고 경력 사건을 남긴다**
+## `log_into`를 주면 **지명된 사람 한 줄**을 담는다 (G-6).
+## ⚠ **`league_id`를 덮어쓰기 전에 읽는다** — 뒤에서 읽으면 from과 to가 같아진다
 static func apply(picks: Array, by_id: Dictionary, league_of: Dictionary,
-		year: int) -> int:
+		year: int, log_into: Array = []) -> int:
 	var n: int = 0
 	for p in picks:
 		var npc = by_id.get(p["npc_id"], null)
@@ -164,6 +166,13 @@ static func apply(picks: Array, by_id: Dictionary, league_of: Dictionary,
 			"detail": "%d라운드 %d순위" % [int(p["round"]), int(p["pick"])],
 		})
 		npc["career_events"] = events
+		# 02는 detail에 라운드·순위를 적는다 — 1라운드와 8라운드는 다른 일이다
+		log_into.append(EventLog.entry(String(p["npc_id"]),
+			String(npc.get("name", "")),
+			"%s · %d라운드 %d순위" % [EventLog.detail_of(npc),
+				int(p["round"]), int(p["pick"])],
+			"", team, String(npc.get("league_id", "")),
+			String(league_of.get(team, ""))))
 		npc["team_id"] = team
 		npc["league_id"] = league_of.get(team, "")
 		npc["draft_round"] = int(p["round"])

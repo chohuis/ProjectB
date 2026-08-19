@@ -126,7 +126,7 @@ static func _serve_year(state: Dictionary, log_into: Array = []) -> Array:
 			q["military_service_weeks"] = 0
 			vacating.append(String(q.get("position", "")))
 			log_into.append(EventLog.entry(String(q.get("id", "")),
-				String(q.get("name", "")), _detail_of(q),
+				String(q.get("name", "")), EventLog.detail_of(q),
 				"", String(q.get("team_id", ""))))
 		else:
 			q["military_service_weeks"] = served
@@ -143,18 +143,6 @@ static func discharged_count(state: Dictionary) -> int:
 ##
 ## ⚠ **주인공은 여기서 안 보낸다.** 뽑혔는지 여부만 명단에 남고, 실제로
 ## 보내는 건 사용자 답을 받은 `CareerRunner`다
-## 사람 한 줄에 붙일 요약 — 02가 "OVR:75 SP 28세" 꼴로 적는다 (G-6)
-static func _detail_of(q: Dictionary) -> String:
-	var out: String = "OVR:%d" % int(roundf(Contract.core_ovr(q)))
-	var pos: String = String(q.get("position", ""))
-	if not pos.is_empty():
-		out += " %s" % pos
-	var age: int = int(q.get("age", 0))
-	if age > 0:
-		out += " %d세" % age
-	return out
-
-
 static func _run_sports(state: Dictionary, vacating: Array, year: int,
 		log_into: Array = []) -> int:
 	var picked: Array = Military.resolve_sports_unit(state, vacating)
@@ -172,7 +160,7 @@ static func _run_sports(state: Dictionary, vacating: Array, year: int,
 		_enlist_npc(q, year)
 		q["military_unit"] = "sports"
 		log_into.append(EventLog.entry(String(q.get("id", "")),
-			String(q.get("name", "")), _detail_of(q),
+			String(q.get("name", "")), EventLog.detail_of(q),
 			String(q.get("team_id", ""))))
 		gone += 1
 	return gone
@@ -240,7 +228,7 @@ static func run(state: Dictionary, at_day: int) -> int:
 		if r.randf() < prob:
 			_enlist_npc(q, year)
 			general.append(EventLog.entry(String(q.get("id", "")),
-				String(q.get("name", "")), _detail_of(q),
+				String(q.get("name", "")), EventLog.detail_of(q),
 				String(q.get("team_id", ""))))
 			gone += 1
 
