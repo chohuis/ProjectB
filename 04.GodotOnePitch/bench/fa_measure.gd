@@ -53,7 +53,7 @@ func _market(log_line: Callable, seed_value: int, warmup: int) -> void:
 		s["season_year"] = year
 		# ⚠ **`summary`가 안에 있다** — `{ran, year, phases, summary}`다.
 		# 찍어 보고 썼다(겉을 읽으면 조용히 0이 나온다)
-		last = SeasonRunner.finish_season(s).get("summary", {})
+		last = SeasonRunner.run(s).get("summary", {})
 		year += 1
 	log_line.call("  %d해 굴린 뒤 (%d년)" % [warmup, year])
 

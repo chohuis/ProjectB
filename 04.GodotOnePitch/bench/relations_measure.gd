@@ -269,7 +269,7 @@ func _one(seed_value: int, years: int) -> Dictionary:
 		# 줄 알았는데, 10경기는 **한 시즌 등판 수**였다
 		_count_appearances(s)
 
-		var season_out: Dictionary = SeasonRunner.finish_season(s)
+		var season_out: Dictionary = SeasonRunner.run(s)
 		# ⚠ **로스터 쪽 주인공을 따로 본다.** `all_players`는 로스터를 훑는데,
 		# 사전이 두 벌이면 로스터만 오르고 `state["protagonist"]`는 그대로다
 		var in_roster: String = "못 찾음"

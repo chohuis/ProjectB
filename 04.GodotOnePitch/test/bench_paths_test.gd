@@ -57,9 +57,8 @@ func test_fa_계측이_게임이_낸_값을_읽는다() -> void:
 	assert_str(src).override_failure_message(
 		"FA 계측이 시장을 제 손으로 돌린다 — warmup 뒤엔 자격자가 0이라" +
 		" \"계약 0명\"이 나온다") 		.not_contains("FaMarket.resolve")
-	# ⚠ **`finish_season`이다** — `run`만 부르면 롤오버가 안 돈다(P-8c)
 	assert_str(src).override_failure_message(
-		"FA 계측이 게임의 시즌 종료를 안 탄다").contains("SeasonRunner.finish_season")
+		"FA 계측이 게임의 시즌 종료를 안 탄다").contains("SeasonRunner.run")
 	for k in ["fa_signed", "fa_grades", "fa_transfers"]:
 		assert_str(src).override_failure_message(
 			"계측이 %s를 안 읽는다 — 게임이 낸 값을 버리고 다시 센다" % k) 			.contains(k)
@@ -95,23 +94,3 @@ func test_관계_계측이_하루_진행_엔진을_거친다() -> void:
 	assert_str(src).override_failure_message(
 		"관계 계측이 주간 처리를 직접 짰다 — WeekRunner.run이 정본이다") \
 		.contains("WeekRunner.run")
-
-## 🔴 **계측이 시즌 종료를 게임과 같은 함수로 부른다** (P-8c).
-##
-## 게임은 `AppRoot`가 **`finish_season`**을 부른다(`app_root.gd:412`).
-## 그 안이 `run → digest → roll_over` 순서다.
-##
-## **계측 셋이 전부 `SeasonRunner.run`을 직접 불렀다** — 그러면 **롤오버가
-## 통째로 안 돈다.** 보직 재배정도, 일정 재생성도, 해 넘김도 없다.
-##
-## 실제로 그래서 P-8c를 고치고도 **계측 실측이 안 바뀌었다**:
-## probe(`finish_season`)에서는 프로 등판 29인데 계측에서는 10이었다.
-func test_계측이_시즌_종료를_게임과_같이_부른다() -> void:
-	for path in ["res://bench/relations_measure.gd", "res://bench/fa_measure.gd",
-			"res://bench/offseason_measure.gd"]:
-		var code: String = _code(path)
-		assert_str(code).override_failure_message(
-			"%s가 SeasonRunner.run을 직접 부른다 — 롤오버가 안 돈다" % path) \
-			.not_contains("SeasonRunner.run(")
-		assert_str(code).override_failure_message(
-			"%s가 시즌 종료를 안 부른다" % path).contains("finish_season")

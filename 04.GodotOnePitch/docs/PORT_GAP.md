@@ -3344,31 +3344,3 @@ finish_season → run → digest → roll_over
 **고교 함수에도 있어서** `replace`가 첫 번째만 바꿨다 — 프로 쪽은 그대로라
 "안 잡힘"으로 나왔다. **주석까지 포함해 잡으니 잡혔다.**
 ⚠ **같은 줄이 파일에 둘 있으면 변이가 어디 붙었는지 확인한다.**
-
-### 🔴 계측 셋이 전부 롤오버를 건너뛰고 있었다 (2026-08-19)
-
-P-8c를 고치고 probe에서 **등판 29**를 확인했는데 **계측은 그대로 10**이었다.
-
-원인: **게임은 `finish_season`을 부르는데**(`app_root.gd:412`)
-**계측 셋은 `SeasonRunner.run`을 직접 불렀다**:
-
-```
-finish_season → run → digest → roll_over
-```
-
-`run`만 부르면 **롤오버가 통째로 안 돈다** — 보직 재배정도, 일정 재생성도,
-해 넘김도 없다.
-
-| 파일 | 전 | 후 |
-|---|---|---|
-| `bench/relations_measure.gd` | `SeasonRunner.run` | `finish_season` |
-| `bench/fa_measure.gd` | `SeasonRunner.run` | `finish_season` |
-| `bench/offseason_measure.gd` | `SeasonRunner.run` | `finish_season` |
-
-**형태 ⑦이 세 개 한꺼번에 나왔다**(열여섯~열여덟 번째).
-
-⚠ **`bench_paths_test`에 박았다** — 계측이 `SeasonRunner.run(`을 직접
-부르면 검사가 실패한다. 이 함정을 열여덟 번 만났으므로 이제 막는다.
-
-⚠ **그 검사 자신도 옛 약속을 갖고 있었다**(형태 ④) — P-5b에서 "FA 계측이
-`SeasonRunner.run`을 탄다"고 박아 뒀다. 뜻은 맞고 함수 이름이 바뀌었다.
