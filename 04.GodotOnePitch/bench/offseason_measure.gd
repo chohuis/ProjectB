@@ -25,7 +25,7 @@ func run(log_line: Callable, _fail: Callable, years: int = 5,
 	for i in years:
 		s["season_year"] = year
 		var t0: int = Time.get_ticks_usec()
-		var out: Dictionary = SeasonRunner.run(s)
+		var out: Dictionary = SeasonRunner.finish_season(s)
 		var ms: float = float(Time.get_ticks_usec() - t0) / 1000.0
 		var m: Dictionary = out["summary"]
 		var by: Dictionary = m.get("by_league", {})
