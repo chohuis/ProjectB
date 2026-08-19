@@ -546,3 +546,51 @@ func test_only_expiring_players_are_shopped_as_expiring() -> void:
 						.override_failure_message(
 							"계약이 남은 특급이 만료 선점으로 오갔다") \
 						.is_less_equal(1)
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+
+## 🔴 **누가 어디로 갔는지 남는다.** 개수만 반환하면 자동 진행을 돌려도
+## "이적 3건"까지만 보이고 누구인지 알 길이 없다.
+## ⚠ **`run`을 부른다** — 기록은 리그마다 모아서 `run`이 남긴다
+func test_a_trade_is_written_to_the_log() -> void:
+	EventLog.clear()
+	var s: Dictionary = _pair_state()
+	TradeRunner.run(s)
+
+	assert_int(EventLog.count_of("trade")).override_failure_message(
+		"이적이 기록에 없다").is_greater(0)
+
+	var ev: Dictionary = {}
+	for e in EventLog.all():
+		if String(e["type"]) == "trade":
+			ev = e
+			break
+	# 🔴 **양방향이다.** `players[0]`만 보면 **받아온 선수가 기록에서 빠져도**
+	# 통과한다 — 실제로 그 변이를 놓쳤다. 옮긴 사람 수와 맞춘다
+	var total: int = 0
+	for e in EventLog.all():
+		if String(e["type"]) == "trade":
+			total += e["players"].size()
+	assert_int(total).override_failure_message(
+		"한쪽 방향만 기록됐다 — 트레이드는 양쪽이 오간다").is_greater(1)
+	var who: Dictionary = ev["players"][0]
+	assert_str(String(who["name"])).override_failure_message(
+		"이름이 비었다 — id만 남으면 화면에서 못 읽는다").is_not_empty()
+	assert_str(String(who["from_team"])).is_not_empty()
+	assert_str(String(who["to_team"])).override_failure_message(
+		"간 팀이 안 적혔다").is_not_empty()
+	assert_str(String(who["from_team"])).override_failure_message(
+		"떠난 팀과 간 팀이 같다").is_not_equal(String(who["to_team"]))
+	# 02는 detail을 "OVR:75 SP 28세" 꼴로 쓴다
+	assert_str(String(who["detail"])).override_failure_message(
+		"능력을 안 적었다 — 큰 이적인지 아닌지 모른다").contains("OVR")
+
+
+## ⚠ **아무 이적도 없으면 안 적는다** — 시즌마다 도는 자리다.
+## ⚠ `_state()`로는 못 본다 — 그 판은 이적이 성사된다. **로스터가 없는 판**을 쓴다
+func test_no_trade_writes_nothing() -> void:
+	EventLog.clear()
+	TradeRunner.run({"season_year": 2030, "world": {"rosters": {}}})
+	assert_int(EventLog.count_of("trade")).override_failure_message(
+		"이적이 없는데 기록이 남았다").is_equal(0)

@@ -308,3 +308,69 @@ func test_an_urgent_week_does_not_send_anyone_down() -> void:
 	var out: Dictionary = PromotionRunner.run(s, Calendar.DAYS_PER_WEEK * 2)
 	assert_bool(bool(out["regular"])).is_false()
 	assert_int(int(out["calldowns"])).is_equal(0)
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+#
+# 🔴 **여기까지 배선 검사가 소스 문자열이었다.** `run_team`을 부르는 검사가
+# 없어서 "`EventLog.push`라는 글자가 파일에 있나"만 봤다 — 그런 검사는
+# 인자를 뒤바꿔도, 빈 배열을 넘겨도 통과한다.
+#
+# ⚠ **`run`을 불러야 한다.** 기록은 `run_team`이 아니라 `run`이 남긴다
+# (리그마다 모아서 한 건으로). 그래서 fixture도 **진짜 팀 id**를 써야
+# `World.teams_of`가 훑는 목록에 걸린다.
+
+
+## 승강이 실제로 일어나는 판. **2군이 더 세야 콜업이 난다** — 같으면
+## 문턱에 걸려 아무도 안 올라오고, 그러면 기록도 안 남아 검사가 헛돈다
+func _promotion_state() -> Dictionary:
+	var league: String = String(RosterMaintenance.active_pro_leagues()[0])
+	var team: String = String(World.teams_of(league)[0]["id"])
+	return {
+		"season_year": 2030, "day": Calendar.DAYS_PER_WEEK,
+		"season_stats": {},
+		"world": {"rosters": {
+			team: _active(60.0),
+			team + World.FARM_SUFFIX: _farm(78.0),
+		}},
+		"_team": team, "_league": league,
+	}
+
+
+## 🔴 **콜업이 기록에 남는다.** 개수만 반환하면 자동 진행을 돌려도
+## "콜업 3건"까지만 보이고 누구인지 알 길이 없다
+func test_a_callup_is_written_to_the_log() -> void:
+	EventLog.clear()
+	var s: Dictionary = _promotion_state()
+	var out: Dictionary = PromotionRunner.run(s, Calendar.DAYS_PER_WEEK)
+	assert_int(int(out["callups"])).override_failure_message(
+		"fixture에서 콜업이 아예 안 일어났다 — 검사가 헛돈다").is_greater(0)
+
+	assert_int(EventLog.count_of("callup")).override_failure_message(
+		"콜업이 %d건인데 기록이 없다" % int(out["callups"])).is_greater(0)
+
+	# **누가 올라갔는지**가 들어 있어야 한다 — 그게 이 장치의 목적이다
+	var found: Dictionary = {}
+	for e in EventLog.all():
+		if String(e["type"]) == "callup":
+			found = e
+			break
+	assert_int(found["players"].size()).is_greater(0)
+	var who: Dictionary = found["players"][0]
+	assert_str(String(who["name"])).override_failure_message(
+		"이름이 비었다 — id만 남으면 화면에서 못 읽는다").is_not_empty()
+	assert_str(String(who["to_team"])).override_failure_message(
+		"올라간 팀이 안 적혔다").is_equal(String(s["_team"]))
+	assert_str(String(found["league_id"])).is_equal(String(s["_league"]))
+
+
+## ⚠ **아무 일도 없으면 안 적는다.** 매주 도는 자리라 빈 줄이 쌓이면
+## 정작 일어난 일이 안 보인다
+func test_a_quiet_week_writes_nothing() -> void:
+	EventLog.clear()
+	var s: Dictionary = _promotion_state()
+	# 2군을 약하게 — 문턱을 못 넘는다
+	s["world"]["rosters"][String(s["_team"]) + World.FARM_SUFFIX] = _farm(40.0)
+	PromotionRunner.run(s, Calendar.DAYS_PER_WEEK)
+	assert_int(EventLog.count_of("callup")).override_failure_message(
+		"아무도 안 올라갔는데 기록이 남았다").is_equal(0)

@@ -177,16 +177,14 @@ func test_the_log_is_not_part_of_the_save() -> void:
 
 
 # ── 부르는 곳이 있나 (형태 ①) ─────────────────────────────────
-
-## 🔴 **만들어 놓고 안 부르면 없는 것과 같다.** 이 저장소에서 "엔진만 있고
-## 호출 0"이 아홉 번 나왔다 — 그중 하나가 `AutoAdvance` 자신이었다.
-##
-## ⚠ **소스 검사라 약하다.** 실제로 줄이 쌓이는지는 계측으로 봐야 한다 —
-## G-6의 남은 종류를 붙일 때 fixture를 짓고 실측 검사로 바꾼다
-func test_promotion_writes_to_the_log() -> void:
-	var src: String = FileAccess.get_file_as_string(
-		"res://sim/promotion_runner.gd")
-	assert_str(src).override_failure_message(
-		"승강이 기록을 안 남긴다 — 자동 진행에서 누가 올라갔는지 못 본다") \
-		.contains("EventLog.push(\"callup\"")
-	assert_str(src).contains("EventLog.push(\"calldown\"")
+#
+# 🔴 **여기 있던 소스 문자열 검사를 지웠다.** "`EventLog.push`라는 글자가
+# `promotion_runner.gd`에 있나"만 봤는데, 그런 검사는 **빈 배열을 넘겨도,
+# 이름을 안 담아도, 리그를 안 실어도 통과한다**(변이로 확인했다).
+#
+# 실측 검사가 `promotion_runner_test.gd`에 있다 —
+# `test_a_callup_is_written_to_the_log`가 `run`을 실제로 돌려
+# **누가 어느 팀으로 올라갔는지**까지 본다. 변이 5/5.
+#
+# ⚠ **약한 검사를 남겨 두면 죽은 가드다.** 초록불이 하나 더 있을 뿐
+# 아무것도 안 지킨다.

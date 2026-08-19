@@ -132,6 +132,9 @@ static func run_league(state: Dictionary, league_id: String) -> Dictionary:
 	var moved_ids: Dictionary = state.get("traded_this_year", {})
 	var done: int = 0
 	var moved: int = 0
+	# 🔴 **누가 어디로 갔는지 남긴다** (G-6). 개수만 반환하면 자동 진행을
+	# 돌려도 "이적 3건"까지만 보이고 누구인지 알 길이 없다
+	var moved_log: Array = []
 	for p in proposals:
 		if done >= MAX_PER_LEAGUE:
 			break
@@ -190,18 +193,19 @@ static func run_league(state: Dictionary, league_id: String) -> Dictionary:
 
 		for id in p["offering_ids"]:
 			if _move(world, String(id), from_id, to_id, league_id,
-					int(state.get("season_year", 0))):
+					int(state.get("season_year", 0)), moved_log):
 				moved += 1
 				moved_ids[String(id)] = true
 		for id in p["requesting_ids"]:
 			if _move(world, String(id), to_id, from_id, league_id,
-					int(state.get("season_year", 0))):
+					int(state.get("season_year", 0)), moved_log):
 				moved += 1
 				moved_ids[String(id)] = true
 		done += 1
 
 	state["traded_this_year"] = moved_ids
-	return {"proposed": proposals.size(), "done": done, "moved": moved}
+	return {"proposed": proposals.size(), "done": done, "moved": moved,
+		"moved_log": moved_log}
 
 
 ## 이 거래를 하면 양쪽 로스터가 정원 안에 남나.
@@ -256,8 +260,29 @@ static func offer_protagonist(state: Dictionary, to_team: String,
 
 
 ## 선수를 옮긴다. **양쪽 배열을 같이 고쳐야 한다**
+## 사람 한 줄에 붙일 요약 — 02가 "OVR:75 SP 28세" 꼴로 적는다 (G-6).
+## **누가 어디로 갔는지만으로는 그게 큰 이적인지 모른다**
+static func _detail_of(pl: Dictionary) -> String:
+	var ovr: float = maxf(
+		float(pl.get("pitching", {}).get("ovr", 0.0)),
+		float(pl.get("batting", {}).get("ovr", 0.0)))
+	if ovr <= 0.0:
+		ovr = float(pl.get("ovr", 0.0))
+	var out: String = "OVR:%d" % int(roundf(ovr))
+	var pos: String = String(pl.get("position", ""))
+	if not pos.is_empty():
+		out += " %s" % pos
+	var age: int = int(pl.get("age", 0))
+	if age > 0:
+		out += " %d세" % age
+	return out
+
+
+## `log_into`를 주면 **옮긴 사람 한 줄**을 담는다 (G-6).
+## ⚠ **이름·능력을 아는 곳이 여기뿐이다** — 부르는 쪽은 id만 들고 있다
 static func _move(world: Dictionary, player_id: String, from_team: String,
-		to_team: String, league_id: String, year: int) -> bool:
+		to_team: String, league_id: String, year: int,
+		log_into: Array = []) -> bool:
 	var roster: Array = World.roster_of(world, from_team)
 	for i in roster.size():
 		if String(roster[i].get("id", "")) != player_id:
@@ -266,6 +291,10 @@ static func _move(world: Dictionary, player_id: String, from_team: String,
 		# 제안에 안 실리므로 여기까지 올 수 없고, 가드를 두면 죽은 코드가 된다
 		var p: Dictionary = roster[i]
 		roster.remove_at(i)
+		# ⚠ **덮어쓰기 전에 담는다** — 뒤에서 읽으면 from과 to가 같아진다
+		log_into.append(EventLog.entry(player_id,
+			String(p.get("name", player_id)), _detail_of(p),
+			from_team, to_team, String(p.get("league_id", "")), league_id))
 		p["team_id"] = to_team
 		p["league_id"] = league_id
 		var events: Array = p.get("career_events", [])
@@ -284,13 +313,18 @@ static func _move(world: Dictionary, player_id: String, from_team: String,
 static func run(state: Dictionary) -> Dictionary:
 	var world: Dictionary = state.get("world", {})
 	if world.is_empty():
-		return {"proposed": 0, "done": 0, "moved": 0}
+		return {"proposed": 0, "done": 0, "moved": 0, "moved_log": []}
 	# 해가 바뀌면 "올해 옮긴 사람" 목록을 비운다
 	state["traded_this_year"] = {}
 
 	var total: Dictionary = {"proposed": 0, "done": 0, "moved": 0}
+	# 🔴 **리그마다 따로 적는다** (G-6) — 02도 `leagueId`를 실어 어느 리그의
+	# 일인지 남긴다. 트레이드는 **시즌 롤오버**에 돌아서 주차가 없다
+	var year: int = int(state.get("season_year", 0))
 	for lid in TeamProfile.PRO_LEAGUES:
 		var r: Dictionary = run_league(state, lid)
+		EventLog.push("trade", year, r.get("moved_log", []),
+			int(r.get("proposed", 0)), 0, lid)
 		for k in total:
 			total[k] = int(total[k]) + int(r[k])
 	return total
