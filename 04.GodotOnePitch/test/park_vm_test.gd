@@ -71,13 +71,98 @@ func test_the_tiers_have_different_coordinates() -> void:
 		.is_not_equal(hs["second"])
 
 
-func test_the_bases_are_where_the_original_says() -> void:
+## 🔴 **값은 그림에서 잰 것이다** (D-6). 02에서 옮긴 값은 다이아몬드가
+## 세로로 17% 길고(앵커 790→454 · 그림 800→514) 마운드가 홈→2루의 72%
+## 지점이라 1·3루보다 위에 있었다. 1루수·3루수가 베이스보다 42px 위
+## 잔디에 떠 있었다
+func test_the_bases_are_where_the_picture_puts_them() -> void:
 	var pro: Dictionary = ParkVm.build("STADIUM_SEOUL_ROYALS")
-	assert_vector(pro["home"]).is_equal(Vector2(497, 790))
-	assert_vector(pro["first"]).is_equal(Vector2(715, 580))
-	assert_vector(pro["second"]).is_equal(Vector2(497, 454))
-	assert_vector(pro["third"]).is_equal(Vector2(280, 580))
-	assert_vector(pro["mound"]).is_equal(Vector2(497, 548))
+	assert_vector(pro["home"]).is_equal(Vector2(497, 800))
+	assert_vector(pro["first"]).is_equal(Vector2(720, 622))
+	assert_vector(pro["second"]).is_equal(Vector2(497, 514))
+	assert_vector(pro["third"]).is_equal(Vector2(275, 622))
+	assert_vector(pro["mound"]).is_equal(Vector2(498, 617))
+
+
+# ── 그림을 열어 맞춰 본다 ─────────────────────────────────────
+#
+# 🔴 **값을 베끼는 검사는 값이 틀려도 통과한다.** 위 검사는 02에서 옮긴
+# 값으로도 초록불이었다 — 그 값이 그림과 42px 어긋나 있는데도. 그래서
+# 여기서는 **그림을 실제로 연다.**
+
+const _SAMPLE: Dictionary = {
+	"pro": "STADIUM_SEOUL_ROYALS",
+	"university": "STADIUM_GEUMGANG_UNIV",
+	"highschool": "STADIUM_HANGANG",
+}
+
+
+## 좌표 한 점 둘레에서 **밝은 픽셀이 차지하는 비율**.
+## 베이스와 투수판은 흰색이고 그 둘레(잔디·흙)는 어둡다
+func _bright_ratio(img: Image, tier: String, p: Dictionary, win: int) -> float:
+	var box: Vector2 = ParkVm.viewbox()
+	# 그림은 비율을 지켜 상자 가운데 놓인다 — 화면과 같은 계산이다
+	var s: float = minf(box.x / img.get_width(), box.y / img.get_height())
+	var px: int = int((float(p["x"]) - (box.x - img.get_width() * s) * 0.5) / s)
+	var py: int = int((float(p["y"]) - (box.y - img.get_height() * s) * 0.5) / s)
+	var lit: int = 0
+	var tot: int = 0
+	for y in range(py - win, py + win + 1):
+		for x in range(px - win, px + win + 1):
+			if x < 0 or y < 0 or x >= img.get_width() or y >= img.get_height():
+				continue
+			var col: Color = img.get_pixel(x, y)
+			tot += 1
+			if col.r > 0.76 and col.g > 0.76 and col.b > 0.72:
+				lit += 1
+	return float(lit) / maxf(1.0, float(tot))
+
+
+func _park_image(tier: String) -> Image:
+	var img: Image = Image.load_from_file(
+		"res://assets/park/%s.png" % _SAMPLE[tier])
+	assert_object(img).override_failure_message(
+		"%s 구장 그림을 못 읽는다" % tier).is_not_null()
+	return img
+
+
+## 🔴 **베이스 앵커가 그려진 베이스 위에 있다.**
+## 실측 81~100% — 42px 위 잔디였을 땐 0%다
+func test_the_base_anchors_sit_on_the_painted_bases() -> void:
+	for tier in _SAMPLE:
+		var img: Image = _park_image(tier)
+		var field: Dictionary = ParkVm.coords_of(tier)["field"]
+		for k in ["home", "first", "second", "third"]:
+			var lit: float = _bright_ratio(img, tier, field[k], 4)
+			assert_float(lit).override_failure_message(
+				"%s %s 앵커가 베이스 위가 아니다 — 둘레에 밝은 픽셀이 %.0f%%뿐이다"
+				% [tier, k, lit * 100.0]).is_greater(0.70)
+
+
+## 🔴 **마운드 앵커가 투수판 위에 있다.**
+## 투수판은 납작해서(25×3) 창을 채우지 못한다 — 실측 33%.
+## 02 값은 투수판보다 69px 위 잔디였다
+func test_the_mound_anchor_sits_on_the_rubber() -> void:
+	for tier in _SAMPLE:
+		var img: Image = _park_image(tier)
+		var lit: float = _bright_ratio(
+			img, tier, ParkVm.coords_of(tier)["field"]["mound"], 4)
+		assert_float(lit).override_failure_message(
+			"%s 마운드 앵커가 투수판 위가 아니다 — 밝은 픽셀이 %.0f%%뿐이다"
+			% [tier, lit * 100.0]).is_greater(0.25)
+
+
+## ⚠ **마운드는 다이아몬드 세로 구간의 64% 지점이다** — 세 티어가 같다.
+## 02 값은 72%였고, 그 8%가 1·3루보다 위로 올라가게 만들었다
+func test_the_mound_keeps_its_depth_in_every_tier() -> void:
+	for tier in ["pro", "university", "highschool"]:
+		var f: Dictionary = ParkVm.coords_of(tier)["field"]
+		var home: float = float(f["home"]["y"])
+		var span: float = home - float(f["second"]["y"])
+		var depth: float = (home - float(f["mound"]["y"])) / span
+		assert_float(depth).override_failure_message(
+			"%s 마운드가 다이아몬드의 %.0f%% 지점이다" % [tier, depth * 100.0]) \
+			.is_between(0.60, 0.68)
 
 
 func test_the_view_box_matches_the_original() -> void:
