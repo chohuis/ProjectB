@@ -617,7 +617,14 @@ func _build(which: String) -> Control:
 			rp["career_history"] = []
 			for y in range(2030, 2038):
 				rp["career_history"].append({
-					"year": y, "team_id": "TEAM_KBL_JEJU",
+					# ⚠ **진짜 팀 id를 쓴다.** `TEAM_KBL_JEJU`는 없는 팀이라
+					# 이름 표에 안 걸려 **캡처에 id가 그대로 떴다** — 로직은
+					# 맞는데 캡처가 거짓말을 했다.
+					# ⚠ **2034년에 팀이 바뀐다** — 바로 아래 `career_events`가
+					# "트레이드 이적"을 적는데 팀이 8년 내내 같으면 앞뒤가
+					# 안 맞고, 소속 절(G-2)이 한 줄이라 묶기가 안 보인다
+					"year": y,
+					"team_id": "TEAM_KBL_BUSAN_WAVES_1" if y < 2034 						else "TEAM_KBL_SEOUL_ROYALS_1",
 					"stat_line": "%d승 %d패 ERA %.2f" % [12 - (y - 2030),
 						6 + (y - 2030), 3.10 + (y - 2030) * 0.2],
 					"stats": {"type": "pitcher", "g": 28,
