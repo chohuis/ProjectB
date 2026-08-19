@@ -1718,7 +1718,11 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 - [x] **G-1d 팀 경기 기록** — 고쳤다(검사 6 · 변이 4/4+5/5). 🔴 **전체 검사에서 37건이 터졌다** — 실제 일정엔 `result`가 **null**인 항목이 있는데 `get(k, {})`는 키가 있고 값이 null이면 **기본값이 아니라 null을 준다**. 검사가 "키 없음"과 "빈 사전"만 봤다(이번 회차 네 번째로 나온 형태). 아래는 원래 기록 (02 `:549`, N경기). 04의 `game_log`는
       **내가 던진 경기만**이다 — 팀 전체 일정은 별개다
 
-- [ ] **G-2 `CareerEndScreen`(299줄) vs `retirement_screen`** — 아직 안 견줬다
+- [x] **G-2 `CareerEndScreen` vs `retirement_screen`** — 2026-08-20 **견줬고 고쳤다.**
+      02의 절 넷 중 셋(통산 기록·커리어 하이·수상)은 04에 있었고 **"소속"만
+      없었다.** 🔴 그런데 엔진(`CareerSummary.team_stints_of`)은 **진작 있었고
+      부르는 곳만 없었다**(형태 ①) — 배선만 하면 됐다.
+      검사 4 · **변이 6/6** · 캡처 `retire-summary`
 
 - [x] **G-3 나머지 pages 8개** — 2026-08-20 **견줬다.** 차이 둘을 찾아
       아래로 뗀다. 나머지는 04 vm이 02 절을 덮는다:
@@ -1825,7 +1829,10 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
           된다 — **죽은 갈래를 두지 않는다**는 규칙에 걸린다.
           **판단이 필요하다**: TYPES에서 빼거나(02와 어긋남을 문서에 남긴다),
           아니면 계약조정을 04에 만든다(그건 이주가 아니라 신규 개발이다)
-      - [ ] 🔴 **배선 검사를 실측으로 바꾼다.** 지금 `test_promotion_writes_to_the_log`가
+      - [x] 🔴 **배선 검사를 실측으로 바꿨다** — 변이 **5/5**. 소스 문자열
+        검사로는 못 잡던 것(빈 배열·이름 누락·팀 누락·리그 누락)이 잡힌다.
+        **약한 검사는 지웠다** — 남기면 초록불만 하나 더 있는 죽은 가드다.
+        (아래는 원래 기록) 지금 지금 `test_promotion_writes_to_the_log`가
         **소스 문자열 검사**라 약하다 — `run_team`을 부르는 검사가 없어
         로스터 fixture를 새로 지어야 했다. **남은 종류를 붙이기 전에** 이걸
         먼저 한다: fixture 하나를 지으면 열 종류가 다 그걸 쓴다
