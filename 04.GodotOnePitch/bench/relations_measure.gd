@@ -160,7 +160,21 @@ func _one(seed_value: int, years: int) -> Dictionary:
 				#
 				# ⚠ **화면과 같은 함수로 낸다**(`DecisionVm.apply`) — 계측이
 				# 제 손으로 원서를 지으면 그게 두 번째 정본이다
+				# 🔴 **`build`는 대기줄의 첫 번째를 낸다**(`blocking`).
+				# hub가 대기줄 뒤에 있으면 **다른 물음의 선택지**가 오고,
+				# 거기에 `submit:`을 보내면 아무 일도 안 일어난다 —
+				# 대기줄이 안 풀려 커리어가 그 자리에 선다.
+				# **낸 것이 hub인지 확인하고 쓴다**
 				var hub: Dictionary = DecisionVm.build(s)
+				if String(hub.get("type", "")) != "career_choice_hub":
+					# 🔴 **앞선 물음을 먼저 답한다.** `build`는 대기줄의
+					# **첫 번째**를 내므로(`blocking`), hub가 뒤에 있으면
+					# 다른 물음의 선택지가 온다 — 거기에 `submit:`을 보내면
+					# 아무 일도 안 일어나고 **대기줄이 영영 안 풀린다.**
+					# 실측에서 `draft_observe`가 앞에 있어 그랬다.
+					# 확인만 하면 되는 물음이라 빈 선택으로 넘긴다
+					DecisionVm.apply(s, "", day)
+					continue
 				var picks: Array = []
 				var univ_n: int = 0
 				for ch in hub.get("choices", []):

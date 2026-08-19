@@ -3465,3 +3465,48 @@ for y in years:
 하거나, 계측이 `AppRoot`와 같은 순서(하루 진행 → `season_end` 신호 →
 `finish_season` → 생존리그 편성)를 밟게 한다.
 ⚠ **화면이 실제로 어떤 순서인지 먼저 읽는다** — 두 번 헛짚었다.
+
+## P-43b — 계측이 hub에 답을 못 하던 것 (부분 ✅)
+
+🔴 **`DecisionVm.build`는 대기줄의 첫 번째를 낸다**(`blocking`).
+계측은 `Pending.has(s, "career_choice_hub")`로 종류를 골라 놓고
+`build(s)`를 불렀는데, **hub가 대기줄 뒤에 있으면 다른 물음의 선택지가
+온다.** 거기에 `submit:`을 보내면 아무 일도 안 일어나고 대기줄이 안 풀린다.
+
+찍어서 확인했다:
+
+```
+Pending: [draft_observe, career_choice_hub]
+[P] build가 낸 것 = draft_observe · 선택지 1개
+```
+
+→ **낸 것이 hub가 아니면 그 물음을 먼저 답하고 다음 주로 넘긴다.**
+
+### 실측 (9해)
+
+**대기줄이 풀렸다** — 전에는 `["career_choice", "draft_observe"]`가 해마다
+쌓였는데 이제 "대기 없음"이다. 관계도 커졌다:
+
+| | 전 | 후 |
+|---|---|---|
+| teammate | 평균 21.9 | **평균 34.1** (6~62) |
+| rival | 0~0 | **−5~4** |
+| owner | −1~0 | **0~29** |
+
+### ⬜ 그래도 대학에 안 간다
+
+커리어는 여전히 고교 → 병역 → 독립이다. **합격 확률은 문제가 아니다** —
+찍어 보니 hub 선택지에 **대학 50곳이 다 있고** 확률이 **78~85%**다:
+
+```
+[P] hub 선택지 60개 · 대학 50곳
+   TEAM_UNIV_ASAN   power=2 확률=85.2%
+   TEAM_UNIV_BAEKJE power=4 확률=78.2%
+```
+
+셋을 지원해서 다 떨어질 확률은 1%도 안 된다 → **원서가 실제로 안 들어갔다.**
+
+**다음에 볼 것**: `submit:` 처리(`_apply_hub`)가 **true를 돌려주는지** ·
+`CareerDecision.of(s)["applications"]`에 대학이 담기는지 **찍는다.**
+⚠ **`picks`가 비어 있을 수도 있다** — hub 선택지의 id 모양이
+`university:TEAM_X`가 맞는지 먼저 본다.
