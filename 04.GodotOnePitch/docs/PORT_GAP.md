@@ -3585,3 +3585,48 @@ Pending: [draft_observe, career_choice_hub]
 **다음에 볼 것**: 계측이 실제로 그 해에 `career_choice`를 어떻게 답하는지
 **그 자리에 `print`를 넣고** 본다 — 고교 3학년 때 hub가 열렸는지,
 `career_results`를 확인했는지, `draft_notification`에서 무엇을 골랐는지.
+
+## P-43b — 계측이 대학에 안 가는 이유 ✅ **전원 탈락이다**
+
+계측의 진로 갈래에 `print`를 넣고 5해를 돌렸다:
+
+```
+[X] hub 열림 y=2029 학년=3
+[X] results 확인 y=2029
+     drafted: false · university_passed: [] · independent_passed: []
+     breakdown: percentile 54.1 · total 57.1
+[X] choice y=2029 ids=["military"]      ← 갈 곳이 없다
+```
+
+**hub는 제대로 열리고 원서도 들어간다.** 대학·독립·드래프트가 **다
+떨어져서** 남는 선택지가 병역뿐이다(P-43에서 만든 그 갈래다).
+
+### 🔴 내 앞선 확률 계산이 틀렸다
+
+"대학 합격 78~85%"라고 적었는데, **OVR을 야구점수 자리에 넣은 착오**였다
+(`university_chance(power, academic_grade, baseball_score)`에 `core_ovr`를
+넘겼다). 진짜 값으로 다시 재면:
+
+| gpa | 학업 등급 | 야구점수 | 합격 확률 |
+|---|---|---|---|
+| 4.0 | 3 | **0.0** | 28% |
+| 3.2 | 5 | **0.0** | 28% |
+| 2.5 | 6 | **0.0** | **8%** |
+
+계측 fixture는 `gpa 3.2` → **등급 5**다. 요건(`min_academic_grade`)에
+미달해 `academic_only`도 아니고 **`neither`에 가까운 자리**다.
+셋을 넣어도 다 떨어질 확률이 낮지 않다.
+
+⚠ **인자 순서를 확인하지 않고 값을 넣어 두 번째로 틀렸다**(P-47에 이어).
+**함수 시그니처를 읽고 넣는다.**
+
+### ⬜ 남은 물음 — `hs_baseball_score`가 0이다
+
+`hs_baseball_score`는 `career_records`의 **포스트시즌 결과(`ps_result`)와
+수상**으로만 센다(`career_path.gd:89`). 계측 주인공은 고교 3해를 뛰고도
+**0점**이다.
+
+애월고(전력 ★2)가 3해 내내 대회 성과가 없을 수는 있다. **하지만 기록이
+쌓이는 경로 자체가 도는지는 확인이 필요하다** — 안 쌓이면 야구 특기
+전형이 통째로 죽은 값이 된다.
+⚠ **표본 하나로 단정하지 않는다** — 여러 시드로 재고 나서 판정한다.
