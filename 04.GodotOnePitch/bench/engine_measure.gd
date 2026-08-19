@@ -95,6 +95,16 @@ func run(log_line: Callable, fail: Callable, games: int, seed_value: int) -> int
 		log_line.call("  타석당 삼진율      %.2f" % (k / float(pa)))
 		log_line.call("  타석당 볼넷율      %.2f" % (bb / float(pa)))
 	log_line.call("  경기당 홈런(양팀)   %.1f" % (float(hr) / gf))
+	# 🔴 **장타를 갈라서 낸다** (P-2f). 밴드를 만질 때 홈런만 보면 2루타가
+	# 어디로 갔는지 모른다 — P-2c가 38 밴드의 **2루타를 갈라** 홈런을 채운
+	# 자리다. `tally`가 투구당 결과 코드를 세므로 **선수 줄에 칸을 더할
+	# 필요가 없다**(02도 `ab·h·hr·rbi·bb·k·sb`뿐이다).
+	# ⚠ 02 `audit-engine.cjs`는 장타를 안 낸다 — **대조 상대가 없는 값이다.**
+	# 04에서 밴드를 바꿨을 때 앞뒤를 견주는 용도다
+	log_line.call("  경기당 2루타(양팀)  %.1f"
+		% (float(tally.get("HIT_DOUBLE", 0)) / gf))
+	log_line.call("  경기당 3루타(양팀)  %.1f"
+		% (float(tally.get("HIT_TRIPLE", 0)) / gf))
 
 	# ── 02 ② `match_engine.rs`와 대조하는 세 비율 ──────────────────
 	#

@@ -116,3 +116,22 @@ func test_계측이_센다() -> void:
 	# ⚠ **02와 대조하는 세 비율도 낸다** — 9이닝당 값은 02의 다른 모델 것이다
 	assert_int(src.find("match_engine")).override_failure_message(
 		"02 ②와 대조하는 비율을 안 낸다").is_greater(-1)
+
+
+## 🔴 **계측이 쓰는 장타 이름이 엔진의 이름과 같다** (P-2f).
+##
+## 계측은 `tally.get("HIT_DOUBLE", 0)`으로 꺼낸다. 엔진이 코드 이름을 바꾸면
+## **오류 없이 0이 나온다** — "2루타가 사라졌다"로 읽히고, 밴드를 만지던
+## 사람은 자기가 방금 한 변경 탓이라고 믿는다.
+##
+## ⚠ 선수 줄(`player_lines`)에는 장타 칸이 없고 **02도 없다**
+## (`ab·h·hr·rbi·bb·k·sb`). 그래서 `tally`가 유일한 경로다
+func test_계측이_쓰는_장타_이름이_엔진에_있다() -> void:
+	var src := FileAccess.get_file_as_string("res://bench/engine_measure.gd")
+	for name in ["HIT_DOUBLE", "HIT_TRIPLE"]:
+		assert_bool(MatchResult.HITS.has(name)).override_failure_message(
+			"계측이 %s를 세는데 엔진 안타 목록엔 없다 — 조용히 0이 나온다"
+			% name).is_true()
+		assert_int(src.find('tally.get("%s"' % name)).override_failure_message(
+			"계측이 %s를 안 센다 — 밴드를 만질 때 장타가 어디로 갔는지 모른다"
+			% name).is_greater(-1)
