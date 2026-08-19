@@ -395,3 +395,62 @@ func test_the_screen_holds_no_logic() -> void:
 	# 은퇴 판정을 화면이 하지 않는다
 	assert_str(src).not_contains("Retirement.")
 	assert_str(src).not_contains("Pending.")
+
+
+# ── 소속 (G-2) ────────────────────────────────────────────────
+
+## 🔴 **엔진은 진작 있었다.** `CareerSummary.team_stints_of`가 02
+## `teamStintsOf`와 글자 그대로 같고 검사도 다섯인데 **부르는 곳이 없었다**
+## (형태 ①). 그래서 은퇴 화면에 **어디서 뛰었는지가 없었다** —
+## "해마다"는 성적만 적는다
+func test_the_teams_i_played_for_show_up() -> void:
+	var s: Dictionary = _state("", {"career_history": [
+		{"year": 2030, "team_id": "T1", "stat_line": "3승"},
+		{"year": 2031, "team_id": "T1", "stat_line": "5승"},
+		{"year": 2032, "team_id": "T2", "stat_line": "7승"},
+	]})
+	s["team_names"] = {"T1": "부산 웨이브스", "T2": "서울 로열스"}
+	var stints: Array = RetirementVm.build_summary(s)["stints"]
+	assert_int(stints.size()).override_failure_message(
+		"거쳐온 팀이 안 나온다").is_equal(2)
+	assert_str(String(stints[0]["label"])).override_failure_message(
+		"팀 이름 표를 안 거쳤다").is_equal("부산 웨이브스")
+	assert_str(String(stints[0]["value"])).contains("2030–2031")
+	assert_str(String(stints[0]["value"])).contains("2시즌")
+
+
+## ⚠ **오래된 순이다**(02와 같다). "해마다"처럼 뒤집으면 커리어가 거꾸로 흐른다
+func test_stints_read_oldest_first() -> void:
+	var s: Dictionary = _state("", {"career_history": [
+		{"year": 2030, "team_id": "T1", "stat_line": "3승"},
+		{"year": 2032, "team_id": "T2", "stat_line": "7승"},
+	]})
+	var stints: Array = RetirementVm.build_summary(s)["stints"]
+	assert_str(String(stints[0]["label"])).is_equal("T1")
+	assert_str(String(stints[1]["label"])).is_equal("T2")
+
+
+## ⚠ **한 해짜리는 범위를 안 적는다** — "2030–2030"은 읽기 나쁘다
+func test_a_single_season_shows_one_year() -> void:
+	var s: Dictionary = _state("", {"career_history": [
+		{"year": 2030, "team_id": "T1", "stat_line": "3승"},
+	]})
+	var v: String = String(RetirementVm.build_summary(s)["stints"][0]["value"])
+	assert_str(v).override_failure_message("한 해인데 범위를 적었다: %s" % v) \
+		.not_contains("–")
+	assert_str(v).contains("2030")
+	assert_str(v).contains("1시즌")
+
+
+## 화면에도 뜬다 — vm만 채우고 안 그리면 없는 것과 같다
+func test_the_screen_shows_the_stints() -> void:
+	var s: Dictionary = _state("", {"career_history": [
+		{"year": 2030, "team_id": "T1", "stat_line": "3승"},
+	]})
+	s["team_names"] = {"T1": "부산 웨이브스"}
+	var screen: RetirementScreen = auto_free(
+		SCREEN.instantiate())
+	add_child(screen)
+	screen.set_summary(RetirementVm.build_summary(s))
+	assert_str(_joined(screen)).override_failure_message(
+		"화면에 소속이 안 뜬다").contains("부산 웨이브스")

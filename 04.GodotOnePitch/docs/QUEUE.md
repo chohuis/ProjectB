@@ -1720,10 +1720,42 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 
 - [ ] **G-2 `CareerEndScreen`(299줄) vs `retirement_screen`** — 아직 안 견줬다
 
-- [ ] **G-3 나머지 pages 8개** — 04에 vm이 다 있다(`academics`·`achievements`·
-      `finance`·`league`·`news`·`people`·`schedule`·`team`). **항목 단위로는
-      안 견줬다.** 02 쪽 줄 수: League 1605 · Schedule 954 · News 540 ·
-      Academics 503 · Finance 436 · Team 304 · People 290
+- [x] **G-3 나머지 pages 8개** — 2026-08-20 **견줬다.** 차이 둘을 찾아
+      아래로 뗀다. 나머지는 04 vm이 02 절을 덮는다:
+      · **People** — 02 "지금 함께 / 지난 인연" ↔ 04 `together`/`past` (정확히 대응)
+      · **Finance** — 02 절 여섯(개인 트레이너·계약 중·받은 제안·재정 규칙·
+        주간 수입·투자) ↔ 04 `training`·`subscriptions`·`offers`·`rows`·
+        `income`/`expense`·`investment`
+      · **Academics** — 02 셋(과목별·시험 준비·주간 학습) ↔ 04 `major`/`semesters`·
+        `exam`/`midterm`/`final`·`study`/`focus`
+      · **News** — 04 `news_vm`(215줄)이 02(540줄)보다 오히려 촘촘하다
+        (필터·읽음·선택지까지 F-8b에서 붙였다)
+      ⚠ **vm 키로 판정한 자리가 있다.** 위 넷은 절 이름과 키가 맞아떨어지는
+        것을 봤을 뿐 **한 항목씩 열어 보지는 않았다** — 정확히 하려면 화면을
+        찍어 02와 나란히 놓아야 한다
+
+- [ ] 🔴 **G-3a League "리그 기록" 탭이 없다** — 02 탭 다섯 중 넷만 있다.
+      04: 리그 순위 · 스탯 순위 · 대회 · 포스트시즌.
+      02: 거기에 **리그 기록**(`transactions`)이 더 있다 —
+      카테고리 다섯(**트레이드 · FA · 드래프트 · 병역 · 은퇴**) · 연도·리그 필터 ·
+      최근 200건(`LeaguePage:1018`·`:55`).
+      🔴 **G-6의 `EventLog`와 같은 데이터인데 성질이 다르다:**
+      | | 02 `transactions` | 02 `eventHistory`(=04 `EventLog`) |
+      |---|---|---|
+      | 어디 | **sqlite DB** | 세션 메모리 |
+      | 언제까지 | **영구** — 지난 시즌도 본다 | 이번 판만 |
+      | 거르기 | 연도·카테고리·리그 | 종류 |
+      **04엔 DB가 없다.** 선수마다 `career_events`가 쌓이므로(`promotion_move`·
+      `trade` 등) **그걸 모으면 영구 기록이 된다** — 어디서 모을지가 설계 지점.
+      ⚠ **G-6을 먼저 끝내고 오면 겹치는 부분이 드러난다** — 순서를 그렇게 잡는다
+
+- [ ] **G-3b Schedule 보기가 하나뿐이다** — 02는 **주·월·시즌·연** 넷을
+      전환한다(`SchedulePage:view`). 04 `schedule_vm`(97줄)은 `rows` 하나다.
+      ⚠ **02에 없던 화면 구조가 아니다** — 02에 있는 것을 안 옮긴 것이다
+
+- [ ] **G-3c Team 페이지를 항목 단위로 안 봤다** — 02 304줄 vs 04
+      `team_vm` 64줄. 04는 `pitchers`·`batters`·`summary`뿐이라 격차가
+      크다. **열어서 견줘야 한다**
 
 - [ ] **G-4 소식 카드 다섯** — 아직 안 견줬다
 

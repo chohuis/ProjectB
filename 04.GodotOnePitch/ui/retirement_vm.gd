@@ -104,6 +104,7 @@ static func build_summary(state: Dictionary) -> Dictionary:
 			{"label": "세이브", "value": "%d세이브" % int(totals["sv"])},
 			{"label": "탈삼진", "value": "%dK" % int(totals["k"])},
 		],
+		"stints": _stints(p, state.get("team_names", {})),
 		"years": _years(p),
 		"events": _events(p),
 		"awards": _awards(p),
@@ -117,6 +118,31 @@ static func _closing(p: Dictionary, r: Dictionary) -> String:
 	return "%d년, %d세에 %s로 선수 생활을 마쳤습니다." % [
 		int(r.get("year", 0)), int(p.get("age", 0)),
 		String(r.get("label", ""))]
+
+
+## 거쳐온 팀 — G-2. 02 `CareerEndScreen:175`의 "소속" 절.
+##
+## 🔴 **엔진은 진작 있었다.** `CareerSummary.team_stints_of`가 02
+## `teamStintsOf`와 글자 그대로 같고 검사도 다섯인데 **부르는 곳이 없었다** —
+## 형태 ①(엔진만 있고 호출 0). 그래서 은퇴 화면에 **어디서 뛰었는지가
+## 없었다**. "해마다"는 성적만 적는다.
+##
+## ⚠ **오래된 순이다**(02와 같다). 소속 이력은 시간순으로 읽는 것이고,
+## "해마다"처럼 뒤집으면 커리어가 거꾸로 흐른다.
+## ⚠ **한 해짜리는 범위를 안 적는다** — "2030–2030"은 읽기 나쁘다(02도 그렇다)
+static func _stints(p: Dictionary, names: Dictionary) -> Array:
+	var out: Array = []
+	for st in CareerSummary.team_stints_of(p.get("career_history", [])):
+		var team: String = String(st["team_id"])
+		var from_y: int = int(st["from_year"])
+		var to_y: int = int(st["to_year"])
+		var span: String = ("%d" % from_y) if from_y == to_y \
+			else ("%d–%d" % [from_y, to_y])
+		out.append({
+			"label": String(names.get(team, team)),
+			"value": "%s · %d시즌" % [span, int(st["seasons"])],
+		})
+	return out
 
 
 ## 해마다 한 줄. **최근이 위다**

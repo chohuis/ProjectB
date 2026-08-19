@@ -108,6 +108,14 @@ func _build_summary() -> void:
 	for t in _summary.get("totals", []):
 		_line("%s  %s" % [String(t["label"]), String(t["value"])])
 
+	# 🔴 **거쳐온 팀** (G-2). 엔진(`team_stints_of`)은 진작 있었는데 부르는
+	# 곳이 없어 **어디서 뛰었는지가 은퇴 화면에 없었다**
+	var stints: Array = _summary.get("stints", [])
+	if not stints.is_empty():
+		_heading("소속")
+		for st in stints:
+			_line("%s  %s" % [String(st["label"]), String(st["value"])])
+
 	var awards: Array = _summary.get("awards", [])
 	if not awards.is_empty():
 		_heading("수상")
