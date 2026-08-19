@@ -1689,7 +1689,9 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
 정본이고, 거기서 `StatusPage`·`PreGameBriefingModal`·`GameStatusModal`·
 `ContractNegotiationModal`·`TrainingPage`·`NewGamePage`는 ✅다.
 
-- [x] **G-1 `SeasonEndModal`(1,195줄) vs `season_end_vm`(169줄)** — 견줬다.
+- [x] **G-1 `SeasonEndModal` — 넷 다 채웠다(2026-08-19). 02의 절 열하나가 04에 다 모였다.**
+      캡처: `shot.gd -- season-digest`(시즌 탭) · `season-digest-team`(팀 탭).
+      아래는 원래 기록 —
       줄 수 차이는 설계 차이다(02는 화면이 계산을 가졌고 04는 `SeasonHistory.digest`가
       만든다). **탭 셋(시즌·팀·개인)도 02 그대로다.** 02의 절 열하나 중
       **일곱은 있고 넷이 없다** — 아래 G-1a~G-1d로 뗀다.
@@ -1698,7 +1700,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       | 리그 순위표 · 시즌 시상 · 팀 최종 성적 · 시즌 통합 스탯 · 경기별 기록 · 투자 결과 · 시즌말 투자 | ✅ |
       | 포스트시즌 · 대회 · 팀 내 베스트 · 팀 경기 기록 | ❌ |
 
-- [ ] 🔴 **G-1a 포스트시즌 결과가 결산에 안 뜬다** — **데이터는 이미 있다.**
+- [x] 🔴 **G-1a 포스트시즌** — 2026-08-19 **고쳤다**(검사 4 · 변이 4/4). 아래는 원래 기록 — **데이터는 이미 있다.**
       `SeasonHistory.digest`의 `my_record`에 `ps_result`가 들어 있는데
       (`season_history.gd:173` `Postseason.result_for`) `season_end_vm.build`가
       `record`에서 `stat_line`·`ovr`·`game_log`만 꺼내고 **`ps_result`를
@@ -1707,13 +1709,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       ⚠ 값 자체는 죽지 않았다 — `career_summary.gd:329`·`career_path.gd:95`가
       읽는다. **결산 화면에만 안 나온다**
 
-- [ ] **G-1b 대회 절이 없다** (02 `:456`). digest에 대회 성적이 없다 —
+- [x] **G-1b 대회** — 고쳤다(검사 3 · 변이 4/4). 캡처를 보고 "우승 · 우승 애월고" 중복도 잡았다. 아래는 원래 기록 (02 `:456`). digest에 대회 성적이 없다 —
       `Tournament`가 결과를 어디에 남기는지부터 본다
 
-- [ ] **G-1c 팀 내 베스트가 없다** (02 `:518`). 팀 동료 중 그 해 최고 성적.
+- [x] **G-1c 팀 내 베스트** — 고쳤다(검사 3 · 변이 4/4). 자격선은 02 그대로(투수 IP 10 · 타자 타수 20). 아래는 원래 기록 (02 `:518`). 팀 동료 중 그 해 최고 성적.
       `SeasonStats`에 있는 값이라 digest에서 뽑으면 된다
 
-- [ ] **G-1d 팀 경기 기록이 없다** (02 `:549`, N경기). 04의 `game_log`는
+- [x] **G-1d 팀 경기 기록** — 고쳤다(검사 6 · 변이 4/4+5/5). 🔴 **전체 검사에서 37건이 터졌다** — 실제 일정엔 `result`가 **null**인 항목이 있는데 `get(k, {})`는 키가 있고 값이 null이면 **기본값이 아니라 null을 준다**. 검사가 "키 없음"과 "빈 사전"만 봤다(이번 회차 네 번째로 나온 형태). 아래는 원래 기록 (02 `:549`, N경기). 04의 `game_log`는
       **내가 던진 경기만**이다 — 팀 전체 일정은 별개다
 
 - [ ] **G-2 `CareerEndScreen`(299줄) vs `retirement_screen`** — 아직 안 견줬다
