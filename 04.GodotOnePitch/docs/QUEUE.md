@@ -302,7 +302,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         한 번도 안 움직였다**(결과는 `weekNum - 1`에 있다)
       `sim/relationship.gd` · `sim/relationship_runner.gd`.
       **지금 도는 것은 팀동료뿐이다** — 감독·코치·구단주는 B-2b가 서야 한다
-- [~] **B-2b 스태프(감독·코치·구단주)** — B-2를 하다 드러난 **빠진 모듈.**
+- [x] **B-2b 스태프(감독·코치·구단주)** — 2026-08-19 닫음(엔진은 진작 끝났고 화면은 C에서 했다) — B-2를 하다 드러난 **빠진 모듈.**
       **생성·효과·관계 배선은 끝났다** — `sim/staff.gd` · `data/staff_rules.json`.
       팀마다 감독 1 · 구단주 1 · 코치 0~8(씀씀이가 정한다). 리그·전력★이
       수준을 올리고, 전문 분야가 그 코치의 두 능력치를 민다.
@@ -333,7 +333,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         1,429명(47%)이 영구 `injured`**로 남았다 — 그 줄을 박아 뒀다.
       **`myBodyReport`의 화면 문구는 C-6("나" 탭)에서** — 여기서는
       `body_log`(경고·완치)와 `injury_log`(월간)를 쌓는 데까지다
-- [~] **B-4** `tournaments`(204) + `survivalLeague`(83)
+- [x] **B-4** `tournaments`(204) + `survivalLeague`(83) — 2026-08-19 닫음(하위 B-4a·b·c 전부 완료 · `tournamentView`는 C와 P-40에서 했다)
       **엔진만 끝났다** — `sim/tournament.gd` · `data/tournament_rules.json`.
       대회 8종(고교 5 · 대학 3) · 시드 배정 · 부전승 · 조별예선 · 본선.
       권역은 `teams.json`의 `stadium`에서 파생한다(02는 목록을 한 벌 더
@@ -405,7 +405,7 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       **다르게 한 것:** 02는 새 게임 시점에 이미 외국인이 있다(`roster_gen.rs`).
       04는 **첫 시즌 롤오버가 채운다** — 초기 로스터 생성을 안 건드리므로
       밸런스 대조가 안 흔들린다. 대신 1년차 KBL엔 외국인이 없다
-- [~] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
+- [x] **B-10** `proSeason`(62) · `backgroundPostseason`(87) · `runDraftBoardBackground`(32)
       — 셋을 읽어 보니 성격이 달랐다. 나눠 적는다:
       - [x] **B-10a** `proSeason`(62) — **옮길 게 없다.** 02는 "계약이 성립했으니
             다음 시즌을 프로로 연다"가 세 곳(롤오버·지명 수락·즉시 계약)에
@@ -422,9 +422,9 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
             `SeasonHistory.protagonist_record`가 프로는 포스트시즌에서,
             학교는 그 해 대회 중 **제일 멀리 간 것**에서 낸다.
             검사 47 · 변이 49/49 + 배선 2/2
-      - [ ] **B-10c** `runDraftBoardBackground`(32) — **C-1(드래프트 보드) 화면
+      - [x] **B-10c** `runDraftBoardBackground`(32) — **C-1에서 같이 끝났다**(C-1 항목이 그렇게 적어 뒀다) — **C-1(드래프트 보드) 화면
             지원이다.** 보드를 여는 그 자리에서 같이 옮긴다
-- [~] **B-11** `runAutoAdvance`(491) — `sim/auto_advance.gd`.
+- [x] **B-11** `runAutoAdvance`(491) — 2026-08-19 닫음(화면 배선은 C에서 `- [x] B-11 자동 진행 화면 배선`으로 끝냈다) — `sim/auto_advance.gd`.
       **정책과 반복은 끝났다.** 무엇 앞에서 멈추고(`STOPPING` 10종) 무엇을
       대신 답하며(경기·소식), 지침 정도로 선택지를 고르고(지치면 쉬는 쪽),
       정지 주차(W40·W51)를 **지나쳤는지**로 잡는다.
