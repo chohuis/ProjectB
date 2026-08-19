@@ -225,7 +225,9 @@ static func _tournament_rows(list: Array) -> Array:
 			continue
 		var champ: String = String(t.get("champion", ""))
 		var value: String = reached
-		if not champ.is_empty():
+		# ⚠ **내가 우승했으면 챔피언을 안 붙인다** — "우승 · 우승 애월고"가
+		# 되어 같은 말이 두 번 나온다. 캡처를 보고 알았다
+		if not champ.is_empty() and reached != "우승":
 			value += " · 우승 %s" % champ
 		out.append({"label": String(t.get("name", "")), "value": value})
 	return out

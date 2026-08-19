@@ -195,7 +195,28 @@ static func season_digest() -> Dictionary:
 			"retired": 0},
 		"league_id": "LEAGUE_HIGHSCHOOL",
 		"team_id": "TEAM_HS_AEWOL", "team_name": "애월고",
-		"my_record": {"year": 2027, "ovr": 63,
+		# G-1b · G-1c · G-1d로 붙은 절들. **화면이 어떻게 생겼는지 보려면
+		# 값이 있어야 한다** — 새 게임 첫 해는 대회도 수상도 비어 있어서
+		# 캡처에 절이 하나도 안 뜬다
+		"tournaments": [
+			{"name": "황금사자기", "champion": "유성고", "reached": "4강"},
+			{"name": "청룡기", "champion": "애월고", "reached": "우승"},
+		],
+		"team_best": {
+			"pitcher": {"name": "김한결", "era": 2.31, "w": 7, "ip": 88.0},
+			"batter": {"name": "오재훈", "avg": 0.341, "hr": 6, "rbi": 28},
+		},
+		"team_games": [
+			{"week": 3, "is_home": true, "opponent": "유성고",
+				"my_score": 5, "opp_score": 2},
+			{"week": 5, "is_home": false, "opponent": "백호고",
+				"my_score": 1, "opp_score": 4},
+			{"week": 7, "is_home": true, "opponent": "한라고",
+				"my_score": 7, "opp_score": 0},
+			{"week": 9, "is_home": false, "opponent": "서귀고",
+				"my_score": 3, "opp_score": 3},
+		],
+		"my_record": {"year": 2027, "ovr": 63, "ps_result": "champion",
 			"stat_line": "7승 2패 ERA 2.31 88.0이닝 91K",
 			"game_log": [
 				{"day": 69, "opponent_id": "유성고", "my_score": 5, "opp_score": 2,

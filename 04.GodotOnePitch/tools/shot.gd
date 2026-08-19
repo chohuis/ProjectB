@@ -549,6 +549,12 @@ func _build(which: String) -> Control:
 			var sd: SeasonEndScreen = SEASON_END.instantiate()
 			sd.set_view_model(SeasonEndVm.build(Fixtures.season_digest()))
 			return sd
+		"season-digest-team":
+			# 팀 탭 — 팀 내 베스트(G-1c)와 팀 경기 기록(G-1d)이 여기 있다
+			var st2: SeasonEndScreen = SEASON_END.instantiate()
+			st2.set_view_model(SeasonEndVm.build(Fixtures.season_digest()))
+			st2.ready.connect(func() -> void: st2._on_tab(1), CONNECT_ONE_SHOT)
+			return st2
 		"season-invest":
 			# 시즌말 투자 절 — 프로 · 현금 5000만. **탭 밖에 붙는다**
 			var si: SeasonEndScreen = SEASON_END.instantiate()

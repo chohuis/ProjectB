@@ -370,3 +370,14 @@ func test_a_win_is_marked() -> void:
 func test_no_games_no_rows() -> void:
 	assert_array(SeasonEndVm.build(_digest())["team_games"]).is_empty()
 	assert_bool(SeasonEndVm.build({}).has("team_games")).is_true()
+
+
+## ⚠ **내가 우승했으면 챔피언을 안 붙인다** — "우승 · 우승 애월고"가 되어
+## 같은 말이 두 번 나온다. 캡처를 눈으로 보고 알았다
+func test_winning_it_does_not_repeat_the_champion() -> void:
+	var d: Dictionary = _digest()
+	d["tournaments"] = [{"name": "청룡기", "champion": "애월고",
+		"reached": "우승"}]
+	var v: String = String(SeasonEndVm.build(d)["tournament_rows"][0]["value"])
+	assert_str(v).override_failure_message(
+		"우승인데 챔피언을 또 적었다: %s" % v).is_equal("우승")
