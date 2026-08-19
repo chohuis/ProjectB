@@ -1406,7 +1406,15 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       계측이 그 결정에 답을 안 해서인지, 결정이 소비되지 않아서인지
       먼저 가른다(입력부터 재라).
 
-- [ ] 🔴 **P-8c 프로 보직 배정 함수가 통째로 미이관이다** — 2026-08-19 **원인 확정**
+- [x] 🔴 **P-8c 프로 보직 배정 함수가 통째로 미이관이다** — 2026-08-19 고침
+      02 `assign_protagonist_role`을 `Rotation.assign_pro_role`로 옮겼다
+      (선발 OVR만 · `rank <= size_of` · 스윙맨/롱릴리프 · CP→마무리 ·
+      RP→OVR대별). `SeasonRunner.roll_over`가 무대로 갈라 부른다.
+      **실측 프로 144경기 등판 7 → 29 · role=3선발.**
+      검사 11 · 변이 6/6.
+      ⚠ 내 probe가 `SeasonRunner.run`만 불러 롤오버를 건너뛰고 있었다 —
+      롤오버는 `finish_season`이 부른다. **probe도 게임 경로를 타야 한다.**
+      (아래는 원래 기록)
       02는 보직 함수가 **둘**이다: 고교 `assign_highschool_position`(전체 투수 ·
       `higher <= 2`)와 프로 `assign_protagonist_role`(**선발 OVR만** · `rank <= 5` ·
       "N선발"/스윙맨/롱릴리프/마무리/셋업맨). **04는 고교 것만 옮겼다.**

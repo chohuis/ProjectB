@@ -3312,3 +3312,35 @@ run 후 stage=pro_kbl league=LEAGUE_KBL 같은사전=true
 
 ⚠ **검사가 통과해도 실측이 안 따라오면 안 끝난 것이다** — 검사 11개가
 전부 초록인데 게임은 그대로다.
+
+### P-8c 배선이 걸렸다 — 등판 7 → 29 (2026-08-19)
+
+🔴 **내 probe가 게임 경로를 안 타고 있었다**(형태 ⑦ — 이번엔 계측이 아니라
+**내가 만든 probe**에서). `SeasonRunner.run`을 불렀는데 **롤오버는
+`finish_season`이 부른다**:
+
+```
+finish_season → run → digest → roll_over
+```
+
+`run`만 부르면 보직 재배정도 일정 재생성도 안 돈다. `print`를 그 자리에
+직접 넣고서야 알았다 — "roll_over 부름"이 아예 안 찍혔다.
+
+`finish_season`으로 고쳐 다시 찍으니:
+
+```
+[PROBE] roll_over 부름
+[PROBE] roll_over 도달 stage=pro_kbl
+[PROBE] 프로 갈래 진입
+[PROBE] 팀 144경기 중 등판 29
+[PROBE] 끝 role=3선발 position=SP
+```
+
+**등판 7 → 29 · `role=3선발`.** 02 로테이션(5인)과 맞는다.
+
+검사 11 · **변이 6/6** · 진로·로테이션 계열 106개 초록.
+
+⚠ **변이 하나가 엉뚱한 함수에 붙었다.** `var seen: float = my_ovr + ovr_bias`가
+**고교 함수에도 있어서** `replace`가 첫 번째만 바꿨다 — 프로 쪽은 그대로라
+"안 잡힘"으로 나왔다. **주석까지 포함해 잡으니 잡혔다.**
+⚠ **같은 줄이 파일에 둘 있으면 변이가 어디 붙었는지 확인한다.**
