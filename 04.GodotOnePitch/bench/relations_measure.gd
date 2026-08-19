@@ -175,16 +175,28 @@ func _one(seed_value: int, years: int) -> Dictionary:
 					# 확인만 하면 되는 물음이라 빈 선택으로 넘긴다
 					DecisionVm.apply(s, "", day)
 					continue
+				# 🔴 **전력이 낮은 대학부터 고른다** (P-49). 예전엔 목록의 **앞 셋**을
+				# 그대로 집었는데, 그 앞자리에 전력 5(합격 8%)가 있어 **셋 다 떨어질
+				# 확률이 8%**였다 — 고정 시드라 매번 같은 자리를 뽑아 커리어가 늘
+				# 병역 → 독립으로 갔다.
+				#
+				# **사용자는 화면에서 자격·확률을 보고 고른다**(`_hub`가 그 정보를
+				# 내려고 만든 것이다) — 계측도 그렇게 고른다.
+				# ⚠ **게임 값은 안 건드린다** — fixture의 선택 전략일 뿐이다
 				var picks: Array = []
-				var univ_n: int = 0
+				var univ: Array = []
 				for ch in hub.get("choices", []):
 					var cid: String = String(ch.get("id", ""))
 					if cid == "draft":
 						picks.append(cid)
-					elif cid.begins_with("university:") \
-							and univ_n < CareerDecision.MAX_CHOICES:
-						picks.append(cid)
-						univ_n += 1
+					elif cid.begins_with("university:"):
+						univ.append(cid)
+				univ.sort_custom(func(a, b) -> bool:
+					var pa: int = int(World.team_field({}, String(a).substr(11), "power", 9))
+					var pb: int = int(World.team_field({}, String(b).substr(11), "power", 9))
+					return pa < pb)
+				for i in mini(univ.size(), CareerDecision.MAX_CHOICES):
+					picks.append(univ[i])
 				if not picks.is_empty():
 					DecisionVm.apply(s, "submit:" + ",".join(picks), day)
 			elif Pending.has(s, "career_results"):
