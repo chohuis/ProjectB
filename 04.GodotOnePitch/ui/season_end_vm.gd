@@ -11,6 +11,21 @@ class_name SeasonEndVm
 ##
 ## 탭 셋은 02 그대로다 — **시즌 · 팀 · 개인.**
 
+## 포스트시즌 결과 → 사람이 읽는 말 (G-1a). 값은 `Postseason`의 상수다.
+##
+## 🔴 **`digest`에 `ps_result`가 있는데 아무도 안 읽고 있었다**(형태 ③).
+## `season_history.gd:173`이 `Postseason.result_for`로 채우는데 여기서
+## `stat_line`·`ovr`·`game_log`만 꺼냈다 — 02는 `<h4>포스트시즌</h4>` 절로
+## 보여준다(`SeasonEndModal.svelte:374`).
+## ⚠ 값이 죽지는 않았다 — `career_summary.gd:329`·`career_path.gd:95`가 읽는다.
+## **결산 화면에만 안 나왔다**
+const PS_LABELS: Dictionary = {
+	"champion": "우승",
+	"runner_up": "준우승",
+	"semi_final": "4강",
+}
+
+
 const TABS: Array[Dictionary] = [
 	{"id": "season", "label": "시즌"},
 	{"id": "team", "label": "팀"},
@@ -22,6 +37,7 @@ static func build(digest: Dictionary, p: Dictionary = {}) -> Dictionary:
 	if digest.is_empty():
 		return {"year": 0, "title": "", "tabs": TABS, "has_data": false,
 			"summary_rows": [], "standings": [], "my_rank_label": "",
+			"tournament_rows": [], "team_best": [],
 			"team_row": {}, "my_line": "", "my_awards": [], "game_log": [],
 			"award_rows": [],
 			"investment": {"show": false, "done": false,
@@ -39,15 +55,21 @@ static func build(digest: Dictionary, p: Dictionary = {}) -> Dictionary:
 			team_row = standings[i]
 
 	var record: Dictionary = digest.get("my_record", {})
+	var ps: String = String(PS_LABELS.get(
+		String(record.get("ps_result", "")), ""))
 
 	return {
 		"year": year,
-		"title": "%d년 시즌 결산" % year,
+		# ⚠ **우승만 제목이 바뀐다** — 02 `SeasonEndModal:351`이 그렇다.
+		# 준우승·4강까지 제목을 바꾸면 "🏆"가 흔해져 우승이 안 도드라진다
+		"title": ("%d년 🏆 우승" % year) if ps == "우승" \
+			else ("%d년 시즌 결산" % year),
 		"tabs": TABS,
 		"has_data": true,
 
 		# ── 시즌 탭 ──
-		"summary_rows": _summary_rows(digest.get("summary", {})),
+		"summary_rows": _summary_rows(digest.get("summary", {}), ps),
+		"tournament_rows": _tournament_rows(digest.get("tournaments", [])),
 		"standings": standings,
 		"award_rows": _award_rows(digest.get("awards", {})),
 
@@ -55,6 +77,7 @@ static func build(digest: Dictionary, p: Dictionary = {}) -> Dictionary:
 		"team_name": String(digest.get("team_name", "")),
 		"team_row": team_row,
 		# ⚠ **순위가 0이면 "미정"이다.** 0위로 찍으면 꼴찌보다 나쁜 등수가 뜬다
+		"team_best": _team_best_rows(digest.get("team_best", {})),
 		"my_rank_label": "%d위 / %d팀" % [my_rank, standings.size()] \
 			if my_rank > 0 else "순위 없음",
 
@@ -119,18 +142,68 @@ static func _investment(p: Dictionary, year: int) -> Dictionary:
 
 ## 한 해에 무슨 일이 있었나. **0인 항목은 안 보여준다** —
 ## "은퇴 0명"이 줄줄이 뜨면 정작 일어난 일이 안 보인다
-static func _summary_rows(s: Dictionary) -> Array:
+static func _summary_rows(s: Dictionary, ps_label: String = "") -> Array:
+	var out: Array = []
+	# 🔴 **맨 앞이다** (G-1a). 그 해 가장 큰 일인데 졸업·지명 밑에 깔리면
+	# 안 읽힌다. **못 갔으면 줄을 안 만든다** — 아래 규칙과 같다
+	if not ps_label.is_empty():
+		out.append({"label": "포스트시즌", "value": ps_label})
 	var order: Array = [
 		["graduated", "졸업"], ["drafted", "지명"], ["placed", "진로 결정"],
 		["gave_up", "은퇴(미지명)"], ["demoted", "2군 강등"],
 		["released", "방출"], ["retired", "은퇴"], ["freshmen", "신입생"],
 	]
-	var out: Array = []
 	for pair in order:
 		var n: int = int(s.get(pair[0], 0))
 		if n <= 0:
 			continue
 		out.append({"label": pair[1], "value": "%d명" % n})
+	return out
+
+
+## 팀 내 베스트 — G-1c. 02 `SeasonEndModal:518`의 두 카드.
+##
+## ⚠ **자격선을 못 넘으면 줄이 없다.** 02도 `{#if teamBestPitcher}`로 감싼다 —
+## 고교 첫 해처럼 아무도 IP 10을 못 넘는 해가 실제로 있다
+static func _team_best_rows(best: Dictionary) -> Array:
+	var out: Array = []
+	var p: Dictionary = best.get("pitcher", {})
+	if not p.is_empty():
+		out.append({"label": "최우수 투수",
+			"name": String(p.get("name", "")),
+			# ⚠ **이름을 값 안에 넣는다** — 화면이 라벨과 이름을 조립하면
+			# 그게 계산이다. 여기가 한 줄을 통째로 만든다
+			"value": "%s  ERA %.2f · %d승 · %.1f이닝" % [
+				String(p.get("name", "")), float(p.get("era", 0.0)),
+				int(p.get("w", 0)), float(p.get("ip", 0.0))]})
+	var b: Dictionary = best.get("batter", {})
+	if not b.is_empty():
+		out.append({"label": "최우수 타자",
+			"name": String(b.get("name", "")),
+			"value": "%s  타율 %s · %d홈런 · %d타점" % [
+				String(b.get("name", "")),
+				("%.3f" % float(b.get("avg", 0.0))).substr(1),
+				int(b.get("hr", 0)), int(b.get("rbi", 0))]})
+	return out
+
+
+## 그 해 대회 — G-1b.
+##
+## ⚠ **내가 어디까지 갔는지를 값으로 삼는다.** 우승 팀은 뒤에 붙인다 —
+## 결산은 내 한 해를 되짚는 자리지 대회 연감이 아니다.
+## ⚠ **못 나간 대회는 안 적는다**(`reached`가 비었을 때) — 02도 그 해 나간
+## 대회만 절에 싣는다
+static func _tournament_rows(list: Array) -> Array:
+	var out: Array = []
+	for t in list:
+		var reached: String = String(t.get("reached", ""))
+		if reached.is_empty():
+			continue
+		var champ: String = String(t.get("champion", ""))
+		var value: String = reached
+		if not champ.is_empty():
+			value += " · 우승 %s" % champ
+		out.append({"label": String(t.get("name", "")), "value": value})
 	return out
 
 

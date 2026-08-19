@@ -192,3 +192,128 @@ func test_the_screen_holds_no_logic() -> void:
 	assert_str(src).not_contains(".filter(")
 	# 탭 목록도 화면이 안 갖는다
 	assert_str(src).not_contains("\"season\", \"team\", \"personal\"")
+
+
+# ── 포스트시즌 (G-1a) ─────────────────────────────────────────
+
+## 🔴 **`digest`에 `ps_result`가 있는데 아무도 안 읽고 있었다**(형태 ③).
+## `season_history.gd:173`이 `Postseason.result_for`로 채우는데
+## `SeasonEndVm`이 `stat_line`·`ovr`·`game_log`만 꺼냈다 —
+## 02는 `<h4>포스트시즌</h4>` 절로 보여준다(`SeasonEndModal.svelte:374`)
+func test_the_postseason_result_shows_up() -> void:
+	var d: Dictionary = _digest()
+	d["my_record"]["ps_result"] = "champion"
+	var vm: Dictionary = SeasonEndVm.build(d)
+	var first: Dictionary = vm["summary_rows"][0]
+	assert_str(String(first["label"])).override_failure_message(
+		"포스트시즌이 요약 맨 앞에 없다 — 졸업·지명 밑에 깔리면 안 읽힌다") \
+		.is_equal("포스트시즌")
+	assert_str(String(first["value"])).is_equal("우승")
+
+
+## ⚠ **우승만 제목이 바뀐다** — 02 `SeasonEndModal:351`이 그렇다
+func test_only_a_title_wins_the_trophy() -> void:
+	var d: Dictionary = _digest()
+	d["my_record"]["ps_result"] = "champion"
+	assert_str(String(SeasonEndVm.build(d)["title"])).contains("🏆")
+
+	d["my_record"]["ps_result"] = "runner_up"
+	var vm: Dictionary = SeasonEndVm.build(d)
+	assert_str(String(vm["title"])).override_failure_message(
+		"준우승인데 트로피가 뜬다 — 우승이 안 도드라진다").not_contains("🏆")
+	assert_str(String(vm["summary_rows"][0]["value"])).is_equal("준우승")
+
+
+## 4강도 남긴다 — 02가 `semiFinal`을 따로 가른다
+func test_a_semi_final_run_is_kept() -> void:
+	var d: Dictionary = _digest()
+	d["my_record"]["ps_result"] = "semi_final"
+	assert_str(String(SeasonEndVm.build(d)["summary_rows"][0]["value"])) \
+		.is_equal("4강")
+
+
+## **못 갔으면 줄을 안 만든다** — "포스트시즌 미진출"이 해마다 뜨면
+## 정작 일어난 일이 안 보인다(04의 다른 요약 행과 같은 규칙이다)
+func test_missing_the_postseason_writes_no_row() -> void:
+	var d: Dictionary = _digest()
+	d["my_record"]["ps_result"] = "not_qualified"
+	for row in SeasonEndVm.build(d)["summary_rows"]:
+		assert_str(String(row["label"])).is_not_equal("포스트시즌")
+
+
+# ── 대회 (G-1b) ───────────────────────────────────────────────
+
+## 🔴 **`tournament_log`가 쌓이는데 결산이 안 읽었다** (형태 ③).
+## 리그 탭은 읽는다(`league_vm.gd:220`) — 거기는 **지난 대회 전부**고
+## 결산은 **그 해**다. 02는 `<h4>대회</h4>` 절이다
+func test_this_years_tournament_shows_up() -> void:
+	var d: Dictionary = _digest()
+	d["tournaments"] = [{"name": "황금사자기", "champion": "유성고",
+		"reached": "4강"}]
+	var rows: Array = SeasonEndVm.build(d)["tournament_rows"]
+	assert_int(rows.size()).override_failure_message(
+		"그 해 대회가 결산에 안 뜬다").is_equal(1)
+	assert_str(String(rows[0]["label"])).is_equal("황금사자기")
+	assert_str(String(rows[0]["value"])).override_failure_message(
+		"내가 어디까지 갔는지가 앞에 안 온다 — 우승 팀만 적으면 남의 기록이다") \
+		.starts_with("4강")
+	assert_str(String(rows[0]["value"])).contains("유성고")
+
+
+## **못 나간 대회는 안 적는다** — 나가지도 않은 대회가 줄줄이 뜨면
+## 정작 나간 대회가 안 보인다
+func test_a_tournament_i_missed_is_not_listed() -> void:
+	var d: Dictionary = _digest()
+	d["tournaments"] = [{"name": "황금사자기", "champion": "유성고",
+		"reached": ""}]
+	assert_array(SeasonEndVm.build(d)["tournament_rows"]).is_empty()
+
+
+## 대회가 아예 없어도 키는 있어야 한다 — 화면이 없는 키를 읽으면 빈 화면이다
+func test_the_key_exists_even_with_no_tournament() -> void:
+	assert_bool(SeasonEndVm.build(_digest()).has("tournament_rows")).is_true()
+	assert_bool(SeasonEndVm.build({}).has("tournament_rows")).is_true()
+
+
+# ── 팀 내 베스트 (G-1c) ───────────────────────────────────────
+
+## 02 `SeasonEndModal:518`의 두 카드. **자격선이 있다** —
+## 투수 IP 10 · 타자 타수 20(02 `:192`·`:203`). 한 경기 나와 ERA 0.00인
+## 사람이 1등이 되면 "최우수"가 뜻을 잃는다
+func test_the_team_best_shows_both_cards() -> void:
+	var d: Dictionary = _digest()
+	d["team_best"] = {
+		"pitcher": {"name": "김투수", "era": 2.31, "w": 12, "ip": 150.0},
+		"batter": {"name": "박타자", "avg": 0.325, "hr": 18, "rbi": 77},
+	}
+	var rows: Array = SeasonEndVm.build(d)["team_best"]
+	assert_int(rows.size()).is_equal(2)
+	assert_str(String(rows[0]["label"])).is_equal("최우수 투수")
+	assert_str(String(rows[0]["value"])).override_failure_message(
+		"이름이 값 안에 없다 — 화면이 라벨과 이름을 조립하면 그게 계산이다") \
+		.contains("김투수")
+	assert_str(String(rows[0]["value"])).contains("2.31")
+	assert_str(String(rows[1]["value"])).contains("박타자")
+	# ⚠ **`.contains(".325")`만으로는 못 잡는다** — "0.325"도 그걸 품는다.
+	# 앞의 0이 없다는 걸 직접 본다
+	assert_str(String(rows[1]["value"])).override_failure_message(
+		"타율에서 앞의 0을 안 뗐다 — 야구 표기는 .325다").not_contains("0.325")
+	assert_str(String(rows[1]["value"])).contains(".325")
+
+
+## **한쪽만 있어도 그쪽만 낸다** — 02도 `{#if}`로 각각 감싼다
+func test_only_one_side_still_shows() -> void:
+	var d: Dictionary = _digest()
+	d["team_best"] = {"pitcher": {"name": "김투수", "era": 2.31,
+		"w": 12, "ip": 150.0}, "batter": {}}
+	var rows: Array = SeasonEndVm.build(d)["team_best"]
+	assert_int(rows.size()).is_equal(1)
+	assert_str(String(rows[0]["label"])).is_equal("최우수 투수")
+
+
+## 아무도 자격선을 못 넘은 해 — 고교 첫 해엔 실제로 있다
+func test_nobody_qualified_means_no_rows() -> void:
+	var d: Dictionary = _digest()
+	d["team_best"] = {"pitcher": {}, "batter": {}}
+	assert_array(SeasonEndVm.build(d)["team_best"]).is_empty()
+	assert_bool(SeasonEndVm.build({}).has("team_best")).is_true()

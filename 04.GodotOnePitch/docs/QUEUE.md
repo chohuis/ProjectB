@@ -1761,13 +1761,31 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       | **이벤트 목록** | ✅ 필터 13개 · 최근 50개 · 이벤트당 선수 5명(이름 · from→to · detail) | ❌ |
       | **로그 내보내기(.txt)** | ✅ | ❌ |
       | 정지 · 재시작 | ✅ | ❌ |
-      **차례**
-      ① `sim/`에 기록 장치를 만든다(**`sim/`이다** — 화면이 계산을 갖지 않는다)
-      ② NPC가 움직이는 자리에 붙인다 — `trade_runner` · FA · 드래프트 ·
-        `military` · `promotion_runner` · 재계약 · 은퇴. **02의 열세 곳이 정본**
-      ③ `AutoAdvanceVm` + 패널. 02는 `visible = running || stopReason`이라
-        **자동 진행 중에만 뜬다** — 04도 같게
-      ④ 내보내기는 `user://`로. 04는 이미 `logs/`를 쓴다
+      **차례** (①·②의 첫 종류까지 2026-08-19에 했다)
+      - [x] ① `sim/event_log.gd` — 02 `PlayerEvent`·`logEvent`·`eventHistory`
+        그대로. 12종·한글 라벨·최근 500개 상한(02 `slice(-499)`)이 02와 같다.
+        **02에서 일부러 안 옮긴 것 둘**: `dbOk`(sqlite 성공 여부 — 04엔 DB가
+        없어 늘 참인 죽은 값) · `counts.saved`(같은 이유, 02에서도
+        `processed`와 거의 같다). 검사 17 · **변이 9/9**
+      - [x] ② **콜업·콜다운** (`promotion_runner.gd`). `_move`가 **이름을 아는
+        유일한 자리**라 거기서 한 줄을 담고 `run`이 리그마다 모아 적는다
+        (02도 `leagueId`를 실어 1군·2군을 가른다).
+        ⚠ **`p["league_id"]`를 덮어쓰기 전에 from을 읽는다** — 순서가 바뀌면
+        from과 to가 같아진다.
+        ⚠ `run_team`에 이미 `down`(내릴 후보)이 있어 기록용은 `down_log`다
+      - [ ] ② **남은 열 종류** — 트레이드(`trade_runner`) · FA신청 · FA이동
+        (`fa_runner`) · 드래프트(`npc_draft`) · 체육부대 · 일반병 · 전역
+        (`npc_military`) · 재계약 · 계약조정(`contract`) · 은퇴(`retirement`).
+        **`trade_runner`도 구조가 같다** — `_move`(259행)에 `log_into`를 주고
+        `run_league`가 모아 `run`이 적는다. 02는 detail을 "OVR:75 SP 28세"
+        꼴로 쓴다
+      - [ ] 🔴 **배선 검사를 실측으로 바꾼다.** 지금 `test_promotion_writes_to_the_log`가
+        **소스 문자열 검사**라 약하다 — `run_team`을 부르는 검사가 없어
+        로스터 fixture를 새로 지어야 했다. **남은 종류를 붙이기 전에** 이걸
+        먼저 한다: fixture 하나를 지으면 열 종류가 다 그걸 쓴다
+      - [ ] ③ `AutoAdvanceVm` + 패널
+      ④ 내보내기는 `user://`로. 04는 이미 `logs/`를 쓴다.
+        02는 `visible = running || stopReason`이라 **자동 진행 중에만 뜬다**
       ⚠ **기록이 없으면 화면부터 만들면 안 된다** — 빈 패널이 된다.
       ⚠ **밸런스는 안 건드린다.** 일어난 일을 적기만 한다
 

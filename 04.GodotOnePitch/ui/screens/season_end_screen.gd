@@ -138,6 +138,15 @@ func _build_season() -> void:
 	for r in rows:
 		_pair(String(r["label"]), String(r["value"]))
 
+	# 🔴 **그 해 대회** (G-1b). `tournament_log`가 쌓이는데 결산이 안 읽었다.
+	# ⚠ **못 나간 해엔 절 자체가 없다** — "대회 없음"이 해마다 뜨면
+	# 정작 나간 해가 안 도드라진다(요약 행과 같은 규칙이다)
+	var tours: Array = _vm.get("tournament_rows", [])
+	if not tours.is_empty():
+		_heading("대회")
+		for t in tours:
+			_pair(String(t["label"]), String(t["value"]))
+
 	_heading("수상")
 	var awards: Array = _vm.get("award_rows", [])
 	if awards.is_empty():
@@ -159,10 +168,18 @@ func _build_team() -> void:
 	var row: Dictionary = _vm.get("team_row", {})
 	if row.is_empty():
 		_line("팀 성적이 없습니다", AppTheme.TEXT_MUTE)
-		return
-	_pair("성적", "%d승 %d무 %d패" % [int(row.get("wins", 0)),
-		int(row.get("draws", 0)), int(row.get("losses", 0))])
-	_pair("승률", String(row.get("pct_label", "")))
+	else:
+		_pair("성적", "%d승 %d무 %d패" % [int(row.get("wins", 0)),
+			int(row.get("draws", 0)), int(row.get("losses", 0))])
+		_pair("승률", String(row.get("pct_label", "")))
+
+	# 🔴 **팀 내 베스트** (G-1c). ⚠ **여기서 돌아가면 안 된다** — 팀 성적이
+	# 없어도(2군·독립) 잘 던진 동료는 있다. 예전엔 위에서 `return`했다
+	var best: Array = _vm.get("team_best", [])
+	if not best.is_empty():
+		_heading("팀 내 베스트")
+		for b in best:
+			_pair(String(b["label"]), String(b["value"]))
 
 
 func _build_personal() -> void:

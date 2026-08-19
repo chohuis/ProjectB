@@ -57,8 +57,12 @@ static func absent_ids(state: Dictionary) -> Array:
 
 ## 한 선수를 옮긴다. **리그도 같이 바꾼다** — 팀만 바꾸면 그 선수는 여전히
 ## 1군 소속으로 집계돼 2군 상한이 영원히 안 걸린다
+## `log_into`를 주면 **옮긴 사람 한 줄**을 거기 담는다 (G-6).
+## ⚠ **이름을 아는 곳이 여기뿐이다** — 부르는 쪽은 id만 들고 있다.
+## ⚠ **`league_id`를 바꾸기 전에 읽는다** — 뒤에서 읽으면 from과 to가 같아진다
 static func _move(world: Dictionary, player_id: String, from_team: String,
-		to_team: String, to_league: String, year: int, detail: String) -> bool:
+		to_team: String, to_league: String, year: int, detail: String,
+		log_into: Array = []) -> bool:
 	var from_roster: Array = World.roster_of(world, from_team)
 	for i in from_roster.size():
 		var p: Dictionary = from_roster[i]
@@ -73,6 +77,9 @@ static func _move(world: Dictionary, player_id: String, from_team: String,
 			"from_league_id": String(p.get("league_id", "")),
 			"to_league_id": to_league, "detail": detail})
 		p["career_events"] = events
+		log_into.append(EventLog.entry(player_id,
+			String(p.get("name", player_id)), detail,
+			from_team, to_team, String(p.get("league_id", "")), to_league))
 		p["team_id"] = to_team
 		p["league_id"] = to_league
 		from_roster.remove_at(i)
@@ -121,7 +128,14 @@ static func run_team(state: Dictionary, team_id: String, league_id: String,
 	var active: Array = pair["active"]
 	var farm: Array = pair["farm"]
 	if active.is_empty() or farm.is_empty():
-		return {"callups": 0, "calldowns": 0}
+		return {"callups": 0, "calldowns": 0, "up": [], "down": []}
+
+	# 🔴 **누가 움직였는지 남긴다** (G-6). 개수만 반환하면 자동 진행을 돌려도
+	# "콜업 3건"까지만 보이고 누구인지 알 길이 없다.
+	# ⚠ **올라간 쪽과 내려간 쪽을 따로 담는다** — 02도 `_callupEntries`와
+	# `_calldownEntries` 둘이다. "콜업 교체"로 밀려난 사람은 **내려간 쪽**이다
+	var up_log: Array = []
+	var down_log: Array = []
 
 	# ⚠ **판정 전에 성적을 붙인다.** 안 붙이면 `form_score`가 늘 0이라
 	# 승강이 능력치만 본다
@@ -152,18 +166,21 @@ static func run_team(state: Dictionary, team_id: String, league_id: String,
 		# ⚠ **올리기 전에 내린다.** 반대로 하면 정원을 한 번 넘겼다가
 		# 줄어드는데, 그 사이에 상한을 보는 코드가 있으면 잘못 잡는다
 		if not _move(world, String(c["replaces_player_id"]), team_id,
-				farm_team, farm_league, year, "콜업 교체"):
+				farm_team, farm_league, year, "콜업 교체", down_log):
 			continue
 		if _move(world, String(c["player_id"]), farm_team, team_id,
-				league_id, year, String(c["reason"])):
+				league_id, year, String(c["reason"]), up_log):
 			callups += 1
 		else:
+			# 되돌렸으면 내려간 일도 없던 것이다 — 담아 둔 줄을 뺀다
+			if not down_log.is_empty():
+				down_log.remove_at(down_log.size() - 1)
 			# 올리기가 막혔으면 내린 사람을 되돌린다 — 안 그러면 1군이 준다
 			_move(world, String(c["replaces_player_id"]), farm_team,
 				team_id, league_id, year, "콜업 취소")
 
 	if urgent_only:
-		return {"callups": callups, "calldowns": 0}
+		return {"callups": callups, "calldowns": 0, "up": up_log, "down": down_log}
 
 	var down: Array = RosterMaintenance.eval_calldown(profile,
 		World.roster_of(world, team_id),
@@ -171,9 +188,10 @@ static func run_team(state: Dictionary, team_id: String, league_id: String,
 	var calldowns: int = 0
 	for d in down.slice(0, REGULAR_CALLDOWNS):
 		if _move(world, String(d["player_id"]), team_id, farm_team,
-				farm_league, year, "정원 정리"):
+				farm_league, year, "정원 정리", down_log):
 			calldowns += 1
-	return {"callups": callups, "calldowns": calldowns}
+	return {"callups": callups, "calldowns": calldowns,
+		"up": up_log, "down": down_log}
 
 
 ## 이번 주가 정기인가 — **달이 바뀌었으면 정기다**
@@ -198,10 +216,22 @@ static func run(state: Dictionary, at_day: int) -> Dictionary:
 	out["regular"] = regular
 
 	var world: Dictionary = state.get("world", {})
+	# 🔴 **리그마다 따로 적는다** (G-6). 02도 `leagueId`를 실어서 어느 리그의
+	# 일인지 남긴다 — 1군·2군이 한 줄에 섞이면 못 읽는다
+	var year: int = int(state.get("season_year", 0))
+	var week: int = Calendar.week_of(at_day)
 	for league_id in RosterMaintenance.active_pro_leagues():
-		for t in World.teams_of(league_id):
+		var up: Array = []
+		var down: Array = []
+		var teams: Array = World.teams_of(league_id)
+		for t in teams:
 			var r: Dictionary = run_team(state, String(t["id"]), league_id,
 				not regular)
 			out["callups"] = int(out["callups"]) + int(r["callups"])
 			out["calldowns"] = int(out["calldowns"]) + int(r["calldowns"])
+			up.append_array(r.get("up", []))
+			down.append_array(r.get("down", []))
+		# `input`은 **후보가 몇 팀이었나**다 — 02도 `proTeams1.length`를 넣는다
+		EventLog.push("callup", year, up, teams.size(), week, league_id)
+		EventLog.push("calldown", year, down, teams.size(), week, league_id)
 	return out

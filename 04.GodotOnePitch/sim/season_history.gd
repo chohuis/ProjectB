@@ -182,6 +182,11 @@ static func protagonist_record(state: Dictionary, year: int) -> Dictionary:
 ##
 ## ⚠ **롤오버가 순위표와 성적을 비운다.** 새 일정이 깔리고 `season_stats`가
 ## 초기화되므로, 그 뒤에 만들면 결산이 통째로 빈 화면이 된다
+## 팀 내 베스트의 자격선 — 02 `SeasonEndModal:192·203` 그대로
+const BEST_MIN_IP: float = 10.0
+const BEST_MIN_AB: int = 20
+
+
 static func digest(state: Dictionary, year: int, summary: Dictionary) -> Dictionary:
 	var me: Dictionary = state.get("protagonist", {})
 	var league_id: String = String(me.get("league_id", ""))
@@ -215,4 +220,65 @@ static func digest(state: Dictionary, year: int, summary: Dictionary) -> Diction
 		# 순위표는 화면이 쓰는 것과 **같은 함수**로 만든다 — 두 벌이 되면
 		# 결산과 리그 탭이 다른 순위를 보여준다
 		"standings": LeagueVm.build(state),
+		"tournaments": _tournaments_of(state, year),
+		"team_best": _team_best_of(state, String(me.get("team_id", ""))),
 	}
+
+
+## 팀 내 베스트 — G-1c. 02 `SeasonEndModal:187·198`.
+##
+## ⚠ **자격선이 있다** — 02는 투수 IP 10, 타자 타수 20. 한 경기 나와 ERA
+## 0.00인 사람이 1등이 되면 "최우수"가 뜻을 잃는다.
+## ⚠ **주인공도 후보다** — 02도 팀 명단으로만 거른다. 내가 팀 최고면
+## 그렇게 뜨는 게 맞다
+static func _team_best_of(state: Dictionary, team_id: String) -> Dictionary:
+	var out: Dictionary = {"pitcher": {}, "batter": {}}
+	if team_id.is_empty():
+		return out
+	var stats: Dictionary = state.get("season_stats", {})
+	var names: Dictionary = {}
+	for p in World.roster_of(state.get("world", {}), team_id):
+		names[String(p.get("id", ""))] = String(p.get("name", ""))
+
+	for id in stats:
+		if not names.has(id):
+			continue
+		var st: Dictionary = stats[id]
+		if String(st.get("type", "")) == "pitcher":
+			if float(st.get("ip", 0.0)) < BEST_MIN_IP:
+				continue
+			var era: float = float(st.get("era", 0.0))
+			if out["pitcher"].is_empty() or era < float(out["pitcher"]["era"]):
+				out["pitcher"] = {"name": String(names[id]), "era": era,
+					"w": int(st.get("w", 0)), "ip": float(st.get("ip", 0.0))}
+		else:
+			if int(st.get("ab", 0)) < BEST_MIN_AB:
+				continue
+			var avg: float = float(st.get("avg", 0.0))
+			if out["batter"].is_empty() or avg > float(out["batter"]["avg"]):
+				out["batter"] = {"name": String(names[id]), "avg": avg,
+					"hr": int(st.get("hr", 0)), "rbi": int(st.get("rbi", 0))}
+	return out
+
+
+## 그 해 대회 — G-1b. 02 `SeasonEndModal`의 `<h4>대회</h4>` 절.
+##
+## 🔴 **`tournament_log`가 쌓이는데 결산이 안 읽었다.** 리그 탭은 읽는다
+## (`league_vm.gd:220`) — 거기는 **지난 대회 전부**고 결산은 **그 해**다.
+##
+## ⚠ **내가 어디까지 갔는지가 요점이다** — 우승 팀만 적으면 남의 기록이다.
+## 그래서 `protagonist_reached`가 있으면 그걸 앞에 세운다
+static func _tournaments_of(state: Dictionary, year: int) -> Array:
+	var names: Dictionary = state.get("team_names", {})
+	var out: Array = []
+	for e in state.get("tournament_log", []):
+		if int(e.get("season_year", 0)) != year:
+			continue
+		var champ: String = String(e.get("champion", ""))
+		var reached: String = String(e.get("protagonist_reached", ""))
+		out.append({
+			"name": String(e.get("name", "")),
+			"champion": String(names.get(champ, champ)),
+			"reached": reached,
+		})
+	return out
