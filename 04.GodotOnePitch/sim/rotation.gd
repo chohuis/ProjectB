@@ -96,6 +96,55 @@ static func assign_position(my_ovr: float, team_pitcher_ovrs: Array,
 	return "SP" if higher <= 2 else "RP"
 
 
+## 프로 보직 — P-8c. 원본: 02 `player_engine.rs:99 assign_protagonist_role`.
+##
+## 🔴 **04는 이 함수가 통째로 없었다.** 고교용(`assign_position`)만 옮겨
+## 놓고 프로에서도 그걸 썼다 — 프로 로테이션은 **5인**인데 고교 규칙은
+## **팀 3위 안**만 선발로 봤다. 위 `assign_position` 주석이 그 어긋남을
+## 스스로 경고하고 있었는데도 그랬다.
+##
+## 실측이 그 값을 보여줬다 — **프로 144경기에 등판 7**(= 불펜 확률 5%).
+## 로테 5인이면 29여야 한다.
+##
+## ⚠ **분모가 다르다.** 고교는 팀 투수 **전체**를 세고, 프로는 **선발 OVR만**
+## 센다(02 `team_sp_ovrs`). 불펜까지 세면 순위가 밀려 선발이 훨씬 어려워진다.
+##
+## ⚠ **돌려주는 이름이 `RELIEVER_CHANCE`의 키와 같아야 한다** — 표에 없는
+## 이름을 내면 그 불펜은 등판 확률 0이라 한 경기도 못 던진다.
+##
+## `position`: `"CP"`면 마무리 · `"RP"`면 OVR대별 · 그 밖은 선발 순위
+static func assign_pro_role(my_ovr: float, team_sp_ovrs: Array,
+		ovr_bias: float = 0.0, position: String = "SP") -> String:
+	# 감독이 보는 나 = 실제 OVR + 관계 보정 (02와 같다)
+	var seen: float = my_ovr + ovr_bias
+
+	if position == "CP":
+		return "마무리"
+	if position == "RP":
+		if seen >= 78.0:
+			return "셋업맨"
+		if seen >= 65.0:
+			return "중간계투"
+		if seen >= 55.0:
+			return "롱릴리프"
+		return "패전처리"
+
+	var rank: int = 1
+	for o in team_sp_ovrs:
+		if float(o) > seen:
+			rank += 1
+	# ⚠ **로테이션 인원과 같은 수다** — `size_of`가 프로에 5를 준다.
+	# 둘이 어긋나면 선발로 배정됐는데 로테엔 못 드는 선수가 생긴다
+	if rank <= size_of("LEAGUE_KBL"):
+		return "%d선발" % rank
+	return "스윙맨" if seen >= 60.0 else "롱릴리프"
+
+
+## 프로 보직인가 — 선발이면 로테이션을 타고, 아니면 불펜 확률을 탄다
+static func is_starter_role(role: String) -> bool:
+	return role.ends_with("선발")
+
+
 ## 불펜 역할별 등판 확률. 02 값 그대로다
 const RELIEVER_CHANCE: Dictionary = {
 	"마무리": 0.55, "셋업맨": 0.45, "중간계투": 0.35,

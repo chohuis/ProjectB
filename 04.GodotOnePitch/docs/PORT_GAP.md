@@ -3269,3 +3269,46 @@ decay  02 {on_move: 0.6, apart_per_season: 0.9, apart_floor: 2}
 4. **실측으로 확인** — 프로 등판이 7 → 29 근처로 오는가
 
 ⚠ **밸런스가 아니라 이주다** — 02 값을 그대로 옮기는 것이다.
+
+## P-8c — 프로 보직 배정 함수를 옮겼다 (엔진 ✅ · 배선 ⬜)
+
+02는 보직 함수가 **둘**인데 04는 고교 것만 옮겨 놓고 프로에서도 그걸 썼다.
+
+| | 02 `player_engine.rs` | 04(전) |
+|---|---|---|
+| 고교 | `:136 assign_highschool_position` — 전체 투수 · `higher <= 2` → SP/RP | `assign_position` — 글자 그대로 같다 |
+| 프로 | `:99 assign_protagonist_role` — **선발 OVR만** · `rank <= 5` → "N선발" · 그 밖 스윙맨/롱릴리프 · CP→마무리 · RP→OVR대별 | **없었다** |
+
+→ **`Rotation.assign_pro_role`** 신설(02 값 그대로) · `is_starter_role`.
+`SeasonRunner.roll_over`가 무대로 갈라 부른다.
+
+⚠ **`size_of("LEAGUE_KBL")`을 문턱으로 쓴다.** 02는 `rank <= 5`라고 상수로
+적었지만 04엔 로테이션 크기 함수가 이미 있다 — **둘을 묶어야 어긋나지
+않는다**(`rotation.gd:77` 주석이 경고한 그 어긋남이다).
+
+⚠ **`position`은 SP/RP 둘로 남긴다** — 로테이션 선정이 그걸 본다.
+세분된 역할("3선발"·"셋업맨")은 `role`에 담기고 등판 확률이 그걸 읽는다.
+
+검사 11 · 전부 통과. ⚠ **검사 하나가 처음엔 틀렸다** — 보정 5를 주면
+`seen 75`라 **4선발**인데 5선발을 기대했다. 순위가 아니라 "로테 안인가"로
+봐야 했다.
+
+### ⬜ 아직 실측이 안 따라온다
+
+```
+run 전 stage=pro_kbl league=LEAGUE_KBL
+run 후 stage=pro_kbl league=LEAGUE_KBL 같은사전=true
+팀 144경기 · 등판 7 · role=SP · position=SP · ovr=68.0
+```
+
+🔴 **무대는 `pro_kbl`인데 `role=SP`다.** `assign_pro_role`은 "SP"를 낼 수
+없다(선발이면 "N선발") — **그 갈래가 안 돌았다는 뜻이다.**
+
+**다음에 볼 것**(순서대로):
+1. `SeasonRunner.run`이 `roll_over`를 **실제로 부르는가** —
+   `season_runner.gd:783`에 조건이 붙어 있는지 찍는다
+2. `roll_over` 안에서 내 코드 **앞**에 이른 `return`이 있는지
+3. `roll_over` **뒤**에 `me["role"]`을 덮는 자리가 있는지
+
+⚠ **검사가 통과해도 실측이 안 따라오면 안 끝난 것이다** — 검사 11개가
+전부 초록인데 게임은 그대로다.

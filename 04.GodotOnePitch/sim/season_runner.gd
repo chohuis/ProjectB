@@ -722,10 +722,36 @@ static func roll_over(state: Dictionary) -> Dictionary:
 	#
 	# ⚠ **새 게임 생성(`world.gd:301`)에는 안 넘긴다** — 그 시점엔 관계가
 	# 아직 없어서 편향이 늘 0이다. 넘기면 절대 안 걸리는 죽은 인자가 된다
-	me["role"] = Rotation.assign_position(
-		float(me.get("pitching", {}).get("ovr", 0.0)), team_ovrs,
-		float(RelationshipRunner.effects_of(state).get("role_ovr_bias", 0.0)))
-	me["position"] = me["role"]
+	# 🔴 **무대로 갈라 부른다** (P-8c). 02도 함수가 둘이다 —
+	# 고교 `assign_highschool_position`(전체 투수 · 둘 이하)와
+	# 프로 `assign_protagonist_role`(**선발 OVR만** · `rank <= 5`).
+	# 04는 고교 것만 옮겨 놓고 프로에서도 그걸 썼고, 그래서 프로 로테
+	# 5인과 어긋나 **144경기에 등판 7**이었다.
+	var stage: String = CareerPath.stage_of(me)
+	var is_pro: bool = stage != "highschool" and stage != "university" \
+		and stage != "independent"
+	var bias: float = float(RelationshipRunner.effects_of(state) \
+		.get("role_ovr_bias", 0.0))
+	if is_pro:
+		# ⚠ **분모가 선발만이다** — 불펜까지 세면 순위가 밀려 선발이
+		# 훨씬 어려워진다(그게 04가 하던 것이다)
+		var sp_ovrs: Array = []
+		for q in World.roster_of(state.get("world", {}), team_id):
+			if q.get("id", "") == me.get("id", ""):
+				continue
+			if String(q.get("position", "")) == "SP":
+				sp_ovrs.append(q.get("pitching", {}).get("ovr", 0.0))
+		me["role"] = Rotation.assign_pro_role(
+			float(me.get("pitching", {}).get("ovr", 0.0)), sp_ovrs, bias,
+			String(me.get("position", "SP")))
+		# ⚠ **`position`은 SP/RP 둘뿐이다** — 로테이션 선정이 그걸 본다.
+		# 세분된 역할(3선발·셋업맨)은 `role`에 남고 등판 확률이 그걸 읽는다
+		me["position"] = "SP" if Rotation.is_starter_role(String(me["role"])) \
+			else "RP"
+	else:
+		me["role"] = Rotation.assign_position(
+			float(me.get("pitching", {}).get("ovr", 0.0)), team_ovrs, bias)
+		me["position"] = me["role"]
 
 	state["schedule"] = World.build_schedule(state.get("world", {}), year, me,
 		team_id, int(state.get("seed", 0)))
