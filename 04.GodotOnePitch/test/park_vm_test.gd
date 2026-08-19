@@ -165,6 +165,89 @@ func test_the_mound_keeps_its_depth_in_every_tier() -> void:
 			.is_between(0.60, 0.68)
 
 
+## 🔴 **다시 재는 길이 살아 있다** (D-6b).
+##
+## 위 검사들은 **지금 값이 맞나**만 본다. 그림이 바뀌면 **새 값을 내야**
+## 하는데 그 도구가 조용히 썩으면 아무도 모른다 — 화면은 멀쩡하니까.
+## 그래서 도구를 실제로 돌려 표와 같은 값을 내는지 본다.
+##
+## ⚠ **`--write`를 안 준다** — 검사가 데이터를 고치면 안 된다.
+func test_the_measuring_tool_agrees_with_the_table() -> void:
+	var said: Array = []
+	var code: int = ParkMeasure.new().run(
+		func(_line: String) -> void: pass,
+		func(line: String) -> void: said.append(line),
+		false)
+	assert_array(said).override_failure_message(
+		"구장을 다시 재니 표와 달랐다 — %s" % str(said)).is_empty()
+	assert_int(code).override_failure_message(
+		"재는 도구가 %d를 냈다" % code).is_equal(0)
+
+
+## 🔴 **틀린 표를 줘도 그림에서 찾아낸다** (D-6b).
+##
+## 위 검사만으로는 부족하다. 표가 이미 맞으면 적합 변환이 **항등**
+## (x' = 1.0000x)이 되어 **도구가 아무 일도 안 해도 같은 값이 나온다** —
+## 변이 8건 중 6건이 그래서 안 잡혔다. 그러니 표를 02 값으로 되돌려 놓고
+## 도구가 그림에서 다시 찾아내는지 본다.
+func test_the_tool_finds_the_bases_even_from_a_wrong_table() -> void:
+	# 02가 쓰던 값 — 그림보다 42~69px 위다
+	var was: Dictionary = {
+		"pro": {"home": [497, 790], "first": [715, 580], "second": [497, 454],
+			"third": [280, 580], "mound": [497, 548]},
+		"university": {"home": [501, 818], "first": [704, 626],
+			"second": [501, 511], "third": [299, 626], "mound": [501, 597]},
+		"highschool": {"home": [499, 793], "first": [707, 558],
+			"second": [499, 417], "third": [292, 558], "mound": [499, 523]},
+	}
+	var parks: Dictionary = ParkVm.data().duplicate(true)
+	for tier in was:
+		for k in was[tier]:
+			parks["coords"][tier]["field"][k] = {
+				"x": was[tier][k][0], "y": was[tier][k][1]}
+
+	var tmp: String = "user://zz_park_measure_test.json"
+	var f: FileAccess = FileAccess.open(tmp, FileAccess.WRITE)
+	assert_object(f).is_not_null()
+	f.store_string(JSON.stringify(parks))
+	# ⚠ **`f = null`로는 안 닫힌다.** 해제 시점이 미뤄져 도구가 반쯤 쓰인
+	# 파일을 읽었다 — "Unterminated string"
+	f.close()
+
+	var m: ParkMeasure = ParkMeasure.new()
+	var noop: Callable = func(_line: String) -> void: pass
+	m.run(noop, noop, false, tmp)
+	DirAccess.remove_absolute(tmp)
+
+	# **세 티어를 다 본다.** 프로만 보면 고교가 8px 어긋나도 통과한다 —
+	# 축별 1차 변환이 고교 그림의 원근을 못 맞추는 게 거기서 드러난다
+	for tier in was:
+		var got: Dictionary = m.last_fit.get(tier, {}).get("field", {})
+		assert_bool(got.is_empty()).override_failure_message(
+			"%s를 02 값에서 시작하니 좌표를 아예 못 냈다" % tier).is_false()
+		var want: Dictionary = ParkVm.coords_of(tier)["field"]
+		for k in want:
+			var p: Dictionary = got.get(k, {})
+			assert_int(int(p.get("y", -1))).override_failure_message(
+				"%s %s를 02 값(%d)에서 %d로 냈다 — 그림 값은 %d다"
+				% [tier, k, int(was[tier][k][1]), int(p.get("y", -1)),
+					int(want[k]["y"])]).is_equal(int(want[k]["y"]))
+			assert_int(int(p.get("x", -1))).override_failure_message(
+				"%s %s의 x가 %d다 — 그림 값은 %d다"
+				% [tier, k, int(p.get("x", -1)), int(want[k]["x"])]) \
+				.is_equal(int(want[k]["x"]))
+
+		# ⚠ **투수는 마운드에 선다.** field만 보면 수비 아홉이 통째로
+		# 어긋나도 통과한다
+		for d in m.last_fit[tier]["defense"]:
+			if String(d["pos"]) != "P":
+				continue
+			assert_int(int(d["y"])).override_failure_message(
+				"%s 투수를 %d에 뒀다 — 마운드는 %d다"
+				% [tier, int(d["y"]), int(got["mound"]["y"])]) \
+				.is_equal(int(got["mound"]["y"]))
+
+
 func test_the_view_box_matches_the_original() -> void:
 	assert_vector(ParkVm.viewbox()).is_equal(Vector2(1000, 920))
 

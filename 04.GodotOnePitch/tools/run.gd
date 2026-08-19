@@ -103,6 +103,10 @@ func _dispatch(task: String, args: PackedStringArray) -> int:
 				arg_int(args, "careers", 12), arg_int(args, "seed", 20270101))
 		"bench:rng":
 			return RngProbe.new().run(log_line, fail)
+		"measure:park":
+			# `--write 1`을 줘야 `parks.json`을 고친다. 기본은 재고 견주기만
+			return ParkMeasure.new().run(log_line, fail,
+				arg_int(args, "write", 0) != 0)
 		_:
 			log_line("모르는 갈래: %s" % task)
 			_print_tasks()
@@ -120,6 +124,7 @@ func _print_tasks() -> void:
 	print("  measure:pitch  구종 습득 — 몇 해에 몇 개까지 배우나 (F-1)")
 	print("  measure:growth NPC 주간 성장")
 	print("  measure:offseason 오프시즌")
+	print("  measure:park   구장 좌표가 그림과 맞나 — `--write 1`이면 다시 잡는다")
 	print("")
 	print("공통 옵션:  --runs N  --shards N  --shard N  --seed N")
 
