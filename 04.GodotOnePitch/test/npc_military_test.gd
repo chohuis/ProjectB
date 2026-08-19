@@ -77,7 +77,11 @@ func _world(n: int) -> Dictionary:
 	var rosters: Dictionary = {}
 	for i in n:
 		rosters["T%d" % i] = [{
-			"id": "N%d" % i, "age": 27, "career_stage": "pro",
+			# ⚠ **실제 NPC엔 이름이 있다**(`player_gen`이 `NameGen`으로 만든다).
+			# fixture가 그걸 빠뜨려 기록 검사가 "이름이 비었다"로 걸렸다 —
+			# **fixture가 게임이 만드는 모양을 안 따르면 검사가 헛것을 본다**
+			"id": "N%d" % i, "name": "선수%d" % i, "age": 27,
+			"career_stage": "pro", "position": "SP",
 			"league_id": "LEAGUE_KBL", "team_id": "T%d" % i,
 			"military_status": Military.STATUS_UNSERVED,
 			"pitching": {"ovr": 40.0}, "contract_years": 1,
@@ -210,3 +214,117 @@ func test_주간_처리가_부른다() -> void:
 	assert_int(src.find("NpcMilitary")).override_failure_message(
 		"NPC 병역을 아무도 안 부른다 — 만들어 놓고 죽은 배선이 된다") \
 		.is_greater(-1)
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+#
+# 🔴 **처음 쓴 검사는 2/7만 잡았다.** 둘이 겹쳤다:
+#   · fixture에 **복무 중인 사람이 없어** 전역이 아예 안 일어났다 —
+#     "전역을 안 적는다" 변이가 통과했다
+#   · 검사가 **합계**(sports + general)만 봐서 한쪽이 통째로 빠져도 통과했다
+# **종류마다 따로 본다. 그리고 fixture가 셋을 다 일으키는지 먼저 확인한다.**
+
+
+## 복무 중인 사람을 섞은 판 — 그래야 전역이 일어난다
+func _world_with_serving(n: int, serving: int) -> Dictionary:
+	var s: Dictionary = _world(n)
+	var i: int = 0
+	for tid in s["world"]["rosters"]:
+		if i >= serving:
+			break
+		var q: Dictionary = s["world"]["rosters"][tid][0]
+		q["military_status"] = Military.STATUS_SERVING
+		q["military_unit"] = "general"
+		# 이번 해에 만기가 되게 — 한 시즌만 더 채우면 끝난다
+		q["military_service_weeks"] = Military.SERVICE_WEEKS \
+			- Calendar.WEEKS_PER_SEASON
+		i += 1
+	return s
+
+
+func _events_of(kind: String) -> Array:
+	var out: Array = []
+	for e in EventLog.all():
+		if String(e["type"]) == kind:
+			out.append(e)
+	return out
+
+
+## 🔴 **전역이 기록에 남는다.** fixture에 복무자가 없으면 이 검사는
+## 헛돈다 — 그래서 전역이 실제로 일어났는지 먼저 본다
+func test_전역이_기록된다() -> void:
+	EventLog.clear()
+	var s: Dictionary = _world_with_serving(40, 6)
+	var before: int = NpcMilitary.serving_count(s)
+	assert_int(before).override_failure_message(
+		"fixture에 복무 중인 사람이 없다 — 검사가 헛돈다").is_greater(0)
+
+	NpcMilitary.run(s, 360)
+	var evs: Array = _events_of("discharge")
+	assert_int(evs.size()).override_failure_message(
+		"복무자 %d명이 만기인데 전역 기록이 없다" % before).is_greater(0)
+	var who: Dictionary = evs[0]["players"][0]
+	assert_str(String(who["name"])).is_not_empty()
+	assert_str(String(who["to_team"])).override_failure_message(
+		"전역인데 돌아갈 팀이 없다").is_not_empty()
+
+
+## 🔴 **일반병 입대가 기록에 남는다** — 종류마다 따로 본다.
+## 합계로 보면 한쪽이 통째로 빠져도 통과한다
+func test_일반병_입대가_기록된다() -> void:
+	EventLog.clear()
+	var s: Dictionary = _world_with_serving(40, 6)
+	NpcMilitary.run(s, 360)
+	var evs: Array = _events_of("enlist_general")
+	assert_int(evs.size()).override_failure_message(
+		"일반병 입대가 기록에 없다").is_greater(0)
+	var who: Dictionary = evs[0]["players"][0]
+	assert_str(String(who["name"])).is_not_empty()
+	assert_str(String(who["detail"])).contains("OVR")
+	assert_str(String(who["from_team"])).override_failure_message(
+		"입대인데 떠난 팀이 없다").is_not_empty()
+
+
+## ⚠ **`input`은 후보 수다** — "몇 명 중 몇이 갔나"를 읽으려면 분모가 있어야
+## 한다. **모든 입대 기록을 본다** — 하나만 보면 다른 쪽 변이를 놓친다
+func test_입대_기록마다_분모가_있다() -> void:
+	EventLog.clear()
+	var s: Dictionary = _world_with_serving(40, 6)
+	NpcMilitary.run(s, 360)
+	var seen: int = 0
+	for e in EventLog.all():
+		if not String(e["type"]).begins_with("enlist_"):
+			continue
+		seen += 1
+		assert_int(int(e["counts"]["input"])).override_failure_message(
+			"%s의 분모가 처리 수와 같다 — 몇 중 몇인지 안 읽힌다" % e["type"]) \
+			.is_greater(e["players"].size())
+	assert_int(seen).override_failure_message(
+		"입대 기록이 하나도 없다 — 검사가 헛돈다").is_greater(0)
+
+
+## 🔴 **체육부대도 따로 본다.** 처음엔 "이 fixture로는 안 뽑힌다"고 적었는데
+## **틀렸다** — 실제로 뽑히고 있었고 **보는 검사가 없었을 뿐**이다.
+## 변이가 안 잡히면 "코드가 안 돈다"고 넘겨짚지 말고 **한 번 찍어 본다**
+func test_체육부대_입대가_기록된다() -> void:
+	EventLog.clear()
+	var s: Dictionary = _world_with_serving(40, 6)
+	NpcMilitary.run(s, 360)
+	var evs: Array = _events_of("enlist_sports")
+	assert_int(evs.size()).override_failure_message(
+		"체육부대 입대가 기록에 없다").is_greater(0)
+	var who: Dictionary = evs[0]["players"][0]
+	assert_str(String(who["name"])).is_not_empty()
+	assert_str(String(who["detail"])).contains("OVR")
+	assert_str(String(who["from_team"])).override_failure_message(
+		"입대인데 떠난 팀이 없다").is_not_empty()
+
+
+## ⚠ **체육부대와 일반병은 다른 줄이다** — 02도 갈라 적는다.
+## 한 줄로 합치면 "누가 체육부대로 갔나"를 못 가린다
+func test_체육부대와_일반병이_다른_줄이다() -> void:
+	EventLog.clear()
+	var s: Dictionary = _world_with_serving(40, 6)
+	NpcMilitary.run(s, 360)
+	assert_int(_events_of("enlist_sports").size()).is_greater(0)
+	assert_int(_events_of("enlist_general").size()).is_greater(0)

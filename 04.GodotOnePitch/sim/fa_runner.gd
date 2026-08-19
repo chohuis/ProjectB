@@ -219,8 +219,25 @@ static func run_market(state: Dictionary,
 	# 목적지의 리그 — **선수가 리그를 넘으므로 정원도 목적지 것으로 본다**
 	var league_of: Dictionary = _league_index(world)
 
+	# 🔴 **시장에 나온 사람이 신청자다** (G-6 · 02 `fa_apply`).
+	# `market_players_of`가 이름·OVR·나이를 이미 담고 있다
+	var applied: Array = []
+	for mp in market_players:
+		applied.append(EventLog.entry(String(mp["id"]), String(mp["name"]),
+			"OVR:%d %d세 · %d만" % [int(roundf(float(mp["ovr"]))),
+				int(mp["age"]), int(mp["salary"])],
+			String(mp["from_team_id"])))
+	# ⚠ **분모를 따로 안 준다.** 02는 `counts.input`에 **전체 NPC 수**를 넣어
+	# "몇 명 중 몇이 신청했나"를 읽게 하는데, 04에서 여기 손에 잡히는 건
+	# `pro_eligible_of`(=FA 자격자)뿐이고 `market_players_of`가 그걸 그대로
+	# 변환하므로 **분모와 분자가 같아진다.** 같은 수를 두 번 적느니 안 적는다
+	EventLog.push("fa_apply", int(state.get("season_year", 0)), applied)
+
 	var out: Dictionary = FaMarket.resolve(market_players, teams,
 		pro_salaries(world), rng)
+
+	# 계약이 성사돼 실제로 옮긴 사람 (02 `fa_result`)
+	var signed: Array = []
 
 	var moved: int = 0
 	# ⚠ **등급·보상 수를 같이 낸다** (P-5b). 계측이 이걸 못 읽어서 **끝난
@@ -258,6 +275,13 @@ static func run_market(state: Dictionary,
 		# **매년 같은 사람이 다시 FA가 된다**
 		p["salary"] = int(s["salary"])
 		p["contract_years"] = int(s["years"])
+		# ⚠ **계약 조건까지 적는다** — 02도 "3500만/2년" 꼴로 쓴다.
+		# 누가 옮겼는지만으로는 그게 큰 계약인지 모른다
+		signed.append(EventLog.entry(String(s["id"]),
+			String(p.get("name", s["id"])),
+			"OVR:%d · %d만/%d년" % [int(roundf(Contract.core_ovr(p))),
+				int(s["salary"]), int(s["years"])],
+			String(s["from_team_id"]), String(s["to_team_id"])))
 		var events: Array = p.get("career_events", [])
 		events.append({"year": int(state.get("season_year", 0)), "type": "fa_signed",
 			"from_team_id": String(s["from_team_id"]),
@@ -286,6 +310,12 @@ static func run_market(state: Dictionary,
 		for p in players:
 			if String(p["id"]) == id:
 				p["fa_unsigned"] = true
+
+	# ⚠ **`input`은 신청자 수다** — 02도 `counts.input`에 신청 수를 넣어
+	# "몇 명 중 몇이 계약했나"를 읽게 한다
+	EventLog.push("fa_result", int(state.get("season_year", 0)), signed,
+		applied.size(), 0, "",
+		"계약 %d / 신청 %d · 이적 %d" % [signed.size(), applied.size(), transfers])
 
 	return {"signings": out["signings"].size(), "unsigned": out["unsigned"].size(),
 		"moved": moved, "grades": by_grade, "compensations": comps,

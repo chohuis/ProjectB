@@ -583,3 +583,55 @@ func test_정원은_목적지_리그_것이다() -> void:
 				continue
 			assert_int(n).override_failure_message(
 				"%s(%s)가 %d명이다 — 정원은 %d명이다" % [tid, lid, n, lim]) 				.is_less_equal(lim)
+
+
+# ── 기록에 남나 (G-6) ─────────────────────────────────────────
+
+## 🔴 **02는 FA를 둘로 나눠 적는다** — 신청(`fa_apply`)과 계약(`fa_result`).
+## "몇 명이 나와서 몇이 계약했나"가 한 줄로 읽혀야 한다
+func test_fa_is_written_as_apply_and_result() -> void:
+	EventLog.clear()
+	var s: Dictionary = _state()
+	FaRunner.run_market(s, _rng(3))
+
+	assert_int(EventLog.count_of("fa_apply")).override_failure_message(
+		"FA 신청이 기록에 없다").is_greater(0)
+	assert_int(EventLog.count_of("fa_result")).override_failure_message(
+		"FA 계약이 기록에 없다").is_greater(0)
+
+	var apply: Dictionary = {}
+	var result: Dictionary = {}
+	for e in EventLog.all():
+		if String(e["type"]) == "fa_apply":
+			apply = e
+		elif String(e["type"]) == "fa_result":
+			result = e
+	assert_int(apply["players"].size()).override_failure_message(
+		"시장에 나온 사람이 한 줄도 안 적혔다").is_greater(0)
+	assert_str(String(apply["players"][0]["name"])).is_not_empty()
+
+	# ⚠ **`input`은 신청자 수다** — "몇 중 몇"을 읽으려면 분모가 있어야 한다
+	assert_int(int(result["counts"]["input"])).override_failure_message(
+		"계약 기록의 분모가 신청자 수가 아니다") \
+		.is_equal(apply["players"].size())
+	assert_str(String(result["extra"])).contains("신청")
+
+
+## ⚠ **계약 조건까지 적는다** — 02도 "3500만/2년" 꼴이다.
+## 누가 옮겼는지만으로는 그게 큰 계약인지 모른다
+func test_a_signing_records_the_contract() -> void:
+	EventLog.clear()
+	var s: Dictionary = _state()
+	FaRunner.run_market(s, _rng(3))
+	for e in EventLog.all():
+		if String(e["type"]) != "fa_result" or e["players"].is_empty():
+			continue
+		var who: Dictionary = e["players"][0]
+		assert_str(String(who["detail"])).override_failure_message(
+			"계약 조건이 없다: %s" % who["detail"]).contains("만/")
+		assert_str(String(who["detail"])).contains("OVR")
+		assert_str(String(who["to_team"])).is_not_empty()
+		return
+	# 계약이 한 건도 안 나오면 검사가 헛돈다
+	assert_bool(false).override_failure_message(
+		"fixture에서 FA 계약이 아예 안 일어났다 — 검사가 헛돈다").is_true()

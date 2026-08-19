@@ -1807,12 +1807,24 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
         ⚠ **`p["league_id"]`를 덮어쓰기 전에 from을 읽는다** — 순서가 바뀌면
         from과 to가 같아진다.
         ⚠ `run_team`에 이미 `down`(내릴 후보)이 있어 기록용은 `down_log`다
-      - [ ] ② **남은 열 종류** — 트레이드(`trade_runner`) · FA신청 · FA이동
-        (`fa_runner`) · 드래프트(`npc_draft`) · 체육부대 · 일반병 · 전역
-        (`npc_military`) · 재계약 · 계약조정(`contract`) · 은퇴(`retirement`).
-        **`trade_runner`도 구조가 같다** — `_move`(259행)에 `log_into`를 주고
-        `run_league`가 모아 `run`이 적는다. 02는 detail을 "OVR:75 SP 28세"
-        꼴로 쓴다
+      - [x] ② **여섯 종류를 붙였다** — 트레이드 · FA신청 · FA이동 ·
+        체육부대 · 일반병 · 전역. 각 실측 검사 + **변이 5/5 · 4/4 · 7/7**
+      - [ ] ② **남은 넷** — 조사는 끝났다:
+        · **은퇴** `Offseason.run`이 `{retired: [선수 사전]}`을 그대로 준다 →
+          `season_runner.gd:119`에서 적으면 된다. **가장 쉽다**
+        · **드래프트** `NpcDraft.apply`(`npc_draft.gd:151`)가 `npc`를 손에
+          쥐고 있다 → `log_into`를 주고 `season_runner.gd:286`이 적는다
+        · **재계약**(02 `renewal`) — 🔴 **04엔 별도 처리가 없다.**
+          `Contract.advance_year`가 계약을 한 해 줄이고 0이 되면 **전부 FA
+          시장으로** 간다. 원소속 재계약은 **FA 결과에서 `from == to`**로
+          나타난다(`fa_runner`의 `transfers`가 그걸로 이적을 가린다) →
+          `fa_result`에서 갈라 적으면 된다
+        · **계약조정**(02 `adjustment`) — 🔴 **04에 대응이 아예 없다.**
+          02는 성적에 따라 연봉을 조정하는데 04엔 그 처리가 없다.
+          ⚠ `EventLog.TYPES`에 열둘을 넣었는데 이건 **영영 안 쓰이는 갈래**가
+          된다 — **죽은 갈래를 두지 않는다**는 규칙에 걸린다.
+          **판단이 필요하다**: TYPES에서 빼거나(02와 어긋남을 문서에 남긴다),
+          아니면 계약조정을 04에 만든다(그건 이주가 아니라 신규 개발이다)
       - [ ] 🔴 **배선 검사를 실측으로 바꾼다.** 지금 `test_promotion_writes_to_the_log`가
         **소스 문자열 검사**라 약하다 — `run_team`을 부르는 검사가 없어
         로스터 fixture를 새로 지어야 했다. **남은 종류를 붙이기 전에** 이걸

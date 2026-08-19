@@ -112,7 +112,9 @@ static func serving_count(state: Dictionary) -> int:
 ## 세도 같은 곳에 떨어진다
 ## ⚠ **전역자의 포지션을 돌려준다** — 02 `select_sports_unit_ids`의 Phase 1이
 ## "그해 전역자가 비운 자리"를 먼저 채운다. 개수만 세면 그 단계가 죽는다
-static func _serve_year(state: Dictionary) -> Array:
+## `log_into`를 주면 **전역한 사람**을 담는다 (G-6 · 02 `discharge`).
+## ⚠ **반환은 포지션 배열이다** — 사람을 담으려면 자리를 따로 받아야 한다
+static func _serve_year(state: Dictionary, log_into: Array = []) -> Array:
 	var vacating: Array = []
 	for q in _serving(state):
 		var served: int = int(q.get("military_service_weeks", 0)) \
@@ -123,6 +125,9 @@ static func _serve_year(state: Dictionary) -> Array:
 			q["military_unit"] = ""
 			q["military_service_weeks"] = 0
 			vacating.append(String(q.get("position", "")))
+			log_into.append(EventLog.entry(String(q.get("id", "")),
+				String(q.get("name", "")), _detail_of(q),
+				"", String(q.get("team_id", ""))))
 		else:
 			q["military_service_weeks"] = served
 	return vacating
@@ -138,7 +143,20 @@ static func discharged_count(state: Dictionary) -> int:
 ##
 ## ⚠ **주인공은 여기서 안 보낸다.** 뽑혔는지 여부만 명단에 남고, 실제로
 ## 보내는 건 사용자 답을 받은 `CareerRunner`다
-static func _run_sports(state: Dictionary, vacating: Array, year: int) -> int:
+## 사람 한 줄에 붙일 요약 — 02가 "OVR:75 SP 28세" 꼴로 적는다 (G-6)
+static func _detail_of(q: Dictionary) -> String:
+	var out: String = "OVR:%d" % int(roundf(Contract.core_ovr(q)))
+	var pos: String = String(q.get("position", ""))
+	if not pos.is_empty():
+		out += " %s" % pos
+	var age: int = int(q.get("age", 0))
+	if age > 0:
+		out += " %d세" % age
+	return out
+
+
+static func _run_sports(state: Dictionary, vacating: Array, year: int,
+		log_into: Array = []) -> int:
 	var picked: Array = Military.resolve_sports_unit(state, vacating)
 	if picked.is_empty():
 		return 0
@@ -153,6 +171,9 @@ static func _run_sports(state: Dictionary, vacating: Array, year: int) -> int:
 			continue
 		_enlist_npc(q, year)
 		q["military_unit"] = "sports"
+		log_into.append(EventLog.entry(String(q.get("id", "")),
+			String(q.get("name", "")), _detail_of(q),
+			String(q.get("team_id", ""))))
 		gone += 1
 	return gone
 
@@ -168,7 +189,12 @@ static func run(state: Dictionary, at_day: int) -> int:
 
 	# ⚠ **전역을 먼저 돌린다.** 뒤에 두면 올해 입대한 사람이 그 자리에서
 	# 한 해를 채운 것으로 잡힌다
-	var vacating: Array = _serve_year(state)
+	# 🔴 **셋을 갈라 적는다** (G-6). 02도 `enlist_sports`·`enlist_general`·
+	# `discharge`가 따로다 — "올해 셋이 갔고 둘이 돌아왔다"가 한 줄로 읽혀야 한다
+	var discharged: Array = []
+	var sports: Array = []
+	var general: Array = []
+	var vacating: Array = _serve_year(state, discharged)
 
 	var year: int = int(state.get("season_year", 0))
 	var seed_value: int = int(state.get("seed", 0))
@@ -176,7 +202,7 @@ static func run(state: Dictionary, at_day: int) -> int:
 	# ⚠ **체육부대를 일반병보다 먼저 뽑는다.** 뒤에 두면 상위권이 이미
 	# 일반병으로 가 버려 **체육부대 정원이 하위권으로 채워진다** —
 	# 02는 상위 29명이 지원자 풀이다
-	var gone: int = _run_sports(state, vacating, year)
+	var gone: int = _run_sports(state, vacating, year, sports)
 
 	var pool: Array = _pool(state)
 	var ranked: Array = pool.duplicate()
@@ -213,7 +239,15 @@ static func run(state: Dictionary, at_day: int) -> int:
 		})
 		if r.randf() < prob:
 			_enlist_npc(q, year)
+			general.append(EventLog.entry(String(q.get("id", "")),
+				String(q.get("name", "")), _detail_of(q),
+				String(q.get("team_id", ""))))
 			gone += 1
+
+	# ⚠ **`input`은 후보 수다** — "몇 명 중 몇이 갔나"를 읽으려면 분모가 있어야 한다
+	EventLog.push("discharge", year, discharged)
+	EventLog.push("enlist_sports", year, sports, pool.size())
+	EventLog.push("enlist_general", year, general, pool.size())
 	return gone
 
 
