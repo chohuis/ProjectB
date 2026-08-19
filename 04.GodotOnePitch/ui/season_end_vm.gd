@@ -38,6 +38,7 @@ static func build(digest: Dictionary, p: Dictionary = {}) -> Dictionary:
 		return {"year": 0, "title": "", "tabs": TABS, "has_data": false,
 			"summary_rows": [], "standings": [], "my_rank_label": "",
 			"tournament_rows": [], "team_best": [],
+			"team_games": [], "team_games_label": "",
 			"team_row": {}, "my_line": "", "my_awards": [], "game_log": [],
 			"award_rows": [],
 			"investment": {"show": false, "done": false,
@@ -78,6 +79,8 @@ static func build(digest: Dictionary, p: Dictionary = {}) -> Dictionary:
 		"team_row": team_row,
 		# ⚠ **순위가 0이면 "미정"이다.** 0위로 찍으면 꼴찌보다 나쁜 등수가 뜬다
 		"team_best": _team_best_rows(digest.get("team_best", {})),
+		"team_games": _team_game_rows(digest.get("team_games", [])),
+		"team_games_label": "%d경기" % digest.get("team_games", []).size(),
 		"my_rank_label": "%d위 / %d팀" % [my_rank, standings.size()] \
 			if my_rank > 0 else "순위 없음",
 
@@ -158,6 +161,27 @@ static func _summary_rows(s: Dictionary, ps_label: String = "") -> Array:
 		if n <= 0:
 			continue
 		out.append({"label": pair[1], "value": "%d명" % n})
+	return out
+
+
+## 팀이 치른 경기 — G-1d. 02 `SeasonEndModal:549`의 다섯 칸
+## (주차 · 홈/원정 · 상대팀 · 점수 · 승무패).
+##
+## ⚠ **한 줄을 통째로 만든다** — 화면이 "승/무/패"를 고르면 그게 계산이다.
+## 이긴 경기를 눈에 띄게 하려고 `won`도 같이 준다(등판 목록과 같은 규칙이다)
+static func _team_game_rows(list: Array) -> Array:
+	var out: Array = []
+	for g in list:
+		var my: int = int(g.get("my_score", 0))
+		var opp: int = int(g.get("opp_score", 0))
+		var mark: String = "승" if my > opp else ("무" if my == opp else "패")
+		out.append({
+			"label": "W%d %s" % [int(g.get("week", 0)),
+				"홈" if bool(g.get("is_home", false)) else "원정"],
+			"value": "%s  %d–%d  %s" % [String(g.get("opponent", "")),
+				my, opp, mark],
+			"won": my > opp,
+		})
 	return out
 
 

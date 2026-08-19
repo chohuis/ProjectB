@@ -181,6 +181,15 @@ func _build_team() -> void:
 		for b in best:
 			_pair(String(b["label"]), String(b["value"]))
 
+	# 🔴 **팀이 치른 경기** (G-1d). `game_log`는 내가 던진 경기만이라,
+	# 불펜으로 열 번 나온 해엔 팀이 뭘 했는지 볼 자리가 없었다
+	var games: Array = _vm.get("team_games", [])
+	if not games.is_empty():
+		_heading("팀 경기 기록  %s" % String(_vm.get("team_games_label", "")))
+		for g in games:
+			_pair(String(g["label"]), String(g["value"]),
+				AppTheme.ACCENT if bool(g["won"]) else AppTheme.TEXT_DIM)
+
 
 func _build_personal() -> void:
 	var line: String = String(_vm.get("my_line", ""))

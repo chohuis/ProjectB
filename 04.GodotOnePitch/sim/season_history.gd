@@ -222,7 +222,49 @@ static func digest(state: Dictionary, year: int, summary: Dictionary) -> Diction
 		"standings": LeagueVm.build(state),
 		"tournaments": _tournaments_of(state, year),
 		"team_best": _team_best_of(state, String(me.get("team_id", ""))),
+		"team_games": _team_games_of(state, String(me.get("team_id", ""))),
 	}
+
+
+## 팀이 치른 경기 — G-1d. 02 `SeasonEndModal:549`의 표.
+##
+## 🔴 **`my_record.game_log`는 내가 던진 경기만이다.** 그래서 불펜으로 한 해
+## 열 번 나온 선수는 팀이 144경기를 어떻게 치렀는지 결산에서 볼 수 없었다 —
+## 02는 **팀 일정 전부**를 따로 싣는다(`teamGames`, `SeasonEndModal:170`).
+##
+## ⚠ **안 치른 경기는 뺀다** — 일정에는 있지만 결과가 없는 날이다.
+## 시즌 도중에 결산을 열면(은퇴·이적) 남은 일정이 0-0 패배로 줄줄이 뜬다
+static func _team_games_of(state: Dictionary, team_id: String) -> Array:
+	if team_id.is_empty():
+		return []
+	var names: Dictionary = state.get("team_names", {})
+	var out: Array = []
+	for g in state.get("schedule", []):
+		var home: String = String(g.get("home", ""))
+		var away: String = String(g.get("away", ""))
+		if home != team_id and away != team_id:
+			continue
+		# ⚠ **`result`가 `null`인 일정이 있다.** `get(k, {})`는 키가 있고
+		# 값이 null이면 **null을 준다** — 기본값으로 안 떨어진다.
+		# 실제 일정이 그렇게 생겼고, "키 없음"과 "빈 사전"만 검사했다가
+		# `season_runner`에서 37건이 터졌다
+		var raw: Variant = g.get("result")
+		if not (raw is Dictionary):
+			continue
+		var res: Dictionary = raw
+		if res.is_empty():
+			continue
+		var is_home: bool = home == team_id
+		var my: int = int(res.get("home_score" if is_home else "away_score", 0))
+		var opp: int = int(res.get("away_score" if is_home else "home_score", 0))
+		var opp_id: String = away if is_home else home
+		out.append({
+			"week": Calendar.week_of(int(g.get("day", 0))),
+			"is_home": is_home,
+			"opponent": String(names.get(opp_id, opp_id)),
+			"my_score": my, "opp_score": opp,
+		})
+	return out
 
 
 ## 팀 내 베스트 — G-1c. 02 `SeasonEndModal:187·198`.

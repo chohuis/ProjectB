@@ -317,3 +317,56 @@ func test_nobody_qualified_means_no_rows() -> void:
 	d["team_best"] = {"pitcher": {}, "batter": {}}
 	assert_array(SeasonEndVm.build(d)["team_best"]).is_empty()
 	assert_bool(SeasonEndVm.build({}).has("team_best")).is_true()
+
+
+# ── 팀 경기 기록 (G-1d) ───────────────────────────────────────
+
+## 🔴 **`game_log`는 내가 던진 경기만이다.** 불펜으로 한 해 열 번 나온
+## 선수는 팀이 144경기를 어떻게 치렀는지 결산에서 볼 수 없었다 —
+## 02는 팀 일정 전부를 따로 싣는다(`SeasonEndModal:170`·`:549`)
+func test_the_team_schedule_shows_up() -> void:
+	var d: Dictionary = _digest()
+	d["team_games"] = [
+		{"week": 3, "is_home": true, "opponent": "유성고",
+			"my_score": 5, "opp_score": 2},
+		{"week": 4, "is_home": false, "opponent": "백제고",
+			"my_score": 1, "opp_score": 4},
+		{"week": 5, "is_home": true, "opponent": "한밭고",
+			"my_score": 3, "opp_score": 3},
+	]
+	var vm: Dictionary = SeasonEndVm.build(d)
+	var rows: Array = vm["team_games"]
+	assert_int(rows.size()).is_equal(3)
+	assert_str(String(vm["team_games_label"])).override_failure_message(
+		"경기 수를 안 적었다 — 02는 제목 옆에 N경기를 단다").is_equal("3경기")
+
+	# 주차 · 홈/원정 — 02의 앞 두 칸
+	assert_str(String(rows[0]["label"])).is_equal("W3 홈")
+	assert_str(String(rows[1]["label"])).is_equal("W4 원정")
+	# 상대 · 점수 · 승무패 — 뒤 세 칸
+	assert_str(String(rows[0]["value"])).contains("유성고")
+	assert_str(String(rows[0]["value"])).contains("5–2")
+	assert_str(String(rows[0]["value"])).ends_with("승")
+	assert_str(String(rows[1]["value"])).ends_with("패")
+	assert_str(String(rows[2]["value"])).override_failure_message(
+		"동점을 무승부로 안 봤다").ends_with("무")
+
+
+## 이긴 경기를 눈에 띄게 — 등판 목록과 같은 규칙이다
+func test_a_win_is_marked() -> void:
+	var d: Dictionary = _digest()
+	d["team_games"] = [
+		{"week": 3, "is_home": true, "opponent": "유성고",
+			"my_score": 5, "opp_score": 2},
+		{"week": 4, "is_home": true, "opponent": "유성고",
+			"my_score": 2, "opp_score": 5},
+	]
+	var rows: Array = SeasonEndVm.build(d)["team_games"]
+	assert_bool(bool(rows[0]["won"])).is_true()
+	assert_bool(bool(rows[1]["won"])).is_false()
+
+
+## 경기가 없으면 절이 안 뜬다 — 키는 있어야 한다
+func test_no_games_no_rows() -> void:
+	assert_array(SeasonEndVm.build(_digest())["team_games"]).is_empty()
+	assert_bool(SeasonEndVm.build({}).has("team_games")).is_true()

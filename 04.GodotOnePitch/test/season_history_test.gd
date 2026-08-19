@@ -311,3 +311,57 @@ func test_an_existing_row_gets_its_stat_line() -> void:
 	SeasonHistory.apply([p], {"P1": _pitcher("P1")}, 2027)
 	assert_str(p["career_history"][0]["stat_line"]).override_failure_message(
 		"진급이 만든 줄이 '-' 그대로다").contains("5승")
+
+
+# ── 팀 경기 (G-1d) ────────────────────────────────────────────
+
+## 🔴 **안 치른 경기는 뺀다.** 일정에는 있지만 결과가 없는 날이다 —
+## 시즌 도중에 결산을 열면(은퇴·이적) 남은 일정이 **0-0 패배로 줄줄이** 뜬다
+func test_unplayed_games_are_left_out() -> void:
+	var state: Dictionary = {
+		"team_names": {"TEAM_B": "유성고"},
+		"schedule": [
+			{"day": 20, "home": "TEAM_A", "away": "TEAM_B",
+				"result": {"home_score": 5, "away_score": 2}},
+			{"day": 27, "home": "TEAM_A", "away": "TEAM_B"},
+			{"day": 34, "home": "TEAM_A", "away": "TEAM_B", "result": {}},
+			# 🔴 **실제 일정은 이 꼴이다.** `get("result", {})`는 키가 있고
+			# 값이 null이면 **null을 준다** — 기본값으로 안 떨어진다.
+			# 이걸 안 보고 넘어갔다가 `season_runner`에서 37건이 터졌다
+			{"day": 41, "home": "TEAM_A", "away": "TEAM_B", "result": null},
+		],
+	}
+	var games: Array = SeasonHistory._team_games_of(state, "TEAM_A")
+	assert_int(games.size()).override_failure_message(
+		"안 치른 경기가 섞였다 — 0-0 패배로 뜬다").is_equal(1)
+	assert_int(int(games[0]["my_score"])).is_equal(5)
+	assert_str(String(games[0]["opponent"])).override_failure_message(
+		"팀 이름 표를 안 거쳤다").is_equal("유성고")
+
+
+## 남의 경기는 안 센다 — 일정에는 리그 전체가 들어 있다
+func test_only_my_teams_games_count() -> void:
+	var state: Dictionary = {"schedule": [
+		{"day": 20, "home": "TEAM_A", "away": "TEAM_B",
+			"result": {"home_score": 5, "away_score": 2}},
+		{"day": 20, "home": "TEAM_C", "away": "TEAM_D",
+			"result": {"home_score": 1, "away_score": 0}},
+	]}
+	assert_int(SeasonHistory._team_games_of(state, "TEAM_A").size()).is_equal(1)
+
+
+## ⚠ **원정이면 점수가 뒤집힌다.** 홈 기준으로만 읽으면 이긴 경기가 진 것이 된다
+func test_an_away_game_reads_from_my_side() -> void:
+	var state: Dictionary = {"schedule": [
+		{"day": 20, "home": "TEAM_B", "away": "TEAM_A",
+			"result": {"home_score": 2, "away_score": 5}},
+	]}
+	var g: Dictionary = SeasonHistory._team_games_of(state, "TEAM_A")[0]
+	assert_bool(bool(g["is_home"])).is_false()
+	assert_int(int(g["my_score"])).override_failure_message(
+		"원정인데 홈 점수를 내 점수로 읽었다").is_equal(5)
+	assert_int(int(g["opp_score"])).is_equal(2)
+	# ⚠ **상대는 "내가 아닌 쪽"이다.** 홈/원정을 뒤집어 잡으면 상대 자리에
+	# 내 팀 이름이 뜬다 — 점수만 보면 안 드러난다
+	assert_str(String(g["opponent"])).override_failure_message(
+		"상대를 내 팀으로 잡았다").is_equal("TEAM_B")
