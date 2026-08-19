@@ -1262,6 +1262,13 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       들어가는 이유다.
       → `_choice`가 무대를 보고 갈래를 낸다 + 전원 탈락·미필이면 현역 입대.
 
+- [ ] **P-46 계측이 시즌 종료를 게임처럼 못 탄다** (2026-08-19)
+      `relations_measure`가 `SeasonRunner.run`만 불러 **롤오버가 안 돈다**
+      (보직 재배정·일정 재생성 없음) — P-8c 같은 롤오버 안의 고침을 못 본다.
+      `finish_season`으로 바꾸면 **독립리그 일정이 빈다**(`build_schedule`이
+      독립을 건너뛰고 `SurvivalRunner`가 따로 짠다). **두 번 되돌렸다.**
+      → 화면(`AppRoot`)의 실제 순서를 먼저 읽고 그대로 밟게 한다.
+
 - [ ] **P-43b 계측 fixture가 대학을 하나만 지원한다** (2026-08-19)
       P-42를 고치고 계측이 `DecisionVm`을 타게 하니 **12해 내내 고교 3학년**
       이었다. 원서를 하나만 넣어 떨어지고, 남는 선택지가 `continue`뿐이다.
