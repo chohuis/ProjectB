@@ -1,21 +1,11 @@
+import { monthNameOf } from "./seasonCalendar";
 import type { ScheduleEntry } from "../types/season";
 import type { MessageItem } from "../types/main";
 
 // ── 월 경계 (1-indexed weekInYear) ───────────────────────────
-const MONTH_STARTS_1 = [1, 6, 10, 14, 19, 23, 27, 32, 36, 40, 45, 49];
-const MONTH_NAMES    = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
-
-export function isMonthStart(weekInYear: number): boolean {
-  return MONTH_STARTS_1.includes(weekInYear);
-}
-
-function monthName(weekInYear: number): string {
-  let idx = 0;
-  for (let i = MONTH_STARTS_1.length - 1; i >= 0; i--) {
-    if (weekInYear >= MONTH_STARTS_1[i]) { idx = i; break; }
-  }
-  return MONTH_NAMES[idx];
-}
+// 표는 `seasonCalendar`가 정본이다 — 예전엔 여기 사본이 있었다
+export { isMonthStart } from "./seasonCalendar";
+const monthName = monthNameOf;
 
 function monthWeekRange(weekInYear: number): [number, number] {
   let idx = 0;

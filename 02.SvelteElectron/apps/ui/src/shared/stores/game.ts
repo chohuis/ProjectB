@@ -1,3 +1,4 @@
+import { weekLabelOf } from "../utils/seasonCalendar";
 import { derived, get, writable } from "svelte/store";
 import type { MessageItem } from "../types/main";
 import type {
@@ -339,20 +340,8 @@ function toSchoolCompat(
 }
 
 const BASE_SEASON_YEAR = 2026;
-const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
-const MONTH_NAMES = ["3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "1월", "2월"];
-
 export function computeWeekLabel(week: number, seasonYear: number = BASE_SEASON_YEAR): string {
-  const w = (Math.max(1, week) - 1) % 52;
-  let monthIdx = 0;
-  for (let i = MONTH_STARTS.length - 1; i >= 0; i -= 1) {
-    if (w >= MONTH_STARTS[i]) {
-      monthIdx = i;
-      break;
-    }
-  }
-  const weekInMonth = w - MONTH_STARTS[monthIdx] + 1;
-  return `${seasonYear}년 ${MONTH_NAMES[monthIdx]} ${weekInMonth}주차`;
+  return weekLabelOf(week, seasonYear);
 }
 
 // ── 초기 상태 ─────────────────────────────────────────────────

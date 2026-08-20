@@ -1,19 +1,10 @@
+import { monthNameOf } from "./seasonCalendar";
 import type { ProtagonistSave, Top10Entry, Top10Snapshot, PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 import type { EntityRow } from "../stores/master";
 import type { MessageItem, Top10Column, Top10Metadata } from "../types/main";
 
-// ── 월 레이블 (게임 내 주차 → 한국어 월) ─────────────────────
-const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
-const MONTH_NAMES  = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
-
-function weekToMonthLabel(weekInYear: number): string {
-  const w = Math.max(0, (weekInYear - 1) % 52);
-  let idx = 0;
-  for (let i = MONTH_STARTS.length - 1; i >= 0; i--) {
-    if (w >= MONTH_STARTS[i]) { idx = i; break; }
-  }
-  return MONTH_NAMES[idx];
-}
+// 월 레이블 — 표는 `seasonCalendar`가 정본이다(예전엔 여기 사본이 있었다)
+const weekToMonthLabel = monthNameOf;
 
 // ── 결정론적 NPC simScout (10~70) ────────────────────────────
 function simNpcScout(npcId: string, week: number, grade: number): number {

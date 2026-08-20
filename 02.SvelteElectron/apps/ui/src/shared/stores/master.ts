@@ -1,3 +1,4 @@
+import { MONTH_STARTS_1 } from "../utils/seasonCalendar";
 ﻿import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
@@ -387,14 +388,15 @@ async function fetchMaster<T>(relPath: string): Promise<T | null> {
   }
 }
 
-// ?? ?대깽??JSON ?뚯꽌 ?????????????????????????????????????????
-// ?쒓뎅 ?숈궗 ?곕룄 湲곗? ????二쇱감 ?쒖옉媛?(3??二? 湲곗?)
-const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
+// ── 이벤트 JSON 파서 ─────────────────────────────────────────
+// 한국 학사 연도 기준 월 → 주차 시작값 (3월=주1 기준).
+// ⚠ 표는 `utils/seasonCalendar`가 정본이다 — 예전엔 여기 사본이 있었다
 
 function scheduleToWeek(month: number, weekOfMonth: number): number {
-  // 3??index0, 4??index1, ..., 12??index9, 1??index10, 2??index11
+  // 3월=index0, 4월=index1, ..., 12월=index9, 1월=index10, 2월=index11
   const idx = month >= 3 ? month - 3 : month + 9;
-  const base = MONTH_STARTS[idx] ?? 0;
+  // MONTH_STARTS_1은 1-based라 옛 0-based 값과 맞추려면 1을 뺀다
+  const base = (MONTH_STARTS_1[idx] ?? 1) - 1;
   return base + weekOfMonth;
 }
 

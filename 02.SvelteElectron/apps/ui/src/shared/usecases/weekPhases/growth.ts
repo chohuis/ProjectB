@@ -1,3 +1,4 @@
+import { prevMonthRange } from "../../utils/seasonCalendar";
 import { get } from "svelte/store";
 import { seasonStore, npcLiveStatsStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
@@ -15,15 +16,10 @@ import type { CareerStage } from "../../types/save";
 
 // ── NPC 월간 성장 헬퍼 ────────────────────────────────────────
 
-// MONTH_STARTS_1 기준 이전 달 주차 범위 반환
-export const MONTH_STARTS_1 = [1, 6, 10, 14, 19, 23, 27, 32, 36, 40, 45, 49];
-function getPrevMonthRange(weekInYear: number): { start: number; end: number } {
-  const idx = MONTH_STARTS_1.findIndex((w) => w === weekInYear);
-  if (idx <= 0) return { start: 1, end: weekInYear - 1 };
-  const start = MONTH_STARTS_1[idx - 1];
-  const end   = weekInYear - 1;
-  return { start, end };
-}
+// 표는 `utils/seasonCalendar`가 정본이다 — 예전엔 여기 사본이 있었다.
+// `MONTH_STARTS_1`을 밖에서 쓰는 곳이 있어 다시 내보낸다
+export { MONTH_STARTS_1 } from "../../utils/seasonCalendar";
+const getPrevMonthRange = prevMonthRange;
 
 // 이전 달 경기 결과에서 NPC별 ERA/AVG 집계
 function aggregateMonthlyPerf(
