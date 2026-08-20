@@ -187,6 +187,104 @@ static func league_mult(league_id: String) -> float:
 		r.get("league_mult_default", 1.0)))
 
 
+# ── NPC 재계약 (G-6) ──────────────────────────────────────────
+#
+# 🔴 **04엔 재계약이 없었다.** 계약이 끝나면 `advance_year`가 0으로 만들고
+# **전부 FA 시장으로** 갔다 — 실측에서 **FA 자격자의 80%가 팀을 옮겼다.**
+# 02는 원소속 재계약을 먼저 하고 안 되는 사람만 시장에 내보낸다.
+#
+# 아래 셋은 02 값 그대로다:
+#   `player_engine.rs:594` calc_npc_renewal_salary
+#   `player_engine.rs:615` calc_npc_contract_years
+#   `market.ts:328`        성향 해시
+
+
+## NPC 성향 — 02 `market.ts:328`이 **id의 글자 코드 합**으로 만든다.
+##
+## ⚠ **04엔 성향이 통째로 없었다.** 재계약 연봉·기간이 이걸 입력으로 받는다.
+## ⚠ **`Rng`를 안 쓴다** — 02가 해시라서다. 같은 사람은 언제 물어도 같은
+## 성향이어야 하고, 난수 흐름에 얹으면 부르는 순서에 따라 달라진다
+static func _personality_hash(npc_id: String) -> int:
+	var h: int = 0
+	for c in npc_id.to_utf8_buffer():
+		h += c
+	return h
+
+
+## 탐욕 25~79 — 02 `25 + ((h * 3) % 55)`
+static func greed_of(npc_id: String) -> float:
+	return 25.0 + float((_personality_hash(npc_id) * 3) % 55)
+
+
+## 안정 선호 25~84 — 02 `25 + ((h * 13) % 60)`
+static func stability_of(npc_id: String) -> float:
+	return 25.0 + float((_personality_hash(npc_id) * 13) % 60)
+
+
+## 재계약 연봉 — 02 `calc_npc_renewal_salary` 그대로.
+##
+## ⚠ **`estimate`와 다른 식이다.** 그쪽은 지수 곡선(OVR 50에서 3000,
+## 1.1^Δ)인데 이쪽은 **선형**(1800 + (OVR-50)×220)이고 **현재 연봉을 60%
+## 물려받는다** — 재계약은 새 계약이 아니라 이어지는 것이기 때문이다.
+## 02도 두 식을 따로 갖고 있다.
+##
+## ⚠ **리그 배수는 04 표를 쓴다**(`salary_rules.json`). 02는 재계약용을
+## 따로 하드코딩하는데(독립 0.35, 04 표는 0.14) **표가 정본이다** — 같은
+## 리그에 배수를 둘 두면 어느 쪽이 맞는지 못 가린다
+static func npc_renewal_salary(ovr: float, age: int, league_id: String,
+		current_salary: int, performance_score: float, greed: float) -> int:
+	var mult: float = float(rules().get("league_mult", {}).get(league_id, 1.0))
+	var market: float = (1800.0 + maxf(ovr - 50.0, 0.0) * 220.0) * mult
+	var blend: float = float(current_salary) * 0.6 + market * 0.4
+	var perf: float = 0.9 + (performance_score / 100.0) * 0.2
+	var greed_mult: float = 1.0 + (greed - 50.0) / 500.0
+	var age_damp: float = 0.9 if age >= 33 else 1.0
+	var raw: float = blend * perf * greed_mult * age_damp
+	# 02: raw.max(market * 0.55).min(market * 1.35)
+	return int(roundf(clampf(raw, market * 0.55, market * 1.35)))
+
+
+## 재계약 기간 — 02 `calc_npc_contract_years` 그대로.
+## ⚠ **순서가 뜻을 갖는다** — 나이가 먼저고, 승부 압박이 육성보다 앞선다
+static func npc_contract_years(age: int, development_focus: float,
+		win_now_pressure: float, stability_preference: float) -> int:
+	if age >= 34:
+		return 1
+	if win_now_pressure > 70.0 and age >= 30:
+		return 1
+	if development_focus > 60.0 and age <= 25:
+		return 3 if stability_preference > 60.0 else 2
+	return 2 if stability_preference > 65.0 else 1
+
+
+## 성적이 급변했나 — 02 `market.ts:139` `detectPerfSwing` 그대로.
+## `+1` 급등 · `-1` 급락 · `0` 평소.
+##
+## ⚠ **경기 수가 줄어도 급락이다** — 다쳐서 못 나온 해를 성적으로만 보면
+## "작년만큼 했다"가 된다
+static func perf_swing(curr: Dictionary, prev: Dictionary) -> int:
+	var kind: String = String(curr.get("type", ""))
+	if kind != String(prev.get("type", "")):
+		return 0
+	var games_drop: float = float(prev.get("g", 0)) - float(curr.get("g", 0))
+	if kind == "pitcher":
+		# ERA는 **낮을수록 좋다** — 개선이면 양수가 되게 뺀다
+		var era_delta: float = float(prev.get("era", 0.0)) \
+			- float(curr.get("era", 0.0))
+		if absf(era_delta) >= 1.5 or games_drop >= 20.0:
+			return 1 if era_delta >= 0.0 else -1
+	elif kind == "batter":
+		var ops_delta: float = float(curr.get("ops", 0.0)) \
+			- float(prev.get("ops", 0.0))
+		if absf(ops_delta) >= 0.100 or games_drop >= 30.0:
+			return 1 if ops_delta >= 0.0 else -1
+	return 0
+
+
+## 중간 조정 문턱 — 02 `market.ts:1163` "10% 이상 차이날 때만"
+const ADJUST_THRESHOLD: float = 0.10
+
+
 static func estimate(ovr: float, league_id: String, years_of_service: int,
 		age: int, team_index: float, rng: RandomNumberGenerator) -> Dictionary:
 	var r: Dictionary = rules()

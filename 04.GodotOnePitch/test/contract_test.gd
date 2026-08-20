@@ -334,3 +334,109 @@ func test_a_player_without_a_contract_is_never_an_fa() -> void:
 	assert_bool(Contract.is_fa_eligible({
 		"league_id": "LEAGUE_HIGHSCHOOL", "contract_years": 0,
 		"pro_service_years": 30})).is_false()
+
+
+# ── NPC 재계약 (G-6) ──────────────────────────────────────────
+#
+# 🔴 **04엔 재계약이 없었다.** 계약이 끝나면 전부 FA 시장으로 갔고, 실측에서
+# **FA 자격자의 80%가 팀을 옮겼다**(measure:fa, 6해 · 297/373).
+# 값은 02 그대로다 — `player_engine.rs:594`·`:615`, `market.ts:139`·`:328`.
+
+## 🔴 **`estimate`와 다른 식이다.** 재계약은 **현재 연봉을 60% 물려받는다** —
+## 새 계약이 아니라 이어지는 것이기 때문이다
+func test_재계약은_지금_연봉을_물려받는다() -> void:
+	# 같은 OVR인데 지금 연봉이 다르면 결과도 달라야 한다
+	var low: int = Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		3000, 50.0, 50.0)
+	var high: int = Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		8000, 50.0, 50.0)
+	assert_int(high).override_failure_message(
+		"지금 연봉이 두 배 넘는데 재계약 값이 같다 — blend를 안 쓴다") \
+		.is_greater(low)
+
+
+## ⚠ **위아래로 막혀 있다** — 02는 market의 0.55~1.35로 가둔다.
+## 없으면 한 번 오른 연봉이 해마다 복리로 불어난다
+func test_재계약은_시장가에서_멀리_못_간다() -> void:
+	# OVR 70 · KBL → market = 1800 + 20*220 = 6200
+	var huge: int = Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		99999, 100.0, 79.0)
+	assert_int(huge).override_failure_message(
+		"상한이 없다 — 연봉이 복리로 분다").is_less_equal(int(6200 * 1.35))
+	var tiny: int = Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		1, 0.0, 25.0)
+	assert_int(tiny).override_failure_message(
+		"하한이 없다 — 잘하는 선수가 1만원에 남는다") \
+		.is_greater_equal(int(6200 * 0.55))
+
+
+## ⚠ **서른셋부터 깎인다** — 02 `age_damp`
+func test_노장은_깎인다() -> void:
+	var young: int = Contract.npc_renewal_salary(70.0, 30, "LEAGUE_KBL",
+		6000, 50.0, 50.0)
+	var old: int = Contract.npc_renewal_salary(70.0, 33, "LEAGUE_KBL",
+		6000, 50.0, 50.0)
+	assert_int(old).override_failure_message(
+		"서른셋인데 안 깎였다").is_less(young)
+
+
+## 성적과 탐욕이 각각 ±10%를 움직인다 — 02 그대로
+func test_성적과_탐욕이_값을_민다() -> void:
+	var base: int = Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		6000, 50.0, 50.0)
+	assert_int(Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		6000, 100.0, 50.0)).is_greater(base)
+	assert_int(Contract.npc_renewal_salary(70.0, 27, "LEAGUE_KBL",
+		6000, 50.0, 79.0)).is_greater(base)
+
+
+## 재계약 기간 — 02 분기 그대로. **순서가 뜻을 갖는다**
+func test_재계약_기간이_02와_같다() -> void:
+	# 나이가 먼저다
+	assert_int(Contract.npc_contract_years(34, 90.0, 0.0, 90.0)).is_equal(1)
+	# 승부 압박이 육성보다 앞선다
+	assert_int(Contract.npc_contract_years(30, 90.0, 71.0, 90.0)).is_equal(1)
+	# 육성 팀의 어린 선수
+	assert_int(Contract.npc_contract_years(25, 61.0, 0.0, 61.0)).is_equal(3)
+	assert_int(Contract.npc_contract_years(25, 61.0, 0.0, 60.0)).is_equal(2)
+	# 그 밖에는 안정 선호가 가른다
+	assert_int(Contract.npc_contract_years(28, 0.0, 0.0, 66.0)).is_equal(2)
+	assert_int(Contract.npc_contract_years(28, 0.0, 0.0, 65.0)).is_equal(1)
+
+
+## 성향은 **해시**다 — 같은 사람은 언제 물어도 같다
+func test_성향은_사람마다_고정이다() -> void:
+	assert_float(Contract.greed_of("N001")).is_equal(Contract.greed_of("N001"))
+	assert_float(Contract.greed_of("N001")).is_not_equal(
+		Contract.greed_of("N002"))
+	# 02 범위 — 탐욕 25~79 · 안정 25~84
+	for i in 50:
+		var id: String = "NPC_%03d" % i
+		assert_float(Contract.greed_of(id)).is_between(25.0, 79.0)
+		assert_float(Contract.stability_of(id)).is_between(25.0, 84.0)
+
+
+## 성적 급변 — 02 `detectPerfSwing` 그대로
+func test_성적_급변을_02처럼_본다() -> void:
+	var p := func(era: float, g: int) -> Dictionary:
+		return {"type": "pitcher", "era": era, "g": g}
+	# ERA 1.5 이상 좋아지면 급등
+	assert_int(Contract.perf_swing(p.call(2.0, 30), p.call(3.6, 30))).is_equal(1)
+	assert_int(Contract.perf_swing(p.call(3.6, 30), p.call(2.0, 30))).is_equal(-1)
+	# 문턱 아래는 0
+	assert_int(Contract.perf_swing(p.call(3.0, 30), p.call(3.4, 30))).is_equal(0)
+	# ⚠ **경기 수가 20 줄어도 급락이다** — 다쳐서 못 나온 해다
+	assert_int(Contract.perf_swing(p.call(3.0, 10), p.call(3.0, 30))) \
+		.override_failure_message("경기가 20 줄었는데 평소로 봤다").is_equal(1)
+
+	var b := func(ops: float, g: int) -> Dictionary:
+		return {"type": "batter", "ops": ops, "g": g}
+	assert_int(Contract.perf_swing(b.call(0.850, 100), b.call(0.700, 100))) \
+		.is_equal(1)
+	assert_int(Contract.perf_swing(b.call(0.700, 100), b.call(0.850, 100))) \
+		.is_equal(-1)
+	assert_int(Contract.perf_swing(b.call(0.750, 100), b.call(0.700, 100))) \
+		.is_equal(0)
+	# 종류가 다르면 못 견준다
+	assert_int(Contract.perf_swing(p.call(3.0, 30), b.call(0.700, 100))) \
+		.is_equal(0)
