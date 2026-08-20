@@ -170,63 +170,6 @@ export async function simulateBackgroundLeagues(
   return { nextSchedules, nextLeagueState, gameLogs };
 }
 
-// 반경 2(드리프트) 리그 순위표 주간 갱신 — 개인 선수 데이터 없이 팀 전력치(prestige)만 사용
-export async function driftBackgroundLeagues(
-  s: SeasonStoreState,
-  protagonistLeagueId: string,
-  careerStage: CareerStage,
-  teams: TeamRef[],
-): Promise<Record<string, LeagueSeasonState> | null> {
-  const driftLeagueIds = [...RADIUS_GATED_LEAGUES].filter(
-    (lid) => lid !== protagonistLeagueId && getLeagueRadius(careerStage, lid) === 2,
-  );
-  if (driftLeagueIds.length === 0) return null;
-
-  const teamPower = new Map(teams.map((t) => [t.id, t.proTeamProfile?.prestige ?? 50]));
-  const nextLeagueState: Record<string, LeagueSeasonState> = {};
-
-  for (const lid of driftLeagueIds) {
-    const teamIds = ALL_TEAMS_BY_LEAGUE[lid] ?? [];
-    if (teamIds.length === 0) continue;
-    const cur = migrateLeagueState(s.leagueState[lid] ?? { standings: makeStandings(teamIds) });
-    const standingsByTeam = new Map(cur.standings.map((st) => [st.teamId, st]));
-
-    const driftInput = teamIds.map((teamId) => {
-      const st = standingsByTeam.get(teamId);
-      return {
-        teamId,
-        power:  teamPower.get(teamId) ?? 50,
-        wins:   st?.wins ?? 0,
-        losses: st?.losses ?? 0,
-      };
-    });
-
-    const raw = await window.projectB!.engine(
-      "standingsDriftNative",
-      JSON.stringify({ teams: driftInput }),
-    );
-    const result = JSON.parse(raw) as { teams: { teamId: string; wins: number; losses: number }[] };
-    const resultByTeam = new Map(result.teams.map((t) => [t.teamId, t]));
-
-    nextLeagueState[lid] = {
-      ...cur,
-      standings: cur.standings.map((st) => {
-        const upd = resultByTeam.get(st.teamId);
-        if (!upd) return st;
-        const total = upd.wins + upd.losses;
-        return {
-          ...st,
-          wins: upd.wins,
-          losses: upd.losses,
-          winPct: total > 0 ? Math.round((upd.wins / total) * 1000) / 1000 : 0,
-        };
-      }),
-    };
-  }
-
-  return Object.keys(nextLeagueState).length > 0 ? nextLeagueState : null;
-}
-
 export function applyBackgroundLeagueUpdate(
   s: SeasonStoreState,
   leagueId: string,

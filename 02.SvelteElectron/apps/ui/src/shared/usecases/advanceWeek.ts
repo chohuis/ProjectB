@@ -1262,7 +1262,6 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   await processNpcInjuries(weekNum);
   seasonStore.applyWeeklyConditionRecovery(bgEntities);
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities, gFinal.protagonist.careerStage);
-  await seasonStore.driftBackgroundLeaguesAsync(gFinal.protagonist.leagueId, gFinal.protagonist.careerStage, m.teams);
   // npcLiveStats 변경 → connectToGameStore 구독이 entities 자동 갱신 (applyNpcLiveStats 불필요)
 
   // 주차 → 월 레이블 헬퍼
@@ -1921,7 +1920,6 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const milEntities = get(masterStore).entities;
       seasonStore.applyWeeklyConditionRecovery(milEntities);
       await seasonStore.simulateBackgroundLeaguesAsync(nextWeek, g.protagonist.leagueId, milEntities, g.protagonist.careerStage);
-      await seasonStore.driftBackgroundLeaguesAsync(g.protagonist.leagueId, g.protagonist.careerStage, m.teams);
       gameStore.save(); seasonStore.save();
 
       const pending = get(seasonStore).pendingActions;

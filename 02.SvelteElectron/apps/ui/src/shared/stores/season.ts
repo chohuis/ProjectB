@@ -568,21 +568,6 @@ function createSeasonStore() {
       }
     },
 
-    // 반경 2(드리프트) 리그 순위표 주간 갱신 — R4 반경 게이트
-    async driftBackgroundLeaguesAsync(
-      protagonistLeagueId: string,
-      careerStage: import("../types/save").CareerStage,
-      teams: import("./master").TeamRef[],
-    ): Promise<void> {
-      const s = get({ subscribe });
-      const nextLeagueState = await BackgroundLeague.driftBackgroundLeagues(s, protagonistLeagueId, careerStage, teams);
-      if (!nextLeagueState) return;
-      update((st) => ({
-        ...st,
-        leagueState: { ...st.leagueState, ...nextLeagueState },
-      }));
-    },
-
     syncProtagonistLeagueResult(leagueId: string, result: MatchResult, homeTeamId: string, awayTeamId: string) {
       update((s) => BackgroundLeague.syncProtagonistLeagueUpdate(s, leagueId, result, homeTeamId, awayTeamId));
     },

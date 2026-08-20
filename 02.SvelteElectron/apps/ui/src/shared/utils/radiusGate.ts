@@ -9,8 +9,13 @@ import { isLeagueInScope } from "../config/releaseScope";
 // 이 파일이 v1인 채로 남아 있어서 Phase 5-5·5-6에서 깐 대학 225경기·독립 152경기가
 // **생성만 되고 시뮬되지 않았다** — `backgroundLeague.ts`가 반경 2·3을 건너뛴다.
 //
-// 1 = 풀 시뮬(경기 단위) / 2 = 순위표 드리프트만 / 3 = 비활성(데이터 미생성)
-export type LeagueRadius = 1 | 2 | 3;
+// 1 = 풀 시뮬(경기 단위) / 3 = 비활성(데이터 미생성)
+//
+// ⚠ **2(순위표 드리프트만)는 2026-08-20에 없앴다.** 해외까지 풀 시뮬로
+// 올리면서 2를 내는 곳이 사라졌고, 그러자 `driftBackgroundLeagues`가 매주
+// 두 번 불리면서 늘 빈 목록을 받았다 — 죽은 갈래라 장치째 지웠다.
+// `releaseScope`로 리그를 다시 닫아도 **3**(비활성)이지 2가 아니다
+export type LeagueRadius = 1 | 3;
 
 /** 국내 리그 — 주인공 소속과 무관하게 항상 풀 시뮬 (DESIGN §2 "국내 전 리그 상시") */
 const DOMESTIC_LEAGUES = new Set([
@@ -58,10 +63,6 @@ export function getLeagueRadius(careerStage: CareerStage, leagueId: string): Lea
   // 남기면 죽은 갈래다
   if (FOREIGN_LEAGUES.has(leagueId)) return 1;
   return 1; // 게이트 대상 아닌 리그는 기존대로 풀 처리
-}
-
-export function isLeagueDriftOnly(careerStage: CareerStage, leagueId: string): boolean {
-  return getLeagueRadius(careerStage, leagueId) === 2;
 }
 
 export function isLeagueInactive(careerStage: CareerStage, leagueId: string): boolean {
