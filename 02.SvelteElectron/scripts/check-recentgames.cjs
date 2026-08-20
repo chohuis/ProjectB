@@ -174,6 +174,25 @@ async function main() {
         if (v.n && v.hit < v.n) bad2++;
         console.log("    " + lid.padEnd(22) + String(v.hit).padStart(5) + " / " + String(v.n).padStart(5) + "  " + pct + "%");
       }
+      // missed games detail: week + kind tells which path leaks
+      const miss = [];
+      for (const r of played) {
+        let e = null;
+        try { e = JSON.parse(r.json); } catch { continue; }
+        const k1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
+        const k2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        if (!logged.has(k1) && !logged.has(k2)) {
+          miss.push((r.league_id || "primary") + " W" + r.week +
+            (e.isTournament ? " [TOUR]" : "") + (e.isFriendly ? " [FRIENDLY]" : "") +
+            (e.phase ? " " + e.phase : ""));
+        }
+      }
+      if (miss.length) {
+        const tally = {};
+        for (const m of miss) tally[m] = (tally[m] || 0) + 1;
+        console.log("    missed " + miss.length + ":");
+        for (const [k, v] of Object.entries(tally).slice(0, 12)) console.log("      " + k + "  x" + v);
+      }
       if (bad2 === 0) ok("치른 경기가 전부 기록에 남았다");
       else console.log("    ← " + bad2 + "개 리그가 100% 미만이다");
       s4.close();
