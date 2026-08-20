@@ -18,6 +18,11 @@ export interface RecentGame {
   week: number;
   /** 저장 당시의 보직 문자열. 라인 안의 `role`("pitcher"/"batter")과 다르다 */
   role: string;
+  /** "2026-07-14". 옛 행은 빈 문자열이다 — 화면이 주차로 되돌아갈 수 있어야 한다 */
+  gameDate: string;
+  /** **그 경기 당시의** 소속팀. 이적해도 과거 경기가 안 뒤집힌다 */
+  teamId: string;
+  opponentTeamId: string;
   line: PlayerGameLine | null;
 }
 
@@ -26,6 +31,9 @@ interface RawRow {
   week: number;
   role: string;
   stat_json: string;
+  game_date?: string;
+  team_id?: string;
+  opponent_team_id?: string;
 }
 
 /**
@@ -62,6 +70,9 @@ export async function getRecentGames(
     season: r.season,
     week: r.week,
     role: r.role,
+    gameDate: r.game_date ?? "",
+    teamId: r.team_id ?? "",
+    opponentTeamId: r.opponent_team_id ?? "",
     line: parseLine(r.stat_json),
   }));
 }
@@ -137,19 +148,48 @@ export function summarize(games: RecentGame[]): {
  * 윈도 함수를 돌리는 비싼 일이라 경기마다 부르면 안 된다. 배경 리그
  * 경로가 주마다 한 번 부르고, 한도는 선수 단위라 거기서 같이 잘린다.
  */
+export interface GameMeta {
+  /** "2026-07-14" — 일정에서 온다. 없으면 화면이 주차로 되돌아간다 */
+  gameDate?: string;
+  homeTeamId?: string;
+  awayTeamId?: string;
+  /**
+   * 선수 → 그 경기 소속팀. **쓸 때 정해야 한다** — 읽을 때 현재 팀으로
+   * 되짚으면 이적한 선수의 과거 경기가 전부 새 팀 기준으로 뒤집힌다.
+   */
+  teamOf?: (playerId: string) => string;
+}
+
 export async function recordGameLogs(
   slotId: string,
   season: number,
   week: number,
   lines: readonly PlayerGameLine[],
+  meta: GameMeta = {},
 ): Promise<void> {
   if (!slotId || !lines || lines.length === 0) return;
   const api = window.projectB?.npcBulkInsertGameLogs;
   if (!api) return;
 
+  const home = meta.homeTeamId ?? "";
+  const away = meta.awayTeamId ?? "";
+  const teamOf = (pid: string) => {
+    const t = meta.teamOf?.(pid) ?? "";
+    // 소속을 못 찾으면 양쪽 다 안 적는다 — **틀린 상대팀이 없는 것보다 나쁘다**
+    return t === home || t === away ? t : "";
+  };
+
   const logs = lines
     .filter((l) => l && typeof l.playerId === "string" && l.playerId)
-    .map((l) => ({ npcId: l.playerId, role: l.role, statJson: JSON.stringify(l) }));
+    .map((l) => {
+      const mine = teamOf(l.playerId);
+      return {
+        npcId: l.playerId, role: l.role, statJson: JSON.stringify(l),
+        gameDate: meta.gameDate ?? "",
+        teamId: mine,
+        opponentTeamId: mine ? (mine === home ? away : home) : "",
+      };
+    });
   if (logs.length === 0) return;
 
   try {

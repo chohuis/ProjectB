@@ -7,6 +7,21 @@ import { autoLog } from "../../stores/autoAdvance";
 import { simulateGame } from "../../utils/gameSimulator";
 import { rotationSizeForLeague } from "../../utils/rosterEngine";
 import { recordGameLogs } from "../../repo/gameLogRepo";
+
+/** 선수 → 소속팀. `entities`가 정본이라 여기서 한 번만 만든다 */
+function teamLookup(entities: { id: string; teamId?: string }[]) {
+  const m = new Map(entities.map((e) => [e.id, e.teamId ?? ""]));
+  return (pid: string) => m.get(pid) ?? "";
+}
+
+/** 일정에서 그 경기 날짜를 찾는다. 못 찾으면 빈 문자열 — 화면이 주차로 돌아간다 */
+function dateOfGame(homeTeamId: string, awayTeamId: string, week: number): string {
+  const s = get(seasonStore);
+  const hit = s.schedule.find(
+    (e) => e.week === week && e.homeTeamId === homeTeamId && e.awayTeamId === awayTeamId,
+  );
+  return hit?.gameDate ?? "";
+}
 import type { MatchResult, PlayerCondition } from "../../types/season";
 
 export interface NpcGameSim {
@@ -67,6 +82,10 @@ export async function simulateNpcGame(
     await recordGameLogs(
       get(gameStore).currentSlotId ?? "",
       s.seasonYear, s.currentWeek, sim.result.playerLines,
+      {
+        gameDate: dateOfGame(homeTeamId, awayTeamId, s.currentWeek),
+        homeTeamId, awayTeamId, teamOf: teamLookup(entities),
+      },
     );
 
     return {
@@ -98,11 +117,20 @@ export async function simulateNpcGame(
  * 얹는다. 그 갈래는 여기를 손으로 불러야 한다 — 안 부르면 **그 경기만**
  * 기록이 빈다.
  */
-export async function logGameLines(result: MatchResult): Promise<void> {
+export async function logGameLines(
+  result: MatchResult,
+  homeTeamId: string,
+  awayTeamId: string,
+): Promise<void> {
   const s = get(seasonStore);
   await recordGameLogs(
     get(gameStore).currentSlotId ?? "",
     s.seasonYear, s.currentWeek, result.playerLines,
+    {
+      gameDate: dateOfGame(homeTeamId, awayTeamId, s.currentWeek),
+      homeTeamId, awayTeamId,
+      teamOf: teamLookup(get(masterStore).entities),
+    },
   );
 }
 

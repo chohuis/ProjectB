@@ -126,6 +126,9 @@ export async function simulateBackgroundLeagues(
           awayRotIdx:  lState.teamRotationIndex[e.awayTeamId] ?? 0,
           conditions:  lState.playerConditions,
           week,
+          // 로그에 "7/14 vs 청람고"를 쓰려면 여기서 들고 가야 한다.
+          // 나중에 시즌·주차로 되짚으면 한 주에 여럿이라 경기를 못 고른다
+          gameDate: e.gameDate ?? "",
         });
       }
     }
@@ -135,10 +138,28 @@ export async function simulateBackgroundLeagues(
   const simmed = await runSimBatch(batch, entities, s.npcInjuries, npcLiveStats, s.worldSeed);
   const simMap = new Map(simmed.map((r) => [r.id, r]));
 
-  const gameLogs: { npcId: string; role: string; statJson: string }[] = [];
+  // 🔴 **날짜·상대를 안 실으면 화면이 "W19"만 쓴다.** 게다가 경기 단위
+  // 적재율 검사가 팀으로 짝을 맞추므로, 비워 두면 **전부 미적재로 잡힌다**
+  // (실측에서 배경 리그 아홉이 0%로 나왔다).
+  const teamOfPlayer = new Map(entities.map((e) => [e.id, e.teamId ?? ""]));
+  const gameById = new Map(batch.map((b) => [b.id, b]));
+  const gameLogs: {
+    npcId: string; role: string; statJson: string;
+    gameDate: string; teamId: string; opponentTeamId: string;
+  }[] = [];
   for (const sim of simmed) {
+    const g = gameById.get(sim.id);
     for (const line of sim.result.playerLines) {
-      gameLogs.push({ npcId: line.playerId, role: line.role, statJson: JSON.stringify(line) });
+      const mine = teamOfPlayer.get(line.playerId) ?? "";
+      // 소속을 못 찾으면 상대도 안 적는다 — 틀린 상대는 없는 것보다 나쁘다
+      const known = !!g && (mine === g.homeTeamId || mine === g.awayTeamId);
+      gameLogs.push({
+        npcId: line.playerId, role: line.role, statJson: JSON.stringify(line),
+        gameDate: g?.gameDate ?? "",
+        teamId: known ? mine : "",
+        opponentTeamId: known
+          ? (mine === g.homeTeamId ? g.awayTeamId : g.homeTeamId) : "",
+      });
     }
   }
 

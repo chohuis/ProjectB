@@ -12,6 +12,9 @@ interface SimGame {
   awayRotIdx?: number;
   conditions?: Record<string, PlayerCondition>;
   week?: number;
+  /** "2026-07-14" — 경기 로그에 날짜를 남기려면 여기서 들고 가야 한다.
+   *  시뮬은 안 쓴다 — 결과를 기록할 때 경기를 되짚을 수가 없어서 실어 보낸다 */
+  gameDate?: string;
 }
 
 export interface SimWorkerRequest {

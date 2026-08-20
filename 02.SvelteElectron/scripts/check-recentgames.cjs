@@ -134,6 +134,51 @@ async function main() {
       s3.close();
     } catch (e) { console.log("  --  schedule 집계 실패:", e.message); }
 
+    // ③-4 **경기 단위 적재율** — 이게 진짜 지표다.
+    //
+    // ⚠ 선수 비율로 재면 한 번도 안 뛴 벤치가 섞여 절대 100%가 안 된다.
+    //   치른 경기 중 로그가 남은 경기 비율이 100%여야 맞다.
+    // ⚠ 보관 한도(40)가 지우므로 **최근 주차**만 본다 — 오래된 주는
+    //   지워졌을 수 있어서 전구간을 재면 멀젖한 누락으로 읽힌다.
+    try {
+      const f4 = fs.readdirSync(dir).find((n) => n.startsWith("slot3"));
+      const s4 = new Database(path.join(dir, f4), { readonly: true });
+      const maxWeek = db.prepare("SELECT MAX(week) w FROM npc_game_log").get().w || 0;
+      // 창을 좁히면 그 주에 안 도는 리그가 통째로 빠진다(프로는 W28에 끝난다).
+      // 넓히면 보관 한도(40)에 잘린 옛 주가 섞여 헛 누락이 잡힌다 — 8주가 절충이다
+      const lo = Math.max(1, maxWeek - 7);
+      const logged = new Set(
+        db.prepare("SELECT DISTINCT season, week, team_id, opponent_team_id FROM npc_game_log WHERE week >= ?")
+          .all(lo).map((r) => [r.season, r.week, r.team_id, r.opponent_team_id].join("|")),
+      );
+      const played = s4.prepare(
+        "SELECT league_id, week, json FROM schedule WHERE has_result = 1 AND week >= ?"
+      ).all(lo);
+      const per = new Map();
+      for (const r of played) {
+        let e = null;
+        try { e = JSON.parse(r.json); } catch { continue; }
+        const lid = r.league_id || (e.leagueId || "(primary)");
+        const v = per.get(lid) || { n: 0, hit: 0 };
+        v.n++;
+        const a1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
+        const a2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        if (logged.has(a1) || logged.has(a2)) v.hit++;
+        per.set(lid, v);
+      }
+      console.log("");
+      console.log("  경기 단위 적재율 (W" + lo + "~W" + maxWeek + ")");
+      let bad2 = 0;
+      for (const [lid, v] of [...per].sort()) {
+        const pct = v.n ? ((v.hit / v.n) * 100).toFixed(0) : "-";
+        if (v.n && v.hit < v.n) bad2++;
+        console.log("    " + lid.padEnd(22) + String(v.hit).padStart(5) + " / " + String(v.n).padStart(5) + "  " + pct + "%");
+      }
+      if (bad2 === 0) ok("치른 경기가 전부 기록에 남았다");
+      else console.log("    ← " + bad2 + "개 리그가 100% 미만이다");
+      s4.close();
+    } catch (e) { console.log("  --  경기 단위 집계 실패:", e.message); }
+
     // ④ 보관 한도
     const max = db.prepare(
       "SELECT MAX(c) m FROM (SELECT COUNT(*) c FROM npc_game_log GROUP BY npc_id)"

@@ -498,6 +498,20 @@
   $: recentSummary = summarize(recentGames);
 
 
+  /**
+   * "7/14(화)". 일정 화면과 **같은 규칙**이다.
+   *
+   * ⚠ `getDay()`는 일요일이 0이라 월요일 시작 표에 그대로 넣으면 하루씩 밀린다.
+   * ⚠ v11 전에 쌓인 행은 `gameDate`가 비어 있다 — 그때만 주차로 되돌아간다.
+   */
+  const DOW = ["월", "화", "수", "목", "금", "토", "일"];
+  function gameDateLabel(iso: string, week: number): string {
+    if (!iso) return `W${week}`;
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return `W${week}`;
+    return `${d.getMonth() + 1}/${d.getDate()}(${DOW[(d.getDay() + 6) % 7]})`;
+  }
+
   /** 이닝은 야구식으로 쓴다 — 6.33이 아니라 6.1(6과 1/3) */
   function ipLabel(ip: number): string {
     const whole = Math.floor(ip + 1e-9);
@@ -1364,12 +1378,12 @@
                     <thead>
                       {#if recentSummary.kind === "pitcher"}
                         <tr>
-                          <th>시즘</th><th>주</th><th></th>
+                          <th>날짜</th><th>상대</th><th></th>
                           <th>IP</th><th>H</th><th>ER</th><th>K</th><th>BB</th>
                         </tr>
                       {:else}
                         <tr>
-                          <th>시즘</th><th>주</th>
+                          <th>날짜</th><th>상대</th>
                           <th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>SB</th>
                         </tr>
                       {/if}
@@ -1378,8 +1392,14 @@
                       {#each recentGames as gm, i (`${gm.season}-${gm.week}-${i}`)}
                         {@const l = gm.line}
                         <tr>
-                          <td>{gm.season}</td>
-                          <td>W{gm.week}</td>
+                          <td class="rg-date">{gameDateLabel(gm.gameDate, gm.week)}</td>
+                          <td class="rg-opp">
+                            {#if gm.opponentTeamId}
+                              <span class="rg-vs">vs</span>{teamById.get(gm.opponentTeamId) ?? gm.opponentTeamId}
+                            {:else}
+                              <span class="rg-none">—</span>
+                            {/if}
+                          </td>
                           {#if l && isPitcherLine(l)}
                             <td class="rg-dec">{decisionLabel(l.decision)}</td>
                             <td>{ipLabel(l.ip ?? 0)}</td>
@@ -1610,6 +1630,11 @@
   .rg-sum b { font-size: 15px; }
   /* 승패 칸은 대부분 빈다 — 좀게 잡아 표가 밀리지 않게 한다 */
   .rg-dec { width: 28px; font-weight: 700; }
+  .rg-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  /* 팀 이름이 길어도 표가 안 밀리게 — 넘치면 자른다 */
+  .rg-opp { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rg-vs { opacity: .5; margin-right: 4px; font-size: .85em; }
+  .rg-none { opacity: .4; }
 
   /* 탭 */
   .modal-tabs {

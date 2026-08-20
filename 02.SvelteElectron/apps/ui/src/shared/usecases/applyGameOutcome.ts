@@ -247,6 +247,19 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   await recordGameLogs(
     gBefore.currentSlotId ?? "",
     sBefore.seasonYear, sBefore.currentWeek, playerLines,
+    {
+      // 날짜는 위에서 이미 일정을 뒤져 뒀다 — 두 번 찾지 않는다
+      gameDate,
+      homeTeamId: outcome.homeTeamId,
+      awayTeamId: outcome.awayTeamId,
+      teamOf: (() => {
+        const m = new Map(get(masterStore).entities.map((e) => [e.id, e.teamId ?? ""]));
+        // ⚠ 주인공은 entities에 없을 수 있다 — gameStore가 정본이다
+        return (pid: string) => (pid === protagonist.id
+          ? (protagonist.teamId ?? "")
+          : (m.get(pid) ?? ""));
+      })(),
+    },
   );
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);

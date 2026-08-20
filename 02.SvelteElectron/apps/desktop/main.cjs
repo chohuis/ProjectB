@@ -285,12 +285,16 @@ app.whenReady().then(() => {
       const { slotId, season, week, logs } = JSON.parse(p);
       if (!slotId || !Array.isArray(logs) || logs.length === 0)
         return JSON.stringify({ ok: true, inserted: 0 });
+      // 날짜·상대는 **쓸 때 받는다.** 읽을 때는 그 경기를 특정할 수 없다 —
+      // 한 주에 경기가 여럿인데 로그에 경기 id가 없다
       const stmt = db.prepare(
-        "INSERT INTO npc_game_log(slot_id, npc_id, season, week, role, stat_json) VALUES(?,?,?,?,?,?)"
+        "INSERT INTO npc_game_log(slot_id, npc_id, season, week, role, stat_json," +
+        " game_date, team_id, opponent_team_id) VALUES(?,?,?,?,?,?,?,?,?)"
       );
       const insertMany = db.transaction((rows) => {
         for (const r of rows)
-          stmt.run(slotId, r.npcId, season, week, r.role, r.statJson);
+          stmt.run(slotId, r.npcId, season, week, r.role, r.statJson,
+            r.gameDate ?? "", r.teamId ?? "", r.opponentTeamId ?? "");
       });
       insertMany(logs);
       return JSON.stringify({ ok: true, inserted: logs.length });
@@ -321,7 +325,7 @@ app.whenReady().then(() => {
     try {
       const { slotId, npcId, limit = 5 } = JSON.parse(p);
       const rows = db.prepare(`
-        SELECT season, week, role, stat_json
+        SELECT season, week, role, stat_json, game_date, team_id, opponent_team_id
         FROM npc_game_log
         WHERE slot_id = ? AND npc_id = ?
         ORDER BY season DESC, week DESC, id DESC

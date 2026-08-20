@@ -304,7 +304,12 @@ function openDatabase(dbPath) {
       season    INTEGER NOT NULL,
       week      INTEGER NOT NULL,
       role      TEXT    NOT NULL,
-      stat_json TEXT    NOT NULL
+      stat_json TEXT    NOT NULL,
+      -- 화면이 "7/14 vs 청람고"를 쓰려면 쓸 때 남겨야 한다. 읽을 때는
+      -- 경기를 특정할 수 없다(한 주에 여럿인데 로그에 경기 id가 없다)
+      game_date        TEXT NOT NULL DEFAULT '',
+      team_id          TEXT NOT NULL DEFAULT '',
+      opponent_team_id TEXT NOT NULL DEFAULT ''
     );
     CREATE INDEX IF NOT EXISTS idx_ngl_lookup ON npc_game_log(slot_id, npc_id, season DESC, week DESC);
 
@@ -757,6 +762,34 @@ function applySchemaPatches(db) {
       `);
       db.pragma("user_version = 10");
       console.log("[db-patch] v10: history_tournaments 추가");
+    })();
+  }
+
+  // ── v11: 경기 로그에 날짜·상대 ────────────────────────────────
+  //
+  // "최근 경기" 화면이 `W19`만 보여줬다. 주차는 내부 단위라 사용자가
+  // 7월 몇 일인지 못 읽고, **누구와 붙었는지도 없었다.**
+  //
+  // ⚠ **읽을 때 계산할 수 없다.** 한 주에 경기가 여럿이고 로그엔 경기 id가
+  // 없어서, 시즌·주차만으로는 일정에서 그 경기를 특정하지 못한다.
+  // 쓸 때 같이 남긴다.
+  //
+  // ⚠ **상대팀을 쓸 때 정한다.** 읽을 때 선수의 현재 팀으로 되짚으면
+  // 이적한 선수의 과거 경기가 전부 새 팀 기준으로 뒤집힌다.
+  if (currentVersion < 11) {
+    db.transaction(() => {
+      const cols = db.prepare("PRAGMA table_info(npc_game_log)").all().map((c) => c.name);
+      for (const [col, decl] of [
+        ["game_date",        "TEXT NOT NULL DEFAULT ''"],
+        ["team_id",          "TEXT NOT NULL DEFAULT ''"],
+        ["opponent_team_id", "TEXT NOT NULL DEFAULT ''"],
+      ]) {
+        if (!cols.includes(col)) {
+          db.exec(`ALTER TABLE npc_game_log ADD COLUMN ${col} ${decl}`);
+        }
+      }
+      db.pragma("user_version = 11");
+      console.log("[db-patch] v11: npc_game_log 날짜·팀·상대팀 추가");
     })();
   }
 }
