@@ -18,7 +18,7 @@ import { primePitchCost } from "../utils/pitchCost";
 
 export type { CoachAttributes, CoachSpecialty };
 
-// ?? ?덈젴쨌援ъ쥌 ????????????????????????????????????????????????
+// ── 훈련·구종 ──────────────────────────────────────────────────────────────────
 /**
  * 훈련 프로그램 — **정본은 `resource/data/master/training/programs.json` 하나다.**
  *
@@ -308,7 +308,7 @@ export interface EntityRow {
   details: EntityDetails;
 }
 
-// ?? NPC ?쇱씠釉??ㅽ꺈 ??????????????????????????????????????????
+// ── NPC 라이브 스탯 ─────────────────────────────────────────────────────────────
 export interface NpcLiveStat {
   pitching?: import("../types/save").PitchingAttributes;
   batting?:  import("../types/save").BattingAttributes;
@@ -341,7 +341,7 @@ export interface MilitaryEvent {
   fatigueDelta?: number;
 }
 
-// ?? ?ㅽ넗???곹깭 ???????????????????????????????????????????????
+// ── 스토어 상태 ─────────────────────────────────────────────────────────────────
 export interface MasterState {
   loaded: boolean;
   trainingPrograms: TrainingProgram[];
@@ -374,7 +374,7 @@ export interface MasterState {
   militaryGeneralEvents: MilitaryEvent[];
 }
 
-// ?? masterFetch ?섑띁 (IPC ?곗꽑, fetch ?대갚) ???????????????????
+// ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
 async function fetchMaster<T>(relPath: string): Promise<T | null> {
   try {
     if (window.projectB?.masterFetch) {
@@ -411,7 +411,8 @@ function stageToCareerStage(stage: string): CareerStage | null {
   return map[stage] ?? null;
 }
 
-// effects 臾몄옄??諛곗뿴 ??DecisionEffect 蹂??// ?뺤떇 ?? ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3", "addTag.湲됱꽦??]
+// effects 문자열 배열 → DecisionEffect 변환
+// 형식 예: ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3"]
 function parseEffectsArray(effects: string[]): DecisionEffect {
   const result: DecisionEffect = {};
   for (const e of effects) {
@@ -576,7 +577,7 @@ async function batchFetch<T>(ids: string[], pathFn: (id: string) => string): Pro
   return results.filter((r): r is NonNullable<typeof r> => r !== null) as T[];
 }
 
-// ?? ?ㅽ넗???앹꽦 ???????????????????????????????????????????????
+// ── 스토어 생성 ─────────────────────────────────────────────────────────────────
 // ── NpcSaveState → EntityRow 변환 브릿지 ─────────────────────
 const _EMPTY_PITCHING = {
   ovr: 0, stamina: 0, velocity: 0, command: 0,
@@ -666,7 +667,7 @@ function createMasterStore() {
     militaryGeneralEvents: [],
   });
 
-  // ?? manifest 湲곕컲 ?대깽??濡쒕뱶 ??????????????????????????????
+  // ── manifest 기반 이벤트 로드 ─────────────────────────────────
   async function loadEventsFromManifest(m: Manifest): Promise<EventRule[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [mandatory, conditional, media, social, teamLife] = await Promise.all([
@@ -681,7 +682,7 @@ function createMasterStore() {
       .map((r) => parseEventRule(r as Record<string, any>));
   }
 
-  // ?? manifest 湲곕컲 ?낆쟻 濡쒕뱶 ???????????????????????????????
+  // ── manifest 기반 업적 로드 ──────────────────────────────────────────────────────
   async function loadAchievementsFromManifest(
     m: Manifest,
   ): Promise<import("../utils/achievementEngine").MasterAchievement[]> {
@@ -696,7 +697,7 @@ function createMasterStore() {
 
   async function load() {
     try {
-      // ?? 怨듯넻 ?곗씠??(蹂寃??놁쓬) ????????????????????????????
+      // ── 공통 데이터 (변경 없음) ─────────────────────────────────────────────────────────
       const [
         trainingData, pitchData, unlockData, refsData,
         msgTmplData, decisionTmplData,
@@ -735,7 +736,7 @@ function createMasterStore() {
       // refs가 팀의 유일한 정본이다 — 보충하지 않는다 (위 주석 참고)
       const mergedTeams = refsData?.teams ?? [];
 
-      // ?? manifest 湲곕컲 濡쒕뱶 (?대깽?맞룹뾽?겶룹틦由?꽣) ??????????
+      // ── manifest 기반 로드 (이벤트·업적) ────────────────────────────────────────────────
       let eventRules:  EventRule[] = [];
       let achievements: import("../utils/achievementEngine").MasterAchievement[] = [];
 
@@ -745,8 +746,8 @@ function createMasterStore() {
           loadAchievementsFromManifest(manifest),
         ]);
       } else {
-        // ?? ?덇굅???대갚 (manifest ?놁쓣 ?? ???????????????????
-        console.warn("[masterStore] _manifest.json ?놁쓬 ???덇굅??濡쒕뵫");
+        // ── 레거시 폴백 (manifest 없을 때) ─────────────────────────────────────────────────
+        console.warn("[masterStore] _manifest.json 없음 — 레거시 로딩");
         const [mandatoryData, conditionalData, randomData, achData] =
           await Promise.all([
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -827,8 +828,8 @@ function createMasterStore() {
         },
       );
 
-      // ?꾩껜 ?뷀떚???ъ쟾 濡쒕뱶 ??諛곌꼍 由ш렇 ?쒕???紐⑤뱺 ? ?좎닔 ?곗씠???꾩슂
-      // loaded: true ?댄썑???ㅽ뻾?섎?濡?寃뚯엫 吏꾩엯??釉붾줈?뱁븯吏 ?딆쓬
+      // 전체 엔티티 사전 로드 — 배경 리그 시뮬에 모든 팀 선수 데이터가 필요하다
+      // loaded: true 이후에 실행되므로 게임 진입을 블로킹하지 않는다
       await reloadEntities();
     } catch (e) {
       console.warn("[masterStore] load failed", e);
@@ -836,7 +837,7 @@ function createMasterStore() {
     }
   }
 
-  // ?? 遺遺??щ줈??(?뚯씪 ?쒕∼ ?ル━濡쒕뱶?? ???????????????????
+  // ── 부분 리로드 (파일 감시 핫리로드용) ───────────────────────────────────────────────────
   async function reloadEvents() {
     const manifest = await fetchMaster<Manifest>("_manifest.json");
     if (!manifest) return;
@@ -933,7 +934,7 @@ function createMasterStore() {
     return () => { unsub1(); unsub2(); };
   }
 
-  // ?? ?ル━濡쒕뱶 由ъ뒪??(媛쒕컻 ?섍꼍: ?뚯씪 ?쒕∼ ???먮룞 諛섏쁺) ??
+  // ── 핫리로드 리스너 (개발 환경: 파일 감시 → 자동 반영) ────────────────────────────────────────
   function setupContentWatcher() {
     const api = (window as Window & typeof globalThis & { projectB?: { onContentChanged?: (cb: (data: { filename: string }) => void) => void } }).projectB;
     if (!api?.onContentChanged) return;
@@ -959,7 +960,7 @@ function createMasterStore() {
 
 export const masterStore = createMasterStore();
 
-// ?? ?뚯깮 ?ㅽ넗?????????????????????????????????????????????????
+// ── 파생 스토어 ─────────────────────────────────────────────────────────────────
 export const trainingProgramMap = derived(masterStore, ($m) =>
   new Map($m.trainingPrograms.map((p) => [p.id, p]))
 );
