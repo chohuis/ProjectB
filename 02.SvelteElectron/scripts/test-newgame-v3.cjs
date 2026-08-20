@@ -100,7 +100,7 @@ check(`세계 규모: 고교 ${HS_TEAMS.length}×${HS_SIZE} + 프로 1군 ${KBL_
 // 세 목록이 어긋나면 조용히 망가진다:
 //   ① 일정이 생기는 리그   (leagueScheduler)
 //   ② 풀 시뮬 대상 리그    (radiusGate DOMESTIC_LEAGUES)
-//   ③ 로스터가 생기는 리그 (newGameV3 DOMESTIC_ROSTER_LEAGUES + rosterRules)
+//   ③ 로스터가 생기는 리그 (newGameV3 ROSTER_LEAGUES + rosterRules)
 //
 // ①∩② 인데 ③에 없으면 → 선수 없는 팀끼리 경기 → Rust가 **항상 0-0, 홈팀 승**을
 // 낸다. 시즌1에 대학 225 + 프로 720 + 2군 495경기가 그렇게 처리되고 있었다.
@@ -116,7 +116,7 @@ console.log("\n리그 3자 정합");
 
   // ③ 새 게임에서 로스터가 생기는 리그
   const ng = read("../apps/ui/src/shared/repo/newGameV3.ts");
-  const rosterBlock = ng.match(/const DOMESTIC_ROSTER_LEAGUES = \[([\s\S]*?)\] as const/);
+  const rosterBlock = ng.match(/const ROSTER_LEAGUES = \[([\s\S]*?)\] as const/);
   const generated = new Set([
     "LEAGUE_HIGHSCHOOL",   // 시작 리그 — 별도 경로로 항상 생성
     ...[...(rosterBlock?.[1] ?? "").matchAll(/"(LEAGUE_[A-Z_]+)"/g)].map((m) => m[1]),

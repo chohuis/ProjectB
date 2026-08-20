@@ -262,9 +262,8 @@ export async function loadRosterRules(): Promise<GenerationRulesFile> {
  * `radiusGate`가 해외를 반경 1로 올렸는데 로스터가 없으면 **빈 로스터로 항상
  * 0-0 홈팀 승**이 된다. 위에 적힌 그 결함이 해외에서 그대로 재현된다.
  *
- * 이름은 뜻이 넓어졌으니 언젠가 `ROSTER_LEAGUES`로 바꾸는 게 맞다.
  */
-const DOMESTIC_ROSTER_LEAGUES = [
+const ROSTER_LEAGUES = [
   "LEAGUE_UNIVERSITY",
   "LEAGUE_INDEPENDENT",
   "LEAGUE_KBL",
@@ -392,7 +391,7 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
 
   // 나머지 국내 리그 — 팀 목록은 leagueScheduler가 정본이다 (refs에서 파생)
   const otherNpcs: Partial<RepoNpc>[] = [];
-  for (const lid of DOMESTIC_ROSTER_LEAGUES) {
+  for (const lid of ROSTER_LEAGUES) {
     const rules = rulesFile.rosterRules[lid];
     if (!rules) {
       console.warn(`[newGameV3] ${lid} rosterRules 없음 — 이 리그는 빈 로스터로 남는다`);

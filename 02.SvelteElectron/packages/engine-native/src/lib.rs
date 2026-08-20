@@ -26,7 +26,6 @@ mod team_engine;
 mod player_agent;
 mod scouting_engine;
 mod roster_gen;
-mod standings_drift;
 mod synthetic_trajectory;
 mod relationship;
 mod career_history;
@@ -1345,17 +1344,6 @@ pub fn generate_foreign_players_native(params_json: String) -> String {
     };
     let result = roster_gen::generate_foreign_players(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateForeignPlayersNative/serialize", e))
-}
-
-/// 반경 2(드리프트) 리그 순위표 주간 갱신 — 팀 전력치 + 노이즈로 승패만 누적 (DESIGN.md §2.1)
-#[napi]
-pub fn standings_drift_native(params_json: String) -> String {
-    let params: standings_drift::StandingsDriftParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v,
-        Err(e) => return parse_err("standingsDriftNative", e),
-    };
-    let result = standings_drift::standings_drift(params);
-    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("standingsDriftNative/serialize", e))
 }
 
 /// 타 리그 Named NPC 주간 합성 성적 — worldSeed 결정적 (DESIGN.md §4.2, R3b)
