@@ -63,16 +63,15 @@ async function main() {
       return Math.round(sum * 100) / 100;
     };
 
+    // ⚠ **한 주씩 못 간다.** `oneWeek()`는 정지 조건을 안 풀어 W1에 머물고,
+    // `autoRun()`은 인자를 무시하고 정지 조건까지 통째로 돈다.
+    // → `autoRun()`을 **한 번만** 불러 W40(오프시즌 시작)까지 가게 하고
+    //   그 구간의 성장을 잰다. 구간을 더 잘게 못 나누는 건 한계다
     const trail = [];
     const d0 = detail();
-    for (let w = 1; w <= WEEKS; w++) {
-      // ⚠ **`autoRun()`은 인자를 안 받는다** — 1을 넘겨도 정지 조건까지
-      // 통째로 돈다. 그래서 "W1에 이미 다 컸다"로 보였다.
-      // `oneWeek()`가 딱 한 주만 진행한다
-      await app.oneWeek();
-      const st = app.protagonistState();
-      trail.push({ week: w, gameWeek: st.week, ovr: ovrOf(st), detail: detail() });
-    }
+    await app.autoRun();
+    const mid = app.protagonistState();
+    trail.push({ week: 1, gameWeek: mid.week, ovr: ovrOf(mid), detail: detail() });
 
     const after = app.protagonistState();
     const ovr1 = ovrOf(after);
