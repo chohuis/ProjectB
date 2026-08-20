@@ -166,6 +166,16 @@ static func run(state: Dictionary) -> Dictionary:
 	# 비어 있다. 계약이 없는 사람(신인·이적자)에게는 여기서 붙인다
 	Contract.advance_year(all_players(state))
 	summary["contracts"] = Contract.ensure_world(state)
+
+	# 🔴 **재계약 — FA보다 먼저, `advance_year` 바로 뒤다** (G-6).
+	# 계약이 끝났는데 **연차가 모자라 시장에도 못 가는 사람**이 계약 0인 채
+	# 방치되고 있었다. 02는 그 사람들을 자동 갱신한다(`market.ts:1128`).
+	# 계약 기간 중 성적이 급변한 사람은 **연봉만** 조정한다.
+	var renewed: Array = []
+	var adjusted: Array = []
+	Contract.renew_expired(state, all_players(state), renewed, adjusted)
+	EventLog.push("renewal", year, renewed)
+	EventLog.push("adjustment", year, adjusted)
 	done.append("contracts")
 
 

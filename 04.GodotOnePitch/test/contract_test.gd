@@ -440,3 +440,117 @@ func test_성적_급변을_02처럼_본다() -> void:
 	# 종류가 다르면 못 견준다
 	assert_int(Contract.perf_swing(p.call(3.0, 30), b.call(0.700, 100))) \
 		.is_equal(0)
+
+
+# ── 재계약 단계 (G-6) ─────────────────────────────────────────
+
+func _npc_for_renew(o: Dictionary = {}) -> Dictionary:
+	var d: Dictionary = {
+		"id": "N1", "name": "김투수", "position": "SP",
+		"league_id": "LEAGUE_KBL", "team_id": "TEAM_A", "age": 25,
+		"salary": 5000, "contract_years": 0, "pro_service_years": 1,
+		"pitching": {"ovr": 70.0}, "batting": {"ovr": 30.0},
+		"player_type": "pitcher", "career_history": [],
+	}
+	d.merge(o, true)
+	return d
+
+
+func _renew_state() -> Dictionary:
+	return {"season_year": 2030, "season_stats": {},
+		"world": {"rosters": {"TEAM_A": []}}}
+
+
+## 🔴 **계약이 끝났는데 연차가 모자라면 시장에도 못 간다.** 04는 그런
+## 사람을 **계약 0인 채 방치**했다 — 02는 자동 갱신한다
+func test_시장에_못_가는_만료자를_재계약한다() -> void:
+	var p: Dictionary = _npc_for_renew()
+	assert_bool(Contract.is_fa_eligible(p)).override_failure_message(
+		"이 fixture가 FA 자격자다 — 검사가 헛돈다").is_false()
+
+	var renewed: Array = []
+	Contract.renew_expired(_renew_state(), [p], renewed)
+	assert_int(renewed.size()).override_failure_message(
+		"방치된 만료자를 재계약 안 했다").is_equal(1)
+	assert_int(int(p["contract_years"])).override_failure_message(
+		"계약 연수가 0 그대로다").is_greater(0)
+	assert_str(String(renewed[0]["detail"])).contains("만→")
+
+
+## ⚠ **FA 자격자는 안 건드린다.** 02는 만료자를 전부 갱신하지만 04에서
+## 그러면 **FA 시장이 통째로 빈다** — 04는 `contract_years == 0`을 FA
+## 자격의 조건으로 쓴다
+func test_FA_자격자는_시장에_보낸다() -> void:
+	var p: Dictionary = _npc_for_renew({"pro_service_years": 99})
+	assert_bool(Contract.is_fa_eligible(p)).is_true()
+
+	var renewed: Array = []
+	Contract.renew_expired(_renew_state(), [p], renewed)
+	assert_array(renewed).override_failure_message(
+		"FA 자격자를 재계약했다 — 시장이 빈다").is_empty()
+	assert_int(int(p["contract_years"])).is_equal(0)
+
+
+## 주인공은 사용자가 정한다
+func test_주인공은_자동_재계약_안_한다() -> void:
+	var p: Dictionary = _npc_for_renew({"is_protagonist": true})
+	var renewed: Array = []
+	Contract.renew_expired(_renew_state(), [p], renewed)
+	assert_array(renewed).is_empty()
+
+
+## ⚠ **계약 기간 중 성적이 급변하면 연봉만 바꾼다** — 기간은 그대로다
+func test_성적_급변에_연봉만_조정한다() -> void:
+	var p: Dictionary = _npc_for_renew({
+		"contract_years": 3, "salary": 3000,
+		"career_history": [{"year": 2029,
+			"stats": {"type": "pitcher", "era": 5.0, "g": 30}}],
+	})
+	var s: Dictionary = _renew_state()
+	s["season_stats"] = {"N1": {"type": "pitcher", "era": 2.0, "g": 30}}
+
+	var renewed: Array = []
+	var adjusted: Array = []
+	Contract.renew_expired(s, [p], renewed, adjusted)
+	assert_array(renewed).override_failure_message(
+		"기간이 남았는데 재계약했다").is_empty()
+	assert_int(adjusted.size()).override_failure_message(
+		"ERA가 3.0 좋아졌는데 조정이 없다").is_equal(1)
+	assert_int(int(p["contract_years"])).override_failure_message(
+		"조정인데 기간이 바뀌었다").is_equal(3)
+	assert_str(String(adjusted[0]["detail"])).contains("성적")
+
+
+## ⚠ **10% 안쪽이면 안 건드린다** — 02 문턱 그대로.
+## 없으면 해마다 잔돈이 흔들려 로그가 시끄러워진다
+func test_조정은_10퍼센트_넘을_때만() -> void:
+	var p: Dictionary = _npc_for_renew({
+		"contract_years": 3, "salary": 6200,
+		"career_history": [{"year": 2029,
+			"stats": {"type": "pitcher", "era": 3.0, "g": 30}}],
+	})
+	var s: Dictionary = _renew_state()
+	# 성적은 급변인데 연봉 계산이 지금과 비슷하다 — 조정 안 한다
+	s["season_stats"] = {"N1": {"type": "pitcher", "era": 4.6, "g": 30}}
+	var adjusted: Array = []
+	Contract.renew_expired(s, [p], [], adjusted)
+	if not adjusted.is_empty():
+		var moved: float = absf(float(p["salary"]) - 6200.0) / 6200.0
+		assert_float(moved).override_failure_message(
+			"10% 안쪽인데 조정했다").is_greater_equal(0.10)
+
+
+## 성적이 평소면 조정하지 않는다
+func test_평소_성적이면_안_건드린다() -> void:
+	var p: Dictionary = _npc_for_renew({
+		"contract_years": 3, "salary": 5000,
+		"career_history": [{"year": 2029,
+			"stats": {"type": "pitcher", "era": 3.0, "g": 30}}],
+	})
+	var s: Dictionary = _renew_state()
+	s["season_stats"] = {"N1": {"type": "pitcher", "era": 3.2, "g": 30}}
+	var adjusted: Array = []
+	Contract.renew_expired(s, [p], [], adjusted)
+	assert_array(adjusted).override_failure_message(
+		"평소 성적인데 조정했다").is_empty()
+	assert_int(int(p["salary"])).is_equal(5000)

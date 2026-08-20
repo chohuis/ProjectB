@@ -403,6 +403,102 @@ static func ensure_world(state: Dictionary) -> int:
 
 # ── 해가 바뀔 때 ──────────────────────────────────────────────
 
+## 계약이 끝난 사람을 원소속과 다시 묶는다 — G-6. 02 `market.ts:1128`.
+##
+## 🔴 **04엔 이 단계가 없었다.** 계약이 0이 되면 FA 시장으로 가는데,
+## `is_fa_eligible`은 **연차까지** 요구한다(`contract.gd:427`) —
+## 그래서 **계약이 끝났는데 연차가 모자란 사람**은 시장에도 못 가고
+## **계약 0인 채 방치**됐다. 02는 그 사람들을 자동 갱신한다.
+##
+## ⚠ **FA 자격자는 안 건드린다.** 02는 만료자를 전부 갱신하지만 04에서
+## 그러면 **FA 시장이 통째로 빈다** — 04는 `contract_years == 0`을 FA 자격의
+## 조건으로 쓰기 때문이다. 02와 04의 갈래 구조가 다른 자리라 **04 구조에
+## 맞춘다**: 시장에 못 가는 사람만 재계약한다.
+##
+## `log_into`를 주면 갱신된 사람 한 줄을 담는다.
+## 성적 급변으로 **연봉만** 바뀐 사람은 `adjusted`에 담긴다(02 "중간조정").
+static func renew_expired(state: Dictionary, players: Array,
+		log_into: Array = [], adjusted: Array = []) -> int:
+	var world: Dictionary = state.get("world", {})
+	var n: int = 0
+	for p in players:
+		if not p.has("salary"):
+			continue
+		if bool(p.get("is_protagonist", false)):
+			continue
+		var league: String = String(p.get("league_id", ""))
+		var years_left: int = int(p.get("contract_years", 0))
+		var prev: Dictionary = _last_year_stats(p)
+		var curr: Dictionary = _this_year_stats(state, p)
+		var perf: float = perf_score_of(curr)
+		var npc_id: String = String(p.get("id", ""))
+		var old_salary: int = int(p.get("salary", 0))
+
+		if years_left <= 0:
+			# ⚠ **시장에 갈 수 있으면 놔둔다** — 그쪽이 정본이다
+			if is_fa_eligible(p):
+				continue
+			var profile: Dictionary = TeamProfile.of(world,
+				String(p.get("team_id", "")))
+			var salary: int = npc_renewal_salary(core_ovr(p),
+				int(p.get("age", 27)), league, old_salary, perf,
+				greed_of(npc_id))
+			var years: int = npc_contract_years(int(p.get("age", 27)),
+				float(profile.get("development_focus", 50.0)),
+				float(profile.get("win_now_pressure", 50.0)),
+				stability_of(npc_id))
+			p["salary"] = salary
+			p["contract_years"] = years
+			log_into.append(EventLog.entry(npc_id,
+				String(p.get("name", "")),
+				"%s · %d만→%d만/%d년" % [EventLog.detail_of(p),
+					old_salary, salary, years],
+				String(p.get("team_id", ""))))
+			n += 1
+		elif not curr.is_empty() and not prev.is_empty():
+			# 계약 기간 중 성적 급변 → **연봉만** 조정(기간은 그대로)
+			if perf_swing(curr, prev) == 0:
+				continue
+			var adj: int = npc_renewal_salary(core_ovr(p),
+				int(p.get("age", 27)), league, old_salary, perf,
+				greed_of(npc_id))
+			# 02: 10% 이상 차이날 때만
+			if absf(float(adj - old_salary)) / maxf(float(old_salary), 1.0) \
+					< ADJUST_THRESHOLD:
+				continue
+			p["salary"] = adj
+			adjusted.append(EventLog.entry(npc_id,
+				String(p.get("name", "")),
+				"성적 %s · %d만→%d만 (잔여 %d년)" % [
+					"급등" if adj > old_salary else "급락",
+					old_salary, adj, years_left],
+				String(p.get("team_id", ""))))
+			n += 1
+	return n
+
+
+## 작년 성적 — `career_history`의 마지막 줄
+static func _last_year_stats(p: Dictionary) -> Dictionary:
+	var hist: Array = p.get("career_history", [])
+	if hist.is_empty():
+		return {}
+	var st = hist[hist.size() - 1].get("stats", {})
+	return st if st is Dictionary else {}
+
+
+## 올해 성적 — `season_stats`
+static func _this_year_stats(state: Dictionary, p: Dictionary) -> Dictionary:
+	var st = state.get("season_stats", {}).get(String(p.get("id", "")), {})
+	return st if st is Dictionary else {}
+
+
+## 성적 점수 0~100 — 02 `calcNpcPerfScore`가 없는 자리라 **중립 50**을 쓴다.
+## ⚠ **02 함수를 못 찾으면 지어내지 않는다** — 중립이면 연봉 보정이 ×1.0이라
+## 아무 방향으로도 안 민다. 나중에 02에서 찾으면 그때 넣는다
+static func perf_score_of(_stats: Dictionary) -> float:
+	return 50.0
+
+
 ## 한 시즌이 지나면 연차가 오르고 계약이 한 해 줄어든다.
 ##
 ## ⚠ **계약이 0이 되면 FA 후보다.** 안 줄이면 아무도 FA가 안 되고 시장이
