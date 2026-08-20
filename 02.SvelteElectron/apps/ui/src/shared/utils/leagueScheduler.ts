@@ -173,12 +173,22 @@ export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
   { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: 1, endWeek: 50, cycles: 16 },
   // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
   { leagueId: "LEAGUE_KBL_FARM", teams: [..._KBLF], startWeek: 1, endWeek: 50, cycles: 11 },
-  // 해외 — 주인공 진출 전까지 드리프트만 (반경 2). 로스터와 성장은 돈다
-  { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: 1, endWeek: 50, cycles: 9  },
-  { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: 1, endWeek: 50, cycles: 10 },
+  // 해외 — **2026-08-20부터 국내와 같이 풀 시뮬한다.** 경기 수도 실제 리그에
+  // 맞췄다(CALENDAR_V2.md):
+  //
+  // ABL은 **MLB를 축소한 가상 리그**다(사용자 확정). MLB가 30팀 162경기인데
+  // 16팀이면 상대가 15명이라 162를 채우려면 10.8차전이 된다 — 10차전 150이
+  // 가장 가깝고, 정규 24주에 넣으면 주 6.25로 MLB(6.2)와 거의 같다.
+  { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: 1, endWeek: 50, cycles: 10 },
+  // JBL은 NPB다 — 12팀 143경기. 13차전이면 정확히 143이 된다
+  { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: 1, endWeek: 50, cycles: 13 },
   // ⚠ 해외 팜은 **항목 자체가 없었다.** 확장팩 게이트를 열어도 1군 일정만
   // 깔리고 팜은 0경기였다 — 승강할 곳이 없으면 로스터가 고인다.
-  // 차수는 국내 2군(11차전)에 맞춘다.
-  { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: 1, endWeek: 50, cycles: 11 },
+  //
+  // 🔴 **차수를 11로 통일했더니 ABL 2군이 1군보다 많아졌다**(16팀 × 11 = 165
+  // vs 1군 150). 2군은 1군보다 적게 뛰는 게 맞다 — 8차전 120으로 내린다.
+  // 1군 대비 0.8인데, KBL 2군은 0.69(99/144) · JBL 2군은 0.85(121/143)라
+  // 그 사이다.
+  { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: 1, endWeek: 50, cycles: 8  },
   { leagueId: "LEAGUE_JBL_FARM", teams: [..._JBLF], startWeek: 1, endWeek: 50, cycles: 11 },
 ] as LeagueConfig[]).filter((c) => isLeagueInScope(c.leagueId));
