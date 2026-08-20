@@ -232,3 +232,167 @@ func test_마크_색이_팀_데이터에서_온다() -> void:
 			"result": null}], "protagonist": {"team_id": "TEAM_HS_AEWOL"}}))
 	var colors: Array = World.team_field({}, "TEAM_HS_HALLA", "colors", [])
 	assert_str(String(rows[0]["mark"]["primary"])).is_equal(String(colors[0]))
+
+
+# ── 보기 (G-3b) ───────────────────────────────────────────────
+#
+# 🔴 **처음 쓴 검사는 4/7만 잡았다.** `_state()`에 경기가 몇 개뿐이라
+# **주간이든 시즌이든 결과가 같았다** — "보기로 안 거른다" 변이가 통과했다.
+# **경기를 여러 달에 흩어 놓고, 줄어드는 것을 수로 본다.**
+
+
+## 열두 주에 걸쳐 한 주에 하나씩 — 주간·월간·시즌이 확실히 갈린다
+func _spread_state(view: String = "season", cursor: int = 0) -> Dictionary:
+	var games: Array = []
+	for i in 12:
+		games.append({"id": "G%d" % i, "day": 3 + i * 7,
+			"home": "TEAM_A", "away": "TEAM_B",
+			"is_protagonist_game": true})
+	var s: Dictionary = _state({"schedule": games})
+	s["schedule_view"] = view
+	if cursor > 0:
+		s["schedule_cursor_day"] = cursor
+	return s
+
+
+## 🔴 **04는 시즌 전체 하나만 보여 줬다.** 프로 144경기가 한 줄로 늘어서면
+## 이번 주에 뭐가 있는지 못 찾는다 — 02는 범위를 좁혀 본다
+func test_보기가_셋이다() -> void:
+	var vm: Dictionary = ScheduleVm.build(_state())
+	assert_int(vm["views"].size()).is_equal(3)
+	assert_str(String(vm["view"])).is_equal("season")
+	assert_bool(bool(vm["can_move"])).override_failure_message(
+		"시즌 보기인데 앞뒤로 넘길 수 있다").is_false()
+
+
+## ⚠ **02의 `year`는 안 만든다** — 04는 한 해가 한 시즌이라 `season`과 같다
+func test_연간_보기는_안_만든다() -> void:
+	for v in ScheduleVm.build(_state())["views"]:
+		assert_str(String(v["id"])).is_not_equal("year")
+
+
+## 🔴 **주간은 한 주만 남는다.** 열두 주에 하나씩 있으면 주간 보기엔 하나다
+func test_주간_보기가_한_주만_남긴다() -> void:
+	var full: int = ScheduleVm.build(_spread_state("season"))["rows"].size()
+	assert_int(full).override_failure_message(
+		"fixture에 경기가 안 깔렸다 — 검사가 헛돈다").is_equal(12)
+
+	var vm: Dictionary = ScheduleVm.build(_spread_state("week", 3))
+	assert_int(vm["rows"].size()).override_failure_message(
+		"주간인데 %d경기가 나온다" % vm["rows"].size()).is_equal(1)
+	assert_str(String(vm["span_label"])).contains("–")
+	assert_bool(bool(vm["can_move"])).is_true()
+
+
+## 월간은 그 달만 — 한 달에 넷 안팎이다
+func test_월간_보기가_한_달만_남긴다() -> void:
+	var vm: Dictionary = ScheduleVm.build(_spread_state("month", 10))
+	var n: int = vm["rows"].size()
+	assert_int(n).override_failure_message(
+		"월간인데 %d경기다 — 시즌 전체가 나온다" % n).is_less(12)
+	assert_int(n).is_greater(0)
+	assert_str(String(vm["span_label"])).contains("월")
+
+
+## ⚠ **주는 일요일에서 시작한다** — 02 `startOfWeek`.
+## 커서 날부터 세면 **같은 주의 앞쪽 경기가 빠진다.**
+##
+## ⚠ **개수로 보면 못 잡는다** — 범위가 7일로 같아서 커서를 어디 두든
+## 세어지는 수가 같을 수 있다. **커서보다 앞선 경기가 나오는지**를 본다
+func test_주는_일요일에서_시작한다() -> void:
+	var year: int = 2027
+	# 주 중간 날을 커서로 — 하필 일요일이면 차이가 안 난다
+	var cursor: int = 0
+	for d in range(4, 12):
+		if Calendar.weekday(year, d) >= 2:
+			cursor = d
+			break
+	assert_int(cursor).override_failure_message(
+		"주 중간 날을 못 찾았다 — 검사가 헛돈다").is_greater(0)
+
+	# 그 주의 **첫날**에 경기를 하나 둔다
+	var first: int = cursor - Calendar.weekday(year, cursor)
+	var s: Dictionary = _state({"schedule": [
+		{"id": "EARLY", "day": maxi(first, 1), "home": "TEAM_A",
+			"away": "TEAM_B", "is_protagonist_game": true},
+		{"id": "LATE", "day": cursor, "home": "TEAM_A",
+			"away": "TEAM_B", "is_protagonist_game": true},
+	]})
+	s["schedule_view"] = "week"
+	s["schedule_cursor_day"] = cursor
+
+	var ids: Array = []
+	for r in ScheduleVm.build(s)["rows"]:
+		ids.append(String(r["id"]))
+	assert_array(ids).override_failure_message(
+		"커서(%d일) 앞의 같은 주 경기가 빠졌다 — 주는 일요일에서 시작한다"
+		% cursor).contains(["EARLY"])
+	assert_array(ids).contains(["LATE"])
+
+
+## ⚠ **성적은 시즌 전체로 센다** — 주간 보기라고 승패가 줄면
+## "이번 주 성적"인지 "올해 성적"인지 못 가린다
+func test_성적은_보기와_무관하다() -> void:
+	var done: Array = []
+	for i in 6:
+		done.append({"id": "G%d" % i, "day": 3 + i * 7,
+			"home": "TEAM_A", "away": "TEAM_B", "is_protagonist_game": true,
+			"result": {"home_score": 5, "away_score": 2}})
+	var s: Dictionary = _state({"schedule": done})
+	var full: String = String(ScheduleVm.build(s)["record_label"])
+	assert_str(full).override_failure_message(
+		"fixture에 끝난 경기가 없다 — 검사가 헛돈다").contains("승")
+
+	s["schedule_view"] = "week"
+	s["schedule_cursor_day"] = 3
+	var vm: Dictionary = ScheduleVm.build(s)
+	assert_int(vm["rows"].size()).is_equal(1)
+	assert_str(String(vm["record_label"])).override_failure_message(
+		"주간 보기에서 성적이 달라졌다 — 시즌 전체로 세야 한다") 		.is_equal(full)
+
+
+## 커서를 옮기면 범위가 따라온다
+func test_커서가_범위를_옮긴다() -> void:
+	var a: String = String(
+		ScheduleVm.build(_spread_state("month", 10))["span_label"])
+	var b: String = String(
+		ScheduleVm.build(_spread_state("month", 100))["span_label"])
+	assert_str(a).override_failure_message(
+		"커서를 90일 옮겼는데 같은 달이다").is_not_equal(b)
+
+
+## **비었을 때 왜 비었는지 말한다** — 주간은 경기 없는 주가 흔하다
+func test_빈_주는_이유를_말한다() -> void:
+	var s: Dictionary = _state()
+	s["schedule_view"] = "week"
+	assert_str(String(ScheduleVm.build(s)["empty"])).contains("주")
+
+
+## 🔴 **화면에 실제로 뜬다.** vm만 채우고 안 그리면 없는 것과 같다 —
+## 이 저장소에서 "엔진만 있고 호출 0"이 아홉 번 나왔다
+func test_보기_단추가_화면에_뜬다() -> void:
+	var screen: MainScreen = auto_free(
+		preload("res://ui/screens/main_screen.tscn").instantiate())
+	add_child(screen)
+	screen.set_view_model({
+		"tabs": [{"id": "schedule", "label": "일정", "badge": ""}],
+		"schedule": ScheduleVm.build(_spread_state("week", 3)),
+	})
+
+	var labels: PackedStringArray = []
+	_texts(screen, labels)
+	var joined: String = "\n".join(labels)
+	assert_str(joined).override_failure_message(
+		"보기 단추가 화면에 없다").contains("주간")
+	assert_str(joined).contains("월간")
+	assert_str(joined).override_failure_message(
+		"어느 주인지 화면에 안 뜬다").contains("–")
+
+
+func _texts(node: Node, out: PackedStringArray) -> void:
+	if node is Label and node.visible:
+		out.append((node as Label).text)
+	elif node is Button and node.visible:
+		out.append((node as Button).text)
+	for c in node.get_children():
+		_texts(c, out)

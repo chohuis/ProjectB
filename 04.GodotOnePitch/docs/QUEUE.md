@@ -1757,9 +1757,14 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       전환한다(`SchedulePage:view`). 04 `schedule_vm`(97줄)은 `rows` 하나다.
       ⚠ **02에 없던 화면 구조가 아니다** — 02에 있는 것을 안 옮긴 것이다
 
-- [ ] **G-3c Team 페이지를 항목 단위로 안 봤다** — 02 304줄 vs 04
-      `team_vm` 64줄. 04는 `pitchers`·`batters`·`summary`뿐이라 격차가
-      크다. **열어서 견줘야 한다**
+- [ ] **G-3c Team 페이지** — 2026-08-20 **견줬다.** 차이 둘:
+      · 🔴 **감독·코치가 팀 화면에 없다.** 02 `TeamPage`는 로스터 옆에
+        감독·코치를 같이 보여 준다. 04는 `team_vm`에도 `team_detail_vm`에도
+        없다 — **데이터는 있다**(`Staff.of(world, team_id)`). `people_vm`이
+        `Staff.all_of`로 인물 탭에 쓰는데 **팀 탭에서는 안 읽는다**(형태 ③)
+      · **팀 고르기가 없다** — 02는 리그를 골라 다른 팀 로스터를 본다.
+        04는 내 팀만이다(`team_detail_vm`은 따로 있지만 목록에서 고르는
+        입구가 다르다). **어느 쪽이 맞는지 04 화면 흐름을 보고 정한다**
 
 - [ ] **G-4 소식 카드 다섯** — 아직 안 견줬다
 

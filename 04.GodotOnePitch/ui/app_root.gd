@@ -65,6 +65,8 @@ func _ready() -> void:
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
 	_main.tx_filter_selected.connect(_on_tx_filter_selected)
+	_main.schedule_view_selected.connect(_on_schedule_view_selected)
+	_main.schedule_moved.connect(_on_schedule_moved)
 	_main.stat_side_selected.connect(_on_stat_side)
 	_main.stat_category_selected.connect(_on_stat_category)
 	_main.study_mode_picked.connect(_on_study_mode)
@@ -848,4 +850,25 @@ func _on_major(name: String) -> void:
 		return
 	school["major"] = name
 	_state["school"] = school
+	_refresh()
+
+
+## 일정 보기를 골랐다 — G-3b.
+## ⚠ **커서를 비운다** — 월간에서 3월을 보다 주간으로 가면 3월 커서가
+## 남아 "이번 주"가 아닌 엉뚱한 주가 뜬다
+func _on_schedule_view_selected(view: String) -> void:
+	_state["schedule_view"] = view
+	_state.erase("schedule_cursor_day")
+	_refresh()
+
+
+## 일정을 앞뒤로 — 02 `SchedulePage:294`(주간 7일 · 월간 한 달).
+## ⚠ **시즌 밖으로 안 나간다** — 나가면 빈 화면만 뜬다
+## ⚠ **여기서 날을 세지 않는다** — `app_root_test`가 달력 모듈 호출을 막는다.
+## 루트는 잇는 곳이지 계산하는 곳이 아니다(그 검사가 이걸 잡았다)
+func _on_schedule_moved(delta: int) -> void:
+	_state["schedule_cursor_day"] = ScheduleVm.move_cursor(
+		String(_state.get("schedule_view", "season")),
+		int(_state.get("schedule_cursor_day", 0)), delta,
+		int(_state.get("day", 1)))
 	_refresh()

@@ -17,6 +17,23 @@ class_name ScheduleVm
 
 const WEEKDAY_NAMES: Array[String] = ["일", "월", "화", "수", "목", "금", "토"]
 
+## 보기 — 02 `SchedulePage`의 `view`(G-3b).
+##
+## 🔴 **04는 시즌 전체 하나만 보여 줬다.** 프로 144경기가 한 줄로 늘어서면
+## 이번 주에 뭐가 있는지 못 찾는다 — 02는 범위를 좁혀 본다.
+##
+## ⚠ **02의 `year`는 안 만든다.** 02에서 그건 "그 해 시즌 일정"인데
+## (`SchedulePage:262`) **04는 한 해가 한 시즌**이라 `season`과 같은 것이
+## 나온다. 같은 값을 두 이름으로 두면 어느 쪽이 정본인지 못 가린다
+const VIEWS: Array[Dictionary] = [
+	{"id": "week", "label": "주간"},
+	{"id": "month", "label": "월간"},
+	{"id": "season", "label": "시즌"},
+]
+
+## 02는 커서를 앞뒤로 옮긴다(`SchedulePage:294`) — 주간은 7일, 월간은 한 달.
+## ⚠ **상태가 든다** — 화면이 들면 진행 뒤에 초기화된다
+
 
 static func build(s: Dictionary) -> Dictionary:
 	var day: int = maxi(int(s.get("day", 1)), 1)
@@ -89,9 +106,94 @@ static func build(s: Dictionary) -> Dictionary:
 	# 날짜 순이 아니다 — 그대로 보여주면 일정표가 뒤죽박죽이 된다
 	rows.sort_custom(func(a, b) -> bool: return a["day"] < b["day"])
 
+	# 보기로 범위를 좁힌다 (G-3b)
+	var view: String = String(s.get("schedule_view", "season"))
+	var cursor: int = int(s.get("schedule_cursor_day", 0))
+	if cursor <= 0:
+		cursor = day
+	var span: Dictionary = _span_of(view, year, cursor)
+	var shown: Array = []
+	for r in rows:
+		var rd: int = int(r["day"])
+		if rd < int(span["from"]) or rd > int(span["to"]):
+			continue
+		shown.append(r)
+
 	return {
-		"rows": rows,
+		# ⚠ **성적은 시즌 전체로 센다** — 주간 보기라고 승패가 줄면
+		# "이번 주 성적"인지 "올해 성적"인지 못 가린다(02도 전체를 낸다)
+		"rows": shown,
+		"views": _view_rows(view),
+		"view": view,
+		"span_label": String(span["label"]),
+		"cursor_day": cursor,
+		# 시즌 보기에서는 앞뒤로 넘길 것이 없다
+		"can_move": view != "season",
 		"wins": w, "losses": l, "draws": d,
 		"remaining": remaining,
 		"record_label": "기록 없음" if w + l + d == 0 else "%d승 %d무 %d패" % [w, d, l],
+		"empty": _empty_note(view),
 	}
+
+
+## 커서를 앞뒤로 — 02 `SchedulePage:294`(주간 7일 · 월간 한 달).
+##
+## 🔴 **루트가 이 계산을 갖고 있었다.** `app_root_test`가 "루트는 잇는 곳이지
+## 계산하는 곳이 아니다"라며 `Calendar.`를 막는데 거기서 날을 세고 있었다 —
+## 검사가 잡았다. 세는 곳은 여기 하나다.
+## ⚠ **시즌 밖으로 안 나간다** — 나가면 빈 화면만 뜬다
+static func move_cursor(view: String, cursor: int, delta: int,
+		today: int = 1) -> int:
+	var cur: int = cursor if cursor > 0 else today
+	var step: int = Calendar.DAYS_PER_WEEK if view == "week" else DAYS_PER_MONTH
+	return clampi(cur + delta * step, 1, Calendar.DAYS_PER_SEASON)
+
+
+## 월간 한 걸음 — 02는 `setMonth(+1)`이라 달의 길이를 따르지만 04 달력은
+## 달마다 길이가 달라 **평균으로 옮기고 범위는 `_span_of`가 다시 잡는다**
+const DAYS_PER_MONTH: int = 30
+
+
+## 보기 단추
+static func _view_rows(active: String) -> Array:
+	var out: Array = []
+	for v in VIEWS:
+		out.append({"id": v["id"], "label": v["label"],
+			"on": String(v["id"]) == active})
+	return out
+
+
+## 그 보기가 덮는 날 범위. **일 단위다** — 04는 날짜로 센다
+static func _span_of(view: String, year: int, cursor: int) -> Dictionary:
+	if view == "week":
+		# 02는 일요일에서 시작한다(`startOfWeek`)
+		var wd: int = Calendar.weekday(year, cursor)
+		var from_day: int = maxi(cursor - wd, 1)
+		var to_day: int = from_day + 6
+		var a: Dictionary = Calendar.date_of(year, from_day)
+		var b: Dictionary = Calendar.date_of(year, to_day)
+		return {"from": from_day, "to": to_day,
+			"label": "%d월 %d일 – %d월 %d일" % [a["month"], a["day"],
+				b["month"], b["day"]]}
+	if view == "month":
+		var d: Dictionary = Calendar.date_of(year, cursor)
+		var first: int = cursor - int(d["day"]) + 1
+		# 다음 달 1일 전날까지
+		var next_first: int = first
+		var m: int = int(d["month"])
+		while next_first <= Calendar.DAYS_PER_SEASON 				and int(Calendar.date_of(year, next_first)["month"]) == m:
+			next_first += 1
+		return {"from": maxi(first, 1), "to": next_first - 1,
+			"label": "%d년 %d월" % [year, m]}
+	return {"from": 1, "to": Calendar.DAYS_PER_SEASON,
+		"label": "%d 시즌" % year}
+
+
+## **비었을 때 왜 비었는지 말한다** — 주간 보기는 경기 없는 주가 흔하다
+static func _empty_note(view: String) -> String:
+	if view == "week":
+		return "이번 주에는 경기가 없습니다"
+	if view == "month":
+		return "이 달에는 경기가 없습니다"
+	# ⚠ **문구를 바꾸지 않는다** — `main_screen_test`가 이 말을 기대한다
+	return "아직 잡힌 경기가 없습니다"

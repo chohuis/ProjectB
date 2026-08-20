@@ -60,6 +60,12 @@ signal league_selected(league_id: String)
 ## 리그 기록에서 종류를 골랐다 (G-3a)
 signal tx_filter_selected(kind: String)
 
+## 일정 보기를 골랐다 (G-3b)
+signal schedule_view_selected(view: String)
+
+## 일정을 앞뒤로 넘겼다 — `delta`는 −1/+1
+signal schedule_moved(delta: int)
+
 ## 스탯 순위에서 투수·타자를 갈랐다
 signal stat_side_selected(side: String)
 
@@ -496,10 +502,42 @@ func _build_schedule() -> void:
 	head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
 	_tab_host.add_child(head)
 
+	# 보기 — 02 `SchedulePage`의 주간·월간·시즌 (G-3b)
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", 4)
+	_tab_host.add_child(bar)
+	for v in vm.get("views", []):
+		var b := Button.new()
+		b.text = String(v["label"])
+		b.toggle_mode = true
+		b.button_pressed = bool(v["on"])
+		b.pressed.connect(func() -> void:
+			schedule_view_selected.emit.call_deferred(String(v["id"])))
+		bar.add_child(b)
+
+	# 앞뒤로 넘기기 — 시즌 보기에는 넘길 것이 없다
+	if bool(vm.get("can_move", false)):
+		var prev := Button.new()
+		prev.text = "◀"
+		prev.pressed.connect(func() -> void:
+			schedule_moved.emit.call_deferred(-1))
+		bar.add_child(prev)
+		var next := Button.new()
+		next.text = "▶"
+		next.pressed.connect(func() -> void:
+			schedule_moved.emit.call_deferred(1))
+		bar.add_child(next)
+
+	var span := Label.new()
+	span.text = String(vm.get("span_label", ""))
+	span.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+	_tab_host.add_child(span)
+
 	var rows: Array = vm.get("rows", [])
 	if rows.is_empty():
 		var empty := Label.new()
-		empty.text = "아직 잡힌 경기가 없습니다"
+		# **왜 비었는지 말한다** — 주간 보기는 경기 없는 주가 흔하다
+		empty.text = String(vm.get("empty", "아직 잡힌 경기가 없습니다"))
 		empty.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 		_tab_host.add_child(empty)
 		return
