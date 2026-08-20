@@ -110,7 +110,8 @@
     "measure:messagekinds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-message-kinds.cjs",
     "check:seasonendguard": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-seasonend-guard.cjs",
     "check:protransition": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-pro-transition.cjs",
-    "measure:leaguegames": "node scripts/measure-league-games.cjs"
+    "measure:leaguegames": "node scripts/measure-league-games.cjs",
+    "measure:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-growth.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

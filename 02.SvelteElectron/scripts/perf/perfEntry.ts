@@ -1888,6 +1888,21 @@ export function growthFactorProbe(): Record<string, unknown> {
 }
 
 /** 주인공 현황 한 줄 — 경로 회귀가 "지금 어디에 있나"를 판정하는 데 쓴다 */
+/**
+ * 주인공 세부 능력치 — 성장 계측이 쓴다.
+ *
+ * ⚠ **OVR만 보면 미세 성장이 안 보인다.** 정수라 W6에 70이 되면 그 뒤로
+ * 안 움직이는 것처럼 뜬다. 실제로는 세부 능력치가 조금씩 오르는 중이다.
+ */
+export function protagonistAbilities(): Record<string, number> {
+  const p = get(gameStore).protagonist;
+  const pit = p.pitching ?? {};
+  const out: Record<string, number> = {};
+  for (const [k, v] of Object.entries(pit)) {
+    if (typeof v === "number") out[k] = v;
+  }
+  return out;
+}
 export function protagonistState(): Record<string, unknown> {
   const p = get(gameStore).protagonist;
   const s = get(seasonStore);
