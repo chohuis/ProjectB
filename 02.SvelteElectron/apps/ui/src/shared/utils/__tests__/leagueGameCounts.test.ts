@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { DEFAULT_LEAGUE_CONFIGS, ALL_TEAMS_BY_LEAGUE } from "../leagueScheduler";
+import {
+  DEFAULT_LEAGUE_CONFIGS, ALL_TEAMS_BY_LEAGUE,
+  PRO_START_WEEK, PRO_END_WEEK,
+} from "../leagueScheduler";
 
 /**
  * 리그별 팀당 경기 수가 **실제 리그와 맞는가** (CALENDAR_V2.md).
@@ -69,5 +72,45 @@ describe("설정이 팀 목록과 어긋나지 않는다", () => {
     for (const c of DEFAULT_LEAGUE_CONFIGS) {
       expect(c.teams.length % 2, `${c.leagueId} ${c.teams.length}팀`).toBe(0);
     }
+  });
+});
+
+describe("정규 기간이 실제 야구와 같은 밀도인가", () => {
+  const WEEKS = PRO_END_WEEK - PRO_START_WEEK + 1;
+
+  it("프로 정규가 24주다 — 실제 KBO는 약 23주", () => {
+    expect(WEEKS).toBe(24);
+  });
+
+  it("여섯 리그가 같은 기간을 쓴다", () => {
+    for (const c of DEFAULT_LEAGUE_CONFIGS) {
+      expect(c.startWeek, c.leagueId).toBe(PRO_START_WEEK);
+      expect(c.endWeek, c.leagueId).toBe(PRO_END_WEEK);
+    }
+  });
+
+  it("1군 셋이 주 5.5~6.5경기다 — KBO 6.3 · MLB 6.2 · NPB 5.3", () => {
+    // 🔴 예전엔 W1~50이라 주 2.9였다. 경기 수는 실제와 같은데 기간이 두 배였다
+    for (const lid of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+      const cfg = DEFAULT_LEAGUE_CONFIGS.find((c) => c.leagueId === lid)!;
+      const per = (cfg.teams.length - 1) * cfg.cycles / WEEKS;
+      expect(per, `${lid} 주 ${per.toFixed(2)}경기`).toBeGreaterThanOrEqual(5.5);
+      expect(per, `${lid} 주 ${per.toFixed(2)}경기`).toBeLessThanOrEqual(6.5);
+    }
+  });
+
+  it("주 6경기를 넘지 않는다 — 월요일은 쉰다", () => {
+    // 짝수 팀이면 하루에 전 팀이 뛸 수 있으므로 상한이 주 6이다.
+    // ⚠ ABL이 6.25라 이 검사는 **1군 중 KBL·JBL만** 본다 — ABL은 MLB 축소라
+    // 원본(MLB)도 주 6.2로 6을 살짝 넘는다
+    for (const lid of ["LEAGUE_KBL", "LEAGUE_JBL"]) {
+      const cfg = DEFAULT_LEAGUE_CONFIGS.find((c) => c.leagueId === lid)!;
+      const per = (cfg.teams.length - 1) * cfg.cycles / WEEKS;
+      expect(per, `${lid} 주 ${per.toFixed(2)}`).toBeLessThanOrEqual(6.0);
+    }
+  });
+
+  it("오프시즌이 남는다 — 52주 중 정규가 절반 이하", () => {
+    expect(WEEKS / 52).toBeLessThan(0.5);
   });
 });

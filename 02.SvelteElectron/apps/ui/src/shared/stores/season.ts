@@ -27,6 +27,8 @@ import {
   HS_ACTIVE_TEAMS_V3,
   HS_REGIONS,
   HS_TARGET_GAMES,
+  HS_START_WEEK,
+  HS_END_WEEK,
   UNIV_GROUPS,
   UNIV_TARGET_GAMES,
   UNIV_REGULAR_START_WEEK,
@@ -471,7 +473,10 @@ function createSeasonStore() {
     // 고교 102팀 8권역 주말리그 초기화 (DESIGN.md §7 v2)
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
       const [hsEntries, univEntries, otherSchedules] = await Promise.all([
-        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES, 2, 45, protagonistTeamId, seasonYear),
+        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES,
+          // 🔴 예전엔 `2, 45`가 여기 박혀 있었다 — W45는 **12월 말**이다.
+          // 기간은 `leagueScheduler`가 정본이다(CALENDAR_V2.md)
+          HS_START_WEEK, HS_END_WEEK, protagonistTeamId, seasonYear),
         // 대학 5조 — 조당 9경기, 조마다 다른 평일 요일 (Phase 5-5b)
         generateRegionalSchedule(
           "LEAGUE_UNIVERSITY", UNIV_GROUPS, UNIV_TARGET_GAMES,

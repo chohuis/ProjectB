@@ -46,17 +46,37 @@ export async function generateLeagueSchedule(
 export const HS_TARGET_GAMES = 20;
 
 /**
+ * 고교 주말리그 기간 (CALENDAR_V2.md).
+ *
+ * 🔴 **예전엔 W2~45였다** — 호출부(`season.ts`)에 숫자로 박혀 있었고,
+ * W45는 **12월 말**이다. 실제 고교 주말리그는 4/17~7/18이고 9월엔 드래프트다.
+ *
+ * W7~26이면 4월 중순~8월 말이다. 3학년은 W26에 시즌이 끝나고 **W31 드래프트**를
+ * 맞는다 — 5주 간격이라 스카우트 평가·진로 상담이 들어갈 자리가 생긴다.
+ */
+export const HS_START_WEEK = 7;
+export const HS_END_WEEK = 26;
+
+/**
  * 대학 정규리그 팀당 목표 경기 수 (03_대학.md §4-1).
  *
- * 조당 10팀 단일 라운드로빈 = 9경기. 조 45경기 × 5조 = **총 225경기**.
- * 고교(20경기)보다 가벼운 건 의도다 — 정규리그는 생존 무대이고
- * 승부는 은하기·여명기에서 난다.
+ * 조당 10팀. **2026-08-20에 9 → 27로 늘렸다**(사용자 확정) — 실제 대학야구가
+ * 춘계·하계·추계 리그전을 치르므로 단일 라운드로빈(9)을 세 바퀴 돈다.
+ *
+ * ⚠ **설계 의도는 그대로다**: 정규리그는 생존 무대이고 승부는 은하기·여명기에서
+ * 난다. 경기가 늘어도 대회가 승부처인 건 안 바뀐다.
  */
-export const UNIV_TARGET_GAMES = 9;
+export const UNIV_TARGET_GAMES = 27;
 
-/** 대학 정규리그 기간 — 3월~5월 초 10주 (§4-6 캘린더) */
-export const UNIV_REGULAR_START_WEEK = 1;
-export const UNIV_REGULAR_END_WEEK = 10;
+/**
+ * 대학 정규리그 기간 — 프로와 같은 W5~28.
+ *
+ * 🔴 **예전엔 W1~10이었다.** 27경기를 10주에 넣으면 주 2.7경기가 되고,
+ * 대회(왕중왕전 W11~12 · 은하기 · 여명기)와 정규가 완전히 갈린다.
+ * 실제 대학야구는 **리그전과 전국대회가 번갈아** 온다.
+ */
+export const UNIV_REGULAR_START_WEEK = 5;
+export const UNIV_REGULAR_END_WEEK = 28;
 
 /**
  * 권역 주말리그 (Phase 5-3).
@@ -168,20 +188,33 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
  * 만들어두고 시뮬만 안 하면 영영 결과 없는 경기가 세이브에 쌓인다.
  * 확장팩에서 releaseScope.ts의 Set을 비우면 아래 항목이 그대로 살아난다.
  */
+/**
+ * 프로 정규시즌 기간 (CALENDAR_V2.md).
+ *
+ * 🔴 **예전엔 W1~50이었다** — `W1 = 3월 1일`이라 3월부터 이듬해 2월까지
+ * 리그가 돌았고, 팀당 144경기를 50주에 펼쳐 **주 2.9경기**가 됐다.
+ * 실제 KBO는 144경기를 약 23주에 치러 주 6.3경기다.
+ *
+ * W5부터인 이유: 실제 KBO 개막이 3월 말이다. W1~4는 시범경기·로스터 확정
+ * 기간이다. 24주에 144경기면 **주 6.0**으로 실제와 같은 밀도가 된다.
+ */
+export const PRO_START_WEEK = 5;
+export const PRO_END_WEEK = 28;
+
 export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
   // 프로 1군 10팀 × 16차전 = 팀당 144경기 (DESIGN.md §7)
-  { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: 1, endWeek: 50, cycles: 16 },
+  { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 16 },
   // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
-  { leagueId: "LEAGUE_KBL_FARM", teams: [..._KBLF], startWeek: 1, endWeek: 50, cycles: 11 },
+  { leagueId: "LEAGUE_KBL_FARM", teams: [..._KBLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 11 },
   // 해외 — **2026-08-20부터 국내와 같이 풀 시뮬한다.** 경기 수도 실제 리그에
   // 맞췄다(CALENDAR_V2.md):
   //
   // ABL은 **MLB를 축소한 가상 리그**다(사용자 확정). MLB가 30팀 162경기인데
   // 16팀이면 상대가 15명이라 162를 채우려면 10.8차전이 된다 — 10차전 150이
   // 가장 가깝고, 정규 24주에 넣으면 주 6.25로 MLB(6.2)와 거의 같다.
-  { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: 1, endWeek: 50, cycles: 10 },
+  { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 10 },
   // JBL은 NPB다 — 12팀 143경기. 13차전이면 정확히 143이 된다
-  { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: 1, endWeek: 50, cycles: 13 },
+  { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 13 },
   // ⚠ 해외 팜은 **항목 자체가 없었다.** 확장팩 게이트를 열어도 1군 일정만
   // 깔리고 팜은 0경기였다 — 승강할 곳이 없으면 로스터가 고인다.
   //
@@ -189,6 +222,6 @@ export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
   // vs 1군 150). 2군은 1군보다 적게 뛰는 게 맞다 — 8차전 120으로 내린다.
   // 1군 대비 0.8인데, KBL 2군은 0.69(99/144) · JBL 2군은 0.85(121/143)라
   // 그 사이다.
-  { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: 1, endWeek: 50, cycles: 8  },
-  { leagueId: "LEAGUE_JBL_FARM", teams: [..._JBLF], startWeek: 1, endWeek: 50, cycles: 11 },
+  { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 8  },
+  { leagueId: "LEAGUE_JBL_FARM", teams: [..._JBLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 11 },
 ] as LeagueConfig[]).filter((c) => isLeagueInScope(c.leagueId));
