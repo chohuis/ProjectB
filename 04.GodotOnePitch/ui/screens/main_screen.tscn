@@ -135,6 +135,21 @@ layout_mode = 2
 autowrap_mode = 3
 visible = false
 
+[node name="AutoCounts" type="Label" parent="Pad/Col/Body/Right/Footer"]
+layout_mode = 2
+autowrap_mode = 3
+visible = false
+
+[node name="AutoRecent" type="Label" parent="Pad/Col/Body/Right/Footer"]
+layout_mode = 2
+autowrap_mode = 3
+visible = false
+
+[node name="AutoExport" type="Button" parent="Pad/Col/Body/Right/Footer"]
+layout_mode = 2
+visible = false
+text = "로그 내보내기"
+
 [node name="Progress" type="ProgressBar" parent="Pad/Col/Body/Right/Footer"]
 custom_minimum_size = Vector2(0, 6)
 layout_mode = 2

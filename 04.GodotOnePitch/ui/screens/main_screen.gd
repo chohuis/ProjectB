@@ -40,6 +40,9 @@ const PEOPLE_SCREEN := preload("res://ui/screens/people_screen.tscn")
 @onready var _advance: Button = $Pad/Col/Body/Right/Footer/Advance
 @onready var _auto: Button = $Pad/Col/Body/Right/Footer/Auto
 @onready var _auto_stop: Label = $Pad/Col/Body/Right/Footer/AutoStop
+@onready var _auto_counts: Label = $Pad/Col/Body/Right/Footer/AutoCounts
+@onready var _auto_recent: Label = $Pad/Col/Body/Right/Footer/AutoRecent
+@onready var _auto_export: Button = $Pad/Col/Body/Right/Footer/AutoExport
 @onready var _progress: ProgressBar = $Pad/Col/Body/Right/Footer/Progress
 
 ## 진행 버튼을 눌렀다. 며칠을 갈지는 사전에 있다
@@ -121,6 +124,39 @@ func set_auto_stop(label: String) -> void:
 	_auto_stop.text = "자동 진행 정지 — %s" % label if not label.is_empty() else ""
 	_auto_stop.visible = not label.is_empty()
 	_auto_stop.add_theme_color_override("font_color", AppTheme.ACCENT)
+	set_auto_summary(AutoAdvanceVm.build(label))
+
+
+## 자동 진행이 무엇을 했나 — G-6 ③.
+##
+## ⚠ **여기는 요약만 맡는다.** 02는 devtools 패널에 이벤트 50건·필터 13개를
+## 띄우는데 이 자리(`Right/Footer`)는 그만큼이 안 들어간다. **상세는 리그
+## 기록 탭이 맡는다**(G-3a) — 02도 그렇게 나뉜다(패널=개발 도구,
+## 리그 기록=게임 화면). 같은 `EventLog`를 본다.
+##
+## ⚠ **화면이 계산을 안 한다** — 줄은 `AutoAdvanceVm`이 만든다
+func set_auto_summary(vm: Dictionary) -> void:
+	var show: bool = bool(vm.get("show", false)) \
+		and int(vm.get("total", 0)) > 0
+	_auto_counts.visible = show
+	_auto_recent.visible = show
+	_auto_export.visible = show
+	if not show:
+		return
+
+	# 0인 종류는 요약에서 뺀다 — 열둘을 다 적으면 한 줄이 넘친다.
+	# **카운터 자리가 고정인 것은 패널의 규칙이고 여기는 요약이다**
+	var parts: PackedStringArray = []
+	for c in vm.get("counts", []):
+		if int(c["value"]) > 0:
+			parts.append("%s %d" % [c["label"], int(c["value"])])
+	_auto_counts.text = " · ".join(parts)
+	_auto_counts.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+
+	var recent: Array = vm.get("recent", [])
+	_auto_recent.text = "\n".join(
+		PackedStringArray(recent.slice(0, RECENT_ON_MAIN)))
+	_auto_recent.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 
 
 ## 사전을 넣는다. `_ready` 전후 어느 때든 부를 수 있다
@@ -137,12 +173,18 @@ func current_tab_id() -> String:
 	return tabs[_tab].get("id", "")
 
 
+## 좁은 자리라 다섯 줄까지만 — 02 패널은 열 줄이지만 거긴 오버레이다
+const RECENT_ON_MAIN: int = 5
+
+
 func _ready() -> void:
 	theme = AppTheme.build()
 	_bg.color = AppTheme.BG
 	_advance.pressed.connect(_on_advance)
 	_auto.pressed.connect(func() -> void: auto_requested.emit())
 	_training.pressed.connect(func() -> void: training_requested.emit.call_deferred())
+	# 02는 .txt로 내려받는다 — 04는 `user://logs/`에 쓴다(계측 로그가 거기 있다)
+	_auto_export.pressed.connect(_on_auto_export)
 	_rebuild()
 
 
@@ -905,3 +947,13 @@ func _muted(text: String) -> void:
 	l.text = text
 	l.add_theme_color_override("font_color", AppTheme.TEXT_MUTE)
 	_tab_host.add_child(l)
+
+
+## 자동 진행 로그를 파일로 — 02 `exportLog`.
+## ⚠ **어디 썼는지 말한다** — 안 말하면 눌러도 아무 일도 안 한 것처럼 보인다
+func _on_auto_export() -> void:
+	var path: String = AutoAdvanceVm.export_to_file()
+	if path.is_empty():
+		_auto_export.text = "내보내기 실패"
+		return
+	_auto_export.text = "저장함 — %s" % path.get_file()
