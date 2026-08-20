@@ -29,6 +29,7 @@ import {
   HS_TARGET_GAMES,
   HS_START_WEEK,
   HS_END_WEEK,
+  generatePreseasonSchedules,
   UNIV_GROUPS,
   UNIV_TARGET_GAMES,
   UNIV_REGULAR_START_WEEK,
@@ -39,6 +40,23 @@ import {
 import * as BackgroundLeague from "./backgroundLeague";
 import * as NpcInjury from "./npcInjury";
 import * as Postseason from "./postseason";
+
+/**
+ * 시범경기를 리그 일정 앞에 붙인다.
+ *
+ * ⚠ **같은 배열에 넣는다.** 따로 두면 화면·순위 계산이 두 곳을 봐야 하고,
+ * 그러면 한쪽을 빠뜨리는 자리가 생긴다. 구분은 `phase`와 `isFriendly`가 한다.
+ */
+function mergePreseason(
+  regular: Record<string, ScheduleEntry[]>,
+  preseason: Record<string, ScheduleEntry[]>,
+): Record<string, ScheduleEntry[]> {
+  const out = { ...regular };
+  for (const [lid, pre] of Object.entries(preseason)) {
+    out[lid] = [...pre, ...(out[lid] ?? [])];
+  }
+  return out;
+}
 
 // ── seasonStore 내부 상태 ─────────────────────────────────────
 export type SeasonStoreState = SaveSeason;
@@ -472,7 +490,7 @@ function createSeasonStore() {
 
     // 고교 102팀 8권역 주말리그 초기화 (DESIGN.md §7 v2)
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
-      const [hsEntries, univEntries, otherSchedules] = await Promise.all([
+      const [hsEntries, univEntries, otherSchedules, preseason] = await Promise.all([
         generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES,
           // 🔴 예전엔 `2, 45`가 여기 박혀 있었다 — W45는 **12월 말**이다.
           // 기간은 `leagueScheduler`가 정본이다(CALENDAR_V2.md)
@@ -484,6 +502,9 @@ function createSeasonStore() {
           { idPrefix: "UNIVR" },
         ),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
+        // 시범경기 — 정규 개막(W5) 앞 4주. 1군 셋만이고 `isFriendly`라
+        // 공식 기록엔 안 들어간다(CALENDAR_V2.md)
+        generatePreseasonSchedules(protagonistTeamId, seasonYear),
       ]);
 
       const hsSchedule = hsEntries
@@ -502,7 +523,10 @@ function createSeasonStore() {
         ...s,
         seasonYear,
         schedule: hsSchedule,
-        leagueSchedules: { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries },
+        // ⚠ **시범경기를 정규 앞에 붙인다.** 같은 리그 배열에 넣어야 화면이
+        // 한 흐름으로 읽는다 — `phase`로 갈린다
+        leagueSchedules: mergePreseason(
+          { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries }, preseason),
         leagueState,
         standings: makeStandings(HS_ACTIVE_TEAMS_V3),
       }));
@@ -514,8 +538,9 @@ function createSeasonStore() {
     async reinitHighschoolSeason(protagonistTeamId: string): Promise<void> {
       const seasonYear = get({ subscribe }).seasonYear;
 
-      const [hsEntries, univEntries, otherSchedules] = await Promise.all([
-        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES, 2, 45, protagonistTeamId, seasonYear),
+      const [hsEntries, univEntries, otherSchedules, preseason] = await Promise.all([
+        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES,
+          HS_START_WEEK, HS_END_WEEK, protagonistTeamId, seasonYear),
         // 대학 5조 — 조당 9경기, 조마다 다른 평일 요일 (Phase 5-5b)
         generateRegionalSchedule(
           "LEAGUE_UNIVERSITY", UNIV_GROUPS, UNIV_TARGET_GAMES,
@@ -523,6 +548,9 @@ function createSeasonStore() {
           { idPrefix: "UNIVR" },
         ),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
+        // ⚠ **여기도 시범경기를 만든다.** 학년이 바뀔 때마다 리그 일정을
+        // 다시 짜는 자리라, 빠뜨리면 2년차부터 시범경기가 없어진다
+        generatePreseasonSchedules(protagonistTeamId, seasonYear),
       ]);
 
       const hsSchedule = hsEntries
@@ -541,7 +569,8 @@ function createSeasonStore() {
         ...s,
         schedule: hsSchedule,
         standings: makeStandings(HS_ACTIVE_TEAMS_V3),
-        leagueSchedules: { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries },
+        leagueSchedules: mergePreseason(
+          { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries }, preseason),
         leagueState,
       }));
     },

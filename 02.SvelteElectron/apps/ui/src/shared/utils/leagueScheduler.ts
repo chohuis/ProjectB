@@ -225,3 +225,49 @@ export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
   { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 8  },
   { leagueId: "LEAGUE_JBL_FARM", teams: [..._JBLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 11 },
 ] as LeagueConfig[]).filter((c) => isLeagueInScope(c.leagueId));
+
+// ── 시범경기 (CALENDAR_V2.md) ─────────────────────────────────
+
+/**
+ * 시범경기 팀당 경기 수. 실제 KBO도 팀당 10경기 안팎이다.
+ */
+export const PRESEASON_GAMES = 12;
+
+/** 시범경기 기간 — 정규 개막(W5) 앞의 4주 */
+export const PRESEASON_START_WEEK = 1;
+export const PRESEASON_END_WEEK = 4;
+
+/** 시범경기를 치르는 리그 — **1군 셋만**이다 (사용자 확정) */
+export const PRESEASON_LEAGUES = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
+
+/**
+ * 시범경기 일정을 만든다.
+ *
+ * ⚠ **`cycles` 모델로는 12경기를 못 만든다.** 10팀이면 상대가 9명이라
+ * 차수의 배수(9·18·27…)만 나온다. 그래서 목표 경기 수를 주고 바퀴를 역산하는
+ * `generateRegionalSchedule`을 쓴다 — 리그 전체를 권역 하나로 넘긴다.
+ *
+ * ⚠ **`isFriendly: true`로 만든다.** 공식 기록에는 안 들어가고 개인 성적만
+ * `friendlyStats`에 남는다(사용자 확정: "기록에도 남긴다"). 그 장치가 이미
+ * 있어서 새로 만들지 않았다.
+ */
+export async function generatePreseasonSchedules(
+  protagonistTeamId: string,
+  seasonYear: number,
+): Promise<Record<string, ScheduleEntry[]>> {
+  const out: Record<string, ScheduleEntry[]> = {};
+  for (const lid of PRESEASON_LEAGUES) {
+    if (!isLeagueInScope(lid)) continue;
+    const teams = ALL_TEAMS_BY_LEAGUE[lid] ?? [];
+    if (teams.length < 2) continue;
+    const entries = await generateRegionalSchedule(
+      lid, { ALL: teams }, PRESEASON_GAMES,
+      PRESEASON_START_WEEK, PRESEASON_END_WEEK, protagonistTeamId, seasonYear,
+      { idPrefix: `PRE_${lid.replace("LEAGUE_", "")}` },
+    );
+    out[lid] = entries.map((e) => ({
+      ...e, leagueId: lid, phase: "preseason" as const, isFriendly: true,
+    }));
+  }
+  return out;
+}
