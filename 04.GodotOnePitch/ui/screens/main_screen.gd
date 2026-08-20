@@ -595,6 +595,25 @@ func _build_team() -> void:
 	head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
 	_tab_host.add_child(head)
 
+	# 🔴 **감독·코치** (G-3c). `Staff`가 있는데 팀 화면이 안 읽어서
+	# "우리 팀 감독이 누구인가"를 여기서 알 수 없었다
+	var staff: Array = vm.get("staff", [])
+	if not staff.is_empty():
+		for st in staff:
+			var line := HBoxContainer.new()
+			line.add_theme_constant_override("separation", 8)
+			_tab_host.add_child(line)
+
+			var who := Label.new()
+			who.text = "%s  %s" % [String(st["label"]), String(st["name"])]
+			who.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			line.add_child(who)
+
+			var what := Label.new()
+			what.text = String(st["detail"])
+			what.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+			line.add_child(what)
+
 	var rows: Array = vm.get("rows", [])
 	if rows.is_empty():
 		var empty := Label.new()

@@ -29,7 +29,39 @@ static func build(s: Dictionary) -> Dictionary:
 		# ⚠ **구성을 숫자로 보여준다.** 02에서 포수 0명·투수 미달이 반복해서
 		# 나왔는데 화면에 안 보이면 아무도 모른다
 		"summary": "%d명 · 투수 %d · 야수 %d" % [rows.size(), pitchers, batters],
+		"staff": _staff_rows(s.get("world", {}), team_id),
 	}
+
+
+## 감독·코치 — G-3c. 02 `TeamPage`는 로스터 옆에 이들을 같이 보여 준다.
+##
+## 🔴 **04는 팀 화면에서 안 읽었다.** `Staff.of(world, team_id)`가 있고
+## `people_vm`이 인물 탭에 쓰는데 **팀 탭에서는 아무도 안 봤다**(형태 ③).
+## 그래서 "우리 팀 감독이 누구인가"를 팀 화면에서 알 수 없었다.
+##
+## ⚠ **구단주는 뺀다.** 02 `TeamPage`도 감독·코치만 싣는다 — 구단주는
+## 재정 화면이 맡는다(`finance_vm`이 `budget` 계수를 읽는다).
+## ⚠ **코치는 전문 분야를 같이 적는다** — 그게 없으면 코치 셋이 같은 줄이 된다
+static func _staff_rows(world: Dictionary, team_id: String) -> Array:
+	var out: Array = []
+	for st in Staff.of(world, team_id):
+		var role: String = String(st.get("role", ""))
+		if role == Staff.ROLE_OWNER:
+			continue
+		var label: String = "감독" if role == Staff.ROLE_MANAGER else "코치"
+		var detail: String = String(st.get("style", ""))
+		if role == Staff.ROLE_COACH:
+			detail = String(st.get("specialty", ""))
+		out.append({
+			"id": String(st.get("id", "")),
+			"label": label,
+			"name": String(st.get("name", "")),
+			"detail": detail,
+			# 감독이 먼저 온다 — 02도 감독·코치 차례다
+			"_rank": 0 if role == Staff.ROLE_MANAGER else 1,
+		})
+	out.sort_custom(func(a, b) -> bool: return int(a["_rank"]) < int(b["_rank"]))
+	return out
 
 
 ## 한 팀의 로스터 줄. **팀 탭과 팀 상세가 같은 것을 봐야 한다** (F-4b) —
