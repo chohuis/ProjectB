@@ -115,6 +115,7 @@
     "measure:leaguegames": "node scripts/measure-league-games.cjs",
     "measure:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-growth.cjs",
     "measure:savesize": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-savesize.cjs",
+    "measure:dirty": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-dirty.cjs",
     "measure:memory": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-memory.cjs"
   },
   "build": {
