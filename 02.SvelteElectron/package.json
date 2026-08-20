@@ -91,6 +91,7 @@
     "diag:roster": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-roster.cjs",
     "check:foreignorigin": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-origin.cjs",
     "check:foreignseed": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-seed.cjs",
+    "check:amateurworld": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-amateur-world.cjs",
     "check:recentgames": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-recentgames.cjs",
     "check:namepair": "node scripts/check-namepair.cjs",
     "check:namelocale": "node scripts/check-namelocale.cjs",
