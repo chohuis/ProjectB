@@ -137,6 +137,22 @@
   function teamLabel(teamId: string): string {
     return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
   }
+  /**
+   * 시즌 보기의 경기 줄에 붙는 날짜 — `5/2(화)`.
+   *
+   * 한 주에 여러 경기가 붙으면(프로는 주 6경기다) 주차만으로는 **어느 게
+   * 화요일이고 어느 게 일요일인지 알 수 없다.** 주차는 왼쪽 `W12`가 지키고
+   * 여기서 며칠인지를 알린다.
+   *
+   * ⚠ `weekLabel`은 **월요일 시작**인데 `getDay()`는 일요일이 0이다 —
+   * 그대로 넣으면 요일이 하루씩 밀린다.
+   */
+  function gameDateLabel(gameDate: string): string {
+    if (!gameDate) return "";
+    const d = new Date(gameDate);
+    if (Number.isNaN(d.getTime())) return "";
+    return `${d.getMonth() + 1}/${d.getDate()}(${weekLabel[(d.getDay() + 6) % 7]})`;
+  }
   function gameStatusLabel(entry: (typeof seasonEntries)[0]): string {
     if (!entry.result) return entry.week > currentWeek ? "예정" : "진행 중";
     const won = entry.result.winnerId === protagonistTeamId;
@@ -413,6 +429,7 @@
                           {@const done   = !!official.result}
                           {@const psl    = psLabel(official.id)}
                           <div class="game-row official">
+                            <span class="game-date">{gameDateLabel(official.gameDate)}</span>
                             <span class="game-loc">{isHome ? "홈" : "원정"}</span>
                             <span class="opponent">{psl ? psl + " " : ""}vs {opp}</span>
                             <span class="status"
@@ -434,6 +451,7 @@
                         {@const done   = !!friendly.result}
                         <div class="game-row friendly">
                           <span class="friendly-tag">친선</span>
+                          <span class="game-date">{gameDateLabel(friendly.gameDate)}</span>
                           <span class="game-loc">{isHome ? "홈" : "원정"}</span>
                           <span class="opponent">vs {opp}</span>
                           <span class="status"
@@ -806,14 +824,21 @@
 
   .week-games { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .game-row {
-    display: grid; grid-template-columns: 40px minmax(0, 1fr) 64px;
+    display: grid; grid-template-columns: 58px 40px minmax(0, 1fr) 64px;
     align-items: center; gap: 7px; min-width: 0;
   }
   .game-row.friendly {
-    grid-template-columns: 34px 40px minmax(0, 1fr) 64px;
+    grid-template-columns: 34px 58px 40px minmax(0, 1fr) 64px;
     padding: 2px 5px;
     border-radius: var(--radius);
     background: var(--panel-sunk);
+  }
+  /* 경기 날짜 — `5/2(화)`. 한 주에 여러 경기가 붙을 때 어느 날인지 알린다.
+     ⚠ 숫자가 세로로 맞게 `tabular-nums`를 준다 — 안 그러면 1과 2의 폭이
+     달라 줄마다 날짜가 흔들린다 */
+  .game-date {
+    font-size: 10px; color: var(--ink-mute);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
   }
   .game-loc {
     font-size: 9px; font-weight: 700;
@@ -833,7 +858,15 @@
   }
   /* 친선은 기록에 안 남는다 — 눈에서도 한 단계 내린다 */
   .game-row.friendly .opponent { color: var(--ink-mute); font-weight: 500; }
-  .no-game { color: var(--ink-mute); font-size: 10px; }
+  /* 경기가 없는 주의 라벨 — "주간 훈련"·"스프링 캠프" 같은 어절 둘짜리다.
+     ⚠ `.game-row`의 첫 칸은 40px("홈"/"원정"용)이라 여기 그대로 들어가면
+     "주간 훈 / 련"으로 글자 중간에서 잘린다. 행 전체를 쓰게 하고
+     한국어는 어절 단위로만 넘긴다 */
+  .no-game {
+    color: var(--ink-mute); font-size: 10px;
+    grid-column: 1 / -1;
+    word-break: keep-all; overflow-wrap: normal;
+  }
 
   .status {
     text-align: right; font-size: 11px; color: var(--ink-mute);
