@@ -157,7 +157,7 @@ export interface TeamRef {
   history?: TeamHistory;
 }
 
-// ?? ?몃Ъ ?뷀떚???곸꽭 ?????????????????????????????????????????
+// ── 인물 엔티티 상세 타입 ──────────────────────────────────────
 // 스태프 능력치 15종. **정본은 `players/staff_rules.json`의 `stats` 배열 하나**다 —
 // 여기 이름이 그 배열과 다르면 값이 조용히 undefined가 된다.
 //
@@ -274,7 +274,7 @@ export interface EntityDetails {
   owner:   EntityOwnerDetails      | null;
 }
 
-// ?? ?몃Ъ ?뷀떚?????(people_*.json 援ъ“) ?????????????????????
+// ── 인물 엔티티 타입 (people_*.json 구조) ─────────────────────
 export interface EntityRow {
   id: string;
   name: string;
@@ -319,7 +319,7 @@ export interface NpcLiveStat {
 }
 export type NpcLiveStats = Record<string, NpcLiveStat>;
 
-// ?? 援??대깽?????????????????????????????????????????????????
+// ── 군 이벤트 ─────────────────────────────────────────────────
 export interface MilitaryEvent {
   id: string;
   title: string;
@@ -441,7 +441,7 @@ function parseEventRule(raw: Record<string, any>): EventRule {
   let conditions: import("../types/event").Condition[] = [];
 
   if (Array.isArray(raw.conditions)) {
-    // ???щ㎎: conditions 諛곗뿴 吏곸젒 ?ъ슜
+    // 새 포맷: conditions 배열 직접 사용
     conditions = raw.conditions as import("../types/event").Condition[];
   } else if (raw.schedule && typeof raw.schedule === "object") {
     // 구형 포맷 처리: schedule 필드에서 week_eq + career_stage 조건 변환
