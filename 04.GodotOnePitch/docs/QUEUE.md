@@ -1771,10 +1771,17 @@ node -e "const d=require('./resource/data/master/players/generation_rules.json')
       **숫자 카드 + 관련성 필터**.
       · **숫자 카드는 04에 있다** — `news_vm`의 필터 그룹과 `counts`가
         같은 일을 한다(눌러서 그 목록만 본다)
-      · 🔴 **관련성 칩이 없다** — 02는 `mineCount`(내 팀)·`knownCount`
-        (아는 사람)로 한 번 더 거른다. 04엔 그 축이 없다.
-        붙이려면 소식마다 "내 팀인가 / 아는 사람인가"를 판정해야 하고,
-        아는 사람은 `relationships`를 봐야 한다 — **작은 일이 아니다**
+      · 🔴 **관련성 칩이 없다** — 그런데 **자리를 잘못 짚었었다.**
+        `mineCount`·`knownCount`는 **소식 탭 전체**가 아니라
+        `InjuryPanel`·`OffseasonPanel`의 **행**에 붙는다
+        (`InjuryPanel.svelte:66` `rows.filter(r => r.mine)`).
+        즉 **월간 부상 리포트와 오프시즌 결산 안**의 필터다.
+        🔴 **04는 그 소식들이 행 구조가 아니다** — `body_report.gd:114`가
+        본문을 `"
+".join(lines)`로 **글자 덩어리**로 만든다. 02는 행마다
+        `mine`(내 팀)·`relation`(관계 태그)을 달아 거른다.
+        → 옮기려면 **소식 본문을 행 배열로 바꿔야 한다**(`body_report` ·
+        오프시즌 소식). 소식 구조 변경이라 **작은 일이 아니다**
       ⚠ 02 주석이 적어 둔 규칙: **"숫자를 누르면 그 목록이 나온다.
       해석하는 문장을 쓰지 않는다."** 04도 그 규칙을 지킨다
 
