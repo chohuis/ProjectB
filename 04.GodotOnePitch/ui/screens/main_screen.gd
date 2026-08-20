@@ -57,6 +57,9 @@ signal news_filter_selected(filter_id: String)
 ## 리그를 골랐다
 signal league_selected(league_id: String)
 
+## 리그 기록에서 종류를 골랐다 (G-3a)
+signal tx_filter_selected(kind: String)
+
 ## 스탯 순위에서 투수·타자를 갈랐다
 signal stat_side_selected(side: String)
 
@@ -600,6 +603,7 @@ func _build_league() -> void:
 		_tab_host.add_child(empty)
 		_build_leaderboard(vm)
 		_build_league_extras(vm)
+		_build_transactions(vm)
 		return
 
 	var box: VBoxContainer = _list_box(false)
@@ -614,6 +618,7 @@ func _build_league() -> void:
 
 	_build_leaderboard(vm)
 	_build_league_extras(vm)
+	_build_transactions(vm)
 
 
 ## 소식 탭. 거르기 칩은 **누르면 루트에 알린다** — 어느 거르기가 켜졌는지는
@@ -957,3 +962,46 @@ func _on_auto_export() -> void:
 		_auto_export.text = "내보내기 실패"
 		return
 	_auto_export.text = "저장함 — %s" % path.get_file()
+
+
+## 리그 기록 — G-3a. 02 `LeaguePage`의 다섯째 탭.
+##
+## ⚠ **줄은 `AutoAdvanceVm`이 만든다**(`LeagueVm._transactions`가 부른다) —
+## 진행 패널과 같은 목록이라 두 벌이면 어긋난다.
+## ⚠ **02는 DB 영구 기록이고 여기는 세션 기록이다** — 그 사실을 화면이 밝힌다
+func _build_transactions(vm: Dictionary) -> void:
+	var tx: Dictionary = vm.get("transactions", {})
+	_section_title("리그 기록")
+
+	var rows: Array = tx.get("rows", [])
+	if rows.is_empty():
+		_muted(String(tx.get("empty", "")))
+		return
+
+	# 거르기 단추 — 02는 열셋(전체 + 열둘)이다
+	var chips := HBoxContainer.new()
+	chips.add_theme_constant_override("separation", 4)
+	_tab_host.add_child(chips)
+	for f in tx.get("filters", []):
+		var b := Button.new()
+		b.text = String(f["label"])
+		b.toggle_mode = true
+		b.button_pressed = bool(f["on"])
+		b.pressed.connect(func() -> void:
+			tx_filter_selected.emit.call_deferred(String(f["id"])))
+		chips.add_child(b)
+
+	_muted(String(tx.get("note", "")))
+
+	for r in rows:
+		var head := Label.new()
+		head.text = String(r["head"])
+		head.add_theme_color_override("font_color", AppTheme.TEXT_DIM)
+		head.add_theme_font_size_override("font_size", AppTheme.FONT_SMALL)
+		_tab_host.add_child(head)
+		for line in r["people"]:
+			var l := Label.new()
+			l.text = String(line)
+			_tab_host.add_child(l)
+		if int(r["more"]) > 0:
+			_muted(String(r["more_label"]))

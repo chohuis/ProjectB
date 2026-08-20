@@ -57,6 +57,34 @@ static func build(s: Dictionary) -> Dictionary:
 		"postseason": _postseason(s, league_id),
 		"tournaments": _tournaments(s),
 		"live_tournaments": _live_tournaments(s),
+		"transactions": _transactions(s),
+	}
+
+
+## 리그 기록 — G-3a. 02 `LeaguePage`의 다섯째 탭(`transactions`).
+##
+## 🔴 **04엔 이 절이 없었다.** 02는 트레이드·FA·드래프트·병역·은퇴를
+## 연도·리그로 걸러 보여 준다 — 04는 그 일들이 소식으로 한 번 흘러가고
+## 끝이라 **지난 이적을 되짚을 자리가 없었다.**
+##
+## ⚠ **02는 DB에서 읽는 영구 기록이고 여기는 세션 기록이다.**
+## 04엔 DB가 없다. 선수마다 `career_events`가 쌓이므로 **그걸 모으면 영구가
+## 되지만** 전 선수를 순회해야 해서 따로 뗀다 — 지금은 `EventLog`(이번 판)를
+## 보여 주고 화면이 그 사실을 밝힌다.
+##
+## ⚠ **줄은 `AutoAdvanceVm`이 만든다** — 진행 패널과 같은 목록이라
+## 두 벌이면 어긋난다
+static func _transactions(s: Dictionary) -> Dictionary:
+	var filter: String = String(s.get("league_tx_filter", "all"))
+	var panel: Dictionary = AutoAdvanceVm.build("", true, filter)
+	return {
+		"filter": filter,
+		"filters": panel["filters"],
+		"rows": panel["events"],
+		"total": int(panel["total"]),
+		# **비었을 때 왜 비었는지 말한다** (U-9와 같은 규칙)
+		"empty": "이번 판에 아직 기록이 없습니다",
+		"note": "이번 판에 일어난 일만 보여 줍니다",
 	}
 
 

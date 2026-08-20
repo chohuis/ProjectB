@@ -64,6 +64,7 @@ func _ready() -> void:
 	_main.training_requested.connect(_on_training)
 	_main.news_filter_selected.connect(_on_news_filter)
 	_main.league_selected.connect(_on_league_selected)
+	_main.tx_filter_selected.connect(_on_tx_filter_selected)
 	_main.stat_side_selected.connect(_on_stat_side)
 	_main.stat_category_selected.connect(_on_stat_category)
 	_main.study_mode_picked.connect(_on_study_mode)
@@ -107,6 +108,13 @@ func _on_news_closed() -> void:
 
 func _on_league_selected(league_id: String) -> void:
 	_state["league_tab"] = league_id
+	_refresh()
+
+
+## 리그 기록에서 종류를 골랐다 — G-3a.
+## ⚠ **상태가 든다** — 화면이 들면 진행 뒤에 초기화된다(스탯 순위와 같다)
+func _on_tx_filter_selected(kind: String) -> void:
+	_state["league_tx_filter"] = kind
 	_refresh()
 
 ## 스탯 순위에서 고른 것. **상태가 든다** — 화면이 들면 진행 뒤에 초기화된다.

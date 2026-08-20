@@ -178,3 +178,43 @@ func _collect(node: Node, out: PackedStringArray) -> void:
 		out.append((node as Label).text)
 	for c in node.get_children():
 		_collect(c, out)
+
+
+# ── 리그 기록 탭 (G-3a) ───────────────────────────────────────
+
+## 🔴 **04엔 이 절이 없었다.** 02는 트레이드·FA·드래프트·병역·은퇴를
+## 연도·리그로 걸러 보여 준다 — 04는 그 일들이 소식으로 한 번 흘러가고
+## 끝이라 **지난 이적을 되짚을 자리가 없었다**
+func test_the_league_tab_lists_transactions() -> void:
+	_fill()
+	var tx: Dictionary = LeagueVm.build({"protagonist": {}})["transactions"]
+	assert_int(tx["rows"].size()).override_failure_message(
+		"리그 기록이 비었다").is_equal(3)
+	assert_int(tx["filters"].size()).is_equal(13)
+	assert_str(String(tx["note"])).override_failure_message(
+		"세션 기록이라는 걸 안 밝힌다 — 02는 DB 영구 기록이다").is_not_empty()
+
+
+## ⚠ **줄은 `AutoAdvanceVm`이 만든다** — 진행 패널과 같은 목록이라
+## 두 벌이면 어긋난다
+func test_the_league_tab_reuses_the_panel_rows() -> void:
+	_fill()
+	var panel: Array = AutoAdvanceVm.build("", true)["events"]
+	var tab: Array = LeagueVm.build({"protagonist": {}})["transactions"]["rows"]
+	assert_str(String(tab[0]["head"])).is_equal(String(panel[0]["head"]))
+
+
+## 필터가 상태에서 온다 — 화면이 들면 진행 뒤에 초기화된다
+func test_the_filter_comes_from_state() -> void:
+	_fill()
+	var tx: Dictionary = LeagueVm.build({
+		"protagonist": {}, "league_tx_filter": "trade"})["transactions"]
+	assert_str(String(tx["filter"])).is_equal("trade")
+	assert_int(tx["rows"].size()).is_equal(1)
+
+
+## 비었을 때 **왜 비었는지** 말한다 — U-9와 같은 규칙
+func test_an_empty_log_says_why() -> void:
+	var tx: Dictionary = LeagueVm.build({"protagonist": {}})["transactions"]
+	assert_array(tx["rows"]).is_empty()
+	assert_str(String(tx["empty"])).is_not_empty()
