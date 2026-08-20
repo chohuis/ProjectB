@@ -228,11 +228,23 @@ export async function loadRosterRules(): Promise<GenerationRulesFile> {
  * Lazy를 유지할 이유도 없다 — 국내 전 리그 로스터 생성이 합쳐서 1,580명·35ms다.
  * **Lazy 활성화는 이제 해외(ABL·JBL) 전용이다.**
  */
+/**
+ * ⚠ **이름이 `DOMESTIC_`인데 2026-08-20부터 해외도 들어 있다** (사용자 확정).
+ * 해외를 국내와 같이 풀 시뮬하기로 하면서 로스터도 처음부터 만든다 —
+ * `radiusGate`가 해외를 반경 1로 올렸는데 로스터가 없으면 **빈 로스터로 항상
+ * 0-0 홈팀 승**이 된다. 위에 적힌 그 결함이 해외에서 그대로 재현된다.
+ *
+ * 이름은 뜻이 넓어졌으니 언젠가 `ROSTER_LEAGUES`로 바꾸는 게 맞다.
+ */
 const DOMESTIC_ROSTER_LEAGUES = [
   "LEAGUE_UNIVERSITY",
   "LEAGUE_INDEPENDENT",
   "LEAGUE_KBL",
   "LEAGUE_KBL_FARM",
+  "LEAGUE_ABL",
+  "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL",
+  "LEAGUE_JBL_FARM",
 ] as const;
 
 async function generateLeagueNpcs(

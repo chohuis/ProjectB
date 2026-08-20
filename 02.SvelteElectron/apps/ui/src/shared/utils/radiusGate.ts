@@ -21,19 +21,22 @@ const DOMESTIC_LEAGUES = new Set([
   "LEAGUE_KBL_FARM",
 ]);
 
-/** 해외 리그 — 진출 전까지 드리프트만 (DESIGN §2.2 Lazy 활성화) */
+/**
+ * 해외 리그 — **2026-08-20부터 국내와 같이 풀 시뮬한다** (사용자 확정).
+ *
+ * 예전엔 주인공이 진출하기 전까지 드리프트(반경 2)였다. 로스터가 없으니
+ * 순위표 숫자만 굴렀고, 화면에서 팀을 열면 선수가 없었다.
+ *
+ * ⚠ **드리프트를 없앤 게 아니라 대상이 없어진 것이다.** 주인공이 국내에
+ * 있어도 해외가 반경 1이므로 `driftBackgroundLeagues`는 이제 빈 목록을
+ * 받는다 — 죽은 장치를 남기지 않으려면 따로 정리해야 한다.
+ */
 const FOREIGN_LEAGUES = new Set([
   "LEAGUE_ABL",
   "LEAGUE_JBL",
   "LEAGUE_ABL_FARM",
   "LEAGUE_JBL_FARM",
 ]);
-
-/** 커리어 단계 → 그 단계에서 주인공이 뛰는 해외 리그 (있으면 그것도 풀 시뮬) */
-const FOREIGN_HOME: Partial<Record<CareerStage, string[]>> = {
-  pro_abl: ["LEAGUE_ABL", "LEAGUE_ABL_FARM"],
-  pro_jbl: ["LEAGUE_JBL", "LEAGUE_JBL_FARM"],
-};
 
 /**
  * 반경 게이트가 적용되는 리그.
@@ -48,9 +51,12 @@ export function getLeagueRadius(careerStage: CareerStage, leagueId: string): Lea
   // 드리프트만 돌려두면 선수 없는 리그의 순위표가 화면에 뜬다 (releaseScope.ts).
   if (!isLeagueInScope(leagueId)) return 3;
   if (DOMESTIC_LEAGUES.has(leagueId)) return 1;
-  if (FOREIGN_LEAGUES.has(leagueId)) {
-    return FOREIGN_HOME[careerStage]?.includes(leagueId) ? 1 : 2;
-  }
+  // 해외도 풀 시뮬이다 (2026-08-20 사용자 확정).
+  //
+  // ⚠ 여기 있던 `FOREIGN_HOME`(커리어 단계 → 그 단계의 해외 리그)은 **같이
+  // 지웠다.** 해외가 전부 반경 1이 되면서 그 표를 읽는 곳이 0이 됐다 —
+  // 남기면 죽은 갈래다
+  if (FOREIGN_LEAGUES.has(leagueId)) return 1;
   return 1; // 게이트 대상 아닌 리그는 기존대로 풀 처리
 }
 

@@ -1,2207 +1,778 @@
 {
-  "ranAt": "2026-07-31T09:52:42.014Z",
+  "ranAt": "2026-08-20T10:13:53.938Z",
   "config": {
     "weeks": 51,
     "seed": 20260731
   },
-  "bundleMs": 134,
+  "bundleMs": 160,
   "boot": {
-    "ms": 418.2133,
-    "ipcMs": 2704.9369,
-    "npcCount": 5596,
-    "entityCount": 6771,
+    "ms": 639.4481,
+    "ipcMs": 15050.931399999989,
+    "npcCount": 7332,
+    "entityCount": 8525,
     "teamId": "TEAM_HS_AEWOL",
-    "worldSeed": 3079667982,
+    "worldSeed": 514333147,
     "topIpc": [
       {
         "key": "master:fetch",
-        "calls": 265,
-        "ms": 2403.8885999999998,
-        "inBytes": 12563,
-        "outBytes": 406249
+        "calls": 590,
+        "ms": 14605.377899999989,
+        "inBytes": 27605,
+        "outBytes": 797988
       },
       {
         "key": "repo:createSlot",
         "calls": 1,
-        "ms": 129.2839,
-        "inBytes": 6243249,
+        "ms": 178.2812,
+        "inBytes": 8659093,
         "outBytes": 45
       },
       {
         "key": "repo:syncNpcs",
         "calls": 1,
-        "ms": 81.0462,
-        "inBytes": 5409583,
+        "ms": 117.3407,
+        "inBytes": 7110843,
         "outBytes": 25
       },
       {
         "key": "repo:getAllNpcs",
         "calls": 1,
-        "ms": 36.872,
+        "ms": 59.0153,
         "inBytes": 27,
-        "outBytes": 5242126
+        "outBytes": 6891309
       },
       {
         "key": "engine:generateLeagueRosterNative",
-        "calls": 5,
-        "ms": 20.393,
-        "inBytes": 27016,
-        "outBytes": 5448509
+        "calls": 9,
+        "ms": 31.411400000000004,
+        "inBytes": 51222,
+        "outBytes": 7168922
       },
       {
         "key": "repo:setSeason",
         "calls": 1,
-        "ms": 9.0407,
-        "inBytes": 560829,
+        "ms": 26.1695,
+        "inBytes": 1333928,
         "outBytes": 11
       },
       {
-        "key": "repo:addTransactions",
+        "key": "engine:generateRegionalScheduleNative",
+        "calls": 2,
+        "ms": 10.2643,
+        "inBytes": 3979,
+        "outBytes": 247376
+      },
+      {
+        "key": "repo:getStaff",
         "calls": 1,
-        "ms": 5.1305,
-        "inBytes": 374252,
-        "outBytes": 11
-      },
-      {
-        "key": "repo:setMeta",
-        "calls": 3,
-        "ms": 4.4408,
-        "inBytes": 288,
-        "outBytes": 33
+        "ms": 5.7175,
+        "inBytes": 43,
+        "outBytes": 488873
       }
     ]
   },
   "weekly": {
-    "weeksRun": 313,
-    "reachedWeek": 52,
-    "totalMs": 464946.3643000001,
-    "avgMs": 1485.4516431309908,
-    "p50": 1484.6313000000082,
-    "p95": 2161.125399999997,
-    "max": 2991.5175000000163,
-    "ipcMs": 329344.98910000053,
-    "jsMs": 135601.37519999954,
-    "ipcCalls": 36728,
-    "ipcBytes": 8195923187
+    "weeksRun": 51,
+    "reachedWeek": 51,
+    "totalMs": 103447.8568,
+    "avgMs": 2028.3893490196078,
+    "p50": 2065.3965000000026,
+    "p95": 2331.747900000002,
+    "max": 2905.2462000000087,
+    "ipcMs": 166519.01919999643,
+    "jsMs": -63071.162399996436,
+    "ipcCalls": 21812,
+    "ipcBytes": 2731024751
   },
   "ipc": [
     {
-      "key": "repo:syncNpcs",
-      "calls": 327,
-      "ms": 94495.24500000007,
-      "inBytes": 2742874899,
-      "outBytes": 8175
+      "key": "engine:simToGameEnd",
+      "calls": 4608,
+      "ms": 86749.97759999975,
+      "inBytes": 72468736,
+      "outBytes": 169985728
     },
     {
-      "key": "engine:updatePlayerLoyaltyNative",
-      "calls": 9004,
-      "ms": 66682.29790000003,
-      "inBytes": 1119424,
-      "outBytes": 72926
+      "key": "engine:startMatchNative",
+      "calls": 4608,
+      "ms": 27378.975300000006,
+      "inBytes": 39128236,
+      "outBytes": 72413440
     },
     {
       "key": "engine:simGameNative",
-      "calls": 12864,
-      "ms": 64536.87749999969,
-      "inBytes": 912283334,
-      "outBytes": 34727253
+      "calls": 2060,
+      "ms": 17502.281700000014,
+      "inBytes": 71765295,
+      "outBytes": 7119360
     },
     {
       "key": "repo:setSeason",
-      "calls": 327,
-      "ms": 57753.16079999999,
-      "inBytes": 1476728644,
-      "outBytes": 3597
+      "calls": 53,
+      "ms": 14202.148299999999,
+      "inBytes": 744233766,
+      "outBytes": 583
     },
     {
-      "key": "engine:npcCalcWeeklyGrowth",
-      "calls": 307,
-      "ms": 17573.764100000008,
-      "inBytes": 1277824344,
-      "outBytes": 1122860203
+      "key": "repo:syncNpcs",
+      "calls": 53,
+      "ms": 7687.396999999999,
+      "inBytes": 460778427,
+      "outBytes": 1325
+    },
+    {
+      "key": "engine:matchToSimResultNative",
+      "calls": 4608,
+      "ms": 5626.681499999999,
+      "inBytes": 389721909,
+      "outBytes": 15342714
     },
     {
       "key": "npc:trimGameLogs",
-      "calls": 171,
-      "ms": 14798.252300000006,
-      "inBytes": 4617,
-      "outBytes": 1881
+      "calls": 50,
+      "ms": 2960.1079999999997,
+      "inBytes": 1350,
+      "outBytes": 550
+    },
+    {
+      "key": "engine:npcCalcWeeklyGrowth",
+      "calls": 51,
+      "ms": 1759.2346,
+      "inBytes": 278924794,
+      "outBytes": 241717686
     },
     {
       "key": "npc:bulkInsertGameLogs",
-      "calls": 171,
-      "ms": 2183.8315999999995,
-      "inBytes": 21204062,
-      "outBytes": 4458
-    },
-    {
-      "key": "engine:calcScoutingImprovementNative",
-      "calls": 114,
-      "ms": 1285.1658,
-      "inBytes": 14630,
-      "outBytes": 3774
-    },
-    {
-      "key": "week:rollRandomBatch",
-      "calls": 602,
-      "ms": 964.2866999999997,
-      "inBytes": 1445,
-      "outBytes": 10199429
-    },
-    {
-      "key": "league:addTransactions",
-      "calls": 57,
-      "ms": 926.5531000000003,
-      "inBytes": 328879,
-      "outBytes": 627
-    },
-    {
-      "key": "repo:setMeta",
-      "calls": 327,
-      "ms": 882.7114000000003,
-      "inBytes": 42972,
-      "outBytes": 3597
-    },
-    {
-      "key": "engine:evalCallupCandidatesNative",
-      "calls": 3070,
-      "ms": 785.6284000000038,
-      "inBytes": 87808752,
-      "outBytes": 1190513
-    },
-    {
-      "key": "master:fetch",
-      "calls": 790,
-      "ms": 592.0819999999998,
-      "inBytes": 22912,
-      "outBytes": 15747879
-    },
-    {
-      "key": "engine:runOffseasonNative",
-      "calls": 5,
-      "ms": 511.8606,
-      "inBytes": 37470167,
-      "outBytes": 37664860
-    },
-    {
-      "key": "match:simulateToEntry",
-      "calls": 162,
-      "ms": 494.37960000000004,
-      "inBytes": 618646,
-      "outBytes": 551959
-    },
-    {
-      "key": "engine:applyDraftNative",
-      "calls": 5,
-      "ms": 488.72159999999997,
-      "inBytes": 33726469,
-      "outBytes": 34697156
-    },
-    {
-      "key": "engine:weekCalcNpcInjuriesNative",
-      "calls": 295,
-      "ms": 475.6957999999999,
-      "inBytes": 84669889,
-      "outBytes": 1129474
-    },
-    {
-      "key": "repo:getRelationships",
-      "calls": 1243,
-      "ms": 470.91509999999994,
-      "inBytes": 60465,
-      "outBytes": 13663180
-    },
-    {
-      "key": "engine:advanceAllGradesNative",
-      "calls": 5,
-      "ms": 455.8707,
-      "inBytes": 33531652,
-      "outBytes": 36016421
-    },
-    {
-      "key": "engine:advanceAllAgesNative",
-      "calls": 5,
-      "ms": 441.88300000000004,
-      "inBytes": 34825036,
-      "outBytes": 36016191
-    },
-    {
-      "key": "repo:setProtagonist",
-      "calls": 327,
-      "ms": 438.0481999999999,
-      "inBytes": 18356739,
-      "outBytes": 3597
+      "calls": 50,
+      "ms": 1402.7459000000003,
+      "inBytes": 27021967,
+      "outBytes": 1350
     },
     {
       "key": "match:autoFinishFromEntry",
-      "calls": 115,
-      "ms": 366.68190000000004,
+      "calls": 34,
+      "ms": 214.77669999999995,
       "inBytes": 0,
-      "outBytes": 207527
+      "outBytes": 60165
+    },
+    {
+      "key": "engine:evalCallupCandidatesNative",
+      "calls": 1938,
+      "ms": 200.56230000000062,
+      "inBytes": 61975258,
+      "outBytes": 314911
+    },
+    {
+      "key": "master:fetch",
+      "calls": 263,
+      "ms": 198.5156,
+      "inBytes": 7629,
+      "outBytes": 12752016
+    },
+    {
+      "key": "repo:setProtagonist",
+      "calls": 53,
+      "ms": 128.5746,
+      "inBytes": 12164838,
+      "outBytes": 583
+    },
+    {
+      "key": "league:addTransactions",
+      "calls": 8,
+      "ms": 110.625,
+      "inBytes": 72312,
+      "outBytes": 88
+    },
+    {
+      "key": "week:rollRandomBatch",
+      "calls": 100,
+      "ms": 109.17370000000003,
+      "inBytes": 245,
+      "outBytes": 1884739
+    },
+    {
+      "key": "engine:weekCalcNpcInjuriesNative",
+      "calls": 49,
+      "ms": 70.90380000000002,
+      "inBytes": 15509174,
+      "outBytes": 186620
+    },
+    {
+      "key": "engine:applyDraftNative",
+      "calls": 1,
+      "ms": 38.6569,
+      "inBytes": 6891224,
+      "outBytes": 7130246
+    },
+    {
+      "key": "repo:setMeta",
+      "calls": 54,
+      "ms": 30.1264,
+      "inBytes": 10022,
+      "outBytes": 594
+    },
+    {
+      "key": "repo:getRelationships",
+      "calls": 205,
+      "ms": 29.85139999999998,
+      "inBytes": 9999,
+      "outBytes": 1389760
     },
     {
       "key": "engine:selectDraftCandidatesNative",
-      "calls": 5,
-      "ms": 299.2606,
-      "inBytes": 33514712,
-      "outBytes": 442904
-    },
-    {
-      "key": "npc:flushSeasonStats",
-      "calls": 16,
-      "ms": 218.13150000000002,
-      "inBytes": 4294608,
-      "outBytes": 405
-    },
-    {
-      "key": "season:saveHistoryStandings",
-      "calls": 5,
-      "ms": 172.9898,
-      "inBytes": 106101,
-      "outBytes": 55
-    },
-    {
-      "key": "repo:getStaff",
-      "calls": 317,
-      "ms": 162.78120000000004,
-      "inBytes": 23178,
-      "outBytes": 5318377
-    },
-    {
-      "key": "season:saveHistoryLbStats",
-      "calls": 5,
-      "ms": 126.50039999999998,
-      "inBytes": 3301291,
-      "outBytes": 55
-    },
-    {
-      "key": "engine:calcWinNowPressureUpdateNative",
-      "calls": 114,
-      "ms": 79.6569,
-      "inBytes": 18359,
-      "outBytes": 4071
-    },
-    {
-      "key": "engine:calcWeeklyFinanceNative",
-      "calls": 307,
-      "ms": 78.38130000000005,
-      "inBytes": 1971086,
-      "outBytes": 75018
+      "calls": 1,
+      "ms": 21.2259,
+      "inBytes": 6834161,
+      "outBytes": 136782
     },
     {
       "key": "engine:evalCalldownCandidatesNative",
-      "calls": 709,
-      "ms": 70.84400000000002,
-      "inBytes": 9181856,
-      "outBytes": 31549
-    },
-    {
-      "key": "engine:runDraftNative",
-      "calls": 5,
-      "ms": 69.1546,
-      "inBytes": 5837450,
-      "outBytes": 176682
-    },
-    {
-      "key": "engine:advanceStaffSeasonNative",
-      "calls": 5,
-      "ms": 53.7523,
-      "inBytes": 2355738,
-      "outBytes": 2399837
-    },
-    {
-      "key": "repo:updateStaff",
-      "calls": 5,
-      "ms": 42.2156,
-      "inBytes": 1300916,
-      "outBytes": 130
-    },
-    {
-      "key": "engine:weeklyRelationsNative",
-      "calls": 307,
-      "ms": 38.25230000000001,
-      "inBytes": 2012848,
-      "outBytes": 13505
+      "calls": 446,
+      "ms": 19.62450000000002,
+      "inBytes": 6454682,
+      "outBytes": 9562
     },
     {
       "key": "repo:upsertRelationships",
-      "calls": 77,
-      "ms": 23.8619,
-      "inBytes": 119681,
-      "outBytes": 1781
+      "calls": 47,
+      "ms": 10.611599999999997,
+      "inBytes": 152727,
+      "outBytes": 1106
     },
     {
-      "key": "engine:runShowcaseNative",
-      "calls": 3,
-      "ms": 23.5788,
-      "inBytes": 1575806,
-      "outBytes": 119512
+      "key": "match:simulateToEntry",
+      "calls": 34,
+      "ms": 9.990700000000002,
+      "inBytes": 156605,
+      "outBytes": 45547
     },
     {
-      "key": "engine:calcSportsUnitCandidatesNative",
-      "calls": 8,
-      "ms": 22.682899999999997,
-      "inBytes": 1666085,
-      "outBytes": 63529
-    },
-    {
-      "key": "repo:insertNpcs",
-      "calls": 4,
-      "ms": 21.808500000000002,
-      "inBytes": 614649,
-      "outBytes": 102
+      "key": "engine:calcWeeklyFinanceNative",
+      "calls": 51,
+      "ms": 7.813499999999999,
+      "inBytes": 327522,
+      "outBytes": 11322
     },
     {
       "key": "npc:updateContracts",
-      "calls": 6,
-      "ms": 16.9191,
-      "inBytes": 131279,
-      "outBytes": 66
-    },
-    {
-      "key": "engine:weekCalcFacilityEffNative",
-      "calls": 307,
-      "ms": 15.606899999999996,
-      "inBytes": 29920,
-      "outBytes": 1993
-    },
-    {
-      "key": "engine:generateRegionalScheduleNative",
-      "calls": 4,
-      "ms": 14.3907,
-      "inBytes": 7958,
-      "outBytes": 494752
-    },
-    {
-      "key": "engine:calcTrainingGrowthNative",
-      "calls": 307,
-      "ms": 14.355500000000003,
-      "inBytes": 297359,
-      "outBytes": 219712
-    },
-    {
-      "key": "engine:selectTournamentEntrantsNative",
-      "calls": 48,
-      "ms": 13.511400000000004,
-      "inBytes": 168372,
-      "outBytes": 45076
-    },
-    {
-      "key": "engine:calcTrainingBonusNative",
-      "calls": 307,
-      "ms": 13.188600000000013,
-      "inBytes": 539736,
-      "outBytes": 15657
-    },
-    {
-      "key": "engine:relationEffectsNative",
-      "calls": 309,
-      "ms": 12.293400000000004,
-      "inBytes": 338955,
-      "outBytes": 53231
-    },
-    {
-      "key": "engine:weekCalcInjuryNative",
-      "calls": 307,
-      "ms": 10.913000000000002,
-      "inBytes": 117134,
-      "outBytes": 38752
-    },
-    {
-      "key": "engine:evalRetirementSuggestionNative",
-      "calls": 1450,
-      "ms": 10.77140000000005,
-      "inBytes": 1013931,
-      "outBytes": 45006
-    },
-    {
-      "key": "engine:generateKblScheduleNative",
-      "calls": 4,
-      "ms": 10.196200000000001,
-      "inBytes": 2616,
-      "outBytes": 936640
-    },
-    {
-      "key": "engine:generateTradeProposalsNative",
-      "calls": 6,
-      "ms": 9.801200000000001,
-      "inBytes": 517070,
-      "outBytes": 12517
-    },
-    {
-      "key": "engine:generateTournamentBracketNative",
-      "calls": 48,
-      "ms": 9.790500000000002,
-      "inBytes": 37953,
-      "outBytes": 365672
-    },
-    {
-      "key": "npc:getByLeague",
-      "calls": 6,
-      "ms": 9.6805,
-      "inBytes": 246,
-      "outBytes": 223581
-    },
-    {
-      "key": "engine:tournamentRoundScheduleNative",
-      "calls": 108,
-      "ms": 8.120900000000004,
-      "inBytes": 910488,
-      "outBytes": 261801
-    },
-    {
-      "key": "engine:advanceTournamentRoundNative",
-      "calls": 60,
-      "ms": 7.603999999999998,
-      "inBytes": 580314,
-      "outBytes": 539308
-    },
-    {
-      "key": "engine:generateFreshmenNative",
-      "calls": 73,
-      "ms": 6.008699999999998,
-      "inBytes": 18885,
-      "outBytes": 617498
-    },
-    {
-      "key": "engine:calcGameGrowthNative",
-      "calls": 98,
-      "ms": 5.2967,
-      "inBytes": 80064,
-      "outBytes": 74551
-    },
-    {
-      "key": "engine:calcNpcRenewalSalaryNative",
-      "calls": 316,
-      "ms": 4.299399999999999,
-      "inBytes": 38627,
-      "outBytes": 1259
-    },
-    {
-      "key": "engine:generateAllLeagueSchedulesNative",
-      "calls": 2,
-      "ms": 4.2264,
-      "inBytes": 1608,
-      "outBytes": 500862
-    },
-    {
-      "key": "engine:selectNationalSquadNative",
-      "calls": 4,
-      "ms": 4.108700000000001,
-      "inBytes": 390896,
-      "outBytes": 4171
-    },
-    {
-      "key": "repo:insertStaff",
-      "calls": 5,
-      "ms": 3.7522,
-      "inBytes": 30985,
-      "outBytes": 123
-    },
-    {
-      "key": "season:saveHistoryPostseason",
-      "calls": 5,
-      "ms": 3.6852,
-      "inBytes": 2658,
-      "outBytes": 55
-    },
-    {
-      "key": "engine:calcNpcContractYearsNative",
-      "calls": 316,
-      "ms": 3.493299999999997,
-      "inBytes": 32780,
-      "outBytes": 316
-    },
-    {
-      "key": "engine:generateStaffNative",
-      "calls": 5,
-      "ms": 2.9072,
-      "inBytes": 34093,
-      "outBytes": 200370
-    },
-    {
-      "key": "engine:buildGroupStageNative",
-      "calls": 12,
-      "ms": 2.4864999999999995,
-      "inBytes": 8361,
-      "outBytes": 121630
-    },
-    {
-      "key": "league:getTransactions",
-      "calls": 6,
-      "ms": 2.0862,
-      "inBytes": 540,
-      "outBytes": 5478
-    },
-    {
-      "key": "engine:generateSurvivalStageNative",
-      "calls": 12,
-      "ms": 2.0739,
-      "inBytes": 5131,
-      "outBytes": 126951
-    },
-    {
-      "key": "npc:swapTeams",
-      "calls": 9,
-      "ms": 2.0206999999999997,
-      "inBytes": 1608,
-      "outBytes": 99
-    },
-    {
-      "key": "engine:resolveFaMarketNative",
-      "calls": 6,
-      "ms": 1.9843,
-      "inBytes": 116979,
-      "outBytes": 38252
-    },
-    {
-      "key": "engine:seasonRelationsNative",
-      "calls": 5,
-      "ms": 1.5914000000000001,
-      "inBytes": 46273,
-      "outBytes": 50814
-    },
-    {
-      "key": "engine:groupStageQualifiersNative",
-      "calls": 12,
-      "ms": 1.5590000000000002,
-      "inBytes": 121942,
-      "outBytes": 7873
-    },
-    {
-      "key": "engine:initRelationsNative",
-      "calls": 30,
-      "ms": 1.2882000000000002,
-      "inBytes": 40375,
-      "outBytes": 10608
-    },
-    {
-      "key": "engine:playerEvalFaDecisionNative",
-      "calls": 240,
-      "ms": 1.2773,
-      "inBytes": 90444,
-      "outBytes": 11468
-    },
-    {
-      "key": "engine:calcSportsUnitSelectionNative",
-      "calls": 5,
-      "ms": 1.1753999999999998,
-      "inBytes": 50200,
-      "outBytes": 2398
-    },
-    {
-      "key": "engine:pickGeneralEnlisteesNative",
-      "calls": 5,
-      "ms": 0.9759,
-      "inBytes": 93991,
-      "outBytes": 5189
-    },
-    {
-      "key": "engine:survivalCutoffNative",
-      "calls": 12,
-      "ms": 0.6148,
-      "inBytes": 16530,
-      "outBytes": 5942
-    },
-    {
-      "key": "engine:buildIndLadderNative",
-      "calls": 6,
-      "ms": 0.4589,
-      "inBytes": 6559,
-      "outBytes": 4780
-    },
-    {
-      "key": "engine:resolveNonProtagonistSeriesNative",
-      "calls": 10,
-      "ms": 0.4459,
-      "inBytes": 9361,
-      "outBytes": 9719
-    },
-    {
-      "key": "engine:calcEarlyEnlistDecisionsNative",
-      "calls": 5,
-      "ms": 0.43989999999999996,
-      "inBytes": 49832,
-      "outBytes": 3506
-    },
-    {
-      "key": "repo:setRelationshipContact",
       "calls": 1,
-      "ms": 0.3045,
-      "inBytes": 84,
+      "ms": 6.4397,
+      "inBytes": 106241,
       "outBytes": 11
     },
     {
-      "key": "engine:evalTradeValueNative",
-      "calls": 9,
-      "ms": 0.2785,
-      "inBytes": 11293,
-      "outBytes": 630
+      "key": "repo:getStaff",
+      "calls": 51,
+      "ms": 6.389199999999999,
+      "inBytes": 3468,
+      "outBytes": 81702
     },
     {
-      "key": "engine:buildKblBracketNative",
+      "key": "engine:runDraftNative",
+      "calls": 1,
+      "ms": 5.6522,
+      "inBytes": 1469487,
+      "outBytes": 50316
+    },
+    {
+      "key": "engine:weekCalcFacilityEffNative",
+      "calls": 51,
+      "ms": 4.1899,
+      "inBytes": 5049,
+      "outBytes": 306
+    },
+    {
+      "key": "engine:evalRetirementSuggestionNative",
+      "calls": 1151,
+      "ms": 3.481899999999994,
+      "inBytes": 871984,
+      "outBytes": 35758
+    },
+    {
+      "key": "engine:weekCalcInjuryNative",
+      "calls": 51,
+      "ms": 2.8607,
+      "inBytes": 19233,
+      "outBytes": 7137
+    },
+    {
+      "key": "engine:runShowcaseNative",
+      "calls": 1,
+      "ms": 2.8179,
+      "inBytes": 627032,
+      "outBytes": 39797
+    },
+    {
+      "key": "engine:weeklyRelationsNative",
+      "calls": 51,
+      "ms": 2.6823,
+      "inBytes": 273758,
+      "outBytes": 101563
+    },
+    {
+      "key": "engine:advanceTournamentRoundNative",
+      "calls": 37,
+      "ms": 2.3636999999999997,
+      "inBytes": 404849,
+      "outBytes": 389938
+    },
+    {
+      "key": "engine:calcTrainingGrowthNative",
+      "calls": 51,
+      "ms": 2.1399,
+      "inBytes": 214815,
+      "outBytes": 36783
+    },
+    {
+      "key": "engine:tournamentRoundScheduleNative",
+      "calls": 43,
+      "ms": 1.5099,
+      "inBytes": 394812,
+      "outBytes": 61978
+    },
+    {
+      "key": "engine:selectTournamentEntrantsNative",
+      "calls": 8,
+      "ms": 1.1907,
+      "inBytes": 33032,
+      "outBytes": 7530
+    },
+    {
+      "key": "engine:relationEffectsNative",
+      "calls": 50,
+      "ms": 1.0254000000000003,
+      "inBytes": 67055,
+      "outBytes": 8561
+    },
+    {
+      "key": "engine:calcTrainingBonusNative",
+      "calls": 51,
+      "ms": 0.9894000000000001,
+      "inBytes": 89301,
+      "outBytes": 2550
+    },
+    {
+      "key": "engine:calcNpcRenewalSalaryNative",
+      "calls": 260,
+      "ms": 0.9823000000000012,
+      "inBytes": 31531,
+      "outBytes": 1137
+    },
+    {
+      "key": "engine:calcNpcContractYearsNative",
+      "calls": 260,
+      "ms": 0.6037000000000016,
+      "inBytes": 26780,
+      "outBytes": 260
+    },
+    {
+      "key": "engine:selectNationalSquadNative",
+      "calls": 1,
+      "ms": 0.4941,
+      "inBytes": 109895,
+      "outBytes": 1083
+    },
+    {
+      "key": "engine:calcGameGrowthNative",
+      "calls": 14,
+      "ms": 0.45840000000000003,
+      "inBytes": 11184,
+      "outBytes": 10439
+    },
+    {
+      "key": "engine:resolveFaMarketNative",
+      "calls": 1,
+      "ms": 0.3794,
+      "inBytes": 38683,
+      "outBytes": 24629
+    },
+    {
+      "key": "engine:generateTournamentBracketNative",
+      "calls": 8,
+      "ms": 0.2762,
+      "inBytes": 6307,
+      "outBytes": 60992
+    },
+    {
+      "key": "engine:playerEvalFaDecisionNative",
+      "calls": 144,
+      "ms": 0.26979999999999976,
+      "inBytes": 55084,
+      "outBytes": 6924
+    },
+    {
+      "key": "engine:groupStageQualifiersNative",
       "calls": 2,
-      "ms": 0.1925,
-      "inBytes": 3178,
-      "outBytes": 2108
+      "ms": 0.2438,
+      "inBytes": 20334,
+      "outBytes": 1326
     },
     {
-      "key": "engine:weekCalcExamResultNative",
-      "calls": 6,
-      "ms": 0.1682,
-      "inBytes": 473,
-      "outBytes": 1707
+      "key": "engine:initRelationsNative",
+      "calls": 9,
+      "ms": 0.22829999999999998,
+      "inBytes": 14553,
+      "outBytes": 3537
     },
     {
-      "key": "engine:simulateTournamentNative",
-      "calls": 4,
-      "ms": 0.15910000000000002,
-      "inBytes": 994,
-      "outBytes": 222
+      "key": "engine:generateSurvivalStageNative",
+      "calls": 2,
+      "ms": 0.1459,
+      "inBytes": 845,
+      "outBytes": 21164
     },
     {
-      "key": "engine:calcProtagonistAgingNative",
-      "calls": 5,
-      "ms": 0.1432,
-      "inBytes": 2245,
-      "outBytes": 1845
+      "key": "engine:buildGroupStageNative",
+      "calls": 2,
+      "ms": 0.1205,
+      "inBytes": 1390,
+      "outBytes": 20282
+    },
+    {
+      "key": "repo:getMeta",
+      "calls": 1,
+      "ms": 0.1154,
+      "inBytes": 24,
+      "outBytes": 307
+    },
+    {
+      "key": "engine:survivalCutoffNative",
+      "calls": 2,
+      "ms": 0.057999999999999996,
+      "inBytes": 2726,
+      "outBytes": 994
     },
     {
       "key": "engine:playerEvalRetirementResponseNative",
-      "calls": 19,
-      "ms": 0.12459999999999999,
-      "inBytes": 5284,
-      "outBytes": 706
+      "calls": 36,
+      "ms": 0.05629999999999999,
+      "inBytes": 10685,
+      "outBytes": 1339
     },
     {
-      "key": "engine:relationMoveDecayNative",
+      "key": "engine:resolveNonProtagonistSeriesNative",
+      "calls": 3,
+      "ms": 0.0499,
+      "inBytes": 2914,
+      "outBytes": 3068
+    },
+    {
+      "key": "engine:updatePlayerLoyaltyNative",
+      "calls": 37,
+      "ms": 0.046299999999999994,
+      "inBytes": 4403,
+      "outBytes": 172
+    },
+    {
+      "key": "engine:weekCalcExamResultNative",
+      "calls": 2,
+      "ms": 0.0452,
+      "inBytes": 157,
+      "outBytes": 563
+    },
+    {
+      "key": "engine:buildKblBracketNative",
       "calls": 1,
-      "ms": 0.0971,
-      "inBytes": 4615,
-      "outBytes": 4369
+      "ms": 0.0387,
+      "inBytes": 1572,
+      "outBytes": 1057
+    },
+    {
+      "key": "engine:buildIndLadderNative",
+      "calls": 1,
+      "ms": 0.0336,
+      "inBytes": 1095,
+      "outBytes": 800
+    },
+    {
+      "key": "engine:simulateTournamentNative",
+      "calls": 1,
+      "ms": 0.0281,
+      "inBytes": 253,
+      "outBytes": 55
     },
     {
       "key": "engine:buildFarmBracketNative",
-      "calls": 2,
-      "ms": 0.0862,
-      "inBytes": 3144,
-      "outBytes": 1627
+      "calls": 1,
+      "ms": 0.0153,
+      "inBytes": 1572,
+      "outBytes": 814
     },
     {
       "key": "engine:assignHighschoolPositionNative",
-      "calls": 3,
-      "ms": 0.0688,
-      "inBytes": 279,
-      "outBytes": 51
-    },
-    {
-      "key": "engine:evalMedicalTestNative",
-      "calls": 9,
-      "ms": 0.0652,
-      "inBytes": 1638,
-      "outBytes": 738
-    },
-    {
-      "key": "engine:assignProtagonistRoleNative",
-      "calls": 3,
-      "ms": 0.0539,
-      "inBytes": 338,
-      "outBytes": 69
-    },
-    {
-      "key": "engine:weekCalcHsAdmissionsNative",
       "calls": 1,
-      "ms": 0.0373,
-      "inBytes": 389,
-      "outBytes": 162
-    },
-    {
-      "key": "engine:determineProtagonistDraftNative",
-      "calls": 1,
-      "ms": 0.0236,
-      "inBytes": 380,
-      "outBytes": 73
-    },
-    {
-      "key": "engine:calcOfferedSalaryForProtagonistNative",
-      "calls": 1,
-      "ms": 0.0213,
-      "inBytes": 272,
-      "outBytes": 4
+      "ms": 0.0147,
+      "inBytes": 104,
+      "outBytes": 17
     }
   ],
   "offseason": [
     {
       "kind": "draftSkip",
-      "ms": 891.6631
-    },
-    {
-      "kind": "rollover",
-      "year": 2026,
-      "ms": 1249.581
-    },
-    {
-      "kind": "draftSkip",
-      "ms": 1115.7066
-    },
-    {
-      "kind": "rollover",
-      "year": 2027,
-      "ms": 1629.4159
-    },
-    {
-      "kind": "career:careerChoiceHub",
-      "ms": 714.4309
-    },
-    {
-      "kind": "career:careerResults",
-      "ms": 666.7315
-    },
-    {
-      "kind": "career:careerChoice(draft)",
-      "ms": 1.6698
-    },
-    {
-      "kind": "career:draftNotification",
-      "ms": 381.4135
-    },
-    {
-      "kind": "draftSkip",
-      "ms": 1017.1886
-    },
-    {
-      "kind": "rollover",
-      "year": 2029,
-      "ms": 1562.3778
-    },
-    {
-      "kind": "draftSkip",
-      "ms": 937.5311
-    },
-    {
-      "kind": "rollover",
-      "year": 2030,
-      "ms": 1409.6431
-    },
-    {
-      "kind": "draftSkip",
-      "ms": 1182.5276
-    },
-    {
-      "kind": "rollover",
-      "year": 2031,
-      "ms": 1984.2183
+      "ms": 860.2928
     }
   ],
   "weekTimings": [
     {
       "week": 0,
-      "ms": 1.4470000000000027
+      "ms": 1.5196000000000822
     },
     {
       "week": 1,
-      "ms": 408.8350999999999
+      "ms": 1194.2568
     },
     {
       "week": 2,
-      "ms": 507.23350000000005
+      "ms": 1823.1227999999996
     },
     {
       "week": 3,
-      "ms": 548.8525000000002
+      "ms": 1736.7113000000004
     },
     {
       "week": 4,
-      "ms": 533.6637999999998
+      "ms": 1961.0531999999994
     },
     {
       "week": 5,
-      "ms": 1086.6453000000001
+      "ms": 1780.6338999999998
     },
     {
       "week": 6,
-      "ms": 1134.1276000000003
+      "ms": 1939.7071000000014
     },
     {
       "week": 7,
-      "ms": 1048.9583999999995
+      "ms": 1758.5513999999985
     },
     {
       "week": 8,
-      "ms": 973.1855000000005
+      "ms": 1823.3423000000003
     },
     {
       "week": 9,
-      "ms": 1259.9906
+      "ms": 1870.4810000000016
     },
     {
       "week": 10,
-      "ms": 1492.5479999999989
+      "ms": 2124.0946000000004
     },
     {
       "week": 11,
-      "ms": 1211.1086000000014
+      "ms": 2105.533599999999
     },
     {
       "week": 12,
-      "ms": 1266.7811000000002
+      "ms": 1809.9707999999991
     },
     {
       "week": 13,
-      "ms": 1228.9993999999988
+      "ms": 1867.9409000000014
     },
     {
       "week": 14,
-      "ms": 1362.1296999999995
+      "ms": 2044.9376999999986
     },
     {
       "week": 15,
-      "ms": 1360.364700000002
+      "ms": 2316.9909000000007
     },
     {
       "week": 16,
-      "ms": 1412.8587999999982
+      "ms": 1895.6562999999987
     },
     {
       "week": 17,
-      "ms": 1582.7839999999997
+      "ms": 2141.755399999998
     },
     {
       "week": 18,
-      "ms": 1411.0928999999996
+      "ms": 1773.3642000000036
     },
     {
       "week": 19,
-      "ms": 1421.5054000000018
+      "ms": 2222.690699999999
     },
     {
       "week": 20,
-      "ms": 1426.7710999999981
+      "ms": 1940.9677999999985
     },
     {
       "week": 21,
-      "ms": 1327.034300000003
+      "ms": 1948.249800000005
     },
     {
       "week": 22,
-      "ms": 1370.057499999999
+      "ms": 2182.841099999998
     },
     {
       "week": 23,
-      "ms": 1374.8286000000007
+      "ms": 1831.0051000000021
     },
     {
       "week": 24,
-      "ms": 1572.541699999998
+      "ms": 2188.436099999999
     },
     {
       "week": 25,
-      "ms": 1574.7553000000007
+      "ms": 2043.0985999999975
     },
     {
       "week": 26,
-      "ms": 1451.3233
+      "ms": 2127.2955
     },
     {
       "week": 27,
-      "ms": 1440.556800000002
+      "ms": 1896.5068000000028
     },
     {
       "week": 28,
-      "ms": 1537.301099999997
+      "ms": 2087.908199999998
     },
     {
       "week": 29,
-      "ms": 1446.5382000000027
+      "ms": 1919.1792999999961
     },
     {
       "week": 30,
-      "ms": 1530.9684999999954
+      "ms": 1956.7068
     },
     {
       "week": 31,
-      "ms": 1886.8392000000022
+      "ms": 2806.383400000006
     },
     {
       "week": 32,
-      "ms": 1619.3171999999977
+      "ms": 2258.4702999999936
     },
     {
       "week": 33,
-      "ms": 1425.8700000000026
+      "ms": 2253.6034
     },
     {
       "week": 34,
-      "ms": 1400.4340999999986
+      "ms": 2109.847099999999
     },
     {
       "week": 35,
-      "ms": 1504.1088000000018
+      "ms": 2249.673999999999
     },
     {
       "week": 36,
-      "ms": 1440.226300000002
+      "ms": 2093.6074999999983
     },
     {
       "week": 37,
-      "ms": 1653.2953999999954
+      "ms": 2273.967000000004
     },
     {
       "week": 38,
-      "ms": 1496.3341
+      "ms": 1970.1068000000087
     },
     {
       "week": 39,
-      "ms": 1738.305800000002
+      "ms": 2203.680899999992
     },
     {
       "week": 40,
-      "ms": 2156.160300000003
+      "ms": 2905.2462000000087
     },
     {
       "week": 41,
-      "ms": 1547.9975999999951
+      "ms": 2156.8076999999903
     },
     {
       "week": 42,
-      "ms": 1466.2049000000043
+      "ms": 2065.3965000000026
     },
     {
       "week": 43,
-      "ms": 1793.0459999999948
+      "ms": 2225.624100000001
     },
     {
       "week": 44,
-      "ms": 1729.2522000000026
+      "ms": 2243.3322000000044
     },
     {
       "week": 45,
-      "ms": 1753.926800000001
+      "ms": 2203.3859999999986
     },
     {
       "week": 46,
-      "ms": 1413.9329999999973
+      "ms": 1989.151199999993
     },
     {
       "week": 47,
-      "ms": 2161.125399999997
+      "ms": 2669.3245000000024
     },
     {
       "week": 48,
-      "ms": 1525.7632000000012
+      "ms": 2057.8347000000067
     },
     {
       "week": 49,
-      "ms": 1642.5226000000112
+      "ms": 2066.155799999993
     },
     {
       "week": 50,
-      "ms": 1570.1410999999935
-    },
-    {
-      "week": 51,
-      "ms": 1381.6493999999948
-    },
-    {
-      "week": 52,
-      "ms": 2405.715000000011
-    },
-    {
-      "week": 0,
-      "ms": 345.9985999999917
-    },
-    {
-      "week": 1,
-      "ms": 981.709400000007
-    },
-    {
-      "week": 2,
-      "ms": 1192.6103999999905
-    },
-    {
-      "week": 3,
-      "ms": 1243.1992000000027
-    },
-    {
-      "week": 4,
-      "ms": 1445.2232999999978
-    },
-    {
-      "week": 5,
-      "ms": 1322.084799999997
-    },
-    {
-      "week": 6,
-      "ms": 1333.1187000000064
-    },
-    {
-      "week": 7,
-      "ms": 1382.4703000000009
-    },
-    {
-      "week": 8,
-      "ms": 1268.850900000005
-    },
-    {
-      "week": 9,
-      "ms": 1523.3447999999917
-    },
-    {
-      "week": 10,
-      "ms": 1395.604600000006
-    },
-    {
-      "week": 11,
-      "ms": 1424.8220999999903
-    },
-    {
-      "week": 12,
-      "ms": 1254.478500000012
-    },
-    {
-      "week": 13,
-      "ms": 1444.8777999999875
-    },
-    {
-      "week": 14,
-      "ms": 1543.0057000000088
-    },
-    {
-      "week": 15,
-      "ms": 1555.9851999999955
-    },
-    {
-      "week": 16,
-      "ms": 1503.053700000004
-    },
-    {
-      "week": 17,
-      "ms": 1698.0853999999963
-    },
-    {
-      "week": 18,
-      "ms": 1425.413400000005
-    },
-    {
-      "week": 19,
-      "ms": 1583.9688999999926
-    },
-    {
-      "week": 20,
-      "ms": 1666.5319000000018
-    },
-    {
-      "week": 21,
-      "ms": 1420.0029000000068
-    },
-    {
-      "week": 22,
-      "ms": 1536.0742000000027
-    },
-    {
-      "week": 23,
-      "ms": 1472.4427999999898
-    },
-    {
-      "week": 24,
-      "ms": 1693.7128999999986
-    },
-    {
-      "week": 25,
-      "ms": 1595.137400000007
-    },
-    {
-      "week": 26,
-      "ms": 1676.6460999999981
-    },
-    {
-      "week": 27,
-      "ms": 1652.404800000004
-    },
-    {
-      "week": 28,
-      "ms": 1742.0497000000032
-    },
-    {
-      "week": 29,
-      "ms": 1706.1930999999895
-    },
-    {
-      "week": 30,
-      "ms": 1615.149000000005
-    },
-    {
-      "week": 31,
-      "ms": 2060.6582000000053
-    },
-    {
-      "week": 32,
-      "ms": 1755.7717999999877
-    },
-    {
-      "week": 33,
-      "ms": 1867.6638000000094
-    },
-    {
-      "week": 34,
-      "ms": 1766.5350999999937
-    },
-    {
-      "week": 35,
-      "ms": 1825.5405000000028
-    },
-    {
-      "week": 36,
-      "ms": 1720.6554000000033
-    },
-    {
-      "week": 37,
-      "ms": 1881.0650999999925
-    },
-    {
-      "week": 38,
-      "ms": 1715.9212000000116
-    },
-    {
-      "week": 39,
-      "ms": 1839.6000999999815
-    },
-    {
-      "week": 40,
-      "ms": 2619.613400000002
-    },
-    {
-      "week": 41,
-      "ms": 1895.8785999999964
-    },
-    {
-      "week": 42,
-      "ms": 1729.2767000000167
-    },
-    {
-      "week": 43,
-      "ms": 2120.064699999988
-    },
-    {
-      "week": 44,
-      "ms": 2341.930699999997
-    },
-    {
-      "week": 45,
-      "ms": 2894.1596000000136
-    },
-    {
-      "week": 46,
-      "ms": 2571.665099999984
-    },
-    {
-      "week": 47,
-      "ms": 2881.5220000000263
-    },
-    {
-      "week": 48,
-      "ms": 1618.4004999999888
-    },
-    {
-      "week": 49,
-      "ms": 1750.613799999992
-    },
-    {
-      "week": 50,
-      "ms": 1686.7361000000092
-    },
-    {
-      "week": 51,
-      "ms": 1359.4614000000001
-    },
-    {
-      "week": 52,
-      "ms": 2556.456999999995
-    },
-    {
-      "week": 0,
-      "ms": 438.9378999999899
-    },
-    {
-      "week": 1,
-      "ms": 1130.4821999999986
-    },
-    {
-      "week": 2,
-      "ms": 1296.5534000000043
-    },
-    {
-      "week": 3,
-      "ms": 1629.7212
-    },
-    {
-      "week": 4,
-      "ms": 1847.5911999999953
-    },
-    {
-      "week": 5,
-      "ms": 1586.2255000000005
-    },
-    {
-      "week": 6,
-      "ms": 1778.6184000000067
-    },
-    {
-      "week": 7,
-      "ms": 1676.8466999999946
-    },
-    {
-      "week": 8,
-      "ms": 1571.104800000001
-    },
-    {
-      "week": 9,
-      "ms": 1848.8250000000116
-    },
-    {
-      "week": 10,
-      "ms": 1878.109999999986
-    },
-    {
-      "week": 11,
-      "ms": 1775.8460000000196
-    },
-    {
-      "week": 12,
-      "ms": 1559.7733000000007
-    },
-    {
-      "week": 13,
-      "ms": 1659.2445000000007
-    },
-    {
-      "week": 14,
-      "ms": 1777.1104999999807
-    },
-    {
-      "week": 15,
-      "ms": 1769.7638000000152
-    },
-    {
-      "week": 16,
-      "ms": 1701.877199999988
-    },
-    {
-      "week": 17,
-      "ms": 1859.9704000000202
-    },
-    {
-      "week": 18,
-      "ms": 1894.456199999986
-    },
-    {
-      "week": 19,
-      "ms": 1793.7256000000052
-    },
-    {
-      "week": 20,
-      "ms": 1863.7269000000088
-    },
-    {
-      "week": 21,
-      "ms": 1716.6412999999884
-    },
-    {
-      "week": 22,
-      "ms": 1688.7123000000138
-    },
-    {
-      "week": 23,
-      "ms": 1678.2464999999793
-    },
-    {
-      "week": 24,
-      "ms": 1757.2847000000183
-    },
-    {
-      "week": 25,
-      "ms": 1718.1596999999892
-    },
-    {
-      "week": 26,
-      "ms": 1894.6896000000124
-    },
-    {
-      "week": 27,
-      "ms": 1713.763799999986
-    },
-    {
-      "week": 28,
-      "ms": 1874.5913
-    },
-    {
-      "week": 29,
-      "ms": 1725.4512000000104
-    },
-    {
-      "week": 30,
-      "ms": 1804.2920999999915
-    },
-    {
-      "week": 31,
-      "ms": 2168.7445000000007
-    },
-    {
-      "week": 32,
-      "ms": 2047.3389000000025
-    },
-    {
-      "week": 33,
-      "ms": 1863.8336999999883
-    },
-    {
-      "week": 34,
-      "ms": 1821.106300000014
-    },
-    {
-      "week": 35,
-      "ms": 1836.1655000000028
-    },
-    {
-      "week": 36,
-      "ms": 1804.536999999982
-    },
-    {
-      "week": 37,
-      "ms": 1742.6892999999982
-    },
-    {
-      "week": 38,
-      "ms": 1636.8723000000173
-    },
-    {
-      "week": 39,
-      "ms": 1705.9579999999842
-    },
-    {
-      "week": 40,
-      "ms": 2461.1159000000043
-    },
-    {
-      "week": 41,
-      "ms": 1619.619800000015
-    },
-    {
-      "week": 42,
-      "ms": 1604.7784999999858
-    },
-    {
-      "week": 43,
-      "ms": 1942.9054000000178
-    },
-    {
-      "week": 44,
-      "ms": 2575.7677999999723
-    },
-    {
-      "week": 45,
-      "ms": 1806.4919000000227
-    },
-    {
-      "week": 46,
-      "ms": 1536.7786999999953
-    },
-    {
-      "week": 47,
-      "ms": 2261.541100000002
-    },
-    {
-      "week": 0,
-      "ms": 381.3622000000032
-    },
-    {
-      "week": 1,
-      "ms": 809.5558999999776
-    },
-    {
-      "week": 2,
-      "ms": 842.6594000000041
-    },
-    {
-      "week": 3,
-      "ms": 782.8540000000212
-    },
-    {
-      "week": 4,
-      "ms": 810.6849999999977
-    },
-    {
-      "week": 5,
-      "ms": 844.9604999999865
-    },
-    {
-      "week": 6,
-      "ms": 781.7957999999926
-    },
-    {
-      "week": 7,
-      "ms": 1213.9135999999999
-    },
-    {
-      "week": 8,
-      "ms": 1110.1296000000148
-    },
-    {
-      "week": 9,
-      "ms": 1300.1135000000068
-    },
-    {
-      "week": 10,
-      "ms": 1103.7956999999878
-    },
-    {
-      "week": 11,
-      "ms": 1363.2715000000026
-    },
-    {
-      "week": 12,
-      "ms": 1385.5944000000018
-    },
-    {
-      "week": 13,
-      "ms": 1370.0956999999762
-    },
-    {
-      "week": 14,
-      "ms": 1600.6136000000406
-    },
-    {
-      "week": 15,
-      "ms": 1510.6699999999837
-    },
-    {
-      "week": 16,
-      "ms": 1437.698299999989
-    },
-    {
-      "week": 17,
-      "ms": 1370.2001000000164
-    },
-    {
-      "week": 18,
-      "ms": 1545.4727999999886
-    },
-    {
-      "week": 19,
-      "ms": 1592.0746999999974
-    },
-    {
-      "week": 20,
-      "ms": 1450.5668000000296
-    },
-    {
-      "week": 21,
-      "ms": 1364.7560999999987
-    },
-    {
-      "week": 22,
-      "ms": 1444.5434999999707
-    },
-    {
-      "week": 23,
-      "ms": 1472.6370999999926
-    },
-    {
-      "week": 24,
-      "ms": 1422.0153000000282
-    },
-    {
-      "week": 25,
-      "ms": 1629.8072999999858
-    },
-    {
-      "week": 26,
-      "ms": 1409.5716000000248
-    },
-    {
-      "week": 27,
-      "ms": 1417.4102999999886
-    },
-    {
-      "week": 28,
-      "ms": 1203.6204000000143
-    },
-    {
-      "week": 29,
-      "ms": 1156.7074999999604
-    },
-    {
-      "week": 30,
-      "ms": 1109.1829000000143
-    },
-    {
-      "week": 31,
-      "ms": 1500.5189999999711
-    },
-    {
-      "week": 32,
-      "ms": 1031.2864000000409
-    },
-    {
-      "week": 33,
-      "ms": 1169.8496999999625
-    },
-    {
-      "week": 34,
-      "ms": 1094.509400000039
-    },
-    {
-      "week": 35,
-      "ms": 1140.8943999999901
-    },
-    {
-      "week": 36,
-      "ms": 1671.5756999999867
-    },
-    {
-      "week": 37,
-      "ms": 1160.4133000000147
-    },
-    {
-      "week": 38,
-      "ms": 1136.6668000000063
-    },
-    {
-      "week": 39,
-      "ms": 1032.0599999999977
-    },
-    {
-      "week": 40,
-      "ms": 1228.6437999999616
-    },
-    {
-      "week": 41,
-      "ms": 1097.6846000000369
-    },
-    {
-      "week": 42,
-      "ms": 1079.0615000000107
-    },
-    {
-      "week": 43,
-      "ms": 1671.4328999999561
-    },
-    {
-      "week": 44,
-      "ms": 1250.6285000000498
-    },
-    {
-      "week": 45,
-      "ms": 1141.9114999999874
-    },
-    {
-      "week": 46,
-      "ms": 1092.366399999999
-    },
-    {
-      "week": 47,
-      "ms": 2158.219699999958
-    },
-    {
-      "week": 48,
-      "ms": 1093.9033000000054
-    },
-    {
-      "week": 49,
-      "ms": 1482.4116000000504
-    },
-    {
-      "week": 50,
-      "ms": 1023.1829999999609
-    },
-    {
-      "week": 51,
-      "ms": 1068.0425000000396
-    },
-    {
-      "week": 52,
-      "ms": 2175.996999999974
-    },
-    {
-      "week": 0,
-      "ms": 404.88199999998324
-    },
-    {
-      "week": 1,
-      "ms": 843.3538000000408
-    },
-    {
-      "week": 2,
-      "ms": 906.5114999999641
-    },
-    {
-      "week": 3,
-      "ms": 857.6640999999945
-    },
-    {
-      "week": 4,
-      "ms": 844.0725000000093
-    },
-    {
-      "week": 5,
-      "ms": 857.3960000000079
-    },
-    {
-      "week": 6,
-      "ms": 892.9637000000221
-    },
-    {
-      "week": 7,
-      "ms": 1103.482399999979
-    },
-    {
-      "week": 8,
-      "ms": 1239.0668999999762
-    },
-    {
-      "week": 9,
-      "ms": 1165.0414000000455
-    },
-    {
-      "week": 10,
-      "ms": 1236.6614999999874
-    },
-    {
-      "week": 11,
-      "ms": 1520.6496000000043
-    },
-    {
-      "week": 12,
-      "ms": 1367.6154999999562
-    },
-    {
-      "week": 13,
-      "ms": 1355.1708000000217
-    },
-    {
-      "week": 14,
-      "ms": 1627.7901999999885
-    },
-    {
-      "week": 15,
-      "ms": 1694.0581000000238
-    },
-    {
-      "week": 16,
-      "ms": 1552.1493999999948
-    },
-    {
-      "week": 17,
-      "ms": 1562.078199999989
-    },
-    {
-      "week": 18,
-      "ms": 1351.9358999999822
-    },
-    {
-      "week": 19,
-      "ms": 1533.5414000000455
-    },
-    {
-      "week": 20,
-      "ms": 1458.7759999999544
-    },
-    {
-      "week": 21,
-      "ms": 1383.3344000000507
-    },
-    {
-      "week": 22,
-      "ms": 1504.9094999999506
-    },
-    {
-      "week": 23,
-      "ms": 1513.659800000023
-    },
-    {
-      "week": 24,
-      "ms": 1460.2697000000044
-    },
-    {
-      "week": 25,
-      "ms": 1583.2471999999834
-    },
-    {
-      "week": 26,
-      "ms": 1592.7090000000317
-    },
-    {
-      "week": 27,
-      "ms": 1406.2266999999993
-    },
-    {
-      "week": 28,
-      "ms": 1141.7037999999593
-    },
-    {
-      "week": 29,
-      "ms": 1240.7962000000407
-    },
-    {
-      "week": 30,
-      "ms": 1182.7477000000072
-    },
-    {
-      "week": 31,
-      "ms": 1724.407899999991
-    },
-    {
-      "week": 32,
-      "ms": 1327.1549999999697
-    },
-    {
-      "week": 33,
-      "ms": 1406.027700000035
-    },
-    {
-      "week": 34,
-      "ms": 1233.6205999999656
-    },
-    {
-      "week": 35,
-      "ms": 1220.241399999999
-    },
-    {
-      "week": 36,
-      "ms": 1280.2162000000244
-    },
-    {
-      "week": 37,
-      "ms": 1249.5701000000117
-    },
-    {
-      "week": 38,
-      "ms": 1124.4464999999618
-    },
-    {
-      "week": 39,
-      "ms": 1125.4528000000282
-    },
-    {
-      "week": 40,
-      "ms": 1314.1932999999844
-    },
-    {
-      "week": 41,
-      "ms": 1279.2176999999792
-    },
-    {
-      "week": 42,
-      "ms": 1251.5548000000417
-    },
-    {
-      "week": 43,
-      "ms": 1875.506400000013
-    },
-    {
-      "week": 44,
-      "ms": 1328.041099999973
-    },
-    {
-      "week": 45,
-      "ms": 1278.6453999999794
-    },
-    {
-      "week": 46,
-      "ms": 1173.013200000045
-    },
-    {
-      "week": 47,
-      "ms": 2068.401499999978
-    },
-    {
-      "week": 48,
-      "ms": 1084.2857000000076
-    },
-    {
-      "week": 49,
-      "ms": 1597.6689999999944
-    },
-    {
-      "week": 50,
-      "ms": 1093.6368999999831
-    },
-    {
-      "week": 51,
-      "ms": 1162.2918000000063
-    },
-    {
-      "week": 52,
-      "ms": 2228.1732000000193
-    },
-    {
-      "week": 0,
-      "ms": 407.9944999999716
-    },
-    {
-      "week": 1,
-      "ms": 982.8816000000224
-    },
-    {
-      "week": 2,
-      "ms": 1030.585000000021
-    },
-    {
-      "week": 3,
-      "ms": 954.0817999999854
-    },
-    {
-      "week": 4,
-      "ms": 906.4900999999954
-    },
-    {
-      "week": 5,
-      "ms": 873.5544999999693
-    },
-    {
-      "week": 6,
-      "ms": 828.4837000000407
-    },
-    {
-      "week": 7,
-      "ms": 1052.087200000009
-    },
-    {
-      "week": 8,
-      "ms": 1223.3323999999557
-    },
-    {
-      "week": 9,
-      "ms": 1310.9137000000337
-    },
-    {
-      "week": 10,
-      "ms": 1268.2606999999844
-    },
-    {
-      "week": 11,
-      "ms": 1513.32640000002
-    },
-    {
-      "week": 12,
-      "ms": 1389.8522999999695
-    },
-    {
-      "week": 13,
-      "ms": 1478.9468999999808
-    },
-    {
-      "week": 14,
-      "ms": 1652.221200000029
-    },
-    {
-      "week": 15,
-      "ms": 1585.9883000000264
-    },
-    {
-      "week": 16,
-      "ms": 1598.5815999999759
-    },
-    {
-      "week": 17,
-      "ms": 1589.0547999999835
-    },
-    {
-      "week": 18,
-      "ms": 1653.3538999999873
-    },
-    {
-      "week": 19,
-      "ms": 1674.9601000000257
-    },
-    {
-      "week": 20,
-      "ms": 1923.0201000000234
-    },
-    {
-      "week": 21,
-      "ms": 1743.3457999999519
-    },
-    {
-      "week": 22,
-      "ms": 1810.2492000000202
-    },
-    {
-      "week": 23,
-      "ms": 1646.537100000016
-    },
-    {
-      "week": 24,
-      "ms": 1649.328899999964
-    },
-    {
-      "week": 25,
-      "ms": 1966.8564000000479
-    },
-    {
-      "week": 26,
-      "ms": 1872.8407000000007
-    },
-    {
-      "week": 27,
-      "ms": 1826.634999999951
-    },
-    {
-      "week": 28,
-      "ms": 1368.233600000036
-    },
-    {
-      "week": 29,
-      "ms": 1374.7810999999638
-    },
-    {
-      "week": 30,
-      "ms": 1408.0995000000112
-    },
-    {
-      "week": 31,
-      "ms": 1856.6001999999862
-    },
-    {
-      "week": 32,
-      "ms": 1469.1005000000005
-    },
-    {
-      "week": 33,
-      "ms": 1516.078600000008
-    },
-    {
-      "week": 34,
-      "ms": 1484.6313000000082
-    },
-    {
-      "week": 35,
-      "ms": 1517.5167000000365
-    },
-    {
-      "week": 36,
-      "ms": 1483.106299999985
-    },
-    {
-      "week": 37,
-      "ms": 1530.416099999973
-    },
-    {
-      "week": 38,
-      "ms": 1500.7019999999902
-    },
-    {
-      "week": 39,
-      "ms": 1457.4411000000546
-    },
-    {
-      "week": 40,
-      "ms": 1745.3800999999512
-    },
-    {
-      "week": 41,
-      "ms": 1469.3870999999926
-    },
-    {
-      "week": 42,
-      "ms": 1453.355200000049
-    },
-    {
-      "week": 43,
-      "ms": 2285.4151999999885
-    },
-    {
-      "week": 44,
-      "ms": 1762.484599999967
-    },
-    {
-      "week": 45,
-      "ms": 1262.776600000041
-    },
-    {
-      "week": 46,
-      "ms": 1437.3843999999808
-    },
-    {
-      "week": 47,
-      "ms": 2667.740899999975
-    },
-    {
-      "week": 48,
-      "ms": 1504.2473000000464
-    },
-    {
-      "week": 49,
-      "ms": 2052.683299999975
-    },
-    {
-      "week": 50,
-      "ms": 1495.1796999999788
-    },
-    {
-      "week": 51,
-      "ms": 1420.5265000000363
-    },
-    {
-      "week": 52,
-      "ms": 2991.5175000000163
+      "ms": 2331.747900000002
     }
   ],
   "slowestWeeks": [
     {
-      "week": 52,
-      "ms": 2991.5175000000163
-    },
-    {
-      "week": 45,
-      "ms": 2894.1596000000136
-    },
-    {
-      "week": 47,
-      "ms": 2881.5220000000263
-    },
-    {
-      "week": 47,
-      "ms": 2667.740899999975
-    },
-    {
       "week": 40,
-      "ms": 2619.613400000002
+      "ms": 2905.2462000000087
     },
     {
-      "week": 44,
-      "ms": 2575.7677999999723
+      "week": 31,
+      "ms": 2806.383400000006
     },
     {
-      "week": 46,
-      "ms": 2571.665099999984
+      "week": 47,
+      "ms": 2669.3245000000024
     },
     {
-      "week": 52,
-      "ms": 2556.456999999995
+      "week": 50,
+      "ms": 2331.747900000002
+    },
+    {
+      "week": 15,
+      "ms": 2316.9909000000007
+    },
+    {
+      "week": 37,
+      "ms": 2273.967000000004
+    },
+    {
+      "week": 32,
+      "ms": 2258.4702999999936
+    },
+    {
+      "week": 33,
+      "ms": 2253.6034
     }
   ],
   "weekLog": [
     {
       "from": 0,
       "to": 40,
-      "ms": 53452.7859
+      "ms": 81228.2095
     },
     {
       "from": 40,
       "to": 47,
-      "ms": 11145.5871
+      "ms": 14902.3515
     },
     {
       "from": 47,
       "to": 51,
-      "ms": 6119.8417
-    },
-    {
-      "from": 51,
-      "to": 52,
-      "ms": 1501.0482
-    },
-    {
-      "from": 0,
-      "to": 40,
-      "ms": 63186.7813
-    },
-    {
-      "from": 40,
-      "to": 47,
-      "ms": 15480.9207
-    },
-    {
-      "from": 47,
-      "to": 51,
-      "ms": 6414.8561
-    },
-    {
-      "from": 51,
-      "to": 52,
-      "ms": 1365.5394
-    },
-    {
-      "from": 0,
-      "to": 40,
-      "ms": 70423.6445
-    },
-    {
-      "from": 40,
-      "to": 44,
-      "ms": 6937.1034
-    },
-    {
-      "from": 44,
-      "to": 47,
-      "ms": 5162.4742
-    },
-    {
-      "from": 0,
-      "to": 40,
-      "ms": 50023.1478
-    },
-    {
-      "from": 40,
-      "to": 47,
-      "ms": 8473.8473
-    },
-    {
-      "from": 47,
-      "to": 51,
-      "ms": 4636.3978
-    },
-    {
-      "from": 51,
-      "to": 52,
-      "ms": 1049.4642
-    },
-    {
-      "from": 0,
-      "to": 40,
-      "ms": 51984.022
-    },
-    {
-      "from": 40,
-      "to": 47,
-      "ms": 9316.8372
-    },
-    {
-      "from": 47,
-      "to": 51,
-      "ms": 4916.6411
-    },
-    {
-      "from": 51,
-      "to": 52,
-      "ms": 1247.1582
-    },
-    {
-      "from": 0,
-      "to": 40,
-      "ms": 58717.4125
-    },
-    {
-      "from": 40,
-      "to": 47,
-      "ms": 11155.6363
-    },
-    {
-      "from": 47,
-      "to": 51,
-      "ms": 6443.0547
-    },
-    {
-      "from": 51,
-      "to": 52,
-      "ms": 1562.4869
+      "ms": 7722.727
     }
   ],
   "dbFiles": [
     {
       "f": "projectb_v2.db",
-      "size": 18182144
+      "size": 16412672
     },
     {
       "f": "projectb_v2.db-shm",
@@ -2209,26 +780,26 @@
     },
     {
       "f": "projectb_v2.db-wal",
-      "size": 5253032
+      "size": 6245952
     },
     {
       "f": "slot3_PERF.db",
-      "size": 22470656
+      "size": 40808448
     },
     {
       "f": "slot3_PERF.db-shm",
-      "size": 32768
+      "size": 65536
     },
     {
       "f": "slot3_PERF.db-wal",
-      "size": 14770232
+      "size": 32160752
     }
   ],
-  "npcCount": 6326,
-  "entityCount": 7501,
+  "npcCount": 7332,
+  "entityCount": 8525,
   "staleReads": [],
-  "fingerprint": "7fbe6497:6327",
-  "dbFingerprint": "7fbe6497:6327",
+  "fingerprint": "b080046e:7571",
+  "dbFingerprint": "b080046e:7571",
   "lossFree": true,
   "staleFree": true,
   "missingChannels": []
