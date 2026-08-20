@@ -185,7 +185,10 @@
         protagonistSide: isHome ? "home" : "away",
         // ⚠ 수비를 안 넘기면 엔진이 평균 50으로 만든다. `buildFielders`는
         // import만 돼 있고 쓰이지 않았다 — 자기 팀 야수를 넘긴다
-        fielders: buildFielders(p.teamId, get(masterStore).entities),
+        // ⚠ **`get(masterStore)`는 여기서 안 된다.** 둘 다 import가 없어
+        // `get is not defined`로 **경기 화면이 통째로 죽었다**(새 게임 2주차
+        // 친선경기에서 재현). 화면은 언어 반영본을 읽는 게 규칙이기도 하다.
+        fielders: buildFielders(p.teamId, $entitiesL10n),
         ...(opponentLineup.length >= 9 ? { opponentLineup } : { batterMean: 55 }),
         ...(myLineup.length >= 9       ? { myTeamLineup: myLineup } : {}),
         ...(opponentPitcher            ? { opponentPitcher } : {}),

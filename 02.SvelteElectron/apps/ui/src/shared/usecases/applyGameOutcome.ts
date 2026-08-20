@@ -4,6 +4,7 @@ import { masterStore } from "../stores/master";
 import { seasonStore } from "../stores/season";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcGameGrowth } from "../utils/growthEngine";
+import { recordGameLogs } from "../repo/gameLogRepo";
 import { staffModsOf } from "../utils/staffEffects";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
@@ -238,6 +239,15 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     ...teamResult,
     playerLines,
   };
+
+  // 🔴 **주인공 경기도 로그를 안 남겼다.** 이 경로는 경기 엔진을 타서
+  // 배경 시뮬(`season.ts`)도 `simulateNpcGame`도 안 거친다 — 그래서
+  // 주인공만, 그리고 그날 같이 뛴 우리 팀 선수까지 "최근 경기"가 비었다.
+  // `playerLines`엔 주인공과 양 팀 출전 선수가 다 들어 있다.
+  await recordGameLogs(
+    gBefore.currentSlotId ?? "",
+    sBefore.seasonYear, sBefore.currentWeek, playerLines,
+  );
 
   seasonStore.applyMatchResult(outcome.scheduleId, matchResult);
   seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult, outcome.homeTeamId, outcome.awayTeamId);

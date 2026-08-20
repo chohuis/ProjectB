@@ -26,7 +26,7 @@ const RULES = JSON.parse(
 ) as { rosterRules: Record<string, RosterRulesData> };
 
 const TEAMS = [{ teamId: "TEAM_X" }, { teamId: "TEAM_Y" }];
-const paramsFor = (leagueId: string, override?: Parameters<typeof buildRosterParams>[6]) =>
+const paramsFor = (leagueId: string, override?: Parameters<typeof buildRosterParams>[5]) =>
   buildRosterParams(leagueId, 2026, 1234, TEAMS, RULES.rosterRules[leagueId], override) as
     { namePool?: { western?: boolean; sep?: string; surnames: string[] } };
 

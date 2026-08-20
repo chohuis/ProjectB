@@ -6,6 +6,7 @@ import { npcLiveStatsStore } from "../../stores/npcLiveStats";
 import { autoLog } from "../../stores/autoAdvance";
 import { simulateGame } from "../../utils/gameSimulator";
 import { rotationSizeForLeague } from "../../utils/rosterEngine";
+import { recordGameLogs } from "../../repo/gameLogRepo";
 import type { MatchResult, PlayerCondition } from "../../types/season";
 
 export interface NpcGameSim {
@@ -57,6 +58,17 @@ export async function simulateNpcGame(
       // 씨앗 — 같은 세이브·같은 주면 같은 경기가 나온다
       worldSeed: s.worldSeed,
     });
+    // 🔴 **주인공 리그는 경기 로그가 통째로 안 쌓였다.** 배경 리그는
+    // 시뮬 직후 쌓는데(`season.ts`) 이 경로엔 그게 없었다 — 실측에서
+    // 내 리그 3,060명이 전부 0건, 다른 리그는 64~80%였다.
+    //
+    // ⚠ **호출부가 아니라 여기서 부른다.** `simulateNpcGame`을 부르는 데가
+    // 여덟이라 각자 부르게 하면 반드시 빠뜨린다.
+    await recordGameLogs(
+      get(gameStore).currentSlotId ?? "",
+      s.seasonYear, s.currentWeek, sim.result.playerLines,
+    );
+
     return {
       result: sim.result,
       nextHomeRotIdx: sim.nextHomeRotIdx,

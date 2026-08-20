@@ -11,6 +11,9 @@
     rispSplit, rispTone,
   } from "../../../shared/utils/playerTraits";
   import { clubKeyOfTeam } from "../../../shared/utils/ids";
+  import {
+    getRecentGames, summarize, isPitcherLine, type RecentGame,
+  } from "../../../shared/repo/gameLogRepo";
 
   export let entityId: string = "";
 
@@ -19,7 +22,7 @@
   function handleOverlayClick(e: MouseEvent) { if (e.target === e.currentTarget) close(); }
   function handleKeydown(e: KeyboardEvent) { if (e.key === "Escape") close(); }
 
-  type ModalTab = "stats" | "record" | "history";
+  type ModalTab = "stats" | "record" | "history" | "recent";
   let modalTab: ModalTab = "stats";
   $: if (entityId) modalTab = "stats";
 
@@ -452,7 +455,7 @@
     const slotId = $gameStore.currentSlotId;
     void $gameStore.npcs; // 드래프트·트레이드 후 npcs 갱신 시 재조회
     const myVersion = ++_txFetchVersion;
-    if (entityId && slotId && !isProtagonistModal) {
+    if (entityId && slotId) {
       window.projectB!.leagueGetTransactions(
         JSON.stringify({ slotId, playerId: entityId, limit: 50 })
       ).then((raw) => {
@@ -467,6 +470,44 @@
     } else {
       playerTransactions = [];
     }
+  }
+
+  // ── 최근 경기 (projectb_v2.db `npc_game_log`) ──────────────
+  //
+  // 🔴 **이 표는 쌓기만 하고 읽는 곳이 없었다.** 매주 쓰고 매주 12만 행을
+  // 훑어 지우면서 아무도 안 봤다(10시즌 실측 168,049행). 여기가 첫 소비처다.
+  //
+  // ⚠ **보관 한도가 40경기다**(`season.ts`의 `keep: 40`). 더 달라고 해도
+  // 안 나온다 — 화면에서 10경기만 쓰는 건 그 안이라 안전하다.
+  let recentGames: RecentGame[] = [];
+  let _rgFetchVersion = 0;
+
+  $: {
+    const slotId = $gameStore.currentSlotId;
+    void $seasonStore.currentWeek;   // 주가 넘어가면 새 경기가 붙는다
+    const myVersion = ++_rgFetchVersion;
+    if (entityId && slotId && !isProtagonistModal) {
+      getRecentGames(slotId, entityId, 10).then((rows) => {
+        if (_rgFetchVersion !== myVersion) return;
+        recentGames = rows;
+      });
+    } else {
+      recentGames = [];
+    }
+  }
+  $: recentSummary = summarize(recentGames);
+
+
+  /** 이닝은 야구식으로 쓴다 — 6.33이 아니라 6.1(6과 1/3) */
+  function ipLabel(ip: number): string {
+    const whole = Math.floor(ip + 1e-9);
+    const outs = Math.round((ip - whole) * 3);
+    return outs > 0 ? `${whole}.${outs}` : `${whole}`;
+  }
+
+  /** 승패 표시. `ND`는 빈칸으로 둔다 — 대부분이 ND라 표가 시끄러워진다 */
+  function decisionLabel(d: string | undefined): string {
+    return !d || d === "ND" ? "" : d;
   }
 
   // 주인공 팀 이력: careerRecords에서 드래프트·이적 이벤트 합성
@@ -797,6 +838,7 @@
             </button>
             {#if isPlayer}
               <button class:mtab-active={modalTab === "history"} on:click={() => (modalTab = "history")}>연도별 성적</button>
+              <button class:mtab-active={modalTab === "recent"} on:click={() => (modalTab = "recent")}>최근 경기</button>
             {/if}
           </nav>
 
@@ -1295,6 +1337,74 @@
                   </table>
                 {/if}
               </section>
+
+            <!-- ══ 최근 경기 탭 ══ -->
+            {:else if modalTab === "recent" && isPlayer}
+              <section class="msec">
+                <h4>최근 경기</h4>
+                {#if recentGames.length === 0}
+                  <p class="modal-pending">경기 기록 없음</p>
+                {:else}
+                  {@const sm = recentSummary}
+                  <div class="rg-sum">
+                    <span class="rg-sum-g">최근 {sm.g}경기</span>
+                    {#if sm.kind === "pitcher"}
+                      <span><b>{ipLabel(sm.ip)}</b>이닝</span>
+                      <span>ERA <b class="era-cell">{sm.era != null ? sm.era.toFixed(2) : "-"}</b></span>
+                      <span>{sm.k}탈삼진</span>
+                      <span>{sm.bb}볼넷</span>
+                    {:else}
+                      <span>타율 <b class="avg-cell">{sm.avg != null ? sm.avg.toFixed(3).replace(/^0/, "") : "-"}</b></span>
+                      <span>{sm.h}안타 / {sm.ab}타수</span>
+                      <span>{sm.hr}홈런</span>
+                      <span>{sm.rbi}타점</span>
+                    {/if}
+                  </div>
+                  <table class="gtable">
+                    <thead>
+                      {#if recentSummary.kind === "pitcher"}
+                        <tr>
+                          <th>시즘</th><th>주</th><th></th>
+                          <th>IP</th><th>H</th><th>ER</th><th>K</th><th>BB</th>
+                        </tr>
+                      {:else}
+                        <tr>
+                          <th>시즘</th><th>주</th>
+                          <th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>SB</th>
+                        </tr>
+                      {/if}
+                    </thead>
+                    <tbody>
+                      {#each recentGames as gm, i (`${gm.season}-${gm.week}-${i}`)}
+                        {@const l = gm.line}
+                        <tr>
+                          <td>{gm.season}</td>
+                          <td>W{gm.week}</td>
+                          {#if l && isPitcherLine(l)}
+                            <td class="rg-dec">{decisionLabel(l.decision)}</td>
+                            <td>{ipLabel(l.ip ?? 0)}</td>
+                            <td>{l.h ?? 0}</td>
+                            <td>{l.er ?? 0}</td>
+                            <td>{l.k ?? 0}</td>
+                            <td>{l.bb ?? 0}</td>
+                          {:else if l}
+                            <td>{l.ab ?? 0}</td>
+                            <td>{l.h ?? 0}</td>
+                            <td>{l.hr ?? 0}</td>
+                            <td>{l.rbi ?? 0}</td>
+                            <td>{l.bb ?? 0}</td>
+                            <td>{l.k ?? 0}</td>
+                            <td>{l.sb ?? 0}</td>
+                          {:else}
+                            <!-- 오래된 형식이 섞일 수 있다 — 한 줄이 표를 죽이면 안 된다 -->
+                            <td colspan="7" class="stat-sum">기록 읽기 실패</td>
+                          {/if}
+                        </tr>
+                      {/each}
+                    </tbody>
+                  </table>
+                {/if}
+              </section>
             {/if}
 
           </div><!-- tab-content -->
@@ -1487,6 +1597,19 @@
     display: flex; flex-direction: column;
     overflow: hidden; min-height: 0;
   }
+
+  /* 최근 경기 요약줄 */
+  .rg-sum {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px;
+    padding: 8px 12px; margin-bottom: 10px;
+    background: var(--surface-2, #f4f5f7);
+    border: 1px solid var(--line, #e2e4e9); border-radius: 8px;
+    font-size: 13px; font-variant-numeric: tabular-nums;
+  }
+  .rg-sum-g { font-weight: 700; }
+  .rg-sum b { font-size: 15px; }
+  /* 승패 칸은 대부분 빈다 — 좀게 잡아 표가 밀리지 않게 한다 */
+  .rg-dec { width: 28px; font-weight: 700; }
 
   /* 탭 */
   .modal-tabs {

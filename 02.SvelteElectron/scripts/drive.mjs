@@ -13,6 +13,7 @@ import { _electron as electron } from "playwright-core";
 import * as readline from "node:readline";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import * as os from "node:os";
 import { fileURLToPath } from "node:url";
 
 const APP_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -44,7 +45,16 @@ const COMMANDS = {
 
     app = await electron.launch({
       executablePath: electronBin,
-      args: [path.join(APP_DIR, "apps/desktop/main.cjs")],
+      // ⚠ **`DRIVE_USER_DATA=1`이면 임시 저장소로 띄운다.**
+      // 세이브 슬롯이 셋뿐이라 다 차 있으면 새 게임을 못 만든다. 확인하려고
+      // 사용자 세이브를 지우거나 앞으로 돌리면 **그 세이브가 바뀐다** —
+      // 화면 확인은 새 게임으로 하라는 규칙과도 어긋난다.
+      args: [
+        path.join(APP_DIR, "apps/desktop/main.cjs"),
+        ...(process.env.DRIVE_USER_DATA
+          ? ["--user-data-dir=" + fs.mkdtempSync(path.join(os.tmpdir(), "drive-udd-"))]
+          : []),
+      ],
       env,
       timeout: 60_000,
     });
