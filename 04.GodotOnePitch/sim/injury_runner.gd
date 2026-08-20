@@ -499,11 +499,14 @@ static func news_message(state: Dictionary, at_day: int,
 	#
 	# ⚠ **내 팀을 위로 올린다.** 02는 `내 팀` 칩으로 거른다 — 전 리그에서
 	# 부상자가 나오는데 관련성을 못 가리면 읽을 이유가 없다
-	var my_team: String = String(state.get("protagonist", {}).get("team_id", ""))
+	# ⚠ **1·2군을 한 구단으로 본다** (G-4). 02 `clubKeyOfTeam`이 그렇게 한다 —
+	# 내가 1군인데 2군 동료가 다치면 그것도 내 팀 일이다
+	var my_team: String = _club_of(
+		String(state.get("protagonist", {}).get("team_id", "")))
 	var rows: Array = news["rows"]
 	rows.sort_custom(func(a, b) -> bool:
-		var am: bool = String(a.get("team_id", "")) == my_team
-		var bm: bool = String(b.get("team_id", "")) == my_team
+		var am: bool = _club_of(String(a.get("team_id", ""))) == my_team
+		var bm: bool = _club_of(String(b.get("team_id", ""))) == my_team
 		if am != bm:
 			return am
 		return int(a.get("weeks", 0)) > int(b.get("weeks", 0)))
@@ -515,10 +518,16 @@ static func news_message(state: Dictionary, at_day: int,
 		# 🔴 **이름이 없으면 id가 그대로 찍힌다.** 실측에서
 		# `GEN_TEAM_KBL_DAEJEON_PHANTOMS_1_20270101_Y2027_025`가 나왔다 —
 		# 02도 같은 결함을 겪고 고쳤다(`top10Engine.ts:62-66`)
-		lines.append("%s%s  %s  %s  %s  %d주" % [
-			"● " if tid == my_team else "  ",
+		# 🔴 **아는 사람인지 적는다** (G-4). 02는 `관계` 칩으로 거르는데
+		# (`InjuryPanel.svelte:67` `knownCount`) 04 소식은 글자라 칩을 못 단다 —
+		# **줄에 붙여서 같은 것을 알린다.** 전 리그에서 부상자가 나오는데
+		# 관련성을 못 가리면 읽을 이유가 없다
+		var tag: String = _relation_tag(state, String(r.get("player_id", "")))
+		lines.append("%s%s  %s%s  %s  %s  %d주" % [
+			"● " if _club_of(tid) == my_team else "  ",
 			Injury.class_label(String(r.get("class", ""))),
 			r.get("name", r.get("player_id", "")),
+			"(%s)" % tag if not tag.is_empty() else "",
 			r.get("position", ""),
 			names.get(tid, tid),
 			int(r.get("weeks", 0))])
@@ -585,3 +594,27 @@ static func run(state: Dictionary, at_day: int = -1) -> Dictionary:
 			state["mailbox"] = mailbox
 
 	return {"protagonist": mine, "npc": npc, "news": news}
+
+
+## 구단 열쇠 — **1군과 2군을 하나로 본다**. 02 `clubKeyOfTeam`.
+## 내가 1군인데 2군 동료가 다치면 그것도 내 팀 일이다
+static func _club_of(team_id: String) -> String:
+	return team_id.trim_suffix(World.FARM_SUFFIX)
+
+
+## 아는 사람인가 — 02 `relationTag`(`offseasonReport.ts:77`).
+##
+## ⚠ **라이벌·동료만이다.** 02 주석: "감독·코치·구단주는 선수 목록에
+## 안 나온다" — 부상 소식은 선수 목록이라 그 셋은 여기 올 일이 없다
+static func _relation_tag(state: Dictionary, person_id: String) -> String:
+	if person_id.is_empty():
+		return ""
+	var row: Dictionary = RelationshipRunner.row_of(state, person_id)
+	if row.is_empty():
+		return ""
+	var kind: String = String(row.get("kind", ""))
+	if kind == Relationship.KIND_RIVAL:
+		return "라이벌"
+	if kind == Relationship.KIND_TEAMMATE:
+		return "동료"
+	return ""

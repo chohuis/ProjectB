@@ -210,3 +210,71 @@ func test_내_팀이_위로_온다() -> void:
 		"내 팀 부상자가 잘려 나갔다 — 남의 팀 중상에 밀렸다").is_greater(-1)
 	assert_bool(lines[mine_at].begins_with("● ")).override_failure_message(
 		"내 팀 표시가 없다").is_true()
+
+
+# ── 관련성 (G-4) ──────────────────────────────────────────────
+
+## ⚠ **아는 사람인지 적는다.** 02는 `관계` 칩으로 거른다
+## (`InjuryPanel.svelte:67` `knownCount` · `offseasonReport.ts:77` `relationTag`).
+## 04 소식은 글자라 칩을 못 달아 **줄에 붙인다**
+func test_라이벌_동료가_줄에_뜬다() -> void:
+	var s: Dictionary = _state([
+		_hurt("R1", 6, "TEAM_OTHER"), _hurt("T1", 6, "TEAM_A"),
+		_hurt("X1", 6, "TEAM_OTHER")])
+	s[RelationshipRunner.STATE_KEY] = [
+		{"person_id": "R1", "kind": Relationship.KIND_RIVAL,
+			"value": 40, "label": "경쟁"},
+		{"person_id": "T1", "kind": Relationship.KIND_TEAMMATE,
+			"value": 60, "label": "동료"}]
+
+	var body: String = String(InjuryRunner.news_message(s, 100).get("body", ""))
+	var by_name: Dictionary = {}
+	for line in body.split("\n"):
+		for n in ["선수R1", "선수T1", "선수X1"]:
+			if line.contains(n):
+				by_name[n] = line
+
+	assert_str(String(by_name.get("선수R1", ""))).override_failure_message(
+		"라이벌인데 안 적혔다").contains("(라이벌)")
+	assert_str(String(by_name.get("선수T1", ""))).override_failure_message(
+		"동료인데 안 적혔다").contains("(동료)")
+	assert_str(String(by_name.get("선수X1", ""))) \
+		.override_failure_message("모르는 사람인데 태그가 붙었다") \
+		.not_contains("(라이벌)").not_contains("(동료)")
+
+
+## ⚠ **감독·코치·구단주는 여기 안 붙는다.** 02 주석 그대로 —
+## "감독·코치·구단주는 선수 목록에 안 나온다". 붙이면 거짓말이 된다
+func test_감독_코치는_태그가_안_붙는다() -> void:
+	var s: Dictionary = _state([_hurt("M1", 6), _hurt("C1", 6)])
+	s[RelationshipRunner.STATE_KEY] = [
+		{"person_id": "M1", "kind": Relationship.KIND_MANAGER,
+			"value": 70, "label": "신뢰"},
+		{"person_id": "C1", "kind": Relationship.KIND_COACH,
+			"value": 70, "label": "신뢰"}]
+
+	var body: String = String(InjuryRunner.news_message(s, 100).get("body", ""))
+	assert_str(body).override_failure_message(
+		"감독·코치에 관계 괄호가 붙었다 — 02는 선수만 태그한다") \
+		.not_contains("(감독)").not_contains("(코치)").not_contains("(라이벌)")
+
+
+## 🔴 **1군과 2군은 한 구단이다** — 02 `clubKeyOfTeam`.
+## 내가 1군인데 2군 동료가 다치면 그것도 내 팀 일이다
+func test_2군_부상도_내_팀이다() -> void:
+	var events: Array = []
+	for i in 20:
+		events.append(_hurt("남%d" % i, 30, "TEAM_OTHER"))
+	events.append(_hurt("팜", 2, "TEAM_A" + World.FARM_SUFFIX))
+
+	var s: Dictionary = _state(events)
+	var lines: PackedStringArray = String(InjuryRunner.news_message(s, 100) \
+		.get("body", "")).split("\n")
+	var at: int = -1
+	for i in lines.size():
+		if lines[i].contains("선수팜"):
+			at = i
+	assert_int(at).override_failure_message(
+		"2군 부상자가 잘려 나갔다 — 내 팀으로 안 쳤다").is_greater(-1)
+	assert_bool(lines[at].begins_with("● ")).override_failure_message(
+		"2군인데 내 팀 표시가 없다 — 1·2군을 안 묶었다").is_true()
