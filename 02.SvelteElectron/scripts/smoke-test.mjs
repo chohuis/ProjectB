@@ -4,7 +4,7 @@
  */
 import { createRequire } from "node:module";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require   = createRequire(import.meta.url);
@@ -103,7 +103,10 @@ function evaluateSmokeGate(metrics) {
 async function main() {
   const engineNative = require(path.resolve(__dirname, "../packages/engine-native"));
   const coreDistPath = path.resolve(__dirname, "../packages/core/dist/index.js");
-  const core = await import(coreDistPath);
+  // ⚠ **Windows 절대 경로를 그대로 import()하면 안 된다.** ESM 로더가
+  // `c:`를 프로토콜로 읽고 ERR_UNSUPPORTED_ESM_URL_SCHEME으로 죽는다 —
+  // 이 스모크가 통째로 안 돌고 있었다. `file://` URL로 바꿔서 넘긴다
+  const core = await import(pathToFileURL(coreDistPath).href);
 
   if (typeof core.setNativeEngine === "function") core.setNativeEngine(engineNative);
   if (typeof core.setNpcSimEngine  === "function") core.setNpcSimEngine(engineNative);
