@@ -1,3 +1,4 @@
+import { MILITARY_RESULT_WEEK } from "../utils/seasonWeeks";
 import { weekLabelOf } from "../utils/seasonCalendar";
 import { derived, get, writable } from "svelte/store";
 import type { MessageItem } from "../types/main";
@@ -1939,7 +1940,7 @@ function createGameStore() {
       }));
     },
 
-    enlistMilitary(unit: "sports" | "general", enlistWeek = 52, sportsUnitSelected = false, enlistYear?: number) {
+    enlistMilitary(unit: "sports" | "general", enlistWeek = MILITARY_RESULT_WEEK, sportsUnitSelected = false, enlistYear?: number) {
       update((s) => {
         const now = s.protagonist;
         const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "pro_jbl" || now.careerStage === "independent";

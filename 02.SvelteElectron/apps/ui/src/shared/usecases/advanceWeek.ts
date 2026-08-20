@@ -1,3 +1,11 @@
+import {
+  TRADE_DEADLINE_WEEK, HS_CAREER_HUB_WEEK, UNIV_CAREER_HUB_WEEK,
+  INDIE_CAREER_HUB_WEEK, INDIE_SEASON_REVIEW_WEEK,
+  CAREER_RESULT_WEEK,
+  OFFSEASON_START_WEEK, STOVE_LEAGUE_WEEK,
+  FA_RETRY_START_WEEK, FA_RETRY_END_WEEK,
+  SPORTS_UNIT_CANDIDATES_WEEK, MILITARY_RESULT_WEEK, MILITARY_AGE_WARNING_WEEK,
+} from "../utils/seasonWeeks";
 import { get } from "svelte/store";
 import { trainingIntensityOf } from "../utils/arsenal";
 import { seasonStore, npcLiveStatsStore } from "../stores/season";
@@ -778,15 +786,16 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   }
 
   // 진로허브 트리거 — 스테이지별 시즌 종료 직후
-  // HS 3학년: W44 (결승 직후) / 대학: W42 (결승 직후) / 독립: W39 (결승 직후)
+  // **각 무대의 결승 직후다.** 주차는 `utils/seasonWeeks`가 정본이다 —
+  // 예전엔 여기 숫자가 박혀 있어서 캘린더를 바꾸면 조용히 안 일어났다
   const gLatest = get(gameStore);
   const needsHsHub =
     gLatest.protagonist.careerStage === "highschool" &&
-    careerStageYear === 2 && weekInYear === 44 &&
+    careerStageYear === 2 && weekInYear === HS_CAREER_HUB_WEEK &&
     !gLatest.schoolState.careerChoiceTriggered;
   const needsUnivHub =
     gLatest.protagonist.careerStage === "university" &&
-    weekInYear === 42 &&
+    weekInYear === UNIV_CAREER_HUB_WEEK &&
     !gLatest.schoolState.careerApplicationsSubmitted &&
     gLatest.schoolState.careerResults === null &&
     !get(seasonStore).pendingActions.some(
@@ -794,7 +803,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     );
   const needsIndieHub =
     gLatest.protagonist.careerStage === "independent" &&
-    weekInYear === 39 &&
+    weekInYear === INDIE_CAREER_HUB_WEEK &&
     !gLatest.schoolState.careerApplicationsSubmitted &&
     gLatest.schoolState.careerResults === null &&
     !get(seasonStore).pendingActions.some(
@@ -812,7 +821,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
 
-  // W47 진로 결과 계산 — KBL 드래프트(W44~W46) 마감 후 전 스테이지 동시 발표
+  // 진로 결과 계산 — 드래프트 마감 후 전 스테이지 동시 발표
   const gDraft = get(gameStore);
   const hasCareerPending = get(seasonStore).pendingActions.some(
     (a) => a.type === "careerChoice" || a.type === "careerChoiceHub" || a.type === "careerResults"
@@ -820,14 +829,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   const isHsResultWeek =
     gDraft.protagonist.careerStage === "highschool" &&
-    gDraft.protagonist.grade === 3 && weekInYear === 47 &&
+    gDraft.protagonist.grade === 3 && weekInYear === CAREER_RESULT_WEEK &&
     gDraft.schoolState.careerApplicationsSubmitted &&
     gDraft.schoolState.careerResults === null &&
     !hasCareerPending;
 
   const isUnivResultWeek =
     (gDraft.protagonist.careerStage === "university" || gDraft.protagonist.careerStage === "independent") &&
-    weekInYear === 47 &&
+    weekInYear === CAREER_RESULT_WEEK &&
     gDraft.schoolState.careerApplicationsSubmitted &&
     gDraft.schoolState.careerResults === null &&
     !hasCareerPending;
@@ -942,10 +951,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     seasonStore.pushPendingAction({ type: "careerResults" });
   }
 
-  // W47: 배경 고교 졸업생 드래프트 (주인공 드래프트 결과 케이스가 아닐 때 항상 실행)
+  // 배경 고교 졸업생 드래프트 (주인공 드래프트 결과 케이스가 아닐 때 항상 실행)
   // 주인공 학년과 무관하게 매년 실행되는 세계 이벤트 — needsHsHub(주인공 3학년 전용)와
   // 별개로 여기서도 대학/독립 리그를 Lazy 활성화해야 배경 드래프트 풀이 채워진다
-  if (weekInYear === 47 && !isHsResultWeek && !isUnivResultWeek && !hasCareerPending) {
+  if (weekInYear === CAREER_RESULT_WEEK && !isHsResultWeek && !isUnivResultWeek && !hasCareerPending) {
     const alreadyQueued = get(seasonStore).pendingActions.some(a => a.type === "draftObserve");
     if (!alreadyQueued) {
       const seasonYearNow = get(seasonStore).seasonYear;
@@ -955,8 +964,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // 프로 트레이드 윈도우 — 연 2회(시즌 중 데드라인 W36 + 오프시즌 W43), 주인공 리그만 (R5, DESIGN.md §5)
-  if (weekInYear === 36 || weekInYear === 43) {
+  // 프로 트레이드 윈도우 — 연 2회(시즌 중 데드라인 + 스토브리그), 주인공 리그만 (R5, DESIGN.md §5)
+  if (weekInYear === TRADE_DEADLINE_WEEK || weekInYear === STOVE_LEAGUE_WEEK) {
     const proLeagueIds = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
     const myLeague = get(gameStore).protagonist.leagueId;
     if (proLeagueIds.includes(myLeague)) {
@@ -970,8 +979,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const sOff = get(seasonStore);
     const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(gOff.protagonist.careerStage);
 
-    // W39: 독립리그 시즌 종료 총평 메시지
-    if (gOff.protagonist.careerStage === "independent" && weekInYear === 39) {
+    // 독립리그 시즌 종료 총평 메시지
+    if (gOff.protagonist.careerStage === "independent" && weekInYear === INDIE_SEASON_REVIEW_WEEK) {
       gameStore.addMessage({
         id: `msg-indie-season-end-${sOff.seasonYear}`,
         category: "system", sender: "리그 사무국",
@@ -982,13 +991,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
     }
 
-    // W40: 팀 Win-Now 압박 업데이트 (오프시즌 시작)
-    if (isProStage && weekInYear === 40) {
+    // 팀 Win-Now 압박 업데이트 (오프시즌 시작)
+    if (isProStage && weekInYear === OFFSEASON_START_WEEK) {
       processWinNowPressureUpdate(weekNum).catch(e => autoLog(`[WinNow압박오류] ${e}`));
     }
 
-    // W40: 프로 시즌 총평 메시지
-    if (isProStage && weekInYear === 40) {
+    // 프로 시즌 총평 메시지
+    if (isProStage && weekInYear === OFFSEASON_START_WEEK) {
       const myStats = sOff.stats[gOff.protagonist.id] as import("../types/save").PitcherSeasonStats | null ?? null;
       const statSummary = myStats
         ? `ERA ${myStats.era?.toFixed(2) ?? "-"} / ${myStats.w ?? 0}승 ${myStats.l ?? 0}패 / ${myStats.k ?? 0}K`
@@ -1009,14 +1018,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
     }
 
-    // W43: NPC 은퇴/FA 결정 — 플레이어 단계 무관하게 배경 프로리그 NPC 처리
-    if (weekInYear === 43) {
+    // NPC 은퇴/FA 결정 — 플레이어 단계 무관하게 배경 프로리그 NPC 처리
+    if (weekInYear === STOVE_LEAGUE_WEEK) {
       const offseasonLogs = await processOffseasonNpcDecisions(weekNum);
       logs.push(...offseasonLogs);
     }
 
-    // W43: 프로 연봉협상 1차 + FA 시장 오픈
-    if (isProStage && weekInYear === 43) {
+    // 프로 연봉협상 1차 + FA 시장 오픈
+    if (isProStage && weekInYear === STOVE_LEAGUE_WEEK) {
       const contract = gOff.protagonist.contract;
       const hasPending = sOff.pendingActions.some(
         (a) => a.type === "salaryNegotiation" || a.type === "faMarket" || a.type === "optionClause"
@@ -1126,8 +1135,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       }
     }
 
-    // W44~W49: FA 미계약자 매주 재트리거
-    if (isProStage && weekInYear >= 44 && weekInYear <= 49) {
+    // FA 미계약자 매주 재트리거
+    if (isProStage && weekInYear >= FA_RETRY_START_WEEK && weekInYear <= FA_RETRY_END_WEEK) {
       const hasFaPending = sOff.pendingActions.some((a) => a.type === "faMarket");
       const hasPendingNext = !!gOff.protagonist.pendingNextContract;
       const isUnsignedFa = !gOff.protagonist.contract && !hasPendingNext && !hasFaPending &&
@@ -1962,8 +1971,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     );
 
     if (isMilUnresolved && !hasAnyMilPending) {
-      // W4: 28세 입영 기간 만료 경고
-      if (p.age === 28 && weekInYear === 4) {
+      // 28세 입영 기간 만료 경고
+      if (p.age === 28 && weekInYear === MILITARY_AGE_WARNING_WEEK) {
         gameStore.addMessage({
           id: `msg-military-warning-${Date.now()}`,
           category: "system", sender: "병무청",
@@ -1974,13 +1983,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         });
       }
 
-      // W50: 체육부대 후보 30명 공개 (주인공 제외 NPC)
+      // 체육부대 후보 30명 공개 (주인공 제외 NPC)
       //
       // ⚠ `sportsUnitPromptedYear` 가드가 **반드시 있어야 한다.** 이 블록은
       // 주를 안 넘기고 pending만 밀어넣은 채 반환한다 — 사용자가 신청/거절
       // 어느 쪽을 눌러도 주차가 그대로라 다음 진행에서 조건이 또 참이 된다.
       // 그러면 미필·비고교·27세 이하는 **매년 여기서 게임이 멈춘다** (실측 확인).
-      if (weekInYear === 50 && p.age <= 27 && p.sportsUnitPromptedYear !== s.seasonYear) {
+      if (weekInYear === SPORTS_UNIT_CANDIDATES_WEEK && p.age <= 27 && p.sportsUnitPromptedYear !== s.seasonYear) {
         const m = get(masterStore);
         const npcCandidates = m.entities
           .filter((e) => {
@@ -2029,8 +2038,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         }
       }
 
-      // W52: 체육부대 신청자 결과 처리
-      if (weekInYear === 52 && p.sportsUnitApplied) {
+      // 체육부대 신청자 결과 처리
+      if (weekInYear === MILITARY_RESULT_WEEK && p.sportsUnitApplied) {
         const m = get(masterStore);
         const npcPool = m.entities
           .filter((e) => {
@@ -2090,8 +2099,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         return { processedWeek: s.currentWeek, logs: ["체육부대 탈락"], newMessages: [], matchResults: [], stoppedBy: action };
       }
 
-      // W52: 스카우트 능력치 향상 + NPC loyalty 연간 감쇠
-      if (weekInYear === 52 && ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage)) {
+      // 스카우트 능력치 향상 + NPC loyalty 연간 감쇠
+      if (weekInYear === MILITARY_RESULT_WEEK && ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage)) {
         processScoutingImprovement().catch(e => autoLog(`[스카우트향상오류] ${e}`));
 
         // season_end_normal loyalty 감쇠
@@ -2129,7 +2138,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       // 주를 안 넘기고 pending만 밀어넣는데 모달의 "연기"는 상태를 안 바꾸므로
       // 다음 진행에서 조건이 또 참이 된다. 실측: 2038 W51에서 자동 진행이
       // 1000회 반복 상한에 걸려 멈췄고, 수동 진행이면 영영 W51이다.
-      if (weekInYear === 52 && p.age >= 28 && p.militaryAskedYear !== s.seasonYear) {
+      if (weekInYear === MILITARY_RESULT_WEEK && p.age >= 28 && p.militaryAskedYear !== s.seasonYear) {
         gameStore.markMilitaryAsked(s.seasonYear);
         const action: PendingAction = { type: "militaryEnlistAsk", reason: "overdue" };
         seasonStore.pushPendingAction(action);

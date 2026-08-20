@@ -1,3 +1,4 @@
+import { MILITARY_RESULT_WEEK } from "../utils/seasonWeeks";
 // ── 병역 결정 ────────────────────────────────────────────────────
 //
 // 일반병 입대가 **네 곳에 복제**돼 있었고 서로 달랐다:
@@ -31,7 +32,7 @@ export type EnlistUnit = "sports" | "general";
  */
 export async function enlistProtagonist(
   unit: EnlistUnit,
-  week = 52,
+  week = MILITARY_RESULT_WEEK,
   sportsSelected = false,
 ): Promise<void> {
   const g = get(gameStore);
