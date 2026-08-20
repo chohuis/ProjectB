@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   MONTH_STARTS_1, MONTH_NAMES, monthIndexOf, monthNameOf,
-  isMonthStart, weekInMonthOf, weekLabelOf, prevMonthRange,
+  isMonthStart, weekInMonthOf, weekLabelOf, prevMonthRange, monthWeekRange,
 } from "../seasonCalendar";
 
 /**
@@ -124,6 +124,27 @@ describe("master.ts의 월→주차 변환도 같은 표를 쓴다", () => {
         expect(newScheduleToWeek(m, w), `${m}월 ${w}주차`)
           .toBe(oldScheduleToWeek(m, w));
       }
+    }
+  });
+});
+
+describe('monthWeekRange — 친선경기가 쓴다', () => {
+  const OLD_S1 = [1, 6, 10, 14, 19, 23, 27, 32, 36, 40, 45, 49];
+  const oldRange = (w: number): [number, number] => {
+    let idx = 0;
+    for (let i = OLD_S1.length - 1; i >= 0; i--) { if (w >= OLD_S1[i]) { idx = i; break; } }
+    return [OLD_S1[idx], idx + 1 < OLD_S1.length ? OLD_S1[idx + 1] - 1 : 52];
+  };
+
+  it('옛 friendlyMatchEngine과 52주 전부 같다', () => {
+    for (let w = 1; w <= 52; w++) expect(monthWeekRange(w)).toEqual(oldRange(w));
+  });
+
+  it('범위가 그 주를 담는다', () => {
+    for (let w = 1; w <= 52; w++) {
+      const [s2, e] = monthWeekRange(w);
+      expect(s2, 'W' + w).toBeLessThanOrEqual(w);
+      expect(e, 'W' + w).toBeGreaterThanOrEqual(w);
     }
   });
 });

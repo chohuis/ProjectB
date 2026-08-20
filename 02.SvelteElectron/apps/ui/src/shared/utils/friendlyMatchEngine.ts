@@ -1,4 +1,4 @@
-import { monthNameOf } from "./seasonCalendar";
+import { monthNameOf, monthWeekRange } from "./seasonCalendar";
 import type { ScheduleEntry } from "../types/season";
 import type { MessageItem } from "../types/main";
 
@@ -7,15 +7,7 @@ import type { MessageItem } from "../types/main";
 export { isMonthStart } from "./seasonCalendar";
 const monthName = monthNameOf;
 
-function monthWeekRange(weekInYear: number): [number, number] {
-  let idx = 0;
-  for (let i = MONTH_STARTS_1.length - 1; i >= 0; i--) {
-    if (weekInYear >= MONTH_STARTS_1[i]) { idx = i; break; }
-  }
-  const start = MONTH_STARTS_1[idx];
-  const end   = idx + 1 < MONTH_STARTS_1.length ? MONTH_STARTS_1[idx + 1] - 1 : 52;
-  return [start, end];
-}
+// monthWeekRange는 `seasonCalendar`가 정본이다 — 여기 사본이 있었다
 
 // ── 요일 상수 ─────────────────────────────────────────────────
 // 공식경기 요일(토=6 또는 일=0)로부터 3일 앞 = 수요일

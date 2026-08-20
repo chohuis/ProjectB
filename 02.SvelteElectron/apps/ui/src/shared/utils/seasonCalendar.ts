@@ -77,3 +77,18 @@ export function prevMonthRange(weekInYear: number): { start: number; end: number
   if (idx <= 0) return { start: 1, end: weekInYear - 1 };
   return { start: MONTH_STARTS_1[idx - 1], end: weekInYear - 1 };
 }
+
+/**
+ * 그 주가 속한 달의 주차 범위 `[시작, 끝]`.
+ *
+ * 친선경기 계획이 "이 달 안에서" 상대를 잡을 때 쓴다.
+ * ⚠ 마지막 달(2월)은 52주까지다.
+ */
+export function monthWeekRange(weekInYear: number): [number, number] {
+  const idx = monthIndexOf(weekInYear);
+  const start = MONTH_STARTS_1[idx];
+  const end = idx + 1 < MONTH_STARTS_1.length
+    ? MONTH_STARTS_1[idx + 1] - 1
+    : WEEKS_PER_YEAR;
+  return [start, end];
+}
