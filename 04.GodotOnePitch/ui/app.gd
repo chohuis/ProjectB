@@ -42,10 +42,23 @@ func current() -> Control:
 	return _current
 
 
+## 화면을 갈아 끼운다.
+##
+## 🔴 **`free()`면 새 게임·설정 단추에서 앱이 죽었다.**
+## 여기로 오는 길이 **단추 → 그 화면의 시그널 → 이 함수**라서, 지우려는
+## `_current`가 **바로 그 시그널을 내보내는 중인 화면**이다. 내보내는 중인
+## 객체는 잠겨 있어 즉시 못 지운다:
+## `Attempted to free a locked object (calling or emitting)`
+##
+## ⚠ **`emit.call_deferred()`로는 안 풀린다.** 그건 내보내는 *시점*만 미룰
+## 뿐이고, 내보내는 도중에 받는 쪽이 도는 것은 그대로다.
+##
+## `queue_free()`는 프레임 끝에 지운다 — `remove_child`를 이미 했으니
+## 화면에는 그 순간부터 안 보인다.
 func _swap(node: Control) -> void:
 	if _current != null:
 		remove_child(_current)
-		_current.free()
+		_current.queue_free()
 	_current = node
 	node.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(node)

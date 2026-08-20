@@ -292,7 +292,10 @@ func _on_match_done() -> void:
 
 	if _match_screen != null:
 		remove_child(_match_screen)
-		_match_screen.free()
+		# ⚠ **`free()`면 죽는다** — 이 함수로 오는 길이
+		# `단추 → done_requested → 여기`라서 지금 이 화면이 시그널을
+		# 내보내는 중이다. 잠긴 객체는 즉시 못 지운다
+		_match_screen.queue_free()
 		_match_screen = null
 	_match = {}
 	_main.visible = true
@@ -484,7 +487,8 @@ func _on_pitch_picked(pitch_id: String) -> void:
 func _on_training_done() -> void:
 	if _training_screen != null:
 		remove_child(_training_screen)
-		_training_screen.free()
+		# ⚠ 내보내는 중인 화면이다 — `_on_match_done`과 같은 자리
+		_training_screen.queue_free()
 		_training_screen = null
 	_main.visible = true
 	_refresh()
@@ -708,7 +712,8 @@ func _on_invest(option_id: String, amount: int) -> void:
 func _on_season_end_done() -> void:
 	if _season_screen != null:
 		remove_child(_season_screen)
-		_season_screen.free()
+		# ⚠ 내보내는 중인 화면이다 — `_on_match_done`과 같은 자리
+		_season_screen.queue_free()
 		_season_screen = null
 	_main.visible = true
 	_refresh()

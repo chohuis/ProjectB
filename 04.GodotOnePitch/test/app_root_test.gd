@@ -410,7 +410,10 @@ func test_finishing_a_match_records_the_result() -> void:
 	r.open_match()
 	var gid: String = r.match_state()["game_id"]
 	r._on_auto()
-	r._on_match_done()
+	# 🔴 **단추를 누른다.** `_on_match_done()`을 직접 부르면 시그널이 없어
+	# 실제 경로가 안 된다 — 잠긴 노드를 free하던 결함을 그래서 못 잡았다
+	r.match_screen().done_requested.emit()
+	await await_idle_frame()
 
 	for g in r.state()["schedule"]:
 		if g["id"] == gid:
@@ -425,7 +428,10 @@ func test_closing_an_unfinished_match_records_nothing() -> void:
 	r.open_match()
 	var gid: String = r.match_state()["game_id"]
 	r._on_pitch()
-	r._on_match_done()
+	# 🔴 **단추를 누른다.** `_on_match_done()`을 직접 부르면 시그널이 없어
+	# 실제 경로가 안 된다 — 잠긴 노드를 free하던 결함을 그래서 못 잡았다
+	r.match_screen().done_requested.emit()
+	await await_idle_frame()
 
 	for g in r.state()["schedule"]:
 		if g["id"] == gid:
@@ -439,7 +445,10 @@ func test_closing_an_unfinished_match_records_nothing() -> void:
 func test_closing_the_match_returns_to_the_main_screen() -> void:
 	var r := await _mount(_game_day_state())
 	r.open_match()
-	r._on_match_done()
+	# 🔴 **단추를 누른다.** `_on_match_done()`을 직접 부르면 시그널이 없어
+	# 실제 경로가 안 된다 — 잠긴 노드를 free하던 결함을 그래서 못 잡았다
+	r.match_screen().done_requested.emit()
+	await await_idle_frame()
 	assert_object(r.match_screen()).is_null()
 	assert_bool(r.screen().visible).is_true()
 
@@ -450,7 +459,10 @@ func test_after_the_match_the_day_can_advance() -> void:
 	var r := await _mount(_game_day_state())
 	r.open_match()
 	r._on_auto()
-	r._on_match_done()
+	# 🔴 **단추를 누른다.** `_on_match_done()`을 직접 부르면 시그널이 없어
+	# 실제 경로가 안 된다 — 잠긴 노드를 free하던 결함을 그래서 못 잡았다
+	r.match_screen().done_requested.emit()
+	await await_idle_frame()
 	assert_str(r.screen()._vm["stop_type"]).override_failure_message(
 		"경기를 끝냈는데 아직 %s로 멈춰 있다" % r.screen()._vm["stop_type"]).is_empty()
 
@@ -587,7 +599,10 @@ func test_a_hand_pitched_game_fills_my_stats() -> void:
 
 	var m: Dictionary = r.match_state()
 	LiveMatch.finish(m["state"], m["ctx"], m["rng"])
-	r._on_match_done()
+	# 🔴 **단추를 누른다.** `_on_match_done()`을 직접 부르면 시그널이 없어
+	# 실제 경로가 안 된다 — 잠긴 노드를 free하던 결함을 그래서 못 잡았다
+	r.match_screen().done_requested.emit()
+	await await_idle_frame()
 
 	var stats: Dictionary = r.state().get("season_stats", {})
 	assert_bool(stats.has(me)).override_failure_message(
@@ -606,7 +621,10 @@ func test_an_unfinished_game_leaves_no_stats() -> void:
 	var m: Dictionary = r.match_state()
 	for i in 10:
 		LiveMatch.pitch(m["state"], m["ctx"], m["rng"])
-	r._on_match_done()
+	# 🔴 **단추를 누른다.** `_on_match_done()`을 직접 부르면 시그널이 없어
+	# 실제 경로가 안 된다 — 잠긴 노드를 free하던 결함을 그래서 못 잡았다
+	r.match_screen().done_requested.emit()
+	await await_idle_frame()
 
 	assert_bool(r.state().get("season_stats", {}).has(me)).override_failure_message(
 		"안 끝낸 경기가 기록에 들어갔다").is_false()
@@ -742,7 +760,8 @@ func test_what_the_screen_picks_reaches_the_engine() -> void:
 	var opts: Node = r.training_screen().get_node("Pad/Center/Col/Options")
 	(opts.get_child(0) as Button).pressed.emit()
 	await await_idle_frame()
-	r._on_training_done()
+	r.training_screen().done_requested.emit()
+	await await_idle_frame()
 
 	for i in 8:
 		WeekRunner.run(r.state())
@@ -1299,3 +1318,66 @@ func test_a_loaded_game_grows_the_protagonist() -> void:
 		"로스터의 학년을 올렸는데 주인공은 그대로다 — 두 벌이다").is_equal(3)
 
 
+
+
+# ── 닫기 단추가 앱을 죽이지 않는가 ────────────────────────────
+
+## 🔴 **`ui/app.gd`에서 실제로 앱이 죽었다**(2026-08-20). 같은 형태가
+## 여기 셋 더 있었다 — 경기 · 훈련 · 결산.
+##
+## 길이 **단추 → 그 화면의 `done_requested` → `_on_*_done`**이라서,
+## 지우려는 화면이 **바로 그 시그널을 내보내는 중**이다. 잠긴 객체는
+## 즉시 못 지운다: `Attempted to free a locked object (calling or emitting)`
+##
+## ⚠ **검사가 `_on_*_done()`을 직접 불러서는 안 잡힌다** — 그 길엔 시그널이
+## 없다. **단추를 눌러야 게임 경로를 탄다**
+func _done_button(node: Node) -> Button:
+	if node is Button:
+		var t: String = (node as Button).text
+		if t.contains("닫") or t.contains("완료") or t.contains("확인") \
+				or t.contains("돌아") or t.contains("나가"):
+			return node
+	for c in node.get_children():
+		var found: Button = _done_button(c)
+		if found != null:
+			return found
+	return null
+
+
+func test_훈련_닫기가_앱을_안_죽인다() -> void:
+	var r := await _mount(_state({"day": 10}))
+	r._on_training()
+	await await_idle_frame()
+	var screen: Control = r.training_screen()
+	assert_object(screen).override_failure_message("훈련 화면이 안 떴다") \
+		.is_not_null()
+
+	screen.done_requested.emit()
+	await await_idle_frame()
+	await await_idle_frame()
+
+	assert_bool(is_instance_valid(screen)).override_failure_message(
+		"훈련 화면이 안 지워졌다 — 시그널을 내보내는 중인 노드를 free했다") \
+		.is_false()
+
+
+## ⚠ **진짜 세계로 연다.** `_on_season_end`는 `SeasonRunner.finish_season`을
+## 실제로 돌린다 — 최소 fixture로는 `rosters`가 없어 터진다
+func test_결산_닫기가_앱을_안_죽인다() -> void:
+	var w: Dictionary = World.new_game({"seed": 20270101, "season_year": 2027,
+		"name": "김한결", "team_id": "TEAM_HS_AEWOL"})
+	w["day"] = int(w.get("season_days", 350))
+	var r := await _mount(w)
+	r._on_season_end()
+	await await_idle_frame()
+	var screen: Control = r.season_screen()
+	assert_object(screen).override_failure_message("결산 화면이 안 떴다") \
+		.is_not_null()
+
+	screen.done_requested.emit()
+	await await_idle_frame()
+	await await_idle_frame()
+
+	assert_bool(is_instance_valid(screen)).override_failure_message(
+		"결산 화면이 안 지워졌다 — 시그널을 내보내는 중인 노드를 free했다") \
+		.is_false()

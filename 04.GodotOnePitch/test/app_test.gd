@@ -198,3 +198,55 @@ func test_another_slot_is_still_fresh() -> void:
 	a._on_new_game(2)
 	await await_idle_frame()
 	assert_array(_texts(a)).not_contains(["덮어쓰고 시작"])
+
+
+# ── 버튼을 실제로 누른다 ──────────────────────────────────────
+
+## 트리에서 그 글씨가 적힌 단추를 찾는다
+func _button(node: Node, text: String) -> Button:
+	if node is Button and (node as Button).text == text:
+		return node
+	for c in node.get_children():
+		var found: Button = _button(c, text)
+		if found != null:
+			return found
+	return null
+
+
+## 🔴 **검사가 `show_new_game()`을 직접 불러서 이 결함을 못 잡았다**(형태 ⑦).
+## 실제 경로는 **단추 → 시그널 → 화면 교체**인데, 교체가 시그널을 내보내는
+## 중인 화면을 `free()`해서 죽었다:
+## `Attempted to free a locked object (calling or emitting)`
+func test_새_게임_단추를_누르면_안_죽는다() -> void:
+	var a: App = await _mount()
+	var title: Control = a.current()
+	var btn: Button = _button(a, "새 게임")
+	assert_object(btn).override_failure_message("새 게임 단추가 없다").is_not_null()
+
+	btn.pressed.emit()
+	await await_idle_frame()
+	await await_idle_frame()
+
+	assert_bool(a.current() is NewGameScreen).override_failure_message(
+		"새 게임 화면으로 안 넘어갔다").is_true()
+	assert_bool(is_instance_valid(title)).override_failure_message(
+		"옛 화면이 안 지워졌다 — 시그널을 내보내는 중인 노드를 free했다") \
+		.is_false()
+
+
+## 설정도 같은 길이다 — 타이틀이 자기 시그널을 내보내는 중에 교체된다
+func test_설정_단추를_누르면_안_죽는다() -> void:
+	var a: App = await _mount()
+	var title: Control = a.current()
+	var btn: Button = _button(a, "설정")
+	assert_object(btn).override_failure_message("설정 단추가 없다").is_not_null()
+
+	btn.pressed.emit()
+	await await_idle_frame()
+	await await_idle_frame()
+
+	assert_bool(a.current() is SettingsScreen).override_failure_message(
+		"설정 화면으로 안 넘어갔다").is_true()
+	assert_bool(is_instance_valid(title)).override_failure_message(
+		"옛 화면이 안 지워졌다 — 시그널을 내보내는 중인 노드를 free했다") \
+		.is_false()
