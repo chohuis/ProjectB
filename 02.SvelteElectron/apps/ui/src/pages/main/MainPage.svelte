@@ -21,7 +21,6 @@
   import LeaguePage from "../league/LeaguePage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import PeoplePage from "../people/PeoplePage.svelte";
-  import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
   import CareerResultsModal from "../../features/career/ui/CareerResultsModal.svelte";
   import CareerResultModal from "../../features/career/ui/CareerResultModal.svelte";
@@ -35,12 +34,8 @@
   import SportsUnitApplicationModal from "../../features/military/ui/SportsUnitApplicationModal.svelte";
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import RetirementAskModal from "../../features/retirement/ui/RetirementAskModal.svelte";
-  import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
-  import ScenarioPanel from "../../features/devtools/ui/ScenarioPanel.svelte";
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
-  import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
-  import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
   import PreGameBriefingModal from "../../features/pre-game-briefing/ui/PreGameBriefingModal.svelte";
@@ -54,11 +49,6 @@
   export let onSeasonEnd: () => void = () => {};
 
   let currentTab: MainTabId = "news";
-  let devToolsHubOpen = false;
-  let eventManagerOpen = false;
-  let achievementManagerOpen = false;
-  let matchLabOpen = false;
-  let scenarioOpen = false;
   let activeMatchContext: InteractiveMatchContext | null = null;
 
 
@@ -369,7 +359,12 @@
     activeMatchContext = null;
   }
 
-  // 키보드 이벤트 핸들러 - Ctrl+Q (메인 페이지에서만 동작)
+  // Ctrl+Q — 자동 진행 (메인 페이지에서만 동작)
+  //
+  // 예전엔 개발자 도구 허브를 열었고 그 아래 항목이 여섯이었다(이벤트·업적·
+  // 메신저 에디터 · 매치 엔진 랩 · 자동 진행 · 테스트 시나리오).
+  // 2026-08-20에 **자동 진행만 남기고 다 지웠다** — 하나만 남으니 허브가
+  // 껍데기라 바로 연다. 나머지는 CLI가 대신한다(`npm run smoke` · `test:*`).
   function handleGlobalShortcut(event: KeyboardEvent) {
     if (!(event.ctrlKey || event.metaKey)) return;
     if (event.key !== "q" && event.key !== "Q") return;
@@ -381,16 +376,7 @@
     if (typing) return;
 
     event.preventDefault();
-    const anyOpen = devToolsHubOpen || eventManagerOpen || achievementManagerOpen || matchLabOpen || scenarioOpen;
-    if (anyOpen) {
-      devToolsHubOpen = false;
-      eventManagerOpen = false;
-      achievementManagerOpen = false;
-      matchLabOpen = false;
-      scenarioOpen = false;
-      return;
-    }
-    devToolsHubOpen = true;
+    runAutoAdvance();
   }
 </script>
 
@@ -457,38 +443,9 @@
   </div>
 {/if}
 
-<DevToolsHubModal
-  open={devToolsHubOpen}
-  on:close={() => (devToolsHubOpen = false)}
-  on:openEvent={() => {
-    devToolsHubOpen = false;
-    eventManagerOpen = true;
-  }}
-  on:openAchievement={() => {
-    devToolsHubOpen = false;
-    achievementManagerOpen = true;
-  }}
-  on:openMatchLab={() => {
-    devToolsHubOpen = false;
-    matchLabOpen = true;
-  }}
-  on:openAutoAdvance={() => {
-    devToolsHubOpen = false;
-    runAutoAdvance();
-  }}
-  on:openScenario={() => {
-    devToolsHubOpen = false;
-    scenarioOpen = true;
-  }}
-/>
-
+<!-- 자동 진행 — 스스로 뜰지 판단한다(진행 중이거나 중지 사유가 있을 때).
+     Ctrl+Q가 `runAutoAdvance()`를 바로 부른다 -->
 <AutoAdvancePanel />
-{#if scenarioOpen}
-  <ScenarioPanel onClose={() => (scenarioOpen = false)} />
-{/if}
-<EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
-<AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />
-<MatchEngineLabModal open={matchLabOpen} on:close={() => (matchLabOpen = false)} />
 
 {#if $seasonEnded}
   <SeasonEndModal onExit={onSeasonEnd} />

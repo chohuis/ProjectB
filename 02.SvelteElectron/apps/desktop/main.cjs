@@ -220,7 +220,10 @@ app.whenReady().then(() => {
   // ── domain IPC 등록 ──────────────────────────────────────────────────────────
   // R3a-4d: save.cjs(v2 game/season 블롭 세이브) 폐기 — repo:call(slot.db)이 유일 경로
   matchIpc.register(ipcMain, { loadCoreModule, engineNative });
-  tuningIpc.register(ipcMain, { isDev, resourceBase, tuningSchema, loadCoreModule, isPathInside });
+  // ⚠ `tuningIpc.register`는 2026-08-20에 지웠다 — 매치 엔진 랩(Ctrl+Q)을
+  // 없애면서 `tuning:load/validate/apply/save/smoke` 다섯이 쓰는 곳 0이 됐다.
+  // **시작 시 튜닝 파일을 먹이는 `applyTuningFromFile`은 그대로 산다**(위쪽).
+  // 수치는 파일을 직접 고치고, 배치 시뮬은 `npm run smoke`가 한다
   // 창은 만들어진 뒤에 잡아야 한다 — 등록 시점엔 아직 없다
   windowIpc.register(ipcMain, { getWindow: () => _mainWindow });
 
@@ -236,26 +239,9 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.handle("master:save", (_event, payload) => {
-    try {
-      const relPath = payload?.relPath;
-      const data    = payload?.data;
-      const backup  = payload?.backup !== false;
-      if (typeof relPath !== "string" || !relPath.trim()) throw new Error("relPath is required");
-      const fullPath = path.resolve(resourceBase, relPath);
-      if (!isPathInside(fullPath, resourceBase)) throw new Error(`invalid master path: ${relPath}`);
-      fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-      if (backup && fs.existsSync(fullPath)) {
-        const stamp = new Date().toISOString().replace(/[.:]/g, "-");
-        fs.copyFileSync(fullPath, `${fullPath}.${stamp}.bak`);
-      }
-      fs.writeFileSync(fullPath, JSON.stringify(data, null, 2), "utf8");
-      return { ok: true };
-    } catch (e) {
-      console.error("[master:save] save failed:", e);
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
+  // ⚠ `master:save`는 2026-08-20에 지웠다 — 이벤트·업적 에디터(Ctrl+Q)를
+  // 없애면서 부르는 곳이 0이 됐다. 콘텐츠는 `resource/data/master/` 아래
+  // 파일을 직접 고친다. 읽기(`master:fetch`)는 게임 경로라 그대로 산다
 
   ipcMain.handle("master:loadEntities", (_event, leagueId, seasonYear) => {
     try {

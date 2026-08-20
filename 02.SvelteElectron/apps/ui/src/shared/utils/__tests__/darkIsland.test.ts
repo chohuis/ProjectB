@@ -125,12 +125,18 @@ describe("어두운 섬이 전역 글자색에 기대지 않는다", () => {
 
   it("아직 안 옮긴 화면이 실제로 남아 있다 — 0개면 검사가 헛돈다", () => {
     // U7·U9·U10이 남았으므로 여기가 0이 되면 이 테스트를 지울 때다
+    //
+    // ⚠ 하한이 5였는데 2026-08-20에 **대상이 3으로 줄었다** — Ctrl+Q 개발자
+    // 도구(이벤트·업적 에디터 · 매치 엔진 랩 · 시나리오 패널 · 허브)를
+    // 지우면서 그 화면들이 같이 없어졌다. **검사가 약해진 게 아니라 대상이
+    // 줄어든 것**이라 하한을 의도대로 0으로 내린다 — 위 주석이 말하는 조건이
+    // 그것이다. 0이 되면 이 검사를 지운다
     const remaining = walk(SRC).filter((p) => {
       const src = readFileSync(p, "utf8");
       const i = src.indexOf("<style>");
       return i >= 0 && !isConverted(src.slice(i)) && /background[^;]*#[0-9a-fA-F]{6}/.test(src.slice(i));
     });
-    expect(remaining.length).toBeGreaterThan(5);
+    expect(remaining.length).toBeGreaterThan(0);
   });
 
   it("어두운 배경을 까는 파일은 자기 글자색을 정한다", () => {

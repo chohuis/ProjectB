@@ -156,97 +156,13 @@ async function applyTuningFromFile(resourceBase, tuningSchema, loadCoreModule) {
   return { ok: true, source: "file" };
 }
 
-function register(ipcMain, { isDev, resourceBase, tuningSchema, loadCoreModule, isPathInside }) {
-  ipcMain.handle("tuning:load", async () => {
-    if (!isDev) return { ok: false, error: "unauthorized" };
-    try {
-      const core = await loadCoreModule();
-      const fullPath = path.resolve(resourceBase, tuningRelPath);
-      if (!fs.existsSync(fullPath)) return { ok: true, data: core.DEFAULT_MATCH_ENGINE_TUNING };
-      const data = JSON.parse(fs.readFileSync(fullPath, "utf8"));
-      const validate = validateMatchEngineTuning(data, tuningSchema);
-      if (!validate.ok) return { ok: false, error: "invalid tuning file", details: validate.errors };
-      return { ok: true, data };
-    } catch (e) {
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
-
-  ipcMain.handle("tuning:validate", async (_event, payload) => {
-    if (!isDev) return { ok: false, error: "unauthorized" };
-    const tuning = payload?.tuning ?? payload;
-    const validate = validateMatchEngineTuning(tuning, tuningSchema);
-    return { ok: validate.ok, errors: validate.errors };
-  });
-
-  ipcMain.handle("tuning:save", async (_event, payload) => {
-    if (!isDev) return { ok: false, error: "unauthorized" };
-    try {
-      const core = await loadCoreModule();
-      const tuning    = payload?.tuning ?? payload;
-      const forceSave = payload?.forceSave === true;
-      const validate  = validateMatchEngineTuning(tuning, tuningSchema);
-      if (!validate.ok) return { ok: false, error: "validation failed", details: validate.errors };
-      core.setMatchEngineTuning(tuning);
-      const smokeMetrics = simulateGames(core, SMOKE_GAMES);
-      const gate = evaluateSmokeGate(smokeMetrics);
-      if (!gate.ok && !forceSave) {
-        return { ok: false, gateFailed: true, error: "smoke gate failed", details: gate.failures, smoke: smokeMetrics, thresholds: SMOKE_THRESHOLDS };
-      }
-      const fullPath = path.resolve(resourceBase, tuningRelPath);
-      if (!isPathInside(fullPath, resourceBase)) throw new Error(`invalid tuning path: ${tuningRelPath}`);
-      fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-      if (fs.existsSync(fullPath)) {
-        const stamp = new Date().toISOString().replace(/[.:]/g, "-");
-        fs.copyFileSync(fullPath, `${fullPath}.${stamp}.bak`);
-      }
-      const next = { ...tuning, version: typeof tuning?.version === "number" ? tuning.version : 1, updatedAt: new Date().toISOString() };
-      fs.writeFileSync(fullPath, JSON.stringify(next, null, 2), "utf8");
-      core.setMatchEngineTuning(next);
-      return { ok: true, data: next, smoke: smokeMetrics, gateBypassed: !gate.ok && forceSave };
-    } catch (e) {
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
-
-  ipcMain.handle("tuning:apply", async (_event, payload) => {
-    if (!isDev) return { ok: false, error: "unauthorized" };
-    try {
-      const core = await loadCoreModule();
-      const tuning = payload?.tuning ?? payload;
-      const validate = validateMatchEngineTuning(tuning, tuningSchema);
-      if (!validate.ok) return { ok: false, error: "validation failed", details: validate.errors };
-      core.setMatchEngineTuning(tuning);
-      const smoke = simulateGames(core, SMOKE_GAMES);
-      const gate  = evaluateSmokeGate(smoke);
-      return { ok: true, smoke, smokeGate: gate };
-    } catch (e) {
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
-
-  ipcMain.handle("tuning:smoke", async (_event, payload) => {
-    if (!isDev) return { ok: false, error: "unauthorized" };
-    try {
-      const core  = await loadCoreModule();
-      const games = Math.max(1, Math.min(500, Number(payload?.games ?? SMOKE_GAMES)));
-      const tuning = payload?.tuning;
-      if (tuning) {
-        const validate = validateMatchEngineTuning(tuning, tuningSchema);
-        if (!validate.ok) return { ok: false, error: "validation failed", details: validate.errors };
-        core.setMatchEngineTuning(tuning);
-      }
-      const smoke = simulateGames(core, games);
-      const gate  = evaluateSmokeGate(smoke);
-      return { ok: true, smoke, smokeGate: gate, thresholds: SMOKE_THRESHOLDS };
-    } catch (e) {
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
-}
+// ⚠ **랩 전용 IPC 다섯을 2026-08-20에 지웠다** — 매치 엔진 랩(Ctrl+Q)을
+// 없애면서 tuning:load/validate/apply/save/smoke가 쓰는 곳 0이 됐다.
+// **시작 시 튜닝 파일을 먹이는 applyTuningFromFile은 그대로 산다** —
+// main.cjs가 부르는 게임 경로다. 수치는 파일을 직접 고치고, 배치 시뮬은
+// npm run smoke가 한다(scripts/smoke-test.mjs는 자체 구현이라 안 겹친다)
 
 module.exports = {
-  register,
   applyTuningFromFile,
   validateMatchEngineTuning,
   simulateGames,

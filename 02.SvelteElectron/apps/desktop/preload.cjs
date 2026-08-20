@@ -160,12 +160,6 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── dev 전용 (프로덕션 빌드에서 미노출) ────────────────────────────────
   ...(isDev && {
     logWrite: (p)                => ipcRenderer.invoke("log:write",         p),
-    masterSave: (payload)        => ipcRenderer.invoke("master:save",       payload),
-    tuningLoad: ()               => ipcRenderer.invoke("tuning:load"),
-    tuningValidate: (payload)    => ipcRenderer.invoke("tuning:validate",   payload),
-    tuningApply: (payload)       => ipcRenderer.invoke("tuning:apply",      payload),
-    tuningSave: (payload)        => ipcRenderer.invoke("tuning:save",       payload),
-    tuningSmoke: (payload)       => ipcRenderer.invoke("tuning:smoke",      payload),
     onContentChanged: (cb) =>
       ipcRenderer.on("master:content-changed", (_event, data) => cb(data)),
   }),

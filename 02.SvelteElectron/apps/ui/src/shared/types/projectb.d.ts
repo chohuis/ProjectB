@@ -265,45 +265,11 @@ declare global {
       masterFetch: (relPath: string) => Promise<unknown>;
       masterLoadEntities: (leagueId: string, seasonYear?: number, slotId?: string) => Promise<unknown[]>;
       masterBulkUpsertEntities: (p: { slotId: string; entities: unknown[] }) => Promise<string>;
-      masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{
-        ok: boolean;
-        error?: string;
-      }>;
-      tuningLoad: () => Promise<{
-        ok: boolean;
-        data?: MatchEngineTuningPayload;
-        error?: string;
-        details?: string[];
-      }>;
-      tuningValidate: (payload: MatchEngineTuningPayload | { tuning: MatchEngineTuningPayload }) => Promise<{
-        ok: boolean;
-        errors: string[];
-      }>;
-      tuningApply: (payload: MatchEngineTuningPayload | { tuning: MatchEngineTuningPayload }) => Promise<{
-        ok: boolean;
-        error?: string;
-        details?: string[];
-        smoke?: MatchEngineSimMetrics;
-        smokeGate?: { ok: boolean; failures: string[] };
-      }>;
-      tuningSave: (payload: MatchEngineTuningPayload | { tuning: MatchEngineTuningPayload; forceSave?: boolean }) => Promise<{
-        ok: boolean;
-        data?: MatchEngineTuningPayload;
-        error?: string;
-        details?: string[];
-        gateFailed?: boolean;
-        smoke?: MatchEngineSimMetrics;
-        thresholds?: MatchEngineSmokeThresholds;
-        gateBypassed?: boolean;
-      }>;
-      tuningSmoke: (payload?: { tuning?: MatchEngineTuningPayload; games?: number }) => Promise<{
-        ok: boolean;
-        error?: string;
-        details?: string[];
-        smoke?: MatchEngineSimMetrics;
-        smokeGate?: { ok: boolean; failures: string[] };
-        thresholds?: MatchEngineSmokeThresholds;
-      }>;
+      // ⚠ `masterSave`·`tuning*` 다섯은 2026-08-20에 지웠다 — Ctrl+Q의
+      // 이벤트·업적 에디터와 매치 엔진 랩을 없애면서 부르는 곳이 0이 됐다.
+      // 콘텐츠는 `resource/data/master/` 파일을 직접 고치고, 튜닝 수치도
+      // 파일을 고친다(시작 시 `applyTuningFromFile`이 먹인다).
+      // 배치 시뮬은 `npm run smoke`
       onContentChanged?: (cb: (data: unknown) => void) => void;
       logWrite?: (payload: string) => Promise<string>;
     };
