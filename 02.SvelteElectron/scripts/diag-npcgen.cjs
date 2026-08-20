@@ -120,7 +120,10 @@ async function main() {
 
     // ── ③④ 국적·이름 ───────────────────────────────────────────
     console.log("\n③④ 국적 분포와 이름");
-    const hangul = /[\uAC00-\uD7A3]/;
+    // ⚠ **"한글이 들어 있나"로 세면 안 된다.** 서양 이름의 한글 짝(오언
+    // 로드리게스)도 한글이라, 고친 뒤에도 100%로 나와 결함처럼 읽힌다.
+    // 한국식 로마자만 `Jung-jae Kang`처럼 **붙임표**를 쓴다 — 그걸 본다.
+    const koreanRoman = /^[A-Z][a-z]+-[a-z]+ /;
     for (const lid of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM"]) {
       const list = byLeague.get(lid) || [];
       if (!list.length) { console.log(`   ${lid.padEnd(18)} (선수 없음)`); continue; }
@@ -128,13 +131,13 @@ async function main() {
       let krName = 0, noEn = 0;
       for (const n of list) {
         nat[n.nationality] = (nat[n.nationality] || 0) + 1;
-        if (hangul.test(n.name || "")) krName++;
+        if (koreanRoman.test(n.name_en || "")) krName++;
         if (!n.name_en) noEn++;
       }
       const top = Object.entries(nat).sort((a, b) => b[1] - a[1]).slice(0, 5)
         .map(([k, v]) => `${k} ${((v / list.length) * 100).toFixed(0)}%`).join(" · ");
       console.log(`   ${lid.padEnd(18)}${String(list.length).padStart(5)}명  ${top}`);
-      console.log(`   ${" ".repeat(18)}     한글이름 ${krName}명(${((krName/list.length)*100).toFixed(0)}%) · nameEn없음 ${noEn}명`);
+      console.log(`   ${" ".repeat(18)}     한국식이름 ${krName}명(${((krName/list.length)*100).toFixed(0)}%) · nameEn없음 ${noEn}명`);
       console.log(`   ${" ".repeat(18)}     표본  ${list.slice(0, 3).map((n) => `${n.name}/${n.name_en || "―"}`).join(" · ")}`);
     }
 

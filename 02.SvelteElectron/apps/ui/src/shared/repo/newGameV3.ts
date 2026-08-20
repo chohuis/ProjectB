@@ -10,6 +10,22 @@ import { isForeignInQuotaLeague } from "../utils/foreignSlots";
 import { originRulesOf } from "../utils/foreignOrigin";
 import { buildForeignSeed } from "../utils/foreignSeed";
 
+/**
+ * 리그별 이름 풀 (generation_rules.json rosterRules[리그].namePool).
+ *
+ * ⚠ **짝 배열의 인덱스가 1:1이어야 한다** — 어긋나면 김씨가 Lee로 나온다.
+ * 일본은 한글이 원본이고 `surnamesEn`이 짝, 서양은 영문이 원본이고
+ * `surnamesKo`가 짝이다.
+ */
+export interface NamePoolData {
+  surnames: string[]; givenA: string[]; givenB: string[];
+  western?: boolean;
+  /** 성-이름 구분자. 일본식은 " "(사토 하루토), 한국식은 ""(김우찬) */
+  sep?: string;
+  surnamesEn?: string[]; givenAEn?: string[];
+  surnamesKo?: string[]; givenAKo?: string[];
+}
+
 // Rust RosterRules와 1:1 (generation_rules.json rosterRules[leagueId])
 export interface RosterRulesData {
   rosterSize: number;
@@ -28,6 +44,11 @@ export interface RosterRulesData {
    */
   rosterMin?: number;
   rosterMax?: number;
+  /**
+   * 리그 이름 풀. **규칙 파일에 있는데 타입에 없어서 안 보였다** —
+   * 그래서 호출부가 넘길 생각을 못 했고 해외가 한국 이름으로 찼다.
+   */
+  namePool?: NamePoolData;
 }
 
 export interface GenerationRulesFile {
@@ -125,12 +146,18 @@ export function buildRosterParams(
   worldSeed: number,
   teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number }[],
   rules: RosterRulesData,
-  namePool?: {
-    surnames: string[]; givenA: string[]; givenB: string[];
-    western?: boolean;
-    /** 성-이름 구분자. 일본식은 " "(사토 하루토), 한국식은 ""(김우찬) */
-    sep?: string;
-  },
+  /**
+   * 이름 풀 **덮어쓰기**. 보통은 넘기지 않는다 — 안 넘기면 `rules.namePool`을 쓴다.
+   *
+   * 🔴 **부르는 쪽이 풀을 고르면 반드시 빠뜨린다.** 예전엔 이 인자가 유일한
+   * 갈림길이었고, 새 게임 경로가 `undefined`를 하드코딩해서 ABL 448명·JBL
+   * 336명이 **전원 한국 이름**으로 만들어졌다(강정재/Jung-jae Kang). 규칙
+   * 파일에도, Rust에도 풀이 다 있는데 잇는 선만 없었다.
+   *
+   * 리그 활성화 경로는 같은 결함을 **자기 자리에서만** 막고 있었다 —
+   * 한 경로를 고쳐도 다른 경로가 새는 형태라, 폴백을 여기로 올린다.
+   */
+  namePool?: NamePoolData,
   salaryRules?: unknown,
   powerRules?: unknown,
   entryRules?: unknown,
@@ -150,7 +177,8 @@ export function buildRosterParams(
       ...(t.power !== undefined ? { power: t.power } : {}),
     })),
     rules,
-    ...(namePool ? { namePool } : {}),
+    // 정본은 `rosterRules[리그].namePool` 하나다. 인자는 덮어쓰기일 뿐이다
+    ...((namePool ?? rules.namePool) ? { namePool: namePool ?? rules.namePool } : {}),
     ...(salaryRules ? { salaryRules } : {}),
     ...(powerRules ? { powerRules } : {}),
     ...(entryRules ? { entryRules } : {}),
@@ -574,7 +602,8 @@ export async function activateLeagueV3(
   leagueId: string,
   seasonYear: number,
   teams: { teamId: string; schoolId?: string }[],
-  namePool?: { surnames: string[]; givenA: string[]; givenB: string[]; western?: boolean },
+  /** 덮어쓰기용. 보통 안 넘긴다 — `rules.namePool`이 정본이다 */
+  namePool?: NamePoolData,
 ): Promise<{ inserted: number }> {
   const meta = await slotRepo.getMeta(slotId);
   const worldSeed = Number(meta.world_seed ?? 0) >>> 0;
@@ -586,14 +615,10 @@ export async function activateLeagueV3(
   const existing = await slotRepo.getByLeague(slotId, leagueId);
   if (existing.length > 0) return { inserted: 0 };
 
-  // ⚠ **호출측이 안 넘기면 규칙 파일에서 읽는다.** `ensureLeagueActivatedV3`가
-  // 인자를 안 줘서 ABL·JBL 초기 로스터가 통째로 내장 한국식 이름으로 만들어졌다 —
-  // 실측 912명 중 799명이 한국 이름이었다(나고야 팀에 "김우찬").
-  // 정본은 `rosterRules[리그].namePool` 하나다.
-  const pool = namePool ?? (rules as { namePool?: typeof namePool }).namePool;
-
+  // 폴백은 `buildRosterParams`가 한다 — 예전엔 이 자리에서만 막아서
+  // 새 게임 경로가 그대로 샜다(ABL·JBL 784명이 한국 이름)
   const params = buildRosterParams(
-    leagueId, seasonYear, worldSeed, teams, rules, pool,
+    leagueId, seasonYear, worldSeed, teams, rules, namePool,
     rulesFile.salaryRules, rulesFile.powerRules,
     (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry,
     foreignSlotsFor(leagueId, rulesFile), rulesFile.talentRules);
