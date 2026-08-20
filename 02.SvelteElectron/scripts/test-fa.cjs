@@ -222,8 +222,14 @@ console.log("\n방출 2단계");
     /category: "fa"/.test(src));
   check("상무는 영입 팀에서 제외한다 (군 복무팀이 FA를 안 뽑는다)",
     /SANGMU_TEAM_IDS\.has/.test(src));
-  check("로스터 상한을 규칙 파일에서 읽는다 (코드에 두 번 적지 않는다)",
-    /rosterRules\["LEAGUE_KBL"\]\?\.rosterMax/.test(src));
+  // 🔴 **이 검사가 옛 모양을 지키고 있었다**(2026-08-20). 패턴이
+  // rosterRules["LEAGUE_KBL"]이라 **리그 id 하드코딩**을 기대했는데, 코드는
+  // 그 사이 rosterRules[leagueId]로 고쳐졌다 — JBL 32를 34로 재서 두 명이
+  // 영영 안 잘리던 것을 고친 것이다. **코드가 나아졌는데 검사가 빨간불이었다.**
+  // 이제 "리그에서 파생해서 읽는가"를 본다
+  check("로스터 상한을 규칙 파일에서 리그별로 읽는다 (코드에 두 번 적지 않는다)",
+    /rosterRules\[leagueId\]\?\.rosterMax/.test(src)
+    && !/rosterRules\["LEAGUE_[A-Z_]+"\]\?\.rosterMax/.test(src));
   check("시장이 죽어도 오프시즌은 멈추지 않는다",
     /catch \(e\)[\s\S]{0,200}FA시장오류/.test(src));
 
