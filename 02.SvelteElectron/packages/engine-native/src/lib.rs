@@ -1,6 +1,8 @@
 #![deny(clippy::all)]
 
 use napi_derive::napi;
+// 씨앗 기반 난수 — 리그 경기 재현성. `StdRng::seed_from_u64`가 이 트레이트에 있다
+use rand::{Rng, SeedableRng};
 
 mod hmac;
 mod crypto;
@@ -131,14 +133,34 @@ pub fn match_to_result_native(params_json: String) -> String {
     serde_json::to_string(&r).unwrap_or_else(|e| parse_err("matchToResultNative/serialize", e))
 }
 
+/// 경기 상태를 만든다.
+///
+/// **씨앗을 주면 재현된다** — 같은 씨앗·같은 입력이면 언제 몇 번을 돌려도
+/// 같은 경기가 된다. 리그 경기(`gameSimulator.ts`)가 그렇게 부른다.
+/// 안 주면 예전 그대로 `thread_rng`다 — 주인공 경기가 그쪽이다.
 #[napi]
 pub fn start_match_native(options_json: String) -> String {
     let opts: MatchStartOptions = match serde_json::from_str(&options_json) {
         Ok(v) => v,
         Err(e) => return parse_err("startMatchNative", e),
     };
-    let mut rng = rand::thread_rng();
-    let state = match_engine::create_initial_match_state(&opts, &mut rng);
+    // ⚠ **0은 "씨앗 없음"이다.** `MatchState.rng_seed`가 0을 그 뜻으로 쓰므로
+    // 여기서도 같게 본다 — 안 그러면 씨앗 0을 준 경기가 상태에선 씨앗 없음이
+    // 되어 두 번째 호출부터 조용히 `thread_rng`로 새 버린다
+    let state = match opts.seed.filter(|s| *s != 0) {
+        Some(seed) => {
+            let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+            let mut st = match_engine::create_initial_match_state(&opts, &mut rng);
+            // **다음 호출이 이어받을 씨앗**을 남긴다. 준 씨앗을 그대로 두면
+            // `simToGameEnd`가 라인업을 만들 때 쓴 난수를 처음부터 다시 쓴다
+            st.rng_seed = rng.gen::<u64>() | 1;
+            st
+        }
+        None => {
+            let mut rng = rand::thread_rng();
+            match_engine::create_initial_match_state(&opts, &mut rng)
+        }
+    };
     serde_json::to_string(&state).unwrap_or_else(|e| parse_err("startMatchNative/serialize", e))
 }
 
@@ -213,8 +235,17 @@ pub fn sim_to_game_end(state_json: String) -> String {
         Ok(v) => v,
         Err(e) => return parse_err("simToGameEnd", e),
     };
-    let mut rng = rand::thread_rng();
-    let result = match_engine::auto_simulate_to_game_end(&state, &mut rng);
+    // 상태가 씨앗을 들고 있으면 이어받는다 — `startMatchNative`가 심어 둔다.
+    // 0이면 예전 그대로 `thread_rng`다
+    let result = if state.rng_seed != 0 {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(state.rng_seed);
+        let mut r = match_engine::auto_simulate_to_game_end(&state, &mut rng);
+        r.rng_seed = rng.gen::<u64>() | 1;
+        r
+    } else {
+        let mut rng = rand::thread_rng();
+        match_engine::auto_simulate_to_game_end(&state, &mut rng)
+    };
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simToGameEnd/serialize", e))
 }
 

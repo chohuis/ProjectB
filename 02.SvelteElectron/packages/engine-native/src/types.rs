@@ -540,6 +540,18 @@ pub struct MatchState {
     pub defense_stat: DefenseStat,
     #[serde(default)]
     pub batter_accum: HashMap<String, BatterStatAccum>,
+
+    /// 난수 씨앗 — **0이면 씨앗을 안 쓴다**(`thread_rng`, 매번 다른 결과).
+    ///
+    /// 리그 경기는 씨앗을 넘겨 **같은 세이브를 다시 열어도 같은 결과**가
+    /// 나오게 한다. 주인공 경기는 아직 안 넘긴다 — "세이브를 다시 열어
+    /// 운을 다시 굴릴 수 있게 할 것인가"는 게임 설계 판단이라 따로 정한다.
+    ///
+    /// ⚠ **경기가 진행되면 이 값을 갱신한다.** 안 그러면 `simToGameEnd`를
+    /// 두 번 부를 때 같은 난수를 다시 쓴다.
+    /// 세이브 호환을 위해 `default` — 옛 세이브엔 이 필드가 없고 그때 0이다.
+    #[serde(default)]
+    pub rng_seed: u64,
 }
 
 // ── 투구 결정 / 결과 ──────────────────────────────────────────────────────────
@@ -665,6 +677,12 @@ pub struct MatchStartOptions {
     pub my_pitchers: Option<Vec<PartialPitcherStats>>,
     #[serde(default)]
     pub opponent_pitchers: Option<Vec<PartialPitcherStats>>,
+    /// 난수 씨앗 — **안 주면 `thread_rng`**(예전 그대로 매번 다른 결과).
+    ///
+    /// 리그 경기(`gameSimulator.ts`)가 넘긴다. 주인공 경기는 안 넘긴다.
+    /// ⚠ **0은 "씨앗 없음"으로 친다** — `MatchState.rng_seed`가 그 규약이다
+    #[serde(default)]
+    pub seed: Option<u64>,
 }
 
 // ── 헤드리스 게임 시뮬 파라미터 ──────────────────────────────────────────────

@@ -376,6 +376,8 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         fielders,
         defense_stat: DefenseStat { errors: 0, assists: 0, throw_outs: 0, throw_safes: 0 },
         batter_accum: HashMap::new(),
+        // 씨앗은 호출부(lib.rs)가 채운다 — 여기선 "없음"으로 둔다
+        rng_seed: 0,
     }
 }
 
@@ -1822,6 +1824,8 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         last_pitch_types: next_last_types,
         defense_stat: next_defense_stat,
         batter_accum: next_batter_accum,
+        // 한 구를 던져도 씨앗은 그대로 이어진다 — 갱신은 진입부가 한다
+        rng_seed: state.rng_seed,
         logs: {
             let mut l = state.logs.clone();
             l.extend(all_new_logs);
