@@ -1,3 +1,4 @@
+import { seedFrom } from "./hash";
 import { toEngineArsenal } from "./arsenal";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
@@ -180,6 +181,11 @@ export async function simulateGame(
     homeHandlePersonnel?: number;
     awayHandlePersonnel?: number;
     tradeAdaptationPenalty?: { playerId: string; factor: number };
+    /** 세계 씨앗 — 이게 있어야 같은 세이브가 같은 경기를 낸다(재현성).
+     *  안 주면 예전 그대로 매번 다른 결과다 */
+    worldSeed?: number;
+    /** 일정 id — 같은 주에 같은 카드가 두 번 있으면 씨앗이 겹친다 */
+    scheduleId?: string;
   },
 ): Promise<SimGameResult> {
   const {
@@ -194,6 +200,8 @@ export async function simulateGame(
     homeHandlePersonnel = 50,
     awayHandlePersonnel = 50,
     tradeAdaptationPenalty,
+    worldSeed,
+    scheduleId,
   } = options ?? {};
 
   const entityMap = new Map(entities.map((e) => [e.id, e]));
@@ -234,6 +242,8 @@ export async function simulateGame(
     week,
     homeTeamId,
     awayTeamId,
+    worldSeed,
+    scheduleId,
   };
 
   // ── C-4: 리그별 엔진 선택 ────────────────────────────────────────
@@ -357,8 +367,22 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
   const awayPitchers = [...params.awayRotation.slice(0, 1), ...params.awayBullpen,
                         ...(params.awayCloser ? [params.awayCloser] : [])].map(toEnginePitcher);
 
+  // 씨앗 — **같은 세이브·같은 주의 같은 경기는 늘 같은 값**이어야 한다.
+  // 그래야 세이브를 다시 열어도 지난 주 순위표가 안 바뀐다.
+  //
+  // ⚠ **`Date.now()`나 호출 순서에 기대면 안 된다** — 그러면 재현이 깨진다.
+  // ⚠ 같은 주에 같은 카드가 두 번 있으면(더블헤더·대회) 씨앗이 겹치므로
+  //    일정 id를 받으면 같이 섞는다.
+  // ⚠ **`worldSeed`를 안 넘기면 씨앗 없이 돈다**(예전 그대로). 넘겼는지는
+  //    `matchSeedWiring.test.ts`가 호출부마다 본다
+  const seed = params.worldSeed === undefined
+    ? undefined
+    : seedFrom(`${params.worldSeed}:${params.week}:${params.homeTeamId}:`
+      + `${params.awayTeamId}:${params.scheduleId ?? ""}`);
+
   const startRaw = await engineCall("startMatchNative", JSON.stringify({
     leagueId,
+    ...(seed === undefined ? {} : { seed }),
     protagonistSide: "home",
     role: "SP",
     homeLineup: params.homeLineup.map(toEngineBatter),

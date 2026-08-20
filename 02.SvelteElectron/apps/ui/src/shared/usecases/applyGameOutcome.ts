@@ -222,7 +222,10 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     const entities = get(masterStore).entities;
     if (entities.length > 0) {
       try {
-        const sim = await simulateGame(outcome.homeTeamId, outcome.awayTeamId, entities, { week: outcome.week });
+        const sim = await simulateGame(outcome.homeTeamId, outcome.awayTeamId, entities, {
+          week: outcome.week,
+          worldSeed: get(seasonStore).worldSeed,
+        });
         const merged = sim.result.playerLines.filter((l) => l.playerId !== protagonist.id);
         playerLines = [...(pitcherLine ? [pitcherLine] : []), ...merged];
       } catch {

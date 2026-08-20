@@ -34,6 +34,9 @@ export async function runSimBatch(
   entities: EntityRow[],
   npcInjuries?: Record<string, NpcInjuryEntry>,
   npcLiveStats?: Record<string, import("../types/season").NpcLiveStat>,
+  // 씨앗 — 같은 세이브·같은 주면 같은 경기가 나온다(재현성).
+  // ⚠ 안 넘기면 씨앗 없이 돈다 — `matchSeedWiring.test.ts`가 호출부를 본다
+  worldSeed?: number,
 ): Promise<SimWorkerResultItem[]> {
   const results: SimWorkerResultItem[] = [];
   for (let i = 0; i < games.length; i += SIM_CHUNK_SIZE) {
@@ -51,6 +54,8 @@ export async function runSimBatch(
         leagueId:             g.leagueId ?? "",
         homeHandlePersonnel:  getManagerRotationSense(g.homeTeamId, entities),
         awayHandlePersonnel:  getManagerRotationSense(g.awayTeamId, entities),
+        worldSeed,
+        scheduleId:           g.id,
       });
 
       // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
@@ -127,7 +132,7 @@ export async function simulateBackgroundLeagues(
   }
   if (batch.length === 0) return null;
 
-  const simmed = await runSimBatch(batch, entities, s.npcInjuries, npcLiveStats);
+  const simmed = await runSimBatch(batch, entities, s.npcInjuries, npcLiveStats, s.worldSeed);
   const simMap = new Map(simmed.map((r) => [r.id, r]));
 
   const gameLogs: { npcId: string; role: string; statJson: string }[] = [];

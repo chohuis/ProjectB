@@ -1,3 +1,4 @@
+import { fnv1a32 } from "./hash";
 /**
  * 팀 마크 — **그림이 아니라 데이터로 조립하는 SVG**다.
  *
@@ -115,13 +116,6 @@ export function groupKey(t: MarkTeam): string {
   return t.leagueId;
 }
 
-function fnv(s: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h = Math.imul(h ^ s.charCodeAt(i), 16777619) >>> 0;
-  }
-  return h;
-}
 
 function keywordMotif(name: string): MotifKey | null {
   for (const [keys, m] of KEYWORD) {
@@ -156,7 +150,7 @@ export function buildMarkIndex(teams: readonly MarkTeam[]): Map<string, MarkSpec
     list.sort((a, b) => (markKey(a.id) < markKey(b.id) ? -1 : 1));
 
     const n = list.length;
-    const band = (t: MarkTeam) => ((fnv(markKey(t.id)) >>> 7) % 4) as BandKey;
+    const band = (t: MarkTeam) => ((fnv1a32(markKey(t.id)) >>> 7) % 4) as BandKey;
 
     if (n <= MOTIF_ORDER.length) {
       // ── 작은 그룹 — 문양을 전부 다르게 줄 수 있으므로 짝은 저절로 유일하다.
@@ -224,7 +218,7 @@ export function buildMarkIndex(teams: readonly MarkTeam[]): Map<string, MarkSpec
 
 /** 배정표에 없는 팀(새로 생긴 팀 등)도 화면이 비지 않게 */
 export function fallbackSpec(teamId: string): MarkSpec {
-  const h = fnv(markKey(teamId));
+  const h = fnv1a32(markKey(teamId));
   return {
     shell: SHELL_ORDER[h % SHELL_ORDER.length],
     motif: MOTIF_ORDER[(h >>> 4) % MOTIF_ORDER.length],

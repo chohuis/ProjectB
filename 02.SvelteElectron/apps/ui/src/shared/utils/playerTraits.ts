@@ -1,3 +1,4 @@
+import { fnv1a32 } from "./hash";
 /**
  * 선수 상세에 붙는 파생 표시 — 성장여지 등급 · 성격 태그 · 병역 이력 · 득점권.
  *
@@ -66,18 +67,6 @@ export function gradeTone(g: TraitGrade | null): "good" | "mid" | "low" {
   return "low";
 }
 
-/**
- * 결정적 해시. **`Math.random()`을 쓰지 않는다** — 같은 선수를 두 번 열면
- * 다른 범위가 나오는 순간 "관측 부정확"이 아니라 버그로 읽힌다.
- */
-function hash32(s: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
 
 export interface ScoutedGrade {
   /** 정확한 등급. 관측이 흐린 선수는 null */
@@ -106,7 +95,7 @@ export function scoutedGrade(
   if (width === 1) return { exact: grade, range: null, label: grade };
 
   const g = GRADES.indexOf(grade);
-  const offset = (hash32(playerId) % width) - Math.floor(width / 2);
+  const offset = (fnv1a32(playerId) % width) - Math.floor(width / 2);
   const maxStart = GRADES.length - width;
   const start = Math.max(0, Math.min(g - Math.floor(width / 2) + offset, maxStart));
   const lo = GRADES[start];

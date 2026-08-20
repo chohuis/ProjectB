@@ -54,6 +54,8 @@ export async function simulateNpcGame(
       rotationSize: rotationSizeForLeague(leagueId),
       npcLiveStats: get(npcLiveStatsStore),
       leagueId,
+      // 씨앗 — 같은 세이브·같은 주면 같은 경기가 나온다
+      worldSeed: s.worldSeed,
     });
     return {
       result: sim.result,
