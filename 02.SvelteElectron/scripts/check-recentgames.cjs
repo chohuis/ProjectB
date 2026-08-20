@@ -118,6 +118,22 @@ async function main() {
       sdb2.close();
     } catch (e) { console.log("  --  리그별 집계 실패:", e.message); }
 
+    // ③-3 내 리그 경기가 어디 담기고 몇 개가 치러졌나
+    try {
+      const f3 = fs.readdirSync(dir).find((n) => n.startsWith("slot3"));
+      const s3 = new Database(path.join(dir, f3), { readonly: true });
+      console.log("");
+      console.log("  schedule 표 — bucket/league_id별 (치른 경기/전체)");
+      const rows3 = s3.prepare(
+        "SELECT bucket, league_id, COUNT(*) n, SUM(has_result) done FROM schedule GROUP BY bucket, league_id ORDER BY bucket, league_id"
+      ).all();
+      for (const r of rows3) {
+        console.log("    " + (r.bucket + "/" + (r.league_id || "-")).padEnd(34) +
+          String(r.done || 0).padStart(6) + " / " + String(r.n).padStart(6));
+      }
+      s3.close();
+    } catch (e) { console.log("  --  schedule 집계 실패:", e.message); }
+
     // ④ 보관 한도
     const max = db.prepare(
       "SELECT MAX(c) m FROM (SELECT COUNT(*) c FROM npc_game_log GROUP BY npc_id)"

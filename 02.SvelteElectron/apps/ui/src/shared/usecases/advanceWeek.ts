@@ -61,7 +61,7 @@ import { applyForeignTurnover } from "./foreignPlayers";
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
-import { simulateNpcGame } from "./weekPhases/games";
+import { simulateNpcGame, logGameLines } from "./weekPhases/games";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
 import { processWeeklyNpcGrowth } from "./weekPhases/growth";
@@ -2264,6 +2264,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
                   : undefined,
               });
               npcResult2 = sim2.result; nextHomeRot2 = sim2.nextHomeRotIdx; nextAwayRot2 = sim2.nextAwayRotIdx; pitcherConds2 = sim2.pitcherConditions;
+              await logGameLines(npcResult2);   // simulateGame 직행 갈래 — 여기서 안 부르면 이 경기만 기록이 빈다
             } else {
               { const _s = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
               npcResult2 = _s.result; nextHomeRot2 = _s.nextHomeRotIdx; nextAwayRot2 = _s.nextAwayRotIdx; pitcherConds2 = _s.pitcherConditions; }
@@ -2320,6 +2321,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             nextHomeRotIdx = sim.nextHomeRotIdx;
             nextAwayRotIdx = sim.nextAwayRotIdx;
             pitcherConds   = sim.pitcherConditions;
+          await logGameLines(npcResult);   // simulateGame 직행 갈래
           } else {
             { const _s = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
               npcResult = _s.result; nextHomeRotIdx = _s.nextHomeRotIdx; nextAwayRotIdx = _s.nextAwayRotIdx; pitcherConds = _s.pitcherConditions; }
@@ -2558,6 +2560,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           nextHomeRotIdx = sim.nextHomeRotIdx;
           nextAwayRotIdx = sim.nextAwayRotIdx;
           pitcherConds   = sim.pitcherConditions;
+          await logGameLines(npcResult);   // simulateGame 직행 갈래
         } else {
           { const _s = await simulateNpcGame(game.homeTeamId, game.awayTeamId);
               npcResult = _s.result; nextHomeRotIdx = _s.nextHomeRotIdx; nextAwayRotIdx = _s.nextAwayRotIdx; pitcherConds = _s.pitcherConditions; }

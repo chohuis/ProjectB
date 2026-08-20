@@ -90,6 +90,22 @@ export async function simulateNpcGame(
   };
 }
 
+/**
+ * 경기 한 판의 출전 기록을 남긴다 — 인물 상세 "최근 경기"가 읽는다.
+ *
+ * ⚠ **`simulateNpcGame`을 안 거치는 자리가 있다.** 주인공이 낀 경기는
+ * `advanceWeek`이 `simulateGame`을 직접 불러 세부 설정(트레이드 적응 감점 등)을
+ * 얹는다. 그 갈래는 여기를 손으로 불러야 한다 — 안 부르면 **그 경기만**
+ * 기록이 빈다.
+ */
+export async function logGameLines(result: MatchResult): Promise<void> {
+  const s = get(seasonStore);
+  await recordGameLogs(
+    get(gameStore).currentSlotId ?? "",
+    s.seasonYear, s.currentWeek, result.playerLines,
+  );
+}
+
 export async function simulateProtagonistGame(
   homeTeamId: string,
   awayTeamId: string,
