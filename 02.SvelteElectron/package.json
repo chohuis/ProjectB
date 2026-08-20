@@ -87,6 +87,7 @@
     "check:injurynews": "node scripts/check-injurynews.cjs",
     "diag:postseason": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-postseason.cjs",
     "diag:univtour": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-univtour.cjs",
+    "diag:npcgen": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-npcgen.cjs",
     "diag:roster": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-roster.cjs",
     "check:foreignorigin": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-origin.cjs",
     "check:foreignseed": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-seed.cjs",
