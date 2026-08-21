@@ -839,7 +839,50 @@ fn normalize_offseason_npcs(
                     .then(next[b].age.cmp(&next[a].age))
                     .then(next[a].npc_id.cmp(&next[b].npc_id))
             });
-            for &idx in sorted_i.iter().take(overflow as usize) {
+            // 🔴 **보직 하한을 본다.** 예전엔 OVR 낮은 순으로만 밀어서
+            // 야수가 14명이어도 계속 깎였다. 실측(KBL 1군 4시즌):
+            //     release_roster/야수 25 · release_roster/투수 2
+            // 정원 정리 하나가 야수를 12배 밀어냈고, 1군 야수 미달이
+            // 2/10팀 → 5/10팀(최소 8)으로 나빠졌다.
+            //
+            // ⚠ 이 결함은 원래 있었는데 **생성 시점 OVR로 돌 땐 안 보였다** —
+            // 투수·야수 분포가 생성값이라 고르게 섞였다. live를 넘기자
+            // 성장·노쇠가 반영되면서 한쪽이 하위에 몰렸다.
+            //
+            // ⚠ **끝내 못 지키면 그냥 민다.** 정원 초과를 안 풀면 로스터가
+            // 상한 위에서 굳는다 — 하한보다 상한이 먼저다.
+            // `fill_first_teams`와 콜다운엔 같은 가드가 이미 있다.
+            let is_first_team = !league_id.ends_with("_FARM")
+                && matches!(league_id.as_str(),
+                    "LEAGUE_KBL" | "LEAGUE_ABL" | "LEAGUE_JBL");
+            let (mut pit_now, mut bat_now) = (0usize, 0usize);
+            for &i in indices.iter() {
+                if next[i].career_status != "active" { continue; }
+                if next[i].player_type == "pitcher" { pit_now += 1; } else { bat_now += 1; }
+            }
+            // 하한을 지키며 고른 순서 → 남으면 나머지로 채운다
+            let mut order: Vec<usize> = Vec::with_capacity(overflow as usize);
+            let mut spare: Vec<usize> = Vec::new();
+            for &i in sorted_i.iter() {
+                if order.len() >= overflow as usize { break; }
+                let is_pit = next[i].player_type == "pitcher";
+                let ok = !is_first_team || if is_pit {
+                    pit_now > crate::tuning::FIRST_TEAM_MIN_PITCHERS
+                } else {
+                    bat_now > crate::tuning::FIRST_TEAM_MIN_BATTERS
+                };
+                if ok {
+                    if is_pit { pit_now -= 1; } else { bat_now -= 1; }
+                    order.push(i);
+                } else {
+                    spare.push(i);
+                }
+            }
+            for i in spare {
+                if order.len() >= overflow as usize { break; }
+                order.push(i);
+            }
+            for &idx in order.iter() {
                 let (new_league, new_team) = {
                     let npc = &mut next[idx];
                     // 1군 초과는 2군으로 내린다 — **리그도 같이 바꾼다.**
@@ -1655,6 +1698,20 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 11-c. 육성선수 단년 계약 만료. 이것도 진로 배정 **앞**이어야 방출자가
     // 독립·은퇴로 갈린다. 여기서 빈 자리에 그해 미지명자가 들어간다
     expire_development_contracts(&mut after_normalize, season_year, &mut events);
+
+    // 11-e. **방출로 빈 자리를 다시 채운다.**
+    //
+    // 🔴 `fill_first_teams`는 `normalize_offseason_npcs` 안(11단계)에 있어
+    // **방출(11-b)보다 먼저** 돈다. 채운 뒤에 깎으니 그 자리가 그대로 남았고,
+    // 그 뒤로 1군을 채우는 경로가 없다.
+    //
+    // 방출이 능력치 하나로만 돌던 시절엔 건수가 적어 안 보였다. 성적·성향을
+    // 잇자 건수가 늘면서 드러났다 — 실측 KBL 1군 야수 미달이 2/10팀 →
+    // 5/10팀(최소 8)이 됐고, 정원 정리에 보직 가드를 넣어 3/10까지만 돌아왔다.
+    //
+    // 이러면 사슬이 맞는다: **방출 → 2군에서 올림 → 2군은 진로 배정이 채움**.
+    // 진로 배정(12단계)이 뒤에 오므로 2군이 얇아진 것도 같은 패스에서 메워진다.
+    fill_first_teams(&mut after_normalize, &params.roster_limits, &mut events, &is_foreign);
 
 
     let mut leftover_pending = Vec::new();

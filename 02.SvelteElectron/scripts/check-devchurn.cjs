@@ -64,11 +64,17 @@ headless.setInterceptor(async (channel, args, call) => {
     try {
       const r = JSON.parse(typeof out === "string" ? out : "{}");
       const lgOf = new Map();
-      try { for (const n of JSON.parse(args[1]).npcs ?? []) lgOf.set(n.npcId, n.currentLeague); } catch {}
+      // ⚠ **보직까지 같이 든다.** 방출이 몇 건인지만 보면 "야수가 깎인다"를 못 본다
+      const tyOf = new Map();
+      try { for (const n of JSON.parse(args[1]).npcs ?? []) {
+        lgOf.set(n.npcId, n.currentLeague);
+        tyOf.set(n.npcId, n.playerType === "pitcher" ? "투수" : "야수");
+      } } catch {}
       for (const e of r.events ?? []) {
         if (!/release|expired/.test(e.kind ?? "")) continue;
         const lg = lgOf.get(e.npcId) ?? "?";
-        rel[lg] ??= {}; rel[lg][e.kind] = (rel[lg][e.kind] ?? 0) + 1;
+        const key = (e.kind ?? '?') + '/' + (tyOf.get(e.npcId) ?? '?');
+        rel[lg] ??= {}; rel[lg][key] = (rel[lg][key] ?? 0) + 1;
       }
     } catch {}
     return out;
