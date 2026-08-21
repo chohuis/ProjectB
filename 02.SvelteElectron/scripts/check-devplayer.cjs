@@ -258,6 +258,85 @@ function npc(over = {}) {
           `나머지는 방출자(OVR 40)다. 인덱스 순으로 돌고 있다`);
   }
 
+
+  // ── 육성선수 단년 계약 만료 ─────────────────────────────────
+  //
+  // 🔴 **이게 없어서 2군 육성 몫이 첫 해에 차고 영영 안 열렸다.**
+  // 육성선수는 contract_years = 1로 들어오는데 만료 판정이 `market.ts`에
+  // 있고 거긴 `_1`(1군)만 훑는다. 실측 진로 분포:
+  //
+  //     연도   →2군   포기
+  //     2026     74    775     ← 첫 해에 팀당 10명을 채운다
+  //     2030      0    971     ← 그 뒤로 한 명도 못 들어간다
+  //
+  // 규칙(사용자 확정): **성장했으면 재계약, 아니면 방출.** 비교 기준은
+  // 입단 시점이 아니라 **직전 판정 시점**이다 — 열여덟·아홉이라 입단
+  // 대비로 재면 거의 다 성장해서 아무도 안 나간다.
+  {
+    const FARM = "TEAM_KBL_Y_2";
+    const at = (ovr, over) => npc({
+      currentLeague: "LEAGUE_KBL_FARM", currentTeam: FARM,
+      currentSalary: DEV_SALARY, contractYears: 1,
+      batting: { ovr, contact: ovr, power: ovr, eye: ovr, discipline: ovr, speed: ovr,
+                 baseInstinct: ovr, bunting: ovr, platoon: ovr, fielding: ovr,
+                 arm: ovr, battingClutch: ovr },
+      careerHistory: [{ year: 2025, leagueId: "LEAGUE_KBL_FARM", teamId: FARM,
+                        statLine: "", highlights: [] }],
+      ...over,
+    });
+
+    // 넷을 한 번에 넣고 각자 다르게 갈리는지 본다
+    const grew    = at(60, { developmentSince: 2025, developmentOvr: 50 });  // 올랐다
+    const stalled = at(50, { developmentSince: 2025, developmentOvr: 50 });  // 그대로
+    const rookie  = at(45, { developmentSince: 2026, developmentOvr: 45 });  // 입단 연도
+    const noBase  = at(50, { developmentSince: 2025 });                      // 기준이 없다(옛 세이브)
+    const regular = at(50, { developmentSince: undefined });                 // 정식 등록 선수
+
+    const raw = JSON.parse(await api.engine("runOffseasonNative", JSON.stringify({
+      npcs: [grew, stalled, rookie, noBase, regular], pendingDraft: [],
+      seasonYear: 2026, namedNpcIds: [],
+      rosterLimits: { LEAGUE_KBL: { rosterMin: 1, rosterMax: 40 },
+                      LEAGUE_KBL_FARM: { rosterMin: 1, rosterMax: 40 } },
+      universityTeamIds: [],
+      // 자리를 다 막는다 — 방출된 사람이 어디로 가든 여기선 "팀을 잃었다"만 본다
+      independentTeamIds: ["TEAM_IND_Z"], farmTeamIds: [],
+      placement: {
+        universityMax: 0, independentMax: 0, independentAgeMax: 0,
+        universityAnnualMax: 0, farmMax: 0,
+        developmentSalary: DEV_SALARY, developmentMax: 0,
+      },
+    })));
+    if (raw.error) { log(`FAIL  엔진 오류(만료): ${raw.error}`); process.exit(1); }
+
+    const byId = new Map((raw.npcs ?? []).map((n) => [n.npcId, n]));
+    const held = (n) => {
+      const r = byId.get(n.npcId);
+      return !!r && r.currentTeam === FARM;
+    };
+
+    check("성장한 육성선수는 재계약한다",
+          held(grew), `OVR 50→60인데 팀을 잃었다`);
+    check("성장이 멈춘 육성선수는 방출된다",
+          !held(stalled),
+          `OVR 50→50인데 남아 있다 — 자리가 안 열려 미지명자가 못 들어온다`);
+    check("입단 연도에는 안 건다",
+          held(rookie), `그 해엔 5월까지 1군 등록도 안 되니 증명할 기회가 없다`);
+    check("기준이 없으면 이번에 세우고 안 자른다",
+          held(noBase), `옛 세이브에서 넘어온 사람을 배선이 늦었다는 이유로 자르면 안 된다`);
+    check("정식 등록 선수는 이 판정을 안 탄다",
+          held(regular), `developmentSince가 없으면 육성선수가 아니다`);
+
+    // 🔴 **대조군** — 갱신이 안 되면 다음 해에 또 같은 기준으로 재게 되고,
+    // 성장이 멈춘 뒤에도 한 해를 더 버틴다. 갱신을 봐야 검사가 의미가 있다
+    const g2 = byId.get(grew.npcId);
+    check("재계약하면 비교 기준을 갱신한다",
+          g2 && g2.developmentOvr === 60,
+          `developmentOvr가 ${g2 && g2.developmentOvr}다 — 60이어야 한다`);
+    check("재계약하면 단년 계약이 다시 붙는다",
+          g2 && g2.contractYears === 1,
+          `contractYears가 ${g2 && g2.contractYears}다`);
+  }
+
   log(failed === 0 ? "\n통과" : `\n실패 ${failed}건`);
   process.exit(failed === 0 ? 0 : 1);
 })();

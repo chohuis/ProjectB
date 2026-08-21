@@ -501,7 +501,18 @@ impl<'a> Placer<'a> {
                 // 소속이 이미 비어 있다(`route_of`의 같은 함정과 같은 이유).
                 let dev_max = self.rules.development_max;
                 let foreign = npc.nationality.as_deref().unwrap_or("KOR") != "KOR";
-                (self.rules.farm_max > 0 && !foreign)
+                // 🔴 **올해 재계약을 못 받은 사람은 올해 다시 못 들어온다.**
+                //
+                // 방출된 육성선수는 소속만 비운 채 여기(12단계)로 온다. 막지
+                // 않으면 방금 내보낸 사람이 **같은 오프시즌에 같은 자리로**
+                // 되돌아온다. 실측에서 만료 방출이 20→108명으로 늘었는데
+                // 미지명자 유입은 그대로 0이었다 — 자리가 회전문이었다.
+                //
+                // 현실에서도 재계약을 안 해 준 선수를 같은 겨울에 같은
+                // 제도로 다시 뽑지 않는다.
+                let just_expired = npc.career_events.iter().any(|e|
+                    e.event_type == "development_expired" && e.year == year);
+                (self.rules.farm_max > 0 && !foreign && !just_expired)
                     .then(|| self.find_slot(
                         is_pitcher, &npc.position, self.farm,
                         self.rules.farm_max + dev_max, None,
@@ -561,6 +572,10 @@ impl<'a> Placer<'a> {
                         npc.contract_years = 1;   // 단년 — 한 해 안에 증명해야 한다
                     }
                     npc.development_since = Some(year);
+                    // 다음 해 재계약 판정의 비교 기준. 이걸 안 남기면 첫
+                    // 판정에서 기준이 없어 전원 재계약이 되고, 자리가 안 열린다
+                    npc.development_ovr =
+                        Some(crate::npc_sim::npc_core_ovr(npc).round() as i32);
                 }
             }
             None => {

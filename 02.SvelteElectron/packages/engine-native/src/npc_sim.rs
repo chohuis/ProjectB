@@ -987,6 +987,81 @@ fn release_second_stage(
     released
 }
 
+/// 육성선수 단년 계약 만료 — **성장했으면 재계약, 아니면 방출**.
+///
+/// 🔴 **이게 없어서 2군 육성 몫이 첫 해에 차고 영영 안 열렸다.** 육성선수는
+/// `contract_years = 1`로 들어오는데(draft.rs "한 해 안에 증명해야 한다"),
+/// 계약 만료 판정이 `market.ts`에 있고 거긴 `_1`(1군)만 훑는다. 실측:
+///
+///     연도   →2군   포기
+///     2026     74    775      ← 첫 해에 팀당 10명을 채운다
+///     2027      0    937      ← 그 뒤로 한 명도 못 들어간다
+///     2030      0    971
+///
+/// 나가는 길이 셋 다 막혀 있었다 — 콜업은 OVR 42~64라 밀리고, 방출 2단계는
+/// 점수가 과지급·부진·뎁스라 연봉 2000에 젊으면 안 걸린다.
+///
+/// ⚠ **비교 기준은 입단 시점이 아니라 직전 판정 시점이다.** 육성선수는
+/// 열여덟·아홉이라 입단 대비로는 거의 다 성장해서, 그렇게 재면 아무도 안
+/// 나가고 위 실측이 그대로 남는다. 판정할 때마다 기준을 갱신한다.
+///
+/// ⚠ **입단 연도에는 안 건다.** 그 해엔 5월까지 1군 등록도 안 되므로
+/// 증명할 기회 자체가 없다.
+///
+/// 방출자는 소속만 비운다 — 진로 배정(12단계)이 독립·은퇴를 정한다.
+/// `release_second_stage`와 같은 모양이다.
+fn expire_development_contracts(
+    npcs: &mut [NpcSaveState],
+    season_year: i32,
+    events: &mut Vec<OffseasonEvent>,
+) -> usize {
+    let mut released = 0;
+    for n in npcs.iter_mut() {
+        let Some(since) = n.development_since else { continue };
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        if !n.current_league.ends_with("_FARM") { continue; }
+        if since >= season_year { continue; }
+
+        let now = npc_core_ovr(n).round() as i32;
+        // 기준이 없으면 이번에 세운다 — 옛 세이브에서 넘어온 사람이다.
+        // 여기서 방출하면 배선이 늦게 들어왔다는 이유로 사람을 자르게 된다
+        let Some(base) = n.development_ovr else {
+            n.development_ovr = Some(now);
+            n.contract_years = 1;
+            continue;
+        };
+
+        if now > base {
+            n.development_ovr = Some(now);
+            n.contract_years = 1;
+        } else {
+            let team = n.current_team.clone();
+            events.push(ev("development_expired", n, Some(team.clone()),
+                Some(format!("{base} → {now}"))));
+            // ⚠ **선수 이력에도 남긴다.** 오프시즌 이벤트는 그 해 요약용이라
+            // 진로 배정이 못 읽는다. 진로 배정은 이걸 보고 **같은 해에 같은
+            // 자리로 되돌아오는 것**을 막는다 — 안 막으면 회전문이 된다.
+            // 이력 화면에도 "재계약 불가"로 남는 게 맞다
+            n.career_events.push(crate::sim_types::NpcCareerEvent {
+                year: season_year,
+                event_type: "development_expired".into(),
+                from_team_id: Some(team),
+                to_team_id: None,
+                from_league_id: Some(n.current_league.clone()),
+                to_league_id: None,
+                detail: Some(format!("육성선수 재계약 불가 (OVR {base} → {now})")),
+            });
+            n.current_team = String::new();
+            n.current_salary = 0;
+            n.contract_years = 0;
+            n.development_since = None;
+            n.development_ovr = None;
+            released += 1;
+        }
+    }
+    released
+}
+
 /// 1군이 최소 인원에 미달하면 같은 구단 2군에서 능력치 상위를 끌어올린다.
 ///
 /// 신인이 전부 2군에서 시작하면(D-3b) 1군은 은퇴·FA로 **빠지기만 한다.**
@@ -1512,6 +1587,10 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             &mut after_normalize, rr, &params.roster_limits, &mut events, &is_foreign);
     }
 
+    // 11-c. 육성선수 단년 계약 만료. 이것도 진로 배정 **앞**이어야 방출자가
+    // 독립·은퇴로 갈린다. 여기서 빈 자리에 그해 미지명자가 들어간다
+    expire_development_contracts(&mut after_normalize, season_year, &mut events);
+
     let mut leftover_pending = Vec::new();
     if can_place {
         // 졸업했는데 지명을 못 받은 사람도 같이 처리한다. 드래프트는 졸업 전(W47)에
@@ -1902,6 +1981,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             nationality:    Some("KOR".into()),
             // 신입생은 학생이다 — 육성선수는 프로 2군에 들어갈 때만 붙는다
             development_since: None,
+            development_ovr: None,
             player_type:    if is_sp { "pitcher".into() } else { "batter".into() },
             position,
             grade:          Some(1),

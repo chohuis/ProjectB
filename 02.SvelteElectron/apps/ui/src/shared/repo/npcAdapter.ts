@@ -44,6 +44,9 @@ export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
     // ⚠ **왕복에 안 실으면 사라진다.** 이게 없어지면 육성선수가 정식 등록
     // 선수가 된다 — 저장 한 번에 1군 등록 제한이 풀린다
     developmentSince: extra.developmentSince as number | undefined,
+    // 재계약 판정의 비교 기준. 없으면 첫 판정에서 전원 재계약이 되고,
+    // 그러면 2군 육성 몫이 안 열려 미지명자 유입이 다시 0이 된다
+    developmentOvr: extra.developmentOvr as number | undefined,
     currentSalary: r.salary,
     contractYears: r.contractYears,
     injuryStatus: r.injury
@@ -124,6 +127,7 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
   if (n.careerEvents?.length) extra.careerEvents = n.careerEvents;
   // 육성선수 신분 — 없으면 정식 등록 선수다. `0`은 연도로 안 쓰므로 truthy 검사면 족하다
   if (n.developmentSince) extra.developmentSince = n.developmentSince;
+  if (n.developmentOvr) extra.developmentOvr = n.developmentOvr;
   if (live?.peakOvr !== undefined) extra.peakOvr = live.peakOvr;
   if (live?.pitchInTraining) extra.pitchInTraining = live.pitchInTraining;
 

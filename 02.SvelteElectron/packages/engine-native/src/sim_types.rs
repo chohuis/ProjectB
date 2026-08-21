@@ -153,6 +153,19 @@ pub struct NpcSaveState {
     /// 거는 곳이 `registrable`이다
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub development_since: Option<i32>,
+    /// 마지막 재계약 판정 시점의 OVR. 육성선수에게만 있다.
+    ///
+    /// 육성선수는 단년 계약이라 해마다 "성장했는가"를 묻는다. 그 비교 기준이
+    /// 이 값이고, 판정할 때마다 갱신된다.
+    ///
+    /// ⚠ **입단 시점으로 고정하면 안 된다.** 육성선수는 열여덟·아홉이라
+    /// 입단 대비로는 거의 다 성장해 아무도 안 나간다 — 자리가 안 열려서
+    /// 실측 다섯 시즌 내내 미지명자 유입이 0이었던 그 상태가 그대로 남는다.
+    ///
+    /// ⚠ **왕복에 안 실으면 사라진다.** 없으면 첫 판정에서 비교 기준이 없어
+    /// 전원 재계약이 된다. 저장은 `npcAdapter`의 `extra`다
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub development_ovr: Option<i32>,
     pub career_history: Vec<NpcCareerEntry>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub career_events: Vec<NpcCareerEvent>,

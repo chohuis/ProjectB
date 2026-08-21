@@ -837,6 +837,15 @@ export interface NpcSaveState {
    * 정식 등록 선수도 2군에 있다. 판정은 `utils/developmentPlayer.ts`
    */
   developmentSince?: number;
+  /**
+   * 마지막 재계약 판정 시점의 OVR. 육성선수에게만 있다.
+   *
+   * 육성선수는 단년 계약이라 해마다 "성장했는가"를 묻고, 이게 그 비교
+   * 기준이다. 판정할 때마다 갱신된다 — **입단 시점 고정이 아니다.**
+   * 열여덟·아홉이라 입단 대비로 재면 거의 다 성장해서 아무도 안 나가고,
+   * 2군 육성 몫이 첫 해에 차서 미지명자 유입이 0이 된다(실측).
+   */
+  developmentOvr?: number;
   currentSalary?: number;   // 오프시즌 OVR 기반 계산 연봉 (Rust estimate_salary_and_contract)
   contractYears?: number;   // 오프시즌 OVR 기반 계산 계약 기간 (Rust estimate_salary_and_contract)
   injuryStatus?: {
