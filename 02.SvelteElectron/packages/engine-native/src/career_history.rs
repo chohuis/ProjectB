@@ -115,6 +115,15 @@ pub struct GenerateCareerHistoryParams {
     /// 같은 리그의 팀 목록 — 과거 소속팀은 여기서만 고른다.
     /// 실재하지 않는 팀을 만들면 화면이 이름을 못 찾는다
     pub league_teams: Vec<String>,
+    /// 입단 기록을 만들지 않는다 (이적만).
+    ///
+    /// 🔴 **해외 리그가 이걸 쓴다.** `entry`는 KBO 기준이라
+    /// (고졸 20세 · 대졸 24세 · 라운드 지명) 해외에 그대로 쓰면
+    /// **"미국 선수가 한국 고졸 입단"**이 된다. 예전에 KBL 용병 30명이
+    /// 전원 "육성선수 입단 (독립)"으로 기록된 실측이 있다.
+    /// **틀린 기록은 없는 것보다 나쁘다** — 이적만 남긴다.
+    #[serde(default)]
+    pub skip_entry: bool,
 }
 
 /// slot.db `transactions` 한 행과 1:1
@@ -202,22 +211,31 @@ pub fn generate_career_history(p: GenerateCareerHistoryParams) -> GenerateCareer
         if move_years.is_empty() { one_club += 1; }
 
         // ── 입단 기록 ───────────────────────────────────────────
-        let route = entry_route(entry_age, &p.rules.entry);
-        let round = pick_round(&p.rules.entry, &mut rng);
-        let detail = match round {
-            Some(r) => format!("{r}라운드 지명 ({route})"),
-            None    => format!("육성선수 입단 ({route})"),
-        };
-        events.push(HistoryEvent {
-            npc_id: pl.npc_id.clone(),
-            npc_name: pl.name.clone(),
-            season_year: entry_year,
-            category: "draft".into(),
-            from_team_id: None,
-            to_team_id: chain[0].clone(),
-            league_id: pl.current_league.clone(),
-            detail,
-        });
+        // 해외는 건너뛴다 — 위 `skip_entry` 주석 참고
+        // 해외는 입단을 안 적는다 — 위 `skip_entry` 주석 참고.
+        // **이적 기록은 그대로 만든다** (아래 루프가 이어서 돈다)
+        if !p.skip_entry {
+            let route = entry_route(entry_age, &p.rules.entry);
+            let round = pick_round(&p.rules.entry, &mut rng);
+            let detail = match round {
+                Some(r) => format!("{r}라운드 지명 ({route})"),
+                None    => format!("육성선수 입단 ({route})"),
+            };
+            events.push(HistoryEvent {
+                npc_id: pl.npc_id.clone(),
+                npc_name: pl.name.clone(),
+                season_year: entry_year,
+                category: "draft".into(),
+                from_team_id: None,
+                to_team_id: chain[0].clone(),
+                league_id: pl.current_league.clone(),
+                detail,
+            });
+        } else {
+            // ⚠ 난수 소비를 맞춘다 — 안 뽑으면 뒤 이적 판정이 밀려
+            // 같은 씨앗인데 국내/해외가 다른 흐름을 탄다
+            let _ = pick_round(&p.rules.entry, &mut rng);
+        }
 
         // ── 이적 기록 ───────────────────────────────────────────
         // 직전 FA 연도 — 재취득 주기 안에는 다시 FA로 옮기지 못한다

@@ -6,7 +6,7 @@ import { slotRepo, type RepoNpc } from "./slotRepo";
 import { generateDomesticStaff } from "./staffGen";
 import { ALL_TEAMS_BY_LEAGUE, HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
-import { isForeignInQuotaLeague } from "../utils/foreignSlots";
+import { isForeignInQuotaLeague, isForeignPlayer } from "../utils/foreignSlots";
 import { originRulesOf } from "../utils/foreignOrigin";
 import { buildForeignSeed } from "../utils/foreignSeed";
 
@@ -479,6 +479,25 @@ async function generateMilitaryRoster(
 /** 계약·이적이 있는 리그. 학교 리그(고교·대학)엔 그런 개념이 없다 */
 const CONTRACT_LEAGUES: ReadonlySet<string> = new Set([
   "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_INDEPENDENT",
+  // 해외를 열면서 빠져 있었다 — ABL·JBL 선수는 과거 이적이 **0건**이었다
+  // (국내는 1,254건). 12년차 베테랑도 한 팀에서만 뛴 세계였다
+  "LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM",
+]);
+
+/**
+ * **입단 경로를 안 적는 리그.**
+ *
+ * 🔴 `careerHistoryRules.entry`는 KBO 기준이다 — 고졸 20세 · 대졸 24세 ·
+ * 라운드 지명. 해외에 그대로 쓰면 **"미국 선수가 한국 고졸 입단"**이 된다.
+ * 예전에 KBL 용병 30명이 전원 `육성선수 입단 (독립)`으로 기록된 실측이 있다:
+ *
+ *     2024  Martinez  육성선수 입단 (독립)
+ *
+ * **틀린 기록은 없는 것보다 나쁘다**(사용자 확정) — 이적만 남긴다.
+ * 리그별 입단 규칙을 정하면 그때 이 목록에서 뺀다.
+ */
+const NO_ENTRY_ROUTE_LEAGUES: ReadonlySet<string> = new Set([
+  "LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM",
 ]);
 
 /**
@@ -513,7 +532,17 @@ async function seedCareerHistory(
   for (const n of npcs) {
     const lid = n.currentLeague ?? "";
     if (!CONTRACT_LEAGUES.has(lid)) continue;
-    if (isForeignInQuotaLeague(n.nationality)) { foreigners.push(n); continue; }
+    // 🔴 **`isForeignInQuotaLeague(국적)`은 너무 넓다.** "한도가 있는
+    // 리그(KBL)에서 외국인인가"라 **USA·JPN이면 무조건 true**다. 해외를
+    // 열자 ABL 448명·JBL 336명이 전원 여기로 새서 `foreign_signing`이 되고
+    // 정작 그 리그 이적 이력은 0건이었다(실측: ABL 4건 · JBL 1건).
+    //
+    // 물어야 할 건 **"지금 처리 중인 리그에서 외국인인가"**다.
+    // ABL 선수는 ABL에서 내국인이니 그 리그 이력을 가져야 한다.
+    // KBL 용병(USA)은 여전히 여기로 빠진다 — 그쪽은 `buildForeignSeed`가 맡는다.
+    //
+    // ⚠ 같은 함정에 트레이드 윈도우도 걸렸었다(f6fb04fe7). **다섯 번째다.**
+    if (isForeignPlayer(lid, n.nationality)) { foreigners.push(n); continue; }
     if (!byLeague.has(lid)) byLeague.set(lid, []);
     byLeague.get(lid)!.push(n);
   }
@@ -527,6 +556,7 @@ async function seedCareerHistory(
       worldSeed: worldSeed >>> 0,
       seasonYear,
       rules,
+      skipEntry: NO_ENTRY_ROUTE_LEAGUES.has(leagueId),
       players: list.map((n) => ({
         npcId: n.npcId, name: n.name, age: n.age,
         proServiceYears: n.proServiceYears ?? 0,
