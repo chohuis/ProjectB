@@ -180,7 +180,7 @@ function runSeason(npcs, year, kblTeams) {
 
   npcs = call("applyDraftNative", {
     npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
-    farmTeamIds: DEST_FARM,
+    farmTeamIds: DEST_FARM, salaryRules: gr.salaryRules,
     contract: gr.draftRules.contract,
     firstTeamRounds: gr.draftRules.firstTeamRounds,
     teamIndex: TEAM_INDEX,
@@ -328,6 +328,30 @@ function measure(label, kblTeams) {
   }
   console.log(`대학  ${sizeOf("LEAGUE_UNIVERSITY")}`);
   console.log(`독립  ${sizeOf("LEAGUE_INDEPENDENT")}`);
+  // ⚠ **상무가 섞여 평균을 흐린다.** 상무는 배정 대상이 아닌데(`SANGMU_TEAM_ID`
+  // 제외) 같이 세면 "최소 26"이 나와 자리가 남는 것처럼 보인다. 실제로는
+  // 나머지가 전부 정원이었다. 배정 대상만 따로 본다.
+  {
+    const per = new Map();
+    const ages = [];
+    for (const n of npcs) {
+      if (n.currentLeague !== "LEAGUE_INDEPENDENT" || !n.currentTeam) continue;
+      if (n.careerStatus !== "active") continue;
+      per.set(n.currentTeam, (per.get(n.currentTeam) ?? 0) + 1);
+      if (n.currentTeam !== SANGMU_TEAM_ID) ages.push(n.age);
+    }
+    const target = DEST_IND.map((t) => per.get(t) ?? 0).sort((a, b) => a - b);
+    const free = target.map((t) => PLACEMENT.independentMax - t);
+    const mid = (v) => (v.length ? v[Math.floor(v.length / 2)] : 0);
+    ages.sort((a, b) => a - b);
+    const over = ages.filter((a) => a > PLACEMENT.independentAgeMax).length;
+    console.log(`  독립 자리  정원 ${PLACEMENT.independentMax} · 배정대상 ${DEST_IND.length}팀` +
+      ` · 총원 중앙 ${mid(target)}/최소 ${target[0]} · 남는 자리 합 ${free.reduce((a, b) => a + b, 0)}` +
+      ` · 나이 중앙 ${mid(ages)}/최대 ${ages[ages.length - 1] ?? 0}` +
+      ` · 입단 상한(${PLACEMENT.independentAgeMax}) 초과 ${over}명`);
+    console.log(`  상무 별도 ${per.get(SANGMU_TEAM_ID) ?? 0}명 (배정 대상이 아니다)`);
+  }
+
   console.log(`고교  ${sizeOf("LEAGUE_HIGHSCHOOL")}`);
 
   // 소속 팀이 없는 현역 — FA 미계약자다. D-4가 진로를 줘야 한다

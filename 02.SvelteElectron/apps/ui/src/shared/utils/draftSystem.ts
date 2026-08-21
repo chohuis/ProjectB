@@ -264,6 +264,14 @@ export interface ApplyDraftOptions {
    * 사람이 시즌당 1,135명씩 야구를 그만뒀다
    */
   farmTeamIds?: string[];
+  /**
+   * 연봉 산식 (generation_rules.json salaryRules).
+   *
+   * 🔴 **안 넘기면 독립리그로 가는 사람이 연봉 0으로 들어간다.** 초기 생성분은
+   * 능력치로 연봉을 받으므로 같은 리그 안에 두 기준이 생기고, 팀 평균 연봉이
+   * 눌려 방출 판정의 과지급 항목이 죽는다 — 독립에서 아무도 안 잘린 이유다.
+   */
+  salaryRules?: unknown;
 }
 
 export async function applyDraftToNpcs(
@@ -279,6 +287,7 @@ export async function applyDraftToNpcs(
     farmTeamIds: opts.farmTeamIds ?? [],
     ...(opts.contract ? { contract: opts.contract } : {}),
     ...(opts.placement ? { placement: opts.placement } : {}),
+    ...(opts.salaryRules ? { salaryRules: opts.salaryRules } : {}),
     firstTeamRounds: opts.firstTeamRounds ?? 0,
     teamIndex: opts.teamIndex ?? {},
   }));

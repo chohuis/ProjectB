@@ -462,6 +462,11 @@ pub struct ApplyDraftParams {
     /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
     #[serde(default)]
     pub release_rules: Option<crate::free_agency::ReleaseRules>,
+    /// 연봉 산식. 독립리그로 배정되는 사람의 연봉을 여기서 낸다.
+    /// 없으면 연봉 0으로 들어간다 — 그러면 같은 리그 안에 연봉 있는 사람과
+    /// 없는 사람이 섞이고, 팀 평균이 눌려 과지급 판정이 죽는다
+    #[serde(default)]
+    pub salary_rules: Option<crate::npc_sim::SalaryRules>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -783,6 +788,28 @@ pub struct OffseasonParams {
     /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
     #[serde(default)]
     pub release_rules: Option<crate::free_agency::ReleaseRules>,
+    /// 🔴 **그해 성적 평점** (npcId → 0~100). 없으면 능력치로 떨어진다.
+    ///
+    /// 방출 판정이 `recent_performance_rating`에 능력치를 넣고 있었다 —
+    /// "오프시즌엔 시즌 기록이 이미 정산돼 넘어오지 않는다"고 적혀 있었는데,
+    /// 실제로는 **호출부 바로 위에서 같은 값을 쓰고 있었다**(seasonRollover가
+    /// `leagueState[리그].stats`를 연감에 넘긴다). 안 넘어온 것뿐이다.
+    ///
+    /// 눈금은 `market.ts`의 `calcNpcPerfScore`가 정본이다 —
+    /// 투수 ERA 2.50=80 · 4.00=50 · 6.00=10 / 타자 OPS .900=85 · .700=50.
+    /// 기준선 50이 `eval_release_priority`의 `50 - rating`과 같은 눈금이다.
+    /// 표본 미달(투수 5이닝·타자 30타수)이면 그 함수가 50(중립)을 준다.
+    #[serde(default)]
+    pub perf_scores: std::collections::HashMap<String, f64>,
+    /// 구단 성향 (teamId → 12축). 없으면 전 팀이 `default()`(전 항목 50)다.
+    ///
+    /// `eval_release_priority`가 이미 쓰고 있는데 오프시즌이 `default()`를
+    /// 넘겨 **한 번도 발동한 적이 없었다** — 어느 구단이든 방출 기준이 같았다:
+    ///
+    ///     if profile.stability > 70 && age >= 30 { score -= 10 }
+    ///     if profile.win_now_pressure > 80 { score *= 1.3 }
+    #[serde(default)]
+    pub team_profiles: std::collections::HashMap<String, ProTeamProfile>,
     /// 외국인 보유 한도가 걸리는 리그 (generation_rules.json `foreignRules.leagues`).
     /// 비면 외국인 개념이 없는 세계 — 구 세이브·구 페이로드가 그렇다
     #[serde(default)]

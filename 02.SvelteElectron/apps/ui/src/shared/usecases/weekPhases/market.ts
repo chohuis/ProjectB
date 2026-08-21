@@ -121,7 +121,17 @@ export const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
 // ⚠ 이 값은 `calcNpcRenewalSalaryNative`로 **엔진에 넘어간다.** 통계가
 // 비면 NaN이 되고 `JSON.stringify`가 null로 바꿔 재계약 계산이 통째로
 // 거부된다 — 국가대표·승강이 정확히 그렇게 죽어 있었다.
-function calcNpcPerfScore(stats: PlayerSeasonStats): number {
+/**
+ * NPC 성적 → 0~100 평점. **이 눈금의 정본은 여기 하나다.**
+ *
+ * 재계약 연봉이 쓰고, 오프시즌 방출 판정도 쓴다(`perfScores`). 표를 두 번
+ * 두면 "재계약은 잘했다는데 방출 후보"가 나온다 — Phase 7에서 그 결함만 15건
+ * 나왔다.
+ *
+ * 표본 미달이면 **50(중립)**을 준다. 방출 산식이 `50 - rating`이라 중립은
+ * 압력 0이다 — 표본이 얇은 선수를 억울하게 자르지 않는다.
+ */
+export function calcNpcPerfScore(stats: PlayerSeasonStats): number {
   if (stats.type === "pitcher") {
     const ip = finiteOr(stats.ip);
     if (ip < 5) return 50;

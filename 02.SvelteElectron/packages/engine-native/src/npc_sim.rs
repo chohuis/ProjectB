@@ -898,6 +898,10 @@ fn release_second_stage(
     rules: &crate::free_agency::ReleaseRules,
     limits: &HashMap<String, RosterLimit>,
     events: &mut Vec<OffseasonEvent>,
+    // 그해 성적 평점 (npcId → 0~100). 비면 능력치로 떨어진다
+    perf: &HashMap<String, f64>,
+    // 구단 성향 (teamId → 12축). 비면 default()
+    profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
     // 외국인은 이 경로를 타지 않는다. 방출자는 소속만 비고 진로 배정이
     // 독립 입단·은퇴를 정하는데, 용병이 국내 독립리그로 가는 건 말이 안 된다.
     // 외국인 교체는 재계약 판정 + 새 영입이 짝이다 (F-4·F-5)
@@ -929,9 +933,21 @@ fn release_second_stage(
     for (i, n) in npcs.iter().enumerate() {
         if n.career_status != "active" || n.current_team.is_empty() { continue; }
         // 프로만. 학생·독립은 방출 개념이 없다
+        // 🔴 **독립리그가 빠져 있었다.** 그래서 정리 경로가 없는 리그가 됐다 —
+        // 9팀이 전부 정원 45로 꽉 차고 나이 중앙 28 · 상한(31) 초과 107명인
+        // 채로 굳었고, 2027년부터 미지명자 유입이 **0명**이었다.
+        //
+        // ⚠ 나이로 자르는 게 아니다. 프로와 **같은 판정**을 태운다 — 성적이
+        // 안 나오면 팀 기대에 못 미치는 것이고 그게 방출 사유다. 성적은
+        // `perf_scores`로 온다(독립도 배경 리그라 `playerLines`가 쌓인다).
+        //
+        // ⚠ **리그를 여기 적는 방식 자체가 이 프로젝트의 반복된 결함이다.**
+        // 해외를 열었을 때도 승강·FA·트레이드가 `LEAGUE_KBL` 하드코딩이라
+        // "채우는 경로는 있는데 정리하는 경로가 없는 리그"가 됐다.
+        // **새 리그를 열면 여기부터 본다.**
         if !matches!(n.current_league.as_str(),
             "LEAGUE_KBL" | "LEAGUE_KBL_FARM" | "LEAGUE_ABL" | "LEAGUE_ABL_FARM"
-            | "LEAGUE_JBL" | "LEAGUE_JBL_FARM") { continue; }
+            | "LEAGUE_JBL" | "LEAGUE_JBL_FARM" | "LEAGUE_INDEPENDENT") { continue; }
         if is_foreign(n) { continue; }
 
         let (sum, cnt) = team_salaries.get(&n.current_team).copied().unwrap_or((0, 1));
@@ -939,7 +955,7 @@ fn release_second_stage(
         let ovr = npc_core_ovr(n);
 
         let res = eval_release_priority(EvalReleaseParams {
-            team_profile: ProTeamProfile::default(),
+            team_profile: profiles.get(&n.current_team).cloned().unwrap_or_default(),
             player: RosterPlayerRef {
                 id: n.npc_id.clone(), position: n.position.clone(), age: n.age, ovr,
                 salary: n.current_salary, remaining_years: n.contract_years,
@@ -949,9 +965,13 @@ fn release_second_stage(
                 personality: n.personality.clone(), fame: n.fame, perf: None,
                 is_foreign: false,   // 위에서 걸러졌다
             },
-            // 성적 표본이 없으므로 능력치를 성적 대용으로 쓴다 —
-            // 오프시즌엔 시즌 기록이 이미 정산돼 넘어오지 않는다
-            recent_performance_rating: ovr,
+            // 🔴 **그해 성적이 있으면 그걸 본다.** 예전엔 능력치를 대용으로
+            // 썼는데, 그 능력치마저 생성 시점 값이라 사실상 "태어날 때 실력"으로
+            // 방출을 정하고 있었다. 성적은 호출부에서 넘어온다(`perfScores`).
+            //
+            // ⚠ 없으면 능력치로 떨어진다 — 아마추어·구 세이브·표본 0인 사람이다.
+            // 그 폴백을 지우면 성적이 없는 리그가 통째로 방출 대상에서 빠진다
+            recent_performance_rating: perf.get(&n.npc_id).copied().unwrap_or(ovr),
             roster_depth_at_position:
                 depth.get(&(n.current_team.clone(), n.position.clone())).copied().unwrap_or(1),
             current_salary: n.current_salary,
@@ -959,7 +979,10 @@ fn release_second_stage(
             owner_relation: 0.0,          // NPC는 구단주 관계가 없다 (6C 설계)
             owner_relation_weight: 0.0,
         });
-        if res.release_score >= rules.score_threshold {
+        // 리그별 임계값 — 없으면 공통값. 독립은 배점 구조가 달라 따로 둔다
+        let thr = rules.threshold_by_league.get(&n.current_league)
+            .copied().unwrap_or(rules.score_threshold);
+        if res.release_score >= thr {
             scored.push((i, res.release_score));
         }
     }
@@ -1010,6 +1033,43 @@ fn release_second_stage(
 ///
 /// 방출자는 소속만 비운다 — 진로 배정(12단계)이 독립·은퇴를 정한다.
 /// `release_second_stage`와 같은 모양이다.
+/// 독립리그 연봉 갱신 — **성적과 능력치로 벌린다.**
+///
+/// 🔴 프로는 매년 재계약으로 연봉이 벌어지는데(`market.ts`의 재계약 루프),
+/// 그 루프는 `_1`(1군)만 돌아서 독립은 평생 첫 연봉 그대로였다. 그래서
+/// 팀 평균 대비 편차가 없었고, 방출 산식의 과지급 항목(최대 +50점)이
+/// 변별력을 잃었다 — 독립에서 아무도 안 잘린 이유의 절반이다.
+///
+/// ⚠ **산식을 새로 만들지 않는다.** `calc_npc_renewal_salary`가 정본이고
+/// 프로 재계약이 쓰는 그 함수다. 따로 만들면 같은 세계에 연봉 기준이 둘이 된다.
+///
+/// ⚠ **성적이 없으면 건너뛴다.** 표본 미달자를 중립 50으로 갱신하면 안 뛴
+/// 선수의 연봉이 조용히 움직인다.
+fn renew_independent_salaries(
+    npcs: &mut [NpcSaveState],
+    perf: &HashMap<String, f64>,
+) -> usize {
+    let mut n_done = 0;
+    for n in npcs.iter_mut() {
+        if n.career_status != "active" { continue; }
+        if n.current_league != "LEAGUE_INDEPENDENT" || n.current_team.is_empty() { continue; }
+        let Some(score) = perf.get(&n.npc_id).copied() else { continue };
+        let greed = n.personality.as_ref().map(|p| p.greed).unwrap_or(40.0);
+        let next = crate::player_engine::calc_npc_renewal_salary(
+            crate::player_engine::CalcNpcRenewalSalaryParams {
+                ovr: npc_core_ovr(n),
+                age: n.age,
+                league_id: n.current_league.clone(),
+                current_salary: n.current_salary.max(1),
+                performance_score: score,
+                greed,
+            });
+        if next != n.current_salary { n_done += 1; }
+        n.current_salary = next;
+    }
+    n_done
+}
+
 fn expire_development_contracts(
     npcs: &mut [NpcSaveState],
     season_year: i32,
@@ -1582,14 +1642,20 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 22세 신인이 방출 한 번에 은퇴하고 있었다.
     // 11-b. 방출 2단계 — 정원 안이어도 성적·연봉으로 걸러낸다.
     // 진로 배정(12단계) **앞**에 있어야 방출자가 그 경로를 탄다
+    // 11-b0. 독립리그 연봉 갱신. **방출 판정 앞**이어야 그해 성적이 반영된
+    // 연봉으로 과지급을 잰다
+    renew_independent_salaries(&mut after_normalize, &params.perf_scores);
+
     if let Some(rr) = params.release_rules.as_ref() {
         release_second_stage(
-            &mut after_normalize, rr, &params.roster_limits, &mut events, &is_foreign);
+            &mut after_normalize, rr, &params.roster_limits, &mut events,
+            &params.perf_scores, &params.team_profiles, &is_foreign);
     }
 
     // 11-c. 육성선수 단년 계약 만료. 이것도 진로 배정 **앞**이어야 방출자가
     // 독립·은퇴로 갈린다. 여기서 빈 자리에 그해 미지명자가 들어간다
     expire_development_contracts(&mut after_normalize, season_year, &mut events);
+
 
     let mut leftover_pending = Vec::new();
     if can_place {
@@ -1607,7 +1673,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let mut placer = crate::draft::Placer::new(
             &after_normalize, &params.university_team_ids, &params.independent_team_ids,
             &params.farm_team_ids, rules,
-        );
+        ).with_salary(params.salary_rules.clone(), season_year as u32);
         let mut homeless: Vec<usize> = after_normalize.iter().enumerate()
             .filter(|(i, n)| n.career_status == "active"
                 && (n.current_team.is_empty()
@@ -2469,7 +2535,7 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
             university_annual_max: None, farm_max: 0,
             development_salary: None, development_max: 0,
         }),
-    );
+    ).with_salary(params.salary_rules.clone(), params.result.year as u32);
     // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다
     for npc in result_npcs.iter() {
         if pick_map.contains_key(&npc.npc_id) { placer.forget(npc); }

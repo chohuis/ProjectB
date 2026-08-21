@@ -40,11 +40,22 @@ pub struct ReleaseRules {
     /// 구단주 관계 1점당 방출 점수 감산폭. **주인공에게만 쓰인다**
     #[serde(default)]
     pub owner_relation_weight: f64,
+    /// 리그별 임계값 덮어쓰기. 없는 리그는 `score_threshold`를 쓴다.
+    ///
+    /// 🔴 **독립리그는 55를 구조적으로 못 넘는다.** 배점의 큰 축이 둘인데
+    /// 독립에선 둘 다 약하다:
+    ///   · 과지급(+20~50) — 전원이 최저연봉 1200에 깔려 팀 평균과 같다
+    ///   · 성적(+최대 40) — 하위 10%가 평점 14~24라 +28.8이 상한이다
+    /// 뎁스(+15)를 더해도 43.8이라, 실측에서 31세 초과가 20→38→68로
+    /// 늘기만 했다. 프로는 FA·재계약으로 연봉이 벌어져 과지급이 살아 있다.
+    #[serde(default)]
+    pub threshold_by_league: HashMap<String, f64>,
 }
 
 impl Default for ReleaseRules {
     fn default() -> Self {
-        Self { score_threshold: 55.0, max_per_team: 3, owner_relation_weight: 0.4 }
+        Self { score_threshold: 55.0, max_per_team: 3, owner_relation_weight: 0.4,
+               threshold_by_league: HashMap::new() }
     }
 }
 

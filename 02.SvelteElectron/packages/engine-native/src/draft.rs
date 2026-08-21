@@ -334,6 +334,15 @@ pub struct Placer<'a> {
     /// 독립리그보다 먼저 본다(현실에서도 다른 팀 팜과 계약한다)
     farm: &'a [String],
     rules: PlacementRules,
+    /// 독립리그 연봉 산정용. 없으면 연봉 0으로 들어간다(예전 동작).
+    ///
+    /// 🔴 **같은 리그 안이 두 갈래였다.** 초기 생성분은 `withContract: true`라
+    /// 능력치·연차·나이로 연봉을 받는데, 여기로 들어온 사람은 0이었다.
+    /// 그래서 팀 평균 연봉이 0 쪽으로 눌렸고 방출 판정의 과지급 항목
+    /// (최대 +50점)이 통째로 죽었다 — 독립리그에서 아무도 안 잘린 이유다.
+    salary_rules: Option<crate::npc_sim::SalaryRules>,
+    /// 연봉 산정의 흔들림용. 시드는 연도에서 온다(thread_rng를 안 쓴다)
+    salary_rng: crate::npc_sim::LcgRand,
 }
 
 impl<'a> Placer<'a> {
@@ -368,11 +377,23 @@ impl<'a> Placer<'a> {
             }
         }
         Self { roster, specialists, dev_count,
+               salary_rules: None,
+               salary_rng: crate::npc_sim::LcgRand::new(0x5eed_1234),
                univ_intake: std::collections::HashMap::new(),
                university, independent, farm, rules }
     }
 
     /// 이미 자리를 잡은 사람을 로스터 집계에서 빼둔다 (지명된 재학생 등)
+    /// 독립리그 연봉을 붙인다. **안 부르면 예전대로 연봉 0이다.**
+    ///
+    /// 최저연봉을 일률로 주면 안 된다 — 전원이 같은 값이면 팀 평균과 같아져
+    /// 과지급 판정이 다시 죽는다. 능력치로 갈려야 "성적 대비 비싼 선수"가 잡힌다.
+    pub fn with_salary(mut self, rules: Option<crate::npc_sim::SalaryRules>, seed: u32) -> Self {
+        self.salary_rules = rules;
+        self.salary_rng = crate::npc_sim::LcgRand::new(seed | 1);
+        self
+    }
+
     pub fn forget(&mut self, npc: &NpcSaveState) {
         if let Some(e) = self.roster.get_mut(&npc.current_team) {
             if npc.player_type == "pitcher" { e.0 = e.0.saturating_sub(1); }
@@ -558,6 +579,19 @@ impl<'a> Placer<'a> {
                 npc.grade = (league == "LEAGUE_UNIVERSITY").then_some(1);
                 npc.current_salary = 0;
                 npc.contract_years = 0;
+                // 독립리그도 연봉을 받고 뛴다. 대학은 아마추어라 0이 맞다.
+                // ⚠ 초기 생성분과 **같은 산식**을 쓴다 — 다르게 주면 같은 리그
+                // 안에서 기준이 둘이 되고, 그게 지금 고치는 결함이다
+                if league == "LEAGUE_INDEPENDENT" {
+                    if let Some(sr) = self.salary_rules.clone() {
+                        let ovr = crate::npc_sim::npc_core_ovr(npc);
+                        let (sal, yrs) = crate::npc_sim::estimate_salary_and_contract(
+                            ovr, league, npc.pro_service_years.unwrap_or(0),
+                            npc.age, 1.0, &sr, &mut self.salary_rng);
+                        npc.current_salary = sal;
+                        npc.contract_years = yrs.max(1);
+                    }
+                }
 
                 // ── 육성선수 ────────────────────────────────────────
                 // 프로 2군으로 갔으면 **드래프트 지명자와 다른 신분**이다.

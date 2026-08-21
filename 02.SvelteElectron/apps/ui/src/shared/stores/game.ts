@@ -2280,6 +2280,28 @@ function createGameStore() {
       // 방출·FA 미계약자의 진로 — 미지명 졸업생과 **같은 로직**을 태운다.
       // 안 넘기면 Rust가 그 사람들을 전부 은퇴시킨다
       const offDest = draftDestinationTeams(get(masterStore).teams);
+      // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
+      // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날
+      // 때 실력"으로 방출을 정했다. 성적은 **바로 이 시점까지 살아 있다** —
+      // `seasonRollover`가 두 줄 위에서 같은 값을 연감에 넘긴다.
+      //
+      // ⚠ 리그를 골라 담지 않는다. 배경 리그 전부가 `playerLines`를 쌓으므로
+      // (`backgroundLeague.accumulateStats`) 독립리그도 여기 들어온다 —
+      // 프로만 담으면 독립이 통째로 방출 대상에서 빠진다.
+      const offPerfScores: Record<string, number> = {};
+      {
+        const { seasonStore: _ss } = await import("./season");
+        const _s = get(_ss);
+        const { calcNpcPerfScore } = await import("../usecases/weekPhases/market");
+        const put = (rows: Record<string, import("../types/save").PlayerSeasonStats>) => {
+          for (const [pid, st] of Object.entries(rows ?? {})) {
+            if (!st) continue;
+            offPerfScores[pid] = calcNpcPerfScore(st);
+          }
+        };
+        put(_s.stats);
+        for (const ls of Object.values(_s.leagueState ?? {})) put(ls?.stats ?? {});
+      }
       const result = await runOffseasonProcessing(
         s.npcs, s.pendingDraft, seasonYear, namedNpcIds,
         rosterLimitsFrom(offRules.rosterRules), offRules.salaryRules,
@@ -2294,6 +2316,11 @@ function createGameStore() {
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
         foreignParamsFrom(offRules),
+        // 🔴 **지금 능력치.** 안 넘기면 오프시즌이 생성 시점 값으로 돈다 —
+        // 은퇴·정원 정리·방출·FA·콜업 정렬 22곳이 전부 그랬다
+        get(npcLiveStatsStore),
+        offPerfScores,
+        s.proTeamProfiles,
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
@@ -3437,6 +3464,8 @@ function createGameStore() {
             rulesFile.developmentPlayerRules?.salary,
             rulesFile.developmentPlayerRules?.intakeMax),
           farmTeamIds: draftDest.farmIds,
+          // 독립리그로 가는 사람도 연봉을 받고 뛴다 — 안 넘기면 0으로 들어간다
+          salaryRules: rulesFile.salaryRules,
         },
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [], lastDraftYear: year }));

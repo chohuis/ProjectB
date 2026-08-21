@@ -125,10 +125,48 @@ export async function runOffseasonProcessing(
   // 추가했는데 여기서 빠져 Rust까지 못 갔다 — 한도가 안 걸렸다.
   // `foreignParamsFrom`의 반환형을 그대로 받는다
   foreign?: ReturnType<typeof foreignParamsFrom>,
+  /**
+   * 🔴 **지금 능력치.** 안 넘기면 오프시즌 전체가 **생성 시점 값**으로 돈다.
+   *
+   * 성장은 `npcLiveStatsStore`에만 쌓이고 `NpcSaveState.pitching/batting`은
+   * 로스터 생성 때 찍힌 값 그대로다(실측: live는 3년에 OVR ±9인데 npcs는 +0).
+   * 그런데 Rust `npc_core_ovr`이 그 얼어붙은 값을 읽는다 — 은퇴·정원 정리·
+   * 방출·FA·콜업 정렬 **22곳 전부**가 태어날 때 능력치로 판정하고 있었다.
+   *
+   * 그래서 서른다섯 살 노쇠한 선수가 스무 살 때 능력치로 평가받고,
+   * 크게 자란 2군 선수가 신인 때 값으로 밀려났다.
+   */
+  liveStats?: Record<string, { pitching?: unknown; batting?: unknown }>,
+  /**
+   * 그해 성적 평점 (npcId → 0~100). 눈금 정본은 `market.calcNpcPerfScore`.
+   * 안 넘기면 방출이 능력치로 판정한다 — 그게 예전 상태다.
+   */
+  perfScores?: Record<string, number>,
+  /**
+   * 구단 성향 (teamId → 12축). 안 넘기면 전 팀이 같은 방출 기준을 쓴다.
+   * `eval_release_priority`의 stability·winNowPressure 갈래가 죽어 있었다.
+   */
+  teamProfiles?: Record<string, unknown>,
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
+  // ⚠ **엔진에 넘길 때만 합치고 돌아올 때 되돌린다.** 결과가 `s.npcs`를
+  // 통째로 덮으므로, 안 되돌리면 "성장은 live에만 쌓인다"는 전제가 조용히
+  // 깨진다. 그 전제는 `liveOvrOf`가 `Math.max(live, npcs)`로 읽는 근거다.
+  const frozen = new Map<string, { pitching?: unknown; batting?: unknown }>();
+  const withLive = liveStats
+    ? npcs.map((n) => {
+        const l = liveStats[n.npcId];
+        if (!l || (!l.pitching && !l.batting)) return n;
+        frozen.set(n.npcId, { pitching: n.pitching, batting: n.batting });
+        return {
+          ...n,
+          pitching: (l.pitching ?? n.pitching) as typeof n.pitching,
+          batting:  (l.batting  ?? n.batting)  as typeof n.batting,
+        };
+      })
+    : npcs;
   const paramsJson = JSON.stringify({
-    npcs, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [],
+    npcs: withLive, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [],
     rosterLimits: rosterLimits ?? {},
     ...(salaryRules ? { salaryRules } : {}),
     ...(placement ? {
@@ -138,6 +176,8 @@ export async function runOffseasonProcessing(
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
+    ...(perfScores   ? { perfScores }   : {}),
+    ...(teamProfiles ? { teamProfiles } : {}),
     ...(foreign ?? {}),
   });
   const json = await api().npcRunOffseason(paramsJson);
@@ -145,11 +185,18 @@ export async function runOffseasonProcessing(
     npcs: NpcSaveState[]; pendingDraft: NpcSaveState[];
     summary: SeasonEndSummary; logs: string[]; events?: OffseasonEvent[];
   }>(json);
-  const rehydrate = (n: NpcSaveState): NpcSaveState => ({
-    ...n,
-    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
-    potentialHidden: n.potentialHidden ?? 75,
-  });
+  const rehydrate = (n: NpcSaveState): NpcSaveState => {
+    // 넘길 때 합친 live 능력치를 원래대로 돌린다. **새로 생긴 사람은 건드리지
+    // 않는다** — 용병 영입처럼 엔진이 만든 사람은 자기 값이 정본이다
+    const back = frozen.get(n.npcId);
+    return {
+      ...n,
+      ...(back ? { pitching: back.pitching as NpcSaveState["pitching"],
+                   batting:  back.batting  as NpcSaveState["batting"] } : {}),
+      isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
+      potentialHidden: n.potentialHidden ?? 75,
+    };
+  };
 
   // ⚠ **이름·팀명을 여기서 굳히지 않는다.** 사건은 `npcId`만 들고 있고 화면이
   // 조회한다 — 예전엔 엔진이 문장을 조립해 보내 `TEAM_UNIV_ASAN`이 그대로 떴다.
