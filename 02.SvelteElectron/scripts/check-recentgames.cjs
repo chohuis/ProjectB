@@ -289,6 +289,46 @@ async function main() {
       s4.close();
     } catch (e) { console.log("  --  경기 단위 집계 실패:", e.message); }
 
+    // 🔴 **정리를 기다린 뒤에 잰다.** `npc:trimGameLogs`는 `void`로 불려서
+    //   (season.ts:601) 결과를 안 기다린다 — 12만 행에 윈도 함수를 도는
+    //   무거운 일이라 그렇게 둔 것이다. 그래서 **끝나기 전에 스냅샷을 찍으면
+    //   40을 넘어 보인다**(실측: 한 번은 42건, 다음 실행은 0건).
+    //
+    //   실행마다 결과가 달라지는 검사는 신뢰를 잃는다 — 진짜 결함이 나도
+    //   "또 그거겠지"로 읽힌다. 여기서 **한 번 불러 끝내 놓고** 잰다.
+    //
+    // ⚠ 이건 검사를 통과시키려는 게 아니라 **재는 조건을 못박는 것**이다.
+    //   "정리가 끝난 상태에서 40 이하인가"가 물어야 할 질문이다.
+    try {
+      const trim = headless.handlers.get("npc:trimGameLogs");
+      if (trim) await trim(null, JSON.stringify({ slotId: "RG", keep: 40 }));
+      else console.log("  --  npc:trimGameLogs 핸들러가 없다 — 정리를 못 기다렸다");
+    } catch (e) { console.log("  --  정리 호출 실패:", e.message); }
+
+    // ④-0 한도를 넘은 선수가 몇이고 얼마나 넘는가
+    {
+      const over = db.prepare(
+        "SELECT npc_id, COUNT(*) c FROM npc_game_log GROUP BY npc_id HAVING c > 40 ORDER BY c DESC"
+      ).all();
+      const tot = db.prepare("SELECT COUNT(DISTINCT npc_id) c FROM npc_game_log").get().c;
+      console.log("");
+      console.log("  보관 한도(40) 초과  " + over.length + " / " + tot + "명" +
+        (over.length ? "  최대 " + over[0].c + "건" : ""));
+      if (over.length) {
+        console.log("    표본: " + over.slice(0, 5).map((r) => r.npc_id + "(" + r.c + ")").join(" · "));
+        // 넘은 선수의 리그 — 특정 리그에 몰리면 그 경로가 trim을 안 부르는 것이다
+        const f6 = fs.readdirSync(dir).find((n) => n.startsWith("slot3"));
+        const s6 = new Database(path.join(dir, f6), { readonly: true });
+        const lg = new Map(s6.prepare("SELECT npc_id, current_league FROM npc").all()
+          .map((r) => [r.npc_id, r.current_league || "-"]));
+        const tally = {};
+        for (const r of over) { const l = lg.get(r.npc_id) || "(모름)"; tally[l] = (tally[l] || 0) + 1; }
+        console.log("    리그별: " + Object.entries(tally).sort((x,y)=>y[1]-x[1])
+          .map(([k,v]) => k + " " + v).join(" · "));
+        s6.close();
+      }
+    }
+
     // ④ 보관 한도
     const max = db.prepare(
       "SELECT MAX(c) m FROM (SELECT COUNT(*) c FROM npc_game_log GROUP BY npc_id)"
