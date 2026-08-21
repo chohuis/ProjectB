@@ -136,6 +136,13 @@ async function main() {
 
     // ③-4 **경기 단위 적재율** — 이게 진짜 지표다.
     //
+    // 🔴 **주차를 키에 넣으면 안 된다.** 대회는 앞 라운드가 밀리면 주차를
+    //   당겨서 넣고(advanceWeek 1659), 배경 리그는 `e.week <= week`로 밀린
+    //   경기를 몰아 친다. 그래서 **로그의 주차(시뮬 시점)와 일정의 주차(원래)가
+    //   다르다.** 주차로 맞췄더니 대학 대회 23건이 "누락"으로 잡혔는데,
+    //   팀으로만 맞춰 보니 **27건 전부 로그가 있었다.** 결함이 아니라 지표 탓이다.
+    //   → **날짜(game_date)로 맞춘다.** 양쪽 다 같은 일정에서 온 값이다.
+    //
     // ⚠ 선수 비율로 재면 한 번도 안 뛴 벤치가 섞여 절대 100%가 안 된다.
     //   치른 경기 중 로그가 남은 경기 비율이 100%여야 맞다.
     // ⚠ 보관 한도(40)가 지우므로 **최근 주차**만 본다 — 오래된 주는
@@ -148,8 +155,8 @@ async function main() {
       // 넓히면 보관 한도(40)에 잘린 옛 주가 섞여 헛 누락이 잡힌다 — 8주가 절충이다
       const lo = Math.max(1, maxWeek - 7);
       const logged = new Set(
-        db.prepare("SELECT DISTINCT season, week, team_id, opponent_team_id FROM npc_game_log WHERE week >= ?")
-          .all(lo).map((r) => [r.season, r.week, r.team_id, r.opponent_team_id].join("|")),
+        db.prepare("SELECT DISTINCT season, game_date, team_id, opponent_team_id FROM npc_game_log WHERE week >= ?")
+          .all(lo).map((r) => [r.season, r.game_date, r.team_id, r.opponent_team_id].join("|")),
       );
       const played = s4.prepare(
         "SELECT league_id, week, json FROM schedule WHERE has_result = 1 AND week >= ?"
@@ -161,8 +168,8 @@ async function main() {
         const lid = r.league_id || (e.leagueId || "(primary)");
         const v = per.get(lid) || { n: 0, hit: 0 };
         v.n++;
-        const a1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
-        const a2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        const a1 = [2026, e.gameDate ?? "", e.homeTeamId, e.awayTeamId].join("|");
+        const a2 = [2026, e.gameDate ?? "", e.awayTeamId, e.homeTeamId].join("|");
         if (logged.has(a1) || logged.has(a2)) v.hit++;
         per.set(lid, v);
       }
@@ -179,8 +186,8 @@ async function main() {
       for (const r of played) {
         let e = null;
         try { e = JSON.parse(r.json); } catch { continue; }
-        const k1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
-        const k2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        const k1 = [2026, e.gameDate ?? "", e.homeTeamId, e.awayTeamId].join("|");
+        const k2 = [2026, e.gameDate ?? "", e.awayTeamId, e.homeTeamId].join("|");
         if (!logged.has(k1) && !logged.has(k2)) {
           miss.push((r.league_id || "primary") + " W" + r.week +
             (e.isTournament ? " [TOUR]" : "") + (e.isFriendly ? " [FRIENDLY]" : "") +
@@ -194,8 +201,8 @@ async function main() {
       for (const r of played) {
         let e = null;
         try { e = JSON.parse(r.json); } catch { continue; }
-        const k1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
-        const k2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        const k1 = [2026, e.gameDate ?? "", e.homeTeamId, e.awayTeamId].join("|");
+        const k2 = [2026, e.gameDate ?? "", e.awayTeamId, e.homeTeamId].join("|");
         if (!logged.has(k1) && !logged.has(k2)) {
           const lines = e.result && Array.isArray(e.result.playerLines) ? e.result.playerLines.length : -1;
           if (lines === 0) emptyLines++;
@@ -219,8 +226,8 @@ async function main() {
       for (const r of played) {
         let e = null;
         try { e = JSON.parse(r.json); } catch { continue; }
-        const k1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
-        const k2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        const k1 = [2026, e.gameDate ?? "", e.homeTeamId, e.awayTeamId].join("|");
+        const k2 = [2026, e.gameDate ?? "", e.awayTeamId, e.homeTeamId].join("|");
         if (!logged.has(k1) && !logged.has(k2)) {
           const n = e.result && Array.isArray(e.result.playerLines) ? e.result.playerLines.length : -1;
           detail.push({ lg: r.league_id || "primary", w: r.week, lines: n,
@@ -246,6 +253,21 @@ async function main() {
         }
         s5.close();
       }
+
+      // ⚠ **주차를 빼고도 맞춰 본다.** 대회는 앞 라운드가 밀리면 주차를
+      // 당겨서 넣는다(advanceWeek 1659). 로그는 **시뮬 시점** 주차를,
+      // 일정은 **원래** 주차를 들고 있으면 키가 어긋난다 — 결함이 아니라 지표 탓이다
+      const byTeams = new Set(
+        db.prepare("SELECT DISTINCT season, team_id, opponent_team_id FROM npc_game_log")
+          .all().map((r) => [r.season, r.team_id, r.opponent_team_id].join("|")),
+      );
+      let weekOnly = 0;
+      for (const d of detail) {
+        const a1 = [2026, d.home, d.away].join("|");
+        const a2 = [2026, d.away, d.home].join("|");
+        if (byTeams.has(a1) || byTeams.has(a2)) weekOnly++;
+      }
+      console.log("    그중 " + weekOnly + "건은 **팀으로는 맞는다** (주차만 어긋난 것)");
 
       if (detail.length) {
         console.log("    놓친 경기의 playerLines (앞 8건)");
