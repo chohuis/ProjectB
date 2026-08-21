@@ -121,6 +121,30 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       rating,
     };
 
+    // 🔴 **주인공 친선경기는 아무의 기록도 안 남았다.**
+    // `buildTeamMatchResult`가 `playerLines: []`를 넣어서, 주인공이 시범경기를
+    // 던져도 "최근 경기"에 한 줄도 안 떴다(실측: lines=0인 경기 넷이 전부
+    // 주인공 팀 친선이었다).
+    //
+    // ⚠ **순위·시즌 기록은 그대로 안 건드린다** — `applyFriendlyResult`가
+    // 친선을 집계에서 빼는 건 설계다. 여기서 채우는 건 **경기별 기록**이고,
+    // 그건 "시범경기도 기록에 남긴다"는 확정 사항이다.
+    //
+    // ⚠ **주인공 것만 채운다.** 같이 뛴 동료·상대는 친선 경로가 애초에
+    // 시뮬을 안 돌려서 성적 자체가 없다 — 지어내지 않는다.
+    const heroLine: import("../types/season").PitcherGameLine = {
+      role: "pitcher",
+      playerId: protagonist.id,
+      ip, er,
+      h:  Math.max(0, outcome.hitsAllowed),
+      k:  Math.max(0, outcome.strikeouts),
+      bb: Math.max(0, outcome.walksAllowed),
+      // 친선엔 승패를 안 매긴다 — 순위에 안 들어가므로 기록만 남긴다
+      decision: "ND",
+      ...(outcome.pitchCount ? { pitchCount: outcome.pitchCount } : {}),
+    };
+    teamResult.playerLines = [heroLine];
+
     // ── 주인공 피로/컨디션 패치 (공식경기의 50% 강도) ──────────
     const fatigueDelta   = Math.ceil(ip * 2);
     const conditionDelta = -Math.ceil(ip * 0.5);  // 0.8 → 0.5 완화
