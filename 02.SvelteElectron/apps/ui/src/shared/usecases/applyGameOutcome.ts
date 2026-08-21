@@ -5,6 +5,7 @@ import { seasonStore } from "../stores/season";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcGameGrowth } from "../utils/growthEngine";
 import { recordGameLogs } from "../repo/gameLogRepo";
+import { recordGameResult } from "./recordGameResult";
 import { staffModsOf } from "../utils/staffEffects";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
@@ -91,12 +92,17 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       && Math.max(0, outcome.hitsAllowed) === 0
       && (outcome.pitchCount ?? 0) === 0;
     if (didNotPitch) {
-      seasonStore.applyFriendlyResult(
-        outcome.scheduleId, teamResult, leagueId,
-        outcome.homeTeamId, outcome.awayTeamId,
-        homeRot + 1, awayRot + 1,
-        null, {},
-      );
+      await recordGameResult({
+        kind: "friendly",
+        scheduleId: outcome.scheduleId,
+        result: teamResult,
+        leagueId: leagueId,
+        homeTeamId: outcome.homeTeamId,
+        awayTeamId: outcome.awayTeamId,
+        nextHomeRotIdx: homeRot + 1,
+        nextAwayRotIdx: awayRot + 1,
+        pitcherConditions: {},
+      });
       seasonStore.resolvePendingAction("game", outcome.scheduleId);
       await gameStore.save();
       await seasonStore.save();
@@ -157,12 +163,18 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       }
     }
 
-    seasonStore.applyFriendlyResult(
-      outcome.scheduleId, teamResult, leagueId,
-      outcome.homeTeamId, outcome.awayTeamId,
-      homeRot + 1, awayRot + 1,
-      log, pitcherConditions,
-    );
+    await recordGameResult({
+      kind: "friendly",
+      scheduleId: outcome.scheduleId,
+      result: teamResult,
+      leagueId: leagueId,
+      homeTeamId: outcome.homeTeamId,
+      awayTeamId: outcome.awayTeamId,
+      nextHomeRotIdx: homeRot + 1,
+      nextAwayRotIdx: awayRot + 1,
+      friendlyLog: log,
+      pitcherConditions: pitcherConditions,
+    });
     seasonStore.resolvePendingAction("game", outcome.scheduleId);
 
     const teamMap = new Map(get(masterStore).teams.map((t) => [t.id, t.name]));

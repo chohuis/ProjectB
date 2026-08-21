@@ -2228,7 +2228,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const result = sim.result;
               if (game.isFriendly) {
                 const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-                seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
+                await recordGameResult({
+                  kind: "friendly",
+                  scheduleId: game.id,
+                  result: result,
+                  leagueId: gCurrent.protagonist.leagueId,
+                  homeTeamId: game.homeTeamId,
+                  awayTeamId: game.awayTeamId,
+                  nextHomeRotIdx: sim.nextHomeRotIdx,
+                  nextAwayRotIdx: sim.nextAwayRotIdx,
+                  pitcherConditions: sim.pitcherConditions,
+                  gameDate: game.gameDate,
+                });
               } else {
                 seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
                 await applyPostseasonResult(game.id, result);
@@ -2283,7 +2294,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               npcResult2 = _s.result; nextHomeRot2 = _s.nextHomeRotIdx; nextAwayRot2 = _s.nextAwayRotIdx; pitcherConds2 = _s.pitcherConditions; }
             }
             if (game.isFriendly) {
-              seasonStore.applyFriendlyResult(game.id, npcResult2, leagueId2, game.homeTeamId, game.awayTeamId, nextHomeRot2, nextAwayRot2, null, pitcherConds2);
+              await recordGameResult({
+                kind: "friendly",
+                scheduleId: game.id,
+                result: npcResult2,
+                leagueId: leagueId2,
+                homeTeamId: game.homeTeamId,
+                awayTeamId: game.awayTeamId,
+                nextHomeRotIdx: nextHomeRot2,
+                nextAwayRotIdx: nextAwayRot2,
+                pitcherConditions: pitcherConds2,
+                gameDate: game.gameDate,
+              });
             } else {
               seasonStore.applyProtagonistGroupNpcResult(game.id, npcResult2, leagueId2, game.homeTeamId, game.awayTeamId, nextHomeRot2, nextAwayRot2, pitcherConds2);
               applyPostseasonResult(game.id, npcResult2);
@@ -2341,12 +2363,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           }
 
           if (game.isFriendly) {
-            seasonStore.applyFriendlyResult(
-              game.id, npcResult, leagueId,
-              game.homeTeamId, game.awayTeamId,
-              nextHomeRotIdx, nextAwayRotIdx,
-              null, pitcherConds,
-            );
+            await recordGameResult({
+              kind: "friendly",
+              scheduleId: game.id,
+              result: npcResult,
+              leagueId: leagueId,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              nextHomeRotIdx: nextHomeRotIdx,
+              nextAwayRotIdx: nextAwayRotIdx,
+              pitcherConditions: pitcherConds,
+              gameDate: game.gameDate,
+            });
           } else {
             seasonStore.applyProtagonistGroupNpcResult(
               game.id, npcResult, leagueId,
@@ -2476,7 +2504,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const result = sim.result;
           if (game.isFriendly) {
             const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
+            await recordGameResult({
+              kind: "friendly",
+              scheduleId: game.id,
+              result: result,
+              leagueId: gCurrent.protagonist.leagueId,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              nextHomeRotIdx: sim.nextHomeRotIdx,
+              nextAwayRotIdx: sim.nextAwayRotIdx,
+              pitcherConditions: sim.pitcherConditions,
+              gameDate: game.gameDate,
+            });
           } else {
             seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
             await applyPostseasonResult(game.id, result);
@@ -2489,7 +2528,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const result = sim.result;
           if (game.isFriendly) {
             const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
+            await recordGameResult({
+              kind: "friendly",
+              scheduleId: game.id,
+              result: result,
+              leagueId: gCurrent.protagonist.leagueId,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              nextHomeRotIdx: sim.nextHomeRotIdx,
+              nextAwayRotIdx: sim.nextAwayRotIdx,
+              pitcherConditions: sim.pitcherConditions,
+              gameDate: game.gameDate,
+            });
           } else {
             seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
             await applyPostseasonResult(game.id, result);
@@ -2508,7 +2558,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const result = sim.result;
           if (game.isFriendly) {
             const lSnap = get(seasonStore).leagueState[gCurrent.protagonist.leagueId];
-            seasonStore.applyFriendlyResult(game.id, result, gCurrent.protagonist.leagueId, game.homeTeamId, game.awayTeamId, sim.nextHomeRotIdx, sim.nextAwayRotIdx, null, sim.pitcherConditions);
+            await recordGameResult({
+              kind: "friendly",
+              scheduleId: game.id,
+              result: result,
+              leagueId: gCurrent.protagonist.leagueId,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              nextHomeRotIdx: sim.nextHomeRotIdx,
+              nextAwayRotIdx: sim.nextAwayRotIdx,
+              pitcherConditions: sim.pitcherConditions,
+              gameDate: game.gameDate,
+            });
           } else {
             seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
             await applyPostseasonResult(game.id, result);
@@ -2581,12 +2642,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
         if (game.isFriendly) {
           // 친선경기 → 순위·통계 미반영, rotationIndex만 갱신
-          seasonStore.applyFriendlyResult(
-            game.id, npcResult, leagueId,
-            game.homeTeamId, game.awayTeamId,
-            nextHomeRotIdx, nextAwayRotIdx,
-            null, pitcherConds,
-          );
+          await recordGameResult({
+            kind: "friendly",
+            scheduleId: game.id,
+            result: npcResult,
+            leagueId: leagueId,
+            homeTeamId: game.homeTeamId,
+            awayTeamId: game.awayTeamId,
+            nextHomeRotIdx: nextHomeRotIdx,
+            nextAwayRotIdx: nextAwayRotIdx,
+            pitcherConditions: pitcherConds,
+            gameDate: game.gameDate,
+          });
         } else if (game.isTournament) {
           // 전국대회 → 개인 기록만. 순위표에 섞이면 다음 대회 시드가 오염된다
           await recordGameResult({
