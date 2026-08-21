@@ -228,6 +228,25 @@ async function main() {
             home: e.homeTeamId, away: e.awayTeamId });
         }
       }
+      // lines=0 경기의 **양 팀 로스터**를 센다.
+      // 폴백SIM은 "엔티티 없음"일 때 도니, 정말 선수가 없는지 본다
+      const zero = detail.filter((d) => d.lines === 0);
+      if (zero.length) {
+        const f5 = fs.readdirSync(dir).find((n) => n.startsWith("slot3"));
+        const s5 = new Database(path.join(dir, f5), { readonly: true });
+        const cnt = s5.prepare("SELECT COUNT(*) c FROM npc WHERE current_team = ?");
+        const seen = new Set();
+        console.log("    lines=0 경기의 팀별 선수 수 (slot.db)");
+        for (const d of zero.slice(0, 6)) {
+          for (const t of [d.home, d.away]) {
+            if (!t || seen.has(t)) continue;
+            seen.add(t);
+            console.log("      " + t.padEnd(28) + String(cnt.get(t).c).padStart(4) + "명");
+          }
+        }
+        s5.close();
+      }
+
       if (detail.length) {
         console.log("    놓친 경기의 playerLines (앞 8건)");
         for (const d of detail.slice(0, 8)) {
