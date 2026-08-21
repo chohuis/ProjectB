@@ -488,8 +488,20 @@ impl<'a> Placer<'a> {
                 //
                 // 그렇다고 무제한이면 2군이 육성선수로 채워져 드래프트 지명의
                 // 가치가 사라진다. 그래서 `development_max`만큼만 얹는다.
+                // 🔴 **외국인은 2군에 못 간다.** `foreignRules._note3`가
+                // 그렇게 적혀 있다 — "1군만. 2군에 두면 보유 한도 계산이
+                // 흐려지고, 실제 KBO도 외국인은 1군 등록이 원칙이다."
+                //
+                // 안 막았더니 방출된 용병이 KBL 2군에 쌓였다(실측 29명):
+                //     2029:release→TEAM_KBL_BUSAN_WAVES_2
+                // `foreignPlayers.ts`의 재계약 불가 경로는 이미 **본국 복귀**로
+                // 처리한다 — 방출만 그걸 안 따랐다.
+                //
+                // ⚠ **국적으로 거른다 — 리그로 거르면 못 잡는다.** 이 시점엔
+                // 소속이 이미 비어 있다(`route_of`의 같은 함정과 같은 이유).
                 let dev_max = self.rules.development_max;
-                (self.rules.farm_max > 0)
+                let foreign = npc.nationality.as_deref().unwrap_or("KOR") != "KOR";
+                (self.rules.farm_max > 0 && !foreign)
                     .then(|| self.find_slot(
                         is_pitcher, &npc.position, self.farm,
                         self.rules.farm_max + dev_max, None,
