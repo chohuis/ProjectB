@@ -120,10 +120,19 @@ const TEAM_INDEX = (() => {
 })();
 
 /** 진로 배정 상한 — draftSystem.placementRulesFrom와 같은 규칙 */
+// ⚠ **빠뜨리면 그 갈래가 통째로 안 보인다.** 예전엔 셋만 적어
+// `→2군`이 다섯 시즌 내내 0이었고, 그걸 게임 결함으로 읽을 뻔했다.
+// 정본은 `draftSystem.placementRulesFrom`이다 — 거기 필드가 늘면 여기도 늘린다.
 const PLACEMENT = {
   universityMax: gr.rosterRules.LEAGUE_UNIVERSITY.rosterMax,
   independentMax: gr.rosterRules.LEAGUE_INDEPENDENT.rosterMax,
   independentAgeMax: gr.rosterRules.LEAGUE_INDEPENDENT.ageMax,
+  // 대학 연간 유입 상한 — 이게 없으면 대학이 무제한으로 받아 진로 분포가 기울어진다
+  universityAnnualMax: Math.max(1, Math.round((gr.rosterRules.LEAGUE_UNIVERSITY.rosterSize ?? 32) / (gr.rosterRules.LEAGUE_UNIVERSITY.gradeMax ?? 4))),
+  // 프로 2군 — `farmTeamIds`와 **둘 다** 있어야 돌아간다
+  farmMax: gr.rosterRules.LEAGUE_KBL_FARM ? gr.rosterRules.LEAGUE_KBL_FARM.rosterMax : 34,
+  developmentSalary: (gr.developmentPlayerRules || {}).salary,
+  developmentMax: (gr.developmentPlayerRules || {}).intakeMax ?? 0,
 };
 
 /** rosterRules → Rust rosterLimits (npcEngine.rosterLimitsFrom와 같은 규칙) */
@@ -136,6 +145,7 @@ const ROSTER_LIMITS = Object.fromEntries(
 // 상무는 진로 배정 대상이 아니다 — draftSystem.draftDestinationTeams와 같은 규칙
 const DEST_UNIV = refs.teams
   .filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
+const DEST_FARM = teamsOf("LEAGUE_KBL", true).map((t) => t.teamId);
 const DEST_IND = refs.teams
   .filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
 
@@ -170,6 +180,7 @@ function runSeason(npcs, year, kblTeams) {
 
   npcs = call("applyDraftNative", {
     npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
+    farmTeamIds: DEST_FARM,
     contract: gr.draftRules.contract,
     firstTeamRounds: gr.draftRules.firstTeamRounds,
     teamIndex: TEAM_INDEX,
@@ -188,10 +199,16 @@ function runSeason(npcs, year, kblTeams) {
     pendingDraft: aged.filter((n) => pendingIds.has(n.npcId)),
     seasonYear: year, namedNpcIds: [],
     salaryRules: gr.salaryRules, rosterLimits: ROSTER_LIMITS,
-    universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND, placement: PLACEMENT,
+    universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND, farmTeamIds: DEST_FARM,
+    placement: PLACEMENT,
     releaseRules: gr.faRules && gr.faRules.release,
   });
-  const releasedThisYear = (off.logs || []).filter((l) => l.includes("방출 (점수")).length;
+  // 🔴 **`off.logs`는 항상 비어 있다.** `npc_sim.rs:1390`에서 만들어져
+  // `1589`에서 그대로 반환되고 사이에 `push`가 한 군데도 없다.
+  // 문자열로 세니 방출이 다섯 시즌 내내 0으로 보였다 — 없는 결함을
+  // 받침할 뿔했다. **경력 사건은 실제로 남으므로 그걸 센다.**
+  const releasedThisYear = (off.npcs || []).reduce((acc, n) =>
+    acc + (n.careerEvents || []).filter((e) => e.eventType === "release" && e.year === year).length, 0);
 
   // ── 다음 시즌 W1: 고교 신입생 ────────────────────────────────
   const fresh = generateFreshmen(off.npcs, year + 1);
@@ -234,18 +251,22 @@ function measure(label, kblTeams) {
       drafted: r.sim.picks.length, leftover: r.leftoverPending, released: r.released,
       toUniv: moved.get("LEAGUE_UNIVERSITY") ?? 0,
       toInd: moved.get("LEAGUE_INDEPENDENT") ?? 0,
+      // ⚠ **2군 칸이 없어 합이 안 맞았다.** 진로가 네 갈래인데 셋만
+      // 찍어서 165명이 표 밖으로 사라졌다. Placer::place의 순서는
+      // 대학 → **2군** → 독립 → 그만둔다이다.
+      toFarm: moved.get("LEAGUE_KBL_FARM") ?? 0,
       retired: moved.get("LEAGUE_RETIRED") ?? 0,
     });
   }
 
-  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  미지명→대학  →독립  포기  방출  신입생");
+  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  미지명→대학  →2군  →독립  포기  방출  신입생");
   for (const r of rows) {
     const c = r.counts;
     console.log(
       `${r.year}  ${String(r.nCand).padStart(5)} (${String(c[0]).padStart(4)}/${String(c[1]).padStart(3)}` +
       `/${String(c[2]).padStart(4)}/${String(c[3]).padStart(3)})` +
       `  ${String(r.drafted).padStart(6)}(${String(r.early).padStart(2)})` +
-      `  ${String(r.toUniv).padStart(9)}  ${String(r.toInd).padStart(5)}` +
+      `  ${String(r.toUniv).padStart(9)}  ${String(r.toFarm).padStart(4)}  ${String(r.toInd).padStart(5)}` +
       `  ${String(r.retired).padStart(4)}  ${String(r.released).padStart(4)}  ${String(r.fresh).padStart(6)}`
     );
   }
@@ -283,6 +304,28 @@ function measure(label, kblTeams) {
   }
   console.log(`프로1군 ${sizeOf("LEAGUE_KBL")}`);
   console.log(`프로2군 ${sizeOf("LEAGUE_KBL_FARM")}`);
+  // ⚠ **정원만 보면 자리가 없는 것처럼 보인다.** 육성선수는 정원 밖 인원이라
+  // 실제 상한은 `farmMax + intakeMax`다. 둘을 같이 찍어야 →2군이 0인 이유가 가린다 —
+  // 정원이 Cc3c건지, 육성선수 몫이 Cc3c건지.
+  {
+    const cap = PLACEMENT.farmMax + PLACEMENT.developmentMax;
+    const per = new Map();
+    for (const n of npcs) {
+      if (n.currentLeague !== "LEAGUE_KBL_FARM" || !n.currentTeam) continue;
+      const e = per.get(n.currentTeam) || { tot: 0, dev: 0 };
+      e.tot++; if (n.developmentSince != null) e.dev++;
+      per.set(n.currentTeam, e);
+    }
+    const rows = [...per.values()];
+    const tot = rows.map((r) => r.tot).sort((a, b) => a - b);
+    const dev = rows.map((r) => r.dev).sort((a, b) => a - b);
+    const free = rows.map((r) => cap - r.tot).sort((a, b) => a - b);
+    const devFree = rows.map((r) => PLACEMENT.developmentMax - r.dev).sort((a, b) => a - b);
+    const mid = (v) => v.length ? v[Math.floor(v.length / 2)] : 0;
+    console.log(`  2군 자리  상한 ${cap}(정원 ${PLACEMENT.farmMax}+육성 ${PLACEMENT.developmentMax})` +
+      ` · 총원 중앙 ${mid(tot)} · 남는 자리 중앙 ${mid(free)}/최소 ${free[0]}` +
+      ` · 육성선수 중앙 ${mid(dev)} · 육성 여유 중앙 ${mid(devFree)}/최소 ${devFree[0]}`);
+  }
   console.log(`대학  ${sizeOf("LEAGUE_UNIVERSITY")}`);
   console.log(`독립  ${sizeOf("LEAGUE_INDEPENDENT")}`);
   console.log(`고교  ${sizeOf("LEAGUE_HIGHSCHOOL")}`);
