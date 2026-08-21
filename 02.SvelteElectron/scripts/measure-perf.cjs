@@ -313,6 +313,29 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
       console.log(`  ${r.key.slice(0, 39).padEnd(40)}${String(r.calls).padStart(7)}${fmtMs(r.ms).padStart(10)}${shareStr.padStart(6)}${fmtB(r.inBytes + r.outBytes).padStart(10)}`);
     }
     if (rows.length > 18) console.log(`  ... 외 ${rows.length - 18}종`);
+
+    // ── IPC 바이트 비중 ────────────────────────────────────────
+    //
+    // 🔴 **시간순 표만 보면 줄일 자리를 잘못 고른다.** 게이트는 바이트인데
+    // 위 표는 시간순이고, 바이트는 정렬에도 비중에도 안 들어간다.
+    //
+    // 🔴 더 나쁜 함정: **채널 페이로드 비중을 전체 비중으로 착각하는 것**이다.
+    // `personality`가 `syncNpcs` 페이로드의 20.1%라 "-20%"로 잡았는데,
+    // `syncNpcs`는 한 시즌에 54회뿐이라 **전체의 15%**였다 —
+    // 실제 감축은 **2.3%**였다. 비율을 옮겨 적기 전에 **분모를 맞춘다.**
+    const byBytes = [...rows].map((r) => ({ ...r, bytes: r.inBytes + r.outBytes }))
+      .sort((a, b) => b.bytes - a.bytes);
+    const totalBytes = byBytes.reduce((a, r) => a + r.bytes, 0) || 1;
+    console.log(`${"─".repeat(72)}`);
+    console.log(`IPC 바이트 비중 (게이트) — 총 ${fmtB(totalBytes)}`);
+    console.log(`  ${"호출".padEnd(40)}${"횟수".padStart(7)}${"바이트".padStart(10)}${"전체%".padStart(7)}${"회당".padStart(9)}`);
+    let acc = 0;
+    for (const r of byBytes.slice(0, 10)) {
+      const pct = (r.bytes / totalBytes) * 100;
+      acc += pct;
+      console.log(`  ${r.key.slice(0, 39).padEnd(40)}${String(r.calls).padStart(7)}${fmtB(r.bytes).padStart(10)}${(pct.toFixed(1) + "%").padStart(7)}${fmtB(r.bytes / Math.max(1, r.calls)).padStart(9)}`);
+    }
+    console.log(`  ${"상위 10 누적".padEnd(40)}${"".padStart(7)}${"".padStart(10)}${(acc.toFixed(1) + "%").padStart(7)}`);
     console.log(`${"─".repeat(72)}`);
     console.log(`slot.db         ${dbFiles.map((d) => `${d.f} ${fmtB(d.size)}`).join(" · ") || "(없음)"}`);
     console.log(`메모리 NPC      ${report.npcCount} · 엔티티 ${report.entityCount}`);
