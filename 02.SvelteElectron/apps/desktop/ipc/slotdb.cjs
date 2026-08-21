@@ -636,7 +636,18 @@ function npcToInsertParams(n) {
     abilitiesJson: JSON.stringify(n.abilities ?? {}),
     xpJson: JSON.stringify(n.xp ?? {}),
     formJson: n.form ? JSON.stringify(n.form) : null,
+    // 🔴 **"안 보냄"과 "비우라"를 가른다.**
+    //   `personality`는 7,332명분 매주 보내는데 **거의 안 변한다**(연 1회
+    //   loyalty 감쇠 + FA 때뿐). 페이로드의 20.1%를 차지하는 순수 낭비다.
+    //   → 키가 아예 없으면 **기존 값을 유지**하고, `null`이면 **지운다**.
+    //   은퇴(`retirement.ts`)가 null로 지우는 걸 그대로 살려야 해서 갈랐다.
+    //
+    //   ⚠ sentinel은 SQL에서 못 쓰므로 **문자열 하나**로 표시한다.
+    //   빈 문자열·null과 겹치지 않는 값이어야 한다.
     personalityJson: n.personality ? JSON.stringify(n.personality) : null,
+    // 1이면 "안 보냈다 — 기존 값을 둬라". 새 행이면 어차피 둘 게 없어 null이 된다.
+    // ⚠ **sentinel을 DB에 넣지 않는다.** 값 자리엔 늘 실제 값(또는 null)만 간다
+    personalityKeep: ("personality" in n) ? 0 : 1,
     emotionJson: null,   // 폐기됨 (Phase 6C) — 위 스키마 주석 참고
     injuryJson: n.injury ? JSON.stringify(n.injury) : null,
     extraJson: n.extra ? JSON.stringify(n.extra) : null,
@@ -990,8 +1001,30 @@ const commands = {
 
   // 시즌 경계 벌크 동기화 (오프시즌 일괄 처리 결과 반영 전용 — 주간 변이는 개별 커맨드 사용)
   syncNpcs(db, p) {
+    // ⚠ **`INSERT OR REPLACE`를 쓰면 안 된다.** 행을 통째로 갈아치우므로
+    // 안 보낸 필드가 NULL이 된다 — `personality`를 아끼려고 빼는 순간
+    // 성향이 전원 날아간다. upsert로 바꾸고 **KEEP인 필드만 기존 값을 남긴다.**
+    const up = db.prepare(
+      INSERT_NPC_SQL + `
+      ON CONFLICT(npc_id) DO UPDATE SET
+        name = excluded.name, name_en = excluded.name_en, is_named = excluded.is_named,
+        player_type = excluded.player_type, position = excluded.position,
+        handedness = excluded.handedness, jersey_number = excluded.jersey_number,
+        age = excluded.age, grade = excluded.grade, school_id = excluded.school_id,
+        graduation_year = excluded.graduation_year, nationality = excluded.nationality,
+        career_status = excluded.career_status, current_league = excluded.current_league,
+        current_team = excluded.current_team, salary = excluded.salary,
+        contract_years = excluded.contract_years, pro_service_years = excluded.pro_service_years,
+        military_status = excluded.military_status, military_json = excluded.military_json,
+        development_rate = excluded.development_rate, potential_hidden = excluded.potential_hidden,
+        abilities_json = excluded.abilities_json, xp_json = excluded.xp_json,
+        form_json = excluded.form_json, emotion_json = excluded.emotion_json,
+        injury_json = excluded.injury_json, extra_json = excluded.extra_json,
+        -- **여기 하나만 다르다** — 안 보냈으면(KEEP) 기존 값을 둔다
+        personality_json = CASE WHEN @personalityKeep = 1
+          THEN npc.personality_json ELSE excluded.personality_json END`
+    );
     const t = db.transaction(() => {
-      const up = db.prepare(INSERT_NPC_SQL.replace("INSERT INTO npc", "INSERT OR REPLACE INTO npc"));
       for (const n of p.npcs) up.run(npcToInsertParams(n));
     });
     t();
