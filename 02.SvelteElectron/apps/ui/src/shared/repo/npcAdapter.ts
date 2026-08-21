@@ -153,10 +153,42 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
     potentialHidden: n.potentialHidden ?? 75,
     abilities,
     xp: { pitchingXp: live?.pitchingXp ?? {}, battingXp: live?.battingXp ?? {} },
-    personality: n.personality,
+    // 🔴 **안 변했으면 키 자체를 뺀다.** `personality`는 7,332명분을 매주
+    // 보내는데 거의 안 변한다(연 1회 loyalty 감쇠 + FA 때뿐) — 페이로드의
+    // **20.1%**가 늘 같은 값이었다.
+    //
+    // 저장 쪽이 "키 없음 = 기존 값 유지"를 안다(`slotdb.cjs` personalityKeep).
+    // `null`은 여전히 **지우라**는 뜻이라 은퇴 처리가 그대로 산다.
+    //
+    // ⚠ **지운 적 있는 값을 되살리면 안 된다.** `personality`가 `null`이면
+    // 키를 남겨서 지우기가 전달되게 한다 — `undefined`일 때만 뺀다.
+    ...(personalityChanged(n) ? { personality: n.personality } : {}),
     injury,
     extra: Object.keys(extra).length > 0 ? extra : undefined,
   };
+}
+
+/**
+ * 직전에 보낸 `personality` — npcId → 직렬화 문자열.
+ *
+ * ⚠ **세션 안에서만 산다.** 앱을 다시 켜면 비어 있어 첫 저장 때 전원이
+ * 한 번 실린다. 그게 맞다 — 저장된 값과 메모리가 같다고 **가정하면 안 된다**.
+ */
+const _lastPersonality = new Map<string, string>();
+
+/** 직전에 보낸 것과 달라졌는가. `null`(지우기)은 늘 보낸다 */
+function personalityChanged(n: { npcId: string; personality?: unknown }): boolean {
+  if (n.personality === undefined) return false;   // 애초에 값이 없다
+  if (n.personality === null) return true;          // 지우라는 뜻 — 반드시 전달한다
+  const cur = JSON.stringify(n.personality);
+  if (_lastPersonality.get(n.npcId) === cur) return false;
+  _lastPersonality.set(n.npcId, cur);
+  return true;
+}
+
+/** 슬롯을 바꾸거나 새 게임을 시작하면 비운다 — 다른 세계의 값을 물고 있으면 안 된다 */
+export function resetPersonalityCache(): void {
+  _lastPersonality.clear();
 }
 
 /** 저장: 스토어 상태 전체 → RepoNpc[] (syncNpcs 입력) */
