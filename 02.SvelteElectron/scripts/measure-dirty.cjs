@@ -84,6 +84,8 @@ function onSync(npcs) {
 // "바뀐 것만 보내기"가 통하려면 **안 바뀌는 조각이 있어야** 한다 —
 // personality는 통했고 xp는 안 통했다. 재고 정한다.
 let prevSeason = new Map();
+let prevEntry = new Map();
+const entryRounds = [];
 const seasonBytes = new Map();
 const seasonHits = new Map();
 let seasonRounds = 0;
@@ -101,6 +103,40 @@ function onSeason(season) {
     }
   }
   prevSeason = cur;
+
+  // ── 일정 항목 단위 — **천장을 잰다** ─────────────────────────
+  //
+  // `leagueSchedules`가 setSeason의 76%인데 거의 매주 바뀐다. 다만 바뀌는 건
+  // **결과가 붙은 몇 경기**일 것이다 — 시즌 전체를 통째로 다시 보내는 셈이다.
+  //
+  // ⚠ **NPC 때 95%가 바뀌어 더티 셋이 -4.5%뿐이었다.** 같은 함정인지
+  //   먼저 잰다. 항목의 몇 %가 실제로 달라지는가가 감축의 천장이다.
+  {
+    const cur2 = new Map();
+    let total = 0, changed = 0, totalB = 0, changedB = 0;
+    for (const bucket of ["leagueSchedules", "schedule"]) {
+      const v = season[bucket];
+      if (!v) continue;
+      const lists = Array.isArray(v) ? { _: v } : v;
+      for (const [lid, list] of Object.entries(lists)) {
+        if (!Array.isArray(list)) continue;
+        for (const e of list) {
+          if (!e || typeof e.id !== "string") continue;
+          const key = bucket + "|" + lid + "|" + e.id;
+          const j = JSON.stringify(e);
+          const b = Buffer.byteLength(j, "utf8");
+          total++; totalB += b;
+          cur2.set(key, j);
+          if (seasonRounds > 0 && prevEntry.get(key) !== j) { changed++; changedB += b; }
+        }
+      }
+    }
+    if (seasonRounds > 0 && total > 0) {
+      entryRounds.push({ total, changed, totalB, changedB });
+    }
+    prevEntry = cur2;
+  }
+
   seasonRounds++;
 }
 
@@ -165,6 +201,20 @@ async function main() {
           String(hits).padStart(3) + "/" + cmp +
           (hits === 0 ? "   ← 한 번도 안 바뀐다" : ""));
       }
+    }
+
+    if (entryRounds.length) {
+      const sum = (f) => entryRounds.reduce((a, r) => a + f(r), 0);
+      const t = sum((r) => r.total), c = sum((r) => r.changed);
+      const tb = sum((r) => r.totalB), cb = sum((r) => r.changedB);
+      console.log("");
+      console.log("[일정 항목] " + entryRounds.length + "회 · **천장**");
+      console.log("  회당 항목      " + (t / entryRounds.length).toFixed(0) + "건");
+      console.log("  그중 달라진 것 " + (c / entryRounds.length).toFixed(1) + "건  (" +
+        ((c / Math.max(1, t)) * 100).toFixed(1) + "%)");
+      console.log("  회당 전량      " + MB(tb / entryRounds.length) + " MB");
+      console.log("  회당 바뀐 것만 " + MB(cb / entryRounds.length) + " MB");
+      console.log("  → 줄어드는 비율 " + (100 - (cb / Math.max(1, tb)) * 100).toFixed(1) + "%");
     }
 
     // 주별 추이 — 한 주에 몰리는지 고르게 퍼지는지
