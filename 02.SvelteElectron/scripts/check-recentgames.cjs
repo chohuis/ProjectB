@@ -204,6 +204,39 @@ async function main() {
       if (emptyLines) {
         console.log("    그중 " + emptyLines + "건은 **playerLines가 빈 경기**다 (폴백SIM)");
       }
+      // ⚠ **내 대조 키가 team_id를 쓴다.** 로그에 팀이 안 적히면
+      // 행이 있어도 "놓침"으로 잡힌다 — 결함이 아니라 지표 탓일 수 있다
+      const noTeam = db.prepare(
+        "SELECT COUNT(*) c FROM npc_game_log WHERE team_id = 0x OR team_id IS NULL".replace("0x", String.fromCharCode(39,39))
+      ).get().c;
+      const allLog = db.prepare("SELECT COUNT(*) c FROM npc_game_log").get().c;
+      console.log("    로그 중 team_id가 빈 행  " + noTeam + " / " + allLog +
+        "  (" + ((noTeam / Math.max(1, allLog)) * 100).toFixed(1) + "%)");
+
+      // 놓친 경기의 playerLines 길이를 그대로 찍는다 — "몇 건"만으론
+      // 로그 배선 문제인지 애초에 기록이 없는 경기인지 못 가린다
+      const detail = [];
+      for (const r of played) {
+        let e = null;
+        try { e = JSON.parse(r.json); } catch { continue; }
+        const k1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
+        const k2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        if (!logged.has(k1) && !logged.has(k2)) {
+          const n = e.result && Array.isArray(e.result.playerLines) ? e.result.playerLines.length : -1;
+          detail.push({ lg: r.league_id || "primary", w: r.week, lines: n,
+            tour: !!e.isTournament, fr: !!e.isFriendly,
+            home: e.homeTeamId, away: e.awayTeamId });
+        }
+      }
+      if (detail.length) {
+        console.log("    놓친 경기의 playerLines (앞 8건)");
+        for (const d of detail.slice(0, 8)) {
+          console.log("      " + d.lg.padEnd(20) + " W" + String(d.w).padEnd(3) +
+            " lines=" + String(d.lines).padStart(3) +
+            (d.tour ? " [TOUR]" : d.fr ? " [FRIENDLY]" : "") +
+            "  " + d.home + " vs " + d.away);
+        }
+      }
       if (miss.length) {
         const tally = {};
         for (const m of miss) tally[m] = (tally[m] || 0) + 1;
