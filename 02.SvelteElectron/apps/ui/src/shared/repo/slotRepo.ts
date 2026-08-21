@@ -172,7 +172,16 @@ export const slotRepo = {
   getProtagonist: <T>(slotId: string) => call<T | null>("getProtagonist", { slotId }),
   setProtagonist: (slotId: string, data: unknown) => call<{ ok: true }>("setProtagonist", { slotId, data }),
   getSeason: <T>(slotId: string) => call<T | null>("getSeason", { slotId }),
-  setSeason: (slotId: string, data: unknown) => call<{ ok: true }>("setSeason", { slotId, data }),
+  /**
+   * 시즌 저장. `scheduleDelta`를 주면 **일정만 항목 단위로** 갱신한다
+   * (없으면 예전처럼 전량 교체).
+   *
+   * ⚠ 시즌 롤오버처럼 일정이 통째로 갈릴 땐 델타를 주면 안 된다 —
+   * 지우기를 못 나르므로 옛 일정이 남는다. `collectScheduleDelta`가
+   * 그럴 때 `null`을 돌려준다.
+   */
+  setSeason: (slotId: string, data: unknown, scheduleDelta?: unknown) =>
+    call<{ ok: true }>("setSeason", { slotId, data, ...(scheduleDelta ? { scheduleDelta } : {}) }),
 
   // NPC 삽입 (Lazy 리그 활성화·신입생)
   insertNpcs: (slotId: string, npcs: Partial<RepoNpc>[]) =>

@@ -62,6 +62,7 @@ import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvan
 import { npcLiveStatsStore, liveOvrOf } from "./npcLiveStats";
 import { slotRepo } from "../repo/slotRepo";
 import { dehydrateToRepo } from "../repo/npcAdapter";
+import { collectScheduleDelta, rollbackScheduleDelta } from "../repo/scheduleDelta";
 import { SANGMU_LEAGUE_ID, SANGMU_TEAM_ID } from "../utils/ids";
 import { sportsUnitLimits, protagonistTookSportsSlot } from "../utils/militaryRules";
 import { isV3SlotActive } from "../repo/v3Mode";
@@ -805,7 +806,33 @@ function createGameStore() {
       const season = _getSeasonData();
       const slimSeason = { ...season, npcLiveStats: {} };
       await slotRepo.setProtagonist(slotId, slimGame);
-      await slotRepo.setSeason(slotId, slimSeason);
+      // 🔴 **일정은 바뀐 것만 보낸다.** 시즌 전체를 매주 다시 보내고 있었다 —
+      // `setSeason`이 IPC의 32.5%인데 주마다 3.3%만 달라진다(실측).
+      // `null`이면 전량 모드다(첫 저장·항목이 줄어든 경우 — 롤오버 등).
+      const schedDelta = collectScheduleDelta(slimSeason);
+      // ⚠ **델타를 얹기만 하면 소용없다.** 원본에 일정이 그대로 있으면
+      // 오히려 더 보낸다(실측: 975MB → 996MB로 늘었다). 델타를 쓸 땐
+      // 본문에서 일정을 **비운다** — 저장 쪽이 어차피 안 읽는다.
+      //
+      // ⚠ **리그 키는 남긴다.** `writeSeason`이 `Object.keys(leagueSchedules)`로
+      // `__leagueScheduleIds`를 만들고 `readSeason`이 그걸로 복원한다 —
+      // 키까지 지우면 리그 일정이 통째로 안 읽힌다.
+      const payload = schedDelta
+        ? {
+            ...slimSeason,
+            schedule: [],
+            leagueSchedules: Object.fromEntries(
+              Object.keys(slimSeason.leagueSchedules ?? {}).map((k) => [k, []]),
+            ),
+          }
+        : slimSeason;
+      try {
+        await slotRepo.setSeason(slotId, payload, schedDelta ?? undefined);
+      } catch (e) {
+        // ⚠ 저장이 실패했는데 스냅샷만 앞서 가면 **그 경기가 영영 안 보내진다**
+        rollbackScheduleDelta();
+        throw e;
+      }
       // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
       await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
       // ⚠ **통산 요약을 메타에 같이 남긴다.** 슬롯 선택 화면이 성적을 보여주려면
