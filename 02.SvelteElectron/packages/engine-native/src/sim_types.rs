@@ -780,6 +780,15 @@ pub struct OffseasonParams {
     /// ABL(USA)·JBL(JPN) 로스터 전원이 외국인이 된다
     #[serde(default)]
     pub home_nationality: std::collections::HashMap<String, String>,
+    /// 팀당 외국인 보유 한도 (`foreignRules.perTeam`). 없으면 한도 없음.
+    ///
+    /// 🔴 **FA 재배치가 이걸 안 봤다.** 정원(로스터 상한)만 보고 붙여서
+    /// ABL·JBL 출신 FA가 KBL 팀에 쌓였다 — 실측 총원 113명(규칙대로면 30명).
+    #[serde(default)]
+    pub foreign_per_team: Option<i32>,
+    /// 팀당 외국인 **투수** 한도 (`foreignRules.maxPitchers`)
+    #[serde(default)]
+    pub foreign_max_pitchers: Option<i32>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────

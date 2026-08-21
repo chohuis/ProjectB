@@ -42,14 +42,29 @@ export function rosterLimitsFrom(
  * 전원이 외국인이 된다 — 그 리그 FA가 통째로 멎는다.
  */
 export function foreignParamsFrom(rulesFile: {
-  foreignRules?: { leagues?: string[] };
+  foreignRules?: { leagues?: string[]; perTeam?: number; maxPitchers?: number };
   rosterRules?: Record<string, { nationality?: string }>;
-}): { foreignLeagues: string[]; homeNationality: Record<string, string> } {
+}): {
+  foreignLeagues: string[];
+  homeNationality: Record<string, string>;
+  foreignPerTeam?: number;
+  foreignMaxPitchers?: number;
+} {
   const homeNationality: Record<string, string> = {};
   for (const [lid, r] of Object.entries(rulesFile.rosterRules ?? {})) {
     homeNationality[lid] = r?.nationality ?? "KOR";
   }
-  return { foreignLeagues: rulesFile.foreignRules?.leagues ?? [], homeNationality };
+  // 🔴 **보유 한도를 안 넘기면 FA 재배치가 정원만 보고 붙인다.** 그래서
+  // ABL·JBL 출신 FA가 KBL 팀에 쌓였다 — 실측 총원 113명(규칙대로면 30).
+  // 한도는 `foreignRules`가 정본이고 여기선 그대로 넘기기만 한다.
+  return {
+    foreignLeagues: rulesFile.foreignRules?.leagues ?? [],
+    homeNationality,
+    ...(rulesFile.foreignRules?.perTeam !== undefined
+      ? { foreignPerTeam: rulesFile.foreignRules.perTeam } : {}),
+    ...(rulesFile.foreignRules?.maxPitchers !== undefined
+      ? { foreignMaxPitchers: rulesFile.foreignRules.maxPitchers } : {}),
+  };
 }
 
 export function clampStat(v: number): number {
@@ -106,7 +121,10 @@ export async function runOffseasonProcessing(
    * 외국인 판정표 (`foreignParamsFrom`). 안 넘기면 외국인 개념이 없는 세계로
    * 돌아간다 — 용병이 FA를 취득하고 2군으로 강등되며 보유 한도가 깨진다
    */
-  foreign?: { foreignLeagues: string[]; homeNationality: Record<string, string> },
+  // ⚠ **타입을 좁게 적으면 새 필드가 조용히 잘린다.** `foreignPerTeam`을
+  // 추가했는데 여기서 빠져 Rust까지 못 갔다 — 한도가 안 걸렸다.
+  // `foreignParamsFrom`의 반환형을 그대로 받는다
+  foreign?: ReturnType<typeof foreignParamsFrom>,
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const paramsJson = JSON.stringify({

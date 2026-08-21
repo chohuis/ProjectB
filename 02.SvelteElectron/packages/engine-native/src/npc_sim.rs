@@ -1419,6 +1419,23 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         teams.dedup();
     }
 
+    // 🔴 **FA 재배치가 외국인 한도를 안 봤다.** 정원(로스터 상한)만 보고
+    // 붙여서 ABL·JBL 출신 FA가 KBL 팀에 쌓였다 — 실측 총원 113명(규칙대로면 30).
+    // 이력이 그대로 남아 있었다:
+    //     PLY_AB26_ABL_BAYSEALS_1_001 팀=TEAM_KBL_BUSAN_WAVES_1 [2028:fa_signed]
+    //
+    // 팀별 현재 외국인 수를 세 둔다. 아래 후보 필터가 이걸 본다.
+    let mut team_foreign: std::collections::HashMap<String, (i32, i32)> =
+        std::collections::HashMap::new();   // 팀 → (외국인 수, 그중 투수)
+    for n in processed.iter() {
+        if n.career_status != "active" { continue; }
+        if n.current_team.is_empty() { continue; }
+        if !is_foreign(n) { continue; }
+        let e = team_foreign.entry(n.current_team.clone()).or_insert((0, 0));
+        e.0 += 1;
+        if n.player_type == "pitcher" { e.1 += 1; }
+    }
+
     for npc in processed.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
         // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
@@ -1427,10 +1444,27 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             .unwrap_or("LEAGUE_KBL");
         let max = roster_rule(origin_league, &params.roster_limits).map(|(_, m)| m);
         // 정원에 여유가 있는 팀만 후보다. 여유를 안 보면 FA가 캡을 통과한다
+        // 이 선수가 **돌아갈 리그 기준**으로 외국인인가.
+        // ⚠ `is_foreign`은 `current_league`를 보는데 지금은 LEAGUE_FREE_AGENT라
+        //   늘 false다 — 그래서 여기서 원소속 리그로 다시 묻는다
+        let fgn = foreign_leagues.iter().any(|l| l == origin_league)
+            && npc.nationality.as_deref().unwrap_or("KOR")
+               != home_nationality.get(origin_league).map(|s| s.as_str()).unwrap_or("KOR");
+        let is_pit = npc.player_type == "pitcher";
+
+        // 정원에 여유가 있는 팀만 후보다. 여유를 안 보면 FA가 캡을 통과한다.
+        // **외국인이면 보유 한도까지 본다** — 안 보면 한 팀에 열댓 명이 쌓인다
         let open: Vec<&String> = league_teams.get(origin_league)
             .map(|teams| teams.iter().filter(|t| {
                 let n = team_active_count.get(*t).copied().unwrap_or(0) as i32;
-                max.map_or(true, |m| n < m)
+                if !max.map_or(true, |m| n < m) { return false; }
+                if !fgn { return true; }
+                let (held, pit) = team_foreign.get(*t).copied().unwrap_or((0, 0));
+                if let Some(cap) = params.foreign_per_team { if held >= cap { return false; } }
+                if is_pit {
+                    if let Some(pc) = params.foreign_max_pitchers { if pit >= pc { return false; } }
+                }
+                true
             }).collect())
             .unwrap_or_default();
 
@@ -1446,6 +1480,13 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
         let team = open[idx].clone();
         *team_active_count.entry(team.clone()).or_default() += 1;
+        // ⚠ **집계를 안 갱신하면 같은 주에 여럿이 같은 팀으로 몰린다** —
+        //   한 명씩 볼 땐 다 여유가 있어 보인다
+        if fgn {
+            let e = team_foreign.entry(team.clone()).or_insert((0, 0));
+            e.0 += 1;
+            if is_pit { e.1 += 1; }
+        }
         npc.current_league = origin_league.into();
         npc.current_team   = team;
         npc.original_league_id = None;
