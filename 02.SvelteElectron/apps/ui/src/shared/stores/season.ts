@@ -606,19 +606,6 @@ function createSeasonStore() {
       update((s) => BackgroundLeague.syncProtagonistLeagueUpdate(s, leagueId, result, homeTeamId, awayTeamId));
     },
 
-    applyBackgroundLeagueResult(
-      leagueId: string,
-      scheduleId: string,
-      homeTeamId: string,
-      awayTeamId: string,
-      result: MatchResult,
-      nextHomeRotIdx: number,
-      nextAwayRotIdx: number,
-      pitcherConditions: Record<string, PlayerCondition>,
-    ) {
-      update((s) => BackgroundLeague.applyBackgroundLeagueUpdate(s, leagueId, scheduleId, homeTeamId, awayTeamId, result, nextHomeRotIdx, nextAwayRotIdx, pitcherConditions));
-    },
-
     injectPostseasonEntries(entries: ScheduleEntry[]) {
       update((s) => Postseason.injectPostseasonEntries(s, entries));
     },

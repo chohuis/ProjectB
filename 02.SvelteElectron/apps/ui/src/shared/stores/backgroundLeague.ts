@@ -191,42 +191,6 @@ export async function simulateBackgroundLeagues(
   return { nextSchedules, nextLeagueState, gameLogs };
 }
 
-export function applyBackgroundLeagueUpdate(
-  s: SeasonStoreState,
-  leagueId: string,
-  scheduleId: string,
-  homeTeamId: string,
-  awayTeamId: string,
-  result: MatchResult,
-  nextHomeRotIdx: number,
-  nextAwayRotIdx: number,
-  pitcherConditions: Record<string, PlayerCondition>,
-): SeasonStoreState {
-  const nextSchedules = { ...s.leagueSchedules };
-  const curSched = nextSchedules[leagueId] ?? [];
-  nextSchedules[leagueId] = curSched.map((e) =>
-    e.id === scheduleId ? { ...e, result } : e,
-  );
-
-  const cur = migrateLeagueState(s.leagueState[leagueId] ?? { standings: makeStandings(ALL_TEAMS_BY_LEAGUE[leagueId] ?? []) });
-  const nextLeagueState: LeagueSeasonState = {
-    standings: updateStandings(cur.standings, result, homeTeamId, awayTeamId),
-    stats:     accumulateStats(cur.stats, result.playerLines),
-    playerConditions:  { ...cur.playerConditions, ...pitcherConditions },
-    teamRotationIndex: {
-      ...cur.teamRotationIndex,
-      [homeTeamId]: nextHomeRotIdx,
-      [awayTeamId]: nextAwayRotIdx,
-    },
-  };
-
-  return {
-    ...s,
-    leagueSchedules: nextSchedules,
-    leagueState: { ...s.leagueState, [leagueId]: nextLeagueState },
-  };
-}
-
 export function syncProtagonistLeagueUpdate(
   s: SeasonStoreState,
   leagueId: string,
