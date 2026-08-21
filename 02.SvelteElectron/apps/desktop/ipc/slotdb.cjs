@@ -328,9 +328,30 @@ function migrate(db) {
 // SaveSeason에서 행 단위로 쪼갤 5개 컬렉션. 나머지 필드는 season_meta JSON에 남는다.
 const SEASON_ROW_FIELDS = ["schedule", "standings", "stats", "leagueSchedules", "leagueState"];
 
-/** SaveSeason → 테이블들 (전체 교체). 호출자가 트랜잭션을 연다. */
-function writeSeason(db, season) {
-  for (const t of ["schedule", "standings", "season_stats", "player_condition", "team_rotation"]) {
+/**
+ * SaveSeason → 테이블들. 호출자가 트랜잭션을 연다.
+ *
+ * `scheduleDelta`가 오면 **일정만 항목 단위로** 갱신한다. 나머지 표는
+ * 그대로 전량 교체다(작아서 이득이 없다 — standings 0.1% · stats 2.0%).
+ *
+ * 🔴 **왜 일정만인가:** `setSeason`이 IPC의 32.5%인데 그중 90%가 일정이고,
+ * 주마다 **3.3%만 바뀐다**(실측 7,080건 중 235건). 시즌 전체를 매주 다시
+ * 보내면서 실제로 달라지는 건 그 주에 치른 경기뿐이었다.
+ *
+ * ⚠ **`ord`(정렬 순서)를 건드리면 안 된다.** 델타는 바뀐 항목만 오므로
+ * 인덱스를 새로 매기면 순서가 뒤섞인다 — 기존 `ord`를 그대로 둔다.
+ * 새 항목은 그 리그의 최대 `ord` 뒤에 붙인다(일정은 뒤에 추가되지
+ * 중간에 끼지 않는다 — 대회 라운드도 뒤에 붙는다).
+ *
+ * ⚠ **지우기는 델타로 못 한다.** 시즌이 넘어가 일정이 통째로 갈릴 땐
+ * 호출부가 **전량 모드**를 써야 한다. 그래서 델타는 "덮어쓰기 전용"이다.
+ */
+function writeSeason(db, season, scheduleDelta) {
+  const partial = !!scheduleDelta;
+  const tables = partial
+    ? ["standings", "season_stats", "player_condition", "team_rotation"]
+    : ["schedule", "standings", "season_stats", "player_condition", "team_rotation"];
+  for (const t of tables) {
     db.prepare(`DELETE FROM ${t}`).run();
   }
 
@@ -369,11 +390,39 @@ function writeSeason(db, season) {
     for (const [pid, v] of Object.entries(map)) insStat.run(bucket, leagueId, pid, JSON.stringify(v));
   };
 
-  putSchedule("primary", "", season.schedule);
+  if (partial) {
+    // 기존 `ord`를 살리고, 없던 항목만 뒤에 붙인다
+    const ordOf = db.prepare(
+      "SELECT ord FROM schedule WHERE bucket = ? AND league_id = ? AND entry_id = ?"
+    );
+    const maxOrd = db.prepare(
+      "SELECT COALESCE(MAX(ord), -1) m FROM schedule WHERE bucket = ? AND league_id = ?"
+    );
+    const nextOrd = new Map();
+    for (const d of scheduleDelta) {
+      const { bucket, leagueId = "", entry } = d;
+      if (!entry || typeof entry.id !== "string") continue;
+      const hit = ordOf.get(bucket, leagueId, entry.id);
+      let ord;
+      if (hit) ord = hit.ord;
+      else {
+        const k = bucket + "|" + leagueId;
+        if (!nextOrd.has(k)) nextOrd.set(k, maxOrd.get(bucket, leagueId).m + 1);
+        ord = nextOrd.get(k);
+        nextOrd.set(k, ord + 1);
+      }
+      insSchedule.run(bucket, leagueId, entry.id, ord,
+        entry.week ?? null, entry.result ? 1 : 0, JSON.stringify(entry));
+    }
+  } else {
+    putSchedule("primary", "", season.schedule);
+  }
   putStandings("primary", "", season.standings);
   putStats("primary", "", season.stats);
 
-  for (const [lid, list] of Object.entries(season.leagueSchedules ?? {})) putSchedule("league", lid, list);
+  if (!partial) {
+    for (const [lid, list] of Object.entries(season.leagueSchedules ?? {})) putSchedule("league", lid, list);
+  }
   for (const [lid, st] of Object.entries(season.leagueState ?? {})) {
     putStandings("league", lid, st?.standings);
     putStats("league", lid, st?.stats);
@@ -854,7 +903,9 @@ const commands = {
     return readSeason(db);
   },
   setSeason(db, p) {
-    const t = db.transaction(() => writeSeason(db, p.data ?? {}));
+    // `scheduleDelta`가 있으면 일정만 항목 단위로 갱신한다.
+    // 없으면 예전 그대로 전량 교체 — 시즌 롤오버처럼 통째로 갈릴 땐 그쪽이다
+    const t = db.transaction(() => writeSeason(db, p.data ?? {}, p.scheduleDelta));
     t();
     return { ok: true };
   },
