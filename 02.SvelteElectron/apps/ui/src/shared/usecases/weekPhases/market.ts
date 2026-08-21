@@ -254,9 +254,21 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   //     고야마 하야토  trade LEAGUE_JBL→LEAGUE_KBL
   //     Jordan Warren  trade LEAGUE_ABL→LEAGUE_KBL
   //
-  // 같은 함정에 FA·드래프트에서도 걸렸다. 물어야 할 건 **한도가 있는 리그에서
-  // 외국인인가**다.
-  const tradableRows = npcRows.filter((n) => !isForeignInQuotaLeague(n.nationality));
+  // 같은 함정에 FA·드래프트에서도 걸렸다.
+  //
+  // 🔴 **다만 `isForeignInQuotaLeague(국적)`은 너무 넓었다.** 그건 "한도가
+  // 있는 리그(KBL)에서 외국인인가"라 **USA·JPN이면 무조건 true**다. 그래서
+  // ABL을 처리할 때 448명이 전원 걸러졌고 **ABL·JBL 트레이드가 0건**이었다
+  // (실측: 트레이드 12건이 전부 KBL이었다).
+  //
+  // 물어야 할 건 **"지금 처리 중인 리그에서 외국인인가"**다. ABL 선수는
+  // ABL에서 내국인이니 ABL 안에서는 이적할 수 있어야 한다.
+  //
+  // ⚠ **리그를 넘는 트레이드는 이 함수가 구조적으로 못 만든다** — 아래
+  // `proTeams`가 `t.leagueId === leagueId`로 한 리그만 담고, 위 `npcRows`도
+  // `n.currentLeague === leagueId`로 걸러진다. 주석의 JBL→KBL 사례가 다시
+  // 나면 그 전제가 깨진 것이다 — `check:amateurworld`가 리그 교차를 본다.
+  const tradableRows = npcRows.filter((n) => !isForeignPlayer(leagueId, n.nationality));
 
   const proTeams = m.teams.filter(
     (t) => t.leagueId === leagueId && t.id.endsWith("_1")

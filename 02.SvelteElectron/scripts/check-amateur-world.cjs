@@ -105,6 +105,28 @@ async function main() {
           "  " + String(r.detail || "").slice(0, 40));
       }
     }
+
+    // 🔴 **리그를 넘는 트레이드는 없어야 한다.** 예전에 JBL 선수가 KBL로
+    // 넘어간 적이 있다(market.ts 주석). 국적 필터를 좁히면서 그 방어가
+    // 얇아졌으므로 여기서 못박는다.
+    const cross = db.prepare(
+      "SELECT COUNT(*) c FROM transactions WHERE category = ? AND week IS NOT NULL" +
+      " AND from_league_id IS NOT NULL AND to_league_id IS NOT NULL" +
+      " AND from_league_id <> to_league_id"
+    ).get("trade").c;
+    console.log("");
+    if (cross === 0) console.log("  ok  리그를 넘는 트레이드 0건");
+    else console.log("  FAIL 리그를 넘는 트레이드 " + cross + "건 — JBL→KBL 결함이 되살아났다");
+
+    // 리그별 트레이드 — 한 리그만 돌면 나머지가 막힌 것이다
+    const perLg = db.prepare(
+      "SELECT to_league_id lg, COUNT(*) c FROM transactions" +
+      " WHERE category = ? AND week IS NOT NULL GROUP BY to_league_id ORDER BY c DESC"
+    ).all("trade");
+    console.log("  리그별 진행 중 트레이드");
+    if (!perLg.length) console.log("    (없음)");
+    for (const r of perLg) console.log("    " + String(r.lg || "-").padEnd(18) + String(r.c).padStart(4));
+
     db.close();
   } finally {
     await headless.cleanup(tmp);
