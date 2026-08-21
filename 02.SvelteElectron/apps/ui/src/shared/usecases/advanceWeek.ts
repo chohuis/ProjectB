@@ -2241,7 +2241,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
                   gameDate: game.gameDate,
                 });
               } else {
-                seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
+                await recordGameResult({
+                  kind: "league",
+                  scheduleId: game.id,
+                  result: result,
+                  leagueId: gCurrent.protagonist.leagueId,
+                  nextHomeRotIdx: sim.nextHomeRotIdx,
+                  nextAwayRotIdx: sim.nextAwayRotIdx,
+                  pitcherConditions: sim.pitcherConditions,
+                  homeTeamId: game.homeTeamId,
+                  awayTeamId: game.awayTeamId,
+                  gameDate: game.gameDate,
+                });
                 await applyPostseasonResult(game.id, result);
               }
               accResults.push(result);
@@ -2307,7 +2318,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
                 gameDate: game.gameDate,
               });
             } else {
-              seasonStore.applyProtagonistGroupNpcResult(game.id, npcResult2, leagueId2, game.homeTeamId, game.awayTeamId, nextHomeRot2, nextAwayRot2, pitcherConds2);
+              await recordGameResult({
+                kind: "group",
+                scheduleId: game.id,
+                result: npcResult2,
+                leagueId: leagueId2,
+                homeTeamId: game.homeTeamId,
+                awayTeamId: game.awayTeamId,
+                nextHomeRotIdx: nextHomeRot2,
+                nextAwayRotIdx: nextAwayRot2,
+                pitcherConditions: pitcherConds2,
+                gameDate: game.gameDate,
+              });
               applyPostseasonResult(game.id, npcResult2);
             }
             accResults.push(npcResult2);
@@ -2376,11 +2398,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               gameDate: game.gameDate,
             });
           } else {
-            seasonStore.applyProtagonistGroupNpcResult(
-              game.id, npcResult, leagueId,
-              game.homeTeamId, game.awayTeamId,
-              nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
-            );
+            await recordGameResult({
+              kind: "group",
+              scheduleId: game.id,
+              result: npcResult,
+              leagueId: leagueId,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              nextHomeRotIdx: nextHomeRotIdx,
+              nextAwayRotIdx: nextAwayRotIdx,
+              pitcherConditions: pitcherConds,
+              gameDate: game.gameDate,
+            });
             applyPostseasonResult(game.id, npcResult);
           }
           accResults.push(npcResult);
@@ -2517,7 +2546,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               gameDate: game.gameDate,
             });
           } else {
-            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
+            await recordGameResult({
+              kind: "league",
+              scheduleId: game.id,
+              result: result,
+              leagueId: gCurrent.protagonist.leagueId,
+              nextHomeRotIdx: sim.nextHomeRotIdx,
+              nextAwayRotIdx: sim.nextAwayRotIdx,
+              pitcherConditions: sim.pitcherConditions,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              gameDate: game.gameDate,
+            });
             await applyPostseasonResult(game.id, result);
           }
           accResults.push(result);
@@ -2541,7 +2581,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               gameDate: game.gameDate,
             });
           } else {
-            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
+            await recordGameResult({
+              kind: "league",
+              scheduleId: game.id,
+              result: result,
+              leagueId: gCurrent.protagonist.leagueId,
+              nextHomeRotIdx: sim.nextHomeRotIdx,
+              nextAwayRotIdx: sim.nextAwayRotIdx,
+              pitcherConditions: sim.pitcherConditions,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              gameDate: game.gameDate,
+            });
             await applyPostseasonResult(game.id, result);
           }
           accResults.push(result);
@@ -2571,7 +2622,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               gameDate: game.gameDate,
             });
           } else {
-            seasonStore.applyMatchResult(game.id, result, gCurrent.protagonist.leagueId, sim);
+            await recordGameResult({
+              kind: "league",
+              scheduleId: game.id,
+              result: result,
+              leagueId: gCurrent.protagonist.leagueId,
+              nextHomeRotIdx: sim.nextHomeRotIdx,
+              nextAwayRotIdx: sim.nextAwayRotIdx,
+              pitcherConditions: sim.pitcherConditions,
+              homeTeamId: game.homeTeamId,
+              awayTeamId: game.awayTeamId,
+              gameDate: game.gameDate,
+            });
             await applyPostseasonResult(game.id, result);
           }
           accResults.push(result);
@@ -2664,11 +2726,18 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             gameDate: game.gameDate,
           });
         } else {
-          seasonStore.applyProtagonistGroupNpcResult(
-            game.id, npcResult, leagueId,
-            game.homeTeamId, game.awayTeamId,
-            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
-          );
+          await recordGameResult({
+            kind: "group",
+            scheduleId: game.id,
+            result: npcResult,
+            leagueId: leagueId,
+            homeTeamId: game.homeTeamId,
+            awayTeamId: game.awayTeamId,
+            nextHomeRotIdx: nextHomeRotIdx,
+            nextAwayRotIdx: nextAwayRotIdx,
+            pitcherConditions: pitcherConds,
+            gameDate: game.gameDate,
+          });
           applyPostseasonResult(game.id, npcResult);
         }
         accResults.push(npcResult);
