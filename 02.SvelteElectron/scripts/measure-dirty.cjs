@@ -77,7 +77,40 @@ function onSync(npcs) {
   prev = cur;
 }
 
+// ── setSeason: 어느 조각이 매주 바뀌나 ────────────────────────
+//
+// 전송량 1위(전체 32.5% · 회당 17.7MB)인데 **무엇이 바뀌어서 그런지** 모른다.
+// slot.db는 이미 다섯 표로 쪼개 저장하는데(`writeSeason`) IPC로는 한 덩어리다.
+// "바뀐 것만 보내기"가 통하려면 **안 바뀌는 조각이 있어야** 한다 —
+// personality는 통했고 xp는 안 통했다. 재고 정한다.
+let prevSeason = new Map();
+const seasonBytes = new Map();
+const seasonHits = new Map();
+let seasonRounds = 0;
+
+function onSeason(season) {
+  if (!season || typeof season !== "object") return;
+  const cur = new Map();
+  for (const k of Object.keys(season)) {
+    const v = JSON.stringify(season[k]);
+    const b = v ? Buffer.byteLength(v, "utf8") : 0;
+    seasonBytes.set(k, (seasonBytes.get(k) ?? 0) + b);
+    cur.set(k, v ?? "");
+    if (seasonRounds > 0 && prevSeason.get(k) !== (v ?? "")) {
+      seasonHits.set(k, (seasonHits.get(k) ?? 0) + 1);
+    }
+  }
+  prevSeason = cur;
+  seasonRounds++;
+}
+
 headless.setInterceptor(async (channel, args, call) => {
+  if (channel === "repo:call" && args[0] === "setSeason") {
+    try {
+      const q = typeof args[1] === "string" ? JSON.parse(args[1]) : args[1];
+      onSeason(q && (q.season ?? q.data ?? q));
+    } catch { /* 계측이 진행을 막지 않는다 */ }
+  }
   if (channel === "repo:call" && args[0] === "syncNpcs") {
     try {
       const p = typeof args[1] === "string" ? JSON.parse(args[1]) : args[1];
@@ -119,6 +152,20 @@ async function main() {
     console.log("\n  무엇이 더티를 만드나 (변경 횟수 상위)");
     const top = [...fieldHits].sort((a, b) => b[1] - a[1]).slice(0, 10);
     for (const [k, v] of top) console.log(`    ${k.padEnd(20)} ${v}`);
+
+    if (seasonRounds > 1) {
+      console.log("");
+      console.log("[setSeason] " + seasonRounds + "회 · 조각별 무게와 변경 빈도");
+      const tot = [...seasonBytes.values()].reduce((a, b) => a + b, 0) || 1;
+      const cmp = seasonRounds - 1;
+      for (const [k, b] of [...seasonBytes].sort((x, y) => y[1] - x[1]).slice(0, 10)) {
+        const hits = seasonHits.get(k) ?? 0;
+        console.log("  " + k.padEnd(20) + MB(b / seasonRounds).padStart(7) + " MB/회  " +
+          ((b / tot) * 100).toFixed(1).padStart(5) + "%   변경 " +
+          String(hits).padStart(3) + "/" + cmp +
+          (hits === 0 ? "   ← 한 번도 안 바뀐다" : ""));
+      }
+    }
 
     // 주별 추이 — 한 주에 몰리는지 고르게 퍼지는지
     console.log("\n  회차별 달라진 수 (앞 12회)");
