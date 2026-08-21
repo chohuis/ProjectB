@@ -55,26 +55,55 @@ async function main() {
 
     console.log(`[아마추어 세계] 씨앗 ${SEED} · ${SEASONS}시즌 · 주인공 단계 ${stage}\n`);
 
-    // 새 게임 시점 생성분(seasonYear = 시작연도 이전)과 진행 중 발생분을 가른다
+    // 🔴 **생성분과 진행분은 연도로 못 가른다.** `generateCareerHistory`가
+    //   12년치를 만들어서 시작 연도에도 걸린다 — 그래서 2026년 트레이드 45건을
+    //   "진행 중 발생"으로 잘못 찍었다(실은 전부 생성분이었다).
+    //   정본은 **`week`**다: 생성분은 null, 진행 중 발생은 주차가 있다.
     const rows = db.prepare(
-      "SELECT season_year, category, COUNT(*) c FROM transactions GROUP BY season_year, category ORDER BY season_year, category"
+      "SELECT season_year, category, (week IS NULL) AS seeded, COUNT(*) c" +
+      " FROM transactions GROUP BY season_year, category, seeded" +
+      " ORDER BY season_year, category"
     ).all();
-    console.log("  연도별 · 종류별 거래");
-    let liveFa = 0, liveTrade = 0;
+    console.log("  연도별 · 종류별 거래  (생성분 = 새 게임이 심은 과거)");
+    const live = new Map();
     for (const r of rows) {
-      const live = r.season_year >= start;
-      if (live && r.category === "fa") liveFa += r.c;
-      if (live && r.category === "trade") liveTrade += r.c;
-      console.log(`    ${r.season_year}  ${String(r.category).padEnd(16)} ${String(r.c).padStart(5)}` +
-        (live ? "   ← 진행 중 발생" : "   (새 게임 생성분)"));
+      const tag = r.seeded ? "(생성분)" : "← 진행 중";
+      if (!r.seeded) live.set(r.category, (live.get(r.category) ?? 0) + r.c);
+      console.log("    " + r.season_year + "  " + String(r.category).padEnd(16) +
+        String(r.c).padStart(5) + "   " + tag);
     }
     console.log("");
-    console.log(`  진행 중 FA    ${liveFa}건`);
-    console.log(`  진행 중 트레이드 ${liveTrade}건`);
-    if (liveFa === 0) {
+    console.log("  진행 중 발생 합계");
+    if (live.size === 0) console.log("    (없음)");
+    for (const [k, v] of [...live].sort((a, b) => b[1] - a[1])) {
+      console.log("    " + k.padEnd(16) + String(v).padStart(5));
+    }
+    const liveTrade = live.get("trade") ?? 0;
+    const liveFa = live.get("fa") ?? 0;
+    console.log("");
+    if (liveTrade === 0) {
+      console.log("  🔴 진행 중 트레이드 **0건** — 주인공이 아마추어인 동안");
+      console.log("     프로 트레이드가 한 번도 안 돈다.");
+      console.log("     `advanceWeek`의 트레이드 윈도우가 주인공 리그로 걸려 있다.");
+    } else {
+      console.log("  진행 중 트레이드 " + liveTrade + "건 — 돈다");
+    }
+    console.log("  (견줄 값: 진행 중 FA " + liveFa + "건 — FA는 배경 경로로 돈다)");
+
+    // 진행 중 트레이드가 **어느 주차**에 났는지 — 트레이드 윈도우(W22·W39)면
+    // `processTradeWindow`가 돈 것이고, 아니면 다른 경로다
+    const tw = db.prepare(
+      "SELECT season_year, week, from_league_id, to_league_id, detail FROM transactions" +
+      " WHERE category = ? AND week IS NOT NULL ORDER BY season_year, week"
+    ).all("trade");
+    if (tw.length) {
       console.log("");
-      console.log("  → **주인공이 아마추어인 동안 FA가 한 건도 안 일어났다.**");
-      console.log("    의도인지 결함인지는 사용자가 정한다. 이 검사는 사실만 낸다.");
+      console.log("  진행 중 트레이드의 주차 (윈도우는 W22 · W39)");
+      for (const r of tw.slice(0, 10)) {
+        console.log("    " + r.season_year + " W" + r.week + "  " +
+          (r.from_league_id || "-") + " → " + (r.to_league_id || "-") +
+          "  " + String(r.detail || "").slice(0, 40));
+      }
     }
     db.close();
   } finally {

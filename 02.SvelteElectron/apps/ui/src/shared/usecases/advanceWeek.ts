@@ -38,7 +38,7 @@ import {
 import { sportsUnitLimits } from "../utils/militaryRules";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
-import { facilityTierOf } from "../utils/ids";
+import { facilityTierOf, activeProLeagues } from "../utils/ids";
 import { staffModsOf, staffStatsOf } from "../utils/staffEffects";
 import { calcWeeklyFinance, calcTrainingBonus } from "./finance";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
@@ -964,12 +964,24 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // 프로 트레이드 윈도우 — 연 2회(시즌 중 데드라인 + 스토브리그), 주인공 리그만 (R5, DESIGN.md §5)
+  // 프로 트레이드 윈도우 — 연 2회(시즌 중 데드라인 + 스토브리그)
+  //
+  // 🔴 **예전엔 주인공 리그에서만 돌았다.** 리그 셋을 손으로 적고
+  // `proLeagueIds.includes(myLeague)`로 걸러서, 주인공이 고교·대학에 있는
+  // 동안(최대 7년) **프로 트레이드가 한 건도 안 났다.**
+  //
+  // 실측(고교 주인공 3시즌): 진행 중 트레이드 0건 · 같은 기간 FA 115건.
+  // "트레이드 5건"으로 보이던 건 전부 **FA 보상선수**였다(W39·detail이 증거).
+  // 로스터가 FA로만 움직이고 트레이드로는 안 움직이는 한쪽만 도는 상태였다.
+  //
+  // ⚠ **리그를 손으로 적지 않는다** — CLAUDE.md: "프로 운영에 리그를 직접
+  // 적지 말 것". `activeProLeagues()`가 정본이라 `releaseScope`로 해외를
+  // 닫으면 여기서도 자동으로 빠진다.
   if (weekInYear === TRADE_DEADLINE_WEEK || weekInYear === STOVE_LEAGUE_WEEK) {
-    const proLeagueIds = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
-    const myLeague = get(gameStore).protagonist.leagueId;
-    if (proLeagueIds.includes(myLeague)) {
-      await processTradeWindow(weekInYear, myLeague);
+    // 리그별로 돈다 — `processTradeWindow`가 리그 하나를 받는다.
+    // 순차로 부르는 건 안쪽이 gameStore를 읽고 쓰기 때문이다(동시에 돌리면 덮어쓴다)
+    for (const lid of activeProLeagues()) {
+      await processTradeWindow(weekInYear, lid);
     }
   }
 
