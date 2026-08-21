@@ -61,7 +61,12 @@ export async function runSimBatch(
       // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
       let result = sim.result;
       if (!result.winnerId) {
-        autoLog(`[폴백SIM] 배경리그 엔티티없음: ${g.homeTeamId} vs ${g.awayTeamId} (${g.leagueId})`);
+        // ⚠ **"엔티티없음"이라 단정하지 않는다.** `winnerId`가 빈 이유는
+        // 여럿일 수 있다 — 로스터가 비었을 수도, 라인업을 못 짰을 수도,
+        // 엔진이 다른 이유로 실패했을 수도 있다. **세어서 찍는다.**
+        const homeN = entities.filter((e) => e.teamId === g.homeTeamId && e.role === "player").length;
+        const awayN = entities.filter((e) => e.teamId === g.awayTeamId && e.role === "player").length;
+        autoLog(`[폴백SIM] ${g.leagueId} ${g.homeTeamId}(${homeN}명) vs ${g.awayTeamId}(${awayN}명)`);
         const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
         const fb = JSON.parse(
           await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
