@@ -62,6 +62,7 @@ import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPha
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
 import { simulateNpcGame, logGameLines } from "./weekPhases/games";
+import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
 import { processWeeklyNpcGrowth } from "./weekPhases/growth";
@@ -2588,11 +2589,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           );
         } else if (game.isTournament) {
           // 전국대회 → 개인 기록만. 순위표에 섞이면 다음 대회 시드가 오염된다
-          seasonStore.applyTournamentResult(
-            game.id, npcResult, leagueId,
-            game.homeTeamId, game.awayTeamId,
-            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
-          );
+          await recordGameResult({
+            kind: "tournament",
+            scheduleId: game.id, result: npcResult, leagueId,
+            homeTeamId: game.homeTeamId, awayTeamId: game.awayTeamId,
+            nextHomeRotIdx, nextAwayRotIdx, pitcherConditions: pitcherConds,
+            gameDate: game.gameDate,
+          });
         } else {
           seasonStore.applyProtagonistGroupNpcResult(
             game.id, npcResult, leagueId,

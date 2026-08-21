@@ -187,6 +187,23 @@ async function main() {
             (e.phase ? " " + e.phase : ""));
         }
       }
+      // 놓친 경기가 **선수 기록 없이 끝난 것**인지 본다.
+      // 배경 리그 시뮬이 실패하면 폴백이 playerLines: [] 를 만든다 —
+      // 로그가 없는 게 아니라 **기록 자체가 없는 경기**다
+      let emptyLines = 0;
+      for (const r of played) {
+        let e = null;
+        try { e = JSON.parse(r.json); } catch { continue; }
+        const k1 = [2026, r.week, e.homeTeamId, e.awayTeamId].join("|");
+        const k2 = [2026, r.week, e.awayTeamId, e.homeTeamId].join("|");
+        if (!logged.has(k1) && !logged.has(k2)) {
+          const lines = e.result && Array.isArray(e.result.playerLines) ? e.result.playerLines.length : -1;
+          if (lines === 0) emptyLines++;
+        }
+      }
+      if (emptyLines) {
+        console.log("    그중 " + emptyLines + "건은 **playerLines가 빈 경기**다 (폴백SIM)");
+      }
       if (miss.length) {
         const tally = {};
         for (const m of miss) tally[m] = (tally[m] || 0) + 1;
