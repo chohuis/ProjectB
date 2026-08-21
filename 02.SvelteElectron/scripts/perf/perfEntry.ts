@@ -1094,8 +1094,13 @@ export function foreignProbe(): Record<string, unknown> {
   if (!F?.leagues?.length) return { 규칙: "없음" };
 
   for (const lg of F.leagues) {
+    // ⚠ **이 리그 선수만 센다.** 예전엔 `n.currentLeague`로 물어서
+    // 전 리그를 훑었다 — 지금은 KBL만 슬롯이 있어 결과가 같지만,
+    // 나중에 ABL·JBL에 한도를 주면 세 리그가 한 통에 섞인다
     const held = g.npcs.filter((n) =>
-      n.careerStatus !== "retired" && isForeignPlayer(n.currentLeague ?? "", n.nationality));
+      n.careerStatus !== "retired"
+      && (n.currentLeague ?? "") === lg
+      && isForeignPlayer(lg, n.nationality));
     // ⚠ **보유자 목록에서 팀을 뽑으면 0명인 팀이 아예 안 보인다.** 그러면
     // "미달 없음"이 자리가 통째로 빈 팀을 통과시킨다 — 충원이 죽었을 때
     // 정확히 그렇게 조용해진다. 팀 목록은 refs에서 온다.
@@ -1123,10 +1128,20 @@ export function foreignProbe(): Record<string, unknown> {
         ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
       );
     }).filter((v) => v > 0);
-    // 2군에 외국인이 있으면 1군 전용 원칙이 깨진 것이다
+    // 2군에 외국인이 있으면 1군 전용 원칙이 깨진 것이다.
+    //
+    // 🔴 **예전엔 팀 id가 `_2`로 끝나기만 하면 다 셌다.** 리그를 안 가려서
+    // ABL 2군 16팀 · JBL 2군 12팀이 통째로 들어갔다 — 34명씩이면 952명이고
+    // 실측이 926명이었다. **KBL 한도 검사인데 해외 2군을 세고 있었다.**
+    // 그 셋이 `test:foreign`을 3건 붉게 켜 두고 있었다.
+    //
+    // ⚠ ABL·JBL엔 외국인 슬롯 개념이 없다(`foreignRules.leagues`가 KBL뿐).
+    // 그 리그에서 USA·JPN은 **내국인**이다.
+    const farmOf = `${lg}_FARM`;
     const inFarm = g.npcs.filter((n) =>
-      n.careerStatus !== "retired" && (n.currentTeam ?? "").endsWith("_2")
-      && (n.nationality ?? "KOR") !== "KOR").length;
+      n.careerStatus !== "retired"
+      && (n.currentLeague ?? "") === farmOf
+      && isForeignPlayer(lg, n.nationality)).length;
 
     // ⚠ **집계로는 원인을 못 찾는다.** 한도가 새면 "누가 언제 왜 옮겼는지"를
     // 그 선수의 `careerEvents`에서 직접 읽어야 한다 — 이 프로젝트에서 KBL
@@ -1137,7 +1152,9 @@ export function foreignProbe(): Record<string, unknown> {
     for (const n of g.npcs) {
       if (n.careerStatus === "retired") continue;
       if (!bad.has(n.currentTeam ?? "")) continue;
-      if ((n.nationality ?? "KOR") === "KOR") continue;
+      // 위와 같은 이유 — 이 리그 밖 선수를 상세에 넣으면 원인이 흐려진다
+      if (!(n.currentLeague ?? "").startsWith(lg)) continue;
+      if (!isForeignPlayer(lg, n.nationality)) continue;
       const ev = (n.careerEvents ?? [])
         .map((e) => `${e.year}:${e.eventType}${e.toTeamId ? `→${e.toTeamId}` : ""}`).join(",");
       상세.push(`${n.npcId} ${n.playerType} 팀=${n.currentTeam} 리그=${n.currentLeague} [${ev}]`);
