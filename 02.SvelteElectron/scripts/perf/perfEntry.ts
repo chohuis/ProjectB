@@ -12,6 +12,7 @@ import { masterStore } from "../../apps/ui/src/shared/stores/master";
 import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
 } from "../../apps/ui/src/shared/stores/game";
+import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
@@ -5103,3 +5104,43 @@ export function drainSeasonEndSnapshots(): Record<string, unknown>[] {
   _seasonEndSnaps.length = 0;
   return out;
 }
+
+// ── 이벤트 깔때기 (트랙 B) ────────────────────────────────────────
+
+/**
+ * **이벤트가 안 뜬 건가, 떴는데 밀려난 건가** — 이 둘을 가르는 계측.
+ *
+ * `mailboxProbe`는 소식함에 **닿은 뒤**를 본다. 그 앞에 깔때기가 하나 더 있다:
+ * conditional은 조건을 통과해도 **주당 1건만** 나가고(정의 260건), random은
+ * 풀 확률(18·22·26%)을 못 넘으면 통째로 안 돈다. 이 앞단이 안 보이면
+ * "이벤트 87% 유실"을 상한 탓으로만 읽게 된다.
+ *
+ * 소식함 쪽 숫자(`mailboxProbe`)와 **같이 읽어야 한다** — 여기 `emitted`가
+ * 곧 저기 생산량의 `evt-*` 몫이다.
+ */
+export function eventFunnelProbe(): Record<string, unknown> {
+  const f = eventFunnelStats;
+  const emitted = f.mandatory.emitted + f.conditional.emitted + f.random.emitted;
+  const top = (m: Record<string, number>, n: number) =>
+    Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n)
+      .map(([id, v]) => ({ 규칙: id, 건수: v }));
+  return {
+    주수: f.weeks,
+    발동: emitted,
+    "주당 발동": f.weeks ? +(emitted / f.weeks).toFixed(2) : 0,
+    mandatory:   { ...f.mandatory },
+    conditional: { ...f.conditional },
+    random:      { ...f.random },
+    // 조건도 정책도 통과했는데 주당 1건 상한에 밀린 것 — 이 트랙의 핵심 숫자
+    "밀린 규칙 상위": top(f.crowdedByRule, 15),
+    "빈 메시지로 버려진 규칙": top(f.emptyByRule, 10),
+    "밀린 규칙 종수": Object.keys(f.crowdedByRule).length,
+    // 정의 537건 중 커리어 내내 실제로 화면에 닿은 종수 — "몇 건이 후보였고
+    // 몇 건이 떴는지"의 답이다. 건수가 아니라 **종수**를 본다
+    "뜬 규칙 종수": Object.keys(f.emittedByRule).length,
+    "뜬 규칙 상위": top(f.emittedByRule, 10),
+  };
+}
+
+/** 회차 사이에 섞이지 않게 — 재기 직전에 부른다 */
+export function resetEventFunnel(): void { resetEventFunnelStats(); }

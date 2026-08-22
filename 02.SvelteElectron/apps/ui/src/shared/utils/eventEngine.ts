@@ -104,6 +104,45 @@ function ruleToOutput(
   return { message };
 }
 
+/**
+ * **깔때기 계측** — 소식함에 닿기 전에 몇 건이 걸러지는가.
+ *
+ * `mailboxTrimStats`(game.ts)는 **생산된 뒤** 상한에 밀려난 것을 센다. 그 앞
+ * 단계, 즉 "조건은 통과했는데 엔진이 안 내보낸 것"은 아무도 안 세고 있었다.
+ * 둘을 못 가르면 "이벤트가 안 뜬다"가 **안 뽑힌 건지 밀려난 건지** 알 수 없다 —
+ * 육성선수·메일함에서 이미 두 번 밟은 함정이다.
+ *
+ * 특히 conditional은 조건을 통과해도 **주당 1건만** 나간다(정의 260건). 나머지가
+ * `crowdedOut`이다 — 정책으로 막힌 것(`policyBlocked`)과 성격이 다르다.
+ */
+export const eventFunnelStats = {
+  weeks: 0,
+  mandatory:   { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
+  conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 },
+  // policyBlocked는 random에선 0이어야 한다 — 후보를 고르기 전에 이미 걸러서 넘긴다.
+  // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
+  random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
+  /** 자리를 못 잡아 밀린 규칙 — 어떤 이야기가 못 뜨는지 */
+  crowdedByRule: {} as Record<string, number>,
+  /** 본문도 선택지도 없어 버려진 규칙 */
+  emptyByRule:   {} as Record<string, number>,
+  /**
+   * 실제로 뜬 규칙 — **종수**가 핵심이다. 정의는 537건인데 커리어 내내 몇 종이
+   * 화면에 닿는가. 발동 "건수"만 보면 같은 이야기를 반복해 뽑아도 커 보인다
+   */
+  emittedByRule: {} as Record<string, number>,
+};
+
+export function resetEventFunnelStats(): void {
+  eventFunnelStats.weeks = 0;
+  eventFunnelStats.mandatory   = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
+  eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 };
+  eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
+  eventFunnelStats.crowdedByRule = {};
+  eventFunnelStats.emptyByRule   = {};
+  eventFunnelStats.emittedByRule = {};
+}
+
 // ── 가중치 기반 랜덤 선택 ─────────────────────────────────────
 function weightedPick<T extends { weight?: number }>(items: T[], rand01: number): T | null {
   if (items.length === 0) return null;
@@ -154,8 +193,12 @@ export function runEventEngine(
     rand: nextRand,
   };
 
-  function tryEmit(rule: EventRule) {
-    if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) return;
+  type Lane = "mandatory" | "conditional" | "random";
+  function tryEmit(rule: EventRule, lane: Lane) {
+    if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) {
+      eventFunnelStats[lane].policyBlocked++;
+      return;
+    }
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
     const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, bank);
@@ -168,11 +211,15 @@ export function runEventEngine(
     //
     // 트리거는 그대로 소비한다 — 조건·쿨다운 판정을 바꾸면 그게 밸런스 변경이다.
     if (!message.body?.trim() && !message.decision) {
+      eventFunnelStats[lane].emptyDropped++;
+      eventFunnelStats.emptyByRule[rule.id] = (eventFunnelStats.emptyByRule[rule.id] ?? 0) + 1;
       updatedTriggers[rule.id] = week;
       if (rule.oncePolicy === "once_per_career") careerUpdatedTriggers[rule.id] = week;
       return;
     }
 
+    eventFunnelStats[lane].emitted++;
+    eventFunnelStats.emittedByRule[rule.id] = (eventFunnelStats.emittedByRule[rule.id] ?? 0) + 1;
     newMessages.push(message);
     updatedTriggers[rule.id] = week;
     if (rule.oncePolicy === "once_per_career") {
@@ -186,8 +233,10 @@ export function runEventEngine(
     .filter((r) => evaluateConditions(r.conditions ?? [], ctx))
     .sort((a, b) => b.priority - a.priority);
 
+  eventFunnelStats.weeks++;
+  eventFunnelStats.mandatory.condPass += mandatory.length;
   for (const rule of mandatory) {
-    tryEmit(rule);
+    tryEmit(rule, "mandatory");
   }
 
   // ── 2. conditional 이벤트 (조건 통과, priority 내림차순, 1개만) ─
@@ -196,12 +245,24 @@ export function runEventEngine(
     .filter((r) => evaluateConditions(r.conditions ?? [], ctx))
     .sort((a, b) => b.priority - a.priority);
 
+  eventFunnelStats.conditional.condPass += conditional.length;
+
   if (conditional.length > 0) {
     // oncePolicy 통과하는 첫 번째
     const picked = conditional.find((r) =>
       checkOncePolicy(r, ctx, seasonYear, careerStageYear)
     );
-    if (picked) tryEmit(picked);
+    if (picked) tryEmit(picked, "conditional");
+
+    // ⚠ **계측 전용 두 번째 훑기.** `find`는 뽑은 뒤 멈추므로 그 뒤에 줄 서 있던
+    // 것이 몇 건인지 모른다 — 그게 "조건도 정책도 통과했는데 자리가 없어 밀린"
+    // 건수이고, 이 트랙이 재려는 바로 그 숫자다. 판정에는 안 쓴다.
+    for (const r of conditional) {
+      if (r === picked) continue;
+      if (!checkOncePolicy(r, ctx, seasonYear, careerStageYear)) continue;
+      eventFunnelStats.conditional.crowdedOut++;
+      eventFunnelStats.crowdedByRule[r.id] = (eventFunnelStats.crowdedByRule[r.id] ?? 0) + 1;
+    }
   }
 
   // ── 3. random 이벤트 (풀 단위 확률 롤) ───────────────────────
@@ -213,7 +274,9 @@ export function runEventEngine(
   }
 
   for (const pool of pools) {
+    eventFunnelStats.random.poolRolls++;
     if (nextRand() * 100 > pool.baseRoll.value) continue;
+    eventFunnelStats.random.poolPassed++;
 
     const poolRules = poolRuleMap.get(pool.id) ?? [];
 
@@ -223,9 +286,10 @@ export function runEventEngine(
         checkOncePolicy(r, ctx, seasonYear, careerStageYear) &&
         !updatedTriggers[r.id]
       );
+      eventFunnelStats.random.eligible += eligible.length;
       const picked = weightedPick(eligible, nextRand());
       if (!picked) break;
-      tryEmit(picked);
+      tryEmit(picked, "random");
     }
   }
 
