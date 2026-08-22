@@ -965,6 +965,18 @@ export function getLeagueStandings(leagueId: string, s: import("../../types/seas
 // 프로 NPC: save state 업데이트 (영구 반영)
 // 배경 entity NPC: masterStore entities 인메모리 업데이트 (세션 내 반영)
 export async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> {
+  // 리그 연봉 배수 — **정본은 규칙 파일이다.** Rust에 표가 따로 있었고
+  // 어긋나 있었다(독립 0.14 vs 0.35 · KBL 2군 0.3 vs 없음→1.0).
+  // 못 읽으면 빈 지도를 넘겨 Rust가 옛 표로 떨어지게 둔다 — 0을 넘기면
+  // 연봉이 통째로 무너진다
+  const leagueMultMap: Record<string, number> = await (async () => {
+    try {
+      const r = await loadRosterRules() as {
+        salaryRules?: { leagueMult?: Record<string, number> };
+      };
+      return r.salaryRules?.leagueMult ?? {};
+    } catch { return {}; }
+  })();
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
@@ -1163,6 +1175,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
             currentSalary:    newSalary,
             performanceScore: perfScore,
             greed:            pers.greed,
+            leagueMult:       leagueMultMap,
           })),
           window.projectB!.calcNpcContractYearsNative(JSON.stringify({
             age:                 npc.age,
@@ -1185,6 +1198,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
             currentSalary:    newSalary,
             performanceScore: perfScore,
             greed:            pers.greed,
+            leagueMult:       leagueMultMap,
           }));
           const adjSalary = JSON.parse(salaryRaw) as number;
           // 10% 이상 차이날 때만 중간 조정

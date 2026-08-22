@@ -1126,6 +1126,8 @@ fn release_second_stage(
 fn renew_independent_salaries(
     npcs: &mut [NpcSaveState],
     perf: &HashMap<String, f64>,
+    // 리그 연봉 배수 — 규칙 파일이 정본이다
+    salary_mult: &HashMap<String, f64>,
 ) -> usize {
     let mut n_done = 0;
     for n in npcs.iter_mut() {
@@ -1135,6 +1137,8 @@ fn renew_independent_salaries(
         let greed = n.personality.as_ref().map(|p| p.greed).unwrap_or(40.0);
         let next = crate::player_engine::calc_npc_renewal_salary(
             crate::player_engine::CalcNpcRenewalSalaryParams {
+                // 규칙 파일의 배수를 그대로 넘긴다 — 코드에 표를 두 번 두지 않는다
+                league_mult: salary_mult.clone(),
                 ovr: npc_core_ovr(n),
                 age: n.age,
                 league_id: n.current_league.clone(),
@@ -1731,7 +1735,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 진로 배정(12단계) **앞**에 있어야 방출자가 그 경로를 탄다
     // 11-b0. 독립리그 연봉 갱신. **방출 판정 앞**이어야 그해 성적이 반영된
     // 연봉으로 과지급을 잰다
-    renew_independent_salaries(&mut after_normalize, &params.perf_scores);
+    renew_independent_salaries(&mut after_normalize, &params.perf_scores,
+        &params.salary_rules.as_ref().map(|r| r.league_mult.clone()).unwrap_or_default());
 
     if let Some(rr) = params.release_rules.as_ref() {
         release_second_stage(

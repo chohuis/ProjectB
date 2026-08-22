@@ -256,7 +256,23 @@ pub fn calc_season_rating(params: CalcSeasonRatingParams) -> i64 {
     }
 }
 
-fn league_salary_mult(league_id: &str) -> f64 {
+/// 리그 연봉 배수. **정본은 `generation_rules.json`의 `salaryRules.leagueMult`다.**
+///
+/// 🔴 예전엔 여기 표가 따로 박혀 있었고 규칙 파일과 **어긋났다**:
+///
+///     리그        규칙 파일   여기(옛값)
+///     독립        0.14        0.35        2.5배
+///     KBL 2군     0.3         (없음→1.0)  3.3배
+///
+/// 2군 선수의 시장가·FA 오퍼가 **1군과 같은 배수**로 계산됐다.
+/// `CLAUDE.md`: "코드에 표를 두 번 적지 말 것 — Phase 7에서 이 결함만 15건".
+///
+/// ⚠ 지도가 비면 옛 표로 떨어진다 — 구 페이로드가 조용히 0이 되지 않게.
+fn league_salary_mult(
+    league_id: &str,
+    mult: &std::collections::HashMap<String, f64>,
+) -> f64 {
+    if let Some(v) = mult.get(league_id) { return *v; }
     match league_id {
         "LEAGUE_ABL"         => 3.5,
         "LEAGUE_JBL"         => 2.0,
@@ -268,6 +284,9 @@ fn league_salary_mult(league_id: &str) -> f64 {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalcMarketSalaryParams {
+    /// 리그 연봉 배수 (`salaryRules.leagueMult`). 비면 옛 표로 떨어진다
+    #[serde(default)]
+    pub league_mult: std::collections::HashMap<String, f64>,
     pub ovr: f64,
     pub fame: f64,
     pub league_id: String,
@@ -275,12 +294,15 @@ pub struct CalcMarketSalaryParams {
 
 pub fn calc_market_salary(params: CalcMarketSalaryParams) -> i64 {
     let base = 1800.0 + (params.ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
-    (base * league_salary_mult(&params.league_id)).round() as i64
+    (base * league_salary_mult(&params.league_id, &params.league_mult)).round() as i64
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalcOfferedSalaryParams {
+    /// 리그 연봉 배수 (`salaryRules.leagueMult`). 비면 옛 표로 떨어진다
+    #[serde(default)]
+    pub league_mult: std::collections::HashMap<String, f64>,
     pub current_salary: f64,
     pub rating: f64,
     pub market_salary: f64,
@@ -295,6 +317,9 @@ pub fn calc_offered_salary(params: CalcOfferedSalaryParams) -> i64 {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalcOfferedSalaryForProtagonistParams {
+    /// 리그 연봉 배수 (`salaryRules.leagueMult`). 비면 옛 표로 떨어진다
+    #[serde(default)]
+    pub league_mult: std::collections::HashMap<String, f64>,
     pub pitching_ovr: f64,
     pub fame: f64,
     pub league_id: String,
@@ -315,7 +340,7 @@ pub fn calc_offered_salary_for_protagonist(params: CalcOfferedSalaryForProtagoni
     };
     let market = {
         let base = 1800.0 + (params.pitching_ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
-        base * league_salary_mult(&params.league_id)
+        base * league_salary_mult(&params.league_id, &params.league_mult)
             * params.budget_mod.unwrap_or(1.0).clamp(0.80, 1.25)
     };
     let current = params.current_salary.unwrap_or(market);
@@ -343,6 +368,9 @@ pub struct TeamRef {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GenerateFaOffersParams {
+    /// 리그 연봉 배수 (`salaryRules.leagueMult`). 비면 옛 표로 떨어진다
+    #[serde(default)]
+    pub league_mult: std::collections::HashMap<String, f64>,
     /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
     ///
     /// 🔴 이 넷(FA 입찰·FA 결정·트레이드 응답·오퍼 생성)이 `thread_rng`이라
@@ -385,7 +413,7 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
     if same_league.is_empty() { return vec![]; }
 
     let base = 1800.0 + (params.pitching_ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
-    let market = base * league_salary_mult(&params.league_id);
+    let market = base * league_salary_mult(&params.league_id, &params.league_mult);
     let unsigned_weeks = params.fa_unsigned_weeks.unwrap_or(0);
     let market_drop = (1.0 - unsigned_weeks as f64 * 0.04).max(0.72);
 
@@ -470,7 +498,7 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
         let chance = if params.pitching_ovr >= hi_ovr { hi_chance } else { lo_chance };
         if rng.gen::<f64>() >= chance { continue; }
 
-        let market = base * league_salary_mult(dest);
+        let market = base * league_salary_mult(dest, &params.league_mult);
         let n = rng.gen_range(1..=2usize).min(dest_teams.len());
         let mut idx: Vec<usize> = (0..dest_teams.len()).collect();
         for i in 0..n {
@@ -610,6 +638,9 @@ pub fn calc_indie_scout_offer(p: IndieScoutOfferParams) -> IndieScoutOfferResult
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalcNpcRenewalSalaryParams {
+    /// 리그 연봉 배수 (`salaryRules.leagueMult`). 비면 옛 표로 떨어진다
+    #[serde(default)]
+    pub league_mult: std::collections::HashMap<String, f64>,
     pub ovr: f64,
     pub age: i32,
     pub league_id: String,
@@ -619,7 +650,7 @@ pub struct CalcNpcRenewalSalaryParams {
 }
 
 pub fn calc_npc_renewal_salary(p: CalcNpcRenewalSalaryParams) -> i64 {
-    let market = (1800.0 + (p.ovr - 50.0).max(0.0) * 220.0) * league_salary_mult(&p.league_id);
+    let market = (1800.0 + (p.ovr - 50.0).max(0.0) * 220.0) * league_salary_mult(&p.league_id, &p.league_mult);
     let blend  = p.current_salary as f64 * 0.6 + market * 0.4;
     let perf   = 0.9 + (p.performance_score / 100.0) * 0.2;   // ×0.90~×1.10
     let greed  = 1.0 + (p.greed - 50.0) / 500.0;              // ×0.90~×1.10
