@@ -1662,6 +1662,17 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         if n.player_type == "pitcher" { e.1 += 1; }
     }
 
+    // 팀별 총연봉·포지션 인원 — **루프 앞에서 만든다.** 안에서 `processed`를
+    // 다시 훑으면 가변 순회와 겹친다. 배정할 때마다 갱신한다 —
+    // 안 하면 같은 오프시즌에 한 팀이 무제한으로 부른다
+    let mut team_payroll: HashMap<String, i64> = HashMap::new();
+    let mut team_at_pos: HashMap<(String, String), usize> = HashMap::new();
+    for n in processed.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        *team_payroll.entry(n.current_team.clone()).or_insert(0) += n.current_salary;
+        *team_at_pos.entry((n.current_team.clone(), n.position.clone())).or_insert(0) += 1;
+    }
+
     for npc in processed.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
         // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
@@ -1703,9 +1714,70 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             npc.current_team   = "".into();
             continue;
         }
-        let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
-        let team = open[idx].clone();
+        // ── 구단 입찰 ─────────────────────────────────────────────
+        //
+        // 🔴 예전엔 `open` 중 **무작위**였다. 구단이 원하는지·얼마를 줄지가
+        // 없어서 FA가 되면 전원이 계약했다(실측 미계약 0건).
+        //
+        // ⚠ **후보 선정(`open`)은 그대로 쓴다.** 정원·외국인 보유 한도·투수
+        // 한도·원소속 리그를 이미 본다 — 이번에 외국인을 113 → 30으로 고친
+        // 자리라 건드리면 그게 깨진다.
+        let team = if params.fa_bid_interest_min > 0.0 {
+            let ovr = npc_core_ovr(npc);
+            let mut best: Option<(String, i64)> = None;
+            for tid in &open {
+                // 그 팀이 지금 얇은 자리 — 같은 포지션이 1명 이하면 부족으로 본다
+                let mut needs: Vec<String> = Vec::new();
+                {
+                    let payroll = team_payroll.get(*tid).copied().unwrap_or(0);
+                    let at_pos = team_at_pos
+                        .get(&((*tid).clone(), npc.position.clone())).copied().unwrap_or(0);
+                    if at_pos <= 1 { needs.push(npc.position.clone()); }
+                    let cap = params.team_payroll_cap.get(*tid).copied().unwrap_or(0).max(1);
+                    let bid = crate::team_engine::eval_fa_bid(crate::team_engine::EvalFaBidParams {
+                        seed: 0,
+                        team_profile: params.team_profiles.get(*tid).cloned().unwrap_or_default(),
+                        fa_player: crate::sim_types::FaPlayerRef {
+                            id: npc.npc_id.clone(),
+                            position: npc.position.clone(),
+                            age: npc.age,
+                            ovr,
+                            market_value: npc.current_salary.max(1),
+                            demand_salary: npc.current_salary.max(1),
+                            demand_years: npc.contract_years.max(1),
+                            fame: npc.fame,
+                            personality: npc.personality.clone(),
+                            pro_service_years: npc.pro_service_years.unwrap_or(0),
+                            current_league: origin_league.to_string(),
+                        },
+                        roster_needs: needs,
+                        salary_cap: cap,
+                        current_payroll: payroll,
+                    });
+                    if bid.interest_level < params.fa_bid_interest_min { continue; }
+                    // 1차는 최고 제시액으로 간다 — 선수의 선택은 2차다
+                    if best.as_ref().map_or(true, |(_, s)| bid.bid_salary > *s) {
+                        best = Some(((*tid).clone(), bid.bid_salary));
+                    }
+                }
+            }
+            match best {
+                Some((tid, _)) => tid,
+                // 아무도 안 불렀다 — 미계약. 진로는 D-4가 정한다
+                None => {
+                    events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
+                    npc.current_league = "LEAGUE_INDEPENDENT".into();
+                    npc.current_team   = "".into();
+                    continue;
+                }
+            }
+        } else {
+            let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
+            open[idx].clone()
+        };
         *team_active_count.entry(team.clone()).or_default() += 1;
+        *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
+        *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;
         // ⚠ **집계를 안 갱신하면 같은 주에 여럿이 같은 팀으로 몰린다** —
         //   한 명씩 볼 땐 다 여유가 있어 보인다
         if fgn {

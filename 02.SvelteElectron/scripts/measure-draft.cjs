@@ -255,6 +255,19 @@ function runSeason(npcs, year, kblTeams) {
     salaryRules: gr.salaryRules, rosterLimits: ROSTER_LIMITS,
     universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND, farmTeamIds: DEST_FARM,
     placement: PLACEMENT,
+    // FA 입찰 — 계측기에도 같은 배선을 넣는다. 안 넣으면 옛 동작을 재고
+    // "고쳤는데 숫자가 그대로"가 된다
+    faBidInterestMin: gr.faRules.bidInterestMin ?? 0,
+    teamPayrollCap: (() => {
+      const cap = {};
+      const pay = {};
+      for (const n of aged) {
+        if (n.careerStatus !== "active" || !n.currentTeam) continue;
+        pay[n.currentTeam] = (pay[n.currentTeam] ?? 0) + (n.currentSalary ?? 0);
+      }
+      for (const [tid, cur] of Object.entries(pay)) cap[tid] = Math.round(cur * 1.25);
+      return cap;
+    })(),
     releaseRules: gr.faRules && gr.faRules.release,
   });
   // 🔴 **`off.logs`는 항상 비어 있다.** `npc_sim.rs:1390`에서 만들어져
@@ -263,13 +276,23 @@ function runSeason(npcs, year, kblTeams) {
   // 받침할 뿔했다. **경력 사건은 실제로 남으므로 그걸 센다.**
   const releasedThisYear = (off.npcs || []).reduce((acc, n) =>
     acc + (n.careerEvents || []).filter((e) => e.eventType === "release" && e.year === year).length, 0);
+  // FA 물량 — **자격자·계약·미계약을 갈라 센다.**
+  // 합쳐 세면 "FA가 준다"가 자격 문제인지 갈 팀이 없는 문제인지 안 갈린다.
+  let faSigned = 0, faUnsigned = 0;
+  for (const n of off.npcs || []) {
+    for (const e of n.careerEvents || []) {
+      if (e.year !== year) continue;
+      if (e.eventType === "fa_signed") faSigned++;
+      else if (e.eventType === "fa_unsigned") faUnsigned++;
+    }
+  }
 
   // ── 다음 시즌 W1: 고교 신입생 ────────────────────────────────
   const fresh = generateFreshmen(off.npcs, year + 1);
 
   return {
     after: [...off.npcs, ...fresh], fresh: fresh.length, counts: sel.counts,
-    released: releasedThisYear,
+    released: releasedThisYear, faSigned, faUnsigned,
     nCand: candidates.length,
     earlyPicked: sim.picks.filter((p) => {
       const r = routeOf.get(p.npcId);
@@ -303,6 +326,7 @@ function measure(label, kblTeams) {
     rows.push({
       year, before, fresh: r.fresh, counts: r.counts, nCand: r.nCand, early: r.earlyPicked,
       drafted: r.sim.picks.length, leftover: r.leftoverPending, released: r.released,
+      faSigned: r.faSigned ?? 0, faUnsigned: r.faUnsigned ?? 0,
       toUniv: moved.get("LEAGUE_UNIVERSITY") ?? 0,
       toInd: moved.get("LEAGUE_INDEPENDENT") ?? 0,
       // ⚠ **2군 칸이 없어 합이 안 맞았다.** 진로가 네 갈래인데 셋만
@@ -322,6 +346,14 @@ function measure(label, kblTeams) {
       console.log(`${d.year}  ${String(d.pickPit).padStart(8)}/${String(d.pickBat).padStart(3)}` +
         ` 부족 중앙 ${String(d.shortMid).padStart(2)}/최대 ${String(d.shortMax).padStart(2)}` +
         `${String(d.hadNeed).padStart(13)}${String(d.hit).padStart(14)} (${pct}%)`);
+    }
+    console.log("");
+  }
+  {
+    console.log("");
+    console.log("[FA] 연도별 계약/미계약");
+    for (const r of rows) {
+      console.log(`${r.year}  계약 ${String(r.faSigned).padStart(4)} · 미계약 ${String(r.faUnsigned).padStart(4)}`);
     }
     console.log("");
   }

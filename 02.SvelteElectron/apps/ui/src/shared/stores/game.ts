@@ -2281,6 +2281,26 @@ function createGameStore() {
       // 방출·FA 미계약자의 진로 — 미지명 졸업생과 **같은 로직**을 태운다.
       // 안 넘기면 Rust가 그 사람들을 전부 은퇴시킨다
       const offDest = draftDestinationTeams(get(masterStore).teams);
+      // FA 입찰 — **상한은 팀 예산 지수에서 유도한다**(새 표를 만들지 않는다).
+      // 지금 총연봉에 지수와 여유를 곱한다: 부자 구단은 더 부를 수 있고
+      // 가난한 구단은 못 부른다. `buildSalaryIndex`는 외국인 영입도 쓰는 함수다.
+      const faParams = await (async () => {
+        const min = (offRules.faRules as { bidInterestMin?: number } | undefined)?.bidInterestMin ?? 0;
+        if (!min) return undefined;
+        const { buildSalaryIndex } = await import("../repo/newGameV3");
+        const idx = buildSalaryIndex(get(masterStore).teams);
+        const payroll = new Map<string, number>();
+        for (const n of s.npcs) {
+          if (n.careerStatus !== "active" || !n.currentTeam) continue;
+          payroll.set(n.currentTeam, (payroll.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
+        }
+        const cap: Record<string, number> = {};
+        for (const [tid, cur] of payroll) {
+          // 지수 1.0인 팀이 지금 총연봉의 1.25배까지 쓸 수 있다
+          cap[tid] = Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
+        }
+        return { teamPayrollCap: cap, bidInterestMin: min };
+      })();
       // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
       // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날
       // 때 실력"으로 방출을 정했다. 성적은 **바로 이 시점까지 살아 있다** —
@@ -2326,6 +2346,7 @@ function createGameStore() {
         s.proTeamProfiles,
         // 세계 씨앗 — 안 넘기면 모든 세계가 같은 오프시즌을 낸다
         offWorldSeed,
+        faParams,
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서

@@ -849,6 +849,19 @@ pub struct OffseasonParams {
     ///     if profile.win_now_pressure > 80 { score *= 1.3 }
     #[serde(default)]
     pub team_profiles: std::collections::HashMap<String, ProTeamProfile>,
+    /// 팀별 연봉 상한 (만원). 팀 예산에서 유도한다 — 없으면 입찰이 안 돈다.
+    #[serde(default)]
+    pub team_payroll_cap: std::collections::HashMap<String, i64>,
+    /// FA 입찰 성립 임계값. 0이면 **입찰을 안 하고 예전대로 아무 팀에나 배정**한다.
+    ///
+    /// 🔴 예전엔 FA 재배치가 "정원 여유가 있는 팀 아무 데나"였다 —
+    /// 구단이 원하는지·얼마를 줄지·선수가 받아들일지가 전부 빠져 있었고
+    /// **미계약이 0건**이었다(실측 5시즌). 구단 입찰 판정(`eval_fa_bid`)은
+    /// 구현돼 있는데 아무도 안 불렀다.
+    ///
+    /// ⚠ `interest_level`은 기본 50에서 시작한다 — 아무 이유가 없어도 50이다.
+    #[serde(default)]
+    pub fa_bid_interest_min: f64,
     /// 외국인 보유 한도가 걸리는 리그 (generation_rules.json `foreignRules.leagues`).
     /// 비면 외국인 개념이 없는 세계 — 구 세이브·구 페이로드가 그렇다
     #[serde(default)]
