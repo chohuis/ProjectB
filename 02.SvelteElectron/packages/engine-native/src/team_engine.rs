@@ -199,6 +199,12 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     // 있어도 자리가 안 비므로 그 경로로는 절대 안 걸린다.
     let pitchers_now = p.active_players.iter().filter(|a| is_pit(&a.position)).count();
     let pitcher_short = pitchers_now < crate::tuning::FIRST_TEAM_MIN_PITCHERS;
+    // 🔴 **야수엔 이 짝이 없었다.** 투수는 총원 하한을 보는데 야수는 안 봐서,
+    // 각 자리에 한 명씩만 있으면 야수 총원이 10명이어도 콜업이 안 돌았다
+    // (`gap_fill`은 그 포지션이 **0명**일 때만 걸린다). 야수 총원을 보는 건
+    // 오프시즌 `fill_first_teams`뿐이라 시즌 중엔 그대로 갔다.
+    let batters_total = p.active_players.iter().filter(|a| !is_pit(&a.position)).count();
+    let batter_short = batters_total < crate::tuning::FIRST_TEAM_MIN_BATTERS;
 
     for farm in &p.farm_players {
         // ⚠ **육성선수는 입단 연도엔 1군에 못 올라간다** (KBO: 5월 1일 이후).
@@ -355,6 +361,40 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
                         // 자리 공백(+60)보다 낮다 — 로테이션이 얇아도 경기는 성립한다
                         priority_score: 40.0,
                         reason: "pitcher_short".into(),
+                    });
+                }
+            }
+        }
+    }
+
+    // ── 야수 총원 하한 — `pitcher_short`의 짝 ──────────────────────────
+    //
+    // ⚠ **위 판정에 끼워 넣지 않는다.** 투수 쪽에서 그렇게 했다가 하한 미달인
+    // 모든 팀에서 부진·부상 교체가 사라졌다(회귀 4건). 하한은 최후 수단이다.
+    //
+    // ⚠ **투수 하한 아래로는 안 내린다** — 야수를 채우겠다고 내리면 이번엔
+    // 등판이 무너진다. 2군 야수 하한도 본다(2군도 경기를 한다).
+    if batter_short {
+        let has_bat_candidate = candidates.iter().any(|c|
+            p.farm_players.iter().any(|f| f.id == c.player_id && !is_pit(&f.position)));
+        if !has_bat_candidate {
+            let farm_bat = p.farm_players.iter().filter(|f| !is_pit(&f.position)).count();
+            let farm_floor = rules.farm_min_batters.unwrap_or(crate::tuning::FARM_MIN_BATTERS);
+            if pitchers_now > crate::tuning::FIRST_TEAM_MIN_PITCHERS && farm_bat > farm_floor {
+                // 육성선수는 뺀다 — 하한이 급해도 등록 자체가 안 된다
+                let up = p.farm_players.iter()
+                    .filter(|f| f.registrable && !is_pit(&f.position))
+                    .max_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
+                let down = p.active_players.iter()
+                    .filter(|a| !a.is_foreign && is_pit(&a.position) && count_at(&a.position) >= 2)
+                    .min_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
+                if let (Some(up), Some(down)) = (up, down) {
+                    candidates.push(CallupCandidate {
+                        player_id: up.id.clone(),
+                        replaces_player_id: down.id.clone(),
+                        // 투수 하한과 같은 급이다 — 둘 다 "경기는 되지만 여유가 없다"
+                        priority_score: 40.0,
+                        reason: "batter_short".into(),
                     });
                 }
             }
