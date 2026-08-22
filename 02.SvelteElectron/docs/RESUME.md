@@ -225,6 +225,48 @@ B면 숫자 둘이 더 필요하다 — **표본선**(투수 N이닝·타자 N�
 
 ---
 
+## 🔴 리그를 열거나 고칠 때 — 확인할 표 목록
+
+**이 세션에서 같은 형태를 다섯 번 만났다.** 어떤 표에는 리그가 있고 어떤
+표에는 없다. 해외를 열 때 `rosterRules`엔 2군을 넣었는데 `salaryRules`엔
+안 넣어서 **절반 이상이 연봉 0**이었고, 방출 목록엔 독립리그가 빠져 있었다.
+
+### `generation_rules.json`의 리그별 표 여섯 (2026-08-22 실측)
+
+| 표 | 지금 든 리그 | 안 든 리그가 정상인가 |
+|---|---|---|
+| `rosterRules` | 9개 전부 | — |
+| `salaryRules.leagueMult` | 7개 | 아마추어 둘은 연봉이 없어 정상 |
+| `salaryRules.minSalary` | 7개 | 위와 같다 |
+| `faRules.eligibleYears` | KBL·ABL·JBL | FA는 1군만이라 정상 |
+| `faRules.release.thresholdByLeague` | 독립만 | 나머지는 공통값(55)을 쓴다 |
+| `foreignRules.origin.weights` | ABL·ABL_FARM·JBL | 용병 출신 리그다 |
+
+**리그를 추가하면 여섯을 하나씩 보고 "넣는다/일부러 뺀다"를 정한다.**
+빠뜨리면 그 리그만 조용히 다른 규칙으로 돈다 — 오류가 안 난다.
+
+### 코드에 박힌 리그 목록
+
+```
+npc_sim.rs:747    은퇴·진로 판정      "LEAGUE_KBL" | "LEAGUE_ABL" | "LEAGUE_JBL"
+npc_sim.rs:892    방출 2단계 대상
+npc_sim.rs:1027   방출 리그 목록      ← 여기에 독립리그가 빠져 있었다
+npc_sim.rs:1495~  프로 판정 셋
+game.ts:1139      proLeagueSet
+slotLifecycleV3:501  isPro
+```
+
+⚠ `CLAUDE.md`: **"프로 운영에 리그를 직접 적지 말 것"** — 정본은
+`releaseScope.activeProLeagues()`다. 위 목록은 아직 그걸 안 쓰는 자리들이고,
+새 리그를 열면 **여기부터 본다.**
+
+### 연봉 배수는 규칙 파일이 정본이다
+
+`player_engine.rs`에 표가 따로 박혀 있었고 어긋나 있었다(독립 0.14 vs 0.35 ·
+KBL 2군 0.3 vs 없음→1.0). 지금은 지도를 받아 쓴다 — **다시 박지 않는다.**
+
+---
+
 ## 그 밖 남은 것 (우선순위)
 
 **재봐야 아는 것**
