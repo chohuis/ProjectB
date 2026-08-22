@@ -2806,6 +2806,20 @@ export function rispSplitProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown>
  * ⚠ 갈래를 나눠 찍는다. 하나로 합치면 어느 계통이 갈렸는지 안 보인다 —
  * 로스터가 갈렸는지, 성적이 갈렸는지, 부상이 갈렸는지가 원인을 가른다.
  */
+/** 순위 원본 — W1엔 경기가 없는데 갈리면 리그 활성화나 초기화가 흔들린 것이다 */
+export function standingsSnapshot(): string[] {
+  const s = get(seasonStore);
+  const out: string[] = [];
+  for (const [lid, ls] of Object.entries(s.leagueState ?? {}).sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
+    const rows = (ls as { standings?: Array<{ teamId: string; wins: number; losses: number }> })?.standings ?? [];
+    out.push(`${lid} 팀수=${rows.length}`);
+    for (const st of [...rows].sort((a, b) => (a.teamId < b.teamId ? -1 : 1))) {
+      if (st.wins || st.losses) out.push(`  ${lid}|${st.teamId}|${st.wins}-${st.losses}`);
+    }
+  }
+  return out;
+}
+
 /** 소속 원본 — 로스터가 갈렸을 때 **누가** 다른지 본다 */
 export function rosterRows(): string[] {
   const g = get(gameStore);
@@ -2861,12 +2875,22 @@ export function worldChecksum(): Record<string, string> {
     }
   }
 
+  // ⚠ **스태프는 npcs가 아니라 체크섬 밖이었다.** 콜업이 감독 능력
+  // (staffModsOf(...).callup)을 쓰므로, 스태프가 갈리면 승강이 갈리는데
+  // 원인이 안 보인다 — 로스터만 다르고 이유가 없는 것처럼 보인다.
+  const m = get(masterStore);
+  const staff = [...(m.staffEntities ?? [])]
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+    .map((e) => `${e.id}|${e.teamId ?? ""}|${e.name ?? ""}`);
+
   return {
     roster: hash(roster),
     contract: hash(contract),
     injury: hash(injury),
     standings: hash(stats),
+    staff: hash(staff),
     n: String(g.npcs.length),
+    ns: String((m.staffEntities ?? []).length),
   };
 }
 export function farmDevProbe(): Record<string, unknown> {
