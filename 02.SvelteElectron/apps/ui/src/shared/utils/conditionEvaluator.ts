@@ -133,6 +133,20 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "academic_warning_gte":
       return (schoolState?.academicWarningLevel ?? 0) >= cond.value;
   }
+
+  // 🔴 **여기 없으면 조용히 false가 된다.**
+  //
+  // 예전엔 `default`가 없어서 모르는 타입이 오면 `undefined`가 반환됐고,
+  // `evaluateConditions`의 `every`가 그걸 false로 읽었다. 로그도 예외도
+  // 없으니 **그 이벤트는 영원히 안 뜨고 아무도 모른다.**
+  //
+  // 실제로 그렇게 죽어 있던 게 35종이었다(2026-08-22). 타입은 맞는데
+  // 필드 이름이 틀린 경우였고(`career_stage`에 `stage` 대신 `value`),
+  // 그건 `checkConditionShape`가 막는다. 여긴 타입 자체가 틀린 경우다.
+  throw new Error(
+    `[conditionEvaluator] 모르는 조건 타입: ${JSON.stringify(cond)} — ` +
+    `오타이거나 엔진에 없는 조건이다. 조용히 넘기면 그 이벤트가 영영 안 뜬다`
+  );
 }
 
 // ── 조건 배열 전체 평가 (AND) ─────────────────────────────────

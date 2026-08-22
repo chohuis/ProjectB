@@ -72,6 +72,8 @@ const pct = (a, b) => (b ? (a / b * 100).toFixed(1) : "0.0").padStart(5) + "%";
       + (NODRAFT ? "  · --nodraft (독립 고정)" : "  ⚠ 경로 미고정 — 전후 비교엔 --nodraft를 써라"));
     log("");
 
+    log(`  엔진 시간 ${f["엔진 시간(ms)"]}ms · 주당 ${f["주당 ms"]}ms — 주 진행 전체는 약 2,300ms/주다`);
+    log("");
     log("  ① 갈래별 — 조건 통과 → 발동");
     log("    갈래           조건통과   정책차단   빈메시지     발동    발동/주");
     for (const lane of ["mandatory", "conditional", "random"]) {

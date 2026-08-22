@@ -438,6 +438,65 @@ function parseEffectsArray(effects: string[]): DecisionEffect {
   return result;
 }
 
+/**
+ * 조건 타입 → **평가기가 실제로 읽는 필드**.
+ *
+ * 🔴 **타입이 맞아도 필드 이름이 틀리면 조건은 늘 false다.**
+ * `evaluateCondition`은 `cond.stage`를 읽는데 데이터가 `cond.value`를 쓰면
+ * `undefined`와 비교하게 되고, `evaluateConditions`의 `every`가 그걸 false로
+ * 만든다. **로그도 예외도 없이 그 이벤트가 영원히 안 뜬다.**
+ *
+ * 실측(2026-08-22): `career_stage`에 `value`를 쓴 게 21건, `season_phase`에
+ * 쓴 게 23건 — 규칙 **35종**이 6시즌 내내 후보에조차 못 올랐다. 밀린 목록에도
+ * 안 나타나서 "콘텐츠가 부족하다"로 읽혔다.
+ *
+ * ⚠ **여기가 두 번째 정본이다.** 진짜 정본은 `conditionEvaluator.ts`이고,
+ * `scripts/check-eventconditions.cjs`가 **그 소스에서 필드를 뽑아** 이 표와
+ * 데이터를 함께 검사한다. 표를 늘렸는데 평가기가 안 늘면 거기서 잡힌다.
+ */
+const CONDITION_FIELDS: Record<string, readonly string[]> = {
+  week_gte: ["value"], week_lte: ["value"], week_eq: ["value"],
+  season_phase: ["phase"],
+  career_stage: ["stage"], league_id: ["leagueId"], grade: ["value"],
+  player_type: ["playerType"],
+  fatigue_gte: ["value"], fatigue_lte: ["value"],
+  condition_gte: ["value"], condition_lte: ["value"],
+  morale_gte: ["value"], morale_lte: ["value"],
+  pitching_stat_gte: ["stat", "value"], pitching_stat_lte: ["stat", "value"],
+  pitching_ovr_gte: ["value"], pitching_ovr_lte: ["value"],
+  pitch_learned: ["pitchId"], pitch_training: ["pitchId"],
+  has_tag: ["tag"],
+  season_wins_gte: ["value"], season_era_lte: ["value"],
+  season_ip_gte: ["value"], season_k_gte: ["value"],
+  team_rank_lte: ["value"], team_rank_gte: ["value"],
+  fame_gte: ["value"], pro_year_gte: ["value"],
+  military_phase: [],
+  gpa_gte: ["value"], gpa_lte: ["value"], academic_warning_gte: ["value"],
+};
+
+/**
+ * 데이터가 코드와 어긋나면 **로드에서 죽는다.** 조용히 도는 것보다 낫다 —
+ * 어긋난 이벤트는 어차피 영영 안 뜨는데, 그때는 원인을 찾을 단서가 없다.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function assertConditions(ruleId: string, conditions: any[]): void {
+  for (const c of conditions) {
+    const type = c?.type;
+    const want = CONDITION_FIELDS[type];
+    if (want === undefined) {
+      throw new Error(`[master] ${ruleId}: 모르는 조건 타입 "${type}" — ${JSON.stringify(c)}`);
+    }
+    for (const k of want) {
+      if (c[k] === undefined) {
+        throw new Error(
+          `[master] ${ruleId}: 조건 "${type}"에 필드 ${k}가 없다 — ${JSON.stringify(c)}. ` +
+          `평가기는 cond.${k}를 읽으므로 이대로면 **영원히 false다**`
+        );
+      }
+    }
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseEventRule(raw: Record<string, any>): EventRule {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -462,6 +521,8 @@ function parseEventRule(raw: Record<string, any>): EventRule {
     typeof raw.cooldownWeeks === "number" ? raw.cooldownWeeks :
     typeof raw.cooldownDays  === "number" ? Math.ceil(raw.cooldownDays / 7) :
     undefined;
+
+  assertConditions(String(raw.id ?? "(id 없음)"), conditions);
 
   return {
     id: String(raw.id ?? ""),
@@ -746,28 +807,21 @@ function createMasterStore() {
           loadAchievementsFromManifest(manifest),
         ]);
       } else {
-        // ── 레거시 폴백 (manifest 없을 때) ─────────────────────────────────────────────────
-        console.warn("[masterStore] _manifest.json 없음 — 레거시 로딩");
-        const [mandatoryData, conditionalData, randomData, achData] =
-          await Promise.all([
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            fetchMaster<{ events: Record<string, any>[] }>("events/rules/mandatory.json"),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            fetchMaster<{ events: Record<string, any>[] }>("events/rules/conditional.json"),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            fetchMaster<{ events: Record<string, any>[] }>("events/rules/random.json"),
-            fetchMaster<{ achievements: import("../utils/achievementEngine").MasterAchievement[] }>(
-              "achievements/achievements.json"
-            ),
-          ]);
-        const rawRules = [
-          ...(mandatoryData?.events ?? []),
-          ...(conditionalData?.events ?? []),
-          ...(randomData?.events ?? []),
-        ];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        eventRules  = rawRules.map((r) => parseEventRule(r as Record<string, any>));
-        achievements = achData?.achievements ?? [];
+        // 🔴 **여기가 조용한 함정이었다.**
+        //
+        // `_manifest.json`은 `npm run gen:manifest`가 만드는 생성물이라 갓 판
+        // 워크트리엔 없다. 없으면 이 갈래가 돌면서 `events/rules/*.json`
+        // **19건짜리 스텁**을 물고 게임이 그냥 돈다 — 콘텐츠 537건 중 3.5%다.
+        // `console.warn` 한 줄이 전부였고, 그 상태로 6시즌을 재고 "이벤트가
+        // 안 뜬다"고 결론 낸 적이 실제로 있다(2026-08-22).
+        //
+        // **안 뜨는 게 낫다.** 고치는 법은 한 줄이고, 정상 경로(`dev:ui`·
+        // `build:ui`)는 이미 `gen:manifest`를 먼저 돌린다.
+        throw new Error(
+          "[masterStore] `_manifest.json`이 없다 — `npm run gen:manifest`를 돌려라. " +
+          "예전엔 여기서 19건짜리 레거시 스텁으로 조용히 폴백했고, 그 상태로 잰 계측이 " +
+          "콘텐츠의 3.5%만 보고 '이벤트가 안 뜬다'는 오진을 냈다"
+        );
       }
 
       update((s) => ({

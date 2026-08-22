@@ -5126,6 +5126,8 @@ export function eventFunnelProbe(): Record<string, unknown> {
       .map(([id, v]) => ({ 규칙: id, 건수: v }));
   return {
     주수: f.weeks,
+    "엔진 시간(ms)": +f.elapsedMs.toFixed(1),
+    "주당 ms": f.weeks ? +(f.elapsedMs / f.weeks).toFixed(3) : 0,
     발동: emitted,
     "주당 발동": f.weeks ? +(emitted / f.weeks).toFixed(2) : 0,
     mandatory:   { ...f.mandatory },
@@ -5144,3 +5146,23 @@ export function eventFunnelProbe(): Record<string, unknown> {
 
 /** 회차 사이에 섞이지 않게 — 재기 직전에 부른다 */
 export function resetEventFunnel(): void { resetEventFunnelStats(); }
+
+/**
+ * **이 규칙 하나가 어떻게 됐나** — 연계를 만들었을 때 "실제로 도는가"를 묻는 도구.
+ *
+ * `eventFunnelProbe`는 상위 N종만 찍는다. 새로 만든 이벤트는 대개 하위라
+ * 목록에 안 나타나는데, **안 보이는 것과 안 뜬 것은 다르다.** 이름을 대고 묻는다.
+ *
+ * `밀림 > 0`이면 조건은 통과했다는 뜻이다 — 자리를 못 잡았을 뿐이고,
+ * 그것만으로도 "조건이 도는가"의 답은 나온다.
+ */
+export function eventRuleProbe(ruleId: string): Record<string, unknown> {
+  const f = eventFunnelStats;
+  return {
+    규칙: ruleId,
+    발동: f.emittedByRule[ruleId] ?? 0,
+    밀림: f.crowdedByRule[ruleId] ?? 0,
+    "빈 메시지": f.emptyByRule[ruleId] ?? 0,
+    주인공태그: [...get(gameStore).protagonist.tags],
+  };
+}

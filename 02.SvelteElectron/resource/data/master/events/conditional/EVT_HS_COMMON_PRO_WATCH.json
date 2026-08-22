@@ -7,7 +7,7 @@
   "conditions": [
     {
       "type": "career_stage",
-      "value": "highschool"
+      "stage": "highschool"
     },
     {
       "type": "week_gte",

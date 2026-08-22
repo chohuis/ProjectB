@@ -129,6 +129,8 @@ function ruleToOutput(
  */
 export const eventFunnelStats = {
   weeks: 0,
+  /** 엔진이 쓴 시간 누계(ms) — 구조 판단용 */
+  elapsedMs: 0,
   mandatory:   { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
   conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
                  freshPicked: 0, repeatPicked: 0 },
@@ -148,6 +150,7 @@ export const eventFunnelStats = {
 
 export function resetEventFunnelStats(): void {
   eventFunnelStats.weeks = 0;
+  eventFunnelStats.elapsedMs = 0;
   eventFunnelStats.mandatory   = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
   eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
                  freshPicked: 0, repeatPicked: 0 };
@@ -191,6 +194,7 @@ export function runEventEngine(
   careerStageYear: number,
   randoms: number[],
 ): EventEngineResult {
+  const _t0 = performance.now();
   const newMessages: MessageItem[] = [];
   const updatedTriggers: Record<string, number> = {};
   const careerUpdatedTriggers: Record<string, number> = {};
@@ -327,5 +331,6 @@ export function runEventEngine(
     }
   }
 
+  eventFunnelStats.elapsedMs += performance.now() - _t0;
   return { newMessages, updatedTriggers, careerUpdatedTriggers, sentencePicks: bank.picked };
 }

@@ -10,11 +10,11 @@
   "conditions": [
     {
       "type": "career_stage",
-      "value": "highschool"
+      "stage": "highschool"
     },
     {
       "type": "season_phase",
-      "value": "season"
+      "phase": "season"
     }
   ],
   "messageTemplateId": "MSG_HS_RAIN_INDOOR",
