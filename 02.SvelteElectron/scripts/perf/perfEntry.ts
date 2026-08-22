@@ -2836,6 +2836,45 @@ export function contractRows(): string[] {
     .map((n) => `${n.npcId}|${n.currentLeague}|${n.currentSalary}|${n.contractYears}|${n.age}`);
 }
 
+/**
+ * 성적 원값 분포 — **`form_score`의 눈금을 실제 분포에 맞추려고 잰다.**
+ *
+ * 🔴 그 함수는 투수·타자가 비대칭이다:
+ *   투수  raw = (4.50 − ERA) / 4.50    ERA 9.00이면 −1.0 (일어난다)
+ *   타자  raw = (OPS − .700) / .700    −1.0이려면 OPS .000 (불가능)
+ *
+ * 그래서 성적 감점이 투수는 −1.0까지 가고 타자는 현실적으로 −0.3이 한계다.
+ * 승강·외국인 재계약이 이 값을 쓰므로 **투수만 성적으로 갈린다.**
+ *
+ * ⚠ 표본선(투수 40이닝·타자 120타석)을 넘긴 사람만 센다 — 그 아래는
+ * `form_score`가 어차피 비율만큼 깎아서 눈금 판단에 안 쓰인다.
+ */
+export function statDistribution(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const era: number[] = [];
+  const ops: number[] = [];
+  const push = (rows: Record<string, unknown>) => {
+    for (const st of Object.values(rows ?? {})) {
+      const r = st as { type?: string; ip?: number; era?: number; pa?: number; ops?: number };
+      if (!r) continue;
+      if (r.type === "pitcher" && (r.ip ?? 0) >= 40) era.push(r.era ?? 0);
+      if (r.type === "batter" && (r.pa ?? 0) >= 120) ops.push(r.ops ?? 0);
+    }
+  };
+  push(s.stats as Record<string, unknown>);
+  for (const ls of Object.values(s.leagueState ?? {})) {
+    push((ls as { stats?: Record<string, unknown> })?.stats ?? {});
+  }
+  era.sort((a, b) => a - b);
+  ops.sort((a, b) => a - b);
+  const q = (v: number[], f: number) => (v.length ? Math.round(v[Math.floor(v.length * f)] * 1000) / 1000 : 0);
+  return {
+    투수: era.length,
+    ERA_p10: q(era, 0.1), ERA_중앙: q(era, 0.5), ERA_p90: q(era, 0.9), ERA_최대: q(era, 0.999),
+    타자: ops.length,
+    OPS_p10: q(ops, 0.1), OPS_중앙: q(ops, 0.5), OPS_p90: q(ops, 0.9), OPS_최소: q(ops, 0.001),
+  };
+}
 export function worldChecksum(): Record<string, string> {
   const g = get(gameStore);
   const s = get(seasonStore);

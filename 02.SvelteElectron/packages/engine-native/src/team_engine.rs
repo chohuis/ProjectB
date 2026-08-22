@@ -123,6 +123,13 @@ pub struct PromotionRules {
     pub pitcher_full_innings: f64,
     pub batter_ops_baseline: f64,
     pub batter_full_pa: f64,
+    /// OPS 하한 — 여기서 성적 점수가 −1.0이 된다.
+    ///
+    /// ⚠ **0이면 예전 동작이다**(기준값을 분모로 써서 −1.0에 안 닿는다).
+    /// 실측 OPS 최저가 .457이라 .450으로 둔다 — 투수가 ERA 9.00에서 −1.0에
+    /// 닿는 것과 대칭이다.
+    #[serde(default)]
+    pub batter_ops_floor: f64,
     /// 성적 점수 폭 (±). 넓힐수록 성적이 능력치를 크게 뒤집는다
     pub form_span: f64,
     /// 이 점수 아래면 "장기 부진" — 상시 콜업의 트리거다
@@ -141,6 +148,7 @@ impl Default for PromotionRules {
     fn default() -> Self {
         Self {
             form_weight: 8.0, pitcher_era_baseline: 4.50, pitcher_full_innings: 40.0,
+            batter_ops_floor: 0.0,
             batter_ops_baseline: 0.700, batter_full_pa: 120.0,
             form_span: 1.0, slump_score: -0.5,
             farm_min_pitchers: None, farm_min_batters: None,
@@ -162,7 +170,24 @@ pub fn form_score(perf: Option<&RosterPerf>, is_pitcher: bool, r: &PromotionRule
     } else {
         if perf.plate_appearances <= 0 { return 0.0; }
         // OPS는 기준 대비 비율. 0.700 기준에 0.910이면 +0.3
-        let rel = (perf.ops - r.batter_ops_baseline) / r.batter_ops_baseline.max(0.01);
+        //
+        // 🔴 **마이너스 쪽 분모가 달라야 대칭이 된다.** 기준값(.700)을 그대로
+        // 분모로 쓰면 −1.0이 되는 OPS가 **.000**이라 절대 안 닿는다. 실측
+        // 최저가 .457이라 현실적 하한이 −0.35였다. 투수는 기준의 2배(ERA 9.00)에서
+        // −1.0이고 실측 p90이 7.04·최대 12.8이라 **실제로 닿는다** —
+        // 그래서 성적 감점이 투수에게만 크게 걸렸다.
+        //
+        // 플러스 쪽은 안 건드린다. 좋은 성적의 눈금까지 바꾸면 승강·재계약이
+        // 한꺼번에 달라져 원인을 못 가린다(사용자 확정: 바닥만 고친다).
+        let d = perf.ops - r.batter_ops_baseline;
+        let rel = if d >= 0.0 {
+            d / r.batter_ops_baseline.max(0.01)
+        } else {
+            // 하한까지의 거리로 나눈다 — 하한에서 −1.0이 된다
+            let floor = r.batter_ops_floor;
+            let span = (r.batter_ops_baseline - floor).max(0.01);
+            d / span
+        };
         (rel, (perf.plate_appearances as f64 / r.batter_full_pa.max(1.0)).min(1.0))
     };
 
