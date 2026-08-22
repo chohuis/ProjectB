@@ -2512,7 +2512,21 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
             let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
                 let base = calc_draft_score(npc, meta_map.get(id).copied()) + bias_of(id);
-                base + (rng.next() - 0.5) * spread
+                // 부족한 보직에 가점 — 팀 사정을 본다. 없으면 0이라 예전 그대로다
+                let need = params.team_needs.get(&params.team_ids[t as usize]);
+                let short = match need {
+                    Some(nd) if npc.player_type == "pitcher" => nd.pitchers,
+                    Some(nd) => nd.batters,
+                    None => 0,
+                };
+                // **벗어난 정도에 비례한다.** 무조건 최대로 주면 살짝 기운 팀도
+                // 능력치를 뒤집어서, 부족팀 지명이 100% 부족 보직이 됐다(실측).
+                // 살짝 기운 팀은 거의 영향이 없고 크게 기운 팀만 뒤집는다.
+                let sat = if params.need_saturation > 0.0 { params.need_saturation } else { 1.0 };
+                let need_pt = if short > 0 {
+                    (short as f64 * params.need_bonus / sat).min(params.need_bonus)
+                } else { 0.0 };
+                base + need_pt + (rng.next() - 0.5) * spread
             }).collect();
             let idx = scored_now.iter().enumerate()
                 .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))

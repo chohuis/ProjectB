@@ -41,6 +41,9 @@ const teamsOf = (leagueId, farm = false) =>
 
 const REAL_KBL = teamsOf("LEAGUE_KBL").map((t) => t.teamId);
 
+/** 지명 보직 분포 — 가점 효과를 보는 유일한 지표. 진로 분포는 가점과 무관하다 */
+const draftShape = [];
+
 function buildWorld() {
   const specs = [
     ["LEAGUE_HIGHSCHOOL", teamsOf("LEAGUE_HIGHSCHOOL")],
@@ -164,9 +167,60 @@ function runSeason(npcs, year, kblTeams) {
   const candidates = sel.candidates.map((c) => byId.get(c.npcId)).filter(Boolean);
   const routeOf = new Map(sel.candidates.map((c) => [c.npcId, c.route]));
 
+  // 팀별 부족 보직 — **하한은 규칙 파일에서 유도한다**(draftSystem.teamNeedsOf와 같은 식).
+  // 1군·2군을 합쳐 센다: 지명자는 대부분 2군에서 시작하므로 조직 전체로 봐야 한다.
+  //
+  // ⚠ **여기 안 넘기면 계측이 옛 동작을 잰다.** game.ts는 넘기는데 계측기는
+  // 안 넘기면 "고쳤는데 계측은 그대로"가 되고, 그걸 효과 없음으로 읽게 된다.
+  const needBonus = gr.draftRules.needBonus ?? 0;
+  const teamNeeds = {};
+  {
+    // 절대 하한이 아니라 **목표 비율**로 본다 — 하한으로 재니 부족팀이 0이었다
+    const one = gr.rosterRules.LEAGUE_KBL ?? {};
+    const ratio = one.pitcherRatio ?? 0.45;
+    for (const tid of kblTeams) {
+      const base = tid.replace(/_1$/, "");
+      let pit = 0, bat = 0;
+      for (const n of npcs) {
+        if (n.careerStatus !== "active" || !n.currentTeam) continue;
+        if (n.currentTeam !== base + "_1" && n.currentTeam !== base + "_2") continue;
+        if (n.playerType === "pitcher") pit++; else bat++;
+      }
+      const total = pit + bat;
+      teamNeeds[tid] = {
+        pitchers: Math.max(0, Math.round(total * ratio) - pit),
+        batters:  Math.max(0, Math.round(total * (1 - ratio)) - bat),
+      };
+    }
+  }
+
   const sim = call("runDraftNative", {
     candidates, namedMetas: [], year, rounds: gr.draftRules.rounds, teamIds: kblTeams,
+    teamNeeds, needBonus, needSaturation: gr.draftRules.needSaturation ?? 0,
   });
+
+  // 🔴 **지명의 보직 분포 — 가점이 실제로 먹는지 보는 유일한 지표다.**
+  // 진로 분포(대학·2군·독립·포기)는 가점과 거의 무관해서 숫자가 안 움직인다.
+  // 그걸 "효과 없음"으로 읽으면 틀린다.
+  {
+    const typeOf = new Map(npcs.map((n) => [n.npcId, n.playerType]));
+    let pickPit = 0, pickBat = 0, hit = 0, hadNeed = 0;
+    for (const pk of sim.picks) {
+      const t = typeOf.get(pk.npcId);
+      if (t === "pitcher") pickPit++; else pickBat++;
+      const nd = teamNeeds[pk.teamId];
+      if (!nd) continue;
+      const need = (nd.pitchers > 0) || (nd.batters > 0);
+      if (!need) continue;
+      hadNeed++;
+      const filled = t === "pitcher" ? nd.pitchers > 0 : nd.batters > 0;
+      if (filled) hit++;
+    }
+    // 부족 인원 분포 — 대부분 상한에 붙으면 비례가 무의미하다
+    const shorts = Object.values(teamNeeds).map((n) => Math.max(n.pitchers, n.batters)).sort((a, b) => a - b);
+    const mid = shorts[Math.floor(shorts.length / 2)] ?? 0;
+    draftShape.push({ year, pickPit, pickBat, hadNeed, hit, shortMid: mid, shortMax: shorts[shorts.length - 1] ?? 0 });
+  }
 
   if (year === START_YEAR && sim.picks.length > 0) {
     const c = gr.draftRules.contract;
@@ -259,6 +313,18 @@ function measure(label, kblTeams) {
     });
   }
 
+  if (draftShape.length) {
+    console.log("");
+    console.log(`[지명 보직] needBonus=${gr.draftRules.needBonus ?? 0}`);
+    console.log("연도    지명 투수/야수   부족팀 지명   그중 부족보직 충족");
+    for (const d of draftShape) {
+      const pct = d.hadNeed ? Math.round((d.hit / d.hadNeed) * 100) : 0;
+      console.log(`${d.year}  ${String(d.pickPit).padStart(8)}/${String(d.pickBat).padStart(3)}` +
+        ` 부족 중앙 ${String(d.shortMid).padStart(2)}/최대 ${String(d.shortMax).padStart(2)}` +
+        `${String(d.hadNeed).padStart(13)}${String(d.hit).padStart(14)} (${pct}%)`);
+    }
+    console.log("");
+  }
   console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  미지명→대학  →2군  →독립  포기  방출  신입생");
   for (const r of rows) {
     const c = r.counts;

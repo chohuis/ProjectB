@@ -43,6 +43,7 @@ import {
   draftDestinationTeams,
   draftOrderOf,
   placementRulesFrom,
+  teamNeedsOf,
 } from "../utils/draftSystem";
 import { loadRosterRules, buildSalaryIndex } from "../repo/newGameV3";
 import type {
@@ -3311,8 +3312,16 @@ function createGameStore() {
       // 지명 대상 풀 배수 — 보드에 싣는 수와 **같은 값**을 쓴다.
       // 다르면 "화면엔 220명인데 실제로는 1,682명에서 뽑는" 상태가 된다
       const poolMult = (draftRules as { boardCandidateMultiplier?: number }).boardCandidateMultiplier ?? 2;
+      // 팀 사정 — **안 넘기면 구단이 뭐가 모자란지 모른 채 최고점만 뽑는다.**
+      // 야수 10명인 팀도 최고점 투수가 남아 있으면 그 투수를 뽑았다.
+      // 하한은 규칙 파일에서 유도한다(표를 새로 두지 않는다)
+      const needBonus = (draftRules as { needBonus?: number }).needBonus ?? 0;
+      const teamNeeds = needBonus > 0
+        ? teamNeedsOf(get({ subscribe }).npcs, draftOrder, rulesFile.rosterRules)
+        : {};
       const simResult = await runDraftSimulation(
         candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
+        needBonus > 0 ? { teamNeeds, needBonus, needSaturation: (draftRules as { needSaturation?: number }).needSaturation ?? 0 } : undefined,
       );
 
       // ── 주인공을 보드에 끼워 넣는다 ──────────────────────────
