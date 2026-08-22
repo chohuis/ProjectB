@@ -571,11 +571,19 @@ function parseDecisionTemplate(raw: Record<string, any>): DecisionTemplate {
         // ???щ㎎: { fatigueDelta: 10, xp: { velocity: 3 } }
         effects = o.effects as DecisionEffect;
       }
+      // 선택지 조건도 규칙 조건과 **같은 검증을 받는다** — 여기만 빠지면
+      // 오타 하나가 그 선택지를 영원히 안 보이게 만들고 아무도 모른다
+      const conditions = Array.isArray(o.conditions)
+        ? (o.conditions as import("../types/event").Condition[])
+        : undefined;
+      if (conditions) assertConditions(`${raw.id ?? "(id 없음)"}#${o.id ?? "?"}`, conditions);
+
       return {
         id: String(o.id ?? ""),
         label: String(o.label ?? ""),
         effectHint: typeof o.effectHint === "string" ? o.effectHint : undefined,
         effects,
+        conditions,
       };
     }
   );

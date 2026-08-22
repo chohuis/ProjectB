@@ -66,6 +66,8 @@ function ruleToOutput(
   msgTmpl: MessageTemplate | undefined,
   decTmpl: DecisionTemplate | undefined,
   week: number,
+  /** 선택지 조건을 재는 데 쓴다 — 조건 없는 선택지만 있으면 안 봐도 된다 */
+  ctx: EventContext,
   /** 문장 뱅크 선택용. 뱅크가 없는 템플릿이면 안 쓴다 */
   bank?: {
     memory: SentenceMemory;
@@ -93,6 +95,25 @@ function ruleToOutput(
     }
   }
 
+  // ── 선택지 조건 (2026-08-23) ─────────────────────────────────
+  // 조건 없는 선택지는 항상 열려 있다. 조건이 붙은 것만 지금 상태로 잰다.
+  //
+  // 🔴 **다 닫히면 선택지를 통째로 뗀다.** `trimMailbox`가 미결 선택지를
+  // 상한 위로 보존하므로, 0개짜리 선택지가 생기면 화면에 버튼이 하나도 없는
+  // **영원히 못 지우는 메시지**가 된다. 그때는 소식만 남긴다.
+  const allOptions = decTmpl?.options ?? [];
+  const openOptions = allOptions.filter(
+    (o) => !o.conditions || evaluateConditions(o.conditions, ctx),
+  );
+  if (decTmpl) {
+    eventFunnelStats.optionsOffered += allOptions.length;
+    eventFunnelStats.optionsOpen    += openOptions.length;
+    if (allOptions.length > 0 && openOptions.length === 0) {
+      eventFunnelStats.decisionsClosedOut++;
+      eventFunnelStats.closedOutByRule[rule.id] = (eventFunnelStats.closedOutByRule[rule.id] ?? 0) + 1;
+    }
+  }
+
   const message: MessageItem = {
     id:        `evt-${rule.id}-w${week}-${Date.now()}`,
     category:  EVENT_DISPLAY_CATEGORY[msgTmpl?.category ?? ""] ?? "system",
@@ -102,9 +123,9 @@ function ruleToOutput(
     body,
     createdAt: `W${week}`,
     readAt:    null,
-    decision: decTmpl ? {
-      prompt: decTmpl.prompt ?? title,
-      options: decTmpl.options.map((o) => ({
+    decision: openOptions.length > 0 ? {
+      prompt: decTmpl!.prompt ?? title,
+      options: openOptions.map((o) => ({
         id:         o.id,
         label:      o.label,
         effectHint: o.effectHint ?? "",
@@ -139,6 +160,12 @@ export const eventFunnelStats = {
   random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
   /** 자리를 못 잡아 밀린 규칙 — 어떤 이야기가 못 뜨는지 */
   crowdedByRule: {} as Record<string, number>,
+  /** 선택지가 제시된 총수 / 그중 조건을 통과해 열린 수 */
+  optionsOffered: 0,
+  optionsOpen: 0,
+  /** 조건 때문에 선택지가 **전부** 닫혀 소식만 나간 횟수 */
+  decisionsClosedOut: 0,
+  closedOutByRule: {} as Record<string, number>,
   /** 본문도 선택지도 없어 버려진 규칙 */
   emptyByRule:   {} as Record<string, number>,
   /**
@@ -155,6 +182,10 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
                  freshPicked: 0, repeatPicked: 0 };
   eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
+  eventFunnelStats.optionsOffered = 0;
+  eventFunnelStats.optionsOpen = 0;
+  eventFunnelStats.decisionsClosedOut = 0;
+  eventFunnelStats.closedOutByRule = {};
   eventFunnelStats.crowdedByRule = {};
   eventFunnelStats.emptyByRule   = {};
   eventFunnelStats.emittedByRule = {};
@@ -219,7 +250,7 @@ export function runEventEngine(
     }
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
-    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, bank);
+    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, ctx, bank);
 
     // 본문도 선택지도 없는 이벤트는 **메시지함에 빈 칸으로 보인다.**
     // `EVT_TRADE_RUMOR`·`EVT_TRADE_CONFIRMED`가 실제로 그랬다 — 그 둘은

@@ -16,6 +16,22 @@
 // 답인지가 갈린다 — 상한만 올려도 ③에서 이미 버려진 건 안 돌아온다.
 //
 // ⚠ **판정이 아니라 계측이다.** 숫자만 찍고 아무것도 안 고친다.
+//
+// 🔴 **1회 실행으로 전후를 비교하지 마라.** 같은 코드·같은 씨앗·`--nodraft`로
+// 세 번 돌린 실측(2026-08-23):
+//
+//   뜬 종수   141 143 143   폭 ±2
+//   밀림      913 963 903   폭 ±60 (6%)
+//   재발동%  53.8 52.2 51.9  폭 ±1.9%p
+//
+// 주차(292)는 세 번 다 같은데 **이벤트 결과가 흔들린다.** 원인은 B 밖이다 —
+// `CLAUDE.md` 남은 결함 #1, Rust `thread_rng` 31곳이 유력하다.
+//
+// 그래서 **이 폭보다 작은 차이는 효과가 아니다.** 실제로 "142 → 143"을 효과로
+// 읽고 보고한 적이 있다. 작은 차이를 재려면 `--runs 3`을 쓴다.
+//
+//   node scripts/measure-eventfunnel.cjs --nodraft --runs 3
+//   node scripts/measure-eventfunnel.cjs --nodraft --json   (1회 · 기계용)
 
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
@@ -32,13 +48,58 @@ const SEED = arg("seed", 20260803);
 // **깔때기 숫자가 통째로 달라진다** — 변경 효과인 줄 알고 읽게 된다.
 // `--nodraft`로 드래프트를 끄면 항상 독립으로 가서 두 실행이 같은 세계를 돈다.
 const NODRAFT = process.argv.includes("--nodraft");
+const JSON_OUT = process.argv.includes("--json");
+const RUNS = arg("runs", 1);
+/** 자식 프로세스 출력에서 결과 줄을 찾는 표식 — 부팅 로그와 섞이므로 필요하다 */
+const MARK = "__FUNNEL_JSON__";
 
 const log = (s) => process.stdout.write(s + "\n");
 const pct = (a, b) => (b ? (a / b * 100).toFixed(1) : "0.0").padStart(5) + "%";
 
-(async () => {
+/** `--runs N` — 자기를 N번 자식으로 띄워 `--json` 결과를 모으고 폭을 찍는다 */
+function multiRun() {
+  const { spawnSync } = require("node:child_process");
+  const base = process.argv.slice(2).filter((a) => a !== "--runs" && a !== String(RUNS));
+  const rows = [];
+  for (let i = 1; i <= RUNS; i++) {
+    const r = spawnSync(process.execPath, [__filename, ...base, "--json"], {
+      encoding: "utf8", env: process.env, maxBuffer: 64 * 1024 * 1024,
+    });
+    const line = String(r.stdout || "").split("\n").find((l) => l.startsWith(MARK));
+    if (!line) {
+      log(`  회차 ${i} 실패 — 출력에 ${MARK}가 없다`);
+      log(String(r.stdout || "").slice(-500));
+      process.exit(1);
+    }
+    rows.push(JSON.parse(line.slice(MARK.length)));
+    log(`  회차 ${i}/${RUNS} 끝`);
+  }
   log("");
-  log("── 이벤트 깔때기 ─────────────────────────────────────────");
+  log(`── ${RUNS}회 평균과 폭 ─────────────────────────────────────`);
+  log("  항목                평균     최소~최대     폭");
+  const KEYS = [
+    ["주수", "주수"], ["뜬 종수", "뜬종수"], ["밀림", "밀림"],
+    ["밀린 규칙 종수", "밀린종수"], ["conditional 발동", "발동"],
+    ["처음 뜬 것", "처음뜬"], ["재발동", "재발동"],
+  ];
+  for (const [label, k] of KEYS) {
+    const v = rows.map((r) => r[k]);
+    const min = Math.min(...v), max = Math.max(...v);
+    const avg = v.reduce((a, b) => a + b, 0) / v.length;
+    log(`  ${label.padEnd(18)}${avg.toFixed(1).padStart(7)}${(min + "~" + max).padStart(13)}${String(max - min).padStart(7)}`);
+  }
+  log("");
+  log("  읽는 법 — **폭보다 작은 차이는 효과가 아니다.**");
+  log("  회차별 원값: " + JSON.stringify(rows));
+}
+
+if (RUNS > 1) { multiRun(); return; }
+
+(async () => {
+  if (!JSON_OUT) {
+    log("");
+    log("── 이벤트 깔때기 ─────────────────────────────────────────");
+  }
 
   let tmp = null;
   try {
@@ -67,6 +128,16 @@ const pct = (a, b) => (b ? (a / b * 100).toFixed(1) : "0.0").padStart(5) + "%";
     const f = app.eventFunnelProbe();
     const m = app.mailboxProbe();
     const seasons = app.currentSeason() - start || 1;
+
+    if (JSON_OUT) {
+      const c0 = f.conditional;
+      log(MARK + JSON.stringify({
+        주수: f.주수, 뜬종수: f["뜬 규칙 종수"], 밀림: c0.crowdedOut,
+        밀린종수: f["밀린 규칙 종수"], 발동: c0.emitted,
+        처음뜬: c0.freshPicked, 재발동: c0.repeatPicked,
+      }));
+      return;
+    }
 
     log(`  씨앗 ${SEED} · ${start}~${app.currentSeason()} (${seasons}시즌) · ${f.주수}주`
       + (NODRAFT ? "  · --nodraft (독립 고정)" : "  ⚠ 경로 미고정 — 전후 비교엔 --nodraft를 써라"));

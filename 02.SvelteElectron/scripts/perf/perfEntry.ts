@@ -5137,6 +5137,10 @@ export function eventFunnelProbe(): Record<string, unknown> {
     "밀린 규칙 상위": top(f.crowdedByRule, 15),
     "빈 메시지로 버려진 규칙": top(f.emptyByRule, 10),
     "밀린 규칙 종수": Object.keys(f.crowdedByRule).length,
+    // 선택지 단위 조건 — 몇 개가 제시됐고 몇 개가 열렸나
+    "선택지 제시": f.optionsOffered,
+    "선택지 열림": f.optionsOpen,
+    "선택지 전부 닫힘": f.decisionsClosedOut,
     // 정의 537건 중 커리어 내내 실제로 화면에 닿은 종수 — "몇 건이 후보였고
     // 몇 건이 떴는지"의 답이다. 건수가 아니라 **종수**를 본다
     "뜬 규칙 종수": Object.keys(f.emittedByRule).length,
