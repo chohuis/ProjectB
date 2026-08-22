@@ -749,7 +749,8 @@
           "웨슬리",
           "잭"
         ]
-      }
+      },
+      "withContract": true
     },
     "LEAGUE_JBL_FARM": {
       "_note": "해외 팜 — 1군 규칙에서 파생. 국내 2군(rosterSize 34, 1군보다 OVR 하향)과 같은 관계",
@@ -960,7 +961,8 @@
           "Minato"
         ],
         "givenBEn": []
-      }
+      },
+      "withContract": true
     },
     "_noteNamePool": "리그별 이름 풀. 없으면 내장 한국식 풀이 나온다 — 그래서 ABL·JBL이 한국 이름으로 찼었다. 일본식은 `sep: ' '`로 성-이름을 띄어 쓴다(사토 하루토). 서양식은 `western: true`(이름 성).",
     "_noteNamePair": "이름 풀의 짝 표기. 인덱스가 1:1이어야 한다 — 어긋나면 김씨가 Lee로 나온다. 일본은 한글이 원본이고 `surnamesEn`이 짝, 서양은 영문이 원본이고 `surnamesKo`가 짝이다. 한국 리그는 Rust 내장 풀(`npc_sim.rs` SURNAMES/SYLLABLES_*)과 그 `*_EN` 짝을 쓴다."
@@ -1002,15 +1004,20 @@
       "LEAGUE_KBL_FARM": 0.3,
       "LEAGUE_INDEPENDENT": 0.14,
       "LEAGUE_ABL": 3.5,
-      "LEAGUE_JBL": 2
+      "LEAGUE_JBL": 2,
+      "LEAGUE_ABL_FARM": 1.05,
+      "LEAGUE_JBL_FARM": 0.6
     },
     "minSalary": {
       "LEAGUE_KBL": 3000,
       "LEAGUE_KBL_FARM": 3000,
       "LEAGUE_INDEPENDENT": 1200,
       "LEAGUE_ABL": 8000,
-      "LEAGUE_JBL": 6000
-    }
+      "LEAGUE_JBL": 6000,
+      "LEAGUE_ABL_FARM": 8000,
+      "LEAGUE_JBL_FARM": 6000
+    },
+    "_leagueMultFarmNote": "해외 2군은 항목이 아예 없어 배수 1.0으로 떨어졌고, withContract도 없어 절반 이상이 연봉 0이었다(실측 ABL_FARM·JBL_FARM p10/중앙 = 0/0). 값은 국내 비율을 그대로 옮긴 것이다 — 국내는 1군 1.0 / 2군 0.3이라 30%이고, 해외에 적용하면 ABL 3.5×0.3=1.05 · JBL 2.0×0.3=0.6이다. 최저연봉은 1군과 같게 뒀다(국내가 3000/3000이고 KBO도 2군 최저연봉이 1군과 같다). 사용자 확정 2026-08-22"
   },
   "powerRules": {
     "_comment": "팀 전력★(1~5) → 로스터 OVR 보정. 중심을 ★3에 두고 한 단계당 shift만큼 민다. 스태프 생성(staff_rules.toml [power_bonus])과 같은 축이다",
