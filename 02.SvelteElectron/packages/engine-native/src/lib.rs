@@ -747,6 +747,34 @@ pub fn calc_npc_renewal_salary_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcNpcRenewalSalaryNative/serialize", e))
 }
 
+/// 성적 점수 (−1 ~ +1) — **승강 판정이 쓰는 그 함수를 그대로 연다.**
+///
+/// 외국인 재계약이 능력치·나이만 봤다. 성적을 넣으려면 눈금이 필요한데,
+/// TS에 다시 구현하면 표가 둘이 되어 "승강은 잘했다는데 재계약은 불가"가
+/// 나온다(`CLAUDE.md`: 코드에 표를 두 번 적지 말 것 — Phase 7에서 15건).
+///
+/// 표본 보정이 함수 안에 있다 — 투수 40이닝·타자 120타석 미만이면 그
+/// 비율만큼만 반영되고 0이닝이면 0이다. 기존 주석이 걱정하던 "표본이 얇은
+/// 선수를 억울하게 자른다"가 여기서 이미 풀린다.
+#[napi]
+pub fn form_score_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P {
+        perf: Option<sim_types::RosterPerf>,
+        is_pitcher: bool,
+        #[serde(default)]
+        rules: Option<team_engine::PromotionRules>,
+    }
+    let p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("formScoreNative", e),
+    };
+    let rules = p.rules.unwrap_or_default();
+    let v = team_engine::form_score(p.perf.as_ref(), p.is_pitcher, &rules);
+    serde_json::to_string(&v).unwrap_or_else(|e| parse_err("formScoreNative/serialize", e))
+}
+
 /// NPC 재계약 기간 계산
 #[napi]
 pub fn calc_npc_contract_years_native(params_json: String) -> String {

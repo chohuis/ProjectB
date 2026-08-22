@@ -1163,6 +1163,9 @@ export function foreignProbe(): Record<string, unknown> {
     out[lg.replace("LEAGUE_", "")] = {
       총원: held.length,
       팀수: byTeam.size,
+      // 교체율을 재려면 명단이 있어야 한다 — 총원만으로는 "한도는 지켜지는데
+      // 아무도 안 갈린다"를 못 본다. 재계약 판정이 능력치만 볼 땐 그 상태였다
+      명단: held.map((n) => n.npcId),
       상세,
       한도초과: overHold,
       투수한도초과: overPitch,

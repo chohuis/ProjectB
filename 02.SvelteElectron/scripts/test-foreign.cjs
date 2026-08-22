@@ -44,6 +44,15 @@ function check(name, cond, extra = "") {
 
     const start = app.currentSeason();
     const snaps = [];
+    // ⚠ **교체율을 안 재면 "한도는 지켜지는데 아무도 안 갈린다"를 못 본다.**
+    // 재계약 판정이 능력치·나이만 볼 땐 OVR 82짜리가 뭘 해도 남았다.
+    // 시즌마다 명단을 떠서 몇 명이 바뀌는지 센다.
+    const rosterOf = () => {
+      const pr = app.foreignProbe();
+      return new Set((pr && pr.KBL && pr.KBL.명단) || []);
+    };
+    const turnover = [];
+    let prevRoster = null;
     let guard = 0;
 
     while (guard++ < 4000) {
@@ -64,6 +73,15 @@ function check(name, cond, extra = "") {
         // 롤오버 **직후**가 아니라 다음 시즌 첫 주가 지난 뒤에 재야 한다 —
         // 외국인 순환(F-4)은 W1에 돌기 때문이다. autoRun이 곧 W1을 민다.
         snaps.push({ year: y, probe: null });
+        {
+          const cur = rosterOf();
+          if (prevRoster && cur.size) {
+            let gone = 0;
+            for (const id of prevRoster) if (!cur.has(id)) gone++;
+            turnover.push({ year: y, gone, size: cur.size });
+          }
+          if (cur.size) prevRoster = cur;
+        }
         continue;
       }
       break;
@@ -89,6 +107,14 @@ function check(name, cond, extra = "") {
     check("외국인이 남아 있다", kbl.총원 > 0, String(kbl.총원));
     // 매년 같은 사람만 남으면 재계약 판정(F-5)이 안 도는 것이다
     check("재계약 하한 아래가 남아 있지 않다", kbl.최저OVR >= 60, String(kbl.최저OVR));
+    if (turnover.length) {
+      const tot = turnover.reduce((a, t) => a + t.gone, 0);
+      const avg = Math.round((tot / turnover.length) * 10) / 10;
+      log("      [교체율] " + turnover.map((t) => t.year + ":" + t.gone).join(" · ") +
+          "  평균 " + avg + "명/시즌 (총원 " + kbl.총원 + ")");
+    } else {
+      log("      [교체율] 관측 없음 — foreignProbe에 명단이 없다");
+    }
   } catch (e) {
     failed++;
     log(`FAIL  ${String((e && e.message) || e).split("\n").slice(0, 6).join("\n      ")}`);

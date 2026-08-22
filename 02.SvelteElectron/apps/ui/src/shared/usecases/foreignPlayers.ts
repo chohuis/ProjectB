@@ -56,6 +56,41 @@ function ovrOf(n: NpcSaveState, live: Record<string, import("../types/season").N
  *
  * @returns `{ released, signed }`
  */
+/**
+ * 성적 점수 (−1 ~ +1). **눈금 정본은 Rust `team_engine::form_score`다** —
+ * 승강 판정이 쓰는 그 함수를 `formScoreNative`로 그대로 부른다.
+ *
+ * ⚠ TS에 다시 구현하면 표가 둘이 되어 "승강은 잘했다는데 재계약은 불가"가
+ * 나온다. 표본 보정(투수 40이닝·타자 120타석)도 그 함수 안에 있다.
+ *
+ * 성적이 없으면 0 — 그 해 한 경기도 안 뛴 선수는 능력치로만 판정된다.
+ */
+async function formOf(
+  n: { npcId: string; playerType?: string },
+  stats: Record<string, unknown>,
+): Promise<number> {
+  const row = stats[n.npcId] as {
+    ip?: number; era?: number; g?: number; pa?: number; ops?: number;
+  } | undefined;
+  if (!row) return 0;
+  const perf = {
+    games: row.g ?? 0,
+    innings: row.ip ?? 0,
+    era: row.era ?? 0,
+    plateAppearances: row.pa ?? 0,
+    ops: row.ops ?? 0,
+  };
+  try {
+    const raw = await window.projectB!.engine(
+      "formScoreNative", JSON.stringify({ perf, isPitcher: n.playerType === "pitcher" }));
+    const v = JSON.parse(raw);
+    return typeof v === "number" && Number.isFinite(v) ? v : 0;
+  } catch {
+    // 엔진이 없으면(Vite 단독) 성적을 안 본다 — 예전 동작 그대로다
+    return 0;
+  }
+}
+
 export async function applyForeignTurnover(
   seasonYear: number,
 ): Promise<{ released: number; signed: number; logs: string[] }> {
@@ -71,7 +106,22 @@ export async function applyForeignTurnover(
   const F = foreignRules();
   if (!F?.leagues?.length) return empty;
 
-  const renew = (F as unknown as { renew?: { ovrMin: number; ageMax: number } }).renew;
+  // 그해 성적 — 리그별로 쌓인다. 외국인은 KBL 1군에만 있지만 리그를 적어
+  // 넣으면 다음에 한도 리그가 늘 때 또 샌다 — **전부 훑는다.**
+  const seasonStats: Record<string, unknown> = {};
+  {
+    const { seasonStore } = await import("../stores/season");
+    const st = get(seasonStore);
+    for (const ls of Object.values(st.leagueState ?? {})) {
+      const rows = (ls as { stats?: Record<string, unknown> })?.stats ?? {};
+      for (const [pid, row] of Object.entries(rows)) seasonStats[pid] = row;
+    }
+    for (const [pid, row] of Object.entries(st.stats ?? {})) seasonStats[pid] = row;
+  }
+
+  const renew = (F as unknown as {
+    renew?: { ovrMin: number; ageMax: number; formWeight?: number };
+  }).renew;
   const live = get(npcLiveStatsStore);
   const logs: string[] = [];
 
@@ -88,18 +138,33 @@ export async function applyForeignTurnover(
 
   // ── ① 재계약 판정 ────────────────────────────────────────────
   //
-  // 성적이 아니라 능력치·나이로 본다. 성적은 그 해 등판 수에 좌우돼 표본이
-  // 얇은 선수를 억울하게 자르는데(승강 판정이 같은 이유로 표본 보정을 쓴다),
-  // 용병은 애초에 능력치 추첨이라 능력치가 곧 그 선수의 값이다.
+  // **능력치 + 성적**으로 본다 (사용자 확정 2026-08-22).
+  //
+  // 예전엔 능력치·나이만 봤고, 주석이 그 이유를 "성적은 표본이 얇은 선수를
+  // 억울하게 자른다"로 적어 뒀다. 그 걱정은 맞지만 **`form_score`가 이미
+  // 표본 보정을 한다** — 투수 40이닝·타자 120타석 미만이면 그 비율만큼만
+  // 반영되고 0이닝이면 성적이 아예 안 걸린다. 승강 판정이 쓰는 그 함수를
+  // `formScoreNative`로 그대로 부른다(표를 두 번 두지 않는다).
+  //
+  // 실측 기준선: 교체 3.7명/시즌(총원 30) — 나이·노쇠로만 갈리던 값이다.
+  //
+  // ⚠ **`form_score`는 투수·타자가 비대칭이다.** 타자는 OPS가 0 아래로 못
+  // 가서 현실적으로 -4점이 한계인데 투수는 ERA 9.00이면 -14점이다.
+  // 즉 `formWeight`는 사실상 투수에게 크게 걸린다 — 승강도 같은 성질이다.
   const releasedIds: string[] = [];
   if (renew && !firstRun) {
     for (const n of g.npcs) {
       if (n.careerStatus !== "active") continue;
       if (!isForeignPlayer(n.currentLeague ?? "", n.nationality)) continue;
       const ovr = ovrOf(n, live);
-      if (ovr >= renew.ovrMin && n.age <= renew.ageMax) continue;
+      // 성적 → 능력치 환산. 표본이 없으면 0이라 예전 동작 그대로다
+      const form = await formOf(n, seasonStats);
+      const eff = ovr + form * (renew.formWeight ?? 0);
+      if (eff >= renew.ovrMin && n.age <= renew.ageMax) continue;
       releasedIds.push(n.npcId);
-      logs.push(`[외국인] ${n.name} 재계약 불가 (OVR ${Math.round(ovr)} · ${n.age}세)`);
+      logs.push(`[외국인] ${n.name} 재계약 불가 ` +
+        `(OVR ${Math.round(ovr)}${form ? ` 성적 ${form > 0 ? "+" : ""}${Math.round(form * (renew.formWeight ?? 0))}` : ""}` +
+        ` · ${n.age}세)`);
     }
   }
 
