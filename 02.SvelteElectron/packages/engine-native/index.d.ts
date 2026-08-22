@@ -146,6 +146,18 @@ export declare function calcOfferedSalaryNative(paramsJson: string): string
 export declare function calcOfferedSalaryForProtagonistNative(paramsJson: string): string
 /** NPC 재계약 연봉 계산 */
 export declare function calcNpcRenewalSalaryNative(paramsJson: string): string
+/**
+ * 성적 점수 (−1 ~ +1) — **승강 판정이 쓰는 그 함수를 그대로 연다.**
+ *
+ * 외국인 재계약이 능력치·나이만 봤다. 성적을 넣으려면 눈금이 필요한데,
+ * TS에 다시 구현하면 표가 둘이 되어 "승강은 잘했다는데 재계약은 불가"가
+ * 나온다(`CLAUDE.md`: 코드에 표를 두 번 적지 말 것 — Phase 7에서 15건).
+ *
+ * 표본 보정이 함수 안에 있다 — 투수 40이닝·타자 120타석 미만이면 그
+ * 비율만큼만 반영되고 0이닝이면 0이다. 기존 주석이 걱정하던 "표본이 얇은
+ * 선수를 억울하게 자른다"가 여기서 이미 풀린다.
+ */
+export declare function formScoreNative(paramsJson: string): string
 /** NPC 재계약 기간 계산 */
 export declare function calcNpcContractYearsNative(paramsJson: string): string
 /** FA 오퍼 생성 */
@@ -233,7 +245,7 @@ export declare function weekCalcTradeRumorNative(p: string): string
 export declare function weekCalcExamResultNative(p: string): string
 export declare function weekCalcMilitaryNative(p: string): string
 export declare function weekCalcNpcFallbackNative(p: string): string
-export declare function weekRollRandomBatchNative(count: number): string
+export declare function weekRollRandomBatchNative(count: number, seed: number): string
 export declare function weekCalcNpcInjuriesNative(p: string): string
 /** 리그 활성화 시점 로스터 생성 — worldSeed 결정적 (DESIGN.md §8.3) */
 export declare function generateLeagueRosterNative(paramsJson: string): string
