@@ -1335,8 +1335,8 @@ pub fn week_calc_npc_fallback_native(p: String) -> String {
 }
 
 #[napi]
-pub fn week_roll_random_batch_native(count: u32) -> String {
-    serde_json::to_string(&week_engine::roll_random_batch(count))
+pub fn week_roll_random_batch_native(count: u32, seed: u32) -> String {
+    serde_json::to_string(&week_engine::roll_random_batch(count, seed))
         .unwrap_or_else(|e| parse_err("weekRollRandomBatchNative/serialize", e))
 }
 

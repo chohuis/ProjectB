@@ -1,4 +1,5 @@
 import { get } from "svelte/store";
+import { seedOf } from "../../utils/seedOf";
 import { seasonStore, npcLiveStatsStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
@@ -479,6 +480,8 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
         const recvStanding = sortedStandings.findIndex((st) => st.teamId === proposal.receivingTeamId) + 1;
         const playerResp = JSON.parse(
           await window.projectB!.playerEvalTradeResponseNative(JSON.stringify({
+            // 선수·상대팀·주차를 섞는다 — 같은 제안이면 같은 답, 다른 팀이면 다른 답
+            seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, offeredAsset.playerId ?? "", proposal.receivingTeamId),
             personality: offeredAsset.personality,
             currentTeamId: offeredAsset.teamId,
             destinationTeamProfile: receivingProfile,
@@ -1058,6 +1061,8 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
 
     const faRes = JSON.parse(
       await window.projectB!.playerEvalFaDecisionNative(JSON.stringify({
+        // 선수·연도만 — 어느 팀이 물어도 그 선수의 판단은 같아야 한다
+        seed: seedOf(s.worldSeed ?? 0, s.seasonYear, npc.npcId),
         personality: npcPersonality,
         age: npc.age, ovr: liveOvr,
         proServiceYears: npc.proServiceYears ?? 0,

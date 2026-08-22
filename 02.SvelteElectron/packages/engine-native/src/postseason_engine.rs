@@ -214,6 +214,13 @@ pub fn fill_next_series(p: FillNextSeriesParams) -> Vec<PostseasonSeries> {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ResolveNpcSeriesParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 이게 없으면 같은 세이브도 실행마다 다른 결과가 난다 — 계측을 한 번
+    /// 돌려 전후를 비교할 수 없고 간헐 실패를 회귀와 구분할 수 없다.
+    /// 씨앗 만드는 곳은 TS `utils/seedOf.ts` 하나다.
+    #[serde(default)]
+    pub seed: u32,
     pub bracket: Vec<PostseasonSeries>,
     pub protagonist_team_id: String,
 }
@@ -221,7 +228,12 @@ pub struct ResolveNpcSeriesParams {
 pub fn resolve_non_protagonist_series(p: ResolveNpcSeriesParams) -> Vec<PostseasonSeries> {
     let mut cur = p.bracket;
     let pt = &p.protagonist_team_id;
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
 
     for _ in 0..20 {
         let mut changed = false;
@@ -294,12 +306,24 @@ pub struct AblConferences {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ShuffleAblConferencesParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 이게 없으면 같은 세이브도 실행마다 다른 결과가 난다 — 계측을 한 번
+    /// 돌려 전후를 비교할 수 없고 간헐 실패를 회귀와 구분할 수 없다.
+    /// 씨앗 만드는 곳은 TS `utils/seedOf.ts` 하나다.
+    #[serde(default)]
+    pub seed: u32,
     pub all_teams: Vec<String>,
 }
 
 pub fn shuffle_abl_conferences(p: ShuffleAblConferencesParams) -> AblConferences {
     let mut arr = p.all_teams;
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     for i in (1..arr.len()).rev() {
         let j = rng.gen_range(0..=i);
         arr.swap(i, j);

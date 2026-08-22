@@ -93,6 +93,7 @@
     "check:foreignseed": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-seed.cjs",
     "check:amateurworld": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-amateur-world.cjs",
     "check:msgdup": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdup.cjs",
+    "check:rostertrend": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-rostertrend.cjs",
     "check:recentgames": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-recentgames.cjs",
     "check:namepair": "node scripts/check-namepair.cjs",
     "check:namelocale": "node scripts/check-namelocale.cjs",
@@ -118,7 +119,8 @@
     "measure:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-growth.cjs",
     "measure:savesize": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-savesize.cjs",
     "measure:dirty": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-dirty.cjs",
-    "measure:memory": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-memory.cjs"
+    "measure:memory": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-memory.cjs",
+    "check:determinism": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-determinism.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

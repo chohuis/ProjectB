@@ -1,4 +1,5 @@
 import { get } from "svelte/store";
+import { seedOf } from "../../utils/seedOf";
 import { seasonStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
@@ -167,8 +168,12 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
 
   // 은퇴 확률 판정용 난수 + NPC 부상 계산 병렬 실행
   const [retireRollsRaw, resultRaw, retireRules] = await Promise.all([
-    window.projectB!.weekRollRandomBatch(players.length),
-    window.projectB!.weekCalcNpcInjuries(JSON.stringify({ players })),
+    // 씨앗 — 안 넘기면 같은 세이브도 실행마다 다른 사람이 다치고 은퇴한다.
+    // 주차·연도를 섞어 주마다 다른 수열이 되게 한다
+    window.projectB!.weekRollRandomBatch(players.length, seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "retire")),
+    window.projectB!.weekCalcNpcInjuries(JSON.stringify({
+      players, seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "injury"),
+    })),
     loadRetirementRules(),
   ]);
   const retireRolls = JSON.parse(retireRollsRaw) as number[];

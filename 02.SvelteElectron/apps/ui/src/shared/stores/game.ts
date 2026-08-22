@@ -2289,6 +2289,7 @@ function createGameStore() {
       // (`backgroundLeague.accumulateStats`) 독립리그도 여기 들어온다 —
       // 프로만 담으면 독립이 통째로 방출 대상에서 빠진다.
       const offPerfScores: Record<string, number> = {};
+      let offWorldSeed = 0;
       {
         const { seasonStore: _ss } = await import("./season");
         const _s = get(_ss);
@@ -2299,6 +2300,7 @@ function createGameStore() {
             offPerfScores[pid] = calcNpcPerfScore(st);
           }
         };
+        offWorldSeed = (_s.worldSeed ?? 0) >>> 0;
         put(_s.stats);
         for (const ls of Object.values(_s.leagueState ?? {})) put(ls?.stats ?? {});
       }
@@ -2321,6 +2323,8 @@ function createGameStore() {
         get(npcLiveStatsStore),
         offPerfScores,
         s.proTeamProfiles,
+        // 세계 씨앗 — 안 넘기면 모든 세계가 같은 오프시즌을 낸다
+        offWorldSeed,
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서

@@ -16,11 +16,46 @@ pub(crate) struct LcgRand { pub(crate) s: u32 }
 
 impl LcgRand {
     pub(crate) fn new(seed: u32) -> Self { LcgRand { s: seed } }
-    pub(crate) fn next(&mut self) -> f64 {
+    /// 한 걸음. `next`와 `RngCore`가 **같은 수열**을 쓰게 여기로 모은다
+    fn step(&mut self) -> u32 {
         self.s = (self.s ^ (self.s >> 16)).wrapping_mul(0x045d9f3b);
         self.s = (self.s ^ (self.s >> 16)).wrapping_mul(0x045d9f3b);
         self.s ^= self.s >> 16;
-        (self.s as f64) / 0xffffffff_u32 as f64
+        self.s
+    }
+    pub(crate) fn next(&mut self) -> f64 {
+        (self.step() as f64) / 0xffffffff_u32 as f64
+    }
+}
+
+// 🔴 **`thread_rng`을 대신 쓰려면 이 트레이트가 필요하다.**
+//
+// 오프시즌이 `thread_rng`을 써서 **같은 세이브·같은 씨앗도 실행마다 결과가
+// 달랐다.** 실측: 같은 설정으로 test:foreign을 세 번 돌리면 외국인 교체율이
+// 4.0 · 4.0 · 4.3으로 갈리고, "빈 슬롯을 남긴 팀이 없다" 검사가 **3회 중
+// 1회** 빨간불이었다. 그 상태에서는
+//   · 계측을 한 번 돌려서 전후를 비교할 수 없고
+//   · 간헐 실패를 회귀와 구분할 수 없고
+//   · 밸런스 값을 정할 근거를 만들 수 없다.
+//
+// `Rng`는 `RngCore`에 대해 자동 구현되므로 이것만 있으면 `gen::<f64>()`가 그대로 돈다.
+impl rand::RngCore for LcgRand {
+    fn next_u32(&mut self) -> u32 { self.step() }
+    fn next_u64(&mut self) -> u64 {
+        ((self.next_u32() as u64) << 32) | (self.next_u32() as u64)
+    }
+    fn fill_bytes(&mut self, dest: &mut [u8]) {
+        let mut i = 0;
+        while i < dest.len() {
+            let v = self.next_u32().to_le_bytes();
+            let n = (dest.len() - i).min(4);
+            dest[i..i + n].copy_from_slice(&v[..n]);
+            i += n;
+        }
+    }
+    fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
+        self.fill_bytes(dest);
+        Ok(())
     }
 }
 
@@ -1402,7 +1437,16 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let home = home_nationality.get(&n.current_league).map(|s| s.as_str()).unwrap_or("KOR");
         n.nationality.as_deref().unwrap_or("KOR") != home
     };
-    let mut rng = rand::thread_rng();
+    // 🔴 **예전엔 `thread_rng`이었다.** 같은 세이브·같은 씨앗도 실행마다
+    // 결과가 달라서 계측을 한 번 돌려선 아무것도 판단할 수 없었다 —
+    // test:foreign의 "빈 슬롯" 검사가 3회 중 1회 빨간불이었고, 외국인
+    // 교체율이 4.0·4.0·4.3으로 갈렸다. 결정적 `LcgRand`가 **바로 옆에**
+    // 있었는데 안 쓰고 있었다.
+    //
+    // ⚠ 씨앗에 연도를 섞는다. 세계 씨앗만 쓰면 해마다 같은 수열이 나온다.
+    let seed = (params.world_seed ^ (params.season_year as u32).wrapping_mul(2654435761))
+        .wrapping_mul(0x9e3779b1) | 1;
+    let mut rng = LcgRand::new(seed);
     let mut lcg = LcgRand::new(
         (params.season_year as u32).wrapping_mul(3571)
     );

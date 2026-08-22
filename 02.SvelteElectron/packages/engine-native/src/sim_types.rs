@@ -760,6 +760,10 @@ pub struct ProtagonistGradeResult {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OffseasonParams {
+    /// 세계 씨앗. **오프시즌 난수의 뿌리다** — 없으면 0이라 모든 세계가
+    /// 같은 전개를 낸다. 연도와 섞어 해마다 다른 수열을 만든다.
+    #[serde(default)]
+    pub world_seed: u32,
     pub npcs: Vec<NpcSaveState>,
     pub pending_draft: Vec<NpcSaveState>,
     pub season_year: i32,

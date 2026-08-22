@@ -130,7 +130,7 @@ contextBridge.exposeInMainWorld("projectB", {
   weekCalcMilitary:      (p) => ipcRenderer.invoke("engine:call", "weekCalcMilitaryNative",      p),
   weekCalcNpcFallback:   (p) => ipcRenderer.invoke("engine:call", "weekCalcNpcFallbackNative",   p),
   weekCalcNpcInjuries:   (p) => ipcRenderer.invoke("engine:call", "weekCalcNpcInjuriesNative",   p),
-  weekRollRandomBatch:   (count) => ipcRenderer.invoke("week:rollRandomBatch", count),
+  weekRollRandomBatch:   (count, seed) => ipcRenderer.invoke("week:rollRandomBatch", count, seed),
 
   // ── scouting_engine ──────────────────────────────────────────────────────────
   applyScoutingNoiseNative:        (p) => ipcRenderer.invoke("engine:call", "applyScoutingNoiseNative", p),

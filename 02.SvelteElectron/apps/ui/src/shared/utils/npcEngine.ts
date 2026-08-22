@@ -147,6 +147,14 @@ export async function runOffseasonProcessing(
    * `eval_release_priority`의 stability·winNowPressure 갈래가 죽어 있었다.
    */
   teamProfiles?: Record<string, unknown>,
+  /**
+   * 🔴 **세계 씨앗.** 안 넘기면 0이라 모든 세계가 같은 오프시즌 전개를 낸다.
+   *
+   * 예전엔 엔진이 `thread_rng`을 써서 같은 세이브도 실행마다 달랐다 —
+   * 계측을 한 번 돌려서 전후를 비교할 수 없었고 간헐 실패를 회귀와
+   * 구분할 수 없었다. 결정적으로 바꾸면서 씨앗이 필요해졌다.
+   */
+  worldSeed?: number,
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   // ⚠ **엔진에 넘길 때만 합치고 돌아올 때 되돌린다.** 결과가 `s.npcs`를
@@ -176,6 +184,7 @@ export async function runOffseasonProcessing(
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
+    worldSeed: (worldSeed ?? 0) >>> 0,
     ...(perfScores   ? { perfScores }   : {}),
     ...(teamProfiles ? { teamProfiles } : {}),
     ...(foreign ?? {}),

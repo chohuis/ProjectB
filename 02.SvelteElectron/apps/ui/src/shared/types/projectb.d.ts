@@ -238,7 +238,7 @@ declare global {
       weekCalcMilitary:     (p: string) => Promise<string>;
       weekCalcNpcFallback:  (p: string) => Promise<string>;
       weekCalcNpcInjuries:  (p: string) => Promise<string>;
-      weekRollRandomBatch:  (count: number) => Promise<string>;
+      weekRollRandomBatch:  (count: number, seed?: number) => Promise<string>;
       // ── scouting_engine ────────────────────────────────────
       applyScoutingNoiseNative(p: string): Promise<string>;
       // ── team_engine ────────────────────────────────────────

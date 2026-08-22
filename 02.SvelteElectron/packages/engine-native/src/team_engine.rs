@@ -532,6 +532,14 @@ pub fn eval_release_priority(p: EvalReleaseParams) -> ReleaseEvalResult {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EvalFaBidParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 🔴 이 넷(FA 입찰·FA 결정·트레이드 응답·오퍼 생성)이 `thread_rng`이라
+    /// 같은 세이브·같은 씨앗도 실행마다 결과가 달랐다. 오프시즌을 결정적으로
+    /// 바꾼 뒤에도 test:foreign 교체율이 5.0·6.0·4.7로 갈렸다 — 남은 건
+    /// 여기였다. 계측을 한 번 돌려선 전후를 비교할 수 없다.
+    #[serde(default)]
+    pub seed: u32,
     pub team_profile: ProTeamProfile,
     pub fa_player: FaPlayerRef,
     pub roster_needs: Vec<String>,
@@ -554,7 +562,12 @@ pub fn eval_fa_bid(p: EvalFaBidParams) -> FaBidResult {
     let profile = &p.team_profile;
     let player = &p.fa_player;
     let mut interest = 50.0_f64;
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
 
     if p.roster_needs.contains(&player.position) { interest += 30.0; }
     if player.ovr >= 75.0 { interest += 15.0; }

@@ -148,7 +148,14 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     faUnsignedWeeks: 0,
   };
 
-  const r = await startNewGameV3({ slotId: opts.slotId, slotName: "perf", seasonYear: opts.seasonYear, protagonist });
+  // 🔴 **씨앗을 넘긴다.** 예전엔 인자로 받아 놓고 안 넘겨서 새 게임이 매번
+  // 자기 씨앗을 만들었다 — 계측이 같은 씨앗을 줘도 **프로 로스터가 실행마다
+  // 달랐다**(연차·나이·연봉을 난수로 정하는 `withContract` 갈래다).
+  // 아마추어는 그 갈래를 안 타서 결정적으로 보였고, 그래서 오래 안 보였다.
+  const r = await startNewGameV3({
+    slotId: opts.slotId, slotName: "perf", seasonYear: opts.seasonYear,
+    protagonist, worldSeed: opts.worldSeed >>> 0,
+  });
   await gameStore.save();
 
   return {
@@ -2789,6 +2796,79 @@ export function rispSplitProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown>
  * 이번 세션에서 하한을 추측으로 올려 1군을 굶긴 적이 있어, 숫자를 만지기
  * 전에 병목을 먼저 잰다.
  */
+/**
+ * 세계 상태 요약 — **두 실행이 어디서 갈리는지** 찾는 데 쓴다.
+ *
+ * 🔴 엔진에 `thread_rng`이 남아 있어 같은 씨앗도 실행마다 결과가 다르다.
+ * 최종 숫자만 비교하면 "다르다"만 알고 **어디서** 갈렸는지는 모른다.
+ * 주마다 이 값을 찍어 두 실행을 나란히 놓으면 **처음 갈린 주**가 잡힌다.
+ *
+ * ⚠ 갈래를 나눠 찍는다. 하나로 합치면 어느 계통이 갈렸는지 안 보인다 —
+ * 로스터가 갈렸는지, 성적이 갈렸는지, 부상이 갈렸는지가 원인을 가른다.
+ */
+/** 소속 원본 — 로스터가 갈렸을 때 **누가** 다른지 본다 */
+export function rosterRows(): string[] {
+  const g = get(gameStore);
+  return [...g.npcs]
+    .sort((a, b) => (a.npcId < b.npcId ? -1 : a.npcId > b.npcId ? 1 : 0))
+    .map((n) => `${n.npcId}|${n.currentTeam}|${n.currentLeague}|${n.careerStatus}`);
+}
+
+/** 계약 원본 — 체크섬이 갈렸을 때 **누가** 다른지 보려고 쓴다 */
+export function contractRows(): string[] {
+  const g = get(gameStore);
+  return [...g.npcs]
+    .sort((a, b) => (a.npcId < b.npcId ? -1 : a.npcId > b.npcId ? 1 : 0))
+    .map((n) => `${n.npcId}|${n.currentLeague}|${n.currentSalary}|${n.contractYears}|${n.age}`);
+}
+
+export function worldChecksum(): Record<string, string> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const hash = (parts: string[]): string => {
+    let h = 2166136261;
+    for (const part of parts) {
+      for (let i = 0; i < part.length; i++) {
+        h ^= part.charCodeAt(i);
+        h = Math.imul(h, 16777619) >>> 0;
+      }
+      h = Math.imul(h ^ 0x2f, 16777619) >>> 0;
+    }
+    return (h >>> 0).toString(16).padStart(8, "0");
+  };
+
+  // 소속·신분 — 이적·방출·은퇴가 갈리면 여기가 먼저 변한다
+  const roster = [...g.npcs]
+    .sort((a, b) => (a.npcId < b.npcId ? -1 : a.npcId > b.npcId ? 1 : 0))
+    .map((n) => `${n.npcId}|${n.currentTeam}|${n.currentLeague}|${n.careerStatus}`);
+
+  // 계약 — 연봉·계약연수는 FA·재계약이 갈리면 변한다
+  const contract = [...g.npcs]
+    .sort((a, b) => (a.npcId < b.npcId ? -1 : a.npcId > b.npcId ? 1 : 0))
+    .map((n) => `${n.npcId}|${n.currentSalary}|${n.contractYears}|${n.age}`);
+
+  // 부상 — 주간 판정이 갈리면 여기가 먼저다
+  const injury = Object.entries(s.npcInjuries ?? {})
+    .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+    .map(([id, v]) => `${id}|${(v as { severity?: string })?.severity ?? ""}`);
+
+  // 성적 — 경기 결과가 갈리면 여기다
+  const stats: string[] = [];
+  for (const [lid, ls] of Object.entries(s.leagueState ?? {}).sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
+    const rows = (ls as { standings?: Array<{ teamId: string; wins: number; losses: number }> })?.standings ?? [];
+    for (const st of [...rows].sort((a, b) => (a.teamId < b.teamId ? -1 : 1))) {
+      stats.push(`${lid}|${st.teamId}|${st.wins}|${st.losses}`);
+    }
+  }
+
+  return {
+    roster: hash(roster),
+    contract: hash(contract),
+    injury: hash(injury),
+    standings: hash(stats),
+    n: String(g.npcs.length),
+  };
+}
 export function farmDevProbe(): Record<string, unknown> {
   const log = getFarmDevLog();
   if (log.length === 0) return { 판정건수: 0, 비고: "육성선수 판정이 한 번도 안 돌았다" };

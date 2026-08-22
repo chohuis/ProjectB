@@ -638,10 +638,11 @@ app.whenReady().then(() => {
   // ── 포스트시즌 엔진 ───────────────────────────────────────────────────────────
 
   // ── 주간 계산 엔진 ────────────────────────────────────────────────────────────
-  ipcMain.handle("week:rollRandomBatch", (_event, count) => {
+  ipcMain.handle("week:rollRandomBatch", (_event, count, seed) => {
     try {
       const safe = Math.min(Math.max(0, Number(count) || 0), 10000);
-      return engineNative.weekRollRandomBatchNative(safe);
+      // 씨앗이 0이면 엔진이 thread_rng로 떨어진다 — 예전 동작 그대로다
+      return engineNative.weekRollRandomBatchNative(safe, (Number(seed) || 0) >>> 0);
     }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });

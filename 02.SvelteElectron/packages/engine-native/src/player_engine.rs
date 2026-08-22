@@ -154,6 +154,13 @@ fn reliever_appearance_chance(role: &str) -> f64 {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RelieverPitchParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 이게 없으면 같은 세이브도 실행마다 다른 결과가 난다 — 계측을 한 번
+    /// 돌려 전후를 비교할 수 없고 간헐 실패를 회귀와 구분할 수 없다.
+    /// 씨앗 만드는 곳은 TS `utils/seedOf.ts` 하나다.
+    #[serde(default)]
+    pub seed: u32,
     pub role: String,
     pub pitch_outs_last: Option<i32>,   // 직전 경기 아웃 수 (None → 0)
     pub last_pitched_week: Option<i32>, // 마지막 등판 주차 (None → 0) — 구 경로
@@ -206,7 +213,13 @@ pub fn reliever_would_pitch(params: RelieverPitchParams) -> RelieverPitchResult 
     };
 
     let chance = base * rest_penalty * rest_block;
-    let would_pitch = rand::thread_rng().gen::<f64>() < chance;
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let roll = if params.seed != 0 {
+        crate::npc_sim::LcgRand::new(params.seed | 1).next()
+    } else {
+        rand::thread_rng().gen::<f64>()
+    };
+    let would_pitch = roll < chance;
     RelieverPitchResult { would_pitch }
 }
 
@@ -330,6 +343,14 @@ pub struct TeamRef {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GenerateFaOffersParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 🔴 이 넷(FA 입찰·FA 결정·트레이드 응답·오퍼 생성)이 `thread_rng`이라
+    /// 같은 세이브·같은 씨앗도 실행마다 결과가 달랐다. 오프시즌을 결정적으로
+    /// 바꾼 뒤에도 test:foreign 교체율이 5.0·6.0·4.7로 갈렸다 — 남은 건
+    /// 여기였다. 계측을 한 번 돌려선 전후를 비교할 수 없다.
+    #[serde(default)]
+    pub seed: u32,
     pub pitching_ovr: f64,
     pub fame: f64,
     pub league_id: String,
@@ -352,7 +373,12 @@ pub struct FaOffer {
 }
 
 pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if params.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(params.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let same_league: Vec<&TeamRef> = params.teams.iter()
         .filter(|t| t.league_id == params.league_id && t.id != params.team_id)
         .collect();
@@ -370,7 +396,8 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
         indices.swap(i, j);
     }
 
-    let make_offer = |team: &TeamRef, league_market: f64, rng: &mut rand::rngs::ThreadRng| -> FaOffer {
+    // 씨앗 유무에 따라 난수원이 달라지므로 구체 타입을 못 박지 않는다
+    let make_offer = |team: &TeamRef, league_market: f64, rng: &mut dyn rand::RngCore| -> FaOffer {
         let (win_mult, year_bias, bonus_mult) = if let Some(ref profile) = team.profile {
             let wm = 1.0 + (profile.win_now_pressure - 50.0) / 100.0 * 0.30;
             let yb = if profile.stability > 65.0 { 1i32 } else if profile.stability < 35.0 { -1 } else { 0 };

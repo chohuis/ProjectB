@@ -8,6 +8,14 @@ use crate::team_engine::fa_eligibility_years;
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FaDecisionParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 🔴 이 넷(FA 입찰·FA 결정·트레이드 응답·오퍼 생성)이 `thread_rng`이라
+    /// 같은 세이브·같은 씨앗도 실행마다 결과가 달랐다. 오프시즌을 결정적으로
+    /// 바꾼 뒤에도 test:foreign 교체율이 5.0·6.0·4.7로 갈렸다 — 남은 건
+    /// 여기였다. 계측을 한 번 돌려선 전후를 비교할 수 없다.
+    #[serde(default)]
+    pub seed: u32,
     pub personality: NpcPersonality,
     pub age: i32,
     pub ovr: f64,
@@ -34,7 +42,12 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
         return FaDecisionResult { apply_fa: false, willingness: 0.0 };
     }
     let pers = &p.personality;
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let mut w = 0.0_f64;
 
     let underpaid = ((p.market_value as f64 / p.current_salary.max(1) as f64) - 1.0).max(0.0);
@@ -67,6 +80,14 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TradeResponseParams {
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 🔴 이 넷(FA 입찰·FA 결정·트레이드 응답·오퍼 생성)이 `thread_rng`이라
+    /// 같은 세이브·같은 씨앗도 실행마다 결과가 달랐다. 오프시즌을 결정적으로
+    /// 바꾼 뒤에도 test:foreign 교체율이 5.0·6.0·4.7로 갈렸다 — 남은 건
+    /// 여기였다. 계측을 한 번 돌려선 전후를 비교할 수 없다.
+    #[serde(default)]
+    pub seed: u32,
     pub personality: NpcPersonality,
     pub current_team_id: String,
     pub destination_team_profile: ProTeamProfile,
@@ -104,7 +125,13 @@ pub fn player_eval_trade_response(p: TradeResponseParams) -> TradeResponseResult
         block -= 20.0 * (pers.greed / 100.0);
     }
     let prob = (block / 100.0).clamp(0.0, 1.0);
-    let accept = rand::thread_rng().gen::<f64>() >= prob;
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let roll = if p.seed != 0 {
+        crate::npc_sim::LcgRand::new(p.seed | 1).next()
+    } else {
+        rand::thread_rng().gen::<f64>()
+    };
+    let accept = roll >= prob;
     TradeResponseResult { accept, block_probability: prob }
 }
 
