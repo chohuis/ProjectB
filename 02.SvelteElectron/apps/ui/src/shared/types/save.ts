@@ -930,6 +930,8 @@ export interface SaveGame {
   recentLogs: string[];  // 최근 30개 활동 로그
   recentUpcoming: string[];  // 다음 예정 이벤트 목록
   npcs: NpcSaveState[];  // NPC 런타임 상태 (Zone 0~3)
+  /** 구단 성향 — 안 넣으면 앱을 껐다 켤 때 압박이 50으로 돌아간다 */
+  proTeamProfiles?: Record<string, unknown>;
 
   /**
    * **한 해에 한 번만 돌아야 하는 작업의 가드.** 반드시 저장한다.
@@ -952,6 +954,18 @@ export interface SaveGame {
 export interface SaveGuards {
   lastSeasonEndYear?: number;
   lastDraftYear?: number;
+  /**
+   * 구단 성향 (teamId → 12축).
+   *
+   * 🔴 **예전엔 저장 안 됐다.** `gameStore.proTeamProfiles`에 "비저장"이라고
+   * 적혀 있었고, 시즌 종료마다 갱신하는데(`calc_win_now_pressure_update`)
+   * **앱을 껐다 켜면 전부 50으로 돌아갔다** — 성적 압박 모델 전체가 세션
+   * 한정이었다. 승강 임계값·방출 판정·FA 입찰이 그 값을 쓴다.
+   *
+   * `CLAUDE.md`의 "가드는 반드시 저장한다"와 같은 형태다 — 갱신 결과는
+   * 영구인데 값 자신이 세션 한정이면 없던 일이 된다.
+   */
+  proTeamProfiles?: Record<string, unknown>;
 }
 
 export const SAVE_GAME_VERSION = 2;

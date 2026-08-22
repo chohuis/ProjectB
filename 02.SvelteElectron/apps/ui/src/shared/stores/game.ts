@@ -525,7 +525,9 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     seasonEndSummary: null,
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
-    proTeamProfiles:  {},
+    // ⚠ **되살린다.** 저장만 하고 안 읽으면 아무 일도 안 일어난다 —
+    // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
+    proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -883,7 +885,12 @@ function createGameStore() {
         // ⚠ **반드시 같이 저장한다.** 이걸 빼면 앱을 껐다 켤 때마다
         // 시즌 종료·드래프트가 다시 돌아 NPC 전원이 한 살씩 더 먹는다
         // (`npm run check:seasonendguard`).
-        { lastSeasonEndYear: s.lastSeasonEndYear, lastDraftYear: s.lastDraftYear },
+        {
+          lastSeasonEndYear: s.lastSeasonEndYear, lastDraftYear: s.lastDraftYear,
+          // ⚠ **구단 성향도 같이 저장한다.** 예전엔 "비저장"이라 앱을 껐다
+          // 켜면 압박이 전부 50으로 돌아갔다 — 시즌마다 갱신해도 남지 않았다
+          proTeamProfiles: s.proTeamProfiles,
+        },
       );
     },
 
