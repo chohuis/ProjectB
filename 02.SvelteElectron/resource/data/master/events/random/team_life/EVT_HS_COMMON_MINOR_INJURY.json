@@ -19,6 +19,10 @@
     {
       "type": "season_phase",
       "phase": "season"
+    },
+    {
+      "type": "injured",
+      "value": false
     }
   ],
   "messageTemplateId": "MSG_HS_COMMON_MINOR_INJURY",

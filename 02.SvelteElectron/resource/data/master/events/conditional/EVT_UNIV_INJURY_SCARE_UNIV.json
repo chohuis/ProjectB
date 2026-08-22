@@ -16,6 +16,10 @@
     {
       "type": "condition_lte",
       "value": 55
+    },
+    {
+      "type": "injured",
+      "value": false
     }
   ],
   "cooldownWeeks": 6,

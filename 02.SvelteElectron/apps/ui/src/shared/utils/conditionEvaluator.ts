@@ -110,6 +110,50 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "fame_gte":
       return protagonist.fame >= cond.value;
 
+    // ── 반쪽이던 축 (2026-08-22) ─────────────────────────────────
+    // 셋 다 보상(`moneyDelta`·`diligenceDelta`·`popularityDelta`)은 예전부터
+    // 있었는데 **읽는 쪽이 없었다.** 선택의 결과를 다음 이야기가 못 알아봤다.
+    case "money_gte":
+      return protagonist.money >= cond.value;
+
+    case "money_lte":
+      return protagonist.money <= cond.value;
+
+    case "diligence_gte":
+      return protagonist.diligence >= cond.value;
+
+    case "diligence_lte":
+      return protagonist.diligence <= cond.value;
+
+    case "popularity_gte":
+      return protagonist.popularity >= cond.value;
+
+    case "popularity_lte":
+      return protagonist.popularity <= cond.value;
+
+    // ── 부상 (2026-08-22) ────────────────────────────────────────
+    // ⚠ **`injury`는 없을 수 있다.** 안 다친 상태가 기본이라
+    // `injury === undefined`다 — 그걸 "부상 중 아님"으로 읽는다.
+    case "injured":
+      return (protagonist.injury != null) === cond.value;
+
+    case "injury_severity":
+      return protagonist.injury?.severity === cond.severity;
+
+    case "injury_weeks_gte":
+      return (protagonist.injury?.recoveryWeeksLeft ?? 0) >= cond.value;
+
+    // 커리어 누계 — `injuryHistory`는 복귀할 때 한 건씩 쌓인다
+    case "injury_count_gte":
+      return (protagonist.injuryHistory?.length ?? 0) >= cond.value;
+
+    // 이번 시즌만 — `seasonHealth`는 시즌 롤오버에서 초기화된다
+    case "season_injury_count_gte":
+      return (protagonist.seasonHealth?.injuryCount ?? 0) >= cond.value;
+
+    case "had_surgery":
+      return (protagonist.injuryHistory ?? []).some((h) => h.severity === "surgery") === cond.value;
+
     case "pro_year_gte":
       return protagonist.proServiceYears >= cond.value;
 

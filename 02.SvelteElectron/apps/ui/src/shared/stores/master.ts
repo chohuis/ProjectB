@@ -470,6 +470,12 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   season_ip_gte: ["value"], season_k_gte: ["value"],
   team_rank_lte: ["value"], team_rank_gte: ["value"],
   fame_gte: ["value"], pro_year_gte: ["value"],
+  money_gte: ["value"], money_lte: ["value"],
+  diligence_gte: ["value"], diligence_lte: ["value"],
+  popularity_gte: ["value"], popularity_lte: ["value"],
+  injured: ["value"], injury_severity: ["severity"],
+  injury_weeks_gte: ["value"], injury_count_gte: ["value"],
+  season_injury_count_gte: ["value"], had_surgery: ["value"],
   military_phase: [],
   gpa_gte: ["value"], gpa_lte: ["value"], academic_warning_gte: ["value"],
 };
