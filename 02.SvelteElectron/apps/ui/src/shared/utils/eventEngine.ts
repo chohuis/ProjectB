@@ -19,6 +19,7 @@ function checkOncePolicy(
   rule: EventRule,
   ctx: EventContext,
   seasonYear: number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   careerStageYear: number,
 ): boolean {
   switch (rule.oncePolicy) {
@@ -35,12 +36,23 @@ function checkOncePolicy(
       // triggeredEvents는 startNewSeason()에서 초기화됨 → 이미 기록 있으면 이번 시즌 차단
       return ctx.triggeredEvents[rule.id] === undefined;
 
-    case "once_per_stage_year": {
-      const lastWeek = ctx.triggeredEvents[rule.id];
-      if (lastWeek === undefined) return true;
-      // careerStageYear 당 1회: 같은 스테이지-연도 내에 발생했으면 차단
-      return careerStageYear !== Math.floor(lastWeek / 52);
-    }
+    case "once_per_stage_year":
+      // 🔴 **첫 스테이지-연도에서만 동작했다.** 예전엔
+      // `careerStageYear !== Math.floor(lastWeek / 52)`로 판정했는데,
+      // `lastWeek`는 `ctx.currentWeek`이고 **주차는 시즌마다 1로 리셋된다** —
+      // 1~51주는 `Math.floor(lastWeek/52)`가 항상 0이다. 그래서
+      // 고교 1학년(careerStageYear 0)은 `0 !== 0`으로 막혔지만
+      // 2·3학년(1·2)은 `1 !== 0`으로 **매주 통과**했다. 대학 2~4학년도 같다.
+      //
+      // 실측: 연 1회여야 할 `EVT_HS_Y2_COACH_TRAIN`이 6시즌 14번 떴고,
+      // 그만큼 주당 1칸을 먹어 다른 2학년 이야기를 밀어냈다.
+      //
+      // `triggeredEvents`는 `startNewSeason()`이 `makeEmptySeason`으로
+      // 통째로 갈아서 **시즌마다 비워진다**(`season.ts:487`). 스테이지-연도는
+      // 시즌마다 오르므로 "시즌에 한 번"이 곧 "스테이지-연도에 한 번"이다.
+      // `once_per_season`과 판정이 같아지는 건 그래서다 — 이름은 데이터
+      // 쪽 표기라 남긴다.
+      return ctx.triggeredEvents[rule.id] === undefined;
 
     case "once_per_career":
       // careerTriggeredEvents는 시즌을 넘어 유지됨 → 한 번이라도 기록 있으면 영구 차단
@@ -118,7 +130,8 @@ function ruleToOutput(
 export const eventFunnelStats = {
   weeks: 0,
   mandatory:   { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
-  conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 },
+  conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
+                 freshPicked: 0, repeatPicked: 0 },
   // policyBlocked는 random에선 0이어야 한다 — 후보를 고르기 전에 이미 걸러서 넘긴다.
   // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
   random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
@@ -136,7 +149,8 @@ export const eventFunnelStats = {
 export function resetEventFunnelStats(): void {
   eventFunnelStats.weeks = 0;
   eventFunnelStats.mandatory   = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
-  eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 };
+  eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
+                 freshPicked: 0, repeatPicked: 0 };
   eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
   eventFunnelStats.crowdedByRule = {};
   eventFunnelStats.emptyByRule   = {};
@@ -248,18 +262,38 @@ export function runEventEngine(
   eventFunnelStats.conditional.condPass += conditional.length;
 
   if (conditional.length > 0) {
-    // oncePolicy 통과하는 첫 번째
-    const picked = conditional.find((r) =>
+    // `conditional`은 이미 priority 내림차순이다 — 아래 두 고르기가 그 순서를 탄다
+    const eligible = conditional.filter((r) =>
       checkOncePolicy(r, ctx, seasonYear, careerStageYear)
     );
-    if (picked) tryEmit(picked, "conditional");
 
-    // ⚠ **계측 전용 두 번째 훑기.** `find`는 뽑은 뒤 멈추므로 그 뒤에 줄 서 있던
-    // 것이 몇 건인지 모른다 — 그게 "조건도 정책도 통과했는데 자리가 없어 밀린"
-    // 건수이고, 이 트랙이 재려는 바로 그 숫자다. 판정에는 안 쓴다.
-    for (const r of conditional) {
+    // ── 두 띠로 고른다 (2026-08-22) ─────────────────────────────
+    // 예전엔 그냥 priority 최대 하나였다. 그러면 **높고 반복되는 것이 영원히
+    // 이긴다** — 실측에서 `repeatable` 89건이 priority 700 이상에 몰려 있고
+    // `once_per_*` 60건이 100 미만이라 6시즌 내내 한 번도 못 떴다.
+    // `EVT_COND_PEAK_FORM` 하나가 전체 발동의 16%(82건)를 먹었다.
+    //
+    // 그래서 **"이번 시즌 아직 안 뜬 것"을 먼저 준다.** 한 바퀴 다 돌기 전에는
+    // 아무도 두 번 못 뜬다는 뜻이고, 띠 안에서는 예전처럼 priority가 정한다.
+    //
+    // ⚠ **총량은 안 바뀐다 — 여전히 주당 1건이다.** 배분만 바꾼다. 상한을
+    //   올리는 건 별개 결정이고(밸런스), 그건 아직 동결이다.
+    //
+    // ⚠ 상태 경고(피로·부진)는 시즌 초엔 아직 안 뜬 상태라 **첫 번은 그대로
+    //   즉시 뜬다.** 두 번째부터가 새 이야기 뒤로 밀린다 — 억제가 아니라
+    //   지연이고, `repeatPicked`로 얼마나 밀리는지 잰다.
+    const fresh  = eligible.find((r) => ctx.triggeredEvents[r.id] === undefined);
+    const picked = fresh ?? eligible[0];
+
+    if (picked) {
+      if (fresh) eventFunnelStats.conditional.freshPicked++;
+      else       eventFunnelStats.conditional.repeatPicked++;
+      tryEmit(picked, "conditional");
+    }
+
+    // 뽑히지 못한 나머지 — 조건도 정책도 통과했는데 자리가 없어 밀린 것
+    for (const r of eligible) {
       if (r === picked) continue;
-      if (!checkOncePolicy(r, ctx, seasonYear, careerStageYear)) continue;
       eventFunnelStats.conditional.crowdedOut++;
       eventFunnelStats.crowdedByRule[r.id] = (eventFunnelStats.crowdedByRule[r.id] ?? 0) + 1;
     }
