@@ -1364,7 +1364,7 @@ fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<
 /// ⚠ 대신 **경력 사건으로 남긴다.** 예전엔 `position`만 바꾸고 아무 기록도
 /// 안 남겨서, 작년엔 3루수였던 선수가 왜 좌익수인지 알 방법이 없었다.
 /// 정보가 있어야 할 자리와 없어야 할 자리가 정확히 뒤바뀌어 있었다.
-fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
+pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
     // 포수가 맨 앞이다 — 전문 요원이라 0명이면 경기가 성립하지 않는다
     const FIELD: [&str; 8] = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"];
 
@@ -1822,6 +1822,21 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     } else {
         leftover_pending = params.pending_draft;
     }
+
+    // 13. **포지션 공백을 마지막에 한 번 더 메운다.**
+    //
+    // 🔴 `fix_position_gaps`는 11단계(`normalize_offseason_npcs` 안)에서 돈다.
+    // 그런데 그 뒤에 방출(11-b)·육성 만료(11-c)·재충원(11-e)·진로 배정(12)이
+    // 전부 선수를 움직인다 — **메운 뒤에 다시 벌어진다.**
+    //
+    // 실측: 시즌 중에는 공백이 **0팀**인데(237팀 전수 확인) 검사는 시즌종료·
+    // 오프시즌직후에 포수 0팀을 1~4팀 잡았다. 공백이 오프시즌 안에서 생기고
+    // 그 안에서 안 메워진다는 뜻이다.
+    //
+    // 이 세션에서 같은 형태를 세 번째로 만났다 — 방출이 충원보다 뒤에 와서
+    // 채운 뒤에 깎았고, 콜업이 야수 총원을 안 봤고, 이번엔 공백 메우기다.
+    // **같은 일을 하는 자리가 여럿이면 순서를 본다.**
+    fix_position_gaps(&mut after_normalize, season_year);
 
     // ⚠ **요약 문장도 여기서 안 만든다.** 한 번 만들어 봤다가 화면과 숫자가
     // 어긋났다 — Rust는 **사건**을 세는데(방출 1170) 화면은 **사람**을 센다

@@ -65,6 +65,7 @@ import { simulateNpcGame, logGameLines } from "./weekPhases/games";
 import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
+import { processPositionGaps } from "./weekPhases/positionGaps";
 import { processWeeklyNpcGrowth } from "./weekPhases/growth";
 import {
   processTradeWindow,
@@ -1282,6 +1283,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // ── 배경 리그 시뮬레이션 (await — 월간 메시지 전 완료 보장) ────
   const bgEntities = get(masterStore).entities;
   await processNpcInjuries(weekNum);
+  // 포지션 공백 — **부상으로 포수가 빠진 그 주에 바로 메운다.** 예전엔 메우는
+  // 경로가 오프시즌에만 있어 공백이 다음 해까지 갔다(실측 1~4팀이 포수 0명)
+  for (const line of await processPositionGaps(get(seasonStore).seasonYear)) autoLog(line);
   seasonStore.applyWeeklyConditionRecovery(bgEntities);
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities, gFinal.protagonist.careerStage);
   // npcLiveStats 변경 → connectToGameStore 구독이 entities 자동 갱신 (applyNpcLiveStats 불필요)
