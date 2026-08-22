@@ -2849,6 +2849,29 @@ export function contractRows(): string[] {
  * ⚠ 표본선(투수 40이닝·타자 120타석)을 넘긴 사람만 센다 — 그 아래는
  * `form_score`가 어차피 비율만큼 깎아서 눈금 판단에 안 쓰인다.
  */
+/**
+ * 구단 압박 분포 — **팀 개성이 실제로 생기는지 본다.**
+ *
+ * 🔴 예전엔 성향이 세이브에 안 남아 앱을 껐다 켜면 전부 50이었고,
+ * 연속 기록도 0이 하드코딩이라 연속 하위권 팀이 추가 압박을 못 받았다.
+ * 전 팀이 같은 값이면 승강·방출·FA 입찰의 성향 분기가 전부 죽는다.
+ */
+export function pressureSpread(): Record<string, unknown> {
+  const g = get(gameStore);
+  const v = Object.values(g.proTeamProfiles ?? {})
+    .map((p) => (p as { winNowPressure?: number })?.winNowPressure ?? 50)
+    .sort((a, b) => a - b);
+  const st = Object.values(g.teamStreaks ?? {});
+  const q = (f: number) => (v.length ? Math.round(v[Math.floor(v.length * f)]) : 0);
+  return {
+    팀: v.length,
+    압박_최소: v[0] ?? 0, 압박_중앙: q(0.5), 압박_최대: v[v.length - 1] ?? 0,
+    "60초과(buyer)": v.filter((x) => x > 60).length,
+    연속실패_최대: st.length ? Math.max(...st.map((s2) => (s2 as { missedPlayoffs: number }).missedPlayoffs)) : 0,
+    연속우승_최대: st.length ? Math.max(...st.map((s2) => (s2 as { titles: number }).titles)) : 0,
+  };
+}
+
 export function statDistribution(): Record<string, unknown> {
   const s = get(seasonStore);
   const era: number[] = [];

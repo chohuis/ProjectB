@@ -145,14 +145,27 @@ async function updateProTeamProfiles(): Promise<void> {
       const cur = g.proTeamProfiles[teamId]
         ?? m.teams.find((t) => t.id === teamId)?.proTeamProfile
         ?? DEFAULT_TEAM_PROFILE;
+      // 이번 시즌 결과로 연속 기록을 갱신한다. **압박에 넘기기 전에** 센다 —
+      // 올해 실패면 올해 것까지 세어야 그 압박이 반영된다
+      const prev = g.teamStreaks[teamId] ?? { missedPlayoffs: 0, titles: 0 };
+      const madePlayoffs = (i + 1) <= Math.floor(sorted.length / 2);
+      const streak = {
+        missedPlayoffs: madePlayoffs ? 0 : prev.missedPlayoffs + 1,
+        titles: i === 0 ? prev.titles + 1 : 0,
+      };
+      gameStore.patchTeamStreak(teamId, streak);
       const raw = await window.projectB!.engine("calcWinNowPressureUpdateNative", JSON.stringify({
         currentPressure: cur.winNowPressure,
         ownerPatience: cur.ownerPatience,
         finalStanding: i + 1,
         totalTeams: sorted.length,
-        // 연속 포스트시즌 실패는 아직 집계하지 않는다 — 순위만으로도
-        // 하위권은 +8/시즌이라 두 시즌이면 buyer 문턱(60)을 넘는다
-        consecutiveMissedPlayoffs: 0,
+        // 🔴 **연속 기록을 실제로 센다.** 예전엔 0이 하드코딩이라 연속 하위권
+        // 팀이 추가 압박을 못 받았다 — 매년 +8로 같았다. 산식에는 × 5 계수가
+        // 처음부터 있었다.
+        //
+        // ⚠ 진출선은 **압박 산식이 이미 쓰는 기준**과 같게 둔다
+        // (`final_standing <= total_teams / 2`). 따로 정하면 표가 둘이 된다.
+        consecutiveMissedPlayoffs: streak.missedPlayoffs,
         wonChampionship: i === 0,
       }));
       const r = JSON.parse(raw) as { newPressure?: number; error?: string };

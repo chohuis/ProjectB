@@ -107,7 +107,9 @@ export interface GameStoreState {
   seasonEndSummary: SeasonEndSummary | null;  // 직전 시즌 종료 처리 요약 (비저장)
   lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
   lastTop10Batter:  import("../types/save").Top10Snapshot | null;  // 직전 타자 TOP10 스냅샷
-  proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 런타임 팀 프로파일 (비저장)
+  proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 구단 성향 (저장됨)
+  /** 구단 연속 기록 — 연속 포스트시즌 실패 · 연속 우승 (저장됨) */
+  teamStreaks: Record<string, { missedPlayoffs: number; titles: number }>;
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -366,6 +368,7 @@ function buildInitialState(): GameStoreState {
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
     proTeamProfiles: {},
+    teamStreaks: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -528,6 +531,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     // ⚠ **되살린다.** 저장만 하고 안 읽으면 아무 일도 안 일어난다 —
     // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
     proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
+    teamStreaks:      (saved.teamStreaks ?? {}) as GameStoreState["teamStreaks"],
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -890,11 +894,17 @@ function createGameStore() {
           // ⚠ **구단 성향도 같이 저장한다.** 예전엔 "비저장"이라 앱을 껐다
           // 켜면 압박이 전부 50으로 돌아갔다 — 시즌마다 갱신해도 남지 않았다
           proTeamProfiles: s.proTeamProfiles,
+          teamStreaks: s.teamStreaks,
         },
       );
     },
 
     // 활성 슬롯 ID 설정 (새 게임 시작 시 슬롯 선택 후 호출)
+    /** 연속 기록 갱신 — 시즌 종료에 한 번. 진출선은 압박 산식과 같은 기준이다 */
+    patchTeamStreak(teamId: string, v: { missedPlayoffs: number; titles: number }) {
+      update((s) => ({ ...s, teamStreaks: { ...s.teamStreaks, [teamId]: v } }));
+    },
+
     setCurrentSlotId(slotId: string | null) {
       update((s) => ({ ...s, currentSlotId: slotId }));
     },
@@ -3073,6 +3083,7 @@ function createGameStore() {
         lastTop10Pitcher: null,
         lastTop10Batter:  null,
         proTeamProfiles:  {},
+        teamStreaks:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
         logs: [],
         upcoming: [],

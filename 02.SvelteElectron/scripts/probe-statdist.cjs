@@ -14,7 +14,7 @@ const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
       const w0 = app.currentWeek(), s0 = app.currentSeason();
       if (await app.pushCareerForward()) continue;
       if (app.isSeasonEnded()) {
-        console.log(`[${s0} 시즌종료] ${JSON.stringify(app.statDistribution())}`);
+        console.log(`[${s0} 시즌종료] ${JSON.stringify(app.pressureSpread())}`);
         await app.seasonRollover();
         continue;
       }

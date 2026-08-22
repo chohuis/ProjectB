@@ -932,6 +932,8 @@ export interface SaveGame {
   npcs: NpcSaveState[];  // NPC 런타임 상태 (Zone 0~3)
   /** 구단 성향 — 안 넣으면 앱을 껐다 켤 때 압박이 50으로 돌아간다 */
   proTeamProfiles?: Record<string, unknown>;
+  /** 구단 연속 기록 (연속 포스트시즌 실패 · 연속 우승) */
+  teamStreaks?: Record<string, { missedPlayoffs: number; titles: number }>;
 
   /**
    * **한 해에 한 번만 돌아야 하는 작업의 가드.** 반드시 저장한다.
@@ -966,6 +968,16 @@ export interface SaveGuards {
    * 영구인데 값 자신이 세션 한정이면 없던 일이 된다.
    */
   proTeamProfiles?: Record<string, unknown>;
+  /**
+   * 구단 이력 — 연속 기록. **성향(12축)과 섞지 않는다.**
+   *
+   * 🔴 압박 산식이 `consecutive_missed_playoffs × 5`를 쓰는데 호출부가
+   * **0을 하드코딩**했다(주석: "아직 집계하지 않는다"). 그래서 연속 하위권
+   * 팀이 추가 압박을 못 받았다 — 매년 +8로 같았다.
+   *
+   * 진출선은 산식이 이미 쓰는 `total_teams / 2`를 그대로 쓴다(새 수치 없음).
+   */
+  teamStreaks?: Record<string, { missedPlayoffs: number; titles: number }>;
 }
 
 export const SAVE_GAME_VERSION = 2;
