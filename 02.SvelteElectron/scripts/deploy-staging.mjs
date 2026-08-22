@@ -7,10 +7,8 @@
  * 라우팅 규칙 (파일명 접두사 기준):
  *   EVT_*      → events/mandatory|conditional|random/{pool}/  (파일 내 type/poolId 참조)
  *   ACH_*      → achievements/{category}/                     (파일 내 category 참조)
- *   CONTACT_*  → characters/
  *   MSG_*      → messages/templates.json  (templates 배열에 추가)
  *   DEC_*      → messages/decision_templates.json  (decisions 배열에 추가)
- *   SCRIPT_*   → messenger/scripts.json  (scripts 배열에 추가)
  *   PLY_* MNG_* COA_* OWN_*  → entities/players/ (자동 번호 부여, _index.json 갱신)
  */
 import {
@@ -143,18 +141,12 @@ for (const file of files) {
       mkdirSync(destDir, { recursive: true });
       writeJson(join(destDir, file), data);
       console.log(`  → achievements/${cat}/${file}`);
-    } else if (file.startsWith("CONTACT_")) {
-      writeJson(join(MASTER, "characters", file), data);
-      console.log(`  → characters/${file}`);
     } else if (file.startsWith("MSG_")) {
       appendToArrayFile(join(MASTER, "messages/templates.json"), "templates", data);
       console.log(`  → messages/templates.json [${data.id}]`);
     } else if (file.startsWith("DEC_")) {
       appendToArrayFile(join(MASTER, "messages/decision_templates.json"), "decisions", data);
       console.log(`  → messages/decision_templates.json [${data.id}]`);
-    } else if (file.startsWith("SCRIPT_")) {
-      appendToArrayFile(join(MASTER, "messenger/scripts.json"), "scripts", data);
-      console.log(`  → messenger/scripts.json [${data.id}]`);
     } else if (["PLY", "MNG", "COA", "OWN"].includes(simplePrefix)) {
       mkdirSync(PLAYERS, { recursive: true });
       const newId   = nextEntityId(simplePrefix);

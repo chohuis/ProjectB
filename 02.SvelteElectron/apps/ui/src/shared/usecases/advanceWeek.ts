@@ -118,7 +118,7 @@ function nextUnresolvedGame(schedule: ScheduleEntry[]): ScheduleEntry | null {
 }
 
 // ── 주간 처리 블록 ─────────────────────────────────────────────
-// week 경계를 넘을 때 호출: 훈련·이벤트·시험·메신저·진로·업적·배경리그
+// week 경계를 넘을 때 호출: 훈련·이벤트·시험·진로·업적·배경리그
 // 반환: 새로 생긴 logs
 async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const s = get(seasonStore);

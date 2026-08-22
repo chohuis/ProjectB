@@ -5,7 +5,7 @@
 | 트랙 | 폴더 · 브랜치 | 소유 |
 |---|---|---|
 | **A+C+E** | `ProjectB` · `extract-modals` | 로스터·계약 · 경기·성적 · 계측/기반 · **Rust 전부** |
-| **B** | `ProjectB-events` · `track/events` | 이벤트·메신저 → [track-B-events.md](track-B-events.md) |
+| **B** | `ProjectB-events` · `track/events` | 이벤트·소식함 → [track-B-events.md](track-B-events.md) |
 
 **이 문서는 A+C+E 트랙 것이다.** B는 자기 문서를 본다.
 

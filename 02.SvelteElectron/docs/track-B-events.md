@@ -1,4 +1,9 @@
-# 트랙 B — 이벤트·메신저
+# 트랙 B — 이벤트·소식함
+
+> ⚠ **예전 이름은 "이벤트·메신저"였다.** 메신저(NPC 1:1 채팅·친밀도·아크
+> 스크립트)는 **2026-06-01에 통째로 제거됐다**(`5687f0de1` — "수신함 단독
+> 운영으로 전환"). 이 트랙이 다루는 건 `events/` 535건과 이벤트 엔진,
+> 그리고 **소식함**이다.
 
 > **이 채팅이 처음 읽는 문서다.** 작업 폴더는 `ProjectB-events`(워크트리),
 > 브랜치는 `track/events`.
@@ -252,6 +257,53 @@ node scripts/measure-eventfunnel.cjs --nodraft    ← 전후 비교엔 반드시
 ```
 "measure:eventfunnel": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-eventfunnel.cjs"
 ```
+
+---
+
+## 메신저·아크 제거 (2026-08-22)
+
+메신저는 **없는 기능이다.** NPC 1:1 채팅·친밀도·**아크 스크립트**가
+2026-06-01 `5687f0de1`에서 통째로 제거됐다 — `MessengerPage`(591줄) ·
+`MessengerManagerModal`(1,652줄) · `types/messenger.ts` · 사이드바 탭 ·
+`game.ts` 메신저 메서드 8개 · `advanceWeek.ts`의 아크 트리거 블록.
+
+기능만 지우고 **부스러기가 남아 있었다.** 뒤에 혼선이 없게 지웠다:
+
+| 지운 것 | 왜 |
+|---|---|
+| `resource/data/master/messenger/` 3파일 | 연락처 2 · greet/advice 응답 뱅크 · 해금 규칙. 읽는 코드 0 |
+| 업적 `ACH_SOCIAL_FIRST_KAKAO` "첫 카톡" | 🔴 **해금이 구조적으로 불가능했다** — `metricKey: kakaoFirstContact`를 계산하는 곳이 없고 `game.ts`의 갈래는 `return item`뿐이었다 |
+| `db.cjs` `kakao_first_contact` 컬럼 | 생성만 되고 읽지도 쓰지도 않았다 (`achievement_metrics`에 INSERT 자체가 없다) |
+| `save.ts`의 `// ── 메신저 시스템 ──` 헤더 | 그 아래는 `HighSchoolMaster`·`SchoolScenario`였다. **엉뚱한 헤더** |
+| `deploy-staging.mjs`의 `SCRIPT_*`·`CONTACT_*` 경로 | `messenger/scripts.json`·`characters/` **둘 다 존재하지 않는 폴더** |
+| `advanceWeek.ts:121` 주석의 "메신저" | 주간 처리 목록에 남아 있었다 |
+
+⚠ **잔재가 아니라 살아 있어서 남긴 것** — `ACH_SOCIAL_MESSAGES_10/50/100`.
+`metricKey: messagesReadTotal`이고 `achievementEngine.ts:32`가
+`mailbox.filter(m => m.readAt !== null).length`로 **실제로 계산한다.**
+메신저가 아니라 **소식함** 업적이다.
+
+⚠ **B가 A 소유 파일 셋을 건드렸다.** 반쪽만 지우면 `DEFAULT_ACHIEVEMENTS`에
+없는 업적 id가 남아 더 나빠져서, 최소로 잘라냈다. 병합할 때 A에 알린다:
+
+```
+game.ts          삭제 2곳 (DEFAULT_ACHIEVEMENTS 한 줄 · 죽은 갈래 3줄)
+advanceWeek.ts   주석 한 줄
+db.cjs           CREATE TABLE 컬럼 한 줄
+```
+
+### 아직 남은 것 — 죽은 스키마 (지우지 않았다. 살릴 개념이 있다)
+
+| | 담긴 것 |
+|---|---|
+| `events/rules/global_policy.json` | 하루 상한 · 카테고리 쿨다운 · 중복 가드 · **큐 정책**(`allowDeferredToNextDay`) |
+| `events/catalog.json` | 카테고리 6종 (`match·academics·messenger·career·media·social`) |
+| `events/index.json` · `calendars/` 2 · `templates/core_events.json` | 옛 로딩 체계 |
+| `events/rules/*.json` 19건 | 매니페스트 없을 때 도는 폴백 스텁 |
+| `seeds/onepitch/events.toml` 1,848줄 | 03/04 형식 |
+
+**정규화 설계 전에 여기서 살릴 개념을 먼저 건진다** — 특히 `global_policy`의
+큐 정책은 연계 이벤트가 주당 1칸 상한을 우회할 길이다.
 
 ---
 

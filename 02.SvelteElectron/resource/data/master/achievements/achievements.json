@@ -37,7 +37,6 @@
     { "id": "ACH_GROWTH_WEEK_104",           "title": "2년 훈련",         "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 104, "hidden": false, "reward": "잠재력 +2" },
     { "id": "ACH_GROWTH_WEEK_156",           "title": "3년 훈련",         "category": "growth",   "status": "active", "metricKey": "trainingWeeksTotal", "targetValue": 156, "hidden": false, "reward": "잠재력 +3" },
 
-    { "id": "ACH_SOCIAL_FIRST_KAKAO",        "title": "첫 카톡",          "category": "social",   "status": "active", "metricKey": "kakaoFirstContact",  "targetValue": 1,   "hidden": false, "reward": "관계도 +1" },
     { "id": "ACH_SOCIAL_MESSAGES_10",        "title": "메시지 확인",      "category": "social",   "status": "active", "metricKey": "messagesReadTotal",  "targetValue": 10,  "hidden": false, "reward": "관계도 +1" },
     { "id": "ACH_SOCIAL_MESSAGES_50",        "title": "메시지 확인왕",    "category": "social",   "status": "active", "metricKey": "messagesReadTotal",  "targetValue": 50,  "hidden": false, "reward": "관계도 +3" },
     { "id": "ACH_SOCIAL_MESSAGES_100",       "title": "소통의 달인",      "category": "social",   "status": "active", "metricKey": "messagesReadTotal",  "targetValue": 100, "hidden": false, "reward": "관계도 +5" },
