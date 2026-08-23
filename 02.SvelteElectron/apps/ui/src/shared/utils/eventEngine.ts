@@ -1,4 +1,4 @@
-import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext } from "../types/event";
+import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext, EventTier } from "../types/event";
 import { pickSentence, bodyBankOf, type SentenceMemory } from "./sentenceBank";
 import type { MessageCategory, MessageItem } from "../types/main";
 import { evaluateConditions } from "./conditionEvaluator";
@@ -154,7 +154,7 @@ export const eventFunnelStats = {
   elapsedMs: 0,
   mandatory:   { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
   conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
-                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0 },
+                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0, urgentPicked: 0 },
   // policyBlocked는 random에선 0이어야 한다 — 후보를 고르기 전에 이미 걸러서 넘긴다.
   // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
   random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
@@ -180,7 +180,7 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.elapsedMs = 0;
   eventFunnelStats.mandatory   = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
   eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
-                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0 };
+                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0, urgentPicked: 0 };
   eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
   eventFunnelStats.optionsOffered = 0;
   eventFunnelStats.optionsOpen = 0;
@@ -189,6 +189,18 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.crowdedByRule = {};
   eventFunnelStats.emptyByRule   = {};
   eventFunnelStats.emittedByRule = {};
+}
+
+/**
+ * 규칙의 **중요도 등급**. 안 적혀 있으면 `oncePolicy`로 추론한다.
+ *
+ * ⚠ 추론은 임시방편이다 — **발동 정책은 중요도가 아니다.** 지금 데이터가
+ * 그 규칙으로 돌고 있어서 등급을 안 적으면 동작이 안 바뀌게 해 둔 것뿐이고,
+ * 등급을 적어 갈아타는 게 목표다.
+ */
+export function tierOf(rule: EventRule): EventTier {
+  if (rule.tier) return rule.tier;
+  return rule.oncePolicy === "repeatable" ? "ambient" : "important";
 }
 
 // ── 가중치 기반 랜덤 선택 ─────────────────────────────────────
@@ -342,20 +354,35 @@ export function runEventEngine(
     //
     // ⚠ `once_per_*`는 한 번 뜨면 정책이 막으므로 **후보에 남아 있다는 건
     //   아직 안 떴다는 뜻**이다. 그래서 둘째 띠는 전부 repeatable이고 손댈 게 없다.
-    const isScarce = (r: EventRule) => r.oncePolicy !== "repeatable";
-    const freshOnes = eligible.filter((r) => ctx.triggeredEvents[r.id] === undefined);
-    const fresh = freshOnes.find(isScarce) ?? freshOnes[0];
-    const picked = fresh ?? eligible[0];
+    // ── 등급 (2026-08-23) ───────────────────────────────────────
+    // 위 두 판단(희소한가·처음인가)을 **등급이 대신한다.** 등급이 없으면
+    // `tierOf`가 `oncePolicy`로 추론하므로 **동작이 안 바뀐다** — 갈아타는
+    // 중이라 둘이 겹쳐 있다.
+    //
+    // 🔴 `urgent`는 **주당 1건 상한 밖이다.** 다쳤는데 다음 주에 알려주면
+    //    안 된다. 상한을 올리지 않고도 "지금 벌어진 일"이 즉시 뜬다.
+    const urgent = eligible.filter((r) => tierOf(r) === "urgent");
+    for (const r of urgent) {
+      eventFunnelStats.conditional.urgentPicked++;
+      tryEmit(r, "conditional");
+    }
+
+    // 나머지는 예전처럼 **한 칸**을 두고 다툰다
+    const rest = eligible.filter((r) => tierOf(r) !== "urgent");
+    const freshOnes = rest.filter((r) => ctx.triggeredEvents[r.id] === undefined);
+    const fresh = freshOnes.find((r) => tierOf(r) === "important") ?? freshOnes[0];
+    const picked = fresh ?? rest[0];
 
     if (picked) {
-      if (!fresh)              eventFunnelStats.conditional.repeatPicked++;
-      else if (isScarce(fresh)) eventFunnelStats.conditional.scarcePicked++;
-      else                      eventFunnelStats.conditional.freshPicked++;
+      if (!fresh)                            eventFunnelStats.conditional.repeatPicked++;
+      else if (tierOf(fresh) === "important") eventFunnelStats.conditional.scarcePicked++;
+      else                                    eventFunnelStats.conditional.freshPicked++;
       tryEmit(picked, "conditional");
     }
 
-    // 뽑히지 못한 나머지 — 조건도 정책도 통과했는데 자리가 없어 밀린 것
-    for (const r of eligible) {
+    // 뽑히지 못한 나머지 — 조건도 정책도 통과했는데 자리가 없어 밀린 것.
+    // `urgent`는 전부 나갔으므로 대기가 아니다
+    for (const r of rest) {
       if (r === picked) continue;
       eventFunnelStats.conditional.crowdedOut++;
       eventFunnelStats.crowdedByRule[r.id] = (eventFunnelStats.crowdedByRule[r.id] ?? 0) + 1;

@@ -5303,3 +5303,51 @@ export function eventRuleProbe(ruleId: string): Record<string, unknown> {
     주인공태그: [...get(gameStore).protagonist.tags],
   };
 }
+
+/**
+ * 소식함 **전체**를 그대로 돌려준다 — 상한을 올릴지 판단하려면 진짜 크기가 필요하다.
+ *
+ * ⚠ `mailboxRaw()`는 `{id, subject}`만 준다(id 충돌 검사용). 그걸로 바이트를
+ * 재면 본문·선택지가 통째로 빠져 **5배 넘게 과소평가한다** — 실제로 한 번
+ * 그렇게 재서 "1통 73B"라는 값을 얻을 뻔했다.
+ */
+export function mailboxFull(): unknown[] {
+  return [...(get(gameStore).mailbox ?? [])];
+}
+
+/**
+ * **소식 metadata가 저장·로드를 견디는가** — 실제 경로로 왕복시킨다.
+ *
+ * `projectb_v2.db`의 `mailbox` 테이블에는 **metadata 컬럼이 없다.** 그런데
+ * 실제 저장은 `setProtagonist`가 `makeSaveGame(...)`을 통째로 나르는 경로라,
+ * 둘 중 어느 쪽이 진짜인지 **코드만 봐서는 모른다.** 왕복이 유일한 답이다.
+ *
+ * 안 살아남으면 세이브를 다시 연 순간 지난 부상 리포트가 **빈 껍데기**가 된다 —
+ * 대시보드는 그 위에 못 세운다.
+ *
+ * ⚠ `hydrateFromSlot(toSaveGame())`은 **메모리 왕복이라 이걸 못 잡는다.**
+ * DB를 실제로 거쳐야 컬럼 누락이 드러난다.
+ */
+export async function mailboxRoundTrip(): Promise<Record<string, unknown>> {
+  const slotId = get(gameStore).currentSlotId;
+  if (!slotId) throw new Error("[mailboxRoundTrip] 슬롯이 없다");
+
+  const shape = (rows: import("../../apps/ui/src/shared/types/main").MessageItem[]) => ({
+    통: rows.length,
+    metadata: rows.filter((m) => m.metadata).length,
+    events: rows.reduce((a, m) => {
+      const e = (m.metadata as { events?: unknown[] } | undefined)?.events;
+      return a + (Array.isArray(e) ? e.length : 0);
+    }, 0),
+    bytes: JSON.stringify(rows).length,
+  });
+
+  const before = shape(get(gameStore).mailbox ?? []);
+  await gameStore.save();
+
+  // 저장된 것을 **DB에서 다시 읽는다** — 메모리 왕복이 아니다
+  const raw = await slotRepo.getProtagonist<{ mailbox?: import("../../apps/ui/src/shared/types/main").MessageItem[] }>(slotId);
+  const after = shape(raw?.mailbox ?? []);
+
+  return { 저장전: before, 로드후: after, 같은가: before.metadata === after.metadata && before.events === after.events };
+}

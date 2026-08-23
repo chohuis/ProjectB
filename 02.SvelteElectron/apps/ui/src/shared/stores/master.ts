@@ -530,10 +530,18 @@ function parseEventRule(raw: Record<string, any>): EventRule {
 
   assertConditions(String(raw.id ?? "(id 없음)"), conditions);
 
+  // 등급은 셋뿐이다. 오타를 조용히 `ambient`로 떨어뜨리면 그 이벤트가
+  // 왜 안 뜨는지 아무도 못 찾는다 — 조건 필드에서 이미 겪은 형태다
+  const TIERS = ["urgent", "important", "ambient"];
+  if (raw.tier !== undefined && !TIERS.includes(raw.tier)) {
+    throw new Error(`[master] ${raw.id}: 모르는 tier "${raw.tier}" — ${TIERS.join("·")} 중 하나여야 한다`);
+  }
+
   return {
     id: String(raw.id ?? ""),
     title: String(raw.title ?? raw.id ?? ""),
     type: (raw.type as EventRule["type"]) ?? "random",
+    tier: raw.tier as EventRule["tier"] | undefined,
     category: String(raw.category ?? ""),
     priority: Number(raw.priority ?? 0),
     oncePolicy: (raw.oncePolicy as EventRule["oncePolicy"]) ?? "repeatable",

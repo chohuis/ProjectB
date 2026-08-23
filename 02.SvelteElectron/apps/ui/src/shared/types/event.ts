@@ -91,12 +91,39 @@ export type EventOncePolicy =
   | "once_per_stage_year"// 커리어 단계(고교/대학 등) 연도당 1회
   | "once_per_career";   // 커리어 전체 1회
 
+/**
+ * **중요도 등급** (2026-08-23).
+ *
+ * `type`은 "어떻게 발동하는가"(달력·조건·확률)이고 이건 **"얼마나 중요한가"**다.
+ * 예전엔 둘이 섞여 있었다 — `mandatory` 105건이 전부 달력 일정인데 상한이
+ * 없어서 사실상 최우선 등급 노릇을 했고, **부상처럼 지금 벌어진 일은 전부
+ * `conditional`로 밀려나 주당 1칸을 두고 분위기 소식과 다퉜다.**
+ *
+ * `priority`(45~900, 값 종류 59개)로 그걸 표현하려던 게 실패했다. 사람이
+ * "이건 몇 점?"에 답할 근거가 없으니 각자 감으로 적었고, 그래서 **평생 한 번뿐인
+ * 이야기가 85점, 매주 오는 피로 알림이 900점**이 됐다(2026-08-23 실측).
+ *
+ * | 등급 | 주당 1건 상한 | 무엇 |
+ * |---|---|---|
+ * | `urgent` | **안 걸린다 — 즉시** | 지금 벌어진 일. 부상·수술·방출·트레이드 통보 |
+ * | `important` | 대기열 **앞** | 놓치면 끝. 진로·계약·일회성 서사 |
+ * | `ambient` | 남는 칸 | 반복되는 상태·분위기 |
+ *
+ * ⚠ **비워 두면 `oncePolicy`로 추론한다** — `repeatable`이면 `ambient`,
+ * 아니면 `important`. 지금 데이터가 그 규칙으로 돌고 있어서, 등급을 안 적으면
+ * **동작이 하나도 안 바뀐다.** 추론은 임시방편이다: 발동 정책은 중요도가
+ * 아니고 둘이 우연히 상관됐을 뿐이라, 등급을 적어 갈아타는 게 목표다.
+ */
+export type EventTier = "urgent" | "important" | "ambient";
+
 export interface EventRule {
   id: string;
   title: string;
   type: "mandatory" | "conditional" | "random";
   category: string;
   priority: number;                          // 높을수록 먼저 처리
+  /** 중요도. 비우면 `oncePolicy`로 추론한다 (위 주석) */
+  tier?: EventTier;
   oncePolicy: EventOncePolicy;
   cooldownWeeks?: number;                    // 재발생 금지 주차 수
   conditions?: Condition[];                  // 모두 AND 조건
