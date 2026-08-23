@@ -43,6 +43,7 @@ import {
   draftDestinationTeams,
   draftOrderOf,
   placementRulesFrom,
+  teamNeedsOf,
 } from "../utils/draftSystem";
 import { loadRosterRules, buildSalaryIndex } from "../repo/newGameV3";
 import type {
@@ -106,7 +107,16 @@ export interface GameStoreState {
   seasonEndSummary: SeasonEndSummary | null;  // 직전 시즌 종료 처리 요약 (비저장)
   lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
   lastTop10Batter:  import("../types/save").Top10Snapshot | null;  // 직전 타자 TOP10 스냅샷
-  proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 런타임 팀 프로파일 (비저장)
+  proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 구단 성향 (저장됨)
+  /** 구단 연속 기록 — 연속 포스트시즌 실패 · 연속 우승 (저장됨) */
+  teamStreaks: Record<string, { missedPlayoffs: number; titles: number }>;
+  /**
+   * 구단 목표 순위 — 지출과 우승 이력에서 유도. 시즌 종료에 갱신한다.
+   *
+   * ⚠ **계산은 `seasonRollover` 한 곳에서만 한다.** 계측기나 화면이 같은 식을
+   * 다시 구현하면 표가 둘이 된다 — 이 저장소에서 반복된 결함이다.
+   */
+  teamTargets: Record<string, number>;
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -364,6 +374,8 @@ function buildInitialState(): GameStoreState {
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
     proTeamProfiles: {},
+    teamStreaks: {},
+    teamTargets: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -523,7 +535,11 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     seasonEndSummary: null,
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
-    proTeamProfiles:  {},
+    // ⚠ **되살린다.** 저장만 하고 안 읽으면 아무 일도 안 일어난다 —
+    // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
+    proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
+    teamStreaks:      (saved.teamStreaks ?? {}) as GameStoreState["teamStreaks"],
+    teamTargets:      {},   // 파생값 — 시즌 종료에 다시 계산된다
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -878,11 +894,27 @@ function createGameStore() {
         // ⚠ **반드시 같이 저장한다.** 이걸 빼면 앱을 껐다 켤 때마다
         // 시즌 종료·드래프트가 다시 돌아 NPC 전원이 한 살씩 더 먹는다
         // (`npm run check:seasonendguard`).
-        { lastSeasonEndYear: s.lastSeasonEndYear, lastDraftYear: s.lastDraftYear },
+        {
+          lastSeasonEndYear: s.lastSeasonEndYear, lastDraftYear: s.lastDraftYear,
+          // ⚠ **구단 성향도 같이 저장한다.** 예전엔 "비저장"이라 앱을 껐다
+          // 켜면 압박이 전부 50으로 돌아갔다 — 시즌마다 갱신해도 남지 않았다
+          proTeamProfiles: s.proTeamProfiles,
+          teamStreaks: s.teamStreaks,
+        },
       );
     },
 
     // 활성 슬롯 ID 설정 (새 게임 시작 시 슬롯 선택 후 호출)
+    /** 연속 기록 갱신 — 시즌 종료에 한 번. 진출선은 압박 산식과 같은 기준이다 */
+    /** 목표 순위 묶음 갱신 — 시즌 종료에 한 번 */
+    setTeamTargets(map: Record<string, number>) {
+      update((s) => ({ ...s, teamTargets: { ...s.teamTargets, ...map } }));
+    },
+
+    patchTeamStreak(teamId: string, v: { missedPlayoffs: number; titles: number }) {
+      update((s) => ({ ...s, teamStreaks: { ...s.teamStreaks, [teamId]: v } }));
+    },
+
     setCurrentSlotId(slotId: string | null) {
       update((s) => ({ ...s, currentSlotId: slotId }));
     },
@@ -2276,6 +2308,26 @@ function createGameStore() {
       // 방출·FA 미계약자의 진로 — 미지명 졸업생과 **같은 로직**을 태운다.
       // 안 넘기면 Rust가 그 사람들을 전부 은퇴시킨다
       const offDest = draftDestinationTeams(get(masterStore).teams);
+      // FA 입찰 — **상한은 팀 예산 지수에서 유도한다**(새 표를 만들지 않는다).
+      // 지금 총연봉에 지수와 여유를 곱한다: 부자 구단은 더 부를 수 있고
+      // 가난한 구단은 못 부른다. `buildSalaryIndex`는 외국인 영입도 쓰는 함수다.
+      const faParams = await (async () => {
+        const min = (offRules.faRules as { bidInterestMin?: number } | undefined)?.bidInterestMin ?? 0;
+        if (!min) return undefined;
+        const { buildSalaryIndex } = await import("../repo/newGameV3");
+        const idx = buildSalaryIndex(get(masterStore).teams);
+        const payroll = new Map<string, number>();
+        for (const n of s.npcs) {
+          if (n.careerStatus !== "active" || !n.currentTeam) continue;
+          payroll.set(n.currentTeam, (payroll.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
+        }
+        const cap: Record<string, number> = {};
+        for (const [tid, cur] of payroll) {
+          // 지수 1.0인 팀이 지금 총연봉의 1.25배까지 쓸 수 있다
+          cap[tid] = Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
+        }
+        return { teamPayrollCap: cap, bidInterestMin: min };
+      })();
       // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
       // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날
       // 때 실력"으로 방출을 정했다. 성적은 **바로 이 시점까지 살아 있다** —
@@ -2321,6 +2373,7 @@ function createGameStore() {
         s.proTeamProfiles,
         // 세계 씨앗 — 안 넘기면 모든 세계가 같은 오프시즌을 낸다
         offWorldSeed,
+        faParams,
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
@@ -3040,6 +3093,8 @@ function createGameStore() {
         lastTop10Pitcher: null,
         lastTop10Batter:  null,
         proTeamProfiles:  {},
+        teamStreaks:      {},
+        teamTargets:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
         logs: [],
         upcoming: [],
@@ -3307,8 +3362,16 @@ function createGameStore() {
       // 지명 대상 풀 배수 — 보드에 싣는 수와 **같은 값**을 쓴다.
       // 다르면 "화면엔 220명인데 실제로는 1,682명에서 뽑는" 상태가 된다
       const poolMult = (draftRules as { boardCandidateMultiplier?: number }).boardCandidateMultiplier ?? 2;
+      // 팀 사정 — **안 넘기면 구단이 뭐가 모자란지 모른 채 최고점만 뽑는다.**
+      // 야수 10명인 팀도 최고점 투수가 남아 있으면 그 투수를 뽑았다.
+      // 하한은 규칙 파일에서 유도한다(표를 새로 두지 않는다)
+      const needBonus = (draftRules as { needBonus?: number }).needBonus ?? 0;
+      const teamNeeds = needBonus > 0
+        ? teamNeedsOf(get({ subscribe }).npcs, draftOrder, rulesFile.rosterRules)
+        : {};
       const simResult = await runDraftSimulation(
         candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
+        needBonus > 0 ? { teamNeeds, needBonus, needSaturation: (draftRules as { needSaturation?: number }).needSaturation ?? 0 } : undefined,
       );
 
       // ── 주인공을 보드에 끼워 넣는다 ──────────────────────────

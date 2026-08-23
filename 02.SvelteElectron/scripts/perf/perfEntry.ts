@@ -2807,6 +2807,20 @@ export function rispSplitProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown>
  * ⚠ 갈래를 나눠 찍는다. 하나로 합치면 어느 계통이 갈렸는지 안 보인다 —
  * 로스터가 갈렸는지, 성적이 갈렸는지, 부상이 갈렸는지가 원인을 가른다.
  */
+/** 순위 원본 — W1엔 경기가 없는데 갈리면 리그 활성화나 초기화가 흔들린 것이다 */
+export function standingsSnapshot(): string[] {
+  const s = get(seasonStore);
+  const out: string[] = [];
+  for (const [lid, ls] of Object.entries(s.leagueState ?? {}).sort((a, b) => (a[0] < b[0] ? -1 : 1))) {
+    const rows = (ls as { standings?: Array<{ teamId: string; wins: number; losses: number }> })?.standings ?? [];
+    out.push(`${lid} 팀수=${rows.length}`);
+    for (const st of [...rows].sort((a, b) => (a.teamId < b.teamId ? -1 : 1))) {
+      if (st.wins || st.losses) out.push(`  ${lid}|${st.teamId}|${st.wins}-${st.losses}`);
+    }
+  }
+  return out;
+}
+
 /** 소속 원본 — 로스터가 갈렸을 때 **누가** 다른지 본다 */
 export function rosterRows(): string[] {
   const g = get(gameStore);
@@ -2823,6 +2837,78 @@ export function contractRows(): string[] {
     .map((n) => `${n.npcId}|${n.currentLeague}|${n.currentSalary}|${n.contractYears}|${n.age}`);
 }
 
+/**
+ * 성적 원값 분포 — **`form_score`의 눈금을 실제 분포에 맞추려고 잰다.**
+ *
+ * 🔴 그 함수는 투수·타자가 비대칭이다:
+ *   투수  raw = (4.50 − ERA) / 4.50    ERA 9.00이면 −1.0 (일어난다)
+ *   타자  raw = (OPS − .700) / .700    −1.0이려면 OPS .000 (불가능)
+ *
+ * 그래서 성적 감점이 투수는 −1.0까지 가고 타자는 현실적으로 −0.3이 한계다.
+ * 승강·외국인 재계약이 이 값을 쓰므로 **투수만 성적으로 갈린다.**
+ *
+ * ⚠ 표본선(투수 40이닝·타자 120타석)을 넘긴 사람만 센다 — 그 아래는
+ * `form_score`가 어차피 비율만큼 깎아서 눈금 판단에 안 쓰인다.
+ */
+/**
+ * 구단 압박 분포 — **팀 개성이 실제로 생기는지 본다.**
+ *
+ * 🔴 예전엔 성향이 세이브에 안 남아 앱을 껐다 켜면 전부 50이었고,
+ * 연속 기록도 0이 하드코딩이라 연속 하위권 팀이 추가 압박을 못 받았다.
+ * 전 팀이 같은 값이면 승강·방출·FA 입찰의 성향 분기가 전부 죽는다.
+ */
+export function pressureSpread(): Record<string, unknown> {
+  const g = get(gameStore);
+  const v = Object.values(g.proTeamProfiles ?? {})
+    .map((p) => (p as { winNowPressure?: number })?.winNowPressure ?? 50)
+    .sort((a, b) => a - b);
+  const st = Object.values(g.teamStreaks ?? {});
+  const q = (f: number) => (v.length ? Math.round(v[Math.floor(v.length * f)]) : 0);
+  return {
+    팀: v.length,
+    압박_최소: v[0] ?? 0, 압박_중앙: q(0.5), 압박_최대: v[v.length - 1] ?? 0,
+    "60초과(buyer)": v.filter((x) => x > 60).length,
+    // 목표가 안 갈리면 편차도 같아져 계수를 아무리 올려도 소용없다.
+    // **계수 곡선을 재기 전에 이것부터 본다.**
+    목표_최소: (() => {
+      const t = Object.values(g.teamTargets ?? {}) as number[];
+      return t.length ? Math.round(Math.min(...t) * 10) / 10 : 0;
+    })(),
+    목표_최대: (() => {
+      const t = Object.values(g.teamTargets ?? {}) as number[];
+      return t.length ? Math.round(Math.max(...t) * 10) / 10 : 0;
+    })(),
+    연속실패_최대: st.length ? Math.max(...st.map((s2) => (s2 as { missedPlayoffs: number }).missedPlayoffs)) : 0,
+    연속우승_최대: st.length ? Math.max(...st.map((s2) => (s2 as { titles: number }).titles)) : 0,
+  };
+}
+
+export function statDistribution(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const era: number[] = [];
+  const ops: number[] = [];
+  const push = (rows: Record<string, unknown>) => {
+    for (const st of Object.values(rows ?? {})) {
+      const r = st as { type?: string; ip?: number; era?: number; pa?: number; ops?: number };
+      if (!r) continue;
+      if (r.type === "pitcher" && (r.ip ?? 0) >= 40) era.push(r.era ?? 0);
+      if (r.type === "batter" && (r.pa ?? 0) >= 120) ops.push(r.ops ?? 0);
+    }
+  };
+  push(s.stats as Record<string, unknown>);
+  for (const ls of Object.values(s.leagueState ?? {})) {
+    push((ls as { stats?: Record<string, unknown> })?.stats ?? {});
+  }
+  era.sort((a, b) => a - b);
+  ops.sort((a, b) => a - b);
+  const q = (v: number[], f: number) => (v.length ? Math.round(v[Math.floor(v.length * f)] * 1000) / 1000 : 0);
+  return {
+    투수: era.length,
+    ERA_p10: q(era, 0.1), ERA_중앙: q(era, 0.5), ERA_p90: q(era, 0.9), ERA_최대: q(era, 0.999),
+    타자: ops.length,
+    OPS_p10: q(ops, 0.1), OPS_중앙: q(ops, 0.5), OPS_p90: q(ops, 0.9), OPS_최소: q(ops, 0.001),
+  };
+}
 export function worldChecksum(): Record<string, string> {
   const g = get(gameStore);
   const s = get(seasonStore);
@@ -2862,12 +2948,22 @@ export function worldChecksum(): Record<string, string> {
     }
   }
 
+  // ⚠ **스태프는 npcs가 아니라 체크섬 밖이었다.** 콜업이 감독 능력
+  // (staffModsOf(...).callup)을 쓰므로, 스태프가 갈리면 승강이 갈리는데
+  // 원인이 안 보인다 — 로스터만 다르고 이유가 없는 것처럼 보인다.
+  const m = get(masterStore);
+  const staff = [...(m.staffEntities ?? [])]
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+    .map((e) => `${e.id}|${e.teamId ?? ""}|${e.name ?? ""}`);
+
   return {
     roster: hash(roster),
     contract: hash(contract),
     injury: hash(injury),
     standings: hash(stats),
+    staff: hash(staff),
     n: String(g.npcs.length),
+    ns: String((m.staffEntities ?? []).length),
   };
 }
 export function farmDevProbe(): Record<string, unknown> {

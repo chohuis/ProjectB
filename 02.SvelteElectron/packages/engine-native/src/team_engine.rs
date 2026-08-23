@@ -28,6 +28,15 @@ pub struct WinNowUpdateParams {
     pub total_teams: i32,
     pub consecutive_missed_playoffs: i32,
     pub won_championship: bool,
+    /// 목표 순위 — 지출과 우승 이력에서 유도한다. 0이면 **절대 순위 방식**(예전).
+    ///
+    /// 🔴 예전엔 절대 순위만 봐서 **예산 큰 팀도 중위권이면 +2**로 만족했다.
+    /// 실측 KBL 지출 지수가 1.5 ~ 0.52로 3배 벌어져 있는데 기대는 같았다.
+    #[serde(default)]
+    pub target_standing: f64,
+    /// 목표 대비 편차 1위당 압박. 0이면 예전 방식으로 떨어진다.
+    #[serde(default)]
+    pub deviation_weight: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -39,7 +48,15 @@ pub struct WinNowUpdateResult {
 
 pub fn calc_win_now_pressure_update(p: WinNowUpdateParams) -> WinNowUpdateResult {
     let patience_mult = 1.0 - (p.owner_patience / 100.0) * 0.5;
+    // 우승은 순위가 아니라 **사건**이다 — 편차와 무관하게 크게 내려간다
     let delta = if p.won_championship { -20.0 }
+        else if p.deviation_weight > 0.0 && p.target_standing > 0.0 {
+            // **목표 대비**로 본다. 예산 큰 팀은 중위권이어도 압박을 받고
+            // 작은 팀은 중위권이면 만족한다 — 예전엔 둘 다 +2로 같았다.
+            let dev = p.final_standing as f64 - p.target_standing;
+            dev * p.deviation_weight * patience_mult
+                + p.consecutive_missed_playoffs as f64 * 5.0
+        }
         else if p.final_standing <= 2 { -5.0 }
         else if p.final_standing <= p.total_teams / 2 { 2.0 * patience_mult }
         else { 8.0 * patience_mult + p.consecutive_missed_playoffs as f64 * 5.0 };
@@ -123,6 +140,13 @@ pub struct PromotionRules {
     pub pitcher_full_innings: f64,
     pub batter_ops_baseline: f64,
     pub batter_full_pa: f64,
+    /// OPS 하한 — 여기서 성적 점수가 −1.0이 된다.
+    ///
+    /// ⚠ **0이면 예전 동작이다**(기준값을 분모로 써서 −1.0에 안 닿는다).
+    /// 실측 OPS 최저가 .457이라 .450으로 둔다 — 투수가 ERA 9.00에서 −1.0에
+    /// 닿는 것과 대칭이다.
+    #[serde(default)]
+    pub batter_ops_floor: f64,
     /// 성적 점수 폭 (±). 넓힐수록 성적이 능력치를 크게 뒤집는다
     pub form_span: f64,
     /// 이 점수 아래면 "장기 부진" — 상시 콜업의 트리거다
@@ -141,6 +165,7 @@ impl Default for PromotionRules {
     fn default() -> Self {
         Self {
             form_weight: 8.0, pitcher_era_baseline: 4.50, pitcher_full_innings: 40.0,
+            batter_ops_floor: 0.0,
             batter_ops_baseline: 0.700, batter_full_pa: 120.0,
             form_span: 1.0, slump_score: -0.5,
             farm_min_pitchers: None, farm_min_batters: None,
@@ -162,7 +187,24 @@ pub fn form_score(perf: Option<&RosterPerf>, is_pitcher: bool, r: &PromotionRule
     } else {
         if perf.plate_appearances <= 0 { return 0.0; }
         // OPS는 기준 대비 비율. 0.700 기준에 0.910이면 +0.3
-        let rel = (perf.ops - r.batter_ops_baseline) / r.batter_ops_baseline.max(0.01);
+        //
+        // 🔴 **마이너스 쪽 분모가 달라야 대칭이 된다.** 기준값(.700)을 그대로
+        // 분모로 쓰면 −1.0이 되는 OPS가 **.000**이라 절대 안 닿는다. 실측
+        // 최저가 .457이라 현실적 하한이 −0.35였다. 투수는 기준의 2배(ERA 9.00)에서
+        // −1.0이고 실측 p90이 7.04·최대 12.8이라 **실제로 닿는다** —
+        // 그래서 성적 감점이 투수에게만 크게 걸렸다.
+        //
+        // 플러스 쪽은 안 건드린다. 좋은 성적의 눈금까지 바꾸면 승강·재계약이
+        // 한꺼번에 달라져 원인을 못 가린다(사용자 확정: 바닥만 고친다).
+        let d = perf.ops - r.batter_ops_baseline;
+        let rel = if d >= 0.0 {
+            d / r.batter_ops_baseline.max(0.01)
+        } else {
+            // 하한까지의 거리로 나눈다 — 하한에서 −1.0이 된다
+            let floor = r.batter_ops_floor;
+            let span = (r.batter_ops_baseline - floor).max(0.01);
+            d / span
+        };
         (rel, (perf.plate_appearances as f64 / r.batter_full_pa.max(1.0)).min(1.0))
     };
 
@@ -199,6 +241,12 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     // 있어도 자리가 안 비므로 그 경로로는 절대 안 걸린다.
     let pitchers_now = p.active_players.iter().filter(|a| is_pit(&a.position)).count();
     let pitcher_short = pitchers_now < crate::tuning::FIRST_TEAM_MIN_PITCHERS;
+    // 🔴 **야수엔 이 짝이 없었다.** 투수는 총원 하한을 보는데 야수는 안 봐서,
+    // 각 자리에 한 명씩만 있으면 야수 총원이 10명이어도 콜업이 안 돌았다
+    // (`gap_fill`은 그 포지션이 **0명**일 때만 걸린다). 야수 총원을 보는 건
+    // 오프시즌 `fill_first_teams`뿐이라 시즌 중엔 그대로 갔다.
+    let batters_total = p.active_players.iter().filter(|a| !is_pit(&a.position)).count();
+    let batter_short = batters_total < crate::tuning::FIRST_TEAM_MIN_BATTERS;
 
     for farm in &p.farm_players {
         // ⚠ **육성선수는 입단 연도엔 1군에 못 올라간다** (KBO: 5월 1일 이후).
@@ -355,6 +403,40 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
                         // 자리 공백(+60)보다 낮다 — 로테이션이 얇아도 경기는 성립한다
                         priority_score: 40.0,
                         reason: "pitcher_short".into(),
+                    });
+                }
+            }
+        }
+    }
+
+    // ── 야수 총원 하한 — `pitcher_short`의 짝 ──────────────────────────
+    //
+    // ⚠ **위 판정에 끼워 넣지 않는다.** 투수 쪽에서 그렇게 했다가 하한 미달인
+    // 모든 팀에서 부진·부상 교체가 사라졌다(회귀 4건). 하한은 최후 수단이다.
+    //
+    // ⚠ **투수 하한 아래로는 안 내린다** — 야수를 채우겠다고 내리면 이번엔
+    // 등판이 무너진다. 2군 야수 하한도 본다(2군도 경기를 한다).
+    if batter_short {
+        let has_bat_candidate = candidates.iter().any(|c|
+            p.farm_players.iter().any(|f| f.id == c.player_id && !is_pit(&f.position)));
+        if !has_bat_candidate {
+            let farm_bat = p.farm_players.iter().filter(|f| !is_pit(&f.position)).count();
+            let farm_floor = rules.farm_min_batters.unwrap_or(crate::tuning::FARM_MIN_BATTERS);
+            if pitchers_now > crate::tuning::FIRST_TEAM_MIN_PITCHERS && farm_bat > farm_floor {
+                // 육성선수는 뺀다 — 하한이 급해도 등록 자체가 안 된다
+                let up = p.farm_players.iter()
+                    .filter(|f| f.registrable && !is_pit(&f.position))
+                    .max_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
+                let down = p.active_players.iter()
+                    .filter(|a| !a.is_foreign && is_pit(&a.position) && count_at(&a.position) >= 2)
+                    .min_by(|a, b| rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap());
+                if let (Some(up), Some(down)) = (up, down) {
+                    candidates.push(CallupCandidate {
+                        player_id: up.id.clone(),
+                        replaces_player_id: down.id.clone(),
+                        // 투수 하한과 같은 급이다 — 둘 다 "경기는 되지만 여유가 없다"
+                        priority_score: 40.0,
+                        reason: "batter_short".into(),
                     });
                 }
             }

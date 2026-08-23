@@ -45,7 +45,7 @@ async function runOnce(label) {
         continue;
       }
       await app.autoRun();
-      trail.push({ tag: `${s0} W${w0}`, sum: app.worldChecksum(), rows: app.contractRows(), rrows: app.rosterRows() });
+      trail.push({ tag: `${s0} W${w0}`, sum: app.worldChecksum(), rows: app.contractRows(), rrows: app.rosterRows(), srows: app.standingsSnapshot() });
       if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
     }
   } finally {
@@ -59,7 +59,7 @@ async function main() {
   const b = await runOnce("B");
 
   console.log(`[결정성] 씨앗 ${SEED} · ${WEEKS}주 · A ${a.length}칸 / B ${b.length}칸\n`);
-  const keys = ["roster", "contract", "injury", "standings", "n"];
+  const keys = ["roster", "contract", "injury", "standings", "staff", "n", "ns"];
   const n = Math.min(a.length, b.length);
   let firstBad = -1;
   for (let i = 0; i < n; i++) {
@@ -113,6 +113,16 @@ async function main() {
     let n2 = 0;
     for (let k = 0; k < Math.min(a[i].rrows.length, b[i].rrows.length); k++) if (a[i].rrows[k] !== b[i].rrows[k]) n2++;
     console.log("        소속 차이 총 " + n2 + "명");
+  }
+  if (diff.includes("standings") && a[i].srows && b[i].srows) {
+    console.log("        순위 차이:");
+    const mx = Math.max(a[i].srows.length, b[i].srows.length);
+    let shown = 0;
+    for (let k = 0; k < mx && shown < 8; k++) {
+      const x = a[i].srows[k] ?? "(없음)", y = b[i].srows[k] ?? "(없음)";
+      if (x !== y) { console.log("          A " + x); console.log("          B " + y); shown++; }
+    }
+    if (shown === 0) console.log("          (줄 단위로는 같다 — 순서만 다르다)");
   }
   if (i > 0) console.log(`        직전(${a[i - 1].tag})까지는 같았다`);
   else console.log(`        **첫 칸부터 다르다** — 세계 생성이나 첫 주 처리다`);

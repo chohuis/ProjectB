@@ -155,6 +155,51 @@ export const DRAFT_ROUTE_LABELS: Record<DraftRoute, string> = {
 };
 
 // ── NPC 드래프트 시뮬 (Rust DLL 위임) ────────────────────────
+
+/**
+ * 팀별 부족 보직 — **목표 보직 비율에서 얼마나 벗어났는가.**
+ *
+ * `rosterMin × pitcherRatio` / `rosterMin × (1 − pitcherRatio)`로 낸다.
+ * `test:rosterbalance`가 쓰는 것과 같은 유도식이라 표가 두 벌이 되지 않는다.
+ *
+ * ⚠ **1군과 2군을 합쳐 센다.** 지명자는 대부분 2군에서 시작하므로
+ * 조직 전체로 봐야 한다 — 1군만 보면 2군이 비어도 안 걸린다.
+ */
+export function teamNeedsOf(
+  npcs: ReadonlyArray<{ currentTeam?: string; currentLeague?: string; playerType?: string; careerStatus?: string }>,
+  teamIds: readonly string[],
+  rosterRules: Record<string, { rosterMin?: number; pitcherRatio?: number }>,
+): Record<string, { pitchers: number; batters: number }> {
+  const out: Record<string, { pitchers: number; batters: number }> = {};
+  for (const teamId of teamIds) {
+    const base = teamId.replace(/_1$/, "");
+    let pit = 0, bat = 0;
+    for (const n of npcs) {
+      if (n.careerStatus !== "active" || !n.currentTeam) continue;
+      // 1군(_1)과 2군(_2)을 합친다
+      if (n.currentTeam !== base + "_1" && n.currentTeam !== base + "_2") continue;
+      if (n.playerType === "pitcher") pit++; else bat++;
+    }
+    // 🔴 **절대 하한이 아니라 목표 비율로 본다.**
+    //
+    // 처음엔 `rosterMin × 2`를 하한으로 썼는데 **아무도 안 걸렸다** —
+    // 조직 규모가 약 68명인데 하한이 52라 전 팀이 여유였다(실측 부족팀 0).
+    // `rosterMin`은 "이 아래로는 못 내려간다"는 최소선이지 목표가 아니다.
+    //
+    // 총원 대비 보직 비율을 본다. 총원이 고정이므로 **둘 중 정확히 하나만
+    // 양수**가 된다 — 팀마다 투수가 모자라거나 야수가 모자라거나 둘 중 하나다.
+    // 하한 표가 아예 필요 없고 `pitcherRatio` 하나만 쓴다.
+    const one = rosterRules[(npcs.find((n) => n.currentTeam === base + "_1")?.currentLeague) ?? ""] ?? {};
+    const ratio = one.pitcherRatio ?? 0.45;
+    const total = pit + bat;
+    out[teamId] = {
+      pitchers: Math.max(0, Math.round(total * ratio) - pit),
+      batters:  Math.max(0, Math.round(total * (1 - ratio)) - bat),
+    };
+  }
+  return out;
+}
+
 export async function runDraftSimulation(
   candidates: NpcSaveState[],
   namedMetas: NamedNpcMeta[],
@@ -163,6 +208,19 @@ export async function runDraftSimulation(
   teamIds: readonly string[] = KBL_TEAM_IDS,
   /** 지명 대상 풀 = 지명 수 × 이 배수 (규칙 파일 `boardCandidateMultiplier`) */
   poolMultiplier = 2,
+  /**
+   * 팀별 부족 보직 + 가점. **안 넘기면 팀 사정을 안 본다**(예전 동작).
+   *
+   * 🔴 예전엔 팀 ID만 넘겨서 구단이 뭐가 모자란지 몰랐다 — 야수 10명인
+   * 팀도 최고점 투수가 남아 있으면 그 투수를 뽑았다. 트레이드는 포지션을
+   * 보는데 드래프트만 안 봤다.
+   */
+  needs?: {
+    teamNeeds: Record<string, { pitchers: number; batters: number }>;
+    needBonus: number;
+    /** 가점이 최대가 되는 부족 인원. ⚠ 타입에서 빠뜨리면 조용히 잘린다 */
+    needSaturation?: number;
+  },
 ): Promise<DraftSimResult> {
   const params = {
     candidates,
@@ -171,6 +229,7 @@ export async function runDraftSimulation(
     rounds,
     teamIds: [...teamIds],
     poolMultiplier,
+    ...(needs ?? {}),
   };
   const json = await api().npcRunDraft(JSON.stringify(params));
   return parseResult<DraftSimResult>(json);

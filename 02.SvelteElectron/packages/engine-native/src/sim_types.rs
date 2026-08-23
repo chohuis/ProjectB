@@ -415,6 +415,19 @@ pub struct NamedNpcMeta {
     pub pro_potential_tier: String,
 }
 
+/// 팀이 무엇이 모자란가. 호출부가 1군+2군을 합쳐 센다 —
+/// 지명자는 대부분 2군에서 시작하므로 조직 전체로 봐야 한다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TeamNeed {
+    /// 투수가 하한보다 몇 명 모자란가 (0이면 충분하다)
+    #[serde(default)]
+    pub pitchers: i32,
+    /// 야수가 하한보다 몇 명 모자란가
+    #[serde(default)]
+    pub batters: i32,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DraftSimParams {
@@ -423,6 +436,28 @@ pub struct DraftSimParams {
     pub year: i32,
     pub rounds: i32,
     pub team_ids: Vec<String>,
+    /// 팀별 부족 보직 — `teamId -> (투수부족, 야수부족)`. 없으면 팀 사정을 안 본다.
+    ///
+    /// 🔴 예전엔 팀 ID만 받아서 **팀이 뭐가 모자란지 전혀 몰랐다.** 야수가
+    /// 10명인 팀도 최고점 투수가 남아 있으면 그 투수를 뽑았다. 트레이드는
+    /// 포지션을 보는데(a_cnt >= 3 && b_cnt <= 1) 드래프트만 안 봤다.
+    #[serde(default)]
+    pub team_needs: std::collections::HashMap<String, TeamNeed>,
+    /// 부족 보직 가점. 0이면 예전 그대로다.
+    ///
+    /// ⚠ **능력치를 뒤집지 않을 만큼만 준다.** 지명자 점수 폭이 18.2이고
+    /// 라운드 노이즈가 최대 ±3이다. 나이 프리미엄을 +26까지 올렸다가
+    /// **OVR 55(19세)가 1순위, OVR 82(26세)가 미지명**이 된 적이 있다.
+    #[serde(default)]
+    pub need_bonus: f64,
+    /// 가점이 최대가 되는 부족 인원. 0이면 1명만 벗어나도 최대다.
+    ///
+    /// ⚠ **없으면 가점이 항상 최대로 붙는다.** 실측: 목표 비율에서 한 명만
+    /// 벗어나도 부족 판정이 나는데 조직이 68명이라 정확히 맞는 팀이 없다 —
+    /// **부족팀 지명 110회 중 110회가 부족 보직**이었다(충족률 100%).
+    /// 능력치 차이를 항상 이기면 "업사이드 프리미엄 +26" 때와 같은 결과가 된다.
+    #[serde(default)]
+    pub need_saturation: f64,
     /// 지명 대상 풀 = 지명 수 × 이 배수. 정본은
     /// `generation_rules.json`의 `draftRules.boardCandidateMultiplier`다.
     /// 없으면 2 (110지명이면 220명이 경쟁한다)
@@ -814,6 +849,19 @@ pub struct OffseasonParams {
     ///     if profile.win_now_pressure > 80 { score *= 1.3 }
     #[serde(default)]
     pub team_profiles: std::collections::HashMap<String, ProTeamProfile>,
+    /// 팀별 연봉 상한 (만원). 팀 예산에서 유도한다 — 없으면 입찰이 안 돈다.
+    #[serde(default)]
+    pub team_payroll_cap: std::collections::HashMap<String, i64>,
+    /// FA 입찰 성립 임계값. 0이면 **입찰을 안 하고 예전대로 아무 팀에나 배정**한다.
+    ///
+    /// 🔴 예전엔 FA 재배치가 "정원 여유가 있는 팀 아무 데나"였다 —
+    /// 구단이 원하는지·얼마를 줄지·선수가 받아들일지가 전부 빠져 있었고
+    /// **미계약이 0건**이었다(실측 5시즌). 구단 입찰 판정(`eval_fa_bid`)은
+    /// 구현돼 있는데 아무도 안 불렀다.
+    ///
+    /// ⚠ `interest_level`은 기본 50에서 시작한다 — 아무 이유가 없어도 50이다.
+    #[serde(default)]
+    pub fa_bid_interest_min: f64,
     /// 외국인 보유 한도가 걸리는 리그 (generation_rules.json `foreignRules.leagues`).
     /// 비면 외국인 개념이 없는 세계 — 구 세이브·구 페이로드가 그렇다
     #[serde(default)]

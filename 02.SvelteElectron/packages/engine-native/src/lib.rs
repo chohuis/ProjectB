@@ -775,6 +775,52 @@ pub fn form_score_native(params_json: String) -> String {
     serde_json::to_string(&v).unwrap_or_else(|e| parse_err("formScoreNative/serialize", e))
 }
 
+/// 포지션 공백 메우기 — **시즌 중에도 부를 수 있게 연다.**
+///
+/// 🔴 이 함수는 `normalize_offseason_npcs` 안에만 있어 **오프시즌에 한 번**
+/// 돌았다. 그런데 공백은 시즌 중에 생긴다:
+///
+///   ① 1군 포수가 0명이 된다            부상·방출·은퇴
+///   ② 콜업이 2군 마지막 포수를 올린다   (1군 0명이 2군 0명보다 나쁘다)
+///   ③ 2군 포수가 0명이 된다
+///   ④ 아무도 안 메운다                 이 함수가 오프시즌 전용이라
+///
+/// ④가 이 export로 닫힌다. 실제 야구도 포수가 없으면 다른 야수가 마스크를 쓴다.
+///
+/// ⚠ **공백이 있는 팀의 선수만 보낸다.** 전량(7,332명)을 주마다 왕복시키면
+/// 이 프로젝트가 줄인 IPC를 도로 까먹는다. 공백은 리그당 1~4팀이다.
+#[napi]
+pub fn fix_position_gaps_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P { npcs: Vec<sim_types::NpcSaveState>, season_year: i32 }
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Change { npc_id: String, team_id: String, from: String, to: String }
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct R { changes: Vec<Change> }
+    let mut p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("fixPositionGapsNative", e),
+    };
+    let before: Vec<String> = p.npcs.iter().map(|n| n.position.clone()).collect();
+    npc_sim::fix_position_gaps(&mut p.npcs, p.season_year);
+    // **바뀐 사람만 돌려준다.** 전량을 돌려주면 호출부가 그걸 스토어에 얹으면서
+    // 다른 필드까지 덮어쓴다 — 그 사이 다른 처리가 바꾼 값이 사라진다
+    let changes: Vec<Change> = p.npcs.iter().zip(before.iter())
+        .filter(|(n, b)| n.position != **b)
+        .map(|(n, b)| Change {
+            npc_id: n.npc_id.clone(),
+            team_id: n.current_team.clone(),
+            from: b.clone(),
+            to: n.position.clone(),
+        })
+        .collect();
+    serde_json::to_string(&R { changes })
+        .unwrap_or_else(|e| parse_err("fixPositionGapsNative/serialize", e))
+}
+
 /// NPC 재계약 기간 계산
 #[napi]
 pub fn calc_npc_contract_years_native(params_json: String) -> String {

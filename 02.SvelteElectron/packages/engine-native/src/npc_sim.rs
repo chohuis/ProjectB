@@ -1126,6 +1126,8 @@ fn release_second_stage(
 fn renew_independent_salaries(
     npcs: &mut [NpcSaveState],
     perf: &HashMap<String, f64>,
+    // 리그 연봉 배수 — 규칙 파일이 정본이다
+    salary_mult: &HashMap<String, f64>,
 ) -> usize {
     let mut n_done = 0;
     for n in npcs.iter_mut() {
@@ -1135,6 +1137,8 @@ fn renew_independent_salaries(
         let greed = n.personality.as_ref().map(|p| p.greed).unwrap_or(40.0);
         let next = crate::player_engine::calc_npc_renewal_salary(
             crate::player_engine::CalcNpcRenewalSalaryParams {
+                // 규칙 파일의 배수를 그대로 넘긴다 — 코드에 표를 두 번 두지 않는다
+                league_mult: salary_mult.clone(),
                 ovr: npc_core_ovr(n),
                 age: n.age,
                 league_id: n.current_league.clone(),
@@ -1364,7 +1368,7 @@ fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<
 /// ⚠ 대신 **경력 사건으로 남긴다.** 예전엔 `position`만 바꾸고 아무 기록도
 /// 안 남겨서, 작년엔 3루수였던 선수가 왜 좌익수인지 알 방법이 없었다.
 /// 정보가 있어야 할 자리와 없어야 할 자리가 정확히 뒤바뀌어 있었다.
-fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
+pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
     // 포수가 맨 앞이다 — 전문 요원이라 0명이면 경기가 성립하지 않는다
     const FIELD: [&str; 8] = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"];
 
@@ -1658,6 +1662,17 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         if n.player_type == "pitcher" { e.1 += 1; }
     }
 
+    // 팀별 총연봉·포지션 인원 — **루프 앞에서 만든다.** 안에서 `processed`를
+    // 다시 훑으면 가변 순회와 겹친다. 배정할 때마다 갱신한다 —
+    // 안 하면 같은 오프시즌에 한 팀이 무제한으로 부른다
+    let mut team_payroll: HashMap<String, i64> = HashMap::new();
+    let mut team_at_pos: HashMap<(String, String), usize> = HashMap::new();
+    for n in processed.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        *team_payroll.entry(n.current_team.clone()).or_insert(0) += n.current_salary;
+        *team_at_pos.entry((n.current_team.clone(), n.position.clone())).or_insert(0) += 1;
+    }
+
     for npc in processed.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
         // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
@@ -1699,9 +1714,70 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             npc.current_team   = "".into();
             continue;
         }
-        let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
-        let team = open[idx].clone();
+        // ── 구단 입찰 ─────────────────────────────────────────────
+        //
+        // 🔴 예전엔 `open` 중 **무작위**였다. 구단이 원하는지·얼마를 줄지가
+        // 없어서 FA가 되면 전원이 계약했다(실측 미계약 0건).
+        //
+        // ⚠ **후보 선정(`open`)은 그대로 쓴다.** 정원·외국인 보유 한도·투수
+        // 한도·원소속 리그를 이미 본다 — 이번에 외국인을 113 → 30으로 고친
+        // 자리라 건드리면 그게 깨진다.
+        let team = if params.fa_bid_interest_min > 0.0 {
+            let ovr = npc_core_ovr(npc);
+            let mut best: Option<(String, i64)> = None;
+            for tid in &open {
+                // 그 팀이 지금 얇은 자리 — 같은 포지션이 1명 이하면 부족으로 본다
+                let mut needs: Vec<String> = Vec::new();
+                {
+                    let payroll = team_payroll.get(*tid).copied().unwrap_or(0);
+                    let at_pos = team_at_pos
+                        .get(&((*tid).clone(), npc.position.clone())).copied().unwrap_or(0);
+                    if at_pos <= 1 { needs.push(npc.position.clone()); }
+                    let cap = params.team_payroll_cap.get(*tid).copied().unwrap_or(0).max(1);
+                    let bid = crate::team_engine::eval_fa_bid(crate::team_engine::EvalFaBidParams {
+                        seed: 0,
+                        team_profile: params.team_profiles.get(*tid).cloned().unwrap_or_default(),
+                        fa_player: crate::sim_types::FaPlayerRef {
+                            id: npc.npc_id.clone(),
+                            position: npc.position.clone(),
+                            age: npc.age,
+                            ovr,
+                            market_value: npc.current_salary.max(1),
+                            demand_salary: npc.current_salary.max(1),
+                            demand_years: npc.contract_years.max(1),
+                            fame: npc.fame,
+                            personality: npc.personality.clone(),
+                            pro_service_years: npc.pro_service_years.unwrap_or(0),
+                            current_league: origin_league.to_string(),
+                        },
+                        roster_needs: needs,
+                        salary_cap: cap,
+                        current_payroll: payroll,
+                    });
+                    if bid.interest_level < params.fa_bid_interest_min { continue; }
+                    // 1차는 최고 제시액으로 간다 — 선수의 선택은 2차다
+                    if best.as_ref().map_or(true, |(_, s)| bid.bid_salary > *s) {
+                        best = Some(((*tid).clone(), bid.bid_salary));
+                    }
+                }
+            }
+            match best {
+                Some((tid, _)) => tid,
+                // 아무도 안 불렀다 — 미계약. 진로는 D-4가 정한다
+                None => {
+                    events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
+                    npc.current_league = "LEAGUE_INDEPENDENT".into();
+                    npc.current_team   = "".into();
+                    continue;
+                }
+            }
+        } else {
+            let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
+            open[idx].clone()
+        };
         *team_active_count.entry(team.clone()).or_default() += 1;
+        *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
+        *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;
         // ⚠ **집계를 안 갱신하면 같은 주에 여럿이 같은 팀으로 몰린다** —
         //   한 명씩 볼 땐 다 여유가 있어 보인다
         if fgn {
@@ -1731,7 +1807,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 진로 배정(12단계) **앞**에 있어야 방출자가 그 경로를 탄다
     // 11-b0. 독립리그 연봉 갱신. **방출 판정 앞**이어야 그해 성적이 반영된
     // 연봉으로 과지급을 잰다
-    renew_independent_salaries(&mut after_normalize, &params.perf_scores);
+    renew_independent_salaries(&mut after_normalize, &params.perf_scores,
+        &params.salary_rules.as_ref().map(|r| r.league_mult.clone()).unwrap_or_default());
 
     if let Some(rr) = params.release_rules.as_ref() {
         release_second_stage(
@@ -1822,6 +1899,21 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     } else {
         leftover_pending = params.pending_draft;
     }
+
+    // 13. **포지션 공백을 마지막에 한 번 더 메운다.**
+    //
+    // 🔴 `fix_position_gaps`는 11단계(`normalize_offseason_npcs` 안)에서 돈다.
+    // 그런데 그 뒤에 방출(11-b)·육성 만료(11-c)·재충원(11-e)·진로 배정(12)이
+    // 전부 선수를 움직인다 — **메운 뒤에 다시 벌어진다.**
+    //
+    // 실측: 시즌 중에는 공백이 **0팀**인데(237팀 전수 확인) 검사는 시즌종료·
+    // 오프시즌직후에 포수 0팀을 1~4팀 잡았다. 공백이 오프시즌 안에서 생기고
+    // 그 안에서 안 메워진다는 뜻이다.
+    //
+    // 이 세션에서 같은 형태를 세 번째로 만났다 — 방출이 충원보다 뒤에 와서
+    // 채운 뒤에 깎았고, 콜업이 야수 총원을 안 봤고, 이번엔 공백 메우기다.
+    // **같은 일을 하는 자리가 여럿이면 순서를 본다.**
+    fix_position_gaps(&mut after_normalize, season_year);
 
     // ⚠ **요약 문장도 여기서 안 만든다.** 한 번 만들어 봤다가 화면과 숫자가
     // 어긋났다 — Rust는 **사건**을 세는데(방출 1170) 화면은 **사람**을 센다
@@ -2492,7 +2584,21 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
             let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
                 let base = calc_draft_score(npc, meta_map.get(id).copied()) + bias_of(id);
-                base + (rng.next() - 0.5) * spread
+                // 부족한 보직에 가점 — 팀 사정을 본다. 없으면 0이라 예전 그대로다
+                let need = params.team_needs.get(&params.team_ids[t as usize]);
+                let short = match need {
+                    Some(nd) if npc.player_type == "pitcher" => nd.pitchers,
+                    Some(nd) => nd.batters,
+                    None => 0,
+                };
+                // **벗어난 정도에 비례한다.** 무조건 최대로 주면 살짝 기운 팀도
+                // 능력치를 뒤집어서, 부족팀 지명이 100% 부족 보직이 됐다(실측).
+                // 살짝 기운 팀은 거의 영향이 없고 크게 기운 팀만 뒤집는다.
+                let sat = if params.need_saturation > 0.0 { params.need_saturation } else { 1.0 };
+                let need_pt = if short > 0 {
+                    (short as f64 * params.need_bonus / sat).min(params.need_bonus)
+                } else { 0.0 };
+                base + need_pt + (rng.next() - 0.5) * spread
             }).collect();
             let idx = scored_now.iter().enumerate()
                 .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))

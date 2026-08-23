@@ -47,6 +47,14 @@ export async function generateFaOffers(
     teamId:          protagonist.teamId,
     faUnsignedWeeks: protagonist.faUnsignedWeeks ?? 0,
     teams:           pool.map((t) => ({ id: t.id, leagueId: t.leagueId })),
+    // 리그 배수는 규칙 파일이 정본이다 — Rust에 표를 두 번 두지 않는다
+    leagueMult:      await (async () => {
+      try {
+        const { loadRosterRules } = await import("../repo/newGameV3");
+        const r = await loadRosterRules() as { salaryRules?: { leagueMult?: Record<string, number> } };
+        return r.salaryRules?.leagueMult ?? {};
+      } catch { return {}; }
+    })(),
   };
   return JSON.parse(
     await window.projectB!.faGenerateOffers(JSON.stringify(params))
