@@ -114,10 +114,13 @@ export async function simulateBackgroundLeagues(
       autoLog(`[배경리그오류] leagueSchedules 오염 — 배열 아님: ${lid}`);
       continue;
     }
-    // 반경 게이트: 비활성(3)은 시뮬 스킵, 드리프트(2)는 별도 driftBackgroundLeagues가 처리
+    // 반경 게이트: 비활성(3)은 시뮬을 건너뛴다.
+    // ⚠ 예전엔 `radius === 2`(드리프트)도 같이 봤는데 **그 값은 없다** —
+    //   `LeagueRadius`는 `1 | 3`이고 `getLeagueRadius`는 둘 중 하나만 돌려준다.
+    //   옆에 "드리프트(2)는 별도로 처리"라고 적힌 것은 옷 설계의 잔재다.
     if (careerStage && RADIUS_GATED_LEAGUES.has(lid)) {
       const radius = getLeagueRadius(careerStage, lid);
-      if (radius === 2 || radius === 3) continue;
+      if (radius === 3) continue;
     }
     const lState = migrateLeagueState(s.leagueState[lid] ?? {});
     for (const e of schedule) {

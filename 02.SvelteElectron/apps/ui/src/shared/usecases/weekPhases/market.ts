@@ -58,6 +58,30 @@ function seasonPerfOf(
   return undefined;
 }
 
+/**
+ * 승강·재계약·FA가 엔진에 넘기는 선수 한 명.
+ *
+ * 🔴 **예전엔 반환 타입이 `object`였다.** 그래서 호출부가 없는 키로 찾아도
+ * TS가 안 잡았다 — 실제로 `farm.find(f => f.playerId === ...)`가 항상 undefined라
+ * 콜업·콜다운 로그의 OVR이 **항상 0**으로 찍혔다. 여기 키는 `id`다.
+ */
+export interface RosterRef {
+  id: string;
+  position: string;
+  age: number;
+  ovr: number;
+  salary: number;
+  remainingYears: number;
+  proServiceYears: number;
+  isProspect: boolean;
+  personality: unknown;
+  fame: number;
+  isForeign: boolean;
+  registrable: boolean;
+  /** 성적이 없으면 없다 — Rust가 그때는 능력치만 본다 */
+  perf?: object;
+}
+
 function buildRosterRef(
   entity: import("../../stores/master").EntityRow,
   liveStats: import("../../stores/master").NpcLiveStats,
@@ -65,7 +89,7 @@ function buildRosterRef(
   perf?: object,
   /** 육성선수 등록 판정용. 없으면 전원 등록 가능(승강 외 호출부) */
   now?: { seasonYear: number; month: number },
-): object {
+): RosterRef {
   const p = (entity.details as EntityDetails)?.player;
   const ref = {
     id:               entity.id,
@@ -672,7 +696,10 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   }
 
   logEvent({
-    id: `trade-${leagueId}-W${weekInYear}-${g.protagonist.currentSlotId ?? ""}`,
+    // ⚠ `currentSlotId`는 **스토어 루트**에 있다 — `protagonist`가 아니다.
+    //   예전엔 `g.protagonist.currentSlotId`라 항상 undefined였고, 그래서 이 ID가
+    //   슬롯을 구분하지 못했다. 반환 타입이 넘어 TS가 안 잡았다.
+    id: `trade-${leagueId}-W${weekInYear}-${g.currentSlotId ?? ""}`,
     type: "trade",
     seasonYear: s.seasonYear,
     week: weekInYear,
@@ -733,7 +760,10 @@ export async function processProTeamCallupCalldown(
   const logs: string[] = [];
 
   const namedMap = new Map(g.npcs.map(n => [n.npcId, n]));
-  const monthIndex = MONTH_STARTS_1.indexOf(s.schedule.find(e => e.week === weekNum)?.week ?? 0);
+  // `MONTH_STARTS_1`은 `as const` 튜플이라 `indexOf`가 리터럴만 받는다.
+  // 찾는 값은 런타임 주차라 읽기 전용으로 넓힌다 — 데이터는 그대로다.
+  const monthIndex = (MONTH_STARTS_1 as readonly number[])
+    .indexOf(s.schedule.find(e => e.week === weekNum)?.week ?? 0);
   const currentMonth = monthIndex >= 0 ? monthIndex + 1 : 6;
 
   // 로스터 상한은 규칙 파일이 정본이다 — 예전엔 여기 35가 박혀 있었고
@@ -828,7 +858,7 @@ export async function processProTeamCallupCalldown(
         allMoves.push({ id: c.replacesPlayerId, teamId: teamId2 });
         const upName   = m.entities.find(e => e.id === c.playerId)?.name         ?? c.playerId;
         const downName = m.entities.find(e => e.id === c.replacesPlayerId)?.name ?? c.replacesPlayerId;
-        const upOvr    = Math.round(farm.find(f => f.playerId === c.playerId)?.ovr ?? 0);
+        const upOvr    = Math.round(farm.find(f => f.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜업] ${teamShort}: ${upName}(2군→1군,OVR:${upOvr}) ↑ | ${downName}(1군→2군) ↓ | 사유: ${c.reason}`);
         _callupEntries.push({ npcId: c.playerId, name: upName, fromTeamId: teamId2, toTeamId: teamId1, detail: `OVR:${upOvr} | ${c.reason}` });
         if (teamId1 === g.protagonist.teamId) logs.push(`[W${weekNum}] 팀 콜업: ${upName}`);
@@ -855,7 +885,7 @@ export async function processProTeamCallupCalldown(
         // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
         const cdName = m.entities.find(e => e.id === c.playerId)?.name ?? c.playerId;
-        const cdOvr  = Math.round(active.find(a => a.playerId === c.playerId)?.ovr ?? 0);
+        const cdOvr  = Math.round(active.find(a => a.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜다운] ${teamShort}: ${cdName}(1군→2군,OVR:${cdOvr}) ↓`);
         _calldownEntries.push({ npcId: c.playerId, name: cdName, fromTeamId: teamId1, toTeamId: teamId2, detail: `OVR:${cdOvr} | 로스터 조정` });
         if (teamId1 === g.protagonist.teamId) logs.push(`[W${weekNum}] 팀 콜다운: ${cdName}`);

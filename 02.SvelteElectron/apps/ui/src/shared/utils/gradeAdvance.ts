@@ -70,8 +70,10 @@ export function entityToProNpcState(
   const pl = entity.details?.player;
   const isMilitary =
     entity.militaryStatus === "현역" || pl?.militaryStatus === "현역";
-  // militaryEnlistYear는 entity 루트에 있고 details.player에는 없으므로 루트 우선
-  const enlistYear = entity.militaryEnlistYear ?? pl?.militaryEnlistYear;
+  // ⚠ **주석이 정반대로 적혀 있었다.** `militaryEnlistYear`는 `details.player`에만
+  //   있다 — `EntityRow` 루트엔 `militaryStatus`만 있고 입대 연도는 없다.
+  //   그래서 `entity.militaryEnlistYear`는 항상 undefined였고 뒤의 폴백이 답을 냈다.
+  const enlistYear = pl?.militaryEnlistYear;
   const careerStatus: NpcSaveState["careerStatus"] =
     entity.status === "retired" ? "retired"
     : isMilitary               ? "military"

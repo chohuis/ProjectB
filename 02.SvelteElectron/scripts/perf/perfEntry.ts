@@ -4339,7 +4339,9 @@ export function arsenalProbe(): Record<string, unknown> {
     // ⚠ **구종은 live에 실린다** (`npcAdapter.repoNpcToLiveStat`).
     // `npc.pitches`를 읽어 "전원 0구종"이라고 잘못 보고했다 — 이번 세션
     // 네 번째로 같은 자리를 틀렸다
-    const k = (live[npc.npcId]?.pitches ?? npc.pitches ?? []).length;
+    // ⚠ **`npc.pitches`로 폴백하지 않는다.** 위 주석이 경고하는 그 자리다 —
+    //   `NpcSaveState`엔 그 필드가 없어 항상 undefined다. 구종은 live가 정본이다.
+    const k = (live[npc.npcId]?.pitches ?? []).length;
     cnt[k] = (cnt[k] ?? 0) + 1; n++;
   }
   const out: Record<string, unknown> = { 투수: n };
