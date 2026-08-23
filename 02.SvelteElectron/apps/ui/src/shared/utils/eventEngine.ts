@@ -154,7 +154,7 @@ export const eventFunnelStats = {
   elapsedMs: 0,
   mandatory:   { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
   conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
-                 freshPicked: 0, repeatPicked: 0 },
+                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0 },
   // policyBlocked는 random에선 0이어야 한다 — 후보를 고르기 전에 이미 걸러서 넘긴다.
   // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
   random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
@@ -180,7 +180,7 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.elapsedMs = 0;
   eventFunnelStats.mandatory   = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
   eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
-                 freshPicked: 0, repeatPicked: 0 };
+                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0 };
   eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
   eventFunnelStats.optionsOffered = 0;
   eventFunnelStats.optionsOpen = 0;
@@ -317,12 +317,40 @@ export function runEventEngine(
     // ⚠ 상태 경고(피로·부진)는 시즌 초엔 아직 안 뜬 상태라 **첫 번은 그대로
     //   즉시 뜬다.** 두 번째부터가 새 이야기 뒤로 밀린다 — 억제가 아니라
     //   지연이고, `repeatPicked`로 얼마나 밀리는지 잰다.
-    const fresh  = eligible.find((r) => ctx.triggeredEvents[r.id] === undefined);
+    //
+    // ── 첫 띠 안에서 다시 한 번 가른다 (2026-08-23) ─────────────
+    // 위 두 띠만으로는 부족했다. **띠 안에서는 priority가 정하는데 그 priority가
+    // 정책과 거꾸로 매겨져 있다** (2026-08-23 실측, conditional 258건 중앙값):
+    //
+    //   repeatable          144건  중앙 710   ← 매주 또 온다
+    //   once_per_season      44건  중앙 740
+    //   once_per_stage_year  36건  중앙  60   ← 그 해 한 번뿐인데 최대가 85
+    //   once_per_career      34건  중앙  85   ← **평생 한 번**
+    //
+    // `once_per_stage_year` 36건은 최대가 85라 `repeatable` 144건의 **최소
+    // 580에도 못 미친다** — repeatable이 하나라도 조건을 통과하면 구조적으로
+    // 절대 못 이긴다. 그래서 고교 1학년 서사가 통째로 안 떴다:
+    // 기숙사 밤(p60) · 신입 환영회(p70) · 향수병(p55) · 주장 첫날(p90).
+    // 게다가 이들은 기회 창이 `week_lte 2~5`로 짧아 **두 겹으로 불리하다.**
+    //
+    // 그래서 **"다시 못 올 것"을 "다시 올 것"보다 먼저 준다.** 놓치면 끝인
+    // 이야기가 매주 또 오는 상태 알림에 밀리는 게 거꾸로다.
+    //
+    // ⚠ priority를 데이터에서 다시 매기는 안(70개 파일 수정)도 있었는데
+    //   이쪽을 골랐다 — **새 이벤트가 추가돼도 자동으로 적용되고**, 사람이
+    //   priority를 잘못 매겨도 같은 일이 안 생긴다.
+    //
+    // ⚠ `once_per_*`는 한 번 뜨면 정책이 막으므로 **후보에 남아 있다는 건
+    //   아직 안 떴다는 뜻**이다. 그래서 둘째 띠는 전부 repeatable이고 손댈 게 없다.
+    const isScarce = (r: EventRule) => r.oncePolicy !== "repeatable";
+    const freshOnes = eligible.filter((r) => ctx.triggeredEvents[r.id] === undefined);
+    const fresh = freshOnes.find(isScarce) ?? freshOnes[0];
     const picked = fresh ?? eligible[0];
 
     if (picked) {
-      if (fresh) eventFunnelStats.conditional.freshPicked++;
-      else       eventFunnelStats.conditional.repeatPicked++;
+      if (!fresh)              eventFunnelStats.conditional.repeatPicked++;
+      else if (isScarce(fresh)) eventFunnelStats.conditional.scarcePicked++;
+      else                      eventFunnelStats.conditional.freshPicked++;
       tryEmit(picked, "conditional");
     }
 

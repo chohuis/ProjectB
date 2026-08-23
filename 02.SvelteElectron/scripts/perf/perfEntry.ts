@@ -5141,6 +5141,10 @@ export function eventFunnelProbe(): Record<string, unknown> {
     "선택지 제시": f.optionsOffered,
     "선택지 열림": f.optionsOpen,
     "선택지 전부 닫힘": f.decisionsClosedOut,
+    // 🔴 **진짜 버려진 것.** `crowdedOut` 건수는 규칙×주차라 과장이다 —
+    // repeatable은 다음 주에 또 후보가 되니 밀린 것이지 버려진 게 아니다.
+    // 후보에 올랐는데 **끝내 한 번도 못 뜬** 종수가 실제 손실이다
+    "밀렸고 끝내 못 뜬 규칙": Object.keys(f.crowdedByRule).filter((id) => !f.emittedByRule[id]),
     // 정의 537건 중 커리어 내내 실제로 화면에 닿은 종수 — "몇 건이 후보였고
     // 몇 건이 떴는지"의 답이다. 건수가 아니라 **종수**를 본다
     "뜬 규칙 종수": Object.keys(f.emittedByRule).length,

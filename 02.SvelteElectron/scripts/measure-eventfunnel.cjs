@@ -135,6 +135,7 @@ if (RUNS > 1) { multiRun(); return; }
         주수: f.주수, 뜬종수: f["뜬 규칙 종수"], 밀림: c0.crowdedOut,
         밀린종수: f["밀린 규칙 종수"], 발동: c0.emitted,
         처음뜬: c0.freshPicked, 재발동: c0.repeatPicked,
+        끝내못뜬: f["밀렸고 끝내 못 뜬 규칙"].length,
       }));
       return;
     }
@@ -168,9 +169,10 @@ if (RUNS > 1) { multiRun(); return; }
     // "새 이야기 우선"이 실제로 도는가. repeat이 크면 뽑을 새 이야기가 동나서
     // 예전처럼 반복물이 칸을 먹는다는 뜻이다 — 그때는 배분이 아니라 상한 문제다
     log("  ②-2 한 바퀴 — 새 이야기 우선이 얼마나 도나");
-    const band = c.freshPicked + c.repeatPicked;
-    log(`    이번 시즌 처음 뜬 것  ${String(c.freshPicked).padStart(6)}회   ${pct(c.freshPicked, band)}`);
-    log(`    이미 떴던 것 재발동  ${String(c.repeatPicked).padStart(6)}회   ${pct(c.repeatPicked, band)}`
+    const band = c.scarcePicked + c.freshPicked + c.repeatPicked;
+    log(`    다시 못 올 것 (once_per_*) ${String(c.scarcePicked).padStart(6)}회   ${pct(c.scarcePicked, band)}`);
+    log(`    처음 뜬 반복물             ${String(c.freshPicked).padStart(6)}회   ${pct(c.freshPicked, band)}`);
+    log(`    이미 떴던 것 재발동         ${String(c.repeatPicked).padStart(6)}회   ${pct(c.repeatPicked, band)}`
       + `   ← 새 이야기가 동난 주. 상태 경고 지연분이기도 하다`);
     log("");
 
@@ -188,6 +190,33 @@ if (RUNS > 1) { multiRun(); return; }
       log("  ⚠ 본문도 선택지도 없어 조용히 버려진 규칙 (트리거만 소비했다)");
       for (const row of f["빈 메시지로 버려진 규칙"]) {
         log(`      ${String(row.규칙).padEnd(38)}${String(row.건수).padStart(6)}`);
+      }
+    }
+    log("");
+    log("  ④-2 🔴 진짜 버려진 것 — 후보엔 올랐는데 끝내 못 뜬 규칙");
+    // `crowdedOut` 건수(규칙×주차)는 과장이다. repeatable은 다음 주에 또
+    // 후보가 되니 **밀린 것이지 버려진 게 아니다.** 정책별로 갈라야 답이 된다:
+    //   repeatable   → 다시 온다. 이월 큐로 회복 가능한 몫
+    //   once_per_*   → 그 시즌(또는 커리어)이 끝이다. **영구 손실**
+    {
+      const lost = f["밀렸고 끝내 못 뜬 규칙"];
+      const fsx = require("node:fs"), px = require("node:path");
+      const walk = (d) => fsx.readdirSync(d, { withFileTypes: true })
+        .flatMap((e) => e.isDirectory() ? walk(px.join(d, e.name)) : [px.join(d, e.name)]);
+      const policy = {};
+      for (const lane of ["mandatory", "conditional", "random"]) {
+        for (const p of walk(`resource/data/master/events/${lane}`).filter((x) => x.endsWith(".json"))) {
+          const r = JSON.parse(fsx.readFileSync(p, "utf8"));
+          policy[r.id] = r.oncePolicy ?? "?";
+        }
+      }
+      const by = {};
+      for (const id of lost) { const k = policy[id] ?? "?"; (by[k] ??= []).push(id); }
+      log(`    밀린 ${f["밀린 규칙 종수"]}종 중 **끝내 못 뜬 것 ${lost.length}종**`);
+      for (const [k, ids] of Object.entries(by).sort((a, b) => b[1].length - a[1].length)) {
+        const mark = k === "repeatable" ? "다시 온다 — 이월로 회복 가능" : "**그 시즌이 끝이다 — 영구 손실**";
+        log(`      ${k.padEnd(20)}${String(ids.length).padStart(4)}종   ${mark}`);
+        log(`        ${ids.slice(0, 6).join(" ")}${ids.length > 6 ? ` 외 ${ids.length - 6}` : ""}`);
       }
     }
     log("");
