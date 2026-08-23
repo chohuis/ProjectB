@@ -11,15 +11,23 @@ const YEARS = Number(process.env.P2_YEARS || 6);
   try {
     await app.boot({ slotId: "P2", worldSeed: SEED, seasonYear: 2026 });
     app.armAfterSeasonSnapshot({ 압박: () => app.pressureSpread() });
+    let prevS = app.currentSeason();
     const start = app.currentSeason();
     let guard = 0;
     while (guard++ < YEARS * 52 * 60 && app.currentSeason() < start + YEARS) {
       if (app.retired()) break;
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       const w0 = app.currentWeek(), s0 = app.currentSeason();
-      if (await app.pushCareerForward()) continue;
-      if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
+      if (await app.pushCareerForward()) {
+        if (app.currentSeason() !== prevS) { console.log(`[전이] S${prevS} → S${app.currentSeason()} (pushCareerForward)`); prevS = app.currentSeason(); }
+        continue;
+      }
+      if (app.isSeasonEnded()) { await app.seasonRollover();
+        if (app.currentSeason() !== prevS) { console.log(`[전이] S${prevS} → S${app.currentSeason()} (rollover)`); prevS = app.currentSeason(); }
+        continue; }
       await app.autoRun();
+      // 시즌이 넘어갔는데 스냅샷이 안 쌓였으면 그 해는 종료 처리가 안 돌았다
+      if (app.currentSeason() !== prevS) { console.log(`[전이] S${prevS} → S${app.currentSeason()} (autoRun)`); prevS = app.currentSeason(); }
       if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
     }
     for (const r of app.drainAfterSeasonSnapshots()) {
