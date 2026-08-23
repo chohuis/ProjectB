@@ -49,6 +49,12 @@ pub fn calc_facility_eff(p: FacilityEffPayload) -> f64 {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InjuryPayload {
+    /// 판정 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// ⚠ 주인공 부상은 주마다 한 번이다 — 씨앗이 없으면 같은 세이브도
+    ///   실행마다 다른 주에 다치고, 그 차이가 성적·진로로 번진다.
+    #[serde(default)]
+    pub seed: u32,
     pub fatigue: f64,
     pub consecutive_high_fatigue_weeks: u32,
     pub has_injury: bool,
@@ -240,7 +246,12 @@ pub fn injury_trigger_chance(p: &InjuryPayload, grace_week: bool) -> f64 {
 }
 
 pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let is_pitcher = p.player_type.as_deref().unwrap_or("pitcher") != "batter";
     let is_high_fatigue = p.fatigue >= 80.0;
     let new_high_fatigue_weeks = if is_high_fatigue { p.consecutive_high_fatigue_weeks + 1 } else { 0 };

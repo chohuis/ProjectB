@@ -8,6 +8,7 @@ import {
 } from "../utils/seasonWeeks";
 import { get } from "svelte/store";
 import { trainingIntensityOf } from "../utils/arsenal";
+import { seedOf } from "../utils/seedOf";
 import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { livePitchingOvrOf } from "../stores/npcLiveStats";
 import { gameStore } from "../stores/game";
@@ -350,6 +351,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       })
     ),
     window.projectB!.weekCalcInjury(JSON.stringify({
+      // 🔴 **씨앗을 넘긴다.** 안 넘기면 엔진이 `thread_rng`로 떨어져
+      //    같은 세이브도 실행마다 다른 주에 다친다. 그 차이가 성적으로,
+      //    성적이 진로로 번져 같은 씨앗이어도 프로에 갔다 독립에 갔다 한다.
+      seed: seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "injury"),
       fatigue: g.protagonist.fatigue,
       consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
       hasInjury: alreadyInjured,

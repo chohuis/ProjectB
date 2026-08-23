@@ -15,8 +15,18 @@ const ok = (cond, msg) => {
   if (!cond) fail++;
 };
 
+// ⚠ **씨앗을 반복마다 다르게 고정한다.**
+//
+// 🔴 예전엔 씨앗을 안 넘겨서 엔진이 `thread_rng`로 돌았다 — 같은 검사가
+// 실행마다 다른 표본을 뽑아 **확률 검사가 간헐적으로 실패**했다.
+// 그렇다고 씨앗 하나로 고정하면 그 씨앗에서만 맞는 걸 보게 된다 —
+// 반복 i마다 다른 씨앗을 주면 **재현되면서 표본은 그대로 다양하다.**
+let _seedCounter = 0;
+const nextSeed = () => (_seedCounter = (_seedCounter + 2654435761) >>> 0) || 1;
+
 const calc = (over) => {
   const out = JSON.parse(native.weekCalcInjuryNative(JSON.stringify({
+    seed: nextSeed(),
     fatigue: 92, consecutiveHighFatigueWeeks: 0,
     hasInjury: false, currentInjuryType: null, currentSeverity: null,
     recoveryWeeksLeft: null, playerType: "pitcher", age: 25,
