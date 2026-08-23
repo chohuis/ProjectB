@@ -351,6 +351,29 @@ const PRO_LEAGUES = new Set([
   "LEAGUE_JBL", "LEAGUE_JBL_FARM",
 ]);
 
+/**
+ * 그 시즌이 **프로 연차로 세어지는가** — 순수 함수다. 검사가 직접 부른다.
+ *
+ * 🔴 단계만 보면 틀린다. 드래프트 결정이 **먼저** `careerStage`를 pro로
+ * 바꾸므로, 고교 시즌을 끝내는 순간 이미 프로로 읽혀 **프로에서 한 경기도
+ * 안 뛰었는데 연차가 1**이 됐다(A7 · 씨앗 31337 재현).
+ *
+ * ⚠ **2군도 프로 연차다.** 실제 KBO도 등록일수로 쌀고, 여기서 빼면
+ *   2군 체류가 긴 선수가 FA 자격에 영영 안 닿는다.
+ * ⚠ `playedLeagueId`를 안 넘기면 예전대로 단계만 본다 — 구 호출부 호환.
+ * ⚠ 리그 목록을 `PRO_LEAGUES`와 공유한다 — 표를 두 번 두지 않는다.
+ *   뜻이 갈라지면(예: 성향은 2군을 뺀다) 그때 나눈다.
+ */
+export function countsAsProSeason(
+  careerStage: string,
+  playedLeagueId?: string,
+): boolean {
+  const stageIsPro = ["pro", "pro_kbl", "pro_abl", "pro_jbl"].includes(careerStage);
+  if (!stageIsPro) return false;
+  if (playedLeagueId === undefined) return true;
+  return PRO_LEAGUES.has(playedLeagueId);
+}
+
 function profilesFromMaster(): Record<string, import("./master").ProTeamProfile> {
   const teams = get(masterStore).teams ?? [];
   const out: Record<string, import("./master").ProTeamProfile> = {};
@@ -2381,10 +2404,7 @@ function createGameStore() {
     advanceSeasonYear(_seasonYear?: number, playedLeagueId?: string) {
       update((s) => {
         const p = s.protagonist;
-        const stageIsPro = ["pro", "pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
-        const isPro = playedLeagueId === undefined
-          ? stageIsPro
-          : stageIsPro && ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(playedLeagueId);
+        const isPro = countsAsProSeason(p.careerStage, playedLeagueId);
         const protagonist: ProtagonistSave = {
           ...p,
           age: p.age + 1,
