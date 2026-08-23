@@ -2774,6 +2774,11 @@ function createGameStore() {
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
                 maxTotal: Math.min(npcIntake, topRaw.topCandidates!.length),
                 maxPerTeam: milLimits.maxPerTeam,
+                // 🔴 **전역자 포지션.** 안 넘기면 엔진의 Phase 1(공백 메우기)이
+                //    통째로 안 돌고 OVR 순으로만 뽑는다 — 상무가 포지션 균형을 잃는다.
+                vacatingPositions: discharging
+                  .map(e => (e.details?.player?.position ?? "") as string)
+                  .filter(pos => pos !== ""),
               }))
             ) as { protagonistSelected?: boolean; selectedIds?: string[]; error?: string };
 

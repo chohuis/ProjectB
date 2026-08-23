@@ -589,6 +589,13 @@ pub struct SportsUnitSelectionParams {
     pub applicants: Vec<SportsUnitCandidate>,
     pub max_total: usize,      // 10
     pub max_per_team: usize,   // 3
+    /// 그해 전역하는 사람들의 포지션 — Phase 1이 그 자리를 먼저 채운다.
+    ///
+    /// 🔴 비어 있으면 **Phase 1이 통째로 안 돌고** OVR 순으로만 뽑는다.
+    ///    호출부가 `&[]`를 넘기고 있어서 그러했다 — 상무가 포지션
+    ///    균형을 잃고 유격수 없는 팀이 된다.
+    #[serde(default)]
+    pub vacating_positions: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -2475,9 +2475,15 @@ fn select_sports_unit_ids(
     let mut sorted = candidates.to_vec();
     sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
-    // Phase 1: 전역 공백 포지션 채우기 (팀당 제한 무시)
+    // Phase 1: 전역 공백 포지션 채우기 (팀당 제한은 무시하되 **정원은 본다**)
+    //
+    // 🔴 예전엔 `max_total` 가드가 없었다. 호출부가 `&[]`를 넘기고 있어
+    //    드러나지 않았을 뿐이다 — 전역자 포지션을 실제로 넘기자
+    //    정원 13명에 **56명이 뒤혓다**(전역자 100건). 상무는 로스터 캅이
+    //    안 걸리니(career_status가 military) 그 누수가 해마다 쌀인다.
     let mut remaining_vacancies = vacating_positions.to_vec();
     for (id, _, _, pos) in &sorted {
+        if selected.len() >= max_total { break; }
         if remaining_vacancies.is_empty() { break; }
         if let Some(idx) = remaining_vacancies.iter().position(|v| v == pos) {
             selected.insert(id.clone());
@@ -3028,8 +3034,10 @@ pub fn calc_sports_unit_selection(params: SportsUnitSelectionParams) -> SportsUn
     let pool: Vec<(String, f64, String, String)> = params.applicants.iter()
         .map(|c| (c.id.clone(), c.ovr, c.team_id.clone(), c.position.clone()))
         .collect();
-    // 주인공 선발 시에는 vacating_positions 없이 OVR 순 Phase2만 동작
-    let selected = select_sports_unit_ids(&pool, &[], params.max_total, params.max_per_team);
+    // 전역 공백 포지션을 먼저 채운다(Phase 1) — 비면 OVR 순만 돌린다.
+    // ⚠ 예전엔 `&[]`가 박혀 있어 **Phase 1이 한 번도 안 돌았다.**
+    let selected = select_sports_unit_ids(
+        &pool, &params.vacating_positions, params.max_total, params.max_per_team);
     let protagonist_selected = params.applicants.iter()
         .any(|c| c.is_protagonist && selected.contains(&c.id));
     SportsUnitSelectionResult { protagonist_selected, selected_ids: selected.into_iter().collect() }
