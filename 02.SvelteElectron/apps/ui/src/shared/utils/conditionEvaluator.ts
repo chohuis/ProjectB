@@ -110,6 +110,50 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "fame_gte":
       return protagonist.fame >= cond.value;
 
+    // ── 반쪽이던 축 (2026-08-22) ─────────────────────────────────
+    // 셋 다 보상(`moneyDelta`·`diligenceDelta`·`popularityDelta`)은 예전부터
+    // 있었는데 **읽는 쪽이 없었다.** 선택의 결과를 다음 이야기가 못 알아봤다.
+    case "money_gte":
+      return protagonist.money >= cond.value;
+
+    case "money_lte":
+      return protagonist.money <= cond.value;
+
+    case "diligence_gte":
+      return protagonist.diligence >= cond.value;
+
+    case "diligence_lte":
+      return protagonist.diligence <= cond.value;
+
+    case "popularity_gte":
+      return protagonist.popularity >= cond.value;
+
+    case "popularity_lte":
+      return protagonist.popularity <= cond.value;
+
+    // ── 부상 (2026-08-22) ────────────────────────────────────────
+    // ⚠ **`injury`는 없을 수 있다.** 안 다친 상태가 기본이라
+    // `injury === undefined`다 — 그걸 "부상 중 아님"으로 읽는다.
+    case "injured":
+      return (protagonist.injury != null) === cond.value;
+
+    case "injury_severity":
+      return protagonist.injury?.severity === cond.severity;
+
+    case "injury_weeks_gte":
+      return (protagonist.injury?.recoveryWeeksLeft ?? 0) >= cond.value;
+
+    // 커리어 누계 — `injuryHistory`는 복귀할 때 한 건씩 쌓인다
+    case "injury_count_gte":
+      return (protagonist.injuryHistory?.length ?? 0) >= cond.value;
+
+    // 이번 시즌만 — `seasonHealth`는 시즌 롤오버에서 초기화된다
+    case "season_injury_count_gte":
+      return (protagonist.seasonHealth?.injuryCount ?? 0) >= cond.value;
+
+    case "had_surgery":
+      return (protagonist.injuryHistory ?? []).some((h) => h.severity === "surgery") === cond.value;
+
     case "pro_year_gte":
       return protagonist.proServiceYears >= cond.value;
 
@@ -133,6 +177,20 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "academic_warning_gte":
       return (schoolState?.academicWarningLevel ?? 0) >= cond.value;
   }
+
+  // 🔴 **여기 없으면 조용히 false가 된다.**
+  //
+  // 예전엔 `default`가 없어서 모르는 타입이 오면 `undefined`가 반환됐고,
+  // `evaluateConditions`의 `every`가 그걸 false로 읽었다. 로그도 예외도
+  // 없으니 **그 이벤트는 영원히 안 뜨고 아무도 모른다.**
+  //
+  // 실제로 그렇게 죽어 있던 게 35종이었다(2026-08-22). 타입은 맞는데
+  // 필드 이름이 틀린 경우였고(`career_stage`에 `stage` 대신 `value`),
+  // 그건 `checkConditionShape`가 막는다. 여긴 타입 자체가 틀린 경우다.
+  throw new Error(
+    `[conditionEvaluator] 모르는 조건 타입: ${JSON.stringify(cond)} — ` +
+    `오타이거나 엔진에 없는 조건이다. 조용히 넘기면 그 이벤트가 영영 안 뜬다`
+  );
 }
 
 // ── 조건 배열 전체 평가 (AND) ─────────────────────────────────

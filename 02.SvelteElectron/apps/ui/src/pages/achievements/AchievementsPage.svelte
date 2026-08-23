@@ -17,7 +17,6 @@
   const DESC_MAP: Record<string, (target: number) => string> = {
     strikeoutTotal:    (t) => `누적 삼진 ${t}개 달성`,
     saveTotal:         (t) => `누적 세이브 ${t}개 달성`,
-    kakaoFirstContact: ()  => "첫 카카오톡 대화 달성",
     winsTotal:         (t) => `누적 승리 ${t}회 달성`,
     gamesPlayedTotal:  (t) => `경기 ${t}회 출전`,
     messagesReadTotal: (t) => `메시지 ${t}개 읽기`,

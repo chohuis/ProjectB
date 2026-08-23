@@ -265,7 +265,6 @@ const DEFAULT_ACHIEVEMENTS: AchievementRuntime[] = [
   { id: "ACH_BASEBALL_FIRST_STRIKEOUT", progress: 0, unlockedAt: null, claimedAt: null },
   { id: "ACH_BASEBALL_100_STRIKEOUTS", progress: 0, unlockedAt: null, claimedAt: null },
   { id: "ACH_BASEBALL_FIRST_SAVE", progress: 0, unlockedAt: null, claimedAt: null },
-  { id: "ACH_SOCIAL_FIRST_KAKAO", progress: 0, unlockedAt: null, claimedAt: null },
 ];
 
 const DEFAULT_MAILBOX: MessageItem[] = [
@@ -771,9 +770,6 @@ function updateAchievementProgress(
       const progress = Math.max(item.progress, metrics.saveTotal);
       const unlockedAt = item.unlockedAt ?? (progress >= 1 ? now : null);
       return { ...item, progress, unlockedAt };
-    }
-    if (item.id === "ACH_SOCIAL_FIRST_KAKAO") {
-      return item;
     }
     return item;
   });

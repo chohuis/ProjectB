@@ -15,7 +15,7 @@
     },
     {
       "type": "season_phase",
-      "value": "postseason"
+      "phase": "postseason"
     }
   ],
   "messageTemplateId": "MSG_HS_Y3_ELIMINATED",

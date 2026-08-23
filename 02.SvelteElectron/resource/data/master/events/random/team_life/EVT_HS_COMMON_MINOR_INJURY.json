@@ -10,7 +10,7 @@
   "conditions": [
     {
       "type": "career_stage",
-      "value": "highschool"
+      "stage": "highschool"
     },
     {
       "type": "fatigue_gte",
@@ -18,7 +18,11 @@
     },
     {
       "type": "season_phase",
-      "value": "season"
+      "phase": "season"
+    },
+    {
+      "type": "injured",
+      "value": false
     }
   ],
   "messageTemplateId": "MSG_HS_COMMON_MINOR_INJURY",

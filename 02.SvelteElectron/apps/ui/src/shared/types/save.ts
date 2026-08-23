@@ -619,7 +619,9 @@ export interface AchievementMetrics {
   gamesWonTotal: number;
 }
 
-// ── 메신저 시스템 ──────────────────────────────────────────────
+// ── 학교·NPC 마스터 타입 ──────────────────────────────────────
+// ⚠ 예전엔 "메신저 시스템"이라고 적혀 있었다. 메신저(채팅)는 2026-06-01에
+// 통째로 제거됐고(`5687f0de1`), 이 아래는 처음부터 학교·NPC 타입이다
 export type SchoolTier = "S" | "A" | "B" | "C";
 export type ProPotentialTier = "S" | "A" | "B" | "C";
 

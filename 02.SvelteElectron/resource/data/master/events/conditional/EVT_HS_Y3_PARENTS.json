@@ -15,7 +15,7 @@
     },
     {
       "type": "season_phase",
-      "value": "season"
+      "phase": "season"
     }
   ],
   "messageTemplateId": "MSG_HS_Y3_PARENTS",

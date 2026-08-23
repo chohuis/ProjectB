@@ -47,6 +47,31 @@ export type Condition =
   | { type: "team_rank_lte";   value: number }        // 현재 팀 순위 이하 (1위=1)
   | { type: "team_rank_gte";   value: number }        // 현재 팀 순위 이상
 
+  // ── 반쪽이던 축 (2026-08-22) ─────────────────────────────────
+  // 셋 다 **보상으로 바꿀 수는 있는데 조건으로 못 읽었다**
+  // (`moneyDelta`·`diligenceDelta`·`popularityDelta`는 예전부터 있다).
+  // 한쪽만 있으면 "그 선택의 결과를 다음 이야기가 알아보지 못한다" —
+  // 돈을 쓰게 해놓고 가난해진 걸 아무도 못 읽는 식이다.
+  | { type: "money_gte";       value: number }        // 소지금 이상
+  | { type: "money_lte";       value: number }        // 소지금 이하
+  | { type: "diligence_gte";   value: number }        // 성실도 이상 (1~99)
+  | { type: "diligence_lte";   value: number }        // 성실도 이하
+  | { type: "popularity_gte";  value: number }        // 인기도 이상 (0~100)
+  | { type: "popularity_lte";  value: number }        // 인기도 이하
+
+  // ── 부상 (2026-08-22) ────────────────────────────────────────
+  // 부상은 이 게임의 중심 사건인데 **이벤트가 그걸 못 봤다.** 세이브에
+  // `injury`·`injuryHistory`·`seasonHealth`가 다 있는데 조건이 하나도 없어서,
+  // "다치고 돌아온 뒤"·"수술까지 갔던 몸"·"올해만 세 번째" 같은 이야기를
+  // 쓸 수가 없었다. 부상 소식(`msg-injury`)은 코드가 따로 만들어 내보낸다 —
+  // 그건 통보고, 이건 이야기다.
+  | { type: "injured";           value: boolean }     // 지금 부상 중인가
+  | { type: "injury_severity";   severity: import("./save").InjurySeverity }  // 지금 부상의 정도
+  | { type: "injury_weeks_gte";  value: number }      // 남은 회복 주차 이상
+  | { type: "injury_count_gte";  value: number }      // **커리어** 누적 부상 횟수 이상
+  | { type: "season_injury_count_gte"; value: number } // **이번 시즌** 부상 횟수 이상
+  | { type: "had_surgery";       value: boolean }     // 커리어에 수술 이력이 있는가
+
   // ── 미래 필드 (evaluator에서 false 반환, 추후 구현) ──────────
   | { type: "fame_gte";        value: number }        // 명성 이상 — protagonist.fame 추가 후 구현
   | { type: "pro_year_gte";    value: number }        // 프로 연차 이상 — 추가 후 구현
@@ -121,6 +146,22 @@ export interface DecisionTemplateOption {
   label: string;
   effectHint?: string;      // 표시용 효과 설명
   effects?: DecisionEffect; // 실제 적용 효과
+  /**
+   * **이 선택지가 보일 조건** (2026-08-23). 비우면 항상 보인다.
+   *
+   * 이벤트 조건(`EventRule.conditions`)은 "이 이야기가 뜨는가"를 정하고,
+   * 이건 "그 이야기 안에서 이 길이 열려 있는가"를 정한다. 예전엔 이게 없어서
+   * **고르면 무조건 그 효과였고, 선택이 전부 트레이드오프 고르기로 수렴했다.**
+   *
+   * ⚠ **발동 시점에 한 번 걸러서 메시지에 굳는다.** 소식은 스냅샷이라
+   * 나중에 열어봐도 그때 열려 있던 길이 그대로 보인다 — 뜬 뒤에 돈이
+   * 떨어졌다고 선택지가 사라지면 그게 더 이상하다.
+   *
+   * 🔴 **다 걸러지면 선택지 자체를 떼고 소식만 내보낸다.** `trimMailbox`가
+   * 미결 선택지를 상한 위로 보존하기 때문에, 0개짜리 선택지가 생기면
+   * **영원히 못 지우는 메시지**가 된다.
+   */
+  conditions?: Condition[];
 }
 
 // ── 이벤트 평가 컨텍스트 (evaluator 입력) ────────────────────

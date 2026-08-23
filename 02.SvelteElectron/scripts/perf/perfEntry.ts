@@ -12,6 +12,7 @@ import { masterStore } from "../../apps/ui/src/shared/stores/master";
 import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
 } from "../../apps/ui/src/shared/stores/game";
+import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
@@ -5231,4 +5232,74 @@ export function drainSeasonEndSnapshots(): Record<string, unknown>[] {
   const out = [..._seasonEndSnaps];
   _seasonEndSnaps.length = 0;
   return out;
+}
+
+// ── 이벤트 깔때기 (트랙 B) ────────────────────────────────────────
+
+/**
+ * **이벤트가 안 뜬 건가, 떴는데 밀려난 건가** — 이 둘을 가르는 계측.
+ *
+ * `mailboxProbe`는 소식함에 **닿은 뒤**를 본다. 그 앞에 깔때기가 하나 더 있다:
+ * conditional은 조건을 통과해도 **주당 1건만** 나가고(정의 260건), random은
+ * 풀 확률(18·22·26%)을 못 넘으면 통째로 안 돈다. 이 앞단이 안 보이면
+ * "이벤트 87% 유실"을 상한 탓으로만 읽게 된다.
+ *
+ * 소식함 쪽 숫자(`mailboxProbe`)와 **같이 읽어야 한다** — 여기 `emitted`가
+ * 곧 저기 생산량의 `evt-*` 몫이다.
+ */
+export function eventFunnelProbe(): Record<string, unknown> {
+  const f = eventFunnelStats;
+  const emitted = f.mandatory.emitted + f.conditional.emitted + f.random.emitted;
+  const top = (m: Record<string, number>, n: number) =>
+    Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n)
+      .map(([id, v]) => ({ 규칙: id, 건수: v }));
+  return {
+    주수: f.weeks,
+    "엔진 시간(ms)": +f.elapsedMs.toFixed(1),
+    "주당 ms": f.weeks ? +(f.elapsedMs / f.weeks).toFixed(3) : 0,
+    발동: emitted,
+    "주당 발동": f.weeks ? +(emitted / f.weeks).toFixed(2) : 0,
+    mandatory:   { ...f.mandatory },
+    conditional: { ...f.conditional },
+    random:      { ...f.random },
+    // 조건도 정책도 통과했는데 주당 1건 상한에 밀린 것 — 이 트랙의 핵심 숫자
+    "밀린 규칙 상위": top(f.crowdedByRule, 15),
+    "빈 메시지로 버려진 규칙": top(f.emptyByRule, 10),
+    "밀린 규칙 종수": Object.keys(f.crowdedByRule).length,
+    // 선택지 단위 조건 — 몇 개가 제시됐고 몇 개가 열렸나
+    "선택지 제시": f.optionsOffered,
+    "선택지 열림": f.optionsOpen,
+    "선택지 전부 닫힘": f.decisionsClosedOut,
+    // 🔴 **진짜 버려진 것.** `crowdedOut` 건수는 규칙×주차라 과장이다 —
+    // repeatable은 다음 주에 또 후보가 되니 밀린 것이지 버려진 게 아니다.
+    // 후보에 올랐는데 **끝내 한 번도 못 뜬** 종수가 실제 손실이다
+    "밀렸고 끝내 못 뜬 규칙": Object.keys(f.crowdedByRule).filter((id) => !f.emittedByRule[id]),
+    // 정의 537건 중 커리어 내내 실제로 화면에 닿은 종수 — "몇 건이 후보였고
+    // 몇 건이 떴는지"의 답이다. 건수가 아니라 **종수**를 본다
+    "뜬 규칙 종수": Object.keys(f.emittedByRule).length,
+    "뜬 규칙 상위": top(f.emittedByRule, 10),
+  };
+}
+
+/** 회차 사이에 섞이지 않게 — 재기 직전에 부른다 */
+export function resetEventFunnel(): void { resetEventFunnelStats(); }
+
+/**
+ * **이 규칙 하나가 어떻게 됐나** — 연계를 만들었을 때 "실제로 도는가"를 묻는 도구.
+ *
+ * `eventFunnelProbe`는 상위 N종만 찍는다. 새로 만든 이벤트는 대개 하위라
+ * 목록에 안 나타나는데, **안 보이는 것과 안 뜬 것은 다르다.** 이름을 대고 묻는다.
+ *
+ * `밀림 > 0`이면 조건은 통과했다는 뜻이다 — 자리를 못 잡았을 뿐이고,
+ * 그것만으로도 "조건이 도는가"의 답은 나온다.
+ */
+export function eventRuleProbe(ruleId: string): Record<string, unknown> {
+  const f = eventFunnelStats;
+  return {
+    규칙: ruleId,
+    발동: f.emittedByRule[ruleId] ?? 0,
+    밀림: f.crowdedByRule[ruleId] ?? 0,
+    "빈 메시지": f.emptyByRule[ruleId] ?? 0,
+    주인공태그: [...get(gameStore).protagonist.tags],
+  };
 }

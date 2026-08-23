@@ -193,7 +193,6 @@ function openDatabase(dbPath) {
       slot_id               TEXT PRIMARY KEY REFERENCES save_slots(slot_id) ON DELETE CASCADE,
       strikeout_total       INTEGER NOT NULL DEFAULT 0,
       save_total            INTEGER NOT NULL DEFAULT 0,
-      kakao_first_contact   INTEGER NOT NULL DEFAULT 0,
       training_weeks_total  INTEGER NOT NULL DEFAULT 0,
       games_won_total       INTEGER NOT NULL DEFAULT 0
     );

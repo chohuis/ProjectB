@@ -7,7 +7,7 @@
   "conditions": [
     {
       "type": "career_stage",
-      "value": "highschool"
+      "stage": "highschool"
     },
     {
       "type": "week_gte",
@@ -15,7 +15,7 @@
     },
     {
       "type": "season_phase",
-      "value": "season"
+      "phase": "season"
     }
   ],
   "messageTemplateId": "MSG_HS_COMMON_CHEER",

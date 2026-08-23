@@ -5,7 +5,11 @@
 | 트랙 | 폴더 · 브랜치 | 소유 |
 |---|---|---|
 | **A+C+E** | `ProjectB` · `extract-modals` | 로스터·계약 · 경기·성적 · 계측/기반 · **Rust 전부** |
-| **B** | `ProjectB-events` · `track/events` | 이벤트·메신저 → [track-B-events.md](track-B-events.md) |
+| **B** | `ProjectB-events` · `track/events` | 이벤트·소식함 → [track-B-events.md](track-B-events.md) |
+
+⚠ **B가 트렁크를 받았다 (2026-08-23 `dc88446ed`, 충돌 없음). A가 병합할 차례다** —
+[HANDOFF_B_TO_A.md](HANDOFF_B_TO_A.md)에 확인할 것을 적었다. 특히 **`CLAUDE.md`의
+"이벤트 로더 0건"이 사실이 아니고**, B가 A 소유 파일 셋을 최소로 건드렸다(전부 삭제).
 
 **이 문서는 A+C+E 트랙 것이다.** B는 자기 문서를 본다.
 
