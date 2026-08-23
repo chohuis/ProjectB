@@ -279,8 +279,12 @@ KBL 2군 0.3 vs 없음→1.0). 지금은 지도를 받아 쓴다 — **다시 �
 - FA 309 → 95 → 26 급감 · loyalty 연간 감쇠 게이트(프로 W50 지나서) · 홈 승률 33%
 
 **간단·안전**
-- 깔때기 예외 둘 — `applyGameOutcome`은 기존 `recordGameLogs` 호출을 같이
-  걷어야 두 번 안 남는다 · `MainPage.svelte` 1곳
+- ~~깔때기 예외 둘~~ — **둘 다 이미 닫혀 있다** (2026-08-23 확인).
+  `applyGameOutcome`은 세 경로가 배타적이다 — 앞의 둘은 `recordGameResult`를
+  부르고 `return`해서 마지막 `recordGameLogs`에 안 닿는다. 중복 기록이 없다.
+  그 호출은 **의도된 별도 경로**다 — 주인공 경기는 경기 엔진을 타서
+  배경 시뮬도 `simulateNpcGame`도 안 거친다(옆 주석에 적혀 있다).
+  `MainPage.svelte`엔 `recordGameLogs`·`recordGameResult` 직접 호출이 **0건**이다.
 - A7 프로 전환 헤더(`프로 2년차 · 2026년`) · `test:injury` 확률 검사 간헐 실패
 - svelte-check 47건 미확인(MainPage 3건은 무해 확인)
 
