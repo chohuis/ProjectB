@@ -12,6 +12,7 @@ const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
       console.log(`[PAYLOAD] npcs=${(p.npcs || []).length}`
         + ` faBidInterestMin=${JSON.stringify(p.faBidInterestMin)}`
         + ` teamPayrollCap=${p.teamPayrollCap ? Object.keys(p.teamPayrollCap).length + "팀" : "없음"}`
+        + ` faPerfSpan=${JSON.stringify(p.faPerfSpan)}`
         + ` worldSeed=${p.worldSeed}`
         + ` teamProfiles=${p.teamProfiles ? Object.keys(p.teamProfiles).length : "없음"}`);
       if (p.faBidInterestMin === undefined) console.log(`[PAYLOAD] 키 목록: ${keys.join(",")}`);

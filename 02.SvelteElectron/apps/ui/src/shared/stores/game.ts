@@ -2317,6 +2317,8 @@ function createGameStore() {
       // 가난한 구단은 못 부른다. `buildSalaryIndex`는 외국인 영입도 쓰는 함수다.
       const faParams = await (async () => {
         const min = (offRules.faRules as { bidInterestMin?: number } | undefined)?.bidInterestMin ?? 0;
+        // 성적 배수 폭 — 0이면 성적을 안 본다(예전 동작)
+        const span = (offRules.faRules as { perfSpan?: number } | undefined)?.perfSpan ?? 0;
         if (!min) return undefined;
         const { buildSalaryIndex } = await import("../repo/newGameV3");
         const idx = buildSalaryIndex(get(masterStore).teams);
@@ -2330,7 +2332,7 @@ function createGameStore() {
           // 지수 1.0인 팀이 지금 총연봉의 1.25배까지 쓸 수 있다
           cap[tid] = Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
         }
-        return { teamPayrollCap: cap, bidInterestMin: min };
+        return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span };
       })();
       // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
       // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날

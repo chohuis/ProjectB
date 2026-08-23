@@ -1741,6 +1741,24 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             let (want, _want_yrs) = estimate_salary_and_contract(
                 ovr, origin_league, npc.pro_service_years.unwrap_or(0), npc.age, 1.0,
                 &salary_rules, &mut rng);
+            // 성적 배수 — **FA는 재계약과 달라야 한다.** 재계약은 구단이 불러 압도하지만
+            // FA는 시장이 값을 매기는 자리라, 잘하면 많이 오르고 애매하면 내려야 한다.
+            //
+            // 🔴 예전엔 성적이 산식에 없어 배수가 `시장가 / 원래 연봉`의 함수였다 —
+            //    연봉이 낮을수록 많이 올라서 **못한 선수가 더 오르는** 꺼꿔짐이었다
+            //    (성적 0~20 구간 1.22 vs 80~100 구간 1.06).
+            //
+            // ⚠ **성적이 없으면 1.0이다**(중립). 부상· 2군 체류로 표본이 안 쌀인
+            //   사람이 계약자의 29%다 — 그들을 깎으면 안 뛴 사람을 벌하는 것이다.
+            //   방출 판정도 같은 이유로 표본 미달자를 건너뒄다.
+            let want = match params.perf_scores.get(&npc.npc_id) {
+                Some(&score) if params.fa_perf_span > 0.0 => {
+                    // score 0~100 → (1 - span) ~ (1 + span)
+                    let m = 1.0 + (score / 50.0 - 1.0) * params.fa_perf_span;
+                    ((want as f64) * m).round() as i64
+                }
+                _ => want,
+            };
             let mut best: Option<(String, i64)> = None;
             for tid in &open {
                 // 그 팀이 지금 얇은 자리 — 같은 포지션이 1명 이하면 부족으로 본다

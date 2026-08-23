@@ -862,6 +862,15 @@ pub struct OffseasonParams {
     /// ⚠ `interest_level`은 기본 50에서 시작한다 — 아무 이유가 없어도 50이다.
     #[serde(default)]
     pub fa_bid_interest_min: f64,
+    /// FA 성적 배수의 폭 (`faRules.perfSpan`). 0이면 성적을 안 본다 — 예전 동작.
+    ///
+    /// 적용은 `1 + (score/50 - 1) * span`이다. span 0.3이면 성적 0점이 0.7배·
+    /// 50점이 1.0배·100점이 1.3배다.
+    ///
+    /// ⚠ **재계약에는 안 걸린다.** 구단이 불러 압도하는 재계약과 시장이 값을
+    ///   매기는 FA는 다른 자리다.
+    #[serde(default)]
+    pub fa_perf_span: f64,
     /// 외국인 보유 한도가 걸리는 리그 (generation_rules.json `foreignRules.leagues`).
     /// 비면 외국인 개념이 없는 세계 — 구 세이브·구 페이로드가 그렇다
     #[serde(default)]
