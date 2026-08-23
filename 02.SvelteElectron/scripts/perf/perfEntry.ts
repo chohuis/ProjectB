@@ -5262,6 +5262,26 @@ const _afterSnaps: Record<string, unknown>[] = [];
  * `{이름: 함수}` 꼴이라 부르는 쪽이 골라 담는다 — 안 쓰는 프로브를
  * 매 시즌 돌리지 않는다.
  */
+/**
+ * 두 훅의 **발화 연도만** 모은다 — 어느 지점에서 빠지는지 가르려고.
+ *
+ * before만 불리면 `runWorldSeasonEnd` 중간에서 끈긴 것이고,
+ * 둘 다 안 불리면 가드(`_lastWorldSeasonEndYear`)에 걸렸거나 호출 자체가 없다.
+ */
+const _hookYears: { before: number[]; after: number[] } = { before: [], after: [] };
+
+export function armHookTrace(): void {
+  setBeforeSeasonEndHook((year) => { _hookYears.before.push(year); });
+  setAfterSeasonEndHook((year) => { _hookYears.after.push(year); });
+}
+
+export function drainHookTrace(): { before: number[]; after: number[] } {
+  const out = { before: [..._hookYears.before], after: [..._hookYears.after] };
+  _hookYears.before.length = 0;
+  _hookYears.after.length = 0;
+  return out;
+}
+
 export function armAfterSeasonSnapshot(probes: Record<string, () => unknown>): void {
   setAfterSeasonEndHook((year) => {
     const row: Record<string, unknown> = { 연도: year };

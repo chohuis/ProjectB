@@ -2,14 +2,15 @@
 /** 계측 루프가 시즌 종료를 왜 놓치는가 — 매 반복의 상태를 찍는다.
  *  ⚠ 추측하지 않는다. 주·연도·종료플래그·정지사유를 그대로 본다. */
 const path = require("node:path");
+const Y = Number(process.env.SL_YEARS || 3);
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 (async () => {
   const { app, tmp } = await headless.boot("sl");
   try {
-    await app.boot({ slotId: "SL", worldSeed: 20260731, seasonYear: 2026 });
+    await app.boot({ slotId: "SL", worldSeed: Number(process.env.SL_SEED || 20260731), seasonYear: 2026 });
     const start = app.currentSeason();
     let guard = 0, last = "";
-    while (guard++ < 3 * 52 * 60 && app.currentSeason() < start + 3) {
+    while (guard++ < Y * 52 * 60 && app.currentSeason() < start + Y) {
       const s0 = app.currentSeason(), w0 = app.currentWeek();
       const ended = app.isSeasonEnded(), pk = app.pendingKind();
       const line = `S${s0} W${w0} ended=${ended} pending=${pk ?? "-"}`;

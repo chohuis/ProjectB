@@ -12,6 +12,7 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { isFaEligible, toContract, type FaOffer } from "../utils/faEngine";
 import { openProSeason } from "./proSeason";
+import { runWorldSeasonEnd } from "./seasonRollover";
 import { TRADE_REASON_LABEL } from "./weekPhases/market";
 import type { ProContract } from "../types/save";
 import type { PendingAction } from "../types/season";
@@ -38,6 +39,22 @@ export async function signNegotiatedContract(
 ): Promise<void> {
   if (isImmediateContract(action.context)) {
     gameStore.signContract(contract);
+    // 🔴 **다음 시즌을 열기 전에 이번 시즌의 세계를 닫는다.**
+    //
+    // `openProSeason`은 현재 연도 +1로 새 시즌을 직접 여는데, 그러면
+    // `runSeasonRollover`를 안 타므로 **그 해 세계 처리가 통째로 사라진다** —
+    // 순위·수상·오프시즌(은퇴·방출·FA·드래프트)·구단 성향 갱신이 전부.
+    //
+    // 실측(씨앗 31337 · 6시즌): `salaryNegotiation`으로 시즌을 넘긴 해만
+    //   훅·오프시즌 연도에서 2029가 통째로 빠졌다. `draftNotification`으로
+    //   넘긴 해는 멀지하다 — `careerDecision`은 이미 이걸 부른다.
+    //
+    // ⚠ 같은 함정을 `careerDecision.ts`가 먼저 만나 고쳤고 주석까지 적어 둔다.
+    //   **그런데 이 파일은 그대로였다** — 즉시 계약(입단·전역 복귀)도
+    //   시즌을 직접 여는 경로라 똑같이 필요했다.
+    // ⚠ 연도 가드(`_lastWorldSeasonEndYear`)가 있어 롤오버가 이미 돌았으면
+    //   그냥 지나간다 — 두 번 돌 걱정은 없다.
+    await runWorldSeasonEnd(get(seasonStore).seasonYear);
     await openProSeason(action.leagueId, contract.teamId);
   } else {
     gameStore.setPendingNextContract(contract);
