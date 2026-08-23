@@ -316,11 +316,88 @@ const DEFAULT_MAILBOX: MessageItem[] = [
  * ⚠ 마스터가 아직 안 실렸으면 빈 객체다 — 그때는 `initProTeamProfiles`가
  *   뒤달아 채운다. 둘 다 `!map[id]` 규칙이라 순서가 바뀜도 안전하다.
  */
+/**
+ * 예산 지수 → 구단 성향. **순수 함수다** — 검사가 직접 부른다.
+ *
+ * 지수 1.0(리그 평균)이면 전 항목 50으로 기본값과 같다. 거기서 벌린다.
+ * 폭은 ±25 안퍼이다 — 더 벌리면 예산이 성향을 지배해서 성적으로
+ * 갱신하는 `updateProTeamProfiles`가 덮이는 데 여러 시즌이 걸린다.
+ */
+export function deriveProfileFromBudgetIndex(
+  idx: number,
+): import("./master").ProTeamProfile {
+  const at = (span: number) => Math.round(Math.max(5, Math.min(95, 50 + (idx - 1) * span)));
+  return {
+        // 돈 쓰는 성향은 예산을 따라간다
+        ownerSpendingWillingness: at(50),
+        prestige:                 at(40),
+        marketAppeal:             at(40),
+        scoutingQuality:          at(30),
+        medicalQuality:           at(30),
+        // 가난한 팀이 **육성·2군에 기란다** — 반대로 밀린다
+        developmentFocus:         at(-40),
+        farmInvestment:           at(-30),
+        // 부자 구단은 지금 이기라는 압박이 크고 인내가 짧다
+        winNowPressure:           at(30),
+        ownerPatience:            at(-30),
+        // 나머지는 예산과 상관이 없다 — 기본값을 둔다
+        stability: 50, discipline: 50, clubhouseCulture: 50,
+  };
+}
+
+/** 구단 성향을 두는 리그 — 1군·2군 둘 다 같은 구단이다 */
+const PRO_LEAGUES = new Set([
+  "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_ABL", "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL", "LEAGUE_JBL_FARM",
+]);
+
 function profilesFromMaster(): Record<string, import("./master").ProTeamProfile> {
+  const teams = get(masterStore).teams ?? [];
   const out: Record<string, import("./master").ProTeamProfile> = {};
-  for (const t of (get(masterStore).teams ?? [])) {
-    if (t.proTeamProfile) out[t.id] = { ...t.proTeamProfile };
+
+  // ① 데이터에 적힌 성향이 있으면 그걸 쓴다 (현재 ABL 32팀)
+  for (const t of teams) if (t.proTeamProfile) out[t.id] = { ...t.proTeamProfile };
+
+  // ② 없는 팀은 **예산 지수에서 유도한다** (사용자 확정 2026-08-23).
+  //
+  // 🔴 KBL 20팀은 성향 데이터가 아예 없다. `teams/pro_korea/*.json`에
+  //    손수 만든 값이 있지만 **구 데이터**다 — seeds로 국내 팀을 통째
+  //    교체하면서 팀이 바뀌었다(부산 자이언트웨일스 → 부산 웨이브스).
+  //    그래서 "복구"가 아니라 유도다.
+  //
+  // ⚠ **새 밸런스 수치를 만들지 않는다.** `history.budget`은 이미 있고,
+  //   목표 순위도 같은 값에서 유도한다 — 표를 두 번 두지 않으려는 것이다.
+  //   기본값 50을 중심으로 지수만큼 벌린다: 지수 1.0 → 50 그대로.
+  //   폭은 ±25로 둘렀다 — 더 벌리면 예산이 성향을 지배해 성적으로 갱신되는
+  //   `updateProTeamProfiles`가 덮이는 데 여러 시즌이 걸린다.
+  const byLeague = new Map<string, typeof teams>();
+  for (const t of teams) {
+    if (out[t.id]) continue;
+    // ⚠ **프로 리그만.** 구단 성향은 프로용이고 세이브에 저장된다 —
+    //   예산이 있는 팀 전부에 붙이면 고교·대학까지 203개가 쌀인다.
+    if (!PRO_LEAGUES.has(t.leagueId)) continue;
+    const b = t.history?.budget ?? 0;
+    if (b <= 0) continue;
+    if (!byLeague.has(t.leagueId)) byLeague.set(t.leagueId, []);
+    byLeague.get(t.leagueId)!.push(t);
   }
+  for (const [, list] of byLeague) {
+    const budgets = list.map((t) => t.history?.budget ?? 0);
+    const avg = budgets.reduce((x, y) => x + y, 0) / budgets.length;
+    if (avg <= 0) continue;
+    for (const t of list) {
+      out[t.id] = deriveProfileFromBudgetIndex((t.history?.budget ?? 0) / avg);
+    }
+  }
+  // 2군은 1군 성향을 물려받는다 — **같은 구단이다.**
+  // ⚠ 2군에는 `history.budget`이 없어 위 유도에서 빠졌다 — `buildSalaryIndex`도
+  //   같은 보완을 한다. 안 하면 승강·육성 판정이 2군을 기본값으로 본다.
+  for (const t of teams) {
+    if (out[t.id] || !t.id.endsWith("_2")) continue;
+    const first = out[t.id.slice(0, -2) + "_1"];
+    if (first) out[t.id] = { ...first };
+  }
+
   return out;
 }
 
