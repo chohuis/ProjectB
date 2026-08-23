@@ -1722,8 +1722,35 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         // ⚠ **후보 선정(`open`)은 그대로 쓴다.** 정원·외국인 보유 한도·투수
         // 한도·원소속 리그를 이미 본다 — 이번에 외국인을 113 → 30으로 고친
         // 자리라 건드리면 그게 깨진다.
-        let team = if params.fa_bid_interest_min > 0.0 {
+        let (team, signed_salary) = if params.fa_bid_interest_min > 0.0 {
             let ovr = npc_core_ovr(npc);
+            // 희망 연봉·시장 가치 — 재계약이 쓰는 산식 그대로다.
+            //
+            // 🔴 예전엔 둘 다 `current_salary`였다. 그러면 성적·나이·OVR이
+            // 못 들어가고, 더 나쁜 건 **연봉이 싼 선수는 잘해도 입찰액이 낮다**는
+            // 것이다 — `eval_fa_bid`의 `bid_salary`가 `market_value`에 비례하기 때문이다.
+            // 싸게 먹힐 수 있는 선수일수록 구단이 적게 부르는 거꿔짐이었다.
+            //
+            // ⚠ **산식을 새로 만들지 않는다.** `renew_independent_salaries`·프로 재계약과
+            //   같은 함수다. 따로 만들면 같은 세계에 몸값 기준이 둘이 된다.
+            // ⚠ **성적이 없으면 예전대로 지금 연봉을 쓴다.** 표본 미달자를 중립 50으로
+            //   넣으면 안 뛴 선수의 몸값이 조용히 움직인다.
+            // ⚠ 리그는 `origin_league`다 — FA 구간의 `current_league`는 LEAGUE_FREE_AGENT라
+            //   그걸 넘기면 리그 배수 표가 안 걸린다.
+            let want = match params.perf_scores.get(&npc.npc_id) {
+                Some(&score) => crate::player_engine::calc_npc_renewal_salary(
+                    crate::player_engine::CalcNpcRenewalSalaryParams {
+                        league_mult: params.salary_rules.as_ref()
+                            .map(|r| r.league_mult.clone()).unwrap_or_default(),
+                        ovr,
+                        age: npc.age,
+                        league_id: origin_league.to_string(),
+                        current_salary: npc.current_salary.max(1),
+                        performance_score: score,
+                        greed: npc.personality.as_ref().map(|p| p.greed).unwrap_or(40.0),
+                    }),
+                None => npc.current_salary.max(1),
+            };
             let mut best: Option<(String, i64)> = None;
             for tid in &open {
                 // 그 팀이 지금 얇은 자리 — 같은 포지션이 1명 이하면 부족으로 본다
@@ -1742,8 +1769,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                             position: npc.position.clone(),
                             age: npc.age,
                             ovr,
-                            market_value: npc.current_salary.max(1),
-                            demand_salary: npc.current_salary.max(1),
+                            market_value: want,
+                            demand_salary: want,
                             demand_years: npc.contract_years.max(1),
                             fame: npc.fame,
                             personality: npc.personality.clone(),
@@ -1762,7 +1789,11 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 }
             }
             match best {
-                Some((tid, _)) => tid,
+                // 🔴 **이긴 구단의 제시액이 계약 연봉이다.** 예전어 이 값을
+                // 버렸다(`Some((tid, _))`) — 구단이 얼마를 부를지 정해 놓고
+                // 계약서에 안 적은 셈이라, FA를 거쳐도 몸값이 평생 고정이고
+                // `team_payroll`도 옷 값으로 쌀였다.
+                Some((tid, s)) => (tid, Some(s)),
                 // 아무도 안 불렀다 — 미계약. 진로는 D-4가 정한다
                 None => {
                     events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
@@ -1772,9 +1803,13 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 }
             }
         } else {
+            // 입찰을 안 하는 예전 경로 — 제시액이 없으니 연봉도 안 건드린다
             let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
-            open[idx].clone()
+            (open[idx].clone(), None)
         };
+        // ⚠ **총연봉 누적보다 먼저 갱신한다** — 순서가 바뀌면 캐프 계산이
+        //   옷 연봉으로 돌아 같은 오프시즌의 뒷사람 판정이 어깋나간다
+        if let Some(s) = signed_salary { npc.current_salary = s; }
         *team_active_count.entry(team.clone()).or_default() += 1;
         *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
         *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;

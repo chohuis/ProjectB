@@ -2856,6 +2856,39 @@ export function contractRows(): string[] {
  * 연속 기록도 0이 하드코딩이라 연속 하위권 팀이 추가 압박을 못 받았다.
  * 전 팀이 같은 값이면 승강·방출·FA 입찰의 성향 분기가 전부 죽는다.
  */
+/**
+ * 연봉 분포 — FA 계약이 몸값을 실제로 움직이는가.
+ *
+ * 🔴 FA 계약은 오랫동안 연봉을 갱신하지 않았다. 구단이 `bid_salary`를 정해
+ * 놓고 그 값을 버려서(`Some((tid, _))`), FA를 거쳐도 몸값이 평생 고정이었다.
+ * 그걸 고쳤는지 보려면 미계약률이 아니라 **연봉 자체**를 봐야 한다.
+ *
+ * ⚠ 총연봉만 보면 안 된다 — 인원이 흔들리면 같이 움직인다. 평균·중앙·p90을
+ * 같이 낸다.
+ */
+export function salarySpread(): Record<string, unknown> {
+  const rows = get(gameStore).npcs.filter((n) => n.careerStatus === "active");
+  const of = (lg: string) => {
+    const v = rows.filter((r) => r.currentLeague === lg)
+      .map((r) => r.currentSalary ?? 0).sort((a, b) => a - b);
+    if (!v.length) return { 인원: 0 };
+    const sum = v.reduce((a, b) => a + b, 0);
+    return {
+      인원: v.length,
+      총연봉: Math.round(sum / 10000) + "억",
+      평균: Math.round(sum / v.length),
+      중앙: v[Math.floor(v.length / 2)],
+      p90: v[Math.floor(v.length * 0.9)],
+      최대: v[v.length - 1],
+    };
+  };
+  return {
+    "1군": of("LEAGUE_KBL"),
+    "2군": of("LEAGUE_KBL_FARM"),
+    독립: of("LEAGUE_INDEPENDENT"),
+  };
+}
+
 export function pressureSpread(): Record<string, unknown> {
   const g = get(gameStore);
   const v = Object.values(g.proTeamProfiles ?? {})
