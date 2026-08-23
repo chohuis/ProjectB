@@ -18,13 +18,15 @@ export type OffseasonKind =
   | "retire_age" | "retire_no_team"
   | "release_roster" | "release_score"
   | "demote_roster" | "demote_fielder" | "promote"
-  | "fa_unsigned";
+  | "fa_unsigned" | "fa_contract";
 
 /** 엔진이 보내는 사건 (Rust `OffseasonEvent`) */
 export interface OffseasonEvent {
   kind: OffseasonKind | string;
   npcId: string;
   fromTeamId?: string;
+  /** 간 곳. **팀 ID다** — 화면이 이름으로 바꾼다 */
+  toTeamId?: string;
   detail?: string;
 }
 
@@ -61,6 +63,7 @@ const KIND: Record<OffseasonKind, KindMeta> = {
   demote_fielder:  { group: "move",    reason: "2군 (야수 자리)", short: "2군" },
   promote:         { group: "move",    reason: "1군 승격",       short: "1군" },
   fa_unsigned:     { group: "fa",      reason: "FA 미계약",      short: "미계약" },
+  fa_contract:     { group: "fa",      reason: "FA 계약",        short: "계약" },
 };
 
 export function isKnownKind(k: string): k is OffseasonKind {
@@ -142,7 +145,11 @@ export function buildRows(p: BuildParams): OffseasonRow[] {
     const who = person.get(npcId);
 
     // 사건 당시 소속. 마지막 사건 것을 쓴다 — 방출이면 방출된 자리가 맞다
-    const teamId = [...list].reverse().find((e) => e.fromTeamId)?.fromTeamId ?? null;
+    const fromId = [...list].reverse().find((e) => e.fromTeamId)?.fromTeamId ?? null;
+    // 간 곳이 있으면 그쪽을 보여준다 — FA 계약은 **어디로 갔나**가 요점이다.
+    // 나머지 사건(은퇴·방출·승강)은 간 곳이 없어 예전대로 떠난 팀이 든다.
+    const toId = [...list].reverse().find((e) => e.toTeamId)?.toTeamId ?? null;
+    const teamId = toId ?? fromId;
 
     // 겹치면 경로로. 같은 말이 반복되면(2군 → 2군) 결론만 쓴다
     const first = KIND[list[0].kind as OffseasonKind];
@@ -161,7 +168,10 @@ export function buildRows(p: BuildParams): OffseasonRow[] {
       group:    meta.group,
       reason,
       detail:   last.detail,
-      mine:     myClub !== null && teamId !== null && clubKeyOfTeam(teamId) === myClub,
+      // ⚠ **양쪽을 다 본다.** 떠난 팀만 보면 내 팀이 데려온 FA가 안 잡힌다 —
+      //   영입이야말로 가장 보고 싶은 소식이다.
+      mine:     myClub !== null && [toId, fromId].some(
+                  (t) => t !== null && clubKeyOfTeam(t) === myClub),
       relation: p.relations?.get(npcId) ?? null,
     });
   }

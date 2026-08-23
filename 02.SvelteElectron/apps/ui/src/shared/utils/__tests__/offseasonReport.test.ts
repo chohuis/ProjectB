@@ -159,3 +159,64 @@ describe("인연 라벨", () => {
     }
   });
 });
+
+describe("FA 계약 — 간 곳이 있는 사건", () => {
+  const evTo = (npcId: string, from: string | undefined, to: string, detail?: string): OffseasonEvent =>
+    ({ kind: "fa_contract", npcId, fromTeamId: from, toTeamId: to, detail });
+
+  it("🔴 fa_contract가 알려진 종류다 — 매핑이 없으면 화면이 조용히 걸러낸다", () => {
+    // Rust가 사건을 남기기 시작했는데 여기 KIND에 없어서,
+    // 계측에는 보이는데 오프시즌 소식에만 안 뜼다. 오류는 안 난다.
+    const rows = buildRows({
+      events: [evTo("N1", "T_OLD_1", "T_NEW_1", "20000→35000·82")],
+      people: [who("N1", "장민호")],
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0].group).toBe("fa");
+    expect(rows[0].reason).toBe("FA 계약");
+  });
+
+  it("팀은 **간 곳**을 보여준다 — FA는 어디로 갔나가 요점이다", () => {
+    const rows = buildRows({
+      events: [evTo("N1", "T_OLD_1", "T_NEW_1")],
+      people: [who("N1", "가")],
+    });
+    expect(rows[0].teamId).toBe("T_NEW_1");
+  });
+
+  it("⚠ 내 팀이 **데려온** FA도 내 것으로 잡힌다", () => {
+    // 떠난 팀만 보면 영입이 안 잡힌다 — 그게 가장 보고 싶은 소식인데도.
+    const rows = buildRows({
+      events: [evTo("N1", "TEAM_KBL_BUSAN_WAVES_1", "TEAM_KBL_SEOUL_ROYALS_1")],
+      people: [who("N1", "가")],
+      myTeamId: "TEAM_KBL_SEOUL_ROYALS_1",
+    });
+    expect(rows[0].mine).toBe(true);
+  });
+
+  it("내 팀에서 **나간** FA도 여전히 잡힌다", () => {
+    const rows = buildRows({
+      events: [evTo("N1", "TEAM_KBL_SEOUL_ROYALS_1", "TEAM_KBL_BUSAN_WAVES_1")],
+      people: [who("N1", "가")],
+      myTeamId: "TEAM_KBL_SEOUL_ROYALS_1",
+    });
+    expect(rows[0].mine).toBe(true);
+  });
+
+  it("상관없는 팀끼리의 계약은 내 것이 아니다 — 대조군", () => {
+    const rows = buildRows({
+      events: [evTo("N1", "TEAM_KBL_BUSAN_WAVES_1", "TEAM_KBL_DAEGU_TIGERS_1")],
+      people: [who("N1", "가")],
+      myTeamId: "TEAM_KBL_SEOUL_ROYALS_1",
+    });
+    expect(rows[0].mine).toBe(false);
+  });
+
+  it("간 곳이 없는 사건은 예전대로 떠난 팀을 보인다 — 회귀 방지", () => {
+    const rows = buildRows({
+      events: [ev("release_roster", "N1", "T_OLD_1", "70")],
+      people: [who("N1", "가")],
+    });
+    expect(rows[0].teamId).toBe("T_OLD_1");
+  });
+});

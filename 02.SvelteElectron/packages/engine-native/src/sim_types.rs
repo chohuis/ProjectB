@@ -219,6 +219,11 @@ pub struct OffseasonEvent {
     /// 사건 당시 소속. 없을 수 있다(소속이 이미 빈 사람)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub from_team_id: Option<String>,
+    /// 간 곳. **팀 ID다 — 이름도 문장도 아니다.**
+    /// 화면이 ID를 이름으로 바꾼다 — `detail`에 박아 넣으면 `TEAM_KBL_...`이
+    /// 그대로 뜼다. 이 파일 위쪽 주석이 경계하는 바로 그것이다.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub to_team_id: Option<String>,
     /// 사유의 부가 정보. **문장이 아니라 값이다** (`"65"` 같은 점수)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub detail: Option<String>,

@@ -1343,6 +1343,23 @@ fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<
         kind:         kind.into(),
         npc_id:       npc.npc_id.clone(),
         from_team_id: from_team.filter(|t| !t.is_empty()),
+        to_team_id:   None,
+        detail,
+    }
+}
+
+/// 간 곳이 있는 사건 (FA 계약처럼).
+///
+/// ⚠ `ev()`를 고치면 호출부 열여덟을 다 건드려야 한다 — 거기엔 간 곳이 없는
+/// 사건만 있으므로 재료가 없는 자리에 `None`만 늘리는 셈이다.
+fn ev_to(kind: &str, npc: &NpcSaveState, from_team: Option<String>, to_team: String,
+         detail: Option<String>) -> OffseasonEvent
+{
+    OffseasonEvent {
+        kind:         kind.into(),
+        npc_id:       npc.npc_id.clone(),
+        from_team_id: from_team.filter(|t| !t.is_empty()),
+        to_team_id:   (!to_team.is_empty()).then_some(to_team),
         detail,
     }
 }
@@ -1824,10 +1841,10 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         if let Some(s) = signed_salary { npc.current_salary = s; }
         if signed_salary.is_some() {
             let score = params.perf_scores.get(&npc.npc_id).copied();
-            events.push(ev("fa_contract", npc, npc.original_team_id.clone(),
-                Some(format!("{} → {} · {} · 성적 {}",
-                    before_salary, npc.current_salary, team,
-                    score.map_or("없음".to_string(), |v| format!("{:.0}", v))))));
+            events.push(ev_to("fa_contract", npc, npc.original_team_id.clone(),
+                team.clone(),
+                Some(format!("{}→{}·{}", before_salary, npc.current_salary,
+                    score.map_or("-".to_string(), |v| format!("{:.0}", v))))));
         }
         *team_active_count.entry(team.clone()).or_default() += 1;
         *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
