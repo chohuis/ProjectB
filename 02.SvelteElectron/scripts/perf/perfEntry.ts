@@ -1937,6 +1937,10 @@ export function protagonistState(): Record<string, unknown> {
   return {
     year: s.seasonYear, week: s.currentWeek,
     stage: p.careerStage, league: p.leagueId, team: p.teamId,
+    // ⚠ **소속과 시즌 리그는 다르다.** 드래프트 직후엔 소속만 프로로
+    //   바뀌고 그 시즌은 아직 고교·대학이다. 연차 판정(`countsAsProSeason`)은
+    //   **시즌 리그**를 보므로, 소속만 보면 정상 동작을 결함으로 읽는다.
+    seasonLeague: get(seasonStore).leagueId,
     age: p.age, grade: p.grade ?? null,
     militaryStatus: p.militaryStatus, militaryUnit: p.militaryUnit,
     serviceWeeks: p.militaryServiceWeeks, recoveryWeeks: p.militaryRecoveryWeeks ?? 0,
