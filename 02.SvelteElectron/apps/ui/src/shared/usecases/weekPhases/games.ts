@@ -7,6 +7,7 @@ import { autoLog } from "../../stores/autoAdvance";
 import { simulateGame } from "../../utils/gameSimulator";
 import { rotationSizeForLeague } from "../../utils/rosterEngine";
 import { recordGameLogs } from "../../repo/gameLogRepo";
+import { seedOf } from "../../utils/seedOf";
 
 /** 선수 → 소속팀. `entities`가 정본이라 여기서 한 번만 만든다 */
 function teamLookup(entities: { id: string; teamId?: string }[]) {
@@ -98,7 +99,9 @@ export async function simulateNpcGame(
 
   autoLog(`[폴백SIM] 주인공리그 엔티티없음: ${homeTeamId} vs ${awayTeamId}`);
   const fb = JSON.parse(await window.projectB!.weekCalcNpcFallback(
-    JSON.stringify({ homeTeamId, awayTeamId })
+    // ⚠ 경기마다 다른 씨앗 — 팀·주차를 섞는다
+    JSON.stringify({ homeTeamId, awayTeamId,
+      seed: seedOf(s.worldSeed ?? 0, s.seasonYear, s.currentWeek, "fallback", homeTeamId, awayTeamId) })
   )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
   return {
     result: { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] },

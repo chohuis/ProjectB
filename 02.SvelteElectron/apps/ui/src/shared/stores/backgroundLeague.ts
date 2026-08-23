@@ -9,6 +9,7 @@ import { simulateGame } from "../utils/gameSimulator";
 import { staffStatsOf } from "../utils/staffEffects";
 import { rotationSizeForLeague } from "../utils/rosterEngine";
 import { autoLog } from "./autoAdvance";
+import { seedOf } from "../utils/seedOf";
 import { getLeagueRadius, RADIUS_GATED_LEAGUES } from "../utils/radiusGate";
 
 /**
@@ -69,7 +70,11 @@ export async function runSimBatch(
         autoLog(`[폴백SIM] ${g.leagueId} ${g.homeTeamId}(${homeN}명) vs ${g.awayTeamId}(${awayN}명)`);
         const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
         const fb = JSON.parse(
-          await api.weekCalcNpcFallback(JSON.stringify({ homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId }))
+          await api.weekCalcNpcFallback(JSON.stringify({
+            homeTeamId: g.homeTeamId, awayTeamId: g.awayTeamId,
+            // ⚠ 경기마다 다른 씨앗 — 리그·팀·주차를 섞는다
+            seed: seedOf(worldSeed ?? 0, g.week ?? 0, g.leagueId, g.homeTeamId, g.awayTeamId, "fallback"),
+          }))
         ) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
         result = { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] };
       }

@@ -526,6 +526,11 @@ pub struct UnivChoiceReq {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct HsAdmissionsPayload {
+    /// 판정 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// ⚠ 진학 합격 판정이다 — 주인공 진로가 여기서 갈린다.
+    #[serde(default)]
+    pub seed: u32,
     pub ovr: f64,
     pub avg_pct: f64,
     pub hs_baseball_score: f64,
@@ -564,7 +569,11 @@ fn pct_to_grade(pct: f64) -> u8 {
 }
 
 pub fn calc_hs_admissions(p: HsAdmissionsPayload) -> HsAdmissionsResult {
-    let mut rng = rand::thread_rng();
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let ovr = p.ovr;
     let academic_grade = pct_to_grade(p.avg_pct);
 
@@ -862,6 +871,11 @@ pub fn calc_military_week(p: MilitaryWeekPayload) -> MilitaryWeekResult {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NpcFallbackPayload {
+    /// 판정 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// ⚠ 경기 결과다 — 씨앗이 없으면 같은 일정도 실행마다 다른 순위를 낸다.
+    #[serde(default)]
+    pub seed: u32,
     pub home_team_id: String,
     pub away_team_id: String,
 }
@@ -876,8 +890,13 @@ pub struct NpcFallbackResult {
 }
 
 pub fn calc_npc_fallback(p: NpcFallbackPayload) -> NpcFallbackResult {
-    let mut rng = rand::thread_rng();
-    let score = |rng: &mut rand::rngs::ThreadRng| -> u32 {
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
+    // ⚠ `ThreadRng`를 못 박으면 씨앗을 쓸 수 없다 — 트레임으로 넓힌다
+    let score = |rng: &mut dyn rand::RngCore| -> u32 {
         let raw: f64 = rng.gen::<f64>() + rng.gen::<f64>() + rng.gen::<f64>() - 1.5;
         (raw * 4.0).round().max(0.0) as u32
     };

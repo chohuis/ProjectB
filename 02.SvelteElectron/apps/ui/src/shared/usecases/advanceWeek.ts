@@ -354,7 +354,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // 🔴 **씨앗을 넘긴다.** 안 넘기면 엔진이 `thread_rng`로 떨어져
       //    같은 세이브도 실행마다 다른 주에 다친다. 그 차이가 성적으로,
       //    성적이 진로로 번져 같은 씨앗이어도 프로에 갔다 독립에 갔다 한다.
-      seed: seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "injury"),
+      seed: seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "injury-protagonist"),
       fatigue: g.protagonist.fatigue,
       consecutiveHighFatigueWeeks: g.protagonist.consecutiveHighFatigueWeeks ?? 0,
       hasInjury: alreadyInjured,
@@ -886,6 +886,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const admissionsCalc = JSON.parse(await window.projectB!.weekCalcHsAdmissions(JSON.stringify({
       ovr: p.pitching.ovr, avgPct, hsBaseballScore,
       univChoices: univChoiceReqs, indieChoices: indieChoiceReqs,
+      // ⚠ 진학 합격이 주인공 진로를 정한다 — 씨앗이 없으면 매번 갈린다
+      seed: seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "admissions"),
     }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
 
     // ── 주인공 드래프트 결과 ──────────────────────────────────
