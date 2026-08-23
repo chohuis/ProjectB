@@ -877,6 +877,15 @@ pub fn calc_npc_fallback(p: NpcFallbackPayload) -> NpcFallbackResult {
 /// NPC 은퇴 판정이 이걸 쓴다 — 씨앗이 없으면 같은 세이브도 실행마다
 /// 다른 사람이 은퇴하고, 그 차이가 로스터·FA·계측으로 번진다.
 pub fn roll_random_batch(count: u32, seed: u32) -> Vec<f64> {
-    let mut rng = rand::thread_rng();
-    (0..count).map(|_| rng.gen::<f64>()).collect()
+    // 🔴 **씨앗을 받고도 버렸다.** 위 주석은 "0이면 thread_rng"라고 적혀
+    //    있었는데 그 갈래가 아예 없었다 — 항상 `thread_rng`였다.
+    //    호출부 셋 중 `injuries.ts`는 `seedOf(...)`로 제대로 넘기고 있었고,
+    //    그 노력이 여기서 통째로 버려졌다. NPC 은퇴 판정이 그래서
+    //    여전히 실행마다 다른 사람을 골랐다.
+    if seed == 0 {
+        let mut rng = rand::thread_rng();
+        return (0..count).map(|_| rng.gen::<f64>()).collect();
+    }
+    let mut rng = crate::npc_sim::LcgRand::new(seed);
+    (0..count).map(|_| rng.next()).collect()
 }

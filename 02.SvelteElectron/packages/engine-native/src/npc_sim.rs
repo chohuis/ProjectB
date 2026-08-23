@@ -1332,6 +1332,27 @@ fn fill_first_teams(
     }
 }
 
+/// 판정용 씨앗 — 입력에서 만든다. TS `seedOf`와 **같은 규칙**이다(FNV-1a).
+///
+/// 🔴 엔진이 `thread_rng`을 쓰면 같은 세이브도 실행마다 결과가 다르다.
+/// 그 상태에선 계측을 한 번 돌려 전후를 비교할 수 없고, 간헐 실패를
+/// 회귀와 구분할 수 없다.
+///
+/// ⚠ **무엇을 섞느냐가 뜻을 정한다.** 팀을 섞으면 팀마다 다른 답이 나온다 —
+///   FA 입찰이 그런 자리다. 안 섞으면 어느 팀이 물어도 같은 답이 된다.
+/// ⚠ **0을 돌려주지 않는다.** 엔진이 0을 "씨앗 없음"으로 읽어 `thread_rng`로
+///   떨어진다 — 고치려던 그 자리로 돌아간다.
+fn seed_of(base: u32, parts: &[&str]) -> u32 {
+    let mut h: u32 = 0x811c_9dc5 ^ base;
+    for part in parts {
+        for b in part.as_bytes() {
+            h ^= *b as u32;
+            h = h.wrapping_mul(0x0100_0193);
+        }
+    }
+    if h == 0 { 1 } else { h }
+}
+
 /// 오프시즌 사건 한 건.
 ///
 /// ⚠ **이름을 담지 않는다.** 화면이 `npcId`로 조회한다 — 은퇴자도 `npcs`에
@@ -1786,8 +1807,12 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                         .get(&((*tid).clone(), npc.position.clone())).copied().unwrap_or(0);
                     if at_pos <= 1 { needs.push(npc.position.clone()); }
                     let cap = params.team_payroll_cap.get(*tid).copied().unwrap_or(0).max(1);
+                    // ⚠ **선수와 팀을 둘 다 섞는다.** 선수를 빼면 그해 전원이 같은
+                    //   난수를 받고, 팀을 빼면 어느 구단이든 같은 값을 부른다.
                     let bid = crate::team_engine::eval_fa_bid(crate::team_engine::EvalFaBidParams {
-                        seed: 0,
+                        seed: seed_of(
+                            params.world_seed ^ (season_year as u32).wrapping_mul(2654435761),
+                            &[npc.npc_id.as_str(), tid.as_str()]),
                         team_profile: params.team_profiles.get(*tid).cloned().unwrap_or_default(),
                         fa_player: crate::sim_types::FaPlayerRef {
                             id: npc.npc_id.clone(),
