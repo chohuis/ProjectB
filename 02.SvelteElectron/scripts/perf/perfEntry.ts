@@ -2890,6 +2890,20 @@ export function salarySpread(): Record<string, unknown> {
   };
 }
 
+/** 구단 성향이 마스터에서 실리는가 — 첫 오프시즌에 비어 있었다 */
+export function teamProfileProbe(): Record<string, unknown> {
+  const m = get(masterStore); const g = get(gameStore);
+  const teams = m.teams ?? [];
+  const withProf = teams.filter((t) => (t as { proTeamProfile?: unknown }).proTeamProfile).length;
+  const pro = teams.filter((t) => t.leagueId === "LEAGUE_KBL");
+  const proWith = pro.filter((t) => (t as { proTeamProfile?: unknown }).proTeamProfile).length;
+  return {
+    마스터팀: teams.length, 성향있는팀: withProf,
+    KBL팀: pro.length, KBL성향: proWith,
+    게임스토어: Object.keys(g.proTeamProfiles).length,
+  };
+}
+
 export function pressureSpread(): Record<string, unknown> {
   const g = get(gameStore);
   const v = Object.values(g.proTeamProfiles ?? {})

@@ -59,6 +59,7 @@ import { careerSummaryOf } from "../utils/careerSummary";
 import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
+
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
 import { npcLiveStatsStore, liveOvrOf } from "./npcLiveStats";
 import { slotRepo } from "../repo/slotRepo";
@@ -309,6 +310,20 @@ const DEFAULT_MAILBOX: MessageItem[] = [
 ];
 
 // ── 헬퍼: ProtagonistSave → player 호환 객체 ──────────────────
+/**
+ * 마스터에 적힌 구단 성향을 꺼낸다 — 새 게임의 시작값이다.
+ *
+ * ⚠ 마스터가 아직 안 실렸으면 빈 객체다 — 그때는 `initProTeamProfiles`가
+ *   뒤달아 채운다. 둘 다 `!map[id]` 규칙이라 순서가 바뀜도 안전하다.
+ */
+function profilesFromMaster(): Record<string, import("./master").ProTeamProfile> {
+  const out: Record<string, import("./master").ProTeamProfile> = {};
+  for (const t of (get(masterStore).teams ?? [])) {
+    if (t.proTeamProfile) out[t.id] = { ...t.proTeamProfile };
+  }
+  return out;
+}
+
 function toPlayerCompat(p: ProtagonistSave): GameStoreState["player"] {
   const gradeLabel = p.grade ? `${p.grade}학년` : "-";
   const throws = p.handedness === "L" ? "좌투" : p.handedness === "S" ? "양투" : "우투";
@@ -1201,6 +1216,18 @@ function createGameStore() {
       }));
     },
 
+    /**
+     * 마스터의 구단 성향을 스토어로 옮긴다.
+     *
+     * 🔴 **예전엔 불러도 날아갔다.** `App.svelte`가 마스터 로드 직후에
+     * 불렀는데, 그 뒤 새 게임이 `proTeamProfiles: {}`로 초기화해 덮었다 —
+     * 실측: 마스터엔 성향이 32팀 있는데 게임 스토어는 **0개**였다.
+     * 그래서 오프시즌이 전 팀을 `DEFAULT_TEAM_PROFILE`로 봤고, 압박이
+     * 전 팀 정확히 50이었다.
+     *
+     * ⚠ **기존 값을 안 덮는다**(`!map[t.id]`) — 세이브에 쌓인 성향이
+     *   마스터 초기값으로 되돌아가면 시즌을 거친 개성이 사라진다.
+     */
     initProTeamProfiles(teams: import("../stores/master").TeamRef[]) {
       update((s) => {
         const map: Record<string, import("../stores/master").ProTeamProfile> = { ...s.proTeamProfiles };
@@ -3094,7 +3121,9 @@ function createGameStore() {
         seasonEndSummary: null,
         lastTop10Pitcher: null,
         lastTop10Batter:  null,
-        proTeamProfiles:  {},
+        // 🔴 **빈 객체로 시작하면 구단 개성이 없는 세계가 된다.**
+        //   `App.svelte`가 부른 `initProTeamProfiles`를 여기서 덮고 있었다.
+        proTeamProfiles:  profilesFromMaster(),
         teamStreaks:      {},
         teamTargets:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
