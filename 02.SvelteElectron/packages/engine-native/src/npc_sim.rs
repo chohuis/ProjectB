@@ -1724,33 +1724,23 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         // 자리라 건드리면 그게 깨진다.
         let (team, signed_salary) = if params.fa_bid_interest_min > 0.0 {
             let ovr = npc_core_ovr(npc);
-            // 희망 연봉·시장 가치 — 재계약이 쓰는 산식 그대로다.
+            // 시장 가치 — **세계 생성·드래프트·프로 재계약이 쓰는 그 함수다**(지수 곱선).
             //
-            // 🔴 예전엔 둘 다 `current_salary`였다. 그러면 성적·나이·OVR이
-            // 못 들어가고, 더 나쁜 건 **연봉이 싼 선수는 잘해도 입찰액이 낮다**는
-            // 것이다 — `eval_fa_bid`의 `bid_salary`가 `market_value`에 비례하기 때문이다.
-            // 싸게 먹힐 수 있는 선수일수록 구단이 적게 부르는 거꿔짐이었다.
+            // 🔴 예전엔 둘 다 `current_salary`였고, 그 다음엔 `calc_npc_renewal_salary`
+            //    (선형)를 썼다. 둘 다 틀렸다. 선형 산식은 독립리그처럼 연봉이 낮은
+            //    리그에 맞춰졌고 상한이 `market * 1.35`인데, KBL 1군은 OVR 90이 실제
+            //    13만인데 그 산식은 1.06만을 낸다 — **잘하는 선수일수록 심하게
+            //    깎였다**(성적 80+ 구간 배수 중앙 0.17 · 성적 0~20은 0.43으로 더 낫았다).
             //
-            // ⚠ **산식을 새로 만들지 않는다.** `renew_independent_salaries`·프로 재계약과
-            //   같은 함수다. 따로 만들면 같은 세계에 몸값 기준이 둘이 된다.
-            // ⚠ **성적이 없으면 예전대로 지금 연봉을 쓴다.** 표본 미달자를 중립 50으로
-            //   넣으면 안 뛴 선수의 몸값이 조용히 움직인다.
-            // ⚠ 리그는 `origin_league`다 — FA 구간의 `current_league`는 LEAGUE_FREE_AGENT라
-            //   그걸 넘기면 리그 배수 표가 안 걸린다.
-            let want = match params.perf_scores.get(&npc.npc_id) {
-                Some(&score) => crate::player_engine::calc_npc_renewal_salary(
-                    crate::player_engine::CalcNpcRenewalSalaryParams {
-                        league_mult: params.salary_rules.as_ref()
-                            .map(|r| r.league_mult.clone()).unwrap_or_default(),
-                        ovr,
-                        age: npc.age,
-                        league_id: origin_league.to_string(),
-                        current_salary: npc.current_salary.max(1),
-                        performance_score: score,
-                        greed: npc.personality.as_ref().map(|p| p.greed).unwrap_or(40.0),
-                    }),
-                None => npc.current_salary.max(1),
-            };
+            // ⚠ **같은 세계에 연봉 산식이 둘이다.** 이름과 주석만 보고 고르면 틀린다 —
+            //   `renew_independent_salaries` 주석은 선형 산식을 "프로 재계약이 쓰는
+            //   그 함수"라고 적어 둔다. 실제 프로 재계약(7번 단계)은 이 함수를 쓴다.
+            // ⚠ 팀 예산 지수는 1.0(평균팀)이다 — 재계약 호출부와 맞춘다. 팀별 차등은
+            //   입찰의 `win_mult`와 상한이 따로 본다.
+            // ⚠ 이 함수는 **성적을 안 받는다.** "잘하면 많이 오른다"는 아직 없다.
+            let (want, _want_yrs) = estimate_salary_and_contract(
+                ovr, origin_league, npc.pro_service_years.unwrap_or(0), npc.age, 1.0,
+                &salary_rules, &mut rng);
             let mut best: Option<(String, i64)> = None;
             for tid in &open {
                 // 그 팀이 지금 얇은 자리 — 같은 포지션이 1명 이하면 부족으로 본다
@@ -1807,9 +1797,20 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
             (open[idx].clone(), None)
         };
-        // ⚠ **총연봉 누적보다 먼저 갱신한다** — 순서가 바뀌면 캐프 계산이
-        //   옷 연봉으로 돌아 같은 오프시즌의 뒷사람 판정이 어깋나간다
+        // ⚠ **총연봉 누적보다 먼저 갱신한다** — 순서가 바뀌면 캡 계산이
+        //   옛 연봉으로 돌아 같은 오프시즌의 뒷사람 판정이 어긋난다
+        // 계약 성사를 남긴다. 예전엔 미계약만 사건이 있어
+        // **구단이 누구를 얼마에 데려갔는지를 알 방법이 없었다** — 화면에도
+        // 안 뜨고 계측도 못 했다. 성적과 전후 연봉을 같이 적는다.
+        let before_salary = npc.current_salary;
         if let Some(s) = signed_salary { npc.current_salary = s; }
+        if signed_salary.is_some() {
+            let score = params.perf_scores.get(&npc.npc_id).copied();
+            events.push(ev("fa_contract", npc, npc.original_team_id.clone(),
+                Some(format!("{} → {} · {} · 성적 {}",
+                    before_salary, npc.current_salary, team,
+                    score.map_or("없음".to_string(), |v| format!("{:.0}", v))))));
+        }
         *team_active_count.entry(team.clone()).or_default() += 1;
         *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
         *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;
