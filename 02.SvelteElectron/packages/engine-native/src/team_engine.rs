@@ -28,6 +28,15 @@ pub struct WinNowUpdateParams {
     pub total_teams: i32,
     pub consecutive_missed_playoffs: i32,
     pub won_championship: bool,
+    /// 목표 순위 — 지출과 우승 이력에서 유도한다. 0이면 **절대 순위 방식**(예전).
+    ///
+    /// 🔴 예전엔 절대 순위만 봐서 **예산 큰 팀도 중위권이면 +2**로 만족했다.
+    /// 실측 KBL 지출 지수가 1.5 ~ 0.52로 3배 벌어져 있는데 기대는 같았다.
+    #[serde(default)]
+    pub target_standing: f64,
+    /// 목표 대비 편차 1위당 압박. 0이면 예전 방식으로 떨어진다.
+    #[serde(default)]
+    pub deviation_weight: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -39,7 +48,15 @@ pub struct WinNowUpdateResult {
 
 pub fn calc_win_now_pressure_update(p: WinNowUpdateParams) -> WinNowUpdateResult {
     let patience_mult = 1.0 - (p.owner_patience / 100.0) * 0.5;
+    // 우승은 순위가 아니라 **사건**이다 — 편차와 무관하게 크게 내려간다
     let delta = if p.won_championship { -20.0 }
+        else if p.deviation_weight > 0.0 && p.target_standing > 0.0 {
+            // **목표 대비**로 본다. 예산 큰 팀은 중위권이어도 압박을 받고
+            // 작은 팀은 중위권이면 만족한다 — 예전엔 둘 다 +2로 같았다.
+            let dev = p.final_standing as f64 - p.target_standing;
+            dev * p.deviation_weight * patience_mult
+                + p.consecutive_missed_playoffs as f64 * 5.0
+        }
         else if p.final_standing <= 2 { -5.0 }
         else if p.final_standing <= p.total_teams / 2 { 2.0 * patience_mult }
         else { 8.0 * patience_mult + p.consecutive_missed_playoffs as f64 * 5.0 };

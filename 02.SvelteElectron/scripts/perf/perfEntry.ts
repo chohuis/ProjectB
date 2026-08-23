@@ -2867,6 +2867,16 @@ export function pressureSpread(): Record<string, unknown> {
     팀: v.length,
     압박_최소: v[0] ?? 0, 압박_중앙: q(0.5), 압박_최대: v[v.length - 1] ?? 0,
     "60초과(buyer)": v.filter((x) => x > 60).length,
+    // 목표가 안 갈리면 편차도 같아져 계수를 아무리 올려도 소용없다.
+    // **계수 곡선을 재기 전에 이것부터 본다.**
+    목표_최소: (() => {
+      const t = Object.values(g.teamTargets ?? {}) as number[];
+      return t.length ? Math.round(Math.min(...t) * 10) / 10 : 0;
+    })(),
+    목표_최대: (() => {
+      const t = Object.values(g.teamTargets ?? {}) as number[];
+      return t.length ? Math.round(Math.max(...t) * 10) / 10 : 0;
+    })(),
     연속실패_최대: st.length ? Math.max(...st.map((s2) => (s2 as { missedPlayoffs: number }).missedPlayoffs)) : 0,
     연속우승_최대: st.length ? Math.max(...st.map((s2) => (s2 as { titles: number }).titles)) : 0,
   };

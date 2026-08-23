@@ -110,6 +110,13 @@ export interface GameStoreState {
   proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 구단 성향 (저장됨)
   /** 구단 연속 기록 — 연속 포스트시즌 실패 · 연속 우승 (저장됨) */
   teamStreaks: Record<string, { missedPlayoffs: number; titles: number }>;
+  /**
+   * 구단 목표 순위 — 지출과 우승 이력에서 유도. 시즌 종료에 갱신한다.
+   *
+   * ⚠ **계산은 `seasonRollover` 한 곳에서만 한다.** 계측기나 화면이 같은 식을
+   * 다시 구현하면 표가 둘이 된다 — 이 저장소에서 반복된 결함이다.
+   */
+  teamTargets: Record<string, number>;
   dayLabel: string;
   logs: string[];
   upcoming: string[];
@@ -369,6 +376,7 @@ function buildInitialState(): GameStoreState {
     lastTop10Batter:  null,
     proTeamProfiles: {},
     teamStreaks: {},
+    teamTargets: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         ["훈련 루틴 설정 완료", "코치 면담으로 제구 +1", "팀 분위기 안정"],
     upcoming:     ["화요일 불펜 세션", "금요일 체력장", "토요일 주말 리그 1차전"],
@@ -532,6 +540,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
     proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
     teamStreaks:      (saved.teamStreaks ?? {}) as GameStoreState["teamStreaks"],
+    teamTargets:      {},   // 파생값 — 시즌 종료에 다시 계산된다
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
     logs:         saved.recentLogs,
     upcoming:     saved.recentUpcoming,
@@ -901,6 +910,11 @@ function createGameStore() {
 
     // 활성 슬롯 ID 설정 (새 게임 시작 시 슬롯 선택 후 호출)
     /** 연속 기록 갱신 — 시즌 종료에 한 번. 진출선은 압박 산식과 같은 기준이다 */
+    /** 목표 순위 묶음 갱신 — 시즌 종료에 한 번 */
+    setTeamTargets(map: Record<string, number>) {
+      update((s) => ({ ...s, teamTargets: { ...s.teamTargets, ...map } }));
+    },
+
     patchTeamStreak(teamId: string, v: { missedPlayoffs: number; titles: number }) {
       update((s) => ({ ...s, teamStreaks: { ...s.teamStreaks, [teamId]: v } }));
     },
@@ -3084,6 +3098,7 @@ function createGameStore() {
         lastTop10Batter:  null,
         proTeamProfiles:  {},
         teamStreaks:      {},
+        teamTargets:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
         logs: [],
         upcoming: [],

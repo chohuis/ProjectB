@@ -140,6 +140,45 @@ async function updateProTeamProfiles(): Promise<void> {
     if (standings.length === 0) continue;
     const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
+    // ── 목표 순위 — **지출과 우승 이력에서 유도한다** ──────────────
+    //
+    // 🔴 예전엔 절대 순위만 봐서 **예산 큰 팀도 중위권이면 +2**로 만족했다.
+    // 실측 KBL 지출 지수가 1.5 ~ 0.52로 3배 벌어져 있는데 기대는 같았다.
+    //
+    // 리그 안 상대 위치로 낸다 — 새 상수가 없다. 지출 "순위"로 하면 동점이
+    // 많아(0.99가 3팀 · 0.9가 4팀) 자의적이라 **연속값**으로 뽑는다.
+    //
+    // ⚠ **해외는 예산이 없다**(refs에 `history.budget`이 KBL에만 있다).
+    // 그러면 목표를 중위권으로 둬서 사실상 예전 동작이 된다 — 조용히
+    // 깨지지 않게 하는 폴백이다. 해외 예산이 생기면 자동으로 작동한다.
+    const deviationWeight = await (async () => {
+      try {
+        const { loadRosterRules } = await import("../repo/newGameV3");
+        const r = await loadRosterRules() as { promotionRules?: { pressureDeviationWeight?: number } };
+        return r.promotionRules?.pressureDeviationWeight ?? 0;
+      } catch { return 0; }
+    })();
+    const targetOf = new Map<string, number>();
+    {
+      const budgets = sorted.map((st) => ({
+        teamId: st.teamId,
+        idx: m.teams.find((t) => t.id === st.teamId)?.history?.budget ?? 0,
+      }));
+      const vals = budgets.map((b2) => b2.idx).filter((v) => v > 0);
+      const lo = vals.length ? Math.min(...vals) : 0;
+      const hi = vals.length ? Math.max(...vals) : 0;
+      for (const b2 of budgets) {
+        // 예산이 없거나 전 팀이 같으면 중위권을 목표로 — 예전 동작과 같아진다
+        if (!b2.idx || hi <= lo) { targetOf.set(b2.teamId, sorted.length / 2); continue; }
+        const t = 1 + (sorted.length - 1) * ((hi - b2.idx) / (hi - lo));
+        // 연속 우승만큼 기대가 올라간다 (1위가 하한)
+        const titles = g.teamStreaks[b2.teamId]?.titles ?? 0;
+        targetOf.set(b2.teamId, Math.max(1, t - titles));
+      }
+      // 계측·화면이 읽을 수 있게 담는다 — 같은 식을 두 번 구현하지 않는다
+      gameStore.setTeamTargets(Object.fromEntries(targetOf));
+    }
+
     for (let i = 0; i < sorted.length; i++) {
       const teamId = sorted[i].teamId;
       const cur = g.proTeamProfiles[teamId]
@@ -167,6 +206,9 @@ async function updateProTeamProfiles(): Promise<void> {
         // (`final_standing <= total_teams / 2`). 따로 정하면 표가 둘이 된다.
         consecutiveMissedPlayoffs: streak.missedPlayoffs,
         wonChampionship: i === 0,
+        // 목표 대비 편차 — 0이면 엔진이 예전 절대 순위 방식으로 떨어진다
+        targetStanding: targetOf.get(teamId) ?? 0,
+        deviationWeight,
       }));
       const r = JSON.parse(raw) as { newPressure?: number; error?: string };
       if (r.error || typeof r.newPressure !== "number") continue;
