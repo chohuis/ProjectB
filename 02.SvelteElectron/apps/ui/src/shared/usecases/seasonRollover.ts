@@ -198,7 +198,18 @@ async function updateProTeamProfiles(): Promise<void> {
         const titles = g.teamStreaks[b2.teamId]?.titles ?? 0;
         targetOf.set(b2.teamId, Math.max(1, t - titles));
       }
-      // 계측·화면이 읽을 수 있게 담는다 — 같은 식을 두 번 구현하지 않는다
+      // 계측·화면이 읽을 수 있게 담는다 — 같은 식을 두 번 구현하지 않는다.
+      //
+      // ⚠ **이 사본은 판정에 안 쓰인다.** 압박 계산은 아래에서 지역 변수
+      //   `targetOf`를 그대로 읽는다(`targetStanding:`). 그래서 세이브에 안 담겨도
+      //   괜찮다 — 시즌 종료마다 여기서 다시 계산되고 바로 쓰인다.
+      //
+      // 실측(2026-08-24 · 씨앗 424242): 시즌 중(S2027 W32)에 세이브 왕복을 하면
+      //   `teamTargets`가 **38 → 0**으로 비지만, 그 시즌 종료의 목표는 여전히
+      //   **1~10위**로 정상이었다(2027·2028 둘 다). 롬드 직후에 오프시즌이
+      //   목표를 0으로 읽는 창은 생기지 않는다.
+      //
+      // ⚠ 화면은 아직 이걸 안 읽는다 — 지금 읽는 건 계측(`perfEntry`)뿐이다.
       gameStore.setTeamTargets(Object.fromEntries(targetOf));
     }
 

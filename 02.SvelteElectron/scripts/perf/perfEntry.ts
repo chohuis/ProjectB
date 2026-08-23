@@ -2908,6 +2908,20 @@ export function teamProfileProbe(): Record<string, unknown> {
   };
 }
 
+/**
+ * 시즌 중 재시작이 목표 순위를 깨뜨리는가 — 세이브 왕복 뒤 압박을 본다.
+ *
+ * ⚠ `teamTargets`는 저장 안 한다(파생값). 그래서 로드 직후엔 비어 있다 —
+ *   그게 오프시즌을 깨뜨리는지가 질문이다.
+ */
+export function saveRoundTripTargets(): Record<string, unknown> {
+  const before = Object.keys(get(gameStore).teamTargets ?? {}).length;
+  const slotId = get(gameStore).currentSlotId ?? "PROBE";
+  gameStore.hydrateFromSlot(gameStore.toSaveGame(), slotId);
+  const after = Object.keys(get(gameStore).teamTargets ?? {}).length;
+  return { 왕복전: before, 왕복후: after };
+}
+
 export function pressureSpread(): Record<string, unknown> {
   const g = get(gameStore);
   const v = Object.values(g.proTeamProfiles ?? {})
