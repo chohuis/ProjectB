@@ -455,7 +455,14 @@ fn build_pit_queue(
 }
 
 pub fn sim_game(params: &SimGameParams) -> SimGameResult {
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 경기 식별자를 섞어 경기마다 다르게 한다
+    let mut rng: Box<dyn rand::RngCore> = if params.world_seed != 0 {
+        Box::new(LcgRand::new(seed_of(
+            params.world_seed ^ (params.week as u32).wrapping_mul(2654435761),
+            &[params.schedule_id.as_str()])))
+    } else {
+        Box::new(rand::thread_rng())
+    };
 
     let home_pit_q = build_pit_queue(&params.home_rotation, &params.home_bullpen, &params.home_closer, params.home_rot_idx);
     let away_pit_q = build_pit_queue(&params.away_rotation, &params.away_bullpen, &params.away_closer, params.away_rot_idx);

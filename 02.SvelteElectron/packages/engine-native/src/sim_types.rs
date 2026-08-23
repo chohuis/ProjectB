@@ -715,6 +715,18 @@ pub struct SimPlayerCondition {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SimGameParams {
+    /// 세계 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// 🔴 **TS는 이미 `worldSeed`·`scheduleId`를 넘기고 있었다**
+    ///    (`gameSimulator.ts`). 근데 이 구조체가 그 둘을 안 받아서
+    ///    serde가 조용히 버렸다 — NPC 경기가 실행마다 다른 결과를 냈고,
+    ///    그 성적이 순위·은퇴·방출·FA·연봉까지 번졌다.
+    #[serde(default)]
+    pub world_seed: u32,
+    /// 경기 식별자 — 씨앗에 섞어 **경기마다 다른 수열**을 만든다.
+    /// 안 섞으면 같은 주의 모든 경기가 같은 난수를 받는다.
+    #[serde(default)]
+    pub schedule_id: String,
     pub home_rotation: Vec<SimPitcher>,
     pub away_rotation: Vec<SimPitcher>,
     pub home_bullpen: Vec<SimPitcher>,
