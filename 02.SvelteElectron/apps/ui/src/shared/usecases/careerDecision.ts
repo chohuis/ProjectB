@@ -256,7 +256,10 @@ export async function acceptDraftOffer(action: {
   // 연도 가드가 있어 롤오버가 이미 돌았으면 그냥 지나간다.
   const closingYear = get(seasonStore).seasonYear;
   await runWorldSeasonEnd(closingYear);
-  gameStore.advanceSeasonYear(closingYear);
+  // ⚠ **끝나는 시즌의 리그를 넘긴다.** 이 시점엔 아직 고교·대학 시즌이다 —
+  //   드래프트 결정이 `careerStage`를 먼저 pro로 바꿔 놓았을 뿐이다.
+  //   안 넘기면 프로 데뷔도 안 한 사람의 연차가 1이 된다(A7).
+  gameStore.advanceSeasonYear(closingYear, get(seasonStore).leagueId);
 
   // 프로 시즌 열기는 `proSeason`이 정본이다 — 예전엔 여기·재계약 모달·
   // 시즌 롤오버 셋이 각자 리그 분기를 적고 있었다

@@ -435,7 +435,7 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     // ⚠ 예전엔 `processAllLeaguesSeasonEnd`만 불렀다. 그 사이 **드래프트가
     // 안 돌아** 복무 2년 동안 신인이 한 명도 안 들어왔다.
     await runWorldSeasonEnd(now);
-    gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
+    gameStore.advanceSeasonYear(get(seasonStore).seasonYear, get(seasonStore).leagueId);
     if (!(await dischargeProtagonist())) openMilitarySeason(now + 1);
     await gameStore.save();
     await seasonStore.save();
@@ -452,7 +452,7 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
   const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(P().careerStage);
   if (isProStage) {
     await runWorldSeasonEnd(now);
-    gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
+    gameStore.advanceSeasonYear(get(seasonStore).seasonYear, get(seasonStore).leagueId);
 
     // ── 2군 리그 우승팀 발표 메시지 ────────────────────────────
     const FARM_LEAGUE_NAMES: Record<string, string> = {
@@ -559,7 +559,7 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     }
     (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
   }
-  gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
+  gameStore.advanceSeasonYear(get(seasonStore).seasonYear, get(seasonStore).leagueId);
   seasonStore.startNewSeason();
 
   // gradeBeforeAdvance 기준으로 판단: processSeasonEnd 후 p.grade는 이미 증가해 있으므로

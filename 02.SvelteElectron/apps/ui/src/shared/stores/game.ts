@@ -2366,10 +2366,25 @@ function createGameStore() {
 
     // 시즌 종료 후 주인공 상태 갱신 (나이+1, 프로연차+1, 오프시즌 회복)
     // 학년 진급은 processSeasonEnd에서 먼저 처리되므로 여기서는 age만 증가
-    advanceSeasonYear(_seasonYear?: number) {
+    /**
+     * ⚠ `playedLeagueId`는 **끝나는 그 시즌을 어디서 보냈는가**다.
+     *
+     * 🔴 예전엔 `careerStage`만 봤다. 그런데 드래프트 결정이 **먼저**
+     *    단계를 pro로 바꾸므로, 고교 시즌을 끝내는 순간 이미 프로로 읽혀
+     *    **프로에서 한 경기도 안 뛰었는데 연차가 1**이 됐다 — 화면에
+     *    "프로 2년차"로 뜼는 A7이 이것이다(씨앗 31337 재현).
+     *    라벨 함수는 멀지았다 — `myStatus.test.ts`가 그걸 보고 있어
+     *    검사는 통과했고 **데이터가 틀렸다.**
+     *
+     * ⚠ 안 넘기면 예전대로 `careerStage`만 본다 — 구 호출부 호환.
+     */
+    advanceSeasonYear(_seasonYear?: number, playedLeagueId?: string) {
       update((s) => {
         const p = s.protagonist;
-        const isPro = ["pro", "pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
+        const stageIsPro = ["pro", "pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
+        const isPro = playedLeagueId === undefined
+          ? stageIsPro
+          : stageIsPro && ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(playedLeagueId);
         const protagonist: ProtagonistSave = {
           ...p,
           age: p.age + 1,
