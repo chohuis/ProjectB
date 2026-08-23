@@ -93,6 +93,8 @@
     "check:foreignseed": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-seed.cjs",
     "check:amateurworld": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-amateur-world.cjs",
     "check:msgdup": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdup.cjs",
+    "check:eventconditions": "node scripts/check-eventconditions.cjs",
+    "measure:eventfunnel": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-eventfunnel.cjs",
     "check:rostertrend": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-rostertrend.cjs",
     "check:recentgames": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-recentgames.cjs",
     "check:namepair": "node scripts/check-namepair.cjs",
