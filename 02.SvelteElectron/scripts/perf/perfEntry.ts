@@ -24,7 +24,7 @@ import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/u
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
-import { runSeasonRollover, setBeforeSeasonEndHook } from "../../apps/ui/src/shared/usecases/seasonRollover";
+import { runSeasonRollover, setBeforeSeasonEndHook, setAfterSeasonEndHook } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import {
@@ -5225,6 +5225,42 @@ export function armSeasonEndSnapshot(): void {
       등판분포: hsPitcherLoadProbe(),
     });
   });
+}
+
+// ── 시즌 처리가 끝난 뒤 스냅샷 (계측 전용) ──────────────
+//
+// 🔴 **하네스 루프로는 시즌을 놓친다.** `isSeasonEnded()`를 보고 잡으면
+// 주인공이 진로를 정하는 해가 통째로 빠진다 — 실측: `S2028 W32`에서
+// `pushCareerForward`가 `S2029 W0`으로 넘기고 2028 종료를 안 거친다.
+// 3시즌을 돌려도 표본이 2개였고, 그 탓에 **압박 계수를 시즌 1개씩만
+// 보고 정했다** — 연속 실패 최대가 1까지밖에 안 나왔다.
+//
+// ⚠ 앞쪽 훅(`armSeasonEndSnapshot`)과 **자리가 다르다.** 저긴 성적이 온전한
+//   지점(처리 앞), 여깴 롤오버가 만든 값(처리 뒤). 압박·목표·연속
+//   기록은 이쪽에서만 보인다.
+const _afterSnaps: Record<string, unknown>[] = [];
+
+/**
+ * 시즌 처리가 끝난 뒤 재고 싶은 프로브를 건다.
+ *
+ * `{이름: 함수}` 꼴이라 부르는 쪽이 골라 담는다 — 안 쓰는 프로브를
+ * 매 시즌 돌리지 않는다.
+ */
+export function armAfterSeasonSnapshot(probes: Record<string, () => unknown>): void {
+  setAfterSeasonEndHook((year) => {
+    const row: Record<string, unknown> = { 연도: year };
+    for (const [k, f] of Object.entries(probes)) {
+      try { row[k] = f(); } catch (e) { row[k] = `오류: ${(e as Error)?.message}`; }
+    }
+    _afterSnaps.push(row);
+  });
+}
+
+/** 모아둔 것을 꺼내고 비운다 */
+export function drainAfterSeasonSnapshots(): Record<string, unknown>[] {
+  const out = [..._afterSnaps];
+  _afterSnaps.length = 0;
+  return out;
 }
 
 /** 모아둔 스냅샷을 꺼내고 비운다 — 회차 사이에 섞이지 않게 */

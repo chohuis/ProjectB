@@ -71,6 +71,26 @@ export function setBeforeSeasonEndHook(fn: ((year: number) => void) | null): voi
   _beforeSeasonEndHook = fn;
 }
 
+/**
+ * 시즌 종료 처리가 **다 끝난 뒤**에 불리는 계측 훅.
+ *
+ * ⚠ 계측 전용이다 — 운영 코드가 여기 붙으면 안 된다.
+ *
+ * `setBeforeSeasonEndHook`과 **짝이지 대체가 아니다.** 저쪽은 성적이 온전한
+ * 지점(처리 앞)이고, 이쪽은 **롤오버가 만든 값**을 보는 자리다 —
+ * 순위·구단 성향·압박·목표 순위·연속 기록은 `updateProTeamProfiles()`가
+ * 돌고 난 뒤에야 생긴다.
+ *
+ * 왜 필요한가: 하네스가 `isSeasonEnded()`를 보고 잡으면 **주인공이 진로를
+ * 정하는 해를 통째로 놓친다.** `pushCareerForward`가 드래프트 통보 뒤로
+ * 시즌을 넘겼 때 실측한 것: `S2028 W32 → S2029 W0` — 2028 종료를 안 거친다.
+ * 그 해만 표본이 비면 연속 실패·연속 우승 같은 **누적 값을 영영 못 재다.**
+ */
+let _afterSeasonEndHook: ((year: number) => void) | null = null;
+export function setAfterSeasonEndHook(fn: ((year: number) => void) | null): void {
+  _afterSeasonEndHook = fn;
+}
+
 export async function runWorldSeasonEnd(now: number): Promise<void> {
   if (_lastWorldSeasonEndYear === now) return;
   _lastWorldSeasonEndYear = now;
@@ -111,6 +131,9 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   await gameStore.applyAgingDecay();
   await updateProTeamProfiles();
   await runSeasonEndBgProcessing(now);
+
+  // ⚠ **모든 처리 뒤.** 앞에 두면 압박·목표가 아직 지난 시즌 값이다
+  try { _afterSeasonEndHook?.(now); } catch { /* 계측이 게임을 깨지 않는다 */ }
 }
 
 /**

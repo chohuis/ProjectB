@@ -5,7 +5,7 @@ cp "$P" "$P.bak"
 for W in 0 2 4; do
   node -e 'const fs=require("fs");const p=process.argv[1];const j=JSON.parse(fs.readFileSync(p,"utf8"));j.promotionRules.pressureDeviationWeight=Number(process.argv[2]);fs.writeFileSync(p,JSON.stringify(j,null,2)+"\n","utf8");' "$P" "$W"
   for S in 20260731 777001 424242; do
-    PP_SEED=$S PP_YEARS=3 PP_TAG="W$W/S$S" ELECTRON_RUN_AS_NODE=1 npx electron scripts/probe-pressure.cjs 2>&1 | grep -E "^\[RES\]|^\[END\]"
+    P2_SEED=$S P2_YEARS=6 ELECTRON_RUN_AS_NODE=1 npx electron scripts/probe-pressure.cjs 2>&1 | grep "^\[SNAP\]" | sed "s|^|W$W/S$S |"
   done
 done
 mv "$P.bak" "$P"
