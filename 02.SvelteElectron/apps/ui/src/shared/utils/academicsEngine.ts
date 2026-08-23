@@ -88,9 +88,11 @@ export async function calcExamResult(
   accumScore: number,
   warningCount: number,
   examType: "midterm" | "final",
+  /** 🔴 안 넘기면 엔진이 `thread_rng`로 떨어져 **진로가 실행마다 갈린다** */
+  seed = 0,
 ): Promise<ExamResult> {
   const raw = JSON.parse(await window.projectB!.weekCalcExamResult(
-    JSON.stringify({ accumScore, warningCount, examType })
+    JSON.stringify({ accumScore, warningCount, examType, seed })
   )) as ExamResult;
   return raw;
 }

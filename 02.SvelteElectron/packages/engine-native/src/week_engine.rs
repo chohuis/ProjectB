@@ -660,6 +660,12 @@ pub fn calc_trade_rumor(p: TradeRumorPayload) -> TradeRumorResult {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ExamPayload {
+    /// 판정 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// ⚠ 시험은 내신 등급을 정하고 등급은 **대학 진학**을 정한다 —
+    ///   씨앗이 없으면 같은 세이브가 실행마다 다른 진로를 탄다.
+    #[serde(default)]
+    pub seed: u32,
     pub accum_score: f64,
     pub warning_count: u32,
     pub exam_type: String,
@@ -678,7 +684,12 @@ pub struct ExamResult {
 }
 
 pub fn calc_exam_result(p: ExamPayload) -> ExamResult {
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let penalty = p.warning_count * 8;
     let rand_val = rng.gen_range(0u32..25);
     let raw = ((p.accum_score as i64 - penalty as i64 + rand_val as i64).clamp(0, 100)) as u32;

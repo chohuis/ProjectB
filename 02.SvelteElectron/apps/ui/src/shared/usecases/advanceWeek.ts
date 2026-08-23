@@ -785,7 +785,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       logs.push(`[학업] ${res.messageSubject} (학점 ${res.gpa.toFixed(2)} / 누적 ${res.cumulativeGpa.toFixed(2)})`);
       if (res.repeats) logs.push("[학업] 유급 — 졸업이 한 해 밀린다");
     } else {
-      const examRes = await calcExamResult(gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType);
+      // ⚠ **씨앗을 넘긴다.** 시험 결과가 내신 등급→대학 진학을 정하므로,
+      //   안 넘기면 같은 씨앗이어도 주인공이 대학에 갔다 말았다 한다.
+      const examRes = await calcExamResult(
+        gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType,
+        seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "exam", examType));
       gameStore.applyExamResult(examRes);
       gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody));
       logs.push(`[시험] ${examRes.messageSubject}`);
