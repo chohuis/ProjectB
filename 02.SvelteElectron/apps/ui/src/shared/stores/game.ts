@@ -1982,7 +1982,6 @@ function createGameStore() {
           contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
           contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
           "pro_kbl";
-        const isNewTeam = contract.teamId !== s.protagonist.teamId;
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           contract: { ...contract, status: "active" },
@@ -1998,7 +1997,17 @@ function createGameStore() {
           faNegotiationRound: 0,
           faUnsignedWeeks: 0,
           tradeAdaptationWeeks: 0,
-          proServiceYears: isNewTeam ? 0 : s.protagonist.proServiceYears,
+          // 🔴 **팀을 옮겼다고 연차를 0으로 되돌리지 않는다.**
+          //
+          // 예전엔 `isNewTeam ? 0 : ...`이었다. 그런데 `isNewTeam`은 "프로에 처음
+          // 들어왔다"가 아니라 **"팀이 바뀜다"**다 — FA 이적·트레이드·
+          // 2군 이동으로 `teamId`가 바뀔 때마다 연차가 사라졌다.
+          // 실측(씨앗 424242 · 12시즌): 연차 **4 → 0**으로 리셋됐다.
+          // 그러면 FA 자격(5년)에 영영 못 닿고 은퇴 판정도 어긋난다.
+          //
+          // ⚠ 프로 등록일수는 리그 전체 기준이다. 신인은 어차피 이 값이 0이라
+          //   따로 리셋할 이유가 없다.
+          proServiceYears: s.protagonist.proServiceYears,
         };
         return {
           ...s,
@@ -2018,7 +2027,6 @@ function createGameStore() {
           contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
           contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
           "pro_kbl";
-        const isNewTeam = contract.teamId !== s.protagonist.teamId;
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           pendingNextContract: { ...contract, status: "active" },
@@ -2028,7 +2036,17 @@ function createGameStore() {
           money: Math.max(0, s.protagonist.money + contract.signingBonus),
           faNegotiationRound: 0,
           faUnsignedWeeks: 0,
-          proServiceYears: isNewTeam ? 0 : s.protagonist.proServiceYears,
+          // 🔴 **팀을 옮겼다고 연차를 0으로 되돌리지 않는다.**
+          //
+          // 예전엔 `isNewTeam ? 0 : ...`이었다. 그런데 `isNewTeam`은 "프로에 처음
+          // 들어왔다"가 아니라 **"팀이 바뀜다"**다 — FA 이적·트레이드·
+          // 2군 이동으로 `teamId`가 바뀔 때마다 연차가 사라졌다.
+          // 실측(씨앗 424242 · 12시즌): 연차 **4 → 0**으로 리셋됐다.
+          // 그러면 FA 자격(5년)에 영영 못 닿고 은퇴 판정도 어긋난다.
+          //
+          // ⚠ 프로 등록일수는 리그 전체 기준이다. 신인은 어차피 이 값이 0이라
+          //   따로 리셋할 이유가 없다.
+          proServiceYears: s.protagonist.proServiceYears,
         };
         return {
           ...s,
