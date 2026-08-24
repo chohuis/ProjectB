@@ -19,7 +19,30 @@
   import { militaryHistory } from "../../../shared/utils/playerTraits";
   import TeamMark from "../../team/ui/TeamMark.svelte";
 
+  import { onMount } from "svelte";
+  import { slotRepo } from "../../../shared/repo/slotRepo";
+  // 🔴 **값을 숫자로 노출하지 않는다** — `Relationship.value` 주석이 그렇게 못박아 뒀다.
+  //    "−100~+100. 플레이어에게 숫자로 노출하지 않는다 — 라벨만 보여준다"
+  import { relationLabel } from "../../../shared/types/relationship";
+  import { isV3SlotActive } from "../../../shared/repo/v3Mode";
+
   export let onClose: () => void;
+
+  // 아래로 잇는다 — 한 장 요약은 그대로 두고 상세를 접어서 붙인다.
+  // 탭으로 쪼개지 않은 이유: 위쪽이 이미 "한 장으로 읽히는" 결산이라
+  // 나누면 그 완성도가 깨진다(사용자 확정 2026-08-24).
+  let showYears = false;
+
+  // 관계는 slot.db에 있고 조회가 비동기다 — 화면이 열릴 때 한 번만 읽는다.
+  // ⚠ **지금 관계 데이터는 숫자뿐이다.** 이름·역할·마지막 값만 담백하게 놓고
+  //   서술은 안 붙인다 — 문장 뱅크를 새로 만들지 않는다는 결정을 따른다.
+  let relRows: import("../../../shared/types/relationship").Relationship[] = [];
+  onMount(async () => {
+    const g = $gameStore;
+    if (!isV3SlotActive() || !g.currentSlotId) return;
+    try { relRows = await slotRepo.getRelationships(g.currentSlotId); }
+    catch { relRows = []; }   // 조회가 실패해도 결산은 떠야 한다
+  });
 
   $: p = $gameStore.protagonist;
   $: records = p.careerRecords ?? [];
@@ -30,6 +53,26 @@
   $: awards = awardTallyOf(records);
   $: titles = titleCountOf(records);
   $: mil = militaryHistory(p.militaryStatus, p.militaryServedUnit);
+
+  // 연도 오름차순 — 데뷔부터 은퇴까지 읽히게 한다
+  $: byYear = [...records].sort((a, b) => a.year - b.year);
+
+  // 포스트시즌 라벨. `psResult`가 없으면 그 해는 아무것도 안 적는다
+  const PS: Record<string, string> = {
+    champion: "우승", runnerUp: "준우승", semiFinal: "PO", notQualified: "",
+  };
+
+  // 관계는 값이 큰 순으로 — 이름·역할·마지막 값만
+  const KIND: Record<string, string> = {
+    manager: "감독", coach: "코치", teammate: "동료", owner: "구단주",
+  };
+  // `personId`가 npcId와 같다 (people.md §4)
+  $: npcNameOf = (id: string) =>
+    ($gameStore.npcs ?? []).find((n) => n.npcId === id)?.name ?? id;
+
+  $: relTop = [...relRows]
+    .filter((r) => (r.value ?? 0) !== 0)
+    .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
   $: teamName = (id: string) =>
     ($teamsL10n ?? []).find((t) => t.id === id)?.name ?? id;
@@ -188,6 +231,58 @@
           </section>
         {/if}
 
+        <!-- 연도별 — 접어 둔다. 한 장 요약을 먼저 읽고 원하면 펼친다 -->
+        {#if byYear.length > 0}
+          <section class="sec">
+            <button class="yr-toggle" on:click={() => (showYears = !showYears)}>
+              연도별로 보기 {showYears ? "▲" : "▼"}
+              <span class="yr-n">{byYear.length}시즌</span>
+            </button>
+            {#if showYears}
+              <ol class="years">
+                {#each byYear as r}
+                  <li class="yr">
+                    <div class="yr-head">
+                      <span class="yr-y">{r.year}</span>
+                      <TeamMark teamId={r.teamId} size={16} />
+                      <span class="yr-t">{teamName(r.teamId)}</span>
+                      {#if r.rank}
+                        <span class="yr-rank">{r.rank}위{#if r.totalTeams}/{r.totalTeams}{/if}</span>
+                      {/if}
+                      {#if r.psResult && PS[r.psResult]}
+                        <span class="yr-ps">{PS[r.psResult]}</span>
+                      {/if}
+                    </div>
+                    {#if r.statLine}<div class="yr-stat">{r.statLine}</div>{/if}
+                    {#if r.awards?.length}
+                      <div class="yr-awards">
+                        {#each r.awards as a}<span class="yr-aw">{a.label}</span>{/each}
+                      </div>
+                    {/if}
+                  </li>
+                {/each}
+              </ol>
+            {/if}
+          </section>
+        {/if}
+
+        <!-- 사람 — 숫자뿐이라 이름·역할·값만 놓는다 -->
+        {#if relTop.length > 0}
+          <section class="sec">
+            <h3>사람</h3>
+            <ul class="rels">
+              {#each relTop.slice(0, 8) as r}
+                <li>
+                  <span class="r-name">{npcNameOf(r.personId)}</span>
+                  <span class="r-kind">{KIND[r.kind] ?? r.kind}</span>
+                  <span class="r-val" class:high={(r.value ?? 0) >= 60}>
+                    {relationLabel(r.value).label}</span>
+                </li>
+              {/each}
+            </ul>
+          </section>
+        {/if}
+
       {/if}
     </div>
 
@@ -198,6 +293,29 @@
 </div>
 
 <style>
+  /* 아래로 이은 세 절 — 위쪽 한 장 요약의 눈금을 그대로 쓴다 */
+  .yr-toggle {
+    width: 100%; display: flex; align-items: center; gap: 8px;
+    background: none; border: 1px solid var(--line, #333); border-radius: 6px;
+    color: inherit; font: inherit; padding: 8px 12px; cursor: pointer;
+  }
+  .yr-n { margin-left: auto; opacity: .6; font-size: .85em; }
+  .years { list-style: none; margin: 10px 0 0; padding: 0; }
+  .yr { padding: 8px 0; border-bottom: 1px solid var(--line-weak, #222); }
+  .yr-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .yr-y { font-variant-numeric: tabular-nums; opacity: .8; min-width: 3.2em; }
+  .yr-t { font-weight: 600; }
+  .yr-rank { font-variant-numeric: tabular-nums; opacity: .7; font-size: .9em; }
+  .yr-ps { font-size: .8em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #2a3a2a); }
+  .yr-stat { margin-top: 3px; opacity: .85; font-variant-numeric: tabular-nums; font-size: .92em; }
+  .yr-awards { margin-top: 3px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .yr-aw { font-size: .78em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #3a3320); }
+  .rels { list-style: none; margin: 0; padding: 0; }
+  .rels li { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+  .r-name { font-weight: 600; }
+  .r-kind { opacity: .6; font-size: .85em; }
+  .r-val { margin-left: auto; font-variant-numeric: tabular-nums; opacity: .8; }
+  .r-val.high { color: var(--good, #7ac47a); }
   /*
     은퇴 화면은 **어둡게 둔다.** 다른 화면이 밝은 것과 반대인데, 커리어가
     끝나는 자리라 톤이 다른 게 맞다. 대신 글자색을 전부 스스로 정해
