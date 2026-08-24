@@ -207,7 +207,10 @@
         gameSimState  = "ready";
       } else {
         gameNoEntryInfo = { homeScore: result.homeScore, awayScore: result.awayScore,
-                            playerLines: Array.isArray(result.playerLines) ? result.playerLines : undefined,
+                            // ⚠ 엔진 응답이 `[key: string]: unknown`이라 여기서 좁힌다 —
+                            //   넓은 채로 두면 `applyGameOutcome`이 받는 타입과 어긋난다.
+                            playerLines: Array.isArray(result.playerLines)
+                              ? (result.playerLines as import("../../shared/types/season").PlayerGameLine[]) : undefined,
                             ...summary };
         gameSimState = "no_entry";
       }

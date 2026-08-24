@@ -23,6 +23,11 @@
   import {
     scaleMs, showsOverlay, overlayMs, reducesMotion, systemReducedMotion,
   } from "../../shared/utils/effectTiming";
+  // 🔴 **import가 없었다.** 아래 `$:` 블록이 이 이름을 쓰는데 스코프에 없어
+  //    매번 ReferenceError로 죽었고, `pitchTypes`가 폴백 초기값에 머물러
+  //    **주인공이 실제로 던지는 구질 대신 폴백 넷만 보였다.**
+  //    조용히 잘못 도는 종류라 화면만 봐선 안 드러난다.
+  import { PITCH_ID_TO_ENGINE, type EnginePitchType } from "../../shared/utils/arsenal";
 
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -47,7 +52,9 @@
     arm?: number;
   }
 
-  type PitchType = "fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball";
+  // ⚠ 같은 유니온이 여기에도 적혀 있었다 — `arsenal.ts`가 "정본은 여기
+  //   하나다"라고 적어 뒀는데 실제로는 둘이었다. 별칭으로 잇는다.
+  type PitchType = EnginePitchType;
   type PitchStrategy = "aggressive" | "balanced" | "safe";
   type PitchPower = "low" | "normal" | "high";
 

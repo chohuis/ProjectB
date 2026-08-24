@@ -1,10 +1,11 @@
-<script lang="ts">
-  export let homeTeamName  = "홈팀";
-  export let awayTeamName  = "원정팀";
-  export let week          = 0;
-  export let isFriendly    = false;
-  export let protagonistTeamId = "";
-  export let homeTeamId    = "";
+<!--
+  ⚠ **타입은 `context="module"`에 있어야 한다.** instance `<script>`의
+     `export type`은 컴포넌트 prop 선언으로 읽혀서 다른 파일이 import할 수
+     없다 — `MainPage`가 `EntryInfo`·`NoEntryInfo`·`MatchSummary`를 그렇게
+     가져가려다 실패하고 있었다(svelte-check 7건이 한 원인이었다).
+-->
+<script context="module" lang="ts">
+  import type { PlayerGameLine } from "../../../shared/types/season";
 
   export type MatchSummary = {
     inningScores:         { home: number[]; away: number[] };
@@ -23,9 +24,27 @@
   };
 
   export type EntryInfo   = MatchSummary & { inning: number; half: string; homeScore: number; awayScore: number };
-  export type NoEntryInfo = MatchSummary & { homeScore: number; awayScore: number };
+  /**
+   * ⚠ `playerLines`는 **타입에 없는데 오가고 있었다.** `MainPage`가 넣고
+   *   (`gameNoEntryInfo = { …, playerLines }`) 다시 읽어(`applyGameOutcome`)
+   *   쓰는데, 타입 블록이 instance `<script>`에 있어 `{}`로 추론되는 바람에
+   *   검사가 통과하고 있었다. 타입을 제자리로 옮기자 드러났다.
+   */
+  export type NoEntryInfo = MatchSummary & {
+    homeScore: number; awayScore: number;
+    playerLines?: PlayerGameLine[];
+  };
 
   export type SimState = "idle" | "loading" | "no_entry" | "ready" | "error";
+</script>
+<script lang="ts">
+  export let homeTeamName  = "홈팀";
+  export let awayTeamName  = "원정팀";
+  export let week          = 0;
+  export let isFriendly    = false;
+  export let protagonistTeamId = "";
+  export let homeTeamId    = "";
+
 
   export let simState:     SimState     = "idle";
   export let entryInfo:    EntryInfo   | null = null;
