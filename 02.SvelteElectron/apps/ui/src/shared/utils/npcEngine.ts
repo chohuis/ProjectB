@@ -161,7 +161,7 @@ export async function runOffseasonProcessing(
    * 🔴 안 넘기면 FA 재배치가 **예전대로 아무 팀에나** 간다 — 구단이 원하는지
    * 얼마를 줄지가 없어 미계약이 0건이었다(실측 5시즌).
    */
-  fa?: { teamPayrollCap: Record<string, number>; bidInterestMin: number; perfSpan?: number },
+  fa?: { teamPayrollCap: Record<string, number>; bidInterestMin: number; perfSpan?: number; renewPerfSpan?: number },
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   // ⚠ **엔진에 넘길 때만 합치고 돌아올 때 되돌린다.** 결과가 `s.npcs`를
@@ -193,7 +193,8 @@ export async function runOffseasonProcessing(
     ...(releaseRules ? { releaseRules } : {}),
     worldSeed: (worldSeed ?? 0) >>> 0,
     ...(fa ? { teamPayrollCap: fa.teamPayrollCap, faBidInterestMin: fa.bidInterestMin,
-               faPerfSpan: fa.perfSpan ?? 0 } : {}),
+               faPerfSpan: fa.perfSpan ?? 0,
+               renewPerfSpan: fa.renewPerfSpan ?? 0 } : {}),
     ...(perfScores   ? { perfScores }   : {}),
     ...(teamProfiles ? { teamProfiles } : {}),
     ...(foreign ?? {}),

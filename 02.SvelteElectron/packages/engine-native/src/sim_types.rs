@@ -895,6 +895,12 @@ pub struct OffseasonParams {
     ///   매기는 FA는 다른 자리다.
     #[serde(default)]
     pub fa_perf_span: f64,
+    /// 재계약 성적 배수의 폭 (`faRules.renewPerfSpan`). 0이면 성적을 안 본다.
+    ///
+    /// ⚠ **FA보다 좁아야 한다.** 구단이 불러 압도하는 자리라 시장보다
+    ///   보수적이어야 한다. 같거나 크면 FA를 갈 이유가 없어진다.
+    #[serde(default)]
+    pub renew_perf_span: f64,
     /// 외국인 보유 한도가 걸리는 리그 (generation_rules.json `foreignRules.leagues`).
     /// 비면 외국인 개념이 없는 세계 — 구 세이브·구 페이로드가 그렇다
     #[serde(default)]

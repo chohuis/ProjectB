@@ -2485,6 +2485,8 @@ function createGameStore() {
         const min = (offRules.faRules as { bidInterestMin?: number } | undefined)?.bidInterestMin ?? 0;
         // 성적 배수 폭 — 0이면 성적을 안 본다(예전 동작)
         const span = (offRules.faRules as { perfSpan?: number } | undefined)?.perfSpan ?? 0;
+        // 재계약 성적 배수 — FA보다 좁다
+        const rSpan = (offRules.faRules as { renewPerfSpan?: number } | undefined)?.renewPerfSpan ?? 0;
         if (!min) return undefined;
         const { buildSalaryIndex } = await import("../repo/newGameV3");
         const idx = buildSalaryIndex(get(masterStore).teams);
@@ -2498,7 +2500,7 @@ function createGameStore() {
           // 지수 1.0인 팀이 지금 총연봉의 1.25배까지 쓸 수 있다
           cap[tid] = Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
         }
-        return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span };
+        return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span, renewPerfSpan: rSpan };
       })();
       // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
       // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날

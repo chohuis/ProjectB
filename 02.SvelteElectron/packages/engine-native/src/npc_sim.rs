@@ -1597,6 +1597,20 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             let (salary, years) = estimate_salary_and_contract(
                 ovr, &n.current_league, n.pro_service_years.unwrap_or(0), n.age, 1.0,
                 &salary_rules, &mut lcg);
+            // 성적 배수 — **재계약도 성적을 본다**(사용자 확정 2026-08-24).
+            //
+            // 🔴 예전엔 OVR·연차·나이만 봐서, FA로 올린 몸값이 **이듬해 그대로
+            //    되돌아갔다** — `faRules.perfSpan`이 1년짜리가 됐다.
+            // ⚠ 폭은 FA보다 좁다. 구단이 불러 압도하는 자리다.
+            // ⚠ **성적이 없으면 1.0**(중립) — 부상·2군 체류로 표본이 없는 사람을
+            //   깎으면 안 뛴 사람을 벌하는 것이다. FA·방출 판정도 같다.
+            let salary = match params.perf_scores.get(&n.npc_id) {
+                Some(&score) if params.renew_perf_span > 0.0 => {
+                    let m = 1.0 + (score / 50.0 - 1.0) * params.renew_perf_span;
+                    ((salary as f64) * m).round() as i64
+                }
+                _ => salary,
+            };
             n.current_salary = salary;
             // 외국인은 **단년 계약**이다 — 다년으로 묶이면 매 시즌 교체(F-4)가 막힌다
             n.contract_years  = if is_foreign(&n) { 1 } else { years };
