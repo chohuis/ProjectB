@@ -90,7 +90,7 @@ const PATHS = [
     //    4년을 다니게 됐다 — 그만큼 프로까지 시즌이 더 걸려 상한에 걸렸다.
     //    실패 메시지가 "프로에 도달 못 함 — 시즌 상한"이었다.
     //    ⚠ **게임이 느려진 게 아니라 경로가 길어진 것이다.** 원래 4년이 정상이다.
-    maxSeasons: 16,
+    maxSeasons: 20,
     until: (a) => a.careerStage().startsWith("pro"),
     check(app, r, out) {
       if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
