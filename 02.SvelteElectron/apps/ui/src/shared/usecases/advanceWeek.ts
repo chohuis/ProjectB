@@ -15,6 +15,7 @@ import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
 import { applyWeeklyRelations, reconcileRelationships, relationEffects, trainingAreaOf } from "./relationships";
+import { slotRepo } from "../repo/slotRepo";
 import { buildRelationMessages } from "../utils/relationMessages";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
@@ -309,6 +310,19 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       })
     : { roleOvrBias: 0, trainingBonus: 0, contractBonus: 0, managerLabel: "중립", coachLabel: "중립", ownerLabel: "중립" };
 
+  // 🔴 **관계도 조건(`relation_gte`/`relation_lte`)이 값을 못 받아 항상 false였다.**
+  //    조건은 트랙 B가 만들었고 평가기도 있는데(`conditionEvaluator.ts:206`)
+  //    `EventContext.relations`를 채우는 코드가 없었다.
+  //
+  //    ⚠ 이 프로젝트가 반복해 밟는 형태다 — **조건만 만들고 배선을 안 하면**
+  //      **조용히 false다.** 이벤트가 안 떠도 로그 한 줄 안 남는다.
+  //
+  //    평가기가 동기라 여기서 미리 실어야 한다(`types/event.ts:79` 주석).
+  //    조회는 위 `relationEffects`와 같은 슬롯이라 왕복이 하나 더 늘 뿐이다.
+  const relRows = (isV3SlotActive() && g.currentSlotId)
+    ? await slotRepo.getRelationships(g.currentSlotId)
+    : [];
+
   // 능력치 보정과 관계 보정을 더한 뒤 clamp한다 — 각각 clamp하면 상한이 두 배가 된다
   const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
     (coachTeaching - 50) * 0.004 + relEffects.trainingBonus));
@@ -590,6 +604,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // 대학 이벤트가 학점·경고를 조건으로 읽는다 (Phase 9-C).
     // **`get(gameStore)`로 최신을 읽는다** — 이번 주 학점 누적이 반영돼야 한다
     schoolState: get(gameStore).schoolState,
+    // 관계도 조건이 읽는다 — 안 실으면 `relation_gte`/`relation_lte`가 항상 false다
+    relations: relRows,
   };
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,

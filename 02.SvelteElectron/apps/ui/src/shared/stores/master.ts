@@ -589,7 +589,7 @@ function parseDecisionTemplate(raw: Record<string, any>): DecisionTemplate {
     (o: Record<string, any>): DecisionTemplateOption => {
       let effects: DecisionEffect | undefined;
       if (Array.isArray(o.effects)) {
-        // 援??щ㎎: ["fatigue:+10", "xp.velocity:+3"]
+        // 구 형식: ["fatigue:+10", "xp.velocity:+3"]
         const parsed = parseEffectsArray(o.effects as string[]);
         effects = Object.keys(parsed).length > 0 ? parsed : undefined;
       } else if (o.effects && typeof o.effects === "object") {
