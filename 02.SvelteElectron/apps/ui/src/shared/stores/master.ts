@@ -629,7 +629,7 @@ function parseEventPool(raw: Record<string, any>): EventPool {
       value: Number(raw.baseRoll?.value ?? raw.baseRollValue ?? 0),
     },
     maxPicksPerWeek: Number(raw.maxPicksPerDay ?? raw.maxPicksPerWeek ?? 1),
-    eventIds: Array.isArray(raw.eventIds) ? (raw.eventIds as string[]) : [],
+
   };
 }
 

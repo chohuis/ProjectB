@@ -161,7 +161,11 @@ export interface EventPool {
   description?: string;
   baseRoll: { mode: "percent"; value: number }; // 이 풀을 이번 주에 검사할 확률
   maxPicksPerWeek: number;                   // 주당 최대 선택 수
-  eventIds: string[];                        // 풀에 속한 이벤트 ID 목록
+  //
+  // ⚠ **`eventIds`가 있었는데 2026-08-24에 지웠다.** 엔진은 규칙 자신의
+  // `poolId`로 풀을 만들고(`eventEngine` §3 `poolRuleMap`) 그 목록을 **안 읽었다.**
+  // 그런데 목록은 22/2/60이고 실제 규칙은 50/13/109라 **절반만 담긴 두 번째
+  // 정본**이었다. 정본은 규칙 파일의 `poolId` 하나다.
 }
 
 // ── 메시지 템플릿 ──────────────────────────────────────────────

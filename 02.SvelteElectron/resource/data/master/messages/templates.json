@@ -405,13 +405,6 @@
       "decisionTemplateId": null
     },
     {
-      "id": "MSG_HS_MEDIA_COMMAND_PRAISE",
-      "category": "news",
-      "subject": "제구력 호평 기사",
-      "body": "기자단이 당신의 안정적인 제구를 강점으로 꼽았습니다.\n\n접전 상황에서도 맞춰 던질 수 있는 투수라는 평가입니다.",
-      "decisionTemplateId": null
-    },
-    {
       "id": "MSG_HS_MEDIA_SCOUT_CAMERA_04",
       "category": "news",
       "subject": "스카우트 카메라 추가 방문",
