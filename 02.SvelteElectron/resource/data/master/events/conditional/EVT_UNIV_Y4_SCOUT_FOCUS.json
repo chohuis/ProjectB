@@ -11,6 +11,11 @@
     {
       "value": 60,
       "type": "pitching_ovr_gte"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 157
     }
   ],
   "id": "EVT_UNIV_Y4_SCOUT_FOCUS",

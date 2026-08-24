@@ -776,19 +776,45 @@ export function applyEffectToProtagonist(
   const clamp = (v: number) => Math.max(0, Math.min(100, v));
   const clampStat = (v: number) => Math.max(1, Math.min(99, v));
 
+  // ── 보상 대상: 투구 / 타격 (2026-08-24) ──────────────────────
+  //
+  // 🔴 **예전엔 투구만 건드렸다.** `xp`·`statDelta`가 `pitchingXP`·`pitching`
+  // 고정이라 **타자 주인공이 이벤트로 성장할 길이 아예 없었다.**
+  //
+  // 키 이름으로 가른다:
+  //   "command"          → 투구 (예전 그대로. 데이터 296곳이 이 형태다)
+  //   "pitching.command" → 투구 (명시)
+  //   "batting.contact"  → 타격
+  //
+  // ⚠ **접두사 없는 키를 타격으로 보내면 안 된다.** `ovr`처럼 양쪽에 다 있는
+  //   이름이 있어서, 기존 데이터가 조용히 타격으로 새면 아무도 모른다.
   const pitchingXP = { ...p.pitchingXP };
+  const battingXP  = { ...p.battingXP };
   if (fx.xp) {
-    for (const [stat, amt] of Object.entries(fx.xp)) {
-      pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
+    for (const [key, amt] of Object.entries(fx.xp)) {
+      const [bucket, stat] = key.includes(".") ? key.split(".") : ["pitching", key];
+      if (bucket === "batting") {
+        (battingXP as Record<string, number>)[stat] = ((battingXP as Record<string, number>)[stat] ?? 0) + amt;
+      } else {
+        pitchingXP[stat as PitchingStatKey] = (pitchingXP[stat as PitchingStatKey] ?? 0) + amt;
+      }
     }
   }
 
   const pitching = { ...p.pitching };
+  // ⚠ **`batting`이 없는 세이브가 있다.** 옛 저장·검사 픽스처가 그렇다 —
+  // 스프레드가 undefined를 만나면 빈 객체가 되고, 그 상태로 `stat in target`을
+  // 물으면 조용히 아무것도 안 하는 대신 **위쪽에서 터진다.** 빈 객체로 받는다
+  const batting  = { ...(p.batting ?? {}) } as typeof p.batting;
   if (fx.statDelta) {
-    for (const [stat, amt] of Object.entries(fx.statDelta)) {
-      if (stat !== "ovr" && stat in pitching) {
-        (pitching as Record<string, number>)[stat] =
-          clampStat((pitching as Record<string, number>)[stat] + amt);
+    for (const [key, amt] of Object.entries(fx.statDelta)) {
+      const [bucket, stat] = key.includes(".") ? key.split(".") : ["pitching", key];
+      // `ovr`은 파생값이라 못 바꾼다 — 능력치에서 계산된다
+      if (stat === "ovr") continue;
+      const target = bucket === "batting" ? batting : pitching;
+      if (stat in target) {
+        (target as unknown as Record<string, number>)[stat] =
+          clampStat((target as unknown as Record<string, number>)[stat] + amt);
       }
     }
   }
@@ -804,7 +830,9 @@ export function applyEffectToProtagonist(
     diligence:  Math.max(1, Math.min(99,  p.diligence  + (fx.diligenceDelta  ?? 0))),
     tags:       fx.addTag ? [...new Set([...p.tags, ...fx.addTag])] : p.tags,
     pitchingXP,
+    battingXP,
     pitching,
+    batting,
   };
 }
 

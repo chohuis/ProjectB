@@ -65,3 +65,46 @@ describe("이벤트 규칙 ↔ 템플릿 배선", () => {
     expect(ids).not.toContain("EVT_TRADE_CONFIRMED");
   });
 });
+
+/**
+ * **정본이 둘이 되는 것을 막는다** (2026-08-24).
+ *
+ * 이 프로젝트가 반복해 겪은 형태다 — `CLAUDE.md`: *"코드에 표를 두 번 적지 말 것 —
+ * Phase 7에서 이 결함만 15건 나왔다."*
+ *
+ * 풀의 `eventIds`가 정확히 그랬다. 엔진은 규칙 자신의 `poolId`로 풀을
+ * 만들고(`eventEngine` §3 `poolRuleMap`) 그 목록을 **안 읽는데**, 목록은
+ * 22/2/60이고 실제 규칙은 50/13/109였다 — **절반만 담긴 채 아무도 모르게
+ * 낡아 있었다.** 지웠고, 다시 생기면 여기서 잡는다.
+ */
+describe("정본이 하나인가", () => {
+  it("풀이 자기 이벤트 목록을 따로 들지 않는다", () => {
+    const bad: string[] = [];
+    for (const p of ["media", "social", "team_life"]) {
+      const j = JSON.parse(readFileSync(join(MASTER, "events/pools", `${p}.json`), "utf8"));
+      if (j.eventIds !== undefined) bad.push(`${j.id}: eventIds ${j.eventIds.length}건`);
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it("아무 규칙도 안 쓰는 템플릿이 없다", () => {
+    const used = new Set<string>();
+    for (const lane of ["mandatory", "conditional", "random"]) {
+      for (const p of walk(join(MASTER, "events", lane))) {
+        const r = JSON.parse(readFileSync(p, "utf8")) as Rule;
+        if (r.messageTemplateId) used.add(r.messageTemplateId);
+        if (r.decisionTemplateId) used.add(r.decisionTemplateId);
+      }
+    }
+    const msgs = JSON.parse(readFileSync(join(MASTER, "messages/templates.json"), "utf8"))
+      .templates as { id: string }[];
+    const decs = JSON.parse(readFileSync(join(MASTER, "messages/decision_templates.json"), "utf8"))
+      .decisions as { id: string }[];
+
+    // 고아는 화면에 닿을 길이 없다 — 쓸 생각이면 규칙을 잇고, 아니면 지운다
+    expect([
+      ...msgs.filter((t) => !used.has(t.id)).map((t) => `msg:${t.id}`),
+      ...decs.filter((d) => !used.has(d.id)).map((d) => `dec:${d.id}`),
+    ]).toEqual([]);
+  });
+});

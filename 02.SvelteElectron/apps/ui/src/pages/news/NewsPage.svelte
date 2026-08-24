@@ -35,6 +35,23 @@
   let selectedId: string | null = null;
   let sortAsc = false;
 
+  /**
+   * **목록을 다 그리지 않는다** (2026-08-23).
+   *
+   * 예전엔 `{#each sorted as msg}`로 소식함 전부를 DOM에 올렸다. 상한이
+   * 200일 땐 견뎠지만 **500·1000으로 올릴 예정**이라 그대로 두면 노드가
+   * 그만큼 늘고, 필터를 바꿀 때마다 통째로 다시 그린다.
+   *
+   * 스크롤이 바닥에 닿으면 한 장씩 늘린다. 진짜 가상 스크롤(창 밖을 걷어내는
+   * 방식)은 **항목 높이가 제각각이라**(제목 길이·미리보기 줄수) 높이 계산이
+   * 필요한데, 그 복잡도를 살 만큼 이득이 크지 않다.
+   *
+   * ⚠ 필터·정렬이 바뀌면 되돌린다. 안 그러면 300장 펼친 상태에서 필터를
+   *   좁혔을 때 몇 건 안 되는 목록에 빈 여백만 남는다.
+   */
+  const PAGE = 60;
+  let shown = PAGE;
+
   $: msgs = $gameStore.mailbox;
   $: p = $gameStore.protagonist;
 
@@ -63,6 +80,20 @@
   $: pendingMsgs = filtered.filter((m) => m.decision?.selectedOptionId === null);
   $: rest    = filtered.filter((m) => !m.decision || m.decision.selectedOptionId !== null);
   $: sorted  = [...pendingMsgs, ...(sortAsc ? [...rest].reverse() : rest)];
+
+  // 필터·정렬이 바뀌면 처음부터. 안 그러면 좁힌 목록에 빈 여백만 남는다.
+  // (`if (activeFilter || ...)`로 쓰면 조건처럼 보이지만 늘 참이라 거짓말이다)
+  $: activeFilter, sortAsc, (shown = PAGE);
+
+  $: visible = sorted.slice(0, shown);
+  $: hasMore = sorted.length > shown;
+
+  /** 바닥 근처면 한 장 더 — 가로 스크롤은 안 본다 */
+  function onListScroll(e: Event): void {
+    if (!hasMore) return;
+    const el = e.currentTarget as HTMLElement;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 200) shown += PAGE;
+  }
 
   $: selected = selectedId ? msgs.find((m) => m.id === selectedId) ?? null : null;
 
@@ -185,11 +216,11 @@
         </div>
       </header>
 
-      <ul class="list">
+      <ul class="list" on:scroll={onListScroll}>
         {#if sorted.length === 0}
           <li class="empty">표시할 소식이 없습니다.</li>
         {:else}
-          {#each sorted as msg (msg.id)}
+          {#each visible as msg (msg.id)}
             {@const cat = categoryMeta(msg.category)}
             {@const isPending = msg.decision?.selectedOptionId === null}
             <li>
@@ -216,6 +247,13 @@
               </button>
             </li>
           {/each}
+          {#if hasMore}
+            <li class="more-row">
+              <button class="more" type="button" on:click={() => (shown += PAGE)}>
+                {Math.min(PAGE, sorted.length - shown)}건 더 · 남은 {sorted.length - shown}
+              </button>
+            </li>
+          {/if}
         {/if}
       </ul>
     </section>
@@ -388,6 +426,13 @@
   }
   .list > li { min-width: 0; }
   .empty { color: var(--ink-mute); font-size: 13px; padding: 14px 2px; }
+  .more-row { display: flex; justify-content: center; }
+  .more {
+    width: 100%; padding: 8px; cursor: pointer;
+    background: transparent; border: 1px dashed var(--line); border-radius: 8px;
+    color: var(--ink-mute); font-size: 12px;
+  }
+  .more:hover { color: var(--ink); border-color: var(--ink-mute); }
 
   .item {
     width: 100%; text-align: left; cursor: pointer;

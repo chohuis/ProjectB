@@ -1,4 +1,5 @@
 import type { Condition, EventContext } from "../types/event";
+import { resolveNumber, resolvePath } from "./eventPaths";
 import type { PitcherSeasonStats } from "../types/save";
 
 // ── 조건 단일 평가 ─────────────────────────────────────────────
@@ -176,6 +177,41 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
 
     case "academic_warning_gte":
       return (schoolState?.academicWarningLevel ?? 0) >= cond.value;
+
+    // ── 일반 조건 (2026-08-24) ───────────────────────────────────
+    // 쓸 수 있는 경로는 `eventPaths.ts`가 정본이다. 모르는 경로면 거기서 던진다.
+    //
+    // ⚠ **값이 없는 것과 경로가 틀린 것은 다르다.** 안 다쳤으면
+    // `injury.rehabPhase`는 `undefined`고 비교는 false — 그게 맞다.
+    // 경로 자체가 틀린 건 결함이라 던진다.
+    case "num_gte": {
+      const v = resolveNumber(ctx, cond.path);
+      return v !== undefined && v >= cond.value;
+    }
+
+    case "num_lte": {
+      const v = resolveNumber(ctx, cond.path);
+      return v !== undefined && v <= cond.value;
+    }
+
+    case "eq":
+      return resolvePath(ctx, cond.path) === cond.value;
+
+    case "neq":
+      return resolvePath(ctx, cond.path) !== cond.value;
+
+    // ── 관계도 ───────────────────────────────────────────────────
+    // 같은 종류가 여럿이면(동료) **가장 높은 값**을 본다 — "친한 동료가 있는가"가
+    // 이야기가 묻는 것이지 평균이 아니다.
+    case "relation_gte":
+    case "relation_lte": {
+      const rows = (ctx.relations ?? []).filter((r) => r.kind === cond.kind);
+      if (rows.length === 0) return false;
+      const best = cond.type === "relation_gte"
+        ? Math.max(...rows.map((r) => r.value))
+        : Math.min(...rows.map((r) => r.value));
+      return cond.type === "relation_gte" ? best >= cond.value : best <= cond.value;
+    }
   }
 
   // 🔴 **여기 없으면 조용히 false가 된다.**

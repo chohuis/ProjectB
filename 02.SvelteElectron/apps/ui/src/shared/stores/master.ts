@@ -15,6 +15,7 @@ import { buildMarkIndex } from "../utils/teamMark";
 import { primeForeignRules } from "../utils/foreignSlots";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
+import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -473,6 +474,9 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   money_gte: ["value"], money_lte: ["value"],
   diligence_gte: ["value"], diligence_lte: ["value"],
   popularity_gte: ["value"], popularity_lte: ["value"],
+  num_gte: ["path", "value"], num_lte: ["path", "value"],
+  eq: ["path", "value"], neq: ["path", "value"],
+  relation_gte: ["kind", "value"], relation_lte: ["kind", "value"],
   injured: ["value"], injury_severity: ["severity"],
   injury_weeks_gte: ["value"], injury_count_gte: ["value"],
   season_injury_count_gte: ["value"], had_surgery: ["value"],
@@ -492,6 +496,19 @@ function assertConditions(ruleId: string, conditions: any[]): void {
     if (want === undefined) {
       throw new Error(`[master] ${ruleId}: 모르는 조건 타입 "${type}" — ${JSON.stringify(c)}`);
     }
+    // 🔴 **경로는 표에 있어야 한다.** 필드가 채워져 있어도 경로가 오타면
+    // `resolvePath`가 던지는데, 그건 **이벤트가 실제로 평가될 때**다 —
+    // 조건이 안 맞는 주에는 안 불려서 몇 시즌 뒤에야 터진다.
+    // 로드에서 잡으면 그 자리에서 끝난다.
+    if ((type === "num_gte" || type === "num_lte") && typeof c.path === "string"
+        && !NUM_PATHS.has(c.path)) {
+      throw new Error(`[master] ${ruleId}: 모르는 경로 "${c.path}" — eventPaths.ts의 NUM_PATHS에 없다`);
+    }
+    if ((type === "eq" || type === "neq") && typeof c.path === "string"
+        && !EQ_PATHS.has(c.path) && !NUM_PATHS.has(c.path)) {
+      throw new Error(`[master] ${ruleId}: 모르는 경로 "${c.path}" — eventPaths.ts의 EQ_PATHS에 없다`);
+    }
+
     for (const k of want) {
       if (c[k] === undefined) {
         throw new Error(
@@ -530,10 +547,18 @@ function parseEventRule(raw: Record<string, any>): EventRule {
 
   assertConditions(String(raw.id ?? "(id 없음)"), conditions);
 
+  // 등급은 셋뿐이다. 오타를 조용히 `ambient`로 떨어뜨리면 그 이벤트가
+  // 왜 안 뜨는지 아무도 못 찾는다 — 조건 필드에서 이미 겪은 형태다
+  const TIERS = ["urgent", "important", "ambient"];
+  if (raw.tier !== undefined && !TIERS.includes(raw.tier)) {
+    throw new Error(`[master] ${raw.id}: 모르는 tier "${raw.tier}" — ${TIERS.join("·")} 중 하나여야 한다`);
+  }
+
   return {
     id: String(raw.id ?? ""),
     title: String(raw.title ?? raw.id ?? ""),
     type: (raw.type as EventRule["type"]) ?? "random",
+    tier: raw.tier as EventRule["tier"] | undefined,
     category: String(raw.category ?? ""),
     priority: Number(raw.priority ?? 0),
     oncePolicy: (raw.oncePolicy as EventRule["oncePolicy"]) ?? "repeatable",
@@ -604,7 +629,7 @@ function parseEventPool(raw: Record<string, any>): EventPool {
       value: Number(raw.baseRoll?.value ?? raw.baseRollValue ?? 0),
     },
     maxPicksPerWeek: Number(raw.maxPicksPerDay ?? raw.maxPicksPerWeek ?? 1),
-    eventIds: Array.isArray(raw.eventIds) ? (raw.eventIds as string[]) : [],
+
   };
 }
 

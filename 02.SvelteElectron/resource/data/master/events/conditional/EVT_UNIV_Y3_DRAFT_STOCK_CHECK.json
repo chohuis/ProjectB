@@ -11,6 +11,16 @@
     {
       "value": 40,
       "type": "season_k_gte"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 105
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 156
     }
   ],
   "id": "EVT_UNIV_Y3_DRAFT_STOCK_CHECK",

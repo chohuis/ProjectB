@@ -59,7 +59,29 @@ export type Condition =
   | { type: "popularity_gte";  value: number }        // 인기도 이상 (0~100)
   | { type: "popularity_lte";  value: number }        // 인기도 이하
 
-  // ── 부상 (2026-08-22) ────────────────────────────────────────
+  // ── 일반 조건 (2026-08-24) ───────────────────────────────────
+  // **필드마다 조건 타입 하나**를 만들던 걸 여기서 멈춘다. 45종까지 그렇게
+  // 늘렸는데 새 축이 생길 때마다 평가기·이 유니온·`CONDITION_FIELDS`·문서
+  // 넷을 같이 고쳐야 했고, 그 넷이 어긋나는 게 이 트랙이 두 번 겪은 결함이다.
+  //
+  // 쓸 수 있는 경로는 `utils/eventPaths.ts`의 표가 정본이고, **모르는 경로는
+  // 던진다** — 오타가 조용히 false가 되면 안 된다.
+  //
+  //   { "type": "num_gte", "path": "batting.contact", "value": 60 }
+  //   { "type": "eq",      "path": "currentRole",     "value": "1선발" }
+  | { type: "num_gte";  path: string; value: number }
+  | { type: "num_lte";  path: string; value: number }
+  | { type: "eq";       path: string; value: string | number | boolean }
+  | { type: "neq";      path: string; value: string | number | boolean }
+
+  // ── 관계도 (2026-08-24) ──────────────────────────────────────
+  // 🟡 **다른 조건과 성격이 다르다.** 관계는 slot.db에 있고 조회가 비동기인데
+  // 평가기는 동기라, `EventContext.relations`에 **미리 실어 줘야** 한다.
+  // 안 실리면 전부 false다(고교 등 관계가 없는 단계에선 그게 맞다).
+  | { type: "relation_gte"; kind: import("./relationship").RelationKind; value: number }
+  | { type: "relation_lte"; kind: import("./relationship").RelationKind; value: number }
+
+  // ── 부상 (2026-08-23) ────────────────────────────────────────
   // 부상은 이 게임의 중심 사건인데 **이벤트가 그걸 못 봤다.** 세이브에
   // `injury`·`injuryHistory`·`seasonHealth`가 다 있는데 조건이 하나도 없어서,
   // "다치고 돌아온 뒤"·"수술까지 갔던 몸"·"올해만 세 번째" 같은 이야기를
@@ -91,12 +113,39 @@ export type EventOncePolicy =
   | "once_per_stage_year"// 커리어 단계(고교/대학 등) 연도당 1회
   | "once_per_career";   // 커리어 전체 1회
 
+/**
+ * **중요도 등급** (2026-08-23).
+ *
+ * `type`은 "어떻게 발동하는가"(달력·조건·확률)이고 이건 **"얼마나 중요한가"**다.
+ * 예전엔 둘이 섞여 있었다 — `mandatory` 105건이 전부 달력 일정인데 상한이
+ * 없어서 사실상 최우선 등급 노릇을 했고, **부상처럼 지금 벌어진 일은 전부
+ * `conditional`로 밀려나 주당 1칸을 두고 분위기 소식과 다퉜다.**
+ *
+ * `priority`(45~900, 값 종류 59개)로 그걸 표현하려던 게 실패했다. 사람이
+ * "이건 몇 점?"에 답할 근거가 없으니 각자 감으로 적었고, 그래서 **평생 한 번뿐인
+ * 이야기가 85점, 매주 오는 피로 알림이 900점**이 됐다(2026-08-23 실측).
+ *
+ * | 등급 | 주당 1건 상한 | 무엇 |
+ * |---|---|---|
+ * | `urgent` | **안 걸린다 — 즉시** | 지금 벌어진 일. 부상·수술·방출·트레이드 통보 |
+ * | `important` | 대기열 **앞** | 놓치면 끝. 진로·계약·일회성 서사 |
+ * | `ambient` | 남는 칸 | 반복되는 상태·분위기 |
+ *
+ * ⚠ **비워 두면 `oncePolicy`로 추론한다** — `repeatable`이면 `ambient`,
+ * 아니면 `important`. 지금 데이터가 그 규칙으로 돌고 있어서, 등급을 안 적으면
+ * **동작이 하나도 안 바뀐다.** 추론은 임시방편이다: 발동 정책은 중요도가
+ * 아니고 둘이 우연히 상관됐을 뿐이라, 등급을 적어 갈아타는 게 목표다.
+ */
+export type EventTier = "urgent" | "important" | "ambient";
+
 export interface EventRule {
   id: string;
   title: string;
   type: "mandatory" | "conditional" | "random";
   category: string;
   priority: number;                          // 높을수록 먼저 처리
+  /** 중요도. 비우면 `oncePolicy`로 추론한다 (위 주석) */
+  tier?: EventTier;
   oncePolicy: EventOncePolicy;
   cooldownWeeks?: number;                    // 재발생 금지 주차 수
   conditions?: Condition[];                  // 모두 AND 조건
@@ -112,7 +161,11 @@ export interface EventPool {
   description?: string;
   baseRoll: { mode: "percent"; value: number }; // 이 풀을 이번 주에 검사할 확률
   maxPicksPerWeek: number;                   // 주당 최대 선택 수
-  eventIds: string[];                        // 풀에 속한 이벤트 ID 목록
+  //
+  // ⚠ **`eventIds`가 있었는데 2026-08-24에 지웠다.** 엔진은 규칙 자신의
+  // `poolId`로 풀을 만들고(`eventEngine` §3 `poolRuleMap`) 그 목록을 **안 읽었다.**
+  // 그런데 목록은 22/2/60이고 실제 규칙은 50/13/109라 **절반만 담긴 두 번째
+  // 정본**이었다. 정본은 규칙 파일의 `poolId` 하나다.
 }
 
 // ── 메시지 템플릿 ──────────────────────────────────────────────
@@ -182,4 +235,9 @@ export interface EventContext {
    * 세이브에 남는 값이라 로드해도 같은 문장이 이어서 나오지 않는다
    */
   sentenceMemory?: Record<string, number>;
+  /**
+   * 관계도 — **비동기라 미리 실어 준다.** `slot.db`에서 읽는 값이고
+   * `evaluateCondition`은 동기다. 안 실으면 관계 조건이 전부 false가 된다.
+   */
+  relations?: import("./relationship").Relationship[];
 }

@@ -5,9 +5,5 @@
     "mode": "percent",
     "value": 22
   },
-  "maxPicksPerWeek": 1,
-  "eventIds": [
-    "EVT_RAND_FRIEND_VISIT",
-    "EVT_RAND_SOCIAL_MEDIA_MENTION"
-  ]
+  "maxPicksPerWeek": 1
 }

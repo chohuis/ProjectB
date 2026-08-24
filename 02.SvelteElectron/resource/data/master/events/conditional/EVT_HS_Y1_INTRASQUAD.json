@@ -6,6 +6,10 @@
   "oncePolicy": "once_per_career",
   "conditions": [
     {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
       "type": "grade",
       "value": 1
     },
