@@ -2487,6 +2487,10 @@ function createGameStore() {
         const span = (offRules.faRules as { perfSpan?: number } | undefined)?.perfSpan ?? 0;
         // 재계약 성적 배수 — FA보다 좁다
         const rSpan = (offRules.faRules as { renewPerfSpan?: number } | undefined)?.renewPerfSpan ?? 0;
+        // 입찰 상한의 하한 — 팀 총연봉 대비. 0이면 하한이 없다(예전 동작).
+        // 🔴 예산 지수가 0.8 미만인 구단은 상한이 **음수**였다(cap < 총연봉).
+        //    자세한 건 Rust `fa_bid_floor_ratio` 주석에 있다.
+        const floor = (offRules.faRules as { bidFloorRatio?: number } | undefined)?.bidFloorRatio ?? 0;
         if (!min) return undefined;
         const { buildSalaryIndex } = await import("../repo/newGameV3");
         const idx = buildSalaryIndex(get(masterStore).teams);
@@ -2500,7 +2504,8 @@ function createGameStore() {
           // 지수 1.0인 팀이 지금 총연봉의 1.25배까지 쓸 수 있다
           cap[tid] = Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
         }
-        return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span, renewPerfSpan: rSpan };
+        return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span, renewPerfSpan: rSpan,
+                 bidFloorRatio: floor };
       })();
       // 🔴 **그해 성적 → 방출 판정.** Rust는 `recent_performance_rating`에
       // 능력치를 넣고 있었고 그 능력치마저 생성 시점 값이라, 사실상 "태어날

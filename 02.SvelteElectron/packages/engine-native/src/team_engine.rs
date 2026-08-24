@@ -636,6 +636,10 @@ pub struct EvalFaBidParams {
     pub roster_needs: Vec<String>,
     pub salary_cap: i64,
     pub current_payroll: i64,
+    /// 상한의 하한 — 총연봉에 곱한다. 0이면 없다.
+    /// 자세한 건 `sim_types::OffseasonParams::fa_bid_floor_ratio` 주석에 있다.
+    #[serde(default)]
+    pub bid_floor_ratio: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -669,7 +673,14 @@ pub fn eval_fa_bid(p: EvalFaBidParams) -> FaBidResult {
     if profile.stability < 40.0 && player.age > 32 { interest -= 20.0; }
 
     let flex = (p.salary_cap - p.current_payroll) as f64 / p.salary_cap as f64;
-    if player.demand_salary as f64 > flex * p.salary_cap as f64 * 0.35 { interest -= 25.0; }
+    // 🔴 **상한에 하한을 둔다.** 예산 지수가 낮은 구단은 이 값이 음수라
+    //    관심도가 항상 -25였고 입찰도 항상 최저액이었다. 하한을 둬야
+    //    가난한 구단도 자기 급의 선수는 노린다.
+    //    ⚠ **관심도와 입찰액이 같은 상한을 봐야 한다** — 한쪽만 고치면
+    //      "부르긴 하는데 관심이 없어서 안 뽑히는" 갈래가 생긴다.
+    let bid_cap = (flex * p.salary_cap as f64 * 0.35)
+        .max(p.current_payroll as f64 * p.bid_floor_ratio);
+    if player.demand_salary as f64 > bid_cap { interest -= 25.0; }
 
     if let Some(pers) = &player.personality {
         let is_foreign = player.current_league != "LEAGUE_KBL";
@@ -680,7 +691,7 @@ pub fn eval_fa_bid(p: EvalFaBidParams) -> FaBidResult {
     let noise = (rng.gen::<f64>() * 2.0 - 1.0) * scouting_noise;
     let win_mult = 1.0 + (profile.win_now_pressure - 50.0) / 100.0 * 0.3;
     let raw_bid = (player.market_value as f64 * (1.0 + noise) * win_mult) as i64;
-    let bid_salary = raw_bid.min((flex * p.salary_cap as f64 * 0.35) as i64).max(1500);
+    let bid_salary = raw_bid.min(bid_cap as i64).max(1500);
 
     let bid_years = if profile.stability > 65.0 { player.demand_years.min(4) }
                     else if profile.stability < 35.0 { 1_i32.max(player.demand_years - 1) }

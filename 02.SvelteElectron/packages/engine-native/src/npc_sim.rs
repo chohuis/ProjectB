@@ -1851,6 +1851,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                         roster_needs: needs,
                         salary_cap: cap,
                         current_payroll: payroll,
+                        bid_floor_ratio: params.fa_bid_floor_ratio,
                     });
                     if bid.interest_level < params.fa_bid_interest_min { continue; }
                     // 1차는 최고 제시액으로 간다 — 선수의 선택은 2차다
