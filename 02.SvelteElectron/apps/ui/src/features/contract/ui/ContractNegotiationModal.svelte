@@ -341,7 +341,6 @@
   .dur-btn.active { background:var(--line); border-color:var(--ink-mute); color:var(--ink); }
 
   .opt-row { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink); }
-  .opt-row label { display:flex; align-items:center; gap:6px; }
   .opt-btns { display:flex; gap:4px; }
   .opt-btn { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:6px; padding:4px 10px; cursor:pointer; font-size:12px; }
   .opt-btn.active { background:var(--line); border-color:var(--ink-mute); color:var(--ink); }

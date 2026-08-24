@@ -138,7 +138,6 @@
   .rows button.selected { border-color:var(--ink); background:var(--line); }
   .rows button span { color:var(--ink); font-size:12px; }
   .detail { display:grid; grid-template-rows:auto auto auto auto minmax(0,1fr) auto; gap:8px; }
-  .meta { margin:0; color:var(--ink); font-size:12px; }
   .profile { border:1px solid var(--line); border-radius:8px; background:var(--panel-sunk); padding:8px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
   .profile div { border:1px solid var(--line); border-radius:6px; background:var(--panel-sunk); padding:6px; display:grid; gap:2px; }
   .profile .wide { grid-column:1 / -1; }

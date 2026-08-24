@@ -1218,11 +1218,6 @@
     margin: -14px -14px 8px;
   }
 
-  .tli-meta {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
 
   .loading-msg {
     color: var(--ink-mute);
@@ -1230,11 +1225,6 @@
   }
 
   /* ── 상세 패널 ── */
-  .detail-panel {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    gap: 12px;
-  }
 
   .detail-placeholder {
     height: 100%;
@@ -1327,23 +1317,11 @@
   .rec-gold   { color: var(--warn); }
   .rec-silver { color: var(--ink); }
   .rec-bronze { color: var(--warn); }
-  .rec-normal { color: var(--ink); }
   .rec-dim    { color: var(--ink-mute); }
   .rec-reg { color: var(--ink-mid); }
   .rec-note { color: var(--ink-mute); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* ── 프로필 열 (삭제 안 하고 유지 - 다른 곳에서 사용 가능) ── */
-  .profile-col {
-    background: var(--panel-sunk);
-    border: 1px solid var(--panel-sunk);
-    border-radius: 10px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-height: 0;
-    overflow-y: auto;
-  }
 
   .style-badge {
     display: inline-block;
@@ -1379,11 +1357,6 @@
     color: var(--ink-mid);
   }
 
-  .strength-section {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
 
   .section-label {
     font-size: 11px;
@@ -1582,38 +1555,10 @@
   }
 
   /* ── 요약 카드 ── */
-  .summary-card {
-    background: var(--panel-sunk);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 20px;
-    display: grid;
-    gap: 0;
-  }
 
-  .summary-row {
-    display: grid;
-    grid-template-columns: 100px minmax(0, 1fr);
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--panel-sunk);
-    align-items: center;
-  }
 
-  .summary-row:last-child {
-    border-bottom: 0;
-  }
 
-  .key {
-    font-size: 13px;
-    color: var(--ink-mid);
-  }
 
-  .val {
-    font-size: 15px;
-    color: var(--ink);
-    font-weight: 600;
-  }
 
   /* ── 하단 네비 ── */
   .nav {
@@ -1671,21 +1616,7 @@
     background: var(--ok);
   }
 
-  .pitch-summary {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
 
-  .pitch-chip {
-    background: var(--panel-sunk);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 3px 9px;
-    font-size: 13px;
-    color: var(--ink);
-    font-weight: 600;
-  }
 
   /* ══ 4단계 확인 — 선수 카드 ══ */
   .step4-layout { display: flex; flex-direction: column; gap: 18px; align-items: center; }
