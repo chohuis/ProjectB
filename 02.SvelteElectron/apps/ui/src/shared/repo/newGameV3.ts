@@ -3,6 +3,7 @@
 // 사전 생성 데이터(people_*.json, entities/players/*) 를 전혀 읽지 않는다.
 
 import { slotRepo, type RepoNpc } from "./slotRepo";
+import { buildPastStandings } from "./seedPastStandings";
 import { generateDomesticStaff } from "./staffGen";
 import { ALL_TEAMS_BY_LEAGUE, HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
@@ -442,6 +443,25 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
       opts.slotId, worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules);
   } catch (e) {
     console.warn("[newGameV3] 과거 경력 생성 실패 — 이력 없이 시작", e);
+  }
+
+  // ── 과거 5년 순위 (A5) ────────────────────────────────────────
+  //
+  // 첫 시즌에 **역대 기록이 0건**이었다 — 리그 화면의 연도 선택이 비어 있고
+  // 역대 수상(A2)도 보여줄 과거가 없었다.
+  //
+  // **팀 순위만 만든다.** 선수 개인은 NPC 7,300명 × 5년 = 36,500행이라 비싸다.
+  // 팀은 238팀 × 5년 ≈ 1,190행으로 가볍다.
+  //
+  // ⚠ 실패해도 새 게임은 성립해야 한다 — 위 `seedCareerHistory`와 같은 규칙이다.
+  try {
+    const past = buildPastStandings(opts.allTeams ?? [], worldSeed, opts.seasonYear);
+    for (const [year, rows] of past) {
+      await window.projectB!.seasonSaveHistoryStandings(
+        JSON.stringify({ slotId: opts.slotId, seasonYear: year, rows }));
+    }
+  } catch (e) {
+    console.warn("[newGameV3] 과거 순위 생성 실패 — 연감 없이 시작", e);
   }
 
   return { slotId: opts.slotId, worldSeed, npcCount: npcs.length, staffCount: staff.length };
