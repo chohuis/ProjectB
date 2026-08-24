@@ -86,6 +86,10 @@ const rows = [];
       console.log(`  ${x.t.padEnd(22)} cap ${M(x.cap).padStart(8)} 총연봉 ${M(x.payroll).padStart(8)}`
         + ` flex ${x.flex.toFixed(3)} 상한 ${M(x.limit).padStart(8)}`);
     }
+    const lgPay = {};
+    for (const x of r.per) { const lg = x.t.split("_")[1]; (lgPay[lg] = lgPay[lg] || []).push(x.payroll); }
+    console.log("  리그별 총연봉(억): " + Object.entries(lgPay).map(([k, v]) =>
+      k + " " + v.length + "팀 중앙 " + (v.sort((a, b) => a - b)[v.length >> 1] / 10000).toFixed(0)).join(" · "));
     const neg = r.per.filter(x => x.raw < 0);
     const bound = r.per.filter(x => x.limit > x.raw);
     console.log("  하한 " + (r.floorRatio * 100).toFixed(1) + "% · 하한이 실제로 든 팀 " + bound.length
