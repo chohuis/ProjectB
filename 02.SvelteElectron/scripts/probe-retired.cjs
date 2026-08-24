@@ -38,5 +38,29 @@ const YEARS = Number(process.env.PF_YEARS || 5);
     const p = app.retiredProbe();
     console.log(`[끝] ${JSON.stringify(p)}`);
   } catch (e) { console.log(`[예외] ${e && e.message}`); }
+  // 로드 경로의 무게를 **DB에서 직접** 잰다 — 스토어는 boot 때 한 번만 로드를 탄다
+  try {
+    const fs2 = require("node:fs");
+    const hit = [];
+    const walk = (d) => { for (const f of fs2.readdirSync(d, { withFileTypes: true })) {
+      const fp = require("node:path").join(d, f.name);
+      if (f.isDirectory()) walk(fp); else if (f.name.endsWith(".db")) hit.push(fp); } };
+    walk(tmp);
+    const Database = require(require("node:path").join(process.cwd(), "node_modules/better-sqlite3"));
+    for (const f of hit) {
+      const db = new Database(f, { readonly: true });
+      let n = 0;
+      try { n = db.prepare("SELECT COUNT(*) c FROM npc").get().c; } catch { db.close(); continue; }
+      if (n === 0) { db.close(); continue; }
+      const kb = (x) => Math.round(JSON.stringify(x).length / 1024);
+      const all = db.prepare("SELECT * FROM npc").all();
+      const act = db.prepare("SELECT * FROM npc WHERE career_status != 'retired'").all();
+      const ret = db.prepare("SELECT npc_id, name, name_en, is_named, player_type, position, handedness, jersey_number, age, grade, school_id, graduation_year, nationality, career_status, current_league, current_team, pro_service_years FROM npc WHERE career_status = 'retired'").all();
+      console.log("[로드무게] npc " + n + "명 · 전 " + kb(all) + "KB → 후 " + (kb(act) + kb(ret))
+        + "KB (현역 " + kb(act) + " + 은퇴 " + kb(ret) + ") · 절감 "
+        + (100 - (kb(act) + kb(ret)) / kb(all) * 100).toFixed(1) + "%");
+      db.close();
+    }
+  } catch (e) { console.log("[로드무게] 못 쟀다: " + (e && e.message)); }
   await headless.cleanup(tmp);
 })();

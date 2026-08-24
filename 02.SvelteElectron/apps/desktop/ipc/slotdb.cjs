@@ -1084,7 +1084,33 @@ const commands = {
 
   // ---- 조회 ----
   getNpc(db, p) { return mapNpcRow(db.prepare("SELECT * FROM npc WHERE npc_id = ?").get(p.npcId)); },
-  getAllNpcs(db) { return db.prepare("SELECT * FROM npc").all().map(mapNpcRow); },
+  /**
+   * 로드용 NPC 목록.
+   *
+   * 🔴 **은퇴자는 가볍게 읽는다.** 예전엔 `SELECT * FROM npc`라 은퇴자의
+   *    능력치·성적·이력 블롭까지 전부 실렸다. 실측(씨앗 20260731): 3시즌 만에
+   *    7,332 → 9,765명이고 그중 **은퇴자가 3,472명(36%)**이다. 시즌당 +1,220명이라
+   *    10시즌이면 +12,200명이 된다.
+   *
+   * ⚠ **행 자체를 빼면 안 된다.** 관계도·커리어 결산이 `npcs`에서 `personId`로
+   *   이름을 찾는다 — 빼면 은퇴한 감독·동료가 **ID로 떨어진다.**
+   *   그래서 은퇴자는 **이름·소속만** 읽고 무거운 json 칼럼은 안 읽는다.
+   *
+   * 은퇴자에게 안 읽는 것: abilities · xp · form · emotion · injury · stats ·
+   *   highlights · career_history · personality
+   *   (은퇴한 사람의 구속을 쓰는 화면은 없다. 필요해지면 `getNpc`로 한 명씩 읽는다)
+   */
+  getAllNpcs(db) {
+    const active = db.prepare(
+      "SELECT * FROM npc WHERE career_status != 'retired'").all().map(mapNpcRow);
+    // 은퇴자 — 이름 표시에 필요한 것만. `mapNpcRow`가 없는 칼럼을 undefined로 두게 둔다
+    const retired = db.prepare(
+      "SELECT npc_id, name, name_en, is_named, player_type, position, handedness, "
+      + "jersey_number, age, grade, school_id, graduation_year, nationality, "
+      + "career_status, current_league, current_team, pro_service_years "
+      + "FROM npc WHERE career_status = 'retired'").all().map(mapNpcRow);
+    return active.concat(retired);
+  },
   getByLeague(db, p) {
     const sql = p.activeOnly
       ? "SELECT * FROM npc WHERE current_league = ? AND career_status = 'active'"

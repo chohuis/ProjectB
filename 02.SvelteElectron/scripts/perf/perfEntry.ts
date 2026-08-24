@@ -942,6 +942,10 @@ export function retiredProbe(): Record<string, number> {
     const k = n.careerStatus ?? "?";
     by[k] = (by[k] ?? 0) + 1;
   }
+  // 무게도 잰다 — 개수는 안 줄고 **바이트가 준다**
+  by["KB"] = Math.round(JSON.stringify(rows).length / 1024);
+  const ret = rows.filter((n) => n.careerStatus === "retired");
+  by["은퇴KB"] = Math.round(JSON.stringify(ret).length / 1024);
   return by;
 }
 
