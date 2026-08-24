@@ -111,3 +111,49 @@ describe("경로 조건", () => {
     expect(EQ_PATHS.size).toBeGreaterThan(20);
   });
 });
+
+/**
+ * **지금 리그에서 몇 년째인가** — 해외 진출 서사의 축.
+ *
+ * 총 프로 연차로는 "낯선 리그 첫해"를 못 쓴다. 5년차에 ABL로 가도 여전히
+ * 5년차라, ABL 이벤트가 KBL 이벤트의 복사본이 된다.
+ *
+ * ⚠ 새 상태를 안 만들고 `careerRecords`에서 유도한다 — 주인공 리그 이동은
+ * `careerEvents`에 안 남기 때문이다(NPC만 남는다).
+ */
+describe("leagueYears", () => {
+  const withRecs = (leagueId: string, recs: { year: number; leagueId: string }[]) =>
+    ctx({ protagonist: proto({ leagueId, careerRecords: recs } as unknown as Partial<ProtagonistSave>) });
+
+  it("기록이 없으면 1년차 — 진입 첫 시즌", () => {
+    expect(ev({ type: "num_lte", path: "leagueYears", value: 1 }, withRecs("LEAGUE_ABL", []))).toBe(true);
+  });
+
+  it("같은 리그가 이어지면 센다", () => {
+    const c = withRecs("LEAGUE_ABL", [
+      { year: 2030, leagueId: "LEAGUE_ABL" },
+      { year: 2031, leagueId: "LEAGUE_ABL" },
+    ]);
+    expect(ev({ type: "num_gte", path: "leagueYears", value: 3 }, c)).toBe(true);
+    expect(ev({ type: "num_gte", path: "leagueYears", value: 4 }, c)).toBe(false);
+  });
+
+  it("🔴 리그를 옮기면 다시 1년차 — 총 연차와 다르다", () => {
+    const c = withRecs("LEAGUE_ABL", [
+      { year: 2028, leagueId: "LEAGUE_KBL" },
+      { year: 2029, leagueId: "LEAGUE_KBL" },
+      { year: 2030, leagueId: "LEAGUE_KBL" },
+    ]);
+    expect(ev({ type: "num_lte", path: "leagueYears", value: 1 }, c)).toBe(true);
+  });
+
+  it("떠났다 돌아오면 연속 구간만 센다", () => {
+    const c = withRecs("LEAGUE_KBL", [
+      { year: 2028, leagueId: "LEAGUE_KBL" },
+      { year: 2029, leagueId: "LEAGUE_ABL" },
+      { year: 2030, leagueId: "LEAGUE_KBL" },
+    ]);
+    expect(ev({ type: "num_lte", path: "leagueYears", value: 2 }, c)).toBe(true);
+    expect(ev({ type: "num_gte", path: "leagueYears", value: 3 }, c)).toBe(false);
+  });
+});
