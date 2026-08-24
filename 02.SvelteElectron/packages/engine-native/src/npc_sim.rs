@@ -3546,7 +3546,12 @@ fn apply_weekly_aging_bat(
 }
 
 pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowthResult {
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if params.seed != 0 {
+        Box::new(LcgRand::new(params.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let phase = params.current_phase.as_str();
 
     // 팀 컨텍스트 맵

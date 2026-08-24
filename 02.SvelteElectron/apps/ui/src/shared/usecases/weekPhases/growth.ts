@@ -4,6 +4,7 @@ import { seasonStore, npcLiveStatsStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { getLeagueRadius } from "../../utils/radiusGate";
+import { seedOf } from "../../utils/seedOf";
 import { slotRepo } from "../../repo/slotRepo";
 import {
   facilityTierOf, facilityFactorOf, loadFacilityFactors,
@@ -173,6 +174,9 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
       perfData,
       currentPhase,
       monthIndex: 0,  // 주간 모드에서는 사용 안 함
+      // ⚠ **씨앗을 넘긴다.** 성장이 능력치를 만들고 능력치가 성적을
+      //   만든다 — 안 넘기면 같은 세이브도 실행마다 다른 리그가 된다.
+      seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "npc-growth"),
       pitchCatalogIds: m.pitchCatalog.map((p) => p.id),
       // 성장 속도 정본은 규칙 파일이다 — Rust의 표는 폴백일 뿐이다
       xpRules: growthXpRules(),

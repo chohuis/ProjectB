@@ -1073,6 +1073,12 @@ pub struct NpcLiveOutput {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MonthlyNpcGrowthParams {
+    /// 판정 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// ⚠ 성장은 **능력치**를 만들고 능력치가 성적을 만든다 — 씨앗이 없으면
+    ///   같은 세이브가 실행마다 다른 리그로 갈라진다.
+    #[serde(default)]
+    pub seed: u32,
     pub npcs: Vec<NpcLiveInput>,
     pub team_contexts: Vec<NpcTeamContext>,
     #[serde(default)]
