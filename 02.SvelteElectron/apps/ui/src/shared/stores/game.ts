@@ -2650,6 +2650,12 @@ function createGameStore() {
       const militaryEnlistedSports: string[] = [];
       const militaryEnlistedGeneral: string[] = [];
       const militaryDischargedNames: string[] = [];
+      // 🔴 **전역의 정본은 Rust다** (사용자 확정 2026-08-24).
+      //    엔진이 `military_discharge_year <= season_year`로 상태를 바꾸고,
+      //    여기서는 그 **변화를 감지해 기록만** 남긴다.
+      //    예전엔 아래에서 TS가 `enlistYear + 2`로 **따로 계산**해서,
+      //    두 조건이 갈려 전역자가 43명이 됐다(상무 정원은 26).
+      const rustDischargedIds = new Set<string>();
       const dischargeRows: import("../types/save").LeagueTransactionRow[] = [];
       const _dischargeEntries: PlayerEventEntry[] = [];
       for (const n of result.npcs) {
@@ -2658,6 +2664,7 @@ function createGameStore() {
         const decIdx = nextNpcs.findIndex(d => d.npcId === n.npcId);
         if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
+          rustDischargedIds.add(n.npcId);
           const returnLeague = proLeagues.has(n.currentLeague) ? n.currentLeague : undefined;
           const _liveDis = _liveStats[n.npcId];
           const ovr = _liveDis?.pitching?.ovr ?? _liveDis?.batting?.ovr ?? 0;
@@ -2753,28 +2760,18 @@ function createGameStore() {
         }
 
         // 1. 전역: 2년 경과 모든 현역 선수 (top-level || 하위 호환 nested 체크)
-        const discharging = mNow.entities.filter(e =>
-          e.role === "player" &&
-          (e.militaryStatus === "현역" || e.details?.player?.militaryStatus === "현역") &&
-          e.details?.player?.militaryEnlistYear !== undefined &&
-          (seasonYear - (e.details.player.militaryEnlistYear ?? 0)) >= 2
-        );
+        // ⚠ **위에서 Rust가 이미 전역시킨 사람만 본다.**
+        //   예전엔 `enlistYear + 2`로 여기서 다시 계산했고, 그 조건이 Rust와
+        //   갈려 **같은 사람이 해마다 다시 전역자로 잡혔다**(43명 · 정원 26).
+        //   그 수가 상무 선발 Phase 1의 공백 목록으로 가서, 정원을 다 먹고
+        //   **Phase 2(OVR 순)가 안 돌게** 만들었다.
+        const discharging = mNow.entities.filter(e => rustDischargedIds.has(e.id));
         const dischargedIds = new Set<string>();
 
-        if (discharging.length > 0) {
-          discharging.forEach(e => dischargedIds.add(e.id));
-          const txRows = discharging.map(e => {
-            const op = e.details?.player;
-            return {
-              seasonYear, category: "military" as const,
-              playerId: e.id, playerName: e.name,
-              fromLeagueId: op?.originalLeagueId ?? e.leagueId,
-              detail: "전역",
-            };
-          });
-          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: txRows }));
-          autoLog(`[전역] 엔티티 ${discharging.length}명`);
-        }
+        // ⚠ 거래 기록은 **위에서 `dischargeRows`로 이미 남겼다** — 여기서 또 남기면
+        //   같은 전역이 두 번 쌓인다. 이 집합은 입대 후보 제외·공백 포지션에만 쓴다.
+        discharging.forEach(e => dischargedIds.add(e.id));
+        if (discharging.length > 0) autoLog(`[전역] 엔티티 ${discharging.length}명`);
 
         // 2. 체육부대 입대: 프로 소속 한국인 선수 후보.
         //
@@ -2840,9 +2837,17 @@ function createGameStore() {
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
                 maxTotal: Math.min(npcIntake, topRaw.topCandidates!.length),
                 maxPerTeam: milLimits.maxPerTeam,
-                // 🔴 **전역자 포지션.** 안 넘기면 엔진의 Phase 1(공백 메우기)이
+                // 🔴 **상무 전역자 포지션만.** 안 넘기면 Phase 1(공백 메우기)이
                 //    통째로 안 돌고 OVR 순으로만 뽑는다 — 상무가 포지션 균형을 잃는다.
+                //
+                // ⚠ **`militaryUnit === "sports"`로 거른다.** `military` 상태엔
+                //   체육부대와 **일반병이 같이** 들어 있다 — 실측 86명 중
+                //   상무 정원은 26이다. 안 거르면 일반병 전역자 포지션까지
+                //   상무 공백으로 읽혀 **Phase 1이 정원을 다 먹고 Phase 2(OVR 순)가
+                //   안 돌게** 된다(전역자 43 vs 정원 13).
+                //   일반병은 상무 소속이 아니니 그 자리가 빈 게 아니다.
                 vacatingPositions: discharging
+                  .filter(e => e.details?.player?.militaryUnit === "sports")
                   .map(e => (e.details?.player?.position ?? "") as string)
                   .filter(pos => pos !== ""),
               }))
