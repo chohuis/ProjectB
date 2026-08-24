@@ -8,6 +8,7 @@ import { createNewGameV3, activateLeagueV3, loadRosterRules } from "./newGameV3"
 import { hydrateFromRepo, saveStateToRepoNpc } from "./npcAdapter";
 import { setV3SlotActive, isV3SlotActive } from "./v3Mode";
 import { gameStore } from "../stores/game";
+import { resetWorldSeasonEndGuard } from "../usecases/seasonRollover";
 import { seasonStore } from "../stores/season";
 import { npcLiveStatsStore } from "../stores/npcLiveStats";
 import { masterStore } from "../stores/master";
@@ -147,6 +148,13 @@ export async function loadGameV3(slotId: string): Promise<boolean> {
   const season = await slotRepo.getSeason<SaveSeason>(slotId);
   if (!game || !season) throw new Error(`[loadGameV3] 슬롯 데이터 손상: ${slotId}`);
 
+  // 🔴 **시즌 종료 가드를 되돌린다.** `_lastWorldSeasonEndYear`는 모듈 지역
+  //    변수라 프로세스가 살아 있는 동안 남는다 — 앉은 자리에서 다른 슬롯을
+  //    불러오면 **앞 게임의 연도가 남아 그 해 시즌 종료가 통째로 스킵된다**
+  //    (순위·수상·오프시즌이 전부).
+  //    `resetWorldSeasonEndGuard`는 이걸 위해 만들어졌는데 **호출부가 0건**이었다.
+  //    ⚠ 헤드리스 계측은 매번 새 프로세스라 이 결함을 못 잡는다.
+  resetWorldSeasonEndGuard();
   gameStore.hydrateFromSlot(game, slotId);      // slim blob (npcs 없음)
   seasonStore.hydrateFromSlot(season);          // slim blob (npcLiveStats 없음)
   await hydrateStoresFromSlot(slotId);          // npcs·능력치는 npc 테이블에서
@@ -536,6 +544,9 @@ export interface StartNewGameV3Options {
 
 /** v3 새 게임: 스토어 초기화 → 시즌 생성 → 로스터 생성·슬롯 생성 → hydrate */
 export async function startNewGameV3(opts: StartNewGameV3Options): Promise<{ npcCount: number; worldSeed: number }> {
+  // 새 게임도 마찬가지다 — 앞 게임의 연도 가드가 남아 있으면
+  // 새 세계의 그 해가 스킵된다.
+  resetWorldSeasonEndGuard();
   gameStore.setCurrentSlotId(opts.slotId);
   gameStore.initNew(opts.protagonist);
   seasonStore.initSeason("LEAGUE_HIGHSCHOOL", opts.seasonYear, 52, []);
