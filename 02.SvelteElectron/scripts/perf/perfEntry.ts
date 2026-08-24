@@ -914,6 +914,71 @@ export function retirementProbe(): Record<string, unknown> {
  *
  * 연차 분포를 1군·2군으로 나눠 보면 가설이 바로 갈린다.
  */
+/**
+ * 리그별 나이·연차 분포 — **세계 생성 직후**를 재려고 만들었다.
+ *
+ * ⚠ 오프시즌 페이로드로 재면 이미 드래프트·콜업이 지나간 뒤다.
+ *   KBL과 JBL은 나이 범위가 20~37로 **같은데** 페이로드에선 중앙이 25 대 30이었다.
+ *   초기 생성이 다른 것인지 그 뒤 흐름이 다른 것인지는 여기서만 갈린다.
+ */
+/** 이 사람들에게 마지막에 무슨 일이 있었나 — 연차 리셋의 범인을 사건으로 찾는다. */
+export function svcEventProbe(ids: string[]): string[] {
+  const byId = new Map(get(gameStore).npcs.map((n) => [n.npcId, n]));
+  return ids.map((id) => {
+    const n = byId.get(id);
+    if (!n) return id + " → 없음";
+    const evs = (n.careerEvents ?? []).slice(-3)
+      .map((e) => (e as { eventType?: string }).eventType + "(" + ((e as { detail?: string }).detail ?? "") + ")");
+    return id + " " + (n.proServiceYears ?? 0) + "년 " + (n.currentTeam ?? "-")
+      + " 사건: " + (evs.length ? evs.join(" → ") : "없음");
+  });
+}
+
+/** npcId가 고유한가 — 중복이면 Map 기반 추적이 전부 거짓말이 된다. */
+export function dupIdProbe(): Record<string, unknown> {
+  const seen = new Map<string, number>();
+  for (const n of get(gameStore).npcs) seen.set(n.npcId, (seen.get(n.npcId) ?? 0) + 1);
+  const dups = [...seen.entries()].filter(([, c]) => c > 1);
+  const sample = dups.slice(0, 5).map(([id, c]) => {
+    const rows = get(gameStore).npcs.filter((n) => n.npcId === id);
+    return id + " x" + c + " → " + rows.map((r) => (r.name ?? "?") + "/" + (r.currentTeam ?? "-") + "/" + (r.proServiceYears ?? 0) + "년/" + r.careerStatus).join(" | ");
+  });
+  return { 전체: get(gameStore).npcs.length, 고유: seen.size, 중복ID수: dups.length, 예시: sample };
+}
+
+/** ID → [연차, 나이, 리그] 스냅샷. **같은 사람**의 연차가 줄어드는지 보려고 만들었다. */
+export function svcSnapshot(): Record<string, [number, number, string]> {
+  const out: Record<string, [number, number, string]> = {};
+  for (const n of get(gameStore).npcs) {
+    if (n.careerStatus !== "active") continue;
+    out[n.npcId] = [n.proServiceYears ?? 0, n.age ?? 0, (n.currentLeague ?? "?") + "|" + (n.currentTeam ?? "?") + "|" + (n.name ?? "?") + "|" + (n.nationality ?? "?")];
+  }
+  return out;
+}
+export function ageServiceProbe(): Record<string, unknown> {
+  const rows = get(gameStore).npcs.filter((n) => n.careerStatus === "active");
+  const med = (a: number[]) => { const z = [...a].sort((x, y) => x - y); return z.length ? z[z.length >> 1] : 0; };
+  const out: Record<string, unknown> = {};
+  const byLeague = new Map<string, typeof rows>();
+  for (const r of rows) {
+    const lg = r.currentLeague ?? "?";
+    if (!byLeague.has(lg)) byLeague.set(lg, []);
+    byLeague.get(lg)!.push(r);
+  }
+  for (const [lg, list] of byLeague) {
+    const ages = list.map((r) => r.age ?? 0);
+    const svc = list.map((r) => r.proServiceYears ?? 0);
+    out[lg] = {
+      인원: list.length,
+      나이중앙: med(ages), 나이최소: Math.min(...ages), 나이최대: Math.max(...ages),
+      연차중앙: med(svc), 연차최대: Math.max(...svc),
+      "7년차+": svc.filter((y) => y >= 7).length,
+      "30세+": ages.filter((a) => a >= 30).length,
+      "30세+인데3년차미만": list.filter((r) => (r.age ?? 0) >= 30 && (r.proServiceYears ?? 0) < 3).length,
+    };
+  }
+  return out;
+}
 export function faTradeProbe(): Record<string, unknown> {
   const rows = get(gameStore).npcs.filter((n) => n.careerStatus !== "retired");
   const bucket = (y: number) => y <= 0 ? "0" : y <= 2 ? "1-2" : y <= 4 ? "3-4" : y <= 6 ? "5-6" : "7+";

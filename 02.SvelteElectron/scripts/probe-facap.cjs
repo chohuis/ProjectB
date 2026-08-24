@@ -38,8 +38,9 @@ const rows = [];
           const y = Math.min(n.proServiceYears || 0, 15);
           byYr[y] = (byYr[y] || 0) + 1;
           const lg = String(n.currentTeam).split("_")[1];
-          const b = (vets.byLeague[lg] = vets.byLeague[lg] || { n: 0, y7: 0 });
+          const b = (vets.byLeague[lg] = vets.byLeague[lg] || { n: 0, y7: 0, ages: [], svc: [] });
           b.n++; if ((n.proServiceYears || 0) >= 7) b.y7++;
+          b.ages.push(n.age || 0); b.svc.push(n.proServiceYears || 0);
         }
         vets.byYr = byYr;
         const per = teams.map(t => {
@@ -95,7 +96,28 @@ const rows = [];
       console.log("    " + x.t.replace(/^TEAM_/, "").padEnd(24)
         + " 원상한 " + M(x.raw).padStart(8) + " → 실상한 " + M(x.limit).padStart(8));
     }
-    console.log("  리그별: " + Object.entries(r.vets.byLeague).map(([k, v]) => k + " " + v.n + "명 7년차+ " + v.y7 + "(" + (v.y7 / v.n * 100).toFixed(0) + "%)").join(" · "));
+    const med = (arr) => { const z = [...arr].sort((x, y) => x - y); return z[z.length >> 1]; };
+    const mx = (arr) => Math.max(...arr);
+    for (const [k, v] of Object.entries(r.vets.byLeague)) {
+      // 나이 구간별 연차 중앙 — "서른 넘어 신인"이 있는지 본다
+      const band = {};
+      for (let i = 0; i < v.n; i++) {
+        const A = v.ages[i], key = A < 24 ? "~23" : A < 27 ? "24-26" : A < 30 ? "27-29" : A < 33 ? "30-32" : "33+";
+        (band[key] = band[key] || []).push(v.svc[i]);
+      }
+      const bs = ["~23", "24-26", "27-29", "30-32", "33+"].filter(x => band[x]).map(x => {
+        const z = [...band[x]].sort((m, n2) => m - n2);
+        const zero = z.filter(y => y === 0).length;
+        return x + ":" + z.length + "명 연차중앙" + z[z.length >> 1] + " 0년차" + zero;
+      });
+      console.log("    [" + k + "] " + bs.join(" | "));
+      console.log("  " + k.padEnd(4) + " " + String(v.n).padStart(4) + "명"
+        + " · 나이 중앙 " + med(v.ages) + " 최대 " + mx(v.ages)
+        + " · 연차 중앙 " + med(v.svc) + " 최대 " + mx(v.svc)
+        + " · 7년차+ " + v.y7 + "(" + (v.y7 / v.n * 100).toFixed(0) + "%)"
+        + " · 30세+ " + v.ages.filter(x => x >= 30).length
+        + "(" + (v.ages.filter(x => x >= 30).length / v.n * 100).toFixed(0) + "%)");
+    }
     console.log("  연차분포: " + Object.keys(r.vets.byYr).sort((a, b) => a - b).map(y => y + "y:" + r.vets.byYr[y]).join(" "));
     const lim = r.per.map(x => x.limit);
     lim.sort((a, b) => a - b);

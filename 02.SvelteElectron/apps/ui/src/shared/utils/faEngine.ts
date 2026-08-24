@@ -18,6 +18,39 @@ export function getFaThreshold(leagueId: string): number {
   return FA_THRESHOLD[leagueId] ?? 5;
 }
 
+/**
+ * FA **재취득**까지의 연수. 짝은 Rust `npc_sim.rs`의 `FA_REACQUIRE_YEARS`다.
+ *
+ * 🔴 **연차를 0으로 되돌려선 안 된다.** `proServiceYears`는 통산 연차이고
+ *   **연봉 산식의 입력**이다(`estimate_salary_and_contract`). 리셋하면 FA를
+ *   신청한 순간 그 선수의 몸값이 신인 수준으로 떨어진다.
+ *
+ *   Rust는 이미 그렇게 고쳐져 있었다 — 그 주석이 증상까지 적어 뒀다:
+ *   "리셋해서 1군 평균이 7년 → 1.8년으로 폭락하고 7년차 이상이 157명 → 0명".
+ *   **TS 경로만 안 고쳐져 있었다.**
+ *
+ *   실측(씨앗 20260731 · 한 시즌): KBL 1군 7년차+ 45% → 5%. 리셋을 빼면 16%다.
+ *
+ * ⚠ 그래서 자격은 **누적 연차 + 마지막 취득으로부터의 경과**로 본다.
+ *   리셋을 그냥 빼기만 하면 자격자가 매년 FA를 신청한다.
+ */
+export const FA_REACQUIRE_YEARS = 4;
+
+/**
+ * 지금 FA를 다시 신청할 수 있는가 — 마지막 `fa_signed` 이후 경과를 본다.
+ * 기록이 없으면 첫 취득이라 언제나 참이다.
+ */
+export function canReacquireFa(
+  careerEvents: ReadonlyArray<{ year: number; eventType: string }> | undefined,
+  seasonYear: number,
+): boolean {
+  let last = -Infinity;
+  for (const e of careerEvents ?? []) {
+    if (e.eventType === "fa_signed" && e.year > last) last = e.year;
+  }
+  return !Number.isFinite(last) || seasonYear - last >= FA_REACQUIRE_YEARS;
+}
+
 export interface FaOffer {
   teamId: string;
   leagueId: string;

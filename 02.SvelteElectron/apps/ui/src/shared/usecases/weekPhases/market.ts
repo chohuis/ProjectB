@@ -4,7 +4,7 @@ import { seasonStore, npcLiveStatsStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../stores/autoAdvance";
-import { getFaThreshold } from "../../utils/faEngine";
+import { getFaThreshold, canReacquireFa } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
 import {
@@ -1096,6 +1096,12 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     if (isForeignInQuotaLeague(npc.nationality)) continue;
     const faThreshold = getFaThreshold(league);
     if ((npc.proServiceYears ?? 0) < faThreshold) continue;
+    // 🔴 **재취득 기간을 여기서 본다.** 예전엔 대신 `proServiceYears`를 0으로
+    //    되돌려 막았는데, 그 값은 **연봉 산식의 입력**이라 FA를 신청한 순간
+    //    몸값이 신인 수준으로 떨어졌다. Rust는 이미 재취득으로 고쳐져 있었고
+    //    (`FA_REACQUIRE_YEARS`) 이 TS 경로만 남아 있었다.
+    //    자세한 건 `faEngine.ts`의 `FA_REACQUIRE_YEARS` 주석에 있다.
+    if (!canReacquireFa(npc.careerEvents, s.seasonYear)) continue;
 
     const leagueStd  = getLeagueStandings(league, s);
     const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
@@ -1130,7 +1136,6 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           originalTeamId:   cur.currentTeam,
           currentLeague:   "LEAGUE_FREE_AGENT",
           currentTeam:     "",
-          proServiceYears: 0,
           careerEvents: [
             ...(cur.careerEvents ?? []),
             { year: s.seasonYear, eventType: "fa_signed" as const,
