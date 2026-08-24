@@ -53,9 +53,18 @@ pub fn calc_win_now_pressure_update(p: WinNowUpdateParams) -> WinNowUpdateResult
         else if p.deviation_weight > 0.0 && p.target_standing > 0.0 {
             // **목표 대비**로 본다. 예산 큰 팀은 중위권이어도 압박을 받고
             // 작은 팀은 중위권이면 만족한다 — 예전엔 둘 다 +2로 같았다.
+            //
+            // 🔴 **`연속실패 × 5`를 여기서 뻐다** (사용자 확정 2026-08-24).
+            //    `dev`가 이미 "목표보다 얼마나 못했나"를 담는데 그 항을 또
+            //    더하면 **같은 부진을 두 번 센다.** 예전 갈래(아래 else)엔 dev가
+            //    없어 그 항이 필요했지만 목표 갈래엔 중복이다.
+            //
+            //    실측(6시즌 중앙값): 계수 2에서 53→54로 평평했지만 최대가
+            //    100에 붙었다. 압박이 100이 되면 그 팀은 **성향이 사라져**
+            //    안정·육성 지향이든 전부 "지금 이겨야 한다"로 수렴한다 —
+            //    목표 순위를 넣은 목적(팀 개성)과 정반대다.
             let dev = p.final_standing as f64 - p.target_standing;
             dev * p.deviation_weight * patience_mult
-                + p.consecutive_missed_playoffs as f64 * 5.0
         }
         else if p.final_standing <= 2 { -5.0 }
         else if p.final_standing <= p.total_teams / 2 { 2.0 * patience_mult }
