@@ -6,6 +6,7 @@
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap, entitiesL10n } from "../../shared/stores/master";
   import { leagueUiState, type LeagueTab, type TxCategory } from "../../shared/stores/leagueUiStore";
+  import { slotRepo } from "../../shared/repo/slotRepo";
   import {
     tournamentsOfLeague, tournamentPhase, bracketRounds, championOf,
     teamRun, runSummary, PHASE_LABEL,
@@ -107,6 +108,15 @@
   };
   let historyTournaments: HistTournament[] = [];
 
+  /**
+   * 지난 시즌 수상 — `history_league` kind=awards.
+   *
+   * ⚠ 이름은 **그때 값이 박혀 있다.** 조회로 대신하면 은퇴·이적으로 사라진
+   *   사람이 ID로 떨어진다(`histPersonName`과 같은 이유).
+   */
+  type HistAward = { playerId: string; name: string; teamId: string; awards: string[] };
+  let historyAwards: HistAward[] = [];
+
   async function loadHistoryYears() {
     const slotId = $gameStore.currentSlotId;
     if (!slotId) return;
@@ -127,6 +137,7 @@
       historyLbStats     = [];
       historyPostseason  = [];
       historyTournaments = [];
+      historyAwards      = [];
       return;
     }
     try {
@@ -140,8 +151,14 @@
       historyLbStats    = JSON.parse(lr) ?? [];
       historyPostseason  = JSON.parse(pr) ?? [];
       historyTournaments = JSON.parse(tr) ?? [];
+      // 수상은 `history_league`에 있다 — 위 넷과 저장소가 다르다
+      const aw = await slotRepo.getHistoryLeague({ slotId, year: selectedYear });
+      historyAwards = aw
+        .filter((r) => r.kind === "awards")
+        .flatMap((r) => (Array.isArray(r.data) ? r.data : []) as HistAward[]);
     } catch {
       historyStandings = []; historyLbStats = []; historyPostseason = []; historyTournaments = [];
+      historyAwards = [];
     }
   }
 
@@ -757,6 +774,24 @@
             {/if}
           </div>
 
+          <!-- 그 해 수상 — 과거 연도에서만. 리더보드보다 먼저 읽힌다 -->
+          {#if selectedYear > 0 && historyAwards.length > 0}
+            <section class="aw-sec">
+              <h4 class="aw-h">{selectedYear} 수상</h4>
+              <ul class="aw-list">
+                {#each historyAwards as a}
+                  <li>
+                    <span class="aw-name">{a.name}</span>
+                    <span class="aw-team">{histTeamName(undefined, a.teamId)}</span>
+                    <span class="aw-tags">
+                      {#each a.awards as t}<span class="aw-tag">{t}</span>{/each}
+                    </span>
+                  </li>
+                {/each}
+              </ul>
+            </section>
+          {/if}
+
           {#if lbRows.length === 0}
             <p class="empty" style="padding:16px">스탯 기록이 아직 없습니다.</p>
           {:else}
@@ -1133,6 +1168,15 @@
 <PlayerDetailModal entityId={txModalEntityId} on:close={() => (txModalEntityId = "")} />
 
 <style>
+  /* 그 해 수상 — 연감(history_league kind=awards) */
+  .aw-sec { padding: 10px 12px; border-bottom: 1px solid var(--line-weak, #222); }
+  .aw-h { margin: 0 0 6px; font-size: .92em; opacity: .8; }
+  .aw-list { list-style: none; margin: 0; padding: 0; }
+  .aw-list li { display: flex; align-items: center; gap: 8px; padding: 3px 0; flex-wrap: wrap; }
+  .aw-name { font-weight: 600; }
+  .aw-team { opacity: .6; font-size: .85em; }
+  .aw-tags { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+  .aw-tag { font-size: .78em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #3a3320); }
   .page {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);

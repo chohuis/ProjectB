@@ -227,7 +227,7 @@ export const slotRepo = {
   appendCareerHistory: (slotId: string, rows: RepoCareerLine[]) =>
     call<{ ok: true; rows: number }>("appendCareerHistory", { slotId, rows }),
 
-  saveHistoryLeague: (p: { slotId: string; year: number; leagueId: string; kind: "standings" | "leaders" | "postseason"; data: unknown }) =>
+  saveHistoryLeague: (p: { slotId: string; year: number; leagueId: string; kind: "standings" | "leaders" | "postseason" | "awards"; data: unknown }) =>
     call<{ ok: true }>("saveHistoryLeague", p),
 
   // 시즌 경계 벌크 동기화 (오프시즌 일괄 결과 반영 전용 — 주간 변이는 개별 커맨드)

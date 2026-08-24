@@ -17,6 +17,8 @@ import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { loadRosterRules } from "../repo/newGameV3";
+import { slotRepo } from "../repo/slotRepo";
+import { isV3SlotActive } from "../repo/v3Mode";
 import { finiteOr } from "../utils/payloadNum";
 import { leagueStatsOf } from "../utils/season-helpers";
 import type { CareerAward, PlayerSeasonStats } from "../types/save";
@@ -143,6 +145,46 @@ export async function loadAwardRules(): Promise<AwardRules | null> {
  * **`runWorldSeasonEnd`가 부른다** — 주인공이 무엇을 하든 매 시즌 돌아야 하고,
  * 연도 기록(`applySeasonHistory`)이 끝난 **뒤**여야 그 해 항목에 얹을 수 있다.
  */
+/**
+ * 그 해 수상을 리그별로 갈라 연감(`history_league` kind=awards)에 남긴다.
+ *
+ * ⚠ **이름을 그때 값으로 박는다.** 조회로 대신하면 은퇴·이적으로 사라진 사람이
+ *   ID로 떨어진다 — 화면이 내부 값을 흘리면 안 된다.
+ */
+async function saveSeasonAwards(
+  seasonYear: number, won: Map<string, string[]>,
+): Promise<void> {
+  const g = get(gameStore);
+  if (!isV3SlotActive() || !g.currentSlotId) return;
+  const nameOf = new Map((g.npcs ?? []).map((n) => [n.npcId, n.name]));
+  const teamOf = new Map((g.npcs ?? []).map((n) => [n.npcId, n.currentTeam ?? ""]));
+  const lgOf   = new Map((g.npcs ?? []).map((n) => [n.npcId, n.currentLeague ?? ""]));
+
+  const byLeague = new Map<string, { playerId: string; name: string; teamId: string; awards: string[] }[]>();
+  for (const [pid, list] of won) {
+    const isProt = pid === g.protagonist.id;
+    const lg = isProt ? (g.protagonist.leagueId ?? "") : (lgOf.get(pid) ?? "");
+    if (!lg) continue;
+    const row = {
+      playerId: pid,
+      name: isProt ? g.protagonist.name : (nameOf.get(pid) ?? ""),
+      teamId: isProt ? (g.protagonist.teamId ?? "") : (teamOf.get(pid) ?? ""),
+      awards: list,
+    };
+    if (!row.name) continue;   // 이름을 모르면 안 남긴다 — ID를 흘리지 않는다
+    if (!byLeague.has(lg)) byLeague.set(lg, []);
+    byLeague.get(lg)!.push(row);
+  }
+  for (const [leagueId, rows] of byLeague) {
+    rows.sort((a, b) => b.awards.length - a.awards.length || a.name.localeCompare(b.name));
+    try {
+      await slotRepo.saveHistoryLeague({
+        slotId: g.currentSlotId, year: seasonYear, leagueId, kind: "awards", data: rows,
+      });
+    } catch { /* 연감 저장이 실패해도 시즌 종료는 계속돼야 한다 */ }
+  }
+}
+
 export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   const rules = await loadAwardRules();
   if (!rules) return [];
@@ -217,6 +259,12 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   gameStore.addProtagonistAwards(seasonYear, protAwards);
   if (won.size === 0) return logs;
   gameStore.addSeasonHighlights(seasonYear, won);
+
+  // 🔴 **연감에 남긴다.** `won`은 이미 여기 있었는데 로그로만 쓰이고 사라졌다 —
+  //    다음 시즌이 되면 "작년 MVP가 누구였나"를 알 방법이 없었다.
+  //    이름을 **그때 값으로 박아 둔다** — 나중에 조회로 대신하면 은퇴·이적으로
+  //    사라진 사람이 ID로 떨어진다(`LeaguePage`의 `histPersonName` 주석과 같은 이유).
+  await saveSeasonAwards(seasonYear, won);
 
   const top = [...won.entries()].sort((a, b) => b[1].length - a[1].length)[0];
   logs.push(`[수상] ${seasonYear} ${won.size}명 수상 (최다 ${top[1].length}개)`);
