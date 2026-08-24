@@ -934,6 +934,17 @@ export function svcEventProbe(ids: string[]): string[] {
   });
 }
 
+/** 은퇴자가 스토어에 얼마나 남아 있는가 — D7 재현용. */
+export function retiredProbe(): Record<string, number> {
+  const rows = get(gameStore).npcs;
+  const by: Record<string, number> = { 전체: rows.length };
+  for (const n of rows) {
+    const k = n.careerStatus ?? "?";
+    by[k] = (by[k] ?? 0) + 1;
+  }
+  return by;
+}
+
 /** npcId가 고유한가 — 중복이면 Map 기반 추적이 전부 거짓말이 된다. */
 export function dupIdProbe(): Record<string, unknown> {
   const seen = new Map<string, number>();
