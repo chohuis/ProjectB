@@ -11,6 +11,16 @@
     {
       "value": 56,
       "type": "pitching_ovr_gte"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 53
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 104
     }
   ],
   "id": "EVT_UNIV_Y2_SCOUT_RUMOR",

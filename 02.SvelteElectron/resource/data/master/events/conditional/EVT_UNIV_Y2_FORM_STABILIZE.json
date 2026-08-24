@@ -1,24 +1,34 @@
 {
-    "conditions":  [
-                       {
-                           "stage":  "university",
-                           "type":  "career_stage"
-                       },
-                       {
-                           "value":  20,
-                           "type":  "week_gte"
-                       },
-                       {
-                           "value":  20,
-                           "type":  "season_ip_gte"
-                       }
-                   ],
-    "id":  "EVT_UNIV_Y2_FORM_STABILIZE",
-    "type":  "conditional",
-    "messageTemplateId":  "MSG_UNIV_LIFE_PEAK_FORM",
-    "category":  "training",
-    "decisionTemplateId":  "DEC_COND_PEAK_FORM",
-    "cooldownWeeks":  5,
-    "oncePolicy":  "repeatable",
-    "priority":  735
+  "conditions": [
+    {
+      "stage": "university",
+      "type": "career_stage"
+    },
+    {
+      "value": 20,
+      "type": "week_gte"
+    },
+    {
+      "value": 20,
+      "type": "season_ip_gte"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 53
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 104
+    }
+  ],
+  "id": "EVT_UNIV_Y2_FORM_STABILIZE",
+  "type": "conditional",
+  "messageTemplateId": "MSG_UNIV_LIFE_PEAK_FORM",
+  "category": "training",
+  "decisionTemplateId": "DEC_COND_PEAK_FORM",
+  "cooldownWeeks": 5,
+  "oncePolicy": "repeatable",
+  "priority": 735
 }

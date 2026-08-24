@@ -9,6 +9,10 @@
   "weight": 6,
   "conditions": [
     {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
       "type": "grade",
       "value": 2
     },

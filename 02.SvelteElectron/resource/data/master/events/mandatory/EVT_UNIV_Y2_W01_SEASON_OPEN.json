@@ -14,6 +14,16 @@
     {
       "value": 1,
       "type": "week_eq"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 53
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 104
     }
   ]
 }
