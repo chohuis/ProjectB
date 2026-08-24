@@ -364,6 +364,19 @@ const PRO_LEAGUES = new Set([
  * ⚠ 리그 목록을 `PRO_LEAGUES`와 공유한다 — 표를 두 번 두지 않는다.
  *   뜻이 갈라지면(예: 성향은 2군을 뺀다) 그때 나눈다.
  */
+// ⚠ **`seasonStore.leagueId`는 `initSeason` 때만 정해진다.**
+//
+// 그걸 부르는 건 새 게임(고교) · 프로 진입(`openProSeason`) · 군 복무뿐이라,
+// **고교→대학 진학은 그걸 안 타서 시즌 리그가 고교로 남는다**
+// (실측 씨앗 424242: 2028·2029 시즌 리그가 LEAGUE_HIGHSCHOOL인데
+//  소속은 university·pro_kbl이었다).
+//
+// 그래도 **이 판정은 안전하다** — 고교든 대학이든 프로가 아니므로 결과가 같고,
+// 프로 진입은 `openProSeason`이 `initSeason`을 부르므로 정확하다.
+// 리그 집계도 이미 `leagueState[lid]`를 보게 고쳐졌다
+// (`season-helpers.ts` 주석 — 승강 시 2군 기록이 1군 버킷으로 읽히던 것).
+//
+// ⚠ 다만 **대학 시즌을 리그별로 다루는 기능을 더할 땐 이걸 먼저 본다.**
 export function countsAsProSeason(
   careerStage: string,
   playedLeagueId?: string,
