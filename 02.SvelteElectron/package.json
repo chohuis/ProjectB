@@ -122,7 +122,8 @@
     "measure:savesize": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-savesize.cjs",
     "measure:dirty": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-dirty.cjs",
     "measure:memory": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-memory.cjs",
-    "check:determinism": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-determinism.cjs"
+    "check:determinism": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-determinism.cjs",
+    "check:svelte": "svelte-check --tsconfig ./tsconfig.json"
   },
   "build": {
     "appId": "com.projectb.desktop",
@@ -174,6 +175,7 @@
     "omggif": "^1.0.10",
     "playwright-core": "^1.62.1",
     "pngjs": "^7.0.0",
+    "svelte-check": "^4.7.6",
     "typescript": "^5.8.3",
     "vite": "^6.2.2",
     "vitest": "^3.2.6"
