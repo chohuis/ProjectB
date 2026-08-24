@@ -59,7 +59,29 @@ export type Condition =
   | { type: "popularity_gte";  value: number }        // 인기도 이상 (0~100)
   | { type: "popularity_lte";  value: number }        // 인기도 이하
 
-  // ── 부상 (2026-08-22) ────────────────────────────────────────
+  // ── 일반 조건 (2026-08-24) ───────────────────────────────────
+  // **필드마다 조건 타입 하나**를 만들던 걸 여기서 멈춘다. 45종까지 그렇게
+  // 늘렸는데 새 축이 생길 때마다 평가기·이 유니온·`CONDITION_FIELDS`·문서
+  // 넷을 같이 고쳐야 했고, 그 넷이 어긋나는 게 이 트랙이 두 번 겪은 결함이다.
+  //
+  // 쓸 수 있는 경로는 `utils/eventPaths.ts`의 표가 정본이고, **모르는 경로는
+  // 던진다** — 오타가 조용히 false가 되면 안 된다.
+  //
+  //   { "type": "num_gte", "path": "batting.contact", "value": 60 }
+  //   { "type": "eq",      "path": "currentRole",     "value": "1선발" }
+  | { type: "num_gte";  path: string; value: number }
+  | { type: "num_lte";  path: string; value: number }
+  | { type: "eq";       path: string; value: string | number | boolean }
+  | { type: "neq";      path: string; value: string | number | boolean }
+
+  // ── 관계도 (2026-08-24) ──────────────────────────────────────
+  // 🟡 **다른 조건과 성격이 다르다.** 관계는 slot.db에 있고 조회가 비동기인데
+  // 평가기는 동기라, `EventContext.relations`에 **미리 실어 줘야** 한다.
+  // 안 실리면 전부 false다(고교 등 관계가 없는 단계에선 그게 맞다).
+  | { type: "relation_gte"; kind: import("./relationship").RelationKind; value: number }
+  | { type: "relation_lte"; kind: import("./relationship").RelationKind; value: number }
+
+  // ── 부상 (2026-08-23) ────────────────────────────────────────
   // 부상은 이 게임의 중심 사건인데 **이벤트가 그걸 못 봤다.** 세이브에
   // `injury`·`injuryHistory`·`seasonHealth`가 다 있는데 조건이 하나도 없어서,
   // "다치고 돌아온 뒤"·"수술까지 갔던 몸"·"올해만 세 번째" 같은 이야기를
@@ -209,4 +231,9 @@ export interface EventContext {
    * 세이브에 남는 값이라 로드해도 같은 문장이 이어서 나오지 않는다
    */
   sentenceMemory?: Record<string, number>;
+  /**
+   * 관계도 — **비동기라 미리 실어 준다.** `slot.db`에서 읽는 값이고
+   * `evaluateCondition`은 동기다. 안 실으면 관계 조건이 전부 false가 된다.
+   */
+  relations?: import("./relationship").Relationship[];
 }

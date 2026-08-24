@@ -15,6 +15,7 @@ import { buildMarkIndex } from "../utils/teamMark";
 import { primeForeignRules } from "../utils/foreignSlots";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
+import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -473,6 +474,9 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   money_gte: ["value"], money_lte: ["value"],
   diligence_gte: ["value"], diligence_lte: ["value"],
   popularity_gte: ["value"], popularity_lte: ["value"],
+  num_gte: ["path", "value"], num_lte: ["path", "value"],
+  eq: ["path", "value"], neq: ["path", "value"],
+  relation_gte: ["kind", "value"], relation_lte: ["kind", "value"],
   injured: ["value"], injury_severity: ["severity"],
   injury_weeks_gte: ["value"], injury_count_gte: ["value"],
   season_injury_count_gte: ["value"], had_surgery: ["value"],
@@ -492,6 +496,19 @@ function assertConditions(ruleId: string, conditions: any[]): void {
     if (want === undefined) {
       throw new Error(`[master] ${ruleId}: 모르는 조건 타입 "${type}" — ${JSON.stringify(c)}`);
     }
+    // 🔴 **경로는 표에 있어야 한다.** 필드가 채워져 있어도 경로가 오타면
+    // `resolvePath`가 던지는데, 그건 **이벤트가 실제로 평가될 때**다 —
+    // 조건이 안 맞는 주에는 안 불려서 몇 시즌 뒤에야 터진다.
+    // 로드에서 잡으면 그 자리에서 끝난다.
+    if ((type === "num_gte" || type === "num_lte") && typeof c.path === "string"
+        && !NUM_PATHS.has(c.path)) {
+      throw new Error(`[master] ${ruleId}: 모르는 경로 "${c.path}" — eventPaths.ts의 NUM_PATHS에 없다`);
+    }
+    if ((type === "eq" || type === "neq") && typeof c.path === "string"
+        && !EQ_PATHS.has(c.path) && !NUM_PATHS.has(c.path)) {
+      throw new Error(`[master] ${ruleId}: 모르는 경로 "${c.path}" — eventPaths.ts의 EQ_PATHS에 없다`);
+    }
+
     for (const k of want) {
       if (c[k] === undefined) {
         throw new Error(

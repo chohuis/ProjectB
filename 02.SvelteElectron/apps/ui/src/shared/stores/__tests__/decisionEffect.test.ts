@@ -20,6 +20,10 @@ import type { DecisionEffect } from "../../types/main";
 const base = (): ProtagonistSave => ({
   condition: 50, fatigue: 50, morale: 50, money: 1000,
   fame: 50, popularity: 50, diligence: 50, tags: ["기존"],
+  battingXP: {}, batting: {
+    ovr: 30, contact: 35, power: 28, eye: 30, discipline: 30, speed: 50,
+    baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30,
+  },
   pitchingXP: {}, pitching: {
     ovr: 60, stamina: 60, velocity: 60, command: 60, control: 60,
     movement: 60, mentality: 60, recovery: 60, clutch: 60, holdRunners: 60,
@@ -109,5 +113,44 @@ describe("효과 적용 경로가 하나인가", () => {
     expect(i).toBeGreaterThan(-1);
     const fn = src.slice(i, src.indexOf("\n}", i));
     expect(fn).toContain("applySideEffects");
+  });
+});
+
+/**
+ * **보상 대상: 투구 / 타격** (2026-08-24).
+ *
+ * 예전엔 `xp`·`statDelta`가 `pitchingXP`·`pitching` 고정이라 **타자 주인공이
+ * 이벤트로 성장할 길이 아예 없었다.** 키에 접두사를 붙여 가른다.
+ *
+ * 🔴 **제일 중요한 건 마지막 검사다.** 접두사 없는 키는 예전처럼 투구여야 한다 —
+ * 데이터 296곳이 그 형태이고, `ovr`처럼 양쪽에 다 있는 이름이 조용히 타격으로
+ * 새면 아무도 모른다.
+ */
+describe("보상 대상 — 투구/타격", () => {
+  it("batting. 접두사는 타격으로 간다", () => {
+    const p = applyEffectToProtagonist(base(), { statDelta: { "batting.contact": 5 } });
+    expect(p.batting.contact).toBe(base().batting.contact + 5);
+    expect(p.pitching.command).toBe(base().pitching.command);
+  });
+
+  it("batting. 접두사 xp는 battingXP로 쌓인다", () => {
+    const p = applyEffectToProtagonist(base(), { xp: { "batting.power": 7 } });
+    expect(p.battingXP?.power).toBe(7);
+    // ⚠ `power`는 투구 키가 아니라 `pitchingXP`에 물을 수조차 없다(타입이 잡는다).
+    // 투구 쪽이 통째로 안 늘었는지를 본다
+    expect(Object.keys(p.pitchingXP ?? {})).toHaveLength(0);
+  });
+
+  it("🔴 접두사 없는 키는 예전처럼 투구다 — 기존 데이터 296곳이 그 형태다", () => {
+    const p = applyEffectToProtagonist(base(), { statDelta: { command: 3 }, xp: { velocity: 4 } });
+    expect(p.pitching.command).toBe(base().pitching.command + 3);
+    expect(p.pitchingXP?.velocity).toBe(4);
+    expect(p.batting.contact).toBe(base().batting.contact);
+  });
+
+  it("ovr은 양쪽 다 못 바꾼다 — 파생값이다", () => {
+    const p = applyEffectToProtagonist(base(), { statDelta: { ovr: 9, "batting.ovr": 9 } });
+    expect(p.pitching.ovr).toBe(base().pitching.ovr);
+    expect(p.batting.ovr).toBe(base().batting.ovr);
   });
 });
