@@ -412,7 +412,15 @@ export async function pushCareerForward(): Promise<string | null> {
       //    ⚠ 지명(`draftDrafted`)은 위에서 이미 처리한다 — 대학생도 2·3·4학년에
       //      드래프트 신청을 하고, 지명되면 그쪽이 우선이다.
       const stageNow = get(gameStore).protagonist.careerStage;
-      if (stageNow === "university") {
+      // 🔴 **4년까지만 이어간다.** `continueCurrentStage()`는 4학년이어도
+      //    **학점이 모자라면 true**를 돌려준다(`careerDecision.ts:95` 유급).
+      //    그대로 두면 자동 진행이 영원히 대학에 남아 **은퇴까지 갔다**
+      //    (T1이 "프로에 도달 못 함 — 은퇴"로 실패했다).
+      //    같은 함정을 주석이 이미 적어 뒀다 — "예전엔 여기서 그냥 계속 눌러
+      //    **7년째 대학생(29세)**이 됐다".
+      //    ⚠ 유급 자체는 게임 규칙이다. 막는 건 **자동 진행의 무한 대기**뿐이다.
+      const uw = get(gameStore).schoolState.universityWeek ?? 0;
+      if (stageNow === "university" && uw < 52 * 4) {
         if (await continueCurrentStage()) return "careerChoice(continue:university)";
         // 못 이어가면 4학년 졸업이다 — 아래 대학 갈래로 떨어진다
       }
