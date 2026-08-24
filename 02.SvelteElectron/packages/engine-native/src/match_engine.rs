@@ -937,10 +937,16 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     // 두 벌로 두면 주인공 기록과 리그 기록이 다른 척도가 된다
     // (실제로 도루가 이쪽에만 있어서 리그 도루가 0이었다).
     let hold_factor = T::steal_hold_factor(pitcher.hold_runners);
+    // 🔴 **포수가 도루에 아무 영향이 없었다.** 투수 견제만 걸리고 포수는 자리만 지켰다.
+    //    수비팀 포수의 `arm`을 성공 확률에 넣는다 — 못 찾으면 50(중립)이다.
+    let catcher_arm = state.fielders.iter()
+        .find(|f| f.position == crate::types::FieldPosition::C)
+        .map(|f| f.arm)
+        .unwrap_or(T::STEAL_CATCHER_ARM_PIVOT);
 
     if first.is_some() && second.is_none() {
         let r = first.as_ref().unwrap().clone();
-        let (attempt_prob, success) = T::steal_second_probs(r.speed, r.instinct, hold_factor, manager_boost);
+        let (attempt_prob, success) = T::steal_second_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
         if rng.gen::<f64>() < attempt_prob {
             if rng.gen::<f64>() < success {
                 second = first.take();
@@ -954,7 +960,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     if let Some(ref r) = second.clone() {
         if third.is_none() && r.speed > T::STEAL_3B_SPEED_GATE {
             let r = r.clone();
-            let (attempt_prob, success) = T::steal_third_probs(r.speed, r.instinct, hold_factor, manager_boost);
+            let (attempt_prob, success) = T::steal_third_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
             if rng.gen::<f64>() < attempt_prob {
                 if rng.gen::<f64>() < success {
                     third = second.take();

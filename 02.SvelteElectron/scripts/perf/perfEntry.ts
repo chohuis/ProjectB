@@ -934,6 +934,28 @@ export function svcEventProbe(ids: string[]): string[] {
   });
 }
 
+/**
+ * 리그 도루가 실제로 도는가 — A8 착수 전 확인용.
+ *
+ * ⚠ `match_engine` 주석에 "실제로 도루가 이쪽에만 있어서 리그 도루가 0이었다"가
+ *   있다. **이미 한 번 죽었던 자리다** — 고치기 전에 지금 도는지부터 잰다.
+ */
+export function stealProbe(): Record<string, number> {
+  const ls = get(seasonStore).leagueState ?? {};
+  let sb = 0, n = 0, withSb = 0;
+  for (const st of Object.values(ls)) {
+    for (const s of Object.values((st as { stats?: Record<string, unknown> }).stats ?? {})) {
+      const b = s as { type?: string; sb?: number };
+      if (b.type !== "batter") continue;
+      n++;
+      const v = b.sb ?? 0;
+      sb += v;
+      if (v > 0) withSb++;
+    }
+  }
+  return { 타자수: n, 도루합: sb, "도루있는타자": withSb };
+}
+
 /** 은퇴자가 스토어에 얼마나 남아 있는가 — D7 재현용. */
 export function retiredProbe(): Record<string, number> {
   const rows = get(gameStore).npcs;

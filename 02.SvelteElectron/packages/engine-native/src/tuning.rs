@@ -268,29 +268,49 @@ pub const STEAL_3B_SUCCESS_MAX: f64   = 0.85;
 fn clamp01(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
 
 /// 견제력이 도루 시도에 거는 배수. 두 모델이 같이 쓴다
+/// 포수 송구(`arm`)가 도루 성공을 누르는 폭.
+///
+/// 🔴 **포수가 도루에 아무 영향이 없었다.** 투수 견제(`hold_runners`)만 걸리고
+///    포수는 자리만 지켰다 — 어깨 좋은 포수를 두는 뜻이 없었다.
+///
+/// `arm` 50이 중립이고 한 눈금당 성공 확률이 이만큼 깎인다.
+/// 0.004면 arm 90인 포수가 성공률을 **16%p** 깎는다 — 실제 KBO 상위 포수의
+/// 저지율 차이가 그 대역이다.
+pub const STEAL_CATCHER_ARM_SCALE: f64 = 0.004;
+pub const STEAL_CATCHER_ARM_PIVOT: f64 = 50.0;
+
+/// 포수 송구 → 성공 확률 보정. 포수를 모르면 50을 넘겨 0이 되게 한다.
+pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
+    (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
+}
+
 pub fn steal_hold_factor(hold_runners: f64) -> f64 {
     clamp01(1.0 - (hold_runners - 50.0) * STEAL_HOLD_SCALE, STEAL_HOLD_MIN, STEAL_HOLD_MAX)
 }
 
 /// 1루 주자의 (시도 확률, 성공 확률)
-pub fn steal_second_probs(speed: f64, instinct: f64, hold_factor: f64, manager_boost: f64) -> (f64, f64) {
+pub fn steal_second_probs(speed: f64, instinct: f64, hold_factor: f64, manager_boost: f64,
+                          catcher_arm: f64) -> (f64, f64) {
     let attempt = clamp01(
         (speed - STEAL_2B_SPEED_PIVOT) * STEAL_2B_ATTEMPT_SCALE * (instinct / STEAL_INSTINCT_PIVOT) * hold_factor
             + manager_boost, 0.0, STEAL_2B_ATTEMPT_MAX);
     let success = clamp01(
-        STEAL_2B_SUCCESS_BASE + (speed - STEAL_2B_SUCCESS_PIVOT) * STEAL_2B_SUCCESS_SCALE,
+        STEAL_2B_SUCCESS_BASE + (speed - STEAL_2B_SUCCESS_PIVOT) * STEAL_2B_SUCCESS_SCALE
+            - steal_catcher_penalty(catcher_arm),
         STEAL_2B_SUCCESS_MIN, STEAL_2B_SUCCESS_MAX);
     (attempt, success)
 }
 
 /// 2루 주자의 (시도 확률, 성공 확률). `STEAL_3B_SPEED_GATE` 미만은 시도하지 않는다
-pub fn steal_third_probs(speed: f64, instinct: f64, hold_factor: f64, manager_boost: f64) -> (f64, f64) {
+pub fn steal_third_probs(speed: f64, instinct: f64, hold_factor: f64, manager_boost: f64,
+                         catcher_arm: f64) -> (f64, f64) {
     if speed <= STEAL_3B_SPEED_GATE { return (0.0, 0.0); }
     let attempt = clamp01(
         (speed - STEAL_3B_SPEED_PIVOT) * STEAL_3B_ATTEMPT_SCALE * (instinct / STEAL_INSTINCT_PIVOT) * hold_factor
             + manager_boost, 0.0, STEAL_3B_ATTEMPT_MAX);
     let success = clamp01(
-        STEAL_3B_SUCCESS_BASE + (speed - STEAL_3B_SUCCESS_PIVOT) * STEAL_3B_SUCCESS_SCALE,
+        STEAL_3B_SUCCESS_BASE + (speed - STEAL_3B_SUCCESS_PIVOT) * STEAL_3B_SUCCESS_SCALE
+            - steal_catcher_penalty(catcher_arm),
         STEAL_3B_SUCCESS_MIN, STEAL_3B_SUCCESS_MAX);
     (attempt, success)
 }
@@ -772,5 +792,45 @@ mod talent_tests {
         let same = vals.iter().filter(|v| (**v - 80.0).abs() < 1.0).count();
         assert!(top >= 90.0, "고교 출신 최고 천장이 {top} — 에이스가 나올 수 없다");
         assert!(same < 300, "천장이 한 값(80 근처)에 {same}/1000명 몰렸다");
+    }
+}
+
+#[cfg(test)]
+mod steal_catcher_tests {
+    use super::*;
+
+    /// 포수 송구가 도루 성공률을 실제로 가르는가.
+    ///
+    /// 🔴 예전엔 포수가 도루에 **아무 영향이 없었다** — 투수 견제만 걸렸다.
+    ///    어깨 좋은 포수를 두는 뜻이 없었다.
+    #[test]
+    fn 포수_어깨가_도루_성공을_가른다() {
+        let (_, weak) = steal_second_probs(70.0, 60.0, 1.0, 0.0, 20.0);
+        let (_, mid)  = steal_second_probs(70.0, 60.0, 1.0, 0.0, 50.0);
+        let (_, good) = steal_second_probs(70.0, 60.0, 1.0, 0.0, 90.0);
+        assert!(weak > mid, "어깨 약한 포수인데 성공률이 안 오른다: {weak} vs {mid}");
+        assert!(mid > good, "어깨 좋은 포수인데 성공률이 안 내린다: {mid} vs {good}");
+    }
+
+    /// 3루 도루도 같은 규칙을 쓴다 — **두 벌로 두면 척도가 갈린다.**
+    #[test]
+    fn 삼루_도루도_같은_규칙이다() {
+        let (_, mid)  = steal_third_probs(80.0, 60.0, 1.0, 0.0, 50.0);
+        let (_, good) = steal_third_probs(80.0, 60.0, 1.0, 0.0, 90.0);
+        assert!(mid > good, "3루 도루에 포수가 안 걸린다");
+    }
+
+    /// 포수를 모르면 중립이다 — 옛 페이로드는 `position`이 비어 있다.
+    #[test]
+    fn 중립이면_예전과_같다() {
+        assert!((steal_catcher_penalty(STEAL_CATCHER_ARM_PIVOT)).abs() < 1e-9);
+    }
+
+    /// 시도 확률은 안 건드린다 — 포수는 **잡는 쪽**이지 뛸지 말지를 정하지 않는다.
+    #[test]
+    fn 시도_확률은_안_바뀐다() {
+        let (a1, _) = steal_second_probs(70.0, 60.0, 1.0, 0.0, 20.0);
+        let (a2, _) = steal_second_probs(70.0, 60.0, 1.0, 0.0, 90.0);
+        assert!((a1 - a2).abs() < 1e-9, "포수가 시도 확률까지 바꾼다");
     }
 }

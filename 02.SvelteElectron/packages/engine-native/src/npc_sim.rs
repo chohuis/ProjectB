@@ -285,6 +285,8 @@ fn npc_clutch_mod(
 
 fn sim_half_inning_pitch(
     lineup: &[SimBatter],
+    // 수비 팀 라인업 — **포수를 찾는 데만 쓴다**(도루 저지)
+    def_lineup: &[SimBatter],
     lineup_pos: usize,
     pit: &SimPitcher,
     pit_stamina: f64,
@@ -320,6 +322,14 @@ fn sim_half_inning_pitch(
 
     // 도루는 **투수 견제력**이 누른다. 이닝 내내 같은 투수이므로 한 번만 계산한다
     let hold_factor = crate::tuning::steal_hold_factor(pit.hold_runners);
+    // 포수 송구 — **두 모델이 같은 규칙을 쓴다.** `match_engine`도 같은 항을 쓴다.
+    // ⚠ 한쪽만 넣으면 주인공 기록과 리그 기록이 다른 척도가 된다
+    //   (`match_engine`의 도루 주석이 같은 함정을 적어 뒀다).
+    // 포수를 못 찾으면 중립(50)이다 — 옛 페이로드는 position이 비어 있다.
+    let catcher_arm = def_lineup.iter()
+        .find(|b| b.position == "C")
+        .map(|b| b.arm)
+        .unwrap_or(crate::tuning::STEAL_CATCHER_ARM_PIVOT);
 
     while outs < 3 {
         if lineup.is_empty() { outs += 1; cur_pit_outs += 1; continue; }
@@ -340,9 +350,9 @@ fn sim_half_inning_pitch(
             if bases[to].is_some() { continue; }
             let r = &lineup[ri % n];
             let (attempt, success) = if from == 0 {
-                crate::tuning::steal_second_probs(r.speed, r.base_instinct, hold_factor, 0.0)
+                crate::tuning::steal_second_probs(r.speed, r.base_instinct, hold_factor, 0.0, catcher_arm)
             } else {
-                crate::tuning::steal_third_probs(r.speed, r.base_instinct, hold_factor, 0.0)
+                crate::tuning::steal_third_probs(r.speed, r.base_instinct, hold_factor, 0.0, catcher_arm)
             };
             if rng.gen::<f64>() >= attempt { continue; }
             if rng.gen::<f64>() < success {
@@ -556,7 +566,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
         // 원정 공격 (상반기)
         let (top_runs, new_away_lpos, new_h_outs, new_h_stamina) = sim_half_inning_pitch(
-            &params.away_lineup, away_lpos, h_pit, h_stamina, h_pit_outs, h_cond,
+            &params.away_lineup, &params.home_lineup, away_lpos, h_pit, h_stamina, h_pit_outs, h_cond,
             inning, home_score - away_score,
             &mut pit_map, &mut bat_map, &mut rng,
         );
@@ -587,7 +597,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
         // 홈 공격 (하반기)
         let (bot_runs, new_home_lpos, new_a_outs, new_a_stamina) = sim_half_inning_pitch(
-            &params.home_lineup, home_lpos, a_pit, a_stamina, a_pit_outs, a_cond,
+            &params.home_lineup, &params.away_lineup, home_lpos, a_pit, a_stamina, a_pit_outs, a_cond,
             inning, home_score - away_score,
             &mut pit_map, &mut bat_map, &mut rng,
         );
@@ -608,7 +618,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 let ex_h_cond = cond_start_mod(&ex_h.id, &params.conditions);
                 let ex_h_st = *pit_stamina_map.get(&ex_h.id).unwrap_or(&ex_h.stamina);
                 let (t, new_al, _, new_ex_h_st) = sim_half_inning_pitch(
-                    &params.away_lineup, away_lpos, ex_h, ex_h_st, 27, ex_h_cond,
+                    &params.away_lineup, &params.home_lineup, away_lpos, ex_h, ex_h_st, 27, ex_h_cond,
                     ex_inning, home_score - away_score,
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
@@ -620,7 +630,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 let ex_a_cond = cond_start_mod(&ex_a.id, &params.conditions);
                 let ex_a_st = *pit_stamina_map.get(&ex_a.id).unwrap_or(&ex_a.stamina);
                 let (b, new_hl, _, new_ex_a_st) = sim_half_inning_pitch(
-                    &params.home_lineup, home_lpos, ex_a, ex_a_st, 27, ex_a_cond,
+                    &params.home_lineup, &params.away_lineup, home_lpos, ex_a, ex_a_st, 27, ex_a_cond,
                     ex_inning, home_score - away_score,
                     &mut pit_map, &mut bat_map, &mut rng,
                 );

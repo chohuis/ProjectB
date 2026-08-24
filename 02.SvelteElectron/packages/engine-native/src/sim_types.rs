@@ -686,6 +686,17 @@ pub(crate) fn default_neutral_stat() -> f64 { 50.0 }
 #[serde(rename_all = "camelCase")]
 pub struct SimBatter {
     pub id: String,
+    /// 수비 포지션 — **도루 저지에 포수를 찾는 데 쓴다.**
+    ///
+    /// ⚠ 없으면 빈 문자열이라 포수를 못 찾고 중립(50)이 된다.
+    ///   `match_engine`은 `fielders`로 포수를 찾는데 리그 시뮬엔 그게 없었다 —
+    ///   **두 모델이 다른 척도를 쓰면 주인공 기록과 리그 기록이 갈린다**
+    ///   (`match_engine`의 도루 주석이 같은 함정을 적어 뒀다).
+    #[serde(default)]
+    pub position: String,
+    /// 송구. 포수일 때 도루 저지에 걸린다. 없으면 50(중립)이다
+    #[serde(default = "default_neutral_stat")]
+    pub arm: f64,
     pub contact: f64,
     pub power: f64,
     pub eye: f64,

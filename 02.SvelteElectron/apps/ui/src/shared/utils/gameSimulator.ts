@@ -41,6 +41,8 @@ interface SimBatter {
   id: string; contact: number; power: number; eye: number;
   discipline: number; battingClutch: number;
   speed: number; baseInstinct: number;
+  /** 도루 저지 — 수비 팀에서 포수를 찾는 데 쓴다 */
+  position: string; arm: number;
 }
 
 function toSimPitcher(
@@ -92,6 +94,11 @@ function toSimBatter(
     // 50은 시도 확률이 바닥이다. 능력치는 처음부터 있었는데 전달만 빠져 있었다
     speed:        b?.speed        ?? 50,
     baseInstinct: b?.baseInstinct ?? 50,
+    // 🔴 **포수 도루 저지.** 수비 팀 라인업에서 포수를 찾아 `arm`을 쓴다 —
+    //    안 넘기면 엔진이 중립(50)으로 보고 어깨 좋은 포수를 두는 뜻이 없어진다.
+    //    바로 위 `speed`·`baseInstinct`가 정확히 같은 이유로 빠져 있던 전례가 있다.
+    position: (e.details.player as EntityPlayerDetails).position ?? "",
+    arm:      b?.arm ?? 50,
   };
 }
 
