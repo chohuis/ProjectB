@@ -403,6 +403,20 @@ export async function pushCareerForward(): Promise<string | null> {
       // 통보 자체가 안 뜨고 대학으로 새서 거부 경로를 영영 못 밟는다
       // (T4가 실제로 그렇게 "거부 경로를 안 탔다"로 실패했다)
       if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
+      // 🔴 **대학생은 진급이 먼저다.** 예전엔 독립 합격이 있으면 그쪽을 먼저 골라
+      //    **1학년만 마치고 대학을 떠났다** — `universityWeek`이 52에서 멈췄고
+      //    대학 이벤트 Y2~Y4 20종이 구조적으로 도달 불가였다.
+      //    게임은 4학년을 지원한다(`UNIVERSITY_FINAL_GRADE = 4`) — **계측이 안 밟은 것이다.**
+      //    화면에는 "다음 학년 진급" 버튼이 있고 사람은 그걸 고를 수 있다.
+      //
+      //    ⚠ 지명(`draftDrafted`)은 위에서 이미 처리한다 — 대학생도 2·3·4학년에
+      //      드래프트 신청을 하고, 지명되면 그쪽이 우선이다.
+      const stageNow = get(gameStore).protagonist.careerStage;
+      if (stageNow === "university") {
+        if (await continueCurrentStage()) return "careerChoice(continue:university)";
+        // 못 이어가면 4학년 졸업이다 — 아래 대학 갈래로 떨어진다
+      }
+
       // 미지명이면 대학 → 독립 순으로 받는다. 아무 데도 안 되면 못 민다
       const uni = r?.universityPassed?.[0];
       const ind = r?.independentPassed?.[0];
@@ -2048,6 +2062,8 @@ export function protagonistState(): Record<string, unknown> {
     serviceWeeks: p.militaryServiceWeeks, recoveryWeeks: p.militaryRecoveryWeeks ?? 0,
     proServiceYears: p.proServiceYears,
     ovr: p.pitching?.ovr ?? p.batting?.ovr ?? 0,
+    // 대학 학년 계수기 — ⑦ 재현용. `stage`만으론 몇 년째인지 못 본다
+    universityWeek: get(gameStore).schoolState?.universityWeek ?? 0,
     retired: p.retirement ?? null,
   };
 }
