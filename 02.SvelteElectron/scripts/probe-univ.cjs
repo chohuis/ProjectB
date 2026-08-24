@@ -5,9 +5,9 @@ const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 const SEED = Number(process.env.PF_SEED || 20260803);
 (async () => {
-  const { app, tmp } = await headless.boot("unv");
+  const { app, tmp } = await headless.boot(process.env.PF_TAG || "unv");
   try {
-    await app.boot({ slotId: "UV", worldSeed: SEED, seasonYear: 2026 });
+    await app.boot({ slotId: (process.env.PF_SLOT || "UV"), worldSeed: SEED, seasonYear: 2026 });
     const start = app.currentSeason();
     let guard = 0, maxUw = 0, lastStage = "";
     const path2 = [];
