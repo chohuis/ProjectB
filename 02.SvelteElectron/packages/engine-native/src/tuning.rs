@@ -813,11 +813,24 @@ mod steal_catcher_tests {
     }
 
     /// 3루 도루도 같은 규칙을 쓴다 — **두 벌로 두면 척도가 갈린다.**
+    ///
+    /// ⚠ **속도가 게이트를 넘어야 한다.** `STEAL_3B_SPEED_GATE`(88) 이하면
+    ///   `(0.0, 0.0)`이 와서 둘이 같아진다 — 처음에 80을 써서 검사가 헛돌았다.
+    ///   *재는 자리가 고친 자리와 다를 수 있다*의 또 다른 얼굴이다.
     #[test]
     fn 삼루_도루도_같은_규칙이다() {
-        let (_, mid)  = steal_third_probs(80.0, 60.0, 1.0, 0.0, 50.0);
-        let (_, good) = steal_third_probs(80.0, 60.0, 1.0, 0.0, 90.0);
-        assert!(mid > good, "3루 도루에 포수가 안 걸린다");
+        let fast = STEAL_3B_SPEED_GATE + 5.0;
+        let (_, mid)  = steal_third_probs(fast, 60.0, 1.0, 0.0, 50.0);
+        let (_, good) = steal_third_probs(fast, 60.0, 1.0, 0.0, 90.0);
+        assert!(mid > good, "3루 도루에 포수가 안 걸린다: {mid} vs {good}");
+    }
+
+    /// 게이트 아래는 시도 자체를 안 한다 — 포수와 무관하다
+    #[test]
+    fn 느린_주자는_삼루를_안_노린다() {
+        let slow = STEAL_3B_SPEED_GATE - 1.0;
+        let (a, s) = steal_third_probs(slow, 60.0, 1.0, 0.0, 50.0);
+        assert_eq!((a, s), (0.0, 0.0));
     }
 
     /// 포수를 모르면 중립이다 — 옛 페이로드는 `position`이 비어 있다.

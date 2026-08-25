@@ -309,6 +309,8 @@ mod tests {
         generate_career_history(GenerateCareerHistoryParams {
             world_seed: 4242.0, season_year: 2029, rules: rules(),
             players: pl, league_teams: teams(),
+            // 입단 이력을 건너뛸지 — 검사는 예전대로 만든다
+            skip_entry: false,
         })
     }
 

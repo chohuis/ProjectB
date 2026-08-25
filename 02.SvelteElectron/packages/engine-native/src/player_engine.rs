@@ -770,28 +770,28 @@ mod tests {
     #[test]
     fn calc_market_salary_base() {
         // ovr=50, fame=0 → 1800
-        let p = CalcMarketSalaryParams { ovr: 50.0, fame: 0.0, league_id: "KBL".to_string() };
+        let p = CalcMarketSalaryParams { ovr: 50.0, fame: 0.0, league_id: "KBL".to_string(), league_mult: Default::default() };
         assert_eq!(calc_market_salary(p), 1800);
     }
 
     #[test]
     fn calc_market_salary_high_ovr() {
         // 1800 + (80-50)*220 = 8400
-        let p = CalcMarketSalaryParams { ovr: 80.0, fame: 0.0, league_id: "KBL".to_string() };
+        let p = CalcMarketSalaryParams { ovr: 80.0, fame: 0.0, league_id: "KBL".to_string(), league_mult: Default::default() };
         assert_eq!(calc_market_salary(p), 8400);
     }
 
     #[test]
     fn calc_market_salary_abl_multiplier() {
         // 1800 * 3.5 = 6300
-        let p = CalcMarketSalaryParams { ovr: 50.0, fame: 0.0, league_id: "LEAGUE_ABL".to_string() };
+        let p = CalcMarketSalaryParams { ovr: 50.0, fame: 0.0, league_id: "LEAGUE_ABL".to_string(), league_mult: Default::default() };
         assert_eq!(calc_market_salary(p), 6300);
     }
 
     #[test]
     fn calc_offered_salary_floor() {
         // 낮은 값 → 1500 floor
-        let p = CalcOfferedSalaryParams { current_salary: 100.0, rating: 50.0, market_salary: 100.0 };
+        let p = CalcOfferedSalaryParams { current_salary: 100.0, rating: 50.0, market_salary: 100.0, league_mult: Default::default() };
         assert_eq!(calc_offered_salary(p), 1500);
     }
 

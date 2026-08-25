@@ -4045,6 +4045,8 @@ mod closer_tests {
         SimBatter {
             id: id.into(), contact: ovr, power: ovr, eye: ovr, discipline: ovr,
             batting_clutch: 50.0, speed: 55.0, base_instinct: 55.0,
+            // 포수 도루 저지용 — 검사는 중립으로 둔다(포수가 아니다)
+            position: String::new(), arm: 50.0,
         }
     }
     /// ⚠ **주력은 실측 분포를 쓴다.** 두 번 틀렸다:
@@ -4080,6 +4082,8 @@ mod closer_tests {
             let apen = || { let mut v = vec![pit("ACP", 75.0)];
                 v.extend((0..4).map(|i| pit(&format!("ARP{i}"), 58.0))); v };
             let params = SimGameParams {
+                // 씨앗 배선에서 늘어난 둘 — 검사는 0(=예전 경로)으로 둔다
+                schedule_id: String::new(), world_seed: 0,
                 home_rotation: vec![pit("HSP", 62.0)],
                 away_rotation: vec![pit("ASP", 62.0)],
                 home_bullpen: hpen(),
@@ -4128,6 +4132,8 @@ mod closer_tests {
         let mut sb = 0usize;
         for w in 0..n {
             let params = SimGameParams {
+                // 씨앗 배선에서 늘어난 둘 — 검사는 0(=예전 경로)으로 둔다
+                schedule_id: String::new(), world_seed: 0,
                 home_rotation: vec![pit("HSP", 62.0)],
                 away_rotation: vec![pit("ASP", 62.0)],
                 home_bullpen: (0..4).map(|i| pit(&format!("HRP{i}"), 58.0)).collect(),
@@ -4170,6 +4176,8 @@ mod closer_tests {
         let (mut p_ab, mut p_risp_ab) = (0i32, 0i32);
         for w in 0..40 {
             let params = SimGameParams {
+                // 씨앗 배선에서 늘어난 둘 — 검사는 0(=예전 경로)으로 둔다
+                schedule_id: String::new(), world_seed: 0,
                 home_rotation: vec![pit("HSP", 65.0)],
                 away_rotation: vec![pit("ASP", 65.0)],
                 home_bullpen: (0..4).map(|i| pit(&format!("HRP{i}"), 60.0)).collect(),
