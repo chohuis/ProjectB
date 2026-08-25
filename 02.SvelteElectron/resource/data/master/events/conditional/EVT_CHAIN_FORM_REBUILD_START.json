@@ -7,18 +7,17 @@
   "oncePolicy": "once_per_career",
   "conditions": [
     {
-      "type": "num_lte",
-      "path": "developmentRate",
-      "value": 1
+      "type": "num_gte",
+      "path": "age",
+      "value": 18
     },
     {
       "type": "week_gte",
       "value": 8
     },
     {
-      "type": "num_gte",
-      "path": "age",
-      "value": 18
+      "type": "week_lte",
+      "value": 20
     }
   ],
   "messageTemplateId": "MSG_CHAIN_FORM_REBUILD_START",
