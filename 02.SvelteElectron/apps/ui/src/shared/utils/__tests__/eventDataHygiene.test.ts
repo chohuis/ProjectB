@@ -80,19 +80,27 @@ describe("이벤트 데이터 위생", () => {
    * 학년으로 갈리는 연간 행사가 그렇다 — 같은 주에 같이 뽑히지 않는다.
    * 문제는 **같은 풀 안**이다. 거기선 매주 같은 상자에서 함께 뽑힌다.
    *
-   * ⚠ 지금 14건(규칙 41개)이 남아 있고 **거의 다 고교·대학 칸**이다.
-   * 최악은 `MSG_RAND_TEAM_MEAL`·`MSG_RAND_SENIOR_ADVICE`로 각각 6개가
-   * 같은 상자에서 뽑힌다. 칸을 내려가며 푼다 — 여기서는 **더 늘지 않는
+   * 🔴 **세는 단위는 그룹이 아니라 잉여 규칙이다.** 예전엔 그룹 수를 셌는데,
+   * 2026-08-25에 풀 하나를 셋으로 가르자 **그룹이 14 → 15로 늘고 잉여는
+   * 27 → 25로 줄었다** — 한 그룹이 두 풀로 쪼개지면 그룹 수는 늘고 그룹
+   * 크기는 준다. 그룹 수로는 나아진 걸 나빠진 걸로 읽는다.
+   *
+   * ⚠ 지금 잉여 25종(그룹 15 · 최대 5)이고 **거의 다 고교·대학 칸**이다.
+   * 최악은 `MSG_RAND_TEAM_MEAL` 5개 — 날씨·팀케미 이벤트가 "팀 회식이
+   * 있습니다"를 띄운다. 칸을 내려가며 푼다. 여기서는 **더 늘지 않는
    * 것**만 지킨다.
    */
-  it("같은 풀 + 같은 템플릿 겹침이 14건을 넘지 않는다", () => {
+  it("같은 풀 + 같은 템플릿 잉여가 25종을 넘지 않는다", () => {
     const byKey = new Map<string, string[]>();
     for (const r of RULES) {
       if (!r.poolId) continue;
       const k = `${r.messageTemplateId}|${r.poolId}`;
       byKey.set(k, [...(byKey.get(k) ?? []), r.id]);
     }
-    const dup = [...byKey.entries()].filter(([, v]) => v.length > 1);
-    expect(dup.length).toBeLessThanOrEqual(14);
+    const dup = [...byKey.values()].filter((v) => v.length > 1);
+    const excess = dup.reduce((a, v) => a + v.length - 1, 0);
+    expect(excess).toBeLessThanOrEqual(25);
+    // 한 상자에 같은 글이 여섯 개씩 있던 걸 다시 만들지 않는다
+    expect(Math.max(0, ...dup.map((v) => v.length))).toBeLessThanOrEqual(5);
   });
 });

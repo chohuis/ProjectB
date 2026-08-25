@@ -671,10 +671,18 @@ interface Manifest {
     conditional: string[];
     random: { media: string[]; social: string[]; team_life: string[] };
   };
+  /**
+   * 추첨 풀 파일 이름 (`events/pools/<name>.json`).
+   *
+   * 🔴 예전엔 이 목록이 **코드에 한 줄씩 박혀** 있었다. 새 풀을 만들어도
+   * 아무도 안 읽고 오류도 로그도 안 난다 — 그 풀에 들어간 이벤트가 영원히
+   * 안 뜬다. 이벤트·업적은 이미 매니페스트로 읽는데 풀만 빠져 있었다.
+   */
+  pools: string[];
   achievements: { baseball: string[]; growth: string[]; social: string[]; hidden: string[] };
 }
 
-// entities/players/_index.json 援ъ“
+// entities/players/_index.json 구조
 interface EntityIndex {
   generated: string;
   byLeague: Record<string, string[]>;
@@ -831,7 +839,6 @@ function createMasterStore() {
       const [
         trainingData, pitchData, unlockData, refsData,
         msgTmplData, decisionTmplData,
-        poolMedia, poolSocial, poolTeamLife,
         militaryCommonData, militarySportsData, militaryGeneralData,
         manifest,
       ] = await Promise.all([
@@ -845,12 +852,6 @@ function createMasterStore() {
         fetchMaster<{ templates: Record<string, any>[] }>("messages/templates.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<{ decisions: Record<string, any>[] }>("messages/decision_templates.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<Record<string, any>>("events/pools/media.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<Record<string, any>>("events/pools/social.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<Record<string, any>>("events/pools/team_life.json"),
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_common.json"),
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_sports.json"),
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_general.json"),
@@ -859,9 +860,18 @@ function createMasterStore() {
 
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
-      const rawPools      = [poolMedia, poolSocial, poolTeamLife].filter(
-        (p): p is Record<string, unknown> => p !== null && typeof p === "object"
-      );
+      // 풀은 **매니페스트가 정본**이다 — 파일을 더해도 코드를 안 고친다
+      const rawPools = (await Promise.all(
+        (manifest?.pools ?? []).map((name) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          fetchMaster<Record<string, any>>(`events/pools/${name}.json`)),
+      )).filter((p): p is Record<string, unknown> => p !== null && typeof p === "object");
+      if (rawPools.length === 0) {
+        throw new Error(
+          "[masterStore] 추첨 풀을 하나도 못 읽었다 — `npm run gen:manifest`를 돌려라. " +
+          "풀이 비면 랜덤 이벤트가 통째로 안 뜬다"
+        );
+      }
       const eventPools = rawPools.map(parseEventPool);
       // refs가 팀의 유일한 정본이다 — 보충하지 않는다 (위 주석 참고)
       const mergedTeams = refsData?.teams ?? [];

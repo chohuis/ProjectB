@@ -6,7 +6,7 @@
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 22,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "poolId": "POOL_TRAIN_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_FIELD_WORK",
   "decisionTemplateId": "DEC_PRO_LIFE_FIELD_WORK",
   "conditions": [

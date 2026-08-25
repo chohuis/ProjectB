@@ -1,6 +1,6 @@
 {
   "id": "POOL_TEAM_LIFE_DAILY",
-  "description": "팀 생활 관련 랜덤 이벤트 풀",
+  "description": "팀·일상 랜덤 이벤트 풀",
   "baseRoll": {
     "mode": "percent",
     "value": 26

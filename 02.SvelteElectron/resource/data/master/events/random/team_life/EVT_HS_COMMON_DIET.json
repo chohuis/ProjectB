@@ -5,7 +5,7 @@
   "priority": 45,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 8,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "poolId": "POOL_BODY_DAILY",
   "weight": 13,
   "conditions": [
     {

@@ -1,0 +1,9 @@
+{
+  "id": "POOL_TRAIN_DAILY",
+  "description": "훈련·폼 랜덤 이벤트 풀",
+  "baseRoll": {
+    "mode": "percent",
+    "value": 13
+  },
+  "maxPicksPerWeek": 1
+}
