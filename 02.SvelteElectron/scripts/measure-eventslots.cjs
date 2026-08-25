@@ -25,7 +25,20 @@ for (const lane of ["mandatory", "conditional", "random"]) {
 }
 
 const C = (r, t) => (r.conditions ?? []).find((c) => c.type === t);
-const stage = (r) => C(r, "career_stage")?.stage ?? null;
+/**
+ * 그 규칙이 속한 무대들. `career_stage`는 `stage` 하나 또는 `stages` 배열이다
+ * — 프로 세 리그를 한 번에 가리키려고 배열을 열었다(2026-08-25).
+ */
+const stagesOf = (r) => {
+  const c = C(r, "career_stage");
+  if (!c) return [];
+  return Array.isArray(c.stages) ? c.stages : c.stage ? [c.stage] : [];
+};
+const stage = (r) => { const a = stagesOf(r); return a.length === 1 ? a[0] : null; };
+/** 그 무대에 속하나 — 배열이면 포함 여부 */
+const inStage = (r, s) => stagesOf(r).includes(s);
+/** 무대를 아예 안 가리는가 (진짜 전체 공용) */
+const noStage = (r) => stagesOf(r).length === 0;
 const league = (r) => C(r, "league_id")?.leagueId ?? null;
 const hasPath = (r, p) => (r.conditions ?? []).some((c) => c.path === p);
 const gradeOf = (r) => C(r, "grade")?.value ?? null;
@@ -89,30 +102,30 @@ function vocab(list) {
 }
 
 const SLOTS = [
-  ["전체 공용",        (r) => !stage(r) && !league(r)],
+  ["전체 공용",        (r) => noStage(r) && !league(r)],
   [null],
-  ["고교 전체 공용",   (r) => stage(r) === "highschool" && gradeOf(r) === null],
-  ["  고교 1학년",     (r) => stage(r) === "highschool" && gradeOf(r) === 1],
-  ["  고교 2학년",     (r) => stage(r) === "highschool" && gradeOf(r) === 2],
-  ["  고교 3학년",     (r) => stage(r) === "highschool" && gradeOf(r) === 3],
+  ["고교 전체 공용",   (r) => inStage(r, "highschool") && gradeOf(r) === null],
+  ["  고교 1학년",     (r) => inStage(r, "highschool") && gradeOf(r) === 1],
+  ["  고교 2학년",     (r) => inStage(r, "highschool") && gradeOf(r) === 2],
+  ["  고교 3학년",     (r) => inStage(r, "highschool") && gradeOf(r) === 3],
   [null],
-  ["대학 전체 공용",   (r) => stage(r) === "university" && uniYear(r) === null],
+  ["대학 전체 공용",   (r) => inStage(r, "university") && uniYear(r) === null],
   ["  대학 1학년",     (r) => uniYear(r) === 1],
   ["  대학 2학년",     (r) => uniYear(r) === 2],
   ["  대학 3학년",     (r) => uniYear(r) === 3],
   ["  대학 4학년",     (r) => uniYear(r) === 4],
   [null],
-  ["독립 전체 공용",   (r) => stage(r) === "independent"],
+  ["독립 전체 공용",   (r) => inStage(r, "independent")],
   [null],
-  ["KBL 1군 공용",     (r) => stage(r) === "pro_kbl" && !league(r) && inBand(r, "proServiceYears", 1, 99) === null],
-  ["  KBL 초기 1~3",   (r) => stage(r) === "pro_kbl" && !league(r) && inBand(r, "proServiceYears", 1, 3) === true],
-  ["  KBL 중기 4~8",   (r) => stage(r) === "pro_kbl" && !league(r) && inBand(r, "proServiceYears", 4, 8) === true],
-  ["  KBL 말기 9~",    (r) => stage(r) === "pro_kbl" && !league(r) && inBand(r, "proServiceYears", 9, 99) === true],
+  ["KBL 1군 공용",     (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 1, 99) === null],
+  ["  KBL 초기 1~3",   (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 1, 3) === true],
+  ["  KBL 중기 4~8",   (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 4, 8) === true],
+  ["  KBL 말기 9~",    (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 9, 99) === true],
   ["KBL 2군",          (r) => league(r) === "LEAGUE_KBL_FARM"],
   [null],
-  ["ABL 1군",          (r) => stage(r) === "pro_abl"],
+  ["ABL 1군",          (r) => inStage(r, "pro_abl")],
   ["ABL 2군",          (r) => league(r) === "LEAGUE_ABL_FARM"],
-  ["JBL 1군",          (r) => stage(r) === "pro_jbl"],
+  ["JBL 1군",          (r) => inStage(r, "pro_jbl")],
   ["JBL 2군",          (r) => league(r) === "LEAGUE_JBL_FARM"],
   [null],
   ["군 · 상무",        (r) => (r.conditions ?? []).some((c) =>
@@ -124,14 +137,14 @@ const log = (s) => process.stdout.write(s + "\n");
 
 /** 무대 하나 = 그 무대의 모든 규칙. 무대를 다 더하면 전체가 나와야 한다 */
 const STAGES = [
-  ["전체 공용", (r) => !stage(r) && !league(r)],
-  ["고교",      (r) => stage(r) === "highschool"],
-  ["대학",      (r) => stage(r) === "university"],
-  ["독립",      (r) => stage(r) === "independent"],
-  ["KBL 1군",   (r) => stage(r) === "pro_kbl" && !league(r)],
+  ["전체 공용", (r) => noStage(r) && !league(r)],
+  ["고교",      (r) => inStage(r, "highschool")],
+  ["대학",      (r) => inStage(r, "university")],
+  ["독립",      (r) => inStage(r, "independent")],
+  ["KBL 1군",   (r) => inStage(r, "pro_kbl") && !league(r)],
   ["KBL 2군",   (r) => league(r) === "LEAGUE_KBL_FARM"],
-  ["ABL",       (r) => stage(r) === "pro_abl" || league(r) === "LEAGUE_ABL_FARM"],
-  ["JBL",       (r) => stage(r) === "pro_jbl" || league(r) === "LEAGUE_JBL_FARM"],
+  ["ABL",       (r) => inStage(r, "pro_abl") || league(r) === "LEAGUE_ABL_FARM"],
+  ["JBL",       (r) => inStage(r, "pro_jbl") || league(r) === "LEAGUE_JBL_FARM"],
 ];
 
 log("");
@@ -159,8 +172,12 @@ for (const [label, pick] of STAGES) {
   for (const r of list) claimed.add(r.id);
   log(`    ${label.padEnd(12)}${String(list.length).padStart(5)}`);
 }
-log(`    ${"합계".padEnd(12)}${String(total).padStart(5)}   /  전체 ${R.length}`);
-if (total !== R.length || claimed.size !== R.length) {
+// ⚠ 한 규칙이 여러 무대에 속할 수 있다 — `career_stage`가 `stages` 배열을
+//   받으면서부터다(프로 세 리그를 한 번에 가리킨다). **합계가 아니라
+//   고유 규칙 수**로 검산한다
+log(`    ${"단순 합".padEnd(12)}${String(total).padStart(5)}   (여러 무대에 걸친 규칙을 중복해서 센다)`);
+log(`    ${"고유 규칙".padEnd(12)}${String(claimed.size).padStart(5)}   /  전체 ${R.length}`);
+if (claimed.size !== R.length) {
   const lost = R.filter((r) => !claimed.has(r.id));
   log(`    🔴 어느 칸에도 안 잡힌 규칙 ${lost.length}종: ${lost.slice(0, 10).map((r) => r.id).join(" ")}`);
   process.exitCode = 1;

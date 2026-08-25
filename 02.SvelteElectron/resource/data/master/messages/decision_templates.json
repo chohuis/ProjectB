@@ -7725,6 +7725,395 @@
           ]
         }
       ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_ADVERTISEMENT",
+      "prompt": "광고 제안을 받아들이겠습니까?",
+      "options": [
+        {
+          "id": "accept",
+          "label": "촬영에 응한다",
+          "effectHint": "돈 +300, 인기 +5, 피로 +8",
+          "effects": [
+            "money:+300",
+            "popularity:+5",
+            "fatigue:+8"
+          ]
+        },
+        {
+          "id": "decline",
+          "label": "훈련이 먼저다",
+          "effectHint": "성실 +3",
+          "effects": [
+            "diligence:+3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_MASSAGE",
+      "prompt": "몸을 어떻게 풀겠습니까?",
+      "options": [
+        {
+          "id": "outside",
+          "label": "밖에서 제대로 받는다",
+          "effectHint": "돈 -30, 피로 -14",
+          "effects": [
+            "money:-30",
+            "fatigue:-14"
+          ]
+        },
+        {
+          "id": "team",
+          "label": "팀 순번으로 끝낸다",
+          "effectHint": "피로 -6",
+          "effects": [
+            "fatigue:-6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_EQUIPMENT_CHECK",
+      "prompt": "스파이크를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "new",
+          "label": "새로 맞춘다",
+          "effectHint": "돈 -150, 컨디션 +5",
+          "effects": [
+            "money:-150",
+            "condition:+5"
+          ]
+        },
+        {
+          "id": "repair",
+          "label": "손봐서 쓴다",
+          "effectHint": "성실 +3",
+          "effects": [
+            "diligence:+3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_CATCHER_DINNER",
+      "prompt": "저녁 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "treat",
+          "label": "내가 산다",
+          "effectHint": "동료 관계 +9 (150만원)",
+          "effects": [
+            "luxury.teammate:150"
+          ]
+        },
+        {
+          "id": "split",
+          "label": "각자 낸다",
+          "effectHint": "동료 관계 +3",
+          "effects": [
+            "relation.teammate:+3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_POST_GAME_MEAL",
+      "prompt": "식사 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "treat",
+          "label": "다 같이 간다 — 내가 낸다",
+          "effectHint": "동료 관계 +6 (100만원), 피로 +3",
+          "effects": [
+            "luxury.teammate:100",
+            "fatigue:+3"
+          ]
+        },
+        {
+          "id": "join",
+          "label": "같이 가되 각자 낸다",
+          "effectHint": "동료 관계 +2, 피로 +3",
+          "effects": [
+            "relation.teammate:+2",
+            "fatigue:+3"
+          ]
+        },
+        {
+          "id": "rest",
+          "label": "혼자 간단히 먹고 쉰다",
+          "effectHint": "피로 -4",
+          "effects": [
+            "fatigue:-4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_OLD_GLOVE",
+      "prompt": "글러브를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "buy",
+          "label": "새로 산다",
+          "effectHint": "돈 -80, 컨디션 +6",
+          "effects": [
+            "money:-80",
+            "condition:+6"
+          ]
+        },
+        {
+          "id": "fix",
+          "label": "수선해서 쓴다",
+          "effectHint": "돈 -15, 성실 +3",
+          "effects": [
+            "money:-15",
+            "diligence:+3"
+          ]
+        },
+        {
+          "id": "keep",
+          "label": "그냥 쓴다",
+          "effectHint": "컨디션 -4",
+          "effects": [
+            "condition:-4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LIFE_LATE_MEAL",
+      "prompt": "저녁을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "outside",
+          "label": "밖에서 제대로 먹는다",
+          "effectHint": "돈 -20, 컨디션 +5",
+          "effects": [
+            "money:-20",
+            "condition:+5"
+          ]
+        },
+        {
+          "id": "leftover",
+          "label": "남은 걸로 때운다",
+          "effectHint": "피로 +4",
+          "effects": [
+            "fatigue:+4"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LIFE_SHARE_GEAR",
+      "prompt": "공이 모자랍니다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "buy",
+          "label": "한 상자 사 온다",
+          "effectHint": "돈 -40, 동료 관계 +6",
+          "effects": [
+            "money:-40",
+            "relation.teammate:+6"
+          ]
+        },
+        {
+          "id": "share",
+          "label": "돌려 쓴다",
+          "effectHint": "피로 +3",
+          "effects": [
+            "fatigue:+3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_COACH_SMALL_TALK",
+      "prompt": "대화를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "이야기를 이어간다",
+          "effectHint": "코치 관계 +7, 피로 +2",
+          "effects": [
+            "relation.coach:+7",
+            "fatigue:+2"
+          ]
+        },
+        {
+          "id": "short",
+          "label": "짧게 끝낸다",
+          "effectHint": "변화 없음",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_NEW_TEAMMATE",
+      "prompt": "새 동료를 어떻게 맞겠습니까?",
+      "options": [
+        {
+          "id": "greet",
+          "label": "먼저 말을 건다",
+          "effectHint": "동료 관계 +8",
+          "effects": [
+            "relation.teammate:+8"
+          ]
+        },
+        {
+          "id": "wait",
+          "label": "지켜본다",
+          "effectHint": "변화 없음",
+          "effects": []
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_ROOKIE_HAZING",
+      "prompt": "신고식에 어떻게 참여하겠습니까?",
+      "options": [
+        {
+          "id": "lead",
+          "label": "앞장서서 띄운다",
+          "effectHint": "동료 관계 +8, 피로 +6",
+          "effects": [
+            "relation.teammate:+8",
+            "fatigue:+6"
+          ]
+        },
+        {
+          "id": "join",
+          "label": "적당히 어울린다",
+          "effectHint": "동료 관계 +3, 피로 +2",
+          "effects": [
+            "relation.teammate:+3",
+            "fatigue:+2"
+          ]
+        },
+        {
+          "id": "skip",
+          "label": "빠진다",
+          "effectHint": "동료 관계 -4, 피로 -3",
+          "effects": [
+            "relation.teammate:-4",
+            "fatigue:-3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_TEAM_MEETING",
+      "prompt": "미팅에서 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "speak",
+          "label": "먼저 입을 연다",
+          "effectHint": "감독 관계 +8, 사기 +5",
+          "effects": [
+            "relation.manager:+8",
+            "morale:+5"
+          ]
+        },
+        {
+          "id": "listen",
+          "label": "끝까지 듣는다",
+          "effectHint": "사기 +3",
+          "effects": [
+            "morale:+3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_VETERAN_ADVICE",
+      "prompt": "선배의 말을 어떻게 받겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "더 물어본다",
+          "effectHint": "동료 관계 +6, 멘탈 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": [
+            "relation.teammate:+6",
+            "xp.mentality:+2"
+          ]
+        },
+        {
+          "id": "ask_bat",
+          "label": "더 물어본다",
+          "effectHint": "동료 관계 +6, 선구 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": [
+            "relation.teammate:+6",
+            "xp.batting.discipline:+2"
+          ]
+        },
+        {
+          "id": "keep",
+          "label": "새겨둔다",
+          "effectHint": "사기 +6",
+          "effects": [
+            "morale:+6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_TEAM_TALK_IND",
+      "prompt": "미팅에서 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "speak",
+          "label": "먼저 입을 연다",
+          "effectHint": "감독 관계 +8, 사기 +5",
+          "effects": [
+            "relation.manager:+8",
+            "morale:+5"
+          ]
+        },
+        {
+          "id": "listen",
+          "label": "듣고만 있는다",
+          "effectHint": "사기 +3",
+          "effects": [
+            "morale:+3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_SEASON_TICKET",
+      "prompt": "그 팬을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sign",
+          "label": "공에 사인해 건넨다",
+          "effectHint": "인기 +5, 사기 +6",
+          "effects": [
+            "popularity:+5",
+            "morale:+6"
+          ]
+        },
+        {
+          "id": "nod",
+          "label": "눈인사만 한다",
+          "effectHint": "사기 +3",
+          "effects": [
+            "morale:+3"
+          ]
+        }
+      ]
     }
   ]
 }

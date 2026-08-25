@@ -21,6 +21,26 @@ const arg = (n, d) => {
 const SEASONS = arg("seasons", 3);
 const SEED = arg("seed", 20260803);
 
+/**
+ * **경로를 고른다.** 헤드리스는 기본값이면 항상 한 갈래로만 간다 —
+ * 그러면 대학·프로·군 무대는 재고가 있어도 영원히 0으로 나온다.
+ *
+ *   --path indie   고교 → 독립          (기본)
+ *   --path univ    고교 → 대학 → …
+ *   --path draft   고교 → 드래프트 → 프로
+ *   --path army    고교 → 즉시 입대
+ */
+const PATHS = {
+  indie: { draft: false, university: false, independent: true },
+  univ:  { draft: false, university: true,  independent: false },
+  draft: { draft: true,  university: false, independent: true },
+  army:  { draft: false, university: false, independent: true, enlistNow: true },
+};
+const pi = process.argv.indexOf("--path");
+const PATH_KEY = pi !== -1 ? process.argv[pi + 1] : "indie";
+const POLICY = PATHS[PATH_KEY];
+if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.exit(1); }
+
 const M = "resource/data/master/events";
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]));
@@ -31,15 +51,28 @@ for (const lane of ["mandatory", "conditional", "random"]) {
   }
 }
 const C = (r, t) => (r.conditions ?? []).find((c) => c.type === t);
-const stage = (r) => C(r, "career_stage")?.stage ?? null;
+/**
+ * 그 규칙이 속한 무대들. `career_stage`는 `stage` 하나 또는 `stages` 배열이다
+ * — 프로 세 리그를 한 번에 가리키려고 배열을 열었다(2026-08-25).
+ */
+const stagesOf = (r) => {
+  const c = C(r, "career_stage");
+  if (!c) return [];
+  return Array.isArray(c.stages) ? c.stages : c.stage ? [c.stage] : [];
+};
+const stage = (r) => { const a = stagesOf(r); return a.length === 1 ? a[0] : null; };
+/** 그 무대에 속하나 — 배열이면 포함 여부 */
+const inStage = (r, s) => stagesOf(r).includes(s);
+/** 무대를 아예 안 가리는가 (진짜 전체 공용) */
+const noStage = (r) => stagesOf(r).length === 0;
 const league = (r) => C(r, "league_id")?.leagueId ?? null;
 
 const GROUPS = [
-  ["전체 공용", (r) => !stage(r) && !league(r)],
-  ["고교",      (r) => stage(r) === "highschool"],
-  ["대학",      (r) => stage(r) === "university"],
-  ["독립",      (r) => stage(r) === "independent"],
-  ["KBL 1군",   (r) => stage(r) === "pro_kbl" && !league(r)],
+  ["전체 공용", (r) => noStage(r) && !league(r)],
+  ["고교",      (r) => inStage(r, "highschool")],
+  ["대학",      (r) => inStage(r, "university")],
+  ["독립",      (r) => inStage(r, "independent")],
+  ["KBL 1군",   (r) => inStage(r, "pro_kbl") && !league(r)],
   ["KBL 2군",   (r) => league(r) === "LEAGUE_KBL_FARM"],
 ];
 
@@ -47,8 +80,7 @@ const GROUPS = [
   const boot = await headless.boot("slotreach");
   const app = boot.app;
   await app.boot({ slotId: "SLTR", worldSeed: SEED, seasonYear: 2026 });
-  // 고교에서 시작해 그대로 둔다 — 진로를 안 밀면 고교 3년이 그대로 잡힌다
-  app.setCareerPolicy({ draft: false, university: false, independent: true });
+  app.setCareerPolicy(POLICY);
   app.resetEventFunnel();
 
   const start = app.currentSeason();
@@ -68,7 +100,7 @@ const GROUPS = [
   const f = app.eventFunnelProbe();
   const log = (s) => process.stdout.write(s + "\n");
   log("");
-  log(`  씨앗 ${SEED} · ${start}~${app.currentSeason()} (${SEASONS}시즌) · ${f.주수}주`);
+  log(`  씨앗 ${SEED} · ${start}~${app.currentSeason()} (${SEASONS}시즌) · ${f.주수}주 · 경로 ${PATH_KEY}`);
   log("");
   // 🔴 **안 뜬 것을 두 부류로 가른다.** 이게 없으면 뽑기 운을 결함으로 읽는다:
   //    후보엔 올랐는데 안 뽑힘  →  다시 돌리면 다른 게 안 뜬다. 정상
@@ -94,13 +126,13 @@ const GROUPS = [
   log("");
   log("  ★ 후보에 한 번도 못 오른 것 — 조건이 안 닿는다. **뽑기 운이 아니다**");
   for (const [label, ids] of Object.entries(neverCand)) {
-    if (label === "전체 공용" || label === "고교") {
+    {
       log(`    ${label} ${ids.length}종: ${ids.slice(0, 24).map((x) => x.replace("EVT_", "")).join(" ")}`);
       if (ids.length > 24) log(`      … 그 밖 ${ids.length - 24}종`);
     }
   }
   log("");
-  log(`  ⚠ 커리어가 그 무대를 안 지나면 재고가 있어도 0이다 — 여기선 고교에서 시작해 ${SEASONS}시즌이다`);
+  log(`  ⚠ 커리어가 그 무대를 안 지나면 재고가 있어도 0이다 — 경로 ${PATH_KEY} · ${SEASONS}시즌`);
   log("");
   boot.cleanup?.();
   process.exit(0);

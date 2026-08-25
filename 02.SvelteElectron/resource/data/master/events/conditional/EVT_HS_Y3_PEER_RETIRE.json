@@ -15,7 +15,7 @@
     },
     {
       "type": "week_gte",
-      "value": 30
+      "value": 16
     }
   ],
   "messageTemplateId": "MSG_HS_Y3_PEER_RETIRE",

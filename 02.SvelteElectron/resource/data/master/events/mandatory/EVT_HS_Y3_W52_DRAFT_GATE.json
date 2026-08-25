@@ -15,7 +15,7 @@
     },
     {
       "type": "week_eq",
-      "value": 52
+      "value": 27
     }
   ],
   "messageTemplateId": "MSG_HS_YEAR_END",

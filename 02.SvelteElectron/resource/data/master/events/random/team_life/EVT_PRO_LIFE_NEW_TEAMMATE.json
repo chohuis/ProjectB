@@ -8,11 +8,15 @@
   "weight": 18,
   "poolId": "POOL_TEAM_LIFE_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_NEW_TEAMMATE",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_NEW_TEAMMATE",
   "conditions": [
     {
       "type": "career_stage",
-      "stage": "pro_kbl"
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
     },
     {
       "type": "week_gte",

@@ -16,11 +16,11 @@
     },
     {
       "type": "week_gte",
-      "value": 25
+      "value": 13
     },
     {
       "type": "week_lte",
-      "value": 40
+      "value": 21
     },
     {
       "type": "team_rank_lte",

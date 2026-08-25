@@ -23,6 +23,11 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
 
     // ── 커리어 / 소속 ────────────────────────────────────────────
     case "career_stage":
+      // 🔴 **프로 세 리그를 한 번에 가리킬 수단이 없었다.** KBL 171종이
+      // `stage: "pro_kbl"`로 잠겨 있어 **해외로 나가면 1군 이야기가 통째로
+      // 멈췄다** — ABL·JBL이 0종인 진짜 이유다. 타입을 늘리지 않고
+      // `stages` 배열을 받는다. `stage` 하나는 그대로 동작한다.
+      if (Array.isArray(cond.stages)) return cond.stages.includes(protagonist.careerStage);
       return protagonist.careerStage === cond.stage;
 
     case "league_id":

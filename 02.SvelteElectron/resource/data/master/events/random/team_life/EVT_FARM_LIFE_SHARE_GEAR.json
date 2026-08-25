@@ -14,5 +14,5 @@
     }
   ],
   "messageTemplateId": "MSG_FARM_LIFE_SHARE_GEAR",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_FARM_LIFE_SHARE_GEAR"
 }

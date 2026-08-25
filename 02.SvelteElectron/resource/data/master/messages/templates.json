@@ -1724,7 +1724,7 @@
       "id": "MSG_PRO_LIFE_CATCHER_DINNER",
       "category": "system",
       "subject": "포수와 식사",
-      "body": "전담 포수와 저녁을 먹었습니다.\n\n야구 이야기가 절반, 사는 이야기가 절반입니다.",
+      "body": "전담 포수가 저녁이나 하자고 합니다.\n\n야구 이야기가 절반, 사는 이야기가 절반일 자리입니다.",
       "decisionTemplateId": null
     },
     {
@@ -1738,7 +1738,7 @@
       "id": "MSG_PRO_LIFE_ROOKIE_HAZING",
       "category": "system",
       "subject": "신인 신고식",
-      "body": "신인 선수들의 신고식이 열립니다.\n\n분위기를 푸는 자리입니다.",
+      "body": "신인 신고식이 열립니다. 분위기를 푸는 자리입니다.\n\n앞장설 수도, 적당히 있을 수도, 빠질 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -1752,7 +1752,7 @@
       "id": "MSG_PRO_LIFE_EQUIPMENT_CHECK",
       "category": "system",
       "subject": "장비 점검",
-      "body": "장비 담당자가 스파이크를 손봐 왔습니다.\n\n작은 것이 크게 느껴지는 날이 있습니다.",
+      "body": "장비 담당자가 스파이크를 살펴보더니 고개를 갸웃했습니다.\n\n손봐서 더 쓸 수도 있고, 새로 맞출 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -1773,14 +1773,14 @@
       "id": "MSG_PRO_LIFE_VETERAN_ADVICE",
       "category": "system",
       "subject": "선배의 조언",
-      "body": "베테랑 선배가 지나가듯 한마디 했습니다.\n\n짧지만 오래 남는 말이었습니다.",
+      "body": "베테랑 선배가 지나가듯 한마디 했습니다. 짧지만 걸리는 말이었습니다.\n\n더 물어볼 수도 있고, 그냥 새겨둘 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_PRO_LIFE_COACH_SMALL_TALK",
       "category": "system",
       "subject": "코치와의 잡담",
-      "body": "투수코치와 짧은 대화를 나눴습니다.\n\n야구 이야기는 아니었습니다.",
+      "body": "투수코치가 지나가다 말을 붙였습니다. 야구 이야기는 아닙니다.\n\n짧게 끊을 수도, 그대로 이어갈 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -1815,7 +1815,7 @@
       "id": "MSG_PRO_LIFE_TEAM_MEETING",
       "category": "system",
       "subject": "팀 미팅",
-      "body": "감독이 전체 미팅을 소집했습니다.\n\n분위기가 무겁습니다.",
+      "body": "감독이 전체 미팅을 소집했습니다. 분위기가 무겁습니다.\n\n먼저 입을 열 수도 있고, 끝까지 들을 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -1829,7 +1829,7 @@
       "id": "MSG_PRO_LIFE_MASSAGE",
       "category": "system",
       "subject": "마사지",
-      "body": "경기 후 마사지를 받았습니다.\n\n근육이 풀리는 감각이 좋습니다.",
+      "body": "트레이너가 팀 마사지 순번을 알려줬습니다. 짧게 끝납니다.\n\n밖에 제대로 받는 곳이 있지만 그건 개인 부담입니다.",
       "decisionTemplateId": null
     },
     {
@@ -1857,7 +1857,7 @@
       "id": "MSG_PRO_LIFE_NEW_TEAMMATE",
       "category": "system",
       "subject": "새 동료",
-      "body": "트레이드로 새 선수가 왔습니다.\n\n라커룸 자리가 하나 바뀌었습니다.",
+      "body": "트레이드로 새 선수가 왔습니다. 라커룸 자리가 하나 바뀌었습니다.\n\n먼저 말을 걸 수도 있고, 알아서 섞이길 기다릴 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -1885,7 +1885,7 @@
       "id": "MSG_PRO_LIFE_POST_GAME_MEAL",
       "category": "system",
       "subject": "경기 후 식사",
-      "body": "경기가 끝나고 늦은 식사를 합니다.\n\n이긴 날의 밥맛은 다릅니다.",
+      "body": "경기가 끝나고 늦은 식사 자리가 생겼습니다.\n\n이긴 날의 밥맛은 다르지만, 몸은 빨리 눕고 싶어 합니다.",
       "decisionTemplateId": null
     },
     {
@@ -1941,7 +1941,7 @@
       "id": "MSG_PRO_LIFE_SEASON_TICKET",
       "category": "system",
       "subject": "시즌권 팬",
-      "body": "매 홈경기 같은 자리에 앉는 팬이 있습니다.\n\n오늘도 그 자리에 있습니다.",
+      "body": "매 홈경기 같은 자리에 앉는 팬이 있습니다. 오늘도 그 자리입니다.\n\n아는 척을 할 수도, 모른 척 지나갈 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -2067,7 +2067,7 @@
       "id": "MSG_PRO_LIFE_ADVERTISEMENT",
       "category": "news",
       "subject": "광고 제안",
-      "body": "지역 업체에서 광고 모델 제안이 왔습니다.\n\n규모는 크지 않습니다.",
+      "body": "지역 업체에서 광고 모델 제안이 왔습니다. 큰 규모는 아닙니다.\n\n촬영은 하루면 끝나지만 그 하루가 훈련일입니다.",
       "decisionTemplateId": null
     },
     {
@@ -2445,7 +2445,7 @@
       "id": "MSG_IND_LIFE_OLD_GLOVE",
       "category": "system",
       "subject": "낡은 장비",
-      "body": "글러브가 많이 낡았습니다.\n\n새로 사려면 돈이 듭니다.",
+      "body": "글러브가 많이 낡았습니다. 가죽이 늘어져 손에 겉돕니다.\n\n새로 사려면 돈이 들고, 수선도 공짜는 아닙니다.",
       "decisionTemplateId": null
     },
     {
@@ -2459,7 +2459,7 @@
       "id": "MSG_IND_LIFE_TEAM_TALK_IND",
       "category": "system",
       "subject": "팀 미팅",
-      "body": "감독이 짧게 미팅을 열었습니다.\n\n다들 무슨 말이 나올지 압니다.",
+      "body": "감독이 짧게 미팅을 열었습니다. 다들 무슨 말이 나올지 압니다.\n\n먼저 말할 수도, 듣고만 있을 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -3096,14 +3096,14 @@
       "id": "MSG_FARM_LIFE_SHARE_GEAR",
       "category": "system",
       "subject": "장비 공유",
-      "body": "공이 모자랍니다.\n\n2군은 늘 그렇습니다.",
+      "body": "훈련용 공이 모자랍니다. 2군은 늘 그렇습니다.\n\n돌려 쓰면 되지만, 내 돈으로 한 상자 사 올 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_FARM_LIFE_LATE_MEAL",
       "category": "system",
       "subject": "늦은 식사",
-      "body": "경기가 끝나고 늦게 먹습니다.\n\n식당 문이 닫히기 직전입니다.",
+      "body": "경기가 끝나니 식당 문이 닫히기 직전입니다.\n\n남은 걸로 때울 수도 있고, 밖에 나가 제대로 먹을 수도 있습니다.",
       "decisionTemplateId": null
     },
     {

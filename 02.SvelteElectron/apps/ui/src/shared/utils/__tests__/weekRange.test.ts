@@ -38,6 +38,16 @@ const RULES: Rule[] = ["mandatory", "conditional", "random"]
   .map((p) => JSON.parse(readFileSync(p, "utf8")) as Rule);
 
 const SEASON_WEEKS = 52;
+/**
+ * 🔴 **고교 3학년은 52주가 아니다.** 진로 허브가 W28에 뜨고
+ * (`HS_CAREER_HUB_WEEK`) 그 주에 `careerStage`가 바뀐다. W28 이후의
+ * 3학년 이벤트는 **주인공이 이미 고교를 떠난 뒤**라 못 뜬다.
+ *
+ * 2026-08-25 실측: 16종이 52주 달력으로 쓰여 있었다. 그중
+ * `EVT_HS_Y3_W50_CAREER_CHOICE_GATE`는 **진로 선택 관문인데 실제 허브보다
+ * 22주 늦었다.**
+ */
+const HS_CAREER_HUB_WEEK = 28;
 
 describe("주차 조건", () => {
   it("🔴 week_eq / week_gte가 52를 넘지 않는다 — 넘으면 영원히 false다", () => {
@@ -58,6 +68,15 @@ describe("주차 조건", () => {
       .filter((r) => !(r.conditions ?? []).some((c) => c.type === "grade"))
       .map((r) => r.id);
     expect(missing).toEqual([]);
+  });
+
+  it("🔴 고교 3학년 주차가 진로 허브(W28)를 안 넘는다", () => {
+    const late = RULES
+      .filter((r) => (r.conditions ?? []).some((c) => c.type === "grade" && c.value === 3))
+      .filter((r) => (r.conditions ?? []).some((c) =>
+        (c.type === "week_eq" || c.type === "week_gte") && (c.value ?? 0) >= HS_CAREER_HUB_WEEK))
+      .map((r) => r.id);
+    expect(late).toEqual([]);
   });
 
   /** grade 값이 id가 말하는 학년과 같다 — 복붙 오류를 막는다 */

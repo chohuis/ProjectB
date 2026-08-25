@@ -15,7 +15,7 @@
     },
     {
       "type": "week_gte",
-      "value": 30
+      "value": 16
     },
     {
       "type": "season_phase",
