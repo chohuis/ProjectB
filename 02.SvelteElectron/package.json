@@ -125,7 +125,8 @@
     "check:determinism": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-determinism.cjs",
     "check:svelte": "svelte-check --tsconfig ./tsconfig.json",
     "measure:eventrules": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-eventrules.cjs",
-    "check:playertype": "node scripts/check-playertype.cjs"
+    "check:playertype": "node scripts/check-playertype.cjs",
+    "check:effectkeys": "node scripts/check-effectkeys.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

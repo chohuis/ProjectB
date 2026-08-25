@@ -3,6 +3,7 @@ import { MONTH_STARTS_1 } from "../utils/seasonCalendar";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
+import type { RelationKind } from "../types/relationship";
 import { validateTeamRefs, primeTeamLeagueMap, primeHsRegionMap } from "../utils/ids";
 import { language } from "../i18n";
 import {
@@ -412,9 +413,26 @@ function stageToCareerStage(stage: string): CareerStage | null {
   return map[stage] ?? null;
 }
 
-// effects 문자열 배열 → DecisionEffect 변환
-// 형식 예: ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3"]
-function parseEffectsArray(effects: string[]): DecisionEffect {
+/** 오타 하나가 관계를 **조용히** 안 움직이게 한다 — 아는 것만 받는다 */
+const RELATION_KINDS = new Set<RelationKind>(["manager", "coach", "owner", "teammate", "rival"]);
+
+/**
+ * effects 문자열 배열 → `DecisionEffect`.
+ *
+ * 형식 예: `["condition:-4", "xp.command:+1", "money:-120", "relation.manager:+8"]`
+ *
+ * 돈·관계·사치품이 여기 없었다. 문자열형 선택지 **26개**만 그걸 못 썼다 —
+ * 나머지 571개는 객체형이라 `{ moneyDelta: -120 }`을 그대로 통과시킨다.
+ *
+ * ⚠ **그러니 이건 막힘이 아니었다.** `moneyDelta`·`relationDelta`·`luxurySpend`가
+ * 데이터에서 0건인 건 쓸 수단이 없어서가 아니라 **아무도 안 썼기 때문**이다
+ * (배선은 `usecases/decisions.ts`에 다 있다 — 사치품은 Rust `calc_luxury`까지
+ * 간다). 여기 넣는 건 문자열형이 저작하기 쉬워서다. (2026-08-25)
+ *
+ * ⚠ 모르는 키는 지금도 조용히 버린다. 그건 `assertConditions`가 있는
+ * 조건 쪽과 다르다 — 보상 쪽 게이트는 `check:effectkeys`가 맡는다.
+ */
+export function parseEffectsArray(effects: string[]): DecisionEffect {
   const result: DecisionEffect = {};
   for (const e of effects) {
     const colonIdx = e.indexOf(":");
@@ -434,6 +452,18 @@ function parseEffectsArray(effects: string[]): DecisionEffect {
     }
     else if (key.startsWith("stat.")) {
       if (!isNaN(val)) result.statDelta = { ...(result.statDelta ?? {}), [key.slice(5)]: val };
+    }
+    // "money:-120" — 단위는 **만원**이다. money·연봉·계약금·치료비가 같은 축이다
+    else if (key === "money")       { if (!isNaN(val)) result.moneyDelta = val; }
+    // "relation.manager:+8" · "relation.teammate:-3"
+    else if (key.startsWith("relation.")) {
+      const kind = key.slice(9) as RelationKind;
+      if (!isNaN(val) && RELATION_KINDS.has(kind)) result.relationDelta = { kind, delta: val };
+    }
+    // "luxury:150" 자기 소비 · "luxury.teammate:150" 동료에게.
+    // ⚠ `money`와 같이 쓰면 두 번 빠진다 — 금액은 여기서도 빠진다
+    else if (key === "luxury" || key === "luxury.teammate") {
+      if (!isNaN(val)) result.luxurySpend = { cost: Math.abs(val), onTeammate: key !== "luxury" };
     }
   }
   return result;
