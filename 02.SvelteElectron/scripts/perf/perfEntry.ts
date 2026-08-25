@@ -1570,6 +1570,42 @@ function pitcherSide(stats: Record<string, { type: string }>): Record<string, un
  *   검사(`rosterCompositionProbe`)는 `playerType === "pitcher"`로 센다.
  *   **둘이 다르면 엔진은 "하한을 지켰다"고 보는데 검사는 미달로 읽는다.**
  */
+/**
+ * KBL 1군 **야수**가 시즌 중 어디로 빠지는가 (C: 야수 미달).
+ *
+ * ⚠ 실측(2026-08-25): 오프시즌직후 13 → **시즌종료 11**. 채우는 자리는 둘 다
+ *   하한 14를 쓰는데 13까지밖에 안 올라온다. 2군엔 야수 16명이 있다.
+ *   **어디서 빠지는지**를 알아야 어느 자리를 고칠지 정해진다.
+ *
+ * 지금 1군에 없는 야수의 **마지막 사건**을 센다 — 부상·트레이드·방출·강등.
+ */
+export function batterLeakProbe(): Record<string, unknown> {
+  const PIT_POS = new Set(["SP", "RP", "CP", "P"]);
+  const g = get(gameStore);
+  const tally: Record<string, number> = {};
+  let inFirst = 0, elsewhere = 0;
+  for (const n of g.npcs) {
+    if (PIT_POS.has(n.position ?? "")) continue;          // 야수만
+    if (n.playerType === "pitcher") continue;
+    const team = n.currentTeam ?? "";
+    // 원래 KBL 1군 소속이었는가 — 사건 기록에서 본다
+    const evs = n.careerEvents ?? [];
+    const everFirst = team.startsWith("TEAM_KBL") && team.endsWith("_1");
+    if (everFirst && n.careerStatus === "active") { inFirst++; continue; }
+    const fromFirst = evs.some((e) => {
+      const f = (e as { fromTeamId?: string }).fromTeamId ?? "";
+      return f.startsWith("TEAM_KBL") && f.endsWith("_1");
+    });
+    if (!fromFirst) continue;
+    elsewhere++;
+    const last = evs[evs.length - 1] as { eventType?: string } | undefined;
+    const k = n.careerStatus === "injured" ? "부상"
+      : n.careerStatus === "retired" ? "은퇴"
+      : (last?.eventType ?? "?");
+    tally[k] = (tally[k] ?? 0) + 1;
+  }
+  return { KBL1군_야수: inFirst, 떠난야수: elsewhere, 사유: tally };
+}
 export function batterCountMismatchProbe(): Record<string, unknown> {
   const PIT_POS = new Set(["SP", "RP", "CP", "P"]);
   const byTeam = new Map<string, { byType: number; byPos: number }>();

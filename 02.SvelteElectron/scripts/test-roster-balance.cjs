@@ -215,6 +215,7 @@ const FLOOR = {
 
     log(`      ${start}~${app.currentSeason()} · 시즌마다 최악값 누적`);
     mism();
+    try { log("  [유출] " + JSON.stringify(app.batterLeakProbe())); } catch (e) { log("  [유출] " + e.message); }
     // 시점 대조 — 어느 쪽에서 무너지는지 한눈에 본다
     for (const lg of Object.keys(byPhase["시즌종료"])) {
       const a1 = byPhase["오프시즌직후"][lg];
