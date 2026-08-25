@@ -30,6 +30,33 @@ A(미구현)·B(미점검)을 마치고 남은 것. **돌지만 틀리거나 절
 | C-5 | T7 포스트시즌 | 프로에 도달 못 함 — 시즌 상한 | M | 실측 · `university: false` |
 | C-6 | T9 FA | 프로에 도달 못 함 — 시즌 상한 | M | 실측 · `university: false` |
 
+### C-1 구조 분석 (2026-08-25) — 실측 전까지 온 것
+
+```
+W39 (STOVE_LEAGUE_WEEK)  · `advanceWeek.ts:1069~`
+  ├ pendingNextContract 있으면        → 건너뜀
+  ├ contract.remainingYears <= 1      → 은퇴 압박 판정 → retirementAsk
+  └ contract.remainingYears === 1     → **재계약 오퍼** → salaryNegotiation
+```
+
+🔴 **둘이 같은 조건에서 함께 pending에 들어간다.** 그리고
+   `PENDING_ACTION_TYPES`에서 **`salaryNegotiation`이 `retirementAsk`보다 앞**이다
+   (`types/season.ts:213` 대 `215`).
+
+🔴 **재계약 오퍼에 나이·성적 게이트가 없다.** `remainingYears === 1`이면
+   46세여도 오퍼가 나온다. 자동 진행은 늘 수락한다(`acceptNegotiation()`).
+
+**갈림길** — 실측으로 갈라야 한다
+  (가) `pressure.suggest`가 **false**다 → 은퇴 판정 기준이 안 걸린다 (게임 결함)
+  (나) `suggest`는 true인데 **재계약이 먼저 처리**된다 → 우선순위 문제
+  (다) 46세 오퍼 자체가 이상하다 → **오퍼 조건에 나이·성적이 없다** (게임 결함)
+
+⚠ 주석이 "고쳤다"고 적어 뒀는데 **증상이 그대로다** —
+  "나이·성적과 무관하게 매번 재계약 오퍼를 만들어서 거기 도달할 일이 없었다.
+   실측: 25시즌(42세)을 완주하고도 은퇴 0건". 지금은 46세다.
+
+**다음** `evalRetirementPressure`의 반환을 찍는 프로브로 (가)/(나)를 가른다.
+
 🔴 **C-1이 가장 크다.** 주인공이 은퇴를 안 한다 — 커리어가 안 끝나면
    A1(커리어 결산)이 영영 안 뜬다. **방금 만든 화면이 죽은 채가 된다.**
 
