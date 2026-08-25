@@ -147,6 +147,7 @@ const FLOOR = {
     let guard = 0;
     // 마지막 시즌 관측값. **시즌마다 최악을 누적**한다 — 마지막 한 시점만 보면
     // 중간에 무너졌다가 회복된 구간을 놓친다
+    const weekly = [];
     const worst = {};
     // 야수를 두 기준으로 세어 어긋나는지 본다 (엔진 vs 검사)
     const mism = () => { try { log("  [기준대조] " + JSON.stringify(app.batterCountMismatchProbe())); } catch (e) { log("  [기준대조] " + e.message); } };
@@ -194,6 +195,18 @@ const FLOOR = {
     while (guard++ < 4000) {
       if (app.currentSeason() - start >= SEASONS) break;
       if (app.retired()) break;
+      // 🔴 **주차별 스냅샷** — 두 시점(시즌종료·오프시즌직후)만으로는
+      //    "언제" 내려가는지 안 보인다. 실측(2026-08-25): 총량 147명·쏠림 4로
+      //    분포는 멀쩡한데 최악값만 11이었다 — 어느 한 시점에만 얕아진다.
+      //    `PB_WEEKLY=1`로 켠다.
+      if (process.env.PB_WEEKLY) {
+        const w = app.currentWeek();
+        const c = app.rosterCompositionProbe();
+        const k = c["KBL_1군"];
+        if (k && k.최소야수 !== undefined) {
+          weekly.push(`${app.currentSeason()}W${w}:${k.최소야수}/${k.최소투수}`);
+        }
+      }
       const before = app.currentWeek();
       await app.autoRun();
       if (app.currentWeek() > before) continue;
@@ -214,6 +227,12 @@ const FLOOR = {
     absorb("시즌종료");
 
     log(`      ${start}~${app.currentSeason()} · 시즌마다 최악값 누적`);
+    if (weekly.length) {
+      // 값이 바뀌는 지점만 — 전부 찍으면 못 읽는다
+      const shrunk = weekly.filter((v, i) => i === 0
+        || v.split(":")[1] !== weekly[i - 1].split(":")[1]);
+      log("  [주차별 KBL1군 최소야수/투수] " + shrunk.join(" "));
+    }
     mism();
     try { log("  [유출] " + JSON.stringify(app.batterLeakProbe())); } catch (e) { log("  [유출] " + e.message); }
     // 시점 대조 — 어느 쪽에서 무너지는지 한눈에 본다
