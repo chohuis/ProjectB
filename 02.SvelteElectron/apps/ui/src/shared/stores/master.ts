@@ -593,7 +593,7 @@ function parseDecisionTemplate(raw: Record<string, any>): DecisionTemplate {
         const parsed = parseEffectsArray(o.effects as string[]);
         effects = Object.keys(parsed).length > 0 ? parsed : undefined;
       } else if (o.effects && typeof o.effects === "object") {
-        // ???щ㎎: { fatigueDelta: 10, xp: { velocity: 3 } }
+        // 신 형식: { fatigueDelta: 10, xp: { velocity: 3 } }
         effects = o.effects as DecisionEffect;
       }
       // 선택지 조건도 규칙 조건과 **같은 검증을 받는다** — 여기만 빠지면

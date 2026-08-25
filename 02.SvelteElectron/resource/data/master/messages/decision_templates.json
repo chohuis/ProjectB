@@ -59,10 +59,31 @@
         {
           "id": "push",
           "label": "계획대로 밀어붙인다",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
           "effectHint": "피로 +5, 커맨드 경험치 +1",
           "effects": [
             "fatigue:+5",
             "xp.command:+1"
+          ]
+        },
+        {
+          "id": "push_bat",
+          "label": "계획대로 밀어붙인다",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effectHint": "피로 +5, 컨택 경험치 +1",
+          "effects": [
+            "fatigue:+5",
+            "xp.batting.contact:+1"
           ]
         }
       ]
@@ -153,9 +174,30 @@
         {
           "id": "ask_more",
           "label": "더 자세히 여쭤본다",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
           "effectHint": "커맨드 경험치 +2, 사기 +5",
           "effects": [
             "xp.command:+2",
+            "morale:+5"
+          ]
+        },
+        {
+          "id": "ask_more_bat",
+          "label": "더 자세히 여쭤본다",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effectHint": "컨택 경험치 +2, 사기 +5",
+          "effects": [
+            "xp.batting.contact:+2",
             "morale:+5"
           ]
         },

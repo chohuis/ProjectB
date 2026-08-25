@@ -9,6 +9,10 @@
   "poolId": "POOL_TEAM_LIFE_DAILY",
   "conditions": [
     {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
+    {
       "type": "fatigue_lte",
       "value": 65
     },

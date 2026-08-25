@@ -9,6 +9,10 @@
   "poolId": "POOL_SOCIAL_DAILY",
   "conditions": [
     {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
+    {
       "type": "popularity_gte",
       "value": 15
     },

@@ -6,6 +6,10 @@
   "oncePolicy": "once_per_season",
   "conditions": [
     {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
+    {
       "type": "season_wins_gte",
       "value": 5
     }
