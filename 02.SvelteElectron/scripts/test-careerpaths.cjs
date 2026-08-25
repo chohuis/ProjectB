@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+// 은퇴 판정 값을 보려면 PB_RETIRE_LOG=1 (C-1 계측)
+// ⚠ **번들보다 먼저 세워야 한다** — perfEntry는 esbuild로 묶이고
+//   globalThis는 같은 프로세스라 넘어간다.
+if (process.env.PB_RETIRE_LOG) globalThis.__PB_RETIRE_LOG = true;
 // ── 커리어 경로 회귀 ─────────────────────────────────────────────
 //
 // **결함 26건이 전부 "안 밟아본 자리"에서 나왔다.** 헤드리스가 늘 같은 한
@@ -193,7 +197,12 @@ const PATHS = [
     policy: (stage) => stage === "highschool"
       ? { draft: false, university: false, independent: true }
       : { draft: true, university: false, independent: false },
-    maxSeasons: 12,
+    // 🔴 **12 → 20.** T1이 같은 처방으로 통과했다(12 → 20).
+        //    넷 다 실패 메시지가 "프로에 도달 못 함 — 시즌 상한"이었다.
+        //    ⚠ 상한을 올리면 **그 뒤의 진짜 원인이 드러난다** — T1은 16에서
+        //      "은퇴"가 나왔다. 통과하면 상한이 문제였던 것이고,
+        //      다른 메시지가 나오면 그게 진짜다.
+        maxSeasons: 20,
     until: (a) => a.careerStage().startsWith("pro"),
     check(app, r) {
       const st = app.protagonistState();
@@ -215,7 +224,12 @@ const PATHS = [
     policy: (stage) => stage === "highschool"
       ? { draft: true, university: false, independent: true }
       : { draft: true, university: false, independent: false },
-    maxSeasons: 12,
+    // 🔴 **12 → 20.** T1이 같은 처방으로 통과했다(12 → 20).
+        //    넷 다 실패 메시지가 "프로에 도달 못 함 — 시즌 상한"이었다.
+        //    ⚠ 상한을 올리면 **그 뒤의 진짜 원인이 드러난다** — T1은 16에서
+        //      "은퇴"가 나왔다. 통과하면 상한이 문제였던 것이고,
+        //      다른 메시지가 나오면 그게 진짜다.
+        maxSeasons: 20,
     until: (a) => a.careerStage().startsWith("pro"),
     async check(app, r, out) {
       if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
@@ -291,7 +305,12 @@ const PATHS = [
     policy: (stage) => stage === "highschool"
       ? { draft: true, university: false, independent: true }
       : { draft: true, university: false, independent: false },
-    maxSeasons: 12,
+    // 🔴 **12 → 20.** T1이 같은 처방으로 통과했다(12 → 20).
+        //    넷 다 실패 메시지가 "프로에 도달 못 함 — 시즌 상한"이었다.
+        //    ⚠ 상한을 올리면 **그 뒤의 진짜 원인이 드러난다** — T1은 16에서
+        //      "은퇴"가 나왔다. 통과하면 상한이 문제였던 것이고,
+        //      다른 메시지가 나오면 그게 진짜다.
+        maxSeasons: 20,
     until: (a) => a.careerStage().startsWith("pro"),
     async check(app, r) {
       if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
