@@ -5452,6 +5452,9 @@ export function eventRuleProbe(ruleId: string): Record<string, unknown> {
   const f = eventFunnelStats;
   return {
     규칙: ruleId,
+    // 🔴 **후보 0이면 조건이 한 번도 안 통과했다는 뜻이다.** 그건 뽑기 운이
+    //    아니라 결함이다 — 몇 번을 돌려도 영원히 안 뜬다
+    후보: f.candidateByRule[ruleId] ?? 0,
     발동: f.emittedByRule[ruleId] ?? 0,
     밀림: f.crowdedByRule[ruleId] ?? 0,
     "빈 메시지": f.emptyByRule[ruleId] ?? 0,

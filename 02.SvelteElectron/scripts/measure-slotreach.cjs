@@ -70,21 +70,34 @@ const GROUPS = [
   log("");
   log(`  씨앗 ${SEED} · ${start}~${app.currentSeason()} (${SEASONS}시즌) · ${f.주수}주`);
   log("");
-  log("  무대           재고    닿음   못 닿음   닿은 비율   발동 총계");
-  log("  " + "─".repeat(60));
+  // 🔴 **안 뜬 것을 두 부류로 가른다.** 이게 없으면 뽑기 운을 결함으로 읽는다:
+  //    후보엔 올랐는데 안 뽑힘  →  다시 돌리면 다른 게 안 뜬다. 정상
+  //    후보에 아예 못 오름      →  몇 번을 돌려도 영원히 안 뜬다. 결함
+  log("  무대           재고    닿음   안뽑힘   못닿음★   닿은비율   발동");
+  log("  " + "─".repeat(62));
+  const neverCand = {};
   for (const [label, pick] of GROUPS) {
     const list = R.filter(pick);
     if (!list.length) continue;
-    let reached = 0, fires = 0;
+    let reached = 0, fires = 0, unlucky = 0, never = 0;
     for (const r of list) {
-      const n = app.eventRuleProbe(r.id).발동;
-      if (n > 0) reached++;
-      fires += n;
+      const p = app.eventRuleProbe(r.id);
+      fires += p.발동;
+      if (p.발동 > 0) reached++;
+      else if (p.후보 > 0) unlucky++;
+      else { never++; (neverCand[label] ??= []).push(r.id); }
     }
-    const miss = list.length - reached;
-    const pct = list.length ? ((reached / list.length) * 100).toFixed(0) + "%" : "-";
+    const pct = ((reached / list.length) * 100).toFixed(0) + "%";
     log(`  ${label.padEnd(12)}${String(list.length).padStart(6)}${String(reached).padStart(8)}`
-      + `${String(miss).padStart(9)}${pct.padStart(12)}${String(fires).padStart(11)}`);
+      + `${String(unlucky).padStart(9)}${String(never).padStart(10)}${pct.padStart(11)}${String(fires).padStart(8)}`);
+  }
+  log("");
+  log("  ★ 후보에 한 번도 못 오른 것 — 조건이 안 닿는다. **뽑기 운이 아니다**");
+  for (const [label, ids] of Object.entries(neverCand)) {
+    if (label === "전체 공용" || label === "고교") {
+      log(`    ${label} ${ids.length}종: ${ids.slice(0, 24).map((x) => x.replace("EVT_", "")).join(" ")}`);
+      if (ids.length > 24) log(`      … 그 밖 ${ids.length - 24}종`);
+    }
   }
   log("");
   log(`  ⚠ 커리어가 그 무대를 안 지나면 재고가 있어도 0이다 — 여기선 고교에서 시작해 ${SEASONS}시즌이다`);

@@ -7,6 +7,10 @@
   "cooldownWeeks": 4,
   "conditions": [
     {
+      "type": "grade",
+      "value": 1
+    },
+    {
       "type": "career_stage",
       "stage": "highschool"
     },

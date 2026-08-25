@@ -7,16 +7,20 @@
   "cooldownWeeks": 4,
   "conditions": [
     {
+      "type": "grade",
+      "value": 2
+    },
+    {
       "type": "career_stage",
       "stage": "highschool"
     },
     {
       "type": "week_gte",
-      "value": 79
+      "value": 27
     },
     {
       "type": "week_lte",
-      "value": 90
+      "value": 38
     },
     {
       "type": "team_rank_lte",
