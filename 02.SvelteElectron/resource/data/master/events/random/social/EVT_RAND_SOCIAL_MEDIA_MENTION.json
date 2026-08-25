@@ -4,10 +4,19 @@
   "category": "social",
   "priority": 260,
   "oncePolicy": "repeatable",
-  "cooldownWeeks": 1,
+  "cooldownWeeks": 4,
   "weight": 25,
   "poolId": "POOL_SOCIAL_DAILY",
-  "conditions": [],
+  "conditions": [
+    {
+      "type": "popularity_gte",
+      "value": 15
+    },
+    {
+      "type": "fame_gte",
+      "value": 10
+    }
+  ],
   "messageTemplateId": "MSG_RAND_SOCIAL_MEDIA_MENTION",
   "decisionTemplateId": null
 }

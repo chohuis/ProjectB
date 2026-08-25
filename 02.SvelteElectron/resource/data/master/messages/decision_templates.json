@@ -7527,6 +7527,35 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_RAND_FRIEND_VISIT",
+      "prompt": "친구를 만나겠습니까?",
+      "options": [
+        {
+          "id": "meet",
+          "label": "시간을 내어 만난다",
+          "effectHint": "사기 +5, 피로 +2",
+          "effects": [
+            "morale:+5",
+            "fatigue:+2"
+          ]
+        },
+        {
+          "id": "short",
+          "label": "짧게 통화만 한다",
+          "effectHint": "사기 +2",
+          "effects": [
+            "morale:+2"
+          ]
+        },
+        {
+          "id": "later",
+          "label": "다음에 보자고 한다",
+          "effectHint": "없음",
+          "effects": []
+        }
+      ]
     }
   ]
 }

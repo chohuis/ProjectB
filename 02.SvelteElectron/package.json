@@ -123,7 +123,8 @@
     "measure:dirty": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-dirty.cjs",
     "measure:memory": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-memory.cjs",
     "check:determinism": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-determinism.cjs",
-    "check:svelte": "svelte-check --tsconfig ./tsconfig.json"
+    "check:svelte": "svelte-check --tsconfig ./tsconfig.json",
+    "measure:eventrules": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-eventrules.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
