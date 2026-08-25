@@ -164,7 +164,7 @@ const FLOOR = {
     //      재면 늘 미달로 잡힌다** — 총량 147명·쏠림 4로 분포는 멀쩡한데도 그랬다.
     //      기존 주석이 "한 시점만 재면 구분이 안 된다"고 적어 뒀다.
     //      **지우지 않고 하나 더 나눈다.**
-    const byPhase = { "시즌종료": {}, "FA구간": {}, "오프시즌직후": {} };
+    const byPhase = { "시즌종료": {}, "오프시즌": {}, "오프시즌직후": {} };
     const absorb = (phase = "시즌종료") => {
       const comp = app.rosterCompositionProbe();
       const bucket = byPhase[phase];
@@ -177,11 +177,15 @@ const FLOOR = {
         bucket[lg] = b;
       }
       // 🔴 **FA 구간은 판정에서 뺀다 — 보고에는 남긴다.**
-      //    W39에 FA로 풀리고 W40~46에 재계약된다. 그 사이 로스터가 얇은 건
-      //    구조이지 결함이 아니다(실측: W32 야수17 → W40 8 → 다음해W0 13).
+      //    W39에 FA로 풀리고 개막(W0) 전에 다시 채워진다. 그 사이가 얇은 건
+      //    구조이지 결함이 아니다. **주차별 3회 실측(2026-08-26)**:
+      //        시즌 중(W0~35) 최소야수  13 · 13 · 13   ← 타순 9명을 늘 넘는다
+      //        오프시즌(W39~)  최소야수  8 ·  8 ·  7   ← 전부 2026W40
+      //    ⚠ **W46이 경계가 아니다.** W51도 8이었다 — FA 재트리거가 끝나도
+      //      개막 전까지 얕게 남고 W0에 회복한다. 그래서 오프시즌 전체를 뺀다.
       //    ⚠ 위 `byPhase`에는 그대로 담긴다 — **안 보이게 만드는 게 아니라
       //      판정 잣대에서만 제외한다.** 그 구간이 이상해지면 보고로 드러난다.
-      if (phase === "FA구간") return;
+      if (phase === "오프시즌") return;
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;   // 비활성 리그(ABL·JBL)
         const w = worst[lg] ?? {
@@ -234,9 +238,9 @@ const FLOOR = {
         //   · 오프시즌 직후에 이미 7명  → 충원(`fill_first_teams`)에 안 걸린다
         //   · 직후엔 14명인데 시즌 말 7명 → 시즌 중 유출(트레이드·부상)
         // 로 갈리고, 고칠 곳이 완전히 다르다. 한 시점만 재면 구분이 안 된다.
-        // W39~46은 FA가 풀렸다 재계약되는 구간이라 구조적으로 얕다
+        // W39부터 개막(W0)까지는 구조적으로 얕다 — 아래 판정 제외 주석 참고
         const wk = app.currentWeek();
-        absorb(wk >= 39 && wk <= 46 ? "FA구간" : "시즌종료");
+        absorb(wk >= 39 ? "오프시즌" : "시즌종료");
         await app.seasonRollover();
         absorb("오프시즌직후");
         continue;
@@ -245,7 +249,7 @@ const FLOOR = {
     }
     {
       const wk = app.currentWeek();
-      absorb(wk >= 39 && wk <= 46 ? "FA구간" : "시즌종료");
+      absorb(wk >= 39 ? "오프시즌" : "시즌종료");
     }
 
     log(`      ${start}~${app.currentSeason()} · 시즌마다 최악값 누적`);
