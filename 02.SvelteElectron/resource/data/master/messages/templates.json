@@ -3230,6 +3230,24 @@
       "subject": "라이벌교 소식",
       "category": "team_life",
       "body": "라이벌 학교가 연습경기에서 크게 이겼다는 소식이 돌았습니다.\n\n신경 쓸 것 없다고들 하지만, 신경이 쓰입니다."
+    },
+    {
+      "id": "MSG_CHAIN_FORM_REBUILD_START",
+      "subject": "폼을 갈아엎을까",
+      "category": "training",
+      "body": "코치가 영상을 돌려보다 말했습니다. 지금 폼으로는 여기가 한계라고.\n\n갈아엎으면 몇 달은 흔들립니다. 그대로 가면 지금이 천장입니다."
+    },
+    {
+      "id": "MSG_CHAIN_FORM_REBUILD_MID",
+      "subject": "폼이 흔들린다",
+      "category": "training",
+      "body": "새 폼이 아직 몸에 안 붙었습니다. 공이 어디로 갈지 저도 모르겠습니다.\n\n여기서 되돌리면 예전으로는 돌아갑니다. 밀어붙이면 더 흔들릴 수도 있습니다."
+    },
+    {
+      "id": "MSG_CHAIN_FORM_REBUILD_DONE",
+      "subject": "자리를 잡았다",
+      "category": "training",
+      "body": "오랜만에 던진 공이 생각한 자리에 갔습니다. 두 번, 세 번 이어졌습니다.\n\n코치가 별말 없이 고개를 끄덕였습니다."
     }
   ]
 }

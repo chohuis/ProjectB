@@ -8114,6 +8114,143 @@
           ]
         }
       ]
+    },
+    {
+      "id": "DEC_CHAIN_FORM_REBUILD_START",
+      "prompt": "폼을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "rebuild",
+          "label": "갈아엎는다",
+          "effectHint": "태그 「폼교정중」 · 사기 -5, 피로 +8",
+          "effects": [
+            "addTag:폼교정중",
+            "morale:-5",
+            "fatigue:+8"
+          ]
+        },
+        {
+          "id": "keep",
+          "label": "지금 폼을 다듬는다",
+          "effectHint": "커맨드 경험치 +2, 성실 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": [
+            "xp.command:+2",
+            "diligence:+2"
+          ]
+        },
+        {
+          "id": "keep_bat",
+          "label": "지금 폼을 다듬는다",
+          "effectHint": "컨택 경험치 +2, 성실 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": [
+            "xp.batting.contact:+2",
+            "diligence:+2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_CHAIN_FORM_REBUILD_MID",
+      "prompt": "흔들리는 구간을 어떻게 넘기겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "밀어붙인다",
+          "effectHint": "피로 +10, 사기 -3, 성실 +5",
+          "effects": [
+            "fatigue:+10",
+            "morale:-3",
+            "diligence:+5"
+          ]
+        },
+        {
+          "id": "coach",
+          "label": "코치에게 붙는다",
+          "effectHint": "코치 관계 +8, 피로 +5",
+          "effects": [
+            "relation.coach:+8",
+            "fatigue:+5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_CHAIN_FORM_REBUILD_DONE",
+      "prompt": "무엇을 챙기겠습니까?",
+      "options": [
+        {
+          "id": "power",
+          "label": "속도를 챙긴다",
+          "effectHint": "구속 +2, 사기 +10",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": [
+            "stat.velocity:+2",
+            "morale:+10"
+          ]
+        },
+        {
+          "id": "power_bat",
+          "label": "힘을 챙긴다",
+          "effectHint": "파워 +2, 사기 +10",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": [
+            "stat.batting.power:+2",
+            "morale:+10"
+          ]
+        },
+        {
+          "id": "control",
+          "label": "제구를 챙긴다",
+          "effectHint": "제구 +2, 사기 +10",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": [
+            "stat.control:+2",
+            "morale:+10"
+          ]
+        },
+        {
+          "id": "control_bat",
+          "label": "정확도를 챙긴다",
+          "effectHint": "컨택 +2, 사기 +10",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": [
+            "stat.batting.contact:+2",
+            "morale:+10"
+          ]
+        }
+      ]
     }
   ]
 }
