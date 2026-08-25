@@ -1,4 +1,15 @@
-// 이 파일은 `npm run fit:park`이 만든다. **직접 편집하지 말 것.**
+// 🔴 **정본은 `resource/park/_spec/anchors.json`이다.** 여기 값은 거기서 옮긴다.
+//    `parkAnchorsMatchSpec.test.ts`가 두 파일이 어긋나면 잡는다.
+//
+// ⚠ **`npm run fit:park`을 돌려 이 파일을 만들지 않는다.** 그 스크립트는
+//   "프로 좌표는 손대지 않는다"를 전제로 하는데 **그 전제가 틀렸다** —
+//   프로 앵커부터 그림과 어긋나 있었다. 스크립트 머리말에 그 경위가 있다.
+//
+// 🔴 **2026-08-26까지 이 파일만 옛 값이었다.** 정본은 2026-08-20에
+//   구장 27장 실측으로 고쳐졌는데 **화면이 쓰는 이 파일이 안 따라갔다.**
+//   마운드가 홈→2루의 72% 지점(정본 63~64%)이라 투수가 마운드보다 위에
+//   떠 있었다. 검사는 `anchors.json`만 보고 있어서 못 잡았다 —
+//   **재는 자리와 쓰는 자리가 달랐다.**
 //
 // 원본 구장 그림 3장(probaseball / universitybaseball / highschoolbaseball)은
 // 각각 따로 그려져 내야 다이아몬드 위치가 다르다. 구장 27장은 각자 제 티어
@@ -35,53 +46,53 @@ export const PARK_SPRITE_OFFSETS = {
 export const PARK_COORDS: Record<ParkTier, ParkCoords> = {
   pro: {
     field: {
-      home: { x: 497, y: 790 }, first: { x: 715, y: 580 }, second: { x: 497, y: 454 },
-      third: { x: 280, y: 580 }, mound: { x: 497, y: 548 },
+      home: { x: 497, y: 800 }, first: { x: 720, y: 622 }, second: { x: 497, y: 514 },
+      third: { x: 275, y: 622 }, mound: { x: 498, y: 617 },
     },
     defense: [
-      { pos: "P", x: 497, y: 548 },
-      { pos: "C", x: 497, y: 800 },
-      { pos: "1B", x: 710, y: 588 },
-      { pos: "2B", x: 600, y: 508 },
-      { pos: "SS", x: 387, y: 508 },
-      { pos: "3B", x: 272, y: 588 },
-      { pos: "LF", x: 242, y: 518 },
-      { pos: "CF", x: 497, y: 434 },
-      { pos: "RF", x: 752, y: 518 },
+      { pos: "P", x: 498, y: 617 },
+      { pos: "C", x: 497, y: 809 },
+      { pos: "1B", x: 715, y: 628 },
+      { pos: "2B", x: 602, y: 560 },
+      { pos: "SS", x: 384, y: 560 },
+      { pos: "3B", x: 267, y: 628 },
+      { pos: "LF", x: 236, y: 569 },
+      { pos: "CF", x: 497, y: 497 },
+      { pos: "RF", x: 758, y: 569 },
     ],
   },
   university: {
     field: {
-      home: { x: 501, y: 818 }, first: { x: 704, y: 626 }, second: { x: 501, y: 511 },
-      third: { x: 299, y: 626 }, mound: { x: 501, y: 597 },
+      home: { x: 501, y: 825 }, first: { x: 710, y: 663 }, second: { x: 501, y: 562 },
+      third: { x: 293, y: 663 }, mound: { x: 501, y: 659 },
     },
     defense: [
-      { pos: "P", x: 501, y: 597 },
-      { pos: "C", x: 501, y: 827 },
-      { pos: "1B", x: 699, y: 633 },
-      { pos: "2B", x: 597, y: 561 },
-      { pos: "SS", x: 398, y: 561 },
-      { pos: "3B", x: 291, y: 633 },
-      { pos: "LF", x: 263, y: 570 },
-      { pos: "CF", x: 501, y: 493 },
-      { pos: "RF", x: 738, y: 570 },
+      { pos: "P", x: 501, y: 659 },
+      { pos: "C", x: 501, y: 834 },
+      { pos: "1B", x: 705, y: 668 },
+      { pos: "2B", x: 600, y: 606 },
+      { pos: "SS", x: 395, y: 606 },
+      { pos: "3B", x: 285, y: 668 },
+      { pos: "LF", x: 256, y: 614 },
+      { pos: "CF", x: 501, y: 548 },
+      { pos: "RF", x: 745, y: 614 },
     ],
   },
   highschool: {
     field: {
-      home: { x: 499, y: 793 }, first: { x: 707, y: 558 }, second: { x: 499, y: 417 },
-      third: { x: 292, y: 558 }, mound: { x: 499, y: 523 },
+      home: { x: 499, y: 799 }, first: { x: 711, y: 611 }, second: { x: 499, y: 476 },
+      third: { x: 288, y: 611 }, mound: { x: 499, y: 594 },
     },
     defense: [
-      { pos: "P", x: 499, y: 523 },
-      { pos: "C", x: 499, y: 804 },
-      { pos: "1B", x: 702, y: 567 },
-      { pos: "2B", x: 597, y: 478 },
-      { pos: "SS", x: 394, y: 478 },
-      { pos: "3B", x: 285, y: 567 },
-      { pos: "LF", x: 256, y: 489 },
-      { pos: "CF", x: 499, y: 395 },
-      { pos: "RF", x: 742, y: 489 },
+      { pos: "P", x: 499, y: 594 },
+      { pos: "C", x: 499, y: 813 },
+      { pos: "1B", x: 706, y: 612 },
+      { pos: "2B", x: 599, y: 536 },
+      { pos: "SS", x: 392, y: 536 },
+      { pos: "3B", x: 281, y: 612 },
+      { pos: "LF", x: 251, y: 546 },
+      { pos: "CF", x: 499, y: 466 },
+      { pos: "RF", x: 746, y: 546 },
     ],
   },
 };

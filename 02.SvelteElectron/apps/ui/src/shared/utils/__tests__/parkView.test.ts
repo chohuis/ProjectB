@@ -42,15 +42,20 @@ describe("좌표표 자체", () => {
     expect(key("university")).not.toBe(key("highschool"));
   });
 
-  it("프로 좌표는 예전 값 그대로다 — 프로 10장은 기존 GIF와 지면이 같다", () => {
-    expect(PARK_COORDS.pro.field).toEqual({
-      home:   { x: 497, y: 790 },
-      first:  { x: 715, y: 580 },
-      second: { x: 497, y: 454 },
-      third:  { x: 280, y: 580 },
-      mound:  { x: 497, y: 548 },
-    });
-  });
+  // 🔴 **여기 "프로 좌표는 예전 값 그대로다"가 있었다 — 지웠다(2026-08-26).**
+  //
+  //  두 가지가 틀렸다:
+  //  ① **전제가 틀렸다.** "기존 GIF와 지면이 같다"고 했지만 그 GIF 좌표부터
+  //     그림과 어긋나 있었다 — 마운드가 홈→2루의 72% 지점(그림은 64%)이라
+  //     투수가 마운드보다 69px 위에 떠 있었다. `fit-park-anchors.cjs`
+  //     머리말에 경위가 있다.
+  //  ② **좌표를 베껴 적었다.** 그러면 값을 고칠 때 검사도 같이 고치게 되어
+  //     아무것도 못 잡는다. `parkAnchorGeometry.test.ts`가 그 함정을
+  //     주석으로 경고해 뒀는데 이 검사가 정확히 그 짓을 하고 있었다.
+  //
+  //  ⚠ **자리를 비워 둔 게 아니다.** 둘이 대신 지킨다:
+  //    · `parkAnchorsMatchSpec.test.ts` — 정본(`anchors.json`)과 같은가
+  //    · `parkAnchorGeometry.test.ts`   — 그림이 정하는 관계와 맞는가
 
   it("다이아몬드가 야구답게 놓여 있다 — 홈이 제일 아래, 2루가 제일 위", () => {
     for (const t of TIERS) {
