@@ -3,6 +3,7 @@
 // ⚠ **번들보다 먼저 세워야 한다** — perfEntry는 esbuild로 묶이고
 //   globalThis는 같은 프로세스라 넘어간다.
 if (process.env.PB_RETIRE_LOG) globalThis.__PB_RETIRE_LOG = true;
+if (process.env.PB_CAREER_LOG) globalThis.__PB_CAREER_LOG = true;
 // ── 커리어 경로 회귀 ─────────────────────────────────────────────
 //
 // **결함 26건이 전부 "안 밟아본 자리"에서 나왔다.** 헤드리스가 늘 같은 한

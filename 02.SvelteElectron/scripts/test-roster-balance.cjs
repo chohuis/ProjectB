@@ -153,7 +153,18 @@ const FLOOR = {
     const mism = () => { try { log("  [기준대조] " + JSON.stringify(app.batterCountMismatchProbe())); } catch (e) { log("  [기준대조] " + e.message); } };
 
     // 시점별로 따로 모은다
-    const byPhase = { "시즌종료": {}, "오프시즌직후": {} };
+    // 🔴 **시점을 셋으로 나눈다.** 둘로는 FA 구간이 시즌종료에 섞여 들어온다.
+    //
+    //    주차별 실측(2026-08-26): `W32 야수17 → **W40 8** → W51 10 → 다음해W0 13`
+    //    시즌 일정(`seasonWeeks.ts:19`): W39 NPC 은퇴·FA → W40~46 FA 재트리거.
+    //    **W39에 FA로 풀리고 W40~46에 다시 계약된다** — 그 사이가 비는 것이고,
+    //    선수가 사라진 게 아니라 **소속이 잠깐 없다**(W0에 돌아온다).
+    //
+    //    ⚠ 실제 야구도 FA 시장 동안은 로스터가 얇다. **그 구간을 같은 잣대로
+    //      재면 늘 미달로 잡힌다** — 총량 147명·쏠림 4로 분포는 멀쩡한데도 그랬다.
+    //      기존 주석이 "한 시점만 재면 구분이 안 된다"고 적어 뒀다.
+    //      **지우지 않고 하나 더 나눈다.**
+    const byPhase = { "시즌종료": {}, "FA구간": {}, "오프시즌직후": {} };
     const absorb = (phase = "시즌종료") => {
       const comp = app.rosterCompositionProbe();
       const bucket = byPhase[phase];
@@ -165,6 +176,12 @@ const FLOOR = {
         b.포수없는팀 = Math.max(b.포수없는팀, v.포수없는팀 ?? 0);
         bucket[lg] = b;
       }
+      // 🔴 **FA 구간은 판정에서 뺀다 — 보고에는 남긴다.**
+      //    W39에 FA로 풀리고 W40~46에 재계약된다. 그 사이 로스터가 얇은 건
+      //    구조이지 결함이 아니다(실측: W32 야수17 → W40 8 → 다음해W0 13).
+      //    ⚠ 위 `byPhase`에는 그대로 담긴다 — **안 보이게 만드는 게 아니라
+      //      판정 잣대에서만 제외한다.** 그 구간이 이상해지면 보고로 드러난다.
+      if (phase === "FA구간") return;
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;   // 비활성 리그(ABL·JBL)
         const w = worst[lg] ?? {
@@ -217,14 +234,19 @@ const FLOOR = {
         //   · 오프시즌 직후에 이미 7명  → 충원(`fill_first_teams`)에 안 걸린다
         //   · 직후엔 14명인데 시즌 말 7명 → 시즌 중 유출(트레이드·부상)
         // 로 갈리고, 고칠 곳이 완전히 다르다. 한 시점만 재면 구분이 안 된다.
-        absorb("시즌종료");
+        // W39~46은 FA가 풀렸다 재계약되는 구간이라 구조적으로 얕다
+        const wk = app.currentWeek();
+        absorb(wk >= 39 && wk <= 46 ? "FA구간" : "시즌종료");
         await app.seasonRollover();
         absorb("오프시즌직후");
         continue;
       }
       break;
     }
-    absorb("시즌종료");
+    {
+      const wk = app.currentWeek();
+      absorb(wk >= 39 && wk <= 46 ? "FA구간" : "시즌종료");
+    }
 
     log(`      ${start}~${app.currentSeason()} · 시즌마다 최악값 누적`);
     if (weekly.length) {

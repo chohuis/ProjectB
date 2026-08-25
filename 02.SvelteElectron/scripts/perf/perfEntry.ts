@@ -402,6 +402,15 @@ export async function pushCareerForward(): Promise<string | null> {
       // ⚠ `rejectDraft`는 **지명 통보에서** 거부한다는 뜻이다. 여기서 막으면
       // 통보 자체가 안 뜨고 대학으로 새서 거부 경로를 영영 못 밟는다
       // (T4가 실제로 그렇게 "거부 경로를 안 탔다"로 실패했다)
+      // 계측 — 독립 선수가 재지명을 받는가(T6). `PB_CAREER_LOG=1`로 켠다.
+      // ⚠ 배선(허브 W26 · 결과 W32 · 전이표 independent→pro)은 다 온전하다.
+      //   그런데 3회 모두 독립에 머문다 — **무엇이 오는지** 봐야 갈린다.
+      if (typeof globalThis !== "undefined" && (globalThis as Record<string, unknown>).__PB_CAREER_LOG) {
+        const st = get(gameStore).protagonist.careerStage;
+        console.log("[진로] " + st + " drafted=" + !!r?.draftDrafted
+          + " uni=" + (r?.universityPassed?.length ?? 0)
+          + " ind=" + (r?.independentPassed?.length ?? 0));
+      }
       if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
       // 🔴 **대학생은 진급이 먼저다.** 예전엔 독립 합격이 있으면 그쪽을 먼저 골라
       //    **1학년만 마치고 대학을 떠났다** — `universityWeek`이 52에서 멈췄고
