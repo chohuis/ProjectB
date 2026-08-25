@@ -1095,6 +1095,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           const trend = ovrTrendOf(gOff.protagonist);
           const mv = await calcMarketValueForProtagonist(gOff.protagonist);
           const pressure = await evalRetirementPressure(trend, mv);
+          // 계측 — 은퇴 판정이 실제로 무엇을 돌려주는지 본다(C-1).
+          // ⚠ 지우지 마라: "매번 재계약 오퍼를 만들어 거기 도달할 일이 없었다"가
+          //   고쳐졌다고 적혀 있는데 증상이 그대로다. 값을 봐야 갈린다.
+          if (typeof globalThis !== "undefined" && (globalThis as Record<string, unknown>).__PB_RETIRE_LOG) {
+            console.log("[은퇴판정] " + gOff.protagonist.age + "세 trend=" + trend.toFixed(2)
+              + " mv=" + mv + " remain=" + contract.remainingYears
+              + " suggest=" + pressure.suggest + " urgency=" + pressure.urgency);
+          }
           if (pressure.suggest) {
             seasonStore.pushPendingAction({
               type: "retirementAsk", urgency: pressure.urgency, reason: "decline",
