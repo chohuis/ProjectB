@@ -17,6 +17,6 @@
       "value": 18
     }
   ],
-  "messageTemplateId": "MSG_RAND_TEAM_MEAL",
+  "messageTemplateId": "MSG_HS_LIFE_WEATHER_02",
   "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
 }

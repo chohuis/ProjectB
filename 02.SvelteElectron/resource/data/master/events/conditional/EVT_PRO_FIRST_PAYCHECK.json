@@ -3,7 +3,7 @@
   "type": "conditional",
   "category": "career",
   "priority": 630,
-  "oncePolicy": "once_per_season",
+  "oncePolicy": "once_per_career",
   "messageTemplateId": "MSG_PRO_FIRST_PAYCHECK",
   "decisionTemplateId": "DEC_PRO_FIRST_PAYCHECK",
   "conditions": [

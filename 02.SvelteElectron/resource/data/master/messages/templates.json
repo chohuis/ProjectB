@@ -3194,6 +3194,42 @@
         "정리를 마치고 나오는데 코치가 문 앞에 서 있었습니다.\n\n티 내지 않고 하는 게 제일 어렵다는 말만 하고 갔습니다.",
         "훈련 일지를 받아 든 코치가 한참 들여다봤습니다.\n\n빠진 날이 없다고 했습니다. 별말 아닌데 오래 남습니다."
       ]
+    },
+    {
+      "id": "MSG_HS_LIFE_TEAM_CHEM",
+      "subject": "팀 분위기",
+      "category": "team_life",
+      "body": "라커룸 공기가 미묘합니다. 큰일은 아닌데 말수가 줄었습니다.\n\n먼저 풀어볼 수도 있고, 시간이 해결하게 둘 수도 있습니다."
+    },
+    {
+      "id": "MSG_HS_LIFE_WEATHER_02",
+      "subject": "장마가 길다",
+      "category": "team_life",
+      "body": "비가 며칠째입니다. 실내에서 할 수 있는 게 슬슬 바닥납니다.\n\n무리해서라도 밖에 나갈지, 안에서 다른 걸 할지 정하세요."
+    },
+    {
+      "id": "MSG_HS_LIFE_TEACHER_ADVICE",
+      "subject": "담임 선생님의 호출",
+      "category": "social",
+      "body": "담임 선생님이 잠깐 보자고 했습니다. 성적표를 앞에 두고 있습니다.\n\n야구 이야기는 한마디도 없었지만, 그게 더 무겁습니다."
+    },
+    {
+      "id": "MSG_HS_LIFE_SCHOOL_EVENT",
+      "subject": "학교 행사",
+      "category": "social",
+      "body": "학교 행사에 야구부도 나와 달라는 요청이 왔습니다.\n\n훈련 시간과 겹치지만, 안 나가면 그것대로 말이 남습니다."
+    },
+    {
+      "id": "MSG_HS_LIFE_JUNIOR_MENTOR",
+      "subject": "후배가 물어왔다",
+      "category": "team_life",
+      "body": "후배가 쭈뼛거리며 폼을 봐 달라고 합니다.\n\n가르치다 보면 제 것도 정리되지만, 그만큼 제 시간은 줄어듭니다."
+    },
+    {
+      "id": "MSG_HS_LIFE_RIVAL_MATCH_02",
+      "subject": "라이벌교 소식",
+      "category": "team_life",
+      "body": "라이벌 학교가 연습경기에서 크게 이겼다는 소식이 돌았습니다.\n\n신경 쓸 것 없다고들 하지만, 신경이 쓰입니다."
     }
   ]
 }

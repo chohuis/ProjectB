@@ -90,17 +90,31 @@ describe("이벤트 데이터 위생", () => {
    * 있습니다"를 띄운다. 칸을 내려가며 푼다. 여기서는 **더 늘지 않는
    * 것**만 지킨다.
    */
-  it("같은 풀 + 같은 템플릿 잉여가 25종을 넘지 않는다", () => {
-    const byKey = new Map<string, string[]>();
+  it("같은 풀 + **같은 무대**에서 같은 글이 두 번 뜨지 않는다", () => {
+    /**
+     * ⚠ **무대가 다르면 겹쳐도 된다.** 고교판과 대학판이 같은 템플릿을
+     * 쓰는 건 정상이다 — `career_stage`가 갈라 같은 주에 같이 안 뜬다.
+     * 예전엔 그걸 세서 지표가 실제 결함보다 훨씬 커 보였다(25 vs 2).
+     */
+    const stagesOf = (r: Rule): string[] => {
+      const c = (r.conditions ?? []).find((x) => (x as { type?: string }).type === "career_stage") as
+        { stage?: string; stages?: string[] } | undefined;
+      if (!c) return ["*"];
+      return Array.isArray(c.stages) ? c.stages : c.stage ? [c.stage] : ["*"];
+    };
+    const byKey = new Map<string, Rule[]>();
     for (const r of RULES) {
       if (!r.poolId) continue;
       const k = `${r.messageTemplateId}|${r.poolId}`;
-      byKey.set(k, [...(byKey.get(k) ?? []), r.id]);
+      byKey.set(k, [...(byKey.get(k) ?? []), r]);
     }
-    const dup = [...byKey.values()].filter((v) => v.length > 1);
-    const excess = dup.reduce((a, v) => a + v.length - 1, 0);
-    expect(excess).toBeLessThanOrEqual(25);
-    // 한 상자에 같은 글이 여섯 개씩 있던 걸 다시 만들지 않는다
-    expect(Math.max(0, ...dup.map((v) => v.length))).toBeLessThanOrEqual(5);
+    let excess = 0;
+    for (const v of byKey.values()) {
+      if (v.length < 2) continue;
+      const seen = new Map<string, number>();
+      for (const r of v) for (const st of stagesOf(r)) seen.set(st, (seen.get(st) ?? 0) + 1);
+      for (const n of seen.values()) if (n > 1) excess += n - 1;
+    }
+    expect(excess).toBeLessThanOrEqual(2);
   });
 });

@@ -17,6 +17,6 @@
       "value": 6
     }
   ],
-  "messageTemplateId": "MSG_RAND_TEAM_MEAL",
+  "messageTemplateId": "MSG_HS_LIFE_TEAM_CHEM",
   "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
 }

@@ -3,7 +3,7 @@
   "type": "conditional",
   "category": "career",
   "priority": 760,
-  "oncePolicy": "once_per_season",
+  "oncePolicy": "once_per_career",
   "conditions": [
     {
       "type": "league_id",
