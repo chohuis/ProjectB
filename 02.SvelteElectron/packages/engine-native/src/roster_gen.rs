@@ -424,7 +424,18 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
 
     let salary_rules = p.salary_rules.clone().unwrap_or_default();
     let roster = p.rules.roster_size.max(1);
-    let pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
+    // 🔴 **타순 9명을 구조적으로 보장한다.**
+    //
+    //    예전엔 `pitcher_ratio`만 곱해서 정원이 작으면 야수가 9명 아래로 떨어졌다.
+    //    실측(2026-08-25 · 3회 반복): 고교 `rosterMin 18 × 0.55 = 야수 9.9명`이라
+    //    반올림에서 **타순 미달이 5~6팀** 나왔다(`test:rosterbalance` FAIL).
+    //
+    //    ⚠ 정원(`roster_size`)을 올리는 건 밸런스 수치라 안 건드린다.
+    //      **같은 인원 안에서** 야수 몫을 먼저 떼고 나머지를 투수에게 준다.
+    //      정원이 9명도 안 되면 그건 여기서 못 고친다 — 그때는 전원 야수다.
+    const BATTING_ORDER: i32 = 9;
+    let raw_pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
+    let pitcher_n = raw_pitcher_n.min((roster - BATTING_ORDER).max(0));
     // 정본은 `tuning::SP_SHARE_OF_PITCHERS` — 충원 경로도 같은 값을 봐야 한다
     let sp_n = (pitcher_n as f64 * crate::tuning::SP_SHARE_OF_PITCHERS).round().max(3.0) as i32;
     let batter_n = roster - pitcher_n;
