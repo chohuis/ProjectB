@@ -148,6 +148,8 @@ const FLOOR = {
     // 마지막 시즌 관측값. **시즌마다 최악을 누적**한다 — 마지막 한 시점만 보면
     // 중간에 무너졌다가 회복된 구간을 놓친다
     const worst = {};
+    // 야수를 두 기준으로 세어 어긋나는지 본다 (엔진 vs 검사)
+    const mism = () => { try { log("  [기준대조] " + JSON.stringify(app.batterCountMismatchProbe())); } catch (e) { log("  [기준대조] " + e.message); } };
 
     // 시점별로 따로 모은다
     const byPhase = { "시즌종료": {}, "오프시즌직후": {} };
@@ -212,6 +214,7 @@ const FLOOR = {
     absorb("시즌종료");
 
     log(`      ${start}~${app.currentSeason()} · 시즌마다 최악값 누적`);
+    mism();
     // 시점 대조 — 어느 쪽에서 무너지는지 한눈에 본다
     for (const lg of Object.keys(byPhase["시즌종료"])) {
       const a1 = byPhase["오프시즌직후"][lg];

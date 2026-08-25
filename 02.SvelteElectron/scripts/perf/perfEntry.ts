@@ -1563,6 +1563,37 @@ function pitcherSide(stats: Record<string, { type: string }>): Record<string, un
  * ⚠ 포수를 따로 센다. 다른 자리는 대체가 되지만 포수는 전문 요원이라
  * 0명이면 경기 자체가 성립하지 않는다.
  */
+/**
+ * 야수를 **두 기준으로** 세어 어긋나는지 본다 (C: KBL 1군 야수 미달).
+ *
+ * ⚠ 엔진(`team_engine.rs:236`)은 포지션 문자열로 센다 — `SP|RP|CP|P`가 투수다.
+ *   검사(`rosterCompositionProbe`)는 `playerType === "pitcher"`로 센다.
+ *   **둘이 다르면 엔진은 "하한을 지켰다"고 보는데 검사는 미달로 읽는다.**
+ */
+export function batterCountMismatchProbe(): Record<string, unknown> {
+  const PIT_POS = new Set(["SP", "RP", "CP", "P"]);
+  const byTeam = new Map<string, { byType: number; byPos: number }>();
+  for (const n of get(gameStore).npcs) {
+    if (n.careerStatus !== "active") continue;
+    const t = n.currentTeam ?? "";
+    if (!t.endsWith("_1") || !t.startsWith("TEAM_KBL")) continue;
+    const b = byTeam.get(t) ?? { byType: 0, byPos: 0 };
+    if (n.playerType !== "pitcher") b.byType++;
+    if (!PIT_POS.has(n.position ?? "")) b.byPos++;
+    byTeam.set(t, b);
+  }
+  const rows = [...byTeam.entries()]
+    .map(([t, v]) => ({ t, ...v, diff: v.byPos - v.byType }))
+    .filter((r) => r.diff !== 0);
+  const all = [...byTeam.values()];
+  return {
+    팀수: all.length,
+    최소_타입기준: Math.min(...all.map((v) => v.byType)),
+    최소_포지션기준: Math.min(...all.map((v) => v.byPos)),
+    어긋난팀: rows.length,
+    예시: rows.slice(0, 3).map((r) => r.t + " type=" + r.byType + " pos=" + r.byPos),
+  };
+}
 export function rosterCompositionProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
