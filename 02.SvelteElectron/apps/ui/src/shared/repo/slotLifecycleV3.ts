@@ -217,6 +217,21 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
     // 정원 초과분은 다음 해 졸업으로 저절로 풀린다.
     const cur = rosterByTeam.get(teamId) ?? [];
     if (!cur.some((p) => p.position === "C")) want = Math.max(want, 1);
+    // 🔴 **타순 9명을 여기서도 본다.** 포수만 챙기고 야수 총원은 안 봤다 —
+    //    졸업으로 야수가 빠져도 신입생 수는 `rosterSize / gradeMax`로 고정이라
+    //    한 학년이 투수에 몰리면 그 해 타순이 무너진다.
+    //    실측(2026-08-25): 세계 생성 직후는 멀쩡한데 시즌을 돌리면
+    //    타순 미달이 5~6팀 나왔다(`test:rosterbalance`는 시즌마다 최악값을 누적한다).
+    //
+    //    ⚠ 생성 쪽(`roster_gen.rs`)에도 같은 보장을 넣었다 — **두 자리 다 필요하다.**
+    //      거긴 첫 생성, 여긴 매년 충원이다.
+    const BATTING_ORDER = 9;
+    //    ⚠ **검사와 같은 기준으로 센다.** `rosterCompositionProbe`는 8포지션
+    //      목록으로 야수를 세는데, 여기서 "투수가 아닌 것"으로 세면 DH 같은
+    //      값이 섞여 어긋난다 — *재는 자리가 고친 자리와 달라진다.*
+    const FIELD = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+    const batters = cur.filter((p) => FIELD.includes(p.position ?? "")).length;
+    if (batters < BATTING_ORDER) want = Math.max(want, BATTING_ORDER - batters);
     if (want <= 0) continue;
     const raw = JSON.parse(
       await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
@@ -229,7 +244,10 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         namedNpcs: [], seasonYear, idOffset: 0,
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
-        pitcherRatio: pitcherRatioOf(rules),
+        // 🔴 **야수가 모자란 팀은 이번 학년을 야수로만 받는다.**
+        //    `want`를 늘려도 생성기가 그 비율대로 투수를 뽑으면 소용이 없다 —
+        //    인원만 늘고 타순은 그대로 비었다. **머릿수가 아니라 구성이 문제다.**
+        pitcherRatio: batters < BATTING_ORDER ? 0 : pitcherRatioOf(rules),
         talent: talentOf(rulesFile),
         // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
         // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
