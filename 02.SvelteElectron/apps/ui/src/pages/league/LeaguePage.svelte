@@ -172,6 +172,13 @@
     const lid = selectedLeagueId || myLeagueId;
     return historyStandings
       .filter(r => r.league_id === lid)
+      // 🔴 **2군을 뺀다.** `refs`는 1군·팜을 **같은 `leagueId`**로 담는다 —
+      //    `_1`/`_2` 접미사로만 갈린다(`rosterCompositionProbe`도 같은 규칙).
+      //    안 거르면 ABL이 16팀이 아니라 32팀, JBL은 12팀이 아니라 24팀으로 뜬다
+      //    (합 56 — 백로그의 "해외 빈 순위표 56행"이 이 숫자다).
+      //    ⚠ KBL은 `LEAGUE_KBL`/`LEAGUE_KBL_FARM`으로 갈려 있어 안 걸렸다 —
+      //      **해외만 같은 id를 쓴다.** 그래서 여태 안 드러났다.
+      .filter(r => !r.team_id.endsWith("_2"))
       .sort((a, b) => b.win_pct - a.win_pct || b.wins - a.wins);
   })();
 

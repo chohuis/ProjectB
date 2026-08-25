@@ -231,6 +231,11 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
     //      값이 섞여 어긋난다 — *재는 자리가 고친 자리와 달라진다.*
     const FIELD = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
     const batters = cur.filter((p) => FIELD.includes(p.position ?? "")).length;
+    //    ⚠ **공백 수를 더해 보았으나 더 나빠졌다**(2026-08-25 · 3회 측정).
+    //      `want`가 커지면 `neededPositions`의 `rest`(남은 칸)도 커지고,
+    //      그 칸은 `pitcherRatio`로 나뉘어 **투수가 더 들어온다**.
+    //      실측: 고교 통과 2/3 → 1/3, 포수 없는 팀은 1 → 2팀.
+    //      부족분만큼만 늘리는 쪽이 낫다 — 되돌렸다.
     if (batters < BATTING_ORDER) want = Math.max(want, BATTING_ORDER - batters);
     if (want <= 0) continue;
     const raw = JSON.parse(
