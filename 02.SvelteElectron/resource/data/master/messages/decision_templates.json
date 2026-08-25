@@ -7598,6 +7598,133 @@
           "effects": []
         }
       ]
+    },
+    {
+      "id": "DEC_COMMON_INJURY_AGAIN",
+      "prompt": "두 번째 부상을 어떻게 받아들이겠습니까?",
+      "options": [
+        {
+          "id": "find_cause",
+          "label": "트레이너와 원인을 찾는다",
+          "effectHint": "성실 +3, 피로 -5",
+          "effects": [
+            "diligence:+3",
+            "fatigue:-5"
+          ]
+        },
+        {
+          "id": "endure",
+          "label": "운이 없었다고 넘긴다",
+          "effectHint": "사기 -5, 멘탈 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": [
+            "morale:-5",
+            "xp.mentality:+2"
+          ]
+        },
+        {
+          "id": "endure_bat",
+          "label": "운이 없었다고 넘긴다",
+          "effectHint": "사기 -5, 선구 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": [
+            "morale:-5",
+            "xp.batting.discipline:+2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_COMMON_SURGERY_SCAR",
+      "prompt": "몸은 돌아왔습니다. 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "rebuild",
+          "label": "폼을 다시 짠다",
+          "effectHint": "커맨드 경험치 +3, 피로 +8",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": [
+            "xp.command:+3",
+            "fatigue:+8"
+          ]
+        },
+        {
+          "id": "rebuild_bat",
+          "label": "폼을 다시 짠다",
+          "effectHint": "컨택 경험치 +3, 피로 +8",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": [
+            "xp.batting.contact:+3",
+            "fatigue:+8"
+          ]
+        },
+        {
+          "id": "trust",
+          "label": "예전 감각을 믿는다",
+          "effectHint": "사기 +8",
+          "effects": [
+            "morale:+8"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_COMMON_INJURY_PRONE",
+      "prompt": "세 번째입니다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "body_first",
+          "label": "몸 관리를 최우선으로 둔다",
+          "effectHint": "성실 +5 · 태그 「유리몸」",
+          "effects": [
+            "diligence:+5",
+            "addTag:유리몸"
+          ]
+        },
+        {
+          "id": "ignore",
+          "label": "신경 쓰지 않는다",
+          "effectHint": "사기 +5",
+          "effects": [
+            "morale:+5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_COMMON_DILIGENCE_SEEN",
+      "prompt": "코치의 말에 어떻게 답하겠습니까?",
+      "options": [
+        {
+          "id": "keep",
+          "label": "하던 대로 한다",
+          "effectHint": "성실 +2, 코치 관계 +8",
+          "effects": [
+            "diligence:+2",
+            "relation.coach:+8"
+          ]
+        }
+      ]
     }
   ]
 }
