@@ -244,10 +244,11 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         namedNpcs: [], seasonYear, idOffset: 0,
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
-        // 🔴 **야수가 모자란 팀은 이번 학년을 야수로만 받는다.**
-        //    `want`를 늘려도 생성기가 그 비율대로 투수를 뽑으면 소용이 없다 —
-        //    인원만 늘고 타순은 그대로 비었다. **머릿수가 아니라 구성이 문제다.**
-        pitcherRatio: batters < BATTING_ORDER ? 0 : pitcherRatioOf(rules),
+        // ⚠ **여기서 비율을 0으로 만들지 않는다.** `neededPositions`가 이미
+        //   `minBatters`(9)를 보고 자리를 지정하며 **비율까지 직접 지킨다**
+        //   (그 함수 주석에 두 번 틀린 기록이 있다 — 백업을 다 채웠다가,
+        //    아예 뺐다가 포수가 사라졌다). 그 위에 0을 덮으면 **포수가 밀린다.**
+        pitcherRatio: pitcherRatioOf(rules),
         talent: talentOf(rulesFile),
         // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
         // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
