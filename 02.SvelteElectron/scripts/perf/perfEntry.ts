@@ -1604,7 +1604,30 @@ export function batterLeakProbe(): Record<string, unknown> {
       : (last?.eventType ?? "?");
     tally[k] = (tally[k] ?? 0) + 1;
   }
-  return { KBL1군_야수: inFirst, 떠난야수: elsewhere, 사유: tally };
+  // 🔴 **공급인가 분배인가.** FA로 나간 야수가 같은 리그 다른 팀으로 갔다면
+  //    리그 총량은 그대로고 **팀별로 쏠린 것**이다 — 성격이 다르다.
+  //    리그 밖(2군·독립·은퇴)으로 갔다면 그건 공급이 마르는 것이다.
+  const byLeague: Record<string, number> = {};
+  const perTeam: number[] = [];
+  const teamCount = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus !== "active") continue;
+    if (PIT_POS.has(n.position ?? "") || n.playerType === "pitcher") continue;
+    const lg = n.currentLeague ?? "?";
+    byLeague[lg] = (byLeague[lg] ?? 0) + 1;
+    const t = n.currentTeam ?? "";
+    if (t.startsWith("TEAM_KBL") && t.endsWith("_1")) {
+      teamCount.set(t, (teamCount.get(t) ?? 0) + 1);
+    }
+  }
+  for (const v of teamCount.values()) perTeam.push(v);
+  perTeam.sort((x, y) => x - y);
+  return {
+    KBL1군_야수: inFirst, 떠난야수: elsewhere, 사유: tally,
+    리그별_야수: byLeague,
+    KBL1군_팀별: perTeam,
+    쏠림: perTeam.length ? (perTeam[perTeam.length - 1] - perTeam[0]) : 0,
+  };
 }
 export function batterCountMismatchProbe(): Record<string, unknown> {
   const PIT_POS = new Set(["SP", "RP", "CP", "P"]);
