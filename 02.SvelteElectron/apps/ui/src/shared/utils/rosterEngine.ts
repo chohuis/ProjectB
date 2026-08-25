@@ -334,6 +334,11 @@ export function neededPositions(
   // 타순 한 바퀴는 **경기 성립 조건**이라 투수 하한보다 앞이다.
   // (야수가 9명 미만이면 Rust가 `lineup[lpos % n]`으로 돌려 남은 타자의
   // 타석이 부풀고, 능력치가 아니라 출전량이 성적을 만든다)
+  // ⚠ **`empty`를 `count`로 잘라 봤으나 더 나빠졌다**(2026-08-25 · 3회 측정).
+  //    `batShort`가 커지면 `batQuota`가 `remain`을 더 먹고, 그만큼
+  //    **투수 몫(`pitQuota`)과 백업 칸이 줄어** 포수가 밀린다.
+  //    실측: 고교 통과 2/3 → 1/3.
+  //    이 식은 **의도적으로 낙관적이다** — 공백이 채워질 걸 전제한다.
   const batShort = Math.max(0, minBatters - batters - empty.length);
 
   // ⚠ **둘 다 하한 미달이면 우선순위로 나누면 안 된다.** 앞쪽이 `count`를 다
