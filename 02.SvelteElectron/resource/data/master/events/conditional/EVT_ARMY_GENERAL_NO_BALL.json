@@ -1,0 +1,32 @@
+{
+  "id": "EVT_ARMY_GENERAL_NO_BALL",
+  "type": "conditional",
+  "category": "training",
+  "tier": "important",
+  "priority": 810,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "현역"
+    },
+    {
+      "type": "eq",
+      "path": "militaryUnit",
+      "value": "general"
+    },
+    {
+      "type": "num_gte",
+      "path": "militaryServiceWeeks",
+      "value": 8
+    },
+    {
+      "type": "num_lte",
+      "path": "militaryServiceWeeks",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_ARMY_GENERAL_NO_BALL",
+  "decisionTemplateId": "DEC_ARMY_GENERAL_NO_BALL"
+}

@@ -65,10 +65,12 @@ const stage = (r) => { const a = stagesOf(r); return a.length === 1 ? a[0] : nul
 const inStage = (r, s) => stagesOf(r).includes(s);
 /** 무대를 아예 안 가리는가 (진짜 전체 공용) */
 const noStage = (r) => stagesOf(r).length === 0;
+/** 군은 `career_stage`가 아니라 `militaryStatus` 경로로 갈린다 */
+const isArmy = (r) => (r.conditions ?? []).some((c) => c.path === "militaryStatus");
 const league = (r) => C(r, "league_id")?.leagueId ?? null;
 
 const GROUPS = [
-  ["전체 공용", (r) => noStage(r) && !league(r)],
+  ["전체 공용", (r) => noStage(r) && !league(r) && !isArmy(r)],
   ["고교",      (r) => inStage(r, "highschool")],
   ["대학",      (r) => inStage(r, "university")],
   ["독립",      (r) => inStage(r, "independent")],

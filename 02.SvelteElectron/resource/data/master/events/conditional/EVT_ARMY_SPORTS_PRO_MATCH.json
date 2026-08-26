@@ -1,0 +1,27 @@
+{
+  "id": "EVT_ARMY_SPORTS_PRO_MATCH",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 780,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "현역"
+    },
+    {
+      "type": "eq",
+      "path": "militaryUnit",
+      "value": "sports"
+    },
+    {
+      "type": "num_gte",
+      "path": "militaryServiceWeeks",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_ARMY_SPORTS_PRO_MATCH",
+  "decisionTemplateId": "DEC_ARMY_SPORTS_PRO_MATCH"
+}

@@ -39,6 +39,8 @@ const stage = (r) => { const a = stagesOf(r); return a.length === 1 ? a[0] : nul
 const inStage = (r, s) => stagesOf(r).includes(s);
 /** 무대를 아예 안 가리는가 (진짜 전체 공용) */
 const noStage = (r) => stagesOf(r).length === 0;
+/** 군은 `career_stage`가 아니라 `militaryStatus` 경로로 갈린다 */
+const isArmy = (r) => (r.conditions ?? []).some((c) => c.path === "militaryStatus");
 const league = (r) => C(r, "league_id")?.leagueId ?? null;
 const hasPath = (r, p) => (r.conditions ?? []).some((c) => c.path === p);
 const gradeOf = (r) => C(r, "grade")?.value ?? null;
@@ -102,7 +104,7 @@ function vocab(list) {
 }
 
 const SLOTS = [
-  ["전체 공용",        (r) => noStage(r) && !league(r)],
+  ["전체 공용",        (r) => noStage(r) && !league(r) && !isArmy(r)],
   [null],
   ["고교 전체 공용",   (r) => inStage(r, "highschool") && gradeOf(r) === null],
   ["  고교 1학년",     (r) => inStage(r, "highschool") && gradeOf(r) === 1],
@@ -128,16 +130,17 @@ const SLOTS = [
   ["JBL 1군",          (r) => inStage(r, "pro_jbl")],
   ["JBL 2군",          (r) => league(r) === "LEAGUE_JBL_FARM"],
   [null],
-  ["군 · 상무",        (r) => (r.conditions ?? []).some((c) =>
-    c.path === "militaryUnit" || c.path === "militaryServedUnit" || c.type === "military_phase")],
-  ["군 · 현역",        () => false],
+  ["군 · 상무", (r) => (r.conditions ?? []).some((c) => c.path === "militaryUnit" && c.value === "sports")],
+  ["군 · 현역", (r) => (r.conditions ?? []).some((c) => c.path === "militaryUnit" && c.value === "general")],
+  ["군 · 공통", (r) => (r.conditions ?? []).some((c) => c.path === "militaryStatus")
+    && !(r.conditions ?? []).some((c) => c.path === "militaryUnit")],
 ];
 
 const log = (s) => process.stdout.write(s + "\n");
 
 /** 무대 하나 = 그 무대의 모든 규칙. 무대를 다 더하면 전체가 나와야 한다 */
 const STAGES = [
-  ["전체 공용", (r) => noStage(r) && !league(r)],
+  ["전체 공용", (r) => noStage(r) && !league(r) && !isArmy(r)],
   ["고교",      (r) => inStage(r, "highschool")],
   ["대학",      (r) => inStage(r, "university")],
   ["독립",      (r) => inStage(r, "independent")],
@@ -145,6 +148,7 @@ const STAGES = [
   ["KBL 2군",   (r) => league(r) === "LEAGUE_KBL_FARM"],
   ["ABL",       (r) => inStage(r, "pro_abl") || league(r) === "LEAGUE_ABL_FARM"],
   ["JBL",       (r) => inStage(r, "pro_jbl") || league(r) === "LEAGUE_JBL_FARM"],
+  ["군",        (r) => isArmy(r)],
 ];
 
 log("");
