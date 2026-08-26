@@ -140,12 +140,19 @@ const SLOTS = [
   ["ABL 2군",          (r) => inLeague(r, "LEAGUE_ABL_FARM")],
   ["JBL 1군",          (r) => inStage(r, "pro_jbl")],
   ["JBL 2군",          (r) => inLeague(r, "LEAGUE_JBL_FARM")],
-  [null],
-  ["군 · 상무", (r) => (r.conditions ?? []).some((c) => c.path === "militaryUnit" && c.value === "sports")],
-  ["군 · 현역", (r) => (r.conditions ?? []).some((c) => c.path === "militaryUnit" && c.value === "general")],
-  ["군 · 공통", (r) => (r.conditions ?? []).some((c) => c.path === "militaryStatus")
-    && !(r.conditions ?? []).some((c) => c.path === "militaryUnit")],
 ];
+
+const MIL = "resource/data/master/events/pools";
+/**
+ * 🔴 **군은 이벤트 규칙이 아니다.** `advanceWeek`가 `careerStage === "military"`면
+ * 일찍 return해서 `runEventEngine()`이 안 불린다(`advanceWeek.ts:1879`).
+ * 군 이벤트는 `military_{common,sports,general}.json`에 있고 Rust가 계급으로
+ * 걸러 하나 고른다. 규칙 표에 0으로 두면 "비었다"로 읽히므로 따로 센다.
+ */
+const milCounts = ["common", "sports", "general"].map((k) => {
+  const j = JSON.parse(fs.readFileSync(`${MIL}/military_${k}.json`, "utf8"));
+  return [k, j.events.length];
+});
 
 const log = (s) => process.stdout.write(s + "\n");
 
@@ -159,7 +166,6 @@ const STAGES = [
   ["KBL 2군",   (r) => inLeague(r, "LEAGUE_KBL_FARM")],
   ["ABL",       (r) => inStage(r, "pro_abl") || inLeague(r, "LEAGUE_ABL_FARM")],
   ["JBL",       (r) => inStage(r, "pro_jbl") || inLeague(r, "LEAGUE_JBL_FARM")],
-  ["군",        (r) => isArmy(r)],
 ];
 
 log("");
@@ -173,6 +179,10 @@ for (const [label, pick] of SLOTS) {
   log(`  ${label.padEnd(20)}${String(list.length).padStart(5)}   ${lanes(list)}   ${vocab(list)}`);
 }
 log("  " + "─".repeat(62));
+log("");
+log("  ⚠ 군은 **이벤트 규칙이 아니다** — 별도 풀이고 Rust가 계급으로 고른다");
+log("    " + milCounts.map(([k, n]) => `military_${k} ${n}`).join(" · ")
+  + "  =  " + milCounts.reduce((a, [, n]) => a + n, 0) + "종");
 
 // ── 검산. 무대별로 갈라 다 더하면 전체가 나와야 한다.
 //    안 맞으면 **어느 칸에도 안 잡히는 규칙이 있다**는 뜻이고, 그건

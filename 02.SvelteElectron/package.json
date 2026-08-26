@@ -129,7 +129,9 @@
     "check:effectkeys": "node scripts/check-effectkeys.cjs",
     "measure:slotreach": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-slotreach.cjs",
     "check:eventranges": "node scripts/check-eventranges.cjs",
-    "check:effecthints": "node scripts/check-effecthints.cjs"
+    "check:effecthints": "node scripts/check-effecthints.cjs",
+    "check:eventslots-health": "node scripts/check-eventslots-health.cjs",
+    "measure:eventslots": "node scripts/measure-eventslots.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

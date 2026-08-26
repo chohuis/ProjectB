@@ -1,146 +1,187 @@
-# B → A 인계 (2026-08-23)
+# B → A 인계 (2026-08-26)
 
-> **트랙 B(이벤트·소식함)가 트렁크를 받았고, A가 트렁크로 병합할 차례다.**
-> 절차 ④ — A가 `extract-modals`에 병합하고 전체 검사를 돌린다.
+> **트랙 B(이벤트·소식함) 정비 한 판을 끝냈다.** 병합해서 전체 검사를 돌려주면 된다.
 >
 > B 브랜치: `track/events` (워크트리 `ProjectB-events`)
-> 병합 커밋: `dc88446ed` — `extract-modals` 12커밋을 받았고 **충돌 없었다.**
+> 지난 인계 이후 **커밋 25개** · 결과 보고서 [EVENT_REPORT_2026-08-25.md](EVENT_REPORT_2026-08-25.md)
 
 ---
 
-## 1. 🔴 A가 확인해야 할 것 — B가 A 소유 파일을 건드렸다
-
-트랙 문서상 B는 읽기 전용인 파일 셋을 **최소로** 고쳤다. **전부 삭제만이고
-추가는 없다.** 반쪽만 지우면 `DEFAULT_ACHIEVEMENTS`에 존재하지 않는 업적
-id가 남아 더 나빠져서 그렇게 했다.
-
-| 파일 | 변경 | 왜 |
-|---|---|---|
-| `stores/game.ts` | 삭제 2곳 (배열 한 줄 · 죽은 갈래 3줄) | 업적 `ACH_SOCIAL_FIRST_KAKAO` 제거 |
-| `usecases/advanceWeek.ts` | 주석 한 줄 | 주간 처리 목록의 "메신저" |
-| `apps/desktop/ipc/db.cjs` | `CREATE TABLE` 컬럼 한 줄 | `kakao_first_contact` — 읽지도 쓰지도 않던 것 |
-
-배경: 메신저(NPC 채팅·친밀도·아크 스크립트)는 **2026-06-01 `5687f0de1`에서
-제거됐는데 데이터·업적·DB 컬럼이 남아 있었다.** 업적 "첫 카톡"은
-`metricKey: kakaoFirstContact`를 계산하는 곳이 없어 **영원히 해금 불가**였다.
-
----
-
-## 2. 🔴 `CLAUDE.md`가 틀렸다 — A가 고쳐야 한다
-
-`02.SvelteElectron/CLAUDE.md`의 남은 결함 표에 아직 이렇게 적혀 있다:
-
-> | 2 | 이벤트 로더 **0건** — `events.toml` 1,848줄 + 에디터 1,531줄이 미사용 | 로더가 없다 | 큼 |
-
-**사실이 아니다.** 실측:
+## 1. ✅ A 소유 파일은 하나도 안 건드렸다
 
 ```
-resource/data/master/events/   535건 (필수 105 · 조건부 258 · 랜덤 172)
-로더   stores/master.ts  loadEventsFromManifest()      있다
-호출   usecases/advanceWeek.ts  runEventEngine()       있다
+git diff --stat 4939ccf40 HEAD -- apps/ui/src/shared/stores/game.ts \
+    apps/ui/src/shared/usecases/ apps/ui/src/pages/ packages/
+→ (빈 출력)
 ```
 
-`events.toml`은 03/04 시절 형식이라 런타임이 안 읽는 게 맞지만, **"로더 0건"이
-아니다.** 이 줄 때문에 B가 세션 시작에 한 번 헛짚었다.
+B가 고친 건 **이벤트 데이터**와 **이벤트 엔진 주변**뿐이다:
 
-### 왜 그렇게 보였는지 — A도 걸릴 수 있는 함정
-
-`_manifest.json`이 없으면 로더가 `events/rules/*.json`이라는 **19건짜리
-스텁으로 조용히 폴백**하고 `console.warn` 한 줄만 남겼다. 콘텐츠의 **3.5%**로
-게임이 그냥 돈다. B가 그 상태로 6시즌을 재고 오진했다.
-
-**B가 이걸 throw로 바꿨다**(레거시 폴백 경로 20줄도 같이 삭제). 이제 매니페스트가
-없으면 안 뜬다 — `npm run gen:manifest` 한 줄이면 된다. `dev:ui`·`build:ui`는
-이미 그걸 먼저 돌린다.
-
-⚠ **새 워크트리를 팔 때 세워야 할 것이 넷이다**(문서엔 `.node` 하나만 적혀 있었다):
-
-```
-npm install                     node_modules
-npm run gen:manifest            _manifest.json
-npm run build:packages          packages/{contracts,core}/dist
-packages/engine-native/*.node   ← A가 빌드한 것을 복사
-```
-
----
-
-## 3. 🔴 A에게 넘기는 실측 — 결정성 잡음
-
-`CLAUDE.md` 남은 결함 #1(Rust `thread_rng` 31곳)의 **피해를 이벤트 쪽에서
-숫자로 쟀다.** A가 결정성을 고칠 때 근거로 쓸 수 있다.
-
-같은 코드·같은 씨앗(20260803)·`--nodraft`(커리어 경로 고정)·6시즌 **3회**:
-
-| | 1회 | 2회 | 3회 | 폭 |
-|---|---:|---:|---:|---:|
-| 주수 | 292 | 292 | 292 | **0** |
-| 뜬 이벤트 종수 | 141 | 143 | 143 | ±2 |
-| 밀린 건수 | 913 | 963 | 903 | **±60 (6%)** |
-| 재발동 비율 | 53.8% | 52.2% | 51.9% | ±1.9%p |
-
-**주차는 완전히 고정인데 이벤트 결과가 흔들린다.** 세계 생성은 결정적이지만
-시즌 진행에 흔들림이 남아 있다는 기존 관측과 일치한다.
-
-재현: `node scripts/measure-eventfunnel.cjs --nodraft --runs 3`
-
----
-
-## 4. A에게 요청 — `package.json` 두 줄
-
-B는 `package.json`을 못 고친다(트랙 규칙). 넣어 주면 좋겠다:
-
-```json
-"measure:eventfunnel":   "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-eventfunnel.cjs",
-"check:eventconditions": "node scripts/check-eventconditions.cjs",
-```
-
-⚠ `check:eventconditions`는 **급하지 않다** — 같은 검사가 이미 `npm test`에
-들어 있다(`eventConditionShape.test.ts`). CLI는 편의용이다.
-
----
-
-## 5. B가 이번에 한 것 — 요약
-
-| 커밋 | 내용 |
+| 영역 | 변경 |
 |---|---|
-| `27b84daf5` | 이벤트 깔때기 계측 신설 — 앞단(엔진)이 아무 데도 안 세어져 있었다 |
-| `1d9752aeb` | 빈 규칙 둘 제거 — 292주 중 **37주**가 소식 0건으로 지나갔다 |
-| `131b34aa8` | 두 띠로 고르기 + `once_per_stage_year` 수정 |
-| `b1e72469a` | 메신저·아크 잔재 제거 |
-| `bb7599565` | 조건 44곳 수정 + 로드 시점 검증 — **35종이 죽어 있었다** |
-| `d2cf060bc` | 어휘 카탈로그(`EVENT_VOCABULARY.md`) + 부상 축 |
-| `e1169b4c4` | 선택지 단위 조건 + 잡음 계측 |
-| `f172ec7aa` | 띠 하나 더 — 끝내 못 뜬 7종 → 4종 |
-
-핵심 성과 (전부 잡음 폭 밖):
-
-```
-빈메시지로 버려진 주    37 → 0
-conditional 발동률   17.8% → 29.1%
-뜬 이벤트 종수         105 → 140~150
-끝내 못 뜬 규칙          7 → 4
-```
-
-### 결함의 공통 형태 — A 쪽에도 있을 수 있다
-
-찾은 결함이 전부 한 부류였다: **데이터가 코드와 어긋나도 아무도 안 죽고
-로그도 안 남는다.** 게임은 돌고 콘텐츠만 사라진다.
-
-- `career_stage`에 `stage` 대신 `value` → 조건이 늘 false. **조용히**
-- `once_per_stage_year`가 2학년부터 안 막힘 (`currentWeek`이 시즌마다 리셋). **조용히**
-- 매니페스트 없으면 19건 스텁. **`warn` 한 줄**
-- 업적 "첫 카톡"이 영원히 해금 불가. **조용히**
-
-**같은 형태를 A 쪽에서도 의심해 볼 만하다** — 특히 데이터 파일을 캐스팅만 해서
-넘기는 자리.
+| `resource/data/master/events/` · `messages/` | 283파일 · 이벤트 535 → **589종** |
+| `utils/conditionEvaluator.ts` · `eventEngine.ts` · `eventPaths.ts` | +75줄 (아래 §3) |
+| `stores/master.ts` · `types/event.ts` | 조건 검증·타입 |
+| `utils/__tests__/` | 검사 766 → **802** |
+| `scripts/` | 게이트 6개 · 계측 4개 |
+| `scripts/perf/perfEntry.ts` | 14줄 (하네스 — 아래 §4) |
 
 ---
 
-## 6. B가 남긴 판단 — 사용자 확정 대기
+## 2. 🔴 A가 봐야 할 것 — 게임 쪽 결함 여덟
 
-- **주당 상한 1 → n** — **밸런스 동결**이라 손 안 댔다. 고교 1학년 입학 서사
-  3종(`WELCOME_DINNER`·`DORM_NIGHT`·`HOMESICK`)이 `week_lte 2~4`라는 같은
-  좁은 창에서 다퉈 아직 못 뜬다. 순서로는 더 못 푼다
-- **이월 큐** — **철회했다.** 회복 가능한 게 7종뿐이라 세이브 필드 추가와
-  A 조율의 대가에 안 맞았다
-- **콘텐츠** — 392종이 아직 조건조차 한 번 안 맞는다. 미사용 어휘 16종이 재료다
+전부 **B가 못 고치는 자리**다. 이벤트 데이터로는 우회만 했다.
+
+| # | 결함 | 근거 |
+|---|---|---|
+| 1 | **주인공이 항상 투수다** | `NewGamePage.svelte:271`이 `playerType: "pitcher"` 하드코딩. 바꾸는 경로가 없다. 그런데 타자 갈래가 코드 곳곳에 반쯤 지어져 있다(`lastTop10Batter` · `TrainingPage`의 `isBatter` · `batting.*` 보상). **입구만 없다** |
+| 2 | 🔴 **주인공이 해외에 갈 수 없다** | `careerStage`를 `pro_abl`/`pro_jbl`로 **쓰는 코드가 아무 데도 없다.** 읽는 자리(`isProStage`·화면 분기)만 있고 진로 허브·FA·계약 어디에도 해외 선택지가 없다. **이번에 채운 해외 258종이 도달 불가** |
+| 3 | **성실이 단방향이다** | 양수 보상 95 대 음수 3(전부 대학 −2). 시작 60에서 **바닥이 54**라 `diligence_lte 30`이 영원히 false. `diligenceRange.test.ts`가 못박아 뒀다 |
+| 4 | **사기가 좁은 띠에 붙어 있다** | `COND_SLUMP`(사기≤38)·`RAND_TEAM_MEAL`(사기≤72)이 **네 경로 전부에서 0회**. 반대로 `diligence_gte 80`은 중반부터 매년 뜬다 |
+| 5 | **`military_phase`가 스텁이다** | 항상 false를 반환한다(`conditionEvaluator.ts`). 군 서사는 `militaryStatus`/`militaryUnit`/`militaryServiceWeeks` 경로로 우회했다 — 살릴 계획이 있으면 옮긴다 |
+| 6 | **`removeTag`가 없다** | 태그로 만든 연계를 닫을 수단이 없다(§5) |
+| 7 | **학점을 건드릴 보상이 없다** | `universityGpa`는 조건으로 읽기만 한다. 힌트 여덟 자리가 "학점 유리"라 써놓고 **성실만 움직이고** 있었다 — 문구를 동작에 맞췄다 |
+| 8 | **2군에서 1군 이벤트가 다 뜬다** | `careerStage`가 2군에서도 `pro_kbl`이라 189종이 그대로 후보다. **의도인지 확인 필요** |
+
+### ⚠ 1번은 크기를 재 뒀다
+
+`npm run check:playertype`의 ②가 **306건**이다 — 투구 보상을 주면서 대상을
+안 가린 선택지 수. 타자가 열리는 날 손봐야 할 일의 크기다.
+
+⚠ **이번에 만든 71종은 타자 갈래를 미리 넣어 뒀다.** 나중에 되돌아와 고치는
+것보다 쓸 때 넣는 게 싸다.
+
+---
+
+## 3. B가 엔진에 넣은 것 — 검토 부탁
+
+전부 **기존 동작을 안 바꾸는 확장**이다. 단일 값은 그대로 돈다.
+
+| 파일 | 무엇 | 왜 |
+|---|---|---|
+| `conditionEvaluator.ts` | `career_stage`가 **`stages` 배열**을 받는다 | 프로 세 리그를 한 번에 가리킬 수단이 없어 **해외로 나가면 1군 이야기 171종이 통째로 멈췄다** |
+| 〃 | `league_id`가 **`leagueIds` 배열**을 받는다 | 같은 이유로 **ABL·JBL 2군이 0종**이었다 |
+| 〃 | `player_type`이 **`twoWay`를 양쪽으로** 본다 | 정확 일치라 투타겸업에게 **투수 것도 타자 것도 안 떴다** |
+| `eventEngine.ts` | `candidateByRule` 계수기 | "뽑기에서 졌다"와 "조건이 안 닿았다"를 못 갈랐다(§6) |
+| `eventPaths.ts` | 경로 몇 개 추가 | `leagueYears` 등 |
+| `stores/master.ts` | 배열 조건 검증 · `parseEffectsArray`에 `money`/`relation.*`/`luxury` | 문자열형 보상이 그 셋을 못 실었다 |
+
+⚠ `stores/master.ts`는 A/B 경계에 걸쳐 있다. **로더·검증만 건드렸고 게임
+로직은 안 건드렸다.**
+
+---
+
+## 4. 하네스(`scripts/perf/perfEntry.ts`) 14줄
+
+계측이 안 되던 자리 둘을 고쳤다. **게임 코드가 아니라 계측 하네스다.**
+
+| 무엇 | 왜 |
+|---|---|
+| 대학 지원을 **전력 낮은 쪽부터** 고른다 | 알파벳순 상위 3개를 골라 **늘 떨어졌고**, 그래서 **대학 113종이 한 번도 계측된 적이 없었다** |
+| `eventRuleProbe`에 `후보` 필드 | 위 계수기를 읽는다 |
+
+---
+
+## 5. 알아두면 좋은 것 — 연계는 태그로만 된다
+
+🔴 **후속 이벤트를 예약할 수단이 없다.** `nextEvents` 같은 필드가 없고,
+`triggeredEvents`는 **"언제"만 남기고 무엇을 골랐는지는 안 남긴다.**
+
+그래서 연계의 유일한 수단이 **상태에 흔적을 남기는 보상**(태그·관계·돈)이다.
+사슬 셋을 그 방식으로 만들어 증명했다(`EVT_CHAIN_FORM_REBUILD_*`).
+
+`removeTag`가 생기면 더 나은 모양으로 다시 짤 수 있다.
+
+---
+
+## 6. 새 게이트 여섯 — CI에 넣을지 판단 부탁
+
+전부 **"아무도 안 죽고 로그도 안 남는" 결함**을 잡는다. 이번에 열둘을 찾았고
+셋은 **B가 만들면서 낸 것을 커밋 전에 잡았다.**
+
+```bash
+npm run check:eventconditions   # 조건 타입·필드·경로
+npm run check:effectkeys        # 보상 키 — 모르는 키는 조용히 버려진다
+npm run check:effecthints       # 힌트가 주지 않는 보상을 약속하는가
+npm run check:playertype        # 투수 전용인데 대상을 안 밝힌 것
+npm run check:eventranges       # 조건값이 그 축의 눈금 안인가
+npm run check:eventslots-health # 무대별 건강 진단 (게이트 아님 · 표만 찍는다)
+```
+
+계측 넷:
+
+```bash
+npm run measure:eventslots      # 재고 — 무대에 몇 개 있나
+npm run measure:slotreach       # 소비 — 몇 개나 닿나  (--path indie|univ|draft|army)
+npm run measure:eventrules      # 이름을 댄 규칙의 시즌별 증가분
+npm run measure:mailbox         # 소식함이 무엇으로 차는가
+```
+
+---
+
+## 7. B가 잰 것 중 A가 알아야 할 셋
+
+### ① 소식함의 64%가 코드 소식이다
+
+```
+6시즌 292주 · 경로 indie
+코드 소식 1029통 (64%) · 이벤트 578통 (36%)
+보유 500/500 · 밀려남 1107통 (68.9%)
+```
+
+`msg-train`이 **매주 한 통씩 292통** — 코드 소식의 28%가 훈련 보고 하나다.
+대회 소식(`msg-tour-*`)이 234통으로 그다음.
+
+⚠ **`trimMailbox`는 두 계통을 구분하지 않는다.** 다만 미결 선택지는 상한
+위로 보존하므로 **선택지 있는 이벤트는 안 밀려난다** — 밀려나는 건 대부분
+읽고 넘기는 알림이다.
+
+### ② 값을 말해야 하는데 고정 문구인 이벤트 23종
+
+**템플릿 467개 중 치환 변수를 쓰는 게 0개다.** "4월 결산"에 4월 성적이 안
+들어가고, "시상식"이 수상해도 "수상자가 아니어도 참석은 합니다"라고 한다.
+
+같은 소재가 두 시스템에 동시에 있기도 하다 — `EVT_HS_Y1_TOP10_REPORT`가
+"이름을 올렸습니다"(고정)라고 하는 동안 `msg-top10`은 **실제 순위**를 말한다.
+**둘 다 뜬다.**
+
+⚠ 사용자 판단으로 **미뤘다** — [EVENT_DEFERRED.md](EVENT_DEFERRED.md)에
+선택지 셋과 판단 근거를 적어 뒀다.
+
+### ③ 군은 이벤트 엔진이 안 돈다
+
+`advanceWeek`가 `careerStage === "military"`면 **일찍 return한다**
+(`advanceWeek.ts:1879`). 그 아래 `runEventEngine()`이 안 불린다.
+
+B가 군 서사 14종을 **조건부 이벤트로 만들었다가** 계측 0회를 보고 알았다.
+`events/pools/military_*.json`으로 옮겼다(35 → **54종**).
+⚠ 계급 경계도 틀렸었다 — 12/40/70주로 근사했는데 실제는
+`advanceWeek.ts:1897`의 **8/34/60**이다.
+
+---
+
+## 8. 병합 뒤 확인
+
+```bash
+npm run gen:manifest            # 🔴 빠뜨리면 새 규칙이 조용히 안 실린다
+npm test                        # 802건
+npm run check:eventconditions && npm run check:effectkeys && \
+npm run check:effecthints && npm run check:playertype && npm run check:eventranges
+npm run measure:eventslots      # 재고표 — 589종 · 빈 무대 없음
+```
+
+⚠ **`_manifest.json`은 gitignore다.** 새 워크트리에서는 `gen:manifest`를
+반드시 먼저 돌린다 — 없으면 로더가 던진다(예전엔 19건짜리 스텁으로 조용히
+폴백했고 그 상태로 잰 계측이 오진을 냈다).
+
+---
+
+## 9. 밸런스 — 확정을 받아야 할 값 열
+
+전부 이번에 처음 들어간 값이라 **전례가 없다.** 보고서 §11에 표로 있다.
+가장 큰 둘:
+
+| | |
+|---|---|
+| **랜덤 추첨률 26% → 48%** | 42종이 35뽑기를 나누던 걸 65뽑기로. **주당 랜덤 소식 0.66 → 1.14건** |
+| **돈 눈금** | 단위는 만원. 학생 15~40 띠 · 프로 150~1000 띠. 고교생 주 순현금이 5.5라 프로 값을 그대로 못 쓴다 |
