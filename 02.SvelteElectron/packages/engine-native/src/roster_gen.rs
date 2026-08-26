@@ -292,6 +292,30 @@ const PITCH_SPECIAL:  &str = "PITCH_KNUCKLEBALL";
 /// - 보유 수는 목표치에 성숙도(나이·OVR)를 곱한다 — 신인은 덜 갖추고 시작한다
 /// - 변화구·오프스피드를 섞는다. 한 계열만 갖는 투수가 나오지 않게
 /// - 너클볼은 특수구다. 낮은 확률로만, 그리고 **주무기로만** 준다
+/// 나이를 **27세 근처가 가장 두꺼운 피라미드**로 뽑는다 (삼각분포).
+///
+/// 🔴 **예전엔 균등이었다.** `age_min..=age_max`가 20~37이라 30세 이상이
+///   **47%**가 되고, 연차는 `age - entry_age`로 역산하므로 **7년차 이상이
+///   44%**인 역피라미드가 나왔다(실측 2026-08-26 · KBL 1군 300명 · 3회).
+///   그래서 첫 시즌에 베테랑이 53% → 18%로 주저앉는 것처럼 보였다 —
+///   실제로는 **시뮬 쪽 18%가 자연스럽고 생성이 노인 리그를 만들고 있었다.**
+///
+/// 최빈값은 구간의 **41% 지점**이다. KBL(20~37)에서 27세가 나오는 값이고
+/// (사용자 확정 2026-08-26), 구간이 다른 리그도 같은 비율로 따라간다 —
+/// 독립(20~31)은 24.5세, ABL(21~38)은 28세다.
+///
+/// ⚠ **학년제 리그는 여기 안 온다.** 고교·대학은 `age_base + grade`다.
+fn pick_age(min: i32, max: i32, rng: &mut LcgRand) -> i32 {
+    let span = (max - min).max(0) as f64;
+    if span <= 0.0 { return min; }
+    const PEAK: f64 = 0.41;
+    let u = rng.next();
+    // 삼각분포 역함수 — 최빈값 왼쪽/오른쪽을 따로 푼다
+    let t = if u < PEAK { (u * PEAK).sqrt() }
+            else { 1.0 - ((1.0 - u) * (1.0 - PEAK)).sqrt() };
+    min + (t * span).round() as i32
+}
+
 fn gen_pitches(
     position: &str,
     velocity: f64,
@@ -507,15 +531,12 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
 
             // 학년/나이 — 외국인은 전성기 나이대에서 뽑는다(유망주를 데려오지 않는다)
             let (grade, age, graduation_year) = if let Some(f) = fgn {
-                let span = (f.age_max - f.age_min).max(0);
-                (None, f.age_min + (rng.next() * (span + 1) as f64) as i32, 0)
+                (None, pick_age(f.age_min, f.age_max, &mut rng), 0)
             } else if p.rules.grade_max > 0 {
                 let g = (i % p.rules.grade_max) + 1;
                 (Some(g), p.rules.age_base + g, p.season_year + (p.rules.grade_max - g))
             } else {
-                let span = (p.rules.age_max - p.rules.age_min).max(0);
-                let a = p.rules.age_min + (rng.next() * (span + 1) as f64) as i32;
-                (None, a, 0)
+                (None, pick_age(p.rules.age_min, p.rules.age_max, &mut rng), 0)
             };
 
             // 능력치 — 투수도 최소 타격치 보유 (교류전/지명타자 부재 대비).
