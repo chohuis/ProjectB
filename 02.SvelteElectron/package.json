@@ -128,7 +128,8 @@
     "check:playertype": "node scripts/check-playertype.cjs",
     "check:effectkeys": "node scripts/check-effectkeys.cjs",
     "measure:slotreach": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-slotreach.cjs",
-    "check:eventranges": "node scripts/check-eventranges.cjs"
+    "check:eventranges": "node scripts/check-eventranges.cjs",
+    "check:effecthints": "node scripts/check-effecthints.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
