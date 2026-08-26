@@ -46,6 +46,15 @@ export interface DecisionEffect {
   popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
   diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
   addTag?:          string[];                // 태그 추가 (중복 무시)
+  /**
+   * 태그 제거.
+   *
+   * 🔴 **`addTag`만 있고 닫을 수단이 없었다.** 이벤트 연계를 태그로 만들면
+   *   ("부상 이력" → 후속 이벤트) **한 번 붙은 태그가 평생 남는다.**
+   *   연계가 끝나도 그 갈래가 계속 후보로 남아 다른 이야기를 밀어낸다.
+   * ⚠ 없는 태그를 지우는 건 조용히 넘어간다 — 순서가 어긋나도 안 터진다.
+   */
+  removeTag?:       string[];
 
   /**
    * 관계도 변화 (Phase 7-6c). **`effectHint`와 반드시 일치시킬 것.**

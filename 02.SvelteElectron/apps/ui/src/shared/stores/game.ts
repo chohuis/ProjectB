@@ -635,6 +635,13 @@ function normalizeMailbox(mailbox: import("../types/main").MessageItem[]): impor
 }
 
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
+/** 태그를 더하고 뺀다. 없는 태그 제거는 조용히 넘어간다 */
+function applyTags(cur: string[], add?: string[], remove?: string[]): string[] {
+  if (!add && !remove) return cur;
+  const out = new Set(add ? [...cur, ...add] : cur);
+  for (const r of remove ?? []) out.delete(r);
+  return [...out];
+}
 function fromSaveGame(saved: SaveGame): GameStoreState {
   const p = migrateProtagonist(saved.protagonist);
   const metrics = { ...DEFAULT_ACHIEVEMENT_METRICS, ...(saved.achievementMetrics ?? {}) };
@@ -838,7 +845,9 @@ export function applyEffectToProtagonist(
     fame:       Math.max(0, Math.min(200, p.fame       + (fx.fameDelta       ?? 0))),
     popularity: Math.max(0, Math.min(100, p.popularity + (fx.popularityDelta ?? 0))),
     diligence:  Math.max(1, Math.min(99,  p.diligence  + (fx.diligenceDelta  ?? 0))),
-    tags:       fx.addTag ? [...new Set([...p.tags, ...fx.addTag])] : p.tags,
+    // ⚠ **더한 뒤 뺀다.** 한 선택지가 같은 태그를 넣고 빼면 결과는 "없음"이다 —
+    //   반대로 하면 넣은 것이 남아 연계가 안 닫힌다
+    tags:       applyTags(p.tags, fx.addTag, fx.removeTag),
     pitchingXP,
     battingXP,
     pitching,

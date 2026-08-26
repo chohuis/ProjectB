@@ -446,6 +446,8 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
     else if (key === "fame")        { if (!isNaN(val)) result.fameDelta       = val; }
     else if (key === "popularity")  { if (!isNaN(val)) result.popularityDelta = val; }
     else if (key === "diligence")   { if (!isNaN(val)) result.diligenceDelta  = val; }
+    // "removeTag:부상이력" — 값이 숫자가 아니라 태그 이름이다
+    else if (key === "removeTag")   { result.removeTag = [...(result.removeTag ?? []), rawVal]; }
     else if (key === "addTag")      result.addTag = [...(result.addTag ?? []), rawVal];
     else if (key.startsWith("xp.")) {
       if (!isNaN(val)) result.xp = { ...(result.xp ?? {}), [key.slice(3)]: val };
