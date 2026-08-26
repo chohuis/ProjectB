@@ -29,6 +29,24 @@ if (exact.size === 0 || prefixes.length === 0) {
 
 const known = (k) => exact.has(k) || prefixes.some((p) => k.startsWith(p));
 
+/**
+ * 🔴 **객체형은 파서를 안 탄다.** `parseEffectsArray`는 문자열형(`["money:-120"]`)
+ * 전용이고, 객체형(`{ moneyDelta: -120 }`)은 그대로 통과한다 — 그래서 위 목록으로는
+ * 객체형을 검사할 수 없다. **2026-08-26까지 객체형 선택지의 오타는 아무도 안 잡았다**
+ * (변이 검증에서 드러났다: `bogusRewardKey`를 넣어도 통과했다).
+ *
+ * JSON 데이터는 TypeScript 검사를 안 받으므로 타입이 지켜 주지도 않는다.
+ * ⚠ **여기 목록을 손으로 적지 않는다** — 위와 같은 이유로 타입에서 읽는다.
+ */
+const TY = fs.readFileSync("apps/ui/src/shared/types/main.ts", "utf8");
+const tyBody = TY.slice(TY.indexOf("interface DecisionEffect"));
+const objKeys = new Set(
+  [...tyBody.slice(0, tyBody.indexOf("\n}")).matchAll(/^\s{2}(\w+)\??:/gm)].map((m) => m[1]));
+if (objKeys.size === 0) {
+  console.log("  🔴 DecisionEffect를 못 읽었다 — 정규식이 타입과 어긋났다");
+  process.exit(1);
+}
+
 const DEC = JSON.parse(fs.readFileSync(
   "resource/data/master/messages/decision_templates.json", "utf8")).decisions;
 
@@ -49,6 +67,10 @@ for (const d of DEC) {
       }
     } else if (o.effects && typeof o.effects === "object") {
       objOpts++;
+      for (const k of Object.keys(o.effects)) {
+        used.add(k);
+        if (!objKeys.has(k)) unknown.set(k, [...(unknown.get(k) ?? []), `${d.id}#${o.id}`]);
+      }
     }
   }
 }
@@ -57,6 +79,7 @@ const log = (s) => process.stdout.write(s + "\n");
 log("");
 log(`[보상 키] 결정 템플릿 ${DEC.length}개 · 선택지 문자열형 ${strOpts} / 객체형 ${objOpts}`);
 log(`  파서가 아는 것: ${[...exact].sort().join(" ")}  +  ${prefixes.map((p) => p + "*").join(" ")}`);
+log(`  DecisionEffect가 아는 것 ${objKeys.size}종: ${[...objKeys].sort().join(" ")}`);
 log(`  데이터가 쓰는 것 ${used.size}종: ${[...used].sort().join(" ")}`);
 
 const never = [...exact, ...prefixes].filter((k) => ![...used].some((u) => u === k || u.startsWith(k)));
