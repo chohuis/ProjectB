@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TrainingStat } from "../../../shared/types/main";
+  import { gaugeLabel } from "../../../shared/utils/baseballFormat";
   export let stats: TrainingStat[];
   export let condition: number = 0;
   export let fatigue: number = 0;
@@ -28,11 +29,11 @@
   </div>
 
   <div class="status-row">
-    <span class="status-item"><span class="status-key">컨디션</span> {condition}</span>
+    <span class="status-item"><span class="status-key">컨디션</span> {gaugeLabel(condition)}</span>
     <span class="sep">/</span>
-    <span class="status-item"><span class="status-key">피로도</span> {fatigue}</span>
+    <span class="status-item"><span class="status-key">피로도</span> {gaugeLabel(fatigue)}</span>
     <span class="sep">/</span>
-    <span class="status-item"><span class="status-key">사기</span> {morale}</span>
+    <span class="status-item"><span class="status-key">사기</span> {gaugeLabel(morale)}</span>
   </div>
 
   {#if extraLogs.length > 0}

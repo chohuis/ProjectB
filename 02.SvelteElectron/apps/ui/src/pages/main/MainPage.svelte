@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MainTabId } from "../../shared/types/main";
+  import { gaugeLabel } from "../../shared/utils/baseballFormat";
   import { gameStore, unreadCount } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
   import { teamMap, entitiesL10n } from "../../shared/stores/master";
@@ -528,7 +529,7 @@
     <div class="cond-warn-modal">
       <h3 class="cond-warn-title">⚠ 컨디션 저조</h3>
       <p class="cond-warn-body">
-        현재 컨디션이 <strong>{pendingConditionWarning.condition}</strong>으로 낮습니다.<br>
+        현재 컨디션이 <strong>{gaugeLabel(pendingConditionWarning.condition)}</strong>으로 낮습니다.<br>
         강행 등판 시 경기력이 크게 저하될 수 있습니다.
       </p>
       <div class="cond-warn-btns">

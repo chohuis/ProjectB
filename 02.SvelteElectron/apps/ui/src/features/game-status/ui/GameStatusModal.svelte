@@ -495,7 +495,12 @@
   .batter-table tr:hover td { background: var(--panel-sunk); }
   .bt-name-cell { color: var(--ink); padding: 3px 4px; font-weight: 600; }
   .bt-val { color: var(--ink); text-align: center; padding: 3px 4px; }
-  .no-data { color: var(--line); font-style: italic; font-size: 11px; padding: 6px; }
+  /* 🔴 **`--line`을 글자색으로 쓰고 있었다** (2026-08-26).
+     그건 구분선 색(#DDE3EE)이라 흰 판 위에서 **대비 1.25:1** — 거의 안 보인다.
+     `--ink-mute`(#5A6478)는 6.5:1이라 흐리면서도 읽힌다.
+     ⚠ 본문과 같은 `--ink`로 올리지 않는다 — "데이터 없음"은 부차 정보라
+       너무 튀면 실제 기록을 가린다. **안 보이는 것과 흐린 것은 다르다.** */
+  .no-data { color: var(--ink-mute); font-style: italic; font-size: 11px; padding: 6px; }
 
   /* ── 우 패널 ── */
   .right-panel {

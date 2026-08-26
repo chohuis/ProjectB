@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
+  import { gaugeLabel } from "../../../shared/utils/baseballFormat";
 
   const TOTAL_WEEKS = 100;
 
@@ -32,9 +33,9 @@
   <div class="grid">
     <p>남은 기간: <strong>{remainingWeeks}주</strong></p>
     <p>복무 진행: <strong>{progress}%</strong></p>
-    <p>컨디션: <strong>{p.condition}</strong></p>
-    <p>피로도: <strong>{p.fatigue}</strong></p>
-    <p>사기: <strong>{p.morale}</strong></p>
+    <p>컨디션: <strong>{gaugeLabel(p.condition)}</strong></p>
+    <p>피로도: <strong>{gaugeLabel(p.fatigue)}</strong></p>
+    <p>사기: <strong>{gaugeLabel(p.morale)}</strong></p>
     {#if p.militaryDischargeYear}
       <p>전역 예정: <strong>{p.militaryDischargeYear}년 W48</strong></p>
     {/if}
