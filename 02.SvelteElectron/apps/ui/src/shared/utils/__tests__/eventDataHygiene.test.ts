@@ -118,3 +118,45 @@ describe("이벤트 데이터 위생", () => {
     expect(excess).toBeLessThanOrEqual(2);
   });
 });
+
+/**
+ * 🔴 **군 복무 중에는 이벤트 엔진이 안 돈다.**
+ *
+ * `advanceWeek`가 `careerStage === "military"`면 **일찍 return한다**
+ * (`advanceWeek.ts:1879`). 그 아래 `runEventEngine()`이 아예 안 불린다 —
+ * 조건부·랜덤 규칙은 군에서 **한 종도 못 돈다.**
+ *
+ * 군은 별도 시스템이다: `events/pools/military_{common,sports,general}.json`을
+ * 계급(`minRank`)으로 걸러 Rust `calc_military_week`가 하나 고른다.
+ *
+ * 2026-08-26에 군 서사 14종을 **조건부 이벤트로 만들었다가** 계측이 0회를
+ * 찍어 알았다. 풀로 옮겼다. 같은 착각을 다시 하지 않게 못박는다.
+ */
+describe("군 이벤트는 규칙이 아니라 풀이다", () => {
+  const MIL = resolve(__dirname, "../../../../../../resource/data/master/events/pools");
+  type MilEvent = { id: string; title?: string; description?: string; minRank?: number; choices?: unknown[] };
+
+  it("이벤트 규칙에 군 조건이 없다 — 있으면 영영 안 뜬다", () => {
+    const army = RULES
+      .filter((r) => (r.conditions ?? []).some((c) => {
+        const p = (c as { path?: string }).path;
+        return p === "militaryStatus" || p === "militaryUnit" || p === "militaryServiceWeeks"
+          || p === "militaryServedUnit" || (c as { type?: string }).type === "military_phase";
+      }))
+      .map((r) => r.id);
+    expect(army).toEqual([]);
+  });
+
+  for (const pool of ["common", "sports", "general"]) {
+    it(`military_${pool} — 제목·본문·선택지가 다 있다`, () => {
+      const j = JSON.parse(readFileSync(join(MIL, `military_${pool}.json`), "utf8")) as { events: MilEvent[] };
+      const bad = j.events
+        .filter((e) => !e.title || !e.description || !(e.choices ?? []).length)
+        .map((e) => e.id);
+      expect(bad).toEqual([]);
+      // 계급은 0~3이다 (advanceWeek.ts:1897 — 8/34/60주 경계)
+      const badRank = j.events.filter((e) => (e.minRank ?? 0) < 0 || (e.minRank ?? 0) > 3).map((e) => e.id);
+      expect(badRank).toEqual([]);
+    });
+  }
+});
