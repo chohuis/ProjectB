@@ -131,6 +131,7 @@
     "check:eventranges": "node scripts/check-eventranges.cjs",
     "check:effecthints": "node scripts/check-effecthints.cjs",
     "check:eventslots-health": "node scripts/check-eventslots-health.cjs",
+    "check:events": "npm run gen:manifest && npm run check:eventconditions && npm run check:effectkeys && npm run check:effecthints && npm run check:playertype && npm run check:eventranges",
     "measure:eventslots": "node scripts/measure-eventslots.cjs"
   },
   "build": {
