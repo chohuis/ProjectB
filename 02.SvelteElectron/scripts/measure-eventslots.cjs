@@ -41,7 +41,18 @@ const inStage = (r, s) => stagesOf(r).includes(s);
 const noStage = (r) => stagesOf(r).length === 0;
 /** 군은 `career_stage`가 아니라 `militaryStatus` 경로로 갈린다 */
 const isArmy = (r) => (r.conditions ?? []).some((c) => c.path === "militaryStatus");
-const league = (r) => C(r, "league_id")?.leagueId ?? null;
+/**
+ * 그 규칙이 걸린 리그들. `league_id`는 `leagueId` 하나 또는 `leagueIds` 배열이다
+ * — 세 리그 2군을 한 번에 가리키려고 열었다(2026-08-26).
+ */
+const leaguesOf = (r) => {
+  const c = C(r, "league_id");
+  if (!c) return [];
+  return Array.isArray(c.leagueIds) ? c.leagueIds : c.leagueId ? [c.leagueId] : [];
+};
+const league = (r) => { const a = leaguesOf(r); return a.length === 1 ? a[0] : null; };
+/** 그 리그에 걸리나 — 배열이면 포함 여부 */
+const inLeague = (r, l) => leaguesOf(r).includes(l);
 const hasPath = (r, p) => (r.conditions ?? []).some((c) => c.path === p);
 const gradeOf = (r) => C(r, "grade")?.value ?? null;
 
@@ -104,7 +115,7 @@ function vocab(list) {
 }
 
 const SLOTS = [
-  ["전체 공용",        (r) => noStage(r) && !league(r) && !isArmy(r)],
+  ["전체 공용",        (r) => noStage(r) && leaguesOf(r).length === 0 && !isArmy(r)],
   [null],
   ["고교 전체 공용",   (r) => inStage(r, "highschool") && gradeOf(r) === null],
   ["  고교 1학년",     (r) => inStage(r, "highschool") && gradeOf(r) === 1],
@@ -119,16 +130,16 @@ const SLOTS = [
   [null],
   ["독립 전체 공용",   (r) => inStage(r, "independent")],
   [null],
-  ["KBL 1군 공용",     (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 1, 99) === null],
-  ["  KBL 초기 1~3",   (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 1, 3) === true],
-  ["  KBL 중기 4~8",   (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 4, 8) === true],
-  ["  KBL 말기 9~",    (r) => inStage(r, "pro_kbl") && !league(r) && inBand(r, "proServiceYears", 9, 99) === true],
-  ["KBL 2군",          (r) => league(r) === "LEAGUE_KBL_FARM"],
+  ["KBL 1군 공용",     (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0 && inBand(r, "proServiceYears", 1, 99) === null],
+  ["  KBL 초기 1~3",   (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0 && inBand(r, "proServiceYears", 1, 3) === true],
+  ["  KBL 중기 4~8",   (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0 && inBand(r, "proServiceYears", 4, 8) === true],
+  ["  KBL 말기 9~",    (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0 && inBand(r, "proServiceYears", 9, 99) === true],
+  ["KBL 2군",          (r) => inLeague(r, "LEAGUE_KBL_FARM")],
   [null],
   ["ABL 1군",          (r) => inStage(r, "pro_abl")],
-  ["ABL 2군",          (r) => league(r) === "LEAGUE_ABL_FARM"],
+  ["ABL 2군",          (r) => inLeague(r, "LEAGUE_ABL_FARM")],
   ["JBL 1군",          (r) => inStage(r, "pro_jbl")],
-  ["JBL 2군",          (r) => league(r) === "LEAGUE_JBL_FARM"],
+  ["JBL 2군",          (r) => inLeague(r, "LEAGUE_JBL_FARM")],
   [null],
   ["군 · 상무", (r) => (r.conditions ?? []).some((c) => c.path === "militaryUnit" && c.value === "sports")],
   ["군 · 현역", (r) => (r.conditions ?? []).some((c) => c.path === "militaryUnit" && c.value === "general")],
@@ -140,14 +151,14 @@ const log = (s) => process.stdout.write(s + "\n");
 
 /** 무대 하나 = 그 무대의 모든 규칙. 무대를 다 더하면 전체가 나와야 한다 */
 const STAGES = [
-  ["전체 공용", (r) => noStage(r) && !league(r) && !isArmy(r)],
+  ["전체 공용", (r) => noStage(r) && leaguesOf(r).length === 0 && !isArmy(r)],
   ["고교",      (r) => inStage(r, "highschool")],
   ["대학",      (r) => inStage(r, "university")],
   ["독립",      (r) => inStage(r, "independent")],
-  ["KBL 1군",   (r) => inStage(r, "pro_kbl") && !league(r)],
-  ["KBL 2군",   (r) => league(r) === "LEAGUE_KBL_FARM"],
-  ["ABL",       (r) => inStage(r, "pro_abl") || league(r) === "LEAGUE_ABL_FARM"],
-  ["JBL",       (r) => inStage(r, "pro_jbl") || league(r) === "LEAGUE_JBL_FARM"],
+  ["KBL 1군",   (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0],
+  ["KBL 2군",   (r) => inLeague(r, "LEAGUE_KBL_FARM")],
+  ["ABL",       (r) => inStage(r, "pro_abl") || inLeague(r, "LEAGUE_ABL_FARM")],
+  ["JBL",       (r) => inStage(r, "pro_jbl") || inLeague(r, "LEAGUE_JBL_FARM")],
   ["군",        (r) => isArmy(r)],
 ];
 

@@ -67,15 +67,26 @@ const inStage = (r, s) => stagesOf(r).includes(s);
 const noStage = (r) => stagesOf(r).length === 0;
 /** 군은 `career_stage`가 아니라 `militaryStatus` 경로로 갈린다 */
 const isArmy = (r) => (r.conditions ?? []).some((c) => c.path === "militaryStatus");
-const league = (r) => C(r, "league_id")?.leagueId ?? null;
+/**
+ * 그 규칙이 걸린 리그들. `league_id`는 `leagueId` 하나 또는 `leagueIds` 배열이다
+ * — 세 리그 2군을 한 번에 가리키려고 열었다(2026-08-26).
+ */
+const leaguesOf = (r) => {
+  const c = C(r, "league_id");
+  if (!c) return [];
+  return Array.isArray(c.leagueIds) ? c.leagueIds : c.leagueId ? [c.leagueId] : [];
+};
+const league = (r) => { const a = leaguesOf(r); return a.length === 1 ? a[0] : null; };
+/** 그 리그에 걸리나 — 배열이면 포함 여부 */
+const inLeague = (r, l) => leaguesOf(r).includes(l);
 
 const GROUPS = [
-  ["전체 공용", (r) => noStage(r) && !league(r) && !isArmy(r)],
+  ["전체 공용", (r) => noStage(r) && leaguesOf(r).length === 0 && !isArmy(r)],
   ["고교",      (r) => inStage(r, "highschool")],
   ["대학",      (r) => inStage(r, "university")],
   ["독립",      (r) => inStage(r, "independent")],
-  ["KBL 1군",   (r) => inStage(r, "pro_kbl") && !league(r)],
-  ["KBL 2군",   (r) => league(r) === "LEAGUE_KBL_FARM"],
+  ["KBL 1군",   (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0],
+  ["KBL 2군",   (r) => inLeague(r, "LEAGUE_KBL_FARM")],
 ];
 
 (async () => {

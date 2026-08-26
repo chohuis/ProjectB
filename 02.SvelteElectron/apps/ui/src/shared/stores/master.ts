@@ -488,7 +488,7 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
 const CONDITION_FIELDS: Record<string, readonly string[]> = {
   week_gte: ["value"], week_lte: ["value"], week_eq: ["value"],
   season_phase: ["phase"],
-  career_stage: [], league_id: ["leagueId"], grade: ["value"],
+  career_stage: [], league_id: [], grade: ["value"],
   player_type: ["playerType"],
   fatigue_gte: ["value"], fatigue_lte: ["value"],
   condition_gte: ["value"], condition_lte: ["value"],
@@ -542,6 +542,11 @@ function assertConditions(ruleId: string, conditions: any[]): void {
     // 🔴 **둘 중 하나면 되는 조건.** `want`는 전부 요구하므로 여기서 따로 본다.
     //    `career_stage`는 `stage` 하나 또는 `stages` 배열을 받는다 —
     //    프로 세 리그를 한 번에 가리키려고 배열을 열었다(2026-08-25).
+    if (type === "league_id" && c.leagueId === undefined && !Array.isArray(c.leagueIds)) {
+      throw new Error(
+        `[master] ${ruleId}: 조건 "league_id"에 leagueId도 leagueIds도 없다 — ${JSON.stringify(c)}`
+      );
+    }
     if (type === "career_stage" && c.stage === undefined && !Array.isArray(c.stages)) {
       throw new Error(
         `[master] ${ruleId}: 조건 "career_stage"에 stage도 stages도 없다 — ${JSON.stringify(c)}`

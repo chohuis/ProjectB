@@ -77,3 +77,44 @@ describe("player_type", () => {
     }
   });
 });
+
+/**
+ * **무대·리그 조건이 배열을 받는다.**
+ *
+ * 🔴 둘 다 단일 값만 받아서 **여러 리그를 한 번에 가리킬 수단이 없었다.**
+ *   `career_stage: "pro_kbl"`  →  해외로 나가면 1군 이야기 171종이 통째로 멈췄다
+ *   `league_id: "LEAGUE_KBL_FARM"`  →  **ABL·JBL 2군이 0종**이었다
+ *
+ * 타입을 늘리지 않고 배열을 열었다(`stages` / `leagueIds`). 단일 값은 그대로 동작한다.
+ */
+describe("무대·리그 배열 조건", () => {
+  const at = (over: Partial<ProtagonistSave>): EventContext => ({
+    protagonist: proto(over), currentWeek: 10, seasonPhase: "season",
+    standings: [], stats: {}, triggeredEvents: {},
+  });
+  const PRO = ["pro_kbl", "pro_abl", "pro_jbl"];
+  const FARMS = ["LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"];
+
+  it("career_stage — stages 배열", () => {
+    const c = { type: "career_stage", stages: PRO } as unknown as Condition;
+    for (const s of PRO) {
+      expect(evaluateCondition(c, at({ careerStage: s } as Partial<ProtagonistSave>))).toBe(true);
+    }
+    expect(evaluateCondition(c, at({ careerStage: "highschool" } as Partial<ProtagonistSave>))).toBe(false);
+  });
+
+  it("league_id — leagueIds 배열", () => {
+    const c = { type: "league_id", leagueIds: FARMS } as unknown as Condition;
+    for (const l of FARMS) {
+      expect(evaluateCondition(c, at({ leagueId: l } as Partial<ProtagonistSave>))).toBe(true);
+    }
+    expect(evaluateCondition(c, at({ leagueId: "LEAGUE_KBL" } as Partial<ProtagonistSave>))).toBe(false);
+  });
+
+  it("단일 값은 그대로 동작한다 — 기존 데이터가 안 깨진다", () => {
+    expect(evaluateCondition({ type: "career_stage", stage: "pro_kbl" } as unknown as Condition,
+      at({ careerStage: "pro_kbl" } as Partial<ProtagonistSave>))).toBe(true);
+    expect(evaluateCondition({ type: "league_id", leagueId: "LEAGUE_KBL_FARM" } as unknown as Condition,
+      at({ leagueId: "LEAGUE_KBL_FARM" } as Partial<ProtagonistSave>))).toBe(true);
+  });
+});

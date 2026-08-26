@@ -31,6 +31,12 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       return protagonist.careerStage === cond.stage;
 
     case "league_id":
+      // 🔴 **세 리그 2군을 한 번에 가리킬 수단이 없었다.** KBL 2군 40종이
+      // `leagueId: "LEAGUE_KBL_FARM"` 하나로 잠겨 있어 **ABL·JBL 2군이 0종**이었다.
+      // 1군은 `career_stage`에 `stages` 배열을 열어 풀었는데(2026-08-25)
+      // `league_id`엔 그게 없었다. 같은 모양으로 연다 — `leagueId` 하나는
+      // 그대로 동작한다.
+      if (Array.isArray(cond.leagueIds)) return cond.leagueIds.includes(protagonist.leagueId);
       return protagonist.leagueId === cond.leagueId;
 
     case "grade":
