@@ -178,19 +178,34 @@
       label: "균형형",
       desc: "모든 부분이 고르게 발달. 성장 방향 자유도가 가장 높음",
       tags: ["정통파", "균형형"],
-      pitching: { ovr: 68, velocity: 70, command: 70, control: 68, movement: 66, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
-      // ⚠ **두 구종으로 시작한다.** 하나면 타자가 같은 공만 봐서 contact_q가
-      // 48까지 내려가고 BABIP이 44.7%가 된다 — 실측(60경기)에서 ERA 9.07이었다.
-      // 둘이면 4.52로 정상권이다. 난이도 정본은 `pitch_catalog.json`
-      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SINKER", grade: 1 }],
+      // 🔴 **약점에 +5를 준다** — 주력(구위·커맨드)에 주면 **균형형이 아니게 된다.**
+      //   75는 파워피처(78)에 근접해 "튀는 스탯이 없다"는 정의가 흐려지고,
+      //   특화형이 균형형보다 뾰족해야 한다는 규칙도 깨진다
+      //   (가 그걸 잡았다).
+      //   제구 68→73 · 무브먼트 66→71. 편차가 12→10으로 **더 고르게** 된다.
+      pitching: { ovr: 70, velocity: 70, command: 70, control: 73, movement: 71, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+      // 🔴 **구종 하나로 시작한다** (사용자 확정 2026-08-26).
+      //   둘째 구종을 배우는 것이 첫 목표가 된다.
+      //
+      // ⚠ **옛 주석의 값은 낡았다.** "하나면 ERA 9.07, 둘이면 4.52"라고
+      //   적혀 있었는데 오늘 다시 재니 **7.90 대 6.70**이었다(60경기 ×2회).
+      //   그 사이 엔진이 여러 번 바뀌었다. 재는 방법은 `probe-arsenal.cjs`.
+      //
+      // 🔴 **구종 수보다 스탯이 크게 듣는다** — 그래서 주력 둘에 +5를 준다:
+      //       OVR68  1개 7.90 · 2개 6.70   (구종 +1 → −1.20)
+      //       OVR73  1개 6.13 · 2개 4.96   (스탯 +5 → **−1.77**)
+      //   1개+스탯(6.13)이 예전 2개(6.70)보다 오히려 낫다.
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     },
     power: {
       label: "파워피처",
       desc: "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
       tags: ["급성장", "파워피처"],
       pitching: { ovr: 68, velocity: 78, command: 64, control: 60, movement: 66, mentality: 68, stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
-      // 빠른 공에 붙는 커터 (난이도1)
-      pitches: [{ id: "PITCH_FASTBALL", grade: 2 }, { id: "PITCH_CUTTER", grade: 1 }],
+      // 🔴 **Lv2 하나로 간다** (사용자 확정). 등급이 높아 손해가 작다 —
+      //   실측 OVR68에서 Lv2 하나 6.34 대 Lv2+Lv1 둘 5.72다.
+      //   ⚠ 그래서 **스탯 보정을 안 준다** — 균형·체력형과 사정이 다르다.
+      pitches: [{ id: "PITCH_FASTBALL", grade: 2 }],
     },
     control: {
       label: "제구형",
@@ -203,9 +218,13 @@
       label: "체력형",
       desc: "이닝이터 스타일. 멘탈과 체력이 강점, 후반까지 무너지지 않음",
       tags: ["체력형", "이닝이터"],
-      pitching: { ovr: 68, velocity: 67, command: 65, control: 63, movement: 62, mentality: 77, stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
-      // 땅볼로 이닝을 먹는 싱커 (난이도1)
-      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SINKER", grade: 1 }],
+      // 🔴 **약점에 +4를 준다** (사용자 확정 2026-08-26).
+      //   스태미나·회복은 이미 78이라 +5면 83 — **잠재력 하한 80을 넘어**
+      //   시작부터 성장 여지가 사라진다(`startPresets.test.ts`가 그걸 잡는다).
+      //   대신 제구 63→67 · 무브먼트 62→66. 한 쌍은 더 둘기 쉬워진다.
+      pitching: { ovr: 69, velocity: 67, command: 65, control: 67, movement: 66, mentality: 77, stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+      // 구종 하나 — 근거는 균형형 쪽에 적었다
+      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     },
   };
 

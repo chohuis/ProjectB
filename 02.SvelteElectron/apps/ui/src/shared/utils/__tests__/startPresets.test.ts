@@ -50,9 +50,25 @@ describe("새 게임 시작 프리셋", () => {
     for (const p of presets) expect(ovrOf(p)).toBe(p.ovr);
   });
 
-  it("넷 다 같은 OVR이다 — 아키타입은 유불리가 아니라 취향이다", () => {
-    const ovrs = presets.map((p) => p.ovr);
-    expect(new Set(ovrs).size).toBe(1);
+  /**
+   * 🔴 **넷 다 같은 OVR이던 규칙을 풀었다** (2026-08-26).
+   *
+   * 구종 수가 달라졌으므로(제구형만 2개) OVR도 달라야 전력이 비슷해진다.
+   * 지금은 70 · 68 · 68 · 69다.
+   *
+   * ⚠ **OVR이 같아도 전력은 안 같았다.** 프리셋 넷을 60경기씩 돌린 실측:
+   *     전(넷 다 OVR 68)  5.35 ~ 7.53   격차 **2.18**
+   *     후(70·68·68·69)   6.28 ~ 7.56   격차 **1.28**
+   *   OVR을 맞춰 두던 시절에 오히려 더 갈렸다 — 구속이 ERA에 크게 들어
+   *   제구형(구속 57)이 늘 불리했다. **OVR은 전력의 대리값이 못 된다.**
+   *
+   * ⚠ 그래도 **너무 벌어지는 것은 막는다** — 66~70 안에 둔다.
+   */
+  it("OVR이 66~70 안이다 — 벌어져도 한 급 안이다", () => {
+    for (const p of presets) {
+      expect(p.ovr).toBeGreaterThanOrEqual(66);
+      expect(p.ovr).toBeLessThanOrEqual(70);
+    }
   });
 
   it("또래 중앙(68) 근처다 — 66~70", () => {
@@ -146,16 +162,21 @@ describe("새 게임 시작 프리셋", () => {
     expect(Math.max(...bal) - Math.min(...bal)).toBeLessThanOrEqual(12);
   });
 
-  it("넷 다 구종을 둘 이상 갖는다 — 하나면 ERA가 2배가 된다", () => {
-    // 실측(2026-08-10, 투수68·타자66·수비66·60경기):
-    //   패스트볼 1개 → ERA 9.07 · H/9 14.74 · BABIP 44.7%
-    //   2구종        → ERA 4.52 · H/9  9.77
-    // 타자가 같은 공만 보면 contact_q가 48까지 내려가 밴드 표의 하위
-    // 구간(안타 33~40%)에서 돌게 된다
+  /**
+   * 🔴 **구종 둘 이상이던 규칙을 바꿨다** (사용자 확정 2026-08-26).
+   *   셋을 하나로 줄이고 주력 스탯을 줬다 — 둘째 구종을 배우는 것이 첫 목표가 된다.
+   *
+   * ⚠ **옛 근거(2026-08-10)는 낡았다**: 1개 ERA 9.07 · 2개 4.52라고 적혀 있었는데
+   *   오늘 다시 재니 **7.90 대 6.70**이었다(60경기 ×2회 · probe-arsenal.cjs).
+   *   그 사이 엔진이 여러 번 바뀌었다.
+   *
+   * ⚠ 대신 **구종이 아예 없는 것**은 막는다. 하나도 없으면 던질 공이 없다.
+   */
+  it("넷 다 구종을 적어도 하나 갖는다", () => {
     const src = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
     const blocks = [...src.matchAll(/pitches:\s*\[([^\]]*)\]/g)].map((m) => m[1]);
     expect(blocks).toHaveLength(4);
-    for (const b of blocks) expect((b.match(/id:/g) ?? []).length).toBeGreaterThanOrEqual(2);
+    for (const b of blocks) expect((b.match(/id:/g) ?? []).length).toBeGreaterThanOrEqual(1);
   });
 
   it("하네스 구종이 균형형과 같다", () => {

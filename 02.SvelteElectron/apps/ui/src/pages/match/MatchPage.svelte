@@ -157,8 +157,12 @@
    * ⚠ 색이 없는 팀은 회색으로 떨어진다. 화면이 안 깨지는 게 먼저다.
    */
   $: defenseTeamId = half === "top" ? matchContext?.homeTeamId : matchContext?.awayTeamId;
+  /** 공격 팀 — 수비의 **반대**다. 타자·주자가 이 색을 입는다 */
+  $: offenseTeamId = half === "top" ? matchContext?.awayTeamId : matchContext?.homeTeamId;
   $: defenseColors = (($masterStore.teams.find((t) => t.id === defenseTeamId)?.colors)
     ?? ["#7a8a99", "#e8e8c8"]) as readonly [string, string];
+  $: offenseColors = (($masterStore.teams.find((t) => t.id === offenseTeamId)?.colors)
+    ?? ["#b0503f", "#f0ecc8"]) as readonly [string, string];
 
   $: awayAtBat = half === "top" ? awayLineupIndex % Math.max(1, awayLineup.length) : -1;
   $: homeAtBat = half === "bottom" ? homeLineupIndex % Math.max(1, homeLineup.length) : -1;
@@ -1548,6 +1552,7 @@
             <BaseballField
               defenders={defenseRetro}
               {defenseColors}
+              {offenseColors}
               {ballPos}
               {ballTrail}
               strikeZoneTarget={clickedFieldPos}

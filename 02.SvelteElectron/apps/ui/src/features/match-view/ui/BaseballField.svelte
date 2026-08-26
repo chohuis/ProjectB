@@ -9,9 +9,6 @@
    * 포지션별로 이미 있었다**(투명 39%). 아무도 안 쓰고 있었을 뿐이다.
    * 그걸 가져오면서 수비 위치별로도 나눴다 — 파일이 원래 그렇게 나뉘어 있다.
    */
-  import fieldBatterRPng  from '../../../shared/assets/sprites/field_batter_r.png';
-  import fieldBatterLPng  from '../../../shared/assets/sprites/field_batter_l.png';
-  import fieldRunnerPng   from '../../../shared/assets/sprites/field_runner.png';
   import { stoneStyle } from '../../../shared/utils/stoneMark';
 
   // 🔴 **수비 아홉의 스프라이트 9장을 여기서 지웠다**(2026-08-26).
@@ -24,8 +21,6 @@
    * 원본이 24x32다. 예전 값(48x52)은 정사각 원본을 억지로 눌러 넣은 것이라
    * 그대로 쓰면 이번엔 가로로 늘어난다 — **원본 비율(3:4)을 지킨다.**
    */
-  const SPR_W = 39;
-  const SPR_H = 52;
 
 
   interface Point {
@@ -65,6 +60,12 @@
    *   **색이 바뀌면 그대로 따라 그려진다.**
    */
   export let defenseColors: readonly [string, string] = ['#7a8a99', '#e8e8c8'];
+  /**
+   * **공격 팀**의 [주색, 보조색] — 타자·주자가 입는다.
+   *
+   * ⚠ 수비와 **반대 팀**이다. 둘이 같으면 화면에서 누가 누군지 안 갈린다.
+   */
+  export let offenseColors: readonly [string, string] = ['#b0503f', '#f0ecc8'];
 
   /**
    * 알 반지름 — 예전 스프라이트(39×52)가 차지하던 폭에 맞춘다.
@@ -74,6 +75,7 @@
    */
   const STONE_R = 17;
   $: stone = stoneStyle(defenseColors[0], defenseColors[1], STONE_R);
+  $: batStone = stoneStyle(offenseColors[0], offenseColors[1], STONE_R);
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
 
@@ -155,11 +157,17 @@
       <!-- 타자 (빨간 유니폼, 좌/우타석) -->
       {#if batterAnimPos !== null}
         <g>
-          <ellipse cx={batterAnimPos.x} cy={batterAnimPos.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
-          <image
-            href={batter.handedness === 'L' ? fieldBatterLPng : fieldBatterRPng}
-            x={batterAnimPos.x - SPR_W / 2} y={batterAnimPos.y - 44}
-            width={SPR_W} height={SPR_H} class="spr"/>
+          <ellipse cx={batterAnimPos.x + 1} cy={batterAnimPos.y + STONE_R * 0.86}
+            rx={STONE_R * 0.92} ry={STONE_R * 0.28} fill="rgba(0,0,0,0.35)"/>
+          <circle cx={batterAnimPos.x} cy={batterAnimPos.y} r={STONE_R}
+            fill={batStone.body} stroke={batStone.rim} stroke-width={batStone.rimWidth}/>
+          <circle cx={batterAnimPos.x} cy={batterAnimPos.y} r={STONE_R - batStone.rimWidth / 2}
+            fill="url(#stone-body)" pointer-events="none"/>
+          <!-- 좌/우타석은 글자로 가른다 — 스프라이트 두 장이 하던 일이다 -->
+          <text x={batterAnimPos.x} y={batterAnimPos.y} text-anchor="middle"
+            dominant-baseline="central" font-size="15" font-weight="800"
+            font-family="'Courier New',monospace" fill={batStone.ink}
+            pointer-events="none">{batter.handedness === 'L' ? 'L' : 'R'}</text>
         </g>
       {/if}
 
@@ -167,10 +175,12 @@
       {#each runnerAnimPositions as rp}
         {#if rp !== null}
           <g class="retro-runner-blink">
-            <ellipse cx={rp.x} cy={rp.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
-            <image href={fieldRunnerPng}
-              x={rp.x - SPR_W / 2} y={rp.y - 44}
-              width={SPR_W} height={SPR_H} class="spr"/>
+            <ellipse cx={rp.x + 1} cy={rp.y + STONE_R * 0.86}
+              rx={STONE_R * 0.92} ry={STONE_R * 0.28} fill="rgba(0,0,0,0.35)"/>
+            <circle cx={rp.x} cy={rp.y} r={STONE_R}
+              fill={batStone.body} stroke={batStone.rim} stroke-width={batStone.rimWidth}/>
+            <circle cx={rp.x} cy={rp.y} r={STONE_R - batStone.rimWidth / 2}
+              fill="url(#stone-body)" pointer-events="none"/>
           </g>
         {/if}
       {/each}
@@ -189,7 +199,8 @@
 
 <style>
   /* 24x32 원본을 키워 그린다. 보간이 들어가면 도트가 뭉개진다 */
-  .spr { image-rendering: pixelated; }
+  /* ⚠ **`.spr`을 지웠다** — 경기장 위 사람 그림이 하나도 안 남았다.
+     수비 아홉·타자·주자가 전부 알(`stoneMark.ts`)로 바뀌었다. */
 
   .wrapper {
     width: 100%;

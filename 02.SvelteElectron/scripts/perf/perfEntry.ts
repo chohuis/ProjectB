@@ -55,7 +55,10 @@ import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
 // 하므로 여기서는 고정한다. 프리셋 수치가 바뀌어도 이 파일은 안 따라간다
 // (따라갈 필요가 없다 — 성능은 프리셋 선택에 좌우되지 않는다).
 const PITCHING = {
-  ovr: 68, velocity: 70, command: 70, control: 68, movement: 66,
+  // ⚠ **균형형 프리셋과 같아야 한다** — 어긋나면 계측이 게임과 다른 주인공을
+  //   잰다(`startPresets.test.ts`가 그걸 잡는다). 2026-08-26에 구종이 하나로
+  //   줄고 구위·커맨드에 +5가 붙었다.
+  ovr: 70, velocity: 70, command: 70, control: 73, movement: 71,
   mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64,
 };
 
@@ -124,7 +127,7 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     battingXP: {},
     // ⚠ NewGamePage 균형형과 같아야 한다 — 어긋나면 계측이 게임과 다른
     // 주인공을 잰다(이번 세션에 프리셋·능력치로 두 번 겪었다)
-    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_SINKER", grade: 1 }],
+    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     birthday: "2010-04-01",
     money: 1200,
     fame: 5,
@@ -5117,6 +5120,68 @@ export async function engineCompare(games: number): Promise<Record<string, unkno
  * ⚠ 능력치는 고정하고 **구종 수만 바꾼다.** 다른 걸 같이 움직이면
  *   무엇이 ERA를 바꿨는지 못 가린다.
  */
+/**
+ * **시작 프리셋 넷이 실제로 비슷한 전력인가.**
+ *
+ * 🔴 설계는 "아키타입은 유불리가 아니라 취향"이라 **넷 다 OVR 68**이었다.
+ *   2026-08-26에 구종을 줄이고 스탯을 준 뒤 OVR이 70·68·68·69로 갈렸다 —
+ *   **구종 수도 달라졌으므로** OVR만으로는 전력을 못 잰다. 직접 돌려 본다.
+ */
+export async function presetEraCurve(games: number, batterMean: number,
+  before = false,
+): Promise<Record<string, unknown>> {
+  // 변경 전(2026-08-26 이전) 값 — **전후를 재려면 옛 값도 돌려야 한다**
+  const OLD: Array<[string, Record<string, number>, Array<{ type: string; grade: number }>]> = [
+    ["균형형", { velocity: 70, command: 70, control: 68, movement: 66, mentality: 68,
+      stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+      [{ type: "fastball", grade: 1 }, { type: "sinker", grade: 1 }]],
+    ["파워피처", { velocity: 78, command: 64, control: 60, movement: 66, mentality: 68,
+      stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
+      [{ type: "fastball", grade: 2 }, { type: "cutter", grade: 1 }]],
+    ["제구형", { velocity: 57, command: 78, control: 75, movement: 66, mentality: 68,
+      stamina: 62, recovery: 65, clutch: 65, holdRunners: 62 },
+      [{ type: "fastball", grade: 1 }, { type: "changeup", grade: 1 }]],
+    ["체력형", { velocity: 67, command: 65, control: 63, movement: 62, mentality: 77,
+      stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+      [{ type: "fastball", grade: 1 }, { type: "sinker", grade: 1 }]],
+  ];
+  const P: Array<[string, Record<string, number>, Array<{ type: string; grade: number }>]> = [
+    ["균형형", { velocity: 75, command: 75, control: 68, movement: 66, mentality: 68,
+      stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+      [{ type: "fastball", grade: 1 }]],
+    ["파워피처", { velocity: 78, command: 64, control: 60, movement: 66, mentality: 68,
+      stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
+      [{ type: "fastball", grade: 2 }]],
+    ["제구형", { velocity: 57, command: 78, control: 75, movement: 66, mentality: 68,
+      stamina: 62, recovery: 65, clutch: 65, holdRunners: 62 },
+      [{ type: "fastball", grade: 1 }, { type: "changeup", grade: 1 }]],
+    ["체력형", { velocity: 67, command: 65, control: 67, movement: 66, mentality: 77,
+      stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+      [{ type: "fastball", grade: 1 }]],
+  ];
+  const out: Record<string, unknown> = {};
+  for (const [name, st, arsenal] of (before ? OLD : P)) {
+    const p = { name, staminaCap: st.stamina, mentalResil: st.mentality, arsenal, ...st };
+    await resetContactBands();
+    let outs = 0, er = 0, h = 0, k = 0;
+    for (let i = 0; i < games; i++) {
+      const stt = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
+        protagonistSide: "home", role: "SP", batterMean, leagueId: "LEAGUE_HIGHSCHOOL",
+        opponentPitchers: [p],
+      })));
+      if (stt.error) return { 오류: stt.error };
+      const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(stt)));
+      if (fin.error) return { 오류: fin.error };
+      for (const l of (fin.opponentQueue?.lines ?? [])) {
+        outs += l.outs ?? 0; er += l.er ?? 0; h += l.h ?? 0; k += l.k ?? 0;
+      }
+    }
+    const r = (v: number) => outs > 0 ? Math.round((v * 27 / outs) * 100) / 100 : null;
+    out[name] = { 이닝: Math.round(outs / 3), ERA: r(er), "K/9": r(k), "H/9": r(h) };
+  }
+  return out;
+}
+
 export async function arsenalEraCurve(games: number, batterMean: number,
   lvl = 68): Promise<Record<string, unknown>> {
   const SETS: Array<[string, Array<{ type: string; grade: number }>]> = [

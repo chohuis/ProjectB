@@ -11,7 +11,12 @@ const BM = Number(process.env.PF_BATTER || 62);   // 고교 평균 타자
   const { app, tmp } = await headless.boot("arsenal");
   try {
     await app.boot({ slotId: "PA", worldSeed: 20260731, seasonYear: 2026 });
-    const r = await app.arsenalEraCurve(GAMES, BM);
+    // **프리셋 넷을 실제 스탯·구종으로 돌린다** — 유불리가 실제로 갈리는지 본다
+    for (const before of [true, false]) {
+      const r = await app.presetEraCurve(GAMES, BM, before);
+      for (const [k, v] of Object.entries(r)) console.log(`[${before ? "전" : "후"}] ${k.padEnd(10)} ${JSON.stringify(v)}`);
+    }
+    const r = {};
     for (const [k, v] of Object.entries(r)) {
       console.log(`[구종] ${k.padEnd(18)} ${JSON.stringify(v)}`);
     }
