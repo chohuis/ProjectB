@@ -148,6 +148,18 @@
   let homeLineupIndex = 0;
 
   /** 지금 타석에 선 순번. 공격 중인 쪽만 의미가 있다 */
+  /**
+   * 수비 팀의 [주색, 보조색] — 알 표식이 쓴다.
+   *
+   * 🔴 **초에는 홈이 수비고 말에는 원정이 수비다.** `half`가 바뀌면 색도 바뀐다.
+   * ⚠ **여기서 정하는 이유** — 구장 모듈(`parkView`)은 구장만 알지
+   *   어느 팀이 수비인지 모른다. 경기 화면이 아는 값이다.
+   * ⚠ 색이 없는 팀은 회색으로 떨어진다. 화면이 안 깨지는 게 먼저다.
+   */
+  $: defenseTeamId = half === "top" ? matchContext?.homeTeamId : matchContext?.awayTeamId;
+  $: defenseColors = (($masterStore.teams.find((t) => t.id === defenseTeamId)?.colors)
+    ?? ["#7a8a99", "#e8e8c8"]) as readonly [string, string];
+
   $: awayAtBat = half === "top" ? awayLineupIndex % Math.max(1, awayLineup.length) : -1;
   $: homeAtBat = half === "bottom" ? homeLineupIndex % Math.max(1, homeLineup.length) : -1;
 
@@ -1535,6 +1547,7 @@
           <div class="field-stage-wrap">
             <BaseballField
               defenders={defenseRetro}
+              {defenseColors}
               {ballPos}
               {ballTrail}
               strikeZoneTarget={clickedFieldPos}

@@ -9,24 +9,16 @@
    * 포지션별로 이미 있었다**(투명 39%). 아무도 안 쓰고 있었을 뿐이다.
    * 그걸 가져오면서 수비 위치별로도 나눴다 — 파일이 원래 그렇게 나뉘어 있다.
    */
-  import fieldPitcherPng  from '../../../shared/assets/sprites/field_pitcher.png';
-  import fieldCatcherPng  from '../../../shared/assets/sprites/field_catcher.png';
-  import field1bPng       from '../../../shared/assets/sprites/field_1b.png';
-  import field2bPng       from '../../../shared/assets/sprites/field_2b.png';
-  import field3bPng       from '../../../shared/assets/sprites/field_3b.png';
-  import fieldSsPng       from '../../../shared/assets/sprites/field_ss.png';
-  import fieldLfPng       from '../../../shared/assets/sprites/field_lf.png';
-  import fieldCfPng       from '../../../shared/assets/sprites/field_cf.png';
-  import fieldRfPng       from '../../../shared/assets/sprites/field_rf.png';
   import fieldBatterRPng  from '../../../shared/assets/sprites/field_batter_r.png';
   import fieldBatterLPng  from '../../../shared/assets/sprites/field_batter_l.png';
   import fieldRunnerPng   from '../../../shared/assets/sprites/field_runner.png';
+  import { stoneStyle } from '../../../shared/utils/stoneMark';
 
-  const DEFENDER_SPRITE: Record<string, string> = {
-    P: fieldPitcherPng, C: fieldCatcherPng,
-    '1B': field1bPng, '2B': field2bPng, '3B': field3bPng, SS: fieldSsPng,
-    LF: fieldLfPng, CF: fieldCfPng, RF: fieldRfPng,
-  };
+  // 🔴 **수비 아홉의 스프라이트 9장을 여기서 지웠다**(2026-08-26).
+  //    팀마다 색이 달라야 하는데 그림 파일로는 못 한다 — 색쌍이 210가지라
+  //    미리 구우면 210 × 9 = **1,890장**이고 팀 색이 바뀌면 다시 구워야 한다.
+  //    지금은 `stoneMark.ts`가 색만 내고 SVG가 그린다.
+  //    ⚠ **타자·주자는 아직 스프라이트다** — 그쪽은 이번 범위가 아니다.
 
   /**
    * 원본이 24x32다. 예전 값(48x52)은 정사각 원본을 억지로 눌러 넣은 것이라
@@ -64,6 +56,24 @@
    * 프로 구장에서 열렸다.
    */
   export let parkImage = '/park/probaseball.gif';
+  /**
+   * 수비 팀의 [주색, 보조색]. `teams.json`의 `colors` 그대로다.
+   *
+   * 🔴 **공수가 바뀌면 이 값도 바뀌어야 한다.** 화면을 만드는 쪽이 넘긴다 —
+   *   구장 모듈(`parkView`)은 어느 팀이 수비인지 모른다.
+   * ⚠ 갈무리(캐시)가 없어도 된다. 알은 그림 파일이 아니라 SVG라
+   *   **색이 바뀌면 그대로 따라 그려진다.**
+   */
+  export let defenseColors: readonly [string, string] = ['#7a8a99', '#e8e8c8'];
+
+  /**
+   * 알 반지름 — 예전 스프라이트(39×52)가 차지하던 폭에 맞춘다.
+   *
+   * ⚠ **알은 발이 없다.** 사람 그림은 발밑을 좌표에 맞췄지만(`y - 44`)
+   *   알은 **세로 가운데**를 좌표에 놓는다.
+   */
+  const STONE_R = 17;
+  $: stone = stoneStyle(defenseColors[0], defenseColors[1], STONE_R);
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
 
@@ -84,6 +94,15 @@
 <div class="wrapper">
   <div class="viewport retro-viewport">
     <svg class="field retro-field" viewBox="0 0 1000 920" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <!-- 알 광택 — 왼쪽 위가 밝고 가장자리가 어둡다.
+             ⚠ 알마다 만들지 않는다. 아홉이 같은 그라디언트를 쓴다 -->
+        <radialGradient id="stone-body" cx="33%" cy="30%" r="78%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+          <stop offset="42%" stop-color="#ffffff" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity="0.42"/>
+        </radialGradient>
+      </defs>
 
       <!-- 픽셀아트 배경 (구장마다 다르다). 좌표는 티어별로 `parkAnchors.ts`에 있다 -->
       <image href={parkImage} x="0" y="0" width="1000" height="920" preserveAspectRatio="xMidYMid meet"/>
@@ -104,22 +123,30 @@
           on:mouseenter={() => (hoveredPos = player.pos)}
           on:mouseleave={() => (hoveredPos = '')}>
           {#if selectedPos === player.pos}
-            <rect x={player.x - 20} y={player.y - 20} width="40" height="40"
+            <rect x={player.x - STONE_R - 4} y={player.y - STONE_R - 4}
+              width={(STONE_R + 4) * 2} height={(STONE_R + 4) * 2}
               fill="none" stroke="#e8e800" stroke-width="2" stroke-dasharray="8 8"
               class="retro-select-march" shape-rendering="crispEdges"/>
           {/if}
-          <!-- 그림자 -->
-          <ellipse cx={player.x} cy={player.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
-          <image href={DEFENDER_SPRITE[player.pos] ?? fieldPitcherPng}
-            x={player.x - SPR_W / 2} y={player.y - 44}
-            width={SPR_W} height={SPR_H} class="spr"/>
-          <text x={player.x} y={player.y + 20} text-anchor="middle"
-            font-size="10" font-weight="700" font-family="'Courier New',monospace"
-            fill="#f0ecc8" stroke="#0a1018" stroke-width="3" paint-order="stroke">{player.pos}</text>
+          <!-- 바닥 그림자 — 알보다 조금 아래·오른쪽 -->
+          <ellipse cx={player.x + 1} cy={player.y + STONE_R * 0.86} rx={STONE_R * 0.92}
+            ry={STONE_R * 0.28} fill="rgba(0,0,0,0.35)"/>
+          <!-- 알 몸통 — 팀 주색. 테두리가 보조색이다 -->
+          <circle cx={player.x} cy={player.y} r={STONE_R}
+            fill={stone.body} stroke={stone.rim} stroke-width={stone.rimWidth}/>
+          <!-- 광택 — 테두리 안쪽까지만 덮는다 -->
+          <circle cx={player.x} cy={player.y} r={STONE_R - stone.rimWidth / 2}
+            fill="url(#stone-body)" pointer-events="none"/>
+          <!-- 자리 이름 — **팀 보조색을 쓰지 않는다.** 흰색이나 검정이다
+               (밝기가 비슷한 색쌍에서 글자가 묻히기 때문. `stoneMark.ts` 참고) -->
+          <text x={player.x} y={player.y} text-anchor="middle" dominant-baseline="central"
+            font-size={player.pos.length > 1 ? 13 : 16} font-weight="800"
+            font-family="'Courier New',monospace" fill={stone.ink}
+            pointer-events="none">{player.pos}</text>
           {#if hoveredPos === player.pos}
-            <rect x={player.x - 36} y={player.y - 46} width="72" height="18"
+            <rect x={player.x - 36} y={player.y - STONE_R - 24} width="72" height="18"
               fill="#0a1018" stroke="#e8e8c8" stroke-width="1" shape-rendering="crispEdges"/>
-            <text x={player.x} y={player.y - 33} text-anchor="middle"
+            <text x={player.x} y={player.y - STONE_R - 11} text-anchor="middle"
               font-size="11" font-family="'Courier New',monospace" fill="#e8e8c8">{posLabel[player.pos] ?? player.pos}</text>
           {/if}
         </g>
