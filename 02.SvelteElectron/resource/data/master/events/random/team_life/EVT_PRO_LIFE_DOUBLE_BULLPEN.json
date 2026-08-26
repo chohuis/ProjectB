@@ -8,8 +8,12 @@
   "weight": 20,
   "poolId": "POOL_TRAIN_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_DOUBLE_BULLPEN",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_DOUBLE_BULLPEN",
   "conditions": [
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
     {
       "type": "career_stage",
       "stages": [

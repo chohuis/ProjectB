@@ -8,7 +8,7 @@
   "weight": 24,
   "poolId": "POOL_BODY_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_ICE_BATH",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_ICE_BATH",
   "conditions": [
     {
       "type": "career_stage",

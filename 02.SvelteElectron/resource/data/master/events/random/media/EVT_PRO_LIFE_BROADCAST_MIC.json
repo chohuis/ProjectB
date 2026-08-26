@@ -8,7 +8,7 @@
   "weight": 20,
   "poolId": "POOL_MEDIA_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_BROADCAST_MIC",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_BROADCAST_MIC",
   "conditions": [
     {
       "type": "career_stage",

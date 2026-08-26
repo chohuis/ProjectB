@@ -2011,7 +2011,7 @@
       "id": "MSG_PRO_LIFE_FAN_LETTER",
       "category": "news",
       "subject": "팬레터",
-      "body": "팬레터가 도착했습니다.\n\n손으로 쓴 편지였습니다.",
+      "body": "팬레터가 도착했습니다. 손으로 쓴 편지였습니다.\n\n답장을 쓸 수도 있고, 마음만 받을 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -2515,7 +2515,7 @@
       "id": "MSG_IND_LIFE_YOUTH_VISIT",
       "category": "news",
       "subject": "유소년 방문",
-      "body": "지역 유소년 팀이 견학을 왔습니다.\n\n아이들이 눈을 반짝입니다.",
+      "body": "지역 유소년 팀이 견학을 왔습니다. 아이들이 눈을 반짝입니다.\n\n시간을 내줄 수도 있고, 훈련을 이어갈 수도 있습니다.",
       "decisionTemplateId": null
     },
     {
@@ -2865,7 +2865,7 @@
       "id": "MSG_UNIV_LIFE_CLUB_FAIR",
       "category": "system",
       "subject": "동아리 축제",
-      "body": "학교 축제 기간입니다.\n\n야구부도 부스를 냅니다.",
+      "body": "학교 축제 기간입니다. 야구부도 부스를 냅니다.\n\n얼굴을 알릴 자리지만, 그만큼 훈련은 밀립니다.",
       "decisionTemplateId": null
     },
     {

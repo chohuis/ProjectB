@@ -8,7 +8,7 @@
   "weight": 14,
   "poolId": "POOL_TEAM_LIFE_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_BAT_BOY",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_BAT_BOY",
   "conditions": [
     {
       "type": "career_stage",

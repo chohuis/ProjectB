@@ -22,5 +22,5 @@
     }
   ],
   "messageTemplateId": "MSG_UNIV_LIFE_CLUB_FAIR",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_UNIV_LIFE_CLUB_FAIR"
 }

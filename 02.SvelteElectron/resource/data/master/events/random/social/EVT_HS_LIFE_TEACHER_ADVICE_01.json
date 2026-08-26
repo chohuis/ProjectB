@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_TEACHER_ADVICE",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_HS_LIFE_TEACHER_ADVICE"
 }

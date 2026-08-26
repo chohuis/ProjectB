@@ -8462,6 +8462,875 @@
           ]
         }
       ]
+    },
+    {
+      "id": "DEC_HS_LIFE_CLASSMATE_01",
+      "prompt": "동기와의 거리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "먼저 말을 건다",
+          "effectHint": "동료 관계 +7, 사기 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 7
+            },
+            "moraleDelta": 4
+          }
+        },
+        {
+          "id": "wait",
+          "label": "당분간 거리를 둔다",
+          "effectHint": "커맨드 경험치 +1, 동료 관계 -3",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "command": 1
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -3
+            }
+          }
+        },
+        {
+          "id": "wait_bat",
+          "label": "당분간 거리를 둔다",
+          "effectHint": "컨택 경험치 +1, 동료 관계 -3",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.contact": 1
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_LIFE_CLASSMATE_01",
+      "prompt": "동기의 제안을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "join",
+          "label": "같이 해본다",
+          "effectHint": "동료 관계 +7, 스태미나 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 7
+            },
+            "xp": {
+              "stamina": 2
+            }
+          }
+        },
+        {
+          "id": "join_bat",
+          "label": "같이 해본다",
+          "effectHint": "동료 관계 +7, 주력 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 7
+            },
+            "xp": {
+              "batting.speed": 2
+            }
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 방식대로 간다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_LIFE_ACADEMIC_CONFLICT_01",
+      "prompt": "시험과 훈련이 겹쳤습니다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "study",
+          "label": "시험을 먼저 본다",
+          "effectHint": "성실 +4, 피로 +6",
+          "effects": {
+            "diligenceDelta": 4,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "train",
+          "label": "야간 훈련에 나간다",
+          "effectHint": "커맨드 경험치 +2, 피로 +10, 성실 -2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "command": 2
+            },
+            "fatigueDelta": 10,
+            "diligenceDelta": -2
+          }
+        },
+        {
+          "id": "train_bat",
+          "label": "야간 훈련에 나간다",
+          "effectHint": "컨택 경험치 +2, 피로 +10, 성실 -2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.contact": 2
+            },
+            "fatigueDelta": 10,
+            "diligenceDelta": -2
+          }
+        },
+        {
+          "id": "half",
+          "label": "둘 다 절반씩",
+          "effectHint": "피로 +8",
+          "effects": {
+            "fatigueDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_LIFE_SCHOOL_EVENT",
+      "prompt": "학교 행사에 나가겠습니까?",
+      "options": [
+        {
+          "id": "go",
+          "label": "나간다",
+          "effectHint": "인기 +4, 동료 관계 +4, 피로 +5",
+          "effects": {
+            "popularityDelta": 4,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "skip",
+          "label": "훈련을 택한다",
+          "effectHint": "커맨드 경험치 +2, 동료 관계 -3",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "command": 2
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -3
+            }
+          }
+        },
+        {
+          "id": "skip_bat",
+          "label": "훈련을 택한다",
+          "effectHint": "컨택 경험치 +2, 동료 관계 -3",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.contact": 2
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_LIFE_TEACHER_ADVICE",
+      "prompt": "담임 선생님에게 무엇을 말하겠습니까?",
+      "options": [
+        {
+          "id": "honest",
+          "label": "솔직히 털어놓는다",
+          "effectHint": "사기 +6, 성실 +3",
+          "effects": {
+            "moraleDelta": 6,
+            "diligenceDelta": 3
+          }
+        },
+        {
+          "id": "promise",
+          "label": "성적을 올리겠다고 한다",
+          "effectHint": "성실 +5, 피로 +6",
+          "effects": {
+            "diligenceDelta": 5,
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_LIFE_CLUB_FAIR",
+      "prompt": "축제 부스를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "run",
+          "label": "앞장서서 맡는다",
+          "effectHint": "인기 +5, 동료 관계 +5, 피로 +6",
+          "effects": {
+            "popularityDelta": 5,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 5
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "help",
+          "label": "잠깐만 돕는다",
+          "effectHint": "동료 관계 +2, 피로 +2",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 2
+            },
+            "fatigueDelta": 2
+          }
+        },
+        {
+          "id": "train",
+          "label": "훈련에 남는다",
+          "effectHint": "성실 +3, 동료 관계 -2",
+          "effects": {
+            "diligenceDelta": 3,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_BROADCAST_MIC",
+      "prompt": "중계 코멘트를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sharp",
+          "label": "각오를 분명히 말한다",
+          "effectHint": "인기 +5, 명성 +3, 사기 -2",
+          "effects": {
+            "popularityDelta": 5,
+            "fameDelta": 3,
+            "moraleDelta": -2
+          }
+        },
+        {
+          "id": "safe",
+          "label": "무난하게 넘긴다",
+          "effectHint": "인기 +2",
+          "effects": {
+            "popularityDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_PRESS_CONF",
+      "prompt": "날카로운 질문에 어떻게 답하겠습니까?",
+      "options": [
+        {
+          "id": "own",
+          "label": "책임을 내가 진다",
+          "effectHint": "명성 +5, 감독 관계 +6, 사기 -4",
+          "effects": {
+            "fameDelta": 5,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 6
+            },
+            "moraleDelta": -4
+          }
+        },
+        {
+          "id": "team",
+          "label": "팀 이야기로 돌린다",
+          "effectHint": "동료 관계 +5",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 5
+            }
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 끊는다",
+          "effectHint": "인기 -3",
+          "effects": {
+            "popularityDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_YOUTH_INTERVIEW",
+      "prompt": "유소년 매체 인터뷰를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "yes",
+          "label": "시간을 낸다",
+          "effectHint": "인기 +4, 사기 +6, 피로 +3",
+          "effects": {
+            "popularityDelta": 4,
+            "moraleDelta": 6,
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "no",
+          "label": "정중히 사양한다",
+          "effectHint": "변화 없음",
+          "effects": {}
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_INTERVIEW_IND",
+      "prompt": "리그 사무국 인터뷰를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "yes",
+          "label": "성의껏 응한다",
+          "effectHint": "인기 +4, 명성 +2, 피로 +2",
+          "effects": {
+            "popularityDelta": 4,
+            "fameDelta": 2,
+            "fatigueDelta": 2
+          }
+        },
+        {
+          "id": "no",
+          "label": "짧게 끝낸다",
+          "effectHint": "인기 +1",
+          "effects": {
+            "popularityDelta": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_SNS_POST",
+      "prompt": "구단 SNS 촬영을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "fun",
+          "label": "재미있게 찍는다",
+          "effectHint": "인기 +5, 동료 관계 +3",
+          "effects": {
+            "popularityDelta": 5,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 3
+            }
+          }
+        },
+        {
+          "id": "plain",
+          "label": "형식만 맞춘다",
+          "effectHint": "인기 +1",
+          "effects": {
+            "popularityDelta": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_FAN_LETTER",
+      "prompt": "팬레터를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "reply",
+          "label": "답장을 쓴다",
+          "effectHint": "인기 +4, 사기 +8, 피로 +2",
+          "effects": {
+            "popularityDelta": 4,
+            "moraleDelta": 8,
+            "fatigueDelta": 2
+          }
+        },
+        {
+          "id": "keep",
+          "label": "읽고 간직한다",
+          "effectHint": "사기 +5",
+          "effects": {
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_BAT_BOY",
+      "prompt": "배트보이 아이에게 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sign",
+          "label": "사인에 한마디 적어준다",
+          "effectHint": "인기 +3, 사기 +6",
+          "effects": {
+            "popularityDelta": 3,
+            "moraleDelta": 6
+          }
+        },
+        {
+          "id": "quick",
+          "label": "빠르게 사인만 한다",
+          "effectHint": "사기 +2",
+          "effects": {
+            "moraleDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_YOUTH_VISIT",
+      "prompt": "유소년 견학을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "teach",
+          "label": "잠깐 가르쳐준다",
+          "effectHint": "인기 +4, 사기 +7, 피로 +4",
+          "effects": {
+            "popularityDelta": 4,
+            "moraleDelta": 7,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "train",
+          "label": "훈련을 이어간다",
+          "effectHint": "커맨드 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "command": 2
+            }
+          }
+        },
+        {
+          "id": "train_bat",
+          "label": "훈련을 이어간다",
+          "effectHint": "컨택 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.contact": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_JERSEY_NUMBER",
+      "prompt": "등번호를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "change",
+          "label": "바꾼다",
+          "effectHint": "사기 +8, 인기 -2",
+          "effects": {
+            "moraleDelta": 8,
+            "popularityDelta": -2
+          }
+        },
+        {
+          "id": "keep",
+          "label": "그대로 둔다",
+          "effectHint": "인기 +2",
+          "effects": {
+            "popularityDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_MOUND_VISIT",
+      "prompt": "코치의 말을 어떻게 받겠습니까?",
+      "options": [
+        {
+          "id": "listen",
+          "label": "그대로 따른다",
+          "effectHint": "코치 관계 +6, 클러치 경험치 +2",
+          "effects": {
+            "relationDelta": {
+              "kind": "coach",
+              "delta": 6
+            },
+            "xp": {
+              "clutch": 2
+            }
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 공을 던지겠다고 한다",
+          "effectHint": "코치 관계 -4, 사기 +6",
+          "effects": {
+            "relationDelta": {
+              "kind": "coach",
+              "delta": -4
+            },
+            "moraleDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_BATTING_PRACTICE",
+      "prompt": "타격 훈련을 보며 무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "study",
+          "label": "타자 시선으로 뜯어본다",
+          "effectHint": "멘탈 경험치 +2, 클러치 경험치 +1",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "mentality": 2,
+              "clutch": 1
+            }
+          }
+        },
+        {
+          "id": "study_bat",
+          "label": "스윙을 뜯어본다",
+          "effectHint": "컨택 경험치 +2, 파워 경험치 +1",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.contact": 2,
+              "batting.power": 1
+            }
+          }
+        },
+        {
+          "id": "chat",
+          "label": "타자들과 이야기한다",
+          "effectHint": "동료 관계 +6",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_DOUBLE_BULLPEN",
+      "prompt": "대기가 길어집니다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ready",
+          "label": "계속 몸을 유지한다",
+          "effectHint": "피로 +8, 클러치 경험치 +2",
+          "effects": {
+            "fatigueDelta": 8,
+            "xp": {
+              "clutch": 2
+            }
+          }
+        },
+        {
+          "id": "rest",
+          "label": "한 번 식힌다",
+          "effectHint": "피로 -4, 컨디션 -3",
+          "effects": {
+            "fatigueDelta": -4,
+            "conditionDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_ICE_BATH",
+      "prompt": "냉욕을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "full",
+          "label": "규정 시간을 다 채운다",
+          "effectHint": "피로 -12, 사기 -3",
+          "effects": {
+            "fatigueDelta": -12,
+            "moraleDelta": -3
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 끝낸다",
+          "effectHint": "피로 -5",
+          "effects": {
+            "fatigueDelta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_SELF_CATCH",
+      "prompt": "캐치볼 상대가 없습니다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "포수에게 부탁한다",
+          "effectHint": "동료 관계 +5, 커맨드 경험치 +2",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 5
+            },
+            "xp": {
+              "command": 2
+            }
+          }
+        },
+        {
+          "id": "wall",
+          "label": "벽에 던진다",
+          "effectHint": "제구 경험치 +2, 사기 -3",
+          "effects": {
+            "xp": {
+              "control": 2
+            },
+            "moraleDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_FIELD_PREP",
+      "prompt": "그라운드 정비를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "lead",
+          "label": "앞장서서 한다",
+          "effectHint": "동료 관계 +6, 성실 +3, 피로 +6",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 6
+            },
+            "diligenceDelta": 3,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "mound",
+          "label": "마운드만 손본다",
+          "effectHint": "제구 경험치 +1, 피로 +3",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "control": 1
+            },
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "mound_bat",
+          "label": "마운드만 손본다",
+          "effectHint": "타석 주변만 고른다 — 선구 경험치 +1, 피로 +3",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.discipline": 1
+            },
+            "fatigueDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_SHARED_ROOM",
+      "prompt": "합숙소 생활을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "mix",
+          "label": "룸메이트와 어울린다",
+          "effectHint": "동료 관계 +6, 사기 +5, 피로 +3",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 6
+            },
+            "moraleDelta": 5,
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "quiet",
+          "label": "일찍 눕는다",
+          "effectHint": "피로 -6, 컨디션 +4",
+          "effects": {
+            "fatigueDelta": -6,
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_TEAM_PHOTO",
+      "prompt": "단체 사진 촬영일입니다.",
+      "options": [
+        {
+          "id": "front",
+          "label": "앞줄에 선다",
+          "effectHint": "인기 +3, 동료 관계 +3",
+          "effects": {
+            "popularityDelta": 3,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 3
+            }
+          }
+        },
+        {
+          "id": "back",
+          "label": "뒤에 선다",
+          "effectHint": "사기 +3",
+          "effects": {
+            "moraleDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_LIFE_CLUBHOUSE_GAME",
+      "prompt": "라커룸 카드 게임에 끼겠습니까?",
+      "options": [
+        {
+          "id": "join",
+          "label": "낀다",
+          "effectHint": "동료 관계 +6, 사기 +5",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 6
+            },
+            "moraleDelta": 5
+          }
+        },
+        {
+          "id": "prep",
+          "label": "혼자 준비한다",
+          "effectHint": "클러치 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "pitcher"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "clutch": 2
+            }
+          }
+        },
+        {
+          "id": "prep_bat",
+          "label": "혼자 준비한다",
+          "effectHint": "찬스 경험치 +2",
+          "conditions": [
+            {
+              "type": "player_type",
+              "playerType": "batter"
+            }
+          ],
+          "effects": {
+            "xp": {
+              "batting.battingClutch": 2
+            }
+          }
+        }
+      ]
     }
   ]
 }

@@ -8,8 +8,12 @@
   "weight": 24,
   "poolId": "POOL_TRAIN_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_MOUND_VISIT",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_MOUND_VISIT",
   "conditions": [
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
     {
       "type": "career_stage",
       "stages": [
