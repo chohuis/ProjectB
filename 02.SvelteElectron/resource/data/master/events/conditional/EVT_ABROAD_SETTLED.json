@@ -1,0 +1,24 @@
+{
+  "id": "EVT_ABROAD_SETTLED",
+  "type": "conditional",
+  "category": "career",
+  "tier": "ambient",
+  "priority": 700,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "leagueYears",
+      "value": 3
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_SETTLED",
+  "decisionTemplateId": "DEC_ABROAD_SETTLED"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "EVT_ABROAD_FAMILY_FAR",
+  "type": "conditional",
+  "category": "social",
+  "tier": "ambient",
+  "priority": 650,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_FAMILY_FAR",
+  "decisionTemplateId": "DEC_ABROAD_FAMILY_FAR"
+}

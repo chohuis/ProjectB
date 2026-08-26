@@ -3248,6 +3248,240 @@
       "subject": "자리를 잡았다",
       "category": "training",
       "body": "오랜만에 던진 공이 생각한 자리에 갔습니다. 두 번, 세 번 이어졌습니다.\n\n코치가 별말 없이 고개를 끄덕였습니다."
+    },
+    {
+      "id": "MSG_ABROAD_ARRIVAL",
+      "subject": "도착",
+      "category": "career",
+      "body": "짐을 풀었습니다. 방 창밖 풍경이 낯섭니다.\n\n계약서에 사인할 때는 실감이 안 났는데, 지금은 납니다."
+    },
+    {
+      "id": "MSG_ABROAD_LANGUAGE",
+      "subject": "말이 안 통한다",
+      "category": "team_life",
+      "body": "미팅에서 절반쯤 놓쳤습니다. 통역이 늘 붙어 있지는 않습니다.\n\n웃으며 넘기는 게 몇 번째인지 모르겠습니다."
+    },
+    {
+      "id": "MSG_ABROAD_STRIKE_ZONE",
+      "subject": "존이 다르다",
+      "category": "training",
+      "body": "같은 코스인데 손이 안 올라옵니다. 여기 존은 바깥쪽이 좁습니다.\n\n적응하는 것도 실력이라고들 합니다."
+    },
+    {
+      "id": "MSG_ABROAD_FOOD",
+      "subject": "입에 안 맞는다",
+      "category": "health",
+      "body": "구단 식당이 계속 안 맞습니다. 체중이 조금 빠졌습니다.\n\n사 먹으면 돈이 들고, 참으면 몸이 축납니다."
+    },
+    {
+      "id": "MSG_ABROAD_FIRST_HOME_CROWD",
+      "subject": "낯선 함성",
+      "category": "career",
+      "body": "홈 관중이 부르는 노래를 모릅니다. 나를 부르는 건 아는데 뜻을 모릅니다.\n\n그래도 등을 밀어주는 소리인 건 압니다."
+    },
+    {
+      "id": "MSG_ABROAD_GO_BACK",
+      "subject": "돌아갈까",
+      "category": "career",
+      "body": "성적도 안 나오고 말도 안 통합니다. 국내 구단에서 연락이 왔다는 이야기가 들립니다.\n\n한 해를 못 채우고 돌아가는 선수도 있습니다."
+    },
+    {
+      "id": "MSG_ABROAD_FAMILY_FAR",
+      "subject": "시차",
+      "category": "social",
+      "body": "집에 전화하려니 거기는 새벽입니다. 시차가 붙습니다.\n\n말이 줄어드는 건 거리 때문만은 아닌 것 같습니다."
+    },
+    {
+      "id": "MSG_ABROAD_SETTLED",
+      "subject": "이제 익숙하다",
+      "category": "career",
+      "body": "메뉴판을 안 보고 시켰습니다. 미팅에서 농담이 들렸습니다.\n\n언제부터인지 모르게 그렇게 됐습니다."
+    },
+    {
+      "id": "MSG_ABROAD_LOCAL_FAN",
+      "subject": "현지 팬",
+      "category": "media",
+      "body": "경기장 밖에서 기다리던 팬이 서툰 한국어로 이름을 불렀습니다.\n\n외워서 온 것 같습니다."
+    },
+    {
+      "id": "MSG_ABROAD_HOME_OFFER",
+      "subject": "국내 복귀 제안",
+      "category": "career",
+      "body": "국내 구단이 자리를 비워 두겠다는 이야기를 전해왔습니다.\n\n여기서 더 할 수도, 돌아갈 수도 있습니다."
+    },
+    {
+      "id": "MSG_ABROAD_TEACH_LOCAL",
+      "subject": "현지 유망주",
+      "category": "team_life",
+      "body": "어린 현지 선수가 폼을 봐 달라고 합니다. 말은 잘 안 통합니다.\n\n손으로 보여주면 되긴 합니다."
+    },
+    {
+      "id": "MSG_ABROAD_JBL_VOLUME",
+      "subject": "연습량",
+      "category": "training",
+      "body": "여기 훈련량은 소문대로입니다. 끝나는 시간이 정해져 있지 않습니다.\n\n다들 남아 있는데 혼자 들어가기가 어렵습니다."
+    },
+    {
+      "id": "MSG_ABROAD_JBL_SENIORITY",
+      "subject": "선후배",
+      "category": "team_life",
+      "body": "여기도 위아래가 분명합니다. 다만 결이 조금 다릅니다.\n\n어디까지가 예의고 어디부터가 눈치인지 아직 모릅니다."
+    },
+    {
+      "id": "MSG_ABROAD_ABL_SHORT",
+      "subject": "짧은 시즌",
+      "category": "career",
+      "body": "시즌이 짧습니다. 경기 수가 국내의 절반쯤입니다.\n\n남는 시간을 어떻게 쓰느냐가 갈립니다."
+    },
+    {
+      "id": "MSG_ABROAD_ABL_DUAL",
+      "subject": "겸업 선수",
+      "category": "team_life",
+      "body": "옆 라커 선수가 낮에는 다른 일을 한다고 합니다.\n\n여기서는 그게 이상한 일이 아닙니다."
+    },
+    {
+      "id": "MSG_UNIV_Y1_PACE_SHOCK",
+      "subject": "고교와는 다른 훈련량",
+      "category": "training",
+      "body": "훈련이 끝났는데 선배들은 아직 남아 있습니다. 고교 때와는 양이 다릅니다.\n\n따라가면 몸이 상하고, 안 따라가면 눈에 띕니다."
+    },
+    {
+      "id": "MSG_UNIV_Y1_FIRST_MOUND",
+      "subject": "대학 무대 첫 등판",
+      "category": "career",
+      "body": "명단에 이름이 올랐습니다. 고교 때와는 관중도 상대도 다릅니다.\n\n몸이 먼저 굳는 게 느껴집니다."
+    },
+    {
+      "id": "MSG_UNIV_Y1_SENIOR_WALL",
+      "subject": "선배의 벽",
+      "category": "team_life",
+      "body": "같은 자리를 놓고 3·4학년이 앞에 있습니다. 실력 차만은 아닙니다.\n\n기다릴 수도, 부딪칠 수도 있습니다."
+    },
+    {
+      "id": "MSG_UNIV_Y1_FIRST_WARNING",
+      "subject": "첫 학사 경고 위험",
+      "category": "academic",
+      "body": "성적표가 나왔습니다. 한 과목이 걸려 있습니다.\n\n대학 야구는 학점이 발목을 잡을 수 있습니다."
+    },
+    {
+      "id": "MSG_UNIV_Y1_DORM_HOMESICK",
+      "subject": "낯선 방",
+      "category": "social",
+      "body": "기숙사 소등 뒤에도 잠이 안 옵니다. 집이 멉니다.\n\n누구에게 말할 일도 아닌 것 같습니다."
+    },
+    {
+      "id": "MSG_UNIV_Y1_MAJOR_PICK",
+      "subject": "전공을 고른다",
+      "category": "academic",
+      "body": "전공 신청 기간입니다. 야구를 그만두는 날을 생각하라는 말을 들었습니다.\n\n지금은 실감이 안 납니다."
+    },
+    {
+      "id": "MSG_UNIV_Y2_ROTATION_FIGHT",
+      "subject": "자리를 다툰다",
+      "category": "team_life",
+      "body": "동기와 같은 자리를 놓고 저울에 올랐습니다. 코치도 아직 안 정했습니다.\n\n남은 건 보여주는 것뿐입니다."
+    },
+    {
+      "id": "MSG_UNIV_Y2_ROOKIE_IN",
+      "subject": "신입생이 들어왔다",
+      "category": "team_life",
+      "body": "1학년이 들어왔습니다. 그중 하나가 눈에 띕니다.\n\n작년의 나를 보는 것 같기도 하고, 아닌 것 같기도 합니다."
+    },
+    {
+      "id": "MSG_UNIV_Y2_SCOUT_FIRST",
+      "subject": "처음 보는 시선",
+      "category": "media",
+      "body": "훈련장 옆에 낯선 사람이 서 있었습니다. 2학년부터 보러 온다고 합니다.\n\n의식하면 공이 달라집니다."
+    },
+    {
+      "id": "MSG_UNIV_Y2_PART_TIME",
+      "subject": "학비와 시간",
+      "category": "life",
+      "body": "생활비가 빠듯합니다. 훈련 없는 날 일할 자리가 있다고 합니다.\n\n시간은 어디서든 나와야 합니다."
+    },
+    {
+      "id": "MSG_UNIV_Y2_SUMMER_LEAGUE",
+      "subject": "여름 리그 초청",
+      "category": "career",
+      "body": "방학 중 초청 경기에 나가 달라는 연락이 왔습니다.\n\n좋은 자리지만 방학이 통째로 사라집니다."
+    },
+    {
+      "id": "MSG_UNIV_Y2_OLD_TEAMMATE_PRO",
+      "subject": "먼저 간 친구",
+      "category": "social",
+      "body": "고교 동기가 프로에서 1군에 올라왔다는 소식을 들었습니다.\n\n축하한다고 보냈습니다. 그 뒤가 조용합니다."
+    },
+    {
+      "id": "MSG_UNIV_Y3_EARLY_DRAFT",
+      "subject": "얼리 드래프트",
+      "category": "career",
+      "body": "3학년도 지명 대상이 될 수 있다는 이야기가 나왔습니다.\n\n나가면 한 해가 빨라지고, 남으면 한 해가 더 있습니다."
+    },
+    {
+      "id": "MSG_UNIV_Y3_CAPTAIN_VOTE",
+      "subject": "주장 후보",
+      "category": "team_life",
+      "body": "다음 학년 주장 이야기가 돌고 있습니다. 이름이 오르내립니다.\n\n맡으면 시간이 갈리고, 안 맡으면 그것대로 남습니다."
+    },
+    {
+      "id": "MSG_UNIV_Y3_GPA_VS_BALL",
+      "subject": "학점과 야구",
+      "category": "academic",
+      "body": "졸업 요건이 빠듯합니다. 계절학기를 들으면 훈련이 통째로 빠집니다.\n\n둘 다 챙기기엔 시간이 모자랍니다."
+    },
+    {
+      "id": "MSG_UNIV_Y3_AGENT_CALL",
+      "subject": "에이전트의 연락",
+      "category": "career",
+      "body": "에이전트라는 사람이 연락해왔습니다. 계약 이야기는 아직 아니랍니다.\n\n만나 보는 것만으로도 소문이 납니다."
+    },
+    {
+      "id": "MSG_UNIV_Y3_INJURY_HIDE",
+      "subject": "말할까 말까",
+      "category": "health",
+      "body": "어깨가 며칠째 무겁습니다. 지금 말하면 명단에서 빠집니다.\n\n드래프트를 앞두고 빠지는 건 다른 문제입니다."
+    },
+    {
+      "id": "MSG_UNIV_Y3_JUNIOR_ASK",
+      "subject": "후배가 물어온다",
+      "category": "team_life",
+      "body": "1·2학년이 폼을 봐 달라고 찾아옵니다. 이제 그런 학년이 됐습니다.\n\n가르치다 보면 제 것도 정리되지만 시간은 줄어듭니다."
+    },
+    {
+      "id": "MSG_UNIV_Y4_LAST_SEASON",
+      "subject": "마지막 시즌",
+      "category": "career",
+      "body": "4학년 개막입니다. 뒤가 없다는 걸 다들 압니다.\n\n작년까지와는 무게가 다릅니다."
+    },
+    {
+      "id": "MSG_UNIV_Y4_UNDRAFTED_FEAR",
+      "subject": "지명이 안 될까",
+      "category": "career",
+      "body": "지명 이야기가 오가는데 내 이름은 안 나옵니다.\n\n독립리그도 길이라고들 하지만, 지금은 그 말이 안 들립니다."
+    },
+    {
+      "id": "MSG_UNIV_Y4_CORP_TEAM_OFFER",
+      "subject": "실업팀 제안",
+      "category": "career",
+      "body": "실업팀에서 먼저 연락이 왔습니다. 프로는 아니지만 야구는 계속합니다.\n\n지명이 확실치 않은 지금은 가벼운 이야기가 아닙니다."
+    },
+    {
+      "id": "MSG_UNIV_Y4_GRAD_THESIS",
+      "subject": "졸업이 걸려 있다",
+      "category": "academic",
+      "body": "졸업 논문이 남았습니다. 안 내면 학위가 없습니다.\n\n지명이 되든 안 되든 이건 따로 굴러갑니다."
+    },
+    {
+      "id": "MSG_UNIV_Y4_LAST_HOME",
+      "subject": "마지막 홈경기",
+      "category": "career",
+      "body": "4년을 쓴 구장에서 마지막 경기입니다. 후배들이 줄을 서 있습니다.\n\n끝나고 나면 여기 올 일이 없습니다."
+    },
+    {
+      "id": "MSG_UNIV_Y4_JUNIOR_HAND",
+      "subject": "후배에게 넘긴다",
+      "category": "team_life",
+      "body": "쓰던 라커와 등번호를 후배가 이어받습니다.\n\n넘기는 김에 한마디 남길 수도 있습니다."
     }
   ]
 }

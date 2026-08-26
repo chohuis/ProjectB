@@ -1,0 +1,28 @@
+{
+  "id": "EVT_ABROAD_FIRST_HOME_CROWD",
+  "type": "conditional",
+  "category": "career",
+  "tier": "ambient",
+  "priority": 690,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_FIRST_HOME_CROWD",
+  "decisionTemplateId": "DEC_ABROAD_FIRST_HOME_CROWD"
+}

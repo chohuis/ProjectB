@@ -1,0 +1,23 @@
+{
+  "id": "EVT_ABROAD_JBL_VOLUME",
+  "type": "conditional",
+  "category": "training",
+  "tier": "important",
+  "priority": 740,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_JBL_VOLUME",
+  "decisionTemplateId": "DEC_ABROAD_JBL_VOLUME"
+}

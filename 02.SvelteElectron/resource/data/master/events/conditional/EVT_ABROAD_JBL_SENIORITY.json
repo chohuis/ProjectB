@@ -1,0 +1,27 @@
+{
+  "id": "EVT_ABROAD_JBL_SENIORITY",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "ambient",
+  "priority": 645,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_JBL_SENIORITY",
+  "decisionTemplateId": "DEC_ABROAD_JBL_SENIORITY"
+}

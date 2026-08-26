@@ -1,0 +1,24 @@
+{
+  "id": "EVT_ABROAD_TEACH_LOCAL",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "ambient",
+  "priority": 630,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "leagueYears",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_TEACH_LOCAL",
+  "decisionTemplateId": "DEC_ABROAD_TEACH_LOCAL"
+}

@@ -1,0 +1,28 @@
+{
+  "id": "EVT_ABROAD_ARRIVAL",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 830,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 1
+    },
+    {
+      "type": "week_lte",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_ARRIVAL",
+  "decisionTemplateId": "DEC_ABROAD_ARRIVAL"
+}

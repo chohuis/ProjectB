@@ -1,0 +1,28 @@
+{
+  "id": "EVT_ABROAD_LANGUAGE",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "important",
+  "priority": 760,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_LANGUAGE",
+  "decisionTemplateId": "DEC_ABROAD_LANGUAGE"
+}

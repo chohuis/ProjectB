@@ -1,0 +1,28 @@
+{
+  "id": "EVT_ABROAD_LOCAL_FAN",
+  "type": "conditional",
+  "category": "media",
+  "tier": "ambient",
+  "priority": 640,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "leagueYears",
+      "value": 2
+    },
+    {
+      "type": "popularity_gte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_LOCAL_FAN",
+  "decisionTemplateId": "DEC_ABROAD_LOCAL_FAN"
+}
