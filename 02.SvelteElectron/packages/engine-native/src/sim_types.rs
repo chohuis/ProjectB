@@ -185,6 +185,17 @@ pub struct SeasonEndSummary {
     pub military_enlisted_count: i32,
     pub military_discharged_count: i32,
     pub fa_count: i32,
+    /// FA 계약 성사 · 미계약 인원.
+    ///
+    /// 🔴 **여기서 세는 이유** — 이 둘은 `events` 채널로만 나가고
+    /// `npc.career_events`에는 안 들어간다. `careerEventTally`(= `careerEvents`를
+    /// 세는 프로브)로 재면 **늘 0**이라, 2026-08-26까지 "미계약률 0%"로
+    /// 잘못 기록돼 있었다. 실측은 40%대였다.
+    /// **사건을 만드는 자리에서 센다.**
+    #[serde(default)]
+    pub fa_signed_count: i32,
+    #[serde(default)]
+    pub fa_unsigned_count: i32,
     pub univ_graduated_count: i32,
     #[serde(default)]
     pub military_enlisted_sports: Vec<String>,   // 체육부대 입대자 이름

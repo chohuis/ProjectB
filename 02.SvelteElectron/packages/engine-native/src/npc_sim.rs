@@ -1779,6 +1779,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             // ⚠ 떠난 팀은 `original_team_id`에만 남아 있다 — `current_team`은
             // FA 전환 때 이미 비었다
             events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
+            summary.fa_unsigned_count += 1;   // 갈 팀 자체가 없는 갈래도 센다
             npc.current_league = "LEAGUE_INDEPENDENT".into();
             npc.current_team   = "".into();
             continue;
@@ -1879,6 +1880,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 // 아무도 안 불렀다 — 미계약. 진로는 D-4가 정한다
                 None => {
                     events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
+                    summary.fa_unsigned_count += 1;
                     npc.current_league = "LEAGUE_INDEPENDENT".into();
                     npc.current_team   = "".into();
                     continue;
@@ -1897,6 +1899,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let before_salary = npc.current_salary;
         if let Some(s) = signed_salary { npc.current_salary = s; }
         if signed_salary.is_some() {
+            summary.fa_signed_count += 1;
             let score = params.perf_scores.get(&npc.npc_id).copied();
             events.push(ev_to("fa_contract", npc, npc.original_team_id.clone(),
                 team.clone(),

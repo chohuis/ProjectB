@@ -846,6 +846,27 @@ export type Trajectory = {
  *
  * ⚠ 은퇴자를 빼면 안 된다 — 세계에서 빠져나간 사람이야말로 세어야 할 대상이다.
  */
+/**
+ * FA 시장 — **계약 성사와 미계약을 엔진이 센 값으로 읽는다.**
+ *
+ * 🔴 **`careerEventTally`로 재면 안 된다.** `fa_contract`·`fa_unsigned`는
+ *   `events` 채널로만 나가고 `careerEvents`에는 안 들어간다. 그걸 세던
+ *   프로브가 늘 0을 봐서 **2026-08-26까지 "미계약률 0%"로 잘못 기록돼
+ *   있었다**(C-7). 실측은 40%대다.
+ *
+ * ⚠ 한 시즌분만 들고 있다 — 시즌 종료 때마다 읽어 쌓아야 한다.
+ */
+export function faMarketProbe(): Record<string, unknown> {
+  const s = get(gameStore) as unknown as {
+    seasonEndSummary?: { faCount?: number; faSignedCount?: number; faUnsignedCount?: number };
+  };
+  const m = s.seasonEndSummary ?? {};
+  const sg = m.faSignedCount ?? 0, un = m.faUnsignedCount ?? 0;
+  const tot = sg + un;
+  return { FA전환: m.faCount ?? 0, 계약: sg, 미계약: un,
+           미계약률: tot ? Math.round(un / tot * 100) : null };
+}
+
 export function careerEventTally(): Record<number, Record<string, number>> {
   const out: Record<number, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {

@@ -10,6 +10,16 @@ export interface SeasonEndSummary {
   militaryEnlistedCount: number;
   militaryDischargedCount: number;
   faCount: number;
+  /**
+   * FA 계약 성사 · 미계약.
+   *
+   * 🔴 **`careerEvents`로는 못 잰다** — 이 둘은 `events` 채널로만 나간다.
+   *   그래서 `careerEventTally`를 쓰던 프로브가 **늘 0**을 봤고,
+   *   2026-08-26까지 "FA 미계약률 0%"로 잘못 기록돼 있었다(C-7).
+   *   실측은 40%대다. 엔진이 세서 넘긴다.
+   */
+  faSignedCount?: number;
+  faUnsignedCount?: number;
   univGraduatedCount: number;
 }
 
