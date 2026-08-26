@@ -2430,10 +2430,18 @@
     border-color: var(--ink);
   }
 
-  .b2 { top: 16px; left: 52px; }
-  .b3 { top: 52px; left: 16px; }
-  .b1 { top: 52px; right: 16px; }
-  .home { bottom: 16px; left: 52px; }
+  /* 🔴 **네 베이스가 8px씩 어긋나 있었다** (2026-08-26).
+     `.base`는 16px인데 `left: 52px`가 **절반을 안 뺐다** — 상자의 왼쪽 모서리가
+     52에 놓여 중심이 60이 됐다(다이아몬드 중앙은 52다).
+     그래서 홈과 1루만 붙어 보였다:
+         홈 중심(60,80) · 1루 중심(80,60)  → 거리 28.3
+         2루 중심(60,24) · 3루 중심(24,60) → 거리 50.9
+     ⚠ `rotate(45deg)`는 중심 기준이라 위치를 안 옮긴다 — 범인이 아니다.
+     중앙 52에서 절반 8을 빼 **44**로 맞춘다. 네 거리가 39.6으로 같아진다. */
+  .b2 { top: 16px; left: 44px; }
+  .b3 { top: 44px; left: 16px; }
+  .b1 { top: 44px; right: 16px; }
+  .home { bottom: 16px; left: 44px; }
 
   .count-panel {
     display: grid;
