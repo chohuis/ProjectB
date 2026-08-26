@@ -13,6 +13,18 @@ const YEARS = Number(process.env.PF_YEARS || 5);
   try {
     await app.boot({ slotId: "PF", worldSeed: SEED, seasonYear: 2026 });
     const start = app.currentSeason();
+    // 🔴 **생성 직후를 먼저 잰다.** C-8은 "한 시즌 만에 45→15"인데,
+    //    그 45가 실측인지부터 확인해야 한다
+    {
+      const v = app.faTradeProbe()["1군"] || {};
+      const d = v.분포 || {};
+      const vet = (d["5-6"] || 0) + (d["7+"] || 0);
+      // 나이 분포 — 연차는 age - entry_age라 나이가 정한다
+      const ages = app.ageBuckets ? app.ageBuckets("LEAGUE_KBL") : null;
+      console.log(`[생성직후] 1군 ${v.인원}명 평균연차 ${v.평균연차} · 5년이상 ${vet}명 ` +
+        `(${v.인원 ? Math.round(vet / v.인원 * 100) : 0}%) · ${JSON.stringify(d)}` +
+        (ages ? ` | 나이 ${JSON.stringify(ages)}` : ""));
+    }
     let guard = 0;
     while (guard++ < YEARS * 52 * 60 && app.currentSeason() < start + YEARS) {
       if (app.retired()) { why = "은퇴"; break; }

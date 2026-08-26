@@ -856,6 +856,18 @@ export type Trajectory = {
  *
  * ⚠ 한 시즌분만 들고 있다 — 시즌 종료 때마다 읽어 쌓아야 한다.
  */
+/** 리그 나이 분포 — **연차는 `age - entry_age`라 나이가 정한다.** */
+export function ageBuckets(leagueId: string): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const n of get(gameStore).npcs) {
+    if (n.careerStatus !== "active" || n.currentLeague !== leagueId) continue;
+    const a = n.age ?? 0;
+    const k = a < 24 ? "~23" : a < 27 ? "24-26" : a < 30 ? "27-29" : a < 34 ? "30-33" : "34+";
+    out[k] = (out[k] ?? 0) + 1;
+  }
+  return out;
+}
+
 export function faMarketProbe(): Record<string, unknown> {
   // 리그별 — **총합만 보면 뜻을 못 읽는다**(2군·독립이 다수다)
   const s = get(gameStore) as unknown as {
