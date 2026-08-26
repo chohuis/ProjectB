@@ -141,7 +141,9 @@ describe("군 이벤트는 규칙이 아니라 풀이다", () => {
       .filter((r) => (r.conditions ?? []).some((c) => {
         const p = (c as { path?: string }).path;
         return p === "militaryStatus" || p === "militaryUnit" || p === "militaryServiceWeeks"
-          || p === "militaryServedUnit" || (c as { type?: string }).type === "military_phase";
+          || p === "militaryServedUnit";
+        // ⚠ `military_phase`는 여기 있었는데 **타입 자체를 지웠다**(2026-08-26).
+        //   지금 그 조건을 쓰면 로드에서 잡힌다 — 여기까지 올 일이 없다.
       }))
       .map((r) => r.id);
     expect(army).toEqual([]);

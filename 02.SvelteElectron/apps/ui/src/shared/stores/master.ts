@@ -514,7 +514,6 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   injured: ["value"], injury_severity: ["severity"],
   injury_weeks_gte: ["value"], injury_count_gte: ["value"],
   season_injury_count_gte: ["value"], had_surgery: ["value"],
-  military_phase: [],
   gpa_gte: ["value"], gpa_lte: ["value"], academic_warning_gte: ["value"],
 };
 

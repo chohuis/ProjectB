@@ -97,7 +97,6 @@ export type Condition =
   // ── 미래 필드 (evaluator에서 false 반환, 추후 구현) ──────────
   | { type: "fame_gte";        value: number }        // 명성 이상 — protagonist.fame 추가 후 구현
   | { type: "pro_year_gte";    value: number }        // 프로 연차 이상 — 추가 후 구현
-  | { type: "military_phase";  phase: string }        // 군복무 단계 — 군대 시스템 추가 후 구현
 
   // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
   // 대학 이벤트가 학점·경고를 조건으로 걸 수 있어야 한다. 이게 없으면

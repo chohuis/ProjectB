@@ -180,9 +180,20 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "pro_year_gte":
       return protagonist.proServiceYears >= cond.value;
 
-    // ── 미래 필드 (군 시스템 설계 시 구현) ──────────────────────
-    case "military_phase":
-      return false;
+    // 🔴 **`military_phase`를 지웠다 (2026-08-26).**
+    // 
+    // `return false`만 하는 스텁이었다 — 걸어도 **영원히 안 뜨고 로그도 안 남는다.**
+    // 쓰는 데이터는 **0건**이었다(`check:eventconditions`가 그렇게 보고했다).
+    // 
+    // ⚠ **살릴 자리가 아니다.** 군 복무 중엔 이벤트 엔진이 아예 안 돈다
+    //   (`advanceWeek:1602`에서 별도 경로로 빠진다). 트랙 B가 군 서사 14종을
+    //   조건부 이벤트로 만들었다가 계측 0회를 보고 알았고,
+    //   **`events/pools/military_*.json` 54종으로 옮겼다** — Rust가 계급으로 고른다.
+    //   그 자리는 이미 채워졌다.
+    // 
+    // ⚠ 지웠으므로 이제 이 조건을 쓰면 **로드에서 잡힌다**(`assertConditions`).
+    //   스텁일 때는 조용히 false였다 — 그게 더 나쁘다.
+
 
     // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
     //
