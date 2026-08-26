@@ -1112,6 +1112,9 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
     match code {
         PitchResultCode::StrikeSwing  => "헛스윙 스트라이크",
         PitchResultCode::StrikeLook   => "루킹 스트라이크",
+        // 삼진 — **타자가 물러났다.** 스트라이크 하나와 다른 일이다
+        PitchResultCode::StrikeoutSwing => "헛스윙 삼진",
+        PitchResultCode::StrikeoutLook  => "루킹 삼진",
         PitchResultCode::Ball         => "볼",
         PitchResultCode::Foul         => "파울",
         PitchResultCode::InplayOut    => "타구 아웃",
@@ -1152,6 +1155,8 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
     let pw = match decision.power { PitchPower::Low => "low", PitchPower::Normal => "normal", PitchPower::High => "high" };
     let code_str = match code {
         PitchResultCode::StrikeSwing => "STRIKE_SWING", PitchResultCode::StrikeLook => "STRIKE_LOOK",
+        PitchResultCode::StrikeoutSwing => "STRIKEOUT_SWING",
+        PitchResultCode::StrikeoutLook => "STRIKEOUT_LOOK",
         PitchResultCode::Ball => "BALL", PitchResultCode::Foul => "FOUL",
         PitchResultCode::InplayOut => "INPLAY_OUT", PitchResultCode::GroundOut => "GROUND_OUT",
         PitchResultCode::FlyOut => "FLY_OUT", PitchResultCode::LineOut => "LINE_OUT",
@@ -1628,7 +1633,18 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         }
         PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing => {
             next_count.strikes += 1;
-            if next_count.strikes >= 3 { next_outs += 1; next_count = MatchCount { balls: 0, strikes: 0 }; }
+            if next_count.strikes >= 3 {
+                next_outs += 1;
+                next_count = MatchCount { balls: 0, strikes: 0 };
+                // 🔴 **3스트라이크째면 삼진으로 좁힌다** — `narrow_inplay_out`과 같은 방식.
+                //   예전엔 여기서 코드를 안 바꿔서 화면이 "루킹"이라고만 했고,
+                //   **타자가 물러난 것**을 말할 방법이 없었다.
+                result_code = if result_code == PitchResultCode::StrikeLook {
+                    PitchResultCode::StrikeoutLook
+                } else {
+                    PitchResultCode::StrikeoutSwing
+                };
+            }
         }
         PitchResultCode::Foul => {
             if next_count.strikes < 2 { next_count.strikes += 1; }

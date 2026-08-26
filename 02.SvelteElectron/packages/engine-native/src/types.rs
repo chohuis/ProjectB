@@ -79,8 +79,16 @@ pub enum BallHitType {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum PitchResultCode {
+    /// 스트라이크 — **투구 하나의 결과**다. 3스트라이크째면 아래 삼진으로 좁힌다.
     #[serde(rename = "STRIKE_SWING")]   StrikeSwing,
     #[serde(rename = "STRIKE_LOOK")]    StrikeLook,
+    /// 삼진 — **타자가 물러났다.**
+    ///
+    /// 🔴 예전엔 이게 없어서 3스트라이크째에도 `StrikeLook`이 그대로 나갔다.
+    ///   화면은 "루킹"이라고만 했고 **타자가 아웃된 걸 말할 방법이 없었다.**
+    ///   인플레이 아웃이 넷으로 쪼개진 것과 같은 이유다(`narrow_inplay_out`).
+    #[serde(rename = "STRIKEOUT_SWING")] StrikeoutSwing,
+    #[serde(rename = "STRIKEOUT_LOOK")]  StrikeoutLook,
     #[serde(rename = "BALL")]           Ball,
     #[serde(rename = "FOUL")]           Foul,
     /// 인플레이 아웃 — **중간값이다.** 타구 종류와 병살 여부가 정해지기 전

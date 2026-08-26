@@ -14,6 +14,9 @@
 
 export type PitchResultCode =
   | "STRIKE_SWING" | "STRIKE_LOOK" | "BALL" | "FOUL"
+  // 삼진 — **타자가 물러났다.** 스트라이크 하나(`STRIKE_*`)와 다른 일이다.
+  // 🔴 예전엔 이게 없어서 3스트라이크째에도 "루킹"이라고만 떴다.
+  | "STRIKEOUT_SWING" | "STRIKEOUT_LOOK"
   | "INPLAY_OUT" | "GROUND_OUT" | "FLY_OUT" | "LINE_OUT" | "DOUBLE_PLAY"
   | "FIELDING_ERROR"
   | "HIT_SINGLE" | "HIT_DOUBLE" | "HIT_TRIPLE" | "HOME_RUN"
@@ -39,11 +42,24 @@ const HITS = new Set<PitchResultCode>([
   "HIT_SINGLE", "HIT_DOUBLE", "HIT_TRIPLE", "HOME_RUN",
 ]);
 
-const STRIKES = new Set<PitchResultCode>(["STRIKE_SWING", "STRIKE_LOOK"]);
+/**
+ * 스트라이크로 세는 것 — **삼진도 스트라이크다.**
+ *
+ * ⚠ 3스트라이크째는 `STRIKEOUT_*`으로 좁혀지므로, 여기 안 넣으면
+ *   **마지막 스트라이크가 카운트에서 빠진다.** 인플레이 아웃을 넷으로
+ *   쪼갤 때 `INPLAY_OUT`을 집합에 남겨 둔 것과 같은 이유다.
+ */
+const STRIKES = new Set<PitchResultCode>([
+  "STRIKE_SWING", "STRIKE_LOOK", "STRIKEOUT_SWING", "STRIKEOUT_LOOK",
+]);
+
+/** 삼진인가 — 타자가 물러났다 */
+const STRIKEOUTS = new Set<PitchResultCode>(["STRIKEOUT_SWING", "STRIKEOUT_LOOK"]);
 
 export const isOutInPlay = (c: PitchResultCode): boolean => OUT_IN_PLAY.has(c);
 export const isHit       = (c: PitchResultCode): boolean => HITS.has(c);
 export const isStrike    = (c: PitchResultCode): boolean => STRIKES.has(c);
+export const isStrikeout = (c: PitchResultCode): boolean => STRIKEOUTS.has(c);
 
 /** 타석이 끝났나 — 다음 타자로 넘어가는 결과 */
 export function isAtBatOver(c: PitchResultCode): boolean {
@@ -64,6 +80,7 @@ const HIT_TYPE_LABEL: Record<BallHitType, string> = {
 /** 큰 글자용 — 1.4초 스쳐 지나가므로 짧게 */
 const FLASH_LABEL: Record<PitchResultCode, string> = {
   STRIKE_SWING: "헛스윙", STRIKE_LOOK: "루킹", BALL: "볼", FOUL: "파울",
+  STRIKEOUT_SWING: "삼진 아웃", STRIKEOUT_LOOK: "삼진 아웃",
   INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
   LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살!",
   FIELDING_ERROR: "실책", WALK: "볼넷",

@@ -5107,6 +5107,52 @@ export async function engineCompare(games: number): Promise<Record<string, unkno
  * ⚠ 능력치를 OVR 목표에 맞춰 **균등하게** 올린다. 한 스탯만 올리면
  * 그 스탯의 기여도만 보게 된다.
  */
+/**
+ * **구종을 몇 개 들고 시작하느냐가 ERA를 얼마나 바꾸는가.**
+ *
+ * 🔴 `NewGamePage`의 프리셋 주석이 "하나면 ERA 9.07, 둘이면 4.52"라고
+ *   적어 뒀다(60경기 실측). **그 값이 지금도 유효한지 다시 잰다** —
+ *   주석은 과거 기록일 수 있고, 그 사이 엔진이 여러 번 바뀌었다.
+ *
+ * ⚠ 능력치는 고정하고 **구종 수만 바꾼다.** 다른 걸 같이 움직이면
+ *   무엇이 ERA를 바꿨는지 못 가린다.
+ */
+export async function arsenalEraCurve(games: number, batterMean: number,
+  lvl = 68): Promise<Record<string, unknown>> {
+  const SETS: Array<[string, Array<{ type: string; grade: number }>]> = [
+    ["1개(패스트볼)", [{ type: "fastball", grade: 1 }]],
+    ["1개(패스트볼Lv2)", [{ type: "fastball", grade: 2 }]],
+    ["2개(패+싱커)", [{ type: "fastball", grade: 1 }, { type: "sinker", grade: 1 }]],
+    ["2개(패Lv2+커터)", [{ type: "fastball", grade: 2 }, { type: "cutter", grade: 1 }]],
+  ];
+  const out: Record<string, unknown> = {};
+  for (const [name, arsenal] of SETS) {
+    const p = {
+      name, command: lvl, velocity: lvl, staminaCap: lvl, mentalResil: lvl,
+      control: lvl, movement: lvl, clutch: lvl, holdRunners: lvl, arsenal,
+    };
+    await resetContactBands();
+    let outs = 0, er = 0, h = 0, k = 0;
+    for (let i = 0; i < games; i++) {
+      const st = JSON.parse(await window.projectB!.engine("startMatchNative", JSON.stringify({
+        protagonistSide: "home", role: "SP", batterMean, leagueId: "LEAGUE_HIGHSCHOOL",
+        opponentPitchers: [p],
+      })));
+      if (st.error) return { 오류: st.error };
+      const fin = JSON.parse(await window.projectB!.engine("simToGameEnd", JSON.stringify(st)));
+      if (fin.error) return { 오류: fin.error };
+      for (const l of (fin.opponentQueue?.lines ?? [])) {
+        outs += l.outs ?? 0; er += l.er ?? 0; h += l.h ?? 0; k += l.k ?? 0;
+      }
+    }
+    const r = (v: number) => outs > 0 ? Math.round((v * 27 / outs) * 100) / 100 : null;
+    const cb = await contactBands() as { 평균contactQ?: number };
+    out[name] = { 이닝: Math.round(outs / 3), ERA: r(er), "K/9": r(k), "H/9": r(h),
+      cq: cb.평균contactQ };
+  }
+  return out;
+}
+
 export async function ovrEraCurve(games: number, batterMean: number): Promise<Record<string, unknown>> {
   const out: Record<string, unknown> = {};
   for (const lvl of [55, 60, 65, 70, 75, 80]) {
