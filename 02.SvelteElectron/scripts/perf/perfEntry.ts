@@ -947,6 +947,17 @@ export function foreignNameProbe(): Record<string, unknown> {
     표본: names.slice(0, 5) };
 }
 
+/** 과거 5년 개인 성적이 실제로 심겼는가 (실플 ⑪) */
+export function pastStatsProbe(): Record<string, unknown> {
+  const rows = get(gameStore).npcs.filter((n) => (n.careerHistory ?? []).length > 0);
+  const total = rows.reduce((s, n) => s + (n.careerHistory ?? []).length, 0);
+  const withStats = rows.reduce((s, n) =>
+    s + (n.careerHistory ?? []).filter((h) => h.stats).length, 0);
+  const one = rows[0]?.careerHistory?.[0];
+  return { 기록있는선수: rows.length, 총줄수: total, 성적붙은줄: withStats,
+    표본: one ? { 연도: one.year, 요약: one.statLine } : null };
+}
+
 export function careerEventTally(): Record<number, Record<string, number>> {
   const out: Record<number, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {

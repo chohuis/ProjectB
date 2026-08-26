@@ -4,6 +4,7 @@
 
 import { slotRepo, type RepoNpc } from "./slotRepo";
 import { buildPastStandings } from "./seedPastStandings";
+import { buildPastPlayerStats } from "./seedPastPlayerStats";
 import { generateDomesticStaff } from "./staffGen";
 import { ALL_TEAMS_BY_LEAGUE, HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
@@ -419,6 +420,52 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   // "이 팀 감독이 아직 없을 수 있다"를 모든 조회 경로가 고려하면 버그가 난다
   // (v1 드래프트 풀 부족 버그가 정확히 이 원인이었다 — people.md §2-1).
   const staff = await generateDomesticStaff(opts.allTeams ?? [], worldSeed, opts.seasonYear);
+
+  // ── 과거 5년 개인 성적 (실플 ⑪) ───────────────────────────────
+  //
+  // A5는 **팀 순위만** 만들었다. 실제로 플레이해 보니 선수 상세의 연도별
+  // 성적이 늘 비어 있어 **세계가 어제 시작한 것처럼** 보였다.
+  //
+  // **프로 1·2군만** 만든다(사용자 확정 2026-08-26) — 화면에 뜨는 선수가
+  // 거의 다 이 층이고, 고교 1학년은 5년 전에 야구를 안 했을 수 있다.
+  //
+  // 🔴 **`careerHistory` 필드에 붙인다.** `career_history` 테이블에 따로
+  //   넣어 봤더니 화면이 0건을 봤다 — 선수 상세는 `npc.careerHistory`를 읽는다.
+  //   **재는 자리와 쓰는 자리가 달랐다.**
+  // ⚠ `createSlot` **앞**이어야 한다 — 거기서 NPC가 DB로 들어간다.
+  // ⚠ 실패해도 새 게임은 성립해야 한다.
+  try {
+    const past = buildPastPlayerStats(
+      npcs.map((n) => ({
+        npcId: n.npcId ?? "",
+        leagueId: n.currentLeague ?? "",
+        teamId: n.currentTeam ?? "",
+        age: n.age ?? 0,
+        // ⚠ 투수는 투구 OVR, 타자는 타격 OVR — 섞으면 엉뚱한 과거가 나온다
+        ovr: (n.playerType === "pitcher"
+          ? n.abilities?.pitching?.ovr
+          : n.abilities?.batting?.ovr) ?? 60,
+        playerType: n.playerType === "pitcher" ? "pitcher" as const : "batter" as const,
+      })),
+      worldSeed, opts.seasonYear);
+    const byNpc = new Map<string, typeof past>();
+    for (const r of past) byNpc.set(r.npcId, [...(byNpc.get(r.npcId) ?? []), r]);
+    for (const n of npcs) {
+      const rows = byNpc.get(n.npcId ?? "");
+      if (!rows?.length) continue;
+      // 🔴 **`extra`로 간다** — `RepoNpc`엔 `careerHistory`가 없고,
+      //   `npcAdapter`가 `extra.careerHistory`를 세이브 필드로 되돌린다.
+      // ⚠ 오래된 해부터 — 화면이 그 순서를 뒤집어 최근부터 보여준다
+      const ex = (n.extra ??= {});
+      const prev = (ex.careerHistory as unknown[] | undefined) ?? [];
+      ex.careerHistory = [...prev, ...rows
+        .slice().sort((x, y) => x.year - y.year)
+        .map((r) => ({ year: r.year, leagueId: r.leagueId, teamId: r.teamId,
+          statLine: r.statLine, highlights: [], stats: r.stats }))];
+    }
+  } catch (e) {
+    console.warn("[newGameV3] 과거 성적 생성 실패 — 연도별 성적 없이 시작", e);
+  }
 
   await slotRepo.createSlot({
     slotId: opts.slotId,
