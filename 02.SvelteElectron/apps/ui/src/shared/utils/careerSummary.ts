@@ -1,4 +1,5 @@
 import type { CareerSeasonRecord } from "../types/save";
+import { rateLabel } from "./baseballFormat";
 
 /** 슬롯 목록·인트로가 쓰는 통산 요약 */
 export interface CareerSummary {
@@ -81,9 +82,10 @@ export interface CareerTotals {
   } | null;
 }
 
-function fmt3(v: number): string {
-  return v.toFixed(3).replace(/^0/, "");
-}
+// ⚠ **지역 구현을 지웠다** — 같은 일을 하는 함수가 셋이었다
+//   (`fmt3` · `GameStatusModal.avg` · `PlayerDetailModal`의 인라인).
+//   1 이상(장타율)에서 앞의 0을 잘못 떼는 갈래도 섞여 있었다.
+const fmt3 = rateLabel;
 
 export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTotals {
   let firstYear: number | null = null;

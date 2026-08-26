@@ -6,6 +6,7 @@
 -->
 <script context="module" lang="ts">
   import type { PlayerGameLine } from "../../../shared/types/season";
+  import { rateLabel } from "../../../shared/utils/baseballFormat";
 
   export type MatchSummary = {
     inningScores:         { home: number[]; away: number[] };
@@ -60,10 +61,8 @@
   export let onSkip:       () => void = () => {};
 
   // ── 헬퍼 ─────────────────────────────────────────────────────
-  function avg(ab: number, h: number): string {
-    if (ab === 0) return "-";
-    return (h / ab).toFixed(3).replace(/^0/, "");
-  }
+  // 표기는 `baseballFormat.rateLabel`이 정본이다
+  const avg = (ab: number, h: number): string => (ab === 0 ? "-" : rateLabel(h / ab));
 
   function staminaBar(val: number): string {
     const pct = Math.round(Math.max(0, Math.min(100, val)));

@@ -107,7 +107,12 @@
 
   .rank-row {
     display: grid;
-    grid-template-columns: 20px 1fr auto;
+    /* 🔴 **이름이 한 글자만 남았다** ("안…" "송…") — 2026-08-26 실플.
+       `auto`인 팀명이 **자기 내용만큼 다 가져가서** `1fr`인 이름을 밀어냈다.
+       팀 이름이 길수록 선수 이름이 짧아지는 구조였다.
+       ⚠ **이름이 더 중요하다** — 순위표에서 누구인지가 핵심이다.
+         이름에 최소 폭을 보장하고, 넘치는 건 팀명이 잘린다(`ellipsis`가 이미 있다). */
+    grid-template-columns: 20px minmax(4.5em, 1fr) minmax(0, auto);
     align-items: center;
     gap: 5px;
     padding: 5px 6px;

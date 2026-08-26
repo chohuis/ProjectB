@@ -1372,7 +1372,7 @@
                       <span>{sm.k}탈삼진</span>
                       <span>{sm.bb}볼넷</span>
                     {:else}
-                      <span>타율 <b class="avg-cell">{sm.avg != null ? sm.avg.toFixed(3).replace(/^0/, "") : "-"}</b></span>
+                      <span>타율 <b class="avg-cell">{rateLabel(sm.avg)}</b></span>
                       <span>{sm.h}안타 / {sm.ab}타수</span>
                       <span>{sm.hr}홈런</span>
                       <span>{sm.rbi}타점</span>
