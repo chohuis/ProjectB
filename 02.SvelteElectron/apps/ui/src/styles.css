@@ -107,6 +107,31 @@ html, body {
 
 #app { width: 100%; height: 100%; overflow: hidden; }
 
+/* ── 드래그·선택 막기 ─────────────────────────────────────
+
+   🔴 **게임 화면인데 글자가 끌려 나왔다.** 버튼 이름을 누르고 살짝 움직이면
+   파란 선택 블록이 생기고, 그림은 유령처럼 딸려 나온다. 웹 문서의 기본
+   동작이지만 앱에서는 오작동으로 보인다.
+
+   ⚠ **입력칸은 뺀다.** 여덟 자리에 `<input>`·`<textarea>`가 있고,
+     거기서 선택이 막히면 **글자를 고칠 수 없다.**
+   ⚠ 사용자가 값을 **읽어 옮겨야 하는 곳**(기록·성적)은 `.selectable`을
+     붙이면 다시 열린다. 지금은 그런 자리를 안 정했다 —
+     필요하면 그때 붙인다.
+   ────────────────────────────────────────────────────── */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input, textarea, [contenteditable="true"], .selectable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* 그림이 끌려 나오는 것 — `user-select`로는 안 막힌다 */
+img, svg, image { -webkit-user-drag: none; }
+
 button, input, select, textarea { font: inherit; }
 
 /* ── 공통 조각 ──────────────────────────────────────────── */
