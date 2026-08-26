@@ -900,6 +900,39 @@ export function faMarketProbe(): Record<string, unknown> {
            RETIRED원소속: m.faRetiredOrigin ?? [0, 0] };
 }
 
+/**
+ * 성실·사기가 **실제로 어느 범위를 도는가.**
+ *
+ * 🔴 조건선이 도달 가능한지는 데이터만 봐서는 모른다. `diligence_lte 30`이
+ *   영원히 false인 것도, `COND_SLUMP`(사기≤38)가 0회인 것도 **궤적을 재야**
+ *   보인다. 매주 불러 쌓는다.
+ */
+let _traj: { dil: number[]; mor: number[] } = { dil: [], mor: [] };
+export function trajTick(): void {
+  const p = get(gameStore).protagonist;
+  _traj.dil.push(p.diligence ?? 0);
+  _traj.mor.push(p.morale ?? 0);
+}
+export function trajProbe(): Record<string, unknown> {
+  const stat = (v: number[]) => v.length
+    ? { 최소: Math.min(...v), 최대: Math.max(...v),
+        평균: Math.round(v.reduce((a, b) => a + b, 0) / v.length),
+        최종: v[v.length - 1], 표본: v.length }
+    : { 표본: 0 };
+  // 조건선에 실제로 닿은 주가 몇 번인가 — **0이면 그 이벤트는 영원히 안 뜬다**
+  const hit = (v: number[], f: (x: number) => boolean) => v.filter(f).length;
+  return {
+    성실: stat(_traj.dil), 사기: stat(_traj.mor),
+    닿음: {
+      "성실≤30": hit(_traj.dil, (x) => x <= 30),
+      "성실≥80": hit(_traj.dil, (x) => x >= 80),
+      "사기≤38": hit(_traj.mor, (x) => x <= 38),
+      "사기≤72": hit(_traj.mor, (x) => x <= 72),
+    },
+  };
+}
+export function trajReset(): void { _traj = { dil: [], mor: [] }; }
+
 export function careerEventTally(): Record<number, Record<string, number>> {
   const out: Record<number, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {

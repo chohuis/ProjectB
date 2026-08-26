@@ -16,8 +16,21 @@ import { resolve, join } from "node:path";
  * 반대쪽은 널널하다 — 양수 95건이라 성실은 오르기만 하고 곧 천장에 붙는다.
  * 실측: `diligence_gte 80` 이벤트가 2027~2031 **매년** 떴다.
  *
- * ⚠ **조건을 낮추는 걸로는 안 풀린다.** 성실 하락 경로가 없는 게 원인이고
- * 그건 밸런스다(A 트랙). 여기서는 **같은 함정을 다시 파지 않는 것**만 지킨다.
+ * ## ✅ 2026-08-26 — 하락 경로가 생겼다
+ *
+ * `advanceWeek`에 **주간 자연 감쇠**를 넣었다(`DILIGENCE_WEEKLY_DECAY = 0.4`).
+ * 성실은 습관이라 방치하면 떨어진다 (사용자 확정).
+ *
+ *     전   최소 60 · 60 · 60      (= 시작값. 한 번도 안 내려갔다)
+ *     후   최소 49.4 · 56.2 · 54.6
+ *     80이상 비율  82~95% → 0~54%
+ *
+ * ⚠ **`diligence_lte 30`은 여전히 0회이고 그게 맞다.** 계측 하네스는 늘
+ *   최선을 고른다 — 성실히 플레이하는데 30까지 떨어지면 뜻이 뒤집힌다.
+ *   30은 **게으른 플레이어**가 닿을 자리다.
+ *
+ * ⚠ **아래 검사는 여전히 필요하다.** 감쇠가 있어도 조건선을 아무 데나
+ *   걸면 안 된다 — 도달 가능한 바닥이 어디인지는 계속 봐야 한다.
  */
 const MASTER = resolve(__dirname, "../../../../../../resource/data/master");
 const DEC = JSON.parse(readFileSync(join(MASTER, "messages/decision_templates.json"), "utf8"))
@@ -38,7 +51,23 @@ function diligenceOf(effects: unknown): number | null {
 const START = 60;
 
 describe("성실 범위", () => {
-  it("성실을 내리는 보상이 거의 없다 — 이게 사실이다", () => {
+  /**
+   * 🔴 **감쇠율을 손으로 적지 않는다.** 적으면 소스와 어긋나고, 그러면
+   *   이 검사가 검사를 안 하게 된다.
+   */
+  const DECAY = (() => {
+    const src = readFileSync(
+      resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+    const m = src.match(/PB_DIL_DECAY\) \|\| ([\d.]+)\)/);
+    if (!m) throw new Error("DILIGENCE_WEEKLY_DECAY를 못 읽었다 — 정규식이 소스와 어긋났다");
+    return Number(m[1]);
+  })();
+
+  it("주간 자연 감쇠가 실제로 걸려 있다", () => {
+    expect(DECAY).toBeGreaterThan(0);
+  });
+
+  it("성실을 내리는 보상이 거의 없다 — 데이터만으로는 여전히 그렇다", () => {
     let down = 0;
     for (const d of DEC) for (const o of d.options ?? []) {
       const v = diligenceOf(o.effects);

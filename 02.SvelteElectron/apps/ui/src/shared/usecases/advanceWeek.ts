@@ -64,6 +64,27 @@ import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPha
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
 import { simulateNpcGame, logGameLines } from "./weekPhases/games";
+/**
+ * 성실 주간 자연 감쇠 (사용자 확정 2026-08-26).
+ *
+ * **0.4는 실측으로 골랐다.** 같은 씨앗에 0 / 0.1 / 0.2 / 0.4를 걸어 재고,
+ * 0.4를 다시 3회 재서 확정했다:
+ *
+ *     감쇠 0.1  평균 95 · 80이상 92%   ← 거의 안 듣는다
+ *     감쇠 0.2  평균 91 · 80이상 83%   ← 미미하다
+ *     감쇠 0.4  평균 76 · 80이상 44%   ← **띠가 생긴다**
+ *
+ *     0.4 · 3회 최소   49.4 · 56.2 · 54.6   (전에는 60 · 60 · 60)
+ *          · 80이상    45% · 0% · 54%       (전에는 82~95%)
+ *
+ * ⚠ **`diligence_lte 30`은 여전히 0회다. 그게 맞다** — 계측 하네스는 늘
+ *   최선을 고르는 주인공이다. 성실히 플레이하는데 30까지 떨어지면
+ *   그 조건의 뜻이 뒤집힌다. 30은 **게으른 플레이어**가 닿을 자리다.
+ *
+ * ⚠ `PB_DIL_DECAY`로 덮어 다시 잴 수 있다.
+ */
+const DILIGENCE_WEEKLY_DECAY = Number(
+  (typeof process !== "undefined" && process.env?.PB_DIL_DECAY) || 0.4);
 import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
@@ -536,6 +557,24 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   }
   if (studyResult.efficiencyMod < 1.0) {
     growth.logs.push(`[학업] 주간 효율 ${Math.round(studyResult.efficiencyMod * 100)}%`);
+  }
+
+  // ── 성실 자연 감쇠 ───────────────────────────────────────────
+  //
+  // 🔴 **성실이 오르기만 했다.** 실측(2026-08-26 · 3회):
+  //      최소 60(=시작값) · 최대 99 · 표본의 82~95%가 80 이상
+  //      `diligence_lte 30`은 **0회** — 영원히 false였다
+  //
+  //   보상이 양수 147건 대 음수 9건이고 **음수 중 7건이 대학 전용**이라,
+  //   데이터로 음수를 아무리 늘려도 못 이긴다. 성실은 습관이니
+  //   **방치하면 떨어지는 것**이 자연스럽다 (사용자 확정 2026-08-26).
+  //
+  // ⚠ **소수를 유지한다.** 정수로 반올림하면 감쇠율이 1 미만일 때
+  //   매주 0이 되어 아무 일도 안 일어난다. 사기도 소수로 돈다.
+  {
+    const cur = g.protagonist.diligence ?? 0;
+    const next = Math.max(1, cur - DILIGENCE_WEEKLY_DECAY);
+    if (next !== cur) growth.protagonistPatch.diligence = next;
   }
 
   growth.protagonistPatch.consecutiveLowMoraleWeeks  = newLowMoraleWeeks;
