@@ -87,6 +87,11 @@ const GROUPS = [
   ["독립",      (r) => inStage(r, "independent")],
   ["KBL 1군",   (r) => inStage(r, "pro_kbl") && leaguesOf(r).length === 0],
   ["KBL 2군",   (r) => inLeague(r, "LEAGUE_KBL_FARM")],
+  // 🔴 이 셋이 빠져 있었다 — 재고표(`measure-eventslots`)엔 있는데 소비표엔
+  //    없어서 **군·해외를 재고도 표에 안 찍혔다.**
+  ["ABL",       (r) => inStage(r, "pro_abl") || inLeague(r, "LEAGUE_ABL_FARM")],
+  ["JBL",       (r) => inStage(r, "pro_jbl") || inLeague(r, "LEAGUE_JBL_FARM")],
+  ["군",        (r) => isArmy(r)],
 ];
 
 (async () => {

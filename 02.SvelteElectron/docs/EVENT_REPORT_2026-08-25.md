@@ -207,6 +207,7 @@ POOL_TEAM_LIFE     팀·일상   59종   26%
 | **`military_phase`가 스텁이다** | 항상 false. 군 14종은 `militaryStatus`/`militaryUnit`/`militaryServiceWeeks` 경로로 우회했다 — 살릴 계획이 있으면 알려주면 옮긴다 |
 | **`removeTag`가 없다** | 태그로 만든 연계를 닫을 수단이 없다 |
 | **학점을 건드릴 보상이 없다** | `universityGpa`는 조건으로 읽기만 한다. 힌트 여덟 자리가 "학점 유리"라 써놓고 성실만 움직이고 있었다 |
+| 🔴 **주인공이 해외에 갈 수 없다** | `careerStage`를 `pro_abl`/`pro_jbl`로 **쓰는 코드가 아무 데도 없다.** 읽는 자리(`isProStage`·화면 분기)만 있고 진로 허브·FA·계약 어느 쪽에도 해외 선택지가 없다. **해외 258종이 도달 불가**다 — 이번에 열어 채웠지만 갈 길이 없다 |
 | **2군에서 1군 이벤트가 다 뜬다** | `careerStage`가 2군에서도 `pro_kbl`이라 189종이 그대로 후보다. 의도인지 확인 필요 |
 
 ---
