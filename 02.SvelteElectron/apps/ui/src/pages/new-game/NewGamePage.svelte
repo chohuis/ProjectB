@@ -6,6 +6,7 @@
   import { HS_REGIONS } from "../../shared/utils/leagueTeams.generated";
   import { hsRegionMeta, sortRegions } from "../../shared/utils/hsRegionLabel";
   import { teamTokens } from "../../shared/utils/teamTheme";
+  import { inkFor } from "../../shared/utils/stoneMark";
   import { startNewGameV3 } from "../../shared/repo/slotLifecycleV3";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
@@ -66,6 +67,16 @@
   // 확인 카드가 입을 팀 색. **전역 --t-*는 안 건드린다** — 아직 소속 확정 전이라
   // 전역을 바꾸면 이전 단계로 돌아갔을 때 화면이 어긋난다
   $: cardTokens = teamTokens(selectedTeam?.colors);
+  /**
+   * 카드 머리(`--c-dark` 바탕) 위 글자색.
+   *
+   * 🔴 **흰색이 박혀 있었다.** 팀 색이 밝으면 글자가 묻힌다 —
+   *   알 표식에서 겪은 것과 **같은 함정**이다(56팀 중 21팀이 그랬다).
+   *   `inkFor`가 바탕 밝기를 보고 흰색·검정 중 대비가 큰 쪽을 고른다.
+   */
+  $: cardInk = inkFor(cardTokens.dark);
+  /** 강조색(`--c-acc`) 바탕 위 글자 — 같은 이유로 따로 뽑는다 */
+  $: cardInkAcc = inkFor(cardTokens.accent);
 
   /** 카드에 그릴 능력치 — 경기에 쓰이는 순서대로 */
   function statRows(p: ProtagonistSave["pitching"]) {
@@ -788,7 +799,7 @@
         </div>
 
         <!-- 선수 카드 — 팀 색을 입는다. 이 순간부터 그 팀 소속이다 -->
-        <div class="pcard" style="--c-dark:{cardTokens.dark};--c-acc:{cardTokens.accent};--c-gold:{cardTokens.gold};--c-stripe:{cardTokens.stripe}">
+        <div class="pcard" style="--c-dark:{cardTokens.dark};--c-acc:{cardTokens.accent};--c-gold:{cardTokens.gold};--c-stripe:{cardTokens.stripe};--c-ink:{cardInk};--c-ink-acc:{cardInkAcc}">
           <div class="pcard-head">
             <div class="pc-id">
               <span class="pc-team">{selectedTeamName}</span>
@@ -1641,12 +1652,15 @@
   .pc-name {
     display: block; margin: 5px 0 4px;
     font-size: 27px; font-weight: 800; font-style: italic;
-    letter-spacing: -0.03em; color: #fff; line-height: 1.1;
+    letter-spacing: -0.03em; color: var(--c-ink); line-height: 1.1;   /* 팀 색 위 — 밝기로 고른다 */
   }
-  .pc-meta { font-size: 11.5px; color: rgba(255, 255, 255, 0.72); }
+  /* 🔴 **흰색이 박혀 있었다.** 바탕이 팀 색(`--c-dark`)이라 밝은 팀에서 묻힌다.
+     `--c-ink`는 `inkFor`가 바탕 밝기를 보고 고른 값이다(흰색 또는 검정).
+     ⚠ 투명도로 흐리게 만든다 — 색 자체를 바꾸면 대비 계산이 무너진다. */
+  .pc-meta { font-size: 11.5px; color: var(--c-ink); opacity: 0.78; }
   .pc-preset { flex: none; }
   .pc-preset-label {
-    display: inline-block; background: var(--c-acc); color: #fff;
+    display: inline-block; background: var(--c-acc); color: var(--c-ink-acc);
     font-size: 11.5px; font-weight: 750; padding: 5px 11px;
   }
 
@@ -1659,7 +1673,10 @@
   .pc-stats { display: flex; flex-direction: column; gap: 7px; }
   .pc-stat { display: grid; grid-template-columns: 54px 1fr 26px; gap: 9px; align-items: center; }
   .pc-stat-k { font-size: 11.5px; color: var(--ink-mute); }
-  .pc-stat-v { font-size: 12px; font-weight: 750; text-align: right; font-variant-numeric: tabular-nums; color: var(--panel-sunk); }
+  /* 🔴 **`--panel-sunk`를 글자색으로 쓰고 있었다** (2026-08-26).
+     그건 표 머리 **배경색**(#EEF2F8)이라 흰 카드 위에서 **대비 1.1:1** —
+     숫자가 사실상 안 보였다. 능력치는 이 화면에서 가장 중요한 정보다. */
+  .pc-stat-v { font-size: 12px; font-weight: 750; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
   .pc-bar { display: block; height: 6px; background: var(--ink); }
   .pc-bar i { display: block; height: 100%; background: var(--c-dark); }
 

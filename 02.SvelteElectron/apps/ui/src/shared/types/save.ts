@@ -392,7 +392,15 @@ export interface PitcherSeasonStats {
   l: number;      // 패
   sv: number;     // 세이브
   hd: number;     // 홀드
-  ip: number;     // 이닝 (소수점: 31.2 → 31이닝 2/3)
+  /**
+   * 이닝 — **실수다**(`outs / 3`). 31과 2/3이닝이면 `31.6666`이다.
+   *
+   * 🔴 **야구 표기(`31.2`)를 넣지 않는다** (사용자 확정 2026-08-26).
+   *   예전엔 `npc_sim`이 표기를, `match_engine`이 실수를 넣어 **한 필드에 두 형식**이었다.
+   *   그 값이 나눗셈에 그대로 쓰여(ERA·WHIP·K/9) 기록이 부풀려졌다.
+   * ⚠ 화면 표기는 `baseballFormat.ts`의 `ipLabel`이 만든다.
+   */
+  ip: number;
   er: number;     // 자책점
   h: number;      // 피안타
   k: number;      // 탈삼진

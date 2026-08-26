@@ -681,7 +681,15 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         let closer_id = if is_home { params.home_closer.as_ref() } else { params.away_closer.as_ref() }
             .map(|c| c.id.as_str());
         let decision  = pitcher_decision(id, team_won, pit_q, final_idx, closer_id);
-        let ip        = (acc.outs / 3) as f64 + (acc.outs % 3) as f64 / 10.0;
+        // 🔴 **실수 이닝으로 통일한다** (사용자 확정 2026-08-26).
+        //    예전엔 `(outs/3) + (outs%3)/10`으로 **야구 표기**(`5.2`)를 넣었는데,
+        //    같은 `PlayerGameLine::Pitcher.ip` 필드에 `match_engine`은
+        //    `outs/3.0`으로 **실수**(`5.667`)를 넣고 있었다 — 한 필드에 두 형식이었다.
+        //
+        //    ⚠ 그 값이 **나눗셈에 그대로 쓰인다**(`player_engine.rs`의 K/9·WHIP).
+        //      `5.2`로 나누면 실제 `5.667`로 나눌 것을 잘못 나눠 **기록이 부풀려진다.**
+        //    ⚠ 야구 표기(`5.2`)는 **화면에서만** 만든다 — `baseballFormat.ts`의 `ipLabel`.
+        let ip        = acc.outs as f64 / 3.0;
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, pc: acc.pc, decision,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { ipLabel, rateLabel, eraLabel } from "../../../shared/utils/baseballFormat";
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import type { EntityDetails } from "../../../shared/stores/master";
@@ -513,11 +514,9 @@
   }
 
   /** 이닝은 야구식으로 쓴다 — 6.33이 아니라 6.1(6과 1/3) */
-  function ipLabel(ip: number): string {
-    const whole = Math.floor(ip + 1e-9);
-    const outs = Math.round((ip - whole) * 3);
-    return outs > 0 ? `${whole}.${outs}` : `${whole}`;
-  }
+  // ⚠ **지역 구현을 지웠다** — `.3`을 만들 수 있었고(`31.9` → `31.3`),
+  //   같은 파일 안에서도 쓰는 자리와 안 쓰는 자리가 갈렸다.
+  //   정본은 `shared/utils/baseballFormat.ts`다.
 
   /** 승패 표시. `ND`는 빈칸으로 둔다 — 대부분이 ND라 표가 시끄러워진다 */
   function decisionLabel(d: string | undefined): string {
@@ -998,7 +997,7 @@
                       {#each [
                         ["G", modalStats.g], ["GS", modalStats.gs], ["W", modalStats.w], ["L", modalStats.l],
                         ["SV", modalStats.sv ?? 0], ["HD", modalStats.hd ?? 0],
-                        ["IP", modalStats.ip], ["ER", modalStats.er],
+                        ["IP", ipLabel(modalStats.ip)], ["ER", modalStats.er],
                         ["H", modalStats.h], ["K", modalStats.k], ["BB", modalStats.bb],
                         ["ERA", modalStats.era?.toFixed(2)], ["WHIP", modalStats.whip?.toFixed(2)],
                       ] as [lbl, val]}
@@ -1064,7 +1063,7 @@
                             <td>{teamById.get(oppId) ?? oppId}</td>
                             <td class={outcomeClass(outcome)}><strong>{outcome}</strong></td>
                             {#if line?.role === "pitcher"}
-                              <td>{line.ip}</td><td>{line.er}</td><td>{line.k}</td><td>{line.bb}</td>
+                              <td>{ipLabel(line.ip)}</td><td>{line.er}</td><td>{line.k}</td><td>{line.bb}</td>
                             {:else if line?.role === "batter"}
                               <td>{line.ab}</td><td>{line.h}</td>
                               <td>{line.ab > 0 ? (line.h / line.ab).toFixed(3) : "---"}</td>
@@ -1326,7 +1325,7 @@
                           <td>{teamById.get(entry.teamId) ?? entry.teamId}</td>
                           {#if st?.type === "pitcher"}
                             <td>{st.g}</td><td>{st.w}</td><td>{st.l}</td><td>{st.sv ?? 0}</td>
-                            <td>{st.ip?.toFixed(1) ?? "-"}</td>
+                            <td>{ipLabel(st.ip ?? NaN)}</td>
                             <td class="era-cell">{st.era?.toFixed(2) ?? "-"}</td>
                             <td>{st.k}</td><td>{st.bb}</td><td>{st.whip?.toFixed(2) ?? "-"}</td>
                           {:else if st?.type === "batter"}
