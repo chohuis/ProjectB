@@ -1744,6 +1744,15 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
     for npc in processed.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
+        // 계측 — 비활성이 여기 들어오면 진입 조건이 새는 것이다
+        if npc.career_status != "active" { summary.fa_inactive_seen += 1; }
+        if npc.original_league_id.as_deref() == Some("LEAGUE_RETIRED") {
+            summary.fa_retired_origin.0 += 1;
+            // 전역자인가 — 입대 때 `originalLeagueId = currentLeague`로 박힌다
+            if npc.military_served_unit.is_some() || npc.military_discharge_year.is_some() {
+                summary.fa_retired_origin.1 += 1;
+            }
+        }
         // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
         let origin_league = npc.original_league_id.as_deref()
             .filter(|l| !l.is_empty())
@@ -1780,6 +1789,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             // FA 전환 때 이미 비었다
             events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
             summary.fa_unsigned_count += 1;   // 갈 팀 자체가 없는 갈래도 센다
+            summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
             npc.current_league = "LEAGUE_INDEPENDENT".into();
             npc.current_team   = "".into();
             continue;
@@ -1881,6 +1891,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 None => {
                     events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
                     summary.fa_unsigned_count += 1;
+                    summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
                     npc.current_league = "LEAGUE_INDEPENDENT".into();
                     npc.current_team   = "".into();
                     continue;
@@ -1900,6 +1911,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         if let Some(s) = signed_salary { npc.current_salary = s; }
         if signed_salary.is_some() {
             summary.fa_signed_count += 1;
+            summary.fa_by_league.entry(origin_league.to_string()).or_default().0 += 1;
             let score = params.perf_scores.get(&npc.npc_id).copied();
             events.push(ev_to("fa_contract", npc, npc.original_team_id.clone(),
                 team.clone(),

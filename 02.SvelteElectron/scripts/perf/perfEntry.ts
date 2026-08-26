@@ -857,14 +857,26 @@ export type Trajectory = {
  * ⚠ 한 시즌분만 들고 있다 — 시즌 종료 때마다 읽어 쌓아야 한다.
  */
 export function faMarketProbe(): Record<string, unknown> {
+  // 리그별 — **총합만 보면 뜻을 못 읽는다**(2군·독립이 다수다)
   const s = get(gameStore) as unknown as {
-    seasonEndSummary?: { faCount?: number; faSignedCount?: number; faUnsignedCount?: number };
+    seasonEndSummary?: { faCount?: number; faSignedCount?: number; faUnsignedCount?: number;
+      faInactiveSeen?: number; faRetiredOrigin?: [number, number] };
   };
   const m = s.seasonEndSummary ?? {};
   const sg = m.faSignedCount ?? 0, un = m.faUnsignedCount ?? 0;
   const tot = sg + un;
+  const byLg = (s.seasonEndSummary as { faByLeague?: Record<string, [number, number]> })
+    ?.faByLeague ?? {};
+  const lg: Record<string, string> = {};
+  for (const [k, v] of Object.entries(byLg)) {
+    const t2 = (v[0] ?? 0) + (v[1] ?? 0);
+    lg[k.replace("LEAGUE_", "")] = `${v[0] ?? 0}/${v[1] ?? 0}`
+      + (t2 ? ` ${Math.round((v[1] ?? 0) / t2 * 100)}%` : "");
+  }
   return { FA전환: m.faCount ?? 0, 계약: sg, 미계약: un,
-           미계약률: tot ? Math.round(un / tot * 100) : null };
+           미계약률: tot ? Math.round(un / tot * 100) : null, 리그별: lg,
+           비활성진입: m.faInactiveSeen ?? 0,
+           RETIRED원소속: m.faRetiredOrigin ?? [0, 0] };
 }
 
 export function careerEventTally(): Record<number, Record<string, number>> {

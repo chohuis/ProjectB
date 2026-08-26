@@ -22,7 +22,10 @@ const YEARS = Number(process.env.PF_YEARS || 5);
       if (app.isSeasonEnded()) {
         await app.seasonRollover();
         // 🔴 **여기서 걷는다.** summary는 한 시즌분만 들고 있다
-        market.push({ y: app.currentSeason(), ...app.faMarketProbe() });
+        // ⚠ **연차 분포도 같이 걷는다.** C-8(베테랑 급감)이 같은 오프시즌을
+        //   보는 항목이라 FA와 따로 재면 원인을 못 가른다
+        market.push({ y: app.currentSeason(), ...app.faMarketProbe(),
+          연차: app.faTradeProbe()["1군"] });
         continue;
       }
       await app.autoRun();
@@ -32,6 +35,9 @@ const YEARS = Number(process.env.PF_YEARS || 5);
   for (const m of market) {
     console.log(`[시장] ${m.y} FA전환 ${m.FA전환} · 계약 ${m.계약} · 미계약 ${m.미계약}`
       + (m.미계약률 === null ? " · (엔진이 안 셌다)" : ` · 미계약률 ${m.미계약률}%`));
+    console.log(`       리그별(계약/미계약) ${JSON.stringify(m.리그별)} · 비활성진입 ${m.비활성진입} · RETIRED원소속 ${JSON.stringify(m.RETIRED원소속)}(전체/전역자)`);
+    const v = m.연차 || {};
+    console.log(`       1군 ${v.인원}명 평균연차 ${v.평균연차} · ${JSON.stringify(v.분포)}`);
   }
   const tally = app.careerEventTally();
   for (const y of Object.keys(tally).sort()) {

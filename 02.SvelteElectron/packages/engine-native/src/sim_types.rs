@@ -196,6 +196,21 @@ pub struct SeasonEndSummary {
     pub fa_signed_count: i32,
     #[serde(default)]
     pub fa_unsigned_count: i32,
+    /// 리그별 `"계약/미계약"` — **원소속 리그 기준**이다.
+    ///
+    /// ⚠ 총합만 보면 뜻을 못 읽는다. FA 전환자는 KBL 1군보다 많고
+    ///   대부분 2군·독립이다 — **2군 선수가 못 구하는 것과 1군 주전이
+    ///   못 구하는 건 다른 일이다.**
+    #[serde(default)]
+    pub fa_by_league: std::collections::HashMap<String, (i32, i32)>,
+    /// FA 재배치 루프에 들어온 **비활성**(은퇴·군복무) 인원.
+    /// 계측용이다 — 0이 아니면 진입 조건이 새는 것이다.
+    #[serde(default)]
+    pub fa_inactive_seen: i32,
+    /// 원소속이 `LEAGUE_RETIRED`인 채로 FA에 온 사람과, 그중 전역자.
+    /// 갈 팀이 없어 **100% 미계약**이 된다. 경로를 가리는 계측이다.
+    #[serde(default)]
+    pub fa_retired_origin: (i32, i32),
     pub univ_graduated_count: i32,
     #[serde(default)]
     pub military_enlisted_sports: Vec<String>,   // 체육부대 입대자 이름

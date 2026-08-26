@@ -2956,6 +2956,14 @@ function createGameStore() {
               // gameStore.npcs 동기화
               for (let i = 0; i < nextNpcs.length; i++) {
                 if (!selectedSet.has(nextNpcs[i].npcId)) continue;
+                  // 🔴 **세이브가 이미 은퇴면 입대시키지 않는다.**
+                  //    후보는 마스터 `e.status`로 거르는데 `originalLeagueId`는
+                  //    세이브 `n.currentLeague`에서 온다 — 둘이 어긋나면
+                  //    **`LEAGUE_RETIRED`가 원소속으로 박히고**, 2년 뒤 전역할 때
+                  //    FA로 나와 갈 팀이 없어 **100% 미계약**이 된다.
+                  //    실측(2026-08-26): 전역 시즌마다 3~8명 · 전원이 전역자였다.
+                if (nextNpcs[i].careerStatus !== "active"
+                    || nextNpcs[i].currentLeague === "LEAGUE_RETIRED") continue;
                 const n = nextNpcs[i];
                 nextNpcs[i] = {
                   ...n,
@@ -3126,6 +3134,14 @@ function createGameStore() {
           });
           for (let i = 0; i < nextNpcs.length; i++) {
             if (!genIdSet.has(nextNpcs[i].npcId)) continue;
+            // 🔴 **세이브가 이미 은퇴면 입대시키지 않는다.**
+            //    후보는 마스터 `e.status`로 거르는데 `originalLeagueId`는
+            //    세이브 `n.currentLeague`에서 온다 — 둘이 어긋나면
+            //    **`LEAGUE_RETIRED`가 원소속으로 박히고**, 2년 뒤 전역할 때
+            //    FA로 나와 갈 팀이 없어 **100% 미계약**이 된다.
+            //    실측(2026-08-26): 전역 시즌마다 3~8명 · 전원이 전역자였다.
+            if (nextNpcs[i].careerStatus !== "active"
+                || nextNpcs[i].currentLeague === "LEAGUE_RETIRED") continue;
             const n = nextNpcs[i];
             nextNpcs[i] = {
               ...n,
