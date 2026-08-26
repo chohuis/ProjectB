@@ -448,6 +448,8 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
     else if (key === "diligence")   { if (!isNaN(val)) result.diligenceDelta  = val; }
     // "removeTag:부상이력" — 값이 숫자가 아니라 태그 이름이다
     else if (key === "removeTag")   { result.removeTag = [...(result.removeTag ?? []), rawVal]; }
+    // "study:+0.5" — 주당 학습 품질(0~1)이 눈금이라 **소수를 쓴다**
+    else if (key === "study")       { const f = parseFloat(rawVal); if (!isNaN(f)) result.studyQualityDelta = f; }
     else if (key === "addTag")      result.addTag = [...(result.addTag ?? []), rawVal];
     else if (key.startsWith("xp.")) {
       if (!isNaN(val)) result.xp = { ...(result.xp ?? {}), [key.slice(3)]: val };

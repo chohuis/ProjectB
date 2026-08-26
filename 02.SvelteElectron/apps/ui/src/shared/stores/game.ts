@@ -635,6 +635,20 @@ function normalizeMailbox(mailbox: import("../types/main").MessageItem[]): impor
 }
 
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
+/**
+ * 학습 품질을 이번 학기에 더한다.
+ *
+ * ⚠ **`semesterWeeks`는 안 늘린다.** 학점은 `qualityAccum / weeks`라,
+ *   주차를 같이 늘리면 평균이 희석돼 **반대 방향으로 간다.**
+ * ⚠ 대학 학기가 아니면(주차 0) 그대로 둔다 — 고교는 9등급 경로다.
+ */
+function applyStudyQuality<T extends { semesterQualityAccum?: number; semesterWeeks?: number }>(
+  school: T, delta?: number,
+): T {
+  if (!delta || (school.semesterWeeks ?? 0) <= 0) return school;
+  return { ...school, semesterQualityAccum: (school.semesterQualityAccum ?? 0) + delta };
+}
+
 /** 태그를 더하고 뺀다. 없는 태그 제거는 조용히 넘어간다 */
 function applyTags(cur: string[], add?: string[], remove?: string[]): string[] {
   if (!add && !remove) return cur;
@@ -1231,6 +1245,7 @@ function createGameStore() {
         if (!fx) return { ...s, mailbox };
 
         const updated = applyEffectToProtagonist(s.protagonist, fx);
+        const nextSchool = applyStudyQuality(s.schoolState, fx.studyQualityDelta);
         const nextMetrics: AchievementMetrics = {
           ...s.achievementMetrics,
         };
@@ -1240,6 +1255,7 @@ function createGameStore() {
           mailbox,
           protagonist: updated,
           player: toPlayerCompat(updated),
+          schoolState: nextSchool,
           achievementMetrics: nextMetrics,
           achievements: nextAchievements,
         };
@@ -1914,7 +1930,10 @@ function createGameStore() {
     applyEventEffect(effect: import("../types/main").DecisionEffect) {
       update((s) => {
         const updated = applyEffectToProtagonist(s.protagonist, effect);
-        return { ...s, protagonist: updated, player: toPlayerCompat(updated) };
+        return {
+          ...s, protagonist: updated, player: toPlayerCompat(updated),
+          schoolState: applyStudyQuality(s.schoolState, effect.studyQualityDelta),
+        };
       });
     },
 
