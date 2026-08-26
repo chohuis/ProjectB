@@ -936,6 +936,17 @@ export function trajProbe(): Record<string, unknown> {
 }
 export function trajReset(): void { _traj = { dil: [], mor: [] }; }
 
+/** KBL 외국인 선수 이름이 한글인가 — 영문이 그대로 뜨던 것 (실플 ⑨) */
+export function foreignNameProbe(): Record<string, unknown> {
+  const HANGUL = /[가-힣]/;
+  const rows = get(gameStore).npcs.filter((n) =>
+    n.currentLeague === "LEAGUE_KBL" && (n.nationality ?? "KOR") !== "KOR");
+  const names = rows.map((n) => n.name ?? "");
+  const ko = names.filter((x) => HANGUL.test(x)).length;
+  return { 외국인: rows.length, 한글이름: ko, 영문그대로: rows.length - ko,
+    표본: names.slice(0, 5) };
+}
+
 export function careerEventTally(): Record<number, Record<string, number>> {
   const out: Record<number, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {
