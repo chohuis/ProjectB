@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_RAND_FRIEND_VISIT"
 }

@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_LATE_MENTOR_ROLE",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "important",
+  "priority": 730,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 8
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LATE_MENTOR_ROLE",
+  "decisionTemplateId": "DEC_PRO_LATE_MENTOR_ROLE"
+}

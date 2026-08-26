@@ -6,12 +6,16 @@
   "oncePolicy": "once_per_career",
   "conditions": [
     {
+      "type": "grade",
+      "value": 3
+    },
+    {
       "type": "career_stage",
       "stage": "highschool"
     },
     {
       "type": "week_eq",
-      "value": 150
+      "value": 24
     }
   ],
   "messageTemplateId": "MSG_HS_FINAL",

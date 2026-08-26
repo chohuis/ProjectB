@@ -1,0 +1,33 @@
+{
+  "id": "EVT_PRO_LATE_BODY_MAINTENANCE",
+  "type": "conditional",
+  "category": "health",
+  "tier": "ambient",
+  "priority": 665,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 8
+    },
+    {
+      "type": "money_gte",
+      "value": 3000
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LATE_BODY_MAINTENANCE",
+  "decisionTemplateId": "DEC_PRO_LATE_BODY_MAINTENANCE"
+}

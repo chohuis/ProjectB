@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_EARLY_ROUTINE_BUILD",
+  "type": "conditional",
+  "category": "training",
+  "tier": "ambient",
+  "priority": 680,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_EARLY_ROUTINE_BUILD",
+  "decisionTemplateId": "DEC_PRO_EARLY_ROUTINE_BUILD"
+}

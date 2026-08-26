@@ -8,11 +8,15 @@
   "weight": 20,
   "poolId": "POOL_TEAM_LIFE_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_CLUBHOUSE_GAME",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_CLUBHOUSE_GAME",
   "conditions": [
     {
       "type": "career_stage",
-      "stage": "pro_kbl"
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
     }
   ]
 }

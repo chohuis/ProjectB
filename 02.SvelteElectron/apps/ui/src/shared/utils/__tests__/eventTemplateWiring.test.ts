@@ -108,3 +108,35 @@ describe("정본이 하나인가", () => {
     ]).toEqual([]);
   });
 });
+
+/**
+ * 🔴 **가리키는 템플릿이 실제로 있는가.**
+ *
+ * 2026-08-26에 대학 학년 서사 24종을 만들면서 규칙 파일만 쓰고 **템플릿·선택지를
+ * 디스크에 안 썼다.** 24종이 없는 템플릿을 가리킨 채 매니페스트에 실렸고,
+ * `check:eventconditions`·`check:effectkeys`·`npm test` **전부 통과했다.**
+ *
+ * 런타임에선 `ruleToOutput`이 빈 메시지로 버린다 — 트리거만 소비하고
+ * 아무것도 안 나간다. 이 트랙이 여섯 번째로 만난 "조용한 결함"이다.
+ */
+describe("규칙이 가리키는 템플릿이 실재하는가", () => {
+  const MASTER2 = resolve(__dirname, "../../../../../../resource/data/master");
+  const TMPL_IDS = new Set(
+    (JSON.parse(readFileSync(join(MASTER2, "messages/templates.json"), "utf8")).templates as { id: string }[])
+      .map((t) => t.id));
+  const DEC_IDS = new Set(
+    (JSON.parse(readFileSync(join(MASTER2, "messages/decision_templates.json"), "utf8")).decisions as { id: string }[])
+      .map((d) => d.id));
+
+  for (const lane of ["mandatory", "conditional", "random"]) {
+    it(`${lane} — 없는 템플릿을 가리키는 규칙이 없다`, () => {
+      const orphans: string[] = [];
+      for (const f of walk(join(MASTER2, "events", lane))) {
+        const r = JSON.parse(readFileSync(f, "utf8")) as Rule & { messageTemplateId?: string | null; decisionTemplateId?: string | null };
+        if (r.messageTemplateId && !TMPL_IDS.has(r.messageTemplateId)) orphans.push(`${r.id} → ${r.messageTemplateId}`);
+        if (r.decisionTemplateId && !DEC_IDS.has(r.decisionTemplateId)) orphans.push(`${r.id} → ${r.decisionTemplateId}`);
+      }
+      expect(orphans).toEqual([]);
+    });
+  }
+});

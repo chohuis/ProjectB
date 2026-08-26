@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_IND_LIFE_TEAM_TALK_IND",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_IND_LIFE_TEAM_TALK_IND"
 }

@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y2_ROTATION_FIGHT",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "important",
+  "priority": 740,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 53
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 104
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y2_ROTATION_FIGHT",
+  "decisionTemplateId": "DEC_UNIV_Y2_ROTATION_FIGHT"
+}

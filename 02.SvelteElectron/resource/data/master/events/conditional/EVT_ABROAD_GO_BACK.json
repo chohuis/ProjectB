@@ -1,0 +1,32 @@
+{
+  "id": "EVT_ABROAD_GO_BACK",
+  "type": "conditional",
+  "category": "career",
+  "tier": "urgent",
+  "priority": 920,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 1
+    },
+    {
+      "type": "morale_lte",
+      "value": 45
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_GO_BACK",
+  "decisionTemplateId": "DEC_ABROAD_GO_BACK"
+}

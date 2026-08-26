@@ -159,6 +159,17 @@ export const eventFunnelStats = {
   // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
   random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
   /** 자리를 못 잡아 밀린 규칙 — 어떤 이야기가 못 뜨는지 */
+  /**
+   * **후보에 올랐다** — 조건도 정책도 통과해 뽑기 대상이 된 횟수.
+   *
+   * 🔴 이게 없으면 "안 뜬 규칙"을 두 부류로 못 가른다:
+   *   후보엔 올랐는데 안 뽑힘  →  다시 돌리면 다른 게 안 뜬다. **정상이다**
+   *   후보에 아예 못 오름      →  몇 번을 돌려도 영원히 안 뜬다. **결함이다**
+   *
+   * 예전엔 랜덤 갈래가 `random.eligible` 총합만 셌다. 총합으로는 어느
+   * 규칙이 한 번도 후보가 못 됐는지 알 수 없다. (2026-08-25)
+   */
+  candidateByRule: {} as Record<string, number>,
   crowdedByRule: {} as Record<string, number>,
   /** 선택지가 제시된 총수 / 그중 조건을 통과해 열린 수 */
   optionsOffered: 0,
@@ -186,6 +197,7 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.optionsOpen = 0;
   eventFunnelStats.decisionsClosedOut = 0;
   eventFunnelStats.closedOutByRule = {};
+  eventFunnelStats.candidateByRule = {};
   eventFunnelStats.crowdedByRule = {};
   eventFunnelStats.emptyByRule   = {};
   eventFunnelStats.emittedByRule = {};
@@ -296,6 +308,9 @@ export function runEventEngine(
 
   eventFunnelStats.weeks++;
   eventFunnelStats.mandatory.condPass += mandatory.length;
+  for (const r of mandatory) {
+    eventFunnelStats.candidateByRule[r.id] = (eventFunnelStats.candidateByRule[r.id] ?? 0) + 1;
+  }
   for (const rule of mandatory) {
     tryEmit(rule, "mandatory");
   }
@@ -313,6 +328,9 @@ export function runEventEngine(
     const eligible = conditional.filter((r) =>
       checkOncePolicy(r, ctx, seasonYear, careerStageYear)
     );
+    for (const r of eligible) {
+      eventFunnelStats.candidateByRule[r.id] = (eventFunnelStats.candidateByRule[r.id] ?? 0) + 1;
+    }
 
     // ── 두 띠로 고른다 (2026-08-22) ─────────────────────────────
     // 예전엔 그냥 priority 최대 하나였다. 그러면 **높고 반복되는 것이 영원히
@@ -411,6 +429,9 @@ export function runEventEngine(
         !updatedTriggers[r.id]
       );
       eventFunnelStats.random.eligible += eligible.length;
+      for (const r of eligible) {
+        eventFunnelStats.candidateByRule[r.id] = (eventFunnelStats.candidateByRule[r.id] ?? 0) + 1;
+      }
       const picked = weightedPick(eligible, nextRand());
       if (!picked) break;
       tryEmit(picked, "random");

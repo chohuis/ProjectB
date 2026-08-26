@@ -23,15 +23,37 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
 
     // ── 커리어 / 소속 ────────────────────────────────────────────
     case "career_stage":
+      // 🔴 **프로 세 리그를 한 번에 가리킬 수단이 없었다.** KBL 171종이
+      // `stage: "pro_kbl"`로 잠겨 있어 **해외로 나가면 1군 이야기가 통째로
+      // 멈췄다** — ABL·JBL이 0종인 진짜 이유다. 타입을 늘리지 않고
+      // `stages` 배열을 받는다. `stage` 하나는 그대로 동작한다.
+      if (Array.isArray(cond.stages)) return cond.stages.includes(protagonist.careerStage);
       return protagonist.careerStage === cond.stage;
 
     case "league_id":
+      // 🔴 **세 리그 2군을 한 번에 가리킬 수단이 없었다.** KBL 2군 40종이
+      // `leagueId: "LEAGUE_KBL_FARM"` 하나로 잠겨 있어 **ABL·JBL 2군이 0종**이었다.
+      // 1군은 `career_stage`에 `stages` 배열을 열어 풀었는데(2026-08-25)
+      // `league_id`엔 그게 없었다. 같은 모양으로 연다 — `leagueId` 하나는
+      // 그대로 동작한다.
+      if (Array.isArray(cond.leagueIds)) return cond.leagueIds.includes(protagonist.leagueId);
       return protagonist.leagueId === cond.leagueId;
 
     case "grade":
       return (protagonist.grade ?? 0) === cond.value;
 
     case "player_type":
+      // 🔴 **정확 일치면 투타겸업이 조용히 빠진다.** `PlayerType`은 셋인데
+      // (`pitcher` · `batter` · `twoWay`) 예전엔 `===`라 `twoWay` 주인공에게
+      // 투수 이벤트도 타자 이벤트도 안 떴다. 지금은 주인공이 항상 `pitcher`라
+      // 안 터지지만, 타입이 열리는 날 **8종이 말없이 사라지는** 모양이다.
+      //
+      // 겸업은 투수이기도 하고 타자이기도 하다 — 엔진도 그렇게 본다
+      // (`gradeAdvance.ts`가 `twoWay`를 `pitcher`로 접는다).
+      if (protagonist.playerType === "twoWay") {
+        return cond.playerType === "pitcher" || cond.playerType === "batter"
+          || cond.playerType === "twoWay";
+      }
       return protagonist.playerType === cond.playerType;
 
     // ── 컨디션 상태 ──────────────────────────────────────────────

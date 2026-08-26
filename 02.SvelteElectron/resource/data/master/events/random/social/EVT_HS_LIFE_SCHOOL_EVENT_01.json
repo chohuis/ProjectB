@@ -17,6 +17,6 @@
       "value": 16
     }
   ],
-  "messageTemplateId": "MSG_RAND_SOCIAL_MEDIA_MENTION",
-  "decisionTemplateId": null
+  "messageTemplateId": "MSG_HS_LIFE_SCHOOL_EVENT",
+  "decisionTemplateId": "DEC_HS_LIFE_SCHOOL_EVENT"
 }

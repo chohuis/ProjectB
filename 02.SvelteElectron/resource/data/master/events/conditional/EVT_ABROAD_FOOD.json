@@ -1,0 +1,28 @@
+{
+  "id": "EVT_ABROAD_FOOD",
+  "type": "conditional",
+  "category": "health",
+  "tier": "ambient",
+  "priority": 660,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "leagueYears",
+      "value": 2
+    },
+    {
+      "type": "condition_lte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_ABROAD_FOOD",
+  "decisionTemplateId": "DEC_ABROAD_FOOD"
+}

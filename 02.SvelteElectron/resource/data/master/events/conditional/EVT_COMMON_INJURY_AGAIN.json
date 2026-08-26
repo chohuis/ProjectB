@@ -1,0 +1,16 @@
+{
+  "id": "EVT_COMMON_INJURY_AGAIN",
+  "type": "conditional",
+  "category": "health",
+  "tier": "important",
+  "priority": 880,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "season_injury_count_gte",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_COMMON_INJURY_AGAIN",
+  "decisionTemplateId": "DEC_COMMON_INJURY_AGAIN"
+}

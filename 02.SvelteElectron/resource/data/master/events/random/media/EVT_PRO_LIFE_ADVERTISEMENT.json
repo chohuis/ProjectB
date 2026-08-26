@@ -8,11 +8,15 @@
   "weight": 14,
   "poolId": "POOL_MEDIA_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_ADVERTISEMENT",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_PRO_LIFE_ADVERTISEMENT",
   "conditions": [
     {
       "type": "career_stage",
-      "stage": "pro_kbl"
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
     }
   ]
 }

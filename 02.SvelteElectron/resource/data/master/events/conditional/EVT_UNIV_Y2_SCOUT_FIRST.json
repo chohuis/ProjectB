@@ -1,0 +1,31 @@
+{
+  "id": "EVT_UNIV_Y2_SCOUT_FIRST",
+  "type": "conditional",
+  "category": "media",
+  "tier": "important",
+  "priority": 700,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 53
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 104
+    },
+    {
+      "type": "num_gte",
+      "path": "scoutScore",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y2_SCOUT_FIRST",
+  "decisionTemplateId": "DEC_UNIV_Y2_SCOUT_FIRST"
+}

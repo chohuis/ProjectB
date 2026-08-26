@@ -1,0 +1,20 @@
+{
+  "id": "EVT_COMMON_SURGERY_SCAR",
+  "type": "conditional",
+  "category": "health",
+  "tier": "important",
+  "priority": 870,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "had_surgery",
+      "value": true
+    },
+    {
+      "type": "injured",
+      "value": false
+    }
+  ],
+  "messageTemplateId": "MSG_COMMON_SURGERY_SCAR",
+  "decisionTemplateId": "DEC_COMMON_SURGERY_SCAR"
+}

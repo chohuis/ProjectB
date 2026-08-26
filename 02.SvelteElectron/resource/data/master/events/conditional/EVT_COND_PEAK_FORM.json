@@ -7,6 +7,10 @@
   "cooldownWeeks": 3,
   "conditions": [
     {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
+    {
       "type": "condition_gte",
       "value": 88
     },

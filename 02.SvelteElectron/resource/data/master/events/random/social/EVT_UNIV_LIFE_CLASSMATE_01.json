@@ -3,7 +3,7 @@
   "type": "random",
   "messageTemplateId": "MSG_UNIV_LIFE_CLASSMATE_01",
   "category": "social",
-  "decisionTemplateId": null,
+  "decisionTemplateId": "DEC_UNIV_LIFE_CLASSMATE_01",
   "weight": 18,
   "cooldownWeeks": 2,
   "priority": 280,

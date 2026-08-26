@@ -108,6 +108,17 @@ export const NUM_PATHS: ReadonlySet<string> = new Set([
   ...join("school", SCHOOL_NUM),
   ...COUNT_PATHS,
   "week", "seasonYear",
+  // **지금 리그에서 몇 년째인가** (2026-08-24). 해외 진출 서사의 축이다.
+  //
+  // 총 프로 연차(`proServiceYears`)로는 "낯선 리그 첫해"를 못 쓴다 —
+  // 5년차에 ABL로 가면 여전히 5년차이고, 그러면 ABL 이벤트가 KBL 이벤트의
+  // 복사본이 된다.
+  //
+  // ⚠ **새 상태를 안 만든다.** `careerRecords[]`에 시즌마다 `year`+`leagueId`가
+  // 쌓이므로(`seasonCareerRecord.ts:115`) 뒤에서부터 현재 리그와 같은 것을
+  // 세면 나온다. 주인공 리그 이동은 `careerEvents`에 안 남아서(NPC만 남는다)
+  // 그쪽으로는 못 구한다.
+  "leagueYears",
 ]);
 
 /** `eq`로 읽을 수 있는 경로 전부 */
@@ -118,6 +129,26 @@ export const EQ_PATHS: ReadonlySet<string> = new Set([
   "injury.treatmentChoice", "school.weeklyStudyMode", "school.universityMajor",
   "seasonPhase",
 ]);
+
+/**
+ * 지금 리그에서 보낸 시즌 수. **이번 시즌을 1로 센다.**
+ *
+ * `careerRecords`는 시즌이 끝나야 쌓이므로 진입 첫 시즌엔 비어 있다 —
+ * 그래서 0이 아니라 1부터 시작한다. "1년차"가 곧 "적응기"다.
+ *
+ * ⚠ 리그를 떠났다 돌아오면 **연속된 구간만** 센다. KBL → ABL → KBL이면
+ * 돌아온 뒤 다시 1년차다. 그게 이야기에 맞다.
+ */
+function leagueYearsOf(ctx: EventContext): number {
+  const now = ctx.protagonist.leagueId;
+  const recs = ctx.protagonist.careerRecords ?? [];
+  let n = 1;                                   // 이번 시즌
+  for (let i = recs.length - 1; i >= 0; i--) {
+    if (recs[i].leagueId !== now) break;
+    n++;
+  }
+  return n;
+}
 
 // ── 해석 ───────────────────────────────────────────────────────
 const seasonStatsOf = (ctx: EventContext): PitcherSeasonStats | BatterSeasonStats | undefined =>
@@ -141,6 +172,7 @@ export function resolvePath(ctx: EventContext, path: string): unknown {
   const p = ctx.protagonist;
 
   if (path === "week") return ctx.currentWeek;
+  if (path === "leagueYears") return leagueYearsOf(ctx);
   if (path === "seasonPhase") return ctx.seasonPhase;
   if (path === "seasonYear") return undefined;   // ctx에 없다 — 넣을 때 여기도 잇는다
 

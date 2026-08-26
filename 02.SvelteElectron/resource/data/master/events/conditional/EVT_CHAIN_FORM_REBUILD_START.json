@@ -1,0 +1,25 @@
+{
+  "id": "EVT_CHAIN_FORM_REBUILD_START",
+  "type": "conditional",
+  "category": "training",
+  "tier": "important",
+  "priority": 840,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "num_gte",
+      "path": "age",
+      "value": 18
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "week_lte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_CHAIN_FORM_REBUILD_START",
+  "decisionTemplateId": "DEC_CHAIN_FORM_REBUILD_START"
+}

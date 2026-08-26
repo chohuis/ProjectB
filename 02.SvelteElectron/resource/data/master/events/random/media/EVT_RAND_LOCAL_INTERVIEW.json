@@ -11,6 +11,10 @@
     {
       "type": "fatigue_lte",
       "value": 70
+    },
+    {
+      "type": "fame_gte",
+      "value": 15
     }
   ],
   "messageTemplateId": "MSG_RAND_LOCAL_INTERVIEW",

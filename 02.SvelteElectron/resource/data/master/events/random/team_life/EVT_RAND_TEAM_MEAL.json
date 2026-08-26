@@ -11,6 +11,11 @@
     {
       "type": "morale_lte",
       "value": 72
+    },
+    {
+      "type": "neq",
+      "path": "careerStage",
+      "value": "highschool"
     }
   ],
   "messageTemplateId": "MSG_RAND_TEAM_MEAL",

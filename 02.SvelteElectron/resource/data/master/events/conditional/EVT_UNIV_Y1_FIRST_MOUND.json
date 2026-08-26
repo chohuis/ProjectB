@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y1_FIRST_MOUND",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 800,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 1
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 52
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y1_FIRST_MOUND",
+  "decisionTemplateId": "DEC_UNIV_Y1_FIRST_MOUND"
+}

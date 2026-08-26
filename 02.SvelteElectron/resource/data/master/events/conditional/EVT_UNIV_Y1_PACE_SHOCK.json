@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y1_PACE_SHOCK",
+  "type": "conditional",
+  "category": "training",
+  "tier": "important",
+  "priority": 720,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 1
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 52
+    },
+    {
+      "type": "week_gte",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y1_PACE_SHOCK",
+  "decisionTemplateId": "DEC_UNIV_Y1_PACE_SHOCK"
+}

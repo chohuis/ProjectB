@@ -6,13 +6,17 @@
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 28,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "poolId": "POOL_BODY_DAILY",
   "messageTemplateId": "MSG_PRO_LIFE_TRAINER_ROOM",
   "decisionTemplateId": "DEC_PRO_LIFE_TRAINER_ROOM",
   "conditions": [
     {
       "type": "career_stage",
-      "stage": "pro_kbl"
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
     },
     {
       "type": "fatigue_gte",

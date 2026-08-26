@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y3_CAPTAIN_VOTE",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "important",
+  "priority": 730,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 105
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 156
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y3_CAPTAIN_VOTE",
+  "decisionTemplateId": "DEC_UNIV_Y3_CAPTAIN_VOTE"
+}

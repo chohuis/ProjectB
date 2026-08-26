@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y4_UNDRAFTED_FEAR",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 790,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 157
+    },
+    {
+      "type": "num_lte",
+      "path": "scoutScore",
+      "value": 45
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y4_UNDRAFTED_FEAR",
+  "decisionTemplateId": "DEC_UNIV_Y4_UNDRAFTED_FEAR"
+}

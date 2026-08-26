@@ -6,13 +6,17 @@
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 22,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "poolId": "POOL_TRAIN_DAILY",
   "conditions": [
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    },
     {
       "type": "career_stage",
       "stage": "independent"
     }
   ],
   "messageTemplateId": "MSG_IND_LIFE_SELF_CATCH",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_IND_LIFE_SELF_CATCH"
 }

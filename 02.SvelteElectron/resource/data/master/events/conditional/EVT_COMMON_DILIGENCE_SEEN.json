@@ -1,0 +1,20 @@
+{
+  "id": "EVT_COMMON_DILIGENCE_SEEN",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "ambient",
+  "priority": 620,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "diligence_gte",
+      "value": 80
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_COMMON_DILIGENCE_SEEN",
+  "decisionTemplateId": "DEC_COMMON_DILIGENCE_SEEN"
+}

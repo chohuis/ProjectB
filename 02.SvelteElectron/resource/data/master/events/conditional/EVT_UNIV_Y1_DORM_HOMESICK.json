@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y1_DORM_HOMESICK",
+  "type": "conditional",
+  "category": "social",
+  "tier": "ambient",
+  "priority": 640,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 1
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 52
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y1_DORM_HOMESICK",
+  "decisionTemplateId": "DEC_UNIV_Y1_DORM_HOMESICK"
+}

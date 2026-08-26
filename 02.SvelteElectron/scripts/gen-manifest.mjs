@@ -51,6 +51,25 @@ const achGrowth   = validateAndFilter(join(MASTER, "achievements/growth"),   sca
 const achSocial   = validateAndFilter(join(MASTER, "achievements/social"),   scanIds(join(MASTER, "achievements/social")));
 const achHidden   = validateAndFilter(join(MASTER, "achievements/hidden"),   scanIds(join(MASTER, "achievements/hidden")));
 
+// ── 랜덤 풀 ──────────────────────────────────────────────────
+// 🔴 풀 파일 경로가 `stores/master.ts`에 **한 줄씩 박혀 있었다.** 새 풀을
+//    만들어도 아무도 안 읽고, 오류도 로그도 안 난다 — 이벤트가 그 풀에
+//    들어간 채 영원히 안 뜬다. 이벤트·업적은 이미 매니페스트로 읽는데
+//    풀만 빠져 있었다. (2026-08-25)
+//
+// ⚠ `military_*.json`은 모양이 다르다(`{events:[...]}` — 군 이벤트 표지
+//    추첨 풀이 아니다). `baseRoll`이 있는 것만 고른다
+const poolFiles = readdirSync(join(MASTER, "events/pools"))
+  .filter((f) => f.endsWith(".json"))
+  .filter((f) => {
+    try {
+      const j = JSON.parse(readFileSync(join(MASTER, "events/pools", f), "utf8"));
+      return typeof j.id === "string" && j.id.startsWith("POOL_") && j.baseRoll;
+    } catch { return false; }
+  })
+  .map((f) => f.replace(/.json$/, ""))
+  .sort();
+
 // ── 매니페스트 조립 ──────────────────────────────────────────
 
 const manifest = {
@@ -64,6 +83,7 @@ const manifest = {
       team_life: randomTeamLife,
     },
   },
+  pools: poolFiles,
   achievements: {
     baseball: achBaseball,
     growth:   achGrowth,

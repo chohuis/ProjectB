@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_EARLY_FIRST_NEGOTIATION",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 790,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_EARLY_FIRST_NEGOTIATION",
+  "decisionTemplateId": "DEC_PRO_EARLY_FIRST_NEGOTIATION"
+}

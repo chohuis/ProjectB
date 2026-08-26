@@ -11,8 +11,8 @@ export type Condition =
   | { type: "season_phase";    phase: SeasonPhase }   // 시즌 페이즈 일치
 
   // 커리어 / 소속
-  | { type: "career_stage";    stage: CareerStage }   // 커리어 단계 일치
-  | { type: "league_id";       leagueId: string }     // 소속 리그 일치
+  | { type: "career_stage";    stage?: CareerStage; stages?: (CareerStage)[];}   // 커리어 단계 일치
+  | { type: "league_id";       leagueId?: string; leagueIds?: string[] }  // 소속 리그 일치 (하나 또는 여럿)
   | { type: "grade";           value: 1 | 2 | 3 }    // 학년 일치 (고교·대학)
   | { type: "player_type";     playerType: PlayerType } // 투수/타자/양방향 일치
 

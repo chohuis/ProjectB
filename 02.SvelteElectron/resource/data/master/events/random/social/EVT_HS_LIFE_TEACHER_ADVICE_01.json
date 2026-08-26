@@ -17,6 +17,6 @@
       "value": 20
     }
   ],
-  "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
-  "decisionTemplateId": null
+  "messageTemplateId": "MSG_HS_LIFE_TEACHER_ADVICE",
+  "decisionTemplateId": "DEC_HS_LIFE_TEACHER_ADVICE"
 }

@@ -6,7 +6,13 @@
       "description": "드디어 자대에 배치받았습니다.\n낯선 환경과 규율에 긴장감이 감돌지만, 이제 적응해야 합니다.",
       "minRank": 0,
       "choices": [
-        { "id": "ok", "label": "받아들인다", "effectHint": "사기 -1, 피로 +2", "moraleDelta": -1, "fatigueDelta": 2 }
+        {
+          "id": "ok",
+          "label": "받아들인다",
+          "effectHint": "사기 -1, 피로 +2",
+          "moraleDelta": -1,
+          "fatigueDelta": 2
+        }
       ]
     },
     {
@@ -14,7 +20,12 @@
       "title": "면회",
       "description": "가족이 면회를 왔습니다.\n짧은 시간이지만 든든한 힘이 됩니다.",
       "choices": [
-        { "id": "ok", "label": "반갑게 맞이한다", "effectHint": "사기 +3", "moraleDelta": 3 }
+        {
+          "id": "ok",
+          "label": "반갑게 맞이한다",
+          "effectHint": "사기 +3",
+          "moraleDelta": 3
+        }
       ]
     },
     {
@@ -22,8 +33,17 @@
       "title": "야구 소식 접하기",
       "description": "동기에게서 프로야구 소식을 들었습니다.\n아는 선수가 좋은 활약을 펼치고 있다는 소식에 복잡한 감정이 밀려옵니다.",
       "choices": [
-        { "id": "motivated", "label": "자극받는다", "effectHint": "사기 +2", "moraleDelta": 2 },
-        { "id": "neutral",   "label": "담담히 받아들인다", "effectHint": "변화 없음" }
+        {
+          "id": "motivated",
+          "label": "자극받는다",
+          "effectHint": "사기 +2",
+          "moraleDelta": 2
+        },
+        {
+          "id": "neutral",
+          "label": "담담히 받아들인다",
+          "effectHint": "변화 없음"
+        }
       ]
     },
     {
@@ -31,7 +51,12 @@
       "title": "의무대 방문",
       "description": "몸 상태가 좋지 않아 의무대를 다녀왔습니다.\n잠시 쉬면서 피로를 회복했습니다.",
       "choices": [
-        { "id": "ok", "label": "치료를 받는다", "effectHint": "피로 -4", "fatigueDelta": -4 }
+        {
+          "id": "ok",
+          "label": "치료를 받는다",
+          "effectHint": "피로 -4",
+          "fatigueDelta": -4
+        }
       ]
     },
     {
@@ -39,8 +64,18 @@
       "title": "부대 검열",
       "description": "상급 부대 검열이 있었습니다.\n준비 상태에 따라 결과가 달라집니다.",
       "choices": [
-        { "id": "pass",  "label": "무사히 통과",   "effectHint": "사기 +2", "moraleDelta":  2 },
-        { "id": "fail",  "label": "지적을 받는다", "effectHint": "사기 -2", "moraleDelta": -2 }
+        {
+          "id": "pass",
+          "label": "무사히 통과",
+          "effectHint": "사기 +2",
+          "moraleDelta": 2
+        },
+        {
+          "id": "fail",
+          "label": "지적을 받는다",
+          "effectHint": "사기 -2",
+          "moraleDelta": -2
+        }
       ]
     },
     {
@@ -49,7 +84,13 @@
       "description": "이번 주 외박을 받았습니다.\n짧은 자유 시간이지만 충전이 됩니다.",
       "minRank": 1,
       "choices": [
-        { "id": "ok", "label": "즐겁게 쉰다", "effectHint": "사기 +4, 피로 -3", "moraleDelta": 4, "fatigueDelta": -3 }
+        {
+          "id": "ok",
+          "label": "즐겁게 쉰다",
+          "effectHint": "사기 +4, 피로 -3",
+          "moraleDelta": 4,
+          "fatigueDelta": -3
+        }
       ]
     },
     {
@@ -58,8 +99,20 @@
       "description": "부대 동기와 가까워질 기회가 생겼습니다.\n함께 시간을 보낼지, 훈련에 집중할지 선택해야 합니다.",
       "minRank": 1,
       "choices": [
-        { "id": "together", "label": "같이 어울린다",   "effectHint": "사기 +2", "moraleDelta": 2 },
-        { "id": "train",    "label": "혼자 훈련한다",   "effectHint": "커맨드 XP +1", "xp": { "command": 1 } }
+        {
+          "id": "together",
+          "label": "같이 어울린다",
+          "effectHint": "사기 +2",
+          "moraleDelta": 2
+        },
+        {
+          "id": "train",
+          "label": "혼자 훈련한다",
+          "effectHint": "커맨드 XP +1",
+          "xp": {
+            "command": 1
+          }
+        }
       ]
     },
     {
@@ -68,7 +121,12 @@
       "description": "새 후임이 입대했습니다.\n이제 내가 선임이 됐다는 실감이 납니다.",
       "minRank": 2,
       "choices": [
-        { "id": "ok", "label": "잘 이끌어준다", "effectHint": "사기 +1", "moraleDelta": 1 }
+        {
+          "id": "ok",
+          "label": "잘 이끌어준다",
+          "effectHint": "사기 +1",
+          "moraleDelta": 1
+        }
       ]
     },
     {
@@ -77,7 +135,13 @@
       "description": "포상 특별 휴가를 받았습니다.\n오랜만에 충분히 쉴 수 있는 기회입니다.",
       "minRank": 2,
       "choices": [
-        { "id": "ok", "label": "푹 쉰다", "effectHint": "사기 +5, 피로 -5", "moraleDelta": 5, "fatigueDelta": -5 }
+        {
+          "id": "ok",
+          "label": "푹 쉰다",
+          "effectHint": "사기 +5, 피로 -5",
+          "moraleDelta": 5,
+          "fatigueDelta": -5
+        }
       ]
     },
     {
@@ -86,7 +150,102 @@
       "description": "드디어 전역 일자가 명시된 통보서를 받았습니다.\n그날이 눈앞에 다가온 것이 실감납니다.",
       "minRank": 3,
       "choices": [
-        { "id": "ok", "label": "기쁘게 확인한다", "effectHint": "사기 +5", "moraleDelta": 5 }
+        {
+          "id": "ok",
+          "label": "기쁘게 확인한다",
+          "effectHint": "사기 +5",
+          "moraleDelta": 5
+        }
+      ]
+    },
+    {
+      "id": "MIL_COMMON_DISCHARGE_NEAR",
+      "title": "전역이 보인다",
+      "description": "달력에 남은 칸이 얼마 없습니다. 나가면 바로 시즌입니다.\n\n몸이 그때까지 돌아올지가 문제입니다.",
+      "minRank": 3,
+      "choices": [
+        {
+          "id": "rebuild",
+          "label": "몸을 되돌리는 데 다 쓴다",
+          "effectHint": "컨디션 +14, 피로 +10, 성실 +5",
+          "conditionDelta": 14,
+          "fatigueDelta": 10,
+          "diligenceDelta": 5
+        },
+        {
+          "id": "rest",
+          "label": "무리 없이 마무리한다",
+          "effectHint": "피로 -14, 사기 +6",
+          "fatigueDelta": -14,
+          "moraleDelta": 6
+        }
+      ]
+    },
+    {
+      "id": "MIL_COMMON_FIRST_DAY",
+      "title": "자대 배치",
+      "description": "짐을 내려놓았습니다. 여기서 2년을 삽니다.\n\n야구 이야기를 하는 사람이 아무도 없습니다.",
+      "minRank": 0,
+      "choices": [
+        {
+          "id": "adapt",
+          "label": "규율부터 익힌다",
+          "effectHint": "성실 +6, 피로 +8",
+          "diligenceDelta": 6,
+          "fatigueDelta": 8
+        },
+        {
+          "id": "body",
+          "label": "짬 나는 대로 몸을 쓴다",
+          "effectHint": "컨디션 +6, 성실 -2",
+          "conditionDelta": 6,
+          "diligenceDelta": -2
+        }
+      ]
+    },
+    {
+      "id": "MIL_COMMON_LETTER",
+      "title": "편지",
+      "description": "밖에서 편지가 왔습니다. 요즘은 이런 걸 잘 안 쓴다는데.\n\n읽는 데 오래 걸렸습니다.",
+      "minRank": 1,
+      "choices": [
+        {
+          "id": "long",
+          "label": "길게 쓴다",
+          "effectHint": "사기 +10, 피로 +3",
+          "moraleDelta": 10,
+          "fatigueDelta": 3
+        },
+        {
+          "id": "short",
+          "label": "짧게 쓴다",
+          "effectHint": "사기 +4",
+          "moraleDelta": 4
+        }
+      ]
+    },
+    {
+      "id": "MIL_COMMON_NEWS",
+      "title": "밖의 소식",
+      "description": "동기가 프로에서 잘한다는 이야기를 들었습니다.\n\n여기서는 순위표를 볼 일이 잘 없습니다.",
+      "minRank": 1,
+      "choices": [
+        {
+          "id": "train",
+          "label": "짬 나는 대로 더 한다",
+          "effectHint": "성실 +5, 피로 +10",
+          "diligenceDelta": 5,
+          "fatigueDelta": 10
+        },
+        {
+          "id": "accept",
+          "label": "지금은 여기 일에 집중한다",
+          "effectHint": "사기 +6, 멘탈 경험치 +2",
+          "moraleDelta": 6,
+          "xp": {
+            "mentality": 2
+          }
+        }
       ]
     }
   ]

@@ -1,0 +1,16 @@
+{
+  "id": "EVT_COMMON_INJURY_PRONE",
+  "type": "conditional",
+  "category": "health",
+  "tier": "urgent",
+  "priority": 950,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "injury_count_gte",
+      "value": 3
+    }
+  ],
+  "messageTemplateId": "MSG_COMMON_INJURY_PRONE",
+  "decisionTemplateId": "DEC_COMMON_INJURY_PRONE"
+}

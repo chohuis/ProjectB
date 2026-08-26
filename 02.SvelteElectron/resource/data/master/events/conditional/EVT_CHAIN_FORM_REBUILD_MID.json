@@ -1,0 +1,20 @@
+{
+  "id": "EVT_CHAIN_FORM_REBUILD_MID",
+  "type": "conditional",
+  "category": "training",
+  "tier": "important",
+  "priority": 830,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "has_tag",
+      "tag": "폼교정중"
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    }
+  ],
+  "messageTemplateId": "MSG_CHAIN_FORM_REBUILD_MID",
+  "decisionTemplateId": "DEC_CHAIN_FORM_REBUILD_MID"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "EVT_UNIV_Y4_LAST_SEASON",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 820,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 157
+    },
+    {
+      "type": "week_lte",
+      "value": 6
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y4_LAST_SEASON",
+  "decisionTemplateId": "DEC_UNIV_Y4_LAST_SEASON"
+}

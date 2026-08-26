@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_CLASSMATE_01",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_HS_LIFE_CLASSMATE_01"
 }

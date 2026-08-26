@@ -3,6 +3,7 @@ import { MONTH_STARTS_1 } from "../utils/seasonCalendar";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
+import type { RelationKind } from "../types/relationship";
 import { validateTeamRefs, primeTeamLeagueMap, primeHsRegionMap } from "../utils/ids";
 import { language } from "../i18n";
 import {
@@ -412,9 +413,26 @@ function stageToCareerStage(stage: string): CareerStage | null {
   return map[stage] ?? null;
 }
 
-// effects 문자열 배열 → DecisionEffect 변환
-// 형식 예: ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3"]
-function parseEffectsArray(effects: string[]): DecisionEffect {
+/** 오타 하나가 관계를 **조용히** 안 움직이게 한다 — 아는 것만 받는다 */
+const RELATION_KINDS = new Set<RelationKind>(["manager", "coach", "owner", "teammate", "rival"]);
+
+/**
+ * effects 문자열 배열 → `DecisionEffect`.
+ *
+ * 형식 예: `["condition:-4", "xp.command:+1", "money:-120", "relation.manager:+8"]`
+ *
+ * 돈·관계·사치품이 여기 없었다. 문자열형 선택지 **26개**만 그걸 못 썼다 —
+ * 나머지 571개는 객체형이라 `{ moneyDelta: -120 }`을 그대로 통과시킨다.
+ *
+ * ⚠ **그러니 이건 막힘이 아니었다.** `moneyDelta`·`relationDelta`·`luxurySpend`가
+ * 데이터에서 0건인 건 쓸 수단이 없어서가 아니라 **아무도 안 썼기 때문**이다
+ * (배선은 `usecases/decisions.ts`에 다 있다 — 사치품은 Rust `calc_luxury`까지
+ * 간다). 여기 넣는 건 문자열형이 저작하기 쉬워서다. (2026-08-25)
+ *
+ * ⚠ 모르는 키는 지금도 조용히 버린다. 그건 `assertConditions`가 있는
+ * 조건 쪽과 다르다 — 보상 쪽 게이트는 `check:effectkeys`가 맡는다.
+ */
+export function parseEffectsArray(effects: string[]): DecisionEffect {
   const result: DecisionEffect = {};
   for (const e of effects) {
     const colonIdx = e.indexOf(":");
@@ -434,6 +452,18 @@ function parseEffectsArray(effects: string[]): DecisionEffect {
     }
     else if (key.startsWith("stat.")) {
       if (!isNaN(val)) result.statDelta = { ...(result.statDelta ?? {}), [key.slice(5)]: val };
+    }
+    // "money:-120" — 단위는 **만원**이다. money·연봉·계약금·치료비가 같은 축이다
+    else if (key === "money")       { if (!isNaN(val)) result.moneyDelta = val; }
+    // "relation.manager:+8" · "relation.teammate:-3"
+    else if (key.startsWith("relation.")) {
+      const kind = key.slice(9) as RelationKind;
+      if (!isNaN(val) && RELATION_KINDS.has(kind)) result.relationDelta = { kind, delta: val };
+    }
+    // "luxury:150" 자기 소비 · "luxury.teammate:150" 동료에게.
+    // ⚠ `money`와 같이 쓰면 두 번 빠진다 — 금액은 여기서도 빠진다
+    else if (key === "luxury" || key === "luxury.teammate") {
+      if (!isNaN(val)) result.luxurySpend = { cost: Math.abs(val), onTeammate: key !== "luxury" };
     }
   }
   return result;
@@ -458,7 +488,7 @@ function parseEffectsArray(effects: string[]): DecisionEffect {
 const CONDITION_FIELDS: Record<string, readonly string[]> = {
   week_gte: ["value"], week_lte: ["value"], week_eq: ["value"],
   season_phase: ["phase"],
-  career_stage: ["stage"], league_id: ["leagueId"], grade: ["value"],
+  career_stage: [], league_id: [], grade: ["value"],
   player_type: ["playerType"],
   fatigue_gte: ["value"], fatigue_lte: ["value"],
   condition_gte: ["value"], condition_lte: ["value"],
@@ -507,6 +537,20 @@ function assertConditions(ruleId: string, conditions: any[]): void {
     if ((type === "eq" || type === "neq") && typeof c.path === "string"
         && !EQ_PATHS.has(c.path) && !NUM_PATHS.has(c.path)) {
       throw new Error(`[master] ${ruleId}: 모르는 경로 "${c.path}" — eventPaths.ts의 EQ_PATHS에 없다`);
+    }
+
+    // 🔴 **둘 중 하나면 되는 조건.** `want`는 전부 요구하므로 여기서 따로 본다.
+    //    `career_stage`는 `stage` 하나 또는 `stages` 배열을 받는다 —
+    //    프로 세 리그를 한 번에 가리키려고 배열을 열었다(2026-08-25).
+    if (type === "league_id" && c.leagueId === undefined && !Array.isArray(c.leagueIds)) {
+      throw new Error(
+        `[master] ${ruleId}: 조건 "league_id"에 leagueId도 leagueIds도 없다 — ${JSON.stringify(c)}`
+      );
+    }
+    if (type === "career_stage" && c.stage === undefined && !Array.isArray(c.stages)) {
+      throw new Error(
+        `[master] ${ruleId}: 조건 "career_stage"에 stage도 stages도 없다 — ${JSON.stringify(c)}`
+      );
     }
 
     for (const k of want) {
@@ -593,7 +637,7 @@ function parseDecisionTemplate(raw: Record<string, any>): DecisionTemplate {
         const parsed = parseEffectsArray(o.effects as string[]);
         effects = Object.keys(parsed).length > 0 ? parsed : undefined;
       } else if (o.effects && typeof o.effects === "object") {
-        // ???щ㎎: { fatigueDelta: 10, xp: { velocity: 3 } }
+        // 신 형식: { fatigueDelta: 10, xp: { velocity: 3 } }
         effects = o.effects as DecisionEffect;
       }
       // 선택지 조건도 규칙 조건과 **같은 검증을 받는다** — 여기만 빠지면
@@ -641,10 +685,18 @@ interface Manifest {
     conditional: string[];
     random: { media: string[]; social: string[]; team_life: string[] };
   };
+  /**
+   * 추첨 풀 파일 이름 (`events/pools/<name>.json`).
+   *
+   * 🔴 예전엔 이 목록이 **코드에 한 줄씩 박혀** 있었다. 새 풀을 만들어도
+   * 아무도 안 읽고 오류도 로그도 안 난다 — 그 풀에 들어간 이벤트가 영원히
+   * 안 뜬다. 이벤트·업적은 이미 매니페스트로 읽는데 풀만 빠져 있었다.
+   */
+  pools: string[];
   achievements: { baseball: string[]; growth: string[]; social: string[]; hidden: string[] };
 }
 
-// entities/players/_index.json 援ъ“
+// entities/players/_index.json 구조
 interface EntityIndex {
   generated: string;
   byLeague: Record<string, string[]>;
@@ -801,7 +853,6 @@ function createMasterStore() {
       const [
         trainingData, pitchData, unlockData, refsData,
         msgTmplData, decisionTmplData,
-        poolMedia, poolSocial, poolTeamLife,
         militaryCommonData, militarySportsData, militaryGeneralData,
         manifest,
       ] = await Promise.all([
@@ -815,12 +866,6 @@ function createMasterStore() {
         fetchMaster<{ templates: Record<string, any>[] }>("messages/templates.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<{ decisions: Record<string, any>[] }>("messages/decision_templates.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<Record<string, any>>("events/pools/media.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<Record<string, any>>("events/pools/social.json"),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        fetchMaster<Record<string, any>>("events/pools/team_life.json"),
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_common.json"),
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_sports.json"),
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_general.json"),
@@ -829,9 +874,18 @@ function createMasterStore() {
 
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
-      const rawPools      = [poolMedia, poolSocial, poolTeamLife].filter(
-        (p): p is Record<string, unknown> => p !== null && typeof p === "object"
-      );
+      // 풀은 **매니페스트가 정본**이다 — 파일을 더해도 코드를 안 고친다
+      const rawPools = (await Promise.all(
+        (manifest?.pools ?? []).map((name) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          fetchMaster<Record<string, any>>(`events/pools/${name}.json`)),
+      )).filter((p): p is Record<string, unknown> => p !== null && typeof p === "object");
+      if (rawPools.length === 0) {
+        throw new Error(
+          "[masterStore] 추첨 풀을 하나도 못 읽었다 — `npm run gen:manifest`를 돌려라. " +
+          "풀이 비면 랜덤 이벤트가 통째로 안 뜬다"
+        );
+      }
       const eventPools = rawPools.map(parseEventPool);
       // refs가 팀의 유일한 정본이다 — 보충하지 않는다 (위 주석 참고)
       const mergedTeams = refsData?.teams ?? [];

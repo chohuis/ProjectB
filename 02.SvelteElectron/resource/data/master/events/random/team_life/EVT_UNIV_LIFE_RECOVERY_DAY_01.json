@@ -8,7 +8,7 @@
   "cooldownWeeks": 2,
   "priority": 290,
   "oncePolicy": "repeatable",
-  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "poolId": "POOL_BODY_DAILY",
   "conditions": [
     {
       "stage": "university",

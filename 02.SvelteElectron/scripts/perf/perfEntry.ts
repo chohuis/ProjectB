@@ -383,8 +383,17 @@ export async function pushCareerForward(): Promise<string | null> {
         return "careerChoiceHub(enlist)";
       }
       const teams = get(masterStore).teams;
+      // 🔴 예전엔 **알파벳순 상위 3개**를 골랐다. 대학 요건은 팀 전력★에서
+      //    나오므로(`requirementOfPower`) 그건 사실상 무작위 난이도였고,
+      //    실측에서 **대학 합격이 한 번도 안 나왔다** — 113종이 통째로
+      //    계측 밖이었다. 실제 플레이어는 자기 수준에 맞는 곳을 고른다.
+      //    전력이 낮은 쪽부터 고른다.
       const pick = (leagueId: string) =>
-        teams.filter((t) => t.leagueId === leagueId).map((t) => t.id).sort().slice(0, 3);
+        teams.filter((t) => t.leagueId === leagueId)
+          .slice()
+          .sort((a, b) => ((a as { power?: number }).power ?? 0) - ((b as { power?: number }).power ?? 0)
+            || a.id.localeCompare(b.id))
+          .map((t) => t.id).slice(0, 3);
       await submitCareerApplications({
         draft: _policy.draft,
         universityChoices: _policy.university ? pick("LEAGUE_UNIVERSITY") : [],
@@ -5657,6 +5666,9 @@ export function eventRuleProbe(ruleId: string): Record<string, unknown> {
   const f = eventFunnelStats;
   return {
     규칙: ruleId,
+    // 🔴 **후보 0이면 조건이 한 번도 안 통과했다는 뜻이다.** 그건 뽑기 운이
+    //    아니라 결함이다 — 몇 번을 돌려도 영원히 안 뜬다
+    후보: f.candidateByRule[ruleId] ?? 0,
     발동: f.emittedByRule[ruleId] ?? 0,
     밀림: f.crowdedByRule[ruleId] ?? 0,
     "빈 메시지": f.emptyByRule[ruleId] ?? 0,

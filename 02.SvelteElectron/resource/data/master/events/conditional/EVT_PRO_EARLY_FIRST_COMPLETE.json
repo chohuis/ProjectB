@@ -1,0 +1,30 @@
+{
+  "id": "EVT_PRO_EARLY_FIRST_COMPLETE",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 810,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 2
+    },
+    {
+      "type": "num_gte",
+      "path": "stats.ip",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_EARLY_FIRST_COMPLETE",
+  "decisionTemplateId": "DEC_PRO_EARLY_FIRST_COMPLETE"
+}

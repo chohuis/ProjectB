@@ -1,0 +1,25 @@
+{
+  "id": "EVT_UNIV_Y4_CORP_TEAM_OFFER",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 770,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 157
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y4_CORP_TEAM_OFFER",
+  "decisionTemplateId": "DEC_UNIV_Y4_CORP_TEAM_OFFER"
+}

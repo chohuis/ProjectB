@@ -1,0 +1,33 @@
+{
+  "id": "EVT_PRO_LATE_RETIRE_PRESSURE",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 775,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 8
+    },
+    {
+      "type": "fame_gte",
+      "value": 20
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LATE_RETIRE_PRESSURE",
+  "decisionTemplateId": "DEC_PRO_LATE_RETIRE_PRESSURE"
+}

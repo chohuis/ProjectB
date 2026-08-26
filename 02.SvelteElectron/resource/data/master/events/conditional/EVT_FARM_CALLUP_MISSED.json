@@ -7,7 +7,11 @@
   "conditions": [
     {
       "type": "league_id",
-      "leagueId": "LEAGUE_KBL_FARM"
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
     },
     {
       "type": "season_ip_gte",

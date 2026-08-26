@@ -484,10 +484,6 @@ function createSeasonStore() {
       }));
     },
 
-    clearTriggeredEvents() {
-      update((s) => ({ ...s, triggeredEvents: {} }));
-    },
-
     // 고교 102팀 8권역 주말리그 초기화 (DESIGN.md §7 v2)
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
       const [hsEntries, univEntries, otherSchedules, preseason] = await Promise.all([
