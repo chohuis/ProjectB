@@ -1,0 +1,31 @@
+{
+  "id": "EVT_UNIV_Y1_FIRST_WARNING",
+  "type": "conditional",
+  "category": "academic",
+  "tier": "important",
+  "priority": 780,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 1
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 52
+    },
+    {
+      "type": "num_gte",
+      "path": "school.warningCount",
+      "value": 1
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y1_FIRST_WARNING",
+  "decisionTemplateId": "DEC_UNIV_Y1_FIRST_WARNING"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y3_AGENT_CALL",
+  "type": "conditional",
+  "category": "career",
+  "tier": "ambient",
+  "priority": 670,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 105
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 156
+    },
+    {
+      "type": "fame_gte",
+      "value": 25
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y3_AGENT_CALL",
+  "decisionTemplateId": "DEC_UNIV_Y3_AGENT_CALL"
+}

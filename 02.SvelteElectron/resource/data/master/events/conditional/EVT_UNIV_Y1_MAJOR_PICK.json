@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y1_MAJOR_PICK",
+  "type": "conditional",
+  "category": "academic",
+  "tier": "important",
+  "priority": 760,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 1
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 52
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y1_MAJOR_PICK",
+  "decisionTemplateId": "DEC_UNIV_Y1_MAJOR_PICK"
+}

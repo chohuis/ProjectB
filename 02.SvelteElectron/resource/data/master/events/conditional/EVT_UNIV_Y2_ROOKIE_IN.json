@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y2_ROOKIE_IN",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "ambient",
+  "priority": 650,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 53
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 104
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y2_ROOKIE_IN",
+  "decisionTemplateId": "DEC_UNIV_Y2_ROOKIE_IN"
+}

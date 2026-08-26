@@ -1,0 +1,31 @@
+{
+  "id": "EVT_UNIV_Y3_INJURY_HIDE",
+  "type": "conditional",
+  "category": "health",
+  "tier": "urgent",
+  "priority": 900,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 105
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 156
+    },
+    {
+      "type": "num_gte",
+      "path": "seasonHealth.highFatigueWeeks",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y3_INJURY_HIDE",
+  "decisionTemplateId": "DEC_UNIV_Y3_INJURY_HIDE"
+}

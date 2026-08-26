@@ -1,0 +1,30 @@
+{
+  "id": "EVT_UNIV_Y3_GPA_VS_BALL",
+  "type": "conditional",
+  "category": "academic",
+  "tier": "important",
+  "priority": 750,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "num_gte",
+      "path": "school.universityWeek",
+      "value": 105
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 156
+    },
+    {
+      "type": "gpa_lte",
+      "value": 25
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_Y3_GPA_VS_BALL",
+  "decisionTemplateId": "DEC_UNIV_Y3_GPA_VS_BALL"
+}
