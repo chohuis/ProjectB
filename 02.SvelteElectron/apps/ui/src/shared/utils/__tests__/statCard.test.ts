@@ -9,7 +9,9 @@ const bat = (o: Partial<BatterSeasonStats> = {}): BatterSeasonStats => ({
 
 const pit = (o: Partial<PitcherSeasonStats> = {}): PitcherSeasonStats => ({
   type: "pitcher", g: 12, gs: 12, w: 6, l: 3, sv: 0, hd: 0,
-  ip: 74.1, er: 21, h: 62, k: 71, bb: 20, era: 2.54, whip: 1.1, ...o,
+  // ⚠ **저장은 실수 이닝이다**(`outs / 3`) — `74.1`은 야구 **표기**라 넣으면 안 된다.
+  //   74와 1아웃이면 `74 + 1/3`이고, 화면에 `74.1`로 나온다(`ipLabel`).
+  ip: 74 + 1 / 3, er: 21, h: 62, k: 71, bb: 20, era: 2.54, whip: 1.1, ...o,
 });
 
 describe("타자 능력치 막대", () => {

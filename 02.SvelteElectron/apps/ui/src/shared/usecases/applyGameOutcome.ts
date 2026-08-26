@@ -78,7 +78,10 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     const protagonist = gBefore.protagonist;
     const role        = (protagonist.position as PitcherRole) ?? "SP";
     const safeOuts    = typeof outcome.outsRecorded === "number" ? outcome.outsRecorded : 0;
-    const ip          = Number((Math.max(0, safeOuts) / 3).toFixed(1));
+    // 🔴 **`toFixed(1)`로 저장하고 있었다** — `5.6666`이 `5.7`이 된다.
+    //   저장에서 반올림하면 **누적 합계에 오차가 쌓인다**(ERA·WHIP이 그 값으로 나뉜다).
+    //   표기는 화면에서 만든다(`baseballFormat.ipLabel`).
+    const ip          = Math.max(0, safeOuts) / 3;
     const leagueId = protagonist.leagueId;
     const lState   = sBefore.leagueState[leagueId];
     const homeRot  = lState?.teamRotationIndex?.[outcome.homeTeamId] ?? 0;

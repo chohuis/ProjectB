@@ -1,4 +1,5 @@
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
+import { ipLabel } from "./baseballFormat";
 
 /**
  * 스탯 순위의 **부문 정의 정본**. (U6)
@@ -38,7 +39,7 @@ export function rate3(v: number): string {
 /** "2.14" */
 const two = (v: number) => v.toFixed(2);
 /** "178.1" — 이닝은 소수 첫자리가 3분의 몇이라 반올림하면 안 된다 */
-const ipText = (v: number) => v.toFixed(1);
+const ipText = (v: number) => ipLabel(v);
 const int = (v: number) => String(Math.round(v));
 
 const P = (f: (p: PitcherSeasonStats) => number) =>

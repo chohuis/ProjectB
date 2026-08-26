@@ -9,6 +9,7 @@
  * "부상위험 %"에서 화면이 값을 지어낸 전례가 있다.
  */
 import type { PlayerSeasonStats, BatterSeasonStats, PitcherSeasonStats } from "../types/save";
+import { ipLabel } from "./baseballFormat";
 
 export interface StatBar {
   label: string;
@@ -89,7 +90,7 @@ export function seasonLines(stats: PlayerSeasonStats | null | undefined): StatLi
     return [
       { label: "ERA", value: stats.ip > 0 ? stats.era.toFixed(2) : "-" },
       { label: "WHIP", value: stats.ip > 0 ? stats.whip.toFixed(2) : "-" },
-      { label: "이닝", value: stats.ip.toFixed(1) },
+      { label: "이닝", value: ipLabel(stats.ip) },
       { label: "탈삼진", value: `${stats.k}` },
       { label: "경기", value: `${stats.g}` },
     ];

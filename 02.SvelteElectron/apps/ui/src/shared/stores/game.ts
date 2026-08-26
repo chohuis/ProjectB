@@ -1,3 +1,4 @@
+import { ipLabel, rateLabel, eraLabel } from "../utils/baseballFormat";
 import { MILITARY_RESULT_WEEK } from "../utils/seasonWeeks";
 import { weekLabelOf } from "../utils/seasonCalendar";
 import { derived, get, writable } from "svelte/store";
@@ -968,12 +969,9 @@ function updateAchievementProgress(
 // ── NPC 스탯라인 생성 헬퍼 ──────────────────────────────────────
 function buildNpcStatLine(stat: PlayerSeasonStats): string {
   if (stat.type === "pitcher") {
-    const ip  = stat.ip.toFixed(1);
-    const era = stat.era.toFixed(2);
-    return `${stat.w}승 ${stat.l}패 ERA ${era} ${ip}이닝 ${stat.k}K`;
+    return `${stat.w}승 ${stat.l}패 ERA ${eraLabel(stat.era)} ${ipLabel(stat.ip)}이닝 ${stat.k}K`;
   }
-  const avg = stat.avg.toFixed(2).replace(/^0\./, ".");
-  return `타율 ${avg} ${stat.hr}홈런 ${stat.rbi}타점 ${stat.ab}타수`;
+  return `타율 ${rateLabel(stat.avg)} ${stat.hr}홈런 ${stat.rbi}타점 ${stat.ab}타수`;
 }
 
 // ── 저장 배치 (P8-2a) ────────────────────────────────────────

@@ -12,6 +12,7 @@
 -->
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
+  import { ipLabel } from "../../../shared/utils/baseballFormat";
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import {
     careerTotalsOf, careerHighsOf, teamStintsOf, awardTallyOf, titleCountOf,
@@ -157,7 +158,7 @@
                 ["경기", totals.pitching.g], ["선발", totals.pitching.gs],
                 ["승", totals.pitching.w], ["패", totals.pitching.l],
                 ["세이브", totals.pitching.sv], ["홀드", totals.pitching.hd],
-                ["이닝", totals.pitching.ip.toFixed(1)], ["탈삼진", totals.pitching.k],
+                ["이닝", ipLabel(totals.pitching.ip)], ["탈삼진", totals.pitching.k],
                 ["볼넷", totals.pitching.bb], ["자책", totals.pitching.er],
                 ["ERA", totals.pitching.era], ["WHIP", totals.pitching.whip],
               ] as [string, string | number][] as [lbl, val]}

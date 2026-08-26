@@ -20,6 +20,7 @@
 // 같은 형태를 이 파일 옆에서 이미 한 번 겪었다 — `computeAwards`도 모달에
 // 자체 집계가 있어 화면과 기록이 어긋났었다. **모달에 계산을 두지 않는다.**
 
+import { ipLabel, rateLabel, eraLabel } from "../utils/baseballFormat";
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
@@ -29,15 +30,13 @@ import type {
 } from "../types/save";
 import type { PitcherGameLine, ScheduleEntry } from "../types/season";
 
-function pct(n: number): string {
-  return n.toFixed(3).replace(/^0\./, ".");
-}
+const pct = rateLabel;   // 표기 정본은 utils/baseballFormat.ts
 
 /** 경력 표에 한 줄로 뜨는 요약 — 화면이 다시 만들지 않는다 */
 export function statLineOf(st: PlayerSeasonStats | undefined): string {
   if (st?.type === "pitcher") {
     const ps = st as PitcherSeasonStats;
-    return `${ps.w}승 ${ps.l}패 ERA ${ps.era.toFixed(2)} ${ps.ip.toFixed(1)}이닝 ${ps.k}K`;
+    return `${ps.w}승 ${ps.l}패 ERA ${eraLabel(ps.era)} ${ipLabel(ps.ip)}이닝 ${ps.k}K`;
   }
   if (st?.type === "batter") {
     const bs = st as BatterSeasonStats;

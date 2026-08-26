@@ -1,4 +1,5 @@
 import { monthNameOf, monthWeekRange } from "./seasonCalendar";
+import { ipLabel } from "./baseballFormat";
 import type { ScheduleEntry } from "../types/season";
 import type { MessageItem } from "../types/main";
 
@@ -281,7 +282,7 @@ function getCoachComment(ip: number, er: number, k: number, bb: number, rating: 
 }
 
 function getCoachCommentSP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
-  const ipStr = ip.toFixed(1);
+  const ipStr = ipLabel(ip);
 
   // 1. 무실점 완투급
   if (ip >= 6 && er === 0)
@@ -352,7 +353,7 @@ function getCoachCommentSP(ip: number, er: number, k: number, bb: number, rating
 }
 
 function getCoachCommentRP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
-  const ipStr = ip.toFixed(1);
+  const ipStr = ipLabel(ip);
 
   // [1] 멀티이닝 완벽 홀드
   if (rating === 5 && ip >= 2 && er === 0)
@@ -395,7 +396,7 @@ function getCoachCommentRP(ip: number, er: number, k: number, bb: number, rating
 }
 
 function getCoachCommentCP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
-  const ipStr = ip.toFixed(1);
+  const ipStr = ipLabel(ip);
 
   // [1] 삼진 세이브
   if (rating === 5 && k >= 2)
@@ -465,7 +466,7 @@ export function buildFriendlyResultMessage(
     `결과: ${myScore} : ${oppScore} (${resultStr})`,
     "",
     "▶ 내 기록",
-    `  ${ip.toFixed(1)}이닝 / 피안타 ${h} / 자책 ${er} / 삼진 ${k} / 볼넷 ${bb}`,
+    `  ${ipLabel(ip)}이닝 / 피안타 ${h} / 자책 ${er} / 삼진 ${k} / 볼넷 ${bb}`,
     "",
     `코치 평가: ${stars}`,
     `"${comment}"`,
@@ -479,7 +480,7 @@ export function buildFriendlyResultMessage(
       category:  "system",
       sender:    "감독",
       subject:   `친선경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
-      preview:   `${ip.toFixed(1)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
+      preview:   `${ipLabel(ip)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
       body,
       createdAt: `W${scheduleEntry.week}`,
       readAt:    null,
@@ -510,7 +511,7 @@ function getOfficialCoachCommentSP(
   rating: 1 | 2 | 3 | 4 | 5,
   won: boolean,
 ): string {
-  const ipStr = ip.toFixed(1);
+  const ipStr = ipLabel(ip);
 
   // ── rating 5 블록 ──────────────────────────────────────────
 
@@ -607,7 +608,7 @@ function getOfficialCoachCommentSP(
 }
 
 function getOfficialCoachCommentRP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
-  const ipStr = ip.toFixed(1);
+  const ipStr = ipLabel(ip);
 
   // [1] 멀티이닝 완벽 홀드
   if (rating === 5 && ip >= 2 && er === 0)
@@ -650,7 +651,7 @@ function getOfficialCoachCommentRP(ip: number, er: number, k: number, bb: number
 }
 
 function getOfficialCoachCommentCP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
-  const ipStr = ip.toFixed(1);
+  const ipStr = ipLabel(ip);
 
   // [1] 삼진 세이브
   if (rating === 5 && k >= 2)
@@ -733,7 +734,7 @@ export function buildOfficialResultMessage(
     `결과: ${myScore} : ${oppScore} (${resultStr})`,
     "",
     "▶ 내 기록",
-    `  ${ip.toFixed(1)}이닝 / 피안타 ${h} / 자책(추정) ${er} / 삼진 ${k} / 볼넷 ${bb} / 투구수 ${pitchCount}구`,
+    `  ${ipLabel(ip)}이닝 / 피안타 ${h} / 자책(추정) ${er} / 삼진 ${k} / 볼넷 ${bb} / 투구수 ${pitchCount}구`,
     "",
     `코치 평가: ${stars}`,
     `"${comment}"`,
@@ -744,7 +745,7 @@ export function buildOfficialResultMessage(
     category:  "manager",
     sender:    "감독",
     subject:   `공식경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
-    preview:   `${ip.toFixed(1)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
+    preview:   `${ipLabel(ip)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
     body,
     createdAt: `W${scheduleEntry.week}`,
     readAt:    null,

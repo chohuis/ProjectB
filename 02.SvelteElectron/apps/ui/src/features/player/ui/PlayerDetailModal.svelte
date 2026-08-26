@@ -1340,7 +1340,11 @@
                             <td>{st.ops?.toFixed(3)?.replace(/^0/,"") ?? "-"}</td>
                             <td>{st.sb}</td>
                           {:else}
-                            <td colspan="9" class="stat-sum">{entry.statLine || "-"}</td>
+                            <!-- 🔴 **`stats`가 없으면 표가 무너졌다** (2026-08-26 실플).
+                                 `colspan="9"`가 박혀 있어 타자 행(헤더 6칸)에서 칸 수가
+                                 어긋났고, 요약 문장이 한 칸에 뭉쳐 **표가 아니라 문장**이 됐다.
+                                 ⚠ 칸 수를 헤더에서 낸다 — 투수 9 · 타자 6, 순위가 있으면 +1. -->
+                            <td colspan={(isPType ? 9 : 6) + (hasRank ? 1 : 0)} class="stat-sum">{entry.statLine || "-"}</td>
                           {/if}
                           {#if hasRank}
                             <td class="rk-cell">

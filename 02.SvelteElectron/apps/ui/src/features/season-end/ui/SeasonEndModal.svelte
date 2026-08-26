@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { ipLabel } from "../../../shared/utils/baseballFormat";
   import { gameStore } from "../../../shared/stores/game";
   import {
     loadFinanceRules, applyInvestment,
@@ -524,7 +525,7 @@
                   <div class="best-stats">
                     <span>ERA <strong>{teamBestPitcher.era.toFixed(2)}</strong></span>
                     <span>{teamBestPitcher.w}승</span>
-                    <span>{teamBestPitcher.ip.toFixed(1)}IP</span>
+                    <span>{ipLabel(teamBestPitcher.ip)}IP</span>
                   </div>
                 </div>
               {/if}
@@ -596,7 +597,7 @@
                     {myPitchingStats.era.toFixed(2)}
                   </strong>
                 </div>
-                <div class="stat-item"><span>IP</span><strong>{myPitchingStats.ip.toFixed(1)}</strong></div>
+                <div class="stat-item"><span>IP</span><strong>{ipLabel(myPitchingStats.ip)}</strong></div>
                 <div class="stat-item"><span>K</span><strong>{myPitchingStats.k}</strong></div>
                 <div class="stat-item"><span>BB</span><strong>{myPitchingStats.bb}</strong></div>
                 <div class="stat-item"><span>WHIP</span><strong>{myPitchingStats.whip.toFixed(2)}</strong></div>
@@ -668,7 +669,7 @@
                       <td class="opp-name">{tName(g.oppTeamId)}</td>
                       <td class="score-cell">{g.myScore} – {g.oppScore}</td>
                       {#if g.line}
-                        <td>{g.line.ip.toFixed(1)}</td>
+                        <td>{ipLabel(g.line.ip)}</td>
                         <td>{g.line.er}</td>
                         <td>{g.line.k}</td>
                         <td>{g.line.bb}</td>
