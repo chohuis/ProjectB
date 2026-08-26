@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { careerEventLabel } from "../../../shared/utils/careerEventLabel";
   import { ipLabel, rateLabel, eraLabel } from "../../../shared/utils/baseballFormat";
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
@@ -1207,7 +1208,11 @@
                               ev.eventType === "draft_undrafted"  ? "미지명" :
                               ev.eventType === "retirement"       ? "은퇴" :
                               ev.eventType === "position_change"  ? "보직" :
-                              ev.eventType === "foreign_signing"  ? "용병 영입" : ev.eventType
+                              ev.eventType === "foreign_signing"  ? "용병 영입" :
+                              // 🔴 **폴백이 원문이었다** — 표에 없는 유형이 오면
+                              //   `foreign_signing` 같은 코드가 그대로 화면에 떴다.
+                              //   ⚠ 위 짧은 이름들은 그대로 둔다 — 칸이 좁다.
+                              careerEventLabel(ev.eventType)
                             }</td>
                             <td>{
                               ev.eventType === "trade"

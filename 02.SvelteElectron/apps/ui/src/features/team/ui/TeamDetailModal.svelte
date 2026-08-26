@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { seasonLabel } from "../../../shared/utils/baseballFormat";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { gameStore } from "../../../shared/stores/game";
@@ -465,7 +466,7 @@
                     <div class="records-list">
                       {#each seasonRanks as sr}
                         <div class="record-row">
-                          <span class="rec-year">{sr.season}</span>
+                          <span class="rec-year">{seasonLabel(sr.season, $seasonStore.seasonYear ?? 2026)}</span>
                           <span class="rec-national" style="color:{rankColor(sr.rank)};">{sr.rank}위</span>
                           <span class="rec-regional">{titlesOfSeason(sr.season).join(" · ")}</span>
                         </div>

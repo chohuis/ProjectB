@@ -79,3 +79,19 @@ export function gaugeLabel(v: number | null | undefined): string {
   const r = Math.round(v * 10) / 10;
   return Number.isInteger(r) ? String(r) : r.toFixed(1);
 }
+
+/**
+ * 상대 시즌 표기(`"S-1"`)를 **실제 연도**로 바꾼다.
+ *
+ * 🔴 세계 생성 때 과거 5시즌을 `S-1`(직전) ~ `S-5`(가장 오래된)로 적어 뒀는데,
+ *   화면이 그 문자열을 **그대로 찍고 있었다.** 플레이어는 `S-3`이 몇 년인지 모른다.
+ *
+ * ⚠ 기준은 **현재 시즌**이다 — 2026년에 `S-1`은 2025년이다.
+ * ⚠ 이미 연도로 적힌 값(`"2025"`)은 그대로 돌려준다. 두 형식이 섞여 있어도
+ *   화면이 안 깨진다.
+ */
+export function seasonLabel(season: string, currentYear: number): string {
+  const m = /^S-(\d+)$/.exec(season.trim());
+  if (m) return String(currentYear - Number(m[1]));
+  return season;
+}

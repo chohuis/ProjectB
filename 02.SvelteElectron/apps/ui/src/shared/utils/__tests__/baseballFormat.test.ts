@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ipLabel, ipToOuts, rateLabel, eraLabel, gaugeLabel } from "../baseballFormat";
+import { ipLabel, ipToOuts, rateLabel, eraLabel, gaugeLabel, seasonLabel } from "../baseballFormat";
 
 /**
  * 야구 기록 표기 — **관례가 있는 숫자들이다.**
@@ -92,5 +92,18 @@ describe("상태값(컨디션·피로·사기)", () => {
 
   it("없는 값은 `-`다", () => {
     expect(gaugeLabel(undefined)).toBe("-");
+  });
+});
+
+describe("시즌 표기", () => {
+  it("상대 표기를 실제 연도로 바꾼다", () => {
+    expect(seasonLabel("S-1", 2026)).toBe("2025");
+    expect(seasonLabel("S-5", 2026)).toBe("2021");
+  });
+
+  // ⚠ 두 형식이 섞여 있어도 화면이 안 깨져야 한다
+  it("이미 연도면 그대로 둔다", () => {
+    expect(seasonLabel("2025", 2026)).toBe("2025");
+    expect(seasonLabel("", 2026)).toBe("");
   });
 });
