@@ -113,9 +113,20 @@
   $: pendingConditionWarning = $nextPendingAction?.type === "conditionWarning" ? $nextPendingAction : null;
   // 경기 전 브리핑 — 경기 창에서 여는 읽기 전용 창. 주 진행과 무관하다
   let briefingScheduleId: string | null = null;
+  /**
+   * 경기 창을 **탭과 무관하게** 열어 두는 표식.
+   *
+   * 🔴 예전엔 경기 창이 소식 탭에만 묶여 있어(`currentTab === "news"`),
+   *   헤더의 [경기 대기 중]을 눌러도 **소식 탭에 이미 있으면 아무 일도
+   *   안 일어났다** — 탭만 바꾸는 버튼이라 바꿀 탭이 없었다.
+   * ⚠ 경기가 끝나거나 사라지면 저절로 꺼진다(아래 반응형).
+   */
+  let gameModalForced = false;
   // 경기가 끝나거나 바뀌면 닫는다 — 안 닫으면 다음 경기 창 위에 이전
   // 브리핑이 남는다
   $: if (!pendingGameEntry && briefingScheduleId) briefingScheduleId = null;
+  // ⚠ 대기가 사라지면 강제 표식도 끈다 — 안 끄면 다음 경기까지 켜져 있다
+  $: if (!pendingGameEntry && gameModalForced) gameModalForced = false;
   // 경기 pendingAction 과 해당 일정 찾기
   $: pendingGame = $nextPendingAction?.type === "game" ? $nextPendingAction : null;
   $: pendingGameEntry = pendingGame
@@ -130,11 +141,12 @@
   let autoSimRunning = false;
 
   // entry 시뮬 트리거 (공식·친선 모두 동일)
-  $: if (pendingGameEntry && currentTab === "news" && gameSimState === "idle") {
+  $: gameModalOpen = !!pendingGameEntry && (currentTab === "news" || gameModalForced);
+  $: if (gameModalOpen && gameSimState === "idle") {
     startEntrySimulation();
   }
 
-  $: if (!pendingGameEntry || currentTab !== "news") {
+  $: if (!gameModalOpen) {
     gameSimState    = "idle";
     gameEntryInfo   = null;
     gameNoEntryInfo = null;
@@ -317,6 +329,9 @@
   function openPendingFromNext() {
     const pa = $nextPendingAction;
     if (!pa) return;
+    // 🔴 **경기는 창을 직접 연다.** 탭만 바꾸면 소식 탭에 이미 있을 때
+    //   버튼이 안 듣는다 — 누른 사람에게는 고장으로 보인다.
+    if (pa.type === "game") gameModalForced = true;
     currentTab = tabForPending(pa);
   }
 
@@ -565,7 +580,7 @@
   </div>
 {/if}
 
-{#if !activeMatchContext && pendingGameEntry && currentTab === "news"}
+{#if !activeMatchContext && pendingGameEntry && gameModalOpen}
   <GameStatusModal
     homeTeamName={tName(pendingGameEntry.homeTeamId)}
     awayTeamName={tName(pendingGameEntry.awayTeamId)}

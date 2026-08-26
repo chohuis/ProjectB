@@ -24,8 +24,13 @@
 
   $: btnDisabled = advancing;
 
+  /**
+   * ⚠ **누를 수 있는 것처럼 보여야 한다.** 예전엔 경기일 때 "경기 대기 중"
+   *   이었는데, "대기 중"은 **기다리라는 뜻으로 읽힌다** — 옆의 "메시지 확인"·
+   *   "이벤트 처리"는 동사인데 이것만 상태 표현이라 못 누르는 줄 안다.
+   */
   $: btnLabel =
-    $nextPendingAction?.type === "game"            ? "경기 대기 중" :
+    $nextPendingAction?.type === "game"            ? "경기 시작" :
     $nextPendingAction?.type === "message"         ? "메시지 확인" :
     $nextPendingAction?.type === "event"           ? "이벤트 처리" :
     advancing ? "진행 중..." : "다음 주 진행";
