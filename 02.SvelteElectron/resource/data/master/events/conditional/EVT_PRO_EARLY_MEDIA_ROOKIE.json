@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_EARLY_MEDIA_ROOKIE",
+  "type": "conditional",
+  "category": "media",
+  "tier": "ambient",
+  "priority": 670,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 2
+    },
+    {
+      "type": "fame_gte",
+      "value": 15
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_EARLY_MEDIA_ROOKIE",
+  "decisionTemplateId": "DEC_PRO_EARLY_MEDIA_ROOKIE"
+}

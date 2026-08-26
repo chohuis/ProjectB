@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_LATE_OLD_RIVAL_RETIRE",
+  "type": "conditional",
+  "category": "social",
+  "tier": "ambient",
+  "priority": 685,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 8
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LATE_OLD_RIVAL_RETIRE",
+  "decisionTemplateId": "DEC_PRO_LATE_OLD_RIVAL_RETIRE"
+}

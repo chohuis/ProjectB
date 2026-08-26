@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_LATE_VELO_DROP",
+  "type": "conditional",
+  "category": "health",
+  "tier": "important",
+  "priority": 800,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 8
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LATE_VELO_DROP",
+  "decisionTemplateId": "DEC_PRO_LATE_VELO_DROP"
+}

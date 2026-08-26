@@ -1,0 +1,38 @@
+{
+  "id": "EVT_PRO_MID_PUSHED_BY_YOUNG",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 770,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 3
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 7
+    },
+    {
+      "type": "morale_lte",
+      "value": 60
+    },
+    {
+      "type": "week_gte",
+      "value": 16
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_MID_PUSHED_BY_YOUNG",
+  "decisionTemplateId": "DEC_PRO_MID_PUSHED_BY_YOUNG"
+}

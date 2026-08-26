@@ -1,0 +1,38 @@
+{
+  "id": "EVT_PRO_MID_TRADE_RUMOR_MID",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 760,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 3
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 7
+    },
+    {
+      "type": "week_gte",
+      "value": 26
+    },
+    {
+      "type": "week_lte",
+      "value": 38
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_MID_TRADE_RUMOR_MID",
+  "decisionTemplateId": "DEC_PRO_MID_TRADE_RUMOR_MID"
+}

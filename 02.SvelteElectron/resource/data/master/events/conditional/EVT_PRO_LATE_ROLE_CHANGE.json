@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_LATE_ROLE_CHANGE",
+  "type": "conditional",
+  "category": "career",
+  "tier": "important",
+  "priority": 785,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 8
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LATE_ROLE_CHANGE",
+  "decisionTemplateId": "DEC_PRO_LATE_ROLE_CHANGE"
+}

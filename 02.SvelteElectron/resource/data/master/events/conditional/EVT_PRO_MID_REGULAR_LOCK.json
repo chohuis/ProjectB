@@ -1,0 +1,35 @@
+{
+  "id": "EVT_PRO_MID_REGULAR_LOCK",
+  "type": "conditional",
+  "category": "career",
+  "tier": "ambient",
+  "priority": 690,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "proServiceYears",
+      "value": 3
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 7
+    },
+    {
+      "type": "num_gte",
+      "path": "stats.g",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_MID_REGULAR_LOCK",
+  "decisionTemplateId": "DEC_PRO_MID_REGULAR_LOCK"
+}

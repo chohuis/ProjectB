@@ -1,0 +1,29 @@
+{
+  "id": "EVT_PRO_EARLY_SENIOR_SPOT",
+  "type": "conditional",
+  "category": "team_life",
+  "tier": "ambient",
+  "priority": 700,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_EARLY_SENIOR_SPOT",
+  "decisionTemplateId": "DEC_PRO_EARLY_SENIOR_SPOT"
+}
