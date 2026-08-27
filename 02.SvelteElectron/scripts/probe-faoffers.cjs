@@ -10,11 +10,11 @@ const SEED = Number(process.env.PF_SEED || 20260826);
 const YEARS = Number(process.env.PF_YEARS || 8);
 (async () => {
   const { app, tmp } = await headless.boot("faoffer");
-  let why = "완주";
+  let why = "완주", shown = 0;
   try {
     await app.boot({ slotId: "PF", worldSeed: SEED, seasonYear: 2026 });
     const start = app.currentSeason();
-    let guard = 0, shown = 0;
+    let guard = 0;
     while (guard++ < YEARS * 52 * 60 && app.currentSeason() < start + YEARS) {
       if (app.retired()) { why = "은퇴"; break; }
       // 프로에 들어가면 매 시즌 한 번 잰다
@@ -32,6 +32,7 @@ const YEARS = Number(process.env.PF_YEARS || 8);
       if (app.currentWeek() === w0 && app.currentSeason() === s0) { why = `정지 ${s0}W${w0}`; break; }
     }
   } catch (e) { why = `예외 ${e && e.message}`; }
-  console.log(`[END] ${why} · 씨앗 ${SEED}`);
+  const st2 = app.protagonistState?.() ?? {};
+  console.log(`[END] ${why} · 씨앗 ${SEED} · 최종무대 ${st2.stage ?? "?"} · 표본 ${shown}`);
   await headless.cleanup(tmp);
 })();

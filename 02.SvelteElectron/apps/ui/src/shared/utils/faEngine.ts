@@ -1,6 +1,10 @@
 import type { ProtagonistSave, ProContract } from "../types/save";
 import type { TeamRef } from "../stores/master";
 import { ALL_TEAMS_BY_LEAGUE } from "./leagueScheduler";
+import { get } from "svelte/store";
+import { gameStore } from "../stores/game";
+import { npcLiveStatsStore, livePitchingOvrOf } from "../stores/npcLiveStats";
+import { postingInterest, POSTING_INTEREST_MIN } from "./postingInterest";
 
 /**
  * 리그별 FA 자격 연수 **폴백** (프로 입단 후 연수).
@@ -78,6 +82,35 @@ export function faDestinationLeagues(fromLeagueId: string): string[] {
   return [fromLeagueId];
 }
 
+/**
+ * 그 팀 투수들의 OVR — 관심도의 **팀 상대 축**이다.
+ *
+ * ⚠ 살아 있는 능력치를 본다(`livePitchingOvrOf`) — 생성 시점 값을 쓰면
+ *   시즌이 갈수록 실제와 벌어진다.
+ */
+function teamPitcherOvrsOf(teamId: string): number[] {
+  const live = get(npcLiveStatsStore);
+  return get(gameStore).npcs
+    .filter((n) => n.currentTeam === teamId && n.careerStatus === "active"
+      && n.playerType === "pitcher")
+    .map((n) => livePitchingOvrOf(n, live));
+}
+
+/** 통산 수상 횟수 — **시즌 기록마다 흩어져 있다**(`careerRecords[].awards`) */
+function awardCountOf(p: ProtagonistSave): number {
+  return (p.careerRecords ?? []).reduce((n, r) => n + (r.awards ?? []).length, 0);
+}
+
+/** 최근 한 시즌 평균자책점. 없으면 `undefined` — **0이 아니다** */
+function recentEraOf(p: ProtagonistSave): number | undefined {
+  const recs = p.careerRecords ?? [];
+  for (let i = recs.length - 1; i >= 0; i--) {
+    const st = recs[i].stats;
+    if (st?.type === "pitcher" && st.ip > 0) return st.era;
+  }
+  return undefined;
+}
+
 export async function generateFaOffers(
   protagonist: ProtagonistSave,
   teams: TeamRef[],
@@ -97,7 +130,27 @@ export async function generateFaOffers(
   //   여기서도 그 표를 통해서만 담는다.
   const destLeagues = faDestinationLeagues(protagonist.leagueId);
   const allowed = new Set(destLeagues.flatMap((lid) => ALL_TEAMS_BY_LEAGUE[lid] ?? []));
-  const pool = allowed.size > 0 ? teams.filter((t) => allowed.has(t.id)) : teams;
+  const poolAll = allowed.size > 0 ? teams.filter((t) => allowed.has(t.id)) : teams;
+
+  // 🔴 **해외는 관심을 받아야 후보가 된다** (2026-08-27).
+  //   1단계에서 풀만 열었더니 OVR 75~77에게 해외 제안이 **84%**였다 —
+  //   조건이 없으면 KBL에 남을 이유가 사라진다.
+  //
+  // ⚠ **국내는 아직 안 거른다.** 5단계에서 모든 리그를 같이 고친다 —
+  //   지금 국내까지 건드리면 기존 밸런스가 흔들려 해외 쪽 실측이 오염된다.
+  const pool = poolAll.filter((t) => {
+    if (t.leagueId === protagonist.leagueId) return true;   // 국내(=자기 리그)
+    const interest = postingInterest({
+      teamPitcherOvrs: teamPitcherOvrsOf(t.id),
+      pitchingOvr:     protagonist.pitching.ovr,
+      scoutScore:      protagonist.scoutScore ?? 0,
+      fame:            protagonist.fame ?? 0,
+      proServiceYears: protagonist.proServiceYears ?? 0,
+      awardCount:      awardCountOf(protagonist),
+      recentEra:       recentEraOf(protagonist),
+    });
+    return interest >= POSTING_INTEREST_MIN;
+  });
 
   const params = {
     pitchingOvr:     protagonist.pitching.ovr,
