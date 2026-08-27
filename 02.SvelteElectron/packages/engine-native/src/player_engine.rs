@@ -407,8 +407,16 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
     } else {
         Box::new(rand::thread_rng())
     };
+    // 🔴 **호출부가 후보를 이미 골라 넘긴다** (2026-08-27).
+    //   예전엔 여기서 `league_id`가 같은 팀만 다시 걸렀는데, 그러면 TS가
+    //   해외를 넣어 보내도 **여기서 도로 잘렸다** — 두 곳이 같은 일을 하면
+    //   한쪽만 고쳤을 때 아무 일도 안 일어난다.
+    //
+    // ⚠ **원소속 팀만 뺀다.** 자기 팀은 FA 제안을 안 한다(재계약은 다른 경로).
+    // ⚠ 2군을 거르는 책임은 호출부(`faEngine.ts`)에 있다 —
+    //   `ALL_TEAMS_BY_LEAGUE`가 1군·2군을 나눠 담는 정본이다.
     let same_league: Vec<&TeamRef> = params.teams.iter()
-        .filter(|t| t.league_id == params.league_id && t.id != params.team_id)
+        .filter(|t| t.id != params.team_id)
         .collect();
     if same_league.is_empty() { return vec![]; }
 

@@ -62,6 +62,22 @@ export interface FaOffer {
   noTrade: boolean;
 }
 
+/**
+ * FA로 갈 수 있는 리그 — **어디서 어디로 갈 수 있는가.**
+ *
+ * ⚠ **1군만 담는다.** 2군 계약은 FA가 아니라 육성 계약이다.
+ *   3단계(아마추어 직행)가 2군을 따로 연다.
+ * ⚠ 아마추어(고교·대학·독립)는 FA가 없다 — 진로 선택으로 간다.
+ */
+const PRO_LEAGUES = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
+
+export function faDestinationLeagues(fromLeagueId: string): string[] {
+  // 프로끼리는 서로 오간다 — 나가는 길과 돌아오는 길이 같은 규칙이다
+  if ((PRO_LEAGUES as readonly string[]).includes(fromLeagueId)) return [...PRO_LEAGUES];
+  // 그 밖(아마추어·2군·FA 상태)은 원래 리그만
+  return [fromLeagueId];
+}
+
 export async function generateFaOffers(
   protagonist: ProtagonistSave,
   teams: TeamRef[],
@@ -70,8 +86,18 @@ export async function generateFaOffers(
   // 2군(`_2`)이 **같은 leagueId**를 쓴다. 그대로 넘기면 FA 제안에 2군이 섞이고
   // 실제로 그리로 이적한다 (실측: TEAM_KBL_CHANGWON_STARS_2와 3년 계약).
   // 1군/2군을 나눠 담는 정본은 `ALL_TEAMS_BY_LEAGUE`다.
-  const firstTeams = ALL_TEAMS_BY_LEAGUE[protagonist.leagueId];
-  const pool = firstTeams ? teams.filter((t) => firstTeams.includes(t.id)) : teams;
+  // 🔴 **해외를 후보에 넣는다** (2026-08-27). 예전엔 자기 리그만 봤다 —
+  //   그 한 줄이 **나가는 길(KBL→해외)과 돌아오는 길(해외→KBL)을 동시에**
+  //   막고 있었다. NPC는 이미 오간다(`market.ts`).
+  //
+  // ⚠ **2군은 여전히 안 섞는다.** `ALL_TEAMS_BY_LEAGUE`가 1군·2군을 따로
+  //   담는 게 그 근거다 — refs에서 KBL 1군(`_1`)과 2군(`_2`)이 **같은
+  //   `leagueId`**를 쓰므로, 리그로만 거르면 2군이 들어온다
+  //   (실측: `TEAM_KBL_CHANGWON_STARS_2`와 3년 계약).
+  //   여기서도 그 표를 통해서만 담는다.
+  const destLeagues = faDestinationLeagues(protagonist.leagueId);
+  const allowed = new Set(destLeagues.flatMap((lid) => ALL_TEAMS_BY_LEAGUE[lid] ?? []));
+  const pool = allowed.size > 0 ? teams.filter((t) => allowed.has(t.id)) : teams;
 
   const params = {
     pitchingOvr:     protagonist.pitching.ovr,

@@ -958,6 +958,64 @@ export function pastStatsProbe(): Record<string, unknown> {
     표본: one ? { 연도: one.year, 요약: one.statLine } : null };
 }
 
+/** 팀마다 로스터 OVR이 얼마나 다른가 — 문턱을 팀 상대로 잡을지 정하려고 잰다 */
+export function teamOvrSpreadProbe(leagueId: string): Record<string, unknown> {
+  const live = get(npcLiveStatsStore);
+  const byTeam = new Map<string, number[]>();
+  for (const n of get(gameStore).npcs) {
+    if (n.careerStatus !== "active" || n.currentLeague !== leagueId) continue;
+    // ⚠ **투수만 잰다** — 타자는 투구 OVR이 0이라 섞으면 평균이 반토막 난다
+    if (n.playerType !== "pitcher") continue;
+    const o = livePitchingOvrOf(n, live);
+    byTeam.set(n.currentTeam, [...(byTeam.get(n.currentTeam) ?? []), o]);
+  }
+  const rows: Array<Record<string, number>> = [];
+  for (const [tid, vs] of byTeam) {
+    if (vs.length < 5) continue;
+    const sorted = [...vs].sort((x, y) => x - y);
+    const at = (q: number) => sorted[Math.floor(sorted.length * q)];
+    rows.push({ 인원: vs.length,
+      평균: Math.round(vs.reduce((a2, b) => a2 + b, 0) / vs.length),
+      중앙: at(0.5), 상위25: at(0.75), 최고: sorted[sorted.length - 1], 최저: sorted[0] });
+  }
+  const mean = (k: string) => Math.round(rows.reduce((a2, r) => a2 + r[k], 0) / rows.length);
+  const span = (k: string) => Math.max(...rows.map((r) => r[k])) - Math.min(...rows.map((r) => r[k]));
+  return { 팀수: rows.length,
+    평균의범위: span("평균"), 중앙의범위: span("중앙"),
+    팀평균평균: mean("평균"),
+    가장센팀평균: Math.max(...rows.map((r) => r.평균)),
+    가장약한팀평균: Math.min(...rows.map((r) => r.평균)) };
+}
+
+/**
+ * 주인공 FA 제안이 **어느 리그·어느 층에서** 오는가.
+ *
+ * 🔴 두 가지를 같이 본다:
+ *   · 해외(ABL·JBL)가 섞이는가 — 1단계가 열려는 것
+ *   · **2군이 섞이는가** — `faEngine`이 막고 있던 것(실측 근거가 주석에 있다)
+ */
+export async function faOfferProbe(): Promise<Record<string, unknown>> {
+  const { generateFaOffers } = await import("../../apps/ui/src/shared/utils/faEngine");
+  const g = get(gameStore);
+  const teams = get(masterStore).teams.map((t) => ({ id: t.id, leagueId: t.leagueId,
+    name: t.name })) as Parameters<typeof generateFaOffers>[1];
+  const offers = await generateFaOffers(g.protagonist, teams);
+  const byLeague: Record<string, number> = {};
+  let farm = 0;
+  for (const o of offers) {
+    const t = get(masterStore).teams.find((x) => x.id === o.teamId);
+    const lg = t?.leagueId ?? "?";
+    byLeague[lg.replace("LEAGUE_", "")] = (byLeague[lg.replace("LEAGUE_", "")] ?? 0) + 1;
+    if (o.teamId.endsWith("_2")) farm++;
+  }
+  return {
+    내리그: g.protagonist.leagueId.replace("LEAGUE_", ""),
+    OVR: g.protagonist.pitching.ovr,
+    제안수: offers.length, 리그별: byLeague,
+    "2군섞임": farm,
+  };
+}
+
 export function careerEventTally(): Record<number, Record<string, number>> {
   const out: Record<number, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {
