@@ -175,9 +175,49 @@ export function overseasFarmCutOfPower(power: number | null | undefined): number
 }
 
 /**
+ * **개인 기여 점수** — 해외 스카우트가 보는 축 (2026-08-27).
+ *
+ * 🔴 `calcHsBaseballScore`를 그대로 쓰면 안 된다. 그건 **팀 성적**이라
+ *   우승팀이면 벤치에 앉아 있어도 100점이다 — 대학 입시엔 맞는 식이지만
+ *   (어느 학교 출신인가가 실제로 입시에 영향을 준다)
+ *   **해외 스카우트가 보는 건 그 선수 개인**이다.
+ *
+ * ⚠ **개인 성적은 이미 있다** — `CareerSeasonRecord.stats`에 ERA·이닝·탈삼진이
+ *   들어 있다(2026-08-26에 과거 5년치를 심으면서 확인했다). 새로 만들지 않는다.
+ *
+ * ⚠ **대회 개인 기록(A3)이 아직 없다.** 대회에서 몇 이닝을 던졌는지는 못 본다 —
+ *   시즌 전체 성적으로 대신한다. A3이 생기면 그 축을 여기 더한다.
+ *
+ *     이닝     많이 던졌나 — 팀이 믿고 맡겼다는 뜻이다
+ *     ERA      잘 던졌나
+ *     수상     개인이 받은 것
+ *     팀 성적  **비중을 줄인다** — 우승 100 → 25. 운의 몫이다
+ */
+export function calcIndividualScore(records: CareerSeasonRecord[]): number {
+  return records.reduce((total, r) => {
+    let score = 0;
+    // 팀 성적 — 남기되 **작게**. 큰 무대를 밟은 경험은 값이 있다
+    if (r.psResult === "champion")        score += 25;
+    else if (r.psResult === "runnerUp")   score += 15;
+    else if (r.psResult === "semiFinal")  score += 8;
+    // 개인 수상 — 이게 개인 축이다
+    score += (r.awards?.length ?? 0) * 20;
+    // 개인 성적 — 이닝과 ERA
+    const st = r.stats;
+    if (st?.type === "pitcher" && st.ip > 0) {
+      // 한 시즌 60이닝이면 주축이다 — 그 근처를 만점으로 본다
+      score += Math.min(30, st.ip * 0.5);
+      // ERA 3.00이 기준. 좋으면 더, 나쁘면 깎는다
+      score += Math.max(-15, Math.min(25, (3.00 - st.era) * 8));
+    }
+    return total + score;
+  }, 0);
+}
+
+/**
  * 해외 2군 직행 판정 — **OVR + 대회 성적** (사용자 확정).
  *
- * ⚠ **대회 성적은 이미 있다.** `calcHsBaseballScore`가 `psResult`(우승 100 ·
+ * ⚠ **개인 기여로 본다** — `calcIndividualScore`. `calcHsBaseballScore`(우승 100 ·
  *   준우승 60 · 4강 30 · 미진출 10)와 수상(×15)으로 낸다 — **새로 만들지 않는다.**
  *   대학·독립도 같은 필드를 쓰므로 무대와 무관하게 돈다.
  *

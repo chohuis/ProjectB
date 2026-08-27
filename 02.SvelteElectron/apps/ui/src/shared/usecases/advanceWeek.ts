@@ -1012,17 +1012,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // ⚠ **팀 전력★이 문턱을 정한다** — `indieCutOfPower`와 같은 축이다.
     //   ★5는 84, ★3은 78(사용자 확정선), ★1은 72.
     // ⚠ 대회 성적은 `hsBaseballScore`를 그대로 쓴다 — 새로 만들지 않는다.
-    const { overseasFarmCutOfPower, passesOverseasFarm, isOverseasFarmTeam } =
+    const { overseasFarmCutOfPower, passesOverseasFarm, isOverseasFarmTeam,
+      calcIndividualScore } =
       await import("../utils/universityUtils");
+    const indivScore = calcIndividualScore(gDraft.protagonist.careerRecords ?? []);
     const overseasPassed = overseasChoices.filter((teamId) => {
       const t = teamsNow.find((x) => x.id === teamId);
       // ⚠ 2군 팀만 후보다 — 1군은 FA·포스팅 경로다
       if (!isOverseasFarmTeam(t?.leagueId)) return false;
-      return passesOverseasFarm(p.pitching.ovr, hsBaseballScore, t?.power);
+      // 🔴 **팀 점수가 아니라 개인 기여를 본다** — 우승팀이면 벤치도 100점인
+      //   `hsBaseballScore`는 대학 입시용이다. 해외 스카우트는 그 선수를 본다.
+      return passesOverseasFarm(p.pitching.ovr, indivScore, t?.power);
     });
     if (overseasChoices.length > 0) {
       logs.push(`[해외지원] ${overseasChoices.length}팀 지원 · ${overseasPassed.length}팀 합격`
-        + ` (OVR ${p.pitching.ovr} · 대회 ${hsBaseballScore}`
+        + ` (OVR ${p.pitching.ovr} · 개인 ${Math.round(indivScore)}`
         + ` · 문턱 ${overseasChoices.map((id) =>
             overseasFarmCutOfPower(teamsNow.find((x) => x.id === id)?.power)).join("/")})`);
     }
