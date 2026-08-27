@@ -1337,11 +1337,43 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           .filter((n) => !isForeignInQuotaLeague(n.nationality))
           .map((n) => ({ npcId: n.npcId, ovr: ovrOf(n.npcId) }));
 
-      const budgets = proFirstTeams.map((t) => t.history?.budget ?? 0).filter((b) => b > 0);
-      const avgBudget = budgets.length > 0 ? budgets.reduce((a, b) => a + b, 0) / budgets.length : 1;
+      // 🔴 **예산 지수는 리그 안에서 잰다** (사용자 확정 2026-08-27).
+      //
+      //   예전엔 세 리그를 **합친 평균**으로 나눴다. 해외가 닫혀 있을 땐 리그가
+      //   하나뿐이라 같은 뜻이었는데, 열자마자 **KBL FA 계약이 0건**이 됐다
+      //   (실측 12시즌 × 6회 · 한 건도 없다). 예산이 이렇게 벌어져 있다:
+      //
+      //       KBL 10팀 평균   233억  (120억 ~ 350억)
+      //       JBL 12팀 평균   997억  (4.3배)
+      //       ABL 16팀 평균 1,972억  (8.5배)
+      //
+      //   합친 평균이 1,206억이라 KBL 지수가 0.19가 된다. 입찰식
+      //   (`free_agency.rs`)이 **예산 지수 하나로만** 갈리므로 KBL 최강팀 최대
+      //   입찰(0.65)이 ABL 최약팀 최소 입찰(0.56)과 겨우 붙는다 — 모든 FA가
+      //   해외로 간다. 매년 60명이 신청하는데 아무도 KBL에 안 남았다.
+      //
+      // ⚠ **리그 격차를 여기서 표현하지 않는다.** 그건 이미 연봉 배수가
+      //   한다(`salaryRules.leagueMult` ABL 3.5 · JBL 2.0) — 두 자리에서
+      //   같은 말을 하면 격차가 두 번 곱해진다.
+      // ⚠ 팀이 하나뿐인 리그도 지수 1이 되게 폴백을 둔다.
+      const budgetByLeague = new Map<string, number[]>();
+      for (const t of proFirstTeams) {
+        const b = t.history?.budget ?? 0;
+        if (b > 0) {
+          const arr = budgetByLeague.get(t.leagueId) ?? [];
+          arr.push(b);
+          budgetByLeague.set(t.leagueId, arr);
+        }
+      }
+      const avgBudgetOf = (leagueId: string): number => {
+        const arr = budgetByLeague.get(leagueId);
+        if (!arr || arr.length === 0) return 0;
+        return arr.reduce((a, b) => a + b, 0) / arr.length;
+      };
 
       const faTeams = proFirstTeams.map((t) => {
         const profile = getTeamProfile(t.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+        const avgBudget = avgBudgetOf(t.leagueId);
         return {
           teamId: t.id,
           budgetIndex: avgBudget > 0 ? (t.history?.budget ?? avgBudget) / avgBudget : 1,

@@ -1109,7 +1109,27 @@ export function faIntakeTally(): Record<string, unknown> {
       }
     }
   }
-  return { 리그별: byLeague, 팀별FA계약: faByTeam, 연도수: years.size };
+  // 🔴 **정원이 차 있으면 FA는 성사 자체가 안 된다.** `market.ts`의
+  //   `openSlots = 상한 − 활성인원`이 0이면 그 구단은 아무도 못 받는다.
+  //   KBL FA 계약이 0건으로 나온 이유가 여기인지 보려는 것이다 —
+  //   **"안 부른다"와 "받을 자리가 없다"는 다른 결함이다.**
+  const roster: Record<string, { 팀수: number; 평균인원: number; 꽉참: number }> = {};
+  const teams = get(masterStore).teams ?? [];
+  const npcs = get(gameStore).npcs;
+  for (const t of teams) {
+    if (!t.id.endsWith("_1")) continue;
+    const lg = (t.leagueId ?? "").replace("LEAGUE_", "");
+    if (!lg || lg === "?") continue;
+    const n = npcs.filter((x) => x.currentTeam === t.id && x.careerStatus === "active").length;
+    const cap = 34;   // ⚠ 진단용 근사다 — 정확한 상한은 `faMaxRosterOf`가 리그별로 안다
+    const r = (roster[lg] ??= { 팀수: 0, 평균인원: 0, 꽉참: 0 });
+    r.팀수 += 1;
+    r.평균인원 += n;
+    if (n >= cap) r.꽉참 += 1;
+  }
+  for (const r of Object.values(roster)) r.평균인원 = Math.round(r.평균인원 / r.팀수 * 10) / 10;
+
+  return { 리그별: byLeague, 팀별FA계약: faByTeam, 연도수: years.size, 정원: roster };
 }
 
 export function careerEventTally(): Record<number, Record<string, number>> {

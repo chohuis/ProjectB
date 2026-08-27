@@ -1925,6 +1925,28 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 team.clone(),
                 Some(format!("{}→{}·{}", before_salary, npc.current_salary,
                     score.map_or("-".to_string(), |v| format!("{:.0}", v))))));
+
+            // 🔴 **경력에도 남긴다** (사용자 확정 2026-08-27).
+            //
+            //   위 `ev_to`는 `OffseasonEvent`다 — **화면용이고 한 해가 지나면
+            //   사라진다.** 그래서 선수 상세의 경력에 "FA로 이 팀에 왔다"가
+            //   한 번도 안 떴고, 계측도 이 길로 간 계약을 아예 못 셌다
+            //   (실측: KBL FA 계약 0건으로 보였는데 그중 일부가 이것이었다).
+            //
+            // ⚠ **`fa_signed`를 쓴다** — TS `market.ts`의 계약 기록과 같은 종류다.
+            //   그쪽 관례가 "간 곳(`to_team_id`)이 있으면 계약, 없으면 신청"이라
+            //   여기서도 간 곳을 반드시 채운다. 안 채우면 신청으로 읽힌다.
+            // ⚠ 재배치는 `origin_league` 안에서만 고른다(위 `open`) —
+            //   그래서 목적지 리그가 원소속 리그다.
+            npc.career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "fa_signed".into(),
+                from_team_id: npc.original_team_id.clone().filter(|t| !t.is_empty()),
+                to_team_id: Some(team.clone()),
+                from_league_id: Some(origin_league.to_string()),
+                to_league_id: Some(origin_league.to_string()),
+                detail: Some(format!("FA 계약 ({}→{})", before_salary, npc.current_salary)),
+            });
         }
         *team_active_count.entry(team.clone()).or_default() += 1;
         *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
