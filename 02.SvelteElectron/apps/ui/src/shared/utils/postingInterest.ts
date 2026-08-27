@@ -17,6 +17,26 @@
 /** 관심도가 이 값을 넘어야 제안이 온다 */
 export const POSTING_INTEREST_MIN = 50;
 
+/**
+ * **리그별 최소선** — 관심도 위에 얹는 바닥이다.
+ *
+ * 🔴 이 값은 새로 지은 게 아니다. `player_engine.rs`의 `OVERSEAS_ROUTES`에
+ *   있던 것을 **옮겨 왔다**(2026-08-27). 그쪽은 후보 풀과 별개로 해외 팀을
+ *   무작위로 더 얹는 **두 번째 문**이었고, 관심도 판정·정원·외국인 한도를
+ *   전부 우회했다. 1단계가 풀을 열면서 같은 일을 하는 길이 둘이 됐다.
+ *
+ * ⚠ **문턱 차이가 위계다. ABL이 위다** — `league_salary_mult`가 ABL 3.5 /
+ *   JBL 2.0이고 로스터 OVR도 62~92 vs 60~90이다.
+ *   (한 번 거꾸로 잡은 적이 있다 — JBL 문턱을 더 높게 뒀는데 연봉은 ABL이
+ *   1.75배였다.)
+ *
+ * ⚠ 값을 바꾸지 않았다. 옮기기만 했다 — 여기서 수치를 손대면 이동 전후를 못 잰다.
+ */
+export const OVERSEAS_FLOOR: Record<string, { ovr: number; fame: number }> = {
+  LEAGUE_ABL: { ovr: 70, fame: 30 },
+  LEAGUE_JBL: { ovr: 62, fame: 15 },
+};
+
 export interface PostingInput {
   /** 그 팀 로스터 투수들의 OVR — 팀 상대 판정의 근거 */
   teamPitcherOvrs: readonly number[];

@@ -363,6 +363,16 @@ pub struct TeamRef {
     pub current_payroll: i64,
     #[serde(default)]
     pub salary_cap: i64,
+    /**
+     * 그 팀이 지금 **얇은 자리** — 관심도의 가장 큰 항이다(+30).
+     *
+     * 🔴 이게 **팀이 필요해서 부른다**는 것 자체다. 비우면 모든 팀이 같은
+     *   점수를 받아 문턱이 전부/전무로 갈린다 — 실측(2026-08-27):
+     *       문턱 40 → 평균 16.9개(전부 통과) · 문턱 45 → 평균 1.1개(KBL 0)
+     *   그 사이에 값이 없다. 관심도가 이산값이라 그렇다.
+     */
+    #[serde(default)]
+    pub roster_needs: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -384,6 +394,17 @@ pub struct GenerateFaOffersParams {
     pub league_id: String,
     pub team_id: String,
     pub fa_unsigned_weeks: Option<u32>,
+    /// 나이·연차·포지션 — **팀별 관심도 판정에 쓴다**(`eval_fa_bid`와 같은 축).
+    /// ⚠ 없으면 판정을 못 하므로 **예전대로 무작위 3~5팀**으로 떨어진다.
+    #[serde(default)]
+    pub age: Option<i32>,
+    #[serde(default)]
+    pub pro_service_years: Option<i32>,
+    #[serde(default)]
+    pub position: Option<String>,
+    /// 관심도 임계값. 0이면 판정을 안 한다(예전 동작).
+    #[serde(default)]
+    pub interest_min: f64,
     pub teams: Vec<TeamRef>,
 }
 
@@ -425,12 +446,75 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
     let unsigned_weeks = params.fa_unsigned_weeks.unwrap_or(0);
     let market_drop = (1.0 - unsigned_weeks as f64 * 0.04).max(0.72);
 
-    let n_picks = rng.gen_range(3..=5usize).min(same_league.len());
-    let mut indices: Vec<usize> = (0..same_league.len()).collect();
-    for i in 0..n_picks {
-        let j = rng.gen_range(i..same_league.len());
-        indices.swap(i, j);
-    }
+    // 🔴 **예전엔 제비뽑기였다** — `rng.gen_range(3..=5)`로 팀을 뽑았다.
+    //   OVR 60이든 90이든 제안이 3~5개고, 팀이 **필요해서 부르는 게 아니었다.**
+    //
+    // 🔴 **NPC는 이미 제대로 돈다.** `team_engine::eval_fa_bid`가 정원
+    //   (`roster_needs` +30)·OVR(+15)·성향×나이(±10~20)·예산(−25)을 본다.
+    //   **주인공만 이 판정을 안 탔다** — 여기서 붙여 두 경로를 하나로 만든다.
+    //
+    // ⚠ `interest_min`이 0이면 **예전 동작**이다. 호출부가 값을 안 넘기면
+    //   조용히 옛 길로 떨어진다 — 배선이 빠졌을 때 게임이 안 죽는다.
+    let indices: Vec<usize> = if params.interest_min > 0.0 {
+        let mut picked: Vec<usize> = Vec::new();
+        for (i, team) in same_league.iter().enumerate() {
+            let profile = team.profile.clone().unwrap_or_default();
+            // ⚠ **얇은 자리는 호출부가 넘긴다**(`TeamRef.roster_needs`) —
+            //   그게 관심도의 가장 큰 항(+30)이고, **팀이 필요해서 부른다**는 뜻이다.
+            let bid = crate::team_engine::eval_fa_bid(crate::team_engine::EvalFaBidParams {
+                seed: if params.seed == 0 { 0 } else { params.seed ^ (i as u32 + 1) },
+                team_profile: profile,
+                fa_player: crate::sim_types::FaPlayerRef {
+                    id: "PLY_HERO".into(),
+                    position: params.position.clone().unwrap_or_else(|| "SP".into()),
+                    age: params.age.unwrap_or(27),
+                    ovr: params.pitching_ovr,
+                    market_value: market as i64,
+                    demand_salary: market as i64,
+                    demand_years: 3,
+                    fame: params.fame,
+                    personality: None,
+                    pro_service_years: params.pro_service_years.unwrap_or(5),
+                    current_league: params.league_id.clone(),
+                },
+                roster_needs: team.roster_needs.clone(),
+                salary_cap: team.salary_cap.max(1),
+                current_payroll: team.current_payroll,
+                bid_floor_ratio: 0.03,
+            });
+            if bid.interest_level >= params.interest_min { picked.push(i); }
+        }
+        picked
+    } else {
+        // 예전 경로 — 무작위 3~5팀
+        let n_picks = rng.gen_range(3..=5usize).min(same_league.len());
+        let mut idx: Vec<usize> = (0..same_league.len()).collect();
+        for i in 0..n_picks {
+            let j = rng.gen_range(i..same_league.len());
+            idx.swap(i, j);
+        }
+        idx.truncate(n_picks);
+        idx
+    };
+    let n_picks = indices.len();
+
+    // ── 경쟁 배수 ────────────────────────────────────────────────
+    //
+    // 🔴 **부른 팀 수가 여태 아무 뜻도 없었다.** 관심도 판정을 붙여 놓고도
+    //   3팀이 부르든 12팀이 부르든 조건이 같았다 — 그러면 판정을 통과한 팀이
+    //   몇인지가 화면에 숫자로만 남고 **협상력이 되지 않는다.**
+    //
+    // ⚠ **기존 조건 다양성은 안 건드린다.** 팀 성향이 연봉(`win_now_pressure`)과
+    //   연수(`stability`)를 흔드는 건 이미 있다. 여기서는 **연봉 하나만** 민다.
+    //
+    // ⚠ 기준점은 3팀이다 — 예전 제비뽑기가 3~5팀이었으므로 그 아래쪽 끝이
+    //   "경쟁 없음"에 가깝다. 폭은 좁게 잡았다(0.96 ~ 1.18):
+    //
+    //       1팀  0.96      혼자 부르면 깎인다
+    //       3팀  1.00      기준
+    //       8팀  1.10
+    //      12팀+ 1.18      상한
+    let competition = 1.0 + ((n_picks as f64) - 3.0).clamp(-2.0, 9.0) * 0.02;
 
     // 씨앗 유무에 따라 난수원이 달라지므로 구체 타입을 못 박지 않는다
     let make_offer = |team: &TeamRef, league_market: f64, rng: &mut dyn rand::RngCore| -> FaOffer {
@@ -453,7 +537,7 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
 
         let noise   = (rng.gen::<f64>() * 2.0 - 1.0) * scouting_noise;
         let mult    = (0.85 + rng.gen::<f64>() * 0.35) * win_mult;
-        let salary  = (league_market * mult * (1.0 + noise) * market_drop).round() as i64;
+        let salary  = (league_market * mult * (1.0 + noise) * market_drop * competition).round() as i64;
         let dur_raw = rng.gen_range(1..=4i32) + year_bias;
         let duration_years = dur_raw.clamp(1, 5) as u32;
 
@@ -469,55 +553,25 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
         }
     };
 
-    let mut offers: Vec<FaOffer> = indices[..n_picks].iter()
+    let offers: Vec<FaOffer> = indices[..n_picks].iter()
         .map(|&idx| make_offer(same_league[idx], market, &mut rng))
         .collect();
 
-    // ── 해외 스카우트 오퍼 ──────────────────────────────────────
+    // 🔴 **두 번째 문을 지웠다** (2026-08-27).
     //
-    // ⚠ 예전엔 **JBL 경로만** 있었다. ABL은 자체 리그로만 존재해서
-    // 국내 선수가 갈 방법이 없었고, 확장팩을 열어도 32팀이 관전 대상일 뿐이었다.
-    // 표를 두 벌 적지 않도록 리그별 문턱만 다른 **하나의 경로**로 만든다.
+    //   여기 `OVERSEAS_ROUTES`가 있었다 — 후보 풀과 **별개로** 해외 팀을 1~2개
+    //   무작위로 더 얹는 경로다. 해외가 열리기 전엔 그게 **유일한 방법**이었고
+    //   그땐 맞았다.
     //
-    // 문턱 차이가 위계를 만든다. **ABL이 최상위다** — `league_salary_mult`가
-    // ABL 3.5 / JBL 2.0이고 로스터 OVR도 62~92 vs 60~90이다.
-    // (한 번 거꾸로 잡았다: JBL 문턱을 더 높게 뒀는데 연봉은 ABL이 1.75배였다)
-    //   (목적지, 최소 OVR, 최소 명성, 상위 확률, 하위 확률, 상위 기준 OVR)
-    const OVERSEAS_ROUTES: [(&str, f64, f64, f64, f64, f64); 2] = [
-        ("LEAGUE_ABL", 70.0, 30.0, 0.55, 0.25, 80.0),
-        ("LEAGUE_JBL", 62.0, 15.0, 0.65, 0.35, 72.0),
-    ];
-
-    for (dest, min_ovr, min_fame, hi_chance, lo_chance, hi_ovr) in OVERSEAS_ROUTES {
-        // 같은 리그로는 스카우트 오퍼를 안 만든다 (그건 위 `same_league` 몫)
-        if params.league_id == dest { continue; }
-        // 국내·해외 1군에서만 나간다 — 팜·대학·독립은 대상이 아니다
-        let from_top = params.league_id == "LEAGUE_KBL"
-            || params.league_id == "LEAGUE_ABL"
-            || params.league_id == "LEAGUE_JBL";
-        if !from_top { continue; }
-        if params.pitching_ovr < min_ovr || params.fame < min_fame { continue; }
-
-        let dest_teams: Vec<&TeamRef> = params.teams.iter()
-            .filter(|t| t.league_id == dest)
-            .collect();
-        if dest_teams.is_empty() { continue; }
-
-        let chance = if params.pitching_ovr >= hi_ovr { hi_chance } else { lo_chance };
-        if rng.gen::<f64>() >= chance { continue; }
-
-        let market = base * league_salary_mult(dest, &params.league_mult);
-        let n = rng.gen_range(1..=2usize).min(dest_teams.len());
-        let mut idx: Vec<usize> = (0..dest_teams.len()).collect();
-        for i in 0..n {
-            let j = rng.gen_range(i..dest_teams.len());
-            idx.swap(i, j);
-        }
-        for &k in &idx[..n] {
-            offers.push(make_offer(dest_teams[k], market, &mut rng));
-        }
-    }
-
+    //   1단계가 풀을 열면서(`faDestinationLeagues`) ABL·JBL이 이미 풀에 들어왔다.
+    //   그러자 같은 일을 하는 길이 둘이 됐고, 이쪽은 **문지기를 전부 우회**했다 —
+    //   관심도 판정(`eval_fa_bid`) · 정원 여유 · 외국인 보유 한도 · 포스팅 문턱.
+    //   실측(8시즌 × 6씨앗): 문지기를 달았는데도 해외 제안이 89건 남았다.
+    //
+    // ⚠ **리그별 바닥은 안 버렸다.** 그 두 줄(ABL 70/30 · JBL 62/15)이 이 루트가
+    //   가진 유일한 근거였고, 그대로 `postingInterest.ts`의 `OVERSEAS_FLOOR`로
+    //   옮겨 풀 문지기에 물렸다. **값은 안 바꿨다** — 바꾸면 이동 전후를 못 잰다.
+    //   그 문턱 차이가 위계다 — **ABL이 위**고, 연봉도 ABL 3.5 / JBL 2.0이다.
     offers
 }
 
@@ -690,6 +744,68 @@ pub fn calc_npc_contract_years(p: CalcNpcContractYearsParams) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// 팀 하나 — 관심도가 반드시 문턱을 넘도록 얇은 자리와 넉넉한 예산을 준다
+    fn fa_team(i: usize) -> TeamRef {
+        TeamRef {
+            id: format!("TEAM_{i}"),
+            league_id: "LEAGUE_KBL".into(),
+            profile: None,
+            current_payroll: 10_000,
+            salary_cap: 1_000_000,
+            roster_needs: vec!["SP".into()],
+        }
+    }
+
+    fn fa_params(n_teams: usize) -> GenerateFaOffersParams {
+        GenerateFaOffersParams {
+            league_mult: std::collections::HashMap::new(),
+            seed: 12345,
+            pitching_ovr: 80.0,
+            fame: 50.0,
+            league_id: "LEAGUE_KBL".into(),
+            team_id: "TEAM_HOME".into(),
+            fa_unsigned_weeks: Some(0),
+            age: Some(28),
+            pro_service_years: Some(6),
+            position: Some("SP".into()),
+            interest_min: 65.0,
+            teams: (0..n_teams).map(fa_team).collect(),
+        }
+    }
+
+    /// **부른 팀이 많으면 조건이 좋아진다.**
+    ///
+    /// 🔴 예전엔 부른 팀 수가 **아무 뜻도 없었다** — 3팀이든 12팀이든 연봉이
+    ///   같았다. 관심도 판정을 붙여 놓고 그 결과를 협상력으로 안 쓴 셈이다.
+    ///
+    /// ⚠ 난수가 섞이므로 **평균으로 본다.** 한 건씩 비교하면 0.85~1.20 폭에
+    ///   묻혀 조용히 통과한다.
+    #[test]
+    fn 부른_팀이_많으면_연봉이_오른다() {
+        let avg = |n: usize| -> f64 {
+            let offers = generate_fa_offers(fa_params(n));
+            assert!(!offers.is_empty(), "{n}팀인데 제안이 0건이다");
+            offers.iter().map(|o| o.salary as f64).sum::<f64>() / offers.len() as f64
+        };
+        let few  = avg(2);
+        let many = avg(13);
+        assert!(many > few * 1.10,
+            "경쟁 배수가 안 걸렸다 — 2팀 {few:.0} vs 13팀 {many:.0}");
+    }
+
+    /// ⚠ **상한이 있어야 한다.** 없으면 리그가 커질수록 연봉이 끝없이 오른다.
+    #[test]
+    fn 경쟁_배수에_상한이_있다() {
+        let avg = |n: usize| -> f64 {
+            let offers = generate_fa_offers(fa_params(n));
+            offers.iter().map(|o| o.salary as f64).sum::<f64>() / offers.len() as f64
+        };
+        let at12 = avg(13);
+        let at30 = avg(31);
+        assert!((at30 - at12).abs() / at12 < 0.10,
+            "12팀 위로도 계속 오른다 — 13팀 {at12:.0} vs 31팀 {at30:.0}");
+    }
 
     #[test]
     fn assign_protagonist_role_cp() {

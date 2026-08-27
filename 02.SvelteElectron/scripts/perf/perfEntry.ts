@@ -349,6 +349,14 @@ export interface CareerPolicy {
   draft: boolean;
   university: boolean;
   independent: boolean;
+  /**
+   * 해외 2군 직행에 지원한다 (실플 ②).
+   *
+   * ⚠ **기본은 켠다.** 문턱(★3 = OVR 78)이 높아 대부분 떨어지므로
+   *   켜 놔도 다른 진로를 안 밀어낸다 — 그리고 안 켜면 **도달률을 영영 못 잰다**
+   *   (1~4단계에서 못 잰 것이 그것이다).
+   */
+  overseas: boolean;
   /** 허브에서 즉시 입대를 고른다 — 다른 신청을 무시한다 */
   enlistNow: boolean;
   /** 지명 통보를 거부한다 (폴백 경로 확인용) */
@@ -357,7 +365,7 @@ export interface CareerPolicy {
   rejectTrade: boolean;
 }
 const DEFAULT_POLICY: CareerPolicy = {
-  draft: true, university: true, independent: true, enlistNow: false,
+  draft: true, university: true, independent: true, overseas: true, enlistNow: false,
   rejectDraft: false, rejectTrade: false,
 };
 let _policy: CareerPolicy = { ...DEFAULT_POLICY };
@@ -401,6 +409,10 @@ export async function pushCareerForward(): Promise<string | null> {
         draft: _policy.draft,
         universityChoices: _policy.university ? pick("LEAGUE_UNIVERSITY") : [],
         independentChoices: _policy.independent ? pick("LEAGUE_INDEPENDENT") : [],
+        // 해외 2군은 두 리그에서 고른다 — 한 리그만 보면 절반을 못 잰다
+        overseasChoices: _policy.overseas
+          ? [...pick("LEAGUE_ABL_FARM").slice(0, 2), ...pick("LEAGUE_JBL_FARM").slice(0, 1)]
+          : [],
       });
       return "careerChoiceHub";
     }
@@ -421,7 +433,8 @@ export async function pushCareerForward(): Promise<string | null> {
         const st = get(gameStore).protagonist.careerStage;
         console.log("[진로] " + st + " drafted=" + !!r?.draftDrafted
           + " uni=" + (r?.universityPassed?.length ?? 0)
-          + " ind=" + (r?.independentPassed?.length ?? 0));
+          + " ind=" + (r?.independentPassed?.length ?? 0)
+          + " ovs=" + (r?.overseasPassed?.length ?? 0));
       }
       if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
       // 🔴 **대학생은 진급이 먼저다.** 예전엔 독립 합격이 있으면 그쪽을 먼저 골라
@@ -446,9 +459,16 @@ export async function pushCareerForward(): Promise<string | null> {
         // 못 이어가면 4학년 졸업이다 — 아래 대학 갈래로 떨어진다
       }
 
-      // 미지명이면 대학 → 독립 순으로 받는다. 아무 데도 안 되면 못 민다
+      // 미지명이면 **해외 2군 → 대학 → 독립** 순으로 받는다.
+      //
+      // ⚠ **해외가 대학보다 위인 이유** — 해외 2군은 프로 계약이다.
+      //   지명(확실한 프로)보다는 아래지만 대학·독립보다는 프로에 가깝다.
+      //   ⚠ 문턱이 높아(★3 = OVR 78) 실제로 뜨는 판이 드물다 —
+      //     대학 경로를 밀어낼 걱정은 실측으로 확인한다.
+      const ovs = r?.overseasPassed?.[0];
       const uni = r?.universityPassed?.[0];
       const ind = r?.independentPassed?.[0];
+      if (ovs) { await chooseSchoolOrIndependent("overseas", ovs); return "careerChoice(overseas)"; }
       if (uni) { await chooseSchoolOrIndependent("university", uni); return "careerChoice(university)"; }
       if (ind) { await chooseSchoolOrIndependent("independent", ind); return "careerChoice(independent)"; }
 
