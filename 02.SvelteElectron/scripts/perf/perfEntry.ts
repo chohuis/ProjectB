@@ -1015,8 +1015,30 @@ export function teamOvrSpreadProbe(leagueId: string): Record<string, unknown> {
  *   · **2군이 섞이는가** — `faEngine`이 막고 있던 것(실측 근거가 주석에 있다)
  */
 export async function faOfferProbe(): Promise<Record<string, unknown>> {
-  const { generateFaOffers } = await import("../../apps/ui/src/shared/utils/faEngine");
+  const { generateFaOffers, isFaEligible, getFaThreshold } =
+    await import("../../apps/ui/src/shared/utils/faEngine");
   const g = get(gameStore);
+
+  // 🔴 **자격을 먼저 본다** (2026-08-27, 사용자 지적).
+  //   예전엔 프로 무대면 연차를 안 보고 매 시즌 불렀다. 게임은 막고 있는데
+  //   (`contractDecision`이 `isFaEligible`을 지나야 `faMarket`을 띄운다)
+  //   **계측만 안 막아서, 게임에 존재하지 않는 상태를 쟀다** — KBL은 5년차라
+  //   8년 커리어에서 자격 없는 해가 표본의 대부분이었다.
+  //
+  // ⚠ 자격 없는 해도 **버리지 말고 남긴다.** 표본에서 조용히 빼면
+  //   "몇 해나 못 나갔는가"를 못 잰다.
+  const eligible = isFaEligible(g.protagonist, get(gameStore).schoolState.attendsUniversity);
+  const years = g.protagonist.proServiceYears ?? 0;
+  if (!eligible) {
+    return {
+      내리그: g.protagonist.leagueId.replace("LEAGUE_", ""),
+      OVR: g.protagonist.pitching.ovr,
+      연차: years, 자격: false,
+      필요연차: getFaThreshold(g.protagonist.leagueId),
+      제안수: 0, 리그별: {}, "2군섞임": 0,
+    };
+  }
+
   const teams = get(masterStore).teams.map((t) => ({ id: t.id, leagueId: t.leagueId,
     name: t.name })) as Parameters<typeof generateFaOffers>[1];
   const offers = await generateFaOffers(g.protagonist, teams);
@@ -1031,9 +1053,63 @@ export async function faOfferProbe(): Promise<Record<string, unknown>> {
   return {
     내리그: g.protagonist.leagueId.replace("LEAGUE_", ""),
     OVR: g.protagonist.pitching.ovr,
+    연차: years, 자격: true,
+    필요연차: getFaThreshold(g.protagonist.leagueId),
     제안수: offers.length, 리그별: byLeague,
     "2군섞임": farm,
   };
+}
+
+/**
+ * **한 팀이 한 해에 선수를 어느 길로 데려오는가.**
+ *
+ * 🔴 `faOfferProbe`와 **방향이 반대다.** 그쪽은 "주인공 한 명에게 몇 팀이
+ *   제안했나"(선수 1명당 구단 수)이고, 이건 "한 구단이 몇 명을 데려왔나"다.
+ *   두 값을 섞어 읽으면 FA 규모를 자릿수째로 잘못 본다.
+ *
+ * ⚠ **승격(육성)은 여기 안 잡힌다.** `NpcCareerEventType`에 승격이 없다 —
+ *   2군↔1군 이동은 경력 사건으로 안 남는다. 그러니 이 표는 **외부에서
+ *   들어오는 길**만 센다(드래프트·FA·용병·트레이드).
+ *
+ * ⚠ 용병은 `fa_signed`가 아니라 `foreign_signing`이다. 섞으면 KBL FA가
+ *   부풀어 보인다 — 외국인은 연차로 자격을 쌓는 신분이 아니다.
+ */
+export function faIntakeTally(): Record<string, unknown> {
+  const ROUTES = ["draft_picked", "fa_signed", "foreign_signing", "trade"] as const;
+  // 리그 → 연도 → 경로 → 건수
+  const byLeague: Record<string, Record<number, Record<string, number>>> = {};
+  // 팀 → FA로 데려온 인원 (리그별)
+  const faByTeam: Record<string, Record<string, number>> = {};
+  const years = new Set<number>();
+
+  for (const n of get(gameStore).npcs) {
+    for (const e of n.careerEvents ?? []) {
+      if (!(ROUTES as readonly string[]).includes(e.eventType)) continue;
+      years.add(e.year);
+
+      // 🔴 **`fa_signed`가 두 가지 일에 같이 쓰인다** (2026-08-27 실측).
+      //   · FA **신청** — `market.ts:1141` · `npc_sim.rs:1593`("FA 취득")
+      //     간 곳이 없다(`toTeamId` 없음). 재취득 기간을 세려고 남기는 기록이다.
+      //   · FA **계약** — `market.ts:1410`. `toTeamId`·`toLeagueId`가 있다.
+      //
+      //   둘을 안 가르면 "FA로 몇 명 데려왔나"에 **신청 건수가 섞여** 서너 배가 된다
+      //   (실측: 2026년 476건이 전부 신청이었다).
+      const kind = e.eventType === "fa_signed"
+        ? (e.toTeamId ? "fa_계약" : "fa_신청")
+        : e.eventType;
+
+      // 🔴 **받는 쪽 리그로 센다.** 보내는 쪽으로 세면 트레이드가 뒤집힌다.
+      //   신청은 간 곳이 없으니 나온 쪽 리그로 센다 — 그래야 "?"로 안 몰린다
+      const lg = ((kind === "fa_신청" ? e.fromLeagueId : e.toLeagueId) ?? "")
+        .replace("LEAGUE_", "") || "?";
+      ((byLeague[lg] ??= {})[e.year] ??= {})[kind] = (byLeague[lg][e.year][kind] ?? 0) + 1;
+
+      if (kind === "fa_계약" && e.toTeamId) {
+        (faByTeam[lg] ??= {})[e.toTeamId] = ((faByTeam[lg] ?? {})[e.toTeamId] ?? 0) + 1;
+      }
+    }
+  }
+  return { 리그별: byLeague, 팀별FA계약: faByTeam, 연도수: years.size };
 }
 
 export function careerEventTally(): Record<number, Record<string, number>> {

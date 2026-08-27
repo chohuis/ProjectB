@@ -11,6 +11,10 @@ const YEARS = Number(process.env.PF_YEARS || 8);
 (async () => {
   const { app, tmp } = await headless.boot("faoffer");
   let why = "완주", shown = 0;
+  // 🔴 **시즌당 한 번만 잰다** (2026-08-27). 예전엔 주 루프가 돌 때마다 셌다 —
+  //   같은 해를 수십 번 찍고 `shown < YEARS`가 먼저 차서 **FA 자격 연차(KBL 5년)에
+  //   닿기 전에 계측이 끝났다.** 그래서 표본이 전부 "자격 없음"이었다.
+  let lastSeason = -1;
   try {
     await app.boot({ slotId: "PF", worldSeed: SEED, seasonYear: 2026 });
     const start = app.currentSeason();
@@ -19,9 +23,10 @@ const YEARS = Number(process.env.PF_YEARS || 8);
       if (app.retired()) { why = "은퇴"; break; }
       // 프로에 들어가면 매 시즌 한 번 잰다
       const st = app.protagonistState?.() ?? {};
-      if (/^pro/.test(st.stage ?? "") && shown < YEARS) {
+      if (/^pro/.test(st.stage ?? "") && app.currentSeason() !== lastSeason) {
+        lastSeason = app.currentSeason();
         const r = await app.faOfferProbe();
-        console.log(`[FA제안] ${app.currentSeason()} ${JSON.stringify(r)}`);
+        console.log(`[FA제안] ${lastSeason} ${JSON.stringify(r)}`);
         shown++;
       }
       const w0 = app.currentWeek(), s0 = app.currentSeason();
