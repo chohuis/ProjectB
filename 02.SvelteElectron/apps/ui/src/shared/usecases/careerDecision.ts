@@ -29,11 +29,17 @@ export async function submitCareerApplications(opts: {
   draft: boolean;
   universityChoices?: string[];
   independentChoices?: string[];
+  /**
+   * 해외 2군 (실플 ②). ⚠ **셋과 같은 상한(3팀)**이다 —
+   *   여기만 늘리면 해외가 유리해져 다른 진로가 죽는다.
+   */
+  overseasChoices?: string[];
 }): Promise<void> {
   gameStore.setCareerApplications({
     draftApplied: opts.draft,
     universityChoices: (opts.universityChoices ?? []).slice(0, 3),
     independentChoices: (opts.independentChoices ?? []).slice(0, 3),
+    overseasChoices: (opts.overseasChoices ?? []).slice(0, 3),
     sportsMilitaryApplied: false,
   });
   gameStore.setCareerApplicationsSubmitted(true);

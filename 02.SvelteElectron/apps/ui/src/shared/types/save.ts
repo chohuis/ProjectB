@@ -533,6 +533,15 @@ export interface CareerApplications {
   draftApplied: boolean;
   universityChoices: string[];
   independentChoices: string[];
+  /**
+   * 해외 2군 지원 (실플 ②, 사용자 확정 2026-08-27).
+   *
+   * 🔴 고교·대학·독립에서 아주 잘하면 KBL 드래프트를 건너뛰고 ABL·JBL
+   *   **2군**으로 바로 간다. 문턱은 **OVR 78 + 대회 성적**이다.
+   * ⚠ 1군은 여기가 아니다 — FA·포스팅 경로다.
+   * ⚠ 옛 세이브엔 없다. 없으면 빈 배열로 읽는다.
+   */
+  overseasChoices?: string[];
   sportsMilitaryApplied: boolean;
 }
 
@@ -544,6 +553,8 @@ export interface CareerResults {
   draftSigningBonus: number;
   universityPassed: string[];
   independentPassed: string[];
+  /** 해외 2군 합격 팀. ⚠ 옛 세이브엔 없다 */
+  overseasPassed?: string[];
 }
 
 export interface SchoolState {

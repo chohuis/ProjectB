@@ -919,6 +919,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const indieChoices = canApplyToIndependent(p.careerStage)
       ? (apps?.independentChoices ?? [])
       : [];
+    // 해외 2군 직행 (실플 ②) — 고교·대학·독립 셋 다에서 지원할 수 있다
+    // ⚠ 대학 재학생·독립 소속도 여기 오므로 무대 게이트를 안 건다 —
+    //   지원 자체가 그 무대에서 이뤄진다
+    const overseasChoices = apps?.overseasChoices ?? [];
     const draftApplied = apps?.draftApplied ?? false;
 
     const subjects = Object.values(gDraft.schoolState.subjectScores);
@@ -1003,6 +1007,26 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     (globalThis as Record<string, unknown>).__lastDraftBreakdown =
       (draftOutcome as { breakdown?: unknown }).breakdown ?? null;
 
+    // ── 해외 2군 직행 판정 (실플 ②) ─────────────────────────
+    //
+    // ⚠ **팀 전력★이 문턱을 정한다** — `indieCutOfPower`와 같은 축이다.
+    //   ★5는 84, ★3은 78(사용자 확정선), ★1은 72.
+    // ⚠ 대회 성적은 `hsBaseballScore`를 그대로 쓴다 — 새로 만들지 않는다.
+    const { overseasFarmCutOfPower, passesOverseasFarm, isOverseasFarmTeam } =
+      await import("../utils/universityUtils");
+    const overseasPassed = overseasChoices.filter((teamId) => {
+      const t = teamsNow.find((x) => x.id === teamId);
+      // ⚠ 2군 팀만 후보다 — 1군은 FA·포스팅 경로다
+      if (!isOverseasFarmTeam(t?.leagueId)) return false;
+      return passesOverseasFarm(p.pitching.ovr, hsBaseballScore, t?.power);
+    });
+    if (overseasChoices.length > 0) {
+      logs.push(`[해외지원] ${overseasChoices.length}팀 지원 · ${overseasPassed.length}팀 합격`
+        + ` (OVR ${p.pitching.ovr} · 대회 ${hsBaseballScore}`
+        + ` · 문턱 ${overseasChoices.map((id) =>
+            overseasFarmCutOfPower(teamsNow.find((x) => x.id === id)?.power)).join("/")})`);
+    }
+
     gameStore.setCareerResults({
       draftDrafted: draftOutcome.drafted,
       draftTeamId: draftOutcome.teamId ?? null,
@@ -1014,6 +1038,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         : 0,
       universityPassed: admissionsCalc.univPassed,
       independentPassed: admissionsCalc.indiePassed,
+      overseasPassed,
     });
 
     seasonStore.pushPendingAction({ type: "careerResults" });

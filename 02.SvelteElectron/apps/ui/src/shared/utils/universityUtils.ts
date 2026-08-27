@@ -149,3 +149,57 @@ export function indieCutOfPower(power: number | null | undefined): number {
   if (p === 2) return 44;
   return 39;
 }
+
+/**
+ * 해외 2군 직행 문턱 — **팀 전력★이 정한다** (실플 ②, 사용자 확정 2026-08-27).
+ *
+ * 🔴 고교·대학·독립에서 아주 잘하면 KBL 드래프트를 건너뛰고 ABL·JBL **2군**으로
+ *   바로 간다. 사용자가 정한 선은 **OVR 78 + 대회 성적**이다.
+ *
+ * ⚠ **해외 2군 실측(2026-08-27, 투수 OVR)**: ABL 2군 팀 평균 **66** ·
+ *   JBL 2군 **63**. OVR 78이면 그 안에서 압도적이다 — 그게 의도다.
+ *   빨리 올라가라고 여는 문이지 거기서 눌러앉으라는 게 아니다.
+ *
+ * ⚠ **★이 셀수록 어렵다.** `indieCutOfPower`와 같은 축이다 —
+ *   같은 모양이라야 두 자리가 같게 읽힌다.
+ * ⚠ **드래프트를 대체하면 안 된다.** 문턱이 낮으면 잘 키운 선수가 전부
+ *   해외로 새어 KBL 드래프트가 죽는다.
+ */
+export function overseasFarmCutOfPower(power: number | null | undefined): number {
+  const p = Math.round(power ?? 3);
+  if (p >= 5) return 84;
+  if (p === 4) return 81;
+  if (p === 3) return 78;   // 사용자 확정선 — 평범한 팀 기준
+  if (p === 2) return 75;
+  return 72;
+}
+
+/**
+ * 해외 2군 직행 판정 — **OVR + 대회 성적** (사용자 확정).
+ *
+ * ⚠ **대회 성적은 이미 있다.** `calcHsBaseballScore`가 `psResult`(우승 100 ·
+ *   준우승 60 · 4강 30 · 미진출 10)와 수상(×15)으로 낸다 — **새로 만들지 않는다.**
+ *   대학·독립도 같은 필드를 쓰므로 무대와 무관하게 돈다.
+ *
+ * ⚠ **대회 개인 기록(A3)이 아직 없다.** 지금은 팀 성적 + 수상으로 대신한다.
+ *   A3이 생기면 개인 기록을 여기 더한다 — 그때 이 주석을 지운다.
+ *
+ * ⚠ 대회 점수가 낮아도 **OVR이 문턱보다 한참 위면** 통과한다 —
+ *   약팀에서 대회를 못 나간 좋은 투수를 통째로 묻으면 안 된다.
+ *   (드래프트 판정이 같은 이유로 순수 실력 축을 따로 둔다.)
+ */
+export function passesOverseasFarm(
+  ovr: number, baseballScore: number, power: number | null | undefined,
+): boolean {
+  const cut = overseasFarmCutOfPower(power);
+  if (ovr < cut) return false;
+  // 문턱을 넘겼으면 대회 성적을 본다 — 다만 실력이 충분히 위면 면제한다
+  const OVR_EXEMPT = 4;        // 문턱 +4면 대회를 안 본다
+  const SCORE_MIN  = 40;       // 4강 한 번(30) + 수상 하나(15) 정도
+  return ovr >= cut + OVR_EXEMPT || baseballScore >= SCORE_MIN;
+}
+
+/** 해외 2군 팀인가 — 직행 후보는 여기뿐이다(1군은 FA·포스팅 경로다) */
+export function isOverseasFarmTeam(leagueId: string | undefined): boolean {
+  return leagueId === "LEAGUE_ABL_FARM" || leagueId === "LEAGUE_JBL_FARM";
+}
