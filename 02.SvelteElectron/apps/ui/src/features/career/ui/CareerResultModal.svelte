@@ -14,6 +14,8 @@
   $: stage = $gameStore.protagonist.careerStage;
   $: univPassed = canApplyToUniversity(stage) ? (results?.universityPassed ?? []) : [];
   $: indiePassed = canApplyToIndependent(stage) ? (results?.independentPassed ?? []) : [];
+  // 해외 2군 직행 (실플 ②) — 무대 게이트가 없다. 고교·대학·독립 다 여기로 온다
+  $: overseasPassed = results?.overseasPassed ?? [];
   $: draftPassed = results?.draftDrafted ?? false;
 
   // 대학 재학 중 여부 및 학년 — 판정은 `careerTransition`이 정본이다.
@@ -40,13 +42,13 @@
     resolving = false;
   }
 
-  async function chooseResult(kind: "draft" | "university" | "independent" | "sports" | "general", teamId?: string) {
+  async function chooseResult(kind: "draft" | "university" | "independent" | "overseas" | "sports" | "general", teamId?: string) {
     if (resolving) return;
     resolving = true;
 
     if (kind === "draft") {
       await chooseDraft();
-    } else if ((kind === "university" || kind === "independent") && teamId) {
+    } else if ((kind === "university" || kind === "independent" || kind === "overseas") && teamId) {
       await chooseSchoolOrIndependent(kind, teamId);
     } else {
       // 전원 탈락: 현역 입대 (고3 강제 케이스).
@@ -100,6 +102,12 @@
       {#each indiePassed as teamId}
         <button class="opt-btn" type="button" on:click={() => chooseResult("independent", teamId)}>
           <span class="opt-label">독립리그 합격: {teamName(teamId)}</span>
+        </button>
+      {/each}
+      <!-- 해외 2군 직행 — 계약은 `salaryNegotiation`이 이어받는다(독립과 같은 흐름) -->
+      {#each overseasPassed as teamId}
+        <button class="opt-btn" type="button" on:click={() => chooseResult("overseas", teamId)}>
+          <span class="opt-label">해외 2군 합격: {teamName(teamId)}</span>
         </button>
       {/each}
       <!-- ⚠ **병역을 이미 마친 사람에게 입대를 권하지 않는다.**

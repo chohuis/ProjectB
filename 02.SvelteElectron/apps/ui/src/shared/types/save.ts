@@ -484,7 +484,8 @@ export interface UniversityMaster {
 }
 
 export type CareerChoiceMode = "none" | "draft" | "university" | "independent";
-export type CareerFinalChoice = "none" | "draft" | "university" | "independent" | "sports" | "general";
+/** ⚠ `overseas`는 해외 2군 직행이다(실플 ②) — 무대는 `pro_abl`/`pro_jbl`이 된다 */
+export type CareerFinalChoice = "none" | "draft" | "university" | "independent" | "sports" | "general" | "overseas";
 
 export interface CareerDraftPickLogEntry {
   pickNo: number;

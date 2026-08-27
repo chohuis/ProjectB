@@ -7,6 +7,7 @@
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
   import IndependentApplyModal from "./IndependentApplyModal.svelte";
+  import OverseasApplyModal from "./OverseasApplyModal.svelte";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
@@ -24,6 +25,15 @@
   let independentChoices: string[] = [];
   let universityModalOpen = false;
   let independentModalOpen = false;
+  /**
+   * 해외 2군 직행 (실플 ②).
+   *
+   * ⚠ **무대 게이트를 안 건다.** 고교·대학·독립 셋 다에서 지원할 수 있고,
+   *   자격은 팀별 문턱(OVR + 개인 기여)이 본다 — 모달이 그걸 보여준다.
+   */
+  let overseasChoices: string[] = [];
+  let overseasChecked = false;
+  let overseasModalOpen = false;
 
   function teamName(teamId: string): string {
     return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
@@ -36,6 +46,8 @@
     independentChoices = apps?.independentChoices ? [...apps.independentChoices] : [];
     universityChecked = universityChoices.length > 0;
     independentChecked = independentChoices.length > 0;
+    overseasChoices = apps?.overseasChoices ? [...apps.overseasChoices] : [];
+    overseasChecked = overseasChoices.length > 0;
   }
   $: setupDefaults();
 
@@ -45,6 +57,7 @@
       draftApplied: draftChecked,
       universityChoices: universityChoices.slice(0, 3),
       independentChoices: independentChoices.slice(0, 3),
+      overseasChoices: overseasChoices.slice(0, 3),
       sportsMilitaryApplied: false,
     });
     await gameStore.save();
@@ -124,11 +137,19 @@
         {/if}
       {/if}
 
+      <!-- 해외 2군 직행 (실플 ②) — 무대 게이트가 없다. 자격은 모달이 보여준다 -->
+      <button class="opt-btn" type="button" on:click={() => (overseasModalOpen = true)}>
+        <span class="opt-label">해외 2군 신청 {overseasChecked ? `✓ (${overseasChoices.length}/3)` : ""}</span>
+      </button>
+      {#if overseasChecked}
+        <div class="opt-box"><div class="list">{#each overseasChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
+      {/if}
+
       <button class="opt-btn danger" type="button" on:click={chooseMilitaryNow}>
         <span class="opt-label">군입대 (즉시 확정)</span>
       </button>
     </div>
-    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked || isIndependent)} on:click={submitApplications}>신청 완료</button>
+    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked || overseasChecked || isIndependent)} on:click={submitApplications}>신청 완료</button>
   </div>
 </div>
 
@@ -158,6 +179,21 @@
       independentChoices = e.detail.selected.slice(0, 3);
       independentChecked = independentChoices.length > 0;
       independentModalOpen = false;
+      await persistHubState();
+    }}
+  />
+{/if}
+{#if overseasModalOpen}
+  <OverseasApplyModal
+    initialSelected={overseasChoices}
+    on:close={async () => {
+      overseasModalOpen = false;
+      await persistHubState();
+    }}
+    on:confirm={async (e) => {
+      overseasChoices = e.detail.selected.slice(0, 3);
+      overseasChecked = overseasChoices.length > 0;
+      overseasModalOpen = false;
       await persistHubState();
     }}
   />

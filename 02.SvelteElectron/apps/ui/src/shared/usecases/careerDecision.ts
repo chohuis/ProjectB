@@ -12,6 +12,7 @@
 // 자동으로 부르면 안 된다 — 부르는 쪽이 "눌렀다"를 책임진다.
 
 import { get } from "svelte/store";
+import type { CareerStage } from "../types/save";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
@@ -148,16 +149,25 @@ export async function chooseDraft(): Promise<void> {
 
 /** 진학·독립 입단 선택 (`CareerResultModal.chooseResult`) */
 export async function chooseSchoolOrIndependent(
-  kind: "university" | "independent",
+  kind: "university" | "independent" | "overseas",
   teamId: string,
 ): Promise<void> {
-  const leagueId = kind === "university" ? "LEAGUE_UNIVERSITY" : "LEAGUE_INDEPENDENT";
-  gameStore.applyDraftDecision({ stage: kind, leagueId, teamId });
+  // 🔴 **해외는 팀에서 리그를 읽는다.** ABL 2군인지 JBL 2군인지는 그 팀이 안다 —
+  //   여기서 하나로 정하면 둘 중 하나가 잘못 들어간다.
+  const leagueId = kind === "university" ? "LEAGUE_UNIVERSITY"
+    : kind === "independent" ? "LEAGUE_INDEPENDENT"
+    : (get(masterStore).teams.find((t) => t.id === teamId)?.leagueId ?? "LEAGUE_ABL_FARM");
+  // 🔴 **무대는 리그가 정한다.** `overseas`는 진로 선택의 이름이고,
+  //   실제 `careerStage`는 `pro_abl`/`pro_jbl`이다 — 그 둘은 이미 있다.
+  const stage: CareerStage = kind === "overseas"
+    ? (leagueId.startsWith("LEAGUE_JBL") ? "pro_jbl" : "pro_abl")
+    : kind;
+  gameStore.applyDraftDecision({ stage, leagueId, teamId });
   gameStore.setCareerApplicationsSubmitted(false);
   gameStore.setCareerFinalChoice(kind);
   seasonStore.resolvePendingAction("careerChoice");
 
-  if (kind === "independent") {
+  if (kind === "independent" || kind === "overseas") {
     const p = get(gameStore).protagonist;
     const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
     // 독립리그 입단은 1년 단기 계약 고정이라 min=max=1이다.
@@ -166,11 +176,15 @@ export async function chooseSchoolOrIndependent(
     seasonStore.pushPendingAction({
       type: "salaryNegotiation",
       teamId, leagueId,
-      offeredSalary: Math.max(800, Math.round((ovr - 40) * 60)),
-      durationYears: 1,
-      minDurationYears: 1,
-      maxDurationYears: 1,
-      signingBonus: 0,
+      // ⚠ **해외 2군은 조건이 다르다.** 독립은 1년 단기지만 해외는 육성 계약이라
+      //   여러 해를 준다 — 1년으로 두면 매년 재계약을 물어 흐름이 끊긴다.
+      offeredSalary: kind === "overseas"
+        ? Math.max(2000, Math.round((ovr - 40) * 140))
+        : Math.max(800, Math.round((ovr - 40) * 60)),
+      durationYears: kind === "overseas" ? 3 : 1,
+      minDurationYears: kind === "overseas" ? 2 : 1,
+      maxDurationYears: kind === "overseas" ? 4 : 1,
+      signingBonus: kind === "overseas" ? Math.max(1000, Math.round((ovr - 60) * 300)) : 0,
       context: "initial",
     });
   }
