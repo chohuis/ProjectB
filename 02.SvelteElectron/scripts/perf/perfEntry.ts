@@ -1129,7 +1129,51 @@ export function faIntakeTally(): Record<string, unknown> {
   }
   for (const r of Object.values(roster)) r.평균인원 = Math.round(r.평균인원 / r.팀수 * 10) / 10;
 
-  return { 리그별: byLeague, 팀별FA계약: faByTeam, 연도수: years.size, 정원: roster };
+  // 🔴 **미계약자가 그 뒤에 어떻게 되는가** (사용자 지시 2026-08-27).
+  //
+  //   미계약률만 봐서는 그 수치가 나쁜지 알 수 없다. 미계약이 **커리어를
+  //   끊는가**(은퇴·야구 포기), 아니면 **한 단계 내려갔다 돌아오는가**
+  //   (독립·2군)가 다르다. 전자면 24%도 많고 후자면 40%도 괜찮다.
+  //
+  // ⚠ **같은 해에 신청은 있는데 계약이 없는 사람**을 미계약으로 본다.
+  //   `market.ts`의 `unsigned` 목록은 경력에 안 남아서 이렇게 되짚는다.
+  // ⚠ 결말은 그해와 **다음 해까지** 본다 — 진로 배정(12단계)이 오프시즌
+  //   뒤쪽이라 해가 넘어가 찍히는 경우가 있다.
+  // ⚠ **나이를 같이 본다.** 독립리그가 31세를 넘으면 안 받는다
+  //   (`rosterRules.LEAGUE_INDEPENDENT.ageMax`). FA 자격이 KBL 5년차라
+  //   미계약자 상당수가 그 위고, 그러면 **갈 곳이 아예 없다.**
+  //   그건 "야구를 그만뒀다"가 아니라 자리가 없는 것이다.
+  const fate = { 은퇴: 0, 야구포기: 0, 계속: 0, 총: 0, 서른둘이상: 0, 포기중_서른둘이상: 0 };
+  const nowYear = get(seasonStore).seasonYear ?? 0;
+  for (const n of npcs) {
+    const ev = n.careerEvents ?? [];
+    const applied = new Set<number>();
+    const signed = new Set<number>();
+    for (const e of ev) {
+      if (e.eventType !== "fa_signed") continue;
+      (e.toTeamId ? signed : applied).add(e.year);
+    }
+    for (const y of applied) {
+      if (signed.has(y)) continue;
+      fate.총 += 1;
+      // 그해 나이 — 지금 나이에서 지난 햇수를 뺀다
+      const ageThen = (n.age ?? 0) - Math.max(0, nowYear - y);
+      const old = ageThen > 31;
+      if (old) fate.서른둘이상 += 1;
+      const kind = ev.find((e) =>
+        (e.eventType === "retirement" || e.eventType === "quit_baseball")
+        && (e.year === y || e.year === y + 1))?.eventType;
+      if (!kind) fate.계속 += 1;
+      else if (kind === "retirement") fate.은퇴 += 1;
+      else {
+        fate.야구포기 += 1;
+        if (old) fate.포기중_서른둘이상 += 1;
+      }
+    }
+  }
+
+  return { 리그별: byLeague, 팀별FA계약: faByTeam, 연도수: years.size,
+    정원: roster, 미계약자결말: fate };
 }
 
 export function careerEventTally(): Record<number, Record<string, number>> {
