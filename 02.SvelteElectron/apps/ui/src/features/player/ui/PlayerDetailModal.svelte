@@ -783,7 +783,16 @@
                   {:else if modalNpcSave?.militaryUnit === "sports" && modalNpcSave?.militaryStatus === "현역"}
                     <span class="cp-yrsin">{militaryRankLabel(modalNpcSave.militaryRank, modalNpcSave.militaryEnlistYear, curSeasonYear)}</span>
                   {:else}
-                    <span class="cp-yrsin">{contractSummary.yearsIn}년차</span>
+                    <!--
+                      🔴 **"n년차"가 두 가지로 읽혔다** (2026-08-28 실제 플레이):
+                      "경기 기록은 5년인데 2년차라고 나온다."
+
+                      어긋난 게 아니라 **다른 값**이다 — 이건 `contract`에서 나온
+                      **이 계약의 몇 년째**(`durationYears - remainingYears + 1`)이고,
+                      경력 이력은 `careerRecords`가 쌓은 통산이다.
+                      말을 갈라 적는다. 통산은 아래 FA 칸이 이미 보여준다.
+                    -->
+                    <span class="cp-yrsin">계약 {contractSummary.yearsIn}년차</span>
                   {/if}
                 </div>
               </div>
@@ -852,7 +861,25 @@
             </button>
             {#if isPlayer}
               <button class:mtab-active={modalTab === "history"} on:click={() => (modalTab = "history")}>연도별 성적</button>
-              <button class:mtab-active={modalTab === "recent"} on:click={() => (modalTab = "recent")}>최근 경기</button>
+              <!--
+                🔴 **주인공에겐 이 탭을 안 띄운다** (2026-08-28 실제 플레이:
+                "최근 5경기는 나오는데 최근 경기 세션은 비워져 있음").
+
+                두 섹션이 **다른 출처**다:
+                  · 기록 탭 "최근 5경기" — `seasonStore.schedule`. 주인공도 나온다
+                  · 이 탭 "최근 경기"     — `npc_game_log` DB
+
+                DB는 `backgroundLeague`가 **배경 리그 경기만** 쌓고, 읽는 쪽도
+                `!isProtagonistModal`로 막혀 있다. 주인공 경기는 플레이어가
+                직접 치르므로 그 로그가 애초에 없다 — 탭만 있고 늘 "경기 없음"이었다.
+
+                ⚠ 데이터를 만드는 대신 **탭을 감춘다.** 주인공은 기록 탭의
+                  최근 5경기와 "나" 탭 경기 기록이 이미 같은 일을 한다 —
+                  같은 것을 세 번 그릴 이유가 없다.
+              -->
+              {#if !isProtagonistModal}
+                <button class:mtab-active={modalTab === "recent"} on:click={() => (modalTab = "recent")}>최근 경기</button>
+              {/if}
             {/if}
           </nav>
 

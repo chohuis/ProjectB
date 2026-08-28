@@ -56,8 +56,11 @@
   const TX_CAT_LABEL: Record<TxCategory, string> = {
     all: "전체", trade: "트레이드", fa: "FA", draft: "드래프트", military: "병역", retirement: "은퇴",
   };
+  // 🔴 **저장 계층이 아는 일곱을 다 적는다.** 다섯만 적어 뒀더니 `callup`·
+  //   `release`가 아이콘 `·`만 남고 본문이 통째로 비었다(2026-08-28 실제 플레이).
   const TX_ICON: Record<string, string> = {
     trade: "TR", fa: "FA", draft: "DR", military: "MIL", retirement: "RT",
+    callup: "UP", release: "RL",
   };
 
   function txMilIcon(detail?: string | null): string {
@@ -1156,6 +1159,51 @@
                           {#if r.fromTeamId}<span class="tx-arrow">{txTeamName(r.fromTeamId)}</span>{/if}
                         </span>
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
+                      {:else if group.category === "callup" || group.category === "release"}
+                        <!--
+                          🔴 **저장은 되는데 그리는 데가 없었다.** `slotRepo`는
+                          일곱 종류를 쓰는데 화면 분기가 다섯뿐이라, 콜업·방출이
+                          아이콘만 남고 본문이 비었다.
+                        -->
+                        {@const r = group.rows[0]}
+                        {@const isUp = group.category === "callup"}
+                        <span class="tx-tag {isUp ? 'tag-callup' : 'tag-release'}">{isUp ? "콜업" : "방출"}</span>
+                        <span class="tx-detail">
+                          <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
+                          {#if r.fromTeamId || r.toTeamId}
+                            <span class="tx-arrow">
+                              {txTeamName(r.fromTeamId)}{#if r.toTeamId} → {txTeamName(r.toTeamId)}{/if}
+                            </span>
+                          {/if}
+                        </span>
+                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
+                      {:else}
+                        <!--
+                          🔴 **폴백이 없어서 조용히 삼켰다** (2026-08-28 실제 플레이:
+                          "전체로 놓으면 아이콘만 있고 내용이 없는 게 잡힌다").
+
+                          분기가 다섯(trade·fa·draft·military·retirement)뿐인데
+                          `category`는 저장된 값 **그대로**다. 그 밖의 값이 오면
+                          `tx-body`가 통째로 비고 아이콘 `·`만 남았다.
+
+                          ⚠ **모르는 종류를 감추지 않는다.** 감추면 데이터가 늘어도
+                            화면이 그대로라 아무도 모른다 — 이 저장소에서 여러 번
+                            나온 형태다(스텁 폴백·조건 오타·검사 통과).
+                            종류 이름을 그대로 드러내 눈에 걸리게 한다.
+                        -->
+                        {@const r = group.rows[0]}
+                        <span class="tx-tag tag-unknown">{group.category || "?"}</span>
+                        <span class="tx-detail">
+                          {#if r.playerName}
+                            <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
+                          {/if}
+                          {#if r.fromTeamId || r.toTeamId}
+                            <span class="tx-arrow">
+                              {txTeamName(r.fromTeamId)}{#if r.toTeamId} → {txTeamName(r.toTeamId)}{/if}
+                            </span>
+                          {/if}
+                        </span>
+                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
                       {/if}
                     </div>
                     {#if group.rows[0].week}
@@ -1542,6 +1590,10 @@
   .tag-mil-sports     { background: #9A6510; }
   .tag-mil-discharge  { background: #1F7A47; }
   .tag-retirement     { background: #B3311F; }
+  .tag-callup         { background: #2C5F8A; }
+  .tag-release        { background: #7A5C1F; }
+  /* 모르는 종류 — 회색으로 두되 **감추지는 않는다** */
+  .tag-unknown        { background: var(--ink-mute); }
 
   .tx-body { flex: 1; min-width: 0; display: grid; gap: 2px; }
   .tx-body strong { color: var(--ink); font-weight: 700; }

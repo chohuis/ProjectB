@@ -922,7 +922,16 @@ export interface CareerSeasonRecord {
 
 // ── 리그 거래 기록 ──────────────────────────────────────────────
 
-export type LeagueTransactionCategory = "trade" | "fa" | "draft" | "military" | "retirement";
+/**
+ * 리그 거래 기록의 종류.
+ *
+ * 🔴 **저장 계층(slotRepo)이 아는 일곱과 맞춰야 한다.** 예전엔 다섯뿐이라
+ *   `callup`(콜업)·`release`(방출)로 저장된 행이 **화면에서 아이콘만 남고
+ *   사라졌다** (2026-08-28 실제 플레이: "아이콘만 있고 내용이 없는 게 잡힌다").
+ *   타입이 좁으면 데이터가 조용히 없어진다.
+ */
+export type LeagueTransactionCategory =
+  | "trade" | "fa" | "draft" | "military" | "retirement" | "callup" | "release";
 
 export interface LeagueTransactionRow {
   id?: number;
