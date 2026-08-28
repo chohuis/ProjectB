@@ -338,6 +338,12 @@ pub struct PitcherLineAccum {
 #[serde(rename_all = "camelCase")]
 pub struct BatterLineAccum {
     pub player_id: String,
+    /// 수비 기록 — **선수별로 한 건도 안 쌓이고 있었다** (2026-08-29).
+    /// `DefenseStat`은 팀 단위 하나라 골든글러브를 뽑을 근거가 없었다.
+    /// ⚠ 전부 `default`다 — 구 세이브의 로그엔 없다.
+    #[serde(default)] pub errors: i32,
+    #[serde(default)] pub assists: i32,
+    #[serde(default)] pub putouts: i32,
     pub ab: i32,
     pub h: i32,
     /// 2루타·3루타 — 엔진은 처음부터 갈라 만드는데 `h`로 뭉개고 있었다
@@ -599,7 +605,16 @@ pub struct MatchState {
 
     pub is_finished: bool,
     pub logs: Vec<String>,
+    /// **주인공 쪽 수비진.**
+    ///
+    /// 🔴 예전엔 이게 전부였다 — `resolve_fielding_result`가 **반과 무관하게**
+    ///   이 배열만 봤다. 즉 **원정 수비가 존재하지 않았고**, 홈(또는 주인공)
+    ///   팀 9명이 양 팀 이닝을 다 지켰다. 선수별 수비 기록을 달면 그 사람들이
+    ///   **상대 수비 기록까지 먹는다.** (2026-08-29)
     pub fielders: Vec<FielderStats>,
+    /// 상대 쪽 수비진. **비면 예전 동작**(양 반 모두 `fielders`)이다.
+    #[serde(default)]
+    pub opponent_fielders: Vec<FielderStats>,
     pub defense_stat: DefenseStat,
     #[serde(default)]
     pub batter_accum: HashMap<String, BatterStatAccum>,
@@ -738,6 +753,9 @@ pub struct MatchStartOptions {
     pub weather: Option<WeatherType>,
     pub park: Option<ParkType>,
     pub fielders: Option<Vec<FielderStats>>,
+    /// 상대 수비진. ⚠ **안 넘기면 상대 이닝도 내 수비수가 지킨다**
+    #[serde(default)]
+    pub opponent_fielders: Option<Vec<FielderStats>>,
     /// 투수진 (C-1). 안 주면 예전처럼 단일 투수로 돈다
     #[serde(default)]
     pub my_pitchers: Option<Vec<PartialPitcherStats>>,

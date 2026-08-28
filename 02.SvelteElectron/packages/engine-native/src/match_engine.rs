@@ -318,6 +318,10 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
 
     let fielders = opts.fielders.clone()
         .unwrap_or_else(|| create_default_fielders(rng, 50.0));
+    // ⚠ **안 넘기면 빈 채로 둔다** — 그러면 예전 동작(양 반 모두 `fielders`)이다.
+    //   기본 수비진을 만들어 채우면 상대가 **평균 50짜리 수비**를 갖게 되어
+    //   조용히 밸런스가 바뀐다
+    let opponent_fielders = opts.opponent_fielders.clone().unwrap_or_default();
 
     let match_id = opts.match_id.clone()
         .unwrap_or_else(|| format!("match-{}", std::time::SystemTime::now()
@@ -381,6 +385,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         is_finished: false,
         logs: vec!["경기 시작".to_string()],
         fielders,
+        opponent_fielders,
         defense_stat: DefenseStat { errors: 0, assists: 0, throw_outs: 0, throw_safes: 0 },
         batter_accum: HashMap::new(),
         // 씨앗은 호출부(lib.rs)가 채운다 — 여기선 "없음"으로 둔다
@@ -796,6 +801,19 @@ fn calc_error_prob(ball: &BallInPlay, fielder: &FielderStats) -> f64 {
         BallHitType::LineDrive  => 0.09,
     };
     clamp(base + (ball.hardness as f64 - 3.0) * 0.025 - (fielder.fielding - 50.0) * 0.003, 0.01, 0.40)
+}
+
+/// **이번 반에 수비하는 쪽**의 수비진.
+///
+/// 🔴 예전엔 반과 무관하게 `state.fielders` 하나만 봤다 — 홈(또는 주인공)
+///   팀 9명이 **양 팀 이닝을 다 지켰다.** 원정 수비가 존재하지 않았다.
+/// ⚠ `opponent_fielders`가 비면 예전 동작으로 떨어진다(구 세이브 호환).
+fn fielding_side<'a>(state: &'a MatchState) -> &'a [FielderStats] {
+    if state.opponent_fielders.is_empty() { return &state.fielders; }
+    let my_is_home = state.protagonist_side == "home";
+    // 초면 홈이 수비, 말이면 원정이 수비다
+    let home_is_fielding = state.half == HalfInning::Top;
+    if home_is_fielding == my_is_home { &state.fielders } else { &state.opponent_fielders }
 }
 
 fn make_default_fielder(pos: FieldPosition) -> FielderStats {
@@ -1679,7 +1697,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let mut fielding_result: Option<FieldingResult> = None;
     if let Some(ref ball) = ball_in_play {
         if result_code == PitchResultCode::InplayOut {
-            let (fr, adj_code) = resolve_fielding_result(ball, &pre_state.fielders, rng);
+            let (fr, adj_code) = resolve_fielding_result(ball, fielding_side(&pre_state), rng);
             fielding_result = Some(fr);
             result_code = adj_code;
         }
@@ -1821,6 +1839,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         } else if fr.throw_result.as_deref() == Some("safe") {
             next_defense_stat.throw_safes += 1;
         }
+
     }
 
     // 콜드게임: 3아웃 전환 전에 판정해야 half=Bottom 조건이 살아있음
@@ -2052,6 +2071,37 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         // ⚠ **투수만 쌓으면 순위표의 절반이 빈다** — 타율·홈런·타점왕이 안 나오고
         // 팀 득점도 선수별로 안 갈린다. 타석이 끝나는 결과에서만 센다
         // (파울·볼·헛스윙은 타석이 안 끝나므로 제외).
+        // 🔴 **선수별 수비 기록** (2026-08-29). `DefenseStat`은 팀 단위 하나뿐이라
+        //   골든글러브를 뽑을 근거가 없었다.
+        //
+        // ⚠ 수비수는 **공격 팀의 반대편**이다 — 초면 홈이 수비다. 타자 줄과
+        //   정반대라 여기서 헷갈리면 기록이 통째로 뒤집힌다.
+        // ⚠ 삼진·볼넷은 `fielding_result`가 없으므로 자연히 빠진다.
+        if let Some(ref fr) = fielding_result {
+            let is_top = state.half == HalfInning::Top;
+            let recv_id = fr.threw_to.and_then(|to| fielding_side(state).iter()
+                .find(|f| f.position == to).map(|f| f.player_id.clone()));
+            let lines = if is_top { &mut next_state.home_bat_lines }
+                        else      { &mut next_state.away_bat_lines };
+            let fid = fr.fielder.player_id.clone();
+            let mut bump = |id: &str, kind: u8| {
+                if id.is_empty() { return; }
+                if let Some(b) = lines.iter_mut().find(|x| x.player_id == id) {
+                    match kind { 0 => b.errors += 1, 1 => b.assists += 1, _ => b.putouts += 1 }
+                }
+            };
+            if fr.is_error {
+                bump(&fid, 0);
+            } else if fr.throw_result.as_deref() == Some("out") {
+                // 던진 사람이 보살, 받은 사람이 자살이다
+                bump(&fid, 1);
+                if let Some(ref r) = recv_id { bump(r, 2); }
+            } else if delta > 0 {
+                // 송구 없이 잡은 아웃 — 뜬공·직선타는 잡은 사람이 자살이다
+                bump(&fid, 2);
+            }
+        }
+
         // 🔴 **도루를 기록한다** (2026-08-29). 예전엔 `attempt_steals`가 로그
         //   문자열만 만들고 타자 줄을 안 건드렸다 — **규정타자 전원 도루 0**이었다.
         // ⚠ 주자는 **공격 팀** 소속이다 — 초면 원정, 말이면 홈이다.
@@ -2426,6 +2476,7 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
                 r: b.r, hbp: b.hbp, sac: b.sac, sf: b.sf, rbi: b.rbi,
                 bb: b.bb, k: b.k, sb: b.sb,
                 risp_ab: b.risp_ab, risp_h: b.risp_h,
+                e: b.errors, a: b.assists, po: b.putouts,
             });
         }
     }

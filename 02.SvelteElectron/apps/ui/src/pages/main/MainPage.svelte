@@ -210,6 +210,8 @@
         // `get is not defined`로 **경기 화면이 통째로 죽었다**(새 게임 2주차
         // 친선경기에서 재현). 화면은 언어 반영본을 읽는 게 규칙이기도 하다.
         fielders: buildFielders(p.teamId, $entitiesL10n),
+        // ⚠ 안 넘기면 **주인공 팀이 공격할 때도 주인공 팀 수비수가 잡는다**
+        opponentFielders: buildFielders(opponentTeamId, $entitiesL10n),
         ...(opponentLineup.length >= 9 ? { opponentLineup } : { batterMean: 55 }),
         ...(myLineup.length >= 9       ? { myTeamLineup: myLineup } : {}),
         ...(opponentPitcher            ? { opponentPitcher } : {}),

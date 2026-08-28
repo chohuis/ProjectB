@@ -870,6 +870,12 @@ pub enum PlayerGameLine {
         risp_ab: i32,
         #[serde(rename = "rispH", default)]
         risp_h: i32,
+        /// 수비 기록 — 실책·보살·자살. **선수별로 한 건도 안 쌓이고 있었다**
+        /// (2026-08-29). 골든글러브의 근거다.
+        /// ⚠ `default`다 — 구 세이브 로그엔 없다.
+        #[serde(default)] e: i32,
+        #[serde(default)] a: i32,
+        #[serde(default)] po: i32,
     },
 }
 

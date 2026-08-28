@@ -84,6 +84,8 @@ declare global {
         weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
         park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
         fielders?: MatchFielderStats[];
+        /** 상대 수비진. ⚠ 안 넘기면 양 반 모두 `fielders`가 지킨다 */
+        opponentFielders?: MatchFielderStats[];
       }) => Promise<{ snapshot: MatchSnapshot }>;
       matchStep: (decision: PitchDecision) => Promise<{
         snapshot: MatchSnapshot;
@@ -153,6 +155,9 @@ declare global {
          * (`create_default_fielders(rng, 50.0)`). 리그 실제 수비는 66 수준이라
          * 주인공만 16점 약한 뒤를 두고 던졌다 — 120경기 실측에서 ERA 10.29 → 7.22 */
         fielders?: MatchFielderStats[];
+        /** 🔴 **상대 수비진.** 안 넘기면 엔진이 양 반 모두 `fielders`를 쓴다 —
+         *  **주인공 팀이 공격할 때도 주인공 팀 수비수가 잡는다** (2026-08-29) */
+        opponentFielders?: MatchFielderStats[];
         opponentPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
         npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
       }) => Promise<string>;

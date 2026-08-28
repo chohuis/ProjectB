@@ -859,6 +859,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
             r: acc.r, hbp: acc.hbp, sac: acc.sac, sf: acc.sf,
             rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
+            // ⚠ npc_sim 갈래는 수비 판정 자체가 없다 — 0이 정직하다
+            e: 0, a: 0, po: 0,
         });
     }
 

@@ -475,6 +475,9 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     // 실측에서 수비 50 vs 66이 ERA 3점 차이였다.
     // 타순이 곧 수비 라인업이다(리그 시뮬은 포지션을 따로 안 들고 있다)
     fielders: buildFieldersFromLineup(params.homeLineup),
+    // 🔴 **원정 수비가 없었다** (2026-08-29). 안 넘기면 홈 9명이 **양 팀 이닝을
+    //   다 지킨다** — 수비 기록이 홈 선수에게 몰리고 원정 타자는 홈 수비를 만난다
+    opponentFielders: buildFieldersFromLineup(params.awayLineup),
   }));
   const st = JSON.parse(startRaw);
   if (st.error) throw new Error(`[C-4] startMatch: ${st.error}`);
