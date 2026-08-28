@@ -324,6 +324,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
     MatchState {
         match_id,
         inning: 1, inning_limit,
+        extra_inning_limit: opts.extra_inning_limit.unwrap_or(0),
         half: HalfInning::Top,
         outs: 0,
         count: MatchCount { balls: 0, strikes: 0 },
@@ -1124,6 +1125,10 @@ fn is_cold_game(state: &MatchState) -> bool {
 fn should_auto_finish(state: &MatchState) -> bool {
     if state.half == HalfInning::Bottom && state.inning >= state.inning_limit && state.score.home > state.score.away { return true; }
     if state.inning > state.inning_limit && state.score.home != state.score.away { return true; }
+    // 🔴 **연장 상한** (2026-08-29). 예전엔 이 줄이 없어서 승부가 날 때까지
+    //   했다 — **무승부가 구조상 안 나왔다.** KBO는 12회까지다.
+    // ⚠ `0`이면 무제한이다 — 대회·포스트시즌은 승자가 나와야 한다.
+    if state.extra_inning_limit > 0 && state.inning > state.extra_inning_limit { return true; }
     is_cold_game(state)
 }
 
@@ -2404,13 +2409,17 @@ pub fn to_match_result(state: &MatchState, home_team_id: &str, away_team_id: &st
 {
     let home = state.score.home;
     let away = state.score.away;
-    let (winner, loser) = if home >= away { (home_team_id, away_team_id) }
-                          else            { (away_team_id, home_team_id) };
+    // 🔴 **동점이면 무승부다** (2026-08-29). 예전엔 `home >= away`라
+    //   **동점이 조용히 홈 승**이 됐다. 연장 상한이 없던 시절엔 닿기
+    //   어려운 자리였지만, 12회 제한을 넣으면 정상 경로가 된다.
+    let (winner, loser) = if home == away { ("", None) }
+                          else if home > away { (home_team_id, Some(away_team_id)) }
+                          else                { (away_team_id, Some(home_team_id)) };
     crate::sim_types::MatchResult {
         home_score: home,
         away_score: away,
         winner_id: winner.to_string(),
-        loser_id:  loser.to_string(),
+        loser_id:  loser.map(|s| s.to_string()),
         player_lines: collect_player_lines(state),
         events: vec![],
     }

@@ -2407,6 +2407,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const _tradeWeeks2 = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
               const sim2 = await simulateGame(game.homeTeamId, game.awayTeamId, entities2, {
                 conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
+                phase: game.phase,
                 worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
                 npcInjuries: get(seasonStore).npcInjuries,
                 // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
@@ -2482,7 +2483,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           if (entities.length > 0) {
             const _tradeWeeksNpc = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
             const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
-              conditions, homeRotIdx, awayRotIdx, week: game.week,
+              conditions, homeRotIdx, awayRotIdx, week: game.week, phase: game.phase,
               worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
               npcInjuries: get(seasonStore).npcInjuries,
               // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
@@ -2800,7 +2801,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         if (entities.length > 0) {
           const _tradeWeeksPs = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
           const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
-            conditions, homeRotIdx, awayRotIdx, week: game.week,
+            conditions, homeRotIdx, awayRotIdx, week: game.week, phase: game.phase,
               worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
             npcInjuries: get(seasonStore).npcInjuries,
             // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수

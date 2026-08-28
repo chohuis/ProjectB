@@ -627,7 +627,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 home_score: 0,
                 away_score: 0,
                 winner_id: params.home_team_id.clone(),
-                loser_id:  params.away_team_id.clone(),
+                loser_id:  Some(params.away_team_id.clone()),
                 player_lines: vec![],
                 events: vec![],
             },
@@ -780,15 +780,22 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 pit_stamina_map.insert(ex_a.id.clone(), new_ex_a_st);
                 ex_inning   += 1;
             }
-            if home_score == away_score {
-                if rng.gen::<f64>() < 0.5 { home_score += 1; } else { away_score += 1; }
-            }
+            // 🔴 **동전던지기로 승자를 만들고 있었다** (2026-08-29).
+            //   연장을 다 돌고도 동점이면 **무승부**다 — 없는 점수를
+            //   지어내지 않는다.
+            // ⚠ 대회·포스트시즌은 승자가 나와야 하므로 호출부가
+            //   `extra_inning_limit`을 0으로 둔다(무제한).
         }
     }
 
+    let is_draw   = home_score == away_score;
     let home_won  = home_score > away_score;
-    let winner_id = if home_won { params.home_team_id.clone() } else { params.away_team_id.clone() };
-    let loser_id  = if home_won { params.away_team_id.clone() } else { params.home_team_id.clone() };
+    let winner_id = if is_draw { String::new() }
+                    else if home_won { params.home_team_id.clone() }
+                    else { params.away_team_id.clone() };
+    let loser_id  = if is_draw { None }
+                    else if home_won { Some(params.away_team_id.clone()) }
+                    else { Some(params.home_team_id.clone()) };
     let margin    = (home_score - away_score).abs();
 
     // W/L/SV/HD 결정

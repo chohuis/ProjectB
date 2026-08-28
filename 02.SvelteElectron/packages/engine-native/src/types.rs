@@ -508,6 +508,13 @@ pub struct MatchState {
     pub match_id: String,
     pub inning: u8,
     pub inning_limit: u8,
+    /// **연장 상한.** 이 회를 넘기고도 동점이면 무승부다.
+    ///
+    /// ⚠ `0`이면 **무제한** — 승부가 날 때까지 한다(예전 동작).
+    ///   대회·포스트시즌은 승자가 나와야 하므로 0으로 둔다.
+    ///   정규리그만 12를 넘긴다(KBO 규정).
+    #[serde(default)]
+    pub extra_inning_limit: u8,
     pub half: HalfInning,
     pub outs: u8,
     pub count: MatchCount,
@@ -702,6 +709,9 @@ pub struct MatchStartOptions {
     /// 이 경기가 속한 리그 — 투구수 상한이 리그별이다 (Phase 5-8)
     pub league_id: Option<String>,
     pub inning_limit: Option<u8>,
+    /// 연장 상한. 없거나 0이면 무제한(예전 동작). 정규리그만 12를 넘긴다
+    #[serde(default)]
+    pub extra_inning_limit: Option<u8>,
     pub protagonist_side: Option<String>,
     pub role: Option<PitcherRole>,
     pub entry_trigger: Option<EntryTrigger>,

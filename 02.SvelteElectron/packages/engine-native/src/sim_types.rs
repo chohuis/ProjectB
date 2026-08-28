@@ -879,7 +879,10 @@ pub struct MatchResult {
     pub home_score: i32,
     pub away_score: i32,
     pub winner_id: String,
-    pub loser_id: String,
+    /// 🔴 **무승부면 `None`이다** (2026-08-29). 예전엔 `String`이라 동점이
+    /// 나도 한쪽이 패자로 적혔다 — TS는 처음부터 `loserId: string | null`로
+    /// 무승부를 기다리고 있었는데 Rust가 null을 못 보냈다.
+    pub loser_id: Option<String>,
     pub player_lines: Vec<PlayerGameLine>,
     pub events: Vec<String>,
 }

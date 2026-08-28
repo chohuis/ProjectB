@@ -195,6 +195,13 @@ export async function simulateGame(
     worldSeed?: number;
     /** 일정 id — 같은 주에 같은 카드가 두 번 있으면 씨앗이 겹친다 */
     scheduleId?: string;
+    /**
+     * 이 경기의 시즌 페이즈. **`"season"`일 때만 무승부가 난다.**
+     *
+     * 🔴 대회·포스트시즌은 **승자가 나와야 한다** — 대진이 다음 라운드로
+     *   못 넘어간다. 안 넘기면 무제한(예전 동작)이라 조용히 안전하다.
+     */
+    phase?: import("../types/season").SeasonPhase;
   },
 ): Promise<SimGameResult> {
   const {
@@ -211,6 +218,7 @@ export async function simulateGame(
     tradeAdaptationPenalty,
     worldSeed,
     scheduleId,
+    phase,
   } = options ?? {};
 
   const entityMap = new Map(entities.map((e) => [e.id, e]));
@@ -249,6 +257,9 @@ export async function simulateGame(
     awayRotIdx,
     conditions,
     week,
+    // 🔴 **연장 상한** — 정규시즌만 건다. 0이면 무제한(승부가 날 때까지).
+    //   예전엔 이 값이 없어 **무승부가 구조상 안 나왔다.**
+    extraInningLimit: phase === "season" ? EXTRA_INNING_LIMIT : 0,
     homeTeamId,
     awayTeamId,
     worldSeed,
@@ -313,6 +324,13 @@ const engineCall = (fn: string, payload: string): Promise<string> =>
 //
 // 능력치가 높을수록 ERA가 나빠지면 육성·드래프트·수상이 전부 거꾸로 돈다.
 // 성능은 문제없었다(주당 +153ms, 예상 136ms와 일치).
+/**
+ * 연장 상한 (KBO 규정). 이 회를 넘기고도 동점이면 무승부다.
+ *
+ * ⚠ 정규시즌에만 건다 — 대회·포스트시즌은 승자가 나와야 한다.
+ */
+export const EXTRA_INNING_LIMIT = 12;
+
 export const FULL_ENGINE_LEAGUES = new Set<string>([
   "LEAGUE_HIGHSCHOOL",   // C-4 검증 완료 (ERA 3.86 · 이닝 47.3)
   "LEAGUE_UNIVERSITY",   // C-5
@@ -417,6 +435,8 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
 
   const startRaw = await engineCall("startMatchNative", JSON.stringify({
     leagueId,
+    // ⚠ 여기 안 넘기면 풀 엔진 경기만 무승부가 안 난다 — 리그마다 규칙이 갈린다
+    extraInningLimit: params.extraInningLimit ?? 0,
     ...(seed === undefined ? {} : { seed }),
     protagonistSide: "home",
     role: "SP",

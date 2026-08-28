@@ -48,6 +48,7 @@ export async function runSimBatch(
         conditions:           g.conditions,
         homeRotIdx:           g.homeRotIdx ?? 0,
         awayRotIdx:           g.awayRotIdx ?? 0,
+        phase:                g.phase,
         week:                 g.week ?? 0,
         npcInjuries,
         npcLiveStats,
@@ -142,6 +143,8 @@ export async function simulateBackgroundLeagues(
           // 로그에 "7/14 vs 청람고"를 쓰려면 여기서 들고 가야 한다.
           // 나중에 시즌·주차로 되짚으면 한 주에 여럿이라 경기를 못 고른다
           gameDate: e.gameDate ?? "",
+          // ⚠ 안 실으면 연장 상한이 안 걸려 무승부가 안 난다
+          phase: e.phase,
         });
       }
     }
