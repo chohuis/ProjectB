@@ -186,7 +186,13 @@ app.whenReady().then(() => {
       try { db.prepare(`DELETE FROM ${t} WHERE slot_id = ?`).run(slotId); } catch { /* 테이블이 아직 없을 수 있다 */ }
     }
   };
-  const slotManager = slotdb.createManager(savesDir, { onSlotReset: purgeSlotHistory });
+  // 🔴 **엔진을 넘긴다** — 세이브 서명(HMAC)이 Rust에 있다.
+  //   키가 Rust 바이너리 안에 XOR 분산 저장돼 있어 **Electron에 두면 안 된다**
+  //   (CLAUDE.md 절대 금지). 여기서는 함수만 빌려 쓴다.
+  const slotManager = slotdb.createManager(savesDir, {
+    onSlotReset: purgeSlotHistory,
+    engine: engineNative,
+  });
   // 레거시 채널(npc:*/league:*)을 slotdb 커맨드로 라우팅 — 콜사이트 무수정 전환
   const v3Compat = (cmd, payload) => JSON.stringify(slotdb.dispatch(slotManager, cmd, payload));
   ipcMain.handle("repo:call", (_event, cmd, payloadJson) => {

@@ -521,6 +521,12 @@ function createManager(savesDir, hooks = {}) {
   return {
     savesDir,
     hooks,
+    // 🔴 **세이브 무결성용 엔진** (2026-08-28). Rust에 `compute_save_sig`·
+    //   `verify_save_sig`가 **있는데 아무도 안 쓰고 있었다**
+    //   (CLAUDE.md가 "v3 미구현"이라 적어 둔 그것이다).
+    // ⚠ 키가 Rust 바이너리 안에 XOR 분산 저장돼 있다 — **Electron에 두면 안 된다**
+    //   (CLAUDE.md 절대 금지: "Electron에 암호화 키").
+    engine: hooks.engine ?? null,
     get(slotId) {
       let db = open.get(slotId);
       if (!db) { db = openSlot(savesDir, slotId); open.set(slotId, db); }
@@ -1258,6 +1264,45 @@ function deleteSlot(manager, slotId) {
 
 // ── 디스패처 (repo:call 진입점) ──────────────────────────────────
 // 계약: 절대 throw하지 않는다 — 실패는 { error } 반환 (트랜잭션은 이미 롤백됨)
+// ── 세이브 무결성 (2026-08-28) ────────────────────────────────────────────────
+//
+// 🔴 Rust에 HMAC이 **있는데 아무도 안 불렀다.** 서명이 없으니 세이브를 손으로
+//   고쳐도 게임이 모른다.
+//
+// ⚠ **못 열게 만들지 않는다.** 서명이 없거나 어긋나도 **읽기는 읽고 표시만
+//   남긴다** — 구 세이브엔 서명이 없고, 여기서 막으면 그 세이브가 통째로
+//   죽는다. "변조를 알린다"와 "게임을 못 하게 한다"는 다른 일이다.
+//
+// ⚠ 서명 대상은 **주인공 blob 하나**다. 시즌은 5개 테이블로 분해 저장돼서
+//   같은 방식이 안 통한다 — 거기까지 넓히려면 별건이다.
+const SIG_KEY = "protagonist_sig";
+
+/** 서명을 만든다. 엔진이 없으면(웹·구 빌드) 아무 일도 안 한다 */
+function signProtagonist(manager, db, json) {
+  const e = manager.engine;
+  if (!e || typeof e.computeSaveSig !== "function") return;
+  try {
+    db.prepare("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)")
+      .run(SIG_KEY, e.computeSaveSig(json));
+  } catch { /* 서명 실패가 저장을 막지 않는다 */ }
+}
+
+/**
+ * 검증 결과를 돌려준다 — `"ok"` · `"none"`(서명 없음) · `"mismatch"`.
+ *
+ * ⚠ `"none"`은 결함이 아니다. 구 세이브이거나 엔진이 없는 환경이다.
+ */
+function verifyProtagonist(manager, db, json) {
+  const e = manager.engine;
+  if (!e || typeof e.verifySaveSig !== "function") return "none";
+  let row;
+  try { row = db.prepare("SELECT value FROM meta WHERE key = ?").get(SIG_KEY); }
+  catch { return "none"; }
+  if (!row || !row.value) return "none";
+  try { return e.verifySaveSig(json, row.value) ? "ok" : "mismatch"; }
+  catch { return "none"; }
+}
+
 function dispatch(manager, cmd, payload) {
   try {
     if (cmd === "listSlots") return listSlots(manager);
@@ -1267,6 +1312,20 @@ function dispatch(manager, cmd, payload) {
     if (!payload || typeof payload.slotId !== "string") return { error: `[repo:call] slotId required for ${cmd}` };
     const db = manager.get(payload.slotId);
     const out = fn(db, payload);
+
+    // 🔴 **저장·로드가 지나는 유일한 자리다.** 커맨드마다 붙이면 새 커맨드가
+    //   생길 때 빠진다 — 이 저장소에서 되풀이된 형태다.
+    if (cmd === "setProtagonist" && !out?.error) {
+      signProtagonist(manager, db, JSON.stringify(payload.data));
+    }
+    if (cmd === "getProtagonist" && out && !out.error) {
+      // ⚠ 결과에 **표시만 얹는다.** 값을 바꾸거나 막지 않는다
+      const verdict = verifyProtagonist(manager, db, JSON.stringify(out));
+      if (verdict === "mismatch") {
+        console.warn("[slotdb] 세이브 서명 불일치 —", payload.slotId);
+      }
+      return { ...out, __sig: verdict };
+    }
     // ⚠ `createSlot`은 그 슬롯의 세계를 **새로 시작**한다. slot.db 안은 스스로
     // 비우지만 공용 DB의 시즌 기록은 그대로 남아, 새 게임이 옛 세계의 순위표를
     // 자기 것으로 읽는다. 삭제만 훅에 걸면 "지우지 않고 덮어쓰는" 이 경로가 샌다.

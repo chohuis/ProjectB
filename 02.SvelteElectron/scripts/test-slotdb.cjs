@@ -173,6 +173,48 @@ check("listSlots 2개", call("listSlots").length === 2);
 call("deleteSlot", { slotId: "T2" });
 check("deleteSlot → 파일 제거", call("listSlots").length === 1 && !fs.existsSync(path.join(tmpDir, "slot3_T2.db")));
 
+// ── 9. 세이브 무결성 (2026-08-28) ─────────────────────────────
+//
+// 🔴 Rust에 HMAC이 **있는데 아무도 안 불렀다** — CLAUDE.md가 "v3 미구현"이라
+//   적어 둔 그것이다. 서명이 없으니 세이브를 손으로 고쳐도 게임이 몰랐다.
+//
+// ⚠ **못 열게 만들지 않는다.** 서명이 없거나 어긋나도 **읽기는 읽는다** —
+//   구 세이브엔 서명이 없고, 막으면 그 세이브가 통째로 죽는다.
+//   "변조를 알린다"와 "게임을 못 하게 한다"는 다른 일이다.
+{
+  const engine = require("../packages/engine-native");
+  const sigDir = fs.mkdtempSync(path.join(os.tmpdir(), "slotdb-sig-"));
+  const sigMgr = slotdb.createManager(sigDir, { engine });
+  const sig = (cmd, p) => slotdb.dispatch(sigMgr, cmd, p);
+  const DATA = { protagonist: { id: "PLY_HERO", fame: 42 } };
+
+  sig("createSlot", { slotId: "S1", worldSeed: 1, protagonist: {}, season: {}, npcs: [] });
+  sig("setProtagonist", { slotId: "S1", data: DATA });
+  check("서명: 저장 직후 검증 통과", sig("getProtagonist", { slotId: "S1" }).__sig === "ok");
+
+  // 세이브를 손으로 고친다 — 서명은 그대로 둔다
+  const sdb = sigMgr.get("S1");
+  sdb.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)")
+     .run(JSON.stringify({ protagonist: { id: "PLY_HERO", fame: 9999 } }));
+  const tampered = sig("getProtagonist", { slotId: "S1" });
+  check("서명: 변조를 잡는다", tampered.__sig === "mismatch");
+  check("서명: 변조여도 값은 읽힌다", tampered.protagonist && tampered.protagonist.fame === 9999);
+
+  // 구 세이브 — 서명이 없다
+  sdb.prepare("DELETE FROM meta WHERE key = ?").run("protagonist_sig");
+  const old = sig("getProtagonist", { slotId: "S1" });
+  check("서명: 없으면 none — 막지 않는다", old.__sig === "none");
+  check("서명: 없어도 값은 읽힌다", old.protagonist && old.protagonist.fame === 9999);
+
+  // 엔진이 없는 환경(웹·구 빌드)
+  const noEng = slotdb.createManager(sigDir, {});
+  check("서명: 엔진이 없으면 none",
+    slotdb.dispatch(noEng, "getProtagonist", { slotId: "S1" }).__sig === "none");
+
+  sigMgr.closeAll(); noEng.closeAll();
+  fs.rmSync(sigDir, { recursive: true, force: true });
+}
+
 // ── 정리 ─────────────────────────────────────────────────────
 mgr.closeAll();
 fs.rmSync(tmpDir, { recursive: true, force: true });
