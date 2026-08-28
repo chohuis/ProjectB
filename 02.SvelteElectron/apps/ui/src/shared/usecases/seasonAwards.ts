@@ -41,6 +41,8 @@ export interface AwardRules {
   pitcher: AwardDef[];
   batter: AwardDef[];
   mvp: { label: string; minTitles: number };
+  /** 신인왕. 없으면 안 뽑는다(구 규칙 파일 호환) */
+  rookie?: { label: string; maxProYears: number; leagues?: string[] };
 }
 
 /** 한 부문의 수상자. 화면과 경력기록이 **같은 값**을 쓴다 */
@@ -94,9 +96,16 @@ function winnerOf(
   return { ...best, second };
 }
 
+/** 비율 부문 — 앞의 0을 떼고 소수 셋째 자리까지 (야구 관습) */
+const RATE_STATS = new Set(["avg", "obp", "slg", "winPct"]);
+
 function fmt(def: AwardDef, v: number): string {
   if (def.stat === "era") return v.toFixed(2);
-  if (def.stat === "avg") return `.${Math.round(v * 1000).toString().padStart(3, "0")}`;
+  // ⚠ 1.0 이상(장타율)은 앞자리를 살린다 — `.1234`가 되면 안 된다
+  if (RATE_STATS.has(def.stat)) {
+    const s = v.toFixed(3);
+    return v < 1 ? s.slice(1) : s;
+  }
   return String(Math.round(v));
 }
 
@@ -199,6 +208,17 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   // 문자열 title을 다시 파싱해 되살리지 않는다 — 정본이 둘이 되면 어긋난다
   const protAwards: CareerAward[] = [];
 
+  // 신인 판정 — NPC는 `proServiceYears`, 주인공은 `proYears`
+  // ⚠ 한 번만 만든다. 리그 루프 안에서 매번 만들면 NPC 전체를 리그 수만큼 훑는다
+  const maxRookieYears = rules.rookie?.maxProYears ?? 1;
+  const rookieIds = new Set<string>();
+  for (const n of get(gameStore).npcs ?? []) {
+    if ((n.proServiceYears ?? 0) <= maxRookieYears) rookieIds.add(n.npcId);
+  }
+  // ⚠ 주인공도 같은 필드다 — `isFaEligible`이 쓰는 축과 하나여야 한다
+  if ((prot.proServiceYears ?? 0) <= maxRookieYears) rookieIds.add(prot.id);
+  const isRookie = (pid: string) => rookieIds.has(pid);
+
   for (const leagueId of rules.leagues) {
     // ⚠ `s.stats`로 대체하면 안 된다 — 그건 주인공 개인 기록이고 승강으로
     // 오르내리면 1군·2군이 합산돼 있다(`leagueStatsOf` 주석 참고)
@@ -234,6 +254,34 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
       inLeague.set(w.playerId, (inLeague.get(w.playerId) ?? 0) + 1);
       if (w.playerId === prot.id) {
         protAwards.push({ id: w.defId, label: w.label, value: w.valueText });
+      }
+    }
+
+    // ── 신인왕 ─────────────────────────────────────────────────
+    //
+    // 🔴 **없었다** (2026-08-29). 드래프트도 데뷔도 있는데 신인상이 없었다.
+    //
+    // ⚠ **새 지표를 만들지 않는다.** 부문 표를 **신인에게만 다시 돌려서**
+    //   그중 가장 압도적으로 1위한 선수에게 준다 — MVP 폴백과 같은 잣대다.
+    //   별도 점수를 만들면 부문 1위와 어긋난다(설계 원칙).
+    //
+    // ⚠ 신인은 `proServiceYears <= 1`이다. NPC는 `gameStore.npcs`가,
+    //   주인공은 `protagonist.proYears`가 갖고 있다.
+    // ⚠ **프로 리그만이다.** 고교·대학은 `proServiceYears`가 0이라 전원이
+    //   신인으로 잡힌다 — 실측에서 후보가 7,443명이었다
+    if (rules.rookie && (rules.rookie.leagues ?? []).includes(leagueId)) {
+      const rookieStats: Record<string, PlayerSeasonStats> = {};
+      for (const [pid, st] of Object.entries(stats)) {
+        if (isRookie(pid)) rookieStats[pid] = st;
+      }
+      const rookieWinners = computeAwards(rules, rookieStats);
+      if (rookieWinners.length > 0) {
+        const top = rookieWinners.reduce((a, b) => (b.dominance > a.dominance ? b : a));
+        won.get(top.playerId)?.push(rules.rookie.label)
+          ?? won.set(top.playerId, [rules.rookie.label]);
+        if (top.playerId === prot.id) {
+          protAwards.push({ id: "rookie", label: rules.rookie.label });
+        }
       }
     }
 

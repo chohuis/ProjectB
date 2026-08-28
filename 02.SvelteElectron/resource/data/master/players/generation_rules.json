@@ -1825,6 +1825,23 @@
         "order": "desc",
         "minIp": 15,
         "minValue": 3
+      },
+      {
+        "id": "holds",
+        "label": "홀드왕",
+        "stat": "hd",
+        "order": "desc",
+        "minIp": 30,
+        "minValue": 5
+      },
+      {
+        "id": "winPct",
+        "label": "승률왕",
+        "stat": "winPct",
+        "order": "desc",
+        "_note": "KBO는 규정이닝 + 최소 승수를 본다. 승률은 파생값이라 sanitizeStatsRecord가 만든다",
+        "minIp": 45,
+        "minValue": 0.6
       }
     ],
     "batter": [
@@ -1859,6 +1876,30 @@
         "order": "desc",
         "minPa": 120,
         "minValue": 3
+      },
+      {
+        "id": "hits",
+        "label": "최다안타",
+        "stat": "h",
+        "order": "desc",
+        "minPa": 120,
+        "minValue": 40
+      },
+      {
+        "id": "obp",
+        "label": "출루율왕",
+        "stat": "obp",
+        "order": "desc",
+        "minPa": 120,
+        "minValue": 0.35
+      },
+      {
+        "id": "slg",
+        "label": "장타율왕",
+        "stat": "slg",
+        "order": "desc",
+        "minPa": 120,
+        "minValue": 0.45
       }
     ],
     "mvp": {
@@ -1870,7 +1911,19 @@
     },
     "_note3": "minValue/maxValue가 없으면 **0이 1위가 된다** — 실측에서 도루왕(0)·세이브왕(0)·방어율왕(8.45)이 나왔고 그걸로 MVP까지 받았다. 부문마다 \"이 정도는 돼야 상\"이라는 선이 필요하다",
     "_note4": "규정타석/이닝 절충값. 250/90은 너무 높아 방어율왕·세이브왕·도루왕이 아예 안 나왔고, 100/50은 너무 낮아 타율 .528 같은 소표본 1위가 나왔다. 아래는 그 사이다 — 타격왕 이상치(.583)가 남아 있어 추가 조정이 필요하다",
-    "_minIpNote": "투수 자격 이닝은 **고교 시즌 길이에 맞춘 값**이다 (사용자 확정 2026-08-12: 45). 예전엔 다승·탈삼진 60 · 방어율 70이었는데, 고교는 대회가 넉아웃이라 팀 공식경기가 21~36으로 갈리고 커리어 이닝 중앙이 42.5였다 — 자격자가 구조적으로 안 나왔다. 팀이 대회에서 잘하면 넘고 일찍 지면 못 넘는 선이다. 방어율왕만 한 단계 위(50)로 둔다 — 규정이닝 성격이 강한 부문이다."
+    "_minIpNote": "투수 자격 이닝은 **고교 시즌 길이에 맞춘 값**이다 (사용자 확정 2026-08-12: 45). 예전엔 다승·탈삼진 60 · 방어율 70이었는데, 고교는 대회가 넉아웃이라 팀 공식경기가 21~36으로 갈리고 커리어 이닝 중앙이 42.5였다 — 자격자가 구조적으로 안 나왔다. 팀이 대회에서 잘하면 넘고 일찍 지면 못 넘는 선이다. 방어율왕만 한 단계 위(50)로 둔다 — 규정이닝 성격이 강한 부문이다.",
+    "rookie": {
+      "_note": "신인왕. **새 지표를 만들지 않는다** — 부문 표를 신인에게만 다시 돌려 가장 압도적으로 1위한 선수에게 준다(MVP 폴백과 같은 잣대)",
+      "_yearsNote": "proServiceYears <= 1 이 신인. FA 자격(isFaEligible)이 쓰는 축과 같다",
+      "label": "신인왕",
+      "maxProYears": 1,
+      "leagues": [
+        "LEAGUE_KBL",
+        "LEAGUE_ABL",
+        "LEAGUE_JBL"
+      ],
+      "_leaguesNote": "**프로만이다.** 고교·대학은 proServiceYears가 0이라 전원이 신인으로 잡힌다(실측 후보 7,443명) — 신인왕이 무의미해진다"
+    }
   },
   "retirementRules": {
     "_note": "은퇴 판정 정본. 읽는 곳: usecases/retirement.ts(surgeryRetireChance) → weekPhases/injuries(NPC) · advanceWeek(주인공). 예전엔 injuries.ts 안에 표가 박혀 있었고 주인공 경로가 아예 없었다",

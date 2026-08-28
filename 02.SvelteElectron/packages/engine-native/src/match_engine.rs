@@ -953,9 +953,16 @@ fn advance_on_hit(runners: MatchRunners, code: PitchResultCode, new_runner: Runn
     (runners, 0, 0, vec![])
 }
 
+/// 도루 시도.
+///
+/// 🔴 **성공해도 기록이 안 남고 있었다** (2026-08-29). 로그 문자열만 만들고
+///   타자 줄의 `sb`를 안 올렸다 — **규정타자 103명 전원 도루 0**이었고
+///   도루왕이 한 번도 안 나왔다.
+/// ⚠ 성공한 주자의 `player_id`를 돌려준다 — 호출부가 그 사람 줄에 단다.
 fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng)
-    -> (MatchRunners, u8, Vec<String>)
+    -> (MatchRunners, u8, Vec<String>, Vec<String>)
 {
+    let mut stole: Vec<String> = vec![];
     let mut first = state.runners.first.clone();
     let mut second = state.runners.second.clone();
     let mut third = state.runners.third.clone();
@@ -982,6 +989,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
         let (attempt_prob, success) = T::steal_second_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
         if rng.gen::<f64>() < attempt_prob {
             if rng.gen::<f64>() < success {
+                if let Some(id) = r.player_id.clone() { stole.push(id); }
                 second = first.take();
                 steal_logs.push(format!("도루 성공! 1루→2루 (스피드 {})", r.speed));
             } else {
@@ -996,6 +1004,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
             let (attempt_prob, success) = T::steal_third_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
             if rng.gen::<f64>() < attempt_prob {
                 if rng.gen::<f64>() < success {
+                    if let Some(id) = r.player_id.clone() { stole.push(id); }
                     third = second.take();
                     steal_logs.push(format!("도루 성공! 2루→3루 (스피드 {})", r.speed));
                 } else {
@@ -1005,7 +1014,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
             }
         }
     }
-    (MatchRunners { first, second, third }, outs, steal_logs)
+    (MatchRunners { first, second, third }, outs, steal_logs, stole)
 }
 
 /// ⚠ **타구 종류를 본다.** 예전엔 안 봐서 주자 1루면 뜬공에도 22%로 병살이
@@ -1591,7 +1600,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 
     // ── 1. 도루 시도 ──────────────────────────────────────────────────────────
     let active_pitcher = get_active_pitcher(state).clone();
-    let (steal_runners, steal_outs, steal_logs) = attempt_steals(state, &active_pitcher, rng);
+    let (steal_runners, steal_outs, steal_logs, stole_ids) = attempt_steals(state, &active_pitcher, rng);
     let mut pre_runners = steal_runners;
     let mut pre_outs    = steal_outs;
     let mut pre_inning  = state.inning;
@@ -2013,8 +2022,13 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 line.outs += delta;
                 line.pc += 1;
                 match result_code {
-                    PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook
-                        if cnt_reset => line.k += 1,
+                    // 🔴 **`StrikeSwing`/`StrikeLook`을 보고 있었다** (2026-08-29).
+                    //   3스트라이크째에 `narrow`가 코드를 `Strikeout*`로 **좁히면서**
+                    //   이 자리가 영영 안 걸렸다 — **탈삼진이 전원 0**이었다
+                    //   (실측: 규정투수 56명 최다 K 0). 탈삼진왕이 한 번도 안 나왔다.
+                    // ⚠ 삼진은 늘 타석을 끝내므로 `cnt_reset` 조건이 필요 없다.
+                    PitchResultCode::StrikeoutSwing | PitchResultCode::StrikeoutLook
+                        => line.k += 1,
                     PitchResultCode::Walk => line.bb += 1,
                     // 사구는 볼넷과 **다른 사건**이다 — 따로 센다
                     PitchResultCode::HitByPitch => line.hbp += 1,
@@ -2035,6 +2049,17 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         // ⚠ **투수만 쌓으면 순위표의 절반이 빈다** — 타율·홈런·타점왕이 안 나오고
         // 팀 득점도 선수별로 안 갈린다. 타석이 끝나는 결과에서만 센다
         // (파울·볼·헛스윙은 타석이 안 끝나므로 제외).
+        // 🔴 **도루를 기록한다** (2026-08-29). 예전엔 `attempt_steals`가 로그
+        //   문자열만 만들고 타자 줄을 안 건드렸다 — **규정타자 전원 도루 0**이었다.
+        // ⚠ 주자는 **공격 팀** 소속이다 — 초면 원정, 말이면 홈이다.
+        if !stole_ids.is_empty() {
+            let is_top = state.half == HalfInning::Top;
+            let lines = if is_top { &mut next_state.away_bat_lines } else { &mut next_state.home_bat_lines };
+            for id in &stole_ids {
+                if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.sb += 1; }
+            }
+        }
+
         {
             let is_top = state.half == HalfInning::Top;
             let idx = if is_top { state.away_lineup_index } else { state.home_lineup_index };
@@ -2058,7 +2083,8 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     HitTriple => { b.ab += 1; b.h += 1; b.b3 += 1; }
                     HomeRun => { b.ab += 1; b.h += 1; b.hr += 1; }
                     // 삼진은 카운트가 리셋됐을 때만 (타석 종료)
-                    StrikeSwing | StrikeLook if next_state.count.strikes == 0 && next_state.count.balls == 0 => {
+                    // 🔴 투수 쪽과 **같은 결함**이었다 — 좁혀진 코드를 안 봤다
+                    StrikeoutSwing | StrikeoutLook => {
                         b.ab += 1; b.k += 1;
                     }
                     InplayOut | GroundOut | FlyOut | LineOut | DoublePlay | FieldingError => { b.ab += 1; }

@@ -393,6 +393,13 @@ export interface PitcherSeasonStats {
   sv: number;     // 세이브
   hd: number;     // 홀드
   /**
+   * 승률 — **파생값이다**(`w / (w + l)`). 무승부는 분모에서 뺀다(야구 규칙).
+   *
+   * ⚠ 저장된 값을 믿지 않고 `sanitizeStatsRecord`가 매번 다시 만든다 —
+   *   `era`·`whip`과 같은 취급이다. 구 세이브엔 없다.
+   */
+  winPct?: number;
+  /**
    * 이닝 — **실수다**(`outs / 3`). 31과 2/3이닝이면 `31.6666`이다.
    *
    * 🔴 **야구 표기(`31.2`)를 넣지 않는다** (사용자 확정 2026-08-26).

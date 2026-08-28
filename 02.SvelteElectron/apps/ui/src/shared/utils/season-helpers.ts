@@ -2,6 +2,16 @@ import type { LeagueSeasonState, MatchResult, PlayerGameLine, Standing } from ".
 import type { BatterSeasonStats, PlayerSeasonStats, PitcherSeasonStats } from "../types/save";
 import { calcAvg, calcEra, calcOps, calcWhip } from "../types/season";
 
+/**
+ * 승률 — 무승부는 분모에서 뺀다(야구 규칙).
+ *
+ * ⚠ **표를 두 곳에 두지 않는다.** 순위표 승률(`updateStandings`)도 같은 식이다.
+ */
+export function winPctOf(w: number, l: number): number {
+  const n = w + l;
+  return n > 0 ? Math.round((w / n) * 1000) / 1000 : 0;
+}
+
 export function migrateLeagueState(ls: Partial<LeagueSeasonState>): LeagueSeasonState {
   return {
     standings:         ls.standings         ?? [],
@@ -30,6 +40,8 @@ export function sanitizeStatsRecord(
         sv: safeN(s.sv), hd: safeN(s.hd), ip,
         er: safeN(s.er), h: safeN(s.h), k: safeN(s.k), bb: safeN(s.bb),
         era: calcEra(safeN(s.er), ip), whip: calcWhip(safeN(s.bb), safeN(s.h), ip),
+        // ⚠ 파생값이라 저장된 걸 안 믿는다 — 승·패에서 매번 다시 만든다
+        winPct: winPctOf(safeN(s.w), safeN(s.l)),
       };
     } else {
       // ⚠ **타자 쪽이 통째로 비어 있었다.** 투수만 NaN을 막고 파생값을 다시
@@ -200,6 +212,7 @@ export function accumulateStats(
         ...(hr !== undefined ? { hr } : {}),
         ...(pHbp !== undefined ? { hbp: pHbp } : {}),
         era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
+        winPct: winPctOf(w, l),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: safeNum(prev.rispAb) + safeNum(line.rispAb),
         rispH:  safeNum(prev.rispH)  + safeNum(line.rispH),
