@@ -10,6 +10,26 @@ export interface TeamRoster {
   lineup: string[];     // 타자 출전 순서 (1번~9번)
 }
 
+/**
+ * 이 명단에서 **이번 경기 선발**을 고른다. 정본은 여기 하나다.
+ *
+ * 🔴 **자리마다 손으로 색인하지 마라.** 2026-08-28에 세어 보니 같은 일을
+ *   하는 자리가 넷이었고 **두 규칙으로 갈려 있었다**:
+ *
+ *     npc_sim `build_pit_queue`   rotation[rot_idx % len]
+ *     mergeConditions             rotation[rotIdx % len]
+ *     simulateWithMatchEngine     rotation.slice(0, 1)      ← 다른 규칙
+ *     applyGameOutcome            base[rotIdx % len]
+ *
+ *   `buildTeamRoster`가 명단을 미리 한 번 돌려서 넘기고 있었기 때문에,
+ *   앞의 둘은 **두 번 돌린 셈**(`base[(2·k) % len]`)이고 뒤의 둘은 한 번이었다.
+ *   그래서 **실제로 던진 투수와 `lastStartGameCount`를 받는 투수가 달랐다.**
+ */
+export function starterOfRotation(rotation: string[], rotIdx: number): string | undefined {
+  if (rotation.length === 0) return undefined;
+  return rotation[((rotIdx % rotation.length) + rotation.length) % rotation.length];
+}
+
 // ── 리그별 SP 의무 휴식 경기 수 ────────────────────────────────
 export function rotationRestGames(leagueId: string): number {
   if (leagueId === "LEAGUE_HIGHSCHOOL")  return 2;
@@ -111,16 +131,6 @@ function playerDetails(e: EntityRow): EntityPlayerDetails {
   return e.details.player as EntityPlayerDetails;
 }
 
-// ── SP 가용 여부 판단 ─────────────────────────────────────────
-function isSpAvailable(
-  condition: PlayerCondition | undefined,
-  teamGameCount: number,
-  restRequired: number,
-): boolean {
-  if (!condition?.lastStartGameCount) return true;  // 첫 등판 or 기록 없음
-  return (teamGameCount - condition.lastStartGameCount) > restRequired;
-}
-
 // ── 선발 로테이션 자동 배정 ──────────────────────────────────
 export function getTeamRotation(
   teamId: string,
@@ -129,15 +139,14 @@ export function getTeamRotation(
   maxRotation = 5,
   conditions?: Record<string, PlayerCondition>,
   currentWeek = 0,
-  teamGameCount?: number,
+  // ⚠ `teamGameCount`를 지웠다 (2026-08-28). **쓰지 않으면서 자리만 차지했다** —
+  //   이 저장소는 이미 그 자리에 `rotIdx`를 잘못 넣어 로테이션이 한 번도
+  //   안 돈 적이 있다(`rotationIndex.test.ts`). 죽은 자리를 남기지 않는다
   leagueId?: string,
   npcRetired?: string[],
 ): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   const pitchers = players.filter((e) => playerDetails(e).playerType === "pitcher");
-
-  const restRequired = leagueId ? rotationRestGames(leagueId) : 4;
-  const gameCount = teamGameCount ?? 0;
 
   const effOvr = (e: EntityRow) =>
     calcEffectiveOvr(playerDetails(e).pitching?.ovr ?? 0, conditions?.[e.id], currentWeek);
@@ -175,7 +184,10 @@ export function getTeamRotation(
       .map((e) => e.id);
     availableSp.push(...restingSp);
   }
-  void isSpAvailable; void gameCount; void restRequired; void effOvr;
+  // ⚠ **휴식 판정을 여기서 하지 않는다.** 위 주석대로 로테이션은 고정이고
+  //   5인이면 등판 간격이 저절로 4경기다. 예전엔 쓰지도 않는 `isSpAvailable`·
+  //   `restRequired`·`gameCount`를 `void`로 눌러 두고 있었다 — 지웠다.
+  //   `currentWeek`는 아래 RP 보충의 `effOvr`가 쓴다
 
   // SP 부족 시 RP 중 effectiveOvr 높은 순으로 보충
   if (availableSp.length < maxRotation) {
@@ -524,8 +536,9 @@ export interface BuildRosterParams {
   currentWeek?: number;
   /** 팀이 지금까지 치른 경기 수 (휴식 판정용) */
   teamGameCount?: number;
-  /** **이번 경기 선발이 로테이션 몇 번째인가.** 경기마다 +1 */
-  rotIdx?: number;
+  // ⚠ `rotIdx`를 지웠다 (2026-08-28). **여기는 명단을 만드는 자리고
+  //   선발을 고르는 자리가 아니다.** 색인은 `starterOfRotation` 하나가 한다 —
+  //   여기서도 돌리면 받는 쪽과 합쳐 두 번이 된다
   leagueId?: string;
   rotationSense?: number;
   npcRetired?: string[];
@@ -534,22 +547,33 @@ export interface BuildRosterParams {
 export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
   const {
     teamId, entities, npcInjuries, maxRotation = 5, conditions,
-    currentWeek = 0, teamGameCount = 0, rotIdx = 0,
+    currentWeek = 0, teamGameCount = 0,
     leagueId = "", rotationSense = 50, npcRetired,
   } = p;
 
   const base = getTeamRotation(
     teamId, entities, npcInjuries, maxRotation, conditions, currentWeek,
-    teamGameCount, leagueId, npcRetired,
+    leagueId, npcRetired,
   );
 
-  // ⚠ **여기가 인덱스를 실제로 쓰는 유일한 자리다.** `getTeamRotation`은
-  // OVR 순으로 고정된 명단을 돌려준다(그건 의도다 — 매주 흔들리면 표본이
-  // 얇아져 ERA가 능력치를 못 따라간다). 그 명단을 **경기마다 회전시켜야**
-  // 선발이 돌아간다. 회전을 안 하면 1번이 매 경기 나간다.
-  const rotation = base.length > 0
-    ? [...base.slice(rotIdx % base.length), ...base.slice(0, rotIdx % base.length)]
-    : base;
+  // 🔴 **여기서 돌리지 않는다** (2026-08-28). 예전엔 이 자리에서 명단을
+  //   `rotIdx`만큼 회전시켜 넘겼는데, **받는 쪽도 또 돌렸다:**
+  //
+  //     npc_sim `build_pit_queue`   rotation[rot_idx % len]   → base[(2·k) % len]
+  //     mergeConditions             rotation[rotIdx % len]    → base[(2·k) % len]
+  //     simulateWithMatchEngine     rotation.slice(0, 1)      → base[k % len]
+  //     applyGameOutcome            base[rotIdx % len]        → base[k % len]
+  //
+  //   네 자리가 두 규칙으로 갈려 있었다. 그래서 **실제로 던진 투수와
+  //   `lastStartGameCount`를 받는 투수가 달랐다** — 던진 사람은 불펜으로
+  //   기록되고 안 던진 사람이 선발로 기록됐다.
+  //
+  //   이제 **정본은 하나다: `base[rotIdx % len]`.** 명단은 순서 그대로 넘기고
+  //   색인은 받는 쪽이 한다. 어느 쪽도 두 번 돌리지 않는다.
+  //
+  // ⚠ `getTeamRotation`이 OVR 순 고정 명단을 주는 건 의도다 — 매주 흔들리면
+  //   표본이 얇아져 ERA가 능력치를 못 따라간다.
+  const rotation = base;
 
   const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, rotationSense, npcRetired);
   const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired);

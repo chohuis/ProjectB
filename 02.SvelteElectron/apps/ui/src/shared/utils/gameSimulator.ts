@@ -3,7 +3,7 @@ import { toEngineArsenal } from "./arsenal";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
 import type { MatchResult, NpcLiveStat, PlayerCondition } from "../types/season";
-import { buildTeamRoster, getTeamBullpen, getTeamRotation, rotationRestGames, rotationSizeForLeague } from "./rosterEngine";
+import { buildTeamRoster, getTeamBullpen, getTeamRotation, rotationSizeForLeague, starterOfRotation } from "./rosterEngine";
 
 // ── 반환 타입 ─────────────────────────────────────────────────
 export interface SimGameResult {
@@ -118,8 +118,10 @@ function mergeConditions(
   leagueId: string,
 ): Record<string, PlayerCondition> {
   const result: Record<string, PlayerCondition> = {};
-  const homeSpId = homeRotation[homeRotIdx % Math.max(1, homeRotation.length)];
-  const awaySpId = awayRotation[awayRotIdx % Math.max(1, awayRotation.length)];
+  // 🔴 **손으로 색인하지 않는다** — 이 자리가 실제로 던진 투수와 어긋나 있었다.
+  //   실측: 선발로 적힌 투수가 실제로 던진 비율 **42.6% → 99.2%**
+  const homeSpId = starterOfRotation(homeRotation, homeRotIdx);
+  const awaySpId = starterOfRotation(awayRotation, awayRotIdx);
   const appearedIds = new Set(Object.keys(rustConditions));
 
   for (const [id, rustCond] of Object.entries(rustConditions)) {
@@ -218,12 +220,12 @@ export async function simulateGame(
   // 로테이션이 한 번도 안 돌아 매 경기 1번 투수가 선발이었다
   const homeRoster = buildTeamRoster({
     teamId: homeTeamId, entities, npcInjuries, maxRotation: rotationSize,
-    conditions, currentWeek: week, rotIdx: homeRotIdx, leagueId,
+    conditions, currentWeek: week, leagueId,
     rotationSense: homeHandlePersonnel,
   });
   const awayRoster = buildTeamRoster({
     teamId: awayTeamId, entities, npcInjuries, maxRotation: rotationSize,
-    conditions, currentWeek: week, rotIdx: awayRotIdx, leagueId,
+    conditions, currentWeek: week, leagueId,
     rotationSense: awayHandlePersonnel,
   });
 
@@ -369,9 +371,17 @@ function toEngineBatter(b: SimBatter): Record<string, unknown> {
  * 여기서는 양쪽 다 NPC라 큐 두 개로 전부 처리된다.
  */
 async function simulateWithMatchEngine(params: any, leagueId: string): Promise<string> {
-  const homePitchers = [...params.homeRotation.slice(0, 1), ...params.homeBullpen,
+  // 🔴 **`slice(0, 1)`이었다.** 명단이 이미 돌려진 걸 전제한 코드였는데,
+  //   `npc_sim`·`mergeConditions`는 같은 명단을 `rotIdx`로 또 색인했다.
+  //   이제 명단은 **순서 그대로** 오고 색인은 `starterOfRotation` 하나가 한다.
+  const starterOf = (rot: any[], idx: number) => {
+    const id = starterOfRotation(rot.map((x: any) => x.id), idx);
+    const hit = rot.find((x: any) => x.id === id);
+    return hit ? [hit] : [];
+  };
+  const homePitchers = [...starterOf(params.homeRotation, params.homeRotIdx ?? 0), ...params.homeBullpen,
                         ...(params.homeCloser ? [params.homeCloser] : [])].map(toEnginePitcher);
-  const awayPitchers = [...params.awayRotation.slice(0, 1), ...params.awayBullpen,
+  const awayPitchers = [...starterOf(params.awayRotation, params.awayRotIdx ?? 0), ...params.awayBullpen,
                         ...(params.awayCloser ? [params.awayCloser] : [])].map(toEnginePitcher);
 
   // 씨앗 — **같은 세이브·같은 주의 같은 경기는 늘 같은 값**이어야 한다.

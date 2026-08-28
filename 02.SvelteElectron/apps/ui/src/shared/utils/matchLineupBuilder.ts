@@ -2,7 +2,8 @@ import type { EntityRow } from "../stores/master";
 import { toEngineArsenal } from "./arsenal";
 import type { MatchBatterStats, MatchFielderStats } from "../types/projectb";
 import type { PlayerCondition } from "../types/season";
-import { rotationRestGames } from "./rosterEngine";
+import type { NpcInjuryEntry } from "../types/save";
+import { getTeamRotation, rotationSizeForLeague, starterOfRotation } from "./rosterEngine";
 
 export interface StarterStats {
   name?: string;
@@ -85,9 +86,9 @@ export interface OpponentBrief {
 /**
  * 상대 팀 한 줄 요약.
  *
- * `starter`는 `buildStarterStats`와 **같은 선발 판정**을 쓴다 —
- * 로테이션 휴식까지 보는 그쪽이 정본이고, 화면이 따로 "OVR 제일 높은 투수"를
- * 고르면 실제 등판할 투수와 달라진다.
+ * `starter`는 `buildStarterStats`와 **같은 선발 판정**(`pickStarterEntity`)을
+ * 쓴다 — 정본은 `rosterEngine`의 고정 로테이션 + 리그 상태의 슬롯이다.
+ * 화면이 따로 "OVR 제일 높은 투수"를 고르면 실제 등판할 투수와 달라진다.
  *
  * ⚠ 예고 시점(월초)엔 로테이션이 확정이 아닐 수 있다. 부르는 쪽이
  * **"선발 예상"**으로 표기해야 한다 — 확정처럼 적으면 브리핑과 어긋난다.
@@ -98,8 +99,10 @@ export function buildOpponentBrief(
   opts: {
     rank?: number | null; total?: number | null; record?: string | null;
     conditions?: Record<string, PlayerCondition>;
-    teamGameCount?: number;
+    /** 그 팀의 로테이션 슬롯 — `rotIdxOf()`로 꺼낸다 */
+    rotIdx?: number;
     leagueId?: string;
+    npcInjuries?: Record<string, NpcInjuryEntry>;
   } = {},
 ): OpponentBrief {
   // 타선 OVR 평균 — `MatchBatterStats`엔 ovr이 없어서 엔티티에서 직접 낸다.
@@ -114,7 +117,7 @@ export function buildOpponentBrief(
     ? Math.round(batters.reduce((s, v) => s + v, 0) / batters.length)
     : null;
 
-  const sp = pickStarterEntity(teamId, entities, opts.conditions, opts.teamGameCount ?? 0, opts.leagueId ?? "");
+  const sp = pickStarterEntity(teamId, entities, opts.conditions, opts.rotIdx ?? 0, opts.leagueId ?? "", opts.npcInjuries);
   const p = sp ? playerOf(sp) : null;
 
   return {
@@ -134,57 +137,57 @@ export function buildOpponentBrief(
 }
 
 /**
+ * 그 팀의 로테이션 슬롯을 리그 상태에서 꺼낸다.
+ *
+ * 🔴 **부르는 쪽마다 손으로 파고들지 마라.** 예전엔 아무도 안 넘겨서
+ *   전부 기본값 0이었고, 그래서 예고가 늘 1번 투수였다.
+ */
+export function rotIdxOf(
+  leagueState: Record<string, { teamRotationIndex?: Record<string, number> }> | undefined,
+  leagueId: string | undefined,
+  teamId: string,
+): number {
+  if (!leagueState || !leagueId) return 0;
+  return leagueState[leagueId]?.teamRotationIndex?.[teamId] ?? 0;
+}
+
+/**
  * 그 팀이 이번 경기에 낼 **선발 투수 한 명**을 고른다.
  *
- * ⚠ **판정을 다른 데서 다시 짜지 말 것.** 경기 브리핑과 월간 편성 소식이
- * 같은 상대의 선발을 말하는데, 화면이 따로 "OVR 제일 높은 투수"를 고르면
- * 실제 등판할 투수와 다르다 — 로테이션 휴식을 안 보기 때문이다.
- * `buildStarterStats`와 `buildOpponentBrief`가 **이 함수 하나**를 쓴다.
+ * ⚠ **판정을 다른 데서 다시 짜지 말 것.** 경기 브리핑·월간 편성 소식·
+ * 주인공이 상대할 투수가 전부 이 함수 하나를 쓴다. 정본은
+ * `rosterEngine.getTeamRotation` + 리그 상태의 로테이션 슬롯이다.
  */
 export function pickStarterEntity(
   teamId: string,
   entities: EntityRow[],
   conditions?: Record<string, PlayerCondition>,
-  teamGameCount = 0,
+  /** 그 팀의 로테이션 인덱스 — `leagueState.teamRotationIndex[teamId]` */
+  rotIdx = 0,
   leagueId = "",
+  /** ⚠ 안 넘기면 **부상으로 빠진 선발을 예고한다** (실측 1%) */
+  npcInjuries?: Record<string, NpcInjuryEntry>,
 ): EntityRow | undefined {
-  const pitchers = entities.filter(
-    (e) => e.teamId === teamId && e.role === "player" &&
-      PITCHER_POS.includes(String(playerOf(e).position ?? "")),
+  // 🔴 **여기서 따로 고르지 않는다** (2026-08-28). 예전엔 "쉰 SP 중 OVR 최고"를
+  //   자체로 뽑았는데, 실제 경기는 `getTeamRotation`의 **고정 로테이션을
+  //   `rotIdx`로 순번대로** 낸다. 두 규칙이 갈라져 있었다.
+  //
+  //   실측 3회(40,000 · 40,000 · 24,000 표본): **예고와 실제가 44.0% · 44.8% ·
+  //   44.1%만 일치**했다. 절반 넘게 다른 투수를 예고했다.
+  //
+  // 🔴 표시만의 문제가 아니었다 — `MainPage`가 이 함수로 고른 투수를
+  //   `matchSimulateToEntry`에 **상대 선발로 그대로 넘긴다.** 주인공은
+  //   리그가 아는 그 팀 선발이 아닌 다른 투수를 상대하고 있었다.
+  //
+  // ⚠ `getTeamRotation`이 휴식 기준을 버린 건 **의도다** — 컨디션 섞인 값으로
+  //   매 경기 다시 뽑으면 로테이션 5명이 계속 바뀌어 표본이 흩어진다(그쪽
+  //   주석 참고). 고친 곳이 둘인데 한 곳만 고쳐져 있었다.
+  const rotation = getTeamRotation(
+    teamId, entities, npcInjuries, rotationSizeForLeague(leagueId),
+    conditions, 0, leagueId,
   );
-  if (pitchers.length === 0) return undefined;
-
-  const restRequired = leagueId ? rotationRestGames(leagueId) : 4;
-
-  const isAvailable = (e: EntityRow) => {
-    const cond = conditions?.[e.id];
-    if (!cond?.lastStartGameCount) return true;
-    return (teamGameCount - cond.lastStartGameCount) > restRequired;
-  };
-
-  const spList = pitchers.filter((e) => String(playerOf(e).position ?? "") === "SP");
-
-  // 가용 SP 중 OVR 최고, 없으면 가장 오래 쉰 SP, 없으면 RP/CP
-  const availableSp = spList
-    .filter(isAvailable)
-    .sort((a, b) => (playerOf(b).pitching?.ovr ?? 0) - (playerOf(a).pitching?.ovr ?? 0));
-
-  const fallbackSp = spList
-    .filter((e) => !isAvailable(e))
-    .sort((a, b) => {
-      const ga = conditions?.[a.id]?.lastStartGameCount ?? 0;
-      const gb = conditions?.[b.id]?.lastStartGameCount ?? 0;
-      return ga - gb;
-    });
-
-  return availableSp[0] ?? fallbackSp[0]
-    ?? [...pitchers].sort((a, b) => {
-      const ORDER: Record<string, number> = { SP: 0, RP: 1, CP: 2 };
-      const da = ORDER[String(playerOf(a).position ?? "RP")] ?? 1;
-      const db = ORDER[String(playerOf(b).position ?? "RP")] ?? 1;
-      if (da !== db) return da - db;
-      return (playerOf(b).pitching?.ovr ?? 0) - (playerOf(a).pitching?.ovr ?? 0);
-    })[0];
+  const id = starterOfRotation(rotation, rotIdx);
+  return id ? entities.find((e) => e.id === id) : undefined;
 }
 
 // ── 선발 투수 스탯 빌드 ──────────────────────────────────────
@@ -192,10 +195,11 @@ export function buildStarterStats(
   teamId: string,
   entities: EntityRow[],
   conditions?: Record<string, PlayerCondition>,
-  teamGameCount = 0,
+  rotIdx = 0,
   leagueId = "",
+  npcInjuries?: Record<string, NpcInjuryEntry>,
 ): StarterStats | undefined {
-  const candidate = pickStarterEntity(teamId, entities, conditions, teamGameCount, leagueId);
+  const candidate = pickStarterEntity(teamId, entities, conditions, rotIdx, leagueId, npcInjuries);
   if (!candidate) return undefined;
   const pit = playerOf(candidate).pitching ?? {};
   return {

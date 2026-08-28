@@ -27,7 +27,7 @@ import {
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
-import { buildOpponentBrief } from "../utils/matchLineupBuilder";
+import { buildOpponentBrief, rotIdxOf } from "../utils/matchLineupBuilder";
 import { HS_REGIONS } from "../utils/leagueScheduler";
 import { buildMyBodyReport } from "./weekPhases/myBodyReport";
 import { runNationalTeamWeek } from "./nationalTeam";
@@ -799,6 +799,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       const briefOf = (teamId: string) => {
         const hit = standRank.get(teamId);
         return buildOpponentBrief(teamId, mFriendly.entities, {
+          // ⚠ 셋을 다 넘긴다 — 하나라도 빠지면 예고가 늘 1번 투수다
+          conditions: sFriendly.leagueState[proto.leagueId]?.playerConditions,
+          rotIdx: rotIdxOf(sFriendly.leagueState, proto.leagueId, teamId),
+          npcInjuries: sFriendly.npcInjuries,
           rank:  hit ? hit.rank : null,
           total: hit ? totalTeams : null,
           record: hit

@@ -10,7 +10,7 @@ import { advanceWeek } from "./advanceWeek";
 import { isRetired } from "./retirement";
 import { applyGameOutcome } from "./applyGameOutcome";
 import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types/season";
-import { buildBatterLineup, buildStarterStats, buildFielders } from "../utils/matchLineupBuilder";
+import { buildBatterLineup, buildStarterStats, buildFielders, rotIdxOf } from "../utils/matchLineupBuilder";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
 // ⚠ `draftNotification`이 여기 없으면 **프로 계약이 조용히 버려진다.**
@@ -80,8 +80,14 @@ async function handleGame(scheduleId: string): Promise<void> {
   const oppTeamId  = isHome ? entry.awayTeamId : entry.homeTeamId;
   const oppLineup  = buildBatterLineup(oppTeamId, ents);
   const myLineup   = buildBatterLineup(p.teamId, ents);
-  const oppPitcher = buildStarterStats(oppTeamId, ents);
-  const myNpc      = (p.position as string) !== "SP" ? buildStarterStats(p.teamId, ents) : undefined;
+  // ⚠ **컨디션·로테이션 슬롯·리그를 넘긴다.** 안 넘기면 슬롯이 0으로 고정돼
+  //   상대가 늘 1번 투수다 — 리그가 아는 선발과 다른 투수를 상대하게 된다
+  const lid   = p.leagueId;
+  const conds = s.leagueState[lid]?.playerConditions;
+  const oppPitcher = buildStarterStats(oppTeamId, ents, conds, rotIdxOf(s.leagueState, lid, oppTeamId), lid, s.npcInjuries);
+  const myNpc      = (p.position as string) !== "SP"
+    ? buildStarterStats(p.teamId, ents, conds, rotIdxOf(s.leagueState, lid, p.teamId), lid, s.npcInjuries)
+    : undefined;
 
   try {
     const raw = await window.projectB!.matchSimulateToEntry({

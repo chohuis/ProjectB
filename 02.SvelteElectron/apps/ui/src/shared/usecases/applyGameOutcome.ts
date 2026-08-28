@@ -10,7 +10,7 @@ import { staffModsOf } from "../utils/staffEffects";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
 import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance, type PitcherRole } from "../utils/friendlyMatchEngine";
-import { getTeamRotation, getTeamBullpen, rotationSizeForLeague } from "../utils/rosterEngine";
+import { getTeamRotation, getTeamBullpen, rotationSizeForLeague, starterOfRotation } from "../utils/rosterEngine";
 
 /**
  * 투수 승패 판정 — **규칙은 Rust `decide_pitcher`가 정본이다.**
@@ -194,7 +194,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     const rotSize     = rotationSizeForLeague(leagueId);
     const entities    = get(masterStore).entities;
     const oppRotation = getTeamRotation(oppTeamId, entities, undefined, rotSize);
-    const oppPitcherId = oppRotation[oppRotIdx % Math.max(1, oppRotation.length)];
+    const oppPitcherId = starterOfRotation(oppRotation, oppRotIdx);
     const pitcherConditions: Record<string, PlayerCondition> = {};
     if (oppPitcherId) {
       const prev = lState?.playerConditions?.[oppPitcherId];
@@ -420,8 +420,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       ? (lState2?.teamRotationIndex?.[oppTeamId2] ?? 0)
       : (lState2?.teamRotationIndex?.[oppTeamId2] ?? 0);
     const rotSize2   = rotationSizeForLeague(leagueId2);
-    const oppRot2    = getTeamRotation(oppTeamId2, entities2, undefined, rotSize2, lState2?.playerConditions, outcome.week, oppRotIdx2, leagueId2);
-    const oppSpId    = oppRot2[oppRotIdx2 % Math.max(1, oppRot2.length)];
+    const oppRot2    = getTeamRotation(oppTeamId2, entities2, undefined, rotSize2, lState2?.playerConditions, outcome.week, leagueId2);
+    const oppSpId    = starterOfRotation(oppRot2, oppRotIdx2);
     const oppBullpen2 = getTeamBullpen(oppTeamId2, entities2, oppRot2, undefined, lState2?.playerConditions, oppRotIdx2).bullpen;
 
     const rotConditions: Record<string, PlayerCondition> = {};

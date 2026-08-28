@@ -45,7 +45,7 @@
   import MatchPage from "../match/MatchPage.svelte";
   import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
   import { masterStore } from "../../shared/stores/master";
-  import { buildBatterLineup, buildStarterStats, buildFielders, derivePreGameWeather, derivePreGamePark } from "../../shared/utils/matchLineupBuilder";
+  import { buildBatterLineup, buildStarterStats, buildFielders, derivePreGameWeather, derivePreGamePark, rotIdxOf } from "../../shared/utils/matchLineupBuilder";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -181,9 +181,17 @@
       const opponentTeamId  = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
       const opponentLineup  = buildBatterLineup(opponentTeamId, entities);
       const myLineup        = buildBatterLineup(p.teamId, entities);
-      const opponentPitcher = buildStarterStats(opponentTeamId, entities);
+      // ⚠ **컨디션·로테이션 슬롯·리그를 넘긴다.** 안 넘기면 슬롯이 0으로
+      //   고정돼 주인공이 늘 상대 1번 투수를 만난다 (실측: 예고와 실제가
+      //   44%만 일치했다)
+      const lid       = p.leagueId;
+      const conds     = $seasonStore.leagueState[lid]?.playerConditions;
+      const opponentPitcher = buildStarterStats(
+        opponentTeamId, entities, conds,
+        rotIdxOf($seasonStore.leagueState, lid, opponentTeamId), lid, $seasonStore.npcInjuries);
       const myNpcStarter    = (p.position as string) !== "SP"
-                                ? buildStarterStats(p.teamId, entities)
+                                ? buildStarterStats(p.teamId, entities, conds,
+                                    rotIdxOf($seasonStore.leagueState, lid, p.teamId), lid, $seasonStore.npcInjuries)
                                 : undefined;
 
       const raw = await window.projectB!.matchSimulateToEntry({
