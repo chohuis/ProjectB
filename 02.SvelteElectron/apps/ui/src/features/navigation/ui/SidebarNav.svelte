@@ -3,6 +3,8 @@
   import { t } from "../../../shared/i18n";
   import { NAV_GROUP_BREAK_AFTER } from "../../../shared/utils/navVisibility";
   import SettingsModal from "../../settings/ui/SettingsModal.svelte";
+  import { nextPendingAction } from "../../../shared/stores/season";
+  import { advancingStore } from "../../../shared/stores/uiLock";
 
   export let currentTab: MainTabId;
   /** 보이는 탭 — 노출 판정의 정본은 `utils/navVisibility`다 */
@@ -12,6 +14,17 @@
   export let pendingByTab: Partial<Record<MainTabId, number>> = {};
   export let militaryCountdownLabel = "";
   export let onSelectTab: (tab: MainTabId) => void;
+
+  /**
+   * **진행 중이거나 경기 차례면 탭을 잠근다** (사용자 확정 2026-08-28).
+   *
+   * 🔴 예전엔 "다음 주 진행"을 누른 뒤에도 탭이 눌렸다 — 진행이 끝나기 전에
+   *   화면을 바꾸면 반쯤 갱신된 상태를 본다. 경기 차례에도 마찬가지였다.
+   *
+   * ⚠ **여기서 판정을 만들지 않는다.** 진행 여부는 `advancingStore`가,
+   *   경기 차례인지는 `nextPendingAction`이 이미 안다.
+   */
+  $: locked = $advancingStore || $nextPendingAction?.type === "game";
 
   let settingsOpen = false;
 
@@ -42,7 +55,8 @@
     {#each tabs as id (id)}
       {@const badge = badgeOf(id)}
       {@const pending = pendingByTab[id] ?? 0}
-      <button class="tab" class:on={id === currentTab} type="button" on:click={() => onSelectTab(id)}>
+      <button class="tab" class:on={id === currentTab} class:locked type="button"
+              disabled={locked} on:click={() => onSelectTab(id)}>
         <span class="label">{$t(LABEL_KEY[id])}</span>
         {#if pending > 0}
           <strong class="badge red">{pending > 99 ? "99+" : pending}</strong>
@@ -107,7 +121,12 @@
     padding: 9px 10px;
     cursor: pointer;
   }
-  .tab:hover { background: var(--panel); color: var(--ink); }
+  .tab:hover:not(:disabled) { background: var(--panel); color: var(--ink); }
+
+  /* 잠김 — 진행 중이거나 경기 차례다. **왜 안 눌리는지 보여야** 한다.
+     아무 반응이 없으면 고장으로 읽힌다 */
+  .tab.locked { opacity: 0.45; cursor: not-allowed; }
+  .tab.locked.on { opacity: 0.75; }
 
   /* 선택은 **왼쪽 띠**로 표시한다. 칸 전체를 팀 색으로 채우면 여섯 칸 중
      하나가 늘 어둡게 떠서 지면의 밝은 인상을 깨뜨린다 */

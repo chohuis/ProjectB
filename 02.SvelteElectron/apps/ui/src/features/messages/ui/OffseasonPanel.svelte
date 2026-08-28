@@ -126,8 +126,10 @@
           <td class="c-age u-num">{r.age || "—"}</td>
           <td class="c-pos">{r.position}</td>
           <td class="c-team">
-            {#if r.teamId}<TeamMark teamId={r.teamId} size={14} />{/if}
-            <span class="tn">{teamName(r.teamId)}</span>
+            <span class="team-cell">
+              {#if r.teamId}<TeamMark teamId={r.teamId} size={14} />{/if}
+              <span class="tn">{teamName(r.teamId)}</span>
+            </span>
           </td>
           <td class="c-why">
             {r.reason}
@@ -178,7 +180,10 @@
     font-size: 10px; color: var(--ink-mute);
     border: 1px solid var(--line); border-radius: 2px; padding: 0 4px; margin-left: 5px;
   }
-  .c-team { display: flex; align-items: center; gap: 5px; }
+  /* 🔴 **td에 display:flex를 걸면 안 된다** — 그 칸이 표의 열 계산에서 빠져
+     열 정렬이 어긋나고 이름이 한두 글자로 잘린다. 배치는 안쪽 래퍼가 맡는다.
+     (부상 리포트에서 "탄…", "금…"으로 나온 것과 같은 원인이다) */
+  .team-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
   .tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .det {
     font-size: 10.5px; color: var(--ink-mute);

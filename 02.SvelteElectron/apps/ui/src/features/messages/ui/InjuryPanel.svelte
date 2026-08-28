@@ -119,8 +119,10 @@
           <td class="c-age u-num">{r.age || "—"}</td>
           <td class="c-pos">{r.position}</td>
           <td class="c-team">
-            {#if r.teamId}<TeamMark teamId={r.teamId} size={14} />{/if}
-            <span class="tn">{teamName(r.teamId)}</span>
+            <span class="team-cell">
+              {#if r.teamId}<TeamMark teamId={r.teamId} size={14} />{/if}
+              <span class="tn">{teamName(r.teamId)}</span>
+            </span>
           </td>
           <td class="c-inj">{injuryName(r.injuryType)}</td>
           <td class="c-wk u-num">
@@ -159,7 +161,11 @@
   .c-age, .c-pos { width: 44px; }
   .c-age, .c-wk { text-align: right; }
   .c-wk { width: 54px; }
-  .c-team { width: 28%; display: flex; align-items: center; gap: 5px; }
+  /* 🔴 **td에 display:flex를 걸면 안 된다.** 그러면 그 칸이 표의 열 계산에서
+     빠져 **열 정렬이 통째로 어긋나고**, 안쪽 이름이 한두 글자로 잘린다
+     (실제 플레이에서 "탄…", "금…"으로 나왔다). 배치는 안쪽 래퍼가 맡는다. */
+  .c-team { width: 28%; }
+  .team-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
   .c-inj { width: 24%; }
 
   .c-name { color: var(--ink); }
@@ -172,6 +178,7 @@
     font-size: 10px; color: var(--ink-mute);
     border: 1px solid var(--line); border-radius: 2px; padding: 0 4px; margin-left: 5px;
   }
+  /* ⚠ 부모에 min-width:0이 없으면 flex 기본값(auto) 때문에 줄임표가 안 먹는다 */
   .tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .empty { color: var(--ink-mute); padding: 14px 6px; }
 

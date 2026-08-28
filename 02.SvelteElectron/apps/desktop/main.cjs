@@ -84,7 +84,10 @@ function createWindow() {
   const isDev = !!process.env.VITE_DEV_SERVER_URL;
 
   const win = new BrowserWindow({
-    width: 1440, height: 900, minWidth: 1200, minHeight: 720,
+    // 처음 뜰 때는 전체화면이다 (사용자 확정 2026-08-28).
+    // 1280x800·1440x900을 없앤 것과 같은 이유 - 그 폭에서 표가 깨진다.
+    width: 1600, height: 900, minWidth: 1600, minHeight: 900,
+    fullscreen: true,
     autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),

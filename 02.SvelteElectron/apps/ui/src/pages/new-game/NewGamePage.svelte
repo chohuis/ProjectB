@@ -11,6 +11,7 @@
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
+  import { seasonLabel } from "../../shared/utils/baseballFormat";
 
   export let onComplete: () => void;
 
@@ -652,7 +653,7 @@
                             .filter((t) => t.season === sr.season && t.result === "우승")
                             .map((t) => t.competition.replace(/^(고교|대학|프로|독립)\s*/, ""))}
                           <div class="record-row">
-                            <span class="rec-year">{sr.season}</span>
+                            <span class="rec-year">{seasonLabel(sr.season, previewSeasonYear)}</span>
                             <span class="rec-nat rec-{sr.rank === 1 ? "gold" : sr.rank <= 3 ? "silver" : sr.rank <= 6 ? "bronze" : "dim"}">{sr.rank}위</span>
                             <span class="rec-reg">{won.join(" · ")}</span>
                             <span class="rec-note"></span>
@@ -1716,7 +1717,9 @@
     text-transform: uppercase; color: var(--ink-mute); font-weight: 700;
   }
   .pc-side-h:not(:first-child) { margin-top: 14px; }
-  .pc-side-v { margin: 0; font-size: 12px; color: var(--panel-sunk); }
+  /* 🔴 예전엔 `--panel-sunk`(#EEF2F8 · 패널 배경색)를 글자색에 썼다 —
+     흰 패널 위에서 안 보였다. 배경 토큰을 글자색에 쓰지 않는다. */
+  .pc-side-v { margin: 0; font-size: 12px; color: var(--ink); }
   .pc-pitches { display: flex; flex-wrap: wrap; gap: 4px; }
   .pc-pitch {
     font-size: 10.5px; padding: 3px 7px;

@@ -2,6 +2,7 @@
   import { hasPendingAction, nextPendingAction } from "../../../shared/stores/season";
   import { advanceWeek } from "../../../shared/usecases/advanceWeek";
   import TeamMark from "../../team/ui/TeamMark.svelte";
+  import { advancingStore } from "../../../shared/stores/uiLock";
 
   export let dayLabel: string;
   /** 시즌 주차. 0이면 표시하지 않는다(비시즌·초기화 직후) */
@@ -20,7 +21,9 @@
   // 헤더는 모든 화면 위에 항상 떠 있으므로 "지금 누구이고 언제인가"만 남긴다.
   // 변하는 수치를 여기 두면 화면을 볼 때마다 눈이 위로 끌려간다.
 
-  let advancing = false;
+  // 🔴 **스토어로 뺐다.** 여기 지역 변수로 두니 내비게이션이 볼 방법이 없어
+  //    진행 중에도 탭을 옮길 수 있었다(2026-08-28 실제 플레이).
+  $: advancing = $advancingStore;
 
   $: btnDisabled = advancing;
 
@@ -49,11 +52,11 @@
       onOpenPending();
       return;
     }
-    advancing = true;
+    advancingStore.set(true);
     try {
       await advanceWeek();
     } finally {
-      advancing = false;
+      advancingStore.set(false);
     }
   }
 

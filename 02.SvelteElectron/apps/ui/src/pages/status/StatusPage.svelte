@@ -9,6 +9,7 @@
   import { getFaThreshold } from "../../shared/utils/faEngine";
   import { canRetireVoluntarily, isRetired, retireProtagonist } from "../../shared/usecases/retirement";
   import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
+  import { ipLabel, eraLabel, rateLabel } from "../../shared/utils/baseballFormat";
 
   type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
@@ -463,9 +464,9 @@
               ["L",    selectedSeasonStats.l],
               ["SV",   selectedSeasonStats.sv],
               ["HD",   selectedSeasonStats.hd],
-              ["IP",   selectedSeasonStats.ip],
-              ["ERA",  selectedSeasonStats.era?.toFixed(2)],
-              ["WHIP", selectedSeasonStats.whip?.toFixed(2)],
+              ["IP",   ipLabel(selectedSeasonStats.ip)],
+              ["ERA",  selectedSeasonStats.era == null ? undefined : eraLabel(selectedSeasonStats.era)],
+              ["WHIP", selectedSeasonStats.whip == null ? undefined : rateLabel(selectedSeasonStats.whip)],
               ["K",    selectedSeasonStats.k],
               ["BB",   selectedSeasonStats.bb],
               ["H",    selectedSeasonStats.h],
@@ -515,7 +516,7 @@
                     <td class="opp-name">{$teamMap.get(g.opponentId)?.name ?? g.opponentId}</td>
                     <td><span class="decision decision-{g.decision}">{g.decision}</span></td>
                     <td class="score">{g.myScore}:{g.oppScore}</td>
-                    <td>{g.ip ?? '-'}</td>
+                    <td>{g.ip == null ? '-' : ipLabel(g.ip)}</td>
                     <td>{g.h ?? '-'}</td>
                     <td>{g.bb ?? '-'}</td>
                     <td>{g.k ?? '-'}</td>

@@ -1507,8 +1507,10 @@
                 형태로 가르는 마크가 그 일을 한다 — 같은 리그 안에서 안 겹치는
                 게 테스트로 보증된다.
               -->
-              {#if rowTeamId}<TeamMark teamId={rowTeamId} size={16} />{/if}
-              <span class="team-name">{row.team}</span>
+              <span class="team-cell">
+                {#if rowTeamId}<TeamMark teamId={rowTeamId} size={16} />{/if}
+                <span class="team-name">{row.team}</span>
+              </span>
             </th>
             {#each row.inningScores as inningScore, i}
               <td class:current-inning={i + 1 === inning}>{inningScore}</td>
@@ -2148,13 +2150,15 @@
     color: var(--ink);
     font-weight: 700;
   }
-  .scoreboard tbody th.team-col {
+  /* 🔴 **셀 자체에 flex를 걸던 것을 안쪽 래퍼로 옮겼다** (2026-08-28).
+     예전 주석이 "표 셀에 flex를 쓰면 높이가 무너진다"며 `height: 30px`로
+     떠받치고 있었다 — 증상만 눌렀지 **그 칸이 열 계산에서 빠지는 건 그대로**였다.
+     같은 원인으로 부상 리포트에서 팀 이름이 "탄…", "금…"으로 잘렸다. */
+  .scoreboard tbody th.team-col .team-cell {
     display: flex;
     align-items: center;
     gap: 7px;
-    /* 표 셀에 flex를 쓰면 높이가 무너진다 — 행 높이를 여기서 잡는다 */
-    height: 30px;
-    box-sizing: border-box;
+    min-width: 0;
   }
   .team-name {
     overflow: hidden;

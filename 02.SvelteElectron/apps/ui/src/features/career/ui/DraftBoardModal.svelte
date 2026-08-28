@@ -402,10 +402,12 @@
                       </td>
                       <td class="td-ovr">{p.candidate.ovr}</td>
                       <td class="td-origin">
-                        <span class="origin-badge origin-{p.candidate.originType}">
-                          {originLabel(p.candidate.originType)}
+                        <span class="origin-cell">
+                          <span class="origin-badge origin-{p.candidate.originType}">
+                            {originLabel(p.candidate.originType)}
+                          </span>
+                          {p.candidate.origin}
                         </span>
-                        {p.candidate.origin}
                       </td>
                       <td class="td-pos">{p.candidate.position}</td>
                     </tr>
@@ -603,7 +605,8 @@
   .td-team { color: var(--ink); font-weight: 600; }
   .td-name { color: var(--ink); }
   .td-ovr { color: var(--ink); font-weight: 700; width: 40px; }
-  .td-origin { display: flex; align-items: center; gap: 5px; }
+  /* 🔴 td에 flex를 걸면 그 칸이 표의 열 계산에서 빠진다 — 안쪽 래퍼가 맡는다 */
+  .origin-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
   .td-pos { color: var(--ink-mid); width: 36px; }
 
   .star { color: var(--warn); font-size: 12px; }

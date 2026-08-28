@@ -8,12 +8,13 @@
    */
   import { createEventDispatcher } from "svelte";
   import { t, language, setLanguage, languageOptions } from "../../../shared/i18n";
-  import { settingsStore, type ThemeSetting, type EffectSpeed, type WindowSize } from "../../../shared/stores/settings";
+  import { settingsStore, WINDOW_SIZES, type ThemeSetting, type EffectSpeed, type WindowSize } from "../../../shared/stores/settings";
   import { hasPlayer } from "../../../shared/utils/sound";
 
   const THEMES: ThemeSetting[] = ["light", "dark", "system"];
   const SPEEDS: EffectSpeed[] = ["fast", "normal", "off"];
-  const SIZES: WindowSize[] = ["1280x800", "1440x900", "1600x900", "1920x1080", "fullscreen"];
+    // 표를 여기 또 적지 않는다 — 정본은 settings.ts의 WINDOW_SIZES다
+  const SIZES: WindowSize[] = WINDOW_SIZES;
 
   /** 볼륨 세 줄. 키를 문자열로 두면 `Settings` 색인이 안 잡힌다 */
   const VOLUMES: Array<{ key: "volumeMaster" | "volumeSfx" | "volumeBgm"; label: string }> = [

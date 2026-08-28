@@ -437,8 +437,10 @@
                     {/if}
                   </td>
                   <td class="team-name">
-                    <TeamMark teamId={s.teamId} size={16} />
-                    <span>{tName(s.teamId)}</span>
+                    <span class="team-cell">
+                      <TeamMark teamId={s.teamId} size={16} />
+                      <span>{tName(s.teamId)}</span>
+                    </span>
                   </td>
                   <td>{s.wins}</td>
                   <td>{s.losses}</td>
@@ -1127,10 +1129,9 @@
     border-bottom: 1px solid var(--panel);
   }
 
-  .team-name {
-    text-align: left; color: var(--ink);
-    display: flex; align-items: center; gap: 7px;
-  }
+  /* 🔴 td에 flex를 걸면 그 칸이 표의 열 계산에서 빠진다 — 안쪽 래퍼가 맡는다 */
+  .team-name { text-align: left; color: var(--ink); }
+  .team-cell { display: flex; align-items: center; gap: 7px; min-width: 0; }
   .rank-cell { white-space: nowrap; }
 
   .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
