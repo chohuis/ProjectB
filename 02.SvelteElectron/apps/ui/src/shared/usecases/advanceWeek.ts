@@ -21,7 +21,7 @@ import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
 import { calcTrainingGrowth } from "../utils/growthEngine";
 import {
-  applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult, getUniversityExamGainMult,
+  applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult,
   loadAcademicsRules, majorEffects, warningEffect, settleSemester,
 } from "../utils/academicsEngine";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
@@ -282,9 +282,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 효율 85%"). 학사 경고가 걸리면 `eligibilityBlocked`로 경기가 자동 시뮬되는데,
   // 프로 선수에게 그게 걸리는 건 말이 안 된다.
   const isStudent = g.protagonist.careerStage === "highschool" || isUniversity;
-  const examGainMult  = isUniversity ? getUniversityExamGainMult(g.schoolState.universityMajor) : 1.0;
+  // ⚠ 배수 인자를 지웠다 — 대학은 결과를 저장하지 않아 **죽은 갈래였다**
   const studyResult = isStudent
-    ? applyWeeklyStudy(g.schoolState, examGainMult)
+    ? await applyWeeklyStudy(g.schoolState)
     : NEUTRAL_STUDY;
   // ⚠ **대학은 고교식 주간 학업 결과를 저장하지 않는다.** 석차백분율·출석·
   // 과제·경고누적은 고교 축이고, 대학은 학점 축이다(설계 §1-1).
@@ -827,7 +827,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // 티어가 정해지고(`universityUtils`), 대학은 학점으로 졸업 자격이
       // 정해진다. 경고는 한 번에 출전 정지로 가지 않고 단계로 오르내린다.
       const sc = gAfterStudy.schoolState;
-      const res = settleSemester(acaRules, {
+      const res = await settleSemester(acaRules, {
         qualityAccum: sc.semesterQualityAccum ?? 0,
         weeks: sc.semesterWeeks ?? 0,
         priorCumulative: sc.universityGpa ?? 0,

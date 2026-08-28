@@ -930,3 +930,327 @@ pub fn roll_random_batch(count: u32, seed: u32) -> Vec<f64> {
     let mut rng = crate::npc_sim::LcgRand::new(seed);
     (0..count).map(|_| rng.next()).collect()
 }
+
+// ── Academics ─────────────────────────────────────────────────
+//
+// 학업 산식이 `apps/ui/.../academicsEngine.ts`에 있었다 (2026-08-28에 내렸다).
+// 표는 `generation_rules.json`의 `academicsRules`가 정본이고 TS가 그대로
+// 넘긴다 — 여기에 같은 숫자를 다시 적지 마라.
+//
+// ⚠ 표 조회(`percentileToGrade`·`weeksUntilNextExam`·모드 뱃지)는 **TS에
+//   남겼다.** 화면이 반응형(`$:`)으로 부르는 자리라 IPC를 태우면 렌더가
+//   깨진다. 산식만 여기 있다.
+
+/// JS `Math.round` 의미 — `floor(x + 0.5)`.
+/// Rust `f64::round`는 음수 절반에서 갈린다(−0.5 → −1 vs JS 0).
+fn js_round(x: f64) -> f64 { (x + 0.5).floor() }
+
+#[derive(Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct StudyModeEffect {
+    pub exam_gain: f64,
+    pub efficiency_mod: f64,
+    pub attendance_delta: f64,
+    pub assignment_delta: f64,
+    /// 양수 = 석차백분율이 오른다 = 나쁜 방향
+    pub percentile_delta: f64,
+    pub warning_increment: bool,
+}
+
+#[derive(Deserialize, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct SubjectScore {
+    pub percentile: f64,
+    pub attendance: f64,
+    pub assignment: f64,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WeeklyStudyPayload {
+    pub mode: String,
+    /// `academicsRules.highschool.studyModes` 그대로
+    pub modes: std::collections::HashMap<String, StudyModeEffect>,
+    pub exam_accum_score: f64,
+    pub subject_scores: std::collections::HashMap<String, SubjectScore>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WeeklyStudyResult {
+    pub exam_accum_delta: f64,
+    pub updated_subject_scores: std::collections::HashMap<String, SubjectScore>,
+    pub warning_count_delta: u32,
+    pub efficiency_mod: f64,
+}
+
+pub fn calc_weekly_study(p: WeeklyStudyPayload) -> WeeklyStudyResult {
+    // 모르는 모드면 무보정 — 구 세이브의 모드 문자열이 표에 없을 수 있다
+    let fx = match p.modes.get(&p.mode) {
+        Some(f) => f.clone(),
+        None => return WeeklyStudyResult {
+            exam_accum_delta: 0.0,
+            updated_subject_scores: p.subject_scores,
+            warning_count_delta: 0,
+            efficiency_mod: 1.0,
+        },
+    };
+    let clamp = |v: f64, lo: f64, hi: f64| (js_round(v * 10.0) / 10.0).max(lo).min(hi);
+
+    let mut updated = std::collections::HashMap::new();
+    for (id, s) in &p.subject_scores {
+        updated.insert(id.clone(), SubjectScore {
+            percentile: clamp(s.percentile + fx.percentile_delta, 1.0, 100.0),
+            attendance: clamp(s.attendance + fx.attendance_delta, 0.0, 100.0),
+            assignment: clamp(s.assignment + fx.assignment_delta, 0.0, 100.0),
+        });
+    }
+
+    WeeklyStudyResult {
+        // 상한 100까지만 쌓인다
+        exam_accum_delta: fx.exam_gain.min(100.0 - p.exam_accum_score),
+        updated_subject_scores: updated,
+        warning_count_delta: if fx.warning_increment { 1 } else { 0 },
+        efficiency_mod: fx.efficiency_mod,
+    }
+}
+
+#[derive(Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct WarningEffectIn {
+    pub level: i32,
+    pub repeats: bool,
+    pub label: String,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SemesterPayload {
+    pub gpa_max: f64,
+    pub warning_gpa: f64,
+    pub warning_effects: Vec<WarningEffectIn>,
+    /// 전공 배수 — TS `majorEffects(rules, major).gpaGainMult`
+    pub gpa_gain_mult: f64,
+    /// 이번 학기 주당 품질(0~1)의 합
+    pub quality_accum: f64,
+    /// 이번 학기 주차 수 — 학기 길이가 다르므로 반드시 나눈다
+    pub weeks: f64,
+    pub prior_cumulative: f64,
+    pub semesters_done: f64,
+    pub warning_level: i32,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SemesterResultOut {
+    pub gpa: f64,
+    pub cumulative_gpa: f64,
+    pub new_warning_level: i32,
+    pub repeats: bool,
+    pub label: String,
+    pub message_subject: String,
+    pub message_body: String,
+}
+
+/// 학기 학점을 확정한다 (중간·기말 각 1회).
+///
+/// 경고는 **단계로 오르내린다** — 기준 미달이면 +1, 넘기면 −1이다.
+/// 예전 고교식은 누적이 임계를 넘는 순간 바로 출전 정지라 회복할 틈이 없었다.
+pub fn calc_semester_result(p: SemesterPayload) -> SemesterResultOut {
+    // ⚠ **평균 품질로 낸다.** 합계를 그대로 쓰면 기말(27주)이 중간(11주)보다
+    // 무조건 높아져, 중간고사에서 늘 경고가 걸린다
+    let avg_quality = if p.weeks > 0.0 { p.quality_accum / p.weeks } else { 0.0 };
+    let gpa = (avg_quality * p.gpa_max * p.gpa_gain_mult).max(0.0).min(p.gpa_max);
+
+    let n = p.semesters_done.max(1.0);
+    let cumulative_gpa = js_round(((p.prior_cumulative * (n - 1.0) + gpa) / n) * 100.0) / 100.0;
+
+    let below = gpa < p.warning_gpa;
+    let raw = if below { p.warning_level + 1 } else { p.warning_level - 1 };
+    let new_level = raw.clamp(0, 3);
+    let fx = p.warning_effects.iter().find(|w| w.level == new_level && new_level != 0);
+
+    let body = if below {
+        let tail = if new_level == 1 {
+            "학사 경고를 받았습니다. 훈련에 쓸 시간이 줄어듭니다."
+        } else if new_level == 2 {
+            "경고가 누적되어 다음 학기 경기 출전이 정지됩니다."
+        } else {
+            "경고가 세 번 쌓였습니다. 유급 처리되어 졸업이 한 해 밀립니다."
+        };
+        format!("이번 학기 학점은 {:.2}입니다. 기준({:.2})에 미치지 못했습니다.\n\n{}",
+            gpa, p.warning_gpa, tail)
+    } else {
+        let tail = if p.warning_level > 0 { "경고 단계가 한 단계 내려갔습니다." } else { "기준을 넘겼습니다." };
+        format!("이번 학기 학점은 {:.2}입니다. 누적 {:.2}.\n\n{}", gpa, cumulative_gpa, tail)
+    };
+
+    let label = fx.map(|f| f.label.clone()).unwrap_or_else(|| "정상".to_string());
+    SemesterResultOut {
+        gpa,
+        cumulative_gpa,
+        new_warning_level: new_level,
+        repeats: fx.map(|f| f.repeats).unwrap_or(false),
+        message_subject: if below {
+            format!("학사 경고 — {}", fx.map(|f| f.label.as_str()).unwrap_or(""))
+        } else {
+            "학기 성적 발표".to_string()
+        },
+        label,
+        message_body: body,
+    }
+}
+
+#[cfg(test)]
+mod academics_tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    fn modes() -> HashMap<String, StudyModeEffect> {
+        let mut m = HashMap::new();
+        m.insert("focus".into(), StudyModeEffect {
+            exam_gain: 8.0, efficiency_mod: 0.70, attendance_delta: 1.0,
+            assignment_delta: 2.0, percentile_delta: -2.0, warning_increment: false });
+        m.insert("sleep".into(), StudyModeEffect {
+            exam_gain: 0.0, efficiency_mod: 1.05, attendance_delta: -8.0,
+            assignment_delta: -9.0, percentile_delta: 7.0, warning_increment: true });
+        m
+    }
+    fn subj(pct: f64, att: f64, asg: f64) -> HashMap<String, SubjectScore> {
+        let mut m = HashMap::new();
+        m.insert("s1".into(), SubjectScore { percentile: pct, attendance: att, assignment: asg });
+        m
+    }
+
+    #[test]
+    fn 상한을_넘겨_쌓지_않는다() {
+        // 누적 95에서 focus(8) → 5만 들어간다
+        let r = calc_weekly_study(WeeklyStudyPayload {
+            mode: "focus".into(), modes: modes(), exam_accum_score: 95.0, subject_scores: subj(50.0, 80.0, 80.0),
+        });
+        assert!((r.exam_accum_delta - 5.0).abs() < 1e-9, "{}", r.exam_accum_delta);
+    }
+
+    #[test]
+    fn 석차백분율은_1_아래로_안_내려간다() {
+        // 🔴 0이 되면 `percentileToGrade`가 1등급을 주는데, 백분율 0은 없는 값이다
+        let r = calc_weekly_study(WeeklyStudyPayload {
+            mode: "focus".into(), modes: modes(), exam_accum_score: 0.0, subject_scores: subj(1.0, 100.0, 100.0),
+        });
+        let s = &r.updated_subject_scores["s1"];
+        assert_eq!(s.percentile, 1.0);
+        // 출석·과제는 100 상한
+        assert_eq!(s.attendance, 100.0);
+        assert_eq!(s.assignment, 100.0);
+    }
+
+    #[test]
+    fn 출석은_0_아래로_안_내려간다() {
+        let r = calc_weekly_study(WeeklyStudyPayload {
+            mode: "sleep".into(), modes: modes(), exam_accum_score: 0.0, subject_scores: subj(100.0, 3.0, 2.0),
+        });
+        let s = &r.updated_subject_scores["s1"];
+        assert_eq!(s.attendance, 0.0);
+        assert_eq!(s.assignment, 0.0);
+        assert_eq!(s.percentile, 100.0);
+        assert_eq!(r.warning_count_delta, 1);
+    }
+
+    #[test]
+    fn 모르는_모드는_무보정이다() {
+        // ⚠ 구 세이브의 모드 문자열이 표에 없을 수 있다 — 죽으면 안 된다
+        let r = calc_weekly_study(WeeklyStudyPayload {
+            mode: "없는모드".into(), modes: modes(), exam_accum_score: 10.0, subject_scores: subj(50.0, 80.0, 80.0),
+        });
+        assert_eq!(r.efficiency_mod, 1.0);
+        assert_eq!(r.exam_accum_delta, 0.0);
+        assert_eq!(r.updated_subject_scores["s1"].percentile, 50.0);
+    }
+
+    fn warns() -> Vec<WarningEffectIn> {
+        vec![
+            WarningEffectIn { level: 1, repeats: false, label: "학사 경고".into() },
+            WarningEffectIn { level: 2, repeats: false, label: "출전 정지".into() },
+            WarningEffectIn { level: 3, repeats: true,  label: "유급".into() },
+        ]
+    }
+    fn sem(quality: f64, weeks: f64, level: i32) -> SemesterPayload {
+        SemesterPayload {
+            gpa_max: 4.5, warning_gpa: 1.75, warning_effects: warns(), gpa_gain_mult: 1.0,
+            quality_accum: quality, weeks, prior_cumulative: 0.0, semesters_done: 1.0, warning_level: level,
+        }
+    }
+
+    #[test]
+    fn 학기_길이가_달라도_공정하다() {
+        // 🔴 합계를 그대로 쓰면 기말(27주)이 중간(11주)보다 무조건 높아진다.
+        //   같은 품질이면 학점이 같아야 한다
+        let mid = calc_semester_result(sem(0.55 * 11.0, 11.0, 0));
+        let fin = calc_semester_result(sem(0.55 * 27.0, 27.0, 0));
+        assert!((mid.gpa - fin.gpa).abs() < 1e-9, "{} vs {}", mid.gpa, fin.gpa);
+    }
+
+    #[test]
+    fn 경고는_단계로_오르내린다() {
+        // 미달이면 +1
+        assert_eq!(calc_semester_result(sem(0.05 * 11.0, 11.0, 0)).new_warning_level, 1);
+        // 넘기면 −1 — **회복할 틈이 있어야 한다**
+        assert_eq!(calc_semester_result(sem(0.85 * 11.0, 11.0, 2)).new_warning_level, 1);
+        // 0 아래로 안 간다
+        assert_eq!(calc_semester_result(sem(0.85 * 11.0, 11.0, 0)).new_warning_level, 0);
+        // 3에서 멈춘다
+        assert_eq!(calc_semester_result(sem(0.05 * 11.0, 11.0, 3)).new_warning_level, 3);
+    }
+
+    #[test]
+    fn 유급은_3단계에서만이다() {
+        assert!(!calc_semester_result(sem(0.05 * 11.0, 11.0, 0)).repeats);
+        assert!(!calc_semester_result(sem(0.05 * 11.0, 11.0, 1)).repeats);
+        let r3 = calc_semester_result(sem(0.05 * 11.0, 11.0, 2));
+        assert_eq!(r3.new_warning_level, 3);
+        assert!(r3.repeats);
+        assert_eq!(r3.label, "유급");
+    }
+
+    #[test]
+    fn 품질이_오르면_학점도_오른다() {
+        // 🔴 `studyQualityDelta` 보상이 실제로 학점을 움직이는지 —
+        //   양방향이다. 단방향이면 깎는 이벤트가 죽는다
+        let plain = calc_semester_result(sem(4.0, 8.0, 0)).gpa;
+        let up    = calc_semester_result(sem(5.0, 8.0, 0)).gpa;
+        let down  = calc_semester_result(sem(3.0, 8.0, 0)).gpa;
+        assert!(up > plain, "{} vs {}", up, plain);
+        assert!(down < plain, "{} vs {}", down, plain);
+    }
+
+    #[test]
+    fn 주차가_0이면_학점도_0이다() {
+        // 0으로 나누지 않는다
+        let r = calc_semester_result(sem(3.0, 0.0, 0));
+        assert_eq!(r.gpa, 0.0);
+    }
+
+    #[test]
+    fn 누적은_학기_수로_평균낸다() {
+        let mut p = sem(0.85 * 11.0, 11.0, 0);
+        p.prior_cumulative = 2.0;
+        p.semesters_done = 3.0;
+        let r = calc_semester_result(p);
+        // (2.0×2 + gpa) / 3, 소수 둘째 자리
+        let want = (((2.0 * 2.0 + r.gpa) / 3.0) * 100.0).round() / 100.0;
+        assert!((r.cumulative_gpa - want).abs() < 1e-9, "{} vs {}", r.cumulative_gpa, want);
+    }
+
+    #[test]
+    fn 전공_배수가_학점에_걸린다() {
+        let mut p = sem(0.5 * 11.0, 11.0, 0);
+        p.gpa_gain_mult = 1.5;
+        let boosted = calc_semester_result(p).gpa;
+        let plain = calc_semester_result(sem(0.5 * 11.0, 11.0, 0)).gpa;
+        assert!(boosted > plain, "{} vs {}", boosted, plain);
+        // 상한을 넘지 않는다
+        let mut q = sem(1.0 * 11.0, 11.0, 0);
+        q.gpa_gain_mult = 1.5;
+        assert_eq!(calc_semester_result(q).gpa, 4.5);
+    }
+}

@@ -59,23 +59,57 @@ describe("학습 품질 보상", () => {
     expect(applyStudyQuality(before)).toBe(before);
   });
 
-  // 🔴 **실제로 학점이 움직이는가** — 여기까지 봐야 "동작"이다
-  it("학기 정산에서 학점이 실제로 오른다", () => {
-    const rules = RULES;
+  /**
+   * 🔴 **실제로 학점이 움직이는가** — 여기까지 봐야 "동작"이다.
+   *
+   * ⚠ 산식은 2026-08-28에 Rust로 내려갔다(`week_engine::calc_semester_result`).
+   *   품질→학점 방향은 거기 검사가 본다(`품질이_오르면_학점도_오른다`).
+   *   여기서 보는 건 **TS가 그 값을 손대지 않고 넘기는가**다 — 중간에
+   *   깎거나 다시 나누면 보상이 조용히 사라진다.
+   */
+  it("보상이 붙은 누적을 엔진에 그대로 넘긴다", async () => {
+    const seen: Record<string, unknown>[] = [];
+    (globalThis as unknown as { window: unknown }).window = {
+      projectB: {
+        engine: (_fn: string, json: string) => {
+          seen.push(JSON.parse(json));
+          return Promise.resolve(JSON.stringify({
+            gpa: 0, cumulativeGpa: 0, newWarningLevel: 0,
+            repeats: false, label: "", messageSubject: "", messageBody: "",
+          }));
+        },
+      },
+    };
     const base = { qualityAccum: 4, weeks: 8, priorCumulative: 3.0,
                    semestersDone: 2, warningLevel: 0, major: "" };
-    const plain = settleSemester(rules, base);
-    const boosted = settleSemester(rules, { ...base, qualityAccum: 4 + 1.0 });
-    expect(boosted.gpa).toBeGreaterThan(plain.gpa);
-    expect(boosted.cumulativeGpa).toBeGreaterThan(plain.cumulativeGpa);
+    await settleSemester(RULES, base);
+    await settleSemester(RULES, { ...base, qualityAccum: applyStudyQuality(
+      { semesterQualityAccum: 4, semesterWeeks: 8 }, 1.0).semesterQualityAccum! });
+
+    expect(seen).toHaveLength(2);
+    expect(seen[0].qualityAccum).toBe(4);
+    // 보상 +1.0이 그대로 도착한다 — 주차는 안 늘어난다
+    expect(seen[1].qualityAccum).toBe(5);
+    expect(seen[1].weeks).toBe(8);
   });
 
-  it("깎으면 내려간다 — 단방향이 아니다", () => {
-    const rules = RULES;
-    const base = { qualityAccum: 4, weeks: 8, priorCumulative: 3.0,
-                   semestersDone: 2, warningLevel: 0, major: "" };
-    const plain = settleSemester(rules, base);
-    const cut = settleSemester(rules, { ...base, qualityAccum: 4 - 1.0 });
-    expect(cut.gpa).toBeLessThan(plain.gpa);
+  /** ⚠ 규칙 파일 값이 실제로 엔진까지 간다 — 표만 채우고 안 넘기면 소용없다 */
+  it("규칙 파일의 학점 상한·경고선을 엔진에 넘긴다", async () => {
+    const seen: Record<string, unknown>[] = [];
+    (globalThis as unknown as { window: unknown }).window = {
+      projectB: { engine: (_fn: string, json: string) => {
+        seen.push(JSON.parse(json));
+        return Promise.resolve(JSON.stringify({
+          gpa: 0, cumulativeGpa: 0, newWarningLevel: 0,
+          repeats: false, label: "", messageSubject: "", messageBody: "",
+        }));
+      } },
+    };
+    await settleSemester(RULES, { qualityAccum: 4, weeks: 8, priorCumulative: 3.0,
+                                  semestersDone: 2, warningLevel: 0, major: "일반전공" });
+    expect(seen[0].gpaMax).toBe(RULES.university.gpaMax);
+    expect(seen[0].warningGpa).toBe(RULES.university.warningGpa);
+    // 전공 배수도 함께 — 안 넘기면 전공이 학점에 아무 영향이 없다
+    expect(seen[0].gpaGainMult).toBe(RULES.majors["일반전공"].gpaGainMult);
   });
 });

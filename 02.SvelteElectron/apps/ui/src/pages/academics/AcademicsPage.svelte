@@ -2,7 +2,7 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import {
-    percentileToGrade, STUDY_MODE_EFFECTS, weeksUntilNextExam,
+    percentileToGrade, studyModeEffect, weeksUntilNextExam,
     UNIVERSITY_MAJORS, getUniversityEffBonus,
   } from "../../shared/utils/academicsEngine";
   import { toGpa45 } from "../../shared/utils/universityUtils";
@@ -181,7 +181,7 @@
 
       <div class="mode-list">
         {#each STUDY_MODE_OPTIONS as opt}
-          {@const fx = STUDY_MODE_EFFECTS[opt.id]}
+          {@const fx = studyModeEffect(opt.id)}
           <button
             class="mode-btn"
             class:active={school.weeklyStudyMode === opt.id}

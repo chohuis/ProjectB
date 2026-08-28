@@ -288,6 +288,8 @@ export declare function weekCalcInjuryNative(p: string): string
 export declare function weekCalcHsAdmissionsNative(p: string): string
 export declare function weekCalcTradeRumorNative(p: string): string
 export declare function weekCalcExamResultNative(p: string): string
+export declare function weekCalcWeeklyStudyNative(p: string): string
+export declare function weekCalcSemesterResultNative(p: string): string
 export declare function weekCalcMilitaryNative(p: string): string
 export declare function weekCalcNpcFallbackNative(p: string): string
 export declare function weekRollRandomBatchNative(count: number, seed: number): string

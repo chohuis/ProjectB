@@ -1,6 +1,16 @@
 import type { SchoolState, StudyMode, SubjectScore, GradeRisk } from "../types/save";
 
-// ── 학업 모드별 효과 ──────────────────────────────────────────
+// ══ 고교 학업 표 — 정본은 `generation_rules.json`이다 ═══════════
+//
+// 🔴 숫자가 여기 박혀 있었다 (2026-08-28에 올렸다). 모드 4종 × 6값 · 9등급
+//   절선 8개 · 시험 주차 2개가 전부 리터럴이었다. 밸런스 값을 코드에 두면
+//   규칙 파일과 어긋난 걸 아무도 모른다.
+//
+// ⚠ **여기 남긴 이유** — 이 셋은 화면이 반응형(`$:`)·템플릿(`{@const}`)으로
+//   부른다(`AcademicsPage`). IPC를 태우면 렌더마다 왕복이라 화면이 깨진다.
+//   **숫자만 규칙 파일로 올리고 조회는 TS에 뒀다** — 이관의 두 번째 갈래다
+//   (`docs/ENGINE_OWNERSHIP.md` 참고). **산식은 Rust에 있다.**
+
 interface StudyModeEffect {
   examGain: number;           // 시험 점수 주당 누적
   efficiencyMod: number;      // 훈련 효율 배율 (1.0 = 100%)
@@ -10,12 +20,44 @@ interface StudyModeEffect {
   warningIncrement: boolean;
 }
 
-export const STUDY_MODE_EFFECTS: Record<StudyMode, StudyModeEffect> = {
+/** 규칙 파일을 못 읽었을 때. **0으로 두면 학업이 통째로 멈춘다** */
+const MODE_FALLBACK: Record<StudyMode, StudyModeEffect> = {
   focus:  { examGain: 8, efficiencyMod: 0.70, attendanceDelta:  1, assignmentDelta:  2, percentileDelta: -2, warningIncrement: false },
   normal: { examGain: 4, efficiencyMod: 0.85, attendanceDelta:  0, assignmentDelta:  1, percentileDelta: -1, warningIncrement: false },
   rest:   { examGain: 1, efficiencyMod: 1.00, attendanceDelta: -3, assignmentDelta: -6, percentileDelta:  4, warningIncrement: false },
   sleep:  { examGain: 0, efficiencyMod: 1.05, attendanceDelta: -8, assignmentDelta: -9, percentileDelta:  7, warningIncrement: true  },
 };
+const CUTS_FALLBACK = [4, 11, 23, 40, 60, 77, 89, 96];
+const EXAM_WEEKS_FALLBACK = { midterm: 11, final: 38 };
+
+let _modes = MODE_FALLBACK;
+let _cuts = CUTS_FALLBACK;
+let _examWeeks = EXAM_WEEKS_FALLBACK;
+
+/**
+ * 규칙 파일을 주입한다. `primeForeignRules`와 같은 방식이고 같은 자리
+ * (`stores/master`)에서 부른다 — 화면이 동기로 읽어야 해서 캐시한다.
+ */
+export function primeAcademicsHsRules(rulesFile: {
+  academicsRules?: {
+    highschool?: {
+      studyModes?: Partial<Record<StudyMode, StudyModeEffect>>;
+      gradeCuts?: number[];
+      examWeeks?: { midterm: number; final: number };
+    };
+  };
+}): void {
+  const h = rulesFile.academicsRules?.highschool;
+  if (h?.studyModes) _modes = { ...MODE_FALLBACK, ...h.studyModes };
+  if (h?.gradeCuts?.length) _cuts = h.gradeCuts;
+  if (h?.examWeeks) _examWeeks = h.examWeeks;
+}
+
+/** 화면이 모드 뱃지(훈련 효율 %)를 그릴 때 읽는다. **상수가 아니다** —
+ *  규칙 파일이 주입되기 전엔 폴백을 준다 */
+export function studyModeEffect(mode: StudyMode): StudyModeEffect {
+  return _modes[mode] ?? MODE_FALLBACK[mode];
+}
 
 // ── 주간 학업 효과 계산 ────────────────────────────────────────
 export interface WeeklyStudyResult {
@@ -39,39 +81,32 @@ export const NEUTRAL_STUDY: WeeklyStudyResult = {
   efficiencyMod: 1.0,
 };
 
-export function applyWeeklyStudy(school: SchoolState, examGainMult = 1.0): WeeklyStudyResult {
-  const fx = STUDY_MODE_EFFECTS[school.weeklyStudyMode];
-  const clamp  = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(v * 10) / 10));
-
-  const updatedSubjectScores: Record<string, SubjectScore> = {};
-  for (const [id, s] of Object.entries(school.subjectScores)) {
-    updatedSubjectScores[id] = {
-      percentile: clamp(s.percentile + fx.percentileDelta, 1, 100),
-      attendance: clamp(s.attendance + fx.attendanceDelta, 0, 100),
-      assignment: clamp(s.assignment + fx.assignmentDelta, 0, 100),
-    };
+/**
+ * 주간 학업. **산식은 Rust에 있다** (`week_engine::calc_weekly_study`).
+ *
+ * ⚠ 엔진이 없으면(Vite 단독) 중립값이다 — **여기서 산식을 다시 만들지
+ *   않는다.** 만들면 또 두 벌이 된다.
+ */
+export async function applyWeeklyStudy(school: SchoolState): Promise<WeeklyStudyResult> {
+  const api = window.projectB?.engine;
+  if (!api) return NEUTRAL_STUDY;
+  try {
+    return JSON.parse(await api("weekCalcWeeklyStudyNative", JSON.stringify({
+      mode: school.weeklyStudyMode,
+      modes: _modes,
+      examAccumScore: school.examAccumScore,
+      subjectScores: school.subjectScores,
+    }))) as WeeklyStudyResult;
+  } catch {
+    return NEUTRAL_STUDY;
   }
-
-  const rawGain = fx.examGain * examGainMult;
-  return {
-    examAccumDelta:       Math.min(rawGain, 100 - school.examAccumScore),
-    updatedSubjectScores,
-    warningCountDelta:    fx.warningIncrement ? 1 : 0,
-    efficiencyMod:        fx.efficiencyMod,
-  };
 }
 
 // ── 석차백분율 → 9등급 ─────────────────────────────────────────
+/** 절선 표는 규칙 파일이 정본이다. 화면이 매 렌더 부르므로 동기다 */
 export function percentileToGrade(pct: number): number {
-  if (pct <=  4) return 1;
-  if (pct <= 11) return 2;
-  if (pct <= 23) return 3;
-  if (pct <= 40) return 4;
-  if (pct <= 60) return 5;
-  if (pct <= 77) return 6;
-  if (pct <= 89) return 7;
-  if (pct <= 96) return 8;
-  return 9;
+  for (let i = 0; i < _cuts.length; i++) if (pct <= _cuts[i]) return i + 1;
+  return _cuts.length + 1;
 }
 
 // ── 시험 결과 계산 ─────────────────────────────────────────────
@@ -116,19 +151,21 @@ export function getUniversityEffBonus(major: string): number {
   return UNIVERSITY_MAJORS.find((m) => m.id === major)?.effBonus ?? 0;
 }
 
-export function getUniversityExamGainMult(major: string): number {
-  return major === "일반전공" ? 1.5 : 1.0;
-}
+// ⚠ `getUniversityExamGainMult`를 지웠다 (2026-08-28). **죽은 갈래였다.**
+//   대학 전공 "일반전공"에 1.5배를 곱했는데 그 배수가 닿는 값은
+//   `examAccumDelta` 하나이고, `advanceWeek`은 대학일 때 그 결과를
+//   **저장하지 않는다**(`if (isStudent && !isUniversity)`).
+//   실측: 배수를 999로 키워도 `efficiencyMod`·과목 점수·경고가 전부 같았다.
+//   화면이 약속하는 "학업 점수 획득 +50%"는 대학 축(`majors.일반전공.
+//   gpaGainMult = 1.5`)이 실제로 주고 있다 — 그쪽은 살아 있다.
 
 // ── 다음 시험까지 남은 주차 계산 ──────────────────────────────
+/** 주차 표는 규칙 파일이 정본이다. 화면이 매 렌더 부르므로 동기다 */
 export function weeksUntilNextExam(currentWeek: number): { label: string; weeksLeft: number } {
-  const MIDTERM = 11;
-  const FINAL   = 38;
   const w = ((currentWeek - 1) % 52) + 1;
-
-  if (w < MIDTERM) return { label: "중간고사",  weeksLeft: MIDTERM - w };
-  if (w < FINAL)   return { label: "기말고사",  weeksLeft: FINAL   - w };
-  return { label: "다음 시즌 중간고사", weeksLeft: 52 - w + MIDTERM };
+  if (w < _examWeeks.midterm) return { label: "중간고사", weeksLeft: _examWeeks.midterm - w };
+  if (w < _examWeeks.final)   return { label: "기말고사", weeksLeft: _examWeeks.final   - w };
+  return { label: "다음 시즌 중간고사", weeksLeft: 52 - w + _examWeeks.midterm };
 }
 
 // ══ 대학 학업 (Phase 9-C) ══════════════════════════════════════
@@ -204,12 +241,16 @@ export interface SemesterResult {
 
 /**
  * 학기 학점을 확정한다 (중간·기말 각 1회).
+ * **산식은 Rust에 있다** (`week_engine::calc_semester_result`).
  *
  * 경고는 **단계로 오르내린다** — 기준 미달이면 +1, 넘기면 -1이다.
  * 예전 고교식은 누적 경고가 임계를 넘는 순간 바로 출전 정지라
  * **회복할 틈이 없었다.** 3단계에서만 유급한다.
+ *
+ * ⚠ 엔진이 없으면 **직전 상태를 그대로 돌려준다** — 여기서 학점을 지어내면
+ *   졸업 자격이 갈린다.
  */
-export function settleSemester(
+export async function settleSemester(
   rules: AcademicsRules,
   opts: {
     /** 이번 학기 주당 품질(0~1)의 합 */
@@ -221,43 +262,27 @@ export function settleSemester(
     warningLevel: number;
     major: string;
   },
-): SemesterResult {
-  const u = rules.university;
-  const mj = majorEffects(rules, opts.major);
-  // ⚠ **평균 품질로 낸다.** 합계를 그대로 쓰면 기말(27주)이 중간(11주)보다
-  // 무조건 높아져, 중간고사에서 늘 경고가 걸린다
-  const avgQuality = opts.weeks > 0 ? opts.qualityAccum / opts.weeks : 0;
-  const gpa = Math.max(0, Math.min(u.gpaMax, avgQuality * u.gpaMax * mj.gpaGainMult));
-
-  const n = Math.max(1, opts.semestersDone);
-  const cumulativeGpa = Math.round(((opts.priorCumulative * (n - 1) + gpa) / n) * 100) / 100;
-
-  const below = gpa < u.warningGpa;
-  const raw = below ? opts.warningLevel + 1 : opts.warningLevel - 1;
-  const newWarningLevel = Math.max(0, Math.min(3, raw)) as 0 | 1 | 2 | 3;
-  const fx = warningEffect(rules, newWarningLevel);
-
-  const body = below
-    ? [
-        `이번 학기 학점은 ${gpa.toFixed(2)}입니다. 기준(${u.warningGpa.toFixed(2)})에 미치지 못했습니다.`,
-        "",
-        newWarningLevel === 1 ? "학사 경고를 받았습니다. 훈련에 쓸 시간이 줄어듭니다."
-        : newWarningLevel === 2 ? "경고가 누적되어 다음 학기 경기 출전이 정지됩니다."
-        : "경고가 세 번 쌓였습니다. 유급 처리되어 졸업이 한 해 밀립니다.",
-      ].join("\n")
-    : [
-        `이번 학기 학점은 ${gpa.toFixed(2)}입니다. 누적 ${cumulativeGpa.toFixed(2)}.`,
-        "",
-        opts.warningLevel > 0 ? "경고 단계가 한 단계 내려갔습니다." : "기준을 넘겼습니다.",
-      ].join("\n");
-
-  return {
-    gpa, cumulativeGpa, newWarningLevel,
-    repeats: !!fx?.repeats,
-    label: fx?.label ?? "정상",
-    messageSubject: below ? `학사 경고 — ${fx?.label ?? ""}` : "학기 성적 발표",
-    messageBody: body,
-  };
+): Promise<SemesterResult> {
+  const api = window.projectB?.engine;
+  if (!api) {
+    return {
+      gpa: 0, cumulativeGpa: opts.priorCumulative,
+      newWarningLevel: (opts.warningLevel || 0) as 0 | 1 | 2 | 3,
+      repeats: false, label: "정상",
+      messageSubject: "학기 성적 발표", messageBody: "",
+    };
+  }
+  return JSON.parse(await api("weekCalcSemesterResultNative", JSON.stringify({
+    gpaMax: rules.university.gpaMax,
+    warningGpa: rules.university.warningGpa,
+    warningEffects: rules.university.warningEffects,
+    gpaGainMult: majorEffects(rules, opts.major).gpaGainMult,
+    qualityAccum: opts.qualityAccum,
+    weeks: opts.weeks,
+    priorCumulative: opts.priorCumulative,
+    semestersDone: opts.semestersDone,
+    warningLevel: opts.warningLevel,
+  }))) as SemesterResult;
 }
 
 /** 졸업할 수 있는가 — 4학년을 마쳤고 누적 학점이 기준 이상 */

@@ -1412,6 +1412,24 @@ pub fn week_calc_exam_result_native(p: String) -> String {
 }
 
 #[napi]
+pub fn week_calc_weekly_study_native(p: String) -> String {
+    let params: week_engine::WeeklyStudyPayload = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("weekCalcWeeklyStudyNative", e),
+    };
+    serde_json::to_string(&week_engine::calc_weekly_study(params))
+        .unwrap_or_else(|e| parse_err("weekCalcWeeklyStudyNative/serialize", e))
+}
+
+#[napi]
+pub fn week_calc_semester_result_native(p: String) -> String {
+    let params: week_engine::SemesterPayload = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("weekCalcSemesterResultNative", e),
+    };
+    serde_json::to_string(&week_engine::calc_semester_result(params))
+        .unwrap_or_else(|e| parse_err("weekCalcSemesterResultNative/serialize", e))
+}
+
+#[napi]
 pub fn week_calc_military_native(p: String) -> String {
     let params: week_engine::MilitaryWeekPayload = match serde_json::from_str(&p) {
         Ok(v) => v, Err(e) => return parse_err("weekCalcMilitaryNative", e),

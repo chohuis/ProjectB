@@ -1108,7 +1108,7 @@
       "ipPerInning": 0.5,
       "ipCap": 30,
       "_ipNote": "한 시즌 60이닝이면 주축이다 - 그 근처를 만점으로 본다",
-      "eraBase": 3.0,
+      "eraBase": 3,
       "eraPerRun": 8,
       "eraMin": -15,
       "eraMax": 25,
@@ -1670,6 +1670,60 @@
         "injuryMod": 1,
         "gpaGainMult": 1.5,
         "careerNet": true
+      }
+    },
+    "highschool": {
+      "_note": "고교 학업 정본. 코드에 같은 표를 다시 적지 말 것 — STUDY_MODE_EFFECTS가 academicsEngine.ts에 박혀 있었다(2026-08-28에 올렸다)",
+      "_studyModeNote": "percentileDelta는 음수가 좋은 방향이다(석차백분율이 내려간다). efficiencyMod는 훈련에 곱한다",
+      "studyModes": {
+        "focus": {
+          "examGain": 8,
+          "efficiencyMod": 0.7,
+          "attendanceDelta": 1,
+          "assignmentDelta": 2,
+          "percentileDelta": -2,
+          "warningIncrement": false
+        },
+        "normal": {
+          "examGain": 4,
+          "efficiencyMod": 0.85,
+          "attendanceDelta": 0,
+          "assignmentDelta": 1,
+          "percentileDelta": -1,
+          "warningIncrement": false
+        },
+        "rest": {
+          "examGain": 1,
+          "efficiencyMod": 1,
+          "attendanceDelta": -3,
+          "assignmentDelta": -6,
+          "percentileDelta": 4,
+          "warningIncrement": false
+        },
+        "sleep": {
+          "examGain": 0,
+          "efficiencyMod": 1.05,
+          "attendanceDelta": -8,
+          "assignmentDelta": -9,
+          "percentileDelta": 7,
+          "warningIncrement": true
+        }
+      },
+      "_gradeCutNote": "석차백분율 → 내신 9등급. 백분율이 이 값 이하면 그 등급이다. 실제 고교 등급제 비율",
+      "gradeCuts": [
+        4,
+        11,
+        23,
+        40,
+        60,
+        77,
+        89,
+        96
+      ],
+      "_examWeekNote": "시험 주차. 중간 이전은 중간까지, 사이는 기말까지, 이후는 다음 시즌 중간까지 센다",
+      "examWeeks": {
+        "midterm": 11,
+        "final": 38
       }
     }
   },

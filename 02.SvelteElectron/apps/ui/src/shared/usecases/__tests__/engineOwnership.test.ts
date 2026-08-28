@@ -244,3 +244,116 @@ describe("유망주 점수는 Rust가 낸다", () => {
     expect(n).toBe(3);   // 정의 1 + generateTop10 1 + buildTop10Metadata 1
   });
 });
+
+/**
+ * **학업 산식은 Rust가 낸다** (5단계 3/4 · 2026-08-28).
+ *
+ * 주간 학업(모드 효과·클램프·누적 상한)과 학기 정산(평균 품질 → 학점 →
+ * 경고 단계)이 `academicsEngine.ts`에 있었다.
+ *
+ * ⚠ **표 조회는 TS에 남겼다** — `percentileToGrade`·`weeksUntilNextExam`·
+ *   모드 뱃지는 화면이 반응형으로 부른다. 숫자만 규칙 파일로 올렸다.
+ *   이관의 **두 번째 갈래**다.
+ */
+describe("학업 산식은 Rust가 낸다", () => {
+  const ACA = read("apps/ui/src/shared/utils/academicsEngine.ts");
+  const WE  = read("packages/engine-native/src/week_engine.rs");
+
+  /**
+   * 🔴 **옛 문자열만 보면 안 된다.** 변이 검증에서 걸렸다 — 같은 산식을
+   *   다른 이름으로 되살리면 그대로 통과했다. **함수 몸통에 산술이
+   *   있는지**를 본다: 옮겼다면 곱셈도 나눗셈도 남을 이유가 없다.
+   */
+  const bodyOf = (src: string, header: string): string => {
+    const at = src.indexOf(header);
+    expect(at, `${header} 를 못 찾았다`).toBeGreaterThan(-1);
+    const end = src.indexOf("\n}", at);
+    // ⚠ **주석은 세지 않는다.** 인자 JSDoc의 `/**`와 줄끝 `//`가 전부
+    //   나눗셈으로 잡혔다 (변이 검증에서 두 번 걸렸다)
+    let inBlock = false;
+    return src.slice(at, end).split("\n").map((l) => {
+      let line = l;
+      if (inBlock) {
+        const close = line.indexOf("*/");
+        if (close < 0) return "";
+        inBlock = false;
+        line = line.slice(close + 2);
+      }
+      const open = line.indexOf("/*");
+      if (open >= 0) {
+        const close = line.indexOf("*/", open + 2);
+        if (close < 0) { inBlock = true; line = line.slice(0, open); }
+        else line = line.slice(0, open) + line.slice(close + 2);
+      }
+      const slash = line.indexOf("//");
+      return slash >= 0 ? line.slice(0, slash) : line;
+    }).join("\n");
+  };
+
+  it("TS 주간 학업 몸통에 산술이 없다", () => {
+    const body = bodyOf(ACA, "export async function applyWeeklyStudy");
+    expect(body.includes("*"), body).toBe(false);
+    expect(body.includes("/"), body).toBe(false);
+    expect(body.includes("Math."), body).toBe(false);
+  });
+
+  it("TS 학기 정산 몸통에 산술이 없다", () => {
+    const body = bodyOf(ACA, "export async function settleSemester");
+    expect(body.includes("*"), body).toBe(false);
+    expect(body.includes("/"), body).toBe(false);
+    expect(body.includes("Math."), body).toBe(false);
+  });
+
+  it("Rust가 두 산식을 갖는다", () => {
+    expect(WE.includes("pub fn calc_weekly_study(")).toBe(true);
+    expect(WE.includes("pub fn calc_semester_result(")).toBe(true);
+    const LIB = read("packages/engine-native/src/lib.rs");
+    expect(LIB.includes("pub fn week_calc_weekly_study_native")).toBe(true);
+    expect(LIB.includes("pub fn week_calc_semester_result_native")).toBe(true);
+  });
+
+  it("TS가 그 함수들을 부른다", () => {
+    expect(ACA.includes('"weekCalcWeeklyStudyNative"')).toBe(true);
+    expect(ACA.includes('"weekCalcSemesterResultNative"')).toBe(true);
+  });
+
+  /**
+   * 🔴 **밸런스 숫자가 코드에 박혀 있었다** — 모드 4종 × 6값이 리터럴이었다.
+   *   규칙 파일과 어긋난 걸 아무도 모른다.
+   */
+  it("고교 학업 표가 규칙 파일에 있다", () => {
+    const R = JSON.parse(read("resource/data/master/players/generation_rules.json"));
+    const h = R.academicsRules?.highschool;
+    expect(h?.studyModes).toBeTruthy();
+    expect(Object.keys(h.studyModes).sort()).toEqual(["focus", "normal", "rest", "sleep"]);
+    expect(h.gradeCuts).toEqual([4, 11, 23, 40, 60, 77, 89, 96]);
+    expect(h.examWeeks).toEqual({ midterm: 11, final: 38 });
+  });
+
+  /** ⚠ 표를 올려도 **주입을 안 하면 폴백만 돈다** — 배선까지 봐야 한다 */
+  it("규칙 파일을 부팅 때 주입한다", () => {
+    const M = read("apps/ui/src/shared/stores/master.ts");
+    expect(M.includes("primeAcademicsHsRules(")).toBe(true);
+    expect(ACA.includes("export function primeAcademicsHsRules")).toBe(true);
+  });
+
+  /** 🔴 규칙 파일 표를 엔진에 **넘겨야** Rust가 그 값으로 센다 */
+  it("주간 학업 payload에 모드 표를 싣는다", () => {
+    expect(ACA.includes("modes: _modes")).toBe(true);
+  });
+
+  /**
+   * ⚠ **죽은 갈래를 지웠다** — `getUniversityExamGainMult`는 대학 전공에
+   *   1.5배를 곱했는데 대학은 그 결과를 저장하지 않았다(실측: 999로 키워도
+   *   전부 같았다).
+   */
+  it("죽은 배수 갈래가 돌아오지 않는다", () => {
+    // ⚠ **주석을 세지 않는다** — 지운 이유가 주석에 적혀 있어서 이름만 세면
+    //   거짓 실패한다. 정의와 호출을 본다
+    expect(ACA.includes("export function getUniversityExamGainMult")).toBe(false);
+    expect(read("apps/ui/src/shared/usecases/advanceWeek.ts")
+      .includes("getUniversityExamGainMult(")).toBe(false);
+    // 배수 인자 자체가 사라졌다 — 시그니처가 학교 상태 하나다
+    expect(ACA.includes("applyWeeklyStudy(school: SchoolState)")).toBe(true);
+  });
+});
