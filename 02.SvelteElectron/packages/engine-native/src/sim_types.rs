@@ -942,6 +942,13 @@ pub struct OffseasonParams {
     /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
     #[serde(default)]
     pub release_rules: Option<crate::free_agency::ReleaseRules>,
+    /// **독립리그 재도전 나이 상한** (`faRules.independentAgeMax`).
+    ///
+    /// FA 미계약자가 원소속 재계약도 못 하면 이 나이 이하일 때만 독립으로
+    /// 간다 — 넘으면 은퇴다.
+    /// ⚠ `None`이면 갈래가 **통째로 꺼진다**(예전 동작: 바로 은퇴).
+    #[serde(default)]
+    pub fa_independent_age_max: Option<i32>,
     /// 🔴 **그해 성적 평점** (npcId → 0~100). 없으면 능력치로 떨어진다.
     ///
     /// 방출 판정이 `recent_performance_rating`에 능력치를 넣고 있었다 —

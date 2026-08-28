@@ -127,6 +127,9 @@ export async function runOffseasonProcessing(
    * 그러면 부진한 고연봉 베테랑이 정원 안에서 계속 버틴다
    */
   releaseRules?: unknown,
+  /** FA 미계약자의 독립 재도전 나이 상한 (`faRules.independentAgeMax`).
+   *  ⚠ 안 넘기면 갈래가 **통째로 꺼진다** — 미계약자가 바로 은퇴한다 */
+  faIndependentAgeMax?: number,
   /**
    * 외국인 판정표 (`foreignParamsFrom`). 안 넘기면 외국인 개념이 없는 세계로
    * 돌아간다 — 용병이 FA를 취득하고 2군으로 강등되며 보유 한도가 깨진다
@@ -202,6 +205,7 @@ export async function runOffseasonProcessing(
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
+    ...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {}),
     worldSeed: (worldSeed ?? 0) >>> 0,
     ...(fa ? { teamPayrollCap: fa.teamPayrollCap, faBidInterestMin: fa.bidInterestMin,
                faPerfSpan: fa.perfSpan ?? 0,

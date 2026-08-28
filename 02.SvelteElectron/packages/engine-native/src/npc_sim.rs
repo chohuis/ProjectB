@@ -1556,6 +1556,11 @@ fn fa_fallback(
     team_payroll: &mut std::collections::HashMap<String, i64>,
     team_at_pos: &mut std::collections::HashMap<(String, String), usize>,
     roster_max: Option<i32>,
+    // 독립리그 팀 목록과 정원. **비면 독립 갈래가 통째로 꺼진다**(예전 동작)
+    independent_team_ids: &[String],
+    independent_max: Option<i32>,
+    // 독립 재도전 나이 상한. 이 나이를 넘으면 바로 은퇴다
+    independent_age_max: Option<i32>,
     events: &mut Vec<OffseasonEvent>,
 ) {
     let home = npc.original_team_id.clone().filter(|t| !t.is_empty());
@@ -1587,7 +1592,46 @@ fn fa_fallback(
         return;
     }
 
-    // ② 갈 곳이 없다 — **은퇴다.** `quit_baseball`이 아니다.
+    // ② **독립리그 재도전** (2026-08-29 · 사용자 확정).
+    //
+    // 🔴 예전엔 여기가 없어서 원소속 재계약이 막히면 **바로 은퇴**였다.
+    //   27세 프로 5년차가 갈 팀이 없다고 그만두는 건 현실과 다르다 —
+    //   독립에서 뛰다 돌아오는 경로가 실제로 있다.
+    //
+    // ⚠ **나이 상한이 있다.** 30대 후반이 독립에서 재도전하는 건 드물다.
+    //   값은 규칙 파일(`faRules.independentAgeMax`)이 정본이다.
+    // ⚠ 목록이 비면 이 갈래는 **통째로 꺼진다** — 예전 동작으로 돌아간다.
+    let age_ok = independent_age_max.map_or(false, |m| npc.age <= m);
+    if age_ok && !independent_team_ids.is_empty() {
+        // 정원에 여유가 제일 많은 팀 — 한 팀에 몰리지 않게
+        let pick = independent_team_ids.iter()
+            .map(|t| (t, team_active_count.get(t).copied().unwrap_or(0)))
+            .filter(|(_, n)| independent_max.map_or(true, |m| (*n as i32) < m))
+            .min_by_key(|(t, n)| (*n, (*t).clone()))
+            .map(|(t, _)| t.clone());
+        if let Some(team) = pick {
+            npc.career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "transfer".into(),
+                from_team_id: npc.original_team_id.clone().filter(|t| !t.is_empty()),
+                to_team_id: Some(team.clone()),
+                from_league_id: Some(origin_league.to_string()),
+                to_league_id: Some("LEAGUE_INDEPENDENT".to_string()),
+                detail: Some("FA 미계약 → 독립리그 재도전".into()),
+            });
+            npc.current_league = "LEAGUE_INDEPENDENT".to_string();
+            npc.current_team = team.clone();
+            npc.career_status = "active".into();
+            npc.original_league_id = None;
+            *team_active_count.entry(team.clone()).or_default() += 1;
+            *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
+            *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;
+            events.push(ev("fa_independent", npc, Some(team), None));
+            return;
+        }
+    }
+
+    // ③ 갈 곳이 없다 — **은퇴다.** `quit_baseball`이 아니다.
     //    프로 경력자가 자리를 못 구해 그만두는 건 은퇴이고, 인생 기록·경력
     //    화면이 그 둘을 다르게 보여준다.
     npc.career_events.push(NpcCareerEvent {
@@ -2008,6 +2052,9 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             .filter(|l| !l.is_empty())
             .unwrap_or("LEAGUE_KBL");
         let max = roster_rule(origin_league, &params.roster_limits).map(|(_, m)| m);
+        // 독립 재도전 — 정원과 나이 상한. 규칙이 없으면 갈래가 꺼진다(예전 동작)
+        let ind_max = roster_rule("LEAGUE_INDEPENDENT", &params.roster_limits).map(|(_, m)| m);
+        let ind_age_max = params.fa_independent_age_max;
         // 정원에 여유가 있는 팀만 후보다. 여유를 안 보면 FA가 캡을 통과한다
         // 이 선수가 **돌아갈 리그 기준**으로 외국인인가.
         // ⚠ `is_foreign`은 `current_league`를 보는데 지금은 LEAGUE_FREE_AGENT라
@@ -2041,7 +2088,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             summary.fa_unsigned_count += 1;   // 갈 팀 자체가 없는 갈래도 센다
             summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
             fa_fallback(npc, season_year, &origin_league.to_string(),
-                &mut team_active_count, &mut team_payroll, &mut team_at_pos, max, &mut events);
+                &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
+                &params.independent_team_ids, ind_max, ind_age_max, &mut events);
             continue;
         }
         // ── 구단 입찰 ─────────────────────────────────────────────
@@ -2144,7 +2192,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                     summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
                     fa_fallback(npc, season_year, &origin_league.to_string(),
                         &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
-                        &mut events);
+                        &params.independent_team_ids, ind_max, ind_age_max, &mut events);
                     continue;
                 }
             }
@@ -4604,6 +4652,92 @@ mod fa_fallback_tests {
     use super::*;
     use std::collections::HashMap;
 
+    const IND: &[&str] = &["TEAM_IND_A", "TEAM_IND_B"];
+    fn ind_ids() -> Vec<String> { IND.iter().map(|s| s.to_string()).collect() }
+
+    /// 🔴 **원소속이 막히면 독립으로 간다** (2026-08-29 · 사용자 확정).
+    ///   예전엔 바로 은퇴였다 — 27세가 갈 팀이 없다고 그만두는 건 현실과 다르다.
+    #[test]
+    fn 원소속이_막히면_독립_재도전() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);   // 원소속 정원 꽉 참
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), &mut b.events);
+
+        assert_eq!(n.career_status, "active", "독립으로 갔는데 비활성이다");
+        assert_eq!(n.current_league, "LEAGUE_INDEPENDENT");
+        assert!(IND.contains(&n.current_team.as_str()), "독립 팀이 아니다: {}", n.current_team);
+        assert!(n.career_events.iter().any(|e| e.event_type == "transfer"
+            && e.to_league_id.as_deref() == Some("LEAGUE_INDEPENDENT")),
+            "경력에 독립 이적이 안 남았다");
+    }
+
+    /// ⚠ **나이 상한을 넘으면 은퇴다.** 30대 후반이 독립에서 재도전하는 건 드물다
+    #[test]
+    fn 나이가_넘으면_은퇴다() {
+        let mut n = fa_npc(35);
+        let mut b = books(34);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+        assert_eq!(n.current_league, "LEAGUE_RETIRED");
+    }
+
+    /// 🔴 **원소속이 우선이다.** 자리가 있으면 독립으로 새지 않는다
+    #[test]
+    fn 자리가_있으면_독립보다_원소속() {
+        let mut n = fa_npc(27);
+        let mut b = books(30);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), &mut b.events);
+
+        assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
+        assert_eq!(n.current_league, "LEAGUE_KBL");
+    }
+
+    /// ⚠ **독립도 꽉 차면 은퇴다** — 정원을 무시하고 밀어 넣지 않는다
+    #[test]
+    fn 독립도_꽉_차면_은퇴다() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);
+        for t in IND { b.active.insert(t.to_string(), 30); }
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+    }
+
+    /// 🔴 **한 팀에 몰리지 않는다** — 여유가 제일 많은 팀으로 간다
+    #[test]
+    fn 여유가_많은_팀으로_간다() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);
+        b.active.insert("TEAM_IND_A".into(), 25);
+        b.active.insert("TEAM_IND_B".into(), 10);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), &mut b.events);
+
+        assert_eq!(n.current_team, "TEAM_IND_B");
+    }
+
+    /// ⚠ **규칙이 없으면 갈래가 꺼진다** — 예전 동작(바로 은퇴)으로 돌아간다
+    #[test]
+    fn 나이_상한이_없으면_갈래가_꺼진다() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), None, &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+    }
+
     /// FA를 막 잃은 프로 선수 — 소속은 비었고 원소속만 남아 있다
     fn fa_npc(age: i32) -> NpcSaveState {
         let mut n: NpcSaveState = serde_json::from_str(&format!(r#"{{
@@ -4640,7 +4774,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(28);
         let mut b = books(30);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, &mut b.events);
 
         assert_eq!(n.career_status, "active", "재계약했는데 비활성이다");
         assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
@@ -4656,7 +4792,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(28);
         let mut b = books(30);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, &mut b.events);
 
         assert_eq!(b.active["TEAM_KBL_HOME_1"], 31, "인원이 안 늘었다");
         assert_eq!(b.payroll["TEAM_KBL_HOME_1"], 12000, "총연봉이 안 늘었다");
@@ -4669,7 +4807,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(28);
         let mut b = books(34);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, &mut b.events);
 
         assert_eq!(n.career_status, "retired");
         assert_eq!(n.current_league, "LEAGUE_RETIRED");
@@ -4683,7 +4823,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(31);
         let mut b = books(34);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, &mut b.events);
 
         assert!(n.career_events.iter().any(|e| e.event_type == "retirement"),
             "은퇴가 경력에 안 남았다");
@@ -4698,7 +4840,9 @@ mod fa_fallback_tests {
         n.original_team_id = None;
         let mut b = books(0);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, &mut b.events);
         assert_eq!(n.career_status, "retired");
     }
 }

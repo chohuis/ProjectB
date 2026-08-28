@@ -2608,6 +2608,8 @@ function createGameStore() {
             offRules.developmentPlayerRules?.intakeMax),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
+        // ⚠ 안 넘기면 FA 미계약자가 **바로 은퇴한다** — 독립 재도전 갈래가 꺼진다
+        (offRules.faRules as { independentAgeMax?: number } | undefined)?.independentAgeMax,
         foreignParamsFrom(offRules),
         // 🔴 **지금 능력치.** 안 넘기면 오프시즌이 생성 시점 값으로 돈다 —
         // 은퇴·정원 정리·방출·FA·콜업 정렬 22곳이 전부 그랬다

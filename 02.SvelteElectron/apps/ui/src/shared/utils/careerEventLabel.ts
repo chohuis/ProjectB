@@ -23,6 +23,8 @@ const LABEL: Record<string, string> = {
   //   경력자가 미지명 졸업생과 같은 통에서 `quit_baseball`이 됐다
   //   (실측 2026-08-27: 미계약자의 67%).
   fa_rehome:        "FA 미계약 · 원소속 잔류",
+  // FA 미계약 → 원소속도 막혀 독립에서 재도전 (2026-08-29)
+  fa_independent:   "독립 재도전",
   fa_unsigned_retire: "FA 미계약 은퇴",
   trade:            "트레이드",
   foreign_signing:  "용병 영입",
