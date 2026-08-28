@@ -211,12 +211,16 @@ pub fn create_batter(rng: &mut impl Rng, mean: f64) -> BatterStats {
         id: None, name: None,
         contact: r!(), power: r!(), eye: r!(), discipline: r!(),
         batting_clutch: r!(), platoon: 50.0,
-        speed: r!(), base_instinct: r!(), fielding: r!(), arm: r!(),
+        speed: r!(), base_instinct: r!(), bunting: Some(r!()), fielding: r!(), arm: r!(),
     }
 }
 
 fn create_runner(batter: &BatterStats) -> RunnerStats {
-    RunnerStats { speed: batter.speed, instinct: batter.base_instinct }
+    RunnerStats {
+        player_id: batter.id.clone(),
+        speed: batter.speed,
+        instinct: batter.base_instinct,
+    }
 }
 
 fn create_default_fielders(rng: &mut impl Rng, mean: f64) -> Vec<FielderStats> {
@@ -834,12 +838,17 @@ fn resolve_fielding_result(ball: &BallInPlay, fielders: &[FielderStats], rng: &m
 
 // ── 주루 ──────────────────────────────────────────────────────────────────────
 
-fn advance_on_walk(runners: MatchRunners, new_runner: RunnerStats) -> (MatchRunners, i32) {
+/// 🔴 **누가 홈을 밟았는지 `scored`에 담는다** (2026-08-28).
+///   득점(R)은 홈을 밟은 사람 것이라 수만 세면 사람에게 못 붙인다.
+fn advance_on_walk(runners: MatchRunners, new_runner: RunnerStats, scored: &mut Vec<String>) -> (MatchRunners, i32) {
     let mut runs = 0;
     let (mut first, mut second, mut third) = (runners.first, runners.second, runners.third);
     if first.is_some() {
         if second.is_some() {
-            if third.is_some() { runs = 1; }
+            if let Some(r) = third.as_ref() {
+                runs = 1;
+                if let Some(id) = r.player_id.clone() { scored.push(id); }
+            }
             third = second.take();
             second = first.take();
         } else { second = first.take(); }
@@ -861,7 +870,9 @@ fn try_extra_base(runner: &RunnerStats, ctx: &str, rng: &mut impl Rng) -> &'stat
     if rng.gen::<f64>() < clamp(success_base + speed_mod, 0.15, 0.95) { "advance" } else { "out" }
 }
 
-fn advance_on_hit(runners: MatchRunners, code: PitchResultCode, new_runner: RunnerStats, rng: &mut impl Rng)
+/// 🔴 **홈을 밟은 사람을 `scored`에 담는다** — 타자 본인의 홈런도 포함이다
+fn advance_on_hit(runners: MatchRunners, code: PitchResultCode, new_runner: RunnerStats,
+                  rng: &mut impl Rng, scored: &mut Vec<String>)
     -> (MatchRunners, i32, i32, Vec<String>)
 {
     let mut next = MatchRunners { first: None, second: None, third: None };
@@ -872,21 +883,37 @@ fn advance_on_hit(runners: MatchRunners, code: PitchResultCode, new_runner: Runn
             runs = 1 + runners.first.is_some() as i32
                      + runners.second.is_some() as i32
                      + runners.third.is_some() as i32;
+            // 타자 본인도 홈을 밟는다
+            if let Some(id) = new_runner.player_id.clone() { scored.push(id); }
+            for r in [&runners.first, &runners.second, &runners.third].into_iter().flatten() {
+                if let Some(id) = r.player_id.clone() { scored.push(id); }
+            }
             return (next, runs, extra_outs, logs);
         }
         PitchResultCode::HitTriple => {
             runs = runners.first.is_some() as i32
                  + runners.second.is_some() as i32
                  + runners.third.is_some() as i32;
+            for r in [&runners.first, &runners.second, &runners.third].into_iter().flatten() {
+                if let Some(id) = r.player_id.clone() { scored.push(id); }
+            }
             next.third = Some(new_runner);
             return (next, runs, extra_outs, logs);
         }
         PitchResultCode::HitDouble => {
-            if runners.third.is_some()  { runs += 1; }
-            if runners.second.is_some() { runs += 1; }
+            if let Some(r) = runners.third.as_ref() {
+                runs += 1;
+                if let Some(id) = r.player_id.clone() { scored.push(id); }
+            }
+            if let Some(r) = runners.second.as_ref() {
+                runs += 1;
+                if let Some(id) = r.player_id.clone() { scored.push(id); }
+            }
             if let Some(r) = runners.first {
                 match try_extra_base(&r, "1st_scores_double", rng) {
-                    "advance" => { runs += 1; logs.push(format!("적극 주루! 1루 주자 홈인 (스피드 {})", r.speed)); }
+                    "advance" => { runs += 1;
+                        if let Some(id) = r.player_id.clone() { scored.push(id); }
+                        logs.push(format!("적극 주루! 1루 주자 홈인 (스피드 {})", r.speed)); }
                     "out"     => { extra_outs += 1; logs.push(format!("주루 아웃! 1루 주자 홈 태그아웃 (스피드 {})", r.speed)); }
                     _         => { next.third = Some(r); }
                 }
@@ -895,10 +922,15 @@ fn advance_on_hit(runners: MatchRunners, code: PitchResultCode, new_runner: Runn
             return (next, runs, extra_outs, logs);
         }
         PitchResultCode::HitSingle => {
-            if runners.third.is_some() { runs += 1; }
+            if let Some(r) = runners.third.as_ref() {
+                runs += 1;
+                if let Some(id) = r.player_id.clone() { scored.push(id); }
+            }
             if let Some(r) = runners.second.clone() {
                 match try_extra_base(&r, "2nd_scores_single", rng) {
-                    "advance" => { runs += 1; logs.push(format!("적극 주루! 2루 주자 홈인 (스피드 {})", r.speed)); }
+                    "advance" => { runs += 1;
+                        if let Some(id) = r.player_id.clone() { scored.push(id); }
+                        logs.push(format!("적극 주루! 2루 주자 홈인 (스피드 {})", r.speed)); }
                     "out"     => { extra_outs += 1; logs.push(format!("주루 아웃! 2루 주자 홈 태그아웃 (스피드 {})", r.speed)); }
                     _         => { next.third = Some(r); }
                 }
@@ -1124,6 +1156,9 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
         PitchResultCode::DoublePlay   => "병살타",
         PitchResultCode::FieldingError=> "실책",
         PitchResultCode::Walk         => "볼넷",
+        PitchResultCode::HitByPitch   => "몸에 맞는 공",
+        PitchResultCode::SacBunt      => "희생번트",
+        PitchResultCode::SacFly       => "희생플라이",
         PitchResultCode::HitSingle    => "안타",
         PitchResultCode::HitDouble    => "2루타",
         PitchResultCode::HitTriple    => "3루타",
@@ -1161,7 +1196,10 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
         PitchResultCode::InplayOut => "INPLAY_OUT", PitchResultCode::GroundOut => "GROUND_OUT",
         PitchResultCode::FlyOut => "FLY_OUT", PitchResultCode::LineOut => "LINE_OUT",
         PitchResultCode::DoublePlay => "DOUBLE_PLAY", PitchResultCode::FieldingError => "FIELDING_ERROR",
-        PitchResultCode::Walk => "WALK", PitchResultCode::HitSingle => "HIT_SINGLE",
+        PitchResultCode::Walk => "WALK",
+        PitchResultCode::HitByPitch => "HIT_BY_PITCH",
+        PitchResultCode::SacBunt => "SAC_BUNT", PitchResultCode::SacFly => "SAC_FLY",
+        PitchResultCode::HitSingle => "HIT_SINGLE",
         PitchResultCode::HitDouble => "HIT_DOUBLE", PitchResultCode::HitTriple => "HIT_TRIPLE",
         PitchResultCode::HomeRun => "HOME_RUN", PitchResultCode::GameOver => "GAME_OVER",
     };
@@ -1588,6 +1626,39 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 
     let ball_in_play = resolve_ball_in_play(result_code, decision, quality, rng);
 
+    // 🔴 **희생번트** (2026-08-28). 작전이 나오는 상황에서만 시도한다:
+    //   무사 또는 1사 · 주자 있음 · 접전(3점 차 이내) · 스트라이크 2개 전.
+    //
+    //   ⚠ **`bunting` 능력치를 여기서 처음 쓴다.** 성장 엔진엔 있는데
+    //     경기엔 안 오고 있어서 **올려도 아무 일이 안 일어나는 값**이었다.
+    //   ⚠ 실패하면 그냥 아웃이다(희생타로 안 센다) — 타수로 잡힌다.
+    //   ⚠ 타자가 스윙한 뒤에는 안 건다 — 이미 결과가 정해진 투구다.
+    if !swings
+        && pre_state.outs < 2
+        && pre_state.count.strikes < 2
+        && (pre_state.runners.first.is_some() || pre_state.runners.second.is_some())
+        && (pre_state.score.home - pre_state.score.away).abs() <= 3
+        && rng.gen::<f64>() < T::SAC_BUNT_ATTEMPT_PROB
+    {
+        let bunt = current_batter.bunting.unwrap_or(50.0);
+        let ok = T::SAC_BUNT_SUCCESS_BASE + (bunt - 50.0) * 0.005;
+        result_code = if rng.gen::<f64>() < clamp(ok, 0.35, 0.95) {
+            PitchResultCode::SacBunt
+        } else {
+            // 실패는 그냥 아웃이다 — 희생타가 아니라 타수로 잡힌다
+            PitchResultCode::GroundOut
+        };
+    }
+
+    // 🔴 **사구** (2026-08-28). 볼 하나에 얹는다 — 타석당이 아니라 투구당이다.
+    //   제구가 나쁘면 더 맞힌다. 볼넷과 **다른 사건**이라 타수가 아니고
+    //   출루율 분모에 들어가며 투수 기록에도 따로 남는다.
+    if result_code == PitchResultCode::Ball {
+        let cmd_mod = 1.0 - (current_pitcher.command - 50.0) * T::HIT_BY_PITCH_COMMAND_SPAN;
+        let p = T::HIT_BY_PITCH_PER_BALL * clamp(cmd_mod, 0.35, 1.8);
+        if rng.gen::<f64>() < p { result_code = PitchResultCode::HitByPitch; }
+    }
+
     let mut fielding_result: Option<FieldingResult> = None;
     if let Some(ref ball) = ball_in_play {
         if result_code == PitchResultCode::InplayOut {
@@ -1618,6 +1689,8 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     // 이 투구로 늘어난 아웃 수 — 아래 3아웃 전환이 `next_outs`를 0으로 되돌리므로
     // **되돌리기 전에** 재야 한다
     let outs_before_play = next_outs;
+    // 이 투구로 홈을 밟은 사람들. 아래 타자 기록에서 R로 붙인다
+    let mut scored_ids: Vec<String> = Vec::new();
 
     match result_code {
         PitchResultCode::Ball => {
@@ -1626,10 +1699,31 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 result_code = PitchResultCode::Walk;
                 next_count  = MatchCount { balls: 0, strikes: 0 };
                 let new_runner = create_runner(&current_batter);
-                let (wr, wr_runs) = advance_on_walk(next_runners, new_runner);
+                let (wr, wr_runs) = advance_on_walk(next_runners, new_runner, &mut scored_ids);
                 next_runners = wr;
                 add_runs(wr_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
             }
+        }
+        PitchResultCode::SacBunt => {
+            next_outs += 1;
+            next_count = MatchCount { balls: 0, strikes: 0 };
+            // 주자를 **뒤에서부터** 한 칸씩 민다 — 앞 베이스가 비어 있을 때만.
+            // ⚠ 3루 주자는 홈으로 안 보낸다. 그건 스퀴즈고 다른 작전이다.
+            // ⚠ 만루면 아무도 못 간다(타자만 아웃) — 드물지만 그게 맞다.
+            let mut b1 = next_runners.first.take();
+            let mut b2 = next_runners.second.take();
+            let mut b3 = next_runners.third.take();
+            if b3.is_none() { b3 = b2.take(); }
+            if b2.is_none() { b2 = b1.take(); }
+            next_runners = MatchRunners { first: b1, second: b2, third: b3 };
+        }
+        PitchResultCode::HitByPitch => {
+            // 볼넷과 **같은 진루**다 — 밀어내기까지 같다. 기록만 다르다
+            next_count = MatchCount { balls: 0, strikes: 0 };
+            let new_runner = create_runner(&current_batter);
+            let (wr, wr_runs) = advance_on_walk(next_runners, new_runner, &mut scored_ids);
+            next_runners = wr;
+            add_runs(wr_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
         }
         PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing => {
             next_count.strikes += 1;
@@ -1656,11 +1750,27 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             if is_dp { next_outs += 1; next_runners = dp_runners; }
             // 여기서야 타구 종류와 병살 여부가 다 정해진다 — 이제 코드를 좁힌다
             result_code = narrow_inplay_out(ball_in_play.as_ref(), is_dp);
+
+            // 🔴 **희생플라이** (2026-08-28). 3루 주자가 뜬공에 홈으로 들어온다.
+            //   ⚠ `npc_sim`엔 이 갈래가 **이미 있었다**(0.10) — 주인공 경기만
+            //     없어서 **두 엔진이 다른 야구를 하고 있었다.**
+            //   ⚠ 2아웃이면 안 된다 — 뜬공 아웃으로 이닝이 끝난다.
+            if result_code == PitchResultCode::FlyOut
+                && pre_state.outs < 2
+                && next_runners.third.is_some()
+                && rng.gen::<f64>() < T::SAC_FLY_PROB
+            {
+                if let Some(r) = next_runners.third.take() {
+                    if let Some(id) = r.player_id.clone() { scored_ids.push(id); }
+                }
+                add_runs(1, &mut next_score, &mut next_inning_scores, next_half, next_inning);
+                result_code = PitchResultCode::SacFly;
+            }
         }
         PitchResultCode::FieldingError => {
             next_count = MatchCount { balls: 0, strikes: 0 };
             let new_runner = create_runner(&current_batter);
-            let (hr, hr_runs, hr_extra, hr_logs) = advance_on_hit(next_runners, PitchResultCode::HitSingle, new_runner, rng);
+            let (hr, hr_runs, hr_extra, hr_logs) = advance_on_hit(next_runners, PitchResultCode::HitSingle, new_runner, rng, &mut scored_ids);
             next_runners = hr;
             add_runs(hr_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
             next_outs += hr_extra as u8;
@@ -1670,7 +1780,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         }
         _ if is_inplay(result_code) => {
             let new_runner = create_runner(&current_batter);
-            let (hr, hr_runs, hr_extra, hr_logs) = advance_on_hit(next_runners, result_code, new_runner, rng);
+            let (hr, hr_runs, hr_extra, hr_logs) = advance_on_hit(next_runners, result_code, new_runner, rng, &mut scored_ids);
             next_runners = hr;
             add_runs(hr_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
             next_outs += hr_extra as u8;
@@ -1901,8 +2011,12 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook
                         if cnt_reset => line.k += 1,
                     PitchResultCode::Walk => line.bb += 1,
+                    // 사구는 볼넷과 **다른 사건**이다 — 따로 센다
+                    PitchResultCode::HitByPitch => line.hbp += 1,
                     PitchResultCode::HitSingle | PitchResultCode::HitDouble
-                    | PitchResultCode::HitTriple | PitchResultCode::HomeRun => line.h += 1,
+                    | PitchResultCode::HitTriple => line.h += 1,
+                    // 피홈런도 안타다 — 그 위에 하나 더 센다
+                    PitchResultCode::HomeRun => { line.h += 1; line.hr += 1; }
                     _ => {}
                 }
                 // 자책점 — 이번 투구로 늘어난 점수를 현재 투수 앞으로 단다
@@ -1926,7 +2040,17 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 use PitchResultCode::*;
                 match result_code {
                     Walk => { b.bb += 1; }
-                    HitSingle | HitDouble | HitTriple => { b.ab += 1; b.h += 1; }
+                    // 🔴 **셋 다 타수가 아니다.** 여기서 `ab`를 올리면 타율이
+                    //    희생타 때문에 떨어진다 — 야구 규칙과 다르다.
+                    HitByPitch => { b.hbp += 1; }
+                    SacBunt    => { b.sac += 1; }
+                    SacFly     => { b.sf  += 1; }
+                    HitSingle => { b.ab += 1; b.h += 1; }
+                    // 🔴 **장타를 갈라 센다.** 엔진은 처음부터 2루타·3루타를
+                    //    따로 만드는데 `h` 하나로 뭉개서, SLG가
+                    //    `(h + hr*3)/ab`라는 근사가 됐다(장타를 단타로 셌다).
+                    HitDouble => { b.ab += 1; b.h += 1; b.b2 += 1; }
+                    HitTriple => { b.ab += 1; b.h += 1; b.b3 += 1; }
                     HomeRun => { b.ab += 1; b.h += 1; b.hr += 1; }
                     // 삼진은 카운트가 리셋됐을 때만 (타석 종료)
                     StrikeSwing | StrikeLook if next_state.count.strikes == 0 && next_state.count.balls == 0 => {
@@ -1936,6 +2060,14 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     _ => {}
                 }
                 if scored > 0 { b.rbi += scored; }
+            }
+            // 🔴 **득점(R)은 홈을 밟은 사람 것이다** — 타점과 다르다.
+            //    `RunnerStats`에 신원이 없어 못 붙이고 있었다(배경 리그는
+            //    진작 lineup 인덱스를 들고 다녔다 — 주인공 경기만 빠져 있었다).
+            // ⚠ 공격 중인 쪽 라인에서만 찾는다 — 수비 쪽에 같은 id가 있을 리 없지만
+            //   대타·교체로 라인이 길어져도 값이 새지 않게 한 쪽만 본다.
+            for id in scored_ids.iter() {
+                if let Some(sb) = lines.iter_mut().find(|x| &x.player_id == id) { sb.r += 1; }
             }
         }
 
@@ -2221,7 +2353,7 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
             out.push(PlayerGameLine::Pitcher {
                 player_id: l.player_id.clone(),
                 ip: (l.outs as f64) / 3.0,
-                er: l.er, h: l.h, k: l.k, bb: l.bb, pc: l.pc,
+                er: l.er, h: l.h, hr: l.hr, k: l.k, bb: l.bb, hbp: l.hbp, pc: l.pc,
                 // 승패는 리그 쪽이 정한다 — 여기서 만들면 두 곳이 달라진다
                 decision: String::new(),
                 risp_ab: l.risp_ab, risp_h: l.risp_h,
@@ -2233,7 +2365,8 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
             if b.ab == 0 && b.bb == 0 { continue; }     // 안 나온 타자는 안 넣는다
             out.push(PlayerGameLine::Batter {
                 player_id: b.player_id.clone(),
-                ab: b.ab, h: b.h, hr: b.hr, rbi: b.rbi,
+                ab: b.ab, h: b.h, b2: b.b2, b3: b.b3, hr: b.hr,
+                r: b.r, hbp: b.hbp, sac: b.sac, sf: b.sf, rbi: b.rbi,
                 bb: b.bb, k: b.k, sb: b.sb,
                 risp_ab: b.risp_ab, risp_h: b.risp_h,
             });

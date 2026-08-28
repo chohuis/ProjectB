@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ipLabel, ipToOuts, rateLabel, eraLabel, gaugeLabel, seasonLabel } from "../baseballFormat";
+import { ipLabel, ipToOuts, rateLabel, eraLabel, gaugeLabel, seasonLabel, wpctLabel, totalBases } from "../baseballFormat";
 
 /**
  * 야구 기록 표기 — **관례가 있는 숫자들이다.**
@@ -105,5 +105,35 @@ describe("시즌 표기", () => {
   it("이미 연도면 그대로 둔다", () => {
     expect(seasonLabel("2025", 2026)).toBe("2025");
     expect(seasonLabel("", 2026)).toBe("");
+  });
+});
+
+describe("승률 · 루타", () => {
+  it("승률은 앞의 0을 뗀다", () => {
+    expect(wpctLabel(2, 2)).toBe(".500");
+    expect(wpctLabel(3, 0)).toBe("1.000");
+    expect(wpctLabel(1, 3)).toBe(".250");
+  });
+
+  /** 🔴 **결정이 없으면 0할이 아니라 없는 값이다** — `.000`은 거짓이다 */
+  it("승패가 없으면 비율이 아니다", () => {
+    expect(wpctLabel(0, 0)).toBe("-");
+    expect(wpctLabel(undefined, undefined)).toBe("-");
+  });
+
+  it("루타는 장타를 제 값으로 센다", () => {
+    // 안타 10 = 단타 5 + 2루타 3 + 3루타 1 + 홈런 1
+    // TB = 5 + 6 + 3 + 4 = 18
+    expect(totalBases(10, 1, 3, 1)).toBe(18);
+    // 전부 단타면 안타 수와 같다
+    expect(totalBases(10, 0, 0, 0)).toBe(10);
+  });
+
+  /**
+   * 🔴 **구 세이브는 낼 수 없다.** 0을 주면 "루타 0인 타자"가 되어 거짓이다 —
+   *   화면이 `—`를 찍게 `undefined`를 돌려준다.
+   */
+  it("장타 수를 모르면 낼 수 없다", () => {
+    expect(totalBases(10, 1, undefined, undefined)).toBeUndefined();
   });
 });

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { careerEventLabel } from "../../../shared/utils/careerEventLabel";
-  import { ipLabel, rateLabel, eraLabel } from "../../../shared/utils/baseballFormat";
+  import { ipLabel, rateLabel, eraLabel, wpctLabel, totalBases } from "../../../shared/utils/baseballFormat";
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import type { EntityDetails } from "../../../shared/stores/master";
@@ -1025,9 +1025,15 @@
                       {#each [
                         ["G", modalStats.g], ["GS", modalStats.gs], ["W", modalStats.w], ["L", modalStats.l],
                         ["SV", modalStats.sv ?? 0], ["HD", modalStats.hd ?? 0],
+                        // 승률은 파생값이다 — 승·패가 이미 있으므로 저장하지 않는다
+                        ["WPCT", wpctLabel(modalStats.w, modalStats.l)],
                         ["IP", ipLabel(modalStats.ip)], ["ER", modalStats.er],
-                        ["H", modalStats.h], ["K", modalStats.k], ["BB", modalStats.bb],
-                        ["ERA", modalStats.era?.toFixed(2)], ["WHIP", modalStats.whip?.toFixed(2)],
+                        ["H", modalStats.h],
+                        // 🔴 **없는 것과 0을 가른다** — 구 세이브엔 피홈런·사구가 없다
+                        ["HR", modalStats.hr ?? "—"], ["HBP", modalStats.hbp ?? "—"],
+                        ["K", modalStats.k], ["BB", modalStats.bb],
+                        ["ERA", modalStats.era == null ? undefined : eraLabel(modalStats.era)],
+                        ["WHIP", modalStats.whip == null ? undefined : rateLabel(modalStats.whip)],
                       ] as [lbl, val]}
                         <div class="sc"><span class="sc-lbl">{lbl}</span><span class="sc-val mid">{val ?? "-"}</span></div>
                       {/each}
@@ -1035,11 +1041,20 @@
                   {:else if modalStats?.type === "batter"}
                     <div class="stat-grid g4">
                       {#each [
-                        ["G", modalStats.g], ["PA", modalStats.pa], ["AB", modalStats.ab], ["H", modalStats.h],
-                        ["HR", modalStats.hr], ["RBI", modalStats.rbi], ["SB", modalStats.sb], ["BB", modalStats.bb],
-                        ["K", modalStats.k], ["AVG", modalStats.avg?.toFixed(3)],
-                        ["OBP", modalStats.obp?.toFixed(3)], ["SLG", modalStats.slg?.toFixed(3)],
-                        ["OPS", modalStats.ops?.toFixed(3)],
+                        ["G", modalStats.g], ["PA", modalStats.pa], ["AB", modalStats.ab],
+                        // 🔴 **없는 것과 0을 가른다** — 구 세이브엔 득점·장타·희생타가 없다.
+                        //    0을 찍으면 "2루타 0인 타자"가 되어 거짓이다
+                        ["R", modalStats.r ?? "—"], ["H", modalStats.h],
+                        ["2B", modalStats.b2 ?? "—"], ["3B", modalStats.b3 ?? "—"],
+                        ["HR", modalStats.hr],
+                        // 루타 — 파생값이다. 장타 수를 모르면 낼 수 없다
+                        ["TB", totalBases(modalStats.h, modalStats.hr, modalStats.b2, modalStats.b3) ?? "—"],
+                        ["RBI", modalStats.rbi], ["SB", modalStats.sb], ["BB", modalStats.bb],
+                        ["HBP", modalStats.hbp ?? "—"],
+                        ["SAC", modalStats.sac ?? "—"], ["SF", modalStats.sf ?? "—"],
+                        ["K", modalStats.k], ["AVG", rateLabel(modalStats.avg)],
+                        ["OBP", rateLabel(modalStats.obp)], ["SLG", rateLabel(modalStats.slg)],
+                        ["OPS", rateLabel(modalStats.ops)],
                       ] as [lbl, val]}
                         <div class="sc"><span class="sc-lbl">{lbl}</span><span class="sc-val mid">{val ?? "-"}</span></div>
                       {/each}

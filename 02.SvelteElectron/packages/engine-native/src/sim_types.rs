@@ -738,6 +738,10 @@ pub struct SimBatter {
     /// 송구. 포수일 때 도루 저지에 걸린다. 없으면 50(중립)이다
     #[serde(default = "default_neutral_stat")]
     pub arm: f64,
+    /// 번트 — 희생번트 성공률. 없으면 50(중립).
+    /// 🔴 성장 엔진엔 있는데 **경기에 안 오고 있던 값**이다
+    #[serde(default = "default_neutral_stat")]
+    pub bunting: f64,
     pub contact: f64,
     pub power: f64,
     pub eye: f64,
@@ -807,8 +811,16 @@ pub enum PlayerGameLine {
         ip: f64,
         er: i32,
         h: i32,
+        /// 피홈런. **엔진은 처음부터 홈런을 따로 만들었는데 안 세고 있었다**
+        /// (2026-08-28). KBO 투수 표의 HR 칸이다.
+        /// ⚠ `default`다 — 구 세이브의 로그엔 없다.
+        #[serde(default)]
+        hr: i32,
         k: i32,
         bb: i32,
+        /// 사구 — 볼넷과 **다른 사건**이다. ⚠ 구 세이브 로그엔 없다
+        #[serde(default)]
+        hbp: i32,
         pc: i32,
         decision: String,
         /// 득점권 피안타율 — 위기 보정이 성적을 만드는지 보여주는 유일한 창구다.
@@ -824,7 +836,26 @@ pub enum PlayerGameLine {
         player_id: String,
         ab: i32,
         h: i32,
+        /// 2루타·3루타. **안타 하나로 뭉개고 있었다** — 그래서 SLG가
+        /// `(h + hr*3)/ab`라는 근사였다(장타를 단타로 셌다).
+        /// ⚠ `default`다 — 구 세이브의 로그엔 없다.
+        #[serde(default)]
+        b2: i32,
+        #[serde(default)]
+        b3: i32,
         hr: i32,
+        /// 득점 — **홈을 밟은 사람 것**이다. 타점(rbi)과 다르다.
+        #[serde(default)]
+        r: i32,
+        /// 사구·희생번트·희생플라이 — **셋 다 타수가 아니다.**
+        /// 타석(PA)과 출루율(OBP) 식이 이 값들을 봐야 한다.
+        /// ⚠ 구 세이브 로그엔 없다.
+        #[serde(default)]
+        hbp: i32,
+        #[serde(default)]
+        sac: i32,
+        #[serde(default)]
+        sf: i32,
         rbi: i32,
         bb: i32,
         k: i32,

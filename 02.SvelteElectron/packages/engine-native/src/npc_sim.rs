@@ -66,8 +66,8 @@ fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondit
     clamp_f(0.60 + fatigue * 0.004, 0.60, 1.0)
 }
 
-struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32, pc: i32, risp_ab: i32, risp_h: i32 }
-struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32, sb: i32, risp_ab: i32, risp_h: i32 }
+struct PitAccum { outs: i32, er: i32, h: i32, hr: i32, k: i32, bb: i32, hbp: i32, pc: i32, risp_ab: i32, risp_h: i32 }
+struct BatAccum { ab: i32, h: i32, b2: i32, b3: i32, hr: i32, r: i32, rbi: i32, bb: i32, hbp: i32, sac: i32, sf: i32, k: i32, sb: i32, risp_ab: i32, risp_h: i32 }
 
 fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
     let eff_stam = pit.stamina * cond_mod;
@@ -83,7 +83,7 @@ fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut imp
 enum NpcPitchResult { Ball, StrikeLook, StrikeSwing, Foul, Out, Single, Double, Triple, HR }
 
 // 타석 결과 (투구 루프 종료 후 반환)
-enum AbResult { K, BB, Out, DoublePlay, Single, Double, Triple, HR }
+enum AbResult { K, BB, Hbp, SacBunt, SacFly, Out, DoublePlay, Single, Double, Triple, HR }
 
 fn npc_sim_one_pitch(
     vel: f64, cmd: f64, ctl: f64, mov: f64,
@@ -143,9 +143,23 @@ fn npc_sim_one_pitch(
 fn sim_at_bat(
     vel: f64, cmd: f64, ctl: f64, mov: f64,
     contact: f64, eye: f64, discipline: f64, power: f64,
+    bunting: f64,
     bases: &[bool; 3], outs: i32,
     rng: &mut impl Rng,
 ) -> (AbResult, u32) {
+    // 🔴 **희생번트** — 무사/1사 + 주자 있음. `bunting`이 성공을 가른다.
+    //   ⚠ 접전 조건은 여기서 못 본다(점수차가 안 넘어온다) — 주인공 경기보다
+    //     느슨하다. 그래서 시도 확률을 절반으로 낮춘다.
+    if outs < 2 && (bases[0] || bases[1])
+        && rng.gen::<f64>() < crate::tuning::SAC_BUNT_ATTEMPT_PROB * 0.5
+    {
+        let ok = crate::tuning::SAC_BUNT_SUCCESS_BASE + (bunting - 50.0) * 0.005;
+        return if rng.gen::<f64>() < clamp_f(ok, 0.35, 0.95) {
+            (AbResult::SacBunt, 1)
+        } else {
+            (AbResult::Out, 1)
+        };
+    }
     let mut balls = 0u8;
     let mut strikes = 0u8;
     let mut pc = 0u32;
@@ -154,6 +168,13 @@ fn sim_at_bat(
         pc += 1;
         match r {
             NpcPitchResult::Ball => {
+                // 🔴 **사구** — 주인공 경기(`match_engine`)와 **같은 상수**를 본다.
+                //    한쪽에만 넣으면 두 리그가 다른 야구를 한다.
+                let cmd_mod = 1.0 - (cmd - 50.0) * crate::tuning::HIT_BY_PITCH_COMMAND_SPAN;
+                if rng.gen::<f64>()
+                    < crate::tuning::HIT_BY_PITCH_PER_BALL * clamp_f(cmd_mod, 0.35, 1.8) {
+                    return (AbResult::Hbp, pc);
+                }
                 balls += 1;
                 if balls >= 4 { return (AbResult::BB, pc); }
             }
@@ -165,6 +186,13 @@ fn sim_at_bat(
             NpcPitchResult::Out => {
                 if bases[0] && outs < 2 && rng.gen::<f64>() < 0.12 {
                     return (AbResult::DoublePlay, pc);
+                }
+                // 🔴 **희생플라이를 이름 있는 결과로 올렸다.** 예전엔 아래
+                //    `apply_ab_result`의 `Out` 갈래 안에 숨어 있어서
+                //    **일어나기는 하는데 기록이 없었다**(타수로만 잡혔다).
+                //    상수도 `tuning`으로 옮겨 주인공 경기와 같은 값을 본다.
+                if bases[2] && outs < 2 && rng.gen::<f64>() < crate::tuning::SAC_FLY_PROB {
+                    return (AbResult::SacFly, pc);
                 }
                 return (AbResult::Out, pc);
             }
@@ -186,26 +214,53 @@ type Bases = [Option<usize>; 3];
 
 fn occupied(b: &Bases) -> [bool; 3] { [b[0].is_some(), b[1].is_some(), b[2].is_some()] }
 
+/// 🔴 **누가 홈을 밟았는지 `scored`에 담는다** (2026-08-28).
+///
+///   예전엔 득점 **수**만 돌려줘서 타자 개인 득점(R)을 셀 방법이 없었다 —
+///   KBO 타자 표의 R 칸이 그것이다. `bases`는 이미 주자의 lineup 인덱스를
+///   들고 다니므로 재료는 있었고, 버리고 있었을 뿐이다.
+///
+/// ⚠ 타석마다 `Vec`을 새로 만들지 않는다 — 호출부가 하나를 돌려 쓴다.
 fn apply_ab_result(
     result: &AbResult,
     bases: &mut Bases,
     batter_idx: usize,
     rng: &mut impl Rng,
+    scored: &mut Vec<usize>,
 ) -> (i32, i32, bool, bool) {
     let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
     match result {
-        AbResult::K | AbResult::Out => {
-            if matches!(result, AbResult::Out) && b3.is_some() && rng.gen::<f64>() < 0.10 {
-                bases[2] = None;
-                return (1, 1, false, false); // 희생플라이
-            }
+        // 사구 — 볼넷과 **같은 진루**다(밀어내기 포함). 기록만 다르다
+        AbResult::Hbp => {
+            let runs = if b1.is_some() && b2.is_some() && b3.is_some() { 1 } else { 0 };
+            if runs > 0 { if let Some(i) = b3 { scored.push(i); } }
+            bases[2] = if b1.is_some() && b2.is_some() { b2 } else { b3 };
+            bases[1] = if b1.is_some() { b1 } else { b2 };
+            bases[0] = Some(batter_idx);
+            (0, runs, false, false)
+        }
+        // 희생번트 — 주자를 뒤에서부터 한 칸씩 민다. 타자는 아웃이다
+        AbResult::SacBunt => {
+            if bases[2].is_none() { bases[2] = bases[1].take(); }
+            if bases[1].is_none() { bases[1] = bases[0].take(); }
             (1, 0, false, false)
         }
+        // 희생플라이 — 3루 주자가 들어온다. 아래 `Out` 갈래에 있던 것을
+        // **이름 있는 결과로 올렸다**(예전엔 아웃으로만 세서 기록이 없었다)
+        AbResult::SacFly => {
+            if let Some(i) = b3 { scored.push(i); }
+            bases[2] = None;
+            (1, 1, false, false)
+        }
+        // ⚠ 희생플라이는 위 `AbResult::SacFly`가 맡는다. 예전엔 여기 숨어 있어
+        //   **기록이 안 남았다** — 같은 일을 두 곳에서 하지 않는다.
+        AbResult::K | AbResult::Out => (1, 0, false, false),
         // 병살은 1루 주자를 지운다 — 예전엔 아웃 수만 늘리고 주자를 안 지워
         // 그 주자가 계속 남아 있었다(신분을 안 들고 다녀 티가 안 났다)
         AbResult::DoublePlay => { bases[0] = None; (2, 0, false, false) }
         AbResult::BB => {
             let runs = if b1.is_some() && b2.is_some() && b3.is_some() { 1 } else { 0 };
+            if runs > 0 { if let Some(i) = b3 { scored.push(i); } }
             bases[2] = if b1.is_some() && b2.is_some() { b2 } else { b3 };
             bases[1] = if b1.is_some() { b1 } else { b2 };
             bases[0] = Some(batter_idx);
@@ -213,9 +268,9 @@ fn apply_ab_result(
         }
         AbResult::Single => {
             let mut runs = 0;
-            if b3.is_some() { runs += 1; }
-            let new_b3 = if b2.is_some() {
-                if rng.gen::<f64>() < 0.45 { runs += 1; None } else { b2 }
+            if let Some(i) = b3 { runs += 1; scored.push(i); }
+            let new_b3 = if let Some(i2) = b2 {
+                if rng.gen::<f64>() < 0.45 { runs += 1; scored.push(i2); None } else { b2 }
             } else { None };
             bases[2] = new_b3;
             bases[1] = b1;
@@ -224,10 +279,10 @@ fn apply_ab_result(
         }
         AbResult::Double => {
             let mut runs = 0;
-            if b3.is_some() { runs += 1; }
-            if b2.is_some() { runs += 1; }
-            let new_b3 = if b1.is_some() {
-                if rng.gen::<f64>() < 0.5 { b1 } else { runs += 1; None }
+            if let Some(i) = b3 { runs += 1; scored.push(i); }
+            if let Some(i) = b2 { runs += 1; scored.push(i); }
+            let new_b3 = if let Some(i1) = b1 {
+                if rng.gen::<f64>() < 0.5 { b1 } else { runs += 1; scored.push(i1); None }
             } else { None };
             bases[2] = new_b3;
             bases[1] = Some(batter_idx);
@@ -236,13 +291,14 @@ fn apply_ab_result(
         }
         AbResult::Triple => {
             let mut runs = 0;
-            for i in 0..3 { if bases[i].is_some() { runs += 1; bases[i] = None; } }
+            for i in 0..3 { if let Some(x) = bases[i] { runs += 1; scored.push(x); bases[i] = None; } }
             bases[2] = Some(batter_idx);
             (0, runs, true, false)
         }
         AbResult::HR => {
             let mut runs = 1;
-            for i in 0..3 { if bases[i].is_some() { runs += 1; bases[i] = None; } }
+            scored.push(batter_idx);   // 타자 본인도 홈을 밟는다
+            for i in 0..3 { if let Some(x) = bases[i] { runs += 1; scored.push(x); bases[i] = None; } }
             (0, runs, true, true)
         }
     }
@@ -309,6 +365,10 @@ fn sim_half_inning_pitch(
 
     if lineup.is_empty() { return (0, lineup_pos, pit_outs, pit_stamina); }
 
+    // 홈을 밟은 주자의 lineup 인덱스를 담는다. **타석마다 새로 만들지 않는다** —
+    // 720경기 × 70타석이라 할당이 그대로 비용이다
+    let mut scored_buf: Vec<usize> = Vec::with_capacity(4);
+
     let stamina_loss = 100.0 / (60.0 + (pit.stamina_cap - 50.0) * 1.5).max(30.0);
     let quality = |st: f64| -> f64 {
         if st < 40.0 { clamp_f(0.75 + st * 0.00625, 0.75, 1.0) }
@@ -317,7 +377,7 @@ fn sim_half_inning_pitch(
     };
 
     let acc = pit_map.entry(pit.id.clone())
-        .or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0, pc: 0, risp_ab: 0, risp_h: 0 });
+        .or_insert(PitAccum { outs: 0, er: 0, h: 0, hr: 0, k: 0, bb: 0, hbp: 0, pc: 0, risp_ab: 0, risp_h: 0 });
     let acc_ptr = acc as *mut PitAccum;
 
     // 도루는 **투수 견제력**이 누른다. 이닝 내내 같은 투수이므로 한 번만 계산한다
@@ -358,7 +418,7 @@ fn sim_half_inning_pitch(
             if rng.gen::<f64>() < success {
                 bases[to] = bases[from].take();
                 bat_map.entry(r.id.clone())
-                    .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
+                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
                     .sb += 1;
             } else {
                 bases[from] = None;
@@ -389,25 +449,34 @@ fn sim_half_inning_pitch(
         let (ab_result, pc) = sim_at_bat(
             vel, cmd, ctl, mov,
             batter.contact, batter.eye, batter.discipline, batter.power,
+            batter.bunting,
             &occupied(&bases), outs, rng,
         );
         stamina = (stamina - stamina_loss * pc as f64).max(0.0);
 
+        scored_buf.clear();
         let (outs_added, runs_scored, is_hit, is_hr) =
-            apply_ab_result(&ab_result, &mut bases, batter_idx, rng);
+            apply_ab_result(&ab_result, &mut bases, batter_idx, rng, &mut scored_buf);
 
         outs         += outs_added;
         cur_pit_outs += outs_added;
         runs         += runs_scored;
 
-        let is_k  = matches!(ab_result, AbResult::K);
-        let is_bb = matches!(ab_result, AbResult::BB);
+        let is_k   = matches!(ab_result, AbResult::K);
+        let is_bb  = matches!(ab_result, AbResult::BB);
+        // 🔴 **셋 다 타수가 아니다.** 타수로 세면 희생타 때문에 타율이 떨어진다
+        let is_hbp = matches!(ab_result, AbResult::Hbp);
+        let is_sac = matches!(ab_result, AbResult::SacBunt);
+        let is_sf  = matches!(ab_result, AbResult::SacFly);
+        let no_ab  = is_bb || is_hbp || is_sac || is_sf;
 
         let pa = unsafe { &mut *acc_ptr };
         pa.outs += outs_added;
         pa.er   += runs_scored;
         pa.pc   += pc as i32;
         if is_hit { pa.h  += 1; }
+        // 피홈런 — 재료는 있었는데 안 세고 있었다(KBO 투수 표의 HR)
+        if is_hr  { pa.hr += 1; }
         if is_k   { pa.k  += 1; }
         if is_bb  { pa.bb += 1; }
         // ⚠ **득점권 기록을 따로 남긴다.** 위기 보정(`npc_clutch_mod`)이
@@ -417,23 +486,43 @@ fn sim_half_inning_pitch(
         // 실제 야구도 시즌 ERA가 아니라 상황별 성적으로 이걸 본다.
         //
         // 볼넷은 타수가 아니므로 제외한다(피안타율 분모를 맞춘다).
-        if !is_bb {
+        if !no_ab {
             pa.risp_ab += risp as i32;
             if is_hit { pa.risp_h += risp as i32; }
         }
+        if is_hbp { pa.hbp += 1; }
 
         let ba = bat_map.entry(batter.id.clone())
-            .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 });
-        if !is_bb {
+            .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 });
+        if !no_ab {
             ba.ab += 1;
             ba.risp_ab += risp as i32;
             if is_hit { ba.risp_h += risp as i32; }
         }
+        if is_hbp { ba.hbp += 1; }
+        if is_sac { ba.sac += 1; }
+        if is_sf  { ba.sf  += 1; }
         if is_hit  { ba.h  += 1; }
+        // 🔴 **장타를 갈라 센다.** 엔진은 처음부터 2루타·3루타를 따로 만들고
+        //    있었는데 집계가 안타 하나로 뭉갰다 — 그래서 SLG가
+        //    `(h + hr*3)/ab`라는 근사였다(2루타·3루타를 단타로 셌다).
+        if matches!(ab_result, AbResult::Double) { ba.b2 += 1; }
+        if matches!(ab_result, AbResult::Triple) { ba.b3 += 1; }
         if is_hr   { ba.hr += 1; }
         if is_bb   { ba.bb += 1; }
         if is_k    { ba.k  += 1; }
         ba.rbi += runs_scored;
+
+        // 🔴 **득점(R)은 홈을 밟은 사람 것이다** — 타점과 다르다.
+        //    `bases`가 lineup 인덱스를 들고 다니므로 재료는 있었고,
+        //    득점 **수**만 돌려주느라 버리고 있었다.
+        // ⚠ 타자 본인의 홈런 득점도 여기 들어온다(위에서 `scored`에 넣는다).
+        for &idx in scored_buf.iter() {
+            let rid = lineup[idx % n].id.clone();
+            bat_map.entry(rid)
+                .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
+                .r += 1;
+        }
     }
 
     (runs, lpos, cur_pit_outs, stamina)
@@ -691,7 +780,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         //    ⚠ 야구 표기(`5.2`)는 **화면에서만** 만든다 — `baseballFormat.ts`의 `ipLabel`.
         let ip        = acc.outs as f64 / 3.0;
         player_lines.push(PlayerGameLine::Pitcher {
-            player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, pc: acc.pc, decision,
+            player_id: id.clone(), ip, er: acc.er, h: acc.h, hr: acc.hr, k: acc.k, bb: acc.bb, hbp: acc.hbp, pc: acc.pc, decision,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
     }
@@ -712,7 +801,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
             _ => continue,
         };
         player_lines.push(PlayerGameLine::Batter {
-            player_id: id.clone(), ab: acc.ab, h: acc.h, hr: acc.hr,
+            player_id: id.clone(), ab: acc.ab, h: acc.h, b2: acc.b2, b3: acc.b3, hr: acc.hr,
+            r: acc.r, hbp: acc.hbp, sac: acc.sac, sf: acc.sf,
             rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
@@ -4128,7 +4218,10 @@ mod clutch_tests {
         let (mut ab, mut hits, mut bb) = (0usize, 0usize, 0usize);
         for _ in 0..n {
             let (r, _) = sim_at_bat(v * cm, c * cm, ct * cm, m * cm,
-                                    contact, eye, disc, power, &bases, 0, &mut rng);
+                                    contact, eye, disc, power,
+                                    // 번트는 이 검사의 관심이 아니다 — 중립으로 둔다.
+                                    // ⚠ 주자가 없으므로(bases 전부 false) 번트 갈래는 안 탄다
+                                    50.0, &bases, 0, &mut rng);
             match r {
                 AbResult::BB => bb += 1,
                 AbResult::Single | AbResult::Double | AbResult::Triple | AbResult::HR => {
@@ -4219,7 +4312,7 @@ mod closer_tests {
             id: id.into(), contact: ovr, power: ovr, eye: ovr, discipline: ovr,
             batting_clutch: 50.0, speed: 55.0, base_instinct: 55.0,
             // 포수 도루 저지용 — 검사는 중립으로 둔다(포수가 아니다)
-            position: String::new(), arm: 50.0,
+            position: String::new(), arm: 50.0, bunting: 50.0,
         }
     }
     /// ⚠ **주력은 실측 분포를 쓴다.** 두 번 틀렸다:
@@ -4780,5 +4873,74 @@ mod sports_unit_team_cap_tests {
         let sel = select_sports_unit_ids(&pool(), &[], 13, 3, Some(6));
         let a = sel.iter().filter(|id| id.starts_with('A')).count();
         assert_eq!(a, 3, "TEAM_A가 {a}명 — 팀당 상한이 안 걸렸다");
+    }
+}
+
+#[cfg(test)]
+mod new_stat_tests {
+    use super::*;
+
+    /// 🔴 **사구·희생번트·희생플라이는 타수가 아니다.** 타수로 세면
+    ///   희생타 때문에 타율이 떨어진다 — 야구 규칙과 다르다.
+    #[test]
+    fn 사구와_희생타는_타수가_아니다() {
+        let mut bases: Bases = [None, None, None];
+        let mut scored: Vec<usize> = Vec::new();
+        let mut rng = LcgRand::new(7);
+
+        // 사구 — 볼넷과 같은 진루
+        let (outs, runs, hit, hr) = apply_ab_result(&AbResult::Hbp, &mut bases, 3, &mut rng, &mut scored);
+        assert_eq!((outs, runs, hit, hr), (0, 0, false, false));
+        assert_eq!(bases[0], Some(3), "사구인데 1루에 안 섰다");
+    }
+
+    /// 희생번트 — 주자를 한 칸 밀고 타자는 아웃이다
+    #[test]
+    fn 희생번트가_주자를_민다() {
+        let mut bases: Bases = [Some(1), None, None];
+        let mut scored: Vec<usize> = Vec::new();
+        let mut rng = LcgRand::new(7);
+        let (outs, runs, _, _) = apply_ab_result(&AbResult::SacBunt, &mut bases, 4, &mut rng, &mut scored);
+        assert_eq!(outs, 1, "타자가 안 죽었다");
+        assert_eq!(runs, 0);
+        assert_eq!(bases[1], Some(1), "1루 주자가 2루로 안 갔다");
+        assert_eq!(bases[0], None, "1루가 안 비었다");
+    }
+
+    /// ⚠ 만루면 아무도 못 간다 — 타자만 아웃이다
+    #[test]
+    fn 만루_번트는_주자가_안_움직인다() {
+        let mut bases: Bases = [Some(1), Some(2), Some(3)];
+        let mut scored: Vec<usize> = Vec::new();
+        let mut rng = LcgRand::new(7);
+        let (outs, runs, _, _) = apply_ab_result(&AbResult::SacBunt, &mut bases, 4, &mut rng, &mut scored);
+        assert_eq!((outs, runs), (1, 0));
+        assert_eq!(bases, [Some(1), Some(2), Some(3)]);
+        assert!(scored.is_empty(), "번트로 점수가 났다 — 스퀴즈는 다른 작전이다");
+    }
+
+    /// 🔴 **희생플라이는 3루 주자를 들여보낸다.** 예전엔 `Out` 갈래 안에 숨어
+    ///   있어서 **일어나기는 하는데 기록이 없었다.**
+    #[test]
+    fn 희생플라이가_주자를_들여보낸다() {
+        let mut bases: Bases = [None, None, Some(2)];
+        let mut scored: Vec<usize> = Vec::new();
+        let mut rng = LcgRand::new(7);
+        let (outs, runs, hit, _) = apply_ab_result(&AbResult::SacFly, &mut bases, 5, &mut rng, &mut scored);
+        assert_eq!((outs, runs, hit), (1, 1, false));
+        assert_eq!(bases[2], None, "3루 주자가 안 들어갔다");
+        assert_eq!(scored, vec![2], "득점을 그 주자에게 안 붙였다");
+    }
+
+    /// 🔴 **아웃 갈래에 희생플라이가 남아 있으면 안 된다** — 같은 일을 두 곳에서
+    ///   하면 하나만 고쳐진 채 남는다(이 저장소에서 여러 번 나온 형태다).
+    #[test]
+    fn 아웃은_주자를_안_들여보낸다() {
+        let mut bases: Bases = [None, None, Some(2)];
+        let mut scored: Vec<usize> = Vec::new();
+        let mut rng = LcgRand::new(7);
+        let (outs, runs, _, _) = apply_ab_result(&AbResult::Out, &mut bases, 5, &mut rng, &mut scored);
+        assert_eq!((outs, runs), (1, 0));
+        assert_eq!(bases[2], Some(2), "그냥 아웃인데 3루 주자가 사라졌다");
     }
 }

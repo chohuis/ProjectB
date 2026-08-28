@@ -105,6 +105,15 @@ pub enum PitchResultCode {
     #[serde(rename = "HIT_TRIPLE")]     HitTriple,
     #[serde(rename = "HOME_RUN")]       HomeRun,
     #[serde(rename = "WALK")]           Walk,
+    /// 사구 — **볼넷과 다른 사건이다.** 타수가 아니고, 출루율 분모에 들어가며,
+    /// 투수 기록에도 따로 남는다(KBO 투수 표의 HBP).
+    #[serde(rename = "HIT_BY_PITCH")]   HitByPitch,
+    /// 희생번트 — 타수가 아니다. `bunting` 능력치가 성공을 가른다.
+    /// 🔴 그 능력치는 성장 엔진에 **있는데 경기에서 안 쓰이고 있었다.**
+    #[serde(rename = "SAC_BUNT")]       SacBunt,
+    /// 희생플라이 — 타수가 아니다. 3루 주자가 뜬공에 홈으로 들어온다.
+    /// ⚠ `npc_sim`엔 이 갈래가 이미 있었는데 **아웃으로만 세고** 있었다.
+    #[serde(rename = "SAC_FLY")]        SacFly,
     #[serde(rename = "GAME_OVER")]      GameOver,
 }
 
@@ -192,12 +201,30 @@ pub struct BatterStats {
     pub platoon: f64,
     pub speed: f64,
     #[serde(rename = "baseInstinct")] pub base_instinct: f64,
+    /// 번트 — 희생번트 성공률을 가른다.
+    ///
+    /// 🔴 이 능력치는 성장 엔진에 **있는데 경기에 안 오고 있었다**. 올려도
+    ///   아무 일이 안 일어나는 죽은 값이었다(2026-08-28에 이어 붙였다).
+    /// ⚠ `default`다 — 안 넘기면 50(보통)으로 본다. 그래서 배선이 빠져도
+    ///   게임이 안 죽지만, **그 상태면 번트가 다시 죽는다.**
+    #[serde(default)]
+    pub bunting: Option<f64>,
     pub fielding: f64,
     pub arm: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RunnerStats {
+    /// 🔴 **누가 나가 있는지** (2026-08-28). 없으면 홈을 밟아도 그 득점을
+    ///   사람에게 못 붙인다 — KBO 타자 표의 R 칸이 그것이다.
+    ///
+    /// ⚠ 배경 리그(`npc_sim`)는 진작 lineup 인덱스를 들고 다녔다("누가 나가
+    ///   있는지를 안 들고 다니면 도루를 누구에게 붙일지 알 수 없다"). 주인공
+    ///   경기만 그 개선이 안 돼 있었다 — **두 경로가 다른 잣대**였다.
+    ///
+    /// ⚠ `default`다. 구 세이브의 경기 상태에는 없다.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub player_id: Option<String>,
     pub speed: f64,
     pub instinct: f64,
 }
@@ -292,6 +319,10 @@ pub struct PitcherLineAccum {
     pub outs: i32,
     pub er: i32,
     pub h: i32,
+    /// 피홈런 — `h`에 뭉개고 있었다
+    pub hr: i32,
+    /// 사구 (KBO 투수 표의 HBP). 볼넷과 다른 사건이다
+    pub hbp: i32,
     pub k: i32,
     pub bb: i32,
     pub pc: i32,
@@ -309,7 +340,17 @@ pub struct BatterLineAccum {
     pub player_id: String,
     pub ab: i32,
     pub h: i32,
+    /// 2루타·3루타 — 엔진은 처음부터 갈라 만드는데 `h`로 뭉개고 있었다
+    pub b2: i32,
+    pub b3: i32,
     pub hr: i32,
+    /// 득점 — **홈을 밟은 사람 것**이다. 타점과 다르다
+    pub r: i32,
+    /// 사구·희생번트·희생플라이 — **셋 다 타수가 아니다.**
+    /// 타석(PA)과 출루율(OBP) 식이 이 값들을 봐야 한다
+    pub hbp: i32,
+    pub sac: i32,
+    pub sf: i32,
     pub rbi: i32,
     pub bb: i32,
     pub k: i32,

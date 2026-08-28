@@ -1182,6 +1182,74 @@ export function faIntakeTally(): Record<string, unknown> {
     정원: roster, 미계약자결말: fate };
 }
 
+/**
+ * **새로 세기 시작한 기록이 실제로 쌓이는가 — 그리고 SLG가 얼마나 움직이는가.**
+ *
+ * 🔴 SLG를 근사(`(h + hr*3)/ab`)에서 루타로 고쳤다. 그 값이 **OPS를 통해
+ *   승강 판정·국가대표 form·트레이드 가치에 물려 있다** — 얼마나 움직이는지
+ *   재지 않고 넘기면 밸런스를 눈감고 바꾸는 것이다.
+ *
+ * ⚠ 옛 식과 새 식을 **같은 표본에서** 비교한다. 세이브를 두 벌 돌리면
+ *   경기 자체가 달라져 차이가 어디서 왔는지 못 가린다.
+ */
+export function statCoverageProbe(): Record<string, unknown> {
+  // 주인공 리그 + 배경 리그를 다 모은다 — 한쪽만 보면 표본이 편향된다
+  const sn = get(seasonStore);
+  const stats: Record<string, import("../../apps/ui/src/shared/types/save").PlayerSeasonStats> = {
+    ...(sn.stats ?? {}),
+  };
+  for (const ls of Object.values(sn.leagueState ?? {})) {
+    Object.assign(stats, ls?.stats ?? {});
+  }
+  let pit = 0, pitHr = 0, bat = 0, batXb = 0, batR = 0;
+  let slgOld = 0, slgNew = 0, opsOld = 0, opsNew = 0, nQual = 0;
+  let hr = 0, b2 = 0, b3 = 0, hbp = 0, sac = 0, sf = 0, pa = 0;
+  let obpOld = 0, obpNew = 0;
+
+  for (const st of Object.values(stats)) {
+    if (!st) continue;
+    if (st.type === "pitcher") {
+      pit++;
+      if (st.hr !== undefined) pitHr++;
+    } else {
+      bat++;
+      if (st.b2 !== undefined) batXb++;
+      if (st.r !== undefined) batR++;
+      hr += st.hr ?? 0; b2 += st.b2 ?? 0; b3 += st.b3 ?? 0;
+      hbp += st.hbp ?? 0; sac += st.sac ?? 0; sf += st.sf ?? 0; pa += st.pa ?? 0;
+      // 표본이 너무 적으면 비율이 튄다 — 규정타석 언저리만 본다
+      if (st.ab >= 100 && st.b2 !== undefined) {
+        const singles = st.h - (st.b2 ?? 0) - (st.b3 ?? 0) - st.hr;
+        const tbNew = singles + (st.b2 ?? 0) * 2 + (st.b3 ?? 0) * 3 + st.hr * 4;
+        const tbOld = st.h + st.hr * 3;
+        const sNew = tbNew / st.ab, sOld = tbOld / st.ab;
+        slgNew += sNew; slgOld += sOld;
+        // 출루율도 갈라 본다 — 사구가 오르게, 희생플라이가 내리게 한다
+        const oOld = (st.ab + st.bb) > 0 ? (st.h + st.bb) / (st.ab + st.bb) : 0;
+        const den = st.ab + st.bb + (st.hbp ?? 0) + (st.sf ?? 0);
+        const oNew = den > 0 ? (st.h + st.bb + (st.hbp ?? 0)) / den : 0;
+        obpOld += oOld; obpNew += oNew;
+        opsNew += oNew + sNew; opsOld += oOld + sOld;
+        nQual++;
+      }
+    }
+  }
+  const r3 = (v: number) => Math.round(v * 1000) / 1000;
+  return {
+    투수: pit, "피홈런 있음": pitHr,
+    타자: bat, "장타 갈림 있음": batXb, "득점 있음": batR,
+    누적: { HR: hr, "2B": b2, "3B": b3, HBP: hbp, SAC: sac, SF: sf, PA: pa },
+    "규정 표본": nQual,
+    "SLG 옛식": nQual ? r3(slgOld / nQual) : 0,
+    "SLG 새식": nQual ? r3(slgNew / nQual) : 0,
+    "SLG 차이": nQual ? r3((slgNew - slgOld) / nQual) : 0,
+    "OBP 옛식": nQual ? r3(obpOld / nQual) : 0,
+    "OBP 새식": nQual ? r3(obpNew / nQual) : 0,
+    "OPS 옛식": nQual ? r3(opsOld / nQual) : 0,
+    "OPS 새식": nQual ? r3(opsNew / nQual) : 0,
+  };
+}
+
 export function careerEventTally(): Record<number, Record<string, number>> {
   const out: Record<number, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {

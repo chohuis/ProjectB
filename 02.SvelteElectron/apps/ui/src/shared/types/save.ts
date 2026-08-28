@@ -403,6 +403,14 @@ export interface PitcherSeasonStats {
   ip: number;
   er: number;     // 자책점
   h: number;      // 피안타
+  /** 피홈런 (KBO 투수 표의 HR).
+   *
+   * ⚠ **구 세이브엔 없다.** `undefined`와 0을 가려야 한다 —
+   *   0으로 채우면 "피홈런 0개인 투수"가 되어 기록이 거짓이 된다.
+   *   화면은 없으면 `—`를 찍는다. */
+  hr?: number;
+  /** 사구 (KBO 투수 표의 HBP). ⚠ 구 세이브엔 없다 */
+  hbp?: number;
   k: number;      // 탈삼진
   bb: number;     // 볼넷
   era: number;  // 평균자책점 (계산값: er*9/ip)
@@ -422,7 +430,28 @@ export interface BatterSeasonStats {
   pa: number;     // 타석
   ab: number;     // 타수
   h: number;      // 안타
+  /** 2루타·3루타 (KBO 타자 표의 2B·3B).
+   *
+   * 🔴 이게 없어서 **SLG가 근사**였다 — `(h + hr*3)/ab`는 2루타·3루타를
+   *   단타로 센다. 엔진은 처음부터 갈라 만들고 있었고 집계가 버렸다.
+   * ⚠ **구 세이브엔 없다.** `undefined`면 옛 근사식으로 떨어진다. */
+  b2?: number;
+  b3?: number;
   hr: number;  // 홈런
+  /** 득점 — **홈을 밟은 사람 것**이다. 타점과 다르다. ⚠ 구 세이브엔 없다 */
+  r?: number;
+  /**
+   * 사구·희생번트·희생플라이 (KBO 타자 표의 HBP·SAC·SF).
+   *
+   * 🔴 **셋 다 타수가 아니다.** 그래서 타석·출루율 식이 이 값들을 봐야 한다:
+   *       PA  = AB + BB + HBP + SAC + SF
+   *       OBP = (H + BB + HBP) / (AB + BB + HBP + SF)
+   *   예전엔 이 사건들이 **엔진에 아예 없어서** `PA = AB + BB`였다.
+   * ⚠ 구 세이브엔 없다 — 그때는 옛 식으로 떨어진다.
+   */
+  hbp?: number;
+  sac?: number;
+  sf?: number;
   rbi: number;    // 타점
   sb: number;     // 도루
   bb: number;  // 볼넷

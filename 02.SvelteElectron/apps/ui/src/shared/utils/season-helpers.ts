@@ -36,9 +36,38 @@ export function sanitizeStatsRecord(
       // 그러면 구 세이브도 로드 시점에 정상으로 돌아온다.
       const b  = st as BatterSeasonStats;
       const ab = safeN(b.ab), h = safeN(b.h), bb = safeN(b.bb), hr = safeN(b.hr);
-      const pa = ab + bb;
-      const obp = pa > 0 ? Math.round(((h + bb) / pa) * 1000) / 1000 : 0;
-      const slg = ab > 0 ? Math.round(((h + hr * 3) / ab) * 1000) / 1000 : 0;
+      // ⚠ **없는 것과 0을 가른다.** 구 세이브엔 장타 수가 없다 —
+      //   0으로 읽으면 장타가 전부 단타로 잡혀 SLG가 떨어진다
+      const xbKnown = b.b2 !== undefined || b.b3 !== undefined;
+      const b2 = xbKnown ? safeN(b.b2) : undefined;
+      const b3 = xbKnown ? safeN(b.b3) : undefined;
+      // 🔴 **타석·출루율 식은 `accumulateStats`와 같아야 한다.** 두 자리가
+      //   갈리면 저장 직후와 로드 직후의 값이 달라진다.
+      //       PA  = AB + BB + HBP + SAC + SF
+      //       OBP = (H + BB + HBP) / (AB + BB + HBP + SF)
+      //   ⚠ 희생번트는 출루율 분모에 안 들어간다(야구 규칙).
+      //   ⚠ 구 세이브엔 그 값이 없다 — 옛 식(AB + BB)으로 떨어진다.
+      const scKnown = b.hbp !== undefined || b.sac !== undefined || b.sf !== undefined;
+      const hbp = scKnown ? safeN(b.hbp) : 0;
+      const sac = scKnown ? safeN(b.sac) : 0;
+      const sf  = scKnown ? safeN(b.sf)  : 0;
+      const pa = ab + bb + hbp + sac + sf;
+      const obpDen = ab + bb + hbp + sf;
+      const obp = obpDen > 0 ? Math.round(((h + bb + hbp) / obpDen) * 1000) / 1000 : 0;
+      // 🔴 **루타(TB)로 장타율을 낸다** (2026-08-28).
+      //
+      //   예전엔 `(h + hr*3)/ab`였다 — 2루타·3루타를 **단타로 세는 근사**다.
+      //   엔진은 처음부터 갈라 만들고 있었고 집계가 버려서 쓸 수가 없었다.
+      //
+      // ⚠ **구 세이브를 따로 갈래 짓지 않는다.** 처음엔 `xbKnown`으로 옛 식을
+      //   남겼는데, **두 식이 같은 값을 낸다** — 장타 수가 0이면
+      //   `(h − hr) + 4hr = h + 3hr`로 근사와 정확히 일치한다.
+      //   변이 검증에서 그 갈래를 없애도 검사가 안 깨져서 드러났다.
+      //   죽은 갈래를 두지 않는다.
+      // ⚠ OPS가 승강 판정(`batterOpsBaseline`)·국가대표 form·트레이드 가치에
+      //   물려 있다. 값이 움직이면 그쪽이 같이 움직인다.
+      const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
+      const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       out[pid] = {
         ...b,
         g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb),
@@ -145,14 +174,24 @@ export function accumulateStats(
       const ip  = safeNum(prev.ip)  + safeNum(line.ip);
       const er  = safeNum(prev.er)  + safeNum(line.er);
       const h   = safeNum(prev.h)   + safeNum(line.h);
+      // 🔴 **피홈런.** 엔진은 처음부터 홈런을 따로 만드는데 안 세고 있었다.
+      // ⚠ 구 세이브는 둘 다 `undefined`다 — 그때는 필드를 안 만든다.
+      //   0으로 채우면 "피홈런 0개인 투수"가 되어 기록이 거짓이 된다.
+      const hrKnown = prev.hr !== undefined || line.hr !== undefined;
+      const hr  = hrKnown ? safeNum(prev.hr) + safeNum(line.hr) : undefined;
       const k   = safeNum(prev.k)   + safeNum(line.k);
       const bb  = safeNum(prev.bb)  + safeNum(line.bb);
+      // 사구 — 볼넷과 다른 사건이다. 구 세이브는 필드를 안 만든다
+      const hbpKnown = prev.hbp !== undefined || line.hbp !== undefined;
+      const pHbp = hbpKnown ? safeNum(prev.hbp) + safeNum(line.hbp) : undefined;
       const w   = prev.w   + (line.decision === "W"  ? 1 : 0);
       const l   = prev.l   + (line.decision === "L"  ? 1 : 0);
       const sv  = prev.sv  + (line.decision === "SV" ? 1 : 0);
       const hd  = prev.hd  + (line.decision === "HD" ? 1 : 0);
       next[line.playerId] = {
         type:"pitcher", g: prev.g+1, gs: prev.gs, w, l, sv, hd, ip, er, h, k, bb,
+        ...(hr !== undefined ? { hr } : {}),
+        ...(pHbp !== undefined ? { hbp: pHbp } : {}),
         era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: safeNum(prev.rispAb) + safeNum(line.rispAb),
@@ -165,6 +204,21 @@ export function accumulateStats(
       const ab  = prev.ab  + (line.ab  ?? 0);
       const h   = prev.h   + (line.h   ?? 0);
       const hr  = prev.hr  + (line.hr  ?? 0);
+      // 🔴 **장타를 갈라 센다.** 없으면 SLG가 옛 근사로 떨어진다(아래 참고).
+      // ⚠ 구 세이브는 `undefined`다 — 0으로 채우면 "2루타 0개"가 되어 거짓이다.
+      const xbKnown = prev.b2 !== undefined || line.b2 !== undefined
+                   || prev.b3 !== undefined || line.b3 !== undefined;
+      const b2  = xbKnown ? (prev.b2 ?? 0) + (line.b2 ?? 0) : undefined;
+      const b3  = xbKnown ? (prev.b3 ?? 0) + (line.b3 ?? 0) : undefined;
+      const rKnown = prev.r !== undefined || line.r !== undefined;
+      const r   = rKnown ? (prev.r ?? 0) + (line.r ?? 0) : undefined;
+      // 🔴 **셋 다 타수가 아니다** — 타석·출루율 식이 이 값들을 본다
+      const scKnown = prev.hbp !== undefined || line.hbp !== undefined
+                   || prev.sac !== undefined || line.sac !== undefined
+                   || prev.sf  !== undefined || line.sf  !== undefined;
+      const hbp = scKnown ? (prev.hbp ?? 0) + (line.hbp ?? 0) : undefined;
+      const sac = scKnown ? (prev.sac ?? 0) + (line.sac ?? 0) : undefined;
+      const sf  = scKnown ? (prev.sf  ?? 0) + (line.sf  ?? 0) : undefined;
       const rbi = prev.rbi + (line.rbi ?? 0);
       const bb  = prev.bb  + (line.bb  ?? 0);
       const k   = prev.k   + (line.k   ?? 0);
@@ -185,12 +239,37 @@ export function accumulateStats(
       // 희생타·사구를 안 세는 이 모델에서 타석 = 타수 + 볼넷이다. 누적 counter
       // (ab·bb)에서 파생하면 애초에 어긋날 수가 없고, 구 세이브도 다음 경기부터
       // 저절로 정상값이 된다(마이그레이션 불필요 — 사용자 확정 "그대로 진행").
-      const pa  = ab + bb;
+      // 🔴 **타석·출루율 식이 바뀐다** (2026-08-28).
+      //
+      //   예전 주석이 "희생타·사구를 안 세는 이 모델에서 타석 = 타수 + 볼넷"
+      //   이라 적고 있었다 — **그 사건들이 엔진에 아예 없어서** 맞는 말이었다.
+      //   이제 셋 다 일어나므로 야구 규칙대로 센다:
+      //
+      //       PA  = AB + BB + HBP + SAC + SF
+      //       OBP = (H + BB + HBP) / (AB + BB + HBP + SF)
+      //
+      //   ⚠ **희생번트(SAC)는 출루율 분모에 안 들어간다.** 야구 규칙이 그렇다 —
+      //     번트는 작전이라 타자에게 책임을 안 묻는다. 희생플라이는 들어간다.
+      //   ⚠ 구 세이브는 그 값이 없다 — 옛 식(AB + BB)으로 떨어진다.
+      const pa  = ab + bb + (hbp ?? 0) + (sac ?? 0) + (sf ?? 0);
       const avg = calcAvg(h, ab);
-      const obp = pa > 0 ? Math.round(((h + bb) / pa) * 1000) / 1000 : 0;
-      const slg = ab > 0 ? Math.round(((h + hr * 3) / ab) * 1000) / 1000 : 0;
+      const obpDen = ab + bb + (hbp ?? 0) + (sf ?? 0);
+      const obp = obpDen > 0 ? Math.round(((h + bb + (hbp ?? 0)) / obpDen) * 1000) / 1000 : 0;
+      // 🔴 **루타(TB)로 장타율을 낸다** — 위 `sanitizeStatsRecord` 쪽과
+      //   **같은 식**이어야 한다. 두 자리가 갈리면 저장 직후와 로드 직후의
+      //   SLG가 달라진다.
+      // ⚠ 장타 수가 없으면(구 세이브) `?? 0`이 되고, 그때 이 식은
+      //   `h + 3hr`로 옛 근사와 **정확히 같아진다** — 갈래를 나눌 필요가 없다.
+      const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
+      const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       next[line.playerId] = {
         type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, bb, k,
+        ...(b2 !== undefined ? { b2 } : {}),
+        ...(b3 !== undefined ? { b3 } : {}),
+        ...(r  !== undefined ? { r }  : {}),
+        ...(hbp !== undefined ? { hbp } : {}),
+        ...(sac !== undefined ? { sac } : {}),
+        ...(sf  !== undefined ? { sf }  : {}),
         avg, obp, slg, ops: calcOps(obp, slg),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: (prev.rispAb ?? 0) + (line.rispAb ?? 0),

@@ -54,6 +54,8 @@ export function buildBatterLineup(teamId: string, entities: EntityRow[]): MatchB
       eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
       battingClutch: bat.battingClutch ?? 50, platoon: bat.platoon ?? 50,
       speed: bat.speed ?? 50, baseInstinct: bat.baseInstinct ?? 50,
+      // 🔴 번트를 안 넘기면 희생번트가 다시 죽는다 — 성장 엔진에만 있던 값이다
+      bunting: bat.bunting ?? 50,
       fielding: bat.fielding ?? 50, arm: bat.arm ?? 50,
     };
   });

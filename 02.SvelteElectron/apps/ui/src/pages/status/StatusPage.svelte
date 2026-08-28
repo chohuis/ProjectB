@@ -9,7 +9,7 @@
   import { getFaThreshold } from "../../shared/utils/faEngine";
   import { canRetireVoluntarily, isRetired, retireProtagonist } from "../../shared/usecases/retirement";
   import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
-  import { ipLabel, eraLabel, rateLabel } from "../../shared/utils/baseballFormat";
+  import { ipLabel, eraLabel, rateLabel, wpctLabel } from "../../shared/utils/baseballFormat";
 
   type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
@@ -464,12 +464,18 @@
               ["L",    selectedSeasonStats.l],
               ["SV",   selectedSeasonStats.sv],
               ["HD",   selectedSeasonStats.hd],
+              // 승률 — **파생값이라 저장하지 않는다**(승·패가 이미 있다)
+              ["WPCT", wpctLabel(selectedSeasonStats.w, selectedSeasonStats.l)],
               ["IP",   ipLabel(selectedSeasonStats.ip)],
               ["ERA",  selectedSeasonStats.era == null ? undefined : eraLabel(selectedSeasonStats.era)],
               ["WHIP", selectedSeasonStats.whip == null ? undefined : rateLabel(selectedSeasonStats.whip)],
               ["K",    selectedSeasonStats.k],
               ["BB",   selectedSeasonStats.bb],
               ["H",    selectedSeasonStats.h],
+              // 🔴 **없는 것과 0을 가른다.** 구 세이브엔 피홈런·사구가 없다 —
+              //    0을 찍으면 "피홈런 0인 투수"가 되어 거짓이다
+              ["HR",   selectedSeasonStats.hr  ?? "—"],
+              ["HBP",  selectedSeasonStats.hbp ?? "—"],
               ["ER",   selectedSeasonStats.er],
             ] as [lbl, val]}
               <div class="record-item">

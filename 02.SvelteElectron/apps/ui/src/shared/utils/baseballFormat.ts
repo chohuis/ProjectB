@@ -95,3 +95,37 @@ export function seasonLabel(season: string, currentYear: number): string {
   if (m) return String(currentYear - Number(m[1]));
   return season;
 }
+
+/**
+ * **승률(WPCT)** — KBO 투수 표의 칸이다. `승 / (승 + 패)`.
+ *
+ * ⚠ **파생값이라 저장하지 않는다.** 승·패가 이미 있으므로 여기서 만든다 —
+ *   저장하면 두 값이 갈릴 자리가 하나 더 생긴다.
+ * ⚠ 결정이 없으면(`0승 0패`) 비율이 아니라 **없는 값**이다. `-`를 준다.
+ * ⚠ 야구 관례대로 앞의 0을 뗀다(`.500`).
+ */
+export function wpctLabel(w: number | null | undefined, l: number | null | undefined): string {
+  const win = typeof w === "number" && Number.isFinite(w) ? w : 0;
+  const loss = typeof l === "number" && Number.isFinite(l) ? l : 0;
+  const dec = win + loss;
+  if (dec <= 0) return "-";
+  return (Math.round((win / dec) * 1000) / 1000).toFixed(3).replace(/^0/, "");
+}
+
+/**
+ * **루타(TB)** — KBO 타자 표의 칸이다. `단타 + 2×2루타 + 3×3루타 + 4×홈런`.
+ *
+ * 🔴 **2루타·3루타를 모르면 낼 수 없다.** 예전엔 그 둘을 안 세서
+ *   장타율마저 `(h + hr*3)/ab`라는 근사였다(장타를 단타로 셌다).
+ *
+ * ⚠ 구 세이브는 그 값이 없다 — `undefined`를 돌려준다. 화면이 `—`를 찍어야지
+ *   0을 찍으면 "루타 0인 타자"가 되어 거짓이다.
+ */
+export function totalBases(
+  h: number, hr: number,
+  b2: number | undefined, b3: number | undefined,
+): number | undefined {
+  if (b2 === undefined && b3 === undefined) return undefined;
+  const d = b2 ?? 0, t = b3 ?? 0;
+  return (h - d - t - hr) + d * 2 + t * 3 + hr * 4;
+}

@@ -8,8 +8,13 @@ export interface PitcherGameLine {
   ip: number;
   er: number;
   h: number;
+  /** 피홈런. **엔진은 처음부터 홈런을 따로 만드는데 안 세고 있었다**(2026-08-28).
+   *  ⚠ 구 세이브의 경기 로그엔 없다 — 읽는 쪽이 `?? 0`으로 받는다. */
+  hr?: number;
   k: number;
   bb: number;
+  /** 사구 — 볼넷과 다른 사건이다. ⚠ 구 세이브 로그엔 없다 */
+  hbp?: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
   pitchCount?: number;
   /** 득점권 타수 — 위기 상황 성적을 보여주는 스플릿.
@@ -26,7 +31,19 @@ export interface BatterGameLine {
   playerId: string;
   ab: number;
   h: number;
+  /** 2루타·3루타. 예전엔 `h` 하나로 뭉개서 **SLG가 근사였다**
+   *  (`(h + hr*3)/ab` — 장타를 단타로 셌다).
+   *  ⚠ 구 세이브의 경기 로그엔 없다. */
+  b2?: number;
+  b3?: number;
   hr: number;
+  /** 득점 — **홈을 밟은 사람 것**이다. 타점(rbi)과 다르다. */
+  r?: number;
+  /** 사구·희생번트·희생플라이 — **셋 다 타수가 아니다.**
+   *  타석(PA)·출루율(OBP) 식이 이 값들을 봐야 한다. ⚠ 구 세이브 로그엔 없다 */
+  hbp?: number;
+  sac?: number;
+  sf?: number;
   rbi: number;
   bb: number;
   k: number;
