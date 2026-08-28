@@ -925,3 +925,264 @@ mod tests {
         assert_eq!(calc_season_rating(p), 50);
     }
 }
+
+// ── 유망주 순위 (TOP 10) ─────────────────────────────────────────────────────
+
+/// **유망주 점수 · 순위** — 주간 TOP10이 쓴다.
+///
+/// 🔴 이 계산이 통째로 TS(`top10Engine.ts`)에 있었다:
+///   · 주인공 점수 — OVR·스카우트 가중, 성적 가중(0 / 0.15 / 0.30)
+///   · NPC 점수 — 같은 축
+///   · `simNpcScout` — **id 뒷자리로 만드는 유사난수**. `Math.random()`은
+///     아니지만 **난수를 TS가 만드는 것**은 같다
+///
+/// ⚠ **정렬까지 여기서 한다.** 점수만 돌려주면 TS가 다시 줄을 세우고,
+///   동점 처리가 두 곳에서 갈린다.
+///
+/// ⚠ 값은 옮기기만 했다 — 가중치·구간을 안 바꿨다.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProspectNpc {
+    pub id: String,
+    pub name: String,
+    pub team_name: String,
+    pub ovr: f64,
+    #[serde(default)]
+    pub grade: i32,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProspectRankParams {
+    pub npcs: Vec<ProspectNpc>,
+    pub week: i32,
+    /// 주인공
+    pub hero_name: String,
+    pub hero_team_name: String,
+    pub hero_ovr: f64,
+    pub hero_scout_score: f64,
+    pub hero_grade: i32,
+    /// 주인공 성적 — 없으면 능력치만 본다
+    #[serde(default)]
+    pub is_pitcher: bool,
+    #[serde(default)]
+    pub ip: f64,
+    #[serde(default)]
+    pub era: f64,
+    #[serde(default)]
+    pub k: f64,
+    #[serde(default)]
+    pub pa: f64,
+    #[serde(default)]
+    pub avg: f64,
+    #[serde(default)]
+    pub ops: f64,
+    #[serde(default)]
+    pub has_stats: bool,
+    /// 학년 필터. 0이면 전체다
+    #[serde(default)]
+    pub grade_filter: i32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProspectEntry {
+    pub id: String,
+    pub name: String,
+    pub team_name: String,
+    pub score: f64,
+    pub rank: i32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProspectRankResult {
+    pub entries: Vec<ProspectEntry>,
+    /// TOP10 밖일 때의 주인공 순위. 0이면 없다(안에 들었거나 학년 필터 밖)
+    pub hero_rank: i32,
+}
+
+/// NPC 스카우트 평가 (10~70) — **id·주차·학년으로 정해진다.**
+/// ⚠ 난수원이 아니라 **결정적 해시**다. 같은 주에 같은 선수는 같은 값이다.
+fn sim_npc_scout(npc_id: &str, week: i32, grade: i32) -> f64 {
+    // 뒤 세 자리를 숫자로 — 없으면 1
+    let tail: i64 = npc_id.chars().rev().take(3).collect::<String>()
+        .chars().rev().collect::<String>()
+        .parse().unwrap_or(1);
+    let seed = (tail * 1000 + week as i64 * 13 + grade as i64 * 7).rem_euclid(600);
+    10.0 + (seed as f64 / 600.0) * 60.0
+}
+
+/// 주인공 점수 — 성적이 쌓일수록 능력치 비중이 줄고 성적 비중이 는다
+fn hero_prospect_score(p: &ProspectRankParams) -> f64 {
+    let ovr = p.hero_ovr;
+    let sc = p.hero_scout_score;
+    if !p.has_stats { return ovr * 0.80 + sc * 0.20; }
+
+    if p.is_pitcher {
+        let stat_w = if p.ip < 10.0 { 0.0 } else if p.ip < 30.0 { 0.15 } else { 0.30 };
+        let era_score = ((9.0 - p.era) / 9.0 * 100.0).clamp(0.0, 100.0);
+        let k9_score = if p.ip > 0.0 { ((p.k / p.ip) * 9.0 * 2.0).min(100.0) } else { 0.0 };
+        let stat_score = era_score * 0.6 + k9_score * 0.4;
+        ovr * (0.80 - stat_w) + sc * 0.20 + stat_score * stat_w
+    } else {
+        let stat_w = if p.pa < 20.0 { 0.0 } else if p.pa < 60.0 { 0.15 } else { 0.30 };
+        let avg_score = (p.avg * 250.0).min(100.0);
+        let ops_score = (p.ops * 83.0).min(100.0);
+        let stat_score = avg_score * 0.5 + ops_score * 0.5;
+        ovr * (0.80 - stat_w) + sc * 0.20 + stat_score * stat_w
+    }
+}
+
+pub fn calc_prospect_rank(p: ProspectRankParams) -> ProspectRankResult {
+    let hero_included = p.grade_filter == 0 || p.hero_grade == p.grade_filter;
+    let hero_score = hero_prospect_score(&p);
+
+    let mut pool: Vec<ProspectEntry> = p.npcs.iter()
+        .filter(|n| p.grade_filter == 0 || n.grade == p.grade_filter)
+        .map(|n| ProspectEntry {
+            id: n.id.clone(),
+            name: n.name.clone(),
+            team_name: n.team_name.clone(),
+            score: n.ovr * 0.80 + sim_npc_scout(&n.id, p.week, n.grade) * 0.20,
+            rank: 0,
+        })
+        .collect();
+
+    if hero_included {
+        pool.push(ProspectEntry {
+            id: "PLY_HERO".into(),
+            name: p.hero_name.clone(),
+            team_name: p.hero_team_name.clone(),
+            score: hero_score,
+            rank: 0,
+        });
+    }
+
+    // ⚠ **동점 처리를 한 곳에서 한다.** 점수만 돌려주고 TS가 다시 세우면
+    //   여기 순서와 갈린다
+    pool.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
+
+    let mut entries: Vec<ProspectEntry> = pool.iter().take(10).enumerate()
+        .map(|(i, e)| ProspectEntry { rank: i as i32 + 1, ..ProspectEntry {
+            id: e.id.clone(), name: e.name.clone(), team_name: e.team_name.clone(),
+            score: e.score, rank: 0,
+        }})
+        .collect();
+    for (i, e) in entries.iter_mut().enumerate() { e.rank = i as i32 + 1; }
+
+    let hero_rank = if hero_included && !entries.iter().any(|e| e.id == "PLY_HERO") {
+        pool.iter().position(|e| e.id == "PLY_HERO").map(|i| i as i32 + 1).unwrap_or(0)
+    } else { 0 };
+
+    ProspectRankResult { entries, hero_rank }
+}
+
+#[cfg(test)]
+mod prospect_tests {
+    use super::*;
+
+    /// 🔴 **TS와 같은 값이 나와야 한다.** `simNpcScout`의 뒷자리 파싱이
+    ///   다르면 **순위가 통째로 달라진다** — 옮기기만 한 게 아니게 된다.
+    ///
+    /// TS 원본은 `parseInt(npcId.slice(-3), 10) || 1`이다:
+    ///   "0001" → slice(-3) = "001" → 1
+    ///   "0123" → "123" → 123
+    ///   "1999" → "999" → 999
+    ///   "ABC"  → NaN → 1
+    ///   "00A"  → parseInt("00A") = 0 → `|| 1` → 1
+    #[test]
+    fn 뒷자리_파싱이_ts와_같다() {
+        // (id, 기대 tail)
+        let cases: [(&str, i64); 5] = [
+            ("PLY_HS_2026_0001", 1),
+            ("PLY_HS_2026_0123", 123),
+            ("PLY_HS_2026_1999", 999),
+            ("PLY_ABC", 1),
+            ("PLY_HS_X_00A", 1),
+        ];
+        for (id, tail) in cases {
+            let expect = 10.0 + (((tail * 1000 + 5 * 13 + 3 * 7).rem_euclid(600)) as f64 / 600.0) * 60.0;
+            let got = sim_npc_scout(id, 5, 3);
+            assert!((got - expect).abs() < 1e-9, "{id}: {got} != {expect}");
+        }
+    }
+
+    /// ⚠ 범위가 10~70이어야 한다 — 벗어나면 점수 축이 바뀐다
+    #[test]
+    fn 스카우트_평가가_범위_안이다() {
+        for i in 0..2000 {
+            let v = sim_npc_scout(&format!("PLY_{:04}", i), i % 52, i % 3 + 1);
+            assert!((10.0..=70.0).contains(&v), "{i}: {v}");
+        }
+    }
+
+    fn base(hero_ovr: f64) -> ProspectRankParams {
+        ProspectRankParams {
+            npcs: vec![], week: 5,
+            hero_name: "주인공".into(), hero_team_name: "우리팀".into(),
+            hero_ovr, hero_scout_score: 50.0, hero_grade: 3,
+            is_pitcher: true, ip: 0.0, era: 0.0, k: 0.0,
+            pa: 0.0, avg: 0.0, ops: 0.0, has_stats: false, grade_filter: 0,
+        }
+    }
+
+    /// 성적이 없으면 능력치만 본다 — `ovr*0.8 + scout*0.2`
+    #[test]
+    fn 성적이_없으면_능력치만_본다() {
+        let r = calc_prospect_rank(base(70.0));
+        assert_eq!(r.entries.len(), 1);
+        assert!((r.entries[0].score - (70.0 * 0.8 + 50.0 * 0.2)).abs() < 1e-9);
+    }
+
+    /// 🔴 **이닝이 쌓이면 성적 비중이 는다** — 0 / 0.15 / 0.30
+    ///
+    /// ⚠ **"이닝이 늘면 점수가 오른다"가 아니다.** 처음엔 그렇게 짰다가 틀렸다 —
+    ///   성적 점수가 OVR보다 낮으면 비중이 늘수록 **점수가 내려간다.**
+    ///   그게 맞는 동작이다. 비중이 걸리는지는 **같은 이닝에서 성적을 갈라**
+    ///   봐야 알 수 있다.
+    #[test]
+    fn 이닝이_쌓이면_성적_비중이_는다() {
+        // 성적이 좋을 때와 나쁠 때의 격차가 이닝이 쌓일수록 벌어져야 한다
+        let gap = |ip: f64| -> f64 {
+            let good = ProspectRankParams {
+                has_stats: true, ip, era: 1.00, k: ip * 1.5, ..base(70.0)
+            };
+            let bad = ProspectRankParams {
+                has_stats: true, ip, era: 8.00, k: 0.0, ..base(70.0)
+            };
+            calc_prospect_rank(good).entries[0].score - calc_prospect_rank(bad).entries[0].score
+        };
+        let g5 = gap(5.0);      // 비중 0
+        let g20 = gap(20.0);    // 비중 0.15
+        let g50 = gap(50.0);    // 비중 0.30
+        assert!(g5.abs() < 1e-9, "5이닝인데 성적이 걸렸다 (격차 {g5})");
+        assert!(g20 > 0.0, "20이닝인데 성적이 안 걸렸다 (격차 {g20})");
+        assert!(g50 > g20, "50이닝({g50})이 20이닝({g20})보다 안 벌어졌다");
+    }
+
+    /// 🔴 **TOP10 밖이면 실제 순위를 돌려준다** — 안에 들면 0이다
+    #[test]
+    fn top10_밖이면_순위를_준다() {
+        let npcs: Vec<ProspectNpc> = (0..30).map(|i| ProspectNpc {
+            id: format!("PLY_{:04}", i), name: format!("N{i}"),
+            team_name: "T".into(), ovr: 99.0, grade: 3,
+        }).collect();
+        let mut p = base(40.0);   // 주인공이 한참 아래다
+        p.npcs = npcs;
+        let r = calc_prospect_rank(p);
+        assert_eq!(r.entries.len(), 10);
+        assert!(!r.entries.iter().any(|e| e.id == "PLY_HERO"));
+        assert!(r.hero_rank > 10, "주인공 순위 {}", r.hero_rank);
+    }
+
+    /// ⚠ 학년 필터 밖이면 주인공을 안 넣는다 — 순위도 0이다
+    #[test]
+    fn 학년_필터_밖이면_안_넣는다() {
+        let mut p = base(99.0);
+        p.grade_filter = 1;   // 주인공은 3학년
+        let r = calc_prospect_rank(p);
+        assert!(!r.entries.iter().any(|e| e.id == "PLY_HERO"));
+        assert_eq!(r.hero_rank, 0);
+    }
+}

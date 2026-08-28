@@ -6,47 +6,90 @@ import type { MessageItem, Top10Column, Top10Metadata } from "../types/main";
 // 월 레이블 — 표는 `seasonCalendar`가 정본이다(예전엔 여기 사본이 있었다)
 const weekToMonthLabel = monthNameOf;
 
-// ── 결정론적 NPC simScout (10~70) ────────────────────────────
-function simNpcScout(npcId: string, week: number, grade: number): number {
-  const tail  = parseInt(npcId.slice(-3), 10) || 1;
-  const seed  = (tail * 1000 + week * 13 + grade * 7) % 600;
-  return 10 + (seed / 600) * 60;
+// ── 점수 계산은 Rust가 한다 (2026-08-28) ──────────────────────
+//
+// 🔴 예전엔 여기 셋이 있었다:
+//   · `calcProspectScore` — OVR·스카우트 가중, 성적 가중(0 / 0.15 / 0.30)
+//   · `calcNpcScore`      — 같은 축
+//   · `simNpcScout`       — **id 뒷자리로 만드는 유사난수**
+//
+//   `Math.random()`은 아니었지만 **난수를 TS가 만드는 것**은 같다.
+//   CLAUDE.md 아키텍처가 금지하는 자리다.
+//
+// ⚠ **정렬도 Rust가 한다.** 점수만 받아 TS가 다시 줄을 세우면 동점 처리가
+//   두 곳에서 갈린다.
+// ⚠ 값은 옮기기만 했다 — 가중치·구간을 안 바꿨다. Rust 검사가 뒷자리 파싱까지
+//   TS 원본(`parseInt(id.slice(-3)) || 1`)과 맞대 본다.
+
+/** Rust에 넘길 NPC 한 명 — **필요한 것만** 보낸다(주당 1,377명이다) */
+interface ProspectNpcPayload {
+  id: string; name: string; teamName: string; ovr: number; grade: number;
 }
 
-// ── 주인공 Prospect Score ────────────────────────────────────
-function calcProspectScore(
+/** 후보 풀을 만든다. 한 번 만들어 네 컬럼이 돌려 쓴다 */
+function buildNpcPayload(
+  allEntities: EntityRow[],
+  type: "pitcher" | "batter",
+  seasonYear: number | undefined,
+  teamNameOf: TeamNameLookup,
+): ProspectNpcPayload[] {
+  const out: ProspectNpcPayload[] = [];
+  for (const n of allEntities) {
+    if (n.role !== "player" || n.leagueId !== "LEAGUE_HIGHSCHOOL") continue;
+    const d = n.details?.player;
+    if (!d || d.playerType !== type) continue;
+    if (n.entryYear && seasonYear && n.entryYear > seasonYear) continue;
+    out.push({
+      id: n.id, name: n.name, teamName: teamNameOf(n.teamId),
+      ovr: type === "pitcher" ? d.pitching.ovr : d.batting.ovr,
+      grade: n.grade ?? 3,
+    });
+  }
+  return out;
+}
+
+/** 주인공 성적을 Rust 페이로드 모양으로 */
+function heroStatsPayload(stats: PitcherSeasonStats | BatterSeasonStats | null) {
+  if (!stats) return { hasStats: false };
+  if (stats.type === "pitcher") {
+    return { hasStats: true, isPitcher: true, ip: stats.ip ?? 0, era: stats.era, k: stats.k };
+  }
+  return { hasStats: true, isPitcher: false, pa: stats.pa ?? 0, avg: stats.avg, ops: stats.ops };
+}
+
+interface RankResult { entries: (Top10Entry & { score: number })[]; heroRank: number }
+
+/**
+ * Rust에 순위를 물어본다.
+ *
+ * ⚠ 엔진이 없으면(Vite 단독) **빈 결과**다 — 여기서 점수를 다시 만들지 않는다.
+ *   만들면 또 두 벌이 된다.
+ */
+async function rankFromEngine(
+  npcs: ProspectNpcPayload[],
   protagonist: ProtagonistSave,
   stats: PitcherSeasonStats | BatterSeasonStats | null,
-): number {
+  teamName: string,
+  week: number,
+  gradeFilter: 0 | 1 | 2 | 3,
+): Promise<RankResult> {
+  const api = window.projectB?.engine;
+  if (!api) return { entries: [], heroRank: 0 };
   const isPitcher = protagonist.playerType === "pitcher";
-  const ovr       = isPitcher ? protagonist.pitching.ovr : protagonist.batting.ovr;
-  const sc        = protagonist.scoutScore;
-
-  if (!stats) return ovr * 0.80 + sc * 0.20;
-
-  if (stats.type === "pitcher") {
-    const ip = stats.ip ?? 0;
-    let statW = ip < 10 ? 0 : ip < 30 ? 0.15 : 0.30;
-    const eraScore = Math.max(0, Math.min(100, (9 - stats.era) / 9 * 100));
-    const k9Score  = ip > 0 ? Math.min(100, (stats.k / ip) * 9 * 2) : 0;
-    const statScore = eraScore * 0.6 + k9Score * 0.4;
-    return ovr * (0.80 - statW) + sc * 0.20 + statScore * statW;
-  } else {
-    const pa = stats.pa ?? 0;
-    let statW = pa < 20 ? 0 : pa < 60 ? 0.15 : 0.30;
-    const avgScore = Math.min(100, stats.avg * 250);
-    const opsScore = Math.min(100, stats.ops * 83);
-    const statScore = avgScore * 0.5 + opsScore * 0.5;
-    return ovr * (0.80 - statW) + sc * 0.20 + statScore * statW;
+  try {
+    return JSON.parse(await api("calcProspectRankNative", JSON.stringify({
+      npcs, week,
+      heroName: protagonist.name,
+      heroTeamName: teamName,
+      heroOvr: isPitcher ? protagonist.pitching.ovr : protagonist.batting.ovr,
+      heroScoutScore: protagonist.scoutScore,
+      heroGrade: protagonist.grade ?? 1,
+      gradeFilter,
+      ...heroStatsPayload(stats),
+    }))) as RankResult;
+  } catch {
+    return { entries: [], heroRank: 0 };
   }
-}
-
-// ── NPC Prospect Score ────────────────────────────────────────
-function calcNpcScore(npc: EntityRow, week: number, grade: number): number {
-  const d   = npc.details?.player;
-  if (!d) return 0;
-  const ovr = d.playerType === "pitcher" ? d.pitching.ovr : d.batting.ovr;
-  return ovr * 0.80 + simNpcScout(npc.id, week, grade) * 0.20;
 }
 
 // ── 팀명 ─────────────────────────────────────────────────────
@@ -60,7 +103,7 @@ type TeamNameLookup = (teamId: string) => string;
 
 
 // ── TOP 10 생성 ───────────────────────────────────────────────
-export function generateTop10(
+export async function generateTop10(
   protagonist: ProtagonistSave,
   stats: PitcherSeasonStats | BatterSeasonStats | null,
   allEntities: EntityRow[],
@@ -68,129 +111,53 @@ export function generateTop10(
   grade: number,
   seasonYear: number | undefined,
   teamNameOf: TeamNameLookup,
-): Top10Snapshot {
-  const npcTeamName = (npc: EntityRow) => teamNameOf(npc.teamId);
+): Promise<Top10Snapshot> {
   const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
-  const teamName = teamNameOf(protagonist.teamId);
-
-  const heroScore = calcProspectScore(protagonist, stats);
-  const heroEntry: Top10Entry & { score: number } = {
-    id:       "PLY_HERO",
-    name:     protagonist.name,
-    teamName,
-    score:    heroScore,
-    rank:     0,
-  };
-
-  const npcPool = allEntities
-    .filter(
-      (n) =>
-        n.role === "player" &&
-        n.leagueId === "LEAGUE_HIGHSCHOOL" &&
-        n.details?.player?.playerType === type &&
-        (!n.entryYear || !seasonYear || n.entryYear <= seasonYear),
-    )
-    .map((n) => ({
-      id:       n.id,
-      name:     n.name,
-      teamName: npcTeamName(n),
-      score:    calcNpcScore(n, seasonWeek, n.grade ?? 3),
-      rank:     0,
-    }));
-
-  const all = [...npcPool, heroEntry]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 10)
-    .map((e, i) => ({ ...e, rank: i + 1 }));
-
-  return { type, grade, week: seasonWeek, entries: all };
+  const npcs = buildNpcPayload(allEntities, type, seasonYear, teamNameOf);
+  const r = await rankFromEngine(
+    npcs, protagonist, stats, teamNameOf(protagonist.teamId), seasonWeek, 0,
+  );
+  return { type, grade, week: seasonWeek, entries: r.entries };
 }
 
 // ── 학년 필터 Top 10 (통합·학년별 공용) ──────────────────────
-function generateTop10ForGrade(
-  protagonist: ProtagonistSave,
-  stats: PitcherSeasonStats | BatterSeasonStats | null,
-  allEntities: EntityRow[],
-  seasonWeek: number,
-  grade: number,
-  seasonYear: number,
-  gradeFilter: 1 | 2 | 3 | null,
-  teamNameOf: TeamNameLookup,
-): { entries: Top10Entry[]; heroRank: number | null } {
-  const npcTeamName = (npc: EntityRow) => teamNameOf(npc.teamId);
-  const teamName = teamNameOf(protagonist.teamId);
-  const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
-  const heroScore = calcProspectScore(protagonist, stats);
-  const heroGrade = protagonist.grade ?? 1;
-
-  const npcPool = allEntities
-    .filter(
-      (n) =>
-        n.role === "player" &&
-        n.leagueId === "LEAGUE_HIGHSCHOOL" &&
-        n.details?.player?.playerType === type &&
-        (!n.entryYear || !seasonYear || n.entryYear <= seasonYear) &&
-        (gradeFilter === null || (n.grade ?? 3) === gradeFilter),
-    )
-    .map((n) => ({
-      id:       n.id,
-      name:     n.name,
-      teamName: npcTeamName(n),
-      score:    calcNpcScore(n, seasonWeek, n.grade ?? 3),
-      rank:     0,
-    }));
-
-  const heroIncluded = gradeFilter === null || heroGrade === gradeFilter;
-  const heroEntry = heroIncluded
-    ? { id: "PLY_HERO", name: protagonist.name, teamName, score: heroScore, rank: 0 }
-    : null;
-
-  const pool = heroEntry ? [...npcPool, heroEntry] : npcPool;
-  const sorted = pool.sort((a, b) => b.score - a.score);
-  const top10 = sorted.slice(0, 10).map((e, i) => ({ ...e, rank: i + 1 }));
-
-  let heroRank: number | null = null;
-  if (heroIncluded) {
-    const heroInTop10 = top10.some((e) => e.id === "PLY_HERO");
-    if (!heroInTop10) {
-      heroRank = sorted.findIndex((e) => e.id === "PLY_HERO") + 1;
-    }
-  }
-
-  return { entries: top10, heroRank };
-}
-
 // ── 4컬럼 Top10Metadata 빌드 ──────────────────────────────────
-export function buildTop10Metadata(
+export async function buildTop10Metadata(
   protagonist: ProtagonistSave,
   stats: PitcherSeasonStats | BatterSeasonStats | null,
   allEntities: EntityRow[],
   weekNum: number,
   seasonYear: number,
   teamNameOf: TeamNameLookup,
-): Top10Metadata {
-  const makeCol = (
+): Promise<Top10Metadata> {
+  const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
+  // ⚠ **풀을 한 번만 만든다.** 컬럼이 넷이라 매번 만들면 1,377명을 네 번 훑고
+  //   네 번 직렬화한다. 학년 필터는 Rust가 건다.
+  const npcs = buildNpcPayload(allEntities, type, seasonYear, teamNameOf);
+  const teamName = teamNameOf(protagonist.teamId);
+  const heroGrade = protagonist.grade ?? 1;
+
+  const makeCol = async (
     label: Top10Column["label"],
-    gradeFilter: 1 | 2 | 3 | null,
+    gradeFilter: 0 | 1 | 2 | 3,
     includeHeroRank: boolean,
-  ): Top10Column => {
-    const { entries, heroRank } = generateTop10ForGrade(
-      protagonist, stats, allEntities, weekNum,
-      protagonist.grade ?? 1, seasonYear, gradeFilter, teamNameOf,
-    );
-    return { label, entries, heroRank: includeHeroRank ? heroRank : null };
+  ): Promise<Top10Column> => {
+    const r = await rankFromEngine(npcs, protagonist, stats, teamName, weekNum, gradeFilter);
+    // ⚠ Rust는 "없음"을 0으로 준다 — 화면 계약은 `null`이다
+    const heroRank = r.heroRank > 0 ? r.heroRank : null;
+    return { label, entries: r.entries, heroRank: includeHeroRank ? heroRank : null };
   };
 
   return {
     type: "top10",
-    playerType: protagonist.playerType === "pitcher" ? "pitcher" : "batter",
+    playerType: type,
     week: weekNum,
     seasonYear,
     columns: [
-      makeCol("통합",   null, true),
-      makeCol("3학년",  3,    (protagonist.grade ?? 1) === 3),
-      makeCol("2학년",  2,    (protagonist.grade ?? 1) === 2),
-      makeCol("1학년",  1,    (protagonist.grade ?? 1) === 1),
+      await makeCol("통합",  0, true),
+      await makeCol("3학년", 3, heroGrade === 3),
+      await makeCol("2학년", 2, heroGrade === 2),
+      await makeCol("1학년", 1, heroGrade === 1),
     ],
   };
 }
@@ -218,31 +185,16 @@ function calcChanges(curr: Top10Snapshot, last: Top10Snapshot | null): Changes {
 }
 
 // ── 주인공 전체 순위 (TOP10 외일 때) ─────────────────────────
-function heroRankInAll(
-  protagonist: ProtagonistSave,
-  stats: PitcherSeasonStats | BatterSeasonStats | null,
-  allEntities: EntityRow[],
-  seasonWeek: number,
-  grade: number,
-  seasonYear?: number,
-): number {
-  const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
-  const heroScore = calcProspectScore(protagonist, stats);
-  const beaten = allEntities
-    .filter(
-      (n) =>
-        n.role === "player" &&
-        n.leagueId === "LEAGUE_HIGHSCHOOL" &&
-        n.details?.player?.playerType === type &&
-        (!n.entryYear || !seasonYear || n.entryYear <= seasonYear),
-    )
-    .filter((n) => calcNpcScore(n, seasonWeek, n.grade ?? 3) > heroScore)
-    .length;
-  return beaten + 1;
-}
+// 🔴 **`heroRankInAll`을 지웠다** (2026-08-28).
+//
+//   TOP10 밖일 때의 주인공 순위를 **여기서 다시 계산했다** — 전 고교 선수를
+//   한 번 더 훑으며 `calcNpcScore`를 다시 돌렸다. 같은 점수를 두 번 만드는
+//   구조라, 한쪽 산식만 고치면 두 값이 갈린다.
+//
+//   Rust `calc_prospect_rank`가 `heroRank`를 **함께 돌려준다.** 그걸 쓴다.
 
 // ── 메시지 생성 ───────────────────────────────────────────────
-export function buildTop10Message(
+export async function buildTop10Message(
   protagonist: ProtagonistSave,
   stats: PitcherSeasonStats | BatterSeasonStats | null,
   allEntities: EntityRow[],
@@ -251,20 +203,24 @@ export function buildTop10Message(
   weekNum: number,
   seasonYear: number | undefined,
   teamNameOf: TeamNameLookup,
-): MessageItem {
+): Promise<MessageItem> {
   const typeKr  = curr.type === "pitcher" ? "투수" : "타자";
   const monthKr = weekToMonthLabel(weekNum);
   const gradeKr = `고${curr.grade}`;
 
   const heroEntry = curr.entries.find((e) => e.id === "PLY_HERO");
-  const overallHeroRank = heroEntry?.rank ?? heroRankInAll(protagonist, stats, allEntities, curr.week, curr.grade, seasonYear);
   const inTop10 = !!heroEntry;
+
+  // ⚠ **메타를 먼저 만든다.** 통합 컬럼의 `heroRank`가 TOP10 밖일 때의
+  //   순위다 — 예전엔 그걸 `heroRankInAll`로 **다시 계산**했다.
+  const metadata = await buildTop10Metadata(
+    protagonist, stats, allEntities, weekNum, seasonYear ?? 0, teamNameOf,
+  );
+  const overallHeroRank = heroEntry?.rank ?? metadata.columns[0]?.heroRank ?? 0;
 
   const subject = inTop10
     ? `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 ${overallHeroRank}위`
     : `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 월간 랭킹`;
-
-  const metadata = buildTop10Metadata(protagonist, stats, allEntities, weekNum, seasonYear ?? 0, teamNameOf);
 
   return {
     id:        `msg-top10-${curr.type}-w${weekNum}-${Date.now()}`,

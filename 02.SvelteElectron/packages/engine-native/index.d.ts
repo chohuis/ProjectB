@@ -184,6 +184,15 @@ export declare function calcDraftRankNative(paramsJson: string): string
 /** 체육부대 후보 30명 공개 (W50 루머) */
 export declare function calcSportsUnitCandidatesNative(paramsJson: string): string
 /**
+ * **유망주 순위 (주간 TOP10)** — 점수 계산과 정렬을 함께 한다.
+ *
+ * 🔴 이 계산이 통째로 TS(`top10Engine.ts`)에 있었다. `simNpcScout`는
+ *   id 뒷자리로 만드는 **유사난수**였다 — `Math.random()`은 아니지만
+ *   난수를 TS가 만드는 것은 같다.
+ * ⚠ **정렬까지 여기서 한다.** 점수만 돌려주면 동점 처리가 두 곳에서 갈린다.
+ */
+export declare function calcProspectRankNative(paramsJson: string): string
+/**
  * **주인공의 잠재력·성장률** — 새 게임에서 한 번 굴린다.
  *
  * 🔴 이 둘을 **화면(`NewGamePage.svelte`)이 `Math.random()`으로 굴리고

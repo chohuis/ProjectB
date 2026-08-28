@@ -674,7 +674,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // 팀 이름은 `refs.json`이 정본이다 — 예전엔 top10Engine 안에 옛 16팀 표가
     // 박혀 있어 나머지 팀은 ID가 그대로 문구에 찍혔다
     const teamNameOf = (id: string) => m.teams.find((t) => t.id === id)?.name ?? id;
-    top10Snap = generateTop10(
+    top10Snap = await generateTop10(
       afterP,
       heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
       m.entities,
@@ -683,7 +683,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       s.seasonYear,
       teamNameOf,
     );
-    top10Msg = buildTop10Message(
+    top10Msg = await buildTop10Message(
       afterP,
       heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
       m.entities,

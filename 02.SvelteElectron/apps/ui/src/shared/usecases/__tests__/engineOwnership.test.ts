@@ -185,3 +185,62 @@ describe("난수는 Rust가 굴린다", () => {
     expect(mp.includes("function applyLocalResult")).toBe(false);
   });
 });
+
+describe("유망주 점수는 Rust가 낸다", () => {
+  const TOP10 = read("apps/ui/src/shared/utils/top10Engine.ts");
+  const PE    = read("packages/engine-native/src/player_engine.rs");
+
+  /**
+   * 🔴 **점수 계산 셋이 TS에 있었다** (2026-08-28에 옮겼다):
+   *   · `calcProspectScore` — OVR·스카우트 가중, 성적 가중(0 / 0.15 / 0.30)
+   *   · `calcNpcScore`      — 같은 축
+   *   · `simNpcScout`       — **id 뒷자리로 만드는 유사난수**
+   *
+   *   `Math.random()`은 아니었지만 **난수를 TS가 만드는 것**은 같다.
+   */
+  it("TS에 점수 산식이 없다", () => {
+    expect(TOP10.includes("function calcProspectScore")).toBe(false);
+    expect(TOP10.includes("function calcNpcScore")).toBe(false);
+    expect(TOP10.includes("function simNpcScout")).toBe(false);
+    // 가중치가 되살아나는 것도 막는다
+    expect(TOP10.includes("* 0.80 + sc * 0.20")).toBe(false);
+  });
+
+  it("Rust가 산식을 갖는다", () => {
+    expect(PE.includes("fn sim_npc_scout(")).toBe(true);
+    expect(PE.includes("fn hero_prospect_score(")).toBe(true);
+    expect(PE.includes("pub fn calc_prospect_rank(")).toBe(true);
+    expect(read("packages/engine-native/src/lib.rs")
+      .includes("pub fn calc_prospect_rank_native")).toBe(true);
+  });
+
+  it("TS가 그 함수를 부른다", () => {
+    expect(TOP10.includes('"calcProspectRankNative"')).toBe(true);
+  });
+
+  /**
+   * 🔴 **정렬도 Rust가 한다.** 점수만 받아 TS가 다시 줄을 세우면
+   *   동점 처리가 두 곳에서 갈린다.
+   */
+  it("TS가 점수로 다시 정렬하지 않는다", () => {
+    expect(TOP10.includes("sort((a, b) => b.score - a.score)")).toBe(false);
+  });
+
+  /**
+   * 🔴 **`heroRankInAll`을 지웠다.** TOP10 밖일 때의 순위를 전 고교 선수를
+   *   한 번 더 훑으며 **다시 계산**했다 — 같은 점수를 두 번 만드는 구조였다.
+   *   Rust가 `heroRank`를 함께 돌려준다.
+   */
+  it("주인공 순위를 두 번 계산하지 않는다", () => {
+    expect(TOP10.includes("function heroRankInAll")).toBe(false);
+  });
+
+  /**
+   * ⚠ **풀을 한 번만 만든다.** 컬럼이 넷이라 매번 만들면 1,377명을 네 번
+   *   훑고 네 번 직렬화한다.
+   */
+  it("후보 풀을 컬럼마다 다시 만들지 않는다", () => {
+    const n = TOP10.split("buildNpcPayload(").length - 1;
+    expect(n).toBe(3);   // 정의 1 + generateTop10 1 + buildTop10Metadata 1
+  });
+});
