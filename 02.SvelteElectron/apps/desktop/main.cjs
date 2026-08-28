@@ -514,8 +514,12 @@ app.whenReady().then(() => {
           (slot_id, season_year, league_id, player_id, stat_type,
            g, gs, w, l, sv, hd, ip, er, h_p, k_p, bb_p, era, whip,
            pa, ab, h_b, hr, rbi, sb, bb_b, k_b, avg_v, obp, slg, ops,
-           player_name, team_name)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           player_name, team_name,
+           -- ⚠ 여기가 안 넓으면 시즌이 넘어가는 순간 새 칸이 사라진다 (v12)
+           hr_p, hbp_p, risp_ab_p, risp_h_p,
+           b2, b3, r_b, hbp_b, sac, sf, risp_ab_b, risp_h_b)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
       db.transaction(() => {
         for (const r of rows) {
@@ -527,7 +531,10 @@ app.whenReady().then(() => {
             r.pa ?? null, r.ab ?? null, r.hB ?? null, r.hr ?? null, r.rbi ?? null,
             r.sb ?? null, r.bbB ?? null, r.kB ?? null,
             r.avgV ?? null, r.obp ?? null, r.slg ?? null, r.ops ?? null,
-            r.playerName ?? "", r.teamName ?? ""
+            r.playerName ?? "", r.teamName ?? "",
+            r.hrP ?? null, r.hbpP ?? null, r.rispAbP ?? null, r.rispHP ?? null,
+            r.b2 ?? null, r.b3 ?? null, r.rB ?? null, r.hbpB ?? null,
+            r.sac ?? null, r.sf ?? null, r.rispAbB ?? null, r.rispHB ?? null
           );
         }
       })();

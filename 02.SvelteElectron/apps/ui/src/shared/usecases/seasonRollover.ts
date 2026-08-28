@@ -308,13 +308,20 @@ export async function saveSeasonHistory(seasonYear: number) {
         lbStatRows.push({ leagueId: lid, playerId, statType: "pitcher",
           playerName: personNameOf(playerId), teamName: personTeamOf(playerId),
           g: p2.g, gs: p2.gs, w: p2.w, l: p2.l, sv: p2.sv ?? 0, hd: p2.hd ?? 0,
-          ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip });
+          ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip,
+          // 🔴 **여기서 빠뜨리면 시즌이 넘어가는 순간 사라진다** — 화면은
+          //   표시하는데 과거 연도 행만 `—`가 된다 (2026-08-28)
+          hrP: p2.hr ?? null, hbpP: p2.hbp ?? null,
+          rispAbP: p2.rispAb ?? null, rispHP: p2.rispH ?? null });
       } else {
         const b2 = stat as BatterSeasonStats;
         lbStatRows.push({ leagueId: lid, playerId, statType: "batter",
           playerName: personNameOf(playerId), teamName: personTeamOf(playerId),
           g: b2.g, pa: b2.pa, ab: b2.ab, hB: b2.h, hr: b2.hr, rbi: b2.rbi,
-          sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops });
+          sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops,
+          b2: b2.b2 ?? null, b3: b2.b3 ?? null, rB: b2.r ?? null, hbpB: b2.hbp ?? null,
+          sac: b2.sac ?? null, sf: b2.sf ?? null,
+          rispAbB: b2.rispAb ?? null, rispHB: b2.rispH ?? null });
       }
     }
   }

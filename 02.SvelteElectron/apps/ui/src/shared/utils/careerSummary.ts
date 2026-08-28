@@ -73,11 +73,15 @@ export interface CareerTotals {
     /** 야구식 표기 (93.1 = 93과 1/3) */
     ip: number;
     er: number; h: number; k: number; bb: number;
+    /** ⚠ 구 세이브엔 없다 — `undefined`면 화면이 `—`를 찍는다. 0이면 거짓이다 */
+    hr?: number; hbp?: number;
     era: string; whip: string;
   } | null;
   batting: {
     g: number; pa: number; ab: number; h: number; hr: number;
     rbi: number; sb: number; bb: number; k: number;
+    /** ⚠ 구 세이브엔 없다 */
+    b2?: number; b3?: number; r?: number; hbp?: number; sac?: number; sf?: number;
     avg: string; obp: string; slg: string; ops: string;
   } | null;
 }
@@ -95,8 +99,13 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
     if (lastYear == null || r.year > lastYear) lastYear = r.year;
   }
 
-  const p = { g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, outs: 0, er: 0, h: 0, k: 0, bb: 0 };
-  const b = { g: 0, pa: 0, ab: 0, h: 0, hr: 0, rbi: 0, sb: 0, bb: 0, k: 0, tb: 0 };
+  const p = { g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, outs: 0, er: 0, h: 0, k: 0, bb: 0, hr: 0, hbp: 0 };
+  const b = { g: 0, pa: 0, ab: 0, h: 0, hr: 0, rbi: 0, sb: 0, bb: 0, k: 0, tb: 0,
+              b2: 0, b3: 0, r: 0, hbp: 0, sac: 0, sf: 0 };
+  // ⚠ **없는 것과 0을 가른다.** 구 세이브엔 이 칸이 없다 — 0으로 합치면
+  //   "통산 피홈런 0개인 투수"가 되어 기록이 거짓이 된다
+  let pHrKnown = false, pHbpKnown = false;
+  let bXbKnown = false, bScKnown = false, bRKnown = false;
   let anyP = false, anyB = false;
 
   for (const r of records) {
@@ -110,11 +119,21 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
       p.outs += inningsToOuts(st.ip ?? 0);
       p.er += st.er ?? 0; p.h += st.h ?? 0;
       p.k += st.k ?? 0; p.bb += st.bb ?? 0;
+      if (st.hr  !== undefined) { pHrKnown  = true; p.hr  += st.hr;  }
+      if (st.hbp !== undefined) { pHbpKnown = true; p.hbp += st.hbp; }
     } else if (st.type === "batter") {
       anyB = true;
       b.g += st.g ?? 0; b.pa += st.pa ?? 0; b.ab += st.ab ?? 0;
       b.h += st.h ?? 0; b.hr += st.hr ?? 0; b.rbi += st.rbi ?? 0;
       b.sb += st.sb ?? 0; b.bb += st.bb ?? 0; b.k += st.k ?? 0;
+      if (st.b2 !== undefined || st.b3 !== undefined) {
+        bXbKnown = true; b.b2 += st.b2 ?? 0; b.b3 += st.b3 ?? 0;
+      }
+      if (st.r !== undefined) { bRKnown = true; b.r += st.r; }
+      if (st.hbp !== undefined || st.sac !== undefined || st.sf !== undefined) {
+        bScKnown = true;
+        b.hbp += st.hbp ?? 0; b.sac += st.sac ?? 0; b.sf += st.sf ?? 0;
+      }
       // 시즌 장타율에서 루타를 되살린다 — 통산 SLG를 시즌 SLG의 평균으로
       // 내면 타석 수가 무시된다(400타석 시즌과 20타석 시즌이 같은 무게)
       b.tb += Math.round((st.slg ?? 0) * (st.ab ?? 0));
@@ -122,6 +141,8 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
   }
 
   const ipReal = p.outs / 3;
+  // OBP 분모 — 희생번트는 안 들어간다(야구 규칙). 구 세이브는 AB+BB다
+  const obpDen = bScKnown ? b.ab + b.bb + b.hbp + b.sf : b.ab + b.bb;
   return {
     seasons: records.length,
     firstYear, lastYear,
@@ -129,16 +150,26 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
       g: p.g, gs: p.gs, w: p.w, l: p.l, sv: p.sv, hd: p.hd,
       ip: outsToInnings(p.outs),
       er: p.er, h: p.h, k: p.k, bb: p.bb,
+      ...(pHrKnown  ? { hr:  p.hr  } : {}),
+      ...(pHbpKnown ? { hbp: p.hbp } : {}),
       era:  ipReal > 0 ? (Math.round((p.er * 9 / ipReal) * 100) / 100).toFixed(2) : "-",
       whip: ipReal > 0 ? (Math.round(((p.bb + p.h) / ipReal) * 100) / 100).toFixed(2) : "-",
     } : null,
     batting: anyB ? {
       g: b.g, pa: b.pa, ab: b.ab, h: b.h, hr: b.hr,
       rbi: b.rbi, sb: b.sb, bb: b.bb, k: b.k,
+      ...(bXbKnown ? { b2: b.b2, b3: b.b3 } : {}),
+      ...(bRKnown  ? { r: b.r } : {}),
+      ...(bScKnown ? { hbp: b.hbp, sac: b.sac, sf: b.sf } : {}),
       avg: b.ab > 0 ? fmt3(b.h / b.ab) : "-",
-      obp: b.pa > 0 ? fmt3((b.h + b.bb) / b.pa) : "-",
+      // 🔴 **출루율 식이 시즌 식과 달랐다** (2026-08-28).
+      //   분자에 사구가 없고, 분모가 `pa`라 **희생번트가 들어갔다** —
+      //   `accumulateStats`는 PA = AB+BB+HBP+SAC+SF로 만든다.
+      //   야구 규칙(OBP 분모 = AB+BB+HBP+SF)과도 어긋났다.
+      //   ⚠ 구 세이브엔 사구·희생타가 없어 옛 식(AB+BB)으로 떨어진다.
+      obp: obpDen > 0 ? fmt3((b.h + b.bb + b.hbp) / obpDen) : "-",
       slg: b.ab > 0 ? fmt3(b.tb / b.ab) : "-",
-      ops: b.ab > 0 && b.pa > 0 ? fmt3((b.h + b.bb) / b.pa + b.tb / b.ab) : "-",
+      ops: b.ab > 0 && obpDen > 0 ? fmt3((b.h + b.bb + b.hbp) / obpDen + b.tb / b.ab) : "-",
     } : null,
   };
 }

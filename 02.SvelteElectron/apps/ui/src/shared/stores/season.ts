@@ -104,7 +104,17 @@ function createSeasonStore() {
         currentDate:     season.currentDate     ?? `${season.seasonYear ?? 2026}-03-01`,
         leagueSchedules: season.leagueSchedules ?? {},
         leagueState: Object.fromEntries(
-          Object.entries(season.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
+          // 🔴 **리그 버킷을 정리 안 하고 있었다** (2026-08-28). 위
+          //   `sanitizeStatsRecord`는 `season.stats`(주인공 개인 버킷)만
+          //   거쳤는데, **리더보드·순위 화면이 읽는 건 여기다**
+          //   (`leagueStatsOf`). NPC 전원의 `pa`·`obp`·`slg`·`ops`와 NaN이
+          //   로드에서 안 고쳐졌다 — "구 세이브도 로드 시점에 정상으로
+          //   돌아온다"던 주석이 **주인공에게만 참**이었다.
+          // ⚠ `migrateLeagueState` 안에서 하지 않는다 — 그건 경기마다 돈다
+          Object.entries(season.leagueState ?? {}).map(([lid, ls]) => {
+            const m = migrateLeagueState(ls as Partial<LeagueSeasonState>);
+            return [lid, { ...m, stats: sanitizeStatsRecord(m.stats) }];
+          })
         ),
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],

@@ -5,6 +5,10 @@ import { calcAvg, calcEra, calcOps, calcWhip } from "../types/season";
 export function migrateLeagueState(ls: Partial<LeagueSeasonState>): LeagueSeasonState {
   return {
     standings:         ls.standings         ?? [],
+    // ⚠ **여기서 정리하지 않는다.** 이 함수는 **경기마다** 돈다
+    //   (`backgroundLeague`가 경기당 한 번). 전 리그 성적을 매번 훑으면
+    //   주 진행이 그만큼 느려진다 — 정리는 **로드 때 한 번**이다
+    //   (`seasonStore.hydrateFromSlot`).
     stats:             ls.stats             ?? {},
     playerConditions:  ls.playerConditions  ?? {},
     teamRotationIndex: ls.teamRotationIndex ?? {},

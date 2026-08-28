@@ -484,6 +484,39 @@
               </div>
             {/each}
           </div>
+        {:else if selectedSeasonStats?.type === "batter"}
+          <!-- 🔴 **타자 분기가 아예 없었다** (2026-08-28). 집계는 되는데
+               표시할 코드가 없어서 주인공이 타자면 "시즌 누적 집계 중"만
+               떴다. `PlayerDetailModal`엔 있었다 — 두 화면이 갈려 있었다. -->
+          <div class="record-grid">
+            {#each [
+              ["G",   selectedSeasonStats.g],
+              ["PA",  selectedSeasonStats.pa],
+              ["AB",  selectedSeasonStats.ab],
+              ["H",   selectedSeasonStats.h],
+              // ⚠ **없는 것과 0을 가른다** — 구 세이브엔 장타 수가 없다
+              ["2B",  selectedSeasonStats.b2 ?? "—"],
+              ["3B",  selectedSeasonStats.b3 ?? "—"],
+              ["HR",  selectedSeasonStats.hr],
+              ["R",   selectedSeasonStats.r ?? "—"],
+              ["RBI", selectedSeasonStats.rbi],
+              ["SB",  selectedSeasonStats.sb],
+              ["BB",  selectedSeasonStats.bb],
+              ["K",   selectedSeasonStats.k],
+              ["HBP", selectedSeasonStats.hbp ?? "—"],
+              ["SAC", selectedSeasonStats.sac ?? "—"],
+              ["SF",  selectedSeasonStats.sf  ?? "—"],
+              ["AVG", rateLabel(selectedSeasonStats.avg)],
+              ["OBP", rateLabel(selectedSeasonStats.obp)],
+              ["SLG", rateLabel(selectedSeasonStats.slg)],
+              ["OPS", rateLabel(selectedSeasonStats.ops)],
+            ] as [lbl, val]}
+              <div class="record-item">
+                <span class="rec-label">{lbl}</span>
+                <strong class="rec-value">{val ?? "-"}</strong>
+              </div>
+            {/each}
+          </div>
         {:else if selectedRecord?.statLine}
           <p class="stat-line-text">{selectedRecord.statLine}</p>
         {:else}
