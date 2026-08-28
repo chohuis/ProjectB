@@ -204,14 +204,32 @@
 
   .wrapper {
     width: 100%;
-    height: 100%;
+    /* ⚠ `height: 100%`를 빼는 게 요점이다 — 부모가 auto면 그 값이 풀리고,
+       아래 `.viewport`가 그걸 믿고 있었다. 높이는 비율이 정한다 */
     display: block;
     user-select: none;
   }
 
   .viewport {
     width: 100%;
-    height: 100%;
+    /**
+     * 🔴 **높이를 폭에서 뽑는다** (2026-08-28 실제 플레이: "타자는 반만 나오고
+     *   포수는 안 보인다 · 경기장마다 잘림이 다르다").
+     *
+     *   예전엔 `height: 100%`였다. 부모(`.field-stage-wrap`)가
+     *   `align-items: start`라 높이가 **내용 기준**이고, 그 위도 auto라
+     *   `100%`가 풀려 `min-height: 280px`만 남았다. 그런데 SVG는 제 비율대로
+     *   폭×0.92만큼 커져서 **`overflow: hidden`이 아래를 잘랐다.**
+     *
+     *   타자·포수는 화면 **아래쪽**에 있어서(앵커 y 795~851, viewBox 920)
+     *   정확히 그 부분이 날아갔다. 티어마다 홈플레이트 y가 달라
+     *   (pro 800 · university 825 · highschool 799) **구장마다 잘림이 달랐다.**
+     *
+     * ⚠ 비율은 viewBox와 같아야 한다 — 다르면 그만큼 여백이 생긴다.
+     * ⚠ `max-height`가 없으면 좁고 높은 창에서 반대로 넘친다.
+     */
+    aspect-ratio: 1000 / 920;
+    max-height: 100%;
     min-height: 280px;
     overflow: hidden;
     border-radius: 12px;
