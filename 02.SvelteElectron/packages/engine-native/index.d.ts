@@ -183,6 +183,17 @@ export declare function generateFaOffersNative(paramsJson: string): string
 export declare function calcDraftRankNative(paramsJson: string): string
 /** 체육부대 후보 30명 공개 (W50 루머) */
 export declare function calcSportsUnitCandidatesNative(paramsJson: string): string
+/**
+ * **투수 승패 판정** — W · L · SV · HD · ND.
+ *
+ * 🔴 **이 규칙이 두 벌이었다.** `npc_sim`의 클로저 안에 갇혀 있어서
+ *   TS(`applyGameOutcome.ts`)가 손으로 옮겨 적었고, 그 사본이 이미
+ *   갈라져 있었다 — 세이브 조건과 여유 점수가 달랐다.
+ *   **주인공만 다른 승패 규칙**을 쓰고 있었다는 뜻이다.
+ *
+ * ⚠ 이걸 내보내는 이유는 하나다 — TS가 규칙을 **다시 적지 않게** 하려고.
+ */
+export declare function calcPitcherDecisionNative(paramsJson: string): string
 /** 체육부대 최종 선발 (W52 입대 신청자 기준) */
 export declare function calcSportsUnitSelectionNative(paramsJson: string): string
 /** 일반병 입대 대상 랜덤 선택 (시즌당 max_count명 상한) */

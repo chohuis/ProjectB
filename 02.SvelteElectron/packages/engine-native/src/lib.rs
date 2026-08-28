@@ -865,6 +865,24 @@ pub fn calc_sports_unit_candidates_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitCandidatesNative/serialize", e))
 }
 
+/// **투수 승패 판정** — W · L · SV · HD · ND.
+///
+/// 🔴 **이 규칙이 두 벌이었다.** `npc_sim`의 클로저 안에 갇혀 있어서
+///   TS(`applyGameOutcome.ts`)가 손으로 옮겨 적었고, 그 사본이 이미
+///   갈라져 있었다 — 세이브 조건과 여유 점수가 달랐다.
+///   **주인공만 다른 승패 규칙**을 쓰고 있었다는 뜻이다.
+///
+/// ⚠ 이걸 내보내는 이유는 하나다 — TS가 규칙을 **다시 적지 않게** 하려고.
+#[napi]
+pub fn calc_pitcher_decision_native(params_json: String) -> String {
+    let params: npc_sim::PitcherDecisionParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcPitcherDecisionNative", e),
+    };
+    let result = npc_sim::calc_pitcher_decision(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcPitcherDecisionNative/serialize", e))
+}
+
 /// 체육부대 최종 선발 (W52 입대 신청자 기준)
 #[napi]
 pub fn calc_sports_unit_selection_native(params_json: String) -> String {

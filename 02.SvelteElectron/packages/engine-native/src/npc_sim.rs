@@ -528,6 +528,58 @@ fn sim_half_inning_pitch(
     (runs, lpos, cur_pit_outs, stamina)
 }
 
+/// **투수 승패 판정의 정본.** W · L · SV · HD · ND.
+///
+/// 🔴 **이 규칙이 두 벌이었다** (2026-08-28에 합쳤다). 여기 클로저 안에 갇혀
+///   있어서 TS(`applyGameOutcome.ts`)가 손으로 옮겨 적고 있었고, 그 사본이
+///   이미 갈라져 있었다 — 세이브에 `outs >= 1`이 붙어 있었고 여유 점수도
+///   `SAVE_MAX_MARGIN` 대신 3이 박혀 있었다.
+///
+///   그래서 **주인공만 다른 승패 규칙**을 썼다. 그 값이 다승왕·경력 기록·
+///   계약 평가로 들어간다.
+///
+/// ⚠ 예전엔 `won ? "W" : "L"`이라 **0.6이닝 던진 불펜이 매 경기 승패를
+///   기록했다**(실측 12경기 6승 6패).
+/// ⚠ 구원 패는 이 모델에서 안 매긴다 — 선발만 패를 진다.
+pub fn decide_pitcher(
+    is_starter: bool,
+    is_closer: bool,
+    outs: i32,
+    team_won: bool,
+    margin: i32,
+) -> String {
+    if team_won {
+        if is_starter && outs >= 15 { return "W".into(); }
+        if is_closer && margin <= crate::tuning::SAVE_MAX_MARGIN { return "SV".into(); }
+        if !is_starter && !is_closer && outs >= 3 { return "HD".into(); }
+    } else if is_starter {
+        return "L".into();
+    }
+    "ND".into()
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PitcherDecisionParams {
+    pub is_starter: bool,
+    pub is_closer: bool,
+    pub outs: i32,
+    pub team_won: bool,
+    pub margin: i32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PitcherDecisionResult {
+    pub decision: String,
+}
+
+pub fn calc_pitcher_decision(p: PitcherDecisionParams) -> PitcherDecisionResult {
+    PitcherDecisionResult {
+        decision: decide_pitcher(p.is_starter, p.is_closer, p.outs, p.team_won, p.margin),
+    }
+}
+
 fn build_pit_queue(
     rotation: &[SimPitcher],
     bullpen: &[SimPitcher],
@@ -750,14 +802,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         // 세이브를 못 받았다(실측 규정투수 108~110명 전원 sv 0).
         let is_closer  = closer_id.is_some_and(|c| c == pit_id) && !is_starter;
         let _ = final_idx;
-        if team_won {
-            if is_starter && acc.outs >= 15  { return "W".into(); }
-            if is_closer && margin <= crate::tuning::SAVE_MAX_MARGIN { return "SV".into(); }
-            if !is_starter && !is_closer && acc.outs >= 3 { return "HD".into(); }
-        } else if is_starter {
-            return "L".into();
-        }
-        "ND".into()
+        // 규칙 자체는 아래 `decide_pitcher`가 정본이다 — 여기서 다시 적지 않는다
+        decide_pitcher(is_starter, is_closer, acc.outs, team_won, margin)
     };
 
     let mut player_lines: Vec<PlayerGameLine> = Vec::new();

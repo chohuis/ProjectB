@@ -13,30 +13,49 @@ import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance
 import { getTeamRotation, getTeamBullpen, rotationSizeForLeague } from "../utils/rosterEngine";
 
 /**
- * 투수 승패 판정 — **`npc_sim.rs`의 `pitcher_decision`과 같은 규칙이다.**
+ * 투수 승패 판정 — **규칙은 Rust `decide_pitcher`가 정본이다.**
  *
- * ⚠ 예전엔 `won ? "W" : isDraw ? "ND" : "L"`이었다. 등판만 하면 무조건 승패가
- * 붙어서 **0.6이닝 던진 불펜이 매 경기 승패를 기록**했다(실측 12경기 6승 6패).
- * 그 값이 다승왕 집계·경력 기록·계약 평가에 그대로 들어간다.
+ * 🔴 **여기 사본이 있었고 이미 갈라져 있었다** (2026-08-28에 합쳤다):
+ *   · 세이브에 `outs >= 1`이 붙어 있었다 — Rust엔 없다
+ *   · 여유 점수가 `3`으로 박혀 있었다 — Rust는 `SAVE_MAX_MARGIN`을 본다
+ *   그래서 **주인공만 다른 승패 규칙**을 썼다. 그 값이 다승왕 집계·경력
+ *   기록·계약 평가로 그대로 들어간다.
  *
- * 리그 NPC는 이미 제대로 된 규칙을 쓰고 있었다. 주인공만 다른 규칙을 쓰면
- * 같은 수상 부문에서 서로 다른 기준으로 경쟁하게 된다 — 규칙을 맞춘다.
+ * ⚠ 예전엔 `won ? "W" : "L"`이라 **0.6이닝 던진 불펜이 매 경기 승패를
+ *   기록했다**(실측 12경기 6승 6패). 그건 이미 고쳐졌었는데, 고치면서
+ *   **규칙을 옮겨 적은 것**이 이번 결함의 씨앗이었다.
+ *
+ * ⚠ Rust를 못 부르는 환경(Vite 단독)에서는 `"ND"`다 — **규칙을 여기 다시
+ *   적지 않는다.** 적으면 또 갈린다.
  */
-function pitcherDecision(
+async function pitcherDecision(
   role: PitcherRole,
   won: boolean,
   isDraw: boolean,
   outs: number,
   margin: number,
-): PitcherGameLine["decision"] {
+): Promise<PitcherGameLine["decision"]> {
   if (isDraw) return "ND";
-  if (role === "SP") {
-    if (won) return outs >= 15 ? "W" : "ND";   // 5이닝 이상
-    return "L";
+  const api = window.projectB?.engine;
+  if (!api) return "ND";
+  try {
+    const r = JSON.parse(await api("calcPitcherDecisionNative", JSON.stringify({
+      isStarter: role === "SP",
+      isCloser:  role === "CP",
+      outs,
+      teamWon:   won,
+      margin,
+    }))) as { decision?: string; error?: string };
+    return (r.decision ?? "ND") as PitcherGameLine["decision"];
+  } catch {
+    return "ND";
   }
-  if (!won) return "ND";                        // 구원 패는 이 모델에서 안 매긴다
-  if (role === "CP") return margin <= 3 && outs >= 1 ? "SV" : "ND";
-  return outs >= 3 ? "HD" : "ND";               // 1이닝 이상 홀드
+}
+
+/** 아웃 수 — 숫자가 아니면 0. 두 갈래가 같은 방식으로 읽어야 한다 */
+function safeOutsOf(o: UnifiedGameOutcome): number {
+  return (typeof o.outsRecorded === "number" && !isNaN(o.outsRecorded))
+    ? Math.max(0, o.outsRecorded) : 0;
 }
 
 function buildTeamMatchResult(
@@ -112,7 +131,17 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       return;
     }
 
-    const er     = Math.round(Math.max(0, outcome.hitsAllowed) * 0.35);
+    // 🔴 **자책점은 엔진이 준다** (2026-08-28). 여기만 `피안타 × 0.35`로
+    //   역산하고 있었다 — **값을 지어내는 자리**다. 피안타가 부풀면 ERA가
+    //   자동으로 따라 올라간다(정식 경기 쪽 주석이 실측 ERA 14.78을 적어 뒀다).
+    //
+    // ⚠ **같은 결함이 둘이었는데 하나만 고쳐져 있었다.** 아래 정식 경기
+    //   갈래는 진작 `outcome.earnedRuns`를 쓰고 있었고 연습경기만 남았다.
+    //   이 저장소에서 되풀이되는 형태다 — 고칠 곳이 둘이면 둘 다 본다.
+    // ⚠ 구 경로 호환으로 값이 없을 때만 역산으로 떨어진다.
+    const er     = typeof outcome.earnedRuns === "number"
+      ? Math.max(0, Math.round(outcome.earnedRuns))
+      : Math.round(Math.max(0, outcome.hitsAllowed) * 0.35);
     const rating = ratePerformance(ip, er, role);
     const log = {
       scheduleId:     outcome.scheduleId,
@@ -235,6 +264,11 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const won = !isDraw && teamResult.winnerId === myTeamId;
 
   const didEnter = outcome.protagonistEntered !== false;
+  // ⚠ **판정은 Rust가 한다** — IPC라 객체 리터럴 안에서 못 부른다. 먼저 받는다
+  const decision = await pitcherDecision(
+    role, won, isDraw, safeOutsOf(outcome),
+    Math.abs(outcome.homeScore - outcome.awayScore),
+  );
   // ⚠ **자책점은 엔진이 준다.** 예전엔 `피안타 × 0.35`로 역산했고, 그래서
   // 피안타가 부풀면 ERA가 자동으로 따라 올라갔다(실측 ERA 14.78 — 시뮬이 아니라
   // 이 곱셈이 만든 숫자다). 구 경로 호환으로 값이 없을 때만 역산으로 떨어진다.
@@ -251,8 +285,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     h: Math.max(0, outcome.hitsAllowed),
     k: Math.max(0, outcome.strikeouts),
     bb: Math.max(0, outcome.walksAllowed),
-    decision: pitcherDecision(role, won, isDraw, safeOuts,
-      Math.abs(outcome.homeScore - outcome.awayScore)),
+    decision,
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   } : null;
   let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0

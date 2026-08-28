@@ -1384,7 +1384,21 @@
     const homeScore = scoreRows[1].r;
     const won = protagonistSide === "home" ? homeScore > awayScore : awayScore > homeScore;
 
-    const runsAllowed = Math.round(totalHitsAllowed * 0.35);
+    // 🔴 **자책점은 엔진이 준다** (2026-08-28). 예전엔 `피안타 × 0.35`로
+    //   **값을 지어냈다** — 피안타가 부풀면 자책점이 자동으로 따라 올랐다.
+    //   화면도 스스로 "자책(추정)"이라 적고 있었다.
+    //
+    //   엔진이 준 `playerLines`에 주인공 투수 줄이 있고 거기 진짜 자책점이 있다.
+    // ⚠ 엔진 줄이 없을 때만(구 경로·주인공 미등판) 옛 역산으로 떨어진다.
+    // ⚠ `playerLines`는 옵셔널이고 투타 유니온이다 — `role`로 좁혀야
+    //   `er`을 볼 수 있다. 안 좁히면 타자 줄에서 없는 필드를 읽는다.
+    const myLine = (playerLines ?? []).find(
+      (l): l is Extract<import('../../shared/types/season').PlayerGameLine, { role: "pitcher" }> =>
+        l.role === "pitcher" && l.playerId === $gameStore.protagonist.id,
+    );
+    const runsAllowed = myLine && typeof myLine.er === "number"
+      ? Math.max(0, Math.round(myLine.er))
+      : Math.round(totalHitsAllowed * 0.35);
     gameResult = {
       awayScore, homeScore,
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
@@ -1936,7 +1950,7 @@
             <li><span>탈삼진</span><strong>{gameResult.strikeouts} K</strong></li>
             <li><span>피안타</span><strong>{gameResult.hitsAllowed} H</strong></li>
             <li><span>볼넷</span><strong>{gameResult.walksAllowed} BB</strong></li>
-            <li><span>자책(추정)</span><strong>{gameResult.runsAllowed} ER</strong></li>
+            <li><span>자책</span><strong>{gameResult.runsAllowed} ER</strong></li>
             <li><span>실책</span><strong>{gameResult.errors} E</strong></li>
           </ul>
         {/if}
