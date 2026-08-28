@@ -1497,10 +1497,16 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           });
         }
 
-        // 미계약자는 `LEAGUE_FREE_AGENT`로 남는다 — Rust `Placer`가
-        // 미지명 졸업생·방출자와 **같은 로직**으로 독립·은퇴를 정한다 (7-1)
+        // 미계약자는 `LEAGUE_FREE_AGENT`로 남는다 — Rust `run_offseason`의
+        // FA 재배치가 한 번 더 팀을 찾고, 그래도 안 되면 `fa_fallback`이
+        // **원소속 재계약 → 은퇴**로 마무리한다.
+        //
+        // 🔴 예전엔 여기서 `Placer`(진로 배정)로 넘어갔다 — 미지명 졸업생·
+        //   방출자와 한 통에서 대학·2군·독립 자리를 겨루고, 못 잡으면
+        //   `quit_baseball`이었다. 실측 미계약자의 **64~71%가 야구를
+        //   그만뒀다**(은퇴는 1~2%). 프로 5년차가 그렇게 끝나면 안 된다.
         if (market.unsigned.length > 0) {
-          autoLog(`[FA미계약] ${market.unsigned.length}명 — 진로 배정으로 넘어간다`);
+          autoLog(`[FA미계약] ${market.unsigned.length}명 — 원소속 재계약 또는 은퇴`);
         }
 
         // ── FA 시장 뉴스 (§7-6b) ────────────────────────────────

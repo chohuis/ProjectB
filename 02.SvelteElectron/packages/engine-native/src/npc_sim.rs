@@ -1382,6 +1382,87 @@ fn seed_of(base: u32, parts: &[&str]) -> u32 {
 ///
 /// ⚠ **이름을 담지 않는다.** 화면이 `npcId`로 조회한다 — 은퇴자도 `npcs`에
 /// 남으므로 조회된다. 팀 이름도 마찬가지로 ID만 넘긴다.
+/// **FA를 못 구한 프로 선수의 진로** — 원소속 재계약, 안 되면 은퇴.
+///
+/// 🔴 예전엔 `current_league = "LEAGUE_INDEPENDENT"`에 소속만 비워 두고
+///   **진로 배정(12단계)에 넘겼다.** 그러면 미지명 고졸·대졸·방출자와 한 통에
+///   들어가 대학·2군·독립 자리를 놓고 겨루고, 못 잡으면 `quit_baseball`이
+///   된다 — **프로 5년차가 "야구를 그만뒀다"로 끝난다.**
+///
+///   실측(2026-08-27, 12시즌 × 4~6회): FA 미계약자의 **64~71%가 야구를
+///   그만뒀다.** 은퇴는 1~2%였다. 목적지가 KBL 2군 10팀과 독립 10팀뿐인데
+///   그 자리를 매년 미지명 졸업생이 먼저 채운다.
+///
+/// ⚠ **나이 탓이 아니다.** 미계약자의 32세 이상은 1%고, 31세 이하가 68%
+///   그만뒀다. 정원 탓도 아니다(KBL 1군 평균 30.3명/상한 34).
+///
+/// 🔴 사용자 확정 2026-08-27: **원 소속팀과 재계약, 그마저 안 되면 은퇴.**
+///   프로 선수가 FA에 실패했다고 아마추어 진로 배정을 타는 게 이상하다.
+///
+/// ⚠ 재계약은 **정원이 있을 때만**이다. 원소속도 자리가 없으면 못 받는다 —
+///   여기서 정원을 안 보면 FA가 캡을 통과한다(`open`이 막던 것과 같은 함정).
+/// ⚠ 집계(`team_active_count`·`team_payroll`·`team_at_pos`)를 **여기서도**
+///   갱신한다. 안 하면 같은 오프시즌의 뒷사람 판정이 옛 값을 본다.
+#[allow(clippy::too_many_arguments)]
+fn fa_fallback(
+    npc: &mut NpcSaveState,
+    season_year: i32,
+    origin_league: &str,
+    team_active_count: &mut std::collections::HashMap<String, usize>,
+    team_payroll: &mut std::collections::HashMap<String, i64>,
+    team_at_pos: &mut std::collections::HashMap<(String, String), usize>,
+    roster_max: Option<i32>,
+    events: &mut Vec<OffseasonEvent>,
+) {
+    let home = npc.original_team_id.clone().filter(|t| !t.is_empty());
+    let has_room = home.as_ref().is_some_and(|t| {
+        let n = team_active_count.get(t).copied().unwrap_or(0) as i32;
+        roster_max.map_or(true, |m| n < m)
+    });
+
+    if let (Some(team), true) = (home, has_room) {
+        // ① 원소속 재계약. 연봉은 그대로 간다 — 시장이 값을 안 매겼으므로
+        //    새 값을 지어낼 근거가 없다
+        npc.career_events.push(NpcCareerEvent {
+            year: season_year,
+            event_type: "fa_signed".into(),
+            from_team_id: Some(team.clone()),
+            to_team_id: Some(team.clone()),
+            from_league_id: Some(origin_league.to_string()),
+            to_league_id: Some(origin_league.to_string()),
+            detail: Some("FA 미계약 → 원소속 재계약".into()),
+        });
+        npc.current_league = origin_league.to_string();
+        npc.current_team = team.clone();
+        npc.career_status = "active".into();
+        npc.original_league_id = None;
+        *team_active_count.entry(team.clone()).or_default() += 1;
+        *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
+        *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;
+        events.push(ev("fa_rehome", npc, Some(team), None));
+        return;
+    }
+
+    // ② 갈 곳이 없다 — **은퇴다.** `quit_baseball`이 아니다.
+    //    프로 경력자가 자리를 못 구해 그만두는 건 은퇴이고, 인생 기록·경력
+    //    화면이 그 둘을 다르게 보여준다.
+    npc.career_events.push(NpcCareerEvent {
+        year: season_year,
+        event_type: "retirement".into(),
+        from_team_id: npc.original_team_id.clone().filter(|t| !t.is_empty()),
+        to_team_id: None,
+        from_league_id: Some(origin_league.to_string()),
+        to_league_id: None,
+        detail: Some(format!("FA 미계약 은퇴 ({}세)", npc.age)),
+    });
+    npc.career_status = "retired".into();
+    npc.current_league = "LEAGUE_RETIRED".into();
+    npc.current_team = String::new();
+    npc.current_salary = 0;
+    npc.contract_years = 0;
+    events.push(ev("fa_unsigned_retire", npc, npc.original_team_id.clone(), None));
+}
+
 fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<String>)
     -> OffseasonEvent
 {
@@ -1587,6 +1668,23 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 && rng.gen::<f64>() < 0.6
             {
                 n.original_league_id = Some(n.current_league.clone()); // FA 재배치 시 원래 리그로 복귀
+                // 🔴 **원소속 팀도 남긴다** (2026-08-28).
+                //
+                //   리그만 남기고 `current_team`을 비워서 **떠난 팀을 잃어버렸다.**
+                //   `original_team_id`엔 훨씬 예전 값이 남아 있거나 비어 있었다.
+                //
+                //   드러난 자리 둘:
+                //   · `fa_unsigned` 이벤트가 `original_team_id`를 from_team으로
+                //     넘긴다 — 화면에 엉뚱한 팀이 찍힌다
+                //   · **`fa_fallback`의 원소속 재계약이 아예 안 돈다** —
+                //     실측(2026-08-28) 미계약자 6,410건 중 재계약 **0건**,
+                //     전원 은퇴였다. 팀을 못 찾으니 당연했다.
+                //
+                // ⚠ TS 경로(`market.ts`)는 이미 `originalTeamId`를 넣는다 —
+                //   **Rust 경로만 안 넣고 있었다.** 같은 일을 하는 자리가 둘이면
+                //   한쪽만 고쳐진 채로 남는다.
+                n.original_team_id = (!n.current_team.is_empty())
+                    .then(|| n.current_team.clone());
                 // 재취득 판정의 근거가 되는 기록 — 이게 없으면 매년 FA가 된다
                 n.career_events.push(NpcCareerEvent {
                     year: season_year,
@@ -1792,14 +1890,14 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             .unwrap_or_default();
 
         if open.is_empty() {
-            // 미계약 — 갈 팀이 없다. 진로(독립 입단·은퇴)는 D-4가 정한다.
+            // 미계약 — 갈 팀이 없다.
             // ⚠ 떠난 팀은 `original_team_id`에만 남아 있다 — `current_team`은
             // FA 전환 때 이미 비었다
             events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
             summary.fa_unsigned_count += 1;   // 갈 팀 자체가 없는 갈래도 센다
             summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
-            npc.current_league = "LEAGUE_INDEPENDENT".into();
-            npc.current_team   = "".into();
+            fa_fallback(npc, season_year, &origin_league.to_string(),
+                &mut team_active_count, &mut team_payroll, &mut team_at_pos, max, &mut events);
             continue;
         }
         // ── 구단 입찰 ─────────────────────────────────────────────
@@ -1895,13 +1993,14 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 // 계약서에 안 적은 셈이라, FA를 거쳐도 몸값이 평생 고정이고
                 // `team_payroll`도 옷 값으로 쌀였다.
                 Some((tid, s)) => (tid, Some(s)),
-                // 아무도 안 불렀다 — 미계약. 진로는 D-4가 정한다
+                // 아무도 안 불렀다 — 미계약
                 None => {
                     events.push(ev("fa_unsigned", npc, npc.original_team_id.clone(), None));
                     summary.fa_unsigned_count += 1;
                     summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
-                    npc.current_league = "LEAGUE_INDEPENDENT".into();
-                    npc.current_team   = "".into();
+                    fa_fallback(npc, season_year, &origin_league.to_string(),
+                        &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
+                        &mut events);
                     continue;
                 }
             }
@@ -4426,5 +4525,109 @@ mod name_pair_tests {
         let (ko, en) = gen_name(&mut LcgRand::new(42));
         let i = SURNAMES.iter().position(|s| ko.starts_with(s)).expect("성 없음");
         assert!(en.ends_with(SURNAMES_EN[i]), "{ko} ↔ {en} 성이 다르다");
+    }
+}
+
+#[cfg(test)]
+mod fa_fallback_tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    /// FA를 막 잃은 프로 선수 — 소속은 비었고 원소속만 남아 있다
+    fn fa_npc(age: i32) -> NpcSaveState {
+        let mut n: NpcSaveState = serde_json::from_str(&format!(r#"{{
+            "npcId": "PLY_FA", "name": "테스트", "playerType": "pitcher", "position": "SP",
+            "age": {age}, "schoolId": "SCHOOL_X", "graduationYear": 2020,
+            "careerStatus": "free_agent",
+            "currentLeague": "LEAGUE_FREE_AGENT", "currentTeam": "", "militaryStatus": "필",
+            "developmentRate": 60, "careerHistory": [], "achievements": [],
+            "pitching": {{ "ovr": 78, "stamina": 50, "velocity": 50, "command": 50,
+                "control": 50, "movement": 50, "mentality": 50, "recovery": 50,
+                "clutch": 50, "holdRunners": 50 }}
+        }}"#)).expect("픽스처 파싱");
+        n.original_team_id = Some("TEAM_KBL_HOME_1".into());
+        n.current_salary = 12000;
+        n
+    }
+
+    struct Books {
+        active: HashMap<String, usize>,
+        payroll: HashMap<String, i64>,
+        at_pos: HashMap<(String, String), usize>,
+        events: Vec<OffseasonEvent>,
+    }
+    fn books(active_now: usize) -> Books {
+        let mut active = HashMap::new();
+        active.insert("TEAM_KBL_HOME_1".to_string(), active_now);
+        Books { active, payroll: HashMap::new(), at_pos: HashMap::new(), events: vec![] }
+    }
+
+    /// 🔴 **자리가 있으면 원소속으로 돌아간다.** 예전엔 소속 없는 독립리그로
+    ///   떨궈 진로 배정에 넘겼고, 거기서 `quit_baseball`이 됐다.
+    #[test]
+    fn 자리가_있으면_원소속_재계약() {
+        let mut n = fa_npc(28);
+        let mut b = books(30);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+
+        assert_eq!(n.career_status, "active", "재계약했는데 비활성이다");
+        assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
+        assert_eq!(n.current_league, "LEAGUE_KBL");
+        assert!(n.career_events.iter().any(|e|
+            e.event_type == "fa_signed" && e.to_team_id.as_deref() == Some("TEAM_KBL_HOME_1")),
+            "경력에 재계약이 안 남았다");
+    }
+
+    /// ⚠ **집계를 안 갱신하면 같은 오프시즌의 뒷사람이 옛 값을 본다**
+    #[test]
+    fn 재계약이_팀_집계를_갱신한다() {
+        let mut n = fa_npc(28);
+        let mut b = books(30);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+
+        assert_eq!(b.active["TEAM_KBL_HOME_1"], 31, "인원이 안 늘었다");
+        assert_eq!(b.payroll["TEAM_KBL_HOME_1"], 12000, "총연봉이 안 늘었다");
+        assert_eq!(b.at_pos[&("TEAM_KBL_HOME_1".to_string(), "SP".to_string())], 1);
+    }
+
+    /// 🔴 **정원이 차면 원소속도 못 받는다** — 안 보면 FA가 캡을 통과한다
+    #[test]
+    fn 정원이_차면_은퇴한다() {
+        let mut n = fa_npc(28);
+        let mut b = books(34);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+        assert_eq!(n.current_league, "LEAGUE_RETIRED");
+        assert_eq!(b.active["TEAM_KBL_HOME_1"], 34, "정원이 찼는데 인원이 늘었다");
+    }
+
+    /// 🔴 **`quit_baseball`이 아니라 `retirement`다.** 프로 경력자가 자리를
+    ///   못 구해 그만두는 건 은퇴다 — 화면이 둘을 다르게 보여준다.
+    #[test]
+    fn 야구포기가_아니라_은퇴다() {
+        let mut n = fa_npc(31);
+        let mut b = books(34);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+
+        assert!(n.career_events.iter().any(|e| e.event_type == "retirement"),
+            "은퇴가 경력에 안 남았다");
+        assert!(!n.career_events.iter().any(|e| e.event_type == crate::draft::QUIT_EVENT),
+            "야구 포기로 끝났다");
+    }
+
+    /// ⚠ **원소속이 아예 없는 사람도 죽지 않아야 한다** (기록이 비었을 때)
+    #[test]
+    fn 원소속이_없으면_은퇴한다() {
+        let mut n = fa_npc(29);
+        n.original_team_id = None;
+        let mut b = books(0);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+        assert_eq!(n.career_status, "retired");
     }
 }

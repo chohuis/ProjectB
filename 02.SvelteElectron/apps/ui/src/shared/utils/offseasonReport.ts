@@ -18,7 +18,10 @@ export type OffseasonKind =
   | "retire_age" | "retire_no_team"
   | "release_roster" | "release_score"
   | "demote_roster" | "demote_fielder" | "promote"
-  | "fa_unsigned" | "fa_contract";
+  | "fa_unsigned" | "fa_contract"
+  // FA 미계약 뒤 — 원소속 잔류 또는 은퇴. 예전엔 진로 배정으로 넘어가
+  // 프로 경력자가 `quit_baseball`이 됐다(실측 미계약자의 67%)
+  | "fa_rehome" | "fa_unsigned_retire";
 
 /** 엔진이 보내는 사건 (Rust `OffseasonEvent`) */
 export interface OffseasonEvent {
@@ -64,6 +67,8 @@ const KIND: Record<OffseasonKind, KindMeta> = {
   promote:         { group: "move",    reason: "1군 승격",       short: "1군" },
   fa_unsigned:     { group: "fa",      reason: "FA 미계약",      short: "미계약" },
   fa_contract:     { group: "fa",      reason: "FA 계약",        short: "계약" },
+  fa_rehome:       { group: "fa",      reason: "원소속 잔류",     short: "잔류" },
+  fa_unsigned_retire: { group: "fa",   reason: "미계약 은퇴",     short: "은퇴" },
 };
 
 export function isKnownKind(k: string): k is OffseasonKind {

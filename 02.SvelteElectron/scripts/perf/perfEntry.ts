@@ -1143,7 +1143,8 @@ export function faIntakeTally(): Record<string, unknown> {
   //   (`rosterRules.LEAGUE_INDEPENDENT.ageMax`). FA 자격이 KBL 5년차라
   //   미계약자 상당수가 그 위고, 그러면 **갈 곳이 아예 없다.**
   //   그건 "야구를 그만뒀다"가 아니라 자리가 없는 것이다.
-  const fate = { 은퇴: 0, 야구포기: 0, 계속: 0, 총: 0, 서른둘이상: 0, 포기중_서른둘이상: 0 };
+  const fate: { 은퇴: number; 야구포기: number; 계속: number; 총: number; 서른둘이상: number; 포기중_서른둘이상: number; 사유: Record<string, number> } =
+    { 은퇴: 0, 야구포기: 0, 계속: 0, 총: 0, 서른둘이상: 0, 포기중_서른둘이상: 0, 사유: {} };
   const nowYear = get(seasonStore).seasonYear ?? 0;
   for (const n of npcs) {
     const ev = n.careerEvents ?? [];
@@ -1160,14 +1161,19 @@ export function faIntakeTally(): Record<string, unknown> {
       const ageThen = (n.age ?? 0) - Math.max(0, nowYear - y);
       const old = ageThen > 31;
       if (old) fate.서른둘이상 += 1;
-      const kind = ev.find((e) =>
+      const hit = ev.find((e) =>
         (e.eventType === "retirement" || e.eventType === "quit_baseball")
-        && (e.year === y || e.year === y + 1))?.eventType;
-      if (!kind) fate.계속 += 1;
-      else if (kind === "retirement") fate.은퇴 += 1;
+        && (e.year === y || e.year === y + 1));
+      if (!hit) fate.계속 += 1;
+      else if (hit.eventType === "retirement") fate.은퇴 += 1;
       else {
         fate.야구포기 += 1;
         if (old) fate.포기중_서른둘이상 += 1;
+        // 🔴 **사유가 경로를 특정한다.** `draft.rs`의 `Placer::place`가
+        //   `"{reason} → 야구를 그만둔다"`로 적는다 — reason은 "방출"(프로
+        //   경력자)이나 "미지명"(졸업생)이다. 어느 쪽이 그만두는지 갈린다.
+        const why = (hit.detail ?? "").split(" ")[0] || "?";
+        fate.사유[why] = (fate.사유[why] ?? 0) + 1;
       }
     }
   }

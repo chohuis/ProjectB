@@ -18,6 +18,12 @@ const LABEL: Record<string, string> = {
   fa_signed:        "FA 취득",
   fa_contract:      "FA 계약",
   fa_unsigned:      "FA 미계약",
+  // FA 미계약 뒤 — 원소속으로 돌아가거나, 갈 곳이 없으면 은퇴다.
+  // ⚠ **"야구를 그만둔다"가 아니다.** 예전엔 진로 배정으로 넘겨서 프로
+  //   경력자가 미지명 졸업생과 같은 통에서 `quit_baseball`이 됐다
+  //   (실측 2026-08-27: 미계약자의 67%).
+  fa_rehome:        "FA 미계약 · 원소속 잔류",
+  fa_unsigned_retire: "FA 미계약 은퇴",
   trade:            "트레이드",
   foreign_signing:  "용병 영입",
   promote:          "1군 승격",
