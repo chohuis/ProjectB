@@ -43,6 +43,9 @@ interface SimBatter {
   speed: number; baseInstinct: number;
   /** 도루 저지 — 수비 팀에서 포수를 찾는 데 쓴다 */
   position: string; arm: number;
+  /** 🔴 **수비 능력.** 예전엔 없어서 리그 경기가 컨택·주력으로 대용값을
+   *  만들었다 — 팀마다 수비가 사실상 같았다 (2026-08-29) */
+  fielding: number;
 }
 
 function toSimPitcher(
@@ -99,6 +102,8 @@ function toSimBatter(
     //    바로 위 `speed`·`baseInstinct`가 정확히 같은 이유로 빠져 있던 전례가 있다.
     position: (e.details.player as EntityPlayerDetails).position ?? "",
     arm:      b?.arm ?? 50,
+    // ⚠ 안 실으면 리그 경기 수비가 전 팀 50 고정으로 돌아간다
+    fielding: b?.fielding ?? 50,
   };
 }
 
@@ -359,14 +364,35 @@ const _FIELD_XY: Record<string, { x: number; y: number }> = {
   P: { x: 50, y: 62 }, C: { x: 50, y: 90 }, "1B": { x: 78, y: 70 }, "2B": { x: 63, y: 55 },
   "3B": { x: 22, y: 70 }, SS: { x: 37, y: 55 }, LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
 };
+/**
+ * 리그 경기의 수비진.
+ *
+ * 🔴 **예전엔 신원도 능력도 없었다** (2026-08-29):
+ *   `name`이 **포지션 문자열**("SS")이었고 `fielding`은 컨택·주력에서
+ *   만든 **대용값**이었다. 그래서 (a) 실책을 선수에게 달 수 없었고
+ *   (b) 수비가 팀마다 사실상 같았다.
+ *
+ * ⚠ **주인공 경기는 이미 실제 수비수를 넘긴다**(`buildFielders`) —
+ *   두 경로가 **다른 수준으로 돌고 있었다.** 이걸 맞춘다.
+ * ⚠ 그래서 **밸런스가 움직인다** — 수비 좋은 팀과 나쁜 팀이 갈린다.
+ *   실측은 커밋에 남긴다(사용자 확정: 멈추지 않고 진행).
+ */
 function buildFieldersFromLineup(lineup: SimBatter[]): Record<string, unknown>[] {
   const pos = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
   return pos.map((p, i) => {
     const b = lineup[i % Math.max(1, lineup.length)];
-    // SimBatter엔 수비 능력이 없다 — 컨택을 대용으로 쓴다(리그 평균 수준을 만든다)
-    const lvl = b ? Math.round((b.contact + b.speed) / 2) : 50;
-    return { position: p, name: p, fielding: lvl, arm: lvl, speed: b?.speed ?? 50,
-             x: _FIELD_XY[p].x, y: _FIELD_XY[p].y };
+    // ⚠ 타순은 수비 위치가 아니다 — 라인업 순서로 자리를 채우는 건 근사다.
+    //   `SimBatter`가 포지션을 안 들고 있어서 지금은 이게 최선이다.
+    return {
+      position: p,
+      playerId: b?.id ?? "",
+      name: b?.id ?? p,
+      // 🔴 **실제 수비 능력을 쓴다.** 컨택 대용이 아니다
+      fielding: b?.fielding ?? 50,
+      arm: b?.arm ?? 50,
+      speed: b?.speed ?? 50,
+      x: _FIELD_XY[p].x, y: _FIELD_XY[p].y,
+    };
   });
 }
 

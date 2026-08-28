@@ -390,6 +390,13 @@ impl PitcherQueue {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FielderStats {
     pub position: FieldPosition,
+    /// 🔴 **누가 수비했는지** (2026-08-29). 예전엔 `name`뿐이라 —
+    ///   주인공 경기는 **사람 이름**(동명이인을 못 가린다),
+    ///   리그 경기는 **포지션 문자열**(신원이 아예 없다)이었다.
+    ///   실책·보살을 선수에게 달 방법이 없었다.
+    /// ⚠ `default`다 — 구 세이브의 스냅샷엔 없다.
+    #[serde(rename = "playerId", default)]
+    pub player_id: String,
     pub name: String,
     pub fielding: f64,
     pub arm: f64,

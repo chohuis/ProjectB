@@ -237,7 +237,9 @@ fn create_default_fielders(rng: &mut impl Rng, mean: f64) -> Vec<FielderStats> {
     for (pos, name) in &positions {
         let p = fielder_default_pos(*pos);
         out.push(FielderStats {
-            position: *pos, name: name.to_string(),
+            // ⚠ 기본 수비진은 신원이 없다 — 호출부가 실제 선수를 안 넘겼을 때다.
+            //   그런 경기의 실책은 아무에게도 안 붙는다(팀 카운터만 오른다)
+            position: *pos, player_id: String::new(), name: name.to_string(),
             fielding: r!(), arm: r!(), speed: r!(),
             x: p.x, y: p.y,
         });
@@ -798,7 +800,8 @@ fn calc_error_prob(ball: &BallInPlay, fielder: &FielderStats) -> f64 {
 
 fn make_default_fielder(pos: FieldPosition) -> FielderStats {
     let p = fielder_default_pos(pos);
-    FielderStats { position: pos, name: format!("{:?}", pos), fielding: 50.0, arm: 50.0, speed: 50.0, x: p.x, y: p.y }
+    FielderStats { position: pos, player_id: String::new(), name: format!("{:?}", pos),
+                   fielding: 50.0, arm: 50.0, speed: 50.0, x: p.x, y: p.y }
 }
 
 fn resolve_fielding_result(ball: &BallInPlay, fielders: &[FielderStats], rng: &mut impl Rng) -> (FieldingResult, PitchResultCode) {

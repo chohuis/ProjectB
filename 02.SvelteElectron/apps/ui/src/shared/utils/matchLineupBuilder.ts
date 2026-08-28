@@ -253,6 +253,9 @@ export function buildFielders(teamId: string, entities: EntityRow[]): MatchField
     const bat = playerOf(src!).batting ?? {};
     return {
       position: pos as MatchFielderStats["position"],
+      // ⚠ **id를 함께 싣는다.** 이름만으론 동명이인을 못 가려 실책이
+      //   엉뚱한 선수에게 붙는다
+      playerId: src?.id ?? "",
       name: src?.name ?? pos,
       fielding: bat.fielding ?? 50,
       arm: bat.arm ?? 50,
