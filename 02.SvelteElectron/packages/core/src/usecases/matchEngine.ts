@@ -126,7 +126,19 @@ export function startMatch(options: MatchStartOptions = {}): MatchState {
   return parse<MatchState>(n().startMatchNative(JSON.stringify(options)));
 }
 
-export function finishMatch(state: MatchState): { nextState: MatchState; summary: string; batterLines: Array<{ playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }> } {
+/**
+ * ⚠ **`playerLines`를 반환 타입에 적는다.** 예전엔 빠져 있었고, 그래서
+ *   `match.cjs`가 `result.playerLines ?? []`로 받아도 **타입이 그런 필드는
+ *   없다고 말하는데 런타임엔 있었다** — 엔진이 안 만들던 시절엔 늘 빈
+ *   배열이라 아무도 못 알아챘다 (2026-08-28).
+ */
+export function finishMatch(state: MatchState): {
+  nextState: MatchState;
+  summary: string;
+  batterLines: Array<{ playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }>;
+  playerLines: Array<Record<string, unknown>>;
+  protagonistEntered: boolean;
+} {
   return parse(n().finishMatchNative(JSON.stringify(state)));
 }
 

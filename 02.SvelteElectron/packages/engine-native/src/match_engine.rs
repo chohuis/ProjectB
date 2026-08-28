@@ -2125,6 +2125,9 @@ pub fn finish_match(state: &MatchState) -> FinishMatchResult {
             next_state: state.clone(),
             summary: build_summary(state),
             batter_lines,
+            // ⚠ 리그 경기와 **같은 함수**로 만든다 — 두 벌이 되면 주인공만
+            //   다른 기록을 갖는다
+            player_lines: collect_player_lines(state),
             protagonist_entered: state.protagonist_has_entered,
         };
     }
@@ -2132,7 +2135,9 @@ pub fn finish_match(state: &MatchState) -> FinishMatchResult {
     next.is_finished = true;
     next.logs.push("경기 종료".to_string());
     let summary = build_summary(&next);
-    FinishMatchResult { next_state: next, summary, batter_lines, protagonist_entered: state.protagonist_has_entered }
+    let player_lines = collect_player_lines(&next);
+    FinishMatchResult { next_state: next, summary, batter_lines, player_lines,
+                        protagonist_entered: state.protagonist_has_entered }
 }
 
 pub fn advance_game_phase(state: &MatchState, rng: &mut impl Rng) -> GamePhaseResult {

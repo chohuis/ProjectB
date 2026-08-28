@@ -761,6 +761,15 @@ pub struct GameSummary {
 pub struct FinishMatchResult {
     pub next_state: MatchState,
     pub summary: String,
+    /// ⚠ **`player_lines`가 정본이다.** 이건 `batter_accum`에서 오는 구
+    ///   경로라 2루타·3루타·득점·사구·희생타가 없다. 읽는 쪽이 아직 있어 남긴다
     pub batter_lines: Vec<BatterLine>,
+    /// 🔴 **이 필드가 없었다** (2026-08-28). `match.cjs`가 세 자리에서
+    ///   `result.playerLines ?? []`로 받고 있어 **주인공 경기는 늘 빈 배열**이었다.
+    ///   그래서 (a) 화면이 자책점을 `피안타 × 0.35`로 되돌아가 지어내고,
+    ///   (b) 주인공만 피홈런·사구·득점권이 안 쌓이고,
+    ///   (c) `applyGameOutcome`이 빈 배열을 보고 **경기를 한 판 더 돌려서**
+    ///       그 결과를 동료·상대 성적에 넣었다 — 화면에서 본 경기와 다른 경기다.
+    pub player_lines: Vec<crate::sim_types::PlayerGameLine>,
     pub protagonist_entered: bool,
 }

@@ -1211,6 +1211,7 @@
     let batterLines: import('../../shared/types/season').BatterGameLine[] | undefined;
     let playerLines: import('../../shared/types/season').PlayerGameLine[] | undefined;
     let protagonistEntered: boolean | undefined;
+    let engineEarnedRuns: number | undefined;
     if (window.projectB?.matchFinish) {
       try {
         const result = await window.projectB.matchFinish();
@@ -1227,6 +1228,7 @@
         if (Array.isArray(result.playerLines)) {
           playerLines = result.playerLines as import('../../shared/types/season').PlayerGameLine[];
         }
+        if (typeof result.earnedRuns === 'number') engineEarnedRuns = result.earnedRuns;
       } catch { /* ignore */ }
     }
 
@@ -1246,9 +1248,14 @@
       (l): l is Extract<import('../../shared/types/season').PlayerGameLine, { role: "pitcher" }> =>
         l.role === "pitcher" && l.playerId === $gameStore.protagonist.id,
     );
-    const runsAllowed = myLine && typeof myLine.er === "number"
-      ? Math.max(0, Math.round(myLine.er))
-      : Math.round(totalHitsAllowed * 0.35);
+    // ⚠ **주인공 줄은 `playerLines`에 없다** — 엔진이 등판 중엔 큐 누적을
+    //   건너뛰고 `erSinceEntry`에 따로 쌓는다. 그래서 엔진 자책점을 먼저 본다.
+    //   `myLine`은 구 경로·다른 투수용 갈래로 남긴다.
+    const runsAllowed = typeof engineEarnedRuns === "number"
+      ? Math.max(0, Math.round(engineEarnedRuns))
+      : myLine && typeof myLine.er === "number"
+        ? Math.max(0, Math.round(myLine.er))
+        : Math.round(totalHitsAllowed * 0.35);
     gameResult = {
       awayScore, homeScore,
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
@@ -1316,6 +1323,9 @@
         outsRecorded: totalOutsRecorded,
         errors: gameResult.errors,
         pitchCount: gameResult.pitchCount,
+        // 🔴 **안 넘기고 있었다** — 받는 쪽(`applyGameOutcome`)이 다시
+        //   `피안타 × 0.35`로 역산했다. 직접 플레이 경기만 그랬다
+        earnedRuns: gameResult.runsAllowed,
         summary: gameResult.summary,
         protagonistEntered: gameResult.protagonistEntered,
         batterLines: gameResult.batterLines,

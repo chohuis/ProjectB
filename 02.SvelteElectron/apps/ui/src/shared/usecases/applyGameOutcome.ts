@@ -290,10 +290,20 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     gs: role === "SP",
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   } : null;
-  let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0
-    ? outcome.playerLines
+  // 🔴 **주인공 줄을 엔진 줄로 갈아치우면 안 된다** (2026-08-28).
+  //   엔진은 등판 중인 주인공을 큐 누적에서 건너뛰고 `*_since_entry`에 따로
+  //   쌓는다 — 그래서 `outcome.playerLines`엔 **주인공이 없다.** 예전엔 그
+  //   배열이 늘 비어서 이 갈래가 안 돌았고, 엔진이 채우기 시작하자
+  //   **주인공 기록이 통째로 사라질 뻔했다.** 합친다.
+  const engineLines = Array.isArray(outcome.playerLines) ? outcome.playerLines : [];
+  const hasEngineLines = engineLines.length > 0;
+  let playerLines = hasEngineLines
+    ? [
+        ...(pitcherLine ? [pitcherLine] : []),
+        ...engineLines.filter((l) => l.playerId !== protagonist.id),
+      ]
     : [...(pitcherLine ? [pitcherLine] : []), ...(outcome.batterLines ?? [])];
-  if (!(Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0)) {
+  if (!hasEngineLines) {
     const entities = get(masterStore).entities;
     if (entities.length > 0) {
       try {

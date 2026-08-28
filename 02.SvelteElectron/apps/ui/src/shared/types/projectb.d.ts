@@ -117,7 +117,24 @@ declare global {
         narrativeLogs?: string[];
         error?: string;
       }>;
-      matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string; batterLines?: unknown[]; playerLines?: unknown[] }>;
+      /**
+       * ⚠ **선언이 현실보다 뒤처져 있었다** (2026-08-28). `match.cjs`는
+       * `protagonistEntered`도 함께 돌려주는데 여기 없어서 화면이
+       * svelte-check 오류를 안고 있었다. `earnedRuns`를 붙이면서 같이 적는다.
+       *
+       * 🔴 `earnedRuns`는 **주인공 자책점**이다(`erSinceEntry`). 이걸 안 돌려줘서
+       * 화면이 `피안타 × 0.35`로 값을 지어내고 있었다.
+       * ⚠ 주인공 줄은 `playerLines`에 없다 — 엔진이 등판 중엔 큐 누적을
+       * 건너뛰고 `*_since_entry`에 따로 쌓는다.
+       */
+      matchFinish: () => Promise<{
+        snapshot: MatchSnapshot;
+        summary: string;
+        batterLines?: { playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }[];
+        playerLines?: unknown[];
+        earnedRuns?: number;
+        protagonistEntered?: boolean;
+      }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       matchRunSimpleGame: (paramsJson: string) => Promise<string>;
