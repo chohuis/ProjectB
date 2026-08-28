@@ -2668,6 +2668,7 @@ fn select_sports_unit_ids(
     vacating_positions: &[String],                 // 올해 전역자 포지션 목록
     max_total: usize,
     max_per_team: usize,
+    phase1_max: Option<usize>,                     // Phase 1 몫. None이면 예전대로 상한 없음
 ) -> std::collections::HashSet<String> {
     let mut selected: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut team_count: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
@@ -2682,13 +2683,38 @@ fn select_sports_unit_ids(
     //    드러나지 않았을 뿐이다 — 전역자 포지션을 실제로 넘기자
     //    정원 13명에 **56명이 뒤혓다**(전역자 100건). 상무는 로스터 캅이
     //    안 걸리니(career_status가 military) 그 누수가 해마다 쌀인다.
+    //
+    // 🔴 **Phase 1 몫에 상한을 둔다** (사용자 확정 2026-08-28).
+    //
+    //    상무 정원 26 / 복무 2년이라 **매년 전역자가 정원(13)과 같다.** 그래서
+    //    Phase 1이 정원을 전부 먹고 **Phase 2가 한 번도 안 돌았다** — 실측
+    //    (8시즌) 전역자 포지션이 1 → 17 → 21 → 13 → 13건이고, 첫 해 말고는
+    //    늘 정원 이상이었다.
+    //
+    // ⚠ 그러면 `max_per_team`(팀당 3명)도 같이 죽는다 — 그 가드는 Phase 2에만
+    //   있다(Phase 1은 일부러 팀을 안 본다). 한 팀에서 열 명이 가도 안 막혔다.
+    //
+    // ⚠ `None`이면 예전 동작이다 — **죽은 갈래가 아니라 폴백**이다.
+    let phase1_cap = phase1_max.unwrap_or(max_total).min(max_total);
     let mut remaining_vacancies = vacating_positions.to_vec();
     for (id, _, _, pos) in &sorted {
-        if selected.len() >= max_total { break; }
+        if selected.len() >= phase1_cap { break; }
         if remaining_vacancies.is_empty() { break; }
         if let Some(idx) = remaining_vacancies.iter().position(|v| v == pos) {
             selected.insert(id.clone());
             remaining_vacancies.remove(idx);
+        }
+    }
+
+    // 🔴 **Phase 1이 데려간 사람도 팀 몫에 넣는다** (2026-08-28).
+    //
+    //    예전엔 Phase 2의 카운터가 0에서 시작해서, Phase 1으로 6명을 보낸 팀이
+    //    Phase 2에서 3명을 **더** 가져갔다(실측 한 팀 9명, 상한 3).
+    //    Phase 1이 팀을 안 보는 건 의도지만(포지션 공백이 우선), 그렇다고
+    //    그 인원이 팀 몫에서 사라지면 상한이 반쪽이 된다.
+    for (id, _, team_id, _) in &sorted {
+        if selected.contains(id) {
+            *team_count.entry(team_id.clone()).or_insert(0) += 1;
         }
     }
 
@@ -3237,8 +3263,11 @@ pub fn calc_sports_unit_selection(params: SportsUnitSelectionParams) -> SportsUn
         .collect();
     // 전역 공백 포지션을 먼저 채운다(Phase 1) — 비면 OVR 순만 돌린다.
     // ⚠ 예전엔 `&[]`가 박혀 있어 **Phase 1이 한 번도 안 돌았다.**
+    // ⚠ 이제는 반대쪽으로 샜다 — Phase 1이 정원을 다 먹어 **Phase 2가 안 돌았다.**
+    //   `phase1_max`가 그 몫을 자른다(정본 `militaryRules.phase1Ratio`).
     let selected = select_sports_unit_ids(
-        &pool, &params.vacating_positions, params.max_total, params.max_per_team);
+        &pool, &params.vacating_positions, params.max_total, params.max_per_team,
+        params.phase1_max);
     let protagonist_selected = params.applicants.iter()
         .any(|c| c.is_protagonist && selected.contains(&c.id));
     SportsUnitSelectionResult { protagonist_selected, selected_ids: selected.into_iter().collect() }
@@ -4629,5 +4658,127 @@ mod fa_fallback_tests {
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
         assert_eq!(n.career_status, "retired");
+    }
+}
+
+#[cfg(test)]
+mod sports_unit_phase_tests {
+    use super::*;
+
+    /// (id, ovr, team_id, position)
+    ///
+    /// ⚠ **팀을 넉넉히 둔다.** 3팀짜리로 짰더니 팀당 상한(3) 때문에 정원 13을
+    ///   구조적으로 못 채워서 검사가 엉뚱한 데서 실패했다 — 실제 풀은
+    ///   프로 20팀에 지원자 70명이라 그런 일이 없다. **표본이 현실과 다르면
+    ///   검사가 없는 결함을 만든다.**
+    fn pool() -> Vec<(String, f64, String, String)> {
+        let mut v = Vec::new();
+        // 한 팀(TEAM_A)에 SP를 잔뜩 둔다 — 팀당 상한이 걸리는지 보려는 것
+        for i in 0..10 {
+            v.push((format!("A{i}"), 90.0 - i as f64, "TEAM_A".into(), "SP".into()));
+        }
+        for i in 0..10 {
+            v.push((format!("B{i}"), 80.0 - i as f64, "TEAM_B".into(), "SP".into()));
+        }
+        // RP는 여러 팀에 흩는다 — Phase 2가 팀당 상한을 지키며 채울 수 있어야 한다
+        for t in ['C', 'D', 'E', 'F'] {
+            for i in 0..5 {
+                v.push((format!("{t}{i}"), 70.0 - i as f64,
+                        format!("TEAM_{t}"), "RP".into()));
+            }
+        }
+        v
+    }
+
+    /// 🔴 **Phase 1이 정원을 다 먹으면 Phase 2가 안 돈다.**
+    ///   상무는 정원 26/복무 2년이라 매년 전역자가 정원과 같다 — 실측(8시즌)
+    ///   전역자 포지션이 1 → 17 → 21 → 13 → 13건이고 정원은 13이었다.
+    #[test]
+    fn 상한이_없으면_phase1이_정원을_다_먹는다() {
+        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, None);
+        assert_eq!(sel.len(), 13);
+        // 전원이 SP다 — Phase 2(팀당 상한)가 한 번도 안 돌았다는 뜻
+        let rp = sel.iter().filter(|id| !id.starts_with('A') && !id.starts_with('B')).count();
+        assert_eq!(rp, 0, "Phase 2가 돌았다 — 전제가 바뀌었다");
+    }
+
+    /// 🔴 **상한을 두면 나머지를 Phase 2가 채운다.**
+    #[test]
+    fn 상한이_있으면_phase2가_나머지를_채운다() {
+        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
+        assert_eq!(sel.len(), 13, "정원을 못 채웠다");
+        let rp = sel.iter().filter(|id| !id.starts_with('A') && !id.starts_with('B')).count();
+        assert!(rp > 0, "Phase 2가 여전히 안 돈다 — RP가 한 명도 없다");
+    }
+
+    /// 🔴 **팀당 상한이 살아난다.** Phase 1은 일부러 팀을 안 보므로,
+    ///   Phase 1이 정원을 다 먹으면 그 가드가 통째로 죽는다.
+    #[test]
+    fn 상한이_있으면_팀당_제한이_산다() {
+        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let no_cap = select_sports_unit_ids(&pool(), &vac, 13, 3, None);
+        let cap    = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
+        let a_of = |s: &std::collections::HashSet<String>|
+            s.iter().filter(|id| id.starts_with('A')).count();
+        assert!(a_of(&no_cap) > 3, "상한 없이도 팀당 3명을 지켰다 — 전제가 바뀌었다");
+        // ⚠ Phase 1은 **일부러** 팀을 안 본다(포지션 공백이 우선) — 그 몫(6)까지는
+        //   한 팀이 가져갈 수 있다. 다만 Phase 2가 **거기에 더 얹으면 안 된다.**
+        //   예전엔 카운터가 0에서 시작해 6 + 3 = 9명이 됐다.
+        assert!(a_of(&cap) <= 6, "TEAM_A가 {}명 — Phase 2가 Phase 1 위에 더 얹었다", a_of(&cap));
+        assert!(a_of(&cap) < a_of(&no_cap), "상한을 둬도 쏠림이 그대로다");
+    }
+
+    /// ⚠ **공백이 적으면 상한이 아무 일도 안 한다** — Phase 1이 알아서 멈춘다
+    #[test]
+    fn 공백이_적으면_상한이_무의미하다() {
+        let vac = vec!["SP".to_string()];
+        let a = select_sports_unit_ids(&pool(), &vac, 13, 3, None);
+        let b = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
+        assert_eq!(a.len(), b.len());
+    }
+
+    /// ⚠ **상한이 정원보다 크면 정원이 이긴다**
+    #[test]
+    fn 상한이_정원보다_크면_정원이_이긴다() {
+        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(999));
+        assert_eq!(sel.len(), 13);
+    }
+}
+
+#[cfg(test)]
+mod sports_unit_team_cap_tests {
+    use super::*;
+
+    fn pool() -> Vec<(String, f64, String, String)> {
+        let mut v = Vec::new();
+        for i in 0..10 {
+            v.push((format!("A{i}"), 90.0 - i as f64, "TEAM_A".into(), "SP".into()));
+        }
+        for i in 0..10 {
+            v.push((format!("B{i}"), 80.0 - i as f64, "TEAM_B".into(), "RP".into()));
+        }
+        v
+    }
+
+    /// 🔴 **Phase 2가 Phase 1 위에 더 얹으면 안 된다.**
+    ///   예전엔 카운터가 0에서 시작해서, Phase 1으로 6명을 보낸 팀이 Phase 2에서
+    ///   3명을 **더** 가져갔다 — 실측 한 팀 9명(상한 3).
+    #[test]
+    fn phase2가_phase1_인원을_함께_센다() {
+        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
+        let a = sel.iter().filter(|id| id.starts_with('A')).count();
+        assert_eq!(a, 6, "TEAM_A가 {a}명 — Phase 1 몫(6)에 Phase 2가 더 얹었다");
+    }
+
+    /// ⚠ Phase 1이 안 도는 해(공백 없음)에는 팀당 상한이 그대로 걸린다
+    #[test]
+    fn 공백이_없으면_팀당_상한_그대로() {
+        let sel = select_sports_unit_ids(&pool(), &[], 13, 3, Some(6));
+        let a = sel.iter().filter(|id| id.starts_with('A')).count();
+        assert_eq!(a, 3, "TEAM_A가 {a}명 — 팀당 상한이 안 걸렸다");
     }
 }

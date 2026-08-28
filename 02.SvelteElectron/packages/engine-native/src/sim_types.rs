@@ -622,6 +622,21 @@ pub struct SportsUnitSelectionParams {
     ///    균형을 잃고 유격수 없는 팀이 된다.
     #[serde(default)]
     pub vacating_positions: Vec<String>,
+    /// Phase 1(공백 포지션 채우기)이 정원에서 **가져갈 수 있는 몫**.
+    ///
+    /// 🔴 없으면 Phase 1이 **정원을 전부 먹고 Phase 2가 한 번도 안 돈다.**
+    ///    상무 정원 26 / 복무 2년이라 매년 전역자가 정원(13)과 같아서
+    ///    구조적으로 그렇게 된다 — 실측(8시즌) 전역자 포지션이
+    ///    1 → 17 → 21 → 13 → 13건이었고 첫 해 말고는 늘 정원 이상이었다.
+    ///
+    /// ⚠ 그러면 `max_per_team`(팀당 3명)도 같이 죽는다 — 그 가드는 Phase 2에만
+    ///   있고 Phase 1은 팀을 안 본다. 한 팀에서 열 명이 가도 안 막혔다.
+    ///
+    /// ⚠ `None`이면 **예전 동작**(상한 없음)이다. 호출부가 값을 안 넘겨도
+    ///   게임이 안 죽는다 — 배선이 빠지면 옛 결함으로 조용히 돌아간다.
+    ///   정본은 `militaryRules.phase1Ratio`다.
+    #[serde(default)]
+    pub phase1_max: Option<usize>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

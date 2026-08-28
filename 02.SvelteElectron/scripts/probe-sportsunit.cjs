@@ -16,11 +16,30 @@ const YEARS = Number(process.env.SU_YEARS || 6);
       n++;
       console.log(`[SU] ${n}회차 지원자 ${apps.length} · 포지션있음 ${withPos}`
         + ` · 전역자포지션 ${vac === undefined ? "없음(배선 끊김)" : `${vac.length}건 [${vac.slice(0,6).join(",")}]`}`
-        + ` · 정원 ${p.maxTotal}`);
+        + ` · 정원 ${p.maxTotal} · Phase1몫 ${p.phase1Max === undefined ? "없음(배선 끊김)" : p.phase1Max}`);
       const r = await call();
       try {
         const out = JSON.parse(r);
-        console.log(`[SU]   → 선발 ${(out.selectedIds || []).length}명`);
+        const ids = new Set(out.selectedIds || []);
+        const picked = apps.filter((a) => ids.has(a.id));
+        // 🔴 **Phase 1과 2를 갈라 본다.** 선발 수만 보면 "13명" 하나뿐이라
+        //   Phase 2가 한 번도 안 도는 걸 못 잡는다 — 실제로 못 잡고 있었다.
+        //   전역자 포지션 목록을 소비해 보면 몇 자리를 Phase 1이 먹었는지 나온다.
+        const vacLeft = (vac || []).slice();
+        let ph1 = 0;
+        for (const a of picked.slice().sort((x, y) => y.ovr - x.ovr)) {
+          const i = vacLeft.indexOf(a.position);
+          if (i >= 0 && ph1 < (p.phase1Max ?? p.maxTotal)) { vacLeft.splice(i, 1); ph1++; }
+        }
+        // 팀 쏠림 — `maxPerTeam` 가드는 Phase 2에만 있다
+        const byTeam = {};
+        for (const a of picked) byTeam[a.teamId] = (byTeam[a.teamId] || 0) + 1;
+        const maxTeam = Math.max(0, ...Object.values(byTeam));
+        const pos = {};
+        for (const a of picked) pos[a.position] = (pos[a.position] || 0) + 1;
+        console.log(`[SU]   → 선발 ${picked.length}명 · Phase1 ${ph1} / Phase2 ${picked.length - ph1}`
+          + ` · 한 팀 최다 ${maxTeam}(상한 ${p.maxPerTeam})`
+          + ` · 포지션 ${Object.entries(pos).map(([k, v]) => k + v).join(" ")}`);
       } catch { /* 무시 */ }
       return r;
     }

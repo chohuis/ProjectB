@@ -67,7 +67,7 @@ import { slotRepo } from "../repo/slotRepo";
 import { dehydrateToRepo } from "../repo/npcAdapter";
 import { collectScheduleDelta, rollbackScheduleDelta } from "../repo/scheduleDelta";
 import { SANGMU_LEAGUE_ID, SANGMU_TEAM_ID } from "../utils/ids";
-import { sportsUnitLimits, protagonistTookSportsSlot } from "../utils/militaryRules";
+import { sportsUnitLimits, protagonistTookSportsSlot, sportsVacatingPositions } from "../utils/militaryRules";
 import { isV3SlotActive } from "../repo/v3Mode";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
@@ -2911,16 +2911,13 @@ function createGameStore() {
                 // 🔴 **상무 전역자 포지션만.** 안 넘기면 Phase 1(공백 메우기)이
                 //    통째로 안 돌고 OVR 순으로만 뽑는다 — 상무가 포지션 균형을 잃는다.
                 //
-                // ⚠ **`militaryUnit === "sports"`로 거른다.** `military` 상태엔
-                //   체육부대와 **일반병이 같이** 들어 있다 — 실측 86명 중
-                //   상무 정원은 26이다. 안 거르면 일반병 전역자 포지션까지
-                //   상무 공백으로 읽혀 **Phase 1이 정원을 다 먹고 Phase 2(OVR 순)가
-                //   안 돌게** 된다(전역자 43 vs 정원 13).
-                //   일반병은 상무 소속이 아니니 그 자리가 빈 게 아니다.
-                vacatingPositions: discharging
-                  .filter(e => e.details?.player?.militaryUnit === "sports")
-                  .map(e => (e.details?.player?.position ?? "") as string)
-                  .filter(pos => pos !== ""),
+                // ⚠ **거르는 규칙은 `sportsVacatingPositions`가 정본이다.**
+                //   여기 인라인으로 적었더니 주인공 경로(`advanceWeek`)에는
+                //   아예 안 넘어가서 **주인공만 다른 잣대**로 뽑혔다.
+                vacatingPositions: sportsVacatingPositions(discharging),
+                // 🔴 **Phase 1 몫을 자른다.** 없으면 Phase 1이 정원을 다 먹고
+                //    Phase 2(OVR 순 + 팀당 상한)가 한 번도 안 돈다.
+                phase1Max: milLimits.phase1Max,
               }))
             ) as { protagonistSelected?: boolean; selectedIds?: string[]; error?: string };
 

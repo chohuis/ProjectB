@@ -37,7 +37,7 @@ import {
   isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
   loadRetirementRules, surgeryRetireChance,
 } from "./retirement";
-import { sportsUnitLimits } from "../utils/militaryRules";
+import { sportsUnitLimits, sportsVacatingFromNpcs } from "../utils/militaryRules";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf, activeProLeagues } from "../utils/ids";
@@ -2195,6 +2195,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             applicants,
             maxTotal: Math.min(milLimits.annualIntake, applicants.length),
             maxPerTeam: milLimits.maxPerTeam,
+            // 🔴 **여기가 안 넘어가고 있었다** (2026-08-28). `serde(default)`라
+            //    조용히 빈 배열로 통과했고, **주인공만 Phase 1 없이 순수 OVR로**
+            //    판정받았다. NPC 경로(`stores/game.ts`)는 넘기고 있었다.
+            //
+            // ⚠ 바로 위 주석의 `maxTotal: 10`과 **같은 형태**다 — 같은 함수의
+            //   다음 인자에서 같은 일이 또 일어났다. 거르는 규칙을 인라인으로
+            //   적지 않고 `militaryRules`의 함수를 쓴다.
+            vacatingPositions: sportsVacatingFromNpcs(g.npcs, s.seasonYear),
+            phase1Max: milLimits.phase1Max,
           }))
         ) as { protagonistSelected: boolean; selectedIds: string[] };
 
