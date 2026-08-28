@@ -94,21 +94,37 @@ describe("새 게임 시작 프리셋", () => {
   // 실측 궤적이 1학년 69 · 2학년 70 · 고교말 71 · 최대 75로, 3년에 +3이고
   // 최대값이 잠재력 중앙에 붙었다. 같은 시기 고졸 지명자는 OVR 중앙 74다.
   describe("잠재력 범위", () => {
-    const src = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
-    const m = src.match(/potentialHidden = Math\.floor\(Math\.random\(\) \* (\d+)\) \+ (\d+)/);
+    // 🔴 **정본이 규칙 파일로 옮겨졌다** (2026-08-28). 예전엔 화면이
+    //   `Math.random()`으로 굴려서 여기서 그 식을 정규식으로 읽었다.
+    //   난수를 Rust로 옮기면서 값은 `protagonistRules`가 정본이 됐고,
+    //   **코드가 맞는데 검사가 옛 모양을 지켜 빨간불이었다.**
+    const rules = JSON.parse(
+      read("resource/data/master/players/generation_rules.json"),
+    ) as { protagonistRules?: { potentialMin?: number; potentialMax?: number } };
+    const pMin = rules.protagonistRules?.potentialMin;
+    const pMax = rules.protagonistRules?.potentialMax;
 
-    it("생성식이 있다", () => {
-      expect(m).not.toBeNull();
+    it("규칙 파일에 잠재력 범위가 있다", () => {
+      expect(typeof pMin).toBe("number");
+      expect(typeof pMax).toBe("number");
+      expect(pMax!).toBeGreaterThan(pMin!);
+    });
+
+    /** 🔴 난수를 화면으로 되돌리면 안 된다 — 그게 이번에 고친 것이다 */
+    it("화면이 잠재력을 직접 굴리지 않는다", () => {
+      const src = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
+      expect(src.includes("Math.floor(Math.random() * 20) + 80")).toBe(false);
+      expect(src.includes('"genProtagonistHiddenNative"')).toBe(true);
     });
 
     it("하한이 프리셋 최고 스탯보다 높다 — 넘긴 채 시작하면 안 된다", () => {
-      const floor = Number(m![2]);
+      const floor = pMin!;
       const maxStat = Math.max(...presets.flatMap((p) => Object.keys(W).map((k) => p[k])));
       expect(floor).toBeGreaterThan(maxStat);
     });
 
     it("굴리기가 성장 속도를 실제로 가른다 — 상·중·하가 다른 구간에 든다", () => {
-      const span = Number(m![1]), floor = Number(m![2]);
+      const span = pMax! - pMin! + 1, floor = pMin!;
       const cap = (cur: number, pot: number) => {
         const r = cur / pot;
         return r < 0.75 ? 1.0 : r < 0.85 ? 0.7 : r < 0.95 ? 0.35 : 0.1;
@@ -120,7 +136,7 @@ describe("새 게임 시작 프리셋", () => {
 
     it("최저 굴리기도 멈추지는 않는다", () => {
       // 0.10배는 사실상 성장 정지다. 느린 것과 죽은 것은 다르다
-      const floor = Number(m![2]);
+      const floor = pMin!;
       expect(70 / floor).toBeLessThan(0.95);
     });
 
@@ -128,20 +144,24 @@ describe("새 게임 시작 프리셋", () => {
       // 하네스는 결정적이어야 해서 고정값을 쓴다. 그 값이 게임과 어긋나면
       // 계측이 조용히 다른 선수를 재고, 그 위에 쌓은 결론이 전부 틀어진다.
       // 실제로 여기가 옛 중앙(75)으로 남아 있었고 "고교말 OVR 71"이 거기서 나왔다
-      // `random(0..span-1) + floor`의 값은 floor ~ floor+span-1이다.
-      // 중앙은 floor + (span-1)/2 — 짝수 폭이면 반값이라 내림한다
-      const mid = (span: number, floor: number) => Math.floor(floor + (span - 1) / 2);
+      // ⚠ **범위는 규칙 파일이 정본이다** (2026-08-28). 예전엔 화면의
+      //   `Math.random()` 식을 정규식으로 읽었는데 난수가 Rust로 갔다.
+      // 중앙은 (min + max) / 2 — 반값이면 내림한다
+      const mid = (lo: number, hi: number) => Math.floor((lo + hi) / 2);
       const harness = read("scripts/perf/perfEntry.ts");
+      const r2 = JSON.parse(
+        read("resource/data/master/players/generation_rules.json"),
+      ) as { protagonistRules?: Record<string, number> };
+      const pr = r2.protagonistRules ?? {};
 
       const hp = harness.match(/potentialHidden: (\d+)/);
       expect(hp).not.toBeNull();
-      expect(Number(hp![1])).toBe(mid(Number(m![1]), Number(m![2])));
+      expect(Number(hp![1])).toBe(mid(pr.potentialMin!, pr.potentialMax!));
 
       // developmentRate도 같은 이유로 맞춰야 한다
-      const dm = src.match(/developmentRate = Math\.floor\(Math\.random\(\) \* (\d+)\) \+ (\d+)/);
-      expect(dm).not.toBeNull();
       const hd = harness.match(/developmentRate: (\d+)/);
-      expect(Number(hd![1])).toBe(mid(Number(dm![1]), Number(dm![2])));
+      expect(hd).not.toBeNull();
+      expect(Number(hd![1])).toBe(mid(pr.devRateMin!, pr.devRateMax!));
     });
   });
 

@@ -184,6 +184,14 @@ export declare function calcDraftRankNative(paramsJson: string): string
 /** 체육부대 후보 30명 공개 (W50 루머) */
 export declare function calcSportsUnitCandidatesNative(paramsJson: string): string
 /**
+ * **주인공의 잠재력·성장률** — 새 게임에서 한 번 굴린다.
+ *
+ * 🔴 이 둘을 **화면(`NewGamePage.svelte`)이 `Math.random()`으로 굴리고
+ *   있었다.** NPC는 `roster_gen`이 만드는데 주인공만 화면에서 만들었다.
+ * ⚠ **분포는 안 바꿨다** — 옮기기만 했다. 값은 `protagonistRules`가 정본이다.
+ */
+export declare function genProtagonistHiddenNative(paramsJson: string): string
+/**
  * **투수 승패 판정** — W · L · SV · HD · ND.
  *
  * 🔴 **이 규칙이 두 벌이었다.** `npc_sim`의 클로저 안에 갇혀 있어서

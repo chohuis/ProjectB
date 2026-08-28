@@ -125,3 +125,63 @@ describe("성장 xp 공식", () => {
     expect(ts.includes("return 7.5 + statVal * 0.35;")).toBe(true);
   });
 });
+
+describe("난수는 Rust가 굴린다", () => {
+  /**
+   * 🔴 **`Math.random()`은 게임 로직에서 금지다** (CLAUDE.md).
+   *   화면·usecase·util 어디에도 남으면 안 된다.
+   *
+   * ⚠ **주석은 세지 않는다.** 왜 지웠는지 설명하려고 그 이름이 주석에 남아
+   *   있다 — 호출 꼴(`Math.random()` 뒤에 연산자·괄호가 오는 형태)만 본다.
+   */
+  it("게임 코드에 Math.random() 호출이 없다", () => {
+    const bad: string[] = [];
+    for (const f of FILES) {
+      // 주석 줄을 걷어내고 본다
+      const code = f.src
+        .split("\n")
+        .filter((l) => {
+          const t = l.trim();
+          return !t.startsWith("//") && !t.startsWith("*") && !t.startsWith("/*");
+        })
+        .join("\n");
+      if (code.includes("Math.random()")) bad.push(rel(f.path));
+    }
+    expect(bad).toEqual([]);
+  });
+
+  /**
+   * 🔴 **주인공 생성은 `roster_gen`이 한다.** NPC는 거기서 만드는데
+   *   주인공만 화면에서 만들고 있었다.
+   * ⚠ 분포는 안 바꿨다 — 값은 `protagonistRules`가 정본이고 NPC 고교와
+   *   **일부러 다르다**(주인공 devRate 73~88 · NPC 45~75).
+   */
+  it("주인공 잠재력·성장률을 Rust가 만든다", () => {
+    const ng = read("apps/ui/src/pages/new-game/NewGamePage.svelte");
+    expect(ng.includes('"genProtagonistHiddenNative"')).toBe(true);
+    const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+      protagonistRules?: Record<string, number>;
+      rosterRules?: Record<string, Record<string, number>>;
+    };
+    const p = rules.protagonistRules ?? {};
+    expect(p.potentialMin).toBe(80);
+    expect(p.potentialMax).toBe(99);
+    expect(p.devRateMin).toBe(73);
+    expect(p.devRateMax).toBe(88);
+    // ⚠ NPC 고교와 다른 건 **의도다** — 같아지면 그게 회귀다
+    const hs = rules.rosterRules?.["LEAGUE_HIGHSCHOOL"] ?? {};
+    expect(p.devRateMin).not.toBe(hs.devRateMin);
+  });
+
+  /**
+   * 🔴 **TS 안의 두 번째 야구 엔진을 지웠다.** `rollLocalResult`가 안타 종류
+   *   분포를 굴리고 `applyLocalResult`가 주자·아웃·이닝까지 처리했다 —
+   *   114줄짜리였고 **아무도 안 켜는 갈래**에 있었다(`allowLocalFallback`
+   *   기본 false, `MainPage`가 안 넘김).
+   */
+  it("경기 화면에 로컬 시뮬이 없다", () => {
+    const mp = read("apps/ui/src/pages/match/MatchPage.svelte");
+    expect(mp.includes("function rollLocalResult")).toBe(false);
+    expect(mp.includes("function applyLocalResult")).toBe(false);
+  });
+});

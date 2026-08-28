@@ -43,21 +43,50 @@ TS가 손으로 옮겨 적었고, 그 사본이 **이미 갈라져 있었다**:
 → `decide_pitcher`를 자유 함수로 꺼내고 `calc_pitcher_decision_native`로
 내보냈다. TS는 부르기만 한다. `engineOwnership.test.ts`가 사본 복귀를 막는다.
 
-## ⏳ 남음 — C. `Math.random()` 6건
+## 🔴 감사가 틀렸던 곳 — 바로잡음
+
+처음에 "Rust에 있는데 아무도 안 부르는 export 8개"라고 적었다. **틀렸다.**
+넷(`sim_half_inning`·`sim_until_entry`·`should_protagonist_exit`·
+`auto_mound_visit`)은 `packages/core`라는 **중간 계층에 감싸져 있고**
+내 검색이 그 폴더를 안 봤다.
+
+경기 화면은 **이미 Rust로 돈다**:
 
 ```
-MatchPage:962         roll < 0.86 → HIT_SINGLE      안타 종류 분포가 TS에
-MatchPage:1261/1274/1343   좌타 32%                  타자 손 결정
-NewGamePage:296/302   잠재력 80~99 · 성장률 73~88    주인공 생성이 TS에
+MatchPage → match:* IPC → apps/desktop/ipc/match.cjs (세션 상태)
+                        → packages/core (얇은 어댑터 · 계산 0)
+                          → Rust
 ```
 
-⚠ **`NewGamePage` 둘이 더 무겁다.** `roster_gen.rs`가 NPC를 만드는데
-**주인공만 TS에서 만든다** — 분포가 다를 수 있고 그건 밸런스 문제다.
+`packages/core/src/usecases/matchEngine.ts` 177줄에 `Math.` 호출이 하나도
+없다 — 전부 `n().xxxNative(JSON.stringify(...))` 위임이다.
 
-⚠ **경기 화면은 먼저 조사해야 한다.** Rust에 `sim_half_inning`·
-`sim_until_entry`·`should_protagonist_exit`·`auto_mound_visit`가 **있는데
-아무도 안 부른다.** 왜 안 쓰는지(성능? 연출? 미완성?) 모르고 옮기면
-경기 화면이 깨진다.
+다시 세니 **정말로 안 불리는 export는 넷**이고 전부 세이브 무결성이다.
+
+## ✅ 고침 — C. `Math.random()` 6건
+
+```
+MatchPage:962         roll < 0.86 → HIT_SINGLE      → 죽은 갈래였다. 지웠다
+MatchPage:1261/1274/1343   좌타 32%                  → 실제 좌우를 읽는다
+NewGamePage:296/302   잠재력 80~99 · 성장률 73~88    → Rust로 옮겼다
+```
+
+**① 경기 화면의 로컬 시뮬 114줄을 지웠다.** `rollLocalResult`가 안타 종류
+분포를 굴리고 `applyLocalResult`가 주자·아웃·이닝까지 처리했다 —
+**TS 안의 두 번째 야구 엔진**이었다.
+⚠ **아무도 안 켜고 있었다** — `allowLocalFallback` 기본값이 false이고
+`MainPage`가 그 prop을 안 넘긴다. 죽은 갈래였다.
+
+**② 타자 좌우를 실제 값으로.** `Math.random() < 0.32`로 매 타석 굴려서
+**화면에 뜬 타자와 스프라이트가 달랐다** — 같은 타자가 타석마다 좌우가 바뀌었다.
+⚠ 좌우는 엔진이 안 보는 값이다(`BatterStats`에 없다) — 결과에 영향이 없는
+스프라이트 표시라 세이브에서 직접 읽는다.
+
+**③ 주인공 생성을 `roster_gen`으로.** 값은 `protagonistRules`로 올렸다.
+⚠ **분포는 안 바꿨다** — 실측(2만 회): 잠재력 평균 89.44 vs 옛 89.49,
+성장률 80.52 vs 80.47. 범위도 같다.
+⚠ 주인공과 NPC 고교가 **일부러 다르다**(주인공 devRate 73~88 · NPC 45~75).
+예전에 주인공이 또래보다 느려 백분위 1%까지 밀린 걸 고친 결과다.
 
 ## ⏳ 남음 — D. 산식이 TS에 있는 유틸
 
@@ -76,16 +105,18 @@ NewGamePage:296/302   잠재력 80~99 · 성장률 73~88    주인공 생성이 
 **표시용 진행바라 렌더마다 IPC를 태울 수 없다.** 사본을 남기되
 `engineOwnership.test.ts`가 두 값이 어긋나면 잡는다.
 
-## 부수 발견 — 안 불리는 Rust export 8개
+## 부수 발견 — 안 불리는 Rust export 넷
 
 ```
-sim_half_inning · sim_until_entry · should_protagonist_exit · auto_mound_visit
 encrypt_save · decrypt_save · compute_save_sig · verify_save_sig
 ```
 
-앞 넷은 위 C의 조사 대상이다.
-뒤 넷은 **세이브 무결성(HMAC)** — CLAUDE.md에 "v3 미구현"이라 적혀 있는데
+**세이브 무결성(HMAC)** — CLAUDE.md에 "v3 미구현"이라 적혀 있는데
 **Rust엔 있고 아무도 안 쓴다.** 배선만 하면 된다.
+
+⚠ 처음엔 여덟이라 적었다. 넷은 `packages/core`에 감싸져 있었고 내 검색이
+그 폴더를 안 봤다 — 위 "감사가 틀렸던 곳" 참고. **미사용을 셀 때는
+`apps/ui` · `apps/desktop` · `scripts` · `packages/core`를 다 봐야 한다.**
 
 ## 이관 순서
 
@@ -96,7 +127,7 @@ encrypt_save · decrypt_save · compute_save_sig · verify_save_sig
 |---|---|---|---|
 | 1 | 자책점 역산 제거 | 안 움직임 | ✅ 2026-08-28 |
 | 2 | 승패 판정 합치기 | 안 움직임 | ✅ 2026-08-28 |
-| 3 | 주인공 생성을 `roster_gen`으로 | **움직임** — NPC와 분포 비교 필요 | ⏳ |
-| 4 | 경기 화면 난수 | **움직임** — 먼저 "왜 Rust를 안 쓰는가" 조사 | ⏳ |
+| 3 | 주인공 생성을 `roster_gen`으로 | 안 움직임 — 실측으로 확인 | ✅ 2026-08-28 |
+| 4 | 경기 화면 난수 | 안 움직임 — 죽은 갈래였다 | ✅ 2026-08-28 |
 | 5 | 산식 유틸 이동 (D) | **움직임** — 건마다 전후 실측 | ⏳ |
 | 6 | 세이브 무결성 배선 | 무관 | ⏳ |

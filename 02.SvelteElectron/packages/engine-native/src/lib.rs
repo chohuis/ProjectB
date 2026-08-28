@@ -865,6 +865,21 @@ pub fn calc_sports_unit_candidates_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcSportsUnitCandidatesNative/serialize", e))
 }
 
+/// **주인공의 잠재력·성장률** — 새 게임에서 한 번 굴린다.
+///
+/// 🔴 이 둘을 **화면(`NewGamePage.svelte`)이 `Math.random()`으로 굴리고
+///   있었다.** NPC는 `roster_gen`이 만드는데 주인공만 화면에서 만들었다.
+/// ⚠ **분포는 안 바꿨다** — 옮기기만 했다. 값은 `protagonistRules`가 정본이다.
+#[napi]
+pub fn gen_protagonist_hidden_native(params_json: String) -> String {
+    let params: roster_gen::ProtagonistHiddenParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("genProtagonistHiddenNative", e),
+    };
+    let result = roster_gen::gen_protagonist_hidden(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("genProtagonistHiddenNative/serialize", e))
+}
+
 /// **투수 승패 판정** — W · L · SV · HD · ND.
 ///
 /// 🔴 **이 규칙이 두 벌이었다.** `npc_sim`의 클로저 안에 갇혀 있어서

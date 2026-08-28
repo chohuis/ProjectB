@@ -293,13 +293,38 @@
     //   80 → 느리게 큰다 (스탯 70 기준 0.35)
     //   89 → 보통       (0.70)
     //   99 → 빠르게     (1.00)
-    const potentialHidden = Math.floor(Math.random() * 20) + 80;
-    // 55~70이었다. **또래보다 느렸다** — 실측(2026-08-09)에서 주인공은 고교
-    // 3년에 +9~10인데 또래 중앙은 +12였고, 그 격차로 백분위 1%까지 밀렸다.
-    // 엔진은 `dev_factor = dev_rate / 62`로 XP에 그대로 곱하며 오차 없이 선형이다
-    // (devRate 31/62/93/124 → 주당 XP 1.48/2.96/4.43/5.91). 또래 중앙 성장에
-    // 맞추려면 약 ×1.25가 필요해 중앙을 62 → 80으로 옮긴다
-    const developmentRate = Math.floor(Math.random() * 16) + 73;
+    // 🔴 **난수는 Rust가 굴린다** (2026-08-28). 예전엔 여기서
+    //   `Math.random()`으로 잠재력·성장률을 만들었다 — NPC는 `roster_gen`이
+    //   만드는데 **주인공만 화면에서 만들었다.** CLAUDE.md가 금지하는 자리다.
+    //
+    // ⚠ **분포는 안 바꿨다.** 값은 `protagonistRules`가 정본이고, 주인공과
+    //   NPC 고교가 **일부러 다르다**(주인공 devRate 73~88 · NPC 45~75).
+    //   왜 그런지는 규칙 파일 주석에 있다.
+    // ⚠ Rust를 못 부르면(Vite 단독) 규칙 파일의 **중앙값**을 쓴다 —
+    //   여기서 난수를 다시 만들지 않는다.
+    const { loadRosterRules } = await import("../../shared/repo/newGameV3");
+    const pRules = (await loadRosterRules() as {
+      protagonistRules?: {
+        potentialMin?: number; potentialMax?: number;
+        devRateMin?: number; devRateMax?: number;
+      };
+    }).protagonistRules ?? {};
+    const pMin = pRules.potentialMin ?? 80, pMax = pRules.potentialMax ?? 99;
+    const dMin = pRules.devRateMin   ?? 73, dMax = pRules.devRateMax   ?? 88;
+    let potentialHidden = Math.round((pMin + pMax) / 2);
+    let developmentRate = Math.round((dMin + dMax) / 2);
+    try {
+      const hidden = JSON.parse(await window.projectB!.engine(
+        "genProtagonistHiddenNative",
+        JSON.stringify({
+          seed: worldSeed >>> 0,
+          potentialMin: pMin, potentialMax: pMax,
+          devRateMin: dMin, devRateMax: dMax,
+        }),
+      )) as { potentialHidden?: number; developmentRate?: number };
+      if (typeof hidden.potentialHidden === "number") potentialHidden = hidden.potentialHidden;
+      if (typeof hidden.developmentRate === "number") developmentRate = hidden.developmentRate;
+    } catch { /* 폴백은 위 중앙값이다 */ }
 
     const protagonist: ProtagonistSave = {
       id: "PLY_HERO",

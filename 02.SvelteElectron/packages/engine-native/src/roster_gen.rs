@@ -1229,3 +1229,52 @@ mod tests {
         }
     }
 }
+
+// ── 주인공 숨은 값 (2026-08-28) ──────────────────────────────────────────────
+
+/// **주인공의 잠재력·성장률.**
+///
+/// 🔴 이 둘을 **`NewGamePage.svelte`가 `Math.random()`으로 굴리고 있었다.**
+///   NPC는 여기 `roster_gen`이 만드는데 **주인공만 화면에서 만들었다** —
+///   CLAUDE.md 아키텍처가 금지하는 자리다("apps/ui는 화면 렌더링만").
+///
+/// ⚠ **분포는 안 바꿨다.** 옮기기만 했다. 값은 `protagonistRules`가 정본이고
+///   주인공과 NPC 고교가 **일부러 다르다**(주인공 devRate 73~88 · NPC 45~75) —
+///   예전에 주인공이 또래보다 느려 백분위 1%까지 밀린 걸 고친 결과다.
+///   규칙 파일 주석에 근거가 있다.
+///
+/// ⚠ 씨앗이 0이면 `thread_rng`다 — 예전 동작(매번 다름)이다.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProtagonistHiddenParams {
+    #[serde(default)]
+    pub seed: u32,
+    pub potential_min: i32,
+    pub potential_max: i32,
+    pub dev_rate_min: i32,
+    pub dev_rate_max: i32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProtagonistHiddenResult {
+    pub potential_hidden: i32,
+    pub development_rate: i32,
+}
+
+pub fn gen_protagonist_hidden(p: ProtagonistHiddenParams) -> ProtagonistHiddenResult {
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
+    // ⚠ 하한이 상한보다 크면 하한을 쓴다 — 규칙 파일이 뒤집혀도 안 죽는다
+    // ⚠ 하한이 상한보다 크면 하한을 쓴다 — 규칙 파일이 뒤집혀도 안 죽는다
+    let mut pick = |lo: i32, hi: i32| -> i32 {
+        if hi <= lo { return lo; }
+        lo + (rng.next_u32() as f64 / u32::MAX as f64 * (hi - lo + 1) as f64) as i32
+    };
+    let potential_hidden = pick(p.potential_min, p.potential_max);
+    let development_rate = pick(p.dev_rate_min, p.dev_rate_max);
+    ProtagonistHiddenResult { potential_hidden, development_rate }
+}

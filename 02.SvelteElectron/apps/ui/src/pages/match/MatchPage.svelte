@@ -958,122 +958,15 @@
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  function rollLocalResult(): PitchResultCode {
-    const roll = Math.random();
-
-    if (roll < 0.18) return "STRIKE_SWING";
-    if (roll < 0.34) return "STRIKE_LOOK";
-    if (roll < 0.47) return "FOUL";
-    if (roll < 0.62) return "BALL";
-    if (roll < 0.73) return roll < 0.45 ? "GROUND_OUT" : roll < 0.64 ? "FLY_OUT" : "LINE_OUT";
-    if (roll < 0.86) return "HIT_SINGLE";
-    if (roll < 0.93) return "HIT_DOUBLE";
-    if (roll < 0.97) return "HIT_TRIPLE";
-    return "HOME_RUN";
-  }
-
-  function applyLocalResult(resultCode: PitchResultCode): { snapshot: SnapshotLike; resolvedCode: PitchResultCode; inningChange: boolean } {
-    localEngineState.pitchCount += 1;
-    localEngineState.stamina = Math.max(0, Number((localEngineState.stamina - 0.8).toFixed(1)));
-
-    // In local mode: top = away batting, bottom = home batting
-    const battingTeam = localEngineState.half === "top" ? "away" : "home";
-
-    if (resultCode === "BALL") {
-      localEngineState.count.balls += 1;
-      if (localEngineState.count.balls >= 4) {
-        localEngineState.count.balls = 0;
-        localEngineState.count.strikes = 0;
-        resultCode = "WALK";
-        if (localEngineState.runners.first && localEngineState.runners.second && localEngineState.runners.third) {
-          localEngineState.score[battingTeam] += 1;
-        }
-        localEngineState.runners.third = localEngineState.runners.third || localEngineState.runners.second;
-        localEngineState.runners.second = localEngineState.runners.second || localEngineState.runners.first;
-        localEngineState.runners.first = true;
-      }
-    } else if (resultCode === "STRIKE_SWING" || resultCode === "STRIKE_LOOK") {
-      localEngineState.count.strikes += 1;
-      if (localEngineState.count.strikes >= 3) {
-        localEngineState.outs += 1;
-        localEngineState.count.balls = 0;
-        localEngineState.count.strikes = 0;
-      }
-    } else if (resultCode === "FOUL") {
-      if (localEngineState.count.strikes < 2) {
-        localEngineState.count.strikes += 1;
-      }
-    } else if (isOutInPlay(resultCode)) {
-      localEngineState.outs += 1;
-      localEngineState.count.balls = 0;
-      localEngineState.count.strikes = 0;
-    } else if (resultCode === "HIT_SINGLE") {
-      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
-      localEngineState.runners.third = localEngineState.runners.second;
-      localEngineState.runners.second = localEngineState.runners.first;
-      localEngineState.runners.first = true;
-      localEngineState.count.balls = 0;
-      localEngineState.count.strikes = 0;
-    } else if (resultCode === "HIT_DOUBLE") {
-      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
-      if (localEngineState.runners.second) localEngineState.score[battingTeam] += 1;
-      localEngineState.runners.third = localEngineState.runners.first;
-      localEngineState.runners.second = true;
-      localEngineState.runners.first = false;
-      localEngineState.count.balls = 0;
-      localEngineState.count.strikes = 0;
-    } else if (resultCode === "HIT_TRIPLE") {
-      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
-      if (localEngineState.runners.second) localEngineState.score[battingTeam] += 1;
-      if (localEngineState.runners.first) localEngineState.score[battingTeam] += 1;
-      localEngineState.runners.third = true;
-      localEngineState.runners.second = false;
-      localEngineState.runners.first = false;
-      localEngineState.count.balls = 0;
-      localEngineState.count.strikes = 0;
-    } else if (resultCode === "HOME_RUN") {
-      if (localEngineState.runners.third) localEngineState.score[battingTeam] += 1;
-      if (localEngineState.runners.second) localEngineState.score[battingTeam] += 1;
-      if (localEngineState.runners.first) localEngineState.score[battingTeam] += 1;
-      localEngineState.score[battingTeam] += 1;
-      localEngineState.runners.third = false;
-      localEngineState.runners.second = false;
-      localEngineState.runners.first = false;
-      localEngineState.count.balls = 0;
-      localEngineState.count.strikes = 0;
-    }
-
-    let inningChange = false;
-    if (localEngineState.outs >= 3) {
-      inningChange = true;
-      localEngineState.outs = 0;
-      localEngineState.count.balls = 0;
-      localEngineState.count.strikes = 0;
-      localEngineState.runners = { first: false, second: false, third: false };
-      if (localEngineState.half === "top") {
-        localEngineState.half = "bottom";
-      } else {
-        localEngineState.half = "top";
-        localEngineState.inning += 1;
-      }
-    }
-
-    localEngineState.mental = Math.max(0, Number((localEngineState.mental + (resultCode.includes("HIT") || resultCode === "HOME_RUN" ? -0.9 : 0.4)).toFixed(1)));
-    localEngineState.recentLogs = [...localEngineState.recentLogs.slice(-29), `로컬엔진: ${resultCode}`];
-
-    return {
-      resolvedCode: resultCode,
-      inningChange,
-      snapshot: {
-        ...localEngineState,
-        count: { ...localEngineState.count },
-        runners: { ...localEngineState.runners },
-        score: { ...localEngineState.score },
-        recentLogs: [...localEngineState.recentLogs]
-      }
-    };
-  }
-
+  // 🔴 **로컬 시뮬 114줄을 지웠다** (2026-08-28).
+  //
+  //   `rollLocalResult`가 안타 종류 분포를 `Math.random()`으로 굴리고
+  //   `applyLocalResult`가 주자·아웃·이닝까지 처리했다 — **TS 안의 두 번째
+  //   야구 엔진**이었다. 규칙이 Rust와 갈릴 수밖에 없는 구조다.
+  //
+  // ⚠ **아무도 안 켜고 있었다.** `allowLocalFallback` 기본값이 false이고
+  //   `MainPage`가 그 prop을 안 넘긴다 — 죽은 갈래였다.
+  //   엔진이 없으면 위 `runPitch`가 안내 문구를 띄우고 멈춘다.
   function applyBatchStats(batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null) {
     if (!batchStats) return;
     const { hits, walks, errors, isTop } = batchStats;
@@ -1258,7 +1151,7 @@
         {
           const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
             && resultCode !== 'FOUL' && resultCode !== 'BALL';
-          if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+          if (atBatEnded) batter = { handedness: batterHandOf(currentBatter) };
           syncRetroPositions();
         }
       } else {
@@ -1271,7 +1164,7 @@
           await animateRetroRunners(resultCode, prevRunners);
           const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
             && resultCode !== 'FOUL' && resultCode !== 'BALL';
-          if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
+          if (atBatEnded) batter = { handedness: batterHandOf(currentBatter) };
           syncRetroPositions();
         }
         await tweenBall(activeMound, ms(180));
@@ -1301,49 +1194,6 @@
         lastPitchPct = effectivePitchedAt;
         return;
       }
-    } else if (allowLocalFallback) {
-      await tweenBall(clickedFieldPos, ms(220));
-      resultCode = rollLocalResult();
-      const local = applyLocalResult(resultCode);
-      resultCode = local.resolvedCode;
-      line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${localComment(resultCode)}`;
-      const prevOuts = count.out;
-      applySnapshot(local.snapshot, line, resultCode);
-      const outsGained = count.out >= prevOuts ? count.out - prevOuts : (3 - prevOuts) + count.out;
-      if (outsGained > 0) totalOutsRecorded += outsGained;
-      if (isStrike(resultCode) && count.out > prevOuts) {
-        totalStrikeouts++;
-      }
-      if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
-        totalHitsAllowed += 1;
-      }
-      if (resultCode === "WALK") {
-        totalWalksAllowed += 1;
-      }
-      if (local.inningChange) {
-        if (local.snapshot.inning > 9 && !isGameOver) {
-          await handleGameOver();
-          lastPitchPct = pitchedAt;
-          isPitching = false;
-          return;
-        }
-        const newHalf = local.snapshot.half === 'top' ? '초' : '말';
-        pushLog(`이닝 교체: ${local.snapshot.inning}회 ${newHalf}`, 'log-separator');
-        showChangeAlert();
-      }
-
-      showResultOverlay(resultCode);
-      if (isOutInPlay(resultCode) || isHit(resultCode)) {
-        await tweenBall(getBattedTarget(resultCode), ms(300));
-      }
-      {
-        await animateRetroRunners(resultCode, prevRunners);
-        const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
-          && resultCode !== 'FOUL' && resultCode !== 'BALL';
-        if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
-        syncRetroPositions();
-      }
-      await tweenBall(activeMound, ms(180));
     } else {
       isPitching = false;
       return;
@@ -1479,6 +1329,28 @@
 
   // 엔진이 없을 때 쓰는 문구도 같은 표에서 온다
   const localComment = (code: PitchResultCode) => logLabel(code);
+
+  /**
+   * 타석에 선 타자의 **실제 좌우**.
+   *
+   * 🔴 예전엔 `Math.random() < 0.32`로 매 타석 굴렸다 — TS 게임 로직에서
+   *   난수는 금지고, 무엇보다 **화면에 뜬 타자와 스프라이트가 달랐다.**
+   *   같은 타자가 타석마다 좌우가 바뀌었다.
+   *
+   * ⚠ 좌우는 **엔진이 안 보는 값**이다(`BatterStats`에 없다) — 결과에
+   *   영향이 없는 스프라이트 표시다. 그래서 세이브에서 직접 읽는다.
+   * ⚠ 스위치히터(`"S"`)는 투수 반대쪽에 선다 — 지금은 우투 기준으로 좌타다.
+   * ⚠ 못 찾으면 우타로 둔다. **지어내지 않는다.**
+   */
+  function batterHandOf(b: SnapshotBatter | null | undefined): 'L' | 'R' {
+    const id = b?.id;
+    if (!id) return 'R';
+    const h = $gameStore.npcs.find((x) => x.npcId === id)?.handedness
+      ?? (id === $gameStore.protagonist.id ? $gameStore.protagonist.handedness : undefined);
+    if (h === 'L') return 'L';
+    if (h === 'S') return 'L';
+    return 'R';
+  }
 </script>
 
 <section class="match-engine-empty" aria-label="match engine workspace">
