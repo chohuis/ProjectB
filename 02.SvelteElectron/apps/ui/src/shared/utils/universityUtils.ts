@@ -84,17 +84,64 @@ export function toGpa45(pct: number): number {
   return 1.0;
 }
 
+// ── 진로 점수 표 (2026-08-28) ────────────────────────────────────
+//
+// 🔴 **숫자가 코드에 박혀 있었다.** 우승 100 · 준우승 60 · 4강 30 · 수상 ×15가
+//   전부 여기 리터럴이었다. 밸런스 값을 코드에 두면 규칙 파일과 어긋난 걸
+//   아무도 모른다 — 이 저장소에서 되풀이된 형태다.
+//
+// ⚠ **Rust로 안 내린다.** 저장된 기록을 더하는 집계고 난수도 확률도 없다.
+//   화면이 반응형(`$:`)으로 부르는 자리가 있어 IPC를 태우면 렌더가 깨진다.
+//   숫자만 규칙 파일로 올리고 합산은 여기 둔다.
+//
+// ⚠ **못 채우면 옛 값으로 떨어진다.** 부팅 순서가 어긋나도 점수가 0이 되지
+//   않게 — 0이면 "대회 성적이 없는 선수"가 되어 진로가 통째로 막힌다.
+interface HsScoreTable {
+  champion: number; runnerUp: number; semiFinal: number;
+  notQualified: number; perAward: number;
+}
+interface IndividualScoreTable {
+  champion: number; runnerUp: number; semiFinal: number; perAward: number;
+  ipPerInning: number; ipCap: number;
+  eraBase: number; eraPerRun: number; eraMin: number; eraMax: number;
+}
+
+const HS_FALLBACK: HsScoreTable = {
+  champion: 100, runnerUp: 60, semiFinal: 30, notQualified: 10, perAward: 15,
+};
+const IND_FALLBACK: IndividualScoreTable = {
+  champion: 25, runnerUp: 15, semiFinal: 8, perAward: 20,
+  ipPerInning: 0.5, ipCap: 30, eraBase: 3.0, eraPerRun: 8, eraMin: -15, eraMax: 25,
+};
+
+let _hs: HsScoreTable = HS_FALLBACK;
+let _ind: IndividualScoreTable = IND_FALLBACK;
+
+/**
+ * 규칙 파일에서 표를 캐시한다. `loadRosterRules()` 결과를 그대로 넘긴다.
+ *
+ * ⚠ 안 부르면 위 폴백이 쓰인다 — **조용히 0이 되지는 않는다.**
+ *   `primeForeignRules`와 같은 방식이고 같은 자리(`stores/master`)에서 부른다.
+ */
+export function primeCareerScoreRules(rulesFile: {
+  careerScoreRules?: { highschool?: Partial<HsScoreTable>; individual?: Partial<IndividualScoreTable> };
+}): void {
+  const c = rulesFile.careerScoreRules;
+  if (c?.highschool) _hs = { ...HS_FALLBACK, ...c.highschool };
+  if (c?.individual) _ind = { ...IND_FALLBACK, ...c.individual };
+}
+
 // ── 고교 야구 점수 계산 (careerRecords 기반) ─────────────────────
 export function calcHsBaseballScore(records: CareerSeasonRecord[]): number {
   return records
     .filter((r) => r.leagueId === "LEAGUE_HIGHSCHOOL")
     .reduce((total, r) => {
       let score = 0;
-      if (r.psResult === "champion")     score += 100;
-      else if (r.psResult === "runnerUp") score += 60;
-      else if (r.psResult === "semiFinal") score += 30;
-      else if (r.psResult === "notQualified") score += 10;
-      score += (r.awards?.length ?? 0) * 15;
+      if (r.psResult === "champion")          score += _hs.champion;
+      else if (r.psResult === "runnerUp")     score += _hs.runnerUp;
+      else if (r.psResult === "semiFinal")    score += _hs.semiFinal;
+      else if (r.psResult === "notQualified") score += _hs.notQualified;
+      score += (r.awards?.length ?? 0) * _hs.perAward;
       return total + score;
     }, 0);
 }
@@ -112,18 +159,18 @@ export function checkUniversityEligibility(
   return { eligible: meetsAcademic && meetsBaseball, meetsAcademic, meetsBaseball };
 }
 
-// ── 대학 재학 중 스카우트 보너스 (대학 teamId 기준) ──────────────
-export function getUniversityScoutBonus(power: number | null | undefined): number {
-  return UNIVERSITY_SCOUT_BONUS[tierOfPower(power)] ?? 0;
-}
+// ⚠ `getUniversityScoutBonus`를 지웠다 (2026-08-28) — 아무도 안 불렀다.
+//   표(`UNIVERSITY_SCOUT_BONUS`)는 남긴다. 화면이 티어별 값을 그대로 보여준다.
 
-// ── 드래프트 라운드 → 1군/2군 연봉 계산 ─────────────────────────
-export function calcDraftSalary(round: number, ovr: number): number {
-  if (round <= 6) {
-    return Math.max(3000, Math.round((ovr - 45) * 220));
-  }
-  return Math.max(1500, Math.round((ovr - 45) * 120));
-}
+// 🔴 **`calcDraftSalary`를 지웠다** (2026-08-28).
+//
+//   `(ovr − 45) × 220`을 여기서 다시 적고 있었는데 **아무도 안 불렀다.**
+//   같은 식이 Rust `player_engine.rs`의 독립리그 스카우트 제안에 있고,
+//   신인 계약은 규칙 파일의 `draftRules.contract`가 정본이다
+//   (KBO 규정대로 연봉은 최저연봉 균일이고 차등은 계약금이 진다).
+//
+// ⚠ **셋이 서로 다른 것을 재고 있었다.** 죽은 사본을 남겨 두면 언젠가
+//   누군가 그걸 부른다 — 그때 신인 연봉이 규정을 벗어난다.
 
 // ── 독립 리그 ─────────────────────────────────────────────────────
 //
@@ -197,18 +244,19 @@ export function calcIndividualScore(records: CareerSeasonRecord[]): number {
   return records.reduce((total, r) => {
     let score = 0;
     // 팀 성적 — 남기되 **작게**. 큰 무대를 밟은 경험은 값이 있다
-    if (r.psResult === "champion")        score += 25;
-    else if (r.psResult === "runnerUp")   score += 15;
-    else if (r.psResult === "semiFinal")  score += 8;
+    if (r.psResult === "champion")        score += _ind.champion;
+    else if (r.psResult === "runnerUp")   score += _ind.runnerUp;
+    else if (r.psResult === "semiFinal")  score += _ind.semiFinal;
     // 개인 수상 — 이게 개인 축이다
-    score += (r.awards?.length ?? 0) * 20;
+    score += (r.awards?.length ?? 0) * _ind.perAward;
     // 개인 성적 — 이닝과 ERA
     const st = r.stats;
     if (st?.type === "pitcher" && st.ip > 0) {
       // 한 시즌 60이닝이면 주축이다 — 그 근처를 만점으로 본다
-      score += Math.min(30, st.ip * 0.5);
+      score += Math.min(_ind.ipCap, st.ip * _ind.ipPerInning);
       // ERA 3.00이 기준. 좋으면 더, 나쁘면 깎는다
-      score += Math.max(-15, Math.min(25, (3.00 - st.era) * 8));
+      score += Math.max(_ind.eraMin,
+        Math.min(_ind.eraMax, (_ind.eraBase - st.era) * _ind.eraPerRun));
     }
     return total + score;
   }, 0);

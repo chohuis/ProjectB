@@ -1088,6 +1088,33 @@
     "faIntervalYears": 4,
     "_faIntervalNote": "FA 재취득 주기. 없으면 FA 이적이 연속으로 나온다"
   },
+  "careerScoreRules": {
+    "_note": "진로 판정에 쓰는 두 점수. 2026-08-28에 universityUtils.ts에서 옮겼다 - 숫자가 코드에 박혀 있었다. **값은 안 바꿨다.**",
+    "_why": "Rust로 내리지 않는다 - 저장된 기록을 더하는 집계이고 난수도 확률도 없다. 화면이 반응형($:)으로 부르는 자리가 있어 IPC를 태우면 렌더가 깨진다. 코드에 박힌 **숫자**만 여기로 올린다",
+    "highschool": {
+      "_note": "대학 입시용 **팀 점수**. 우승팀이면 벤치도 같은 점수를 받는다 - 그게 입시의 성격이다",
+      "champion": 100,
+      "runnerUp": 60,
+      "semiFinal": 30,
+      "notQualified": 10,
+      "perAward": 15
+    },
+    "individual": {
+      "_note": "해외 2군 직행용 **개인 기여**. 팀 점수를 그대로 쓰면 우승팀 벤치가 뚫는다는 사용자 지적으로 새로 만들었다(2026-08-27) - 그래서 팀 성적을 100 → 25로 낮추고 이닝·ERA를 넣었다",
+      "champion": 25,
+      "runnerUp": 15,
+      "semiFinal": 8,
+      "perAward": 20,
+      "ipPerInning": 0.5,
+      "ipCap": 30,
+      "_ipNote": "한 시즌 60이닝이면 주축이다 - 그 근처를 만점으로 본다",
+      "eraBase": 3.0,
+      "eraPerRun": 8,
+      "eraMin": -15,
+      "eraMax": 25,
+      "_eraNote": "ERA 3.00이 기준. 좋으면 더 주고 나쁘면 깎는다"
+    }
+  },
   "protagonistRules": {
     "_note": "주인공 생성값. 2026-08-28에 NewGamePage.svelte에서 옮겼다 - 난수는 Rust가 굴린다(CLAUDE.md 아키텍처). **분포는 안 바꿨다** - 옮기기만 했다.",
     "potentialMin": 80,

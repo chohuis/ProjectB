@@ -14,6 +14,7 @@ import {
 import { HS_REGIONS } from "../utils/leagueTeams.generated";
 import { buildMarkIndex } from "../utils/teamMark";
 import { primeForeignRules } from "../utils/foreignSlots";
+import { primeCareerScoreRules } from "../utils/universityUtils";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
@@ -959,6 +960,9 @@ function createMasterStore() {
         if (genRules) {
           primeForeignRules(genRules as Parameters<typeof primeForeignRules>[0]);
           primeTraitDisplay(genRules);
+          // 진로 점수 표 — 대학 입시·해외 2군 판정이 쓴다.
+          // ⚠ 안 채우면 코드의 폴백이 쓰인다 — 조용히 0이 되지는 않는다
+          primeCareerScoreRules(genRules as Parameters<typeof primeCareerScoreRules>[0]);
         }
         // 경기 화면이 투구 선택의 스태미나 소모를 표시한다.
         // **엔진과 같은 파일**을 읽는다 — 숫자를 두 벌로 두지 않는다.
