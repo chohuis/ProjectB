@@ -95,8 +95,6 @@ export declare function runDraftNative(paramsJson: string): string
 /** 드래프트 결과 NPC에 적용 */
 export declare function applyDraftNative(paramsJson: string): string
 /** 배경 고교 졸업생 드래프트 시뮬레이션 */
-export declare function bgHsGraduateDraftNative(paramsJson: string): string
-/** 주인공 드래프트 결과 결정 */
 export declare function determineProtagonistDraftNative(paramsJson: string): string
 /** 주인공 학년 진급 */
 export declare function advanceProtagonistGradeNative(paramsJson: string): string
@@ -286,7 +284,6 @@ export declare function shuffleAblConferencesNative(p: string): string
 export declare function weekCalcFacilityEffNative(p: string): string
 export declare function weekCalcInjuryNative(p: string): string
 export declare function weekCalcHsAdmissionsNative(p: string): string
-export declare function weekCalcTradeRumorNative(p: string): string
 export declare function weekCalcExamResultNative(p: string): string
 export declare function weekCalcWeeklyStudyNative(p: string): string
 export declare function weekCalcSemesterResultNative(p: string): string

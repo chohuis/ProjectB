@@ -511,17 +511,7 @@ pub fn apply_draft_native(params_json: String) -> String {
 }
 
 /// 배경 고교 졸업생 드래프트 시뮬레이션
-#[napi]
-pub fn bg_hs_graduate_draft_native(params_json: String) -> String {
-    let params: npc_sim::BgHsGraduateDraftParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v,
-        Err(e) => return parse_err("bgHsGraduateDraftNative", e),
-    };
-    let result = npc_sim::bg_hs_graduate_draft(params);
-    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("bgHsGraduateDraftNative/serialize", e))
-}
 
-/// 주인공 드래프트 결과 결정
 #[napi]
 pub fn determine_protagonist_draft_native(params_json: String) -> String {
     let params: ProtagonistDraftParams = match serde_json::from_str(&params_json) {
@@ -1393,14 +1383,6 @@ pub fn week_calc_hs_admissions_native(p: String) -> String {
         .unwrap_or_else(|e| parse_err("weekCalcHsAdmissionsNative/serialize", e))
 }
 
-#[napi]
-pub fn week_calc_trade_rumor_native(p: String) -> String {
-    let params: week_engine::TradeRumorPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcTradeRumorNative", e),
-    };
-    serde_json::to_string(&week_engine::calc_trade_rumor(params))
-        .unwrap_or_else(|e| parse_err("weekCalcTradeRumorNative/serialize", e))
-}
 
 #[napi]
 pub fn week_calc_exam_result_native(p: String) -> String {

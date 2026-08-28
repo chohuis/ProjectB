@@ -180,7 +180,6 @@ declare global {
       npcGenerateFreshmen:          (p: string) => Promise<string>;
       npcRunDraft:                  (p: string) => Promise<string>;
       npcApplyDraft:                (p: string) => Promise<string>;
-      npcBgHsGraduateDraft:        (p: string) => Promise<string>;
       npcDetermineProtagonistDraft: (p: string) => Promise<string>;
       npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
       npcAdvanceAllGrades:          (p: string) => Promise<string>;
@@ -250,7 +249,6 @@ declare global {
       weekCalcFacilityEff:  (p: string) => Promise<string>;
       weekCalcInjury:       (p: string) => Promise<string>;
       weekCalcHsAdmissions: (p: string) => Promise<string>;
-      weekCalcTradeRumor:   (p: string) => Promise<string>;
       weekCalcExamResult:   (p: string) => Promise<string>;
       weekCalcMilitary:     (p: string) => Promise<string>;
       weekCalcNpcFallback:  (p: string) => Promise<string>;
