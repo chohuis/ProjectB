@@ -827,6 +827,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         let ip        = acc.outs as f64 / 3.0;
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, hr: acc.hr, k: acc.k, bb: acc.bb, hbp: acc.hbp, pc: acc.pc, decision,
+            gs: pit_q.first().map(|p| &p.id == id).unwrap_or(false),
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
     }

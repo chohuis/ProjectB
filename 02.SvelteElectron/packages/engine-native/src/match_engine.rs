@@ -2347,15 +2347,33 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
 fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameLine> {
     use crate::sim_types::PlayerGameLine;
     let mut out = Vec::new();
-    for q in [&state.my_queue, &state.opponent_queue] {
+    // 🔴 **`decision`이 빈 문자열이었다** (2026-08-28). "승패는 리그 쪽이
+    //   정한다"고 적혀 있었는데 **리그 쪽이 안 채웠다.** 모든 리그가
+    //   이 경로라서, 실측 투수 라인의 **77.3%가 빈 값**이었고 KBL·ABL·JBL·
+    //   고교·대학·독립 **NPC 전원이 승·패·세이브·홀드 0**이었다.
+    //
+    // ⚠ 규칙은 `npc_sim::decide_pitcher`가 정본이다 — 여기서 다시 적지 않는다.
+    let my_is_home = state.protagonist_side == "home";
+    let margin = (state.score.home - state.score.away).abs();
+    let is_draw = state.score.home == state.score.away;
+    for (q, is_home) in [(&state.my_queue, my_is_home), (&state.opponent_queue, !my_is_home)] {
+        let team_won = if is_home { state.score.home > state.score.away }
+                       else       { state.score.away > state.score.home };
+        // 큐 0번이 선발, 마지막이 마무리 — `build_pit_queue`와 같은 규약이다
+        let starter_id = q.lines.first().map(|l| l.player_id.as_str());
+        let closer_id  = q.pitchers.last().and_then(|p| p.name.as_deref());
         for l in &q.lines {
             if l.outs == 0 && l.pc == 0 { continue; }   // 안 던진 투수는 안 넣는다
+            let is_starter = starter_id == Some(l.player_id.as_str());
+            let is_closer  = closer_id  == Some(l.player_id.as_str()) && !is_starter;
             out.push(PlayerGameLine::Pitcher {
                 player_id: l.player_id.clone(),
                 ip: (l.outs as f64) / 3.0,
                 er: l.er, h: l.h, hr: l.hr, k: l.k, bb: l.bb, hbp: l.hbp, pc: l.pc,
-                // 승패는 리그 쪽이 정한다 — 여기서 만들면 두 곳이 달라진다
-                decision: String::new(),
+                // ⚠ 무승부면 아무도 승패를 안 진다 — TS 래퍼와 같은 규칙이다
+                decision: if is_draw { "ND".to_string() }
+                          else { crate::npc_sim::decide_pitcher(is_starter, is_closer, l.outs, team_won, margin) },
+                gs: is_starter,
                 risp_ab: l.risp_ab, risp_h: l.risp_h,
             });
         }

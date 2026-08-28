@@ -16,6 +16,9 @@ export interface PitcherGameLine {
   /** 사구 — 볼넷과 다른 사건이다. ⚠ 구 세이브 로그엔 없다 */
   hbp?: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
+  /** **선발 등판인가.** 화면 넷이 GS(선발)를 표시하는데 올리는 코드가
+   *  없어서 전원 0이었다 (2026-08-28). ⚠ 구 세이브 로그엔 없다 */
+  gs?: boolean;
   pitchCount?: number;
   /** 득점권 타수 — 위기 상황 성적을 보여주는 스플릿.
    *

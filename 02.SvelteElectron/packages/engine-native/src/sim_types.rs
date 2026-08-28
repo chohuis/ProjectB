@@ -823,6 +823,11 @@ pub enum PlayerGameLine {
         hbp: i32,
         pc: i32,
         decision: String,
+        /// **선발 등판인가.** 화면 넷이 GS(선발)를 표시하는데 이 값이 없어서
+        /// `accumulateStats`가 올릴 근거가 없었다 — 전원 0이었다.
+        /// ⚠ `default`다: 구 세이브의 로그엔 없다
+        #[serde(default)]
+        gs: bool,
         /// 득점권 피안타율 — 위기 보정이 성적을 만드는지 보여주는 유일한 창구다.
         /// 시즌 ERA로는 못 본다(득점권은 전체 타석의 25%뿐이라 희석된다).
         #[serde(rename = "rispAb", default)]

@@ -379,10 +379,28 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     const hit = rot.find((x: any) => x.id === id);
     return hit ? [hit] : [];
   };
-  const homePitchers = [...starterOf(params.homeRotation, params.homeRotIdx ?? 0), ...params.homeBullpen,
-                        ...(params.homeCloser ? [params.homeCloser] : [])].map(toEnginePitcher);
-  const awayPitchers = [...starterOf(params.awayRotation, params.awayRotIdx ?? 0), ...params.awayBullpen,
-                        ...(params.awayCloser ? [params.awayCloser] : [])].map(toEnginePitcher);
+  // 🔴 **마무리를 불펜에서 뺀다.** `getTeamBullpen`이 마무리를 불펜 목록에도
+  //   같이 넣어 준다(그건 의도다 — 다른 호출부가 전체 불펜을 본다). 그대로
+  //   큐에 실으면 **마무리가 점수순 정렬에서 대개 맨 앞이라 6~7회에 소모되고
+  //   9회에 남아 있지 않다.** `npc_sim::build_pit_queue`는 이걸 걸러내는데
+  //   이 경로만 안 걸러냈다 — **고친 곳이 둘인데 하나만이었다.**
+  const queueOf = (rot: any[], idx: number, bullpen: any[], closer: any) => {
+    const closerId = closer?.id;
+    const seen = new Set<string>();
+    const push = (arr: any[], x: any) => {
+      if (!x || seen.has(x.id)) return;
+      seen.add(x.id); arr.push(x);
+    };
+    const out: any[] = [];
+    for (const x of starterOf(rot, idx)) push(out, x);
+    for (const x of bullpen) { if (x?.id !== closerId) push(out, x); }
+    push(out, closer);
+    return out;
+  };
+  const homePitchers = queueOf(params.homeRotation, params.homeRotIdx ?? 0,
+                               params.homeBullpen, params.homeCloser).map(toEnginePitcher);
+  const awayPitchers = queueOf(params.awayRotation, params.awayRotIdx ?? 0,
+                               params.awayBullpen, params.awayCloser).map(toEnginePitcher);
 
   // 씨앗 — **같은 세이브·같은 주의 같은 경기는 늘 같은 값**이어야 한다.
   // 그래야 세이브를 다시 열어도 지난 주 순위표가 안 바뀐다.

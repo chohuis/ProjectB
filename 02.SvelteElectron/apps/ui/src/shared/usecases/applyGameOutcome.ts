@@ -286,6 +286,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     k: Math.max(0, outcome.strikeouts),
     bb: Math.max(0, outcome.walksAllowed),
     decision,
+    // ⚠ 안 실으면 주인공만 선발 등판이 0으로 남는다
+    gs: role === "SP",
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   } : null;
   let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0

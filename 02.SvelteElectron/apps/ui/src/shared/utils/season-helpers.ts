@@ -189,7 +189,10 @@ export function accumulateStats(
       const sv  = prev.sv  + (line.decision === "SV" ? 1 : 0);
       const hd  = prev.hd  + (line.decision === "HD" ? 1 : 0);
       next[line.playerId] = {
-        type:"pitcher", g: prev.g+1, gs: prev.gs, w, l, sv, hd, ip, er, h, k, bb,
+        // 🔴 `gs: prev.gs`였다 — **올리는 코드가 아무 데도 없어** 전원 0이었다.
+        //   화면 넷이 이걸 표시한다(PlayerDetailModal · CareerEndScreen ·
+        //   SeasonEndModal · LeaguePage). 엔진이 `gs`를 보낸다
+        type:"pitcher", g: prev.g+1, gs: prev.gs + (line.gs ? 1 : 0), w, l, sv, hd, ip, er, h, k, bb,
         ...(hr !== undefined ? { hr } : {}),
         ...(pHbp !== undefined ? { hbp: pHbp } : {}),
         era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
