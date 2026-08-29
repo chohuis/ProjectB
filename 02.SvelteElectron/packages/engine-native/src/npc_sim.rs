@@ -1718,12 +1718,24 @@ pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
 
     for team in keys {
         let idxs = match by_team.get(&team) { Some(v) => v.clone(), None => continue };
-        if idxs.len() < FIELD.len() { continue; }   // 자리 수보다 적으면 전환해도 소용없다
+        // ⚠ **포수만은 예외다.** 야수가 자리 수(8)보다 적으면 돌려도 다른
+        //   자리가 비니 원래는 통째로 건너뛴다. 그런데 **포수가 없는 팀은
+        //   대개 야수가 적은 팀이라 정작 필요한 팀에서 안 돌았다.**
+        //   실측(4씨앗 · 5시즌): 고교 포수 0명이 세 씨앗에서 1팀씩 남았다.
+        //
+        //   다른 자리는 대체가 되지만 **포수는 전문 요원이라 0명이면 경기가
+        //   성립하지 않는다.** 아래 `pick(3)→pick(2)` 주석이 이미 같은 논리를
+        //   쓴다 — "백업이 없는 것이 아무도 없는 것보다 낫다".
+        let thin = idxs.len() < FIELD.len();
+        let has_catcher = idxs.iter().any(|&i| npcs[i].position == "C");
+        if thin && has_catcher { continue; }   // 얇은데 포수는 있다 — 둘 자리가 없다
 
         let mut cnt: HashMap<String, Vec<usize>> = HashMap::new();
         for &i in &idxs { cnt.entry(npcs[i].position.clone()).or_default().push(i); }
 
         for pos in FIELD {
+            // 얇은 팀은 **포수만** 메운다 — 나머지를 건드리면 준 자리가 빈다
+            if thin && pos != "C" { continue; }
             if cnt.get(pos).map_or(0, |v| v.len()) > 0 { continue; }
             // ⚠ **3명 조건만으로는 못 메운다.** 야수 14명을 8자리에 나누면
             // 대부분 1~2명씩이라 3명인 자리가 아예 없다 — 실측에서 야수 16명인
@@ -1736,7 +1748,11 @@ pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
                 .filter(|p| **p != pos)
                 .filter(|p| cnt.get(**p).map_or(0, |v| v.len()) >= min)
                 .max_by_key(|p| (cnt.get(**p).map_or(0, |v| v.len()), std::cmp::Reverse(**p)));
-            let donor = pick(3).or_else(|| pick(2));
+            // ⚠ 얇은 팀은 **1명인 자리에서도** 가져온다. 야수 7명이 8자리에
+            //   흩어지면 2명인 자리조차 없다 — 그러면 포수를 영영 못 만든다.
+            //   준 자리가 0이 되지만 **포수 0명보다는 낫다.**
+            let donor = pick(3).or_else(|| pick(2))
+                .or_else(|| if thin { pick(1) } else { None });
             let Some(from) = donor else { continue };
             let Some(pool) = cnt.get_mut(*from) else { continue };
             // 그 자리에서 능력치가 가장 낮은 사람을 돌린다 — 주전은 자리를 지킨다

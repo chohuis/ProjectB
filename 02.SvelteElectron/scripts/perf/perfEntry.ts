@@ -6221,3 +6221,55 @@ export function clubBudgetProbe(leagueId: string): Record<string, unknown> {
     rows: rows.map((r) => `${r.name}:${Math.round(r.now / 10000)}억(×${(r.now / r.base).toFixed(2)})`),
   };
 }
+
+/**
+ * 고교 로스터 실태 — **정원 30인데 실측이 18이다.** 어디서 새는가.
+ *
+ * ⚠ 신입 충원은 `generateFreshmenV3`가 `rosterSize - 현재`만큼 만든다.
+ *   그게 도는데도 안 차면 **세는 기준이 다르거나** 다른 유출이 있다.
+ *   ⚠ 충원 코드는 `currentLeague`로 세는데 여기서도 **같게** 센다 —
+ *     기준이 어긋나면 고칠 자리와 재는 자리가 갈린다.
+ */
+export function hsRosterProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const FIELD = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+  const size = new Map<string, number>();
+  const bat = new Map<string, number>();
+  const pit = new Map<string, number>();
+  const cat = new Map<string, number>();
+  const byGrade: Record<string, number> = {};
+  // 🔴 **검사와 기준이 갈렸다.** `rosterCompositionProbe` 는 active·injured
+  //   만 세는데 여기선 retired 만 뺐다 — 최소 야수가 15 vs 9 로 갈렸다.
+  //   어느 쪽이 맞는지는 **상태 분포를 봐야** 안다.
+  const statusTally: Record<string, number> = {};
+  for (const n of g.npcs ?? []) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    if (n.currentLeague !== "LEAGUE_HIGHSCHOOL") continue;
+    const t = n.currentTeam;
+    size.set(t, (size.get(t) ?? 0) + 1);
+    if (n.playerType === "pitcher") pit.set(t, (pit.get(t) ?? 0) + 1);
+    else if (FIELD.includes(n.position ?? "")) bat.set(t, (bat.get(t) ?? 0) + 1);
+    if (n.position === "C") cat.set(t, (cat.get(t) ?? 0) + 1);
+    const gr = String((n as { grade?: number }).grade ?? "?");
+    byGrade[gr] = (byGrade[gr] ?? 0) + 1;
+    statusTally[n.careerStatus] = (statusTally[n.careerStatus] ?? 0) + 1;
+  }
+  const teams = [...size.keys()];
+  const stat = (m: Map<string, number>) => {
+    const v = teams.map((t) => m.get(t) ?? 0).sort((a, b) => a - b);
+    if (!v.length) return { min: 0, med: 0, max: 0 };
+    return { min: v[0], med: v[Math.floor(v.length / 2)], max: v[v.length - 1] };
+  };
+  return {
+    teams: teams.length,
+    total: [...size.values()].reduce((a, b) => a + b, 0),
+    size: stat(size),
+    batters: stat(bat),
+    pitchers: stat(pit),
+    byGrade,
+    byStatus: statusTally,
+    // 검사가 보는 두 조건
+    under9: teams.filter((t) => (bat.get(t) ?? 0) < 9).length,
+    noCatcher: teams.filter((t) => (cat.get(t) ?? 0) === 0).length,
+  };
+}
