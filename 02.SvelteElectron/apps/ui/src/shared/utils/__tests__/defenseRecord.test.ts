@@ -63,8 +63,49 @@ describe("선수별 수비 기록", () => {
   /** 🔴 호출부가 안 넘기면 **원정 수비가 다시 사라진다** */
   it("두 경로가 상대 수비진을 넘긴다", () => {
     expect(read("apps/ui/src/shared/utils/gameSimulator.ts"))
-      .toContain("opponentFielders: buildFieldersFromLineup(params.awayLineup)");
+      .toContain("opponentFielders: buildFieldersFromLineup(params.awayLineup, awayStarter)");
     expect(read("apps/ui/src/pages/main/MainPage.svelte"))
       .toContain("opponentFielders: buildFielders(opponentTeamId, $entitiesL10n)");
+  });
+});
+
+/**
+ * **지명타자제** (2026-08-29 · 사용자 확정).
+ *
+ * 🔴 리그 경기가 **타순을 수비 자리로** 쓰고 있었다 — `lineup[i]`를 그대로
+ *   `pos[i]`에 앉혀서:
+ *     (a) **타자 하나가 투수 자리를 지켰고**
+ *     (b) 유격수가 좌익을 보는 식으로 자리가 뒤죽박죽이었다
+ *
+ * ⚠ **DH는 태생이 아니라 그 경기의 자리다**(사용자 지적). 메인 포지션이
+ *   있는 선수 중 야수 8자리를 못 받은 한 명이 DH가 된다 — 수비를 안 나가므로
+ *   수비 기록이 안 쌓인다.
+ *
+ * 실측(씨앗 555 · 3시즌 · 규정타자 90):
+ *   평균 수비율 **0.875 → 0.988** · 최저 0.000 → 0.941
+ *   (실제 KBO는 약 0.980)
+ */
+describe("지명타자제", () => {
+  const GS = readFileSync(
+    resolve(__dirname, "../../../../../../apps/ui/src/shared/utils/gameSimulator.ts"), "utf8");
+
+  /** 🔴 타순이 곧 수비 자리가 아니다 */
+  it("포지션으로 수비 자리를 맞춘다", () => {
+    expect(GS).toContain("const byPos = (want: string) => {");
+    expect(GS.includes("const b = lineup[i % Math.max(1, lineup.length)];")).toBe(false);
+  });
+
+  /** 🔴 P 자리에 타자가 서 있었다 */
+  it("투수 자리에 실제 선발이 선다", () => {
+    expect(GS).toContain("playerId: starter?.id ?? \"\",");
+    expect(GS).toContain("buildFieldersFromLineup(params.homeLineup, homeStarter)");
+    expect(GS).toContain("buildFieldersFromLineup(params.awayLineup, awayStarter)");
+  });
+
+  /** ⚠ 자리를 못 받은 한 명이 DH — 수비 기록이 안 쌓인다 */
+  it("자리를 두 번 주지 않는다", () => {
+    // `used` 로 중복을 막는다 — 안 막으면 한 사람이 두 자리를 지킨다
+    expect(GS).toContain("const used = new Set<string>();");
+    expect(GS).toContain("lineup.find((b) => !used.has(b.id) && b.position === want)");
   });
 });

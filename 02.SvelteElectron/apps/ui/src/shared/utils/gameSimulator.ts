@@ -377,12 +377,42 @@ const _FIELD_XY: Record<string, { x: number; y: number }> = {
  * ⚠ 그래서 **밸런스가 움직인다** — 수비 좋은 팀과 나쁜 팀이 갈린다.
  *   실측은 커밋에 남긴다(사용자 확정: 멈추지 않고 진행).
  */
-function buildFieldersFromLineup(lineup: SimBatter[]): Record<string, unknown>[] {
+function buildFieldersFromLineup(
+  lineup: SimBatter[],
+  starter?: SimPitcher,
+): Record<string, unknown>[] {
   const pos = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
-  return pos.map((p, i) => {
-    const b = lineup[i % Math.max(1, lineup.length)];
-    // ⚠ 타순은 수비 위치가 아니다 — 라인업 순서로 자리를 채우는 건 근사다.
-    //   `SimBatter`가 포지션을 안 들고 있어서 지금은 이게 최선이다.
+  // 🔴 **타순을 수비 자리로 쓰고 있었다** (2026-08-29). `lineup[i]`를 그대로
+  //   `pos[i]`에 앉혀서 (a) **타자 하나가 투수 자리를 지켰고**
+  //   (b) 유격수가 좌익을 보는 식으로 자리가 뒤죽박죽이었다.
+  //
+  // ⚠ 이제 **포지션으로 맞춘다.** `SimBatter`가 `position`을 들고 있다.
+  // ⚠ P 자리엔 **실제 선발 투수**가 선다.
+  //
+  // 🔴 **지명타자가 여기서 생긴다** (사용자 확정 2026-08-29): 라인업 9명 중
+  //   야수 8자리를 채우고 **남는 한 명이 DH**다 — 수비를 안 나가므로 수비
+  //   기록이 안 쌓인다. DH는 태생이 아니라 **그 경기의 자리**다.
+  const used = new Set<string>();
+  const byPos = (want: string) => {
+    const hit = lineup.find((b) => !used.has(b.id) && b.position === want);
+    if (hit) { used.add(hit.id); return hit; }
+    // 그 자리 선수가 없으면 남은 사람으로 메운다 — 자리가 비면 수비가 안 선다
+    const any = lineup.find((b) => !used.has(b.id));
+    if (any) used.add(any.id);
+    return any;
+  };
+  return pos.map((p) => {
+    if (p === "P") {
+      return {
+        position: p,
+        playerId: starter?.id ?? "",
+        name: starter?.id ?? p,
+        // ⚠ 투수는 타격 능력치가 얇다 — 수비는 리그 평균으로 둔다
+        fielding: 50, arm: 50, speed: 50,
+        x: _FIELD_XY[p].x, y: _FIELD_XY[p].y,
+      };
+    }
+    const b = byPos(p);
     return {
       position: p,
       playerId: b?.id ?? "",
@@ -441,6 +471,8 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     push(out, closer);
     return out;
   };
+  const homeStarter = starterOf(params.homeRotation, params.homeRotIdx ?? 0)[0];
+  const awayStarter = starterOf(params.awayRotation, params.awayRotIdx ?? 0)[0];
   const homePitchers = queueOf(params.homeRotation, params.homeRotIdx ?? 0,
                                params.homeBullpen, params.homeCloser).map(toEnginePitcher);
   const awayPitchers = queueOf(params.awayRotation, params.awayRotIdx ?? 0,
@@ -474,10 +506,12 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     // 주인공 경기는 넘기는데 리그 경기만 안 넘기면 **같은 엔진인데 두 저울**이 된다.
     // 실측에서 수비 50 vs 66이 ERA 3점 차이였다.
     // 타순이 곧 수비 라인업이다(리그 시뮬은 포지션을 따로 안 들고 있다)
-    fielders: buildFieldersFromLineup(params.homeLineup),
+    // ⚠ **선발 투수를 넘긴다.** 안 넘기면 P 자리가 비고, 예전처럼 타자가
+    //   투수 자리를 지키게 된다
+    fielders: buildFieldersFromLineup(params.homeLineup, homeStarter),
     // 🔴 **원정 수비가 없었다** (2026-08-29). 안 넘기면 홈 9명이 **양 팀 이닝을
     //   다 지킨다** — 수비 기록이 홈 선수에게 몰리고 원정 타자는 홈 수비를 만난다
-    opponentFielders: buildFieldersFromLineup(params.awayLineup),
+    opponentFielders: buildFieldersFromLineup(params.awayLineup, awayStarter),
   }));
   const st = JSON.parse(startRaw);
   if (st.error) throw new Error(`[C-4] startMatch: ${st.error}`);
