@@ -6,15 +6,19 @@ const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 const SEED = Number(process.env.PF_SEED || 20260829);
 const YEARS = Number(process.env.PF_YEARS || 5);
-const LG = process.env.PF_LEAGUE || "LEAGUE_KBL";
+// 세 프로 리그를 한 번에 본다 — ABL·JBL 도 정산이 도는지 확인해야 한다
+const LGS = (process.env.PF_LEAGUE || "LEAGUE_KBL,LEAGUE_ABL,LEAGUE_JBL").split(",");
 (async () => {
   const { app, tmp } = await headless.boot("cbud");
   let why = "완주";
   try {
     await app.boot({ slotId: "CB", worldSeed: SEED, seasonYear: 2026 });
     const start = app.currentSeason();
-    const p0 = app.clubBudgetProbe(LG);
-    console.log(`[시작 ${start}] 팀 ${p0.n} · 중앙 ${Math.round(p0.medBudget / 10000)}억`);
+    for (const lg of LGS) {
+      const p0 = app.clubBudgetProbe(lg);
+      console.log(`[시작 ${start}] ${lg} · 팀 ${p0.n} · 순위표 ${p0.standings}`
+        + ` · 중앙 ${Math.round(p0.medBudget / 10000)}억`);
+    }
     let guard = 0, seen = start;
     while (guard++ < YEARS * 52 * 60 && app.currentSeason() < start + YEARS) {
       if (app.retired()) { why = "은퇴"; break; }
@@ -25,14 +29,19 @@ const LG = process.env.PF_LEAGUE || "LEAGUE_KBL";
       await app.autoRun();
       if (app.currentSeason() > seen) {
         seen = app.currentSeason();
-        const p = app.clubBudgetProbe(LG);
-        console.log(`[${seen}] 중앙 ${Math.round(p.medBudget / 10000)}억`
-          + ` · 배수 최소 ${p.minRatio} 중앙 ${p.medRatio} 최대 ${p.maxRatio}`);
+        for (const lg of LGS) {
+          const p = app.clubBudgetProbe(lg);
+          console.log(`[${seen}] ${lg} · 순위표 ${p.standings}`
+            + ` · 팀당 ${p.gamesPerTeam}경기 · 중앙 ${Math.round(p.medBudget / 10000)}억`
+            + ` · 배수 최소 ${p.minRatio} 중앙 ${p.medRatio} 최대 ${p.maxRatio}`);
+        }
       }
       if (app.currentWeek() === w0 && app.currentSeason() === s0) { why = `정지 ${s0}W${w0}`; break; }
     }
-    const pN = app.clubBudgetProbe(LG);
-    console.log(`[팀별] ${pN.rows.join(" · ")}`);
+    for (const lg of LGS) {
+      const pN = app.clubBudgetProbe(lg);
+      console.log(`[팀별] ${lg} — ${pN.rows.join(" · ")}`);
+    }
   } catch (e) { why = `예외 ${e && e.message}`; }
   console.log(`[END] ${why} · 씨앗 ${SEED}`);
   await headless.cleanup(tmp);

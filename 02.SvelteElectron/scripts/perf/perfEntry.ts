@@ -6192,7 +6192,9 @@ export async function mailboxRoundTrip(): Promise<Record<string, unknown>> {
 export function clubBudgetProbe(leagueId: string): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
-  const teams = m.teams.filter((t) => t.leagueId === leagueId && !t.id.endsWith("_2"));
+  // ⚠ 정산이 거르는 조건과 **같게** 본다 — `_1`로 끝나는 팀만이다.
+  //   느슨하게 보면 정산이 건너뛴 팀을 셌다고 착각한다.
+  const teams = m.teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"));
   const rows: { id: string; name: string; now: number; base: number }[] = [];
   for (const t of teams) {
     const base = ((t.history as { budget?: number } | undefined)?.budget ?? 0) / 10000;
@@ -6202,7 +6204,15 @@ export function clubBudgetProbe(leagueId: string): Record<string, unknown> {
   const ratios = rows.map((r) => r.now / r.base).sort((a, b) => a - b);
   const now = rows.map((r) => r.now).sort((a, b) => a - b);
   const med = (a: number[]) => (a.length ? a[Math.floor(a.length / 2)] : 0);
+  // 정산이 도는 조건 둘 — 하나라도 비면 그 리그는 통째로 건너뛴다
+  const ls = (get(seasonStore).leagueState ?? {})[leagueId] as
+    { standings?: { wins?: number; losses?: number; draws?: number }[] } | undefined;
+  // 정산이 쓰는 홈경기 수 = 팀당 경기 ÷ 2. **가정하지 말고 여기서 읽는다**
+  const gp = (ls?.standings ?? []).map((r) =>
+    (r.wins ?? 0) + (r.losses ?? 0) + (r.draws ?? 0)).sort((a, b) => a - b);
   return {
+    standings: ls?.standings?.length ?? 0,
+    gamesPerTeam: gp.length ? gp[Math.floor(gp.length / 2)] : 0,
     n: rows.length,
     medBudget: Math.round(med(now)),
     minRatio: +(ratios[0] ?? 0).toFixed(3),
