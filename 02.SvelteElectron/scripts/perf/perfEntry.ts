@@ -6298,3 +6298,66 @@ export async function teamTimelineProbe(teamId: string): Promise<Record<string, 
     행: rows.map((r) => `${r.season_year}:${r.rank}/${r.teams}위 ${r.wins}승${r.losses}패`),
   };
 }
+
+/**
+ * 영구결번·명예의 전당의 **전제 두 가지**를 잰다 (2단계).
+ *
+ * ① 등번호가 팀 안에서 유일한가 — 결번을 얹으려면 먼저 알아야 한다.
+ *    생성은 `i + 1`(초기)·`60 + i`(신입·외국인)라 **부딪힐 수 있다.**
+ * ② 통산 기록이 쌓이는가 — 헌액 점수의 재료다.
+ */
+export async function hofPrereqProbe(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const slotId = g.currentSlotId;
+
+  // ① 팀 안 등번호 중복
+  const byTeam = new Map<string, Map<number, number>>();
+  for (const n of g.npcs ?? []) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    const num = (n as { jerseyNumber?: number }).jerseyNumber ?? 0;
+    if (!byTeam.has(n.currentTeam)) byTeam.set(n.currentTeam, new Map());
+    const m = byTeam.get(n.currentTeam)!;
+    m.set(num, (m.get(num) ?? 0) + 1);
+  }
+  let dupTeams = 0, dupPairs = 0, worst = 0;
+  const sample: string[] = [];
+  for (const [tid, m] of byTeam) {
+    let d = 0;
+    for (const [num, c] of m) {
+      if (c > 1) { d += c - 1; worst = Math.max(worst, c); if (sample.length < 5) sample.push(`${tid}#${num}×${c}`); }
+    }
+    if (d > 0) { dupTeams++; dupPairs += d; }
+  }
+
+  // ② 통산 기록 — 몇 해치가 쌓였나
+  let lbYears = 0, lbRows = 0;
+  const api = (window as unknown as {
+    projectB?: {
+      seasonGetHistoryYears?: (p: string) => Promise<string>;
+      seasonGetHistoryLbStats?: (p: string) => Promise<string>;
+    };
+  }).projectB;
+  if (slotId && api?.seasonGetHistoryYears && api.seasonGetHistoryLbStats) {
+    try {
+      const years = JSON.parse(await api.seasonGetHistoryYears(JSON.stringify({ slotId })));
+      if (Array.isArray(years)) {
+        lbYears = years.length;
+        for (const y of years) {
+          const rows = JSON.parse(await api.seasonGetHistoryLbStats(
+            JSON.stringify({ slotId, seasonYear: y })));
+          if (Array.isArray(rows)) lbRows += rows.length;
+        }
+      }
+    } catch { /* 없으면 0 */ }
+  }
+
+  return {
+    팀수: byTeam.size,
+    등번호중복팀: dupTeams,
+    중복건수: dupPairs,
+    한번호최대: worst,
+    예: sample,
+    기록연도수: lbYears,
+    기록행수: lbRows,
+  };
+}

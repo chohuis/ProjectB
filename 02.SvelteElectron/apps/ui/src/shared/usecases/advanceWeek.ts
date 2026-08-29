@@ -89,6 +89,7 @@ import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
 import { processPositionGaps } from "./weekPhases/positionGaps";
+import { processJerseyNumbers } from "./weekPhases/jerseyNumbers";
 import { processWeeklyNpcGrowth } from "./weekPhases/growth";
 import {
   processTradeWindow,
@@ -1393,6 +1394,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 포지션 공백 — **부상으로 포수가 빠진 그 주에 바로 메운다.** 예전엔 메우는
   // 경로가 오프시즌에만 있어 공백이 다음 해까지 갔다(실측 1~4팀이 포수 0명)
   for (const line of await processPositionGaps(get(seasonStore).seasonYear)) autoLog(line);
+  // 등번호 — **유입 경로가 여럿이라 여기 한 곳에 모았다.** 신입생·육성선수·
+  // 해외·드래프트·FA 이적이 각각 선수를 팀에 넣는데 번호를 주는 곳은
+  // 초기 생성뿐이었다(실측: 238팀 전부 중복 · 한 번호 최대 45명).
+  // ⚠ 문제 있는 팀이 없으면 IPC 를 아예 안 탄다.
+  for (const line of await processJerseyNumbers()) autoLog(line);
   seasonStore.applyWeeklyConditionRecovery(bgEntities);
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities, gFinal.protagonist.careerStage);
   // npcLiveStats 변경 → connectToGameStore 구독이 entities 자동 갱신 (applyNpcLiveStats 불필요)

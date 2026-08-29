@@ -797,6 +797,41 @@ pub fn form_score_native(params_json: String) -> String {
 ///
 /// ⚠ **공백이 있는 팀의 선수만 보낸다.** 전량(7,332명)을 주마다 왕복시키면
 /// 이 프로젝트가 줄인 IPC를 도로 까먹는다. 공백은 리그당 1~4팀이다.
+/// 팀 안 등번호를 유일하게 만든다 — **문제가 있는 팀의 선수만 보낸다.**
+///
+/// ⚠ 팀 선수를 **모두** 보내야 한다. 빈 번호를 팀 단위로 세므로 일부만
+///   보내면 이미 쓰는 번호를 다시 준다.
+#[napi]
+pub fn fix_jersey_numbers_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P { npcs: Vec<sim_types::NpcSaveState> }
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Change { npc_id: String, team_id: String, from: i32, to: i32 }
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct R { changes: Vec<Change> }
+    let mut p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("fixJerseyNumbersNative", e),
+    };
+    let before: Vec<i32> = p.npcs.iter().map(|n| n.jersey_number).collect();
+    npc_sim::fix_jersey_numbers(&mut p.npcs);
+    // **바뀐 사람만 돌려준다** — 전량을 얹으면 다른 필드까지 덮어쓴다
+    let changes: Vec<Change> = p.npcs.iter().zip(before.iter())
+        .filter(|(n, b)| n.jersey_number != **b)
+        .map(|(n, b)| Change {
+            npc_id: n.npc_id.clone(),
+            team_id: n.current_team.clone(),
+            from: *b,
+            to: n.jersey_number,
+        })
+        .collect();
+    serde_json::to_string(&R { changes })
+        .unwrap_or_else(|e| parse_err("fixJerseyNumbersNative/serialize", e))
+}
+
 #[napi]
 pub fn fix_position_gaps_native(params_json: String) -> String {
     #[derive(serde::Deserialize)]

@@ -1132,6 +1132,7 @@ fn normalize_offseason_npcs(
     fill_first_teams(&mut next, limits, events, is_foreign);
     // 충원 **뒤에** 돈다 — 새로 올라온 선수까지 보고 남은 공백만 전환한다
     fix_position_gaps(&mut next, season_year);
+    fix_jersey_numbers(&mut next);
     next
 }
 
@@ -1702,6 +1703,50 @@ fn ev_to(kind: &str, npc: &NpcSaveState, from_team: Option<String>, to_team: Str
 /// ⚠ 대신 **경력 사건으로 남긴다.** 예전엔 `position`만 바꾸고 아무 기록도
 /// 안 남겨서, 작년엔 3루수였던 선수가 왜 좌익수인지 알 방법이 없었다.
 /// 정보가 있어야 할 자리와 없어야 할 자리가 정확히 뒤바뀌어 있었다.
+/// 팀 안에서 등번호를 **유일하게** 만든다.
+///
+/// 🔴 **유입 경로가 여럿이라 한 곳에 모았다** — 신입생·육성선수·해외·
+///   드래프트·FA 이적이 각각 선수를 팀에 넣는다. 경로마다 배정하면
+///   하나를 빠뜨리고, 그 경로만 0번으로 남는다(실제로 그랬다).
+///
+/// ⚠ **이미 유일한 번호는 안 건드린다.** 선수에게 등번호는 정체성이라
+///   해마다 바뀌면 안 된다. 0(없음)과 **나중에 온 중복자**만 준다.
+///
+/// 실측(고치기 전 · 씨앗 111 · 2027): 238팀 전부 중복 · 7,338건 ·
+/// 한 번호에 최대 45명 — 전부 `#0` 이었다.
+pub(crate) fn fix_jersey_numbers(npcs: &mut [NpcSaveState]) {
+    // 팀 → 그 팀 선수들의 인덱스
+    let mut by_team: HashMap<String, Vec<usize>> = HashMap::new();
+    for (i, n) in npcs.iter().enumerate() {
+        if n.career_status == "retired" || n.current_team.is_empty() { continue; }
+        by_team.entry(n.current_team.clone()).or_default().push(i);
+    }
+    let mut keys: Vec<String> = by_team.keys().cloned().collect();
+    keys.sort();   // HashMap 순회 순서에 기대지 않는다 (결정성)
+
+    for team in keys {
+        let idxs = match by_team.get(&team) { Some(v) => v.clone(), None => continue };
+        // ⚠ **먼저 온 사람이 번호를 지킨다.** 인덱스 순서가 그 기준이다 —
+        //   같은 번호를 든 둘 중 뒤엣사람만 새로 받는다.
+        let mut taken: std::collections::HashSet<i32> = std::collections::HashSet::new();
+        let mut need: Vec<usize> = Vec::new();
+        for &i in &idxs {
+            let num = npcs[i].jersey_number;
+            if num > 0 && taken.insert(num) { continue; }   // 유일하다 — 그대로
+            need.push(i);
+        }
+        if need.is_empty() { continue; }
+
+        // 1~99 중 빈 번호를 앞에서부터 준다. 다 차면 100 이상으로 이어간다
+        let mut next = 1;
+        for i in need {
+            while taken.contains(&next) { next += 1; }
+            taken.insert(next);
+            npcs[i].jersey_number = next;
+        }
+    }
+}
+
 pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
     // 포수가 맨 앞이다 — 전문 요원이라 0명이면 경기가 성립하지 않는다
     const FIELD: [&str; 8] = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"];
@@ -2396,6 +2441,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 채운 뒤에 깎았고, 콜업이 야수 총원을 안 봤고, 이번엔 공백 메우기다.
     // **같은 일을 하는 자리가 여럿이면 순서를 본다.**
     fix_position_gaps(&mut after_normalize, season_year);
+    // 등번호도 **마지막에** 한 번 더 — 위 단계들이 선수를 옮긴 뒤다
+    fix_jersey_numbers(&mut after_normalize);
 
     // ⚠ **요약 문장도 여기서 안 만든다.** 한 번 만들어 봤다가 화면과 숫자가
     // 어긋났다 — Rust는 **사건**을 세는데(방출 1170) 화면은 **사람**을 센다
@@ -2716,6 +2763,9 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             rng.next(), rng.next(), rng.next());
 
         result.push(NpcSaveState {
+            // 0 = **아직 없음**. 팀 안 빈 번호를 알아야 정하므로
+            // `fix_jersey_numbers` 가 채운다 — 여기서 지어내면 겹친다.
+            jersey_number: 0,
             npc_id,
             name,
             name_en: Some(name_en),

@@ -92,6 +92,12 @@ pub struct NpcSaveState {
     pub nationality: Option<String>,  // "KOR"|"JPN"|"USA"|"OTHER"; None → "KOR" 폴백
     pub player_type: String,
     pub position: String,
+    /// 등번호. **0 은 "아직 없음"이다** — `fix_jersey_numbers` 가 채운다.
+    ///
+    /// ⚠ `serde(default)` 라 안 넘겨도 통과한다. 그래서 이 필드가 **없던**
+    ///   시절에도 오류 없이 돌았고, 화면에만 0번으로 나왔다.
+    #[serde(default)]
+    pub jersey_number: i32,
     pub age: i32,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub grade: Option<u8>,

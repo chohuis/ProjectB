@@ -173,7 +173,12 @@ export declare function formScoreNative(paramsJson: string): string
  *
  * ⚠ **공백이 있는 팀의 선수만 보낸다.** 전량(7,332명)을 주마다 왕복시키면
  * 이 프로젝트가 줄인 IPC를 도로 까먹는다. 공백은 리그당 1~4팀이다.
+ * 팀 안 등번호를 유일하게 만든다 — **문제가 있는 팀의 선수만 보낸다.**
+ *
+ * ⚠ 팀 선수를 **모두** 보내야 한다. 빈 번호를 팀 단위로 세므로 일부만
+ *   보내면 이미 쓰는 번호를 다시 준다.
  */
+export declare function fixJerseyNumbersNative(paramsJson: string): string
 export declare function fixPositionGapsNative(paramsJson: string): string
 /** NPC 재계약 기간 계산 */
 export declare function calcNpcContractYearsNative(paramsJson: string): string
