@@ -6273,3 +6273,28 @@ export function hsRosterProbe(): Record<string, unknown> {
     noCatcher: teams.filter((t) => (cat.get(t) ?? 0) === 0).length,
   };
 }
+
+/**
+ * 구단 연표가 **실제로 값을 주는가** (1단계).
+ *
+ * ⚠ 화면 코드는 헤드리스에서 안 돈다 — **같은 IPC 를 같은 인자로** 불러
+ *   행이 나오는지 본다. 배선이 끊기면 여기서 빈 배열이 온다.
+ */
+export async function teamTimelineProbe(teamId: string): Promise<Record<string, unknown>> {
+  const slotId = get(gameStore).currentSlotId;
+  if (!slotId) return { 오류: "슬롯 없음" };
+  const api = (window as unknown as {
+    projectB?: { seasonGetTeamHistory?: (p: string) => Promise<string> };
+  }).projectB;
+  if (!api?.seasonGetTeamHistory) return { 오류: "IPC 없음 — preload 배선 확인" };
+  const raw = await api.seasonGetTeamHistory(JSON.stringify({ slotId, teamId }));
+  const rows = JSON.parse(raw) as
+    { season_year: number; rank: number; teams: number; wins: number; losses: number }[]
+    | { error?: string };
+  if (!Array.isArray(rows)) return { 오류: (rows as { error?: string }).error ?? "형식 오류" };
+  return {
+    teamId,
+    시즌수: rows.length,
+    행: rows.map((r) => `${r.season_year}:${r.rank}/${r.teams}위 ${r.wins}승${r.losses}패`),
+  };
+}

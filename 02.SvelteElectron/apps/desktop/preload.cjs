@@ -74,6 +74,7 @@ contextBridge.exposeInMainWorld("projectB", {
   seasonSaveHistoryLbStats:     (p) => ipcRenderer.invoke("season:saveHistoryLbStats",     p),
   seasonGetHistoryYears:        (p) => ipcRenderer.invoke("season:getHistoryYears",        p),
   seasonGetHistoryStandings:    (p) => ipcRenderer.invoke("season:getHistoryStandings",    p),
+  seasonGetTeamHistory:         (p) => ipcRenderer.invoke("season:getTeamHistory",         p),
   seasonGetHistoryLbStats:      (p) => ipcRenderer.invoke("season:getHistoryLbStats",      p),
   seasonSaveHistoryPostseason:  (p) => ipcRenderer.invoke("season:saveHistoryPostseason",  p),
   seasonGetHistoryPostseason:   (p) => ipcRenderer.invoke("season:getHistoryPostseason",   p),

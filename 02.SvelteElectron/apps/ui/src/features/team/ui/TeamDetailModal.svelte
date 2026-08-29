@@ -95,15 +95,55 @@
     for (const t of championships) m.set(t.competition, (m.get(t.competition) ?? 0) + 1);
     return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   })();
-  /** 과거 5시즌 순위 — S-5(가장 오래된)부터 S-1(직전) 순으로 */
+  /**
+   * 과거 5시즌 순위 — S-5(가장 오래된)부터 S-1(직전) 순으로.
+   *
+   * 🔴 **DB 에 같은 해가 있으면 뺀다.** 새 게임을 열면 그 다섯 해가
+   *   `history_standings` 에도 들어가 있어서 **연표에 두 번 나왔다**
+   *   (실측: 시작 시점에 이미 2021~2025 다섯 행). DB 쪽이 승·패까지
+   *   있으니 그쪽을 남긴다.
+   */
+  $: playedYears = new Set(played.map((p) => p.season_year));
   $: seasonRanks = [...(team?.history?.seasonRanks ?? [])]
-    .sort((a, b) => b.season.localeCompare(a.season));
+    .sort((a, b) => b.season.localeCompare(a.season))
+    .filter((sr) => !playedYears.has(
+      Number(seasonLabel(sr.season, $seasonStore.seasonYear ?? 2026))));
   /** 그 시즌에 딴 타이틀 (최근 성적 줄에 붙인다) */
   function titlesOfSeason(season: string): string[] {
     return (team?.history?.titles ?? [])
       .filter((t) => t.season === season && t.result === "우승")
       .map((t) => t.competition.replace(/^(고교|대학|프로|독립)\s*/, ""));
   }
+  /**
+   * 플레이하며 쌓인 시즌 성적. **`seasonRanks` 와 다른 것이다** —
+   * 그쪽은 `refs.json` 의 가상 과거(S-1~S-5)라 게임을 돌려도 안 변한다.
+   *
+   * ⚠ **한 번에 읽는다.** 기존 `seasonGetHistoryStandings` 는 연도별이라
+   *   20시즌이면 IPC 20번이다 — 이 프로젝트는 IPC 를 30% 줄인 이력이 있다.
+   */
+  type PlayedSeason = {
+    season_year: number; league_id: string;
+    wins: number; losses: number; draws: number; win_pct: number;
+    rank: number; teams: number;
+  };
+  let played: PlayedSeason[] = [];
+  let playedFor = "";   // 어느 팀 것인지 — 팀이 바뀌면 다시 읽는다
+
+  async function loadPlayed(id: string) {
+    const slotId = $gameStore.currentSlotId;
+    if (!id || !slotId || !window.projectB?.seasonGetTeamHistory) { played = []; return; }
+    try {
+      const raw = await window.projectB.seasonGetTeamHistory(
+        JSON.stringify({ slotId, teamId: id }));
+      const parsed = JSON.parse(raw);
+      played = Array.isArray(parsed) ? parsed : [];
+    } catch { played = []; }
+    playedFor = id;
+  }
+  // 모달이 열려 있고 팀이 바뀌었을 때만 읽는다
+  $: if (open && teamId && teamId !== playedFor) loadPlayed(teamId);
+  $: if (!open) playedFor = "";
+
   function rankColor(rank: number): string {
     if (rank === 1) return "#9A6510";
     if (rank <= 3) return "#1F5FA8";
@@ -473,9 +513,15 @@
                   {/each}
                 </section>
 
-                {#if seasonRanks.length}
+                {#if seasonRanks.length || played.length}
                   <section class="section">
-                    <h4>과거 5시즌</h4>
+                    <h4>구단 연표</h4>
+                    {#if team.history.foundedYear}
+                      <div class="tl-founded">
+                        <span class="tl-year">{team.history.foundedYear}</span>
+                        <span class="tl-what">창단</span>
+                      </div>
+                    {/if}
                     <div class="records-list">
                       {#each seasonRanks as sr}
                         <div class="record-row">
@@ -485,6 +531,24 @@
                         </div>
                       {/each}
                     </div>
+
+                    <!-- 플레이하며 쌓인 기록 — 위 다섯은 시작 전 가상 과거다 -->
+                    {#if played.length}
+                      {#if seasonRanks.length}<div class="tl-split">여기부터 플레이 기록</div>{/if}
+                      <div class="records-list">
+                        {#each played as p}
+                          <div class="record-row">
+                            <span class="rec-year">{p.season_year}</span>
+                            <span class="rec-national" style="color:{rankColor(p.rank)};">
+                              {p.rank}위<span class="tl-of">/{p.teams}</span>
+                            </span>
+                            <span class="rec-regional">
+                              {p.wins}승 {p.losses}패{p.draws ? ` ${p.draws}무` : ""}
+                            </span>
+                          </div>
+                        {/each}
+                      </div>
+                    {/if}
                   </section>
                 {/if}
               {:else}
@@ -892,6 +956,22 @@
     background: var(--panel); border: 1px solid var(--panel-sunk);
     border-radius: 7px; padding: 6px 10px; font-size: 12px;
   }
+  /* 연표 — 창단과 '여기부터' 구분선 */
+  .tl-founded {
+    display: flex; align-items: baseline; gap: .5rem;
+    padding: .25rem 0 .4rem;
+    border-bottom: 1px solid var(--border, #d8dce6);
+    margin-bottom: .35rem;
+  }
+  .tl-year { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tl-what { font-size: .78rem; opacity: .7; }
+  .tl-split {
+    font-size: .7rem; opacity: .6; letter-spacing: .04em;
+    margin: .5rem 0 .25rem; padding-top: .35rem;
+    border-top: 1px dashed var(--border, #d8dce6);
+  }
+  .tl-of { font-size: .78em; opacity: .65; font-weight: 400; }
+
   .rec-year { color: var(--ink-mid); font-size: 11px; font-weight: 700; }
   .rec-national { font-weight: 700; font-size: 12px; }
   .rec-regional { color: var(--ink); font-size: 11px; }

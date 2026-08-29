@@ -204,6 +204,7 @@ declare global {
       seasonSaveHistoryLbStats:     (p: string) => Promise<string>;
       seasonGetHistoryYears:        (p: string) => Promise<string>;
       seasonGetHistoryStandings:    (p: string) => Promise<string>;
+      seasonGetTeamHistory:         (p: string) => Promise<string>;
       seasonGetHistoryLbStats:      (p: string) => Promise<string>;
       seasonSaveHistoryPostseason:  (p: string) => Promise<string>;
       seasonGetHistoryPostseason:   (p: string) => Promise<string>;

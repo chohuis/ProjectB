@@ -567,6 +567,49 @@ app.whenReady().then(() => {
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  // 팀 하나의 **전 시즌** 성적 — 구단 연표(팀 상세)가 쓴다.
+  //
+  // ⚠ **순위는 저장돼 있지 않다.** `history_standings` 에는 승·패·승률만
+  //   있어서 같은 해 같은 리그 안에서 세어야 한다.
+  // 🔴 **같은 종류끼리 센다.** `refs` 는 1군·팜을 **같은 `leagueId`** 로 담고
+  //   `_1`/`_2` 접미사로만 갈린다 — 안 거르면 ABL 순위가 16팀이 아니라
+  //   32팀 중에서 매겨진다. 리그 화면이 같은 이유로 같은 필터를 쓴다.
+  //   ⚠ 처음엔 2군을 **통째로 뺐다가** 2군 자신도 빠져 `1위 / 0팀` 이
+  //     나왔다(실측). 빼는 게 아니라 **접미사가 같은 팀끼리** 세야 한다.
+  //   ⚠ **`LIKE ... ESCAPE` 를 쓰지 않는다.** 이 SQL 은 백틱 템플릿 안이라
+  //     `ESCAPE '\\'` 의 백슬래시가 JS 에 먹혀 빈 문자열이 된다
+  //     ("ESCAPE expression must be a single character"). `substr(id, -2)` 는
+  //     이스케이프가 없어 그 함정을 아예 피한다.
+  //   ⚠ KBL 은 `LEAGUE_KBL`/`LEAGUE_KBL_FARM` 으로 갈려 있어 안 걸린다 —
+  //     **해외만 같은 id 를 쓴다.** 그래서 이 함정은 늦게 드러난다.
+  ipcMain.handle("season:getTeamHistory", (_event, p) => {
+    try {
+      const { slotId, teamId } = JSON.parse(p);
+      const rows = db.prepare(
+        `SELECT h1.season_year, h1.league_id, h1.wins, h1.losses, h1.draws,
+                h1.win_pct, h1.runs_for, h1.runs_against,
+                (SELECT COUNT(*) + 1 FROM history_standings h2
+                  WHERE h2.slot_id = h1.slot_id
+                    AND h2.season_year = h1.season_year
+                    AND h2.league_id = h1.league_id
+                    AND substr(h2.team_id, -2) = substr(h1.team_id, -2)
+                    AND (h2.win_pct > h1.win_pct
+                         OR (h2.win_pct = h1.win_pct AND h2.wins > h1.wins))
+                ) AS rank,
+                (SELECT COUNT(*) FROM history_standings h3
+                  WHERE h3.slot_id = h1.slot_id
+                    AND h3.season_year = h1.season_year
+                    AND h3.league_id = h1.league_id
+                    AND substr(h3.team_id, -2) = substr(h1.team_id, -2)
+                ) AS teams
+           FROM history_standings h1
+          WHERE h1.slot_id = ? AND h1.team_id = ?
+          ORDER BY h1.season_year`,
+      ).all(slotId, teamId);
+      return JSON.stringify(rows);
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
   ipcMain.handle("season:getHistoryLbStats", (_event, p) => {
     try {
       const { slotId, seasonYear, leagueId } = JSON.parse(p);
