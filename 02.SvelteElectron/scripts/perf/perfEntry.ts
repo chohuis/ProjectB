@@ -6433,8 +6433,12 @@ export function rosterSlotProbe(): Record<string, unknown> {
   return {
     팀수: size.size,
     인원: nums.length ? `${nums[0]}/${med(nums)}/${nums[nums.length - 1]}` : "-",
-    // 34(KBL·ABL) · 32(JBL) 가 상한이다
-    상한초과팀: nums.filter((v) => v > 34).length,
+    // 🔴 **IL 을 뺀 수로 잰다.** 부상자 명단이 정원을 안 차지하게 고쳤으니
+    //   재는 쪽도 같아야 한다 — 안 맞추면 21~30팀이 초과로 나온다(실측).
+    //   34(KBL·ABL) · 32(JBL) 가 상한이다.
+    상한초과팀: pro1.filter((t) =>
+      (size.get(t.id) ?? 0) - (statusInj.get(t.id) ?? 0) > 34).length,
+    _총원기준초과: nums.filter((v) => v > 34).length,
     부상자_시즌표: injTotal,
     부상자_상태값: [...statusInj.values()].reduce((a, b) => a + b, 0),
     프로_2군인원: farmSize,

@@ -816,10 +816,24 @@ export async function processProTeamCallupCalldown(
     const teamId2 = teamId1.replace(/_1$/, "_2");
     const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
+    // ── 부상자 명단(IL) ─────────────────────────────────────
+    //
+    // 🔴 **부상자가 정원을 차지하고 있었다.** 콜업 판정에서는 이미 빼는데
+    //   (`injuredPlayerIds`) 정원 계산에는 남아서, 대체 선수가 올라오면
+    //   상한을 넘었다 — 실측 0~6팀이 34명(JBL 32) 초과.
+    //
+    // 실제 야구의 IL 이 하는 일이 이것이다: **자리를 비운다.**
+    // ⚠ 심각도 `mild` 는 안 넣는다 — 며칠 쉬는 것까지 명단에 올리면
+    //   로스터가 매주 출렁인다. `injuredIds` 가 이미 그 기준이다.
     const { active, farm } = getTeamEntityRefs(
       teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats,
       { seasonYear: s.seasonYear, month: currentMonth });
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+    // IL 등재자 — 이 팀 1군에서 부상·차출로 못 뛰는 사람
+    const ilSet = new Set(injuredIds);
+    const ilCount = active.filter((a) => ilSet.has(a.id)).length;
+    // **정원은 IL 을 뺀 수로 잰다.** 상한 34에 IL 3명이면 37명까지 보유한다
+    const activeCount = active.length - ilCount;
     // 감독 승부처 판단이 "최근 성적을 얼마나 정확히 읽는가"를 정한다 (§7-5 F-1).
     // 낮은 감독은 이름값(OVR)만 보고 올린다
     const callupMod = staffModsOf(teamId1, m.entities).callup;
@@ -845,12 +859,20 @@ export async function processProTeamCallupCalldown(
       // 팀당 한 명. 나머지 사유(전력 보강·유망주 노출)는 정기의 몫이다
       // `position_gap`도 상시 경로에 넣는다 — 포수가 0명인 팀을 월간 주기까지
       // 기다리게 하면 그 사이 경기가 그대로 돈다 (엔진 쪽 주석 참고)
+      // ⚠ **IL 만큼 더 올린다.** 콜업은 1:1 교체(`replacesPlayerId`)라
+      //   정원이 안 늘어난다 — IL 로 자리를 비워 놔도 채울 길이 없다.
+      //   부상 3명이면 그 주에 최대 3명까지 올린다.
+      //   ⚠ 정원(IL 제외)이 상한을 넘으면 안 올린다 — 순증이 무한하면
+      //     IL 이 로스터 상한을 통째로 무력화한다.
+      const urgentSlots = activeCount >= maxRosterSize
+        ? 0
+        : Math.max(1, Math.min(ilCount, maxRosterSize - activeCount));
       const picked = urgentOnly
         ? callupRes.candidates
             .filter(c => c.reason === "injury_replacement"
                       || c.reason === "slump_replacement"
                       || c.reason === "position_gap")
-            .slice(0, 1)
+            .slice(0, urgentSlots)
         : callupRes.candidates.slice(0, 2);
 
       for (const c of picked) {
@@ -868,11 +890,21 @@ export async function processProTeamCallupCalldown(
     // 콜다운 — 정기에만. 상시가 같이 돌면 매주 로스터가 출렁인다.
     // 하한 아래로는 안 내린다 (규칙 파일의 rosterMin) — 콜업은 1:1 교체라
     // 정원을 안 늘리는데 콜다운만 나가면 1군이 마른다
-    if (!urgentOnly && active.length > minRosterSize) {
+    // ⚠ **IL 을 뺀 수로 본다.** 부상자를 세면 하한을 넘은 줄 알고 내리는데,
+    //   실제로 뛸 수 있는 사람은 그보다 적어 1군이 마른다.
+    //
+    // 🔴 **정원을 넘으면 상시에도 내린다.** 콜다운이 정기(월 첫 주)에만
+    //   최대 2명이라 순증을 못 따라갔다 — 실측 4~12팀이 상한 초과.
+    //   ⚠ IL 이 만든 문제가 아니다. IL 전에도 0~6팀이 넘었고 IL 이 그걸
+    //     드러냈다. 상한이 원래 안 지켜지고 있었다.
+    //   ⚠ **초과일 때만** 상시로 돈다 — 늘 돌면 매주 로스터가 출렁인다
+    //     (바로 위 주석의 경고다).
+    const overCap = activeCount > maxRosterSize;
+    if ((!urgentOnly || overCap) && activeCount > minRosterSize) {
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
-          currentRosterSize: active.length, maxRosterSize, promotionRules, callupMod,
+          currentRosterSize: activeCount, maxRosterSize, promotionRules, callupMod,
         }))
       ) as { candidates?: Array<{ playerId: string }>; error?: string };
 
@@ -880,7 +912,11 @@ export async function processProTeamCallupCalldown(
         throw new Error(`[승강] 콜다운 판정 실패 ${teamId1}: ${calldownRes.error ?? "candidates 없음"}`);
       }
 
-      for (const c of calldownRes.candidates.slice(0, 2)) {
+      // 초과분만큼 내린다. 2명 고정이면 크게 넘친 팀이 여러 주 걸린다
+      const cutN = overCap
+        ? Math.max(2, activeCount - maxRosterSize)
+        : 2;
+      for (const c of calldownRes.candidates.slice(0, cutN)) {
         // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어
         // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
