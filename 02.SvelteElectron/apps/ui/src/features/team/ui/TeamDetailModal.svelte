@@ -43,6 +43,17 @@
     return ($masterStore.stadiums ?? []).find((s) => s.id === id)?.name ?? id;
   }
 
+  /**
+   * 수용 인원 — **구장에서 가져온다.**
+   *
+   * 🔴 화면이 `team.capacity`만 보고 있었는데 그건 **ABL·JBL 팀에만** 있다
+   *   (KBL·고교·대학·독립은 전부 0). 4-A에서 구장 27개에 수용인원을
+   *   넣었으므로 거기서 읽는다 — 팀 값이 있으면 그게 우선이다.
+   */
+  $: stadiumCapacity = (team?.capacity && team.capacity > 0)
+    ? team.capacity
+    : (($masterStore.stadiums ?? []).find((s) => s.id === team?.stadium)?.capacity ?? 0);
+
   function leagueLabel(lid: string): string {
     const map: Record<string, string> = {
       LEAGUE_HIGHSCHOOL: "고교리그", LEAGUE_UNIVERSITY: "대학리그",
@@ -321,7 +332,7 @@
         <div class="header-meta">
           {#if team.nameEn}<span class="name-en">{team.nameEn}</span>{/if}
           {#if team.city}<span class="meta-chip">📍 {team.city}</span>{/if}
-          {#if team.stadium}<span class="meta-chip">🏟 {stadiumName(team.stadium)}{#if team.capacity} · {capacityFmt(team.capacity)}석{/if}</span>{/if}
+          {#if team.stadium}<span class="meta-chip">🏟 {stadiumName(team.stadium)}{#if stadiumCapacity} · {capacityFmt(stadiumCapacity)}석{/if}</span>{/if}
         </div>
 
         <button class="close-btn" on:click={close} aria-label="닫기">✕</button>
@@ -437,6 +448,8 @@
                     {#if team.history.foundedYear}<div><span>창단</span><strong>{team.history.foundedYear}년</strong></div>{/if}
                     {#if championships.length}<div><span>대회 우승</span><strong>{championships.length}회</strong></div>{/if}
                     {#if team.history.budget}<div><span>운영 예산</span><strong>{Math.round(team.history.budget / 100000000)}억</strong></div>{/if}
+                    {#if team.history.parentCompany}<div><span>모기업</span><strong>{team.history.parentCompany}</strong></div>{/if}
+                    {#if stadiumCapacity}<div><span>수용 인원</span><strong>{stadiumCapacity.toLocaleString()}석</strong></div>{/if}
                   </div>
 
                   {#if titlesByCompetition.length}

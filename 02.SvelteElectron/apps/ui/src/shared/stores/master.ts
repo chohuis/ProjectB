@@ -85,6 +85,9 @@ export interface StadiumRef {
   id: string;
   name: string;
   parkFactor?: string;
+  /** **수용인원** (4-A · 2026-08-29). 관중 수입의 유일한 근거다.
+   *  🔴 예전엔 필드 자체가 없었고, 팀 쪽 `capacity`도 ABL·JBL만 있었다 */
+  capacity?: number;
 }
 
 export interface ClubRef {
@@ -135,6 +138,13 @@ export interface ProTeamProfile {
 export interface TeamHistory {
   foundedYear?: number | null;
   budget?: number | null;
+  /** **모기업** (4-A · 2026-08-29).
+   *
+   * ⚠ **이름만 둔다.** 지원 규모는 `budget`에서 유도한다 — 이 저장소의
+   *   원칙이다("새 밸런스 수치를 만들지 않는다").
+   * ⚠ `clubs`(36개)는 **구 데이터**다 — KBL 8개고 팀 이름과도 안 맞는다.
+   *   그래서 여기(`budget`이 있는 자리)에 붙였다. */
+  parentCompany?: string;
   /** 과거 5시즌 순위 ("S-1" = 직전 시즌) — 첫 시즌 대회 시드의 근거 */
   seasonRanks?: { season: string; rank: number }[];
   titles?: { season: string; competition: string; result: string }[];
