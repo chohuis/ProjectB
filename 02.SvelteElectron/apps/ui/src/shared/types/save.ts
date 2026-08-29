@@ -1025,6 +1025,7 @@ export interface SaveGame {
    * ⚠ **갈래 B**: 예산이 움직여도 구단 성향 12개는 안 흔들린다.
    */
   clubBudgets?: Record<string, number>;
+  demotionWeek?: Record<string, number>;
   hallOfFame?: Record<string, { year: number; score: number; teams: string[]; num: number }>;
   retiredNumbers?: Record<string, number[]>;
   /** 구단 연속 기록 (연속 포스트시즌 실패 · 연속 우승) */
@@ -1075,6 +1076,7 @@ export interface SaveGuards {
    * ⚠ **갈래 B**: 예산이 움직여도 구단 성향 12개는 안 흔들린다.
    */
   clubBudgets?: Record<string, number>;
+  demotionWeek?: Record<string, number>;
   hallOfFame?: Record<string, { year: number; score: number; teams: string[]; num: number }>;
   retiredNumbers?: Record<string, number[]>;
   /**

@@ -6480,3 +6480,26 @@ export function playerLinesProbe(): Record<string, unknown> {
   }
   return out;
 }
+
+/** 등록말소 10일(2주)이 실제로 걸리는가 (3단계 · 3) */
+export function demotionLockProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const dw = g.demotionWeek ?? {};
+  const wk = s.currentWeek;
+  const rows = Object.entries(dw);
+  // 지금 락이 걸린 사람 — 2주 안에 내려간 사람
+  const locked = rows.filter(([, w]) => wk - w < 2);
+  // 🔴 **위반**: 락 기간인데 1군에 있는 사람. 0이어야 한다
+  const byId = new Map((g.npcs ?? []).map((n) => [n.npcId, n]));
+  const violate = locked.filter(([id]) => {
+    const n = byId.get(id);
+    return !!n && (n.currentTeam ?? "").endsWith("_1");
+  });
+  return {
+    기록된인원: rows.length,
+    현재락: locked.length,
+    위반: violate.length,
+    예: violate.slice(0, 3).map(([id, w]) => `${id}:W${w}`),
+  };
+}

@@ -137,6 +137,9 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   } catch (e) {
     console.warn("[hallOfFame] 심사 실패:", e);
   }
+  // 🔴 **등록말소 기록을 비운다.** `weekNum` 이 시즌마다 리셋되므로
+  //   작년 기록을 두면 `올해W32 - 작년W48 = -16` 로 영원히 락이 된다.
+  gameStore.clearDemotions();
   await gameStore.applyAgingDecay();
   await updateProTeamProfiles();
 

@@ -777,6 +777,10 @@ export async function processProTeamCallupCalldown(
     rulesFile.rosterRules[leagueId]?.rosterMin ?? 26;
   // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
   const promotionRules = rulesFile.promotionRules;
+  // 등록말소 기간(주). 0이면 예전 동작이다 — 규칙 파일이 정본
+  const lockWeeks = (promotionRules as { demotionLockWeeks?: number })
+    ?.demotionLockWeeks ?? 0;
+  const demotionWeek = g.demotionWeek ?? {};
 
   // 1군·2군 시즌 기록. 없으면 판정이 능력치만 보게 된다
   const leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {};
@@ -805,6 +809,7 @@ export async function processProTeamCallupCalldown(
   const _callupEntries: PlayerEventEntry[] = [];
   const _calldownEntries: PlayerEventEntry[] = [];
 
+  const _demotedIds: string[] = [];
   const label = urgentOnly ? "상시콜업" : "월간승강";
   autoLog(`[${label}] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
 
@@ -834,15 +839,37 @@ export async function processProTeamCallupCalldown(
     const ilCount = active.filter((a) => ilSet.has(a.id)).length;
     // **정원은 IL 을 뺀 수로 잰다.** 상한 34에 IL 3명이면 37명까지 보유한다
     const activeCount = active.length - ilCount;
+
+    // ── 등록말소 10일 (실제 KBO 규칙 · 주 단위라 2주) ──────
+    //
+    // 2군에 내린 선수를 바로 다시 올리면 승강이 의미가 없다 — 한 주 부진에
+    // 내렸다가 다음 주에 올린다. 실제 규칙이 이걸 막는다.
+    //
+    // ⚠ **IL 예외를 넣지 않는다.** 처음엔 "부상자가 있으면 락 무시"로
+    //   했는데 **거의 항상 풀렸다** — 실측 팀당 부상 2~3명이라 조건이
+    //   늘 참이다. 락이 사실상 없는 것과 같았다.
+    //   부상 대체는 **순증 콜업**(`urgentSlots`)이 이미 감당한다 —
+    //   2군에 락 안 걸린 후보가 남아 있으므로 못 올리는 일은 없다.
+    const lockedIds = new Set<string>();
+    if (lockWeeks > 0) {
+      for (const f of farm) {
+        const w = demotionWeek[f.id];
+        if (w != null && weekNum - w < lockWeeks) lockedIds.add(f.id);
+      }
+    }
     // 감독 승부처 판단이 "최근 성적을 얼마나 정확히 읽는가"를 정한다 (§7-5 F-1).
     // 낮은 감독은 이름값(OVR)만 보고 올린다
     const callupMod = staffModsOf(teamId1, m.entities).callup;
 
-    // 콜업
-    if (farm.length > 0 && active.length > 0) {
+    // 콜업 — **락 걸린 선수는 후보에서 뺀다.** 엔진이 뽑은 뒤에 거르면
+    //   "뽑았는데 못 올림"이 되어 그 주 콜업이 통째로 빈다
+    const farmOk = lockedIds.size > 0
+      ? farm.filter((f) => !lockedIds.has(f.id))
+      : farm;
+    if (farmOk.length > 0 && active.length > 0) {
       const callupRes = JSON.parse(
         await window.projectB!.evalCallupCandidatesNative(JSON.stringify({
-          teamProfile: profile, farmPlayers: farm, activePlayers: active,
+          teamProfile: profile, farmPlayers: farmOk, activePlayers: active,
           injuredPlayerIds: injuredIds, currentMonth, promotionRules, callupMod,
         }))
       ) as { candidates?: Array<{ playerId: string; replacesPlayerId: string; reason: string }>; error?: string };
@@ -878,9 +905,10 @@ export async function processProTeamCallupCalldown(
       for (const c of picked) {
         allMoves.push({ id: c.playerId,         teamId: teamId1 });
         allMoves.push({ id: c.replacesPlayerId, teamId: teamId2 });
+        _demotedIds.push(c.replacesPlayerId);
         const upName   = m.entities.find(e => e.id === c.playerId)?.name         ?? c.playerId;
         const downName = m.entities.find(e => e.id === c.replacesPlayerId)?.name ?? c.replacesPlayerId;
-        const upOvr    = Math.round(farm.find(f => f.id === c.playerId)?.ovr ?? 0);
+        const upOvr    = Math.round(farmOk.find(f => f.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜업] ${teamShort}: ${upName}(2군→1군,OVR:${upOvr}) ↑ | ${downName}(1군→2군) ↓ | 사유: ${c.reason}`);
         _callupEntries.push({ npcId: c.playerId, name: upName, fromTeamId: teamId2, toTeamId: teamId1, detail: `OVR:${upOvr} | ${c.reason}` });
         if (teamId1 === g.protagonist.teamId) logs.push(`[W${weekNum}] 팀 콜업: ${upName}`);
@@ -920,6 +948,7 @@ export async function processProTeamCallupCalldown(
         // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어
         // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
+        _demotedIds.push(c.playerId);
         const cdName = m.entities.find(e => e.id === c.playerId)?.name ?? c.playerId;
         const cdOvr  = Math.round(active.find(a => a.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜다운] ${teamShort}: ${cdName}(1군→2군,OVR:${cdOvr}) ↓`);
@@ -930,6 +959,10 @@ export async function processProTeamCallupCalldown(
   }
 
   let _callupDbOk = true;
+  // 🔴 **내려간 주차를 남긴다.** 이걸 안 저장하면 등록말소 기간을 못 잰다 —
+  //   `demotionWeek` 는 세이브에도 실린다(앱을 껐다 켜도 유지).
+  if (_demotedIds.length > 0) gameStore.markDemotions(_demotedIds, weekNum);
+
   if (allMoves.length > 0) {
     // 팀 이동을 gameStore.npcs에 반영 → connectToGameStore 구독이 entities 자동 갱신
     //
