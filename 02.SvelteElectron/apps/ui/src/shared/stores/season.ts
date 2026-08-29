@@ -581,8 +581,8 @@ function createSeasonStore() {
       }));
     },
 
-    applyWeeklyConditionRecovery(entities: EntityRow[]) {
-      update((s) => BackgroundLeague.applyWeeklyConditionRecovery(s, entities));
+    applyWeeklyConditionRecovery(entities: EntityRow[], campBonus?: Record<string, number>) {
+      update((s) => BackgroundLeague.applyWeeklyConditionRecovery(s, entities, campBonus));
     },
 
     async simulateBackgroundLeaguesAsync(

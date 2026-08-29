@@ -56,6 +56,7 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
+import { loadRosterRules } from "../repo/newGameV3";
 import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
 import { applyForeignTurnover } from "./foreignPlayers";
 
@@ -1399,7 +1400,28 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 초기 생성뿐이었다(실측: 238팀 전부 중복 · 한 번호 최대 45명).
   // ⚠ 문제 있는 팀이 없으면 IPC 를 아예 안 탄다.
   for (const line of await processJerseyNumbers()) autoLog(line);
-  seasonStore.applyWeeklyConditionRecovery(bgEntities);
+  // 전지훈련 (4단계) — **시즌 초 몇 주만** 컨디션이 더 붙는다.
+  // ⚠ 값은 규칙 파일이 정본(`campRules`). 없으면 안 돈다 — 예전 동작이다.
+  {
+    const camp = (await loadRosterRules() as unknown as
+      { campRules?: { conditionBonus?: number; weeks?: number } }).campRules;
+    let campBonus: Record<string, number> | undefined;
+    if (camp?.conditionBonus && weekInYear <= (camp.weeks ?? 0)) {
+      // 전훈비는 **규모 비례**라 부자 구단이 유리하다 — 현실도 그렇다.
+      // 규모 지수를 그대로 쓰지 않고 성향(`farmInvestment`)으로 가른다:
+      // 육성에 투자하는 구단이 캠프도 잘 차린다.
+      const gNow = get(gameStore);
+      const mNow = get(masterStore);
+      campBonus = {};
+      for (const n of gNow.npcs ?? []) {
+        const tid = n.currentTeam ?? "";
+        if (!tid) continue;
+        const inv = getTeamProfile(tid, gNow, mNow)?.farmInvestment ?? 50;
+        campBonus[n.npcId] = Math.round(camp.conditionBonus * (inv / 50));
+      }
+    }
+    seasonStore.applyWeeklyConditionRecovery(bgEntities, campBonus);
+  }
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities, gFinal.protagonist.careerStage);
   // npcLiveStats 변경 → connectToGameStore 구독이 entities 자동 갱신 (applyNpcLiveStats 불필요)
 

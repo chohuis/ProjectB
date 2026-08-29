@@ -231,6 +231,16 @@ export function syncProtagonistLeagueUpdate(
 export function applyWeeklyConditionRecovery(
   s: SeasonStoreState,
   entities: EntityRow[],
+  /**
+   * 전지훈련 가산 — 선수 id → 추가 회복량. **시즌 초에만 온다.**
+   *
+   * 🔴 `operations.camp`(구단 규모의 6%)가 **나가기만 하고 아무 효과가
+   *   없었다** — 4-B 에서 만든 죽은 갈래다. 구장비는 수용인원에, 2군비는
+   *   2군 존재 여부에 물리는데 전훈만 어디에도 안 물렸다.
+   * ⚠ **의료팀과 다른 축이다.** 둘 다 부상에 물리면 어느 쪽이 효과인지
+   *   못 가린다 — 전훈은 컨디션, 의료는 회복 속도다.
+   */
+  campBonus?: Record<string, number>,
 ): SeasonStoreState {
   const entityMap = new Map(entities.map((e) => [e.id, e]));
   const nextState = { ...s.leagueState };
@@ -239,7 +249,8 @@ export function applyWeeklyConditionRecovery(
     for (const [pid, cond] of Object.entries(nextConditions)) {
       const rec = (entityMap.get(pid)?.details?.player as import("./master").EntityPlayerDetails | undefined)?.pitching?.recovery ?? 50;
       const recoveryMod = 0.6 + rec * 0.008;
-      const gain = Math.round(WEEKLY_FATIGUE_RECOVERY * recoveryMod);
+      const gain = Math.round(WEEKLY_FATIGUE_RECOVERY * recoveryMod)
+        + (campBonus?.[pid] ?? 0);
       nextConditions[pid] = { ...cond, fatigue: Math.min(100, cond.fatigue + gain) };
     }
     nextState[lid] = { ...ls, playerConditions: nextConditions };

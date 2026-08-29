@@ -1,9 +1,12 @@
 import { get } from "svelte/store";
 import { seedOf } from "../../utils/seedOf";
+import { loadRosterRules } from "../../repo/newGameV3";
 import { seasonStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog } from "../../stores/autoAdvance";
+// 의료팀 — 팀 성향에서 `medicalQuality` 를 읽는다
+import { getTeamProfile } from "./market";
 import { staffStatsOf, factorOf } from "../../utils/staffEffects";
 import { loadRetirementRules, surgeryRetireChance } from "../retirement";
 import type { InjurySeverity, InjuryState, InjuryType } from "../../types/save";
@@ -193,8 +196,37 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     })),
     loadRetirementRules(),
   ]);
+  // 의료팀 규칙 — 없으면 안 돈다(예전 동작)
+  const rulesFile = await loadRosterRules();
   const retireRolls = JSON.parse(retireRollsRaw) as number[];
   const result = JSON.parse(resultRaw) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
+
+  // ── 의료팀 (4단계) ─────────────────────────────────────
+  //
+  // 🔴 `medicalQuality` 가 **트레이드 판정에만** 쓰이고 있었다.
+  //   부상 회복은 팀과 무관해서 **의료 투자에 값이 없었다.**
+  //
+  // ⚠ 값은 규칙 파일이 정본이다(`medicalRules`). 없으면 안 돈다 —
+  //   예전 동작이라 안전하다.
+  // ⚠ **Rust 로 안 내렸다.** 이미 계산된 주 수에 팀 계수를 곱하는 것이라
+  //   산식도 난수도 아니다 — `rosterEngine`(5단계)과 같은 갈래다.
+  {
+    const med = (rulesFile as { medicalRules?: {
+      recoverySpan?: number; minWeeks?: number } }).medicalRules;
+    if (med?.recoverySpan) {
+      const span = med.recoverySpan;
+      const minW = med.minWeeks ?? 1;
+      const teamOf = new Map((g.npcs ?? []).map((n) => [n.npcId, n.currentTeam ?? ""]));
+      for (const occ of result.occurred) {
+        const tid = teamOf.get(occ.playerId) ?? "";
+        if (!tid) continue;
+        const q = getTeamProfile(tid, g, m)?.medicalQuality ?? 50;
+        // 50이 1.0 — 좋을수록 짧아진다
+        const mult = 1 - ((q - 50) / 50) * span;
+        occ.recoveryWeeks = Math.max(minW, Math.round(occ.recoveryWeeks * mult));
+      }
+    }
+  }
 
   let retireRollIdx = 0;
 
