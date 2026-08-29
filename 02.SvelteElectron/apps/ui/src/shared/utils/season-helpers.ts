@@ -7,6 +7,16 @@ import { calcAvg, calcEra, calcOps, calcWhip } from "../types/season";
  *
  * ⚠ **표를 두 곳에 두지 않는다.** 순위표 승률(`updateStandings`)도 같은 식이다.
  */
+/**
+ * 수비율 — `(자살 + 보살) / (자살 + 보살 + 실책)`.
+ *
+ * ⚠ 기회가 없으면 0이다. 1로 두면 **한 번도 안 잡은 선수가 완벽한 수비수**가 된다.
+ */
+export function fpctOf(po: number, a: number, e: number): number {
+  const chances = po + a + e;
+  return chances > 0 ? Math.round(((po + a) / chances) * 1000) / 1000 : 0;
+}
+
 export function winPctOf(w: number, l: number): number {
   const n = w + l;
   return n > 0 ? Math.round((w / n) * 1000) / 1000 : 0;
@@ -88,6 +98,9 @@ export function sanitizeStatsRecord(
         ...b,
         g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb),
         bb, k: safeN(b.k),
+        // ⚠ 파생값이라 저장된 걸 안 믿는다 — 실책·보살·자살에서 다시 만든다
+        ...(b.e !== undefined || b.a !== undefined || b.po !== undefined
+          ? { fpct: fpctOf(safeN(b.po), safeN(b.a), safeN(b.e)) } : {}),
         avg: calcAvg(h, ab), obp, slg, ops: calcOps(obp, slg),
       };
     }
@@ -280,6 +293,17 @@ export function accumulateStats(
       //   SLG가 달라진다.
       // ⚠ 장타 수가 없으면(구 세이브) `?? 0`이 되고, 그때 이 식은
       //   `h + 3hr`로 옛 근사와 **정확히 같아진다** — 갈래를 나눌 필요가 없다.
+      // ⚠ **없는 것과 0을 가른다.** 구 세이브 로그엔 수비 칸이 없다 —
+      //   0으로 채우면 "실책 0인 수비수"가 되어 기록이 거짓이 된다
+      const lineDef = line as unknown as { e?: number; a?: number; po?: number };
+      const defKnown = prev.e !== undefined || lineDef.e !== undefined
+                    || prev.a !== undefined || lineDef.a !== undefined
+                    || prev.po !== undefined || lineDef.po !== undefined;
+      // ⚠ `safeNum`은 투수 갈래 안에만 있다 — 여기서 따로 만든다
+      const nz = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
+      const defE  = nz(prev.e)  + nz(lineDef.e);
+      const defA  = nz(prev.a)  + nz(lineDef.a);
+      const defPo = nz(prev.po) + nz(lineDef.po);
       const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       next[line.playerId] = {
@@ -290,6 +314,7 @@ export function accumulateStats(
         ...(hbp !== undefined ? { hbp } : {}),
         ...(sac !== undefined ? { sac } : {}),
         ...(sf  !== undefined ? { sf }  : {}),
+        ...(defKnown ? { e: defE, a: defA, po: defPo, fpct: fpctOf(defPo, defA, defE) } : {}),
         avg, obp, slg, ops: calcOps(obp, slg),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: (prev.rispAb ?? 0) + (line.rispAb ?? 0),

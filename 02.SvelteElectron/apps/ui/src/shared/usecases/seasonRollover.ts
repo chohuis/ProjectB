@@ -323,7 +323,10 @@ export async function saveSeasonHistory(seasonYear: number) {
           sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops,
           b2: b2.b2 ?? null, b3: b2.b3 ?? null, rB: b2.r ?? null, hbpB: b2.hbp ?? null,
           sac: b2.sac ?? null, sf: b2.sf ?? null,
-          rispAbB: b2.rispAb ?? null, rispHB: b2.rispH ?? null });
+          rispAbB: b2.rispAb ?? null, rispHB: b2.rispH ?? null,
+          // 🔴 여기서 빠뜨리면 시즌이 넘어가는 순간 수비 기록이 사라진다
+          defE: b2.e ?? null, defA: b2.a ?? null, defPo: b2.po ?? null,
+          fpct: b2.fpct ?? null });
       }
     }
   }

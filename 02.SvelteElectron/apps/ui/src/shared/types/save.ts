@@ -459,6 +459,20 @@ export interface BatterSeasonStats {
   hbp?: number;
   sac?: number;
   sf?: number;
+  /**
+   * 수비 기록 — 실책·보살·자살과 수비율 (G-3 · 2026-08-29).
+   *
+   * 🔴 **선수별로 한 건도 안 쌓이고 있었다.** `DefenseStat`은 팀 단위
+   *   하나뿐이라 골든글러브를 뽑을 근거가 없었다.
+   * ⚠ `fpct`는 **파생값**이다 — `era`·`whip`처럼 매번 다시 만든다.
+   *       fpct = (po + a) / (po + a + e)
+   * ⚠ 구 세이브엔 없다. `undefined`와 0을 가른다 — 0으로 채우면
+   *   "실책 0인 수비수"가 되어 기록이 거짓이 된다.
+   */
+  e?: number;
+  a?: number;
+  po?: number;
+  fpct?: number;
   rbi: number;    // 타점
   sb: number;     // 도루
   bb: number;  // 볼넷

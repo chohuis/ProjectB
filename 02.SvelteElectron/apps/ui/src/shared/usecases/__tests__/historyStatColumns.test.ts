@@ -46,7 +46,8 @@ describe("과거 시즌 기록 칸", () => {
     const body = MAIN.slice(at, MAIN.indexOf("`", at));
     const cols = body.slice(body.indexOf("(") + 1, body.lastIndexOf(")")).split(",").length;
     const marks = (body.match(/\?/g) ?? []).length;
-    expect(marks, `컬럼 ${cols} · 자리표시자 ${marks}`).toBe(44);
+    // ⚠ v13(수비 4칸)에서 44 → 48. **이 숫자를 안 고치면 v13이 빨간불이다**
+    expect(marks, `컬럼 ${cols} · 자리표시자 ${marks}`).toBe(48);
   });
 
   it("저장이 12칸을 보낸다", () => {

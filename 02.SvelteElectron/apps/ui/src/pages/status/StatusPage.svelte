@@ -510,6 +510,11 @@
               ["OBP", rateLabel(selectedSeasonStats.obp)],
               ["SLG", rateLabel(selectedSeasonStats.slg)],
               ["OPS", rateLabel(selectedSeasonStats.ops)],
+              // 수비 — ⚠ 없는 것과 0을 가른다(구 세이브엔 없다)
+              ["E",   selectedSeasonStats.e  ?? "—"],
+              ["A",   selectedSeasonStats.a  ?? "—"],
+              ["PO",  selectedSeasonStats.po ?? "—"],
+              ["FPCT", selectedSeasonStats.fpct == null ? "—" : rateLabel(selectedSeasonStats.fpct)],
             ] as [lbl, val]}
               <div class="record-item">
                 <span class="rec-label">{lbl}</span>

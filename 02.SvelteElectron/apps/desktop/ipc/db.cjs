@@ -816,6 +816,24 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v12: history_lb_stats 기록 칸 12개 추가");
     })();
   }
+
+  if (currentVersion < 13) {
+    db.transaction(() => {
+      // 🔴 **수비 기록 칸** (G-3 · 2026-08-29). 실책·보살·자살·수비율.
+      //   골든글러브의 근거다 — 없으면 시즌이 넘어가는 순간 사라진다.
+      // ⚠ **v12 뒤에 넣는다.** v12를 v11 앞에 넣었다가 버전이 덮여
+      //   영원히 다시 도는 걸 실측으로 잡았다.
+      const addCol = (table, col, def) => {
+        const has = db.prepare(`SELECT name FROM pragma_table_info('${table}') WHERE name='${col}'`).get();
+        if (!has) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
+      };
+      for (const c of ["def_e", "def_a", "def_po"]) addCol("history_lb_stats", c, "INTEGER");
+      addCol("history_lb_stats", "fpct", "REAL");
+
+      db.pragma("user_version = 13");
+      console.log("[db-patch] v13: history_lb_stats 수비 칸 4개 추가");
+    })();
+  }
 }
 
 // R3a-4d: dbListSlots/dbSaveSlot/dbLoadSlot(v2 game/season 블롭 세이브) 폐기

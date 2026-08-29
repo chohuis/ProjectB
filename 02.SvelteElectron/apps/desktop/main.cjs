@@ -517,9 +517,12 @@ app.whenReady().then(() => {
            player_name, team_name,
            -- ⚠ 여기가 안 넓으면 시즌이 넘어가는 순간 새 칸이 사라진다 (v12)
            hr_p, hbp_p, risp_ab_p, risp_h_p,
-           b2, b3, r_b, hbp_b, sac, sf, risp_ab_b, risp_h_b)
+           b2, b3, r_b, hbp_b, sac, sf, risp_ab_b, risp_h_b,
+           -- 수비 기록 (v13) — 골든글러브의 근거다
+           def_e, def_a, def_po, fpct)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?)
       `);
       db.transaction(() => {
         for (const r of rows) {
@@ -534,7 +537,8 @@ app.whenReady().then(() => {
             r.playerName ?? "", r.teamName ?? "",
             r.hrP ?? null, r.hbpP ?? null, r.rispAbP ?? null, r.rispHP ?? null,
             r.b2 ?? null, r.b3 ?? null, r.rB ?? null, r.hbpB ?? null,
-            r.sac ?? null, r.sf ?? null, r.rispAbB ?? null, r.rispHB ?? null
+            r.sac ?? null, r.sf ?? null, r.rispAbB ?? null, r.rispHB ?? null,
+            r.defE ?? null, r.defA ?? null, r.defPo ?? null, r.fpct ?? null
           );
         }
       })();

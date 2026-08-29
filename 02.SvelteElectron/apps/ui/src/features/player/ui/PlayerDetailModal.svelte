@@ -1055,6 +1055,10 @@
                         ["K", modalStats.k], ["AVG", rateLabel(modalStats.avg)],
                         ["OBP", rateLabel(modalStats.obp)], ["SLG", rateLabel(modalStats.slg)],
                         ["OPS", rateLabel(modalStats.ops)],
+                        // 수비 (G-3) — ⚠ 없는 것과 0을 가른다
+                        ["E",   modalStats.e  ?? "—"], ["A", modalStats.a ?? "—"],
+                        ["PO",  modalStats.po ?? "—"],
+                        ["FPCT", modalStats.fpct == null ? "—" : rateLabel(modalStats.fpct)],
                       ] as [lbl, val]}
                         <div class="sc"><span class="sc-lbl">{lbl}</span><span class="sc-val mid">{val ?? "-"}</span></div>
                       {/each}

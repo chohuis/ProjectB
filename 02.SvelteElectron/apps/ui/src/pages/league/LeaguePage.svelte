@@ -102,6 +102,8 @@
     hr_p?: number|null; hbp_p?: number|null; risp_ab_p?: number|null; risp_h_p?: number|null;
     b2?: number|null; b3?: number|null; r_b?: number|null; hbp_b?: number|null;
     sac?: number|null; sf?: number|null; risp_ab_b?: number|null; risp_h_b?: number|null;
+    /** 수비 기록 (v13) — 그 전 세이브는 전부 null이다 */
+    def_e?: number|null; def_a?: number|null; def_po?: number|null; fpct?: number|null;
   };
   let historyStandings:  HistStanding[]  = [];
   let historyLbStats:    HistLbStat[]    = [];
@@ -520,6 +522,12 @@
       ...(r.sf  != null ? { sf:  r.sf  } : {}),
       ...(r.risp_ab_b != null ? { rispAb: r.risp_ab_b } : {}),
       ...(r.risp_h_b  != null ? { rispH:  r.risp_h_b  } : {}),
+      // ⚠ `?? 0`으로 채우지 않는다 — v13 이전 세이브엔 값이 없고,
+      //   0으로 채우면 "실책 0인 수비수"가 되어 기록이 거짓이 된다
+      ...(r.def_e  != null ? { e:  r.def_e  } : {}),
+      ...(r.def_a  != null ? { a:  r.def_a  } : {}),
+      ...(r.def_po != null ? { po: r.def_po } : {}),
+      ...(r.fpct   != null ? { fpct: r.fpct } : {}),
     } satisfies BatterSeasonStats;
   }
 
