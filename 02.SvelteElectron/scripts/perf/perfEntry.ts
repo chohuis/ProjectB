@@ -6539,3 +6539,21 @@ export function overCapProbe(): Record<string, unknown> {
   }
   return { 초과팀수: rows.length, 목록: rows.slice(0, 8) };
 }
+
+/** 웨이버가 실제로 도는가 (3단계 · 4) */
+export function waiverProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  let claimed = 0, released = 0;
+  const sample: string[] = [];
+  for (const n of g.npcs ?? []) {
+    for (const e of (n as { careerEvents?: { eventType?: string; year?: number; toTeamId?: string }[] })
+      .careerEvents ?? []) {
+      if (e.eventType === "waiver_claim") {
+        claimed++;
+        if (sample.length < 4) sample.push(`${n.npcId.slice(-14)}→${(e.toTeamId ?? "").replace(/^TEAM_[A-Z]+_/, "")}`);
+      }
+      if (e.eventType === "release_score" || e.eventType === "release_roster") released++;
+    }
+  }
+  return { 방출: released, 웨이버클레임: claimed, 예: sample };
+}

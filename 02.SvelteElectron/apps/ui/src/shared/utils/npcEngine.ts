@@ -127,6 +127,12 @@ export async function runOffseasonProcessing(
    * 그러면 부진한 고연봉 베테랑이 정원 안에서 계속 버틴다
    */
   releaseRules?: unknown,
+  /**
+   * 웨이버 공시 (`waiverRules`). 방출된 선수를 다른 구단이 데려간다.
+   * ⚠ **안 넘기면 갈래가 통째로 꺼진다** — `serde(default)` 라 Rust 는
+   *   조용히 통과하고 방출자가 곧장 시장으로 간다.
+   */
+  waiverRules?: unknown,
   /** FA 미계약자의 독립 재도전 나이 상한 (`faRules.independentAgeMax`).
    *  ⚠ 안 넘기면 갈래가 **통째로 꺼진다** — 미계약자가 바로 은퇴한다 */
   faIndependentAgeMax?: number,
@@ -205,6 +211,7 @@ export async function runOffseasonProcessing(
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
+    ...(waiverRules ? { waiverRules } : {}),
     ...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {}),
     worldSeed: (worldSeed ?? 0) >>> 0,
     ...(fa ? { teamPayrollCap: fa.teamPayrollCap, faBidInterestMin: fa.bidInterestMin,

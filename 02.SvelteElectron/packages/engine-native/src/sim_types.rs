@@ -917,6 +917,20 @@ pub struct ProtagonistGradeResult {
     pub is_graduating: bool,
 }
 
+/// 웨이버 공시 규칙. **없으면 안 돈다** — 예전 동작이다.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WaiverRules {
+    #[serde(default)]
+    pub enabled: bool,
+    /// 그 팀 최약체보다 이만큼 나으면 데려간다 (음수면 조금 못해도)
+    #[serde(default)]
+    pub ovr_margin: f64,
+    /// 한 팀이 한 오프시즌에 데려갈 최대 인원
+    #[serde(default)]
+    pub max_per_team: i32,
+}
+
 // ── 오프시즌 입력 ────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -927,6 +941,10 @@ pub struct OffseasonParams {
     #[serde(default)]
     pub world_seed: u32,
     pub npcs: Vec<NpcSaveState>,
+    /// 웨이버 공시. ⚠ `serde(default)` 라 **안 넘겨도 통과한다** —
+    /// 그래서 배선 검사가 TS 가 넘기는지 따로 본다.
+    #[serde(default)]
+    pub waiver_rules: Option<WaiverRules>,
     pub pending_draft: Vec<NpcSaveState>,
     pub season_year: i32,
     // TS에서 FA/은퇴 결정을 완료한 named NPC ID 목록 — Rust FA 로직 스킵 대상

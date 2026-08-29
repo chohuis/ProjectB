@@ -1260,6 +1260,93 @@ fn release_second_stage(
     released
 }
 
+/// 웨이버 공시 — 방출된 선수를 **다른 구단이 데려간다.**
+///
+/// 🔴 방출되면 `current_team` 을 비워 곧장 시장으로 보냈다. 실제 야구는
+///   그 전에 **웨이버 공시**를 거치고, **순위 역순**(하위 팀 먼저)으로
+///   데려갈 기회를 준다 — 전력 평준화 장치다.
+///
+/// ⚠ **아무나 데려가면 방출이 무의미하다.** 그 팀 최약체보다 나은 선수만
+///   클레임한다(`ovr_margin`). 팀당 상한도 둔다 — 없으면 정원 여유가 큰
+///   팀이 방출자를 쓸어담는다.
+///
+/// ⚠ **정원을 넘기지 않는다.** 상한이 없으면 웨이버가 로스터 캡을 뚫는다.
+fn waiver_claim(
+    npcs: &mut [NpcSaveState],
+    released_ids: &std::collections::HashSet<String>,
+    limits: &HashMap<String, RosterLimit>,
+    ovr_margin: f64,
+    max_per_team: i32,
+    season_year: i32,
+) -> i32 {
+    // 🔴 **그 해 방출된 사람만이다.** 처음엔 "팀이 빈 사람"으로 잡았는데
+    //   졸업생·미배정자까지 걸렸다 — 실측에서 고교·대학 선수가 프로 2군에
+    //   클레임됐다(2027년 102명). 웨이버는 **방출 절차**의 일부다.
+    //
+    // ⚠ **`career_events` 로는 못 찾는다.** 방출은 `ev()` 로 `OffseasonEvent`
+    //   에만 남고 선수의 `career_events` 에는 안 들어간다 — 그걸 보면
+    //   **아무도 안 걸려 웨이버가 죽은 갈래가 된다.**
+    let free: Vec<usize> = npcs.iter().enumerate()
+        .filter(|(_, n)| n.current_team.is_empty()
+            && n.career_status != "retired"
+            && !n.current_league.is_empty()
+            && released_ids.contains(&n.npc_id))
+        .map(|(i, _)| i).collect();
+    if free.is_empty() { return 0; }
+
+    // 팀별 인원과 최약체 OVR — **한 번만 훑는다**
+    let mut size: HashMap<String, i32> = HashMap::new();
+    let mut weakest: HashMap<String, f64> = HashMap::new();
+    for n in npcs.iter() {
+        if n.current_team.is_empty() || n.career_status == "retired" { continue; }
+        *size.entry(n.current_team.clone()).or_insert(0) += 1;
+        let o = npc_core_ovr(n);
+        weakest.entry(n.current_team.clone())
+            .and_modify(|w| if o < *w { *w = o })
+            .or_insert(o);
+    }
+
+    let mut taken: HashMap<String, i32> = HashMap::new();
+    let mut claimed = 0;
+    for i in free {
+        let league = npcs[i].current_league.clone();
+        let ovr = npc_core_ovr(&npcs[i]);
+        let max = match roster_rule(&league, limits) { Some((_, m)) => m, None => continue };
+
+        // 같은 리그에서 **인원이 적은 팀부터** — 순위 역순의 대용이다
+        // (오프시즌 이 시점엔 순위표가 없다)
+        let mut cands: Vec<(String, i32)> = size.iter()
+            .filter(|(t, _)| npcs.iter().any(|n|
+                n.current_team == **t && n.current_league == league))
+            .map(|(t, c)| (t.clone(), *c))
+            .collect();
+        cands.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
+
+        for (team, cnt) in cands {
+            if cnt >= max { continue; }                       // 정원이 찼다
+            if *taken.get(&team).unwrap_or(&0) >= max_per_team { continue; }
+            let w = *weakest.get(&team).unwrap_or(&0.0);
+            if ovr < w + ovr_margin { continue; }             // 최약체만도 못하다
+
+            npcs[i].current_team = team.clone();
+            npcs[i].career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "waiver_claim".into(),
+                from_team_id: None,
+                to_team_id: Some(team.clone()),
+                from_league_id: None,
+                to_league_id: None,
+                detail: Some(format!("OVR {ovr:.0}")),
+            });
+            *size.entry(team.clone()).or_insert(0) += 1;
+            *taken.entry(team).or_insert(0) += 1;
+            claimed += 1;
+            break;
+        }
+    }
+    claimed
+}
+
 /// 육성선수 단년 계약 만료 — **성장했으면 재계약, 아니면 방출**.
 ///
 /// 🔴 **이게 없어서 2군 육성 몫이 첫 해에 차고 영영 안 열렸다.** 육성선수는
@@ -2352,6 +2439,25 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         release_second_stage(
             &mut after_normalize, rr, &params.roster_limits, &mut events,
             &params.perf_scores, &params.team_profiles, &is_foreign);
+    }
+
+    // 11-b2. **웨이버 공시.** 방금 방출된 사람을 다른 구단이 데려간다.
+    //
+    // ⚠ **방출 직후여야 한다.** 육성 만료(11-c)·진로 배정(12)이 돌면
+    //   그 사람들은 이미 독립리그나 은퇴로 갈려 나간 뒤다.
+    if let Some(wr) = params.waiver_rules.as_ref() {
+        if wr.enabled {
+            // ⚠ 요약은 안 남긴다 — `events` 는 `OffseasonEvent` 라 선수가
+            //   있어야 한다. 클레임한 사람마다 `career_events` 에 이미
+            //   `waiver_claim` 이 남는다.
+            let released_ids: std::collections::HashSet<String> = events.iter()
+                .filter(|e| e.kind == "release_score" || e.kind == "release_roster")
+                .map(|e| e.npc_id.clone())
+                .collect();
+            let _ = waiver_claim(&mut after_normalize, &released_ids,
+                &params.roster_limits,
+                wr.ovr_margin, wr.max_per_team.max(1), season_year);
+        }
     }
 
     // 11-c. 육성선수 단년 계약 만료. 이것도 진로 배정 **앞**이어야 방출자가

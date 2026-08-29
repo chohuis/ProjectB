@@ -2685,6 +2685,9 @@ function createGameStore() {
             offRules.developmentPlayerRules?.intakeMax),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
+        // 🔴 **안 넘기면 웨이버가 통째로 꺼진다.** `serde(default)` 라
+        //   Rust 는 조용히 통과하고 방출자가 곧장 시장으로 간다.
+        (offRules as { waiverRules?: unknown }).waiverRules,
         // ⚠ 안 넘기면 FA 미계약자가 **바로 은퇴한다** — 독립 재도전 갈래가 꺼진다
         (offRules.faRules as { independentAgeMax?: number } | undefined)?.independentAgeMax,
         foreignParamsFrom(offRules),
