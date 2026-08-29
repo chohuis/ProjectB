@@ -21,7 +21,7 @@ import { slotRepo } from "../repo/slotRepo";
 import { isV3SlotActive } from "../repo/v3Mode";
 import { finiteOr } from "../utils/payloadNum";
 import { leagueStatsOf } from "../utils/season-helpers";
-import type { CareerAward, PlayerSeasonStats } from "../types/save";
+import type { BatterSeasonStats, CareerAward, PitcherSeasonStats, PlayerSeasonStats } from "../types/save";
 
 interface AwardDef {
   id: string;
@@ -43,6 +43,16 @@ export interface AwardRules {
   mvp: { label: string; minTitles: number };
   /** 신인왕. 없으면 안 뽑는다(구 규칙 파일 호환) */
   rookie?: { label: string; maxProYears: number; leagues?: string[] };
+  /** 골든글러브. 없으면 안 뽑는다(구 규칙 파일 호환) */
+  golden?: GoldenRules;
+}
+
+export interface GoldenRules {
+  leagues: string[];
+  qualify: Record<string, { minPa: number; minIp: number; minChances: number }>;
+  positions: { pos: string; label: string; ops: number; fpct: number }[];
+  dh: { label: string };
+  pitcher: { label: string; stat: string; order: "asc" | "desc" };
 }
 
 /** 한 부문의 수상자. 화면과 경력기록이 **같은 값**을 쓴다 */
@@ -142,6 +152,105 @@ export function computeAwards(
   return out;
 }
 
+/** 수비 기회 — 자살 + 보살 + 실책. **하한이 없으면 기회 1인 선수가 1.000으로 1위다** */
+function chancesOf(b: BatterSeasonStats): number {
+  return (b.po ?? 0) + (b.a ?? 0) + (b.e ?? 0);
+}
+
+/**
+ * 리그 안에서 0~1로 정규화한다.
+ *
+ * 🔴 **OPS와 수비율은 단위가 다르다.** 그대로 더하면 OPS(0.7~1.1)가
+ *   수비율(0.94~1.00)을 지배한다 — 가중치가 의미를 잃는다.
+ * ⚠ 전원이 같은 값이면 0.5를 준다(나눗셈이 터지지 않게).
+ */
+function normalizer(values: number[]): (v: number) => number {
+  const lo = Math.min(...values), hi = Math.max(...values);
+  if (!Number.isFinite(lo) || hi <= lo) return () => 0.5;
+  return (v) => (v - lo) / (hi - lo);
+}
+
+/**
+ * **골든글러브.** 포지션별로 공격·수비를 섞어 1위를 뽑는다.
+ *
+ * ⚠ **MVP 셈에는 안 들어간다**(사용자 확정) — 넣으면 수상자가
+ *   `minTitles 2`를 쉽게 채워 MVP가 흔해진다.
+ * ⚠ **지명타자는 별도 추적이 없다.** 규정타석을 채웠는데 **수비 기회가
+ *   자격선 미만**인 타자가 곧 DH다 — 수비를 안 나갔다는 뜻이다.
+ * ⚠ 포지션은 **고정 판정**이다(사용자 확정) — 엔티티의 값 하나를 본다.
+ */
+export function computeGoldenGlove(
+  g: GoldenRules,
+  leagueId: string,
+  stats: Record<string, PlayerSeasonStats>,
+  positionOf: (playerId: string) => string,
+): AwardWinner[] {
+  const q = g.qualify[leagueId];
+  if (!q) return [];
+  const out: AwardWinner[] = [];
+
+  const bats = Object.entries(stats)
+    .filter(([, st]) => st.type === "batter" && finiteOr((st as BatterSeasonStats).pa) >= q.minPa)
+    .map(([id, st]) => [id, st as BatterSeasonStats] as const);
+
+  // 정규화 기준은 **자격을 갖춘 야수 전체**다 — 포지션마다 따로 하면
+  // 사람이 적은 자리(포수)에서 눈금이 널뛴다
+  const fielders = bats.filter(([, b]) => chancesOf(b) >= q.minChances);
+  const nOps  = normalizer(fielders.map(([, b]) => finiteOr(b.ops)));
+  const nFpct = normalizer(fielders.map(([, b]) => finiteOr(b.fpct)));
+
+  const push = (label: string, id: string, value: number, text: string, second: number | null) => {
+    const base = Math.abs(second ?? value) || 1;
+    out.push({
+      defId: `golden_${label}`, label, playerId: id, value,
+      valueText: text, title: `${label} (${text})`,
+      dominance: Math.max(0, ((second == null ? 0 : value - second)) / base),
+    });
+  };
+
+  for (const def of g.positions) {
+    const pool = fielders.filter(([id]) => positionOf(id) === def.pos);
+    if (pool.length === 0) continue;
+    const scored = pool.map(([id, b]) => ({
+      id,
+      score: nOps(finiteOr(b.ops)) * def.ops + nFpct(finiteOr(b.fpct)) * def.fpct,
+      fpct: finiteOr(b.fpct),
+    })).sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
+    const w = scored[0];
+    push(def.label, w.id, w.score, w.fpct.toFixed(3).replace(/^0/, ""),
+         scored[1]?.score ?? null);
+  }
+
+  // 지명타자 — 규정타석은 채웠는데 **수비를 안 나간** 타자
+  const dhPool = bats.filter(([, b]) => chancesOf(b) < q.minChances)
+    .map(([id, b]) => ({ id, ops: finiteOr(b.ops) }))
+    .sort((a, b) => b.ops - a.ops || a.id.localeCompare(b.id));
+  if (dhPool.length > 0) {
+    const w = dhPool[0];
+    push(g.dh.label, w.id, w.ops, w.ops.toFixed(3).replace(/^0/, ""),
+         dhPool[1]?.ops ?? null);
+  }
+
+  // 투수 — ERA 1위(규정이닝). 부문 표를 다시 적지 않는다
+  const pits = Object.entries(stats)
+    .filter(([, st]) => st.type === "pitcher"
+      && finiteOr((st as PitcherSeasonStats).ip) >= q.minIp)
+    .map(([id, st]) => ({ id, era: finiteOr((st as PitcherSeasonStats).era) }))
+    .sort((a, b) => a.era - b.era || a.id.localeCompare(b.id));
+  if (pits.length > 0) {
+    const w = pits[0];
+    const second = pits[1]?.era ?? null;
+    const base = Math.abs(second ?? w.era) || 1;
+    out.push({
+      defId: `golden_${g.pitcher.label}`, label: g.pitcher.label, playerId: w.id,
+      value: w.era, valueText: w.era.toFixed(2), title: `${g.pitcher.label} (${w.era.toFixed(2)})`,
+      // 방어율은 낮을수록 좋다 — 방향을 맞춘다
+      dominance: Math.max(0, (second == null ? 0 : second - w.era) / base),
+    });
+  }
+  return out;
+}
+
 /** 규칙 파일에서 수상 규칙을 읽는다. 화면도 이걸 쓴다 — 상수를 다시 적지 않는다 */
 export async function loadAwardRules(): Promise<AwardRules | null> {
   const rules = (await loadRosterRules()).awardRules as AwardRules | undefined;
@@ -219,6 +328,13 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   if ((prot.proServiceYears ?? 0) <= maxRookieYears) rookieIds.add(prot.id);
   const isRookie = (pid: string) => rookieIds.has(pid);
 
+  // 포지션 — **고정 판정**(사용자 확정). 엔티티의 값 하나를 본다.
+  // ⚠ 한 번만 만든다. 리그 루프 안에서 매번 만들면 NPC 전체를 리그 수만큼 훑는다
+  const posOf = new Map<string, string>();
+  for (const n of get(gameStore).npcs ?? []) posOf.set(n.npcId, n.position ?? "");
+  posOf.set(prot.id, String(prot.position ?? ""));
+  const positionOf = (pid: string) => posOf.get(pid) ?? "";
+
   for (const leagueId of rules.leagues) {
     // ⚠ `s.stats`로 대체하면 안 된다 — 그건 주인공 개인 기록이고 승강으로
     // 오르내리면 1군·2군이 합산돼 있다(`leagueStatsOf` 주석 참고)
@@ -281,6 +397,21 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
           ?? won.set(top.playerId, [rules.rookie.label]);
         if (top.playerId === prot.id) {
           protAwards.push({ id: "rookie", label: rules.rookie.label });
+        }
+      }
+    }
+
+    // ── 골든글러브 ─────────────────────────────────────────────
+    //
+    // ⚠ **MVP 셈 밖이다**(사용자 확정) — `inLeague`를 안 건드린다.
+    //   넣으면 수상자가 `minTitles 2`를 쉽게 채워 MVP가 흔해진다.
+    if (rules.golden && rules.golden.leagues.includes(leagueId)) {
+      for (const w of computeGoldenGlove(rules.golden, leagueId, stats, positionOf)) {
+        const list = won.get(w.playerId) ?? [];
+        list.push(w.title);
+        won.set(w.playerId, list);
+        if (w.playerId === prot.id) {
+          protAwards.push({ id: w.defId, label: w.label, value: w.valueText });
         }
       }
     }

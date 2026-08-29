@@ -2077,6 +2077,25 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         // ⚠ 수비수는 **공격 팀의 반대편**이다 — 초면 홈이 수비다. 타자 줄과
         //   정반대라 여기서 헷갈리면 기록이 통째로 뒤집힌다.
         // ⚠ 삼진·볼넷은 `fielding_result`가 없으므로 자연히 빠진다.
+        // 🔴 **삼진은 포수의 자살이다** (야구 규칙 · 2026-08-29).
+        //   실제 KBO 포수는 시즌 자살 800~900인데 **거의 전부 삼진 포구**다.
+        //   그걸 안 세니 포수 수비 기회가 극히 적어 골든글러브 자격을 못
+        //   채웠다 — 실측에서 **10 리그시즌 중 1번**만 포수 부문이 나왔다.
+        // ⚠ 삼진엔 `fielding_result`가 없으므로 여기서 따로 센다.
+        if matches!(result_code, PitchResultCode::StrikeoutSwing | PitchResultCode::StrikeoutLook) {
+            let is_top = state.half == HalfInning::Top;
+            let catcher = fielding_side(state).iter()
+                .find(|f| f.position == FieldPosition::C)
+                .map(|f| f.player_id.clone()).unwrap_or_default();
+            if !catcher.is_empty() {
+                let lines = if is_top { &mut next_state.home_bat_lines }
+                            else      { &mut next_state.away_bat_lines };
+                if let Some(b) = lines.iter_mut().find(|x| x.player_id == catcher) {
+                    b.putouts += 1;
+                }
+            }
+        }
+
         if let Some(ref fr) = fielding_result {
             let is_top = state.half == HalfInning::Top;
             let recv_id = fr.threw_to.and_then(|to| fielding_side(state).iter()
