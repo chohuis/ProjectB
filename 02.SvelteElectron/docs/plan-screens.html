@@ -1,0 +1,245 @@
+<title>화면과 스카우팅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap">
+
+<style>
+:root {
+  --ink:#17242E; --ink-soft:#4A5A64; --ink-faint:#7A8A92;
+  --paper:#F1F3F2; --paper-2:#E7EBE9; --rule:#D2D9D7; --rule-soft:#E1E6E4;
+  --credit:#16624F; --debit:#9E3020; --accent:#A96721; --accent-bg:#EDE4D6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:#DFE6E3; --ink-soft:#A2AFAF; --ink-faint:#76858A;
+    --paper:#10181B; --paper-2:#172226; --rule:#2A383D; --rule-soft:#212D32;
+    --credit:#4FBF9C; --debit:#E0705C; --accent:#D3A05C; --accent-bg:#2A2318;
+  }
+}
+:root[data-theme="dark"] {
+  --ink:#DFE6E3; --ink-soft:#A2AFAF; --ink-faint:#76858A;
+  --paper:#10181B; --paper-2:#172226; --rule:#2A383D; --rule-soft:#212D32;
+  --credit:#4FBF9C; --debit:#E0705C; --accent:#D3A05C; --accent-bg:#2A2318;
+}
+* { box-sizing: border-box; }
+body { word-break: keep-all; overflow-wrap: break-word; }
+body {
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans KR", system-ui, sans-serif;
+  font-weight:300; font-size:15px; line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:1000px; margin:0 auto;
+  padding:clamp(2.5rem,6vw,5rem) clamp(1.1rem,4vw,2.5rem) 6rem;
+  display:flex; flex-direction:column; gap:3rem; }
+header { display:flex; flex-direction:column; gap:1rem; }
+.eyebrow { font-family:"IBM Plex Mono",monospace; font-size:.72rem; font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
+h1 { font-family:"Gowun Batang",serif; font-weight:700;
+  font-size:clamp(2.1rem,5.5vw,3rem); line-height:1.18; margin:0; text-wrap:balance; }
+.lede { max-width:62ch; font-size:1.02rem; color:var(--ink-soft); margin:0; }
+.lede strong { font-weight:600; color:var(--ink); }
+h2 { font-family:"Gowun Batang",serif; font-weight:700; font-size:1.4rem;
+  margin:0 0 1rem; padding-bottom:.5rem; border-bottom:2px solid var(--ink);
+  display:flex; align-items:baseline; gap:.7rem; }
+h2 .tag { font-family:"IBM Plex Mono",monospace; font-size:.68rem; font-weight:500;
+  letter-spacing:.1em; color:var(--accent); background:var(--accent-bg);
+  padding:.15rem .45rem; border-radius:2px; }
+section { display:flex; flex-direction:column; }
+section > p { margin:0 0 1rem; max-width:68ch; color:var(--ink-soft); }
+section > p:last-child { margin-bottom:0; }
+section > p strong { font-weight:600; color:var(--ink); }
+.scroll { overflow-x:auto; border:1px solid var(--rule); background:var(--paper); margin-bottom:1rem; }
+table { border-collapse:collapse; width:100%; font-size:.86rem; }
+th,td { padding:.5rem .75rem; text-align:left; border-bottom:1px solid var(--rule-soft);
+  vertical-align:top; }
+th { font-weight:500; font-size:.72rem; letter-spacing:.04em; color:var(--ink-faint);
+  text-transform:uppercase; background:var(--paper-2); border-bottom:1px solid var(--rule); }
+tbody tr:last-child td { border-bottom:none; }
+td.n, th.n { text-align:center; font-family:"IBM Plex Mono",monospace;
+  font-variant-numeric:tabular-nums; white-space:nowrap; }
+code { font-family:"IBM Plex Mono",monospace; font-size:.88em;
+  background:var(--paper-2); padding:.05em .3em; border-radius:2px; }
+pre { font-family:"IBM Plex Mono",monospace; font-size:.8rem; line-height:1.6;
+  background:var(--paper-2); border:1px solid var(--rule-soft); padding:.8rem 1rem;
+  overflow-x:auto; margin:0 0 1rem; }
+.note { border-left:3px solid var(--accent); background:var(--paper-2);
+  padding:.85rem 1.1rem; font-size:.88rem; color:var(--ink-soft);
+  display:flex; flex-direction:column; gap:.4rem; margin-bottom:1rem; }
+.note p { margin:0; } .note strong { color:var(--ink); font-weight:600; }
+.note.warn { border-left-color:var(--debit); }
+.note-h { font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--accent); font-weight:500; }
+.note.warn .note-h { color:var(--debit); }
+.step { font-family:"IBM Plex Mono",monospace; font-size:1.1rem; font-weight:600;
+  color:var(--accent); }
+.foot { border-top:1px solid var(--rule); padding-top:1.3rem; font-size:.8rem;
+  color:var(--ink-faint); font-family:"IBM Plex Mono",monospace; line-height:1.9; }
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    --ink:#17242E; --ink-soft:#4A5A64; --ink-faint:#6E7E86;
+    --paper:#FFFFFF; --paper-2:#F0F3F2; --rule:#C6CFCD; --rule-soft:#DFE4E2;
+    --credit:#125442; --debit:#8E2A1B; --accent:#8E5518; --accent-bg:#F0E7D9;
+  }
+  body { font-size:11px; }
+  .wrap { max-width:none; padding:0; gap:1.5rem; }
+  h1 { font-size:24px; } h2 { font-size:15px; break-after:avoid; }
+  table { font-size:9.4px; } th,td { padding:.3rem .42rem; }
+  pre { font-size:8.6px; }
+  section, .note, .scroll { break-inside:avoid; }
+  * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">다음 세션 계획 · 2026-08-30</div>
+  <h1>화면과 스카우팅</h1>
+  <p class="lede">밸런스를 잡기 <strong>전에</strong> 한다. 근거는 둘이다 — <strong>화면 없이 도는 기능은 밸런스를 재도 확인할 방법이 없고</strong>, 스카우팅은 드래프트 결과를 바꾸므로 밸런스 뒤에 넣으면 그 측정이 통째로 무효가 된다.</p>
+</header>
+
+<section>
+  <h2>왜 지금인가 <span class="tag">점검 60항목</span></h2>
+  <p><code>scripts/audit-career.cjs</code>로 고교부터 은퇴까지 훑었다. 화면 53개 기준이다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>결과</th><th class="n">건수</th><th>무엇</th></tr></thead>
+      <tbody>
+        <tr><td>기능이 없다</td><td class="n">11</td><td>2차 드래프트 · 연봉조정 · 비FA 다년계약 · 경쟁균형세 · 우천취소 · 팬 충성도 …</td></tr>
+        <tr><td><strong>기능은 있는데 화면이 없다</strong></td><td class="n"><strong>14</strong></td><td><strong>이번 세션에 만든 것 대부분</strong> — 등록말소 · 웨이버 · 의료팀 · 전지훈련 · 명예의 전당 · 영구결번</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note warn">
+    <div class="note-h">점검 중 내 검사가 또 틀렸다</div>
+    <p>첫 판에서 <strong>훈련·경기·계약금·일반입대·독립스카우트가 “없음”</strong>으로 나왔다. 실제로는 <code>matchStart</code>·<code>signingBonus</code>(42곳)처럼 <strong>다른 이름</strong>이었다. 고쳐서 15건 → 11건이 됐다.</p>
+    <p><strong>검사가 틀리면 없는 결함을 만든다</strong> — 이 세션에서 네 번째다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>다섯 단계</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="n">단계</th><th>내용</th><th class="n">건수</th><th>왜 이 순서인가</th></tr></thead>
+      <tbody>
+        <tr><td class="n"><span class="step">A</span></td><td>소식으로 보이는 것</td><td class="n">6</td><td><strong>가장 싸다.</strong> 소식 틀이 이미 있고 이벤트를 한 줄 더 흘리는 일이다</td></tr>
+        <tr><td class="n"><span class="step">B</span></td><td>구단 정보에 얹기</td><td class="n">4</td><td>1단계에서 연표를 붙인 자리라 <strong>구조를 안다</strong></td></tr>
+        <tr><td class="n"><span class="step">C</span></td><td>명예의 전당 화면</td><td class="n">2</td><td><strong>유일한 새 화면.</strong> 목록·검색이 필요해 패널로 안 된다</td></tr>
+        <tr><td class="n"><span class="step">D</span></td><td>스카우팅 잡음 배선</td><td class="n">1</td><td>드래프트 구조를 바꾼다 — 화면 작업과 섞으면 <strong>회귀 원인을 못 가린다</strong></td></tr>
+        <tr><td class="n"><span class="step">E</span></td><td>통합 점검</td><td class="n">—</td><td>화면 없음이 14 → 몇으로 줄었는지 다시 센다</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>A · 소식으로 보이는 것 <span class="tag">6건</span></h2>
+  <p>지금 <strong>로그로만 남고 플레이어에게 안 간다.</strong> <code>autoLog</code>는 개발용이다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>기능</th><th>지금</th><th>넣을 소식</th></tr></thead>
+      <tbody>
+        <tr><td>등록말소 기간</td><td>로그만</td><td>“OOO 2군 등록말소 (2주간 재등록 불가)”</td></tr>
+        <tr><td>웨이버 공시</td><td>이벤트만</td><td>“OOO 웨이버 공시 → △△ 구단이 영입”</td></tr>
+        <tr><td>FA 미계약 → 원소속 재계약</td><td>Rust 이벤트</td><td>“OOO 원소속 재계약 · 시장에서 못 구했다”</td></tr>
+        <tr><td>전역 · 복귀</td><td>Rust 이벤트</td><td>“OOO 전역 · △△ 복귀”</td></tr>
+        <tr><td>캠퍼스 이벤트</td><td>판정만</td><td>그 해 무슨 일이 있었는지</td></tr>
+        <tr><td>프로 올스타 초청</td><td>판정만</td><td>“대학 OOO, 프로 올스타전 초청”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note warn">
+    <div class="note-h">🔴 이 자리를 내가 틀렸다 — 상한은 500이다</div>
+    <p>계획서에 “200통 포화”라고 적었는데 <strong>틀렸다.</strong> CLAUDE.md의 낡은 기록을 그대로 옮겼고, 실제로는 <strong>2026-08-24에 200 → 500</strong>으로 올렸다(약 83주 = 한 시즌 반 · IPC 주당 +38 KB · 화면은 60건씩 점진 렌더링).</p><p>그래도 <strong>한 시즌에 몇 통이 오는지는 잰다</strong> — 500이 여유인지는 생산량을 봐야 안다.</p>
+  </div>
+  <div class="note">
+    <div class="note-h">소식 id — 이미 관행이 서 있다</div>
+    <p>기존 소식이 <code>${seasonYear}</code> 또는 <code>${Date.now()}</code>를 붙인다(실측). <strong>새로 만들 때 그걸 따르면 된다.</strong> <code>weekNum</code>만 쓰면 안 되는 이유는 시즌마다 리셋되기 때문이다 — 중복이 하나만 생겨도 세이브가 안 열린다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>B · 구단 정보에 얹기 <span class="tag">4건</span></h2>
+  <p><code>TeamDetailModal</code>에 붙인다. 1단계에서 연표를 넣은 자리다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>기능</th><th>보일 것</th></tr></thead>
+      <tbody>
+        <tr><td>의료팀</td><td><code>medicalQuality</code> 등급 + “부상 회복 ○○% 빠름”</td></tr>
+        <tr><td>전지훈련</td><td>전훈비 규모 + 시즌 초 컨디션 효과</td></tr>
+        <tr><td>외국인 한도</td><td>보유 3명 중 몇 명 · 누구</td></tr>
+        <tr><td>영구결번</td><td>그 구단이 비운 번호와 주인</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">값을 화면에서 다시 계산하지 않는다</div>
+    <p>의료 배수는 <code>medicalRules.recoverySpan</code>이 정본이고, <code>injuries.ts</code>가 쓰는 <strong>같은 식</strong>을 써야 한다 — 두 벌이 되면 화면과 실제가 갈린다. 검사는 <strong>규칙 파일 값을 바꿨을 때 화면도 바뀌는지</strong>로 본다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>C · 명예의 전당 화면 <span class="tag">새 화면</span></h2>
+  <p>재료는 다 있다 — <code>hallOfFame</code>(선수 id → 연도·점수·구단·번호) · <code>retiredNumbers</code>(팀 → 번호) · <code>careerHistory</code>(수상 이력).</p>
+  <pre>헌액자 목록    이름 · 헌액 연도 · 점수 · 소속 구단
+선수 상세      수상 이력 · 통산 기록 · 영구결번 여부
+구단별 보기    그 구단 출신 헌액자</pre>
+  <p><strong>어디에 둘까</strong> — <code>MePage</code> 하위 탭이 자연스럽다. 업적이 이미 거기 있고, 명예의 전당도 “커리어의 끝”이라는 같은 성격이다.</p>
+  <div class="note">
+    <div class="note-h">은퇴 선수는 사라지지 않는다</div>
+    <p><code>careerStatus: "retired"</code>로 남아 있어 이름·기록을 그때 조회할 수 있다. 다만 <strong>세이브가 커지면 느려질 수 있으니</strong> 목록을 한 번만 만들고 캐시한다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>D · 스카우팅 잡음 배선 <span class="tag">죽은 갈래</span></h2>
+  <div class="note warn">
+    <div class="note-h">완성돼 있는데 아무도 안 부른다</div>
+    <p><code>apply_scouting_noise_native</code>가 <strong>Rust·preload·타입까지 다 배선돼 있는데 TS가 한 번도 안 부른다.</strong></p>
+  </div>
+  <p>그 엔진이 <strong>이미</strong> 하는 것:</p>
+  <pre>base_noise       스카우팅 품질이 낮을수록 크다
+fame_factor      명성이 높으면 정확해진다 (−40%)
+prospect_factor  유망주는 <strong>1.5배</strong> 부정확
+age_factor       28세 이상 0.80 · 22세 이하 1.20
+seed_base        선수 id + 팀 + 연도 해시 — <strong>결정적이다</strong></pre>
+  <p><strong>지금 구조가 막는 것</strong> — <code>runDraftSimulation</code>이 후보 목록 하나를 받고 <strong>전 팀이 그걸 공유한다.</strong> 팀마다 다른 눈으로 볼 자리가 없다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="n">순서</th><th>어떻게 바꾸나</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>드래프트 순번마다 <strong>그 팀의 스카우팅 뷰</strong>로 후보를 평가한다</td></tr>
+        <tr><td class="n">2</td><td>뷰는 <code>applyScoutingNoise(팀 성향, 후보)</code> 한 번으로 만든다 — 결정적 해시라 같은 팀·같은 해면 늘 같다</td></tr>
+        <tr><td class="n">3</td><td><strong>지명은 뷰로, 실제 능력은 진짜 값으로</strong> 들어간다 — 그게 이 기능의 요점이다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note warn">
+    <div class="note-h">밸런스가 흔들린다 — 그게 목적이다</div>
+    <p>지명 순서가 바뀐다. <strong>상위 지명자의 평균 OVR이 내려가고 하위에서 대박이 나온다.</strong> 전후를 반드시 잰다 — 라운드별 지명자 OVR 분포, 그리고 스카우팅 95인 팀이 5인 팀보다 잘 뽑는지.</p>
+    <p>⚠ <strong>성능</strong>: 팀 10 × 후보 200 = 2,000건을 드래프트마다 만든다. 한 번에 한 팀씩 만들고 버린다 — 전부 들고 있으면 메모리가 는다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>매 단계 규칙</h2>
+  <pre>1. 재현부터 — 3회씩
+2. 고치고 검사 붙이고 <strong>변이 검증</strong>
+3. 전후 실측 + 회귀
+4. 커밋</pre>
+  <div class="note warn">
+    <div class="note-h">이 세션의 교훈 둘</div>
+    <p><strong>검사가 틀리면 없는 결함을 만든다.</strong> 네 번 그랬다 — 찾는 문자열이 실제 이름과 달랐다. <strong>검사를 짤 때 표본 하나를 손으로 확인한다.</strong></p>
+    <p><strong>계획서의 “이미 있다”를 믿지 않는다.</strong> <strong>여섯 번</strong> 틀렸다 — 등번호 · 연표 재료 · 고교 로스터 · 34명 출전 · 부상 범위 · <strong>이 계획서의 소식함 200통</strong>. <strong>먼저 잰다.</strong></p>
+  </div>
+</section>
+
+<div class="foot">
+  <div>기준선 · 708bd051a</div>
+  <div>vitest 142파일 1,254건 · cargo 247건 · tsc 0 · svelte-check 34/37</div>
+  <div>계획서 · docs/PLAN_SCREENS_SCOUTING.md</div>
+</div>
+
+</div>

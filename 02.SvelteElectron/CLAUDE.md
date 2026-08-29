@@ -452,4 +452,4 @@ Godot 이주(`04.GodotOnePitch/`, 08-13 시작)를 멈추고 **02로 돌아왔�
 - `MainPage` 등판 회피가 선수 기록 없는 점수만 만든다
 - `syncProtagonistLeagueUpdate`가 로테이션·피로를 안 건드린다 (주인공 팀 한정)
 - C 결함 4건 — `test:rosterbalance` 포수 0명 · 이야기 이벤트 87% 유실 ·
-  동료 떠난 뒤 `together` · 소식함 200통 포화
+  동료 떠난 뒤 `together` · ~~소식함 200통 포화~~ → **500으로 올렸다(2026-08-24)**
