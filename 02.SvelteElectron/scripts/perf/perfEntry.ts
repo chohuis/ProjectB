@@ -6181,3 +6181,33 @@ export async function mailboxRoundTrip(): Promise<Record<string, unknown>> {
 
   return { 저장전: before, 로드후: after, 같은가: before.metadata === after.metadata && before.events === after.events };
 }
+
+/**
+ * 구단 예산 — 시즌 정산이 실제로 값을 움직이는가.
+ *
+ * ⚠ **되먹임을 봐야 한다.** 4-B에서 `base_scale`에 누적 예산을 넣었다가
+ *   매년 33%씩 발산한 적이 있다. 중앙값과 함께 **최대/최소 비율**을 본다 —
+ *   한쪽으로 벌어지면 그게 발산이다.
+ */
+export function clubBudgetProbe(leagueId: string): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const teams = m.teams.filter((t) => t.leagueId === leagueId && !t.id.endsWith("_2"));
+  const rows: { id: string; name: string; now: number; base: number }[] = [];
+  for (const t of teams) {
+    const base = ((t.history as { budget?: number } | undefined)?.budget ?? 0) / 10000;
+    const now = g.clubBudgets?.[t.id] ?? base;
+    if (base > 0) rows.push({ id: t.id, name: t.name, now, base });
+  }
+  const ratios = rows.map((r) => r.now / r.base).sort((a, b) => a - b);
+  const now = rows.map((r) => r.now).sort((a, b) => a - b);
+  const med = (a: number[]) => (a.length ? a[Math.floor(a.length / 2)] : 0);
+  return {
+    n: rows.length,
+    medBudget: Math.round(med(now)),
+    minRatio: +(ratios[0] ?? 0).toFixed(3),
+    medRatio: +med(ratios).toFixed(3),
+    maxRatio: +(ratios[ratios.length - 1] ?? 0).toFixed(3),
+    rows: rows.map((r) => `${r.name}:${Math.round(r.now / 10000)}억(×${(r.now / r.base).toFixed(2)})`),
+  };
+}
