@@ -360,7 +360,7 @@ tfoot td {
 <div class="tallies">
   <div class="tally"><div class="tally-n">238<span class="unit">팀</span></div><div class="tally-k">데이터가 채워진 구단</div></div>
   <div class="tally"><div class="tally-n">27<span class="unit">구장</span></div><div class="tally-k">수용인원이 생겼다</div></div>
-  <div class="tally"><div class="tally-n">38<span class="unit">팀</span></div><div class="tally-k">정산이 도는 프로 구단 · 3리그</div></div>
+  <div class="tally"><div class="tally-n">38<span class="unit">팀</span></div><div class="tally-k">모기업이 붙은 프로 구단 · 3리그</div></div>
   <div class="tally"><div class="tally-n">1.17<span class="unit">×</span></div><div class="tally-k">5시즌 예산 중앙 배수 · 3회 평균</div></div>
 </div>
 
@@ -800,7 +800,89 @@ tfoot td {
   </div>
 </section>
 
-<!-- ── 8. 남은 것 ────────────────────────────────── -->
+<!-- ── 8. 모기업 ─────────────────────────────────── -->
+<section>
+  <h2>모기업 서른여덟 <span class="tag">4-A 보완</span></h2>
+  <p>4-A에서 KBL 열 팀은 회사 이름을 지어 넣었는데, 해외 스물여덟 팀은 <strong>팀 이름에 “Holdings”만 붙인 자리표시자</strong>였다. JBL은 팀 이름에 “1군”이 들어 있어 그게 영문 <code>(1st)</code>로 회사명에 딸려 들어갔다.</p>
+  <div class="note warn">
+    <div class="note-h">화면에 그대로 나오고 있었다</div>
+    <p><code>TeamDetailModal</code>이 모기업을 표시한다 — 팀 상세를 열면 <strong>“Tokyo Neon Cranes (1st) Holdings”</strong>가 보였다. 검사가 있었지만 <code>toBeTruthy()</code>만 봤다: 값이 <strong>있었으므로</strong> 통과했다. <strong>있는지가 아니라 무엇인지를 봐야 한다.</strong></p>
+  </div>
+
+  <p>현실의 소유 구조를 본떠 채웠다. <strong>두 리그가 같은 방식이 아니다</strong> — 실제로 다르기 때문이다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">JBL 구단</th><th class="l">모기업</th><th class="l">업종</th><th class="num">창단</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#c8a822"></span>도쿄 네온 크레인즈</span></td><td class="l"><strong>토와 신문</strong></td><td class="l faint">신문</td><td class="num">1962</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003da5;--c2:#d40000"></span>나고야 아이언 드레이크스</span></td><td class="l"><strong>주부 신문</strong></td><td class="l faint">신문</td><td class="num">1953</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002b5c;--c2:#d00000"></span>오사카 템포 스팅스</span></td><td class="l"><strong>한요 전철</strong></td><td class="l faint">철도</td><td class="num">1998</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#0077b6;--c2:#f4a300"></span>오키나와 선즈</span></td><td class="l"><strong>난세이 철도</strong></td><td class="l faint">철도</td><td class="num">1936</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002d62;--c2:#fdbb30"></span>후쿠오카 썬더 팰컨즈</span></td><td class="l"><strong>큐슈 텔레콤</strong></td><td class="l faint">통신</td><td class="num">1942</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#d70000"></span>요코하마 타이드 레이브스</span></td><td class="l"><strong>미나토 디지털</strong></td><td class="l faint">IT</td><td class="num">1978</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003da5;--c2:#e8002d"></span>센다이 스피릿 버팔로스</span></td><td class="l"><strong>도호쿠 커머스</strong></td><td class="l faint">전자상거래</td><td class="num">1999</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002060;--c2:#c8102e"></span>삿포로 폴라 베어스</span></td><td class="l"><strong>홋카이 식품</strong></td><td class="l faint">식품</td><td class="num">1986</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#00205b;--c2:#cf152d"></span>나가사키 마린 솔저스</span></td><td class="l"><strong>히노데 제과</strong></td><td class="l faint">제과</td><td class="num">1978</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#005aab;--c2:#8a8a8a"></span>니가타 씨걸스</span></td><td class="l"><strong>시라유키 유업</strong></td><td class="l faint">유제품</td><td class="num">1975</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#005bac;--c2:#c8a400"></span>고베 실버 울브스</span></td><td class="l"><strong>롯코 캐피탈</strong></td><td class="l faint">금융</td><td class="num">1975</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#bf0000;--c2:#000000"></span>히로시마 아이언 스톰즈</span></td><td class="l"><strong>세토 자동차</strong></td><td class="l faint">자동차</td><td class="num">1952</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="faint" style="font-size:.85rem">업종 분포를 실제 NPB에 맞췄다 — <strong>신문 2 · 철도 2 · 통신/IT 3 · 식품 3 · 금융 1 · 자동차 1.</strong> 일본은 모기업이 구단 이름에까지 들어갈 만큼 존재가 뚜렷하다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">ABL 구단</th><th class="l">소유</th><th class="l">형태</th><th class="num">창단</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#e8312a"></span>뉴욕 엠파이어</span></td><td class="l"><strong>홀랜드 패밀리 트러스트</strong></td><td class="l faint">가족</td><td class="num">1916</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002244;--c2:#cc0000"></span>시카고 윈드베어스</span></td><td class="l"><strong>미들랜드 트러스트</strong></td><td class="l faint">가족</td><td class="num">1933</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#bd3039;--c2:#0d2b56"></span>보스턴 하버호크스</span></td><td class="l"><strong>베이스테이트 스포츠 벤처스</strong></td><td class="l faint">투자그룹</td><td class="num">1990</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003da5;--c2:#ef3e42"></span>LA 선드래곤스</span></td><td class="l"><strong>퍼시픽 캐피털 파트너스</strong></td><td class="l faint">투자그룹</td><td class="num">1948</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#c0111f"></span>댈러스 론스타스</span></td><td class="l"><strong>트리니티 캐피털</strong></td><td class="l faint">투자그룹</td><td class="num">1935</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003366;--c2:#cc0000"></span>클리블랜드 레이크스피리츠</span></td><td class="l"><strong>레이크쇼어 파트너스</strong></td><td class="l faint">투자그룹</td><td class="num">1945</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#33006f;--c2:#c4ced4"></span>덴버 마운틴픽스</span></td><td class="l"><strong>로키마운틴 파트너스</strong></td><td class="l faint">투자그룹</td><td class="num">1971</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#00a3e0;--c2:#ef3340"></span>마이애미 웨이브라이더스</span></td><td class="l"><strong>선코스트 벤처스</strong></td><td class="l faint">투자그룹</td><td class="num">1974</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#fd5a1e;--c2:#27251f"></span>샌프란시스코 베이씰스</span></td><td class="l"><strong>골든게이트 벤처스</strong></td><td class="l faint">투자그룹</td><td class="num">1998</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#a71930;--c2:#e3d4ad"></span>피닉스 데저트서펀츠</span></td><td class="l"><strong>선벨트 인베스트먼트</strong></td><td class="l faint">투자그룹</td><td class="num">1969</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#0c2c56;--c2:#005c5c"></span>시애틀 레인애로우스</span></td><td class="l"><strong>노스웨스트 홀딩스</strong></td><td class="l faint">투자그룹</td><td class="num">1970</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002d62;--c2:#ffc425"></span>샌디에이고 코스털레이스</span></td><td class="l"><strong>라호야 홀딩스</strong></td><td class="l faint">투자그룹</td><td class="num">1984</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#ce1141;--c2:#002d62"></span>애틀랜타 피치트리팰컨스</span></td><td class="l"><strong>서던 미디어 네트웍스</strong></td><td class="l faint">미디어</td><td class="num">1927</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#c41e3a;--c2:#0c2340"></span>세인트루이스 리버카디널스</span></td><td class="l"><strong>미시시피 브루잉</strong></td><td class="l faint">양조</td><td class="num">1921</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#eb6e1f;--c2:#002d62"></span>휴스턴 스페이스코밋츠</span></td><td class="l"><strong>걸프코스트 에너지</strong></td><td class="l faint">에너지</td><td class="num">1953</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#0c2340;--c2:#fa4616"></span>디트로이트 모터울브즈</span></td><td class="l"><strong>그레이트레이크 인더스트리</strong></td><td class="l faint">제조</td><td class="num">1947</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">왜 ABL만 “Holdings”를 안 붙였나</div>
+    <p>MLB는 <strong>모기업 개념이 약하다.</strong> 대부분 가족 소유나 투자그룹이고 기업 소유는 예외다 — 브레이브스가 미디어 기업 소유였고, 카디널스가 한때 양조 회사 소유였던 정도다. 그래서 열여섯 팀에 회사를 하나씩 붙이는 대신 <strong>소유 형태를 갈랐다</strong>: 가족 2 · 투자그룹 10 · 사업체 4.</p>
+    <p>같은 이유로 <strong>ABL의 모기업 수입 몫이 낮은 것이 오히려 맞다.</strong> 수입 유형이 <em>자립</em>으로 뽑힌 ABL 구단은 실제 MLB 구단의 장부와 가깝다.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="l">1군·2군 표기</th><th class="l">전</th><th class="l">후</th></tr></thead>
+      <tbody>
+        <tr><td class="l">KBL</td><td class="l faint">부산 웨이브스 / … (2군)</td><td class="l">그대로</td></tr>
+        <tr><td class="l">ABL</td><td class="l faint">뉴욕 엠파이어 / … <strong>팜</strong></td><td class="l">뉴욕 엠파이어 / … (2군)</td></tr>
+        <tr><td class="l">JBL</td><td class="l faint">도쿄 네온 크레인즈 <strong>1군</strong> / … 2군</td><td class="l">도쿄 네온 크레인즈 / … (2군)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>세 리그가 같은 표기를 쓴다 — <strong>JBL만 1군에도 이름표가 붙어 있었고</strong> 그게 모기업 이름을 망친 원인이다.</p>
+  <div class="note">
+    <div class="note-h">기존 세이브에 남는 것</div>
+    <p><code>history_standings</code>와 <code>history_lb_stats</code>가 <code>team_name</code>을 <strong>복사해 저장한다</strong> — 팀이 사라져도 기록이 남게 하려는 것이다. 그래서 이미 진행 중인 세이브의 <strong>과거 기록에는 옛 이름이 남는다.</strong> id는 안 건드렸으니 데이터는 안전하고, 새로 쌓이는 기록부터 새 이름이다. 새 게임은 영향이 없다.</p>
+  </div>
+</section>
+
+<!-- ── 9. 남은 것 ────────────────────────────────── -->
 <section>
   <h2>연결은 됐고, 값은 아직이다</h2>
   <p>배선은 다섯 층을 다 지난다 — <strong>Rust → napi → ipcMain → preload → TS → 세이브 → 복원.</strong> 값은 밸런스 단계에서 잡는다.</p>
@@ -808,6 +890,9 @@ tfoot td {
     <table>
       <thead><tr><th class="l">항목</th><th class="l">상태</th><th class="l">무엇이 남았나</th></tr></thead>
       <tbody>
+        <tr><td class="l">모기업 38팀 · 자리표시자 제거</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">검사가 이름 베끼기를 잡는다</td></tr>
+        <tr><td class="l">1군·2군 표기 통일</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">세 리그가 같은 형식</td></tr>
+        <tr><td class="l">ABL 3년에 상한 2.0</td><td class="l"><span class="pill hold">밸런스</span></td><td class="l faint">수용/규모 편차가 티켓값과 안 맞는다</td></tr>
         <tr><td class="l">수입 6항목 · 지출 5항목</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">Rust 검사 14건</td></tr>
         <tr><td class="l"><code>clubBudgets</code> 저장·복원</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">세이브에 안 실려 조용히 사라질 뻔했다</td></tr>
         <tr><td class="l">되먹임 발산</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">계측기(<code>clubBudgetProbe</code>)를 남겼다</td></tr>
@@ -826,9 +911,10 @@ tfoot td {
 
 <div class="foot">
   <div>실측 · 2026-08-29 · 헤드리스 5시즌 × 3회 · 씨앗 111 · 222 · 333</div>
-  <div>회귀 · vitest 134파일 1,197건 · cargo 247건 · tsc 0 · svelte-check 34/37</div>
+  <div>회귀 · vitest 134파일 1,199건 · cargo 247건 · tsc 0 · svelte-check 34/37</div>
   <div>리그 · KBL 10 · JBL 12 · ABL 16 구단 — 셋 다 정산이 돈다</div>
-  <div>커밋 · 5f8e07d7f (4-A) · 75f17515b (4-C) · ee4ee29cb (4-B) · ce557277e (계측기)</div>
+  <div>커밋 · 5f8e07d7f (4-A) · 75f17515b (4-C) · ee4ee29cb (4-B)</div>
+  <div>　　 · ce557277e (계측기) · 62974430e (세 리그) · bc45ff645 (모기업)</div>
 </div>
 
 </div>
