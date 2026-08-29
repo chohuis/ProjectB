@@ -16,7 +16,8 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 const R = JSON.parse(read("resource/data/master/entities/refs.json")) as {
   stadiums: { id: string; name: string; capacity?: number }[];
   teams: {
-    id: string; leagueId: string; stadium: string; capacity?: number;
+    id: string; name: string; nameEn: string;
+    leagueId: string; stadium: string; capacity?: number;
     profile?: { desc?: string };
     history?: { foundedYear?: number | null; parentCompany?: string; titles?: unknown[] };
   }[];
@@ -63,6 +64,44 @@ describe("모기업", () => {
     expect(pro1.length).toBeGreaterThan(0);
     for (const t of pro1) {
       expect(t.history?.parentCompany, `${t.id} 모기업 없음`).toBeTruthy();
+    }
+  });
+
+  /**
+   * 🔴 **`toBeTruthy()` 는 자리표시자를 통과시킨다.**
+   *
+   * ABL·JBL 은 `팀이름 + " Holdings"` 로 기계 생성돼 있었고, JBL 은 팀
+   * 이름에 "1군" 이 들어 있어 **`"Tokyo Neon Cranes (1st) Holdings"`** 가
+   * 화면(`TeamDetailModal`)에 그대로 나왔다. 값이 **있었으므로** 위 검사는
+   * 통과했다 — 있는지가 아니라 **무엇인지**를 봐야 한다.
+   */
+  it("모기업이 팀 이름을 베끼지 않았다", () => {
+    const pro1 = R.teams.filter((t) =>
+      ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"));
+    for (const t of pro1) {
+      const co = String(t.history?.parentCompany ?? "");
+      // 팀 이름(한글·영문)의 고유 부분이 회사명에 통째로 들어가면 자리표시자다
+      const stem = String(t.nameEn ?? "").replace(/\s*\((1st|2nd|Farm)\)$/, "").trim();
+      expect(stem.length, `${t.id} nameEn 이 비었다`).toBeGreaterThan(0);
+      expect(co.includes(stem), `${t.id} 모기업이 팀 이름 베낌: ${co}`).toBe(false);
+      expect(co.includes(String(t.name)), `${t.id} 모기업이 팀 이름 베낌: ${co}`).toBe(false);
+    }
+  });
+
+  /** ⚠ 1군·2군 표기를 **세 리그가 같게** 쓴다 — JBL 만 1군에도 "1군" 이 붙어 있었다 */
+  it("1군·2군 표기가 세 리그 같다", () => {
+    for (const lg of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+      const teams = R.teams.filter((t) => t.leagueId === lg);
+      expect(teams.length, `${lg} 팀 없음`).toBeGreaterThan(0);
+      for (const t of teams) {
+        if (t.id.endsWith("_1")) {
+          expect(/1군|\(1st\)/.test(`${t.name}${t.nameEn}`),
+            `${t.id} 1군에 이름표가 붙었다: ${t.name}`).toBe(false);
+        } else if (t.id.endsWith("_2")) {
+          expect(t.name.endsWith("(2군)"), `${t.id} 2군 표기가 다르다: ${t.name}`).toBe(true);
+          expect(t.nameEn.endsWith("(Farm)"), `${t.id} 2군 영문이 다르다: ${t.nameEn}`).toBe(true);
+        }
+      }
     }
   });
 

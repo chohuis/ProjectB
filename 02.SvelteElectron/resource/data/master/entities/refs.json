@@ -11710,7 +11710,7 @@
         ],
         "nationalTitles": 27,
         "budget": 275900000000,
-        "parentCompany": "New York Empire Holdings",
+        "parentCompany": "홀랜드 패밀리 트러스트",
         "foundedYear": 1916,
         "titles": []
       },
@@ -11732,7 +11732,7 @@
     },
     {
       "id": "TEAM_ABL_EMPIRE_2",
-      "name": "뉴욕 엠파이어 팜",
+      "name": "뉴욕 엠파이어 (2군)",
       "nameEn": "New York Empire (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_EMPIRE",
@@ -11877,7 +11877,7 @@
         ],
         "nationalTitles": 9,
         "budget": 175000000000,
-        "parentCompany": "Boston HarborHawks Holdings",
+        "parentCompany": "베이스테이트 스포츠 벤처스",
         "foundedYear": 1990,
         "titles": []
       },
@@ -11899,7 +11899,7 @@
     },
     {
       "id": "TEAM_ABL_HARBORHAWKS_2",
-      "name": "보스턴 하버호크스 팜",
+      "name": "보스턴 하버호크스 (2군)",
       "nameEn": "Boston HarborHawks (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_HARBORHAWKS",
@@ -12037,7 +12037,7 @@
         ],
         "nationalTitles": 2,
         "budget": 185500000000,
-        "parentCompany": "Cleveland LakeSpirits Holdings",
+        "parentCompany": "레이크쇼어 파트너스",
         "foundedYear": 1945,
         "titles": []
       },
@@ -12059,7 +12059,7 @@
     },
     {
       "id": "TEAM_ABL_LAKESPIRITS_2",
-      "name": "클리블랜드 레이크스피리츠 팜",
+      "name": "클리블랜드 레이크스피리츠 (2군)",
       "nameEn": "Cleveland LakeSpirits (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LAKESPIRITS",
@@ -12200,7 +12200,7 @@
         ],
         "nationalTitles": 5,
         "budget": 196000000000,
-        "parentCompany": "Dallas LoneStars Holdings",
+        "parentCompany": "트리니티 캐피털",
         "foundedYear": 1935,
         "titles": []
       },
@@ -12222,7 +12222,7 @@
     },
     {
       "id": "TEAM_ABL_LONESTARS_2",
-      "name": "댈러스 론스타스 팜",
+      "name": "댈러스 론스타스 (2군)",
       "nameEn": "Dallas LoneStars (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LONESTARS",
@@ -12362,7 +12362,7 @@
         ],
         "nationalTitles": 4,
         "budget": 206500000000,
-        "parentCompany": "Detroit MotorWolves Holdings",
+        "parentCompany": "그레이트레이크 인더스트리",
         "foundedYear": 1947,
         "titles": []
       },
@@ -12384,7 +12384,7 @@
     },
     {
       "id": "TEAM_ABL_MOTORWOLVES_2",
-      "name": "디트로이트 모터울브즈 팜",
+      "name": "디트로이트 모터울브즈 (2군)",
       "nameEn": "Detroit MotorWolves (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOTORWOLVES",
@@ -12522,7 +12522,7 @@
         ],
         "nationalTitles": 2,
         "budget": 165200000000,
-        "parentCompany": "Miami WaveRiders Holdings",
+        "parentCompany": "선코스트 벤처스",
         "foundedYear": 1974,
         "titles": []
       },
@@ -12544,7 +12544,7 @@
     },
     {
       "id": "TEAM_ABL_WAVERIDERS_2",
-      "name": "마이애미 웨이브라이더스 팜",
+      "name": "마이애미 웨이브라이더스 (2군)",
       "nameEn": "Miami WaveRiders (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WAVERIDERS",
@@ -12681,7 +12681,7 @@
         ],
         "nationalTitles": 1,
         "budget": 238000000000,
-        "parentCompany": "Seattle RainArrows Holdings",
+        "parentCompany": "노스웨스트 홀딩스",
         "foundedYear": 1970,
         "titles": []
       },
@@ -12703,7 +12703,7 @@
     },
     {
       "id": "TEAM_ABL_RAINARROWS_2",
-      "name": "시애틀 레인애로우스 팜",
+      "name": "시애틀 레인애로우스 (2군)",
       "nameEn": "Seattle RainArrows (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RAINARROWS",
@@ -12845,7 +12845,7 @@
         ],
         "nationalTitles": 6,
         "budget": 79800000000,
-        "parentCompany": "Chicago WindBears Holdings",
+        "parentCompany": "미들랜드 트러스트",
         "foundedYear": 1933,
         "titles": []
       },
@@ -12867,7 +12867,7 @@
     },
     {
       "id": "TEAM_ABL_WINDBEARS_2",
-      "name": "시카고 윈드베어스 팜",
+      "name": "시카고 윈드베어스 (2군)",
       "nameEn": "Chicago WindBears (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WINDBEARS",
@@ -13004,7 +13004,7 @@
         ],
         "nationalTitles": 1,
         "budget": 217000000000,
-        "parentCompany": "Denver MountainPeaks Holdings",
+        "parentCompany": "로키마운틴 파트너스",
         "foundedYear": 1971,
         "titles": []
       },
@@ -13026,7 +13026,7 @@
     },
     {
       "id": "TEAM_ABL_MOUNTAINPEAKS_2",
-      "name": "덴버 마운틴픽스 팜",
+      "name": "덴버 마운틴픽스 (2군)",
       "nameEn": "Denver MountainPeaks (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOUNTAINPEAKS",
@@ -13165,7 +13165,7 @@
         ],
         "nationalTitles": 3,
         "budget": 148400000000,
-        "parentCompany": "Houston SpaceComets Holdings",
+        "parentCompany": "걸프코스트 에너지",
         "foundedYear": 1953,
         "titles": []
       },
@@ -13187,7 +13187,7 @@
     },
     {
       "id": "TEAM_ABL_SPACECOMETS_2",
-      "name": "휴스턴 스페이스코밋츠 팜",
+      "name": "휴스턴 스페이스코밋츠 (2군)",
       "nameEn": "Houston SpaceComets (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SPACECOMETS",
@@ -13330,7 +13330,7 @@
         ],
         "nationalTitles": 7,
         "budget": 156800000000,
-        "parentCompany": "Los Angeles SunDragons Holdings",
+        "parentCompany": "퍼시픽 캐피털 파트너스",
         "foundedYear": 1948,
         "titles": []
       },
@@ -13352,7 +13352,7 @@
     },
     {
       "id": "TEAM_ABL_SUNDRAGONS_2",
-      "name": "LA 선드래곤스 팜",
+      "name": "LA 선드래곤스 (2군)",
       "nameEn": "Los Angeles SunDragons (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SUNDRAGONS",
@@ -13489,7 +13489,7 @@
         ],
         "nationalTitles": 1,
         "budget": 261900000000,
-        "parentCompany": "Phoenix DesertSerpents Holdings",
+        "parentCompany": "선벨트 인베스트먼트",
         "foundedYear": 1969,
         "titles": []
       },
@@ -13511,7 +13511,7 @@
     },
     {
       "id": "TEAM_ABL_DESERTSERPENTS_2",
-      "name": "피닉스 데저트서펀츠 팜",
+      "name": "피닉스 데저트서펀츠 (2군)",
       "nameEn": "Phoenix DesertSerpents (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_DESERTSERPENTS",
@@ -13646,7 +13646,7 @@
         ],
         "nationalTitles": 0,
         "budget": 247800000000,
-        "parentCompany": "San Diego CoastalRays Holdings",
+        "parentCompany": "라호야 홀딩스",
         "foundedYear": 1984,
         "titles": []
       },
@@ -13668,7 +13668,7 @@
     },
     {
       "id": "TEAM_ABL_COASTALRAYS_2",
-      "name": "샌디에이고 코스털레이스 팜",
+      "name": "샌디에이고 코스털레이스 (2군)",
       "nameEn": "San Diego CoastalRays (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_COASTALRAYS",
@@ -13809,7 +13809,7 @@
         ],
         "nationalTitles": 5,
         "budget": 233800000000,
-        "parentCompany": "San Francisco BaySeals Holdings",
+        "parentCompany": "골든게이트 벤처스",
         "foundedYear": 1998,
         "titles": []
       },
@@ -13831,7 +13831,7 @@
     },
     {
       "id": "TEAM_ABL_BAYSEALS_2",
-      "name": "샌프란시스코 베이씰스 팜",
+      "name": "샌프란시스코 베이씰스 (2군)",
       "nameEn": "San Francisco BaySeals (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_BAYSEALS",
@@ -13978,7 +13978,7 @@
         ],
         "nationalTitles": 11,
         "budget": 140000000000,
-        "parentCompany": "St. Louis RiverCardinals Holdings",
+        "parentCompany": "미시시피 브루잉",
         "foundedYear": 1921,
         "titles": []
       },
@@ -14000,7 +14000,7 @@
     },
     {
       "id": "TEAM_ABL_RIVERCARDINALS_2",
-      "name": "세인트루이스 리버카디널스 팜",
+      "name": "세인트루이스 리버카디널스 (2군)",
       "nameEn": "St. Louis RiverCardinals (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RIVERCARDINALS",
@@ -14138,7 +14138,7 @@
         ],
         "nationalTitles": 2,
         "budget": 227500000000,
-        "parentCompany": "Atlanta PeachtreeFalcons Holdings",
+        "parentCompany": "서던 미디어 네트웍스",
         "foundedYear": 1927,
         "titles": []
       },
@@ -14160,7 +14160,7 @@
     },
     {
       "id": "TEAM_ABL_PEACHTREEFALCONS_2",
-      "name": "애틀랜타 피치트리팰컨스 팜",
+      "name": "애틀랜타 피치트리팰컨스 (2군)",
       "nameEn": "Atlanta PeachtreeFalcons (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_PEACHTREEFALCONS",
@@ -14237,8 +14237,8 @@
     },
     {
       "id": "TEAM_JBL_CL_NEONCRANES_1",
-      "name": "도쿄 네온 크레인즈 1군",
-      "nameEn": "Tokyo Neon Cranes (1st)",
+      "name": "도쿄 네온 크레인즈",
+      "nameEn": "Tokyo Neon Cranes",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_NEONCRANES",
       "tier": "1군",
@@ -14318,7 +14318,7 @@
         ],
         "nationalTitles": 22,
         "budget": 139300000000,
-        "parentCompany": "Tokyo Neon Cranes (1st) Holdings",
+        "parentCompany": "토와 신문",
         "foundedYear": 1962,
         "titles": []
       },
@@ -14326,8 +14326,8 @@
     },
     {
       "id": "TEAM_JBL_CL_NEONCRANES_2",
-      "name": "도쿄 네온 크레인즈 2군",
-      "nameEn": "Tokyo Neon Cranes (2nd)",
+      "name": "도쿄 네온 크레인즈 (2군)",
+      "nameEn": "Tokyo Neon Cranes (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_NEONCRANES",
       "tier": "2군",
@@ -14389,8 +14389,8 @@
     },
     {
       "id": "TEAM_JBL_CL_TEMPOSTINGS_1",
-      "name": "오사카 템포 스팅스 1군",
-      "nameEn": "Osaka Tempo Stings (1st)",
+      "name": "오사카 템포 스팅스",
+      "nameEn": "Osaka Tempo Stings",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
       "tier": "1군",
@@ -14454,7 +14454,7 @@
         ],
         "nationalTitles": 6,
         "budget": 98700000000,
-        "parentCompany": "Osaka Tempo Stings (1st) Holdings",
+        "parentCompany": "한요 전철",
         "foundedYear": 1998,
         "titles": []
       },
@@ -14462,8 +14462,8 @@
     },
     {
       "id": "TEAM_JBL_CL_TEMPOSTINGS_2",
-      "name": "오사카 템포 스팅스 2군",
-      "nameEn": "Osaka Tempo Stings (2nd)",
+      "name": "오사카 템포 스팅스 (2군)",
+      "nameEn": "Osaka Tempo Stings (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
       "tier": "2군",
@@ -14525,8 +14525,8 @@
     },
     {
       "id": "TEAM_JBL_CL_IRONDRAKES_1",
-      "name": "나고야 아이언 드레이크스 1군",
-      "nameEn": "Nagoya Iron Drakes (1st)",
+      "name": "나고야 아이언 드레이크스",
+      "nameEn": "Nagoya Iron Drakes",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
       "tier": "1군",
@@ -14586,7 +14586,7 @@
         ],
         "nationalTitles": 2,
         "budget": 124400000000,
-        "parentCompany": "Nagoya Iron Drakes (1st) Holdings",
+        "parentCompany": "주부 신문",
         "foundedYear": 1953,
         "titles": []
       },
@@ -14594,8 +14594,8 @@
     },
     {
       "id": "TEAM_JBL_CL_IRONDRAKES_2",
-      "name": "나고야 아이언 드레이크스 2군",
-      "nameEn": "Nagoya Iron Drakes (2nd)",
+      "name": "나고야 아이언 드레이크스 (2군)",
+      "nameEn": "Nagoya Iron Drakes (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
       "tier": "2군",
@@ -14657,8 +14657,8 @@
     },
     {
       "id": "TEAM_JBL_CL_TIDERAVES_1",
-      "name": "요코하마 타이드 레이브스 1군",
-      "nameEn": "Yokohama Tide Raves (1st)",
+      "name": "요코하마 타이드 레이브스",
+      "nameEn": "Yokohama Tide Raves",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TIDERAVES",
       "tier": "1군",
@@ -14719,7 +14719,7 @@
         ],
         "nationalTitles": 3,
         "budget": 104300000000,
-        "parentCompany": "Yokohama Tide Raves (1st) Holdings",
+        "parentCompany": "미나토 디지털",
         "foundedYear": 1978,
         "titles": []
       },
@@ -14727,8 +14727,8 @@
     },
     {
       "id": "TEAM_JBL_CL_TIDERAVES_2",
-      "name": "요코하마 타이드 레이브스 2군",
-      "nameEn": "Yokohama Tide Raves (2nd)",
+      "name": "요코하마 타이드 레이브스 (2군)",
+      "nameEn": "Yokohama Tide Raves (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TIDERAVES",
       "tier": "2군",
@@ -14790,8 +14790,8 @@
     },
     {
       "id": "TEAM_JBL_CL_SILVERWOLVES_1",
-      "name": "고베 실버 울브스 1군",
-      "nameEn": "Kobe Silver Wolves (1st)",
+      "name": "고베 실버 울브스",
+      "nameEn": "Kobe Silver Wolves",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
       "tier": "1군",
@@ -14850,7 +14850,7 @@
         ],
         "nationalTitles": 1,
         "budget": 93100000000,
-        "parentCompany": "Kobe Silver Wolves (1st) Holdings",
+        "parentCompany": "롯코 캐피탈",
         "foundedYear": 1975,
         "titles": []
       },
@@ -14858,8 +14858,8 @@
     },
     {
       "id": "TEAM_JBL_CL_SILVERWOLVES_2",
-      "name": "고베 실버 울브스 2군",
-      "nameEn": "Kobe Silver Wolves (2nd)",
+      "name": "고베 실버 울브스 (2군)",
+      "nameEn": "Kobe Silver Wolves (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
       "tier": "2군",
@@ -14921,8 +14921,8 @@
     },
     {
       "id": "TEAM_JBL_CL_IRONSTORMS_1",
-      "name": "히로시마 아이언 스톰즈 1군",
-      "nameEn": "Hiroshima Iron Storms (1st)",
+      "name": "히로시마 아이언 스톰즈",
+      "nameEn": "Hiroshima Iron Storms",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
       "tier": "1군",
@@ -14983,7 +14983,7 @@
         ],
         "nationalTitles": 3,
         "budget": 131900000000,
-        "parentCompany": "Hiroshima Iron Storms (1st) Holdings",
+        "parentCompany": "세토 자동차",
         "foundedYear": 1952,
         "titles": []
       },
@@ -14991,8 +14991,8 @@
     },
     {
       "id": "TEAM_JBL_CL_IRONSTORMS_2",
-      "name": "히로시마 아이언 스톰즈 2군",
-      "nameEn": "Hiroshima Iron Storms (2nd)",
+      "name": "히로시마 아이언 스톰즈 (2군)",
+      "nameEn": "Hiroshima Iron Storms (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
       "tier": "2군",
@@ -15054,8 +15054,8 @@
     },
     {
       "id": "TEAM_JBL_PL_THUNDERFALCONS_1",
-      "name": "후쿠오카 썬더 팰컨즈 1군",
-      "nameEn": "Fukuoka Thunder Falcons (1st)",
+      "name": "후쿠오카 썬더 팰컨즈",
+      "nameEn": "Fukuoka Thunder Falcons",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
       "tier": "1군",
@@ -15121,7 +15121,7 @@
         ],
         "nationalTitles": 8,
         "budget": 42500000000,
-        "parentCompany": "Fukuoka Thunder Falcons (1st) Holdings",
+        "parentCompany": "큐슈 텔레콤",
         "foundedYear": 1942,
         "titles": []
       },
@@ -15129,8 +15129,8 @@
     },
     {
       "id": "TEAM_JBL_PL_THUNDERFALCONS_2",
-      "name": "후쿠오카 썬더 팰컨즈 2군",
-      "nameEn": "Fukuoka Thunder Falcons (2nd)",
+      "name": "후쿠오카 썬더 팰컨즈 (2군)",
+      "nameEn": "Fukuoka Thunder Falcons (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
       "tier": "2군",
@@ -15192,8 +15192,8 @@
     },
     {
       "id": "TEAM_JBL_PL_POLARBEARS_1",
-      "name": "삿포로 폴라 베어스 1군",
-      "nameEn": "Sapporo Polar Bears (1st)",
+      "name": "삿포로 폴라 베어스",
+      "nameEn": "Sapporo Polar Bears",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_POLARBEARS",
       "tier": "1군",
@@ -15253,7 +15253,7 @@
         ],
         "nationalTitles": 2,
         "budget": 115500000000,
-        "parentCompany": "Sapporo Polar Bears (1st) Holdings",
+        "parentCompany": "홋카이 식품",
         "foundedYear": 1986,
         "titles": []
       },
@@ -15261,8 +15261,8 @@
     },
     {
       "id": "TEAM_JBL_PL_POLARBEARS_2",
-      "name": "삿포로 폴라 베어스 2군",
-      "nameEn": "Sapporo Polar Bears (2nd)",
+      "name": "삿포로 폴라 베어스 (2군)",
+      "nameEn": "Sapporo Polar Bears (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_POLARBEARS",
       "tier": "2군",
@@ -15324,8 +15324,8 @@
     },
     {
       "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
-      "name": "센다이 스피릿 버팔로스 1군",
-      "nameEn": "Sendai Spirit Buffalos (1st)",
+      "name": "센다이 스피릿 버팔로스",
+      "nameEn": "Sendai Spirit Buffalos",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
       "tier": "1군",
@@ -15384,7 +15384,7 @@
         ],
         "nationalTitles": 1,
         "budget": 79000000000,
-        "parentCompany": "Sendai Spirit Buffalos (1st) Holdings",
+        "parentCompany": "도호쿠 커머스",
         "foundedYear": 1999,
         "titles": []
       },
@@ -15392,8 +15392,8 @@
     },
     {
       "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
-      "name": "센다이 스피릿 버팔로스 2군",
-      "nameEn": "Sendai Spirit Buffalos (2nd)",
+      "name": "센다이 스피릿 버팔로스 (2군)",
+      "nameEn": "Sendai Spirit Buffalos (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
       "tier": "2군",
@@ -15455,8 +15455,8 @@
     },
     {
       "id": "TEAM_JBL_PL_MARINESOLDIERS_1",
-      "name": "나가사키 마린 솔저스 1군",
-      "nameEn": "Nagasaki Marine Soldiers (1st)",
+      "name": "나가사키 마린 솔저스",
+      "nameEn": "Nagasaki Marine Soldiers",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
       "tier": "1군",
@@ -15516,7 +15516,7 @@
         ],
         "nationalTitles": 2,
         "budget": 109900000000,
-        "parentCompany": "Nagasaki Marine Soldiers (1st) Holdings",
+        "parentCompany": "히노데 제과",
         "foundedYear": 1978,
         "titles": []
       },
@@ -15524,8 +15524,8 @@
     },
     {
       "id": "TEAM_JBL_PL_MARINESOLDIERS_2",
-      "name": "나가사키 마린 솔저스 2군",
-      "nameEn": "Nagasaki Marine Soldiers (2nd)",
+      "name": "나가사키 마린 솔저스 (2군)",
+      "nameEn": "Nagasaki Marine Soldiers (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
       "tier": "2군",
@@ -15587,8 +15587,8 @@
     },
     {
       "id": "TEAM_JBL_PL_SEAGULLS_1",
-      "name": "니가타 씨걸스 1군",
-      "nameEn": "Niigata Seagulls (1st)",
+      "name": "니가타 씨걸스",
+      "nameEn": "Niigata Seagulls",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SEAGULLS",
       "tier": "1군",
@@ -15645,7 +15645,7 @@
         ],
         "nationalTitles": 0,
         "budget": 74500000000,
-        "parentCompany": "Niigata Seagulls (1st) Holdings",
+        "parentCompany": "시라유키 유업",
         "foundedYear": 1975,
         "titles": []
       },
@@ -15653,8 +15653,8 @@
     },
     {
       "id": "TEAM_JBL_PL_SEAGULLS_2",
-      "name": "니가타 씨걸스 2군",
-      "nameEn": "Niigata Seagulls (2nd)",
+      "name": "니가타 씨걸스 (2군)",
+      "nameEn": "Niigata Seagulls (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SEAGULLS",
       "tier": "2군",
@@ -15716,8 +15716,8 @@
     },
     {
       "id": "TEAM_JBL_PL_SUNS_1",
-      "name": "오키나와 선즈 1군",
-      "nameEn": "Okinawa Suns (1st)",
+      "name": "오키나와 선즈",
+      "nameEn": "Okinawa Suns",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SUNS",
       "tier": "1군",
@@ -15774,7 +15774,7 @@
         ],
         "nationalTitles": 0,
         "budget": 83400000000,
-        "parentCompany": "Okinawa Suns (1st) Holdings",
+        "parentCompany": "난세이 철도",
         "foundedYear": 1936,
         "titles": []
       },
@@ -15782,8 +15782,8 @@
     },
     {
       "id": "TEAM_JBL_PL_SUNS_2",
-      "name": "오키나와 선즈 2군",
-      "nameEn": "Okinawa Suns (2nd)",
+      "name": "오키나와 선즈 (2군)",
+      "nameEn": "Okinawa Suns (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SUNS",
       "tier": "2군",
