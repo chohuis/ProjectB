@@ -1132,7 +1132,7 @@ fn normalize_offseason_npcs(
     fill_first_teams(&mut next, limits, events, is_foreign);
     // 충원 **뒤에** 돈다 — 새로 올라온 선수까지 보고 남은 공백만 전환한다
     fix_position_gaps(&mut next, season_year);
-    fix_jersey_numbers(&mut next);
+    fix_jersey_numbers(&mut next, &HashMap::new());
     next
 }
 
@@ -1714,7 +1714,13 @@ fn ev_to(kind: &str, npc: &NpcSaveState, from_team: Option<String>, to_team: Str
 ///
 /// 실측(고치기 전 · 씨앗 111 · 2027): 238팀 전부 중복 · 7,338건 ·
 /// 한 번호에 최대 45명 — 전부 `#0` 이었다.
-pub(crate) fn fix_jersey_numbers(npcs: &mut [NpcSaveState]) {
+///
+/// `retired` 는 팀 id → **영구결번된 번호들**. 그 번호는 새로 주지 않는다.
+/// ⚠ 빈 맵을 넘기면 예전과 같이 돈다 — 호출부가 안 넘겨도 안전하다.
+pub(crate) fn fix_jersey_numbers(
+    npcs: &mut [NpcSaveState],
+    retired: &HashMap<String, Vec<i32>>,
+) {
     // 팀 → 그 팀 선수들의 인덱스
     let mut by_team: HashMap<String, Vec<usize>> = HashMap::new();
     for (i, n) in npcs.iter().enumerate() {
@@ -1729,6 +1735,11 @@ pub(crate) fn fix_jersey_numbers(npcs: &mut [NpcSaveState]) {
         // ⚠ **먼저 온 사람이 번호를 지킨다.** 인덱스 순서가 그 기준이다 —
         //   같은 번호를 든 둘 중 뒤엣사람만 새로 받는다.
         let mut taken: std::collections::HashSet<i32> = std::collections::HashSet::new();
+        // 🔴 **영구결번을 먼저 막는다.** 그 번호는 아무도 못 받는다 —
+        //   결번해 놓고 이듬해 신입이 달면 결번이 아니다.
+        if let Some(list) = retired.get(&team) {
+            for &n in list { taken.insert(n); }
+        }
         let mut need: Vec<usize> = Vec::new();
         for &i in &idxs {
             let num = npcs[i].jersey_number;
@@ -2442,7 +2453,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // **같은 일을 하는 자리가 여럿이면 순서를 본다.**
     fix_position_gaps(&mut after_normalize, season_year);
     // 등번호도 **마지막에** 한 번 더 — 위 단계들이 선수를 옮긴 뒤다
-    fix_jersey_numbers(&mut after_normalize);
+    fix_jersey_numbers(&mut after_normalize, &HashMap::new());
 
     // ⚠ **요약 문장도 여기서 안 만든다.** 한 번 만들어 봤다가 화면과 숫자가
     // 어긋났다 — Rust는 **사건**을 세는데(방출 1170) 화면은 **사람**을 센다

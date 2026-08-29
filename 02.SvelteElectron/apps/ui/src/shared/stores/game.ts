@@ -112,6 +112,10 @@ export interface GameStoreState {
   proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 구단 성향 (저장됨)
   /** 구단 예산 (4-C · 만원). 안 저장하면 정적값으로 돌아간다 */
   clubBudgets: Record<string, number>;
+  /** 명예의 전당 — 선수 id → 헌액 정보. **이미 넣은 사람을 다시 안 넣는 표**이기도 하다 */
+  hallOfFame: Record<string, { year: number; score: number; teams: string[]; num: number }>;
+  /** 영구결번 — 팀 id → 비운 번호들. `fix_jersey_numbers` 가 이 번호를 피해야 한다 */
+  retiredNumbers: Record<string, number[]>;
   /** 구단 연속 기록 — 연속 포스트시즌 실패 · 연속 우승 (저장됨) */
   teamStreaks: Record<string, { missedPlayoffs: number; titles: number }>;
   /**
@@ -506,6 +510,8 @@ function buildInitialState(): GameStoreState {
     lastTop10Batter:  null,
     proTeamProfiles: {},
     clubBudgets: {},
+    hallOfFame: {},
+    retiredNumbers: {},
     teamStreaks: {},
     teamTargets: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -693,6 +699,8 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
     // ⚠ 안 되살리면 앱을 껐다 켤 때 예산이 정적값으로 돌아간다
     clubBudgets:      (saved.clubBudgets ?? {}) as GameStoreState["clubBudgets"],
+    hallOfFame:       (saved.hallOfFame ?? {}) as GameStoreState["hallOfFame"],
+    retiredNumbers:   (saved.retiredNumbers ?? {}) as GameStoreState["retiredNumbers"],
     teamStreaks:      (saved.teamStreaks ?? {}) as GameStoreState["teamStreaks"],
     teamTargets:      {},   // 파생값 — 시즌 종료에 다시 계산된다
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -1095,6 +1103,8 @@ function createGameStore() {
           // 돌아가고, 그 값을 읽는 셋(신인 계약금·FA 입찰 상한·감독 기대치)이
           // 통째로 되돌아간다 — 성향에서 이미 겪은 형태다 (4-C · 2026-08-29)
           clubBudgets: s.clubBudgets,
+          hallOfFame: s.hallOfFame,
+          retiredNumbers: s.retiredNumbers,
           teamStreaks: s.teamStreaks,
         },
       );
@@ -1400,6 +1410,26 @@ function createGameStore() {
      */
     patchClubBudgets(next: Record<string, number>) {
       update((s) => ({ ...s, clubBudgets: { ...s.clubBudgets, ...next } }));
+    },
+
+    /**
+     * 헌액자와 영구결번을 얹는다.
+     *
+     * ⚠ **덮지 않고 더한다** — 결번은 쌓이는 것이고, 헌액 표는 "이미 넣은
+     *   사람"을 가리는 데도 쓴다. 덮으면 매년 같은 사람이 다시 헌액된다.
+     */
+    addHallOfFame(
+      inducted: GameStoreState["hallOfFame"],
+      retired: Record<string, number[]>,
+    ) {
+      update((s) => {
+        const nums = { ...s.retiredNumbers };
+        for (const [tid, list] of Object.entries(retired)) {
+          const set = new Set([...(nums[tid] ?? []), ...list]);
+          nums[tid] = [...set].sort((a, b) => a - b);
+        }
+        return { ...s, hallOfFame: { ...s.hallOfFame, ...inducted }, retiredNumbers: nums };
+      });
     },
 
     patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
@@ -3383,6 +3413,8 @@ function createGameStore() {
         //   `App.svelte`가 부른 `initProTeamProfiles`를 여기서 덮고 있었다.
         proTeamProfiles:  profilesFromMaster(),
         clubBudgets: {},
+    hallOfFame: {},
+    retiredNumbers: {},
         teamStreaks:      {},
         teamTargets:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),

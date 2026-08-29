@@ -805,7 +805,13 @@ pub fn form_score_native(params_json: String) -> String {
 pub fn fix_jersey_numbers_native(params_json: String) -> String {
     #[derive(serde::Deserialize)]
     #[serde(rename_all = "camelCase")]
-    struct P { npcs: Vec<sim_types::NpcSaveState> }
+    struct P {
+        npcs: Vec<sim_types::NpcSaveState>,
+        /// 팀 id → 영구결번. ⚠ `serde(default)` 라 **안 넘겨도 통과한다** —
+        /// 그래서 배선 검사가 이걸 따로 본다.
+        #[serde(default)]
+        retired_numbers: std::collections::HashMap<String, Vec<i32>>,
+    }
     #[derive(serde::Serialize)]
     #[serde(rename_all = "camelCase")]
     struct Change { npc_id: String, team_id: String, from: i32, to: i32 }
@@ -817,7 +823,7 @@ pub fn fix_jersey_numbers_native(params_json: String) -> String {
         Err(e) => return parse_err("fixJerseyNumbersNative", e),
     };
     let before: Vec<i32> = p.npcs.iter().map(|n| n.jersey_number).collect();
-    npc_sim::fix_jersey_numbers(&mut p.npcs);
+    npc_sim::fix_jersey_numbers(&mut p.npcs, &p.retired_numbers);
     // **바뀐 사람만 돌려준다** — 전량을 얹으면 다른 필드까지 덮어쓴다
     let changes: Vec<Change> = p.npcs.iter().zip(before.iter())
         .filter(|(n, b)| n.jersey_number != **b)

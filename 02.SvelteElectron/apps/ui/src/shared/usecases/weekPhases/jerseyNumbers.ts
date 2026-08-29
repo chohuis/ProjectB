@@ -67,7 +67,12 @@ export async function processJerseyNumbers(): Promise<string[]> {
   let changes: Array<{ npcId: string; teamId: string; from: number; to: number }> = [];
   try {
     const raw = await window.projectB!.engine(
-      "fixJerseyNumbersNative", JSON.stringify({ npcs: payload }));
+      // ⚠ **영구결번을 넘긴다.** 안 넘기면 결번한 번호를 새 선수가 받는다 —
+      //   `serde(default)` 라 안 넘겨도 조용히 통과한다.
+      "fixJerseyNumbersNative", JSON.stringify({
+        npcs: payload,
+        retiredNumbers: g.retiredNumbers ?? {},
+      }));
     changes = (JSON.parse(raw)?.changes ?? []) as typeof changes;
   } catch (e) {
     // ⚠ **조용히 삼키지 않는다.** 실패가 "아무 일도 안 일어남"으로 나타나면

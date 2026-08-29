@@ -128,6 +128,15 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   applyProtagonistSeasonRecord(now);
   // 수상은 연도 기록이 만들어진 **뒤**여야 얹을 자리가 있다
   logsOf(await applySeasonAwards(now));
+  // 🔴 **수상 뒤여야 한다.** 헌액 점수는 `careerHistory[].highlights` 를
+  //   세는데 그 문자열을 `applySeasonAwards` 가 방금 넣었다.
+  //   앞에 두면 그 해 수상이 점수에 안 들어간다.
+  try {
+    const { inductHallOfFame } = await import("./hallOfFame");
+    for (const line of await inductHallOfFame(now)) autoLog(line);
+  } catch (e) {
+    console.warn("[hallOfFame] 심사 실패:", e);
+  }
   await gameStore.applyAgingDecay();
   await updateProTeamProfiles();
 

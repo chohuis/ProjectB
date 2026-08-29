@@ -6361,3 +6361,20 @@ export async function hofPrereqProbe(): Promise<Record<string, unknown>> {
     기록행수: lbRows,
   };
 }
+
+/** 명예의 전당이 **실제로 도는가** (2단계) */
+export function hofProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const hof = g.hallOfFame ?? {};
+  const nums = g.retiredNumbers ?? {};
+  const rows = Object.entries(hof);
+  const teamsWith = Object.keys(nums).filter((t) => (nums[t] ?? []).length > 0);
+  return {
+    헌액자: rows.length,
+    결번구단: teamsWith.length,
+    결번총수: Object.values(nums).reduce((a, b) => a + b.length, 0),
+    점수분포: rows.map(([, v]) => v.score).sort((a, b) => b - a).slice(0, 6),
+    예: rows.slice(0, 3).map(([id, v]) =>
+      `${id}:${v.score}점 ${v.num}번 ${v.teams.length}구단`),
+  };
+}
