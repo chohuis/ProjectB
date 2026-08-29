@@ -130,6 +130,17 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   logsOf(await applySeasonAwards(now));
   await gameStore.applyAgingDecay();
   await updateProTeamProfiles();
+
+  // 🔴 **구단 재정 정산** (4-C · 2026-08-29). 시즌에 한 번이다.
+  // ⚠ **성향 갱신 뒤**에 온다 — 관중이 `marketAppeal`·`prestige`를 보므로
+  //   그 해 값으로 재야 한다.
+  try {
+    const { settleClubFinance } = await import("./clubFinance");
+    for (const line of await settleClubFinance(now)) autoLog(line);
+  } catch (e) {
+    // 정산이 실패해도 시즌 종료는 계속돼야 한다
+    console.warn("[clubFinance] 정산 실패:", e);
+  }
   await runSeasonEndBgProcessing(now);
 
   // ⚠ **모든 처리 뒤.** 앞에 두면 압박·목표가 아직 지난 시즌 값이다

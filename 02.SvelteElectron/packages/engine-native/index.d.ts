@@ -71,6 +71,7 @@ export declare function generateFreshmenNative(paramsJson: string): string
 /** FA 시장 정산 — 등급·계약·보상선수를 한 번에 */
 export declare function resolveFaMarketNative(paramsJson: string): string
 /** 주간 수입·지출·세금. `money`에 더할 순현금을 낸다 */
+export declare function calcClubRevenueNative(paramsJson: string): string
 export declare function calcWeeklyFinanceNative(paramsJson: string): string
 /** 명성 연동 스폰서 오퍼. 학생·독립은 빈 결과 (아마추어 규정) */
 export declare function calcSponsorOffersNative(paramsJson: string): string

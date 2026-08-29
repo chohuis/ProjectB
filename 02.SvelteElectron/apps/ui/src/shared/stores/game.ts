@@ -110,6 +110,8 @@ export interface GameStoreState {
   lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
   lastTop10Batter:  import("../types/save").Top10Snapshot | null;  // 직전 타자 TOP10 스냅샷
   proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 구단 성향 (저장됨)
+  /** 구단 예산 (4-C · 만원). 안 저장하면 정적값으로 돌아간다 */
+  clubBudgets: Record<string, number>;
   /** 구단 연속 기록 — 연속 포스트시즌 실패 · 연속 우승 (저장됨) */
   teamStreaks: Record<string, { missedPlayoffs: number; titles: number }>;
   /**
@@ -503,6 +505,7 @@ function buildInitialState(): GameStoreState {
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
     proTeamProfiles: {},
+    clubBudgets: {},
     teamStreaks: {},
     teamTargets: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -688,6 +691,8 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     // ⚠ **되살린다.** 저장만 하고 안 읽으면 아무 일도 안 일어난다 —
     // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
     proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
+    // ⚠ 안 되살리면 앱을 껐다 켤 때 예산이 정적값으로 돌아간다
+    clubBudgets:      (saved.clubBudgets ?? {}) as GameStoreState["clubBudgets"],
     teamStreaks:      (saved.teamStreaks ?? {}) as GameStoreState["teamStreaks"],
     teamTargets:      {},   // 파생값 — 시즌 종료에 다시 계산된다
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -1086,6 +1091,10 @@ function createGameStore() {
           // ⚠ **구단 성향도 같이 저장한다.** 예전엔 "비저장"이라 앱을 껐다
           // 켜면 압박이 전부 50으로 돌아갔다 — 시즌마다 갱신해도 남지 않았다
           proTeamProfiles: s.proTeamProfiles,
+          // 🔴 **예산도 같이 저장한다.** 안 하면 앱을 껐다 켤 때 refs 정적값으로
+          // 돌아가고, 그 값을 읽는 셋(신인 계약금·FA 입찰 상한·감독 기대치)이
+          // 통째로 되돌아간다 — 성향에서 이미 겪은 형태다 (4-C · 2026-08-29)
+          clubBudgets: s.clubBudgets,
           teamStreaks: s.teamStreaks,
         },
       );
@@ -1381,6 +1390,16 @@ function createGameStore() {
 
       if (newProNpcs.length === 0 && patched === 0) return;
       update((st) => ({ ...st, npcs: [...patchedNpcs, ...newProNpcs] }));
+    },
+
+    /**
+     * 구단 예산을 갱신한다 (4-C).
+     *
+     * ⚠ **덮어쓰지 않고 합친다** — 리그마다 따로 정산하므로 한 리그를
+     *   저장하면서 다른 리그를 지우면 안 된다.
+     */
+    patchClubBudgets(next: Record<string, number>) {
+      update((s) => ({ ...s, clubBudgets: { ...s.clubBudgets, ...next } }));
     },
 
     patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
@@ -3363,6 +3382,7 @@ function createGameStore() {
         // 🔴 **빈 객체로 시작하면 구단 개성이 없는 세계가 된다.**
         //   `App.svelte`가 부른 `initProTeamProfiles`를 여기서 덮고 있었다.
         proTeamProfiles:  profilesFromMaster(),
+        clubBudgets: {},
         teamStreaks:      {},
         teamTargets:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),

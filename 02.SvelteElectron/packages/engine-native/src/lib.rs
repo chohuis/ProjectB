@@ -380,6 +380,15 @@ pub fn resolve_fa_market_native(params_json: String) -> String {
 
 /// 주간 수입·지출·세금. `money`에 더할 순현금을 낸다
 #[napi]
+pub fn calc_club_revenue_native(params_json: String) -> String {
+    let params: finance::ClubRevenueParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("calcClubRevenueNative", e),
+    };
+    serde_json::to_string(&finance::calc_club_revenue(params))
+        .unwrap_or_else(|e| parse_err("calcClubRevenueNative/serialize", e))
+}
+
+#[napi]
 pub fn calc_weekly_finance_native(params_json: String) -> String {
     let params: finance::WeeklyFinanceParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,

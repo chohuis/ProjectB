@@ -772,3 +772,232 @@ mod tests {
             "최저연봉으로 상시 구독 3개가 감당된다 — 구독이 공짜 버프가 된다");
     }
 }
+
+// ── 구단 재정 (4-C · 2026-08-29) ──────────────────────────────
+//
+// 🔴 **구단 수입이 통째로 없었다.** 팀 예산은 `refs.json`의 정적값이고
+//   관중·중계권·스폰서 개념이 없었다(`attendance`는 학업 출결이고 스폰서는
+//   주인공 개인 재정이다).
+//
+// ⚠ **시즌 종료에 한 번** 돈다(사용자 확정). 경기마다 재면 주 진행이
+//   그만큼 느려진다 — 실측으로 주당 약 20,000경기가 돈다.
+//
+// ⚠ 수치 정본은 `generation_rules.json`의 `clubFinanceRules`다.
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct AttendanceRules {
+    pub base: f64,
+    pub win_pct_span: f64,
+    pub market_appeal_span: f64,
+    pub prestige_span: f64,
+    pub min: f64,
+    pub max: f64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RevenueShare {
+    pub gate: f64,
+    pub parent: f64,
+    pub tv: f64,
+    pub sponsor: f64,
+    pub goods: f64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct PostseasonBonus {
+    pub qualified: f64,
+    pub runner_up: f64,
+    pub champion: f64,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClubRevenueParams {
+    pub attendance: AttendanceRules,
+    /// 그 팀의 수입 구조 — 호출부가 유형표에서 골라 넘긴다
+    pub share: RevenueShare,
+    pub postseason: PostseasonBonus,
+    /// 스폰서가 명성을 타는 폭
+    pub sponsor_prestige_span: f64,
+
+    /// 기준 규모 (만원). `history.budget`에서 온다
+    pub base_scale: f64,
+    /// 리그 평균 기준 규모 — **중계권은 균등 배분**이라 이걸 쓴다
+    pub league_avg_scale: f64,
+    pub ticket_price: f64,
+    pub capacity: f64,
+    pub home_games: f64,
+
+    pub win_pct: f64,
+    pub market_appeal: f64,
+    pub prestige: f64,
+    /// 0=미진출 · 1=진출 · 2=준우승 · 3=우승
+    #[serde(default)]
+    pub postseason_result: i32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClubRevenue {
+    /// 흥행률 (0~1) — 화면이 "관중 x명 (수용 y%)"을 쓴다
+    pub attendance_rate: f64,
+    pub attendance_total: f64,
+    pub gate: f64,
+    pub parent: f64,
+    pub tv: f64,
+    pub sponsor: f64,
+    pub goods: f64,
+    pub postseason: f64,
+    pub total: f64,
+}
+
+/// 성향은 0~100이고 **50이 중립**이다 — 거기서 얼마나 벗어났는지를 본다
+fn span_of(v: f64, span: f64) -> f64 {
+    ((v - 50.0) / 50.0) * span
+}
+
+pub fn calc_club_revenue(p: ClubRevenueParams) -> ClubRevenue {
+    let a = &p.attendance;
+
+    // ── 흥행률 ────────────────────────────────────────────────
+    //
+    // ⚠ **이미 있는 값만 쓴다**(사용자 확정) — 승률과 구단 성향이다.
+    //   새 수치는 `base` 하나뿐이다.
+    let rate = (a.base
+        + ((p.win_pct - 0.5) / 0.5) * a.win_pct_span
+        + span_of(p.market_appeal, a.market_appeal_span)
+        + span_of(p.prestige, a.prestige_span))
+        .clamp(a.min, a.max);
+
+    let attendance_total = (p.capacity * rate * p.home_games).max(0.0);
+    let gate = attendance_total * p.ticket_price;
+
+    // ── 나머지 항목 ───────────────────────────────────────────
+    //
+    // ⚠ **모기업과 중계권은 성적을 안 탄다.** 모기업은 그 해 성적과 무관하게
+    //   대주고, 중계권은 리그가 균등 배분한다 — 그게 현실이다.
+    // ⚠ 그래서 **유형이 성적 민감도를 정한다**: 자력형은 관중이 절반이라
+    //   성적이 크게 물리고, 모기업형은 성적이 나빠도 버틴다.
+    let parent = p.base_scale * p.share.parent;
+    let tv = p.league_avg_scale * p.share.tv;
+    // 스폰서는 명성을 **약하게** 탄다
+    let sponsor = p.base_scale * p.share.sponsor
+        * (1.0 + span_of(p.prestige, p.sponsor_prestige_span));
+    // 굿즈는 관중을 따라간다 — 사람이 와야 산다
+    let goods = if p.share.gate > 0.0 {
+        gate * (p.share.goods / p.share.gate)
+    } else { 0.0 };
+
+    let postseason = p.base_scale * match p.postseason_result {
+        3 => p.postseason.champion,
+        2 => p.postseason.runner_up,
+        1 => p.postseason.qualified,
+        _ => 0.0,
+    };
+
+    let total = gate + parent + tv + sponsor + goods + postseason;
+    ClubRevenue {
+        attendance_rate: rate,
+        attendance_total,
+        gate, parent, tv, sponsor, goods, postseason, total,
+    }
+}
+
+#[cfg(test)]
+mod club_revenue_tests {
+    use super::*;
+
+    fn rules() -> AttendanceRules {
+        AttendanceRules { base: 0.45, win_pct_span: 0.20, market_appeal_span: 0.15,
+                          prestige_span: 0.10, min: 0.10, max: 0.95 }
+    }
+    fn params(win: f64, appeal: f64, prestige: f64, share: RevenueShare) -> ClubRevenueParams {
+        ClubRevenueParams {
+            attendance: rules(), share,
+            postseason: PostseasonBonus { qualified: 0.03, runner_up: 0.05, champion: 0.08 },
+            sponsor_prestige_span: 0.30,
+            base_scale: 2_300_000.0,      // 230억(만원)
+            league_avg_scale: 2_300_000.0,
+            ticket_price: 1.3, capacity: 20_000.0, home_games: 72.0,
+            win_pct: win, market_appeal: appeal, prestige,
+            postseason_result: 0,
+        }
+    }
+    fn balanced() -> RevenueShare {
+        RevenueShare { gate: 0.45, parent: 0.25, tv: 0.15, sponsor: 0.10, goods: 0.05 }
+    }
+    fn self_made() -> RevenueShare {
+        RevenueShare { gate: 0.50, parent: 0.05, tv: 0.15, sponsor: 0.20, goods: 0.10 }
+    }
+    fn parent_fed() -> RevenueShare {
+        RevenueShare { gate: 0.25, parent: 0.50, tv: 0.15, sponsor: 0.10, goods: 0.00 }
+    }
+
+    #[test]
+    fn 성적이_좋으면_관중이_는다() {
+        let lo = calc_club_revenue(params(0.350, 50.0, 50.0, balanced()));
+        let hi = calc_club_revenue(params(0.650, 50.0, 50.0, balanced()));
+        assert!(hi.attendance_rate > lo.attendance_rate, "{} vs {}", hi.attendance_rate, lo.attendance_rate);
+        assert!(hi.gate > lo.gate);
+    }
+
+    /// 🔴 **흥행률이 0이나 1이 되면 안 된다** — 수입이 사라지거나 매 경기 만원이다
+    #[test]
+    fn 흥행률이_범위를_안_넘는다() {
+        let worst = calc_club_revenue(params(0.0, 0.0, 0.0, balanced()));
+        let best  = calc_club_revenue(params(1.0, 100.0, 100.0, balanced()));
+        assert!(worst.attendance_rate >= 0.10, "{}", worst.attendance_rate);
+        assert!(best.attendance_rate <= 0.95, "{}", best.attendance_rate);
+    }
+
+    /// 🔴 **유형이 성적 민감도를 정한다** — 자력형이 성적을 크게 탄다
+    #[test]
+    fn 자력형이_성적을_더_탄다() {
+        let d = |s: RevenueShare| {
+            let lo = calc_club_revenue(params(0.350, 50.0, 50.0, s.clone())).total;
+            let hi = calc_club_revenue(params(0.650, 50.0, 50.0, s)).total;
+            (hi - lo) / lo
+        };
+        assert!(d(self_made()) > d(parent_fed()),
+            "자력 {:.4} · 모기업 {:.4}", d(self_made()), d(parent_fed()));
+    }
+
+    /// ⚠ **모기업과 중계권은 성적을 안 탄다** — 그게 현실이다
+    #[test]
+    fn 모기업과_중계권은_성적을_안_탄다() {
+        let lo = calc_club_revenue(params(0.350, 50.0, 50.0, balanced()));
+        let hi = calc_club_revenue(params(0.650, 50.0, 50.0, balanced()));
+        assert_eq!(lo.parent, hi.parent);
+        assert_eq!(lo.tv, hi.tv);
+    }
+
+    /// ⚠ 중계권은 **리그 평균**을 쓴다 — 균등 배분이다
+    #[test]
+    fn 중계권은_균등_배분이다() {
+        let mut poor = params(0.5, 50.0, 50.0, balanced());
+        poor.base_scale = 1_200_000.0;      // 가난한 구단
+        let rich = params(0.5, 50.0, 50.0, balanced());
+        assert_eq!(calc_club_revenue(poor).tv, calc_club_revenue(rich).tv);
+    }
+
+    #[test]
+    fn 포스트시즌_배당이_붙는다() {
+        let none = calc_club_revenue(params(0.5, 50.0, 50.0, balanced()));
+        let mut ch = params(0.5, 50.0, 50.0, balanced());
+        ch.postseason_result = 3;
+        let won = calc_club_revenue(ch);
+        assert!(won.total > none.total);
+        assert_eq!(none.postseason, 0.0);
+    }
+
+    /// ⚠ 모기업형은 굿즈가 0이다 — 나눗셈이 터지면 안 된다
+    #[test]
+    fn 굿즈가_0인_유형도_돈다() {
+        let r = calc_club_revenue(params(0.5, 50.0, 50.0, parent_fed()));
+        assert_eq!(r.goods, 0.0);
+        assert!(r.total > 0.0);
+    }
+}

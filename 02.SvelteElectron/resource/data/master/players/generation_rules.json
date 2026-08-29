@@ -2391,5 +2391,71 @@
       }
     },
     "maxPersonalityTags": 3
+  },
+  "clubFinanceRules": {
+    "_note": "구단 수입 (4-C · 2026-08-29 · 사용자 확정). **시즌 종료에 한 번** 정산한다 — 경기마다 재면 주 진행이 그만큼 느려진다",
+    "_scaleNote": "단위 만원. `history.budget`(원)이 기준 규모다 — KBL 120~350억 · ABL 798~2759억 · JBL 425~1393억",
+    "attendance": {
+      "_note": "관중 = 수용인원 × 흥행률. **이미 있는 값만 쓴다** — 승률과 구단 성향(marketAppeal·prestige)이다. 새 수치는 `base` 하나뿐이다",
+      "base": 0.45,
+      "_baseNote": "평범한 팀(승률 .500 · 성향 50)의 흥행률. 실제 KBO 평균 관중은 수용인원의 50~60%다",
+      "winPctSpan": 0.2,
+      "_winNote": "승률 .500 기준 ±0.20 — 꼴찌(.350)면 −0.06, 우승권(.650)이면 +0.06",
+      "marketAppealSpan": 0.15,
+      "prestigeSpan": 0.1,
+      "_spanNote": "성향은 0~100이고 50이 중립이다. 폭은 (값−50)/50 × span",
+      "min": 0.1,
+      "max": 0.95,
+      "_clampNote": "0이면 수입이 통째로 사라지고 1이면 매 경기 만원이다 — 둘 다 현실이 아니다"
+    },
+    "ticketPrice": {
+      "_note": "1인 관람 단가(만원). **역산으로 정했다** — 평균 흥행률에서 관중 수입이 `기준규모 × 관중몫`에 오도록. 실제 KBO 1.0~1.5만원 · MLB 약 5.5만원과 맞는다",
+      "LEAGUE_KBL": 1.3,
+      "LEAGUE_ABL": 5.5,
+      "LEAGUE_JBL": 3
+    },
+    "types": {
+      "_note": "구단 수입 **구조 유형**(사용자 확정: 리그마다 5:3:2). 팀 id 해시로 고정 배분한다 — `Math.random()`이면 세이브마다 바뀐다",
+      "_ratioNote": "각 항목의 몫(합 1.0). 유형이 다르면 **성적에 대한 민감도**가 다르다 — 자력형은 관중이 절반이라 성적이 크게 물리고, 모기업형은 성적이 나빠도 버틴다",
+      "balanced": {
+        "_note": "균형형 (10팀 중 5)",
+        "gate": 0.45,
+        "parent": 0.25,
+        "tv": 0.15,
+        "sponsor": 0.1,
+        "goods": 0.05
+      },
+      "parent": {
+        "_note": "모기업 의존형 (10팀 중 3) — KBO 현실에 가깝다",
+        "gate": 0.25,
+        "parent": 0.5,
+        "tv": 0.15,
+        "sponsor": 0.1,
+        "goods": 0
+      },
+      "self": {
+        "_note": "자력형 (10팀 중 2) — 성적이 수입을 크게 움직인다",
+        "gate": 0.5,
+        "parent": 0.05,
+        "tv": 0.15,
+        "sponsor": 0.2,
+        "goods": 0.1
+      }
+    },
+    "typeWeights": {
+      "balanced": 5,
+      "parent": 3,
+      "self": 2
+    },
+    "sponsor": {
+      "_note": "스폰서는 명성을 탄다 — 약하게 반응한다. 0.7 ~ 1.3 배",
+      "prestigeSpan": 0.3
+    },
+    "postseason": {
+      "_note": "포스트시즌 배당. 진출만 해도 붙고 우승이면 크다. 기준규모 대비 비율",
+      "qualified": 0.03,
+      "runnerUp": 0.05,
+      "champion": 0.08
+    }
   }
 }
