@@ -6557,3 +6557,30 @@ export function waiverProbe(): Record<string, unknown> {
   }
   return { 방출: released, 웨이버클레임: claimed, 예: sample };
 }
+
+/**
+ * 소식 생산량 — **A단계 전에 잰다.** 6종을 더 흘려도 되는지 판단할 근거다.
+ *
+ * ⚠ 상한(`MAX_MAILBOX`)은 500이다. 계획서에 200이라 적었다가 사용자
+ *   지적으로 잡았다 — 2026-08-24 에 올렸다.
+ * ⚠ **누적 생산량이 아니라 현재 보유 수**다. 상한에 닿으면 옛것이 잘린다 —
+ *   `잘림` 이 1이면 그 시즌에 이미 밀어내고 있다는 뜻이다.
+ */
+export function mailboxLoadProbe(): Record<string, unknown> {
+  const mb = get(gameStore).mailbox ?? [];
+  const byKind: Record<string, number> = {};
+  for (const m of mb) {
+    // id 앞머리로 종류를 가른다 — `msg-<종류>-...`
+    const k = String(m.id ?? "").split("-").slice(0, 2).join("-") || "(없음)";
+    byKind[k] = (byKind[k] ?? 0) + 1;
+  }
+  const top = Object.entries(byKind).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  return {
+    보유: mb.length,
+    상한: 500,
+    잘림: mb.length >= 500 ? 1 : 0,
+    안읽음: mb.filter((m) => !m.readAt).length,
+    종류수: Object.keys(byKind).length,
+    상위: top.map(([k, n]) => `${k}:${n}`),
+  };
+}
