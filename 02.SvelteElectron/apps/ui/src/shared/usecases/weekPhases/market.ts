@@ -963,6 +963,29 @@ export async function processProTeamCallupCalldown(
   //   `demotionWeek` 는 세이브에도 실린다(앱을 껐다 켜도 유지).
   if (_demotedIds.length > 0) gameStore.markDemotions(_demotedIds, weekNum);
 
+  // 등록말소 소식 — **주인공 팀 것만.** 리그 전체를 보내면 주당 수십 통이다.
+  // ⚠ 기간(`lockWeeks`)을 문장에 넣는다 — 규칙 파일 값이 바뀌면 문장도 바뀐다.
+  {
+    const myTeam = g.protagonist.teamId;
+    const mine = _demotedIds.filter((id) =>
+      id === g.protagonist.id
+      || (namedMap.get(id)?.currentTeam ?? "") === myTeam);
+    if (mine.length > 0 && lockWeeks > 0) {
+      const names = mine.map((id) =>
+        namedMap.get(id)?.name ?? m.entities.find((e) => e.id === id)?.name ?? id);
+      gameStore.addMessage({
+        id: `msg-demote-${s.seasonYear}-w${weekNum}-${mine[0]}`,
+        category: "system",
+        sender: "구단 사무국",
+        subject: `2군 등록말소 ${names.length}명`,
+        preview: `${names.slice(0, 2).join(", ")}${names.length > 2 ? ` 외 ${names.length - 2}명` : ""}`,
+        body: `${names.join("\n")}\n\n${lockWeeks}주간 1군 재등록이 불가하다.`,
+        createdAt: `W${weekNum}`,
+        readAt: null,
+      });
+    }
+  }
+
   if (allMoves.length > 0) {
     // 팀 이동을 gameStore.npcs에 반영 → connectToGameStore 구독이 entities 자동 갱신
     //
