@@ -6378,3 +6378,101 @@ export function hofProbe(): Record<string, unknown> {
       `${id}:${v.score}점 ${v.num}번 ${v.teams.length}구단`),
   };
 }
+
+/**
+ * 로스터 자리 실태 — 3단계(엔트리·IL·등록말소·웨이버)의 전제.
+ *
+ * ⚠ **계획서에 \"이미 있다\"고 적은 것이 세 번 틀렸다**(등번호·연표·고교
+ *   로스터). 여기서도 코드가 아니라 **값**을 본다.
+ */
+export function rosterSlotProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  // 🔴 **부상 저장소가 둘이다.** `s.npcInjuries`(시즌 스토어)만 보면
+  //   38팀에 1~2명으로 나오는데, `careerStatus === "injured"` 로 세면
+  //   훨씬 많다(고교만 227명). **둘 다 센다** — 어느 쪽이 정본인지
+  //   가려야 IL 이 무엇을 옮길지 정할 수 있다.
+  const inj = s.npcInjuries ?? {};
+  const injuredIds = new Set(Object.keys(inj));
+
+  const PRO = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
+  const pro1 = m.teams.filter((t) => PRO.includes(t.leagueId) && t.id.endsWith("_1"));
+  const ids = new Set(pro1.map((t) => t.id));
+  // 🔴 **2군까지 본다.** 1군만 보면 부상자가 0~3명으로 나오는데,
+  //   부상자가 2군으로 내려가면 그쪽에 있다 — 그게 곧 IL 의 실질이다.
+  //   "1군에 부상자가 없다"와 "부상이 안 난다"는 완전히 다른 이야기다.
+  const farmIds = new Set(m.teams.filter((t) =>
+    (PRO.includes(t.leagueId) || t.leagueId.endsWith("_FARM")) && t.id.endsWith("_2"))
+    .map((t) => t.id));
+
+  const size = new Map<string, number>();
+  const injOnRoster = new Map<string, number>();
+  const statusInj = new Map<string, number>();
+  for (const n of g.npcs ?? []) {
+    const t = n.currentTeam ?? "";
+    if (!ids.has(t)) continue;
+    if (n.careerStatus === "retired" || n.careerStatus === "free_agent") continue;
+    size.set(t, (size.get(t) ?? 0) + 1);
+    if (injuredIds.has(n.npcId)) injOnRoster.set(t, (injOnRoster.get(t) ?? 0) + 1);
+    if (n.careerStatus === "injured") statusInj.set(t, (statusInj.get(t) ?? 0) + 1);
+  }
+  // 2군 부상자 · 프로 전체 부상자
+  let farmInj = 0, farmSize = 0, proInjAll = 0;
+  for (const n of g.npcs ?? []) {
+    if (n.careerStatus === "retired" || n.careerStatus === "free_agent") continue;
+    const t = n.currentTeam ?? "";
+    const isInj = n.careerStatus === "injured" || injuredIds.has(n.npcId);
+    if (farmIds.has(t)) { farmSize++; if (isInj) farmInj++; }
+    if ((ids.has(t) || farmIds.has(t)) && isInj) proInjAll++;
+  }
+  const nums = [...size.values()].sort((a, b) => a - b);
+  const med = (a: number[]) => (a.length ? a[Math.floor(a.length / 2)] : 0);
+  const injTotal = [...injOnRoster.values()].reduce((a, b) => a + b, 0);
+
+  return {
+    팀수: size.size,
+    인원: nums.length ? `${nums[0]}/${med(nums)}/${nums[nums.length - 1]}` : "-",
+    // 34(KBL·ABL) · 32(JBL) 가 상한이다
+    상한초과팀: nums.filter((v) => v > 34).length,
+    부상자_시즌표: injTotal,
+    부상자_상태값: [...statusInj.values()].reduce((a, b) => a + b, 0),
+    프로_2군인원: farmSize,
+    프로_2군부상: farmInj,
+    프로_전체부상: proInjAll,
+    부상자있는팀: injOnRoster.size,
+    팀당부상중앙: med([...injOnRoster.values()].sort((a, b) => a - b)),
+    // IL 이 있으면 이만큼 자리가 빈다
+    부상제외인원: nums.length
+      ? `${Math.min(...pro1.map((t) => (size.get(t.id) ?? 0) - (injOnRoster.get(t.id) ?? 0)))}`
+      + `/${med(pro1.map((t) => (size.get(t.id) ?? 0) - (injOnRoster.get(t.id) ?? 0)).sort((a, b) => a - b))}`
+      : "-",
+  };
+}
+
+/**
+ * 배경 리그 경기에 `playerLines` 가 있는가 — **부상 범위 수정의 전제**.
+ *
+ * 🔴 `processNpcInjuries` 는 `entry.result.playerLines` 로 출전 이력을 만든다.
+ *   `leagueSchedules` 를 훑게 고쳐도 **거기 `playerLines` 가 비면 부상이
+ *   여전히 안 난다** — 고치고 나서 "왜 그대로지" 하게 되는 자리다.
+ */
+export function playerLinesProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const out: Record<string, string> = {};
+  const scan = (label: string, sched: { result?: { playerLines?: unknown[] } }[]) => {
+    let played = 0, withLines = 0, lines = 0;
+    for (const e of sched) {
+      if (!e.result) continue;
+      played++;
+      const n = e.result.playerLines?.length ?? 0;
+      if (n > 0) { withLines++; lines += n; }
+    }
+    out[label] = `${played}경기 · 라인있음 ${withLines} · 총 ${lines}줄`;
+  };
+  scan(`주인공(${s.leagueId})`, s.schedule as never);
+  for (const [lid, sch] of Object.entries(s.leagueSchedules ?? {})) {
+    if (Array.isArray(sch)) scan(lid, sch as never);
+  }
+  return out;
+}

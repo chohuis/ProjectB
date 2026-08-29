@@ -97,14 +97,31 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
 
   // 캐시에 없는 새 주차 항목만 증분 반영
   const protagonistId = g.protagonist.id;
-  for (const entry of s.schedule) {
-    if (!entry.result || entry.week >= weekNum) continue;
-    if (entry.week <= _injuryAppCache.lastScannedWeek) continue;
-    for (const line of entry.result.playerLines) {
-      if (line.playerId === protagonistId) continue;
-      const ex = _injuryAppCache.playerData.get(line.playerId);
-      if (ex) { ex.weeks.add(entry.week); }
-      else     { _injuryAppCache.playerData.set(line.playerId, { role: line.role as "pitcher" | "batter", weeks: new Set([entry.week]) }); }
+  // 🔴 **`s.schedule` 만 훑고 있었다 — 그건 주인공 리그 일정이다.**
+  //   나머지 리그는 `s.leagueSchedules` 에 따로 있는데 안 봤다.
+  //   그래서 **주인공이 고교생이면 프로 선수는 아무도 안 다쳤다.**
+  //
+  //   실측(씨앗 111 · 2시즌):
+  //       고교(주인공 리그)  3,060명 중 부상 227~291명
+  //       프로 1군+2군       2,600명 중 부상   0~6명
+  //
+  //   ⚠ 데이터는 다 있었다 — 배경 리그도 `playerLines` 를 만든다
+  //     (KBL 780경기 16,345줄 · ABL 1,296경기 27,027줄). **보는 쪽만 좁았다.**
+  //   ⚠ 증분 캐시(`lastScannedWeek`)라 리그가 늘어도 매주 새 주차만 훑는다.
+  const allSchedules: (typeof s.schedule)[] = [s.schedule];
+  for (const sch of Object.values(s.leagueSchedules ?? {})) {
+    if (Array.isArray(sch)) allSchedules.push(sch);
+  }
+  for (const sched of allSchedules) {
+    for (const entry of sched) {
+      if (!entry.result || entry.week >= weekNum) continue;
+      if (entry.week <= _injuryAppCache.lastScannedWeek) continue;
+      for (const line of entry.result.playerLines) {
+        if (line.playerId === protagonistId) continue;
+        const ex = _injuryAppCache.playerData.get(line.playerId);
+        if (ex) { ex.weeks.add(entry.week); }
+        else     { _injuryAppCache.playerData.set(line.playerId, { role: line.role as "pitcher" | "batter", weeks: new Set([entry.week]) }); }
+      }
     }
   }
   _injuryAppCache.lastScannedWeek = weekNum - 1;
