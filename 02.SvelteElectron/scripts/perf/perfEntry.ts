@@ -6394,7 +6394,11 @@ export function rosterSlotProbe(): Record<string, unknown> {
   //   훨씬 많다(고교만 227명). **둘 다 센다** — 어느 쪽이 정본인지
   //   가려야 IL 이 무엇을 옮길지 정할 수 있다.
   const inj = s.npcInjuries ?? {};
-  const injuredIds = new Set(Object.keys(inj));
+  const injuredIds = new Set([
+    ...Object.entries(inj).filter(([, v]) =>
+      (v as { severity?: string })?.severity !== "mild").map(([id]) => id),
+    ...Object.keys(s.nationalDuty ?? {}),
+  ]);
 
   const PRO = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
   const pro1 = m.teams.filter((t) => PRO.includes(t.leagueId) && t.id.endsWith("_1"));
@@ -6436,8 +6440,11 @@ export function rosterSlotProbe(): Record<string, unknown> {
     // 🔴 **IL 을 뺀 수로 잰다.** 부상자 명단이 정원을 안 차지하게 고쳤으니
     //   재는 쪽도 같아야 한다 — 안 맞추면 21~30팀이 초과로 나온다(실측).
     //   34(KBL·ABL) · 32(JBL) 가 상한이다.
+    // ⚠ **`market.ts` 의 `ilSet` 과 같은 기준으로 뺀다.** 거긴
+    //   `npcInjuries`(mild 제외)+`nationalDuty` 인데 여기서 `careerStatus`
+    //   로 빼면 mild 부상이 갈려 없는 초과를 만든다. **세 번째 같은 실수다.**
     상한초과팀: pro1.filter((t) =>
-      (size.get(t.id) ?? 0) - (statusInj.get(t.id) ?? 0) > 34).length,
+      (size.get(t.id) ?? 0) - (injOnRoster.get(t.id) ?? 0) > 34).length,
     _총원기준초과: nums.filter((v) => v > 34).length,
     부상자_시즌표: injTotal,
     부상자_상태값: [...statusInj.values()].reduce((a, b) => a + b, 0),
@@ -6502,4 +6509,33 @@ export function demotionLockProbe(): Record<string, unknown> {
     위반: violate.length,
     예: violate.slice(0, 3).map(([id, w]) => `${id}:W${w}`),
   };
+}
+
+/** 상한을 넘는 팀이 **어디서** 넘치나 — 유입 경로를 가른다 */
+export function overCapProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  const inj = s.npcInjuries ?? {};
+  const il = new Set([
+    ...Object.entries(inj).filter(([, v]) =>
+      (v as { severity?: string })?.severity !== "mild").map(([id]) => id),
+    ...Object.keys(s.nationalDuty ?? {}),
+  ]);
+  const pro1 = m.teams.filter((t) =>
+    ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"));
+  const rows: string[] = [];
+  for (const t of pro1) {
+    let n = 0, ilN = 0;
+    // 그 팀 1군 인원과 IL
+    for (const p of g.npcs ?? []) {
+      if ((p.currentTeam ?? "") !== t.id) continue;
+      if (p.careerStatus === "retired" || p.careerStatus === "free_agent") continue;
+      n++;
+      if (il.has(p.npcId)) ilN++;
+    }
+    const eff = n - ilN;
+    if (eff > 34) rows.push(`${t.id.replace(/^TEAM_[A-Z]+_/, "")}:${eff}(총${n}·IL${ilN})`);
+  }
+  return { 초과팀수: rows.length, 목록: rows.slice(0, 8) };
 }
