@@ -114,3 +114,74 @@ describe("배선", () => {
       .toContain("clubBudgets: { ...s.clubBudgets, ...next }");
   });
 });
+
+/**
+ * **구단 지출** (4-B · 2026-08-29).
+ *
+ * 🔴 처음에 **예산이 폭주했다** — 실측 164 → 206 → 256억(매년 33%).
+ *   `base_scale`에 **누적 예산**을 넣어 되먹임이 생겼다:
+ *
+ *       새 예산 = 예산 + 수입 − 지출
+ *               = 예산 × (1 + 0.50 − 0.17) = 예산 × 1.33
+ *
+ * 🔴 둘째, 티켓값을 `balanced`(관중 몫 0.45) 기준으로 역산했는데 모기업형은
+ *   몫이 0.25라 **총수입이 기준 규모를 넘었다**(부산 static 210억, 수입 261억).
+ *
+ * 고친 뒤 실측:
+ *   2026 중앙 237억 → 2027 254 → 2028 258 (배수 2.74 → 2.69 → 2.73)
+ *   수입 216 ≈ static 210 — 설계대로다
+ */
+describe("구단 지출", () => {
+  const CF = read("apps/ui/src/shared/usecases/clubFinance.ts");
+  const E = (RULES as unknown as { expense: {
+    operations: { stadium: number; farm: number; camp: number };
+    minBudgetRatio: number; maxBudgetRatio: number; budgetAdjustRate: number;
+    staff: { managerBase: number; coachBase: number; abilityExp: number };
+  } }).expense;
+
+  it("지출 규칙이 있다", () => {
+    expect(E.staff.managerBase).toBeGreaterThan(E.staff.coachBase);
+    expect(E.operations.stadium + E.operations.farm + E.operations.camp)
+      .toBeGreaterThan(0.3);
+  });
+
+  /** 🔴 **되먹임을 끊는다** — 수입·지출은 정적 기준을 본다 */
+  it("수입·지출이 누적 예산을 안 본다", () => {
+    expect(CF).toContain("const staticOf = (teamId: string) =>");
+    expect(CF).toContain("baseScale: staticOf(t.id),");
+    // 누적 예산(`scaleOf`)을 기준으로 넘기지 않는다
+    expect(CF.includes("baseScale: scaleOf(t.id)")).toBe(false);
+  });
+
+  /** 🔴 티켓값이 유형과 안 맞으면 총수입이 기준 규모를 넘는다 */
+  it("티켓값을 유형에 맞춘다", () => {
+    expect(CF).toContain("* (share.gate / (rules.types.balanced?.gate ?? share.gate))");
+  });
+
+  /** 🔴 잔고가 그대로 예산이 되면 몇 해만 겹쳐도 발산·붕괴한다 */
+  it("순익을 통째로 넣지 않고 상·하한이 있다", () => {
+    expect(E.budgetAdjustRate).toBeGreaterThan(0);
+    expect(E.budgetAdjustRate).toBeLessThan(1);
+    expect(E.minBudgetRatio).toBeGreaterThan(0);
+    expect(E.maxBudgetRatio).toBeGreaterThan(1);
+    expect(CF).toContain("profit * rules.expense.budgetAdjustRate");
+    expect(CF).toContain("st0 * rules.expense.maxBudgetRatio");
+    expect(CF).toContain("st0 * rules.expense.minBudgetRatio");
+  });
+
+  /** ⚠ 1군만 세면 2군 연봉이 빠진다 — 같은 구단이다 */
+  it("총연봉에 2군을 포함한다", () => {
+    expect(CF).toContain('payrollOf.get(t.id.slice(0, -2) + "_2")');
+  });
+
+  /** ⚠ 스태프 급여는 **선수와 같은 리그 배수**를 쓴다 — 두 벌이면 갈라진다 */
+  it("리그 배수를 선수 표에서 읽는다", () => {
+    expect(CF).toContain("salaryRules?.leagueMult?.[leagueId]");
+  });
+
+  it("산식이 Rust에 있다", () => {
+    expect(CF).toContain('"calcClubExpenseNative"');
+    expect(read("packages/engine-native/src/finance.rs"))
+      .toContain("pub fn calc_club_expense(");
+  });
+});

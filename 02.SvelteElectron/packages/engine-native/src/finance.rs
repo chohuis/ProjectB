@@ -823,7 +823,13 @@ pub struct ClubRevenueParams {
     /// 스폰서가 명성을 타는 폭
     pub sponsor_prestige_span: f64,
 
-    /// 기준 규모 (만원). `history.budget`에서 온다
+    /// **정적 기준 규모** (만원) — `refs.json`의 원래 예산이다.
+    ///
+    /// 🔴 처음엔 여기에 **누적 예산**을 넣었다. 그러면
+    ///   `새 예산 = 예산 + 수입 − 지출`이 `예산 × 1.33`이 되어
+    ///   **매년 33%씩 발산한다**(실측: 164 → 206 → 256억).
+    ///   모기업·중계·스폰서가 이 값에 비례하기 때문이다.
+    /// ⚠ 이건 고정값이다 — 되먹임이 없다.
     pub base_scale: f64,
     /// 리그 평균 기준 규모 — **중계권은 균등 배분**이라 이걸 쓴다
     pub league_avg_scale: f64,
@@ -999,5 +1005,158 @@ mod club_revenue_tests {
         let r = calc_club_revenue(params(0.5, 50.0, 50.0, parent_fed()));
         assert_eq!(r.goods, 0.0);
         assert!(r.total > 0.0);
+    }
+}
+
+// ── 구단 지출 (4-B · 2026-08-29) ──────────────────────────────
+//
+// ⚠ 수입과 **같은 자리**에서 시즌에 한 번 정산한다.
+// ⚠ 스태프 급여는 **선수 연봉과 같은 축**을 쓴다 — 능력 평균을 OVR처럼 본다.
+//   두 벌로 두면 갈라진다.
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct StaffPayRules {
+    pub manager_base: f64,
+    pub coach_base: f64,
+    pub ability_exp: f64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct OperationRules {
+    pub stadium: f64,
+    pub farm: f64,
+    pub camp: f64,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClubExpenseParams {
+    pub staff_rules: StaffPayRules,
+    pub operations: OperationRules,
+    /// 기준 규모 (만원)
+    pub base_scale: f64,
+    /// 리그 배수 — **선수와 같은 표**(`salaryRules.leagueMult`)
+    pub league_mult: f64,
+    /// 선수 총연봉 (만원). 호출부가 로스터에서 센다
+    pub payroll: f64,
+    /// 감독 능력 평균 (0~100). 없으면 0
+    #[serde(default)]
+    pub manager_ability: f64,
+    /// 코치들의 능력 평균 (0~100)
+    #[serde(default)]
+    pub coach_abilities: Vec<f64>,
+    /// 구장 수용인원 / 리그 평균 수용인원 — 큰 구장은 유지비가 많이 든다
+    #[serde(default = "ratio_one")]
+    pub capacity_ratio: f64,
+    /// 2군이 있는가
+    #[serde(default)]
+    pub has_farm: bool,
+}
+fn ratio_one() -> f64 { 1.0 }
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClubExpense {
+    pub payroll: f64,
+    pub staff: f64,
+    pub stadium: f64,
+    pub farm: f64,
+    pub camp: f64,
+    pub total: f64,
+}
+
+/// 능력 평균 → 연봉 배수. **50이 기준**이다(선수 `ovrPivot`과 같은 사고).
+fn pay_mult(ability: f64, exp: f64) -> f64 {
+    if ability <= 0.0 { return 0.0; }
+    (ability / 50.0).powf(exp)
+}
+
+pub fn calc_club_expense(p: ClubExpenseParams) -> ClubExpense {
+    let s = &p.staff_rules;
+
+    // 스태프 — 감독 하나 + 코치 여럿
+    let manager = if p.manager_ability > 0.0 {
+        s.manager_base * pay_mult(p.manager_ability, s.ability_exp) * p.league_mult
+    } else { 0.0 };
+    let coaches: f64 = p.coach_abilities.iter()
+        .map(|a| s.coach_base * pay_mult(*a, s.ability_exp) * p.league_mult)
+        .sum();
+    let staff = manager + coaches;
+
+    // 운영비 — 기준 규모 대비. ⚠ 구장은 **수용인원에 비례**한다
+    let stadium = p.base_scale * p.operations.stadium * p.capacity_ratio.max(0.0);
+    let farm = if p.has_farm { p.base_scale * p.operations.farm } else { 0.0 };
+    let camp = p.base_scale * p.operations.camp;
+
+    let total = p.payroll + staff + stadium + farm + camp;
+    ClubExpense { payroll: p.payroll, staff, stadium, farm, camp, total }
+}
+
+#[cfg(test)]
+mod club_expense_tests {
+    use super::*;
+
+    fn base(payroll: f64, mgr: f64, coaches: Vec<f64>) -> ClubExpenseParams {
+        ClubExpenseParams {
+            staff_rules: StaffPayRules { manager_base: 15000.0, coach_base: 6000.0, ability_exp: 1.5 },
+            operations: OperationRules { stadium: 0.06, farm: 0.08, camp: 0.03 },
+            base_scale: 2_300_000.0, league_mult: 1.0, payroll,
+            manager_ability: mgr, coach_abilities: coaches,
+            capacity_ratio: 1.0, has_farm: true,
+        }
+    }
+
+    #[test]
+    fn 총지출은_항목의_합이다() {
+        let r = calc_club_expense(base(1_500_000.0, 60.0, vec![55.0, 50.0]));
+        assert!((r.total - (r.payroll + r.staff + r.stadium + r.farm + r.camp)).abs() < 1e-6);
+    }
+
+    /// ⚠ **능력이 좋은 감독은 비싸다** — 그게 이 시스템의 요점이다
+    #[test]
+    fn 좋은_감독이_더_비싸다() {
+        let lo = calc_club_expense(base(0.0, 40.0, vec![])).staff;
+        let hi = calc_club_expense(base(0.0, 80.0, vec![])).staff;
+        assert!(hi > lo * 2.0, "{} vs {}", hi, lo);
+    }
+
+    /// ⚠ 코치가 많으면 많이 든다 — 2~8명으로 갈린다
+    #[test]
+    fn 코치가_많으면_많이_든다() {
+        let few = calc_club_expense(base(0.0, 0.0, vec![50.0, 50.0])).staff;
+        let many = calc_club_expense(base(0.0, 0.0, vec![50.0; 8])).staff;
+        assert!((many - few * 4.0).abs() < 1.0, "{} vs {}", many, few);
+    }
+
+    /// 🔴 **스태프가 없으면 0이다** — 고교·대학은 스태프가 얇다
+    #[test]
+    fn 스태프가_없으면_0이다() {
+        assert_eq!(calc_club_expense(base(0.0, 0.0, vec![])).staff, 0.0);
+    }
+
+    /// ⚠ 2군이 없는 리그는 2군 운영비가 없다
+    #[test]
+    fn 이군이_없으면_운영비도_없다() {
+        let mut p = base(0.0, 0.0, vec![]);
+        p.has_farm = false;
+        assert_eq!(calc_club_expense(p).farm, 0.0);
+    }
+
+    /// ⚠ 큰 구장은 유지비가 많이 든다
+    #[test]
+    fn 큰_구장이_더_든다() {
+        let small = { let mut p = base(0.0, 0.0, vec![]); p.capacity_ratio = 0.5; calc_club_expense(p).stadium };
+        let big   = { let mut p = base(0.0, 0.0, vec![]); p.capacity_ratio = 1.5; calc_club_expense(p).stadium };
+        assert!(big > small * 2.5, "{} vs {}", big, small);
+    }
+
+    /// ⚠ 리그 배수는 **선수와 같은 표**다 — ABL은 3.5배다
+    #[test]
+    fn 리그_배수가_스태프에_걸린다() {
+        let kbl = calc_club_expense(base(0.0, 60.0, vec![50.0])).staff;
+        let abl = { let mut p = base(0.0, 60.0, vec![50.0]); p.league_mult = 3.5; calc_club_expense(p).staff };
+        assert!((abl - kbl * 3.5).abs() < 1.0, "{} vs {}", abl, kbl);
     }
 }
