@@ -6561,7 +6561,7 @@ export function waiverProbe(): Record<string, unknown> {
 /**
  * 소식 생산량 — **A단계 전에 잰다.** 6종을 더 흘려도 되는지 판단할 근거다.
  *
- * ⚠ 상한(`MAX_MAILBOX`)은 500이다. 계획서에 200이라 적었다가 사용자
+ * ⚠ 상한(`MAX_MAILBOX`)은 1500이다(2026-08-30 에 500 에서 올렸다). 계획서에 200이라 적었다가 사용자
  *   지적으로 잡았다 — 2026-08-24 에 올렸다.
  * ⚠ **누적 생산량이 아니라 현재 보유 수**다. 상한에 닿으면 옛것이 잘린다 —
  *   `잘림` 이 1이면 그 시즌에 이미 밀어내고 있다는 뜻이다.
@@ -6577,8 +6577,8 @@ export function mailboxLoadProbe(): Record<string, unknown> {
   const top = Object.entries(byKind).sort((a, b) => b[1] - a[1]).slice(0, 8);
   return {
     보유: mb.length,
-    상한: 500,
-    잘림: mb.length >= 500 ? 1 : 0,
+    상한: 1500,
+    잘림: mb.length >= 1500 ? 1 : 0,
     안읽음: mb.filter((m) => !m.readAt).length,
     종류수: Object.keys(byKind).length,
     상위: top.map(([k, n]) => `${k}:${n}`),
