@@ -2487,5 +2487,69 @@
       "maxBudgetRatio": 2,
       "_maxNote": "예산 상한 — 최초 예산 대비. 하한(minBudgetRatio)과 짝이다"
     }
+  },
+  "rosterOpsRules": {
+    "_note": "로스터 운용 수치 (5단계 · 2026-08-29). 예전엔 `rosterEngine.ts`에 전부 리터럴이었다 — 밸런스 값을 코드에 두면 규칙 파일과 어긋난 걸 아무도 모른다",
+    "_moveNote": "🔴 **Rust로 안 내렸다.** 계획엔 '피로 보정이 npc_sim 에도 있다'고 적었는데 **틀렸다** — Rust엔 같은 보정이 없다. 두 벌이 아니므로 고칠 결함이 없고, 옮기면 IPC가 **+10~28%**(실측 20,000경기) 는다. 경기마다 도는 자리다. **숫자만 여기로 올리고 조회는 TS에 뒀다** — academicsEngine 과 같은 갈래다",
+    "rotationSize": {
+      "_note": "선발 로테이션 인원",
+      "LEAGUE_HIGHSCHOOL": 3,
+      "LEAGUE_UNIVERSITY": 3,
+      "LEAGUE_INDEPENDENT": 4,
+      "default": 5
+    },
+    "restGames": {
+      "_note": "SP 의무 휴식 경기 수. ⚠ 지금 getTeamRotation 은 이 값을 안 본다 — 로테이션이 고정이라 5인이면 간격이 저절로 4경기다. matchLineupBuilder 가 쓴다",
+      "LEAGUE_HIGHSCHOOL": 2,
+      "LEAGUE_UNIVERSITY": 2,
+      "LEAGUE_INDEPENDENT": 2,
+      "default": 4
+    },
+    "pitcherFatigue": {
+      "_note": "투수 유효 OVR의 피로 배수. fatigue 는 100=완전회복이다",
+      "_tierNote": "**투수는 타자보다 잘게 나뉘고 바닥도 낮다**(0.65 vs 0.78). 피로에 더 민감하다는 뜻이고 의도로 보인다 — 값을 합치지 않았다",
+      "tiers": [
+        {
+          "atLeast": 70,
+          "mult": 1
+        },
+        {
+          "atLeast": 50,
+          "mult": 0.9
+        },
+        {
+          "atLeast": 30,
+          "mult": 0.8
+        }
+      ],
+      "floor": 0.65
+    },
+    "batterFatigue": {
+      "_note": "타자 유효 OVR의 피로 배수. 투수보다 단계가 적고 바닥이 높다",
+      "tiers": [
+        {
+          "atLeast": 70,
+          "mult": 1
+        },
+        {
+          "atLeast": 50,
+          "mult": 0.9
+        }
+      ],
+      "floor": 0.78
+    },
+    "pitcherRest": {
+      "_note": "마지막 등판 이후 경과 **주** 수에 따른 배수. 직전 주 등판이면 로테이션 후순위로 밀린다",
+      "weeks2": 1,
+      "weeks1": 0.85,
+      "weeks0": 0.55
+    },
+    "freshnessWeight": 0.3,
+    "_freshnessNote": "선도 점수 = 경과경기 × (감독 bullpenRead − 50) × 이 값. 50보다 크면 쉰 선수를 선호하고 작으면 OVR 위주다",
+    "playThroughOvrMult": {
+      "_note": "부상을 안고 뛸 때의 OVR 배수",
+      "light": 0.88,
+      "moderate": 0.7
+    }
   }
 }

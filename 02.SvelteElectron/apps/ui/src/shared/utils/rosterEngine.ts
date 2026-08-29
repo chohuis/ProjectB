@@ -30,12 +30,61 @@ export function starterOfRotation(rotation: string[], rotIdx: number): string | 
   return rotation[((rotIdx % rotation.length) + rotation.length) % rotation.length];
 }
 
+// ══ 운용 수치 — 정본은 `generation_rules.json`의 `rosterOpsRules`다 ══
+//
+// 🔴 전부 이 파일에 **리터럴로 박혀 있었다**(2026-08-29에 올렸다).
+//   로테이션 인원 · 휴식 경기 · 피로 배수 두 표 · 선도 가중 · 부상 배수.
+//   밸런스 값을 코드에 두면 규칙 파일과 어긋난 걸 아무도 모른다.
+//
+// 🔴 **Rust로 안 내렸다.** 계획엔 "피로 보정이 `npc_sim`에도 있다"고
+//   적었는데 **틀렸다** — Rust엔 같은 보정이 없다. 두 벌이 아니므로
+//   고칠 결함이 없고, 옮기면 IPC가 **+10~28%**(실측 20,000경기) 는다.
+//   **경기마다 도는 자리다.** 숫자만 올리고 조회는 여기 뒀다 —
+//   `academicsEngine`과 같은 갈래다(`docs/ENGINE_OWNERSHIP.md`).
+
+interface FatigueTable { tiers: { atLeast: number; mult: number }[]; floor: number }
+
+/** 규칙 파일을 못 읽었을 때. **0으로 두면 로스터가 통째로 멈춘다** */
+const OPS_FALLBACK = {
+  rotationSize: { LEAGUE_HIGHSCHOOL: 3, LEAGUE_UNIVERSITY: 3, LEAGUE_INDEPENDENT: 4, default: 5 } as Record<string, number>,
+  restGames:    { LEAGUE_HIGHSCHOOL: 2, LEAGUE_UNIVERSITY: 2, LEAGUE_INDEPENDENT: 2, default: 4 } as Record<string, number>,
+  pitcherFatigue: { tiers: [{ atLeast: 70, mult: 1.0 }, { atLeast: 50, mult: 0.9 }, { atLeast: 30, mult: 0.8 }], floor: 0.65 } as FatigueTable,
+  batterFatigue:  { tiers: [{ atLeast: 70, mult: 1.0 }, { atLeast: 50, mult: 0.9 }], floor: 0.78 } as FatigueTable,
+  pitcherRest: { weeks2: 1.0, weeks1: 0.85, weeks0: 0.55 },
+  freshnessWeight: 0.3,
+  playThroughOvrMult: { light: 0.88, moderate: 0.70 } as Record<string, number>,
+};
+let _ops = OPS_FALLBACK;
+
+/**
+ * 규칙 파일을 주입한다. `primeForeignRules`와 같은 방식이고 같은 자리
+ * (`stores/master`)에서 부른다 — 경기 경로가 동기로 읽어야 해서 캐시한다.
+ */
+export function primeRosterOpsRules(rulesFile: {
+  rosterOpsRules?: Partial<typeof OPS_FALLBACK>;
+}): void {
+  const o = rulesFile.rosterOpsRules;
+  if (!o) return;
+  _ops = {
+    rotationSize: { ...OPS_FALLBACK.rotationSize, ...(o.rotationSize ?? {}) },
+    restGames:    { ...OPS_FALLBACK.restGames,    ...(o.restGames ?? {}) },
+    pitcherFatigue: o.pitcherFatigue ?? OPS_FALLBACK.pitcherFatigue,
+    batterFatigue:  o.batterFatigue  ?? OPS_FALLBACK.batterFatigue,
+    pitcherRest:    o.pitcherRest    ?? OPS_FALLBACK.pitcherRest,
+    freshnessWeight: o.freshnessWeight ?? OPS_FALLBACK.freshnessWeight,
+    playThroughOvrMult: { ...OPS_FALLBACK.playThroughOvrMult, ...(o.playThroughOvrMult ?? {}) },
+  };
+}
+
+/** 피로 배수 — 표를 위에서부터 훑는다. 어디에도 안 걸리면 바닥이다 */
+function fatigueMult(t: FatigueTable, fatigue: number): number {
+  for (const tier of t.tiers) if (fatigue >= tier.atLeast) return tier.mult;
+  return t.floor;
+}
+
 // ── 리그별 SP 의무 휴식 경기 수 ────────────────────────────────
 export function rotationRestGames(leagueId: string): number {
-  if (leagueId === "LEAGUE_HIGHSCHOOL")  return 2;
-  if (leagueId === "LEAGUE_UNIVERSITY")  return 2;
-  if (leagueId === "LEAGUE_INDEPENDENT") return 2;
-  return 4;  // 프로 (KBL, ABL, JBL)
+  return _ops.restGames[leagueId] ?? _ops.restGames.default;
 }
 
 // ── 유효 OVR 계산 (피로·휴식·부상 반영) ───────────────────────
@@ -47,17 +96,15 @@ function calcEffectiveOvr(
   if (!condition) return baseOvr;
 
   // fatigue: 100=완전회복, 낮을수록 피로
-  const fatF = condition.fatigue >= 70 ? 1.00
-             : condition.fatigue >= 50 ? 0.90
-             : condition.fatigue >= 30 ? 0.80
-             : 0.65;
+  const fatF = fatigueMult(_ops.pitcherFatigue, condition.fatigue);
 
   // 마지막 등판 이후 경과 주 수
   const weeksRested = condition.lastPitchedWeek > 0
     ? currentWeek - condition.lastPitchedWeek : 99;
-  const restF = weeksRested >= 2 ? 1.00
-              : weeksRested === 1 ? 0.85
-              : 0.55;  // 직전 주 등판 → 로테이션 후순위로 밀림
+  // 직전 주 등판이면 로테이션 후순위로 밀린다
+  const restF = weeksRested >= 2 ? _ops.pitcherRest.weeks2
+              : weeksRested === 1 ? _ops.pitcherRest.weeks1
+              : _ops.pitcherRest.weeks0;
 
   return Math.round(baseOvr * fatF * restF);
 }
@@ -76,26 +123,25 @@ function freshnessBonus(
   const gamesSince = lastAppearanceGameCount !== undefined
     ? teamGameCount - lastAppearanceGameCount
     : 99;  // 한 번도 안 나온 선수 → 가장 신선
-  return gamesSince * (rotationSense - 50) * 0.3;
+  return gamesSince * (rotationSense - 50) * _ops.freshnessWeight;
 }
 
 // 리그(careerStage)별 로테이션 크기
+/** 단계 이름 → 리그 id. 표를 두 벌 두지 않으려는 것이다 */
+const STAGE_LEAGUE: Record<string, string> = {
+  highschool: "LEAGUE_HIGHSCHOOL", university: "LEAGUE_UNIVERSITY",
+  independent: "LEAGUE_INDEPENDENT",
+};
 export function rotationSizeForStage(careerStage: string): number {
-  if (careerStage === "highschool")  return 3;
-  if (careerStage === "university")  return 3;
-  if (careerStage === "independent") return 4;
-  return 5; // pro_kbl, pro_abl, pro_jbl
+  return rotationSizeForLeague(STAGE_LEAGUE[careerStage] ?? "");
 }
 
 // 리그 ID 기반 로테이션 크기 (UI 표시용)
 export function rotationSizeForLeague(leagueId: string): number {
-  if (leagueId === "LEAGUE_HIGHSCHOOL")  return 3;
-  if (leagueId === "LEAGUE_UNIVERSITY")  return 3;
-  if (leagueId === "LEAGUE_INDEPENDENT") return 4;
-  return 5;
+  return _ops.rotationSize[leagueId] ?? _ops.rotationSize.default;
 }
 
-const PLAY_THROUGH_OVR_MULT: Record<string, number> = { light: 0.88, moderate: 0.70 };
+// 부상을 안고 뛸 때의 OVR 배수 — 정본은 규칙 파일이다
 
 // ── 부상 필터링 + OVR 패널티 적용 ─────────────────────────────
 function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, NpcInjuryEntry>): EntityRow[] {
@@ -103,7 +149,7 @@ function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, Npc
     const inj = npcInjuries[e.id];
     if (!inj) return [e];
     if (!inj.isPlayingThrough) return []; // benched
-    const mult = PLAY_THROUGH_OVR_MULT[inj.severity] ?? 1.0;
+    const mult = _ops.playThroughOvrMult[inj.severity] ?? 1.0;
     if (mult === 1.0) return [e];
     const pd = e.details.player as EntityPlayerDetails | undefined;
     if (!pd) return [e];
@@ -443,10 +489,9 @@ export function getTeamLineup(
   const batScore = (e: EntityRow) => {
     const base = playerDetails(e).batting?.ovr ?? 0;
     const cond = conditions?.[e.id];
-    const fatF = !cond ? 1.0
-      : cond.fatigue >= 70 ? 1.00
-      : cond.fatigue >= 50 ? 0.90
-      : 0.78;
+    // ⚠ **투수 표와 다르다.** 타자는 단계가 적고 바닥이 높다(0.78 vs 0.65) —
+    //   피로에 덜 민감하다는 뜻이고 의도로 보여 합치지 않았다
+    const fatF = !cond ? 1.0 : fatigueMult(_ops.batterFatigue, cond.fatigue);
     const effOvr = Math.round(base * fatF);
     return effOvr + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
   };
