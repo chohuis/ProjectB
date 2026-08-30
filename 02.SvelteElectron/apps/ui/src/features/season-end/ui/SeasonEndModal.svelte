@@ -162,7 +162,7 @@
   //
   // 정본은 `usecases/seasonAwards.ts`의 `computeAwards` 하나다.
   $: seasonAwards = awardRules
-    ? computeAwards(awardRules, leagueStatsOf($seasonStore, $seasonStore.leagueId))
+    ? computeAwards(awardRules, leagueStatsOf($seasonStore, $seasonStore.leagueId), $seasonStore.leagueId)
     : [];
 
   // ── 팀 경기 기록 ────────────────────────────────────────────────

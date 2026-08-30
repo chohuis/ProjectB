@@ -1860,7 +1860,13 @@
         "stat": "hd",
         "order": "desc",
         "minIp": 30,
-        "minValue": 5
+        "minValue": 5,
+        "byLeague": {
+          "LEAGUE_HIGHSCHOOL": {
+            "minIp": 10,
+            "minValue": 3
+          }
+        }
       },
       {
         "id": "winPct",
@@ -1879,7 +1885,12 @@
         "stat": "avg",
         "order": "desc",
         "minPa": 200,
-        "minValue": 0.25
+        "minValue": 0.25,
+        "byLeague": {
+          "LEAGUE_HIGHSCHOOL": {
+            "minPa": 130
+          }
+        }
       },
       {
         "id": "hr",
@@ -2052,7 +2063,9 @@
         "stat": "era",
         "order": "asc"
       }
-    }
+    },
+    "_noteHs": "자격선은 리그별로 덮어쓴다(부문의 byLeague). 프로 기준 하나로는 고교가 안 맞는다 — 실측 2026-08-30: minPa 200에 KBL 통과 104~108명인데 고교는 매년 0명이었다. 고교 타격왕만 130으로 내렸다(사용자 확정) — 홈런왕·타점왕과 같은 선이고 그 선에서 통과 70명이다. 120으로 더 내리면 타자 부문이 전부 같은 선이 되어 소표본 1위가 나온다",
+    "_noteHd": "고교 홀드왕은 10이닝·3홀드다(사용자 확정 2026-08-30). 30이닝·5홀드는 프로 기준이라 고교에서 매년 0건이었는데 **엔진 결함이 아니었다** — 홀드는 한 해 704~714개가 실제로 쌓이고 홀드 있는 투수도 441~461명인데, 최다 홀드 투수가 7홀드·10이닝이라 자격선에 걸렸다. 고교 구원전담 평균이 2.8~3.2이닝이라 30이닝은 구조적으로 불가능하다. KBL은 최다 21홀드·49이닝이라 30이 맞다"
   },
   "retirementRules": {
     "_note": "은퇴 판정 정본. 읽는 곳: usecases/retirement.ts(surgeryRetireChance) → weekPhases/injuries(NPC) · advanceWeek(주인공). 예전엔 injuries.ts 안에 표가 박혀 있었고 주인공 경로가 아예 없었다",

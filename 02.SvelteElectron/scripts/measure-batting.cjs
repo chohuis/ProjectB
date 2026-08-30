@@ -107,6 +107,10 @@ const log = (s) => process.stdout.write(s + "\n");
     const aw = app.awardTally();
     log(`  수상선수 ${aw.수상선수}명`);
     log(`  부문별 ${JSON.stringify(aw.부문별)}`);
+    log(`  리그별 ${JSON.stringify(aw.리그별)}`);
+    for (const [lg, t] of Object.entries(aw.리그별부문 ?? {})) {
+      log(`    ${lg} ${JSON.stringify(t)}`);
+    }
     for (const e of aw.표본 ?? []) log(`    ${e}`);
   } catch (e) {
     log("ERR " + ((e && e.stack) || e));

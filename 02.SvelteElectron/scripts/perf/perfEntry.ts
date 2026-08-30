@@ -2279,6 +2279,10 @@ export function awardTally(): Record<string, unknown> {
   const byYear: Record<number, number> = {};
   let players = 0;
   const examples: string[] = [];
+  // ⚠ **리그를 나눠야 고교가 도는지 보인다** — 합산만 찍으면
+  //   프로 수상에 묻혀 0건이어도 안 보인다.
+  const byLeague: Record<string, number> = {};
+  const byLeagueTitle: Record<string, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {
     let has = false;
     for (const h of n.careerHistory ?? []) {
@@ -2286,13 +2290,17 @@ export function awardTally(): Record<string, unknown> {
         const key = t.split(" (")[0];
         byTitle[key] = (byTitle[key] ?? 0) + 1;
         byYear[h.year] = (byYear[h.year] ?? 0) + 1;
+        const lg = h.leagueId || "(없음)";
+        byLeague[lg] = (byLeague[lg] ?? 0) + 1;
+        (byLeagueTitle[lg] ??= {})[key] = (byLeagueTitle[lg][key] ?? 0) + 1;
         has = true;
         if (examples.length < 6) examples.push(`${h.year} ${n.name} ${t}`);
       }
     }
     if (has) players++;
   }
-  return { 수상선수: players, 부문별: byTitle, 연도별: byYear, 표본: examples };
+  return { 수상선수: players, 부문별: byTitle, 연도별: byYear,
+           리그별: byLeague, 리그별부문: byLeagueTitle, 표본: examples };
 }
 
 /** 리그별 가용 슬롯 — 정원 대비 얼마나 차 있는가 */
@@ -3050,6 +3058,49 @@ export async function dbFingerprint(slotId: string): Promise<string> {
  *   통과 1~2명 표본이 얕아 요행이 1위가 된다
  *   1위 값이 minValue/maxValue에 걸리면 그 해 수상자가 없다
  */
+/**
+ * 불펜이 실제로 도는가 — 홀드가 0인 이유를 가른다.
+ *
+ * 🔴 홀드 조건은 **선발도 마무리도 아니고 3아웃 이상**이다
+ *   (npc_sim decide_pitcher). 그러니 구원 등판 자체가 없으면
+ *   자격자가 아무리 많아도 전원 0홀드다.
+ * ⚠ 자격선(minIp)은 통과하는데 값이 0인 부문은 **자격선 문제가 아니다.**
+ */
+export function bullpenUseProbe(leagueId = "LEAGUE_HIGHSCHOOL"): Record<string, unknown> {
+  const st = get(seasonStore).leagueState?.[leagueId]?.stats ?? {};
+  let pitchers = 0, reliefOnly = 0, everRelieved = 0, allStarts = 0;
+  let sumG = 0, sumGs = 0, sumIp = 0;
+  let sumHd = 0, hdAny = 0, maxHd = 0, maxHdIp = 0, reliefIp = 0;
+  for (const r of Object.values(st) as unknown as Array<Record<string, unknown>>) {
+    if (r.type !== "pitcher") continue;
+    const g = Number(r.g ?? 0), gs = Number(r.gs ?? 0);
+    if (g <= 0) continue;
+    pitchers++; sumG += g; sumGs += gs; sumIp += Number(r.ip ?? 0);
+    const hd = Number(r.hd ?? 0);
+    sumHd += hd;
+    if (hd > 0) hdAny++;
+    if (hd > maxHd) { maxHd = hd; maxHdIp = Number(r.ip ?? 0); }
+    if (gs === 0) { reliefOnly++; reliefIp += Number(r.ip ?? 0); }
+    if (g > gs) everRelieved++;
+    if (g === gs) allStarts++;
+  }
+  return {
+    명세: leagueId,
+    투수: pitchers,
+    구원전담: reliefOnly,
+    구원등판있음: everRelieved,
+    전부선발: allStarts,
+    홀드총합: sumHd,
+    홀드있는투수: hdAny,
+    홀드최다: maxHd,
+    홀드최다의이닝: maxHdIp,
+    구원전담평균이닝: reliefOnly ? Math.round((reliefIp / reliefOnly) * 10) / 10 : 0,
+    평균등판: pitchers ? Math.round((sumG / pitchers) * 10) / 10 : 0,
+    평균선발: pitchers ? Math.round((sumGs / pitchers) * 10) / 10 : 0,
+    평균이닝: pitchers ? Math.round((sumIp / pitchers) * 10) / 10 : 0,
+  };
+}
+
 export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Record<string, unknown>> {
   const s = get(seasonStore);
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
@@ -3065,7 +3116,12 @@ export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Reco
   const out: Record<string, unknown> = {};
   const won = new Map<string, number>();
 
-  for (const def of [...rules.pitcher, ...rules.batter] as unknown as Array<Record<string, unknown>>) {
+  for (const rawDef of [...rules.pitcher, ...rules.batter] as unknown as Array<Record<string, unknown>>) {
+    // 🔴 **가장 문서와 같은 규칙을 읽는다** — 계측이 기본값을 보면
+    //   판정은 고교 130으로 도는데 계측만 200으로 재서 **자격자 0명**이
+    //   그대로 찍힌다. 정본이 둘이면 반드시 어긋난다.
+    const ov = (rawDef.byLeague as Record<string, Record<string, unknown>> | undefined)?.[leagueId];
+    const def = ov ? { ...rawDef, ...ov } : rawDef;
     const minIp = def.minIp as number | undefined;
     const minPa = def.minPa as number | undefined;
     const stat  = def.stat as string;

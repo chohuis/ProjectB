@@ -30,6 +30,17 @@ interface AwardDef {
   order: "asc" | "desc";
   minIp?: number;
   minPa?: number;
+  /**
+   * 리그별 덮어쓰기. **안 적은 리그는 위 기본값을 쓴다.**
+   *
+   * 🔴 자격선이 프로에 맞춰져 있어서 **고교 타격왕이 매년 0명**이었다
+   *   (실측 2026-08-30: `minPa` 200에 KBL 104~108명 · 고교 0명).
+   *   고교는 대회가 넉아웃이라 타석이 그만큼 안 쌓인다.
+   * ⚠ 정본을 둘로 쪼개지 않으려고 **부문 안에 얹었다** — `awardRules`를
+   *   리그마다 통째로 두면 한쪽만 고쳐진 채 남는다.
+   */
+  byLeague?: Record<string, { minIp?: number; minPa?: number;
+                              minValue?: number; maxValue?: number }>;
   /** 이 값에 못 미치면 수상 없음 (desc 부문) */
   minValue?: number;
   /** 이 값을 넘으면 수상 없음 (asc 부문 — 방어율) */
@@ -74,11 +85,23 @@ export interface AwardWinner {
   dominance: number;
 }
 
+/**
+ * 그 리그에 맞춘 부문 정의를 만든다.
+ *
+ * ⚠ **얕은 병합이다** — `byLeague` 에 적은 키만 덮고 나머지는 기본값이다.
+ */
+export function defForLeague(def: AwardDef, leagueId: string): AwardDef {
+  const o = def.byLeague?.[leagueId];
+  return o ? { ...def, ...o } : def;
+}
+
 /** 한 부문의 1위 — 자격 미달은 후보에서 뺀다 */
 function winnerOf(
-  def: AwardDef,
+  rawDef: AwardDef,
   stats: Record<string, PlayerSeasonStats>,
+  leagueId: string,
 ): { playerId: string; value: number; second: number | null } | null {
+  const def = defForLeague(rawDef, leagueId);
   let best: { playerId: string; value: number } | null = null;
   let second: number | null = null;
   for (const [playerId, st] of Object.entries(stats)) {
@@ -133,10 +156,20 @@ function fmt(def: AwardDef, v: number): string {
 export function computeAwards(
   rules: AwardRules,
   stats: Record<string, PlayerSeasonStats>,
+  /**
+   * 자격선을 그 리그 것으로 갈아 끼운다(`byLeague`).
+   *
+   * ⚠ **넘기지 않으면 기본값(프로 기준)이다** — 예전과 같게 돈다.
+   *   고교에서 안 넘기면 타격왕이 다시 0명이 된다.
+   */
+  leagueId = "",
 ): AwardWinner[] {
   const out: AwardWinner[] = [];
-  for (const def of [...rules.pitcher, ...rules.batter]) {
-    const w = winnerOf(def, stats);
+  for (const rawDef of [...rules.pitcher, ...rules.batter]) {
+    // ⚠ **`def` 를 여기서 한 번 갈아 끼운다** — 아래 `fmt`·하한 판정이
+    //   원본을 보면 자격선과 표시가 갈린다.
+    const def = defForLeague(rawDef, leagueId);
+    const w = winnerOf(def, stats, leagueId);
     if (!w) continue;
     const valueText = fmt(def, w.value);
     // 방어율은 낮을수록 좋다 — 방향을 맞춰야 부문 간 비교가 된다
@@ -361,7 +394,7 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
     // ⚠ **MVP는 리그별로 뽑는다.** `won`은 전 리그를 한 Map에 담으므로
     // 여기서 리그 안에서만 판정해야 한다 — 리그를 합치면 KBO MVP와 고교
     // MVP가 같은 저울에 올라간다.
-    const winners = computeAwards(rules, stats);
+    const winners = computeAwards(rules, stats, leagueId);
     const inLeague = new Map<string, number>();
     for (const w of winners) {
       const list = won.get(w.playerId) ?? [];
@@ -390,7 +423,7 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
       for (const [pid, st] of Object.entries(stats)) {
         if (isRookie(pid)) rookieStats[pid] = st;
       }
-      const rookieWinners = computeAwards(rules, rookieStats);
+      const rookieWinners = computeAwards(rules, rookieStats, leagueId);
       if (rookieWinners.length > 0) {
         const top = rookieWinners.reduce((a, b) => (b.dominance > a.dominance ? b : a));
         won.get(top.playerId)?.push(rules.rookie.label)
