@@ -155,6 +155,37 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
         if (e.toTeamId === myTeam) inbound.push(n.name);
       }
     }
+    // 원소속 재계약 — **시장에서 못 구해 돌아온 사람들** (A단계 3/6)
+    //
+    // ⚠ `fa_signed` 는 **FA 취득에도 쓰인다.** `detail` 로 갈라야 한다 —
+    //   이벤트 종류만 보면 FA 를 얻은 사람까지 "재계약"으로 센다.
+    // ⚠ 주인공 팀 것만. 실측 미계약자가 한 해 652건이다.
+    {
+      const resigned: string[] = [];
+      for (const n of gW.npcs ?? []) {
+        const evs = (n as { careerEvents?: { eventType?: string; year?: number;
+          toTeamId?: string; detail?: string }[] }).careerEvents ?? [];
+        for (const e of evs) {
+          if (e.eventType !== "fa_signed" || e.year !== now) continue;
+          if (!String(e.detail ?? "").includes("원소속 재계약")) continue;
+          if (e.toTeamId === myTeam) resigned.push(n.name);
+        }
+      }
+      if (resigned.length > 0) {
+        gameStore.addMessage({
+          id: `msg-resign-${now}-${myTeam}`,
+          category: "system",
+          sender: "구단 사무국",
+          subject: `FA 잔류 ${resigned.length}명`,
+          preview: `${resigned[0]}${resigned.length > 1 ? ` 외 ${resigned.length - 1}명` : ""} 잔류`,
+          body: [`■ 시장에서 계약처를 못 찾아 원소속으로 돌아왔다`, "",
+            ...resigned.map((x) => `   ${x}`)].join("\n"),
+          createdAt: `W1`,
+          readAt: null,
+        });
+      }
+    }
+
     if (inbound.length > 0) {
       const lines: string[] = [];
       lines.push(`■ 웨이버 영입 ${inbound.length}명`, ...inbound.map((x) => `   ${x}`));
