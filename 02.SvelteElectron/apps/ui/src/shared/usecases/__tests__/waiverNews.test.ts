@@ -44,7 +44,12 @@ describe("웨이버 소식", () => {
     // 이 검사는 Rust 가 그대로인 한 유효하다 — 바뀌면 여기가 먼저 실패한다.
     expect(rust.includes('event_type: "waiver_claim".into(),\n                from_team_id: None,'),
       "Rust 가 원 소속을 안 넣는다").toBe(true);
-    expect(src.includes("e.fromTeamId === myTeam"),
-      "그걸 세면 죽은 갈래다").toBe(false);
+    // ⚠ **같은 파일의 독립 재도전은 `fromTeamId` 를 정당하게 쓴다** —
+    //   거긴 Rust 가 원 소속을 넣기 때문이다. 파일 전체에서 그 문자열을
+    //   금지하면 그쪽이 걸린다(실측: 이 검사가 그렇게 깨졌다).
+    //   **웨이버 판정 줄 자체**를 본다.
+    expect(src.includes(
+      "else if (e.fromTeamId === myTeam) outbound.push"
+    ), "웨이버에서 나간 쪽을 세면 죽은 갈래다").toBe(false);
   });
 });

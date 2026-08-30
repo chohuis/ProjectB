@@ -158,6 +158,7 @@
   let clubRules: {
     medicalRules?: { recoverySpan?: number; minWeeks?: number };
     campRules?: { conditionBonus?: number; weeks?: number };
+    draftScoutingRules?: { span?: number };
   } = {};
   loadRosterRules().then((r) => { clubRules = r as typeof clubRules; }).catch(() => {});
 
@@ -175,6 +176,20 @@
     if (!b || !profileOf) return null;
     return campConditionBonus(profileOf.farmInvestment, b);
   })();
+  /**
+   * 스카우팅 — 드래프트에서 후보를 얼마나 정확히 보는가.
+   *
+   * ⚠ **폭은 규칙 파일이 정본이다**(`draftScoutingRules.span`). 화면이
+   *   숫자를 지어내면 엔진과 갈린다 — `clubEffects` 와 같은 원칙이다.
+   */
+  $: scoutSpread = (() => {
+    const sp = (clubRules as { draftScoutingRules?: { span?: number } })
+      .draftScoutingRules?.span;
+    if (!sp || !profileOf) return null;
+    // 엔진과 같은 식: ((100 − 품질) / 100) × span
+    return Math.round(((100 - profileOf.scoutingQuality) / 100) * sp * 10) / 10;
+  })();
+
   /** 영구결번 — 이 구단이 비운 번호 */
   $: retiredNums = ($gameStore.retiredNumbers?.[teamId] ?? []);
   /** 외국인 보유 — 한도는 3명이다 */
@@ -541,6 +556,10 @@
                       {#if campBonus !== null}
                         <div><span>전지훈련</span><strong>{qualityGrade(profileOf?.farmInvestment ?? 50)}</strong>
                           <em>시즌 초 컨디션 +{campBonus}</em></div>
+                      {/if}
+                      {#if scoutSpread !== null}
+                        <div><span>스카우팅</span><strong>{qualityGrade(profileOf?.scoutingQuality ?? 50)}</strong>
+                          <em>드래프트 평가 오차 ±{scoutSpread}</em></div>
                       {/if}
                       {#if foreignHeld.length > 0}
                         <div><span>외국인</span><strong>{foreignHeld.length} / 3</strong>

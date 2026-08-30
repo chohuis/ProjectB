@@ -74,13 +74,13 @@ const ROWS = [
   // ── 독립리그 ──────────────────────────────────────────────
   ["독립", "리그 운영", has("LEAGUE_INDEPENDENT"), screen("LeaguePage")],
   ["독립", "프로 재도전 (스카우트)", has("IndieScoutOffer") || has("indieScoutOffer"), false],
-  ["독립", "FA 미계약자 유입", hasRust("fa_fallback"), false],
+  ["독립", "FA 미계약자 유입", hasRust("fa_fallback"), news("msg-indie-retry-")],
 
   // ── 드래프트 ──────────────────────────────────────────────
   ["드래프트", "지명 시뮬", has("runDraftSimulation"), screen("DraftBoardModal")],
   ["드래프트", "지명 통보", has("DraftNotificationModal"), screen("DraftNotificationModal")],
   ["드래프트", "신인 계약금", has("signingBonus"), screen("ContractNegotiationModal")],
-  ["드래프트", "🔴 스카우팅 잡음", has("applyScoutingNoiseNative"), false],
+  ["드래프트", "스카우팅 잡음", has("draftScoutingRules"), has("드래프트 평가 오차")],
   ["드래프트", "2차 드래프트 · 룰5", has("secondaryDraft"), false],
 
   // ── 프로 ──────────────────────────────────────────────────
@@ -120,7 +120,7 @@ const ROWS = [
   // ── FA ────────────────────────────────────────────────────
   ["FA", "FA 자격·등급", has("faRules"), screen("FaMarketModal")],
   ["FA", "제안 생성", has("generateFaOffers"), screen("FaMarketModal")],
-  ["FA", "보상선수·보상금", has("compensation"), false],
+  ["FA", "보상선수·보상금", has("compensation"), news("msg-facomp-")],
   ["FA", "미계약 → 원소속 재계약", hasRust("fa_fallback"), news("msg-resign-")],
 
   // ── 은퇴 ──────────────────────────────────────────────────

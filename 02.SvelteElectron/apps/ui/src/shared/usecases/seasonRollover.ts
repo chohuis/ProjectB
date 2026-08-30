@@ -171,6 +171,38 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
           if (e.toTeamId === myTeam) resigned.push(n.name);
         }
       }
+      // 독립리그 재도전 — **우리 팀을 떠나 독립으로 간 사람** (남은 3건)
+      //
+      // ⚠ `transfer` 는 트레이드·이적에도 쓰인다. `detail` 로 갈라야 한다 —
+      //   재계약(`fa_signed`)과 같은 형태다.
+      // ⚠ 원소속이 우리 팀이었는지는 `fromTeamId` 로 본다 — 웨이버와 달리
+      //   여긴 Rust 가 원 소속을 넣는다(확인함).
+      {
+        const toIndie: string[] = [];
+        for (const n of gW.npcs ?? []) {
+          const evs = (n as { careerEvents?: { eventType?: string; year?: number;
+            fromTeamId?: string; detail?: string }[] }).careerEvents ?? [];
+          for (const e of evs) {
+            if (e.eventType !== "transfer" || e.year !== now) continue;
+            if (!String(e.detail ?? "").includes("독립리그 재도전")) continue;
+            if (e.fromTeamId === myTeam) toIndie.push(n.name);
+          }
+        }
+        if (toIndie.length > 0) {
+          gameStore.addMessage({
+            id: `msg-indie-retry-${now}-${myTeam}`,
+            category: "system",
+            sender: "리그 사무국",
+            subject: `독립리그 재도전 ${toIndie.length}명`,
+            preview: `${toIndie[0]}${toIndie.length > 1 ? ` 외 ${toIndie.length - 1}명` : ""}`,
+            body: ["■ FA 계약처를 못 찾아 독립리그로 갔다", "",
+              ...toIndie.map((x) => `   ${x}`)].join(String.fromCharCode(10)),
+            createdAt: `W1`,
+            readAt: null,
+          });
+        }
+      }
+
       if (resigned.length > 0) {
         gameStore.addMessage({
           id: `msg-resign-${now}-${myTeam}`,

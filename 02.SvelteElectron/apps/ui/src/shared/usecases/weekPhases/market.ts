@@ -1574,6 +1574,41 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
               + (sg.compensationMoney > 0 ? ` | 보상금 ${sg.compensationMoney.toLocaleString()}만` : "");
 
           autoLog(`[FA계약] ${sg.name} | ${stayed ? "잔류" : "이적"} → ${sg.toTeamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "")} | ${detail}`);
+
+          // 보상선수·보상금 소식 — **우리 팀이 주거나 받을 때만.**
+          // ⚠ 리그 전체 FA 계약은 한 해 수십 건이다. 보상이 오간 것만,
+          //   그중에서도 우리 팀이 걸린 것만 보낸다.
+          {
+            const myT = g.protagonist.teamId;
+            const gave = sg.fromTeamId === myT;   // 우리가 내준다
+            const got  = sg.toTeamId === myT;     // 우리가 데려온다
+            const hasComp = !!sg.compensationNpcId || sg.compensationMoney > 0;
+            if (!stayed && hasComp && (gave || got)) {
+              const compName = sg.compensationNpcId
+                ? (m.entities.find((e) => e.id === sg.compensationNpcId)?.name
+                   ?? sg.compensationNpcId)
+                : null;
+              const lines = [
+                `■ ${sg.name} (${sg.grade}등급) ${gave ? "이적" : "영입"}`,
+                "",
+                compName ? `보상선수  ${compName}` : "보상선수  없음(보상금만)",
+                sg.compensationMoney > 0
+                  ? `보상금    ${sg.compensationMoney.toLocaleString()}만원` : "",
+              ].filter(Boolean);
+              gameStore.addMessage({
+                id: `msg-facomp-${s.seasonYear}-${sg.npcId}`,
+                category: "system",
+                sender: "리그 사무국",
+                subject: gave
+                  ? `FA 보상 — ${sg.name} 이적`
+                  : `FA 보상 — ${sg.name} 영입`,
+                preview: compName ? `보상선수 ${compName}` : "보상금 지급",
+                body: lines.join(String.fromCharCode(10)),
+                createdAt: `W${s.currentWeek}`,
+                readAt: null,
+              });
+            }
+          }
           _faSignEntries.push({
             npcId: sg.npcId, name: sg.name,
             fromTeamId: sg.fromTeamId, fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
