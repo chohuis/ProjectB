@@ -3119,6 +3119,33 @@ export function managerStyleProbe(): Record<string, unknown> {
   };
 }
 
+/**
+ * 이번 세션에 넣은 사건들이 실제로 얼마나 나는가 (3단계).
+ *
+ * ⚠ **0이면 죽은 갈래다.** 판정을 넣어도 조건이 안 맞으면 한 번도 안 난다.
+ * ⚠ 실제 KBO 와 견줄 값이다:
+ *   WP 팀당 시즌 30~50 · PB 5~15 · BK 3~8 · 삼중살 0~2
+ */
+export function newEventProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const st = get(seasonStore).leagueState?.[leagueId]?.stats ?? {};
+  let wp = 0, pb = 0, bk = 0, cs = 0, sb = 0;
+  let pitchers = 0, batters = 0;
+  for (const r of Object.values(st) as unknown as Array<Record<string, unknown>>) {
+    if (r.type === "pitcher") {
+      pitchers++;
+      wp += Number(r.wp ?? 0);
+      bk += Number(r.bk ?? 0);
+    } else {
+      batters++;
+      pb += Number(r.pb ?? 0);
+      cs += Number(r.cs ?? 0);
+      sb += Number(r.sb ?? 0);
+    }
+  }
+  return { 리그: leagueId, 투수: pitchers, 타자: batters,
+           폭투: wp, 포일: pb, 보크: bk, 도루: sb, 도루자: cs };
+}
+
 export function bullpenUseProbe(leagueId = "LEAGUE_HIGHSCHOOL"): Record<string, unknown> {
   const st = get(seasonStore).leagueState?.[leagueId]?.stats ?? {};
   let pitchers = 0, reliefOnly = 0, everRelieved = 0, allStarts = 0;

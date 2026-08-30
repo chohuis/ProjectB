@@ -79,6 +79,11 @@ const log = (s) => process.stdout.write(s + "\n");
         for (const [lg, v] of Object.entries(probe)) {
           log(`  ${lg}  ${JSON.stringify(v)}`);
         }
+        // ⚠ **롤오버 앞이어야 한다.** `seasonRollover()` 가 시즌 성적을
+        //   비우므로 뒤에서 세면 전부 0이다(실제로 그렇게 나왔다).
+        for (const lg of ["LEAGUE_KBL", "LEAGUE_HIGHSCHOOL"]) {
+          log(`  신규사건 ${JSON.stringify(app.newEventProbe(lg))}`);
+        }
         await app.seasonRollover();
         continue;
       }

@@ -73,7 +73,26 @@ describe("폭투·포일 배선", () => {
     expect(npc.includes("cs: acc.cs, pb: 0,")).toBe(true);
   });
 
-  it("로그가 두 갈래다 — 책임이 다르니 문구도 다르다", () => {
+  it("🔴 TS 가 합산한다 — 이걸 빠뜨리면 리그 집계가 0이다", () => {
+    // 🔴 **같은 자리에서 세 번째다** — `gs` · 도루자 · 이번.
+    //   엔진은 세는데 `accumulateStats` 가 안 합쳐 실측이 전부 0이었다.
+    const h = read("apps/ui/src/shared/utils/season-helpers.ts");
+    expect(h.includes("const wp  = (prev.wp ?? 0) + (line.wp ?? 0);")).toBe(true);
+    expect(h.includes("const bk  = (prev.bk ?? 0) + (line.bk ?? 0);")).toBe(true);
+    expect(h.includes("const pb  = (prev.pb ?? 0) + (line.pb ?? 0);")).toBe(true);
+    expect(h.includes("hd, ip, er, h, k, bb, wp, bk,")).toBe(true);
+    expect(h.includes("rbi, sb, cs, pb, bb, k,")).toBe(true);
+  });
+
+  it("리그에서 실제로 난다 — 기준선 문서에 적혔다", () => {
+    // KBL 한 시즌: 폭투 108 · 포일 48 · 보크 87 (2026-08-30 실측)
+    const doc = read("docs/BALANCE_BASELINE_2026-08-30.md");
+    expect(doc.includes("| 폭투 WP | 108 |")).toBe(true);
+    expect(doc.includes("| 포일 PB | 48 |")).toBe(true);
+    expect(doc.includes("| 보크 BK | 87 |")).toBe(true);
+  });
+
+  it("로그가 두 갈래다 — 책임이 다alue르니 문구도 다르다", () => {
     expect(me.includes('                "폭투! 주자가 진루한다".to_string()')).toBe(true);
     expect(me.includes('                "포일! 포수가 공을 빠뜨렸다".to_string()')).toBe(true);
   });

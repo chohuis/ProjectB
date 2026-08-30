@@ -45,7 +45,8 @@ describe("도루자 배선", () => {
 
   it("🔴 ⑤ TS가 합산한다 — 이걸 빠뜨려 처음 실측이 0건이었다", () => {
     expect(helpers.includes("const cs  = (prev.cs ?? 0) + (line.cs ?? 0);")).toBe(true);
-    expect(helpers.includes("type:\"batter\", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, bb, k,")).toBe(true);
+    // ⚠ 3단계에서 포일(pb)을 같은 줄에 더했다 — 순서가 바뀌었다
+    expect(helpers.includes("type:\"batter\", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,")).toBe(true);
   });
 
   it("구 세이브 호환 — 없으면 0이다", () => {

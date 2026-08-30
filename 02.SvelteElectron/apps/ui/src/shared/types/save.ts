@@ -392,6 +392,8 @@ export interface PitcherSeasonStats {
   l: number;      // 패
   sv: number;     // 세이브
   hd: number;     // 홀드
+  wp?: number;    // 폭투 — 투수 책임. ⚠ 구 세이브엔 없다
+  bk?: number;    // 보크 — 투수 책임. ⚠ 구 세이브엔 없다
   /**
    * 승률 — **파생값이다**(`w / (w + l)`). 무승부는 분모에서 뺀다(야구 규칙).
    *
@@ -476,6 +478,7 @@ export interface BatterSeasonStats {
   rbi: number;    // 타점
   sb: number;     // 도루
   cs?: number;    // 도루자 — 성공률의 분모다. ⚠ 구 세이브엔 없다
+  pb?: number;    // 포일 — **포수 책임**. 타자 줄에 실리지만 그 이닝 포수 것이다
   bb: number;  // 볼넷
   k: number;  // 삼진
   avg: number;  // 타율 (계산값: h/ab)

@@ -217,11 +217,15 @@ export function accumulateStats(
       const l   = prev.l   + (line.decision === "L"  ? 1 : 0);
       const sv  = prev.sv  + (line.decision === "SV" ? 1 : 0);
       const hd  = prev.hd  + (line.decision === "HD" ? 1 : 0);
+      // 🔴 **엔진이 세는데 여기서 합산을 안 해 리그 폭투·보크가 0이었다** —
+      //   `gs` · 도루자에 이어 **같은 자리에서 세 번째**다.
+      const wp  = (prev.wp ?? 0) + (line.wp ?? 0);
+      const bk  = (prev.bk ?? 0) + (line.bk ?? 0);
       next[line.playerId] = {
         // 🔴 `gs: prev.gs`였다 — **올리는 코드가 아무 데도 없어** 전원 0이었다.
         //   화면 넷이 이걸 표시한다(PlayerDetailModal · CareerEndScreen ·
         //   SeasonEndModal · LeaguePage). 엔진이 `gs`를 보낸다
-        type:"pitcher", g: prev.g+1, gs: prev.gs + (line.gs ? 1 : 0), w, l, sv, hd, ip, er, h, k, bb,
+        type:"pitcher", g: prev.g+1, gs: prev.gs + (line.gs ? 1 : 0), w, l, sv, hd, ip, er, h, k, bb, wp, bk,
         ...(hr !== undefined ? { hr } : {}),
         ...(pHbp !== undefined ? { hbp: pHbp } : {}),
         era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
@@ -232,7 +236,7 @@ export function accumulateStats(
       };
     } else {
       const prev = (next[line.playerId] as BatterSeasonStats | undefined) ?? {
-        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
+        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0, pb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
       };
       const ab  = prev.ab  + (line.ab  ?? 0);
       const h   = prev.h   + (line.h   ?? 0);
@@ -258,6 +262,8 @@ export function accumulateStats(
       const sb  = prev.sb  + (line.sb  ?? 0);
       // 🔴 **엔진이 세는데 여기서 합산을 안 해서 리그 도루자가 0이었다**
       const cs  = (prev.cs ?? 0) + (line.cs ?? 0);
+      // ⚠ **포일은 포수 것이다.** 타자 줄에 실려 오지만 그 이닝 포수의 기록이다.
+      const pb  = (prev.pb ?? 0) + (line.pb ?? 0);
       // ⚠ **타석은 누적하지 않고 파생한다.**
       //
       // 예전엔 `prev.pa + ab + bb`였는데 `ab`·`bb`가 **이미 누적 합계**라
@@ -309,7 +315,7 @@ export function accumulateStats(
       const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       next[line.playerId] = {
-        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, bb, k,
+        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,
         ...(b2 !== undefined ? { b2 } : {}),
         ...(b3 !== undefined ? { b3 } : {}),
         ...(r  !== undefined ? { r }  : {}),

@@ -19,6 +19,10 @@ export interface PitcherGameLine {
   /** **선발 등판인가.** 화면 넷이 GS(선발)를 표시하는데 올리는 코드가
    *  없어서 전원 0이었다 (2026-08-28). ⚠ 구 세이브 로그엔 없다 */
   gs?: boolean;
+  /** 폭투 — 투수 책임(WP). ⚠ 구 세이브 로그엔 없다 */
+  wp?: number;
+  /** 보크 — 투수 책임(BK). ⚠ 구 세이브 로그엔 없다 */
+  bk?: number;
   /**
    * 구종별 성적 — 무슨 공을 몇 개 던져 삼진·안타가 얼마였나.
    *
@@ -67,6 +71,8 @@ export interface BatterGameLine {
   sb: number;
   /** 도루자 — `sb` 와 짝이다. ⚠ 구 세이브엔 없다 */
   cs?: number;
+  /** 포일 — **포수 책임**(PB). 타자 줄에 실리지만 그 이닝 포수 것이다 */
+  pb?: number;
   /** 득점권 타수·안타 — 투수 쪽과 짝이다 */
   rispAb?: number;
   rispH?: number;
