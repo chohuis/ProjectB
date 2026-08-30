@@ -23,7 +23,7 @@ export type PitchResultCode =
   | "WALK"
   // 사구·희생번트·희생플라이 (2026-08-28). **셋 다 타수가 아니다** —
   // 기록에서 볼넷·아웃과 다르게 잡힌다
-  | "HIT_BY_PITCH" | "SAC_BUNT" | "SAC_FLY"
+  | "HIT_BY_PITCH" | "INTERFERENCE" | "SAC_BUNT" | "SAC_FLY"
   | "GAME_OVER";
 
 export type BallHitType = "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt";
@@ -90,7 +90,7 @@ const FLASH_LABEL: Record<PitchResultCode, string> = {
   INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
   LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살!", TRIPLE_PLAY: "삼중살!!",
   FIELDING_ERROR: "실책", WALK: "볼넷",
-  HIT_BY_PITCH: "몸에 맞는 공", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이",
+  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이",
   HIT_SINGLE: "안타", HIT_DOUBLE: "2루타", HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
   GAME_OVER: "경기 종료",
 };

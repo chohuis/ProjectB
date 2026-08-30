@@ -111,6 +111,12 @@ pub enum PitchResultCode {
     /// 사구 — **볼넷과 다른 사건이다.** 타수가 아니고, 출루율 분모에 들어가며,
     /// 투수 기록에도 따로 남는다(KBO 투수 표의 HBP).
     #[serde(rename = "HIT_BY_PITCH")]   HitByPitch,
+    /// 수비 방해 — 포수가 타자 스윙을 방해했다. 타자가 1루로 간다.
+    ///
+    /// ⚠ **타수가 아니다**(볼넷과 같은 취급). 결과 코드가 따로 있어야
+    ///   타율 분모가 안 부푼다.
+    /// ⚠ 주루 방해와 **다른 사건**이다 — 저쪽은 야수가 주자를 막는다.
+    #[serde(rename = "INTERFERENCE")]   Interference,
     /// 희생번트 — 타수가 아니다. `bunting` 능력치가 성공을 가른다.
     /// 🔴 그 능력치는 성장 엔진에 **있는데 경기에서 안 쓰이고 있었다.**
     #[serde(rename = "SAC_BUNT")]       SacBunt,

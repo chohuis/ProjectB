@@ -290,6 +290,18 @@ pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
     (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
 }
 
+/// 수비 방해 — 포수가 타자 스윙을 방해했다.
+///
+/// ⚠ 실제 KBO 는 팀당 시즌 1~3건이다. **타석 모수가 크니** 아주 낮다.
+/// ⚠ 포수 수비가 나쁠수록 잦다.
+pub const INTERFERENCE_PROB: f64 = 0.0004;
+
+/// 주루 방해 — 야수가 주자를 막았다. 한 베이스 준다.
+///
+/// ⚠ **수비 방해와 다른 사건**이다 — 이건 주자 쪽이고 타석과 무관하다.
+/// ⚠ 인플레이 타구가 있어야 성립한다.
+pub const OBSTRUCTION_PROB: f64 = 0.0025;
+
 /// 낫아웃 — 삼진인데 포수가 놓쳐 타자가 1루로 뛴다.
 ///
 /// ⚠ **1루가 비었거나 2아웃일 때만** 성립한다(실제 야구 규칙).

@@ -1342,6 +1342,7 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
         PitchResultCode::FieldingError=> "실책",
         PitchResultCode::Walk         => "볼넷",
         PitchResultCode::HitByPitch   => "몸에 맞는 공",
+        PitchResultCode::Interference => "수비 방해",
         PitchResultCode::SacBunt      => "희생번트",
         PitchResultCode::SqueezeBunt  => "스퀴즈",
         PitchResultCode::SacFly       => "희생플라이",
@@ -1385,6 +1386,7 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
         PitchResultCode::FieldingError => "FIELDING_ERROR",
         PitchResultCode::Walk => "WALK",
         PitchResultCode::HitByPitch => "HIT_BY_PITCH",
+        PitchResultCode::Interference => "INTERFERENCE",
         PitchResultCode::SacBunt => "SAC_BUNT", PitchResultCode::SqueezeBunt => "SQUEEZE",
         PitchResultCode::SacFly => "SAC_FLY",
         PitchResultCode::HitSingle => "HIT_SINGLE",
@@ -1932,6 +1934,22 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let ball_in_play = resolve_ball_in_play(result_code, decision, quality,
                                             current_batter.power, rng);
 
+    // 🔴 **수비 방해** (6단계). 포수가 타자 스윙을 방해했다.
+    //
+    // ⚠ 스윙했을 때만이다 — 안 휘두르면 방해할 게 없다.
+    // ⚠ **타수가 아니다**(볼넷과 같은 취급). 그래서 결과 코드가 따로 있다.
+    // ⚠ 포수 수비가 나쁠수록 잦다. 실제 KBO 는 팀당 시즌 1~3건이다.
+    if swings {
+        let cb = pre_state.fielders.iter()
+            .find(|f| f.position == crate::types::FieldPosition::C)
+            .map(|f| f.fielding)
+            .unwrap_or(T::CATCHER_BLOCK_PIVOT);
+        let blk = (1.0 - (cb - T::CATCHER_BLOCK_PIVOT) / 50.0).clamp(0.2, 1.8);
+        if rng.gen::<f64>() < T::INTERFERENCE_PROB * blk {
+            result_code = PitchResultCode::Interference;
+        }
+    }
+
     // 🔴 **수비 시프트** (5단계). 당겨치는 타자에게 수비를 기울인다.
     //
     // ⚠ **방향이 정해진 뒤**에 건다 — `resolve_contact` 는 안타/아웃만
@@ -2184,6 +2202,26 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         scored_ids.extend(loose_scored.iter().cloned());
     }
 
+    // 🔴 **주루 방해** (6단계). 야수가 주자를 막아 한 베이스를 준다.
+    //
+    // ⚠ **수비 방해와 다른 사건**이다 — 저쪽은 타석이고 이건 주자다.
+    // ⚠ 인플레이 타구가 있어야 성립한다. 주자가 뛰는 상황이라야 막힌다.
+    // ⚠ 결과 코드를 안 바꾼다 — 타격 결과는 그대로고 주자만 더 간다.
+    if ball_in_play.is_some() && rng.gen::<f64>() < T::OBSTRUCTION_PROB {
+        // 뒤에서부터 민다 — 앞에서 밀면 덮어쓴다
+        if let Some(r3) = next_runners.third.take() {
+            if let Some(id) = r3.player_id.clone() { scored_ids.push(id); }
+            add_runs(1, &mut next_score, &mut next_inning_scores, next_half, next_inning);
+            running_logs.push("주루 방해 — 3루 주자가 홈으로".to_string());
+        } else if next_runners.second.is_some() {
+            next_runners.third = next_runners.second.take();
+            running_logs.push("주루 방해 — 주자가 한 베이스 더".to_string());
+        } else if next_runners.first.is_some() {
+            next_runners.second = next_runners.first.take();
+            running_logs.push("주루 방해 — 주자가 한 베이스 더".to_string());
+        }
+    }
+
     // 🔴 **보크 득점을 여기서 반영한다.** 위에서 판정만 하고 점수를
     //   안 올리면 **3루 주자가 사라지기만 한다** — 죽은 갈래다.
     if balk_runs > 0 {
@@ -2233,6 +2271,16 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             if b3.is_none() { b3 = b2.take(); }
             if b2.is_none() { b2 = b1.take(); }
             next_runners = MatchRunners { first: b1, second: b2, third: b3 };
+        }
+        // 🔴 **수비 방해** — 볼넷과 같은 진루다. 밀어내기까지 같다.
+        //   ⚠ **타수가 아니다** — 아래 타수 집계에서 빠져 있어야 한다.
+        PitchResultCode::Interference => {
+            next_count = MatchCount { balls: 0, strikes: 0 };
+            let new_runner = create_runner(&current_batter);
+            let (wr, wr_runs) = advance_on_walk(next_runners, new_runner, &mut scored_ids);
+            next_runners = wr;
+            add_runs(wr_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
+            running_logs.push("수비 방해 — 타자가 1루로".to_string());
         }
         PitchResultCode::HitByPitch => {
             // 볼넷과 **같은 진루**다 — 밀어내기까지 같다. 기록만 다르다
@@ -3595,5 +3643,41 @@ mod 낫아웃_태그업 {
         //   목표의 6분의 1"이라 적혀 있다. 뜬공 아웃 + 2아웃 전 + 2루 주자 +
         //   3루 빔이 다 겹쳐야 이 갈래에 온다.
         assert!(T::TAG_UP_SECOND_PROB < 0.85, "뜬공마다 진루하면 안 된다");
+    }
+}
+
+#[cfg(test)]
+mod 방해 {
+    use super::*;
+
+    /// ⚠ **둘은 다른 사건이다.** 수비 방해는 타석이고 주루 방해는 주자다.
+    #[test]
+    fn 둘이_다른_확률이다() {
+        assert!(T::INTERFERENCE_PROB > 0.0, "수비 방해가 0이면 죽은 갈래다");
+        assert!(T::OBSTRUCTION_PROB > 0.0, "주루 방해가 0이면 죽은 갈래다");
+        // 주루 방해는 인플레이 타구에만 걸려 모수가 작다 — 확률이 더 높다
+        assert!(T::OBSTRUCTION_PROB > T::INTERFERENCE_PROB,
+            "모수가 작은 쪽이 확률이 높아야 비슷한 건수가 된다");
+    }
+
+    /// 🔴 **타석 모수가 크다.** 실제 KBO 는 팀당 시즌 1~3건이라
+    ///   확률이 아주 낮아야 한다 — 낫아웃·시프트에서 겪은 형태다.
+    #[test]
+    fn 아주_드물다() {
+        assert!(T::INTERFERENCE_PROB < 0.002,
+            "타석마다 {} 면 시즌 수십 건이 된다", T::INTERFERENCE_PROB);
+        assert!(T::OBSTRUCTION_PROB < 0.01,
+            "인플레이마다 {} 면 너무 잦다", T::OBSTRUCTION_PROB);
+    }
+
+    /// ⚠ 수비 방해는 **타수가 아니다** — 타율 분모에 안 들어간다
+    #[test]
+    fn 수비방해는_타수가_아니다() {
+        let src = include_str!("match_engine.rs");
+        // 타수를 올리는 목록에 `Interference` 가 없어야 한다
+        let ab_line = src.lines()
+            .find(|l| l.contains("HitSingle => { b.ab += 1;"))
+            .unwrap_or("");
+        assert!(!ab_line.contains("Interference"), "타수 목록에 들어갔다");
     }
 }
