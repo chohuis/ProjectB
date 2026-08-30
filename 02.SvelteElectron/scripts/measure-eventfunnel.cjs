@@ -5,7 +5,7 @@
 //   node scripts/measure-eventfunnel.cjs --seasons 6 --seed 20260803
 //
 // `docs/BACKLOG.md` 1-A2가 "이야기 이벤트 87%가 사라진다"고 적었는데, 그 87%는
-// **소식함 상한(200)에 밀려난 비율**이다. 그 앞에 깔때기가 하나 더 있다:
+// **소식함 상한(MAX_MAILBOX)에 밀려난 비율**이다. 그 앞에 깔때기가 하나 더 있다:
 //
 //   ① 조건 통과      evaluateConditions
 //   ② 정책 통과      oncePolicy · cooldown

@@ -2225,6 +2225,9 @@
   }
 
   .field-stage-wrap {
+    /* 구장이 칸 높이를 다 쓴다 — `start` 면 높이가 내용 기준이라
+       `.viewport` 의 `100%` 가 풀린다(2026-08-30 계측) */
+    align-items: stretch;
     display: grid;
     min-height: 0;
     height: 100%;
