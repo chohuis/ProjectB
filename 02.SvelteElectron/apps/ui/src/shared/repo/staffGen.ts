@@ -58,11 +58,26 @@ export async function loadStaffRules(): Promise<StaffRulesFile> {
 }
 
 /** 국내 리그만. 해외는 진출 시 Lazy 생성 (people.md §2-1) */
+/**
+ * 스태프를 만드는 리그.
+ *
+ * 🔴 **예전엔 넷뿐이라 56팀에 감독이 없었다**(실측 2026-08-30) —
+ *   ABL·JBL·2군 전부·상무. 그 팀들은 경기에서 감독이 늘 기본값 50이라
+ *   타순도 작전도 전 구단이 똑같았다.
+ *
+ * ⚠ **이름이 `DOMESTIC`인데 해외도 들어간다.** 예전 뜻(국내)이 아니라
+ *   "스태프를 만드는 리그"다 — 이름은 호출부가 여럿이라 그대로 둔다.
+ */
 export const DOMESTIC_STAFF_LEAGUES = [
   "LEAGUE_HIGHSCHOOL",
   "LEAGUE_UNIVERSITY",
   "LEAGUE_INDEPENDENT",
   "LEAGUE_KBL",
+  "LEAGUE_KBL_FARM",
+  "LEAGUE_ABL",
+  "LEAGUE_JBL",
+  "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL_FARM",
 ];
 
 /**

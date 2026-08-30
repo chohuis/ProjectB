@@ -1,3 +1,5 @@
+import { managerProfileOf } from "./staffEffects";
+import { managerEffect } from "./managerStyle";
 import { seedFrom } from "./hash";
 import { toEngineArsenal } from "./arsenal";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
@@ -249,7 +251,19 @@ export async function simulateGame(
   }).filter(Boolean) as SimPitcher[];
   const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap, npcLiveStats)).filter(Boolean)  as SimBatter[];
 
+  // 감독 — **두 팀 다 넣는다.** 한쪽만 넣으면 그쪽 작전만 바뀐다.
+  const hMgrP = managerProfileOf(homeTeamId, entities);
+  const aMgrP = managerProfileOf(awayTeamId, entities);
+  const hEff = managerEffect(hMgrP);
+  const aEff = managerEffect(aMgrP);
+  const mgrPayload = (pr: ReturnType<typeof managerProfileOf>,
+                      ef: ReturnType<typeof managerEffect>) => pr ? {
+    tacticalIQ: pr.tacticalIQ, offenseMind: pr.offenseMind,
+    buntMult: ef.buntMult, stealMult: ef.stealMult,
+  } : undefined;
   const params = {
+    homeManager: mgrPayload(hMgrP, hEff),
+    awayManager: mgrPayload(aMgrP, aEff),
     homeRotation: toSimPitchers(homeRoster.rotation),
     awayRotation: toSimPitchers(awayRoster.rotation),
     homeBullpen:  toSimPitchers(homeRoster.bullpen),
@@ -512,6 +526,13 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     // 🔴 **원정 수비가 없었다** (2026-08-29). 안 넘기면 홈 9명이 **양 팀 이닝을
     //   다 지킨다** — 수비 기록이 홈 선수에게 몰리고 원정 타자는 홈 수비를 만난다
     opponentFielders: buildFieldersFromLineup(params.awayLineup, awayStarter),
+    // 🔴 **리그 경기도 감독을 넘긴다.** 안 넘기면 리그 전 경기가 양쪽 다
+    //   기본값 50으로 돌아, 감독이 있어도 번트·도루가 전 구단 똑같았다.
+    // ⚠ 위 `fielders` 주석과 같은 함정이다 — 주인공 경기만 넘기면
+    //   **같은 엔진인데 두 저울**이 된다.
+    // ⚠ 여기선 홈이 `protagonistSide: "home"` 이라 홈이 `myManager` 다.
+    ...(params.homeManager ? { myManager: params.homeManager } : {}),
+    ...(params.awayManager ? { opponentManager: params.awayManager } : {}),
   }));
   const st = JSON.parse(startRaw);
   if (st.error) throw new Error(`[C-4] startMatch: ${st.error}`);

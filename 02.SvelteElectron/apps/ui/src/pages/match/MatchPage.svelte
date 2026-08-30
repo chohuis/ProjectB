@@ -785,6 +785,18 @@
         ? { ...myManagerEntity.details.manager.stats,
             buntMult: myMgrEff.buntMult, stealMult: myMgrEff.stealMult }
         : undefined;
+      // 상대 팀 감독 — 같은 방식으로 뽑는다
+      const oppTeamId = ctx
+        ? (ctx.protagonistTeamId === ctx.homeTeamId ? ctx.awayTeamId : ctx.homeTeamId)
+        : "";
+      const oppManagerEntity = get(masterStore).entities.find(
+        (e) => e.role === "manager" && e.teamId === oppTeamId
+      );
+      const oppMgrEff = managerEffect(managerProfileOf(oppTeamId, get(masterStore).entities));
+      const oppManagerStats = oppManagerEntity?.details.manager
+        ? { ...oppManagerEntity.details.manager.stats,
+            buntMult: oppMgrEff.buntMult, stealMult: oppMgrEff.stealMult }
+        : undefined;
       const response = await window.projectB.matchStart({
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
         leagueId: $gameStore.protagonist.leagueId,
@@ -802,6 +814,10 @@
         ...(opponentPitcherStats ? { opponentPitcher: opponentPitcherStats } : {}),
         ...(myNpcStarterStats ? { npcStarterPitcher: myNpcStarterStats } : {}),
         ...(myManagerStats ? { myManager: myManagerStats } : {}),
+        // 🔴 **상대 감독도 넘긴다.** `opponent_manager` 는 Rust 에 자리가
+        //   있는데 TS 가 한 번도 안 넘겨서 늘 기본값 50이었다 —
+        //   상대 팀은 감독이 누구든 똑같이 번트를 대고 도루를 걸었다.
+        ...(oppManagerStats ? { opponentManager: oppManagerStats } : {}),
       });
       engineAvailable = true;
       engineStarted = true;

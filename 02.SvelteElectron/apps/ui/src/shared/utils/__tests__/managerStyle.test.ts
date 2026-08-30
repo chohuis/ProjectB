@@ -142,8 +142,9 @@ describe("경기 엔진 배선", () => {
   });
 
   it("번트·도루에 실제로 곱한다", () => {
-    // 받기만 하고 안 쓰면 죽은 갈래다
-    expect(rust.includes("else { state.my_manager.bunt_mult.clamp(0.0, 3.0) }")).toBe(true);
+    // 받기만 하고 안 쓰면 죽은 갈래다.
+    // ⚠ 지금은 양 팀 다 건다 — "상대 감독" 묶음이 그걸 따로 본다.
+    expect(rust.includes("* batting_manager(&pre_state).bunt_mult.clamp(0.0, 3.0)")).toBe(true);
     expect(rust.includes("if rng.gen::<f64>() < attempt_prob * steal_mult {")).toBe(true);
   });
 
@@ -152,8 +153,64 @@ describe("경기 엔진 배선", () => {
     expect(page.includes("buntMult: myMgrEff.buntMult, stealMult: myMgrEff.stealMult")).toBe(true);
   });
 
-  it("우리 팀 공격일 때만 건다", () => {
-    // 상대 감독은 이 모델에 없다
-    expect(rust.includes("let steal_mult = if is_our_batting {")).toBe(true);
+  it("🔴 공격하는 쪽 감독이 정한다 — 양 팀 다", () => {
+    // 예전엔 우리가 공격할 때만 걸렸고 상대 공격은 늘 기본값이었다
+    expect(rust.includes("let steal_mult = bm.steal_mult.clamp(0.0, 3.0);")).toBe(true);
+    expect(rust.includes("let steal_mult = if is_our_batting {")).toBe(false);
+  });
+});
+
+describe("상대 감독", () => {
+  const rust = read("packages/engine-native/src/match_engine.rs");
+  const page = read("apps/ui/src/pages/match/MatchPage.svelte");
+  const sim = read("apps/ui/src/shared/utils/gameSimulator.ts");
+  const staff = read("apps/ui/src/shared/repo/staffGen.ts");
+
+  it("🔴 공격·수비 감독을 나눠 본다", () => {
+    // 한 함수로 뭉치면 우리가 수비할 때 우리 감독이 상대 도루를 정한다
+    expect(rust.includes("fn batting_manager(state: &MatchState) -> &ManagerStats {")).toBe(true);
+    expect(rust.includes("fn fielding_manager(state: &MatchState) -> &ManagerStats {")).toBe(true);
+  });
+
+  it("공격 쪽은 수비 쪽의 반대다", () => {
+    expect(rust.includes(
+      "if is_our_team_fielding(state) { &state.opponent_manager } else { &state.my_manager }"
+    )).toBe(true);
+  });
+
+  it("번트·도루가 공격 쪽 감독을 쓴다", () => {
+    expect(rust.includes("let bm = batting_manager(state);")).toBe(true);
+    expect(rust.includes("* batting_manager(&pre_state).bunt_mult.clamp(0.0, 3.0)")).toBe(true);
+  });
+
+  it("🔴 주인공 경기가 상대 감독을 넘긴다", () => {
+    // Rust에 자리가 있어도 TS가 안 넘기면 **기본값 50**이다
+    expect(page.includes("opponentManager: oppManagerStats")).toBe(true);
+  });
+
+  it("🔴 리그 경기도 넘긴다 — 안 그러면 두 저울이 된다", () => {
+    // 이 파일 주석이 이미 같은 함정을 적어 뒀다(수비 미전달)
+    expect(sim.includes("myManager: params.homeManager")).toBe(true);
+    expect(sim.includes("opponentManager: params.awayManager")).toBe(true);
+  });
+
+  it("🔴 감독 없던 리그 다섯에 감독을 만든다", () => {
+    // 실측: 감독 있는 팀 182 · 없는 팀 56 (ABL·JBL·2군 전부)
+    for (const lg of ["LEAGUE_ABL", "LEAGUE_JBL",
+                      "LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]) {
+      expect(staff.includes(`"${lg}"`), `${lg} 가 빠졌다`).toBe(true);
+    }
+  });
+
+  it("감독 기량이 기존 리그 순서를 따른다", () => {
+    // 지어낸 값이 아니라 OVR 상한·연봉 배수와 같은 순서다
+    const lb = JSON.parse(read("resource/data/master/players/staff_rules.json"))
+      .rules.league_bonus as Record<string, number>;
+    expect(lb.LEAGUE_ABL).toBeGreaterThan(lb.LEAGUE_JBL);
+    expect(lb.LEAGUE_JBL).toBeGreaterThan(lb.LEAGUE_KBL);
+    expect(lb.LEAGUE_KBL).toBeGreaterThan(lb.LEAGUE_ABL_FARM);
+    expect(lb.LEAGUE_ABL_FARM).toBeGreaterThan(lb.LEAGUE_JBL_FARM);
+    expect(lb.LEAGUE_JBL_FARM).toBeGreaterThan(lb.LEAGUE_KBL_FARM);
+    expect(lb.LEAGUE_KBL_FARM).toBeGreaterThan(lb.LEAGUE_INDEPENDENT);
   });
 });

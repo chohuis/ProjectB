@@ -477,6 +477,23 @@ fn switch_pitcher_if_needed(state: &mut MatchState, my_side: bool) {
     state.logs.push(format!("[{}회] 투수 교체 — {}", state.inning, name));
 }
 
+/// 지금 **수비하는 팀**의 감독 — 투수 교체를 정한다.
+///
+/// 🔴 예전엔 늘 `my_manager` 였다. `opponent_manager` 는 만들어져서
+///   상태에 실리는데 **아무도 안 읽었다** — 완성된 죽은 갈래였고,
+///   그래서 상대 팀은 감독이 누구든 똑같이 투수를 바꿨다.
+fn fielding_manager(state: &MatchState) -> &ManagerStats {
+    if is_our_team_fielding(state) { &state.my_manager } else { &state.opponent_manager }
+}
+
+/// 지금 **공격하는 팀**의 감독 — 번트·도루를 정한다.
+///
+/// ⚠ 수비 쪽과 **반대다.** 한 함수로 뭉치면 우리가 수비할 때 우리
+///   감독이 상대 도루를 정하게 된다.
+fn batting_manager(state: &MatchState) -> &ManagerStats {
+    if is_our_team_fielding(state) { &state.opponent_manager } else { &state.my_manager }
+}
+
 fn get_active_pitcher(state: &MatchState) -> &PitcherStats {
     if !is_our_team_fielding(state) { return &state.opponent_npc_pitcher; }
     if state.protagonist_has_entered && !state.protagonist_exited { return &state.protagonist_pitcher; }
@@ -993,16 +1010,12 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     let mut outs = state.outs;
     let mut steal_logs: Vec<String> = vec![];
 
-    let is_our_batting = !is_our_team_fielding(state);
-    let manager_boost = if is_our_batting {
-        (state.my_manager.offense_mind - 50.0) * T::OFFENSE_STEAL_MODIFIER
-    } else { 0.0 };
-    // 🔴 **스타일이 도루 시도 자체를 바꾼다.** `offense_mind` 는 이미
-    //   성공 쪽에 얹혀 있었지만, 감독이 **걸지 말지**는 못 정했다.
+    // 🔴 **양 팀 감독이 각자 작전을 낸다.** 예전엔 우리가 공격할 때만
+    //   감독이 걸렸고, 상대 공격은 늘 기본값이었다.
+    let bm = batting_manager(state);
+    let manager_boost = (bm.offense_mind - 50.0) * T::OFFENSE_STEAL_MODIFIER;
     // ⚠ 1.0이면 예전 동작이다.
-    let steal_mult = if is_our_batting {
-        state.my_manager.steal_mult.clamp(0.0, 3.0)
-    } else { 1.0 };
+    let steal_mult = bm.steal_mult.clamp(0.0, 3.0);
     // ⚠ 계수를 여기 적지 않는다 — **`npc_sim`이 같은 규칙을 쓴다.**
     // 두 벌로 두면 주인공 기록과 리그 기록이 다른 척도가 된다
     // (실제로 도루가 이쪽에만 있어서 리그 도루가 0이었다).
@@ -1682,11 +1695,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         && pre_state.count.strikes < 2
         && (pre_state.runners.first.is_some() || pre_state.runners.second.is_some())
         && (pre_state.score.home - pre_state.score.away).abs() <= 3
-        // ⚠ **감독 배수는 우리 팀 공격일 때만 건다** — 상대 감독은 여기
-        //   모델에 없다. 1.0이면 예전과 똑같이 돈다.
+        // ⚠ **지금 공격하는 팀 감독**이 정한다 — 양 팀 다 건다.
+        //   1.0이면 예전과 똑같이 돈다.
         && rng.gen::<f64>() < T::SAC_BUNT_ATTEMPT_PROB
-            * if is_our_team_fielding(&pre_state) { 1.0 }
-              else { state.my_manager.bunt_mult.clamp(0.0, 3.0) }
+            * batting_manager(&pre_state).bunt_mult.clamp(0.0, 3.0)
     {
         let bunt = current_batter.bunting.unwrap_or(50.0);
         let ok = T::SAC_BUNT_SUCCESS_BASE + (bunt - 50.0) * 0.005;
