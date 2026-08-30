@@ -1593,6 +1593,31 @@ export function rosterOverflowProbe(): Record<string, unknown> {
  *
  * ⚠ 다른 독립 9팀을 나란히 찍는다. 상무만 그런지 리그가 그런지 가려야 한다.
  */
+/** 야수의 live OVR 이 왜 0인가 — 후보 OVR 이 0으로 잡히던 자리. */
+export function liveOvrProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const bats = g.npcs.filter((n) => !PIT.has(String(n.position ?? "")) && n.careerStatus !== "retired");
+  const rows = bats.slice(0, 5).map((n) => {
+    const l = live[n.npcId] as unknown as Record<string, { ovr?: number } | undefined> | undefined;
+    return {
+      id: n.npcId, pos: n.position,
+      live투구: l?.pitching?.ovr ?? "없음",
+      live타격: l?.batting?.ovr ?? "없음",
+      원본투구: (n as unknown as Record<string, { ovr?: number } | undefined>).pitching?.ovr ?? "없음",
+      원본타격: (n as unknown as Record<string, { ovr?: number } | undefined>).batting?.ovr ?? "없음",
+    };
+  });
+  let live투구있는야수 = 0, live투구0인야수 = 0;
+  for (const n of bats) {
+    const l = live[n.npcId] as unknown as Record<string, { ovr?: number } | undefined> | undefined;
+    const po = l?.pitching?.ovr;
+    if (typeof po === "number") { live투구있는야수++; if (po <= 1) live투구0인야수++; }
+  }
+  return { 야수수: bats.length, live투구있는야수, live투구0인야수, 표본: rows };
+}
+
 export function sangmuProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const SANGMU = "TEAM_IND_SANGMU_PHOENIX";
@@ -1641,6 +1666,28 @@ export function sangmuProbe(): Record<string, unknown> {
         c[k] = (c[k] ?? 0) + 1;
       }
       return c;
+    })(),
+    // 🔴 **군인이 아닌 사람이 상무에 있다** — 정원 초과분과 수가 같다.
+    //   배정 경로(`draftDestinationTeams`)는 상무를 거른다 — 다른 길이다.
+    비군인: (() => {
+      const out: string[] = [];
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        if (String(n.militaryStatus ?? "") === "현역") continue;
+        const r = n as unknown as Record<string, unknown>;
+        if (out.length < 6) out.push([
+          n.npcId, n.position, n.age + "세",
+          n.careerStatus, n.militaryStatus,
+          "리그" + String(n.currentLeague ?? ""),
+          "부대" + String(r.militaryUnit ?? "없음"),
+          "입대" + String(r.militaryEnlistYear ?? "없음"),
+          "전역" + String(r.militaryDischargeYear ?? "없음"),
+          "원팀" + String(r.originalTeamId ?? "없음"),
+          "계약" + String(r.contractYears ?? "?"),
+        ].join("|"));
+      }
+      return out;
     })(),
     // 어디 출신이 상무에 있나 — id 접두어가 생성 리그를 말한다
     출신접두: (() => {

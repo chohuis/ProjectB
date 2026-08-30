@@ -7,6 +7,24 @@ const YEARS = Number(process.env.SU_YEARS || 6);
 (async () => {
   let n = 0;
   headless.setInterceptor(async (channel, args, call) => {
+    // 🔴 **후보 생성 입력도 본다.** 밖(선발)에서 야수 0이면 원인이 둘로
+    //   갈린다: 애초에 안 들어오나, 들어오는데 OVR 이 낮게 계산되나.
+    if (channel === "engine:call" && args[0] === "calcSportsUnitCandidatesNative") {
+      let q = {};
+      try { q = JSON.parse(args[1]); } catch { /* 아래가 말해준다 */ }
+      const cs = q.candidates || [];
+      const PIT2 = new Set(["SP", "RP", "CP"]);
+      const b2 = cs.filter((c) => !PIT2.has(String(c.position)));
+      const p2 = cs.filter((c) => PIT2.has(String(c.position)));
+      const srt = (v) => v.map((c) => c.ovr).sort((x, y) => y - x);
+      const bo = srt(b2), po = srt(p2);
+      const med = (v) => (v.length ? v[Math.floor(v.length / 2)] : null);
+      console.log(`[SU] 입력후보 ${cs.length}명 · 투수 ${p2.length} / 야수 ${b2.length}`
+        + ` · OVR 중앙 투수 ${med(po)} / 야수 ${med(bo)}`
+        + ` · 최고 투수 ${po[0] ?? "-"} / 야수 ${bo[0] ?? "-"}`
+        + ` · 포지션없음 ${cs.filter((c) => !c.position).length}`);
+      return call();
+    }
     if (channel === "engine:call" && args[0] === "calcSportsUnitSelectionNative") {
       let p = {};
       try { p = JSON.parse(args[1]); } catch { /* 아래가 말해준다 */ }

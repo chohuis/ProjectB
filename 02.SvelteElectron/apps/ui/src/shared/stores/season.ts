@@ -170,10 +170,24 @@ function createSeasonStore() {
       npcLiveStatsStore.update((stats) => {
         const next = { ...stats };
         for (const u of updated) {
+          // 🔴 **없던 블록을 만들지 않는다** (2026-08-31).
+          //   Rust `GrowthPatch.pitching` 은 필수 필드라, 투구 블록이 없는
+          //   야수를 보내면 serde 가 **0 으로 채워** 되돌려준다. 그대로 쓰면
+          //   `live?.pitching?.ovr ?? live?.batting?.ovr` 이 야수를 전부
+          //   **OVR 0** 으로 본다 — `??` 는 0 을 안 건너뛴다.
+          //
+          //   실측: 2주만 돌려도 야수 3,990명 전원에게 투구 OVR 0 이 붙었고,
+          //   상무 선발 후보 343명이 그 때문에 상위 70 에 한 명도 못 들어
+          //   **3년 39명이 전원 투수**였다.
+          //
+          // ⚠ 소비하는 자리가 45곳이다. 거기를 다 고치는 게 아니라 **여기**를
+          //   막는다 — 성장은 있는 능력을 키우는 일이지 없는 능력을 만드는
+          //   일이 아니다.
+          const prev = next[u.npcId];
           next[u.npcId] = {
-            ...(next[u.npcId] ?? { pitchingXp: {}, battingXp: {} }),
-            pitching:        u.pitching,
-            batting:         u.batting,
+            ...(prev ?? { pitchingXp: {}, battingXp: {} }),
+            pitching:        prev && prev.pitching === undefined ? undefined : u.pitching,
+            batting:         prev && prev.batting  === undefined ? undefined : u.batting,
             pitchingXp:      u.pitchingXp,
             battingXp:       u.battingXp,
             peakOvr:         u.peakOvr,

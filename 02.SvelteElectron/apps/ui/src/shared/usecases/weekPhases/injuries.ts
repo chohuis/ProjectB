@@ -231,6 +231,13 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
 
   let retireRollIdx = 0;
 
+  // 🔴 **군 복무 중인지 볼 수 있어야 한다** — 아래에서 신분을 안 덮으려면
+  //   그 값이 필요하다. 부상자가 없는 주가 대부분이라 발생했을 때만 만든다
+  //   (위 완치 갈래가 같은 이유로 `healed.length > 0` 을 본다).
+  const npcStatusById = result.occurred.length > 0
+    ? new Map(g.npcs.map((n) => [n.npcId, n.careerStatus]))
+    : null;
+
   for (const occ of result.occurred) {
     const entity = entityMap.get(occ.playerId);
     const injuryMgmt = injuryMgmtOf(entity?.teamId ?? "");
@@ -313,7 +320,18 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     });
 
     // NpcSaveState 부상 상태 갱신
-    gameStore.updateNpcCareerStatus(occ.playerId, "injured");
+    //
+    // 🔴 **군 복무 중인 선수는 신분을 안 바꾼다** (2026-08-31).
+    //   `careerStatus` 는 **신분**(military/active/free_agent/retired)이고
+    //   부상은 상태다. 여기서 `injured` 로 덮으면 상무 선수가 군 신분을
+    //   잃고, 완치 때 `active` 로 돌아와 **전역 판정에서 영원히 빠진다**
+    //   (`npc_sim.rs` 전역 루프는 military 만 본다).
+    //   실측: 상무가 26 → 54명으로 부풀고 전역년 2027인 사람이 2029까지 남았다.
+    // ⚠ 정보가 사라지는 게 아니다 — 부상의 정본은 바로 위
+    //   `seasonStore.setNpcInjury` 다. 여기 값은 신분 칸이다.
+    if (npcStatusById?.get(occ.playerId) !== "military") {
+      gameStore.updateNpcCareerStatus(occ.playerId, "injured");
+    }
 
     // ── 월간 부상 소식 버퍼 ────────────────────────────────
     //

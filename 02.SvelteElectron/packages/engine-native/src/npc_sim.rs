@@ -2104,8 +2104,19 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     }).collect();
 
     // 7. 전역 처리 (discharge_year 도달)
+    //
+    // 🔴 **`career_status` 로 거르면 샌다** (2026-08-31). 그 값은 부상·완치가
+    //   덮어쓴다 — 상무 선수가 한 번 다치면 `military` → `injured` → `active`
+    //   가 되고, 여기서 영원히 건너뛰어 **전역년이 2년 지나도 안 나갔다.**
+    //   인원이 26 → 54로 부풀고 그 자리만큼 새 입대가 쌓였다.
+    //
+    //   지금은 **복무 상태**(`military_status`)로 거른다. 그게 이 판정의
+    //   진짜 술어다 — 전역하면 아래에서 `군필` 로 바뀌니 두 번 안 돈다.
+    // ⚠ 구 세이브에 이미 눌러앉은 사람도 이걸로 나간다. 수리 갈래를 따로
+    //   두지 않는다.
+    // ⚠ 일반병도 `현역` 이다 — 아래가 부대별로 갈라 처리하므로 맞다.
     for n in processed.iter_mut() {
-        if n.career_status != "military" { continue; }
+        if n.military_status != "현역" { continue; }
         if let Some(dy) = n.military_discharge_year {
             if dy <= season_year {
                 n.career_status   = "active".into();
