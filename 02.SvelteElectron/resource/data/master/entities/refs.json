@@ -956,163 +956,325 @@
       "id": "STADIUM_BUSAN_WAVES",
       "name": "웨이브스타디움",
       "parkFactor": "타자친화",
-      "capacity": 22990
+      "capacity": 22990,
+      "dist": {
+        "lf": 96,
+        "cf": 120,
+        "rf": 97,
+        "fence": 2
+      }
     },
     {
       "id": "STADIUM_BYEOLBIT",
       "name": "별빛구장",
       "parkFactor": "타자친화",
-      "capacity": 3000
+      "capacity": 3000,
+      "dist": {
+        "lf": 96,
+        "cf": 116,
+        "rf": 95,
+        "fence": 3.1
+      }
     },
     {
       "id": "STADIUM_CHANGGONG",
       "name": "창공구장",
       "parkFactor": "중립",
-      "capacity": 1500
+      "capacity": 1500,
+      "dist": {
+        "lf": 98,
+        "cf": 124,
+        "rf": 98,
+        "fence": 2.4
+      }
     },
     {
       "id": "STADIUM_CHANGWON_STARS",
       "name": "스타스파크",
       "parkFactor": "투수친화",
-      "capacity": 22000
+      "capacity": 22000,
+      "dist": {
+        "lf": 100,
+        "cf": 126,
+        "rf": 103,
+        "fence": 4.3
+      }
     },
     {
       "id": "STADIUM_DAEGU_SABERS",
       "name": "세이버스필드",
       "parkFactor": "투수친화",
-      "capacity": 24000
+      "capacity": 24000,
+      "dist": {
+        "lf": 103,
+        "cf": 127,
+        "rf": 102,
+        "fence": 4.6
+      }
     },
     {
       "id": "STADIUM_DAEJEON_PHANTOMS",
       "name": "팬텀스타디움",
       "parkFactor": "중립",
-      "capacity": 17000
+      "capacity": 17000,
+      "dist": {
+        "lf": 99,
+        "cf": 124,
+        "rf": 97,
+        "fence": 3.6
+      }
     },
     {
       "id": "STADIUM_GANGBYEON",
       "name": "강변구장",
       "parkFactor": "타자친화",
-      "capacity": 3000
+      "capacity": 3000,
+      "dist": {
+        "lf": 98,
+        "cf": 119,
+        "rf": 98,
+        "fence": 2.6
+      }
     },
     {
       "id": "STADIUM_GEUMGANG_UNIV",
       "name": "금강구장",
       "parkFactor": "투수친화",
-      "capacity": 2200
+      "capacity": 2200,
+      "dist": {
+        "lf": 103,
+        "cf": 122,
+        "rf": 102,
+        "fence": 3.6
+      }
     },
     {
       "id": "STADIUM_GWANGJU_PANTHERS",
       "name": "팬서스파크",
       "parkFactor": "타자친화",
-      "capacity": 20500
+      "capacity": 20500,
+      "dist": {
+        "lf": 95,
+        "cf": 120,
+        "rf": 94,
+        "fence": 2.6
+      }
     },
     {
       "id": "STADIUM_GYEBAEK",
       "name": "계백구장",
       "parkFactor": "중립",
-      "capacity": 1800
+      "capacity": 1800,
+      "dist": {
+        "lf": 100,
+        "cf": 124,
+        "rf": 99,
+        "fence": 3.9
+      }
     },
     {
       "id": "STADIUM_GYERYONG",
       "name": "계룡구장",
       "parkFactor": "중립",
-      "capacity": 1100
+      "capacity": 1100,
+      "dist": {
+        "lf": 97,
+        "cf": 119,
+        "rf": 100,
+        "fence": 2.7
+      }
     },
     {
       "id": "STADIUM_HALLA",
       "name": "한라구장",
       "parkFactor": "투수친화",
-      "capacity": 900
+      "capacity": 900,
+      "dist": {
+        "lf": 100,
+        "cf": 127,
+        "rf": 101,
+        "fence": 4.9
+      }
     },
     {
       "id": "STADIUM_HANGANG",
       "name": "한강구장",
       "parkFactor": "중립",
-      "capacity": 2000
+      "capacity": 2000,
+      "dist": {
+        "lf": 100,
+        "cf": 121,
+        "rf": 97,
+        "fence": 3.2
+      }
     },
     {
       "id": "STADIUM_INCHEON_SHARKS",
       "name": "샤크스파크",
       "parkFactor": "중립",
-      "capacity": 23000
+      "capacity": 23000,
+      "dist": {
+        "lf": 97,
+        "cf": 121,
+        "rf": 101,
+        "fence": 2.8
+      }
     },
     {
       "id": "STADIUM_MIREU",
       "name": "미르구장",
       "parkFactor": "중립",
-      "capacity": 2000
+      "capacity": 2000,
+      "dist": {
+        "lf": 97,
+        "cf": 119,
+        "rf": 100,
+        "fence": 2.7
+      }
     },
     {
       "id": "STADIUM_MUJIGAE",
       "name": "무지개구장",
       "parkFactor": "타자친화",
-      "capacity": 1600
+      "capacity": 1600,
+      "dist": {
+        "lf": 94,
+        "cf": 117,
+        "rf": 97,
+        "fence": 2.3
+      }
     },
     {
       "id": "STADIUM_NAKDONG",
       "name": "낙동구장",
       "parkFactor": "타자친화",
-      "capacity": 1500
+      "capacity": 1500,
+      "dist": {
+        "lf": 96,
+        "cf": 116,
+        "rf": 97,
+        "fence": 2.1
+      }
     },
     {
       "id": "STADIUM_NAMNYEOK",
       "name": "남녘구장",
       "parkFactor": "투수친화",
-      "capacity": 2200
+      "capacity": 2200,
+      "dist": {
+        "lf": 100,
+        "cf": 122,
+        "rf": 101,
+        "fence": 3.6
+      }
     },
     {
       "id": "STADIUM_NOEUL",
       "name": "노을구장",
       "parkFactor": "타자친화",
-      "capacity": 2600
+      "capacity": 2600,
+      "dist": {
+        "lf": 96,
+        "cf": 121,
+        "rf": 95,
+        "fence": 3
+      }
     },
     {
       "id": "STADIUM_PALGONG",
       "name": "팔공구장",
       "parkFactor": "투수친화",
-      "capacity": 1200
+      "capacity": 1200,
+      "dist": {
+        "lf": 102,
+        "cf": 123,
+        "rf": 103,
+        "fence": 4
+      }
     },
     {
       "id": "STADIUM_SEORAK_HS",
       "name": "설악구장",
       "parkFactor": "투수친화",
-      "capacity": 800
+      "capacity": 800,
+      "dist": {
+        "lf": 103,
+        "cf": 123,
+        "rf": 101,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_SEOUL_COBRAS",
       "name": "코브라돔",
       "parkFactor": "타자친화",
-      "capacity": 23750
+      "capacity": 23750,
+      "dist": {
+        "lf": 97,
+        "cf": 120,
+        "rf": 94,
+        "fence": 2.6
+      }
     },
     {
       "id": "STADIUM_SEOUL_GUARDIANS",
       "name": "가디언스필드",
       "parkFactor": "투수친화",
-      "capacity": 16000
+      "capacity": 16000,
+      "dist": {
+        "lf": 103,
+        "cf": 123,
+        "rf": 102,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_SEOUL_ROYALS",
       "name": "로열파크",
       "parkFactor": "중립",
-      "capacity": 23000
+      "capacity": 23000,
+      "dist": {
+        "lf": 99,
+        "cf": 124,
+        "rf": 97,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_SUWON_KNIGHTS",
       "name": "나이츠아레나",
       "parkFactor": "타자친화",
-      "capacity": 20000
+      "capacity": 20000,
+      "dist": {
+        "lf": 94,
+        "cf": 116,
+        "rf": 96,
+        "fence": 3.2
+      }
     },
     {
       "id": "STADIUM_TAEJONG",
       "name": "태종구장",
       "parkFactor": "중립",
-      "capacity": 1500
+      "capacity": 1500,
+      "dist": {
+        "lf": 99,
+        "cf": 123,
+        "rf": 98,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_YEONGSAN",
       "name": "영산구장",
       "parkFactor": "타자친화",
-      "capacity": 1400
+      "capacity": 1400,
+      "dist": {
+        "lf": 96,
+        "cf": 117,
+        "rf": 98,
+        "fence": 2.4
+      }
     }
   ],
   "clubs": [

@@ -390,6 +390,8 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         last_pitch_types: vec![],
         weather: opts.weather.unwrap_or(WeatherType::Sunny),
         park:    opts.park.unwrap_or(ParkType::Neutral),
+        // ⚠ 안 넘기면 중립 기본값이다 — 예전과 같게 돈다
+        park_dims: opts.park_dims.unwrap_or_default(),
         is_finished: false,
         logs: vec!["경기 시작".to_string()],
         fielders,
@@ -826,12 +828,52 @@ fn resolve_hardness(code: PitchResultCode, power: PitchPower, quality: f64, rng:
     clamp(base.round(), 1.0, 5.0) as u8
 }
 
-fn resolve_ball_in_play(code: PitchResultCode, decision: &PitchDecision, quality: f64, rng: &mut impl Rng) -> Option<BallInPlay> {
+/// 타구 종류가 정하는 발사각 대역(도).
+///
+/// ⚠ 땅볼이 음수인 게 요점이다 — 담장을 못 넘는다.
+fn launch_angle_of(hit_type: BallHitType, rng: &mut impl Rng) -> f64 {
+    let (lo, hi) = match hit_type {
+        BallHitType::GroundBall => (-12.0, 6.0),
+        BallHitType::Bunt       => (-15.0, 0.0),
+        BallHitType::LineDrive  => (10.0, 25.0),
+        BallHitType::FlyBall    => (25.0, 45.0),
+        BallHitType::Popup      => (50.0, 75.0),
+    };
+    lo + rng.gen::<f64>() * (hi - lo)
+}
+
+/// 비거리(m).
+///
+/// 🔴 **결과가 정해진 뒤 붙이는 장식이 아니다** — 담장을 넘는지
+///   이걸로 가른다.
+/// ⚠ 최적각(28도)에서 멀어질수록 짧아진다. 팝업이 안 넘어가는 이유다.
+fn flight_distance(hardness: u8, angle: f64, power: f64) -> f64 {
+    let base = T::FLIGHT_BASE_M + (hardness as f64 - 1.0) * T::FLIGHT_PER_HARDNESS;
+    let pw = (power - T::FLIGHT_POWER_PIVOT) / 50.0 * T::FLIGHT_POWER_SPAN;
+    let off = (angle - T::FLIGHT_BEST_ANGLE).abs() * T::FLIGHT_ANGLE_PENALTY;
+    (base + pw - off).max(0.0)
+}
+
+fn resolve_ball_in_play(code: PitchResultCode, decision: &PitchDecision, quality: f64,
+                        power: f64, rng: &mut impl Rng) -> Option<BallInPlay> {
     if !is_inplay(code) { return None; }
     let hit_type = resolve_hit_type(code, decision, quality, rng);
     let zone     = resolve_zone(hit_type, decision.location, rng);
     let hardness = resolve_hardness(code, decision.power, quality, rng);
-    Some(BallInPlay { hit_type, zone, hardness })
+    let launch_angle = launch_angle_of(hit_type, rng);
+    let distance = flight_distance(hardness, launch_angle, power);
+    Some(BallInPlay { hit_type, zone, hardness, distance, launch_angle })
+}
+
+/// 그 방향의 담장 거리(m).
+///
+/// ⚠ 좌우가 비대칭인 구장이 있다 — 수비 위치로 방향을 안다.
+fn fence_for(zone: FieldPosition, d: &crate::types::ParkDims) -> f64 {
+    match zone {
+        FieldPosition::LF => d.lf,
+        FieldPosition::RF => d.rf,
+        _ => d.cf,
+    }
 }
 
 // ── 수비 처리 ─────────────────────────────────────────────────────────────────
@@ -1878,7 +1920,37 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         }
     }
 
-    let ball_in_play = resolve_ball_in_play(result_code, decision, quality, rng);
+    let ball_in_play = resolve_ball_in_play(result_code, decision, quality,
+                                            current_batter.power, rng);
+
+    // 🔴 **담장으로 다시 본다** (4단계 ③). 예전엔 홈런이 확률표에서
+    //   바로 나와 **같은 타구가 잠실이든 사직이든 똑같이 홈런**이었다.
+    //
+    // ⚠ **확률표를 갈아엎지 않는다.** 표가 "얼마나 잘 맞았나"를 정하고,
+    //   여기선 그 타구가 담장을 넘느냐만 본다.
+    // ⚠ **양방향이다.** 표의 홈런이 못 넘으면 내리고, 표의 장타가
+    //   넘으면 올린다. 한쪽만 하면 홈런이 일방적으로 줄거나 는다.
+    // ⚠ 땅볼·번트는 안 본다 — 발사각이 음수라 애초에 못 넘는다.
+    if let Some(b) = ball_in_play.as_ref() {
+        let is_air = matches!(b.hit_type,
+            BallHitType::FlyBall | BallHitType::LineDrive);
+        if is_air {
+            let fence = fence_for(b.zone, &pre_state.park_dims);
+            let over = b.distance >= fence;
+            match (result_code, over) {
+                // 표는 홈런인데 못 넘었다 — 펜스 앞에 떨어진다
+                (PitchResultCode::HomeRun, false) => {
+                    result_code = PitchResultCode::HitDouble;
+                }
+                // 표는 장타인데 넘었다 — 홈런이다
+                (PitchResultCode::HitDouble, true)
+                | (PitchResultCode::HitTriple, true) => {
+                    result_code = PitchResultCode::HomeRun;
+                }
+                _ => {}
+            }
+        }
+    }
 
     // 🔴 **희생번트** (2026-08-28). 작전이 나오는 상황에서만 시도한다:
     //   무사 또는 1사 · 주자 있음 · 접전(3점 차 이내) · 스트라이크 2개 전.
@@ -3063,7 +3135,8 @@ mod 삼중살 {
         }
     }
     fn ground() -> BallInPlay {
-        BallInPlay { hit_type: BallHitType::GroundBall, zone: FieldPosition::SS, hardness: 3 }
+        BallInPlay { hit_type: BallHitType::GroundBall, zone: FieldPosition::SS, hardness: 3,
+                     distance: 0.0, launch_angle: -5.0 }
     }
 
     /// 🔴 **삼중살은 무사에만 난다.** 1사면 아웃 셋을 잡는 순간 이닝이
@@ -3111,7 +3184,8 @@ mod 삼중살 {
     /// ⚠ 뜬공으로는 병살도 삼중살도 안 된다
     #[test]
     fn 뜬공은_아니다() {
-        let b = BallInPlay { hit_type: BallHitType::FlyBall, zone: FieldPosition::CF, hardness: 3 };
+        let b = BallInPlay { hit_type: BallHitType::FlyBall, zone: FieldPosition::CF, hardness: 3,
+                             distance: 80.0, launch_angle: 35.0 };
         for seed in 0..200u64 {
             let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
             let (killed, _) = try_double_play(Some(&b), &runners(3), 0, &mut rng);
@@ -3183,5 +3257,84 @@ mod 폭투_포일 {
     fn 드물다() {
         assert!(T::WILD_PITCH_BASE_PROB < 0.30, "폭투가 너무 잦다");
         assert!(T::PASSED_BALL_BASE_PROB < 0.02, "포일이 너무 잦다");
+    }
+}
+
+#[cfg(test)]
+mod 타구물리 {
+    use super::*;
+
+    /// 🔴 **최적각에서 멀어질수록 짧아진다.** 팝업이 안 넘어가는 이유다.
+    #[test]
+    fn 각도가_거리를_가른다() {
+        let best = flight_distance(5, T::FLIGHT_BEST_ANGLE, 50.0);
+        let popup = flight_distance(5, 65.0, 50.0);
+        let grounder = flight_distance(5, -8.0, 50.0);
+        assert!(best > popup, "최적각이 팝업보다 멀어야 한다");
+        assert!(best > grounder, "최적각이 땅볼보다 멀어야 한다");
+    }
+
+    /// 세게 맞을수록 멀리 간다
+    #[test]
+    fn 세기가_거리를_가른다() {
+        let a = flight_distance(1, T::FLIGHT_BEST_ANGLE, 50.0);
+        let e = flight_distance(5, T::FLIGHT_BEST_ANGLE, 50.0);
+        assert!(e > a + 40.0, "hardness 1 {} vs 5 {}", a, e);
+    }
+
+    /// 파워가 좋으면 더 간다
+    #[test]
+    fn 파워가_거리를_가른다() {
+        let weak = flight_distance(4, T::FLIGHT_BEST_ANGLE, 20.0);
+        let strong = flight_distance(4, T::FLIGHT_BEST_ANGLE, 90.0);
+        assert!(strong > weak, "파워 90 이 20 보다 멀어야 한다");
+    }
+
+    /// 🔴 **실제 KBO 홈런 비거리 대역(105~135m)에 든다.**
+    ///   너무 짧으면 아무도 못 넘고, 너무 길면 전부 넘는다.
+    #[test]
+    fn 홈런_대역이_현실적이다() {
+        let top = flight_distance(5, T::FLIGHT_BEST_ANGLE, 90.0);
+        assert!(top >= 120.0 && top <= 150.0, "최대 비거리 {}m", top);
+        // ⚠ **평범한 타자(파워 50)의 hardness 4 는 담장을 못 넘어야 한다.**
+        //   넘으면 장타가 전부 홈런이 된다(첫 값에서 OPS .904 → .989 로 올랐다).
+        //   중립 구장 중앙이 122m 이다.
+        let mid = flight_distance(4, T::FLIGHT_BEST_ANGLE, 50.0);
+        assert!(mid >= 90.0 && mid < 118.0, "보통 장타 {}m", mid);
+    }
+
+    /// ⚠ 좌우 비대칭 구장에서 방향이 담장을 가른다
+    #[test]
+    fn 방향이_담장을_고른다() {
+        let d = crate::types::ParkDims { lf: 95.0, cf: 125.0, rf: 100.0, fence: 3.0 };
+        assert_eq!(fence_for(FieldPosition::LF, &d), 95.0);
+        assert_eq!(fence_for(FieldPosition::RF, &d), 100.0);
+        assert_eq!(fence_for(FieldPosition::CF, &d), 125.0);
+        // 내야는 중앙으로 둔다 — 어차피 담장을 못 넘는다
+        assert_eq!(fence_for(FieldPosition::SS, &d), 125.0);
+    }
+
+    /// 🔴 **땅볼은 발사각이 음수다** — 담장을 넘을 수 없다
+    #[test]
+    fn 땅볼은_안_뜬다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(1);
+        for _ in 0..200 {
+            let a = launch_angle_of(BallHitType::GroundBall, &mut rng);
+            assert!(a < 10.0, "땅볼 발사각 {}", a);
+        }
+    }
+
+    /// 뜬공이 라인드라이브보다 높이 뜬다
+    #[test]
+    fn 타구_종류가_각도를_가른다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let mut fly = 0.0; let mut line = 0.0;
+        for _ in 0..500 {
+            fly += launch_angle_of(BallHitType::FlyBall, &mut rng);
+            line += launch_angle_of(BallHitType::LineDrive, &mut rng);
+        }
+        assert!(fly > line, "뜬공 {} vs 라인 {}", fly / 500.0, line / 500.0);
     }
 }

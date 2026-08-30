@@ -90,6 +90,15 @@ export interface StadiumRef {
   /** **수용인원** (4-A · 2026-08-29). 관중 수입의 유일한 근거다.
    *  🔴 예전엔 필드 자체가 없었고, 팀 쪽 `capacity`도 ABL·JBL만 있었다 */
   capacity?: number;
+  /**
+   * 담장 — 좌·중·우 거리(m)와 펜스 높이(m).
+   *
+   * 🔴 중앙 거리는 예전에도 있었지만 **성격별 한 값씩**이었고
+   *   (타자친화 100 · 중립 110 · 투수친화 122) **아무도 안 읽었다.**
+   * ⚠ 안 넘기면 엔진이 중립 기본값을 쓴다 — 27개를 채워 놓고도
+   *   같은 야구를 하게 된다.
+   */
+  dist?: { lf: number; cf: number; rf: number; fence: number };
 }
 
 export interface ClubRef {

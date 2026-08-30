@@ -592,7 +592,11 @@ function createSeasonStore() {
       careerStage?: import("../types/save").CareerStage,
     ): Promise<void> {
       const s = get({ subscribe });
-      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage);
+      // 🔴 **팀·구장을 넘긴다** — 담장을 고르는 데 쓴다.
+      //   안 넘기면 리그 전체가 중립 구장이 된다.
+      const mst = get(masterStore);
+      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage,
+        { teams: mst.teams, stadiums: mst.stadiums });
       if (!result) return;
 
       update((st) => ({

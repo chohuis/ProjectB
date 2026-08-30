@@ -1,3 +1,4 @@
+import { parkDimsForHomeTeam } from "./parkDims";
 import { managerProfileOf } from "./staffEffects";
 import { managerEffect } from "./managerStyle";
 import { seedFrom } from "./hash";
@@ -191,6 +192,8 @@ export async function simulateGame(
     awayRotIdx?:     number;
     week?:           number;
     npcInjuries?:    Record<string, NpcInjuryEntry>;
+    /** 홈 구장 담장. **안 넘기면 엔진이 중립 기본값을 쓴다** */
+    parkDims?:       import("./parkDims").ParkDims;
     rotationSize?:   number;
     npcLiveStats?:   Record<string, NpcLiveStat>;
     leagueId?:       string;
@@ -262,6 +265,9 @@ export async function simulateGame(
     buntMult: ef.buntMult, stealMult: ef.stealMult,
   } : undefined;
   const params = {
+    // 🔴 **담장을 십는다.** 안 넘기면 엔진이 중립 기본값을 써
+    //   27개 구장을 채워 놓고도 같은 야구를 한다.
+    parkDims: options?.parkDims,
     homeManager: mgrPayload(hMgrP, hEff),
     awayManager: mgrPayload(aMgrP, aEff),
     homeRotation: toSimPitchers(homeRoster.rotation),
@@ -531,6 +537,9 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     // ⚠ 위 `fielders` 주석과 같은 함정이다 — 주인공 경기만 넘기면
     //   **같은 엔진인데 두 저울**이 된다.
     // ⚠ 여기선 홈이 `protagonistSide: "home"` 이라 홈이 `myManager` 다.
+    // 🔴 **담장을 넘긴다.** 안 넘기면 엔진이 중립 기본값을 써
+    //   27개 구장을 채워 놓고도 같은 야구를 한다.
+    ...(params.parkDims ? { parkDims: params.parkDims } : {}),
     ...(params.homeManager ? { myManager: params.homeManager } : {}),
     ...(params.awayManager ? { opponentManager: params.awayManager } : {}),
   }));

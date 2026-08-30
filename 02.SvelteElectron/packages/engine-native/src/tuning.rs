@@ -290,6 +290,27 @@ pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
     (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
 }
 
+/// 타구 비거리 — `hardness`(1~5)와 발사각으로 만든다.
+///
+/// 🔴 예전엔 **거리 개념이 없었다.** 홈런이 확률표에서 바로 나와
+///   같은 타구가 잠실이든 사직이든 똑같이 홈런이었다.
+///
+/// ⚠ **확률표를 갈아엎지 않는다.** 표가 "얼마나 잘 맞았나"를 정하고,
+///   물리는 **담장을 넘느냐**만 다시 본다. 표를 버리면 기준선이 무의미해진다.
+/// ⚠ 실제 KBO 홈런 비거리는 105~135m 다. hardness 5 + 최적각이 그 위쪽이다.
+/// 🔴 **첫 값(62/15.5)은 너무 후했다** — 같은 씨앗에서 OPS .904 → .989.
+///   장타가 홈런으로 올라가는 쪽이 내려가는 쪽보다 훨씬 많았다.
+pub const FLIGHT_BASE_M: f64 = 56.0;
+/// hardness 한 칸당 더해지는 거리
+pub const FLIGHT_PER_HARDNESS: f64 = 14.0;
+/// 최적 발사각(도) — 여기서 제일 멀리 간다
+pub const FLIGHT_BEST_ANGLE: f64 = 28.0;
+/// 최적각에서 벗어난 1도당 잃는 거리(m)
+pub const FLIGHT_ANGLE_PENALTY: f64 = 0.75;
+/// 타자 파워가 피벗에서 벗어난 만큼 더해지는 거리
+pub const FLIGHT_POWER_SPAN: f64 = 14.0;
+pub const FLIGHT_POWER_PIVOT: f64 = 50.0;
+
 /// 폭투·포일 — **포수를 지나친 공.** 주자가 있을 때만 의미가 있다.
 ///
 /// 🔴 **책임이 갈린다**(실제 야구 규칙):

@@ -540,11 +540,42 @@ pub enum EntryTrigger {
 
 // ── 인플레이 ──────────────────────────────────────────────────────────────────
 
+/// 구장 담장 — 좌·중·우 거리(m)와 펜스 높이(m).
+///
+/// 🔴 예전엔 `ParkType` 4종(중립·투수친화·타자친화·돔)만 왔고 그것도
+///   타율 보정 ±3점으로만 쓰였다. **거리 개념이 없어 같은 타구가
+///   어느 구장에서나 똑같이 홈런이었다.**
+///
+/// ⚠ 안 넘기면 중립 기본값이다 — 예전과 같게 돈다.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ParkDims {
+    pub lf: f64,
+    pub cf: f64,
+    pub rf: f64,
+    pub fence: f64,
+}
+
+impl Default for ParkDims {
+    /// 중립 구장 평균 — 실측(2026-08-30) `stadiums.json` 중립 9개
+    fn default() -> Self {
+        ParkDims { lf: 98.4, cf: 122.1, rf: 98.6, fence: 3.1 }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BallInPlay {
     #[serde(rename = "hitType")]  pub hit_type: BallHitType,
     pub zone: FieldPosition,
     pub hardness: u8,
+    /// 비거리(m) — **결과가 정해진 뒤 붙는 값이 아니다.** 담장을 넘는지
+    /// 이걸로 가른다.
+    /// ⚠ `default` 다 — 구 세이브 로그엔 없다.
+    #[serde(default)]
+    pub distance: f64,
+    /// 발사각(도). 뜬공이 높고 땅볼이 낮다
+    #[serde(default)]
+    pub launch_angle: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -670,6 +701,9 @@ pub struct MatchState {
 
     pub weather: WeatherType,
     pub park: ParkType,
+    /// 담장 — **안 넘기면 중립 기본값**이라 예전과 같게 돈다
+    #[serde(default)]
+    pub park_dims: ParkDims,
 
     pub is_finished: bool,
     pub logs: Vec<String>,
@@ -820,6 +854,8 @@ pub struct MatchStartOptions {
     pub opponent_manager: Option<PartialManagerStats>,
     pub weather: Option<WeatherType>,
     pub park: Option<ParkType>,
+    #[serde(default)]
+    pub park_dims: Option<ParkDims>,
     pub fielders: Option<Vec<FielderStats>>,
     /// 상대 수비진. ⚠ **안 넘기면 상대 이닝도 내 수비수가 지킨다**
     #[serde(default)]

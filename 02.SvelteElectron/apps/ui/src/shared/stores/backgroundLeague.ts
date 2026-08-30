@@ -1,3 +1,4 @@
+import { parkDimsForHomeTeam } from "../utils/parkDims";
 import type { LeagueSeasonState, MatchResult, PlayerCondition, ScheduleEntry } from "../types/season";
 import type { NpcInjuryEntry, CareerStage } from "../types/save";
 import type { EntityRow, TeamRef } from "./master";
@@ -38,6 +39,16 @@ export async function runSimBatch(
   // 씨앗 — 같은 세이브·같은 주면 같은 경기가 나온다(재현성).
   // ⚠ 안 넘기면 씨앗 없이 돈다 — `matchSeedWiring.test.ts`가 호출부를 본다
   worldSeed?: number,
+  /**
+   * 팀·구장 — **담장을 고르는 데 쓴다.**
+   *
+   * ⚠ 안 넘기면 리그 전체가 중립 구장이 된다. 27개를 채워 놓고도
+   *   같은 야구를 하는 셈이다.
+   */
+  parkRefs?: {
+    teams: readonly { id: string; stadium?: string }[];
+    stadiums: readonly import("./master").StadiumRef[];
+  },
 ): Promise<SimWorkerResultItem[]> {
   const results: SimWorkerResultItem[] = [];
   for (let i = 0; i < games.length; i += SIM_CHUNK_SIZE) {
@@ -45,6 +56,10 @@ export async function runSimBatch(
     const chunkResults = await Promise.all(chunk.map(async (g) => {
       const rotSize = g.leagueId ? rotationSizeForLeague(g.leagueId) : 5;
       const sim = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+        // 🔴 **담장을 넘긴다.** 안 넘기면 리그 전체가 중립 구장이 된다
+        parkDims:             parkRefs
+          ? parkDimsForHomeTeam(g.homeTeamId, parkRefs.teams, parkRefs.stadiums)
+          : undefined,
         conditions:           g.conditions,
         homeRotIdx:           g.homeRotIdx ?? 0,
         awayRotIdx:           g.awayRotIdx ?? 0,
@@ -109,6 +124,11 @@ export async function simulateBackgroundLeagues(
   entities: EntityRow[],
   npcLiveStats?: Record<string, import("../types/season").NpcLiveStat>,
   careerStage?: CareerStage,
+  /** 팀·구장 — **담장을 고르는 데 쓴다.** 안 넘기면 리그가 중립 구장이 된다 */
+  parkRefs?: {
+    teams: readonly { id: string; stadium?: string }[];
+    stadiums: readonly import("./master").StadiumRef[];
+  },
 ): Promise<SimBatchResult | null> {
   const batch: SimWorkerRequest["games"] = [];
   if (Object.keys(s.leagueSchedules).length === 0) {
@@ -151,7 +171,7 @@ export async function simulateBackgroundLeagues(
   }
   if (batch.length === 0) return null;
 
-  const simmed = await runSimBatch(batch, entities, s.npcInjuries, npcLiveStats, s.worldSeed);
+  const simmed = await runSimBatch(batch, entities, s.npcInjuries, npcLiveStats, s.worldSeed, parkRefs);
   const simMap = new Map(simmed.map((r) => [r.id, r]));
 
   // 🔴 **날짜·상대를 안 실으면 화면이 "W19"만 쓴다.** 게다가 경기 단위
