@@ -841,6 +841,15 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, hr: acc.hr, k: acc.k, bb: acc.bb, hbp: acc.hbp, pc: acc.pc, decision,
             gs: pit_q.first().map(|p| &p.id == id).unwrap_or(false),
+            // ⚠ **배경 리그는 구종을 안 정한다** — 타석 단위 시뮬이라
+            //   `pitch_type` 이 없다(실측: npc_sim 에 0건). 지어내면
+            //   주인공 기록과 다른 척도가 된다 — **빈 맵이 정직하다.**
+            pitch_mix: Default::default(),
+            // ⚠ **이닝별도 안 채운다.** 배경 리그는 이닝을 알지만
+            //   (`for inning in 1..=9`) 한 주 720경기 × 투수 여럿 ×
+            //   9이닝 배열이면 세이브가 커지고, **배경 리그 투수의
+            //   이닝별을 볼 화면이 없다.** 주인공 경기에만 둔다.
+            by_inning: vec![],
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
     }

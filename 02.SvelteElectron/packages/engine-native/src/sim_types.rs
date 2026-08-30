@@ -838,6 +838,14 @@ pub enum PlayerGameLine {
         /// ⚠ `default`다: 구 세이브의 로그엔 없다
         #[serde(default)]
         gs: bool,
+        /// 구종별 성적 — **`pitch_type` 이 매 투구에 있는데 아무도
+        /// 안 셀다.** 투수 상세에 구종 목록은 뜨는데 **실제로 뭐를
+        /// 던졌는지는 알 수 없었다.** ⚠ `default`다 — 구 세이브 로그엔 없다.
+        #[serde(default)]
+        pitch_mix: std::collections::HashMap<String, crate::types::PitchMixLine>,
+        /// 이닝별 — 몇 회에 무너졌는지는 합계로 못 본다
+        #[serde(default)]
+        by_inning: Vec<crate::types::InningLine>,
         /// 득점권 피안타율 — 위기 보정이 성적을 만드는지 보여주는 유일한 창구다.
         /// 시즌 ERA로는 못 본다(득점권은 전체 타석의 25%뿐이라 희석된다).
         #[serde(rename = "rispAb", default)]

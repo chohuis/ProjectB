@@ -2263,6 +2263,45 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             if let Some(line) = q.lines.get_mut(idx) {
                 line.outs += delta;
                 line.pc += 1;
+
+                // 🔴 **구종별** — `pitch_type` 이 매 투구에 있는데 아무도
+                //   안 셌다. 투수 상세에 구종 목록은 뜨는데 실제로 뭘
+                //   던졌는지는 알 수 없었다.
+                // ⚠ 안 던진 구종은 안 실린다(맵) — 10종을 배열로 두면
+                //   대부분 0인 칸이 매 경기 로그에 쌓인다.
+                {
+                    let key = format!("{:?}", decision.pitch_type).to_lowercase();
+                    let m = line.pitch_mix.entry(key).or_default();
+                    m.pc += 1;
+                    match result_code {
+                        PitchResultCode::StrikeoutSwing
+                        | PitchResultCode::StrikeoutLook => m.k += 1,
+                        PitchResultCode::HitSingle | PitchResultCode::HitDouble
+                        | PitchResultCode::HitTriple | PitchResultCode::HomeRun
+                            => m.h += 1,
+                        _ => {}
+                    }
+                }
+
+                // 🔴 **이닝별** — 합계만으로는 6이닝 3실점이 "고르게"인지
+                //   "한 이닝에 몰아서"인지 구분이 안 됐다.
+                // ⚠ 이닝은 **투구 시점**(`state`)이다. `next_state` 는 이미
+                //   다음 이닝일 수 있다 — 3아웃이면 넘어간 뒤다.
+                {
+                    let inn = state.inning as i32;
+                    let slot = match line.by_inning.iter_mut().find(|x| x.inning == inn) {
+                        Some(x) => x,
+                        None => {
+                            line.by_inning.push(crate::types::InningLine {
+                                inning: inn, ..Default::default()
+                            });
+                            line.by_inning.last_mut().unwrap()
+                        }
+                    };
+                    slot.pc += 1;
+                    slot.outs += delta;
+                    if scored > 0 { slot.er += scored; }
+                }
                 match result_code {
                     // 🔴 **`StrikeSwing`/`StrikeLook`을 보고 있었다** (2026-08-29).
                     //   3스트라이크째에 `narrow`가 코드를 `Strikeout*`로 **좁히면서**
@@ -2707,6 +2746,8 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
                 decision: if is_draw { "ND".to_string() }
                           else { crate::npc_sim::decide_pitcher(is_starter, is_closer, l.outs, team_won, margin) },
                 gs: is_starter,
+                pitch_mix: l.pitch_mix.clone(),
+                by_inning: l.by_inning.clone(),
                 risp_ab: l.risp_ab, risp_h: l.risp_h,
             });
         }

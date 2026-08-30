@@ -329,10 +329,44 @@ pub struct PitcherQueue {
 /// 성적이 안 남아서, 통합하면 리그 순위표·성적표가 통째로 빈다.
 /// `sim_game`은 `PitAccum`/`BatAccum`으로 전원을 쌓아 `player_lines`를 만든다 —
 /// 그 계약을 만족해야 순위표가 안 깨진다.
+/// 한 이닝의 투수 성적.
+///
+/// 🔴 예전엔 **합계만** 있어서 6이닝 3실점이 "고르게"인지 "한 이닝에
+///   몰아서"인지 구분이 안 됐다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InningLine {
+    pub inning: i32,
+    pub pc: i32,
+    pub er: i32,
+    pub outs: i32,
+}
+
+/// 구종 하나의 성적.
+///
+/// ⚠ 지표를 늘리면 경기 로그가 무거워진다 — 셋으로 족하다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PitchMixLine {
+    /// 그 구종을 던진 수
+    pub pc: i32,
+    /// 그 구종으로 잡은 삼진 — **결정구가 뭔지 보여준다**
+    pub k: i32,
+    /// 그 구종으로 맞은 안타
+    pub h: i32,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PitcherLineAccum {
     pub player_id: String,
+    /// 구종별 성적. **안 던진 구종은 안 실린다** — 10종을 배열로 두면
+    /// 대부분 0인 칸이 매 경기 로그에 쌓인다.
+    #[serde(default)]
+    pub pitch_mix: std::collections::HashMap<String, PitchMixLine>,
+    /// 이닝별 성적. 몇 회에 무너졌는지는 합계로 못 본다.
+    #[serde(default)]
+    pub by_inning: Vec<InningLine>,
     pub outs: i32,
     pub er: i32,
     pub h: i32,

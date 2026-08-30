@@ -952,6 +952,16 @@ export interface CareerGameLogEntry {
   bb: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
   pitchCount?: number;
+  /**
+   * 그 등판의 구종별 성적 — **무슨 공으로 잡고 무슨 공에 맞았나.**
+   *
+   * 🔴 `pitch_type` 이 매 투구에 있는데 아무도 안 셌다. 투수 상세에
+   *   구종 목록은 뜨는데 실제로 뭘 던졌는지는 알 수 없었다.
+   * ⚠ 구 세이브엔 없다.
+   */
+  pitchMix?: Record<string, { pc: number; k: number; h: number }>;
+  /** 이닝별 — 몇 회에 무너졌는지는 합계로 못 본다. ⚠ 구 세이브엔 없다 */
+  byInning?: Array<{ inning: number; pc: number; er: number; outs: number }>;
 }
 
 export interface CareerSeasonRecord {
