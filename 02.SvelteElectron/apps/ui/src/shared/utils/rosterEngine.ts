@@ -491,7 +491,21 @@ export function getTeamLineup(
     batters = [...batters, ...fillers.slice(0, 9 - batters.length)];
   }
 
-  // 타자 선택 점수: 피로 반영 OVR + freshnessBonus
+  // 🔴 **감독이 누굴 쓸지도 정한다** — 예전엔 타순만 감독이 짜고
+  //   선발 9명은 OVR×컨디션만 봤다. 육성 우선 감독이 유망주를 안 올리고
+  //   수비 조직 감독이 수비 좋은 포수를 먼저 안 썼다.
+  // ⚠ **타순과 같은 재료를 쓴다** — 두 자리가 다른 기준으로 고르면
+  //   "수비형으로 뽑아 놓고 파워 순으로 배열" 같은 게 된다.
+  const selEff = managerEff ?? NEUTRAL_STYLE;
+  const selAges = batters
+    .map((e) => Number((e as unknown as { age?: number }).age ?? 0))
+    .filter((v) => v > 0);
+  const selAgeMid = selAges.length
+    ? selAges.slice().sort((a, b) => a - b)[Math.floor(selAges.length / 2)] : 0;
+  const selAgeSpan = selAges.length
+    ? Math.max(1, Math.max(...selAges) - Math.min(...selAges)) : 1;
+
+  // 타자 선택 점수: 피로 반영 OVR + freshnessBonus + 감독 취향
   const batScore = (e: EntityRow) => {
     const base = playerDetails(e).batting?.ovr ?? 0;
     const cond = conditions?.[e.id];
@@ -499,7 +513,19 @@ export function getTeamLineup(
     //   피로에 덜 민감하다는 뜻이고 의도로 보여 합치지 않았다
     const fatF = !cond ? 1.0 : fatigueMult(_ops.batterFatigue, cond.fatigue);
     const effOvr = Math.round(base * fatF);
-    return effOvr + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
+    const b = playerDetails(e).batting;
+    const age = Number((e as unknown as { age?: number }).age ?? selAgeMid);
+    // ⚠ 세기는 타순의 **절반**이다. 여기서 세게 걸면 감독 취향이 OVR을
+    //   눌러 리그 전체 수준이 내려간다 — 누굴 쓸지는 실력이 먼저다.
+    const mgrAdj = selEff.age === 0 && selEff.power === 0
+        && selEff.defense === 0 && selEff.speed === 0
+      ? 0
+      : (((age - selAgeMid) / selAgeSpan) * selEff.age
+         + ((b?.power ?? 50) - 50) / 50 * selEff.power
+         + ((b?.fielding ?? 50) - 50) / 50 * selEff.defense
+         + ((b?.speed ?? 50) - 50) / 50 * selEff.speed) * 0.5;
+    return effOvr + mgrAdj
+      + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
   };
 
   // 포지션별 1명씩 최고 점수 선택

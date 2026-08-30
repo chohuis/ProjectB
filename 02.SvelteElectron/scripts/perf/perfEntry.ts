@@ -3091,6 +3091,7 @@ export function managerStyleProbe(): Record<string, unknown> {
   // 같은 팀 로스터에 스타일만 바꿔 끼워 타순이 달라지는지 본다
   const sample = teams.find((t) => managerProfileOf(t.id, ents) != null);
   const orders: Record<string, string> = {};
+  const squads: Record<string, string> = {};
   if (sample) {
     for (const st of ["공격 지향", "수비 조직", "육성 우선", "노장 중용"]) {
       const eff = managerEffect({
@@ -3099,9 +3100,13 @@ export function managerStyleProbe(): Record<string, unknown> {
       const ids = getTeamLineup(sample.id, ents, undefined, undefined,
                                 1, 0, 50, undefined, eff);
       orders[st] = ids.slice(0, 5).join(",");
+      // 선발 9명 **구성**도 본다 — 배열만 바뀌고 멤버가 같으면
+      // "누굴 쓸지"는 안 변한 것이다
+      squads[st] = ids.slice().sort().join(",");
     }
     const base = getTeamLineup(sample.id, ents, undefined, undefined, 1, 0, 50);
     orders["(감독없음)"] = base.slice(0, 5).join(",");
+    squads["(감독없음)"] = base.slice().sort().join(",");
   }
   const uniq = new Set(Object.values(orders));
   return {
@@ -3110,6 +3115,7 @@ export function managerStyleProbe(): Record<string, unknown> {
     표본팀: sample?.id ?? null,
     타순: orders,
     서로다른타순: uniq.size,
+    서로다른멤버: new Set(Object.values(squads)).size,
   };
 }
 

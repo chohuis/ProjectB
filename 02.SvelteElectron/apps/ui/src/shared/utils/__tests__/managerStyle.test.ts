@@ -214,3 +214,34 @@ describe("상대 감독", () => {
     expect(lb.LEAGUE_KBL_FARM).toBeGreaterThan(lb.LEAGUE_INDEPENDENT);
   });
 });
+
+describe("누굴 쓸지 · 언제 바꿀지", () => {
+  const roster = read("apps/ui/src/shared/utils/rosterEngine.ts");
+  const rust = read("packages/engine-native/src/match_engine.rs");
+
+  it("🔴 선발 9명 선택에도 감독이 든다", () => {
+    // 예전엔 타순만 감독이 짜고 **누굴 쓸지는 OVR×컨디션만** 봤다 —
+    // 육성 우선 감독이 유망주를 안 올렸다
+    expect(roster.includes("const selEff = managerEff ?? NEUTRAL_STYLE;")).toBe(true);
+    expect(roster.includes("return effOvr + mgrAdj")).toBe(true);
+  });
+
+  it("선택은 타순보다 약하게 건다", () => {
+    // 세게 걸면 감독 취향이 OVR을 눌러 리그 수준이 내려간다
+    expect(roster.includes("+ ((b?.speed ?? 50) - 50) / 50 * selEff.speed) * 0.5;")).toBe(true);
+  });
+
+  it("🔴 NPC 투수 교체가 감독을 본다", () => {
+    // `bullpenRead` 가 **주인공 등판 시점에만** 쓰이고 NPC 교체는
+    // 난수+리그값이라 감독이 누구든 똑같이 바꿨다
+    expect(rust.includes("bullpen_read: f64) -> Vec<i32> {")).toBe(true);
+    expect(rust.includes("queue_max_outs(&ps, rng, my_manager.bullpen_read)")).toBe(true);
+    expect(rust.includes("queue_max_outs(&ps, rng, opp_manager.bullpen_read)")).toBe(true);
+  });
+
+  it("🔴 불펜은 절단이다 — 반올림으로 바꾸면 밸런스가 움직인다", () => {
+    // 예전 식이 `3 + (rng * 4.0) as i32` 라 3~6인데 반올림하면 3~7이 된다.
+    // 감독을 얹는 김에 조용히 바뀌었고 cargo 검사가 잡았다.
+    expect(rust.includes("(3 + (rng.gen::<f64>() * 4.0) as i32 - (k * 1.5).round() as i32).max(1)")).toBe(true);
+  });
+});

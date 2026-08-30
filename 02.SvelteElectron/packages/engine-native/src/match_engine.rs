@@ -351,12 +351,15 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         // C-1: 큐가 비면 위의 단일 투수를 그대로 쓴다 — 예전과 완전히 같다
         my_queue: {
             let ps = opts.my_pitchers.clone().unwrap_or_default();
-            let mo = queue_max_outs(&ps, rng);
+            // ⚠ **우리 감독**이 우리 투수 운용을 정한다
+            let mo = queue_max_outs(&ps, rng, my_manager.bullpen_read);
             PitcherQueue { pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")), lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
         },
         opponent_queue: {
             let ps = opts.opponent_pitchers.clone().unwrap_or_default();
-            let mo = queue_max_outs(&ps, rng);
+            // ⚠ **상대 감독**이 상대 투수 운용을 정한다 — 한쪽만 넘기면
+            //   그쪽만 바뀌어 양 팀 기준이 갈린다
+            let mo = queue_max_outs(&ps, rng, opp_manager.bullpen_read);
             PitcherQueue { pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")), lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
         },
         home_lineup, away_lineup,
@@ -436,11 +439,30 @@ fn protagonist_max_outs(state: &MatchState) -> u32 {
     (12.0 + (stam / 99.0) * 15.0).round().max(1.0) as u32
 }
 
-fn queue_max_outs(pitchers: &[PartialPitcherStats], rng: &mut impl Rng) -> Vec<i32> {
+/// 투수마다 몇 아웃까지 맡기나.
+///
+/// 🔴 **감독이 안 들어갔다.** 선발 이닝은 스태미나+난수, 불펜은 난수뿐이라
+///   `bullpenRead` 가 높든 낮든 똑같이 바꿨다 — 그 값은 주인공 등판
+///   시점에만 쓰이고 있었다.
+///
+/// ⚠ `bullpen_read` 가 높을수록 **선발을 일찍 내리고 불펜을 짧게 끊는다**
+///   (불펜을 잘 읽는 감독). 50이 기준이라 **50이면 예전 값 그대로다.**
+fn queue_max_outs(pitchers: &[PartialPitcherStats], rng: &mut impl Rng,
+                  bullpen_read: f64) -> Vec<i32> {
+    // 70이면 선발 -3아웃(1이닝), 30이면 +2아웃꼴
+    let k = (bullpen_read - 50.0) / 50.0;
     pitchers.iter().enumerate().map(|(i, p)| {
         let stam = p.stamina_cap.unwrap_or(50.0);
-        if i == 0 { (12.0 + (stam / 99.0) * 15.0 + (rng.gen::<f64>() - 0.5) * 6.0).round() as i32 }
-        else      { 3 + (rng.gen::<f64>() * 4.0) as i32 }
+        if i == 0 {
+            let base = 12.0 + (stam / 99.0) * 15.0 + (rng.gen::<f64>() - 0.5) * 6.0;
+            (base - k * 5.0).round().max(6.0) as i32
+        } else {
+            // ⚠ **절단이다(`as i32`) — 반올림이 아니다.** 예전 식이
+            //   `3 + (rng * 4.0) as i32` 라 3~6이었는데, 반올림으로 바꾸면
+            //   3~7이 된다. 감독을 얹는 김에 **밸런스가 조용히 움직였고**
+            //   검사가 그걸 잡았다.
+            (3 + (rng.gen::<f64>() * 4.0) as i32 - (k * 1.5).round() as i32).max(1)
+        }
     }).collect()
 }
 
@@ -2597,5 +2619,55 @@ pub fn to_sim_game_result(
         next_home_rot_idx: (home_rot_idx + home_used.min(1)) as i32,
         next_away_rot_idx: (away_rot_idx + away_used.min(1)) as i32,
         pitcher_conditions: conds,
+    }
+}
+
+#[cfg(test)]
+mod 감독_투수운용 {
+    use super::*;
+
+    /// 🔴 **감독이 투수 교체를 바꾸는가.** 안 바뀌면 배선이 헛돈 것이다.
+    fn outs_for(bullpen_read: f64) -> Vec<i32> {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+        let ps: Vec<PartialPitcherStats> = (0..5).map(|i| PartialPitcherStats {
+            stamina_cap: Some(if i == 0 { 80.0 } else { 40.0 }),
+            ..Default::default()
+        }).collect();
+        queue_max_outs(&ps, &mut rng, bullpen_read)
+    }
+
+    #[test]
+    fn 불펜을_잘_읽으면_선발을_일찍_내린다() {
+        let quick = outs_for(90.0);
+        let slow  = outs_for(10.0);
+        assert!(quick[0] < slow[0],
+            "선발 아웃: 빠른 감독 {} vs 느린 감독 {}", quick[0], slow[0]);
+    }
+
+    #[test]
+    fn 오십이면_예전값이다() {
+        // 기준값에서 안 흔들려야 기존 밸런스가 그대로다
+        use rand::SeedableRng;
+        let mut r1 = rand::rngs::StdRng::seed_from_u64(7);
+        let ps: Vec<PartialPitcherStats> = (0..3).map(|_| PartialPitcherStats {
+            stamina_cap: Some(60.0), ..Default::default()
+        }).collect();
+        let with_mgr = queue_max_outs(&ps, &mut r1, 50.0);
+        let mut r2 = rand::rngs::StdRng::seed_from_u64(7);
+        let old: Vec<i32> = ps.iter().enumerate().map(|(i, p)| {
+            let stam = p.stamina_cap.unwrap_or(50.0);
+            if i == 0 { (12.0 + (stam / 99.0) * 15.0 + (r2.gen::<f64>() - 0.5) * 6.0).round() as i32 }
+            else      { 3 + (r2.gen::<f64>() * 4.0) as i32 }
+        }).collect();
+        assert_eq!(with_mgr, old, "50이면 예전과 같아야 한다");
+    }
+
+    #[test]
+    fn 하한이_있다() {
+        // 극단값에서 0아웃짜리 투수가 나오면 큐가 즉시 소진된다
+        for br in [0.0, 100.0] {
+            for v in outs_for(br) { assert!(v >= 1, "아웃 {} (bullpenRead {})", v, br); }
+        }
     }
 }
