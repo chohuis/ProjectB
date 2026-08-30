@@ -16,6 +16,10 @@
     growthRoom, growthGrade, gradeTone, scoutedGrade, foreignBadge,
   } from "../../../shared/utils/playerTraits";
   import { clubKeyOfTeam } from "../../../shared/utils/ids";
+  import { loadRosterRules } from "../../../shared/repo/newGameV3";
+  import { getTeamProfile } from "../../../shared/usecases/weekPhases/market";
+  import { medicalRecoveryMult, campConditionBonus, qualityGrade } from "../../../shared/utils/clubEffects";
+  import { isForeignInQuotaLeague } from "../../../shared/utils/foreignSlots";
 
   export let teamId: string = "";
   export let open: boolean = false;
@@ -143,6 +147,41 @@
   // 모달이 열려 있고 팀이 바뀌었을 때만 읽는다
   $: if (open && teamId && teamId !== playedFor) loadPlayed(teamId);
   $: if (!open) playedFor = "";
+
+  /**
+   * 구단 운영 효과 (B단계).
+   *
+   * 🔴 **식을 여기서 다시 쓰지 않는다.** `clubEffects` 의 함수를 그대로
+   *   부른다 — `injuries.ts`·`advanceWeek.ts` 와 같은 자리다.
+   *   두 벌이 되면 규칙 파일을 바꿨을 때 화면만 옛 값을 보인다.
+   */
+  let clubRules: {
+    medicalRules?: { recoverySpan?: number; minWeeks?: number };
+    campRules?: { conditionBonus?: number; weeks?: number };
+  } = {};
+  loadRosterRules().then((r) => { clubRules = r as typeof clubRules; }).catch(() => {});
+
+  $: profileOf = getTeamProfile(teamId, $gameStore, $masterStore) ?? null;
+  /** 부상 회복이 평균 대비 몇 % 빠른가 — 음수면 느리다 */
+  $: medicalPct = (() => {
+    const span = clubRules.medicalRules?.recoverySpan;
+    if (!span || !profileOf) return null;
+    const mult = medicalRecoveryMult(profileOf.medicalQuality, span);
+    return Math.round((1 - mult) * 100);
+  })();
+  /** 전지훈련 컨디션 가산 */
+  $: campBonus = (() => {
+    const b = clubRules.campRules?.conditionBonus;
+    if (!b || !profileOf) return null;
+    return campConditionBonus(profileOf.farmInvestment, b);
+  })();
+  /** 영구결번 — 이 구단이 비운 번호 */
+  $: retiredNums = ($gameStore.retiredNumbers?.[teamId] ?? []);
+  /** 외국인 보유 — 한도는 3명이다 */
+  $: foreignHeld = ($gameStore.npcs ?? []).filter((n) =>
+    (n.currentTeam ?? "") === teamId
+    && n.careerStatus !== "retired"
+    && isForeignInQuotaLeague(String((n as { nationality?: string }).nationality ?? "KOR")));
 
   function rankColor(rank: number): string {
     if (rank === 1) return "#9A6510";
@@ -491,6 +530,27 @@
                     {#if team.history.parentCompany}<div><span>모기업</span><strong>{team.history.parentCompany}</strong></div>{/if}
                     {#if stadiumCapacity}<div><span>수용 인원</span><strong>{stadiumCapacity.toLocaleString()}석</strong></div>{/if}
                   </div>
+
+                  <!-- 구단 운영 (B단계) — 값은 `clubEffects` 가 계산한다 -->
+                  {#if medicalPct !== null || campBonus !== null || retiredNums.length || foreignHeld.length}
+                    <div class="club-ops">
+                      {#if medicalPct !== null}
+                        <div><span>의료팀</span><strong>{qualityGrade(profileOf?.medicalQuality ?? 50)}</strong>
+                          <em>회복 {medicalPct > 0 ? `${medicalPct}% 빠름` : medicalPct < 0 ? `${-medicalPct}% 느림` : "평균"}</em></div>
+                      {/if}
+                      {#if campBonus !== null}
+                        <div><span>전지훈련</span><strong>{qualityGrade(profileOf?.farmInvestment ?? 50)}</strong>
+                          <em>시즌 초 컨디션 +{campBonus}</em></div>
+                      {/if}
+                      {#if foreignHeld.length > 0}
+                        <div><span>외국인</span><strong>{foreignHeld.length} / 3</strong>
+                          <em>{foreignHeld.map((f) => f.name).join(", ")}</em></div>
+                      {/if}
+                      {#if retiredNums.length > 0}
+                        <div><span>영구결번</span><strong>{retiredNums.map((n) => `#${n}`).join(" ")}</strong></div>
+                      {/if}
+                    </div>
+                  {/if}
 
                   {#if titlesByCompetition.length}
                     <div class="title-years">
@@ -956,6 +1016,13 @@
     background: var(--panel); border: 1px solid var(--panel-sunk);
     border-radius: 7px; padding: 6px 10px; font-size: 12px;
   }
+  /* 구단 운영 — 의료팀·전지훈련·외국인·영구결번 */
+  .club-ops { display: flex; flex-direction: column; gap: .3rem; margin: .5rem 0 .2rem; }
+  .club-ops div { display: flex; align-items: baseline; gap: .5rem; font-size: .82rem; }
+  .club-ops span { min-width: 4.2rem; opacity: .65; }
+  .club-ops strong { font-weight: 600; }
+  .club-ops em { font-style: normal; opacity: .7; font-size: .95em; }
+
   /* 연표 — 창단과 '여기부터' 구분선 */
   .tl-founded {
     display: flex; align-items: baseline; gap: .5rem;

@@ -57,6 +57,7 @@ import {
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
 import { loadRosterRules } from "../repo/newGameV3";
+import { campConditionBonus } from "../utils/clubEffects";
 import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
 import { applyForeignTurnover } from "./foreignPlayers";
 
@@ -1417,7 +1418,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         const tid = n.currentTeam ?? "";
         if (!tid) continue;
         const inv = getTeamProfile(tid, gNow, mNow)?.farmInvestment ?? 50;
-        campBonus[n.npcId] = Math.round(camp.conditionBonus * (inv / 50));
+        // ⚠ 식은 `clubEffects` 한 곳에 — 팀 상세가 같은 함수를 쓴다
+        campBonus[n.npcId] = campConditionBonus(inv, camp.conditionBonus);
       }
     }
     seasonStore.applyWeeklyConditionRecovery(bgEntities, campBonus);

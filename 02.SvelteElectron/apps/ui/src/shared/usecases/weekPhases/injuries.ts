@@ -1,6 +1,7 @@
 import { get } from "svelte/store";
 import { seedOf } from "../../utils/seedOf";
 import { loadRosterRules } from "../../repo/newGameV3";
+import { medicalRecoveryWeeks } from "../../utils/clubEffects";
 import { seasonStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
@@ -221,9 +222,9 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
         const tid = teamOf.get(occ.playerId) ?? "";
         if (!tid) continue;
         const q = getTeamProfile(tid, g, m)?.medicalQuality ?? 50;
-        // 50이 1.0 — 좋을수록 짧아진다
-        const mult = 1 - ((q - 50) / 50) * span;
-        occ.recoveryWeeks = Math.max(minW, Math.round(occ.recoveryWeeks * mult));
+        // ⚠ **식은 `clubEffects` 한 곳에만 둔다.** 팀 상세도 같은 함수를
+        //   써서 화면과 실제가 안 갈린다.
+        occ.recoveryWeeks = medicalRecoveryWeeks(occ.recoveryWeeks, q, span, minW);
       }
     }
   }
