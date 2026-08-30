@@ -42,6 +42,13 @@ const SCREENS = srcFiles.filter((f) => f.endsWith(".svelte"))
 const has = (s) => BODY.includes(s);
 const hasRust = (s) => RUST.includes(s);
 const screen = (n) => SCREENS.includes(n);
+/**
+ * 소식으로 나가는가 — **소식도 플레이어가 보는 자리다.**
+ *
+ * 🔴 처음엔 전용 화면만 셌다. 그래서 전역·캠퍼스·프로올스타처럼
+ *   `addMessage` 로 이미 나가는 것까지 "화면 없음"으로 셌다.
+ */
+const news = (idPrefix) => BODY.includes(idPrefix);
 
 /** [단계, 기능, 있나, 화면] */
 const ROWS = [
@@ -60,8 +67,8 @@ const ROWS = [
 
   // ── 대학 ──────────────────────────────────────────────────
   ["대학", "학업 (전공·학점)", has("academicsRules"), screen("AcademicsPage")],
-  ["대학", "캠퍼스 이벤트", has("campusEvents"), false],
-  ["대학", "프로 올스타 초청", has("proAllstar"), false],
+  ["대학", "캠퍼스 이벤트", has("campusEvents"), news("msg-allstar") || news("msg-campus")],
+  ["대학", "프로 올스타 초청", has("proAllstar"), news("msg-allstar")],
   ["대학", "졸업 후 드래프트", hasRust("대학_졸업반은_졸업_경로로"), screen("DraftObserveModal")],
 
   // ── 독립리그 ──────────────────────────────────────────────
@@ -79,8 +86,8 @@ const ROWS = [
   // ── 프로 ──────────────────────────────────────────────────
   ["프로", "1군·2군 승강", has("processProTeamCallupCalldown"), screen("TeamPage")],
   ["프로", "부상자 명단(IL)", has("const activeCount = active.length - ilCount"), screen("InjuryPanel")],
-  ["프로", "등록말소 기간", has("demotionLockWeeks"), false],
-  ["프로", "웨이버 공시", hasRust("fn waiver_claim"), false],
+  ["프로", "등록말소 기간", has("demotionLockWeeks"), news("msg-demote-")],
+  ["프로", "웨이버 공시", hasRust("fn waiver_claim"), news("msg-waiver-")],
   ["프로", "엔트리 28/26", has("activeRosterSize"), false],
   ["프로", "트레이드", has("applyTradeTransfer"), screen("TradeModal")],
   ["프로", "연봉 협상", has("ContractNegotiationModal"), screen("ContractNegotiationModal")],
@@ -108,13 +115,13 @@ const ROWS = [
   ["군대", "상무 지원", has("SportsUnitApplicationModal"), screen("SportsUnitApplicationModal")],
   ["군대", "일반 입대", has("generalEnlist"), screen("MilitaryEnlistAskModal")],
   ["군대", "복무 중 상태", has("MilitaryStatusPanel"), screen("MilitaryStatusPanel")],
-  ["군대", "전역·복귀", hasRust("military_discharge"), false],
+  ["군대", "전역·복귀", hasRust("military_discharge"), news("msg-military-discharge")],
 
   // ── FA ────────────────────────────────────────────────────
   ["FA", "FA 자격·등급", has("faRules"), screen("FaMarketModal")],
   ["FA", "제안 생성", has("generateFaOffers"), screen("FaMarketModal")],
   ["FA", "보상선수·보상금", has("compensation"), false],
-  ["FA", "미계약 → 원소속 재계약", hasRust("fa_fallback"), false],
+  ["FA", "미계약 → 원소속 재계약", hasRust("fa_fallback"), news("msg-resign-")],
 
   // ── 은퇴 ──────────────────────────────────────────────────
   ["은퇴", "은퇴 판정", has("retirementRules"), screen("RetirementAskModal")],
@@ -136,4 +143,4 @@ for (const [st, name, ok, sc] of ROWS) {
   else if (!sc) noScreen++;
   console.log("  " + mark + " " + scr + "  " + name);
 }
-console.log(NL + "기능 없음 " + no + "건 · 기능은 있는데 전용 화면 없음 " + noScreen + "건");
+console.log(NL + "기능 없음 " + no + "건 · 기능은 있는데 **보이는 데가** 없음 " + noScreen + "건");
