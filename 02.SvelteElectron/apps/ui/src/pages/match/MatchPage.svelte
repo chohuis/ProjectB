@@ -7,6 +7,8 @@
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
+  import { managerEffect } from "../../shared/utils/managerStyle";
+  import { managerProfileOf } from "../../shared/utils/staffEffects";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
   import {
     staminaCostOf, pitchesLeft,
@@ -775,8 +777,13 @@
       // Rust ManagerStats와 키가 같으므로 그대로 넘긴다. 예전엔 옛 키를 새 키에
       // 별칭으로 붙이고 있었는데 옛 키가 이미 없어서 5종 중 4종이 undefined였다 —
       // JSON.stringify가 그 키를 지워 Rust는 매 경기 기본값으로 돌았다
+      // 🔴 **작전 배수를 같이 넘긴다.** 스타일 9종이 저장되고 팀 상세에
+      //   표시까지 되는데 경기에선 아무것도 안 바꿨다 — 안 넘기면
+      //   `serde(default)` 라 조용히 1.0(예전 동작)이 된다.
+      const myMgrEff = managerEffect(managerProfileOf(myTeamId ?? "", get(masterStore).entities));
       const myManagerStats = myManagerEntity?.details.manager
-        ? { ...myManagerEntity.details.manager.stats }
+        ? { ...myManagerEntity.details.manager.stats,
+            buntMult: myMgrEff.buntMult, stealMult: myMgrEff.stealMult }
         : undefined;
       const response = await window.projectB.matchStart({
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)

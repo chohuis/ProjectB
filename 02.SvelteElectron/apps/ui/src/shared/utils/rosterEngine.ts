@@ -1,3 +1,7 @@
+import {
+  type ManagerStyleEffect, NEUTRAL_STYLE, styleNoiseOf, managerEffect,
+} from "./managerStyle";
+import { managerProfileOf } from "./staffEffects";
 import { SANGMU_TEAM_IDS } from "./ids";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
@@ -459,6 +463,8 @@ export function getTeamLineup(
   teamGameCount = 0,
   rotationSense = 50,
   npcRetired?: string[],
+  /** 감독 효과. **안 넘기면 중립**이라 예전과 같게 돈다 */
+  managerEff?: ManagerStyleEffect,
 ): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   let batters = players.filter(
@@ -526,20 +532,57 @@ export function getTeamLineup(
   }
 
   // 타순 정렬: 1번(출루율 높음) → 3·4번(파워·컨택) → 나머지
-  return sortBattingOrder(lineup9, entities);
+  // ⚠ 감독 효과는 호출부가 넘긴다 — 안 넘기면 중립이라 예전과 같다
+  return sortBattingOrder(lineup9, entities, managerEff, teamId);
 }
 
-function sortBattingOrder(ids: string[], entities: EntityRow[]): string[] {
+/**
+ * 타순.
+ *
+ * 🔴 **예전엔 전 구단이 똑같은 규칙이었다** — 1번은 눈+발 최고,
+ *   3·4번은 파워+컨택 최고. 감독이 누구든 같은 타순이 나왔고,
+ *   그래서 `offenseMind`·`tacticalIQ`·스타일 9종이 **저장만 되고
+ *   아무것도 안 바꾸는 값**이었다(팀 상세엔 표시까지 됐다).
+ *
+ * ⚠ 감독이 없거나 규칙이 꺼져 있으면 **예전과 똑같이 돈다.**
+ */
+function sortBattingOrder(
+  ids: string[],
+  entities: EntityRow[],
+  mgr?: ManagerStyleEffect,
+  teamId = "",
+): string[] {
   if (ids.length === 0) return [];
 
+  const eff = mgr ?? NEUTRAL_STYLE;
   const map = new Map(entities.map((e) => [e.id, e]));
+  // 🔴 **팀 안 상대 나이로 잰다.** 절대 나이(25 기준)는 리그마다 안 맞아서,
+  //   고교(전원 16~18세)에선 "육성 우선"과 "노장 중용"이 **같은 타순**을
+  //   냈다(실측). 이러면 규칙에 값을 적어도 죽은 갈래가 된다.
+  const ages = ids.map((id) =>
+    Number((map.get(id) as unknown as { age?: number } | undefined)?.age ?? 0))
+    .filter((v) => v > 0);
+  const ageMid = ages.length
+    ? ages.slice().sort((a, b) => a - b)[Math.floor(ages.length / 2)] : 0;
+  // 그 명단의 나이 폭 — 좁으면 나이 가중이 무의미하므로 최소 1로 둔다
+  const ageSpan = ages.length
+    ? Math.max(1, Math.max(...ages) - Math.min(...ages)) : 1;
   const scored = ids.map((id) => {
     const e = map.get(id);
     if (!e) return { id, lead: 0, power: 0, contact: 0 };
-    const b = playerDetails(e).batting;
-    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50);
-    const power   = (b?.power ?? 50) + (b?.contact ?? 50);
-    const contact = b?.contact ?? 50;
+    const d = playerDetails(e);
+    const b = d.batting;
+    // ⚠ **잡음은 선수마다 고정이다** — 매번 다르면 경기마다 타순이 바뀐다
+    const nz = styleNoiseOf(id, teamId, eff.noise);
+    const age = Number((e as unknown as { age?: number }).age ?? ageMid);
+    // 나이 가중: 노장 중용은 +, 육성 우선은 −.
+    // ⚠ **그 팀 중앙값에서 얼마나 떨어졌나**를 폭으로 나눈다 — 리그마다
+    //   나이대가 달라도 같은 세기로 듣는다.
+    const ageAdj = ((age - ageMid) / ageSpan) * eff.age;
+    const def = (b?.fielding ?? 50) * (eff.defense / 100);
+    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50) + eff.speed + ageAdj + def + nz;
+    const power   = (b?.power ?? 50) + (b?.contact ?? 50) + eff.power + ageAdj + def + nz;
+    const contact = (b?.contact ?? 50) + nz;
     return { id, lead, power, contact };
   });
 
@@ -621,6 +664,10 @@ export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
   const rotation = base;
 
   const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, rotationSense, npcRetired);
-  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired);
+  // 감독 효과 — **여기서 한 번 뽑아 넘긴다.** 안 넘기면 중립이라
+  // 스타일이 다시 죽은 값이 된다.
+  const mgrProfile = managerProfileOf(teamId, entities);
+  const mgrEff = managerEffect(mgrProfile);
+  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired, mgrEff);
   return { rotation, bullpen, closer, lineup };
 }

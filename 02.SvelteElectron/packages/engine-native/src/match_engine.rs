@@ -196,6 +196,9 @@ fn grade_of(pit: &PitcherStats, t: PitchType) -> u8 {
 
 fn create_manager(opts: &PartialManagerStats) -> ManagerStats {
     ManagerStats {
+        // ⚠ **안 넘어오면 1.0(예전 동작)이다**
+        bunt_mult:      opts.bunt_mult.unwrap_or(1.0),
+        steal_mult:     opts.steal_mult.unwrap_or(1.0),
         tactical_iq:    opts.tactical_iq.unwrap_or(50.0),
         bullpen_read:   opts.bullpen_read.unwrap_or(50.0),
         offense_mind:   opts.offense_mind.unwrap_or(50.0),
@@ -994,6 +997,12 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     let manager_boost = if is_our_batting {
         (state.my_manager.offense_mind - 50.0) * T::OFFENSE_STEAL_MODIFIER
     } else { 0.0 };
+    // 🔴 **스타일이 도루 시도 자체를 바꾼다.** `offense_mind` 는 이미
+    //   성공 쪽에 얹혀 있었지만, 감독이 **걸지 말지**는 못 정했다.
+    // ⚠ 1.0이면 예전 동작이다.
+    let steal_mult = if is_our_batting {
+        state.my_manager.steal_mult.clamp(0.0, 3.0)
+    } else { 1.0 };
     // ⚠ 계수를 여기 적지 않는다 — **`npc_sim`이 같은 규칙을 쓴다.**
     // 두 벌로 두면 주인공 기록과 리그 기록이 다른 척도가 된다
     // (실제로 도루가 이쪽에만 있어서 리그 도루가 0이었다).
@@ -1008,7 +1017,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     if first.is_some() && second.is_none() {
         let r = first.as_ref().unwrap().clone();
         let (attempt_prob, success) = T::steal_second_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
-        if rng.gen::<f64>() < attempt_prob {
+        if rng.gen::<f64>() < attempt_prob * steal_mult {
             if rng.gen::<f64>() < success {
                 if let Some(id) = r.player_id.clone() { stole.push(id); }
                 second = first.take();
@@ -1023,7 +1032,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
         if third.is_none() && r.speed > T::STEAL_3B_SPEED_GATE {
             let r = r.clone();
             let (attempt_prob, success) = T::steal_third_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
-            if rng.gen::<f64>() < attempt_prob {
+            if rng.gen::<f64>() < attempt_prob * steal_mult {
                 if rng.gen::<f64>() < success {
                     if let Some(id) = r.player_id.clone() { stole.push(id); }
                     third = second.take();
@@ -1673,7 +1682,11 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         && pre_state.count.strikes < 2
         && (pre_state.runners.first.is_some() || pre_state.runners.second.is_some())
         && (pre_state.score.home - pre_state.score.away).abs() <= 3
+        // ⚠ **감독 배수는 우리 팀 공격일 때만 건다** — 상대 감독은 여기
+        //   모델에 없다. 1.0이면 예전과 똑같이 돈다.
         && rng.gen::<f64>() < T::SAC_BUNT_ATTEMPT_PROB
+            * if is_our_team_fielding(&pre_state) { 1.0 }
+              else { state.my_manager.bunt_mult.clamp(0.0, 3.0) }
     {
         let bunt = current_batter.bunting.unwrap_or(50.0);
         let ok = T::SAC_BUNT_SUCCESS_BASE + (bunt - 50.0) * 0.005;

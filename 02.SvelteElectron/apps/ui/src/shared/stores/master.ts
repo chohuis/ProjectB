@@ -17,6 +17,7 @@ import { primeForeignRules } from "../utils/foreignSlots";
 import { primeCareerScoreRules } from "../utils/universityUtils";
 import { primeAcademicsHsRules } from "../utils/academicsEngine";
 import { primeRosterOpsRules } from "../utils/rosterEngine";
+import { primeManagerStyleRules } from "../utils/managerStyle";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
@@ -977,6 +978,8 @@ function createMasterStore() {
           primeCareerScoreRules(genRules as Parameters<typeof primeCareerScoreRules>[0]);
           primeAcademicsHsRules(genRules as Parameters<typeof primeAcademicsHsRules>[0]);
           primeRosterOpsRules(genRules as Parameters<typeof primeRosterOpsRules>[0]);
+          // 감독 스타일 — 안 실으면 규칙이 늘 null 이라 **스타일이 다시 죽는다**
+          primeManagerStyleRules((genRules as Record<string, unknown>).managerStyleRules);
         }
         // 경기 화면이 투구 선택의 스태미나 소모를 표시한다.
         // **엔진과 같은 파일**을 읽는다 — 숫자를 두 벌로 두지 않는다.

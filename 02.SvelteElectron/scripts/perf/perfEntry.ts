@@ -15,6 +15,9 @@ import {
 import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
+import { getTeamLineup } from "../../apps/ui/src/shared/utils/rosterEngine";
+import { managerProfileOf } from "../../apps/ui/src/shared/utils/staffEffects";
+import { managerEffect } from "../../apps/ui/src/shared/utils/managerStyle";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
 import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
@@ -3066,6 +3069,50 @@ export async function dbFingerprint(slotId: string): Promise<string> {
  *   자격자가 아무리 많아도 전원 0홀드다.
  * ⚠ 자격선(minIp)은 통과하는데 값이 0인 부문은 **자격선 문제가 아니다.**
  */
+/**
+ * 감독 스타일이 실제로 타순을 바꾸는가.
+ *
+ * 🔴 **배선이 헛돌면 "아무 일도 안 일어남"으로 나타난다** — 스타일이
+ *   달라도 타순이 같으면 값이 안 물린 것이다.
+ * ⚠ 같은 로스터에 감독만 바꿔 넣어 비교한다.
+ */
+export function managerStyleProbe(): Record<string, unknown> {
+  const ents = get(masterStore).entities;
+  const teams = get(masterStore).teams;
+  const byStyle: Record<string, number> = {};
+  let withMgr = 0, noMgr = 0;
+  for (const t of teams) {
+    const prof = managerProfileOf(t.id, ents);
+    if (!prof) { noMgr++; continue; }
+    withMgr++;
+    const k = prof.style ?? "(없음)";
+    byStyle[k] = (byStyle[k] ?? 0) + 1;
+  }
+  // 같은 팀 로스터에 스타일만 바꿔 끼워 타순이 달라지는지 본다
+  const sample = teams.find((t) => managerProfileOf(t.id, ents) != null);
+  const orders: Record<string, string> = {};
+  if (sample) {
+    for (const st of ["공격 지향", "수비 조직", "육성 우선", "노장 중용"]) {
+      const eff = managerEffect({
+        style: st, tacticalIQ: 50, offenseMind: 50, riskTolerance: 50,
+      });
+      const ids = getTeamLineup(sample.id, ents, undefined, undefined,
+                                1, 0, 50, undefined, eff);
+      orders[st] = ids.slice(0, 5).join(",");
+    }
+    const base = getTeamLineup(sample.id, ents, undefined, undefined, 1, 0, 50);
+    orders["(감독없음)"] = base.slice(0, 5).join(",");
+  }
+  const uniq = new Set(Object.values(orders));
+  return {
+    감독있는팀: withMgr, 감독없는팀: noMgr,
+    스타일분포: byStyle,
+    표본팀: sample?.id ?? null,
+    타순: orders,
+    서로다른타순: uniq.size,
+  };
+}
+
 export function bullpenUseProbe(leagueId = "LEAGUE_HIGHSCHOOL"): Record<string, unknown> {
   const st = get(seasonStore).leagueState?.[leagueId]?.stats ?? {};
   let pitchers = 0, reliefOnly = 0, everRelieved = 0, allStarts = 0;

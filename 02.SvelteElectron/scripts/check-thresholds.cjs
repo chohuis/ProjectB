@@ -71,6 +71,7 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
           // ⚠ 고교도 수상 대상이다 — 그런데 타격왕·도루왕·홀드왕이 0건이다
           awardsHs: await app.awardThresholdProbe("LEAGUE_HIGHSCHOOL"),
           bullpenHs: app.bullpenUseProbe("LEAGUE_HIGHSCHOOL"),
+          mgrStyle: app.managerStyleProbe(),
           bullpenKbl: app.bullpenUseProbe("LEAGUE_KBL"),
           steal: app.stealInputProbe("LEAGUE_KBL"),
           risp: app.rispSplitProbe("LEAGUE_KBL"),
@@ -145,6 +146,7 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
           + `  2위차 ${String(v["2위차"] ?? "-").padStart(5)}`
           + `  중앙 ${String(v.중앙 ?? "-").padStart(6)}${flag}`);
       }
+      if (s.mgrStyle) log("      ─ 감독 " + JSON.stringify(s.mgrStyle));
       if (s.bullpenHs) {
         log("      ─ 불펜 · 고교 " + JSON.stringify(s.bullpenHs));
         log("      ─ 불펜 · KBL  " + JSON.stringify(s.bullpenKbl));

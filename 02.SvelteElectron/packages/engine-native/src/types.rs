@@ -261,10 +261,25 @@ pub struct ManagerStats {
     #[serde(rename = "offenseMind")]    pub offense_mind: f64,
     pub motivator: f64,
     #[serde(rename = "clutchDecision")] pub clutch_decision: f64,
+    /// 감독 스타일이 정하는 작전 배수. **1.0이 예전 동작이다.**
+    ///
+    /// 🔴 스타일 9종이 저장되고 팀 상세에 표시까지 되는데 경기에선
+    ///   아무것도 안 바꿨다 — 공격 지향 감독이 번트를 제일 많이 댈 수
+    ///   있었다.
+    /// ⚠ `serde(default)` 라 **안 넘겨도 조용히 통과한다.**
+    /// ⚠ **TS 는 camelCase 로 보낸다** — 이 구조체엔 `rename_all` 이
+    ///   없어서 이름을 명시해야 한다. 안 붙이면 `bunt_mult` 를
+    ///   기대해서 **조용히 기본값(1.0)으로 돌아간다.**
+    #[serde(default = "one", rename = "buntMult")]  pub bunt_mult: f64,
+    #[serde(default = "one", rename = "stealMult")] pub steal_mult: f64,
 }
+
+fn one() -> f64 { 1.0 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PartialManagerStats {
+    #[serde(default, rename = "buntMult")]  pub bunt_mult: Option<f64>,
+    #[serde(default, rename = "stealMult")] pub steal_mult: Option<f64>,
     #[serde(rename = "tacticalIQ")]     pub tactical_iq: Option<f64>,
     #[serde(rename = "bullpenRead")]    pub bullpen_read: Option<f64>,
     #[serde(rename = "offenseMind")]    pub offense_mind: Option<f64>,
