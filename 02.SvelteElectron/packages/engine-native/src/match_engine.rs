@@ -1869,7 +1869,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         // 🔴 **타석 시작에만 바꾼다.** 이게 없으면 투구마다 판정해서
         //   볼카운트 1-2 도중에 타자가 갈린다 — 야구가 아니다.
         let pa_start = pre_state.count.balls == 0 && pre_state.count.strikes == 0;
-        if pa_start && used < bench.len() && !lineup.is_empty()
+        // 🔴 **한 자리를 남긴다.** 대타가 벤치를 다 먹으면 8회 뒤
+        //   대주자가 쓸 사람이 없다 — 실측에서 대주자가 팀당 0.08~0.16회였다.
+        //   실제 감독도 대주자를 들려높고 간다.
+        if pa_start && used + 1 < bench.len() && !lineup.is_empty()
             && pre_state.inning >= T::PINCH_HIT_MIN_INNING
             // ⚠ 3점 차까지 본다 — 2점이면 팀당 0.67회로 실제(1~2)보다 적다
             && (pre_state.score.home - pre_state.score.away).abs() <= 3
@@ -1907,6 +1910,79 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                         }
                     }
                     pinch_log = Some(format!("대타 — {}", name));
+                }
+            }
+        }
+    }
+
+    // 🔴 **대주자** (7단계). 늦은 접전에 느린 주자를 바꾼다.
+    //
+    // ⚠ **대타와 같은 벤치**다 — 대타로 넷을 다 쓰면 대주자가 없다.
+    // ⚠ **타순 자리도 물려받는다.** 안 하면 이미 물러난 사람이 계속
+    //   타석에 선다 — 라인업에서 그 id 자리를 찾아 같이 갈아 끼운다.
+    // ⚠ 벤치는 앞에서부터 쓰는데 대주자는 **제일 빠른 사람**을 원한다.
+    //   남은 구간에서 골라 맨 앞으로 당긴 뒤 소모한다(불변식 유지).
+    // ⚠ 3루 주자는 안 바꾼다 — 한 베이스면 발이 거의 안 쓰인다.
+    let mut pinch_run_log: Option<String> = None;
+    {
+        let bat_is_home = pinch_state.half == HalfInning::Bottom;
+        let used = if bat_is_home { pinch_state.home_bench_used }
+                   else          { pinch_state.away_bench_used };
+        let blen = if bat_is_home { pinch_state.home_bench.len() }
+                   else          { pinch_state.away_bench.len() };
+        let pa_start = pinch_state.count.balls == 0 && pinch_state.count.strikes == 0;
+        if pa_start && used < blen
+            && pinch_state.inning >= T::PINCH_RUN_MIN_INNING
+            && (pinch_state.score.home - pinch_state.score.away).abs() <= 2
+        {
+            // 느린 쪽부터 본다 — 2루가 득점권이라 먼저다
+            let target: Option<u8> = if pinch_state.runners.second.is_some() { Some(2) }
+                                     else if pinch_state.runners.first.is_some() { Some(1) }
+                                     else { None };
+            if let Some(base) = target {
+                let cur = if base == 2 { pinch_state.runners.second.clone() }
+                          else         { pinch_state.runners.first.clone() };
+                let cur = cur.unwrap();
+                let bench = if bat_is_home { &pinch_state.home_bench }
+                            else          { &pinch_state.away_bench };
+                // 남은 벤치 중 제일 빠른 사람
+                let best = (used..bench.len())
+                    .max_by(|&a, &b| bench[a].speed.total_cmp(&bench[b].speed))
+                    .unwrap();
+                if bench[best].speed >= cur.speed + T::PINCH_RUN_SPEED_GAP {
+                    let iq = (batting_manager(&pinch_state).tactical_iq - 50.0) / 50.0;
+                    let p = T::PINCH_RUN_PROB * (1.0 + iq * 0.5);
+                    if rng.gen::<f64>() < p.clamp(0.0, 0.95) {
+                        if bat_is_home { pinch_state.home_bench.swap(used, best); }
+                        else           { pinch_state.away_bench.swap(used, best); }
+                        let picked = if bat_is_home { pinch_state.home_bench[used].clone() }
+                                     else          { pinch_state.away_bench[used].clone() };
+                        let name = picked.name.clone().unwrap_or_default();
+                        let pid = picked.id.clone().unwrap_or_default();
+                        let new_runner = create_runner(&picked);
+                        if base == 2 { pinch_state.runners.second = Some(new_runner); }
+                        else         { pinch_state.runners.first  = Some(new_runner); }
+                        // 🔴 타순 자리도 물려받는다 — 안 하면 물러난 사람이 또 친다
+                        if let Some(ref old_id) = cur.player_id {
+                            let lineup = if bat_is_home { &mut pinch_state.home_lineup }
+                                         else          { &mut pinch_state.away_lineup };
+                            if let Some(slot) = lineup.iter().position(|b| b.id.as_deref() == Some(old_id.as_str())) {
+                                lineup[slot] = picked;
+                            }
+                        }
+                        // 기록도 사람을 따라간다 — 그 사람 득점·도루가 붙을 자리
+                        if !pid.is_empty() {
+                            let lines = if bat_is_home { &mut pinch_state.home_bat_lines }
+                                        else          { &mut pinch_state.away_bat_lines };
+                            if !lines.iter().any(|x| x.player_id == pid) {
+                                lines.push(crate::types::BatterLineAccum {
+                                    player_id: pid, ..Default::default() });
+                            }
+                        }
+                        if bat_is_home { pinch_state.home_bench_used += 1; }
+                        else           { pinch_state.away_bench_used += 1; }
+                        pinch_run_log = Some(format!("대주자 — {}루에 {}", base, name));
+                    }
                 }
             }
         }
@@ -2624,6 +2700,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let pitch_log = build_pitch_log(&pre_state, decision, lr.landing, result_code, quality);
     // ⚠ 대타 줄이 맨 앞이다 — 그 타석 결과보다 먼저 일어난 일이다
     let narrative_logs: Vec<String> = pinch_log.into_iter()
+        .chain(pinch_run_log.into_iter())
         .chain(steal_logs.into_iter())
         .chain(lr.miss_log.into_iter())
         .chain(running_logs.into_iter())
@@ -3823,6 +3900,49 @@ mod 방해 {
         assert!(top < 0.95,
             "최고 IQ 가 {} 라 천장 0.95 에 닿는다 — 위로 죽은 갈래", top);
         assert!(T::PINCH_HIT_PROB > 0.0, "0이면 대타가 아예 안 난다");
+    }
+
+    /// 🔴 **대주자도 타순 자리를 물려받는다.**
+    ///
+    /// 1루 주자를 바꿔 놓고 라인업을 그대로 두면 **이미 물러난 사람이
+    /// 계속 타석에 선다.** 대타와 같은 함정인데 이쪽은 주자 쪽이라
+    /// 눈에 덜 띈다.
+    #[test]
+    fn 대주자도_타순_자리를_물려받는다() {
+        let src = include_str!("match_engine.rs");
+        let i = src.find("let mut pinch_run_log").expect("대주자 판정이 없다");
+        let j = src[i..].find("let pre_state = pinch_state;").expect("끝을 못 찾겠다");
+        let block = &src[i..i + j];
+        assert!(block.contains("lineup.iter().position"),
+            "라인업에서 그 사람 자리를 안 찾는다 — 물러난 사람이 또 친다");
+        assert!(block.contains("BatterLineAccum"),
+            "대주자 기록 줄을 안 만든다 — 득점·도루가 엉뚱한 사람에게 붙는다");
+    }
+
+    /// 🔴 **대타가 벤치를 다 먹으면 대주자가 없다.**
+    ///
+    /// 실측에서 대타가 매 경기 넷을 다 썼고 대주자가 팀당 0.08~0.16회로
+    /// 눌렸다. 한 자리를 남기게 하니 0.16~0.25 가 됐다.
+    #[test]
+    fn 대타가_벤치를_다_먹지_않는다() {
+        // 🔴 `include_str!` 은 **이 검사 자신도** 담는다 — 그냥 찾으면
+        //   아래 문자열이 걸려서 변이를 놓친다(실제로 놓쳤다).
+        //   대타 블록 안을 본다.
+        let src = include_str!("match_engine.rs");
+        let i = src.find("let mut pinch_state").expect("대타 판정이 없다");
+        let j = src[i..].find("let mut pinch_run_log").expect("대주자 판정이 없다");
+        assert!(src[i..i + j].contains("used + 1 < bench.len()"),
+            "대타가 벤치를 끝까지 쓴다 — 대주자 몫이 안 남는다");
+    }
+
+    /// ⚠ 대주자 확률에도 감독이 들어갈 자리가 있어야 한다 — 대타와 같다
+    #[test]
+    fn 대주자_확률에_감독이_들어갈_자리가_있다() {
+        let top = T::PINCH_RUN_PROB * 1.5;
+        assert!(top < 0.95,
+            "최고 IQ 가 {} 라 천장 0.95 에 닿는다 — 위로 죽은 갈래", top);
+        assert!(T::PINCH_RUN_MIN_INNING >= T::PINCH_HIT_MIN_INNING,
+            "대주자가 대타보다 이르면 벤치를 먼저 먹는다");
     }
 
     /// ⚠ **벤치보다 문턱이 높으면 대타가 안 난다.**

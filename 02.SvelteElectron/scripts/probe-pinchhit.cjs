@@ -34,7 +34,7 @@ function main() {
   const home = shared.squad(shared.roster("TEAM_HOME", SEED));
   const away = shared.squad(shared.roster("TEAM_AWAY", SEED + 1));
 
-  let total = 0, gamesWith = 0, maxOne = 0;
+  let total = 0, totalRun = 0, gamesWith = 0, maxOne = 0;
   const names = new Set();
 
   for (let i = 0; i < GAMES; i++) {
@@ -53,7 +53,10 @@ function main() {
     if (fin.error) throw new Error(`simToGameEnd: ${fin.error}`);
 
     const hits = (fin.logs ?? []).filter((l) => String(l).startsWith("대타 —"));
+    // ⚠ 대주자는 **같은 벤치**를 쓴다 — 둘을 같이 봐야 소모가 보인다
+    const runs = (fin.logs ?? []).filter((l) => String(l).startsWith("대주자 —"));
     for (const l of hits) names.add(String(l));
+    totalRun += runs.length;
     total += hits.length;
     if (hits.length > 0) gamesWith++;
     if (hits.length > maxOne) maxOne = hits.length;
@@ -62,6 +65,8 @@ function main() {
   console.log(`[대타] ${GAMES}경기 · 씨앗 ${SEED}${NOBENCH ? " · 벤치 없음(대조군)" : ""}`);
   console.log(`  총 ${total}회 · 경기당 ${(total / GAMES).toFixed(2)}회`
     + ` · 팀당 경기당 ${(total / GAMES / 2).toFixed(2)}회`);
+  console.log(`  대주자 총 ${totalRun}회`
+    + ` · 팀당 경기당 ${(totalRun / GAMES / 2).toFixed(2)}회`);
   console.log(`  대타가 난 경기 ${(gamesWith / GAMES * 100).toFixed(1)}%`
     + ` · 한 경기 최다 ${maxOne}회 · 서로 다른 대타 ${names.size}명`);
 }

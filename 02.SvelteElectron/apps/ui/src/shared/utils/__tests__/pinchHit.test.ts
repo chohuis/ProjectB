@@ -123,14 +123,29 @@ describe("대타 — 다섯 층이 이어져 있다", () => {
     expect(ME).toContain("home_bench: opts.home_bench.clone().unwrap_or_default()");
   });
 
-  /** ⚠ 비면 예전 동작이다 — 구 세이브가 죽으면 안 된다 */
+  /**
+   * ⚠ 비면 예전 동작이다 — 구 세이브가 죽으면 안 된다.
+   * ⚠ 대타는 **한 자리 남기고**(`used + 1`) 대주자는 끝까지 쓴다.
+   */
   it("벤치가 없으면 예전과 같게 돈다", () => {
-    expect(ME).toContain("used < bench.len()");
+    expect(ME).toContain("used + 1 < bench.len()");
+    expect(ME).toContain("if pa_start && used < blen");
   });
 
   it("⑤ 대타가 타순 자리를 물려받는다", () => {
     expect(ME).toContain("pinch_state.home_lineup[slot] = picked");
     expect(ME).toContain("pinch_state.home_bench_used += 1");
+  });
+
+  /**
+   * 대주자도 **같은 벤치**를 쓴다 — 대타가 넓을 다 먹으면 8회에
+   * 쓸 사람이 없다. 실측으로 팀당 0.08~0.16 → 0.16~0.25 가 됐다.
+   */
+  it("⑤ 대주자가 같은 벤치를 나눠 쓴다", () => {
+    expect(ME).toContain("let mut pinch_run_log: Option<String> = None;");
+    expect(ME).toContain("used + 1 < bench.len()");
+    // 대주자 로그도 같은 채널로 나간다
+    expect(ME).toContain(".chain(pinch_run_log.into_iter())");
   });
 
   /**
