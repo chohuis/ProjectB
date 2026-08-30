@@ -16,7 +16,7 @@ import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/share
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
-import { npcLiveStatsStore, livePitchingOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
+import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
@@ -6582,5 +6582,48 @@ export function mailboxLoadProbe(): Record<string, unknown> {
     안읽음: mb.filter((m) => !m.readAt).length,
     종류수: Object.keys(byKind).length,
     상위: top.map(([k, n]) => `${k}:${n}`),
+  };
+}
+
+/**
+ * 드래프트 스카우팅 효과 (D단계) — **전후를 재는 게 요점이다.**
+ *
+ * ⚠ 스카우팅은 지명 **순서**를 바꾼다. 상위 지명자의 평균 OVR 이 내려가고
+ *   하위에서 대박이 나오면 도는 것이다. 안 바뀌면 배선이 끊긴 것이다.
+ */
+export function draftScoutProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const byRound = new Map<number, number[]>();
+  const byTeam = new Map<string, number[]>();
+  for (const n of g.npcs ?? []) {
+    for (const e of (n as { careerEvents?: { eventType?: string; detail?: string;
+      toTeamId?: string }[] }).careerEvents ?? []) {
+      if (e.eventType !== "draft_picked") continue;
+      // detail 예: "3라운드 21순위" — 앞 숫자가 라운드다
+      const r = Number(String(e.detail ?? "").match(/^(\d+)/)?.[1] ?? 0);
+      if (!r) continue;
+      // ⚠ **`n.ovr` 은 없다.** 정본은 `liveOvrOf` 다 — 처음에 그걸 몰라서
+      //   라운드별 평균이 전부 0으로 나왔다(실측).
+      const ovr = liveOvrOf(n, get(npcLiveStatsStore));
+      if (!byRound.has(r)) byRound.set(r, []);
+      byRound.get(r)!.push(ovr);
+      const t = e.toTeamId ?? "";
+      if (t) {
+        if (!byTeam.has(t)) byTeam.set(t, []);
+        byTeam.get(t)!.push(ovr);
+      }
+    }
+  }
+  const avg = (a: number[]) => a.length
+    ? Math.round((a.reduce((x, y) => x + y, 0) / a.length) * 10) / 10 : 0;
+  const rounds = [...byRound.entries()].sort((a, b) => a[0] - b[0]).slice(0, 5);
+  return {
+    지명수: [...byRound.values()].reduce((a, b) => a + b.length, 0),
+    라운드별평균: rounds.map(([r, v]) => `R${r}:${avg(v)}`),
+    // 팀별 평균의 폭 — 스카우팅이 돌면 벌어진다
+    팀별폭: (() => {
+      const xs = [...byTeam.values()].map(avg).filter((v) => v > 0).sort((a, b) => a - b);
+      return xs.length ? `${xs[0]}~${xs[xs.length - 1]}` : "-";
+    })(),
   };
 }

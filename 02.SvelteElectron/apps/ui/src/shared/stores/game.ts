@@ -3739,6 +3739,19 @@ function createGameStore() {
         : {};
       const simResult = await runDraftSimulation(
         candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
+        // 🔴 **팀마다 다른 눈으로 보게 한다.** 안 넘기면 전 구단이 진짜
+        //   능력을 정확히 알던 예전 동작이다 — `serde(default)` 라 조용하다.
+        (() => {
+          const sp = (rulesFile as unknown as { draftScoutingRules?: { span?: number } })
+            .draftScoutingRules?.span ?? 0;
+          if (sp <= 0) return undefined;
+          const quality: Record<string, number> = {};
+          for (const tid of KBL_TEAM_IDS) {
+            // 성향은 스토어가 정본이다 — 없으면 50(기준)
+            quality[tid] = get({ subscribe }).proTeamProfiles?.[tid]?.scoutingQuality ?? 50;
+          }
+          return { quality, span: sp };
+        })(),
         needBonus > 0 ? { teamNeeds, needBonus, needSaturation: (draftRules as { needSaturation?: number }).needSaturation ?? 0 } : undefined,
       );
 

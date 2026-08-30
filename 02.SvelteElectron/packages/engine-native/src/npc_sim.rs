@@ -3264,7 +3264,28 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
             let spread = (r as f64 * 1.2).min(6.0);
             let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
-                let base = calc_draft_score(npc, meta_map.get(id).copied()) + bias_of(id);
+                // 🔴 **팀마다 다른 눈으로 본다.** 그 전엔 전 구단이 진짜
+                //   능력을 정확히 알아서 스카우트 조직에 값이 없었다.
+                //
+                // ⚠ **점수만 흔든다 — 실제 능력은 그대로다.** 잘못 본 팀이
+                //   잘못 뽑는 것이지, 뽑힌 선수가 나빠지는 게 아니다.
+                // ⚠ 씨앗은 **선수 + 팀 + 연도**다. 같은 팀이 같은 해에 같은
+                //   선수를 보면 늘 같은 값이다 — 순번마다 흔들리면 안 된다.
+                let scout_noise = match params.scouting.as_ref() {
+                    Some(sc) if sc.span > 0.0 => {
+                        let team = &params.team_ids[t as usize];
+                        let q = sc.quality.get(team).copied().unwrap_or(50.0);
+                        let mag = ((100.0 - q) / 100.0) * sc.span;
+                        let h = crate::scouting_engine::simple_hash(id)
+                            .wrapping_add(crate::scouting_engine::simple_hash(team))
+                            .wrapping_add(params.year as u32);
+                        // [-1, 1) 로 편 뒤 폭을 곱한다
+                        (((h % 2000) as f64 / 1000.0) - 1.0) * mag
+                    }
+                    _ => 0.0,
+                };
+                let base = calc_draft_score(npc, meta_map.get(id).copied())
+                    + bias_of(id) + scout_noise;
                 // 부족한 보직에 가점 — 팀 사정을 본다. 없으면 0이라 예전 그대로다
                 let need = params.team_needs.get(&params.team_ids[t as usize]);
                 let short = match need {

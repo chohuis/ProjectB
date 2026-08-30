@@ -480,6 +480,10 @@ pub struct DraftSimParams {
     /// 포지션을 보는데(a_cnt >= 3 && b_cnt <= 1) 드래프트만 안 봤다.
     #[serde(default)]
     pub team_needs: std::collections::HashMap<String, TeamNeed>,
+    /// 스카우팅. ⚠ `serde(default)` 라 **안 넘겨도 통과한다** —
+    /// 배선 검사가 TS 가 넘기는지 따로 본다.
+    #[serde(default)]
+    pub scouting: Option<DraftScoutingParams>,
     /// 부족 보직 가점. 0이면 예전 그대로다.
     ///
     /// ⚠ **능력치를 뒤집지 않을 만큼만 준다.** 지명자 점수 폭이 18.2이고
@@ -915,6 +919,22 @@ pub struct SimGameResult {
 pub struct ProtagonistGradeResult {
     pub new_grade: serde_json::Value,
     pub is_graduating: bool,
+}
+
+/// 드래프트 스카우팅 — 팀마다 **다른 눈**으로 후보를 본다.
+///
+/// 🔴 그 전엔 **전 구단이 진짜 능력을 정확히 알았다.** 스카우트 조직에
+///   값이 생길 자리가 없었다.
+/// ⚠ 비면 안 돈다 — 예전 동작이라 안전하다.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftScoutingParams {
+    /// 팀 id → `scoutingQuality`(0~100). 50이 기준이다
+    #[serde(default)]
+    pub quality: std::collections::HashMap<String, f64>,
+    /// 잡음 폭 — 품질 0일 때 OVR 에 ±이만큼 흔들린다
+    #[serde(default)]
+    pub span: f64,
 }
 
 /// 웨이버 공시 규칙. **없으면 안 돈다** — 예전 동작이다.
