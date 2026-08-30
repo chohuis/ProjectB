@@ -44,9 +44,12 @@ describe("의료팀", () => {
     expect(multOf(5, span)).toBeGreaterThan(1);
   });
 
-  it("아무리 좋아도 0주가 되지 않는다", () => {
-    // 0이면 부상이 없는 것과 같다
-    expect(inj.includes("Math.max(minW,")).toBe(true);
+  it("하한은 공용 함수가 지킨다", () => {
+    // 🔴 예전엔 `injuries.ts` 안에 `Math.max(minW, ...)` 가 있었다.
+    //   B단계에서 식을 `clubEffects` 로 빼면서 그 줄이 사라졌고,
+    //   **문자열을 찾던 이 검사가 깨졌다** — 고친 게 아니라 옮긴 것이다.
+    //   하한 자체는 `clubEffects.test.ts` 가 값으로 확인한다.
+    expect(inj.includes("medicalRecoveryWeeks("), "공용 함수를 쓴다").toBe(true);
   });
 
   it("규칙이 없으면 안 돈다 (예전 동작)", () => {
