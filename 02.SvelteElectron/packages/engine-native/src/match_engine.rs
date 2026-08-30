@@ -392,6 +392,11 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         park:    opts.park.unwrap_or(ParkType::Neutral),
         // ⚠ 안 넘기면 중립 기본값이다 — 예전과 같게 돈다
         park_dims: opts.park_dims.unwrap_or_default(),
+        // ⚠ 벤치가 비면 교체가 없다 — 예전과 같게 돈다
+        home_bench: opts.home_bench.clone().unwrap_or_default(),
+        away_bench: opts.away_bench.clone().unwrap_or_default(),
+        home_bench_used: 0,
+        away_bench_used: 0,
         is_finished: false,
         logs: vec!["경기 시작".to_string()],
         fielders,
@@ -1840,6 +1845,74 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 
     // ── 2. 현재 투수·타자·스태미나 결정 ──────────────────────────────────────
     let current_pitcher = get_active_pitcher(&pre_state).clone();
+    // 🔴 **대타** (7단계). 후반 접전에 약한 타자를 바꾼다.
+    //
+    // ⚠ **새 설계가 아니다** — `PitcherQueue` 가 하던 일을 타자에 옮겼다.
+    //   벤치를 앞에서부터 소모하고 라인업의 그 자리를 갈아 끼운다.
+    // ⚠ **타순 자리를 물려받는다** — 9번을 바꾸면 그 뒤로도 9번에서 친다.
+    // ⚠ 감독 `tacticalIQ` 가 판단한다 — 이번 세션에 살린 값이다.
+    // ⚠ 벤치가 비면 아무 일도 안 일어난다(예전 동작).
+    let mut pinch_state = pre_state.clone();
+    // ⚠ 로그는 여기서 못 넣는다 — 마지막 조합이 `state.logs` 를 복사하고
+    //   `pre_state.logs` 는 통째로 버린다. 밖으로 들고 나간다.
+    let mut pinch_log: Option<String> = None;
+    {
+        let bat_is_home = pre_state.half == HalfInning::Bottom;
+        let (bench, used, lineup, idx) = if bat_is_home {
+            (&pre_state.home_bench, pre_state.home_bench_used,
+             &pre_state.home_lineup, pre_state.home_lineup_index)
+        } else {
+            (&pre_state.away_bench, pre_state.away_bench_used,
+             &pre_state.away_lineup, pre_state.away_lineup_index)
+        };
+        let slot = if lineup.is_empty() { 0 } else { idx % lineup.len() };
+        // 🔴 **타석 시작에만 바꾼다.** 이게 없으면 투구마다 판정해서
+        //   볼카운트 1-2 도중에 타자가 갈린다 — 야구가 아니다.
+        let pa_start = pre_state.count.balls == 0 && pre_state.count.strikes == 0;
+        if pa_start && used < bench.len() && !lineup.is_empty()
+            && pre_state.inning >= T::PINCH_HIT_MIN_INNING
+            // ⚠ 3점 차까지 본다 — 2점이면 팀당 0.67회로 실제(1~2)보다 적다
+            && (pre_state.score.home - pre_state.score.away).abs() <= 3
+        {
+            let cur = &lineup[slot];
+            let cand = &bench[used];
+            // 컨택+파워로 견준다 — 타자 OVR 이 따로 없다
+            let cur_v = cur.contact + cur.power;
+            let cand_v = cand.contact + cand.power;
+            if cand_v >= cur_v + T::PINCH_HIT_OVR_GAP * 2.0 {
+                let iq = (batting_manager(&pre_state).tactical_iq - 50.0) / 50.0;
+                let p = T::PINCH_HIT_PROB * (1.0 + iq * 0.5);
+                // ⚠ 천장이 0.9면 `PINCH_HIT_PROB` 0.6 × 최고 IQ(1.5)가 딱
+                //   닿아서 **위로는 감독이 아무것도 안 하게** 된다.
+                if rng.gen::<f64>() < p.clamp(0.0, 0.95) {
+                    let picked = cand.clone();
+                    let name = picked.name.clone().unwrap_or_default();
+                    let pid = picked.id.clone().unwrap_or_default();
+                    if bat_is_home {
+                        pinch_state.home_lineup[slot] = picked;
+                        pinch_state.home_bench_used += 1;
+                    } else {
+                        pinch_state.away_lineup[slot] = picked;
+                        pinch_state.away_bench_used += 1;
+                    }
+                    // 🔴 **기록은 사람을 따라간다.** 자리는 물려받지만 타수까지
+                    //   물려받으면 안 된다 — 대타 줄이 없으면 바뀌기 전 선수
+                    //   기록에 쌓인다. 아래 집계가 `player_id` 로 찾는다.
+                    if !pid.is_empty() {
+                        let lines = if bat_is_home { &mut pinch_state.home_bat_lines }
+                                    else           { &mut pinch_state.away_bat_lines };
+                        if !lines.iter().any(|x| x.player_id == pid) {
+                            lines.push(crate::types::BatterLineAccum {
+                                player_id: pid, ..Default::default() });
+                        }
+                    }
+                    pinch_log = Some(format!("대타 — {}", name));
+                }
+            }
+        }
+    }
+    let pre_state = pinch_state;
+
     let current_batter  = get_current_batter(&pre_state, rng);
     let current_stamina = get_active_stamina(&pre_state);
     let current_mental  = get_active_mental(&pre_state);
@@ -2549,7 +2622,9 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     // 예전엔 둘이 한 배열에 섞여 `state.logs`로만 나갔고, 그래서 화면이
     // **주루·실책을 받을 방법이 없었다** — 받으면 디버그 줄까지 같이 왔다.
     let pitch_log = build_pitch_log(&pre_state, decision, lr.landing, result_code, quality);
-    let narrative_logs: Vec<String> = steal_logs.into_iter()
+    // ⚠ 대타 줄이 맨 앞이다 — 그 타석 결과보다 먼저 일어난 일이다
+    let narrative_logs: Vec<String> = pinch_log.into_iter()
+        .chain(steal_logs.into_iter())
         .chain(lr.miss_log.into_iter())
         .chain(running_logs.into_iter())
         .collect();
@@ -2791,7 +2866,19 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             let scored = (next_state.score.home + next_state.score.away)
                 - (state.score.home + state.score.away);
             let lines = if is_top { &mut next_state.away_bat_lines } else { &mut next_state.home_bat_lines };
-            if let Some(b) = lines.get_mut(idx) {
+            // 🔴 **자리가 아니라 사람으로 찾는다.** 예전엔 `get_mut(idx)` 로
+            //   타순 인덱스를 썼는데, 대타가 들어오면 그 타수가 **바뀌기 전
+            //   선수 줄에** 쌓인다. 자리는 물려받되 기록은 따라가야 한다.
+            // ⚠ id 가 없는 라인업(스모크·구 세이브)은 예전대로 인덱스로 간다.
+            // ⚠ `pre_state` 는 이미 `next_state` 로 옮겨갔다 — 이 타석의
+            //   타자를 바로 쓴다(대타 교체가 반영된 값이다).
+            let bat_id = current_batter.id.clone();
+            let found = match bat_id {
+                Some(ref id) if !id.is_empty() =>
+                    lines.iter_mut().find(|x| x.player_id == *id),
+                _ => lines.get_mut(idx),
+            };
+            if let Some(b) = found {
                 use PitchResultCode::*;
                 match result_code {
                     Walk => { b.bb += 1; }
@@ -3679,5 +3766,75 @@ mod 방해 {
             .find(|l| l.contains("HitSingle => { b.ab += 1;"))
             .unwrap_or("");
         assert!(!ab_line.contains("Interference"), "타수 목록에 들어갔다");
+    }
+
+    // ── 대타 (7단계) ────────────────────────────────────────
+
+    /// 🔴 **타석 도중에 타자가 바뀌면 안 된다.**
+    ///
+    /// 첫 판이 투구마다 돌아서 볼카운트 1-2에 대타가 들어갔다.
+    /// 이 검사가 없으면 그 형태가 조용히 돌아온다 — 로그만 보면
+    /// "대타"가 잘 나오는 것처럼 보인다.
+    #[test]
+    fn 대타는_타석_시작에만_바뀐다() {
+        let src = include_str!("match_engine.rs");
+        let i = src.find("let mut pinch_state").expect("대타 판정이 없다");
+        let j = src[i..].find("let pre_state = pinch_state;").expect("끝을 못 찾겠다");
+        let block = &src[i..i + j];
+        assert!(block.contains("count.balls == 0") && block.contains("count.strikes == 0"),
+            "타석 시작을 가리는 식이 없다");
+        // 🔴 **식만 있고 안 쓰면 소용없다.** 변이 검증에서
+        //   조건에서만 빼니 이 검사가 그대로 통과했다.
+        assert!(block.contains("if pa_start &&"),
+            "타석 시작 가드를 조건에 안 썼다 — 투구마다 타자가 갈린다");
+    }
+
+    /// 🔴 **기록은 사람을 따라간다.**
+    ///
+    /// 타순 자리는 물려받지만 타수까지 물려받으면 안 된다. 예전 집계는
+    /// `lines.get_mut(idx)` 로 **타순 인덱스**를 썼고, 대타의 안타가
+    /// 바뀌기 전 선수 기록에 쌓였다.
+    #[test]
+    fn 대타_기록은_자리가_아니라_사람에_붙는다() {
+        let src = include_str!("match_engine.rs");
+        // 타격 결과 집계가 id 로 찾아야 한다
+        // ⚠ 한글 주석이 바이트로 길어서 고정 길이로 자르면 몷 미친다 —
+        //   집계 블록의 시작을 집어서 사이를 본다.
+        let i = src.find("let bat_id = current_batter.id.clone();")
+            .expect("타격 집계가 타자를 안 집는다");
+        let j = src[i..].find("HitSingle => { b.ab += 1;").expect("타격 집계가 없다");
+        assert!(src[i..i + j].contains("x.player_id == *id"),
+            "타격 집계가 아직 타순 인덱스로 찾는다");
+        // 교체할 때 대타 줄을 만들어야 한다 — 없으면 찾아도 못 찾는다
+        let j = src.find("let mut pinch_state").expect("대타 판정이 없다");
+        let k = src[j..].find("let pre_state = pinch_state;").unwrap();
+        assert!(src[j..j + k].contains("BatterLineAccum"),
+            "대타 기록 줄을 안 만든다");
+    }
+
+    /// ⚠ **감독이 위로도 아래로도 움직여야 한다.**
+    ///
+    /// 확률 천장이 `PINCH_HIT_PROB × 최고 IQ 배수`보다 낮으면 좋은 감독이
+    /// 나쁜 감독과 같아진다 — 살려 둔 `tacticalIQ` 가 또 죽는다.
+    #[test]
+    fn 대타_확률에_감독이_들어갈_자리가_있다() {
+        // 판정식: PROB × (1 + iq×0.5), iq 는 -1..1 → 배수 0.5..1.5
+        let top = T::PINCH_HIT_PROB * 1.5;
+        assert!(top < 0.95,
+            "최고 IQ 가 {} 라 천장 0.95 에 닿는다 — 위로 죽은 갈래", top);
+        assert!(T::PINCH_HIT_PROB > 0.0, "0이면 대타가 아예 안 난다");
+    }
+
+    /// ⚠ **벤치보다 문턱이 높으면 대타가 안 난다.**
+    ///
+    /// 처음 값(6.0 = 컨택+파워 12)은 300경기에서 벤치 8명 중 3명만 썼다.
+    /// 벤치는 정의상 라인업보다 약해서 그만한 차가 잘 안 난다.
+    #[test]
+    fn 대타_문턱이_벤치를_죽이지_않는다() {
+        assert!(T::PINCH_HIT_OVR_GAP <= 2.0,
+            "{} 면 컨택+파워 {} 차라 벤치가 거의 못 들어간다",
+            T::PINCH_HIT_OVR_GAP, T::PINCH_HIT_OVR_GAP * 2.0);
+        assert!(T::PINCH_HIT_MIN_INNING >= 6,
+            "{}회부터면 선발 타순이 초반에 무너진다", T::PINCH_HIT_MIN_INNING);
     }
 }

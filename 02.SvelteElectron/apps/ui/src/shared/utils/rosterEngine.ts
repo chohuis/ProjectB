@@ -12,6 +12,14 @@ export interface TeamRoster {
   bullpen: string[];    // RP/CP ID 목록
   closer: string;       // CP ID
   lineup: string[];     // 타자 출전 순서 (1번~9번)
+  /**
+   * 벤치 — 대타·대주자 후보.
+   *
+   * 🔴 예전엔 **라인업 9명만** 만들고 벤치가 없었다. 엔진에 교체 자리를
+   *   만들어도 여기서 안 주면 죽은 갈래가 된다.
+   * ⚠ 라인업에 안 든 타자 중 좋은 순으로 몇 명이다.
+   */
+  bench: string[];
 }
 
 /**
@@ -454,6 +462,32 @@ export function neededPositions(
   return out;
 }
 
+/**
+ * 벤치 — 라인업에 안 든 타자 중 좋은 순으로 넷.
+ *
+ * 🔴 예전엔 라인업 9명만 만들어 **대타가 불가능했다.**
+ * ⚠ 모듈 변수로 넘기지 않는다 — 재진입에 안전하지 않다.
+ * ⚠ 네 명이면 한 경기에 충분하다 — 많으면 전송만 커진다.
+ */
+export function getTeamBench(
+  teamId: string,
+  entities: EntityRow[],
+  lineup: readonly string[],
+  npcInjuries?: Record<string, NpcInjuryEntry>,
+  npcRetired?: string[],
+): string[] {
+  const inLineup = new Set(lineup);
+  return getTeamPlayers(teamId, entities, npcInjuries, npcRetired)
+    .filter((e) => {
+      const t = playerDetails(e).playerType;
+      return (t === "batter" || t === "twoWay") && !inLineup.has(e.id);
+    })
+    .sort((a, b) =>
+      (playerDetails(b).batting?.ovr ?? 0) - (playerDetails(a).batting?.ovr ?? 0))
+    .slice(0, 4)
+    .map((e) => e.id);
+}
+
 export function getTeamLineup(
   teamId: string,
   entities: EntityRow[],
@@ -559,7 +593,12 @@ export function getTeamLineup(
 
   // 타순 정렬: 1번(출루율 높음) → 3·4번(파워·컨택) → 나머지
   // ⚠ 감독 효과는 호출부가 넘긴다 — 안 넘기면 중립이라 예전과 같다
-  return sortBattingOrder(lineup9, entities, managerEff, teamId);
+  const ordered = sortBattingOrder(lineup9, entities, managerEff, teamId);
+
+  // 🔴 **벤치** — 라인업에 안 든 타자 중 좋은 순으로.
+  //   예전엔 9명만 만들어 **대타가 불가능했다.**
+  // ⚠ 네 명이면 한 경기에 충분하다 — 많으면 전송만 커진다.
+  return ordered;
 }
 
 /**
@@ -695,5 +734,6 @@ export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
   const mgrProfile = managerProfileOf(teamId, entities);
   const mgrEff = managerEffect(mgrProfile);
   const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired, mgrEff);
-  return { rotation, bullpen, closer, lineup };
+  const bench = getTeamBench(teamId, entities, lineup, npcInjuries, npcRetired);
+  return { rotation, bullpen, closer, lineup, bench };
 }

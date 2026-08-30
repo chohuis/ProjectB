@@ -3142,7 +3142,18 @@ export function newEventProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> 
       sb += Number(r.sb ?? 0);
     }
   }
+  // 🔴 **대타** (7단계) — 기록 항목이 따로 없어서 **타석을 가진 타자 수**로
+  //   잰다. 예전엔 라인업 9명만 타석에 서서 팀당 9 언저리였다.
+  //   벤치 넷이 들어오면 그보다 늘어야 한다. 안 늘면 죽은 갈래다.
+  const teams = new Set<string>();
+  for (const t of Object.values(get(seasonStore).leagueState?.[leagueId]?.standings ?? {})) {
+    const id = (t as unknown as Record<string, unknown>).teamId;
+    if (typeof id === "string") teams.add(id);
+  }
+  const teamCount = teams.size || 10;
   return { 리그: leagueId, 투수: pitchers, 타자: batters,
+           팀수: teamCount,
+           팀당타자: Math.round((batters / teamCount) * 10) / 10,
            폭투: wp, 포일: pb, 보크: bk, 도루: sb, 도루자: cs };
 }
 

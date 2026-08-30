@@ -471,6 +471,42 @@
     return buildOpponentLineup(teamId);
   }
 
+  /**
+   * 벤치 — 라인업에 안 든 타자 중 좋은 순으로 넷.
+   *
+   * ⚠ 안 넘기면 엔진이 빈 벤치로 돌아 **대타가 한 번도 안 나온다**
+   *   (`serde(default)` 라 오류도 안 난다).
+   * ⚠ 라인업과 **같은 재료**로 뽑는다 — 다른 기준을 쓰면 라인업에 든
+   *   사람이 벤치에도 들어가 자기 자신으로 교체된다.
+   */
+  function buildBenchForTeam(teamId: string): import('../../shared/types/projectb').MatchBatterStats[] {
+    const inLineup = new Set(buildOpponentLineup(teamId).map((b) => b.id));
+    const entities = get(masterStore).entities;
+    const pitcherPos = ['SP', 'RP', 'CP'];
+    return entities
+      .filter((e: EntityRow) =>
+        e.teamId === teamId && e.role === 'player' &&
+        !pitcherPos.includes(String((e.details as EntityDetails)?.player?.position ?? '')) &&
+        !inLineup.has(e.id))
+      .sort((a: EntityRow, b: EntityRow) =>
+        ((b.details as EntityDetails)?.player?.batting?.ovr ?? 0) -
+        ((a.details as EntityDetails)?.player?.batting?.ovr ?? 0))
+      .slice(0, 4)
+      .map((e: EntityRow) => {
+        const bat = (e.details as EntityDetails)?.player?.batting ?? {};
+        return {
+          id: e.id,
+          name: e.name ?? undefined,
+          contact: bat.contact ?? 50, power: bat.power ?? 50,
+          eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
+          battingClutch: bat.battingClutch ?? 50, platoon: bat.platoon ?? 50,
+          speed: bat.speed ?? 50, baseInstinct: bat.baseInstinct ?? 50,
+          bunting: bat.bunting ?? 50,
+          fielding: bat.fielding ?? 50, arm: bat.arm ?? 50,
+        };
+      });
+  }
+
   function buildPitcherStatsForTeam(teamId: string): {
     command?: number; velocity?: number; staminaCap?: number;
     mentalResil?: number; control?: number; movement?: number;
@@ -767,6 +803,9 @@
       // 넘기고 있었고, 자동 진행 경로는 아예 안 넘겨 평균 50이 됐다.
       const fielders = myTeamId ? buildOpponentFielders(myTeamId) : [];
       const myLineup = myTeamId ? buildLineupForTeam(myTeamId) : [];
+      // 🔴 **벤치** — 대타 후보. 안 넘기면 교체가 한 번도 안 일어난다.
+      const myBench = myTeamId ? buildBenchForTeam(myTeamId) : [];
+      const oppBench = opponentTeamId ? buildBenchForTeam(opponentTeamId) : [];
       const opponentPitcherStats = opponentTeamId ? buildPitcherStatsForTeam(opponentTeamId) : undefined;
       const ctx = matchContext;
       const myNpcStarterStats = (ctx?.role !== 'SP' && myTeamId) ? buildPitcherStatsForTeam(myTeamId) : undefined;
@@ -818,6 +857,13 @@
         //   있는데 TS 가 한 번도 안 넘겨서 늘 기본값 50이었다 —
         //   상대 팀은 감독이 누구든 똑같이 번트를 대고 도루를 걸었다.
         ...(oppManagerStats ? { opponentManager: oppManagerStats } : {}),
+        // 🔴 **벤치** — `homeBench`/`awayBench` 는 **절대 좌표**다.
+        //   라인업처럼 `myTeamLineup` 별칭이 없어서 여기서 갈라 넣는다.
+        //   뒤집어 넣으면 상대 벤치가 우리 타순으로 들어간다.
+        ...(myBench.length > 0
+          ? (isHome ? { homeBench: myBench } : { awayBench: myBench }) : {}),
+        ...(oppBench.length > 0
+          ? (isHome ? { awayBench: oppBench } : { homeBench: oppBench }) : {}),
       });
       engineAvailable = true;
       engineStarted = true;

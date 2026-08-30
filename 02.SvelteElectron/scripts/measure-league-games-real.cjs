@@ -111,6 +111,8 @@ function squad(npcs) {
       ...cp.map(toEnginePitcher),
     ],
     lineup: bats.slice(0, 9).map(toEngineBatter),
+    // 벤치 넷 — `buildTeamRoster` 와 같은 규칙(라인업 밖 상위)
+    bench: bats.slice(9, 13).map(toEngineBatter),
   };
 }
 
@@ -164,4 +166,7 @@ function main() {
     + ` · 완봉 낀 경기 ${(shutouts / GAMES * 100).toFixed(1)}%`);
 }
 
-main();
+// 대타 프로브가 이 재료를 그대로 쓴다 — 사본을 두 번 적으면 갈린다.
+// ⚠ `require` 로 불릴 땐 main() 을 안 돈다.
+module.exports = { roster, squad, fieldersFrom, SEED };
+if (require.main === module) main();

@@ -78,6 +78,9 @@ declare global {
         opponentLineup?: MatchBatterStats[];
         myTeamLineup?: MatchBatterStats[];
         homeLineup?: MatchBatterStats[];
+        // 벤치 — 대타 후보. **절대 좌표**다(홈/원정), 별칭이 없다
+        homeBench?: MatchBatterStats[];
+        awayBench?: MatchBatterStats[];
         awayLineup?: MatchBatterStats[];
         myManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };
         opponentManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };

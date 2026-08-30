@@ -654,6 +654,19 @@ pub struct MatchState {
     pub opponent_npc_pitcher: PitcherStats,
 
     pub home_lineup: Vec<BatterStats>,
+    /// 벤치 — 대타·대주자 후보.
+    ///
+    /// ⚠ **비면 교체가 없다** — 예전과 같게 돈다.
+    /// ⚠ `PitcherQueue` 와 같은 방식이다: 쓴 사람은 앞에서부터 소모한다.
+    #[serde(default)]
+    pub home_bench: Vec<BatterStats>,
+    #[serde(default)]
+    pub away_bench: Vec<BatterStats>,
+    /// 이미 교체로 나간 벤치 인원 수 — 앞에서부터 쓴다
+    #[serde(default)]
+    pub home_bench_used: usize,
+    #[serde(default)]
+    pub away_bench_used: usize,
     pub away_lineup: Vec<BatterStats>,
     pub home_lineup_index: usize,
     pub away_lineup_index: usize,
@@ -850,6 +863,11 @@ pub struct MatchStartOptions {
     pub opponent_pitcher: Option<PartialPitcherStats>,
     pub npc_starter_pitcher: Option<PartialPitcherStats>,
     pub home_lineup: Option<Vec<BatterStats>>,
+    /// 벤치 — **안 넘기면 교체가 없다**(예전 동작)
+    #[serde(default)]
+    pub home_bench: Option<Vec<BatterStats>>,
+    #[serde(default)]
+    pub away_bench: Option<Vec<BatterStats>>,
     pub away_lineup: Option<Vec<BatterStats>>,
     pub opponent_lineup: Option<Vec<BatterStats>>,      // legacy
     pub my_team_lineup: Option<Vec<BatterStats>>,

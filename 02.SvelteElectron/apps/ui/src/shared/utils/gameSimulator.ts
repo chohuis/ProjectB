@@ -278,6 +278,10 @@ export async function simulateGame(
     awayCloser:   awayRoster.closer ? toSimPitcher(awayRoster.closer, entityMap) : null,
     homeLineup:   toSimBatters(homeRoster.lineup),
     awayLineup:   toSimBatters(awayRoster.lineup),
+    // 🔴 **벤치** — 안 넘기면 대타가 **한 번도 안 나온다.**
+    //   예전엔 buildTeamRoster 가 라인업 9명만 내서 받을 것이 없었다.
+    homeBench:    toSimBatters(homeRoster.bench),
+    awayBench:    toSimBatters(awayRoster.bench),
     homeRotIdx,
     awayRotIdx,
     conditions,
@@ -520,6 +524,10 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     role: "SP",
     homeLineup: params.homeLineup.map(toEngineBatter),
     awayLineup: params.awayLineup.map(toEngineBatter),
+    // 🔴 **벤치** — serde(default) 라 안 넘겨도 조용히 통과한다.
+    //   그래서 배선 누락이 오류가 아니라 '아무 일도 안 일어남'으로 나타난다.
+    homeBench: (params.homeBench ?? []).map(toEngineBatter),
+    awayBench: (params.awayBench ?? []).map(toEngineBatter),
     myPitchers: homePitchers,
     opponentPitchers: awayPitchers,
     // ⚠ **수비를 넘긴다.** 안 넘기면 엔진이 평균 50짜리를 만든다 —
