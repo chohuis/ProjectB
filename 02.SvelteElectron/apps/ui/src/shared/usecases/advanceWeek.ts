@@ -65,6 +65,9 @@ import { applyForeignTurnover } from "./foreignPlayers";
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
+import {
+  collectTournamentLines, tournamentAwards, weekRangeOf,
+} from "./tournamentAwards";
 import { simulateNpcGame, logGameLines } from "./weekPhases/games";
 /**
  * 성실 주간 자연 감쇠 (사용자 확정 2026-08-26).
@@ -1842,6 +1845,67 @@ async function progressTournaments(week: number): Promise<boolean> {
             const champ = buildChampionMessage(
               def, next, protagonistTeamId, tName4Tour, week);
             if (champ) gameStore.addMessage(champ);
+
+            // 🔴 **대회 개인 수상** — 5개 대회가 도는데 우승해도 개인에게
+            //   남는 게 없었다. 팀 성적만 쌓여 진로 판정의 팀 점수로만 갔다.
+            // ⚠ MVP는 우승팀 안에서, 부문상은 참가팀 전체에서 뽑는다
+            //   (사용자 확정 2026-08-30).
+            // ⚠ 기록은 시즌 수상과 **같은 자리**(`careerHistory.highlights`)에
+            //   남긴다 — 명예의 전당·진학 점수가 그걸 본다.
+            const finalM = next.matches.find((m) => m.round === next.totalRounds);
+            const championId = finalM?.winnerTeamId ?? null;
+            if (championId) {
+              const sNow = get(seasonStore);
+              const range = weekRangeOf(sNow, def.id);
+              if (range) {
+                const ents = get(masterStore).entities;
+                const teamsNow2 = get(masterStore).teams;
+                // 🔴 **리그 게이트가 없으면 섞인다.** 일정은 주인공 것 하나라,
+                //   대학 대회의 주차 범위로 고교 경기를 모으면 **대학 대회
+                //   이름으로 고교 선수가 상을 받는다** — 실측에서 고교 집계에
+                //   여명기·은하기·왕중왕전이 섞여 나왔다.
+                const teamOf = (pid: string): string | null => {
+                  const tid = ents.find((e) => e.id === pid)?.teamId ?? null;
+                  if (!tid) return null;
+                  const lg = teamsNow2.find((t) => t.id === tid)?.leagueId ?? null;
+                  return lg === def.leagueId ? tid : null;
+                };
+                const awards = tournamentAwards(
+                  collectTournamentLines(sNow.schedule, range.start, range.end),
+                  championId, teamOf);
+                if (awards.length > 0) {
+                  const byPlayer = new Map<string, string[]>();
+                  for (const a of awards) {
+                    const list = byPlayer.get(a.playerId) ?? [];
+                    list.push(`${def.name} ${a.label}`);
+                    byPlayer.set(a.playerId, list);
+                  }
+                  gameStore.addSeasonHighlights(next.seasonYear, byPlayer);
+
+                  // 우리 팀이 걸린 상만 알린다 — 5대회 × 3상이면 한 해 15통이다
+                  const mineAw = awards.filter((a) => a.teamId === protagonistTeamId);
+                  if (mineAw.length > 0) {
+                    const nameOf = (pid: string) =>
+                      ents.find((e) => e.id === pid)?.name ?? pid;
+                    gameStore.addMessage({
+                      id: `msg-tour-award-${def.id}-${next.seasonYear}`,
+                      category: "news",
+                      sender: "고교야구연맹",
+                      subject: `${def.name} 시상 — 우리 학교 ${mineAw.length}명`,
+                      preview: mineAw.map((a) => a.label).join(" · "),
+                      body: [
+                        `${next.seasonYear} ${def.name} 시상식`,
+                        "",
+                        ...mineAw.map((a) =>
+                          `🏅 ${a.label}  ${nameOf(a.playerId)}  (${a.value})`),
+                      ].join(String.fromCharCode(10)),
+                      createdAt: `W${week}`,
+                      readAt: null,
+                    });
+                  }
+                }
+              }
+            }
           }
         }
       }
