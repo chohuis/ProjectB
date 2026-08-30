@@ -1049,6 +1049,28 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
         .map(|f| f.arm)
         .unwrap_or(T::STEAL_CATCHER_ARM_PIVOT);
 
+    // 🔴 **견제사** (C-④). `hold_runners` 가 도루 성공률만 낮추고 있었다 —
+    //   주자를 잡는 사건이 없어서 견제 좋은 투수가 묶기만 하고 못 잡았다.
+    //
+    // ⚠ **도루 판정 앞**이다. 뒤에 두면 이미 뛴 주자를 견제하는 꼴이 된다.
+    // ⚠ 주루센스가 좋으면 덜 걸린다 — 도루와 **반대 축**을 쓴다.
+    // ⚠ 감독이 과감할수록 리드를 크게 시켜 더 걸린다.
+    if let Some(r1) = first.clone() {
+        if second.is_none() {
+            let risk = ((pitcher.hold_runners - 50.0) / 50.0).max(-1.0);
+            let lead = ((r1.instinct - 50.0) / 50.0).max(-1.0);
+            let bold = steal_mult.clamp(0.5, 2.0);
+            let p = (T::PICKOFF_BASE_PROB + risk * T::PICKOFF_HOLD_SPAN
+                     - lead * T::PICKOFF_INSTINCT_SPAN) * bold;
+            if rng.gen::<f64>() < p.clamp(0.0, T::PICKOFF_MAX_PROB) {
+                first = None;
+                outs += 1;
+                steal_logs.push(format!("견제사 — {}",
+                    r1.player_id.clone().unwrap_or_default()));
+            }
+        }
+    }
+
     if first.is_some() && second.is_none() {
         let r = first.as_ref().unwrap().clone();
         let (attempt_prob, success) = T::steal_second_probs(r.speed, r.instinct, hold_factor, manager_boost, catcher_arm);
@@ -1237,6 +1259,7 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
         PitchResultCode::Walk         => "볼넷",
         PitchResultCode::HitByPitch   => "몸에 맞는 공",
         PitchResultCode::SacBunt      => "희생번트",
+        PitchResultCode::SqueezeBunt  => "스퀴즈",
         PitchResultCode::SacFly       => "희생플라이",
         PitchResultCode::HitSingle    => "안타",
         PitchResultCode::HitDouble    => "2루타",
@@ -1277,7 +1300,8 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
         PitchResultCode::DoublePlay => "DOUBLE_PLAY", PitchResultCode::FieldingError => "FIELDING_ERROR",
         PitchResultCode::Walk => "WALK",
         PitchResultCode::HitByPitch => "HIT_BY_PITCH",
-        PitchResultCode::SacBunt => "SAC_BUNT", PitchResultCode::SacFly => "SAC_FLY",
+        PitchResultCode::SacBunt => "SAC_BUNT", PitchResultCode::SqueezeBunt => "SQUEEZE",
+        PitchResultCode::SacFly => "SAC_FLY",
         PitchResultCode::HitSingle => "HIT_SINGLE",
         PitchResultCode::HitDouble => "HIT_DOUBLE", PitchResultCode::HitTriple => "HIT_TRIPLE",
         PitchResultCode::HomeRun => "HOME_RUN", PitchResultCode::GameOver => "GAME_OVER",
@@ -1703,6 +1727,36 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         apply_hit_upgrade(resolve_contact(quality, cq, &current_batter, rng), current_batter.power, pre_state.weather, rng)
     };
 
+    // 🔴 **고의사구** (C-①). 예전엔 어떤 상황에서도 승부만 했다 —
+    //   1루가 비고 2사 3루에 강타자가 서도 그냥 던졌다.
+    //
+    // ⚠ **1루가 비어야 한다.** 채워져 있으면 밀어내기 위험만 늘고
+    //   포스 상황도 안 만들어진다 — 실제 야구가 그렇다.
+    // ⚠ 판단은 **수비 쪽 감독**이다 — 번트·도루(공격 쪽)와 반대다.
+    // ⚠ **`result_code` 를 덮어쓴다.** 조기 반환을 만들면 아래 기록
+    //   집계·주자 진루를 통째로 건너뛰어 **볼넷이 기록에 안 남는다.**
+    if !swings && pre_state.count.balls == 0 && pre_state.count.strikes == 0 {
+        let fm = fielding_manager(&pre_state);
+        let first_open = pre_state.runners.first.is_none();
+        let scoring = pre_state.runners.second.is_some()
+            || pre_state.runners.third.is_some();
+        let diff = (pre_state.score.home - pre_state.score.away).abs();
+        if first_open && scoring && pre_state.outs >= 1 && diff <= 3 {
+            // 타자가 셀수록, 감독이 조심스러울수록 자주 건다.
+            // `tactical_iq` 는 **상황을 알아보는 눈**이라 높을수록 잘 고른다.
+            let power = current_batter.power.max(current_batter.contact);
+            let iq = (fm.tactical_iq - 50.0) / 50.0;
+            let over = ((power - T::IBB_BATTER_PIVOT) / 50.0).max(0.0);
+            // 과감한 감독은 덜 피한다 — 작전 성향축(`steal_mult`)을 같이 쓴다
+            let bold = fm.steal_mult.clamp(0.5, 2.0);
+            let p = (T::IBB_BASE_PROB + over * T::IBB_POWER_SPAN)
+                * (1.0 + iq * 0.4) / bold;
+            if rng.gen::<f64>() < p.clamp(0.0, T::IBB_MAX_PROB) {
+                result_code = PitchResultCode::Walk;
+            }
+        }
+    }
+
     let ball_in_play = resolve_ball_in_play(result_code, decision, quality, rng);
 
     // 🔴 **희생번트** (2026-08-28). 작전이 나오는 상황에서만 시도한다:
@@ -1715,6 +1769,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     if !swings
         && pre_state.outs < 2
         && pre_state.count.strikes < 2
+        // ⚠ 3루 주자는 여기 안 넣는다 — **그건 아래 스퀴즈다.**
         && (pre_state.runners.first.is_some() || pre_state.runners.second.is_some())
         && (pre_state.score.home - pre_state.score.away).abs() <= 3
         // ⚠ **지금 공격하는 팀 감독**이 정한다 — 양 팀 다 건다.
@@ -1729,6 +1784,36 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         } else {
             // 실패는 그냥 아웃이다 — 희생타가 아니라 타수로 잡힌다
             PitchResultCode::GroundOut
+        };
+    }
+
+    // 🔴 **스퀴즈** (C-②). 3루 주자를 번트로 불러들인다.
+    //
+    // ⚠ 희생번트와 **다른 상황**이다 — 저쪽은 주자를 진루시켜 다음을 노리고,
+    //   이쪽은 지금 1점을 가져온다. 그래서 조건이 더 좁다:
+    //   **3루 주자 · 2아웃 전 · 1점 승부(2점 차 이내) · 7회 이후.**
+    // ⚠ **실패하면 3루 주자가 죽는다** — 번트 실패보다 대가가 크다.
+    //   그래서 성공률도 번트보다 낮게 잡는다(주자가 미리 뛴다).
+    // ⚠ 위 번트가 이미 코드를 정했으면 안 건다 — 한 투구에 작전은 하나다.
+    if !swings
+        && result_code != PitchResultCode::SacBunt
+        && result_code != PitchResultCode::GroundOut
+        && pre_state.outs < 2
+        && pre_state.count.strikes < 2
+        && pre_state.runners.third.is_some()
+        && pre_state.inning >= T::SQUEEZE_MIN_INNING
+        && (pre_state.score.home - pre_state.score.away).abs() <= 2
+        && rng.gen::<f64>() < T::SQUEEZE_ATTEMPT_PROB
+            * batting_manager(&pre_state).bunt_mult.clamp(0.0, 3.0)
+    {
+        let bunt = current_batter.bunting.unwrap_or(50.0);
+        let ok = T::SQUEEZE_SUCCESS_BASE + (bunt - 50.0) * 0.005;
+        result_code = if rng.gen::<f64>() < clamp(ok, 0.30, 0.90) {
+            PitchResultCode::SqueezeBunt
+        } else {
+            // 🔴 **실패하면 3루 주자가 죽는다.** 타자는 살지만 아웃 하나가
+            //   더 늘어난 것과 같다 — 병살로 낸다.
+            PitchResultCode::DoublePlay
         };
     }
 
@@ -1785,6 +1870,24 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 next_runners = wr;
                 add_runs(wr_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
             }
+        }
+        // 🔴 **스퀴즈** (C-②). `SacBunt` 와 달리 **3루 주자가 홈에 온다.**
+        //   위 주석이 남겨 둔 자리다 — "그건 스퀴즈고 다른 작전이다".
+        // ⚠ 타자는 아웃이지만 점수가 난다. 실패하면 애초에 이 코드가 안 온다.
+        PitchResultCode::SqueezeBunt => {
+            next_outs += 1;
+            next_count = MatchCount { balls: 0, strikes: 0 };
+            if let Some(r3) = next_runners.third.take() {
+                if let Some(pid) = r3.player_id.clone() { scored_ids.push(pid); }
+                add_runs(1, &mut next_score, &mut next_inning_scores, next_half, next_inning);
+            }
+            // 나머지는 희생번트와 같이 한 칸씩
+            let mut b1 = next_runners.first.take();
+            let mut b2 = next_runners.second.take();
+            let mut b3 = next_runners.third.take();
+            if b3.is_none() { b3 = b2.take(); }
+            if b2.is_none() { b2 = b1.take(); }
+            next_runners = MatchRunners { first: b1, second: b2, third: b3 };
         }
         PitchResultCode::SacBunt => {
             next_outs += 1;
@@ -2192,7 +2295,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     // 🔴 **셋 다 타수가 아니다.** 여기서 `ab`를 올리면 타율이
                     //    희생타 때문에 떨어진다 — 야구 규칙과 다르다.
                     HitByPitch => { b.hbp += 1; }
-                    SacBunt    => { b.sac += 1; }
+                    SacBunt | SqueezeBunt => { b.sac += 1; }
                     SacFly     => { b.sf  += 1; }
                     HitSingle => { b.ab += 1; b.h += 1; }
                     // 🔴 **장타를 갈라 센다.** 엔진은 처음부터 2루타·3루타를
@@ -2671,3 +2774,4 @@ mod 감독_투수운용 {
         }
     }
 }
+

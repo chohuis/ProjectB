@@ -284,6 +284,19 @@ pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
     (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
 }
 
+/// 견제사 — 1루에만 주자가 있을 때.
+///
+/// 🔴 `hold_runners` 가 **도루 성공률만 낮추고 있었다** — 주자를
+///   잡는 사건이 없어서 견제 좋은 투수가 묶기만 하고 못 잡았다.
+/// ⚠ 실제 KBO 견제사는 팀당 시즌 20~30개다 — **드문 사건으로 둔다.**
+pub const PICKOFF_BASE_PROB: f64 = 0.004;
+/// 견제력이 피벗이에서 벗어난 만큼 더해지는 폭
+pub const PICKOFF_HOLD_SPAN: f64 = 0.006;
+/// 주루센스가 높으면 덜 걸린다 — 도루와 **반대 축**이다
+pub const PICKOFF_INSTINCT_SPAN: f64 = 0.004;
+/// 상한
+pub const PICKOFF_MAX_PROB: f64 = 0.02;
+
 pub fn steal_hold_factor(hold_runners: f64) -> f64 {
     clamp01(1.0 - (hold_runners - 50.0) * STEAL_HOLD_SCALE, STEAL_HOLD_MIN, STEAL_HOLD_MAX)
 }
@@ -877,6 +890,31 @@ pub const HIT_BY_PITCH_COMMAND_SPAN: f64 = 0.02;
 /// ⚠ **실측으로 절반 이하로 낮췄다** (2026-08-28). 0.16이면 타석의 **2.83%**로
 ///   희생플라이의 27배가 나왔다 — 실제 야구는 둘이 비슷하다.
 pub const SAC_BUNT_ATTEMPT_PROB: f64 = 0.074;
+
+/// 고의사구 — **1루가 비고 득점권 주자가 있고 1아웃 이상 · 3점 차 이내**일 때만.
+///
+/// 🔴 예전엔 **어떤 상황에서도 승부만 했다** — 감독이 피할 방법이 없었다.
+/// ⚠ 기준 타자(50)에게는 거의 안 건다 — **셀 타자만** 걸려야
+///   볼넷이 부풀지 않는다. 기준선 9이닝당 BB 3.6(KBL 실측).
+/// ⚠ **첫 값(0.05/0.55/0.35)은 3배 많았다** — BB 3.6 → 4.2(+0.6).
+///   실제 KBO 고의사구는 9이닝당 0.15~0.2다. 1/3로 낮췄다.
+pub const IBB_BATTER_PIVOT: f64 = 70.0;
+/// 조건을 다 채운 타석에서의 밑값
+pub const IBB_BASE_PROB: f64 = 0.017;
+/// 타자가 피벗이에서 50 위일 때 더해지는 폭
+pub const IBB_POWER_SPAN: f64 = 0.18;
+/// 상한 — 어떤 조합에서도 이것보다 자주 안 건다
+pub const IBB_MAX_PROB: f64 = 0.12;
+
+/// 스퀸즈 — **3루 주자 · 2아웃 전 · 1점 승부 · 7회 이후**에만.
+///
+/// ⚠ 희생번트와 **다른 상황**이다 — 저쪽은 다음을 노리고 이쪽은
+///   지금 1점을 가져온다. 실패하면 **3루 주자가 죽는다.**
+pub const SQUEEZE_MIN_INNING: u8 = 7;
+/// 조건을 다 채운 투구에서의 시도 확률
+pub const SQUEEZE_ATTEMPT_PROB: f64 = 0.10;
+/// 성공률 — 번트(0.72)보다 낮다. 주자가 미리 뛰어 수비가 준비한다
+pub const SQUEEZE_SUCCESS_BASE: f64 = 0.62;
 
 /// 번트 성공률 — `bunting` 50 기준. 능력치로 ±0.25 흔든다.
 pub const SAC_BUNT_SUCCESS_BASE: f64 = 0.72;

@@ -245,3 +245,61 @@ describe("누굴 쓸지 · 언제 바꿀지", () => {
     expect(rust.includes("(3 + (rng.gen::<f64>() * 4.0) as i32 - (k * 1.5).round() as i32).max(1)")).toBe(true);
   });
 });
+
+describe("새 작전 셋 (C-①②④)", () => {
+  const rust = read("packages/engine-native/src/match_engine.rs");
+  const types = read("packages/engine-native/src/types.rs");
+  const tune = read("packages/engine-native/src/tuning.rs");
+
+  it("🔴 고의사구 — 1루가 비어야 건다", () => {
+    // 1루가 차 있으면 밀어내기 위험만 늘고 포스 상황도 안 생긴다
+    expect(rust.includes("let first_open = pre_state.runners.first.is_none();")).toBe(true);
+    expect(rust.includes("if first_open && scoring && pre_state.outs >= 1 && diff <= 3 {")).toBe(true);
+  });
+
+  it("🔴 고의사구는 수비 쪽 감독이 정한다", () => {
+    // 번트·도루(공격 쪽)와 반대다
+    expect(rust.includes("let fm = fielding_manager(&pre_state);")).toBe(true);
+  });
+
+  it("🔴 조기 반환이 아니라 코드를 덮어쓴다", () => {
+    // 조기 반환하면 아래 기록 집계를 건너뛰어 **볼넷이 안 남는다**
+    expect(rust.includes("                result_code = PitchResultCode::Walk;")).toBe(true);
+  });
+
+  it("스퀴즈가 별도 결과 코드다", () => {
+    // `SacBunt` 재활용하면 진루 규칙이 갈린다
+    expect(types.includes("SqueezeBunt,")).toBe(true);
+    expect(rust.includes("PitchResultCode::SqueezeBunt => {")).toBe(true);
+  });
+
+  it("🔴 스퀴즈는 3루 주자를 홈에 보내고 희생번트는 안 보낸다", () => {
+    // 둘이 갈려 있어야 한다 — 기존 주석이 그렇게 적어 뒀다
+    expect(rust.includes("if let Some(r3) = next_runners.third.take() {")).toBe(true);
+    expect(rust.includes("// ⚠ 3루 주자는 홈으로 안 보낸다. 그건 스퀴즈고 다른 작전이다.")).toBe(true);
+  });
+
+  it("스퀴즈 실패는 대가가 크다", () => {
+    // 3루 주자가 죽는다 — 번트 실패(그냥 아웃)보다 무겁다
+    expect(rust.includes("            PitchResultCode::DoublePlay")).toBe(true);
+    expect(tune.includes("pub const SQUEEZE_SUCCESS_BASE: f64 = 0.62;")).toBe(true);
+  });
+
+  it("🔴 견제사가 도루 판정 앞에 있다", () => {
+    // 뒤에 두면 이미 뛴 주자를 견제하는 꼴이다
+    const pick = rust.indexOf("// 🔴 **견제사** (C-④)");
+    const steal = rust.indexOf("let (attempt_prob, success) = T::steal_second_probs");
+    expect(pick).toBeGreaterThan(-1);
+    expect(pick).toBeLessThan(steal);
+  });
+
+  it("견제는 주루센스와 반대 축이다", () => {
+    expect(rust.includes("- lead * T::PICKOFF_INSTINCT_SPAN) * bold;")).toBe(true);
+  });
+
+  it("셋 다 드문 사건이다 — 상한이 있다", () => {
+    // 자주 나오면 리그 지표가 통째로 움직인다
+    expect(tune.includes("pub const IBB_MAX_PROB: f64 = 0.12;")).toBe(true);
+    expect(tune.includes("pub const PICKOFF_MAX_PROB: f64 = 0.02;")).toBe(true);
+  });
+});

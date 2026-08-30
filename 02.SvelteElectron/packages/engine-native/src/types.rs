@@ -111,6 +111,8 @@ pub enum PitchResultCode {
     /// 희생번트 — 타수가 아니다. `bunting` 능력치가 성공을 가른다.
     /// 🔴 그 능력치는 성장 엔진에 **있는데 경기에서 안 쓰이고 있었다.**
     #[serde(rename = "SAC_BUNT")]       SacBunt,
+    /// 스퀴즈 — 3루 주자를 번트로 불러들인다. `SacBunt` 와 진루가 다르다
+    SqueezeBunt,
     /// 희생플라이 — 타수가 아니다. 3루 주자가 뜬공에 홈으로 들어온다.
     /// ⚠ `npc_sim`엔 이 갈래가 이미 있었는데 **아웃으로만 세고** 있었다.
     #[serde(rename = "SAC_FLY")]        SacFly,
