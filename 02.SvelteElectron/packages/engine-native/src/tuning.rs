@@ -290,6 +290,24 @@ pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
     (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
 }
 
+/// 펜스 직격 — 담장에 **아슬하게** 못 미친 타구.
+///
+/// 🔴 예전엔 홈런이 못 넘으면 **무조건 2루타**였다. 1m 못 미친 타구와
+///   20m 못 미친 타구가 같은 결과였다.
+/// ⚠ 담장 대비 비율로 가른다 — 절대 거리로 하면 구장마다 뜻이 달라진다.
+pub const FENCE_HIT_RATIO: f64 = 0.94;
+/// 펜스를 맞고 튀면 3루타가 되기도 한다 — 좌우 구석일수록
+pub const FENCE_TRIPLE_PROB: f64 = 0.22;
+/// 이 아래면 평범한 뜬공 아웃이다 — 담장 근처도 못 갔다
+pub const DEEP_FLY_RATIO: f64 = 0.82;
+
+/// 그라운드 홈런 — **담장 안**에 떨어졌는데 주자가 다 돌았다.
+///
+/// ⚠ 실제 KBO 는 시즌 2~5건이다. 조건이 겹쳐야 난다:
+///   깊은 타구(펜스 직격 대역) + 좌우 구석 + 아주 빠른 주자.
+pub const INSIDE_PARK_SPEED_MIN: f64 = 78.0;
+pub const INSIDE_PARK_PROB: f64 = 0.05;
+
 /// 타구 비거리 — `hardness`(1~5)와 발사각으로 만든다.
 ///
 /// 🔴 예전엔 **거리 개념이 없었다.** 홈런이 확률표에서 바로 나와

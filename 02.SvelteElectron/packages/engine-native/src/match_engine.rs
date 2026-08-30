@@ -1938,13 +1938,44 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             let fence = fence_for(b.zone, &pre_state.park_dims);
             let over = b.distance >= fence;
             match (result_code, over) {
-                // 표는 홈런인데 못 넘었다 — 펜스 앞에 떨어진다
+                // 🔴 **표는 홈런인데 못 넘었다.** 예전엔 무조건 2루타였다 —
+                //   1m 못 미친 타구와 20m 못 미친 타구가 같은 결과였다.
+                //
+                // ⚠ **담장 대비 비율**로 가른다. 절대 거리로 하면 구장마다
+                //   같은 5m 가 다른 뜻이 된다.
                 (PitchResultCode::HomeRun, false) => {
-                    result_code = PitchResultCode::HitDouble;
+                    let ratio = b.distance / fence.max(1.0);
+                    result_code = if ratio >= T::FENCE_HIT_RATIO {
+                        // 펜스 직격 — 튀는 방향에 따라 3루타도 된다
+                        if rng.gen::<f64>() < T::FENCE_TRIPLE_PROB {
+                            PitchResultCode::HitTriple
+                        } else {
+                            PitchResultCode::HitDouble
+                        }
+                    } else if ratio >= T::DEEP_FLY_RATIO {
+                        // 담장 앞 깊은 타구 — 2루타
+                        PitchResultCode::HitDouble
+                    } else {
+                        // 담장 근처도 못 갔다 — 평범한 뜬공 아웃
+                        PitchResultCode::FlyOut
+                    };
                 }
                 // 표는 장타인데 넘었다 — 홈런이다
                 (PitchResultCode::HitDouble, true)
                 | (PitchResultCode::HitTriple, true) => {
+                    result_code = PitchResultCode::HomeRun;
+                }
+                // 🔴 **그라운드 홈런** — 담장 **안**에 떨어졌는데 다 돌았다.
+                //
+                // ⚠ 조건이 겹쳐야 난다: 3루타가 날 만큼 깊고 · 좌우 구석이고 ·
+                //   주자가 아주 빠르다. 실제 KBO 는 시즌 2~5건이다.
+                // ⚠ **담장을 넘은 게 아니다** — `over` 가 false 인 갈래다.
+                (PitchResultCode::HitTriple, false)
+                    if current_batter.speed >= T::INSIDE_PARK_SPEED_MIN
+                        && matches!(b.zone, FieldPosition::LF | FieldPosition::RF)
+                        && b.distance / fence.max(1.0) >= T::DEEP_FLY_RATIO
+                        && rng.gen::<f64>() < T::INSIDE_PARK_PROB =>
+                {
                     result_code = PitchResultCode::HomeRun;
                 }
                 _ => {}
@@ -3336,5 +3367,45 @@ mod 타구물리 {
             line += launch_angle_of(BallHitType::LineDrive, &mut rng);
         }
         assert!(fly > line, "뜬공 {} vs 라인 {}", fly / 500.0, line / 500.0);
+    }
+}
+
+#[cfg(test)]
+mod 펜스 {
+    use super::*;
+
+    /// 🔴 **담장 대비 비율로 가른다.** 절대 거리로 하면 구장마다 같은
+    ///   5m 가 다른 뜻이 된다 — 잠실(125)과 사직(118)에서 다르다.
+    #[test]
+    fn 비율_경계가_순서대로다() {
+        assert!(T::FENCE_HIT_RATIO > T::DEEP_FLY_RATIO,
+            "펜스 직격이 깊은 뜬공보다 담장에 가까워야 한다");
+        assert!(T::FENCE_HIT_RATIO < 1.0, "1.0 이면 그냥 홈런이다");
+        assert!(T::DEEP_FLY_RATIO > 0.5, "너무 낮으면 얕은 뜬공도 2루타가 된다");
+    }
+
+    /// ⚠ 같은 비율이 구장마다 다른 거리다 — 그게 요점이다
+    #[test]
+    fn 구장마다_경계_거리가_다르다() {
+        let jamsil = 125.0 * T::FENCE_HIT_RATIO;
+        let sajik  = 118.0 * T::FENCE_HIT_RATIO;
+        assert!(jamsil > sajik + 5.0,
+            "잠실 {:.1}m vs 사직 {:.1}m", jamsil, sajik);
+    }
+
+    /// 그라운드 홈런은 드물다 — 실제 KBO 시즌 2~5건
+    #[test]
+    fn 그라운드홈런이_드물다() {
+        assert!(T::INSIDE_PARK_PROB <= 0.10, "너무 잦다");
+        assert!(T::INSIDE_PARK_PROB > 0.0, "0이면 죽은 갈래다");
+        // 빠른 주자만 — 리그 상위권 주력이다
+        assert!(T::INSIDE_PARK_SPEED_MIN >= 70.0, "누구나 되면 안 된다");
+    }
+
+    /// ⚠ 펜스 직격에서 3루타가 나오되 드물어야 한다
+    #[test]
+    fn 펜스_삼루타가_드물다() {
+        assert!(T::FENCE_TRIPLE_PROB > 0.0, "0이면 죽은 갈래다");
+        assert!(T::FENCE_TRIPLE_PROB < 0.5, "절반 넘으면 2루타보다 잦다");
     }
 }
