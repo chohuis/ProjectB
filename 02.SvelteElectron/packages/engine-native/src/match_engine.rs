@@ -2255,6 +2255,30 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 } else {
                     PitchResultCode::StrikeoutSwing
                 };
+
+                // 🔴 **낫아웃** (6단계). 삼진인데 포수가 놓쳐 타자가 산다.
+                //
+                // ⚠ **1루가 비었거나 2아웃일 때만** 성립한다(실제 야구 규칙).
+                //   1루에 주자가 있고 2아웃 미만이면 포스아웃이라 뛸 이유가 없다.
+                // ⚠ **삼진은 투수 기록에 그대로 남는다** — 타자만 산다.
+                //   그래서 `result_code` 를 안 바꾸고 주자·아웃만 손댄다.
+                // 🔴 삼진은 모수가 크다(타석의 20% 안팎) — 확률을 높이면
+                //   출루가 통째로 부푼다.
+                let dropped_ok = next_runners.first.is_none() || pre_state.outs >= 2;
+                if dropped_ok {
+                    let cb = pre_state.fielders.iter()
+                        .find(|f| f.position == crate::types::FieldPosition::C)
+                        .map(|f| f.fielding)
+                        .unwrap_or(T::CATCHER_BLOCK_PIVOT);
+                    let blk = (1.0 - (cb - T::CATCHER_BLOCK_PIVOT) / 50.0
+                        * T::DROPPED_THIRD_CATCHER_SPAN).clamp(0.15, 1.85);
+                    if rng.gen::<f64>() < T::DROPPED_THIRD_PROB * blk {
+                        // 타자가 산다 — 아웃을 되돌리고 1루에 세운다
+                        next_outs = next_outs.saturating_sub(1);
+                        next_runners.first = Some(create_runner(&current_batter));
+                        running_logs.push("낫아웃! 타자가 1루에서 살았다".to_string());
+                    }
+                }
             }
         }
         PitchResultCode::Foul => {
@@ -2288,6 +2312,25 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 }
                 add_runs(1, &mut next_score, &mut next_inning_scores, next_half, next_inning);
                 result_code = PitchResultCode::SacFly;
+            }
+
+            // 🔴 **태그업** (6단계). 뜬공 아웃에 **2루 주자가 3루로** 간다.
+            //
+            // ⚠ 희생플라이(3루→홈)는 위에 이미 있다. 없던 게 이 갈래다.
+            // ⚠ 3루가 비어 있어야 간다 — 위에서 홈으로 들어갔으면 비었다.
+            // ⚠ 주루센스가 좋을수록 잘 판단한다.
+            if result_code == PitchResultCode::FlyOut
+                && pre_state.outs < 2
+                && next_runners.third.is_none()
+            {
+                if let Some(r2) = next_runners.second.clone() {
+                    let sense = ((r2.instinct - 50.0) / 50.0).clamp(-1.0, 1.0);
+                    let p = T::TAG_UP_SECOND_PROB * (1.0 + sense * 0.5);
+                    if rng.gen::<f64>() < p.clamp(0.0, 0.5) {
+                        next_runners.third = next_runners.second.take();
+                        running_logs.push("태그업 — 2루 주자가 3루로".to_string());
+                    }
+                }
             }
         }
         PitchResultCode::FieldingError => {
@@ -3508,5 +3551,49 @@ mod 시프트 {
     fn 파워_문턱이_있다() {
         assert!(T::SHIFT_POWER_MIN > 55.0, "문턱이 낮으면 전원 시프트다");
         assert!(T::SHIFT_POWER_MIN < 80.0, "너무 높으면 아무도 안 걸린다");
+    }
+}
+
+#[cfg(test)]
+mod 낫아웃_태그업 {
+    use super::*;
+
+    /// 🔴 **삼진은 모수가 크다**(타석의 20% 안팎). 확률을 높이면 출루가
+    ///   통째로 부푼다 — 시프트에서 겪은 것과 같은 형태다.
+    #[test]
+    fn 낫아웃이_드물다() {
+        assert!(T::DROPPED_THIRD_PROB > 0.0, "0이면 죽은 갈래다");
+        // 실제 KBO 는 팀당 시즌 5~15건이다. 삼진 1000개 기준 1.5% 면 15건.
+        assert!(T::DROPPED_THIRD_PROB <= 0.02,
+            "삼진 모수가 커서 {} 면 출루가 부푼다", T::DROPPED_THIRD_PROB);
+    }
+
+    /// 포수가 좋으면 덜 놓친다 — 폭투·포일과 같은 축이다
+    #[test]
+    fn 포수가_좋으면_덜_놓친다() {
+        let blk = |fielding: f64| {
+            (1.0 - (fielding - T::CATCHER_BLOCK_PIVOT) / 50.0
+                * T::DROPPED_THIRD_CATCHER_SPAN).clamp(0.15, 1.85)
+        };
+        assert!(blk(90.0) < blk(50.0), "좋은 포수가 덜 놓쳐야 한다");
+        assert!(blk(20.0) > blk(50.0), "나쁜 포수가 더 놓쳐야 한다");
+    }
+
+    /// ⚠ 태그업은 희생플라이보다 잦다 — 홈보다 3루가 가깝다
+    #[test]
+    fn 태그업이_희생플라이보다_잦다() {
+        assert!(T::TAG_UP_SECOND_PROB > T::SAC_FLY_PROB,
+            "2루→3루({})가 3루→홈({})보다 쉬워야 한다",
+            T::TAG_UP_SECOND_PROB, T::SAC_FLY_PROB);
+    }
+
+    /// 태그업이 너무 잦으면 뜬공이 진루타가 된다
+    #[test]
+    fn 태그업이_너무_잦지_않다() {
+        // ⚠ 상한은 있되 **조건이 드물어서 확률 자체는 높다.** 희생플라이가
+        //   0.55 인 것과 같은 이유다 — 그쪽 주석에 "0.10이면 타석의 0.11%로
+        //   목표의 6분의 1"이라 적혀 있다. 뜬공 아웃 + 2아웃 전 + 2루 주자 +
+        //   3루 빔이 다 겹쳐야 이 갈래에 온다.
+        assert!(T::TAG_UP_SECOND_PROB < 0.85, "뜬공마다 진루하면 안 된다");
     }
 }
