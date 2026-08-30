@@ -12,6 +12,18 @@ const YEARS = Number(process.env.SU_YEARS || 6);
       try { p = JSON.parse(args[1]); } catch { /* 아래가 말해준다 */ }
       const apps = p.applicants || [];
       const withPos = apps.filter((a) => a.position && a.position !== "").length;
+      // 🔴 **후보 풀이 투수뿐인가, 순위가 불공평한가.**
+      //   3년치 39명이 전부 투수였다 — 둘 중 하나다.
+      const PIT = new Set(["SP", "RP", "CP"]);
+      const poolPit = apps.filter((a) => PIT.has(String(a.position))).length;
+      const top = apps.slice().sort((x, y) => y.ovr - x.ovr).slice(0, 13);
+      const ovrP = apps.filter((a) => PIT.has(String(a.position))).map((a) => a.ovr).sort((x, y) => y - x);
+      const ovrB = apps.filter((a) => !PIT.has(String(a.position))).map((a) => a.ovr).sort((x, y) => y - x);
+      const med = (v) => v.length ? v[Math.floor(v.length / 2)] : null;
+      console.log(`[SU]   풀 투수 ${poolPit} / 야수 ${apps.length - poolPit}`
+        + ` · OVR 중앙 투수 ${med(ovrP)} / 야수 ${med(ovrB)}`
+        + ` · 최고 투수 ${ovrP[0] ?? "-"} / 야수 ${ovrB[0] ?? "-"}`
+        + ` · 상위 13 중 야수 ${top.filter((a) => !PIT.has(String(a.position))).length}`);
       const vac = p.vacatingPositions;
       n++;
       console.log(`[SU] ${n}회차 지원자 ${apps.length} · 포지션있음 ${withPos}`

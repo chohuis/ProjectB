@@ -1584,6 +1584,117 @@ export function rosterOverflowProbe(): Record<string, unknown> {
   return out;
 }
 
+/**
+ * 상무 인원 — **왜 11명인가** (2026-08-31).
+ *
+ * 세계 생성 직후엔 30명이다(독립 10팀 × 30 · 공백 0 · 실측). 시즌이 돌면서
+ * 줄어든다. **총원만 세면 나가는 게 많은지 들어오는 게 없는지 못 가른다** —
+ * 복무 상태별로 갈라 찍는다.
+ *
+ * ⚠ 다른 독립 9팀을 나란히 찍는다. 상무만 그런지 리그가 그런지 가려야 한다.
+ */
+export function sangmuProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const SANGMU = "TEAM_IND_SANGMU_PHOENIX";
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const mine: Record<string, unknown>[] = [];
+  const others = new Map<string, number>();
+  const mil: Record<string, number> = {};
+  let bat = 0, pit = 0;
+  const pos: Record<string, number> = {};
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    const t = n.currentTeam ?? "";
+    if (t === SANGMU) {
+      const p = String(n.position ?? "");
+      pos[p] = (pos[p] ?? 0) + 1;
+      if (PIT.has(p)) pit++; else bat++;
+      const ms = String(n.militaryStatus ?? "?");
+      mil[ms] = (mil[ms] ?? 0) + 1;
+      if (mine.length < 3) mine.push({ id: n.npcId, pos: p, age: n.age, 복무: ms });
+    } else if (n.currentLeague === "LEAGUE_INDEPENDENT" && t) {
+      others.set(t, (others.get(t) ?? 0) + 1);
+    }
+  }
+  const oc = [...others.values()].sort((x, y) => y - x);
+  // 🔴 **복무 중인 사람이 세계 어디에 있나** — 상무 밖에 있으면 배정이 안 된 것이다
+  let 복무중_전체 = 0, 복무중_상무밖 = 0;
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    if (String(n.militaryStatus ?? "") !== "복무중") continue;
+    복무중_전체++;
+    if ((n.currentTeam ?? "") !== SANGMU) 복무중_상무밖++;
+  }
+  return {
+    상무총원: bat + pit, 야수: bat, 투수: pit,
+    포지션: pos, 복무상태: mil, 표본: mine,
+    독립_다른팀: { 팀수: oc.length, 최대: oc[0] ?? 0, 중앙: oc[Math.floor(oc.length / 2)] ?? 0, 최소: oc[oc.length - 1] ?? 0 },
+    복무중_전체, 복무중_상무밖,
+    // 🔴 **누가 안 나가는가.** 전역은 `career_status == "military"` 일 때만
+    //   돌고(`npc_sim.rs:2108`), 그 조건을 안 만족하는 사람은 영원히 남는다.
+    상태쌍: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const k = String(n.careerStatus ?? "?") + "/" + String(n.militaryStatus ?? "?");
+        c[k] = (c[k] ?? 0) + 1;
+      }
+      return c;
+    })(),
+    // 어디 출신이 상무에 있나 — id 접두어가 생성 리그를 말한다
+    출신접두: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const m = /^PLY_([A-Z]{2})/.exec(String(n.npcId ?? ""));
+        const k = m ? m[1] : "?";
+        c[k] = (c[k] ?? 0) + 1;
+      }
+      return c;
+    })(),
+    // 전역년이 지났는데 아직 상무에 있는 사람 — 이게 0이 아니면 전역이 새는 것이다
+    전역년지남: (() => {
+      const yr = get(seasonStore).seasonYear ?? 0;
+      const out: string[] = [];
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const dy = (n as unknown as Record<string, unknown>).militaryDischargeYear;
+        if (typeof dy === "number" && dy <= yr && out.length < 4) {
+          out.push(`${n.npcId}|${n.careerStatus}|${n.militaryStatus}|dy${dy}|now${yr}`);
+        }
+      }
+      return out;
+    })(),
+    // 🔴 **검사(11명)와 이 프로브(48명)가 어긋난다.**
+    //   검사는 `currentLeague` 로 세고 여긴 `currentTeam` 으로 센다 —
+    //   상무 선수의 소속 리그가 마다 다르면 그것부터가 결함이다.
+    소속리그: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        c[String(n.currentLeague ?? "없음")] = (c[String(n.currentLeague ?? "없음")] ?? 0) + 1;
+      }
+      return c;
+    })(),
+    // 전역 판정의 재료 — 없으면 영원히 못 나간다
+    전역년: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const raw = (n as unknown as Record<string, unknown>).militaryDischargeYear;
+        c[raw === undefined || raw === null ? "없음" : String(raw)] =
+          (c[raw === undefined || raw === null ? "없음" : String(raw)] ?? 0) + 1;
+      }
+      return c;
+    })(),
+  };
+}
+
 export function overseasProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
@@ -2080,7 +2191,11 @@ export function rosterCompositionProbe(): Record<string, unknown> {
   const plan: Array<[string, (t: { id: string; leagueId: string }) => boolean]> = [
     ["HIGHSCHOOL",  (t) => t.leagueId === "LEAGUE_HIGHSCHOOL"],
     ["UNIVERSITY",  (t) => t.leagueId === "LEAGUE_UNIVERSITY"],
-    ["INDEPENDENT", (t) => t.leagueId === "LEAGUE_INDEPENDENT"],
+    // ⚠ **상무를 갈라낸다.** 정원이 26(militaryRules)이고 독립은 30이다.
+    //   섞으면 상무 하나가 독립 9팀의 최소값을 대신 말한다.
+    ["INDEPENDENT", (t) => t.leagueId === "LEAGUE_INDEPENDENT"
+                        && t.id !== "TEAM_IND_SANGMU_PHOENIX"],
+    ["SANGMU",      (t) => t.id === "TEAM_IND_SANGMU_PHOENIX"],
     ["KBL_1군",     (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1")],
     ["KBL_2군",     (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2")],
     ["ABL_1군",     (t) => t.leagueId === "LEAGUE_ABL" && t.id.endsWith("_1")],
@@ -2104,7 +2219,18 @@ export function rosterCompositionProbe(): Record<string, unknown> {
     // ⚠ 그렇다고 은퇴만 빼면 반대로 과하다. **`free_agent`가 팀 ID를 단 채
     // 남는다** — 독립리그 탈락 팀이 그렇고, 그러면 야수 0명짜리 팀이
     // 집계에 새로 들어와 타순 미달로 잡힌다(실측). 들일 것은 부상자뿐이다.
-    if (n.careerStatus !== "active" && n.careerStatus !== "injured") continue;
+    // 🔴 **`military` 도 센다** (2026-08-31). 상무 선수는 전원
+    // `careerStatus: "military"` 다 — 그건 의도다(`military_roster.rs:206`:
+    // "active면 드래프트·FA 후보 풀에 섞인다"). 그래서 **실제 26~48명인
+    // 상무를 이 프로브가 11명으로 봤고**, 검사는 있지도 않은 타순 미달을
+    // 잡고 있었다. `CLAUDE.md` 가 같은 함정을 오프시즌 로스터 캡에서
+    // 이미 적어 뒀다 — **검사에도 있었다.**
+    //
+    // ⚠ 들여도 **새로 들어오는 건 상무뿐이다.** 일반병은
+    //   `currentLeague: "LEAGUE_MILITARY"` · `currentTeam: ""` 라
+    //   바로 아래 팀 없음 갈래에서 이미 빠진다(실측).
+    if (n.careerStatus !== "active" && n.careerStatus !== "injured"
+        && n.careerStatus !== "military") continue;
     if (!n.currentTeam) continue;
     const arr = byTeam.get(n.currentTeam) ?? [];
     arr.push(n);

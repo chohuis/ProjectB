@@ -116,6 +116,12 @@ const FLOOR = {
   HIGHSCHOOL:  floorOf("LEAGUE_HIGHSCHOOL"),
   UNIVERSITY:  floorOf("LEAGUE_UNIVERSITY"),
   INDEPENDENT: floorOf("LEAGUE_INDEPENDENT"),
+  // ⚠ **상무는 파생식을 안 쓴다.** 정원이 26(militaryRules.rosterSize)이고
+  //   `pitcherRatio` 가 없다 — 군팀이라 독립 규칙과 잣대가 다르다.
+  //   하한의 근거는 **경기를 치른다**는 것뿐이다: 타순 한 바퀴 9 · 선발+불펜 8.
+  //   실측(2026-08-31)에 야수 14 → 8 로 빠지고 투수가 40까지 쌓였다 —
+  //   그걸 잡으라고 두는 값이다.
+  SANGMU: { bat: 9, pit: 8 },
   "KBL_1군":   floorOf("LEAGUE_KBL"),
   // ⚠ **2군만 파생식을 안 쓴다.** 위 식(`rosterMin × 비율 − 여유2`)은 독립
   // 리그용이고, 2군은 리그이면서 동시에 **1군에 공급하는 풀**이라 잣대가 다르다.
@@ -326,7 +332,10 @@ const FLOOR = {
 
       // ── 하한 ── 비율로 본다 (최소값은 극단값이라 못 쓴다)
       if (floor && w.팀수 > 0) {
-        const lim = Math.max(1, Math.floor(w.팀수 * UNDER_FLOOR_RATIO));
+        // 🔴 **한 팀짜리 버킷은 여유를 안 준다.** 비율 여유는 표본이
+        //   여러일 때의 이야기다 — 팀이 하나면 max(1,…) 가 항상 1이라
+        //   그 한 팀이 무너져도 통과한다. **상무가 바로 그렇다.**
+        const lim = w.팀수 <= 1 ? 0 : Math.max(1, Math.floor(w.팀수 * UNDER_FLOOR_RATIO));
         check(`${lg}: 야수 ${floor.bat} 미달 ${lim}팀 이하`, w.야수미달팀 <= lim,
           `${w.야수미달팀}/${w.팀수}팀 (최소 ${w.최소야수}, 5%tile ${w.야수5퍼센타일})`);
         check(`${lg}: 투수 ${floor.pit} 미달 ${lim}팀 이하`, w.투수미달팀 <= lim,
