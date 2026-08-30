@@ -838,6 +838,9 @@ pub enum PlayerGameLine {
         /// ⚠ `default`다: 구 세이브의 로그엔 없다
         #[serde(default)]
         gs: bool,
+        /// 폭투 — KBO 투수 표의 WP. ⚠ `default`다
+        #[serde(default)]
+        wp: i32,
         /// 보크 — KBO 투수 표의 BK. ⚠ `default`다
         #[serde(default)]
         bk: i32,
@@ -892,6 +895,9 @@ pub enum PlayerGameLine {
         /// ⚠ `default`다 — 구 세이브의 로그엔 없다.
         #[serde(default)]
         cs: i32,
+        /// 포일 — 포수 기록(PB). ⚠ `default`다
+        #[serde(default)]
+        pb: i32,
         /// 득점권 타율 — 투수 쪽과 짝이다
         #[serde(rename = "rispAb", default)]
         risp_ab: i32,

@@ -1980,6 +1980,65 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     // 이 투구로 홈을 밟은 사람들. 아래 타자 기록에서 R로 붙인다
     let mut scored_ids: Vec<String> = Vec::new();
 
+    // 🔴 **폭투·포일** (2단계). 포수를 지나친 공에 주자가 진루한다.
+    //
+    // 🔴 **책임이 갈린다**(실제 야구 규칙):
+    //   폭투(WP)  공이 너무 벗어나 포수가 잡을 수 없었다 → **투수** 기록
+    //   포일(PB)  잡을 수 있는 공을 놓쳤다               → **포수** 기록
+    //
+    // ⚠ **타자가 안 쳤을 때만**이다. 친 공은 인플레이라 다른 흐름이다.
+    // ⚠ 주자가 없으면 아무 일도 안 일어난다 — 기록도 안 남긴다.
+    // ⚠ 보크와 같이 **여기서** 득점을 만진다 — 진루 로직 안에서는 못 한다.
+    let mut wp_count = 0i32;
+    // ⚠ 포수 이름을 **여기서** 잡는다 — 아래에선 `pre_state` 가 이미 옮겨졌다
+    let mut pb_catcher: Option<String> = None;
+    let mut pb_count = 0i32;
+    let mut loose_runs = 0i32;
+    let mut loose_scored: Vec<String> = vec![];
+    if !swings
+        && (next_runners.first.is_some() || next_runners.second.is_some()
+            || next_runners.third.is_some())
+    {
+        // 존은 ±1 이다. 그보다 멀리 가면 포수가 몸으로 막아야 한다
+        let dist = lr.landing.x.abs().max(lr.landing.y.abs());
+        let catcher_block = pre_state.fielders.iter()
+            .find(|f| f.position == crate::types::FieldPosition::C)
+            .map(|f| f.fielding)
+            .unwrap_or(T::CATCHER_BLOCK_PIVOT);
+        // 포수가 좋을수록 덜 흘린다 — 1.0이 기준이다
+        let block = (1.0 - (catcher_block - T::CATCHER_BLOCK_PIVOT) / 50.0
+            * T::CATCHER_BLOCK_SPAN).clamp(0.15, 1.85);
+        let (p, is_wp) = if dist >= T::WILD_PITCH_DISTANCE {
+            (T::WILD_PITCH_BASE_PROB * block, true)
+        } else {
+            (T::PASSED_BALL_BASE_PROB * block, false)
+        };
+        if rng.gen::<f64>() < p {
+            if is_wp { wp_count += 1; } else {
+                pb_count += 1;
+                pb_catcher = pre_state.fielders.iter()
+                    .find(|f| f.position == crate::types::FieldPosition::C)
+                    .map(|f| f.name.clone());
+            }
+            // ⚠ **뒤에서부터** 민다 — 앞에서 밀면 덮어쓴다
+            if let Some(r3) = next_runners.third.take() {
+                loose_runs += 1;
+                if let Some(id) = r3.player_id.clone() { loose_scored.push(id); }
+            }
+            next_runners.third  = next_runners.second.take();
+            next_runners.second = next_runners.first.take();
+            running_logs.push(if is_wp {
+                "폭투! 주자가 진루한다".to_string()
+            } else {
+                "포일! 포수가 공을 빠뜨렸다".to_string()
+            });
+        }
+    }
+    if loose_runs > 0 {
+        add_runs(loose_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
+        scored_ids.extend(loose_scored.iter().cloned());
+    }
+
     // 🔴 **보크 득점을 여기서 반영한다.** 위에서 판정만 하고 점수를
     //   안 올리면 **3루 주자가 사라지기만 한다** — 죽은 갈래다.
     if balk_runs > 0 {
@@ -2340,6 +2399,8 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 //   화면에서 "왜 주자가 갔지"만 남는다 — 도루자에서 겪은
                 //   것과 같은 형태다.
                 if balked { line.bk += 1; }
+                // ⚠ **폭투는 투수 것**이다 — 포일은 포수 것이라 여기 없다
+                if wp_count > 0 { line.wp += wp_count; }
 
                 // 🔴 **구종별** — `pitch_type` 이 매 투구에 있는데 아무도
                 //   안 셌다. 투수 상세에 구종 목록은 뜨는데 실제로 뭘
@@ -2470,6 +2531,21 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             //   셀 자리가 없어서 화면엔 성공만 보이고 성공률을 못 냈다.
             for id in &caught_ids {
                 if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.cs += 1; }
+            }
+        }
+
+        // 🔴 **포일은 포수 것이다.** 수비 팀 포수를 찾아 단다 —
+        //   공격 팀 타자 줄에 달면 엉뚱한 사람 기록이 된다.
+        // ⚠ 포수는 **수비 팀** 소속이다. 도루와 반대편이다.
+        if pb_count > 0 {
+            if let Some(cname) = pb_catcher.clone() {
+                let is_top = state.half == HalfInning::Top;
+                // 초면 홈이 수비다
+                let dl = if is_top { &mut next_state.home_bat_lines }
+                         else { &mut next_state.away_bat_lines };
+                if let Some(b) = dl.iter_mut().find(|x| x.player_id == cname) {
+                    b.pb += pb_count;
+                }
             }
         }
 
@@ -2824,6 +2900,7 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
                           else { crate::npc_sim::decide_pitcher(is_starter, is_closer, l.outs, team_won, margin) },
                 gs: is_starter,
                 bk: l.bk,
+                wp: l.wp,
                 pitch_mix: l.pitch_mix.clone(),
                 by_inning: l.by_inning.clone(),
                 risp_ab: l.risp_ab, risp_h: l.risp_h,
@@ -2837,7 +2914,7 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
                 player_id: b.player_id.clone(),
                 ab: b.ab, h: b.h, b2: b.b2, b3: b.b3, hr: b.hr,
                 r: b.r, hbp: b.hbp, sac: b.sac, sf: b.sf, rbi: b.rbi,
-                bb: b.bb, k: b.k, sb: b.sb, cs: b.cs,
+                bb: b.bb, k: b.k, sb: b.sb, cs: b.cs, pb: b.pb,
                 risp_ab: b.risp_ab, risp_h: b.risp_h,
                 e: b.errors, a: b.assists, po: b.putouts,
             });
@@ -3066,5 +3143,45 @@ mod 보크 {
         };
         assert!(p(20.0) > p(50.0), "제구 20이 50보다 잦아야 한다");
         assert!((p(50.0) - p(80.0)).abs() < 1e-9, "50 위는 더 안 좋아진다");
+    }
+}
+
+#[cfg(test)]
+mod 폭투_포일 {
+    use super::*;
+
+    /// 🔴 **책임이 갈린다** — 존 밖으로 멀리 가면 투수(WP), 존 근처면 포수(PB).
+    ///   같은 확률을 쓰면 "포수가 못 막을 공"과 "놓친 공"이 구분되지 않는다.
+    #[test]
+    fn 멀리_간_공이_훨씬_잦다() {
+        assert!(T::WILD_PITCH_BASE_PROB > T::PASSED_BALL_BASE_PROB * 10.0,
+            "폭투가 포일보다 훨씬 잦아야 한다 (WP {} vs PB {})",
+            T::WILD_PITCH_BASE_PROB, T::PASSED_BALL_BASE_PROB);
+    }
+
+    /// ⚠ 포수가 좋을수록 덜 흘린다
+    #[test]
+    fn 포수가_좋으면_덜_흘린다() {
+        let block = |fielding: f64| {
+            (1.0 - (fielding - T::CATCHER_BLOCK_PIVOT) / 50.0 * T::CATCHER_BLOCK_SPAN)
+                .clamp(0.15, 1.85)
+        };
+        assert!(block(90.0) < block(50.0), "좋은 포수가 덜 흘려야 한다");
+        assert!(block(20.0) > block(50.0), "나쁜 포수가 더 흘려야 한다");
+        assert!((block(50.0) - 1.0).abs() < 1e-9, "50이 기준값이다");
+    }
+
+    /// ⚠ 존 경계가 폭투와 포일을 가른다 — 존은 ±1 이다
+    #[test]
+    fn 존_밖_거리로_가른다() {
+        assert!(T::WILD_PITCH_DISTANCE > 1.0, "존(±1) 밖이어야 폭투다");
+        assert!(T::WILD_PITCH_DISTANCE < 2.5, "너무 멀면 폭투가 안 난다");
+    }
+
+    /// 드문 사건이다 — 실제 KBO 는 팀당 시즌 WP 30~50 · PB 5~15
+    #[test]
+    fn 드물다() {
+        assert!(T::WILD_PITCH_BASE_PROB < 0.30, "폭투가 너무 잦다");
+        assert!(T::PASSED_BALL_BASE_PROB < 0.02, "포일이 너무 잦다");
     }
 }

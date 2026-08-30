@@ -843,6 +843,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
             gs: pit_q.first().map(|p| &p.id == id).unwrap_or(false),
             // ⚠ 배경 리그는 보크 판정이 없다 — 투구 단위로 안 돌기 때문이다
             bk: 0,
+            // ⚠ 배경 리그는 투구 단위로 안 돌아 폭투 판정이 없다
+            wp: 0,
             // ⚠ **배경 리그는 구종을 안 정한다** — 타석 단위 시뮬이라
             //   `pitch_type` 이 없다(실측: npc_sim 에 0건). 지어내면
             //   주인공 기록과 다른 척도가 된다 — **빈 맵이 정직하다.**
@@ -874,7 +876,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         player_lines.push(PlayerGameLine::Batter {
             player_id: id.clone(), ab: acc.ab, h: acc.h, b2: acc.b2, b3: acc.b3, hr: acc.hr,
             r: acc.r, hbp: acc.hbp, sac: acc.sac, sf: acc.sf,
-            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb, cs: acc.cs,
+            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb, cs: acc.cs, pb: 0,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
             // ⚠ npc_sim 갈래는 수비 판정 자체가 없다 — 0이 정직하다
             e: 0, a: 0, po: 0,

@@ -290,6 +290,23 @@ pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
     (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
 }
 
+/// 폭투·포일 — **포수를 지나친 공.** 주자가 있을 때만 의미가 있다.
+///
+/// 🔴 **책임이 갈린다**(실제 야구 규칙):
+///   폭투(WP)  공이 너무 벗어나 포수가 잡을 수 없었다 → 투수 기록
+///   포일(PB)  잡을 수 있는 공을 놓쳤다               → 포수 기록
+///
+/// ⚠ 존 밖 거리로 가른다. 존은 ±1 이고 이 값보다 멀면 폭투다.
+pub const WILD_PITCH_DISTANCE: f64 = 1.55;
+/// 그만큼 벗어났을 때 포수가 못 막을 확률 — 포수 수비로 줄어든다
+pub const WILD_PITCH_BASE_PROB: f64 = 0.16;
+/// 존 근처인데 포수가 놓칠 확률 — **포일**이다. 훨씬 드물다
+pub const PASSED_BALL_BASE_PROB: f64 = 0.004;
+/// 포수 수비가 피벗에서 벗어난 만큼 곱해지는 폭 (둘 다에 걸린다)
+pub const CATCHER_BLOCK_SPAN: f64 = 0.9;
+/// 포수 수비 기준값
+pub const CATCHER_BLOCK_PIVOT: f64 = 50.0;
+
 /// 보크 — **주자가 있을 때만.** 투구 전 사건이라 타석은 그대로다.
 ///
 /// ⚠ 제구(`control`)가 나쁠수록 자주 낸다. 실제 KBO 는 팀당 시즌 3~8개라

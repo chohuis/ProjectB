@@ -363,6 +363,9 @@ pub struct PitchMixLine {
 #[serde(rename_all = "camelCase")]
 pub struct PitcherLineAccum {
     pub player_id: String,
+    /// 폭투 — KBO 투수 표의 WP. **포일(PB)은 포수 것이라 여기 없다.**
+    #[serde(default)]
+    pub wp: i32,
     /// 보크 — KBO 투수 표의 BK. **판정만 하고 안 세면 화면에서
     /// "왜 주자가 갔지"만 남는다.**
     #[serde(default)]
@@ -397,6 +400,11 @@ pub struct PitcherLineAccum {
 pub struct BatterLineAccum {
     /// 도루자 — `sb` 와 짝이다
     pub cs: i32,
+    /// 포일 — KBO 포수 기록의 PB. **폭투(WP)와 다르다** — 저쪽은
+    /// 투수가 못 던진 것이고 이건 포수가 못 잡은 것이다.
+    /// ⚠ 타자 줄에 있지만 **그 이닝 포수**의 기록이다.
+    #[serde(default)]
+    pub pb: i32,
     pub player_id: String,
     /// 수비 기록 — **선수별로 한 건도 안 쌓이고 있었다** (2026-08-29).
     /// `DefenseStat`은 팀 단위 하나라 골든글러브를 뽑을 근거가 없었다.
