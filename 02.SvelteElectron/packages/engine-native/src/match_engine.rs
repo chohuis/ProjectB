@@ -1022,9 +1022,14 @@ fn advance_on_hit(runners: MatchRunners, code: PitchResultCode, new_runner: Runn
 ///   타자 줄의 `sb`를 안 올렸다 — **규정타자 103명 전원 도루 0**이었고
 ///   도루왕이 한 번도 안 나왔다.
 /// ⚠ 성공한 주자의 `player_id`를 돌려준다 — 호출부가 그 사람 줄에 단다.
+/// 도루 시도.
+///
+/// ⚠ **성공한 주자와 잡힌 주자를 따로 돌려준다.** 예전엔 성공만 넘겨서
+///   도루자가 기록에 안 남았다 — 판정은 도는데 셀 자리가 없었다.
 fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng)
-    -> (MatchRunners, u8, Vec<String>, Vec<String>)
+    -> (MatchRunners, u8, Vec<String>, Vec<String>, Vec<String>)
 {
+    let mut caught: Vec<String> = vec![];
     let mut stole: Vec<String> = vec![];
     let mut first = state.runners.first.clone();
     let mut second = state.runners.second.clone();
@@ -1081,6 +1086,7 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
                 steal_logs.push(format!("도루 성공! 1루→2루 (스피드 {})", r.speed));
             } else {
                 first = None; outs += 1;
+                if let Some(id) = r.player_id.clone() { caught.push(id); }
                 steal_logs.push(format!("도루 실패! 1루 주자 아웃 (스피드 {})", r.speed));
             }
         }
@@ -1096,12 +1102,13 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
                     steal_logs.push(format!("도루 성공! 2루→3루 (스피드 {})", r.speed));
                 } else {
                     second = None; outs += 1;
+                    if let Some(id) = r.player_id.clone() { caught.push(id); }
                     steal_logs.push(format!("도루 실패! 2루 주자 아웃 (스피드 {})", r.speed));
                 }
             }
         }
     }
-    (MatchRunners { first, second, third }, outs, steal_logs, stole)
+    (MatchRunners { first, second, third }, outs, steal_logs, stole, caught)
 }
 
 /// ⚠ **타구 종류를 본다.** 예전엔 안 봐서 주자 1루면 뜬공에도 22%로 병살이
@@ -1702,7 +1709,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 
     // ── 1. 도루 시도 ──────────────────────────────────────────────────────────
     let active_pitcher = get_active_pitcher(state).clone();
-    let (steal_runners, steal_outs, steal_logs, stole_ids) = attempt_steals(state, &active_pitcher, rng);
+    let (steal_runners, steal_outs, steal_logs, stole_ids, caught_ids) = attempt_steals(state, &active_pitcher, rng);
     let mut pre_runners = steal_runners;
     let mut pre_outs    = steal_outs;
     let mut pre_inning  = state.inning;
@@ -2337,11 +2344,16 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         // 🔴 **도루를 기록한다** (2026-08-29). 예전엔 `attempt_steals`가 로그
         //   문자열만 만들고 타자 줄을 안 건드렸다 — **규정타자 전원 도루 0**이었다.
         // ⚠ 주자는 **공격 팀** 소속이다 — 초면 원정, 말이면 홈이다.
-        if !stole_ids.is_empty() {
+        if !stole_ids.is_empty() || !caught_ids.is_empty() {
             let is_top = state.half == HalfInning::Top;
             let lines = if is_top { &mut next_state.away_bat_lines } else { &mut next_state.home_bat_lines };
             for id in &stole_ids {
                 if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.sb += 1; }
+            }
+            // 🔴 **도루자도 같은 자리에 센다.** 판정은 처음부터 돌았는데
+            //   셀 자리가 없어서 화면엔 성공만 보이고 성공률을 못 냈다.
+            for id in &caught_ids {
+                if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.cs += 1; }
             }
         }
 
@@ -2706,7 +2718,7 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
                 player_id: b.player_id.clone(),
                 ab: b.ab, h: b.h, b2: b.b2, b3: b.b3, hr: b.hr,
                 r: b.r, hbp: b.hbp, sac: b.sac, sf: b.sf, rbi: b.rbi,
-                bb: b.bb, k: b.k, sb: b.sb,
+                bb: b.bb, k: b.k, sb: b.sb, cs: b.cs,
                 risp_ab: b.risp_ab, risp_h: b.risp_h,
                 e: b.errors, a: b.assists, po: b.putouts,
             });

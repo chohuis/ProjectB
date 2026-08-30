@@ -51,6 +51,8 @@ export interface BatterGameLine {
   bb: number;
   k: number;
   sb: number;
+  /** 도루자 — `sb` 와 짝이다. ⚠ 구 세이브엔 없다 */
+  cs?: number;
   /** 득점권 타수·안타 — 투수 쪽과 짝이다 */
   rispAb?: number;
   rispH?: number;

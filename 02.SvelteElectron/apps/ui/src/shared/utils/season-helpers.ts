@@ -96,7 +96,7 @@ export function sanitizeStatsRecord(
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       out[pid] = {
         ...b,
-        g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb),
+        g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb), cs: safeN(b.cs),
         bb, k: safeN(b.k),
         // ⚠ 파생값이라 저장된 걸 안 믿는다 — 실책·보살·자살에서 다시 만든다
         ...(b.e !== undefined || b.a !== undefined || b.po !== undefined
@@ -232,7 +232,7 @@ export function accumulateStats(
       };
     } else {
       const prev = (next[line.playerId] as BatterSeasonStats | undefined) ?? {
-        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
+        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
       };
       const ab  = prev.ab  + (line.ab  ?? 0);
       const h   = prev.h   + (line.h   ?? 0);
@@ -256,6 +256,8 @@ export function accumulateStats(
       const bb  = prev.bb  + (line.bb  ?? 0);
       const k   = prev.k   + (line.k   ?? 0);
       const sb  = prev.sb  + (line.sb  ?? 0);
+      // 🔴 **엔진이 세는데 여기서 합산을 안 해서 리그 도루자가 0이었다**
+      const cs  = (prev.cs ?? 0) + (line.cs ?? 0);
       // ⚠ **타석은 누적하지 않고 파생한다.**
       //
       // 예전엔 `prev.pa + ab + bb`였는데 `ab`·`bb`가 **이미 누적 합계**라
@@ -307,7 +309,7 @@ export function accumulateStats(
       const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       next[line.playerId] = {
-        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, bb, k,
+        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, bb, k,
         ...(b2 !== undefined ? { b2 } : {}),
         ...(b3 !== undefined ? { b3 } : {}),
         ...(r  !== undefined ? { r }  : {}),

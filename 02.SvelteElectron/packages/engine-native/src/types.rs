@@ -354,6 +354,8 @@ pub struct PitcherLineAccum {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BatterLineAccum {
+    /// 도루자 — `sb` 와 짝이다
+    pub cs: i32,
     pub player_id: String,
     /// 수비 기록 — **선수별로 한 건도 안 쌓이고 있었다** (2026-08-29).
     /// `DefenseStat`은 팀 단위 하나라 골든글러브를 뽑을 근거가 없었다.

@@ -3124,7 +3124,10 @@ export function bullpenUseProbe(leagueId = "LEAGUE_HIGHSCHOOL"): Record<string, 
   let pitchers = 0, reliefOnly = 0, everRelieved = 0, allStarts = 0;
   let sumG = 0, sumGs = 0, sumIp = 0;
   let sumHd = 0, hdAny = 0, maxHd = 0, maxHdIp = 0, reliefIp = 0;
+  let sumSb = 0, sumCs = 0;
   for (const r of Object.values(st) as unknown as Array<Record<string, unknown>>) {
+    sumSb += Number(r.sb ?? 0);
+    sumCs += Number(r.cs ?? 0);
     if (r.type !== "pitcher") continue;
     const g = Number(r.g ?? 0), gs = Number(r.gs ?? 0);
     if (g <= 0) continue;
@@ -3140,6 +3143,8 @@ export function bullpenUseProbe(leagueId = "LEAGUE_HIGHSCHOOL"): Record<string, 
   return {
     명세: leagueId,
     투수: pitchers,
+    도루합: sumSb,
+    도루자합: sumCs,
     구원전담: reliefOnly,
     구원등판있음: everRelieved,
     전부선발: allStarts,

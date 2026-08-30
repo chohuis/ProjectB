@@ -875,6 +875,12 @@ pub enum PlayerGameLine {
         bb: i32,
         k: i32,
         sb: i32,
+        /// 도루자 — **판정은 처음부터 돌았는데 셀 자리가 없었다.**
+        /// 주자가 아웃되고 로그도 남는데 기록에 안 남아서, 화면엔
+        /// 도루 성공만 보이고 **성공률을 낼 수 없었다.**
+        /// ⚠ `default`다 — 구 세이브의 로그엔 없다.
+        #[serde(default)]
+        cs: i32,
         /// 득점권 타율 — 투수 쪽과 짝이다
         #[serde(rename = "rispAb", default)]
         risp_ab: i32,

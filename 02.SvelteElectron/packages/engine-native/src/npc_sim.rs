@@ -67,7 +67,7 @@ fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondit
 }
 
 struct PitAccum { outs: i32, er: i32, h: i32, hr: i32, k: i32, bb: i32, hbp: i32, pc: i32, risp_ab: i32, risp_h: i32 }
-struct BatAccum { ab: i32, h: i32, b2: i32, b3: i32, hr: i32, r: i32, rbi: i32, bb: i32, hbp: i32, sac: i32, sf: i32, k: i32, sb: i32, risp_ab: i32, risp_h: i32 }
+struct BatAccum { ab: i32, h: i32, b2: i32, b3: i32, hr: i32, r: i32, rbi: i32, bb: i32, hbp: i32, sac: i32, sf: i32, k: i32, sb: i32, cs: i32, risp_ab: i32, risp_h: i32 }
 
 fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
     let eff_stam = pit.stamina * cond_mod;
@@ -418,13 +418,19 @@ fn sim_half_inning_pitch(
             if rng.gen::<f64>() < success {
                 bases[to] = bases[from].take();
                 bat_map.entry(r.id.clone())
-                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
+                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 })
                     .sb += 1;
             } else {
                 bases[from] = None;
                 outs += 1;
                 cur_pit_outs += 1;
                 unsafe { (*acc_ptr).outs += 1; }
+                // 🔴 **도루자도 센다.** 예전엔 아웃만 올리고 타자 기록을
+                //   안 건들어서 **리그 전체 도루자가 0**이었다 — 도루 성공에서
+                //   겪은 것과 같은 형태다.
+                bat_map.entry(r.id.clone())
+                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 })
+                    .cs += 1;
             }
         }
         if outs >= 3 { break; }
@@ -493,7 +499,7 @@ fn sim_half_inning_pitch(
         if is_hbp { pa.hbp += 1; }
 
         let ba = bat_map.entry(batter.id.clone())
-            .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 });
+            .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 });
         if !no_ab {
             ba.ab += 1;
             ba.risp_ab += risp as i32;
@@ -520,7 +526,7 @@ fn sim_half_inning_pitch(
         for &idx in scored_buf.iter() {
             let rid = lineup[idx % n].id.clone();
             bat_map.entry(rid)
-                .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
+                .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 })
                 .r += 1;
         }
     }
@@ -857,7 +863,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         player_lines.push(PlayerGameLine::Batter {
             player_id: id.clone(), ab: acc.ab, h: acc.h, b2: acc.b2, b3: acc.b3, hr: acc.hr,
             r: acc.r, hbp: acc.hbp, sac: acc.sac, sf: acc.sf,
-            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb,
+            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb, cs: acc.cs,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
             // ⚠ npc_sim 갈래는 수비 판정 자체가 없다 — 0이 정직하다
             e: 0, a: 0, po: 0,

@@ -475,6 +475,7 @@ export interface BatterSeasonStats {
   fpct?: number;
   rbi: number;    // 타점
   sb: number;     // 도루
+  cs?: number;    // 도루자 — 성공률의 분모다. ⚠ 구 세이브엔 없다
   bb: number;  // 볼넷
   k: number;  // 삼진
   avg: number;  // 타율 (계산값: h/ab)

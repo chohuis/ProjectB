@@ -79,7 +79,7 @@ export interface CareerTotals {
   } | null;
   batting: {
     g: number; pa: number; ab: number; h: number; hr: number;
-    rbi: number; sb: number; bb: number; k: number;
+    rbi: number; sb: number; cs: number; bb: number; k: number;
     /** ⚠ 구 세이브엔 없다 */
     b2?: number; b3?: number; r?: number; hbp?: number; sac?: number; sf?: number;
     avg: string; obp: string; slg: string; ops: string;
@@ -100,7 +100,7 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
   }
 
   const p = { g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, outs: 0, er: 0, h: 0, k: 0, bb: 0, hr: 0, hbp: 0 };
-  const b = { g: 0, pa: 0, ab: 0, h: 0, hr: 0, rbi: 0, sb: 0, bb: 0, k: 0, tb: 0,
+  const b = { g: 0, pa: 0, ab: 0, h: 0, hr: 0, rbi: 0, sb: 0, cs: 0, bb: 0, k: 0, tb: 0,
               b2: 0, b3: 0, r: 0, hbp: 0, sac: 0, sf: 0 };
   // ⚠ **없는 것과 0을 가른다.** 구 세이브엔 이 칸이 없다 — 0으로 합치면
   //   "통산 피홈런 0개인 투수"가 되어 기록이 거짓이 된다
@@ -125,7 +125,7 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
       anyB = true;
       b.g += st.g ?? 0; b.pa += st.pa ?? 0; b.ab += st.ab ?? 0;
       b.h += st.h ?? 0; b.hr += st.hr ?? 0; b.rbi += st.rbi ?? 0;
-      b.sb += st.sb ?? 0; b.bb += st.bb ?? 0; b.k += st.k ?? 0;
+      b.sb += st.sb ?? 0; b.cs += st.cs ?? 0; b.bb += st.bb ?? 0; b.k += st.k ?? 0;
       if (st.b2 !== undefined || st.b3 !== undefined) {
         bXbKnown = true; b.b2 += st.b2 ?? 0; b.b3 += st.b3 ?? 0;
       }
@@ -157,7 +157,7 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
     } : null,
     batting: anyB ? {
       g: b.g, pa: b.pa, ab: b.ab, h: b.h, hr: b.hr,
-      rbi: b.rbi, sb: b.sb, bb: b.bb, k: b.k,
+      rbi: b.rbi, sb: b.sb, cs: b.cs, bb: b.bb, k: b.k,
       ...(bXbKnown ? { b2: b.b2, b3: b.b3 } : {}),
       ...(bRKnown  ? { r: b.r } : {}),
       ...(bScKnown ? { hbp: b.hbp, sac: b.sac, sf: b.sf } : {}),
