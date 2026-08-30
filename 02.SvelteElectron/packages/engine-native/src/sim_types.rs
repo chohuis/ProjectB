@@ -838,6 +838,9 @@ pub enum PlayerGameLine {
         /// ⚠ `default`다: 구 세이브의 로그엔 없다
         #[serde(default)]
         gs: bool,
+        /// 보크 — KBO 투수 표의 BK. ⚠ `default`다
+        #[serde(default)]
+        bk: i32,
         /// 구종별 성적 — **`pitch_type` 이 매 투구에 있는데 아무도
         /// 안 셀다.** 투수 상세에 구종 목록은 뜨는데 **실제로 뭐를
         /// 던졌는지는 알 수 없었다.** ⚠ `default`다 — 구 세이브 로그엔 없다.

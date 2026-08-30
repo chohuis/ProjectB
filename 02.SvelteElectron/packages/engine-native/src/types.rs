@@ -363,6 +363,10 @@ pub struct PitchMixLine {
 #[serde(rename_all = "camelCase")]
 pub struct PitcherLineAccum {
     pub player_id: String,
+    /// 보크 — KBO 투수 표의 BK. **판정만 하고 안 세면 화면에서
+    /// "왜 주자가 갔지"만 남는다.**
+    #[serde(default)]
+    pub bk: i32,
     /// 구종별 성적. **안 던진 구종은 안 실린다** — 10종을 배열로 두면
     /// 대부분 0인 칸이 매 경기 로그에 쌓인다.
     #[serde(default)]

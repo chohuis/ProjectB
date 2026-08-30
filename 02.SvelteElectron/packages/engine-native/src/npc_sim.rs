@@ -841,6 +841,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, hr: acc.hr, k: acc.k, bb: acc.bb, hbp: acc.hbp, pc: acc.pc, decision,
             gs: pit_q.first().map(|p| &p.id == id).unwrap_or(false),
+            // ⚠ 배경 리그는 보크 판정이 없다 — 투구 단위로 안 돌기 때문이다
+            bk: 0,
             // ⚠ **배경 리그는 구종을 안 정한다** — 타석 단위 시뮬이라
             //   `pitch_type` 이 없다(실측: npc_sim 에 0건). 지어내면
             //   주인공 기록과 다른 척도가 된다 — **빈 맵이 정직하다.**

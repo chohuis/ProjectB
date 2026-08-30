@@ -1736,9 +1736,40 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 
     // ── 1. 도루 시도 ──────────────────────────────────────────────────────────
     let active_pitcher = get_active_pitcher(state).clone();
-    let (steal_runners, steal_outs, steal_logs, stole_ids, caught_ids) = attempt_steals(state, &active_pitcher, rng);
+    let (steal_runners, steal_outs, mut steal_logs, stole_ids, caught_ids) = attempt_steals(state, &active_pitcher, rng);
     let mut pre_runners = steal_runners;
     let mut pre_outs    = steal_outs;
+
+    // 🔴 **보크** (2단계). 투구 전 사건이라 **타석은 그대로**고 주자만
+    //   한 칸씩 간다 — 결과 코드가 필요 없다.
+    //
+    // ⚠ **도루 함수 안에 못 넣는다.** 3루 주자가 홈에 오면 득점인데
+    //   `attempt_steals` 는 득점을 반환하지 않는다. 여기선 점수를 만진다.
+    // ⚠ 제구가 나쁠수록 자주 낸다. 실제 KBO 는 팀당 시즌 3~8개다.
+    let mut balk_runs = 0i32;
+    let mut balked = false;
+    let mut balk_scored_ids: Vec<String> = vec![];
+    if pre_runners.first.is_some() || pre_runners.second.is_some()
+        || pre_runners.third.is_some()
+    {
+        let ctl = ((50.0 - active_pitcher.control) / 50.0).max(0.0);
+        let p = T::BALK_BASE_PROB + ctl * T::BALK_CONTROL_SPAN;
+        if rng.gen::<f64>() < p.clamp(0.0, T::BALK_MAX_PROB) {
+            balked = true;
+            // ⚠ **뒤에서부터** 민다 — 앞에서 밀면 덮어쓴다
+            if let Some(r3) = pre_runners.third.take() {
+                balk_runs += 1;
+                if let Some(id) = r3.player_id.clone() { balk_scored_ids.push(id); }
+            }
+            pre_runners.third  = pre_runners.second.take();
+            pre_runners.second = pre_runners.first.take();
+            steal_logs.push(if balk_runs > 0 {
+                "보크! 3루 주자가 홈을 밟는다".to_string()
+            } else {
+                "보크! 주자가 한 베이스씩 진루한다".to_string()
+            });
+        }
+    }
     let mut pre_inning  = state.inning;
     let mut pre_half    = state.half;
 
@@ -1948,6 +1979,13 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let outs_before_play = next_outs;
     // 이 투구로 홈을 밟은 사람들. 아래 타자 기록에서 R로 붙인다
     let mut scored_ids: Vec<String> = Vec::new();
+
+    // 🔴 **보크 득점을 여기서 반영한다.** 위에서 판정만 하고 점수를
+    //   안 올리면 **3루 주자가 사라지기만 한다** — 죽은 갈래다.
+    if balk_runs > 0 {
+        add_runs(balk_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);
+        scored_ids.extend(balk_scored_ids.iter().cloned());
+    }
 
     match result_code {
         PitchResultCode::Ball => {
@@ -2298,6 +2336,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             if let Some(line) = q.lines.get_mut(idx) {
                 line.outs += delta;
                 line.pc += 1;
+                // 🔴 **보크를 그 투수 줄에 단다.** 판정만 하고 안 세면
+                //   화면에서 "왜 주자가 갔지"만 남는다 — 도루자에서 겪은
+                //   것과 같은 형태다.
+                if balked { line.bk += 1; }
 
                 // 🔴 **구종별** — `pitch_type` 이 매 투구에 있는데 아무도
                 //   안 셌다. 투수 상세에 구종 목록은 뜨는데 실제로 뭘
@@ -2781,6 +2823,7 @@ fn collect_player_lines(state: &MatchState) -> Vec<crate::sim_types::PlayerGameL
                 decision: if is_draw { "ND".to_string() }
                           else { crate::npc_sim::decide_pitcher(is_starter, is_closer, l.outs, team_won, margin) },
                 gs: is_starter,
+                bk: l.bk,
                 pitch_mix: l.pitch_mix.clone(),
                 by_inning: l.by_inning.clone(),
                 risp_ab: l.risp_ab, risp_h: l.risp_h,
@@ -2997,5 +3040,31 @@ mod 삼중살 {
             let (killed, _) = try_double_play(Some(&b), &runners(3), 0, &mut rng);
             assert_eq!(killed, 0, "뜬공에 살이 붙었다 (seed {})", seed);
         }
+    }
+}
+
+#[cfg(test)]
+mod 보크 {
+    use super::*;
+
+    /// ⚠ 보크는 **투구 전** 사건이라 `step_pitch_core` 안에서 난다.
+    ///   함수로 떼어내지 않았으므로 상수와 배선을 본다.
+    #[test]
+    fn 드문_사건이다() {
+        // 실제 KBO 는 팀당 시즌 3~8개다. 타석당 확률이 0.6%를 넘으면
+        // 한 시즌에 수십 개가 나온다.
+        assert!(T::BALK_MAX_PROB <= 0.01, "보크 상한이 너무 높다");
+        assert!(T::BALK_BASE_PROB > 0.0, "0이면 죽은 갈래다");
+    }
+
+    /// 🔴 제구가 나쁠수록 자주 낸다 — 그게 이 사건의 축이다
+    #[test]
+    fn 제구가_나쁠수록_잦다() {
+        let p = |control: f64| {
+            let ctl = ((50.0 - control) / 50.0).max(0.0);
+            (T::BALK_BASE_PROB + ctl * T::BALK_CONTROL_SPAN).clamp(0.0, T::BALK_MAX_PROB)
+        };
+        assert!(p(20.0) > p(50.0), "제구 20이 50보다 잦아야 한다");
+        assert!((p(50.0) - p(80.0)).abs() < 1e-9, "50 위는 더 안 좋아진다");
     }
 }

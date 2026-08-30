@@ -290,6 +290,16 @@ pub fn steal_catcher_penalty(catcher_arm: f64) -> f64 {
     (catcher_arm - STEAL_CATCHER_ARM_PIVOT) * STEAL_CATCHER_ARM_SCALE
 }
 
+/// 보크 — **주자가 있을 때만.** 투구 전 사건이라 타석은 그대로다.
+///
+/// ⚠ 제구(`control`)가 나쁠수록 자주 낸다. 실제 KBO 는 팀당 시즌 3~8개라
+///   **아주 드물게** 둔다.
+pub const BALK_BASE_PROB: f64 = 0.0012;
+/// 제구가 50에서 아래로 벗어난 만큼 더해지는 폭
+pub const BALK_CONTROL_SPAN: f64 = 0.0018;
+/// 상한
+pub const BALK_MAX_PROB: f64 = 0.006;
+
 /// 견제사 — 1루에만 주자가 있을 때.
 ///
 /// 🔴 `hold_runners` 가 **도루 성공률만 낮추고 있었다** — 주자를
