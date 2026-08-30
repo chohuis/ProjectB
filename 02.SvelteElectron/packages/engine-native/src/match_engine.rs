@@ -782,9 +782,18 @@ fn resolve_hit_type(code: PitchResultCode, decision: &PitchDecision, quality: f6
     }
 }
 
-fn resolve_zone(hit_type: BallHitType, loc: u8, rng: &mut impl Rng) -> FieldPosition {
-    let is_left  = loc == 1 || loc == 4 || loc == 7;
-    let is_right = loc == 3 || loc == 6 || loc == 9;
+/// 타구 방향.
+///
+/// 🔴 예전엔 **투구 코스만** 봤다 — 같은 코스면 홈런왕도 교타자도
+///   같은 분포로 쳤다.
+/// ⚠ 파워로 당겨치기를 대신한다 — 성향 값이 따로 없다(실측).
+fn resolve_zone(hit_type: BallHitType, loc: u8, power: f64,
+                rng: &mut impl Rng) -> FieldPosition {
+    // 파워가 셀수록 당겨친다. 가운데 코스도 한쪽으로 기운다.
+    let pull = ((power - T::PULL_PIVOT) / 50.0 * T::PULL_SPAN).clamp(-0.4, 0.4);
+    let pulled = pull > 0.0 && rng.gen::<f64>() < pull;
+    let is_left  = (loc == 1 || loc == 4 || loc == 7) || (loc == 2 || loc == 5 || loc == 8) && pulled;
+    let is_right = (loc == 3 || loc == 6 || loc == 9) && !pulled;
     match hit_type {
         BallHitType::Bunt => {
             let opts = [FieldPosition::P, FieldPosition::C, FieldPosition::B1, FieldPosition::B3];
@@ -858,7 +867,7 @@ fn resolve_ball_in_play(code: PitchResultCode, decision: &PitchDecision, quality
                         power: f64, rng: &mut impl Rng) -> Option<BallInPlay> {
     if !is_inplay(code) { return None; }
     let hit_type = resolve_hit_type(code, decision, quality, rng);
-    let zone     = resolve_zone(hit_type, decision.location, rng);
+    let zone     = resolve_zone(hit_type, decision.location, power, rng);
     let hardness = resolve_hardness(code, decision.power, quality, rng);
     let launch_angle = launch_angle_of(hit_type, rng);
     let distance = flight_distance(hardness, launch_angle, power);
@@ -1922,6 +1931,39 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
 
     let ball_in_play = resolve_ball_in_play(result_code, decision, quality,
                                             current_batter.power, rng);
+
+    // 🔴 **수비 시프트** (5단계). 당겨치는 타자에게 수비를 기울인다.
+    //
+    // ⚠ **방향이 정해진 뒤**에 건다 — `resolve_contact` 는 안타/아웃만
+    //   정하고 어디로 갔는지는 모른다.
+    // ⚠ **양방향이다.** 시프트 쪽 땅볼은 아웃이 늘고, 반대(빈 자리)로
+    //   간 땅볼은 안타가 는다. 한쪽만 하면 리그 타율이 통째로 움직인다.
+    // ⚠ 땅볼에만 건다 — 뜬공은 시프트와 무관하다.
+    if let Some(b) = ball_in_play.as_ref() {
+        let shifted = current_batter.power >= T::SHIFT_POWER_MIN;
+        if shifted && b.hit_type == BallHitType::GroundBall {
+            // 당겨치는 쪽(3루·유격) 이 시프트 방향이다
+            let to_shift = matches!(b.zone,
+                FieldPosition::B3 | FieldPosition::SS);
+            let r = rng.gen::<f64>();
+            match (result_code, to_shift) {
+                // 시프트 쪽으로 굴렀다 — 수비가 몰려 있어 잡힌다
+                (PitchResultCode::HitSingle, true)
+                    if r < T::SHIFT_OUT_BONUS =>
+                {
+                    result_code = PitchResultCode::GroundOut;
+                }
+                // 빈 자리로 굴렀다 — 수비가 비어 안타가 된다
+                (PitchResultCode::InplayOut, false)
+                | (PitchResultCode::GroundOut, false)
+                    if r < T::SHIFT_HOLE_PENALTY =>
+                {
+                    result_code = PitchResultCode::HitSingle;
+                }
+                _ => {}
+            }
+        }
+    }
 
     // 🔴 **담장으로 다시 본다** (4단계 ③). 예전엔 홈런이 확률표에서
     //   바로 나와 **같은 타구가 잠실이든 사직이든 똑같이 홈런**이었다.
@@ -3407,5 +3449,64 @@ mod 펜스 {
     fn 펜스_삼루타가_드물다() {
         assert!(T::FENCE_TRIPLE_PROB > 0.0, "0이면 죽은 갈래다");
         assert!(T::FENCE_TRIPLE_PROB < 0.5, "절반 넘으면 2루타보다 잦다");
+    }
+}
+
+#[cfg(test)]
+mod 시프트 {
+    use super::*;
+    use rand::SeedableRng;
+
+    fn zone_counts(power: f64, seed: u64) -> (usize, usize) {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+        let (mut left, mut right) = (0, 0);
+        for _ in 0..3000 {
+            // 가운데 코스(5)로만 친다 — 성향만 보려는 것이다
+            let z = resolve_zone(BallHitType::GroundBall, 5, power, &mut rng);
+            match z {
+                FieldPosition::B3 | FieldPosition::SS => left += 1,
+                FieldPosition::B1 | FieldPosition::B2 => right += 1,
+                _ => {}
+            }
+        }
+        (left, right)
+    }
+
+    /// 🔴 **파워 타자가 당겨친다.** 예전엔 투구 코스만 봐서 홈런왕도
+    ///   교타자도 같은 분포로 쳤다.
+    #[test]
+    fn 파워가_방향을_기울인다() {
+        let (weak_l, _) = zone_counts(20.0, 1);
+        let (strong_l, _) = zone_counts(95.0, 1);
+        assert!(strong_l > weak_l,
+            "파워 95 가 20 보다 당겨쳐야 한다 ({} vs {})", strong_l, weak_l);
+    }
+
+    /// ⚠ 평범한 타자(50)는 안 기운다 — 기준값이다
+    #[test]
+    fn 기준값은_안_기운다() {
+        let (l, r) = zone_counts(50.0, 7);
+        let diff = (l as f64 - r as f64).abs() / (l + r) as f64;
+        assert!(diff < 0.15, "기준 타자가 기울었다 (좌 {} 우 {})", l, r);
+    }
+
+    /// 🔴 **시프트는 양방향이다** — 한쪽만 하면 리그 타율이 통째로 움직인다
+    #[test]
+    fn 양방향이다() {
+        assert!(T::SHIFT_OUT_BONUS > 0.0, "시프트 쪽 아웃 가산이 없다");
+        assert!(T::SHIFT_HOLE_PENALTY > 0.0, "빈 자리 안타 가산이 없다");
+        // 빈 자리 쪽이 살짝 커야 시프트가 공짜가 아니다
+        // 🔴 **모수가 다르다** — 인플레이 아웃이 단타보다 약 2.4배다.
+        // 확률을 같게 주면 안타가 순증한다(실측: .322 → .327).
+        // 그래서 안타 → 아웃 쪽을 훨씬 크게 준다.
+        assert!(T::SHIFT_OUT_BONUS > T::SHIFT_HOLE_PENALTY * 2.0,
+            "모수 차를 안 넘으면 시프트가 타율을 올린다");
+    }
+
+    /// ⚠ 아무에게나 걸지 않는다
+    #[test]
+    fn 파워_문턱이_있다() {
+        assert!(T::SHIFT_POWER_MIN > 55.0, "문턱이 낮으면 전원 시프트다");
+        assert!(T::SHIFT_POWER_MIN < 80.0, "너무 높으면 아무도 안 걸린다");
     }
 }
