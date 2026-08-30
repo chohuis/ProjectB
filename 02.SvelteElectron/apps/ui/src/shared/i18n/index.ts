@@ -115,6 +115,7 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "nav.matchEngine": "Match Engine",
     "nav.league": "League",
     "nav.achievements": "Achievements",
+    "nav.hallOfFame": "Hall of Fame",
     "nav.academics": "Academics",
     "header.progress": "Advance",
     "header.progressRunning": "Advancing...",

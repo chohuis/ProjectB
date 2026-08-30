@@ -8,6 +8,7 @@
   import AcademicsPage from "../academics/AcademicsPage.svelte";
   import FinancePage from "../finance/FinancePage.svelte";
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
+  import HallOfFamePage from "../hall-of-fame/HallOfFamePage.svelte";
 
   /**
    * C2 "나" — 상태·훈련·학업·재정·업적을 한 지붕 아래로. (사용자 확정: 탭 2단)
@@ -28,13 +29,22 @@
     academics:    "nav.academics",
     finance:      "nav.finance",
     achievements: "nav.achievements",
+    hallOfFame:   "nav.hallOfFame",
   };
 
   $: p = $gameStore.protagonist;
-  $: tabs = visibleMeTabs(p);
+  // ⚠ 명예의 전당은 **세계의 상태**라 주인공 객체에 없다 — 따로 넘긴다.
+  //   안 넘기면 탭이 영영 안 보인다(옵셔널이라 조용히).
+  $: hofCtx = {
+    ...p,
+    hallOfFameCount: Object.keys($gameStore.hallOfFame ?? {}).length,
+    retiredNumberCount: Object.values($gameStore.retiredNumbers ?? {})
+      .reduce((a, b) => a + (b?.length ?? 0), 0),
+  };
+  $: tabs = visibleMeTabs(hofCtx);
 
   // 보고 있던 탭이 단계 변화로 사라지면(졸업·은퇴) 빈 화면 대신 첫 탭으로 보낸다
-  $: tab = fallbackMeTab(p, tab);
+  $: tab = fallbackMeTab(hofCtx, tab);
 
   function select(next: MeTabId) {
     tab = next;
@@ -65,6 +75,8 @@
       <FinancePage />
     {:else if tab === "achievements"}
       <AchievementsPage />
+    {:else if tab === "hallOfFame"}
+      <HallOfFamePage />
     {/if}
   </div>
 </section>

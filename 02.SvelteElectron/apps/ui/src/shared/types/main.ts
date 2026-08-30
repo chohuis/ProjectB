@@ -20,7 +20,8 @@ export type MeTabId =
   | "training"
   | "academics"
   | "finance"
-  | "achievements";
+  | "achievements"
+  | "hallOfFame";
 
 export interface MainSnapshot {
   dayLabel: string;

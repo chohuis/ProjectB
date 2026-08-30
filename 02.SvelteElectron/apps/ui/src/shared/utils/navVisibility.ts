@@ -17,7 +17,15 @@ import type { MainTabId, MeTabId } from "../types/main";
  * 표를 `Record<유니온, …>`으로 못박아 탭이 늘면 컴파일이 깨지게 한다.
  */
 
-type Ctx = Pick<ProtagonistSave, "careerStage" | "retirement">;
+type Ctx = Pick<ProtagonistSave, "careerStage" | "retirement"> & {
+  /**
+   * 명예의 전당·영구결번 개수. **주인공 것이 아니라 세계의 상태다** —
+   * `gameStore` 에 있어서 `ProtagonistSave` 로는 못 본다.
+   * ⚠ 옵셔널이라 **안 넘기면 탭이 안 보인다** — 기존 호출부는 그대로 돈다.
+   */
+  hallOfFameCount?: number;
+  retiredNumberCount?: number;
+};
 
 const ALWAYS = () => true;
 
@@ -44,9 +52,13 @@ const ME: Record<MeTabId, (p: Ctx) => boolean> = {
   // 붙지 않습니다"를 직접 말하고 용돈·구독은 단계와 무관하다 — 숨기면 안 된다
   finance:      ALWAYS,
   achievements: ALWAYS,
+  // 🔴 **헌액자가 생겨야 보인다.** 늘 열어 두면 커리어 내내 빈 탭이다 —
+  //   은퇴자가 나와야 채워지므로 초반 몇 시즌은 반드시 비어 있다.
+  //   ⚠ 결번만 있고 헌액자가 없는 경우도 연다(구단 역사는 그것도 기록이다).
+  hallOfFame:   (p) => (p.hallOfFameCount ?? 0) > 0 || (p.retiredNumberCount ?? 0) > 0,
 };
 
-export const ME_ORDER: MeTabId[] = ["status", "training", "academics", "finance", "achievements"];
+export const ME_ORDER: MeTabId[] = ["status", "training", "academics", "finance", "achievements", "hallOfFame"];
 
 export function visibleNavTabs(p: Ctx): MainTabId[] {
   return NAV_ORDER.filter((id) => NAV[id](p));

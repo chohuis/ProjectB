@@ -98,8 +98,8 @@ const ROWS = [
   ["프로", "골든글러브", has("computeGoldenGlove"), screen("SeasonEndModal")],
   ["프로", "구단 재정", has("settleClubFinance"), screen("FinancePage")],
   ["프로", "구단 연표", has("seasonGetTeamHistory"), screen("TeamDetailModal")],
-  ["프로", "의료팀 (회복)", has("medicalRules"), false],
-  ["프로", "전지훈련", has("campRules"), false],
+  ["프로", "의료팀 (회복)", has("medicalRules"), has("의료팀")],
+  ["프로", "전지훈련", has("campRules"), has("전지훈련")],
   ["프로", "전력분석팀", has("analyticsRules"), false],
   ["프로", "경쟁균형세 제재", has("luxuryTax"), false],
   ["프로", "우천 취소·순연", has("rainout"), false],
@@ -108,7 +108,7 @@ const ROWS = [
   // ── 해외 ──────────────────────────────────────────────────
   ["해외", "포스팅·진출", has("OverseasApplyModal"), screen("OverseasApplyModal")],
   ["해외", "ABL·JBL 운영", has("LEAGUE_ABL"), screen("LeaguePage")],
-  ["해외", "외국인 한도", has("applyForeignTurnover"), false],
+  ["해외", "외국인 한도", has("applyForeignTurnover"), has("{foreignHeld.length} / 3")],
   ["해외", "해외 리그 드래프트", has("overseasDraft"), false],
 
   // ── 군대 ──────────────────────────────────────────────────
@@ -126,9 +126,9 @@ const ROWS = [
   // ── 은퇴 ──────────────────────────────────────────────────
   ["은퇴", "은퇴 판정", has("retirementRules"), screen("RetirementAskModal")],
   ["은퇴", "커리어 종료 화면", has("CareerEndScreen"), screen("CareerEndScreen")],
-  ["은퇴", "명예의 전당", has("inductHallOfFame"), false],
-  ["은퇴", "영구결번", has("retiredNumbers"), false],
-  ["은퇴", "레전드·연표 화면", has("hallOfFamePage"), false],
+  ["은퇴", "명예의 전당", has("inductHallOfFame"), screen("HallOfFamePage")],
+  ["은퇴", "영구결번", has("retiredNumbers"), screen("HallOfFamePage")],
+  ["은퇴", "레전드·연표 화면", has("HallOfFamePage"), screen("HallOfFamePage")],
 ];
 
 // ── 출력 ─────────────────────────────────────────────────────
