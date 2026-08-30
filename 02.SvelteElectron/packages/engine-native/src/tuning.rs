@@ -135,6 +135,12 @@ pub fn park_quality_modifier(p: ParkType) -> f64 {
 /// `INPLAY_OUT` 하나뿐이라 화면에 "아웃"으로만 나와 안 보였을 뿐이다.
 pub const DOUBLE_PLAY_BASE_PROB: f64 = 0.22;
 
+/// 삼중살 — **병살이 난 타구 중에서** 다시 걸러낸다.
+///
+/// ⚠ 조건은 병살보다 좁다: 무사 · 주자 둘 이상. 실제 KBO 는 시즌
+///   0~2건이라 병살(연 100건대) 대비 아주 낮아야 한다.
+pub const TRIPLE_PLAY_FROM_DP: f64 = 0.02;
+
 /// 직선타 병살 배수. 잡아서 주자를 묶는 경우라 땅볼보다 훨씬 드물다
 pub const DOUBLE_PLAY_LINEDRIVE_MOD: f64 = 0.25;
 

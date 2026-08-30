@@ -327,7 +327,12 @@ describe("히트앤런 (C-③)", () => {
   });
 
   it("🔴 병살을 땅볼로 낮춘다 — 그게 이 작전의 값이다", () => {
-    expect(rust.includes("            PitchResultCode::DoublePlay => {\n                result_code = PitchResultCode::GroundOut;")).toBe(true);
+    // ⚠ 2단계에서 **삼중살도 같이 낮추게** 됐다 — 안 그러면 히트앤런을
+    //   걸고도 주자 둘이 죽어 작전을 거는 이유가 사라진다.
+    expect(rust.includes(
+      "            PitchResultCode::DoublePlay | PitchResultCode::TriplePlay => {\n" +
+      "                result_code = PitchResultCode::GroundOut;"
+    )).toBe(true);
   });
 
   it("🔴 헛치면 주자가 죽는다", () => {

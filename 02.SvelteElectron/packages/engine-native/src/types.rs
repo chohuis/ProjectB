@@ -99,6 +99,9 @@ pub enum PitchResultCode {
     #[serde(rename = "FLY_OUT")]        FlyOut,
     #[serde(rename = "LINE_OUT")]       LineOut,
     #[serde(rename = "DOUBLE_PLAY")]    DoublePlay,
+    /// 삼중살 — 아웃 셋을 한 번에. **무사 · 주자 둘 이상**에서만 난다.
+    /// ⚠ 실제 KBO 는 시즌 0~2건이다 — 아주 드물게 둔다.
+    #[serde(rename = "TRIPLE_PLAY")]    TriplePlay,
     #[serde(rename = "FIELDING_ERROR")] FieldingError,
     #[serde(rename = "HIT_SINGLE")]     HitSingle,
     #[serde(rename = "HIT_DOUBLE")]     HitDouble,

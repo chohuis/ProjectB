@@ -86,7 +86,7 @@ fn is_out_in_play(code: PitchResultCode) -> bool {
     matches!(code,
         PitchResultCode::InplayOut | PitchResultCode::GroundOut |
         PitchResultCode::FlyOut    | PitchResultCode::LineOut   |
-        PitchResultCode::DoublePlay)
+        PitchResultCode::DoublePlay | PitchResultCode::TriplePlay)
 }
 
 fn is_inplay(code: PitchResultCode) -> bool {
@@ -106,8 +106,10 @@ fn is_ab_terminal(code: PitchResultCode) -> bool {
 /// 타구 종류는 엔진이 이미 `BallInPlay.hitType`으로 정해 놓았는데
 /// **결과 코드가 하나뿐이라 화면까지 못 갔다.** 병살은 아웃이 둘이라
 /// 따로 둔다 — 색도 연출도 집계도 달라야 한다.
-fn narrow_inplay_out(ball: Option<&BallInPlay>, is_dp: bool) -> PitchResultCode {
-    if is_dp { return PitchResultCode::DoublePlay; }
+fn narrow_inplay_out(ball: Option<&BallInPlay>, killed: u8) -> PitchResultCode {
+    // ⚠ 셋이면 삼중살이다 — 둘과 코드가 달라야 화면·집계가 갈린다
+    if killed >= 3 { return PitchResultCode::TriplePlay; }
+    if killed >= 2 { return PitchResultCode::DoublePlay; }
     match ball.map(|b| b.hit_type) {
         Some(BallHitType::GroundBall) | Some(BallHitType::Bunt) => PitchResultCode::GroundOut,
         Some(BallHitType::LineDrive)  => PitchResultCode::LineOut,
@@ -1114,22 +1116,43 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
 /// ⚠ **타구 종류를 본다.** 예전엔 안 봐서 주자 1루면 뜬공에도 22%로 병살이
 /// 붙었다 — 결과 코드가 `INPLAY_OUT` 하나뿐이라 화면엔 "아웃"으로만 나와
 /// 안 보였다. 코드를 쪼개자마자 "중견수 병살타"가 로그에 찍혔다.
+/// 병살·삼중살 판정.
+///
+/// ⚠ **아웃을 몇 개 잡았는지 돌려준다**(0·2·3). `bool` 하나면 삼중살에도
+///   아웃이 둘만 올라가 **이닝이 안 끝난다.**
 fn try_double_play(
     ball: Option<&BallInPlay>, runners: &MatchRunners, outs_before: u8, rng: &mut impl Rng,
-) -> (bool, MatchRunners) {
-    if outs_before >= 2 || runners.first.is_none() { return (false, runners.clone()); }
+) -> (u8, MatchRunners) {
+    if outs_before >= 2 || runners.first.is_none() { return (0, runners.clone()); }
     let type_mod = match ball.map(|b| b.hit_type) {
         Some(BallHitType::GroundBall) | Some(BallHitType::Bunt) => 1.0,
         Some(BallHitType::LineDrive) => T::DOUBLE_PLAY_LINEDRIVE_MOD,
         // 뜬공·팝업으로는 병살이 안 된다
         _ => 0.0,
     };
-    if type_mod <= 0.0 { return (false, runners.clone()); }
+    if type_mod <= 0.0 { return (0, runners.clone()); }
     let base_prob = (T::DOUBLE_PLAY_BASE_PROB
         + if runners.second.is_some() { 0.05 } else { 0.0 }
         + if runners.third.is_some()  { 0.03 } else { 0.0 }) * type_mod;
-    if rng.gen::<f64>() >= base_prob { return (false, runners.clone()); }
-    (true, MatchRunners { first: None, second: runners.second.clone(), third: runners.third.clone() })
+    if rng.gen::<f64>() >= base_prob { return (0, runners.clone()); }
+
+    // 🔴 **삼중살** — 병살이 난 타구 중에서 다시 거른다.
+    //
+    // ⚠ **따로 판정하면 안 된다.** 두 판정이 같은 타구를 두 번 보면
+    //   병살이 난 뒤 삼중살이 또 나는 꼴이 된다.
+    // ⚠ 조건이 더 좁다: **무사 · 주자 둘 이상.** 1사면 아웃 셋을
+    //   잡는 순간 이닝이 이미 끝나 있어 성립하지 않는다.
+    let on_base = (runners.first.is_some() as u8)
+        + (runners.second.is_some() as u8)
+        + (runners.third.is_some() as u8);
+    if outs_before == 0 && on_base >= 2
+        && rng.gen::<f64>() < T::TRIPLE_PLAY_FROM_DP
+    {
+        // 주자가 다 죽는다 — 아웃 셋이라 이닝이 끝난다
+        return (3, MatchRunners { first: None, second: None, third: None });
+    }
+
+    (2, MatchRunners { first: None, second: runners.second.clone(), third: runners.third.clone() })
 }
 
 // ── 보정 함수 ─────────────────────────────────────────────────────────────────
@@ -1141,6 +1164,8 @@ fn resolve_mental_delta(code: PitchResultCode) -> f64 {
         | PitchResultCode::FlyOut | PitchResultCode::LineOut => 0.8,
         // 아웃 두 개를 한 번에 잡았다. 0.8을 두 번 준 셈으로 둔다
         PitchResultCode::DoublePlay  =>  1.6,
+        // 셋이면 그만큼 더 준다 — 이닝이 한 번에 끝난다
+        PitchResultCode::TriplePlay  =>  2.4,
         PitchResultCode::FieldingError => -1.2,
         PitchResultCode::Ball        => -0.4,
         PitchResultCode::Foul        => -0.1,
@@ -1262,6 +1287,7 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
         PitchResultCode::FlyOut       => "뜬공 아웃",
         PitchResultCode::LineOut      => "직선타 아웃",
         PitchResultCode::DoublePlay   => "병살타",
+        PitchResultCode::TriplePlay   => "삼중살!",
         PitchResultCode::FieldingError=> "실책",
         PitchResultCode::Walk         => "볼넷",
         PitchResultCode::HitByPitch   => "몸에 맞는 공",
@@ -1304,7 +1330,8 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
         PitchResultCode::Ball => "BALL", PitchResultCode::Foul => "FOUL",
         PitchResultCode::InplayOut => "INPLAY_OUT", PitchResultCode::GroundOut => "GROUND_OUT",
         PitchResultCode::FlyOut => "FLY_OUT", PitchResultCode::LineOut => "LINE_OUT",
-        PitchResultCode::DoublePlay => "DOUBLE_PLAY", PitchResultCode::FieldingError => "FIELDING_ERROR",
+        PitchResultCode::DoublePlay => "DOUBLE_PLAY", PitchResultCode::TriplePlay => "TRIPLE_PLAY",
+        PitchResultCode::FieldingError => "FIELDING_ERROR",
         PitchResultCode::Walk => "WALK",
         PitchResultCode::HitByPitch => "HIT_BY_PITCH",
         PitchResultCode::SacBunt => "SAC_BUNT", PitchResultCode::SqueezeBunt => "SQUEEZE",
@@ -1804,8 +1831,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let mut hnr_runner_out = false;
     if hit_and_run {
         match result_code {
-            // 맞혔다 — 병살을 땅볼로 낮춘다(주자가 2루에서 안 잡힌다)
-            PitchResultCode::DoublePlay => {
+            // 맞혔다 — 병살·삼중살을 땅볼로 낮춘다(주자가 이미 뛰어
+            // 2루에서 안 잡힌다). ⚠ 삼중살을 빼면 히트앤런을 걸고도
+            //   주자 둘이 죽는다 — 작전을 거는 이유가 사라진다.
+            PitchResultCode::DoublePlay | PitchResultCode::TriplePlay => {
                 result_code = PitchResultCode::GroundOut;
             }
             // 헛쳤다 — 주자가 뛰다 잡힌다. 타자는 스트라이크만 먹는다
@@ -1992,10 +2021,16 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         PitchResultCode::InplayOut => {
             next_outs += 1;
             next_count = MatchCount { balls: 0, strikes: 0 };
-            let (is_dp, dp_runners) = try_double_play(ball_in_play.as_ref(), &next_runners, pre_state.outs, rng);
-            if is_dp { next_outs += 1; next_runners = dp_runners; }
+            // ⚠ **몇 명이 죽었는지**를 받는다(0·2·3). 예전엔 `bool` 이라
+            //   삼중살을 표현할 수 없었다 — 아웃이 둘만 올라가 이닝이 안 끝난다.
+            let (killed, dp_runners) = try_double_play(ball_in_play.as_ref(), &next_runners, pre_state.outs, rng);
+            if killed >= 2 {
+                // 타자 아웃은 위에서 이미 +1 했다 — 나머지만 더한다
+                next_outs += killed - 1;
+                next_runners = dp_runners;
+            }
             // 여기서야 타구 종류와 병살 여부가 다 정해진다 — 이제 코드를 좁힌다
-            result_code = narrow_inplay_out(ball_in_play.as_ref(), is_dp);
+            result_code = narrow_inplay_out(ball_in_play.as_ref(), killed);
 
             // 🔴 **희생플라이** (2026-08-28). 3루 주자가 뜬공에 홈으로 들어온다.
             //   ⚠ `npc_sim`엔 이 갈래가 **이미 있었다**(0.10) — 주인공 경기만
@@ -2423,7 +2458,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     StrikeoutSwing | StrikeoutLook => {
                         b.ab += 1; b.k += 1;
                     }
-                    InplayOut | GroundOut | FlyOut | LineOut | DoublePlay | FieldingError => { b.ab += 1; }
+                    InplayOut | GroundOut | FlyOut | LineOut | DoublePlay | TriplePlay | FieldingError => { b.ab += 1; }
                     _ => {}
                 }
                 if scored > 0 { b.rbi += scored; }
@@ -2891,3 +2926,76 @@ mod 감독_투수운용 {
     }
 }
 
+
+#[cfg(test)]
+mod 삼중살 {
+    use super::*;
+    use rand::SeedableRng;
+
+    fn runners(n: usize) -> MatchRunners {
+        let r = || Some(RunnerStats {
+            player_id: Some("R".into()), speed: 50.0, instinct: 50.0,
+        });
+        MatchRunners {
+            first: r(),
+            second: if n >= 2 { r() } else { None },
+            third:  if n >= 3 { r() } else { None },
+        }
+    }
+    fn ground() -> BallInPlay {
+        BallInPlay { hit_type: BallHitType::GroundBall, zone: FieldPosition::SS, hardness: 3 }
+    }
+
+    /// 🔴 **삼중살은 무사에만 난다.** 1사면 아웃 셋을 잡는 순간 이닝이
+    ///   이미 끝나 있어 성립하지 않는다.
+    #[test]
+    fn 일사에는_안_난다() {
+        let b = ground();
+        for seed in 0..400u64 {
+            let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+            let (killed, _) = try_double_play(Some(&b), &runners(2), 1, &mut rng);
+            assert!(killed <= 2, "1사에 삼중살이 났다 (seed {})", seed);
+        }
+    }
+
+    /// ⚠ 주자가 하나뿐이면 죽일 사람이 모자란다
+    #[test]
+    fn 주자_하나면_안_난다() {
+        let b = ground();
+        for seed in 0..400u64 {
+            let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+            let (killed, _) = try_double_play(Some(&b), &runners(1), 0, &mut rng);
+            assert!(killed <= 2, "주자 하나에 삼중살이 났다 (seed {})", seed);
+        }
+    }
+
+    /// 무사 주자 둘이면 드물게 난다 — **0건이면 죽은 갈래다**
+    #[test]
+    fn 무사_주자둘이면_드물게_난다() {
+        let b = ground();
+        let mut tp = 0;
+        for seed in 0..4000u64 {
+            let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+            let (killed, r) = try_double_play(Some(&b), &runners(2), 0, &mut rng);
+            if killed >= 3 {
+                tp += 1;
+                assert!(r.first.is_none() && r.second.is_none() && r.third.is_none(),
+                    "삼중살인데 주자가 남았다");
+            }
+        }
+        assert!(tp > 0, "4000판에 삼중살이 한 번도 안 났다 — 죽은 갈래다");
+        // 드물어야 한다 — 병살 22% × 2%
+        assert!(tp < 200, "삼중살이 {}건으로 너무 잦다", tp);
+    }
+
+    /// ⚠ 뜬공으로는 병살도 삼중살도 안 된다
+    #[test]
+    fn 뜬공은_아니다() {
+        let b = BallInPlay { hit_type: BallHitType::FlyBall, zone: FieldPosition::CF, hardness: 3 };
+        for seed in 0..200u64 {
+            let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+            let (killed, _) = try_double_play(Some(&b), &runners(3), 0, &mut rng);
+            assert_eq!(killed, 0, "뜬공에 살이 붙었다 (seed {})", seed);
+        }
+    }
+}
