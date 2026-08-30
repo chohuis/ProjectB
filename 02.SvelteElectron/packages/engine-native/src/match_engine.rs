@@ -1414,6 +1414,19 @@ fn build_animation_cues(
             let throw_to = fielder_default_pos(threw_to);
             let throw_dur = (200.0 + (100.0 - f.fielder.arm) * 1.2) as u32;
             cues.push(AnimationCue::BallThrow { from: zone_pos, to: throw_to, duration: throw_dur });
+
+            // 🔴 **병살은 두 번 던진다.** 예전엔 송구 큐가 하나뿐이라
+            //   화면에서 병살과 평범한 땅볼이 **똑같이 보였다.**
+            //   2루(포스아웃) → 1루(타자아웃)가 실제 순서다.
+            // ⚠ 첫 송구가 이미 1루면 두 번째가 없다 — 그건 1루에서
+            //   잡고 2루로 던지는 드문 형태라 여기 모델엔 없다.
+            if code == PitchResultCode::DoublePlay && threw_to != FieldPosition::B1 {
+                let relay_from = throw_to;
+                let relay_to = fielder_default_pos(FieldPosition::B1);
+                cues.push(AnimationCue::BallThrow {
+                    from: relay_from, to: relay_to, duration: 220,
+                });
+            }
         }
     }
 

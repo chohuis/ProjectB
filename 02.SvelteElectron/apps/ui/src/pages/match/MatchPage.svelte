@@ -950,17 +950,34 @@
    * ⚠ 예전엔 여기 분기가 둘이었다. 정수 경로는 `dot` 모드 전용이고 레트로는
    * 소수 보간 쪽으로 갔는데, **레트로야말로 픽셀아트다** — 방향이 뒤바뀌어 있었다.
    */
-  async function tweenBall(to: FieldPoint, duration: number) {
+  /**
+   * 공을 옮긴다.
+   *
+   * 🔴 **엔진이 `arc` 를 채워 보내는데 받아서 버리고 있었다.** 직선
+   *   보간만 해서 **팝업도 땅볼도 같은 궤적**이었다. 엔진은 타구
+   *   종류별로 이미 다른 값을 준다(팝업 0.85 · 뜬공 0.60 · 라인 0.15 ·
+   *   땅볼 0.05 · 번트 0.08).
+   *
+   * ⚠ 0이면 예전과 똑같은 직선이다 — 투구·송구는 arc 를 안 넘긴다.
+   */
+  async function tweenBall(to: FieldPoint, duration: number, arc = 0) {
     const from = { ...ballPos };
     const dx = to.x - from.x;
     const dy = to.y - from.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     const steps = Math.max(1, Math.round(dist / 10));
     const delay = Math.max(20, Math.round(duration / steps));
+    // 포물선 높이 — 거리에 비례한다. 짧은 타구가 높이 뜨면 어색하다
+    const lift = arc * dist * 0.55;
     for (let i = 1; i <= steps; i++) {
       const t = i / steps;
+      // 4t(1-t) 는 t=0.5 에서 1이고 양 끝에서 0이다 — 시작·도착이 안 뜬다
+      const rise = lift * 4 * t * (1 - t);
       ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
-      ballPos = { x: Math.round(from.x + dx * t), y: Math.round(from.y + dy * t) };
+      ballPos = {
+        x: Math.round(from.x + dx * t),
+        y: Math.round(from.y + dy * t - rise),
+      };
       await sleep(delay);
     }
     ballTrail = [];
@@ -1073,7 +1090,11 @@
     for (const cue of cues) {
       if (cue.type === "ball_pitch") {
         await tweenBall(clickedFieldPos, ms(cue.duration));
-      } else if (cue.type === "ball_batted" || cue.type === "ball_throw") {
+      } else if (cue.type === "ball_batted") {
+        // ⚠ **타구만 포물선이다.** 송구는 직선이라 arc 를 안 넘긴다.
+        const svgTo = enginePosToSvg(cue.to);
+        await tweenBall(svgTo, ms(cue.duration), cue.arc);
+      } else if (cue.type === "ball_throw") {
         const svgTo = enginePosToSvg(cue.to);
         await tweenBall(svgTo, ms(cue.duration));
       } else if (cue.type === "fielder_move") {
