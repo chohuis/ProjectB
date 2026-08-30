@@ -131,6 +131,46 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   // 🔴 **수상 뒤여야 한다.** 헌액 점수는 `careerHistory[].highlights` 를
   //   세는데 그 문자열을 `applySeasonAwards` 가 방금 넣었다.
   //   앞에 두면 그 해 수상이 점수에 안 들어간다.
+  // ── 웨이버 공시 소식 (A단계) ───────────────────────────
+  //
+  // 웨이버는 Rust 가 `career_events` 에 `waiver_claim` 으로 남긴다.
+  // ⚠ **주인공 팀이 걸린 것만** 보낸다 — 리그 전체는 실측 105~232명이라
+  //   그대로 보내면 소식함이 한 해에 막힌다.
+  {
+    const gW = get(gameStore);
+    const mW = get(masterStore);
+    const myTeam = gW.protagonist.teamId;
+    const teamName = (id: string) =>
+      mW.teams.find((t) => t.id === id)?.name ?? id;
+    // ⚠ **영입만 센다.** Rust `waiver_claim` 이 `from_team_id: None` 을
+    //   넣어서 **어디서 왔는지 모른다** — 방출 시점의 팀을 안 넘긴다.
+    //   "우리 팀에서 나갔다"를 세려다 **죽은 갈래**를 만들 뻔했다.
+    //   나가는 쪽은 방출 소식이 이미 알린다.
+    const inbound: string[] = [];
+    for (const n of gW.npcs ?? []) {
+      const evs = (n as { careerEvents?: { eventType?: string; year?: number;
+        toTeamId?: string; fromTeamId?: string }[] }).careerEvents ?? [];
+      for (const e of evs) {
+        if (e.eventType !== "waiver_claim" || e.year !== now) continue;
+        if (e.toTeamId === myTeam) inbound.push(n.name);
+      }
+    }
+    if (inbound.length > 0) {
+      const lines: string[] = [];
+      lines.push(`■ 웨이버 영입 ${inbound.length}명`, ...inbound.map((x) => `   ${x}`));
+      gameStore.addMessage({
+        id: `msg-waiver-${now}-${myTeam}`,
+        category: "system",
+        sender: "리그 사무국",
+        subject: `웨이버 영입 ${inbound.length}명 — ${teamName(myTeam)}`,
+        preview: `${inbound[0]}${inbound.length > 1 ? ` 외 ${inbound.length - 1}명` : ""} 영입`,
+        body: lines.join("\n"),
+        createdAt: `W1`,
+        readAt: null,
+      });
+    }
+  }
+
   try {
     const { inductHallOfFame } = await import("./hallOfFame");
     for (const line of await inductHallOfFame(now)) autoLog(line);
