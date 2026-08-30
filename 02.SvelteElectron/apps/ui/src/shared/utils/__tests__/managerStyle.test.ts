@@ -303,3 +303,50 @@ describe("새 작전 셋 (C-①②④)", () => {
     expect(tune.includes("pub const PICKOFF_MAX_PROB: f64 = 0.02;")).toBe(true);
   });
 });
+
+describe("히트앤런 (C-③)", () => {
+  const rust = read("packages/engine-native/src/match_engine.rs");
+  const tune = read("packages/engine-native/src/tuning.rs");
+
+  it("🔴 도루와 별도 갈래다", () => {
+    // 기존 도루 판정에 섞으면 시도율이 통째로 는다
+    // (기준선 중앙 3.2~5.6% · 상위 18.3~18.8%)
+    expect(rust.includes("let hit_and_run = pre_state.runners.first.is_some()")).toBe(true);
+    expect(rust.includes("&& rng.gen::<f64>() < T::HIT_AND_RUN_PROB")).toBe(true);
+  });
+
+  it("🔴 걸리면 타자는 무조건 친다", () => {
+    // 주자가 이미 뛰었으니 거르면 도루사가 된다 — 그게 작전이다
+    expect(rust.includes("    let (swings, umpire_strike) = if hit_and_run {")).toBe(true);
+    expect(rust.includes("        (true, false)")).toBe(true);
+  });
+
+  it("2스트라이크엔 안 건다", () => {
+    // 헛스윙 삼진 + 도루사로 이닝이 한 번에 끝난다
+    expect(rust.includes("        && pre_state.count.strikes < 2\n        && rng.gen::<f64>() < T::HIT_AND_RUN_PROB")).toBe(true);
+  });
+
+  it("🔴 병살을 땅볼로 낮춘다 — 그게 이 작전의 값이다", () => {
+    expect(rust.includes("            PitchResultCode::DoublePlay => {\n                result_code = PitchResultCode::GroundOut;")).toBe(true);
+  });
+
+  it("🔴 헛치면 주자가 죽는다", () => {
+    // 판정만 하고 반영을 안 하면 죽은 갈래다
+    expect(rust.includes("let mut hnr_runner_out = false;")).toBe(true);
+    expect(rust.includes("    if hnr_runner_out && next_runners.first.is_some() {")).toBe(true);
+    expect(rust.includes("        next_outs += 1;")).toBe(true);
+  });
+
+  it("주자 아웃이 3아웃 전환 앞에 있다", () => {
+    // 뒤에 두면 이닝이 안 넘어간다
+    const out = rust.indexOf("if hnr_runner_out && next_runners.first.is_some()");
+    const half = rust.indexOf("// 3아웃 → half 전환");
+    expect(out).toBeGreaterThan(-1);
+    expect(out).toBeLessThan(half);
+  });
+
+  it("드문 작전이다", () => {
+    // 실제 KBO 히트앤런은 경기당 0.5회꼴이다
+    expect(tune.includes("pub const HIT_AND_RUN_PROB: f64 = 0.012;")).toBe(true);
+  });
+});

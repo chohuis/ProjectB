@@ -1717,7 +1717,26 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let target = decision.target.unwrap_or_else(|| zone_to_target(decision.location));
     let lr = resolve_actual_landing(target, &current_pitcher, current_stamina, current_mental, &pre_state, rng);
     let quality = calculate_pitch_quality(&pre_state, &current_pitcher, &current_batter, current_stamina, current_mental, decision, lr.landing, rng);
-    let (swings, umpire_strike) = swing_decision(lr.landing, decision.pitch_type, &current_batter, lr.in_zone, lr.in_shadow, rng);
+    // 🔴 **히트앤런** (C-③). 주자를 뛰게 하면서 타자가 친다.
+    //
+    // ⚠ **도루와 별도 갈래다.** 기존 도루 판정에 섞으면 도루 시도율이
+    //   통째로 는다 — 기준선 중앙주자 3.2~5.6% · 상위주자 18.3~18.8%.
+    // ⚠ 조건: 1루 주자 · 2루 빔 · 2아웃 전 · 스트라이크 2개 전.
+    //   2스트라이크에 걸면 헛스윙 삼진 + 도루사로 이닝이 끝난다.
+    let hit_and_run = pre_state.runners.first.is_some()
+        && pre_state.runners.second.is_none()
+        && pre_state.outs < 2
+        && pre_state.count.strikes < 2
+        && rng.gen::<f64>() < T::HIT_AND_RUN_PROB
+            * batting_manager(&pre_state).steal_mult.clamp(0.0, 3.0);
+
+    let (swings, umpire_strike) = if hit_and_run {
+        // 🔴 **타자는 무조건 친다.** 그게 작전이다 — 주자가 이미 뛰었으니
+        //   거르면 도루사가 된다.
+        (true, false)
+    } else {
+        swing_decision(lr.landing, decision.pitch_type, &current_batter, lr.in_zone, lr.in_shadow, rng)
+    };
 
     let mut result_code = if !swings {
         if umpire_strike { PitchResultCode::StrikeLook } else { PitchResultCode::Ball }
@@ -1754,6 +1773,28 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
             if rng.gen::<f64>() < p.clamp(0.0, T::IBB_MAX_PROB) {
                 result_code = PitchResultCode::Walk;
             }
+        }
+    }
+
+    // 🔴 **히트앤런 결과.** 맞히면 주자가 살고, 헛치면 주자가 죽는다.
+    //
+    // ⚠ **병살을 피하는 게 이 작전의 값이다.** 땅볼이 나와도 주자가
+    //   이미 뛰고 있어서 2루에서 못 잡는다.
+    // ⚠ 헛스윙이면 주자는 **도루 시도가 된 셈**이다 — 포수가 바로 던진다.
+    let mut hnr_runner_out = false;
+    if hit_and_run {
+        match result_code {
+            // 맞혔다 — 병살을 땅볼로 낮춘다(주자가 2루에서 안 잡힌다)
+            PitchResultCode::DoublePlay => {
+                result_code = PitchResultCode::GroundOut;
+            }
+            // 헛쳤다 — 주자가 뛰다 잡힌다. 타자는 스트라이크만 먹는다
+            PitchResultCode::StrikeSwing | PitchResultCode::StrikeoutSwing => {
+                if rng.gen::<f64>() < T::HIT_AND_RUN_CAUGHT_PROB {
+                    hnr_runner_out = true;
+                }
+            }
+            _ => {}
         }
     }
 
@@ -1998,6 +2039,15 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         && { let d = (next_score.home - next_score.away).unsigned_abs() as u8;
              (next_inning >= 5 && d >= 10) || (next_inning >= 7 && d >= 7) };
     let cold_game_completed_inning = next_inning as u8;
+
+    // 🔴 **히트앱런 주자가 잡혔다.** 위에서 판정만 하고 여기서
+    //   반영한다 — 진루 처리가 끝난 뒤여야 주자를 다시 안 넣는다.
+    // ⚠ 3아웃 전환 **앞**이다. 뒤에 두면 이닝이 안 넘어간다.
+    if hnr_runner_out && next_runners.first.is_some() {
+        next_runners.first = None;
+        next_outs += 1;
+        running_logs.push(format!("히트앤런 실패 — 주자 아웃"));
+    }
 
     // 3아웃 → half 전환
     if next_outs >= 3 {
