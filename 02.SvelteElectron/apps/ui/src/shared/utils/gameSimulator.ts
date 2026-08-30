@@ -467,6 +467,19 @@ function toEngineBatter(b: SimBatter): Record<string, unknown> {
  *
  * ⚠ **주인공이 없는 경기다.** `protagonistSide`는 기록 대상을 정할 뿐이고,
  * 여기서는 양쪽 다 NPC라 큐 두 개로 전부 처리된다.
+ *
+ * 🔴 **이 전제가 틀려 있었다** (2026-08-31 실측). `role: "SP"` 면 엔진이
+ *   `is_immediate` 로 **1구부터 주인공을 마운드에 세운다.** 여기서 `pitcher`
+ *   를 안 넘기니 그 자리에 기본값(50/52/55…)이 섰고, 홈 큐는 한 번도
+ *   안 탔다 — 같은 로스터끼리 붙여도 홈이 **2.2점을 더 줬다.**
+ *
+ *   ```
+ *     noProtagonist 없음   홈 승률 33.0 / 36.0 / 32.3 %   홈 4.75 / 원정 6.92
+ *     noProtagonist: true         43.3 / 47.5 / 50.2 %        4.28 /      4.88
+ *   ```
+ *
+ *   ⚠ 남은 47% 언저리는 **주인공과 무관하다** — 주인공을 원정에 둬도 같다.
+ *     엔진에 홈 이점이 아예 없는 것이고 그건 따로 볼 일이다(실제는 54%).
  */
 async function simulateWithMatchEngine(params: any, leagueId: string): Promise<string> {
   // 🔴 **`slice(0, 1)`이었다.** 명단이 이미 돌려진 걸 전제한 코드였는데,
@@ -522,6 +535,10 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
     ...(seed === undefined ? {} : { seed }),
     protagonistSide: "home",
     role: "SP",
+    // 🔴 **주인공이 없다고 알린다.** 안 넘기면 `role: "SP"` 가 기본값
+    //   투수를 홈 마운드에 세운다 — 홈 큐가 통째로 죽는다.
+    // ⚠ `serde(default)` 라 빠뜨려도 오류가 안 난다. `noProtagonist.test.ts` 가 본다.
+    noProtagonist: true,
     homeLineup: params.homeLineup.map(toEngineBatter),
     awayLineup: params.awayLineup.map(toEngineBatter),
     // 🔴 **벤치** — serde(default) 라 안 넘겨도 조용히 통과한다.

@@ -314,7 +314,11 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         .map(|(i, b)| crate::types::BatterLineAccum {
             player_id: b.id.clone().unwrap_or_else(|| format!("A{}", i)), ..Default::default() }).collect();
 
-    let is_immediate = matches!(&entry_trigger, EntryTrigger::InningStart { inning } if *inning <= 1);
+    // 🔴 주인공이 없는 경기면 **아무도 안 들어온다.** 안 그러면 기본값
+    //   투수가 그 팀 마운드를 지킨다 — 리그 시뮬 홈이 그랬다.
+    let no_protagonist = opts.no_protagonist.unwrap_or(false);
+    let is_immediate = !no_protagonist
+        && matches!(&entry_trigger, EntryTrigger::InningStart { inning } if *inning <= 1);
     let initial_stamina = clamp(opts.initial_stamina.unwrap_or(82.0), 0.0, 100.0);
     let initial_mental  = clamp(opts.initial_mental.unwrap_or(74.0), 0.0, 100.0);
 
@@ -369,6 +373,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         home_bat_lines: _home_bat_lines, away_bat_lines: _away_bat_lines,
         batter_mean,
         role, entry_trigger,
+        no_protagonist,
         protagonist_has_entered: is_immediate,
         protagonist_exited: false,
         pitch_count_since_entry: 0,
@@ -1612,6 +1617,9 @@ fn random_decision_for_sim(balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchD
 // ── 등판 진입/강판 ────────────────────────────────────────────────────────────
 
 fn should_protagonist_enter(state: &MatchState) -> bool {
+    // 🔴 **여기도 막아야 한다.** 시작만 막으면 `entry_trigger` 가 나중에
+    //   불러들여서 6회쯤 기본값 투수가 등판한다 — 갈래가 둘이다.
+    if state.no_protagonist { return false; }
     if state.protagonist_has_entered || state.protagonist_exited || state.is_finished { return false; }
     if !is_our_team_fielding(state) { return false; }
 
@@ -3933,6 +3941,53 @@ mod 방해 {
         let j = src[i..].find("let mut pinch_run_log").expect("대주자 판정이 없다");
         assert!(src[i..i + j].contains("used + 1 < bench.len()"),
             "대타가 벤치를 끝까지 쓴다 — 대주자 몫이 안 남는다");
+    }
+
+    // ── 주인공 없는 경기 (2026-08-31) ───────────────────────
+
+    /// 🔴 **리그 경기 홈 마운드에 기본값 투수가 서 있었다.**
+    ///
+    /// `role: "SP"` 면 `is_immediate` 로 1구부터 주인공이 던진다. 리그
+    /// 시뮬은 주인공이 없어 `pitcher` 를 안 넘기니 그 자리에 50/52/55…
+    /// 가 섰다. 같은 로스터끼리 붙여도 홈이 **2.2점을 더 줬고**
+    /// 홈 승률이 33% 였다. 리그 타율도 .31 로 부풀었다(실측).
+    #[test]
+    fn 주인공이_없으면_아무도_안_들어온다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let opts = MatchStartOptions {
+            no_protagonist: Some(true),
+            role: Some(PitcherRole::SP),
+            ..Default::default()
+        };
+        let st = create_initial_match_state(&opts, &mut rng);
+        assert!(!st.protagonist_has_entered,
+            "주인공이 없다는데 1구부터 마운드에 서 있다");
+        // 🔴 시작만 막으면 `entry_trigger` 가 나중에 불러들인다 — 갈래가 둘이다
+        let mut later = st.clone();
+        later.inning = 5;
+        later.half = HalfInning::Top;   // 우리 팀 수비
+        later.outs = 0;
+        later.count = MatchCount { balls: 0, strikes: 0 };
+        assert!(!should_protagonist_enter(&later),
+            "5회에 기본값 투수가 등판한다 — 도중 갈래가 안 막혔다");
+    }
+
+    /// ⚠ **안 넘기면 예전과 완전히 같아야 한다.**
+    ///
+    /// `tuning.cjs` 는 일부러 `pitcher` 없이 합성 주인공을 돌린다 —
+    /// 그쪽은 기본값이 의도다. 추론으로 껐으면 그 도구가 죽는다.
+    #[test]
+    fn 안_넘기면_예전대로_주인공이_선다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let opts = MatchStartOptions {
+            role: Some(PitcherRole::SP),
+            ..Default::default()
+        };
+        let st = create_initial_match_state(&opts, &mut rng);
+        assert!(st.protagonist_has_entered,
+            "기본값이 false 여야 한다 — 예전 동작이 바뀌었다");
     }
 
     /// ⚠ 대주자 확률에도 감독이 들어갈 자리가 있어야 한다 — 대타와 같다

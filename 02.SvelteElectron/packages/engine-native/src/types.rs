@@ -660,6 +660,18 @@ pub struct MatchState {
     /// ⚠ `PitcherQueue` 와 같은 방식이다: 쓴 사람은 앞에서부터 소모한다.
     #[serde(default)]
     pub home_bench: Vec<BatterStats>,
+    /// 주인공이 **아예 없는 경기**인가 — 리그 시뮬이 그렇다.
+    ///
+    /// 🔴 `role: "SP"` 면 `is_immediate` 로 1구부터 주인공이 던지는데,
+    ///   리그 시뮬은 주인공이 없어서 `pitcher` 를 안 넘긴다. 그래서
+    ///   **기본값 투수(50/52/55…)가 홈 마운드에 섰다** — 홈이 원정보다
+    ///   2.2점을 더 줬고 홈 승률이 33% 였다(같은 로스터끼리 붙여 실측).
+    ///
+    /// ⚠ **추론으로 끄지 않는다.** `tuning.cjs` 는 일부러 `pitcher` 없이
+    ///   합성 주인공을 돌린다 — 그쪽은 기본값이 의도다.
+    /// ⚠ `default` 는 false 다 — 안 넘기면 예전과 완전히 같게 돈다.
+    #[serde(default)]
+    pub no_protagonist: bool,
     #[serde(default)]
     pub away_bench: Vec<BatterStats>,
     /// 이미 교체로 나간 벤치 인원 수 — 앞에서부터 쓴다
@@ -866,6 +878,9 @@ pub struct MatchStartOptions {
     /// 벤치 — **안 넘기면 교체가 없다**(예전 동작)
     #[serde(default)]
     pub home_bench: Option<Vec<BatterStats>>,
+    /// 주인공이 없는 경기 — **리그 시뮬은 반드시 켠다**
+    #[serde(default)]
+    pub no_protagonist: Option<bool>,
     #[serde(default)]
     pub away_bench: Option<Vec<BatterStats>>,
     pub away_lineup: Option<Vec<BatterStats>>,
