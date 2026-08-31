@@ -1651,7 +1651,15 @@ export function ovrImpactProbe(): Record<string, unknown> {
     if (typeof po === "number" && po <= 1) 야수0++;
   }
 
-  return { 리그별: byLeague, 팀인원: sizeOut, 야수전체, "야수중투구OVR0": 야수0 };
+  // 🔴 **정원 정리가 `active` 만 센다**(`npc_sim.rs:1028`). 부상·복무 중인
+  //   사람은 자리를 차지하는데 상한 검사에 안 들어간다 — 그만큼 초과한다.
+  const 신분별: Record<string, Record<string, number>> = {};
+  for (const n of alive) {
+    const lg = String(n.currentLeague ?? "?");
+    ((신분별[lg] ??= {})[String(n.careerStatus ?? "?")] ??= 0);
+    신분별[lg][String(n.careerStatus ?? "?")]++;
+  }
+  return { 리그별: byLeague, 팀인원: sizeOut, 야수전체, "야수중투구OVR0": 야수0, 신분별 };
 }
 
 export function liveOvrProbe(): Record<string, unknown> {
