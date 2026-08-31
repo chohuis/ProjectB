@@ -146,7 +146,8 @@ export function buildRosterParams(
   leagueId: string,
   seasonYear: number,
   worldSeed: number,
-  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number }[],
+  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number;
+           budget?: number; spendRatio?: number; qualityBias?: number }[],
   rules: RosterRulesData,
   /**
    * 이름 풀 **덮어쓰기**. 보통은 넘기지 않는다 — 안 넘기면 `rules.namePool`을 쓴다.
@@ -177,6 +178,12 @@ export function buildRosterParams(
       schoolId: t.schoolId ?? "",
       ...(t.salaryIndex !== undefined ? { salaryIndex: t.salaryIndex } : {}),
       ...(t.power !== undefined ? { power: t.power } : {}),
+      // 🔴 **예산이 팀 편성을 정한다** (사용자 확정 2026-08-31).
+      //   예전엔 전 팀이 똑같이 `rosterSize` 명이었고 예산은 연봉에만 갔다.
+      // ⚠ 안 넘기면 예전과 같다 — 생성이 기준 정원을 그대로 쓴다.
+      ...(t.budget !== undefined ? { budget: t.budget } : {}),
+      ...(t.spendRatio !== undefined ? { spendRatio: t.spendRatio } : {}),
+      ...(t.qualityBias !== undefined ? { qualityBias: t.qualityBias } : {}),
     })),
     rules,
     // 정본은 `rosterRules[리그].namePool` 하나다. 인자는 덮어쓰기일 뿐이다
@@ -201,6 +208,81 @@ export function foreignSlotsFor(
 ): unknown | undefined {
   const fr = rulesFile.foreignRules;
   return fr?.leagues?.includes(leagueId) ? fr : undefined;
+}
+
+/**
+ * **구단 성향 → 편성 두 축** (사용자 확정 2026-08-31).
+ *
+ * "모든 팀이 골고루 잘할 수는 없어. 예산·상황·드래프트·육성 등 다양한
+ * 변수를 통해서 다양한 팀 컬러가 있는 거야"
+ *
+ * ```
+ *   spendRatio    예산의 몇 %를 선수 연봉에 쓰나 (나머지는 FA·트레이드·
+ *                 드래프트에 남긴다) — `resource` 에서 온다
+ *   qualityBias   같은 돈을 인원 많이(0) 쓰나 선수 좋게(1) 쓰나
+ *                 — `philosophy` 에서 온다
+ * ```
+ *
+ * ⚠ **ABL·JBL 은 `traits` 가 비어 있다**(실측 · 28팀 전부). 그쪽은
+ *   `power`(전력★ 1~5)로 떨어진다 — 강팀일수록 질적으로 본다.
+ * ⚠ 값이 하나도 없으면 `undefined` 를 낸다 — 엔진이 예전 동작으로 간다.
+ * ⚠ 표를 여기 한 벌만 둔다. 성향 이름은 `refs.json` 이 정본이다.
+ */
+const SPEND_BY_RESOURCE: Record<string, number> = {
+  // 궁핍한 팀은 남길 여유가 없다 — 있는 걸 다 쓴다
+  궁핍: 1.00,
+  // 알뜰한 팀은 아껴 두고 시장에서 기회를 본다
+  알뜰: 0.75,
+  안정: 0.85,
+  // 부유한 팀은 많이 쓰되 여유도 크다
+  부유: 0.90,
+};
+
+const QUALITY_BY_PHILOSOPHY: Record<string, number> = {
+  // 인원을 많이 데리고 키운다
+  육성중심: 0.20,
+  "젊은피(세대교체)": 0.25,
+  "스파르타(혹독훈련)": 0.30,
+  "부상방지/재활특화": 0.35,
+  // 중간
+  "근성/언더독": 0.45,
+  스몰볼: 0.45,
+  "수비/짜임새": 0.50,
+  데이터중심: 0.50,
+  "전통/정통": 0.55,
+  // 좋은 선수를 적게
+  투수왕국: 0.65,
+  "공격야구(화력)": 0.70,
+  베테랑우대: 0.75,
+};
+
+/**
+ * 팀 연간 예산(만원). `refs.json` 은 원 단위라 10,000으로 나눈다.
+ *
+ * ⚠ **연봉이 없는 리그는 넘기면 안 된다** — 고교·대학은 예산이
+ *   있어도 그건 운영비지 인건비가 아니다. 그쪽은 엔진이 `league_mult` 가
+ *   없어 1인 연봉을 못 구하므로 안전하게 예전 동작으로 떨어진다.
+ */
+export function budgetOf(t: { history?: { budget?: number | null } | null }): number | undefined {
+  const b = t.history?.budget;
+  return typeof b === "number" && b > 0 ? Math.round(b / 10000) : undefined;
+}
+
+export function squadPlanOf(t: {
+  traits?: { philosophy?: string; resource?: string } | null;
+  power?: number | null;
+}): { spendRatio?: number; qualityBias?: number } {
+  const res = t.traits?.resource;
+  const phi = t.traits?.philosophy;
+  const spendRatio = res ? SPEND_BY_RESOURCE[res] : undefined;
+  // ⚠ 성향이 없으면 전력★로 떨어진다 — ABL·JBL 28팀이 그렇다.
+  //   1~5 를 0.3~0.7 로 편다. 강팀일수록 질적이다.
+  const qualityBias = phi !== undefined ? QUALITY_BY_PHILOSOPHY[phi]
+    : (typeof t.power === "number" ? 0.3 + (t.power - 1) * 0.1 : undefined);
+  return {
+    ...(spendRatio !== undefined ? { spendRatio } : {}),
+    ...(qualityBias !== undefined ? { qualityBias } : {}),
+  };
 }
 
 /**
@@ -280,7 +362,8 @@ async function generateLeagueNpcs(
   leagueId: string,
   seasonYear: number,
   worldSeed: number,
-  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number }[],
+  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number;
+           budget?: number; spendRatio?: number; qualityBias?: number }[],
   rules: RosterRulesData,
   salaryRules?: unknown,
   powerRules?: unknown,
@@ -347,6 +430,9 @@ export async function previewTeamRoster(
       schoolId: team.schoolId ?? "",
       salaryIndex: salaryIndex.get(teamId),
       power: team.power,
+      // 🔴 예산과 편성 성향 — 안 넘기면 예전처럼 전 팀이 같은 인원이 된다
+      budget: budgetOf(team),
+      ...squadPlanOf(team),
     }],
     rules,
     rulesFile.salaryRules, rulesFile.powerRules, entryRules,
@@ -378,17 +464,27 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   const entryRules = (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry;
   // 전력★ — 명문팀 로스터가 실제로 강해지는 유일한 입력 (Phase 6.5)
   const powerOf = new Map((opts.allTeams ?? []).map((t) => [t.id, t.power]));
+  // 예산과 편성 성향을 같이 찾는다 — 한 자리에서 만들어야 갈리지 않는다
+  const teamOf = new Map((opts.allTeams ?? []).map((t) => [t.id, t]));
   const withIndex = (ids: string[]) =>
-    ids.map((teamId) => ({
-      teamId,
-      salaryIndex: salaryIndex.get(teamId),
-      power: powerOf.get(teamId),
-    }));
+    ids.map((teamId) => {
+      const t = teamOf.get(teamId);
+      return {
+        teamId,
+        salaryIndex: salaryIndex.get(teamId),
+        power: powerOf.get(teamId),
+        ...(t ? { budget: budgetOf(t), ...squadPlanOf(t) } : {}),
+      };
+    });
 
   const teams = opts.teams ?? HS_ACTIVE_TEAMS_V3.map((teamId) => ({ teamId }));
   const hsNpcs = await generateLeagueNpcs(
     "LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed,
-    teams.map((t) => ({ ...t, salaryIndex: salaryIndex.get(t.teamId), power: powerOf.get(t.teamId) })),
+    teams.map((t) => {
+      const ref = teamOf.get(t.teamId);
+      return { ...t, salaryIndex: salaryIndex.get(t.teamId), power: powerOf.get(t.teamId),
+        ...(ref ? { budget: budgetOf(ref), ...squadPlanOf(ref) } : {}) };
+    }),
     hsRules, salaryRules, powerRules, entryRules);
 
   // 나머지 국내 리그 — 팀 목록은 leagueScheduler가 정본이다 (refs에서 파생)

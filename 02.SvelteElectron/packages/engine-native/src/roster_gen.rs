@@ -28,6 +28,26 @@ pub struct TeamSpec {
     /// 이게 없어서 **명문교와 약팀의 로스터가 똑같았다** (고교 상관계수 −0.05)
     #[serde(default)]
     pub power: Option<f64>,
+    /// 팀 연간 예산(만원) — **인원을 여기에 맞춘다** (사용자 확정 2026-08-31).
+    ///
+    /// 🔴 예전엔 전 팀이 똑같이 `rosterSize` 명이었다. 예산은 `salary_index`
+    ///   로 **연봉에만** 갔고 인원엔 안 갔다 — 예산 2.6억인 팀이 총연봉
+    ///   4.25억(예산의 163%)을 안고 시작했다.
+    /// ⚠ 없으면 예전과 같다 — `roster_size` 그대로.
+    /// ⚠ `roster_min` 아래로는 안 내린다. 경기는 치러야 한다.
+    #[serde(default)]
+    pub budget: Option<i64>,
+    /// 예산의 몇 %를 **선수 연봉에** 쓰나 (0.5~1.0). 나머지는 FA·트레이드·
+    /// 드래프트에 남긴다 — **다 쓰는 팀과 아껴 두는 팀이 있어야 한다**
+    /// (사용자 확정 2026-08-31). 없으면 1.0(다 쓴다).
+    #[serde(default)]
+    pub spend_ratio: Option<f64>,
+    /// 같은 돈을 **인원 많이**(0) 쓰나 **선수 좋게**(1) 쓰나. 없으면 0.5.
+    ///
+    /// 🔴 이게 없으면 색깔이 안 난다 — 실측에서 평균 OVR 62 이하면
+    ///   원주(2.6억)를 뺀 전 팀이 상한 45로 붙어 **다시 균일해진다.**
+    #[serde(default)]
+    pub quality_bias: Option<f64>,
 }
 
 fn default_pitcher_ratio() -> f64 { 0.45 }
@@ -36,6 +56,17 @@ fn default_pitcher_ratio() -> f64 { 0.45 }
 #[serde(rename_all = "camelCase")]
 pub struct RosterRules {
     pub roster_size: i32,
+    /// 정원 하한 — **예산이 인원을 줄여도 여기 아래로는 안 내린다.**
+    ///
+    /// ⚠ 규칙 파일에 있는데 **구조체가 안 받고 있었다** — 지금까지는
+    ///   쓰는 데가 없어서 드러나지 않았다(`serde` 가 조용히 무시한다).
+    /// ⚠ 없으면 타순 9명이 하한이다 — 경기를 못 치르면 그건 로스터가 아니다.
+    #[serde(default)]
+    pub roster_min: Option<i32>,
+    /// 정원 상한 — **부유한 팀은 기준보다 많이 데린다.**
+    /// ⚠ 규칙 파일에 있는데 구조체가 안 받고 있었다(`roster_min` 과 같다).
+    #[serde(default)]
+    pub roster_max: Option<i32>,
     pub pitching_ovr_min: f64,
     pub pitching_ovr_max: f64,
     pub batting_ovr_min: f64,
@@ -458,11 +489,23 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
     //      **같은 인원 안에서** 야수 몫을 먼저 떼고 나머지를 투수에게 준다.
     //      정원이 9명도 안 되면 그건 여기서 못 고친다 — 그때는 전원 야수다.
     const BATTING_ORDER: i32 = 9;
-    let raw_pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
-    let pitcher_n = raw_pitcher_n.min((roster - BATTING_ORDER).max(0));
-    // 정본은 `tuning::SP_SHARE_OF_PITCHERS` — 충원 경로도 같은 값을 봐야 한다
-    let sp_n = (pitcher_n as f64 * crate::tuning::SP_SHARE_OF_PITCHERS).round().max(3.0) as i32;
-    let batter_n = roster - pitcher_n;
+
+    // 🔴 **예산 한 명분** — 팀 정원을 여기서 나눈다.
+    //   생성 OVR 범위의 중앙값으로 잡는다. 정확한 평균은 만들어 봐야 알지만,
+    //   그러면 난수 순서가 흔들려 같은 씨앗이 다른 로스터를 낸다.
+    //   ⚠ 실측 평균 1,410만원 · 이 추정 1,318만원 — 7% 차이다.
+    let per_head: f64 = {
+        let mid = (p.rules.batting_ovr_min + p.rules.batting_ovr_max) as f64 / 2.0;
+        let mult = salary_rules.league_mult.get(&p.league_id).copied().unwrap_or(1.0);
+        let floor = salary_rules.min_salary.get(&p.league_id).copied().unwrap_or(0.0);
+        (salary_rules.ovr_base * salary_rules.ovr_growth.powf(mid - salary_rules.ovr_pivot)
+            * mult).max(floor).max(1.0)
+    };
+    // 정원 하한 — 예산이 아무리 적어도 경기는 치러야 한다
+    let roster_min = p.rules.roster_min.unwrap_or(BATTING_ORDER).max(BATTING_ORDER);
+    // 정원 상한 — 부유한 팀은 기준(`roster_size`)보다 많이 데릴 수 있다.
+    // ⚠ 없으면 기준이 곧 상한이다(예전 동작).
+    let roster_max = p.rules.roster_max.unwrap_or(roster).max(roster_min);
 
     for team in &p.teams {
         // 전력★ → OVR 이동폭. 규칙이 없으면 0 (구 동작)
@@ -470,6 +513,43 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             (Some(pr), Some(pw)) => (pw - pr.pivot) * pr.ovr_shift_per_star,
             _ => 0.0,
         };
+
+        // 🔴 **예산이 정원을 정한다.** 없으면 리그 정원 그대로(예전 동작).
+        //   ⚠ 타순 9명 보장을 **팀 정원에서 다시** 계산한다 — 리그 공통값을
+        //     쓰면 인원이 줄어든 팀에서 야수가 9명 아래로 떨어진다.
+        // 🔴 **인원과 수준을 같이 정한다.** 예산이 총량이고, `quality_bias`
+        //   가 그 총량을 인원 쪽으로 쓸지 수준 쪽으로 쓸지 가른다.
+        //   ⚠ 수준을 올리면 1인 연봉이 **지수로** 뛴다(OVR 62 → 74 가 3배).
+        //     그래서 질적 팀은 인원이 확 줄고, 그게 팀 색깔이 된다.
+        let qbias = team.quality_bias.unwrap_or(0.5).clamp(0.0, 1.0);
+        let spend = team.spend_ratio.unwrap_or(1.0).clamp(0.3, 1.0);
+        // 수준 이동폭 — 리그 OVR 범위의 얼마를 쓸지.
+        //
+        // ⚠ 0.35 였을 때 KBL 평균 OVR 이 69.1~72.2(**3.1 차**)뿐이었다.
+        //   예산이 120~350억으로 3배 차인데 그게 안 보였다. 0.60 이면
+        //   폭이 ±7.8 이라 부유한 팀과 가난한 팀이 실제로 갈린다.
+        // ⚠ 전 범위(1.0)를 쓰면 질적 팀이 리그 최고 대역만 뽑아 정원이
+        //   한 자리가 된다 — 연봉이 지수라 그렇다.
+        let ovr_span = (p.rules.batting_ovr_max - p.rules.batting_ovr_min) * 0.60;
+        let team_ovr = (p.rules.batting_ovr_min + p.rules.batting_ovr_max) / 2.0
+            + (qbias - 0.5) * ovr_span;
+        let team_head_cost = {
+            let mult = salary_rules.league_mult.get(&p.league_id).copied().unwrap_or(1.0);
+            let floor = salary_rules.min_salary.get(&p.league_id).copied().unwrap_or(0.0);
+            (salary_rules.ovr_base
+                * salary_rules.ovr_growth.powf(team_ovr - salary_rules.ovr_pivot)
+                * mult).max(floor).max(1.0)
+        };
+        let roster = match team.budget {
+            Some(b) if b > 0 => (((b as f64 * spend) / team_head_cost).floor() as i32)
+                .clamp(roster_min, roster_max),
+            _ => roster,
+        };
+        let raw_pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
+        let pitcher_n = raw_pitcher_n.min((roster - BATTING_ORDER).max(0));
+        // 정본은 `tuning::SP_SHARE_OF_PITCHERS` — 충원 경로도 같은 값을 봐야 한다
+        let sp_n = (pitcher_n as f64 * crate::tuning::SP_SHARE_OF_PITCHERS).round().max(3.0) as i32;
+        let batter_n = roster - pitcher_n;
 
         // 팀별 독립 시드 — 팀 목록 순서/구성 변경이 다른 팀 로스터에 영향 없음
         let seed = p.world_seed
@@ -585,6 +665,11 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 Some(f) => f.ovr_max,
                 None => p.rules.pitching_ovr_max.max(p.rules.batting_ovr_max),
             };
+            // ⚠ **유망주를 예산에 묶는 건 아직 안 됐다** (2026-08-31).
+            //   `pot_cap * pot_mult` 에 편향을 곱해 봤는데 **전부 천장(84/74)에
+            //   붙어** 아무 차이가 안 났고, 전력★ 보정으로 `core_ovr` 이
+            //   천장을 넘으면 clamp 가 터졌다(검사 2건이 잡았다).
+            //   편향은 곱셈이 아니라 `pot_mult` 샘플링 자체에 넣어야 한다.
             let potential = (pot_cap * pot_mult).round().clamp(core_ovr.round(), 99.0);
 
             let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
@@ -854,7 +939,7 @@ mod tests {
             world_seed: 4242,
             teams: teams.iter().map(|(t, pw, si)| TeamSpec {
                 team_id: t.to_string(), school_id: String::new(),
-                salary_index: *si, power: *pw,
+                salary_index: *si, power: *pw, budget: None, spend_ratio: None, quality_bias: None
             }).collect(),
             rules: league_rules(league, size),
             name_pool: None,
@@ -926,7 +1011,7 @@ mod tests {
 
         let teams: Vec<TeamSpec> = ["TEAM_KBL_A_1", "TEAM_KBL_B_1", "TEAM_KBL_C_1"].iter()
             .map(|t| TeamSpec { team_id: t.to_string(), school_id: String::new(),
-                                salary_index: None, power: None })
+                                salary_index: None, power: None, budget: None, spend_ratio: None, quality_bias: None })
             .collect();
         let n_teams = teams.len();
         let size = rules.roster_size;
