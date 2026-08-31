@@ -73,8 +73,23 @@
       case "salaryNegotiation":
       case "optionClause":
       case "faMarket":
+      // 🔴 **이 둘이 빠져 있었다.** `PendingAction` 은 17종인데 15종만 적혀
+      //   있어서, 부상 치료·컨디션 경고가 다음 순번이면 이 함수가
+      //   `undefined` 를 냈다. 그 값이 두 군데로 흘렀다 —
+      //     · `pendingByTab` 의 키가 `undefined` 가 되어 **배지가 안 뜬다**
+      //     · `openPendingFromNext` 가 `currentTab = undefined` 를 박는다
+      //   둘 다 최상위 모달이라 화면은 뜨지만, 내비는 어긋난 채였다.
+      case "injuryTreatment":
+      case "conditionWarning":
         return "news";
     }
+    // 🔴 **유형이 늘면 여기서 컴파일이 깨진다.** 위 `switch` 가 유니온을 다
+    //   덮으면 `action` 은 `never` 다 — 한 종이라도 빠지면 이 대입이 실패한다.
+    //   `season.ts` 의 `_MissingPendingType` 과 같은 수법이다.
+    //   런타임 폴백도 남긴다 — 다시는 `undefined` 가 흐르지 않게.
+    const _exhaustive: never = action;
+    void _exhaustive;
+    return "news";
   }
 
 
@@ -217,7 +232,15 @@
         ...(opponentPitcher            ? { opponentPitcher } : {}),
         ...(myNpcStarter               ? { npcStarterPitcher: myNpcStarter } : {}),
       });
-      const result = JSON.parse(raw) as { error?: string; entryReached?: boolean; homeScore?: number; awayScore?: number; [key: string]: unknown };
+      // ⚠ **`inning`·`half` 가 선언에 없었다** — 색인 서명에 걸려 `unknown` 이
+      //   되고, `EntryInfo` 가 요구하는 `number`·`string` 과 어긋났다.
+      //   읽는 칸은 선언한다. 안 그러면 다음 사람이 또 `as` 로 덮는다.
+      const result = JSON.parse(raw) as {
+        error?: string; entryReached?: boolean;
+        homeScore?: number; awayScore?: number;
+        inning?: number; half?: string;
+        [key: string]: unknown;
+      };
       if (result.error) {
         gameSimState    = "error";
         gameSimErrorMsg = result.error;
@@ -225,11 +248,14 @@
       }
       const summary = extractMatchSummary(result);
       if (result.entryReached) {
-        gameEntryInfo = { inning: result.inning, half: result.half,
-                          homeScore: result.homeScore, awayScore: result.awayScore, ...summary };
+        // ⚠ 넷 다 선택 칸이라 기본값을 준다. **`as number` 로 덮지 않는다** —
+        //   엔진이 안 주면 0회 0:0 으로 드러나야 한다
+        gameEntryInfo = { inning: result.inning ?? 0, half: result.half ?? "",
+                          homeScore: result.homeScore ?? 0,
+                          awayScore: result.awayScore ?? 0, ...summary };
         gameSimState  = "ready";
       } else {
-        gameNoEntryInfo = { homeScore: result.homeScore, awayScore: result.awayScore,
+        gameNoEntryInfo = { homeScore: result.homeScore ?? 0, awayScore: result.awayScore ?? 0,
                             // ⚠ 엔진 응답이 `[key: string]: unknown`이라 여기서 좁힌다 —
                             //   넓은 채로 두면 `applyGameOutcome`이 받는 타입과 어긋난다.
                             playerLines: Array.isArray(result.playerLines)

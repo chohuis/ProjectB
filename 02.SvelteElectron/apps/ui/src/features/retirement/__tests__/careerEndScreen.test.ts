@@ -66,3 +66,47 @@ describe("있던 것을 안 지웠다", () => {
     }
   });
 });
+
+/**
+ * 세 덩어리 중 셋째 — **주요 사건.** (2026-09-01, 트랙 C)
+ *
+ * 🔴 화면은 `careerRecords`(시즌 성적)만 읽고 `careerEvents`(사건)는 한 번도
+ *    안 읽었다. 드래프트·트레이드·입대·전역·졸업·병역 면제가 전부 저장돼
+ *    있는데 결산 어디에도 안 나왔다.
+ */
+describe("주요 사건", () => {
+  it("`careerEvents`를 읽는다", () => {
+    expect(SRC, "careerEvents를 안 읽는다 — 사건이 저장만 되고 안 보인다")
+      .toMatch(/careerEvents/);
+  });
+
+  it("연도 오름차순이다", () => {
+    expect(SRC).toMatch(/events = \[\.\.\.\(p\.careerEvents \?\? \[\]\)\]\.sort\(/);
+  });
+
+  /**
+   * 🔴 **이게 이 절의 핵심이다.** 통산 표는 `records.length === 0`이면
+   *    "기록을 남기지 못했습니다" 한 문장으로 대체된다. 사건 절을 그 `{:else}`
+   *    안에 두면 **아마추어에서 그만둔 커리어의 결산이 통째로 사라진다** —
+   *    졸업·중단 사건은 남아 있는데도.
+   *
+   * 분기를 닫는 `{/if}` 바로 뒤에 오는지를 본다.
+   */
+  it("통산 기록 분기 **바깥**에 있다", () => {
+    const outside = /^ {6}\{\/if\}\r?\n\r?\n {6}<!-- 주요 사건/m;
+    expect(SRC, "사건 절이 records 분기 안에 들어갔다 — 기록 없는 커리어에서 사라진다")
+      .toMatch(outside);
+  });
+
+  it("유형 이름은 공용 표에서 읽는다", () => {
+    expect(SRC, "화면에 번역표를 또 만들면 안 된다 (careerEventLabel.ts 머리말)")
+      .toMatch(/careerEventLabel\(/);
+    expect(SRC, "eventType을 그대로 찍고 있다 — 코드가 화면에 샌다")
+      .not.toMatch(/\{e\.eventType\}/);
+  });
+
+  it("팀 이름은 `teamName`으로 읽는다", () => {
+    expect(SRC, "teamId를 그대로 찍으면 그 화면만 영문 id가 뜬다")
+      .not.toMatch(/\{e\.fromTeamId\}|\{e\.toTeamId\}/);
+  });
+});

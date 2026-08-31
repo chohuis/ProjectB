@@ -38,4 +38,24 @@ describe("커리어 이벤트 이름", () => {
     const unknown = [...emitted].filter((t) => !KNOWN_CAREER_EVENTS.includes(t));
     expect(unknown, `표에 없는 유형: ${unknown.join(", ")}`).toEqual([]);
   });
+
+  /**
+   * 🔴 **위 검사에 사각지대가 있었다 — Rust만 본다.**
+   *
+   * `military_exempt`(game.ts) · `graduation`(careerDecision.ts) 는 TS 가
+   * 내는데 표에 없었고, Rust 소스엔 없으니 위 검사가 통과했다. 은퇴 결산에
+   * 그대로 "military exempt" 라고 뜰 자리였다(2026-09-01).
+   *
+   * ⚠ 여기도 목록을 손으로 적지 않는다 — `NpcCareerEventType` 유니온을 긁는다.
+   */
+  it("TS 타입이 정의한 유형을 전부 안다", () => {
+    const src = readFileSync(
+      resolve(__dirname, "../../types/save.ts"), "utf8");
+    const union = src.match(/export type NpcCareerEventType =([\s\S]*?);/)?.[1] ?? "";
+    const declared = [...union.matchAll(/"([a-z_]+)"/g)].map((m) => m[1]);
+    expect(declared.length, "유니온을 못 읽었다 — 정규식이 타입 선언과 어긋났다")
+      .toBeGreaterThan(5);
+    const unknown = declared.filter((t) => !KNOWN_CAREER_EVENTS.includes(t));
+    expect(unknown, `표에 없는 유형: ${unknown.join(", ")}`).toEqual([]);
+  });
 });

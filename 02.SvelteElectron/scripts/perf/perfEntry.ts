@@ -1506,6 +1506,38 @@ export function faTradeProbe(): Record<string, unknown> {
  * ⚠ 산수로만 보면 안 된다 — **실제로 그만큼 버는 선수가 있어야** 의미가 있다.
  *   그래서 분포(중앙·90%·최대)를 같이 낸다.
  */
+/**
+ * **주인공 팀의 선발 로테이션이 도는가** — 배경 팀과 나란히 본다.
+ *
+ * 🔴 문서가 "`syncProtagonistLeagueUpdate` 가 `teamRotationIndex` 를 안
+ *   건드린다"고 적어 뒀다. 그런데 `applyMatchResult` 는 `rot` 인자를
+ *   **받을 준비가 돼 있다**(주석에 "예전엔 이 갈래만 빠져 있었다"고 적힘).
+ *   호출부(`applyGameOutcome`)가 안 넘기는 것이 진짜 모양인지 재야 한다.
+ *
+ * ⚠ **주인공 팀과 배경 팀을 같은 리그에서 비교한다.** 리그가 다르면
+ *   경기 수가 달라 값이 안 맞는 게 당연해진다.
+ */
+export function rotationProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const lid = g.protagonist.leagueId;
+  const ls = s.leagueState?.[lid];
+  const idx = ls?.teamRotationIndex ?? {};
+  const myTeam = g.protagonist.teamId ?? "";
+  const all = Object.entries(idx);
+  const others = all.filter(([t]) => t !== myTeam).map(([, v]) => v as number).sort((a2, b2) => a2 - b2);
+  return {
+    리그: lid.replace("LEAGUE_", ""),
+    주인공팀: myTeam.replace("TEAM_", ""),
+    주인공팀_로테이션: (idx as Record<string, number>)[myTeam] ?? null,
+    배경팀_최소: others[0] ?? null,
+    배경팀_중앙: others[others.length >> 1] ?? null,
+    배경팀_최대: others[others.length - 1] ?? null,
+    팀수: all.length,
+    시즌: s.seasonYear, 주차: s.currentWeek,
+  };
+}
+
 export function salaryWeightProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);

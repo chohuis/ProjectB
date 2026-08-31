@@ -103,6 +103,18 @@ let LOGPATH = null;
         + " · 성사 " + String(v.성사).padStart(3));
     }
   }
+  // 🔴 로그가 센 트레이드와 **경력에 남은 트레이드**가 같은지 본다.
+  //   예전엔 경력에 아무것도 안 남아 집계가 통째로 다른 값을 봤다.
+  try {
+    const tally = app.faIntakeTally();
+    const per = {};
+    for (const [lg, years] of Object.entries(tally.리그별 || {})) {
+      let n = 0;
+      for (const v of Object.values(years)) n += v.trade || 0;
+      if (n) per[lg] = n;
+    }
+    console.log("[경력trade] " + JSON.stringify(per));
+  } catch (e) { console.log("[경력trade] " + (e && e.message)); }
   try { console.log("[연봉무게] " + JSON.stringify(app.salaryWeightProbe())); }
   catch (e) { console.log("[연봉무게] " + (e && e.message)); }
   // 원본 로그를 꺼내 둔다 — 파서를 못 믿을 때 직접 봐야 한다

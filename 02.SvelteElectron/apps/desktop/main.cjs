@@ -494,15 +494,21 @@ app.whenReady().then(() => {
           (slot_id, season_year, league_id, team_id, wins, losses, draws, win_pct, runs_for, runs_against, streak, last10, group_label, team_name)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
+      // 🔴 **실제로 쓴 행 수를 돌려준다** (2026-09-01).
+      //   예전엔 `{ok:true}` 뿐이라, 호출부가 로그를 남겨도 "보낸 행"밖에
+      //   못 적었다 — 보낸 것과 쓴 것이 다를 때 그걸 못 가린다.
+      let _saved = 0;
+      // ⚠ `stmt.run()` 은 객체(`{changes}`)를 돌려준다 — 그대로 더하면 NaN 이다
+      const run1 = (...a) => { _saved += stmt.run(...a).changes; };
       db.transaction(() => {
         for (const r of rows) {
-          stmt.run(slotId, seasonYear, r.leagueId, r.teamId,
+          run1(slotId, seasonYear, r.leagueId, r.teamId,
             r.wins ?? 0, r.losses ?? 0, r.draws ?? 0, r.winPct ?? 0,
             r.runsFor ?? 0, r.runsAgainst ?? 0, r.streak ?? "", r.last10 ?? "",
             r.groupLabel ?? "", r.teamName ?? "");
         }
       })();
-      return JSON.stringify({ ok: true });
+      return JSON.stringify({ ok: true, saved: _saved });
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
@@ -524,9 +530,15 @@ app.whenReady().then(() => {
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?)
       `);
+      // 🔴 **실제로 쓴 행 수를 돌려준다** (2026-09-01).
+      //   예전엔 `{ok:true}` 뿐이라, 호출부가 로그를 남겨도 "보낸 행"밖에
+      //   못 적었다 — 보낸 것과 쓴 것이 다를 때 그걸 못 가린다.
+      let _saved = 0;
+      // ⚠ `stmt.run()` 은 객체(`{changes}`)를 돌려준다 — 그대로 더하면 NaN 이다
+      const run1 = (...a) => { _saved += stmt.run(...a).changes; };
       db.transaction(() => {
         for (const r of rows) {
-          stmt.run(
+          run1(
             slotId, seasonYear, r.leagueId, r.playerId, r.statType,
             r.g ?? 0, r.gs ?? null, r.w ?? null, r.l ?? null, r.sv ?? null, r.hd ?? null,
             r.ip ?? null, r.er ?? null, r.hP ?? null, r.kP ?? null, r.bbP ?? null,
@@ -542,7 +554,7 @@ app.whenReady().then(() => {
           );
         }
       })();
-      return JSON.stringify({ ok: true });
+      return JSON.stringify({ ok: true, saved: _saved });
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
@@ -629,9 +641,15 @@ app.whenReady().then(() => {
            champion_name, runner_up_name, bracket_json)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
+      // 🔴 **실제로 쓴 행 수를 돌려준다** (2026-09-01).
+      //   예전엔 `{ok:true}` 뿐이라, 호출부가 로그를 남겨도 "보낸 행"밖에
+      //   못 적었다 — 보낸 것과 쓴 것이 다를 때 그걸 못 가린다.
+      let _saved = 0;
+      // ⚠ `stmt.run()` 은 객체(`{changes}`)를 돌려준다 — 그대로 더하면 NaN 이다
+      const run1 = (...a) => { _saved += stmt.run(...a).changes; };
       db.transaction(() => {
         for (const r of rows) {
-          stmt.run(slotId, seasonYear, r.leagueId, r.championId ?? "", r.runnerUpId ?? "",
+          run1(slotId, seasonYear, r.leagueId, r.championId ?? "", r.runnerUpId ?? "",
             JSON.stringify(r.playoffTeams ?? []),
             r.championName ?? "", r.runnerUpName ?? "",
             // 포스트시즌이 없는 리그(고교 등)는 빈 문자열. "[]"로 두면
@@ -639,7 +657,7 @@ app.whenReady().then(() => {
             r.bracket ? JSON.stringify(r.bracket) : "");
         }
       })();
-      return JSON.stringify({ ok: true });
+      return JSON.stringify({ ok: true, saved: _saved });
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
@@ -669,9 +687,15 @@ app.whenReady().then(() => {
            bracket_json, group_json)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
+      // 🔴 **실제로 쓴 행 수를 돌려준다** (2026-09-01).
+      //   예전엔 `{ok:true}` 뿐이라, 호출부가 로그를 남겨도 "보낸 행"밖에
+      //   못 적었다 — 보낸 것과 쓴 것이 다를 때 그걸 못 가린다.
+      let _saved = 0;
+      // ⚠ `stmt.run()` 은 객체(`{changes}`)를 돌려준다 — 그대로 더하면 NaN 이다
+      const run1 = (...a) => { _saved += stmt.run(...a).changes; };
       db.transaction(() => {
         for (const r of rows) {
-          stmt.run(slotId, seasonYear, r.tourId, r.leagueId ?? '', r.tourName ?? '',
+          run1(slotId, seasonYear, r.tourId, r.leagueId ?? '', r.tourName ?? '',
             r.championId ?? '', r.championName ?? '',
             r.runnerUpId ?? '', r.runnerUpName ?? '',
             // 안 열린 대회는 빈 문자열. '[]'로 두면 화면이 빈 대진표를 그린다
@@ -679,7 +703,7 @@ app.whenReady().then(() => {
             r.group   ? JSON.stringify(r.group)   : '');
         }
       })();
-      return JSON.stringify({ ok: true });
+      return JSON.stringify({ ok: true, saved: _saved });
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 

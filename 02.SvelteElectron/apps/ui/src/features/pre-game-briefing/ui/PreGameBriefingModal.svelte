@@ -4,6 +4,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import type { EntityRow, EntityDetails, NpcLiveStats } from "../../../shared/stores/master";
+  import type { BattingAttributes, PitchingAttributes } from "../../../shared/types/save";
   import TeamMark from "../../team/ui/TeamMark.svelte";
   import { derivePreGameWeather, derivePreGamePark } from "../../../shared/utils/matchLineupBuilder";
   import type { PreGameWeather, PreGamePark } from "../../../shared/utils/matchLineupBuilder";
@@ -89,7 +90,10 @@
   }
 
   function getLiveBat(id: string, entities: EntityRow[], npcLiveStats: NpcLiveStats) {
-    const live = npcLiveStats[id]?.batting ?? {};
+    // ⚠ **`?? {}` 는 타입을 `{}` 로 넓힌다** — 그러면 아래 여덟 줄의 필드
+    //   접근이 전부 "Property does not exist on type '{}'" 가 된다.
+    //   변수에 타입을 붙여 둔다. 값은 그대로다(라이브 없으면 base 로 간다)
+    const live: Partial<BattingAttributes> = npcLiveStats[id]?.batting ?? {};
     const base = playerOf(entities.find(e => e.id === id) ?? {} as EntityRow).batting ?? {};
     return {
       contact:       Number(live.contact       ?? base.contact       ?? 50),
@@ -104,7 +108,7 @@
   }
 
   function getLivePit(id: string, entities: EntityRow[], npcLiveStats: NpcLiveStats) {
-    const live = npcLiveStats[id]?.pitching ?? {};
+    const live: Partial<PitchingAttributes> = npcLiveStats[id]?.pitching ?? {};
     const base = playerOf(entities.find(e => e.id === id) ?? {} as EntityRow).pitching ?? {};
     return {
       velocity: Number(live.velocity ?? base.velocity ?? 50),

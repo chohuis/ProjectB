@@ -25,6 +25,9 @@
   // 🔴 **값을 숫자로 노출하지 않는다** — `Relationship.value` 주석이 그렇게 못박아 뒀다.
   //    "−100~+100. 플레이어에게 숫자로 노출하지 않는다 — 라벨만 보여준다"
   import { relationLabel } from "../../../shared/types/relationship";
+  // 🔴 **화면마다 번역표를 만들지 않는다.** `careerEventLabel.ts` 머리말이
+  //    그 결함(코드가 화면에 새는 것)을 이미 적어 뒀다
+  import { careerEventLabel } from "../../../shared/utils/careerEventLabel";
   import { isV3SlotActive } from "../../../shared/repo/v3Mode";
 
   export let onClose: () => void;
@@ -57,6 +60,17 @@
 
   // 연도 오름차순 — 데뷔부터 은퇴까지 읽히게 한다
   $: byYear = [...records].sort((a, b) => a.year - b.year);
+
+  // ── 주요 사건 ──────────────────────────────────────────────────
+  //
+  // ⚠ **`careerRecords`가 아니라 `careerEvents`다.** 시즌 성적과 달리 사건은
+  //   시즌 밖에서도 일어난다 — 대학 졸업·입대·병역 면제는 출전 기록이 한 줄도
+  //   없는 해에 남는다. 통산 표에서는 그 해가 통째로 빈칸이다.
+  //
+  // 🔴 그래서 이 절만 `records.length === 0` **바깥**에 둔다. 아마추어에서
+  //   그만둔 커리어는 통산 표가 비지만 졸업·중단 사건은 남아 있고, 안쪽에
+  //   두면 그 커리어의 결말이 "기록을 남기지 못했습니다" 한 문장으로 끝난다.
+  $: events = [...(p.careerEvents ?? [])].sort((a, b) => a.year - b.year);
 
   // 포스트시즌 라벨. `psResult`가 없으면 그 해는 아무것도 안 적는다
   const PS: Record<string, string> = {
@@ -286,6 +300,29 @@
         {/if}
 
       {/if}
+
+      <!-- 주요 사건 — 위 분기 바깥이다. 통산 기록이 없어도 사건은 있다 -->
+      {#if events.length > 0}
+        <section class="sec">
+          <h3>주요 사건</h3>
+          <ol class="events">
+            {#each events as e}
+              <li class="ev">
+                <span class="ev-y">{e.year}</span>
+                <span class="ev-k">{careerEventLabel(e.eventType)}</span>
+                {#if e.fromTeamId || e.toTeamId}
+                  <span class="ev-t">
+                    {#if e.fromTeamId}{teamName(e.fromTeamId)}{/if}
+                    {#if e.fromTeamId && e.toTeamId}<span class="ev-ar">→</span>{/if}
+                    {#if e.toTeamId}{teamName(e.toTeamId)}{/if}
+                  </span>
+                {/if}
+                {#if e.detail}<span class="ev-d">{e.detail}</span>{/if}
+              </li>
+            {/each}
+          </ol>
+        </section>
+      {/if}
     </div>
 
     <footer class="foot">
@@ -405,6 +442,22 @@
   .s-team { flex: 1; font-size: 13px; color: #dce7f7; }
   .s-span { font-size: 12px; color: #8aa0bf; font-variant-numeric: tabular-nums; }
   .s-n    { font-size: 11px; color: #62779a; min-width: 46px; text-align: right; }
+
+  /* 주요 사건 — 연도를 왼쪽에 고정해 세로로 읽히게 한다 */
+  .events { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .ev {
+    display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap;
+    padding: 7px 10px; border-radius: 6px; background: #121c30;
+  }
+  .ev-y {
+    font-size: 12px; color: #8aa0bf; font-variant-numeric: tabular-nums;
+    min-width: 3.2em;
+  }
+  .ev-k { font-size: 13px; font-weight: 600; color: #dce7f7; }
+  .ev-t { font-size: 12px; color: #93aacb; }
+  .ev-ar { color: #62779a; margin: 0 4px; }
+  /* 사유는 길다(졸업은 전공·학점·경로가 붙는다) — 줄을 넘겨서 다 보인다 */
+  .ev-d { font-size: 11px; color: #62779a; flex: 1 1 100%; }
 
   .foot {
     padding: 14px 26px; border-top: 1px solid #23324c;

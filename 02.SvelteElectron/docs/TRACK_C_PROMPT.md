@@ -54,6 +54,7 @@ apps/ui/src/pages/**
 apps/ui/src/features/**
 apps/ui/src/shared/repo/slotRepo.ts       화면이 읽을 커맨드를 여기 추가
 apps/desktop/ipc/slotdb.cjs               그 커맨드의 SQL
+apps/desktop/ipc/db.cjs                   역대 기록 네 테이블 — **C 소유다**(A 확정 2026-09-01)
 apps/ui/src/**/*.css · 스타일
 docs/TRACK_C_*.md                         네 문서
 ```
@@ -103,10 +104,25 @@ docs/TRACK_C_*.md                         네 문서
 ```
 화면            18개 (pages/)  ·  svelte 파일 54개
 없는 것         인생 기록 · 엔딩 화면  ·  히스토리 화면
-데이터는 있다   history_json · history_lb_stats · history_league
-                history_postseason · history_standings · history_tournaments
 svelte-check    오류 34 · 경고 37
 ```
+
+### 역대 기록 테이블 — **DB 둘로 갈려 있다** (C 가 실측으로 잡았다)
+
+```
+projectb_v2.db (db.cjs)     history_standings · history_lb_stats
+                            history_postseason · history_tournaments
+slot3_*.db (slotdb.cjs)     history_league
+양쪽 다                     career_history
+```
+
+⚠ 앞선 판이 적었던 `history_json` 은 **테이블이 아니다** — `db.cjs` 의
+`chat_history_json` **컬럼**이다. 지웠다.
+
+🔴 **여섯 중 다섯이 0행이다.** 유일하게 찬 `history_standings` 190행도
+플레이 산물이 아니라 새 게임이 심는 **가짜 과거 5년**(2021–2025)이다.
+A 가 원인을 재고 있다 — 저장 실패가 로그에도 안 남던 것을 먼저 고쳤다.
+**엔딩 화면은 `protagonist.careerRecords` 로 짜는 게 맞다.**
 
 ### svelte-check 오류가 어디 있나 (실측)
 
