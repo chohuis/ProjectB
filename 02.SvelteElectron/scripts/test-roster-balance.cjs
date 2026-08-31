@@ -137,6 +137,38 @@ const FLOOR = {
   },
 };
 
+/**
+ * 🔴 **리그별 시즌 종료 주차** — 판정 창의 오른쪽 끝이다.
+ *
+ * 값의 근거는 `apps/ui/src/shared/utils/seasonWeeks.ts` 다:
+ * ```
+ *   INDIE_CAREER_HUB_WEEK = 26   독립 3단계 W10~25 → 결승 직후
+ *   HS_CAREER_HUB_WEEK    = 28   고교 주말리그 W26 · 패왕기 W26~27 → 결승 직후
+ *   UNIV_CAREER_HUB_WEEK  = 29   대학 정규 W28 · 여명기 W25~28 → 결승 직후
+ * ```
+ * ⚠ **여기에 값을 두 번 적는 셈이다.** 저쪽은 TS 라 이 CJS 검사가 못 읽는다.
+ *   저쪽을 바꾸면 여기도 바꿔야 한다 — `seasonWeekCalendar.test.ts` 가
+ *   두 값이 어긋나면 실패하게 물려 뒀다.
+ *
+ * 프로(KBL·ABL·JBL)와 상무는 W38 까지라 기본값을 쓴다.
+ */
+const SEASON_END_WEEK = {
+  INDEPENDENT: 26,
+  HIGHSCHOOL:  28,
+  UNIVERSITY:  29,
+};
+
+/**
+ * 🔴 **아마추어를 시즌 안에서 잴 표본 주차.**
+ *
+ * `autoRun` 은 W0 → W32 → W40 → W51 로 뛴다. 아마추어 시즌(~W29) 안에
+ * 멈추는 자리가 **한 곳도 없어서**, 판정 창을 좁히면 표본이 0건이 된다.
+ * 그래서 이 주차까지는 `oneWeek()` 으로 한 주씩 올라간다.
+ *
+ * ⚠ W20 은 셋 다 시즌 한복판이다(독립 W10~25 · 고교 ~W26 · 대학 ~W28).
+ */
+const AMATEUR_SAMPLE_UNTIL = 20;
+
 (async () => {
   log("");
   log("── 로스터 포지션 균형 회귀 ───────────────────────────────");
@@ -170,12 +202,19 @@ const FLOOR = {
     //      재면 늘 미달로 잡힌다** — 총량 147명·쏠림 4로 분포는 멀쩡한데도 그랬다.
     //      기존 주석이 "한 시점만 재면 구분이 안 된다"고 적어 뒀다.
     //      **지우지 않고 하나 더 나눈다.**
-    const byPhase = { "시즌중": {}, "시즌종료": {}, "오프시즌": {}, "오프시즌직후": {} };
-    const absorb = (phase = "시즌종료") => {
+    const byPhase = { "시즌중": {}, "시즌후": {}, "시즌종료": {}, "오프시즌": {}, "오프시즌직후": {} };
+    const absorb = (phase = "시즌종료", week = null) => {
       const comp = app.rosterCompositionProbe();
-      const bucket = byPhase[phase];
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;
+        // 🔴 **보고도 판정과 같은 잣대로 갈라야 한다** (2026-08-31).
+        //   아래에서 아마추어의 시즌 종료 뒤 주차를 판정에서 뺐는데, 보고는
+        //   안 갈랐더니 **"판정은 이것만 쓴다"고 적힌 줄이 판정에 안 쓰이는
+        //   값을 찍고 있었다.** 주석이 거짓말하는 그 형태다.
+        //   `시즌후`로 따로 담는다 — 안 보이게 만드는 게 아니라 **갈라 보인다.**
+        const key = (phase === "시즌중" && week != null
+                     && week > (SEASON_END_WEEK[lg] ?? 38)) ? "시즌후" : phase;
+        const bucket = byPhase[key];
         const b = bucket[lg] ?? { 최소야수: 999, 최소투수: 999, 포수없는팀: 0 };
         b.최소야수 = Math.min(b.최소야수, v.최소야수);
         b.최소투수 = Math.min(b.최소투수, v.최소투수);
@@ -204,6 +243,24 @@ const FLOOR = {
       if (phase !== "시즌중") return;
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;   // 비활성 리그(ABL·JBL)
+        // 🔴 **리그마다 시즌이 끝나는 주가 다르다** (2026-08-31).
+        //
+        //   아마추어는 프로보다 훨씬 일찍 끝난다(`seasonWeeks.ts`):
+        //     독립 W26 · 고교 W28 · 대학 W29   ←→   프로 W38
+        //   그런데 판정 창이 전부 W1~38 이었다. 그래서 **대학 로스터를
+        //   시즌이 끝난 뒤에 재고 있었고**, 하필 `autoRun` 이 멈추는 W32 가
+        //   `CAREER_RESULT_WEEK`(드래프트가 4학년을 데려가는 주)였다.
+        //
+        //   주차별 실측(2026-08-31):
+        //     2026W32 드래프트 **전** 야수11/투수8 · 포수0 **0팀**
+        //     2026W32 드래프트 **후** 야수 8/투수6 · 포수0 **4팀**   ← 여기만
+        //     2026W40 야수8/투수6 · 포수0 0팀   ← 다음 측정엔 이미 없다
+        //   4년 추이도 11 → 9 → 11 → 14 로 **돌아온다.** 결함이 아니라 상황이다.
+        //
+        // ⚠ **빼기만 하면 안 된다.** `autoRun` 은 W0 → W32 → W40 으로 뛰므로
+        //   W32 를 빼면 대학은 표본이 **0건**이 된다. 아래 루프에서 시즌 안을
+        //   한 주씩 올라가며 재도록 같이 고쳤다 — **둘 다 있어야 한다.**
+        if (week != null && week > (SEASON_END_WEEK[lg] ?? 38)) continue;
         const w = worst[lg] ?? {
           포수없는팀: 0, 포지션공백팀: 0, 타순미달팀: 0,
           최소야수: 999, 최소투수: 999, 야수5퍼센타일: 999, 투수5퍼센타일: 999,
@@ -239,9 +296,11 @@ const FLOOR = {
       if (process.env.PB_WEEKLY) {
         const w = app.currentWeek();
         const c = app.rosterCompositionProbe();
-        const k = c["KBL_1군"];
+        // ⚠ **리그를 고를 수 있어야 한다.** 대학이 시즌 중 어디서 빠지는지를
+        //   재려는데 이 스냅샷이 KBL 1군만 찍고 있었다. `PB_WEEKLY_LG` 로 바꾼다.
+        const k = c[process.env.PB_WEEKLY_LG || "KBL_1군"];
         if (k && k.최소야수 !== undefined) {
-          weekly.push(`${app.currentSeason()}W${w}:${k.최소야수}/${k.최소투수}`);
+          weekly.push(`${app.currentSeason()}W${w}:${k.최소야수}/${k.최소투수}/C${k.포수없는팀 ?? 0}`);
         }
       }
       // 🔴 **경기가 치러지는 구간을 잰다.** 예전엔 시즌 끝(W0)만 판정에
@@ -255,11 +314,24 @@ const FLOOR = {
         //   `W0 → W32 → W40 → W51 → W52` 다. W10/20/30 을 노리면 한 번도
         //   안 걸린다(실제로 그렇게 짰다가 검사가 0건이 됐다).
         //   **정규 시즌 구간(W1~38)이면 잰다.**
-        if (wkNow >= 1 && wkNow <= 38) absorb("시즌중");
+        //   ⚠ **주차를 넘긴다.** 리그마다 시즌이 끝나는 주가 달라서
+        //     `absorb` 안에서 리그별로 다시 거른다(`SEASON_END_WEEK`).
+        if (wkNow >= 1 && wkNow <= 38) absorb("시즌중", wkNow);
         if (process.env.PB_WK) process.stdout.write("w"+wkNow+" ");
       }
       const before = app.currentWeek();
-      await app.autoRun();
+      // 🔴 **아마추어 시즌 안에서는 한 주씩 간다** (2026-08-31).
+      //   `autoRun` 이 W0 → W32 로 뛰어서 고교·대학·독립은 **시즌 중을 한 번도
+      //   안 쟀다.** W32 는 드래프트가 4학년을 데려간 직후라 늘 얇게 나왔고,
+      //   그걸 로스터 결함으로 읽고 있었다.
+      // ⚠ **막히면 예전 경로로 돌아간다.** `oneWeek` 은 pending 을 안 푼다 —
+      //   여기서 주차가 안 오르면 아래 갈래가 다 어긋나 검사가 통째로 죽는다.
+      if (before < AMATEUR_SAMPLE_UNTIL) {
+        await app.oneWeek();
+        if (app.currentWeek() === before) await app.autoRun();
+      } else {
+        await app.autoRun();
+      }
       if (app.currentWeek() > before) continue;
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       if (await app.pushCareerForward()) continue;
@@ -287,7 +359,7 @@ const FLOOR = {
       // 값이 바뀌는 지점만 — 전부 찍으면 못 읽는다
       const shrunk = weekly.filter((v, i) => i === 0
         || v.split(":")[1] !== weekly[i - 1].split(":")[1]);
-      log("  [주차별 KBL1군 최소야수/투수] " + shrunk.join(" "));
+      log(`  [주차별 ${process.env.PB_WEEKLY_LG || "KBL_1군"} 최소야수/투수/포수0팀] ` + shrunk.join(" "));
     }
     mism();
     try { log("  [유출] " + JSON.stringify(app.batterLeakProbe())); } catch (e) { log("  [유출] " + e.message); }
@@ -296,6 +368,7 @@ const FLOOR = {
       const a1 = byPhase["오프시즌직후"][lg];
       const b1 = byPhase["시즌종료"][lg];
       const m1 = byPhase["시즌중"][lg];
+      const m2 = byPhase["시즌후"][lg];
       if (!a1 || !b1) continue;
       // ⚠ **포수 0명을 시점별로 갈라 본다.** `오프시즌직후`는 졸업 후 ·
       // W1 신입생 생성 **전** 구간이라, 유일한 포수가 졸업한 팀은 그 순간
@@ -306,7 +379,11 @@ const FLOOR = {
           `  →  시즌종료 야수${b1.최소야수}/투수${b1.최소투수}` +
           `(포수0 ${b1.포수없는팀}팀)` +
           (m1 ? `  ||  **시즌중** 야수${m1.최소야수}/투수${m1.최소투수}` +
-            `(포수0 ${m1.포수없는팀}팀) ← 판정은 이것만 쓴다` : "  ||  시즌중 측정 없음"));
+            `(포수0 ${m1.포수없는팀}팀) ← 판정은 이것만 쓴다` : "  ||  시즌중 측정 없음") +
+          // 아마추어만 나온다 — 시즌(독립 W26·고교 W28·대학 W29)이 끝난 뒤 주차.
+          // 드래프트(W32)가 상급생을 데려간 직후라 늘 얇다. **경기는 이미 없다.**
+          (m2 ? `  ||  시즌후 야수${m2.최소야수}/투수${m2.최소투수}` +
+            `(포수0 ${m2.포수없는팀}팀) ← 판정 제외` : ""));
     }
     // ── 육성선수 병목 — 상한인가 유출인가 ──────────────────────
     //

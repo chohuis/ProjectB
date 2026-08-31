@@ -30,6 +30,7 @@ const J = (o) => JSON.stringify(o);
       if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
     }
     console.log(`  [파급]  ${J(app.ovrImpactProbe())}`);
+    console.log(`  [대학]  ${J(app.univFlowProbe())}`);
     console.log(`  [전향]  ${J(app.positionChangeProbe())}`);
     console.log(`  [예산]  ${J(app.payrollVsBudgetProbe())}`);
     console.log(`  [독립]  ${J(app.indTeamDetailProbe())}`);
