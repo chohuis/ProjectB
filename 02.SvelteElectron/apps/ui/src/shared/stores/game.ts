@@ -3839,6 +3839,27 @@ function createGameStore() {
             ...heroPick,
             draftRound: mine.round, draftPick: mine.pick, draftTeamId: mine.teamId,
           });
+          // 🔴 **지명을 주인공 경력에 남긴다** (2026-09-01 · 트랙 C 요청).
+          //
+          //   `addCareerEvent` 호출부 여섯 곳 어디에도 드래프트가 없었다.
+          //   NPC 는 Rust `apply_draft` 가 `draft_picked` 를 남기는데
+          //   **주인공만 안 남았다.** 그래서 엔딩 화면 "주요 사건" 절이
+          //   졸업·트레이드·입대·전역·면제·은퇴는 다 보여주는데 **지명만
+          //   비었다** — 커리어에서 제일 큰 사건이다.
+          //
+          // ⚠ **여기여야 한다.** 위에서 번호를 다시 매겼으므로 산식이 낸
+          //   값과 최종 순번이 다를 수 있다(앞사람이 밀렸다). 화면·계약이
+          //   읽는 값과 **같은 값**을 남긴다.
+          // ⚠ `toLeagueId` 는 팀에서 끌어온다 — 드래프트 목적지가 KBL 1군만
+          //   은 아니다(2군 지명이 있다). 못 찾으면 비운다.
+          const draftTeam = get(masterStore).teams.find((t) => t.id === mine.teamId);
+          this.addCareerEvent({
+            year,
+            eventType: "draft_picked",
+            toTeamId: mine.teamId,
+            toLeagueId: draftTeam?.leagueId ?? "",
+            detail: `${mine.round}라운드 ${mine.pick}순위`,
+          });
         }
         // ⚠ **밀려난 사람을 미지명 목록에 넣는다.** `apply_draft`는 `picks`에
         // 없으면 KBL로 안 옮기고, `undraftedIds`에도 없으면 진로 배정

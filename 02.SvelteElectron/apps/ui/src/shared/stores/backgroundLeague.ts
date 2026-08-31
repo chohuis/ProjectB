@@ -243,6 +243,26 @@ export function syncProtagonistLeagueUpdate(
         ...cur,
         standings: updateStandings(cur.standings, result, homeTeamId, awayTeamId),
         stats:     accumulateStats(cur.stats, result.playerLines),
+        // 🔴 **로테이션을 여기서 올린다** (2026-09-01 · 트랙 C 가 찾았다).
+        //
+        //   예전엔 안 올렸다. 그래서 **배경 팀은 선발이 돌고 주인공 팀만
+        //   같은 투수가 계속 나왔다.** 같은 파일 위쪽 `simulateBackgroundWeek`
+        //   은 `nextHomeRotIdx`·`nextAwayRotIdx` 를 넣고, 친선경기
+        //   (`applyFriendlyResult`)도 `(idx ?? 0) + 1` 을 명시로 넘긴다 —
+        //   **정규 경기만 빠져 있었다.**
+        //
+        // ⚠ **여기여야 한다.** `applyMatchResult` 도 `rot` 인자를 받지만,
+        //   그걸 쓰려면 `leagueId` 를 같이 넘겨야 하고 그러면 바로 다음 줄의
+        //   이 함수와 **리그 순위·기록을 두 번 누적**한다(호출부
+        //   `applyGameOutcome` 이 둘을 잇달아 부른다).
+        // ⚠ 이중 적용 위험은 없다 — `syncProtagonistLeagueResult` 의 호출부는
+        //   `applyGameOutcome` 한 곳뿐이고, 그 경로는 `applyMatchResult` 에
+        //   `leagueId` 를 안 넘긴다(`if (!leagueId) return`).
+        teamRotationIndex: {
+          ...cur.teamRotationIndex,
+          [homeTeamId]: (cur.teamRotationIndex?.[homeTeamId] ?? 0) + 1,
+          [awayTeamId]: (cur.teamRotationIndex?.[awayTeamId] ?? 0) + 1,
+        },
       },
     },
   };

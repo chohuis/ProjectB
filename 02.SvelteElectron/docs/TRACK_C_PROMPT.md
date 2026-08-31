@@ -47,6 +47,26 @@ docs/RESUME.md · CLAUDE.md                              A
 **화면에 필요한 값을 못 얻으면 직접 고치지 마라.** A 에게 셀렉터를 요청해라 —
 A 가 함수 하나를 추가해 주는 편이 병합 푸는 것보다 훨씬 빠르다.
 
+### 🔴 가르는 규칙 (A 확정 2026-09-01)
+
+`shared/utils/` 는 40개가 넘고 성격이 섞여 있다. **표시는 C, 계산은 A** 다.
+
+```
+C   *Label.ts · displayName.ts · baseballFormat.ts · injuryReport.ts
+    — 값을 사람이 읽는 글자로 바꾸는 것
+A   *Engine.ts · draftSystem.ts · ids.ts · seasonWeeks.ts · careerSummary.ts
+    gameSimulator.ts · matchLineupBuilder.ts · leagueScheduler.ts 등 나머지 전부
+    — 규칙·계산. game.ts 가 읽는 것은 전부 A 다
+```
+
+`shared/stores/` 는 **화면 상태만 C** 다(`leagueUiStore` · `settings` ·
+`uiLock`). `game.ts` · `season.ts` · `backgroundLeague.ts` · `master.ts` ·
+`postseason.ts` · `npcLiveStats.ts` · `npcInjury.ts` · `autoAdvance.ts` 는 A 다.
+
+`apps/desktop/` 은 **스키마(`ipc/*.cjs`)가 C, 핸들러(`main.cjs`)가 A** 다.
+
+⚠ 경계가 애매하면 **먼저 물어라.** 되돌리는 것보다 싸다.
+
 ### R3. 네 소유는 이것이다
 
 ```
@@ -54,7 +74,10 @@ apps/ui/src/pages/**
 apps/ui/src/features/**
 apps/ui/src/shared/repo/slotRepo.ts       화면이 읽을 커맨드를 여기 추가
 apps/desktop/ipc/slotdb.cjs               그 커맨드의 SQL
-apps/desktop/ipc/db.cjs                   역대 기록 네 테이블 — **C 소유다**(A 확정 2026-09-01)
+apps/desktop/ipc/db.cjs                   역대 기록 네 테이블 — **C 소유**
+shared/utils/*Label.ts · displayName.ts   표시 문자열 — **C 소유**
+shared/utils/baseballFormat.ts · injuryReport.ts          같음
+shared/stores/leagueUiStore.ts · settings.ts · uiLock.ts  화면 상태 — **C 소유**
 apps/ui/src/**/*.css · 스타일
 docs/TRACK_C_*.md                         네 문서
 ```
@@ -103,9 +126,13 @@ docs/TRACK_C_*.md                         네 문서
 
 ```
 화면            18개 (pages/)  ·  svelte 파일 54개
-없는 것         인생 기록 · 엔딩 화면  ·  히스토리 화면
-svelte-check    오류 34 · 경고 37
+svelte-check    오류 15 · 경고 37   (C 가 1주차에 34 → 15)
 ```
+
+🔴 **앞선 판이 "엔딩 화면이 없다"고 적었는데 틀렸다.** `pages/` 만 세고
+`features/` 를 안 봤다 — `features/retirement/ui/CareerEndScreen.svelte` 가
+**472줄로 이미 있었다.** 은퇴 흐름 연결까지 돼 있었다.
+**없는 것은 히스토리 화면(역대 순위·수상) 하나다.**
 
 ### 역대 기록 테이블 — **DB 둘로 갈려 있다** (C 가 실측으로 잡았다)
 
@@ -166,7 +193,11 @@ features/contract/ui/ContractNegotiationModal.svelte         1
 ### 2주차 · 09.08 – 09.14
 
 1. **엔딩 화면 구현 완료**
-2. **히스토리 화면** — 역대 순위 · 수상. 데이터는 이미 쌓인다
+2. **히스토리 화면** — 역대 순위 · 수상.
+   ⚠ **"데이터는 이미 쌓인다"고 적었는데 반만 맞다.** 새 게임 기준으로는
+   시즌마다 쌓인다(A 가 2시즌 실측: 순위 238행 · 개인기록 6,708행 ·
+   포스트시즌 9행 · 대회 8행). 다만 **지금 있는 세이브엔 안 쌓여 있다** —
+   `HANDOFF_A_TO_C.md` §2 참고. 화면은 **빈 상태를 정상으로** 다뤄라.
 3. `svelte-check` 나머지 15건
 4. 남으면 **눈확인을 앞당긴다** — 3주차 일감을 미리 시작한다
 
