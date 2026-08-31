@@ -604,6 +604,22 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 let np = POSITIONS.len();
                 if bi < np * 2 {
                     POSITIONS[bi % np].to_string()
+                } else if bi == np * 2 {
+                    // 🔴 **세 번째 포수** (2026-08-31 · 사용자 확정).
+                    //
+                    //   두 바퀴를 돈 **바로 다음 한 명**을 포수로 못박는다.
+                    //   예전엔 여기부터 랜덤이라 8분의 1 확률이었다.
+                    //
+                    // 🔴 왜 포수만인가 — **대학이 마르기 때문이다.**
+                    //   고교 졸업 1,020명/년 중 포수 68명 → 대학 유입 400명 중
+                    //   27명 → 팀당 **0.53명/년**. 대학이 4년간 필요한 2.1명과
+                    //   **정확히 같아** 여유가 0이었고, 분산만으로 절반 가까운
+                    //   팀이 0명이 됐다(실측 3회: 포수 0팀이 3·4·6팀).
+                    //
+                    // ⚠ **대학은 전과·전학이 없다**(사용자 확정) — 한 번 없으면
+                    //   4년 내내 없다. 그래서 공급 쪽에서 풀어야 한다.
+                    // ⚠ 야수가 17명 미만인 리그는 여기 안 닿는다 — 예전과 같다.
+                    POSITIONS[0].to_string()
                 } else {
                     POSITIONS[(rng.next() * np as f64) as usize % np].to_string()
                 }

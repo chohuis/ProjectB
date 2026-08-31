@@ -1703,6 +1703,30 @@ export function payrollVsBudgetProbe(): Record<string, unknown> {
   return out;
 }
 
+/** 포지션 전향(`position_change`)이 **어느 무대에서** 몇 건 나나.
+ *  사용자 확정(2026-08-31): 대학은 전과·전학이 없다 — 가면 쪽 간다.
+ *  그런데 `fix_position_gaps` 가 전 리그에서 돌며 자리를 바꾼다. */
+export function positionChangeProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const byLeague: Record<string, number> = {};
+  const byYear: Record<string, number> = {};
+  let total = 0;
+  const sample: string[] = [];
+  for (const n of g.npcs) {
+    const evs = ((n as unknown as Record<string, unknown>).careerEvents ?? []) as
+      Array<Record<string, unknown>>;
+    for (const e of evs) {
+      if (e.eventType !== "position_change") continue;
+      total++;
+      const lg = String(e.toLeagueId ?? e.fromLeagueId ?? n.currentLeague ?? "?").replace("LEAGUE_", "");
+      byLeague[lg] = (byLeague[lg] ?? 0) + 1;
+      byYear[String(e.year)] = (byYear[String(e.year)] ?? 0) + 1;
+      if (sample.length < 4) sample.push(`${n.npcId}|${lg}|${e.year}|${e.detail ?? ""}`);
+    }
+  }
+  return { 총건수: total, 리그별: byLeague, 연도별: byYear, 표본: sample };
+}
+
 export function ovrImpactProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const PIT = new Set(["SP", "RP", "CP"]);
