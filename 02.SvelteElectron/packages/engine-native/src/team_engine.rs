@@ -1238,9 +1238,29 @@ pub struct TradeEvalResult {
     pub accept_probability: f64,
 }
 
+/// 🔴 **여유 공간의 하한** — 예산을 넘긴 팀이 판정을 뒤집지 않게.
+///
+/// `flex` 가 음수면 아래 부담항의 분모 `(flex × cap).max(1.0)` 이 **1.0 으로
+/// 주저앉는다.** 그러면 연봉 항이 OVR 항의 500~8,000배가 되어 판정이 통째로
+/// 연봉 하나로 포화되고, **싼 선수를 받는 쪽이 무조건 이긴다.**
+///
+/// 실측(엔진 직접 호출 · cap 30억 · payroll 70억):
+/// ```
+///   OVR 80(연봉 5000) 주고 → OVR 60(연봉 3000) 받기   수락확률 0.950
+///   OVR 60(연봉 3000) 주고 → OVR 80(연봉 5000) 받기   수락확률 0.050
+/// ```
+/// **거꾸로 서 있었다.**
+///
+/// ⚠ 같은 함정을 `eval_fa_bid` 가 이미 겪었다 — 바로 위 "상한에 하한을 둔다"
+///   주석이 그것이다(관심도가 항상 −25 였다). **같은 파일에서 두 번째다.**
+/// ⚠ 예산 초과가 벌을 안 받는 게 아니다. 분모가 예산의 5%로 묶이므로 부담이
+///   **크지만 유한**해진다 — 폭발하지 않을 뿐이다.
+const TRADE_FLEX_FLOOR: f64 = 0.05;
+
 pub fn eval_trade_value(p: EvalTradeValueParams) -> TradeEvalResult {
     let profile = &p.team_profile;
-    let flex = (p.salary_cap - p.current_payroll) as f64 / p.salary_cap as f64;
+    let flex = (((p.salary_cap - p.current_payroll) as f64 / p.salary_cap as f64)
+        as f64).max(TRADE_FLEX_FLOOR);
 
     let value_asset = |asset: &TradeAsset| -> f64 {
         let mut v = asset.ovr * 1.5;
@@ -1889,5 +1909,86 @@ mod tests {
         assert!(floors < max, "하한 합 {floors} 가 상한 {max} 이상이면 강등이 멈춘다");
         // 생성 시점 구성(30)도 넘으면 새 시즌이 시작부터 잠긴 상태가 된다
         assert!(floors < size, "하한 합 {floors} 가 생성 정원 {size} 이상이다");
+    }
+
+    // ── 트레이드 가치: 예산을 넘겨도 판정이 안 뒤집힌다 ────────────────────
+
+    fn trade_asset(id: &str, ovr: f64, salary: i64) -> TradeAsset {
+        TradeAsset {
+            player_id: id.into(), team_id: "T".into(), position: "SS".into(),
+            age: 27, ovr, true_ovr: ovr, salary, remaining_years: 2,
+            is_prospect: false, personality: None,
+            injury_severity: None, injury_weeks_left: 0,
+            career_injury_count: 0, has_steroid_history: false,
+        }
+    }
+    fn trade_eval(cap: i64, payroll: i64, give: TradeAsset, recv: TradeAsset) -> TradeEvalResult {
+        eval_trade_value(EvalTradeValueParams {
+            team_profile: ProTeamProfile::default(),
+            giving: vec![give], receiving: vec![recv],
+            cash_amount: 0, roster_needs: vec![], salary_cap: cap, current_payroll: payroll,
+        })
+    }
+
+    /// 🔴 **이게 이 수정의 핵심이다.**
+    ///
+    /// 예전엔 호출부가 `salary_cap: 300000`(30억)을 박아 넘겼는데 실제
+    /// 총연봉이 60~86억이라 `flex` 가 음수였다. 그러면 부담항의 분모
+    /// `(flex × cap).max(1.0)` 이 **1.0 으로 주저앉아** 연봉 항이 OVR 항의
+    /// 수백~수천 배가 되고, 판정이 **연봉 하나로 포화**된다.
+    ///
+    /// 실측(고치기 전 · 엔진 직접 호출):
+    /// ```text
+    ///   OVR 80(5000) 주고 → OVR 60(3000) 받기   수락확률 0.950   ← 수락했다
+    ///   OVR 60(3000) 주고 → OVR 80(5000) 받기   수락확률 0.050   ← 거절했다
+    /// ```
+    #[test]
+    fn 예산을_넘겨도_좋은_선수를_받는_쪽이_이긴다() {
+        // 총연봉(70억)이 상한(30억)보다 크다 — 예전에 판정을 뒤집던 조건 그대로
+        let cap = 300_000_i64;
+        let payroll = 700_000_i64;
+
+        let downgrade = trade_eval(cap, payroll,
+            trade_asset("A", 80.0, 5000), trade_asset("B", 60.0, 3000));
+        let upgrade = trade_eval(cap, payroll,
+            trade_asset("B", 60.0, 3000), trade_asset("A", 80.0, 5000));
+
+        assert!(upgrade.net_value > downgrade.net_value,
+            "좋은 선수를 받는 쪽이 더 높아야 한다: 받기 {} / 주기 {}",
+            upgrade.net_value, downgrade.net_value);
+        // 호출부 문턱이 0.35 다 (`market.ts`). 그 잣대로도 갈려야 한다
+        assert!(upgrade.accept_probability >= 0.35,
+            "OVR 80 을 받는 트레이드를 거절한다: {}", upgrade.accept_probability);
+        assert!(downgrade.accept_probability < 0.35,
+            "OVR 80 을 내주는 트레이드를 수락한다: {}", downgrade.accept_probability);
+    }
+
+    /// ⚠ **부담항이 폭발하지 않아야 한다.** 뒤집힘만 막고 크기를 안 보면,
+    ///   분모가 다시 주저앉았을 때 같은 자리로 돌아가는 걸 못 잡는다.
+    #[test]
+    fn 연봉_부담이_능력치를_덮지_않는다() {
+        // 같은 OVR·다른 연봉. 차이는 연봉 항에서만 나온다
+        let same_ovr = trade_eval(300_000, 700_000,
+            trade_asset("A", 70.0, 3000), trade_asset("B", 70.0, 12000));
+        // OVR 1 점이 값 1.5 다. 연봉 차 9000 이 OVR 몇 점을 덮는지 본다
+        let in_ovr_points = same_ovr.net_value.abs() / 1.5;
+        assert!(in_ovr_points < 20.0,
+            "연봉 차이가 OVR {in_ovr_points:.1} 점만큼을 덮는다 — 능력치가 안 보인다");
+    }
+
+    /// 여유 공간이 넉넉하면 부담항이 더 작아야 한다 — 축이 살아 있는지 본다.
+    ///
+    /// ⚠ 이 차이는 **작다**(실측 net 15.06 vs 15.39). 예산이 만원 단위로
+    ///   백만대인데 연봉은 만 단위라, 분모가 커질수록 부담항이 0 에 수렴한다.
+    ///   축이 **살아는 있으나 거의 안 보인다** — 밸런스에서 다룰 몫이다.
+    #[test]
+    fn 여유가_많은_구단이_연봉을_덜_꺼린다() {
+        let give = trade_asset("G", 68.0, 3000);
+        let recv = trade_asset("R", 68.0, 12000);
+        let tight = trade_eval(1_200_000, 700_000, give.clone(), recv.clone());
+        let rich  = trade_eval(3_500_000, 700_000, give, recv);
+        assert!(rich.net_value > tight.net_value,
+            "여유가 많은 쪽이 비싼 선수를 더 받아들여야 한다: 부유 {} / 빠듯 {}",
+            rich.net_value, tight.net_value);
     }
 }

@@ -308,6 +308,42 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   const proTeams = m.teams.filter(
     (t) => t.leagueId === leagueId && t.id.endsWith("_1")
   );
+  /**
+   * 🔴 **트레이드 상한을 실제 구단 예산으로 준다** (2026-09-01).
+   *
+   * 예전엔 `salaryCap: 300000`(30억)이 두 곳에 **박혀** 있었다. 그런데 실제
+   * 총연봉이 60~86억이라 **상한이 총연봉보다 작았고**, 엔진의
+   * `flex = (cap − payroll) / cap` 이 **음수**가 됐다.
+   *
+   * 그 뒤가 문제다 — `eval_trade_value` 가 부담항의 분모를
+   * `(flex × cap).max(1.0)` 으로 잡는다. 음수면 **1.0 으로 주저앉아** 연봉
+   * 항이 OVR 항의 500~8,000배가 된다. 엔진에 직접 물어본 값:
+   *
+   * ```
+   *   박힌 30억   OVR 80(5000) 주고 → OVR 60(3000) 받기   확률 0.950 수락
+   *               OVR 60(3000) 주고 → OVR 80(5000) 받기   확률 0.050 거절
+   *   실제 예산   OVR 80(5000) 주고 → OVR 60(3000) 받기   확률 0.200 거절
+   *               OVR 60(3000) 주고 → OVR 80(5000) 받기   확률 0.800 수락
+   * ```
+   *
+   * **판정이 거꾸로 서 있었다.** "덜 준다/더 받는다"가 아니라 **싼 쪽을
+   * 받으면 무조건 수락**이었고 OVR·나이·성향은 사실상 안 봤다.
+   *
+   * ⚠ 값의 출처는 `clubFinance.ts` 의 `scaleOf` 와 같다 — 저장된 정산
+   *   결과가 있으면 그게 우선이고, 없으면 `refs.json` 의 `history.budget`
+   *   이다(원 → 만원). **표를 두 번 적지 않는다.**
+   * ⚠ 예산이 0인 팀은 **예전 값으로 떨어진다.** 상한이 0이면 `flex` 가
+   *   또 음수가 되어 같은 자리로 돌아간다.
+   */
+  const FALLBACK_SALARY_CAP = 300000;
+  const budgetCapOf = (teamId: string): number => {
+    const saved = g.clubBudgets?.[teamId];
+    if (saved != null && saved > 0) return Math.round(saved);
+    const raw = m.teams.find((t) => t.id === teamId)?.history?.budget ?? 0;
+    const won = Math.round(raw / 10000);   // 원 → 만원 (연봉과 같은 단위)
+    return won > 0 ? won : FALLBACK_SALARY_CAP;
+  };
+
   const isMyLeague = g.protagonist.leagueId === leagueId;
   const standings = isMyLeague ? s.standings : (s.leagueState[leagueId]?.standings ?? []);
   const sortedStandings = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
@@ -341,7 +377,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       profile,
       activeRoster: roster.map((n) => n.npcId),
       farmRoster: [] as string[],
-      salaryCap: 300000,
+      salaryCap: budgetCapOf(team.id),
       currentPayroll,
       winPct,
       injuredPositions,
@@ -474,7 +510,11 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
         receiving: [offeredAsset],
         cashAmount: proposal.cash,
         rosterNeeds: [],
-        salaryCap: 300000,
+        // ⚠ **두 곳이 같은 팀의 같은 값을 봐야 한다.** 위 `teamWithRosters`
+        //   가 이미 담고 있으니 거기서 꺼낸다 — 여기서 다시 계산하면
+        //   한쪽만 고쳐진 채로 남는다(이 파일에서 이미 그렇게 됐었다).
+        salaryCap: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.salaryCap
+                   ?? budgetCapOf(proposal.receivingTeamId),
         currentPayroll: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.currentPayroll ?? 150000,
       }))
     ) as { netValue: number; acceptProbability: number };
