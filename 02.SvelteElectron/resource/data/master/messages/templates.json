@@ -3590,6 +3590,24 @@
       "subject": "관리에 드는 돈",
       "category": "health",
       "body": "예전에는 자고 나면 풀렸습니다. 이제는 사람을 붙여야 풀립니다.\n\n비용이 듭니다."
+    },
+    {
+      "id": "MSG_HS_Y1_RIVAL_NOTICE",
+      "category": "news",
+      "subject": "또래가 이름을 외웠다",
+      "body": "다른 학교 1학년 투수가 당신 이름을 알고 있었다.\n\n같은 학년 사이에서 먼저 이름이 도는 건 흔한 일이 아니다."
+    },
+    {
+      "id": "MSG_HS_Y3_DRAFT_STOCK_CHECK",
+      "category": "news",
+      "subject": "지명 순위 이야기가 돈다",
+      "body": "올해 드래프트 예상 순위를 다루는 글에 당신이 언급됐다.\n\n아직 시즌 중반이고, 남은 경기가 순위를 다시 쓴다."
+    },
+    {
+      "id": "MSG_HS_Y3_SCOUT_FOCUS",
+      "category": "news",
+      "subject": "스카우트가 자리를 옮겼다",
+      "body": "백네트 뒤에 앉던 스카우트가 오늘은 1루 쪽에서 봤다.\n\n폼을 옆에서 보겠다는 뜻이다."
     }
   ]
 }

@@ -27,6 +27,6 @@
       "value": 30
     }
   ],
-  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "messageTemplateId": "MSG_HS_Y1_RIVAL_NOTICE",
   "decisionTemplateId": null
 }

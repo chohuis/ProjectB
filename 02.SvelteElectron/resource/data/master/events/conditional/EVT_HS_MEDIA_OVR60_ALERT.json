@@ -2,7 +2,7 @@
   "id": "EVT_HS_MEDIA_OVR60_ALERT",
   "type": "conditional",
   "category": "media",
-  "priority": 740,
+  "priority": 40,
   "oncePolicy": "once_per_season",
   "conditions": [
     {
