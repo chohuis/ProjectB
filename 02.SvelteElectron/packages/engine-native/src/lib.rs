@@ -380,6 +380,24 @@ pub fn resolve_fa_market_native(params_json: String) -> String {
 
 /// 주간 수입·지출·세금. `money`에 더할 순현금을 낸다
 #[napi]
+pub fn calc_club_expense_native(params_json: String) -> String {
+    let params: finance::ClubExpenseParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("calcClubExpenseNative", e),
+    };
+    serde_json::to_string(&finance::calc_club_expense(params))
+        .unwrap_or_else(|e| parse_err("calcClubExpenseNative/serialize", e))
+}
+
+#[napi]
+pub fn calc_club_revenue_native(params_json: String) -> String {
+    let params: finance::ClubRevenueParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("calcClubRevenueNative", e),
+    };
+    serde_json::to_string(&finance::calc_club_revenue(params))
+        .unwrap_or_else(|e| parse_err("calcClubRevenueNative/serialize", e))
+}
+
+#[napi]
 pub fn calc_weekly_finance_native(params_json: String) -> String {
     let params: finance::WeeklyFinanceParams = match serde_json::from_str(&params_json) {
         Ok(v) => v,
@@ -511,17 +529,7 @@ pub fn apply_draft_native(params_json: String) -> String {
 }
 
 /// 배경 고교 졸업생 드래프트 시뮬레이션
-#[napi]
-pub fn bg_hs_graduate_draft_native(params_json: String) -> String {
-    let params: npc_sim::BgHsGraduateDraftParams = match serde_json::from_str(&params_json) {
-        Ok(v) => v,
-        Err(e) => return parse_err("bgHsGraduateDraftNative", e),
-    };
-    let result = npc_sim::bg_hs_graduate_draft(params);
-    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("bgHsGraduateDraftNative/serialize", e))
-}
 
-/// 주인공 드래프트 결과 결정
 #[napi]
 pub fn determine_protagonist_draft_native(params_json: String) -> String {
     let params: ProtagonistDraftParams = match serde_json::from_str(&params_json) {
@@ -789,6 +797,47 @@ pub fn form_score_native(params_json: String) -> String {
 ///
 /// ⚠ **공백이 있는 팀의 선수만 보낸다.** 전량(7,332명)을 주마다 왕복시키면
 /// 이 프로젝트가 줄인 IPC를 도로 까먹는다. 공백은 리그당 1~4팀이다.
+/// 팀 안 등번호를 유일하게 만든다 — **문제가 있는 팀의 선수만 보낸다.**
+///
+/// ⚠ 팀 선수를 **모두** 보내야 한다. 빈 번호를 팀 단위로 세므로 일부만
+///   보내면 이미 쓰는 번호를 다시 준다.
+#[napi]
+pub fn fix_jersey_numbers_native(params_json: String) -> String {
+    #[derive(serde::Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct P {
+        npcs: Vec<sim_types::NpcSaveState>,
+        /// 팀 id → 영구결번. ⚠ `serde(default)` 라 **안 넘겨도 통과한다** —
+        /// 그래서 배선 검사가 이걸 따로 본다.
+        #[serde(default)]
+        retired_numbers: std::collections::HashMap<String, Vec<i32>>,
+    }
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Change { npc_id: String, team_id: String, from: i32, to: i32 }
+    #[derive(serde::Serialize)]
+    #[serde(rename_all = "camelCase")]
+    struct R { changes: Vec<Change> }
+    let mut p: P = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("fixJerseyNumbersNative", e),
+    };
+    let before: Vec<i32> = p.npcs.iter().map(|n| n.jersey_number).collect();
+    npc_sim::fix_jersey_numbers(&mut p.npcs, &p.retired_numbers);
+    // **바뀐 사람만 돌려준다** — 전량을 얹으면 다른 필드까지 덮어쓴다
+    let changes: Vec<Change> = p.npcs.iter().zip(before.iter())
+        .filter(|(n, b)| n.jersey_number != **b)
+        .map(|(n, b)| Change {
+            npc_id: n.npc_id.clone(),
+            team_id: n.current_team.clone(),
+            from: *b,
+            to: n.jersey_number,
+        })
+        .collect();
+    serde_json::to_string(&R { changes })
+        .unwrap_or_else(|e| parse_err("fixJerseyNumbersNative/serialize", e))
+}
+
 #[napi]
 pub fn fix_position_gaps_native(params_json: String) -> String {
     #[derive(serde::Deserialize)]
@@ -1393,14 +1442,6 @@ pub fn week_calc_hs_admissions_native(p: String) -> String {
         .unwrap_or_else(|e| parse_err("weekCalcHsAdmissionsNative/serialize", e))
 }
 
-#[napi]
-pub fn week_calc_trade_rumor_native(p: String) -> String {
-    let params: week_engine::TradeRumorPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcTradeRumorNative", e),
-    };
-    serde_json::to_string(&week_engine::calc_trade_rumor(params))
-        .unwrap_or_else(|e| parse_err("weekCalcTradeRumorNative/serialize", e))
-}
 
 #[napi]
 pub fn week_calc_exam_result_native(p: String) -> String {

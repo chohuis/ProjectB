@@ -5,7 +5,12 @@
         "LEAGUE_HIGHSCHOOL",
         "LEAGUE_UNIVERSITY",
         "LEAGUE_INDEPENDENT",
-        "LEAGUE_KBL"
+        "LEAGUE_KBL",
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL",
+        "LEAGUE_JBL",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
       ]
     },
     "coach_count": {
@@ -30,7 +35,12 @@
       "LEAGUE_HIGHSCHOOL": 0,
       "LEAGUE_UNIVERSITY": 4,
       "LEAGUE_INDEPENDENT": 2,
-      "LEAGUE_KBL": 10
+      "LEAGUE_KBL": 10,
+      "LEAGUE_ABL": 14,
+      "LEAGUE_JBL": 12,
+      "LEAGUE_ABL_FARM": 6,
+      "LEAGUE_JBL_FARM": 5,
+      "LEAGUE_KBL_FARM": 4
     },
     "power_bonus": {
       "per_star": 3
@@ -315,7 +325,8 @@
         "facilityInvestment": 0.16,
         "staffTrust": 0.1
       }
-    }
+    },
+    "_noteLeagueBonus": "감독 기량은 리그 수준을 따른다 — **기존 두 표와 같은 순서다**(사용자 확정 2026-08-30). rosterRules OVR상한: ABL 92 > JBL 90 > KBL 84 > ABL_FARM 80 > JBL_FARM 78 > KBL_FARM 76 = 대학 76 > 독립 74 > 고교 70. salaryRules.leagueMult: ABL 3.5 > JBL 2 > KBL 1 > ABL_FARM 1.05 > JBL_FARM 0.6 > KBL_FARM 0.3 > 독립 0.14. 지어낸 값이 아니라 이미 있는 순서에 맞춘 것이다"
   },
   "namePools": {
     "krSurnames": [

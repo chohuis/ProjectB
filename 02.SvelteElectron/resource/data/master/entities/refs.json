@@ -955,137 +955,326 @@
     {
       "id": "STADIUM_BUSAN_WAVES",
       "name": "웨이브스타디움",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 22990,
+      "dist": {
+        "lf": 96,
+        "cf": 120,
+        "rf": 97,
+        "fence": 2
+      }
     },
     {
       "id": "STADIUM_BYEOLBIT",
       "name": "별빛구장",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 3000,
+      "dist": {
+        "lf": 96,
+        "cf": 116,
+        "rf": 95,
+        "fence": 3.1
+      }
     },
     {
       "id": "STADIUM_CHANGGONG",
       "name": "창공구장",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 1500,
+      "dist": {
+        "lf": 98,
+        "cf": 124,
+        "rf": 98,
+        "fence": 2.4
+      }
     },
     {
       "id": "STADIUM_CHANGWON_STARS",
       "name": "스타스파크",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 22000,
+      "dist": {
+        "lf": 100,
+        "cf": 126,
+        "rf": 103,
+        "fence": 4.3
+      }
     },
     {
       "id": "STADIUM_DAEGU_SABERS",
       "name": "세이버스필드",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 24000,
+      "dist": {
+        "lf": 103,
+        "cf": 127,
+        "rf": 102,
+        "fence": 4.6
+      }
     },
     {
       "id": "STADIUM_DAEJEON_PHANTOMS",
       "name": "팬텀스타디움",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 17000,
+      "dist": {
+        "lf": 99,
+        "cf": 124,
+        "rf": 97,
+        "fence": 3.6
+      }
     },
     {
       "id": "STADIUM_GANGBYEON",
       "name": "강변구장",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 3000,
+      "dist": {
+        "lf": 98,
+        "cf": 119,
+        "rf": 98,
+        "fence": 2.6
+      }
     },
     {
       "id": "STADIUM_GEUMGANG_UNIV",
       "name": "금강구장",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 2200,
+      "dist": {
+        "lf": 103,
+        "cf": 122,
+        "rf": 102,
+        "fence": 3.6
+      }
     },
     {
       "id": "STADIUM_GWANGJU_PANTHERS",
       "name": "팬서스파크",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 20500,
+      "dist": {
+        "lf": 95,
+        "cf": 120,
+        "rf": 94,
+        "fence": 2.6
+      }
     },
     {
       "id": "STADIUM_GYEBAEK",
       "name": "계백구장",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 1800,
+      "dist": {
+        "lf": 100,
+        "cf": 124,
+        "rf": 99,
+        "fence": 3.9
+      }
     },
     {
       "id": "STADIUM_GYERYONG",
       "name": "계룡구장",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 1100,
+      "dist": {
+        "lf": 97,
+        "cf": 119,
+        "rf": 100,
+        "fence": 2.7
+      }
     },
     {
       "id": "STADIUM_HALLA",
       "name": "한라구장",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 900,
+      "dist": {
+        "lf": 100,
+        "cf": 127,
+        "rf": 101,
+        "fence": 4.9
+      }
     },
     {
       "id": "STADIUM_HANGANG",
       "name": "한강구장",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 2000,
+      "dist": {
+        "lf": 100,
+        "cf": 121,
+        "rf": 97,
+        "fence": 3.2
+      }
     },
     {
       "id": "STADIUM_INCHEON_SHARKS",
       "name": "샤크스파크",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 23000,
+      "dist": {
+        "lf": 97,
+        "cf": 121,
+        "rf": 101,
+        "fence": 2.8
+      }
     },
     {
       "id": "STADIUM_MIREU",
       "name": "미르구장",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 2000,
+      "dist": {
+        "lf": 97,
+        "cf": 119,
+        "rf": 100,
+        "fence": 2.7
+      }
     },
     {
       "id": "STADIUM_MUJIGAE",
       "name": "무지개구장",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 1600,
+      "dist": {
+        "lf": 94,
+        "cf": 117,
+        "rf": 97,
+        "fence": 2.3
+      }
     },
     {
       "id": "STADIUM_NAKDONG",
       "name": "낙동구장",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 1500,
+      "dist": {
+        "lf": 96,
+        "cf": 116,
+        "rf": 97,
+        "fence": 2.1
+      }
     },
     {
       "id": "STADIUM_NAMNYEOK",
       "name": "남녘구장",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 2200,
+      "dist": {
+        "lf": 100,
+        "cf": 122,
+        "rf": 101,
+        "fence": 3.6
+      }
     },
     {
       "id": "STADIUM_NOEUL",
       "name": "노을구장",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 2600,
+      "dist": {
+        "lf": 96,
+        "cf": 121,
+        "rf": 95,
+        "fence": 3
+      }
     },
     {
       "id": "STADIUM_PALGONG",
       "name": "팔공구장",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 1200,
+      "dist": {
+        "lf": 102,
+        "cf": 123,
+        "rf": 103,
+        "fence": 4
+      }
     },
     {
       "id": "STADIUM_SEORAK_HS",
       "name": "설악구장",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 800,
+      "dist": {
+        "lf": 103,
+        "cf": 123,
+        "rf": 101,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_SEOUL_COBRAS",
       "name": "코브라돔",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 23750,
+      "dist": {
+        "lf": 97,
+        "cf": 120,
+        "rf": 94,
+        "fence": 2.6
+      }
     },
     {
       "id": "STADIUM_SEOUL_GUARDIANS",
       "name": "가디언스필드",
-      "parkFactor": "투수친화"
+      "parkFactor": "투수친화",
+      "capacity": 16000,
+      "dist": {
+        "lf": 103,
+        "cf": 123,
+        "rf": 102,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_SEOUL_ROYALS",
       "name": "로열파크",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 23000,
+      "dist": {
+        "lf": 99,
+        "cf": 124,
+        "rf": 97,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_SUWON_KNIGHTS",
       "name": "나이츠아레나",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 20000,
+      "dist": {
+        "lf": 94,
+        "cf": 116,
+        "rf": 96,
+        "fence": 3.2
+      }
     },
     {
       "id": "STADIUM_TAEJONG",
       "name": "태종구장",
-      "parkFactor": "중립"
+      "parkFactor": "중립",
+      "capacity": 1500,
+      "dist": {
+        "lf": 99,
+        "cf": 123,
+        "rf": 98,
+        "fence": 3.5
+      }
     },
     {
       "id": "STADIUM_YEONGSAN",
       "name": "영산구장",
-      "parkFactor": "타자친화"
+      "parkFactor": "타자친화",
+      "capacity": 1400,
+      "dist": {
+        "lf": 96,
+        "cf": 117,
+        "rf": 98,
+        "fence": 2.4
+      }
     }
   ],
   "clubs": [
@@ -1330,10 +1519,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "제주 연고 고교 팀. 숫자로 상대를 읽는다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1970,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -1384,10 +1573,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "전주 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1928,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -1443,10 +1632,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "수원 연고 고교 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1960,
         "budget": 270000000,
         "seasonRanks": [
           {
@@ -1470,7 +1659,18 @@
             "rank": 1
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-2",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-5",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": [
           {
             "with": "TEAM_HS_SONGRIM",
@@ -1502,10 +1702,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "천안 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1957,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -1556,10 +1756,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "광주 연고 고교 팀. 타선의 힘으로 밀어붙인다. 오랜 강호다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1971,
         "budget": 460000000,
         "seasonRanks": [
           {
@@ -1616,10 +1816,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "춘천 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1961,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -1670,10 +1870,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1996,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -1724,10 +1924,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "창원 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1979,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -1778,10 +1978,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "성남 연고 고교 팀. 마운드로 버틴다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1985,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -1832,10 +2032,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "김해 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1951,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -1886,10 +2086,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "인천 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1939,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -1940,10 +2140,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1962,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -1994,10 +2194,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 타선의 힘으로 밀어붙인다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1981,
         "budget": 270000000,
         "seasonRanks": [
           {
@@ -2069,10 +2269,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "원주 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1952,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2096,7 +2296,18 @@
             "rank": 2
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-2",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-4",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -2123,10 +2334,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "진주 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1977,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -2177,10 +2388,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1955,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2231,10 +2442,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "대구 연고 고교 팀. 숫자로 상대를 읽는다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1923,
         "budget": 460000000,
         "seasonRanks": [
           {
@@ -2285,10 +2496,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "부산 연고 고교 팀. 젊은 선수를 키워 쓴다. 오랜 강호다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1976,
         "budget": 460000000,
         "seasonRanks": [
           {
@@ -2312,7 +2523,18 @@
             "rank": 2
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-2",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-4",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -2339,10 +2561,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 젊은 선수를 키워 쓴다. 오랜 강호다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1965,
         "budget": 460000000,
         "seasonRanks": [
           {
@@ -2398,10 +2620,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1974,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2452,10 +2674,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 마운드로 버틴다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1954,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2506,10 +2728,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "강진 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1962,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -2560,10 +2782,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "김해 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1972,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2614,10 +2836,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "창원 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1990,
         "budget": 118000000,
         "seasonRanks": [
           {
@@ -2673,10 +2895,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "거제 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1934,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -2727,10 +2949,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대전 연고 고교 팀. 제 색이 뚜렷하다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1987,
         "budget": 270000000,
         "seasonRanks": [
           {
@@ -2792,10 +3014,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "부산 연고 고교 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1987,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2846,10 +3068,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "구미 연고 고교 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1943,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -2900,10 +3122,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "금산 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1962,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -2954,10 +3176,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "용인 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1953,
         "budget": 270000000,
         "seasonRanks": [
           {
@@ -2981,7 +3203,13 @@
             "rank": 3
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-3",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -3008,10 +3236,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "김포 연고 고교 팀. 젊은 선수를 키워 쓴다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1976,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3062,10 +3290,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "부산 연고 고교 팀. 숫자로 상대를 읽는다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1981,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3116,10 +3344,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "수원 연고 고교 팀. 제 색이 뚜렷하다. 오랜 강호다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1929,
         "budget": 460000000,
         "seasonRanks": [
           {
@@ -3143,7 +3371,18 @@
             "rank": 2
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-1",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-4",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -3170,10 +3409,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1945,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3224,10 +3463,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "부여 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1972,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -3278,10 +3517,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "강릉 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1934,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -3332,10 +3571,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "경주 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1955,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3386,10 +3625,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대전 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1976,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3440,10 +3679,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "인천 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1932,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3494,10 +3733,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "부산 연고 고교 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1953,
         "budget": 270000000,
         "seasonRanks": [
           {
@@ -3559,10 +3798,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "안동 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1973,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -3613,10 +3852,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "제주 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1960,
         "budget": 40000000,
         "seasonRanks": [
           {
@@ -3640,7 +3879,13 @@
             "rank": 1
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-5",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": [
           {
             "with": "TEAM_HS_SEORAK",
@@ -3672,10 +3917,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1950,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -3726,10 +3971,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "제주 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1939,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -3753,7 +3998,13 @@
             "rank": 2
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-4",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -3780,10 +4031,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1937,
         "budget": 500000000,
         "seasonRanks": [
           {
@@ -3875,10 +4126,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "홍성 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1929,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -3929,10 +4180,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "화순 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1930,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -3983,10 +4234,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "포항 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1968,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4037,10 +4288,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "고양 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1957,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4091,10 +4342,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "담양 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1984,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -4145,10 +4396,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "영주 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1968,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -4199,10 +4450,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "부천 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1972,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4253,10 +4504,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "인천 연고 고교 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1970,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4307,10 +4558,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "창원 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1992,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -4361,10 +4612,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "하남 연고 고교 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1946,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -4415,10 +4666,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 타선의 힘으로 밀어붙인다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1942,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -4469,10 +4720,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "광주 연고 고교 팀. 타선의 힘으로 밀어붙인다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1939,
         "budget": 500000000,
         "seasonRanks": [
           {
@@ -4564,10 +4815,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "광주 연고 고교 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1947,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4618,10 +4869,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "울산 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1946,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -4672,10 +4923,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "청주 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1941,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -4726,10 +4977,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1980,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4780,10 +5031,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "구미 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1986,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -4834,10 +5085,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "무안 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1982,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -4888,10 +5139,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "진주 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1947,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4942,10 +5193,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1934,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -4996,10 +5247,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "여수 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1991,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -5050,10 +5301,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "제주 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1996,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -5077,7 +5328,13 @@
             "rank": 3
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-3",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -5104,10 +5361,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "오산 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1955,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -5158,10 +5415,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대구 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1986,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -5212,10 +5469,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대구 연고 고교 팀. 제 색이 뚜렷하다. 오랜 강호다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1986,
         "budget": 500000000,
         "seasonRanks": [
           {
@@ -5297,10 +5554,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "성남 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1956,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -5351,10 +5608,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "전주 연고 고교 팀. 숫자로 상대를 읽는다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1974,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -5405,10 +5662,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "안양 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1990,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -5459,10 +5716,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "평택 연고 고교 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1973,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -5513,10 +5770,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1967,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -5567,10 +5824,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "청주 연고 고교 팀. 마운드로 버틴다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1949,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -5621,10 +5878,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "안산 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1929,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -5675,10 +5932,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "서귀포 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1970,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -5702,7 +5959,13 @@
             "rank": 4
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-2",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -5729,10 +5992,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "속초 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1989,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -5783,10 +6046,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "천안 연고 고교 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1997,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -5837,10 +6100,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "서귀포 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1924,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -5864,7 +6127,13 @@
             "rank": 5
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-1",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -5891,10 +6160,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "춘천 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1955,
         "budget": 118000000,
         "seasonRanks": [
           {
@@ -5918,7 +6187,23 @@
             "rank": 1
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-1",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-3",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-5",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": [
           {
             "with": "TEAM_HS_HALLA",
@@ -5950,10 +6235,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "순천 연고 고교 팀. 젊은 선수를 키워 쓴다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1945,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -6004,10 +6289,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "시흥 연고 고교 팀. 숫자로 상대를 읽는다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1966,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -6058,10 +6343,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "대구 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1971,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6112,10 +6397,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1941,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -6166,10 +6451,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "인천 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1987,
         "budget": 118000000,
         "seasonRanks": [
           {
@@ -6225,10 +6510,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "수원 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1928,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6279,10 +6564,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "태백 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1995,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -6333,10 +6618,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "울산 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1966,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6387,10 +6672,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "부산 연고 고교 팀. 타선의 힘으로 밀어붙인다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1964,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -6441,10 +6726,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "충주 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1977,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -6495,10 +6780,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "통영 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1936,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -6549,10 +6834,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "전주 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1980,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6603,10 +6888,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "군산 연고 고교 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1927,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6657,10 +6942,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "서울 연고 고교 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1934,
         "budget": 270000000,
         "seasonRanks": [
           {
@@ -6716,10 +7001,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "포항 연고 고교 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1949,
         "budget": 102000000,
         "seasonRanks": [
           {
@@ -6770,10 +7055,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "경산 연고 고교 팀. 타선의 힘으로 밀어붙인다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1956,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6824,10 +7109,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "인천 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1969,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -6878,10 +7163,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "예산 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1942,
         "budget": 210000000,
         "seasonRanks": [
           {
@@ -6932,10 +7217,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "목포 연고 고교 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1927,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -6986,10 +7271,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "대전 연고 고교 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1938,
         "budget": 240000000,
         "seasonRanks": [
           {
@@ -7040,7 +7325,7 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "부산 연고 독립 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2018,
@@ -7094,7 +7379,7 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "대구 연고 독립 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2013,
@@ -7148,7 +7433,7 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "대전 연고 독립 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2014,
@@ -7208,7 +7493,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "광주 연고 독립 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2012,
@@ -7262,7 +7547,7 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "인천 연고 독립 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2019,
@@ -7321,7 +7606,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "파주 연고 독립 팀. 젊은 선수를 키워 쓴다. 최근 몇 해 부쩍 올라섰다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2016,
@@ -7381,7 +7666,7 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "무연고(군소재) 연고 독립 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2011,
@@ -7461,7 +7746,7 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "서울 연고 독립 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2017,
@@ -7520,7 +7805,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "서울 연고 독립 팀. 젊은 선수를 키워 쓴다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2015,
@@ -7590,7 +7875,7 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "원주 연고 독립 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
         "foundedYear": 2020,
@@ -7644,7 +7929,7 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "부산 연고 KBL 팀. 타선의 힘으로 밀어붙인다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1984,
@@ -7677,7 +7962,8 @@
             "with": "TEAM_KBL_GWANGJU_PANTHERS_1",
             "desc": "호남 vs 영남 전통 라이벌"
           }
-        ]
+        ],
+        "parentCompany": "부산해운"
       }
     },
     {
@@ -7703,7 +7989,7 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "부산 연고 KBL 팀. 타선의 힘으로 밀어붙인다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1984,
@@ -7736,7 +8022,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "창원 연고 KBL 팀. 젊은 선수를 키워 쓴다."
       },
       "history": {
         "foundedYear": 2008,
@@ -7769,7 +8055,8 @@
             "with": "TEAM_KBL_DAEGU_SABERS_1",
             "desc": "영남 라이벌"
           }
-        ]
+        ],
+        "parentCompany": "창원기계"
       }
     },
     {
@@ -7795,7 +8082,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "창원 연고 KBL 팀. 젊은 선수를 키워 쓴다."
       },
       "history": {
         "foundedYear": 2008,
@@ -7828,7 +8115,7 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "대구 연고 KBL 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2000,
@@ -7861,7 +8148,8 @@
             "with": "TEAM_KBL_CHANGWON_STARS_1",
             "desc": "영남 라이벌"
           }
-        ]
+        ],
+        "parentCompany": "대구제강"
       }
     },
     {
@@ -7887,7 +8175,7 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "대구 연고 KBL 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2000,
@@ -7920,7 +8208,7 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "대전 연고 KBL 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2018,
@@ -7953,7 +8241,8 @@
             "with": "TEAM_KBL_SUWON_KNIGHTS_1",
             "desc": "신흥 데이터야구 vs 리빌딩, 세대 대비"
           }
-        ]
+        ],
+        "parentCompany": "충청건설"
       }
     },
     {
@@ -7979,7 +8268,7 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "대전 연고 KBL 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
         "foundedYear": 2018,
@@ -8012,7 +8301,7 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "광주 연고 KBL 팀. 제 색이 뚜렷하다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1986,
@@ -8051,7 +8340,8 @@
             "with": "TEAM_KBL_BUSAN_WAVES_1",
             "desc": "호남 vs 영남 전통 라이벌"
           }
-        ]
+        ],
+        "parentCompany": "호남식품"
       }
     },
     {
@@ -8077,7 +8367,7 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "광주 연고 KBL 팀. 제 색이 뚜렷하다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1986,
@@ -8110,7 +8400,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "인천 연고 KBL 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1994,
@@ -8143,7 +8433,8 @@
             "with": "TEAM_KBL_SEOUL_COBRAS_1",
             "desc": "수도권 라이벌"
           }
-        ]
+        ],
+        "parentCompany": "인천중공"
       }
     },
     {
@@ -8169,7 +8460,7 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "인천 연고 KBL 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1994,
@@ -8202,7 +8493,7 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "서울 연고 KBL 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1998,
@@ -8235,7 +8526,8 @@
             "with": "TEAM_KBL_INCHEON_SHARKS_1",
             "desc": "수도권 라이벌"
           }
-        ]
+        ],
+        "parentCompany": "대한전자"
       }
     },
     {
@@ -8261,7 +8553,7 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "서울 연고 KBL 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1998,
@@ -8294,7 +8586,7 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "서울 연고 KBL 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1990,
@@ -8343,7 +8635,8 @@
             "with": "TEAM_KBL_SEOUL_ROYALS_1",
             "desc": "서울 더비 — 최강 자금력 vs 투수왕국"
           }
-        ]
+        ],
+        "parentCompany": "세종화학"
       }
     },
     {
@@ -8369,7 +8662,7 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "서울 연고 KBL 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 1990,
@@ -8402,7 +8695,7 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "서울 연고 KBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "foundedYear": 1982,
@@ -8456,7 +8749,8 @@
             "with": "TEAM_KBL_SEOUL_GUARDIANS_1",
             "desc": "서울 더비 — 최강 자금력 vs 투수왕국"
           }
-        ]
+        ],
+        "parentCompany": "한성물산"
       }
     },
     {
@@ -8482,7 +8776,7 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "서울 연고 KBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "foundedYear": 1982,
@@ -8515,7 +8809,7 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "수원 연고 KBL 팀. 숫자로 상대를 읽는다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2013,
@@ -8559,7 +8853,8 @@
             "with": "TEAM_KBL_DAEJEON_PHANTOMS_1",
             "desc": "신흥 데이터야구 vs 리빌딩, 세대 대비"
           }
-        ]
+        ],
+        "parentCompany": "경기유통"
       }
     },
     {
@@ -8585,7 +8880,7 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "수원 연고 KBL 팀. 숫자로 상대를 읽는다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
         "foundedYear": 2013,
@@ -8618,10 +8913,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "아산 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1978,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -8672,10 +8967,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대전 연고 대학 팀. 제 색이 뚜렷하다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1965,
         "budget": 1360000000,
         "seasonRanks": [
           {
@@ -8742,10 +9037,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "서울 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1984,
         "budget": 1360000000,
         "seasonRanks": [
           {
@@ -8812,10 +9107,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "안산 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1985,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -8866,10 +9161,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대구 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1994,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -8920,10 +9215,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "광주 연고 대학 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1975,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -8979,10 +9274,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "서울 연고 대학 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1969,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -9033,10 +9328,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "김해 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1996,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -9087,10 +9382,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "남양주 연고 대학 팀. 타선의 힘으로 밀어붙인다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1972,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9141,10 +9436,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "원주 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1969,
         "budget": 280000000,
         "seasonRanks": [
           {
@@ -9168,7 +9463,33 @@
             "rank": 1
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-1",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-2",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-3",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-4",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-5",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": [
           {
             "with": "TEAM_UNIV_GYEONGIN",
@@ -9200,10 +9521,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "대구 연고 대학 팀. 숫자로 상대를 읽는다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1965,
         "budget": 2300000000,
         "seasonRanks": [
           {
@@ -9270,10 +9591,10 @@
       },
       "profile": {
         "style": "부상방지/재활특화",
-        "desc": ""
+        "desc": "거제 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1948,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -9324,10 +9645,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "부산 연고 대학 팀. 타선의 힘으로 밀어붙인다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1959,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9378,10 +9699,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "서울 연고 대학 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1986,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9432,10 +9753,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "수원 연고 대학 팀. 마운드로 버틴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1973,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9486,10 +9807,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "안양 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1993,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -9540,10 +9861,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "인천 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1961,
         "budget": 640000000,
         "seasonRanks": [
           {
@@ -9599,10 +9920,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "대전 연고 대학 팀. 제 색이 뚜렷하다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1953,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9653,10 +9974,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "부산 연고 대학 팀. 젊은 선수를 키워 쓴다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1966,
         "budget": 1360000000,
         "seasonRanks": [
           {
@@ -9718,10 +10039,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "안동 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1985,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -9772,10 +10093,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "서울 연고 대학 팀. 젊은 선수를 키워 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1987,
         "budget": 2500000000,
         "seasonRanks": [
           {
@@ -9862,10 +10183,10 @@
       },
       "profile": {
         "style": "스몰볼",
-        "desc": ""
+        "desc": "하남 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1956,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9916,10 +10237,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "서울 연고 대학 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1952,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -9970,10 +10291,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "수원 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1990,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -10024,10 +10345,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "포항 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1964,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10078,10 +10399,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "평택 연고 대학 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1958,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10132,10 +10453,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "무안 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1952,
         "budget": 160000000,
         "seasonRanks": [
           {
@@ -10186,10 +10507,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "진주 연고 대학 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1969,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10240,10 +10561,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "서울 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1984,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -10294,10 +10615,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "여수 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1956,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10348,10 +10669,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "옥천 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1984,
         "budget": 160000000,
         "seasonRanks": [
           {
@@ -10402,10 +10723,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "오산 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1986,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -10456,10 +10777,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "청주 연고 대학 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1956,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10510,10 +10831,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "서귀포 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1955,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -10537,7 +10858,33 @@
             "rank": 1
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-1",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-2",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-3",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-4",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-5",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": []
       }
     },
@@ -10564,10 +10911,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "천안 연고 대학 팀. 타선의 힘으로 밀어붙인다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1991,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -10618,10 +10965,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "춘천 연고 대학 팀. 젊은 선수를 키워 쓴다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1976,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10672,10 +11019,10 @@
       },
       "profile": {
         "style": "수비/짜임새",
-        "desc": ""
+        "desc": "서산 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1960,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -10726,10 +11073,10 @@
       },
       "profile": {
         "style": "공격야구(화력)",
-        "desc": ""
+        "desc": "광주 연고 대학 팀. 타선의 힘으로 밀어붙인다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1975,
         "budget": 1360000000,
         "seasonRanks": [
           {
@@ -10791,10 +11138,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "순천 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1976,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -10845,10 +11192,10 @@
       },
       "profile": {
         "style": "젊은피(세대교체)",
-        "desc": ""
+        "desc": "시흥 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1989,
         "budget": 1080000000,
         "seasonRanks": [
           {
@@ -10899,10 +11246,10 @@
       },
       "profile": {
         "style": "스파르타(혹독훈련)",
-        "desc": ""
+        "desc": "인천 연고 대학 팀. 제 색이 뚜렷하다. 오랜 강호다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1972,
         "budget": 1360000000,
         "seasonRanks": [
           {
@@ -10926,7 +11273,23 @@
             "rank": 1
           }
         ],
-        "titles": [],
+        "titles": [
+          {
+            "season": "S-1",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-3",
+            "competition": "정규리그",
+            "result": "우승"
+          },
+          {
+            "season": "S-5",
+            "competition": "정규리그",
+            "result": "우승"
+          }
+        ],
         "rivals": [
           {
             "with": "TEAM_UNIV_SURI",
@@ -10958,10 +11321,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "부천 연고 대학 팀. 젊은 선수를 키워 쓴다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1949,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -11012,10 +11375,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "수원 연고 대학 팀. 숫자로 상대를 읽는다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1993,
         "budget": 1360000000,
         "seasonRanks": [
           {
@@ -11077,10 +11440,10 @@
       },
       "profile": {
         "style": "데이터중심",
-        "desc": ""
+        "desc": "울산 연고 대학 팀. 숫자로 상대를 읽는다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1980,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -11131,10 +11494,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "통영 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1991,
         "budget": 160000000,
         "seasonRanks": [
           {
@@ -11185,10 +11548,10 @@
       },
       "profile": {
         "style": "투수왕국",
-        "desc": ""
+        "desc": "전주 연고 대학 팀. 마운드로 버틴다. 최근 몇 해 부쩍 올라섰다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1992,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -11244,10 +11607,10 @@
       },
       "profile": {
         "style": "베테랑우대",
-        "desc": ""
+        "desc": "인천 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1960,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -11298,10 +11661,10 @@
       },
       "profile": {
         "style": "근성/언더독",
-        "desc": ""
+        "desc": "영천 연고 대학 팀. 제 색이 뚜렷하다. 가진 것보다 잘한다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1971,
         "budget": 160000000,
         "seasonRanks": [
           {
@@ -11352,10 +11715,10 @@
       },
       "profile": {
         "style": "육성중심",
-        "desc": ""
+        "desc": "목포 연고 대학 팀. 젊은 선수를 키워 쓴다. 가진 것보다 잘한다. 적은 돈으로 버틴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1967,
         "budget": 560000000,
         "seasonRanks": [
           {
@@ -11406,10 +11769,10 @@
       },
       "profile": {
         "style": "전통/정통",
-        "desc": ""
+        "desc": "대전 연고 대학 팀. 제 색이 뚜렷하다. 쓸 때 쓴다."
       },
       "history": {
-        "foundedYear": null,
+        "foundedYear": 1996,
         "budget": 1220000000,
         "seasonRanks": [
           {
@@ -11459,7 +11822,8 @@
         "mediaPressure": "극심",
         "funding": "최상",
         "difficulty": "최상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "뉴욕 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1925,
@@ -11507,7 +11871,10 @@
           }
         ],
         "nationalTitles": 27,
-        "budget": 275900000000
+        "budget": 275900000000,
+        "parentCompany": "홀랜드 패밀리 트러스트",
+        "foundedYear": 1916,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 90,
@@ -11527,7 +11894,7 @@
     },
     {
       "id": "TEAM_ABL_EMPIRE_2",
-      "name": "뉴욕 엠파이어 팜",
+      "name": "뉴욕 엠파이어 (2군)",
       "nameEn": "New York Empire (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_EMPIRE",
@@ -11547,7 +11914,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "뉴욕 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1930,
@@ -11582,7 +11950,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1916,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 90,
@@ -11621,7 +11991,8 @@
         "mediaPressure": "극심",
         "funding": "최상",
         "difficulty": "최상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "보스턴 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1901,
@@ -11667,7 +12038,10 @@
           }
         ],
         "nationalTitles": 9,
-        "budget": 175000000000
+        "budget": 175000000000,
+        "parentCompany": "베이스테이트 스포츠 벤처스",
+        "foundedYear": 1990,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 78,
@@ -11687,7 +12061,7 @@
     },
     {
       "id": "TEAM_ABL_HARBORHAWKS_2",
-      "name": "보스턴 하버호크스 팜",
+      "name": "보스턴 하버호크스 (2군)",
       "nameEn": "Boston HarborHawks (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_HARBORHAWKS",
@@ -11707,7 +12081,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "보스턴 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1906,
@@ -11742,7 +12117,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1990,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 78,
@@ -11781,7 +12158,8 @@
         "mediaPressure": "보통",
         "funding": "상",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "클리블랜드 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1915,
@@ -11820,7 +12198,10 @@
           }
         ],
         "nationalTitles": 2,
-        "budget": 185500000000
+        "budget": 185500000000,
+        "parentCompany": "레이크쇼어 파트너스",
+        "foundedYear": 1945,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 36,
@@ -11840,7 +12221,7 @@
     },
     {
       "id": "TEAM_ABL_LAKESPIRITS_2",
-      "name": "클리블랜드 레이크스피리츠 팜",
+      "name": "클리블랜드 레이크스피리츠 (2군)",
       "nameEn": "Cleveland LakeSpirits (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LAKESPIRITS",
@@ -11860,7 +12241,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "클리블랜드 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1920,
@@ -11895,7 +12277,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1945,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 36,
@@ -11934,7 +12318,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "댈러스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1972,
@@ -11976,7 +12361,10 @@
           }
         ],
         "nationalTitles": 5,
-        "budget": 196000000000
+        "budget": 196000000000,
+        "parentCompany": "트리니티 캐피털",
+        "foundedYear": 1935,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 60,
@@ -11996,7 +12384,7 @@
     },
     {
       "id": "TEAM_ABL_LONESTARS_2",
-      "name": "댈러스 론스타스 팜",
+      "name": "댈러스 론스타스 (2군)",
       "nameEn": "Dallas LoneStars (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_LONESTARS",
@@ -12016,7 +12404,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "댈러스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1977,
@@ -12051,7 +12440,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1935,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 60,
@@ -12090,7 +12481,8 @@
         "mediaPressure": "보통",
         "funding": "상",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "디트로이트 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1901,
@@ -12131,7 +12523,10 @@
           }
         ],
         "nationalTitles": 4,
-        "budget": 206500000000
+        "budget": 206500000000,
+        "parentCompany": "그레이트레이크 인더스트리",
+        "foundedYear": 1947,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 52,
@@ -12151,7 +12546,7 @@
     },
     {
       "id": "TEAM_ABL_MOTORWOLVES_2",
-      "name": "디트로이트 모터울브즈 팜",
+      "name": "디트로이트 모터울브즈 (2군)",
       "nameEn": "Detroit MotorWolves (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOTORWOLVES",
@@ -12171,7 +12566,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "디트로이트 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1906,
@@ -12206,7 +12602,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1947,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 52,
@@ -12245,7 +12643,8 @@
         "mediaPressure": "보통",
         "funding": "상",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "마이애미 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1993,
@@ -12284,7 +12683,10 @@
           }
         ],
         "nationalTitles": 2,
-        "budget": 165200000000
+        "budget": 165200000000,
+        "parentCompany": "선코스트 벤처스",
+        "foundedYear": 1974,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 58,
@@ -12304,7 +12706,7 @@
     },
     {
       "id": "TEAM_ABL_WAVERIDERS_2",
-      "name": "마이애미 웨이브라이더스 팜",
+      "name": "마이애미 웨이브라이더스 (2군)",
       "nameEn": "Miami WaveRiders (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WAVERIDERS",
@@ -12324,7 +12726,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "마이애미 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1998,
@@ -12359,7 +12762,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1974,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 58,
@@ -12398,7 +12803,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "시애틀 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1977,
@@ -12436,7 +12842,10 @@
           }
         ],
         "nationalTitles": 1,
-        "budget": 238000000000
+        "budget": 238000000000,
+        "parentCompany": "노스웨스트 홀딩스",
+        "foundedYear": 1970,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 56,
@@ -12456,7 +12865,7 @@
     },
     {
       "id": "TEAM_ABL_RAINARROWS_2",
-      "name": "시애틀 레인애로우스 팜",
+      "name": "시애틀 레인애로우스 (2군)",
       "nameEn": "Seattle RainArrows (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RAINARROWS",
@@ -12476,7 +12885,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "시애틀 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1982,
@@ -12511,7 +12921,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1970,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 56,
@@ -12550,7 +12962,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "시카고 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1900,
@@ -12593,7 +13006,10 @@
           }
         ],
         "nationalTitles": 6,
-        "budget": 79800000000
+        "budget": 79800000000,
+        "parentCompany": "미들랜드 트러스트",
+        "foundedYear": 1933,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 75,
@@ -12613,7 +13029,7 @@
     },
     {
       "id": "TEAM_ABL_WINDBEARS_2",
-      "name": "시카고 윈드베어스 팜",
+      "name": "시카고 윈드베어스 (2군)",
       "nameEn": "Chicago WindBears (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_WINDBEARS",
@@ -12633,7 +13049,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "시카고 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1905,
@@ -12668,7 +13085,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1933,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 75,
@@ -12707,7 +13126,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "덴버 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1993,
@@ -12745,7 +13165,10 @@
           }
         ],
         "nationalTitles": 1,
-        "budget": 217000000000
+        "budget": 217000000000,
+        "parentCompany": "로키마운틴 파트너스",
+        "foundedYear": 1971,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 54,
@@ -12765,7 +13188,7 @@
     },
     {
       "id": "TEAM_ABL_MOUNTAINPEAKS_2",
-      "name": "덴버 마운틴픽스 팜",
+      "name": "덴버 마운틴픽스 (2군)",
       "nameEn": "Denver MountainPeaks (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_MOUNTAINPEAKS",
@@ -12785,7 +13208,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "덴버 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1998,
@@ -12820,7 +13244,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1971,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 54,
@@ -12859,7 +13285,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "휴스턴 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1962,
@@ -12899,7 +13326,10 @@
           }
         ],
         "nationalTitles": 3,
-        "budget": 148400000000
+        "budget": 148400000000,
+        "parentCompany": "걸프코스트 에너지",
+        "foundedYear": 1953,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 58,
@@ -12919,7 +13349,7 @@
     },
     {
       "id": "TEAM_ABL_SPACECOMETS_2",
-      "name": "휴스턴 스페이스코밋츠 팜",
+      "name": "휴스턴 스페이스코밋츠 (2군)",
       "nameEn": "Houston SpaceComets (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SPACECOMETS",
@@ -12939,7 +13369,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "휴스턴 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1967,
@@ -12974,7 +13405,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1953,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 58,
@@ -13013,7 +13446,8 @@
         "mediaPressure": "극심",
         "funding": "최상",
         "difficulty": "최상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "로스앤젤레스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1958,
@@ -13057,7 +13491,10 @@
           }
         ],
         "nationalTitles": 7,
-        "budget": 156800000000
+        "budget": 156800000000,
+        "parentCompany": "퍼시픽 캐피털 파트너스",
+        "foundedYear": 1948,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 88,
@@ -13077,7 +13514,7 @@
     },
     {
       "id": "TEAM_ABL_SUNDRAGONS_2",
-      "name": "LA 선드래곤스 팜",
+      "name": "LA 선드래곤스 (2군)",
       "nameEn": "Los Angeles SunDragons (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_SUNDRAGONS",
@@ -13097,7 +13534,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "로스앤젤레스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1963,
@@ -13132,7 +13570,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1948,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 88,
@@ -13171,7 +13611,8 @@
         "mediaPressure": "보통",
         "funding": "상",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "피닉스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1998,
@@ -13209,7 +13650,10 @@
           }
         ],
         "nationalTitles": 1,
-        "budget": 261900000000
+        "budget": 261900000000,
+        "parentCompany": "선벨트 인베스트먼트",
+        "foundedYear": 1969,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 38,
@@ -13229,7 +13673,7 @@
     },
     {
       "id": "TEAM_ABL_DESERTSERPENTS_2",
-      "name": "피닉스 데저트서펀츠 팜",
+      "name": "피닉스 데저트서펀츠 (2군)",
       "nameEn": "Phoenix DesertSerpents (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_DESERTSERPENTS",
@@ -13249,7 +13693,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "피닉스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2003,
@@ -13284,7 +13729,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1969,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 38,
@@ -13323,7 +13770,8 @@
         "mediaPressure": "보통",
         "funding": "상",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "샌디에이고 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1969,
@@ -13359,7 +13807,10 @@
           }
         ],
         "nationalTitles": 0,
-        "budget": 247800000000
+        "budget": 247800000000,
+        "parentCompany": "라호야 홀딩스",
+        "foundedYear": 1984,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 35,
@@ -13379,7 +13830,7 @@
     },
     {
       "id": "TEAM_ABL_COASTALRAYS_2",
-      "name": "샌디에이고 코스털레이스 팜",
+      "name": "샌디에이고 코스털레이스 (2군)",
       "nameEn": "San Diego CoastalRays (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_COASTALRAYS",
@@ -13399,7 +13850,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "샌디에이고 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1974,
@@ -13434,7 +13886,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1984,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 35,
@@ -13473,7 +13927,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "샌프란시스코 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1958,
@@ -13515,7 +13970,10 @@
           }
         ],
         "nationalTitles": 5,
-        "budget": 233800000000
+        "budget": 233800000000,
+        "parentCompany": "골든게이트 벤처스",
+        "foundedYear": 1998,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 60,
@@ -13535,7 +13993,7 @@
     },
     {
       "id": "TEAM_ABL_BAYSEALS_2",
-      "name": "샌프란시스코 베이씰스 팜",
+      "name": "샌프란시스코 베이씰스 (2군)",
       "nameEn": "San Francisco BaySeals (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_BAYSEALS",
@@ -13555,7 +14013,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "샌프란시스코 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1963,
@@ -13590,7 +14049,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1998,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 60,
@@ -13629,7 +14090,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "세인트루이스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1900,
@@ -13677,7 +14139,10 @@
           }
         ],
         "nationalTitles": 11,
-        "budget": 140000000000
+        "budget": 140000000000,
+        "parentCompany": "미시시피 브루잉",
+        "foundedYear": 1921,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 36,
@@ -13697,7 +14162,7 @@
     },
     {
       "id": "TEAM_ABL_RIVERCARDINALS_2",
-      "name": "세인트루이스 리버카디널스 팜",
+      "name": "세인트루이스 리버카디널스 (2군)",
       "nameEn": "St. Louis RiverCardinals (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_RIVERCARDINALS",
@@ -13717,7 +14182,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "세인트루이스 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1905,
@@ -13752,7 +14218,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1921,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 36,
@@ -13791,7 +14259,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "애틀랜타 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1966,
@@ -13830,7 +14299,10 @@
           }
         ],
         "nationalTitles": 2,
-        "budget": 227500000000
+        "budget": 227500000000,
+        "parentCompany": "서던 미디어 네트웍스",
+        "foundedYear": 1927,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 56,
@@ -13850,7 +14322,7 @@
     },
     {
       "id": "TEAM_ABL_PEACHTREEFALCONS_2",
-      "name": "애틀랜타 피치트리팰컨스 팜",
+      "name": "애틀랜타 피치트리팰컨스 (2군)",
       "nameEn": "Atlanta PeachtreeFalcons (Farm)",
       "leagueId": "LEAGUE_ABL",
       "clubId": "CLUB_ABL_PEACHTREEFALCONS",
@@ -13870,7 +14342,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "애틀랜타 연고 ABL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1971,
@@ -13905,7 +14378,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1927,
+        "titles": []
       },
       "proTeamProfile": {
         "ownerSpendingWillingness": 56,
@@ -13924,8 +14399,8 @@
     },
     {
       "id": "TEAM_JBL_CL_NEONCRANES_1",
-      "name": "도쿄 네온 크레인즈 1군",
-      "nameEn": "Tokyo Neon Cranes (1st)",
+      "name": "도쿄 네온 크레인즈",
+      "nameEn": "Tokyo Neon Cranes",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_NEONCRANES",
       "tier": "1군",
@@ -13944,7 +14419,8 @@
         "mediaPressure": "극심",
         "funding": "최상",
         "difficulty": "최상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "도쿄 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1934,
@@ -14003,14 +14479,17 @@
           }
         ],
         "nationalTitles": 22,
-        "budget": 139300000000
+        "budget": 139300000000,
+        "parentCompany": "토와 신문",
+        "foundedYear": 1962,
+        "titles": []
       },
       "power": 5
     },
     {
       "id": "TEAM_JBL_CL_NEONCRANES_2",
-      "name": "도쿄 네온 크레인즈 2군",
-      "nameEn": "Tokyo Neon Cranes (2nd)",
+      "name": "도쿄 네온 크레인즈 (2군)",
+      "nameEn": "Tokyo Neon Cranes (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_NEONCRANES",
       "tier": "2군",
@@ -14029,7 +14508,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "도쿄 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1939,
@@ -14064,13 +14544,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1962,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_CL_TEMPOSTINGS_1",
-      "name": "오사카 템포 스팅스 1군",
-      "nameEn": "Osaka Tempo Stings (1st)",
+      "name": "오사카 템포 스팅스",
+      "nameEn": "Osaka Tempo Stings",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
       "tier": "1군",
@@ -14089,7 +14571,8 @@
         "mediaPressure": "극심",
         "funding": "최상",
         "difficulty": "최상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "오사카 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1936,
@@ -14132,14 +14615,17 @@
           }
         ],
         "nationalTitles": 6,
-        "budget": 98700000000
+        "budget": 98700000000,
+        "parentCompany": "한요 전철",
+        "foundedYear": 1998,
+        "titles": []
       },
       "power": 4
     },
     {
       "id": "TEAM_JBL_CL_TEMPOSTINGS_2",
-      "name": "오사카 템포 스팅스 2군",
-      "nameEn": "Osaka Tempo Stings (2nd)",
+      "name": "오사카 템포 스팅스 (2군)",
+      "nameEn": "Osaka Tempo Stings (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
       "tier": "2군",
@@ -14158,7 +14644,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "오사카 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1941,
@@ -14193,13 +14680,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1998,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_CL_IRONDRAKES_1",
-      "name": "나고야 아이언 드레이크스 1군",
-      "nameEn": "Nagoya Iron Drakes (1st)",
+      "name": "나고야 아이언 드레이크스",
+      "nameEn": "Nagoya Iron Drakes",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
       "tier": "1군",
@@ -14218,7 +14707,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "나고야 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1936,
@@ -14257,14 +14747,17 @@
           }
         ],
         "nationalTitles": 2,
-        "budget": 124400000000
+        "budget": 124400000000,
+        "parentCompany": "주부 신문",
+        "foundedYear": 1953,
+        "titles": []
       },
       "power": 5
     },
     {
       "id": "TEAM_JBL_CL_IRONDRAKES_2",
-      "name": "나고야 아이언 드레이크스 2군",
-      "nameEn": "Nagoya Iron Drakes (2nd)",
+      "name": "나고야 아이언 드레이크스 (2군)",
+      "nameEn": "Nagoya Iron Drakes (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONDRAKES",
       "tier": "2군",
@@ -14283,7 +14776,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "나고야 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1941,
@@ -14318,13 +14812,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1953,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_CL_TIDERAVES_1",
-      "name": "요코하마 타이드 레이브스 1군",
-      "nameEn": "Yokohama Tide Raves (1st)",
+      "name": "요코하마 타이드 레이브스",
+      "nameEn": "Yokohama Tide Raves",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TIDERAVES",
       "tier": "1군",
@@ -14343,7 +14839,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "요코하마 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1950,
@@ -14383,14 +14880,17 @@
           }
         ],
         "nationalTitles": 3,
-        "budget": 104300000000
+        "budget": 104300000000,
+        "parentCompany": "미나토 디지털",
+        "foundedYear": 1978,
+        "titles": []
       },
       "power": 4
     },
     {
       "id": "TEAM_JBL_CL_TIDERAVES_2",
-      "name": "요코하마 타이드 레이브스 2군",
-      "nameEn": "Yokohama Tide Raves (2nd)",
+      "name": "요코하마 타이드 레이브스 (2군)",
+      "nameEn": "Yokohama Tide Raves (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_TIDERAVES",
       "tier": "2군",
@@ -14409,7 +14909,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "요코하마 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1955,
@@ -14444,13 +14945,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1978,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_CL_SILVERWOLVES_1",
-      "name": "고베 실버 울브스 1군",
-      "nameEn": "Kobe Silver Wolves (1st)",
+      "name": "고베 실버 울브스",
+      "nameEn": "Kobe Silver Wolves",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
       "tier": "1군",
@@ -14469,7 +14972,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "고베 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1936,
@@ -14507,14 +15011,17 @@
           }
         ],
         "nationalTitles": 1,
-        "budget": 93100000000
+        "budget": 93100000000,
+        "parentCompany": "롯코 캐피탈",
+        "foundedYear": 1975,
+        "titles": []
       },
       "power": 4
     },
     {
       "id": "TEAM_JBL_CL_SILVERWOLVES_2",
-      "name": "고베 실버 울브스 2군",
-      "nameEn": "Kobe Silver Wolves (2nd)",
+      "name": "고베 실버 울브스 (2군)",
+      "nameEn": "Kobe Silver Wolves (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_SILVERWOLVES",
       "tier": "2군",
@@ -14533,7 +15040,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "고베 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1941,
@@ -14568,13 +15076,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1975,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_CL_IRONSTORMS_1",
-      "name": "히로시마 아이언 스톰즈 1군",
-      "nameEn": "Hiroshima Iron Storms (1st)",
+      "name": "히로시마 아이언 스톰즈",
+      "nameEn": "Hiroshima Iron Storms",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
       "tier": "1군",
@@ -14593,7 +15103,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "히로시마 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1950,
@@ -14633,14 +15144,17 @@
           }
         ],
         "nationalTitles": 3,
-        "budget": 131900000000
+        "budget": 131900000000,
+        "parentCompany": "세토 자동차",
+        "foundedYear": 1952,
+        "titles": []
       },
       "power": 5
     },
     {
       "id": "TEAM_JBL_CL_IRONSTORMS_2",
-      "name": "히로시마 아이언 스톰즈 2군",
-      "nameEn": "Hiroshima Iron Storms (2nd)",
+      "name": "히로시마 아이언 스톰즈 (2군)",
+      "nameEn": "Hiroshima Iron Storms (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_CL_IRONSTORMS",
       "tier": "2군",
@@ -14659,7 +15173,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "히로시마 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1955,
@@ -14694,13 +15209,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1952,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_PL_THUNDERFALCONS_1",
-      "name": "후쿠오카 썬더 팰컨즈 1군",
-      "nameEn": "Fukuoka Thunder Falcons (1st)",
+      "name": "후쿠오카 썬더 팰컨즈",
+      "nameEn": "Fukuoka Thunder Falcons",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
       "tier": "1군",
@@ -14719,7 +15236,8 @@
         "mediaPressure": "극심",
         "funding": "최상",
         "difficulty": "최상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "후쿠오카 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1938,
@@ -14764,14 +15282,17 @@
           }
         ],
         "nationalTitles": 8,
-        "budget": 42500000000
+        "budget": 42500000000,
+        "parentCompany": "큐슈 텔레콤",
+        "foundedYear": 1942,
+        "titles": []
       },
       "power": 2
     },
     {
       "id": "TEAM_JBL_PL_THUNDERFALCONS_2",
-      "name": "후쿠오카 썬더 팰컨즈 2군",
-      "nameEn": "Fukuoka Thunder Falcons (2nd)",
+      "name": "후쿠오카 썬더 팰컨즈 (2군)",
+      "nameEn": "Fukuoka Thunder Falcons (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
       "tier": "2군",
@@ -14790,7 +15311,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "후쿠오카 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1943,
@@ -14825,13 +15347,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1942,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_PL_POLARBEARS_1",
-      "name": "삿포로 폴라 베어스 1군",
-      "nameEn": "Sapporo Polar Bears (1st)",
+      "name": "삿포로 폴라 베어스",
+      "nameEn": "Sapporo Polar Bears",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_POLARBEARS",
       "tier": "1군",
@@ -14850,7 +15374,8 @@
         "mediaPressure": "높음",
         "funding": "상",
         "difficulty": "상",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "삿포로 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2004,
@@ -14889,14 +15414,17 @@
           }
         ],
         "nationalTitles": 2,
-        "budget": 115500000000
+        "budget": 115500000000,
+        "parentCompany": "홋카이 식품",
+        "foundedYear": 1986,
+        "titles": []
       },
       "power": 4
     },
     {
       "id": "TEAM_JBL_PL_POLARBEARS_2",
-      "name": "삿포로 폴라 베어스 2군",
-      "nameEn": "Sapporo Polar Bears (2nd)",
+      "name": "삿포로 폴라 베어스 (2군)",
+      "nameEn": "Sapporo Polar Bears (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_POLARBEARS",
       "tier": "2군",
@@ -14915,7 +15443,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "삿포로 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2009,
@@ -14950,13 +15479,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1986,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
-      "name": "센다이 스피릿 버팔로스 1군",
-      "nameEn": "Sendai Spirit Buffalos (1st)",
+      "name": "센다이 스피릿 버팔로스",
+      "nameEn": "Sendai Spirit Buffalos",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
       "tier": "1군",
@@ -14975,7 +15506,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "센다이 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2005,
@@ -15013,14 +15545,17 @@
           }
         ],
         "nationalTitles": 1,
-        "budget": 79000000000
+        "budget": 79000000000,
+        "parentCompany": "도호쿠 커머스",
+        "foundedYear": 1999,
+        "titles": []
       },
       "power": 3
     },
     {
       "id": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
-      "name": "센다이 스피릿 버팔로스 2군",
-      "nameEn": "Sendai Spirit Buffalos (2nd)",
+      "name": "센다이 스피릿 버팔로스 (2군)",
+      "nameEn": "Sendai Spirit Buffalos (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
       "tier": "2군",
@@ -15039,7 +15574,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "센다이 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2010,
@@ -15074,13 +15610,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1999,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_PL_MARINESOLDIERS_1",
-      "name": "나가사키 마린 솔저스 1군",
-      "nameEn": "Nagasaki Marine Soldiers (1st)",
+      "name": "나가사키 마린 솔저스",
+      "nameEn": "Nagasaki Marine Soldiers",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
       "tier": "1군",
@@ -15099,7 +15637,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "나가사키 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1950,
@@ -15138,14 +15677,17 @@
           }
         ],
         "nationalTitles": 2,
-        "budget": 109900000000
+        "budget": 109900000000,
+        "parentCompany": "히노데 제과",
+        "foundedYear": 1978,
+        "titles": []
       },
       "power": 4
     },
     {
       "id": "TEAM_JBL_PL_MARINESOLDIERS_2",
-      "name": "나가사키 마린 솔저스 2군",
-      "nameEn": "Nagasaki Marine Soldiers (2nd)",
+      "name": "나가사키 마린 솔저스 (2군)",
+      "nameEn": "Nagasaki Marine Soldiers (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
       "tier": "2군",
@@ -15164,7 +15706,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "나가사키 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 1955,
@@ -15199,13 +15742,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1978,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_PL_SEAGULLS_1",
-      "name": "니가타 씨걸스 1군",
-      "nameEn": "Niigata Seagulls (1st)",
+      "name": "니가타 씨걸스",
+      "nameEn": "Niigata Seagulls",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SEAGULLS",
       "tier": "1군",
@@ -15224,7 +15769,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "니가타 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2009,
@@ -15260,14 +15806,17 @@
           }
         ],
         "nationalTitles": 0,
-        "budget": 74500000000
+        "budget": 74500000000,
+        "parentCompany": "시라유키 유업",
+        "foundedYear": 1975,
+        "titles": []
       },
       "power": 3
     },
     {
       "id": "TEAM_JBL_PL_SEAGULLS_2",
-      "name": "니가타 씨걸스 2군",
-      "nameEn": "Niigata Seagulls (2nd)",
+      "name": "니가타 씨걸스 (2군)",
+      "nameEn": "Niigata Seagulls (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SEAGULLS",
       "tier": "2군",
@@ -15286,7 +15835,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "니가타 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2014,
@@ -15321,13 +15871,15 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1975,
+        "titles": []
       }
     },
     {
       "id": "TEAM_JBL_PL_SUNS_1",
-      "name": "오키나와 선즈 1군",
-      "nameEn": "Okinawa Suns (1st)",
+      "name": "오키나와 선즈",
+      "nameEn": "Okinawa Suns",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SUNS",
       "tier": "1군",
@@ -15346,7 +15898,8 @@
         "mediaPressure": "보통",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "낮음"
+        "promoChance": "낮음",
+        "desc": "오키나와 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2011,
@@ -15382,14 +15935,17 @@
           }
         ],
         "nationalTitles": 0,
-        "budget": 83400000000
+        "budget": 83400000000,
+        "parentCompany": "난세이 철도",
+        "foundedYear": 1936,
+        "titles": []
       },
       "power": 3
     },
     {
       "id": "TEAM_JBL_PL_SUNS_2",
-      "name": "오키나와 선즈 2군",
-      "nameEn": "Okinawa Suns (2nd)",
+      "name": "오키나와 선즈 (2군)",
+      "nameEn": "Okinawa Suns (Farm)",
       "leagueId": "LEAGUE_JBL",
       "clubId": "CLUB_JBL_PL_SUNS",
       "tier": "2군",
@@ -15408,7 +15964,8 @@
         "mediaPressure": "낮음",
         "funding": "중",
         "difficulty": "중",
-        "promoChance": "높음"
+        "promoChance": "높음",
+        "desc": "오키나와 연고 JBL 팀. 제 색이 뚜렷하다."
       },
       "history": {
         "founded": 2016,
@@ -15443,7 +16000,9 @@
             "national": ""
           }
         ],
-        "nationalTitles": 0
+        "nationalTitles": 0,
+        "foundedYear": 1936,
+        "titles": []
       }
     }
   ]

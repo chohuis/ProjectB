@@ -777,6 +777,10 @@ export async function processProTeamCallupCalldown(
     rulesFile.rosterRules[leagueId]?.rosterMin ?? 26;
   // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
   const promotionRules = rulesFile.promotionRules;
+  // 등록말소 기간(주). 0이면 예전 동작이다 — 규칙 파일이 정본
+  const lockWeeks = (promotionRules as { demotionLockWeeks?: number })
+    ?.demotionLockWeeks ?? 0;
+  const demotionWeek = g.demotionWeek ?? {};
 
   // 1군·2군 시즌 기록. 없으면 판정이 능력치만 보게 된다
   const leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {};
@@ -805,6 +809,7 @@ export async function processProTeamCallupCalldown(
   const _callupEntries: PlayerEventEntry[] = [];
   const _calldownEntries: PlayerEventEntry[] = [];
 
+  const _demotedIds: string[] = [];
   const label = urgentOnly ? "상시콜업" : "월간승강";
   autoLog(`[${label}] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
 
@@ -816,19 +821,55 @@ export async function processProTeamCallupCalldown(
     const teamId2 = teamId1.replace(/_1$/, "_2");
     const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
+    // ── 부상자 명단(IL) ─────────────────────────────────────
+    //
+    // 🔴 **부상자가 정원을 차지하고 있었다.** 콜업 판정에서는 이미 빼는데
+    //   (`injuredPlayerIds`) 정원 계산에는 남아서, 대체 선수가 올라오면
+    //   상한을 넘었다 — 실측 0~6팀이 34명(JBL 32) 초과.
+    //
+    // 실제 야구의 IL 이 하는 일이 이것이다: **자리를 비운다.**
+    // ⚠ 심각도 `mild` 는 안 넣는다 — 며칠 쉬는 것까지 명단에 올리면
+    //   로스터가 매주 출렁인다. `injuredIds` 가 이미 그 기준이다.
     const { active, farm } = getTeamEntityRefs(
       teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats,
       { seasonYear: s.seasonYear, month: currentMonth });
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+    // IL 등재자 — 이 팀 1군에서 부상·차출로 못 뛰는 사람
+    const ilSet = new Set(injuredIds);
+    const ilCount = active.filter((a) => ilSet.has(a.id)).length;
+    // **정원은 IL 을 뺀 수로 잰다.** 상한 34에 IL 3명이면 37명까지 보유한다
+    const activeCount = active.length - ilCount;
+
+    // ── 등록말소 10일 (실제 KBO 규칙 · 주 단위라 2주) ──────
+    //
+    // 2군에 내린 선수를 바로 다시 올리면 승강이 의미가 없다 — 한 주 부진에
+    // 내렸다가 다음 주에 올린다. 실제 규칙이 이걸 막는다.
+    //
+    // ⚠ **IL 예외를 넣지 않는다.** 처음엔 "부상자가 있으면 락 무시"로
+    //   했는데 **거의 항상 풀렸다** — 실측 팀당 부상 2~3명이라 조건이
+    //   늘 참이다. 락이 사실상 없는 것과 같았다.
+    //   부상 대체는 **순증 콜업**(`urgentSlots`)이 이미 감당한다 —
+    //   2군에 락 안 걸린 후보가 남아 있으므로 못 올리는 일은 없다.
+    const lockedIds = new Set<string>();
+    if (lockWeeks > 0) {
+      for (const f of farm) {
+        const w = demotionWeek[f.id];
+        if (w != null && weekNum - w < lockWeeks) lockedIds.add(f.id);
+      }
+    }
     // 감독 승부처 판단이 "최근 성적을 얼마나 정확히 읽는가"를 정한다 (§7-5 F-1).
     // 낮은 감독은 이름값(OVR)만 보고 올린다
     const callupMod = staffModsOf(teamId1, m.entities).callup;
 
-    // 콜업
-    if (farm.length > 0 && active.length > 0) {
+    // 콜업 — **락 걸린 선수는 후보에서 뺀다.** 엔진이 뽑은 뒤에 거르면
+    //   "뽑았는데 못 올림"이 되어 그 주 콜업이 통째로 빈다
+    const farmOk = lockedIds.size > 0
+      ? farm.filter((f) => !lockedIds.has(f.id))
+      : farm;
+    if (farmOk.length > 0 && active.length > 0) {
       const callupRes = JSON.parse(
         await window.projectB!.evalCallupCandidatesNative(JSON.stringify({
-          teamProfile: profile, farmPlayers: farm, activePlayers: active,
+          teamProfile: profile, farmPlayers: farmOk, activePlayers: active,
           injuredPlayerIds: injuredIds, currentMonth, promotionRules, callupMod,
         }))
       ) as { candidates?: Array<{ playerId: string; replacesPlayerId: string; reason: string }>; error?: string };
@@ -845,20 +886,29 @@ export async function processProTeamCallupCalldown(
       // 팀당 한 명. 나머지 사유(전력 보강·유망주 노출)는 정기의 몫이다
       // `position_gap`도 상시 경로에 넣는다 — 포수가 0명인 팀을 월간 주기까지
       // 기다리게 하면 그 사이 경기가 그대로 돈다 (엔진 쪽 주석 참고)
+      // ⚠ **IL 만큼 더 올린다.** 콜업은 1:1 교체(`replacesPlayerId`)라
+      //   정원이 안 늘어난다 — IL 로 자리를 비워 놔도 채울 길이 없다.
+      //   부상 3명이면 그 주에 최대 3명까지 올린다.
+      //   ⚠ 정원(IL 제외)이 상한을 넘으면 안 올린다 — 순증이 무한하면
+      //     IL 이 로스터 상한을 통째로 무력화한다.
+      const urgentSlots = activeCount >= maxRosterSize
+        ? 0
+        : Math.max(1, Math.min(ilCount, maxRosterSize - activeCount));
       const picked = urgentOnly
         ? callupRes.candidates
             .filter(c => c.reason === "injury_replacement"
                       || c.reason === "slump_replacement"
                       || c.reason === "position_gap")
-            .slice(0, 1)
+            .slice(0, urgentSlots)
         : callupRes.candidates.slice(0, 2);
 
       for (const c of picked) {
         allMoves.push({ id: c.playerId,         teamId: teamId1 });
         allMoves.push({ id: c.replacesPlayerId, teamId: teamId2 });
+        _demotedIds.push(c.replacesPlayerId);
         const upName   = m.entities.find(e => e.id === c.playerId)?.name         ?? c.playerId;
         const downName = m.entities.find(e => e.id === c.replacesPlayerId)?.name ?? c.replacesPlayerId;
-        const upOvr    = Math.round(farm.find(f => f.id === c.playerId)?.ovr ?? 0);
+        const upOvr    = Math.round(farmOk.find(f => f.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜업] ${teamShort}: ${upName}(2군→1군,OVR:${upOvr}) ↑ | ${downName}(1군→2군) ↓ | 사유: ${c.reason}`);
         _callupEntries.push({ npcId: c.playerId, name: upName, fromTeamId: teamId2, toTeamId: teamId1, detail: `OVR:${upOvr} | ${c.reason}` });
         if (teamId1 === g.protagonist.teamId) logs.push(`[W${weekNum}] 팀 콜업: ${upName}`);
@@ -868,11 +918,21 @@ export async function processProTeamCallupCalldown(
     // 콜다운 — 정기에만. 상시가 같이 돌면 매주 로스터가 출렁인다.
     // 하한 아래로는 안 내린다 (규칙 파일의 rosterMin) — 콜업은 1:1 교체라
     // 정원을 안 늘리는데 콜다운만 나가면 1군이 마른다
-    if (!urgentOnly && active.length > minRosterSize) {
+    // ⚠ **IL 을 뺀 수로 본다.** 부상자를 세면 하한을 넘은 줄 알고 내리는데,
+    //   실제로 뛸 수 있는 사람은 그보다 적어 1군이 마른다.
+    //
+    // 🔴 **정원을 넘으면 상시에도 내린다.** 콜다운이 정기(월 첫 주)에만
+    //   최대 2명이라 순증을 못 따라갔다 — 실측 4~12팀이 상한 초과.
+    //   ⚠ IL 이 만든 문제가 아니다. IL 전에도 0~6팀이 넘었고 IL 이 그걸
+    //     드러냈다. 상한이 원래 안 지켜지고 있었다.
+    //   ⚠ **초과일 때만** 상시로 돈다 — 늘 돌면 매주 로스터가 출렁인다
+    //     (바로 위 주석의 경고다).
+    const overCap = activeCount > maxRosterSize;
+    if ((!urgentOnly || overCap) && activeCount > minRosterSize) {
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
-          currentRosterSize: active.length, maxRosterSize, promotionRules, callupMod,
+          currentRosterSize: activeCount, maxRosterSize, promotionRules, callupMod,
         }))
       ) as { candidates?: Array<{ playerId: string }>; error?: string };
 
@@ -880,10 +940,15 @@ export async function processProTeamCallupCalldown(
         throw new Error(`[승강] 콜다운 판정 실패 ${teamId1}: ${calldownRes.error ?? "candidates 없음"}`);
       }
 
-      for (const c of calldownRes.candidates.slice(0, 2)) {
+      // 초과분만큼 내린다. 2명 고정이면 크게 넘친 팀이 여러 주 걸린다
+      const cutN = overCap
+        ? Math.max(2, activeCount - maxRosterSize)
+        : 2;
+      for (const c of calldownRes.candidates.slice(0, cutN)) {
         // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어
         // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
+        _demotedIds.push(c.playerId);
         const cdName = m.entities.find(e => e.id === c.playerId)?.name ?? c.playerId;
         const cdOvr  = Math.round(active.find(a => a.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜다운] ${teamShort}: ${cdName}(1군→2군,OVR:${cdOvr}) ↓`);
@@ -894,6 +959,33 @@ export async function processProTeamCallupCalldown(
   }
 
   let _callupDbOk = true;
+  // 🔴 **내려간 주차를 남긴다.** 이걸 안 저장하면 등록말소 기간을 못 잰다 —
+  //   `demotionWeek` 는 세이브에도 실린다(앱을 껐다 켜도 유지).
+  if (_demotedIds.length > 0) gameStore.markDemotions(_demotedIds, weekNum);
+
+  // 등록말소 소식 — **주인공 팀 것만.** 리그 전체를 보내면 주당 수십 통이다.
+  // ⚠ 기간(`lockWeeks`)을 문장에 넣는다 — 규칙 파일 값이 바뀌면 문장도 바뀐다.
+  {
+    const myTeam = g.protagonist.teamId;
+    const mine = _demotedIds.filter((id) =>
+      id === g.protagonist.id
+      || (namedMap.get(id)?.currentTeam ?? "") === myTeam);
+    if (mine.length > 0 && lockWeeks > 0) {
+      const names = mine.map((id) =>
+        namedMap.get(id)?.name ?? m.entities.find((e) => e.id === id)?.name ?? id);
+      gameStore.addMessage({
+        id: `msg-demote-${s.seasonYear}-w${weekNum}-${mine[0]}`,
+        category: "system",
+        sender: "구단 사무국",
+        subject: `2군 등록말소 ${names.length}명`,
+        preview: `${names.slice(0, 2).join(", ")}${names.length > 2 ? ` 외 ${names.length - 2}명` : ""}`,
+        body: `${names.join("\n")}\n\n${lockWeeks}주간 1군 재등록이 불가하다.`,
+        createdAt: `W${weekNum}`,
+        readAt: null,
+      });
+    }
+  }
+
   if (allMoves.length > 0) {
     // 팀 이동을 gameStore.npcs에 반영 → connectToGameStore 구독이 entities 자동 갱신
     //
@@ -1482,6 +1574,41 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
               + (sg.compensationMoney > 0 ? ` | 보상금 ${sg.compensationMoney.toLocaleString()}만` : "");
 
           autoLog(`[FA계약] ${sg.name} | ${stayed ? "잔류" : "이적"} → ${sg.toTeamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "")} | ${detail}`);
+
+          // 보상선수·보상금 소식 — **우리 팀이 주거나 받을 때만.**
+          // ⚠ 리그 전체 FA 계약은 한 해 수십 건이다. 보상이 오간 것만,
+          //   그중에서도 우리 팀이 걸린 것만 보낸다.
+          {
+            const myT = g.protagonist.teamId;
+            const gave = sg.fromTeamId === myT;   // 우리가 내준다
+            const got  = sg.toTeamId === myT;     // 우리가 데려온다
+            const hasComp = !!sg.compensationNpcId || sg.compensationMoney > 0;
+            if (!stayed && hasComp && (gave || got)) {
+              const compName = sg.compensationNpcId
+                ? (m.entities.find((e) => e.id === sg.compensationNpcId)?.name
+                   ?? sg.compensationNpcId)
+                : null;
+              const lines = [
+                `■ ${sg.name} (${sg.grade}등급) ${gave ? "이적" : "영입"}`,
+                "",
+                compName ? `보상선수  ${compName}` : "보상선수  없음(보상금만)",
+                sg.compensationMoney > 0
+                  ? `보상금    ${sg.compensationMoney.toLocaleString()}만원` : "",
+              ].filter(Boolean);
+              gameStore.addMessage({
+                id: `msg-facomp-${s.seasonYear}-${sg.npcId}`,
+                category: "system",
+                sender: "리그 사무국",
+                subject: gave
+                  ? `FA 보상 — ${sg.name} 이적`
+                  : `FA 보상 — ${sg.name} 영입`,
+                preview: compName ? `보상선수 ${compName}` : "보상금 지급",
+                body: lines.join(String.fromCharCode(10)),
+                createdAt: `W${s.currentWeek}`,
+                readAt: null,
+              });
+            }
+          }
           _faSignEntries.push({
             npcId: sg.npcId, name: sg.name,
             fromTeamId: sg.fromTeamId, fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,

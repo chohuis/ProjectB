@@ -78,12 +78,17 @@ declare global {
         opponentLineup?: MatchBatterStats[];
         myTeamLineup?: MatchBatterStats[];
         homeLineup?: MatchBatterStats[];
+        // 벤치 — 대타 후보. **절대 좌표**다(홈/원정), 별칭이 없다
+        homeBench?: MatchBatterStats[];
+        awayBench?: MatchBatterStats[];
         awayLineup?: MatchBatterStats[];
         myManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };
         opponentManager?: { tacticalIQ?: number; bullpenRead?: number; offenseMind?: number; motivator?: number; clutchDecision?: number };
         weather?: "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
         park?: "neutral" | "pitcher_park" | "hitter_park" | "dome";
         fielders?: MatchFielderStats[];
+        /** 상대 수비진. ⚠ 안 넘기면 양 반 모두 `fielders`가 지킨다 */
+        opponentFielders?: MatchFielderStats[];
       }) => Promise<{ snapshot: MatchSnapshot }>;
       matchStep: (decision: PitchDecision) => Promise<{
         snapshot: MatchSnapshot;
@@ -117,7 +122,24 @@ declare global {
         narrativeLogs?: string[];
         error?: string;
       }>;
-      matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string; batterLines?: unknown[]; playerLines?: unknown[] }>;
+      /**
+       * ⚠ **선언이 현실보다 뒤처져 있었다** (2026-08-28). `match.cjs`는
+       * `protagonistEntered`도 함께 돌려주는데 여기 없어서 화면이
+       * svelte-check 오류를 안고 있었다. `earnedRuns`를 붙이면서 같이 적는다.
+       *
+       * 🔴 `earnedRuns`는 **주인공 자책점**이다(`erSinceEntry`). 이걸 안 돌려줘서
+       * 화면이 `피안타 × 0.35`로 값을 지어내고 있었다.
+       * ⚠ 주인공 줄은 `playerLines`에 없다 — 엔진이 등판 중엔 큐 누적을
+       * 건너뛰고 `*_since_entry`에 따로 쌓는다.
+       */
+      matchFinish: () => Promise<{
+        snapshot: MatchSnapshot;
+        summary: string;
+        batterLines?: { playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }[];
+        playerLines?: unknown[];
+        earnedRuns?: number;
+        protagonistEntered?: boolean;
+      }>;
       matchMoundVisit: () => Promise<{ snapshot: MatchSnapshot } | null>;
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       matchRunSimpleGame: (paramsJson: string) => Promise<string>;
@@ -136,6 +158,9 @@ declare global {
          * (`create_default_fielders(rng, 50.0)`). 리그 실제 수비는 66 수준이라
          * 주인공만 16점 약한 뒤를 두고 던졌다 — 120경기 실측에서 ERA 10.29 → 7.22 */
         fielders?: MatchFielderStats[];
+        /** 🔴 **상대 수비진.** 안 넘기면 엔진이 양 반 모두 `fielders`를 쓴다 —
+         *  **주인공 팀이 공격할 때도 주인공 팀 수비수가 잡는다** (2026-08-29) */
+        opponentFielders?: MatchFielderStats[];
         opponentPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
         npcStarterPitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string; command?: number; velocity?: number; staminaCap?: number; mentalResil?: number; control?: number; movement?: number; clutch?: number; holdRunners?: number; };
       }) => Promise<string>;
@@ -163,7 +188,6 @@ declare global {
       npcGenerateFreshmen:          (p: string) => Promise<string>;
       npcRunDraft:                  (p: string) => Promise<string>;
       npcApplyDraft:                (p: string) => Promise<string>;
-      npcBgHsGraduateDraft:        (p: string) => Promise<string>;
       npcDetermineProtagonistDraft: (p: string) => Promise<string>;
       npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
       npcAdvanceAllGrades:          (p: string) => Promise<string>;
@@ -183,6 +207,7 @@ declare global {
       seasonSaveHistoryLbStats:     (p: string) => Promise<string>;
       seasonGetHistoryYears:        (p: string) => Promise<string>;
       seasonGetHistoryStandings:    (p: string) => Promise<string>;
+      seasonGetTeamHistory:         (p: string) => Promise<string>;
       seasonGetHistoryLbStats:      (p: string) => Promise<string>;
       seasonSaveHistoryPostseason:  (p: string) => Promise<string>;
       seasonGetHistoryPostseason:   (p: string) => Promise<string>;
@@ -233,7 +258,6 @@ declare global {
       weekCalcFacilityEff:  (p: string) => Promise<string>;
       weekCalcInjury:       (p: string) => Promise<string>;
       weekCalcHsAdmissions: (p: string) => Promise<string>;
-      weekCalcTradeRumor:   (p: string) => Promise<string>;
       weekCalcExamResult:   (p: string) => Promise<string>;
       weekCalcMilitary:     (p: string) => Promise<string>;
       weekCalcNpcFallback:  (p: string) => Promise<string>;

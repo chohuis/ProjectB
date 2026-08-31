@@ -71,6 +71,8 @@ export declare function generateFreshmenNative(paramsJson: string): string
 /** FA 시장 정산 — 등급·계약·보상선수를 한 번에 */
 export declare function resolveFaMarketNative(paramsJson: string): string
 /** 주간 수입·지출·세금. `money`에 더할 순현금을 낸다 */
+export declare function calcClubExpenseNative(paramsJson: string): string
+export declare function calcClubRevenueNative(paramsJson: string): string
 export declare function calcWeeklyFinanceNative(paramsJson: string): string
 /** 명성 연동 스폰서 오퍼. 학생·독립은 빈 결과 (아마추어 규정) */
 export declare function calcSponsorOffersNative(paramsJson: string): string
@@ -95,8 +97,6 @@ export declare function runDraftNative(paramsJson: string): string
 /** 드래프트 결과 NPC에 적용 */
 export declare function applyDraftNative(paramsJson: string): string
 /** 배경 고교 졸업생 드래프트 시뮬레이션 */
-export declare function bgHsGraduateDraftNative(paramsJson: string): string
-/** 주인공 드래프트 결과 결정 */
 export declare function determineProtagonistDraftNative(paramsJson: string): string
 /** 주인공 학년 진급 */
 export declare function advanceProtagonistGradeNative(paramsJson: string): string
@@ -173,7 +173,12 @@ export declare function formScoreNative(paramsJson: string): string
  *
  * ⚠ **공백이 있는 팀의 선수만 보낸다.** 전량(7,332명)을 주마다 왕복시키면
  * 이 프로젝트가 줄인 IPC를 도로 까먹는다. 공백은 리그당 1~4팀이다.
+ * 팀 안 등번호를 유일하게 만든다 — **문제가 있는 팀의 선수만 보낸다.**
+ *
+ * ⚠ 팀 선수를 **모두** 보내야 한다. 빈 번호를 팀 단위로 세므로 일부만
+ *   보내면 이미 쓰는 번호를 다시 준다.
  */
+export declare function fixJerseyNumbersNative(paramsJson: string): string
 export declare function fixPositionGapsNative(paramsJson: string): string
 /** NPC 재계약 기간 계산 */
 export declare function calcNpcContractYearsNative(paramsJson: string): string
@@ -286,7 +291,6 @@ export declare function shuffleAblConferencesNative(p: string): string
 export declare function weekCalcFacilityEffNative(p: string): string
 export declare function weekCalcInjuryNative(p: string): string
 export declare function weekCalcHsAdmissionsNative(p: string): string
-export declare function weekCalcTradeRumorNative(p: string): string
 export declare function weekCalcExamResultNative(p: string): string
 export declare function weekCalcWeeklyStudyNative(p: string): string
 export declare function weekCalcSemesterResultNative(p: string): string

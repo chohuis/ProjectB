@@ -99,6 +99,9 @@ pub enum PitchResultCode {
     #[serde(rename = "FLY_OUT")]        FlyOut,
     #[serde(rename = "LINE_OUT")]       LineOut,
     #[serde(rename = "DOUBLE_PLAY")]    DoublePlay,
+    /// 삼중살 — 아웃 셋을 한 번에. **무사 · 주자 둘 이상**에서만 난다.
+    /// ⚠ 실제 KBO 는 시즌 0~2건이다 — 아주 드물게 둔다.
+    #[serde(rename = "TRIPLE_PLAY")]    TriplePlay,
     #[serde(rename = "FIELDING_ERROR")] FieldingError,
     #[serde(rename = "HIT_SINGLE")]     HitSingle,
     #[serde(rename = "HIT_DOUBLE")]     HitDouble,
@@ -108,9 +111,17 @@ pub enum PitchResultCode {
     /// 사구 — **볼넷과 다른 사건이다.** 타수가 아니고, 출루율 분모에 들어가며,
     /// 투수 기록에도 따로 남는다(KBO 투수 표의 HBP).
     #[serde(rename = "HIT_BY_PITCH")]   HitByPitch,
+    /// 수비 방해 — 포수가 타자 스윙을 방해했다. 타자가 1루로 간다.
+    ///
+    /// ⚠ **타수가 아니다**(볼넷과 같은 취급). 결과 코드가 따로 있어야
+    ///   타율 분모가 안 부푼다.
+    /// ⚠ 주루 방해와 **다른 사건**이다 — 저쪽은 야수가 주자를 막는다.
+    #[serde(rename = "INTERFERENCE")]   Interference,
     /// 희생번트 — 타수가 아니다. `bunting` 능력치가 성공을 가른다.
     /// 🔴 그 능력치는 성장 엔진에 **있는데 경기에서 안 쓰이고 있었다.**
     #[serde(rename = "SAC_BUNT")]       SacBunt,
+    /// 스퀴즈 — 3루 주자를 번트로 불러들인다. `SacBunt` 와 진루가 다르다
+    SqueezeBunt,
     /// 희생플라이 — 타수가 아니다. 3루 주자가 뜬공에 홈으로 들어온다.
     /// ⚠ `npc_sim`엔 이 갈래가 이미 있었는데 **아웃으로만 세고** 있었다.
     #[serde(rename = "SAC_FLY")]        SacFly,
@@ -261,10 +272,25 @@ pub struct ManagerStats {
     #[serde(rename = "offenseMind")]    pub offense_mind: f64,
     pub motivator: f64,
     #[serde(rename = "clutchDecision")] pub clutch_decision: f64,
+    /// 감독 스타일이 정하는 작전 배수. **1.0이 예전 동작이다.**
+    ///
+    /// 🔴 스타일 9종이 저장되고 팀 상세에 표시까지 되는데 경기에선
+    ///   아무것도 안 바꿨다 — 공격 지향 감독이 번트를 제일 많이 댈 수
+    ///   있었다.
+    /// ⚠ `serde(default)` 라 **안 넘겨도 조용히 통과한다.**
+    /// ⚠ **TS 는 camelCase 로 보낸다** — 이 구조체엔 `rename_all` 이
+    ///   없어서 이름을 명시해야 한다. 안 붙이면 `bunt_mult` 를
+    ///   기대해서 **조용히 기본값(1.0)으로 돌아간다.**
+    #[serde(default = "one", rename = "buntMult")]  pub bunt_mult: f64,
+    #[serde(default = "one", rename = "stealMult")] pub steal_mult: f64,
 }
+
+fn one() -> f64 { 1.0 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PartialManagerStats {
+    #[serde(default, rename = "buntMult")]  pub bunt_mult: Option<f64>,
+    #[serde(default, rename = "stealMult")] pub steal_mult: Option<f64>,
     #[serde(rename = "tacticalIQ")]     pub tactical_iq: Option<f64>,
     #[serde(rename = "bullpenRead")]    pub bullpen_read: Option<f64>,
     #[serde(rename = "offenseMind")]    pub offense_mind: Option<f64>,
@@ -312,10 +338,51 @@ pub struct PitcherQueue {
 /// 성적이 안 남아서, 통합하면 리그 순위표·성적표가 통째로 빈다.
 /// `sim_game`은 `PitAccum`/`BatAccum`으로 전원을 쌓아 `player_lines`를 만든다 —
 /// 그 계약을 만족해야 순위표가 안 깨진다.
+/// 한 이닝의 투수 성적.
+///
+/// 🔴 예전엔 **합계만** 있어서 6이닝 3실점이 "고르게"인지 "한 이닝에
+///   몰아서"인지 구분이 안 됐다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InningLine {
+    pub inning: i32,
+    pub pc: i32,
+    pub er: i32,
+    pub outs: i32,
+}
+
+/// 구종 하나의 성적.
+///
+/// ⚠ 지표를 늘리면 경기 로그가 무거워진다 — 셋으로 족하다.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PitchMixLine {
+    /// 그 구종을 던진 수
+    pub pc: i32,
+    /// 그 구종으로 잡은 삼진 — **결정구가 뭔지 보여준다**
+    pub k: i32,
+    /// 그 구종으로 맞은 안타
+    pub h: i32,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PitcherLineAccum {
     pub player_id: String,
+    /// 폭투 — KBO 투수 표의 WP. **포일(PB)은 포수 것이라 여기 없다.**
+    #[serde(default)]
+    pub wp: i32,
+    /// 보크 — KBO 투수 표의 BK. **판정만 하고 안 세면 화면에서
+    /// "왜 주자가 갔지"만 남는다.**
+    #[serde(default)]
+    pub bk: i32,
+    /// 구종별 성적. **안 던진 구종은 안 실린다** — 10종을 배열로 두면
+    /// 대부분 0인 칸이 매 경기 로그에 쌓인다.
+    #[serde(default)]
+    pub pitch_mix: std::collections::HashMap<String, PitchMixLine>,
+    /// 이닝별 성적. 몇 회에 무너졌는지는 합계로 못 본다.
+    #[serde(default)]
+    pub by_inning: Vec<InningLine>,
     pub outs: i32,
     pub er: i32,
     pub h: i32,
@@ -337,7 +404,20 @@ pub struct PitcherLineAccum {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BatterLineAccum {
+    /// 도루자 — `sb` 와 짝이다
+    pub cs: i32,
+    /// 포일 — KBO 포수 기록의 PB. **폭투(WP)와 다르다** — 저쪽은
+    /// 투수가 못 던진 것이고 이건 포수가 못 잡은 것이다.
+    /// ⚠ 타자 줄에 있지만 **그 이닝 포수**의 기록이다.
+    #[serde(default)]
+    pub pb: i32,
     pub player_id: String,
+    /// 수비 기록 — **선수별로 한 건도 안 쌓이고 있었다** (2026-08-29).
+    /// `DefenseStat`은 팀 단위 하나라 골든글러브를 뽑을 근거가 없었다.
+    /// ⚠ 전부 `default`다 — 구 세이브의 로그엔 없다.
+    #[serde(default)] pub errors: i32,
+    #[serde(default)] pub assists: i32,
+    #[serde(default)] pub putouts: i32,
     pub ab: i32,
     pub h: i32,
     /// 2루타·3루타 — 엔진은 처음부터 갈라 만드는데 `h`로 뭉개고 있었다
@@ -390,6 +470,13 @@ impl PitcherQueue {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FielderStats {
     pub position: FieldPosition,
+    /// 🔴 **누가 수비했는지** (2026-08-29). 예전엔 `name`뿐이라 —
+    ///   주인공 경기는 **사람 이름**(동명이인을 못 가린다),
+    ///   리그 경기는 **포지션 문자열**(신원이 아예 없다)이었다.
+    ///   실책·보살을 선수에게 달 방법이 없었다.
+    /// ⚠ `default`다 — 구 세이브의 스냅샷엔 없다.
+    #[serde(rename = "playerId", default)]
+    pub player_id: String,
     pub name: String,
     pub fielding: f64,
     pub arm: f64,
@@ -459,11 +546,42 @@ pub enum EntryTrigger {
 
 // ── 인플레이 ──────────────────────────────────────────────────────────────────
 
+/// 구장 담장 — 좌·중·우 거리(m)와 펜스 높이(m).
+///
+/// 🔴 예전엔 `ParkType` 4종(중립·투수친화·타자친화·돔)만 왔고 그것도
+///   타율 보정 ±3점으로만 쓰였다. **거리 개념이 없어 같은 타구가
+///   어느 구장에서나 똑같이 홈런이었다.**
+///
+/// ⚠ 안 넘기면 중립 기본값이다 — 예전과 같게 돈다.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ParkDims {
+    pub lf: f64,
+    pub cf: f64,
+    pub rf: f64,
+    pub fence: f64,
+}
+
+impl Default for ParkDims {
+    /// 중립 구장 평균 — 실측(2026-08-30) `stadiums.json` 중립 9개
+    fn default() -> Self {
+        ParkDims { lf: 98.4, cf: 122.1, rf: 98.6, fence: 3.1 }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BallInPlay {
     #[serde(rename = "hitType")]  pub hit_type: BallHitType,
     pub zone: FieldPosition,
     pub hardness: u8,
+    /// 비거리(m) — **결과가 정해진 뒤 붙는 값이 아니다.** 담장을 넘는지
+    /// 이걸로 가른다.
+    /// ⚠ `default` 다 — 구 세이브 로그엔 없다.
+    #[serde(default)]
+    pub distance: f64,
+    /// 발사각(도). 뜬공이 높고 땅볼이 낮다
+    #[serde(default)]
+    pub launch_angle: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -508,6 +626,13 @@ pub struct MatchState {
     pub match_id: String,
     pub inning: u8,
     pub inning_limit: u8,
+    /// **연장 상한.** 이 회를 넘기고도 동점이면 무승부다.
+    ///
+    /// ⚠ `0`이면 **무제한** — 승부가 날 때까지 한다(예전 동작).
+    ///   대회·포스트시즌은 승자가 나와야 하므로 0으로 둔다.
+    ///   정규리그만 12를 넘긴다(KBO 규정).
+    #[serde(default)]
+    pub extra_inning_limit: u8,
     pub half: HalfInning,
     pub outs: u8,
     pub count: MatchCount,
@@ -529,6 +654,31 @@ pub struct MatchState {
     pub opponent_npc_pitcher: PitcherStats,
 
     pub home_lineup: Vec<BatterStats>,
+    /// 벤치 — 대타·대주자 후보.
+    ///
+    /// ⚠ **비면 교체가 없다** — 예전과 같게 돈다.
+    /// ⚠ `PitcherQueue` 와 같은 방식이다: 쓴 사람은 앞에서부터 소모한다.
+    #[serde(default)]
+    pub home_bench: Vec<BatterStats>,
+    /// 주인공이 **아예 없는 경기**인가 — 리그 시뮬이 그렇다.
+    ///
+    /// 🔴 `role: "SP"` 면 `is_immediate` 로 1구부터 주인공이 던지는데,
+    ///   리그 시뮬은 주인공이 없어서 `pitcher` 를 안 넘긴다. 그래서
+    ///   **기본값 투수(50/52/55…)가 홈 마운드에 섰다** — 홈이 원정보다
+    ///   2.2점을 더 줬고 홈 승률이 33% 였다(같은 로스터끼리 붙여 실측).
+    ///
+    /// ⚠ **추론으로 끄지 않는다.** `tuning.cjs` 는 일부러 `pitcher` 없이
+    ///   합성 주인공을 돌린다 — 그쪽은 기본값이 의도다.
+    /// ⚠ `default` 는 false 다 — 안 넘기면 예전과 완전히 같게 돈다.
+    #[serde(default)]
+    pub no_protagonist: bool,
+    #[serde(default)]
+    pub away_bench: Vec<BatterStats>,
+    /// 이미 교체로 나간 벤치 인원 수 — 앞에서부터 쓴다
+    #[serde(default)]
+    pub home_bench_used: usize,
+    #[serde(default)]
+    pub away_bench_used: usize,
     pub away_lineup: Vec<BatterStats>,
     pub home_lineup_index: usize,
     pub away_lineup_index: usize,
@@ -582,10 +732,22 @@ pub struct MatchState {
 
     pub weather: WeatherType,
     pub park: ParkType,
+    /// 담장 — **안 넘기면 중립 기본값**이라 예전과 같게 돈다
+    #[serde(default)]
+    pub park_dims: ParkDims,
 
     pub is_finished: bool,
     pub logs: Vec<String>,
+    /// **주인공 쪽 수비진.**
+    ///
+    /// 🔴 예전엔 이게 전부였다 — `resolve_fielding_result`가 **반과 무관하게**
+    ///   이 배열만 봤다. 즉 **원정 수비가 존재하지 않았고**, 홈(또는 주인공)
+    ///   팀 9명이 양 팀 이닝을 다 지켰다. 선수별 수비 기록을 달면 그 사람들이
+    ///   **상대 수비 기록까지 먹는다.** (2026-08-29)
     pub fielders: Vec<FielderStats>,
+    /// 상대 쪽 수비진. **비면 예전 동작**(양 반 모두 `fielders`)이다.
+    #[serde(default)]
+    pub opponent_fielders: Vec<FielderStats>,
     pub defense_stat: DefenseStat,
     #[serde(default)]
     pub batter_accum: HashMap<String, BatterStatAccum>,
@@ -702,6 +864,9 @@ pub struct MatchStartOptions {
     /// 이 경기가 속한 리그 — 투구수 상한이 리그별이다 (Phase 5-8)
     pub league_id: Option<String>,
     pub inning_limit: Option<u8>,
+    /// 연장 상한. 없거나 0이면 무제한(예전 동작). 정규리그만 12를 넘긴다
+    #[serde(default)]
+    pub extra_inning_limit: Option<u8>,
     pub protagonist_side: Option<String>,
     pub role: Option<PitcherRole>,
     pub entry_trigger: Option<EntryTrigger>,
@@ -710,6 +875,14 @@ pub struct MatchStartOptions {
     pub opponent_pitcher: Option<PartialPitcherStats>,
     pub npc_starter_pitcher: Option<PartialPitcherStats>,
     pub home_lineup: Option<Vec<BatterStats>>,
+    /// 벤치 — **안 넘기면 교체가 없다**(예전 동작)
+    #[serde(default)]
+    pub home_bench: Option<Vec<BatterStats>>,
+    /// 주인공이 없는 경기 — **리그 시뮬은 반드시 켠다**
+    #[serde(default)]
+    pub no_protagonist: Option<bool>,
+    #[serde(default)]
+    pub away_bench: Option<Vec<BatterStats>>,
     pub away_lineup: Option<Vec<BatterStats>>,
     pub opponent_lineup: Option<Vec<BatterStats>>,      // legacy
     pub my_team_lineup: Option<Vec<BatterStats>>,
@@ -720,7 +893,12 @@ pub struct MatchStartOptions {
     pub opponent_manager: Option<PartialManagerStats>,
     pub weather: Option<WeatherType>,
     pub park: Option<ParkType>,
+    #[serde(default)]
+    pub park_dims: Option<ParkDims>,
     pub fielders: Option<Vec<FielderStats>>,
+    /// 상대 수비진. ⚠ **안 넘기면 상대 이닝도 내 수비수가 지킨다**
+    #[serde(default)]
+    pub opponent_fielders: Option<Vec<FielderStats>>,
     /// 투수진 (C-1). 안 주면 예전처럼 단일 투수로 돈다
     #[serde(default)]
     pub my_pitchers: Option<Vec<PartialPitcherStats>>,
@@ -761,6 +939,15 @@ pub struct GameSummary {
 pub struct FinishMatchResult {
     pub next_state: MatchState,
     pub summary: String,
+    /// ⚠ **`player_lines`가 정본이다.** 이건 `batter_accum`에서 오는 구
+    ///   경로라 2루타·3루타·득점·사구·희생타가 없다. 읽는 쪽이 아직 있어 남긴다
     pub batter_lines: Vec<BatterLine>,
+    /// 🔴 **이 필드가 없었다** (2026-08-28). `match.cjs`가 세 자리에서
+    ///   `result.playerLines ?? []`로 받고 있어 **주인공 경기는 늘 빈 배열**이었다.
+    ///   그래서 (a) 화면이 자책점을 `피안타 × 0.35`로 되돌아가 지어내고,
+    ///   (b) 주인공만 피홈런·사구·득점권이 안 쌓이고,
+    ///   (c) `applyGameOutcome`이 빈 배열을 보고 **경기를 한 판 더 돌려서**
+    ///       그 결과를 동료·상대 성적에 넣었다 — 화면에서 본 경기와 다른 경기다.
+    pub player_lines: Vec<crate::sim_types::PlayerGameLine>,
     pub protagonist_entered: bool,
 }

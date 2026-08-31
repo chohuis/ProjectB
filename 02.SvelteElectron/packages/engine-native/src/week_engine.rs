@@ -611,59 +611,6 @@ pub fn calc_hs_admissions(p: HsAdmissionsPayload) -> HsAdmissionsResult {
     HsAdmissionsResult { univ_passed, indie_passed }
 }
 
-// ── Trade Rumor ───────────────────────────────────────────────
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct TradeRumorPayload {
-    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
-    ///
-    /// 이게 없으면 같은 세이브도 실행마다 다른 결과가 난다 — 계측을 한 번
-    /// 돌려 전후를 비교할 수 없고 간헐 실패를 회귀와 구분할 수 없다.
-    /// 씨앗 만드는 곳은 TS `utils/seedOf.ts` 하나다.
-    #[serde(default)]
-    pub seed: u32,
-    pub era: f64,
-    pub my_rank: usize,
-    pub total_teams: usize,
-    pub week_in_year: u32,
-    pub same_league_teams: Vec<String>,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct TradeRumorResult {
-    pub should_trigger: bool,
-    pub to_team_id: Option<String>,
-}
-
-pub fn calc_trade_rumor(p: TradeRumorPayload) -> TradeRumorResult {
-    let bottom_team = p.my_rank > 0 && p.my_rank >= p.total_teams.saturating_sub(1);
-    let poor_perf   = p.era >= 5.0;
-    let elite_perf  = p.era <= 2.5;
-    let should_check = p.week_in_year >= 12 && p.week_in_year <= 38 && p.week_in_year % 4 == 0;
-
-    if !should_check || (!poor_perf && !elite_perf && !bottom_team) || p.same_league_teams.is_empty() {
-        return TradeRumorResult { should_trigger: false, to_team_id: None };
-    }
-
-    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
-    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
-        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
-    } else {
-        Box::new(rand::thread_rng())
-    };
-    if rng.gen::<f64>() < 0.24 {
-        let idx = rng.gen_range(0..p.same_league_teams.len());
-        TradeRumorResult {
-            should_trigger: true,
-            to_team_id: Some(p.same_league_teams[idx].clone()),
-        }
-    } else {
-        TradeRumorResult { should_trigger: false, to_team_id: None }
-    }
-}
-
 // ── Exam Result ───────────────────────────────────────────────
 
 #[derive(Deserialize)]

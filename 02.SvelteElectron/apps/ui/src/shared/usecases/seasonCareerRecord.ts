@@ -105,6 +105,11 @@ export function applyProtagonistSeasonRecord(seasonYear: number): void {
         oppScore: isHome ? e.result!.awayScore : e.result!.homeScore,
         ip: line.ip, er: line.er, h: line.h, k: line.k, bb: line.bb,
         decision: line.decision, pitchCount: line.pitchCount,
+        // ⚠ **여기서 안 실으면 화면이 못 본다.** 엔진이 세도 등판
+        //   기록에 안 담기면 선수 상세에서 볼 자리가 없다 — 도루자에서
+        //   `accumulateStats` 를 빠뜨려 0건이었던 것과 같은 층이다.
+        pitchMix: line.pitchMix,
+        byInning: line.byInning,
       } as CareerGameLogEntry;
     })
     .filter((g): g is CareerGameLogEntry => g != null);

@@ -181,6 +181,11 @@
             oppScore:   isHome ? e.result!.awayScore : e.result!.homeScore,
             ip: line.ip, er: line.er, h: line.h, k: line.k, bb: line.bb,
             decision: line.decision, pitchCount: line.pitchCount,
+            // ⚠ **같은 모양을 두 곳에서 만든다** — 여기와
+            //   `seasonCareerRecord.ts`. 한쪽만 채우면 합집합 타입이 돼서
+            //   화면이 그 칸을 못 읽는다(svelte-check 가 잡았다).
+            pitchMix: line.pitchMix,
+            byInning: line.byInning,
           };
         });
     }
@@ -189,6 +194,28 @@
 
   const GAME_LOG_PAGE_SIZE = 5;
   let gameLogPage = 0;
+
+  /** 구종 한글 이름 — 엔진 키(소문자)와 짝이다 */
+  const PITCH_KO: Record<string, string> = {
+    fastball: "직구", sinker: "싱커", cutter: "커터", slider: "슬라",
+    curve: "커브", changeup: "체인지", splitter: "스플",
+    forkball: "포크", screwball: "스크류", knuckleball: "너클",
+  };
+
+  /**
+   * 그 등판에서 제일 많이 던진 구종 둘.
+   *
+   * ⚠ 배경 리그 경기엔 구종이 없다 — 그땐 `—` 다.
+   */
+  function mixLabel(mix?: Record<string, { pc: number; k: number; h: number }>): string {
+    if (!mix) return "—";
+    const rows = Object.entries(mix).sort((a, b) => b[1].pc - a[1].pc).slice(0, 2);
+    if (rows.length === 0) return "—";
+    const total = Object.values(mix).reduce((n, v) => n + v.pc, 0) || 1;
+    return rows
+      .map(([k, v]) => `${PITCH_KO[k] ?? k} ${Math.round((v.pc / total) * 100)}%`)
+      .join(" · ");
+  }
   $: if (selectedYearStr) gameLogPage = 0;
   $: totalGamePages = Math.ceil(selectedSeasonGames.length / GAME_LOG_PAGE_SIZE);
   $: pagedGames = selectedSeasonGames.slice(
@@ -484,6 +511,44 @@
               </div>
             {/each}
           </div>
+        {:else if selectedSeasonStats?.type === "batter"}
+          <!-- 🔴 **타자 분기가 아예 없었다** (2026-08-28). 집계는 되는데
+               표시할 코드가 없어서 주인공이 타자면 "시즌 누적 집계 중"만
+               떴다. `PlayerDetailModal`엔 있었다 — 두 화면이 갈려 있었다. -->
+          <div class="record-grid">
+            {#each [
+              ["G",   selectedSeasonStats.g],
+              ["PA",  selectedSeasonStats.pa],
+              ["AB",  selectedSeasonStats.ab],
+              ["H",   selectedSeasonStats.h],
+              // ⚠ **없는 것과 0을 가른다** — 구 세이브엔 장타 수가 없다
+              ["2B",  selectedSeasonStats.b2 ?? "—"],
+              ["3B",  selectedSeasonStats.b3 ?? "—"],
+              ["HR",  selectedSeasonStats.hr],
+              ["R",   selectedSeasonStats.r ?? "—"],
+              ["RBI", selectedSeasonStats.rbi],
+              ["SB",  selectedSeasonStats.sb],
+              ["BB",  selectedSeasonStats.bb],
+              ["K",   selectedSeasonStats.k],
+              ["HBP", selectedSeasonStats.hbp ?? "—"],
+              ["SAC", selectedSeasonStats.sac ?? "—"],
+              ["SF",  selectedSeasonStats.sf  ?? "—"],
+              ["AVG", rateLabel(selectedSeasonStats.avg)],
+              ["OBP", rateLabel(selectedSeasonStats.obp)],
+              ["SLG", rateLabel(selectedSeasonStats.slg)],
+              ["OPS", rateLabel(selectedSeasonStats.ops)],
+              // 수비 — ⚠ 없는 것과 0을 가른다(구 세이브엔 없다)
+              ["E",   selectedSeasonStats.e  ?? "—"],
+              ["A",   selectedSeasonStats.a  ?? "—"],
+              ["PO",  selectedSeasonStats.po ?? "—"],
+              ["FPCT", selectedSeasonStats.fpct == null ? "—" : rateLabel(selectedSeasonStats.fpct)],
+            ] as [lbl, val]}
+              <div class="record-item">
+                <span class="rec-label">{lbl}</span>
+                <strong class="rec-value">{val ?? "-"}</strong>
+              </div>
+            {/each}
+          </div>
         {:else if selectedRecord?.statLine}
           <p class="stat-line-text">{selectedRecord.statLine}</p>
         {:else}
@@ -512,7 +577,7 @@
               <thead>
                 <tr>
                   <th>주차</th><th>상대</th><th>결과</th><th>점수</th>
-                  <th>IP</th><th>H</th><th>BB</th><th>K</th><th>ER</th><th>투구수</th>
+                  <th>IP</th><th>H</th><th>BB</th><th>K</th><th>ER</th><th>투구수</th><th>주무기</th>
                 </tr>
               </thead>
               <tbody>
@@ -528,6 +593,10 @@
                     <td>{g.k ?? '-'}</td>
                     <td>{g.er ?? '-'}</td>
                     <td>{g.pitchCount ?? '—'}</td>
+                    <!-- 🔴 **무슨 공을 던졌나** — `pitch_type` 이 매 투구에
+                         있는데 아무도 안 세서, 구종 목록은 뜨지만 실제로
+                         뭘 던졌는지는 알 수 없었다 -->
+                    <td class="mix-cell">{mixLabel(g.pitchMix)}</td>
                   </tr>
                 {/each}
               </tbody>

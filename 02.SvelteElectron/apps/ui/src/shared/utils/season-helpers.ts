@@ -2,9 +2,33 @@ import type { LeagueSeasonState, MatchResult, PlayerGameLine, Standing } from ".
 import type { BatterSeasonStats, PlayerSeasonStats, PitcherSeasonStats } from "../types/save";
 import { calcAvg, calcEra, calcOps, calcWhip } from "../types/season";
 
+/**
+ * 승률 — 무승부는 분모에서 뺀다(야구 규칙).
+ *
+ * ⚠ **표를 두 곳에 두지 않는다.** 순위표 승률(`updateStandings`)도 같은 식이다.
+ */
+/**
+ * 수비율 — `(자살 + 보살) / (자살 + 보살 + 실책)`.
+ *
+ * ⚠ 기회가 없으면 0이다. 1로 두면 **한 번도 안 잡은 선수가 완벽한 수비수**가 된다.
+ */
+export function fpctOf(po: number, a: number, e: number): number {
+  const chances = po + a + e;
+  return chances > 0 ? Math.round(((po + a) / chances) * 1000) / 1000 : 0;
+}
+
+export function winPctOf(w: number, l: number): number {
+  const n = w + l;
+  return n > 0 ? Math.round((w / n) * 1000) / 1000 : 0;
+}
+
 export function migrateLeagueState(ls: Partial<LeagueSeasonState>): LeagueSeasonState {
   return {
     standings:         ls.standings         ?? [],
+    // ⚠ **여기서 정리하지 않는다.** 이 함수는 **경기마다** 돈다
+    //   (`backgroundLeague`가 경기당 한 번). 전 리그 성적을 매번 훑으면
+    //   주 진행이 그만큼 느려진다 — 정리는 **로드 때 한 번**이다
+    //   (`seasonStore.hydrateFromSlot`).
     stats:             ls.stats             ?? {},
     playerConditions:  ls.playerConditions  ?? {},
     teamRotationIndex: ls.teamRotationIndex ?? {},
@@ -26,6 +50,8 @@ export function sanitizeStatsRecord(
         sv: safeN(s.sv), hd: safeN(s.hd), ip,
         er: safeN(s.er), h: safeN(s.h), k: safeN(s.k), bb: safeN(s.bb),
         era: calcEra(safeN(s.er), ip), whip: calcWhip(safeN(s.bb), safeN(s.h), ip),
+        // ⚠ 파생값이라 저장된 걸 안 믿는다 — 승·패에서 매번 다시 만든다
+        winPct: winPctOf(safeN(s.w), safeN(s.l)),
       };
     } else {
       // ⚠ **타자 쪽이 통째로 비어 있었다.** 투수만 NaN을 막고 파생값을 다시
@@ -70,8 +96,11 @@ export function sanitizeStatsRecord(
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       out[pid] = {
         ...b,
-        g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb),
+        g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb), cs: safeN(b.cs),
         bb, k: safeN(b.k),
+        // ⚠ 파생값이라 저장된 걸 안 믿는다 — 실책·보살·자살에서 다시 만든다
+        ...(b.e !== undefined || b.a !== undefined || b.po !== undefined
+          ? { fpct: fpctOf(safeN(b.po), safeN(b.a), safeN(b.e)) } : {}),
         avg: calcAvg(h, ab), obp, slg, ops: calcOps(obp, slg),
       };
     }
@@ -188,18 +217,26 @@ export function accumulateStats(
       const l   = prev.l   + (line.decision === "L"  ? 1 : 0);
       const sv  = prev.sv  + (line.decision === "SV" ? 1 : 0);
       const hd  = prev.hd  + (line.decision === "HD" ? 1 : 0);
+      // 🔴 **엔진이 세는데 여기서 합산을 안 해 리그 폭투·보크가 0이었다** —
+      //   `gs` · 도루자에 이어 **같은 자리에서 세 번째**다.
+      const wp  = (prev.wp ?? 0) + (line.wp ?? 0);
+      const bk  = (prev.bk ?? 0) + (line.bk ?? 0);
       next[line.playerId] = {
-        type:"pitcher", g: prev.g+1, gs: prev.gs, w, l, sv, hd, ip, er, h, k, bb,
+        // 🔴 `gs: prev.gs`였다 — **올리는 코드가 아무 데도 없어** 전원 0이었다.
+        //   화면 넷이 이걸 표시한다(PlayerDetailModal · CareerEndScreen ·
+        //   SeasonEndModal · LeaguePage). 엔진이 `gs`를 보낸다
+        type:"pitcher", g: prev.g+1, gs: prev.gs + (line.gs ? 1 : 0), w, l, sv, hd, ip, er, h, k, bb, wp, bk,
         ...(hr !== undefined ? { hr } : {}),
         ...(pHbp !== undefined ? { hbp: pHbp } : {}),
         era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
+        winPct: winPctOf(w, l),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: safeNum(prev.rispAb) + safeNum(line.rispAb),
         rispH:  safeNum(prev.rispH)  + safeNum(line.rispH),
       };
     } else {
       const prev = (next[line.playerId] as BatterSeasonStats | undefined) ?? {
-        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
+        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0, pb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
       };
       const ab  = prev.ab  + (line.ab  ?? 0);
       const h   = prev.h   + (line.h   ?? 0);
@@ -223,6 +260,10 @@ export function accumulateStats(
       const bb  = prev.bb  + (line.bb  ?? 0);
       const k   = prev.k   + (line.k   ?? 0);
       const sb  = prev.sb  + (line.sb  ?? 0);
+      // 🔴 **엔진이 세는데 여기서 합산을 안 해서 리그 도루자가 0이었다**
+      const cs  = (prev.cs ?? 0) + (line.cs ?? 0);
+      // ⚠ **포일은 포수 것이다.** 타자 줄에 실려 오지만 그 이닝 포수의 기록이다.
+      const pb  = (prev.pb ?? 0) + (line.pb ?? 0);
       // ⚠ **타석은 누적하지 않고 파생한다.**
       //
       // 예전엔 `prev.pa + ab + bb`였는데 `ab`·`bb`가 **이미 누적 합계**라
@@ -260,16 +301,28 @@ export function accumulateStats(
       //   SLG가 달라진다.
       // ⚠ 장타 수가 없으면(구 세이브) `?? 0`이 되고, 그때 이 식은
       //   `h + 3hr`로 옛 근사와 **정확히 같아진다** — 갈래를 나눌 필요가 없다.
+      // ⚠ **없는 것과 0을 가른다.** 구 세이브 로그엔 수비 칸이 없다 —
+      //   0으로 채우면 "실책 0인 수비수"가 되어 기록이 거짓이 된다
+      const lineDef = line as unknown as { e?: number; a?: number; po?: number };
+      const defKnown = prev.e !== undefined || lineDef.e !== undefined
+                    || prev.a !== undefined || lineDef.a !== undefined
+                    || prev.po !== undefined || lineDef.po !== undefined;
+      // ⚠ `safeNum`은 투수 갈래 안에만 있다 — 여기서 따로 만든다
+      const nz = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
+      const defE  = nz(prev.e)  + nz(lineDef.e);
+      const defA  = nz(prev.a)  + nz(lineDef.a);
+      const defPo = nz(prev.po) + nz(lineDef.po);
       const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       next[line.playerId] = {
-        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, bb, k,
+        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,
         ...(b2 !== undefined ? { b2 } : {}),
         ...(b3 !== undefined ? { b3 } : {}),
         ...(r  !== undefined ? { r }  : {}),
         ...(hbp !== undefined ? { hbp } : {}),
         ...(sac !== undefined ? { sac } : {}),
         ...(sf  !== undefined ? { sf }  : {}),
+        ...(defKnown ? { e: defE, a: defA, po: defPo, fpct: fpctOf(defPo, defA, defE) } : {}),
         avg, obp, slg, ops: calcOps(obp, slg),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: (prev.rispAb ?? 0) + (line.rispAb ?? 0),

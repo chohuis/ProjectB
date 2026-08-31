@@ -116,6 +116,12 @@ const FLOOR = {
   HIGHSCHOOL:  floorOf("LEAGUE_HIGHSCHOOL"),
   UNIVERSITY:  floorOf("LEAGUE_UNIVERSITY"),
   INDEPENDENT: floorOf("LEAGUE_INDEPENDENT"),
+  // ⚠ **상무는 파생식을 안 쓴다.** 정원이 26(militaryRules.rosterSize)이고
+  //   `pitcherRatio` 가 없다 — 군팀이라 독립 규칙과 잣대가 다르다.
+  //   하한의 근거는 **경기를 치른다**는 것뿐이다: 타순 한 바퀴 9 · 선발+불펜 8.
+  //   실측(2026-08-31)에 야수 14 → 8 로 빠지고 투수가 40까지 쌓였다 —
+  //   그걸 잡으라고 두는 값이다.
+  SANGMU: { bat: 9, pit: 8 },
   "KBL_1군":   floorOf("LEAGUE_KBL"),
   // ⚠ **2군만 파생식을 안 쓴다.** 위 식(`rosterMin × 비율 − 여유2`)은 독립
   // 리그용이고, 2군은 리그이면서 동시에 **1군에 공급하는 풀**이라 잣대가 다르다.
@@ -164,7 +170,7 @@ const FLOOR = {
     //      재면 늘 미달로 잡힌다** — 총량 147명·쏠림 4로 분포는 멀쩡한데도 그랬다.
     //      기존 주석이 "한 시점만 재면 구분이 안 된다"고 적어 뒀다.
     //      **지우지 않고 하나 더 나눈다.**
-    const byPhase = { "시즌종료": {}, "오프시즌": {}, "오프시즌직후": {} };
+    const byPhase = { "시즌중": {}, "시즌종료": {}, "오프시즌": {}, "오프시즌직후": {} };
     const absorb = (phase = "시즌종료") => {
       const comp = app.rosterCompositionProbe();
       const bucket = byPhase[phase];
@@ -185,7 +191,17 @@ const FLOOR = {
       //      개막 전까지 얕게 남고 W0에 회복한다. 그래서 오프시즌 전체를 뺀다.
       //    ⚠ 위 `byPhase`에는 그대로 담긴다 — **안 보이게 만드는 게 아니라
       //      판정 잣대에서만 제외한다.** 그 구간이 이상해지면 보고로 드러난다.
-      if (phase === "오프시즌") return;
+      // 🔴 **판정은 `시즌중`만 쓴다.** 나머지 셋은 보고에만 남는다.
+      //
+      //   오프시즌(W39~)  FA 로 풀렸다 다시 계약되는 구간 — 원래 빼고 있었다
+      //   오프시즌직후     롤오버 직후 · **신입생 생성 전**
+      //   시즌종료(W0)     같은 순간을 다른 이름으로 한 번 더 담던 자리
+      //
+      //   ⚠ 위 주석이 "오프시즌직후는 신입생 생성 전이라 그 순간 정상"이라고
+      //     **적어 뒀는데 판정에서는 안 뺐다.** 그래서 네 씨앗 모두 실패했다.
+      //   ⚠ 사각지대는 없다 — 신입생 생성이 실제로 실패하면 그 해 **시즌중**에
+      //     미달로 잡힌다. 변이 검증으로 확인했다.
+      if (phase !== "시즌중") return;
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;   // 비활성 리그(ABL·JBL)
         const w = worst[lg] ?? {
@@ -228,6 +244,20 @@ const FLOOR = {
           weekly.push(`${app.currentSeason()}W${w}:${k.최소야수}/${k.최소투수}`);
         }
       }
+      // 🔴 **경기가 치러지는 구간을 잰다.** 예전엔 시즌 끝(W0)만 판정에
+      //   썼는데 그 시점은 **신입생(W1) 생성 직전**이라 1학년이 0명이다.
+      //   실측: 고교 총원 3052 → 1972 · 타순 미달 5팀 — 전부 W0 이었다.
+      //   ⚠ W0 을 판정에서 빼기만 하면 **잴 게 없어져 검사가 0건이 된다.**
+      //     실제로 한 번 그렇게 만들었다. 자리를 옮기는 것이 답이다.
+      {
+        const wkNow = app.currentWeek();
+        // ⚠ **`autoRun` 이 여러 주를 한 번에 건너뛴다** — 실측 주차 흐름은
+        //   `W0 → W32 → W40 → W51 → W52` 다. W10/20/30 을 노리면 한 번도
+        //   안 걸린다(실제로 그렇게 짰다가 검사가 0건이 됐다).
+        //   **정규 시즌 구간(W1~38)이면 잰다.**
+        if (wkNow >= 1 && wkNow <= 38) absorb("시즌중");
+        if (process.env.PB_WK) process.stdout.write("w"+wkNow+" ");
+      }
       const before = app.currentWeek();
       await app.autoRun();
       if (app.currentWeek() > before) continue;
@@ -265,6 +295,7 @@ const FLOOR = {
     for (const lg of Object.keys(byPhase["시즌종료"])) {
       const a1 = byPhase["오프시즌직후"][lg];
       const b1 = byPhase["시즌종료"][lg];
+      const m1 = byPhase["시즌중"][lg];
       if (!a1 || !b1) continue;
       // ⚠ **포수 0명을 시점별로 갈라 본다.** `오프시즌직후`는 졸업 후 ·
       // W1 신입생 생성 **전** 구간이라, 유일한 포수가 졸업한 팀은 그 순간
@@ -273,7 +304,9 @@ const FLOOR = {
       log(`      [시점] ${lg.padEnd(12)} 오프시즌직후 야수${a1.최소야수}/투수${a1.최소투수}` +
           `(포수0 ${a1.포수없는팀}팀)` +
           `  →  시즌종료 야수${b1.최소야수}/투수${b1.최소투수}` +
-          `(포수0 ${b1.포수없는팀}팀)`);
+          `(포수0 ${b1.포수없는팀}팀)` +
+          (m1 ? `  ||  **시즌중** 야수${m1.최소야수}/투수${m1.최소투수}` +
+            `(포수0 ${m1.포수없는팀}팀) ← 판정은 이것만 쓴다` : "  ||  시즌중 측정 없음"));
     }
     // ── 육성선수 병목 — 상한인가 유출인가 ──────────────────────
     //
@@ -299,7 +332,10 @@ const FLOOR = {
 
       // ── 하한 ── 비율로 본다 (최소값은 극단값이라 못 쓴다)
       if (floor && w.팀수 > 0) {
-        const lim = Math.max(1, Math.floor(w.팀수 * UNDER_FLOOR_RATIO));
+        // 🔴 **한 팀짜리 버킷은 여유를 안 준다.** 비율 여유는 표본이
+        //   여러일 때의 이야기다 — 팀이 하나면 max(1,…) 가 항상 1이라
+        //   그 한 팀이 무너져도 통과한다. **상무가 바로 그렇다.**
+        const lim = w.팀수 <= 1 ? 0 : Math.max(1, Math.floor(w.팀수 * UNDER_FLOOR_RATIO));
         check(`${lg}: 야수 ${floor.bat} 미달 ${lim}팀 이하`, w.야수미달팀 <= lim,
           `${w.야수미달팀}/${w.팀수}팀 (최소 ${w.최소야수}, 5%tile ${w.야수5퍼센타일})`);
         check(`${lg}: 투수 ${floor.pit} 미달 ${lim}팀 이하`, w.투수미달팀 <= lim,

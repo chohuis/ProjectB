@@ -1,6 +1,8 @@
 use crate::sim_types::*;
 
-fn simple_hash(s: &str) -> u32 {
+/// ⚠ 드래프트 스카우팅(`npc_sim`)도 쓴다 — **해시를 두 벌로 두지 않는다.**
+//    같은 씨앗이 같은 값을 내야 팀별 뷰가 결정적이다.
+pub fn simple_hash(s: &str) -> u32 {
     s.bytes().fold(2166136261u32, |h, b| {
         h.wrapping_mul(16777619).wrapping_add(b as u32)
     })

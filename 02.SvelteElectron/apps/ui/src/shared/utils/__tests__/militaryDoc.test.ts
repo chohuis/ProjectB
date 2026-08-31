@@ -47,9 +47,11 @@ describe("병역 문서가 코드와 맞는다", () => {
 
   it("나이 범위가 맞는다", () => {
     const m = RULES.militaryRules ?? {};
+    // ⚠ 생성 범위는 **선발 범위와 같다**(2026-08-31 사용자 확정).
+    //   둘이 갈리는 것은 `sangmuAge.test.ts` 가 따로 잡는다.
     expect(m.ageMin).toBe(20);
-    expect(m.ageMax).toBe(24);
-    expect(DOC).toMatch(/20~24세/);
+    expect(m.ageMax).toBe(29);
+    expect(DOC).toMatch(/20~29세/);
   });
 
   it("계급 넷이 맞는다", () => {

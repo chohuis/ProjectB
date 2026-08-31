@@ -1,0 +1,490 @@
+<title>빠진 스물셋</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap">
+
+<style>
+:root {
+  --ink:      #17242E;
+  --ink-soft: #4A5A64;
+  --ink-faint:#7A8A92;
+  --paper:    #F1F3F2;
+  --paper-2:  #E7EBE9;
+  --rule:     #D2D9D7;
+  --rule-soft:#E1E6E4;
+  --credit:   #16624F;
+  --debit:    #9E3020;
+  --accent:   #A96721;
+  --accent-bg:#EDE4D6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:#DFE6E3; --ink-soft:#A2AFAF; --ink-faint:#76858A;
+    --paper:#10181B; --paper-2:#172226; --rule:#2A383D; --rule-soft:#212D32;
+    --credit:#4FBF9C; --debit:#E0705C; --accent:#D3A05C; --accent-bg:#2A2318;
+  }
+}
+:root[data-theme="dark"] {
+  --ink:#DFE6E3; --ink-soft:#A2AFAF; --ink-faint:#76858A;
+  --paper:#10181B; --paper-2:#172226; --rule:#2A383D; --rule-soft:#212D32;
+  --credit:#4FBF9C; --debit:#E0705C; --accent:#D3A05C; --accent-bg:#2A2318;
+}
+
+* { box-sizing: border-box; }
+body { word-break: keep-all; overflow-wrap: break-word; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans KR", system-ui, sans-serif;
+  font-weight: 300; font-size: 15px; line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1000px; margin: 0 auto;
+  padding: clamp(2.5rem,6vw,5rem) clamp(1.1rem,4vw,2.5rem) 6rem;
+  display: flex; flex-direction: column; gap: 3.5rem;
+}
+
+header { display: flex; flex-direction: column; gap: 1.1rem; }
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace; font-size: .72rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
+}
+h1 {
+  font-family: "Gowun Batang", serif; font-weight: 700;
+  font-size: clamp(2.1rem,5.5vw,3.1rem); line-height: 1.18;
+  letter-spacing: -.01em; margin: 0; text-wrap: balance;
+}
+.lede { max-width: 62ch; font-size: 1.02rem; color: var(--ink-soft); margin: 0; }
+.lede strong { font-weight: 600; color: var(--ink); }
+
+h2 {
+  font-family: "Gowun Batang", serif; font-weight: 700; font-size: 1.4rem;
+  margin: 0 0 1.1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--ink);
+  display: flex; align-items: baseline; gap: .7rem;
+}
+h2 .n {
+  font-family: "IBM Plex Mono", monospace; font-size: .8rem; font-weight: 500;
+  color: var(--ink-faint);
+}
+section { display: flex; flex-direction: column; }
+
+/* ── 항목 카드 ─────────────────────────────── */
+.items { display: flex; flex-direction: column; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.item {
+  background: var(--paper); padding: 1rem 1.2rem 1.1rem;
+  display: grid; grid-template-columns: 2.4rem 1fr; gap: 0 1rem;
+}
+.item-n {
+  font-family: "IBM Plex Mono", monospace; font-size: 1.05rem; font-weight: 600;
+  color: var(--accent); line-height: 1.5; font-variant-numeric: tabular-nums;
+}
+.item-b { display: flex; flex-direction: column; gap: .45rem; }
+.item-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem .7rem; }
+.item-t { font-size: 1.02rem; font-weight: 600; }
+.tags { display: flex; gap: .35rem; flex-wrap: wrap; }
+.tag {
+  font-family: "IBM Plex Mono", monospace; font-size: .66rem; font-weight: 500;
+  letter-spacing: .04em; padding: .1rem .42rem; border-radius: 2px;
+  border: 1px solid currentColor; white-space: nowrap;
+}
+.tag.c1 { color: var(--credit); }   /* 비용 작음 */
+.tag.c2 { color: var(--accent); }   /* 중간 */
+.tag.c3 { color: var(--debit); }    /* 큼 */
+.tag.hot { color: var(--debit); background: var(--paper-2); }
+
+dl { margin: 0; display: grid; grid-template-columns: 4.6rem 1fr; gap: .3rem .8rem; font-size: .88rem; }
+dt {
+  font-family: "IBM Plex Mono", monospace; font-size: .68rem; letter-spacing: .06em;
+  color: var(--ink-faint); text-transform: uppercase; padding-top: .28rem;
+}
+dd { margin: 0; color: var(--ink-soft); }
+dd strong { color: var(--ink); font-weight: 600; }
+dd code, .item code, p code {
+  font-family: "IBM Plex Mono", monospace; font-size: .88em;
+  background: var(--paper-2); padding: .05em .3em; border-radius: 2px;
+}
+
+.note {
+  border-left: 3px solid var(--accent); background: var(--paper-2);
+  padding: .85rem 1.1rem; font-size: .88rem; color: var(--ink-soft);
+  display: flex; flex-direction: column; gap: .4rem; margin-top: 1.1rem;
+}
+.note p { margin: 0; }
+.note strong { color: var(--ink); font-weight: 600; }
+.note.warn { border-left-color: var(--debit); }
+.note-h {
+  font-family: "IBM Plex Mono", monospace; font-size: .7rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent); font-weight: 500;
+}
+.note.warn .note-h { color: var(--debit); }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: .5rem 1.2rem; font-size: .82rem;
+  color: var(--ink-faint); align-items: center;
+}
+
+.foot {
+  border-top: 1px solid var(--rule); padding-top: 1.4rem;
+  font-size: .8rem; color: var(--ink-faint);
+  font-family: "IBM Plex Mono", monospace; line-height: 1.9;
+}
+
+@media (max-width: 560px) {
+  .item { grid-template-columns: 1fr; gap: .5rem; }
+  dl { grid-template-columns: 1fr; gap: .1rem; }
+  dt { padding-top: .5rem; }
+}
+
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    --ink:#17242E; --ink-soft:#4A5A64; --ink-faint:#6E7E86;
+    --paper:#FFFFFF; --paper-2:#F0F3F2; --rule:#C6CFCD; --rule-soft:#DFE4E2;
+    --credit:#125442; --debit:#8E2A1B; --accent:#8E5518; --accent-bg:#F0E7D9;
+  }
+  body { font-size: 11px; }
+  .wrap { max-width: none; padding: 0; gap: 1.6rem; }
+  h1 { font-size: 25px; } h2 { font-size: 15px; break-after: avoid; }
+  .item, .note { break-inside: avoid; }
+  section { break-inside: auto; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">구현 후보 · 2026-08-29 실측</div>
+  <h1>빠진 스물셋</h1>
+  <p class="lede">실제 야구에는 있는데 이 게임에 아직 없는 것들이다. <strong>번호를 골라 주시면 그것부터 짓는다.</strong> 각 항목의 “지금”은 <strong>코드에서 확인한 값</strong>이고, 문서에 적힌 말이 아니다 — 훑는 동안 낡은 기록을 세 건 발견했다.</p>
+  <div class="legend">
+    <span><span class="tag c1">작음</span> 데이터·화면만 — Rust를 안 건드린다</span>
+    <span><span class="tag c2">중간</span> TS 로직 + 규칙 파일</span>
+    <span><span class="tag c3">큼</span> Rust + 여러 층 배선</span>
+  </div>
+</header>
+
+<div class="note warn">
+  <div class="note-h">먼저 — 이미 만들어 둔 죽은 갈래가 하나 있다</div>
+  <p><strong>전지훈련비가 돈만 나가고 아무 효과가 없다.</strong> 4-B에서 운영비에 <code>camp: 0.06</code>을 넣었는데(구단 규모의 6%), <code>finance.rs</code>가 지출 합계에 더하는 것으로 끝이다. 구장비는 수용인원에, 2군비는 2군 존재 여부에 물리는데 <strong>전지훈련은 어디에도 안 물린다.</strong></p>
+  <p>아래 <strong>15번</strong>이 그것이다. 넣거나, 아니면 지출 항목에서 빼는 게 맞다 — 둘 중 하나는 해야 한다.</p>
+</div>
+
+<!-- ── 제도 ──────────────────────────────── -->
+<section>
+  <h2>제도 <span class="n">9</span></h2>
+  <div class="items">
+
+    <div class="item"><div class="item-n">1</div><div class="item-b">
+      <div class="item-h"><span class="item-t">1군 엔트리 28 / 출장 26</span>
+        <span class="tags"><span class="tag c3">큼</span><span class="tag hot">파급 큼</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>KBO는 1군 등록 28명이고 그중 <strong>26명만 경기에 나간다.</strong> 매 경기 전에 명단을 낸다.</dd>
+        <dt>지금</dt><dd>로스터 상한 <code>34</code>만 있고 엔트리 개념이 없다 — <strong>34명 전원이 늘 출전 후보다.</strong></dd>
+        <dt>넣으면</dt><dd>매 경기 26명을 골라야 하니 <strong>벤치가 생긴다.</strong> 감독 성향·컨디션이 명단에 물리고, 안 뽑히는 선수의 불만이 생긴다.</dd>
+        <dt>꼬임</dt><dd><code>buildTeamRoster</code>·<code>matchLineupBuilder</code>·승강이 전부 “34명 전원”을 전제한다. 2·3번과 한 묶음으로 봐야 한다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">2</div><div class="item-b">
+      <div class="item-h"><span class="item-t">부상자 명단 (IL)</span>
+        <span class="tags"><span class="tag c2">중간</span><span class="tag hot">효과 큼</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>부상 선수를 명단에 올리면 <strong>로스터 자리가 비어</strong> 대체 선수를 올릴 수 있다. 최소 10일·15일·60일.</dd>
+        <dt>지금</dt><dd>부상 선수가 <strong>자리를 차지한 채 있다.</strong> 안고 뛰거나(OVR ×0.88·×0.70) 결장할 뿐이다.</dd>
+        <dt>넣으면</dt><dd>부상이 팀 전력에 <strong>진짜 구멍</strong>을 낸다. 2군 콜업이 의미를 갖고, 백업 선수에게 기회가 온다.</dd>
+        <dt>꼬임</dt><dd>상시 콜업이 이미 “부상·장기 부진으로 빈 자리만 메운다”고 돈다 — <strong>겹치는 자리를 정리해야 한다.</strong></dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">3</div><div class="item-b">
+      <div class="item-h"><span class="item-t">등록말소 10일 제한</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>2군에 내린 선수는 <strong>10일간 다시 못 올린다</strong>(부상 대체 제외). 승강을 함부로 못 하게 한다.</dd>
+        <dt>지금</dt><dd>월 첫 주 정기 재편 + 상시 콜업. <strong>제한이 없다.</strong></dd>
+        <dt>넣으면</dt><dd>승강이 신중해진다. 하루 부진으로 내렸다가 바로 못 올린다.</dd>
+        <dt>꼬임</dt><dd>승강 로직에 날짜만 기록하면 된다. <strong>2번과 같이 넣으면 자연스럽다.</strong></dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">4</div><div class="item-b">
+      <div class="item-h"><span class="item-t">웨이버 공시</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>방출 전에 <strong>다른 구단이 데려갈 기회</strong>를 준다. 순위 역순으로 우선권.</dd>
+        <dt>지금</dt><dd>방출 2단계는 있다(노쇠·방출 압박 판정). 다만 방출되면 <strong>바로 시장으로</strong> 간다.</dd>
+        <dt>넣으면</dt><dd>버려진 선수가 다른 팀에서 부활한다. 하위권 팀이 싸게 전력을 보강한다.</dd>
+        <dt>꼬임</dt><dd>FA 미계약 뒤 처리(원소속 재계약 → 은퇴)와 <strong>같은 자리를 건드린다.</strong></dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">5</div><div class="item-b">
+      <div class="item-h"><span class="item-t">2차 드래프트 · 룰5</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>2년마다 각 구단이 보호선수 35명을 묶고, <strong>나머지에서 다른 구단이 지명</strong>한다. 전력 평준화 장치다.</dd>
+        <dt>지금</dt><dd>신인 드래프트만 있다.</dd>
+        <dt>넣으면</dt><dd><strong>2군에 묻힌 선수가 기회를 얻는다.</strong> 주인공이 2군에서 안 올라갈 때 탈출구가 된다.</dd>
+        <dt>꼬임</dt><dd>드래프트 순번 로직을 재사용할 수 있다. 보호선수 명단이 새 개념이다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">6</div><div class="item-b">
+      <div class="item-h"><span class="item-t">연봉조정신청</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>구단과 선수가 합의를 못 하면 <strong>KBO가 양쪽 제시액 중 하나를 통째로 채택</strong>한다. 중간값이 없다.</dd>
+        <dt>지금</dt><dd>재계약 협상은 있다. 결렬되면 그냥 낮은 쪽으로 수렴한다.</dd>
+        <dt>넣으면</dt><dd>협상 결렬에 <strong>결말이 생긴다.</strong> 도박 요소 — 무리한 요구는 지면 손해다.</dd>
+        <dt>꼬임</dt><dd>기존 협상 흐름의 마지막에 한 단계를 붙이는 것이다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">7</div><div class="item-b">
+      <div class="item-h"><span class="item-t">비FA 다년계약</span>
+        <span class="tags"><span class="tag c2">중간</span><span class="tag hot">예산과 직결</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>2021년부터 허용됐다. <strong>FA 자격을 얻기 전에</strong> 유망주를 장기 계약으로 묶는다.</dd>
+        <dt>지금</dt><dd>다년계약은 FA에만 있다.</dd>
+        <dt>넣으면</dt><dd>구단이 <strong>미래에 돈을 건다.</strong> 4단계에서 만든 예산이 여기로 흘러 의미를 갖는다 — 지금 예산은 늘기만 하고 쓸 데가 적다.</dd>
+        <dt>꼬임</dt><dd>FA 자격 연수 계산과 겹친다. 계약 중 FA 자격을 얻으면 어떻게 되는지 정해야 한다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">8</div><div class="item-b">
+      <div class="item-h"><span class="item-t">경쟁균형세 제재</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>연봉 총액이 상한을 넘으면 <strong>초과분의 50%를 내고 다음 해 지명권이 내려간다.</strong></dd>
+        <dt>지금</dt><dd>상한(<code>teamPayrollCap</code>)만 있고 <strong>넘어도 아무 일이 없다.</strong></dd>
+        <dt>넣으면</dt><dd>돈 쓰는 데 대가가 생긴다. 부자 구단이 무한히 사들이지 못한다.</dd>
+        <dt>꼬임</dt><dd>4단계 예산·FA 입찰과 직결. <strong>지금 전 구단이 흑자라 제재가 안 아플 수 있다</strong> — 밸런스와 같이 봐야 한다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">9</div><div class="item-b">
+      <div class="item-h"><span class="item-t">해외 리그 드래프트</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>MLB 드래프트 20라운드, NPB 드래프트가 각각 돈다.</dd>
+        <dt>지금</dt><dd>ABL·JBL은 <strong>부족분 충원만</strong> 한다 — 로스터가 비면 채운다.</dd>
+        <dt>넣으면</dt><dd>해외 진출 경로가 늘고, 해외 리그가 <strong>제 나름의 세대교체</strong>를 갖는다.</dd>
+        <dt>꼬임</dt><dd>아마추어 직행(해외 진출 3단계)과 경로가 겹친다. 어느 쪽이 먼저인지 정해야 한다.</dd>
+      </dl>
+    </div></div>
+
+  </div>
+</section>
+
+<!-- ── 경기 운영 ─────────────────────────── -->
+<section>
+  <h2>경기 운영 <span class="n">2</span></h2>
+  <div class="items">
+
+    <div class="item"><div class="item-n">10</div><div class="item-b">
+      <div class="item-h"><span class="item-t">우천 취소 · 순연</span>
+        <span class="tags"><span class="tag c3">큼</span><span class="tag hot">파급 큼</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>비가 오면 취소하고 나중에 편성한다. 시즌 말에 몰리면 팀마다 <strong>경기 수가 달라진다.</strong></dd>
+        <dt>지금</dt><dd>날씨는 <strong>이미 있다</strong> — <code>match_engine.rs</code>가 투구 품질과 비거리에 물린다. 다만 <strong>취소는 없다.</strong></dd>
+        <dt>넣으면</dt><dd>일정이 흔들리고 로테이션이 밀린다. 더블헤더가 자연히 따라온다.</dd>
+        <dt>꼬임</dt><dd>🔴 <strong>팀마다 경기 수가 달라지면 순위·승률·재정이 전부 영향을 받는다.</strong> 구단 수입이 홈경기 수에 비례하므로 4단계와 직결이다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">11</div><div class="item-b">
+      <div class="item-h"><span class="item-t">더블헤더</span>
+        <span class="tags"><span class="tag c3">큼</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>하루에 두 경기. 취소분을 소화하는 수단이고 <strong>불펜과 체력을 갈아 넣는다.</strong></dd>
+        <dt>지금</dt><dd>주 단위 일정이라 하루에 두 경기라는 개념이 없다.</dd>
+        <dt>넣으면</dt><dd>피로 관리가 실제 전략이 된다 — 5단계에서 정리한 피로 표가 여기서 살아난다.</dd>
+        <dt>꼬임</dt><dd><strong>10번과 한 묶음이다.</strong> 따로 넣을 이유가 없다.</dd>
+      </dl>
+    </div></div>
+
+  </div>
+</section>
+
+<!-- ── 조직 ──────────────────────────────── -->
+<section>
+  <h2>조직 <span class="n">6</span></h2>
+  <div class="items">
+
+    <div class="item"><div class="item-n">12</div><div class="item-b">
+      <div class="item-h"><span class="item-t">프런트 · 단장</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>단장이 트레이드·FA·드래프트를 주도한다. 감독은 경기를 맡는다.</dd>
+        <dt>지금</dt><dd>감독·코치만 있다. 구단 성향 12항목이 단장 역할을 대신한다.</dd>
+        <dt>넣으면</dt><dd>구단 성향에 <strong>얼굴이 생긴다.</strong> 단장이 바뀌면 팀 방향이 바뀐다.</dd>
+        <dt>꼬임</dt><dd>구단 성향과 역할이 겹친다 — 어느 쪽이 정본인지 정해야 한다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">13</div><div class="item-b">
+      <div class="item-h"><span class="item-t">전력분석팀</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>상대 투수 습관·타자 약점을 분석해 경기 전에 전달한다.</dd>
+        <dt>지금</dt><dd><code>scoutingQuality</code> 수치 하나가 4곳에서 쓰인다 — 주로 드래프트 평가다.</dd>
+        <dt>넣으면</dt><dd>경기 안에서 <strong>정보가 무기가 된다.</strong> 주인공이 상대 분석을 받고 안 받고가 갈린다.</dd>
+        <dt>꼬임</dt><dd>경기 엔진(Rust)에 새 보정을 넣는 것이라 밸런스가 흔들린다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">14</div><div class="item-b">
+      <div class="item-h"><span class="item-t">통역</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>외국인 선수에게 전담 통역이 붙는다. 적응 속도를 좌우한다.</dd>
+        <dt>지금</dt><dd>없다. 외국인 한도(3명)와 트레이드 적응 페널티(<code>tradeAdaptationWeeks</code>)는 있다.</dd>
+        <dt>넣으면</dt><dd>주인공이 해외에 나갔을 때 <strong>적응이 이야기가 된다.</strong> 해외 진출과 바로 이어진다.</dd>
+        <dt>꼬임</dt><dd>기존 적응 페널티에 계수를 얹는 정도라 가볍다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">15</div><div class="item-b">
+      <div class="item-h"><span class="item-t">전지훈련지</span>
+        <span class="tags"><span class="tag c1">작음</span><span class="tag hot">지금 죽어 있다</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>2월에 따뜻한 곳에서 캠프를 차린다. 어디로 가느냐가 준비 상태를 가른다.</dd>
+        <dt>지금</dt><dd>🔴 <strong>지출에만 있다.</strong> <code>operations.camp = 0.06</code>으로 구단 규모의 6%가 나가는데 <strong>아무 효과가 없다.</strong></dd>
+        <dt>넣으면</dt><dd>비용에 값이 생긴다 — 시즌 초 컨디션·부상 확률에 물리면 된다.</dd>
+        <dt>꼬임</dt><dd><strong>둘 중 하나는 해야 한다</strong> — 효과를 넣거나 지출에서 빼거나. 지금은 이유 없이 돈만 샌다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">16</div><div class="item-b">
+      <div class="item-h"><span class="item-t">트레이닝 · 의료팀</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>트레이너·재활코치·팀닥터가 따로 있다. 부상 예방과 복귀 속도를 맡는다.</dd>
+        <dt>지금</dt><dd><code>medicalQuality</code> 수치 하나가 5곳에서 쓰인다. <strong>사람이 없다.</strong></dd>
+        <dt>넣으면</dt><dd>부상이 구단 선택의 결과가 된다. <strong>2번(IL)과 잘 맞는다.</strong></dd>
+        <dt>꼬임</dt><dd>스태프 15종 계수가 <code>staff_rules.toml</code>에 있다 — 거기에 붙인다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">17</div><div class="item-b">
+      <div class="item-h"><span class="item-t">스카우트 조직</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>국내·해외·아마추어 스카우트가 나뉜다. 드래프트 성패를 가른다.</dd>
+        <dt>지금</dt><dd><code>scoutingQuality</code> 하나. 팀마다 예산에서 파생된 값이다.</dd>
+        <dt>넣으면</dt><dd>드래프트에서 <strong>구단마다 보는 눈이 달라진다.</strong> 숨은 보석을 찾는 팀이 생긴다.</dd>
+        <dt>꼬임</dt><dd>13번과 성격이 겹친다. 함께 설계하는 게 낫다.</dd>
+      </dl>
+    </div></div>
+
+  </div>
+</section>
+
+<!-- ── 팬·브랜드 ─────────────────────────── -->
+<section>
+  <h2>팬 · 브랜드 <span class="n">3</span></h2>
+  <div class="items">
+
+    <div class="item"><div class="item-n">18</div><div class="item-b">
+      <div class="item-h"><span class="item-t">팬 수 · 충성도</span>
+        <span class="tags"><span class="tag c2">중간</span><span class="tag hot">재정과 직결</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>팬은 쌓이고 빠진다. 성적이 나빠도 안 떠나는 팬층이 구단의 바닥을 만든다.</dd>
+        <dt>지금</dt><dd><code>marketAppeal</code> 하나가 관중율에 물린다. <strong>축적이 없다</strong> — 작년에 우승해도 올해 팬이 안 늘어난다.</dd>
+        <dt>넣으면</dt><dd>관중이 <strong>쌓인 결과</strong>가 된다. 지금 관중율이 36~55%로 낮은 것도 여기서 풀릴 수 있다.</dd>
+        <dt>꼬임</dt><dd>4단계 관중 산식을 바꾸는 것이라 <strong>재정 밸런스를 다시 재야 한다.</strong></dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">19</div><div class="item-b">
+      <div class="item-h"><span class="item-t">홈 · 원정 유니폼</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>홈 흰색·원정 회색이 기본이고 서드 유니폼이 따로 있다.</dd>
+        <dt>지금</dt><dd>팀 색 두 개(<code>colors</code>)가 있다. 유니폼 개념은 없다.</dd>
+        <dt>넣으면</dt><dd>경기 화면이 홈·원정에 따라 달라진다. <strong>순수 연출이다.</strong></dd>
+        <dt>꼬임</dt><dd>없다. 화면만 건드린다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">20</div><div class="item-b">
+      <div class="item-h"><span class="item-t">마스코트 · 응원단</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>KBO 응원 문화의 핵심이다. 구단별 응원가·치어리더가 정체성을 만든다.</dd>
+        <dt>지금</dt><dd>없다.</dd>
+        <dt>넣으면</dt><dd>구단에 표정이 생긴다. 홈 경기 연출에 쓴다.</dd>
+        <dt>꼬임</dt><dd>없다. 다만 <strong>게임 동작에 영향이 없다</strong> — 연출 우선순위를 어떻게 볼지에 달렸다.</dd>
+      </dl>
+    </div></div>
+
+  </div>
+</section>
+
+<!-- ── 역사 ──────────────────────────────── -->
+<section>
+  <h2>역사 <span class="n">3</span></h2>
+  <div class="items">
+
+    <div class="item"><div class="item-n">21</div><div class="item-b">
+      <div class="item-h"><span class="item-t">영구결번</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>구단이 레전드의 등번호를 영구히 비운다. 최고의 예우다.</dd>
+        <dt>지금</dt><dd><code>jerseyNumber</code>는 <strong>이미 있다</strong>(선수마다 배정된다). 결번 개념만 없다.</dd>
+        <dt>넣으면</dt><dd>주인공이 은퇴할 때 <strong>목표가 하나 더 생긴다.</strong> 커리어의 종착점이 된다.</dd>
+        <dt>꼬임</dt><dd>등번호 배정이 결번을 피해야 한다 — 그 한 줄이다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">22</div><div class="item-b">
+      <div class="item-h"><span class="item-t">레전드 · 명예의 전당</span>
+        <span class="tags"><span class="tag c2">중간</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>은퇴 후 일정 기간이 지나면 투표로 헌액한다.</dd>
+        <dt>지금</dt><dd>은퇴 선수의 <strong>통산 기록이 남는다</strong>(<code>history_lb_stats</code>). 평가 장치가 없다.</dd>
+        <dt>넣으면</dt><dd>은퇴가 끝이 아니게 된다. <strong>주인공의 커리어에 사후 평가가 붙는다.</strong></dd>
+        <dt>꼬임</dt><dd>수상 집계(<code>seasonAwards</code>)를 재사용할 수 있다. 21번과 한 묶음이 자연스럽다.</dd>
+      </dl>
+    </div></div>
+
+    <div class="item"><div class="item-n">23</div><div class="item-b">
+      <div class="item-h"><span class="item-t">구단 연표</span>
+        <span class="tags"><span class="tag c1">작음</span></span></div>
+      <dl>
+        <dt>현실</dt><dd>창단·우승·이전·개명이 연표로 정리된다.</dd>
+        <dt>지금</dt><dd>재료가 <strong>이미 다 있다</strong> — <code>foundedYear</code> 238팀 · <code>titles</code> 36팀 · <code>seasonRanks</code>. <strong>보여주는 화면만 없다.</strong></dd>
+        <dt>넣으면</dt><dd>구단에 시간이 생긴다. 4-A에서 채운 데이터가 화면에 나온다.</dd>
+        <dt>꼬임</dt><dd>없다. <strong>가장 싸다</strong> — 있는 데이터를 읽어 그리기만 한다.</dd>
+      </dl>
+    </div></div>
+
+  </div>
+</section>
+
+<!-- ── 묶음 제안 ─────────────────────────── -->
+<section>
+  <h2>같이 넣어야 자연스러운 묶음</h2>
+  <div class="note">
+    <div class="note-h">따로 넣으면 어색해지는 것들</div>
+    <p><strong>1 + 2 + 3</strong> — 엔트리·부상자명단·등록말소는 한 덩어리다. 셋 다 “로스터 자리”를 다루므로 하나만 넣으면 나머지가 구멍으로 남는다.</p>
+    <p><strong>10 + 11</strong> — 우천 취소를 넣으면 밀린 경기를 소화할 더블헤더가 필요하다.</p>
+    <p><strong>21 + 22</strong> — 영구결번과 명예의 전당은 같은 평가 기준을 쓴다.</p>
+    <p><strong>13 + 17</strong> — 전력분석과 스카우트는 둘 다 <code>scoutingQuality</code>에서 갈라져 나온다.</p>
+    <p><strong>7 + 8</strong> — 비FA 다년계약과 경쟁균형세는 예산을 쓰게 만드는 짝이다. 지금 예산은 <strong>늘기만 하고 쓸 데가 없다.</strong></p>
+  </div>
+  <div class="note warn">
+    <div class="note-h">먼저 재야 할 것이 하나 있다</div>
+    <p>고교 로스터가 흔들린다 — 방금 돌려보니 <strong>6팀이 야수 9명 미만이고 1팀은 포수가 없다.</strong> 타순을 못 짜는 팀이 섞인 채로 잰 성적은 밸런스 기준이 될 수 없다. <strong>1·2·3번을 손대기 전에 이걸 봐야 한다</strong> — 셋 다 로스터 자리를 다루기 때문이다.</p>
+  </div>
+</section>
+
+<div class="foot">
+  <div>실측 · 2026-08-29 · 코드에서 확인 (문서 기록이 아님)</div>
+  <div>낡은 기록 셋 발견 · RosterPage 이미 삭제 · 해외 오퍼 화면 있음 · 세이브 무결성 8/28 구현</div>
+  <div>죽은 갈래 · 전지훈련비만 효과 없음 (15번)</div>
+</div>
+
+</div>

@@ -241,6 +241,12 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       summary: result.summary,
       batterLines: result.batterLines ?? [],
       playerLines: result.playerLines ?? [],
+      // 🔴 **주인공 자책점을 안 돌려주고 있었다** (2026-08-28). 엔진은 계속
+      //   갖고 있었는데(`erSinceEntry`) 이 자리만 안 실어서, 화면이
+      //   `피안타 × 0.35`로 되돌아가 값을 지어냈다.
+      //   ⚠ 주인공 줄은 `playerLines`에 안 들어간다 — 엔진이 등판 중엔
+      //     큐 누적을 건너뛰고 `*_since_entry`에 따로 쌓기 때문이다.
+      earnedRuns: activeMatchState?.erSinceEntry ?? 0,
     };
   });
 

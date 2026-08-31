@@ -1,0 +1,920 @@
+<title>구단 장부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap">
+
+<style>
+:root {
+  --ink:      #17242E;
+  --ink-soft: #4A5A64;
+  --ink-faint:#7A8A92;
+  --paper:    #F1F3F2;
+  --paper-2:  #E7EBE9;
+  --rule:     #D2D9D7;
+  --rule-soft:#E1E6E4;
+  --credit:   #16624F;
+  --debit:    #9E3020;
+  --accent:   #A96721;
+  --accent-bg:#EDE4D6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:      #DFE6E3;
+    --ink-soft: #A2AFAF;
+    --ink-faint:#76858A;
+    --paper:    #10181B;
+    --paper-2:  #172226;
+    --rule:     #2A383D;
+    --rule-soft:#212D32;
+    --credit:   #4FBF9C;
+    --debit:    #E0705C;
+    --accent:   #D3A05C;
+    --accent-bg:#2A2318;
+  }
+}
+:root[data-theme="dark"] {
+  --ink:      #DFE6E3;
+  --ink-soft: #A2AFAF;
+  --ink-faint:#76858A;
+  --paper:    #10181B;
+  --paper-2:  #172226;
+  --rule:     #2A383D;
+  --rule-soft:#212D32;
+  --credit:   #4FBF9C;
+  --debit:    #E0705C;
+  --accent:   #D3A05C;
+  --accent-bg:#2A2318;
+}
+
+* { box-sizing: border-box; }
+
+/* 한국어는 단어 중간에서 끊지 않는다 — 기본값이면 "포/스트시즌"이 된다 */
+body { word-break: keep-all; overflow-wrap: break-word; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans KR", system-ui, -apple-system, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.1rem, 4vw, 2.5rem) 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* ── 머리 ─────────────────────────────────────────── */
+header { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+h1 {
+  font-family: "Gowun Batang", "Nanum Myeongjo", serif;
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5.5vw, 3.1rem);
+  line-height: 1.18;
+  letter-spacing: -.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 62ch;
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.lede strong { font-weight: 600; color: var(--ink); }
+
+/* ── 요약 숫자 ─────────────────────────────────────── */
+.tallies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.tally {
+  background: var(--paper);
+  padding: 1.1rem 1.2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+.tally-n {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+.tally-n .unit { font-size: .9rem; font-weight: 400; color: var(--ink-faint); margin-left: .12em; }
+.tally-k {
+  font-size: .78rem;
+  color: var(--ink-faint);
+  letter-spacing: .02em;
+}
+
+/* ── 절 ───────────────────────────────────────────── */
+section { display: flex; flex-direction: column; gap: 1.1rem; }
+
+h2 {
+  font-family: "Gowun Batang", serif;
+  font-weight: 700;
+  font-size: 1.45rem;
+  margin: 0;
+  padding-bottom: .5rem;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+}
+h2 .tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: .15rem .45rem;
+  border-radius: 2px;
+}
+
+section > p { margin: 0; max-width: 68ch; color: var(--ink-soft); }
+section > p strong { font-weight: 600; color: var(--ink); }
+
+/* ── 표 ───────────────────────────────────────────── */
+.scroll {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: .845rem;
+  white-space: nowrap;
+}
+th, td {
+  padding: .5rem .75rem;
+  text-align: right;
+  border-bottom: 1px solid var(--rule-soft);
+}
+th {
+  font-weight: 500;
+  font-size: .72rem;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+}
+tbody tr:last-child td { border-bottom: none; }
+td.l, th.l { text-align: left; }
+td.num, th.num {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+tfoot td {
+  border-top: 1px solid var(--rule);
+  border-bottom: none;
+  font-weight: 500;
+  background: var(--paper-2);
+}
+.credit { color: var(--credit); }
+.debit  { color: var(--debit); }
+.faint  { color: var(--ink-faint); }
+
+/* 팀 색 칩 */
+.team { display: inline-flex; align-items: center; gap: .5rem; }
+.chip {
+  width: 3px;
+  height: 1.05em;
+  border-radius: 1px;
+  flex: none;
+  box-shadow: 2px 0 0 var(--c2);
+}
+
+/* 변화 화살 */
+.was { color: var(--ink-faint); }
+.arrow { color: var(--accent); padding: 0 .25em; }
+.now { font-weight: 500; }
+
+/* 상태 알약 */
+.pill {
+  display: inline-block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  padding: .1rem .45rem;
+  border-radius: 2px;
+  border: 1px solid currentColor;
+}
+.pill.done { color: var(--credit); }
+.pill.open { color: var(--accent); }
+.pill.hold { color: var(--debit); }
+
+/* ── 주석 상자 ─────────────────────────────────────── */
+.note {
+  border-left: 3px solid var(--accent);
+  background: var(--paper-2);
+  padding: .85rem 1.1rem;
+  font-size: .88rem;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+.note p { margin: 0; }
+.note strong { color: var(--ink); font-weight: 600; }
+.note.warn { border-left-color: var(--debit); }
+.note-h {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+.note.warn .note-h { color: var(--debit); }
+
+/* ── 궤적 막대 ─────────────────────────────────────── */
+.traj { display: flex; flex-direction: column; gap: .35rem; }
+.traj-row {
+  display: grid;
+  grid-template-columns: 3.6rem 1fr 8.5rem;
+  align-items: center;
+  gap: .75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+}
+.traj-bar {
+  height: 1.4rem;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  position: relative;
+  overflow: hidden;
+}
+.traj-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--credit);
+  opacity: .22;
+}
+.traj-span {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-left: 2px solid var(--ink-faint);
+  border-right: 2px solid var(--ink-faint);
+  background: transparent;
+}
+.traj-mid {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: var(--ink);
+}
+.traj-lab { color: var(--ink-faint); font-size: .74rem; text-align: right; }
+
+.foot {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.4rem;
+  font-size: .8rem;
+  color: var(--ink-faint);
+  font-family: "IBM Plex Mono", monospace;
+  line-height: 1.9;
+}
+
+@media (max-width: 620px) {
+  .traj-row { grid-template-columns: 3.2rem 1fr; }
+  .traj-lab { grid-column: 1 / -1; text-align: left; }
+}
+
+/* ── 인쇄 / PDF ─────────────────────────────────────
+   화면에서는 표가 가로로 스크롤되지만 종이에는 스크롤이 없다 —
+   테두리를 풀고 글자를 줄여 표 전체를 한 폭에 넣는다. */
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    --ink:      #17242E;
+    --ink-soft: #4A5A64;
+    --ink-faint:#6E7E86;
+    --paper:    #FFFFFF;
+    --paper-2:  #F0F3F2;
+    --rule:     #C6CFCD;
+    --rule-soft:#DFE4E2;
+    --credit:   #125442;
+    --debit:    #8E2A1B;
+    --accent:   #8E5518;
+    --accent-bg:#F0E7D9;
+  }
+  body { font-size: 11px; }
+  .wrap { max-width: none; padding: 0; gap: 1.6rem; }
+
+  .scroll { overflow: visible; }
+  table { font-size: 9.4px; }
+  th, td { padding: .3rem .42rem; }
+  th { position: static; }
+
+  h1 { font-size: 25px; }
+  h2 { font-size: 15px; break-after: avoid; }
+  .lede { font-size: 12px; }
+  .tally-n { font-size: 20px; }
+
+  /* 표와 그 앞 제목이 갈라지지 않게 */
+  section { break-inside: avoid; }
+  .scroll, .traj, .note { break-inside: avoid; }
+
+  /* 배경색이 인쇄에 나오게 — 유형 칩과 머리줄이 색으로 구분된다 */
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">4단계 · 구단 재정 · 2026-08-27 ~ 08-29</div>
+  <h1>구단에 장부가 생겼다</h1>
+  <p class="lede">그 전까지 구단은 <strong>이름과 예산 한 줄</strong>이었다. 예산은 <code>refs.json</code>에 박혀 시즌이 몇 번 지나도 그대로였다. 이제 <strong>세 프로 리그 서른여덟 구단</strong>이 관중을 받고 모기업 지원금을 받고 연봉과 운영비를 낸다. 성적이 좋으면 관중이 늘고, 남으면 이듬해 예산이 오른다.</p>
+</header>
+
+<div class="tallies">
+  <div class="tally"><div class="tally-n">238<span class="unit">팀</span></div><div class="tally-k">데이터가 채워진 구단</div></div>
+  <div class="tally"><div class="tally-n">27<span class="unit">구장</span></div><div class="tally-k">수용인원이 생겼다</div></div>
+  <div class="tally"><div class="tally-n">38<span class="unit">팀</span></div><div class="tally-k">모기업이 붙은 프로 구단 · 3리그</div></div>
+  <div class="tally"><div class="tally-n">1.17<span class="unit">×</span></div><div class="tally-k">5시즌 예산 중앙 배수 · 3회 평균</div></div>
+</div>
+
+<!-- ── 1. 데이터 채움 ───────────────────────────── -->
+<section>
+  <h2>refs.json이 어떻게 달라졌나 <span class="tag">4-A</span></h2>
+  <p>재정을 계산하려면 <strong>구장이 몇 명을 받는지</strong> 알아야 하는데, 27개 구장 전부 <code>capacity</code>가 0이었다. 함께 비어 있던 칸도 같이 채웠다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">칸</th><th class="num">전</th><th class="num">후</th><th class="l">무엇에 쓰나</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><code>stadiums[].capacity</code></td><td class="num was">0</td><td class="num now credit">27</td><td class="l faint">관중 수입의 상한. 800~24,000명</td></tr>
+        <tr><td class="l"><code>history.parentCompany</code></td><td class="num was">0</td><td class="num now credit">38</td><td class="l faint">모기업 지원금 — 프로 3리그만</td></tr>
+        <tr><td class="l"><code>profile.desc</code></td><td class="num was">0</td><td class="num now credit">238</td><td class="l faint">구단 소개문. 화면 표시용</td></tr>
+        <tr><td class="l"><code>history.foundedYear</code></td><td class="num was">30</td><td class="num now credit">238</td><td class="l faint">창단 연도</td></tr>
+        <tr><td class="l"><code>history.titles</code></td><td class="num was">22</td><td class="num now credit">36</td><td class="l faint">우승 기록</td></tr>
+        <tr><td class="l"><code>history.budget</code></td><td class="num was">199</td><td class="num faint">199</td><td class="l faint">그대로 — 이제 <em>정적 기준</em>으로 쓴다</td></tr>
+        <tr><td class="l"><code>traits</code> 3종</td><td class="num was">182</td><td class="num faint">182</td><td class="l faint">그대로</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">왜 budget은 안 늘렸나</div>
+    <p><code>history.budget</code>은 이제 <strong>움직이지 않는 기준점</strong>이다. 실제 예산은 <code>clubBudgets</code>에 따로 쌓이고 매 시즌 갱신된다. 둘을 같은 자리에 두면 수입이 예산에 비례하는데 그 예산이 다시 수입에서 나와 <strong>되먹임으로 발산한다</strong> — 실제로 그렇게 만들었다가 매년 33%씩 부푸는 걸 실측으로 잡았다.</p>
+  </div>
+</section>
+
+<!-- ── 2. 리그별 ─────────────────────────────────── -->
+<section>
+  <h2>리그마다 규모가 다르다</h2>
+  <p>같은 규칙을 쓰되 <strong>기준 규모와 티켓값이 리그마다 다르다.</strong> 고교·대학·독립은 모기업이 없고 중계권도 없다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">리그</th><th class="num">팀</th><th class="num">모기업</th><th class="num">우승기록</th>
+        <th class="num">예산 중앙</th><th class="num">수용 중앙</th><th class="num">수용 범위</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l">고교</td><td class="num">102</td><td class="num faint">—</td><td class="num">18</td><td class="num">2억</td><td class="num">1,500</td><td class="num faint">800–2,000</td></tr>
+        <tr><td class="l">대학</td><td class="num">50</td><td class="num faint">—</td><td class="num">10</td><td class="num">11억</td><td class="num">2,200</td><td class="num faint">1,500–3,000</td></tr>
+        <tr><td class="l">독립</td><td class="num">10</td><td class="num faint">—</td><td class="num">4</td><td class="num">8억</td><td class="num">2,200</td><td class="num faint">1,500–3,000</td></tr>
+        <tr><td class="l"><strong>KBL</strong> (국내 프로)</td><td class="num">20</td><td class="num credit">10</td><td class="num">4</td><td class="num">230억</td><td class="num">22,990</td><td class="num faint">16,000–24,000</td></tr>
+        <tr><td class="l">JBL</td><td class="num">24</td><td class="num credit">12</td><td class="num faint">0</td><td class="num">1,043억</td><td class="num">25,000</td><td class="num faint">2,200–55,000</td></tr>
+        <tr><td class="l">ABL</td><td class="num">32</td><td class="num credit">16</td><td class="num faint">0</td><td class="num">2,065억</td><td class="num">34,788</td><td class="num faint">3,000–56,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="faint" style="font-size:.82rem">팀 수가 두 배로 보이는 것은 <strong>2군이 별도 팀</strong>이기 때문이다. KBL 20팀 = 1군 10 + 2군 10. 2군에는 예산이 없고 1군 성향을 물려받는다.</p>
+</section>
+
+<!-- ── 3. 프로 10팀 ──────────────────────────────── -->
+<section>
+  <h2>KBL 열 구단, 한 장에 <span class="tag">4-A · 4-C</span></h2>
+  <p>모기업·창단연도·우승·구장은 이번에 채운 것이고, <strong>수입 유형</strong>과 오른쪽 <strong>성향 넷</strong>은 이번에 새로 생긴 파생값이다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">구단</th><th class="l">모기업</th><th class="num">창단</th><th class="num">우승</th>
+        <th class="l">구장</th><th class="num">수용</th><th class="num">예산</th>
+        <th class="l">수입 유형</th><th class="l">기질</th>
+        <th class="num">매력</th><th class="num">명성</th><th class="num">육성</th><th class="num">인내</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#2A386F;--c2:#8A6512"></span>서울 로열스</span></td>
+          <td class="l faint">한성물산</td><td class="num">1982</td><td class="num">4</td>
+          <td class="l faint">로열파크</td><td class="num">23,000</td><td class="num">350억</td>
+          <td class="l">균형</td><td class="l faint">전통·부유·슈퍼스타</td>
+          <td class="num credit">70</td><td class="num credit">70</td><td class="num debit">30</td><td class="num debit">35</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#2C9196;--c2:#7B1E2B"></span>창원 스타스</span></td>
+          <td class="l faint">창원기계</td><td class="num">2008</td><td class="num faint">0</td>
+          <td class="l faint">스타스파크</td><td class="num">22,000</td><td class="num">330억</td>
+          <td class="l">균형</td><td class="l faint">육성·부유·엘리트</td>
+          <td class="num credit">67</td><td class="num credit">67</td><td class="num debit">33</td><td class="num debit">38</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#F49530;--c2:#123A6B"></span>광주 팬서스</span></td>
+          <td class="l faint">호남식품</td><td class="num">1986</td><td class="num">1</td>
+          <td class="l faint">팬서스파크</td><td class="num">20,500</td><td class="num">230억</td>
+          <td class="l">균형</td><td class="l faint">정통·안정·명문</td>
+          <td class="num">49</td><td class="num">49</td><td class="num">51</td><td class="num">50</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#AC0F30;--c2:#123A6B"></span>서울 가디언스</span></td>
+          <td class="l faint">세종화학</td><td class="num">1990</td><td class="num">3</td>
+          <td class="l faint">가디언스필드</td><td class="num">16,000</td><td class="num">230억</td>
+          <td class="l">균형</td><td class="l faint">투수왕국·안정·엘리트</td>
+          <td class="num">49</td><td class="num">49</td><td class="num">51</td><td class="num">50</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#494E77;--c2:#C8102E"></span>수원 나이츠</span></td>
+          <td class="l faint">경기유통</td><td class="num">2013</td><td class="num">2</td>
+          <td class="l faint">나이츠아레나</td><td class="num">20,000</td><td class="num">230억</td>
+          <td class="l">균형</td><td class="l faint">데이터·안정·신흥</td>
+          <td class="num">49</td><td class="num">49</td><td class="num">51</td><td class="num">50</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#194980;--c2:#C1500F"></span>부산 웨이브스</span></td>
+          <td class="l faint">부산해운</td><td class="num">1984</td><td class="num faint">0</td>
+          <td class="l faint">웨이브스타디움</td><td class="num">22,990</td><td class="num">210억</td>
+          <td class="l"><strong>모기업</strong></td><td class="l faint">화력·안정·명문</td>
+          <td class="num">46</td><td class="num">46</td><td class="num">54</td><td class="num">53</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#6F797D;--c2:#C8102E"></span>대구 세이버스</span></td>
+          <td class="l faint">대구제강</td><td class="num">2000</td><td class="num faint">0</td>
+          <td class="l faint">세이버스필드</td><td class="num">24,000</td><td class="num">210억</td>
+          <td class="l"><strong>자립</strong></td><td class="l faint">스몰볼·안정·중견</td>
+          <td class="num">46</td><td class="num">46</td><td class="num">54</td><td class="num">53</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#219FDE;--c2:#8A6512"></span>인천 샤크스</span></td>
+          <td class="l faint">인천중공</td><td class="num">1994</td><td class="num faint">0</td>
+          <td class="l faint">샤크스파크</td><td class="num">23,000</td><td class="num">210억</td>
+          <td class="l">균형</td><td class="l faint">육성·안정·중견</td>
+          <td class="num">46</td><td class="num">46</td><td class="num">54</td><td class="num">53</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#30C52B;--c2:#7B1E2B"></span>서울 코브라스</span></td>
+          <td class="l faint">대한전자</td><td class="num">1998</td><td class="num faint">0</td>
+          <td class="l faint">코브라돔</td><td class="num">23,750</td><td class="num">210억</td>
+          <td class="l">균형</td><td class="l faint">화력·안정·중견</td>
+          <td class="num">46</td><td class="num">46</td><td class="num">54</td><td class="num">53</td>
+        </tr>
+        <tr>
+          <td class="l"><span class="team"><span class="chip" style="background:#DC5A46;--c2:#0E5A63"></span>대전 팬텀스</span></td>
+          <td class="l faint">충청건설</td><td class="num">2018</td><td class="num faint">0</td>
+          <td class="l faint">팬텀스타디움</td><td class="num">17,000</td><td class="num">120억</td>
+          <td class="l"><strong>자립</strong></td><td class="l faint">젊은피·알뜰·언더독</td>
+          <td class="num debit">31</td><td class="num debit">31</td><td class="num credit">69</td><td class="num credit">65</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note warn">
+    <div class="note-h">유형 배분이 목표와 다르다</div>
+    <p>수입 유형은 팀 id 해시로 <strong>균형 5 : 모기업 3 : 자립 2</strong>로 나누기로 했다. 238팀 전체로는 <strong>45.0% / 31.9% / 23.1%</strong>로 목표에 맞는다. 그런데 KBL 열 팀만 보면 <strong>7 : 1 : 2</strong>다 — 표본이 열이라 그렇다. 해시가 고르면 열 개 표본에서도 이 정도는 흔하다. 리그 안에서 배분을 강제할지는 <strong>밸런스 단계에서 정한다.</strong></p>
+  </div>
+</section>
+
+<!-- ── 4. 수입·지출 ──────────────────────────────── -->
+<section>
+  <h2>한 시즌 장부 <span class="tag">엔진 실측</span></h2>
+  <p>실제 <code>calcClubRevenueNative</code> · <code>calcClubExpenseNative</code>를 부른 값이다. 조건은 <strong>승률 .500 · 포스트시즌 미진출 · 홈 72경기</strong>로 통일했다 — 구단 차이만 보려는 것이다. 단위는 억원.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">구단</th><th class="l">유형</th>
+        <th class="num">관중율</th><th class="num">관중</th>
+        <th class="num">입장</th><th class="num">모기업</th><th class="num">중계</th><th class="num">스폰서</th><th class="num">굿즈</th>
+        <th class="num">수입</th>
+        <th class="num">연봉</th><th class="num">스태프</th><th class="num">구장</th><th class="num">2군</th><th class="num">전훈</th>
+        <th class="num">지출</th><th class="num">순익</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#2A386F;--c2:#8A6512"></span>로열스</span></td><td class="l faint">균형</td>
+          <td class="num">55%</td><td class="num faint">91만</td>
+          <td class="num">118</td><td class="num">88</td><td class="num">35</td><td class="num">39</td><td class="num">13</td><td class="num"><strong>293</strong></td>
+          <td class="num">112</td><td class="num">5</td><td class="num">53</td><td class="num">63</td><td class="num">21</td><td class="num"><strong>255</strong></td><td class="num credit">+39</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#2C9196;--c2:#7B1E2B"></span>스타스</span></td><td class="l faint">균형</td>
+          <td class="num">54%</td><td class="num faint">85만</td>
+          <td class="num">110</td><td class="num">83</td><td class="num">35</td><td class="num">36</td><td class="num">12</td><td class="num"><strong>276</strong></td>
+          <td class="num">106</td><td class="num">5</td><td class="num">48</td><td class="num">59</td><td class="num">20</td><td class="num"><strong>238</strong></td><td class="num credit">+38</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#6F797D;--c2:#C8102E"></span>세이버스</span></td><td class="l faint">자립</td>
+          <td class="num">43%</td><td class="num faint">74만</td>
+          <td class="num">107</td><td class="num faint">11</td><td class="num">35</td><td class="num">41</td><td class="num">21</td><td class="num"><strong>215</strong></td>
+          <td class="num">67</td><td class="num">5</td><td class="num">33</td><td class="num">38</td><td class="num">13</td><td class="num"><strong>156</strong></td><td class="num credit">+59</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#30C52B;--c2:#7B1E2B"></span>코브라스</span></td><td class="l faint">균형</td>
+          <td class="num">43%</td><td class="num faint">74만</td>
+          <td class="num">96</td><td class="num">53</td><td class="num">35</td><td class="num">20</td><td class="num">11</td><td class="num"><strong>214</strong></td>
+          <td class="num">67</td><td class="num">5</td><td class="num">33</td><td class="num">38</td><td class="num">13</td><td class="num"><strong>156</strong></td><td class="num credit">+58</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#194980;--c2:#C1500F"></span>웨이브스</span></td><td class="l faint">모기업</td>
+          <td class="num">43%</td><td class="num faint">71만</td>
+          <td class="num">51</td><td class="num">105</td><td class="num">35</td><td class="num">20</td><td class="num faint">0</td><td class="num"><strong>212</strong></td>
+          <td class="num">67</td><td class="num">5</td><td class="num">32</td><td class="num">38</td><td class="num">13</td><td class="num"><strong>155</strong></td><td class="num credit">+57</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#219FDE;--c2:#8A6512"></span>샤크스</span></td><td class="l faint">균형</td>
+          <td class="num">43%</td><td class="num faint">71만</td>
+          <td class="num">93</td><td class="num">53</td><td class="num">35</td><td class="num">20</td><td class="num">10</td><td class="num"><strong>211</strong></td>
+          <td class="num">67</td><td class="num">5</td><td class="num">32</td><td class="num">38</td><td class="num">13</td><td class="num"><strong>155</strong></td><td class="num credit">+56</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#F49530;--c2:#123A6B"></span>팬서스</span></td><td class="l faint">균형</td>
+          <td class="num">45%</td><td class="num faint">66만</td>
+          <td class="num">85</td><td class="num">58</td><td class="num">35</td><td class="num">23</td><td class="num">9</td><td class="num"><strong>210</strong></td>
+          <td class="num">74</td><td class="num">5</td><td class="num">31</td><td class="num">41</td><td class="num">14</td><td class="num"><strong>165</strong></td><td class="num credit">+45</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#494E77;--c2:#C8102E"></span>나이츠</span></td><td class="l faint">균형</td>
+          <td class="num">45%</td><td class="num faint">64만</td>
+          <td class="num">83</td><td class="num">58</td><td class="num">35</td><td class="num">23</td><td class="num">9</td><td class="num"><strong>208</strong></td>
+          <td class="num">74</td><td class="num">5</td><td class="num">30</td><td class="num">41</td><td class="num">14</td><td class="num"><strong>165</strong></td><td class="num credit">+43</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#AC0F30;--c2:#123A6B"></span>가디언스</span></td><td class="l faint">균형</td>
+          <td class="num">45%</td><td class="num faint">51만</td>
+          <td class="num">67</td><td class="num">58</td><td class="num">35</td><td class="num">23</td><td class="num">7</td><td class="num"><strong>189</strong></td>
+          <td class="num">74</td><td class="num">5</td><td class="num">24</td><td class="num">41</td><td class="num">14</td><td class="num"><strong>159</strong></td><td class="num credit">+31</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#DC5A46;--c2:#0E5A63"></span>팬텀스</span></td><td class="l faint">자립</td>
+          <td class="num">36%</td><td class="num faint">43만</td>
+          <td class="num">63</td><td class="num faint">6</td><td class="num">35</td><td class="num">21</td><td class="num">13</td><td class="num"><strong>138</strong></td>
+          <td class="num">38</td><td class="num">5</td><td class="num">13</td><td class="num">22</td><td class="num">7</td><td class="num"><strong>86</strong></td><td class="num credit">+51</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">이 표에서 읽을 것</div>
+    <p><strong>유형이 장부의 모양을 바꾼다.</strong> 웨이브스(모기업형)는 입장 51억 · 모기업 105억이고, 세이버스(자립형)는 정확히 반대로 입장 107억 · 모기업 11억이다. 둘 다 규모는 210억으로 같다. 굿즈는 모기업형이 0이다 — 몫이 0으로 정의돼 있다.</p>
+    <p><strong>연봉·스태프는 가정값이다.</strong> 이 표에서는 연봉을 규모의 32%, 감독 능력 60 · 코치 55×5로 고정해 구단 간 비교만 보이게 했다. 실제 게임에서는 명단에 실린 선수 연봉을 그대로 합산한다.</p>
+  </div>
+  <div class="note warn">
+    <div class="note-h">아직 흑자 쪽으로 기운다</div>
+    <p>열 구단 모두 순익이 <strong>+31억에서 +59억</strong>이다. 처음에는 운영비 합이 규모의 0.17이라 절반이 남았고, 실측을 보고 <strong>0.38로 올렸다.</strong> 그래도 남는다. 다만 예산 반영률이 0.35이고 상한이 2.0이라 <strong>발산하지는 않는다</strong>(아래 궤적). 이 값은 밸런스 단계로 넘긴다.</p>
+  </div>
+</section>
+
+<!-- ── 5. 규칙 ───────────────────────────────────── -->
+<section>
+  <h2>새로 생긴 규칙 값 <span class="tag">generation_rules.json</span></h2>
+  <p>전부 <code>clubFinanceRules</code> 아래에 있다. 코드에 리터럴로 둔 것은 없다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="l">관중율 — 성적과 성향이 자리를 채운다</th><th class="num">값</th><th class="l">뜻</th></tr></thead>
+      <tbody>
+        <tr><td class="l"><code>base</code></td><td class="num">0.45</td><td class="l faint">승률 .500 · 매력 50 · 명성 50일 때</td></tr>
+        <tr><td class="l"><code>winPctSpan</code></td><td class="num">0.20</td><td class="l faint">승률이 밀어 올리는 폭 — 가장 크다</td></tr>
+        <tr><td class="l"><code>marketAppealSpan</code></td><td class="num">0.15</td><td class="l faint">시장 매력 (예산에서 파생)</td></tr>
+        <tr><td class="l"><code>prestigeSpan</code></td><td class="num">0.10</td><td class="l faint">구단 명성</td></tr>
+        <tr><td class="l"><code>min</code> / <code>max</code></td><td class="num">0.10 / 0.95</td><td class="l faint">양 끝을 막는다</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">수입 유형</th><th class="num">배분</th>
+        <th class="num">입장</th><th class="num">모기업</th><th class="num">중계</th><th class="num">스폰서</th><th class="num">굿즈</th>
+        <th class="l">닮은 실제 구단</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l">균형 <code>balanced</code></td><td class="num">5</td>
+          <td class="num">.45</td><td class="num">.25</td><td class="num">.15</td><td class="num">.10</td><td class="num">.05</td>
+          <td class="l faint">관중과 모기업이 반반</td></tr>
+        <tr><td class="l">모기업 <code>parent</code></td><td class="num">3</td>
+          <td class="num">.25</td><td class="num"><strong>.50</strong></td><td class="num">.15</td><td class="num">.10</td><td class="num faint">0</td>
+          <td class="l faint">그룹이 절반을 대는 구단</td></tr>
+        <tr><td class="l">자립 <code>self</code></td><td class="num">2</td>
+          <td class="num"><strong>.50</strong></td><td class="num faint">.05</td><td class="num">.15</td><td class="num">.20</td><td class="num">.10</td>
+          <td class="l faint">티켓·굿즈로 버티는 구단</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="l">지출과 예산</th><th class="num">값</th><th class="l">뜻</th></tr></thead>
+      <tbody>
+        <tr><td class="l"><code>staff.managerBase</code></td><td class="num">1.5억</td><td class="l faint">능력 평균 50인 감독의 연봉</td></tr>
+        <tr><td class="l"><code>staff.coachBase</code></td><td class="num">0.6억</td><td class="l faint">코치 한 명</td></tr>
+        <tr><td class="l"><code>staff.abilityExp</code></td><td class="num">1.5</td><td class="l faint">(능력 ÷ 50)의 지수 — 잘하면 가파르게 오른다</td></tr>
+        <tr><td class="l"><code>operations.stadium</code></td><td class="num">0.14</td><td class="l faint">규모 대비. 수용인원이 크면 더 든다</td></tr>
+        <tr><td class="l"><code>operations.farm</code></td><td class="num">0.18</td><td class="l faint">2군 — 없는 리그는 0</td></tr>
+        <tr><td class="l"><code>operations.camp</code></td><td class="num">0.06</td><td class="l faint">전지훈련</td></tr>
+        <tr><td class="l"><code>budgetAdjustRate</code></td><td class="num">0.35</td><td class="l faint"><strong>순익을 예산에 얼마나 반영하나.</strong> 1.0이면 발산한다</td></tr>
+        <tr><td class="l"><code>minBudgetRatio</code></td><td class="num">0.40</td><td class="l faint">적자가 겹쳐도 여기까지만 — 리그가 죽지 않게</td></tr>
+        <tr><td class="l"><code>maxBudgetRatio</code></td><td class="num">2.00</td><td class="l faint">흑자가 겹쳐도 여기까지만</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="l">포스트시즌 보너스</th><th class="num">규모 대비</th></tr></thead>
+      <tbody>
+        <tr><td class="l">가을야구 진출</td><td class="num">+3%</td></tr>
+        <tr><td class="l">준우승</td><td class="num">+5%</td></tr>
+        <tr><td class="l">우승</td><td class="num">+8%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── 6. 궤적 ───────────────────────────────────── -->
+<section>
+  <h2>다섯 시즌을 굴렸더니 <span class="tag">헤드리스 · 씨앗 셋</span></h2>
+  <p>실제 게임 경로로 세 번 돌렸다. 값은 <strong>최초 예산 대비 배수</strong>다 — 중앙값만 보면 부자가 오르고 빈자가 내리는 걸 못 보므로 <strong>최소·중앙·최대를 함께</strong> 낸다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">시즌</th>
+        <th class="num">씨앗 111</th><th class="num">씨앗 222</th><th class="num">씨앗 333</th>
+        <th class="l">배수 구간 (최소 – 중앙 – 최대)</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l">2026 시작</td><td class="num">230억</td><td class="num">230억</td><td class="num">230억</td><td class="l faint">1.00 기준</td></tr>
+        <tr><td class="l">2027</td><td class="num">236억</td><td class="num">236억</td><td class="num">239억</td><td class="l faint">0.99 – 1.08 – 1.14</td></tr>
+        <tr><td class="l">2028</td><td class="num">253억</td><td class="num">254억</td><td class="num">252억</td><td class="l faint">0.98 – 1.14 – 1.26</td></tr>
+        <tr><td class="l">2029</td><td class="num">247억</td><td class="num">264억</td><td class="num">261억</td><td class="l faint">0.90 – 1.17 – 1.34</td></tr>
+      </tbody>
+      <tfoot><tr>
+        <td class="l">중앙 배수</td>
+        <td class="num">1.168</td><td class="num">1.163</td><td class="num">1.188</td>
+        <td class="l">세 씨앗이 거의 같다</td>
+      </tr></tfoot>
+    </table>
+  </div>
+  <p><strong>발산하지 않는다.</strong> 세 씨앗의 중앙 배수가 <span style="font-family:'IBM Plex Mono',monospace">1.163 · 1.168 · 1.188</span>로 모이고, 최대도 1.30–1.34에서 멎는다. 상한 2.0에는 닿지 않고 하한 0.4는 근처도 못 간다. 2030년 값이 2029와 같은 것은 마지막 시즌의 정산이 루프가 끝난 뒤라 안 찍힌 것이다 — 결함이 아니다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">구단</th><th class="num">최초</th>
+        <th class="num">111</th><th class="num">222</th><th class="num">333</th>
+        <th class="num">평균 배수</th><th class="l">왜 이 자리인가</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#6F797D;--c2:#C8102E"></span>대구 세이버스</span></td><td class="num faint">210억</td>
+          <td class="num">1.30</td><td class="num">1.31</td><td class="num">1.34</td><td class="num credit"><strong>1.32</strong></td>
+          <td class="l faint">자립형 + 수용 24,000 — 관중을 가장 많이 받는다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#219FDE;--c2:#8A6512"></span>인천 샤크스</span></td><td class="num faint">210억</td>
+          <td class="num">1.26</td><td class="num">1.26</td><td class="num">1.19</td><td class="num credit">1.24</td>
+          <td class="l faint">수용 23,000 · 규모 대비 구장이 크다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#194980;--c2:#C1500F"></span>부산 웨이브스</span></td><td class="num faint">210억</td>
+          <td class="num">1.17</td><td class="num">1.26</td><td class="num">1.24</td><td class="num credit">1.22</td>
+          <td class="l faint">모기업형 — 성적과 무관하게 지원금이 고정이다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#30C52B;--c2:#7B1E2B"></span>서울 코브라스</span></td><td class="num faint">210억</td>
+          <td class="num">1.18</td><td class="num">1.27</td><td class="num">1.20</td><td class="num credit">1.22</td>
+          <td class="l faint">수용 23,750</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#2C9196;--c2:#7B1E2B"></span>창원 스타스</span></td><td class="num faint">330억</td>
+          <td class="num">1.13</td><td class="num">1.11</td><td class="num">1.18</td><td class="num credit">1.14</td>
+          <td class="l faint">규모가 커서 지출도 크다 — 비율로는 덜 오른다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#DC5A46;--c2:#0E5A63"></span>대전 팬텀스</span></td><td class="num faint">120억</td>
+          <td class="num">1.20</td><td class="num">1.16</td><td class="num">1.03</td><td class="num credit">1.13</td>
+          <td class="l faint">규모가 작아 지출도 작다 · 편차가 가장 크다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#F49530;--c2:#123A6B"></span>광주 팬서스</span></td><td class="num faint">230억</td>
+          <td class="num">1.06</td><td class="num">1.07</td><td class="num">1.19</td><td class="num credit">1.11</td>
+          <td class="l faint">—</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#2A386F;--c2:#8A6512"></span>서울 로열스</span></td><td class="num faint">350억</td>
+          <td class="num">1.16</td><td class="num">0.99</td><td class="num">1.09</td><td class="num credit">1.08</td>
+          <td class="l faint">최대 규모 — 연봉 112억이 장부를 누른다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#494E77;--c2:#C8102E"></span>수원 나이츠</span></td><td class="num faint">230억</td>
+          <td class="num">1.07</td><td class="num">1.09</td><td class="num">1.08</td><td class="num credit">1.08</td>
+          <td class="l faint">세 씨앗 편차가 가장 작다</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#AC0F30;--c2:#123A6B"></span>서울 가디언스</span></td><td class="num faint">230억</td>
+          <td class="num debit">0.90</td><td class="num debit">0.96</td><td class="num">1.02</td><td class="num debit"><strong>0.96</strong></td>
+          <td class="l">수용 <strong>16,000</strong> — 열 구단 중 가장 작다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">구장이 장부에 나타난다</div>
+    <p>순위가 <strong>수용인원 순서를 거의 그대로 따라간다.</strong> 세이버스(24,000)가 세 씨앗 모두 1위고, 가디언스(16,000)가 세 번 모두 꼴찌다. 규모는 둘 다 210~230억으로 비슷한데 <strong>받을 수 있는 관중이 다르다.</strong> 4-A에서 <code>capacity</code>를 채운 것이 여기로 흘러온다.</p>
+  </div>
+  <div class="note warn">
+    <div class="note-h">적자가 거의 안 난다</div>
+    <p>구단·씨앗 30개 조합 중 예산이 준 경우가 <strong>세 번뿐이다</strong>(10%) — 그것도 전부 가디언스다. 씨앗 333에서는 <strong>열 구단이 모두 늘었다.</strong> 예산이 내려가는 갈래(FA 입찰 축소·계약금 삭감)가 <strong>사실상 안 도는 상태</strong>라는 뜻이다. 위의 흑자 편향과 같은 원인이고, 같이 밸런스 단계에서 잡는다.</p>
+  </div>
+</section>
+
+<!-- ── 7. 세 프로 리그 ───────────────────────────── -->
+<section>
+  <h2>ABL·JBL도 같은 장부를 쓴다 <span class="tag">헤드리스 실측</span></h2>
+  <p>정산은 <code>ticketPrice</code>에 실린 리그를 전부 돈다 — <strong>KBL·ABL·JBL 셋이다.</strong> 세 리그 모두 순위표가 서고 팀 id 규칙(<code>_1</code>)이 같고 예산이 채워져 있어, 조건 셋을 다 통과한다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">리그</th><th class="num">정산 팀</th><th class="num">순위표</th><th class="num">팀당 경기</th>
+        <th class="num">티켓값</th><th class="num">수용 평균</th><th class="num">규모 평균</th>
+        <th class="l">돌고 있나</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l">KBL</td><td class="num">10</td><td class="num">10</td><td class="num">156</td>
+          <td class="num">1.3만원</td><td class="num">21,224</td><td class="num">233억</td>
+          <td class="l"><span class="pill done">돈다</span></td></tr>
+        <tr><td class="l">JBL</td><td class="num">12</td><td class="num">12</td><td class="num">155</td>
+          <td class="num">3.0만원</td><td class="num">36,712</td><td class="num">1,043억</td>
+          <td class="l"><span class="pill done">돈다</span></td></tr>
+        <tr><td class="l">ABL</td><td class="num">16</td><td class="num">16</td><td class="num">162</td>
+          <td class="num">5.5만원</td><td class="num">43,870</td><td class="num">1,972억</td>
+          <td class="l"><span class="pill done">돈다</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="faint" style="font-size:.85rem">경기 수는 <strong>가정이 아니라 실측이다</strong> — 정산이 쓰는 <code>standings</code>의 승·패·무를 헤드리스에서 그대로 읽었다. 티켓값은 리그 평균 팀에서 관중 수입이 <em>규모 × 관중몫</em>에 오도록 역산한 값이고, 실제 KBO 1.0–1.5만원 · MLB 약 5.5만원과 맞춰 뒀다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">리그</th>
+        <th class="num">수입/규모</th><th class="num">지출/규모</th><th class="num">순익/규모</th>
+        <th class="num">3년 배수</th><th class="num">상한 2.0까지</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l">KBL</td><td class="num">96%</td><td class="num">72%</td><td class="num">24%</td>
+          <td class="num">1.131</td><td class="num">약 9년</td></tr>
+        <tr><td class="l">JBL</td><td class="num">95%</td><td class="num">71%</td><td class="num">24%</td>
+          <td class="num">1.198</td><td class="num">약 9년</td></tr>
+        <tr><td class="l">ABL</td><td class="num"><strong>100%</strong></td><td class="num">70%</td><td class="num debit"><strong>30%</strong></td>
+          <td class="num debit">1.236</td><td class="num debit"><strong>약 7년</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <div class="note-h">ABL은 3년 만에 상한을 쳤다</div>
+    <p>평균 팀은 7년이 걸리는데, 실제로는 <strong>시카고 윈드베어스와 LA 선드래곤스가 3년째에 ×2.00</strong>으로 상한에 닿았다. 평균이 아니라 <strong>편차</strong> 때문이다.</p>
+    <p>관중 수입은 <strong>수용인원</strong>에 비례하고 지출은 <strong>규모</strong>에 비례한다. 둘의 비가 팀마다 다르면 어긋나는데, 티켓값은 <strong>리그 평균에서 역산</strong>한 값이라 평균에서 멀수록 크게 틀어진다.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">ABL 구단</th><th class="num">규모</th><th class="num">수용</th>
+        <th class="num">수용/규모 지수</th><th class="num">3년 배수</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l">시카고 윈드베어스</td><td class="num faint">798억</td><td class="num">41,268</td>
+          <td class="num debit"><strong>2.32</strong></td><td class="num debit"><strong>2.00</strong> 상한</td></tr>
+        <tr><td class="l">LA 선드래곤스</td><td class="num faint">1,568억</td><td class="num">56,000</td>
+          <td class="num debit"><strong>1.61</strong></td><td class="num debit"><strong>2.00</strong> 상한</td></tr>
+        <tr><td class="l">세인트루이스 리버카디널스</td><td class="num faint">1,400억</td><td class="num">45,494</td>
+          <td class="num">1.46</td><td class="num">1.50</td></tr>
+        <tr><td class="l">휴스턴 스페이스코밋츠</td><td class="num faint">1,484억</td><td class="num">41,168</td>
+          <td class="num">1.25</td><td class="num">1.54</td></tr>
+        <tr><td class="l faint">… 중간 생략 …</td><td class="num faint">—</td><td class="num faint">—</td><td class="num faint">—</td><td class="num faint">—</td></tr>
+        <tr><td class="l">피닉스 데저트서펀츠</td><td class="num faint">2,619억</td><td class="num">48,519</td>
+          <td class="num">0.83</td><td class="num">1.11</td></tr>
+        <tr><td class="l">샌디에이고 코스털레이스</td><td class="num faint">2,478억</td><td class="num">40,162</td>
+          <td class="num">0.73</td><td class="num">1.19</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>지수가 높은 순서가 <strong>배수 순서와 거의 그대로 겹친다.</strong> 이 지수의 폭은 세 리그가 비슷한데(KBL ×2.2 · ABL ×3.2 · JBL ×3.6), <strong>ABL만 상한에 닿는 것은 순익률이 30%로 더 높아 같은 편차가 더 빨리 벌어지기 때문이다.</strong></p>
+
+  <div class="note">
+    <div class="note-h">고칠 자리는 하나가 아니다</div>
+    <p>티켓값만 낮추면 리그 평균이 내려갈 뿐 <strong>편차는 그대로다.</strong> 관중 수입을 수용인원이 아니라 <em>수용인원과 규모를 함께</em> 보게 하거나, 지출의 구장 항목을 수용인원에 더 강하게 물리는 쪽이 대칭이 맞는다. <strong>둘 다 밸런스 값이라 값을 정하기 전에 묻는다.</strong></p>
+  </div>
+</section>
+
+<!-- ── 8. 모기업 ─────────────────────────────────── -->
+<section>
+  <h2>모기업 서른여덟 <span class="tag">4-A 보완</span></h2>
+  <p>4-A에서 KBL 열 팀은 회사 이름을 지어 넣었는데, 해외 스물여덟 팀은 <strong>팀 이름에 “Holdings”만 붙인 자리표시자</strong>였다. JBL은 팀 이름에 “1군”이 들어 있어 그게 영문 <code>(1st)</code>로 회사명에 딸려 들어갔다.</p>
+  <div class="note warn">
+    <div class="note-h">화면에 그대로 나오고 있었다</div>
+    <p><code>TeamDetailModal</code>이 모기업을 표시한다 — 팀 상세를 열면 <strong>“Tokyo Neon Cranes (1st) Holdings”</strong>가 보였다. 검사가 있었지만 <code>toBeTruthy()</code>만 봤다: 값이 <strong>있었으므로</strong> 통과했다. <strong>있는지가 아니라 무엇인지를 봐야 한다.</strong></p>
+  </div>
+
+  <p>현실의 소유 구조를 본떠 채웠다. <strong>두 리그가 같은 방식이 아니다</strong> — 실제로 다르기 때문이다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">JBL 구단</th><th class="l">모기업</th><th class="l">업종</th><th class="num">창단</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#c8a822"></span>도쿄 네온 크레인즈</span></td><td class="l"><strong>토와 신문</strong></td><td class="l faint">신문</td><td class="num">1962</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003da5;--c2:#d40000"></span>나고야 아이언 드레이크스</span></td><td class="l"><strong>주부 신문</strong></td><td class="l faint">신문</td><td class="num">1953</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002b5c;--c2:#d00000"></span>오사카 템포 스팅스</span></td><td class="l"><strong>한요 전철</strong></td><td class="l faint">철도</td><td class="num">1998</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#0077b6;--c2:#f4a300"></span>오키나와 선즈</span></td><td class="l"><strong>난세이 철도</strong></td><td class="l faint">철도</td><td class="num">1936</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002d62;--c2:#fdbb30"></span>후쿠오카 썬더 팰컨즈</span></td><td class="l"><strong>큐슈 텔레콤</strong></td><td class="l faint">통신</td><td class="num">1942</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#d70000"></span>요코하마 타이드 레이브스</span></td><td class="l"><strong>미나토 디지털</strong></td><td class="l faint">IT</td><td class="num">1978</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003da5;--c2:#e8002d"></span>센다이 스피릿 버팔로스</span></td><td class="l"><strong>도호쿠 커머스</strong></td><td class="l faint">전자상거래</td><td class="num">1999</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002060;--c2:#c8102e"></span>삿포로 폴라 베어스</span></td><td class="l"><strong>홋카이 식품</strong></td><td class="l faint">식품</td><td class="num">1986</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#00205b;--c2:#cf152d"></span>나가사키 마린 솔저스</span></td><td class="l"><strong>히노데 제과</strong></td><td class="l faint">제과</td><td class="num">1978</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#005aab;--c2:#8a8a8a"></span>니가타 씨걸스</span></td><td class="l"><strong>시라유키 유업</strong></td><td class="l faint">유제품</td><td class="num">1975</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#005bac;--c2:#c8a400"></span>고베 실버 울브스</span></td><td class="l"><strong>롯코 캐피탈</strong></td><td class="l faint">금융</td><td class="num">1975</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#bf0000;--c2:#000000"></span>히로시마 아이언 스톰즈</span></td><td class="l"><strong>세토 자동차</strong></td><td class="l faint">자동차</td><td class="num">1952</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="faint" style="font-size:.85rem">업종 분포를 실제 NPB에 맞췄다 — <strong>신문 2 · 철도 2 · 통신/IT 3 · 식품 3 · 금융 1 · 자동차 1.</strong> 일본은 모기업이 구단 이름에까지 들어갈 만큼 존재가 뚜렷하다.</p>
+
+  <div class="scroll">
+    <table>
+      <thead><tr>
+        <th class="l">ABL 구단</th><th class="l">소유</th><th class="l">형태</th><th class="num">창단</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#e8312a"></span>뉴욕 엠파이어</span></td><td class="l"><strong>홀랜드 패밀리 트러스트</strong></td><td class="l faint">가족</td><td class="num">1916</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002244;--c2:#cc0000"></span>시카고 윈드베어스</span></td><td class="l"><strong>미들랜드 트러스트</strong></td><td class="l faint">가족</td><td class="num">1933</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#bd3039;--c2:#0d2b56"></span>보스턴 하버호크스</span></td><td class="l"><strong>베이스테이트 스포츠 벤처스</strong></td><td class="l faint">투자그룹</td><td class="num">1990</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003da5;--c2:#ef3e42"></span>LA 선드래곤스</span></td><td class="l"><strong>퍼시픽 캐피털 파트너스</strong></td><td class="l faint">투자그룹</td><td class="num">1948</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003087;--c2:#c0111f"></span>댈러스 론스타스</span></td><td class="l"><strong>트리니티 캐피털</strong></td><td class="l faint">투자그룹</td><td class="num">1935</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#003366;--c2:#cc0000"></span>클리블랜드 레이크스피리츠</span></td><td class="l"><strong>레이크쇼어 파트너스</strong></td><td class="l faint">투자그룹</td><td class="num">1945</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#33006f;--c2:#c4ced4"></span>덴버 마운틴픽스</span></td><td class="l"><strong>로키마운틴 파트너스</strong></td><td class="l faint">투자그룹</td><td class="num">1971</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#00a3e0;--c2:#ef3340"></span>마이애미 웨이브라이더스</span></td><td class="l"><strong>선코스트 벤처스</strong></td><td class="l faint">투자그룹</td><td class="num">1974</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#fd5a1e;--c2:#27251f"></span>샌프란시스코 베이씰스</span></td><td class="l"><strong>골든게이트 벤처스</strong></td><td class="l faint">투자그룹</td><td class="num">1998</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#a71930;--c2:#e3d4ad"></span>피닉스 데저트서펀츠</span></td><td class="l"><strong>선벨트 인베스트먼트</strong></td><td class="l faint">투자그룹</td><td class="num">1969</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#0c2c56;--c2:#005c5c"></span>시애틀 레인애로우스</span></td><td class="l"><strong>노스웨스트 홀딩스</strong></td><td class="l faint">투자그룹</td><td class="num">1970</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#002d62;--c2:#ffc425"></span>샌디에이고 코스털레이스</span></td><td class="l"><strong>라호야 홀딩스</strong></td><td class="l faint">투자그룹</td><td class="num">1984</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#ce1141;--c2:#002d62"></span>애틀랜타 피치트리팰컨스</span></td><td class="l"><strong>서던 미디어 네트웍스</strong></td><td class="l faint">미디어</td><td class="num">1927</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#c41e3a;--c2:#0c2340"></span>세인트루이스 리버카디널스</span></td><td class="l"><strong>미시시피 브루잉</strong></td><td class="l faint">양조</td><td class="num">1921</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#eb6e1f;--c2:#002d62"></span>휴스턴 스페이스코밋츠</span></td><td class="l"><strong>걸프코스트 에너지</strong></td><td class="l faint">에너지</td><td class="num">1953</td></tr>
+        <tr><td class="l"><span class="team"><span class="chip" style="background:#0c2340;--c2:#fa4616"></span>디트로이트 모터울브즈</span></td><td class="l"><strong>그레이트레이크 인더스트리</strong></td><td class="l faint">제조</td><td class="num">1947</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">왜 ABL만 “Holdings”를 안 붙였나</div>
+    <p>MLB는 <strong>모기업 개념이 약하다.</strong> 대부분 가족 소유나 투자그룹이고 기업 소유는 예외다 — 브레이브스가 미디어 기업 소유였고, 카디널스가 한때 양조 회사 소유였던 정도다. 그래서 열여섯 팀에 회사를 하나씩 붙이는 대신 <strong>소유 형태를 갈랐다</strong>: 가족 2 · 투자그룹 10 · 사업체 4.</p>
+    <p>같은 이유로 <strong>ABL의 모기업 수입 몫이 낮은 것이 오히려 맞다.</strong> 수입 유형이 <em>자립</em>으로 뽑힌 ABL 구단은 실제 MLB 구단의 장부와 가깝다.</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="l">1군·2군 표기</th><th class="l">전</th><th class="l">후</th></tr></thead>
+      <tbody>
+        <tr><td class="l">KBL</td><td class="l faint">부산 웨이브스 / … (2군)</td><td class="l">그대로</td></tr>
+        <tr><td class="l">ABL</td><td class="l faint">뉴욕 엠파이어 / … <strong>팜</strong></td><td class="l">뉴욕 엠파이어 / … (2군)</td></tr>
+        <tr><td class="l">JBL</td><td class="l faint">도쿄 네온 크레인즈 <strong>1군</strong> / … 2군</td><td class="l">도쿄 네온 크레인즈 / … (2군)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>세 리그가 같은 표기를 쓴다 — <strong>JBL만 1군에도 이름표가 붙어 있었고</strong> 그게 모기업 이름을 망친 원인이다.</p>
+  <div class="note">
+    <div class="note-h">기존 세이브에 남는 것</div>
+    <p><code>history_standings</code>와 <code>history_lb_stats</code>가 <code>team_name</code>을 <strong>복사해 저장한다</strong> — 팀이 사라져도 기록이 남게 하려는 것이다. 그래서 이미 진행 중인 세이브의 <strong>과거 기록에는 옛 이름이 남는다.</strong> id는 안 건드렸으니 데이터는 안전하고, 새로 쌓이는 기록부터 새 이름이다. 새 게임은 영향이 없다.</p>
+  </div>
+</section>
+
+<!-- ── 9. 남은 것 ────────────────────────────────── -->
+<section>
+  <h2>연결은 됐고, 값은 아직이다</h2>
+  <p>배선은 다섯 층을 다 지난다 — <strong>Rust → napi → ipcMain → preload → TS → 세이브 → 복원.</strong> 값은 밸런스 단계에서 잡는다.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="l">항목</th><th class="l">상태</th><th class="l">무엇이 남았나</th></tr></thead>
+      <tbody>
+        <tr><td class="l">모기업 38팀 · 자리표시자 제거</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">검사가 이름 베끼기를 잡는다</td></tr>
+        <tr><td class="l">1군·2군 표기 통일</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">세 리그가 같은 형식</td></tr>
+        <tr><td class="l">ABL 3년에 상한 2.0</td><td class="l"><span class="pill hold">밸런스</span></td><td class="l faint">수용/규모 편차가 티켓값과 안 맞는다</td></tr>
+        <tr><td class="l">수입 6항목 · 지출 5항목</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">Rust 검사 14건</td></tr>
+        <tr><td class="l"><code>clubBudgets</code> 저장·복원</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">세이브에 안 실려 조용히 사라질 뻔했다</td></tr>
+        <tr><td class="l">되먹임 발산</td><td class="l"><span class="pill done">닫힘</span></td><td class="l faint">계측기(<code>clubBudgetProbe</code>)를 남겼다</td></tr>
+        <tr><td class="l">관중율 36–55%</td><td class="l"><span class="pill hold">밸런스</span></td><td class="l faint">실제 KBO는 60–70% 대역이다</td></tr>
+        <tr><td class="l">전 구단 흑자</td><td class="l"><span class="pill hold">밸런스</span></td><td class="l faint">운영비 0.38도 부족하다</td></tr>
+        <tr><td class="l">유형 배분 7:1:2</td><td class="l"><span class="pill open">검토</span></td><td class="l faint">리그 안에서 배분을 강제할지</td></tr>
+        <tr><td class="l">예산 → FA 입찰·계약금</td><td class="l"><span class="pill open">검토</span></td><td class="l faint">예산이 움직이니 이제 아래로 물릴 수 있다</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <div class="note-h">구단 성향은 일부러 안 흔들었다</div>
+    <p>예산이 매년 바뀌는데 성향(<code>marketAppeal</code>·<code>prestige</code> 등 12항목)은 <strong>최초 예산으로 한 번만</strong> 유도한다. <code>deriveProfileFromBudgetIndex</code>를 부르는 자리가 <code>if (out[t.id]) continue;</code>로 막혀 있어 구조상 이미 그렇다. 성적으로 성향을 갱신하는 <code>updateProTeamProfiles</code>가 따로 있고, 예산까지 성향을 밀면 <strong>두 힘이 겹쳐 원인을 못 가린다.</strong></p>
+  </div>
+</section>
+
+<div class="foot">
+  <div>실측 · 2026-08-29 · 헤드리스 5시즌 × 3회 · 씨앗 111 · 222 · 333</div>
+  <div>회귀 · vitest 134파일 1,199건 · cargo 247건 · tsc 0 · svelte-check 34/37</div>
+  <div>리그 · KBL 10 · JBL 12 · ABL 16 구단 — 셋 다 정산이 돈다</div>
+  <div>커밋 · 5f8e07d7f (4-A) · 75f17515b (4-C) · ee4ee29cb (4-B)</div>
+  <div>　　 · ce557277e (계측기) · 62974430e (세 리그) · bc45ff645 (모기업)</div>
+</div>
+
+</div>

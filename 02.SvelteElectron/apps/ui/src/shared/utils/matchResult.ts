@@ -17,13 +17,13 @@ export type PitchResultCode =
   // 삼진 — **타자가 물러났다.** 스트라이크 하나(`STRIKE_*`)와 다른 일이다.
   // 🔴 예전엔 이게 없어서 3스트라이크째에도 "루킹"이라고만 떴다.
   | "STRIKEOUT_SWING" | "STRIKEOUT_LOOK"
-  | "INPLAY_OUT" | "GROUND_OUT" | "FLY_OUT" | "LINE_OUT" | "DOUBLE_PLAY"
+  | "INPLAY_OUT" | "GROUND_OUT" | "FLY_OUT" | "LINE_OUT" | "DOUBLE_PLAY" | "TRIPLE_PLAY"
   | "FIELDING_ERROR"
   | "HIT_SINGLE" | "HIT_DOUBLE" | "HIT_TRIPLE" | "HOME_RUN"
   | "WALK"
   // 사구·희생번트·희생플라이 (2026-08-28). **셋 다 타수가 아니다** —
   // 기록에서 볼넷·아웃과 다르게 잡힌다
-  | "HIT_BY_PITCH" | "SAC_BUNT" | "SAC_FLY"
+  | "HIT_BY_PITCH" | "INTERFERENCE" | "SAC_BUNT" | "SAC_FLY"
   | "GAME_OVER";
 
 export type BallHitType = "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt";
@@ -39,7 +39,7 @@ export interface BallInPlay {
  * 옛 세이브나 로컬 폴백이 낼 수 있어 남겨 둔다.
  */
 const OUT_IN_PLAY = new Set<PitchResultCode>([
-  "INPLAY_OUT", "GROUND_OUT", "FLY_OUT", "LINE_OUT", "DOUBLE_PLAY",
+  "INPLAY_OUT", "GROUND_OUT", "FLY_OUT", "LINE_OUT", "DOUBLE_PLAY", "TRIPLE_PLAY",
 ]);
 
 const HITS = new Set<PitchResultCode>([
@@ -88,9 +88,9 @@ const FLASH_LABEL: Record<PitchResultCode, string> = {
   STRIKE_SWING: "헛스윙", STRIKE_LOOK: "루킹", BALL: "볼", FOUL: "파울",
   STRIKEOUT_SWING: "삼진 아웃", STRIKEOUT_LOOK: "삼진 아웃",
   INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
-  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살!",
+  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살!", TRIPLE_PLAY: "삼중살!!",
   FIELDING_ERROR: "실책", WALK: "볼넷",
-  HIT_BY_PITCH: "몸에 맞는 공", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이",
+  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이",
   HIT_SINGLE: "안타", HIT_DOUBLE: "2루타", HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
   GAME_OVER: "경기 종료",
 };
@@ -105,6 +105,12 @@ export function flashLabel(code: PitchResultCode): string {
  * ⚠ 없는 정보를 지어내지 않는다 — `ballInPlay`가 없으면 기본 문구 그대로다.
  */
 export function logLabel(code: PitchResultCode, ball?: BallInPlay | null): string {
+  // ⚠ **삼중살은 병살과 같은 문구 규칙을 쓴다** — 다만 아웃이 셋이라
+  //   따로 적는다. 실제 KBO 는 시즌 0~2건이라 로그에 뜨면 사건이다.
+  if (code === "TRIPLE_PLAY") {
+    const who = ball ? POSITION_LABEL[ball.zone] : null;
+    return who ? `${who} 삼중살!!` : "삼중살!!";
+  }
   if (code === "DOUBLE_PLAY") {
     const who = ball ? POSITION_LABEL[ball.zone] : null;
     // ⚠ **"병살타"는 땅볼에만 쓰는 말이다.** 엔진은 직선타에서도 병살을 내는데
@@ -130,7 +136,7 @@ export function logClass(code: PitchResultCode): string {
   if (isHit(code)) return "log-hit";
   if (code === "WALK") return "log-walk";
   // 병살은 삼진보다 더 좋은 일이다 — 아웃 색이 아니라 제 색을 준다
-  if (code === "DOUBLE_PLAY") return "log-dp";
+  if (code === "DOUBLE_PLAY" || code === "TRIPLE_PLAY") return "log-dp";
   if (isStrike(code)) return "log-strike";
   if (code === "FOUL") return "log-foul";
   if (code === "BALL") return "log-ball";

@@ -1,9 +1,13 @@
 import { get } from "svelte/store";
 import { seedOf } from "../../utils/seedOf";
+import { loadRosterRules } from "../../repo/newGameV3";
+import { medicalRecoveryWeeks } from "../../utils/clubEffects";
 import { seasonStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog } from "../../stores/autoAdvance";
+// 의료팀 — 팀 성향에서 `medicalQuality` 를 읽는다
+import { getTeamProfile } from "./market";
 import { staffStatsOf, factorOf } from "../../utils/staffEffects";
 import { loadRetirementRules, surgeryRetireChance } from "../retirement";
 import type { InjurySeverity, InjuryState, InjuryType } from "../../types/save";
@@ -97,14 +101,31 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
 
   // 캐시에 없는 새 주차 항목만 증분 반영
   const protagonistId = g.protagonist.id;
-  for (const entry of s.schedule) {
-    if (!entry.result || entry.week >= weekNum) continue;
-    if (entry.week <= _injuryAppCache.lastScannedWeek) continue;
-    for (const line of entry.result.playerLines) {
-      if (line.playerId === protagonistId) continue;
-      const ex = _injuryAppCache.playerData.get(line.playerId);
-      if (ex) { ex.weeks.add(entry.week); }
-      else     { _injuryAppCache.playerData.set(line.playerId, { role: line.role as "pitcher" | "batter", weeks: new Set([entry.week]) }); }
+  // 🔴 **`s.schedule` 만 훑고 있었다 — 그건 주인공 리그 일정이다.**
+  //   나머지 리그는 `s.leagueSchedules` 에 따로 있는데 안 봤다.
+  //   그래서 **주인공이 고교생이면 프로 선수는 아무도 안 다쳤다.**
+  //
+  //   실측(씨앗 111 · 2시즌):
+  //       고교(주인공 리그)  3,060명 중 부상 227~291명
+  //       프로 1군+2군       2,600명 중 부상   0~6명
+  //
+  //   ⚠ 데이터는 다 있었다 — 배경 리그도 `playerLines` 를 만든다
+  //     (KBL 780경기 16,345줄 · ABL 1,296경기 27,027줄). **보는 쪽만 좁았다.**
+  //   ⚠ 증분 캐시(`lastScannedWeek`)라 리그가 늘어도 매주 새 주차만 훑는다.
+  const allSchedules: (typeof s.schedule)[] = [s.schedule];
+  for (const sch of Object.values(s.leagueSchedules ?? {})) {
+    if (Array.isArray(sch)) allSchedules.push(sch);
+  }
+  for (const sched of allSchedules) {
+    for (const entry of sched) {
+      if (!entry.result || entry.week >= weekNum) continue;
+      if (entry.week <= _injuryAppCache.lastScannedWeek) continue;
+      for (const line of entry.result.playerLines) {
+        if (line.playerId === protagonistId) continue;
+        const ex = _injuryAppCache.playerData.get(line.playerId);
+        if (ex) { ex.weeks.add(entry.week); }
+        else     { _injuryAppCache.playerData.set(line.playerId, { role: line.role as "pitcher" | "batter", weeks: new Set([entry.week]) }); }
+      }
     }
   }
   _injuryAppCache.lastScannedWeek = weekNum - 1;
@@ -176,10 +197,46 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     })),
     loadRetirementRules(),
   ]);
+  // 의료팀 규칙 — 없으면 안 돈다(예전 동작)
+  const rulesFile = await loadRosterRules();
   const retireRolls = JSON.parse(retireRollsRaw) as number[];
   const result = JSON.parse(resultRaw) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
 
+  // ── 의료팀 (4단계) ─────────────────────────────────────
+  //
+  // 🔴 `medicalQuality` 가 **트레이드 판정에만** 쓰이고 있었다.
+  //   부상 회복은 팀과 무관해서 **의료 투자에 값이 없었다.**
+  //
+  // ⚠ 값은 규칙 파일이 정본이다(`medicalRules`). 없으면 안 돈다 —
+  //   예전 동작이라 안전하다.
+  // ⚠ **Rust 로 안 내렸다.** 이미 계산된 주 수에 팀 계수를 곱하는 것이라
+  //   산식도 난수도 아니다 — `rosterEngine`(5단계)과 같은 갈래다.
+  {
+    const med = (rulesFile as { medicalRules?: {
+      recoverySpan?: number; minWeeks?: number } }).medicalRules;
+    if (med?.recoverySpan) {
+      const span = med.recoverySpan;
+      const minW = med.minWeeks ?? 1;
+      const teamOf = new Map((g.npcs ?? []).map((n) => [n.npcId, n.currentTeam ?? ""]));
+      for (const occ of result.occurred) {
+        const tid = teamOf.get(occ.playerId) ?? "";
+        if (!tid) continue;
+        const q = getTeamProfile(tid, g, m)?.medicalQuality ?? 50;
+        // ⚠ **식은 `clubEffects` 한 곳에만 둔다.** 팀 상세도 같은 함수를
+        //   써서 화면과 실제가 안 갈린다.
+        occ.recoveryWeeks = medicalRecoveryWeeks(occ.recoveryWeeks, q, span, minW);
+      }
+    }
+  }
+
   let retireRollIdx = 0;
+
+  // 🔴 **군 복무 중인지 볼 수 있어야 한다** — 아래에서 신분을 안 덮으려면
+  //   그 값이 필요하다. 부상자가 없는 주가 대부분이라 발생했을 때만 만든다
+  //   (위 완치 갈래가 같은 이유로 `healed.length > 0` 을 본다).
+  const npcStatusById = result.occurred.length > 0
+    ? new Map(g.npcs.map((n) => [n.npcId, n.careerStatus]))
+    : null;
 
   for (const occ of result.occurred) {
     const entity = entityMap.get(occ.playerId);
@@ -263,7 +320,18 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     });
 
     // NpcSaveState 부상 상태 갱신
-    gameStore.updateNpcCareerStatus(occ.playerId, "injured");
+    //
+    // 🔴 **군 복무 중인 선수는 신분을 안 바꾼다** (2026-08-31).
+    //   `careerStatus` 는 **신분**(military/active/free_agent/retired)이고
+    //   부상은 상태다. 여기서 `injured` 로 덮으면 상무 선수가 군 신분을
+    //   잃고, 완치 때 `active` 로 돌아와 **전역 판정에서 영원히 빠진다**
+    //   (`npc_sim.rs` 전역 루프는 military 만 본다).
+    //   실측: 상무가 26 → 54명으로 부풀고 전역년 2027인 사람이 2029까지 남았다.
+    // ⚠ 정보가 사라지는 게 아니다 — 부상의 정본은 바로 위
+    //   `seasonStore.setNpcInjury` 다. 여기 값은 신분 칸이다.
+    if (npcStatusById?.get(occ.playerId) !== "military") {
+      gameStore.updateNpcCareerStatus(occ.playerId, "injured");
+    }
 
     // ── 월간 부상 소식 버퍼 ────────────────────────────────
     //

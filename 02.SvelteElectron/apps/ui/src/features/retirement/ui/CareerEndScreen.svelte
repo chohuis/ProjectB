@@ -172,6 +172,7 @@
                 ["경기", totals.batting.g], ["타석", totals.batting.pa],
                 ["안타", totals.batting.h], ["홈런", totals.batting.hr],
                 ["타점", totals.batting.rbi], ["도루", totals.batting.sb],
+                ["도루자", totals.batting.cs ?? 0],
                 ["타율", totals.batting.avg], ["출루", totals.batting.obp],
                 ["장타", totals.batting.slg], ["OPS", totals.batting.ops],
               ] as [string, string | number][] as [lbl, val]}

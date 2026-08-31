@@ -16,6 +16,27 @@ export interface PitcherGameLine {
   /** 사구 — 볼넷과 다른 사건이다. ⚠ 구 세이브 로그엔 없다 */
   hbp?: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
+  /** **선발 등판인가.** 화면 넷이 GS(선발)를 표시하는데 올리는 코드가
+   *  없어서 전원 0이었다 (2026-08-28). ⚠ 구 세이브 로그엔 없다 */
+  gs?: boolean;
+  /** 폭투 — 투수 책임(WP). ⚠ 구 세이브 로그엔 없다 */
+  wp?: number;
+  /** 보크 — 투수 책임(BK). ⚠ 구 세이브 로그엔 없다 */
+  bk?: number;
+  /**
+   * 구종별 성적 — 무슨 공을 몇 개 던져 삼진·안타가 얼마였나.
+   *
+   * ⚠ **배경 리그엔 없다**(빈 객체) — 타석 단위 시뮬이라 구종을 안 정한다.
+   *   지어내면 주인공 기록과 다른 척도가 된다.
+   */
+  pitchMix?: Record<string, { pc: number; k: number; h: number }>;
+  /**
+   * 이닝별 — 몇 회에 무너졌는지는 합계로 못 본다.
+   *
+   * ⚠ **주인공 경기에만 있다.** 배경 리그 720경기에 9이닝 배열을 붙이면
+   *   세이브가 커지고 볼 화면도 없다.
+   */
+  byInning?: Array<{ inning: number; pc: number; er: number; outs: number }>;
   pitchCount?: number;
   /** 득점권 타수 — 위기 상황 성적을 보여주는 스플릿.
    *
@@ -48,6 +69,10 @@ export interface BatterGameLine {
   bb: number;
   k: number;
   sb: number;
+  /** 도루자 — `sb` 와 짝이다. ⚠ 구 세이브엔 없다 */
+  cs?: number;
+  /** 포일 — **포수 책임**(PB). 타자 줄에 실리지만 그 이닝 포수 것이다 */
+  pb?: number;
   /** 득점권 타수·안타 — 투수 쪽과 짝이다 */
   rispAb?: number;
   rispH?: number;

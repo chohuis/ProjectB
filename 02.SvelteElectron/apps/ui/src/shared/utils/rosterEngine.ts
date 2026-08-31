@@ -1,3 +1,7 @@
+import {
+  type ManagerStyleEffect, NEUTRAL_STYLE, styleNoiseOf, managerEffect,
+} from "./managerStyle";
+import { managerProfileOf } from "./staffEffects";
 import { SANGMU_TEAM_IDS } from "./ids";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
@@ -8,14 +12,91 @@ export interface TeamRoster {
   bullpen: string[];    // RP/CP ID 목록
   closer: string;       // CP ID
   lineup: string[];     // 타자 출전 순서 (1번~9번)
+  /**
+   * 벤치 — 대타·대주자 후보.
+   *
+   * 🔴 예전엔 **라인업 9명만** 만들고 벤치가 없었다. 엔진에 교체 자리를
+   *   만들어도 여기서 안 주면 죽은 갈래가 된다.
+   * ⚠ 라인업에 안 든 타자 중 좋은 순으로 몇 명이다.
+   */
+  bench: string[];
+}
+
+/**
+ * 이 명단에서 **이번 경기 선발**을 고른다. 정본은 여기 하나다.
+ *
+ * 🔴 **자리마다 손으로 색인하지 마라.** 2026-08-28에 세어 보니 같은 일을
+ *   하는 자리가 넷이었고 **두 규칙으로 갈려 있었다**:
+ *
+ *     npc_sim `build_pit_queue`   rotation[rot_idx % len]
+ *     mergeConditions             rotation[rotIdx % len]
+ *     simulateWithMatchEngine     rotation.slice(0, 1)      ← 다른 규칙
+ *     applyGameOutcome            base[rotIdx % len]
+ *
+ *   `buildTeamRoster`가 명단을 미리 한 번 돌려서 넘기고 있었기 때문에,
+ *   앞의 둘은 **두 번 돌린 셈**(`base[(2·k) % len]`)이고 뒤의 둘은 한 번이었다.
+ *   그래서 **실제로 던진 투수와 `lastStartGameCount`를 받는 투수가 달랐다.**
+ */
+export function starterOfRotation(rotation: string[], rotIdx: number): string | undefined {
+  if (rotation.length === 0) return undefined;
+  return rotation[((rotIdx % rotation.length) + rotation.length) % rotation.length];
+}
+
+// ══ 운용 수치 — 정본은 `generation_rules.json`의 `rosterOpsRules`다 ══
+//
+// 🔴 전부 이 파일에 **리터럴로 박혀 있었다**(2026-08-29에 올렸다).
+//   로테이션 인원 · 휴식 경기 · 피로 배수 두 표 · 선도 가중 · 부상 배수.
+//   밸런스 값을 코드에 두면 규칙 파일과 어긋난 걸 아무도 모른다.
+//
+// 🔴 **Rust로 안 내렸다.** 계획엔 "피로 보정이 `npc_sim`에도 있다"고
+//   적었는데 **틀렸다** — Rust엔 같은 보정이 없다. 두 벌이 아니므로
+//   고칠 결함이 없고, 옮기면 IPC가 **+10~28%**(실측 20,000경기) 는다.
+//   **경기마다 도는 자리다.** 숫자만 올리고 조회는 여기 뒀다 —
+//   `academicsEngine`과 같은 갈래다(`docs/ENGINE_OWNERSHIP.md`).
+
+interface FatigueTable { tiers: { atLeast: number; mult: number }[]; floor: number }
+
+/** 규칙 파일을 못 읽었을 때. **0으로 두면 로스터가 통째로 멈춘다** */
+const OPS_FALLBACK = {
+  rotationSize: { LEAGUE_HIGHSCHOOL: 3, LEAGUE_UNIVERSITY: 3, LEAGUE_INDEPENDENT: 4, default: 5 } as Record<string, number>,
+  restGames:    { LEAGUE_HIGHSCHOOL: 2, LEAGUE_UNIVERSITY: 2, LEAGUE_INDEPENDENT: 2, default: 4 } as Record<string, number>,
+  pitcherFatigue: { tiers: [{ atLeast: 70, mult: 1.0 }, { atLeast: 50, mult: 0.9 }, { atLeast: 30, mult: 0.8 }], floor: 0.65 } as FatigueTable,
+  batterFatigue:  { tiers: [{ atLeast: 70, mult: 1.0 }, { atLeast: 50, mult: 0.9 }], floor: 0.78 } as FatigueTable,
+  pitcherRest: { weeks2: 1.0, weeks1: 0.85, weeks0: 0.55 },
+  freshnessWeight: 0.3,
+  playThroughOvrMult: { light: 0.88, moderate: 0.70 } as Record<string, number>,
+};
+let _ops = OPS_FALLBACK;
+
+/**
+ * 규칙 파일을 주입한다. `primeForeignRules`와 같은 방식이고 같은 자리
+ * (`stores/master`)에서 부른다 — 경기 경로가 동기로 읽어야 해서 캐시한다.
+ */
+export function primeRosterOpsRules(rulesFile: {
+  rosterOpsRules?: Partial<typeof OPS_FALLBACK>;
+}): void {
+  const o = rulesFile.rosterOpsRules;
+  if (!o) return;
+  _ops = {
+    rotationSize: { ...OPS_FALLBACK.rotationSize, ...(o.rotationSize ?? {}) },
+    restGames:    { ...OPS_FALLBACK.restGames,    ...(o.restGames ?? {}) },
+    pitcherFatigue: o.pitcherFatigue ?? OPS_FALLBACK.pitcherFatigue,
+    batterFatigue:  o.batterFatigue  ?? OPS_FALLBACK.batterFatigue,
+    pitcherRest:    o.pitcherRest    ?? OPS_FALLBACK.pitcherRest,
+    freshnessWeight: o.freshnessWeight ?? OPS_FALLBACK.freshnessWeight,
+    playThroughOvrMult: { ...OPS_FALLBACK.playThroughOvrMult, ...(o.playThroughOvrMult ?? {}) },
+  };
+}
+
+/** 피로 배수 — 표를 위에서부터 훑는다. 어디에도 안 걸리면 바닥이다 */
+function fatigueMult(t: FatigueTable, fatigue: number): number {
+  for (const tier of t.tiers) if (fatigue >= tier.atLeast) return tier.mult;
+  return t.floor;
 }
 
 // ── 리그별 SP 의무 휴식 경기 수 ────────────────────────────────
 export function rotationRestGames(leagueId: string): number {
-  if (leagueId === "LEAGUE_HIGHSCHOOL")  return 2;
-  if (leagueId === "LEAGUE_UNIVERSITY")  return 2;
-  if (leagueId === "LEAGUE_INDEPENDENT") return 2;
-  return 4;  // 프로 (KBL, ABL, JBL)
+  return _ops.restGames[leagueId] ?? _ops.restGames.default;
 }
 
 // ── 유효 OVR 계산 (피로·휴식·부상 반영) ───────────────────────
@@ -27,17 +108,15 @@ function calcEffectiveOvr(
   if (!condition) return baseOvr;
 
   // fatigue: 100=완전회복, 낮을수록 피로
-  const fatF = condition.fatigue >= 70 ? 1.00
-             : condition.fatigue >= 50 ? 0.90
-             : condition.fatigue >= 30 ? 0.80
-             : 0.65;
+  const fatF = fatigueMult(_ops.pitcherFatigue, condition.fatigue);
 
   // 마지막 등판 이후 경과 주 수
   const weeksRested = condition.lastPitchedWeek > 0
     ? currentWeek - condition.lastPitchedWeek : 99;
-  const restF = weeksRested >= 2 ? 1.00
-              : weeksRested === 1 ? 0.85
-              : 0.55;  // 직전 주 등판 → 로테이션 후순위로 밀림
+  // 직전 주 등판이면 로테이션 후순위로 밀린다
+  const restF = weeksRested >= 2 ? _ops.pitcherRest.weeks2
+              : weeksRested === 1 ? _ops.pitcherRest.weeks1
+              : _ops.pitcherRest.weeks0;
 
   return Math.round(baseOvr * fatF * restF);
 }
@@ -56,26 +135,25 @@ function freshnessBonus(
   const gamesSince = lastAppearanceGameCount !== undefined
     ? teamGameCount - lastAppearanceGameCount
     : 99;  // 한 번도 안 나온 선수 → 가장 신선
-  return gamesSince * (rotationSense - 50) * 0.3;
+  return gamesSince * (rotationSense - 50) * _ops.freshnessWeight;
 }
 
 // 리그(careerStage)별 로테이션 크기
+/** 단계 이름 → 리그 id. 표를 두 벌 두지 않으려는 것이다 */
+const STAGE_LEAGUE: Record<string, string> = {
+  highschool: "LEAGUE_HIGHSCHOOL", university: "LEAGUE_UNIVERSITY",
+  independent: "LEAGUE_INDEPENDENT",
+};
 export function rotationSizeForStage(careerStage: string): number {
-  if (careerStage === "highschool")  return 3;
-  if (careerStage === "university")  return 3;
-  if (careerStage === "independent") return 4;
-  return 5; // pro_kbl, pro_abl, pro_jbl
+  return rotationSizeForLeague(STAGE_LEAGUE[careerStage] ?? "");
 }
 
 // 리그 ID 기반 로테이션 크기 (UI 표시용)
 export function rotationSizeForLeague(leagueId: string): number {
-  if (leagueId === "LEAGUE_HIGHSCHOOL")  return 3;
-  if (leagueId === "LEAGUE_UNIVERSITY")  return 3;
-  if (leagueId === "LEAGUE_INDEPENDENT") return 4;
-  return 5;
+  return _ops.rotationSize[leagueId] ?? _ops.rotationSize.default;
 }
 
-const PLAY_THROUGH_OVR_MULT: Record<string, number> = { light: 0.88, moderate: 0.70 };
+// 부상을 안고 뛸 때의 OVR 배수 — 정본은 규칙 파일이다
 
 // ── 부상 필터링 + OVR 패널티 적용 ─────────────────────────────
 function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, NpcInjuryEntry>): EntityRow[] {
@@ -83,7 +161,7 @@ function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, Npc
     const inj = npcInjuries[e.id];
     if (!inj) return [e];
     if (!inj.isPlayingThrough) return []; // benched
-    const mult = PLAY_THROUGH_OVR_MULT[inj.severity] ?? 1.0;
+    const mult = _ops.playThroughOvrMult[inj.severity] ?? 1.0;
     if (mult === 1.0) return [e];
     const pd = e.details.player as EntityPlayerDetails | undefined;
     if (!pd) return [e];
@@ -111,16 +189,6 @@ function playerDetails(e: EntityRow): EntityPlayerDetails {
   return e.details.player as EntityPlayerDetails;
 }
 
-// ── SP 가용 여부 판단 ─────────────────────────────────────────
-function isSpAvailable(
-  condition: PlayerCondition | undefined,
-  teamGameCount: number,
-  restRequired: number,
-): boolean {
-  if (!condition?.lastStartGameCount) return true;  // 첫 등판 or 기록 없음
-  return (teamGameCount - condition.lastStartGameCount) > restRequired;
-}
-
 // ── 선발 로테이션 자동 배정 ──────────────────────────────────
 export function getTeamRotation(
   teamId: string,
@@ -129,15 +197,14 @@ export function getTeamRotation(
   maxRotation = 5,
   conditions?: Record<string, PlayerCondition>,
   currentWeek = 0,
-  teamGameCount?: number,
+  // ⚠ `teamGameCount`를 지웠다 (2026-08-28). **쓰지 않으면서 자리만 차지했다** —
+  //   이 저장소는 이미 그 자리에 `rotIdx`를 잘못 넣어 로테이션이 한 번도
+  //   안 돈 적이 있다(`rotationIndex.test.ts`). 죽은 자리를 남기지 않는다
   leagueId?: string,
   npcRetired?: string[],
 ): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   const pitchers = players.filter((e) => playerDetails(e).playerType === "pitcher");
-
-  const restRequired = leagueId ? rotationRestGames(leagueId) : 4;
-  const gameCount = teamGameCount ?? 0;
 
   const effOvr = (e: EntityRow) =>
     calcEffectiveOvr(playerDetails(e).pitching?.ovr ?? 0, conditions?.[e.id], currentWeek);
@@ -175,7 +242,10 @@ export function getTeamRotation(
       .map((e) => e.id);
     availableSp.push(...restingSp);
   }
-  void isSpAvailable; void gameCount; void restRequired; void effOvr;
+  // ⚠ **휴식 판정을 여기서 하지 않는다.** 위 주석대로 로테이션은 고정이고
+  //   5인이면 등판 간격이 저절로 4경기다. 예전엔 쓰지도 않는 `isSpAvailable`·
+  //   `restRequired`·`gameCount`를 `void`로 눌러 두고 있었다 — 지웠다.
+  //   `currentWeek`는 아래 RP 보충의 `effOvr`가 쓴다
 
   // SP 부족 시 RP 중 effectiveOvr 높은 순으로 보충
   if (availableSp.length < maxRotation) {
@@ -392,6 +462,32 @@ export function neededPositions(
   return out;
 }
 
+/**
+ * 벤치 — 라인업에 안 든 타자 중 좋은 순으로 넷.
+ *
+ * 🔴 예전엔 라인업 9명만 만들어 **대타가 불가능했다.**
+ * ⚠ 모듈 변수로 넘기지 않는다 — 재진입에 안전하지 않다.
+ * ⚠ 네 명이면 한 경기에 충분하다 — 많으면 전송만 커진다.
+ */
+export function getTeamBench(
+  teamId: string,
+  entities: EntityRow[],
+  lineup: readonly string[],
+  npcInjuries?: Record<string, NpcInjuryEntry>,
+  npcRetired?: string[],
+): string[] {
+  const inLineup = new Set(lineup);
+  return getTeamPlayers(teamId, entities, npcInjuries, npcRetired)
+    .filter((e) => {
+      const t = playerDetails(e).playerType;
+      return (t === "batter" || t === "twoWay") && !inLineup.has(e.id);
+    })
+    .sort((a, b) =>
+      (playerDetails(b).batting?.ovr ?? 0) - (playerDetails(a).batting?.ovr ?? 0))
+    .slice(0, 4)
+    .map((e) => e.id);
+}
+
 export function getTeamLineup(
   teamId: string,
   entities: EntityRow[],
@@ -401,6 +497,8 @@ export function getTeamLineup(
   teamGameCount = 0,
   rotationSense = 50,
   npcRetired?: string[],
+  /** 감독 효과. **안 넘기면 중립**이라 예전과 같게 돈다 */
+  managerEff?: ManagerStyleEffect,
 ): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   let batters = players.filter(
@@ -427,16 +525,41 @@ export function getTeamLineup(
     batters = [...batters, ...fillers.slice(0, 9 - batters.length)];
   }
 
-  // 타자 선택 점수: 피로 반영 OVR + freshnessBonus
+  // 🔴 **감독이 누굴 쓸지도 정한다** — 예전엔 타순만 감독이 짜고
+  //   선발 9명은 OVR×컨디션만 봤다. 육성 우선 감독이 유망주를 안 올리고
+  //   수비 조직 감독이 수비 좋은 포수를 먼저 안 썼다.
+  // ⚠ **타순과 같은 재료를 쓴다** — 두 자리가 다른 기준으로 고르면
+  //   "수비형으로 뽑아 놓고 파워 순으로 배열" 같은 게 된다.
+  const selEff = managerEff ?? NEUTRAL_STYLE;
+  const selAges = batters
+    .map((e) => Number((e as unknown as { age?: number }).age ?? 0))
+    .filter((v) => v > 0);
+  const selAgeMid = selAges.length
+    ? selAges.slice().sort((a, b) => a - b)[Math.floor(selAges.length / 2)] : 0;
+  const selAgeSpan = selAges.length
+    ? Math.max(1, Math.max(...selAges) - Math.min(...selAges)) : 1;
+
+  // 타자 선택 점수: 피로 반영 OVR + freshnessBonus + 감독 취향
   const batScore = (e: EntityRow) => {
     const base = playerDetails(e).batting?.ovr ?? 0;
     const cond = conditions?.[e.id];
-    const fatF = !cond ? 1.0
-      : cond.fatigue >= 70 ? 1.00
-      : cond.fatigue >= 50 ? 0.90
-      : 0.78;
+    // ⚠ **투수 표와 다르다.** 타자는 단계가 적고 바닥이 높다(0.78 vs 0.65) —
+    //   피로에 덜 민감하다는 뜻이고 의도로 보여 합치지 않았다
+    const fatF = !cond ? 1.0 : fatigueMult(_ops.batterFatigue, cond.fatigue);
     const effOvr = Math.round(base * fatF);
-    return effOvr + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
+    const b = playerDetails(e).batting;
+    const age = Number((e as unknown as { age?: number }).age ?? selAgeMid);
+    // ⚠ 세기는 타순의 **절반**이다. 여기서 세게 걸면 감독 취향이 OVR을
+    //   눌러 리그 전체 수준이 내려간다 — 누굴 쓸지는 실력이 먼저다.
+    const mgrAdj = selEff.age === 0 && selEff.power === 0
+        && selEff.defense === 0 && selEff.speed === 0
+      ? 0
+      : (((age - selAgeMid) / selAgeSpan) * selEff.age
+         + ((b?.power ?? 50) - 50) / 50 * selEff.power
+         + ((b?.fielding ?? 50) - 50) / 50 * selEff.defense
+         + ((b?.speed ?? 50) - 50) / 50 * selEff.speed) * 0.5;
+    return effOvr + mgrAdj
+      + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
   };
 
   // 포지션별 1명씩 최고 점수 선택
@@ -469,20 +592,62 @@ export function getTeamLineup(
   }
 
   // 타순 정렬: 1번(출루율 높음) → 3·4번(파워·컨택) → 나머지
-  return sortBattingOrder(lineup9, entities);
+  // ⚠ 감독 효과는 호출부가 넘긴다 — 안 넘기면 중립이라 예전과 같다
+  const ordered = sortBattingOrder(lineup9, entities, managerEff, teamId);
+
+  // 🔴 **벤치** — 라인업에 안 든 타자 중 좋은 순으로.
+  //   예전엔 9명만 만들어 **대타가 불가능했다.**
+  // ⚠ 네 명이면 한 경기에 충분하다 — 많으면 전송만 커진다.
+  return ordered;
 }
 
-function sortBattingOrder(ids: string[], entities: EntityRow[]): string[] {
+/**
+ * 타순.
+ *
+ * 🔴 **예전엔 전 구단이 똑같은 규칙이었다** — 1번은 눈+발 최고,
+ *   3·4번은 파워+컨택 최고. 감독이 누구든 같은 타순이 나왔고,
+ *   그래서 `offenseMind`·`tacticalIQ`·스타일 9종이 **저장만 되고
+ *   아무것도 안 바꾸는 값**이었다(팀 상세엔 표시까지 됐다).
+ *
+ * ⚠ 감독이 없거나 규칙이 꺼져 있으면 **예전과 똑같이 돈다.**
+ */
+function sortBattingOrder(
+  ids: string[],
+  entities: EntityRow[],
+  mgr?: ManagerStyleEffect,
+  teamId = "",
+): string[] {
   if (ids.length === 0) return [];
 
+  const eff = mgr ?? NEUTRAL_STYLE;
   const map = new Map(entities.map((e) => [e.id, e]));
+  // 🔴 **팀 안 상대 나이로 잰다.** 절대 나이(25 기준)는 리그마다 안 맞아서,
+  //   고교(전원 16~18세)에선 "육성 우선"과 "노장 중용"이 **같은 타순**을
+  //   냈다(실측). 이러면 규칙에 값을 적어도 죽은 갈래가 된다.
+  const ages = ids.map((id) =>
+    Number((map.get(id) as unknown as { age?: number } | undefined)?.age ?? 0))
+    .filter((v) => v > 0);
+  const ageMid = ages.length
+    ? ages.slice().sort((a, b) => a - b)[Math.floor(ages.length / 2)] : 0;
+  // 그 명단의 나이 폭 — 좁으면 나이 가중이 무의미하므로 최소 1로 둔다
+  const ageSpan = ages.length
+    ? Math.max(1, Math.max(...ages) - Math.min(...ages)) : 1;
   const scored = ids.map((id) => {
     const e = map.get(id);
     if (!e) return { id, lead: 0, power: 0, contact: 0 };
-    const b = playerDetails(e).batting;
-    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50);
-    const power   = (b?.power ?? 50) + (b?.contact ?? 50);
-    const contact = b?.contact ?? 50;
+    const d = playerDetails(e);
+    const b = d.batting;
+    // ⚠ **잡음은 선수마다 고정이다** — 매번 다르면 경기마다 타순이 바뀐다
+    const nz = styleNoiseOf(id, teamId, eff.noise);
+    const age = Number((e as unknown as { age?: number }).age ?? ageMid);
+    // 나이 가중: 노장 중용은 +, 육성 우선은 −.
+    // ⚠ **그 팀 중앙값에서 얼마나 떨어졌나**를 폭으로 나눈다 — 리그마다
+    //   나이대가 달라도 같은 세기로 듣는다.
+    const ageAdj = ((age - ageMid) / ageSpan) * eff.age;
+    const def = (b?.fielding ?? 50) * (eff.defense / 100);
+    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50) + eff.speed + ageAdj + def + nz;
+    const power   = (b?.power ?? 50) + (b?.contact ?? 50) + eff.power + ageAdj + def + nz;
+    const contact = (b?.contact ?? 50) + nz;
     return { id, lead, power, contact };
   });
 
@@ -524,8 +689,9 @@ export interface BuildRosterParams {
   currentWeek?: number;
   /** 팀이 지금까지 치른 경기 수 (휴식 판정용) */
   teamGameCount?: number;
-  /** **이번 경기 선발이 로테이션 몇 번째인가.** 경기마다 +1 */
-  rotIdx?: number;
+  // ⚠ `rotIdx`를 지웠다 (2026-08-28). **여기는 명단을 만드는 자리고
+  //   선발을 고르는 자리가 아니다.** 색인은 `starterOfRotation` 하나가 한다 —
+  //   여기서도 돌리면 받는 쪽과 합쳐 두 번이 된다
   leagueId?: string;
   rotationSense?: number;
   npcRetired?: string[];
@@ -534,24 +700,40 @@ export interface BuildRosterParams {
 export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
   const {
     teamId, entities, npcInjuries, maxRotation = 5, conditions,
-    currentWeek = 0, teamGameCount = 0, rotIdx = 0,
+    currentWeek = 0, teamGameCount = 0,
     leagueId = "", rotationSense = 50, npcRetired,
   } = p;
 
   const base = getTeamRotation(
     teamId, entities, npcInjuries, maxRotation, conditions, currentWeek,
-    teamGameCount, leagueId, npcRetired,
+    leagueId, npcRetired,
   );
 
-  // ⚠ **여기가 인덱스를 실제로 쓰는 유일한 자리다.** `getTeamRotation`은
-  // OVR 순으로 고정된 명단을 돌려준다(그건 의도다 — 매주 흔들리면 표본이
-  // 얇아져 ERA가 능력치를 못 따라간다). 그 명단을 **경기마다 회전시켜야**
-  // 선발이 돌아간다. 회전을 안 하면 1번이 매 경기 나간다.
-  const rotation = base.length > 0
-    ? [...base.slice(rotIdx % base.length), ...base.slice(0, rotIdx % base.length)]
-    : base;
+  // 🔴 **여기서 돌리지 않는다** (2026-08-28). 예전엔 이 자리에서 명단을
+  //   `rotIdx`만큼 회전시켜 넘겼는데, **받는 쪽도 또 돌렸다:**
+  //
+  //     npc_sim `build_pit_queue`   rotation[rot_idx % len]   → base[(2·k) % len]
+  //     mergeConditions             rotation[rotIdx % len]    → base[(2·k) % len]
+  //     simulateWithMatchEngine     rotation.slice(0, 1)      → base[k % len]
+  //     applyGameOutcome            base[rotIdx % len]        → base[k % len]
+  //
+  //   네 자리가 두 규칙으로 갈려 있었다. 그래서 **실제로 던진 투수와
+  //   `lastStartGameCount`를 받는 투수가 달랐다** — 던진 사람은 불펜으로
+  //   기록되고 안 던진 사람이 선발로 기록됐다.
+  //
+  //   이제 **정본은 하나다: `base[rotIdx % len]`.** 명단은 순서 그대로 넘기고
+  //   색인은 받는 쪽이 한다. 어느 쪽도 두 번 돌리지 않는다.
+  //
+  // ⚠ `getTeamRotation`이 OVR 순 고정 명단을 주는 건 의도다 — 매주 흔들리면
+  //   표본이 얇아져 ERA가 능력치를 못 따라간다.
+  const rotation = base;
 
   const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, rotationSense, npcRetired);
-  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired);
-  return { rotation, bullpen, closer, lineup };
+  // 감독 효과 — **여기서 한 번 뽑아 넘긴다.** 안 넘기면 중립이라
+  // 스타일이 다시 죽은 값이 된다.
+  const mgrProfile = managerProfileOf(teamId, entities);
+  const mgrEff = managerEffect(mgrProfile);
+  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired, mgrEff);
+  const bench = getTeamBench(teamId, entities, lineup, npcInjuries, npcRetired);
+  return { rotation, bullpen, closer, lineup, bench };
 }

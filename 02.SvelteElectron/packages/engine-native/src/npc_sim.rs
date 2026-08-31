@@ -67,7 +67,7 @@ fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondit
 }
 
 struct PitAccum { outs: i32, er: i32, h: i32, hr: i32, k: i32, bb: i32, hbp: i32, pc: i32, risp_ab: i32, risp_h: i32 }
-struct BatAccum { ab: i32, h: i32, b2: i32, b3: i32, hr: i32, r: i32, rbi: i32, bb: i32, hbp: i32, sac: i32, sf: i32, k: i32, sb: i32, risp_ab: i32, risp_h: i32 }
+struct BatAccum { ab: i32, h: i32, b2: i32, b3: i32, hr: i32, r: i32, rbi: i32, bb: i32, hbp: i32, sac: i32, sf: i32, k: i32, sb: i32, cs: i32, risp_ab: i32, risp_h: i32 }
 
 fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
     let eff_stam = pit.stamina * cond_mod;
@@ -418,13 +418,19 @@ fn sim_half_inning_pitch(
             if rng.gen::<f64>() < success {
                 bases[to] = bases[from].take();
                 bat_map.entry(r.id.clone())
-                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
+                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 })
                     .sb += 1;
             } else {
                 bases[from] = None;
                 outs += 1;
                 cur_pit_outs += 1;
                 unsafe { (*acc_ptr).outs += 1; }
+                // 🔴 **도루자도 센다.** 예전엔 아웃만 올리고 타자 기록을
+                //   안 건들어서 **리그 전체 도루자가 0**이었다 — 도루 성공에서
+                //   겪은 것과 같은 형태다.
+                bat_map.entry(r.id.clone())
+                    .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 })
+                    .cs += 1;
             }
         }
         if outs >= 3 { break; }
@@ -493,7 +499,7 @@ fn sim_half_inning_pitch(
         if is_hbp { pa.hbp += 1; }
 
         let ba = bat_map.entry(batter.id.clone())
-            .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 });
+            .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 });
         if !no_ab {
             ba.ab += 1;
             ba.risp_ab += risp as i32;
@@ -520,7 +526,7 @@ fn sim_half_inning_pitch(
         for &idx in scored_buf.iter() {
             let rid = lineup[idx % n].id.clone();
             bat_map.entry(rid)
-                .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
+                .or_insert(BatAccum { ab: 0, h: 0, b2: 0, b3: 0, hr: 0, r: 0, rbi: 0, bb: 0, hbp: 0, sac: 0, sf: 0, k: 0, sb: 0, cs: 0, risp_ab: 0, risp_h: 0 })
                 .r += 1;
         }
     }
@@ -627,7 +633,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 home_score: 0,
                 away_score: 0,
                 winner_id: params.home_team_id.clone(),
-                loser_id:  params.away_team_id.clone(),
+                loser_id:  Some(params.away_team_id.clone()),
                 player_lines: vec![],
                 events: vec![],
             },
@@ -780,15 +786,22 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 pit_stamina_map.insert(ex_a.id.clone(), new_ex_a_st);
                 ex_inning   += 1;
             }
-            if home_score == away_score {
-                if rng.gen::<f64>() < 0.5 { home_score += 1; } else { away_score += 1; }
-            }
+            // 🔴 **동전던지기로 승자를 만들고 있었다** (2026-08-29).
+            //   연장을 다 돌고도 동점이면 **무승부**다 — 없는 점수를
+            //   지어내지 않는다.
+            // ⚠ 대회·포스트시즌은 승자가 나와야 하므로 호출부가
+            //   `extra_inning_limit`을 0으로 둔다(무제한).
         }
     }
 
+    let is_draw   = home_score == away_score;
     let home_won  = home_score > away_score;
-    let winner_id = if home_won { params.home_team_id.clone() } else { params.away_team_id.clone() };
-    let loser_id  = if home_won { params.away_team_id.clone() } else { params.home_team_id.clone() };
+    let winner_id = if is_draw { String::new() }
+                    else if home_won { params.home_team_id.clone() }
+                    else { params.away_team_id.clone() };
+    let loser_id  = if is_draw { None }
+                    else if home_won { Some(params.away_team_id.clone()) }
+                    else { Some(params.home_team_id.clone()) };
     let margin    = (home_score - away_score).abs();
 
     // W/L/SV/HD 결정
@@ -827,6 +840,20 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         let ip        = acc.outs as f64 / 3.0;
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, hr: acc.hr, k: acc.k, bb: acc.bb, hbp: acc.hbp, pc: acc.pc, decision,
+            gs: pit_q.first().map(|p| &p.id == id).unwrap_or(false),
+            // ⚠ 배경 리그는 보크 판정이 없다 — 투구 단위로 안 돌기 때문이다
+            bk: 0,
+            // ⚠ 배경 리그는 투구 단위로 안 돌아 폭투 판정이 없다
+            wp: 0,
+            // ⚠ **배경 리그는 구종을 안 정한다** — 타석 단위 시뮬이라
+            //   `pitch_type` 이 없다(실측: npc_sim 에 0건). 지어내면
+            //   주인공 기록과 다른 척도가 된다 — **빈 맵이 정직하다.**
+            pitch_mix: Default::default(),
+            // ⚠ **이닝별도 안 채운다.** 배경 리그는 이닝을 알지만
+            //   (`for inning in 1..=9`) 한 주 720경기 × 투수 여럿 ×
+            //   9이닝 배열이면 세이브가 커지고, **배경 리그 투수의
+            //   이닝별을 볼 화면이 없다.** 주인공 경기에만 둔다.
+            by_inning: vec![],
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
     }
@@ -849,8 +876,10 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         player_lines.push(PlayerGameLine::Batter {
             player_id: id.clone(), ab: acc.ab, h: acc.h, b2: acc.b2, b3: acc.b3, hr: acc.hr,
             r: acc.r, hbp: acc.hbp, sac: acc.sac, sf: acc.sf,
-            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb,
+            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb, cs: acc.cs, pb: 0,
             risp_ab: acc.risp_ab, risp_h: acc.risp_h,
+            // ⚠ npc_sim 갈래는 수비 판정 자체가 없다 — 0이 정직하다
+            e: 0, a: 0, po: 0,
         });
     }
 
@@ -943,6 +972,8 @@ fn normalize_offseason_npcs(
     // 외국인 판정. 이들은 **2군으로 못 내린다**(1군 전용) —
     // 정원 초과는 내국인 안에서 푼다
     is_foreign: &dyn Fn(&NpcSaveState) -> bool,
+    // 리그가 바뀌면 연봉도 오르내린다 — 없으면 예전대로 그대로 들고 간다
+    salary_rules_ref: Option<&SalaryRules>,
 ) -> Vec<NpcSaveState> {
     let mut next = npcs;
 
@@ -1087,6 +1118,11 @@ fn normalize_offseason_npcs(
                     match farm_league(&league_id).zip(farm_team(&npc.current_team)) {
                         Some((farm_lid, farm_tid)) => {
                             events.push(ev("demote_roster", npc, Some(npc.current_team.clone()), None));
+                            // 🔴 **연봉도 같이 깍인다**(2026-08-31 사용자 확정).
+                            //   예전엔 2군에 내려가도 1군 연봉을 그대로 받았다 —
+                            //   `leagueMult`(1군 1.0 · 2군 0.3)가 생성 때만 걸렸다.
+                            let npc_league_before = npc.current_league.clone();
+                            rescale_salary_for_league(npc, &npc_league_before, &farm_lid, salary_rules_ref);
                             npc.current_league = farm_lid.clone();
                             npc.current_team   = farm_tid.clone();
                             (Some(farm_lid), Some(farm_tid))
@@ -1119,9 +1155,10 @@ fn normalize_offseason_npcs(
         }
     }
 
-    fill_first_teams(&mut next, limits, events, is_foreign);
+    fill_first_teams(salary_rules_ref, &mut next, limits, events, is_foreign);
     // 충원 **뒤에** 돈다 — 새로 올라온 선수까지 보고 남은 공백만 전환한다
     fix_position_gaps(&mut next, season_year);
+    fix_jersey_numbers(&mut next, &HashMap::new());
     next
 }
 
@@ -1249,6 +1286,199 @@ fn release_second_stage(
     released
 }
 
+/// 예산 초과 방출 — **총연봉이 예산을 넘으면 가성비 나쁜 순으로 자른다.**
+///
+/// 🔴 어느 리그에도 없던 경로다(2026-08-31 · 사용자 확정). `teamPayrollCap`
+///   은 있지만 **예산이 아니라 "지금 총연봉 × 팀지수 × 1.25"** 이고 FA
+///   입찰에만 쓴다. `refs.json` 의 팀별 예산은 아무 데도 안 들어갔다.
+///
+/// 실측 (총연봉/예산 %): 독립 중앙 63 · **최대 486** · 100% 초과 3팀 /
+/// KBL 중앙 35 최대 60 · ABL 15/26 · JBL 16/37 — **전부 초과 0팀**이다.
+/// 그래서 상한 100%는 프로를 안 건드린다.
+///
+/// ⚠ 점수 방출과 **같은 하한**(`rosterMin`)을 지킨다 — 예산을 맞추자고
+///   로스터를 말리면 그게 더 나쁘다. 못 맞추면 그대로 둔다.
+/// ⚠ 예산이 없는 팀(상무·아마추어)은 건너뛴다.
+fn release_over_budget(
+    npcs: &mut [NpcSaveState],
+    budgets: &HashMap<String, i64>,
+    limits: &HashMap<String, RosterLimit>,
+    profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
+    perf: &HashMap<String, f64>,
+    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
+    events: &mut Vec<OffseasonEvent>,
+) -> i32 {
+    use crate::team_engine::{eval_release_priority, EvalReleaseParams};
+    if budgets.is_empty() { return 0; }
+
+    // 팀별 총연봉 — **한 번만 훑는다**
+    let mut payroll: HashMap<String, i64> = HashMap::new();
+    let mut head: HashMap<String, i32> = HashMap::new();
+    for n in npcs.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        *payroll.entry(n.current_team.clone()).or_insert(0) += n.current_salary;
+        *head.entry(n.current_team.clone()).or_insert(0) += 1;
+    }
+
+    let mut over: Vec<String> = payroll.iter()
+        .filter(|(t, p)| budgets.get(*t).map_or(false, |b| *b > 0 && **p > *b))
+        .map(|(t, _)| t.clone()).collect();
+    over.sort();                       // 결정성 — HashMap 순회에 기대지 않는다
+    if over.is_empty() { return 0; }
+
+    let mut released = 0;
+    for team in over {
+        let budget = *budgets.get(&team).unwrap_or(&0);
+        let league = npcs.iter().find(|n| n.current_team == team)
+            .map(|n| n.current_league.clone()).unwrap_or_default();
+        let min = roster_rule(&league, limits).map(|(m, _)| m).unwrap_or(0);
+
+        // 가성비 나쁜 순 — 점수 방출과 **같은 잣대**를 쓴다(표를 두 번 안 만든다)
+        let mut cand: Vec<(usize, f64)> = vec![];
+        for (i, n) in npcs.iter().enumerate() {
+            if n.current_team != team || n.career_status != "active" { continue; }
+            if is_foreign(n) { continue; }   // 외국인은 따로 푼다
+            let ovr = npc_core_ovr(n);
+            let res = eval_release_priority(EvalReleaseParams {
+                team_profile: profiles.get(&team).cloned().unwrap_or_default(),
+                player: RosterPlayerRef {
+                    id: n.npc_id.clone(), position: n.position.clone(), age: n.age, ovr,
+                    salary: n.current_salary, remaining_years: n.contract_years,
+                    pro_service_years: n.pro_service_years.unwrap_or(0),
+                    registrable: true,
+                    is_prospect: n.current_team.ends_with("_2"),
+                    personality: n.personality.clone(), fame: n.fame, perf: None,
+                    is_foreign: false,
+                },
+                recent_performance_rating: perf.get(&n.npc_id).copied().unwrap_or(ovr),
+                roster_depth_at_position: 2,
+                current_salary: n.current_salary,
+                market_value: n.current_salary.max(1),
+                owner_relation: 0.0,
+                owner_relation_weight: 0.0,
+            });
+            cand.push((i, res.release_score));
+        }
+        cand.sort_by(|a, b| b.1.partial_cmp(&a.1)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then(npcs[a.0].npc_id.cmp(&npcs[b.0].npc_id)));
+
+        let mut cur = *payroll.get(&team).unwrap_or(&0);
+        let mut have = *head.get(&team).unwrap_or(&0);
+        for (idx, score) in cand {
+            if cur <= budget { break; }
+            if have <= min { break; }        // 하한 아래로는 안 내린다
+            cur -= npcs[idx].current_salary;
+            have -= 1;
+            released += 1;
+            events.push(ev("release_budget", &npcs[idx], Some(team.clone()),
+                Some(format!("예산 {budget} / 총연봉 {} · 점수 {score:.0}",
+                    payroll.get(&team).copied().unwrap_or(0)))));
+            npcs[idx].current_team = String::new();
+            npcs[idx].current_salary = 0;
+            npcs[idx].contract_years = 0;
+        }
+    }
+    released
+}
+
+/// 웨이버 공시 — 방출된 선수를 **다른 구단이 데려간다.**
+///
+/// 🔴 방출되면 `current_team` 을 비워 곧장 시장으로 보냈다. 실제 야구는
+///   그 전에 **웨이버 공시**를 거치고, **순위 역순**(하위 팀 먼저)으로
+///   데려갈 기회를 준다 — 전력 평준화 장치다.
+///
+/// ⚠ **아무나 데려가면 방출이 무의미하다.** 그 팀 최약체보다 나은 선수만
+///   클레임한다(`ovr_margin`). 팀당 상한도 둔다 — 없으면 정원 여유가 큰
+///   팀이 방출자를 쓸어담는다.
+///
+/// ⚠ **정원을 넘기지 않는다.** 상한이 없으면 웨이버가 로스터 캡을 뚫는다.
+fn waiver_claim(
+    npcs: &mut [NpcSaveState],
+    released_ids: &std::collections::HashSet<String>,
+    limits: &HashMap<String, RosterLimit>,
+    ovr_margin: f64,
+    max_per_team: i32,
+    season_year: i32,
+    // 청구 대상이 **아닌** 팀 — 상무 같은 군팀.
+    //
+    // 🔴 아래 후보 목록은 팀을 **NPC 소속에서 역산**한다. 다른 배정 경로는
+    //   TS 가 넘긴 목록(상무 제외)을 쓰는데 여기만 자기가 만든다. 게다가
+    //   **인원이 적은 팀부터** 고르니 정원 26인 상무가 늘 1순위였다
+    //   (다른 독립팀은 30~45명). 실측에서 상무 비군인 전원의 이력이
+    //   `waiver_claim→IND_SANGMU_PHOENIX` 였다.
+    exclude_teams: &std::collections::HashSet<String>,
+) -> i32 {
+    // 🔴 **그 해 방출된 사람만이다.** 처음엔 "팀이 빈 사람"으로 잡았는데
+    //   졸업생·미배정자까지 걸렸다 — 실측에서 고교·대학 선수가 프로 2군에
+    //   클레임됐다(2027년 102명). 웨이버는 **방출 절차**의 일부다.
+    //
+    // ⚠ **`career_events` 로는 못 찾는다.** 방출은 `ev()` 로 `OffseasonEvent`
+    //   에만 남고 선수의 `career_events` 에는 안 들어간다 — 그걸 보면
+    //   **아무도 안 걸려 웨이버가 죽은 갈래가 된다.**
+    let free: Vec<usize> = npcs.iter().enumerate()
+        .filter(|(_, n)| n.current_team.is_empty()
+            && n.career_status != "retired"
+            && !n.current_league.is_empty()
+            && released_ids.contains(&n.npc_id))
+        .map(|(i, _)| i).collect();
+    if free.is_empty() { return 0; }
+
+    // 팀별 인원과 최약체 OVR — **한 번만 훑는다**
+    let mut size: HashMap<String, i32> = HashMap::new();
+    let mut weakest: HashMap<String, f64> = HashMap::new();
+    for n in npcs.iter() {
+        if n.current_team.is_empty() || n.career_status == "retired" { continue; }
+        *size.entry(n.current_team.clone()).or_insert(0) += 1;
+        let o = npc_core_ovr(n);
+        weakest.entry(n.current_team.clone())
+            .and_modify(|w| if o < *w { *w = o })
+            .or_insert(o);
+    }
+
+    let mut taken: HashMap<String, i32> = HashMap::new();
+    let mut claimed = 0;
+    for i in free {
+        let league = npcs[i].current_league.clone();
+        let ovr = npc_core_ovr(&npcs[i]);
+        let max = match roster_rule(&league, limits) { Some((_, m)) => m, None => continue };
+
+        // 같은 리그에서 **인원이 적은 팀부터** — 순위 역순의 대용이다
+        // (오프시즌 이 시점엔 순위표가 없다)
+        let mut cands: Vec<(String, i32)> = size.iter()
+            // ⚠ 군팀은 청구 대상이 아니다 — 복무자만 들어가는 자리다
+            .filter(|(t, _)| !exclude_teams.contains(*t))
+            .filter(|(t, _)| npcs.iter().any(|n|
+                n.current_team == **t && n.current_league == league))
+            .map(|(t, c)| (t.clone(), *c))
+            .collect();
+        cands.sort_by(|a, b| a.1.cmp(&b.1).then(a.0.cmp(&b.0)));
+
+        for (team, cnt) in cands {
+            if cnt >= max { continue; }                       // 정원이 찼다
+            if *taken.get(&team).unwrap_or(&0) >= max_per_team { continue; }
+            let w = *weakest.get(&team).unwrap_or(&0.0);
+            if ovr < w + ovr_margin { continue; }             // 최약체만도 못하다
+
+            npcs[i].current_team = team.clone();
+            npcs[i].career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "waiver_claim".into(),
+                from_team_id: None,
+                to_team_id: Some(team.clone()),
+                from_league_id: None,
+                to_league_id: None,
+                detail: Some(format!("OVR {ovr:.0}")),
+            });
+            *size.entry(team.clone()).or_insert(0) += 1;
+            *taken.entry(team).or_insert(0) += 1;
+            claimed += 1;
+            break;
+        }
+    }
+    claimed
+}
+
 /// 육성선수 단년 계약 만료 — **성장했으면 재계약, 아니면 방출**.
 ///
 /// 🔴 **이게 없어서 2군 육성 몫이 첫 해에 차고 영영 안 열렸다.** 육성선수는
@@ -1284,6 +1514,33 @@ fn release_second_stage(
 ///
 /// ⚠ **성적이 없으면 건너뛴다.** 표본 미달자를 중립 50으로 갱신하면 안 뛴
 /// 선수의 연봉이 조용히 움직인다.
+/// **리그가 바뀌면 연봉도 오르내린다** (사용자 확정 2026-08-31).
+///
+/// `salaryRules.leagueMult` (KBL 1.0 · 2군 0.3 · 독립 0.14 · ABL 3.5 · JBL 2.0)
+/// 가 **생성 때만** 걸리고 있었다. 소속을 바꾸는 자리가 연봉을 안 건드려
+/// 2군에 내려가도 1군 연봉을 그대로 받았다.
+///
+/// ⚠ **다시 계산하지 않고 배수 비율로 옮긴다.** 새로 계산하면 그 선수가
+///   연차·성적으로 쌓은 상대적 위치가 지워진다 — "올라가고 깎이고"는
+///   비율로 움직이는 것이지 새 사람이 되는 게 아니다.
+/// ⚠ 배수가 없는 리그(아마추어)는 안 건드린다 — 연봉 개념이 없다.
+/// ⚠ 규칙이 없으면 아무 일도 안 한다(예전 동작).
+fn rescale_salary_for_league(
+    npc: &mut NpcSaveState,
+    from_league: &str,
+    to_league: &str,
+    rules: Option<&SalaryRules>,
+) {
+    if from_league == to_league { return; }
+    let Some(sr) = rules else { return };
+    let (Some(&from_m), Some(&to_m)) =
+        (sr.league_mult.get(from_league), sr.league_mult.get(to_league)) else { return };
+    if from_m <= 0.0 || to_m <= 0.0 { return; }
+    let scaled = (npc.current_salary as f64 * (to_m / from_m)).round() as i64;
+    let floor = sr.min_salary.get(to_league).copied().unwrap_or(0.0).round() as i64;
+    npc.current_salary = scaled.max(floor);
+}
+
 fn renew_independent_salaries(
     npcs: &mut [NpcSaveState],
     perf: &HashMap<String, f64>,
@@ -1371,6 +1628,8 @@ fn expire_development_contracts(
 /// 실측에서 1군이 팀당 24명(최소 16)까지 말랐다. 성적 기반 상시 콜업은
 /// Phase 7-2가 담당하고, 여기서는 리그가 성립하는 최소선만 지킨다.
 fn fill_first_teams(
+    // 승격하면 연봉이 오른다 — 강등과 짝이다
+    promote_salary_rules: Option<&SalaryRules>,
     npcs: &mut [NpcSaveState],
     limits: &HashMap<String, RosterLimit>,
     events: &mut Vec<OffseasonEvent>,
@@ -1425,6 +1684,9 @@ fn fill_first_teams(
         };
 
         let promote = |npcs: &mut [NpcSaveState], idx: usize, events: &mut Vec<OffseasonEvent>| {
+            // 🔴 **올라가면 오른다** — 강등과 짝이다.
+            let before = npcs[idx].current_league.clone();
+            rescale_salary_for_league(&mut npcs[idx], &before, &league_id, promote_salary_rules);
             npcs[idx].current_league = league_id.clone();
             npcs[idx].current_team   = team_id.clone();
             events.push(ev("promote", &npcs[idx], Some(team_id.clone()), None));
@@ -1548,6 +1810,14 @@ fn fa_fallback(
     team_payroll: &mut std::collections::HashMap<String, i64>,
     team_at_pos: &mut std::collections::HashMap<(String, String), usize>,
     roster_max: Option<i32>,
+    // 독립리그 팀 목록과 정원. **비면 독립 갈래가 통째로 꺼진다**(예전 동작)
+    independent_team_ids: &[String],
+    independent_max: Option<i32>,
+    // 독립 재도전 나이 상한. 이 나이를 넘으면 바로 은퇴다
+    independent_age_max: Option<i32>,
+    // 독립 재도전은 **새 계약**이라 그 리그 기준으로 다시 잡는다.
+    // ⚠ None 이면 옛 연봉을 그대로 들고 간다(예전 동작) — 검사 호출부가 그렇다.
+    salary_rules: Option<&SalaryRules>,
     events: &mut Vec<OffseasonEvent>,
 ) {
     let home = npc.original_team_id.clone().filter(|t| !t.is_empty());
@@ -1579,7 +1849,61 @@ fn fa_fallback(
         return;
     }
 
-    // ② 갈 곳이 없다 — **은퇴다.** `quit_baseball`이 아니다.
+    // ② **독립리그 재도전** (2026-08-29 · 사용자 확정).
+    //
+    // 🔴 예전엔 여기가 없어서 원소속 재계약이 막히면 **바로 은퇴**였다.
+    //   27세 프로 5년차가 갈 팀이 없다고 그만두는 건 현실과 다르다 —
+    //   독립에서 뛰다 돌아오는 경로가 실제로 있다.
+    //
+    // ⚠ **나이 상한이 있다.** 30대 후반이 독립에서 재도전하는 건 드물다.
+    //   값은 규칙 파일(`faRules.independentAgeMax`)이 정본이다.
+    // ⚠ 목록이 비면 이 갈래는 **통째로 꺼진다** — 예전 동작으로 돌아간다.
+    let age_ok = independent_age_max.map_or(false, |m| npc.age <= m);
+    if age_ok && !independent_team_ids.is_empty() {
+        // 정원에 여유가 제일 많은 팀 — 한 팀에 몰리지 않게
+        let pick = independent_team_ids.iter()
+            .map(|t| (t, team_active_count.get(t).copied().unwrap_or(0)))
+            .filter(|(_, n)| independent_max.map_or(true, |m| (*n as i32) < m))
+            .min_by_key(|(t, n)| (*n, (*t).clone()))
+            .map(|(t, _)| t.clone());
+        if let Some(team) = pick {
+            npc.career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "transfer".into(),
+                from_team_id: npc.original_team_id.clone().filter(|t| !t.is_empty()),
+                to_team_id: Some(team.clone()),
+                from_league_id: Some(origin_league.to_string()),
+                to_league_id: Some("LEAGUE_INDEPENDENT".to_string()),
+                detail: Some("FA 미계약 → 독립리그 재도전".into()),
+            });
+            npc.current_league = "LEAGUE_INDEPENDENT".to_string();
+            npc.current_team = team.clone();
+            // 🔴 **새 계약이다** (2026-08-31). 예전엔 옛 리그 몸값을 그대로
+            //   들고 왔다 — 독립 배수 0.14 · 최저 1,200만원이 **생성된
+            //   선수에게만** 걸렸고, 실측에서 KBL 출신 23명이 독립리그에서
+            //   **평균 2억 · 최고 9.97억**을 받고 있었다.
+            // ⚠ 2군 강등은 이렇게 안 한다 — 같은 구단 안이라 계약이 이어진다
+            //   (KBO 도 그렇다). 여기는 **팀이 바뀌는 새 계약**이라 다시 잡는다.
+            if let Some(sr) = salary_rules {
+                // ⚠ 난수는 여기서 만든다 — 씨앗은 npc_id + 연도라 재현된다.
+                let mut r2 = LcgRand::new(seed_of(season_year as u32, &[npc.npc_id.as_str()]));
+                let (s2, y2) = estimate_salary_and_contract(
+                    npc_core_ovr(npc), "LEAGUE_INDEPENDENT",
+                    npc.pro_service_years.unwrap_or(0), npc.age, 1.0, sr, &mut r2);
+                npc.current_salary = s2;
+                npc.contract_years = y2.max(1);
+            }
+            npc.career_status = "active".into();
+            npc.original_league_id = None;
+            *team_active_count.entry(team.clone()).or_default() += 1;
+            *team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;
+            *team_at_pos.entry((team.clone(), npc.position.clone())).or_insert(0) += 1;
+            events.push(ev("fa_independent", npc, Some(team), None));
+            return;
+        }
+    }
+
+    // ③ 갈 곳이 없다 — **은퇴다.** `quit_baseball`이 아니다.
     //    프로 경력자가 자리를 못 구해 그만두는 건 은퇴이고, 인생 기록·경력
     //    화면이 그 둘을 다르게 보여준다.
     npc.career_events.push(NpcCareerEvent {
@@ -1648,6 +1972,61 @@ fn ev_to(kind: &str, npc: &NpcSaveState, from_team: Option<String>, to_team: Str
 /// ⚠ 대신 **경력 사건으로 남긴다.** 예전엔 `position`만 바꾸고 아무 기록도
 /// 안 남겨서, 작년엔 3루수였던 선수가 왜 좌익수인지 알 방법이 없었다.
 /// 정보가 있어야 할 자리와 없어야 할 자리가 정확히 뒤바뀌어 있었다.
+/// 팀 안에서 등번호를 **유일하게** 만든다.
+///
+/// 🔴 **유입 경로가 여럿이라 한 곳에 모았다** — 신입생·육성선수·해외·
+///   드래프트·FA 이적이 각각 선수를 팀에 넣는다. 경로마다 배정하면
+///   하나를 빠뜨리고, 그 경로만 0번으로 남는다(실제로 그랬다).
+///
+/// ⚠ **이미 유일한 번호는 안 건드린다.** 선수에게 등번호는 정체성이라
+///   해마다 바뀌면 안 된다. 0(없음)과 **나중에 온 중복자**만 준다.
+///
+/// 실측(고치기 전 · 씨앗 111 · 2027): 238팀 전부 중복 · 7,338건 ·
+/// 한 번호에 최대 45명 — 전부 `#0` 이었다.
+///
+/// `retired` 는 팀 id → **영구결번된 번호들**. 그 번호는 새로 주지 않는다.
+/// ⚠ 빈 맵을 넘기면 예전과 같이 돈다 — 호출부가 안 넘겨도 안전하다.
+pub(crate) fn fix_jersey_numbers(
+    npcs: &mut [NpcSaveState],
+    retired: &HashMap<String, Vec<i32>>,
+) {
+    // 팀 → 그 팀 선수들의 인덱스
+    let mut by_team: HashMap<String, Vec<usize>> = HashMap::new();
+    for (i, n) in npcs.iter().enumerate() {
+        if n.career_status == "retired" || n.current_team.is_empty() { continue; }
+        by_team.entry(n.current_team.clone()).or_default().push(i);
+    }
+    let mut keys: Vec<String> = by_team.keys().cloned().collect();
+    keys.sort();   // HashMap 순회 순서에 기대지 않는다 (결정성)
+
+    for team in keys {
+        let idxs = match by_team.get(&team) { Some(v) => v.clone(), None => continue };
+        // ⚠ **먼저 온 사람이 번호를 지킨다.** 인덱스 순서가 그 기준이다 —
+        //   같은 번호를 든 둘 중 뒤엣사람만 새로 받는다.
+        let mut taken: std::collections::HashSet<i32> = std::collections::HashSet::new();
+        // 🔴 **영구결번을 먼저 막는다.** 그 번호는 아무도 못 받는다 —
+        //   결번해 놓고 이듬해 신입이 달면 결번이 아니다.
+        if let Some(list) = retired.get(&team) {
+            for &n in list { taken.insert(n); }
+        }
+        let mut need: Vec<usize> = Vec::new();
+        for &i in &idxs {
+            let num = npcs[i].jersey_number;
+            if num > 0 && taken.insert(num) { continue; }   // 유일하다 — 그대로
+            need.push(i);
+        }
+        if need.is_empty() { continue; }
+
+        // 1~99 중 빈 번호를 앞에서부터 준다. 다 차면 100 이상으로 이어간다
+        let mut next = 1;
+        for i in need {
+            while taken.contains(&next) { next += 1; }
+            taken.insert(next);
+            npcs[i].jersey_number = next;
+        }
+    }
+}
+
 pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
     // 포수가 맨 앞이다 — 전문 요원이라 0명이면 경기가 성립하지 않는다
     const FIELD: [&str; 8] = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"];
@@ -1664,12 +2043,24 @@ pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
 
     for team in keys {
         let idxs = match by_team.get(&team) { Some(v) => v.clone(), None => continue };
-        if idxs.len() < FIELD.len() { continue; }   // 자리 수보다 적으면 전환해도 소용없다
+        // ⚠ **포수만은 예외다.** 야수가 자리 수(8)보다 적으면 돌려도 다른
+        //   자리가 비니 원래는 통째로 건너뛴다. 그런데 **포수가 없는 팀은
+        //   대개 야수가 적은 팀이라 정작 필요한 팀에서 안 돌았다.**
+        //   실측(4씨앗 · 5시즌): 고교 포수 0명이 세 씨앗에서 1팀씩 남았다.
+        //
+        //   다른 자리는 대체가 되지만 **포수는 전문 요원이라 0명이면 경기가
+        //   성립하지 않는다.** 아래 `pick(3)→pick(2)` 주석이 이미 같은 논리를
+        //   쓴다 — "백업이 없는 것이 아무도 없는 것보다 낫다".
+        let thin = idxs.len() < FIELD.len();
+        let has_catcher = idxs.iter().any(|&i| npcs[i].position == "C");
+        if thin && has_catcher { continue; }   // 얇은데 포수는 있다 — 둘 자리가 없다
 
         let mut cnt: HashMap<String, Vec<usize>> = HashMap::new();
         for &i in &idxs { cnt.entry(npcs[i].position.clone()).or_default().push(i); }
 
         for pos in FIELD {
+            // 얇은 팀은 **포수만** 메운다 — 나머지를 건드리면 준 자리가 빈다
+            if thin && pos != "C" { continue; }
             if cnt.get(pos).map_or(0, |v| v.len()) > 0 { continue; }
             // ⚠ **3명 조건만으로는 못 메운다.** 야수 14명을 8자리에 나누면
             // 대부분 1~2명씩이라 3명인 자리가 아예 없다 — 실측에서 야수 16명인
@@ -1682,7 +2073,11 @@ pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
                 .filter(|p| **p != pos)
                 .filter(|p| cnt.get(**p).map_or(0, |v| v.len()) >= min)
                 .max_by_key(|p| (cnt.get(**p).map_or(0, |v| v.len()), std::cmp::Reverse(**p)));
-            let donor = pick(3).or_else(|| pick(2));
+            // ⚠ 얇은 팀은 **1명인 자리에서도** 가져온다. 야수 7명이 8자리에
+            //   흩어지면 2명인 자리조차 없다 — 그러면 포수를 영영 못 만든다.
+            //   준 자리가 0이 되지만 **포수 0명보다는 낫다.**
+            let donor = pick(3).or_else(|| pick(2))
+                .or_else(|| if thin { pick(1) } else { None });
             let Some(from) = donor else { continue };
             let Some(pool) = cnt.get_mut(*from) else { continue };
             // 그 자리에서 능력치가 가장 낮은 사람을 돌린다 — 주전은 자리를 지킨다
@@ -1872,8 +2267,19 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     }).collect();
 
     // 7. 전역 처리 (discharge_year 도달)
+    //
+    // 🔴 **`career_status` 로 거르면 샌다** (2026-08-31). 그 값은 부상·완치가
+    //   덮어쓴다 — 상무 선수가 한 번 다치면 `military` → `injured` → `active`
+    //   가 되고, 여기서 영원히 건너뛰어 **전역년이 2년 지나도 안 나갔다.**
+    //   인원이 26 → 54로 부풀고 그 자리만큼 새 입대가 쌓였다.
+    //
+    //   지금은 **복무 상태**(`military_status`)로 거른다. 그게 이 판정의
+    //   진짜 술어다 — 전역하면 아래에서 `군필` 로 바뀌니 두 번 안 돈다.
+    // ⚠ 구 세이브에 이미 눌러앉은 사람도 이걸로 나간다. 수리 갈래를 따로
+    //   두지 않는다.
+    // ⚠ 일반병도 `현역` 이다 — 아래가 부대별로 갈라 처리하므로 맞다.
     for n in processed.iter_mut() {
-        if n.career_status != "military" { continue; }
+        if n.military_status != "현역" { continue; }
         if let Some(dy) = n.military_discharge_year {
             if dy <= season_year {
                 n.career_status   = "active".into();
@@ -2000,6 +2406,9 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             .filter(|l| !l.is_empty())
             .unwrap_or("LEAGUE_KBL");
         let max = roster_rule(origin_league, &params.roster_limits).map(|(_, m)| m);
+        // 독립 재도전 — 정원과 나이 상한. 규칙이 없으면 갈래가 꺼진다(예전 동작)
+        let ind_max = roster_rule("LEAGUE_INDEPENDENT", &params.roster_limits).map(|(_, m)| m);
+        let ind_age_max = params.fa_independent_age_max;
         // 정원에 여유가 있는 팀만 후보다. 여유를 안 보면 FA가 캡을 통과한다
         // 이 선수가 **돌아갈 리그 기준**으로 외국인인가.
         // ⚠ `is_foreign`은 `current_league`를 보는데 지금은 LEAGUE_FREE_AGENT라
@@ -2033,7 +2442,9 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             summary.fa_unsigned_count += 1;   // 갈 팀 자체가 없는 갈래도 센다
             summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
             fa_fallback(npc, season_year, &origin_league.to_string(),
-                &mut team_active_count, &mut team_payroll, &mut team_at_pos, max, &mut events);
+                &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
+                &params.independent_team_ids, ind_max, ind_age_max,
+                params.salary_rules.as_ref(), &mut events);
             continue;
         }
         // ── 구단 입찰 ─────────────────────────────────────────────
@@ -2136,7 +2547,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                     summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
                     fa_fallback(npc, season_year, &origin_league.to_string(),
                         &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
-                        &mut events);
+                        &params.independent_team_ids, ind_max, ind_age_max,
+                params.salary_rules.as_ref(), &mut events);
                     continue;
                 }
             }
@@ -2204,6 +2616,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut after_normalize = normalize_offseason_npcs(
         processed, season_year, &mut summary, &mut events, &mut rng,
         &params.roster_limits, can_place, &is_foreign,
+        params.salary_rules.as_ref(),
     );
 
     // 12. 소속을 잃은 사람들의 진로 — 방출자와 FA 미계약자.
@@ -2224,6 +2637,38 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             &params.perf_scores, &params.team_profiles, &is_foreign);
     }
 
+    // 11-b2. **웨이버 공시.** 방금 방출된 사람을 다른 구단이 데려간다.
+    //
+    // ⚠ **방출 직후여야 한다.** 육성 만료(11-c)·진로 배정(12)이 돌면
+    //   그 사람들은 이미 독립리그나 은퇴로 갈려 나간 뒤다.
+    // 🔴 **예산 초과 방출** — 웨이버 **앞**에 둔다. 여기서 나온 사람도
+    //   다른 구단이 데려갈 수 있어야 한다 — 방출 절차의 일부다.
+    let _budget_released = release_over_budget(
+        &mut after_normalize, &params.team_budgets, &params.roster_limits,
+        &params.team_profiles, &params.perf_scores, &is_foreign, &mut events);
+
+    if let Some(wr) = params.waiver_rules.as_ref() {
+        if wr.enabled {
+            // ⚠ 요약은 안 남긴다 — `events` 는 `OffseasonEvent` 라 선수가
+            //   있어야 한다. 클레임한 사람마다 `career_events` 에 이미
+            //   `waiver_claim` 이 남는다.
+            let released_ids: std::collections::HashSet<String> = events.iter()
+                .filter(|e| e.kind == "release_score" || e.kind == "release_roster"
+                    // ⚠ 예산 방출도 **방출 절차의 일부**다 — 빼면 그 사람만
+                    //   청구 대상에서 빠져 곱장 진로 배정으로 간다
+                    || e.kind == "release_budget")
+                .map(|e| e.npc_id.clone())
+                .collect();
+            // ⚠ 안 넘기면 상무가 다시 1순위가 된다 — `serde(default)` 라
+            //   오류가 아니라 "조용히 예전 동작"으로 나타난다.
+            let excl: std::collections::HashSet<String> =
+                params.waiver_exclude_teams.iter().cloned().collect();
+            let _ = waiver_claim(&mut after_normalize, &released_ids,
+                &params.roster_limits,
+                wr.ovr_margin, wr.max_per_team.max(1), season_year, &excl);
+        }
+    }
+
     // 11-c. 육성선수 단년 계약 만료. 이것도 진로 배정 **앞**이어야 방출자가
     // 독립·은퇴로 갈린다. 여기서 빈 자리에 그해 미지명자가 들어간다
     expire_development_contracts(&mut after_normalize, season_year, &mut events);
@@ -2240,7 +2685,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     //
     // 이러면 사슬이 맞는다: **방출 → 2군에서 올림 → 2군은 진로 배정이 채움**.
     // 진로 배정(12단계)이 뒤에 오므로 2군이 얇아진 것도 같은 패스에서 메워진다.
-    fill_first_teams(&mut after_normalize, &params.roster_limits, &mut events, &is_foreign);
+    fill_first_teams(params.salary_rules.as_ref(), &mut after_normalize,
+        &params.roster_limits, &mut events, &is_foreign);
 
 
     let mut leftover_pending = Vec::new();
@@ -2259,7 +2705,17 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let mut placer = crate::draft::Placer::new(
             &after_normalize, &params.university_team_ids, &params.independent_team_ids,
             &params.farm_team_ids, rules,
-        ).with_salary(params.salary_rules.clone(), season_year as u32);
+        ).with_salary(params.salary_rules.clone(), season_year as u32)
+        // 🔴 **예산 게이트** — 들어올 때 그 팀 예산에 자리가 있는지 본다.
+        //   사후에 방출로 풀면 같은 사람이 매년 들어왔다 잘리는 **회전문**이 된다.
+        .with_budgets(params.team_budgets.clone(), {
+            let mut m: std::collections::HashMap<String, i64> = std::collections::HashMap::new();
+            for n in after_normalize.iter() {
+                if n.career_status != "active" || n.current_team.is_empty() { continue; }
+                *m.entry(n.current_team.clone()).or_insert(0) += n.current_salary;
+            }
+            m
+        });
         let mut homeless: Vec<usize> = after_normalize.iter().enumerate()
             .filter(|(i, n)| n.career_status == "active"
                 && (n.current_team.is_empty()
@@ -2322,6 +2778,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 채운 뒤에 깎았고, 콜업이 야수 총원을 안 봤고, 이번엔 공백 메우기다.
     // **같은 일을 하는 자리가 여럿이면 순서를 본다.**
     fix_position_gaps(&mut after_normalize, season_year);
+    // 등번호도 **마지막에** 한 번 더 — 위 단계들이 선수를 옮긴 뒤다
+    fix_jersey_numbers(&mut after_normalize, &HashMap::new());
 
     // ⚠ **요약 문장도 여기서 안 만든다.** 한 번 만들어 봤다가 화면과 숫자가
     // 어긋났다 — Rust는 **사건**을 세는데(방출 1170) 화면은 **사람**을 센다
@@ -2642,6 +3100,9 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             rng.next(), rng.next(), rng.next());
 
         result.push(NpcSaveState {
+            // 0 = **아직 없음**. 팀 안 빈 번호를 알아야 정하므로
+            // `fix_jersey_numbers` 가 채운다 — 여기서 지어내면 겹친다.
+            jersey_number: 0,
             npc_id,
             name,
             name_en: Some(name_en),
@@ -3023,7 +3484,28 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
             let spread = (r as f64 * 1.2).min(6.0);
             let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
-                let base = calc_draft_score(npc, meta_map.get(id).copied()) + bias_of(id);
+                // 🔴 **팀마다 다른 눈으로 본다.** 그 전엔 전 구단이 진짜
+                //   능력을 정확히 알아서 스카우트 조직에 값이 없었다.
+                //
+                // ⚠ **점수만 흔든다 — 실제 능력은 그대로다.** 잘못 본 팀이
+                //   잘못 뽑는 것이지, 뽑힌 선수가 나빠지는 게 아니다.
+                // ⚠ 씨앗은 **선수 + 팀 + 연도**다. 같은 팀이 같은 해에 같은
+                //   선수를 보면 늘 같은 값이다 — 순번마다 흔들리면 안 된다.
+                let scout_noise = match params.scouting.as_ref() {
+                    Some(sc) if sc.span > 0.0 => {
+                        let team = &params.team_ids[t as usize];
+                        let q = sc.quality.get(team).copied().unwrap_or(50.0);
+                        let mag = ((100.0 - q) / 100.0) * sc.span;
+                        let h = crate::scouting_engine::simple_hash(id)
+                            .wrapping_add(crate::scouting_engine::simple_hash(team))
+                            .wrapping_add(params.year as u32);
+                        // [-1, 1) 로 편 뒤 폭을 곱한다
+                        (((h % 2000) as f64 / 1000.0) - 1.0) * mag
+                    }
+                    _ => 0.0,
+                };
+                let base = calc_draft_score(npc, meta_map.get(id).copied())
+                    + bias_of(id) + scout_noise;
                 // 부족한 보직에 가점 — 팀 사정을 본다. 없으면 0이라 예전 그대로다
                 let need = params.team_needs.get(&params.team_ids[t as usize]);
                 let short = match need {
@@ -4057,111 +4539,6 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
     MonthlyNpcGrowthResult { updated }
 }
 
-// ── 배경 고교 졸업생 드래프트 ─────────────────────────────────────────────────
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct BgHsGraduate {
-    pub id: String,
-    pub player_type: String,
-    pub pitch_ovr: Option<f64>,
-    pub bat_ovr:   Option<f64>,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct BgDraftAssignment {
-    pub id:            String,
-    pub new_league_id: String,
-    pub new_team_id:   String,
-    pub round:         Option<i32>,
-    pub detail:        String,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct BgHsGraduateDraftParams {
-    pub graduates:      Vec<BgHsGraduate>,
-    pub kbl_teams:      Vec<String>,
-    pub abl_teams:      Vec<String>,
-    pub jbl_teams:      Vec<String>,
-    pub univ_teams:     Vec<String>,
-    pub ind_teams:      Vec<String>,
-    pub picks_per_team: Option<i32>,
-    pub season_year:    i32,
-    pub seed:           u32,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct BgHsGraduateDraftResult {
-    pub assignments: Vec<BgDraftAssignment>,
-}
-
-pub fn bg_hs_graduate_draft(params: BgHsGraduateDraftParams) -> BgHsGraduateDraftResult {
-    let picks = params.picks_per_team.unwrap_or(2) as usize;
-
-    // OVR 내림차순 정렬 인덱스
-    let grad_ovr = |g: &BgHsGraduate| -> f64 {
-        if g.player_type == "pitcher" { g.pitch_ovr.unwrap_or(0.0) }
-        else { g.bat_ovr.unwrap_or(0.0) }
-    };
-    let mut sorted: Vec<usize> = (0..params.graduates.len()).collect();
-    sorted.sort_by(|&a, &b| grad_ovr(&params.graduates[b])
-        .partial_cmp(&grad_ovr(&params.graduates[a]))
-        .unwrap_or(std::cmp::Ordering::Equal));
-
-    // 드래프트 슬롯 생성: KBL → ABL → JBL, picks 라운드 반복
-    let mut slots: Vec<(String, String, i32)> = Vec::new();
-    for round in 0..picks {
-        let r = round as i32 + 1;
-        for tid in &params.kbl_teams { slots.push(("LEAGUE_KBL".into(), tid.clone(), r)); }
-        for tid in &params.abl_teams { slots.push(("LEAGUE_ABL".into(), tid.clone(), r)); }
-        for tid in &params.jbl_teams { slots.push(("LEAGUE_JBL".into(), tid.clone(), r)); }
-    }
-
-    let mut assignments = Vec::new();
-    let mut grad_iter = sorted.iter();
-
-    // 프로 드래프트 배정
-    for (league_id, team_id, round_num) in &slots {
-        let Some(&gi) = grad_iter.next() else { break };
-        let g = &params.graduates[gi];
-        assignments.push(BgDraftAssignment {
-            id:            g.id.clone(),
-            new_league_id: league_id.clone(),
-            new_team_id:   team_id.clone(),
-            round:         Some(*round_num),
-            detail:        format!("{} {}라운드 지명", league_id, round_num),
-        });
-    }
-
-    // 미지명자 → 대학 → 독립 → 은퇴
-    let mut roster: HashMap<String, (usize, usize)> = HashMap::new();
-    for &gi in grad_iter {
-        let g = &params.graduates[gi];
-        let is_pitcher = g.player_type == "pitcher";
-        if let Some(tid) = find_slot(&mut roster, is_pitcher, &params.univ_teams, 40) {
-            assignments.push(BgDraftAssignment {
-                id: g.id.clone(), new_league_id: "LEAGUE_UNIVERSITY".into(),
-                new_team_id: tid, round: None, detail: "미지명 → 대학리그".into(),
-            });
-        } else if let Some(tid) = find_slot(&mut roster, is_pitcher, &params.ind_teams, 45) {
-            assignments.push(BgDraftAssignment {
-                id: g.id.clone(), new_league_id: "LEAGUE_INDEPENDENT".into(),
-                new_team_id: tid, round: None, detail: "미지명 → 독립리그".into(),
-            });
-        } else {
-            assignments.push(BgDraftAssignment {
-                id: g.id.clone(), new_league_id: "LEAGUE_RETIRED".into(),
-                new_team_id: "".into(), round: None, detail: "미지명 → 은퇴".into(),
-            });
-        }
-    }
-
-    BgHsGraduateDraftResult { assignments }
-}
-
 #[cfg(test)]
 mod clutch_tests {
     use super::*;
@@ -4701,6 +5078,92 @@ mod fa_fallback_tests {
     use super::*;
     use std::collections::HashMap;
 
+    const IND: &[&str] = &["TEAM_IND_A", "TEAM_IND_B"];
+    fn ind_ids() -> Vec<String> { IND.iter().map(|s| s.to_string()).collect() }
+
+    /// 🔴 **원소속이 막히면 독립으로 간다** (2026-08-29 · 사용자 확정).
+    ///   예전엔 바로 은퇴였다 — 27세가 갈 팀이 없다고 그만두는 건 현실과 다르다.
+    #[test]
+    fn 원소속이_막히면_독립_재도전() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);   // 원소속 정원 꽉 참
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
+
+        assert_eq!(n.career_status, "active", "독립으로 갔는데 비활성이다");
+        assert_eq!(n.current_league, "LEAGUE_INDEPENDENT");
+        assert!(IND.contains(&n.current_team.as_str()), "독립 팀이 아니다: {}", n.current_team);
+        assert!(n.career_events.iter().any(|e| e.event_type == "transfer"
+            && e.to_league_id.as_deref() == Some("LEAGUE_INDEPENDENT")),
+            "경력에 독립 이적이 안 남았다");
+    }
+
+    /// ⚠ **나이 상한을 넘으면 은퇴다.** 30대 후반이 독립에서 재도전하는 건 드물다
+    #[test]
+    fn 나이가_넘으면_은퇴다() {
+        let mut n = fa_npc(35);
+        let mut b = books(34);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+        assert_eq!(n.current_league, "LEAGUE_RETIRED");
+    }
+
+    /// 🔴 **원소속이 우선이다.** 자리가 있으면 독립으로 새지 않는다
+    #[test]
+    fn 자리가_있으면_독립보다_원소속() {
+        let mut n = fa_npc(27);
+        let mut b = books(30);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
+
+        assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
+        assert_eq!(n.current_league, "LEAGUE_KBL");
+    }
+
+    /// ⚠ **독립도 꽉 차면 은퇴다** — 정원을 무시하고 밀어 넣지 않는다
+    #[test]
+    fn 독립도_꽉_차면_은퇴다() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);
+        for t in IND { b.active.insert(t.to_string(), 30); }
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+    }
+
+    /// 🔴 **한 팀에 몰리지 않는다** — 여유가 제일 많은 팀으로 간다
+    #[test]
+    fn 여유가_많은_팀으로_간다() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);
+        b.active.insert("TEAM_IND_A".into(), 25);
+        b.active.insert("TEAM_IND_B".into(), 10);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
+
+        assert_eq!(n.current_team, "TEAM_IND_B");
+    }
+
+    /// ⚠ **규칙이 없으면 갈래가 꺼진다** — 예전 동작(바로 은퇴)으로 돌아간다
+    #[test]
+    fn 나이_상한이_없으면_갈래가_꺼진다() {
+        let mut n = fa_npc(27);
+        let mut b = books(34);
+        fa_fallback(&mut n, 2030, "LEAGUE_KBL",
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            &ind_ids(), Some(30), None, None, &mut b.events);
+
+        assert_eq!(n.career_status, "retired");
+    }
+
     /// FA를 막 잃은 프로 선수 — 소속은 비었고 원소속만 남아 있다
     fn fa_npc(age: i32) -> NpcSaveState {
         let mut n: NpcSaveState = serde_json::from_str(&format!(r#"{{
@@ -4737,7 +5200,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(28);
         let mut b = books(30);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, None, &mut b.events);
 
         assert_eq!(n.career_status, "active", "재계약했는데 비활성이다");
         assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
@@ -4753,7 +5218,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(28);
         let mut b = books(30);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, None, &mut b.events);
 
         assert_eq!(b.active["TEAM_KBL_HOME_1"], 31, "인원이 안 늘었다");
         assert_eq!(b.payroll["TEAM_KBL_HOME_1"], 12000, "총연봉이 안 늘었다");
@@ -4766,7 +5233,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(28);
         let mut b = books(34);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, None, &mut b.events);
 
         assert_eq!(n.career_status, "retired");
         assert_eq!(n.current_league, "LEAGUE_RETIRED");
@@ -4780,7 +5249,9 @@ mod fa_fallback_tests {
         let mut n = fa_npc(31);
         let mut b = books(34);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, None, &mut b.events);
 
         assert!(n.career_events.iter().any(|e| e.event_type == "retirement"),
             "은퇴가 경력에 안 남았다");
@@ -4795,7 +5266,9 @@ mod fa_fallback_tests {
         n.original_team_id = None;
         let mut b = books(0);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
-            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34), &mut b.events);
+            &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
+            // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
+            &[], None, None, None, &mut b.events);
         assert_eq!(n.career_status, "retired");
     }
 }

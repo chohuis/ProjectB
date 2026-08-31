@@ -23,6 +23,8 @@ const LABEL: Record<string, string> = {
   //   경력자가 미지명 졸업생과 같은 통에서 `quit_baseball`이 됐다
   //   (실측 2026-08-27: 미계약자의 67%).
   fa_rehome:        "FA 미계약 · 원소속 잔류",
+  // FA 미계약 → 원소속도 막혀 독립에서 재도전 (2026-08-29)
+  fa_independent:   "독립 재도전",
   fa_unsigned_retire: "FA 미계약 은퇴",
   trade:            "트레이드",
   foreign_signing:  "용병 영입",
@@ -33,6 +35,8 @@ const LABEL: Record<string, string> = {
   // 방출 — 정원 초과와 성적 부진은 다른 일이다
   release_roster:   "방출(정원)",
   release_score:    "방출(성적)",
+  // 팀 총연봉이 예산을 넘어 잘렸다 (2026-08-31)
+  release_budget:   "방출(예산)",
   release:          "방출",
   development_expired: "육성 만료",
   // 은퇴

@@ -1049,12 +1049,17 @@
                         ["HR", modalStats.hr],
                         // 루타 — 파생값이다. 장타 수를 모르면 낼 수 없다
                         ["TB", totalBases(modalStats.h, modalStats.hr, modalStats.b2, modalStats.b3) ?? "—"],
-                        ["RBI", modalStats.rbi], ["SB", modalStats.sb], ["BB", modalStats.bb],
+                        ["RBI", modalStats.rbi], ["SB", modalStats.sb],
+                        ["CS", modalStats.cs ?? 0], ["BB", modalStats.bb],
                         ["HBP", modalStats.hbp ?? "—"],
                         ["SAC", modalStats.sac ?? "—"], ["SF", modalStats.sf ?? "—"],
                         ["K", modalStats.k], ["AVG", rateLabel(modalStats.avg)],
                         ["OBP", rateLabel(modalStats.obp)], ["SLG", rateLabel(modalStats.slg)],
                         ["OPS", rateLabel(modalStats.ops)],
+                        // 수비 (G-3) — ⚠ 없는 것과 0을 가른다
+                        ["E",   modalStats.e  ?? "—"], ["A", modalStats.a ?? "—"],
+                        ["PO",  modalStats.po ?? "—"],
+                        ["FPCT", modalStats.fpct == null ? "—" : rateLabel(modalStats.fpct)],
                       ] as [lbl, val]}
                         <div class="sc"><span class="sc-lbl">{lbl}</span><span class="sc-val mid">{val ?? "-"}</span></div>
                       {/each}
@@ -1358,7 +1363,7 @@
                         {#if isPType}
                           <th>G</th><th>W</th><th>L</th><th>SV</th><th>IP</th><th>ERA</th><th>K</th><th>BB</th><th>WHIP</th>
                         {:else}
-                          <th>G</th><th>AVG</th><th>HR</th><th>RBI</th><th>OPS</th><th>SB</th>
+                          <th>G</th><th>AVG</th><th>HR</th><th>RBI</th><th>OPS</th><th>SB</th><th>CS</th>
                         {/if}
                         {#if hasRank}<th>순위</th>{/if}
                       </tr>
@@ -1381,6 +1386,7 @@
                             <td>{st.hr}</td><td>{st.rbi}</td>
                             <td>{st.ops?.toFixed(3)?.replace(/^0/,"") ?? "-"}</td>
                             <td>{st.sb}</td>
+                            <td>{st.cs ?? 0}</td>
                           {:else}
                             <!-- 🔴 **`stats`가 없으면 표가 무너졌다** (2026-08-26 실플).
                                  `colspan="9"`가 박혀 있어 타자 행(헤더 6칸)에서 칸 수가
@@ -1434,7 +1440,7 @@
                       {:else}
                         <tr>
                           <th>날짜</th><th>상대</th>
-                          <th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>SB</th>
+                          <th>AB</th><th>H</th><th>HR</th><th>RBI</th><th>BB</th><th>K</th><th>SB</th><th>CS</th>
                         </tr>
                       {/if}
                     </thead>
@@ -1465,6 +1471,7 @@
                             <td>{l.bb ?? 0}</td>
                             <td>{l.k ?? 0}</td>
                             <td>{l.sb ?? 0}</td>
+                            <td>{l.cs ?? 0}</td>
                           {:else}
                             <!-- 오래된 형식이 섞일 수 있다 — 한 줄이 표를 죽이면 안 된다 -->
                             <td colspan="7" class="stat-sum">기록 읽기 실패</td>

@@ -791,6 +791,49 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v11: npc_game_log 날짜·팀·상대팀 추가");
     })();
   }
+
+  if (currentVersion < 12) {
+    db.transaction(() => {
+      // 🔴 **시즌이 넘어가면 새 기록 칸이 통째로 사라지고 있었다.**
+      //   2026-08-28에 KBO 기록표 전 칸을 채웠는데(2루타·3루타·득점·사구·
+      //   희생번트·희생플라이·피홈런·득점권), `history_lb_stats`엔 그 칸이
+      //   없어서 **과거 연도 행에서는 전부 `—`**였다.
+      //
+      // ⚠ 투수/타자를 컬럼으로 가른다 — 기존 `h_p`/`h_b` 규약을 따른다.
+      //   `hr`은 이미 타자 홈런이 쓰고 있어 피홈런은 `hr_p`다.
+      const addCol = (table, col, def) => {
+        const has = db.prepare(`SELECT name FROM pragma_table_info('${table}') WHERE name='${col}'`).get();
+        if (!has) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
+      };
+      for (const c of [
+        // 투수
+        "hr_p", "hbp_p", "risp_ab_p", "risp_h_p",
+        // 타자
+        "b2", "b3", "r_b", "hbp_b", "sac", "sf", "risp_ab_b", "risp_h_b",
+      ]) addCol("history_lb_stats", c, "INTEGER");
+
+      db.pragma("user_version = 12");
+      console.log("[db-patch] v12: history_lb_stats 기록 칸 12개 추가");
+    })();
+  }
+
+  if (currentVersion < 13) {
+    db.transaction(() => {
+      // 🔴 **수비 기록 칸** (G-3 · 2026-08-29). 실책·보살·자살·수비율.
+      //   골든글러브의 근거다 — 없으면 시즌이 넘어가는 순간 사라진다.
+      // ⚠ **v12 뒤에 넣는다.** v12를 v11 앞에 넣었다가 버전이 덮여
+      //   영원히 다시 도는 걸 실측으로 잡았다.
+      const addCol = (table, col, def) => {
+        const has = db.prepare(`SELECT name FROM pragma_table_info('${table}') WHERE name='${col}'`).get();
+        if (!has) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
+      };
+      for (const c of ["def_e", "def_a", "def_po"]) addCol("history_lb_stats", c, "INTEGER");
+      addCol("history_lb_stats", "fpct", "REAL");
+
+      db.pragma("user_version = 13");
+      console.log("[db-patch] v13: history_lb_stats 수비 칸 4개 추가");
+    })();
+  }
 }
 
 // R3a-4d: dbListSlots/dbSaveSlot/dbLoadSlot(v2 game/season 블롭 세이브) 폐기

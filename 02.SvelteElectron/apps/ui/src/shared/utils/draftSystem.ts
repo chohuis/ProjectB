@@ -215,6 +215,11 @@ export async function runDraftSimulation(
    * 팀도 최고점 투수가 남아 있으면 그 투수를 뽑았다. 트레이드는 포지션을
    * 보는데 드래프트만 안 봤다.
    */
+  /**
+   * 팀별 스카우팅 — **안 넘기면 전 구단이 진짜 능력을 정확히 안다**(예전 동작).
+   * `serde(default)` 라 Rust 는 조용히 통과한다.
+   */
+  scouting?: { quality: Record<string, number>; span: number },
   needs?: {
     teamNeeds: Record<string, { pitchers: number; batters: number }>;
     needBonus: number;
@@ -229,6 +234,7 @@ export async function runDraftSimulation(
     rounds,
     teamIds: [...teamIds],
     poolMultiplier,
+    ...(scouting ? { scouting } : {}),
     ...(needs ?? {}),
   };
   const json = await api().npcRunDraft(JSON.stringify(params));

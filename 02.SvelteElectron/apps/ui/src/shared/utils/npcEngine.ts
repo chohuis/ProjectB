@@ -3,6 +3,7 @@ import type { NpcSaveState } from "../types/save";
 import {
   buildRows, countByGroup, previewLine, type OffseasonEvent,
 } from "./offseasonReport";
+import { SANGMU_TEAM_IDS } from "./ids";
 
 // ── 시즌 종료 요약 ────────────────────────────────────────────
 export interface SeasonEndSummary {
@@ -128,6 +129,15 @@ export async function runOffseasonProcessing(
    */
   releaseRules?: unknown,
   /**
+   * 웨이버 공시 (`waiverRules`). 방출된 선수를 다른 구단이 데려간다.
+   * ⚠ **안 넘기면 갈래가 통째로 꺼진다** — `serde(default)` 라 Rust 는
+   *   조용히 통과하고 방출자가 곧장 시장으로 간다.
+   */
+  waiverRules?: unknown,
+  /** FA 미계약자의 독립 재도전 나이 상한 (`faRules.independentAgeMax`).
+   *  ⚠ 안 넘기면 갈래가 **통째로 꺼진다** — 미계약자가 바로 은퇴한다 */
+  faIndependentAgeMax?: number,
+  /**
    * 외국인 판정표 (`foreignParamsFrom`). 안 넘기면 외국인 개념이 없는 세계로
    * 돌아간다 — 용병이 FA를 취득하고 2군으로 강등되며 보유 한도가 깨진다
    */
@@ -173,6 +183,19 @@ export async function runOffseasonProcessing(
    */
   fa?: { teamPayrollCap: Record<string, number>; bidInterestMin: number; perfSpan?: number;
          renewPerfSpan?: number; bidFloorRatio?: number },
+  /**
+   * 팀별 연간 예산(만원) — 총연봉이 넘으면 **방출한다**
+   * (사용자 확정 2026-08-31).
+   *
+   * 🔴 예전엔 예산이 어느 판정에도 안 들어갔다. `refs.json` 에 팀별
+   * 예산(KBL 210~350억 · 독립 2.6~18억)이 있는데 아무도 안 읽었다 —
+   * `teamPayrollCap` 은 예산이 아니라 "지금 총연봉 × 1.25" 다.
+   *
+   * ⚠ 안 넘기면 예산 방출이 통째로 꺼진다(예전 동작).
+   * ⚠ 실측: 프로는 총연봉이 예산의 10~60% 라 **상한 100%가 안 물린다.**
+   *   독립만 중앙 63% · 최대 486% 로 3팀이 물린다.
+   */
+  teamBudgets?: Record<string, number>,
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   // ⚠ **엔진에 넘길 때만 합치고 돌아올 때 되돌린다.** 결과가 `s.npcs`를
@@ -202,6 +225,20 @@ export async function runOffseasonProcessing(
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
+    ...(waiverRules ? { waiverRules } : {}),
+    // 🔴 **군팀은 웨이버 청구 대상이 아니다** (2026-08-31).
+    //   `waiver_claim` 만 목적지 팀을 **NPC 소속에서 역산**하고,
+    //   게다가 인원이 적은 팀부터 고른다 — 정원 26인 상무가 늘 1순위였다.
+    //   상무의 비군인 전원이 `waiver_claim→IND_SANGMU_PHOENIX` 이었다.
+    // ⚠ 안 넘기면 `serde(default)` 로 조용히 예전 동작이 된다.
+    waiverExcludeTeams: [...SANGMU_TEAM_IDS],
+    // 🔴 **팀별 예산** — 총연봉이 이걸 넘으면 방출한다 (2026-08-31 사용자 확정).
+    //   예전엔 예산이 어느 판정에도 안 들어갔다 — `refs.json` 에 팀별
+    //   예산(KBL 210~350억 · 독립 2.6~18억)이 있는데 아무도 안 읽었다.
+    // ⚠ 저장된 예산(전년 정산)이 있으면 그게 우선이다 — `clubFinance` 가 갱신한다.
+    // ⚠ 예산이 0·없음인 팀(상무·아마추어)은 안 넘긴다 — 엔진이 건너뛴다.
+    teamBudgets: teamBudgets ?? {},
+    ...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {}),
     worldSeed: (worldSeed ?? 0) >>> 0,
     ...(fa ? { teamPayrollCap: fa.teamPayrollCap, faBidInterestMin: fa.bidInterestMin,
                faPerfSpan: fa.perfSpan ?? 0,

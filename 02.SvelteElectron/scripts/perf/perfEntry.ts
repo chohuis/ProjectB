@@ -15,8 +15,11 @@ import {
 import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
+import { getTeamLineup } from "../../apps/ui/src/shared/utils/rosterEngine";
+import { managerProfileOf } from "../../apps/ui/src/shared/utils/staffEffects";
+import { managerEffect } from "../../apps/ui/src/shared/utils/managerStyle";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
-import { npcLiveStatsStore, livePitchingOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
+import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
@@ -599,7 +602,7 @@ export function mailboxRaw(): { id: string; subject: string }[] {
 
 // ── 이벤트 발생 계측 ─────────────────────────────────────────────
 //
-// ⚠ **메일함을 나중에 훑으면 안 된다.** `MAX_MAILBOX = 50`이라 `autoRun`이
+// ⚠ **메일함을 나중에 훑으면 안 된다.** 상한(`MAX_MAILBOX`)이 있어 `autoRun`이
 // 30주를 한 번에 도는 사이 초반 메시지가 밀려 사라진다 — 실측에서 프로
 // 전반기(W1~W28) 달력 이벤트가 통째로 "한 번도 안 뜸"으로 나왔는데
 // 실제로는 뜬 뒤 밀려난 것이었다. (스카우트 데이·W40 총평도 같은 함정이었다)
@@ -1581,6 +1584,347 @@ export function rosterOverflowProbe(): Record<string, unknown> {
   return out;
 }
 
+/**
+ * 상무 인원 — **왜 11명인가** (2026-08-31).
+ *
+ * 세계 생성 직후엔 30명이다(독립 10팀 × 30 · 공백 0 · 실측). 시즌이 돌면서
+ * 줄어든다. **총원만 세면 나가는 게 많은지 들어오는 게 없는지 못 가른다** —
+ * 복무 상태별로 갈라 찍는다.
+ *
+ * ⚠ 다른 독립 9팀을 나란히 찍는다. 상무만 그런지 리그가 그런지 가려야 한다.
+ */
+/** 야수의 live OVR 이 왜 0인가 — 후보 OVR 이 0으로 잡히던 자리. */
+/**
+ * **야수 OVR 0 의 파급** (2026-08-31 · 1단계).
+ *
+ * `live?.pitching?.ovr ?? live?.batting?.ovr` 식이 45곳이고, 성장이 한 번만
+ * 돌면 야수 전원이 **OVR 0** 이었다. 그 값을 방출·FA·승강·드래프트 순위가
+ * 전부 쓴다 — **미해결로 남아 있던 넷이 이것 하나의 증상일 수 있다.**
+ *
+ * ⚠ 한 번 돌려 필요한 값을 다 뽑는다. 따로 돌리면 시간이 배로 들고,
+ *   **서로 다른 세계를 보게 된다**(이 계측은 실행마다 흔들린다).
+ */
+/**
+ * **예산 대비 총연봉** — F-3(예산 → 방출) 문턱을 정하기 전에 잰다.
+ *
+ * 🔴 지금 `teamPayrollCap` 은 **예산이 아니라 "지금 총연봉 × 팀지수 × 1.25"** 다.
+ *   `refs.json` 의 팀별 예산(KBL 210~350억 · 독립 2.6~18억)은 FA 입찰에도
+ *   방출에도 안 들어간다. 상한을 걸기 전에 **지금 어디쯤인지** 봐야 한다 —
+ *   모르고 걸면 KBL 을 통째로 방출 사태로 민다.
+ */
+/** 독립 팀별 **예산·총연봉·인원 원값** — 비율만 보면 분자가 는 건지
+ *  분모가 준 건지 못 가린다. 실측에서 최대 비율이 471% → 1937% 로 튀었다. */
+/** 독립리그 연봉이 **어디서 온 사람** 때문에 튀는가.
+ *  id 접두어가 생성 리그를 말한다 — IN=독립생성 · KB=KBL · UV=대학 · HS=고교. */
+export function indSalarySourceProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const by: Record<string, { n: number; sum: number; max: number }> = {};
+  const worst: string[] = [];
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    if (n.currentLeague !== "LEAGUE_INDEPENDENT") continue;
+    const m = /^PLY_([A-Z]{2})/.exec(String(n.npcId ?? ""));
+    const k = m ? m[1] : "?";
+    const b2 = (by[k] ??= { n: 0, sum: 0, max: 0 });
+    const sal = n.currentSalary ?? 0;
+    b2.n++; b2.sum += sal; if (sal > b2.max) b2.max = sal;
+  }
+  const rows = Object.entries(by).map(([k, v]) =>
+    `${k}:${v.n}명 평균${Math.round(v.sum / Math.max(1, v.n))} 최고${v.max}`).sort();
+  // 연봉 상위 6명이 누구인가
+  const top = g.npcs.filter((n) => n.careerStatus !== "retired"
+      && n.currentLeague === "LEAGUE_INDEPENDENT")
+    .sort((a, b3) => (b3.currentSalary ?? 0) - (a.currentSalary ?? 0)).slice(0, 6);
+  for (const n of top) {
+    // 🔴 **어느 길로 왔나** — 짐작하지 말고 이력을 본다.
+    //   `Placer` 는 독립 배정 때 연봉을 다시 잡는데(`draft.rs`) 이 사람들은
+    //   그 길이 아니었다. 남은 길이 무엇인지 이 줄이 말해 준다.
+    const evs = ((n as unknown as Record<string, unknown>).careerEvents ?? []) as
+      Array<Record<string, unknown>>;
+    const tail = evs.slice(-4).map((e) =>
+      `${e.year}:${e.eventType}:${String(e.fromLeagueId ?? "?").replace("LEAGUE_", "")}→${String(e.toLeagueId ?? "?").replace("LEAGUE_", "")}${e.detail ? "(" + e.detail + ")" : ""}`).join(" | ");
+    worst.push(`${n.npcId}|${n.currentTeam?.replace("TEAM_IND_", "")}|${n.currentSalary}|[${tail}]`);
+  }
+  return { 출신별: rows, 최고연봉: worst };
+}
+
+export function indTeamDetailProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const pay = new Map<string, number>(); const head = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    pay.set(n.currentTeam, (pay.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
+    head.set(n.currentTeam, (head.get(n.currentTeam) ?? 0) + 1);
+  }
+  const rows: string[] = [];
+  for (const t of m.teams) {
+    if ((t as unknown as { leagueId?: string }).leagueId !== "LEAGUE_INDEPENDENT") continue;
+    const start = ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
+    if (start <= 0) continue;                       // 상무
+    const now = g.clubBudgets?.[t.id];
+    rows.push([
+      t.id.replace("TEAM_IND_", ""),
+      "시작" + Math.round(start),
+      "지금" + (now == null ? "없음" : Math.round(now)),
+      "연봉" + (pay.get(t.id) ?? 0),
+      "인원" + (head.get(t.id) ?? 0),
+    ].join("|"));
+  }
+  return { 팀: rows.sort() };
+}
+
+export function payrollVsBudgetProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const pay = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    pay.set(n.currentTeam, (pay.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
+  }
+  const out: Record<string, unknown> = {};
+  const byLeague = new Map<string, number[]>();
+  for (const t of m.teams) {
+    const budget = ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
+    if (budget <= 0) continue;                       // 상무·아마추어는 예산이 없다
+    const p = pay.get(t.id) ?? 0;
+    if (p <= 0) continue;
+    const lg = String((t as unknown as { leagueId?: string }).leagueId ?? "?");
+    // 저장된 예산(전년 정산)이 있으면 그게 실제로 쓰는 값이다
+    const saved = g.clubBudgets?.[t.id];
+    const base = saved != null ? saved : budget;
+    (byLeague.get(lg) ?? byLeague.set(lg, []).get(lg)!).push(Math.round((p / base) * 100));
+  }
+  for (const [lg, arr] of byLeague) {
+    const z = arr.sort((a, b) => a - b);
+    out[lg] = { 팀: z.length, "총연봉/예산%": { 최소: z[0], 중앙: z[z.length >> 1], 최대: z[z.length - 1] },
+                "100%초과팀": z.filter((v) => v > 100).length };
+  }
+  return out;
+}
+
+export function ovrImpactProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const alive = g.npcs.filter((n) => n.careerStatus !== "retired");
+
+  // 리그별 야수/투수 인원 — 야수가 안 잘렸으면 여기가 부푼다
+  const byLeague: Record<string, { 야수: number; 투수: number }> = {};
+  for (const n of alive) {
+    const lg = String(n.currentLeague ?? "?");
+    const b = (byLeague[lg] ??= { 야수: 0, 투수: 0 });
+    if (PIT.has(String(n.position ?? ""))) b.투수++; else b.야수++;
+  }
+
+  // 팀 인원 — 정원 대비 부풂 (독립 30 → 44 가 여기 보인다)
+  const teamSize: Record<string, number[]> = {};
+  for (const n of alive) {
+    const t = n.currentTeam ?? "";
+    if (!t) continue;
+    const lg = String(n.currentLeague ?? "?");
+    (teamSize[lg] ??= []);
+  }
+  const byTeam = new Map<string, { lg: string; c: number }>();
+  for (const n of alive) {
+    const t = n.currentTeam ?? "";
+    if (!t) continue;
+    const cur = byTeam.get(t) ?? { lg: String(n.currentLeague ?? "?"), c: 0 };
+    cur.c++; byTeam.set(t, cur);
+  }
+  for (const v of byTeam.values()) (teamSize[v.lg] ??= []).push(v.c);
+  const sizeOut: Record<string, unknown> = {};
+  for (const [lg, arr] of Object.entries(teamSize)) {
+    if (arr.length === 0) continue;
+    const z = arr.sort((x, y) => x - y);
+    sizeOut[lg] = { 팀: z.length, 최소: z[0], 중앙: z[z.length >> 1], 최대: z[z.length - 1] };
+  }
+
+  // 야수 live OVR 이 0 인가 — 이 수정이 실제로 걸렸는지 보는 대조 지표
+  const live = get(npcLiveStatsStore);
+  let 야수0 = 0, 야수전체 = 0;
+  for (const n of alive) {
+    if (PIT.has(String(n.position ?? ""))) continue;
+    야수전체++;
+    const l = live[n.npcId] as unknown as Record<string, { ovr?: number } | undefined> | undefined;
+    const po = l?.pitching?.ovr;
+    if (typeof po === "number" && po <= 1) 야수0++;
+  }
+
+  // 🔴 **정원 정리가 `active` 만 센다**(`npc_sim.rs:1028`). 부상·복무 중인
+  //   사람은 자리를 차지하는데 상한 검사에 안 들어간다 — 그만큼 초과한다.
+  const 신분별: Record<string, Record<string, number>> = {};
+  for (const n of alive) {
+    const lg = String(n.currentLeague ?? "?");
+    ((신분별[lg] ??= {})[String(n.careerStatus ?? "?")] ??= 0);
+    신분별[lg][String(n.careerStatus ?? "?")]++;
+  }
+  return { 리그별: byLeague, 팀인원: sizeOut, 야수전체, "야수중투구OVR0": 야수0, 신분별 };
+}
+
+export function liveOvrProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const bats = g.npcs.filter((n) => !PIT.has(String(n.position ?? "")) && n.careerStatus !== "retired");
+  const rows = bats.slice(0, 5).map((n) => {
+    const l = live[n.npcId] as unknown as Record<string, { ovr?: number } | undefined> | undefined;
+    return {
+      id: n.npcId, pos: n.position,
+      live투구: l?.pitching?.ovr ?? "없음",
+      live타격: l?.batting?.ovr ?? "없음",
+      원본투구: (n as unknown as Record<string, { ovr?: number } | undefined>).pitching?.ovr ?? "없음",
+      원본타격: (n as unknown as Record<string, { ovr?: number } | undefined>).batting?.ovr ?? "없음",
+    };
+  });
+  let live투구있는야수 = 0, live투구0인야수 = 0;
+  for (const n of bats) {
+    const l = live[n.npcId] as unknown as Record<string, { ovr?: number } | undefined> | undefined;
+    const po = l?.pitching?.ovr;
+    if (typeof po === "number") { live투구있는야수++; if (po <= 1) live투구0인야수++; }
+  }
+  return { 야수수: bats.length, live투구있는야수, live투구0인야수, 표본: rows };
+}
+
+export function sangmuProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const SANGMU = "TEAM_IND_SANGMU_PHOENIX";
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const mine: Record<string, unknown>[] = [];
+  const others = new Map<string, number>();
+  const mil: Record<string, number> = {};
+  let bat = 0, pit = 0;
+  const pos: Record<string, number> = {};
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    const t = n.currentTeam ?? "";
+    if (t === SANGMU) {
+      const p = String(n.position ?? "");
+      pos[p] = (pos[p] ?? 0) + 1;
+      if (PIT.has(p)) pit++; else bat++;
+      const ms = String(n.militaryStatus ?? "?");
+      mil[ms] = (mil[ms] ?? 0) + 1;
+      if (mine.length < 3) mine.push({ id: n.npcId, pos: p, age: n.age, 복무: ms });
+    } else if (n.currentLeague === "LEAGUE_INDEPENDENT" && t) {
+      others.set(t, (others.get(t) ?? 0) + 1);
+    }
+  }
+  const oc = [...others.values()].sort((x, y) => y - x);
+  // 🔴 **복무 중인 사람이 세계 어디에 있나** — 상무 밖에 있으면 배정이 안 된 것이다
+  let 복무중_전체 = 0, 복무중_상무밖 = 0;
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    if (String(n.militaryStatus ?? "") !== "복무중") continue;
+    복무중_전체++;
+    if ((n.currentTeam ?? "") !== SANGMU) 복무중_상무밖++;
+  }
+  return {
+    상무총원: bat + pit, 야수: bat, 투수: pit,
+    포지션: pos, 복무상태: mil, 표본: mine,
+    독립_다른팀: { 팀수: oc.length, 최대: oc[0] ?? 0, 중앙: oc[Math.floor(oc.length / 2)] ?? 0, 최소: oc[oc.length - 1] ?? 0 },
+    복무중_전체, 복무중_상무밖,
+    // 🔴 **누가 안 나가는가.** 전역은 `career_status == "military"` 일 때만
+    //   돌고(`npc_sim.rs:2108`), 그 조건을 안 만족하는 사람은 영원히 남는다.
+    상태쌍: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const k = String(n.careerStatus ?? "?") + "/" + String(n.militaryStatus ?? "?");
+        c[k] = (c[k] ?? 0) + 1;
+      }
+      return c;
+    })(),
+    // 🔴 **군인이 아닌 사람이 상무에 있다** — 정원 초과분과 수가 같다.
+    //   배정 경로(`draftDestinationTeams`)는 상무를 거른다 — 다른 길이다.
+    비군인: (() => {
+      const out: string[] = [];
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        if (String(n.militaryStatus ?? "") === "현역") continue;
+        const r = n as unknown as Record<string, unknown>;
+        if (out.length < 6) out.push([
+          n.npcId, n.position, n.age + "세",
+          n.careerStatus, n.militaryStatus,
+          "리그" + String(n.currentLeague ?? ""),
+          "부대" + String(r.militaryUnit ?? "없음"),
+          "입대" + String(r.militaryEnlistYear ?? "없음"),
+          "전역" + String(r.militaryDischargeYear ?? "없음"),
+          "원팀" + String(r.originalTeamId ?? "없음"),
+          "계약" + String(r.contractYears ?? "?"),
+        ].join("|"));
+      }
+      return out;
+    })(),
+    // 🔴 **누가 옥겼나** — 짐작하지 말고 기록을 본다.
+    //   배정 경로는 전부 상무를 거른다 — 그런데도 들어와 있다.
+    비군인이력: (() => {
+      const out: string[] = [];
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        if (String(n.militaryStatus ?? "") === "현역") continue;
+        const evs = ((n as unknown as Record<string, unknown>).careerEvents ?? []) as
+          Array<Record<string, unknown>>;
+        const tail = evs.slice(-4).map((e) =>
+          `${e.year}:${e.eventType}${e.toTeamId ? "→" + String(e.toTeamId).replace("TEAM_", "") : ""}`);
+        if (out.length < 4) out.push(`${n.npcId} [${tail.join(" ")}]`);
+      }
+      return out;
+    })(),
+    // 어디 출신이 상무에 있나 — id 접두어가 생성 리그를 말한다
+    출신접두: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const m = /^PLY_([A-Z]{2})/.exec(String(n.npcId ?? ""));
+        const k = m ? m[1] : "?";
+        c[k] = (c[k] ?? 0) + 1;
+      }
+      return c;
+    })(),
+    // 전역년이 지났는데 아직 상무에 있는 사람 — 이게 0이 아니면 전역이 새는 것이다
+    전역년지남: (() => {
+      const yr = get(seasonStore).seasonYear ?? 0;
+      const out: string[] = [];
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const dy = (n as unknown as Record<string, unknown>).militaryDischargeYear;
+        if (typeof dy === "number" && dy <= yr && out.length < 4) {
+          out.push(`${n.npcId}|${n.careerStatus}|${n.militaryStatus}|dy${dy}|now${yr}`);
+        }
+      }
+      return out;
+    })(),
+    // 🔴 **검사(11명)와 이 프로브(48명)가 어긋난다.**
+    //   검사는 `currentLeague` 로 세고 여긴 `currentTeam` 으로 센다 —
+    //   상무 선수의 소속 리그가 마다 다르면 그것부터가 결함이다.
+    소속리그: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        c[String(n.currentLeague ?? "없음")] = (c[String(n.currentLeague ?? "없음")] ?? 0) + 1;
+      }
+      return c;
+    })(),
+    // 전역 판정의 재료 — 없으면 영원히 못 나간다
+    전역년: (() => {
+      const c: Record<string, number> = {};
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        const raw = (n as unknown as Record<string, unknown>).militaryDischargeYear;
+        c[raw === undefined || raw === null ? "없음" : String(raw)] =
+          (c[raw === undefined || raw === null ? "없음" : String(raw)] ?? 0) + 1;
+      }
+      return c;
+    })(),
+  };
+}
+
 export function overseasProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
@@ -2077,7 +2421,11 @@ export function rosterCompositionProbe(): Record<string, unknown> {
   const plan: Array<[string, (t: { id: string; leagueId: string }) => boolean]> = [
     ["HIGHSCHOOL",  (t) => t.leagueId === "LEAGUE_HIGHSCHOOL"],
     ["UNIVERSITY",  (t) => t.leagueId === "LEAGUE_UNIVERSITY"],
-    ["INDEPENDENT", (t) => t.leagueId === "LEAGUE_INDEPENDENT"],
+    // ⚠ **상무를 갈라낸다.** 정원이 26(militaryRules)이고 독립은 30이다.
+    //   섞으면 상무 하나가 독립 9팀의 최소값을 대신 말한다.
+    ["INDEPENDENT", (t) => t.leagueId === "LEAGUE_INDEPENDENT"
+                        && t.id !== "TEAM_IND_SANGMU_PHOENIX"],
+    ["SANGMU",      (t) => t.id === "TEAM_IND_SANGMU_PHOENIX"],
     ["KBL_1군",     (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1")],
     ["KBL_2군",     (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2")],
     ["ABL_1군",     (t) => t.leagueId === "LEAGUE_ABL" && t.id.endsWith("_1")],
@@ -2101,7 +2449,18 @@ export function rosterCompositionProbe(): Record<string, unknown> {
     // ⚠ 그렇다고 은퇴만 빼면 반대로 과하다. **`free_agent`가 팀 ID를 단 채
     // 남는다** — 독립리그 탈락 팀이 그렇고, 그러면 야수 0명짜리 팀이
     // 집계에 새로 들어와 타순 미달로 잡힌다(실측). 들일 것은 부상자뿐이다.
-    if (n.careerStatus !== "active" && n.careerStatus !== "injured") continue;
+    // 🔴 **`military` 도 센다** (2026-08-31). 상무 선수는 전원
+    // `careerStatus: "military"` 다 — 그건 의도다(`military_roster.rs:206`:
+    // "active면 드래프트·FA 후보 풀에 섞인다"). 그래서 **실제 26~48명인
+    // 상무를 이 프로브가 11명으로 봤고**, 검사는 있지도 않은 타순 미달을
+    // 잡고 있었다. `CLAUDE.md` 가 같은 함정을 오프시즌 로스터 캡에서
+    // 이미 적어 뒀다 — **검사에도 있었다.**
+    //
+    // ⚠ 들여도 **새로 들어오는 건 상무뿐이다.** 일반병은
+    //   `currentLeague: "LEAGUE_MILITARY"` · `currentTeam: ""` 라
+    //   바로 아래 팀 없음 갈래에서 이미 빠진다(실측).
+    if (n.careerStatus !== "active" && n.careerStatus !== "injured"
+        && n.careerStatus !== "military") continue;
     if (!n.currentTeam) continue;
     const arr = byTeam.get(n.currentTeam) ?? [];
     arr.push(n);
@@ -2279,6 +2638,10 @@ export function awardTally(): Record<string, unknown> {
   const byYear: Record<number, number> = {};
   let players = 0;
   const examples: string[] = [];
+  // ⚠ **리그를 나눠야 고교가 도는지 보인다** — 합산만 찍으면
+  //   프로 수상에 묻혀 0건이어도 안 보인다.
+  const byLeague: Record<string, number> = {};
+  const byLeagueTitle: Record<string, Record<string, number>> = {};
   for (const n of get(gameStore).npcs) {
     let has = false;
     for (const h of n.careerHistory ?? []) {
@@ -2286,13 +2649,17 @@ export function awardTally(): Record<string, unknown> {
         const key = t.split(" (")[0];
         byTitle[key] = (byTitle[key] ?? 0) + 1;
         byYear[h.year] = (byYear[h.year] ?? 0) + 1;
+        const lg = h.leagueId || "(없음)";
+        byLeague[lg] = (byLeague[lg] ?? 0) + 1;
+        (byLeagueTitle[lg] ??= {})[key] = (byLeagueTitle[lg][key] ?? 0) + 1;
         has = true;
         if (examples.length < 6) examples.push(`${h.year} ${n.name} ${t}`);
       }
     }
     if (has) players++;
   }
-  return { 수상선수: players, 부문별: byTitle, 연도별: byYear, 표본: examples };
+  return { 수상선수: players, 부문별: byTitle, 연도별: byYear,
+           리그별: byLeague, 리그별부문: byLeagueTitle, 표본: examples };
 }
 
 /** 리그별 가용 슬롯 — 정원 대비 얼마나 차 있는가 */
@@ -3050,6 +3417,142 @@ export async function dbFingerprint(slotId: string): Promise<string> {
  *   통과 1~2명 표본이 얕아 요행이 1위가 된다
  *   1위 값이 minValue/maxValue에 걸리면 그 해 수상자가 없다
  */
+/**
+ * 불펜이 실제로 도는가 — 홀드가 0인 이유를 가른다.
+ *
+ * 🔴 홀드 조건은 **선발도 마무리도 아니고 3아웃 이상**이다
+ *   (npc_sim decide_pitcher). 그러니 구원 등판 자체가 없으면
+ *   자격자가 아무리 많아도 전원 0홀드다.
+ * ⚠ 자격선(minIp)은 통과하는데 값이 0인 부문은 **자격선 문제가 아니다.**
+ */
+/**
+ * 감독 스타일이 실제로 타순을 바꾸는가.
+ *
+ * 🔴 **배선이 헛돌면 "아무 일도 안 일어남"으로 나타난다** — 스타일이
+ *   달라도 타순이 같으면 값이 안 물린 것이다.
+ * ⚠ 같은 로스터에 감독만 바꿔 넣어 비교한다.
+ */
+export function managerStyleProbe(): Record<string, unknown> {
+  const ents = get(masterStore).entities;
+  const teams = get(masterStore).teams;
+  const byStyle: Record<string, number> = {};
+  let withMgr = 0, noMgr = 0;
+  for (const t of teams) {
+    const prof = managerProfileOf(t.id, ents);
+    if (!prof) { noMgr++; continue; }
+    withMgr++;
+    const k = prof.style ?? "(없음)";
+    byStyle[k] = (byStyle[k] ?? 0) + 1;
+  }
+  // 같은 팀 로스터에 스타일만 바꿔 끼워 타순이 달라지는지 본다
+  const sample = teams.find((t) => managerProfileOf(t.id, ents) != null);
+  const orders: Record<string, string> = {};
+  const squads: Record<string, string> = {};
+  if (sample) {
+    for (const st of ["공격 지향", "수비 조직", "육성 우선", "노장 중용"]) {
+      const eff = managerEffect({
+        style: st, tacticalIQ: 50, offenseMind: 50, riskTolerance: 50,
+      });
+      const ids = getTeamLineup(sample.id, ents, undefined, undefined,
+                                1, 0, 50, undefined, eff);
+      orders[st] = ids.slice(0, 5).join(",");
+      // 선발 9명 **구성**도 본다 — 배열만 바뀌고 멤버가 같으면
+      // "누굴 쓸지"는 안 변한 것이다
+      squads[st] = ids.slice().sort().join(",");
+    }
+    const base = getTeamLineup(sample.id, ents, undefined, undefined, 1, 0, 50);
+    orders["(감독없음)"] = base.slice(0, 5).join(",");
+    squads["(감독없음)"] = base.slice().sort().join(",");
+  }
+  const uniq = new Set(Object.values(orders));
+  return {
+    감독있는팀: withMgr, 감독없는팀: noMgr,
+    스타일분포: byStyle,
+    표본팀: sample?.id ?? null,
+    타순: orders,
+    서로다른타순: uniq.size,
+    서로다른멤버: new Set(Object.values(squads)).size,
+  };
+}
+
+/**
+ * 이번 세션에 넣은 사건들이 실제로 얼마나 나는가 (3단계).
+ *
+ * ⚠ **0이면 죽은 갈래다.** 판정을 넣어도 조건이 안 맞으면 한 번도 안 난다.
+ * ⚠ 실제 KBO 와 견줄 값이다:
+ *   WP 팀당 시즌 30~50 · PB 5~15 · BK 3~8 · 삼중살 0~2
+ */
+export function newEventProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const st = get(seasonStore).leagueState?.[leagueId]?.stats ?? {};
+  let wp = 0, pb = 0, bk = 0, cs = 0, sb = 0;
+  let pitchers = 0, batters = 0;
+  for (const r of Object.values(st) as unknown as Array<Record<string, unknown>>) {
+    if (r.type === "pitcher") {
+      pitchers++;
+      wp += Number(r.wp ?? 0);
+      bk += Number(r.bk ?? 0);
+    } else {
+      batters++;
+      pb += Number(r.pb ?? 0);
+      cs += Number(r.cs ?? 0);
+      sb += Number(r.sb ?? 0);
+    }
+  }
+  // 🔴 **대타** (7단계) — 기록 항목이 따로 없어서 **타석을 가진 타자 수**로
+  //   잰다. 예전엔 라인업 9명만 타석에 서서 팀당 9 언저리였다.
+  //   벤치 넷이 들어오면 그보다 늘어야 한다. 안 늘면 죽은 갈래다.
+  const teams = new Set<string>();
+  for (const t of Object.values(get(seasonStore).leagueState?.[leagueId]?.standings ?? {})) {
+    const id = (t as unknown as Record<string, unknown>).teamId;
+    if (typeof id === "string") teams.add(id);
+  }
+  const teamCount = teams.size || 10;
+  return { 리그: leagueId, 투수: pitchers, 타자: batters,
+           팀수: teamCount,
+           팀당타자: Math.round((batters / teamCount) * 10) / 10,
+           폭투: wp, 포일: pb, 보크: bk, 도루: sb, 도루자: cs };
+}
+
+export function bullpenUseProbe(leagueId = "LEAGUE_HIGHSCHOOL"): Record<string, unknown> {
+  const st = get(seasonStore).leagueState?.[leagueId]?.stats ?? {};
+  let pitchers = 0, reliefOnly = 0, everRelieved = 0, allStarts = 0;
+  let sumG = 0, sumGs = 0, sumIp = 0;
+  let sumHd = 0, hdAny = 0, maxHd = 0, maxHdIp = 0, reliefIp = 0;
+  let sumSb = 0, sumCs = 0;
+  for (const r of Object.values(st) as unknown as Array<Record<string, unknown>>) {
+    sumSb += Number(r.sb ?? 0);
+    sumCs += Number(r.cs ?? 0);
+    if (r.type !== "pitcher") continue;
+    const g = Number(r.g ?? 0), gs = Number(r.gs ?? 0);
+    if (g <= 0) continue;
+    pitchers++; sumG += g; sumGs += gs; sumIp += Number(r.ip ?? 0);
+    const hd = Number(r.hd ?? 0);
+    sumHd += hd;
+    if (hd > 0) hdAny++;
+    if (hd > maxHd) { maxHd = hd; maxHdIp = Number(r.ip ?? 0); }
+    if (gs === 0) { reliefOnly++; reliefIp += Number(r.ip ?? 0); }
+    if (g > gs) everRelieved++;
+    if (g === gs) allStarts++;
+  }
+  return {
+    명세: leagueId,
+    투수: pitchers,
+    도루합: sumSb,
+    도루자합: sumCs,
+    구원전담: reliefOnly,
+    구원등판있음: everRelieved,
+    전부선발: allStarts,
+    홀드총합: sumHd,
+    홀드있는투수: hdAny,
+    홀드최다: maxHd,
+    홀드최다의이닝: maxHdIp,
+    구원전담평균이닝: reliefOnly ? Math.round((reliefIp / reliefOnly) * 10) / 10 : 0,
+    평균등판: pitchers ? Math.round((sumG / pitchers) * 10) / 10 : 0,
+    평균선발: pitchers ? Math.round((sumGs / pitchers) * 10) / 10 : 0,
+    평균이닝: pitchers ? Math.round((sumIp / pitchers) * 10) / 10 : 0,
+  };
+}
+
 export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Record<string, unknown>> {
   const s = get(seasonStore);
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
@@ -3065,7 +3568,12 @@ export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Reco
   const out: Record<string, unknown> = {};
   const won = new Map<string, number>();
 
-  for (const def of [...rules.pitcher, ...rules.batter] as unknown as Array<Record<string, unknown>>) {
+  for (const rawDef of [...rules.pitcher, ...rules.batter] as unknown as Array<Record<string, unknown>>) {
+    // 🔴 **가장 문서와 같은 규칙을 읽는다** — 계측이 기본값을 보면
+    //   판정은 고교 130으로 도는데 계측만 200으로 재서 **자격자 0명**이
+    //   그대로 찍힌다. 정본이 둘이면 반드시 어긋난다.
+    const ov = (rawDef.byLeague as Record<string, Record<string, unknown>> | undefined)?.[leagueId];
+    const def = ov ? { ...rawDef, ...ov } : rawDef;
     const minIp = def.minIp as number | undefined;
     const minPa = def.minPa as number | undefined;
     const stat  = def.stat as string;
@@ -6180,4 +6688,450 @@ export async function mailboxRoundTrip(): Promise<Record<string, unknown>> {
   const after = shape(raw?.mailbox ?? []);
 
   return { 저장전: before, 로드후: after, 같은가: before.metadata === after.metadata && before.events === after.events };
+}
+
+/**
+ * 구단 예산 — 시즌 정산이 실제로 값을 움직이는가.
+ *
+ * ⚠ **되먹임을 봐야 한다.** 4-B에서 `base_scale`에 누적 예산을 넣었다가
+ *   매년 33%씩 발산한 적이 있다. 중앙값과 함께 **최대/최소 비율**을 본다 —
+ *   한쪽으로 벌어지면 그게 발산이다.
+ */
+export function clubBudgetProbe(leagueId: string): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  // ⚠ 정산이 거르는 조건과 **같게** 본다 — `_1`로 끝나는 팀만이다.
+  //   느슨하게 보면 정산이 건너뛴 팀을 셌다고 착각한다.
+  const teams = m.teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"));
+  const rows: { id: string; name: string; now: number; base: number }[] = [];
+  for (const t of teams) {
+    const base = ((t.history as { budget?: number } | undefined)?.budget ?? 0) / 10000;
+    const now = g.clubBudgets?.[t.id] ?? base;
+    if (base > 0) rows.push({ id: t.id, name: t.name, now, base });
+  }
+  const ratios = rows.map((r) => r.now / r.base).sort((a, b) => a - b);
+  const now = rows.map((r) => r.now).sort((a, b) => a - b);
+  const med = (a: number[]) => (a.length ? a[Math.floor(a.length / 2)] : 0);
+  // 정산이 도는 조건 둘 — 하나라도 비면 그 리그는 통째로 건너뛴다
+  const ls = (get(seasonStore).leagueState ?? {})[leagueId] as
+    { standings?: { wins?: number; losses?: number; draws?: number }[] } | undefined;
+  // 정산이 쓰는 홈경기 수 = 팀당 경기 ÷ 2. **가정하지 말고 여기서 읽는다**
+  const gp = (ls?.standings ?? []).map((r) =>
+    (r.wins ?? 0) + (r.losses ?? 0) + (r.draws ?? 0)).sort((a, b) => a - b);
+  return {
+    standings: ls?.standings?.length ?? 0,
+    gamesPerTeam: gp.length ? gp[Math.floor(gp.length / 2)] : 0,
+    n: rows.length,
+    medBudget: Math.round(med(now)),
+    minRatio: +(ratios[0] ?? 0).toFixed(3),
+    medRatio: +med(ratios).toFixed(3),
+    maxRatio: +(ratios[ratios.length - 1] ?? 0).toFixed(3),
+    rows: rows.map((r) => `${r.name}:${Math.round(r.now / 10000)}억(×${(r.now / r.base).toFixed(2)})`),
+  };
+}
+
+/**
+ * 고교 로스터 실태 — **정원 30인데 실측이 18이다.** 어디서 새는가.
+ *
+ * ⚠ 신입 충원은 `generateFreshmenV3`가 `rosterSize - 현재`만큼 만든다.
+ *   그게 도는데도 안 차면 **세는 기준이 다르거나** 다른 유출이 있다.
+ *   ⚠ 충원 코드는 `currentLeague`로 세는데 여기서도 **같게** 센다 —
+ *     기준이 어긋나면 고칠 자리와 재는 자리가 갈린다.
+ */
+export function hsRosterProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const FIELD = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+  const size = new Map<string, number>();
+  const bat = new Map<string, number>();
+  const pit = new Map<string, number>();
+  const cat = new Map<string, number>();
+  const byGrade: Record<string, number> = {};
+  // 🔴 **검사와 기준이 갈렸다.** `rosterCompositionProbe` 는 active·injured
+  //   만 세는데 여기선 retired 만 뺐다 — 최소 야수가 15 vs 9 로 갈렸다.
+  //   어느 쪽이 맞는지는 **상태 분포를 봐야** 안다.
+  const statusTally: Record<string, number> = {};
+  for (const n of g.npcs ?? []) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    if (n.currentLeague !== "LEAGUE_HIGHSCHOOL") continue;
+    const t = n.currentTeam;
+    size.set(t, (size.get(t) ?? 0) + 1);
+    if (n.playerType === "pitcher") pit.set(t, (pit.get(t) ?? 0) + 1);
+    else if (FIELD.includes(n.position ?? "")) bat.set(t, (bat.get(t) ?? 0) + 1);
+    if (n.position === "C") cat.set(t, (cat.get(t) ?? 0) + 1);
+    const gr = String((n as { grade?: number }).grade ?? "?");
+    byGrade[gr] = (byGrade[gr] ?? 0) + 1;
+    statusTally[n.careerStatus] = (statusTally[n.careerStatus] ?? 0) + 1;
+  }
+  const teams = [...size.keys()];
+  const stat = (m: Map<string, number>) => {
+    const v = teams.map((t) => m.get(t) ?? 0).sort((a, b) => a - b);
+    if (!v.length) return { min: 0, med: 0, max: 0 };
+    return { min: v[0], med: v[Math.floor(v.length / 2)], max: v[v.length - 1] };
+  };
+  return {
+    teams: teams.length,
+    total: [...size.values()].reduce((a, b) => a + b, 0),
+    size: stat(size),
+    batters: stat(bat),
+    pitchers: stat(pit),
+    byGrade,
+    byStatus: statusTally,
+    // 검사가 보는 두 조건
+    under9: teams.filter((t) => (bat.get(t) ?? 0) < 9).length,
+    noCatcher: teams.filter((t) => (cat.get(t) ?? 0) === 0).length,
+  };
+}
+
+/**
+ * 구단 연표가 **실제로 값을 주는가** (1단계).
+ *
+ * ⚠ 화면 코드는 헤드리스에서 안 돈다 — **같은 IPC 를 같은 인자로** 불러
+ *   행이 나오는지 본다. 배선이 끊기면 여기서 빈 배열이 온다.
+ */
+export async function teamTimelineProbe(teamId: string): Promise<Record<string, unknown>> {
+  const slotId = get(gameStore).currentSlotId;
+  if (!slotId) return { 오류: "슬롯 없음" };
+  const api = (window as unknown as {
+    projectB?: { seasonGetTeamHistory?: (p: string) => Promise<string> };
+  }).projectB;
+  if (!api?.seasonGetTeamHistory) return { 오류: "IPC 없음 — preload 배선 확인" };
+  const raw = await api.seasonGetTeamHistory(JSON.stringify({ slotId, teamId }));
+  const rows = JSON.parse(raw) as
+    { season_year: number; rank: number; teams: number; wins: number; losses: number }[]
+    | { error?: string };
+  if (!Array.isArray(rows)) return { 오류: (rows as { error?: string }).error ?? "형식 오류" };
+  return {
+    teamId,
+    시즌수: rows.length,
+    행: rows.map((r) => `${r.season_year}:${r.rank}/${r.teams}위 ${r.wins}승${r.losses}패`),
+  };
+}
+
+/**
+ * 영구결번·명예의 전당의 **전제 두 가지**를 잰다 (2단계).
+ *
+ * ① 등번호가 팀 안에서 유일한가 — 결번을 얹으려면 먼저 알아야 한다.
+ *    생성은 `i + 1`(초기)·`60 + i`(신입·외국인)라 **부딪힐 수 있다.**
+ * ② 통산 기록이 쌓이는가 — 헌액 점수의 재료다.
+ */
+export async function hofPrereqProbe(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const slotId = g.currentSlotId;
+
+  // ① 팀 안 등번호 중복
+  const byTeam = new Map<string, Map<number, number>>();
+  for (const n of g.npcs ?? []) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    const num = (n as { jerseyNumber?: number }).jerseyNumber ?? 0;
+    if (!byTeam.has(n.currentTeam)) byTeam.set(n.currentTeam, new Map());
+    const m = byTeam.get(n.currentTeam)!;
+    m.set(num, (m.get(num) ?? 0) + 1);
+  }
+  let dupTeams = 0, dupPairs = 0, worst = 0;
+  const sample: string[] = [];
+  for (const [tid, m] of byTeam) {
+    let d = 0;
+    for (const [num, c] of m) {
+      if (c > 1) { d += c - 1; worst = Math.max(worst, c); if (sample.length < 5) sample.push(`${tid}#${num}×${c}`); }
+    }
+    if (d > 0) { dupTeams++; dupPairs += d; }
+  }
+
+  // ② 통산 기록 — 몇 해치가 쌓였나
+  let lbYears = 0, lbRows = 0;
+  const api = (window as unknown as {
+    projectB?: {
+      seasonGetHistoryYears?: (p: string) => Promise<string>;
+      seasonGetHistoryLbStats?: (p: string) => Promise<string>;
+    };
+  }).projectB;
+  if (slotId && api?.seasonGetHistoryYears && api.seasonGetHistoryLbStats) {
+    try {
+      const years = JSON.parse(await api.seasonGetHistoryYears(JSON.stringify({ slotId })));
+      if (Array.isArray(years)) {
+        lbYears = years.length;
+        for (const y of years) {
+          const rows = JSON.parse(await api.seasonGetHistoryLbStats(
+            JSON.stringify({ slotId, seasonYear: y })));
+          if (Array.isArray(rows)) lbRows += rows.length;
+        }
+      }
+    } catch { /* 없으면 0 */ }
+  }
+
+  return {
+    팀수: byTeam.size,
+    등번호중복팀: dupTeams,
+    중복건수: dupPairs,
+    한번호최대: worst,
+    예: sample,
+    기록연도수: lbYears,
+    기록행수: lbRows,
+  };
+}
+
+/** 명예의 전당이 **실제로 도는가** (2단계) */
+export function hofProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const hof = g.hallOfFame ?? {};
+  const nums = g.retiredNumbers ?? {};
+  const rows = Object.entries(hof);
+  const teamsWith = Object.keys(nums).filter((t) => (nums[t] ?? []).length > 0);
+  return {
+    헌액자: rows.length,
+    결번구단: teamsWith.length,
+    결번총수: Object.values(nums).reduce((a, b) => a + b.length, 0),
+    점수분포: rows.map(([, v]) => v.score).sort((a, b) => b - a).slice(0, 6),
+    예: rows.slice(0, 3).map(([id, v]) =>
+      `${id}:${v.score}점 ${v.num}번 ${v.teams.length}구단`),
+  };
+}
+
+/**
+ * 로스터 자리 실태 — 3단계(엔트리·IL·등록말소·웨이버)의 전제.
+ *
+ * ⚠ **계획서에 \"이미 있다\"고 적은 것이 세 번 틀렸다**(등번호·연표·고교
+ *   로스터). 여기서도 코드가 아니라 **값**을 본다.
+ */
+export function rosterSlotProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  // 🔴 **부상 저장소가 둘이다.** `s.npcInjuries`(시즌 스토어)만 보면
+  //   38팀에 1~2명으로 나오는데, `careerStatus === "injured"` 로 세면
+  //   훨씬 많다(고교만 227명). **둘 다 센다** — 어느 쪽이 정본인지
+  //   가려야 IL 이 무엇을 옮길지 정할 수 있다.
+  const inj = s.npcInjuries ?? {};
+  const injuredIds = new Set([
+    ...Object.entries(inj).filter(([, v]) =>
+      (v as { severity?: string })?.severity !== "mild").map(([id]) => id),
+    ...Object.keys(s.nationalDuty ?? {}),
+  ]);
+
+  const PRO = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
+  const pro1 = m.teams.filter((t) => PRO.includes(t.leagueId) && t.id.endsWith("_1"));
+  const ids = new Set(pro1.map((t) => t.id));
+  // 🔴 **2군까지 본다.** 1군만 보면 부상자가 0~3명으로 나오는데,
+  //   부상자가 2군으로 내려가면 그쪽에 있다 — 그게 곧 IL 의 실질이다.
+  //   "1군에 부상자가 없다"와 "부상이 안 난다"는 완전히 다른 이야기다.
+  const farmIds = new Set(m.teams.filter((t) =>
+    (PRO.includes(t.leagueId) || t.leagueId.endsWith("_FARM")) && t.id.endsWith("_2"))
+    .map((t) => t.id));
+
+  const size = new Map<string, number>();
+  const injOnRoster = new Map<string, number>();
+  const statusInj = new Map<string, number>();
+  for (const n of g.npcs ?? []) {
+    const t = n.currentTeam ?? "";
+    if (!ids.has(t)) continue;
+    if (n.careerStatus === "retired" || n.careerStatus === "free_agent") continue;
+    size.set(t, (size.get(t) ?? 0) + 1);
+    if (injuredIds.has(n.npcId)) injOnRoster.set(t, (injOnRoster.get(t) ?? 0) + 1);
+    if (n.careerStatus === "injured") statusInj.set(t, (statusInj.get(t) ?? 0) + 1);
+  }
+  // 2군 부상자 · 프로 전체 부상자
+  let farmInj = 0, farmSize = 0, proInjAll = 0;
+  for (const n of g.npcs ?? []) {
+    if (n.careerStatus === "retired" || n.careerStatus === "free_agent") continue;
+    const t = n.currentTeam ?? "";
+    const isInj = n.careerStatus === "injured" || injuredIds.has(n.npcId);
+    if (farmIds.has(t)) { farmSize++; if (isInj) farmInj++; }
+    if ((ids.has(t) || farmIds.has(t)) && isInj) proInjAll++;
+  }
+  const nums = [...size.values()].sort((a, b) => a - b);
+  const med = (a: number[]) => (a.length ? a[Math.floor(a.length / 2)] : 0);
+  const injTotal = [...injOnRoster.values()].reduce((a, b) => a + b, 0);
+
+  return {
+    팀수: size.size,
+    인원: nums.length ? `${nums[0]}/${med(nums)}/${nums[nums.length - 1]}` : "-",
+    // 🔴 **IL 을 뺀 수로 잰다.** 부상자 명단이 정원을 안 차지하게 고쳤으니
+    //   재는 쪽도 같아야 한다 — 안 맞추면 21~30팀이 초과로 나온다(실측).
+    //   34(KBL·ABL) · 32(JBL) 가 상한이다.
+    // ⚠ **`market.ts` 의 `ilSet` 과 같은 기준으로 뺀다.** 거긴
+    //   `npcInjuries`(mild 제외)+`nationalDuty` 인데 여기서 `careerStatus`
+    //   로 빼면 mild 부상이 갈려 없는 초과를 만든다. **세 번째 같은 실수다.**
+    상한초과팀: pro1.filter((t) =>
+      (size.get(t.id) ?? 0) - (injOnRoster.get(t.id) ?? 0) > 34).length,
+    _총원기준초과: nums.filter((v) => v > 34).length,
+    부상자_시즌표: injTotal,
+    부상자_상태값: [...statusInj.values()].reduce((a, b) => a + b, 0),
+    프로_2군인원: farmSize,
+    프로_2군부상: farmInj,
+    프로_전체부상: proInjAll,
+    부상자있는팀: injOnRoster.size,
+    팀당부상중앙: med([...injOnRoster.values()].sort((a, b) => a - b)),
+    // IL 이 있으면 이만큼 자리가 빈다
+    부상제외인원: nums.length
+      ? `${Math.min(...pro1.map((t) => (size.get(t.id) ?? 0) - (injOnRoster.get(t.id) ?? 0)))}`
+      + `/${med(pro1.map((t) => (size.get(t.id) ?? 0) - (injOnRoster.get(t.id) ?? 0)).sort((a, b) => a - b))}`
+      : "-",
+  };
+}
+
+/**
+ * 배경 리그 경기에 `playerLines` 가 있는가 — **부상 범위 수정의 전제**.
+ *
+ * 🔴 `processNpcInjuries` 는 `entry.result.playerLines` 로 출전 이력을 만든다.
+ *   `leagueSchedules` 를 훑게 고쳐도 **거기 `playerLines` 가 비면 부상이
+ *   여전히 안 난다** — 고치고 나서 "왜 그대로지" 하게 되는 자리다.
+ */
+export function playerLinesProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const out: Record<string, string> = {};
+  const scan = (label: string, sched: { result?: { playerLines?: unknown[] } }[]) => {
+    let played = 0, withLines = 0, lines = 0;
+    for (const e of sched) {
+      if (!e.result) continue;
+      played++;
+      const n = e.result.playerLines?.length ?? 0;
+      if (n > 0) { withLines++; lines += n; }
+    }
+    out[label] = `${played}경기 · 라인있음 ${withLines} · 총 ${lines}줄`;
+  };
+  scan(`주인공(${s.leagueId})`, s.schedule as never);
+  for (const [lid, sch] of Object.entries(s.leagueSchedules ?? {})) {
+    if (Array.isArray(sch)) scan(lid, sch as never);
+  }
+  return out;
+}
+
+/** 등록말소 10일(2주)이 실제로 걸리는가 (3단계 · 3) */
+export function demotionLockProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const dw = g.demotionWeek ?? {};
+  const wk = s.currentWeek;
+  const rows = Object.entries(dw);
+  // 지금 락이 걸린 사람 — 2주 안에 내려간 사람
+  const locked = rows.filter(([, w]) => wk - w < 2);
+  // 🔴 **위반**: 락 기간인데 1군에 있는 사람. 0이어야 한다
+  const byId = new Map((g.npcs ?? []).map((n) => [n.npcId, n]));
+  const violate = locked.filter(([id]) => {
+    const n = byId.get(id);
+    return !!n && (n.currentTeam ?? "").endsWith("_1");
+  });
+  return {
+    기록된인원: rows.length,
+    현재락: locked.length,
+    위반: violate.length,
+    예: violate.slice(0, 3).map(([id, w]) => `${id}:W${w}`),
+  };
+}
+
+/** 상한을 넘는 팀이 **어디서** 넘치나 — 유입 경로를 가른다 */
+export function overCapProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  const inj = s.npcInjuries ?? {};
+  const il = new Set([
+    ...Object.entries(inj).filter(([, v]) =>
+      (v as { severity?: string })?.severity !== "mild").map(([id]) => id),
+    ...Object.keys(s.nationalDuty ?? {}),
+  ]);
+  const pro1 = m.teams.filter((t) =>
+    ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"));
+  const rows: string[] = [];
+  for (const t of pro1) {
+    let n = 0, ilN = 0;
+    // 그 팀 1군 인원과 IL
+    for (const p of g.npcs ?? []) {
+      if ((p.currentTeam ?? "") !== t.id) continue;
+      if (p.careerStatus === "retired" || p.careerStatus === "free_agent") continue;
+      n++;
+      if (il.has(p.npcId)) ilN++;
+    }
+    const eff = n - ilN;
+    if (eff > 34) rows.push(`${t.id.replace(/^TEAM_[A-Z]+_/, "")}:${eff}(총${n}·IL${ilN})`);
+  }
+  return { 초과팀수: rows.length, 목록: rows.slice(0, 8) };
+}
+
+/** 웨이버가 실제로 도는가 (3단계 · 4) */
+export function waiverProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  let claimed = 0, released = 0;
+  const sample: string[] = [];
+  for (const n of g.npcs ?? []) {
+    for (const e of (n as { careerEvents?: { eventType?: string; year?: number; toTeamId?: string }[] })
+      .careerEvents ?? []) {
+      if (e.eventType === "waiver_claim") {
+        claimed++;
+        if (sample.length < 4) sample.push(`${n.npcId.slice(-14)}→${(e.toTeamId ?? "").replace(/^TEAM_[A-Z]+_/, "")}`);
+      }
+      if (e.eventType === "release_score" || e.eventType === "release_roster") released++;
+    }
+  }
+  return { 방출: released, 웨이버클레임: claimed, 예: sample };
+}
+
+/**
+ * 소식 생산량 — **A단계 전에 잰다.** 6종을 더 흘려도 되는지 판단할 근거다.
+ *
+ * ⚠ 상한(`MAX_MAILBOX`)은 1500이다(2026-08-30 에 500 에서 올렸다). 계획서에 200이라 적었다가 사용자
+ *   지적으로 잡았다 — 2026-08-24 에 올렸다.
+ * ⚠ **누적 생산량이 아니라 현재 보유 수**다. 상한에 닿으면 옛것이 잘린다 —
+ *   `잘림` 이 1이면 그 시즌에 이미 밀어내고 있다는 뜻이다.
+ */
+export function mailboxLoadProbe(): Record<string, unknown> {
+  const mb = get(gameStore).mailbox ?? [];
+  const byKind: Record<string, number> = {};
+  for (const m of mb) {
+    // id 앞머리로 종류를 가른다 — `msg-<종류>-...`
+    const k = String(m.id ?? "").split("-").slice(0, 2).join("-") || "(없음)";
+    byKind[k] = (byKind[k] ?? 0) + 1;
+  }
+  const top = Object.entries(byKind).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  return {
+    보유: mb.length,
+    상한: 1500,
+    잘림: mb.length >= 1500 ? 1 : 0,
+    안읽음: mb.filter((m) => !m.readAt).length,
+    종류수: Object.keys(byKind).length,
+    상위: top.map(([k, n]) => `${k}:${n}`),
+  };
+}
+
+/**
+ * 드래프트 스카우팅 효과 (D단계) — **전후를 재는 게 요점이다.**
+ *
+ * ⚠ 스카우팅은 지명 **순서**를 바꾼다. 상위 지명자의 평균 OVR 이 내려가고
+ *   하위에서 대박이 나오면 도는 것이다. 안 바뀌면 배선이 끊긴 것이다.
+ */
+export function draftScoutProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const byRound = new Map<number, number[]>();
+  const byTeam = new Map<string, number[]>();
+  for (const n of g.npcs ?? []) {
+    for (const e of (n as { careerEvents?: { eventType?: string; detail?: string;
+      toTeamId?: string }[] }).careerEvents ?? []) {
+      if (e.eventType !== "draft_picked") continue;
+      // detail 예: "3라운드 21순위" — 앞 숫자가 라운드다
+      const r = Number(String(e.detail ?? "").match(/^(\d+)/)?.[1] ?? 0);
+      if (!r) continue;
+      // ⚠ **`n.ovr` 은 없다.** 정본은 `liveOvrOf` 다 — 처음에 그걸 몰라서
+      //   라운드별 평균이 전부 0으로 나왔다(실측).
+      const ovr = liveOvrOf(n, get(npcLiveStatsStore));
+      if (!byRound.has(r)) byRound.set(r, []);
+      byRound.get(r)!.push(ovr);
+      const t = e.toTeamId ?? "";
+      if (t) {
+        if (!byTeam.has(t)) byTeam.set(t, []);
+        byTeam.get(t)!.push(ovr);
+      }
+    }
+  }
+  const avg = (a: number[]) => a.length
+    ? Math.round((a.reduce((x, y) => x + y, 0) / a.length) * 10) / 10 : 0;
+  const rounds = [...byRound.entries()].sort((a, b) => a[0] - b[0]).slice(0, 5);
+  return {
+    지명수: [...byRound.values()].reduce((a, b) => a + b.length, 0),
+    라운드별평균: rounds.map(([r, v]) => `R${r}:${avg(v)}`),
+    // 팀별 평균의 폭 — 스카우팅이 돌면 벌어진다
+    팀별폭: (() => {
+      const xs = [...byTeam.values()].map(avg).filter((v) => v > 0).sort((a, b) => a - b);
+      return xs.length ? `${xs[0]}~${xs[xs.length - 1]}` : "-";
+    })(),
+  };
 }

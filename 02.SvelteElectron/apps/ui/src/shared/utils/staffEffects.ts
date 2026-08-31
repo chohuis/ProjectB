@@ -102,6 +102,37 @@ export interface StaffLookupOptions {
  * - 코치 5종에는 구단주 `staffTrust`가 곱해진다 — 스태프를 안 믿는 구단에선
  *   좋은 코치를 데려와도 덜 먹힌다. 이게 구단주 5번째 능력치의 유일한 소비처다
  */
+/**
+ * 그 팀 감독의 스타일과 전술 능력치.
+ *
+ * 🔴 **스타일 9종이 생성·저장되고 팀 상세에 표시까지 되는데 아무것도
+ *   안 바꿨다.** `staffStatsOf` 는 능력치 숫자만 내주고 스타일 문자열은
+ *   버렸다 — 읽는 데가 없으니 뽑을 이유가 없었다.
+ *
+ * ⚠ 감독이 없으면 `null` 이다. 호출부는 중립으로 돌아야 한다.
+ */
+export function managerProfileOf(
+  teamId: string,
+  entities: readonly EntityRow[],
+): { style: string | null; tacticalIQ: number; offenseMind: number;
+     riskTolerance: number } | null {
+  if (!teamId) return null;
+  for (const e of entities) {
+    if (e.teamId !== teamId || e.role !== "manager") continue;
+    const d = e.details as EntityDetails | undefined;
+    if (!d?.manager) continue;
+    const st = d.manager.stats as unknown as Record<string, unknown>;
+    const mg = d.manager as unknown as Record<string, unknown>;
+    return {
+      style: (mg.style as string) ?? null,
+      tacticalIQ:    num(st.tacticalIQ) ?? 50,
+      offenseMind:   num(st.offenseMind) ?? 50,
+      riskTolerance: num(mg.riskTolerance) ?? num(st.riskTolerance) ?? 50,
+    };
+  }
+  return null;
+}
+
 export function staffStatsOf(
   teamId: string,
   entities: readonly EntityRow[],

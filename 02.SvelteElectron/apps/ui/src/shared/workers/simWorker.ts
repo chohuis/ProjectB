@@ -15,6 +15,8 @@ interface SimGame {
   /** "2026-07-14" — 경기 로그에 날짜를 남기려면 여기서 들고 가야 한다.
    *  시뮬은 안 쓴다 — 결과를 기록할 때 경기를 되짚을 수가 없어서 실어 보낸다 */
   gameDate?: string;
+  /** ⚠ 안 실으면 **정규시즌 경기가 무승부를 못 낸다** — 연장 상한이 안 걸린다 */
+  phase?: import("../types/season").SeasonPhase;
 }
 
 export interface SimWorkerRequest {
@@ -48,6 +50,7 @@ self.onmessage = async (e: MessageEvent<SimWorkerRequest>) => {
       conditions:  g.conditions,
       homeRotIdx:  g.homeRotIdx ?? 0,
       awayRotIdx:  g.awayRotIdx ?? 0,
+      phase:       g.phase,
       week:        g.week ?? 0,
       worldSeed,
       scheduleId:  g.id,

@@ -128,8 +128,134 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   applyProtagonistSeasonRecord(now);
   // 수상은 연도 기록이 만들어진 **뒤**여야 얹을 자리가 있다
   logsOf(await applySeasonAwards(now));
+  // 🔴 **수상 뒤여야 한다.** 헌액 점수는 `careerHistory[].highlights` 를
+  //   세는데 그 문자열을 `applySeasonAwards` 가 방금 넣었다.
+  //   앞에 두면 그 해 수상이 점수에 안 들어간다.
+  // ── 웨이버 공시 소식 (A단계) ───────────────────────────
+  //
+  // 웨이버는 Rust 가 `career_events` 에 `waiver_claim` 으로 남긴다.
+  // ⚠ **주인공 팀이 걸린 것만** 보낸다 — 리그 전체는 실측 105~232명이라
+  //   그대로 보내면 소식함이 한 해에 막힌다.
+  {
+    const gW = get(gameStore);
+    const mW = get(masterStore);
+    const myTeam = gW.protagonist.teamId;
+    const teamName = (id: string) =>
+      mW.teams.find((t) => t.id === id)?.name ?? id;
+    // ⚠ **영입만 센다.** Rust `waiver_claim` 이 `from_team_id: None` 을
+    //   넣어서 **어디서 왔는지 모른다** — 방출 시점의 팀을 안 넘긴다.
+    //   "우리 팀에서 나갔다"를 세려다 **죽은 갈래**를 만들 뻔했다.
+    //   나가는 쪽은 방출 소식이 이미 알린다.
+    const inbound: string[] = [];
+    for (const n of gW.npcs ?? []) {
+      const evs = (n as { careerEvents?: { eventType?: string; year?: number;
+        toTeamId?: string; fromTeamId?: string }[] }).careerEvents ?? [];
+      for (const e of evs) {
+        if (e.eventType !== "waiver_claim" || e.year !== now) continue;
+        if (e.toTeamId === myTeam) inbound.push(n.name);
+      }
+    }
+    // 원소속 재계약 — **시장에서 못 구해 돌아온 사람들** (A단계 3/6)
+    //
+    // ⚠ `fa_signed` 는 **FA 취득에도 쓰인다.** `detail` 로 갈라야 한다 —
+    //   이벤트 종류만 보면 FA 를 얻은 사람까지 "재계약"으로 센다.
+    // ⚠ 주인공 팀 것만. 실측 미계약자가 한 해 652건이다.
+    {
+      const resigned: string[] = [];
+      for (const n of gW.npcs ?? []) {
+        const evs = (n as { careerEvents?: { eventType?: string; year?: number;
+          toTeamId?: string; detail?: string }[] }).careerEvents ?? [];
+        for (const e of evs) {
+          if (e.eventType !== "fa_signed" || e.year !== now) continue;
+          if (!String(e.detail ?? "").includes("원소속 재계약")) continue;
+          if (e.toTeamId === myTeam) resigned.push(n.name);
+        }
+      }
+      // 독립리그 재도전 — **우리 팀을 떠나 독립으로 간 사람** (남은 3건)
+      //
+      // ⚠ `transfer` 는 트레이드·이적에도 쓰인다. `detail` 로 갈라야 한다 —
+      //   재계약(`fa_signed`)과 같은 형태다.
+      // ⚠ 원소속이 우리 팀이었는지는 `fromTeamId` 로 본다 — 웨이버와 달리
+      //   여긴 Rust 가 원 소속을 넣는다(확인함).
+      {
+        const toIndie: string[] = [];
+        for (const n of gW.npcs ?? []) {
+          const evs = (n as { careerEvents?: { eventType?: string; year?: number;
+            fromTeamId?: string; detail?: string }[] }).careerEvents ?? [];
+          for (const e of evs) {
+            if (e.eventType !== "transfer" || e.year !== now) continue;
+            if (!String(e.detail ?? "").includes("독립리그 재도전")) continue;
+            if (e.fromTeamId === myTeam) toIndie.push(n.name);
+          }
+        }
+        if (toIndie.length > 0) {
+          gameStore.addMessage({
+            id: `msg-indie-retry-${now}-${myTeam}`,
+            category: "system",
+            sender: "리그 사무국",
+            subject: `독립리그 재도전 ${toIndie.length}명`,
+            preview: `${toIndie[0]}${toIndie.length > 1 ? ` 외 ${toIndie.length - 1}명` : ""}`,
+            body: ["■ FA 계약처를 못 찾아 독립리그로 갔다", "",
+              ...toIndie.map((x) => `   ${x}`)].join(String.fromCharCode(10)),
+            createdAt: `W1`,
+            readAt: null,
+          });
+        }
+      }
+
+      if (resigned.length > 0) {
+        gameStore.addMessage({
+          id: `msg-resign-${now}-${myTeam}`,
+          category: "system",
+          sender: "구단 사무국",
+          subject: `FA 잔류 ${resigned.length}명`,
+          preview: `${resigned[0]}${resigned.length > 1 ? ` 외 ${resigned.length - 1}명` : ""} 잔류`,
+          body: [`■ 시장에서 계약처를 못 찾아 원소속으로 돌아왔다`, "",
+            ...resigned.map((x) => `   ${x}`)].join("\n"),
+          createdAt: `W1`,
+          readAt: null,
+        });
+      }
+    }
+
+    if (inbound.length > 0) {
+      const lines: string[] = [];
+      lines.push(`■ 웨이버 영입 ${inbound.length}명`, ...inbound.map((x) => `   ${x}`));
+      gameStore.addMessage({
+        id: `msg-waiver-${now}-${myTeam}`,
+        category: "system",
+        sender: "리그 사무국",
+        subject: `웨이버 영입 ${inbound.length}명 — ${teamName(myTeam)}`,
+        preview: `${inbound[0]}${inbound.length > 1 ? ` 외 ${inbound.length - 1}명` : ""} 영입`,
+        body: lines.join("\n"),
+        createdAt: `W1`,
+        readAt: null,
+      });
+    }
+  }
+
+  try {
+    const { inductHallOfFame } = await import("./hallOfFame");
+    for (const line of await inductHallOfFame(now)) autoLog(line);
+  } catch (e) {
+    console.warn("[hallOfFame] 심사 실패:", e);
+  }
+  // 🔴 **등록말소 기록을 비운다.** `weekNum` 이 시즌마다 리셋되므로
+  //   작년 기록을 두면 `올해W32 - 작년W48 = -16` 로 영원히 락이 된다.
+  gameStore.clearDemotions();
   await gameStore.applyAgingDecay();
   await updateProTeamProfiles();
+
+  // 🔴 **구단 재정 정산** (4-C · 2026-08-29). 시즌에 한 번이다.
+  // ⚠ **성향 갱신 뒤**에 온다 — 관중이 `marketAppeal`·`prestige`를 보므로
+  //   그 해 값으로 재야 한다.
+  try {
+    const { settleClubFinance } = await import("./clubFinance");
+    for (const line of await settleClubFinance(now)) autoLog(line);
+  } catch (e) {
+    // 정산이 실패해도 시즌 종료는 계속돼야 한다
+    console.warn("[clubFinance] 정산 실패:", e);
+  }
   await runSeasonEndBgProcessing(now);
 
   // ⚠ **모든 처리 뒤.** 앞에 두면 압박·목표가 아직 지난 시즌 값이다
@@ -171,9 +297,11 @@ async function updateProTeamProfiles(): Promise<void> {
     // 리그 안 상대 위치로 낸다 — 새 상수가 없다. 지출 "순위"로 하면 동점이
     // 많아(0.99가 3팀 · 0.9가 4팀) 자의적이라 **연속값**으로 뽑는다.
     //
-    // ⚠ **해외는 예산이 없다**(refs에 `history.budget`이 KBL에만 있다).
-    // 그러면 목표를 중위권으로 둬서 사실상 예전 동작이 된다 — 조용히
-    // 깨지지 않게 하는 폴백이다. 해외 예산이 생기면 자동으로 작동한다.
+    // ⚠ 이 주석은 **틀렸었다** — "해외는 예산이 없다"고 적혀 있었다.
+    //   실측(2026-08-29): 1군 전 팀에 있다. KBL 10/10 · ABL 16/16 · JBL 12/12.
+    //   KBL 120~350억 · ABL 798~2759억 · JBL 425~1393억.
+    //   **해외도 이 계산을 제대로 탄다.** 아래 폴백은 2군처럼 예산이 없는
+    //   팀(그건 정상이다)과 전 팀이 같은 값일 때를 위한 것이다.
     const deviationWeight = await (async () => {
       try {
         const { loadRosterRules } = await import("../repo/newGameV3");
@@ -308,13 +436,23 @@ export async function saveSeasonHistory(seasonYear: number) {
         lbStatRows.push({ leagueId: lid, playerId, statType: "pitcher",
           playerName: personNameOf(playerId), teamName: personTeamOf(playerId),
           g: p2.g, gs: p2.gs, w: p2.w, l: p2.l, sv: p2.sv ?? 0, hd: p2.hd ?? 0,
-          ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip });
+          ip: p2.ip, er: p2.er, hP: p2.h, kP: p2.k, bbP: p2.bb, era: p2.era, whip: p2.whip,
+          // 🔴 **여기서 빠뜨리면 시즌이 넘어가는 순간 사라진다** — 화면은
+          //   표시하는데 과거 연도 행만 `—`가 된다 (2026-08-28)
+          hrP: p2.hr ?? null, hbpP: p2.hbp ?? null,
+          rispAbP: p2.rispAb ?? null, rispHP: p2.rispH ?? null });
       } else {
         const b2 = stat as BatterSeasonStats;
         lbStatRows.push({ leagueId: lid, playerId, statType: "batter",
           playerName: personNameOf(playerId), teamName: personTeamOf(playerId),
           g: b2.g, pa: b2.pa, ab: b2.ab, hB: b2.h, hr: b2.hr, rbi: b2.rbi,
-          sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops });
+          sb: b2.sb ?? 0, bbB: b2.bb, kB: b2.k, avgV: b2.avg, obp: b2.obp, slg: b2.slg, ops: b2.ops,
+          b2: b2.b2 ?? null, b3: b2.b3 ?? null, rB: b2.r ?? null, hbpB: b2.hbp ?? null,
+          sac: b2.sac ?? null, sf: b2.sf ?? null,
+          rispAbB: b2.rispAb ?? null, rispHB: b2.rispH ?? null,
+          // 🔴 여기서 빠뜨리면 시즌이 넘어가는 순간 수비 기록이 사라진다
+          defE: b2.e ?? null, defA: b2.a ?? null, defPo: b2.po ?? null,
+          fpct: b2.fpct ?? null });
       }
     }
   }

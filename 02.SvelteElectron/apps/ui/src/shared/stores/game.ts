@@ -110,6 +110,14 @@ export interface GameStoreState {
   lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
   lastTop10Batter:  import("../types/save").Top10Snapshot | null;  // 직전 타자 TOP10 스냅샷
   proTeamProfiles: Record<string, import("../stores/master").ProTeamProfile>;  // 구단 성향 (저장됨)
+  /** 구단 예산 (4-C · 만원). 안 저장하면 정적값으로 돌아간다 */
+  clubBudgets: Record<string, number>;
+  /** 2군에 내려간 주차 — 선수 id → weekNum. 등록말소 10일(2주)이 이걸 본다 */
+  demotionWeek: Record<string, number>;
+  /** 명예의 전당 — 선수 id → 헌액 정보. **이미 넣은 사람을 다시 안 넣는 표**이기도 하다 */
+  hallOfFame: Record<string, { year: number; score: number; teams: string[]; num: number }>;
+  /** 영구결번 — 팀 id → 비운 번호들. `fix_jersey_numbers` 가 이 번호를 피해야 한다 */
+  retiredNumbers: Record<string, number[]>;
   /** 구단 연속 기록 — 연속 포스트시즌 실패 · 연속 우승 (저장됨) */
   teamStreaks: Record<string, { missedPlayoffs: number; titles: number }>;
   /**
@@ -503,6 +511,10 @@ function buildInitialState(): GameStoreState {
     lastTop10Pitcher: null,
     lastTop10Batter:  null,
     proTeamProfiles: {},
+    clubBudgets: {},
+    demotionWeek: {},
+    hallOfFame: {},
+    retiredNumbers: {},
     teamStreaks: {},
     teamTargets: {},
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -688,6 +700,11 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
     // ⚠ **되살린다.** 저장만 하고 안 읽으면 아무 일도 안 일어난다 —
     // 이 프로젝트에서 반복된 형태다(가드를 저장했는데 fromSaveGame이 안 읽음)
     proTeamProfiles:  (saved.proTeamProfiles ?? {}) as GameStoreState["proTeamProfiles"],
+    // ⚠ 안 되살리면 앱을 껐다 켤 때 예산이 정적값으로 돌아간다
+    clubBudgets:      (saved.clubBudgets ?? {}) as GameStoreState["clubBudgets"],
+    demotionWeek:     (saved.demotionWeek ?? {}) as GameStoreState["demotionWeek"],
+    hallOfFame:       (saved.hallOfFame ?? {}) as GameStoreState["hallOfFame"],
+    retiredNumbers:   (saved.retiredNumbers ?? {}) as GameStoreState["retiredNumbers"],
     teamStreaks:      (saved.teamStreaks ?? {}) as GameStoreState["teamStreaks"],
     teamTargets:      {},   // 파생값 — 시즌 종료에 다시 계산된다
     dayLabel:     computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -720,7 +737,21 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
 //
 //    화면은 B가 미리 준비했다 — 소식함이 60건씩 점진 렌더링이라
 //    500통이어도 DOM에는 60건만 올라간다.
-export const MAX_MAILBOX = 500;
+//    🔴 **500 → 1500** (사용자 확정 · 2026-08-30). 500도 모자랐다.
+//
+//    실측(씨앗 111 · 3시즌 · `probe-mailbox.cjs`):
+//        2026 종료  340통          여유
+//        2027 종료  500통 · 잘림   `msg-tour` 420 (**84%**)
+//        2028 종료  500통 · 잘림   `msg-tour` 273
+//
+//    **대회 소식이 혼자 소식함을 먹는다.** 그건 사용자 확정 동작이고
+//    (2026-08-08 "내 팀이 없는 라운드도 32강부터 알린다"), 줄이는 대신
+//    자리를 늘리기로 했다 — 대회 흐름을 보는 게 그만한 값이 있다.
+//
+//    ⚠ 비용은 500 때 잰 값에서 비례로 본다: IPC 주당 +38KB → 약 +114KB,
+//      전체 비중 0.8% → 약 1.1%. **다음 `measure:perf` 에서 실측한다.**
+//    ⚠ 화면은 60건씩 점진 렌더링이라 통수가 늘어도 DOM 은 그대로다.
+export const MAX_MAILBOX = 1500;
 
 /**
  * 밀려나 사라진 소식의 **누계** — 계측 전용이고 화면 로직은 읽지 않는다.
@@ -1086,6 +1117,13 @@ function createGameStore() {
           // ⚠ **구단 성향도 같이 저장한다.** 예전엔 "비저장"이라 앱을 껐다
           // 켜면 압박이 전부 50으로 돌아갔다 — 시즌마다 갱신해도 남지 않았다
           proTeamProfiles: s.proTeamProfiles,
+          // 🔴 **예산도 같이 저장한다.** 안 하면 앱을 껐다 켤 때 refs 정적값으로
+          // 돌아가고, 그 값을 읽는 셋(신인 계약금·FA 입찰 상한·감독 기대치)이
+          // 통째로 되돌아간다 — 성향에서 이미 겪은 형태다 (4-C · 2026-08-29)
+          clubBudgets: s.clubBudgets,
+          demotionWeek: s.demotionWeek,
+          hallOfFame: s.hallOfFame,
+          retiredNumbers: s.retiredNumbers,
           teamStreaks: s.teamStreaks,
         },
       );
@@ -1381,6 +1419,59 @@ function createGameStore() {
 
       if (newProNpcs.length === 0 && patched === 0) return;
       update((st) => ({ ...st, npcs: [...patchedNpcs, ...newProNpcs] }));
+    },
+
+    /**
+     * 구단 예산을 갱신한다 (4-C).
+     *
+     * ⚠ **덮어쓰지 않고 합친다** — 리그마다 따로 정산하므로 한 리그를
+     *   저장하면서 다른 리그를 지우면 안 된다.
+     */
+    patchClubBudgets(next: Record<string, number>) {
+      update((s) => ({ ...s, clubBudgets: { ...s.clubBudgets, ...next } }));
+    },
+
+    /**
+     * 시즌이 바뀌면 등록말소 기록을 비운다.
+     *
+     * 🔴 **`weekNum` 은 시즌마다 리셋된다.** 작년 W48 에 내려간 사람을
+     *   올해 W32 와 비교하면 `32 - 48 = -16` 이라 **영원히 락**이다.
+     *   실측: 2027W32 에 위반 92명 — 전부 작년 기록이었다.
+     *   CLAUDE.md 가 경고한 그 함정이다("weekNum 은 누적이 아니다").
+     *   시즌이 넘어가면 등록말소 기간은 어차피 끝난 것이다.
+     */
+    clearDemotions() {
+      update((s) => ({ ...s, demotionWeek: {} }));
+    },
+
+    /** 2군에 내려간 주차를 적는다 — 등록말소 기간을 재는 자리다 */
+    markDemotions(ids: string[], weekNum: number) {
+      if (ids.length === 0) return;
+      update((s) => {
+        const next = { ...s.demotionWeek };
+        for (const id of ids) next[id] = weekNum;
+        return { ...s, demotionWeek: next };
+      });
+    },
+
+    /**
+     * 헌액자와 영구결번을 얹는다.
+     *
+     * ⚠ **덮지 않고 더한다** — 결번은 쌓이는 것이고, 헌액 표는 "이미 넣은
+     *   사람"을 가리는 데도 쓴다. 덮으면 매년 같은 사람이 다시 헌액된다.
+     */
+    addHallOfFame(
+      inducted: GameStoreState["hallOfFame"],
+      retired: Record<string, number[]>,
+    ) {
+      update((s) => {
+        const nums = { ...s.retiredNumbers };
+        for (const [tid, list] of Object.entries(retired)) {
+          const set = new Set([...(nums[tid] ?? []), ...list]);
+          nums[tid] = [...set].sort((a, b) => a - b);
+        }
+        return { ...s, hallOfFame: { ...s.hallOfFame, ...inducted }, retiredNumbers: nums };
+      });
     },
 
     patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
@@ -2608,6 +2699,11 @@ function createGameStore() {
             offRules.developmentPlayerRules?.intakeMax),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
+        // 🔴 **안 넘기면 웨이버가 통째로 꺼진다.** `serde(default)` 라
+        //   Rust 는 조용히 통과하고 방출자가 곧장 시장으로 간다.
+        (offRules as { waiverRules?: unknown }).waiverRules,
+        // ⚠ 안 넘기면 FA 미계약자가 **바로 은퇴한다** — 독립 재도전 갈래가 꺼진다
+        (offRules.faRules as { independentAgeMax?: number } | undefined)?.independentAgeMax,
         foreignParamsFrom(offRules),
         // 🔴 **지금 능력치.** 안 넘기면 오프시즌이 생성 시점 값으로 돈다 —
         // 은퇴·정원 정리·방출·FA·콜업 정렬 22곳이 전부 그랬다
@@ -2617,6 +2713,20 @@ function createGameStore() {
         // 세계 씨앗 — 안 넘기면 모든 세계가 같은 오프시즌을 낸다
         offWorldSeed,
         faParams,
+        // 🔴 **팀별 예산** — 총연봉이 넘으면 방출한다 (사용자 확정 2026-08-31).
+        //   저장된 예산(전년 정산 · `clubFinance`)이 있으면 그게 우선이고,
+        //   없으면 `refs.json` 의 팀별 예산을 만원으로 바꿔 쓴다.
+        // ⚠ 안 넘기면 예산 방출이 통째로 꺼진다 — `serde(default)` 라 오류가 안 난다.
+        (() => {
+          const out: Record<string, number> = {};
+          for (const t of get(masterStore).teams) {
+            const saved = s.clubBudgets?.[t.id];
+            const base = saved != null ? saved
+              : ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
+            if (base > 0) out[t.id] = Math.round(base);
+          }
+          return out;
+        })(),
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
@@ -2897,6 +3007,7 @@ function createGameStore() {
             // ⚠ 계산을 여기서 다시 적지 않는다 — 주인공 경로(`advanceWeek`)와
             // **같은 함수**를 쓴다. 따로 적었더니 그쪽만 10으로 박혀 있었다.
             const milLimits = await sportsUnitLimits();
+            const milSalary = milLimits.salary;
             // ⚠ **주인공이 뽑힌 해엔 한 자리를 뺀다.** 두 선발이 별개 추첨이라
             // 둘 다 뽑히면 그 해 입대가 정원 + 1이 된다 — 상무는 로스터 캡이
             // 안 걸리니 이런 누수가 해마다 쌓인다.
@@ -3003,6 +3114,14 @@ function createGameStore() {
                   // 2362줄 주석이 고쳤다고 적은 그 결함이 여기 그대로 있었다.
                   currentLeague:         SANGMU_LEAGUE_ID,
                   currentTeam:           SANGMU_TEAM_ID,
+                  // 🔴 **군인 봉급이다** (2026-08-31). 예전엔 원 소속 연봉을
+                  //   그대로 들고 왔다 — 실측에서 상무 최고연봉이 **9.97억**
+                  //   이었고 상위 6명이 전부 상무였다. 연봉 10억짜리 군인이다.
+                  //   `militaryRules.salary`(300만원)는 **생성된 26명에게만**
+                  //   걸리고 선발로 들어온 사람은 안 걸렸다.
+                  // ⚠ 전역할 때는 **새 계약**이다 — 원 소속 리그 기준으로
+                  //   엔진이 다시 잡는다(`npc_sim` 전역 처리). 새 세이브 칸을 안 만든다.
+                  currentSalary:         milSalary,
                 };
               }
 
@@ -3361,6 +3480,10 @@ function createGameStore() {
         // 🔴 **빈 객체로 시작하면 구단 개성이 없는 세계가 된다.**
         //   `App.svelte`가 부른 `initProTeamProfiles`를 여기서 덮고 있었다.
         proTeamProfiles:  profilesFromMaster(),
+        clubBudgets: {},
+    demotionWeek: {},
+    hallOfFame: {},
+    retiredNumbers: {},
         teamStreaks:      {},
         teamTargets:      {},
         dayLabel: computeWeekLabel(1, BASE_SEASON_YEAR),
@@ -3639,6 +3762,19 @@ function createGameStore() {
         : {};
       const simResult = await runDraftSimulation(
         candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
+        // 🔴 **팀마다 다른 눈으로 보게 한다.** 안 넘기면 전 구단이 진짜
+        //   능력을 정확히 알던 예전 동작이다 — `serde(default)` 라 조용하다.
+        (() => {
+          const sp = (rulesFile as unknown as { draftScoutingRules?: { span?: number } })
+            .draftScoutingRules?.span ?? 0;
+          if (sp <= 0) return undefined;
+          const quality: Record<string, number> = {};
+          for (const tid of KBL_TEAM_IDS) {
+            // 성향은 스토어가 정본이다 — 없으면 50(기준)
+            quality[tid] = get({ subscribe }).proTeamProfiles?.[tid]?.scoutingQuality ?? 50;
+          }
+          return { quality, span: sp };
+        })(),
         needBonus > 0 ? { teamNeeds, needBonus, needSaturation: (draftRules as { needSaturation?: number }).needSaturation ?? 0 } : undefined,
       );
 

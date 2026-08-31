@@ -104,7 +104,17 @@ function createSeasonStore() {
         currentDate:     season.currentDate     ?? `${season.seasonYear ?? 2026}-03-01`,
         leagueSchedules: season.leagueSchedules ?? {},
         leagueState: Object.fromEntries(
-          Object.entries(season.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
+          // 🔴 **리그 버킷을 정리 안 하고 있었다** (2026-08-28). 위
+          //   `sanitizeStatsRecord`는 `season.stats`(주인공 개인 버킷)만
+          //   거쳤는데, **리더보드·순위 화면이 읽는 건 여기다**
+          //   (`leagueStatsOf`). NPC 전원의 `pa`·`obp`·`slg`·`ops`와 NaN이
+          //   로드에서 안 고쳐졌다 — "구 세이브도 로드 시점에 정상으로
+          //   돌아온다"던 주석이 **주인공에게만 참**이었다.
+          // ⚠ `migrateLeagueState` 안에서 하지 않는다 — 그건 경기마다 돈다
+          Object.entries(season.leagueState ?? {}).map(([lid, ls]) => {
+            const m = migrateLeagueState(ls as Partial<LeagueSeasonState>);
+            return [lid, { ...m, stats: sanitizeStatsRecord(m.stats) }];
+          })
         ),
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
@@ -160,10 +170,24 @@ function createSeasonStore() {
       npcLiveStatsStore.update((stats) => {
         const next = { ...stats };
         for (const u of updated) {
+          // 🔴 **없던 블록을 만들지 않는다** (2026-08-31).
+          //   Rust `GrowthPatch.pitching` 은 필수 필드라, 투구 블록이 없는
+          //   야수를 보내면 serde 가 **0 으로 채워** 되돌려준다. 그대로 쓰면
+          //   `live?.pitching?.ovr ?? live?.batting?.ovr` 이 야수를 전부
+          //   **OVR 0** 으로 본다 — `??` 는 0 을 안 건너뛴다.
+          //
+          //   실측: 2주만 돌려도 야수 3,990명 전원에게 투구 OVR 0 이 붙었고,
+          //   상무 선발 후보 343명이 그 때문에 상위 70 에 한 명도 못 들어
+          //   **3년 39명이 전원 투수**였다.
+          //
+          // ⚠ 소비하는 자리가 45곳이다. 거기를 다 고치는 게 아니라 **여기**를
+          //   막는다 — 성장은 있는 능력을 키우는 일이지 없는 능력을 만드는
+          //   일이 아니다.
+          const prev = next[u.npcId];
           next[u.npcId] = {
-            ...(next[u.npcId] ?? { pitchingXp: {}, battingXp: {} }),
-            pitching:        u.pitching,
-            batting:         u.batting,
+            ...(prev ?? { pitchingXp: {}, battingXp: {} }),
+            pitching:        prev && prev.pitching === undefined ? undefined : u.pitching,
+            batting:         prev && prev.batting  === undefined ? undefined : u.batting,
             pitchingXp:      u.pitchingXp,
             battingXp:       u.battingXp,
             peakOvr:         u.peakOvr,
@@ -571,8 +595,8 @@ function createSeasonStore() {
       }));
     },
 
-    applyWeeklyConditionRecovery(entities: EntityRow[]) {
-      update((s) => BackgroundLeague.applyWeeklyConditionRecovery(s, entities));
+    applyWeeklyConditionRecovery(entities: EntityRow[], campBonus?: Record<string, number>) {
+      update((s) => BackgroundLeague.applyWeeklyConditionRecovery(s, entities, campBonus));
     },
 
     async simulateBackgroundLeaguesAsync(
@@ -582,7 +606,11 @@ function createSeasonStore() {
       careerStage?: import("../types/save").CareerStage,
     ): Promise<void> {
       const s = get({ subscribe });
-      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage);
+      // 🔴 **팀·구장을 넘긴다** — 담장을 고르는 데 쓴다.
+      //   안 넘기면 리그 전체가 중립 구장이 된다.
+      const mst = get(masterStore);
+      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage,
+        { teams: mst.teams, stadiums: mst.stadiums });
       if (!result) return;
 
       update((st) => ({

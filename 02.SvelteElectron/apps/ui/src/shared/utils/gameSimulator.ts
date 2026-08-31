@@ -1,9 +1,12 @@
+import { parkDimsForHomeTeam } from "./parkDims";
+import { managerProfileOf } from "./staffEffects";
+import { managerEffect } from "./managerStyle";
 import { seedFrom } from "./hash";
 import { toEngineArsenal } from "./arsenal";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
 import type { MatchResult, NpcLiveStat, PlayerCondition } from "../types/season";
-import { buildTeamRoster, getTeamBullpen, getTeamRotation, rotationRestGames, rotationSizeForLeague } from "./rosterEngine";
+import { buildTeamRoster, getTeamBullpen, getTeamRotation, rotationSizeForLeague, starterOfRotation } from "./rosterEngine";
 
 // ── 반환 타입 ─────────────────────────────────────────────────
 export interface SimGameResult {
@@ -43,6 +46,9 @@ interface SimBatter {
   speed: number; baseInstinct: number;
   /** 도루 저지 — 수비 팀에서 포수를 찾는 데 쓴다 */
   position: string; arm: number;
+  /** 🔴 **수비 능력.** 예전엔 없어서 리그 경기가 컨택·주력으로 대용값을
+   *  만들었다 — 팀마다 수비가 사실상 같았다 (2026-08-29) */
+  fielding: number;
 }
 
 function toSimPitcher(
@@ -99,6 +105,8 @@ function toSimBatter(
     //    바로 위 `speed`·`baseInstinct`가 정확히 같은 이유로 빠져 있던 전례가 있다.
     position: (e.details.player as EntityPlayerDetails).position ?? "",
     arm:      b?.arm ?? 50,
+    // ⚠ 안 실으면 리그 경기 수비가 전 팀 50 고정으로 돌아간다
+    fielding: b?.fielding ?? 50,
   };
 }
 
@@ -118,8 +126,10 @@ function mergeConditions(
   leagueId: string,
 ): Record<string, PlayerCondition> {
   const result: Record<string, PlayerCondition> = {};
-  const homeSpId = homeRotation[homeRotIdx % Math.max(1, homeRotation.length)];
-  const awaySpId = awayRotation[awayRotIdx % Math.max(1, awayRotation.length)];
+  // 🔴 **손으로 색인하지 않는다** — 이 자리가 실제로 던진 투수와 어긋나 있었다.
+  //   실측: 선발로 적힌 투수가 실제로 던진 비율 **42.6% → 99.2%**
+  const homeSpId = starterOfRotation(homeRotation, homeRotIdx);
+  const awaySpId = starterOfRotation(awayRotation, awayRotIdx);
   const appearedIds = new Set(Object.keys(rustConditions));
 
   for (const [id, rustCond] of Object.entries(rustConditions)) {
@@ -182,6 +192,8 @@ export async function simulateGame(
     awayRotIdx?:     number;
     week?:           number;
     npcInjuries?:    Record<string, NpcInjuryEntry>;
+    /** 홈 구장 담장. **안 넘기면 엔진이 중립 기본값을 쓴다** */
+    parkDims?:       import("./parkDims").ParkDims;
     rotationSize?:   number;
     npcLiveStats?:   Record<string, NpcLiveStat>;
     leagueId?:       string;
@@ -193,6 +205,13 @@ export async function simulateGame(
     worldSeed?: number;
     /** 일정 id — 같은 주에 같은 카드가 두 번 있으면 씨앗이 겹친다 */
     scheduleId?: string;
+    /**
+     * 이 경기의 시즌 페이즈. **`"season"`일 때만 무승부가 난다.**
+     *
+     * 🔴 대회·포스트시즌은 **승자가 나와야 한다** — 대진이 다음 라운드로
+     *   못 넘어간다. 안 넘기면 무제한(예전 동작)이라 조용히 안전하다.
+     */
+    phase?: import("../types/season").SeasonPhase;
   },
 ): Promise<SimGameResult> {
   const {
@@ -209,6 +228,7 @@ export async function simulateGame(
     tradeAdaptationPenalty,
     worldSeed,
     scheduleId,
+    phase,
   } = options ?? {};
 
   const entityMap = new Map(entities.map((e) => [e.id, e]));
@@ -218,12 +238,12 @@ export async function simulateGame(
   // 로테이션이 한 번도 안 돌아 매 경기 1번 투수가 선발이었다
   const homeRoster = buildTeamRoster({
     teamId: homeTeamId, entities, npcInjuries, maxRotation: rotationSize,
-    conditions, currentWeek: week, rotIdx: homeRotIdx, leagueId,
+    conditions, currentWeek: week, leagueId,
     rotationSense: homeHandlePersonnel,
   });
   const awayRoster = buildTeamRoster({
     teamId: awayTeamId, entities, npcInjuries, maxRotation: rotationSize,
-    conditions, currentWeek: week, rotIdx: awayRotIdx, leagueId,
+    conditions, currentWeek: week, leagueId,
     rotationSense: awayHandlePersonnel,
   });
 
@@ -234,7 +254,22 @@ export async function simulateGame(
   }).filter(Boolean) as SimPitcher[];
   const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap, npcLiveStats)).filter(Boolean)  as SimBatter[];
 
+  // 감독 — **두 팀 다 넣는다.** 한쪽만 넣으면 그쪽 작전만 바뀐다.
+  const hMgrP = managerProfileOf(homeTeamId, entities);
+  const aMgrP = managerProfileOf(awayTeamId, entities);
+  const hEff = managerEffect(hMgrP);
+  const aEff = managerEffect(aMgrP);
+  const mgrPayload = (pr: ReturnType<typeof managerProfileOf>,
+                      ef: ReturnType<typeof managerEffect>) => pr ? {
+    tacticalIQ: pr.tacticalIQ, offenseMind: pr.offenseMind,
+    buntMult: ef.buntMult, stealMult: ef.stealMult,
+  } : undefined;
   const params = {
+    // 🔴 **담장을 십는다.** 안 넘기면 엔진이 중립 기본값을 써
+    //   27개 구장을 채워 놓고도 같은 야구를 한다.
+    parkDims: options?.parkDims,
+    homeManager: mgrPayload(hMgrP, hEff),
+    awayManager: mgrPayload(aMgrP, aEff),
     homeRotation: toSimPitchers(homeRoster.rotation),
     awayRotation: toSimPitchers(awayRoster.rotation),
     homeBullpen:  toSimPitchers(homeRoster.bullpen),
@@ -243,10 +278,17 @@ export async function simulateGame(
     awayCloser:   awayRoster.closer ? toSimPitcher(awayRoster.closer, entityMap) : null,
     homeLineup:   toSimBatters(homeRoster.lineup),
     awayLineup:   toSimBatters(awayRoster.lineup),
+    // 🔴 **벤치** — 안 넘기면 대타가 **한 번도 안 나온다.**
+    //   예전엔 buildTeamRoster 가 라인업 9명만 내서 받을 것이 없었다.
+    homeBench:    toSimBatters(homeRoster.bench),
+    awayBench:    toSimBatters(awayRoster.bench),
     homeRotIdx,
     awayRotIdx,
     conditions,
     week,
+    // 🔴 **연장 상한** — 정규시즌만 건다. 0이면 무제한(승부가 날 때까지).
+    //   예전엔 이 값이 없어 **무승부가 구조상 안 나왔다.**
+    extraInningLimit: phase === "season" ? EXTRA_INNING_LIMIT : 0,
     homeTeamId,
     awayTeamId,
     worldSeed,
@@ -311,6 +353,13 @@ const engineCall = (fn: string, payload: string): Promise<string> =>
 //
 // 능력치가 높을수록 ERA가 나빠지면 육성·드래프트·수상이 전부 거꾸로 돈다.
 // 성능은 문제없었다(주당 +153ms, 예상 136ms와 일치).
+/**
+ * 연장 상한 (KBO 규정). 이 회를 넘기고도 동점이면 무승부다.
+ *
+ * ⚠ 정규시즌에만 건다 — 대회·포스트시즌은 승자가 나와야 한다.
+ */
+export const EXTRA_INNING_LIMIT = 12;
+
 export const FULL_ENGINE_LEAGUES = new Set<string>([
   "LEAGUE_HIGHSCHOOL",   // C-4 검증 완료 (ERA 3.86 · 이닝 47.3)
   "LEAGUE_UNIVERSITY",   // C-5
@@ -339,14 +388,65 @@ const _FIELD_XY: Record<string, { x: number; y: number }> = {
   P: { x: 50, y: 62 }, C: { x: 50, y: 90 }, "1B": { x: 78, y: 70 }, "2B": { x: 63, y: 55 },
   "3B": { x: 22, y: 70 }, SS: { x: 37, y: 55 }, LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
 };
-function buildFieldersFromLineup(lineup: SimBatter[]): Record<string, unknown>[] {
+/**
+ * 리그 경기의 수비진.
+ *
+ * 🔴 **예전엔 신원도 능력도 없었다** (2026-08-29):
+ *   `name`이 **포지션 문자열**("SS")이었고 `fielding`은 컨택·주력에서
+ *   만든 **대용값**이었다. 그래서 (a) 실책을 선수에게 달 수 없었고
+ *   (b) 수비가 팀마다 사실상 같았다.
+ *
+ * ⚠ **주인공 경기는 이미 실제 수비수를 넘긴다**(`buildFielders`) —
+ *   두 경로가 **다른 수준으로 돌고 있었다.** 이걸 맞춘다.
+ * ⚠ 그래서 **밸런스가 움직인다** — 수비 좋은 팀과 나쁜 팀이 갈린다.
+ *   실측은 커밋에 남긴다(사용자 확정: 멈추지 않고 진행).
+ */
+function buildFieldersFromLineup(
+  lineup: SimBatter[],
+  starter?: SimPitcher,
+): Record<string, unknown>[] {
   const pos = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
-  return pos.map((p, i) => {
-    const b = lineup[i % Math.max(1, lineup.length)];
-    // SimBatter엔 수비 능력이 없다 — 컨택을 대용으로 쓴다(리그 평균 수준을 만든다)
-    const lvl = b ? Math.round((b.contact + b.speed) / 2) : 50;
-    return { position: p, name: p, fielding: lvl, arm: lvl, speed: b?.speed ?? 50,
-             x: _FIELD_XY[p].x, y: _FIELD_XY[p].y };
+  // 🔴 **타순을 수비 자리로 쓰고 있었다** (2026-08-29). `lineup[i]`를 그대로
+  //   `pos[i]`에 앉혀서 (a) **타자 하나가 투수 자리를 지켰고**
+  //   (b) 유격수가 좌익을 보는 식으로 자리가 뒤죽박죽이었다.
+  //
+  // ⚠ 이제 **포지션으로 맞춘다.** `SimBatter`가 `position`을 들고 있다.
+  // ⚠ P 자리엔 **실제 선발 투수**가 선다.
+  //
+  // 🔴 **지명타자가 여기서 생긴다** (사용자 확정 2026-08-29): 라인업 9명 중
+  //   야수 8자리를 채우고 **남는 한 명이 DH**다 — 수비를 안 나가므로 수비
+  //   기록이 안 쌓인다. DH는 태생이 아니라 **그 경기의 자리**다.
+  const used = new Set<string>();
+  const byPos = (want: string) => {
+    const hit = lineup.find((b) => !used.has(b.id) && b.position === want);
+    if (hit) { used.add(hit.id); return hit; }
+    // 그 자리 선수가 없으면 남은 사람으로 메운다 — 자리가 비면 수비가 안 선다
+    const any = lineup.find((b) => !used.has(b.id));
+    if (any) used.add(any.id);
+    return any;
+  };
+  return pos.map((p) => {
+    if (p === "P") {
+      return {
+        position: p,
+        playerId: starter?.id ?? "",
+        name: starter?.id ?? p,
+        // ⚠ 투수는 타격 능력치가 얇다 — 수비는 리그 평균으로 둔다
+        fielding: 50, arm: 50, speed: 50,
+        x: _FIELD_XY[p].x, y: _FIELD_XY[p].y,
+      };
+    }
+    const b = byPos(p);
+    return {
+      position: p,
+      playerId: b?.id ?? "",
+      name: b?.id ?? p,
+      // 🔴 **실제 수비 능력을 쓴다.** 컨택 대용이 아니다
+      fielding: b?.fielding ?? 50,
+      arm: b?.arm ?? 50,
+      speed: b?.speed ?? 50,
+      x: _FIELD_XY[p].x, y: _FIELD_XY[p].y,
+    };
   });
 }
 
@@ -367,12 +467,53 @@ function toEngineBatter(b: SimBatter): Record<string, unknown> {
  *
  * ⚠ **주인공이 없는 경기다.** `protagonistSide`는 기록 대상을 정할 뿐이고,
  * 여기서는 양쪽 다 NPC라 큐 두 개로 전부 처리된다.
+ *
+ * 🔴 **이 전제가 틀려 있었다** (2026-08-31 실측). `role: "SP"` 면 엔진이
+ *   `is_immediate` 로 **1구부터 주인공을 마운드에 세운다.** 여기서 `pitcher`
+ *   를 안 넘기니 그 자리에 기본값(50/52/55…)이 섰고, 홈 큐는 한 번도
+ *   안 탔다 — 같은 로스터끼리 붙여도 홈이 **2.2점을 더 줬다.**
+ *
+ *   ```
+ *     noProtagonist 없음   홈 승률 33.0 / 36.0 / 32.3 %   홈 4.75 / 원정 6.92
+ *     noProtagonist: true         43.3 / 47.5 / 50.2 %        4.28 /      4.88
+ *   ```
+ *
+ *   ⚠ 남은 47% 언저리는 **주인공과 무관하다** — 주인공을 원정에 둬도 같다.
+ *     엔진에 홈 이점이 아예 없는 것이고 그건 따로 볼 일이다(실제는 54%).
  */
 async function simulateWithMatchEngine(params: any, leagueId: string): Promise<string> {
-  const homePitchers = [...params.homeRotation.slice(0, 1), ...params.homeBullpen,
-                        ...(params.homeCloser ? [params.homeCloser] : [])].map(toEnginePitcher);
-  const awayPitchers = [...params.awayRotation.slice(0, 1), ...params.awayBullpen,
-                        ...(params.awayCloser ? [params.awayCloser] : [])].map(toEnginePitcher);
+  // 🔴 **`slice(0, 1)`이었다.** 명단이 이미 돌려진 걸 전제한 코드였는데,
+  //   `npc_sim`·`mergeConditions`는 같은 명단을 `rotIdx`로 또 색인했다.
+  //   이제 명단은 **순서 그대로** 오고 색인은 `starterOfRotation` 하나가 한다.
+  const starterOf = (rot: any[], idx: number) => {
+    const id = starterOfRotation(rot.map((x: any) => x.id), idx);
+    const hit = rot.find((x: any) => x.id === id);
+    return hit ? [hit] : [];
+  };
+  // 🔴 **마무리를 불펜에서 뺀다.** `getTeamBullpen`이 마무리를 불펜 목록에도
+  //   같이 넣어 준다(그건 의도다 — 다른 호출부가 전체 불펜을 본다). 그대로
+  //   큐에 실으면 **마무리가 점수순 정렬에서 대개 맨 앞이라 6~7회에 소모되고
+  //   9회에 남아 있지 않다.** `npc_sim::build_pit_queue`는 이걸 걸러내는데
+  //   이 경로만 안 걸러냈다 — **고친 곳이 둘인데 하나만이었다.**
+  const queueOf = (rot: any[], idx: number, bullpen: any[], closer: any) => {
+    const closerId = closer?.id;
+    const seen = new Set<string>();
+    const push = (arr: any[], x: any) => {
+      if (!x || seen.has(x.id)) return;
+      seen.add(x.id); arr.push(x);
+    };
+    const out: any[] = [];
+    for (const x of starterOf(rot, idx)) push(out, x);
+    for (const x of bullpen) { if (x?.id !== closerId) push(out, x); }
+    push(out, closer);
+    return out;
+  };
+  const homeStarter = starterOf(params.homeRotation, params.homeRotIdx ?? 0)[0];
+  const awayStarter = starterOf(params.awayRotation, params.awayRotIdx ?? 0)[0];
+  const homePitchers = queueOf(params.homeRotation, params.homeRotIdx ?? 0,
+                               params.homeBullpen, params.homeCloser).map(toEnginePitcher);
+  const awayPitchers = queueOf(params.awayRotation, params.awayRotIdx ?? 0,
+                               params.awayBullpen, params.awayCloser).map(toEnginePitcher);
 
   // 씨앗 — **같은 세이브·같은 주의 같은 경기는 늘 같은 값**이어야 한다.
   // 그래야 세이브를 다시 열어도 지난 주 순위표가 안 바뀐다.
@@ -389,18 +530,43 @@ async function simulateWithMatchEngine(params: any, leagueId: string): Promise<s
 
   const startRaw = await engineCall("startMatchNative", JSON.stringify({
     leagueId,
+    // ⚠ 여기 안 넘기면 풀 엔진 경기만 무승부가 안 난다 — 리그마다 규칙이 갈린다
+    extraInningLimit: params.extraInningLimit ?? 0,
     ...(seed === undefined ? {} : { seed }),
     protagonistSide: "home",
     role: "SP",
+    // 🔴 **주인공이 없다고 알린다.** 안 넘기면 `role: "SP"` 가 기본값
+    //   투수를 홈 마운드에 세운다 — 홈 큐가 통째로 죽는다.
+    // ⚠ `serde(default)` 라 빠뜨려도 오류가 안 난다. `noProtagonist.test.ts` 가 본다.
+    noProtagonist: true,
     homeLineup: params.homeLineup.map(toEngineBatter),
     awayLineup: params.awayLineup.map(toEngineBatter),
+    // 🔴 **벤치** — serde(default) 라 안 넘겨도 조용히 통과한다.
+    //   그래서 배선 누락이 오류가 아니라 '아무 일도 안 일어남'으로 나타난다.
+    homeBench: (params.homeBench ?? []).map(toEngineBatter),
+    awayBench: (params.awayBench ?? []).map(toEngineBatter),
     myPitchers: homePitchers,
     opponentPitchers: awayPitchers,
     // ⚠ **수비를 넘긴다.** 안 넘기면 엔진이 평균 50짜리를 만든다 —
     // 주인공 경기는 넘기는데 리그 경기만 안 넘기면 **같은 엔진인데 두 저울**이 된다.
     // 실측에서 수비 50 vs 66이 ERA 3점 차이였다.
     // 타순이 곧 수비 라인업이다(리그 시뮬은 포지션을 따로 안 들고 있다)
-    fielders: buildFieldersFromLineup(params.homeLineup),
+    // ⚠ **선발 투수를 넘긴다.** 안 넘기면 P 자리가 비고, 예전처럼 타자가
+    //   투수 자리를 지키게 된다
+    fielders: buildFieldersFromLineup(params.homeLineup, homeStarter),
+    // 🔴 **원정 수비가 없었다** (2026-08-29). 안 넘기면 홈 9명이 **양 팀 이닝을
+    //   다 지킨다** — 수비 기록이 홈 선수에게 몰리고 원정 타자는 홈 수비를 만난다
+    opponentFielders: buildFieldersFromLineup(params.awayLineup, awayStarter),
+    // 🔴 **리그 경기도 감독을 넘긴다.** 안 넘기면 리그 전 경기가 양쪽 다
+    //   기본값 50으로 돌아, 감독이 있어도 번트·도루가 전 구단 똑같았다.
+    // ⚠ 위 `fielders` 주석과 같은 함정이다 — 주인공 경기만 넘기면
+    //   **같은 엔진인데 두 저울**이 된다.
+    // ⚠ 여기선 홈이 `protagonistSide: "home"` 이라 홈이 `myManager` 다.
+    // 🔴 **담장을 넘긴다.** 안 넘기면 엔진이 중립 기본값을 써
+    //   27개 구장을 채워 놓고도 같은 야구를 한다.
+    ...(params.parkDims ? { parkDims: params.parkDims } : {}),
+    ...(params.homeManager ? { myManager: params.homeManager } : {}),
+    ...(params.awayManager ? { opponentManager: params.awayManager } : {}),
   }));
   const st = JSON.parse(startRaw);
   if (st.error) throw new Error(`[C-4] startMatch: ${st.error}`);

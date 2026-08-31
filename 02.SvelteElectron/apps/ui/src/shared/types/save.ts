@@ -392,6 +392,15 @@ export interface PitcherSeasonStats {
   l: number;      // 패
   sv: number;     // 세이브
   hd: number;     // 홀드
+  wp?: number;    // 폭투 — 투수 책임. ⚠ 구 세이브엔 없다
+  bk?: number;    // 보크 — 투수 책임. ⚠ 구 세이브엔 없다
+  /**
+   * 승률 — **파생값이다**(`w / (w + l)`). 무승부는 분모에서 뺀다(야구 규칙).
+   *
+   * ⚠ 저장된 값을 믿지 않고 `sanitizeStatsRecord`가 매번 다시 만든다 —
+   *   `era`·`whip`과 같은 취급이다. 구 세이브엔 없다.
+   */
+  winPct?: number;
   /**
    * 이닝 — **실수다**(`outs / 3`). 31과 2/3이닝이면 `31.6666`이다.
    *
@@ -452,8 +461,24 @@ export interface BatterSeasonStats {
   hbp?: number;
   sac?: number;
   sf?: number;
+  /**
+   * 수비 기록 — 실책·보살·자살과 수비율 (G-3 · 2026-08-29).
+   *
+   * 🔴 **선수별로 한 건도 안 쌓이고 있었다.** `DefenseStat`은 팀 단위
+   *   하나뿐이라 골든글러브를 뽑을 근거가 없었다.
+   * ⚠ `fpct`는 **파생값**이다 — `era`·`whip`처럼 매번 다시 만든다.
+   *       fpct = (po + a) / (po + a + e)
+   * ⚠ 구 세이브엔 없다. `undefined`와 0을 가른다 — 0으로 채우면
+   *   "실책 0인 수비수"가 되어 기록이 거짓이 된다.
+   */
+  e?: number;
+  a?: number;
+  po?: number;
+  fpct?: number;
   rbi: number;    // 타점
   sb: number;     // 도루
+  cs?: number;    // 도루자 — 성공률의 분모다. ⚠ 구 세이브엔 없다
+  pb?: number;    // 포일 — **포수 책임**. 타자 줄에 실리지만 그 이닝 포수 것이다
   bb: number;  // 볼넷
   k: number;  // 삼진
   avg: number;  // 타율 (계산값: h/ab)
@@ -930,6 +955,16 @@ export interface CareerGameLogEntry {
   bb: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
   pitchCount?: number;
+  /**
+   * 그 등판의 구종별 성적 — **무슨 공으로 잡고 무슨 공에 맞았나.**
+   *
+   * 🔴 `pitch_type` 이 매 투구에 있는데 아무도 안 셌다. 투수 상세에
+   *   구종 목록은 뜨는데 실제로 뭘 던졌는지는 알 수 없었다.
+   * ⚠ 구 세이브엔 없다.
+   */
+  pitchMix?: Record<string, { pc: number; k: number; h: number }>;
+  /** 이닝별 — 몇 회에 무너졌는지는 합계로 못 본다. ⚠ 구 세이브엔 없다 */
+  byInning?: Array<{ inning: number; pc: number; er: number; outs: number }>;
 }
 
 export interface CareerSeasonRecord {
@@ -992,6 +1027,21 @@ export interface SaveGame {
   npcs: NpcSaveState[];  // NPC 런타임 상태 (Zone 0~3)
   /** 구단 성향 — 안 넣으면 앱을 껐다 켤 때 압박이 50으로 돌아간다 */
   proTeamProfiles?: Record<string, unknown>;
+  /**
+   * **구단 예산** (4-C · 2026-08-29). 만원 단위.
+   *
+   * 🔴 예전엔 예산이 `refs.json`의 **정적값**이라 시즌이 지나도 안 변했다.
+   *   수입을 만들었으므로 그 결과를 여기 쌓는다.
+   *
+   * ⚠ **저장해야 한다.** 안 하면 앱을 껐다 켤 때 정적값으로 돌아가고,
+   *   그 값을 읽는 셋(신인 계약금·FA 입찰 상한·감독 기대치)이 통째로
+   *   되돌아간다 — 이 저장소가 이미 겪은 형태다("한 해에 한 번 가드").
+   * ⚠ **갈래 B**: 예산이 움직여도 구단 성향 12개는 안 흔들린다.
+   */
+  clubBudgets?: Record<string, number>;
+  demotionWeek?: Record<string, number>;
+  hallOfFame?: Record<string, { year: number; score: number; teams: string[]; num: number }>;
+  retiredNumbers?: Record<string, number[]>;
   /** 구단 연속 기록 (연속 포스트시즌 실패 · 연속 우승) */
   teamStreaks?: Record<string, { missedPlayoffs: number; titles: number }>;
 
@@ -1028,6 +1078,21 @@ export interface SaveGuards {
    * 영구인데 값 자신이 세션 한정이면 없던 일이 된다.
    */
   proTeamProfiles?: Record<string, unknown>;
+  /**
+   * **구단 예산** (4-C · 2026-08-29). 만원 단위.
+   *
+   * 🔴 예전엔 예산이 `refs.json`의 **정적값**이라 시즌이 지나도 안 변했다.
+   *   수입을 만들었으므로 그 결과를 여기 쌓는다.
+   *
+   * ⚠ **저장해야 한다.** 안 하면 앱을 껐다 켤 때 정적값으로 돌아가고,
+   *   그 값을 읽는 셋(신인 계약금·FA 입찰 상한·감독 기대치)이 통째로
+   *   되돌아간다 — 이 저장소가 이미 겪은 형태다("한 해에 한 번 가드").
+   * ⚠ **갈래 B**: 예산이 움직여도 구단 성향 12개는 안 흔들린다.
+   */
+  clubBudgets?: Record<string, number>;
+  demotionWeek?: Record<string, number>;
+  hallOfFame?: Record<string, { year: number; score: number; teams: string[]; num: number }>;
+  retiredNumbers?: Record<string, number[]>;
   /**
    * 구단 이력 — 연속 기록. **성향(12축)과 섞지 않는다.**
    *

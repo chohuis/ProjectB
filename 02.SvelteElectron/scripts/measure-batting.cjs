@@ -79,6 +79,11 @@ const log = (s) => process.stdout.write(s + "\n");
         for (const [lg, v] of Object.entries(probe)) {
           log(`  ${lg}  ${JSON.stringify(v)}`);
         }
+        // ⚠ **롤오버 앞이어야 한다.** `seasonRollover()` 가 시즌 성적을
+        //   비우므로 뒤에서 세면 전부 0이다(실제로 그렇게 나왔다).
+        for (const lg of ["LEAGUE_KBL", "LEAGUE_HIGHSCHOOL"]) {
+          log(`  신규사건 ${JSON.stringify(app.newEventProbe(lg))}`);
+        }
         await app.seasonRollover();
         continue;
       }
@@ -107,6 +112,10 @@ const log = (s) => process.stdout.write(s + "\n");
     const aw = app.awardTally();
     log(`  수상선수 ${aw.수상선수}명`);
     log(`  부문별 ${JSON.stringify(aw.부문별)}`);
+    log(`  리그별 ${JSON.stringify(aw.리그별)}`);
+    for (const [lg, t] of Object.entries(aw.리그별부문 ?? {})) {
+      log(`    ${lg} ${JSON.stringify(t)}`);
+    }
     for (const e of aw.표본 ?? []) log(`    ${e}`);
   } catch (e) {
     log("ERR " + ((e && e.stack) || e));

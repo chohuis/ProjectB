@@ -27,7 +27,7 @@ import {
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
-import { buildOpponentBrief } from "../utils/matchLineupBuilder";
+import { buildOpponentBrief, rotIdxOf } from "../utils/matchLineupBuilder";
 import { HS_REGIONS } from "../utils/leagueScheduler";
 import { buildMyBodyReport } from "./weekPhases/myBodyReport";
 import { runNationalTeamWeek } from "./nationalTeam";
@@ -56,6 +56,8 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
+import { loadRosterRules } from "../repo/newGameV3";
+import { campConditionBonus } from "../utils/clubEffects";
 import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
 import { applyForeignTurnover } from "./foreignPlayers";
 
@@ -63,6 +65,9 @@ import { applyForeignTurnover } from "./foreignPlayers";
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
+import {
+  collectTournamentLines, tournamentAwards, weekRangeOf,
+} from "./tournamentAwards";
 import { simulateNpcGame, logGameLines } from "./weekPhases/games";
 /**
  * 성실 주간 자연 감쇠 (사용자 확정 2026-08-26).
@@ -89,6 +94,7 @@ import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
 import { processPositionGaps } from "./weekPhases/positionGaps";
+import { processJerseyNumbers } from "./weekPhases/jerseyNumbers";
 import { processWeeklyNpcGrowth } from "./weekPhases/growth";
 import {
   processTradeWindow,
@@ -799,6 +805,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       const briefOf = (teamId: string) => {
         const hit = standRank.get(teamId);
         return buildOpponentBrief(teamId, mFriendly.entities, {
+          // ⚠ 셋을 다 넘긴다 — 하나라도 빠지면 예고가 늘 1번 투수다
+          conditions: sFriendly.leagueState[proto.leagueId]?.playerConditions,
+          rotIdx: rotIdxOf(sFriendly.leagueState, proto.leagueId, teamId),
+          npcInjuries: sFriendly.npcInjuries,
           rank:  hit ? hit.rank : null,
           total: hit ? totalTeams : null,
           record: hit
@@ -1389,7 +1399,34 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 포지션 공백 — **부상으로 포수가 빠진 그 주에 바로 메운다.** 예전엔 메우는
   // 경로가 오프시즌에만 있어 공백이 다음 해까지 갔다(실측 1~4팀이 포수 0명)
   for (const line of await processPositionGaps(get(seasonStore).seasonYear)) autoLog(line);
-  seasonStore.applyWeeklyConditionRecovery(bgEntities);
+  // 등번호 — **유입 경로가 여럿이라 여기 한 곳에 모았다.** 신입생·육성선수·
+  // 해외·드래프트·FA 이적이 각각 선수를 팀에 넣는데 번호를 주는 곳은
+  // 초기 생성뿐이었다(실측: 238팀 전부 중복 · 한 번호 최대 45명).
+  // ⚠ 문제 있는 팀이 없으면 IPC 를 아예 안 탄다.
+  for (const line of await processJerseyNumbers()) autoLog(line);
+  // 전지훈련 (4단계) — **시즌 초 몇 주만** 컨디션이 더 붙는다.
+  // ⚠ 값은 규칙 파일이 정본(`campRules`). 없으면 안 돈다 — 예전 동작이다.
+  {
+    const camp = (await loadRosterRules() as unknown as
+      { campRules?: { conditionBonus?: number; weeks?: number } }).campRules;
+    let campBonus: Record<string, number> | undefined;
+    if (camp?.conditionBonus && weekInYear <= (camp.weeks ?? 0)) {
+      // 전훈비는 **규모 비례**라 부자 구단이 유리하다 — 현실도 그렇다.
+      // 규모 지수를 그대로 쓰지 않고 성향(`farmInvestment`)으로 가른다:
+      // 육성에 투자하는 구단이 캠프도 잘 차린다.
+      const gNow = get(gameStore);
+      const mNow = get(masterStore);
+      campBonus = {};
+      for (const n of gNow.npcs ?? []) {
+        const tid = n.currentTeam ?? "";
+        if (!tid) continue;
+        const inv = getTeamProfile(tid, gNow, mNow)?.farmInvestment ?? 50;
+        // ⚠ 식은 `clubEffects` 한 곳에 — 팀 상세가 같은 함수를 쓴다
+        campBonus[n.npcId] = campConditionBonus(inv, camp.conditionBonus);
+      }
+    }
+    seasonStore.applyWeeklyConditionRecovery(bgEntities, campBonus);
+  }
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities, gFinal.protagonist.careerStage);
   // npcLiveStats 변경 → connectToGameStore 구독이 entities 자동 갱신 (applyNpcLiveStats 불필요)
 
@@ -1808,6 +1845,67 @@ async function progressTournaments(week: number): Promise<boolean> {
             const champ = buildChampionMessage(
               def, next, protagonistTeamId, tName4Tour, week);
             if (champ) gameStore.addMessage(champ);
+
+            // 🔴 **대회 개인 수상** — 5개 대회가 도는데 우승해도 개인에게
+            //   남는 게 없었다. 팀 성적만 쌓여 진로 판정의 팀 점수로만 갔다.
+            // ⚠ MVP는 우승팀 안에서, 부문상은 참가팀 전체에서 뽑는다
+            //   (사용자 확정 2026-08-30).
+            // ⚠ 기록은 시즌 수상과 **같은 자리**(`careerHistory.highlights`)에
+            //   남긴다 — 명예의 전당·진학 점수가 그걸 본다.
+            const finalM = next.matches.find((m) => m.round === next.totalRounds);
+            const championId = finalM?.winnerTeamId ?? null;
+            if (championId) {
+              const sNow = get(seasonStore);
+              const range = weekRangeOf(sNow, def.id);
+              if (range) {
+                const ents = get(masterStore).entities;
+                const teamsNow2 = get(masterStore).teams;
+                // 🔴 **리그 게이트가 없으면 섞인다.** 일정은 주인공 것 하나라,
+                //   대학 대회의 주차 범위로 고교 경기를 모으면 **대학 대회
+                //   이름으로 고교 선수가 상을 받는다** — 실측에서 고교 집계에
+                //   여명기·은하기·왕중왕전이 섞여 나왔다.
+                const teamOf = (pid: string): string | null => {
+                  const tid = ents.find((e) => e.id === pid)?.teamId ?? null;
+                  if (!tid) return null;
+                  const lg = teamsNow2.find((t) => t.id === tid)?.leagueId ?? null;
+                  return lg === def.leagueId ? tid : null;
+                };
+                const awards = tournamentAwards(
+                  collectTournamentLines(sNow.schedule, range.start, range.end),
+                  championId, teamOf);
+                if (awards.length > 0) {
+                  const byPlayer = new Map<string, string[]>();
+                  for (const a of awards) {
+                    const list = byPlayer.get(a.playerId) ?? [];
+                    list.push(`${def.name} ${a.label}`);
+                    byPlayer.set(a.playerId, list);
+                  }
+                  gameStore.addSeasonHighlights(next.seasonYear, byPlayer);
+
+                  // 우리 팀이 걸린 상만 알린다 — 5대회 × 3상이면 한 해 15통이다
+                  const mineAw = awards.filter((a) => a.teamId === protagonistTeamId);
+                  if (mineAw.length > 0) {
+                    const nameOf = (pid: string) =>
+                      ents.find((e) => e.id === pid)?.name ?? pid;
+                    gameStore.addMessage({
+                      id: `msg-tour-award-${def.id}-${next.seasonYear}`,
+                      category: "news",
+                      sender: "고교야구연맹",
+                      subject: `${def.name} 시상 — 우리 학교 ${mineAw.length}명`,
+                      preview: mineAw.map((a) => a.label).join(" · "),
+                      body: [
+                        `${next.seasonYear} ${def.name} 시상식`,
+                        "",
+                        ...mineAw.map((a) =>
+                          `🏅 ${a.label}  ${nameOf(a.playerId)}  (${a.value})`),
+                      ].join(String.fromCharCode(10)),
+                      createdAt: `W${week}`,
+                      readAt: null,
+                    });
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2403,6 +2501,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const _tradeWeeks2 = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
               const sim2 = await simulateGame(game.homeTeamId, game.awayTeamId, entities2, {
                 conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
+                phase: game.phase,
                 worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
                 npcInjuries: get(seasonStore).npcInjuries,
                 // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
@@ -2478,7 +2577,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           if (entities.length > 0) {
             const _tradeWeeksNpc = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
             const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
-              conditions, homeRotIdx, awayRotIdx, week: game.week,
+              conditions, homeRotIdx, awayRotIdx, week: game.week, phase: game.phase,
               worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
               npcInjuries: get(seasonStore).npcInjuries,
               // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
@@ -2796,7 +2895,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         if (entities.length > 0) {
           const _tradeWeeksPs = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
           const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
-            conditions, homeRotIdx, awayRotIdx, week: game.week,
+            conditions, homeRotIdx, awayRotIdx, week: game.week, phase: game.phase,
               worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
             npcInjuries: get(seasonStore).npcInjuries,
             // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수

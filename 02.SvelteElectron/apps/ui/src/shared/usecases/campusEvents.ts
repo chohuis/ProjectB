@@ -33,6 +33,25 @@ export function regionOf(city: string | undefined): "north" | "south" {
   return city && SOUTH_CITIES.has(city) ? "south" : "north";
 }
 
+/**
+ * 올스타 편 가르기. 국내는 남/북 도시로 가른다.
+ *
+ * 🔴 **해외(ABL·JBL)는 도시가 목록에 없어 전원이 `north`가 된다** — 한 편이
+ *   통째로 비어 경기가 안 선다. 그럴 땐 **팀 id 정렬 순서로 반씩** 가른다.
+ * ⚠ 정렬 순서를 쓰는 건 **결정성** 때문이다 — 같은 세이브가 늘 같은 편이다.
+ */
+export function allStarSideOf(
+  teamId: string,
+  city: string | undefined,
+  sortedTeamIds: readonly string[],
+): "north" | "south" {
+  if (city && SOUTH_CITIES.has(city)) return "south";
+  // 국내면 여기서 끝 — 남쪽 도시가 하나라도 있으면 도시 축이 선다
+  if (sortedTeamIds.some((t) => t === teamId) === false) return "north";
+  const i = sortedTeamIds.indexOf(teamId);
+  return i >= 0 && i % 2 === 1 ? "south" : "north";
+}
+
 // ── 후보 수집 ─────────────────────────────────────────────────
 
 interface CampusCandidate {
@@ -49,6 +68,13 @@ function gatherCandidates(leagueId: string): CampusCandidate[] {
   const live = get(npcLiveStatsStore);
   const cityOf = new Map(m.teams.map((t) => [t.id, t.city]));
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
+  // ⚠ **도시 축이 서는지 먼저 본다.** 해외는 남쪽 도시가 하나도 없어
+  //   전원이 북이 된다 — 그러면 팀 정렬 순서로 반씩 가른다
+  const leagueTeamIds = m.teams
+    .filter((t) => t.leagueId === leagueId)
+    .map((t) => t.id)
+    .sort();
+  const cityAxisWorks = leagueTeamIds.some((t) => regionOf(cityOf.get(t)) === "south");
 
   const out: CampusCandidate[] = [];
   for (const e of m.entities) {
@@ -62,7 +88,9 @@ function gatherCandidates(leagueId: string): CampusCandidate[] {
       npcId: e.id,
       name: e.name || e.id,
       teamId: e.teamId ?? "",
-      region: regionOf(cityOf.get(e.teamId ?? "")),
+      region: cityAxisWorks
+        ? regionOf(cityOf.get(e.teamId ?? ""))
+        : allStarSideOf(e.teamId ?? "", undefined, leagueTeamIds),
       position: d?.position ?? "SP",
       ovr,
       age: e.age,
@@ -126,13 +154,16 @@ export async function runCampusEventsWeek(
 ): Promise<string[]> {
   const g = get(gameStore);
   const stage = g.protagonist.careerStage;
-  if (stage !== "university" && stage !== "highschool") return [];
+  // ⚠ 프로도 온다 — 올스타전 때문이다. 대학·고교만 받던 시절의 게이트였다
+  const isPro = stage.startsWith("pro");
+  if (stage !== "university" && stage !== "highschool" && !isPro) return [];
 
   try {
     const rules = (await loadRosterRules() as unknown as {
       campusEvents?: {
         showcase: Record<string, unknown> & { week: number };
         allstar: Record<string, unknown> & { week: number };
+        proAllstar?: Record<string, unknown> & { week: number };
       };
     }).campusEvents;
     if (!rules) return [];
@@ -141,7 +172,11 @@ export async function runCampusEventsWeek(
       return await runShowcase(rules.showcase, weekNum);
     }
     if (stage === "university" && weekInYear === rules.allstar.week) {
-      return await runAllStar(rules.allstar, weekNum);
+      return await runAllStar(rules.allstar, weekNum, "LEAGUE_UNIVERSITY");
+    }
+    // 🔴 **프로 올스타전** (2026-08-29). 규칙이 없으면 안 연다
+    if (isPro && rules.proAllstar && weekInYear === rules.proAllstar.week) {
+      return await runAllStar(rules.proAllstar, weekNum, g.protagonist.leagueId ?? "");
     }
     // 고교는 쇼케이스와 같은 주에 축소판을 연다 (§A-9 "단계별 비대칭 축소")
     if (stage === "highschool" && weekInYear === rules.showcase.week) {
@@ -238,10 +273,17 @@ interface AllStarPick {
   side: string; score: number; byQuota: boolean;
 }
 
-async function runAllStar(rules: unknown, weekNum: number): Promise<string[]> {
+/**
+ * 올스타전. **리그 중립이다** — 대학도 프로도 같은 기계를 쓴다.
+ *
+ * 🔴 프로 올스타전이 **아예 없었다** (2026-08-29). `run_allstar`는 처음부터
+ *   리그를 안 가렸고 쿼터도 팀 단위인데, 호출부가 `LEAGUE_UNIVERSITY`를
+ *   박아 놓고 `stage === "university"`로 막고 있었다.
+ */
+async function runAllStar(rules: unknown, weekNum: number, leagueId: string): Promise<string[]> {
   const s = get(seasonStore);
   const g = get(gameStore);
-  const candidates = gatherCandidates("LEAGUE_UNIVERSITY");
+  const candidates = gatherCandidates(leagueId);
   if (candidates.length === 0) return [];
 
   const res = await engine<{

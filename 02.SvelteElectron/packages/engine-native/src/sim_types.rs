@@ -92,6 +92,12 @@ pub struct NpcSaveState {
     pub nationality: Option<String>,  // "KOR"|"JPN"|"USA"|"OTHER"; None → "KOR" 폴백
     pub player_type: String,
     pub position: String,
+    /// 등번호. **0 은 "아직 없음"이다** — `fix_jersey_numbers` 가 채운다.
+    ///
+    /// ⚠ `serde(default)` 라 안 넘겨도 통과한다. 그래서 이 필드가 **없던**
+    ///   시절에도 오류 없이 돌았고, 화면에만 0번으로 나왔다.
+    #[serde(default)]
+    pub jersey_number: i32,
     pub age: i32,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub grade: Option<u8>,
@@ -474,6 +480,10 @@ pub struct DraftSimParams {
     /// 포지션을 보는데(a_cnt >= 3 && b_cnt <= 1) 드래프트만 안 봤다.
     #[serde(default)]
     pub team_needs: std::collections::HashMap<String, TeamNeed>,
+    /// 스카우팅. ⚠ `serde(default)` 라 **안 넘겨도 통과한다** —
+    /// 배선 검사가 TS 가 넘기는지 따로 본다.
+    #[serde(default)]
+    pub scouting: Option<DraftScoutingParams>,
     /// 부족 보직 가점. 0이면 예전 그대로다.
     ///
     /// ⚠ **능력치를 뒤집지 않을 만큼만 준다.** 지명자 점수 폭이 18.2이고
@@ -823,6 +833,25 @@ pub enum PlayerGameLine {
         hbp: i32,
         pc: i32,
         decision: String,
+        /// **선발 등판인가.** 화면 넷이 GS(선발)를 표시하는데 이 값이 없어서
+        /// `accumulateStats`가 올릴 근거가 없었다 — 전원 0이었다.
+        /// ⚠ `default`다: 구 세이브의 로그엔 없다
+        #[serde(default)]
+        gs: bool,
+        /// 폭투 — KBO 투수 표의 WP. ⚠ `default`다
+        #[serde(default)]
+        wp: i32,
+        /// 보크 — KBO 투수 표의 BK. ⚠ `default`다
+        #[serde(default)]
+        bk: i32,
+        /// 구종별 성적 — **`pitch_type` 이 매 투구에 있는데 아무도
+        /// 안 셀다.** 투수 상세에 구종 목록은 뜨는데 **실제로 뭐를
+        /// 던졌는지는 알 수 없었다.** ⚠ `default`다 — 구 세이브 로그엔 없다.
+        #[serde(default)]
+        pitch_mix: std::collections::HashMap<String, crate::types::PitchMixLine>,
+        /// 이닝별 — 몇 회에 무너졌는지는 합계로 못 본다
+        #[serde(default)]
+        by_inning: Vec<crate::types::InningLine>,
         /// 득점권 피안타율 — 위기 보정이 성적을 만드는지 보여주는 유일한 창구다.
         /// 시즌 ERA로는 못 본다(득점권은 전체 타석의 25%뿐이라 희석된다).
         #[serde(rename = "rispAb", default)]
@@ -860,11 +889,26 @@ pub enum PlayerGameLine {
         bb: i32,
         k: i32,
         sb: i32,
+        /// 도루자 — **판정은 처음부터 돌았는데 셀 자리가 없었다.**
+        /// 주자가 아웃되고 로그도 남는데 기록에 안 남아서, 화면엔
+        /// 도루 성공만 보이고 **성공률을 낼 수 없었다.**
+        /// ⚠ `default`다 — 구 세이브의 로그엔 없다.
+        #[serde(default)]
+        cs: i32,
+        /// 포일 — 포수 기록(PB). ⚠ `default`다
+        #[serde(default)]
+        pb: i32,
         /// 득점권 타율 — 투수 쪽과 짝이다
         #[serde(rename = "rispAb", default)]
         risp_ab: i32,
         #[serde(rename = "rispH", default)]
         risp_h: i32,
+        /// 수비 기록 — 실책·보살·자살. **선수별로 한 건도 안 쌓이고 있었다**
+        /// (2026-08-29). 골든글러브의 근거다.
+        /// ⚠ `default`다 — 구 세이브 로그엔 없다.
+        #[serde(default)] e: i32,
+        #[serde(default)] a: i32,
+        #[serde(default)] po: i32,
     },
 }
 
@@ -874,7 +918,10 @@ pub struct MatchResult {
     pub home_score: i32,
     pub away_score: i32,
     pub winner_id: String,
-    pub loser_id: String,
+    /// 🔴 **무승부면 `None`이다** (2026-08-29). 예전엔 `String`이라 동점이
+    /// 나도 한쪽이 패자로 적혔다 — TS는 처음부터 `loserId: string | null`로
+    /// 무승부를 기다리고 있었는데 Rust가 null을 못 보냈다.
+    pub loser_id: Option<String>,
     pub player_lines: Vec<PlayerGameLine>,
     pub events: Vec<String>,
 }
@@ -897,6 +944,36 @@ pub struct ProtagonistGradeResult {
     pub is_graduating: bool,
 }
 
+/// 드래프트 스카우팅 — 팀마다 **다른 눈**으로 후보를 본다.
+///
+/// 🔴 그 전엔 **전 구단이 진짜 능력을 정확히 알았다.** 스카우트 조직에
+///   값이 생길 자리가 없었다.
+/// ⚠ 비면 안 돈다 — 예전 동작이라 안전하다.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftScoutingParams {
+    /// 팀 id → `scoutingQuality`(0~100). 50이 기준이다
+    #[serde(default)]
+    pub quality: std::collections::HashMap<String, f64>,
+    /// 잡음 폭 — 품질 0일 때 OVR 에 ±이만큼 흔들린다
+    #[serde(default)]
+    pub span: f64,
+}
+
+/// 웨이버 공시 규칙. **없으면 안 돈다** — 예전 동작이다.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WaiverRules {
+    #[serde(default)]
+    pub enabled: bool,
+    /// 그 팀 최약체보다 이만큼 나으면 데려간다 (음수면 조금 못해도)
+    #[serde(default)]
+    pub ovr_margin: f64,
+    /// 한 팀이 한 오프시즌에 데려갈 최대 인원
+    #[serde(default)]
+    pub max_per_team: i32,
+}
+
 // ── 오프시즌 입력 ────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -907,6 +984,10 @@ pub struct OffseasonParams {
     #[serde(default)]
     pub world_seed: u32,
     pub npcs: Vec<NpcSaveState>,
+    /// 웨이버 공시. ⚠ `serde(default)` 라 **안 넘겨도 통과한다** —
+    /// 그래서 배선 검사가 TS 가 넘기는지 따로 본다.
+    #[serde(default)]
+    pub waiver_rules: Option<WaiverRules>,
     pub pending_draft: Vec<NpcSaveState>,
     pub season_year: i32,
     // TS에서 FA/은퇴 결정을 완료한 named NPC ID 목록 — Rust FA 로직 스킵 대상
@@ -925,6 +1006,24 @@ pub struct OffseasonParams {
     pub university_team_ids: Vec<String>,
     #[serde(default)]
     pub independent_team_ids: Vec<String>,
+    /// 웨이버 청구 대상에서 뻐 팀 — 군팀(상무).
+    ///
+    /// 🔴 `waiver_claim` 만 **목적지 팀을 NPC 소속에서 역산한다** — 다른 배정
+    ///   경로는 위 목록(상무 제외)을 쓰는데 거기만 자기가 만든다. 게다가
+    ///   **인원이 적은 팀부터** 고르니 정원 26인 상무가 늘 1순위였다
+    ///   (다른 독립팀은 30~45명). 실측에서 상무 비군인 전원의 이력이
+    ///   `waiver_claim→IND_SANGMU_PHOENIX` 였다.
+    /// ⚠ 비면 예전과 같게 돌다 — `waiverSangmu.test.ts` 가 배선을 본다.
+    #[serde(default)]
+    pub waiver_exclude_teams: Vec<String>,
+    /// 팀별 연간 예산(만원) — 총연봉이 이걸 넘으면 **방출한다.**
+    ///
+    /// 🔴 예전엔 예산이 어느 판정에도 안 들어갔다. `team_payroll_cap` 은
+    ///   있지만 **예산이 아니라 "지금 총연봉 × 팀지수 × 1.25"** 이고
+    ///   FA 입찰에만 쓴다.
+    /// ⚠ 비면 예전과 같게 돌다. 예산이 없는 팀(상무·아마추어)은 건너넌다.
+    #[serde(default)]
+    pub team_budgets: std::collections::HashMap<String, i64>,
     /// 프로 2군 팀. **방출자·미계약 FA가 갈 첫 자리다** — 없으면 2군은
     /// 드래프트 하위 라운드로만 채워져 투수가 마른다(실측 야수 29/투수 6)
     #[serde(default)]
@@ -934,6 +1033,13 @@ pub struct OffseasonParams {
     /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
     #[serde(default)]
     pub release_rules: Option<crate::free_agency::ReleaseRules>,
+    /// **독립리그 재도전 나이 상한** (`faRules.independentAgeMax`).
+    ///
+    /// FA 미계약자가 원소속 재계약도 못 하면 이 나이 이하일 때만 독립으로
+    /// 간다 — 넘으면 은퇴다.
+    /// ⚠ `None`이면 갈래가 **통째로 꺼진다**(예전 동작: 바로 은퇴).
+    #[serde(default)]
+    pub fa_independent_age_max: Option<i32>,
     /// 🔴 **그해 성적 평점** (npcId → 0~100). 없으면 능력치로 떨어진다.
     ///
     /// 방출 판정이 `recent_performance_rating`에 능력치를 넣고 있었다 —

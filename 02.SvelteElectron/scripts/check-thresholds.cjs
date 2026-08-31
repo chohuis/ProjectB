@@ -68,6 +68,11 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
           bat: app.batterSampleProbe(),
           spread: app.abilitySpreadProbe("LEAGUE_KBL"),
           awards: await app.awardThresholdProbe("LEAGUE_KBL"),
+          // ⚠ 고교도 수상 대상이다 — 그런데 타격왕·도루왕·홀드왕이 0건이다
+          awardsHs: await app.awardThresholdProbe("LEAGUE_HIGHSCHOOL"),
+          bullpenHs: app.bullpenUseProbe("LEAGUE_HIGHSCHOOL"),
+          mgrStyle: app.managerStyleProbe(),
+          bullpenKbl: app.bullpenUseProbe("LEAGUE_KBL"),
           steal: app.stealInputProbe("LEAGUE_KBL"),
           risp: app.rispSplitProbe("LEAGUE_KBL"),
         });
@@ -123,6 +128,31 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
       }
       const mvp = s.awards.MVP;
       if (mvp) log(`      MVP      ${mvp.기준} → ${mvp.해당}명 (최다 ${mvp.최다부문}부문)`);
+    }
+
+    log("");
+    log("②-HS 고교 — 같은 자격선이 고교 분포 위에서도 서는가");
+    for (const s of seasons) {
+      if (!s.awardsHs) continue;
+      log(`   ── ${s.year}`);
+      for (const [label, v] of Object.entries(s.awardsHs)) {
+        if (label === "MVP") continue;
+        const flag = v.수상없음 ? `  ⚠ ${v.수상없음}`
+          : (v.통과 ?? 0) === 0 ? "  ⚠ 자격자 없음"
+          : (v.통과 ?? 0) < 5 ? `  ⚠ 통과 ${v.통과}명뿐`
+          : "";
+        log(`      ${String(label).padEnd(8)} 통과 ${String(v.통과 ?? 0).padStart(3)}`
+          + `  1위 ${String(v["1위"] ?? "-").padStart(6)}`
+          + `  2위차 ${String(v["2위차"] ?? "-").padStart(5)}`
+          + `  중앙 ${String(v.중앙 ?? "-").padStart(6)}${flag}`);
+      }
+      if (s.mgrStyle) log("      ─ 감독 " + JSON.stringify(s.mgrStyle));
+      if (s.bullpenHs) {
+        log("      ─ 불펜 · 고교 " + JSON.stringify(s.bullpenHs));
+        log("      ─ 불펜 · KBL  " + JSON.stringify(s.bullpenKbl));
+      }
+      const m2 = s.awardsHs.MVP;
+      if (m2) log(`      MVP      ${m2.기준} → ${m2.해당}명 (최다 ${m2.최다부문}부문)`);
     }
 
     // ── ②-1 도루 입력 분포 ───────────────────────────────────

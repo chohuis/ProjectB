@@ -7,6 +7,8 @@
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
+  import { managerEffect } from "../../shared/utils/managerStyle";
+  import { managerProfileOf } from "../../shared/utils/staffEffects";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
   import {
     staminaCostOf, pitchesLeft,
@@ -469,6 +471,42 @@
     return buildOpponentLineup(teamId);
   }
 
+  /**
+   * 벤치 — 라인업에 안 든 타자 중 좋은 순으로 넷.
+   *
+   * ⚠ 안 넘기면 엔진이 빈 벤치로 돌아 **대타가 한 번도 안 나온다**
+   *   (`serde(default)` 라 오류도 안 난다).
+   * ⚠ 라인업과 **같은 재료**로 뽑는다 — 다른 기준을 쓰면 라인업에 든
+   *   사람이 벤치에도 들어가 자기 자신으로 교체된다.
+   */
+  function buildBenchForTeam(teamId: string): import('../../shared/types/projectb').MatchBatterStats[] {
+    const inLineup = new Set(buildOpponentLineup(teamId).map((b) => b.id));
+    const entities = get(masterStore).entities;
+    const pitcherPos = ['SP', 'RP', 'CP'];
+    return entities
+      .filter((e: EntityRow) =>
+        e.teamId === teamId && e.role === 'player' &&
+        !pitcherPos.includes(String((e.details as EntityDetails)?.player?.position ?? '')) &&
+        !inLineup.has(e.id))
+      .sort((a: EntityRow, b: EntityRow) =>
+        ((b.details as EntityDetails)?.player?.batting?.ovr ?? 0) -
+        ((a.details as EntityDetails)?.player?.batting?.ovr ?? 0))
+      .slice(0, 4)
+      .map((e: EntityRow) => {
+        const bat = (e.details as EntityDetails)?.player?.batting ?? {};
+        return {
+          id: e.id,
+          name: e.name ?? undefined,
+          contact: bat.contact ?? 50, power: bat.power ?? 50,
+          eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
+          battingClutch: bat.battingClutch ?? 50, platoon: bat.platoon ?? 50,
+          speed: bat.speed ?? 50, baseInstinct: bat.baseInstinct ?? 50,
+          bunting: bat.bunting ?? 50,
+          fielding: bat.fielding ?? 50, arm: bat.arm ?? 50,
+        };
+      });
+  }
+
   function buildPitcherStatsForTeam(teamId: string): {
     command?: number; velocity?: number; staminaCap?: number;
     mentalResil?: number; control?: number; movement?: number;
@@ -765,6 +803,9 @@
       // 넘기고 있었고, 자동 진행 경로는 아예 안 넘겨 평균 50이 됐다.
       const fielders = myTeamId ? buildOpponentFielders(myTeamId) : [];
       const myLineup = myTeamId ? buildLineupForTeam(myTeamId) : [];
+      // 🔴 **벤치** — 대타 후보. 안 넘기면 교체가 한 번도 안 일어난다.
+      const myBench = myTeamId ? buildBenchForTeam(myTeamId) : [];
+      const oppBench = opponentTeamId ? buildBenchForTeam(opponentTeamId) : [];
       const opponentPitcherStats = opponentTeamId ? buildPitcherStatsForTeam(opponentTeamId) : undefined;
       const ctx = matchContext;
       const myNpcStarterStats = (ctx?.role !== 'SP' && myTeamId) ? buildPitcherStatsForTeam(myTeamId) : undefined;
@@ -775,8 +816,25 @@
       // Rust ManagerStats와 키가 같으므로 그대로 넘긴다. 예전엔 옛 키를 새 키에
       // 별칭으로 붙이고 있었는데 옛 키가 이미 없어서 5종 중 4종이 undefined였다 —
       // JSON.stringify가 그 키를 지워 Rust는 매 경기 기본값으로 돌았다
+      // 🔴 **작전 배수를 같이 넘긴다.** 스타일 9종이 저장되고 팀 상세에
+      //   표시까지 되는데 경기에선 아무것도 안 바꿨다 — 안 넘기면
+      //   `serde(default)` 라 조용히 1.0(예전 동작)이 된다.
+      const myMgrEff = managerEffect(managerProfileOf(myTeamId ?? "", get(masterStore).entities));
       const myManagerStats = myManagerEntity?.details.manager
-        ? { ...myManagerEntity.details.manager.stats }
+        ? { ...myManagerEntity.details.manager.stats,
+            buntMult: myMgrEff.buntMult, stealMult: myMgrEff.stealMult }
+        : undefined;
+      // 상대 팀 감독 — 같은 방식으로 뽑는다
+      const oppTeamId = ctx
+        ? (ctx.protagonistTeamId === ctx.homeTeamId ? ctx.awayTeamId : ctx.homeTeamId)
+        : "";
+      const oppManagerEntity = get(masterStore).entities.find(
+        (e) => e.role === "manager" && e.teamId === oppTeamId
+      );
+      const oppMgrEff = managerEffect(managerProfileOf(oppTeamId, get(masterStore).entities));
+      const oppManagerStats = oppManagerEntity?.details.manager
+        ? { ...oppManagerEntity.details.manager.stats,
+            buntMult: oppMgrEff.buntMult, stealMult: oppMgrEff.stealMult }
         : undefined;
       const response = await window.projectB.matchStart({
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
@@ -795,6 +853,17 @@
         ...(opponentPitcherStats ? { opponentPitcher: opponentPitcherStats } : {}),
         ...(myNpcStarterStats ? { npcStarterPitcher: myNpcStarterStats } : {}),
         ...(myManagerStats ? { myManager: myManagerStats } : {}),
+        // 🔴 **상대 감독도 넘긴다.** `opponent_manager` 는 Rust 에 자리가
+        //   있는데 TS 가 한 번도 안 넘겨서 늘 기본값 50이었다 —
+        //   상대 팀은 감독이 누구든 똑같이 번트를 대고 도루를 걸었다.
+        ...(oppManagerStats ? { opponentManager: oppManagerStats } : {}),
+        // 🔴 **벤치** — `homeBench`/`awayBench` 는 **절대 좌표**다.
+        //   라인업처럼 `myTeamLineup` 별칭이 없어서 여기서 갈라 넣는다.
+        //   뒤집어 넣으면 상대 벤치가 우리 타순으로 들어간다.
+        ...(myBench.length > 0
+          ? (isHome ? { homeBench: myBench } : { awayBench: myBench }) : {}),
+        ...(oppBench.length > 0
+          ? (isHome ? { awayBench: oppBench } : { homeBench: oppBench }) : {}),
       });
       engineAvailable = true;
       engineStarted = true;
@@ -927,17 +996,34 @@
    * ⚠ 예전엔 여기 분기가 둘이었다. 정수 경로는 `dot` 모드 전용이고 레트로는
    * 소수 보간 쪽으로 갔는데, **레트로야말로 픽셀아트다** — 방향이 뒤바뀌어 있었다.
    */
-  async function tweenBall(to: FieldPoint, duration: number) {
+  /**
+   * 공을 옮긴다.
+   *
+   * 🔴 **엔진이 `arc` 를 채워 보내는데 받아서 버리고 있었다.** 직선
+   *   보간만 해서 **팝업도 땅볼도 같은 궤적**이었다. 엔진은 타구
+   *   종류별로 이미 다른 값을 준다(팝업 0.85 · 뜬공 0.60 · 라인 0.15 ·
+   *   땅볼 0.05 · 번트 0.08).
+   *
+   * ⚠ 0이면 예전과 똑같은 직선이다 — 투구·송구는 arc 를 안 넘긴다.
+   */
+  async function tweenBall(to: FieldPoint, duration: number, arc = 0) {
     const from = { ...ballPos };
     const dx = to.x - from.x;
     const dy = to.y - from.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     const steps = Math.max(1, Math.round(dist / 10));
     const delay = Math.max(20, Math.round(duration / steps));
+    // 포물선 높이 — 거리에 비례한다. 짧은 타구가 높이 뜨면 어색하다
+    const lift = arc * dist * 0.55;
     for (let i = 1; i <= steps; i++) {
       const t = i / steps;
+      // 4t(1-t) 는 t=0.5 에서 1이고 양 끝에서 0이다 — 시작·도착이 안 뜬다
+      const rise = lift * 4 * t * (1 - t);
       ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
-      ballPos = { x: Math.round(from.x + dx * t), y: Math.round(from.y + dy * t) };
+      ballPos = {
+        x: Math.round(from.x + dx * t),
+        y: Math.round(from.y + dy * t - rise),
+      };
       await sleep(delay);
     }
     ballTrail = [];
@@ -1050,7 +1136,11 @@
     for (const cue of cues) {
       if (cue.type === "ball_pitch") {
         await tweenBall(clickedFieldPos, ms(cue.duration));
-      } else if (cue.type === "ball_batted" || cue.type === "ball_throw") {
+      } else if (cue.type === "ball_batted") {
+        // ⚠ **타구만 포물선이다.** 송구는 직선이라 arc 를 안 넘긴다.
+        const svgTo = enginePosToSvg(cue.to);
+        await tweenBall(svgTo, ms(cue.duration), cue.arc);
+      } else if (cue.type === "ball_throw") {
         const svgTo = enginePosToSvg(cue.to);
         await tweenBall(svgTo, ms(cue.duration));
       } else if (cue.type === "fielder_move") {
@@ -1211,6 +1301,7 @@
     let batterLines: import('../../shared/types/season').BatterGameLine[] | undefined;
     let playerLines: import('../../shared/types/season').PlayerGameLine[] | undefined;
     let protagonistEntered: boolean | undefined;
+    let engineEarnedRuns: number | undefined;
     if (window.projectB?.matchFinish) {
       try {
         const result = await window.projectB.matchFinish();
@@ -1227,6 +1318,7 @@
         if (Array.isArray(result.playerLines)) {
           playerLines = result.playerLines as import('../../shared/types/season').PlayerGameLine[];
         }
+        if (typeof result.earnedRuns === 'number') engineEarnedRuns = result.earnedRuns;
       } catch { /* ignore */ }
     }
 
@@ -1246,9 +1338,14 @@
       (l): l is Extract<import('../../shared/types/season').PlayerGameLine, { role: "pitcher" }> =>
         l.role === "pitcher" && l.playerId === $gameStore.protagonist.id,
     );
-    const runsAllowed = myLine && typeof myLine.er === "number"
-      ? Math.max(0, Math.round(myLine.er))
-      : Math.round(totalHitsAllowed * 0.35);
+    // ⚠ **주인공 줄은 `playerLines`에 없다** — 엔진이 등판 중엔 큐 누적을
+    //   건너뛰고 `erSinceEntry`에 따로 쌓는다. 그래서 엔진 자책점을 먼저 본다.
+    //   `myLine`은 구 경로·다른 투수용 갈래로 남긴다.
+    const runsAllowed = typeof engineEarnedRuns === "number"
+      ? Math.max(0, Math.round(engineEarnedRuns))
+      : myLine && typeof myLine.er === "number"
+        ? Math.max(0, Math.round(myLine.er))
+        : Math.round(totalHitsAllowed * 0.35);
     gameResult = {
       awayScore, homeScore,
       pitchCount: engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount,
@@ -1316,6 +1413,9 @@
         outsRecorded: totalOutsRecorded,
         errors: gameResult.errors,
         pitchCount: gameResult.pitchCount,
+        // 🔴 **안 넘기고 있었다** — 받는 쪽(`applyGameOutcome`)이 다시
+        //   `피안타 × 0.35`로 역산했다. 직접 플레이 경기만 그랬다
+        earnedRuns: gameResult.runsAllowed,
         summary: gameResult.summary,
         protagonistEntered: gameResult.protagonistEntered,
         batterLines: gameResult.batterLines,
@@ -2215,6 +2315,9 @@
   }
 
   .field-stage-wrap {
+    /* 구장이 칸 높이를 다 쓴다 — `start` 면 높이가 내용 기준이라
+       `.viewport` 의 `100%` 가 풀린다(2026-08-30 계측) */
+    align-items: stretch;
     display: grid;
     min-height: 0;
     height: 100%;

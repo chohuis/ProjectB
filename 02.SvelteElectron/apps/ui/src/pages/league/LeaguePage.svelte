@@ -98,6 +98,12 @@
     pa: number|null; ab: number|null; h_b: number|null; hr: number|null; rbi: number|null;
     sb: number|null; bb_b: number|null; k_b: number|null;
     avg_v: number|null; obp: number|null; slg: number|null; ops: number|null;
+    /** v12에서 넓혔다 — 그 전 세이브는 전부 null이다 */
+    hr_p?: number|null; hbp_p?: number|null; risp_ab_p?: number|null; risp_h_p?: number|null;
+    b2?: number|null; b3?: number|null; r_b?: number|null; hbp_b?: number|null;
+    sac?: number|null; sf?: number|null; risp_ab_b?: number|null; risp_h_b?: number|null;
+    /** 수비 기록 (v13) — 그 전 세이브는 전부 null이다 */
+    def_e?: number|null; def_a?: number|null; def_po?: number|null; fpct?: number|null;
   };
   let historyStandings:  HistStanding[]  = [];
   let historyLbStats:    HistLbStat[]    = [];
@@ -496,12 +502,32 @@
         sv: r.sv ?? 0, hd: r.hd ?? 0, ip: r.ip ?? 0, er: r.er ?? 0,
         h: r.h_p ?? 0, k: r.k_p ?? 0, bb: r.bb_p ?? 0,
         era: r.era ?? 0, whip: r.whip ?? 0,
+        // ⚠ **`?? 0`으로 채우지 않는다.** v12 이전 세이브엔 값이 없고,
+        //   0으로 채우면 "피홈런 0개인 투수"가 되어 기록이 거짓이 된다
+        ...(r.hr_p  != null ? { hr:  r.hr_p  } : {}),
+        ...(r.hbp_p != null ? { hbp: r.hbp_p } : {}),
+        ...(r.risp_ab_p != null ? { rispAb: r.risp_ab_p } : {}),
+        ...(r.risp_h_p  != null ? { rispH:  r.risp_h_p  } : {}),
       } satisfies PitcherSeasonStats;
     }
     return {
       type: "batter", g: r.g, pa: r.pa ?? 0, ab: r.ab ?? 0, h: r.h_b ?? 0,
       hr: r.hr ?? 0, rbi: r.rbi ?? 0, sb: r.sb ?? 0, bb: r.bb_b ?? 0, k: r.k_b ?? 0,
       avg: r.avg_v ?? 0, obp: r.obp ?? 0, slg: r.slg ?? 0, ops: r.ops ?? 0,
+      ...(r.b2  != null ? { b2:  r.b2  } : {}),
+      ...(r.b3  != null ? { b3:  r.b3  } : {}),
+      ...(r.r_b != null ? { r:   r.r_b } : {}),
+      ...(r.hbp_b != null ? { hbp: r.hbp_b } : {}),
+      ...(r.sac != null ? { sac: r.sac } : {}),
+      ...(r.sf  != null ? { sf:  r.sf  } : {}),
+      ...(r.risp_ab_b != null ? { rispAb: r.risp_ab_b } : {}),
+      ...(r.risp_h_b  != null ? { rispH:  r.risp_h_b  } : {}),
+      // ⚠ `?? 0`으로 채우지 않는다 — v13 이전 세이브엔 값이 없고,
+      //   0으로 채우면 "실책 0인 수비수"가 되어 기록이 거짓이 된다
+      ...(r.def_e  != null ? { e:  r.def_e  } : {}),
+      ...(r.def_a  != null ? { a:  r.def_a  } : {}),
+      ...(r.def_po != null ? { po: r.def_po } : {}),
+      ...(r.fpct   != null ? { fpct: r.fpct } : {}),
     } satisfies BatterSeasonStats;
   }
 
