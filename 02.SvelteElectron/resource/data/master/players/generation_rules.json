@@ -1155,8 +1155,8 @@
       }
     ],
     "ageMin": 20,
-    "ageMax": 24,
-    "_ageNote": "상무는 병역을 일찍 해결하려는 젊은 선수가 간다",
+    "ageMax": 29,
+    "_ageNote": "상무 **선발 후보 조건과 같은 범위**다 (`game.ts` 체육부대 후보 필터: age 20~29). 예전엔 생성만 20~24였고, 그래서 세계 시작 26명과 이후 선발로 들어오는 사람의 나이대가 달랐다 — 같은 팀에 기준이 둘이라 자기일관되지 않았다 (사용자 확정 2026-08-31). ⚠ 값의 정본은 이 파일 하나다. `military_roster.rs`는 age_min/age_max를 그대로 받아 쓴다 — 표를 두 번 적지 않는다.",
     "pitchingOvrMin": 52,
     "pitchingOvrMax": 80,
     "battingOvrMin": 52,

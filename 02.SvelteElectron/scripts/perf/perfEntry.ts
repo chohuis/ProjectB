@@ -1594,6 +1594,66 @@ export function rosterOverflowProbe(): Record<string, unknown> {
  * ⚠ 다른 독립 9팀을 나란히 찍는다. 상무만 그런지 리그가 그런지 가려야 한다.
  */
 /** 야수의 live OVR 이 왜 0인가 — 후보 OVR 이 0으로 잡히던 자리. */
+/**
+ * **야수 OVR 0 의 파급** (2026-08-31 · 1단계).
+ *
+ * `live?.pitching?.ovr ?? live?.batting?.ovr` 식이 45곳이고, 성장이 한 번만
+ * 돌면 야수 전원이 **OVR 0** 이었다. 그 값을 방출·FA·승강·드래프트 순위가
+ * 전부 쓴다 — **미해결로 남아 있던 넷이 이것 하나의 증상일 수 있다.**
+ *
+ * ⚠ 한 번 돌려 필요한 값을 다 뽑는다. 따로 돌리면 시간이 배로 들고,
+ *   **서로 다른 세계를 보게 된다**(이 계측은 실행마다 흔들린다).
+ */
+export function ovrImpactProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const alive = g.npcs.filter((n) => n.careerStatus !== "retired");
+
+  // 리그별 야수/투수 인원 — 야수가 안 잘렸으면 여기가 부푼다
+  const byLeague: Record<string, { 야수: number; 투수: number }> = {};
+  for (const n of alive) {
+    const lg = String(n.currentLeague ?? "?");
+    const b = (byLeague[lg] ??= { 야수: 0, 투수: 0 });
+    if (PIT.has(String(n.position ?? ""))) b.투수++; else b.야수++;
+  }
+
+  // 팀 인원 — 정원 대비 부풂 (독립 30 → 44 가 여기 보인다)
+  const teamSize: Record<string, number[]> = {};
+  for (const n of alive) {
+    const t = n.currentTeam ?? "";
+    if (!t) continue;
+    const lg = String(n.currentLeague ?? "?");
+    (teamSize[lg] ??= []);
+  }
+  const byTeam = new Map<string, { lg: string; c: number }>();
+  for (const n of alive) {
+    const t = n.currentTeam ?? "";
+    if (!t) continue;
+    const cur = byTeam.get(t) ?? { lg: String(n.currentLeague ?? "?"), c: 0 };
+    cur.c++; byTeam.set(t, cur);
+  }
+  for (const v of byTeam.values()) (teamSize[v.lg] ??= []).push(v.c);
+  const sizeOut: Record<string, unknown> = {};
+  for (const [lg, arr] of Object.entries(teamSize)) {
+    if (arr.length === 0) continue;
+    const z = arr.sort((x, y) => x - y);
+    sizeOut[lg] = { 팀: z.length, 최소: z[0], 중앙: z[z.length >> 1], 최대: z[z.length - 1] };
+  }
+
+  // 야수 live OVR 이 0 인가 — 이 수정이 실제로 걸렸는지 보는 대조 지표
+  const live = get(npcLiveStatsStore);
+  let 야수0 = 0, 야수전체 = 0;
+  for (const n of alive) {
+    if (PIT.has(String(n.position ?? ""))) continue;
+    야수전체++;
+    const l = live[n.npcId] as unknown as Record<string, { ovr?: number } | undefined> | undefined;
+    const po = l?.pitching?.ovr;
+    if (typeof po === "number" && po <= 1) 야수0++;
+  }
+
+  return { 리그별: byLeague, 팀인원: sizeOut, 야수전체, "야수중투구OVR0": 야수0 };
+}
+
 export function liveOvrProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const live = get(npcLiveStatsStore);
