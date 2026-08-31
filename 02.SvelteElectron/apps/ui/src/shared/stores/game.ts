@@ -2655,9 +2655,26 @@ function createGameStore() {
           payroll.set(n.currentTeam, (payroll.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
         }
         const cap: Record<string, number> = {};
+        // 🔴 **FA 상한을 예산에서 낸다** (사용자 확정 2026-08-31).
+        //
+        //   예전엔 "지금 총연봉 × 팀지수 × 1.25" 였다 — 즉 **많이 쓰는 팀일수록
+        //   상한이 높았다.** `refs.json` 의 팀별 예산(KBL 120~350억)은 어느
+        //   판정에도 안 들어갔다.
+        //
+        //   지금은 **남은 예산**이 상한이다. 생성 때 예산을 적게 쓴 팀이
+        //   그만큼 시장에서 큰손이 된다 — 실측에서 사용률이 19~66% 로
+        //   갈렸다(창원 19% · 대전 66%).
+        //
+        // ⚠ 예산이 없는 팀(2군·상무·아마추어)은 **예전 식으로 떨어진다** —
+        //   상한이 0이 되면 그 팀은 FA 입찰을 통째로 못 한다.
+        const budgetOfTeam = new Map(get(masterStore).teams.map((t) =>
+          [t.id, ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000]));
         for (const [tid, cur] of payroll) {
-          // 지수 1.0인 팀이 지금 총연봉의 1.25배까지 쓸 수 있다
-          cap[tid] = Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
+          const saved = s.clubBudgets?.[tid];
+          const budget = saved != null ? saved : (budgetOfTeam.get(tid) ?? 0);
+          cap[tid] = budget > 0
+            ? Math.max(0, Math.round(budget - cur))
+            : Math.round(cur * (idx.get(tid) ?? 1) * 1.25);
         }
         return { teamPayrollCap: cap, bidInterestMin: min, perfSpan: span, renewPerfSpan: rSpan,
                  bidFloorRatio: floor };

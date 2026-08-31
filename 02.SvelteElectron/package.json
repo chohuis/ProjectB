@@ -133,7 +133,9 @@
     "check:eventslots-health": "node scripts/check-eventslots-health.cjs",
     "check:events": "npm run gen:manifest && npm run check:eventconditions && npm run check:effectkeys && npm run check:effecthints && npm run check:playertype && npm run check:eventranges",
     "measure:eventslots": "node scripts/measure-eventslots.cjs",
-    "probe:traits": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-traits.cjs"
+    "probe:traits": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-traits.cjs",
+    "probe:ovrimpact": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-ovrimpact.cjs",
+    "probe:sangmu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-sangmu.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

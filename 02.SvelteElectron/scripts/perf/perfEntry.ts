@@ -1496,6 +1496,60 @@ export function faTradeProbe(): Record<string, unknown> {
  * 경로 규칙(`path.join(logsDir, filename)`)과 `isDev=false`가 겹친다.
  * 재료를 직접 세는 편이 확실하다.
  */
+/**
+ * **연봉이 트레이드 판정에서 얼마나 무게를 갖는가** — 실제 분포로 환산한다.
+ *
+ * `eval_trade_value` 의 부담항은
+ * `salary / max(flex × cap, 1) / 0.3 × 5` 이고, OVR 1점은 값 1.5 다.
+ * 그래서 **"이 연봉이 OVR 몇 점만큼 깎는가"** 로 바꿔 보면 축의 크기가 보인다.
+ *
+ * ⚠ 산수로만 보면 안 된다 — **실제로 그만큼 버는 선수가 있어야** 의미가 있다.
+ *   그래서 분포(중앙·90%·최대)를 같이 낸다.
+ */
+export function salaryWeightProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const budgetOf = (teamId: string) => {
+    const saved = g.clubBudgets?.[teamId];
+    if (saved != null && saved > 0) return Math.round(saved);
+    return Math.round((m.teams.find((t) => t.id === teamId)?.history?.budget ?? 0) / 10000);
+  };
+  const out: Record<string, unknown> = {};
+  for (const lg of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+    const teams = m.teams.filter((t) => t.leagueId === lg && t.id.endsWith("_1"));
+    if (teams.length === 0) continue;
+    const sal: number[] = [];
+    const payroll = new Map<string, number>();
+    for (const n of g.npcs) {
+      if (n.currentLeague !== lg || !n.currentTeam) continue;
+      if (n.careerStatus === "retired") continue;
+      const v = n.currentSalary ?? 0;
+      sal.push(v);
+      payroll.set(n.currentTeam, (payroll.get(n.currentTeam) ?? 0) + v);
+    }
+    if (sal.length === 0) continue;
+    sal.sort((a2, b2) => a2 - b2);
+    const q = (f: number) => sal[Math.min(sal.length - 1, Math.floor(sal.length * f))];
+    // 가장 가난한 팀 기준으로 환산한다 — 축이 제일 크게 보이는 쪽이다
+    const budgets = teams.map((t) => budgetOf(t.id)).filter((v) => v > 0).sort((a2, b2) => a2 - b2);
+    const cap = budgets[0] ?? 0;
+    const pays = [...payroll.values()].sort((a2, b2) => a2 - b2);
+    const pay = pays[Math.floor(pays.length / 2)] ?? 0;
+    const flex = cap > 0 ? Math.max((cap - pay) / cap, 0.05) : 0.05;
+    const ovrPts = (s2: number) => cap > 0
+      ? Math.round((s2 / Math.max(flex * cap, 1) / 0.3) * 5 / 1.5 * 100) / 100 : null;
+    out[lg.replace("LEAGUE_", "")] = {
+      인원: sal.length,
+      연봉_중앙: q(0.5), "연봉_90%": q(0.9), 연봉_최대: sal[sal.length - 1],
+      최저예산팀: cap, 총연봉_중앙: pay, flex: Math.round(flex * 100) / 100,
+      "OVR환산_중앙": ovrPts(q(0.5)),
+      "OVR환산_90%": ovrPts(q(0.9)),
+      "OVR환산_최대": ovrPts(sal[sal.length - 1]),
+    };
+  }
+  return out;
+}
+
 export function tradeSourceProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
@@ -1701,6 +1755,71 @@ export function payrollVsBudgetProbe(): Record<string, unknown> {
                 "100%초과팀": z.filter((v) => v > 100).length };
   }
   return out;
+}
+
+/** 포지션 전향(`position_change`)이 **어느 무대에서** 몇 건 나나.
+ *  사용자 확정(2026-08-31): 대학은 전과·전학이 없다 — 가면 쪽 간다.
+ *  그런데 `fix_position_gaps` 가 전 리그에서 돌며 자리를 바꾼다. */
+/** 대학이 **실제로** 몇 명을 주고받나 — 산수가 아니라 흐름을 본다.
+ *
+ *  🔴 규칙 산수로는 맞았다(유입 400 = 졸업 400). 그런데 실측에서 대학
+ *    최소 야수가 **7명**(필요 9)이고 타순 미달이 매번 4~5팀이다.
+ *    평균이 맞아도 **어딘가에서 새고 있다.**
+ */
+export function univFlowProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const PIT = new Set(["SP", "RP", "CP"]);
+  const byTeam = new Map<string, { bat: number; pit: number; C: number; grades: Record<string, number> }>();
+  let total = 0;
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    if (n.currentLeague !== "LEAGUE_UNIVERSITY" || !n.currentTeam) continue;
+    total++;
+    const b = byTeam.get(n.currentTeam) ?? { bat: 0, pit: 0, C: 0, grades: {} };
+    if (PIT.has(String(n.position ?? ""))) b.pit++; else b.bat++;
+    if (n.position === "C") b.C++;
+    const gr = String((n as unknown as { grade?: number }).grade ?? "없음");
+    b.grades[gr] = (b.grades[gr] ?? 0) + 1;
+    byTeam.set(n.currentTeam, b);
+  }
+  const arr = [...byTeam.values()];
+  const bats = arr.map((x) => x.bat).sort((a, b) => a - b);
+  const pits = arr.map((x) => x.pit).sort((a, b) => a - b);
+  const sizes = arr.map((x) => x.bat + x.pit).sort((a, b) => a - b);
+  // 학년 분포 — 4학년제가 고르게 서는지. 한 학년이 비면 그해 유입이 없었다
+  const gAll: Record<string, number> = {};
+  for (const x of arr) for (const [k, v] of Object.entries(x.grades)) gAll[k] = (gAll[k] ?? 0) + v;
+  const med = (z: number[]) => z[z.length >> 1] ?? 0;
+  return {
+    총원: total, 팀수: arr.length,
+    인원: { 최소: sizes[0], 중앙: med(sizes), 최대: sizes[sizes.length - 1] },
+    야수: { 최소: bats[0], 중앙: med(bats), 최대: bats[bats.length - 1] },
+    투수: { 최소: pits[0], 중앙: med(pits), 최대: pits[pits.length - 1] },
+    "야수9미만팀": bats.filter((v) => v < 9).length,
+    "포수0팀": arr.filter((x) => x.C === 0).length,
+    학년분포: gAll,
+  };
+}
+
+export function positionChangeProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const byLeague: Record<string, number> = {};
+  const byYear: Record<string, number> = {};
+  let total = 0;
+  const sample: string[] = [];
+  for (const n of g.npcs) {
+    const evs = ((n as unknown as Record<string, unknown>).careerEvents ?? []) as
+      Array<Record<string, unknown>>;
+    for (const e of evs) {
+      if (e.eventType !== "position_change") continue;
+      total++;
+      const lg = String(e.toLeagueId ?? e.fromLeagueId ?? n.currentLeague ?? "?").replace("LEAGUE_", "");
+      byLeague[lg] = (byLeague[lg] ?? 0) + 1;
+      byYear[String(e.year)] = (byYear[String(e.year)] ?? 0) + 1;
+      if (sample.length < 4) sample.push(`${n.npcId}|${lg}|${e.year}|${e.detail ?? ""}`);
+    }
+  }
+  return { 총건수: total, 리그별: byLeague, 연도별: byYear, 표본: sample };
 }
 
 export function ovrImpactProbe(): Record<string, unknown> {

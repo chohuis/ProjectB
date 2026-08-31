@@ -3,7 +3,7 @@
   "description": "player generation baseline rules | 구 ageRangeByStage/overallRangeByStage/potentialRangeByStage는 2026-07-30에 제거했다 — 아무도 안 읽는데 옛 나이(고교 16~18)가 박혀 있어 참고하면 틀린다. 정본은 rosterRules다.",
   "rosterRules": {
     "LEAGUE_HIGHSCHOOL": {
-      "rosterSize": 30,
+      "rosterSize": 31,
       "pitcherRatio": 0.45,
       "pitchingOvrMin": 45,
       "pitchingOvrMax": 70,
@@ -14,7 +14,8 @@
       "gradeMax": 3,
       "ageBase": 16,
       "rosterMin": 18,
-      "rosterMax": 33
+      "rosterMax": 33,
+      "_rosterSizeNote": "30 → 31 (사용자 확정 2026-08-31). **세 번째 포수를 넣으려고 한 자리 늘렸다.** 야수 16 → 17(포수 3 + 7포지션 × 2) · 투수는 14 그대로다(pitcherRatio 0.45 × 31 = 13.95 → 14). ⚠ 왜 — 대학 포수 공급이 팀당 0.53명/년이라 4년 누적이 필요량(2.1명)과 **정확히 같았다**. 여유가 0이라 분산만으로 절반 가까운 팀이 0명이 됐다(실측 3회: 대학 포수 0팀이 3·4·6팀). ⚠ 대학은 전과·전학이 없어(사용자 확정) 한 번 없으면 4년 내내 없다 — 공급 쪽에서 풀어야 한다."
     },
     "LEAGUE_UNIVERSITY": {
       "rosterSize": 32,

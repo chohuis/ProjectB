@@ -118,6 +118,25 @@ async function boot(prefix) {
   const bridge = globalThis.__bridge_projectB;
   if (!bridge?.engine) throw new Error("[headless] preload.cjs가 projectB를 노출하지 않았다");
 
+  // 🔴 **`logWrite` 는 preload 에서 dev 전용이다** — `...(isDev && { logWrite })`.
+  //   `isDev = !!process.env.VITE_DEV_SERVER_URL` 이고 헤드리스엔 그 변수가
+  //   없으니, 브리지에 **함수 자체가 안 실린다.**
+  //
+  //   그러면 `autoLog` 의 `if (!api?.logWrite) return;` 에 걸려 **조용히 아무
+  //   일도 안 한다.** 주간 루프 곳곳의 진단 로그(`[트레이드]`·`[W43오프시즌]`·
+  //   `[정지]`)가 통째로 사라지고, 계측할 때마다 스크립트를 새로 짜게 된다.
+  //   `perfEntry.setLogFile` 이 있는데도 **세 번 헛짚었다** — 앞선 두 번은
+  //   "경로 규칙"과 "isDev" 를 의심하고 멈췄고, 진짜 원인은 이 한 줄이었다.
+  //
+  // ⚠ `VITE_DEV_SERVER_URL` 을 켜서 푸는 방법은 안 쓴다 — 그러면 `main.cjs`
+  //   쪽 isDev 도 같이 켜져 CSP·loadURL·로그 경로가 한꺼번에 바뀐다.
+  //   **필요한 한 가지만 심는다.**
+  // ⚠ 로그는 `userData/logs/<filename>` 에 쌓인다(main.cjs 의 isDev 는 false).
+  //   `boot()` 가 돌려주는 `tmp` 아래다 — `cleanup(tmp)` 전에 읽어야 한다.
+  if (!bridge.logWrite) {
+    bridge.logWrite = (p) => fakeElectron.ipcRenderer.invoke("log:write", p);
+  }
+
   globalThis.window = globalThis;
   globalThis.window.projectB = bridge;
   globalThis.localStorage = {
