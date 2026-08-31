@@ -1496,6 +1496,60 @@ export function faTradeProbe(): Record<string, unknown> {
  * 경로 규칙(`path.join(logsDir, filename)`)과 `isDev=false`가 겹친다.
  * 재료를 직접 세는 편이 확실하다.
  */
+/**
+ * **연봉이 트레이드 판정에서 얼마나 무게를 갖는가** — 실제 분포로 환산한다.
+ *
+ * `eval_trade_value` 의 부담항은
+ * `salary / max(flex × cap, 1) / 0.3 × 5` 이고, OVR 1점은 값 1.5 다.
+ * 그래서 **"이 연봉이 OVR 몇 점만큼 깎는가"** 로 바꿔 보면 축의 크기가 보인다.
+ *
+ * ⚠ 산수로만 보면 안 된다 — **실제로 그만큼 버는 선수가 있어야** 의미가 있다.
+ *   그래서 분포(중앙·90%·최대)를 같이 낸다.
+ */
+export function salaryWeightProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const budgetOf = (teamId: string) => {
+    const saved = g.clubBudgets?.[teamId];
+    if (saved != null && saved > 0) return Math.round(saved);
+    return Math.round((m.teams.find((t) => t.id === teamId)?.history?.budget ?? 0) / 10000);
+  };
+  const out: Record<string, unknown> = {};
+  for (const lg of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+    const teams = m.teams.filter((t) => t.leagueId === lg && t.id.endsWith("_1"));
+    if (teams.length === 0) continue;
+    const sal: number[] = [];
+    const payroll = new Map<string, number>();
+    for (const n of g.npcs) {
+      if (n.currentLeague !== lg || !n.currentTeam) continue;
+      if (n.careerStatus === "retired") continue;
+      const v = n.currentSalary ?? 0;
+      sal.push(v);
+      payroll.set(n.currentTeam, (payroll.get(n.currentTeam) ?? 0) + v);
+    }
+    if (sal.length === 0) continue;
+    sal.sort((a2, b2) => a2 - b2);
+    const q = (f: number) => sal[Math.min(sal.length - 1, Math.floor(sal.length * f))];
+    // 가장 가난한 팀 기준으로 환산한다 — 축이 제일 크게 보이는 쪽이다
+    const budgets = teams.map((t) => budgetOf(t.id)).filter((v) => v > 0).sort((a2, b2) => a2 - b2);
+    const cap = budgets[0] ?? 0;
+    const pays = [...payroll.values()].sort((a2, b2) => a2 - b2);
+    const pay = pays[Math.floor(pays.length / 2)] ?? 0;
+    const flex = cap > 0 ? Math.max((cap - pay) / cap, 0.05) : 0.05;
+    const ovrPts = (s2: number) => cap > 0
+      ? Math.round((s2 / Math.max(flex * cap, 1) / 0.3) * 5 / 1.5 * 100) / 100 : null;
+    out[lg.replace("LEAGUE_", "")] = {
+      인원: sal.length,
+      연봉_중앙: q(0.5), "연봉_90%": q(0.9), 연봉_최대: sal[sal.length - 1],
+      최저예산팀: cap, 총연봉_중앙: pay, flex: Math.round(flex * 100) / 100,
+      "OVR환산_중앙": ovrPts(q(0.5)),
+      "OVR환산_90%": ovrPts(q(0.9)),
+      "OVR환산_최대": ovrPts(sal[sal.length - 1]),
+    };
+  }
+  return out;
+}
+
 export function tradeSourceProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
