@@ -1016,6 +1016,14 @@ pub struct OffseasonParams {
     /// ⚠ 비면 예전과 같게 돌다 — `waiverSangmu.test.ts` 가 배선을 본다.
     #[serde(default)]
     pub waiver_exclude_teams: Vec<String>,
+    /// 팀별 연간 예산(만원) — 총연봉이 이걸 넘으면 **방출한다.**
+    ///
+    /// 🔴 예전엔 예산이 어느 판정에도 안 들어갔다. `team_payroll_cap` 은
+    ///   있지만 **예산이 아니라 "지금 총연봉 × 팀지수 × 1.25"** 이고
+    ///   FA 입찰에만 쓴다.
+    /// ⚠ 비면 예전과 같게 돌다. 예산이 없는 팀(상무·아마추어)은 건너넌다.
+    #[serde(default)]
+    pub team_budgets: std::collections::HashMap<String, i64>,
     /// 프로 2군 팀. **방출자·미계약 FA가 갈 첫 자리다** — 없으면 2군은
     /// 드래프트 하위 라운드로만 채워져 투수가 마른다(실측 야수 29/투수 6)
     #[serde(default)]

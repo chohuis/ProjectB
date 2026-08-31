@@ -972,6 +972,8 @@ fn normalize_offseason_npcs(
     // 외국인 판정. 이들은 **2군으로 못 내린다**(1군 전용) —
     // 정원 초과는 내국인 안에서 푼다
     is_foreign: &dyn Fn(&NpcSaveState) -> bool,
+    // 리그가 바뀌면 연봉도 오르내린다 — 없으면 예전대로 그대로 들고 간다
+    salary_rules_ref: Option<&SalaryRules>,
 ) -> Vec<NpcSaveState> {
     let mut next = npcs;
 
@@ -1116,6 +1118,11 @@ fn normalize_offseason_npcs(
                     match farm_league(&league_id).zip(farm_team(&npc.current_team)) {
                         Some((farm_lid, farm_tid)) => {
                             events.push(ev("demote_roster", npc, Some(npc.current_team.clone()), None));
+                            // 🔴 **연봉도 같이 깍인다**(2026-08-31 사용자 확정).
+                            //   예전엔 2군에 내려가도 1군 연봉을 그대로 받았다 —
+                            //   `leagueMult`(1군 1.0 · 2군 0.3)가 생성 때만 걸렸다.
+                            let npc_league_before = npc.current_league.clone();
+                            rescale_salary_for_league(npc, &npc_league_before, &farm_lid, salary_rules_ref);
                             npc.current_league = farm_lid.clone();
                             npc.current_team   = farm_tid.clone();
                             (Some(farm_lid), Some(farm_tid))
@@ -1148,7 +1155,7 @@ fn normalize_offseason_npcs(
         }
     }
 
-    fill_first_teams(&mut next, limits, events, is_foreign);
+    fill_first_teams(salary_rules_ref, &mut next, limits, events, is_foreign);
     // 충원 **뒤에** 돈다 — 새로 올라온 선수까지 보고 남은 공백만 전환한다
     fix_position_gaps(&mut next, season_year);
     fix_jersey_numbers(&mut next, &HashMap::new());
@@ -1275,6 +1282,102 @@ fn release_second_stage(
         npcs[idx].current_team = String::new();
         npcs[idx].current_salary = 0;
         npcs[idx].contract_years = 0;
+    }
+    released
+}
+
+/// 예산 초과 방출 — **총연봉이 예산을 넘으면 가성비 나쁜 순으로 자른다.**
+///
+/// 🔴 어느 리그에도 없던 경로다(2026-08-31 · 사용자 확정). `teamPayrollCap`
+///   은 있지만 **예산이 아니라 "지금 총연봉 × 팀지수 × 1.25"** 이고 FA
+///   입찰에만 쓴다. `refs.json` 의 팀별 예산은 아무 데도 안 들어갔다.
+///
+/// 실측 (총연봉/예산 %): 독립 중앙 63 · **최대 486** · 100% 초과 3팀 /
+/// KBL 중앙 35 최대 60 · ABL 15/26 · JBL 16/37 — **전부 초과 0팀**이다.
+/// 그래서 상한 100%는 프로를 안 건드린다.
+///
+/// ⚠ 점수 방출과 **같은 하한**(`rosterMin`)을 지킨다 — 예산을 맞추자고
+///   로스터를 말리면 그게 더 나쁘다. 못 맞추면 그대로 둔다.
+/// ⚠ 예산이 없는 팀(상무·아마추어)은 건너뛴다.
+fn release_over_budget(
+    npcs: &mut [NpcSaveState],
+    budgets: &HashMap<String, i64>,
+    limits: &HashMap<String, RosterLimit>,
+    profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
+    perf: &HashMap<String, f64>,
+    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
+    events: &mut Vec<OffseasonEvent>,
+) -> i32 {
+    use crate::team_engine::{eval_release_priority, EvalReleaseParams};
+    if budgets.is_empty() { return 0; }
+
+    // 팀별 총연봉 — **한 번만 훑는다**
+    let mut payroll: HashMap<String, i64> = HashMap::new();
+    let mut head: HashMap<String, i32> = HashMap::new();
+    for n in npcs.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        *payroll.entry(n.current_team.clone()).or_insert(0) += n.current_salary;
+        *head.entry(n.current_team.clone()).or_insert(0) += 1;
+    }
+
+    let mut over: Vec<String> = payroll.iter()
+        .filter(|(t, p)| budgets.get(*t).map_or(false, |b| *b > 0 && **p > *b))
+        .map(|(t, _)| t.clone()).collect();
+    over.sort();                       // 결정성 — HashMap 순회에 기대지 않는다
+    if over.is_empty() { return 0; }
+
+    let mut released = 0;
+    for team in over {
+        let budget = *budgets.get(&team).unwrap_or(&0);
+        let league = npcs.iter().find(|n| n.current_team == team)
+            .map(|n| n.current_league.clone()).unwrap_or_default();
+        let min = roster_rule(&league, limits).map(|(m, _)| m).unwrap_or(0);
+
+        // 가성비 나쁜 순 — 점수 방출과 **같은 잣대**를 쓴다(표를 두 번 안 만든다)
+        let mut cand: Vec<(usize, f64)> = vec![];
+        for (i, n) in npcs.iter().enumerate() {
+            if n.current_team != team || n.career_status != "active" { continue; }
+            if is_foreign(n) { continue; }   // 외국인은 따로 푼다
+            let ovr = npc_core_ovr(n);
+            let res = eval_release_priority(EvalReleaseParams {
+                team_profile: profiles.get(&team).cloned().unwrap_or_default(),
+                player: RosterPlayerRef {
+                    id: n.npc_id.clone(), position: n.position.clone(), age: n.age, ovr,
+                    salary: n.current_salary, remaining_years: n.contract_years,
+                    pro_service_years: n.pro_service_years.unwrap_or(0),
+                    registrable: true,
+                    is_prospect: n.current_team.ends_with("_2"),
+                    personality: n.personality.clone(), fame: n.fame, perf: None,
+                    is_foreign: false,
+                },
+                recent_performance_rating: perf.get(&n.npc_id).copied().unwrap_or(ovr),
+                roster_depth_at_position: 2,
+                current_salary: n.current_salary,
+                market_value: n.current_salary.max(1),
+                owner_relation: 0.0,
+                owner_relation_weight: 0.0,
+            });
+            cand.push((i, res.release_score));
+        }
+        cand.sort_by(|a, b| b.1.partial_cmp(&a.1)
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then(npcs[a.0].npc_id.cmp(&npcs[b.0].npc_id)));
+
+        let mut cur = *payroll.get(&team).unwrap_or(&0);
+        let mut have = *head.get(&team).unwrap_or(&0);
+        for (idx, score) in cand {
+            if cur <= budget { break; }
+            if have <= min { break; }        // 하한 아래로는 안 내린다
+            cur -= npcs[idx].current_salary;
+            have -= 1;
+            released += 1;
+            events.push(ev("release_budget", &npcs[idx], Some(team.clone()),
+                Some(format!("예산 {budget} / 총연봉 {} · 점수 {score:.0}",
+                    payroll.get(&team).copied().unwrap_or(0)))));
+            npcs[idx].current_team = String::new();
+            npcs[idx].current_salary = 0;
+            npcs[idx].contract_years = 0;
+        }
     }
     released
 }
@@ -1411,6 +1514,33 @@ fn waiver_claim(
 ///
 /// ⚠ **성적이 없으면 건너뛴다.** 표본 미달자를 중립 50으로 갱신하면 안 뛴
 /// 선수의 연봉이 조용히 움직인다.
+/// **리그가 바뀌면 연봉도 오르내린다** (사용자 확정 2026-08-31).
+///
+/// `salaryRules.leagueMult` (KBL 1.0 · 2군 0.3 · 독립 0.14 · ABL 3.5 · JBL 2.0)
+/// 가 **생성 때만** 걸리고 있었다. 소속을 바꾸는 자리가 연봉을 안 건드려
+/// 2군에 내려가도 1군 연봉을 그대로 받았다.
+///
+/// ⚠ **다시 계산하지 않고 배수 비율로 옮긴다.** 새로 계산하면 그 선수가
+///   연차·성적으로 쌓은 상대적 위치가 지워진다 — "올라가고 깎이고"는
+///   비율로 움직이는 것이지 새 사람이 되는 게 아니다.
+/// ⚠ 배수가 없는 리그(아마추어)는 안 건드린다 — 연봉 개념이 없다.
+/// ⚠ 규칙이 없으면 아무 일도 안 한다(예전 동작).
+fn rescale_salary_for_league(
+    npc: &mut NpcSaveState,
+    from_league: &str,
+    to_league: &str,
+    rules: Option<&SalaryRules>,
+) {
+    if from_league == to_league { return; }
+    let Some(sr) = rules else { return };
+    let (Some(&from_m), Some(&to_m)) =
+        (sr.league_mult.get(from_league), sr.league_mult.get(to_league)) else { return };
+    if from_m <= 0.0 || to_m <= 0.0 { return; }
+    let scaled = (npc.current_salary as f64 * (to_m / from_m)).round() as i64;
+    let floor = sr.min_salary.get(to_league).copied().unwrap_or(0.0).round() as i64;
+    npc.current_salary = scaled.max(floor);
+}
+
 fn renew_independent_salaries(
     npcs: &mut [NpcSaveState],
     perf: &HashMap<String, f64>,
@@ -1498,6 +1628,8 @@ fn expire_development_contracts(
 /// 실측에서 1군이 팀당 24명(최소 16)까지 말랐다. 성적 기반 상시 콜업은
 /// Phase 7-2가 담당하고, 여기서는 리그가 성립하는 최소선만 지킨다.
 fn fill_first_teams(
+    // 승격하면 연봉이 오른다 — 강등과 짝이다
+    promote_salary_rules: Option<&SalaryRules>,
     npcs: &mut [NpcSaveState],
     limits: &HashMap<String, RosterLimit>,
     events: &mut Vec<OffseasonEvent>,
@@ -1552,6 +1684,9 @@ fn fill_first_teams(
         };
 
         let promote = |npcs: &mut [NpcSaveState], idx: usize, events: &mut Vec<OffseasonEvent>| {
+            // 🔴 **올라가면 오른다** — 강등과 짝이다.
+            let before = npcs[idx].current_league.clone();
+            rescale_salary_for_league(&mut npcs[idx], &before, &league_id, promote_salary_rules);
             npcs[idx].current_league = league_id.clone();
             npcs[idx].current_team   = team_id.clone();
             events.push(ev("promote", &npcs[idx], Some(team_id.clone()), None));
@@ -1680,6 +1815,9 @@ fn fa_fallback(
     independent_max: Option<i32>,
     // 독립 재도전 나이 상한. 이 나이를 넘으면 바로 은퇴다
     independent_age_max: Option<i32>,
+    // 독립 재도전은 **새 계약**이라 그 리그 기준으로 다시 잡는다.
+    // ⚠ None 이면 옛 연봉을 그대로 들고 간다(예전 동작) — 검사 호출부가 그렇다.
+    salary_rules: Option<&SalaryRules>,
     events: &mut Vec<OffseasonEvent>,
 ) {
     let home = npc.original_team_id.clone().filter(|t| !t.is_empty());
@@ -1740,6 +1878,21 @@ fn fa_fallback(
             });
             npc.current_league = "LEAGUE_INDEPENDENT".to_string();
             npc.current_team = team.clone();
+            // 🔴 **새 계약이다** (2026-08-31). 예전엔 옛 리그 몸값을 그대로
+            //   들고 왔다 — 독립 배수 0.14 · 최저 1,200만원이 **생성된
+            //   선수에게만** 걸렸고, 실측에서 KBL 출신 23명이 독립리그에서
+            //   **평균 2억 · 최고 9.97억**을 받고 있었다.
+            // ⚠ 2군 강등은 이렇게 안 한다 — 같은 구단 안이라 계약이 이어진다
+            //   (KBO 도 그렇다). 여기는 **팀이 바뀌는 새 계약**이라 다시 잡는다.
+            if let Some(sr) = salary_rules {
+                // ⚠ 난수는 여기서 만든다 — 씨앗은 npc_id + 연도라 재현된다.
+                let mut r2 = LcgRand::new(seed_of(season_year as u32, &[npc.npc_id.as_str()]));
+                let (s2, y2) = estimate_salary_and_contract(
+                    npc_core_ovr(npc), "LEAGUE_INDEPENDENT",
+                    npc.pro_service_years.unwrap_or(0), npc.age, 1.0, sr, &mut r2);
+                npc.current_salary = s2;
+                npc.contract_years = y2.max(1);
+            }
             npc.career_status = "active".into();
             npc.original_league_id = None;
             *team_active_count.entry(team.clone()).or_default() += 1;
@@ -2290,7 +2443,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
             fa_fallback(npc, season_year, &origin_league.to_string(),
                 &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
-                &params.independent_team_ids, ind_max, ind_age_max, &mut events);
+                &params.independent_team_ids, ind_max, ind_age_max,
+                params.salary_rules.as_ref(), &mut events);
             continue;
         }
         // ── 구단 입찰 ─────────────────────────────────────────────
@@ -2393,7 +2547,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                     summary.fa_by_league.entry(origin_league.to_string()).or_default().1 += 1;
                     fa_fallback(npc, season_year, &origin_league.to_string(),
                         &mut team_active_count, &mut team_payroll, &mut team_at_pos, max,
-                        &params.independent_team_ids, ind_max, ind_age_max, &mut events);
+                        &params.independent_team_ids, ind_max, ind_age_max,
+                params.salary_rules.as_ref(), &mut events);
                     continue;
                 }
             }
@@ -2461,6 +2616,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut after_normalize = normalize_offseason_npcs(
         processed, season_year, &mut summary, &mut events, &mut rng,
         &params.roster_limits, can_place, &is_foreign,
+        params.salary_rules.as_ref(),
     );
 
     // 12. 소속을 잃은 사람들의 진로 — 방출자와 FA 미계약자.
@@ -2485,13 +2641,22 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     //
     // ⚠ **방출 직후여야 한다.** 육성 만료(11-c)·진로 배정(12)이 돌면
     //   그 사람들은 이미 독립리그나 은퇴로 갈려 나간 뒤다.
+    // 🔴 **예산 초과 방출** — 웨이버 **앞**에 둔다. 여기서 나온 사람도
+    //   다른 구단이 데려갈 수 있어야 한다 — 방출 절차의 일부다.
+    let _budget_released = release_over_budget(
+        &mut after_normalize, &params.team_budgets, &params.roster_limits,
+        &params.team_profiles, &params.perf_scores, &is_foreign, &mut events);
+
     if let Some(wr) = params.waiver_rules.as_ref() {
         if wr.enabled {
             // ⚠ 요약은 안 남긴다 — `events` 는 `OffseasonEvent` 라 선수가
             //   있어야 한다. 클레임한 사람마다 `career_events` 에 이미
             //   `waiver_claim` 이 남는다.
             let released_ids: std::collections::HashSet<String> = events.iter()
-                .filter(|e| e.kind == "release_score" || e.kind == "release_roster")
+                .filter(|e| e.kind == "release_score" || e.kind == "release_roster"
+                    // ⚠ 예산 방출도 **방출 절차의 일부**다 — 빼면 그 사람만
+                    //   청구 대상에서 빠져 곱장 진로 배정으로 간다
+                    || e.kind == "release_budget")
                 .map(|e| e.npc_id.clone())
                 .collect();
             // ⚠ 안 넘기면 상무가 다시 1순위가 된다 — `serde(default)` 라
@@ -2520,7 +2685,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     //
     // 이러면 사슬이 맞는다: **방출 → 2군에서 올림 → 2군은 진로 배정이 채움**.
     // 진로 배정(12단계)이 뒤에 오므로 2군이 얇아진 것도 같은 패스에서 메워진다.
-    fill_first_teams(&mut after_normalize, &params.roster_limits, &mut events, &is_foreign);
+    fill_first_teams(params.salary_rules.as_ref(), &mut after_normalize,
+        &params.roster_limits, &mut events, &is_foreign);
 
 
     let mut leftover_pending = Vec::new();
@@ -2539,7 +2705,17 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let mut placer = crate::draft::Placer::new(
             &after_normalize, &params.university_team_ids, &params.independent_team_ids,
             &params.farm_team_ids, rules,
-        ).with_salary(params.salary_rules.clone(), season_year as u32);
+        ).with_salary(params.salary_rules.clone(), season_year as u32)
+        // 🔴 **예산 게이트** — 들어올 때 그 팀 예산에 자리가 있는지 본다.
+        //   사후에 방출로 풀면 같은 사람이 매년 들어왔다 잘리는 **회전문**이 된다.
+        .with_budgets(params.team_budgets.clone(), {
+            let mut m: std::collections::HashMap<String, i64> = std::collections::HashMap::new();
+            for n in after_normalize.iter() {
+                if n.career_status != "active" || n.current_team.is_empty() { continue; }
+                *m.entry(n.current_team.clone()).or_insert(0) += n.current_salary;
+            }
+            m
+        });
         let mut homeless: Vec<usize> = after_normalize.iter().enumerate()
             .filter(|(i, n)| n.career_status == "active"
                 && (n.current_team.is_empty()
@@ -4913,7 +5089,7 @@ mod fa_fallback_tests {
         let mut b = books(34);   // 원소속 정원 꽉 참
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
-            &ind_ids(), Some(30), Some(30), &mut b.events);
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
 
         assert_eq!(n.career_status, "active", "독립으로 갔는데 비활성이다");
         assert_eq!(n.current_league, "LEAGUE_INDEPENDENT");
@@ -4930,7 +5106,7 @@ mod fa_fallback_tests {
         let mut b = books(34);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
-            &ind_ids(), Some(30), Some(30), &mut b.events);
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
 
         assert_eq!(n.career_status, "retired");
         assert_eq!(n.current_league, "LEAGUE_RETIRED");
@@ -4943,7 +5119,7 @@ mod fa_fallback_tests {
         let mut b = books(30);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
-            &ind_ids(), Some(30), Some(30), &mut b.events);
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
 
         assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
         assert_eq!(n.current_league, "LEAGUE_KBL");
@@ -4957,7 +5133,7 @@ mod fa_fallback_tests {
         for t in IND { b.active.insert(t.to_string(), 30); }
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
-            &ind_ids(), Some(30), Some(30), &mut b.events);
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
 
         assert_eq!(n.career_status, "retired");
     }
@@ -4971,7 +5147,7 @@ mod fa_fallback_tests {
         b.active.insert("TEAM_IND_B".into(), 10);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
-            &ind_ids(), Some(30), Some(30), &mut b.events);
+            &ind_ids(), Some(30), Some(30), None, &mut b.events);
 
         assert_eq!(n.current_team, "TEAM_IND_B");
     }
@@ -4983,7 +5159,7 @@ mod fa_fallback_tests {
         let mut b = books(34);
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
-            &ind_ids(), Some(30), None, &mut b.events);
+            &ind_ids(), Some(30), None, None, &mut b.events);
 
         assert_eq!(n.career_status, "retired");
     }
@@ -5026,7 +5202,7 @@ mod fa_fallback_tests {
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
             // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
-            &[], None, None, &mut b.events);
+            &[], None, None, None, &mut b.events);
 
         assert_eq!(n.career_status, "active", "재계약했는데 비활성이다");
         assert_eq!(n.current_team, "TEAM_KBL_HOME_1");
@@ -5044,7 +5220,7 @@ mod fa_fallback_tests {
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
             // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
-            &[], None, None, &mut b.events);
+            &[], None, None, None, &mut b.events);
 
         assert_eq!(b.active["TEAM_KBL_HOME_1"], 31, "인원이 안 늘었다");
         assert_eq!(b.payroll["TEAM_KBL_HOME_1"], 12000, "총연봉이 안 늘었다");
@@ -5059,7 +5235,7 @@ mod fa_fallback_tests {
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
             // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
-            &[], None, None, &mut b.events);
+            &[], None, None, None, &mut b.events);
 
         assert_eq!(n.career_status, "retired");
         assert_eq!(n.current_league, "LEAGUE_RETIRED");
@@ -5075,7 +5251,7 @@ mod fa_fallback_tests {
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
             // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
-            &[], None, None, &mut b.events);
+            &[], None, None, None, &mut b.events);
 
         assert!(n.career_events.iter().any(|e| e.event_type == "retirement"),
             "은퇴가 경력에 안 남았다");
@@ -5092,7 +5268,7 @@ mod fa_fallback_tests {
         fa_fallback(&mut n, 2030, "LEAGUE_KBL",
             &mut b.active, &mut b.payroll, &mut b.at_pos, Some(34),
             // ⚠ 독립 갈래를 끈 채로 본다 — 이 검사들은 **예전 동작**이 정본이다
-            &[], None, None, &mut b.events);
+            &[], None, None, None, &mut b.events);
         assert_eq!(n.career_status, "retired");
     }
 }

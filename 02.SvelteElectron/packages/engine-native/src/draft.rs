@@ -343,6 +343,17 @@ pub struct Placer<'a> {
     salary_rules: Option<crate::npc_sim::SalaryRules>,
     /// 연봉 산정의 흔들림용. 시드는 연도에서 온다(thread_rng를 안 쓴다)
     salary_rng: crate::npc_sim::LcgRand,
+    /// 팀별 연간 예산(만원)과 지금 총연봉 — **독립 입단 게이트**.
+    ///
+    /// 🔴 연봉 상한은 안 둔다(사용자 확정 2026-08-31). 대신 **들어올 때**
+    ///   예산에 자리가 있는지 본다 — 사후에 방출로 풀면 같은 사람이 매년
+    ///   들어왔다 잘리는 **회전문**이 된다.
+    /// ⚠ 비면 게이트가 통째로 꺼진다(예전 동작).
+    team_budget: std::collections::HashMap<String, i64>,
+    team_payroll: std::collections::HashMap<String, i64>,
+    /// 지금 배정하려는 사람의 예상 연봉 — 팀을 고르기 **전에** 구해 둔다.
+    /// 연봉은 팀지수 1.0으로 계산하므로 팀과 무관하다.
+    pending_salary: Option<i64>,
 }
 
 impl<'a> Placer<'a> {
@@ -378,6 +389,9 @@ impl<'a> Placer<'a> {
         }
         Self { roster, specialists, dev_count,
                salary_rules: None,
+               team_budget: std::collections::HashMap::new(),
+               team_payroll: std::collections::HashMap::new(),
+               pending_salary: None,
                salary_rng: crate::npc_sim::LcgRand::new(0x5eed_1234),
                univ_intake: std::collections::HashMap::new(),
                university, independent, farm, rules }
@@ -388,6 +402,20 @@ impl<'a> Placer<'a> {
     ///
     /// 최저연봉을 일률로 주면 안 된다 — 전원이 같은 값이면 팀 평균과 같아져
     /// 과지급 판정이 다시 죽는다. 능력치로 갈려야 "성적 대비 비싼 선수"가 잡힌다.
+    /// 독립 입단 예산 게이트를 켠다.
+    ///
+    /// ⚠ 안 부르면 꺼진 채로 돈다 — 예전과 완전히 같다.
+    /// ⚠ `payroll` 은 **지금** 총연봉이다. 배정할 때마다 여기서 더한다.
+    pub fn with_budgets(
+        mut self,
+        budgets: std::collections::HashMap<String, i64>,
+        payroll: std::collections::HashMap<String, i64>,
+    ) -> Self {
+        self.team_budget = budgets;
+        self.team_payroll = payroll;
+        self
+    }
+
     pub fn with_salary(mut self, rules: Option<crate::npc_sim::SalaryRules>, seed: u32) -> Self {
         self.salary_rules = rules;
         self.salary_rng = crate::npc_sim::LcgRand::new(seed | 1);
@@ -435,6 +463,17 @@ impl<'a> Placer<'a> {
                 let (p, b) = self.roster.get(tid).copied().unwrap_or((0, 0));
                 let total = p + b;
                 if total >= max { continue; }
+                // 🔴 **예산에 자리가 있나** (2026-08-31). 없으면 그 팀은 못 받는다.
+                //   OVR 91 방출자가 독립 배수를 받고도 2.09억이라, 예산 2.6억
+                //   팀에 들어가면 혼자 80%를 먹는다.
+                // ⚠ `pending_salary` 나 예산이 비면 이 갈래가 통째로 꺼진다.
+                if let (Some(need), Some(budget)) =
+                    (self.pending_salary, self.team_budget.get(tid).copied()) {
+                    if budget > 0
+                        && self.team_payroll.get(tid).copied().unwrap_or(0) + need > budget {
+                        continue;
+                    }
+                }
                 // ⚠ 정원 밖이라고 무제한이면 2군이 육성선수로 채워진다 —
                 // 그러면 드래프트 지명의 가치가 사라진다
                 if let Some(dm) = dev_max {
@@ -545,6 +584,17 @@ impl<'a> Placer<'a> {
             .or_else(|| {
                 // 독립리그는 나이 제한이 있다. 서른 넘은 미지명자를 받으면
                 // 독립 로스터가 은퇴 직전 선수로만 채워진다
+                //
+                // 🔴 **연봉을 먼저 구한다** (2026-08-31). 예산 게이트가
+                //   그 값을 봐야 하는데, 아래 배정이 끝난 뒤에 계산하면
+                //   이미 팀이 정해진 뒤다. 팀지수 1.0이라 팀과 무관하니
+                //   여기서 구해도 같은 값이다.
+                self.pending_salary = self.salary_rules.clone().map(|sr| {
+                    let ovr = crate::npc_sim::npc_core_ovr(npc);
+                    crate::npc_sim::estimate_salary_and_contract(
+                        ovr, "LEAGUE_INDEPENDENT", npc.pro_service_years.unwrap_or(0),
+                        npc.age, 1.0, &sr, &mut self.salary_rng).0
+                });
                 (npc.age <= self.rules.independent_age_max)
                     .then(|| self.find_slot(
                         is_pitcher, &npc.position, self.independent, self.rules.independent_max,
@@ -583,13 +633,15 @@ impl<'a> Placer<'a> {
                 // ⚠ 초기 생성분과 **같은 산식**을 쓴다 — 다르게 주면 같은 리그
                 // 안에서 기준이 둘이 되고, 그게 지금 고치는 결함이다
                 if league == "LEAGUE_INDEPENDENT" {
-                    if let Some(sr) = self.salary_rules.clone() {
-                        let ovr = crate::npc_sim::npc_core_ovr(npc);
-                        let (sal, yrs) = crate::npc_sim::estimate_salary_and_contract(
-                            ovr, league, npc.pro_service_years.unwrap_or(0),
-                            npc.age, 1.0, &sr, &mut self.salary_rng);
+                    // ⚠ 위 게이트가 이미 구해 뒀다 — **다시 계산하지 않는다.**
+                    //   다시 구하면 난수가 한 번 더 돌아 게이트가 본 값과
+                    //   실제 연봉이 갈린다(예산을 넘겨도 들어간다).
+                    if let Some(sal) = self.pending_salary {
                         npc.current_salary = sal;
-                        npc.contract_years = yrs.max(1);
+                        npc.contract_years = 1;
+                        // 🔴 **그 팀 총연봉에 더한다.** 안 더하면 한 팀이
+                        //   예산 안에서 여러 명을 받는다.
+                        *self.team_payroll.entry(npc.current_team.clone()).or_insert(0) += sal;
                     }
                 }
 

@@ -20,6 +20,7 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { loadRosterRules } from "../repo/newGameV3";
 import { seedFrom } from "../utils/hash";
+import { SANGMU_TEAM_IDS } from "../utils/ids";
 
 export interface ClubRevenue {
   attendanceRate: number;
@@ -106,7 +107,15 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
     const ls = s.leagueState?.[leagueId];
     if (!ls?.standings?.length) continue;
 
-    const teams = m.teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"));
+    // 🔴 **`_1` 을 요구하면 독립리그가 통째로 빠진다** (2026-08-31).
+    //   프로는 1군·2군이 같은 `leagueId` 라 접미사로 갈라야 하지만,
+    //   독립은 1군만 있고 팀 id 가 `_1` 로 안 끝난다. 그래서 예산이
+    //   `refs.json` 에 있는데도 **아무도 안 읽었다.**
+    // ⚠ 상무는 뺀다 — 군팀이라 예산이 없다(`history.budget` 자체가 없다).
+    const needsFarmSplit = m.teams.some((t) => t.leagueId === leagueId && t.id.endsWith("_2"));
+    const teams = m.teams.filter((t) => t.leagueId === leagueId
+      && (needsFarmSplit ? t.id.endsWith("_1") : true)
+      && !SANGMU_TEAM_IDS.has(t.id));
     if (teams.length === 0) continue;
 
     // 기준 규모 — 저장된 예산이 있으면 그게 우선이다(전년 정산 결과)
@@ -168,7 +177,11 @@ export async function settleClubFinance(seasonYear: number): Promise<string[]> {
       const games = st.wins + st.losses + st.draws;
       const prof = (g.proTeamProfiles?.[t.id] ?? {}) as
         { marketAppeal?: number; prestige?: number };
-      const share = rules.types[revenueTypeOf(t.id, rules)] ?? rules.types.balanced;
+      // ⚠ **독립은 유형을 안 가른다.** 열 팀 다 지원금으로 버티는 구조라
+      //   5:3:2 로 나눌 근거가 없다 — 팀별 차이는 `history.budget` 이 낸다.
+      const share = leagueId === "LEAGUE_INDEPENDENT"
+        ? (rules.types.independent ?? rules.types.parent ?? rules.types.balanced)
+        : (rules.types[revenueTypeOf(t.id, rules)] ?? rules.types.balanced);
 
       const raw = await api("calcClubRevenueNative", JSON.stringify({
         attendance: rules.attendance,

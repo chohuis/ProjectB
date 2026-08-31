@@ -35,6 +35,8 @@ const LABEL: Record<string, string> = {
   // 방출 — 정원 초과와 성적 부진은 다른 일이다
   release_roster:   "방출(정원)",
   release_score:    "방출(성적)",
+  // 팀 총연봉이 예산을 넘어 잘렸다 (2026-08-31)
+  release_budget:   "방출(예산)",
   release:          "방출",
   development_expired: "육성 만료",
   // 은퇴

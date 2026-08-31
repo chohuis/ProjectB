@@ -2713,6 +2713,20 @@ function createGameStore() {
         // 세계 씨앗 — 안 넘기면 모든 세계가 같은 오프시즌을 낸다
         offWorldSeed,
         faParams,
+        // 🔴 **팀별 예산** — 총연봉이 넘으면 방출한다 (사용자 확정 2026-08-31).
+        //   저장된 예산(전년 정산 · `clubFinance`)이 있으면 그게 우선이고,
+        //   없으면 `refs.json` 의 팀별 예산을 만원으로 바꿔 쓴다.
+        // ⚠ 안 넘기면 예산 방출이 통째로 꺼진다 — `serde(default)` 라 오류가 안 난다.
+        (() => {
+          const out: Record<string, number> = {};
+          for (const t of get(masterStore).teams) {
+            const saved = s.clubBudgets?.[t.id];
+            const base = saved != null ? saved
+              : ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
+            if (base > 0) out[t.id] = Math.round(base);
+          }
+          return out;
+        })(),
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
@@ -2993,6 +3007,7 @@ function createGameStore() {
             // ⚠ 계산을 여기서 다시 적지 않는다 — 주인공 경로(`advanceWeek`)와
             // **같은 함수**를 쓴다. 따로 적었더니 그쪽만 10으로 박혀 있었다.
             const milLimits = await sportsUnitLimits();
+            const milSalary = milLimits.salary;
             // ⚠ **주인공이 뽑힌 해엔 한 자리를 뺀다.** 두 선발이 별개 추첨이라
             // 둘 다 뽑히면 그 해 입대가 정원 + 1이 된다 — 상무는 로스터 캡이
             // 안 걸리니 이런 누수가 해마다 쌓인다.
@@ -3099,6 +3114,14 @@ function createGameStore() {
                   // 2362줄 주석이 고쳤다고 적은 그 결함이 여기 그대로 있었다.
                   currentLeague:         SANGMU_LEAGUE_ID,
                   currentTeam:           SANGMU_TEAM_ID,
+                  // 🔴 **군인 봉급이다** (2026-08-31). 예전엔 원 소속 연봉을
+                  //   그대로 들고 왔다 — 실측에서 상무 최고연봉이 **9.97억**
+                  //   이었고 상위 6명이 전부 상무였다. 연봉 10억짜리 군인이다.
+                  //   `militaryRules.salary`(300만원)는 **생성된 26명에게만**
+                  //   걸리고 선발로 들어온 사람은 안 걸렸다.
+                  // ⚠ 전역할 때는 **새 계약**이다 — 원 소속 리그 기준으로
+                  //   엔진이 다시 잡는다(`npc_sim` 전역 처리). 새 세이브 칸을 안 만든다.
+                  currentSalary:         milSalary,
                 };
               }
 

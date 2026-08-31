@@ -1604,6 +1604,105 @@ export function rosterOverflowProbe(): Record<string, unknown> {
  * ⚠ 한 번 돌려 필요한 값을 다 뽑는다. 따로 돌리면 시간이 배로 들고,
  *   **서로 다른 세계를 보게 된다**(이 계측은 실행마다 흔들린다).
  */
+/**
+ * **예산 대비 총연봉** — F-3(예산 → 방출) 문턱을 정하기 전에 잰다.
+ *
+ * 🔴 지금 `teamPayrollCap` 은 **예산이 아니라 "지금 총연봉 × 팀지수 × 1.25"** 다.
+ *   `refs.json` 의 팀별 예산(KBL 210~350억 · 독립 2.6~18억)은 FA 입찰에도
+ *   방출에도 안 들어간다. 상한을 걸기 전에 **지금 어디쯤인지** 봐야 한다 —
+ *   모르고 걸면 KBL 을 통째로 방출 사태로 민다.
+ */
+/** 독립 팀별 **예산·총연봉·인원 원값** — 비율만 보면 분자가 는 건지
+ *  분모가 준 건지 못 가린다. 실측에서 최대 비율이 471% → 1937% 로 튀었다. */
+/** 독립리그 연봉이 **어디서 온 사람** 때문에 튀는가.
+ *  id 접두어가 생성 리그를 말한다 — IN=독립생성 · KB=KBL · UV=대학 · HS=고교. */
+export function indSalarySourceProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const by: Record<string, { n: number; sum: number; max: number }> = {};
+  const worst: string[] = [];
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    if (n.currentLeague !== "LEAGUE_INDEPENDENT") continue;
+    const m = /^PLY_([A-Z]{2})/.exec(String(n.npcId ?? ""));
+    const k = m ? m[1] : "?";
+    const b2 = (by[k] ??= { n: 0, sum: 0, max: 0 });
+    const sal = n.currentSalary ?? 0;
+    b2.n++; b2.sum += sal; if (sal > b2.max) b2.max = sal;
+  }
+  const rows = Object.entries(by).map(([k, v]) =>
+    `${k}:${v.n}명 평균${Math.round(v.sum / Math.max(1, v.n))} 최고${v.max}`).sort();
+  // 연봉 상위 6명이 누구인가
+  const top = g.npcs.filter((n) => n.careerStatus !== "retired"
+      && n.currentLeague === "LEAGUE_INDEPENDENT")
+    .sort((a, b3) => (b3.currentSalary ?? 0) - (a.currentSalary ?? 0)).slice(0, 6);
+  for (const n of top) {
+    // 🔴 **어느 길로 왔나** — 짐작하지 말고 이력을 본다.
+    //   `Placer` 는 독립 배정 때 연봉을 다시 잡는데(`draft.rs`) 이 사람들은
+    //   그 길이 아니었다. 남은 길이 무엇인지 이 줄이 말해 준다.
+    const evs = ((n as unknown as Record<string, unknown>).careerEvents ?? []) as
+      Array<Record<string, unknown>>;
+    const tail = evs.slice(-4).map((e) =>
+      `${e.year}:${e.eventType}:${String(e.fromLeagueId ?? "?").replace("LEAGUE_", "")}→${String(e.toLeagueId ?? "?").replace("LEAGUE_", "")}${e.detail ? "(" + e.detail + ")" : ""}`).join(" | ");
+    worst.push(`${n.npcId}|${n.currentTeam?.replace("TEAM_IND_", "")}|${n.currentSalary}|[${tail}]`);
+  }
+  return { 출신별: rows, 최고연봉: worst };
+}
+
+export function indTeamDetailProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const pay = new Map<string, number>(); const head = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    pay.set(n.currentTeam, (pay.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
+    head.set(n.currentTeam, (head.get(n.currentTeam) ?? 0) + 1);
+  }
+  const rows: string[] = [];
+  for (const t of m.teams) {
+    if ((t as unknown as { leagueId?: string }).leagueId !== "LEAGUE_INDEPENDENT") continue;
+    const start = ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
+    if (start <= 0) continue;                       // 상무
+    const now = g.clubBudgets?.[t.id];
+    rows.push([
+      t.id.replace("TEAM_IND_", ""),
+      "시작" + Math.round(start),
+      "지금" + (now == null ? "없음" : Math.round(now)),
+      "연봉" + (pay.get(t.id) ?? 0),
+      "인원" + (head.get(t.id) ?? 0),
+    ].join("|"));
+  }
+  return { 팀: rows.sort() };
+}
+
+export function payrollVsBudgetProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const pay = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    pay.set(n.currentTeam, (pay.get(n.currentTeam) ?? 0) + (n.currentSalary ?? 0));
+  }
+  const out: Record<string, unknown> = {};
+  const byLeague = new Map<string, number[]>();
+  for (const t of m.teams) {
+    const budget = ((t as unknown as { history?: { budget?: number } }).history?.budget ?? 0) / 10000;
+    if (budget <= 0) continue;                       // 상무·아마추어는 예산이 없다
+    const p = pay.get(t.id) ?? 0;
+    if (p <= 0) continue;
+    const lg = String((t as unknown as { leagueId?: string }).leagueId ?? "?");
+    // 저장된 예산(전년 정산)이 있으면 그게 실제로 쓰는 값이다
+    const saved = g.clubBudgets?.[t.id];
+    const base = saved != null ? saved : budget;
+    (byLeague.get(lg) ?? byLeague.set(lg, []).get(lg)!).push(Math.round((p / base) * 100));
+  }
+  for (const [lg, arr] of byLeague) {
+    const z = arr.sort((a, b) => a - b);
+    out[lg] = { 팀: z.length, "총연봉/예산%": { 최소: z[0], 중앙: z[z.length >> 1], 최대: z[z.length - 1] },
+                "100%초과팀": z.filter((v) => v > 100).length };
+  }
+  return out;
+}
+
 export function ovrImpactProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const PIT = new Set(["SP", "RP", "CP"]);

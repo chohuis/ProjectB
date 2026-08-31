@@ -30,6 +30,9 @@ const J = (o) => JSON.stringify(o);
       if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
     }
     console.log(`  [파급]  ${J(app.ovrImpactProbe())}`);
+    console.log(`  [예산]  ${J(app.payrollVsBudgetProbe())}`);
+    console.log(`  [독립]  ${J(app.indTeamDetailProbe())}`);
+    console.log(`  [연봉]  ${J(app.indSalarySourceProbe())}`);
     console.log(`  [연령]  ${J(app.ageServiceProbe())}`);
     console.log(`  [상무]  ${J(app.sangmuProbe())}`);
     console.log(`  [구성]  ${J(app.rosterCompositionProbe())}`);

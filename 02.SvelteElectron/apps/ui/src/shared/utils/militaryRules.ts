@@ -24,6 +24,14 @@ export interface SportsUnitLimits {
   /** 한 구단이 상무를 독식하지 않게 하는 상한 */
   maxPerTeam: number;
   /**
+   * 군인 봉급(만원) — 입대하면 연봉이 이걸로 바뀜다.
+   *
+   * 🔴 예전엔 원 소속 연봉을 그대로 들고 왔다 — `militaryRules.salary`(300)가
+   *   **생성된 26명에게만** 걸렸고 선발로 들어온 사람은 안 걸렸다.
+   *   실측(2026-08-31): 상무 최고연봉 **9.97억** · 상위 6명이 전부 상무였다.
+   */
+  salary: number;
+  /**
    * Phase 1(전역 공백 포지션 채우기)이 정원에서 가져갈 몫.
    *
    * 🔴 이게 없으면 Phase 1이 **정원을 전부 먹고 Phase 2가 안 돈다.**
@@ -42,12 +50,17 @@ export interface SportsUnitLimits {
 export async function sportsUnitLimits(): Promise<SportsUnitLimits> {
   const mil = (await loadRosterRules()).militaryRules as {
     rosterSize?: number; serviceMonths?: number; maxPerTeam?: number; phase1Ratio?: number;
+    salary?: number;
   } | undefined;
   const serviceYears = Math.max(1, Math.round((mil?.serviceMonths ?? 24) / 12));
   const annualIntake = Math.max(1, Math.round((mil?.rosterSize ?? 26) / serviceYears));
   return {
     annualIntake,
     maxPerTeam: mil?.maxPerTeam ?? 3,
+    // 🔴 **군인 봉급** — 입대하면 연봉이 이걸로 바뀜다(2026-08-31).
+    //   예전엔 원 소속 연봉을 그대로 들고 왔고, 실측에서 상무 최고연봉이
+    //   **9.97억**이었다 — 연봉 10억짜리 군인이있었다.
+    salary: mil?.salary ?? 300,
     // ⚠ 최소 1 — 0이면 Phase 1이 죽고 포지션 균형을 통째로 포기한다
     phase1Max: Math.max(1, Math.round(annualIntake * (mil?.phase1Ratio ?? 0.5))),
   };
