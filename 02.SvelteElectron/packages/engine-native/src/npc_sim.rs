@@ -1297,6 +1297,14 @@ fn waiver_claim(
     ovr_margin: f64,
     max_per_team: i32,
     season_year: i32,
+    // 청구 대상이 **아닌** 팀 — 상무 같은 군팀.
+    //
+    // 🔴 아래 후보 목록은 팀을 **NPC 소속에서 역산**한다. 다른 배정 경로는
+    //   TS 가 넘긴 목록(상무 제외)을 쓰는데 여기만 자기가 만든다. 게다가
+    //   **인원이 적은 팀부터** 고르니 정원 26인 상무가 늘 1순위였다
+    //   (다른 독립팀은 30~45명). 실측에서 상무 비군인 전원의 이력이
+    //   `waiver_claim→IND_SANGMU_PHOENIX` 였다.
+    exclude_teams: &std::collections::HashSet<String>,
 ) -> i32 {
     // 🔴 **그 해 방출된 사람만이다.** 처음엔 "팀이 빈 사람"으로 잡았는데
     //   졸업생·미배정자까지 걸렸다 — 실측에서 고교·대학 선수가 프로 2군에
@@ -1335,6 +1343,8 @@ fn waiver_claim(
         // 같은 리그에서 **인원이 적은 팀부터** — 순위 역순의 대용이다
         // (오프시즌 이 시점엔 순위표가 없다)
         let mut cands: Vec<(String, i32)> = size.iter()
+            // ⚠ 군팀은 청구 대상이 아니다 — 복무자만 들어가는 자리다
+            .filter(|(t, _)| !exclude_teams.contains(*t))
             .filter(|(t, _)| npcs.iter().any(|n|
                 n.current_team == **t && n.current_league == league))
             .map(|(t, c)| (t.clone(), *c))
@@ -2484,9 +2494,13 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 .filter(|e| e.kind == "release_score" || e.kind == "release_roster")
                 .map(|e| e.npc_id.clone())
                 .collect();
+            // ⚠ 안 넘기면 상무가 다시 1순위가 된다 — `serde(default)` 라
+            //   오류가 아니라 "조용히 예전 동작"으로 나타난다.
+            let excl: std::collections::HashSet<String> =
+                params.waiver_exclude_teams.iter().cloned().collect();
             let _ = waiver_claim(&mut after_normalize, &released_ids,
                 &params.roster_limits,
-                wr.ovr_margin, wr.max_per_team.max(1), season_year);
+                wr.ovr_margin, wr.max_per_team.max(1), season_year, &excl);
         }
     }
 

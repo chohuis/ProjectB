@@ -1006,6 +1006,16 @@ pub struct OffseasonParams {
     pub university_team_ids: Vec<String>,
     #[serde(default)]
     pub independent_team_ids: Vec<String>,
+    /// 웨이버 청구 대상에서 뻐 팀 — 군팀(상무).
+    ///
+    /// 🔴 `waiver_claim` 만 **목적지 팀을 NPC 소속에서 역산한다** — 다른 배정
+    ///   경로는 위 목록(상무 제외)을 쓰는데 거기만 자기가 만든다. 게다가
+    ///   **인원이 적은 팀부터** 고르니 정원 26인 상무가 늘 1순위였다
+    ///   (다른 독립팀은 30~45명). 실측에서 상무 비군인 전원의 이력이
+    ///   `waiver_claim→IND_SANGMU_PHOENIX` 였다.
+    /// ⚠ 비면 예전과 같게 돌다 — `waiverSangmu.test.ts` 가 배선을 본다.
+    #[serde(default)]
+    pub waiver_exclude_teams: Vec<String>,
     /// 프로 2군 팀. **방출자·미계약 FA가 갈 첫 자리다** — 없으면 2군은
     /// 드래프트 하위 라운드로만 채워져 투수가 마른다(실측 야수 29/투수 6)
     #[serde(default)]

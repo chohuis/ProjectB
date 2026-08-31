@@ -3,6 +3,7 @@ import type { NpcSaveState } from "../types/save";
 import {
   buildRows, countByGroup, previewLine, type OffseasonEvent,
 } from "./offseasonReport";
+import { SANGMU_TEAM_IDS } from "./ids";
 
 // ── 시즌 종료 요약 ────────────────────────────────────────────
 export interface SeasonEndSummary {
@@ -212,6 +213,12 @@ export async function runOffseasonProcessing(
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
     ...(waiverRules ? { waiverRules } : {}),
+    // 🔴 **군팀은 웨이버 청구 대상이 아니다** (2026-08-31).
+    //   `waiver_claim` 만 목적지 팀을 **NPC 소속에서 역산**하고,
+    //   게다가 인원이 적은 팀부터 고른다 — 정원 26인 상무가 늘 1순위였다.
+    //   상무의 비군인 전원이 `waiver_claim→IND_SANGMU_PHOENIX` 이었다.
+    // ⚠ 안 넘기면 `serde(default)` 로 조용히 예전 동작이 된다.
+    waiverExcludeTeams: [...SANGMU_TEAM_IDS],
     ...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {}),
     worldSeed: (worldSeed ?? 0) >>> 0,
     ...(fa ? { teamPayrollCap: fa.teamPayrollCap, faBidInterestMin: fa.bidInterestMin,

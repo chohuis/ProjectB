@@ -1749,6 +1749,22 @@ export function sangmuProbe(): Record<string, unknown> {
       }
       return out;
     })(),
+    // 🔴 **누가 옥겼나** — 짐작하지 말고 기록을 본다.
+    //   배정 경로는 전부 상무를 거른다 — 그런데도 들어와 있다.
+    비군인이력: (() => {
+      const out: string[] = [];
+      for (const n of g.npcs) {
+        if (n.careerStatus === "retired") continue;
+        if ((n.currentTeam ?? "") !== SANGMU) continue;
+        if (String(n.militaryStatus ?? "") === "현역") continue;
+        const evs = ((n as unknown as Record<string, unknown>).careerEvents ?? []) as
+          Array<Record<string, unknown>>;
+        const tail = evs.slice(-4).map((e) =>
+          `${e.year}:${e.eventType}${e.toTeamId ? "→" + String(e.toTeamId).replace("TEAM_", "") : ""}`);
+        if (out.length < 4) out.push(`${n.npcId} [${tail.join(" ")}]`);
+      }
+      return out;
+    })(),
     // 어디 출신이 상무에 있나 — id 접두어가 생성 리그를 말한다
     출신접두: (() => {
       const c: Record<string, number> = {};
