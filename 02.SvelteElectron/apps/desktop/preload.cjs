@@ -139,8 +139,6 @@ contextBridge.exposeInMainWorld("projectB", {
   evalCalldownCandidatesNative:    (p) => ipcRenderer.invoke("engine:call", "evalCalldownCandidatesNative", p),
   evalReleasePriorityNative:       (p) => ipcRenderer.invoke("engine:call", "evalReleasePriorityNative", p),
   evalFaBidNative:                 (p) => ipcRenderer.invoke("engine:call", "evalFaBidNative", p),
-  evalRenewalOfferNative:          (p) => ipcRenderer.invoke("engine:call", "evalRenewalOfferNative", p),
-  evalNewContractNative:           (p) => ipcRenderer.invoke("engine:call", "evalNewContractNative", p),
   evalRetirementSuggestionNative:  (p) => ipcRenderer.invoke("engine:call", "evalRetirementSuggestionNative", p),
   generateTradeProposalsNative:    (p) => ipcRenderer.invoke("engine:call", "generateTradeProposalsNative", p),
   evalTradeValueNative:            (p) => ipcRenderer.invoke("engine:call", "evalTradeValueNative", p),
@@ -151,7 +149,6 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── player_agent ─────────────────────────────────────────────────────────────
   playerEvalFaDecisionNative:         (p) => ipcRenderer.invoke("engine:call", "playerEvalFaDecisionNative", p),
   playerEvalTradeResponseNative:      (p) => ipcRenderer.invoke("engine:call", "playerEvalTradeResponseNative", p),
-  playerEvalContractOfferNative:      (p) => ipcRenderer.invoke("engine:call", "playerEvalContractOfferNative", p),
   playerEvalRetirementResponseNative: (p) => ipcRenderer.invoke("engine:call", "playerEvalRetirementResponseNative", p),
   playerRankFaOffersNative:           (p) => ipcRenderer.invoke("engine:call", "playerRankFaOffersNative", p),
   updatePlayerLoyaltyNative:          (p) => ipcRenderer.invoke("engine:call", "updatePlayerLoyaltyNative", p),

@@ -393,6 +393,49 @@ export function resetWorldSeasonEndGuard(): void {
  * 사실**이라 그때 이름이 함께 남아야 한다 — 팀명이 바뀌어도 5년 전 순위표는
  * 그 시절 이름이어야 맞다.
  */
+/**
+ * 🔴 **저장 실패가 두 겹으로 묻혀 있었다** (2026-09-01 · 트랙 C 가 찾았다).
+ *
+ * ```js
+ *   main.cjs   catch (e) { return JSON.stringify({ error: ... }); }   // throw 가 아니다
+ *   호출부     ....catch(() => {});                                    // 그래서 안 걸린다
+ * ```
+ *
+ * `throw` 가 아니라 **`{error}` 를 반환**하므로 `.catch()` 는 애초에 안 걸리고,
+ * resolve 된 값은 아무도 안 읽었다. **저장이 실패해도 화면에도 로그에도
+ * 아무 흔적이 없다.** 같은 모양이 네 곳(순위·개인기록·포스트시즌·대회) 전부에
+ * 있었다.
+ *
+ * 실측(트랙 C): `history_*` 여섯 중 **다섯이 0행**이고, 유일하게 찬
+ * `history_standings` 190행도 플레이 산물이 아니라 새 게임이 심는 가짜 과거
+ * 5년이다. **왜 비는지 코드만으로 못 가른다는 것 자체가 결함이다.**
+ *
+ * ⚠ 여기서 던지지는 않는다 — 시즌 종료가 저장 하나로 멈추면 더 나쁘다.
+ *   **보이게만 한다.** 다음번엔 한 번에 갈린다.
+ */
+async function saveHistoryStep(
+  label: string,
+  rows: readonly object[],
+  send: () => Promise<string>,
+): Promise<void> {
+  if (rows.length === 0) {
+    console.warn(`[역대기록] ${label}: 넘길 행이 0건이라 건너뛴다`);
+    return;
+  }
+  try {
+    const raw = await send();
+    const res = JSON.parse(raw) as { error?: string; saved?: number };
+    if (res?.error) {
+      console.warn(`[역대기록] ${label}: 저장 실패 — ${res.error} (${rows.length}행)`);
+      return;
+    }
+    console.warn(`[역대기록] ${label}: ${res?.saved ?? rows.length}행 저장`);
+  } catch (e) {
+    // 여기 걸리는 건 IPC 자체가 죽은 것이다 — 반환형 실패와 구분해서 남긴다
+    console.warn(`[역대기록] ${label}: IPC 예외 — ${String((e as Error)?.message ?? e)}`);
+  }
+}
+
 export async function saveSeasonHistory(seasonYear: number) {
   const slotId = get(gameStore).currentSlotId;
   if (!slotId) return;
@@ -425,9 +468,8 @@ export async function saveSeasonHistory(seasonYear: number) {
         runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
     }
   }
-  if (standingRows.length > 0) {
-    window.projectB!.seasonSaveHistoryStandings(JSON.stringify({ slotId, seasonYear, rows: standingRows })).catch(() => {});
-  }
+  await saveHistoryStep("순위", standingRows, () =>
+    window.projectB!.seasonSaveHistoryStandings(JSON.stringify({ slotId, seasonYear, rows: standingRows })));
   const lbStatRows: object[] = [];
   for (const [lid, ls] of Object.entries(get(seasonStore).leagueState)) {
     for (const [playerId, stat] of Object.entries(ls.stats ?? {})) {
@@ -457,7 +499,8 @@ export async function saveSeasonHistory(seasonYear: number) {
     }
   }
   if (lbStatRows.length > 0) {
-    window.projectB!.seasonSaveHistoryLbStats(JSON.stringify({ slotId, seasonYear, rows: lbStatRows })).catch(() => {});
+    await saveHistoryStep("개인기록", lbStatRows, () =>
+      window.projectB!.seasonSaveHistoryLbStats(JSON.stringify({ slotId, seasonYear, rows: lbStatRows })));
   }
 
   // 포스트시즌 결과 저장
@@ -507,7 +550,8 @@ export async function saveSeasonHistory(seasonYear: number) {
       playoffTeams: [], bracket });
   }
   if (psRows.length > 0) {
-    window.projectB!.seasonSaveHistoryPostseason(JSON.stringify({ slotId, seasonYear, rows: psRows })).catch(() => {});
+    await saveHistoryStep("포스트시즌", psRows, () =>
+      window.projectB!.seasonSaveHistoryPostseason(JSON.stringify({ slotId, seasonYear, rows: psRows })));
   }
 
   // ── 대회 결과 저장 ──────────────────────────────────────────
@@ -533,8 +577,9 @@ export async function saveSeasonHistory(seasonYear: number) {
       };
     });
     if (tourRows.length > 0) {
-      window.projectB!.seasonSaveHistoryTournaments(
-        JSON.stringify({ slotId, seasonYear, rows: tourRows })).catch(() => {});
+      await saveHistoryStep("대회", tourRows, () =>
+        window.projectB!.seasonSaveHistoryTournaments(
+          JSON.stringify({ slotId, seasonYear, rows: tourRows })));
     }
   }
 }

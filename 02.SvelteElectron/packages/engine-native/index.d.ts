@@ -16,6 +16,8 @@ export declare function verifySaveSig(snapshot: string, sig: string): boolean
  * 계측 전용 — contact_q 밴드 분포를 읽는다 (릴리스 동작에 영향 없음)
  */
 export declare function contactBandStatsNative(): string
+/** 계측 전용 — 담장 재확인이 결과를 몇 번 바꿨나 (양방향) */
+export declare function fenceMoveStatsNative(): string
 /** 계측 전용 — 카운터 초기화 */
 export declare function resetContactBandsNative(): string
 /**
@@ -312,8 +314,6 @@ export declare function evalCallupCandidatesNative(paramsJson: string): string
 export declare function evalCalldownCandidatesNative(paramsJson: string): string
 export declare function evalReleasePriorityNative(paramsJson: string): string
 export declare function evalFaBidNative(paramsJson: string): string
-export declare function evalRenewalOfferNative(paramsJson: string): string
-export declare function evalNewContractNative(paramsJson: string): string
 export declare function evalRetirementSuggestionNative(paramsJson: string): string
 export declare function generateTradeProposalsNative(paramsJson: string): string
 export declare function evalTradeValueNative(paramsJson: string): string
@@ -322,7 +322,6 @@ export declare function calcWinNowPressureUpdateNative(paramsJson: string): stri
 export declare function calcScoutingImprovementNative(paramsJson: string): string
 export declare function playerEvalFaDecisionNative(paramsJson: string): string
 export declare function playerEvalTradeResponseNative(paramsJson: string): string
-export declare function playerEvalContractOfferNative(paramsJson: string): string
 export declare function playerEvalRetirementResponseNative(paramsJson: string): string
 export declare function playerRankFaOffersNative(paramsJson: string): string
 export declare function updatePlayerLoyaltyNative(paramsJson: string): string

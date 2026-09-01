@@ -1,4 +1,4 @@
-import type { PitcherSeasonStats, ProtagonistSave } from "../types/save";
+import type { PitcherSeasonStats, ProtagonistSave, BatterSeasonStats } from "../types/save";
 
 /**
  * 리그 연봉 배수 — **정본은 `generation_rules.json`의 `salaryRules.leagueMult`다.**
@@ -23,7 +23,17 @@ async function leagueMultOf(): Promise<Record<string, number>> {
 }
 
 
-export async function calcSeasonRating(stats: PitcherSeasonStats | null): Promise<number> {
+/**
+ * 시즌 평점 0~100. **투수·타자 둘 다 받는다** (2026-09-01 · 트랙 C 가 잡았다).
+ *
+ * 🔴 예전엔 인자가 `PitcherSeasonStats | null` 이었고 엔진 구조체도 투수
+ *   네 칸이 **전부 필수**였다. 타자를 넘기면 **역직렬화가 실패**해
+ *   `{"error": …}` 가 오고, 이 함수가 그걸 `as number` 로 받아
+ *   **숫자가 아니라 객체를 돌려줬다.**
+ */
+export async function calcSeasonRating(
+  stats: PitcherSeasonStats | BatterSeasonStats | null,
+): Promise<number> {
   const raw = await window.projectB!.salaryCalcSeasonRating(
     JSON.stringify({ stats: stats ?? null })
   );
@@ -50,12 +60,17 @@ export async function calcOfferedSalary(
 
 export async function calcOfferedSalaryForProtagonist(
   protagonist: ProtagonistSave,
-  seasonStats: PitcherSeasonStats | null,
+  seasonStats: PitcherSeasonStats | BatterSeasonStats | null,
   /** 구단주 budgetSupport 계수 (§7-5 F-1). 없으면 중립 */
   budgetMod = 1.0,
 ): Promise<number> {
+  // 🔴 **타자면 타격 OVR 을 넘긴다** (2026-09-01).
+  //   예전엔 타자에게도 `protagonist.pitching.ovr` 를 넘겼다 —
+  //   타자에게 그 값은 뜻이 없고, 제시액이 그만큼 어긋났다.
+  const isBatter = protagonist.playerType !== "pitcher";
   const params = {
     pitchingOvr:   protagonist.pitching.ovr,
+    battingOvr:    isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,
     fame:          protagonist.fame,
     leagueId:      protagonist.leagueId,
     currentSalary: protagonist.contract?.salary ?? null,

@@ -6,6 +6,7 @@
     UNIVERSITY_MAJORS, getUniversityEffBonus,
   } from "../../shared/utils/academicsEngine";
   import { toGpa45 } from "../../shared/utils/universityUtils";
+  import { universityGradeOf } from "../../shared/utils/careerTransition";
   import type { StudyMode } from "../../shared/types/save";
 
   const SUBJECT_NAMES: Record<string, string> = {
@@ -24,9 +25,18 @@
   $: isUniv      = careerStage === "university";
   $: curWeek     = $seasonStore.currentWeek;
 
-  // 대학 년차 (1~4)
-  $: univYear = Math.min(4, Math.floor(school.universityWeek / 52) + 1);
-  $: univSemester = Math.min(8, Math.floor(school.universityWeek / 26) + 1);
+  /*
+    🔴 **여기서 학년을 따로 셌다.** `universityWeek / 52` 는 정본
+    (`careerTransition.universityGradeOf`)의 `(universityWeek - 1) / 52` 와
+    한 주 어긋난다 — 52주차에 이 화면만 **2학년으로 먼저 넘어갔다.**
+
+    `CareerResultModal` 이 같은 실수를 이미 걷어내며 *"정본이 둘이었다"* 고
+    적어 뒀는데 이 화면은 남아 있었다. 정본을 쓴다.
+
+    ⚠ 학기도 같은 축이라 `-1` 을 맞춘다. 안 그러면 26주차에 2학기가 된다.
+  */
+  $: univYear = universityGradeOf(undefined, school.universityWeek);
+  $: univSemester = Math.min(8, Math.floor(Math.max(0, school.universityWeek - 1) / 26) + 1);
 
   $: subjects = Object.entries(school.subjectScores).map(([id, s]) => ({
     id,

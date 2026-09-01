@@ -1148,10 +1148,24 @@ const commands = {
         highlights: r.highlights_json ? JSON.parse(r.highlights_json) : undefined,
       }));
   },
+  // 🔴 **연도 없이 부르면 깨져 있었다.** `year` 가 없으면 `league_id = ?` 로
+  //    가는데, `leagueId` 까지 없으면 `undefined` 를 바인딩해 예외가 났다.
+  //    타입은 둘 다 선택 인자라 부를 수 있는 모양이었는데 실행이 안 됐다.
+  //
+  // 연감(역대 탭)이 **여러 해를 가로질러** 읽어야 해서 세 조건을 각각
+  // 선택으로 받게 고쳤다. 아무것도 안 주면 전부 준다.
   getHistoryLeague(db, p) {
-    const rows = p.year != null
-      ? db.prepare("SELECT * FROM history_league WHERE year = ? AND (? = '' OR league_id = ?)").all(p.year, p.leagueId ?? "", p.leagueId ?? "")
-      : db.prepare("SELECT * FROM history_league WHERE league_id = ?").all(p.leagueId);
+    const where = [];
+    const args = [];
+    if (p.year != null) { where.push("year = ?");      args.push(p.year); }
+    if (p.leagueId)     { where.push("league_id = ?"); args.push(p.leagueId); }
+    // `kind` 로 걸러 두면 수상만 볼 때 나머지 두 종을 안 실어 온다
+    if (p.kind)         { where.push("kind = ?");      args.push(p.kind); }
+    const rows = db.prepare(
+      "SELECT * FROM history_league"
+      + (where.length ? " WHERE " + where.join(" AND ") : "")
+      + " ORDER BY year DESC"
+    ).all(...args);
     return rows.map((r) => ({ year: r.year, leagueId: r.league_id, kind: r.kind, data: JSON.parse(r.json) }));
   },
 };

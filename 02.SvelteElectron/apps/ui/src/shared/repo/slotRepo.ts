@@ -256,6 +256,10 @@ export const slotRepo = {
     call<{ ok: true }>("addTransactions", { slotId, rows }),
   getCareerHistory: (slotId: string, npcId: string) =>
     call<RepoCareerLine[]>("getCareerHistory", { slotId, npcId }),
-  getHistoryLeague: (p: { slotId: string; year?: number; leagueId?: string }) =>
+  /**
+   * 리그 연감. **셋 다 선택이다** — 아무것도 안 주면 전 연도·전 리그를 준다.
+   * 연도별로 N번 부르지 않게 `kind` 로 걸러 한 번에 읽어라.
+   */
+  getHistoryLeague: (p: { slotId: string; year?: number; leagueId?: string; kind?: string }) =>
     call<{ year: number; leagueId: string; kind: string; data: unknown }[]>("getHistoryLeague", p),
 };

@@ -1,4 +1,17 @@
 <script lang="ts">
+
+  /**
+   * 주차 행을 눌렀을 때 그 주로 옮긴다.
+   *
+   * ⚠ 예전엔 이 식이 마크업 안에 인라인으로 있었다. 키보드 길을 붙이며
+   *   같은 식이 두 벌이 될 뻔해서 함수로 뺐다 — 둘이 어긋나면 마우스와
+   *   키보드가 다른 주로 간다.
+   */
+  function goWeek(week: number) {
+    view = "week";
+    cursor = new Date(seasonYear, 2, 1);
+    cursor.setDate(cursor.getDate() + (week - 1) * 7);
+  }
   import { seasonStore } from "../../shared/stores/season";
   import { gameStore } from "../../shared/stores/game";
   import { hsRegionOfTeam, hsRegionTeams } from "../../shared/utils/ids";
@@ -408,7 +421,9 @@
                     class:past={isPast}
                     class:postseason-game={hasPost}
                     class:has-friendly={hasFriendly}
-                    on:click={() => { view = "week"; cursor = new Date(seasonYear, 2, 1); cursor.setDate(cursor.getDate() + (week - 1) * 7); }}
+                    on:click={() => goWeek(week)}
+                    on:keydown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goWeek(week); } }}
+                    role="button" tabindex="0"
                   >
                     <!-- 주차 + 페이즈 -->
                     <div class="week-left">

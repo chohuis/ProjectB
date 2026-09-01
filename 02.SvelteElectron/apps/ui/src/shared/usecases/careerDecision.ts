@@ -41,7 +41,6 @@ export async function submitCareerApplications(opts: {
     universityChoices: (opts.universityChoices ?? []).slice(0, 3),
     independentChoices: (opts.independentChoices ?? []).slice(0, 3),
     overseasChoices: (opts.overseasChoices ?? []).slice(0, 3),
-    sportsMilitaryApplied: false,
   });
   gameStore.setCareerApplicationsSubmitted(true);
   gameStore.markCareerChoiceTriggered();

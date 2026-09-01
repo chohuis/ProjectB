@@ -711,52 +711,21 @@ pub fn eval_fa_bid(p: EvalFaBidParams) -> FaBidResult {
     }
 }
 
-// ── eval_renewal_offer / eval_new_contract ───────────────────────────────────
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct EvalContractParams {
-    pub team_profile: ProTeamProfile,
-    pub player: RosterPlayerRef,
-    pub league_id: String,
-    pub market_value: i64,
-    pub is_renewal: bool,
-}
-
-fn base_contract_offer(p: &EvalContractParams) -> ContractOfferResult {
-    let profile = &p.team_profile;
-    let budget_mult = match profile.owner_spending_willingness as i32 / 25 {
-        3.. => 1.10_f64,
-        2   => 1.0,
-        1   => 0.92,
-        _   => 0.85,
-    };
-    let win_mult = 1.0 + (profile.win_now_pressure - 50.0) / 200.0;
-    let offer_salary = ((p.market_value as f64) * budget_mult * win_mult) as i64;
-
-    let base_years = if p.player.ovr >= 75.0 { 3 } else if p.player.ovr >= 65.0 { 2 } else { 1 };
-    let offer_years = {
-        let mut y = base_years;
-        if profile.stability > 65.0 { y += 1; }
-        if profile.development_focus > 65.0 && p.player.age <= 24 { y += 1; }
-        if profile.win_now_pressure > 70.0 { y = y.max(3); }
-        y.min(5)
-    };
-    let signing_bonus = (offer_salary as f64 * (0.08 + profile.market_appeal / 100.0 * 0.12)) as i64;
-    let no_trade = profile.prestige > 60.0 && profile.stability > 60.0
-                   && p.player.age >= 30 && p.player.ovr >= 70.0;
-    ContractOfferResult {
-        offer_salary,
-        offer_years,
-        signing_bonus,
-        team_option_years: 0,
-        player_option_years: 0,
-        no_trade_clause: no_trade,
-    }
-}
-
-pub fn eval_renewal_offer(p: EvalContractParams) -> ContractOfferResult { base_contract_offer(&p) }
-pub fn eval_new_contract(p: EvalContractParams) -> ContractOfferResult  { base_contract_offer(&p) }
+// ── 계약 제시액 — **지웠다** (2026-09-01 · C-3) ──────────────────────────────
+//
+// `eval_renewal_offer` · `eval_new_contract` · `base_contract_offer` 가 여기
+// 있었다. 셋 다 **TS 호출부가 0건**이었고, 하는 일은 살아 있는
+// `player_engine::calc_npc_renewal_salary` 와 같다 — **같은 세계에 연봉
+// 산식이 둘**인 형태였다.
+//
+// 그런데 죽은 쪽에만 `owner_spending_willingness` 가 있었다. 구단 성향
+// 12축 중 **그 축 하나만 아무 데서도 안 읽혔다.**
+//
+// 지우는 대신 **축을 살아 있는 산식으로 옮겼다**(`calc_npc_renewal_salary`).
+// 계단표(`owner / 25`)는 안 옮겼다 — 실측에서 KBL 10팀 중 8팀을 같은
+// 값으로 뭉갰다. 연속식으로 바꿨고 근거는 그쪽 주석에 있다.
+//
+// ⚠ 되살릴 일이 생기면 git 에 있다 — **죽은 채로 두지 않는다.**
 
 // ── eval_retirement_suggestion ───────────────────────────────────────────────
 

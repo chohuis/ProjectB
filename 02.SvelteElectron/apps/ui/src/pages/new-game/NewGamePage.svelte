@@ -368,6 +368,31 @@
       militaryUnit: null,
       militaryServiceWeeks: 0,
       militaryRecoveryWeeks: 0,
+      // 🔴 **아래 열한 개가 통째로 빠져 있었다** (2026-09-01 실측).
+      //
+      //   `gameStore` 의 기본 주인공에는 다 있는데, 여기서 새 객체를 통으로
+      //   만들어 **덮어쓰기** 때문에 새 게임 세이브에는 안 들어갔다.
+      //   실제 세이브(`slot3_slot_1.db`)를 열어 확인했다 — 아홉 개가 없다.
+      //
+      //   `svelte-check` 는 "missing the following properties" 한 줄로만
+      //   말했지만 **동작이 이미 어긋나 있었다.** `militaryStatus` 가
+      //   `undefined` 라 `=== "미필"` 이 어디서도 참이 안 된다 —
+      //     · `game.ts` 국제대회 입상 병역 면제가 안 걸린다
+      //     · `CareerResultModal` 체육부대 갈래가 안 뜬다
+      //     · `StatusPage` · `CareerEndScreen` 병역 표시가 어긋난다
+      //
+      //   값은 `gameStore` 기본값과 같게 맞춘다. 두 곳이 다르면 또 어긋난다.
+      militaryStatus: "미필",
+      militaryEnlistYear: null,
+      militaryDischargeYear: null,
+      militaryEnlistWeek: null,
+      sportsUnitSelected: false,
+      sportsUnitApplied: false,
+      militaryHiatusStage: null,
+      militaryHiatusUniversityWeek: null,
+      militaryDeferPenalty: 0,
+      consecutiveLowMoraleWeeks: 0,
+      consecutiveHighFatigueWeeks: 0,
       tradeAdaptationWeeks: 0,
       faNegotiationRound: 0,
       faUnsignedWeeks: 0,
@@ -510,8 +535,10 @@
         </div>
 
         <div class="field">
-          <label>생년월일</label>
-          <div class="birthday-row">
+          <!-- ⚠ `<label>` 이 아니다 — 이건 입력 하나가 아니라 **묶음**을
+               가리킨다. `for` 는 하나만 짚을 수 있어 맞지 않는다 -->
+          <span class="field-label" id="lbl-birthday">생년월일</span>
+          <div class="birthday-row" role="group" aria-labelledby="lbl-birthday">
             <span class="birth-year">2010년</span>
             <select bind:value={birthMonth} class="birth-select">
               {#each Array.from({length: 12}, (_, i) => i + 1) as m}
@@ -527,8 +554,10 @@
         </div>
 
         <div class="field">
-          <label>투구 방향</label>
-          <div class="radio-row">
+          <!-- ⚠ `<label>` 이 아니다 — 이건 입력 하나가 아니라 **묶음**을
+               가리킨다. `for` 는 하나만 짚을 수 있어 맞지 않는다 -->
+          <span class="field-label" id="lbl-throwhand">투구 방향</span>
+          <div class="radio-row" role="group" aria-labelledby="lbl-throwhand">
             {#each handednessOptions as opt}
               <button
                 class="radio-btn"
@@ -542,8 +571,10 @@
         </div>
 
         <div class="field">
-          <label>투구 폼</label>
-          <div class="form-cards">
+          <!-- ⚠ `<label>` 이 아니다 — 이건 입력 하나가 아니라 **묶음**을
+               가리킨다. `for` 는 하나만 짚을 수 있어 맞지 않는다 -->
+          <span class="field-label" id="lbl-pitchform">투구 폼</span>
+          <div class="form-cards" role="group" aria-labelledby="lbl-pitchform">
             {#each formOptions as opt}
               <button
                 class="form-card"
@@ -1031,7 +1062,8 @@
     margin-bottom: 28px;
   }
 
-  label {
+  label,
+  .field-label {
     display: block;
     margin-bottom: 8px;
     font-size: 14px;

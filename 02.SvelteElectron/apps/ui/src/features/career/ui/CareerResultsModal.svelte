@@ -17,18 +17,27 @@
   $: draftApplied = apps?.draftApplied ?? false;
   $: hasUniv = (apps?.universityChoices?.length ?? 0) > 0;
   $: hasIndie = (apps?.independentChoices?.length ?? 0) > 0;
-  $: hasSports = apps?.sportsMilitaryApplied ?? false;
+  // 🔴 **체육부대는 여기 있을 자리가 아니었다** (2026-09-01, A 회신 2차).
+  //
+  //   `sportsMilitaryApplied` 를 `true` 로 만드는 코드가 저장소에 **0건**이라
+  //   이 갈래는 화면에 **뜬 적이 없다.** 리터럴 `false` 둘과 읽는 곳 하나뿐이었다.
+  //
+  //   시점도 대상도 다르다 —
+  //     진로 허브   고2 W28 · 대학 W29     아마추어 진로(대학·독립·드래프트)
+  //     체육부대    W46 후보공개 → W50 결과  **프로 선수** 대상
+  //
+  //   진짜 경로는 `advanceWeek:2263` 이 `p.sportsUnitApplied` 로 이미 제대로
+  //   돈다(선발 → `enlistProtagonist("sports", …)` · 탈락 → `militaryEnlistAsk`).
+  //   여기 두면 죽은 갈래가 둘이 된다.
 
   let draftRevealed = false;
   let universityRevealed = false;
   let indieRevealed = false;
-  let sportsRevealed = false;
 
   $: canProceed =
     (!draftApplied || draftRevealed) &&
     (!hasUniv     || universityRevealed) &&
-    (!hasIndie    || indieRevealed) &&
-    (!hasSports   || sportsRevealed);
+    (!hasIndie    || indieRevealed);
 
   function teamName(teamId: string | null): string {
     if (!teamId) return "-";
@@ -47,7 +56,6 @@
       ...(results ?? {
         universityPassed: [],
         independentPassed: [],
-        sportsMilitaryPassed: false,
       }),
       draftDrafted: drafted,
       draftTeamId: teamId,
@@ -143,24 +151,6 @@
               {/each}
             {:else}
               <p class="block-main fail-text">전원 불합격</p>
-            {/if}
-          </div>
-        {/if}
-
-        {#if hasSports}
-          <div
-            class="result-block"
-            class:pass={sportsRevealed && (results?.sportsMilitaryPassed ?? false)}
-            class:fail={sportsRevealed && !(results?.sportsMilitaryPassed ?? false)}
-            class:pending={!sportsRevealed}
-          >
-            <p class="block-label">체육부대</p>
-            {#if !sportsRevealed}
-              <button class="reveal-btn" on:click={() => (sportsRevealed = true)}>결과 확인 →</button>
-            {:else}
-              <p class="block-main" class:fail-text={!results?.sportsMilitaryPassed}>
-                {results?.sportsMilitaryPassed ? "합격" : "불합격"}
-              </p>
             {/if}
           </div>
         {/if}

@@ -225,13 +225,36 @@ pub fn reliever_would_pitch(params: RelieverPitchParams) -> RelieverPitchResult 
 
 // ── Salary Engine ─────────────────────────────────────────────
 
-#[derive(Debug, Deserialize)]
+/// 시즌 성적 — **투수와 타자를 같이 받는다** (2026-09-01 · 트랙 C 가 잡았다).
+///
+/// 🔴 예전엔 네 칸(`ip` · `era` · `whip` · `k`)이 **전부 필수**였다. 그래서
+/// 타자 주인공의 `BatterSeasonStats` 를 넘기면 **역직렬화 자체가 실패**하고
+/// `parse_err` 가 `{"error": …}` 를 돌려줬다. 호출부는 그걸
+/// `JSON.parse(raw) as number` 로 받는다 — **숫자가 아니라 객체가 된다.**
+///
+/// ```
+///   투수 → 85
+///   타자 → {"error":"missing field `ip`"}      ← 실측
+/// ```
+///
+/// ⚠ `s.ip <= 0.0 → 50` 가드는 **역직렬화가 성공했을 때만** 걸린다.
+///   타자는 거기까지 못 갔다.
+///
+/// ⚠ 표시만의 문제가 아니었다. 같은 구조체를
+///   `calc_offered_salary_for_protagonist` 도 쓰므로 **타자 주인공은 계약
+///   제시액 자체가 객체**였다.
+#[derive(Debug, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct SeasonStats {
-    pub ip: f64,
-    pub era: f64,
-    pub whip: f64,
-    pub k: f64,
+    // ── 투수 ──
+    #[serde(default)] pub ip: f64,
+    #[serde(default)] pub era: f64,
+    #[serde(default)] pub whip: f64,
+    #[serde(default)] pub k: f64,
+    // ── 타자 ──
+    #[serde(default)] pub ab: f64,
+    #[serde(default)] pub ops: f64,
+    #[serde(default)] pub g: f64,
 }
 
 #[derive(Debug, Deserialize)]
@@ -241,6 +264,23 @@ pub struct CalcSeasonRatingParams {
 }
 
 fn calc_season_rating_inner(s: &SeasonStats) -> f64 {
+    // 🔴 **타자 갈래** (2026-09-01). 예전엔 투수식뿐이라 타자 주인공이
+    //   여기까지 오지도 못했다(역직렬화에서 죽었다).
+    //
+    // ⚠ **산식을 새로 만들지 않았다.** NPC 전체를 평가하는
+    //   `calcNpcPerfScore`(`market.ts`)의 타자식을 그대로 옮겼다 —
+    //   OPS 기준선 .700 · 폭 180 · 출전 15점 · 가중 0.85/0.15.
+    //   주인공만 다른 잣대로 재면 "재계약은 잘했다는데 방출 후보"가 나온다.
+    //
+    // ⚠ 투수식은 **안 건드렸다.** 그쪽은 Rust 가 ERA·WHIP·K 를 보고 TS 는
+    //   ERA·경기를 본다 — 원래 다른 함수고, 여기서 맞추면 기존 값이 통째로
+    //   움직인다(밸런스). 타자만 없던 것을 채운다.
+    if s.ip <= 0.0 {
+        if s.ab < 30.0 { return 50.0; }        // 표본이 얇으면 중립
+        let ops_pts   = (50.0 + (s.ops - 0.700) * 180.0).max(10.0).min(95.0);
+        let games_pts = ((s.g / 130.0) * 15.0).min(15.0);
+        return ops_pts * 0.85 + games_pts * 0.15;
+    }
     let era_score  = (100.0 - (s.era  - 2.0) * 18.0).max(20.0).min(100.0);
     let whip_score = (100.0 - (s.whip - 1.0) * 55.0).max(20.0).min(100.0);
     let k9         = if s.ip > 0.0 { (s.k / s.ip) * 9.0 } else { 0.0 };
@@ -249,9 +289,13 @@ fn calc_season_rating_inner(s: &SeasonStats) -> f64 {
 }
 
 pub fn calc_season_rating(params: CalcSeasonRatingParams) -> i64 {
+    // ⚠ **`ip <= 0` 가드가 여기에도 있었다** — 두 자리였다.
+    //   `calc_offered_salary_for_protagonist` 쪽만 고치고 이쪽을 못 봐서,
+    //   제시액은 타자를 반영하는데 **화면 평점만 50 으로 굳어 있었다**(실측).
+    //   같은 판정이 두 곳에 있으면 반드시 한쪽만 고쳐진다.
+    //   이제 `calc_season_rating_inner` 가 투수·타자를 스스로 가른다.
     match &params.stats {
         None => 50,
-        Some(s) if s.ip <= 0.0 => 50,
         Some(s) => calc_season_rating_inner(s).round() as i64,
     }
 }
@@ -321,6 +365,13 @@ pub struct CalcOfferedSalaryForProtagonistParams {
     #[serde(default)]
     pub league_mult: std::collections::HashMap<String, f64>,
     pub pitching_ovr: f64,
+    /// 🔴 **타자 주인공의 OVR** (2026-09-01). 있으면 이쪽을 쓴다.
+    ///
+    /// 호출부가 타자에게도 `pitching_ovr` 를 넘기고 있었다
+    /// (`protagonist.pitching.ovr`) — 타자에게 그 값은 뜻이 없다.
+    /// **안 넘기면 예전 그대로다.**
+    #[serde(default)]
+    pub batting_ovr: Option<f64>,
     pub fame: f64,
     pub league_id: String,
     pub current_salary: Option<f64>,
@@ -333,13 +384,17 @@ pub struct CalcOfferedSalaryForProtagonistParams {
 }
 
 pub fn calc_offered_salary_for_protagonist(params: CalcOfferedSalaryForProtagonistParams) -> i64 {
+    // ⚠ **`ip <= 0` 가드를 뺐다** (2026-09-01). 그게 타자를 막고 있었다 —
+    //   이제 `calc_season_rating_inner` 가 투수·타자를 스스로 가른다
+    //   (표본이 얇으면 거기서 50 을 준다).
     let rating = match &params.stats {
         None => 50.0,
-        Some(s) if s.ip <= 0.0 => 50.0,
         Some(s) => calc_season_rating_inner(s).round(),
     };
     let market = {
-        let base = 1800.0 + (params.pitching_ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
+        // 타자면 타격 OVR 을 쓴다 — 안 넘어오면 예전 그대로 투수 OVR
+        let ovr = params.batting_ovr.unwrap_or(params.pitching_ovr);
+        let base = 1800.0 + (ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
         base * league_salary_mult(&params.league_id, &params.league_mult)
             * params.budget_mod.unwrap_or(1.0).clamp(0.80, 1.25)
     };
@@ -709,6 +764,15 @@ pub struct CalcNpcRenewalSalaryParams {
     pub current_salary: i64,
     pub performance_score: f64,  // 0~100, 시즌 성적 기반
     pub greed: f64,              // personality.greed 0~100
+    /// 🔴 **구단주가 돈을 쓰는 성향** (2026-09-01 · C-3). 0~100.
+    ///
+    /// ⚠ **안 넘기면 예전 그대로다**(50 → 배수 1.0). 구 페이로드가 그대로 돈다.
+    ///
+    /// 이 축은 구단 성향 12축 중 **유일하게 아무 데서도 안 읽히던 것**이었다.
+    /// 읽는 자리가 Rust 전체에 하나뿐이었고(`team_engine::base_contract_offer`)
+    /// 그 함수의 TS 호출부가 0건이었다 — **축 하나가 통째로 죽어 있었다.**
+    #[serde(default)]
+    pub owner_spending_willingness: Option<f64>,
 }
 
 pub fn calc_npc_renewal_salary(p: CalcNpcRenewalSalaryParams) -> i64 {
@@ -717,7 +781,27 @@ pub fn calc_npc_renewal_salary(p: CalcNpcRenewalSalaryParams) -> i64 {
     let perf   = 0.9 + (p.performance_score / 100.0) * 0.2;   // ×0.90~×1.10
     let greed  = 1.0 + (p.greed - 50.0) / 500.0;              // ×0.90~×1.10
     let age_damp = if p.age >= 33 { 0.9 } else { 1.0 };
-    let raw = blend * perf * greed * age_damp;
+    // 🔴 **구단주 성향** — 같은 선수라도 구단에 따라 제시액이 다르다.
+    //
+    // ⚠ **계단이 아니라 연속이다** (사용자 확정 2026-09-01). 죽어 있던
+    //   `base_contract_offer` 는 `owner / 25` 로 4단 계단이었는데, 실측해
+    //   보니 그 표가 축을 **삼킨다**:
+    //
+    //       KBL 축  26 45 45 45 45 49 49 49 71 75  →  배수 0.92 가 **8팀**
+    //
+    //   26 과 49 가 같은 값이 된다. 연속으로 두면 KBL 이 3 → 5 가지,
+    //   해외가 3 → 12 가지로 갈린다(폭은 20% → 16% 로 비슷하다).
+    //
+    // ⚠ **KBL 은 이래도 5가지뿐이다.** 축 값 자체가 45 에 4팀·49 에 3팀으로
+    //   뭉쳐 있고, 그건 예산에서 유도하기 때문이다
+    //   (`deriveProfileFromBudgetIndex`). **근본은 KBL 예산 분포**라
+    //   여기서는 못 푼다.
+    //
+    // ⚠ 상·하한(`market * 0.55 ~ 1.35`)은 그대로다 — 성향이 그 밖으로
+    //   끌고 나가면 리그 연봉 체계가 무너진다.
+    let owner = 0.85
+        + p.owner_spending_willingness.unwrap_or(50.0).clamp(0.0, 100.0) / 100.0 * 0.30;
+    let raw = blend * perf * greed * age_damp * owner;
     raw.max(market * 0.55).min(market * 1.35).round() as i64
 }
 
@@ -1184,5 +1268,96 @@ mod prospect_tests {
         let r = calc_prospect_rank(p);
         assert!(!r.entries.iter().any(|e| e.id == "PLY_HERO"));
         assert_eq!(r.hero_rank, 0);
+    }
+
+    // ── 구단주 성향이 재계약 제시액을 탄다 (2026-09-01 · C-3) ──────────────
+
+    fn renewal(owner: Option<f64>, current_salary: i64, ovr: f64) -> i64 {
+        let mut mult = std::collections::HashMap::new();
+        mult.insert("LEAGUE_KBL".to_string(), 1.0_f64);
+        calc_npc_renewal_salary(CalcNpcRenewalSalaryParams {
+            league_mult: mult,
+            ovr, age: 28,
+            league_id: "LEAGUE_KBL".into(),
+            current_salary,
+            performance_score: 60.0,
+            greed: 50.0,
+            owner_spending_willingness: owner,
+        })
+    }
+
+    /// 시장가(`1800 + (ovr-50)*220`) — 상·하한을 피해 고르려고 쓴다
+    fn market_of(ovr: f64) -> f64 { 1800.0 + (ovr - 50.0).max(0.0) * 220.0 }
+
+    /// 🔴 **이게 이 수정의 핵심이다.**
+    ///
+    /// 구단 성향 12축 중 `owner_spending_willingness` 만 아무 데서도 안 읽혔다.
+    /// 읽는 자리가 Rust 전체에 하나뿐이었고(`team_engine::base_contract_offer`)
+    /// 그 함수의 TS 호출부가 0건이었다.
+    #[test]
+    fn 구단주_성향이_제시액을_가른다() {
+        // ⚠ 상·하한을 피한 자리에서 본다 — 현재 연봉을 시장가 근처로 둔다
+        let ovr = 72.0;
+        let cur = (market_of(ovr) * 0.9) as i64;
+        let 짠구단 = renewal(Some(26.0), cur, ovr);   // KBL 최저 실측
+        let 큰손 = renewal(Some(75.0), cur, ovr);     // KBL 최고 실측
+        assert!(큰손 > 짠구단, "큰손이 더 줘야 한다: {큰손} vs {짠구단}");
+        // 축의 폭은 0.85~1.15 라 약 15% 다. 계단표(4단)였다면 KBL 10팀 중
+        // 8팀이 **같은 값**이었다 — 연속으로 둔 이유가 그것이다
+        let 비율 = 큰손 as f64 / 짠구단 as f64;
+        assert!(비율 > 1.10 && 비율 < 1.25, "폭이 이상하다: {비율}");
+    }
+
+    /// 🔴 **계단이면 안 된다 — 이게 이 수정의 요점이다.**
+    ///
+    /// 죽어 있던 `base_contract_offer` 는 `owner / 25` 로 4단 계단이었다.
+    /// 그 표에서는 **26 과 45 가 같은 값**(0.92)이 되고, KBL 실측 축이
+    /// `26 45 45 45 45 49 49 49 71 75` 라 **10팀 중 8팀이 한 칸에 몰린다.**
+    ///
+    /// 이 검사가 없으면 계단으로 되돌려도 아무도 안 잡는다 — 실제로
+    /// 처음 짠 검사가 그 변이를 놓쳤다.
+    #[test]
+    fn 계단이_아니라_연속이다() {
+        let ovr = 72.0;
+        let cur = (market_of(ovr) * 0.9) as i64;
+        // 계단표에서는 둘 다 0.92 다. 연속이면 갈려야 한다
+        assert_ne!(renewal(Some(26.0), cur, ovr), renewal(Some(45.0), cur, ovr),
+            "26 과 45 가 같은 값이다 — 계단표로 돌아갔다");
+        // 같은 칸 안의 다른 두 값도 갈려야 한다 (45·49 는 계단에서 둘 다 0.92)
+        assert_ne!(renewal(Some(45.0), cur, ovr), renewal(Some(49.0), cur, ovr),
+            "45 와 49 가 같은 값이다 — 계단표로 돌아갔다");
+    }
+
+    /// ⚠ **안 넘기면 예전 그대로여야 한다.** 구 페이로드가 그대로 돈다
+    #[test]
+    fn 성향을_안_넘기면_중립이다() {
+        let ovr = 72.0;
+        let cur = (market_of(ovr) * 0.9) as i64;
+        assert_eq!(renewal(None, cur, ovr), renewal(Some(50.0), cur, ovr));
+    }
+
+    /// 🔴 **상·하한이 축을 삼킨다.** 실측에서 재계약 228건 중 **54%** 가
+    ///   상한(19%) 또는 하한(36%)에 붙어 있었다 — 그 선수들에겐 성향뿐 아니라
+    ///   **성적·greed·나이 축도 안 보인다.**
+    ///
+    ///   이 검사는 그 사실을 못박는다. 고치는 건 밸런스 몫이다.
+    #[test]
+    fn 현재_연봉이_시장가보다_훨씬_높으면_상한이_축을_삼킨다() {
+        let ovr = 72.0;
+        let cur = (market_of(ovr) * 2.0) as i64;   // 시장가의 2배
+        assert_eq!(renewal(Some(26.0), cur, ovr), renewal(Some(75.0), cur, ovr),
+            "상한에 붙으면 성향이 안 보인다 — 그게 지금 재계약의 19% 다");
+    }
+
+    /// 상·하한 자체는 그대로여야 한다 — 성향이 그 밖으로 끌고 나가면
+    /// 리그 연봉 체계가 무너진다
+    #[test]
+    fn 성향이_상하한을_넘지_못한다() {
+        let ovr = 72.0;
+        let m = market_of(ovr);
+        let 큰손_비싼선수 = renewal(Some(100.0), (m * 3.0) as i64, ovr);
+        assert!(큰손_비싼선수 as f64 <= m * 1.35 + 1.0, "상한을 넘었다: {큰손_비싼선수}");
+        let 짠구단_싼선수 = renewal(Some(0.0), 1, ovr);
+        assert!(짠구단_싼선수 as f64 >= m * 0.55 - 1.0, "하한 아래다: {짠구단_싼선수}");
     }
 }

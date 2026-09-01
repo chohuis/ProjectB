@@ -403,7 +403,11 @@
 <svelte:window on:keydown={handleKeydown} />
 
 {#if open && team}
-  <div class="overlay" on:click={handleOverlayClick} role="dialog" aria-modal="true">
+  <!-- ⚠ `role="dialog"` 는 초점을 받을 수 있어야 하고, 배경 클릭으로
+       닫으면 키보드에도 같은 길이 있어야 한다. Esc 는 `svelte:window`
+       가 이미 받지만 요소에도 달아 둔다 — `close()` 는 멱등하다 -->
+  <div class="overlay" on:click={handleOverlayClick} on:keydown={handleKeydown}
+       role="dialog" aria-modal="true" tabindex="-1">
     <div class="modal">
 
       <!-- 컬러 바 -->
@@ -716,7 +720,9 @@
                         class="lineup-row"
                         class:hero={entry.player.id === $gameStore.protagonist.id}
                         on:dblclick={() => { playerModalId = entry.player.id; }}
-                        title="더블클릭: 선수 상세 보기"
+                        on:keydown={(e) => { if (e.key === "Enter") { playerModalId = entry.player.id; } }}
+                        role="button" tabindex="0"
+                        title="더블클릭: 선수 상세 보기 (Enter 도 된다)"
                         style="cursor:pointer"
                       >
                         <span class="slot-label">{SP_LABELS[i] ?? `${i + 1}선발`}</span>
@@ -744,7 +750,9 @@
                         class="lineup-row"
                         class:hero={player.id === $gameStore.protagonist.id}
                         on:dblclick={() => { playerModalId = player.id; }}
-                        title="더블클릭: 선수 상세 보기"
+                        on:keydown={(e) => { if (e.key === "Enter") { playerModalId = player.id; } }}
+                        role="button" tabindex="0"
+                        title="더블클릭: 선수 상세 보기 (Enter 도 된다)"
                         style="cursor:pointer"
                       >
                         <span class="slot-label rp-label">중계</span>
@@ -772,7 +780,9 @@
                         class="lineup-row"
                         class:hero={player.id === $gameStore.protagonist.id}
                         on:dblclick={() => { playerModalId = player.id; }}
-                        title="더블클릭: 선수 상세 보기"
+                        on:keydown={(e) => { if (e.key === "Enter") { playerModalId = player.id; } }}
+                        role="button" tabindex="0"
+                        title="더블클릭: 선수 상세 보기 (Enter 도 된다)"
                         style="cursor:pointer"
                       >
                         <span class="slot-label cp-label">마무리</span>
@@ -798,7 +808,9 @@
                         class="lineup-row"
                         class:hero={player.id === $gameStore.protagonist.id}
                         on:dblclick={() => { playerModalId = player.id; }}
-                        title="더블클릭: 선수 상세 보기"
+                        on:keydown={(e) => { if (e.key === "Enter") { playerModalId = player.id; } }}
+                        role="button" tabindex="0"
+                        title="더블클릭: 선수 상세 보기 (Enter 도 된다)"
                         style="cursor:pointer"
                       >
                         <span class="slot-label extra-label">후보</span>
@@ -826,7 +838,9 @@
                       class="lineup-row"
                       class:hero={entry.player.id === $gameStore.protagonist.id}
                       on:dblclick={() => { playerModalId = entry.player.id; }}
-                      title="더블클릭: 선수 상세 보기"
+                      on:keydown={(e) => { if (e.key === "Enter") { playerModalId = entry.player.id; } }}
+                      role="button" tabindex="0"
+                      title="더블클릭: 선수 상세 보기 (Enter 도 된다)"
                       style="cursor:pointer"
                     >
                       <span class="slot-label">{entry.slot}번</span>

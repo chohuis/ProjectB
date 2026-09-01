@@ -629,7 +629,11 @@
   {@const pid  = isProtagonistModal ? protagonist.id : entityId}
   {@const ptId = isProtagonistModal ? protagonist.teamId : (modalEntity?.teamId ?? "")}
 
-  <div class="modal-overlay" on:click={handleOverlayClick} role="dialog" aria-modal="true">
+  <!-- ⚠ `role="dialog"` 는 초점을 받을 수 있어야 하고, 배경 클릭으로
+       닫으면 키보드에도 같은 길이 있어야 한다. Esc 는 `svelte:window`
+       가 이미 받지만 요소에도 달아 둔다 — `close()` 는 멱등하다 -->
+  <div class="modal-overlay" on:click={handleOverlayClick} on:keydown={handleKeydown}
+       role="dialog" aria-modal="true" tabindex="-1">
     <div class="modal-box">
       <button class="modal-close" on:click={close}>✕</button>
 

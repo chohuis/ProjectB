@@ -1117,6 +1117,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
     // 프로 시즌 총평 메시지
     if (isProStage && weekInYear === OFFSEASON_START_WEEK) {
+      // ⚠ 여기는 **투수 전용**이다 — 바로 아래가 era·w·l 을 읽는다.
+      //   타자를 넓히면 그 줄이 깨진다. 계약 쪽(1160·1245)만 넓혔다.
       const myStats = sOff.stats[gOff.protagonist.id] as import("../types/save").PitcherSeasonStats | null ?? null;
       const statSummary = myStats
         ? `ERA ${myStats.era?.toFixed(2) ?? "-"} / ${myStats.w ?? 0}승 ${myStats.l ?? 0}패 / ${myStats.k ?? 0}K`
@@ -1157,7 +1159,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // applySeasonContractProgress()는 W52(SeasonEndModal)에서 호출 — 여기서는 미리 체크만
       // 이번 시즌 종료 후 계약이 만료되는지 확인 (remainingYears === 1 → 감산 후 0)
       if (!hasPending && !hasPendingNext && contract) {
-        const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
+        const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null;
 
         // ── 노쇠·방출 압박 판정 ──────────────────────────────────
         //
@@ -1242,7 +1244,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         // remainingYears > 1: 계약 기간 중 — 아무것도 하지 않음
       } else if (!contract && !hasPending && !hasPendingNext) {
         // 계약 자체 없음 (이례적)
-        const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
+        const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null;
         if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
           seasonStore.pushPendingAction({ type: "faMarket" });
         } else {
@@ -1565,6 +1567,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (weekInYear % 3 === 0 && gFinal.protagonist.careerStage !== "military" && isSeasonActive) {
     const p   = gFinal.protagonist;
     const pit = p.pitching;
+    // ⚠ 투수 전용 — 아래가 ERA 로 코치 총평을 쓴다
     const myStats = sFinal.stats[p.id] as import("../types/save").PitcherSeasonStats | null ?? null;
     const coachName = getPitchCoachName(p.teamId, mFinal.entities);
 

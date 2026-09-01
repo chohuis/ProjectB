@@ -63,10 +63,31 @@ export interface PitchEntry {
   unlockRuleId: string;
 }
 
+/**
+ * 구종 해금 조건. **정본은 `training/pitch_unlock_rules.json` 이다.**
+ *
+ * 🔴 `"multi_stat"` 이 빠져 있었다 (2026-09-01 · 트랙 C 가 잡았다).
+ * 데이터 10건 중 **3건**이 그 타입이고 화면(`TrainingPage`)은 이미 제대로
+ * 처리한다 — **타입만 뒤처져 있었다.**
+ *
+ * ```json
+ *   { "id": "PITCH_UNLOCK_CUTTER", "type": "multi_stat",
+ *     "params": { "conditions": [ {"stat":"command","value":52},
+ *                                 {"stat":"velocity","value":68} ] } }
+ * ```
+ *
+ * ⚠ **타입을 데이터에 맞춘 것이지 동작을 바꾼 게 아니다.** 런타임은 원래
+ *   맞게 돌고 있었고 `svelte-check` 오류 6건만 나고 있었다.
+ */
 export interface PitchUnlockRule {
   id: string;
-  type: "always" | "min_stat";
-  params: { stat?: string; value?: number };
+  type: "always" | "min_stat" | "multi_stat";
+  params: {
+    stat?: string;
+    value?: number;
+    /** `multi_stat` 전용 — 전부 만족해야 해금이다 */
+    conditions?: { stat: string; value: number }[];
+  };
 }
 
 // ?? refs ???(refs.json 援ъ“) ?????????????????????????????????

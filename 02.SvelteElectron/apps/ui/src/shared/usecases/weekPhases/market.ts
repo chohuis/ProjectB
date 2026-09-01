@@ -663,14 +663,49 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     {
       // ⚠ 예전엔 `currentTeam`만 갈았다. 같은 리그 안 거래라 국내에선 안
       // 드러났지만, 리그를 안 건드리면 목적지가 다른 리그일 때 소속이 어긋난다.
+      // 🔴 **경력에도 남긴다** (2026-09-01).
+      //
+      //   예전엔 팀만 갈고 `careerEvents` 에 아무것도 안 남겼다. 그래서
+      //   **선수 인생 기록에 트레이드가 한 줄도 안 뜬다** — 소속만 어느 날
+      //   갑자기 바뀐다. `leagueAddTransactions` 에는 남지만 그건 리그
+      //   거래 기록이지 선수 개인 기록이 아니다.
+      //
+      // ⚠ **집계가 이것 때문에 틀렸다.** `faIntakeTally` 가 `eventType:
+      //   "trade"` 를 세는데, 그 값을 남기는 자리가 **FA 보상선수 하나뿐**
+      //   이었다(아래 `fa` 쪽). 그래서 "트레이드 건수"라고 잰 값이 전부
+      //   보상선수 수였고, JBL 이 0건으로 보였다(실제로는 3시즌 12~15건).
+      //   `advanceWeek.ts` 주석이 같은 함정을 이미 적어 뒀다 —
+      //   "트레이드 5건으로 보이던 건 전부 FA 보상선수였다".
+      //
+      // ⚠ 리그를 넘는 트레이드는 이 함수가 구조적으로 못 만든다(위 주석).
+      //   그래도 `leagueOfTeam` 으로 실제 값을 넣는다 — 전제가 깨지면
+      //   기록에서 드러나야 한다.
+      const tradeEvOf = (
+        toTeamId: string,
+        from: { currentTeam?: string; currentLeague?: string } | undefined,
+      ) => ({
+        year: s.seasonYear,
+        eventType: "trade" as const,
+        fromTeamId:   from?.currentTeam ?? "",
+        fromLeagueId: from?.currentLeague ?? leagueId,
+        toTeamId,
+        toLeagueId:   leagueOfTeam(toTeamId) ?? leagueId,
+        detail: TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason,
+      });
       const updatedNpcs = get(gameStore).npcs.map(n => {
         if (n.npcId === offeredId) {
           const t = proposal.receivingTeamId;
-          return { ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague };
+          return {
+            ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague,
+            careerEvents: [...(n.careerEvents ?? []), tradeEvOf(t, n)],
+          };
         }
         if (n.npcId === requestedId) {
           const t = proposal.proposingTeamId;
-          return { ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague };
+          return {
+            ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague,
+            careerEvents: [...(n.careerEvents ?? []), tradeEvOf(t, n)],
+          };
         }
         return n;
       });
@@ -1343,6 +1378,11 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
             performanceScore: perfScore,
             greed:            pers.greed,
             leagueMult:       leagueMultMap,
+            // 🔴 **구단주 성향을 넘긴다** (2026-09-01 · C-3).
+            //   바로 아래 `calcNpcContractYearsNative` 에는 성향 둘을 이미
+            //   넘기는데 **연봉 쪽에만 안 넘기고 있었다.** 그래서 12축 중
+            //   이 축 하나만 아무 데서도 안 읽혔다.
+            ownerSpendingWillingness: profile.ownerSpendingWillingness,
           })),
           window.projectB!.calcNpcContractYearsNative(JSON.stringify({
             age:                 npc.age,

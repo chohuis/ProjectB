@@ -25,9 +25,25 @@
   // 🔴 **값을 숫자로 노출하지 않는다** — `Relationship.value` 주석이 그렇게 못박아 뒀다.
   //    "−100~+100. 플레이어에게 숫자로 노출하지 않는다 — 라벨만 보여준다"
   import { relationLabel } from "../../../shared/types/relationship";
+  // 🔴 **화면마다 번역표를 만들지 않는다.** `careerEventLabel.ts` 머리말이
+  //    그 결함(코드가 화면에 새는 것)을 이미 적어 뒀다
+  import { careerEventLabel } from "../../../shared/utils/careerEventLabel";
   import { isV3SlotActive } from "../../../shared/repo/v3Mode";
 
   export let onClose: () => void;
+
+  /**
+   * **커리어를 끝내고 타이틀로 나간다.** 없으면 그 버튼을 안 그린다.
+   *
+   * 🔴 예전엔 이 길이 없었다. 은퇴 결산을 닫으면 **은퇴한 주인공인 채로**
+   *   메인 화면에 남았고, 게임 안에 타이틀로 돌아가는 길이 하나도 없었다.
+   *   `App.svelte` 부터 `onSeasonEnd` 이 배선돼 있었는데 `SeasonEndModal`
+   *   에서 끊겨 아무도 안 불렀다(2026-09-01 실측).
+   *
+   * ⚠ **`나 > 상태`에서 다시 열 때는 안 넘긴다.** 기록을 다시 보러 온
+   *   것이므로 거기서 타이틀로 튕기면 안 된다.
+   */
+  export let onExit: (() => void) | null = null;
 
   // 아래로 잇는다 — 한 장 요약은 그대로 두고 상세를 접어서 붙인다.
   // 탭으로 쪼개지 않은 이유: 위쪽이 이미 "한 장으로 읽히는" 결산이라
@@ -58,6 +74,17 @@
   // 연도 오름차순 — 데뷔부터 은퇴까지 읽히게 한다
   $: byYear = [...records].sort((a, b) => a.year - b.year);
 
+  // ── 주요 사건 ──────────────────────────────────────────────────
+  //
+  // ⚠ **`careerRecords`가 아니라 `careerEvents`다.** 시즌 성적과 달리 사건은
+  //   시즌 밖에서도 일어난다 — 대학 졸업·입대·병역 면제는 출전 기록이 한 줄도
+  //   없는 해에 남는다. 통산 표에서는 그 해가 통째로 빈칸이다.
+  //
+  // 🔴 그래서 이 절만 `records.length === 0` **바깥**에 둔다. 아마추어에서
+  //   그만둔 커리어는 통산 표가 비지만 졸업·중단 사건은 남아 있고, 안쪽에
+  //   두면 그 커리어의 결말이 "기록을 남기지 못했습니다" 한 문장으로 끝난다.
+  $: events = [...(p.careerEvents ?? [])].sort((a, b) => a.year - b.year);
+
   // 포스트시즌 라벨. `psResult`가 없으면 그 해는 아무것도 안 적는다
   const PS: Record<string, string> = {
     champion: "우승", runnerUp: "준우승", semiFinal: "PO", notQualified: "",
@@ -67,16 +94,33 @@
   const KIND: Record<string, string> = {
     manager: "감독", coach: "코치", teammate: "동료", owner: "구단주",
   };
-  // `personId`가 npcId와 같다 (people.md §4)
-  $: npcNameOf = (id: string) =>
-    ($gameStore.npcs ?? []).find((n) => n.npcId === id)?.name ?? id;
+  /**
+   * 🔴 **`npcs` 를 뒤지면 안 됐다** (2026-09-01 눈확인에서 드러났다).
+   *
+   *   코치·감독은 `npcs` 에 없다 — 스태프는 따로 산다. 그래서 결산의 `사람`
+   *   절에 **`staff:TEAM_HS_DOSEONG_COA1` 같은 원문 id 가 그대로 떴다.**
+   *   폴백이 원문이면 안 된다는 건 `careerEventLabel.ts` 머리말이 이미
+   *   못박은 결함 모양이고, 지시서의 "이름은 조회해서 읽어라"에도 어긋난다.
+   *
+   * ⚠ **조회할 필요가 없다.** `Relationship` 은 person VIEW 조인에서 `name`
+   *   을 이미 받아 온다. `PeoplePage` 도 그걸 쓴다 — 없으면 역할명으로
+   *   대체한다(은퇴 등으로 VIEW 에서 사라진 상대).
+   */
+  $: relName = (r: import("../../../shared/types/relationship").Relationship) =>
+    r.name || `(${KIND[r.kind] ?? "인물"})`;
 
   $: relTop = [...relRows]
     .filter((r) => (r.value ?? 0) !== 0)
     .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
+  /**
+   * ⚠ **폴백이 원문 id 였다.** 해체·이름 변경으로 목록에 없는 팀이면
+   *   `TEAM_UNIV_HANYANG` 같은 영문 id 가 화면에 샜다. `LeaguePage` 는
+   *   같은 문제를 `(기록 없음)` 으로 이미 막아 뒀다 — 같게 맞춘다.
+   */
+  const GONE = "(기록 없음)";
   $: teamName = (id: string) =>
-    ($teamsL10n ?? []).find((t) => t.id === id)?.name ?? id;
+    ($teamsL10n ?? []).find((t) => t.id === id)?.name ?? (id ? GONE : "");
 
   const REASON: Record<string, string> = {
     voluntary: "자발적 은퇴",
@@ -268,14 +312,40 @@
           </section>
         {/if}
 
-        <!-- 사람 — 숫자뿐이라 이름·역할·값만 놓는다 -->
+      {/if}
+
+      <!-- 주요 사건 — 위 분기 바깥이다. 통산 기록이 없어도 사건은 있다 -->
+      {#if events.length > 0}
+        <section class="sec">
+          <h3>주요 사건</h3>
+          <ol class="events">
+            {#each events as e}
+              <li class="ev">
+                <span class="ev-y">{e.year}</span>
+                <span class="ev-k">{careerEventLabel(e.eventType)}</span>
+                {#if e.fromTeamId || e.toTeamId}
+                  <span class="ev-t">
+                    {#if e.fromTeamId}{teamName(e.fromTeamId)}{/if}
+                    {#if e.fromTeamId && e.toTeamId}<span class="ev-ar">→</span>{/if}
+                    {#if e.toTeamId}{teamName(e.toTeamId)}{/if}
+                  </span>
+                {/if}
+                {#if e.detail}<span class="ev-d">{e.detail}</span>{/if}
+              </li>
+            {/each}
+          </ol>
+        </section>
+      {/if}
+
+        <!-- 사람 — **세 덩어리 뒤에 놓는다.** 요약·통산·사건이 결산의
+             본문이고 관계는 덧붙이는 것이다 (사용자 확정 2026-09-01) -->
         {#if relTop.length > 0}
           <section class="sec">
             <h3>사람</h3>
             <ul class="rels">
               {#each relTop.slice(0, 8) as r}
                 <li>
-                  <span class="r-name">{npcNameOf(r.personId)}</span>
+                  <span class="r-name">{relName(r)}</span>
                   <span class="r-kind">{KIND[r.kind] ?? r.kind}</span>
                   <span class="r-val" class:high={(r.value ?? 0) >= 60}>
                     {relationLabel(r.value).label}</span>
@@ -285,11 +355,14 @@
           </section>
         {/if}
 
-      {/if}
     </div>
 
     <footer class="foot">
-      <button class="close" on:click={onClose}>닫기</button>
+      <!-- 나가는 길이 있을 때만 "둘러보기"다 — 없으면 그냥 닫는 것이다 -->
+      <button class="close" on:click={onClose}>{onExit ? "둘러보기" : "닫기"}</button>
+      {#if onExit}
+        <button class="exit" on:click={onExit}>마치기</button>
+      {/if}
     </footer>
   </section>
 </div>
@@ -308,10 +381,19 @@
   .yr-y { font-variant-numeric: tabular-nums; opacity: .8; min-width: 3.2em; }
   .yr-t { font-weight: 600; }
   .yr-rank { font-variant-numeric: tabular-nums; opacity: .7; font-size: .9em; }
-  .yr-ps { font-size: .8em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #2a3a2a); }
+  /* ⚠ `--accent-weak` 는 없는 토큰이었다 — 폴백만 먹혔고 글자색이 없어
+       어두운 바탕에 어두운 글자가 됐다. 이 화면은 어두운 섬이라 토큰을
+       안 쓰고 색을 직접 정한다 (위 머리말 규칙) */
+  .yr-ps {
+    font-size: .8em; padding: 1px 6px; border-radius: 4px;
+    background: #1b2a1b; color: #7fc99a;
+  }
   .yr-stat { margin-top: 3px; opacity: .85; font-variant-numeric: tabular-nums; font-size: .92em; }
   .yr-awards { margin-top: 3px; display: flex; gap: 4px; flex-wrap: wrap; }
-  .yr-aw { font-size: .78em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #3a3320); }
+  .yr-aw {
+    font-size: .78em; padding: 1px 6px; border-radius: 4px;
+    background: #241c06; color: #f0c65a;
+  }
   .rels { list-style: none; margin: 0; padding: 0; }
   .rels li { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
   .r-name { font-weight: 600; }
@@ -341,7 +423,12 @@
     background: linear-gradient(180deg, #14203a 0%, #0d1524 100%);
     border-bottom: 1px solid #23324c;
   }
-  .chip { margin: 0; font-size: 11px; letter-spacing: 0.12em; color: #7e97bd; text-transform: uppercase; }
+  /*
+    ⚠ **자간을 한국어에 맞춘다.** 0.12em 은 라틴 소문자 기준이라 한글에서는
+    글자가 흩어져 보인다. `text-transform: uppercase` 는 한글에 아무 일도
+    안 하면서 라틴이 섞이면 그것만 튄다 — 둘 다 걷어낸다.
+  */
+  .chip { margin: 0; font-size: 11px; letter-spacing: 0.04em; color: #7e97bd; }
   .head h2 {
     margin: 7px 0 0; display: flex; align-items: center; gap: 10px;
     font-size: 26px; font-weight: 800; color: #eef4ff; letter-spacing: -0.02em;
@@ -366,12 +453,17 @@
 
   .sec { display: grid; gap: 10px; }
   .sec h3 {
-    margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    color: #7e97bd; text-transform: uppercase;
+    margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+    color: #7e97bd;
     padding-bottom: 6px; border-bottom: 1px solid #1b2740;
   }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 8px; }
+  /*
+    ⚠ **`auto-fit` 이 줄을 7+5 로 갈랐다.** 폭에 따라 한 줄에 몇 칸이 들어갈지
+    달라져서 아래 줄이 늘 어중간했다. 여섯 열로 고정한다 —
+    투수 12칸이 **6+6** 으로 딱 맞고, 타자 11칸은 6+5 다.
+  */
+  .grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
   .cell {
     display: grid; gap: 3px; justify-items: center;
     padding: 8px 4px; border-radius: 6px; background: #121c30;
@@ -379,23 +471,37 @@
   .lbl { font-size: 10px; color: #7e97bd; }
   .val { font-size: 15px; color: #dce7f7; font-variant-numeric: tabular-nums; }
 
-  .highs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  /* 다섯 개가 4+1 로 갈려 마지막 한 칸이 외따로 떨어졌다 — 세 열이면 3+2 다 */
+  .highs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .high {
     display: flex; align-items: baseline; gap: 7px;
     padding: 8px 11px; border-radius: 6px; background: #121c30;
   }
-  .h-lbl { font-size: 11px; color: #8aa0bf; flex: 1; }
+  /* 칸이 좁으면 "최다 이닝" 이 두 줄로 접혀 그 칸만 키가 커졌다 */
+  .h-lbl { font-size: 11px; color: #8aa0bf; flex: 1; white-space: nowrap; }
   .h-val { font-size: 14px; color: #7fc99a; font-variant-numeric: tabular-nums; }
   .h-yr  { font-size: 11px; color: #62779a; font-variant-numeric: tabular-nums; }
 
+  /*
+    ⚠ **수상만 민무늬였다.** 소속·주요 사건은 카드 행인데 여기만 배경이 없어
+    리듬이 끊기고, 연도를 오른쪽에 붙이자 이름과의 사이가 휑해 보였다.
+    같은 카드로 맞추면 그 간격이 표처럼 읽힌다.
+  */
   .awards { display: grid; gap: 6px; }
-  .award { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+  .award {
+    display: flex; align-items: center; gap: 8px; font-size: 13px;
+    padding: 7px 10px; border-radius: 6px; background: #121c30;
+  }
   .a-name { color: #dce7f7; }
   .a-cnt {
     font-size: 11px; font-weight: 700; color: #f0c65a;
     background: #241c06; border-radius: 10px; padding: 1px 7px;
   }
-  .a-yrs { font-size: 11px; color: #62779a; font-variant-numeric: tabular-nums; }
+  /* 연도를 오른쪽에 붙여 줄마다 같은 자리에서 읽히게 한다 */
+  .a-yrs {
+    margin-left: auto; font-size: 11px; color: #62779a;
+    font-variant-numeric: tabular-nums;
+  }
 
   .stints { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   .stints li {
@@ -406,9 +512,25 @@
   .s-span { font-size: 12px; color: #8aa0bf; font-variant-numeric: tabular-nums; }
   .s-n    { font-size: 11px; color: #62779a; min-width: 46px; text-align: right; }
 
+  /* 주요 사건 — 연도를 왼쪽에 고정해 세로로 읽히게 한다 */
+  .events { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .ev {
+    display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap;
+    padding: 7px 10px; border-radius: 6px; background: #121c30;
+  }
+  .ev-y {
+    font-size: 12px; color: #8aa0bf; font-variant-numeric: tabular-nums;
+    min-width: 3.2em;
+  }
+  .ev-k { font-size: 13px; font-weight: 600; color: #dce7f7; }
+  .ev-t { font-size: 12px; color: #93aacb; }
+  .ev-ar { color: #62779a; margin: 0 4px; }
+  /* 사유는 길다(졸업은 전공·학점·경로가 붙는다) — 줄을 넘겨서 다 보인다 */
+  .ev-d { font-size: 11px; color: #62779a; flex: 1 1 100%; }
+
   .foot {
     padding: 14px 26px; border-top: 1px solid #23324c;
-    display: flex; justify-content: flex-end;
+    display: flex; justify-content: flex-end; gap: 8px;
   }
   .close {
     border: 1px solid #3a4d70; background: #16233c; color: #cfe0f5;
@@ -416,4 +538,11 @@
     cursor: pointer;
   }
   .close:hover { background: #1d2d4a; }
+  /* 커리어를 끝내는 쪽이라 무게를 준다 — 되돌릴 수 없는 이동이다 */
+  .exit {
+    border: 1px solid #6b5220; background: #2a2008; color: #f0c65a;
+    border-radius: 8px; padding: 9px 22px; font-size: 13px; font-weight: 700;
+    cursor: pointer;
+  }
+  .exit:hover { background: #3a2c0c; }
 </style>

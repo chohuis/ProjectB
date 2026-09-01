@@ -597,7 +597,18 @@ export interface CareerApplications {
    * ⚠ 옛 세이브엔 없다. 없으면 빈 배열로 읽는다.
    */
   overseasChoices?: string[];
-  sportsMilitaryApplied: boolean;
+  /**
+   * ⚠ **`sportsMilitaryApplied` 를 지웠다** (2026-09-01 · 트랙 C 가 찾았다).
+   *
+   * 진로 허브(고2 W28 · 대학 W29)는 **아마추어 진로**이고, 체육부대는
+   * **프로 선수** 대상이라 W46 후보공개 → W50 결과로 따로 돈다
+   * (`advanceWeek` · `protagonist.sportsUnitApplied`). 시점도 대상도 다르다.
+   *
+   * 그런데 이 필드를 `true` 로 만드는 코드가 **0건**이었다(두 생산부 다
+   * 리터럴 `false`). 진로 결과 화면의 체육부대 블록은 **뜨지도 않았다** —
+   * 도달 불가한 죽은 갈래였다. 짝이던 `CareerResults.sportsMilitaryPassed`
+   * 는 애초에 타입에 없었고, 넣어 달라는 요청을 거절하고 지우는 쪽을 택했다.
+   */
 }
 
 export interface CareerResults {

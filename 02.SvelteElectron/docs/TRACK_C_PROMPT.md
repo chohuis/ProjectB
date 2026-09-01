@@ -47,6 +47,26 @@ docs/RESUME.md · CLAUDE.md                              A
 **화면에 필요한 값을 못 얻으면 직접 고치지 마라.** A 에게 셀렉터를 요청해라 —
 A 가 함수 하나를 추가해 주는 편이 병합 푸는 것보다 훨씬 빠르다.
 
+### 🔴 가르는 규칙 (A 확정 2026-09-01)
+
+`shared/utils/` 는 40개가 넘고 성격이 섞여 있다. **표시는 C, 계산은 A** 다.
+
+```
+C   *Label.ts · displayName.ts · baseballFormat.ts · injuryReport.ts
+    — 값을 사람이 읽는 글자로 바꾸는 것
+A   *Engine.ts · draftSystem.ts · ids.ts · seasonWeeks.ts · careerSummary.ts
+    gameSimulator.ts · matchLineupBuilder.ts · leagueScheduler.ts 등 나머지 전부
+    — 규칙·계산. game.ts 가 읽는 것은 전부 A 다
+```
+
+`shared/stores/` 는 **화면 상태만 C** 다(`leagueUiStore` · `settings` ·
+`uiLock`). `game.ts` · `season.ts` · `backgroundLeague.ts` · `master.ts` ·
+`postseason.ts` · `npcLiveStats.ts` · `npcInjury.ts` · `autoAdvance.ts` 는 A 다.
+
+`apps/desktop/` 은 **스키마(`ipc/*.cjs`)가 C, 핸들러(`main.cjs`)가 A** 다.
+
+⚠ 경계가 애매하면 **먼저 물어라.** 되돌리는 것보다 싸다.
+
 ### R3. 네 소유는 이것이다
 
 ```
@@ -54,6 +74,10 @@ apps/ui/src/pages/**
 apps/ui/src/features/**
 apps/ui/src/shared/repo/slotRepo.ts       화면이 읽을 커맨드를 여기 추가
 apps/desktop/ipc/slotdb.cjs               그 커맨드의 SQL
+apps/desktop/ipc/db.cjs                   역대 기록 네 테이블 — **C 소유**
+shared/utils/*Label.ts · displayName.ts   표시 문자열 — **C 소유**
+shared/utils/baseballFormat.ts · injuryReport.ts          같음
+shared/stores/leagueUiStore.ts · settings.ts · uiLock.ts  화면 상태 — **C 소유**
 apps/ui/src/**/*.css · 스타일
 docs/TRACK_C_*.md                         네 문서
 ```
@@ -102,36 +126,54 @@ docs/TRACK_C_*.md                         네 문서
 
 ```
 화면            18개 (pages/)  ·  svelte 파일 54개
-없는 것         인생 기록 · 엔딩 화면  ·  히스토리 화면
-데이터는 있다   history_json · history_lb_stats · history_league
-                history_postseason · history_standings · history_tournaments
-svelte-check    오류 34 · 경고 37
 ```
 
-### svelte-check 오류가 어디 있나 (실측)
+🔴 **앞선 판이 "엔딩 화면이 없다"고 적었는데 틀렸다.** `pages/` 만 세고
+`features/` 를 안 봤다 — `features/retirement/ui/CareerEndScreen.svelte` 가
+**472줄로 이미 있었다.** 은퇴 흐름 연결까지 돼 있었다.
+**없는 것은 히스토리 화면(역대 순위·수상) 하나다.**
+
+### 역대 기록 테이블 — **DB 둘로 갈려 있다** (C 가 실측으로 잡았다)
 
 ```
-features/pre-game-briefing/ui/PreGameBriefingModal.svelte   12
-pages/main/MainPage.svelte                                   7
-pages/training/TrainingPage.svelte                           6
-features/career/ui/CareerResultsModal.svelte                 4
-pages/match/MatchPage.svelte                                 2
-pages/new-game/NewGamePage.svelte                            1
-features/injury/ui/InjuryTreatmentModal.svelte               1
-features/contract/ui/ContractNegotiationModal.svelte         1
+projectb_v2.db (db.cjs)     history_standings · history_lb_stats
+                            history_postseason · history_tournaments
+slot3_*.db (slotdb.cjs)     history_league
+양쪽 다                     career_history
 ```
 
-⚠ **이 중 셋은 동작이 이미 어긋났을 수 있다.** 타입 오류가 아니라
-런타임에 `undefined` 가 흐르는 자리인지 하나씩 봐라.
+⚠ 앞선 판이 적었던 `history_json` 은 **테이블이 아니다** — `db.cjs` 의
+`chat_history_json` **컬럼**이다. 지웠다.
 
-### 이미 알려진 화면 결함 둘 — A 소유라 네가 못 고친다
+🔴 **여섯 중 다섯이 0행이다.** 유일하게 찬 `history_standings` 190행도
+플레이 산물이 아니라 새 게임이 심는 **가짜 과거 5년**(2021–2025)이다.
+A 가 원인을 재고 있다 — 저장 실패가 로그에도 안 남던 것을 먼저 고쳤다.
+**엔딩 화면은 `protagonist.careerRecords` 로 짜는 게 맞다.**
 
-- `MainPage` 등판 회피가 `playerLines: []` 를 박는다 → 점수는 나오는데
-  **그 경기 선수 기록만 통째로 없다**
-- `syncProtagonistLeagueUpdate` 가 `teamRotationIndex` 를 안 건드린다 →
-  **배경 팀은 로테이션이 돌고 주인공 팀만 안 돈다**
+### 🔴 "없다"고 적기 전에 **재현한다**
 
-둘 다 `usecases/` 라 **A 에게 넘겨라.** 화면에서 우회하지 마라.
+이 저장소에서 "없다"가 **세 번** 틀렸다 — A1 · 엔딩 화면 · 히스토리 화면.
+세 번 다 `pages/` 만 세고 `features/` 를 안 봤다.
+
+```
+파일 검색 한 번으로 끝내지 마라
+  pages/ · features/ · shared/ 를 다 본다
+  화면이면 **띄워 본다** — 이 저장소 검사는 전부 소스 문자열 대조라
+  컴포넌트를 안 띄운다
+```
+
+⚠ **숫자를 여기 적지 않는다.** 예전엔 `svelte-check` 내역("PreGameBriefing
+12 · MainPage 7")을 적어 뒀는데 주마다 바뀌어 **문서가 늘 뒤처졌다.**
+직접 돌려서 봐라: `npx svelte-check --threshold error`
+
+### ✅ 화면 결함 둘 — **처리됐다** (2026-09-01)
+
+- 등판 회피가 선수 기록을 안 남기던 것 → A 가 `simulateSkippedGame` usecase 를
+  만들었고 C 가 이었다. ⚠ 위치는 `usecases/` 가 아니라 **`pages/main/`** 이었다
+- 정규 경기가 로테이션을 안 올리던 것 → 두 자리에서 고쳤다.
+  ⚠ 위치는 `stores/backgroundLeague.ts` 와 `pages/main/` 이다
+
+⚠ 앞선 판이 둘 다 "`usecases/` 라 A 소유"라고 적었는데 **위치가 틀렸다.**
 
 ---
 
@@ -150,7 +192,11 @@ features/contract/ui/ContractNegotiationModal.svelte         1
 ### 2주차 · 09.08 – 09.14
 
 1. **엔딩 화면 구현 완료**
-2. **히스토리 화면** — 역대 순위 · 수상. 데이터는 이미 쌓인다
+2. **히스토리 화면** — 역대 순위 · 수상.
+   ⚠ **"데이터는 이미 쌓인다"고 적었는데 반만 맞다.** 새 게임 기준으로는
+   시즌마다 쌓인다(A 가 2시즌 실측: 순위 238행 · 개인기록 6,708행 ·
+   포스트시즌 9행 · 대회 8행). 다만 **지금 있는 세이브엔 안 쌓여 있다** —
+   `HANDOFF_A_TO_C.md` §2 참고. 화면은 **빈 상태를 정상으로** 다뤄라.
 3. `svelte-check` 나머지 15건
 4. 남으면 **눈확인을 앞당긴다** — 3주차 일감을 미리 시작한다
 

@@ -47,6 +47,13 @@ const LABEL: Record<string, string> = {
   // 병역
   military_enlist:    "입대",
   military_discharge: "전역",
+  // 국제대회 입상으로 병역이 면제됐다. **전역과 다른 일이다** — 복무를
+  // 안 했으므로 공백 시즌이 없다 (`game.ts` 가 낸다)
+  military_exempt:    "병역 면제",
+  // 아마추어에서 야구를 그만뒀다. **은퇴와 구분한다** — 프로 경력이 없다
+  quit_baseball:      "야구를 그만둠",
+  // 대학 졸업 (`careerDecision.ts`). 미지명이어도 진로가 갈린다
+  graduation:         "대학 졸업",
   // 기타
   position_change:  "보직 변경",
 };

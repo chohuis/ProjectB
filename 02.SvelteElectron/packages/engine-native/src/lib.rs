@@ -86,6 +86,21 @@ pub fn contact_band_stats_native() -> String {
     }).to_string()
 }
 
+/// 계측 전용 — 담장 재확인이 결과를 몇 번 바꿨나 (양방향)
+#[napi]
+pub fn fence_move_stats_native() -> String {
+    let m = match_engine::read_fence_moves();
+    serde_json::json!({
+        "moves": m,
+        "labels": ["HR→2루타", "HR→3루타", "HR→뜬공아웃", "2루타→HR", "3루타→HR", "그라운드HR"],
+        "홈런_강등": m[0] + m[1] + m[2],
+        "홈런_승격": m[3] + m[4] + m[5],
+        "홈런_순증": (m[3] + m[4] + m[5]) as i64 - (m[0] + m[1] + m[2]) as i64,
+        "승격비율": match_engine::read_promo_ratio(),
+        "승격비율_구간": ["1.00~1.02","1.02~1.05","1.05~1.10","1.10~1.20","1.20~1.35","1.35+"],
+    }).to_string()
+}
+
 /// 계측 전용 — 카운터 초기화
 #[napi]
 pub fn reset_contact_bands_native() -> String {
@@ -1567,8 +1582,6 @@ napi_team!(eval_callup_candidates_native,        team_engine::eval_callup_candid
 napi_team!(eval_calldown_candidates_native,      team_engine::eval_calldown_candidates);
 napi_team!(eval_release_priority_native,         team_engine::eval_release_priority);
 napi_team!(eval_fa_bid_native,                   team_engine::eval_fa_bid);
-napi_team!(eval_renewal_offer_native,            team_engine::eval_renewal_offer);
-napi_team!(eval_new_contract_native,             team_engine::eval_new_contract);
 napi_team!(eval_retirement_suggestion_native,    team_engine::eval_retirement_suggestion);
 napi_team!(generate_trade_proposals_native,      team_engine::generate_trade_proposals);
 napi_team!(eval_trade_value_native,              team_engine::eval_trade_value);
@@ -1580,7 +1593,6 @@ napi_team!(calc_scouting_improvement_native,     team_engine::calc_scouting_impr
 
 napi_team!(player_eval_fa_decision_native,           player_agent::player_eval_fa_decision);
 napi_team!(player_eval_trade_response_native,        player_agent::player_eval_trade_response);
-napi_team!(player_eval_contract_offer_native,        player_agent::player_eval_contract_offer);
 napi_team!(player_eval_retirement_response_native,   player_agent::player_eval_retirement_response);
 napi_team!(player_rank_fa_offers_native,             player_agent::player_rank_fa_offers);
 

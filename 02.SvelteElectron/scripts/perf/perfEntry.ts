@@ -1506,6 +1506,38 @@ export function faTradeProbe(): Record<string, unknown> {
  * ⚠ 산수로만 보면 안 된다 — **실제로 그만큼 버는 선수가 있어야** 의미가 있다.
  *   그래서 분포(중앙·90%·최대)를 같이 낸다.
  */
+/**
+ * **주인공 팀의 선발 로테이션이 도는가** — 배경 팀과 나란히 본다.
+ *
+ * 🔴 문서가 "`syncProtagonistLeagueUpdate` 가 `teamRotationIndex` 를 안
+ *   건드린다"고 적어 뒀다. 그런데 `applyMatchResult` 는 `rot` 인자를
+ *   **받을 준비가 돼 있다**(주석에 "예전엔 이 갈래만 빠져 있었다"고 적힘).
+ *   호출부(`applyGameOutcome`)가 안 넘기는 것이 진짜 모양인지 재야 한다.
+ *
+ * ⚠ **주인공 팀과 배경 팀을 같은 리그에서 비교한다.** 리그가 다르면
+ *   경기 수가 달라 값이 안 맞는 게 당연해진다.
+ */
+export function rotationProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const lid = g.protagonist.leagueId;
+  const ls = s.leagueState?.[lid];
+  const idx = ls?.teamRotationIndex ?? {};
+  const myTeam = g.protagonist.teamId ?? "";
+  const all = Object.entries(idx);
+  const others = all.filter(([t]) => t !== myTeam).map(([, v]) => v as number).sort((a2, b2) => a2 - b2);
+  return {
+    리그: lid.replace("LEAGUE_", ""),
+    주인공팀: myTeam.replace("TEAM_", ""),
+    주인공팀_로테이션: (idx as Record<string, number>)[myTeam] ?? null,
+    배경팀_최소: others[0] ?? null,
+    배경팀_중앙: others[others.length >> 1] ?? null,
+    배경팀_최대: others[others.length - 1] ?? null,
+    팀수: all.length,
+    시즌: s.seasonYear, 주차: s.currentWeek,
+  };
+}
+
 export function salaryWeightProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
@@ -2690,6 +2722,8 @@ export function batterSampleProbe(): Record<string, unknown> {
     const bs = Object.values(stats).filter((x) => x.type === "batter") as Array<{
       g: number; pa: number; ab: number; h: number; bb: number;
       avg: number; obp: number; ops: number;
+      // 장타를 보려면 필요하다 — 없으면 0 으로 떨어진다(구 세이브 호환)
+      hr?: number; b2?: number; b3?: number;
     }>;
     if (bs.length === 0) continue;
     const pas = bs.map((b) => b.pa).sort((a, b) => a - b);
@@ -2716,6 +2750,30 @@ export function batterSampleProbe(): Record<string, unknown> {
       최고타율_규정: regulars.length ? Math.max(...regulars.map((b) => b.avg)) : 0,
       // ⚠ 최대값만 보면 "이상치 한 명"으로 읽힌다. **중앙값이 리그 수준이다**
       타율_p25: qa(0.25), 타율_중앙: qa(0.5), 타율_p75: qa(0.75),
+      // 🔴 **리그 전체 타율** (2026-09-01). 위 중앙값은 **선수별** 값이라
+      //   규정 미달 선수가 많으면 낮게 나온다 — 9이닝당 피안타·ERA 와
+      //   **짝이 안 맞는다.** 실제로 "중앙 .256 인데 9이닝당 피안타 10.5"
+      //   라는 어긋난 조합을 보고 "타율은 정상"이라고 읽을 뻔했다.
+      //   리그 판정은 **총 안타 / 총 타수**로 한다.
+      "리그타율": (() => {
+        const H = bs.reduce((a2, b) => a2 + b.h, 0);
+        const AB = bs.reduce((a2, b) => a2 + b.ab, 0);
+        return AB > 0 ? Math.round((H / AB) * 1000) / 1000 : 0;
+      })(),
+      "리그출루": (() => {
+        const H = bs.reduce((a2, b) => a2 + b.h, 0);
+        const BB = bs.reduce((a2, b) => a2 + b.bb, 0);
+        const AB = bs.reduce((a2, b) => a2 + b.ab, 0);
+        return AB + BB > 0 ? Math.round(((H + BB) / (AB + BB)) * 1000) / 1000 : 0;
+      })(),
+      "리그장타": (() => {
+        const AB = bs.reduce((a2, b) => a2 + b.ab, 0);
+        // ⚠ 2·3루타를 안 세면 장타율이 근사가 된다 — 없으면 0 으로 떨어진다
+        const TB = bs.reduce((a2, b) =>
+          a2 + (b.h + (b.b2 ?? 0) + (b.b3 ?? 0) * 2 + (b.hr ?? 0) * 3), 0);
+        return AB > 0 ? Math.round((TB / AB) * 1000) / 1000 : 0;
+      })(),
+      "홈런합": bs.reduce((a2, b) => a2 + (b.hr ?? 0), 0),
       최다타석선수: `g${top.g} pa${top.pa} ab${top.ab} bb${top.bb} = 경기당 ${
         top.g > 0 ? Math.round((top.pa / top.g) * 100) / 100 : 0}`,
       // ⚠ **경기당 타석이 실제 라인업 길이를 알려준다.** 9인 타순이면 4.5~5.2다.
@@ -5586,6 +5644,85 @@ export function leagueComponents(): Record<string, unknown> {
   return out;
 }
 
+/**
+ * **도루가 누구에게서 나오나** — `stealProbe` 는 합계만 센다 — 성공률이 낮은 원인을 가른다.
+ *
+ * 🔴 산식은 스피드 80 에서 65% 이고 포수 어깨가 그걸 깎는다:
+ *
+ * ```
+ *   스피드 80 · 포수 50 → 65%      스피드 80 · 포수 80 → 53%
+ *   스피드 95 · 포수 50 → 76%      스피드 70 · 포수 65 → 52%
+ * ```
+ *
+ * 실측 리그 성공률이 54~56% 라는 건 **느린 주자가 많이 뛰거나 포수 어깨가
+ * 세다**는 뜻이다. 어느 쪽인지 봐야 고칠 자리가 정해진다.
+ *
+ * ⚠ **견제사는 `cs` 에 안 섞인다** (코드 확인 2026-09-01). 옛 문서가
+ *   "섞여 있어 못 가른다"고 적었는데 `caught.push` 를 안 한다 — `outs` 만
+ *   올린다. **그 경고는 틀렸다.**
+ */
+export function stealBreakdownProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  void g;
+  const out: Record<string, unknown> = {};
+  for (const lid of ["LEAGUE_KBL"]) {
+    // ⚠ **롤오버 뒤에 읽으면 `stats` 가 비어 도루가 0 이 된다.**
+    //   프로브를 시즌 종료 **뒤**에 불렀더니 실제로 0/0 이 나왔다 —
+    //   "도루가 안 돈다"로 읽을 뻔했다. 계측은 롤오버 **앞**에서 잡는다.
+    const stats = s.leagueState?.[lid]?.stats ?? {};
+    let sb = 0, cs = 0;
+    const runners: Array<{ sb: number; cs: number; speed: number }> = [];
+    for (const [pid, st] of Object.entries(stats)) {
+      const b = st as unknown as { type?: string; sb?: number; cs?: number };
+      if (b.type !== "batter") continue;
+      const s2 = b.sb ?? 0, c2 = b.cs ?? 0;
+      sb += s2; cs += c2;
+      if (s2 + c2 === 0) continue;
+      const e = m.entities.find((x) => x.id === pid);
+      const sp = ((e?.details as { player?: { batting?: { speed?: number } } })
+        ?.player?.batting?.speed) ?? 50;
+      runners.push({ sb: s2, cs: c2, speed: sp });
+    }
+    // 시도량 가중 평균 스피드 — **누가 뛰는가**가 성공률을 정한다
+    const att = runners.reduce((a2, r) => a2 + r.sb + r.cs, 0);
+    const wSpeed = att > 0
+      ? runners.reduce((a2, r) => a2 + r.speed * (r.sb + r.cs), 0) / att : 0;
+    // 포수 어깨 분포 — 깎는 쪽
+    // 🔴 **그 리그 포수만 본다** — 처음엔 전 리그 506명을 셌다.
+    //   고교·대학·독립 포수가 섞이면 중앙이 리그 실제와 달라지고,
+    //   그 값으로 기준점을 잡으면 엉뚱한 데 맞춘다.
+    const teamsOfLeague = new Set(
+      m.teams.filter((t) => t.leagueId === lid && t.id.endsWith("_1")).map((t) => t.id));
+    const arms = m.entities
+      .filter((e) => {
+        const pl = (e.details as { player?: { position?: string } })?.player;
+        return e.role === "player" && pl?.position === "C"
+          && !!e.teamId && teamsOfLeague.has(e.teamId);
+      })
+      // ⚠ **`arm` 은 `batting` 블록에 있다** — `fielding` 밑이 아니다.
+      //   처음에 `player.fielding.arm` 을 봐서 **500명 전부 50** 으로
+      //   떨어졌다. 없는 경로를 읽으면 조용히 기본값이 되고, 그걸
+      //   "포수 어깨가 다 평균이다"로 읽을 뻔했다.
+      .map((e) => ((e.details as { player?: { batting?: { arm?: number } } })
+        ?.player?.batting?.arm) ?? 50)
+      .sort((a2, b2) => a2 - b2);
+    const med = arms.length ? arms[arms.length >> 1] : 0;
+    out[lid.replace("LEAGUE_", "")] = {
+      도루: sb, 도루자: cs,
+      성공률: sb + cs > 0 ? Math.round((sb / (sb + cs)) * 1000) / 10 : 0,
+      시도한선수: runners.length,
+      시도가중_평균스피드: Math.round(wSpeed * 10) / 10,
+      포수어깨_중앙: med,
+      포수어깨_최소: arms[0] ?? 0,
+      포수어깨_최대: arms[arms.length - 1] ?? 0,
+      포수수: arms.length,
+    };
+  }
+  return out;
+}
+
 /** contact_q 밴드 분포 — 어느 구간에서 도는지 본다 */
 export async function contactBands(): Promise<Record<string, unknown>> {
   const raw = await window.projectB!.engine("contactBandStatsNative", "{}");
@@ -5598,6 +5735,34 @@ export async function contactBands(): Promise<Record<string, unknown>> {
   });
   return out;
 }
+/**
+ * 담장 재확인이 결과를 몇 번 바꿨나 — **양방향**이다.
+ *
+ * 🔴 표의 2·3루타가 담장을 넘으면 **홈런으로 승격**된다. 그쪽을 아무도
+ *   안 셌다. KBL 이 리그타율·출루는 KBO 와 맞는데 **장타율만 .464**
+ *   (KBO .390)인 원인 후보다.
+ */
+export async function fenceMoves(): Promise<Record<string, unknown>> {
+  const raw = await window.projectB!.engine("fenceMoveStatsNative", "{}");
+  const d = JSON.parse(raw);
+  if (d.error) return d;
+  const out: Record<string, unknown> = {};
+  (d.labels as string[]).forEach((l, i) => { out[l] = (d.moves as number[])[i]; });
+  out["홈런_강등"] = d["홈런_강등"];
+  out["홈런_승격"] = d["홈런_승격"];
+  out["홈런_순증"] = d["홈런_순증"];
+  // 승격 후보가 담장을 얼마나 넘겼나 — 문턱을 정하려면 이 분포가 필요하다
+  const pr = d["승격비율"] as number[] | undefined;
+  const lb = d["승격비율_구간"] as string[] | undefined;
+  if (pr && lb) {
+    const tot = pr.reduce((a2, b) => a2 + b, 0) || 1;
+    const hist: Record<string, string> = {};
+    lb.forEach((l, i) => { hist[l] = pr[i] + " (" + Math.round(pr[i] / tot * 100) + "%)"; });
+    out["승격비율"] = hist;
+  }
+  return out;
+}
+
 export async function resetContactBands(): Promise<void> {
   await window.projectB!.engine("resetContactBandsNative", "{}");
 }

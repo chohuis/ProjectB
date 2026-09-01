@@ -22,7 +22,6 @@
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
-  export let onExit: () => void;
 
   let isProcessing = false;
   let activeTab: "season" | "team" | "personal" = "season";
