@@ -172,6 +172,8 @@ import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { winnerById, scheduledIdSet } from "../utils/scheduleView";
 import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
 import { IND_LEAGUE_ID, emptySurvivalState, stageStandings } from "../utils/survivalLeague";
+// 팀 목록의 정본 — 생존리그 순위 모수를 **리그 전체**로 고정한다
+import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 import { canApplyToUniversity, canApplyToIndependent } from "../utils/careerTransition";
 import { isLeagueInScope } from "../config/releaseScope";
@@ -1814,7 +1816,24 @@ async function progressIndependentLeague(week: number): Promise<void> {
       ...s.schedule.filter((e) => e.leagueId === IND_LEAGUE_ID),
     ];
     if (state.stage >= 1) {
-      const st = stageStandings(state.stage, state.activeTeams, sched);
+      // 🔴 **모수는 리그 전체다 — `activeTeams` 가 아니다** (2026-09-01).
+      //
+      // 처음엔 `state.activeTeams` 를 넘겼는데 그건 **탈락 후 남은 팀**이라
+      // 순위표 팀 수가 시즌 중에 **10 → 4** 로 줄었다(트랙 B 실측).
+      // 모수가 변하면 조건이 뜻을 잃는다:
+      //
+      // ```
+      //   team_rank_lte 4   4팀 리그에서는 **전원 참**
+      //   team_rank_gte 8   4팀 리그에서는 **영원히 거짓**
+      // ```
+      //
+      // 문턱이 10팀 감각으로 쓰였으니 **모수도 10팀으로 고정**한다.
+      // 탈락한 팀은 경기를 안 하니 0승 0패로 아래에 붙는다 —
+      // 「살아남았다(lte 4)」가 "10팀 중 상위 4위"가 되어 뜻이 산다.
+      //
+      // ⚠ `f20a7f81c` 에서 최상위 `standings` 를 지켰는데 **이벤트가 읽는
+      // `leagueState` 쪽에 같은 문제가 남아 있었다.** 한쪽만 고친 것이다.
+      const st = stageStandings(state.stage, ALL_TEAMS_BY_LEAGUE[IND_LEAGUE_ID] ?? state.activeTeams, sched);
       if (st.length > 0) seasonStore.setLeagueStandings(IND_LEAGUE_ID, st);
     }
   }

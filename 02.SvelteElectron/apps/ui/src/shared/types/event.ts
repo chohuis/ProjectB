@@ -42,6 +42,30 @@ export type Condition =
   | { type: "season_era_lte";  value: number }        // 시즌 ERA 이하
   | { type: "season_ip_gte";   value: number }        // 시즌 이닝 이상
   | { type: "season_k_gte";    value: number }        // 시즌 탈삼진 이상
+  /**
+   * 🔴 **반대쪽** (2026-09-01 · 사용자 확정).
+   *
+   * 위 넷은 전부 **잘한 쪽**만 물었다 — "성적이 나쁘다"를 물을 축이
+   * 하나도 없었다. 그래서 부진·기회부족·강등을 **`morale_lte` 가 대역**
+   * 하고 있었다(트랙 B 실측 · 그 조건을 쓰는 이벤트가 **42종**):
+   *
+   * ```
+   *   「등판 기회가 좀처럼 오지 않습니다」   morale_lte 50
+   *   「평가가 내려갔다는 이야기를…」        morale_lte 50
+   *   「대회에서 탈락했습니다」              morale_lte 55
+   * ```
+   *
+   * ⚠ 마지막 것이 특히 어긋난다 — **진출은 `team_rank_lte 2`, 탈락은
+   * `morale_lte 55`** 다. 같은 대회를 두 축으로 판정하고 있었다.
+   *
+   * ⚠ 사기 축 하나가 42종의 목숨을 쥐고 있어서, **사기를 고치면 42종이
+   * 같이 움직이고 문턱을 올리면 42종의 문안이 같이 어긋난다.**
+   * 제 축으로 옮길 수 있는 것을 옮겨 그 부담을 던다.
+   */
+  | { type: "season_wins_lte"; value: number }        // 시즌 승수 이하 — 안 이긴다
+  | { type: "season_era_gte";  value: number }        // 시즌 ERA 이상 — 얻어맞는다
+  | { type: "season_ip_lte";   value: number }        // 시즌 이닝 이하 — 기회가 없다
+  | { type: "season_k_lte";    value: number }        // 시즌 탈삼진 이하 — 못 잡는다
 
   // 팀 순위
   | { type: "team_rank_lte";   value: number }        // 현재 팀 순위 이하 (1위=1)
