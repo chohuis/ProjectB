@@ -1025,6 +1025,30 @@ export function trajProbe(): Record<string, unknown> {
             표본: v.length }
         : { 표본: 0 };
     };
+    /**
+     * 🔴 **`week_gte W` 뒤의 순위 범위** — 이것 하나로 순위 조건이 다 판정된다
+     * (2026-09-01 · 트랙 B 제안).
+     *
+     * 한 커리어는 상위권이거나 하위권이지 **둘 다일 수 없다.** 그래서
+     * 이벤트 도달로 판정하면 **한 실행에 절반만** 답이 나온다 — 네 번 쟀는데
+     * 네 번 다 그랬다(상위권 씨앗에선 `lte` 만, 하위권에선 `gte` 만 닿는다).
+     *
+     * 순위의 **범위**를 알면 계산으로 끝난다:
+     *
+     * ```
+     *   lte N ∧ week≥W   가능 ⟺ (week≥W 구간의 **최고 순위**) ≤ N
+     *   gte N ∧ week≥W   가능 ⟺ (그 구간의 **최저 순위**)     ≥ N
+     * ```
+     *
+     * ⚠ 문턱은 **실제 데이터에서 뽑은 13개**다 — 감으로 고른 격자가 아니다.
+     *   순위 조건 26종이 쓰는 `week_gte` 값 전부다(0 은 게이트 없음).
+     */
+    const WEEK_CUTS = [0, 10, 12, 13, 14, 20, 24, 25, 26, 27, 30, 38, 40];
+    const afterWeek = (w: number) => {
+      const v = idx.map((i, j) => [wk[j], _traj.rank[i]] as const)
+        .filter(([ww, r]) => ww >= w && r > 0).map(([, r]) => r);
+      return v.length ? `${Math.min(...v)}~${Math.max(...v)}(${v.length})` : "표본0";
+    };
     byStage[s] = {
       사기: stat(mor), 닿음: cuts(mor),
       인기: stat(idx.map((i) => _traj.pop[i])),
@@ -1034,6 +1058,8 @@ export function trajProbe(): Record<string, unknown> {
       순위없음: idx.filter((i) => _traj.rank[i] === 0).length,
       주차별순위: { "W1~13": band(1, 13), "W14~23": band(14, 23),
                     "W24~39": band(24, 39), "W40~52": band(40, 52) },
+      // `최고~최저(표본)` — 이벤트 문턱과 바로 대조한다
+      "week_gte뒤순위": Object.fromEntries(WEEK_CUTS.map((w) => [`≥${w}`, afterWeek(w)])),
     };
   }
   return {
