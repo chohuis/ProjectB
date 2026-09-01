@@ -21,8 +21,7 @@
       "value": 52
     },
     {
-      "type": "num_gte",
-      "path": "school.warningCount",
+      "type": "academic_warning_gte",
       "value": 1
     }
   ],

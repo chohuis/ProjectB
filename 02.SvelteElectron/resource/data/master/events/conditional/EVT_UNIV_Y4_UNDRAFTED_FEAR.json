@@ -17,6 +17,11 @@
     },
     {
       "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 208
+    },
+    {
+      "type": "num_lte",
       "path": "scoutScore",
       "value": 45
     },
