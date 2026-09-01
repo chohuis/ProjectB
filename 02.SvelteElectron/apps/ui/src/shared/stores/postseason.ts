@@ -45,12 +45,47 @@ export function setSurvivalState(
 }
 
 /** 독립 단계 일정은 leagueSchedules에 쌓인다 — 단계마다 새 경기가 붙는다 */
+/**
+ * 리그 일정을 넣는다.
+ *
+ * 🔴 **주인공 리그면 `s.schedule` 에 넣는다** (2026-09-01).
+ *
+ * 이 저장소의 규칙은 **"주인공 리그는 `schedule`, 나머지는
+ * `leagueSchedules`"** 다(`leagueSummary` 주석). 경기를 돌리는 자리가
+ * 그 둘로 갈려 있다:
+ *
+ * ```
+ *   s.schedule          주 경기 루프가 **전부** 돌린다 (advanceWeek)
+ *   leagueSchedules     배경 시뮬이 돌린다 — 단 `lid === 주인공리그` 면 **건너뛴다**
+ * ```
+ *
+ * 그런데 생존리그(독립)만 **주인공이 거기 있어도 `leagueSchedules` 에**
+ * 넣고 있었다. 그러면 **둘 다 안 돌린다:**
+ *
+ * ```
+ *   [일정끝:highschool]   INDEPENDENT 102/102   ← 배경이 돌린다 (주인공은 고교)
+ *   [일정끝:independent]  INDEPENDENT 188/ 13   ← 주인공이 가면 **멈춘다**
+ * ```
+ *
+ * 경기가 안 치러지니 `stageStandings` 에 넣을 결과가 없고, 순위표가 전원
+ * 0-0 이 되고, 정렬이 **배열 순서**를 준다 — 순위가 **씨앗을 안 타고
+ * 85주 내내 8** 이었다(트랙 B 실측).
+ *
+ * ⚠ 고교·프로가 멀쩡했던 건 그쪽 일정이 처음부터 `s.schedule` 에 있어서다.
+ */
 export function injectLeagueEntries(
   s: SeasonStoreState,
   leagueId: string,
   entries: ScheduleEntry[],
 ): SeasonStoreState {
   if (entries.length === 0) return s;
+  if (leagueId === s.leagueId) {
+    // 주인공 리그 — 주 경기 루프가 보는 곳에 넣는다
+    const have = new Set(s.schedule.map((e) => e.id));
+    const fresh = entries.filter((e) => !have.has(e.id));
+    if (fresh.length === 0) return s;
+    return { ...s, schedule: [...s.schedule, ...fresh] };
+  }
   const cur = s.leagueSchedules[leagueId] ?? [];
   const have = new Set(cur.map((e) => e.id));
   const fresh = entries.filter((e) => !have.has(e.id));

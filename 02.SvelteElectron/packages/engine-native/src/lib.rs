@@ -101,6 +101,33 @@ pub fn fence_move_stats_native() -> String {
     }).to_string()
 }
 
+/// **폭투 깔때기** — 밸런스 ④ 의 손잡이를 정하는 값 (2026-09-01).
+///
+/// 총량(KBL 팀당 20.3)만으로는 **문턱을 내릴지 확률을 올릴지** 못 정한다.
+/// 둘이 포일에 반대로 작용하기 때문이다 — 포일은 이미 하한 아래(4.6/팀)다.
+///
+/// ```
+///   [1]→[2] 이 좁다   문턱(WILD_PITCH_DISTANCE 1.55)이 병목
+///   [2]→[3] 이 좁다   확률(WILD_PITCH_BASE_PROB 0.16)이 병목
+/// ```
+#[napi]
+pub fn wp_funnel_stats_native() -> String {
+    let f = match_engine::read_wp_funnel();
+    let pct = |a: u64, b: u64| if b == 0 { 0.0 } else { (a as f64 / b as f64 * 1000.0).round() / 10.0 };
+    serde_json::json!({
+        "전체투구": f[0],
+        "주자있고_안휘두름": f[1],
+        "폭투후보_존밖": f[2],
+        "폭투": f[3],
+        "포일": f[4],
+        // 각 단계에서 몇 %가 남는가 — **좁아지는 자리가 병목이다**
+        "기회율_퍼센트": pct(f[1], f[0]),
+        "후보율_퍼센트": pct(f[2], f[1]),
+        "폭투전환_퍼센트": pct(f[3], f[2]),
+        "포일전환_퍼센트": pct(f[4], f[1] - f[2]),
+    }).to_string()
+}
+
 /// 계측 전용 — 카운터 초기화
 #[napi]
 pub fn reset_contact_bands_native() -> String {

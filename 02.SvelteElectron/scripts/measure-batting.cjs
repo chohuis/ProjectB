@@ -84,6 +84,12 @@ const log = (s) => process.stdout.write(s + "\n");
         for (const lg of ["LEAGUE_KBL", "LEAGUE_HIGHSCHOOL"]) {
           log(`  신규사건 ${JSON.stringify(app.newEventProbe(lg))}`);
         }
+        // 🔴 **폭투 깔때기** (밸런스 ④). 총량만으로는 문턱을 내릴지 확률을
+        //   올릴지 못 정한다 — 둘이 포일에 반대로 작용하고 포일은 이미
+        //   하한 아래(4.6/팀 · 목표 5~15)다.
+        // ⚠ 엔진 전역 카운터라 **리그별이 아니라 전체 누적**이다.
+        //   비율(기회율·후보율·폭투전환)로 읽는다.
+        log(`  폭투깔때기 ${JSON.stringify(await app.wpFunnel())}`);
         await app.seasonRollover();
         continue;
       }
