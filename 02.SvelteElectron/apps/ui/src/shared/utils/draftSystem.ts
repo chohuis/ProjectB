@@ -78,11 +78,16 @@ export function pickInRound(
 export function draftDestinationTeams(
   teams: readonly { id: string; leagueId: string }[],
 ): { univIds: string[]; indIds: string[]; farmIds: string[] } {
-  const pick = (leagueId: string) =>
+  // ⚠ **아마추어 전용이다** — 이름에 그걸 적는다 (2026-09-01).
+  //   프로 리그는 1군·2군이 **같은 `leagueId`** 라 이렇게 거르면 20팀이
+  //   된다(`seasonRollover` 에서 실제로 그 결함이 있었다). 대학·독립은
+  //   2군이 없어서 안전한데, **이름이 `pick` 이면 다음 사람이 프로에도
+  //   쓴다.** `proTeamSplit.test.ts` 도 이 이름을 보고 면제한다.
+  const pickAmateurLeague = (leagueId: string) =>
     teams.filter((t) => t.leagueId === leagueId && !SANGMU_TEAM_IDS.has(t.id)).map((t) => t.id);
   return {
-    univIds: pick("LEAGUE_UNIVERSITY"),
-    indIds: pick("LEAGUE_INDEPENDENT"),
+    univIds: pickAmateurLeague("LEAGUE_UNIVERSITY"),
+    indIds: pickAmateurLeague("LEAGUE_INDEPENDENT"),
     // ⚠ refs는 1군·팜을 **같은 leagueId**로 담는다 — `_2` 접미사로 가른다
     // (`roster_gen.rs`의 plan과 같은 규칙)
     farmIds: teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2")).map((t) => t.id),

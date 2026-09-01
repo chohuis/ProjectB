@@ -17,6 +17,8 @@ import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
 import { loadRosterRules } from "../repo/newGameV3";
+// 🔴 팀 목록의 정본 — refs 에서 1군/2군을 **나눠 담는다**
+import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 
 // ── 남/북 판정 ────────────────────────────────────────────────
 //
@@ -70,9 +72,19 @@ function gatherCandidates(leagueId: string): CampusCandidate[] {
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
   // ⚠ **도시 축이 서는지 먼저 본다.** 해외는 남쪽 도시가 하나도 없어
   //   전원이 북이 된다 — 그러면 팀 정렬 순서로 반씩 가른다
-  const leagueTeamIds = m.teams
-    .filter((t) => t.leagueId === leagueId)
-    .map((t) => t.id)
+  // 🔴 **`m.teams` 를 리그로 거르면 1군과 2군이 같이 딸려온다** (2026-09-01).
+  //   refs 에서 KBL 은 `_1`(1군)과 `_2`(2군)가 **같은 `leagueId`** 다.
+  //
+  //   `runAllStar` 가 프로에도 쓰이면서(`campusEvents.ts:179` ·
+  //   `g.protagonist.leagueId` 를 넘긴다) **프로 올스타 후보에 2군 선수가
+  //   섞였다.** 대학·고교는 2군이 없어 예전에도 맞았고, 2026-08-29 에
+  //   프로 올스타를 열면서 이 함정에 들어왔다.
+  //
+  // ⚠ 정본은 `ALL_TEAMS_BY_LEAGUE` — refs 에서 1군/2군을 나눠 담는다.
+  //   없는 리그(상무 등)만 옛 방식으로 떨어진다.
+  const leagueTeamIds = (ALL_TEAMS_BY_LEAGUE[leagueId]
+    ?? m.teams.filter((t) => t.leagueId === leagueId).map((t) => t.id))
+    .slice()
     .sort();
   const cityAxisWorks = leagueTeamIds.some((t) => regionOf(cityOf.get(t)) === "south");
 
