@@ -933,11 +933,17 @@ export function faMarketProbe(): Record<string, unknown> {
  *   영원히 false인 것도, `COND_SLUMP`(사기≤38)가 0회인 것도 **궤적을 재야**
  *   보인다. 매주 불러 쌓는다.
  */
-let _traj: { dil: number[]; mor: number[] } = { dil: [], mor: [] };
+// ⚠ **무대를 같이 쌓는다** (2026-09-01). 전 커리어를 뭉쳐서 재면
+//   "사기가 40까지 내려간다"가 나와도 그게 **프로에서만** 그런 건지
+//   대학에서도 그런 건지 못 가른다. 트랙 B 가 대학 이벤트 아홉이
+//   `morale_lte 40~60` 으로 전멸한 걸 찾았는데, 그걸 확인하려면
+//   **대학 구간의 궤적만** 봐야 한다.
+let _traj: { dil: number[]; mor: number[]; stage: string[] } = { dil: [], mor: [], stage: [] };
 export function trajTick(): void {
   const p = get(gameStore).protagonist;
   _traj.dil.push(p.diligence ?? 0);
   _traj.mor.push(p.morale ?? 0);
+  _traj.stage.push(p.careerStage ?? "?");
 }
 export function trajProbe(): Record<string, unknown> {
   const stat = (v: number[]) => v.length
@@ -947,17 +953,31 @@ export function trajProbe(): Record<string, unknown> {
     : { 표본: 0 };
   // 조건선에 실제로 닿은 주가 몇 번인가 — **0이면 그 이벤트는 영원히 안 뜬다**
   const hit = (v: number[], f: (x: number) => boolean) => v.filter(f).length;
+  /**
+   * 실제 이벤트가 쓰는 사기 문턱들. **감으로 고르지 않았다** —
+   * 대학 이벤트 아홉이 40·48·50·55·58·60 을 쓴다(트랙 B 실측).
+   */
+  const MORALE_CUTS = [38, 40, 45, 48, 50, 55, 58, 60, 72];
+  const cuts = (v: number[]) =>
+    Object.fromEntries(MORALE_CUTS.map((c) => [`≤${c}`, hit(v, (x) => x <= c)]));
+  /** 무대별로 가른다 — 뭉치면 프로에서만 내려간 걸 못 본다 */
+  const byStage: Record<string, unknown> = {};
+  for (const s of new Set(_traj.stage)) {
+    const idx = _traj.stage.flatMap((x, i) => (x === s ? [i] : []));
+    const mor = idx.map((i) => _traj.mor[i]);
+    byStage[s] = { 사기: stat(mor), 닿음: cuts(mor) };
+  }
   return {
     성실: stat(_traj.dil), 사기: stat(_traj.mor),
     닿음: {
       "성실≤30": hit(_traj.dil, (x) => x <= 30),
       "성실≥80": hit(_traj.dil, (x) => x >= 80),
-      "사기≤38": hit(_traj.mor, (x) => x <= 38),
-      "사기≤72": hit(_traj.mor, (x) => x <= 72),
+      ...cuts(_traj.mor),
     },
+    무대별: byStage,
   };
 }
-export function trajReset(): void { _traj = { dil: [], mor: [] }; }
+export function trajReset(): void { _traj = { dil: [], mor: [], stage: [] }; }
 
 /** KBL 외국인 선수 이름이 한글인가 — 영문이 그대로 뜨던 것 (실플 ⑨) */
 export function foreignNameProbe(): Record<string, unknown> {
