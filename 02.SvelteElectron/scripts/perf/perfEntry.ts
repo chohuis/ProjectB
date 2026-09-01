@@ -962,7 +962,8 @@ export function faMarketProbe(): Record<string, unknown> {
 let _traj: {
   dil: number[]; mor: number[]; pop: number[];
   stage: string[]; week: number[]; rank: number[]; pool: number[];
-} = { dil: [], mor: [], pop: [], stage: [], week: [], rank: [], pool: [] };
+  gp: number[];
+} = { dil: [], mor: [], pop: [], stage: [], week: [], rank: [], pool: [], gp: [] };
 export function trajTick(): void {
   const p = get(gameStore).protagonist;
   const s = get(seasonStore);
@@ -989,6 +990,15 @@ export function trajTick(): void {
   const sorted = [...rows].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
   _traj.rank.push(sorted.findIndex((x) => x.teamId === p.teamId) + 1);   // 0 = 없음
   _traj.pool.push(rows.length);
+  // 🔴 **사기가 어디서 오는지 가르려면 경기 여부를 같이 쌓아야 한다**
+  //   (2026-09-02). 승 +6 · 패 −8 이 있는데도 대학 4시즌 72주에서 사기가
+  //   83 밑으로 안 갔다(2승 5패인데도). 주간 회귀는 60 으로 **끌어내리는**
+  //   방향이니, 어딘가 매주 올리는 입력이 있다는 뜻이다.
+  //   **경기가 있던 주와 없던 주의 증감을 갈라 보면** 그게 경기인지
+  //   훈련·이벤트인지 한 값으로 갈린다.
+  _traj.gp.push((s.schedule ?? []).filter(
+    (e: { isProtagonistGame?: boolean; result?: unknown }) => e.isProtagonistGame && e.result != null,
+  ).length);
 }
 export function trajProbe(): Record<string, unknown> {
   const stat = (v: number[]) => v.length
@@ -1049,8 +1059,38 @@ export function trajProbe(): Record<string, unknown> {
         .filter(([ww, r]) => ww >= w && r > 0).map(([, r]) => r);
       return v.length ? `${Math.min(...v)}~${Math.max(...v)}(${v.length})` : "표본0";
     };
+    /**
+     * 🔴 **사기가 어디서 오나** (2026-09-02).
+     *
+     * 주간 회귀는 기준값 60 으로 **끌어내리는** 방향인데, 대학 4시즌
+     * 72주에서 사기가 83 밑으로 안 갔다 — **2승 5패인데도.**
+     * 승 +6 · 패 −8 이 닿고 있다면 나올 수 없는 값이다.
+     *
+     * 그래서 **경기가 치러진 주와 아닌 주를 갈라** 증감을 잰다:
+     *
+     * ```
+     *   경기주 평균이 0 근처       승패가 사기에 안 닿는다 → 배선 결함
+     *   무경기주 평균이 (+)        매주 올리는 입력이 따로 있다 → 그걸 찾는다
+     * ```
+     *
+     * ⚠ 한 값으로 갈린다. 둘 다 재야 어느 쪽인지 안다.
+     */
+    const dMor = { 경기주: [] as number[], 무경기주: [] as number[] };
+    for (let j = 1; j < idx.length; j++) {
+      const a = idx[j - 1], b = idx[j];
+      if (_traj.week[b] <= _traj.week[a]) continue;        // 같은 주·롤오버는 건너뛴다
+      const played = (_traj.gp[b] ?? 0) - (_traj.gp[a] ?? 0);
+      if (played < 0) continue;                             // 시즌이 바뀌어 0으로 돌아간 주
+      (played > 0 ? dMor.경기주 : dMor.무경기주).push(_traj.mor[b] - _traj.mor[a]);
+    }
+    const dstat = (v: number[]) => v.length
+      ? { 평균: Math.round((v.reduce((a, b) => a + b, 0) / v.length) * 100) / 100,
+          최소: Math.round(Math.min(...v) * 100) / 100,
+          최대: Math.round(Math.max(...v) * 100) / 100, 표본: v.length }
+      : { 표본: 0 };
     byStage[s] = {
       사기: stat(mor), 닿음: cuts(mor),
+      사기증감: { 경기주: dstat(dMor.경기주), 무경기주: dstat(dMor.무경기주) },
       인기: stat(idx.map((i) => _traj.pop[i])),
       순위: stat(rank),
       순위표팀수: stat(idx.map((i) => _traj.pool[i])),
@@ -1075,7 +1115,7 @@ export function trajProbe(): Record<string, unknown> {
   };
 }
 export function trajReset(): void {
-  _traj = { dil: [], mor: [], pop: [], stage: [], week: [], rank: [], pool: [] };
+  _traj = { dil: [], mor: [], pop: [], stage: [], week: [], rank: [], pool: [], gp: [] };
 }
 
 /** KBL 외국인 선수 이름이 한글인가 — 영문이 그대로 뜨던 것 (실플 ⑨) */
