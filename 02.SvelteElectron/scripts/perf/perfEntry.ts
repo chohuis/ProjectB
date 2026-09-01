@@ -7419,3 +7419,60 @@ export function draftScoutProbe(): Record<string, unknown> {
     })(),
   };
 }
+
+/**
+ * **주인공 시즌 기록** — B 요청 (2026-09-01).
+ *
+ * `season_k_gte` 문턱이 40 위로는 어느 무대에서도 안 뜬다는 실측이 나왔는데,
+ * 그게 문턱이 높은 건지 **등판 자체가 적은 건지** 가르려면 K 만으론 안 된다.
+ * 그래서 `g`·`ip` 를 같이 준다 — 이닝이 100 을 넘는데 K 가 모자라면 문턱이고,
+ * 이닝이 60 도 안 되면 로테이션 배정 쪽이다.
+ *
+ * ⚠ 투수·타자 어느 쪽인지는 `type` 으로 갈린다. 통째로 넘긴다.
+ */
+export function protagonistSeasonStats(): Record<string, unknown> | null {
+  const pid = get(gameStore).protagonist.id;
+  const s = get(seasonStore);
+  const cur = s.stats?.[pid] ?? null;
+  return cur ? { 무대: get(gameStore).protagonist.careerStage, ...cur } as Record<string, unknown> : null;
+}
+
+/**
+ * **순위 조건이 왜 안 걸리나** — B 제보 (2026-09-01).
+ *
+ * `conditionEvaluator` 의 `team_rank_lte` 는 `standings` 에서 주인공 팀을
+ * 찾고 **못 찾으면 조용히 false** 다. 고교·2군만 전멸한다는 실측이 나왔는데
+ * 원인 후보가 둘이라 갈라야 한다:
+ *
+ * ```
+ *   순위표에 팀이 없다        → rank 0. 배선 결함
+ *   순위표에 있는데 순위가 낮다 → 모수 문제. 문턱이 무대와 안 맞는다
+ * ```
+ *
+ * ⚠ **이벤트가 읽는 건 `s.standings` 하나다**(`advanceWeek.ts:645`).
+ *   `leagueState[리그].standings` 가 아니다 — 둘을 같이 찍어야 갈린다.
+ */
+export function rankCtxProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const teamId = g.protagonist.teamId;
+  const lid = g.protagonist.leagueId;
+  const sortRank = (rows: { teamId: string; winPct: number; wins: number }[]) => {
+    const sorted = [...rows].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+    return sorted.findIndex((x) => x.teamId === teamId) + 1;   // 0 = 없음
+  };
+  const top = s.standings ?? [];
+  const lg = s.leagueState?.[lid]?.standings ?? [];
+  return {
+    무대: g.protagonist.careerStage,
+    리그: lid,
+    팀: teamId,
+    주차: s.currentWeek,
+    // 이벤트가 실제로 읽는 쪽
+    top_팀수: top.length,
+    top_순위: sortRank(top as never),
+    // 리그별로 따로 있는 쪽
+    lg_팀수: lg.length,
+    lg_순위: sortRank(lg as never),
+  };
+}
