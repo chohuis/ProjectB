@@ -92,6 +92,47 @@ fn tally_promo_ratio(ratio: f64) {
 pub fn read_promo_ratio() -> [u64; 6] {
     PROMO_RATIO.with(|r| *r.borrow())
 }
+
+// ── 폭투 모수 (밸런스 ④) ─────────────────────────────────────────
+//
+// 🔴 **총량만 보면 어느 손잡이를 돌릴지 못 정한다.** 실측은 이렇다:
+//
+// ```
+//   KBL 1군   폭투/팀 20.3 (목표 30~50)  ·  포일/팀 4.6 (목표 5~15, 하한 아래)
+// ```
+//
+// 폭투를 올리는 길이 둘인데 **포일에 반대로 작용한다:**
+//
+// ```
+//   WILD_PITCH_DISTANCE 를 내린다   후보가 는다 → **포일이 그만큼 준다**
+//                                   (같은 문턱으로 갈리니까)
+//   WILD_PITCH_BASE_PROB 를 올린다  폭투만 는다. 포일은 그대로
+// ```
+//
+// 포일이 이미 하한 아래라 확률 쪽이 맞아 보이는데, **얼마나 올릴지는
+// 모수를 알아야** 정해진다. 어느 단계에서 좁아지는지 센다:
+//
+// ```
+//   [0] 전체 투구
+//   [1] 그중 **주자 있고 안 휘두른** 것        ← 판정 자체가 여기서만 돈다
+//   [2] 그중 dist >= WILD_PITCH_DISTANCE      ← 폭투 후보
+//   [3] 실제 폭투
+//   [4] 실제 포일
+// ```
+//
+// ⚠ [1] → [2] 가 좁으면 **문턱이 병목**이고, [2] → [3] 이 좁으면 **확률이
+// 병목**이다. 총량 20.3 만으로는 둘을 못 가른다.
+thread_local! {
+    pub static WP_FUNNEL: RefCell<[u64; 5]> = const { RefCell::new([0; 5]) };
+}
+
+fn tally_wp(i: usize) {
+    WP_FUNNEL.with(|r| r.borrow_mut()[i] += 1);
+}
+
+pub fn read_wp_funnel() -> [u64; 5] {
+    WP_FUNNEL.with(|r| *r.borrow())
+}
 fn round1(x: f64) -> f64 { (x * 10.0).round() / 10.0 }
 fn round2(x: f64) -> f64 { (x * 100.0).round() / 100.0 }
 
@@ -2398,10 +2439,12 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let mut pb_count = 0i32;
     let mut loose_runs = 0i32;
     let mut loose_scored: Vec<String> = vec![];
+    tally_wp(0);   // 전체 투구 — 깔때기의 입구
     if !swings
         && (next_runners.first.is_some() || next_runners.second.is_some()
             || next_runners.third.is_some())
     {
+        tally_wp(1);   // 주자 있고 안 휘둘렀다 — **판정 자체가 여기서만 돈다**
         // 존은 ±1 이다. 그보다 멀리 가면 포수가 몸으로 막아야 한다
         let dist = lr.landing.x.abs().max(lr.landing.y.abs());
         let catcher_block = pre_state.fielders.iter()
@@ -2412,11 +2455,14 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         let block = (1.0 - (catcher_block - T::CATCHER_BLOCK_PIVOT) / 50.0
             * T::CATCHER_BLOCK_SPAN).clamp(0.15, 1.85);
         let (p, is_wp) = if dist >= T::WILD_PITCH_DISTANCE {
+            tally_wp(2);   // 폭투 후보 — 여기가 좁으면 **문턱이 병목**이다
             (T::WILD_PITCH_BASE_PROB * block, true)
         } else {
             (T::PASSED_BALL_BASE_PROB * block, false)
         };
         if rng.gen::<f64>() < p {
+            // [2]→[3] 이 좁으면 **확률이 병목**이다
+            tally_wp(if is_wp { 3 } else { 4 });
             if is_wp { wp_count += 1; } else {
                 pb_count += 1;
                 pb_catcher = pre_state.fielders.iter()

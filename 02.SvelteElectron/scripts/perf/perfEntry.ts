@@ -7689,3 +7689,28 @@ export function survivalProbe(): Record<string, unknown> {
     "주인공_순위표에있나": cur.some((r) => r.teamId === get(gameStore).protagonist.teamId),
   };
 }
+
+/**
+ * **폭투 깔때기** — 밸런스 ④ 의 손잡이를 정한다 (2026-09-01).
+ *
+ * 총량(KBL 팀당 20.3 · 목표 30~50)만으로는 **문턱을 내릴지 확률을 올릴지**
+ * 못 정한다. 둘이 포일에 반대로 작용하고 **포일은 이미 하한 아래**(4.6/팀 ·
+ * 목표 5~15)다:
+ *
+ * ```
+ *   WILD_PITCH_DISTANCE 를 내린다   후보가 는다 → **포일이 그만큼 준다**
+ *   WILD_PITCH_BASE_PROB 를 올린다  폭투만 는다. 포일은 그대로
+ * ```
+ *
+ * 어느 단계에서 좁아지는지 보면 정해진다:
+ *
+ * ```
+ *   기회율   전체 투구 중 **주자 있고 안 휘두른** 비율
+ *   후보율   그중 존 밖 1.55 이상        ← 낮으면 **문턱**이 병목
+ *   폭투전환 그중 실제 폭투              ← 낮으면 **확률**이 병목
+ * ```
+ */
+export async function wpFunnel(): Promise<Record<string, unknown>> {
+  const raw = await window.projectB!.engine("wpFunnelStatsNative", "{}");
+  return JSON.parse(raw) as Record<string, unknown>;
+}
