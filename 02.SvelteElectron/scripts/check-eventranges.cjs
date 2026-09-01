@@ -66,6 +66,16 @@ const RANGE = {
   "fame":             [0, 200],
   "pitchingOvr":      [0, 99],
   "teamRank":         [1, 102],       // 고교 102팀이 제일 크다
+
+  // ── 시즌 성적 (2026-09-01) ───────────────────────────────────
+  //
+  // 반대쪽 조건(`season_*_lte` · `season_era_gte`)을 열면서 같이 넣는다.
+  // ⚠ **상한이 특히 중요하다** — `season_k_lte 200` 처럼 쓰면 **항상 참**이
+  //   되어 조건이 아무 일도 안 한다(`gpa_lte 25` 와 같은 형태).
+  "seasonWins":       [0, 30],        // 한 시즌 30승은 KBO 최다를 훨씬 넘는다
+  "seasonEra":        [0, 30],        // ERA 30 이면 사실상 상한
+  "seasonIp":         [0, 250],       // 규정이닝 144 · 최다도 220 언저리
+  "seasonK":          [0, 350],       // KBO 최다 225 (2011 윤석민 178)
 };
 
 // ⚠ **`fame` clamp가 코드에 둘 있다** — `game.ts:891`·`1572`는 200이고
@@ -86,6 +96,10 @@ const TYPE_AXIS = {
   fame_gte: "fame",
   pitching_ovr_gte: "pitchingOvr", pitching_ovr_lte: "pitchingOvr",
   team_rank_gte: "teamRank", team_rank_lte: "teamRank",
+  season_wins_gte: "seasonWins", season_wins_lte: "seasonWins",
+  season_era_lte: "seasonEra",   season_era_gte: "seasonEra",
+  season_ip_gte: "seasonIp",     season_ip_lte: "seasonIp",
+  season_k_gte: "seasonK",       season_k_lte: "seasonK",
 };
 
 const bad = [];

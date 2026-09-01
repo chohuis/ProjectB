@@ -571,6 +571,10 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   has_tag: ["tag"],
   season_wins_gte: ["value"], season_era_lte: ["value"],
   season_ip_gte: ["value"], season_k_gte: ["value"],
+  // 🔴 반대쪽 — "성적이 나쁘다" (2026-09-01). 여기 없으면 **데이터에 써도
+  //   로더가 조용히 버린다** — 층은 맞는데 잇는 선이 없는 그 형태다
+  season_wins_lte: ["value"], season_era_gte: ["value"],
+  season_ip_lte: ["value"], season_k_lte: ["value"],
   team_rank_lte: ["value"], team_rank_gte: ["value"],
   fame_gte: ["value"], pro_year_gte: ["value"],
   money_gte: ["value"], money_lte: ["value"],

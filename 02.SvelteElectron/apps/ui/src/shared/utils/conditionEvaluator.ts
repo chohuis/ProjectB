@@ -122,6 +122,41 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       return s?.type === "pitcher" ? s.k >= cond.value : false;
     }
 
+    // ── 반대쪽 — "성적이 나쁘다" (2026-09-01 · 사용자 확정) ──────
+    //
+    // 🔴 위 넷은 전부 **잘한 쪽**만 물었다. 그래서 부진·기회부족을
+    //    `morale_lte` 가 대역하고 있었다(그 조건을 쓰는 이벤트 **42종**).
+    //
+    // ⚠ **기록이 없으면 거짓이다.** `0 <= N` 이 참이라고 "안 던졌는데 부진"
+    //    으로 뜨면 안 된다 — 데뷔 전·부상 결장이 전부 걸린다.
+    //    그래서 `season_*_gte` 와 달리 **등판 여부를 먼저 본다.**
+    case "season_wins_lte": {
+      const s = stats[protagonist.id] as PitcherSeasonStats | undefined;
+      if (!s || s.type !== "pitcher" || s.g === 0) return false;
+      return s.w <= cond.value;
+    }
+
+    case "season_era_gte": {
+      const s = stats[protagonist.id] as PitcherSeasonStats | undefined;
+      // ⚠ `ip === 0` 이면 ERA 가 0 이라 **얻어맞은 게 아니라 안 던진 것**이다
+      if (!s || s.type !== "pitcher" || s.ip === 0) return false;
+      return s.era >= cond.value;
+    }
+
+    case "season_ip_lte": {
+      const s = stats[protagonist.id] as PitcherSeasonStats | undefined;
+      // ⚠ **여기는 `g === 0` 을 본다.** "이닝이 적다"는 등판은 했는데 짧다는
+      //    뜻이고, 한 경기도 안 나간 것과 다르다
+      if (!s || s.type !== "pitcher" || s.g === 0) return false;
+      return s.ip <= cond.value;
+    }
+
+    case "season_k_lte": {
+      const s = stats[protagonist.id] as PitcherSeasonStats | undefined;
+      if (!s || s.type !== "pitcher" || s.ip === 0) return false;
+      return s.k <= cond.value;
+    }
+
     // ── 팀 순위 ──────────────────────────────────────────────────
     //
     // 🔴 **조·권역이 있으면 그 안의 순위다** (2026-09-01 · 트랙 B 실측).
