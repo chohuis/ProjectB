@@ -2160,11 +2160,35 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const m = get(masterStore);
       const serviceWeeks = g.protagonist.militaryServiceWeeks;
 
-      // 계급 기반 이벤트 필터링 (minRank 이하만 포함)
+      // 계급 기반 이벤트 필터링
+      //
+      // 🔴 **`minRank` 하나로는 한 번 열린 이벤트가 전역까지 안 닫힌다**
+      // (2026-09-01 · 트랙 B 실측). 셋을 같이 본다:
+      //
+      // ```
+      //   minRank   그 계급 **이상**이면 후보                      (예전부터)
+      //   maxRank   그 계급 **이하**여야 후보 — 훈련소 이벤트가
+      //             병장 때 뜨는 걸 막는다
+      //   once      커리어에 한 번만 — 「자대 배치 첫날」이 두 번 뜨던 것
+      // ```
+      //
+      // ⚠ **`once` 는 커리어 통을 쓴다**(`careerTriggeredEvents`).
+      // `seasonStore.triggeredEvents` 는 `makeEmptySeason` 이 매 시즌 비우는데
+      // **군 복무는 104주(2시즌)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
+      //
+      // ⚠ 뽑기는 Rust 가 한다 — 복원추출이고 쿨다운이 없다. 그래서 후보에
+      // 남아 있는 한 계속 뽑힌다. **거르는 자리는 여기 하나뿐이다.**
       const rankIndex = serviceWeeks <= 8 ? 0 : serviceWeeks <= 34 ? 1 : serviceWeeks <= 60 ? 2 : 3;
-      const eligibleSports  = m.militarySportsEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
-      const eligibleGeneral = m.militaryGeneralEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
-      const eligibleCommon  = m.militaryCommonEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
+      const fired = get(gameStore).protagonist.careerTriggeredEvents ?? {};
+      const eligible = <T extends { id: string; minRank?: number; maxRank?: number; once?: boolean }>(
+        list: T[],
+      ) => list.filter((e) =>
+        (e.minRank ?? 0) <= rankIndex
+        && rankIndex <= (e.maxRank ?? Number.POSITIVE_INFINITY)
+        && !(e.once && fired[e.id] !== undefined));
+      const eligibleSports  = eligible(m.militarySportsEvents);
+      const eligibleGeneral = eligible(m.militaryGeneralEvents);
+      const eligibleCommon  = eligible(m.militaryCommonEvents);
 
       // ⚠ **정수로 반올림해서 넘긴다.** Rust `MilitaryWeekPayload`는 이 값들이
       // 전부 `u32`/`i32`인데 주인공 스탯은 소수다(피로 62.125 · 스태미나 54.3).
@@ -2201,6 +2225,17 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         morale: number; fatigue: number;
         eventPool: string | null; eventIndex: number | null; rank: string;
       };
+      /**
+       * 이번 주에 뜬 군 이벤트 제목 — 주간 로그에 남긴다.
+       *
+       * ⚠ **이건 기록의 대체가 아니다.** `logs` 는 `slice(0, 30)` 인 **굴림
+       * 버퍼**라 104주 복무 중 **마지막 30주만** 남고, 전역 뒤엔 리그 로그가
+       * 몇 주 만에 밀어낸다. 그래도 지금은 `군 복무(체육부대)` 고정 한 줄이라
+       * **이벤트가 떴다는 것조차 안 남는다** — 그 사이를 메운다.
+       *
+       * 소식함에 남길지는 사용자 판단 대기다(통수가 는다).
+       */
+      let milEventTitle: string | null = null;
 
       if (milCalc.eventPool !== null && milCalc.eventIndex !== null) {
         const pool = milCalc.eventPool === "sports" ? eligibleSports
@@ -2221,6 +2256,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           seasonStore.pushPendingAction({
             type: "event", eventId: evt.id, title: evt.title, description: evt.description, choices,
           });
+          // 🔴 **뜬 자리에서 기록한다.** 선택 완료를 기다리면 그 사이 다음 주가
+          //   오고, `once` 가 안 먹은 채로 같은 이벤트가 또 후보에 오른다.
+          //   기록은 "떴다"의 뜻이고, 선택 결과는 효과가 따로 담는다.
+          // ⚠ 커리어 통이라 시즌을 넘어 산다 — 군 복무 104주를 덮는다.
+          if (evt.once) gameStore.recordCareerTriggeredEvents({ [evt.id]: nextWeek });
+          milEventTitle = evt.title;
         }
       }
 
@@ -2234,7 +2275,10 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       };
       gameStore.applyWeekResult(
         { morale: milCalc.morale, fatigue: milCalc.fatigue, pitching },
-        [`군 복무(${isSportsUnit ? "체육부대" : "일반부대"}) — ${milCalc.rank}`],
+        [
+          `군 복무(${isSportsUnit ? "체육부대" : "일반부대"}) — ${milCalc.rank}`,
+          ...(milEventTitle ? [`[군] ${milEventTitle}`] : []),
+        ],
         [], nextWeek, s.seasonYear,
       );
       const milEntities = get(masterStore).entities;
@@ -2245,7 +2289,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const pending = get(seasonStore).pendingActions;
       return {
         processedWeek: nextWeek,
-        logs: [isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)"],
+        logs: [
+          isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)",
+          ...(milEventTitle ? [`[군] ${milEventTitle}`] : []),
+        ],
+        // 🛑 **소식함에 안 남는다 — 사용자 판단 대기다** (2026-09-01).
+        //   군 이벤트 54종이 104주에 약 42번 뜨는데 전부 모달로만 간다.
+        //   통수가 42 늘어나는 변경이라 A 가 임의로 못 정한다.
+        //   ⚠ 위 `logs` 는 대체가 아니다 — `slice(0, 30)` 굴림 버퍼라
+        //     104주 중 마지막 30주만 남는다(71% 사라진다).
         newMessages: [],
         matchResults: [],
         stoppedBy: pending.length > 0 ? pending[0] : null,
