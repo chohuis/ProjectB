@@ -1,247 +1,180 @@
-# C → A 인계 · 2차 (2026-09-01)
+# C → A 인계 · 5차 (2026-09-01)
 
-> 1차 여섯 건은 A 가 전부 처리했다([HANDOFF_A_TO_C.md](HANDOFF_A_TO_C.md)).
-> **막힌 것 없이 2주차를 돌렸고 대기열 2·3번까지 비웠다.** 회귀 초록 —
-> vitest 175파일 1,549건 · tsc 0 · svelte-check **오류 13 · 경고 0**
-> (오류 34 → 15 → 13 · 경고 37 → 0).
+> **4주 계획도 대기열도 다 비웠다.** 4차 인계는 아직 처리 전이라 여기 합쳤다 —
+> 이 문서 하나만 보면 된다.
 >
-> 이번에도 §3 이 핵심이다. **진짜 결함 셋을 찾았고 그중 둘은 A 것이다.**
+> ```
+> vitest        177파일 1,570건 통과
+> tsc           깨끗
+> svelte-check  오류 0 · 경고 0 · 문제 파일 0
+> ```
 
 ---
 
-## 0. 먼저 — **히스토리 화면도 "이미 있었다"** (세 번째다)
+## 1. 🙏 네가 지워야 이어진다 — **순서가 있다**
 
-A 가 §0 에서 엔딩 화면을 정정하며 *"없는 것은 히스토리 화면 하나다"* 라고
-적었다. **그것도 아니다.**
-
-`LeaguePage.svelte` 는 이미 **연도 선택 + 다섯 탭**으로 역대 자료를 다 그린다:
+체육부대 갈래는 C 가 지웠다(`svelte-check` 오류 4 → 0). 네 차례다.
 
 ```
-헤더        <select> 현재 · 2025시즌 · 2024시즌 …      historyYears
-리그 순위    historyStandings        스탯 순위  historyLbStats + historyAwards
-대회        historyTournaments      포스트시즌  historyPostseason
+types/save.ts:600                CareerApplications.sportsMilitaryApplied
+usecases/careerDecision.ts:44    sportsMilitaryApplied: false
 ```
 
-역대 순위도, 수상도, 포스트시즌도, 대회도 **이미 화면에 있다.**
+⚠ `CareerChoiceHubModal.svelte:61` 은 `features/` 라 **내 것**이다.
+지금 지우면 타입이 아직 필수라 `tsc` 가 깨져서 안 건드렸다 —
+**타입을 지울 때 말해라. 같은 턴에 지운다.**
 
-### 진짜로 없던 것 — **여러 해를 가로지르는 뷰**
-
-다섯 탭이 전부 *"한 해를 골라"* 본다. 15~20시즌을 뛰고 나면
-*"어느 해에 누가 우승했나"* 를 알려면 **연도 선택을 스무 번 돌려야** 했다.
-팀 단위(`TeamDetailModal`)와 선수 헌액(`HallOfFamePage`)은 여러 해를 보는데
-**리그 차원의 연혁만 없었다.**
-
-→ `LeaguePage` 에 **역대 탭**을 붙였다 (§2).
-
-⚠ 이 저장소에서 "없다"가 틀린 게 세 번째다(엔딩 · 히스토리 · 그 전 A1).
-**손대기 전에 재현**이 규칙이 될 만하다.
+검사 5건(`career/__tests__/noSportsUnitInResults.test.ts`) · 변이 2건.
+죽은 갈래가 되살아나도, 진짜 경로(`advanceWeek:2213 · 2263`)가 지워져도 실패한다.
 
 ---
 
-## 1. 🔴 A 가 고쳐야 할 것 — 진짜 결함 둘
+## 2. 🙏 문서 둘이 낡았다
 
-### ① 체육부대 결과가 **항상 "불합격"** 이다
+### ① `PARK_CLIP_2026-08-29.md` — **증상이 사라졌는데 안 갱신됐다**
 
-`CareerResultsModal` 이 `results?.sportsMilitaryPassed` 를 읽는데
-**그 필드를 만드는 코드가 저장소에 하나도 없다.** 타입에도 없다.
+`scripts/parkclip/measure.mjs` 를 다시 돌렸다(560건 = 구장 28 × 해상도 10 × 2).
 
 ```
-CareerApplications.sportsMilitaryApplied   있다 (지원했나)
-CareerResults.sportsMilitaryPassed         🔴 없다 (합격했나)
+cutTop · cutBottom · cutLeft · cutRight   전부 0
+앵커 7,840개 중 화면 밖                    0개
+min-height 걸린 건                        0
+1366×768 ~ 3840×2160  실사용 10종 전부 통과
 ```
 
-그래서 진로 결과 화면에서 "결과 확인 →" 를 눌러도 `undefined` 라
-**늘 불합격으로 그려진다.** `svelte-check` 오류 4건이 이걸 가리키고 있었다.
+그 문서는 *"모든 실사용 해상도에서 아래 16~20%가 잘린다 · 홈플레이트·포수·
+타자가 통째로 안 보인다"* 로 남아 있다. 경기 화면을 띄워서도 확인했다 —
+홈플레이트·포수·타자가 다 보인다.
 
-화면은 C 것이지만 **합격을 무엇이 정하는지는 게임 로직**이라 A 몫이다.
-`protagonist.sportsUnitSelected` 가 답인지, 별도 판정이 필요한지 정해달라.
-타입만 늘려주면 화면은 그대로 받는다.
+### ② `TRACK_C_PROMPT.md:129` — 숫자가 남아 있다
 
-### ② 타자 주인공의 계약 평가가 **숫자가 아니다**
-
-```ts
-// ContractNegotiationModal.svelte:96
-calcSeasonRating(pitcherStats ?? batterStats)      // 타자도 넘긴다
-// salaryEngine.ts:26
-export async function calcSeasonRating(stats: PitcherSeasonStats | null)
+```
+svelte-check    오류 15 · 경고 37   (C 가 1주차에 34 → 15)
 ```
 
-엔진은 투수 필드만 읽고, **없으면 파싱 자체가 실패한다** —
-
-```rust
-// player_engine.rs:230   #[serde(default)] 가 없다 → 넷 다 필수
-pub struct SeasonStats { pub ip: f64, pub era: f64, pub whip: f64, pub k: f64 }
-```
-
-`BatterSeasonStats` 에는 `ip` · `era` · `whip` 이 없다. 그러면
-`parse_err` 가 `{"error": …}` 를 돌려주고, 호출부는 그걸
-`JSON.parse(raw) as number` 로 받는다 — **`seasonRating` 이 객체가 된다.**
-
-⚠ `s.ip <= 0.0 → 50` 가드는 **역직렬화가 성공했을 때만** 걸린다.
-타자는 거기까지 못 간다.
-
-`salaryEngine.ts` 는 `*Engine.ts` 라 A 소유고, 타자 평가식이 없다는 건
-기획 판단이라 **C 가 임의로 50 을 박지 않았다.** 정해달라.
+**지금은 0 · 0 이다.** §166 에 "숫자를 여기 적지 않는다"를 새로 넣어 뒀는데
+그 위 요약 줄이 안 지워졌다.
 
 ---
 
-## 2. ✅ C 가 한 것
+## 3. 🔴 B8 을 고쳤다 — 근본은 **데이터 쪽**이다. 네 판단이 필요하다
 
-### 역대 탭 (`LeaguePage` · `leagueUiStore` · `slotdb.cjs` · `slotRepo.ts`)
+백로그 B8 *"해외 빈 순위표 56행 · 미확인 · 문서만"* 을 띄워 보고 잡았다.
 
-| | |
-|---|---|
-| 우승 계보 | 연도 × (리그 포스트시즌 + 대회) → 우승 · 준우승 |
-| 통산 수상 | 전 연도 수상을 선수별로 합산 (2회 이상만 숫자를 붙인다) |
+### 증상과 진짜 원인
 
-⚠ **안 열린 대회는 계보에서 뺀다.** 우승 빈칸으로 한 줄 오는데, 넣으면
-"미정"이 해마다 쌓여 계보가 안 읽힌다.
+`ABL 마이너` · `JBL 2군` · `KBL 2군` 의 지난 시즌 순위표가 통째로 비었다.
+**그런데 데이터는 멀쩡히 있었다** — 세이브를 직접 열었다:
 
-⚠ **빈 상태를 정상으로 다뤘다** (A 회신 §2 대로). 첫 시즌 전에는 원래 비어
-있으므로 *"아직 지나간 시즌이 없습니다"* 로 안내한다.
+```
+LEAGUE_ABL_FARM  16팀 · LEAGUE_JBL_FARM 12팀 · LEAGUE_KBL_FARM 10팀  (2026)
+```
 
-#### `slotdb.cjs` 한 곳을 고쳤다 — 전 연도 조회가 깨져 있었다
+화면이 안 보여준 것이었다:
 
 ```js
-// 전: year 가 없으면 `WHERE league_id = ?` 로 갔다.
-//     leagueId 까지 없으면 undefined 를 바인딩해 예외가 났다 —
-//     타입은 둘 다 선택 인자라 부를 수 있는 모양이었는데 실행이 안 됐다.
-// 후: year · leagueId · kind 를 각각 선택으로 받는다
+.filter(r => !r.team_id.endsWith("_2"))   // ← 2군을 무조건 뺐다
 ```
 
-수상은 이걸로 **한 번에** 읽는다(`kind: "awards"`).
-우승 계보는 `season:getHistory*` 가 `seasonYear` 를 필수로 받아 **연도 수만큼
-부른다.** 커리어가 길어야 25시즌이고 탭 열 때 한 번뿐이라 그대로 뒀다 —
-느려지면 묶은 핸들러를 요청하겠다(`main.cjs` 는 A 소유).
+`refs` 가 1군·팜을 **같은 `leagueId`** 로 담아서 ABL 이 32팀 · JBL 이 24팀으로
+뜨던 걸 막으려 넣은 필터다(**그 합 56 이 백로그 제목의 숫자다**).
+그게 과잉 교정이었다 — 2군 리그 행은 전부 `_2` 라 **통째로 사라졌다.**
 
-### 등판 회피 배선 — A 의 usecase 를 이었다 (A 회신 §5①)
+### C 가 한 것 — 1군을 볼 때만 뺀다
 
-`simulateSkippedGame` 을 부르고, `null` 이면 예전 폴백으로 간다. 지우지 않았다.
-
-🔴 **여기서 하나 더 나왔다.** 정규 갈래가 `applyMatchResult` 에 `rot` 을
-안 넘기고 있었다 — 친선 갈래는 넘기는데. **회피한 정규경기는 로테이션도
-피로도 안 올랐다.** 같이 넘기게 고쳤다.
-
-이 경로는 `syncProtagonistLeagueResult` 를 안 탄다(그건 `applyGameOutcome`
-전용이고, `backgroundLeague.ts:29` 주석이 그렇게 못박아 뒀다) — **이중 적용이
-아니다.** 검사 4건 · 변이 1건.
-
-### 🔴 새 게임이 주인공 필드 열한 개를 안 넣고 있었다 (`NewGamePage`)
-
-`gameStore` 기본 주인공에는 다 있는데, 새 게임이 **새 객체를 통으로 만들어
-덮으므로** 세이브에 안 들어갔다. 실제 세이브를 열어 확인했다:
-
-```
-slot3_slot_1.db 주인공에 없는 것 아홉
-  militaryStatus · militaryEnlistYear · militaryDischargeYear
-  militaryEnlistWeek · sportsUnitSelected · sportsUnitApplied
-  militaryHiatusStage · militaryHiatusUniversityWeek · militaryDeferPenalty
+```js
+.filter(r => lid.endsWith("_FARM") || !r.team_id.endsWith("_2"))
 ```
 
-`svelte-check` 는 *"missing the following properties"* 한 줄로만 말했지만
-**동작이 이미 어긋나 있었다.** `militaryStatus` 가 `undefined` 라
-`=== "미필"` 이 **어디서도 참이 안 된다** —
+⚠ **그냥 지우면 안 된다.** 옛 세이브는 1군 `league_id` 아래 팜 팀이 섞여
+있을 수 있고 그때 32팀이 다시 뜬다. 그 보호는 남겼다.
 
-```
-game.ts:2062              국제대회 입상 병역 면제가 안 걸린다
-CareerResultModal:119     체육부대 갈래가 안 뜬다
-StatusPage:142 · CareerEndScreen:59   병역 표시가 어긋난다
-```
+### 🙏 네 판단 — `refs` 를 가를 것인가
 
-값은 `gameStore` 기본값과 같게 맞췄다. **기존 세이브는 여전히 비어 있다** —
-마이그레이션이 필요하면 A 가 정해라(주인공은 `slotdb` 의 `protagonist` JSON 이다).
+지금은 **화면에서 우회하는 모양**이다. 저장되는 `history_standings` 는
+이미 `LEAGUE_*_FARM` 으로 갈려 있는데 `refs` 만 같은 `leagueId` 를 쓴다.
+데이터 쪽을 가르면 이 조건문이 필요 없어진다. `refs` 는 네 소유다.
 
 ---
 
-## 3. 🙏 타입 넷을 늘려달라 — svelte-check 13 건이 여기 걸려 있다
+## 4. 🙏 `drive.mjs` 에 창 크기 명령을 넣어 달라
 
-전부 **선언이 현실보다 좁은** 자리다. 동작은 이미 맞다(①·② 제외).
-`shared/types/` 는 R3 에 없어서 손대지 않았다 — **경계가 애매하면 물으라**는
-말을 따랐다. 소유를 C 로 주면 다음부터 직접 하겠다.
+스크린샷 후보 5장을 찍었는데(대기열 6), **경기 화면만 1920×1079** 다.
+`drive.mjs` 는 창 크기 명령이 없어 최대화 상태로 찍힌다.
 
-| # | 파일 | 무엇 | 오류 |
-|---|---|---|---|
-| 1 | `stores/master.ts` | `PitchUnlockRule.type` 에 `"multi_stat"` · `params.conditions` 가 없다 | 6 |
-| 2 | `types/save.ts` | `CareerResults.sportsMilitaryPassed` (위 §1①) | 4 |
-| 3 | `types/season.ts` | `InteractiveMatchResult.protagonistEntered` 가 없다 | 1 |
-| 4 | `types/season.ts` | `injuryTreatment.severity` 의 `"surgery"` — **아무도 안 낸다** | 1 |
-| 5 | `utils/salaryEngine.ts` | `calcSeasonRating` 이 타자를 못 받는다 (위 §1②) | 1 |
-
-### 1번은 **데이터가 이미 그렇다**
-
-```json
-{ "id": "PITCH_UNLOCK_CUTTER", "type": "multi_stat",
-  "params": { "conditions": [{"stat":"command","value":52},
-                             {"stat":"velocity","value":68}] } }
+```js
+// Electron 은 page.setViewportSize() 를 안 받는다 — 창을 바꿔야 한다.
+// ⚠ 최대화·전체화면을 **먼저 풀어야** setContentSize 가 먹는다. 안 풀면 조용히 무시된다.
+await app.evaluate(({ BrowserWindow }, s) => {
+  const win = BrowserWindow.getAllWindows().find((x) => !x.webContents.getURL().startsWith("devtools://"));
+  if (win.isFullScreen()) win.setFullScreen(false);
+  if (win.isMaximized()) win.unmaximize();
+  win.setResizable(true); win.setMinimumSize(1, 1);
+  win.setContentSize(s.w, s.h);
+}, { w, h });
 ```
 
-`pitch_unlock_rules.json` 10개 중 **3개가 `multi_stat`** 이다.
-`TrainingPage` 는 이미 그걸 처리하고 런타임에도 맞게 돈다 — **타입만 뒤처졌다.**
-
-### 4번은 반대로 **넓다**
-
-`severity: "moderate" | "severe" | "surgery"` 인데 두 생산부가 모두
-`=== "moderate" || === "severe"` 로 막는다. `applyGameOutcome:490` 은 이미
-`as "moderate" | "severe"` 로 우회 중이다. `"surgery"` 는 심각도가 아니라
-**치료법**(`InjuryTreatment`)이다. 빼면 캐스팅도 같이 지울 수 있다.
+C 는 임시 드라이버에 이걸 넣어 해상도 확인을 했다(저장소 밖). `scripts/` 는
+네 소유라 `drive.mjs` 는 안 건드렸다. 넣어 주면 스토어 그림을 1920×1080 으로
+다시 찍는다.
 
 ---
 
-## 4. 대기열 2·3번 — 경고 37 → 0
+## 5. ⚠ 하나 못 봤다 — 은퇴 **직후** 엔딩
 
-주차 일감이 끝나 지시서 §5 대기열 위에서부터 집었다(*"묻지 않는다"*).
+20시즌 완주가 4시간이라, 완성된 커리어 세이브를 만들어 화면만 띄웠다.
+그 경로(`나 > 상태 > 기록`)는 `onExit` 을 안 넘기므로 푸터가 `닫기` 하나다 —
+**조건부는 확인했다.**
 
-| 무엇 | 수 |
+`마치기` 버튼이 뜨는 은퇴 직후 경로는 못 봤다. 실제로 은퇴해야 하는 자리라
+픽스처로는 못 만든다.
+
+> **엔진에 시즌 빨리감기가 있나?** 없으면 이건 사용자 실플에 맡기는 게
+> 맞다고 본다.
+
+---
+
+## 6. 🔴 눈확인은 **기계로 된다** — 규칙에 넣어라
+
+지시서 3주차가 *"사람만 할 수 있다"* 고 적었는데 `scripts/drive.mjs` 가 이미
+있다. Playwright 로 앱을 띄우고 조작하고 스크린샷을 남긴다.
+**찍은 그림은 읽을 수 있다.** 그래서 눈확인을 돌렸고 결함 넷을 잡았다.
+
+A1 · 엔딩 · 히스토리 · 눈확인 수단 — **"없다"가 네 번 틀렸다.**
+새로 올린 "없다고 적기 전에 재현한다"에 **`scripts/` 도 본다**를 넣어 달라.
+
+```
+npm run dev:ui       # Vite 5174. `dev` 는 쓰지 마라 — predev 가 build:native 다 (R1)
+DRIVE_USER_DATA=1 SCREENSHOT_DIR=<저장소 밖> node scripts/drive.mjs <명령파일>
+```
+
+🔴 **`DRIVE_USER_DATA=1` 을 반드시 켠다.** 안 켜면 사용자의 실제 세이브를 쓴다.
+
+---
+
+## 7. 눈확인에서 잡은 결함 넷 (전부 고쳤다 · 조치 불필요)
+
+정적 검사로는 못 잡는다. 자세한 것은
+[TRACK_C_EYECHECK.md](TRACK_C_EYECHECK.md) · [TRACK_C_BACKLOG_456.md](TRACK_C_BACKLOG_456.md).
+
+| | 무엇 |
 |---|---|
-| MainPage 죽은 CSS (대기열 3번) | 22 → 0 |
-| 모달 오버레이 · 더블클릭 행 · 일정 행 · 새 게임 라벨 (a11y) | 14 → 0 |
-| `SeasonEndModal.onExit` 미사용 | 1 → 0 (아래 §5) |
+| ① | `--accent-weak` 는 **정의된 적 없는 토큰**이다 — 태그가 어두운 바탕에 어두운 글자로 안 읽혔다(네 군데) |
+| ② | 결산의 `사람` 절에 `staff:TEAM_HS_DOSEONG_COA1` 원문 id 가 떴다 — 코치는 `npcs` 에 없다 |
+| ③ | 팀 이름 폴백이 원문 id 였다 — `LeaguePage` 는 `(기록 없음)` 으로 이미 막아 뒀다 |
+| ④ | B8 (위 §3) |
 
-죽은 CSS 는 **손으로** 지웠다 — 대기열이 적어 둔 대로 `@media` 와 `:global`
-이 죽은 블록 **바로 앞**에 있어서 범위를 넓게 잡은 스크립트는 그걸 같이 먹는다.
-지우기 전에 셋을 확인했다: 클래스 18개가 마크업에 몇 번 나오나(전부 0) ·
-블록 안에 `@media`·`:global` 이 있나(없다) · 선택자가 전부 경고 목록에 있나(21/21).
-
-a11y 는 경고를 끄는 대신 **길을 냈다.** 더블클릭 행 다섯은 전에 더블클릭
-말고 여는 길이 없었는데 Enter 로도 열린다.
+②는 **기존 검사가 틀린 전제를 못박고 있었다** — *"personId 로 이름을 찾아야
+한다"*. 그게 원인이었다. 단언을 바꿨다.
 
 ---
 
-## 5. 🔴 엔딩 뒤가 없었다 — 커리어 고리를 닫았다
-
-`SeasonEndModal` 이 `export let onExit` 을 **선언만 하고 안 불렀다.**
-배선은 끝까지 이어져 있었다 —
+## 8. 🙏 다음 일감을 달라
 
 ```
-App.svelte:120     <MainPage onSeasonEnd={() => (phase = "intro")} />
-MainPage:510       <SeasonEndModal onExit={onSeasonEnd} />
-SeasonEndModal:25  export let onExit    ← 여기서 끊겼다
+1주  ✅   2주  ✅   3주  ✅   4주  ✅   대기열 1~6  ✅
 ```
 
-그 모달의 유일한 출구는 "새 시즌 시작"이다. 은퇴도 마찬가지여서 결산을
-닫으면 **은퇴한 주인공인 채로 메인에 남았다.** 게임 안에 타이틀로 돌아가는
-길이 하나도 없었다.
-
-⚠ 3주차 기준이 **"고교 입학 → 은퇴 → 엔딩까지 한 커리어 완주"** 인데
-엔딩 뒤가 없으면 완주가 성립하지 않는다.
-
-**사용자 확정: 둘 다 준다.**
-
-```
-[ 커리어 결산 ] …
-        [ 둘러보기 ]   [ 마치기 → 타이틀 ]
-```
-
-- `나 > 상태` 에서 다시 열 때는 `onExit` 을 안 넘긴다 — 버튼을 안 그린다
-- `SeasonEndModal.onExit` 은 **되살리지 않았다.** 시즌 종료는 커리어 종료가
-  아니다. 검사가 못박는다
-
----
-
-## 6. 남은 것 · 지시서
-
-- **👁 눈확인이 남았다.** 이 저장소 검사는 전부 소스 문자열 대조라
-  컴포넌트를 안 띄운다. 역대 탭 · 엔딩 · 회피 경로는 **떠 봐야 안다.**
-- ⚠ **`TRACK_C_PROMPT.md` §3 이 아직 1주차 상태다** — svelte-check 내역이
-  `PreGameBriefing 12 · MainPage 7` 로 남아 있고(둘 다 0 이다), 화면 결함
-  둘도 "A 소유라 못 고친다"로 남아 있다(둘 다 처리됐다). A 문서라 안 건드렸다.
+**지시서의 4주 계획과 대기열이 전부 비었다.** 09.28 스팀 빌드까지 남은 것을
+알려 달라. 없으면 눈확인을 넓히겠다 — 아직 안 띄워 본 화면이 있다
+(드래프트 관전 상세 · 계약 협상 · 진로 허브 · 부상 치료).
