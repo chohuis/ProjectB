@@ -16,11 +16,15 @@
  *   `reinitHighschoolSeason` 이 방금 **다시 만들었기 때문**이다 —
  *   리그가 도는 증거가 아니라 다시 만든 증거다.
  *
- * 그래서 **시즌 중(W15~25)** 에 한 장씩 찍는다. 거기가 0 이면 그 시즌에
- * 진짜로 일정이 없는 것이다.
+ * 그래서 매 바퀴 찍고 **그 시즌에 치른 경기(`played`)가 가장 많았던 순간**을
+ * 남긴다 — 롤오버가 비우기 직전이다. (처음엔 W15~25 창 → `autoRun` 이
+ * 건너뛰어 한 줄도 안 나왔고, 다음엔 일정 수 최대 → 만들어진 직후라 0/…
+ * 로 찍혀 "안 돈다"와 "W0 에서 찍었다"가 안 갈렸다. 본문 주석에 경위가 있다.)
  *
- *   npm run probe:bgsched
- *   PF_YEARS=6 PF_SEED=20260731 ... --path indie
+ * 출력 한 칸은 `리그:일정/치른(팀당)` 이다. 팀당 = 일정×2/순위표 팀수.
+ *
+ *   npm run probe:bgsched -- --path <indie|univ|draft|pro|mil>
+ *   PF_YEARS=6 PF_SEED=20260731 npm run probe:bgsched -- --path mil
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
@@ -34,6 +38,11 @@ const PATHS = {
   // ⚠ 독립을 막아 **프로로 밀어 넣는다.** `draft` 경로는 지명이 안 되면
   //   독립으로 새는데, 주인공 프로 일정(팀당 144)을 보려면 프로에 닿아야 한다.
   pro:   { draft: true,  university: false, independent: false },
+  // 🔴 **셋 다 막으면 고3 진로가 입대뿐이다** → 복무 2년 → 전역 → 독립.
+  //   전역 → 독립 갈래(`dischargeProtagonist`)를 **운에 안 맡기고** 밟는다.
+  //   `--path pro` 는 드래프트가 되면 그 갈래를 영영 안 지난다 — 세상이
+  //   바뀔 때마다 같은 씨앗의 진로가 달라졌다(실측: 20260803 이 독립 → 프로).
+  mil:   { draft: false, university: false, independent: false },
 };
 const pi = process.argv.indexOf("--path");
 const PATH_KEY = pi !== -1 ? process.argv[pi + 1] : "univ";
