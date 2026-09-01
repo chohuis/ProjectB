@@ -9,6 +9,7 @@
   "description": "OnePitch — 투수 인생 시뮬레이션 (Svelte + Electron)",
   "main": "apps/desktop/main.cjs",
   "scripts": {
+    "make:icon": "node scripts/make-icon.cjs",
     "build:contracts": "npm run -w @projectb/contracts build",
     "build:core": "npm run -w @projectb/core build",
     "build:native": "npm run -w @projectb/engine-native build",
@@ -164,6 +165,7 @@
       "packages/engine-native/**"
     ],
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         {
           "target": "dir"
