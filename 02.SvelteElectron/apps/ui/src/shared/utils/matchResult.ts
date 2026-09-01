@@ -24,6 +24,10 @@ export type PitchResultCode =
   // 사구·희생번트·희생플라이 (2026-08-28). **셋 다 타수가 아니다** —
   // 기록에서 볼넷·아웃과 다르게 잡힌다
   | "HIT_BY_PITCH" | "INTERFERENCE" | "SAC_BUNT" | "SAC_FLY"
+  // 🔴 **스퀴즈가 유니온에 없었다** (2026-09-01). 엔진은 `SqueezeBunt => "SQUEEZE"`
+  //   로 내는데(`match_engine.rs:1463`) 타입도 표도 몰라서 화면에 영문이 샜다.
+  //   희생번트와 다른 일이다 — 3루 주자를 홈에 넣으려고 대는 것이다.
+  | "SQUEEZE"
   | "GAME_OVER";
 
 export type BallHitType = "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt";
@@ -90,13 +94,25 @@ const FLASH_LABEL: Record<PitchResultCode, string> = {
   INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
   LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살!", TRIPLE_PLAY: "삼중살!!",
   FIELDING_ERROR: "실책", WALK: "볼넷",
-  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이",
+  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이", SQUEEZE: "스퀴즈 번트",
   HIT_SINGLE: "안타", HIT_DOUBLE: "2루타", HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
   GAME_OVER: "경기 종료",
 };
 
+/**
+ * 🔴 **폴백을 원문으로 두지 않는다.** 표에 없는 코드를 그대로 내면
+ *   화면에 `STRIKEOUT_SWING` 같은 영문이 **조용히** 샌다 — 실제로 그렇게
+ *   샜다(2026-09-01). `careerEventLabel.ts` 머리말이 못박은 그 결함이다.
+ *
+ * ⚠ 눈에 띄게 낸다. 아래 게이트(`matchLabelTable.test.ts`)가 엔진 코드를
+ *   긁어 막지만, 검사를 우회해 들어와도 화면에서 바로 보이게 한다.
+ */
+function unknownLabel(code: string): string {
+  return `[?${code}]`;
+}
+
 export function flashLabel(code: PitchResultCode): string {
-  return FLASH_LABEL[code] ?? code;
+  return FLASH_LABEL[code] ?? unknownLabel(code);
 }
 
 /**
@@ -127,7 +143,7 @@ export function logLabel(code: PitchResultCode, ball?: BallInPlay | null): strin
     const who = POSITION_LABEL[ball.zone];
     if (who && code === "HIT_SINGLE") return `${who} 앞 안타`;
   }
-  return FLASH_LABEL[code] ?? code;
+  return FLASH_LABEL[code] ?? unknownLabel(code);
 }
 
 /** 경기 내용 패널의 색 클래스 */

@@ -2233,9 +2233,22 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
        * 몇 주 만에 밀어낸다. 그래도 지금은 `군 복무(체육부대)` 고정 한 줄이라
        * **이벤트가 떴다는 것조차 안 남는다** — 그 사이를 메운다.
        *
-       * 소식함에 남길지는 사용자 판단 대기다(통수가 는다).
+       * ✅ 소식함에도 남긴다 (사용자 확정 2026-09-01) — 아래 `milMessages`.
        */
       let milEventTitle: string | null = null;
+      /**
+       * 군 이벤트 소식 (사용자 확정 2026-09-01).
+       *
+       * 🔴 예전엔 `newMessages: []` 가 박혀 있어서 **104주 동안 소식함에 한
+       * 줄도 안 남았다.** 이벤트는 54종이 매주 40%로 떠서 약 42번 뜨는데
+       * 전부 모달로만 갔다 — 나중에 2년을 되돌아볼 방법이 없었다.
+       *
+       * ⚠ **통수를 걱정할 자리가 아니다.** 2년에 42통이면 **연 21통**이고,
+       * 사용자가 그대로 두기로 한 훈련 소식이 **연 52통**이다. A 가 처음에
+       * "훈련 접기를 거부하셨으니 통수에 민감하다"고 읽었는데 **방향이
+       * 반대였다** — 거부한 건 통수가 아니라 **개별 소식이 접히는 것**이다.
+       */
+      const milMessages: MessageItem[] = [];
 
       if (milCalc.eventPool !== null && milCalc.eventIndex !== null) {
         const pool = milCalc.eventPool === "sports" ? eligibleSports
@@ -2262,6 +2275,26 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           // ⚠ 커리어 통이라 시즌을 넘어 산다 — 군 복무 104주를 덮는다.
           if (evt.once) gameStore.recordCareerTriggeredEvents({ [evt.id]: nextWeek });
           milEventTitle = evt.title;
+          // ⚠ **id 는 유일해야 한다.** 소식 목록이 id 를 키로 잡아서 중복이
+          //   하나만 생겨도 Svelte 가 죽고 **세이브가 아예 안 열린다**
+          //   (CLAUDE.md). `once` 가 아닌 종은 같은 해에 두 번 뜰 수 있으므로
+          //   **연도 + 주차**를 둘 다 넣는다.
+          const milMsg: MessageItem = {
+            id: `msg-mil-${evt.id}-${s.seasonYear}-w${nextWeek}`,
+            category: "system",
+            sender: isSportsUnit ? "체육부대" : "군 복무",
+            subject: evt.title,
+            preview: evt.description.split("\n")[0] ?? "",
+            body: evt.description,
+            createdAt: `W${nextWeek}`,
+            readAt: null,
+          };
+          milMessages.push(milMsg);
+          // 🔴 **여기서 실제로 넣는다.** 아래 반환값의 `newMessages` 는
+          //   **아무도 안 읽는다**(호출부 전수 확인 · 2026-09-01) — 거기만
+          //   채우면 층은 맞는데 잇는 선이 없어 아무 일도 안 일어난다.
+          //   군 분기는 `applyWeekResult` 를 쓰는데 그건 메시지 인자가 없다.
+          gameStore.addMessage(milMsg);
         }
       }
 
@@ -2293,12 +2326,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)",
           ...(milEventTitle ? [`[군] ${milEventTitle}`] : []),
         ],
-        // 🛑 **소식함에 안 남는다 — 사용자 판단 대기다** (2026-09-01).
-        //   군 이벤트 54종이 104주에 약 42번 뜨는데 전부 모달로만 간다.
-        //   통수가 42 늘어나는 변경이라 A 가 임의로 못 정한다.
-        //   ⚠ 위 `logs` 는 대체가 아니다 — `slice(0, 30)` 굴림 버퍼라
-        //     104주 중 마지막 30주만 남는다(71% 사라진다).
-        newMessages: [],
+        // ⚠ **이 필드는 아무도 안 읽는다** (호출부 전수 확인 · 2026-09-01).
+        //   소식은 위에서 `gameStore.addMessage` 로 **이미 넣었다.**
+        //   여기 채우는 것만으로는 아무 일도 안 일어난다 — 반환 타입에
+        //   있으니 모양만 맞춰 둔다.
+        //   🔴 트랙 B 가 "`newMessages: []` 가 박혀 있다"고 제보했는데
+        //      **원인은 맞고 고칠 자리는 여기가 아니었다.**
+        //   ⚠ 타입이 `string[]`(**메시지 id 목록**)이다 — `MessageItem[]` 이
+        //     아니다. 소식 자체를 여기 넣을 수 있는 구조가 애초에 아니었다.
+        newMessages: milMessages.map((msg) => msg.id),
         matchResults: [],
         stoppedBy: pending.length > 0 ? pending[0] : null,
       };

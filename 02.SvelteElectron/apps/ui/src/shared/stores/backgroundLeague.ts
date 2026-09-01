@@ -234,7 +234,32 @@ export function syncProtagonistLeagueUpdate(
   homeTeamId: string,
   awayTeamId: string,
 ): SeasonStoreState {
-  const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
+  // 🔴 **순위표가 없으면 리그 전체로 세운다** (2026-09-01).
+  //
+  // 예전엔 `?? {}` 라 `migrateLeagueState` 가 `standings: []` 를 주고,
+  // 그 위에 `updateStandings` 가 **경기에 나온 두 팀만** 얹었다. 그래서
+  // 주인공 리그 순위표에 **한두 팀만** 있었다:
+  //
+  // ```
+  //   대학 실측(8시즌 · 씨앗 20260803)  순위표팀수 최소 0 · 평균 1 · 최종 0
+  //                                     순위없음 **49 / 56주**
+  // ```
+  //
+  // `team_rank` 조건은 순위표에서 팀을 못 찾으면 **조용히 false** 다
+  // (`conditionEvaluator.ts`) — gte·lte 가 같이 죽는다.
+  //
+  // ⚠ **`initSeason` 도 세우지만 그것만으로는 안 된다.** 대학은 진학이
+  // 학적 전이라 `initSeason` 을 아예 안 타고, 롤오버는 `leagueState` 를
+  // 비운다. **여기가 마지막 방어선**이다.
+  //
+  // ⚠ 이걸로 순위표가 **서기만** 한다 — 전원 0승 0패다. 다른 팀 경기가
+  // 결과를 안 보내는 건 별개 결함이다(주인공 리그는 배경 시뮬에서 제외된다).
+  const prev = s.leagueState[leagueId];
+  const cur = migrateLeagueState(prev ?? {});
+  if (cur.standings.length === 0) {
+    const teams = ALL_TEAMS_BY_LEAGUE[leagueId];
+    if (teams?.length) cur.standings = makeStandings(teams);
+  }
   return {
     ...s,
     leagueState: {

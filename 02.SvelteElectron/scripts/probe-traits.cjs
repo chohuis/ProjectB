@@ -30,6 +30,11 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
 (async () => {
   const { app, tmp } = await headless.boot("traits");
   let why = "완주";
+  // ⚠ **try 밖에 둔다.** 안에서 선언하면 아래 출력부가 못 읽어 ReferenceError 다
+  //   (`node --check` 는 문법만 봐서 안 잡는다).
+  const lastStat = {};
+  const lastSched = {};
+  let prevStage = null;
   try {
     await app.boot({ slotId: "PT", worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy(POLICY);
@@ -41,6 +46,33 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
       // ⚠ **진행 전후로 둘 다 걷는다.** 한 번만 걷으니 6시즌 312주에서
       //   표본이 38~48개뿐이었다 — autoRun이 여러 주를 한 번에 넘긴다.
       app.trajTick();
+      // 🔴 **무대별 마지막 성적을 남긴다** (2026-09-01).
+      //   대학에서 주인공이 경기를 뛰는지 확인해야 한다 — `s.schedule` 은
+      //   고교 일정이고 대학은 `leagueSchedules` 에만 있어서, 진학 뒤
+      //   **주인공 경기가 아예 없을** 가능성이 있다.
+      //   그러면 사기(승패 ±6/−8)도 성적 조건(`season_ip_gte` 등)도 전부 죽는다.
+      {
+        // ⚠ **`경기 > 0` 으로 거르면 아무것도 안 남는다** — 실제로 첫 실행에서
+        //   고교조차 한 줄도 안 찍혔다(고교는 확실히 뛰는데도).
+        //   `{기록:"없음"}` 도 남겨야 **"안 뛴다"와 "프로브가 못 읽는다"** 가
+        //   갈린다. 그리고 **최대 경기 수**를 남긴다 — 마지막 값만 남기면
+        //   시즌 종료 뒤(stats 리셋) 값을 잡는다.
+        const st = app.protagonistStatProbe();
+        const stage = app.careerStage();
+        if (st) {
+          const prev = lastStat[stage];
+          if (!prev || (st.경기 ?? -1) >= (prev.경기 ?? -1)) lastStat[stage] = st;
+        }
+        // 🔴 **무대가 바뀐 주에 일정을 찍는다.** `leagueSummary` 가
+        //   "주인공 리그는 `schedule`, 나머지는 `leagueSchedules`" 를 이미
+        //   가른다 — 대학에서 주인공 일정이 0이면 **경기를 안 뛰는 것**이
+        //   직접 확인된다.
+        // ⚠ 매주 부르면 무겁다(전 리그 순회). 무대 전환에서만 찍는다.
+        if (stage !== prevStage) {
+          prevStage = stage;
+          lastSched[stage] = app.leagueSummary();
+        }
+      }
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       const w0 = app.currentWeek(), s0 = app.currentSeason();
       if (await app.pushCareerForward()) continue;
@@ -58,6 +90,15 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   //   읽는다 — 대학 이벤트 아홉이 `morale_lte 40~60` 으로 전멸했다(트랙 B)
   for (const [stage, v] of Object.entries(t.무대별 ?? {})) {
     console.log(`  [${stage}] ${JSON.stringify(v)}`);
+  }
+  for (const [stage, st] of Object.entries(lastStat)) {
+    console.log(`  [성적:${stage}] ${JSON.stringify(st)}`);
+  }
+  // 🔴 주인공 리그의 `schedule` 이 0이면 **그 무대에서 경기를 안 뛴다**
+  for (const [stage, sum] of Object.entries(lastSched)) {
+    const mine = Object.entries(sum).filter(([, v]) => v.schedule > 0)
+      .map(([lid, v]) => `${lid.replace("LEAGUE_", "")}:${v.schedule}/${v.played}`);
+    console.log(`  [일정:${stage}] ${mine.join(" ") || "(전 리그 0)"}`);
   }
   console.log(`[END] ${why} · 씨앗 ${SEED} · 경로 ${PATH_KEY} · ${YEARS}시즌`);
   await headless.cleanup(tmp);

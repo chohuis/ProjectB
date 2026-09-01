@@ -11,15 +11,36 @@ let matchReadyState = null;
  * "삼진"이라 하고 직접 던지면 "헛스윙 스트라이크"가 나오는 식으로 어긋났다.
  */
 const AUTO_SIM_AB_LABEL = {
-  STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
+  // 투구 단위 — 타석 결과로는 안 오지만 같은 코드 공간이라 함께 둔다
+  STRIKE_SWING: "헛스윙", STRIKE_LOOK: "루킹",
+  FOUL: "파울", BALL: "볼",
+  // 🔴 **삼진이 여기 없었다** (2026-09-01). 엔진이 3스트라이크째에 코드를
+  //   좁히는데(`STRIKE_* → STRIKEOUT_*`) 이 표가 좁히기 전 것만 갖고 있어서
+  //   화면에 **`STRIKEOUT_SWING` 이라는 영문이 그대로 떴다.**
+  STRIKEOUT_SWING: "삼진", STRIKEOUT_LOOK: "삼진(루킹)",
   WALK: "볼넷", FIELDING_ERROR: "실책",
   // 인플레이 아웃이 넷으로 쪼개졌다 (엔진 `narrow_inplay_out`)
   INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
-  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살타",
+  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살타", TRIPLE_PLAY: "삼중살",
   HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
   HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
-  FOUL: "파울", BALL: "볼",
+  // 타수가 아닌 것들 — 드물어서 여태 아무도 못 봤다
+  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해",
+  SAC_BUNT: "희생번트", SAC_FLY: "희생플라이", SQUEEZE: "스퀴즈 번트",
+  GAME_OVER: "경기 종료",
 };
+
+/**
+ * 🔴 **폴백을 원문으로 두지 않는다.** 표에 없으면 화면에 영문이 **조용히**
+ *   샌다 — 실제로 `STRIKEOUT_SWING` 이 그렇게 샜다.
+ *   `careerEventLabel.ts` 머리말이 못박은 그 결함이다.
+ *
+ * ⚠ 눈에 띄게 낸다. 게이트(`matchLabelTable.test.ts`)가 엔진 코드를 긁어
+ *   막지만, 그걸 우회해 들어와도 화면에서 바로 보이게 한다.
+ */
+function abLabel(code) {
+  return AUTO_SIM_AB_LABEL[code] ?? `[?${code}]`;
+}
 
 function toSnapshotDto(state, autoSimLogs, core) {
   const currentLineup = state.half === "top" ? state.awayLineup : state.homeLineup;
@@ -188,7 +209,7 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       const halfLabel = half === "top" ? "초" : "말";
       allLogs.push(`── ${inning}회${halfLabel} (${halfResult.runs}득점 ${halfResult.hits}안타) ──`);
       for (const ab of halfResult.atBats) {
-        const label = AB_RESULT_LABEL[ab.resultCode] ?? ab.resultCode;
+        const label = abLabel(ab.resultCode);
         const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
         allLogs.push(`투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${label} (${ab.pitchCount}구)${runMark}`);
       }
@@ -347,7 +368,7 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       const raw = engineNative.runSimpleGame(paramsJson);
       const result = JSON.parse(raw);
       const logs = (result.atBatLogs ?? []).map((ab) => {
-        const label = AUTO_SIM_AB_LABEL[ab.resultCode] ?? ab.resultCode;
+        const label = abLabel(ab.resultCode);
         const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
         return `투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${label} (${ab.pitchCount}구)${runMark}`;
       });

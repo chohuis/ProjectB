@@ -17,7 +17,7 @@
   import { pitchSlotsOf, slotCountLabel, gradeFraction } from "../../shared/utils/pitchSlots";
   import { batterBars, seasonLines, seasonStatsOf } from "../../shared/utils/statCard";
   import {
-    isOutInPlay, isHit, isStrike, flashLabel, logLabel, logClass, flashColor,
+    isOutInPlay, isHit, isStrike, isStrikeout, flashLabel, logLabel, logClass, flashColor,
     type PitchResultCode, type BallInPlay,
   } from "../../shared/utils/matchResult";
   import { seasonStore } from "../../shared/stores/season";
@@ -1230,7 +1230,15 @@
       if (outsGained > 0) totalOutsRecorded += outsGained;
 
       // 개인 기록 집계
-      if (isStrike(resultCode) && count.out > prevOuts) {
+      /*
+        ⚠ **간접 판정이었다** — `isStrike(코드) && 아웃이 늘었나`.
+        스트라이크와 아웃이 겹치기만 하면 세므로, 그 투구에 **도루 저지**처럼
+        다른 이유로 아웃이 늘면 삼진이 아닌데도 하나 올라갔다.
+
+        엔진이 3스트라이크째에 코드를 좁혀 주고(`STRIKEOUT_*`) 그걸 가르는
+        `isStrikeout` 이 있다 — 그걸 쓴다. 정확하고 읽기도 쉽다.
+      */
+      if (isStrikeout(resultCode)) {
         totalStrikeouts++;
       }
       if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
@@ -1843,6 +1851,22 @@
         <section class="panel info-panel" aria-label="pitcher info panel">
           <div class="card-head">
             <h2>{pitcherState.name}</h2>
+            <!--
+              🔴 **경기 중에 탈삼진이 안 보였다.** 종료 화면에만 있어서, 삼진이
+              한 번도 안 잡히던 결함(2026-09-01)이 **한 시즌 내내 0 인 채로**
+              아무 눈에도 안 띄었다.
+
+              ⚠ **능력치 목록에 넣으면 소용이 없다.** 실측 —
+
+                  해상도        카드 패널  머리글  목록에 남는 높이
+                  1280×720        44px     21px      0px
+                  1366×768        92px     21px     39px   (내용 104px)
+                  1536×864       190px     21px    137px
+
+                실사용 두 해상도에서 목록은 **한 줄도 안 보인다.** 머리글은
+                어디서나 남으므로 여기 세운다.
+            -->
+            <span class="k-tag" title="이 경기 탈삼진">K {totalStrikeouts}</span>
             <button
               type="button"
               class="flip-btn"
@@ -2801,6 +2825,20 @@
      앞뒤 두 면. 뒷면은 실제 기록이 있을 때만 그린다 — 없으면 "기록 없음"이다. */
   .info-panel { display: flex; flex-direction: column; overflow: hidden; }
 
+  /* 이름과 뒤집기 버튼 사이. **줄바꿈 없이** 붙어 있어야 머리글이 안 늘어난다 */
+  .k-tag {
+    margin-left: auto;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--panel-sunk);
+    color: var(--ink-mid);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
   .card-head {
     display: flex;
     align-items: baseline;
@@ -2810,6 +2848,9 @@
   }
   .card-head h2 {
     margin: 0;
+    /* ⚠ K 표식이 붙어 셋이 됐다. 이름이 길면 이 줄이 안 줄어 버튼을 민다 */
+    flex: 0 1 auto;
+    min-width: 0;
     font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;

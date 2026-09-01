@@ -27,6 +27,9 @@ import { draftDestinationTeams } from "../utils/draftSystem";
 import { proSchedule } from "./proSeason";
 import { dischargeProtagonist, openMilitarySeason } from "./militaryDecision";
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
+// 🔴 팀 목록의 정본 — refs 에서 1군/2군을 **나눠 담는다**.
+//   `masterStore.teams` 를 `leagueId` 로 거르면 둘이 같이 딸려온다
+import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 
 /**
  * 세계 오프시즌을 한 해에 한 번만 돌게 하는 가드.
@@ -682,9 +685,25 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     const pending = P().pendingNextContract;
     if (pending) {
       gameStore.applyPendingNextContract();
-      const proTeamIds = get(masterStore).teams
-        .filter((t) => t.leagueId === pending.leagueId)
-        .map((t) => t.id);
+      // 🔴 **`masterStore.teams`를 리그로 거르면 1군과 2군이 같이 딸려온다**
+      // (2026-09-01 · 트랙 B 실측). refs에서 KBL은 `_1`(1군 10팀)과
+      // `_2`(2군 10팀)가 **같은 `leagueId`**를 쓴다.
+      //
+      // 그대로 쓰면 **20팀짜리 시즌**이 열리고 순위표에 2군이 섞인다:
+      //
+      // ```
+      //   실측(씨앗 20260803 · 9시즌)  순위표팀수 최소 0 · 최대 **20** · 평균 13
+      //   그래서 PRO_TEAM_TOP3(lte 3)가 **20팀 중 3위**를 요구했다
+      //   문턱은 10팀 감각으로 쓰였는데 모수가 두 배다
+      // ```
+      //
+      // ⚠ **`proSeason.ts:40`이 이 결함을 주석으로 경고하고 고쳐 뒀는데
+      // 여기는 안 고쳐졌다.** 같은 함정을 두 자리에서 만났고 한쪽만 닫혔다.
+      // 정본은 `ALL_TEAMS_BY_LEAGUE` — refs에서 생성되고 1군/2군을 나눠 담는다.
+      const proTeamIds = ALL_TEAMS_BY_LEAGUE[pending.leagueId]
+        ?? get(masterStore).teams
+          .filter((t) => t.leagueId === pending.leagueId)
+          .map((t) => t.id);
       const seasonYear = (get(seasonStore).seasonYear || 2026) + 1;
       seasonStore.initSeason(pending.leagueId, seasonYear, 52, proTeamIds);
       seasonStore.setSchedule(await proSchedule(pending.leagueId, proTeamIds, pending.teamId));

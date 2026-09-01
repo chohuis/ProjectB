@@ -51,6 +51,8 @@ import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { relationLabel } from "../../apps/ui/src/shared/types/relationship";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
+// 조·권역 편성 — `conditionEvaluator` 가 순위를 이 안에서 센다
+import { GROUPS_BY_LEAGUE } from "../../apps/ui/src/shared/utils/leagueTeams.generated";
 
 // ── 주인공 픽스처 ────────────────────────────────────────────────
 // NewGamePage의 "균형형" 프리셋과 같은 값이지만 **정의가 아니라 픽스처**다.
@@ -972,7 +974,18 @@ export function trajTick(): void {
   // 🔴 **이벤트가 읽는 것과 같은 순위표를 본다.** `advanceWeek` 이
   //   `leagueState[주인공리그] ?? s.standings` 를 넘기므로 여기도 그렇게 읽는다 —
   //   다르게 읽으면 프로브가 이벤트와 다른 세계를 재게 된다.
-  const rows = s.leagueState?.[p.leagueId]?.standings ?? s.standings ?? [];
+  //
+  // ⚠ **조·권역 필터까지 같이 걸어야 한다** (2026-09-01 · 트랙 B 지적).
+  //   `conditionEvaluator` 는 한 단계를 더 한다 — 고교 8권역(6~20팀)·
+  //   대학 5조(각 10팀)에서는 **조 안 순위**를 본다. 그걸 빼면 프로브가
+  //   102팀 기준으로 찍고 이벤트는 조 기준으로 판정해 **다른 값**이 된다.
+  //   (독립·프로는 `GROUPS_BY_LEAGUE` 에 없어 리그 전체가 모수다.)
+  const all = s.leagueState?.[p.leagueId]?.standings ?? s.standings ?? [];
+  const groups = GROUPS_BY_LEAGUE[p.leagueId];
+  const myGroup = groups
+    ? Object.values(groups).find((ids) => ids.includes(p.teamId))
+    : undefined;
+  const rows = myGroup ? all.filter((x) => myGroup.includes(x.teamId)) : all;
   const sorted = [...rows].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
   _traj.rank.push(sorted.findIndex((x) => x.teamId === p.teamId) + 1);   // 0 = 없음
   _traj.pool.push(rows.length);
