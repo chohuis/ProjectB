@@ -31,6 +31,9 @@ const PATHS = {
   indie: { draft: false, university: false, independent: true },
   univ:  { draft: false, university: true,  independent: false },
   draft: { draft: true,  university: false, independent: true },
+  // ⚠ 독립을 막아 **프로로 밀어 넣는다.** `draft` 경로는 지명이 안 되면
+  //   독립으로 새는데, 주인공 프로 일정(팀당 144)을 보려면 프로에 닿아야 한다.
+  pro:   { draft: true,  university: false, independent: false },
 };
 const pi = process.argv.indexOf("--path");
 const PATH_KEY = pi !== -1 ? process.argv[pi + 1] : "univ";
@@ -81,7 +84,13 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
     const { sum, wy, stage } = seen.get(year);
     const live = Object.entries(sum)
       .filter(([, v]) => v.schedule > 0)
-      .map(([lid, v]) => `${lid.replace("LEAGUE_", "")}:${v.schedule}/${v.played}`);
+      .map(([lid, v]) => {
+        // ⚠ **팀당 경기 수를 같이 낸다.** 총량만 보면 "리그가 몇 경기냐"를
+        //   못 읽는다 — 주인공 리그만 126 이던 걸 총 630 으로만 봤었다.
+        //   팀당 = 총경기 × 2 / 팀수. `standings` 가 팀 수다.
+        const per = v.standings > 0 ? Math.round(v.schedule * 2 / v.standings) : 0;
+        return `${lid.replace("LEAGUE_", "")}:${v.schedule}/${v.played}(${per})`;
+      });
     console.log(`  ${year} W${wy} [${stage}] ${live.join(" ") || "(전 리그 0)"}`);
   }
   console.log(`[END] ${why} · 씨앗 ${SEED} · 경로 ${PATH_KEY} · ${YEARS}시즌`);

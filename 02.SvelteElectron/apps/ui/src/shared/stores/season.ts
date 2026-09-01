@@ -644,6 +644,20 @@ function createSeasonStore() {
       const own = all[myLeagueId];
       delete all[myLeagueId];
 
+      // 🔴 **시범경기는 주인공에게도 간다** (2026-09-02 · 사용자 확정).
+      //
+      // 정규 일정을 이미 세워 둔 경로(`keepOwnSchedule`)에서는 위에서 주인공
+      // 리그 몫을 통째로 버리는데, 거기 **시범경기가 같이 들려 있었다.**
+      // 그래서 배경 프로 리그엔 팀당 12경기가 있고 주인공만 0이었다.
+      //
+      // ⚠ **정규는 안 붙인다.** 그건 `proSchedule` 이 이미 세웠고, 두 벌이
+      //   되면 같은 주에 경기가 겹친다. `isFriendly` 인 것만 고른다.
+      // ⚠ 공식 기록엔 안 들어간다(`isFriendly`) — 성적 밸런스를 안 건드리고
+      //   컨디션·로테이션 준비만 생긴다.
+      const ownPreseason = opts.keepOwnSchedule
+        ? (own ?? []).filter((e) => e.isFriendly)
+        : [];
+
       const ownTeams = myLeagueId === "LEAGUE_HIGHSCHOOL"
         ? HS_ACTIVE_TEAMS_V3
         : ALL_TEAMS_BY_LEAGUE[myLeagueId];
@@ -663,10 +677,15 @@ function createSeasonStore() {
             stats: {}, playerConditions: {}, teamRotationIndex: {},
           };
         }
+        // 시범경기는 정규 **앞**에 붙인다 — 화면이 한 흐름으로 읽는다
+        const haveIds = new Set(s.schedule.map((e) => e.id));
+        const freshPre = ownPreseason.filter((e) => !haveIds.has(e.id));
         return {
           ...s,
           leagueId: takeOwn ? myLeagueId : s.leagueId,
-          schedule: takeOwn ? own : s.schedule,
+          schedule: takeOwn ? own
+            : freshPre.length > 0 ? [...freshPre, ...s.schedule]
+            : s.schedule,
           standings: takeOwn && ownTeams ? makeStandings(ownTeams) : s.standings,
           leagueSchedules: { ...s.leagueSchedules, ...all },
           leagueState,

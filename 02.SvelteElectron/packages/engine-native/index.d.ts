@@ -18,6 +18,18 @@ export declare function verifySaveSig(snapshot: string, sig: string): boolean
 export declare function contactBandStatsNative(): string
 /** 계측 전용 — 담장 재확인이 결과를 몇 번 바꿨나 (양방향) */
 export declare function fenceMoveStatsNative(): string
+/**
+ * **폭투 깔때기** — 밸런스 ④ 의 손잡이를 정하는 값 (2026-09-01).
+ *
+ * 총량(KBL 팀당 20.3)만으로는 **문턱을 내릴지 확률을 올릴지** 못 정한다.
+ * 둘이 포일에 반대로 작용하기 때문이다 — 포일은 이미 하한 아래(4.6/팀)다.
+ *
+ * ```
+ *   [1]→[2] 이 좁다   문턱(WILD_PITCH_DISTANCE 1.55)이 병목
+ *   [2]→[3] 이 좁다   확률(WILD_PITCH_BASE_PROB 0.16)이 병목
+ * ```
+ */
+export declare function wpFunnelStatsNative(): string
 /** 계측 전용 — 카운터 초기화 */
 export declare function resetContactBandsNative(): string
 /**

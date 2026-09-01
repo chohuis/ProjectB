@@ -1,4 +1,5 @@
 import type { ScheduleEntry } from "../types/season";
+import { PRO_START_WEEK, PRO_END_WEEK } from "./leagueScheduler";
 
 // ── 날짜 유틸리티 (pure TS — UI 표시용) ──────────────────────────
 export function toGameDate(seasonYear: number, week: number, dayOffset = 0): string {
@@ -40,7 +41,7 @@ export async function generateKblSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleKbl(
-    JSON.stringify({ teamIds, protagonistTeamId, seasonYear })
+    JSON.stringify({ teamIds, protagonistTeamId, seasonYear, startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK })
   );
   return JSON.parse(raw);
 }
@@ -51,7 +52,7 @@ export async function generateAblSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleAbl(
-    JSON.stringify({ teamIds, protagonistTeamId, seasonYear })
+    JSON.stringify({ teamIds, protagonistTeamId, seasonYear, startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK })
   );
   return JSON.parse(raw);
 }
@@ -62,7 +63,7 @@ export async function generateJblSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleJbl(
-    JSON.stringify({ teamIds, protagonistTeamId, seasonYear })
+    JSON.stringify({ teamIds, protagonistTeamId, seasonYear, startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK })
   );
   return JSON.parse(raw);
 }

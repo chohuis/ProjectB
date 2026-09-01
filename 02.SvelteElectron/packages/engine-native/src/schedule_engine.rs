@@ -163,6 +163,15 @@ fn assign_rounds_to_weeks(
 
 // ── Pro-league schedule (scheduleGen style) ───────────────────
 
+/// 프로 정규 일정 — **주당 2 시리즈 × 3연전**.
+///
+/// 팀당 경기 수 = (주 수) × 2 슬롯 × 3경기. W5~28(24주)이면 **144**로
+/// DESIGN.md §7·KBO 와 맞는다. W7~27(21주)이면 126이다.
+///
+/// ⚠ **상대별로는 균등하지 않다.** 10팀 라운드로빈이 9라운드인데 슬롯이
+///   48개라 5.33 바퀴다 — 세 팀은 18경기, 여섯 팀은 15경기가 된다
+///   (15×6 + 18×3 = 144). 3연전 단위로는 상대별 16경기가 안 나온다.
+///   정본이 요구하는 건 **팀당 총 144경기**이지 상대별 균등이 아니다.
 fn generate_pro_league_schedule(
     team_ids: &[String],
     protagonist_team_id: &str,
@@ -273,18 +282,38 @@ pub struct GenerateProScheduleParams {
     pub team_ids: Vec<String>,
     pub protagonist_team_id: String,
     pub season_year: Option<u32>,
+    /// 정규 시즌 기간. **TS `PRO_START_WEEK`/`PRO_END_WEEK` 가 정본이다.**
+    ///
+    /// 🔴 예전엔 여기 `7, 27` 이 박혀 있었다. 배경 리그는 TS 쪽 `W5~28` 로
+    ///   돌아서 **같은 리그가 주인공 유무로 경기 수가 달라졌다** —
+    ///   주인공이 있으면 팀당 126, 없으면 144.
+    ///   숫자가 두 곳에 적히면 한쪽만 고쳐진 채 남는다.
+    ///
+    /// ⚠ `Option` 이다. `serde(default)` 로 0 이 조용히 들어오면 주차 계산이
+    ///   통째로 어긋난다 — 안 넘기면 옛 값(7, 27)으로 떨어진다.
+    pub start_week: Option<u32>,
+    pub end_week: Option<u32>,
+}
+
+impl GenerateProScheduleParams {
+    fn weeks(&self) -> (u32, u32) {
+        (self.start_week.unwrap_or(7), self.end_week.unwrap_or(27))
+    }
 }
 
 pub fn generate_kbl_schedule(p: GenerateProScheduleParams) -> Vec<ScheduleEntry> {
-    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, 7, 27, "KBL", p.season_year.unwrap_or(2026))
+    let (sw, ew) = p.weeks();
+    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, sw, ew, "KBL", p.season_year.unwrap_or(2026))
 }
 
 pub fn generate_abl_schedule(p: GenerateProScheduleParams) -> Vec<ScheduleEntry> {
-    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, 7, 27, "ABL", p.season_year.unwrap_or(2026))
+    let (sw, ew) = p.weeks();
+    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, sw, ew, "ABL", p.season_year.unwrap_or(2026))
 }
 
 pub fn generate_jbl_schedule(p: GenerateProScheduleParams) -> Vec<ScheduleEntry> {
-    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, 7, 27, "JBL", p.season_year.unwrap_or(2026))
+    let (sw, ew) = p.weeks();
+    generate_pro_league_schedule(&p.team_ids, &p.protagonist_team_id, sw, ew, "JBL", p.season_year.unwrap_or(2026))
 }
 
 #[derive(Debug, Deserialize)]
