@@ -938,12 +938,44 @@ export function faMarketProbe(): Record<string, unknown> {
 //   대학에서도 그런 건지 못 가른다. 트랙 B 가 대학 이벤트 아홉이
 //   `morale_lte 40~60` 으로 전멸한 걸 찾았는데, 그걸 확인하려면
 //   **대학 구간의 궤적만** 봐야 한다.
-let _traj: { dil: number[]; mor: number[]; stage: string[] } = { dil: [], mor: [], stage: [] };
+// ⚠ **순위와 인기도 같이 쌓는다** (2026-09-01).
+//
+// 트랙 B 가 프로 순위 조건에서 갈리지 않는 것을 하나 남겼다:
+//
+//   ✅ 닿음   TEAM_STREAK_WIN  lte 4        **week 게이트 없음**
+//   ❌ 못닿음  TEAM_BUBBLE      lte 6 ∧ week≥30
+//   ❌ 못닿음  TEAM_TOP3        lte 3 ∧ week≥24
+//
+// **느슨한 lte 6 이 못 닿는데 빡빡한 lte 4 는 닿는다** — 문턱 순서가
+// 뒤집혔으니 순위가 병목이 아니다. 갈리는 건 `week_gte` 하나다.
+// 읽는 방법이 둘이고 한 실행으로는 못 가른다:
+//
+//   ① 시즌 초에만 ≤4 를 스치고 20주 뒤엔 하위권으로 굳는다  → 결함 아님
+//   ② `week_gte` 뒤에 순위를 못 읽는 자리가 있다            → 결함
+//
+// **주차별 순위 궤적**이 그걸 가른다. 초반에만 낮고 뒤로 갈수록 높으면 ①이다.
+//
+// ⚠ 인기도 같이 쌓는다 — 사기와 **같은 형태**일 수 있다(올리는 경로만 있는
+// 지). `EVT_RAND_SOCIAL_MEDIA_MENTION` 이 `popularity_gte 15` 를 건다.
+let _traj: {
+  dil: number[]; mor: number[]; pop: number[];
+  stage: string[]; week: number[]; rank: number[]; pool: number[];
+} = { dil: [], mor: [], pop: [], stage: [], week: [], rank: [], pool: [] };
 export function trajTick(): void {
   const p = get(gameStore).protagonist;
+  const s = get(seasonStore);
   _traj.dil.push(p.diligence ?? 0);
   _traj.mor.push(p.morale ?? 0);
+  _traj.pop.push(p.popularity ?? 0);
   _traj.stage.push(p.careerStage ?? "?");
+  _traj.week.push(s.currentWeek);
+  // 🔴 **이벤트가 읽는 것과 같은 순위표를 본다.** `advanceWeek` 이
+  //   `leagueState[주인공리그] ?? s.standings` 를 넘기므로 여기도 그렇게 읽는다 —
+  //   다르게 읽으면 프로브가 이벤트와 다른 세계를 재게 된다.
+  const rows = s.leagueState?.[p.leagueId]?.standings ?? s.standings ?? [];
+  const sorted = [...rows].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  _traj.rank.push(sorted.findIndex((x) => x.teamId === p.teamId) + 1);   // 0 = 없음
+  _traj.pool.push(rows.length);
 }
 export function trajProbe(): Record<string, unknown> {
   const stat = (v: number[]) => v.length
@@ -965,19 +997,47 @@ export function trajProbe(): Record<string, unknown> {
   for (const s of new Set(_traj.stage)) {
     const idx = _traj.stage.flatMap((x, i) => (x === s ? [i] : []));
     const mor = idx.map((i) => _traj.mor[i]);
-    byStage[s] = { 사기: stat(mor), 닿음: cuts(mor) };
+    const rank = idx.map((i) => _traj.rank[i]).filter((r) => r > 0);
+    const wk = idx.map((i) => ((_traj.week[i] - 1) % 52) + 1);
+    /**
+     * 🔴 **주차 구간별 순위** — 이벤트가 `week_gte` 뒤에 순위를 건다.
+     * 시즌 초에만 상위권이면 `week_gte 24` 짜리는 영영 안 뜬다.
+     */
+    const band = (lo: number, hi: number) => {
+      const v = idx.map((i, j) => [wk[j], _traj.rank[i]] as const)
+        .filter(([w, r]) => w >= lo && w <= hi && r > 0).map(([, r]) => r);
+      return v.length
+        ? { 최고: Math.min(...v), 최저: Math.max(...v),
+            평균: Math.round((v.reduce((a, b) => a + b, 0) / v.length) * 10) / 10,
+            표본: v.length }
+        : { 표본: 0 };
+    };
+    byStage[s] = {
+      사기: stat(mor), 닿음: cuts(mor),
+      인기: stat(idx.map((i) => _traj.pop[i])),
+      순위: stat(rank),
+      순위표팀수: stat(idx.map((i) => _traj.pool[i])),
+      // 순위표에 팀이 없던 주 — **0이 아니면 조건이 조용히 false 였다**
+      순위없음: idx.filter((i) => _traj.rank[i] === 0).length,
+      주차별순위: { "W1~13": band(1, 13), "W14~23": band(14, 23),
+                    "W24~39": band(24, 39), "W40~52": band(40, 52) },
+    };
   }
   return {
-    성실: stat(_traj.dil), 사기: stat(_traj.mor),
+    성실: stat(_traj.dil), 사기: stat(_traj.mor), 인기: stat(_traj.pop),
     닿음: {
       "성실≤30": hit(_traj.dil, (x) => x <= 30),
       "성실≥80": hit(_traj.dil, (x) => x >= 80),
       ...cuts(_traj.mor),
+      // 사교 이벤트가 이걸 건다 — 사기와 같은 형태인지 본다
+      "인기≥15": hit(_traj.pop, (x) => x >= 15),
     },
     무대별: byStage,
   };
 }
-export function trajReset(): void { _traj = { dil: [], mor: [], stage: [] }; }
+export function trajReset(): void {
+  _traj = { dil: [], mor: [], pop: [], stage: [], week: [], rank: [], pool: [] };
+}
 
 /** KBL 외국인 선수 이름이 한글인가 — 영문이 그대로 뜨던 것 (실플 ⑨) */
 export function foreignNameProbe(): Record<string, unknown> {
