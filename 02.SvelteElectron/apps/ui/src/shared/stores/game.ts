@@ -1612,15 +1612,15 @@ function createGameStore() {
       }));
     },
 
-    updateFame(delta: number) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          fame: Math.max(0, Math.min(100, s.protagonist.fame + delta)),
-        },
-      }));
-    },
+    // ⚠ **`updateFame`을 지웠다** (2026-09-01). `applyFameChange`와 같은 일을
+    //   하면서 상한만 100으로 달랐다 — `applyFameChange`·`applyEventEffects`
+    //   (`:891`)·`types/main.ts`가 전부 200인데 여기만 100이었다.
+    //
+    //   그래서 이벤트·사치품으로 100을 넘긴 명성이 **경기를 한 번 치르면
+    //   100으로 잘렸다**(경기 결과 경로가 이걸 썼다). 오류도 로그도 없이
+    //   값이 사라진다.
+    //
+    //   호출부(`applyGameOutcome.ts`)는 `applyFameChange`를 쓴다.
 
     updateScoutScore(delta: number) {
       update((s) => ({

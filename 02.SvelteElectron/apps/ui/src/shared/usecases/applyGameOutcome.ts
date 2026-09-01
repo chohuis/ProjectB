@@ -366,7 +366,9 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     [],
     sBefore.currentWeek,
   );
-  if (growth.fameDelta !== 0) gameStore.updateFame(growth.fameDelta);
+  // ⚠ 예전엔 `updateFame`이었다 — 같은 일을 하면서 상한만 100이라
+  //   이벤트로 100을 넘긴 명성을 경기 한 번에 깎았다. 정본은 200이다
+  if (growth.fameDelta !== 0) gameStore.applyFameChange(growth.fameDelta);
 
   const gotSave = won && outcome.week > 3 && diff <= 3 ? 1 : 0;
   gameStore.recordBaseballAchievementMetric({
