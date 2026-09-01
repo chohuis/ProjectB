@@ -371,7 +371,31 @@ export interface MilitaryEvent {
   id: string;
   title: string;
   description: string;
+  /** 이 계급 **이상**이면 후보. 0=이병 1=일병 2=상병 3=병장 */
   minRank?: number;
+  /**
+   * 이 계급 **이하**여야 후보 (2026-09-01).
+   *
+   * 🔴 `minRank` 만 있어서 **한 번 열린 이벤트가 전역까지 안 닫혔다.**
+   * `MIL_GEN_BOOT_CAMP`(「훈련소 강도 훈련」 · "기초군사훈련이 이어지고
+   * 있습니다")이 `minRank 0` 이라 **복무 20개월차에도 뜬다.**
+   *
+   * ⚠ 훈련소 이벤트는 훈련소 기간에 **여러 번 뜨는 게 맞다** — `once` 로는
+   * 못 막는다. 상한이 필요한 이유가 그거다.
+   */
+  maxRank?: number;
+  /**
+   * 커리어에 **한 번만** (2026-09-01).
+   *
+   * 🔴 Rust 뽑기가 복원추출이고 쿨다운이 없어서 「자대 배치 첫날」이
+   * **평균 1.1회** 떴다 — 두 번 뜨거나 한 번도 안 뜬다는 뜻이고,
+   * **병장 때 「자대 배치 첫날」이 뜰 수도** 있었다(트랙 B 실측).
+   *
+   * ⚠ 기록은 `protagonist.careerTriggeredEvents` 에 남는다.
+   * `seasonStore.triggeredEvents` 는 매 시즌 비워지는데 **군 복무는
+   * 104주(2시즌)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
+   */
+  once?: boolean;
   /**
    * ⚠ **효과 필드를 여기 다시 나열하지 않는다.** 예전엔 `moraleDelta`·
    * `fatigueDelta`·`xp`·`statDelta` 넷만 선언돼 있어서, 데이터에 성실도나

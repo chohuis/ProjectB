@@ -91,6 +91,61 @@ import { simulateNpcGame, logGameLines } from "./weekPhases/games";
  */
 const DILIGENCE_WEEKLY_DECAY = Number(
   (typeof process !== "undefined" && process.env?.PB_DIL_DECAY) || 0.4);
+
+/**
+ * 🔴 **사기는 기준값으로 끌린다 — 평균 회귀** (사용자 확정 2026-09-01).
+ *
+ * 성실과 **같은 병**이었는데 더 심했다. 실측(`probe:traits --path univ` ·
+ * 8시즌 · 씨앗 20260803):
+ *
+ * ```
+ *   대학  최소 100 · 최대 100 · 평균 100   표본 56주 — **한 번도 안 움직인다**
+ *   고교  최소  70 · 최대 100 · 평균  99
+ *   사기 ≤60 에 닿은 주   0
+ * ```
+ *
+ * 그래서 사기를 조건으로 쓰는 **대학 이벤트 아홉이 전멸**했다(트랙 B 실측 ·
+ * 문턱 40·48·50·50·55·55·55·58·60). 다른 무대는 같은 문턱대가 뜬다.
+ *
+ * ⚠ **올리는 경로만 있었다** — 경기 승패로도 훈련으로도 안 움직이고
+ * 자연 감쇠도 없다. 이벤트 선택지(양수가 3배)와 TOP10 순위 보상
+ * (`rankEffect` · 매주 +1~5, **음수 없음**)이 전부였다.
+ *
+ * ## 왜 감쇠가 아니라 회귀인가
+ *
+ * 성실은 **습관**이라 방치하면 떨어지는 게 맞다(단방향 감쇠). 사기는
+ * **기분**이라 좋을 때도 나쁠 때도 중립으로 돌아온다 — 바닥에 붙어
+ * 영영 못 올라오면 그것도 죽은 축이다.
+ *
+ * ```
+ *   사기 100 → 매주 (60-100) × 0.05 = **-2.0**
+ *   사기  70 →       (60- 70) × 0.05 = **-0.5**   가까울수록 느려진다
+ *   사기  30 →       (60- 30) × 0.05 = **+1.5**   바닥에서는 올라온다
+ * ```
+ *
+ * TOP10 보상(+1~5)과 만나 **평형점**이 생긴다 — 상위권 주인공은 높게,
+ * 무명은 60 근처. 그게 노린 것이다.
+ *
+ * ⚠ **소수를 유지한다.** 정수로 반올림하면 회귀량이 1 미만일 때 매주 0이
+ * 되어 아무 일도 안 일어난다(성실에서 겪었다).
+ *
+ * ⚠ `PB_MORALE_PIVOT` · `PB_MORALE_PULL` 로 덮어 다시 잴 수 있다.
+ */
+const MORALE_PIVOT = Number(
+  (typeof process !== "undefined" && process.env?.PB_MORALE_PIVOT) || 60);
+const MORALE_WEEKLY_PULL = Number(
+  (typeof process !== "undefined" && process.env?.PB_MORALE_PULL) || 0.05);
+
+/**
+ * 한 주가 지난 뒤의 사기. **검사가 이 함수를 부른다.**
+ *
+ * ⚠ 식을 인라인으로 두면 검사가 자기 사본을 만들어 보게 되고, 그러면
+ * **코드를 되돌려도 검사가 초록**이다(변이가 안 잡힌다). 순수 함수로
+ * 뽑아 두면 검사와 코드가 같은 것을 본다.
+ */
+export function moraleAfterWeek(cur: number): number {
+  return Math.max(0, Math.min(100, cur + (MORALE_PIVOT - cur) * MORALE_WEEKLY_PULL));
+}
 import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
@@ -584,6 +639,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     if (next !== cur) growth.protagonistPatch.diligence = next;
   }
 
+  // 사기 — **기준값으로 끌린다.** 근거는 `MORALE_PIVOT` 주석에 있다.
+  //
+  // ⚠ **여기서 patch 에 넣는 게 맞다.** `applyWeekEndBatch` 가
+  //   `{ ...protagonist, ...patch }` 를 먼저 만들고 그 위에 `moraleDelta`
+  //   (TOP10 보상)를 더한다 — 회귀가 기준값이 되고 보상이 얹힌다.
+  //   순서가 반대면 회귀가 보상을 덮어 TOP10 이 아무 일도 안 하게 된다.
+  {
+    const cur = g.protagonist.morale ?? MORALE_PIVOT;
+    const next = moraleAfterWeek(cur);
+    if (Math.abs(next - cur) > 1e-9) growth.protagonistPatch.morale = next;
+  }
+
   growth.protagonistPatch.consecutiveLowMoraleWeeks  = newLowMoraleWeeks;
   growth.protagonistPatch.consecutiveHighFatigueWeeks = injuryCalc.newConsecutiveHighFatigueWeeks;
   growth.protagonistPatch.injury                      = injuryState;
@@ -643,7 +710,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     protagonist:     afterP,
     currentWeek:     weekNum,
     seasonPhase:     s.schedule.find((e) => e.week === weekNum)?.phase ?? "season",
-    standings:       s.standings,
+    // 🔴 **주인공 리그를 명시해 읽는다** (2026-09-01).
+    //
+    // `s.standings`는 "지금 열려 있는 시즌"의 순위표인데, **진로가 바뀌고
+    // 새 시즌이 열리기 전까지 옛 리그 것**이다. `applyDraftDecision`이
+    // `careerStage`·`leagueId`를 먼저 바꾸고, `openProSeason`(→`initSeason`)은
+    // 계약 수락 뒤에야 불린다 — 그 사이 주가 흐르면 **주인공이 독립인데
+    // 순위표는 고교 102팀**이다.
+    //
+    // 실측(트랙 B · `rankCtxProbe`): 독립 주인공의 `s.standings`가 102팀이고
+    // **그 안에 주인공 팀이 없었다**(`top_순위 = 0`). `team_rank` 조건은
+    // 팀을 못 찾으면 **조용히 false**다 — 오류도 로그도 없다.
+    //
+    // ⚠ `leagueState`는 `initAllLeaguesV3`가 전 리그를 미리 채우므로
+    // 그 창에서도 옳다. 없을 때만 `s.standings`로 떨어진다(구 세이브).
+    standings:       s.leagueState?.[afterP.leagueId]?.standings ?? s.standings,
     stats:           s.stats,
     triggeredEvents: s.triggeredEvents,
     sentenceMemory: s.sentenceMemory ?? {},
@@ -2079,11 +2160,35 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const m = get(masterStore);
       const serviceWeeks = g.protagonist.militaryServiceWeeks;
 
-      // 계급 기반 이벤트 필터링 (minRank 이하만 포함)
+      // 계급 기반 이벤트 필터링
+      //
+      // 🔴 **`minRank` 하나로는 한 번 열린 이벤트가 전역까지 안 닫힌다**
+      // (2026-09-01 · 트랙 B 실측). 셋을 같이 본다:
+      //
+      // ```
+      //   minRank   그 계급 **이상**이면 후보                      (예전부터)
+      //   maxRank   그 계급 **이하**여야 후보 — 훈련소 이벤트가
+      //             병장 때 뜨는 걸 막는다
+      //   once      커리어에 한 번만 — 「자대 배치 첫날」이 두 번 뜨던 것
+      // ```
+      //
+      // ⚠ **`once` 는 커리어 통을 쓴다**(`careerTriggeredEvents`).
+      // `seasonStore.triggeredEvents` 는 `makeEmptySeason` 이 매 시즌 비우는데
+      // **군 복무는 104주(2시즌)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
+      //
+      // ⚠ 뽑기는 Rust 가 한다 — 복원추출이고 쿨다운이 없다. 그래서 후보에
+      // 남아 있는 한 계속 뽑힌다. **거르는 자리는 여기 하나뿐이다.**
       const rankIndex = serviceWeeks <= 8 ? 0 : serviceWeeks <= 34 ? 1 : serviceWeeks <= 60 ? 2 : 3;
-      const eligibleSports  = m.militarySportsEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
-      const eligibleGeneral = m.militaryGeneralEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
-      const eligibleCommon  = m.militaryCommonEvents.filter(e => (e.minRank ?? 0) <= rankIndex);
+      const fired = get(gameStore).protagonist.careerTriggeredEvents ?? {};
+      const eligible = <T extends { id: string; minRank?: number; maxRank?: number; once?: boolean }>(
+        list: T[],
+      ) => list.filter((e) =>
+        (e.minRank ?? 0) <= rankIndex
+        && rankIndex <= (e.maxRank ?? Number.POSITIVE_INFINITY)
+        && !(e.once && fired[e.id] !== undefined));
+      const eligibleSports  = eligible(m.militarySportsEvents);
+      const eligibleGeneral = eligible(m.militaryGeneralEvents);
+      const eligibleCommon  = eligible(m.militaryCommonEvents);
 
       // ⚠ **정수로 반올림해서 넘긴다.** Rust `MilitaryWeekPayload`는 이 값들이
       // 전부 `u32`/`i32`인데 주인공 스탯은 소수다(피로 62.125 · 스태미나 54.3).
@@ -2120,6 +2225,17 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         morale: number; fatigue: number;
         eventPool: string | null; eventIndex: number | null; rank: string;
       };
+      /**
+       * 이번 주에 뜬 군 이벤트 제목 — 주간 로그에 남긴다.
+       *
+       * ⚠ **이건 기록의 대체가 아니다.** `logs` 는 `slice(0, 30)` 인 **굴림
+       * 버퍼**라 104주 복무 중 **마지막 30주만** 남고, 전역 뒤엔 리그 로그가
+       * 몇 주 만에 밀어낸다. 그래도 지금은 `군 복무(체육부대)` 고정 한 줄이라
+       * **이벤트가 떴다는 것조차 안 남는다** — 그 사이를 메운다.
+       *
+       * 소식함에 남길지는 사용자 판단 대기다(통수가 는다).
+       */
+      let milEventTitle: string | null = null;
 
       if (milCalc.eventPool !== null && milCalc.eventIndex !== null) {
         const pool = milCalc.eventPool === "sports" ? eligibleSports
@@ -2140,6 +2256,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           seasonStore.pushPendingAction({
             type: "event", eventId: evt.id, title: evt.title, description: evt.description, choices,
           });
+          // 🔴 **뜬 자리에서 기록한다.** 선택 완료를 기다리면 그 사이 다음 주가
+          //   오고, `once` 가 안 먹은 채로 같은 이벤트가 또 후보에 오른다.
+          //   기록은 "떴다"의 뜻이고, 선택 결과는 효과가 따로 담는다.
+          // ⚠ 커리어 통이라 시즌을 넘어 산다 — 군 복무 104주를 덮는다.
+          if (evt.once) gameStore.recordCareerTriggeredEvents({ [evt.id]: nextWeek });
+          milEventTitle = evt.title;
         }
       }
 
@@ -2153,7 +2275,10 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       };
       gameStore.applyWeekResult(
         { morale: milCalc.morale, fatigue: milCalc.fatigue, pitching },
-        [`군 복무(${isSportsUnit ? "체육부대" : "일반부대"}) — ${milCalc.rank}`],
+        [
+          `군 복무(${isSportsUnit ? "체육부대" : "일반부대"}) — ${milCalc.rank}`,
+          ...(milEventTitle ? [`[군] ${milEventTitle}`] : []),
+        ],
         [], nextWeek, s.seasonYear,
       );
       const milEntities = get(masterStore).entities;
@@ -2164,7 +2289,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const pending = get(seasonStore).pendingActions;
       return {
         processedWeek: nextWeek,
-        logs: [isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)"],
+        logs: [
+          isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)",
+          ...(milEventTitle ? [`[군] ${milEventTitle}`] : []),
+        ],
+        // 🛑 **소식함에 안 남는다 — 사용자 판단 대기다** (2026-09-01).
+        //   군 이벤트 54종이 104주에 약 42번 뜨는데 전부 모달로만 간다.
+        //   통수가 42 늘어나는 변경이라 A 가 임의로 못 정한다.
+        //   ⚠ 위 `logs` 는 대체가 아니다 — `slice(0, 30)` 굴림 버퍼라
+        //     104주 중 마지막 30주만 남는다(71% 사라진다).
         newMessages: [],
         matchResults: [],
         stoppedBy: pending.length > 0 ? pending[0] : null,
