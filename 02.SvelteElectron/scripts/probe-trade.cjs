@@ -93,6 +93,44 @@ let LOGPATH = null;
         per[lg2].성사++;
       }
     }
+    // 🔴 **재계약이 상·하한에 붙어 있는가** (2026-09-01 · C-3).
+    //   `calc_npc_renewal_salary` 는 `market*0.55 ~ market*1.35` 로 자른다.
+    //   현재 연봉이 시장가보다 훨씬 높으면 **어떤 축을 곱해도 상한에 붙어**
+    //   성향·성적·greed·나이가 전부 안 보인다. 그 비율을 센다.
+    {
+      const per = { 총: 0, 상한: 0, 하한: 0, 안쪽: 0, 리그: {} };
+      const MK = (ovr, mult) => 1800 + Math.max(0, ovr - 50) * 220 * 1;
+      for (const ln of lines) {
+        const k = ln.indexOf("[재계약] ");
+        if (k < 0) continue;
+        // 형식: [재계약] 이름 | KBL | OVR:72 | 성적:60 | 20,000만→8,964만 / 2년
+        const seg = ln.slice(k).split("|").map((x) => x.trim());
+        if (seg.length < 5) continue;
+        const lg = seg[1];
+        const ovr = Number((seg[2].split(":")[1] || "").trim());
+        const money = seg[4];
+        const arrow = money.split("→");
+        if (arrow.length < 2) continue;
+        const from = Number(arrow[0].replace(/[^0-9]/g, ""));
+        const to = Number(arrow[1].split("/")[0].replace(/[^0-9]/g, ""));
+        if (!ovr || !to) continue;
+        const mult = lg === "ABL" ? 3.5 : lg === "JBL" ? 2.0 : lg === "INDEPENDENT" ? 0.14 : 1.0;
+        const m = (1800 + Math.max(0, ovr - 50) * 220) * mult;
+        per.총++;
+        per.리그[lg] = per.리그[lg] || { 총: 0, 상한: 0, 하한: 0 };
+        per.리그[lg].총++;
+        if (Math.abs(to - Math.round(m * 1.35)) <= 1) { per.상한++; per.리그[lg].상한++; }
+        else if (Math.abs(to - Math.round(m * 0.55)) <= 1) { per.하한++; per.리그[lg].하한++; }
+        else per.안쪽++;
+      }
+      if (per.총) {
+        console.log("[재계약클램프] 총 " + per.총 + "건 · 상한 " + per.상한
+          + "(" + (per.상한 / per.총 * 100).toFixed(0) + "%) · 하한 " + per.하한
+          + "(" + (per.하한 / per.총 * 100).toFixed(0) + "%) · 안쪽 " + per.안쪽
+          + "(" + (per.안쪽 / per.총 * 100).toFixed(0) + "%)");
+        console.log("            리그별 " + JSON.stringify(per.리그));
+      } else { console.log("[재계약클램프] 재계약 로그가 0건이다"); }
+    }
     console.log("[트레이드분해] 씨앗 " + SEED + " · " + YEARS + "시즌");
     for (const [lg, v] of Object.entries(per)) {
       console.log("   " + lg.padEnd(12)

@@ -32,6 +32,19 @@
 
   export let onClose: () => void;
 
+  /**
+   * **커리어를 끝내고 타이틀로 나간다.** 없으면 그 버튼을 안 그린다.
+   *
+   * 🔴 예전엔 이 길이 없었다. 은퇴 결산을 닫으면 **은퇴한 주인공인 채로**
+   *   메인 화면에 남았고, 게임 안에 타이틀로 돌아가는 길이 하나도 없었다.
+   *   `App.svelte` 부터 `onSeasonEnd` 이 배선돼 있었는데 `SeasonEndModal`
+   *   에서 끊겨 아무도 안 불렀다(2026-09-01 실측).
+   *
+   * ⚠ **`나 > 상태`에서 다시 열 때는 안 넘긴다.** 기록을 다시 보러 온
+   *   것이므로 거기서 타이틀로 튕기면 안 된다.
+   */
+  export let onExit: (() => void) | null = null;
+
   // 아래로 잇는다 — 한 장 요약은 그대로 두고 상세를 접어서 붙인다.
   // 탭으로 쪼개지 않은 이유: 위쪽이 이미 "한 장으로 읽히는" 결산이라
   // 나누면 그 완성도가 깨진다(사용자 확정 2026-08-24).
@@ -326,7 +339,11 @@
     </div>
 
     <footer class="foot">
-      <button class="close" on:click={onClose}>닫기</button>
+      <!-- 나가는 길이 있을 때만 "둘러보기"다 — 없으면 그냥 닫는 것이다 -->
+      <button class="close" on:click={onClose}>{onExit ? "둘러보기" : "닫기"}</button>
+      {#if onExit}
+        <button class="exit" on:click={onExit}>마치기</button>
+      {/if}
     </footer>
   </section>
 </div>
@@ -461,7 +478,7 @@
 
   .foot {
     padding: 14px 26px; border-top: 1px solid #23324c;
-    display: flex; justify-content: flex-end;
+    display: flex; justify-content: flex-end; gap: 0;
   }
   .close {
     border: 1px solid #3a4d70; background: #16233c; color: #cfe0f5;
@@ -469,4 +486,11 @@
     cursor: pointer;
   }
   .close:hover { background: #1d2d4a; }
+  /* 커리어를 끝내는 쪽이라 무게를 준다 — 되돌릴 수 없는 이동이다 */
+  .exit {
+    border: 1px solid #6b5220; background: #2a2008; color: #f0c65a;
+    border-radius: 8px; padding: 9px 22px; font-size: 13px; font-weight: 700;
+    cursor: pointer; margin-left: 8px;
+  }
+  .exit:hover { background: #3a2c0c; }
 </style>

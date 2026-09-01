@@ -110,3 +110,62 @@ describe("주요 사건", () => {
       .not.toMatch(/\{e\.fromTeamId\}|\{e\.toTeamId\}/);
   });
 });
+
+/**
+ * 엔딩 뒤가 없었다 — **커리어 고리가 안 닫혔다.** (2026-09-01)
+ *
+ * 🔴 `App.svelte` 부터 `onSeasonEnd`(→ `phase = "intro"`)가 배선돼 있었는데
+ *    `SeasonEndModal.onExit` 에서 끊겨 **아무도 안 불렀다.** 은퇴 결산을
+ *    닫으면 은퇴한 주인공인 채로 메인 화면에 남았고, 게임 안에 타이틀로
+ *    돌아가는 길이 하나도 없었다. 3주차 기준이 "고교 입학 → 은퇴 → 엔딩까지
+ *    한 커리어 완주"인데 엔딩 뒤가 없으면 완주가 성립하지 않는다.
+ *
+ * 사용자 확정: **둘 다 준다** — 둘러보기(메인에 남는다) · 마치기(타이틀로).
+ */
+const ASK = readFileSync(
+  join(__dirname, "../ui/RetirementAskModal.svelte"), "utf8");
+const MAIN = readFileSync(
+  join(__dirname, "../../../pages/main/MainPage.svelte"), "utf8");
+const SEASON_END = readFileSync(
+  join(__dirname, "../../season-end/ui/SeasonEndModal.svelte"), "utf8");
+
+describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
+  it("결산 화면이 `onExit` 을 받는다", () => {
+    expect(SRC).toMatch(/export let onExit: \(\(\) => void\) \| null/);
+  });
+
+  it("두 버튼을 다 준다 — 둘러보기 · 마치기", () => {
+    expect(SRC, "마치기 버튼이 없다 — 나가는 길이 다시 사라졌다")
+      .toContain("마치기");
+    expect(SRC).toContain("둘러보기");
+  });
+
+  /**
+   * ⚠ `나 > 상태` 에서 다시 열 때는 `onExit` 을 안 넘긴다. 기록을 다시 보러
+   *   온 것이라 거기서 타이틀로 튕기면 안 된다. 그래서 **없으면 안 그린다.**
+   */
+  it("`onExit` 이 없으면 마치기를 안 그린다", () => {
+    expect(SRC).toMatch(/\{#if onExit\}/);
+  });
+
+  it("은퇴 흐름이 위로 넘긴다", () => {
+    expect(ASK, "RetirementAskModal 이 onExit 을 안 받는다")
+      .toMatch(/export let onExit/);
+    expect(ASK, "결산 화면에 안 넘긴다")
+      .toMatch(/<CareerEndScreen[\s\S]{0,140}?\{onExit\}/);
+    expect(MAIN, "MainPage 가 은퇴 모달에 onSeasonEnd 를 안 넘긴다")
+      .toMatch(/<RetirementAskModal[\s\S]{0,240}?onExit=\{onSeasonEnd\}/);
+  });
+
+  /**
+   * 🔴 **시즌 종료는 커리어 종료가 아니다.** 그 모달의 출구는 "새 시즌 시작"
+   *    하나뿐이고, `onExit` 은 선언만 돼 있어 아무도 안 불렀다. 되살리면
+   *    같은 죽은 배선이 다시 생긴다.
+   */
+  it("시즌 종료 모달에는 `onExit` 이 없다", () => {
+    expect(SEASON_END, "SeasonEndModal 에 죽은 onExit 이 되살아났다")
+      .not.toMatch(/export let onExit/);
+    expect(MAIN, "MainPage 가 SeasonEndModal 에 다시 onExit 을 넘긴다")
+      .not.toMatch(/<SeasonEndModal[^>]*onExit/);
+  });
+});

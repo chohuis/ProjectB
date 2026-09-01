@@ -126,6 +126,88 @@
   type HistAward = { playerId: string; name: string; teamId: string; awards: string[] };
   let historyAwards: HistAward[] = [];
 
+  // ── 역대(연혁) ────────────────────────────────────────────────
+  //
+  // 다른 탭은 전부 **한 해를 골라** 본다. 그 자체는 있었는데, 15~20시즌을
+  // 뛰고 나면 *"어느 해에 누가 우승했나"* 를 한 눈에 볼 자리가 없었다 —
+  // 연도 선택을 스무 번 돌려야 알 수 있었다. 여기만 여러 해를 가로지른다.
+  //
+  // ⚠ **우승 계보는 연도 수만큼 조회한다.** `season:getHistory*` 핸들러가
+  //   `seasonYear` 를 필수로 받기 때문이다. 커리어가 길어야 25시즌이고 탭을
+  //   열 때 한 번만 부르므로 그대로 둔다. 느려지면 A 에게 묶은 핸들러를
+  //   요청해라 — `main.cjs` 는 A 소유다.
+  //
+  // 수상은 다르다. `history_league` 는 내 소유(`slotdb.cjs`)라 **한 번에**
+  // 읽게 고쳤다 (`kind: "awards"`).
+  type ChampRow = { year: number; scope: string; champion: string; runnerUp: string };
+  type AwardTally = { playerId: string; name: string; teamId: string;
+                      total: number; byAward: Array<[string, number]> };
+  let champRows: ChampRow[] = [];
+  let awardTally: AwardTally[] = [];
+  let histAllState: "idle" | "loading" | "done" = "idle";
+
+  async function loadAllHistory() {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId || histAllState !== "idle") return;
+    histAllState = "loading";
+    try {
+      // 우승 계보 — 연도별 두 종을 모은다
+      const per = await Promise.all(historyYears.map(async (yr) => {
+        const [pr, tr] = await Promise.all([
+          window.projectB!.seasonGetHistoryPostseason(JSON.stringify({ slotId, seasonYear: yr })),
+          window.projectB!.seasonGetHistoryTournaments(JSON.stringify({ slotId, seasonYear: yr })),
+        ]);
+        const ps = (JSON.parse(pr) ?? []) as HistPostseason[];
+        const to = (JSON.parse(tr) ?? []) as HistTournament[];
+        const out: ChampRow[] = [];
+        for (const r of ps) {
+          if (!r.champion_id && !r.champion_name) continue;
+          out.push({ year: yr, scope: lbLeagueName(r.league_id),
+            champion: histTeamName(r.champion_name, r.champion_id),
+            runnerUp: r.runner_up_id || r.runner_up_name
+              ? histTeamName(r.runner_up_name, r.runner_up_id) : "" });
+        }
+        // ⚠ **안 열린 대회도 한 줄 온다**(우승 빈칸). 계보에는 안 넣는다 —
+        //   넣으면 "우승 미정"이 해마다 쌓여 계보가 안 읽힌다
+        for (const r of to) {
+          if (!r.champion_id && !r.champion_name) continue;
+          out.push({ year: yr, scope: r.tour_name || "대회",
+            champion: histTeamName(r.champion_name, r.champion_id),
+            runnerUp: r.runner_up_id || r.runner_up_name
+              ? histTeamName(r.runner_up_name, r.runner_up_id) : "" });
+        }
+        return out;
+      }));
+      champRows = per.flat().sort((a, b) => b.year - a.year || a.scope.localeCompare(b.scope));
+
+      // 통산 수상 — 전 연도를 한 번에
+      const aw = await slotRepo.getHistoryLeague({ slotId, kind: "awards" });
+      const bucket = new Map<string, AwardTally>();
+      for (const row of aw) {
+        for (const a of ((Array.isArray(row.data) ? row.data : []) as HistAward[])) {
+          // 이름은 **그때 값**을 쓴다. 은퇴·이적으로 사라진 사람이 ID 로
+          // 떨어지는 것을 막는다 (`historyAwards` 와 같은 이유)
+          const cur = bucket.get(a.playerId)
+            ?? { playerId: a.playerId, name: a.name, teamId: a.teamId, total: 0,
+                 byAward: [] as Array<[string, number]> };
+          const cnt = new Map(cur.byAward);
+          for (const t of (a.awards ?? [])) {
+            cnt.set(t, (cnt.get(t) ?? 0) + 1);
+            cur.total += 1;
+          }
+          cur.byAward = [...cnt].sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]));
+          bucket.set(a.playerId, cur);
+        }
+      }
+      awardTally = [...bucket.values()]
+        .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
+      histAllState = "done";
+    } catch {
+      // 연혁이 안 읽혀도 나머지 탭은 살아야 한다
+      champRows = []; awardTally = []; histAllState = "done";
+    }
+  }
+
   async function loadHistoryYears() {
     const slotId = $gameStore.currentSlotId;
     if (!slotId) return;
@@ -208,6 +290,8 @@
   $: if (!txLeagueId && TX_LEAGUES.length) txLeagueId = TX_LEAGUES[0];
 
   $: if (tab === "transactions") loadTransactions();
+  // ⚠ `histAllState` 가드가 없으면 반응문이 자기 결과에 다시 걸려 무한히 돈다
+  $: if (tab === "history" && historyYears.length > 0) loadAllHistory();
 
   async function loadTransactions() {
     const slotId = $gameStore.currentSlotId;
@@ -644,13 +728,18 @@
         <button class:active={tab === "tournaments"}  on:click={() => (tab = "tournaments")}>대회</button>
         <button class:active={tab === "postseason"}   on:click={() => (tab = "postseason")}>포스트시즌</button>
         <button class:active={tab === "transactions"} on:click={() => (tab = "transactions")}>리그 기록</button>
+        <button class:active={tab === "history"}      on:click={() => (tab = "history")}>역대</button>
       </div>
-      <select class="yr-select" bind:value={selectedYear}>
-        <option value={0}>현재</option>
-        {#each historyYears as yr}
-          <option value={yr}>{yr}시즌</option>
-        {/each}
-      </select>
+      <!-- ⚠ 역대 탭은 **여러 해를 가로지른다** — 연도 선택이 뜨면 무엇을
+           고르라는 건지 모른다. 그 탭에서만 감춘다 -->
+      {#if tab !== "history"}
+        <select class="yr-select" bind:value={selectedYear}>
+          <option value={0}>현재</option>
+          {#each historyYears as yr}
+            <option value={yr}>{yr}시즌</option>
+          {/each}
+        </select>
+      {/if}
     </header>
 
     <!-- ── 리그 순위 ── -->
@@ -1243,6 +1332,64 @@
         </div>
       </section>
     {/if}
+
+    <!-- ── 역대 ── -->
+    {#if tab === "history"}
+      <section class="hist-layout">
+        {#if histAllState === "loading"}
+          <p class="empty" style="padding:16px">역대 기록을 읽는 중</p>
+        {:else if champRows.length === 0 && awardTally.length === 0}
+          <!-- ⚠ **빈 것이 정상이다.** 첫 시즌을 마치기 전에는 원래 아무것도
+               없다. "기록 없음"을 결함처럼 보이게 쓰지 않는다 -->
+          <p class="empty" style="padding:16px">
+            아직 지나간 시즌이 없습니다. 시즌을 마치면 여기에 쌓입니다.
+          </p>
+        {:else}
+          <div class="panel hist-panel">
+            {#if champRows.length > 0}
+              <section class="hist-sec">
+                <h4 class="hist-h">우승 계보</h4>
+                <table class="hist-tbl">
+                  <thead>
+                    <tr><th>연도</th><th>리그 · 대회</th><th>우승</th><th>준우승</th></tr>
+                  </thead>
+                  <tbody>
+                    {#each champRows as r}
+                      <tr>
+                        <td class="hist-yr">{r.year}</td>
+                        <td class="hist-scope">{r.scope}</td>
+                        <td class="hist-champ">{r.champion}</td>
+                        <td class="hist-runner">{r.runnerUp || "—"}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </section>
+            {/if}
+
+            {#if awardTally.length > 0}
+              <section class="hist-sec">
+                <h4 class="hist-h">통산 수상</h4>
+                <ul class="hist-aw">
+                  {#each awardTally as a}
+                    <li>
+                      <span class="ha-name">{a.name}</span>
+                      <span class="ha-team">{histTeamName(undefined, a.teamId)}</span>
+                      <span class="ha-tags">
+                        {#each a.byAward as [label, n]}
+                          <span class="ha-tag">{label}{#if n > 1}<b class="ha-n">{n}</b>{/if}</span>
+                        {/each}
+                      </span>
+                      <span class="ha-total">{a.total}</span>
+                    </li>
+                  {/each}
+                </ul>
+              </section>
+            {/if}
+          </div>
+        {/if}
+      </section>
+    {/if}
   </article>
 </section>
 
@@ -1258,6 +1405,40 @@
   .aw-team { opacity: .6; font-size: .85em; }
   .aw-tags { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
   .aw-tag { font-size: .78em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #3a3320); }
+
+  /* ── 역대(연혁) — 위 수상 목록의 눈금을 그대로 쓴다 ── */
+  .hist-layout { min-height: 0; overflow-y: auto; }
+  .hist-panel { padding: 0; }
+  .hist-sec { padding: 10px 12px; border-bottom: 1px solid var(--line-weak, #222); }
+  .hist-h { margin: 0 0 8px; font-size: .92em; opacity: .8; }
+
+  .hist-tbl { width: 100%; border-collapse: collapse; font-size: .92em; }
+  .hist-tbl th {
+    text-align: left; font-weight: 600; opacity: .6; font-size: .85em;
+    padding: 4px 6px; border-bottom: 1px solid var(--line-weak, #222);
+  }
+  .hist-tbl td { padding: 4px 6px; border-bottom: 1px solid var(--line-weak, #1c1c1c); }
+  /* 연도는 자릿수를 맞춰 세로로 읽히게 한다 */
+  .hist-yr { font-variant-numeric: tabular-nums; opacity: .7; width: 4.5em; }
+  .hist-scope { opacity: .8; }
+  .hist-champ { font-weight: 600; }
+  .hist-runner { opacity: .6; }
+
+  .hist-aw { list-style: none; margin: 0; padding: 0; }
+  .hist-aw li { display: flex; align-items: center; gap: 8px; padding: 4px 0; flex-wrap: wrap; }
+  .ha-name { font-weight: 600; }
+  .ha-team { opacity: .6; font-size: .85em; }
+  .ha-tags { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+  .ha-tag {
+    font-size: .78em; padding: 1px 6px; border-radius: 4px;
+    background: var(--accent-weak, #3a3320);
+  }
+  /* 2회 이상만 숫자를 붙인다 — 전부 "1"이면 눈만 시끄럽다 */
+  .ha-n { margin-left: 4px; font-weight: 700; }
+  .ha-total {
+    min-width: 2.2em; text-align: right; font-variant-numeric: tabular-nums;
+    opacity: .55; font-size: .85em;
+  }
   .page {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);

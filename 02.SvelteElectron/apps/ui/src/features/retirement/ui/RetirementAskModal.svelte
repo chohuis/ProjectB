@@ -16,6 +16,9 @@
   import { retireProtagonist } from "../../../shared/usecases/retirement";
   import CareerEndScreen from "./CareerEndScreen.svelte";
 
+  /** 커리어를 마치고 타이틀로. `MainPage` → `App` 으로 이어진다 */
+  export let onExit: () => void = () => {};
+
   export let urgency = 0;
   export let reason: "decline" | "injury" = "decline";
   export let detail = "";
@@ -62,7 +65,7 @@
 </script>
 
 {#if showSummary}
-  <CareerEndScreen onClose={() => (showSummary = false)} />
+  <CareerEndScreen onClose={() => (showSummary = false)} {onExit} />
 {:else}
 <div class="overlay">
   <section class="modal">

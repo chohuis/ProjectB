@@ -312,8 +312,6 @@ export declare function evalCallupCandidatesNative(paramsJson: string): string
 export declare function evalCalldownCandidatesNative(paramsJson: string): string
 export declare function evalReleasePriorityNative(paramsJson: string): string
 export declare function evalFaBidNative(paramsJson: string): string
-export declare function evalRenewalOfferNative(paramsJson: string): string
-export declare function evalNewContractNative(paramsJson: string): string
 export declare function evalRetirementSuggestionNative(paramsJson: string): string
 export declare function generateTradeProposalsNative(paramsJson: string): string
 export declare function evalTradeValueNative(paramsJson: string): string
@@ -322,7 +320,6 @@ export declare function calcWinNowPressureUpdateNative(paramsJson: string): stri
 export declare function calcScoutingImprovementNative(paramsJson: string): string
 export declare function playerEvalFaDecisionNative(paramsJson: string): string
 export declare function playerEvalTradeResponseNative(paramsJson: string): string
-export declare function playerEvalContractOfferNative(paramsJson: string): string
 export declare function playerEvalRetirementResponseNative(paramsJson: string): string
 export declare function playerRankFaOffersNative(paramsJson: string): string
 export declare function updatePlayerLoyaltyNative(paramsJson: string): string

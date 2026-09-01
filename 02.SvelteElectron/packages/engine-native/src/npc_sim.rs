@@ -1563,6 +1563,11 @@ fn renew_independent_salaries(
                 current_salary: n.current_salary.max(1),
                 performance_score: score,
                 greed,
+                // ⚠ **독립리그엔 구단 성향이 없다.** `proTeamProfiles` 는
+                //   프로 리그만 만든다(`PRO_LEAGUES` 에 독립이 없다) —
+                //   여기서 지어내면 없는 축을 있는 것처럼 만드는 셈이다.
+                //   `None` 이면 배수 1.0 이라 **예전과 완전히 같게 돈다.**
+                owner_spending_willingness: None,
             });
         if next != n.current_salary { n_done += 1; }
         n.current_salary = next;

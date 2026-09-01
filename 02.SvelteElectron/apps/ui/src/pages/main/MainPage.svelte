@@ -39,6 +39,7 @@
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
+  import { simulateSkippedGame } from "../../shared/usecases/simulateSkippedGame";
   import PreGameBriefingModal from "../../features/pre-game-briefing/ui/PreGameBriefingModal.svelte";
   import GameStatusModal from "../../features/game-status/ui/GameStatusModal.svelte";
   import type { EntryInfo, NoEntryInfo } from "../../features/game-status/ui/GameStatusModal.svelte";
@@ -506,7 +507,10 @@
 <AutoAdvancePanel />
 
 {#if $seasonEnded}
-  <SeasonEndModal onExit={onSeasonEnd} />
+  <!-- ⚠ 여기 `onExit` 을 다시 넘기지 마라. 시즌 종료는 커리어 종료가
+       아니다 — 그 모달의 출구는 "새 시즌 시작" 하나뿐이고, 넘겨 봐야
+       아무도 안 불렀다. 타이틀로 나가는 길은 은퇴 결산에 있다 -->
+  <SeasonEndModal />
 {/if}
 
 {#if pendingCareerChoiceHub && currentTab === "news"}
@@ -558,6 +562,7 @@
     urgency={pendingRetirementAsk.urgency}
     reason={pendingRetirementAsk.reason ?? "decline"}
     detail={pendingRetirementAsk.detail ?? ""}
+    onExit={onSeasonEnd}
   />
 {/if}
 
@@ -597,16 +602,42 @@
           const schedId = pendingConditionWarning!.scheduleId;
           const entry = $seasonStore.schedule.find((e) => e.id === schedId);
           if (entry) {
-            const result = JSON.parse(await window.projectB!.weekCalcNpcFallback(
-              JSON.stringify({ homeTeamId: entry.homeTeamId, awayTeamId: entry.awayTeamId })
-            )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
-            const matchResult = { homeScore: result.homeScore, awayScore: result.awayScore, winnerId: result.winnerId, loserId: result.loserId, playerLines: [], events: [] };
+            const leagueId = $gameStore.protagonist.leagueId;
+            // 🔴 **회피해도 나머지 선수 기록은 남아야 한다.** 예전엔 여기서
+            //   `weekCalcNpcFallback`(점수 넷)을 부르고 `playerLines: []` 로
+            //   감쌌다 — 점수는 나오고 순위도 오르는데 **그 경기 기록만
+            //   통째로 없었다.** 회피를 자주 쓰면 시즌 성적이 조용히 빈다.
+            //   진짜 시뮬은 화면이 모을 수 없어 A 가 usecase 로 감쌌다.
+            const sim = await simulateSkippedGame(schedId);
+            const lState = $seasonStore.leagueState[leagueId];
+            // ⚠ **폴백을 지우지 않는다.** 로스터가 비면 시뮬이 여전히 실패하고
+            //   (`null`), 그때는 점수라도 나와야 일정이 안 막힌다
+            let matchResult = sim?.result;
+            let homeRot = sim?.nextHomeRotIdx;
+            let awayRot = sim?.nextAwayRotIdx;
+            if (!matchResult) {
+              const result = JSON.parse(await window.projectB!.weekCalcNpcFallback(
+                JSON.stringify({ homeTeamId: entry.homeTeamId, awayTeamId: entry.awayTeamId })
+              )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
+              matchResult = { homeScore: result.homeScore, awayScore: result.awayScore,
+                              winnerId: result.winnerId, loserId: result.loserId,
+                              playerLines: [], events: [] };
+              homeRot = (lState?.teamRotationIndex?.[entry.homeTeamId] ?? 0) + 1;
+              awayRot = (lState?.teamRotationIndex?.[entry.awayTeamId] ?? 0) + 1;
+            }
             if (entry.isFriendly) {
-              const leagueId = $gameStore.protagonist.leagueId;
-              const lState = $seasonStore.leagueState[leagueId];
-              seasonStore.applyFriendlyResult(schedId, matchResult, leagueId, entry.homeTeamId, entry.awayTeamId, (lState?.teamRotationIndex?.[entry.homeTeamId] ?? 0) + 1, (lState?.teamRotationIndex?.[entry.awayTeamId] ?? 0) + 1, null);
+              seasonStore.applyFriendlyResult(schedId, matchResult, leagueId,
+                entry.homeTeamId, entry.awayTeamId, homeRot!, awayRot!, null,
+                sim?.pitcherConditions ?? {});
             } else {
-              seasonStore.applyMatchResult(schedId, matchResult, $gameStore.protagonist.leagueId);
+              // 🔴 **`rot` 을 안 넘기고 있었다.** 회피한 정규경기는 로테이션도
+              //   피로도 안 올랐다 — 친선 갈래는 넘기는데 여기만 빠져 있었다.
+              //   이 경로는 `syncProtagonistLeagueResult` 를 안 타므로
+              //   (그건 `applyGameOutcome` 전용이다) 이중 적용이 아니다.
+              seasonStore.applyMatchResult(schedId, matchResult, leagueId, {
+                nextHomeRotIdx: homeRot!, nextAwayRotIdx: awayRot!,
+                pitcherConditions: sim?.pitcherConditions ?? {},
+              });
             }
           }
           await gameStore.save(); await seasonStore.save();
@@ -710,165 +741,12 @@
   .cond-btn.skip { background: var(--panel); border: 1px solid var(--line); color: var(--ink); }
   .cond-btn.skip:hover { background: var(--panel-sunk); }
 
-  /* ── 경기 오버레이 ── */
-  .game-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(10, 18, 38, 0.52);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-  }
+  /*
+    경기 오버레이 스타일 161줄을 지웠다 (2026-09-01).
 
-  .game-modal {
-    background: var(--panel);
-    border: 1px solid var(--ink-mute);
-    border-radius: 14px;
-    padding: 32px 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    min-width: 340px;
-  }
-
-  .friendly-badge {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 1px 7px;
-    background: var(--ok);
-    color: var(--ok);
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    vertical-align: middle;
-  }
-
-  .week-badge {
-    margin: 0;
-    font-size: 13px;
-    color: var(--ink-mid);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .matchup {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--ink);
-  }
-
-  .matchup .my-team {
-    color: var(--warn);
-  }
-
-  .vs {
-    font-size: 13px;
-    color: var(--ink-mute);
-    font-weight: 400;
-  }
-
-  .game-actions {
-    display: flex;
-    gap: 10px;
-  }
-
-  .btn-auto {
-    padding: 10px 28px;
-    background: var(--ok);
-    color: #fff;
-    border: 0;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .btn-auto:hover:not(:disabled) {
-    background: var(--ok);
-  }
-
-  .btn-auto:disabled,
-  .btn-play:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .sim-status {
-    margin: 4px 0 0;
-    font-size: 13px;
-    color: var(--ink);
-    text-align: center;
-  }
-
-  .sim-error-msg {
-    font-size: 11px;
-    color: var(--bad);
-    text-align: center;
-    margin: 4px 0;
-    word-break: break-all;
-    max-height: 48px;
-    overflow: hidden;
-  }
-
-  .sim-status.no-entry {
-    font-size: 15px;
-    color: var(--warn);
-    font-weight: 600;
-  }
-
-  .sim-final-score {
-    margin: 6px 0 0;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: 4px;
-  }
-
-  .entry-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 10px 16px;
-  }
-
-  .entry-label {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-  }
-
-  .entry-score {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: 3px;
-  }
-
-  .game-actions.single {
-    justify-content: center;
-  }
-
-  .btn-play {
-    padding: 10px 20px;
-    background: var(--ink-mute);
-    color: var(--ink);
-    border: 1px solid var(--ink-mid);
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .btn-play:hover {
-    background: var(--ink-mute);
-  }
+    ⚠ **여기 다시 넣지 마라.** 마크업은 `features/game-status/ui/
+    GameStatusModal.svelte` 로 옮겨갔고 그 컴포넌트가 자기 스타일을 갖는다.
+    Svelte 는 스타일을 컴포넌트에 가둬서 **여기 두면 자식에 안 닿는다** —
+    고쳐도 화면이 안 변하는 모양이 된다.
+  */
 </style>

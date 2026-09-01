@@ -508,6 +508,10 @@
   }
 
   function buildPitcherStatsForTeam(teamId: string): {
+    // ⚠ **`name` 이 빠져 있었다.** 아래 `return` 은 넣어서 보내는데 선언에만
+    //   없었다 — 엔진 쪽 `pitcher` 페이로드는 이름을 받는다(`MainPage` 도
+    //   같이 넘긴다). 값이 아니라 선언이 뒤처진 자리다
+    name?: string;
     command?: number; velocity?: number; staminaCap?: number;
     mentalResil?: number; control?: number; movement?: number;
     clutch?: number; holdRunners?: number;

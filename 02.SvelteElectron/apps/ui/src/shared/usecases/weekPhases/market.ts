@@ -1378,6 +1378,11 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
             performanceScore: perfScore,
             greed:            pers.greed,
             leagueMult:       leagueMultMap,
+            // 🔴 **구단주 성향을 넘긴다** (2026-09-01 · C-3).
+            //   바로 아래 `calcNpcContractYearsNative` 에는 성향 둘을 이미
+            //   넘기는데 **연봉 쪽에만 안 넘기고 있었다.** 그래서 12축 중
+            //   이 축 하나만 아무 데서도 안 읽혔다.
+            ownerSpendingWillingness: profile.ownerSpendingWillingness,
           })),
           window.projectB!.calcNpcContractYearsNative(JSON.stringify({
             age:                 npc.age,

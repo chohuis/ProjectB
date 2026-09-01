@@ -135,64 +135,18 @@ pub fn player_eval_trade_response(p: TradeResponseParams) -> TradeResponseResult
     TradeResponseResult { accept, block_probability: prob }
 }
 
-// ── player_eval_contract_offer ───────────────────────────────────────────────
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ContractEvalParams {
-    pub personality: NpcPersonality,
-    pub offer: ContractOfferResult,
-    pub market_value: i64,
-    pub age: i32,
-    pub expected_playing_time: f64,
-    pub team_profile: ProTeamProfile,
-    pub is_renewal: bool,
-    pub best_competing_offer: Option<i64>,
-}
-
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ContractEvalResult {
-    pub accept: bool,
-    pub counter_salary: Option<i64>,
-    pub counter_years: Option<i32>,
-}
-
-pub fn player_eval_contract_offer(p: ContractEvalParams) -> ContractEvalResult {
-    let pers = &p.personality;
-    let mut sat = 0.0_f64;
-    let ratio = p.offer.offer_salary as f64 / p.market_value.max(1) as f64;
-    sat += (ratio - 1.0) * 60.0 * (pers.greed / 100.0);
-    sat += (ratio - 0.8) * 30.0 * ((100.0 - pers.greed) / 100.0);
-
-    if p.offer.offer_years >= 3 && pers.stability_preference > 60.0 { sat += 15.0; }
-    if p.offer.offer_years == 1 && pers.stability_preference > 70.0 { sat -= 20.0; }
-    if p.expected_playing_time < 0.4 { sat -= 25.0 * (pers.competitive_drive / 100.0); }
-
-    sat += p.team_profile.prestige * 0.1;
-    sat += p.team_profile.clubhouse_culture * 0.08;
-    if pers.home_team_id.is_some() { sat += 20.0; }
-    if p.is_renewal { sat += pers.loyalty * 0.3; }
-
-    if let Some(best) = p.best_competing_offer {
-        let gap = (best - p.offer.offer_salary) as f64;
-        if gap > 0.0 { sat -= (gap / p.market_value as f64) * 50.0 * (pers.greed / 100.0); }
-    }
-
-    if sat >= 0.0 {
-        ContractEvalResult { accept: true, counter_salary: None, counter_years: None }
-    } else if sat >= -20.0 {
-        let counter = (p.offer.offer_salary as f64 * 1.1).round() as i64;
-        ContractEvalResult {
-            accept: false,
-            counter_salary: Some(counter),
-            counter_years: Some(p.offer.offer_years),
-        }
-    } else {
-        ContractEvalResult { accept: false, counter_salary: None, counter_years: None }
-    }
-}
-
+// ── player_eval_contract_offer — **지웠다** (2026-09-01 · C-3) ───────────────
+//
+// 선수가 제시안을 수락/거절하던 함수다. **TS 호출부가 0건**이었고,
+// 인자로 받던 `ContractOfferResult` 를 만드는 쪽(`eval_renewal_offer`)도
+// 같이 죽어 있었다 — **셋이 한 세트로 죽어 있었다.**
+//
+// ⚠ 주인공 재계약 협상(`contractDecision.ts`)은 **엔진을 아예 안 쓴다**
+//   (Native 호출 0건). 나중에 협상을 제대로 만들 때는 그 화면이 요구하는
+//   모양으로 새로 설계하는 게 맞다 — 죽은 채로 두면 "있으니까 된다"고
+//   착각하게 된다. 이 저장소에서 반복해 본 형태다.
+//
+// ⚠ 되살릴 일이 생기면 git 에 있다.
 // ── player_eval_retirement_response ─────────────────────────────────────────
 
 #[derive(Debug, Deserialize)]
