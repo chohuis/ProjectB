@@ -91,6 +91,61 @@ import { simulateNpcGame, logGameLines } from "./weekPhases/games";
  */
 const DILIGENCE_WEEKLY_DECAY = Number(
   (typeof process !== "undefined" && process.env?.PB_DIL_DECAY) || 0.4);
+
+/**
+ * 🔴 **사기는 기준값으로 끌린다 — 평균 회귀** (사용자 확정 2026-09-01).
+ *
+ * 성실과 **같은 병**이었는데 더 심했다. 실측(`probe:traits --path univ` ·
+ * 8시즌 · 씨앗 20260803):
+ *
+ * ```
+ *   대학  최소 100 · 최대 100 · 평균 100   표본 56주 — **한 번도 안 움직인다**
+ *   고교  최소  70 · 최대 100 · 평균  99
+ *   사기 ≤60 에 닿은 주   0
+ * ```
+ *
+ * 그래서 사기를 조건으로 쓰는 **대학 이벤트 아홉이 전멸**했다(트랙 B 실측 ·
+ * 문턱 40·48·50·50·55·55·55·58·60). 다른 무대는 같은 문턱대가 뜬다.
+ *
+ * ⚠ **올리는 경로만 있었다** — 경기 승패로도 훈련으로도 안 움직이고
+ * 자연 감쇠도 없다. 이벤트 선택지(양수가 3배)와 TOP10 순위 보상
+ * (`rankEffect` · 매주 +1~5, **음수 없음**)이 전부였다.
+ *
+ * ## 왜 감쇠가 아니라 회귀인가
+ *
+ * 성실은 **습관**이라 방치하면 떨어지는 게 맞다(단방향 감쇠). 사기는
+ * **기분**이라 좋을 때도 나쁠 때도 중립으로 돌아온다 — 바닥에 붙어
+ * 영영 못 올라오면 그것도 죽은 축이다.
+ *
+ * ```
+ *   사기 100 → 매주 (60-100) × 0.05 = **-2.0**
+ *   사기  70 →       (60- 70) × 0.05 = **-0.5**   가까울수록 느려진다
+ *   사기  30 →       (60- 30) × 0.05 = **+1.5**   바닥에서는 올라온다
+ * ```
+ *
+ * TOP10 보상(+1~5)과 만나 **평형점**이 생긴다 — 상위권 주인공은 높게,
+ * 무명은 60 근처. 그게 노린 것이다.
+ *
+ * ⚠ **소수를 유지한다.** 정수로 반올림하면 회귀량이 1 미만일 때 매주 0이
+ * 되어 아무 일도 안 일어난다(성실에서 겪었다).
+ *
+ * ⚠ `PB_MORALE_PIVOT` · `PB_MORALE_PULL` 로 덮어 다시 잴 수 있다.
+ */
+const MORALE_PIVOT = Number(
+  (typeof process !== "undefined" && process.env?.PB_MORALE_PIVOT) || 60);
+const MORALE_WEEKLY_PULL = Number(
+  (typeof process !== "undefined" && process.env?.PB_MORALE_PULL) || 0.05);
+
+/**
+ * 한 주가 지난 뒤의 사기. **검사가 이 함수를 부른다.**
+ *
+ * ⚠ 식을 인라인으로 두면 검사가 자기 사본을 만들어 보게 되고, 그러면
+ * **코드를 되돌려도 검사가 초록**이다(변이가 안 잡힌다). 순수 함수로
+ * 뽑아 두면 검사와 코드가 같은 것을 본다.
+ */
+export function moraleAfterWeek(cur: number): number {
+  return Math.max(0, Math.min(100, cur + (MORALE_PIVOT - cur) * MORALE_WEEKLY_PULL));
+}
 import { recordGameResult } from "./recordGameResult";
 export { simulateProtagonistGame } from "./weekPhases/games";
 import { getPermanentPenalty, processNpcInjuries } from "./weekPhases/injuries";
@@ -582,6 +637,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const cur = g.protagonist.diligence ?? 0;
     const next = Math.max(1, cur - DILIGENCE_WEEKLY_DECAY);
     if (next !== cur) growth.protagonistPatch.diligence = next;
+  }
+
+  // 사기 — **기준값으로 끌린다.** 근거는 `MORALE_PIVOT` 주석에 있다.
+  //
+  // ⚠ **여기서 patch 에 넣는 게 맞다.** `applyWeekEndBatch` 가
+  //   `{ ...protagonist, ...patch }` 를 먼저 만들고 그 위에 `moraleDelta`
+  //   (TOP10 보상)를 더한다 — 회귀가 기준값이 되고 보상이 얹힌다.
+  //   순서가 반대면 회귀가 보상을 덮어 TOP10 이 아무 일도 안 하게 된다.
+  {
+    const cur = g.protagonist.morale ?? MORALE_PIVOT;
+    const next = moraleAfterWeek(cur);
+    if (Math.abs(next - cur) > 1e-9) growth.protagonistPatch.morale = next;
   }
 
   growth.protagonistPatch.consecutiveLowMoraleWeeks  = newLowMoraleWeeks;
