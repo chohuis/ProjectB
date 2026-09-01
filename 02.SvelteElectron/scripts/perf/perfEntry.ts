@@ -7633,3 +7633,59 @@ export function studyState(): Record<string, unknown> {
     학기주수: sc.semesterWeeks ?? 0,
   };
 }
+
+/**
+ * **생존리그 순위가 왜 안 움직이나** — 한 번에 가르는 프로브 (2026-09-01).
+ *
+ * 실측(트랙 B · 씨앗 둘):
+ *
+ * ```
+ *   사기    73.46 / 74.73    ← 씨앗마다 **다르다** (세계가 갈린다)
+ *   순위    8 / 8            ← **같다.** 시뮬 결과의 함수가 아니다
+ * ```
+ *
+ * `sort(winPct → wins)` 가 전원 동률에서 배열 순서를 준다 — 주인공 팀이
+ * 8번째다. 즉 **순위표에 승패가 한 건도 안 들어간다.**
+ *
+ * 어디서 끊기는지 층마다 센다:
+ *
+ * ```
+ *   [일정]      leagueSchedules[IND] + s.schedule 의 독립 경기
+ *   [결과]      그중 result 가 있는 것
+ *   [단계일치]  그중 `INDS{현재stage}_` 로 시작하는 것   ← stage 가 어긋나면 0
+ *   [집계]      stageStandings 가 돌려준 행의 승+패 합    ← 0이면 읽는 자리 문제
+ *   [반영]      leagueState[IND].standings 의 승+패 합    ← 0이면 옮기는 자리 문제
+ * ```
+ *
+ * ⚠ **[집계]가 0이 아닌데 [반영]이 0이면** `setLeagueStandings` 가 안 도는
+ * 것이고, **둘 다 0이면** `stageStandings` 입력이 문제다. 한 값으로 갈린다.
+ */
+export function survivalProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const IND = "LEAGUE_INDEPENDENT";
+  const st = s.survival;
+  const sched = [
+    ...((s.leagueSchedules?.[IND] ?? []) as Array<{ id: string; result?: unknown }>),
+    ...(s.schedule.filter((e) => e.leagueId === IND) as Array<{ id: string; result?: unknown }>),
+  ];
+  const withResult = sched.filter((e) => e.result != null);
+  const stage = st?.stage ?? -1;
+  const matchStage = withResult.filter((e) => e.id.startsWith(`INDS${stage}_`));
+  // 실제로 어떤 접두사들이 있나 — 패턴이 어긋났으면 여기서 드러난다
+  const prefixes = new Set(sched.map((e) => e.id.split("_")[0]));
+  const sumWL = (rows: Array<{ wins: number; losses: number }>) =>
+    rows.reduce((a, r) => a + r.wins + r.losses, 0);
+  const cur = (s.leagueState?.[IND]?.standings ?? []) as Array<{ wins: number; losses: number; teamId: string }>;
+  return {
+    stage,
+    activeTeams: st?.activeTeams?.length ?? 0,
+    일정: sched.length,
+    결과있음: withResult.length,
+    단계일치: matchStage.length,
+    id접두사: [...prefixes].slice(0, 8),
+    반영_팀수: cur.length,
+    "반영_승패합": sumWL(cur),
+    주인공팀: get(gameStore).protagonist.teamId,
+    "주인공_순위표에있나": cur.some((r) => r.teamId === get(gameStore).protagonist.teamId),
+  };
+}

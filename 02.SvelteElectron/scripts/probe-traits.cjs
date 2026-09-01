@@ -34,6 +34,8 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   //   (`node --check` 는 문법만 봐서 안 잡는다).
   const lastStat = {};
   const lastSched = {};
+  const lastSchedEnd = {};
+  let lastSurvival = null;
   let prevStage = null;
   try {
     await app.boot({ slotId: "PT", worldSeed: SEED, seasonYear: 2026 });
@@ -72,13 +74,36 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
           prevStage = stage;
           lastSched[stage] = app.leagueSummary();
         }
+        // 🔴 **무대의 마지막 값을 남긴다** (2026-09-01).
+        //   전환 직후 스냅샷만 찍으면 `102/102` 가 **그 무대에 오기 전
+        //   배경으로 치러진 것**인지 알 수 없다 — 트랙 B 가 그걸 지적했다.
+        //   매주 덮어쓰면 그 무대의 **마지막 주** 값이 남는다.
+        lastSchedEnd[stage] = app.leagueSummary();
+        if (stage === "independent") {
+          // 생존리그가 왜 안 움직이나 — 층마다 센다
+          lastSurvival = app.survivalProbe();
+        }
       }
-      if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
+      // 🔴 **`measure-slotreach` 와 같은 순서로 돈다** (2026-09-01).
+      //
+      // 예전엔 pending 을 먼저 보고 `autoRun` 을 나중에 불렀다. 그런데
+      // 같은 씨앗·같은 정책인데 **`slotreach` 는 프로를 지나고 이 프로브는
+      // 9시즌 내내 고교 → 독립으로 끝났다**(무대별에 `pro_kbl` 이 없었다).
+      //
+      // 계측 둘이 다른 세계를 재면 **어느 쪽 값도 못 믿는다.** 그래서
+      // 판정에 쓰는 쪽(`slotreach`)에 맞춘다:
+      //
+      // ```
+      //   autoRun 먼저 → 주가 넘어갔으면 바로 다음 주
+      //   안 넘어갔을 때만 pending 을 본다
+      // ```
       const w0 = app.currentWeek(), s0 = app.currentSeason();
-      if (await app.pushCareerForward()) continue;
-      if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
       await app.autoRun();
       app.trajTick();   // 진행 뒤에도 걷는다
+      if (app.currentWeek() > w0) continue;
+      if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
+      if (await app.pushCareerForward()) continue;
+      if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
       if (app.currentWeek() === w0 && app.currentSeason() === s0) { why = `정지 ${s0}W${w0}`; break; }
     }
   } catch (e) { why = `예외 ${e && e.message}`; }
@@ -95,11 +120,12 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
     console.log(`  [성적:${stage}] ${JSON.stringify(st)}`);
   }
   // 🔴 주인공 리그의 `schedule` 이 0이면 **그 무대에서 경기를 안 뛴다**
-  for (const [stage, sum] of Object.entries(lastSched)) {
+  for (const [stage, sum] of Object.entries(lastSchedEnd)) {
     const mine = Object.entries(sum).filter(([, v]) => v.schedule > 0)
       .map(([lid, v]) => `${lid.replace("LEAGUE_", "")}:${v.schedule}/${v.played}`);
-    console.log(`  [일정:${stage}] ${mine.join(" ") || "(전 리그 0)"}`);
+    console.log(`  [일정끝:${stage}] ${mine.join(" ") || "(전 리그 0)"}`);
   }
+  if (lastSurvival) console.log(`  [생존리그] ${JSON.stringify(lastSurvival)}`);
   console.log(`[END] ${why} · 씨앗 ${SEED} · 경로 ${PATH_KEY} · ${YEARS}시즌`);
   await headless.cleanup(tmp);
 })();
