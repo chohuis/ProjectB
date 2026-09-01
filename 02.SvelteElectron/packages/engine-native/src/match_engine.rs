@@ -141,8 +141,24 @@ fn is_inplay(code: PitchResultCode) -> bool {
         PitchResultCode::HitTriple | PitchResultCode::HomeRun)
 }
 
+/// 삼진 — **타자가 물러난 결과 코드**다.
+///
+/// 🔴 `StrikeLook`/`StrikeSwing`(투구 하나)과 다르다. 3스트라이크째에
+/// `run_pitch`가 코드를 이쪽으로 **좁힌다**(`StrikeoutLook`/`StrikeoutSwing`).
+///
+/// ⚠ **이 함수가 없어서 결함이 둘 났다** (2026-09-01). 삼진 코드를 새로
+/// 만들면서 그걸 읽는 자리를 안 고쳐서, `is_k_out`·`is_ab_terminal`이
+/// 좁혀진 코드를 못 알아봤다 — 바로 위 `is_out_in_play` 주석이
+/// *"코드가 하나 늘 때마다 빠뜨린 자리가 조용히 생긴다"* 고 경고한 그대로다.
+fn is_strikeout(code: PitchResultCode) -> bool {
+    matches!(code, PitchResultCode::StrikeoutLook | PitchResultCode::StrikeoutSwing)
+}
+
 fn is_ab_terminal(code: PitchResultCode) -> bool {
-    is_out_in_play(code) || matches!(code, PitchResultCode::Walk |
+    // ⚠ **삼진이 여기 없었다.** 그래서 `ab_ended`가 거짓이 되어
+    //   **삼진당한 타자가 타순에서 안 넘어갔다** — 같은 타자가 다시 섰다.
+    //   아웃은 따로 올라가므로 이닝은 멀쩡했고, 그래서 안 보였다.
+    is_strikeout(code) || is_out_in_play(code) || matches!(code, PitchResultCode::Walk |
         PitchResultCode::FieldingError | PitchResultCode::HitSingle |
         PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun)
 }
@@ -2707,7 +2723,21 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     }
 
     // ── 6. 타자 교체 ─────────────────────────────────────────────────────────
-    let is_k_out = matches!(result_code, PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing) && pre_state.count.strikes == 2;
+    // 🔴 **좁혀진 코드를 본다** (2026-09-01). 예전엔
+    //   `matches!(result_code, StrikeLook | StrikeSwing) && pre_state.count.strikes == 2`
+    //   였는데, 이 줄에 닿을 때 `result_code`는 **이미 `StrikeoutLook`/
+    //   `StrikeoutSwing`으로 좁혀져 있다**(위 5단계에서 바꾼다).
+    //   그래서 **삼진이 한 번도 안 잡혔다**:
+    //
+    // ```
+    //   주인공 시즌 K   0        전 무대 · 9시즌 (실측)
+    //   리그 평균 9K   10.7      NPC 는 다른 경로라 정상
+    //   타순           삼진당한 타자가 다시 섰다 (ab_ended 가 거짓)
+    // ```
+    //
+    // ⚠ 아웃은 5단계에서 따로 올리므로 **이닝·ERA·승패는 멀쩡했다.**
+    //   그래서 "k 만 0"이라는 이상한 모양으로 나타났다.
+    let is_k_out = is_strikeout(result_code);
     let ab_ended = is_k_out || is_ab_terminal(result_code);
 
     let mut next_home_idx = pre_state.home_lineup_index;
@@ -3181,7 +3211,6 @@ pub fn auto_simulate_half_inning(state: &MatchState, rng: &mut impl Rng) -> Half
         safety -= 1;
         if s.half != start_half || s.inning != start_inning { break; }
 
-        let prev_strikes = s.count.strikes;
         let prev_score   = s.score.clone();
         let pitcher      = get_active_pitcher(&s).clone();
         let batter       = get_current_batter(&s, rng);
@@ -3199,7 +3228,9 @@ pub fn auto_simulate_half_inning(state: &MatchState, rng: &mut impl Rng) -> Half
 
         if matches!(code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun) { hits += 1; }
         if code == PitchResultCode::Walk { walks += 1; }
-        let is_k_out = matches!(code, PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing) && prev_strikes == 2;
+        // 🔴 여기도 좁혀진 코드를 본다 — `is_k_out`이 옛 코드를 보던 자리가
+        //   **둘**이었다(2026-09-01). `prev_strikes`는 이제 안 쓴다.
+        let is_k_out = is_strikeout(code);
         if is_k_out { strikeouts += 1; }
 
         if is_k_out || is_ab_terminal(code) {
@@ -3303,13 +3334,13 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
 
     while !state.is_finished && safety > 0 {
         safety -= 1;
-        let prev_strikes = state.count.strikes;
         let decision = if is_protagonist_pitching(&state) {
             random_decision_for_sim(state.count.balls, state.count.strikes, rng)
         } else { auto_pick_decision(&state, rng) };
         let step = step_pitch_core(&state, &decision, is_protagonist_pitching(&state), rng);
         let code = step.outcome.result_code;
-        if matches!(code, PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing) && prev_strikes == 2 { strikeouts += 1; }
+        // 🔴 좁혀진 코드를 본다 — 옛 코드를 보던 자리가 **셋**이었다 (2026-09-01)
+        if is_strikeout(code) { strikeouts += 1; }
         if matches!(code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun) { hits += 1; }
         if code == PitchResultCode::Walk { walks += 1; }
         state = step.next_state;
@@ -3620,6 +3651,61 @@ mod 보크 {
         };
         assert!(p(20.0) > p(50.0), "제구 20이 50보다 잦아야 한다");
         assert!((p(50.0) - p(80.0)).abs() < 1e-9, "50 위는 더 안 좋아진다");
+    }
+}
+
+#[cfg(test)]
+mod 삼진_코드 {
+    use super::*;
+
+    /// 🔴 **좁혀진 코드를 읽는 자리가 셋이었고 전부 옛 코드를 봤다** (2026-09-01).
+    ///
+    /// `run_pitch`가 3스트라이크째에 `StrikeLook` → `StrikeoutLook`으로 코드를
+    /// **좁힌다**. 그런데 그걸 읽는 `is_k_out` 셋이 좁히기 **전** 코드를
+    /// 매치하고 있어서:
+    ///
+    /// ```
+    ///   주인공 시즌 K   0        전 무대 · 9시즌 (트랙 B 실측)
+    ///   타순           삼진당한 타자가 다시 섰다 (ab_ended 가 거짓)
+    /// ```
+    ///
+    /// 아웃은 따로 올라가 **이닝·ERA·승패는 멀쩡했다.** 그래서 "k 만 0"이라는
+    /// 이상한 모양으로 나타났고, 리그 전체(NPC 경로)는 9K 10.7 로 정상이라
+    /// 대조군이 있어야만 보였다.
+    #[test]
+    fn 삼진은_타석을_끝낸다() {
+        for code in [PitchResultCode::StrikeoutLook, PitchResultCode::StrikeoutSwing] {
+            assert!(is_strikeout(code), "{code:?} 가 삼진으로 안 읽힌다");
+            assert!(is_ab_terminal(code),
+                "{code:?} 로 타석이 안 끝난다 — 삼진당한 타자가 다시 선다");
+        }
+    }
+
+    /// ⚠ **투구 하나와 타석 종료를 가른다.** `StrikeLook`은 카운트만 올린다
+    #[test]
+    fn 스트라이크_하나는_타석을_안_끝낸다() {
+        for code in [PitchResultCode::StrikeLook, PitchResultCode::StrikeSwing] {
+            assert!(!is_strikeout(code), "{code:?} 는 투구 하나지 삼진이 아니다");
+            assert!(!is_ab_terminal(code), "{code:?} 로 타석이 끝나면 안 된다");
+        }
+    }
+
+    /// 🔴 **`matches!`를 새로 쓰지 마라** — `is_out_in_play` 주석이 그렇게
+    /// 경고해 뒀는데 이번 결함이 정확히 그 형태였다. 읽는 자리를 함수 하나로
+    /// 모아 두면 코드가 늘어도 한 곳만 고치면 된다.
+    #[test]
+    fn 삼진_판정을_직접_나열한_자리가_없다() {
+        let src = include_str!("match_engine.rs");
+        // ⚠ **자기 문자열을 세지 않으려고** 이 검사 본문을 잘라낸다.
+        //   `include_str!`은 이 파일 전체를 읽으므로 아래 패턴이 그대로 걸린다.
+        let cut = src.find("fn 삼진_판정을_직접_나열한_자리가_없다").unwrap_or(src.len());
+        let body = &src[..cut];
+        // 좁히는 자리(5단계)에서 코드를 만들 때는 나열이 맞다 — 그건 대입이라
+        // `=>` 나 `=` 가 붙는다. 판정(`matches!`)만 센다
+        let bad = body.matches("matches!(code, PitchResultCode::StrikeLook").count()
+            + body.matches("matches!(result_code, PitchResultCode::StrikeLook").count();
+        assert_eq!(bad, 0,
+            "삼진을 `matches!`로 직접 판정하는 자리가 {bad}곳 있다 — `is_strikeout`을 써라");
     }
 }
 
