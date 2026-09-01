@@ -688,6 +688,31 @@ function createSeasonStore() {
       update((s) => Postseason.setSurvivalState(s, survival));
     },
 
+    /**
+     * 리그 순위표를 통째로 갈아끼운다.
+     *
+     * 🔴 **생존리그(독립) 전용에 가깝다.** 보통 리그는 경기마다
+     * `updateStandings` 가 얹지만, 독립은 순위를 `stageStandings` 가 따로
+     * 계산한다(단계마다 팀이 준다) — 그 결과를 이벤트가 읽는 순위표에
+     * 옮겨야 한다.
+     *
+     * ⚠ **주인공 리그면 최상위 `standings` 도 같이 바꾼다.** 이벤트는
+     * `leagueState[리그] ?? s.standings` 를 읽지만(`advanceWeek`), 화면
+     * 순위표는 최상위를 본다 — 둘이 갈리면 **화면과 판정이 어긋난다.**
+     */
+    setLeagueStandings(leagueId: string, standings: Standing[]) {
+      update((s) => {
+        const cur = s.leagueState[leagueId] ?? {
+          standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {},
+        };
+        return {
+          ...s,
+          leagueState: { ...s.leagueState, [leagueId]: { ...cur, standings } },
+          ...(s.leagueId === leagueId ? { standings } : {}),
+        };
+      });
+    },
+
     injectLeagueEntries(leagueId: string, entries: ScheduleEntry[]) {
       update((s) => Postseason.injectLeagueEntries(s, leagueId, entries));
     },
