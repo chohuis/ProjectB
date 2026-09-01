@@ -151,30 +151,30 @@ slot3_*.db (slotdb.cjs)     history_league
 A 가 원인을 재고 있다 — 저장 실패가 로그에도 안 남던 것을 먼저 고쳤다.
 **엔딩 화면은 `protagonist.careerRecords` 로 짜는 게 맞다.**
 
-### svelte-check 오류가 어디 있나 (실측)
+### 🔴 "없다"고 적기 전에 **재현한다**
+
+이 저장소에서 "없다"가 **세 번** 틀렸다 — A1 · 엔딩 화면 · 히스토리 화면.
+세 번 다 `pages/` 만 세고 `features/` 를 안 봤다.
 
 ```
-features/pre-game-briefing/ui/PreGameBriefingModal.svelte   12
-pages/main/MainPage.svelte                                   7
-pages/training/TrainingPage.svelte                           6
-features/career/ui/CareerResultsModal.svelte                 4
-pages/match/MatchPage.svelte                                 2
-pages/new-game/NewGamePage.svelte                            1
-features/injury/ui/InjuryTreatmentModal.svelte               1
-features/contract/ui/ContractNegotiationModal.svelte         1
+파일 검색 한 번으로 끝내지 마라
+  pages/ · features/ · shared/ 를 다 본다
+  화면이면 **띄워 본다** — 이 저장소 검사는 전부 소스 문자열 대조라
+  컴포넌트를 안 띄운다
 ```
 
-⚠ **이 중 셋은 동작이 이미 어긋났을 수 있다.** 타입 오류가 아니라
-런타임에 `undefined` 가 흐르는 자리인지 하나씩 봐라.
+⚠ **숫자를 여기 적지 않는다.** 예전엔 `svelte-check` 내역("PreGameBriefing
+12 · MainPage 7")을 적어 뒀는데 주마다 바뀌어 **문서가 늘 뒤처졌다.**
+직접 돌려서 봐라: `npx svelte-check --threshold error`
 
-### 이미 알려진 화면 결함 둘 — A 소유라 네가 못 고친다
+### ✅ 화면 결함 둘 — **처리됐다** (2026-09-01)
 
-- `MainPage` 등판 회피가 `playerLines: []` 를 박는다 → 점수는 나오는데
-  **그 경기 선수 기록만 통째로 없다**
-- `syncProtagonistLeagueUpdate` 가 `teamRotationIndex` 를 안 건드린다 →
-  **배경 팀은 로테이션이 돌고 주인공 팀만 안 돈다**
+- 등판 회피가 선수 기록을 안 남기던 것 → A 가 `simulateSkippedGame` usecase 를
+  만들었고 C 가 이었다. ⚠ 위치는 `usecases/` 가 아니라 **`pages/main/`** 이었다
+- 정규 경기가 로테이션을 안 올리던 것 → 두 자리에서 고쳤다.
+  ⚠ 위치는 `stores/backgroundLeague.ts` 와 `pages/main/` 이다
 
-둘 다 `usecases/` 라 **A 에게 넘겨라.** 화면에서 우회하지 마라.
+⚠ 앞선 판이 둘 다 "`usecases/` 라 A 소유"라고 적었는데 **위치가 틀렸다.**
 
 ---
 

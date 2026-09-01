@@ -488,7 +488,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       seasonStore.pushPendingAction({
         type: "injuryTreatment",
         injuryType,
-        severity: severity as "moderate" | "severe",
+        severity,
       });
     }
     const { INJURY_LABEL } = await import("../types/save");

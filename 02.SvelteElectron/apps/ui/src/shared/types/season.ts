@@ -224,7 +224,18 @@ export type PendingAction =
   | {
       type: "injuryTreatment";
       injuryType: string;
-      severity: "moderate" | "severe" | "surgery";
+      /**
+       * 🔴 **`"surgery"` 를 뺐다** (2026-09-01 · 트랙 C 가 잡았다).
+       *
+       * 수술은 **심각도가 아니라 치료법**이다. 이 pending 은 "치료를
+       * 고르라"고 묻는 것이고, 수술은 그 화면의 **선택지 중 하나**다
+       * (`InjuryTreatmentModal` 의 `id: "surgery"`).
+       *
+       * 두 생산부 모두 `=== "moderate" || === "severe"` 로 막는다 —
+       * **선언만 넓었다.** 그래서 `applyGameOutcome:490` 이
+       * `as "moderate" | "severe"` 로 우회하고 있었고, 좁히면서 같이 지웠다.
+       */
+      severity: "moderate" | "severe";
     }
   | {
       type: "conditionWarning";
@@ -310,6 +321,18 @@ export interface InteractiveMatchResult {
   /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */
   gameDate?: string;
   summary: string;
+  /**
+   * 주인공이 **실제로 나갔는가**. 없으면 나간 것으로 본다(구 경로 호환).
+   *
+   * 🔴 `UnifiedGameOutcome` 에는 있는데 **여기만 빠져 있었다**
+   * (2026-09-01 · 트랙 C 가 잡았다). `MatchPage` 는 이미 만들어 넘기고
+   * 화면도 `=== false` 로 갈라 그리는데 타입만 뒤처져 있었다.
+   *
+   * ⚠ **`false` 와 `undefined` 가 다르다.** 판정이 전부
+   *   `!== true` / `!== false` 형태라, 없으면 "나갔다"로 떨어진다 —
+   *   기록이 0 이어도 등판으로 세는 갈래가 여기 걸려 있다.
+   */
+  protagonistEntered?: boolean;
   batterLines?: BatterGameLine[];
   playerLines?: PlayerGameLine[];
   midGameInjury?: MatchInjury;

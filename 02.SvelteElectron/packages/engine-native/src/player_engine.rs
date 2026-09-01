@@ -225,13 +225,36 @@ pub fn reliever_would_pitch(params: RelieverPitchParams) -> RelieverPitchResult 
 
 // ── Salary Engine ─────────────────────────────────────────────
 
-#[derive(Debug, Deserialize)]
+/// 시즌 성적 — **투수와 타자를 같이 받는다** (2026-09-01 · 트랙 C 가 잡았다).
+///
+/// 🔴 예전엔 네 칸(`ip` · `era` · `whip` · `k`)이 **전부 필수**였다. 그래서
+/// 타자 주인공의 `BatterSeasonStats` 를 넘기면 **역직렬화 자체가 실패**하고
+/// `parse_err` 가 `{"error": …}` 를 돌려줬다. 호출부는 그걸
+/// `JSON.parse(raw) as number` 로 받는다 — **숫자가 아니라 객체가 된다.**
+///
+/// ```
+///   투수 → 85
+///   타자 → {"error":"missing field `ip`"}      ← 실측
+/// ```
+///
+/// ⚠ `s.ip <= 0.0 → 50` 가드는 **역직렬화가 성공했을 때만** 걸린다.
+///   타자는 거기까지 못 갔다.
+///
+/// ⚠ 표시만의 문제가 아니었다. 같은 구조체를
+///   `calc_offered_salary_for_protagonist` 도 쓰므로 **타자 주인공은 계약
+///   제시액 자체가 객체**였다.
+#[derive(Debug, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct SeasonStats {
-    pub ip: f64,
-    pub era: f64,
-    pub whip: f64,
-    pub k: f64,
+    // ── 투수 ──
+    #[serde(default)] pub ip: f64,
+    #[serde(default)] pub era: f64,
+    #[serde(default)] pub whip: f64,
+    #[serde(default)] pub k: f64,
+    // ── 타자 ──
+    #[serde(default)] pub ab: f64,
+    #[serde(default)] pub ops: f64,
+    #[serde(default)] pub g: f64,
 }
 
 #[derive(Debug, Deserialize)]
@@ -241,6 +264,23 @@ pub struct CalcSeasonRatingParams {
 }
 
 fn calc_season_rating_inner(s: &SeasonStats) -> f64 {
+    // 🔴 **타자 갈래** (2026-09-01). 예전엔 투수식뿐이라 타자 주인공이
+    //   여기까지 오지도 못했다(역직렬화에서 죽었다).
+    //
+    // ⚠ **산식을 새로 만들지 않았다.** NPC 전체를 평가하는
+    //   `calcNpcPerfScore`(`market.ts`)의 타자식을 그대로 옮겼다 —
+    //   OPS 기준선 .700 · 폭 180 · 출전 15점 · 가중 0.85/0.15.
+    //   주인공만 다른 잣대로 재면 "재계약은 잘했다는데 방출 후보"가 나온다.
+    //
+    // ⚠ 투수식은 **안 건드렸다.** 그쪽은 Rust 가 ERA·WHIP·K 를 보고 TS 는
+    //   ERA·경기를 본다 — 원래 다른 함수고, 여기서 맞추면 기존 값이 통째로
+    //   움직인다(밸런스). 타자만 없던 것을 채운다.
+    if s.ip <= 0.0 {
+        if s.ab < 30.0 { return 50.0; }        // 표본이 얇으면 중립
+        let ops_pts   = (50.0 + (s.ops - 0.700) * 180.0).max(10.0).min(95.0);
+        let games_pts = ((s.g / 130.0) * 15.0).min(15.0);
+        return ops_pts * 0.85 + games_pts * 0.15;
+    }
     let era_score  = (100.0 - (s.era  - 2.0) * 18.0).max(20.0).min(100.0);
     let whip_score = (100.0 - (s.whip - 1.0) * 55.0).max(20.0).min(100.0);
     let k9         = if s.ip > 0.0 { (s.k / s.ip) * 9.0 } else { 0.0 };
@@ -249,9 +289,13 @@ fn calc_season_rating_inner(s: &SeasonStats) -> f64 {
 }
 
 pub fn calc_season_rating(params: CalcSeasonRatingParams) -> i64 {
+    // ⚠ **`ip <= 0` 가드가 여기에도 있었다** — 두 자리였다.
+    //   `calc_offered_salary_for_protagonist` 쪽만 고치고 이쪽을 못 봐서,
+    //   제시액은 타자를 반영하는데 **화면 평점만 50 으로 굳어 있었다**(실측).
+    //   같은 판정이 두 곳에 있으면 반드시 한쪽만 고쳐진다.
+    //   이제 `calc_season_rating_inner` 가 투수·타자를 스스로 가른다.
     match &params.stats {
         None => 50,
-        Some(s) if s.ip <= 0.0 => 50,
         Some(s) => calc_season_rating_inner(s).round() as i64,
     }
 }
@@ -321,6 +365,13 @@ pub struct CalcOfferedSalaryForProtagonistParams {
     #[serde(default)]
     pub league_mult: std::collections::HashMap<String, f64>,
     pub pitching_ovr: f64,
+    /// 🔴 **타자 주인공의 OVR** (2026-09-01). 있으면 이쪽을 쓴다.
+    ///
+    /// 호출부가 타자에게도 `pitching_ovr` 를 넘기고 있었다
+    /// (`protagonist.pitching.ovr`) — 타자에게 그 값은 뜻이 없다.
+    /// **안 넘기면 예전 그대로다.**
+    #[serde(default)]
+    pub batting_ovr: Option<f64>,
     pub fame: f64,
     pub league_id: String,
     pub current_salary: Option<f64>,
@@ -333,13 +384,17 @@ pub struct CalcOfferedSalaryForProtagonistParams {
 }
 
 pub fn calc_offered_salary_for_protagonist(params: CalcOfferedSalaryForProtagonistParams) -> i64 {
+    // ⚠ **`ip <= 0` 가드를 뺐다** (2026-09-01). 그게 타자를 막고 있었다 —
+    //   이제 `calc_season_rating_inner` 가 투수·타자를 스스로 가른다
+    //   (표본이 얇으면 거기서 50 을 준다).
     let rating = match &params.stats {
         None => 50.0,
-        Some(s) if s.ip <= 0.0 => 50.0,
         Some(s) => calc_season_rating_inner(s).round(),
     };
     let market = {
-        let base = 1800.0 + (params.pitching_ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
+        // 타자면 타격 OVR 을 쓴다 — 안 넘어오면 예전 그대로 투수 OVR
+        let ovr = params.batting_ovr.unwrap_or(params.pitching_ovr);
+        let base = 1800.0 + (ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
         base * league_salary_mult(&params.league_id, &params.league_mult)
             * params.budget_mod.unwrap_or(1.0).clamp(0.80, 1.25)
     };
