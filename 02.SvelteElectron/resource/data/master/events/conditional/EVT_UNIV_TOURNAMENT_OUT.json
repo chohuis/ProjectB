@@ -11,14 +11,14 @@
     },
     {
       "type": "week_gte",
-      "value": 20
+      "value": 12
     },
     {
-      "type": "morale_lte",
-      "value": 55
+      "type": "team_rank_gte",
+      "value": 3
     }
   ],
-  "cooldownWeeks": 8,
+  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_TOURNAMENT_OUT",
   "decisionTemplateId": "DEC_UNIV_TOURNAMENT_OUT"
 }

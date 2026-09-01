@@ -5,6 +5,7 @@
       "title": "첫 야구 훈련",
       "description": "처음으로 야구부 훈련에 합류했습니다.\n익숙한 공 냄새가 반갑지만 군 생활과 병행하는 게 쉽지 않습니다.",
       "minRank": 0,
+      "once": true,
       "choices": [
         {
           "id": "ok",
@@ -245,6 +246,7 @@
       "title": "마지막 훈련 경기",
       "description": "군 생활 중 마지막 공식 훈련 경기입니다.\n전역 후 복귀를 앞두고 설레는 마음으로 마운드에 섭니다.",
       "minRank": 3,
+      "once": true,
       "choices": [
         {
           "id": "ok",
@@ -260,6 +262,7 @@
       "title": "복귀 구단 연락",
       "description": "원 소속 구단에서 복귀 준비를 시작하자는 연락이 왔습니다.\n전역 후의 야구가 기다리고 있습니다.",
       "minRank": 3,
+      "once": true,
       "choices": [
         {
           "id": "ok",
@@ -329,6 +332,7 @@
       "title": "상무 첫 경기",
       "description": "군복을 벗고 유니폼을 입었습니다. 상대는 프로 2군입니다.\n\n2년 쉬는 줄 알았는데 야구를 합니다.",
       "minRank": 0,
+      "once": true,
       "choices": [
         {
           "id": "all",
