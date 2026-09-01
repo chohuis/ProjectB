@@ -94,16 +94,33 @@
   const KIND: Record<string, string> = {
     manager: "감독", coach: "코치", teammate: "동료", owner: "구단주",
   };
-  // `personId`가 npcId와 같다 (people.md §4)
-  $: npcNameOf = (id: string) =>
-    ($gameStore.npcs ?? []).find((n) => n.npcId === id)?.name ?? id;
+  /**
+   * 🔴 **`npcs` 를 뒤지면 안 됐다** (2026-09-01 눈확인에서 드러났다).
+   *
+   *   코치·감독은 `npcs` 에 없다 — 스태프는 따로 산다. 그래서 결산의 `사람`
+   *   절에 **`staff:TEAM_HS_DOSEONG_COA1` 같은 원문 id 가 그대로 떴다.**
+   *   폴백이 원문이면 안 된다는 건 `careerEventLabel.ts` 머리말이 이미
+   *   못박은 결함 모양이고, 지시서의 "이름은 조회해서 읽어라"에도 어긋난다.
+   *
+   * ⚠ **조회할 필요가 없다.** `Relationship` 은 person VIEW 조인에서 `name`
+   *   을 이미 받아 온다. `PeoplePage` 도 그걸 쓴다 — 없으면 역할명으로
+   *   대체한다(은퇴 등으로 VIEW 에서 사라진 상대).
+   */
+  $: relName = (r: import("../../../shared/types/relationship").Relationship) =>
+    r.name || `(${KIND[r.kind] ?? "인물"})`;
 
   $: relTop = [...relRows]
     .filter((r) => (r.value ?? 0) !== 0)
     .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
+  /**
+   * ⚠ **폴백이 원문 id 였다.** 해체·이름 변경으로 목록에 없는 팀이면
+   *   `TEAM_UNIV_HANYANG` 같은 영문 id 가 화면에 샜다. `LeaguePage` 는
+   *   같은 문제를 `(기록 없음)` 으로 이미 막아 뒀다 — 같게 맞춘다.
+   */
+  const GONE = "(기록 없음)";
   $: teamName = (id: string) =>
-    ($teamsL10n ?? []).find((t) => t.id === id)?.name ?? id;
+    ($teamsL10n ?? []).find((t) => t.id === id)?.name ?? (id ? GONE : "");
 
   const REASON: Record<string, string> = {
     voluntary: "자발적 은퇴",
@@ -302,7 +319,7 @@
             <ul class="rels">
               {#each relTop.slice(0, 8) as r}
                 <li>
-                  <span class="r-name">{npcNameOf(r.personId)}</span>
+                  <span class="r-name">{relName(r)}</span>
                   <span class="r-kind">{KIND[r.kind] ?? r.kind}</span>
                   <span class="r-val" class:high={(r.value ?? 0) >= 60}>
                     {relationLabel(r.value).label}</span>
@@ -362,10 +379,19 @@
   .yr-y { font-variant-numeric: tabular-nums; opacity: .8; min-width: 3.2em; }
   .yr-t { font-weight: 600; }
   .yr-rank { font-variant-numeric: tabular-nums; opacity: .7; font-size: .9em; }
-  .yr-ps { font-size: .8em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #2a3a2a); }
+  /* ⚠ `--accent-weak` 는 없는 토큰이었다 — 폴백만 먹혔고 글자색이 없어
+       어두운 바탕에 어두운 글자가 됐다. 이 화면은 어두운 섬이라 토큰을
+       안 쓰고 색을 직접 정한다 (위 머리말 규칙) */
+  .yr-ps {
+    font-size: .8em; padding: 1px 6px; border-radius: 4px;
+    background: #1b2a1b; color: #7fc99a;
+  }
   .yr-stat { margin-top: 3px; opacity: .85; font-variant-numeric: tabular-nums; font-size: .92em; }
   .yr-awards { margin-top: 3px; display: flex; gap: 4px; flex-wrap: wrap; }
-  .yr-aw { font-size: .78em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #3a3320); }
+  .yr-aw {
+    font-size: .78em; padding: 1px 6px; border-radius: 4px;
+    background: #241c06; color: #f0c65a;
+  }
   .rels { list-style: none; margin: 0; padding: 0; }
   .rels li { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
   .r-name { font-weight: 600; }

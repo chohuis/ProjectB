@@ -30,8 +30,14 @@ describe("커리어 결산 — 아래로 이은 세 절", () => {
 
   it("사람(관계)을 읽는다", () => {
     expect(SRC).toMatch(/getRelationships/);
-    expect(SRC, "personId로 이름을 찾아야 한다 (people.md §4)")
-      .toMatch(/personId/);
+    /**
+     * ⚠ **여기 있던 `personId` 단언을 바꿨다** (2026-09-01 눈확인).
+     *   원래 "personId 로 이름을 찾아야 한다"였는데, 그게 코치·감독을
+     *   원문 id 로 찍던 원인이었다 — 스태프는 `npcs` 에 없다.
+     *   `Relationship` 이 person VIEW 에서 `name` 을 이미 받아 온다.
+     *   아래 "이름이 원문 id 로 새지 않는다"가 그걸 못박는다.
+     */
+    expect(SRC, "관계 목록을 안 그린다").toMatch(/relTop/);
   });
 });
 
@@ -167,5 +173,58 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
       .not.toMatch(/export let onExit/);
     expect(MAIN, "MainPage 가 SeasonEndModal 에 다시 onExit 을 넘긴다")
       .not.toMatch(/<SeasonEndModal[^>]*onExit/);
+  });
+});
+
+/**
+ * 🔴 **눈확인에서만 나온 결함 둘.** (2026-09-01 · 실제로 띄워 보고 찾았다)
+ *
+ * 정적 검사는 "이름을 조회한다"까지만 본다. **못 찾았을 때 무엇을 찍는지**는
+ * 띄워 봐야 안다. 둘 다 폴백이 원문 id 였다 —
+ *
+ *   사람   `staff:TEAM_HS_DOSEONG_COA1`  코치·감독은 `npcs` 에 없다
+ *   사건   `TEAM_UNIV_HANYANG`           목록에 없는 팀
+ *
+ * `careerEventLabel.ts` 머리말이 "폴백이 원문이면 안 된다"고 이미 못박은
+ * 결함 모양이고, 지시서의 이름 규칙에도 어긋난다.
+ */
+describe("이름이 원문 id 로 새지 않는다", () => {
+  it("관계 이름은 `npcs` 를 안 뒤진다 — `Relationship.name` 을 쓴다", () => {
+    expect(SRC, "npcs 에서 찾으면 코치·감독이 id 로 떨어진다")
+      .not.toMatch(/npcs \?\? \[\]\)\.find\(\(n\) => n\.npcId === id\)/);
+    expect(SRC, "person VIEW 가 채워 주는 name 을 안 쓴다")
+      .toMatch(/r\.name \|\|/);
+  });
+
+  it("이름이 없으면 역할명으로 대체한다 (`PeoplePage` 와 같게)", () => {
+    expect(SRC).toMatch(/KIND\[r\.kind\] \?\? "인물"/);
+  });
+
+  it("팀 이름 폴백이 id 가 아니다", () => {
+    expect(SRC, "못 찾은 팀을 id 로 찍고 있다")
+      .not.toMatch(/find\(\(t\) => t\.id === id\)\?\.name \?\? id/);
+    expect(SRC).toMatch(/const GONE = "\(기록 없음\)"/);
+  });
+});
+
+/**
+ * 🔴 **`--accent-weak` 는 정의된 적이 없는 토큰이다.** 하드코딩 폴백만 먹혀
+ *    어두운 바탕이 됐고, 글자색을 안 정해서 **어두운 바탕에 어두운 글자**가
+ *    됐다 — 태그가 안 읽혔다. 이 화면은 어두운 섬이라 토큰을 쓰면 안 되고
+ *    색을 직접 정한다(머리말 규칙).
+ */
+describe("태그가 읽힌다", () => {
+  it("없는 토큰에 기대지 않는다", () => {
+    const css = SRC.slice(SRC.indexOf("<style>"));
+    expect(css, "--accent-weak 는 정의된 적이 없다")
+      .not.toMatch(/background: var\(--accent-weak/);
+  });
+
+  it("연도별 수상·포스트시즌 태그가 글자색을 정한다", () => {
+    for (const cls of ["yr-ps", "yr-aw"]) {
+      const rule = SRC.slice(SRC.indexOf(`.${cls} {`), SRC.indexOf(`.${cls} {`) + 200);
+      expect(rule, `${cls} 가 색을 안 정한다 — 지면이 어두워 안 읽힌다`)
+        .toMatch(/color: #/);
+    }
   });
 });

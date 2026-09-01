@@ -274,6 +274,43 @@ const COMMANDS = {
     for (const w of app.windows()) console.log(" ", w.url());
   },
 
+  /**
+   * 창 크기를 바꾼다 — `resize 1366x768`
+   *
+   * 🔴 **`page.setViewportSize()` 는 Electron 에서 안 먹는다.** 창 자체를
+   *   바꿔야 한다. 그래서 해상도별 확인을 하려면 이 명령이 필요하다 —
+   *   없이 찍으면 전부 최대화 크기로 나온다(실제로 스크린샷 5장 중
+   *   경기 화면만 1920×1079 로 찍혔다).
+   *
+   * ⚠ **최대화·전체화면을 먼저 풀어야 `setContentSize` 가 먹는다.**
+   *   안 풀면 **조용히 무시**되고 계속 최대 크기로 찍힌다 — 오류도 안 난다.
+   * ⚠ `setMinimumSize(1,1)` 도 필요하다. 최소 크기가 걸려 있으면
+   *   작은 해상도(1280×720)에서 그만큼만 줄어든다.
+   */
+  async resize(arg) {
+    if (!app) return console.log("ERROR: launch first");
+    const m = String(arg).trim().match(/^(\d+)\s*[x×]\s*(\d+)$/i);
+    if (!m) return console.log("usage: resize 1366x768");
+    const w = Number(m[1]), h = Number(m[2]);
+    const got = await app.evaluate(({ BrowserWindow }, s) => {
+      // ⚠ DevTools 창을 고르면 엉뚱한 걸 줄인다 — url 로 거른다
+      const win = BrowserWindow.getAllWindows()
+        .find((x) => !x.webContents.getURL().startsWith("devtools://"));
+      if (!win) return null;
+      if (win.isFullScreen()) win.setFullScreen(false);
+      if (win.isMaximized()) win.unmaximize();
+      win.setResizable(true);
+      win.setMinimumSize(1, 1);
+      win.setContentSize(s.w, s.h);
+      const [cw, ch] = win.getContentSize();
+      return { cw, ch };
+    }, { w, h });
+    if (!got) return console.log("ERROR: window not found");
+    // 실제로 그 크기가 됐는지 되읽는다 — 조용히 무시되는 걸 잡는다
+    console.log(`resize → ${got.cw}x${got.ch}` +
+      (got.cw !== w || got.ch !== h ? `  ⚠ 요청 ${w}x${h} 와 다르다` : ""));
+  },
+
   async quit() { if (app) await app.close().catch(() => {}); app = null; page = null; },
   help() { console.log("commands:", Object.keys(COMMANDS).join(", ")); },
 };

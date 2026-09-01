@@ -263,13 +263,24 @@
     const lid = selectedLeagueId || myLeagueId;
     return historyStandings
       .filter(r => r.league_id === lid)
-      // 🔴 **2군을 뺀다.** `refs`는 1군·팜을 **같은 `leagueId`**로 담는다 —
-      //    `_1`/`_2` 접미사로만 갈린다(`rosterCompositionProbe`도 같은 규칙).
-      //    안 거르면 ABL이 16팀이 아니라 32팀, JBL은 12팀이 아니라 24팀으로 뜬다
-      //    (합 56 — 백로그의 "해외 빈 순위표 56행"이 이 숫자다).
-      //    ⚠ KBL은 `LEAGUE_KBL`/`LEAGUE_KBL_FARM`으로 갈려 있어 안 걸렸다 —
-      //      **해외만 같은 id를 쓴다.** 그래서 여태 안 드러났다.
-      .filter(r => !r.team_id.endsWith("_2"))
+      // 🔴 **2군 제외는 1군 화면에서만 한다** (2026-09-01 눈확인에서 잡았다).
+      //
+      //   원래는 무조건 `_2`를 뺐다. `refs`가 1군·팜을 **같은 `leagueId`**로
+      //   담아서, 안 거르면 ABL이 32팀·JBL이 24팀으로 뜨기 때문이었다
+      //   (합 56 — 백로그 B8 "해외 빈 순위표 56행"이 이 숫자다).
+      //
+      //   그런데 그게 **과잉 교정이었다.** 2군 리그를 고르면 그 리그 행은
+      //   전부 `_2`라 **통째로 사라지고** "해당 시즌 순위 기록이 없습니다"가
+      //   떴다 — 데이터는 멀쩡히 있는데도. 실측(2026시즌 세이브):
+      //
+      //       LEAGUE_ABL       16행 중 `_2` 0개   ← 필터가 하는 일이 없다
+      //       LEAGUE_ABL_FARM  16행 중 `_2` 16개  ← 전부 사라진다
+      //       LEAGUE_KBL_FARM  10행 중 `_2` 10개  ← 같다
+      //
+      //   ⚠ **필터를 그냥 지우면 안 된다.** 옛 세이브는 1군 `league_id` 아래
+      //     팜 팀이 섞여 있을 수 있다 — 그때 32팀이 다시 뜬다.
+      //     그래서 **1군을 볼 때만** 뺀다.
+      .filter(r => lid.endsWith("_FARM") || !r.team_id.endsWith("_2"))
       .sort((a, b) => b.win_pct - a.win_pct || b.wins - a.wins);
   })();
 
@@ -1404,7 +1415,19 @@
   .aw-name { font-weight: 600; }
   .aw-team { opacity: .6; font-size: .85em; }
   .aw-tags { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
-  .aw-tag { font-size: .78em; padding: 1px 6px; border-radius: 4px; background: var(--accent-weak, #3a3320); }
+  /*
+    🔴 **`--accent-weak` 는 정의된 적이 없다** (2026-09-01 눈확인).
+       네 군데가 전부 하드코딩 폴백 `#3a3320`(짙은 올리브)으로 떨어졌고,
+       밝은 지면에서 글자색은 `--ink` 인 채라 **어두운 바탕에 어두운 글자**가
+       됐다 — 태그가 안 읽힌다. 정적 검사로는 안 잡히는 종류다.
+    ⚠ 없는 토큰을 새로 정의하지 않는다. `.yr-ps`(초록)와 `.aw-tag`(금색)가
+       서로 다른 색을 기대하고 있어서 토큰 하나로는 둘 다 못 맞춘다.
+       지면에 맞는 토큰을 직접 고른다.
+  */
+  .aw-tag {
+    font-size: .78em; padding: 1px 6px; border-radius: 4px;
+    background: var(--panel-sunk); color: var(--warn);
+  }
 
   /* ── 역대(연혁) — 위 수상 목록의 눈금을 그대로 쓴다 ── */
   .hist-layout { min-height: 0; overflow-y: auto; }
@@ -1431,7 +1454,7 @@
   .ha-tags { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
   .ha-tag {
     font-size: .78em; padding: 1px 6px; border-radius: 4px;
-    background: var(--accent-weak, #3a3320);
+    background: var(--panel-sunk); color: var(--warn);
   }
   /* 2회 이상만 숫자를 붙인다 — 전부 "1"이면 눈만 시끄럽다 */
   .ha-n { margin-left: 4px; font-weight: 700; }

@@ -58,7 +58,6 @@
       universityChoices: universityChoices.slice(0, 3),
       independentChoices: independentChoices.slice(0, 3),
       overseasChoices: overseasChoices.slice(0, 3),
-      sportsMilitaryApplied: false,
     });
     await gameStore.save();
   }
