@@ -171,7 +171,7 @@ import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { winnerById, scheduledIdSet } from "../utils/scheduleView";
 import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
-import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
+import { IND_LEAGUE_ID, emptySurvivalState, stageStandings } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 import { canApplyToUniversity, canApplyToIndependent } from "../utils/careerTransition";
 import { isLeagueInScope } from "../config/releaseScope";
@@ -1782,6 +1782,42 @@ async function progressIndependentLeague(week: number): Promise<void> {
   const s = get(seasonStore);
   const g = get(gameStore);
   const state = s.survival ?? emptySurvivalState();
+
+  // 🔴 **독립 순위표에 결과를 얹는 자리가 없었다** (2026-09-01 · 트랙 B 실측).
+  //
+  // 생존리그는 순위 개념이 **둘**이다:
+  //
+  // ```
+  //   stageStandings         단계별 순위 — **탈락 판정에만** 쓴다
+  //   leagueState.standings  일반 순위표 — **이벤트가 읽는다**
+  // ```
+  //
+  // 앞의 것만 돌고 뒤의 것은 **한 번도 안 갱신됐다.** 그래서:
+  //
+  // ```
+  //   경기      102 / 102  전부 치러진다
+  //   순위표    10팀 · 전원 0승 0패
+  //   순위      **85주 내내 8** (씨앗 셋에서 똑같이)
+  //             전원 동률이면 정렬이 배열 순서를 주고, 주인공 팀이 8번째다
+  // ```
+  //
+  // `IND_SURVIVE_SAFE`·`PLAYOFF_IND`·`SEASON_SURVIVED`·`WIN_STREAK_IND`
+  // (전부 `lte 3~4`)가 **영원히 거짓**이고 `IND_SURVIVE_EDGE`(gte 8)만
+  // 영원히 참이었다.
+  //
+  // ⚠ **`progressSurvival` 이 null 을 내도 갱신해야 한다.** 그 함수는 단계가
+  // 끝나는 주에만 값을 내는데, 이벤트는 **매주** 순위를 본다.
+  // ⚠ 현재 단계 기준이 맞다 — 생존리그는 단계마다 팀이 준다.
+  {
+    const sched = [
+      ...(s.leagueSchedules?.[IND_LEAGUE_ID] ?? []),
+      ...s.schedule.filter((e) => e.leagueId === IND_LEAGUE_ID),
+    ];
+    if (state.stage >= 1) {
+      const st = stageStandings(state.stage, state.activeTeams, sched);
+      if (st.length > 0) seasonStore.setLeagueStandings(IND_LEAGUE_ID, st);
+    }
+  }
 
   const r = await progressSurvival(week, s, state, g.protagonist.teamId);
   if (!r) return;
