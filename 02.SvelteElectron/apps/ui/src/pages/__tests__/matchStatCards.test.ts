@@ -23,9 +23,16 @@ import { resolve } from "node:path";
 const SRC = readFileSync(
   resolve(__dirname, "../match/MatchPage.svelte"), "utf8");
 
-const RULE = SRC.slice(
-  SRC.indexOf(".bar-list, .line-list {"),
-  SRC.indexOf(".bar-list, .line-list {") + 320);
+/**
+ * ⚠ **짧은 높이 블록에도 같은 선택자가 있다** (2026-09-01 · 720p 대응).
+ *   그냥 `indexOf` 하면 그쪽을 먼저 잘라서, 이 검사가 **엉뚱한 규칙을 보고
+ *   통과했다.** `@media` 안쪽을 걷어내고 기본 규칙을 찾는다.
+ */
+const BASE = SRC.replace(/@media[^{]*\{[\s\S]*?\n  \}/g, "");
+
+const RULE = BASE.slice(
+  BASE.indexOf(".bar-list, .line-list {"),
+  BASE.indexOf(".bar-list, .line-list {") + 320);
 
 describe("선수 카드 능력치가 잘려도 닿을 수 있다", () => {
   it("규칙을 찾았다", () => {
