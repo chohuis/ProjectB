@@ -5644,6 +5644,85 @@ export function leagueComponents(): Record<string, unknown> {
   return out;
 }
 
+/**
+ * **도루가 누구에게서 나오나** — `stealProbe` 는 합계만 센다 — 성공률이 낮은 원인을 가른다.
+ *
+ * 🔴 산식은 스피드 80 에서 65% 이고 포수 어깨가 그걸 깎는다:
+ *
+ * ```
+ *   스피드 80 · 포수 50 → 65%      스피드 80 · 포수 80 → 53%
+ *   스피드 95 · 포수 50 → 76%      스피드 70 · 포수 65 → 52%
+ * ```
+ *
+ * 실측 리그 성공률이 54~56% 라는 건 **느린 주자가 많이 뛰거나 포수 어깨가
+ * 세다**는 뜻이다. 어느 쪽인지 봐야 고칠 자리가 정해진다.
+ *
+ * ⚠ **견제사는 `cs` 에 안 섞인다** (코드 확인 2026-09-01). 옛 문서가
+ *   "섞여 있어 못 가른다"고 적었는데 `caught.push` 를 안 한다 — `outs` 만
+ *   올린다. **그 경고는 틀렸다.**
+ */
+export function stealBreakdownProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  void g;
+  const out: Record<string, unknown> = {};
+  for (const lid of ["LEAGUE_KBL"]) {
+    // ⚠ **롤오버 뒤에 읽으면 `stats` 가 비어 도루가 0 이 된다.**
+    //   프로브를 시즌 종료 **뒤**에 불렀더니 실제로 0/0 이 나왔다 —
+    //   "도루가 안 돈다"로 읽을 뻔했다. 계측은 롤오버 **앞**에서 잡는다.
+    const stats = s.leagueState?.[lid]?.stats ?? {};
+    let sb = 0, cs = 0;
+    const runners: Array<{ sb: number; cs: number; speed: number }> = [];
+    for (const [pid, st] of Object.entries(stats)) {
+      const b = st as unknown as { type?: string; sb?: number; cs?: number };
+      if (b.type !== "batter") continue;
+      const s2 = b.sb ?? 0, c2 = b.cs ?? 0;
+      sb += s2; cs += c2;
+      if (s2 + c2 === 0) continue;
+      const e = m.entities.find((x) => x.id === pid);
+      const sp = ((e?.details as { player?: { batting?: { speed?: number } } })
+        ?.player?.batting?.speed) ?? 50;
+      runners.push({ sb: s2, cs: c2, speed: sp });
+    }
+    // 시도량 가중 평균 스피드 — **누가 뛰는가**가 성공률을 정한다
+    const att = runners.reduce((a2, r) => a2 + r.sb + r.cs, 0);
+    const wSpeed = att > 0
+      ? runners.reduce((a2, r) => a2 + r.speed * (r.sb + r.cs), 0) / att : 0;
+    // 포수 어깨 분포 — 깎는 쪽
+    // 🔴 **그 리그 포수만 본다** — 처음엔 전 리그 506명을 셌다.
+    //   고교·대학·독립 포수가 섞이면 중앙이 리그 실제와 달라지고,
+    //   그 값으로 기준점을 잡으면 엉뚱한 데 맞춘다.
+    const teamsOfLeague = new Set(
+      m.teams.filter((t) => t.leagueId === lid && t.id.endsWith("_1")).map((t) => t.id));
+    const arms = m.entities
+      .filter((e) => {
+        const pl = (e.details as { player?: { position?: string } })?.player;
+        return e.role === "player" && pl?.position === "C"
+          && !!e.teamId && teamsOfLeague.has(e.teamId);
+      })
+      // ⚠ **`arm` 은 `batting` 블록에 있다** — `fielding` 밑이 아니다.
+      //   처음에 `player.fielding.arm` 을 봐서 **500명 전부 50** 으로
+      //   떨어졌다. 없는 경로를 읽으면 조용히 기본값이 되고, 그걸
+      //   "포수 어깨가 다 평균이다"로 읽을 뻔했다.
+      .map((e) => ((e.details as { player?: { batting?: { arm?: number } } })
+        ?.player?.batting?.arm) ?? 50)
+      .sort((a2, b2) => a2 - b2);
+    const med = arms.length ? arms[arms.length >> 1] : 0;
+    out[lid.replace("LEAGUE_", "")] = {
+      도루: sb, 도루자: cs,
+      성공률: sb + cs > 0 ? Math.round((sb / (sb + cs)) * 1000) / 10 : 0,
+      시도한선수: runners.length,
+      시도가중_평균스피드: Math.round(wSpeed * 10) / 10,
+      포수어깨_중앙: med,
+      포수어깨_최소: arms[0] ?? 0,
+      포수어깨_최대: arms[arms.length - 1] ?? 0,
+      포수수: arms.length,
+    };
+  }
+  return out;
+}
+
 /** contact_q 밴드 분포 — 어느 구간에서 도는지 본다 */
 export async function contactBands(): Promise<Record<string, unknown>> {
   const raw = await window.projectB!.engine("contactBandStatsNative", "{}");

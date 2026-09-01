@@ -38,6 +38,7 @@ const SEED = arg("seed", 20260802);
 (async () => {
   const { app, tmp } = await headless.boot("cband");
   let why = "완주";
+  let stealSnap = null;
   try {
     await app.boot({ slotId: "CB", worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy({ draft: true, university: false, independent: true });
@@ -54,7 +55,12 @@ const SEED = arg("seed", 20260802);
       if (app.currentWeek() > before) continue;
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       if (await app.pushCareerForward()) continue;
-      if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
+      if (app.isSeasonEnded()) {
+        // 🔴 **롤오버 앞에서 잡는다** — 넘기면 leagueState.stats 가 비어
+        //   도루가 0 으로 보인다(실제로 한 번 그렇게 읽을 뻔했다)
+        try { stealSnap = JSON.stringify(app.stealBreakdownProbe()); } catch { /* 무시 */ }
+        await app.seasonRollover(); continue;
+      }
       why = "막힘: " + (app.stopReason() ?? "?");
       break;
     }
@@ -75,6 +81,9 @@ const SEED = arg("seed", 20260802);
       const fm = await app.fenceMoves();
       console.log("  [담장] " + JSON.stringify(fm));
     } catch (e) { console.log("  [담장] " + (e && e.message)); }
+
+    // 도루 성공률의 원인 분해 — 누가 뛰나 · 포수 어깨는 어떤가
+    console.log("  [도루] " + (stealSnap ?? "시즌 종료를 못 잡았다"));
 
     // 같은 실행에서 리그 지표도 같이 본다 — 따로 재면 씨앗이 어긋난다
     try {
