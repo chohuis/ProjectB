@@ -615,6 +615,39 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     consecutiveLowMoraleWeeks:  p.consecutiveLowMoraleWeeks  ?? 0,
     consecutiveHighFatigueWeeks: p.consecutiveHighFatigueWeeks ?? 0,
     careerRecords: p.careerRecords ?? [],
+    // 🔴 **병역·프로 계약 묶음** (2026-09-02).
+    //
+    // 검사(`protagonistMigration.test.ts`)가 이 묶음을 "미필이면 기본값이
+    // 의미가 없다"며 KNOWN_MISSING 에 두고 있었다. **그 전제가 틀렸다** —
+    // C 가 실제 세이브를 열어 `militaryStatus` 가 없는 걸 확인했고, 그러면
+    // `=== "미필"` 이 어디서도 참이 안 된다:
+    //
+    // ```
+    //   game.ts 국제대회 입상 병역 면제      안 걸린다
+    //   CareerResultModal 체육부대 갈래      안 뜬다
+    //   StatusPage 병역 표시                 어긋난다
+    //   RightPanel `104 - militaryServiceWeeks`   NaN
+    // ```
+    //
+    // 새 게임은 C 가 고쳤다(열한 필드). **옛 세이브는 여기서 채운다** —
+    // 계수·플래그는 0/false/"미필", 날짜·소속은 null(기본값과 같은 모양).
+    // `pendingNextContract` 는 기본값이 undefined 라 그대로 둔다.
+    militaryStatus:               p.militaryStatus               ?? def.militaryStatus,
+    militaryUnit:                 p.militaryUnit                 ?? def.militaryUnit,
+    militaryServiceWeeks:         p.militaryServiceWeeks         ?? def.militaryServiceWeeks,
+    militaryRecoveryWeeks:        p.militaryRecoveryWeeks        ?? def.militaryRecoveryWeeks,
+    militaryDeferPenalty:         p.militaryDeferPenalty         ?? def.militaryDeferPenalty,
+    militaryEnlistWeek:           p.militaryEnlistWeek           ?? def.militaryEnlistWeek,
+    militaryEnlistYear:           p.militaryEnlistYear           ?? def.militaryEnlistYear,
+    militaryDischargeYear:        p.militaryDischargeYear        ?? def.militaryDischargeYear,
+    militaryHiatusStage:          p.militaryHiatusStage          ?? def.militaryHiatusStage,
+    militaryHiatusUniversityWeek: p.militaryHiatusUniversityWeek ?? def.militaryHiatusUniversityWeek,
+    sportsUnitApplied:            p.sportsUnitApplied            ?? def.sportsUnitApplied,
+    sportsUnitSelected:           p.sportsUnitSelected           ?? def.sportsUnitSelected,
+    proServiceYears:              p.proServiceYears              ?? def.proServiceYears,
+    faNegotiationRound:           p.faNegotiationRound           ?? def.faNegotiationRound,
+    faUnsignedWeeks:              p.faUnsignedWeeks              ?? def.faUnsignedWeeks,
+    tradeAdaptationWeeks:         p.tradeAdaptationWeeks         ?? def.tradeAdaptationWeeks,
   };
 }
 

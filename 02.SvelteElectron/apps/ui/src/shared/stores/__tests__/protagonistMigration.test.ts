@@ -51,14 +51,13 @@ const KNOWN_MISSING: string[] = [
   "condition", "fatigue", "morale", "money", "fame", "scoutScore",
   "growthPoints", "potentialHidden", "developmentRate", "pitchingXP",
   "tags", "careerTriggeredEvents",
-  // 병역 — 한 덩어리로 들어왔다. 미필이면 기본값이 의미가 없다
-  "militaryStatus", "militaryUnit", "militaryServiceWeeks", "militaryRecoveryWeeks",
-  "militaryDeferPenalty", "militaryEnlistWeek", "militaryEnlistYear",
-  "militaryDischargeYear", "militaryHiatusStage", "militaryHiatusUniversityWeek",
-  "sportsUnitApplied", "sportsUnitSelected",
-  // 프로 계약·FA — 그 단계에 안 가면 값이 없는 게 맞다
-  "proServiceYears", "faNegotiationRound", "faUnsignedWeeks",
-  "pendingNextContract", "tradeAdaptationWeeks",
+  // 🔴 병역·프로 묶음은 **2026-09-02 에 목록에서 뺐다** — 이제 복원된다.
+  //   "미필이면 기본값이 의미가 없다"가 틀렸다. C 가 실제 세이브에서
+  //   `militaryStatus` 가 빠진 걸 확인했고, 그러면 `=== "미필"` 이 어디서도
+  //   참이 안 된다(병역 면제 · 체육부대 갈래 · 병역 표시 · `104 - 복무주` NaN).
+  //   ⚠ 여기 다시 넣으려면 그 세 자리가 undefined 를 견디는지 먼저 봐라.
+  // 프로 계약 — 기본값이 undefined 라 복원할 값이 없다
+  "pendingNextContract",
 ];
 
 /** 없으면 마이그레이션이 죽는 필드 — 옛 세이브에도 반드시 있는 것들 */
