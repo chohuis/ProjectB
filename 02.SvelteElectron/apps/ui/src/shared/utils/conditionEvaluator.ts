@@ -1,6 +1,7 @@
 import type { Condition, EventContext } from "../types/event";
 import { resolveNumber, resolvePath } from "./eventPaths";
 import type { PitcherSeasonStats } from "../types/save";
+import { GROUPS_BY_LEAGUE } from "./leagueTeams.generated";
 
 // ── 조건 단일 평가 ─────────────────────────────────────────────
 export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
@@ -122,9 +123,37 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     }
 
     // ── 팀 순위 ──────────────────────────────────────────────────
+    //
+    // 🔴 **조·권역이 있으면 그 안의 순위다** (2026-09-01 · 트랙 B 실측).
+    //
+    // 예전엔 리그 전체에서 셌다. 그런데 아마추어는 리그가 통짜가 아니다:
+    //
+    // ```
+    //   고교  102팀  권역 8개 (6~20팀)     HS_REGIONS
+    //   대학   50팀  조   5개 (각 10팀)    UNIV_GROUPS
+    //   프로   10팀  조 없음 — 리그가 곧 조
+    // ```
+    //
+    // 그래서 `team_rank_lte 2` 가 고교에서는 **102팀 중 2위**를 요구했고
+    // 넷 다 한 번도 안 떴다(실측 0/4).
+    //
+    // ⚠ **이름이 뜻을 말한다** — `EVT_UNIV_GROUP_LAST` 가 `team_rank_gte 4`
+    // 다. 50팀 기준이면 4위는 상위권인데 「조 꼴찌」라 부른다. **10팀 조를
+    // 전제로 쓴 값**이다. 고교 `lte 2·4`("미디어가 주목")도 마찬가지다.
+    //
+    // ⚠ 문턱은 **하나도 안 고쳤다.** 지금 값들이 전부 10팀 안팎 감각이고
+    // 그게 조 크기와 맞는다 — 모수를 바로잡으면 값이 저절로 맞는다.
     case "team_rank_lte":
     case "team_rank_gte": {
-      const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+      // 주인공이 속한 조. 없으면 리그 전체가 모수다
+      const groups = GROUPS_BY_LEAGUE[protagonist.leagueId];
+      const myGroup = groups
+        ? Object.values(groups).find((ids) => ids.includes(protagonist.teamId))
+        : undefined;
+      const pool = myGroup
+        ? standings.filter((s) => myGroup.includes(s.teamId))
+        : standings;
+      const sorted = [...pool].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       const rank = sorted.findIndex((s) => s.teamId === protagonist.teamId) + 1;
       if (rank === 0) return false; // 팀이 순위표에 없음
       return cond.type === "team_rank_lte" ? rank <= cond.value : rank >= cond.value;

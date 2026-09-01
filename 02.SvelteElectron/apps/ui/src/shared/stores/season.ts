@@ -224,8 +224,38 @@ function createSeasonStore() {
       return;
     },
 
+    /**
+     * 새 리그 시즌을 연다 — **season 상태를 통째로 갈아치운다.**
+     *
+     * 🔴 **`leagueState[주인공리그]`를 같이 세운다** (2026-09-01).
+     *
+     * `makeEmptySeason`이 `leagueState: {}`로 두는데, 다시 채우는 건
+     * **배경 리그 시뮬뿐**이다(`simulateBackgroundWeek`). 주인공 리그는
+     * 배경 시뮬을 안 돌고 `syncProtagonistLeagueUpdate`가 처리하는데,
+     * 그건 `s.leagueState[lid] ?? {}`에서 시작해 **경기에 나온 두 팀만**
+     * 순위표에 넣는다 — 리그 전체 팀이 영영 안 들어온다.
+     *
+     * 실측(트랙 B · `rankCtxProbe`): 프로 주인공의 `leagueState[LEAGUE_KBL]`
+     * 팀 수가 **0**이었다. 최상위 `standings`는 10팀으로 멀쩡한데 리그별
+     * 사본만 비어 있었다.
+     *
+     * ⚠ **조용히 틀린다.** 순위표 화면은 최상위 `standings`를 보므로
+     * 멀쩡해 보이고, `leagueState`를 읽는 쪽(다이제스트·트레이드 판단)만
+     * 빈 배열을 받는다.
+     */
     initSeason(leagueId: string, seasonYear: number, totalWeeks: number, teamIds: string[]) {
-      set(makeEmptySeason(leagueId, seasonYear, totalWeeks, teamIds));
+      const next = makeEmptySeason(leagueId, seasonYear, totalWeeks, teamIds);
+      // ⚠ 고교·군은 `teamIds`가 빈 배열로 온다 — 그쪽은 뒤에 오는
+      //   `initAllLeaguesV3`·`reinitHighschoolSeason`이 채운다
+      if (teamIds.length > 0) {
+        next.leagueState = {
+          [leagueId]: {
+            standings: makeStandings(teamIds),
+            stats: {}, playerConditions: {}, teamRotationIndex: {},
+          },
+        };
+      }
+      set(next);
     },
 
     /**
