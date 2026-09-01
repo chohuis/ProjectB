@@ -696,9 +696,26 @@ function createSeasonStore() {
      * 계산한다(단계마다 팀이 준다) — 그 결과를 이벤트가 읽는 순위표에
      * 옮겨야 한다.
      *
-     * ⚠ **주인공 리그면 최상위 `standings` 도 같이 바꾼다.** 이벤트는
-     * `leagueState[리그] ?? s.standings` 를 읽지만(`advanceWeek`), 화면
-     * 순위표는 최상위를 본다 — 둘이 갈리면 **화면과 판정이 어긋난다.**
+     * 🔴 **최상위 `s.standings` 는 건드리지 않는다** (2026-09-01).
+     *
+     * 처음엔 "화면이 최상위를 보니 같이 바꿔야 한다"고 넣었다가 **회귀를
+     * 냈다.** `startNewSeason` 이 **다음 시즌 팀 목록을 거기서 가져온다**:
+     *
+     * ```
+     *   const teamIds = s.standings.map((st) => st.teamId);   // :284
+     * ```
+     *
+     * 생존리그의 `stageStandings` 는 **현재 단계의 `activeTeams`** 만 담는다
+     * (탈락하면 준다). 그걸 최상위에 얹으면 **다음 시즌 리그가 그만큼
+     * 쪼그라들고**, 시즌이 갈수록 계속 준다.
+     *
+     * 실측(트랙 B · 씨앗 20260803 · `--path draft` 9시즌):
+     * **KBL 1군 발동 444 → 0**. 9시즌 448주를 전부 독립에서 보냈다.
+     *
+     * ⚠ 이벤트는 `leagueState[리그] ?? s.standings` 를 읽으므로
+     * (`advanceWeek` · `8915b2dc1`) **여기만 바꿔도 판정은 맞는다.**
+     * 화면이 최상위를 보는 건 별개 결함이고, 그건 **리그를 무너뜨리지 않는
+     * 방법으로** 따로 고쳐야 한다.
      */
     setLeagueStandings(leagueId: string, standings: Standing[]) {
       update((s) => {
@@ -708,7 +725,6 @@ function createSeasonStore() {
         return {
           ...s,
           leagueState: { ...s.leagueState, [leagueId]: { ...cur, standings } },
-          ...(s.leagueId === leagueId ? { standings } : {}),
         };
       });
     },
