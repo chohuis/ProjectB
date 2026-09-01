@@ -163,7 +163,8 @@ export interface GameStoreState {
 }
 
 // ── 기본값 (새 게임) ───────────────────────────────────────────
-const DEFAULT_PROTAGONIST: ProtagonistSave = {
+/** 새 게임의 주인공. ⚠ **검사가 읽는다** — 마이그레이션의 대조군이다 */
+export const DEFAULT_PROTAGONIST: ProtagonistSave = {
   id: "PLY_HERO",
   name: "주인공 투수",
   careerStage: "highschool",
@@ -526,7 +527,14 @@ function buildInitialState(): GameStoreState {
 }
 
 // ── 구버전 세이브 → 새 필드 기본값 채우기 ─────────────────────
-function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] }): ProtagonistSave {
+/**
+ * 옛 세이브의 주인공을 지금 모양으로 맞춘다.
+ *
+ * ⚠ **검사가 부른다** (`protagonistMigration.test.ts`). 필드를 하나씩 지워
+ * 보고 이게 되살리는지 전수로 확인한다 — 안 되살리는 필드는 옛 세이브에서
+ * `undefined` 로 남아 화면·계산이 조용히 어긋난다.
+ */
+export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] }): ProtagonistSave {
   const def = DEFAULT_PROTAGONIST;
 
   // learnedPitchIds (구버전) → pitches 배열로 변환
