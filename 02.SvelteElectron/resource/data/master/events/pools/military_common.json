@@ -5,6 +5,7 @@
       "title": "자대 배치 첫날",
       "description": "드디어 자대에 배치받았습니다.\n낯선 환경과 규율에 긴장감이 감돌지만, 이제 적응해야 합니다.",
       "minRank": 0,
+      "once": true,
       "choices": [
         {
           "id": "ok",
@@ -149,6 +150,7 @@
       "title": "전역 통보서 수령",
       "description": "드디어 전역 일자가 명시된 통보서를 받았습니다.\n그날이 눈앞에 다가온 것이 실감납니다.",
       "minRank": 3,
+      "once": true,
       "choices": [
         {
           "id": "ok",
@@ -163,6 +165,7 @@
       "title": "전역이 보인다",
       "description": "달력에 남은 칸이 얼마 없습니다. 나가면 바로 시즌입니다.\n\n몸이 그때까지 돌아올지가 문제입니다.",
       "minRank": 3,
+      "once": true,
       "choices": [
         {
           "id": "rebuild",
@@ -186,6 +189,7 @@
       "title": "자대 배치",
       "description": "짐을 내려놓았습니다. 여기서 2년을 삽니다.\n\n야구 이야기를 하는 사람이 아무도 없습니다.",
       "minRank": 0,
+      "once": true,
       "choices": [
         {
           "id": "adapt",

@@ -5,6 +5,7 @@
       "title": "훈련소 강도 훈련",
       "description": "기초군사훈련이 이어지고 있습니다.\n체력적으로 극한에 몰리지만 버텨야 합니다.",
       "minRank": 0,
+      "maxRank": 0,
       "choices": [
         {
           "id": "ok",
@@ -43,6 +44,7 @@
       "title": "선임과 갈등",
       "description": "선임 병사와 크고 작은 마찰이 생겼습니다.\n어떻게 대처할지 결정해야 합니다.",
       "minRank": 0,
+      "maxRank": 2,
       "choices": [
         {
           "id": "endure",
@@ -230,6 +232,7 @@
       "title": "전역 예행 연습",
       "description": "곧 있을 전역식 예행연습을 했습니다.\n이제 정말 얼마 남지 않았습니다.",
       "minRank": 3,
+      "once": true,
       "choices": [
         {
           "id": "ok",
@@ -244,6 +247,7 @@
       "title": "마지막 경계 근무",
       "description": "군 생활 마지막 경계 근무를 섰습니다.\n이번이 끝이라는 생각에 감회가 새롭습니다.",
       "minRank": 3,
+      "once": true,
       "choices": [
         {
           "id": "ok",
