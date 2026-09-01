@@ -9,6 +9,7 @@ import type { SaveSeason } from "../../types/season";
 import {
   buildRows, countByClass, previewLine, type InjuryEvent,
 } from "../../utils/injuryReport";
+import { weekInYearOf } from "../../utils/seasonWeeks";
 
 /** 4주마다. 기존 월간 순위표와 같은 리듬이라 소식이 한 주에 몰린다 */
 export const INJURY_NEWS_PERIOD = 4;
@@ -30,7 +31,7 @@ export function weeksLeftInSeason(season: SaveSeason, weekInYear: number): numbe
   );
   if (last === 0) return 0;
   // `week`은 통산 주차라 연내 주차로 환산한다 — 둘을 섞으면 음수가 나온다
-  const lastInYear = ((last - 1) % 52) + 1;
+  const lastInYear = weekInYearOf(last);
   return Math.max(0, lastInYear - weekInYear);
 }
 

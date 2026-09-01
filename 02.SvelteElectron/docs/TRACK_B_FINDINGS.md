@@ -294,3 +294,115 @@ trap 'git checkout $FIX -- $FILES' EXIT INT TERM
 ⚠ **계측 10개 중 8개가 `university: false` 다.** `measure-eventfunnel` 포함이다.
 그래서 §2 의 도달률 63.5% 는 **대학 113종이 분모 밖인 값**이고, 이 어긋남도
 오래 안 보였다. `measure:slotreach --path univ` 만 대학을 탄다.
+
+---
+
+## §9 무대별 재고 — 상무·프로 사교가 비었다 (2026-09-01 · 데이터만으로 확인)
+
+계측 없이 **규칙 589종·템플릿 527종을 세어서** 나온 값이다. `.node` 를
+안 쓰므로 A 의 빌드와 안 겹친다.
+
+### 9-1 🔴 random 다섯 풀의 무대별 재고
+
+풀마다 주 1회 뽑는다(`maxPicksPerWeek: 1`). **재고가 1이면 그 하나만 반복된다.**
+
+```
+  무대           SOCIAL   BODY  TRAIN  MEDIA  TEAM_LIFE     합
+  ────────────────────────────────────────────────────────────
+  highschool          6      9     13     17     23        68
+  university          6      3      6      8     10        33
+  independent   🔴    1      3      6     10     11        31
+  pro_kbl       🔴    1      8     13     24     29        75
+  pro_abl       🔴    1      8     13     24     29        75
+  pro_jbl       🔴    1      8     13     24     29        75
+  military      🔴    1 🔴   1      4      4      5        15
+```
+
+⚠ **무대무관 규칙을 포함한 수**다. `career_stage` 조건이 없는 것은 모든
+무대에 더해진다(SOCIAL 1 · BODY 1 · TRAIN 4 · MEDIA 4 · TEAM_LIFE 5).
+
+### 9-2 🔴 프로·독립의 사교 풀은 사실상 0이다
+
+`POOL_SOCIAL_DAILY` 은 **고교 5 · 대학 5 · 무대무관 1** 로만 짜여 있다.
+프로·독립 전용이 **한 종도 없다.** 그 유일한 무대무관 1종은:
+
+```
+  EVT_RAND_SOCIAL_MEDIA_MENTION   cd4
+    player_type    pitcher
+    popularity_gte 15
+    fame_gte       10
+```
+
+**주인공이 타자면 사교 풀이 통째로 빈다.** 투수여도 인지도 15·명성 10
+아래면 같다. 프로 커리어 내내 사교 소식이 한 줄도 안 온다.
+
+### 9-3 🔴 상무 2년(104주) — 후보에 오를 수 있는 게 17종뿐
+
+`game.ts:2377` 이 `careerStage: "military"` 를 **실제로 세운다**.
+`militaryDischargeYear = enlistYear + 2` 라 **약 104주**를 그 무대로 산다.
+
+그런데 `career_stage: "military"` 를 조건에 쓴 규칙이 **0종**이다.
+
+```
+  전체 589종 중 무대·리그 조건이 없는 것   17종
+     conditional 12 · random 5 · mandatory 0
+```
+
+**`mandatory` 가 0이다** — 상무 2년 동안 정해진 소식이 하나도 없다.
+
+⚠ id 에 상무가 든 규칙은 `EVT_IND_SANGMU_MATCH` 하나인데, 조건이
+`career_stage: independent` 다. **상무를 상대하는 이벤트**이지 상무에
+있는 이벤트가 아니다.
+
+⚠ 이건 CLAUDE.md 잔여 결함 #3(상무 Phase 1 이 `&[]` 를 받아 한 번도 안
+돈다 · `npc_sim.rs:2567`)과 **다른 자리**다. 엔진과 콘텐츠가 **양쪽 다**
+비어 있다. A 가 #3 을 고쳐도 소식은 여전히 안 온다.
+
+### 9-4 ✅ 2군은 문제없다 — 확인하고 접었다
+
+처음엔 2군도 빈 줄 알았는데 아니다. `game.ts:2297` 이 강등·이적 시
+`LEAGUE_KBL_FARM` 을 **`careerStage: "pro_kbl"`** 로 떨어뜨린다(폴백).
+
+```
+  2군 선수 = careerStage "pro_kbl" + leagueId "LEAGUE_KBL_FARM"
+     → 프로 random 75종을 그대로 뽑는다
+     → 거기에 league_id 로 걸린 EVT_FARM_* 40종이 더해진다
+```
+
+`CareerStage` 타입에 farm 값이 없어서 빈 줄 알았던 것이다. **무대축이
+아니라 리그축으로 걸려 있다.**
+
+### 9-5 🔴 문장 은행 — 527종 중 19종만 있다
+
+```
+  템플릿 527종
+    bodies 없음   508      매 발동마다 같은 문장 하나
+    bodies 3+      19
+```
+
+`test:sentencebank` 는 **`bodies` 가 있는 것만** 검사한다
+(`test-sentencebank.cjs:29`). 없는 508종은 검사 대상이 아니라 통과한다.
+
+반복 노출되는 것만 추리면:
+
+```
+  oncePolicy repeatable 인데 은행 없음   273종
+     conditional 132 · random 141
+  random 162종은 전부 repeatable · 전부 은행 없음
+```
+
+**우선순위는 재고가 작은 풀이다.** 재고 6인 고교 SOCIAL 은 쿨다운 2주
+기준으로 같은 문장을 커리어 내내 수십 번 띄운다.
+
+⚠ `once_per_career` 는 은행이 없어도 된다 — 한 번만 뜬다. 273종만 대상이다.
+
+### 9-6 다음에 할 것
+
+```
+  ① POOL_SOCIAL_DAILY 에 프로·독립·상무 전용 추가      재고 1 → 6 목표
+  ② career_stage "military" 이벤트 신설                mandatory 0 → 최소 4
+  ③ 재고 작은 풀부터 bodies 3~4문장                    고교/대학 SOCIAL 12종 먼저
+```
+
+⚠ ①②는 `docs/EVENT_PLAN_2026-08-28.md` 의 간극 1~4 와 같은 자리다.
+그 계획안은 **간극을 짐작으로 잡았는데**, 위 표가 실측 근거다.
