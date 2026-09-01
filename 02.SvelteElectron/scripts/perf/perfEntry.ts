@@ -7657,8 +7657,19 @@ export function studyState(): Record<string, unknown> {
  *   [반영]      leagueState[IND].standings 의 승+패 합    ← 0이면 옮기는 자리 문제
  * ```
  *
- * ⚠ **[집계]가 0이 아닌데 [반영]이 0이면** `setLeagueStandings` 가 안 도는
- * 것이고, **둘 다 0이면** `stageStandings` 입력이 문제다. 한 값으로 갈린다.
+ * ⚠ **[단계일치]·[집계]는 이제 0이 정상이다** (2026-09-01).
+ *
+ * 일정이 `s.schedule` 로 가면서 **일반 경로**(`syncProtagonistLeagueUpdate`)가
+ * 순위를 만든다. `stageStandings` → `leagueState` 로 옮기던 자리는 지웠다 —
+ * 마지막 단계엔 `INDS{stage}_` 일정이 없어 **빈 결과가 멀쩡한 순위표를
+ * 0-0 으로 덮었다.**
+ *
+ * 그러니 지금 볼 값은 **[반영] 하나**다:
+ *
+ * ```
+ *   [반영] > 0        정상 — 일반 경로가 승패를 쌓고 있다
+ *   [반영] = 0 인데 [결과] > 0   경기는 치렀는데 순위표가 안 받는다 → 결함
+ * ```
  */
 export function survivalProbe(): Record<string, unknown> {
   const s = get(seasonStore);

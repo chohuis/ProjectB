@@ -171,7 +171,7 @@ import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { winnerById, scheduledIdSet } from "../utils/scheduleView";
 import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
-import { IND_LEAGUE_ID, emptySurvivalState, stageStandings } from "../utils/survivalLeague";
+import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 // 팀 목록의 정본 — 생존리그 순위 모수를 **리그 전체**로 고정한다
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
@@ -1785,58 +1785,22 @@ async function progressIndependentLeague(week: number): Promise<void> {
   const g = get(gameStore);
   const state = s.survival ?? emptySurvivalState();
 
-  // 🔴 **독립 순위표에 결과를 얹는 자리가 없었다** (2026-09-01 · 트랙 B 실측).
+  // ⚠ **여기서 순위표를 만들지 않는다** (2026-09-01).
   //
-  // 생존리그는 순위 개념이 **둘**이다:
+  // 한때 `stageStandings` 결과를 매주 `leagueState` 로 옮겼다. 독립 경기가
+  // 아무도 안 돌아 순위표가 전원 0-0 이던 시절의 대증요법이었다.
   //
-  // ```
-  //   stageStandings         단계별 순위 — **탈락 판정에만** 쓴다
-  //   leagueState.standings  일반 순위표 — **이벤트가 읽는다**
-  // ```
+  // 🔴 **뿌리를 고치자 그게 해로워졌다.** `injectLeagueEntries` 가 주인공
+  // 리그 일정을 `s.schedule` 에 넣게 되면서 **일반 경로가 순위를 제대로
+  // 만든다**(`syncProtagonistLeagueUpdate`). 그런데 마지막 단계에는
+  // `INDS{stage}_` 일정이 없어 `stageStandings` 가 **빈 결과**를 내고,
+  // 그게 멀쩡한 순위표를 **0-0 으로 덮었다.**
   //
-  // 앞의 것만 돌고 뒤의 것은 **한 번도 안 갱신됐다.** 그래서:
+  // 실측(트랙 B): 순위는 8~10 으로 움직이는데 `survivalProbe` 의
+  // `반영_승패합` 은 0 이었다 — **두 경로가 같은 자리를 두고 다퉜다.**
   //
-  // ```
-  //   경기      102 / 102  전부 치러진다
-  //   순위표    10팀 · 전원 0승 0패
-  //   순위      **85주 내내 8** (씨앗 셋에서 똑같이)
-  //             전원 동률이면 정렬이 배열 순서를 주고, 주인공 팀이 8번째다
-  // ```
-  //
-  // `IND_SURVIVE_SAFE`·`PLAYOFF_IND`·`SEASON_SURVIVED`·`WIN_STREAK_IND`
-  // (전부 `lte 3~4`)가 **영원히 거짓**이고 `IND_SURVIVE_EDGE`(gte 8)만
-  // 영원히 참이었다.
-  //
-  // ⚠ **`progressSurvival` 이 null 을 내도 갱신해야 한다.** 그 함수는 단계가
-  // 끝나는 주에만 값을 내는데, 이벤트는 **매주** 순위를 본다.
-  // ⚠ 현재 단계 기준이 맞다 — 생존리그는 단계마다 팀이 준다.
-  {
-    const sched = [
-      ...(s.leagueSchedules?.[IND_LEAGUE_ID] ?? []),
-      ...s.schedule.filter((e) => e.leagueId === IND_LEAGUE_ID),
-    ];
-    if (state.stage >= 1) {
-      // 🔴 **모수는 리그 전체다 — `activeTeams` 가 아니다** (2026-09-01).
-      //
-      // 처음엔 `state.activeTeams` 를 넘겼는데 그건 **탈락 후 남은 팀**이라
-      // 순위표 팀 수가 시즌 중에 **10 → 4** 로 줄었다(트랙 B 실측).
-      // 모수가 변하면 조건이 뜻을 잃는다:
-      //
-      // ```
-      //   team_rank_lte 4   4팀 리그에서는 **전원 참**
-      //   team_rank_gte 8   4팀 리그에서는 **영원히 거짓**
-      // ```
-      //
-      // 문턱이 10팀 감각으로 쓰였으니 **모수도 10팀으로 고정**한다.
-      // 탈락한 팀은 경기를 안 하니 0승 0패로 아래에 붙는다 —
-      // 「살아남았다(lte 4)」가 "10팀 중 상위 4위"가 되어 뜻이 산다.
-      //
-      // ⚠ `f20a7f81c` 에서 최상위 `standings` 를 지켰는데 **이벤트가 읽는
-      // `leagueState` 쪽에 같은 문제가 남아 있었다.** 한쪽만 고친 것이다.
-      const st = stageStandings(state.stage, ALL_TEAMS_BY_LEAGUE[IND_LEAGUE_ID] ?? state.activeTeams, sched);
-      if (st.length > 0) seasonStore.setLeagueStandings(IND_LEAGUE_ID, st);
-    }
-  }
+  // ⚠ `stageStandings` 는 **탈락 판정에만** 쓴다(`progressSurvival` 안).
+  //   그게 원래 그 함수의 몫이다.
 
   const r = await progressSurvival(week, s, state, g.protagonist.teamId);
   if (!r) return;

@@ -280,6 +280,19 @@ function createSeasonStore() {
       update((s) => ({ ...s, nationalDuty: {}, activeTournament: null }));
     },
 
+    /**
+     * 다음 시즌을 연다.
+     *
+     * ⚠ **`s.standings` 가 다음 시즌 팀 목록이다.** 그래서 최상위 순위표를
+     * 부분 집합으로 갈아끼우면 리그가 **그만큼 쪼그라든다.**
+     *
+     * 실측(2026-09-01 회귀): 생존리그 `stageStandings`(현재 단계의
+     * `activeTeams` 만 담는다)를 여기 얹었더니 **KBL 1군 발동 444 → 0**,
+     * 9시즌 448주를 전부 독립에서 보냈다.
+     *
+     * 🔴 순위표를 갈아끼우는 코드를 쓰기 전에 **읽는 자리를 전수로 본다.**
+     *   `standings` 는 순위만이 아니라 **멤버십**도 겸한다.
+     */
     startNewSeason() {
       update((s) => {
         const teamIds = s.standings.map((st) => st.teamId);
@@ -686,47 +699,6 @@ function createSeasonStore() {
 
     setSurvivalState(survival: import("../utils/survivalLeague").SurvivalState) {
       update((s) => Postseason.setSurvivalState(s, survival));
-    },
-
-    /**
-     * 리그 순위표를 통째로 갈아끼운다.
-     *
-     * 🔴 **생존리그(독립) 전용에 가깝다.** 보통 리그는 경기마다
-     * `updateStandings` 가 얹지만, 독립은 순위를 `stageStandings` 가 따로
-     * 계산한다(단계마다 팀이 준다) — 그 결과를 이벤트가 읽는 순위표에
-     * 옮겨야 한다.
-     *
-     * 🔴 **최상위 `s.standings` 는 건드리지 않는다** (2026-09-01).
-     *
-     * 처음엔 "화면이 최상위를 보니 같이 바꿔야 한다"고 넣었다가 **회귀를
-     * 냈다.** `startNewSeason` 이 **다음 시즌 팀 목록을 거기서 가져온다**:
-     *
-     * ```
-     *   const teamIds = s.standings.map((st) => st.teamId);   // :284
-     * ```
-     *
-     * 생존리그의 `stageStandings` 는 **현재 단계의 `activeTeams`** 만 담는다
-     * (탈락하면 준다). 그걸 최상위에 얹으면 **다음 시즌 리그가 그만큼
-     * 쪼그라들고**, 시즌이 갈수록 계속 준다.
-     *
-     * 실측(트랙 B · 씨앗 20260803 · `--path draft` 9시즌):
-     * **KBL 1군 발동 444 → 0**. 9시즌 448주를 전부 독립에서 보냈다.
-     *
-     * ⚠ 이벤트는 `leagueState[리그] ?? s.standings` 를 읽으므로
-     * (`advanceWeek` · `8915b2dc1`) **여기만 바꿔도 판정은 맞는다.**
-     * 화면이 최상위를 보는 건 별개 결함이고, 그건 **리그를 무너뜨리지 않는
-     * 방법으로** 따로 고쳐야 한다.
-     */
-    setLeagueStandings(leagueId: string, standings: Standing[]) {
-      update((s) => {
-        const cur = s.leagueState[leagueId] ?? {
-          standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {},
-        };
-        return {
-          ...s,
-          leagueState: { ...s.leagueState, [leagueId]: { ...cur, standings } },
-        };
-      });
     },
 
     injectLeagueEntries(leagueId: string, entries: ScheduleEntry[]) {
