@@ -27,6 +27,6 @@
       "value": 80
     }
   ],
-  "messageTemplateId": "MSG_COND_STAT_MILESTONE",
+  "messageTemplateId": "MSG_HS_Y3_DRAFT_STOCK_CHECK",
   "decisionTemplateId": null
 }

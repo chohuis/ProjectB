@@ -9,7 +9,11 @@
   "conditions": [
     {
       "type": "career_stage",
-      "stage": "pro_kbl"
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
     },
     {
       "type": "pro_year_gte",
