@@ -22,7 +22,7 @@
     },
     {
       "type": "gpa_lte",
-      "value": 25
+      "value": 2
     }
   ],
   "messageTemplateId": "MSG_UNIV_Y3_GPA_VS_BALL",
