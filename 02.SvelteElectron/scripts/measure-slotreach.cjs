@@ -143,10 +143,23 @@ const GROUPS = [
   }
   log("");
   log("  ★ 후보에 한 번도 못 오른 것 — 조건이 안 닿는다. **뽑기 운이 아니다**");
+  // ⚠ **24종에서 자르면 전후 비교가 반쪽이 된다.** 축을 고치고 다시 쟀을 때
+  //   "무엇이 사라졌나"를 알려면 전체 목록이 있어야 하는데, 잘린 쪽에 든
+  //   이름은 역산이 안 된다(2026-09-01 실측 — 대학 28종 중 4종이 잘려 나가
+  //   고치려는 그 넷이 목록에 있었는지 확인이 안 됐다).
+  //   `--full` 이면 전부 찍고, 아니면 24종 + 나머지 수를 찍는다.
+  const FULL = process.argv.includes("--full");
   for (const [label, ids] of Object.entries(neverCand)) {
-    {
+    if (FULL) {
+      // 한 줄에 6종씩 — 무대별 종수가 189까지 가서 한 줄이면 못 읽는다
+      log(`    ${label} ${ids.length}종:`);
+      const short = ids.map((x) => x.replace("EVT_", ""));
+      for (let i = 0; i < short.length; i += 6) {
+        log(`      ${short.slice(i, i + 6).join(" ")}`);
+      }
+    } else {
       log(`    ${label} ${ids.length}종: ${ids.slice(0, 24).map((x) => x.replace("EVT_", "")).join(" ")}`);
-      if (ids.length > 24) log(`      … 그 밖 ${ids.length - 24}종`);
+      if (ids.length > 24) log(`      … 그 밖 ${ids.length - 24}종 (--full 로 전부 본다)`);
     }
   }
   log("");

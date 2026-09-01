@@ -5,6 +5,7 @@ import {
   OFFSEASON_START_WEEK, STOVE_LEAGUE_WEEK,
   FA_RETRY_START_WEEK, FA_RETRY_END_WEEK,
   SPORTS_UNIT_CANDIDATES_WEEK, MILITARY_RESULT_WEEK, MILITARY_AGE_WARNING_WEEK,
+  weekInYearOf,
 } from "../utils/seasonWeeks";
 import { get } from "svelte/store";
 import { trainingIntensityOf } from "../utils/arsenal";
@@ -279,7 +280,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   }
 
   const isUniversity = g.protagonist.careerStage === "university";
-  const weekInYear   = ((weekNum - 1) % 52) + 1;
+  const weekInYear   = weekInYearOf(weekNum);
 
   if (isUniversity) gameStore.incrementUniversityWeek();
 
@@ -2183,7 +2184,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     const s = get(seasonStore);
     const p = g.protagonist;
     const weekNum    = s.currentWeek + 1;
-    const weekInYear = ((weekNum - 1) % 52) + 1;
+    const weekInYear = weekInYearOf(weekNum);
     const isMilUnresolved = p.militaryStatus === "미필"
       && p.careerStage !== "military"
       && p.careerStage !== "highschool";

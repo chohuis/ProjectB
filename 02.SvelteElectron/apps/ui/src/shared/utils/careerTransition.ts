@@ -9,6 +9,7 @@
 // UI에서 지원 선택지를 막고(1차), 전이 자체를 거부한다(2차).
 
 import type { CareerStage } from "../types/save";
+import { WEEKS_PER_SEASON } from "./seasonWeeks";
 
 /**
  * 전이 허용표. 값에 없는 조합은 전부 거부한다.
@@ -71,6 +72,34 @@ export function canApplyToIndependent(stage: CareerStage): boolean {
 export const UNIVERSITY_FINAL_GRADE = 4;
 
 /**
+ * 🔴 **진학할 때 `universityWeek`을 무엇으로 세우나** — 학년 계수기의 원점.
+ *
+ * 진학은 시즌 도중(`CAREER_RESULT_WEEK` = W32)에 확정된다. 계수기를 거기서
+ * 0으로 시작하면 **학년이 매 시즌 W33에 오른다** — 야구 시즌과 20주 어긋난다.
+ *
+ * 그래서 `진학주차 - 52`로 세운다. 그러면 그 뒤로는 **진학 주차와 무관하게**
+ * `uw = 절대주 - 52`가 되어, 다음 시즌 W1에 정확히 1이 된다:
+ *
+ * ```
+ *   진학 W32          uw -20      합격했으나 학기 전
+ *   같은 시즌 W52     uw   0
+ *   다음 시즌 W1      uw   1      1학년 시작
+ *   다음 시즌 W52     uw  52      1학년 끝
+ *   그다음 W1         uw  53      2학년 시작
+ * ```
+ *
+ * ⚠ **음수가 정상이다.** `universityGradeOf`는 `uw >= 1`일 때만 계수기를
+ * 쓰고 그 전에는 `grade`로 떨어진다 — 입학 전 위상에서 학년을 세지 않는다.
+ *
+ * ⚠ 이벤트가 `week_eq`와 `school.universityWeek` 창을 **같이** 건다.
+ * 축이 어긋나면 창 밖으로 밀려 조용히 사라진다 — 실측으로 넷이 죽어 있었다.
+ * `universityAxis.test.ts`가 그 조합을 전수로 본다.
+ */
+export function universityWeekOnEnroll(enrollWeekInYear: number): number {
+  return enrollWeekInYear - WEEKS_PER_SEASON;
+}
+
+/**
  * 대학 몇 학년인가 (1~4).
  *
  * ⚠ **정본이 둘이었다.** 저장 필드 `protagonist.grade`와
@@ -79,16 +108,21 @@ export const UNIVERSITY_FINAL_GRADE = 4;
  * 화면만 `universityWeek`로 버티고 있었다 — 그래서 **화면은 4학년에서
  * 진급을 막는데 헤드리스는 7년째 "계속"을 눌렀다**(실측 29세 대학생).
  *
- * **`universityWeek`이 정본이다** — 매주 오르는 실제 계수기이고, 진학이
- * 시즌 도중(W47)에 확정돼도 어긋나지 않는다. `grade`는 그걸 비추는 값이라
- * 계수기가 없을 때(구 세이브)만 쓴다.
+ * **`universityWeek`이 정본이다** — 매주 오르는 실제 계수기다. `grade`는
+ * 그걸 비추는 값이라 계수기가 없을 때(구 세이브)만 쓴다.
+ *
+ * ⚠ **여기 "진학이 시즌 도중에 확정돼도 어긋나지 않는다"고 적혀 있었다.
+ * 틀렸다** (2026-09-01 실측). 계수기를 진학한 주부터 세면 **정확히 그만큼
+ * 어긋난다** — 진학은 W32이고 학년이 매 시즌 W33에 올랐다. 원점을
+ * `universityWeekOnEnroll`로 옮겨 고쳤다.
  */
 export function universityGradeOf(
   grade: number | null | undefined,
   universityWeek: number | null | undefined,
 ): number {
   if (typeof universityWeek === "number" && universityWeek >= 1) {
-    return Math.min(Math.floor((universityWeek - 1) / 52) + 1, UNIVERSITY_FINAL_GRADE);
+    return Math.min(
+      Math.floor((universityWeek - 1) / WEEKS_PER_SEASON) + 1, UNIVERSITY_FINAL_GRADE);
   }
   if (typeof grade === "number" && grade >= 1) return Math.min(grade, UNIVERSITY_FINAL_GRADE);
   return 1;

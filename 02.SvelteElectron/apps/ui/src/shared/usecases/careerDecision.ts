@@ -19,11 +19,20 @@ import { masterStore } from "../stores/master";
 import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity, isUniversityFinalYear } from "../utils/careerTransition";
+import { weekInYearOf } from "../utils/seasonWeeks";
 import { loadAcademicsRules, canGraduate, majorEffects } from "../utils/academicsEngine";
 import { openProSeason } from "./proSeason";
 import { runWorldSeasonEnd } from "./seasonRollover";
 import { enlistProtagonist } from "./militaryDecision";
 import type { PendingAction } from "../types/season";
+
+/**
+ * **진학하는 그 주의 시즌 안 주차** — 대학 학년 계수기의 원점이다.
+ *
+ * 진학 경로가 둘이라(진로 선택 · 지명 거부) 같은 값을 두 곳에서 쓴다.
+ * `applyDraftDecision`이 이걸 안 받으면 던진다 — 근거는 그쪽 주석에 있다.
+ */
+const enrollWeek = (): number => weekInYearOf(get(seasonStore).currentWeek);
 
 /** 진로 지원 제출 (`CareerChoiceHubModal.submitApplications`) */
 export async function submitCareerApplications(opts: {
@@ -161,7 +170,9 @@ export async function chooseSchoolOrIndependent(
   const stage: CareerStage = kind === "overseas"
     ? (leagueId.startsWith("LEAGUE_JBL") ? "pro_jbl" : "pro_abl")
     : kind;
-  gameStore.applyDraftDecision({ stage, leagueId, teamId });
+  // 🔴 대학이면 진학 주차를 같이 넘긴다 — 학년 계수기의 원점이다.
+  //   `applyDraftDecision`이 없으면 던진다(store 쪽 주석에 근거가 있다).
+  gameStore.applyDraftDecision({ stage, leagueId, teamId, enrollWeekInYear: enrollWeek() });
   gameStore.setCareerApplicationsSubmitted(false);
   gameStore.setCareerFinalChoice(kind);
   seasonStore.resolvePendingAction("careerChoice");
@@ -211,6 +222,7 @@ export async function rejectDraftOffer(
   if (action.altUniversityTeamId && canApplyToUniversity(p.careerStage)) {
     gameStore.applyDraftDecision({
       stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId: action.altUniversityTeamId,
+      enrollWeekInYear: enrollWeek(),
     });
     gameStore.setCareerFinalChoice("university");
     went = "university";

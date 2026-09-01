@@ -88,3 +88,23 @@ export const MILITARY_RESULT_WEEK = 50;
 
 /** 28세 입영 기간 만료 경고. 옛 W4(3월) — 병역 구간으로 옮겼다 */
 export const MILITARY_AGE_WARNING_WEEK = 47;
+
+// ── 주차 환산 ─────────────────────────────────────────────────
+
+/** 한 시즌의 주 수. 롤오버가 `weekNum`을 리셋하지 않으므로 환산이 필요하다 */
+export const WEEKS_PER_SEASON = 52;
+
+/**
+ * 누적 주차 → **시즌 안 주차** (1~52).
+ *
+ * 🔴 **같은 식이 네 곳에 따로 적혀 있었다** (2026-09-01 실측):
+ * `advanceWeek.ts:282` · `:2193` · `weekPhases/injuryNews.ts:33` ·
+ * `academicsEngine.ts:165`. 전부 `((w - 1) % 52) + 1`이다.
+ *
+ * ⚠ `weekNum`은 **누적이다.** 롤오버가 리셋하지 않는다 — CLAUDE.md의
+ * 소식 id 규칙이 "weekNum은 시즌마다 1로 리셋된다"고 적었는데 그건
+ * **환산한 뒤의 값**을 말한 것이다. 원본은 계속 오른다.
+ */
+export function weekInYearOf(weekNum: number): number {
+  return ((weekNum - 1) % WEEKS_PER_SEASON) + 1;
+}

@@ -1,4 +1,5 @@
 import type { SchoolState, StudyMode, SubjectScore, GradeRisk } from "../types/save";
+import { weekInYearOf } from "./seasonWeeks";
 
 // ══ 고교 학업 표 — 정본은 `generation_rules.json`이다 ═══════════
 //
@@ -162,7 +163,7 @@ export function getUniversityEffBonus(major: string): number {
 // ── 다음 시험까지 남은 주차 계산 ──────────────────────────────
 /** 주차 표는 규칙 파일이 정본이다. 화면이 매 렌더 부르므로 동기다 */
 export function weeksUntilNextExam(currentWeek: number): { label: string; weeksLeft: number } {
-  const w = ((currentWeek - 1) % 52) + 1;
+  const w = weekInYearOf(currentWeek);
   if (w < _examWeeks.midterm) return { label: "중간고사", weeksLeft: _examWeeks.midterm - w };
   if (w < _examWeeks.final)   return { label: "기말고사", weeksLeft: _examWeeks.final   - w };
   return { label: "다음 시즌 중간고사", weeksLeft: 52 - w + _examWeeks.midterm };
