@@ -643,7 +643,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     protagonist:     afterP,
     currentWeek:     weekNum,
     seasonPhase:     s.schedule.find((e) => e.week === weekNum)?.phase ?? "season",
-    standings:       s.standings,
+    // 🔴 **주인공 리그를 명시해 읽는다** (2026-09-01).
+    //
+    // `s.standings`는 "지금 열려 있는 시즌"의 순위표인데, **진로가 바뀌고
+    // 새 시즌이 열리기 전까지 옛 리그 것**이다. `applyDraftDecision`이
+    // `careerStage`·`leagueId`를 먼저 바꾸고, `openProSeason`(→`initSeason`)은
+    // 계약 수락 뒤에야 불린다 — 그 사이 주가 흐르면 **주인공이 독립인데
+    // 순위표는 고교 102팀**이다.
+    //
+    // 실측(트랙 B · `rankCtxProbe`): 독립 주인공의 `s.standings`가 102팀이고
+    // **그 안에 주인공 팀이 없었다**(`top_순위 = 0`). `team_rank` 조건은
+    // 팀을 못 찾으면 **조용히 false**다 — 오류도 로그도 없다.
+    //
+    // ⚠ `leagueState`는 `initAllLeaguesV3`가 전 리그를 미리 채우므로
+    // 그 창에서도 옳다. 없을 때만 `s.standings`로 떨어진다(구 세이브).
+    standings:       s.leagueState?.[afterP.leagueId]?.standings ?? s.standings,
     stats:           s.stats,
     triggeredEvents: s.triggeredEvents,
     sentenceMemory: s.sentenceMemory ?? {},
