@@ -7476,3 +7476,41 @@ export function rankCtxProbe(): Record<string, unknown> {
     lg_순위: sortRank(lg as never),
   };
 }
+
+/**
+ * **주간 학업 모드를 바꾼다** — 계측이 학업 갈래를 한 번도 안 타고 있었다.
+ *
+ * 🔴 기본값이 `normal`(품질 0.55)이고 헤드리스가 이걸 안 바꾼다. 그런데
+ * 학기 학점은 `품질 × gpaMax`라 `normal`이면 **2.48**이고, 경고선은 1.75다:
+ *
+ * ```
+ *   focus   3.82      UNIV_GPA_GOOD(3.5) · SCHOLARSHIP(3.0) 이 여기서만 열린다
+ *   normal  2.48      ← 헤드리스 기본값. 경고도 안 나고 우수도 못 넘는다
+ *   rest    1.35      경고선 1.75 아래 — WARN_1~3 이 여기서만 열린다
+ *   sleep   0.23
+ * ```
+ *
+ * 그래서 학업 축을 거는 대학 이벤트 여섯이 **계측에서만** 0이었다.
+ * 결함이 아니라 **계측이 그 선택을 안 한 것**인데, 스위치가 없어서
+ * 그 둘을 갈라낼 방법이 없었다.
+ *
+ * ⚠ **호출 시점이 중요하다.** 진학 전에 부르면 고교 학업에 걸리고,
+ * 시즌 롤오버는 이 값을 안 지운다 — 대학에 들어간 뒤 한 번 부르면 유지된다.
+ */
+export function setStudyMode(mode: "focus" | "normal" | "rest" | "sleep"): void {
+  gameStore.setStudyMode(mode);
+}
+
+/** 지금 학업 상태 — 모드를 바꾼 게 실제로 먹었는지 되읽는다 */
+export function studyState(): Record<string, unknown> {
+  const sc = get(gameStore).schoolState;
+  return {
+    모드: sc.weeklyStudyMode,
+    누적학점: sc.universityGpa,
+    경고단계: sc.academicWarningLevel ?? 0,
+    유급횟수: sc.repeatedYears ?? 0,
+    대학주차: sc.universityWeek,
+    학기누적: sc.semesterQualityAccum ?? 0,
+    학기주수: sc.semesterWeeks ?? 0,
+  };
+}
