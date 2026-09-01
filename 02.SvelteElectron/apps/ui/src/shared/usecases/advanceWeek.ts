@@ -710,7 +710,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   }
 
   // ── 주차 결과 배치 적용 (store 업데이트 최소화) ────────────────
-  const weekMessages: MessageItem[] = [trainingMsg, ...evResult.newMessages];
+  //
+  // ⚠ **훈련 소식은 안 낼 수 있다** (2026-09-01 · B 요청). 매주 1통이
+  // 코드 소식 985통 중 292통(29.6%)이라 소식함의 3분의 1을 혼자 먹고 있었다.
+  // `makeTrainingMessage`가 null을 내면 그 주는 건너뛴다 — 여기서 안 거르면
+  // 배열에 null이 들어가고 `{#each ... (msg.id)}`가 undefined 키로 죽는다
+  // (CLAUDE.md가 "세이브가 아예 안 열린다"고 적은 그 결함이다).
+  const weekMessages: MessageItem[] = trainingMsg
+    ? [trainingMsg, ...evResult.newMessages]
+    : [...evResult.newMessages];
   if (top10Msg) weekMessages.push(top10Msg);
 
   gameStore.applyMoneyChange(weeklyNet);
