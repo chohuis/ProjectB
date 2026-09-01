@@ -9456,26 +9456,6 @@
               "delta": -3
             }
           }
-        },
-        {
-          "id": "silent_bat",
-          "label": "야구로만 말한다",
-          "effectHint": "선구 경험치 +3, 동료 관계 -3",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "xp": {
-              "batting.discipline": 3
-            },
-            "relationDelta": {
-              "kind": "teammate",
-              "delta": -3
-            }
-          }
         }
       ]
     },
@@ -9530,23 +9510,6 @@
           "effects": {
             "xp": {
               "mentality": 3
-            },
-            "diligenceDelta": 3
-          }
-        },
-        {
-          "id": "umpire_bat",
-          "label": "심판 성향을 외운다",
-          "effectHint": "선구 경험치 +3, 성실 +3",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "xp": {
-              "batting.discipline": 3
             },
             "diligenceDelta": 3
           }
@@ -9683,24 +9646,6 @@
           }
         },
         {
-          "id": "stay_bat",
-          "label": "끝까지 해본다",
-          "effectHint": "선구 경험치 +4, 사기 +8, 피로 +8",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "xp": {
-              "batting.discipline": 4
-            },
-            "moraleDelta": 8,
-            "fatigueDelta": 8
-          }
-        },
-        {
           "id": "listen",
           "label": "일단 들어본다",
           "effectHint": "사기 +5, 명성 -4",
@@ -9782,22 +9727,6 @@
           "effects": {
             "xp": {
               "mentality": 3
-            }
-          }
-        },
-        {
-          "id": "keep_bat",
-          "label": "언제든 갈 수 있게 둔다",
-          "effectHint": "선구 경험치 +3",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "xp": {
-              "batting.discipline": 3
             }
           }
         },
@@ -9993,26 +9922,6 @@
               "batting.discipline": 2
             }
           }
-        },
-        {
-          "id": "ask_bat",
-          "label": "선배에게 대놓고 묻는다",
-          "effectHint": "동료 관계 +8, 선구 경험치 +2",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "relationDelta": {
-              "kind": "teammate",
-              "delta": 8
-            },
-            "xp": {
-              "batting.discipline": 2
-            }
-          }
         }
       ]
     },
@@ -10033,23 +9942,6 @@
           "effects": {
             "xp": {
               "stamina": 4
-            },
-            "fatigueDelta": 10
-          }
-        },
-        {
-          "id": "train_bat",
-          "label": "몸을 만든다",
-          "effectHint": "주력 경험치 +4, 피로 +10",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "xp": {
-              "batting.speed": 4
             },
             "fatigueDelta": 10
           }
@@ -10113,26 +10005,6 @@
             },
             "xp": {
               "mentality": 2
-            }
-          }
-        },
-        {
-          "id": "respect_bat",
-          "label": "이야기를 더 듣는다",
-          "effectHint": "동료 관계 +7, 선구 경험치 +2",
-          "conditions": [
-            {
-              "type": "player_type",
-              "playerType": "batter"
-            }
-          ],
-          "effects": {
-            "relationDelta": {
-              "kind": "teammate",
-              "delta": 7
-            },
-            "xp": {
-              "batting.discipline": 2
             }
           }
         },
