@@ -15,7 +15,7 @@
     },
     {
       "type": "week_lte",
-      "value": 2
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_HS_Y1_DORM_NIGHT",

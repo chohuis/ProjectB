@@ -14,8 +14,12 @@
       "value": 1
     },
     {
+      "type": "week_gte",
+      "value": 3
+    },
+    {
       "type": "week_lte",
-      "value": 6
+      "value": 8
     }
   ],
   "messageTemplateId": "MSG_HS_Y1_POSITION",

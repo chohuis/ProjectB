@@ -11,14 +11,6 @@
       "stage": "highschool"
     },
     {
-      "type": "week_gte",
-      "value": 1
-    },
-    {
-      "type": "week_lte",
-      "value": 156
-    },
-    {
       "type": "condition_gte",
       "value": 88
     },
