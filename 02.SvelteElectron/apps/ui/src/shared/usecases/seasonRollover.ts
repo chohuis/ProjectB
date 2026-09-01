@@ -633,7 +633,7 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     // 안 돌아** 복무 2년 동안 신인이 한 명도 안 들어왔다.
     await runWorldSeasonEnd(now);
     gameStore.advanceSeasonYear(get(seasonStore).seasonYear, get(seasonStore).leagueId);
-    if (!(await dischargeProtagonist())) openMilitarySeason(now + 1);
+    if (!(await dischargeProtagonist())) await openMilitarySeason(now + 1, P().teamId);
     await gameStore.save();
     await seasonStore.save();
     return;
@@ -815,11 +815,26 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     // 팀 목록을 넘기지 않는다 — 일정·순위표 모두 HS_REGIONS(102팀)에서 나오므로
     // 새 게임 initAllLeaguesV3와 자동으로 같은 소스가 된다.
     await seasonStore.reinitHighschoolSeason(P().teamId);
-  } else if (P().careerStage !== "highschool") {
-    // 주인공 리그가 여기서 만들어지는 리그면(대학) `s.schedule` 로 간다.
-    // 아니면(독립·군) 배경만 채우고 `s.schedule` 은 그대로 둔다 —
-    // 독립 일정은 생존리그 진행이 `injectLeagueEntries` 로 따로 넣는다.
-    await seasonStore.reinitSeasonSchedules(P().leagueId, P().teamId);
+  } else {
+    // 🔴 **`careerStage !== "highschool"` 로 걸었더니 졸업하는 해가 샜다**
+    //   (2026-09-02 · 씨앗 20260803 실측).
+    //
+    //   3학년 시즌이 끝나는 롤오버에서는 **아직 `careerStage` 가 고교**다.
+    //   그런데 `grade < 3` 이 아니라 HS 재초기화도 안 탄다 — 두 갈래
+    //   **사이로 빠져** 그 해만 배경이 없었다:
+    //
+    //   ```
+    //     2029 [independent]  INDEPENDENT 171 · HIGHSCHOOL 210 · UNIVERSITY 85
+    //     2030 [independent]  9개 리그 전부
+    //   ```
+    //
+    // ⚠ 졸업 해에는 **`s.schedule` 을 건드리면 안 된다.** 진로가 정해지면
+    //   거기로 새 일정이 들어온다(독립은 생존리그가 `injectLeagueEntries`
+    //   로 넣는다). 아직 고교 신분이라고 고교 일정을 다시 깔면 그걸 덮는다.
+    //   그래서 그 해만 배경으로 한정한다.
+    await seasonStore.reinitSeasonSchedules(P().leagueId, P().teamId, {
+      keepOwnSchedule: P().careerStage === "highschool",
+    });
   }
 
   await gameStore.save();

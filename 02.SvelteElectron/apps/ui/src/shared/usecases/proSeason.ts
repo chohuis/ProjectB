@@ -51,12 +51,30 @@ export async function openProSeason(
   // `injectLeagueEntries`로 넣는다. 여기서 KBL식 통짜 일정(144경기)을 얹으면
   // 10팀짜리 리그에 있지도 않은 경기가 깔린다.
   // (예전엔 리그 분기의 기본값이 KBL이라 독립도 그리로 흘렀다)
+  // 🔴 **배경 리그도 같이 채운다** (2026-09-02).
+  //
+  // `initSeason` 은 `set(next)` 로 **전부 갈아끼운다** — `leagueSchedules` 가
+  // 빈다. 그래서 여기로 무대를 여는 해만 배경 리그가 통째로 없었다:
+  //
+  // ```
+  //   2029 [pro_kbl]  KBL 630/630 · HIGHSCHOOL 233 · UNIVERSITY 85   ← 4개
+  //   2030 [pro_kbl]  9개 리그 전부                                  ← 롤오버가 채운다
+  // ```
+  //
+  // ⚠ 롤오버 쪽만 고쳤더니 **구멍이 여기로 옮겨왔다.** 시즌을 여는 자리가
+  //   셋이다(여기 · 롤오버 프로 갈래 · 롤오버 꼬리) — 셋 다 채워야 한다.
+  // ⚠ `keepOwnSchedule` — 바로 위·아래에서 세우는 `s.schedule` 을 덮으면 안 된다.
+  // ⚠ **헬퍼로 묶지 않는다.** 한 번 그렇게 짰더니 변이 검증에서 호출을 지워도
+  //   `seasonOpenRefill.test.ts` 가 **선언에 남은 이름**을 보고 통과했다.
+  //   검사가 이름이 아니라 호출을 보게 하려면 부르는 자리에 그대로 적는다.
   if (leagueId === "LEAGUE_INDEPENDENT") {
     seasonStore.setSchedule([]);
+    await seasonStore.reinitSeasonSchedules(leagueId, myTeamId, { keepOwnSchedule: true });
     return 0;
   }
 
   const schedule = await proSchedule(leagueId, teamIds, myTeamId);
   seasonStore.setSchedule(schedule);
+  await seasonStore.reinitSeasonSchedules(leagueId, myTeamId, { keepOwnSchedule: true });
   return schedule.length;
 }

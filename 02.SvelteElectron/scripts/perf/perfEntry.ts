@@ -996,9 +996,17 @@ export function trajTick(): void {
   //   방향이니, 어딘가 매주 올리는 입력이 있다는 뜻이다.
   //   **경기가 있던 주와 없던 주의 증감을 갈라 보면** 그게 경기인지
   //   훈련·이벤트인지 한 값으로 갈린다.
-  _traj.gp.push((s.schedule ?? []).filter(
-    (e: { isProtagonistGame?: boolean; result?: unknown }) => e.isProtagonistGame && e.result != null,
-  ).length);
+  // ⚠ **팀 경기가 아니라 `등판`이다** (2026-09-02 · 첫 판이 틀렸다).
+  //
+  //   처음엔 `s.schedule` 의 `isProtagonistGame` 을 셌다. 그건 **팀 경기**라
+  //   선발이 안 나온 주도 "경기주" 로 들어간다 — 선발은 5경기에 1번 나온다.
+  //   그래서 "1승 4패인데 경기주 평균 +0.88" 이라는, 승패가 안 닿는 것처럼
+  //   보이는 값이 나왔다. **모수가 틀린 것이었다.**
+  //
+  //   사기를 움직이는 건 `calcGameGrowth` 이고 그건 **등판했을 때만** 돈다.
+  //   개인 기록의 `g`(투수) · `g`(타자) 가 등판 수다.
+  const _mySt = s.stats?.[p.id] as { g?: number } | undefined;
+  _traj.gp.push(_mySt?.g ?? 0);
 }
 export function trajProbe(): Record<string, unknown> {
   const stat = (v: number[]) => v.length
@@ -1066,22 +1074,25 @@ export function trajProbe(): Record<string, unknown> {
      * 72주에서 사기가 83 밑으로 안 갔다 — **2승 5패인데도.**
      * 승 +6 · 패 −8 이 닿고 있다면 나올 수 없는 값이다.
      *
-     * 그래서 **경기가 치러진 주와 아닌 주를 갈라** 증감을 잰다:
+     * 그래서 **등판한 주와 아닌 주를 갈라** 증감을 잰다:
      *
      * ```
-     *   경기주 평균이 0 근처       승패가 사기에 안 닿는다 → 배선 결함
-     *   무경기주 평균이 (+)        매주 올리는 입력이 따로 있다 → 그걸 찾는다
+     *   등판주 평균이 0 근처       승패가 사기에 안 닿는다 → 배선 결함
+     *   미등판주 평균이 (+)        매주 올리는 입력이 따로 있다 → 그걸 찾는다
      * ```
      *
-     * ⚠ 한 값으로 갈린다. 둘 다 재야 어느 쪽인지 안다.
+     * ⚠ **"경기" 가 아니라 "등판" 이다.** 첫 판에 `isProtagonistGame`(팀 경기)
+     *   을 셌더니 선발이 안 나온 주가 죄다 "경기주" 로 들어가 **1승 4패인데
+     *   평균 +0.88** 이 나왔다 — 승패가 안 닿는 것처럼 보였지만 모수가
+     *   틀린 것이었다. `calcGameGrowth` 는 등판했을 때만 돈다.
      */
-    const dMor = { 경기주: [] as number[], 무경기주: [] as number[] };
+    const dMor = { 등판주: [] as number[], 미등판주: [] as number[] };
     for (let j = 1; j < idx.length; j++) {
       const a = idx[j - 1], b = idx[j];
       if (_traj.week[b] <= _traj.week[a]) continue;        // 같은 주·롤오버는 건너뛴다
-      const played = (_traj.gp[b] ?? 0) - (_traj.gp[a] ?? 0);
+      const played = (_traj.gp[b] ?? 0) - (_traj.gp[a] ?? 0);   // 등판 수 증가분
       if (played < 0) continue;                             // 시즌이 바뀌어 0으로 돌아간 주
-      (played > 0 ? dMor.경기주 : dMor.무경기주).push(_traj.mor[b] - _traj.mor[a]);
+      (played > 0 ? dMor.등판주 : dMor.미등판주).push(_traj.mor[b] - _traj.mor[a]);
     }
     const dstat = (v: number[]) => v.length
       ? { 평균: Math.round((v.reduce((a, b) => a + b, 0) / v.length) * 100) / 100,
@@ -1090,7 +1101,7 @@ export function trajProbe(): Record<string, unknown> {
       : { 표본: 0 };
     byStage[s] = {
       사기: stat(mor), 닿음: cuts(mor),
-      사기증감: { 경기주: dstat(dMor.경기주), 무경기주: dstat(dMor.무경기주) },
+      사기증감: { 등판주: dstat(dMor.등판주), 미등판주: dstat(dMor.미등판주) },
       인기: stat(idx.map((i) => _traj.pop[i])),
       순위: stat(rank),
       순위표팀수: stat(idx.map((i) => _traj.pool[i])),
@@ -2887,8 +2898,26 @@ export function batterSampleProbe(): Record<string, unknown> {
     if (bs.length === 0) continue;
     const pas = bs.map((b) => b.pa).sort((a, b) => a - b);
     const q = (f: number) => pas[Math.min(pas.length - 1, Math.floor(pas.length * f))];
-    // pa가 ab+bb와 어긋나면 파생이 깨진 것이다 — 이 검사가 회귀의 핵심이다
-    const mismatched = bs.filter((b) => Math.abs(b.pa - (b.ab + b.bb)) > 0.5).length;
+    // 🔴 **`pa === ab+bb` 는 더 이상 기준이 아니다** (2026-09-02).
+    //
+    //   그 기준은 사구·희생타·희생플라이가 **엔진에 없던 시절**에 맞았다.
+    //   지금 식은 야구 규칙 그대로다(`season-helpers.ts`):
+    //
+    //       PA = AB + BB + HBP + SAC + SF
+    //
+    //   그래서 `pa ≠ ab+bb` 가 84% 로 나오는 건 **정상**이고, 그걸
+    //   결함으로 적어 A 목록에 올려 뒀었다. 낡은 잣대가 없는 결함을 만든다.
+    //
+    //   진짜로 봐야 할 것은 **`pa` 가 세 요소로 설명되는가**다.
+    //   설명이 안 되면 그때가 파생이 깨진 것이다.
+    const paBroken = bs.filter((b) => {
+      const extra = b.pa - (b.ab + b.bb);
+      // 구 세이브는 셋이 없어 0 이다 — 음수이거나 터무니없이 크면 깨진 것
+      return extra < -0.5 || extra > Math.max(20, (b.ab + b.bb) * 0.25);
+    }).length;
+    const extras = bs.map((b) => b.pa - (b.ab + b.bb));
+    const extraAvg = extras.length
+      ? Math.round((extras.reduce((a, b) => a + b, 0) / extras.length) * 10) / 10 : 0;
     const regulars = bs.filter((b) => b.pa >= 200);
     // 최다타석 선수의 원시값 — 경기당 타석이 말이 되는지 본다.
     // 집계값만 보면 "최대 1140타석"이 왜 나오는지 알 수 없다
@@ -2899,7 +2928,10 @@ export function batterSampleProbe(): Record<string, unknown> {
       list.length ? Math.round((list.reduce((a, b) => a + b.ops, 0) / list.length) * 1000) / 1000 : 0;
     out[lid.replace("LEAGUE_", "")] = {
       타자수: bs.length,
-      "pa≠ab+bb": mismatched,
+      // ⚠ **0 이 목표가 아니다.** `pa - (ab+bb)` = 사구+희생타+희생플라이.
+      //   음수이거나 타석의 25% 를 넘으면 파생이 깨진 것이다
+      "pa파생깨짐": paBroken,
+      "pa_추가평균": extraAvg,
       최대경기: Math.max(...bs.map((b) => b.g)),
       "pa_중앙": q(0.5), "pa_p75": q(0.75), "pa_최대": pas[pas.length - 1],
       "200타석이상": regulars.length,

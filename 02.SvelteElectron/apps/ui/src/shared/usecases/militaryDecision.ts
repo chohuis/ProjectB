@@ -60,7 +60,7 @@ export async function enlistProtagonist(
   // "1시즌 = 52주"(DESIGN §6.1)가 깨져서 **복무 2년 동안 세계는 1년만
   // 흐른다** — 연도도 나이도 한 번만 오른다(실측: 2029 입대 후 전역했는데
   // 여전히 2029년 19세). 복무는 시즌 롤오버가 이어 열어 두 번에 나눈다.
-  openMilitarySeason((seasonYear || 2026) + 1);
+  await openMilitarySeason((seasonYear || 2026) + 1, g.protagonist.teamId);
 
   const slotId = g.currentSlotId;
   if (slotId) {
@@ -84,10 +84,28 @@ export const SERVICE_WEEKS = 100;
 
 
 
-/** 군 시즌을 연다 — 경기 없는 52주. 입대와 롤오버가 같은 함수를 쓴다 */
-export function openMilitarySeason(seasonYear: number): void {
+/**
+ * 군 시즌을 연다 — **주인공만** 경기 없는 52주. 입대와 롤오버가 같은 함수를 쓴다.
+ *
+ * 🔴 **세상까지 멈춰 있었다** (2026-09-02).
+ *
+ * `initSeason` 은 `set(next)` 로 전부 갈아끼운다 — `leagueSchedules` 가
+ * 빈다. 그래서 복무 2년 동안 **전 리그가 한 경기도 안 치러졌다**:
+ *
+ * ```
+ *   [일정끝:military] (전 리그 0)
+ * ```
+ *
+ * 주인공이 안 뛰는 것과 **세상이 안 도는 것은 다르다.** 전역하면 돌아갈
+ * 리그가 있어야 하고, 그 사이 NPC 성장·드래프트·순위가 굴러야 한다.
+ *
+ * ⚠ `LEAGUE_MILITARY` 는 `ALL_TEAMS_BY_LEAGUE` 에 없어서 `reinitSeasonSchedules`
+ *   가 `s.schedule` 을 안 건드린다 — 위 `setSchedule([])` 가 그대로 산다.
+ */
+export async function openMilitarySeason(seasonYear: number, protagonistTeamId = ""): Promise<void> {
   seasonStore.initSeason("LEAGUE_MILITARY", seasonYear, 52, []);
   seasonStore.setSchedule([]);
+  await seasonStore.reinitSeasonSchedules("LEAGUE_MILITARY", protagonistTeamId);
 }
 
 /**
