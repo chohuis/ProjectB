@@ -707,6 +707,9 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
       const seasonYear = (get(seasonStore).seasonYear || 2026) + 1;
       seasonStore.initSeason(pending.leagueId, seasonYear, 52, proTeamIds);
       seasonStore.setSchedule(await proSchedule(pending.leagueId, proTeamIds, pending.teamId));
+      // ⚠ **`keepOwnSchedule`** — 방금 세운 `s.schedule` 을 덮으면 안 된다.
+      //   배경(나머지 리그)만 채운다
+      await seasonStore.reinitSeasonSchedules(pending.leagueId, pending.teamId, { keepOwnSchedule: true });
     } else {
       // ⚠ **계약 기간 중이면 `pendingNextContract`가 없는 게 정상이다.**
       // 재계약을 앞둔 해가 아니면 아무것도 대기하지 않는다 — 신인 3년 계약이면
@@ -718,11 +721,23 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
       // 대부분 **정상 계약 중인 선수**다.
       seasonStore.startNewSeason();
       const me = P();
-      const teamIds = get(masterStore).teams
-        .filter((t) => t.leagueId === me.leagueId)
-        .map((t) => t.id);
+      // 🔴 **같은 20팀 함정이 세 번째 자리다** (2026-09-02).
+      //
+      // `masterStore.teams.filter(leagueId === ...)` 는 1군(`_1`)과
+      // 2군(`_2`)을 **같이** 준다 — 둘이 같은 `leagueId` 를 쓴다.
+      // 그대로 쓰면 20팀짜리 시즌이 열리고 순위표에 2군이 섞인다.
+      //
+      // `proSeason.ts:40` 이 이걸 주석으로 경고하며 고쳤고, 바로 위
+      // `pending` 갈래도 2026-08-30 에 고쳤는데 **여기만 남아 있었다.**
+      // 정본은 `ALL_TEAMS_BY_LEAGUE` — refs 에서 생성되고 1군/2군을 나눠 담는다.
+      const teamIds = ALL_TEAMS_BY_LEAGUE[me.leagueId]
+        ?? get(masterStore).teams
+          .filter((t) => t.leagueId === me.leagueId)
+          .map((t) => t.id);
       if (teamIds.length > 0 && me.teamId) {
         seasonStore.setSchedule(await proSchedule(me.leagueId, teamIds, me.teamId));
+        // 배경 리그도 이 시즌 몫을 다시 만든다 — `startNewSeason` 이 비웠다
+        await seasonStore.reinitSeasonSchedules(me.leagueId, me.teamId, { keepOwnSchedule: true });
       }
     }
 
@@ -777,10 +792,34 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
 
   // gradeBeforeAdvance 기준으로 판단: processSeasonEnd 후 p.grade는 이미 증가해 있으므로
   // grade 1→2 또는 2→3 진급 시에만 다음 HS 시즌 재초기화 (grade 3→졸업은 제외)
+  // 🔴 **고교를 떠나면 배경 리그가 통째로 멈춰 있었다** (2026-09-02).
+  //
+  // `startNewSeason` 이 `leagueSchedules` 를 비우는데, 다시 채우는 자리가
+  // **고교 전용 둘뿐**이었다(`initAllLeaguesV3` · `reinitHighschoolSeason`).
+  // 그래서 졸업하는 순간 프로 6개 리그 · 고교 · 대학 배경 일정이 사라졌다.
+  //
+  // 실측(`probe-traits --path univ` · 씨앗 20260731 · 8시즌):
+  //
+  // ```
+  //   [일정끝:highschool]  9개 리그 — KBL 780/780 · ABL 1296/1296 …
+  //   [일정끝:university]  UNIVERSITY **68/0** · 프로 6개 리그가 아예 없다
+  //   [university]         순위없음 64/72 · 순위표팀수 최종 0
+  //   [성적:university]    고교 기록과 **한 글자도 안 다르다** — 안 뛰었다
+  // ```
+  //
+  // ⚠ 대학은 배선이 하나 더 없었다. 진학해도 `s.leagueId` 를 대학으로
+  //   바꾸는 자리가 없어서, 배경 시뮬은 `lid === 주인공리그` 로 건너뛰고
+  //   주 경기 루프는 빈 `s.schedule` 을 봤다 — **아무도 안 돌렸다.**
+  //   독립리그와 같은 형태다(`postseason.ts` 주석).
   if (P().careerStage === "highschool" && gradeBeforeAdvance != null && gradeBeforeAdvance < 3) {
     // 팀 목록을 넘기지 않는다 — 일정·순위표 모두 HS_REGIONS(102팀)에서 나오므로
     // 새 게임 initAllLeaguesV3와 자동으로 같은 소스가 된다.
     await seasonStore.reinitHighschoolSeason(P().teamId);
+  } else if (P().careerStage !== "highschool") {
+    // 주인공 리그가 여기서 만들어지는 리그면(대학) `s.schedule` 로 간다.
+    // 아니면(독립·군) 배경만 채우고 `s.schedule` 은 그대로 둔다 —
+    // 독립 일정은 생존리그 진행이 `injectLeagueEntries` 로 따로 넣는다.
+    await seasonStore.reinitSeasonSchedules(P().leagueId, P().teamId);
   }
 
   await gameStore.save();

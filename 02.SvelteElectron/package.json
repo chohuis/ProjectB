@@ -136,7 +136,8 @@
     "measure:eventslots": "node scripts/measure-eventslots.cjs",
     "probe:traits": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-traits.cjs",
     "probe:ovrimpact": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-ovrimpact.cjs",
-    "probe:sangmu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-sangmu.cjs"
+    "probe:sangmu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-sangmu.cjs",
+    "probe:bgsched": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-bgsched.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

@@ -35,6 +35,7 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   const lastStat = {};
   const lastSched = {};
   const lastSchedEnd = {};
+  const schedMid = {};
   let lastSurvival = null;
   let prevStage = null;
   try {
@@ -79,6 +80,26 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
         //   배경으로 치러진 것**인지 알 수 없다 — 트랙 B 가 그걸 지적했다.
         //   매주 덮어쓰면 그 무대의 **마지막 주** 값이 남는다.
         lastSchedEnd[stage] = app.leagueSummary();
+        // ⚠ **`일정끝` 만으로는 판정할 수 없다** (2026-09-02).
+        //
+        //   `startNewSeason` 은 `leagueSchedules` 를 **통째로 비운다**
+        //   (`makeEmptySeason`). 그래서 무대의 마지막 주는 대개 롤오버
+        //   **뒤**이고, 거기서 찍으면 배경 리그가 전부 0 으로 보인다.
+        //
+        //   고교만 9개 리그가 꽉 차 보였던 건 `reinitHighschoolSeason` 이
+        //   진급 때마다 **다시 채우기 때문**이다 — 리그가 도는 증거가 아니라
+        //   **다시 만든 증거**다. 시점을 안 가르면 정반대로 읽는다.
+        //
+        //   시즌 중(W15~25) 한 장을 따로 남긴다. 여기가 0 이면 **그 시즌에
+        //   진짜로 일정이 없는 것**이다.
+        //
+        // ⚠ **첫 시즌이 아니라 마지막 시즌을 남긴다.** 한 무대가 여러 시즌이면
+        //   첫 해는 앞 무대가 만들어 둔 일정이 남아 있을 수 있다 — 덮어써서
+        //   그 무대의 **마지막 시즌 중**을 본다.
+        {
+          const wy = ((app.currentWeek() - 1) % 52) + 1;
+          if (wy >= 15 && wy <= 25) schedMid[stage] = app.leagueSummary();
+        }
         if (stage === "independent") {
           // 생존리그가 왜 안 움직이나 — 층마다 센다
           lastSurvival = app.survivalProbe();
@@ -120,6 +141,11 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
     console.log(`  [성적:${stage}] ${JSON.stringify(st)}`);
   }
   // 🔴 주인공 리그의 `schedule` 이 0이면 **그 무대에서 경기를 안 뛴다**
+  for (const [stage, sum] of Object.entries(schedMid)) {
+    const mine = Object.entries(sum).filter(([, v]) => v.schedule > 0)
+      .map(([lid, v]) => `${lid.replace("LEAGUE_", "")}:${v.schedule}/${v.played}`);
+    console.log(`  [일정중:${stage}] ${mine.join(" ") || "(전 리그 0)"}`);
+  }
   for (const [stage, sum] of Object.entries(lastSchedEnd)) {
     const mine = Object.entries(sum).filter(([, v]) => v.schedule > 0)
       .map(([lid, v]) => `${lid.replace("LEAGUE_", "")}:${v.schedule}/${v.played}`);

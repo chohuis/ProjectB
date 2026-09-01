@@ -552,53 +552,67 @@ function createSeasonStore() {
     },
 
     // 고교 102팀 8권역 주말리그 초기화 (DESIGN.md §7 v2)
+    //
+    // 🔴 **일정 만드는 블록은 `reinitSeasonSchedules` 하나다** (2026-09-02).
+    //   예전엔 이 블록이 **세 벌**이었다(여기 · `reinitHighschoolSeason` ·
+    //   그리고 고교 밖에는 아예 없었다). 세 벌이면 한쪽만 고쳐진 채 남고,
+    //   이 저장소는 그 형태로 세 번 당했다 — 프로 20팀 · 시범경기 누락 ·
+    //   졸업 뒤 배경 리그 정지.
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
-      const [hsEntries, univEntries, otherSchedules, preseason] = await Promise.all([
-        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES,
-          // 🔴 예전엔 `2, 45`가 여기 박혀 있었다 — W45는 **12월 말**이다.
-          // 기간은 `leagueScheduler`가 정본이다(CALENDAR_V2.md)
-          HS_START_WEEK, HS_END_WEEK, protagonistTeamId, seasonYear),
-        // 대학 5조 — 조당 9경기, 조마다 다른 평일 요일 (Phase 5-5b)
-        generateRegionalSchedule(
-          "LEAGUE_UNIVERSITY", UNIV_GROUPS, UNIV_TARGET_GAMES,
-          UNIV_REGULAR_START_WEEK, UNIV_REGULAR_END_WEEK, protagonistTeamId, seasonYear,
-          { idPrefix: "UNIVR" },
-        ),
-        generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
-        // 시범경기 — 정규 개막(W5) 앞 4주. 1군 셋만이고 `isFriendly`라
-        // 공식 기록엔 안 들어간다(CALENDAR_V2.md)
-        generatePreseasonSchedules(protagonistTeamId, seasonYear),
-      ]);
-
-      const hsSchedule = hsEntries
-        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", isFriendly: e.isFriendly ?? false }))
-        .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
-
-      const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL: { standings: makeStandings(HS_ACTIVE_TEAMS_V3), stats: {}, playerConditions: {}, teamRotationIndex: {} },
-      };
-      for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
-        if (lid === "LEAGUE_HIGHSCHOOL") continue;
-        leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
-      }
-
-      update((s) => ({
-        ...s,
-        seasonYear,
-        schedule: hsSchedule,
-        // ⚠ **시범경기를 정규 앞에 붙인다.** 같은 리그 배열에 넣어야 화면이
-        // 한 흐름으로 읽는다 — `phase`로 갈린다
-        leagueSchedules: mergePreseason(
-          { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries }, preseason),
-        leagueState,
-        standings: makeStandings(HS_ACTIVE_TEAMS_V3),
-      }));
+      update((s) => ({ ...s, seasonYear }));
+      await this.reinitSeasonSchedules("LEAGUE_HIGHSCHOOL", protagonistTeamId);
     },
 
     // 학년 진급 시 다음 고교 시즌 재초기화 — 8권역 주말리그 재생성
     // 팀 목록을 인자로 받지 않는다: 일정은 HS_REGIONS(102팀 전체)로 짜이므로
     // 부분 목록을 넘기면 순위표와 일정이 어긋난다.
+    //
+    // 🔴 **하던 일을 `reinitSeasonSchedules` 로 합쳤다** (2026-09-02).
+    //   같은 블록이 두 벌이면 한쪽만 고쳐진 채 남는다 — 이 저장소가
+    //   프로 20팀 결함에서 겪은 형태다("같은 함정을 두 자리에서 만났고
+    //   한쪽만 닫혔다").
     async reinitHighschoolSeason(protagonistTeamId: string): Promise<void> {
+      await this.reinitSeasonSchedules("LEAGUE_HIGHSCHOOL", protagonistTeamId);
+    },
+
+    /**
+     * 배경 리그 일정을 **다시 채운다** — 주인공 리그는 안 건드린다.
+     *
+     * 🔴 **고교를 떠나면 배경 리그가 통째로 멈춰 있었다** (2026-09-02).
+     *
+     * `startNewSeason` 은 `leagueSchedules` 를 **비운다**(`makeEmptySeason`).
+     * 그러니 매 시즌 누군가 다시 채워야 하는데, 채우는 자리가 둘뿐이었고
+     * **둘 다 고교 전용**이었다:
+     *
+     * ```
+     *   initAllLeaguesV3        새 게임에서 한 번
+     *   reinitHighschoolSeason  고교 1→2 · 2→3 진급에서만
+     * ```
+     *
+     * 실측(`probe-traits --path univ` · 씨앗 20260731 · 8시즌):
+     *
+     * ```
+     *   [일정끝:highschool]  9개 리그 전부 — KBL 780/780 · ABL 1296/1296 …
+     *   [일정끝:university]  HIGHSCHOOL 233/233 · INDEPENDENT 102/102 ·
+     *                        UNIVERSITY **68/0**      ← 프로 6개 리그가 없다
+     * ```
+     *
+     * ⚠ **`일정끝` 한 장으로는 이걸 못 가린다.** 무대의 마지막 주는 대개
+     * 롤오버 뒤라 전부 0 으로 보이고, 고교만 꽉 차 보이는 건 방금 **다시
+     * 만들었기 때문**이다. `probe:bgsched` 가 시즌 중에 찍는다.
+     *
+     * ⚠ **주인공 리그를 빼고 넣는다.** 안 빼면 `s.schedule` 과 두 벌이 되고,
+     * 배경 시뮬은 `lid === 주인공리그` 를 건너뛰므로 그 벌은 영영 안 치러진
+     * 채 세이브에 쌓인다.
+     *
+     * ⚠ **`leagueState` 는 없는 리그만 만든다.** 주인공 리그 순위표는
+     * `initSeason` 이 이미 세웠다 — 덮으면 그걸 지운다.
+     */
+    async reinitSeasonSchedules(
+      myLeagueId: string,
+      protagonistTeamId: string,
+      opts: { keepOwnSchedule?: boolean } = {},
+    ): Promise<void> {
       const seasonYear = get({ subscribe }).seasonYear;
 
       const [hsEntries, univEntries, otherSchedules, preseason] = await Promise.all([
@@ -611,31 +625,53 @@ function createSeasonStore() {
           { idPrefix: "UNIVR" },
         ),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
-        // ⚠ **여기도 시범경기를 만든다.** 학년이 바뀔 때마다 리그 일정을
-        // 다시 짜는 자리라, 빠뜨리면 2년차부터 시범경기가 없어진다
+        // ⚠ 빠뜨리면 그 시즌부터 시범경기가 없어진다
         generatePreseasonSchedules(protagonistTeamId, seasonYear),
       ]);
 
-      const hsSchedule = hsEntries
-        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", isFriendly: e.isFriendly ?? false }))
-        .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+      const all: Record<string, ScheduleEntry[]> = mergePreseason(
+        {
+          ...otherSchedules,
+          LEAGUE_HIGHSCHOOL: hsEntries
+            .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", isFriendly: e.isFriendly ?? false }))
+            .sort((a, b) => a.gameDate.localeCompare(b.gameDate)),
+          LEAGUE_UNIVERSITY: univEntries,
+        },
+        preseason,
+      );
 
-      const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL: { standings: makeStandings(HS_ACTIVE_TEAMS_V3), stats: {}, playerConditions: {}, teamRotationIndex: {} },
-      };
-      for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
-        if (lid === "LEAGUE_HIGHSCHOOL") continue;
-        leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
-      }
+      // 주인공 리그 몫을 꺼낸다 — 남은 것만 배경으로 간다
+      const own = all[myLeagueId];
+      delete all[myLeagueId];
 
-      update((s) => ({
-        ...s,
-        schedule: hsSchedule,
-        standings: makeStandings(HS_ACTIVE_TEAMS_V3),
-        leagueSchedules: mergePreseason(
-          { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries }, preseason),
-        leagueState,
-      }));
+      const ownTeams = myLeagueId === "LEAGUE_HIGHSCHOOL"
+        ? HS_ACTIVE_TEAMS_V3
+        : ALL_TEAMS_BY_LEAGUE[myLeagueId];
+
+      update((s) => {
+        const takeOwn = own != null && !opts.keepOwnSchedule;
+        // ⚠ **`leagueState` 사본은 전 리그가 있어야 한다.** 이벤트·다이제스트·
+        //   트레이드 판단이 최상위 `standings` 가 아니라 여기를 읽는다
+        //   (`initSeason` 주석 — "사본만 비어 있었다").
+        //   단 **주인공 리그를 직접 세우는 경우가 아니면 안 건드린다** —
+        //   프로 경로는 `initSeason` 이 이미 세워 뒀다.
+        const leagueState: Record<string, LeagueSeasonState> = { ...s.leagueState };
+        for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
+          if (lid === myLeagueId && !takeOwn) continue;
+          leagueState[lid] = {
+            standings: makeStandings(lid === "LEAGUE_HIGHSCHOOL" ? HS_ACTIVE_TEAMS_V3 : teams),
+            stats: {}, playerConditions: {}, teamRotationIndex: {},
+          };
+        }
+        return {
+          ...s,
+          leagueId: takeOwn ? myLeagueId : s.leagueId,
+          schedule: takeOwn ? own : s.schedule,
+          standings: takeOwn && ownTeams ? makeStandings(ownTeams) : s.standings,
+          leagueSchedules: { ...s.leagueSchedules, ...all },
+          leagueState,
+        };
+      });
     },
 
     applyWeeklyConditionRecovery(entities: EntityRow[], campBonus?: Record<string, number>) {

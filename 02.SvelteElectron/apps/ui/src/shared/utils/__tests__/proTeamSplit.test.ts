@@ -33,6 +33,9 @@ import { ALL_TEAMS_BY_LEAGUE } from "../leagueScheduler";
 
 const ROOT = resolve(__dirname, "../../..");   // apps/ui/src
 
+/** 근거가 본체 주석에 적힌 면제 — 프로 1군 목록이 아닌 자리 */
+const EXEMPT = ["shared/usecases/tournaments.ts", "shared/usecases/devScenarios.ts"];
+
 /** `.ts`/`.svelte` 전부 — 한 폴더만 보면 다음 자리를 놓친다 */
 function sources(): { path: string; body: string }[] {
   const out: { path: string; body: string }[] = [];
@@ -113,9 +116,26 @@ describe("1군/2군이 같은 leagueId 를 쓴다 — 팀 목록을 리그로만
         // ⚠ **면제 근거는 아래로 더 멀리 있을 수 있다.** 실제 코드가
         //   `.filter(리그)` 다음에 줄바꿈·주석을 끼고 `.filter(접미사)` 를
         //   이어 붙인다 — ±3줄이면 그 두 번째 필터를 놓쳐 오탐이 났다.
-        const nearby = lines.slice(Math.max(0, i - 3), i + 7).join("\n");
+        //
+        // ⚠ **위로도 멀다.** 거르는 **대상**이 이미 `_1` 로 좁혀진 경우가
+        //   있다(`market.ts` — `proTeams` 를 9줄 위에서 만든다).
+        //   앞을 12줄까지 본다.
+        const nearby = lines.slice(Math.max(0, i - 12), i + 7).join("\n");
+        // 🔴 **접두사 목록을 박아 두면 다음 자리를 놓친다** (2026-09-02).
+        //
+        // 예전엔 `(pending\.|p\.|action\.)?` 였다. 그래서 세 번째 자리를
+        // **그대로 통과시켰다** — 거기 변수 이름이 `me` 였다:
+        //
+        // ```
+        //   const teamIds = get(masterStore).teams
+        //     .filter((t) => t.leagueId === me.leagueId)   ← `me.` 가 목록에 없다
+        // ```
+        //
+        // 검사를 만든 이유가 "주석은 그 자리를 보는 사람에게만 말한다" 였는데,
+        // **검사도 자기가 아는 이름에게만 말하고 있었다.**
+        // 오른쪽이 무엇이든 `…leagueId` 로 끝나면 리그끼리 견주는 것이다.
         const touchesPro = PRO.some((l) => nearby.includes(l))
-          || /leagueId\s*===\s*(pending\.|p\.|action\.)?leagueId/.test(line);
+          || /leagueId\s*===\s*(?:[\w$]+\.)*leagueId\b/.test(line);
         if (!touchesPro) continue;
         // 면제 셋
         if (nearby.includes("ALL_TEAMS_BY_LEAGUE")) continue;
@@ -127,6 +147,18 @@ describe("1군/2군이 같은 leagueId 를 쓴다 — 팀 목록을 리그로만
         //   2군이 없어서 리그로만 걸러도 맞다. 이름에 안 적혀 있으면 다음
         //   사람이 프로에도 쓰므로 **면제 조건을 이름에 건다.**
         if (/[Aa]mateur/.test(nearby)) continue;
+        // ⚠ **근거를 적은 면제만 둔다** (2026-09-02). 접두사 목록을 넓히면서
+        //   프로와 무관한 자리가 셋 걸렸다. 각각 왜 아닌지 실측으로 확인했다:
+        //
+        //   tournaments.ts   대회 정의는 **고교 5 · 대학 3 뿐**이다
+        //                    (`seeds/onepitch/tournaments.csv` — 프로 대회 0건).
+        //                    아마추어엔 2군이 없다
+        //   devScenarios.ts  팀 목록을 만드는 게 아니라 **소속을 확인하는
+        //                    진단**이다. 2군 주인공이면 2군이 들어와야 맞다
+        //
+        // ⚠ 여기 추가하려면 **왜 프로 1군 목록이 아닌지**를 적어라.
+        //   못 적으면 결함이다.
+        if (EXEMPT.some((e) => path.endsWith(e))) continue;
         bad.push(`${path}:${i + 1}  ${line.trim().slice(0, 90)}`);
       }
     }
