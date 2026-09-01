@@ -1859,38 +1859,30 @@ function createGameStore() {
       }));
     },
 
-    // 진로 선택 완료 → careerStage 변경
-    setCareerStage(stage: import("../types/save").CareerStage) {
-      update((s) => {
-        const p = { ...s.protagonist, careerStage: stage };
-        const schoolPatch: Partial<import("../types/save").SchoolState> = {
-          careerChoiceTriggered: true,
-        };
-        if (stage === "university") {
-          schoolPatch.attendsUniversity = true;
-          schoolPatch.universityWeek    = 0;
-          schoolPatch.majorSelected     = false;
-          // 대학 과목 초기화 (고교보다 낮은 성적에서 시작)
-          schoolPatch.subjectScores = {
-            kor:  { percentile: 28, attendance: 93, assignment: 85 },
-            eng:  { percentile: 32, attendance: 90, assignment: 82 },
-            math: { percentile: 45, attendance: 87, assignment: 78 },
-            soc:  { percentile: 38, attendance: 91, assignment: 80 },
-            sci:  { percentile: 50, attendance: 85, assignment: 76 },
-          };
-          schoolPatch.examAccumScore = 0;
-          schoolPatch.lastGrade      = null;
-          schoolPatch.lastGradeRisk  = "ok";
-          schoolPatch.warningCount   = 0;
-        }
-        return {
-          ...s,
-          protagonist: p,
-          player:      toPlayerCompat(p),
-          schoolState: { ...s.schoolState, ...schoolPatch },
-        };
-      });
-    },
+    // ⚠ **`setCareerStage`를 지웠다** (2026-09-01). 호출부가 **0건**이었다 —
+    //   진로 전이의 실제 정본은 `applyDraftDecision`이다.
+    //
+    // 🔴 **다만 지운 코드에 실제 경로엔 없는 의도가 들어 있었다.** 대학
+    //   진학 시 학업 상태를 리셋하는 것이다:
+    //
+    // ```
+    //   subjectScores    대학용 낮은 값으로 갈아끼운다  (kor 28 · math 45 …)
+    //   examAccumScore   0
+    //   lastGrade        null
+    //   warningCount     0
+    //   majorSelected    false
+    // ```
+    //
+    //   `applyDraftDecision`은 **이 중 아무것도 안 한다.** 그래서 지금은
+    //   고교 성적·경고가 대학으로 그대로 이어진다.
+    //
+    // ⚠ **그게 결함인지 아닌지는 잰 적이 없다.** 대학 학점은 `studyModeGpa`
+    //   에서만 오므로(`advanceWeek.ts`의 대학 갈래 참고) `subjectScores`는
+    //   학점에 안 들어간다 — 훈련 효율(`efficiencyMod`)에만 남는다.
+    //   반면 `warningCount`는 이벤트가 읽는다(`school.warningCount`).
+    //
+    // 🛑 **리셋할지는 밸런스다 — 사용자에게 묻는다.** 지우면서 값을 바꾸면
+    //   두 변수가 같이 움직인다. 지금은 동작을 그대로 뒀다.
 
     // 진로 선택 이벤트 발동 마킹 (중복 방지)
     markCareerChoiceTriggered() {
