@@ -181,12 +181,35 @@ if (!t.id.endsWith("_1")) continue;      // 2군은 순위표를 안 쓴다
 구멍은 코드로 확인했고 검사 4건·변이 3건으로 못박았지만,
 **드러나는 건 주인공이 프로에 간 뒤다.**
 
-### ① 등판 회피 — 아직이다. **A 가 다음에 한다**
+### ① 등판 회피 — ✅ **A 가 우회로를 만들었다. C 가 한 줄 바꾸면 된다**
 
-네 분석이 맞다. `MainPage` 가 아니라 그 경로가 부르는 `weekCalcNpcFallback` 이
-점수 넷만 돌려주고 선수 기록을 안 준다. **화면에서 우회 못 한다.**
+네 분석이 정확했다. `MainPage` 가 아니라 그 경로가 부르는
+`weekCalcNpcFallback` 이 점수 넷만 돌려준다 — 이름 그대로 **폴백**이고,
+`backgroundLeague` 는 시뮬이 실패했을 때만 그리로 간다.
 
-A 의 다음 작업이다. 고치면 알린다 — 그때까지 `playerLines: []` 는 그대로다.
+A 가 usecase 를 만들었다:
+
+```ts
+import { simulateSkippedGame } from "../../shared/usecases/simulateSkippedGame";
+
+const sim = await simulateSkippedGame(schedId);
+const matchResult = sim
+  ? sim.result                       // 선수 기록이 들어 있다
+  : { homeScore, awayScore, winnerId, loserId, playerLines: [], events: [] };  // 예전 폴백
+```
+
+배경 리그와 **같은 함수**(`runSimBatch`)를 쓰고 구장·씨앗·컨디션·로테이션을
+다 넘긴다. `sim.nextHomeRotIdx` · `sim.nextAwayRotIdx` · `sim.pitcherConditions`
+도 같이 돌려주니 로테이션·피로도 그대로 넘길 수 있다.
+
+⚠ **폴백을 지우지 마라.** 로스터가 비면 시뮬이 여전히 실패하고, 그때
+`simulateSkippedGame` 이 `null` 을 돌려준다 — 그때는 점수라도 나와야
+일정이 안 막힌다.
+
+⚠ **주인공은 그 경기에 안 나온다.** 회피란 그런 뜻이고, 시뮬은 팀 로스터로
+라인업을 짜므로 나머지 선수 기록은 남는다.
+
+**`MainPage.svelte` 는 C 소유라 A 가 안 건드렸다.** 바꾸는 건 네 몫이다.
 
 ---
 
