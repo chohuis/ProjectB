@@ -45,6 +45,52 @@ pub fn read_contact_bands() -> ([u64; 6], f64) {
 pub fn reset_contact_bands() {
     CONTACT_BANDS.with(|b| *b.borrow_mut() = [0; 6]);
     CONTACT_SUM.with(|s| *s.borrow_mut() = (0.0, 0));
+    FENCE_MOVES.with(|f| *f.borrow_mut() = [0; 6]);
+    PROMO_RATIO.with(|r| *r.borrow_mut() = [0; 6]);
+}
+
+// ── 계측: 담장 재확인이 결과를 몇 번 바꾸나 ───────────────────────────────
+//
+// 🔴 담장 재확인은 **양방향**이다 — 표의 홈런을 내리기도 하고 표의 2·3루타를
+//    **홈런으로 올리기도** 한다. 올리는 쪽이 몇 건인지 아무도 안 셌다.
+//
+//    실측(2026-09-01): KBL 리그타율 .272 · 출루 .338 은 KBO 와 맞는데
+//    **장타율만 .464**(KBO .390)다. 안타 수가 아니라 **안타 하나의 무게**가
+//    문제라는 뜻이고, 그 무게를 이 갈래가 만들 수 있다.
+//
+// ⚠ 계측 전용이다. 카운터를 안 읽으면 릴리스 동작에 영향이 없다.
+thread_local! {
+    /// [HR→2루타, HR→3루타, HR→뜬공아웃, 2루타→HR, 3루타→HR, 그라운드HR]
+    pub static FENCE_MOVES: RefCell<[u64; 6]> = const { RefCell::new([0; 6]) };
+}
+
+fn tally_fence_move(i: usize) {
+    FENCE_MOVES.with(|f| f.borrow_mut()[i] += 1);
+}
+
+pub fn read_fence_moves() -> [u64; 6] {
+    FENCE_MOVES.with(|f| *f.borrow())
+}
+
+// ── 계측: 승격 후보의 담장 대비 비율 ──────────────────────────────────────
+//
+// 🔴 승격 갈래에 **문턱이 없다.** 강등 쪽은 0.94 / 0.82 로 3단계인데
+//    올리는 쪽은 `over` 하나만 본다. 문턱을 얼마로 둘지 정하려면
+//    **넘긴 타구가 얼마나 넘겼는지** 분포를 알아야 한다.
+//
+// 구간: [1.00~1.02, 1.02~1.05, 1.05~1.10, 1.10~1.20, 1.20~1.35, 1.35+]
+thread_local! {
+    pub static PROMO_RATIO: RefCell<[u64; 6]> = const { RefCell::new([0; 6]) };
+}
+
+fn tally_promo_ratio(ratio: f64) {
+    let i = if ratio < 1.02 { 0 } else if ratio < 1.05 { 1 } else if ratio < 1.10 { 2 }
+            else if ratio < 1.20 { 3 } else if ratio < 1.35 { 4 } else { 5 };
+    PROMO_RATIO.with(|r| r.borrow_mut()[i] += 1);
+}
+
+pub fn read_promo_ratio() -> [u64; 6] {
+    PROMO_RATIO.with(|r| *r.borrow())
 }
 fn round1(x: f64) -> f64 { (x * 10.0).round() / 10.0 }
 fn round2(x: f64) -> f64 { (x * 100.0).round() / 100.0 }
@@ -2165,21 +2211,41 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                     result_code = if ratio >= T::FENCE_HIT_RATIO {
                         // 펜스 직격 — 튀는 방향에 따라 3루타도 된다
                         if rng.gen::<f64>() < T::FENCE_TRIPLE_PROB {
+                            tally_fence_move(1);
                             PitchResultCode::HitTriple
                         } else {
+                            tally_fence_move(0);
                             PitchResultCode::HitDouble
                         }
                     } else if ratio >= T::DEEP_FLY_RATIO {
                         // 담장 앞 깊은 타구 — 2루타
+                        tally_fence_move(0);
                         PitchResultCode::HitDouble
                     } else {
                         // 담장 근처도 못 갔다 — 평범한 뜬공 아웃
+                        tally_fence_move(2);
                         PitchResultCode::FlyOut
                     };
                 }
                 // 표는 장타인데 넘었다 — 홈런이다
+                // 🔴 **표는 장타인데 넘었다 — 문턱을 넘어야 홈런이다.**
+                //
+                // ⚠ 예전엔 `over` 하나만 봐서 **1cm 넘어도 홈런**이었다.
+                //   내리는 쪽은 0.94 / 0.82 로 3단계인데 올리는 쪽만
+                //   문턱이 없어 비대칭이었고, 실측에서 승격 6,182 >
+                //   강등 4,631 로 **담장이 홈런을 만들고 있었다.**
+                // ⚠ 문턱을 못 넘으면 표 그대로 둔다 — 2루타는 2루타,
+                //   3루타는 3루타다. 여기서 내리면 강등 갈래와 겹친다.
                 (PitchResultCode::HitDouble, true)
-                | (PitchResultCode::HitTriple, true) => {
+                    if b.distance / fence.max(1.0) >= T::FENCE_PROMOTE_RATIO => {
+                    tally_fence_move(3);
+                    tally_promo_ratio(b.distance / fence.max(1.0));
+                    result_code = PitchResultCode::HomeRun;
+                }
+                (PitchResultCode::HitTriple, true)
+                    if b.distance / fence.max(1.0) >= T::FENCE_PROMOTE_RATIO => {
+                    tally_fence_move(4);
+                    tally_promo_ratio(b.distance / fence.max(1.0));
                     result_code = PitchResultCode::HomeRun;
                 }
                 // 🔴 **그라운드 홈런** — 담장 **안**에 떨어졌는데 다 돌았다.
@@ -2193,6 +2259,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                         && b.distance / fence.max(1.0) >= T::DEEP_FLY_RATIO
                         && rng.gen::<f64>() < T::INSIDE_PARK_PROB =>
                 {
+                    tally_fence_move(5);
                     result_code = PitchResultCode::HomeRun;
                 }
                 _ => {}
@@ -3687,6 +3754,52 @@ mod 펜스 {
             "펜스 직격이 깊은 뜬공보다 담장에 가까워야 한다");
         assert!(T::FENCE_HIT_RATIO < 1.0, "1.0 이면 그냥 홈런이다");
         assert!(T::DEEP_FLY_RATIO > 0.5, "너무 낮으면 얕은 뜬공도 2루타가 된다");
+    }
+
+    /// 🔴 **올리는 쪽에도 문턱이 있어야 한다** (2026-09-01).
+    ///
+    /// 예전엔 `distance >= fence` 하나였다 — **1cm 넘어도 홈런**이다.
+    /// 내리는 쪽은 0.94 / 0.82 로 3단계인데 올리는 쪽만 문턱이 없어
+    /// 비대칭이었고, 실측에서 **승격 6,182 > 강등 4,631** 이 나왔다.
+    /// 담장 재확인이 홈런을 **만들고** 있었다.
+    #[test]
+    fn 승격에도_문턱이_있다() {
+        assert!(T::FENCE_PROMOTE_RATIO > 1.0,
+            "1.0 이면 문턱이 없는 것과 같다 — 1cm 넘어도 홈런이 된다");
+        // ⚠ 너무 높으면 담장이 홈런을 **줄이는** 쪽으로 뒤집힌다.
+        //   실측: 1.05 면 순증이 +1,551 → −1,462 로 부호가 바뀐다.
+        assert!(T::FENCE_PROMOTE_RATIO < 1.05,
+            "1.05 이상이면 담장이 홈런을 줄이는 쪽으로 뒤집힌다");
+    }
+
+    /// ⚠ **강등 문턱과 짝이다.** 0.94 ~ 1.02 가 "담장 근처" 대역이 된다 —
+    ///   예전엔 1.00 에서 칼같이 갈려 양쪽이 비대칭이었다.
+    #[test]
+    fn 담장_근처_대역이_대칭이다() {
+        let below = 1.0 - T::FENCE_HIT_RATIO;       // 0.06
+        let above = T::FENCE_PROMOTE_RATIO - 1.0;   // 0.02
+        assert!(above > 0.0 && below > 0.0);
+        // 완전 대칭일 필요는 없지만 **한쪽만 0** 이면 안 된다.
+        // 위쪽이 아래쪽보다 넓으면 승격이 오히려 더 막혀 홈런이 마른다
+        assert!(above <= below,
+            "위쪽 대역 {above} 이 아래쪽 {below} 보다 넓다 — 홈런이 마른다");
+    }
+
+    /// 🔴 **상수만 보면 반쪽이다.** 갈래에서 조건을 빼도 상수는 그대로라
+    ///   위 두 검사가 통과한다 — 실제로 변이 검증에서 그랬다.
+    ///   **코드가 그 상수를 보는지**를 못박는다.
+    #[test]
+    fn 승격_갈래가_문턱을_실제로_본다() {
+        let src = include_str!("match_engine.rs");
+        // 승격 갈래 둘 다 조건이 걸려 있어야 한다
+        let guard = "if b.distance / fence.max(1.0) >= T::FENCE_PROMOTE_RATIO => {";
+        let n = src.matches(guard).count();
+        assert!(n >= 2, "승격 갈래에 문턱 조건이 {n} 곳뿐이다 — 2루타·3루타 둘 다여야 한다");
+        // ⚠ **이 검사 자신도 그 문자열을 담는다**(include_str! 함정).
+        //   그래서 2 가 아니라 **2 이상**을 본다 — 아래에서 자기 몫을 뺀다.
+        let mine = 1;  // 바로 위 `let guard` 줄
+        assert!(n - mine >= 2,
+            "검사 자신을 빼면 {} 곳이다 — 갈래에서 조건이 빠졌다", n - mine);
     }
 
     /// ⚠ 같은 비율이 구장마다 다른 거리다 — 그게 요점이다

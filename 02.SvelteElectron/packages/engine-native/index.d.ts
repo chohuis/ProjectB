@@ -16,6 +16,8 @@ export declare function verifySaveSig(snapshot: string, sig: string): boolean
  * 계측 전용 — contact_q 밴드 분포를 읽는다 (릴리스 동작에 영향 없음)
  */
 export declare function contactBandStatsNative(): string
+/** 계측 전용 — 담장 재확인이 결과를 몇 번 바꿨나 (양방향) */
+export declare function fenceMoveStatsNative(): string
 /** 계측 전용 — 카운터 초기화 */
 export declare function resetContactBandsNative(): string
 /**

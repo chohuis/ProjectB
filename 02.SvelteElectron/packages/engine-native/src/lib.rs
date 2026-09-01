@@ -86,6 +86,21 @@ pub fn contact_band_stats_native() -> String {
     }).to_string()
 }
 
+/// 계측 전용 — 담장 재확인이 결과를 몇 번 바꿨나 (양방향)
+#[napi]
+pub fn fence_move_stats_native() -> String {
+    let m = match_engine::read_fence_moves();
+    serde_json::json!({
+        "moves": m,
+        "labels": ["HR→2루타", "HR→3루타", "HR→뜬공아웃", "2루타→HR", "3루타→HR", "그라운드HR"],
+        "홈런_강등": m[0] + m[1] + m[2],
+        "홈런_승격": m[3] + m[4] + m[5],
+        "홈런_순증": (m[3] + m[4] + m[5]) as i64 - (m[0] + m[1] + m[2]) as i64,
+        "승격비율": match_engine::read_promo_ratio(),
+        "승격비율_구간": ["1.00~1.02","1.02~1.05","1.05~1.10","1.10~1.20","1.20~1.35","1.35+"],
+    }).to_string()
+}
+
 /// 계측 전용 — 카운터 초기화
 #[napi]
 pub fn reset_contact_bands_native() -> String {

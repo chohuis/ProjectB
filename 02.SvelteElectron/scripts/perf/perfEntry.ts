@@ -2722,6 +2722,8 @@ export function batterSampleProbe(): Record<string, unknown> {
     const bs = Object.values(stats).filter((x) => x.type === "batter") as Array<{
       g: number; pa: number; ab: number; h: number; bb: number;
       avg: number; obp: number; ops: number;
+      // 장타를 보려면 필요하다 — 없으면 0 으로 떨어진다(구 세이브 호환)
+      hr?: number; b2?: number; b3?: number;
     }>;
     if (bs.length === 0) continue;
     const pas = bs.map((b) => b.pa).sort((a, b) => a - b);
@@ -2748,6 +2750,30 @@ export function batterSampleProbe(): Record<string, unknown> {
       최고타율_규정: regulars.length ? Math.max(...regulars.map((b) => b.avg)) : 0,
       // ⚠ 최대값만 보면 "이상치 한 명"으로 읽힌다. **중앙값이 리그 수준이다**
       타율_p25: qa(0.25), 타율_중앙: qa(0.5), 타율_p75: qa(0.75),
+      // 🔴 **리그 전체 타율** (2026-09-01). 위 중앙값은 **선수별** 값이라
+      //   규정 미달 선수가 많으면 낮게 나온다 — 9이닝당 피안타·ERA 와
+      //   **짝이 안 맞는다.** 실제로 "중앙 .256 인데 9이닝당 피안타 10.5"
+      //   라는 어긋난 조합을 보고 "타율은 정상"이라고 읽을 뻔했다.
+      //   리그 판정은 **총 안타 / 총 타수**로 한다.
+      "리그타율": (() => {
+        const H = bs.reduce((a2, b) => a2 + b.h, 0);
+        const AB = bs.reduce((a2, b) => a2 + b.ab, 0);
+        return AB > 0 ? Math.round((H / AB) * 1000) / 1000 : 0;
+      })(),
+      "리그출루": (() => {
+        const H = bs.reduce((a2, b) => a2 + b.h, 0);
+        const BB = bs.reduce((a2, b) => a2 + b.bb, 0);
+        const AB = bs.reduce((a2, b) => a2 + b.ab, 0);
+        return AB + BB > 0 ? Math.round(((H + BB) / (AB + BB)) * 1000) / 1000 : 0;
+      })(),
+      "리그장타": (() => {
+        const AB = bs.reduce((a2, b) => a2 + b.ab, 0);
+        // ⚠ 2·3루타를 안 세면 장타율이 근사가 된다 — 없으면 0 으로 떨어진다
+        const TB = bs.reduce((a2, b) =>
+          a2 + (b.h + (b.b2 ?? 0) + (b.b3 ?? 0) * 2 + (b.hr ?? 0) * 3), 0);
+        return AB > 0 ? Math.round((TB / AB) * 1000) / 1000 : 0;
+      })(),
+      "홈런합": bs.reduce((a2, b) => a2 + (b.hr ?? 0), 0),
       최다타석선수: `g${top.g} pa${top.pa} ab${top.ab} bb${top.bb} = 경기당 ${
         top.g > 0 ? Math.round((top.pa / top.g) * 100) / 100 : 0}`,
       // ⚠ **경기당 타석이 실제 라인업 길이를 알려준다.** 9인 타순이면 4.5~5.2다.
@@ -5630,6 +5656,34 @@ export async function contactBands(): Promise<Record<string, unknown>> {
   });
   return out;
 }
+/**
+ * 담장 재확인이 결과를 몇 번 바꿨나 — **양방향**이다.
+ *
+ * 🔴 표의 2·3루타가 담장을 넘으면 **홈런으로 승격**된다. 그쪽을 아무도
+ *   안 셌다. KBL 이 리그타율·출루는 KBO 와 맞는데 **장타율만 .464**
+ *   (KBO .390)인 원인 후보다.
+ */
+export async function fenceMoves(): Promise<Record<string, unknown>> {
+  const raw = await window.projectB!.engine("fenceMoveStatsNative", "{}");
+  const d = JSON.parse(raw);
+  if (d.error) return d;
+  const out: Record<string, unknown> = {};
+  (d.labels as string[]).forEach((l, i) => { out[l] = (d.moves as number[])[i]; });
+  out["홈런_강등"] = d["홈런_강등"];
+  out["홈런_승격"] = d["홈런_승격"];
+  out["홈런_순증"] = d["홈런_순증"];
+  // 승격 후보가 담장을 얼마나 넘겼나 — 문턱을 정하려면 이 분포가 필요하다
+  const pr = d["승격비율"] as number[] | undefined;
+  const lb = d["승격비율_구간"] as string[] | undefined;
+  if (pr && lb) {
+    const tot = pr.reduce((a2, b) => a2 + b, 0) || 1;
+    const hist: Record<string, string> = {};
+    lb.forEach((l, i) => { hist[l] = pr[i] + " (" + Math.round(pr[i] / tot * 100) + "%)"; });
+    out["승격비율"] = hist;
+  }
+  return out;
+}
+
 export async function resetContactBands(): Promise<void> {
   await window.projectB!.engine("resetContactBandsNative", "{}");
 }
