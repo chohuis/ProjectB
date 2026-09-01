@@ -1635,16 +1635,6 @@ function createGameStore() {
       }));
     },
 
-    updateMorale(delta: number) {
-      update((s) => ({
-        ...s,
-        protagonist: {
-          ...s.protagonist,
-          morale: Math.max(0, Math.min(100, s.protagonist.morale + delta)),
-        },
-      }));
-    },
-
     saveTop10Snapshot(snapshot: import("../types/save").Top10Snapshot) {
       update((s) => ({
         ...s,

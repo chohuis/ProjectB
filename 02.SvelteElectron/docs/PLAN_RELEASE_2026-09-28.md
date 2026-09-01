@@ -105,8 +105,8 @@ C   apps/ui/src/pages/**  ·  features/**  ·  apps/desktop/ipc/*.cjs
 |---|---|---|
 | W1 | 🔴 **전역 → 독립 경기 0** (`INDEPENDENT:175/0(0)` · 순위표 0) | 오늘 `probe:bgsched --path pro` |
 | W1 | 사기 **원천** — 등판주 −3.3 은 맞고 미등판주 +0.37 이 문제. `oneWeek()` 계측으로 무엇이 올리는지 | `trajProbe 사기증감` |
-| W1 | `track/events` 병합 (B 14커밋 · 전부 B 소유 파일) | `git log track/events ^extract-modals` |
-| W1 | 세이브 마이그레이션 — 주인공 필드 아홉 · `test:migration` | HANDOFF_A_TO_C §7 |
+| W1 | ✅ `track/events` 병합 — `9f8ad99b5` (충돌 0 · 1,714건 통과) | 09-02 |
+| W1 | ✅ 세이브 마이그레이션 — 병역·프로 필드 **열여섯** `828f2b40d` ("아홉"은 C 가 본 실제 세이브의 빠진 수였다) | 09-02 |
 | W2 | 🔴 **밸런스 기준선 재측정** 씨앗 3 × `measure:batting` → 사용자에게 값 확정 | BALANCE_BASELINE 배너 |
 | W2 | 보크 12.8 → 3~8 (Rust) · 2군 타율 .329 · 경기당타석 **모수부터**(규정타자 기준) | A 목록 |
 | W3 | **Steam 파이프라인** — `pack` 산출물 검증 · dir vs nsis 결정 · steam_appid · depot 구조 · 업로드 스크립트 | 흔적 0 |
