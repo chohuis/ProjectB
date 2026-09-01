@@ -11,8 +11,13 @@
 | **A+C+E** | `ProjectB` · `extract-modals` | 로스터·계약 · 경기·성적 · 계측/기반 · **Rust 전부** |
 | **B** | `ProjectB-events` · `track/events` | 이벤트·소식함 → [track-B-events.md](track-B-events.md) |
 
-🔴 **`track/events` 는 아직 안 병합됐다** (2026-08-30 확인). 저쪽이
-그저께(08-29)까지 문서를 더 썼고 **A 에만 56커밋이 앞서 있다.**
+✅ **`track/events` 는 2026-09-02 에 병합됐다** (`9f8ad99b5` · B 14커밋 ·
+충돌 0 · 1,714건 통과). 아래 08-30 기록은 그때 것이다 — B 가 다시
+앞서면 `git log track/events ^extract-modals` 로 세고 `git merge-tree` 로
+미리 본다(작업 트리를 안 건드린다).
+
+~~🔴 **`track/events` 는 아직 안 병합됐다** (2026-08-30 확인). 저쪽이
+그저께(08-29)까지 문서를 더 썼고 **A 에만 56커밋이 앞서 있다.**~~
 
 | track/events 에만 있는 것 | 상태 |
 |---|---|

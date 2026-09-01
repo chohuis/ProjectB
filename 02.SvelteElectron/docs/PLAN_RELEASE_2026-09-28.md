@@ -167,6 +167,33 @@ C   apps/ui/src/pages/**  ·  features/**  ·  apps/desktop/ipc/*.cjs
 
 ---
 
+## 8. Steam 파이프라인 — 지금 있는 것 (2026-09-02 실측 · W3 출발점)
+
+코드는 안 만졌다. `package.json` `build` 블록과 `main.cjs` 를 읽은 것이다.
+
+| 있는 것 | 실측 | Steam 에 어떻게 닿나 |
+|---|---|---|
+| `npm run pack` | electron-builder **`dir`** 타깃 → `release/win-unpacked/` | **그대로 디포다.** 설치기(nsis) 필요 없음 — Steam 이 설치를 맡는다 |
+| `asarUnpack` | `resource/**` · `packages/*/dist` · `engine-native/**` | `.node` 와 master.db 가 asar 밖 — 그대로 둔다 |
+| 세이브 경로 | `app.getPath("userData")/saves` = `%APPDATA%/OnePitch/saves` | Steam Cloud **Auto-Cloud** 루트 `WinAppDataRoaming` + 상대경로 `OnePitch/saves` — 코드 변경 0 |
+| 아이콘 | `build/icon.ico` · `icon.png` | 스토어 자산과 별개. 실행파일 아이콘은 이걸로 됨 |
+| `productName` | `OnePitch` (6월 산출물은 `ProjectB` 였다) | 실행파일 이름이 바뀌었다 — 디포 설정에 `OnePitch.exe` |
+| Steamworks SDK | **없음** | 9/28 "올릴 수 있는 빌드"에는 **필요 없다.** 도전과제·오버레이는 1.1 |
+
+⚠ `npmRebuild: true` 라 `pack` 이 네이티브를 electron 33.4.11 로 다시 빌드한다 —
+**계측이 `.node` 를 잡고 있으면 EPERM** 이다. W3 빌드는 계측을 다 끝낸 뒤에.
+
+### W3 에 만들 것 — 셋뿐이다
+
+```
+dist:steam     pack → win-unpacked/OnePitch.exe 존재 · .node/master.db 가 asar 밖 검증
+               → depot 폴더 정리(scripts·docs 제외 확인) → 크기·파일 수 기록
+smoke:dist     그 폴더의 exe 를 headless 로 띄워 새 게임 → W5 까지 (drive.mjs 재사용)
+depot 문서     app id · depot id · 실행 경로 · Cloud 루트 — 업로드는 SteamPipe GUI 로 (사용자)
+```
+
+---
+
 ## 7. 이런 요청에 어떻게 움직였나 — 다음에도 같이
 
 ```
