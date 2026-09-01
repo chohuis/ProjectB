@@ -336,27 +336,65 @@ trap 'git checkout $FIX -- $FILES' EXIT INT TERM
 **주인공이 타자면 사교 풀이 통째로 빈다.** 투수여도 인지도 15·명성 10
 아래면 같다. 프로 커리어 내내 사교 소식이 한 줄도 안 온다.
 
-### 9-3 🔴 상무 2년(104주) — 후보에 오를 수 있는 게 17종뿐
+### 9-3 🔴 상무 — 이벤트는 도는데 소식함에 한 줄도 안 간다
 
-`game.ts:2377` 이 `careerStage: "military"` 를 **실제로 세운다**.
-`militaryDischargeYear = enlistYear + 2` 라 **약 104주**를 그 무대로 산다.
-
-그런데 `career_stage: "military"` 를 조건에 쓴 규칙이 **0종**이다.
+🔴 **처음엔 "상무 이벤트 0종"이라고 적었다. 틀렸다.** `events/` 렌즈로만
+세서 못 봤다 — 상무는 **별도 계통**을 쓴다.
 
 ```
-  전체 589종 중 무대·리그 조건이 없는 것   17종
-     conditional 12 · random 5 · mandatory 0
+  resource/data/master/events/pools/military_common.json    14종
+  resource/data/master/events/pools/military_sports.json    20종
+  resource/data/master/events/pools/military_general.json   20종
+  resource/data/master/events/pools/military.json            5종
 ```
 
-**`mandatory` 가 0이다** — 상무 2년 동안 정해진 소식이 하나도 없다.
+`advanceWeek.ts:2083` 이 `minRank` 로 걸러 개수를 `weekCalcMilitary` 에
+넘기고, Rust(`week_engine.rs:783`)가 **매주 40%** 로 하나 뽑는다.
+104주면 **약 42번 뜬다.** 계통은 멀쩡히 돈다.
 
-⚠ id 에 상무가 든 규칙은 `EVT_IND_SANGMU_MATCH` 하나인데, 조건이
-`career_stage: independent` 다. **상무를 상대하는 이벤트**이지 상무에
-있는 이벤트가 아니다.
+⚠ **9-4 와 같은 실수다** — 2군은 리그축, 상무는 별도 풀이었다.
+**무대축(`career_stage`) 하나로 재고를 세면 두 번 틀린다.**
 
-⚠ 이건 CLAUDE.md 잔여 결함 #3(상무 Phase 1 이 `&[]` 를 받아 한 번도 안
-돈다 · `npc_sim.rs:2567`)과 **다른 자리**다. 엔진과 콘텐츠가 **양쪽 다**
-비어 있다. A 가 #3 을 고쳐도 소식은 여전히 안 온다.
+#### 그래도 소식함은 빈다 — 이건 맞다
+
+`advanceWeek.ts:2166` 군 복무 분기의 반환값:
+
+```
+  return {
+    processedWeek: nextWeek,
+    logs: [isSportsUnit ? "군 복무(체육부대)" : "군 복무(일반부대)"],
+    newMessages: [],        ← 🔴 박혀 있다
+    ...
+  };
+```
+
+54종이 전부 `pushPendingAction` 으로 **모달만** 띄운다. 소식함에는
+104주 동안 한 줄도 안 들어가고, 주간 로그도 고정 한 줄이다.
+
+⚠ 이 54종은 `title`/`description` 이 파일에 직접 박혀 있어
+**메시지 템플릿을 안 탄다.** 문장 은행(9-5)도 못 붙인다.
+
+#### 🔴 1회성 이벤트에 1회 가드가 없다
+
+```
+  Rust    rng.gen_range(0..total)   복원추출 · 쿨다운 없음
+  데이터   id title description minRank choices   ← once 필드 없음
+  TS      pushPendingAction 이 중복을 안 거른다
+  스토어   발동 기록이 없다
+```
+
+`MIL_COM_FIRST_DAY`(「자대 배치 첫날」)는 `minRank 0` 이라 104주 내내
+후보에 남는다. 계급 구간별 기대 발동을 더하면:
+
+```
+  이병 0.16 + 일병 0.31 + 상병 0.26 + 병장 0.38 ≈ 1.1회
+```
+
+**평균 1.1회** — 상당수 커리어에서 두 번 뜨거나 한 번도 안 뜬다.
+그리고 **병장 때 「자대 배치 첫날」이 뜰 수 있다.**
+`MIL_SPT_FIRST_PRACTICE`(「첫 야구 훈련」)도 같다.
+
+⚠ 뽑기·데이터 스키마를 손대야 해서 **B lane 밖이다.** A 와 상의 중.
 
 ### 9-4 ✅ 2군은 문제없다 — 확인하고 접었다
 
@@ -399,10 +437,16 @@ trap 'git checkout $FIX -- $FILES' EXIT INT TERM
 ### 9-6 다음에 할 것
 
 ```
-  ① POOL_SOCIAL_DAILY 에 프로·독립·상무 전용 추가      재고 1 → 6 목표
-  ② career_stage "military" 이벤트 신설                mandatory 0 → 최소 4
-  ③ 재고 작은 풀부터 bodies 3~4문장                    고교/대학 SOCIAL 12종 먼저
+  ① POOL_SOCIAL_DAILY 에 프로·독립 전용 추가          재고 1 → 6 목표
+  ② 군 복무 주간을 소식함에 잇는다                    newMessages: [] 를 채운다
+  ③ 재고 작은 풀부터 bodies 3~4문장                   고교/대학 SOCIAL 12종 먼저
 ```
 
-⚠ ①②는 `docs/EVENT_PLAN_2026-08-28.md` 의 간극 1~4 와 같은 자리다.
-그 계획안은 **간극을 짐작으로 잡았는데**, 위 표가 실측 근거다.
+⚠ ①은 `docs/EVENT_PLAN_2026-08-28.md` 의 간극 1~4 와 같은 자리다.
+그 계획안은 **간극을 짐작으로 잡았는데**, 9-1 표가 실측 근거다.
+
+⚠ ②는 상무 54종이 이미 있으니 **새로 쓰는 게 아니라 잇는 일**이다.
+다만 그 54종은 템플릿을 안 타므로(9-3) 이을 자리를 A 와 정해야 한다.
+
+🛑 **상무 이벤트를 새로 쓰지 않는다.** 처음에 0종으로 잘못 세어
+"만들자"고 했는데, 54종이 이미 있다. 만들면 중복이 된다.
