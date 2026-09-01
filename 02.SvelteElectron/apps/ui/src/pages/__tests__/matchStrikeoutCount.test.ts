@@ -26,6 +26,9 @@ const SRC = readFileSync(resolve(__dirname, "../match/MatchPage.svelte"), "utf8"
 /** 주석 안의 글자가 검사에 걸리면 시험이 거짓으로 통과한다. */
 const CODE = SRC.replace(/\/\*[\s\S]*?\*\//g, "").replace(/<!--[\s\S]*?-->/g, "");
 
+/** 색 토큰이 실제로 선언된 곳. 손으로 적은 목록이 아니라 **파일을 읽는다.** */
+const DEFINED = readFileSync(resolve(__dirname, "../../styles.css"), "utf8");
+
 const COUNT = CODE.slice(
   CODE.indexOf("totalStrikeouts++") - 400,
   CODE.indexOf("totalStrikeouts++") + 40,
@@ -53,22 +56,49 @@ describe("탈삼진을 정확히 센다", () => {
 });
 
 describe("경기 중에 탈삼진이 보인다", () => {
-  it("투수 카드에 탈삼진 줄이 있다", () => {
+  /**
+   * 🔴 **능력치 목록에 넣으면 소용이 없다.** 실측(2026-09-01) —
+   *
+   *       해상도       카드 패널  머리글  목록에 남는 높이
+   *       1280×720       44px     21px      0px
+   *       1366×768       92px     21px     39px   (내용 104px)
+   *       1536×864      190px     21px    137px
+   *
+   *   실사용 두 해상도에서 목록은 **한 줄도 안 보인다** — 체력·멘탈까지
+   *   접힌다. 머리글은 어디서나 남으므로 K 는 거기 세운다.
+   *
+   * ⚠ 가운데 행(존 캔버스 · 구종 선택 · 던지기)에서 높이를 뺏어 목록을
+   *   살리는 길도 있으나, **조작이 참고보다 우선**이라 안 건드렸다.
+   *   자세한 계측은 docs/TRACK_C_EYECHECK.md.
+   */
+  it("머리글에 K 표식이 있다", () => {
     expect(CODE, "던지는 동안 탈삼진이 안 보인다 — 0 이어도 눈에 안 띈다")
-      .toMatch(/탈삼진<\/span><strong class="bv">/);
+      .toMatch(/class="k-tag"[^>]*>K \{totalStrikeouts\}</);
+  });
+
+  it("목록에 넣지 않았다", () => {
+    expect(CODE, "실사용 해상도에서 목록은 접혀 있어 넣어도 안 보인다")
+      .not.toMatch(/bl">탈삼진</);
   });
 
   /**
    * 🔴 `gameResult.strikeouts` 는 **경기가 끝날 때 한 번** 채워진다.
-   *    카드에 그걸 붙이면 경기 내내 0 이라, 있으나 마나다.
+   *    그걸 붙이면 경기 내내 0 이라, 있으나 마나다.
    */
   it("경기 중에도 늘어나는 값을 쓴다", () => {
-    const CARD = CODE.slice(
-      CODE.indexOf('탈삼진</span><strong class="bv">') - 20,
-      CODE.indexOf('탈삼진</span><strong class="bv">') + 120,
-    );
-    expect(CARD, "종료 때만 채워지는 값이라 경기 내내 0 이다")
+    const TAG = CODE.slice(CODE.indexOf('class="k-tag"'),
+      CODE.indexOf('class="k-tag"') + 120);
+    expect(TAG, "종료 때만 채워지는 값이라 경기 내내 0 이다")
       .not.toMatch(/gameResult\.strikeouts/);
-    expect(CARD).toMatch(/\{totalStrikeouts\}/);
+    expect(TAG).toMatch(/\{totalStrikeouts\}/);
+  });
+
+  /** ⚠ 정의되지 않은 토큰을 쓰면 색이 조용히 사라진다 (엔딩 화면 `--accent-weak`). */
+  it("쓰는 색 토큰이 실재한다", () => {
+    const RULE = CODE.slice(CODE.indexOf(".k-tag {"), CODE.indexOf(".k-tag {") + 300);
+    for (const t of RULE.match(/var\(--[a-z-]+\)/g) ?? []) {
+      expect(SRC.includes(t.slice(4, -1) + ":") || DEFINED.includes(t.slice(4, -1) + ":"),
+        `${t} 이 어디에도 정의돼 있지 않다`).toBe(true);
+    }
   });
 });
