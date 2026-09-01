@@ -174,4 +174,31 @@ describe("playerYearLabel", () => {
     expect(playerYearLabel({ ...base, careerStage: "military" })).toBe("복무 중");
     expect(playerYearLabel({ ...base, careerStage: "independent" })).toBe("");
   });
+
+  /**
+   * 🔴 **대학은 `grade` 만 보면 묵은 학년이 뜬다** (2026-09-01).
+   *
+   *   `grade` 는 `universityWeek` 을 비추는 값이고 **시즌 롤오버 때만**
+   *   동기화된다. 시즌 중에 계수기가 한 해를 넘겨도 롤오버 전까지 옛 학년을
+   *   보여줬다. 정본은 `careerTransition.universityGradeOf` 다.
+   *
+   * ⚠ A 가 축 원점을 옮겼다(진학 W32 부터 세던 것 → 진학 시 정렬).
+   *   여기가 그 축을 읽는 화면 쪽 관문이다.
+   */
+  it("대학은 계수기가 이기고, 없으면 `grade` 로 떨어진다", () => {
+    const u = { ...base, careerStage: "university" } as const;
+    // 계수기가 앞서면 계수기를 따른다 — grade 는 아직 롤오버 전이라 1이다
+    expect(playerYearLabel({ ...u, grade: 1 }, 53)).toBe("2학년");
+    expect(playerYearLabel({ ...u, grade: 2 }, 157)).toBe("4학년");
+    // 경계 — 52주차는 아직 1학년이다 (정본이 (uw-1)/52 다)
+    expect(playerYearLabel({ ...u, grade: 1 }, 52)).toBe("1학년");
+    // 계수기가 없으면 예전처럼 grade
+    expect(playerYearLabel({ ...u, grade: 3 })).toBe("3학년");
+    expect(playerYearLabel({ ...u, grade: 3 }, null)).toBe("3학년");
+  });
+
+  /** ⚠ 고교는 계수기가 없다 — `universityWeek` 을 줘도 `grade` 여야 한다 */
+  it("고교는 계수기에 안 휘둘린다", () => {
+    expect(playerYearLabel({ ...base, careerStage: "highschool", grade: 2 }, 999)).toBe("2학년");
+  });
 });

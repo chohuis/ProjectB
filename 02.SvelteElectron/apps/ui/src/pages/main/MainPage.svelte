@@ -462,7 +462,7 @@
       teamName={tName($gameStore.protagonist.teamId)}
       teamId={$gameStore.protagonist.teamId}
       playerName={$gameStore.player.name}
-      playerYear={playerYearLabel($gameStore.protagonist)}
+      playerYear={playerYearLabel($gameStore.protagonist, $gameStore.schoolState.universityWeek)}
       playerPosition={$gameStore.player.position}
       playerThrows={$gameStore.player.throws}
       playerBats={$gameStore.player.bats}

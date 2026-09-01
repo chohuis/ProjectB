@@ -1,4 +1,5 @@
 import type { CareerStage, ProtagonistSave } from "../types/save";
+import { universityGradeOf } from "./careerTransition";
 
 /**
  * "3학년" · "프로 4년차" — 헤더와 선수 카드가 같이 쓰는 **연차 표기의 정본**.
@@ -27,11 +28,27 @@ const KIND: Record<CareerStage, YearKind> = {
   independent: "none",
 };
 
-export function playerYearLabel(p: Pick<ProtagonistSave,
-  "careerStage" | "grade" | "proServiceYears">): string {
+/**
+ * ⚠ **대학은 `grade` 만 보면 안 된다** (2026-09-01).
+ *
+ *   `grade` 는 `universityWeek` 을 비추는 값이고 **시즌 롤오버 때만** 동기화된다.
+ *   시즌 중에 계수기가 한 해를 넘겨도 **롤오버 전까지 묵은 학년을 보여준다.**
+ *   정본은 `careerTransition.universityGradeOf` 다.
+ *
+ *   `universityWeek` 을 안 주면 예전처럼 `grade` 로 떨어진다 — 고교는 계수기가
+ *   없으므로 그쪽이 맞고, **NPC 도 계수기가 없다**(`schoolState` 는 주인공 것이다).
+ */
+export function playerYearLabel(
+  p: Pick<ProtagonistSave, "careerStage" | "grade" | "proServiceYears">,
+  universityWeek?: number | null,
+): string {
   switch (KIND[p.careerStage]) {
-    case "grade":
+    case "grade": {
+      if (p.careerStage === "university") {
+        return `${universityGradeOf(p.grade, universityWeek)}학년`;
+      }
       return p.grade ? `${p.grade}학년` : "";
+    }
     case "proYears":
       // 신인은 proServiceYears가 0이다 — "0년차"는 없다
       return `프로 ${Math.max(1, p.proServiceYears + 1)}년차`;

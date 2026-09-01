@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { ipLabel } from "../../../shared/utils/baseballFormat";
   import { gameStore } from "../../../shared/stores/game";
+  import { playerYearLabel } from "../../../shared/utils/playerYearLabel";
   import {
     loadFinanceRules, applyInvestment,
     type FinanceRulesFile, type InvestmentResult,
@@ -86,6 +87,13 @@
   }
 
   $: p = $gameStore.protagonist;
+
+  /**
+   * ⚠ **생 `grade` 를 쓰고 있었다.** 대학은 `universityWeek` 이 정본이고
+   *   `grade` 는 시즌 롤오버 때만 동기화된다 — 시즌 중엔 묵은 학년이 뜬다.
+   *   `playerYearLabel` 이 단계별 표기의 정본이라 그걸 쓴다.
+   */
+  $: yearLabel = playerYearLabel(p, $gameStore.schoolState.universityWeek) || p.careerStage;
   $: myTeamId = p.teamId;
   $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
   $: myRank = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
@@ -350,7 +358,7 @@
       <p class="season-label">{$seasonStore.seasonYear} 시즌 종료</p>
       <h2>{postseasonResult?.myResult === "champion" ? "🏆 우승" : "시즌 결산"}</h2>
       <p class="sub">
-        {p.grade ? `${p.grade}학년` : p.careerStage}
+        {yearLabel}
         · {tName(myTeamId)}
       </p>
     </header>

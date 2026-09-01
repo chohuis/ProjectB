@@ -3,6 +3,7 @@
   import { careerEventLabel } from "../../../shared/utils/careerEventLabel";
   import { ipLabel, rateLabel, eraLabel, wpctLabel, totalBases } from "../../../shared/utils/baseballFormat";
   import { gameStore } from "../../../shared/stores/game";
+  import { universityGradeOf } from "../../../shared/utils/careerTransition";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import type { EntityDetails } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
@@ -355,11 +356,21 @@
       }
 
       if (p.leagueId === "LEAGUE_UNIVERSITY" && p.grade != null) {
-        const baseGradYear   = curYear + (4 - p.grade);
+        /*
+          ⚠ **생 `p.grade` 로 연도를 셌다.** `grade` 는 `universityWeek` 을
+          비추는 값이고 **시즌 롤오버 때만** 동기화된다 — 시즌 중에 계수기가
+          한 해를 넘겨도 롤오버 전까지 묵은 학년으로 입학·졸업 연도를 그렸다.
+          정본은 `universityGradeOf` 다 (2026-09-01 · A 가 축을 정렬했다).
+
+          ⚠ **뜨는 조건(`p.grade != null`)은 안 건드린다.** 계수기로 바꾸면
+          `grade` 가 없는 세이브에서 안 뜨던 칸이 뜨기 시작한다 — 값만 옮긴다.
+        */
+        const grade          = universityGradeOf(p.grade, $gameStore.schoolState.universityWeek);
+        const baseGradYear   = curYear + (4 - grade);
         const milDuringUniv  = p.militaryHiatusStage === "university";
         const graduationYear = baseGradYear + (milDuringUniv ? 2 : 0);
-        const enrollYear     = curYear - p.grade + 1;
-        return { teamName, startYear: enrollYear, endYear: graduationYear, durLabel: undefined as string | undefined, yearsIn: p.grade, isSchool: true };
+        const enrollYear     = curYear - grade + 1;
+        return { teamName, startYear: enrollYear, endYear: graduationYear, durLabel: undefined as string | undefined, yearsIn: grade, isSchool: true };
       }
 
       const c = p.contract;
@@ -384,6 +395,13 @@
       }
 
       if (leagueId === "LEAGUE_UNIVERSITY") {
+        /*
+          ⚠ **여기는 `universityGradeOf` 로 안 바꾼다.** NPC 에는 계수기가 없다 —
+          `universityWeek` 을 담은 `schoolState` 는 `SaveGame`(주인공) 것이고
+          `NpcSaveState` 에는 `grade` 뿐이다. `universityGradeOf(grade, undefined)`
+          는 `grade` 로 떨어지므로 **지금과 완전히 같고**, 바꾸면 "NPC 도 정본
+          축에 올렸다"는 거짓 인상만 남는다.
+        */
         const grade          = modalNpcSave?.grade ?? 4;
         const isMilDuringUniv = (modalNpcSave?.militaryStatus === "현역" || modalNpcSave?.militaryStatus === "군필")
           && (modalNpcSave?.militaryDischargeYear ?? 0) > (curYear - 2);
