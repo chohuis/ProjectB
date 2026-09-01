@@ -17,7 +17,7 @@
   import { pitchSlotsOf, slotCountLabel, gradeFraction } from "../../shared/utils/pitchSlots";
   import { batterBars, seasonLines, seasonStatsOf } from "../../shared/utils/statCard";
   import {
-    isOutInPlay, isHit, isStrike, flashLabel, logLabel, logClass, flashColor,
+    isOutInPlay, isHit, isStrike, isStrikeout, flashLabel, logLabel, logClass, flashColor,
     type PitchResultCode, type BallInPlay,
   } from "../../shared/utils/matchResult";
   import { seasonStore } from "../../shared/stores/season";
@@ -1230,7 +1230,15 @@
       if (outsGained > 0) totalOutsRecorded += outsGained;
 
       // 개인 기록 집계
-      if (isStrike(resultCode) && count.out > prevOuts) {
+      /*
+        ⚠ **간접 판정이었다** — `isStrike(코드) && 아웃이 늘었나`.
+        스트라이크와 아웃이 겹치기만 하면 세므로, 그 투구에 **도루 저지**처럼
+        다른 이유로 아웃이 늘면 삼진이 아닌데도 하나 올라갔다.
+
+        엔진이 3스트라이크째에 코드를 좁혀 주고(`STRIKEOUT_*`) 그걸 가르는
+        `isStrikeout` 이 있다 — 그걸 쓴다. 정확하고 읽기도 쉽다.
+      */
+      if (isStrikeout(resultCode)) {
         totalStrikeouts++;
       }
       if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
@@ -1865,6 +1873,12 @@
               </li>
               <li class="plain"><span class="bl">구속</span><strong class="bv">{pitcherState.speed}</strong></li>
               <li class="plain"><span class="bl">투구수</span><strong class="bv">{engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount}</strong></li>
+              <!--
+                🔴 **경기 중에 탈삼진이 안 보였다.** 종료 화면에만 있어서,
+                삼진이 한 번도 안 잡히던 결함(2026-09-01)이 **한 시즌 내내
+                0 인 채로** 아무 눈에도 안 띄었다. 던지는 동안 보이는 자리에 둔다.
+              -->
+              <li class="plain"><span class="bl">탈삼진</span><strong class="bv">{totalStrikeouts}</strong></li>
             </ul>
           {:else}
             <ul class="line-list">
