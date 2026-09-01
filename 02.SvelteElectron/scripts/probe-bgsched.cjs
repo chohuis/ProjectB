@@ -63,7 +63,17 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
       const year = app.currentSeason();
       {
         const sum = app.leagueSummary();
-        const total = Object.values(sum).reduce((a, v) => a + v.schedule, 0);
+        // 🔴 **`schedule` 이 아니라 `played` 로 고른다** (2026-09-02 · 2차 수정).
+        //
+        //   처음엔 일정 수가 최대인 순간을 남겼다. 그런데 일정은 **만들어진
+        //   직후**가 최대이고 거기선 아직 아무것도 안 치렀다 — 군 시즌이
+        //   `KBL:780/0` 으로 찍혔는데 그게 "안 돈다"인지 "W0 에서 찍었다"인지
+        //   **구분이 안 됐다.**
+        //
+        //   알고 싶은 건 "그 시즌에 **몇 경기가 치러졌나**" 다. 그러면
+        //   `played` 합이 최대인 순간을 남기는 게 맞다 — 롤오버가 비우기
+        //   직전이 그 지점이다.
+        const total = Object.values(sum).reduce((a, v) => a + v.played, 0);
         const prev = seen.get(year);
         if (!prev || total > prev.total) {
           seen.set(year, { total, sum, wy: ((app.currentWeek() - 1) % 52) + 1, stage: app.careerStage() });
