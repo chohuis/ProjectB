@@ -312,23 +312,6 @@
           </section>
         {/if}
 
-        <!-- 사람 — 숫자뿐이라 이름·역할·값만 놓는다 -->
-        {#if relTop.length > 0}
-          <section class="sec">
-            <h3>사람</h3>
-            <ul class="rels">
-              {#each relTop.slice(0, 8) as r}
-                <li>
-                  <span class="r-name">{relName(r)}</span>
-                  <span class="r-kind">{KIND[r.kind] ?? r.kind}</span>
-                  <span class="r-val" class:high={(r.value ?? 0) >= 60}>
-                    {relationLabel(r.value).label}</span>
-                </li>
-              {/each}
-            </ul>
-          </section>
-        {/if}
-
       {/if}
 
       <!-- 주요 사건 — 위 분기 바깥이다. 통산 기록이 없어도 사건은 있다 -->
@@ -353,6 +336,25 @@
           </ol>
         </section>
       {/if}
+
+        <!-- 사람 — **세 덩어리 뒤에 놓는다.** 요약·통산·사건이 결산의
+             본문이고 관계는 덧붙이는 것이다 (사용자 확정 2026-09-01) -->
+        {#if relTop.length > 0}
+          <section class="sec">
+            <h3>사람</h3>
+            <ul class="rels">
+              {#each relTop.slice(0, 8) as r}
+                <li>
+                  <span class="r-name">{relName(r)}</span>
+                  <span class="r-kind">{KIND[r.kind] ?? r.kind}</span>
+                  <span class="r-val" class:high={(r.value ?? 0) >= 60}>
+                    {relationLabel(r.value).label}</span>
+                </li>
+              {/each}
+            </ul>
+          </section>
+        {/if}
+
     </div>
 
     <footer class="foot">
@@ -421,7 +423,12 @@
     background: linear-gradient(180deg, #14203a 0%, #0d1524 100%);
     border-bottom: 1px solid #23324c;
   }
-  .chip { margin: 0; font-size: 11px; letter-spacing: 0.12em; color: #7e97bd; text-transform: uppercase; }
+  /*
+    ⚠ **자간을 한국어에 맞춘다.** 0.12em 은 라틴 소문자 기준이라 한글에서는
+    글자가 흩어져 보인다. `text-transform: uppercase` 는 한글에 아무 일도
+    안 하면서 라틴이 섞이면 그것만 튄다 — 둘 다 걷어낸다.
+  */
+  .chip { margin: 0; font-size: 11px; letter-spacing: 0.04em; color: #7e97bd; }
   .head h2 {
     margin: 7px 0 0; display: flex; align-items: center; gap: 10px;
     font-size: 26px; font-weight: 800; color: #eef4ff; letter-spacing: -0.02em;
@@ -446,12 +453,17 @@
 
   .sec { display: grid; gap: 10px; }
   .sec h3 {
-    margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    color: #7e97bd; text-transform: uppercase;
+    margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+    color: #7e97bd;
     padding-bottom: 6px; border-bottom: 1px solid #1b2740;
   }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 8px; }
+  /*
+    ⚠ **`auto-fit` 이 줄을 7+5 로 갈랐다.** 폭에 따라 한 줄에 몇 칸이 들어갈지
+    달라져서 아래 줄이 늘 어중간했다. 여섯 열로 고정한다 —
+    투수 12칸이 **6+6** 으로 딱 맞고, 타자 11칸은 6+5 다.
+  */
+  .grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
   .cell {
     display: grid; gap: 3px; justify-items: center;
     padding: 8px 4px; border-radius: 6px; background: #121c30;
@@ -459,23 +471,37 @@
   .lbl { font-size: 10px; color: #7e97bd; }
   .val { font-size: 15px; color: #dce7f7; font-variant-numeric: tabular-nums; }
 
-  .highs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+  /* 다섯 개가 4+1 로 갈려 마지막 한 칸이 외따로 떨어졌다 — 세 열이면 3+2 다 */
+  .highs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .high {
     display: flex; align-items: baseline; gap: 7px;
     padding: 8px 11px; border-radius: 6px; background: #121c30;
   }
-  .h-lbl { font-size: 11px; color: #8aa0bf; flex: 1; }
+  /* 칸이 좁으면 "최다 이닝" 이 두 줄로 접혀 그 칸만 키가 커졌다 */
+  .h-lbl { font-size: 11px; color: #8aa0bf; flex: 1; white-space: nowrap; }
   .h-val { font-size: 14px; color: #7fc99a; font-variant-numeric: tabular-nums; }
   .h-yr  { font-size: 11px; color: #62779a; font-variant-numeric: tabular-nums; }
 
+  /*
+    ⚠ **수상만 민무늬였다.** 소속·주요 사건은 카드 행인데 여기만 배경이 없어
+    리듬이 끊기고, 연도를 오른쪽에 붙이자 이름과의 사이가 휑해 보였다.
+    같은 카드로 맞추면 그 간격이 표처럼 읽힌다.
+  */
   .awards { display: grid; gap: 6px; }
-  .award { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+  .award {
+    display: flex; align-items: center; gap: 8px; font-size: 13px;
+    padding: 7px 10px; border-radius: 6px; background: #121c30;
+  }
   .a-name { color: #dce7f7; }
   .a-cnt {
     font-size: 11px; font-weight: 700; color: #f0c65a;
     background: #241c06; border-radius: 10px; padding: 1px 7px;
   }
-  .a-yrs { font-size: 11px; color: #62779a; font-variant-numeric: tabular-nums; }
+  /* 연도를 오른쪽에 붙여 줄마다 같은 자리에서 읽히게 한다 */
+  .a-yrs {
+    margin-left: auto; font-size: 11px; color: #62779a;
+    font-variant-numeric: tabular-nums;
+  }
 
   .stints { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   .stints li {
@@ -504,7 +530,7 @@
 
   .foot {
     padding: 14px 26px; border-top: 1px solid #23324c;
-    display: flex; justify-content: flex-end; gap: 0;
+    display: flex; justify-content: flex-end; gap: 8px;
   }
   .close {
     border: 1px solid #3a4d70; background: #16233c; color: #cfe0f5;
@@ -516,7 +542,7 @@
   .exit {
     border: 1px solid #6b5220; background: #2a2008; color: #f0c65a;
     border-radius: 8px; padding: 9px 22px; font-size: 13px; font-weight: 700;
-    cursor: pointer; margin-left: 8px;
+    cursor: pointer;
   }
   .exit:hover { background: #3a2c0c; }
 </style>

@@ -154,13 +154,38 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
     expect(SRC).toMatch(/\{#if onExit\}/);
   });
 
-  it("은퇴 흐름이 위로 넘긴다", () => {
-    expect(ASK, "RetirementAskModal 이 onExit 을 안 받는다")
-      .toMatch(/export let onExit/);
-    expect(ASK, "결산 화면에 안 넘긴다")
-      .toMatch(/<CareerEndScreen[\s\S]{0,140}?\{onExit\}/);
-    expect(MAIN, "MainPage 가 은퇴 모달에 onSeasonEnd 를 안 넘긴다")
-      .toMatch(/<RetirementAskModal[\s\S]{0,240}?onExit=\{onSeasonEnd\}/);
+  /**
+   * 🔴 **결산을 은퇴 모달이 들면 안 된다** (2026-09-01 눈확인).
+   *
+   *   `retire()` 가 `resolvePendingAction("retirementAsk")` 를 부르면
+   *   `MainPage` 의 `{#if pendingRetirementAsk}` 가 false 가 되어 그 모달이
+   *   **통째로 언마운트된다.** 뒤이은 `showSummary = true` 는 죽은 상태를
+   *   건드리는 것이라 **결산이 아예 안 떴다** — 은퇴하면 엔딩을 못 봤다.
+   *   `나 > 상태 > 기록` 재관람만 살아 있어서 여태 안 드러났다.
+   */
+  it("은퇴 모달은 결산을 들지 않는다", () => {
+    expect(ASK, "결산이 다시 은퇴 모달 안으로 들어갔다 — 언마운트되면 같이 죽는다")
+      .not.toMatch(/CareerEndScreen/);
+    expect(ASK, "끝났다고 알리지 않는다").toMatch(/onRetired\(\)/);
+  });
+
+  it("MainPage 가 결산을 형제로 든다", () => {
+    expect(MAIN, "MainPage 가 CareerEndScreen 을 안 그린다")
+      .toMatch(/<CareerEndScreen[\s\S]{0,120}?onExit=\{onSeasonEnd\}/);
+    expect(MAIN, "은퇴 모달이 끝났다고 알릴 길이 없다")
+      .toMatch(/onRetired=\{\(\) => \(careerEndOpen = true\)\}/);
+  });
+
+  /**
+   * ⚠ 기록이 확정된 뒤에 알려야 한다 — 결산은 `careerRecords` 를 읽으므로
+   *   저장 전에 알리면 마지막 시즌이 빠진 채로 나온다.
+   */
+  it("저장이 끝난 뒤에 알린다", () => {
+    const fn = ASK.slice(ASK.indexOf("async function retire()"),
+                         ASK.indexOf("async function keepPlaying"));
+    expect(fn.indexOf("seasonStore.save()"), "save 를 안 부른다").toBeGreaterThan(0);
+    expect(fn.indexOf("onRetired()"), "save 보다 먼저 알린다")
+      .toBeGreaterThan(fn.indexOf("seasonStore.save()"));
   });
 
   /**
@@ -226,5 +251,19 @@ describe("태그가 읽힌다", () => {
       expect(rule, `${cls} 가 색을 안 정한다 — 지면이 어두워 안 읽힌다`)
         .toMatch(/color: #/);
     }
+  });
+});
+
+/**
+ * 결산의 세 덩어리 순서 — **요약 · 통산 · 사건이 본문이고 사람은 덧붙이는 것**
+ * (사용자 확정 2026-09-01). 처음엔 `사람` 이 `주요 사건` 앞에 있었다.
+ */
+describe("절 순서", () => {
+  it("주요 사건이 사람보다 앞에 온다", () => {
+    const ev = SRC.indexOf("<h3>주요 사건</h3>");
+    const pp = SRC.indexOf("<h3>사람</h3>");
+    expect(ev, "주요 사건 절이 없다").toBeGreaterThan(0);
+    expect(pp, "사람 절이 없다").toBeGreaterThan(0);
+    expect(ev, "사람이 주요 사건보다 앞에 있다").toBeLessThan(pp);
   });
 });

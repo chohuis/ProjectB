@@ -2829,6 +2829,22 @@
   .flip-btn:hover { border-color: var(--ink); color: var(--ink); }
   .flip-btn[aria-pressed="true"] { background: var(--line); border-color: var(--ink); color: #fff; }
 
+  /*
+    🔴 **`overflow: hidden` 이 능력치를 소리 없이 잘랐다** (2026-09-01 눈확인).
+
+    카드가 짧아지면 막대가 그냥 사라진다 — 스크롤바도 없어서 **잘린 줄도
+    모른다.** 투구를 고를 때 보라고 띄운 상대 타자 능력치가 그 자리다.
+
+    해상도별로 잰 잘린 높이(px · [타자, 투수]):
+
+        1280×720   [104, 82]   ← FHD @150%
+        1366×768   [ 65, 43]   ← 노트북 표준
+        1536×864 이상          [0, 0]
+
+    ⚠ **`hidden` 을 지우면 안 된다.** 그러면 카드가 늘어나 옆 열의 높이를
+      밀어 구장까지 흔든다. `auto` 로 바꾼다 — 넘칠 때만 스크롤바가 생기고
+      1536 이상에서는 지금과 똑같다.
+  */
   .bar-list, .line-list {
     list-style: none;
     margin: 0;
@@ -2838,7 +2854,7 @@
     align-content: start;
     min-height: 0;
     flex: 1 1 auto;
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   /* 라벨 · 막대 · 숫자 — 세 열을 고정해 두 카드의 눈금이 서로 맞는다 */

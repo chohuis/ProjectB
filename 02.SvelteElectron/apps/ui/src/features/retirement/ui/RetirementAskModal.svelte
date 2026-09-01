@@ -14,10 +14,22 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { retireProtagonist } from "../../../shared/usecases/retirement";
-  import CareerEndScreen from "./CareerEndScreen.svelte";
 
-  /** 커리어를 마치고 타이틀로. `MainPage` → `App` 으로 이어진다 */
-  export let onExit: () => void = () => {};
+  /**
+   * 🔴 **결산을 여기서 들면 안 된다** (2026-09-01 눈확인에서 드러났다).
+   *
+   *   `retire()` 가 `resolvePendingAction("retirementAsk")` 를 부르는 순간
+   *   `MainPage` 의 `{#if pendingRetirementAsk}` 가 false 가 되어 **이 컴포넌트가
+   *   통째로 언마운트된다.** 그 뒤에 `showSummary = true` 를 해봐야 이미 죽은
+   *   상태를 건드리는 것이라 **결산이 아예 안 떴다** — 은퇴하면 엔딩을 못 봤다.
+   *   `나 > 상태 > 기록` 재관람 경로만 살아 있어서 여태 안 드러났다.
+   *
+   *   결산은 `MainPage` 가 형제로 든다. 여기서는 **끝났다고 알리기만** 한다.
+   *
+   * ⚠ 대기 동작을 늦게 해소하는 쪽으로 고치면 안 된다 — 타이틀로 나간 뒤
+   *   슬롯을 다시 열면 은퇴한 선수에게 은퇴 권고가 또 뜬다.
+   */
+  export let onRetired: () => void = () => {};
 
   export let urgency = 0;
   export let reason: "decline" | "injury" = "decline";
@@ -29,7 +41,6 @@
    * "결산을 봤는가" 플래그를 세이브에 새로 넣지 않으려는 것이다 — 은퇴하는
    * 그 순간이 곧 첫 관람이고, 다시 보는 건 나 > 상태에서 누를 때다.
    */
-  let showSummary = false;
 
   $: p = $gameStore.protagonist;
   $: seasons = (p.careerRecords ?? []).length;
@@ -49,9 +60,9 @@
     seasonStore.resolvePendingAction("retirementAsk");
     await seasonStore.save();
     resolving = false;
-    // 저장이 끝난 뒤에 바꾼다 — 결산은 `careerRecords`를 읽으므로
-    // 기록이 확정되기 전에 띄우면 마지막 시즌이 빠진 채로 나온다
-    showSummary = true;
+    // ⚠ **저장이 끝난 뒤에 알린다.** 결산은 `careerRecords`를 읽으므로
+    //   기록이 확정되기 전에 띄우면 마지막 시즌이 빠진 채로 나온다
+    onRetired();
   }
 
   async function keepPlaying() {
@@ -64,9 +75,6 @@
   }
 </script>
 
-{#if showSummary}
-  <CareerEndScreen onClose={() => (showSummary = false)} {onExit} />
-{:else}
 <div class="overlay">
   <section class="modal">
     <header>
@@ -85,7 +93,6 @@
     </div>
   </section>
 </div>
-{/if}
 
 <style>
   .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:245; }

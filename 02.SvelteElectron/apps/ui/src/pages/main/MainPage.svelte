@@ -35,6 +35,7 @@
   import SportsUnitApplicationModal from "../../features/military/ui/SportsUnitApplicationModal.svelte";
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import RetirementAskModal from "../../features/retirement/ui/RetirementAskModal.svelte";
+  import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
   import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
@@ -54,6 +55,12 @@
   let activeMatchContext: InteractiveMatchContext | null = null;
 
 
+  /**
+   * 🔴 **결산은 여기가 든다.** 은퇴 모달 안에 두면 안 된다 —
+   *   `resolvePendingAction("retirementAsk")` 이 그 모달을 언마운트해서
+   *   **결산이 아예 안 떴다**(2026-09-01). 대기 동작과 수명을 끊는다.
+   */
+  let careerEndOpen = false;
   let committedMatchScheduleIds = new Set<string>();
   let lastSeasonYear = 0;
 
@@ -562,8 +569,13 @@
     urgency={pendingRetirementAsk.urgency}
     reason={pendingRetirementAsk.reason ?? "decline"}
     detail={pendingRetirementAsk.detail ?? ""}
-    onExit={onSeasonEnd}
+    onRetired={() => (careerEndOpen = true)}
   />
+{/if}
+
+<!-- 은퇴 결산 — **탭과 무관하다.** 전면 오버레이라 어느 탭에서 은퇴했든 뜬다 -->
+{#if careerEndOpen}
+  <CareerEndScreen onClose={() => (careerEndOpen = false)} onExit={onSeasonEnd} />
 {/if}
 
 {#if pendingInjuryTreatment && currentTab === "news"}
