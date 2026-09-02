@@ -38,7 +38,12 @@ A
 ├─ 7. ✅ 보크 12.4 → **5.4/팀** (씨앗 3: 6.7 · 4.3 · 5.1 · 목표 3~8) — 상수 셋 절반 · 폭투 33~44 · 포일 4.4~5.6 은 그대로
 ├─ 7.5 ✅ 해외 2군 직행 — 신청(3곳) → **구단 제안** (사용자 확정: 부모 1군 전력 문턱만 · 상한 없음) 2a708abbd · 화면 둘은 C-1.5
 ├─ 8. ⬜ B 재병합 (B 가 당겨 두면) · B·C 결함 회신 (인계 둘을 매 회차 읽는다)
-├─ 9. 🔄 회귀 전량 — ✅ vitest 195/1,728 · ✅ cargo 312 · ✅ svelte-check 0 · ✅ smoke:dist · check:* 33 → 아래 FAIL 확인 · ⬜ test:releasescope · 문서 갱신
+├─ 9. 🔄 회귀 전량 — ✅ vitest 195/1,728 · ✅ cargo 312 · ✅ svelte-check 0 · ✅ smoke:dist · check:* 33 → **29 OK · 4 FAIL**
+│     ├─ 🔴 check:teamrefs — CareerEndScreen.svelte 의 가짜 팀 ID 2건(TEAM_HS_DOSEONG_COA1 · TEAM_UNIV_HANYANG) → **C**
+│     ├─ 🔴 check:namelocale — HallOfFamePage·MatchPage 원본 스토어 읽음(예전부터) → **C** (이미 할당)
+│     ├─ 🔄 check:protransition — 기본 씨앗 03 이 오늘 세상에선 고교 미지명·군 경로라 "5시즌 안에 프로" 못 밟음 → 씨앗 02(2029 KBL)로 바꿔 재실행 중
+│     ├─ ⚠ check:determinism(67분) — 2026 W0 NPC 부상 상태부터 두 실행이 갈린다 · seedOf 는 0 을 안 낸다(실측) → Rust thread_rng 폴백 자리(npc_sim 621·4374) 중 하나가 W0 에 씨앗 없이 불린다 · 결정성 정책(계측 재현 수준)상 🛑 1.1
+│     └─ ⬜ test:releasescope · 문서 갱신
 ├─ 10. 빌드 · Steam
 │     ├─ ✅ 현 상태 — dir 산출물이 곧 디포 · Cloud 는 Auto-Cloud (PLAN_RELEASE §8)
 │     ├─ ✅ dist:steam 검증기 (d6aa846e0) · ✅ 새 pack 검증 OK — 파일 1,506 · 441.4 MB · 누출 0 (09-02)
