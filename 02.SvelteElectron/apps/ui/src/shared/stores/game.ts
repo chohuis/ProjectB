@@ -2398,6 +2398,15 @@ function createGameStore() {
         const protagonist: ProtagonistSave = {
           ...now,
           careerStage: "military",
+          // 🔴 **소속 리그도 군으로 옮긴다** (2026-09-02).
+          //
+          // 예전엔 단계만 바꾸고 `leagueId` 는 입대 전 것을 그대로 뒀다.
+          // 배경 시뮬은 `lid === 주인공.leagueId` 를 건너뛰므로, 학생 입대자는
+          // 복무 2년 내내 **고교 리그가 통째로 멈췄고**(실측 `HIGHSCHOOL 1020/0`),
+          // 프로 입대자면 **그 프로 리그가 멈춘다.** 소속은 NPC 처럼
+          // `LEAGUE_MILITARY` 다(AUDIT_STAGES §8). 원래 리그는 전역 때
+          // 복구 단계(`militaryHiatusStage`)에서 되돌린다.
+          leagueId: "LEAGUE_MILITARY",
           militaryUnit: unit,
           militaryServiceWeeks: 0,
           militaryRecoveryWeeks: 0,
@@ -2450,6 +2459,13 @@ function createGameStore() {
         const protagonist: ProtagonistSave = {
           ...p,
           careerStage: stage,
+          // 입대 때 `LEAGUE_MILITARY` 로 옮겼으니 여기서 되돌린다 — 단계가
+          // 정본이고 리그는 그 파생이다. 학생 출신은 독립으로 간다(위 주석).
+          // ⚠ 독립의 **팀**은 `dischargeProtagonist` 가 정한다 — 여기는 리그만.
+          leagueId:
+            stage === "pro_abl" ? "LEAGUE_ABL" :
+            stage === "pro_jbl" ? "LEAGUE_JBL" :
+            stage === "pro_kbl" ? "LEAGUE_KBL" : "LEAGUE_INDEPENDENT",
           // ⚠ **다녀온 부대는 남긴다.** 지우면 전역 후 상무/현역 구분이 사라져
           // 선수 상세·인생 기록에 표시할 수 없다 (NPC 쪽도 같이 고쳤다)
           militaryServedUnit: p.militaryUnit ?? p.militaryServedUnit,

@@ -136,8 +136,14 @@ export async function dischargeProtagonist(): Promise<boolean> {
   // 옮긴다. `completeMilitaryService`가 단계만 바꾸므로 여기가 짝이다
   // (안 하면 `stage: independent`인데 `league: LEAGUE_HIGHSCHOOL`이 된다).
   const after = get(gameStore).protagonist;
-  if (after.careerStage === "independent" && after.leagueId !== "LEAGUE_INDEPENDENT") {
-    const indieTeams = ALL_TEAMS_BY_LEAGUE.LEAGUE_INDEPENDENT ?? [];
+  // ⚠ **리그가 아니라 팀으로 판정한다** (2026-09-02). `completeMilitaryService`
+  //   가 이제 리그를 `LEAGUE_INDEPENDENT` 로 되돌려 주므로 리그로 보면 이
+  //   갈래를 영영 안 탄다 — 그러면 팀은 여전히 고교 팀이고 시즌도 안 열린다.
+  //   "독립 팀이 아닌 팀을 달고 독립 무대에 있다"가 옮겨야 할 상태다.
+  const indieTeams = ALL_TEAMS_BY_LEAGUE.LEAGUE_INDEPENDENT ?? [];
+  const needsIndiePlacement = after.careerStage === "independent"
+    && (!indieTeams.includes(after.teamId) || SANGMU_TEAM_IDS.has(after.teamId));
+  if (needsIndiePlacement) {
     // 상무는 복무 중인 선수의 자리다 — 전역자가 갈 팀이 아니다
     const target = indieTeams.filter((t) => !SANGMU_TEAM_IDS.has(t)).sort()[0];
     if (target) {
