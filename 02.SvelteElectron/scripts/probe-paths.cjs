@@ -81,6 +81,8 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
       if (!cur.farm && prev.farm && /^pro/.test(cur.stage)) seen.farmOut++;
       if (cur.tournamentGamesOfMyTeam > prev.tournamentGamesOfMyTeam && cur.myGames > prev.myGames) seen.tourStatWeeks++;
       if (cur.military === "면제" && prev.military !== "면제") seen.exempt++;
+      // 독립리그 세계 — 해가 바뀔 때 한 줄 (재적 · 31세 초과 · 나이 중앙값) — 닫힌 세계인지 본다
+      if (cur.year !== prev.year && cur.indie) console.log(`[독립세계] ${cur.year} ${JSON.stringify(cur.indie)}`);
       // 병영생활 — 4주마다 한 줄 (감각·아크·관계·캘린더·이벤트). 살았는지도 여기서 본다
       if (cur.stage === "military" && cur.mil && cur.week % 4 === 0) console.log(`[병영] ${tag} ${JSON.stringify(cur.mil)}`);
       prev = cur;

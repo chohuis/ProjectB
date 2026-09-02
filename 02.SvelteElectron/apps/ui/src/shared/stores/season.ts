@@ -246,6 +246,12 @@ function createSeasonStore() {
      */
     initSeason(leagueId: string, seasonYear: number, totalWeeks: number, teamIds: string[]) {
       const next = makeEmptySeason(leagueId, seasonYear, totalWeeks, teamIds);
+      // 🔴 **씨앗을 잃지 않는다** (2026-09-03). `makeEmptySeason` 에는 worldSeed 가 없어서 무대를 여는
+      //   자리(입대 `openMilitarySeason` · 프로 `openProSeason` …)를 지나면 worldSeed 가 undefined → 0 이 됐다.
+      //   그 뒤의 seedOf(worldSeed, …) 굴림(부상·시험·진학·병영·성과)이 전부 같은 값으로 돌아가,
+      //   병영 밸런스 아홉 판(씨앗 3)이 보직까지 **완전히 같은 결과**였다(씨앗 02 는 박격포병이어야 했다).
+      //   시즌 롤오버(`startNewSeason`)는 보존하고 있었다 — 여기만 빠져 있었다.
+      next.worldSeed = get({ subscribe }).worldSeed;
       // ⚠ 고교·군은 `teamIds`가 빈 배열로 온다 — 그쪽은 뒤에 오는
       //   `initAllLeaguesV3`·`reinitHighschoolSeason`이 채운다
       if (teamIds.length > 0) {

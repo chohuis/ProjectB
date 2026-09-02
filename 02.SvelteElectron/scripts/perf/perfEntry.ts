@@ -3678,6 +3678,13 @@ export function pathSignals(): Record<string, unknown> {
     events: (p.careerEvents ?? []).map((e) => e.eventType),
     military: p.militaryStatus,
     retired: p.retirement != null,
+    // 독립리그 세계 — B measure:draft(씨앗 4242): 2027부터 미지명→독립 0 · 정원 45 꽉 · 31세 초과 69명 잔류.
+    // 실제 주간 시뮬이 도는 런에서도 그런지 본다 (재적 수 · 상한 초과 수 · 나이 중앙값). 31 = rosterRules.LEAGUE_INDEPENDENT.ageMax
+    indie: (() => {
+      const ind = g.npcs.filter((n) => n.currentLeague === "LEAGUE_INDEPENDENT" && n.careerStatus === "active" && n.currentTeam);
+      const ages = ind.map((n) => n.age).sort((a, b) => a - b);
+      return { active: ind.length, over31: ages.filter((a) => a > 31).length, medianAge: ages[Math.floor(ages.length / 2)] ?? null };
+    })(),
     // 병영생활(현역) — 감각·아크·관계 수·캘린더 소화·뜬 이벤트 종류·휴가·상벌 (probe-paths 가 4주마다 찍는다)
     mil: p.militaryLife ? {
       sense: Math.round(p.militaryLife.ballSense), role: p.militaryLife.roleId, arc: p.militaryLife.arcStage,

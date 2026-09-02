@@ -188,6 +188,9 @@ pub struct NpcSaveState {
 #[serde(rename_all = "camelCase")]
 pub struct SeasonEndSummary {
     pub retired_count: i32,
+    /// 독립리그 나이 상한 은퇴 (2026-09-03) — 이게 0 이면 독립이 다시 닫힌 세계다
+    #[serde(default)]
+    pub indie_age_retired: i32,
     pub military_enlisted_count: i32,
     pub military_discharged_count: i32,
     pub fa_count: i32,
