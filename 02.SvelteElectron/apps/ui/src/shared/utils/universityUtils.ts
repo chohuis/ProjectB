@@ -287,10 +287,8 @@ export function passesOverseasFarm(
   return ovr >= cut + OVR_EXEMPT || baseballScore >= SCORE_MIN;
 }
 
-/** 해외 2군 팀인가 — 직행 후보는 여기뿐이다(1군은 FA·포스팅 경로다) */
-export function isOverseasFarmTeam(leagueId: string | undefined): boolean {
-  return leagueId === "LEAGUE_ABL_FARM" || leagueId === "LEAGUE_JBL_FARM";
-}
+// ⚠ `isOverseasFarmTeam(leagueId)` 는 2026-09-02 에 지웠다 — refs 의 2군 팀은 `leagueId` 가 **1군 리그**라
+//   (tier "마이너") 이 함수로 거르면 한 팀도 안 남았다(C 눈확인 · 0/0). 2군 소속은 `ALL_TEAMS_BY_LEAGUE[…_FARM]` 로 본다.
 
 /**
  * 해외 2군 직행 — **구단이 제안한다** (2026-09-02 · 사용자 확정).

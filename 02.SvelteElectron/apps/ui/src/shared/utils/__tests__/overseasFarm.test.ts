@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { overseasFarmCutOfPower, passesOverseasFarm, isOverseasFarmTeam,
+import { overseasFarmCutOfPower, passesOverseasFarm,
   indieCutOfPower } from "../universityUtils";
 
 /**
@@ -55,13 +55,8 @@ describe("해외 2군 직행", () => {
     expect(passesOverseasFarm(79, 100, 3)).toBe(true);
   });
 
-  it("2군 팀만 직행 후보다 — 1군은 FA·포스팅 경로다", () => {
-    expect(isOverseasFarmTeam("LEAGUE_ABL_FARM")).toBe(true);
-    expect(isOverseasFarmTeam("LEAGUE_JBL_FARM")).toBe(true);
-    expect(isOverseasFarmTeam("LEAGUE_ABL")).toBe(false);
-    expect(isOverseasFarmTeam("LEAGUE_KBL_FARM")).toBe(false);
-    expect(isOverseasFarmTeam(undefined)).toBe(false);
-  });
+  // `isOverseasFarmTeam` 검사는 2026-09-02 에 지웠다 — refs 의 2군은 leagueId 가 1군 리그라 그 함수가 틀린 잣대였다.
+  // 2군 소속의 정본은 ALL_TEAMS_BY_LEAGUE[…_FARM] · overseasWiring.test 가 그 배선을 본다.
 
   /**
    * 🔴 **드래프트를 대체하면 안 된다.** 고교 졸업 OVR이 보통 68~75인데
