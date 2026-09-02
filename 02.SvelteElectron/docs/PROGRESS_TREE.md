@@ -38,7 +38,7 @@ A
 ├─ 7. ✅ 보크 12.4 → **5.4/팀** (씨앗 3: 6.7 · 4.3 · 5.1 · 목표 3~8) — 상수 셋 절반 · 폭투 33~44 · 포일 4.4~5.6 은 그대로
 ├─ 7.5 ✅ 해외 2군 직행 — 신청(3곳) → **구단 제안** (사용자 확정: 부모 1군 전력 문턱만 · 상한 없음) 2a708abbd · 화면 둘은 C-1.5
 ├─ 8. ✅ B 병합 10회 — 마지막 ffc63fa4c(B-9 전 무대 도달률 한 장 · 새 엔진: 고교 80 · 대학 80 · 독립 84 · KBL 84 · 해외 65(체류 기간) · 병영 85 · 공용 100)
-│      ⚠ 도달률 인용은 엔진 판까지 적는다(구 88% → 새 80%) · KBL 2군 0% 는 경로(강등 안 겪음) · 상무·옛 군 풀 59종은 A 가 --path milsports 로 재는 중 · 검사: test:events ALL PASS · eventconditions OK · militarydata OK · vitest 38
+│      ⚠ 도달률 인용은 엔진 판까지(구 88% → 새 80%) · KBL 2군 0% 는 경로 · ✅ 상무(--path milsports · 씨앗 02 · 100주): sports 17/20 · common 10/14 = **27/34 79%** · 🔴 `pools/military.json` 5종은 로더가 안 읽는 죽은 풀(0/5) → B 판단 · general 20 은 옛 세이브 갈래라 새 게임 0 이 정상 · 검사: test:events ALL PASS · eventconditions OK · militarydata OK · vitest 38
 ├─ 9. 🔄 회귀 전량 — ✅ vitest 195/1,728 · ✅ cargo 312 · ✅ svelte-check 0 · ✅ smoke:dist · check:* 33 → **29 OK · 4 FAIL**
 │     ├─ ✅ check:teamrefs — CareerEndScreen.svelte 주석 속 예시 팀 ID 2건을 지웠다(표시용도 샘플도 아니고 주석이었다) → C
 │     ├─ ✅ check:namelocale — HallOfFamePage·MatchPage → teamMap(언어 반영본) → C
