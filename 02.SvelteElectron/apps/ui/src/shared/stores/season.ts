@@ -38,6 +38,7 @@ import {
   makeStandings,
 } from "../utils/leagueScheduler";
 import * as BackgroundLeague from "./backgroundLeague";
+import { switchProtagonistLeague as switchProtagonistLeagueState } from "../utils/protagonistLeagueSwitch";
 import * as NpcInjury from "./npcInjury";
 import * as Postseason from "./postseason";
 
@@ -693,6 +694,13 @@ function createSeasonStore() {
       });
     },
 
+    /**
+     * 시즌 중 주인공 리그 교체(승강) — `s.schedule` ↔ `leagueSchedules` (utils/protagonistLeagueSwitch.ts).
+     * `gameStore.setProtagonistTeam` 바로 뒤에 부른다 — 소속만 옮기면 일정이 옛 리그에 남는다.
+     */
+    switchProtagonistLeague(toLeagueId: string, teamId: string) {
+      update((s) => switchProtagonistLeagueState(s, toLeagueId, teamId));
+    },
     applyWeeklyConditionRecovery(entities: EntityRow[], campBonus?: Record<string, number>) {
       update((s) => BackgroundLeague.applyWeeklyConditionRecovery(s, entities, campBonus));
     },

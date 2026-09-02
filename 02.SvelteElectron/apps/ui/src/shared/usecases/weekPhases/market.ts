@@ -1089,12 +1089,15 @@ export async function processProTeamCallupCalldown(
       });
     if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);
 
-    // 주인공이 승강 대상이면 소속 리그를 같이 옮긴다 — 2군 일정·순위표가
-    // 이미 있으므로 leagueId만 맞으면 그대로 뛴다 (사용자 확정)
+    // 주인공이 승강 대상이면 소속 리그를 같이 옮긴다.
+    // 🔴 "leagueId 만 맞으면 그대로 뛴다" 는 **순위표에만** 맞았다 (2026-09-02 · C 눈확인).
+    //   주인공 일정은 `s.schedule` 이라 옛 리그 일정이 그대로 남아 상대가 전부 옛 팀이었다 —
+    //   `switchProtagonistLeague` 가 `s.schedule` ↔ `leagueSchedules` 를 맞바꾼다.
     const protoTo = moveMap.get(g.protagonist.id);
     if (protoTo) {
       const toLeague = leagueOfTeam(protoTo) ?? g.protagonist.leagueId;
       gameStore.setProtagonistTeam(protoTo, toLeague);
+      seasonStore.switchProtagonistLeague(toLeague, protoTo);
       logs.push(protoTo.endsWith("_2")
         ? `[W${weekNum}] 2군 강등 통보를 받았다.`
         : `[W${weekNum}] 1군 승격 통보를 받았다.`);

@@ -613,6 +613,9 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
   리그)가 통째로 멈췄다(`HIGHSCHOOL 1020/0` · 씨앗 3). 배경 시뮬의 건너뛰기는
   `protagonist.leagueId` 하나로 정해진다
 - 검사 `protagonistLeagueSchedule.test.ts` · 계측 `npm run probe:bgsched`
+- **시즌 중에 리그가 바뀌면(승강) `seasonStore.switchProtagonistLeague`** — `setProtagonistTeam` 은 소속만
+  옮긴다. 강등 뒤 일정 탭 상대가 전부 옛 팀이고 "예정된 경기 없음" 이던 것(C 눈확인 09-02)이 이 자리다.
+  `s.schedule` ↔ `leagueSchedules[to]` 를 맞바꾸고 주인공 표시를 다시 켠다 (`utils/protagonistLeagueSwitch.ts`)
 
 ⚠ **`[일정끝]` 으로 판정하지 마라.** 그건 롤오버 **뒤**를 찍는다 — 고교만
 꽉 차 보이는 건 `reinitHighschoolSeason` 이 방금 다시 만들었기 때문이지
