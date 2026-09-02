@@ -201,7 +201,7 @@ if (rules) {
   };
   for (const k of ["serviceWeeks", "bootCampWeeks", "rankBandWeeks", "ballSense.start", "ballSense.weeklyDecay", "ballSense.gainByAccess",
     "ballSense.capPerAccessGap", "fatigue.baseByIntensity", "fatigue.choice.ball", "fatigue.choice.people", "fatigue.choice.rest",
-    "fatigue.natural", "fatigue.leave", "morale.choice", "relation.weeklyDecay", "relation.peopleByBand", "relation.sameSubunitWeight",
+    "fatigue.natural", "fatigue.leave", "fatigue.injuryWarn", "morale.choice", "relation.weeklyDecay", "relation.peopleByBand", "relation.sameSubunitWeight",
     "event.weeklyChance", "event.defaultCooldown", "perf.bandCoef", "discharge"]) need(rules, k);
   if (rules.serviceWeeks !== 100) fail(`rules.serviceWeeks 는 100 (militaryDecision.SERVICE_WEEKS 와 같아야 한다)`);
   if (Array.isArray(rules.rankBandWeeks) && rules.rankBandWeeks.join(",") !== "8,34,60") fail("rules.rankBandWeeks 는 코드 띠 8/34/60 그대로");

@@ -148,6 +148,8 @@ export interface MilitaryLifeRules {
     choice: Record<MilitaryWeekChoice, number>;
     natural: number;
     leave: number;
+    /** 이 위면 공 카드에 "부상 위험" 띠 (§27) — 부상 자체는 조건부 이벤트가 맡는다 */
+    injuryWarn: number;
   };
   morale: {
     choice: Partial<Record<MilitaryWeekChoice, number>>;

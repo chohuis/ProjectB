@@ -15,7 +15,8 @@
     "baseByIntensity": [0, 2, 4, 6, 8, 10],
     "choice": { "ball": 4, "people": 1, "rest": -6 },
     "natural": -3,
-    "leave": -20
+    "leave": -20,
+    "injuryWarn": 85
   },
   "morale": {
     "choice": { "people": 2, "rest": 1 },

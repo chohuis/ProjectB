@@ -78,7 +78,8 @@ export async function runMilitaryLifeWeek(args: { nextWeek: number; seasonYear: 
 
   // ① 전입·전출·진급
   for (const mem of members) {
-    if (mem.leaveWeek === week && state.relations[mem.id] !== undefined) {
+    // leaveWeek 100 은 "복무 끝까지" 다 — 전역 주(W100)에 전원을 얼리면 부대원 탭이 모두 "전역" 으로 보인다 (실측 09-02: frozen 15)
+    if (mem.leaveWeek === week && week < rules.serviceWeeks && state.relations[mem.id] !== undefined) {
       state.frozen[mem.id] = state.relations[mem.id];
       delete state.relations[mem.id];
       messages.push(msg(`msg-mil-unit-leave-${mem.id}-${args.seasonYear}-w${args.nextWeek}`, `${mem.name || mem.rank} 전역`,
@@ -227,7 +228,8 @@ export async function runMilitaryLifeWeek(args: { nextWeek: number; seasonYear: 
   }
   logs.unshift(`군 복무(현역) — ${week}주차${choice === "none" ? (onLeave ? " · 휴가" : bootCamp ? " · 훈련소" : "") : ` · ${CHOICE_LABEL[choice]}`}`);
 
-  return { patch: { fatigue: res.fatigue, morale: res.morale, militaryLife: state }, logs, messages };
+  // 정수로 저장한다 — 옛 군 갈래(Rust u32)와 같다. 소수로 두면 이벤트 조건·소식이 "68.628…" 을 본다 (C 회신 09-02)
+  return { patch: { fatigue: Math.round(res.fatigue), morale: Math.round(res.morale), militaryLife: state }, logs, messages };
 }
 
 /** 이벤트 선택지 중 병영생활 몫 — 관계·감각·상벌·휴가·성과 보정 (§28). 옛 군 풀 이벤트면 아무것도 안 한다 */

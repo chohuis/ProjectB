@@ -2195,7 +2195,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       //
       // ⚠ **`once` 는 커리어 통을 쓴다**(`careerTriggeredEvents`).
       // `seasonStore.triggeredEvents` 는 `makeEmptySeason` 이 매 시즌 비우는데
-      // **군 복무는 104주(2시즌)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
+      // **군 복무는 100주(`SERVICE_WEEKS` · 52주 시즌 둘에 걸친다)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
       //
       // ⚠ 뽑기는 Rust 가 한다 — 복원추출이고 쿨다운이 없다. 그래서 후보에
       // 남아 있는 한 계속 뽑힌다. **거르는 자리는 여기 하나뿐이다.**
