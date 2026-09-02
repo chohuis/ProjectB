@@ -803,3 +803,192 @@ C  §22 탭 + §32 화면 넷 (A ① 의 타입이 나오면 목업 그대로 �
 | 5 | 보직 배정 | **반반 랜덤** — W6 에 `seedOf(worldSeed, "military-role")` 50/50. 능력 기울임 없음 |
 | §25 | 이번 주 선택 시점 | **병역 탭에서 미리 고른다** — `militaryLife.nextChoice` · 안 고르면 "쉰다" · 헤드리스는 정책으로 채운다 |
 | 착수 | 구현 시작 | **아직 — 기획을 더 다듬는다.** 코드는 1.1 첫 항목 그대로. 이 부(4부)를 대화로 계속 채운다 |
+
+## 36. 이벤트 카탈로그 — id·트리거·선택지 골격 (문안은 비워 둔다 · 사용자 몫)
+
+층 넷: **필수**(캘린더 · 확률 밖) · **화천**(캘린더 · §18) · **조건부**(자원·관계가 연다) · **일상**(랜덤 · 쿨다운).
+효과 축은 §28 의 선택지 필드다. `역할` 은 ㉠ 통신병 · ㉡ 박격포병 · 둘 다 = —.
+
+### 36-1. 필수 14 + 화천 6 (캘린더 · 한 주 한 사건)
+
+| 주 | id | 역할 | 선택 | 효과 골격 |
+|---|---|---|---|---|
+| 1 | `MIL_CAL_ENTRY` | — | 없음 | 피로 +8 · 사기 −3 · 감각 −2 (훈련소 감쇠 최대) |
+| 2 | `MIL_CAL_SHOOTING` | — | 없음 | 소식만 · 감각 −2 |
+| 4 | `MIL_CAL_MARCH` | — | 없음 | 피로 +10 · 감각 −2 |
+| 5 | `MIL_CAL_GRADUATION` | — | 없음 | 배치 통보 — unit.name·location 을 문안에 넣는다 · 피로 −5 |
+| 6 | `MIL_CAL_FIRST_DAY` | — | 1 (인사) | 보직 확정 표시(§35 · 50/50) · 재적 부대원 전원 관계 +2 · 사기 +2 |
+| 12 | `MIL_CAL_WORKS_SPRING` | ㉡ 주 · ㉠ 보조 | noChoice | 피로 +12(㉡) / +6(㉠) · 같은 소단위 관계 +1 |
+| 16 | `MIL_CAL_FIRE_1` | ㉡ (㉠ 통신 지원) | 1 (긴장/평정) | **perf 포사격** tier(§28) · 포반장 관계 ±3 · 피로 +6 |
+| 20 | `MIL_CAL_FIRST_LEAVE` | — | 2 (집 / 야구장) | 휴가 10일 · 집: 사기 +10 감각 +2 · 야구장: 감각 +6 사기 +6 · 피로 −20 |
+| 28 | `MIL_CAL_INSPECTION_1` | — | 1 (성실/요령) | **perf 통신평가**(㉠) / 진지 검열(㉡) · 성실: tier −1 피로 +5 · 요령: tier 그대로 피로 0 |
+| 35 | `MIL_CAL_PROMOTE_2` | — | 1 (후임 소개) | 상병 · 후임(joinWeek 36) 예고 · 사기 +3 · **포상휴가 조건 열림** |
+| 44 | `MIL_CAL_WINTER` | — | noChoice | 혹한기 · 피로 +12 · 감각 −3 · 앞뒤 8주에 `MIL_COND_SNOW` 열림 |
+| 46 | `MIL_CAL_FESTIVAL` | — | 2 (외박 / 부대 잔류) | 산천어축제 · 외박: 사기 +6 감각 +2 관계 동기 +3 · 잔류: 피로 −6 간부 관계 +2 |
+| 52 | `MIL_CAL_SECOND_LEAVE` | — | 2 | 첫 휴가와 같다 |
+| 61 | `MIL_CAL_PROMOTE_3` | — | 1 (책임 — 후임/소단위) | 병장 · 후임 관계 +4 또는 소단위 전원 +2 · **보직 아크 문**(§38) |
+| 64 | `MIL_CAL_WORKS_FALL` | ㉡ 주 | noChoice | 봄과 같다 · 병장이면 피로 절반 |
+| 68 | `MIL_CAL_FIRE_2` | ㉡ | 1 | perf 포사격 — **사수면 "내 성적"** 문안 · 표창 후보 |
+| 70 | `MIL_CAL_RANGER` | — | noChoice | 유격 · 피로 +10 · 감각 −3 |
+| 84 | `MIL_CAL_INSPECTION_2` | — | 2 | 통신평가 2(㉠) / 진지 검열(㉡) · W28 과 같다 · 표창 후보 |
+| 96 | `MIL_CAL_D30` | — | 1 (연락) | 전역 30일 · 복귀 연락 — 기존 복귀 로직(구단/독립)에 걸친다 · 사기 +5 |
+| 100 | `MIL_CAL_DISCHARGE` | — | 없음 | 전역식 · §30 환산·기록 |
+
+⚠ §11 의 W28 「검열」과 §18 의 W28 「지휘검열」은 **한 사건**이다 — id 하나(`MIL_CAL_INSPECTION_1`)에 역할별 perf 가 갈린다.
+
+### 36-2. 조건부 16 — 자원·관계가 연다 (조건은 §28 어휘 · 쿨다운 주)
+
+| id | 조건 | 쿨다운 | 대상 | 선택지 골격 → 효과 |
+|---|---|---|---|---|
+| `MIL_COND_NO_BALL` | ballSense ≤ 30 | 12 | — | 편지로 야구 소식(사기 +4 감각 +2) / 잊는다(사기 +1) |
+| `MIL_COND_SENSE_HIGH` | ballSense ≥ 75 · rank ≥ 2 | 16 | peer | 중대 대항전 에이스 — 감각 +3 · 소단위 관계 +2 · 피로 +5 |
+| `MIL_COND_FATIGUE` | fatigue ≥ 85 | 6 | officer | 의무대(피로 −15 · 간부 −2) / 참는다(피로 +5 · `MIL_COND_INJURY` 문 열림 4주) |
+| `MIL_COND_INJURY` | fatigue ≥ 90 · 참는다 뒤 4주 안 | 20 | — | 허리/무릎 — 2주 선택 없음(휴식) · 감각 −5 · perf note · **능력치 안 건드림** |
+| `MIL_COND_CONFLICT_SENIOR` | relation(senior) ≤ −20 | 8 | senior | 사과(관계 +6 사기 −2) / 맞선다(관계 −8 · 동기 +3) |
+| `MIL_COND_CONFLICT_OFFICER` | relation(행보관) ≤ −25 | 10 | officer | 호출 — 수긍(관계 +4) / 항변(관계 −6 · **징계 후보**) |
+| `MIL_COND_BOND_PEER` | relation(peer) ≥ 35 | 10 | peer | 동기와 밤새 — 사기 +4 · 관계 +3 · 피로 +2 |
+| `MIL_COND_MENTOR` | relation(senior) ≥ 35 · rank ≤ 1 | 12 | senior | 선임의 조언 — 사기 +3 · 감각 +1 · 관계 +2 |
+| `MIL_COND_JUNIOR_TROUBLE` | junior 재적 · relation(junior) ≤ 0 · rank ≥ 2 | 8 | junior | 감싼다(후임 +8 간부 −2) / 보고(간부 +3 후임 −6) |
+| `MIL_COND_MORALE_LOW` | morale ≤ 35 | 8 | — | 전화(사기 +6) / 훈련 몰두(피로 +4 사기 +2 감각 +1) |
+| `MIL_COND_REWARD_LEAVE` | rank ≥ 2 · Σrelation(officer) ≥ 40 · 징계 봉쇄 아님 | once ×2 | officer | **포상휴가 4일** — 다음 주 휴가 주 · 사기 +6 감각 +3 |
+| `MIL_COND_COMMENDATION` | 직전 perf tier ≤ 2 (perf 마다 한 번) | — | officer | **표창** — award · 사기 +8 · 간부 +5 · 경력 highlight |
+| `MIL_COND_PENALTY` | perf tier 6 · 또는 항변 선택 | — | officer | **징계** — penalty · 사기 −8 · 간부 −10 · 포상휴가 8주 봉쇄 |
+| `MIL_COND_SNOW` | week 40~48 | 3 | 소단위 | 제설 — 피로 +6 · 소단위 관계 +2 · (선택) 요령: 피로 +2 관계 −1 |
+| `MIL_COND_LETTER_CLUB` | ballSense ≤ 45 · once | — | — | 구단/감독 편지 — 사기 +5 · 감각 +2 (militaryHiatusStage 가 프로면 구단, 아니면 감독) |
+| `MIL_COND_TEAM_NEWS` | 8주마다 | 8 | — | 소속팀 소식 — 배경 리그 결과를 문안에 인용(복무 중 세상이 돈다) · 사기 ±3 |
+
+### 36-3. 일상 24 — 랜덤 (쿨다운 · 가중) · 역할 게이트
+
+| id | 역할 | 쿨다운 | 대상 | 효과 축 (선택 1~2) |
+|---|---|---|---|---|
+| `MIL_DAY_VISIT` 면회 | — | 10 | — | 사기 +6 · 감각 +1 / 못 온다: 사기 −2 |
+| `MIL_DAY_LETTER` 편지 | — | 6 | — | 사기 +3 |
+| `MIL_DAY_PX` PX | — | 4 | peer | 관계 peer +2 · 사기 +2 |
+| `MIL_DAY_NIGHT_DUTY` 야간 근무 | — | 8 | senior | 들어 준다(관계 +8 피로 +2) / 존다(관계 −4) |
+| `MIL_DAY_GUARD` 위병소 | — | 6 | — | 피로 +3 · 사기 −1 |
+| `MIL_DAY_PT_TEST` 체력 검정 | — | 13 | officer | 상위: 간부 +3 사기 +3 / 하위: 피로 +4 |
+| `MIL_DAY_UNIT_GAME` 중대 대항전(야구) | — | 12 | peer | 감각 +4 · 피로 +5 · 소단위 +2 |
+| `MIL_DAY_SOCCER` 축구 | — | 5 | peer | 피로 +4 · 사기 +3 · 관계 +1 |
+| `MIL_DAY_KITCHEN` 취사 지원 | — | 8 | peer(취사병) | 관계 취사병 +4 · 피로 +2 |
+| `MIL_DAY_WORK` 작업 | — | 4 | 소단위 | 피로 +5 · 소단위 +1 |
+| `MIL_DAY_STORM` 폭우/폭설 | — | 8 | — | 피로 +4 · (겨울이면 `MIL_COND_SNOW` 대신) |
+| `MIL_DAY_CHAPEL` 종교 행사 | — | 4 | — | 사기 +2 · 피로 −2 |
+| `MIL_DAY_LIBRARY` 병영 도서관 | — | 6 | — | 사기 +2 · 감각 +1(야구 서적) |
+| `MIL_DAY_OVERNIGHT` 외박 | — | 12 | peer | 사기 +5 · 감각 +2 |
+| `MIL_DAY_CO_VISIT` 지휘관 방문 | — | 10 | officer | 간부 +2 / 실수: −3 |
+| `MIL_DAY_RESERVE` 예비군 지원 | — | 14 | — | 피로 +3 · 사기 +1 |
+| `MIL_DAY_RANGE` 분기 사격 | — | 13 | officer | 상위 간부 +2 · 하위 없음 |
+| `MIL_DAY_WIRE` 유선 가설 | ㉠ | 6 | 선임 통신병 | 관계 +3 · 피로 +4 |
+| `MIL_DAY_OPS_NIGHT` 상황실 야근 | ㉠ | 5 | 행보관 | 관계 ±3 (실수 갈래) · 피로 +3 |
+| `MIL_DAY_ERRAND` 간부 심부름 | ㉠ | 4 | officer | 관계 +2 · 사기 −1 |
+| `MIL_DAY_GUN_MAINT` 포 정비 | ㉡ | 5 | 사수 | 관계 사수 +3 · 피로 +3 |
+| `MIL_DAY_AMMO` 탄약 정리 | ㉡ | 5 | 포반장 | 관계 +2 · 피로 +5 |
+| `MIL_DAY_PATROL` 진지 순찰 | ㉡ | 6 | 소단위 | 피로 +4 · 관계 +1 |
+| `MIL_DAY_SQUAD_MEAL` 포반 회식 | ㉡ | 10 | 소단위 | 소단위 전원 +3 · 사기 +4 |
+
+합 14 + 6 + 16 + 24 = **60 종**. 주 40% × 94주 ≈ 38번 뜨니 쿨다운을 감안하면 반복 없이 찬다(§11 추정과 같다).
+`weight` 는 일상 1 · 조건부 2 (조건이 맞으면 일상보다 먼저 보이게) · 성과 연계는 캘린더라 가중이 없다.
+
+## 37. 부대원 골격 — `members.json` 초안 (이름·성격은 빈 칸 · 사용자가 채운다)
+
+조직도 §16 에서 **카드가 있는 자리만**. `subunit` 은 `HQ`(중대본부) · `PLT1`(1소대 본부) · `SQ1`(1포반).
+주인공의 소단위는 보직으로 정해진다 — ㉠ `HQ` · ㉡ `SQ1` (같은 소단위가 사람 카드 대상 가중 2배 · §26).
+`tags` 는 동작 훅이다: `decides_leave`(휴가 결재) · `grades_perf`(성과 판정 관계 대상) · `ball_partner`(공 카드 문안) · `mentor`.
+
+```json
+[
+  { "id": "MEM_CO",      "name": "", "rank": "대위", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": ["decides_leave"] },
+  { "id": "MEM_XO",      "name": "", "rank": "중위", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_1SG",     "name": "", "rank": "상사", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 100, "tags": ["decides_leave", "grades_perf:signal"] },
+  { "id": "MEM_SIG_SR",  "name": "", "rank": "상병", "role": "senior",  "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 70,  "tags": ["mentor:signal"] },
+  { "id": "MEM_SUPPLY",  "name": "", "rank": "일병", "role": "peer",    "subunit": "HQ",   "trait": "", "relationStart": 5,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_COOK",    "name": "", "rank": "상병", "role": "peer",    "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 80,  "tags": [] },
+  { "id": "MEM_PLT_LDR", "name": "", "rank": "소위", "role": "officer", "subunit": "PLT1", "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_PLT_SGT", "name": "", "rank": "중사", "role": "officer", "subunit": "PLT1", "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_SQ_LDR",  "name": "", "rank": "하사", "role": "officer", "subunit": "SQ1",  "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": ["grades_perf:mortar"] },
+  { "id": "MEM_GUNNER",  "name": "", "rank": "병장", "role": "senior",  "subunit": "SQ1",  "trait": "", "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 30,  "tags": ["mentor:mortar"] },
+  { "id": "MEM_ASST",    "name": "", "rank": "상병", "role": "senior",  "subunit": "SQ1",  "trait": "", "relationStart": 5,   "joinWeek": 0,  "leaveWeek": 62,  "tags": [] },
+  { "id": "MEM_AMMO_PR", "name": "", "rank": "이병", "role": "peer",    "subunit": "SQ1",  "trait": "", "relationStart": 10,  "joinWeek": 0,  "leaveWeek": 100, "tags": ["ball_partner"] },
+  { "id": "MEM_DRIVER",  "name": "", "rank": "상병", "role": "peer",    "subunit": "SQ1",  "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 88,  "tags": [] },
+  { "id": "MEM_JR_1",    "name": "", "rank": "이병", "role": "junior",  "subunit": "SQ1",  "trait": "", "relationStart": 5,   "joinWeek": 36, "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_JR_2",    "name": "", "rank": "이병", "role": "junior",  "subunit": "HQ",   "trait": "", "relationStart": 5,   "joinWeek": 62, "leaveWeek": 100, "tags": [] }
+]
+```
+
+- **15장.** 후임 둘은 상병(W36)·병장(W62) 때 온다 — 계급 아크(§38)가 후임 유무를 본다.
+- 전역·전출 주(`leaveWeek`)는 실제 복무 주기를 흉내 낸다: 사수 W30 · 선임 통신병 W70 · 부사수 W62 · 조종수 W88.
+  그 자리는 **비워 둔다**(자동 보충 없음) — 빈자리가 아크(부사수→사수)를 연다.
+- `MEM_SIG_SR` 은 ㉡에게도 보이고 `MEM_GUNNER` 는 ㉠에게도 보인다 — 한 중대다. 다만 카드 대상 가중이 소단위로 갈린다.
+- 이름·성격을 비워 두면 `check:militarydata` 가 **경고**(오류 아님) — 문안 없이도 틀은 돈다.
+
+## 38. 계급 아크 · 휴가 · 상벌 — 동작
+
+### 38-1. 계급 띠와 보직 아크
+
+```
+띠 (코드 그대로)   W1~8 훈련병·이병(0) · W9~34 일병(1) · W35~60 상병(2) · W61~100 병장(3)
+                   진급 주(9·35·61)에 소식 한 통 · 35·61 은 캘린더 필수가 대신한다
+
+㉡ 박격포병        탄약수(입대) → 부사수 → 사수 → 포반장 대행
+   부사수   W35 이후 · 조건: 사수 자리(MEM_GUNNER) 비었음(W30 전역) AND relation(MEM_SQ_LDR) ≥ 10  → 조건 이벤트 MIL_ARC_ASST (1 선택 · 관계 포반장 +3)
+            조건이 안 맞으면 W45 에 무조건 (문안이 "늦게") — 아크가 막히지 않는다
+   사수     W61 진급 주 · 조건: 부사수 AND (perf W16 tier ≤ 4 OR relation(MEM_SQ_LDR) ≥ 20)
+            아니면 W75 · 사수면 W68 포사격이 "내 성적"이고 표창 확률 표가 바뀐다
+   포반장 대행  W85 이후 · 조건: 사수 AND MEM_JR_1 재적 → 사람 카드 폭 +1 · 후임 관계 이벤트 가중 2배
+
+㉠ 통신병          이병 통신병 → 상황실 근무자(W35) → 중대 통신 담당(W61 · 조건 relation(MEM_1SG) ≥ 10, 아니면 W75)
+   담당이면 통신평가 tier −1 보정 · 야간 근무 이벤트 쿨다운 절반(잦아진다) · 사람 카드 폭 +1
+```
+
+아크는 `militaryLife.arcStage`(0~3) 한 칸이다. 화면 머리의 보직 라벨이 이 칸을 읽는다.
+
+### 38-2. 휴가
+
+| 종류 | 언제 | 일수 | 조건 | 효과(그 주) |
+|---|---|---|---|---|
+| 정기 1·2 | W20 · W52 (캘린더) | 10 | 없음 | 선택 없음 · 피로 −20 · 사기 +8 · 감각 +4 (+선택지 보너스 §36-1) |
+| 포상 | 조건 이벤트 (§36-2) | 4 | rank ≥ 2 · Σ간부 관계 ≥ 40 · 봉쇄 아님 · 복무 중 최대 2회 | 다음 주가 휴가 주 · 사기 +6 · 감각 +3 |
+| 위로 | 조건 이벤트 `MIL_COND_MORALE_LOW` 의 셋째 선택지(once) | 3 | morale ≤ 30 | 사기 +10 · 감각 +1 |
+
+`leaveDays` 누계 → 경력 탭 · 군 경력 한 장. 징계는 **포상휴가 8주 봉쇄**(정기는 안 건드린다 — 규정 휴가).
+
+### 38-3. 표창 · 징계
+
+```
+표창   perf tier ≤ 2 → `MIL_COND_COMMENDATION` (perf 마다 최대 1) · 확정 조건: relation(판정 간부) ≥ 20 · 아니면 70% ❓
+       효과: award 기록 · 사기 +8 · 간부 전원 +5 · 포상휴가 조건의 Σ관계에 +10 가산 · 경력 highlight
+징계   perf tier 6 AND relation(판정 간부) ≤ −10 · 또는 `MIL_COND_CONFLICT_OFFICER` 항변
+       효과: penalty 기록 · 사기 −8 · 간부 −10 · 포상휴가 8주 봉쇄 · 경력 기록(전역 뒤 재회 이벤트 문안에 쓴다)
+전역 특성  보직 특성 하나(§17) + 표창 ≥ 1 이면 mentality +1 추가 ❓ · 징계 ≥ 2 면 추가 특성 없음
+```
+
+perf tier 식(§28)에 **표창·징계 이력은 안 들어간다** — 순환을 막는다(성적 → 표창 → 성적).
+
+## 39. 상무(체육부대) — 같은 탭, 다른 안
+
+### 지금 상무가 코드에서 하는 것 (실측 2026-09-02)
+
+```
+경기      없다 — openMilitarySeason 이 "주인공만 경기 없는 52주" 를 연다 (s.schedule = [])
+성장      Rust calc_military_week 상무 표: 스태미나 매주 +1 · 회복 +1(25%→100%) · 커맨드 +1(30→50%) · 병장 구속 +1(20%)
+이벤트    military_sports 20 + common 14 · 주 40% · 쿨다운 없음
+동료      상무 팀 로스터는 **진짜 NPC** 다 (Phase 1/2 선발 · SANGMU_TEAM_IDS) — 관계 축이 이미 있다
+화면      MilitaryStatusPanel: 계급 · 부대 · 남은 주 · 진행% · 컨디션 · 피로 · 사기 · 계약 +2년
+```
+
+### 병역 탭 넷을 상무가 쓰면
+
+| 2단 | 현역(§22) | **상무** |
+|---|---|---|
+| 일과 | 자원 셋 · 선택 카드 셋(공/사람/쉼) | 자원 **둘**(체력·멘탈 — 야구 감각은 100 고정 · 막대 없음) · 선택 카드 셋 = **훈련 강도**(강: 성장 확률 ×1.3 피로 +8 / 보통: 표 그대로 / 휴식: 성장 없음 피로 −8) ❓ · 이번 주 이벤트(sports 풀) |
+| 부대원 | members.json 카드 | **상무 로스터 NPC 카드** — 기존 `relations` 그대로 · 소단위 대신 포지션 · 전역자는 매년 W48 에 빠지고 신입이 들어온다(Phase 1/2 실제 결과) |
+| 캘린더 | 필수 14 + 화천 6 | 공통 필수만(입소·수료·진급 ×3·휴가 ×2·전역 30일·전역 = 9) + **상무 캘린더 4**: W14 전반기 평가전 · W40 후반기 평가전 · W44 혹한기(공통) · W48 전역식(로스터 교체) ❓ 평가전은 경기가 아니라 perf 이벤트(tier = 성장 누적으로 판정) |
+| 경력 | perf · 상벌 · 휴가 · 감각 곡선 | **OVR 곡선**(4주 표본) · 평가전 tier · 휴가 · 전역 뒤 "계약 +2년" 표시 그대로 |
+
+- **상태**: `militaryLife` 를 같이 쓰되 `ballSense = 100` 고정 · `roleId = null` · `unitId = "UNIT_SANGMU"`. 부대원은 members.json 이 아니라 로스터에서 파생 — `relations` 도 기존 NPC 관계 축.
+- **주간 루프**: §25 순서 그대로, ④만 `calc_military_week`(기존 상무 표)를 부른다 — 훈련 강도 카드가 확률 배율로 들어간다.
+  현역과 갈리는 자리는 **Rust 함수 하나**뿐이고 나머지 루프(캘린더·이벤트·소식·저장)는 공유한다.
+- **전역**: 감각 100 → 환산 손실 0 · 회복 2주 · 특성 없음(성장을 이미 받았다). 군 경력 한 장에는 OVR 변화·평가전·동료 관계 상위.
+- **경기는 넣지 않는다**(퓨처스 참가 등) — 일정·리그 배선이 통째로 붙는 일이라 1.1 밖. 평가전은 perf 이벤트로 흉내 낸다.
+- 화면(C)은 **같은 컴포넌트에 분기 넷**이다 — 탭·머리·캘린더 축·경력 카드는 공유하고, 일과의 카드 셋과 부대원의 출처만 갈린다.
+  분기 키는 `militaryUnit === "sports"` 하나(탭 유무가 `careerStage` 하나인 것과 같은 규칙).
