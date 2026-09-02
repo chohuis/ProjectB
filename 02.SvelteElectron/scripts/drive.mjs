@@ -48,7 +48,7 @@ const COMMANDS = {
       ? path.resolve(APP_DIR, process.env.DRIVE_EXE)
       : null;
     if (packed && !fs.existsSync(packed)) {
-      console.log(`ERROR: DRIVE_EXE 가 없다: ${packed} — 먼저 npm run pack`);
+      fail(`ERROR: DRIVE_EXE 가 없다: ${packed} — 먼저 npm run pack`);
       return;
     }
     const env = packed
@@ -80,7 +80,7 @@ const COMMANDS = {
       if (page) break;
       await new Promise((r) => setTimeout(r, 300));
     }
-    if (!page) { console.log("ERROR: 앱 창을 못 찾았다"); return; }
+    if (!page) { fail("ERROR: 앱 창을 못 찾았다"); return; }
     try {
       await page.waitForLoadState("domcontentloaded", { timeout: 30_000 });
     } catch { /* 무시하고 아래에서 상태를 찍는다 */ }
@@ -93,7 +93,7 @@ const COMMANDS = {
   },
 
   async ss(name) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     const f = path.join(SHOT_DIR, (name || `ss-${Date.now()}`) + ".png");
     // ⚠ `animations: "disabled"`는 애니메이션을 **되감아 멈추길 기다린다.**
     // 주자 스프라이트(`gbcBlink`)처럼 무한 반복이면 그 대기가 안 끝나 타임아웃이
@@ -123,7 +123,7 @@ const COMMANDS = {
 
   /** DOM 클릭 — 좌표 계산을 안 거치므로 겹친 레이어에 안 막힌다 */
   async click(sel) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     console.log("click", sel, "→", await page.evaluate((s) => {
       const el = document.querySelector(s);
       if (!el) return "NOT_FOUND";
@@ -132,7 +132,7 @@ const COMMANDS = {
   },
 
   async "click-text"(text) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     console.log("click-text", JSON.stringify(text), "→", await page.evaluate((t) => {
       const els = [...document.querySelectorAll("button, a, [role='button'], li, td, tr")];
       const el = els.find((e) => e.textContent?.trim() === t)
@@ -143,7 +143,7 @@ const COMMANDS = {
   },
 
   async dblclick(sel) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     console.log("dblclick", sel, "→", await page.evaluate((s) => {
       const el = document.querySelector(s);
       if (!el) return "NOT_FOUND";
@@ -154,19 +154,19 @@ const COMMANDS = {
 
   /** fill <css-sel>|<값> — Svelte가 듣도록 input 이벤트까지 보낸다 */
   async fill(arg) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     const [sel, ...rest] = arg.split("|");
     try {
       await page.fill(sel.trim(), rest.join("|"));
       console.log("fill", sel.trim(), "→ OK");
-    } catch (e) { console.log("fill ERROR:", e.message.split("\n")[0]); }
+    } catch (e) { fail("fill ERROR:", e.message.split("\n")[0]); }
   },
 
   async type(t) { if (page) await page.keyboard.type(t, { delay: 25 }); },
   async press(k) { if (page) await page.keyboard.press(k); },
 
   async wait(sel) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     try { await page.waitForSelector(sel, { timeout: 20_000 }); console.log("found:", sel); }
     catch { console.log("TIMEOUT:", sel); }
   },
@@ -182,7 +182,7 @@ const COMMANDS = {
    */
   /** advance <n> [멈출 CSS 선택자] */
   async advance(nArg) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     const parts = String(nArg).trim().split(/\s+/);
     const n = Number(parts[0]) || 1;
     // `--auto` — 경기를 직접 플레이하지 않고 자동 시뮬로 넘긴다.
@@ -271,19 +271,19 @@ const COMMANDS = {
   },
 
   async eval(expr) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     try { console.log(JSON.stringify(await page.evaluate(expr), null, 1)); }
-    catch (e) { console.log("ERROR:", e.message); }
+    catch (e) { fail("ERROR:", e.message); }
   },
 
   async text(sel) {
-    if (!page) return console.log("ERROR: launch first");
+    if (!page) return fail("ERROR: launch first");
     const t = await page.evaluate((s) => (s ? document.querySelector(s) : document.body)?.innerText ?? "(null)", sel || null);
     console.log(t.slice(0, 3000));
   },
 
   async windows() {
-    if (!app) return console.log("ERROR: launch first");
+    if (!app) return fail("ERROR: launch first");
     for (const w of app.windows()) console.log(" ", w.url());
   },
 
@@ -301,7 +301,7 @@ const COMMANDS = {
    *   작은 해상도(1280×720)에서 그만큼만 줄어든다.
    */
   async resize(arg) {
-    if (!app) return console.log("ERROR: launch first");
+    if (!app) return fail("ERROR: launch first");
     const m = String(arg).trim().match(/^(\d+)\s*[x×]\s*(\d+)$/i);
     if (!m) return console.log("usage: resize 1366x768");
     const w = Number(m[1]), h = Number(m[2]);
@@ -318,7 +318,7 @@ const COMMANDS = {
       const [cw, ch] = win.getContentSize();
       return { cw, ch };
     }, { w, h });
-    if (!got) return console.log("ERROR: window not found");
+    if (!got) return fail("ERROR: window not found");
     // 실제로 그 크기가 됐는지 되읽는다 — 조용히 무시되는 걸 잡는다
     console.log(`resize → ${got.cw}x${got.ch}` +
       (got.cw !== w || got.ch !== h ? `  ⚠ 요청 ${w}x${h} 와 다르다` : ""));
@@ -328,6 +328,12 @@ const COMMANDS = {
   help() { console.log("commands:", Object.keys(COMMANDS).join(", ")); },
 };
 
+// 🔴 **ERROR 를 찍었으면 실패로 끝낸다.** smoke:dist 가 launch 에서 60초 타임아웃을
+// 내고 뒤 명령 여덟 개가 전부 "launch first" 였는데 종료 코드가 0 이었다 —
+// 게이트로 못 쓴다. 스크립트 모드는 ERROR 가 한 줄이라도 있으면 1 로 끝난다.
+let failed = false;
+function fail(...parts) { failed = true; console.log(...parts); }
+
 async function run(line) {
   const s = line.trim();
   if (!s || s.startsWith("#")) return;
@@ -336,7 +342,7 @@ async function run(line) {
   const arg = i < 0 ? "" : s.slice(i + 1);
   const fn = COMMANDS[cmd];
   if (!fn) return console.log("unknown:", cmd, "— try: help");
-  try { await fn(arg); } catch (e) { console.log("ERROR:", e.message); }
+  try { await fn(arg); } catch (e) { fail("ERROR:", e.message); }
 }
 
 console.log("dev server:", DEV_URL, "· shots →", SHOT_DIR);
@@ -351,7 +357,7 @@ if (scriptArg) {
     await run(l);
   }
   await COMMANDS.quit();
-  process.exit(0);
+  process.exit(failed ? 1 : 0);
 }
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout, prompt: "driver> " });

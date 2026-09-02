@@ -35,7 +35,9 @@ A
 ├─ 10. 빌드 · Steam
 │     ├─ ✅ 현 상태 — dir 산출물이 곧 디포 · Cloud 는 Auto-Cloud (PLAN_RELEASE §8)
 │     ├─ ✅ dist:steam 검증기 (d6aa846e0) · ✅ 새 pack 검증 OK — 파일 1,506 · 441.4 MB · 누출 0 (09-02)
-│     ├─ ✅ smoke:dist 명령파일 + drive DRIVE_EXE (e1b2ba197) · ⬜ 새 pack 으로 실행
+│     ├─ ✅ smoke:dist 명령파일 + drive DRIVE_EXE (e1b2ba197) · 🔴→✅ 첫 실행이 **패키지 앱이 아예 안 뜨는 결함**을 잡음 —
+│     │     main.cjs 가 `dev-server.config.cjs` 를 요구하는데 build.files 에 없었다(MODULE_NOT_FOUND · "Error" 대화상자 · stderr 빈 채).
+│     │     files 에 추가 + 검증기에 상대 require↔asar 대조 + 드라이버 ERROR 시 exit 1 · ⬜ 재 pack → verify → smoke
 │     ├─ ⬜ 구 세이브 3종 마이그레이션 · test:migration
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     └─ ⬜ 최종 빌드 → 프리즈 → 업로드 후보 → 사용자 확인

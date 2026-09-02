@@ -52,6 +52,37 @@ for (const rel of ["scripts", "docs", "resource/data/staging", "resource/data/ba
 
 // ⑤ 크기·파일 수
 let files = 0, bytes = 0;
+// ── 메인 프로세스 상대 require 가 asar 안에 있는가 ─────────────────────────
+// 🔴 2026-09-02: main.cjs:9 가 `../../dev-server.config.cjs` 를 요구하는데 build.files 에
+//    저장소 루트 파일이 없어 asar 에 안 실렸다. 패키지 앱은 MODULE_NOT_FOUND 로
+//    "Error" 대화상자만 띄운 채 서 있었고 stderr 는 비어 있었다 — 포트 정본을 한
+//    파일로 모은 뒤(dev-server.config.cjs) 패키지 빌드가 한 번도 못 뜬 것이다.
+//    파일 수·용량·누출로는 안 보인다. 실제 경로를 asar 목록과 대조한다.
+{
+  const asar = require("@electron/asar");
+  const listed = new Set(asar.listPackage(path.join(OUT, "resources", "app.asar"))
+    .map((e) => String(e).split("\\").join("/")));
+  const has = (rel) => listed.has(rel) || fs.existsSync(path.join(unpacked, rel));
+  const resolves = (rel) => [rel, rel + ".js", rel + ".cjs", rel + "/index.js", rel + "/package.json"].some(has);
+  const srcRoot = path.join(process.cwd(), "apps", "desktop");
+  const cjsFiles = [];
+  const collect = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const q = path.join(d, e.name); if (e.isDirectory()) collect(q); else if (e.name.endsWith(".cjs")) cjsFiles.push(q); } };
+  collect(srcRoot);
+  let checked = 0;
+  for (const f of cjsFiles) {
+    const src = fs.readFileSync(f, "utf8");
+    for (const piece of src.split('require("').slice(1)) {
+      const target = piece.slice(0, piece.indexOf('"'));
+      if (!target.startsWith(".")) continue;
+      checked++;
+      const abs = path.resolve(path.dirname(f), target);
+      const rel = "/" + path.relative(process.cwd(), abs).split("\\").join("/");
+      ok(resolves(rel), `메인 프로세스 require 가 asar 에 없다: ${path.relative(process.cwd(), f)} → ${target} (${rel}) — build.files 를 본다`);
+    }
+  }
+  console.log(`  require   상대 경로 ${checked}건 대조`);
+}
+
 const walk = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else { files++; bytes += fs.statSync(p).size; } } };
 walk(OUT);
 const mb = (bytes / 1048576).toFixed(1);

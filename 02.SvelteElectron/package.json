@@ -152,6 +152,7 @@
     },
     "files": [
       "apps/desktop/**",
+      "dev-server.config.cjs",
       "dist/ui/**",
       "packages/*/dist/**",
       "packages/*/package.json",
