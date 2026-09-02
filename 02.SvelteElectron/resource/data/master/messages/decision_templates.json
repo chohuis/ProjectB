@@ -6073,14 +6073,10 @@
         {
           "id": "own",
           "label": "내 훈련을 한다",
-          "effectHint": "커맨드 XP +3, 동료 관계 +6",
+          "effectHint": "커맨드 XP +3",
           "effects": {
             "xp": {
               "command": 3
-            },
-            "relationDelta": {
-              "kind": "teammate",
-              "delta": 6
             }
           }
         }

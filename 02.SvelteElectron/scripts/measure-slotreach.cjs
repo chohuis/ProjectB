@@ -99,6 +99,13 @@ const GROUPS = [
   const app = boot.app;
   await app.boot({ slotId: "SLTR", worldSeed: SEED, seasonYear: 2026 });
   app.setCareerPolicy(POLICY);
+  // ⚠ **학습 모드를 안 흔들면 대학 학점 열 종이 영영 "못닿음"으로 잡힌다.**
+  //   `weeklyStudyMode` 는 "normal"(품질 0.55 → 학기 GPA 2.48)로 시작하고
+  //   화면 조작(`setStudyMode`)으로만 바뀌는데 헤드리스는 그걸 안 부른다.
+  //   그래서 `gpa_lte 2` 도 `gpa_gte 3.5` 도 밴드 밖이라 둘 다 0회가 된다 —
+  //   **콘텐츠가 없는 게 아니라 재는 쪽이 한 갈래만 밟은 것이다** (2026-09-02 · B).
+  //     PB_STUDY_MODE=focus | normal | rest | alternate
+  if (process.env.PB_STUDY_MODE) app.setStudyPolicy(process.env.PB_STUDY_MODE);
   app.resetEventFunnel();
 
   const start = app.currentSeason();
