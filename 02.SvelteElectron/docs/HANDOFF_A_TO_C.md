@@ -52,6 +52,12 @@ C 가 고칠 화면 둘 (전부 C 소유):
 확인하면 못 뜨는 게 정상이니 결함으로 적지 마라. 검증은 `npm run dist:steam:verify`
 (상대 require↔asar 대조가 들어갔다) → `npm run smoke:dist` (ERROR 면 exit 1).
 
+## 0.49 ⚠ drive.mjs 계측 함정 (B-10 · 09-03) — 목록형 화면에서 `.click()` 을 동기 루프로 돌리지 마라
+
+선택 블록(`.dec`)은 고른 소식 **하나의 상세창**에만 그려진다. `page.evaluate` 안에서 목록 항목을 동기 루프로
+`.click()` 하면 Svelte 재렌더 전에 읽어 **열두 줄이 전부 같은 내용**으로 보인다 — 결함이 아니다.
+항목마다 `click` → `wait` → 읽기 를 드라이버 명령 줄로 나눠서 한다(`scripts/b10-mailbox.txt` 가 예시).
+
 ## 0.48 🔴 이벤트 pending 을 그리는 화면이 없다 — 병역 착수와 같이 (09-02 밤)
 
 `type: "event"` pending 은 군 복무 주간(옛 갈래·새 병영생활 갈래 둘 다)이 매주 최대 한 건 올린다.
