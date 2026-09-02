@@ -302,9 +302,29 @@ gpa_gte 3     UNIV_SCHOLARSHIP (+ season_ip_gte 20)
 양쪽이 다 0이면 **밴드 안에 갇힌 것**이다. 전공이 일반전공(배수 1.5 → 3.71)도
 아니었다는 뜻이기도 하다.
 
-→ A 가 `setStudyPolicy` 손잡이를 넣었으니(09-02 저녁) 다음 판은
-`PB_STUDY_MODE=focus` · `rest` 로 갈라 재면 열 종이 열리는지 바로 나온다.
-**그때까지 이 열 종을 "안 뜨는 콘텐츠"로 세지 마라.**
+### ✅ 확인했다 — `PB_STUDY_MODE=alternate` 로 **열 종 중 다섯이 열렸다**
+
+A 의 `setStudyPolicy` 를 `measure-slotreach` 에 이어 같은 씨앗으로 다시 쟀다.
+
+```
+열렸다   UNIV_GPA_GOOD(gpa≥3.5) · UNIV_SCHOLARSHIP(gpa≥3) ·
+         UNIV_ATTENDANCE · UNIV_WARN_1 · UNIV_Y1_FIRST_WARNING (학사경고 ≥1)
+아직     UNIV_GPA_DANGER · UNIV_GRAD_RISK · UNIV_Y3_GPA_VS_BALL (전부 gpa≤2) ·
+         UNIV_WARN_2 · UNIV_WARN_3
+```
+
+**"콘텐츠가 없는 게 아니라 재는 쪽이 한 갈래만 밟았다" 가 맞았다.** 학사경고는
+실제로 나고 장학금도 실제로 받는다 — 기본(normal) 한 갈래로만 재서 안 보였다.
+
+남은 다섯은 `gpa ≤ 2` 를 **여러 학기 이어서** 밟아야 한다(`WARN_2`·`WARN_3`
+은 경고가 쌓여야 한다). `alternate`(짝수해 focus · 홀수해 rest)는 학기마다
+되돌아가서 누적이 2 아래로 안 내려간다 — `PB_STUDY_MODE=rest` 로 한 판 더
+재면 갈린다. **1.0 판정에는 안 쓴다** — 사람이 그렇게 플레이하면 뜬다는 게
+이미 나왔다.
+
+⚠ **이 판은 278주에서 끊겼다**(기준선 396주 · 2026~2031). 그래서 `UNIV_Y3_*`·
+  `Y4_*` 캘린더가 다시 못닿음으로 잡혔다 — **학점 판정에만 쓰고 도달률
+  숫자(73%)로는 쓰지 마라.** 도달률 정본은 위 표(79~88%)다.
 
 ### 나머지 못닿음 — 씨앗 편차다
 
