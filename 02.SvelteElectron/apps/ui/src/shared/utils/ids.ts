@@ -33,6 +33,17 @@ export function farmTeamId(teamId: string): string | null {
 }
 
 /**
+ * 팜(2군) 팀 ID → 1군 팀 ID (TEAM_X_2 → TEAM_X_1), 규칙 불일치 시 null.
+ *
+ * `farmTeamId` 의 역이다. 해외 2군 직행 제안이 **부모 1군의 전력**으로
+ * 문턱을 정한다(2026-09-02 · 사용자 확정) — refs 의 `_2` 팀은 전부 ★3 이라
+ * 2군 전력으로는 28팀이 한 문턱에 몰린다.
+ */
+export function firstTeamIdOf(teamId: string): string | null {
+  return teamId.endsWith("_2") ? `${teamId.slice(0, -2)}_1` : null;
+}
+
+/**
  * 1군·2군을 한 구단으로 묶는 키 (TEAM_X_1 · TEAM_X_2 → TEAM_X).
  *
  * "같은 구단 사람인가"를 묻는 자리에 쓴다 — 내 팀 2군 선수는 남이 아니다.

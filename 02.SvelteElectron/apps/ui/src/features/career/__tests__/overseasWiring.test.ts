@@ -38,8 +38,11 @@ describe("해외 2군 직행 배선", () => {
     expect(SUBMIT.includes("overseasChoices: (opts.overseasChoices ?? [])")).toBe(true);
   });
 
-  it("주 진행이 판정해 결과에 싣는다", () => {
-    expect(WEEK.includes("passesOverseasFarm")).toBe(true);
+  it("주 진행이 판정해 결과에 싣는다 — 신청이 아니라 제안 (2026-09-02)", () => {
+    // 28팀 전부를 부모 1군 전력으로 본다. 허브 신청 목록으로 거르면 옛 모양이다
+    expect(WEEK.includes("overseasOfferTeams(")).toBe(true);
+    expect(WEEK.includes("firstTeamIdOf(")).toBe(true);
+    expect(WEEK.includes("overseasChoices.filter(")).toBe(false);
     expect(WEEK.includes("overseasPassed,")).toBe(true);
   });
 

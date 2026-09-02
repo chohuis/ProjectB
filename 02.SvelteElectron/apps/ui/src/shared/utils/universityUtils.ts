@@ -291,3 +291,34 @@ export function passesOverseasFarm(
 export function isOverseasFarmTeam(leagueId: string | undefined): boolean {
   return leagueId === "LEAGUE_ABL_FARM" || leagueId === "LEAGUE_JBL_FARM";
 }
+
+/**
+ * 해외 2군 직행 — **구단이 제안한다** (2026-09-02 · 사용자 확정).
+ *
+ * 예전엔 주인공이 3곳을 골라 신청하고 그중 문턱을 넘는 팀에 붙었다. 판정에
+ * 난수가 없어 "붙을 팀을 내가 골라 신청하는" 모양이었고 3은 합격이 아니라
+ * 신청 상한이었다. 이제 **28팀 전부를 같은 규칙으로 보고 넘는 팀이 제안**한다.
+ *
+ * 🔴 문턱은 **부모 1군의 전력**이다. refs 의 해외 `_2` 팀은 전부 ★3 이라
+ *   2군 전력으로 보면 문턱 78 하나에 28팀이 몰려 **0 아니면 28** 이다.
+ *   1군은 {★2: 2 · ★3: 7 · ★4: 12 · ★5: 7} 로 갈린다 (2026-09-02 실측):
+ *
+ *   ```
+ *     OVR 75 → 2팀    78 → 9팀    81 → 21팀    84 → 28팀
+ *   ```
+ *
+ *   로스터 생성은 그대로 2군 전력을 쓴다 — 여기는 제안 판정만이라 배경
+ *   밸런스에 파장이 없다.
+ *
+ * ⚠ 상한을 두지 않는다(사용자 확정 "부모 전력 문턱만"). 포지션 공백으로
+ *   거르는 안(`neededPositions`)은 안 넣었다 — 필요해지면 그때 여기다.
+ */
+export function overseasOfferTeams(
+  ovr: number,
+  indivScore: number,
+  farmTeams: ReadonlyArray<{ id: string; parentPower: number | null | undefined }>,
+): string[] {
+  return farmTeams
+    .filter((t) => passesOverseasFarm(ovr, indivScore, t.parentPower))
+    .map((t) => t.id);
+}

@@ -23,6 +23,26 @@
 날짜는 마감뿐이다. 1번이 **순위표 4종**이다. 결함은 `HANDOFF_C_TO_A.md` 에 — A 가 매 회차 읽는다.
 (PLAN_RELEASE §2.1 의 날짜 표는 상한이다.)
 
+## 0.45 🔴 새 일감 — 해외 2군 직행이 **신청 → 구단 제안**으로 바뀌었다 (사용자 확정 · 09-02)
+
+A 가 판정을 바꿨다: `overseasChoices`(허브에서 고른 3곳)는 **더 이상 안 쓴다.**
+W47 에 해외 2군 28팀 전부를 **부모 1군 전력** 문턱으로 보고 넘는 팀이 `overseasPassed`
+로 온다 (`advanceWeek` · `universityUtils.overseasOfferTeams`). 상한 없음 —
+OVR 78 이면 9팀, 81 이면 21팀, 84 면 28팀이 온다(실측 분포).
+
+C 가 고칠 화면 둘 (전부 C 소유):
+
+1. `CareerChoiceHubModal.svelte` — 「해외 2군 신청」 버튼·`OverseasApplyModal` 을
+   **안내 한 줄**로 바꿔라: "해외 2군 제안은 시즌 결과(W47)에 온다 — 지금 내
+   OVR 로는 N팀" 정도. N 은 `overseasOfferTeams(myOvr, myScore, …)` 로 미리
+   셀 수 있다(부모 전력은 `firstTeamIdOf(id)` 로 1군을 찾아 `power`).
+   `overseasChoices` 저장은 지워도 된다 — 판정이 안 읽는다.
+2. `CareerResultsModal.svelte` — `overseasPassed` 가 **28개까지** 올 수 있다.
+   목록이 스크롤되고, 팀 이름 옆에 리그(ABL/JBL)·1군 전력★이 보이면 고르기 쉽다.
+
+⚠ `overseasWiring.test.ts` 의 허브 쪽 세 줄(`overseasModalOpen` · "해외 2군 신청" ·
+`slice(0, 3)`)은 **네가 화면을 바꾸면서 같이 바꿔라** — 지금은 옛 화면을 못박고 있다.
+
 ## 0.5 🔴 기능 단위 정본 — [PLAN_FEATURES_2026-09-02.md](PLAN_FEATURES_2026-09-02.md)
 
 무대 × 기능 78행 중 **"아무도 안 본" 18행**이 있고 그중 C 몫이 열이다(§10).

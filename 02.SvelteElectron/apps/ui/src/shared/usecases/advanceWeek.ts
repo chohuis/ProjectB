@@ -1114,24 +1114,27 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // ⚠ **팀 전력★이 문턱을 정한다** — `indieCutOfPower`와 같은 축이다.
     //   ★5는 84, ★3은 78(사용자 확정선), ★1은 72.
     // ⚠ 대회 성적은 `hsBaseballScore`를 그대로 쓴다 — 새로 만들지 않는다.
-    const { overseasFarmCutOfPower, passesOverseasFarm, isOverseasFarmTeam,
-      calcIndividualScore } =
+    const { overseasOfferTeams, calcIndividualScore } =
       await import("../utils/universityUtils");
+    const { firstTeamIdOf } = await import("../utils/ids");
+    // 🔴 **팀 점수가 아니라 개인 기여를 본다** — 우승팀이면 벤치도 100점인
+    //   `hsBaseballScore`는 대학 입시용이다. 해외 스카우트는 그 선수를 본다.
     const indivScore = calcIndividualScore(gDraft.protagonist.careerRecords ?? []);
-    const overseasPassed = overseasChoices.filter((teamId) => {
-      const t = teamsNow.find((x) => x.id === teamId);
-      // ⚠ 2군 팀만 후보다 — 1군은 FA·포스팅 경로다
-      if (!isOverseasFarmTeam(t?.leagueId)) return false;
-      // 🔴 **팀 점수가 아니라 개인 기여를 본다** — 우승팀이면 벤치도 100점인
-      //   `hsBaseballScore`는 대학 입시용이다. 해외 스카우트는 그 선수를 본다.
-      return passesOverseasFarm(p.pitching.ovr, indivScore, t?.power);
-    });
-    if (overseasChoices.length > 0) {
-      logs.push(`[해외지원] ${overseasChoices.length}팀 지원 · ${overseasPassed.length}팀 합격`
-        + ` (OVR ${p.pitching.ovr} · 개인 ${Math.round(indivScore)}`
-        + ` · 문턱 ${overseasChoices.map((id) =>
-            overseasFarmCutOfPower(teamsNow.find((x) => x.id === id)?.power)).join("/")})`);
-    }
+    // 🔴 **해외 2군 직행은 신청이 아니라 제안이다** (2026-09-02 · 사용자 확정).
+    //   `overseasChoices`(허브에서 고른 3곳)는 더 이상 판정에 안 쓴다 — 범위 안
+    //   해외 2군 28팀 전부를 **부모 1군 전력** 문턱으로 보고 넘는 팀이 제안한다.
+    //   근거·숫자는 `overseasOfferTeams` 주석. 2군 팀만 후보다(1군은 FA·포스팅).
+    const overseasFarmTeams = ["LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]
+      .filter((lid) => isLeagueInScope(lid))
+      .flatMap((lid) => ALL_TEAMS_BY_LEAGUE[lid] ?? [])
+      .map((id) => {
+        const parent = firstTeamIdOf(id);
+        return { id, parentPower: teamsNow.find((x) => x.id === parent)?.power };
+      });
+    const overseasPassed = overseasOfferTeams(p.pitching.ovr, indivScore, overseasFarmTeams);
+    logs.push(`[해외제안] ${overseasFarmTeams.length}팀 중 ${overseasPassed.length}팀 제안`
+      + ` (OVR ${p.pitching.ovr} · 개인 ${Math.round(indivScore)}`
+      + (overseasChoices.length > 0 ? ` · 허브 신청 ${overseasChoices.length}곳은 무시` : "") + ")");
 
     gameStore.setCareerResults({
       draftDrafted: draftOutcome.drafted,
