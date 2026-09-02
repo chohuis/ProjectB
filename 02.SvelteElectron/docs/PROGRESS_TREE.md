@@ -123,7 +123,10 @@ B
 │        고교 80 · 대학 80 · 독립 84 · KBL1군 84 · 해외 65 · 현역 병영 85(A) · 전체공용 100%
 │        └─ ⚠ 2군 0% 는 재고가 아니라 강등을 안 겪은 커리어다 · 군 121종은 slotreach 계통이 아니다
 │        └─ ⚠ 같은 씨앗이 worldSeed 수정 전 88 · 후 80 — 엔진이 바뀌면 값이 바뀐다
-├─ 10. ⬜ 빌드에서 소식함 눈확인 → 결함은 HANDOFF_B_TO_A
+├─ 10. ✅ 빌드에서 소식함 눈확인 (§K · 명령파일 b10-mailbox.txt · b10-decisions.txt)
+│        ✅ 소식이 빌드에서 쌓인다 · ✅ 사기 손질 표시가 데이터와 같다(인터뷰 사기 +2)
+│        ⚠ B-4 일곱은 26주 안에 안 떠서 눈으로는 못 봤다(데이터로는 확인)
+│        └─ ✅ 죽은 풀 events/pools/military.json 5종을 military_common 으로 살렸다(14 → 19)
 ├─ 11. ✅ **병역** — A 의 캘린더 20종 위에 조건부 16 + 일상 24 를 얹어 **60종** · 기존 34종에
 │        cooldownWeeks 4(28건 · once 6건 제외) · military_general 의 statDelta 2건 제거
 │        (훈련소 command −1 → 감각 −2) · check:militarydata OK

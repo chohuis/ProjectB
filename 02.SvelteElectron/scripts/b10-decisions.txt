@@ -1,0 +1,23 @@
+# B-10 ②③ — 빌드에서 선택지 문안·효과힌트를 본다 (2026-09-03 · 트랙 B)
+# ⚠ 선택 블록(.dec)은 **고른 소식 하나**의 상세창에만 그려진다 — 목록엔 없다.
+# ⚠ 클릭을 동기 루프로 돌리면 Svelte 가 다시 그리기 전에 읽어 **같은 항목만 나온다.**
+#    한 번 누를 때마다 기다린다.
+launch
+wait .btn.primary
+click .btn.primary
+wait .slot-info
+click .slot-info
+wait #pname
+fill #pname|선택지확인
+click .btn.next
+wait button.team-list-item
+click button.team-list-item
+click .btn.next
+click .btn.next
+wait .btn.start
+click .btn.start
+wait .go
+advance 26 --auto
+ss b10-04-feed
+eval (async()=>{const w=(ms)=>new Promise(r=>setTimeout(r,ms));const seen=new Set();const out=[];const items=[...document.querySelectorAll('.item')];for(let i=0;i<Math.min(items.length,30);i++){items[i].click();await w(60);const d=document.querySelector('.detail');if(!d)continue;const p=d.querySelector('.dec-prompt');if(!p)continue;const key=p.innerText;if(seen.has(key))continue;seen.add(key);const subj=(d.querySelector('h3')||{}).innerText;const body=(d.querySelector('.body-text')||d.querySelector('.body')||{}).innerText;const done=d.querySelector('.dec-done');const opts=[...d.querySelectorAll('.opt')].map(b=>b.innerText.replace(/\n/g,' / '));out.push({제목:subj,본문:(body||'').replace(/\n/g,' ').slice(0,70),물음:key,갈래:opts,고름:done&&done.innerText.replace(/\n/g,' ')});}return out})()
+quit
