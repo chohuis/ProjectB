@@ -52,7 +52,7 @@ A
 │     ├─ ✅ smoke:dist 명령파일 + drive DRIVE_EXE (e1b2ba197) · 🔴→✅ 첫 실행이 **패키지 앱이 아예 안 뜨는 결함**을 잡음 —
 │     │     main.cjs 가 `dev-server.config.cjs` 를 요구하는데 build.files 에 없었다(MODULE_NOT_FOUND · "Error" 대화상자 · stderr 빈 채).
 │     │     files 에 추가 + 검증기에 상대 require↔asar 대조 + 드라이버 ERROR 시 exit 1 · ✅ 재 pack → verify OK → **smoke 통과** (새 게임 → W5 · 명령 파일의 슬롯 단계·fill 구문 두 곳 고침)
-│     ├─ 🔄 구 세이브 — ✅ test:migration 6 ok · ✅ 이 기계의 옛 파일(5월 v1 slot_A.json · 6월 v2 projectb_v2.db · master_overlay.db)을 복사해 패키지 exe 로 열면 죽지 않고 "저장된 기록이 없습니다"(v1·v2 는 R3a-4d 에서 폐기 — 정상)
+│     ├─ ✅ 구 세이브 — 사용자 확정(v3 구 세이브 없음 · 09-02) · test:migration 6 ok · ✅ 이 기계의 옛 파일(5월 v1 slot_A.json · 6월 v2 projectb_v2.db · master_overlay.db)을 복사해 패키지 exe 로 열면 죽지 않고 "저장된 기록이 없습니다"(v1·v2 는 R3a-4d 에서 폐기 — 정상)
 │     │     ⚠ 6월·8월 v3 빌드의 slot3_*.db 가 이 기계엔 없다 → **사용자 확인**: 그런 세이브 폴더가 있으면 복사해 `DRIVE_USER_DATA=<복사본> npm run smoke:oldsaves` (원본 절대 넘기지 말 것 · 앱이 열면서 고친다)
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     └─ ⬜ 최종 빌드 → 프리즈 → 업로드 후보 → 사용자 확인
@@ -68,7 +68,8 @@ A
 │           ├─ 14. 🔄 A ③ ✅ 전역 환산(rules.discharge · 능력치 한 번 · 회복 주 덮음) · ✅ 군 경력 한 장(militaryRecord · 소식 한 통) · ✅ 소식(이벤트·전입/전출/진급·월간·전역) · ⬜ 재회 훅(전역 뒤 W10·W30 조건 이벤트 — B 문안 뒤) · ✅ probe:military 명령 등록(= probe:paths mil · PF_SEED · PB_MIL_CHOICE) — 밸런스 조정 실행은 B-11 뒤(랜덤 이벤트가 있어야 재는 뜻이 있다) · ✅ probe:paths mil 씨앗 0731 — 정책 공: 감각 90(상한) · 섞음: 59 · 캘린더 20/20 · 휴가 20일 · 성과 4건 · 아크 2 (100주 완주 · 랜덤 이벤트는 B-11 전이라 0)
 │           └─ B·C 몫은 각 트리 (B-11 · C-12)
 ├─ 12. 🔄 **C 눈확인이 넘긴 엔진 결함** — ✅ 강등 뒤 주인공 일정: `seasonStore.switchProtagonistLeague` (s.schedule↔leagueSchedules · 표시 재계산 · vitest 7 · 승격 되돌림까지) → C-2 재확인 요청 · ✅ W22→W23 60초+ — 헤드리스 measure:perf(30주): 느린 주 W22 7.9s · W26 7.6s · W19 7.0s (최대 8초) → 60초는 드라이브 환경(동시 전자 3 + dev HMR)이지 엔진이 아니다 · 상황
-└─ 🛑 1.1 — 독립 시장 · 중도 콜업 · 2군 예산 · 전역 기량 · 일반병 화면 · 동적 치환 ·
+└─ 🛑 1.1 — 고교 사기(등판 비중과) · 병영 문안 다듬기(사용자) · 병영 밸런스(probe:military 재기·§35 값) · 재회 이벤트 · 상무 탭 §39 · determinism(W0 부상 씨앗) ·
+        독립 시장 · 중도 콜업 · 2군 예산 · 전역 기량 · 일반병 화면 · 동적 치환 ·
         상무 섞임 · FA 정교화 · OVR 드리프트 · 장타율 .461
 ```
 
@@ -141,5 +142,6 @@ C
 ✅ 팀당 144 · 시범경기 12     ✅ 선택지를 소식에     ✅ 프리즈 9/15     ✅ 이월 다섯
 ✅ 사기: 이벤트 데이터 손질(B)
 ❓ 밸런스 값 (대학 ERA · 2군 타율 · 보크) — A-4~6 재측정 뒤 건마다
-❓ **고교 사기** — B 손질로 대학은 열렸는데 고교는 평균 89~93 · ≤60 0주라 morale_lte 다섯이 여전히 못 닿는다. 한 단 더 조이면 고교 경험이 달라지는 폭 → 1.0 에서 조일지, 1.1 로 둘지 (A 권장: 1.1 — 고교는 등판 비중과 같이 봐야 한다)
+✅ 고교 사기 — **1.1 로 둔다** (09-02 21:50 · 등판 비중과 같이 본다)     ✅ v3 구 세이브 — **없다 · 항목 닫음**
+✅ Steam App/Depot ID — **프리즈(9/15) 때 사용자가 넣는다**     ✅ 병영 문안 62종 — **1.0 은 B 초안 · 1.1 에서 사용자가 다듬는다**
 ```
