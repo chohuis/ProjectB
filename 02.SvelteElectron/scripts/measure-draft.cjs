@@ -269,6 +269,11 @@ function runSeason(npcs, year, kblTeams) {
       return cap;
     })(),
     releaseRules: gr.faRules && gr.faRules.release,
+    // 독립 나이 상한 — 게임 경로(game.ts processAllLeaguesSeasonEnd)와 같은 값. 안 넘기면 상한 초과 은퇴
+    // (retire_independent_over_age · 2026-09-03)가 안 돌아 "고쳤는데 →독립 0" 으로 보인다
+    // ⚠ faRules.independentAgeMax(30) 와 rosterRules.LEAGUE_INDEPENDENT.ageMax(31) 가 다르다 — 게임은 전자를 넘긴다.
+    //   상한 초과 은퇴도 지금은 전자를 쓴다(같은 파라미터). 둘을 하나로 묶는 건 다음 Rust 빌드 때(현황판 A-15 ⚠).
+    faIndependentAgeMax: gr.faRules && gr.faRules.independentAgeMax,
   });
   // 🔴 **`off.logs`는 항상 비어 있다.** `npc_sim.rs:1390`에서 만들어져
   // `1589`에서 그대로 반환되고 사이에 `push`가 한 군데도 없다.

@@ -71,7 +71,8 @@ A
 │           ├─ 13. ✅ A ② Rust calc_military_life_week(씨앗 · cargo 5) · 주간 루프 usecases/militaryLife.ts(§25 ①~⑦) · 순수 규칙 utils/militaryLifeRules.ts(vitest 16) · 입대 시 상태 생성 · 이벤트 선택 효과 훅 · 상무·옛 세이브는 옛 갈래 · build:native 13:57 · ⏳ 헤드리스 probe:paths mil 6시즌
 │           ├─ 14. 🔄 A ③ ✅ 전역 환산(rules.discharge · 능력치 한 번 · 회복 주 덮음) · ✅ 군 경력 한 장(militaryRecord · 소식 한 통) · ✅ 소식(이벤트·전입/전출/진급·월간·전역) · ⬜ 재회 훅(전역 뒤 W10·W30 조건 이벤트 — B 문안 뒤) · ✅ probe:military 명령 등록(= probe:paths mil · PF_SEED · PB_MIL_CHOICE) — 밸런스 조정 실행은 B-11 뒤(랜덤 이벤트가 있어야 재는 뜻이 있다) · ✅ probe:paths mil 씨앗 0731 — 정책 공: 감각 90(상한) · 섞음: 59 · 캘린더 20/20 · 휴가 20일 · 성과 4건 · 아크 2 (100주 완주 · 랜덤 이벤트는 B-11 전이라 0)
 │           └─ B·C 몫은 각 트리 (B-11 · C-12)
-├─ 15. ✅ **B 실측이 넘긴 엔진 결함** — 독립리그 닫힌 세계(상한 31 이 입단만 막음 · 정원 45 꽉 · 31세 초과 69 잔류 · 2027부터 유입 0) → 시즌 끝 상한 초과 은퇴(e0298ec53 · cargo 1) · ⏳ measure:draft 씨앗 4242 전후
+├─ 15. ✅ **B 실측이 넘긴 엔진 결함** — 독립리그 닫힌 세계(상한 31 이 입단만 막음 · 정원 45 꽉 · 31세 초과 69 잔류 · 2027부터 유입 0) → 시즌 끝 상한 초과 은퇴(e0298ec53 · cargo 1) · ⏳ measure:draft 씨앗 4242 전후(계측기가 상한을 안 넘기고 있어 먼저 고침)
+│      ⚠ 상한이 둘이다 — faRules.independentAgeMax 30(FA 재도전) · rosterRules.LEAGUE_INDEPENDENT.ageMax 31(입단). 은퇴는 지금 30(같은 파라미터)을 쓴다 → 다음 Rust 빌드 때 하나로(사용자 확인: 30 인지 31 인지)
 ├─ 16. ✅ 🔴 initSeason 이 worldSeed 를 버리던 것 — 무대 여는 자리를 지나면 seedOf 굴림이 전부 0 (vitest 2)
 ├─ 12. 🔄 **C 눈확인이 넘긴 엔진 결함** — ✅ 강등 뒤 주인공 일정: `seasonStore.switchProtagonistLeague` (s.schedule↔leagueSchedules · 표시 재계산 · vitest 7 · 승격 되돌림까지) → C-2 재확인 요청 · ✅ W22→W23 60초+ — 헤드리스 measure:perf(30주): 느린 주 W22 7.9s · W26 7.6s · W19 7.0s (최대 8초) → 60초는 드라이브 환경(동시 전자 3 + dev HMR)이지 엔진이 아니다 · 상황
 └─ 🛑 1.1 — 고교 사기(등판 비중과) · 병영 문안 다듬기(사용자) · 병영 밸런스(probe:military 재기·§35 값) · 재회 이벤트 · 상무 탭 §39 · determinism(W0 부상 씨앗) ·
