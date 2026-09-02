@@ -194,10 +194,14 @@ for (const f of DECISION_CALLERS) {
 // `applyDecision`을 못 쓴다. 대신 관계·사치품을 따로 이어야 한다
 {
   const auto = read("apps/ui/src/shared/usecases/runAutoAdvance.ts");
-  const i = auto.indexOf("async function handleEvent");
+  // 2026-09-02: handleEvent 는 선택만 고르고 `resolveEventPending` 에 넘긴다 — 화면(이벤트 모달)과 헤드리스가
+  // 같은 셋(applyEventEffect → applySideEffects → applyMilitaryEventChoice)을 부르게 한 자리다. 거기를 본다.
+  const h = auto.indexOf("async function handleEvent");
+  const hf = h >= 0 ? auto.slice(h, auto.indexOf("\n}", h)) : "";
+  const i = auto.indexOf("export async function resolveEventPending");
   const fn = i >= 0 ? auto.slice(i, auto.indexOf("\n}", i)) : "";
-  ok(/applySideEffects/.test(fn),
-     "handleEvent — applyEventEffect 뒤에 applySideEffects를 잇는다 (관계·사치품)");
+  ok(hf.includes("resolveEventPending(") && /applySideEffects/.test(fn),
+     "handleEvent → resolveEventPending — applyEventEffect 뒤에 applySideEffects를 잇는다 (관계·사치품)");
 }
 
 const dec = read("apps/ui/src/shared/usecases/decisions.ts");
