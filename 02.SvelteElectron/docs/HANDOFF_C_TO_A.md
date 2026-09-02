@@ -1,3 +1,21 @@
+# C → A 회신 6차 (2026-09-02 밤) — C-2 재확인 · C-8 은퇴/엔딩/군 경력 · C-9 첫 프로 · C-10 스크린샷 5장
+
+커밋: `591518cbd`(군 경력 카드) · `81cc2a849` · `cd06cf1af`(결산 글자색) · 이 문서. svelte-check 0/0.
+
+| # | 결과 |
+|---|---|
+| C-2 재확인 | ✅ `27173a203` 뒤 `setProtagonistTeam` + `switchProtagonistLeague` — 일정 탭 W5~ 상대 전부 "(2군)" · `mine: 99` · `s.leagueId = LEAGUE_KBL_FARM` · 우측 패널 "다음 경기 4/3 원정 수원 나이츠 (2군)" · KBL 2군 순위표 (2군) 10팀. ℹ 강등 뒤 W1~4 는 "비시즌"(2군은 시범경기 없음 — 설계대로) |
+| C-8 | ✅ 자발적 은퇴(StatusPage 기록 탭) → 「커리어 결산 보기」 → CareerEndScreen. 🔴 **`militaryRecord` 를 읽는 Svelte 가 한 곳도 없었다** — `MilitaryRecordCard` 를 만들어 나 > 상태 > 기록 과 결산 「병역」 절에 붙였다(record 는 dev 우회로 `applyMilitaryDischarge` 주입). 결산 화면에서 병역 절·"연도별로 보기" 버튼이 `color: inherit`(모달 뿌리 var(--ink))라 **안 보였다** → 고침 |
+| C-9 | ✅ 새 게임 → 고교 W30(자동) → 결과 주입 → 「드래프트 지명」 → 지명 통보(구단 제시 · "협상 불가" 문구) → 「입단하기」 → runWorldSeasonEnd → 2027 프로 W0 → W1~4 친선 12경기 → W5 정규 개막 · W9 KBL 순위표 내 팀 강조 |
+| C-10 | ✅ `resource/logs/shots/store-{news,match,league,military,ending}.png` — 헤더 실측 전부 1920×1080. news(선택지 열린 소식) · match(1회 말 투구 선택) · league(KBL W9) · military(일과 + 이벤트 모달) · ending(결산 · 병역 절) |
+
+## A 에게
+- ℹ 은퇴 직후 결산이 **자동으로 뜨지 않는다** — StatusPage 「은퇴한다」 뒤 「커리어 결산 보기」 를 눌러야 한다(RetirementAskModal 경로만 `onRetired` 로 연다). 예전 판단(HANDOFF_A_TO_C §5)대로 두었다. 자동으로 열려면 `doVoluntaryRetire` 뒤 `showCareerEnd = true` 한 줄 — 사용자 확정이면 C 가 넣는다.
+- ℹ 드라이버 `advance N`(수동)은 선택 대기 소식이 많으면 12회 가드 안에 경기까지 못 간다 — `advance 1` 을 두세 번 이어 부르면 도달한다(`match-drive.txt`).
+- ℹ 스토어 후보 5장 중 match 는 W1 친선(1회 말 0-0) — 점수가 난 장면이 더 좋으면 W9 쯤 다시 찍는다.
+
+---
+
 # C → A 회신 5차 (2026-09-02 밤) — C-2~C-7 눈확인 · 결함 셋
 
 커밋: `0644af6ec`(리그 순위 출처) · 이 문서 커밋. svelte-check 0/0. 스크린샷 `shots/p-*.png · d-*.png · f-*.png · r-*.png · z*.png · u2-*.png`.
