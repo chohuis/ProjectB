@@ -32,13 +32,15 @@ const scopeSrc = read("../apps/ui/src/shared/config/releaseScope.ts");
 {
   const block = scopeSrc.match(/OUT_OF_SCOPE_LEAGUES[^=]*=\s*new Set\(\[([\s\S]*?)\]\)/);
   const out = [...(block?.[1] ?? "").matchAll(/"(LEAGUE_[A-Z_]+)"/g)].map((m) => m[1]);
-  console.log(`    범위 밖: ${out.join(" ")}`);
-  check("ABL 본·팜이 범위 밖", out.includes("LEAGUE_ABL") && out.includes("LEAGUE_ABL_FARM"), out.join(","));
-  check("JBL 본·팜이 범위 밖", out.includes("LEAGUE_JBL") && out.includes("LEAGUE_JBL_FARM"), out.join(","));
+  console.log(`    범위 밖: ${out.length ? out.join(" ") : "(없음 — 해외 열림)"}`);
+  // ⚠ 2026-08-06 에 해외(ABL·JBL)를 열었다(CLAUDE.md) — 두 Set 이 비어 있는 게 정본이다.
+  //   예전 단정("ABL·JBL 이 범위 밖")은 확장팩 시절 것이라 2026-09-02 에 뒤집었다.
+  //   다시 닫으려면 Set 에 네 리그를 넣는다 — 아래 4절이 그 갈래가 살아 있는지 본다.
+  check("해외 리그가 범위 안 (OUT_OF_SCOPE_LEAGUES 비어 있음)", out.length === 0, out.join(","));
 
   const stages = scopeSrc.match(/OUT_OF_SCOPE_STAGES[^=]*=\s*new Set\(\[([\s\S]*?)\]\)/);
   const st = [...(stages?.[1] ?? "").matchAll(/"([a-z_]+)"/g)].map((m) => m[1]);
-  check("해외 커리어 단계도 범위 밖", st.includes("pro_abl") && st.includes("pro_jbl"), st.join(","));
+  check("해외 커리어 단계도 범위 안 (OUT_OF_SCOPE_STAGES 비어 있음)", st.length === 0, st.join(","));
 
   // 국내는 절대 범위 밖이 되면 안 된다 — 오타 하나로 게임이 통째로 빈다
   const domestic = ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_KBL", "LEAGUE_KBL_FARM"];
@@ -59,7 +61,8 @@ console.log("\n게이트 적용");
     /DEFAULT_LEAGUE_CONFIGS[\s\S]*?filter\(\(c\) => isLeagueInScope\(c\.leagueId\)\)/.test(sched));
 
   const teamPage = stripComments(read("../apps/ui/src/pages/team/TeamPage.svelte"));
-  check("팀 화면: 팀 목록을 범위로 거른다", /inScope\(\$masterStore\.teams\)/.test(teamPage));
+  // 팀 목록은 언어 반영본(`$teamsL10n`)을 읽는다 — 원본 `$masterStore.teams` 를 읽으면 check:namelocale 이 잡는다
+  check("팀 화면: 팀 목록을 범위로 거른다", /inScope\(\$(teamsL10n|masterStore\.teams)\)/.test(teamPage));
   check("팀 화면: 리그 탭을 범위로 거른다", /SCOPED_TABS/.test(teamPage));
 
   // ⚠ 예전엔 여기서 `LeaguePage.svelte` 안의 `isLeagueInScope(lid)` **개수**를 셌다.
@@ -118,10 +121,14 @@ console.log("\n확장팩 복원 가능성 (데이터 보존)");
 // Set을 비운 상태를 흉내내서, 게이트가 **조건부**인지(하드 삭제가 아닌지) 본다.
 console.log("\n게이트 해제 시뮬");
 {
-  // releaseScope.ts를 Set만 비워 평가하면 해외가 범위 안으로 돌아와야 한다
+  // 해외가 열린 지금은 반대로 본다 — Set 에 네 리그를 **넣어** 평가하면 해외가 범위 밖으로 닫혀야 한다.
+  // (게이트가 조건부로 살아 있다는 뜻 · 하드 삭제면 넣어도 안 닫힌다)
+  // ⚠ `const ` 로 앵커를 잡는다 — 선언 위 주석에도 같은 이름이 있어서, 이름만으로 잡으면 주석부터
+  //   선언까지가 통째로 치환돼 **대입이 주석 안으로 들어간다**(첫 실행에서 "is not defined" 로 죽었다).
   const patched = scopeSrc
-    .replace(/OUT_OF_SCOPE_LEAGUES[^=]*=\s*new Set\(\[[\s\S]*?\]\)/, "OUT_OF_SCOPE_LEAGUES = new Set([])")
-    .replace(/OUT_OF_SCOPE_STAGES[^=]*=\s*new Set\(\[[\s\S]*?\]\)/, "OUT_OF_SCOPE_STAGES = new Set([])")
+    .replace(/const OUT_OF_SCOPE_LEAGUES[^=]*=\s*new Set\(\[[\s\S]*?\]\)/,
+      'const OUT_OF_SCOPE_LEAGUES = new Set(["LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM"])')
+    .replace(/const OUT_OF_SCOPE_STAGES[^=]*=\s*new Set\(\[[\s\S]*?\]\)/, 'const OUT_OF_SCOPE_STAGES = new Set(["pro_abl", "pro_jbl"])')
     .replace(/export (const|function) /g, "$1 ")
     .replace(/: ReadonlySet<string>/g, "")
     .replace(/<T extends \{ leagueId: string \}>/g, "")
@@ -133,11 +140,11 @@ console.log("\n게이트 해제 시뮬");
   let ok = false;
   try {
     // eslint-disable-next-line no-new-func
-    ok = new Function(`${patched}; return isLeagueInScope("LEAGUE_ABL") && isLeagueInScope("LEAGUE_JBL");`)();
+    ok = new Function(`${patched}; return !isLeagueInScope("LEAGUE_ABL") && !isLeagueInScope("LEAGUE_JBL") && isLeagueInScope("LEAGUE_KBL");`)();
   } catch (e) {
     console.error("    (평가 실패 — 게이트 구조가 바뀌었는지 확인) " + String(e).slice(0, 120));
   }
-  check("Set을 비우면 해외가 범위 안으로 돌아온다 (하드 삭제가 아니다)", ok === true);
+  check("Set에 넣으면 해외가 닫히고 국내는 남는다 (게이트가 조건부다 · 하드 삭제가 아니다)", ok === true);
 }
 
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);

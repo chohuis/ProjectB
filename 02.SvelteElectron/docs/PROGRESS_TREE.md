@@ -43,7 +43,9 @@ A
 │     ├─ 🔴 check:namelocale — HallOfFamePage·MatchPage 원본 스토어 읽음(예전부터) → **C** (이미 할당)
 │     ├─ ✅ check:protransition — 기본 씨앗 03 → 02 (352d47f9f) · 재실행 통과 (2029 프로 1년차 · 연도·나이 ok)
 │     ├─ ⚠ check:determinism(67분) — 2026 W0 NPC 부상 상태부터 두 실행이 갈린다 · seedOf 는 0 을 안 낸다(실측) → Rust thread_rng 폴백 자리(npc_sim 621·4374) 중 하나가 W0 에 씨앗 없이 불린다 · 결정성 정책(계측 재현 수준)상 🛑 1.1
-│     └─ ⬜ test:releasescope · 문서 갱신
+│     ├─ ✅ test:releasescope — 옛 전제(해외 범위 밖) 세 줄 + 주석에 걸린 변이 치환 + 팀 목록 l10n 스토어, 다섯 실패가 전부 낡은 잣대였다 · 변이(Set 에 넣으면 닫힘) 통과
+│     ├─ ✅ test:migration 6 ok
+│     └─ ✅ 문서 갱신 — CLAUDE.md 병영 배선 한 장 (2728f5de5)
 ├─ 10. 빌드 · Steam
 │     ├─ ✅ 현 상태 — dir 산출물이 곧 디포 · Cloud 는 Auto-Cloud (PLAN_RELEASE §8)
 │     ├─ ✅ dist:steam 검증기 (d6aa846e0) · ✅ 새 pack 검증 OK — 파일 1,506 · 441.4 MB · 누출 0 (09-02)
