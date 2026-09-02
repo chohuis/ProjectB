@@ -282,7 +282,8 @@
         {#if p.militaryRecord}
           <section class="sec">
             <h3>병역</h3>
-            <MilitaryRecordCard record={p.militaryRecord} showTitle={false} />
+            <!-- 결산은 어두운 바탕 — 모달 뿌리색(var(--ink))을 이으면 안 보인다. 소속 절과 같은 글자색을 준다 -->
+            <div class="mil"><MilitaryRecordCard record={p.militaryRecord} showTitle={false} /></div>
           </section>
         {/if}
 
@@ -381,7 +382,8 @@
   .yr-toggle {
     width: 100%; display: flex; align-items: center; gap: 8px;
     background: none; border: 1px solid var(--line, #333); border-radius: 6px;
-    color: inherit; font: inherit; padding: 8px 12px; cursor: pointer;
+    /* ⚠ inherit 는 모달 뿌리색(var(--ink) · 어두움)이라 어두운 바탕에서 안 보였다(2026-09-02 눈확인) */
+    color: #dce7f7; font: inherit; padding: 8px 12px; cursor: pointer;
   }
   .yr-n { margin-left: auto; opacity: .6; font-size: .85em; }
   .years { list-style: none; margin: 10px 0 0; padding: 0; }
@@ -518,6 +520,7 @@
     padding: 7px 10px; border-radius: 6px; background: #121c30;
   }
   .s-team { flex: 1; font-size: 13px; color: #dce7f7; }
+  .mil { color: #dce7f7; }
   .s-span { font-size: 12px; color: #8aa0bf; font-variant-numeric: tabular-nums; }
   .s-n    { font-size: 11px; color: #62779a; min-width: 46px; text-align: right; }
 
