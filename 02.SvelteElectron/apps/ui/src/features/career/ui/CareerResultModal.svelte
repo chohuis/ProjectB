@@ -6,6 +6,7 @@
   import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { canApplyToUniversity, canApplyToIndependent, universityGradeOf, isUniversityFinalYear } from "../../../shared/utils/careerTransition";
   import { firstTeamIdOf } from "../../../shared/utils/ids";
+  import { ALL_TEAMS_BY_LEAGUE } from "../../../shared/utils/leagueScheduler";
 
   let resolving = false;
 
@@ -22,6 +23,9 @@
    * 해외 2군 제안은 **28팀까지** 온다(§0.45 · OVR 84 면 전부). 이름만 28줄이면 못 고른다 —
    * 리그(ABL/JBL)·부모 1군 전력★을 같이 적고, 리그 → ★ 순으로 세운다. 목록은 스크롤.
    */
+  // ⚠ refs 의 2군 팀은 `leagueId` 가 1군 리그다(tier "마이너") — 소속은 판정과 같은 출처(ALL_TEAMS_BY_LEAGUE)로 본다
+  const farmLeagueOf = (teamId: string): string | undefined =>
+    (["LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"] as const).find((lid) => (ALL_TEAMS_BY_LEAGUE[lid] ?? []).includes(teamId));
   const leagueLabel = (id: string | undefined) =>
     id === "LEAGUE_ABL_FARM" ? "ABL 2군" : id === "LEAGUE_JBL_FARM" ? "JBL 2군" : "";
   $: overseasRows = overseasPassed
@@ -29,7 +33,7 @@
       const t = $teamsL10n.find((x) => x.id === id);
       const parent = firstTeamIdOf(id);
       const power = Math.max(0, Math.min(5, Math.round((parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined) ?? 0)));
-      return { id, name: t?.name ?? id, league: leagueLabel(t?.leagueId), power, stars: "★".repeat(power) + "☆".repeat(5 - power) };
+      return { id, name: t?.name ?? id, league: leagueLabel(farmLeagueOf(id)), power, stars: "★".repeat(power) + "☆".repeat(5 - power) };
     })
     .sort((a, b) => a.league.localeCompare(b.league) || b.power - a.power || a.name.localeCompare(b.name, "ko"));
 

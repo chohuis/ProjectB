@@ -2,9 +2,10 @@
   import { createEventDispatcher } from "svelte";
   import { entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { gameStore } from "../../../shared/stores/game";
-  import { overseasFarmCutOfPower, passesOverseasFarm, isOverseasFarmTeam,
-    calcIndividualScore } from "../../../shared/utils/universityUtils";
+  import { overseasFarmCutOfPower, passesOverseasFarm, calcIndividualScore } from "../../../shared/utils/universityUtils";
   import { firstTeamIdOf } from "../../../shared/utils/ids";
+  import { ALL_TEAMS_BY_LEAGUE } from "../../../shared/utils/leagueScheduler";
+  import { isLeagueInScope } from "../../../shared/config/releaseScope";
   import type { EntityDetails } from "../../../shared/stores/master";
 
   /**
@@ -21,10 +22,21 @@
   /**
    * 🔴 **2군만 보여준다.** 1군은 FA·포스팅 경로다 — 여기 섞으면
    *   아마추어가 바로 ABL 1군에 지원하게 된다.
+   *
+   * 🔴 **refs 의 2군 팀은 `leagueId` 가 1군 리그다**(`LEAGUE_ABL` · tier "마이너") — 2026-09-02 눈확인.
+   *   예전엔 팀의 leagueId 로 걸러서 **한 팀도 안 떴다**(0/0). 판정(advanceWeek)과
+   *   같은 출처 `ALL_TEAMS_BY_LEAGUE[…_FARM]` 로 소속을 정한다.
    */
-  $: teams = $teamsL10n.filter((t) => isOverseasFarmTeam(t.leagueId));
+  const FARM_LEAGUES = ["LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"] as const;
+  const farmLeagueOf = (teamId: string): string | undefined =>
+    FARM_LEAGUES.find((lid) => (ALL_TEAMS_BY_LEAGUE[lid] ?? []).includes(teamId));
+  $: teams = FARM_LEAGUES
+    .filter((lid) => isLeagueInScope(lid))
+    .flatMap((lid) => ALL_TEAMS_BY_LEAGUE[lid] ?? [])
+    .map((id) => $teamsL10n.find((t) => t.id === id))
+    .filter((t): t is NonNullable<typeof t> => !!t);
   $: sortedTeams = [...teams].sort((a, b) =>
-    (a.leagueId ?? "").localeCompare(b.leagueId ?? "") || a.name.localeCompare(b.name, "ko"));
+    (farmLeagueOf(a.id) ?? "").localeCompare(farmLeagueOf(b.id) ?? "") || a.name.localeCompare(b.name, "ko"));
   $: if (!selectedTeamId || !sortedTeams.some((t) => t.id === selectedTeamId)) {
     selectedTeamId = sortedTeams[0]?.id ?? "";
   }
@@ -78,7 +90,7 @@
           <div class="rows">
             {#each sortedTeams as team}
               <button class:selected={selectedTeamId === team.id} on:click={() => (selectedTeamId = team.id)}>
-                <strong>{team.name} <small class="lg">{leagueLabel(team.leagueId)} {stars(team.id)}</small></strong>
+                <strong>{team.name} <small class="lg">{leagueLabel(farmLeagueOf(team.id))} {stars(team.id)}</small></strong>
                 <span class:ok={passes(team.id)}>
                   {passes(team.id) ? "제안 예상 · " : ""}{cutOf(team.id)} 필요
                 </span>
@@ -89,7 +101,7 @@
 
         <section class="panel detail">
           {#if selectedTeam}
-            <h4>{selectedTeam.name} <span class="lg">{leagueLabel(selectedTeam.leagueId)} · 1군 {stars(selectedTeam.id)}</span></h4>
+            <h4>{selectedTeam.name} <span class="lg">{leagueLabel(farmLeagueOf(selectedTeam.id))} · 1군 {stars(selectedTeam.id)}</span></h4>
             <div class="stats">
               <div><span>필요 능력</span><strong>{cutOf(selectedTeam.id)}</strong></div>
               <div><span>내 능력</span><strong>{myOvr}</strong></div>

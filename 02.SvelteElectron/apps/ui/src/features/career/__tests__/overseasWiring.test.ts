@@ -77,9 +77,16 @@ describe("해외 2군 직행 배선", () => {
 
   /**
    * 🔴 **2군만 후보다.** 1군이 섞이면 아마추어가 바로 ABL 1군에 지원한다.
+   *
+   * 🔴 refs 의 2군 팀은 `leagueId` 가 **1군 리그**다(tier "마이너"). `isOverseasFarmTeam(t.leagueId)` 로
+   *   거르면 한 팀도 안 남는다 — 실제로 0/0 이 떴다(2026-09-02). 판정(advanceWeek)과 같은 출처
+   *   `ALL_TEAMS_BY_LEAGUE[…_FARM]` 로 소속을 정한다.
    */
-  it("모달이 2군만 보여준다", () => {
-    expect(MODAL.includes("isOverseasFarmTeam(t.leagueId)")).toBe(true);
+  it("모달이 2군만 보여준다 — 소속은 판정과 같은 출처(ALL_TEAMS_BY_LEAGUE)", () => {
+    expect(MODAL.includes("ALL_TEAMS_BY_LEAGUE")).toBe(true);
+    expect(MODAL.includes("LEAGUE_ABL_FARM")).toBe(true);
+    expect(MODAL.includes("isOverseasFarmTeam(t.leagueId)")).toBe(false);
+    expect(WEEK.includes("ALL_TEAMS_BY_LEAGUE[lid]")).toBe(true);
   });
 
   /**
