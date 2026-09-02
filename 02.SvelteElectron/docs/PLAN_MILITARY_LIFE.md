@@ -1017,7 +1017,7 @@ perf tier 식(§28)에 **표창·징계 이력은 안 들어간다** — 순환�
 1. **선택이 이분법이다.** 공을 매주 고르면 열 주 안에 상한(통신 90 · 박격포 80)에 붙어 그 뒤 선택이 무의미하고, 안 고르면 W37 에 0. 섞음(3주에 한 번 공)은 통신병 58~71 로 살지만 **박격포병은 28 → 3 으로 무너진다**(접근 1 이라 +3 이 −1.5×3 을 못 이긴다).
    → 조정 후보: 주간 감쇠 −1.5 → −1.0 · 상한식 100−10×(3−접근) → 100−5×(3−접근) · 접근 1 의 +3 → +4. 셋 중 하나만 움직여 재본다.
 2. **감각 0 전역은 커리어가 끝날 수 있다** — 0731 사람 정책이 전역 1년 뒤 은퇴(환산 −4 · 구속 −1 → 독립에서 밀림). 의도한 결과이나 "손쓰면 지킬 수 있다" 가 목표라 폭(§9 표 <20 구간)을 1.1 에서 본다.
-3. **이벤트 도달 53/62 (85%)** — 5판 합집합. 안 뜬 9: CONFLICT_SENIOR · CONFLICT_OFFICER · BOND_PEER · MENTOR · MORALE_LOW · REWARD_LEAVE (관계·사기 문턱을 100주 안에 못 넘음 — 관계 감쇠 −0.5 와 사람 카드 +2 폭의 문제) · SNOW · GUN_MAINT · JR_SIGNAL_TRAIN (조건 데이터 의심 → B 확인).
+3. **이벤트 도달 53/62 (85%)** — 5판 합집합. 안 뜬 9: CONFLICT_SENIOR · CONFLICT_OFFICER · BOND_PEER · MENTOR · MORALE_LOW · REWARD_LEAVE (관계·사기 문턱을 100주 안에 못 넘음 — 관계 감쇠 −0.5 와 사람 카드 +2 폭의 문제) · SNOW · GUN_MAINT · JR_SIGNAL_TRAIN — **B 대조(09-03): 조건은 멀쩡하고 창이 좁아 기댓값 0.2~0.5회/판** (SNOW 8주 · GUNNER W30 전출 · JR_2 W62 전입) → 창 좁은 다섯의 가중만 올림(SNOW 10 · GUN_MAINT 4 · NIGHT_DUTY 4 · JR_SIGNAL_TRAIN 2 · OPS_HANDOVER 2 · 4dfbc2da5) · 다음 판에서 뜨는지 확인.
    1판만 뜬 6: SENSE_HIGH · JUNIOR_TROUBLE · NIGHT_DUTY · PT_TEST · SOCCER · AMMO.
 4. 성과 tier 는 씨앗·보직에 따라 1~6 으로 흩어진다 ✓ · 아크는 통신 2 · 박격포 3 까지 간다 ✓ · 표창 0~3 ✓.
 5. 계측 함정 둘을 이 표를 만들다 잡았다 — initSeason 이 worldSeed 를 버림(§16 A) · probe 의 선택 정책이 없어 "쉼" 고정.
