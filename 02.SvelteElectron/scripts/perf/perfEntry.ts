@@ -3361,6 +3361,28 @@ export function peerPitcherProbe(ovrBand = 8): Record<string, unknown> {
  * 맞춰두면 주인공이 상대적으로 과대·과소 평가된다. 리그를 KBO 수준으로
  * 맞춘 뒤 이쪽도 같은 세계에 있는지 확인해야 한다.
  */
+/**
+ * 사기 원천 계측용 스냅샷 — `probe-morale.cjs` 가 한 주마다 찍는다.
+ *
+ * `triggeredEvents` 는 **맵 그대로** 준다(eventId → 마지막 발생 주차).
+ * "이번 주 발동" 은 프로브가 앞 스냅샷과 **diff** 로 낸다 — 주차 값으로
+ * 거르면 `processWeekBoundary(nextWeekNum)` 이 새 주차로 찍는지 지난
+ * 주차로 찍는지에 따라 한 주가 통째로 빠지거나 두 번 센다.
+ */
+export function moraleSnapshot(): {
+  stage: string; morale: number; gp: number; triggered: Record<string, number>;
+} {
+  const p = get(gameStore).protagonist;
+  const s = get(seasonStore);
+  const st = s.stats?.[p.id] as { g?: number } | undefined;
+  return {
+    stage: p.careerStage ?? "?",
+    morale: p.morale ?? 0,
+    gp: st?.g ?? 0,
+    triggered: { ...(s.triggeredEvents ?? {}) },
+  };
+}
+
 export function protagonistStatProbe(): Record<string, unknown> {
   const g = get(gameStore).protagonist;
   const s = get(seasonStore);
@@ -3648,6 +3670,31 @@ export async function probeRetirementEval(
 /** 주 1회 진행만 (pending 처리 없음) — 순수 `advanceWeek` 비용 측정용 */
 export async function oneWeek(): Promise<void> {
   await advanceWeek();
+}
+
+/**
+ * **pending 까지 풀면서** 딱 한 주만 간다 — `probe-morale` 이 쓴다.
+ *
+ * `oneWeek()` 은 pending 을 안 풀어 첫 경기·첫 선택지에서 선다(실측: W1 정지).
+ * `autoRun()` 은 풀지만 여러 주를 한 번에 넘긴다. 둘 다 "한 주 = 표본 1" 이
+ * 안 된다.
+ *
+ * `runAutoAdvance` 는 매 바퀴 `autoAdvanceStore.running` 을 본다. 그래서
+ * **주가 넘어가는 순간 `stop()` 을 부르는 구독**을 걸어 두면, 운영 루프를
+ * 한 줄도 안 건드리고 한 주 뒤에 멈춘다. 헤드리스 전용 훅이다.
+ *
+ * ⚠ 주가 넘어간 **뒤** 그 바퀴에 남은 pending 은 이어서 처리되고 다음 바퀴
+ *   머리에서 멈춘다 — 그건 새 주에 속한 처리라 스냅샷 델타에 들어가는 게 맞다.
+ * ⚠ `stop` 사유가 "오류:" 로 시작하지 않으므로 `autoRun` 이 던지지 않는다.
+ */
+export async function runOneWeek(): Promise<void> {
+  const w0 = get(seasonStore).currentWeek;
+  const unsub = seasonStore.subscribe((s) => {
+    if (s.currentWeek > w0 && get(autoAdvanceStore).running) {
+      autoAdvanceStore.stop("probe: 한 주");
+    }
+  });
+  try { await autoRun(); } finally { unsub(); }
 }
 
 /** `SportsUnitApplicationModal.apply` — 신청한다 */
