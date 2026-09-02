@@ -8,7 +8,7 @@
 // `window.projectB`를 계측 래퍼로 심어둔 뒤 require한다.
 
 import { get } from "svelte/store";
-import { masterStore } from "../../apps/ui/src/shared/stores/master";
+import { masterStore, teamsL10n } from "../../apps/ui/src/shared/stores/master";
 import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
 } from "../../apps/ui/src/shared/stores/game";
@@ -2970,7 +2970,15 @@ export function batterSampleProbe(): Record<string, unknown> {
       // ⚠ **경기당 타석이 실제 라인업 길이를 알려준다.** 9인 타순이면 4.5~5.2다.
       // 6을 넘으면 라인업이 9명이 아니라는 뜻이고, 그때는 능력치가 아니라
       // 출전량이 성적을 만든다 — 집계만 보면 "타격이 세다"로 읽힌다.
-      "경기당타석_중앙": (() => {
+      // 🔴 **모수를 규정타자로 좁혔다** (2026-09-02). `g >= 20` 전 타자의
+      //   중앙값은 벤치·대타가 섞여 3.48 로 나왔고 그게 "타순이 9명이 아니다"로
+      //   읽힐 뻔했다. 4.5~5.2 는 **선발 라인업** 기준이라 규정타자(pa ≥ 200)로
+      //   재야 같은 잣대다. 전 타자 값도 남긴다 — 둘의 차이가 벤치 두께다.
+      "경기당타석_규정": (() => {
+        const per = regulars.map((b) => b.pa / b.g).sort((a, b) => a - b);
+        return per.length ? Math.round(per[Math.floor(per.length / 2)] * 100) / 100 : 0;
+      })(),
+      "경기당타석_전체(g≥20)": (() => {
         const per = bs.filter((b) => b.g >= 20).map((b) => b.pa / b.g).sort((a, b) => a - b);
         return per.length ? Math.round(per[Math.floor(per.length / 2)] * 100) / 100 : 0;
       })(),
@@ -3532,6 +3540,117 @@ export async function acceptNegotiation(): Promise<boolean> {
     teamOptionYears: 0, playerOptionYears: 0, noTrade: false, status: "active",
   }, teamName);
   return true;
+}
+
+// ── 헤드리스가 못 넘던 pending 넷 (2026-09-02 · probe-paths) ──────────
+//
+// `runAutoAdvance` 는 `retirementAsk`·`optionClause`·`faMarket`·`trade` 에서
+// 멈춘다(사용자 결정이 필요해서 맞다). 헤드리스엔 진로·관전·연봉협상·
+// 체육부대 손잡이만 있어서 **PLAN_FEATURES 의 "안 본 10행"** 이 이 넷 뒤에
+// 숨어 있었다. 아래는 모달이 하는 일을 그대로 대신 누른다 — 로직은 전부
+// usecase 에 있고 여기선 고르기만 한다.
+
+/** 옵션 조항 — 기본은 행사. `exercise=false` 면 FA 또는 재계약으로 이어진다 */
+export async function resolveOptionClause(exercise = true): Promise<boolean> {
+  const pa = get(nextPendingAction);
+  if (pa?.type !== "optionClause") return false;
+  await applyOptionClause(pa, exercise);
+  return true;
+}
+
+/**
+ * FA 시장 — 첫 제안에 제시 연봉 그대로 서명한다. 제안이 없으면 기다린다.
+ * ⚠ `generateFaOffers` 는 `teamsL10n`(언어 반영본)을 받는다 — 모달과 같다.
+ */
+export async function resolveFaMarket(mode: "sign" | "wait" = "sign"): Promise<"signed" | "waited" | false> {
+  const pa = get(nextPendingAction);
+  if (pa?.type !== "faMarket") return false;
+  if (mode === "sign") {
+    const offers = await generateFaOffers(get(gameStore).protagonist, get(teamsL10n));
+    if (offers.length > 0) { await signFaOffer(offers[0], offers[0].salary); return "signed"; }
+  }
+  await waitFaMarket();
+  return "waited";
+}
+
+/** 트레이드 — 기본은 수락. 거부는 노트레이드 조항이 있을 때만 된다(usecase 가 막는다) */
+export async function resolveTrade(accept = true): Promise<"accepted" | "rejected" | false> {
+  const pa = get(nextPendingAction);
+  if (pa?.type !== "trade") return false;
+  if (!accept && await rejectTrade()) return "rejected";
+  await acceptTrade(pa);
+  return "accepted";
+}
+
+/**
+ * 은퇴 권고 — 기본은 **계속 뛴다**(안 본 행을 더 밟으려면 커리어가 길어야 한다).
+ * `reason: "injury"` 는 거절 선택지가 없다(설계) — 그땐 은퇴한다.
+ */
+export async function resolveRetirementAsk(keep = true): Promise<"kept" | "retired" | false> {
+  const pa = get(nextPendingAction);
+  if (pa?.type !== "retirementAsk") return false;
+  if (keep && pa.reason !== "injury") {
+    seasonStore.resolvePendingAction("retirementAsk");
+    await gameStore.save(); await seasonStore.save();
+    return "kept";
+  }
+  await retireProtagonist(pa.reason === "injury" ? "injury" : "decline");
+  seasonStore.resolvePendingAction("retirementAsk");
+  await seasonStore.save();
+  return "retired";
+}
+
+/**
+ * 지금 pending 이 위 넷 중 하나면 기본 선택으로 푼다. 푼 종류를 돌려준다.
+ * 진로 셋·관전·연봉협상은 기존 손잡이(`pushCareerForward` 등)가 맡는다.
+ */
+export async function pushPendingForward(): Promise<string | null> {
+  const pa = get(nextPendingAction);
+  if (!pa) return null;
+  switch (pa.type) {
+    case "optionClause":   return (await resolveOptionClause()) ? "optionClause" : null;
+    case "faMarket":       return (await resolveFaMarket()) ? "faMarket" : null;
+    case "trade":          return (await resolveTrade()) ? "trade" : null;
+    case "retirementAsk":  return (await resolveRetirementAsk()) ? "retirementAsk" : null;
+    case "salaryNegotiation": return (await acceptNegotiation()) ? "salaryNegotiation" : null;
+    default: return null;
+  }
+}
+
+/** 은퇴 권고의 사유 — `injury` 면 거절 선택지가 없다. pending 이 아니면 null */
+export function pendingReason(): string | null {
+  const pa = get(nextPendingAction);
+  return pa?.type === "retirementAsk" ? (pa.reason ?? "decline") : null;
+}
+
+/**
+ * 안 본 10행을 가르는 신호 — `probe-paths` 가 매 바퀴 읽는다.
+ * 값이 아니라 **"그 일이 일어났는가"** 를 남기는 용도라 가볍게 둔다.
+ */
+export function pathSignals(): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const p = g.protagonist;
+  const heroId = p.id;
+  const brackets = Object.values(s.postseasonBrackets ?? {}).flat() as Array<{ homeTeamId?: string; awayTeamId?: string; teamA?: string; teamB?: string }>;
+  const inPostseason = brackets.some((b) =>
+    [b.homeTeamId, b.awayTeamId, b.teamA, b.teamB].includes(p.teamId));
+  const tourMine = (s.schedule ?? []).filter((e) => e.isTournament && e.result
+    && (e.homeTeamId === p.teamId || e.awayTeamId === p.teamId)).length;
+  const st = s.stats?.[heroId] as { g?: number } | undefined;
+  return {
+    year: s.seasonYear, week: s.currentWeek,
+    stage: p.careerStage, league: p.leagueId, team: p.teamId,
+    position: p.position ?? null,
+    farm: /_2$/.test(p.teamId ?? ""),
+    national: (s.nationalDuty ?? {})[heroId] != null,
+    postseason: inPostseason,
+    tournamentGamesOfMyTeam: tourMine,
+    myGames: st?.g ?? 0,
+    events: (p.careerEvents ?? []).map((e) => e.eventType),
+    military: p.militaryStatus,
+    retired: p.retirement != null,
+  };
 }
 
 /** 계약 상태 — 재계약이 실제로 적용되는지 본다 */
