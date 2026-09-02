@@ -97,6 +97,10 @@ B
 ├─ 12. ✅ **병역 보강** — 통신 후반 얇던 것: 일상 둘 추가(JR_SIGNAL_TRAIN W62+ · OPS_HANDOVER W60+) ·
 │        ERRAND maxRank 2→3 · 진지 공사 봄/가을의 fatigueDelta 제거(캘린더가 준다 · 이중 적용 방지)
 │        → 62종 · W70+ 전용 일상 통신 4 · 박격포 3 (전엔 1 대 3) · check:militarydata OK
+├─ 13. ✅ **test:events 빨간 줄** — 콘텐츠가 아니라 **잣대**였다. 무대 판정이 career_stage 의
+│        stages 배열과 league_id 의 leagueIds 배열을 안 읽어 프로 1군이 통째로 "전체" 로 샜다
+│        → 프로 5 · 전체 256  이었던 것이 **프로 189 · 전체 17** · ALL PASS
+│        같은 버그가 [3] 함의 비교에도 있어 같이 고쳤다(판정은 안 바뀐다 · 잠복이었다)
 ├─ ✅ 병합됨 14커밋 (9f8ad99b5)
 └─ 🛑 동적 치환 23종
 ```
