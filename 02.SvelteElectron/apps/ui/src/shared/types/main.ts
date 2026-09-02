@@ -46,6 +46,16 @@ export interface DecisionEffect {
   fameDelta?:       number;                  // 명성 ± (0~200 clamp)
   popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
   diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
+  // ── 현역 병영생활 전용 (PLAN_MILITARY_LIFE §28) — `militaryLife` 가 있을 때만 읽는다 ──
+  // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
+  //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
+  memberRelationDelta?: number;              // 부대원 관계 ± (대상은 relationTarget)
+  relationTarget?:  string;                  // 부대원 id · "all" · "subunit" · "junior" (없으면 이벤트의 member → 없으면 all)
+  ballDelta?:       number;                  // 야구 감각 ±
+  award?:           string;                  // 표창 id
+  penalty?:         string;                  // 징계 id
+  leaveDays?:       number;                  // 휴가 일수 +
+  perfTierDelta?:   number;                  // 성과 판정 tier 보정 (−1 이 유리)
   addTag?:          string[];                // 태그 추가 (중복 무시)
   /**
    * 태그 제거.

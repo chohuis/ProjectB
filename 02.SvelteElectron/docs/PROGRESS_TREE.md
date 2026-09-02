@@ -53,8 +53,8 @@ A
 │           · §35 사용자 확정(제안값 1차 · 보직 반반 · 선택은 탭에서 · 착수는 기획 뒤) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
 │     └─ 🔄 **구현 착수 (사용자 09-02 13:40 "지금 구현 문서 기준으로 A·B·C 에 넣어 진행")** — 4부 §34 순서
 │           ├─ 12. ✅ A ① 타입 militaryLife.ts · 세이브 필드+migrate · 데이터 넷(unit/members 15장/calendar 20주/rules) · 풀 military_life.json 캘린더 20종 · 로더 · **check:militarydata**(변이 2종 실패 확인)
-│           ├─ 13. ⬜ A ② Rust calc_military_life_week(§26) · 주간 루프(§25) · 상무 갈래 분리 · migrate 한 줄
-│           ├─ 14. ⬜ A ③ 전역 환산·군 경력 한 장·재회 훅(§30) · 소식(§31) · probe:military(§33)
+│           ├─ 13. ✅ A ② Rust calc_military_life_week(씨앗 · cargo 5) · 주간 루프 usecases/militaryLife.ts(§25 ①~⑦) · 순수 규칙 utils/militaryLifeRules.ts(vitest 16) · 입대 시 상태 생성 · 이벤트 선택 효과 훅 · 상무·옛 세이브는 옛 갈래 · build:native 13:57 · ⏳ 헤드리스 probe:paths mil 6시즌
+│           ├─ 14. 🔄 A ③ ✅ 전역 환산(rules.discharge · 능력치 한 번 · 회복 주 덮음) · ✅ 군 경력 한 장(militaryRecord · 소식 한 통) · ✅ 소식(이벤트·전입/전출/진급·월간·전역) · ⬜ 재회 훅(전역 뒤 W10·W30 조건 이벤트 — B 문안 뒤) · ⬜ probe:military(씨앗 3×100주 · 정책 셋) · ⏳ probe:paths mil 6시즌 도는 중
 │           └─ B·C 몫은 각 트리 (B-11 · C-12)
 └─ 🛑 1.1 — 독립 시장 · 중도 콜업 · 2군 예산 · 전역 기량 · 일반병 화면 · 동적 치환 ·
         상무 섞임 · FA 정교화 · OVR 드리프트 · 장타율 .461
@@ -102,7 +102,8 @@ C
 ├─ 9. ⬜ 새 게임 → 고교 → 진로 → 첫 프로 시즌 한 줄
 ├─ 10. ⬜ 스크린샷 5장 (1920×1080 정확히) · 스토어 자산
 ├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드
-├─ 12. ⬜ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility · 입대 주 전환) + §32 화면 넷 (일과·부대원·캘린더·경력 · 상무 분기) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252 그대로 · A ① 타입이 나오면 착수
+├─ 12. ⬜ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility · 입대 주 전환) + §32 화면 넷 (일과·부대원·캘린더·경력 · 상무 분기) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252 그대로 · A ①② 끝났으니 착수 가능 (타입 types/militaryLife.ts · 상태 protagonist.militaryLife · 선택은 militaryLife.nextChoice 에 적는다)
+├─ 13. ⬜ 🔴 **이벤트 pending 모달이 없다** — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 └─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
 ```

@@ -3658,6 +3658,14 @@ export function pathSignals(): Record<string, unknown> {
     events: (p.careerEvents ?? []).map((e) => e.eventType),
     military: p.militaryStatus,
     retired: p.retirement != null,
+    // 병영생활(현역) — 감각·아크·관계 수·캘린더 소화·뜬 이벤트 종류·휴가·상벌 (probe-paths 가 4주마다 찍는다)
+    mil: p.militaryLife ? {
+      sense: Math.round(p.militaryLife.ballSense), role: p.militaryLife.roleId, arc: p.militaryLife.arcStage,
+      rel: Object.keys(p.militaryLife.relations).length, frozen: Object.keys(p.militaryLife.frozen).length,
+      cal: p.militaryLife.calendarDone.length, fired: Object.keys(p.militaryLife.cooldown).length,
+      leave: p.militaryLife.leaveDays, awards: p.militaryLife.awards.length, perf: p.militaryLife.perf.map((x) => x.tier),
+      choice: p.militaryLife.choiceLog[p.militaryLife.choiceLog.length - 1]?.choice ?? null,
+    } : null,
   };
 }
 

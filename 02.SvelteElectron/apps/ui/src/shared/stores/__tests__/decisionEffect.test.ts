@@ -109,10 +109,16 @@ describe("효과 적용 경로가 하나인가", () => {
 
   it("자동 진행의 이벤트 처리가 관계·사치품 경로를 거친다", () => {
     const src = read("../../usecases/runAutoAdvance.ts");
-    const i = src.indexOf("async function handleEvent");
+    // 2026-09-02: 헤드리스(handleEvent)와 화면(이벤트 모달)이 같은 `resolveEventPending` 을 부른다 —
+    // 효과 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)은 그 안에 한 번만 있다
+    const h = src.indexOf("async function handleEvent");
+    expect(h).toBeGreaterThan(-1);
+    expect(src.slice(h, src.indexOf("\n}", h))).toContain("resolveEventPending(");
+    const i = src.indexOf("export async function resolveEventPending");
     expect(i).toBeGreaterThan(-1);
     const fn = src.slice(i, src.indexOf("\n}", i));
     expect(fn).toContain("applySideEffects");
+    expect(fn).toContain("applyMilitaryEventChoice");
   });
 });
 

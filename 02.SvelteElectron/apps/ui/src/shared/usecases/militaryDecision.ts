@@ -18,6 +18,9 @@ import { MILITARY_RESULT_WEEK } from "../utils/seasonWeeks";
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
+import { startMilitaryLife } from "./militaryLife";
+import { masterStore } from "../stores/master";
+import { buildMilitaryRecord, dischargeConversion } from "../utils/militaryLifeRules";
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
 import { openProSeason } from "./proSeason";
@@ -43,6 +46,11 @@ export async function enlistProtagonist(
   const label = unit === "sports" ? "체육부대 입대" : "일반병 입대";
 
   gameStore.enlistMilitary(unit, week, sportsSelected, seasonYear);
+  // 현역이면 병영생활 상태를 만든다 (PLAN_MILITARY_LIFE 4부 §24) — 데이터가 없으면 null 로 남아 옛 갈래로 간다
+  if (unit === "general") {
+    const life = startMilitaryLife(get(gameStore).protagonist);
+    if (life) gameStore.setMilitaryLife(life);
+  }
   gameStore.addCareerEvent({
     year: seasonYear,
     eventType: "military_enlist",
@@ -130,7 +138,26 @@ export async function dischargeProtagonist(): Promise<boolean> {
   if (p.careerStage !== "military") return false;
   if ((p.militaryServiceWeeks ?? 0) < SERVICE_WEEKS) return false;
 
+  // 현역 병영생활이면 전역 환산 — 능력치는 여기서 **한 번** 움직인다 (§30 · 사용자 확정 "복무 중 안 깎고 전역 때 환산")
+  const life = p.militaryLife;
+  const master = get(masterStore);
   gameStore.completeMilitaryService();
+  if (life && master.militaryLifeRules && master.militaryUnit) {
+    const conversion = dischargeConversion(master.militaryLifeRules, life.ballSense);
+    const record = buildMilitaryRecord(life, master.militaryUnit, master.militaryMembers, conversion);
+    gameStore.applyMilitaryDischarge({ ...conversion, record });
+    const lines = [
+      `${record.unitName} · ${record.roleLabel}${record.arcLabel ? ` · ${record.arcLabel}` : ""}`,
+      `야구 감각 ${record.finalBallSense} → 커맨드·제구·회복 ${conversion.statDelta >= 0 ? "그대로" : conversion.statDelta}${conversion.velocityDelta ? ` · 구속 ${conversion.velocityDelta}` : ""} · 회복 ${conversion.recoveryWeeks}주`,
+      `휴가 ${record.leaveDays}일 · 표창 ${record.awards.length} · 징계 ${record.penalties.length}${record.perf.length ? ` · 성과 ${record.perf.map((x) => `${x.tier}등급`).join("/")}` : ""}`,
+      record.topRelations.length ? `함께한 사람: ${record.topRelations.map((r) => `${r.name} ${r.value}`).join(" · ")}` : "",
+    ].filter(Boolean).join("\n");
+    gameStore.addMessage({
+      id: `msg-mil-record-${s.seasonYear}-w${s.currentWeek}`, category: "system", sender: "군 복무",
+      subject: "군 경력 한 장", preview: lines.split("\n")[0], body: lines,
+      createdAt: `W${s.currentWeek}`, readAt: null,
+    });
+  }
 
   // 학생 신분에서 입대했으면 소속이 아직 학교다 — 리그·팀·시즌을 독립리그로
   // 옮긴다. `completeMilitaryService`가 단계만 바꾸므로 여기가 짝이다

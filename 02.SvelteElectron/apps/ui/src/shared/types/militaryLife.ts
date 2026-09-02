@@ -198,6 +198,25 @@ export interface MilitaryLifeState {
   senseCurve: number[];
 }
 
+/** 전역 때 접는 "군 경력 한 장" (§30) — 인생 기록 화면 · 재회 이벤트가 읽는다 */
+export interface MilitaryRecord {
+  unitId: string;
+  unitName: string;
+  roleId: MilitaryRoleId | null;
+  roleLabel: string;
+  arcLabel: string;
+  finalBallSense: number;
+  leaveDays: number;
+  awards: Array<{ week: number; id: string }>;
+  penalties: Array<{ week: number; id: string }>;
+  perf: Array<{ week: number; id: string; tier: number; note: string }>;
+  /** 관계 상위 셋 — 재회 후보 */
+  topRelations: Array<{ memberId: string; name: string; value: number }>;
+  senseCurve: number[];
+  /** 전역 환산 — 무엇이 얼마나 깎였나 (화면·소식이 그대로 적는다) */
+  conversion: { statDelta: number; velocityDelta: number; recoveryWeeks: number };
+}
+
 export function emptyMilitaryLife(unitId: string, ballSense: number): MilitaryLifeState {
   return {
     unitId, roleId: null, arcStage: 0, ballSense,

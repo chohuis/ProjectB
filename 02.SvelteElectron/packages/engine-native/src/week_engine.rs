@@ -1201,3 +1201,250 @@ mod academics_tests {
         assert_eq!(calc_semester_result(q).gpa, 4.5);
     }
 }
+
+// ── 현역 병영생활 주간 계산 (docs/PLAN_MILITARY_LIFE.md 4부 §26 · 2026-09-02) ─────────
+//
+// 상무는 위 `calc_military_week` 를 그대로 쓴다 — 갈래 하나를 고쳐 두 무대가 같이
+// 흔들리는 걸 막으려고 함수를 따로 뒀다. **능력치 칸이 없다** — 복무 중엔 능력치를
+// 안 건드리고 전역 때 야구 감각으로 환산한다(사용자 확정 09-02).
+// 수치는 전부 페이로드로 받는다 — 정본은 `resource/data/master/military/rules.json` 이다.
+// 난수는 씨앗(`seed`)에서만 나온다 — 계측이 재현돼야 한다(결정성 정책).
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MilitaryLifeMember {
+    pub id: String,
+    pub relation: f64,
+    pub same_subunit: bool,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MilitaryLifeWeekPayload {
+    pub seed: u64,
+    pub duty_intensity: u32,
+    pub ball_access: u32,
+    pub rank_band: u32,
+    /// "ball" | "people" | "rest" | "none"(훈련소·휴가·선택 없는 주)
+    pub choice: String,
+    pub fatigue: f64,
+    pub morale: f64,
+    pub ball_sense: f64,
+    pub calendar_fatigue: f64,
+    pub calendar_ball: f64,
+    pub on_leave: bool,
+    pub boot_camp: bool,
+    pub members: Vec<MilitaryLifeMember>,
+    /// 후보 이벤트 가중 — 빈 배열이면 이번 주 이벤트 없음
+    pub candidate_weights: Vec<f64>,
+    // rules.json
+    pub fatigue_base_by_intensity: Vec<f64>,
+    pub fatigue_choice_ball: f64,
+    pub fatigue_choice_people: f64,
+    pub fatigue_choice_rest: f64,
+    pub fatigue_natural: f64,
+    pub fatigue_leave: f64,
+    pub morale_choice_people: f64,
+    pub morale_choice_rest: f64,
+    pub morale_leave: f64,
+    pub sense_weekly_decay: f64,
+    pub sense_gain_by_access: Vec<f64>,
+    pub sense_cap_per_access_gap: f64,
+    pub sense_leave_gain: f64,
+    pub relation_weekly_decay: f64,
+    pub relation_people_by_band: Vec<f64>,
+    pub relation_same_subunit_weight: f64,
+    pub event_weekly_chance: f64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MilitaryLifeRelationDelta {
+    pub id: String,
+    pub delta: f64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MilitaryLifeWeekResult {
+    pub fatigue: f64,
+    pub morale: f64,
+    pub ball_sense: f64,
+    /// 야구 감각 상한 — 화면이 "상한 — 오르지 않는다" 를 보여 주려고 같이 준다
+    pub ball_sense_cap: f64,
+    pub relation_deltas: Vec<MilitaryLifeRelationDelta>,
+    /// 사람 카드가 고른 대상 (소식에 적는다)
+    pub people_targets: Vec<String>,
+    /// 40% 굴림에 걸렸고 후보가 있었으면 그 인덱스
+    pub event_index: Option<usize>,
+}
+
+fn weighted_index<R: rand::Rng>(rng: &mut R, weights: &[f64]) -> Option<usize> {
+    let total: f64 = weights.iter().filter(|w| **w > 0.0).sum();
+    if total <= 0.0 { return None; }
+    let mut r = rng.gen::<f64>() * total;
+    for (i, w) in weights.iter().enumerate() {
+        if *w <= 0.0 { continue; }
+        if r < *w { return Some(i); }
+        r -= *w;
+    }
+    Some(weights.len() - 1)
+}
+
+pub fn calc_military_life_week(p: MilitaryLifeWeekPayload) -> MilitaryLifeWeekResult {
+    use rand::SeedableRng;
+    let mut rng = rand::rngs::StdRng::seed_from_u64(p.seed);
+    let at = |v: &Vec<f64>, i: usize| v.get(i).copied().unwrap_or_else(|| v.last().copied().unwrap_or(0.0));
+
+    // 피로 — 훈련소는 최고 강도(5) · 휴가 주는 고정 회복
+    let intensity = if p.boot_camp { 5 } else { p.duty_intensity.min(5) } as usize;
+    let mut fatigue = p.fatigue + at(&p.fatigue_base_by_intensity, intensity) + p.calendar_fatigue + p.fatigue_natural;
+    let mut morale = p.morale + (60.0 - p.morale) * 0.05;   // 회귀 — CLAUDE.md 사기 규칙 그대로
+    let cap = (100.0 - p.sense_cap_per_access_gap * (3.0 - p.ball_access.min(3) as f64)).max(0.0);
+    let mut sense = p.ball_sense - p.sense_weekly_decay + p.calendar_ball;
+    let mut people_targets: Vec<String> = Vec::new();
+    let mut deltas: Vec<f64> = vec![-p.relation_weekly_decay; p.members.len()];
+
+    if p.on_leave {
+        fatigue += p.fatigue_leave;
+        morale += p.morale_leave;
+        sense += p.sense_leave_gain;
+    } else {
+        match p.choice.as_str() {
+            "ball" => {
+                fatigue += p.fatigue_choice_ball;
+                if p.ball_access > 0 { sense += at(&p.sense_gain_by_access, p.ball_access.min(3) as usize); }
+            }
+            "people" => {
+                fatigue += p.fatigue_choice_people;
+                morale += p.morale_choice_people;
+                if !p.members.is_empty() {
+                    let n = if p.members.len() >= 2 && rng.gen::<f64>() < 0.5 { 2 } else { 1 };
+                    let gain = at(&p.relation_people_by_band, p.rank_band.min(3) as usize);
+                    let mut weights: Vec<f64> = p.members.iter()
+                        .map(|m| if m.same_subunit { p.relation_same_subunit_weight } else { 1.0 })
+                        .collect();
+                    for _ in 0..n {
+                        if let Some(i) = weighted_index(&mut rng, &weights) {
+                            deltas[i] += gain;
+                            people_targets.push(p.members[i].id.clone());
+                            weights[i] = 0.0;
+                        }
+                    }
+                }
+            }
+            "rest" => {
+                fatigue += p.fatigue_choice_rest;
+                morale += p.morale_choice_rest;
+            }
+            _ => {}
+        }
+    }
+
+    // 상한: 이미 상한 위였으면 올리진 않되 깎이는 건 그대로
+    let sense_max = cap.max(p.ball_sense.min(100.0)).min(100.0);
+    let ball_sense = sense.clamp(0.0, sense_max);
+
+    let event_index = if !p.candidate_weights.is_empty() && rng.gen::<f64>() < p.event_weekly_chance {
+        weighted_index(&mut rng, &p.candidate_weights)
+    } else { None };
+
+    MilitaryLifeWeekResult {
+        fatigue: fatigue.clamp(0.0, 100.0),
+        morale: morale.clamp(0.0, 100.0),
+        ball_sense,
+        ball_sense_cap: cap,
+        relation_deltas: p.members.iter().zip(deltas.iter())
+            .map(|(m, d)| MilitaryLifeRelationDelta { id: m.id.clone(), delta: *d })
+            .collect(),
+        people_targets,
+        event_index,
+    }
+}
+
+#[cfg(test)]
+mod military_life_tests {
+    use super::*;
+
+    fn payload(choice: &str) -> MilitaryLifeWeekPayload {
+        MilitaryLifeWeekPayload {
+            seed: 7, duty_intensity: 4, ball_access: 1, rank_band: 1, choice: choice.to_string(),
+            fatigue: 50.0, morale: 60.0, ball_sense: 60.0, calendar_fatigue: 0.0, calendar_ball: 0.0,
+            on_leave: false, boot_camp: false,
+            members: vec![
+                MilitaryLifeMember { id: "A".into(), relation: 0.0, same_subunit: true },
+                MilitaryLifeMember { id: "B".into(), relation: 0.0, same_subunit: false },
+            ],
+            candidate_weights: vec![],
+            fatigue_base_by_intensity: vec![0.0, 2.0, 4.0, 6.0, 8.0, 10.0],
+            fatigue_choice_ball: 4.0, fatigue_choice_people: 1.0, fatigue_choice_rest: -6.0,
+            fatigue_natural: -3.0, fatigue_leave: -20.0,
+            morale_choice_people: 2.0, morale_choice_rest: 1.0, morale_leave: 8.0,
+            sense_weekly_decay: 1.5, sense_gain_by_access: vec![0.0, 3.0, 5.0, 8.0],
+            sense_cap_per_access_gap: 10.0, sense_leave_gain: 4.0,
+            relation_weekly_decay: 0.5, relation_people_by_band: vec![2.0, 2.0, 3.0, 4.0],
+            relation_same_subunit_weight: 2.0, event_weekly_chance: 0.4,
+        }
+    }
+
+    #[test]
+    fn ball_choice_raises_sense_and_fatigue() {
+        let r = calc_military_life_week(payload("ball"));
+        assert!((r.ball_sense - (60.0 - 1.5 + 3.0)).abs() < 1e-9);
+        assert!((r.fatigue - (50.0 + 8.0 - 3.0 + 4.0)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn sense_cap_follows_ball_access() {
+        let mut p = payload("ball");
+        p.ball_sense = 79.5;
+        let r = calc_military_life_week(p);
+        assert!((r.ball_sense_cap - 80.0).abs() < 1e-9);
+        assert!(r.ball_sense <= 80.0);
+    }
+
+    #[test]
+    fn people_choice_adds_on_top_of_decay_and_prefers_same_subunit() {
+        let mut same = 0;
+        for seed in 0..200u64 {
+            let mut p = payload("people");
+            p.seed = seed;
+            let r = calc_military_life_week(p);
+            assert!(!r.people_targets.is_empty());
+            for d in &r.relation_deltas {
+                if r.people_targets.contains(&d.id) { assert!((d.delta - 1.5).abs() < 1e-9); }
+                else { assert!((d.delta + 0.5).abs() < 1e-9); }
+            }
+            if r.people_targets[0] == "A" { same += 1; }
+        }
+        assert!(same > 110, "same-subunit weight 2x, but A first only {same}/200");
+    }
+
+    #[test]
+    fn leave_week_has_no_choice_and_fixed_recovery() {
+        let mut p = payload("ball");
+        p.on_leave = true;
+        let r = calc_military_life_week(p);
+        assert!((r.fatigue - (50.0 + 8.0 - 3.0 - 20.0)).abs() < 1e-9);
+        assert!((r.ball_sense - (60.0 - 1.5 + 4.0)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn event_pick_is_weighted_and_seeded() {
+        let a = calc_military_life_week(payload("rest"));
+        assert!(a.event_index.is_none());
+        let mut hits = [0usize; 3];
+        let mut any = 0;
+        for seed in 0..300u64 {
+            let mut q = payload("rest");
+            q.candidate_weights = vec![1.0, 0.0, 5.0];
+            q.seed = seed;
+            if let Some(i) = calc_military_life_week(q).event_index { hits[i] += 1; any += 1; }
+        }
+        assert_eq!(hits[1], 0, "zero weight never picked");
+        assert!(hits[2] > hits[0] * 2, "weight 5 should beat 1 by far {hits:?}");
+        assert!(any > 60 && any < 180, "about 40% per week {any}/300");
+        let mk = || { let mut q = payload("rest"); q.candidate_weights = vec![1.0, 1.0]; q.seed = 42; q };
+        assert_eq!(calc_military_life_week(mk()).event_index, calc_military_life_week(mk()).event_index);
+    }
+}
