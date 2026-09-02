@@ -531,6 +531,21 @@ MainTabId  += "military"                       라벨 「병역」
 전역 뒤     탭은 사라진다. 군 경력 한 장은 나 > 상태 > 기록 과 인생 기록 화면에서 본다
 ```
 
+### 나타나고 사라지는 규칙 (✅ 사용자 확정 09-02 밤: "입대하면 나오고 제대하면 사라져야 한다")
+
+```
+입대하는 주   enlistMilitary 가 careerStage 를 "military" 로 → visibleNavTabs 에 "military" 가 들어온다
+              같은 주에 currentTab = "military" 로 옮긴다 (MainPage 의 "navTabs 에 없으면 폴백" 옆에 한 줄)
+복무 100주    탭이 있다. 상무(체육부대)도 careerStage 가 "military" 라 같은 규칙 — 안의 내용만 다르다
+전역하는 주   completeMilitaryService 가 단계를 되돌리면 visibleNavTabs 에서 빠진다
+              currentTab 이 "military" 였으면 기존 폴백(navTabs[0] = "news")이 받는다 — 새 코드 없음
+전역 뒤       탭 없음. 군 경력 한 장은 나 > 상태 > 기록 · 인생 기록 (militaryServedUnit 이 있으면 항목이 뜬다)
+세이브 로드   복무 중 세이브를 열면 그 탭이 그대로 있다 — 조건이 상태 하나(careerStage)라 따로 저장할 게 없다
+```
+
+⚠ **탭의 유무를 결정하는 값은 `careerStage` 하나**다. 다른 플래그를 두지 않는다 —
+둘이면 한쪽만 바뀐 채 남는다(이 저장소가 여러 번 겪은 형태).
+
 ### 병역 탭 안 — 2단 넷 (`MilitaryTabId`)
 
 | 2단 | 무엇 | 데이터 |
