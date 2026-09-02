@@ -11858,6 +11858,57 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_RECOVERY_DAY",
+      "prompt": "이 하루를 어디에 쓰겠습니까?",
+      "options": [
+        {
+          "id": "review",
+          "label": "기술 복습에 쓴다",
+          "effectHint": "컨디션 -4, 커맨드 경험치 +1",
+          "effects": [
+            "condition:-4",
+            "xp.command:+1"
+          ]
+        },
+        {
+          "id": "rest",
+          "label": "몸을 회복하는 데 쓴다",
+          "effectHint": "컨디션 +2",
+          "effects": [
+            "condition:+2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DEC_SCOUT_PRESSURE",
+      "prompt": "스카우트 앞에서 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "impact",
+          "label": "임팩트를 노린다",
+          "effectHint": "컨트롤 XP +3, 피로 +6",
+          "effects": {
+            "xp": {
+              "control": 3
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "routine",
+          "label": "평소 루틴을 지킨다",
+          "effectHint": "구속 XP +3, 사기 +1",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "moraleDelta": 1
+          }
+        }
+      ]
     }
   ]
 }

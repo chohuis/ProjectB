@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_RECOVERY_DAY_01",
-  "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+  "decisionTemplateId": "DEC_RECOVERY_DAY"
 }

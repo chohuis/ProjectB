@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_SCOUT_PRESSURE_01",
-  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
+  "decisionTemplateId": "DEC_SCOUT_PRESSURE"
 }
