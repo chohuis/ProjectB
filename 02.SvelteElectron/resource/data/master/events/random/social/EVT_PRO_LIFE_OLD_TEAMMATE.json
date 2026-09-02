@@ -1,0 +1,18 @@
+{
+  "id": "EVT_PRO_LIFE_OLD_TEAMMATE",
+  "type": "random",
+  "category": "social",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "weight": 22,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": ["pro_kbl", "pro_abl", "pro_jbl"]
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_LIFE_OLD_TEAMMATE",
+  "decisionTemplateId": "DEC_RAND_FRIEND_VISIT"
+}
