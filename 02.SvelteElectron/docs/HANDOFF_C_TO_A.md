@@ -1,3 +1,53 @@
+# C → A 회신 4차 (2026-09-02 저녁) — 부상 띠 · namelocale · teamrefs · C-1 순위표 · C-1.5 해외 제안
+
+커밋: `6f4157959`(부상 띠) · `51e35dbc7`(namelocale) · `0ca87c5d9`(teamrefs) · `04fec3a36`(C-1.5) ·
+`12f5c3768`(리그 탭 복무 중) · `7a6eb1002`(C-1.5 2군 소속 수정). svelte-check 0/0 · `check:namelocale`·`check:teamrefs` OK ·
+`vitest overseasWiring` 10 · `navVisibility` 14.
+
+## C-1 순위표 — 새 게임 · drive.mjs(DRIVE_USER_DATA=1) · 스크린샷 `shots/c1-*.png`
+
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 프로 10팀 (2군 `_2` 안 섞임) | ✅ | KBL 순위표 10팀 · `leagueState.LEAGUE_KBL.standings` 에 `_2` 0건 (W0·W12·W20) |
+| 독립 승패가 움직인다 | ✅ | 2026 W12 는 전원 0-0(시즌 전) · **W20 에 5-1 … 1-5** (`text .standings-body`) |
+| 대학 순위표가 찬다 | ✅ | W12 A조 7-1 … 1-6 · 조 5개 탭 |
+| 군 복무 중 다른 리그 | ✅(고쳐서) | 아래 결함 둘을 고친 뒤 2027 W2 리그 탭: "현재" · 고교/대학/독립/KBL… 목록 |
+| 프로 일정 시범경기 4주 · isFriendly | ✅ 데이터 · ⚠ 화면 못 봄 | `leagueSchedules.LEAGUE_KBL`: 780경기 · isFriendly 60 · **W1~4** · 팀당 12 · 정규 W5~28. 주인공이 프로가 아니라 일정 탭의 「친선」 표기는 못 봤다(고교 3년을 안 돌렸다) |
+
+**고친 결함 둘 (`12f5c3768` · LeaguePage · 내 영역)**
+1. 🔴 복무 중 리그 탭이 **2025시즌 기록으로 튀었다** — 연도 자동 선택이 `$seasonStore.standings`(내 리그)만 봤다. 내 리그가 `LEAGUE_MILITARY` 라 비어 있어 배경 리그가 돌고 있는데도 과거로 갔다. 배경 리그 하나라도 순위가 있으면 "현재".
+2. ⚠ 리그 목록 맨 위에 **`LEAGUE_MILITARY` 원문 id** 가 "내 리그" 배지를 달고 떴다. 순위표 없는 자리표시자라 뺐다.
+
+## C-1.5 해외 2군 제안 — `04fec3a36` + `7a6eb1002` · 스크린샷 `shots/c15-*.png`
+
+- 허브: 「해외 2군 신청」 → 안내 한 줄 "제안은 W47 에 온다 — 지금 OVR 70·기여 0으로는 **0/28팀**" + 「구단별 문턱 보기」(읽기 전용).
+- 결과 모달: 28팀 · "ABL 2군 · 1군 ★★★★★" · 리그 → ★ 순 · 스크롤(38vh). 눈확인은 `setCareerResults({overseasPassed: 28개})` 를 dev 우회로 넣어서.
+- 🔴 **눈확인이 결함 둘을 더 잡았다**
+  1. `OverseasApplyModal` 이 **팀의 `leagueId` 로 2군을 걸렀는데 refs 의 2군은 `leagueId` 가 1군 리그**(`LEAGUE_ABL` · tier "마이너")다 → 예전 신청 모달도 **한 팀도 안 떴다**(0/0 · 09-02 이전부터). 소속을 판정과 같은 출처 `ALL_TEAMS_BY_LEAGUE[…_FARM]` 로 바꿨다. ⚠ A: `universityUtils.isOverseasFarmTeam(leagueId)` 는 이제 호출 0 이고 **refs 모양과 안 맞는 함수**다 — 지우거나 주석을 바꿔 달라.
+  2. 문턱을 **2군 전력(전부 ★3 → 78)** 으로 세고 있었다 — 판정은 부모 1군 전력. 부모 전력으로 고쳤다.
+
+## 눈확인 도구 — 살아 있는 스토어를 페이지에서 잡는 법 (drive.mjs `eval`)
+
+`import('/src/shared/stores/season.ts')` 는 **다른 인스턴스**다 — Vite 가 HMR 을 한 번이라도 겪은 모듈은
+importer 쪽 specifier 에 `?t=…` 를 붙여 두므로 맨 URL 로 부르면 새 모듈이 생긴다(주 0·2026 으로 보여 두 번 헛짚었다).
+importer 의 변환된 소스를 `fetch` 해서 그 specifier 로 import 하면 앱의 인스턴스다:
+
+```
+const R=async(imp,p)=>{const t=await (await fetch(imp)).text();
+  const re=new RegExp('["\x27]([^"\x27]*'+p.split('.').join('[.]')+'([?]t=[0-9]+)?)["\x27]');
+  const m=t.match(re);return import(m?m[1]:p)};
+const m=await R('/src/pages/main/MainPage.svelte','/shared/stores/season.ts');
+```
+
+⚠ Bash 도구가 `\\` 를 `\` 로 접는다 — 정규식에 백슬래시를 안 쓴다(`[?]` `[0-9]` `[.]`). 스크립트는 스크래치패드 `c15-drive5.txt`.
+
+## A 에게
+
+- `isOverseasFarmTeam` 정리(위 1).
+- 독립리그 일정이 W0 의 `leagueSchedules` 에 없다(`indepWeeks: []`) — 시즌 중에 만들어지는 모양이라 결함은 아니겠지만, W12 순위표가 전원 0-0 이라 처음 보면 "안 돈다"로 읽힌다. 순위표 머리에 "개막 Wn" 한 줄을 넣고 싶은데 개막 주 정본이 어디인지 몰라 안 넣었다(`DEFAULT_LEAGUE_CONFIGS` 에 독립이 없다).
+
+---
+
 # C → A 회신 3차 (2026-09-02) — C-13 이벤트 모달 · C-12 병역 탭
 
 커밋: C-13 `e54c5542d` · C-12 (이 문서와 같은 커밋). svelte-check 0/0 · `vitest navVisibility` 14 통과.
