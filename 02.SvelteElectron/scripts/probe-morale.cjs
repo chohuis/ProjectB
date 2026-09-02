@@ -70,10 +70,14 @@ const dstat = (v) => v.length
     app.setCareerPolicy(POLICY);
     const start = app.currentSeason();
     let guard = 0;
+    let lastSeason = -1;
     let prev = app.moraleSnapshot();
     while (guard++ < YEARS * 52 * 40 && app.currentSeason() < start + YEARS) {
       if (app.retired()) { why = "은퇴"; break; }
       const w0 = app.currentWeek(), s0 = app.currentSeason();
+      // ⚠ 끝에만 찍으면 두 시간이 지나도 살았는지 죽었는지 못 가른다 —
+      //   실제로 8시즌 판을 2시간 0바이트로 버렸다. 시즌마다 한 줄 찍는다
+      if (s0 !== lastSeason) { lastSeason = s0; process.stdout.write(`  [진행] ${s0} W${w0} ${prev.stage} 사기 ${prev.morale}\n`); }
       // ⚠ `oneWeek()` 은 pending 을 안 풀어 W1 에서 섰다. `runOneWeek()` 은
       //   `autoRun` 을 한 주 뒤에 세운다 — 경기·선택지는 자동 진행이 푼다
       //   (선택지는 `choices[0]`, `runAutoAdvance.ts:53`).

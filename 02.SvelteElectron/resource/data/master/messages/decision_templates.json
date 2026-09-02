@@ -167,9 +167,9 @@
         {
           "id": "accept",
           "label": "인터뷰에 응한다",
-          "effectHint": "사기 +8, 피로 +3",
+          "effectHint": "사기 +2, 피로 +3",
           "effects": [
-            "morale:+8",
+            "morale:+2",
             "fatigue:+3"
           ]
         },
@@ -194,10 +194,10 @@
               "playerType": "pitcher"
             }
           ],
-          "effectHint": "커맨드 경험치 +2, 사기 +5",
+          "effectHint": "커맨드 경험치 +2, 사기 +1",
           "effects": [
             "xp.command:+2",
-            "morale:+5"
+            "morale:+1"
           ]
         },
         {
@@ -209,18 +209,18 @@
               "playerType": "batter"
             }
           ],
-          "effectHint": "컨택 경험치 +2, 사기 +5",
+          "effectHint": "컨택 경험치 +2, 사기 +1",
           "effects": [
             "xp.batting.contact:+2",
-            "morale:+5"
+            "morale:+1"
           ]
         },
         {
           "id": "appreciate",
           "label": "감사하게 받아들인다",
-          "effectHint": "사기 +8",
+          "effectHint": "사기 +2",
           "effects": [
-            "morale:+8"
+            "morale:+2"
           ]
         },
         {
@@ -238,18 +238,18 @@
         {
           "id": "active",
           "label": "적극적으로 분위기를 끌어올린다",
-          "effectHint": "사기 +12, 피로 +5",
+          "effectHint": "사기 +4, 피로 +5",
           "effects": [
-            "morale:+12",
+            "morale:+4",
             "fatigue:+5"
           ]
         },
         {
           "id": "join",
           "label": "함께 참여하며 즐긴다",
-          "effectHint": "사기 +8, 피로 +3",
+          "effectHint": "사기 +2, 피로 +3",
           "effects": [
-            "morale:+8",
+            "morale:+2",
             "fatigue:+3"
           ]
         },
@@ -1177,10 +1177,10 @@
         {
           "id": "rest",
           "label": "완전히 회복한다",
-          "effectHint": "컨디션 +10, 사기 +5",
+          "effectHint": "컨디션 +10, 사기 +1",
           "effects": {
             "conditionDelta": 10,
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         }
       ]
@@ -1355,9 +1355,9 @@
         {
           "id": "chat",
           "label": "팀원들과 수다를 떤다",
-          "effectHint": "사기 +8, 피로 +3",
+          "effectHint": "사기 +2, 피로 +3",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 3
           }
         },
@@ -2045,9 +2045,9 @@
         {
           "id": "ignore",
           "label": "숫자에 연연하지 않는다",
-          "effectHint": "사기 +5, 멘탈리티 XP +1",
+          "effectHint": "사기 +1, 멘탈리티 XP +1",
           "effects": {
-            "moraleDelta": 5,
+            "moraleDelta": 1,
             "xp": {
               "mentality": 1
             }
@@ -2198,13 +2198,13 @@
         {
           "id": "ask",
           "label": "용기 내서 코치에게 질문한다",
-          "effectHint": "커맨드 XP +2, 멘탈리티 XP +1, 사기 +5",
+          "effectHint": "커맨드 XP +2, 멘탈리티 XP +1, 사기 +1",
           "effects": {
             "xp": {
               "command": 2,
               "mentality": 1
             },
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         },
         {
@@ -2284,9 +2284,9 @@
         {
           "id": "enjoy",
           "label": "기분 좋게 루틴대로 간다",
-          "effectHint": "사기 +10, 코치 관계 +2",
+          "effectHint": "사기 +3, 코치 관계 +2",
           "effects": {
-            "moraleDelta": 10,
+            "moraleDelta": 3,
             "relationDelta": {
               "kind": "coach",
               "delta": 2
@@ -2392,9 +2392,9 @@
         {
           "id": "long",
           "label": "길게 이야기한다",
-          "effectHint": "사기 +12, 피로 +4, 돈 +10만원",
+          "effectHint": "사기 +4, 피로 +4, 돈 +10만원",
           "effects": {
-            "moraleDelta": 12,
+            "moraleDelta": 4,
             "fatigueDelta": 4,
             "moneyDelta": 10
           }
@@ -2488,19 +2488,19 @@
         {
           "id": "sign",
           "label": "흔쾌히 해준다",
-          "effectHint": "인기도 +6, 사기 +8, 피로 +2",
+          "effectHint": "인기도 +6, 사기 +2, 피로 +2",
           "effects": {
             "popularityDelta": 6,
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 2
           }
         },
         {
           "id": "later",
           "label": "다음에 해주겠다",
-          "effectHint": "사기 +4",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         }
       ]
@@ -2838,10 +2838,10 @@
         {
           "id": "humble",
           "label": "아직 시즌이 길다고 말한다",
-          "effectHint": "명성 +3, 사기 +4",
+          "effectHint": "명성 +3, 사기 +1",
           "effects": {
             "fameDelta": 3,
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         },
         {
@@ -2928,21 +2928,21 @@
         {
           "id": "reset",
           "label": "머리를 비운다",
-          "effectHint": "사기 +10, 컨디션 +6",
+          "effectHint": "사기 +3, 컨디션 +6",
           "effects": {
-            "moraleDelta": 10,
+            "moraleDelta": 3,
             "conditionDelta": 6
           }
         },
         {
           "id": "coach",
           "label": "코치에게 털어놓는다",
-          "effectHint": "멘탈 XP +3, 사기 +6",
+          "effectHint": "멘탈 XP +3, 사기 +2",
           "effects": {
             "xp": {
               "mentality": 3
             },
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         }
       ]
@@ -2964,9 +2964,9 @@
         {
           "id": "fuel",
           "label": "자극으로 삼는다",
-          "effectHint": "사기 +8, 피로 +6",
+          "effectHint": "사기 +2, 피로 +6",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 6
           }
         }
@@ -2979,10 +2979,10 @@
         {
           "id": "rest",
           "label": "며칠 쉰다",
-          "effectHint": "피로 -10, 사기 +6",
+          "effectHint": "피로 -10, 사기 +2",
           "effects": {
             "fatigueDelta": -10,
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
@@ -3032,9 +3032,9 @@
         {
           "id": "carry",
           "label": "내가 끌고 간다",
-          "effectHint": "사기 +10, 피로 +12",
+          "effectHint": "사기 +3, 피로 +12",
           "effects": {
-            "moraleDelta": 10,
+            "moraleDelta": 3,
             "fatigueDelta": 12
           }
         },
@@ -3064,9 +3064,9 @@
         {
           "id": "young",
           "label": "어린 선수들을 챙긴다",
-          "effectHint": "사기 +8, 명성 +2",
+          "effectHint": "사기 +2, 명성 +2",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fameDelta": 2
           }
         }
@@ -3079,12 +3079,12 @@
         {
           "id": "stopper",
           "label": "내가 끊는다",
-          "effectHint": "위기집중력 XP +3, 사기 +8, 피로 +10",
+          "effectHint": "위기집중력 XP +3, 사기 +2, 피로 +10",
           "effects": {
             "xp": {
               "clutch": 3
             },
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 10
           }
         },
@@ -3123,9 +3123,9 @@
         {
           "id": "ignore",
           "label": "그냥 나간다",
-          "effectHint": "사기 +5, 피로 +6",
+          "effectHint": "사기 +1, 피로 +6",
           "effects": {
-            "moraleDelta": 5,
+            "moraleDelta": 1,
             "fatigueDelta": 6
           }
         }
@@ -3200,9 +3200,9 @@
         {
           "id": "hide",
           "label": "말하지 않는다",
-          "effectHint": "사기 +4, 피로 +8",
+          "effectHint": "사기 +1, 피로 +8",
           "effects": {
-            "moraleDelta": 4,
+            "moraleDelta": 1,
             "fatigueDelta": 8
           }
         }
@@ -3367,19 +3367,19 @@
         {
           "id": "team",
           "label": "팀 덕분이라고 말한다",
-          "effectHint": "사기 +6, 명성 +2",
+          "effectHint": "사기 +2, 명성 +2",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fameDelta": 2
           }
         },
         {
           "id": "self",
           "label": "내 준비를 말한다",
-          "effectHint": "명성 +5, 사기 +2",
+          "effectHint": "명성 +5, 사기 +1",
           "effects": {
             "fameDelta": 5,
-            "moraleDelta": 2
+            "moraleDelta": 1
           }
         }
       ]
@@ -3416,9 +3416,9 @@
         {
           "id": "teach",
           "label": "시간을 들여 가르친다",
-          "effectHint": "사기 +6, 명성 +3, 피로 +4",
+          "effectHint": "사기 +2, 명성 +3, 피로 +4",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fameDelta": 3,
             "fatigueDelta": 4
           }
@@ -3440,12 +3440,12 @@
         {
           "id": "trust",
           "label": "포수를 믿고 따른다",
-          "effectHint": "커맨드 XP +3, 사기 +4",
+          "effectHint": "커맨드 XP +3, 사기 +1",
           "effects": {
             "xp": {
               "command": 3
             },
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         },
         {
@@ -3477,9 +3477,9 @@
         {
           "id": "coexist",
           "label": "각자 자리를 인정한다",
-          "effectHint": "사기 +6",
+          "effectHint": "사기 +2",
           "effects": {
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         }
       ]
@@ -3491,9 +3491,9 @@
         {
           "id": "more",
           "label": "더 많은 등판",
-          "effectHint": "사기 +8, 피로 +8",
+          "effectHint": "사기 +2, 피로 +8",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 8
           }
         },
@@ -3517,9 +3517,9 @@
         {
           "id": "speak",
           "label": "먼저 말을 꺼낸다",
-          "effectHint": "사기 +8, 명성 +2",
+          "effectHint": "사기 +2, 명성 +2",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fameDelta": 2
           }
         },
@@ -3568,12 +3568,12 @@
         {
           "id": "accept",
           "label": "맡겠다고 한다",
-          "effectHint": "위기집중력 XP +4, 사기 +8",
+          "effectHint": "위기집중력 XP +4, 사기 +2",
           "effects": {
             "xp": {
               "clutch": 4
             },
-            "moraleDelta": 8
+            "moraleDelta": 2
           }
         },
         {
@@ -3602,9 +3602,9 @@
         {
           "id": "protest",
           "label": "감독에게 항의한다",
-          "effectHint": "사기 +6, 명성 -3",
+          "effectHint": "사기 +2, 명성 -3",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fameDelta": -3
           }
         }
@@ -3655,9 +3655,9 @@
         {
           "id": "forget",
           "label": "잊고 넘어간다",
-          "effectHint": "사기 +6, 컨디션 +4",
+          "effectHint": "사기 +2, 컨디션 +4",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "conditionDelta": 4
           }
         }
@@ -3681,12 +3681,12 @@
         {
           "id": "own",
           "label": "내 공만 던진다",
-          "effectHint": "구속 XP +3, 사기 +5",
+          "effectHint": "구속 XP +3, 사기 +1",
           "effects": {
             "xp": {
               "velocity": 3
             },
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         }
       ]
@@ -3994,9 +3994,9 @@
         {
           "id": "embrace",
           "label": "즐긴다",
-          "effectHint": "사기 +8, 위기집중력 XP +2",
+          "effectHint": "사기 +2, 위기집중력 XP +2",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "xp": {
               "clutch": 2
             }
@@ -4256,9 +4256,9 @@
         {
           "id": "join",
           "label": "끝까지 함께한다",
-          "effectHint": "사기 +8, 피로 +6",
+          "effectHint": "사기 +2, 피로 +6",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 6
           }
         },
@@ -4311,9 +4311,9 @@
         {
           "id": "loose",
           "label": "적당히 한다",
-          "effectHint": "사기 +5",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         }
       ]
@@ -4373,12 +4373,12 @@
         {
           "id": "use",
           "label": "자극으로 쓴다",
-          "effectHint": "위기집중력 XP +2, 사기 +4",
+          "effectHint": "위기집중력 XP +2, 사기 +1",
           "effects": {
             "xp": {
               "clutch": 2
             },
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         },
         {
@@ -4400,9 +4400,9 @@
         {
           "id": "talk",
           "label": "말을 걸어준다",
-          "effectHint": "사기 +6, 명성 +2",
+          "effectHint": "사기 +2, 명성 +2",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fameDelta": 2
           }
         },
@@ -4582,9 +4582,9 @@
         {
           "id": "reject",
           "label": "신경 쓰지 않는다",
-          "effectHint": "사기 +5",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         }
       ]
@@ -4619,10 +4619,10 @@
         {
           "id": "reply",
           "label": "맞받아친다",
-          "effectHint": "명성 +5, 사기 +4",
+          "effectHint": "명성 +5, 사기 +1",
           "effects": {
             "fameDelta": 5,
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         },
         {
@@ -4676,9 +4676,9 @@
         {
           "id": "team",
           "label": "다음 경기를 말한다",
-          "effectHint": "사기 +4",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         }
       ]
@@ -4978,12 +4978,12 @@
         {
           "id": "prove",
           "label": "증명한다",
-          "effectHint": "구속 XP +3, 사기 +6, 피로 +8",
+          "effectHint": "구속 XP +3, 사기 +2, 피로 +8",
           "effects": {
             "xp": {
               "velocity": 3
             },
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fatigueDelta": 8
           }
         }
@@ -5007,10 +5007,10 @@
         {
           "id": "rest",
           "label": "며칠 쉰다",
-          "effectHint": "피로 -10, 사기 +6",
+          "effectHint": "피로 -10, 사기 +2",
           "effects": {
             "fatigueDelta": -10,
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         }
       ]
@@ -5033,9 +5033,9 @@
         {
           "id": "push",
           "label": "그냥 던진다",
-          "effectHint": "사기 +4, 피로 +8",
+          "effectHint": "사기 +1, 피로 +8",
           "effects": {
-            "moraleDelta": 4,
+            "moraleDelta": 1,
             "fatigueDelta": 8
           }
         }
@@ -5073,9 +5073,9 @@
         {
           "id": "fuel",
           "label": "나도 간다",
-          "effectHint": "사기 +8, 성실성 +3",
+          "effectHint": "사기 +2, 성실성 +3",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "diligenceDelta": 3
           }
         },
@@ -5136,9 +5136,9 @@
         {
           "id": "same",
           "label": "주는 대로 먹는다",
-          "effectHint": "사기 +4",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         }
       ]
@@ -5520,9 +5520,9 @@
         {
           "id": "go",
           "label": "나간다",
-          "effectHint": "사기 +5, 피로 +10",
+          "effectHint": "사기 +1, 피로 +10",
           "effects": {
-            "moraleDelta": 5,
+            "moraleDelta": 1,
             "fatigueDelta": 10
           }
         }
@@ -5564,10 +5564,10 @@
         {
           "id": "greet",
           "label": "인사를 건넨다",
-          "effectHint": "인기 +5, 사기 +6",
+          "effectHint": "인기 +5, 사기 +2",
           "effects": {
             "popularityDelta": 5,
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
@@ -5587,12 +5587,12 @@
         {
           "id": "how",
           "label": "어떻게 버텼는지",
-          "effectHint": "멘탈 XP +3, 사기 +5",
+          "effectHint": "멘탈 XP +3, 사기 +1",
           "effects": {
             "xp": {
               "mentality": 3
             },
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         },
         {
@@ -5815,9 +5815,9 @@
         {
           "id": "ride",
           "label": "흐름을 탄다",
-          "effectHint": "사기 +8, 피로 +6",
+          "effectHint": "사기 +2, 피로 +6",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 6
           }
         },
@@ -5948,9 +5948,9 @@
         {
           "id": "later",
           "label": "시즌 끝나고 본다",
-          "effectHint": "사기 +4, 성실성 -2",
+          "effectHint": "사기 +1, 성실성 -2",
           "effects": {
-            "moraleDelta": 4,
+            "moraleDelta": 1,
             "diligenceDelta": -2
           }
         }
@@ -6035,9 +6035,9 @@
         {
           "id": "appeal",
           "label": "코치에게 어필한다",
-          "effectHint": "사기 +6, 명성 +2",
+          "effectHint": "사기 +2, 명성 +2",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fameDelta": 2
           }
         },
@@ -6058,12 +6058,12 @@
         {
           "id": "teach",
           "label": "시간을 들여 봐준다",
-          "effectHint": "멘탈 XP +2, 사기 +5, 동료 관계 +6",
+          "effectHint": "멘탈 XP +2, 사기 +1, 동료 관계 +6",
           "effects": {
             "xp": {
               "mentality": 2
             },
-            "moraleDelta": 5,
+            "moraleDelta": 1,
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
@@ -6093,9 +6093,9 @@
         {
           "id": "prove",
           "label": "남은 경기로 뒤집는다",
-          "effectHint": "사기 +8, 피로 +10",
+          "effectHint": "사기 +2, 피로 +10",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 10
           }
         },
@@ -6153,10 +6153,10 @@
         {
           "id": "rest",
           "label": "쉬어간다",
-          "effectHint": "피로 -10, 사기 +6",
+          "effectHint": "피로 -10, 사기 +2",
           "effects": {
             "fatigueDelta": -10,
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         }
       ]
@@ -6221,9 +6221,9 @@
         {
           "id": "all",
           "label": "모든 경기를 맡는다",
-          "effectHint": "사기 +8, 피로 +12",
+          "effectHint": "사기 +2, 피로 +12",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 12
           }
         },
@@ -6271,12 +6271,12 @@
         {
           "id": "pro",
           "label": "프로가 어떤지",
-          "effectHint": "멘탈 XP +3, 사기 +5, 동료 관계 +5",
+          "effectHint": "멘탈 XP +3, 사기 +1, 동료 관계 +5",
           "effects": {
             "xp": {
               "mentality": 3
             },
-            "moraleDelta": 5,
+            "moraleDelta": 1,
             "relationDelta": {
               "kind": "teammate",
               "delta": 5
@@ -6330,9 +6330,9 @@
         {
           "id": "lead",
           "label": "팀을 이끈다",
-          "effectHint": "사기 +8, 명성 +3",
+          "effectHint": "사기 +2, 명성 +3",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fameDelta": 3
           }
         },
@@ -6583,9 +6583,9 @@
         {
           "id": "team",
           "label": "팀을 끌어올린다",
-          "effectHint": "사기 +8, 피로 +8",
+          "effectHint": "사기 +2, 피로 +8",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 8
           }
         }
@@ -6598,9 +6598,9 @@
         {
           "id": "push",
           "label": "대회까지 밀어붙인다",
-          "effectHint": "사기 +8, 피로 +8",
+          "effectHint": "사기 +2, 피로 +8",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 8
           }
         },
@@ -6621,9 +6621,9 @@
         {
           "id": "call",
           "label": "집에 연락한다",
-          "effectHint": "사기 +8",
+          "effectHint": "사기 +2",
           "effects": {
-            "moraleDelta": 8
+            "moraleDelta": 2
           }
         },
         {
@@ -6655,9 +6655,9 @@
         {
           "id": "hide",
           "label": "말하지 않는다",
-          "effectHint": "사기 +4, 피로 +8",
+          "effectHint": "사기 +1, 피로 +8",
           "effects": {
-            "moraleDelta": 4,
+            "moraleDelta": 1,
             "fatigueDelta": 8
           }
         }
@@ -6670,10 +6670,10 @@
         {
           "id": "talk",
           "label": "교수와 상담한다",
-          "effectHint": "성실성 +3, 사기 +4",
+          "effectHint": "성실성 +3, 사기 +1",
           "effects": {
             "diligenceDelta": 3,
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         },
         {
@@ -6942,9 +6942,9 @@
         {
           "id": "pro",
           "label": "프로에 갈 거라고",
-          "effectHint": "사기 +6",
+          "effectHint": "사기 +2",
           "effects": {
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
@@ -7109,9 +7109,9 @@
         {
           "id": "mental",
           "label": "머리를 비운다",
-          "effectHint": "사기 +8, 컨디션 +6",
+          "effectHint": "사기 +2, 컨디션 +6",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "conditionDelta": 6
           }
         }
@@ -7124,9 +7124,9 @@
         {
           "id": "help",
           "label": "도와준다",
-          "effectHint": "사기 +6, 명성 +3",
+          "effectHint": "사기 +2, 명성 +3",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fameDelta": 3
           }
         },
@@ -7148,9 +7148,9 @@
         {
           "id": "throw",
           "label": "계속 던진다",
-          "effectHint": "사기 +6, 피로 +12",
+          "effectHint": "사기 +2, 피로 +12",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fatigueDelta": 12
           }
         },
@@ -7201,9 +7201,9 @@
         {
           "id": "fuel",
           "label": "다음은 나다",
-          "effectHint": "사기 +8, 성실성 +3",
+          "effectHint": "사기 +2, 성실성 +3",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "diligenceDelta": 3
           }
         },
@@ -7227,9 +7227,9 @@
         {
           "id": "hold",
           "label": "한 해 더 해본다",
-          "effectHint": "사기 +6, 성실성 +3",
+          "effectHint": "사기 +2, 성실성 +3",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "diligenceDelta": 3
           }
         },
@@ -7430,9 +7430,9 @@
         {
           "id": "soon",
           "label": "곧 간다고 말한다",
-          "effectHint": "사기 +6",
+          "effectHint": "사기 +2",
           "effects": {
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
@@ -7610,12 +7610,12 @@
         {
           "id": "ask",
           "label": "조언을 구한다",
-          "effectHint": "커맨드 XP +3, 사기 +5",
+          "effectHint": "커맨드 XP +3, 사기 +1",
           "effects": {
             "xp": {
               "command": 3
             },
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         },
         {
@@ -7637,9 +7637,9 @@
         {
           "id": "fight",
           "label": "남은 기회에 건다",
-          "effectHint": "사기 +8, 피로 +12",
+          "effectHint": "사기 +2, 피로 +12",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 12
           }
         },
@@ -7688,9 +7688,9 @@
         {
           "id": "open",
           "label": "기회로 본다",
-          "effectHint": "사기 +8, 명성 +3",
+          "effectHint": "사기 +2, 명성 +3",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fameDelta": 3
           }
         },
@@ -7737,9 +7737,9 @@
         {
           "id": "hope",
           "label": "올라가면 뭘 할지",
-          "effectHint": "사기 +6",
+          "effectHint": "사기 +2",
           "effects": {
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
@@ -7788,18 +7788,18 @@
         {
           "id": "meet",
           "label": "시간을 내어 만난다",
-          "effectHint": "사기 +5, 피로 +2",
+          "effectHint": "사기 +1, 피로 +2",
           "effects": [
-            "morale:+5",
+            "morale:+1",
             "fatigue:+2"
           ]
         },
         {
           "id": "short",
           "label": "짧게 통화만 한다",
-          "effectHint": "사기 +2",
+          "effectHint": "사기 +1",
           "effects": [
-            "morale:+2"
+            "morale:+1"
           ]
         },
         {
@@ -8220,18 +8220,18 @@
         {
           "id": "speak",
           "label": "먼저 입을 연다",
-          "effectHint": "감독 관계 +8, 사기 +5",
+          "effectHint": "감독 관계 +8, 사기 +1",
           "effects": [
             "relation.manager:+8",
-            "morale:+5"
+            "morale:+1"
           ]
         },
         {
           "id": "listen",
           "label": "끝까지 듣는다",
-          "effectHint": "사기 +3",
+          "effectHint": "사기 +1",
           "effects": [
-            "morale:+3"
+            "morale:+1"
           ]
         }
       ]
@@ -8273,9 +8273,9 @@
         {
           "id": "keep",
           "label": "새겨둔다",
-          "effectHint": "사기 +6",
+          "effectHint": "사기 +2",
           "effects": [
-            "morale:+6"
+            "morale:+2"
           ]
         }
       ]
@@ -8287,18 +8287,18 @@
         {
           "id": "speak",
           "label": "먼저 입을 연다",
-          "effectHint": "감독 관계 +8, 사기 +5",
+          "effectHint": "감독 관계 +8, 사기 +1",
           "effects": [
             "relation.manager:+8",
-            "morale:+5"
+            "morale:+1"
           ]
         },
         {
           "id": "listen",
           "label": "듣고만 있는다",
-          "effectHint": "사기 +3",
+          "effectHint": "사기 +1",
           "effects": [
-            "morale:+3"
+            "morale:+1"
           ]
         }
       ]
@@ -8310,18 +8310,18 @@
         {
           "id": "sign",
           "label": "공에 사인해 건넨다",
-          "effectHint": "인기 +5, 사기 +6",
+          "effectHint": "인기 +5, 사기 +2",
           "effects": [
             "popularity:+5",
-            "morale:+6"
+            "morale:+2"
           ]
         },
         {
           "id": "nod",
           "label": "눈인사만 한다",
-          "effectHint": "사기 +3",
+          "effectHint": "사기 +1",
           "effects": [
-            "morale:+3"
+            "morale:+1"
           ]
         }
       ]
@@ -8470,13 +8470,13 @@
         {
           "id": "talk",
           "label": "먼저 말을 건다",
-          "effectHint": "동료 관계 +7, 사기 +4",
+          "effectHint": "동료 관계 +7, 사기 +1",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 7
             },
-            "moraleDelta": 4
+            "moraleDelta": 1
           }
         },
         {
@@ -8700,9 +8700,9 @@
         {
           "id": "honest",
           "label": "솔직히 털어놓는다",
-          "effectHint": "사기 +6, 성실 +3",
+          "effectHint": "사기 +2, 성실 +3",
           "effects": {
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "diligenceDelta": 3
           }
         },
@@ -8829,10 +8829,10 @@
         {
           "id": "yes",
           "label": "시간을 낸다",
-          "effectHint": "인기 +4, 사기 +6, 피로 +3",
+          "effectHint": "인기 +4, 사기 +2, 피로 +3",
           "effects": {
             "popularityDelta": 4,
-            "moraleDelta": 6,
+            "moraleDelta": 2,
             "fatigueDelta": 3
           }
         },
@@ -8901,19 +8901,19 @@
         {
           "id": "reply",
           "label": "답장을 쓴다",
-          "effectHint": "인기 +4, 사기 +8, 피로 +2",
+          "effectHint": "인기 +4, 사기 +2, 피로 +2",
           "effects": {
             "popularityDelta": 4,
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "fatigueDelta": 2
           }
         },
         {
           "id": "keep",
           "label": "읽고 간직한다",
-          "effectHint": "사기 +5",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         }
       ]
@@ -8925,18 +8925,18 @@
         {
           "id": "sign",
           "label": "사인에 한마디 적어준다",
-          "effectHint": "인기 +3, 사기 +6",
+          "effectHint": "인기 +3, 사기 +2",
           "effects": {
             "popularityDelta": 3,
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
           "id": "quick",
           "label": "빠르게 사인만 한다",
-          "effectHint": "사기 +2",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 2
+            "moraleDelta": 1
           }
         }
       ]
@@ -8948,10 +8948,10 @@
         {
           "id": "teach",
           "label": "잠깐 가르쳐준다",
-          "effectHint": "인기 +4, 사기 +7, 피로 +4",
+          "effectHint": "인기 +4, 사기 +2, 피로 +4",
           "effects": {
             "popularityDelta": 4,
-            "moraleDelta": 7,
+            "moraleDelta": 2,
             "fatigueDelta": 4
           }
         },
@@ -8996,9 +8996,9 @@
         {
           "id": "change",
           "label": "바꾼다",
-          "effectHint": "사기 +8, 인기 -2",
+          "effectHint": "사기 +2, 인기 -2",
           "effects": {
-            "moraleDelta": 8,
+            "moraleDelta": 2,
             "popularityDelta": -2
           }
         },
@@ -9033,13 +9033,13 @@
         {
           "id": "own",
           "label": "내 공을 던지겠다고 한다",
-          "effectHint": "코치 관계 -4, 사기 +6",
+          "effectHint": "코치 관계 -4, 사기 +2",
           "effects": {
             "relationDelta": {
               "kind": "coach",
               "delta": -4
             },
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         }
       ]
@@ -9235,13 +9235,13 @@
         {
           "id": "mix",
           "label": "룸메이트와 어울린다",
-          "effectHint": "동료 관계 +6, 사기 +5, 피로 +3",
+          "effectHint": "동료 관계 +6, 사기 +1, 피로 +3",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
             },
-            "moraleDelta": 5,
+            "moraleDelta": 1,
             "fatigueDelta": 3
           }
         },
@@ -9275,9 +9275,9 @@
         {
           "id": "back",
           "label": "뒤에 선다",
-          "effectHint": "사기 +3",
+          "effectHint": "사기 +1",
           "effects": {
-            "moraleDelta": 3
+            "moraleDelta": 1
           }
         }
       ]
@@ -9289,13 +9289,13 @@
         {
           "id": "join",
           "label": "낀다",
-          "effectHint": "동료 관계 +6, 사기 +5",
+          "effectHint": "동료 관계 +6, 사기 +1",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
             },
-            "moraleDelta": 5
+            "moraleDelta": 1
           }
         },
         {
@@ -9755,10 +9755,10 @@
         {
           "id": "talk",
           "label": "그 나라 말로 답한다",
-          "effectHint": "인기 +7, 사기 +6",
+          "effectHint": "인기 +7, 사기 +2",
           "effects": {
             "popularityDelta": 7,
-            "moraleDelta": 6
+            "moraleDelta": 2
           }
         },
         {
