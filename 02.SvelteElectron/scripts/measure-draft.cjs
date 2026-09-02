@@ -275,6 +275,13 @@ function runSeason(npcs, year, kblTeams) {
     //   상한 초과 은퇴도 지금은 전자를 쓴다(같은 파라미터). 둘을 하나로 묶는 건 다음 Rust 빌드 때(현황판 A-15 ⚠).
     faIndependentAgeMax: gr.faRules && gr.faRules.independentAgeMax,
   });
+  // 오프시즌 사건 종류별 집계 (2026-09-03) — 독립 자리를 누가 채우는지(fa_independent · indie_age_retire · release_score)
+  {
+    const tally = {};
+    for (const e of (off.events || [])) tally[e.kind] = (tally[e.kind] || 0) + 1;
+    const keys = Object.keys(tally).filter((k) => /independent|indie|release|retire|fa_/.test(k));
+    console.log(`  [사건 ${year}] ${keys.map((k) => `${k}=${tally[k]}`).join(" · ") || "(events 없음 · keys: " + Object.keys(off).join(",") + ")"}`);
+  }
   // 🔴 **`off.logs`는 항상 비어 있다.** `npc_sim.rs:1390`에서 만들어져
   // `1589`에서 그대로 반환되고 사이에 `push`가 한 군데도 없다.
   // 문자열로 세니 방출이 다섯 시즌 내내 0으로 보였다 — 없는 결함을
