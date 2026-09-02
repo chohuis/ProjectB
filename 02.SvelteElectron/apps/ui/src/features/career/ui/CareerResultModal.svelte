@@ -5,6 +5,7 @@
   import { chooseDraft, chooseSchoolOrIndependent, continueCurrentStage } from "../../../shared/usecases/careerDecision";
   import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { canApplyToUniversity, canApplyToIndependent, universityGradeOf, isUniversityFinalYear } from "../../../shared/utils/careerTransition";
+  import { firstTeamIdOf } from "../../../shared/utils/ids";
 
   let resolving = false;
 
@@ -17,6 +18,20 @@
   // 해외 2군 직행 (실플 ②) — 무대 게이트가 없다. 고교·대학·독립 다 여기로 온다
   $: overseasPassed = results?.overseasPassed ?? [];
   $: draftPassed = results?.draftDrafted ?? false;
+  /**
+   * 해외 2군 제안은 **28팀까지** 온다(§0.45 · OVR 84 면 전부). 이름만 28줄이면 못 고른다 —
+   * 리그(ABL/JBL)·부모 1군 전력★을 같이 적고, 리그 → ★ 순으로 세운다. 목록은 스크롤.
+   */
+  const leagueLabel = (id: string | undefined) =>
+    id === "LEAGUE_ABL_FARM" ? "ABL 2군" : id === "LEAGUE_JBL_FARM" ? "JBL 2군" : "";
+  $: overseasRows = overseasPassed
+    .map((id) => {
+      const t = $teamsL10n.find((x) => x.id === id);
+      const parent = firstTeamIdOf(id);
+      const power = Math.max(0, Math.min(5, Math.round((parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined) ?? 0)));
+      return { id, name: t?.name ?? id, league: leagueLabel(t?.leagueId), power, stars: "★".repeat(power) + "☆".repeat(5 - power) };
+    })
+    .sort((a, b) => a.league.localeCompare(b.league) || b.power - a.power || a.name.localeCompare(b.name, "ko"));
 
   // 대학 재학 중 여부 및 학년 — 판정은 `careerTransition`이 정본이다.
   // 예전엔 여기서 `universityWeek / 52`로 따로 계산해 `protagonist.grade`와
@@ -104,12 +119,21 @@
           <span class="opt-label">독립리그 합격: {teamName(teamId)}</span>
         </button>
       {/each}
-      <!-- 해외 2군 직행 — 계약은 `salaryNegotiation`이 이어받는다(독립과 같은 흐름) -->
-      {#each overseasPassed as teamId}
-        <button class="opt-btn" type="button" on:click={() => chooseResult("overseas", teamId)}>
-          <span class="opt-label">해외 2군 합격: {teamName(teamId)}</span>
-        </button>
-      {/each}
+      <!-- 해외 2군 제안 — 계약은 `salaryNegotiation`이 이어받는다(독립과 같은 흐름) -->
+      {#if overseasRows.length > 0}
+        <div class="overseas">
+          <p class="overseas-head">해외 2군 제안 <strong>{overseasRows.length}팀</strong> <small>· 리그 → 1군 전력★ 순</small></p>
+          <div class="overseas-list">
+            {#each overseasRows as row (row.id)}
+              {@const teamId = row.id}
+              <button class="opt-btn overseas-btn" type="button" on:click={() => chooseResult("overseas", teamId)}>
+                <span class="opt-label">{row.name}</span>
+                <span class="opt-meta">{row.league} · 1군 {row.stars}</span>
+              </button>
+            {/each}
+          </div>
+        </div>
+      {/if}
       <!-- ⚠ **병역을 이미 마친 사람에게 입대를 권하지 않는다.**
            예전엔 조건이 "아무 데도 안 됐다"뿐이라, **군필자가 독립리그에서
            갈 곳이 없으면 이 버튼이 또 떴다.** 60회 조사에서 한 커리어가
@@ -128,7 +152,15 @@
 <style>
   .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display: flex; align-items: center; justify-content: center; z-index: 200; }
   /* U5 안전망 — 전역이 밝아져 색 없는 자식(.opt-btn 등)이 안 보인다 */
-  .modal { background: var(--panel); border: 1px solid var(--ink-mute); border-radius: 16px; padding: 24px; width: min(700px, 92vw); display: grid; color: var(--ink); gap: 14px; }
+  .modal { background: var(--panel); border: 1px solid var(--ink-mute); border-radius: 16px; padding: 24px; width: min(700px, 92vw); max-height: 90vh; overflow-y: auto; display: grid; color: var(--ink); gap: 14px; }
+  .overseas { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 8px; }
+  .overseas-head { margin: 0; font-size: 13px; color: var(--ink-mid); }
+  .overseas-head strong { color: var(--ink); }
+  .overseas-head small { color: var(--ink-mute); }
+  /* 28줄이 와도 모달이 화면을 넘지 않는다 */
+  .overseas-list { max-height: 38vh; overflow-y: auto; display: grid; gap: 6px; padding-right: 4px; }
+  .overseas-btn { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .opt-meta { color: var(--ink-mute); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .chip { font-size: 11px; color: var(--ink-mid); }
   h2 { margin: 0; color: var(--ink); }
   .body-text { margin: 0; color: var(--ink); }
