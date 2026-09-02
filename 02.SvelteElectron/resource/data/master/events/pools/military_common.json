@@ -27,7 +27,8 @@
           "effectHint": "사기 +3",
           "moraleDelta": 3
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_BASEBALL_NEWS",
@@ -45,7 +46,8 @@
           "label": "담담히 받아들인다",
           "effectHint": "변화 없음"
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_SICK_BAY",
@@ -58,7 +60,8 @@
           "effectHint": "피로 -4",
           "fatigueDelta": -4
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_INSPECTION",
@@ -77,7 +80,8 @@
           "effectHint": "사기 -2",
           "moraleDelta": -2
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_VACATION",
@@ -92,7 +96,8 @@
           "moraleDelta": 4,
           "fatigueDelta": -3
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_BUDDY_BOND",
@@ -114,7 +119,8 @@
             "command": 1
           }
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_JUNIOR_ENLIST",
@@ -128,7 +134,8 @@
           "effectHint": "사기 +1",
           "moraleDelta": 1
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_EXTENDED_LEAVE",
@@ -143,7 +150,8 @@
           "moraleDelta": 5,
           "fatigueDelta": -5
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COM_DISCHARGE_LETTER",
@@ -226,7 +234,8 @@
           "effectHint": "사기 +4",
           "moraleDelta": 4
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_COMMON_NEWS",
@@ -250,7 +259,8 @@
             "mentality": 2
           }
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     }
   ]
 }

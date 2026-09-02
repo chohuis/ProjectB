@@ -1,80 +1,1403 @@
 {
   "_note": "현역 군 생활 이벤트 풀 — 형식은 PLAN_MILITARY_LIFE.md §28, 목록은 §36. 여기 20종은 캘린더 필수(§36-1) 골격이고 문안은 초안이다(사용자가 다듬는다). 조건부 16·일상 24 는 B 가 이 파일에 이어 붙인다. 검사: npm run check:militarydata",
   "events": [
-    { "id": "MIL_CAL_ENTRY", "calendar": true, "once": true, "minRank": 0, "maxRank": 0,
-      "title": "입소", "description": "훈련소 정문. 머리를 밀고 번호를 받는다. 다섯 주 동안 선택은 없다.",
-      "choices": [ { "id": "ok", "label": "들어간다", "effectHint": "사기 −3", "moraleDelta": -3 } ] },
-    { "id": "MIL_CAL_SHOOTING", "calendar": true, "once": true, "minRank": 0, "maxRank": 0,
-      "title": "사격", "description": "처음 잡는 소총. 공을 쥐던 손이 낯설다.",
-      "choices": [ { "id": "ok", "label": "쏜다", "effectHint": "없음" } ] },
-    { "id": "MIL_CAL_MARCH", "calendar": true, "once": true, "minRank": 0, "maxRank": 0,
-      "title": "행군", "description": "완전군장 20km. 발보다 어깨가 먼저 무너진다.",
-      "choices": [ { "id": "ok", "label": "걷는다", "effectHint": "피로 +10 (캘린더)" } ] },
-    { "id": "MIL_CAL_GRADUATION", "calendar": true, "once": true, "minRank": 0, "maxRank": 0,
-      "title": "수료 · 배치 통보", "description": "수료식 뒤 종이 한 장. {unit.name} — {unit.location}.",
-      "choices": [ { "id": "ok", "label": "받는다", "effectHint": "피로 −5 (캘린더)" } ] },
-    { "id": "MIL_CAL_FIRST_DAY", "calendar": true, "once": true, "minRank": 0, "maxRank": 1,
-      "title": "자대 첫날", "description": "생활관 문이 열린다. 보직은 {role.label}. 사람들이 한 명씩 이름을 댄다.",
-      "choices": [ { "id": "greet", "label": "한 명씩 인사한다", "effectHint": "재적 부대원 전원 관계 +2 · 사기 +2", "relationDelta": 2, "moraleDelta": 2 } ] },
-    { "id": "MIL_CAL_WORKS_SPRING", "calendar": true, "once": true, "minRank": 0, "maxRank": 3,
-      "title": "진지 공사 (봄)", "description": "언 땅이 풀리자마자 삽을 든다. 포반은 한 주 내내 산에 있다.",
-      "choices": [ { "id": "ok", "label": "판다", "effectHint": "피로 +12(박격포병) / +6(통신병) · 같은 소단위 관계 +1", "fatigueDelta": 12, "relationDelta": 1 } ] },
-    { "id": "MIL_CAL_FIRE_1", "calendar": true, "once": true, "minRank": 0, "maxRank": 3, "perf": "fire", "member": "MEM_SQ_LDR",
-      "title": "포사격훈련", "description": "포반 전원이 진지에 선다. 포반장 {member.name}이 탄약수 자리를 가리킨다. 결과 {tier}등급.",
+    {
+      "id": "MIL_CAL_ENTRY",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 0,
+      "title": "입소",
+      "description": "훈련소 정문. 머리를 밀고 번호를 받는다. 다섯 주 동안 선택은 없다.",
       "choices": [
-        { "id": "calm",  "label": "평정을 지킨다", "effectHint": "포반장 관계 +3 · 피로 +6", "relationDelta": 3, "fatigueDelta": 6 },
-        { "id": "tense", "label": "긴장한다",     "effectHint": "관계 −3 · 피로 +6", "relationDelta": -3, "fatigueDelta": 6 } ] },
-    { "id": "MIL_CAL_FIRST_LEAVE", "calendar": true, "once": true, "minRank": 1, "maxRank": 1,
-      "title": "첫 정기휴가", "description": "열흘. 위병소를 나서는 순간 공기가 다르다.",
+        {
+          "id": "ok",
+          "label": "들어간다",
+          "effectHint": "사기 −3",
+          "moraleDelta": -3
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_SHOOTING",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 0,
+      "title": "사격",
+      "description": "처음 잡는 소총. 공을 쥐던 손이 낯설다.",
       "choices": [
-        { "id": "home", "label": "집",     "effectHint": "사기 +10 · 감각 +2", "moraleDelta": 10, "ballDelta": 2 },
-        { "id": "park", "label": "야구장", "effectHint": "감각 +6 · 사기 +6",  "ballDelta": 6,   "moraleDelta": 6 } ] },
-    { "id": "MIL_CAL_INSPECTION_1", "calendar": true, "once": true, "minRank": 1, "maxRank": 2, "perf": "inspection", "member": "MEM_1SG",
-      "title": "대대 지휘검열", "description": "통신병은 상황실에서 통신평가를, 박격포병은 진지에서 검열을 받는다. 결과 {tier}등급.",
+        {
+          "id": "ok",
+          "label": "쏜다",
+          "effectHint": "없음"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_MARCH",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 0,
+      "title": "행군",
+      "description": "완전군장 20km. 발보다 어깨가 먼저 무너진다.",
       "choices": [
-        { "id": "diligent", "label": "성실하게",  "effectHint": "판정 한 등급 유리 · 피로 +5", "perfTierDelta": -1, "fatigueDelta": 5 },
-        { "id": "smart",    "label": "요령껏",    "effectHint": "판정 그대로 · 피로 0" } ] },
-    { "id": "MIL_CAL_PROMOTE_2", "calendar": true, "once": true, "minRank": 2, "maxRank": 2,
-      "title": "상병 진급", "description": "계급장이 하나 늘었다. 다음 주에 후임이 온다고 한다.",
-      "choices": [ { "id": "ok", "label": "후임을 맞을 준비를 한다", "effectHint": "사기 +3 · 포상휴가 조건 열림", "moraleDelta": 3 } ] },
-    { "id": "MIL_CAL_WINTER", "calendar": true, "once": true, "minRank": 0, "maxRank": 3,
-      "title": "혹한기 훈련", "description": "화천 영하 20도. 텐트 안에서 손가락 감각이 먼저 사라진다.",
-      "choices": [ { "id": "ok", "label": "버틴다", "effectHint": "피로 +12 · 감각 −3 (캘린더)" } ] },
-    { "id": "MIL_CAL_FESTIVAL", "calendar": true, "once": true, "minRank": 0, "maxRank": 3,
-      "title": "산천어축제", "description": "읍내가 사람으로 찬다. 외박 명단이 돈다.",
+        {
+          "id": "ok",
+          "label": "걷는다",
+          "effectHint": "피로 +10 (캘린더)"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_GRADUATION",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 0,
+      "title": "수료 · 배치 통보",
+      "description": "수료식 뒤 종이 한 장. {unit.name} — {unit.location}.",
       "choices": [
-        { "id": "out",  "label": "외박",     "effectHint": "사기 +6 · 감각 +2 · 동기 관계 +3", "moraleDelta": 6, "ballDelta": 2, "relationDelta": 3 },
-        { "id": "stay", "label": "부대 잔류", "effectHint": "피로 −6 · 간부 관계 +2",          "fatigueDelta": -6, "relationDelta": 2 } ] },
-    { "id": "MIL_CAL_SECOND_LEAVE", "calendar": true, "once": true, "minRank": 2, "maxRank": 2,
-      "title": "정기휴가 2", "description": "두 번째 열흘. 이번엔 어디로 갈지 안다.",
+        {
+          "id": "ok",
+          "label": "받는다",
+          "effectHint": "피로 −5 (캘린더)"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_FIRST_DAY",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 1,
+      "title": "자대 첫날",
+      "description": "생활관 문이 열린다. 보직은 {role.label}. 사람들이 한 명씩 이름을 댄다.",
       "choices": [
-        { "id": "home", "label": "집",     "effectHint": "사기 +10 · 감각 +2", "moraleDelta": 10, "ballDelta": 2 },
-        { "id": "park", "label": "야구장", "effectHint": "감각 +6 · 사기 +6",  "ballDelta": 6,   "moraleDelta": 6 } ] },
-    { "id": "MIL_CAL_PROMOTE_3", "calendar": true, "once": true, "minRank": 3, "maxRank": 3,
-      "title": "병장 진급", "description": "이제 생활관에서 제일 오래 있는 사람이다.",
+        {
+          "id": "greet",
+          "label": "한 명씩 인사한다",
+          "effectHint": "재적 부대원 전원 관계 +2 · 사기 +2",
+          "relationDelta": 2,
+          "moraleDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_WORKS_SPRING",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 3,
+      "title": "진지 공사 (봄)",
+      "description": "언 땅이 풀리자마자 삽을 든다. 포반은 한 주 내내 산에 있다.",
       "choices": [
-        { "id": "junior", "label": "후임을 챙긴다",     "effectHint": "후임 관계 +4", "relationDelta": 4 },
-        { "id": "squad",  "label": "소단위를 챙긴다",   "effectHint": "같은 소단위 전원 +2", "relationDelta": 2 } ] },
-    { "id": "MIL_CAL_WORKS_FALL", "calendar": true, "once": true, "minRank": 0, "maxRank": 3,
-      "title": "진지 공사 (가을)", "description": "겨울 오기 전에 한 번 더. 병장은 감독이 반이다.",
-      "choices": [ { "id": "ok", "label": "판다", "effectHint": "피로 +10 (병장 절반) · 소단위 관계 +1", "fatigueDelta": 10, "relationDelta": 1 } ] },
-    { "id": "MIL_CAL_FIRE_2", "calendar": true, "once": true, "minRank": 2, "maxRank": 3, "perf": "fire", "member": "MEM_SQ_LDR",
-      "title": "포사격훈련 2", "description": "사수라면 이번엔 내 성적이다. 결과 {tier}등급.",
+        {
+          "id": "ok",
+          "label": "판다",
+          "effectHint": "피로 +12(박격포병) / +6(통신병) · 같은 소단위 관계 +1",
+          "fatigueDelta": 12,
+          "relationDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_FIRE_1",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 3,
+      "perf": "fire",
+      "member": "MEM_SQ_LDR",
+      "title": "포사격훈련",
+      "description": "포반 전원이 진지에 선다. 포반장 {member.name}이 탄약수 자리를 가리킨다. 결과 {tier}등급.",
       "choices": [
-        { "id": "calm",  "label": "평정을 지킨다", "effectHint": "포반장 관계 +3 · 피로 +6", "relationDelta": 3, "fatigueDelta": 6 } ] },
-    { "id": "MIL_CAL_RANGER", "calendar": true, "once": true, "minRank": 0, "maxRank": 3,
-      "title": "유격 훈련", "description": "PT 8번. 구호가 산을 넘는다.",
-      "choices": [ { "id": "ok", "label": "버틴다", "effectHint": "피로 +10 · 감각 −3 (캘린더)" } ] },
-    { "id": "MIL_CAL_INSPECTION_2", "calendar": true, "once": true, "minRank": 3, "maxRank": 3, "perf": "inspection", "member": "MEM_1SG",
-      "title": "대대 지휘검열 2", "description": "병장으로 받는 마지막 검열. 결과 {tier}등급.",
+        {
+          "id": "calm",
+          "label": "평정을 지킨다",
+          "effectHint": "포반장 관계 +3 · 피로 +6",
+          "relationDelta": 3,
+          "fatigueDelta": 6
+        },
+        {
+          "id": "tense",
+          "label": "긴장한다",
+          "effectHint": "관계 −3 · 피로 +6",
+          "relationDelta": -3,
+          "fatigueDelta": 6
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_FIRST_LEAVE",
+      "calendar": true,
+      "once": true,
+      "minRank": 1,
+      "maxRank": 1,
+      "title": "첫 정기휴가",
+      "description": "열흘. 위병소를 나서는 순간 공기가 다르다.",
       "choices": [
-        { "id": "diligent", "label": "성실하게",  "effectHint": "판정 한 등급 유리 · 피로 +5", "perfTierDelta": -1, "fatigueDelta": 5 },
-        { "id": "smart",    "label": "요령껏",    "effectHint": "판정 그대로 · 피로 0" } ] },
-    { "id": "MIL_CAL_D30", "calendar": true, "once": true, "minRank": 3, "maxRank": 3,
-      "title": "전역 30일", "description": "달력에 남은 칸이 서른. 밖에서 연락이 온다.",
-      "choices": [ { "id": "ok", "label": "연락을 받는다", "effectHint": "사기 +5 · 복귀 연락", "moraleDelta": 5 } ] },
-    { "id": "MIL_CAL_DISCHARGE", "calendar": true, "once": true, "minRank": 3, "maxRank": 3,
-      "title": "전역", "description": "전역식. 군 경력 한 장이 접힌다.",
-      "choices": [ { "id": "ok", "label": "나간다", "effectHint": "없음 — 전역 환산은 감각으로" } ] }
+        {
+          "id": "home",
+          "label": "집",
+          "effectHint": "사기 +10 · 감각 +2",
+          "moraleDelta": 10,
+          "ballDelta": 2
+        },
+        {
+          "id": "park",
+          "label": "야구장",
+          "effectHint": "감각 +6 · 사기 +6",
+          "ballDelta": 6,
+          "moraleDelta": 6
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_INSPECTION_1",
+      "calendar": true,
+      "once": true,
+      "minRank": 1,
+      "maxRank": 2,
+      "perf": "inspection",
+      "member": "MEM_1SG",
+      "title": "대대 지휘검열",
+      "description": "통신병은 상황실에서 통신평가를, 박격포병은 진지에서 검열을 받는다. 결과 {tier}등급.",
+      "choices": [
+        {
+          "id": "diligent",
+          "label": "성실하게",
+          "effectHint": "판정 한 등급 유리 · 피로 +5",
+          "perfTierDelta": -1,
+          "fatigueDelta": 5
+        },
+        {
+          "id": "smart",
+          "label": "요령껏",
+          "effectHint": "판정 그대로 · 피로 0"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_PROMOTE_2",
+      "calendar": true,
+      "once": true,
+      "minRank": 2,
+      "maxRank": 2,
+      "title": "상병 진급",
+      "description": "계급장이 하나 늘었다. 다음 주에 후임이 온다고 한다.",
+      "choices": [
+        {
+          "id": "ok",
+          "label": "후임을 맞을 준비를 한다",
+          "effectHint": "사기 +3 · 포상휴가 조건 열림",
+          "moraleDelta": 3
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_WINTER",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 3,
+      "title": "혹한기 훈련",
+      "description": "화천 영하 20도. 텐트 안에서 손가락 감각이 먼저 사라진다.",
+      "choices": [
+        {
+          "id": "ok",
+          "label": "버틴다",
+          "effectHint": "피로 +12 · 감각 −3 (캘린더)"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_FESTIVAL",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 3,
+      "title": "산천어축제",
+      "description": "읍내가 사람으로 찬다. 외박 명단이 돈다.",
+      "choices": [
+        {
+          "id": "out",
+          "label": "외박",
+          "effectHint": "사기 +6 · 감각 +2 · 동기 관계 +3",
+          "moraleDelta": 6,
+          "ballDelta": 2,
+          "relationDelta": 3
+        },
+        {
+          "id": "stay",
+          "label": "부대 잔류",
+          "effectHint": "피로 −6 · 간부 관계 +2",
+          "fatigueDelta": -6,
+          "relationDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_SECOND_LEAVE",
+      "calendar": true,
+      "once": true,
+      "minRank": 2,
+      "maxRank": 2,
+      "title": "정기휴가 2",
+      "description": "두 번째 열흘. 이번엔 어디로 갈지 안다.",
+      "choices": [
+        {
+          "id": "home",
+          "label": "집",
+          "effectHint": "사기 +10 · 감각 +2",
+          "moraleDelta": 10,
+          "ballDelta": 2
+        },
+        {
+          "id": "park",
+          "label": "야구장",
+          "effectHint": "감각 +6 · 사기 +6",
+          "ballDelta": 6,
+          "moraleDelta": 6
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_PROMOTE_3",
+      "calendar": true,
+      "once": true,
+      "minRank": 3,
+      "maxRank": 3,
+      "title": "병장 진급",
+      "description": "이제 생활관에서 제일 오래 있는 사람이다.",
+      "choices": [
+        {
+          "id": "junior",
+          "label": "후임을 챙긴다",
+          "effectHint": "후임 관계 +4",
+          "relationDelta": 4
+        },
+        {
+          "id": "squad",
+          "label": "소단위를 챙긴다",
+          "effectHint": "같은 소단위 전원 +2",
+          "relationDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_WORKS_FALL",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 3,
+      "title": "진지 공사 (가을)",
+      "description": "겨울 오기 전에 한 번 더. 병장은 감독이 반이다.",
+      "choices": [
+        {
+          "id": "ok",
+          "label": "판다",
+          "effectHint": "피로 +10 (병장 절반) · 소단위 관계 +1",
+          "fatigueDelta": 10,
+          "relationDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_FIRE_2",
+      "calendar": true,
+      "once": true,
+      "minRank": 2,
+      "maxRank": 3,
+      "perf": "fire",
+      "member": "MEM_SQ_LDR",
+      "title": "포사격훈련 2",
+      "description": "사수라면 이번엔 내 성적이다. 결과 {tier}등급.",
+      "choices": [
+        {
+          "id": "calm",
+          "label": "평정을 지킨다",
+          "effectHint": "포반장 관계 +3 · 피로 +6",
+          "relationDelta": 3,
+          "fatigueDelta": 6
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_RANGER",
+      "calendar": true,
+      "once": true,
+      "minRank": 0,
+      "maxRank": 3,
+      "title": "유격 훈련",
+      "description": "PT 8번. 구호가 산을 넘는다.",
+      "choices": [
+        {
+          "id": "ok",
+          "label": "버틴다",
+          "effectHint": "피로 +10 · 감각 −3 (캘린더)"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_INSPECTION_2",
+      "calendar": true,
+      "once": true,
+      "minRank": 3,
+      "maxRank": 3,
+      "perf": "inspection",
+      "member": "MEM_1SG",
+      "title": "대대 지휘검열 2",
+      "description": "병장으로 받는 마지막 검열. 결과 {tier}등급.",
+      "choices": [
+        {
+          "id": "diligent",
+          "label": "성실하게",
+          "effectHint": "판정 한 등급 유리 · 피로 +5",
+          "perfTierDelta": -1,
+          "fatigueDelta": 5
+        },
+        {
+          "id": "smart",
+          "label": "요령껏",
+          "effectHint": "판정 그대로 · 피로 0"
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_D30",
+      "calendar": true,
+      "once": true,
+      "minRank": 3,
+      "maxRank": 3,
+      "title": "전역 30일",
+      "description": "달력에 남은 칸이 서른. 밖에서 연락이 온다.",
+      "choices": [
+        {
+          "id": "ok",
+          "label": "연락을 받는다",
+          "effectHint": "사기 +5 · 복귀 연락",
+          "moraleDelta": 5
+        }
+      ]
+    },
+    {
+      "id": "MIL_CAL_DISCHARGE",
+      "calendar": true,
+      "once": true,
+      "minRank": 3,
+      "maxRank": 3,
+      "title": "전역",
+      "description": "전역식. 군 경력 한 장이 접힌다.",
+      "choices": [
+        {
+          "id": "ok",
+          "label": "나간다",
+          "effectHint": "없음 — 전역 환산은 감각으로"
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_NO_BALL",
+      "title": "공을 놓은 지 오래됐다",
+      "description": "손에 공을 쥔 게 언제인지 기억이 흐립니다.\n감각이 빠져나가는 게 느껴집니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 12,
+      "weight": 2,
+      "conditions": [
+        {
+          "type": "ballSense_lte",
+          "value": 30
+        }
+      ],
+      "choices": [
+        {
+          "id": "letter",
+          "label": "야구 소식을 편지로 받는다",
+          "effectHint": "사기 +4, 감각 +2",
+          "moraleDelta": 4,
+          "ballDelta": 2
+        },
+        {
+          "id": "forget",
+          "label": "지금은 잊는다",
+          "effectHint": "사기 +1",
+          "moraleDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_SENSE_HIGH",
+      "title": "중대 대항전 에이스",
+      "description": "중대 대항전에 내보낼 투수를 찾고 있습니다.\n다들 나를 봅니다.",
+      "minRank": 2,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 16,
+      "weight": 2,
+      "conditions": [
+        {
+          "type": "ballSense_gte",
+          "value": 75
+        }
+      ],
+      "choices": [
+        {
+          "id": "throw",
+          "label": "마운드에 선다",
+          "effectHint": "감각 +3, 소단위 관계 +2, 피로 +5",
+          "ballDelta": 3,
+          "relationDelta": 2,
+          "fatigueDelta": 5
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_FATIGUE",
+      "title": "몸이 안 따라온다",
+      "description": "며칠째 잠을 자도 풀리지 않습니다.\n의무대에 갈지 참을지 정해야 합니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 2,
+      "member": "MEM_1SG",
+      "conditions": [
+        {
+          "type": "fatigue_gte",
+          "value": 85
+        }
+      ],
+      "choices": [
+        {
+          "id": "medic",
+          "label": "의무대에 간다",
+          "effectHint": "피로 -15, 간부 관계 -2",
+          "fatigueDelta": -15,
+          "relationDelta": -2
+        },
+        {
+          "id": "endure",
+          "label": "참는다",
+          "effectHint": "피로 +5",
+          "fatigueDelta": 5
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_INJURY",
+      "title": "허리가 나갔다",
+      "description": "참고 넘긴 자리가 결국 터졌습니다.\n2주는 아무것도 못 합니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 20,
+      "weight": 2,
+      "conditions": [
+        {
+          "type": "fatigue_gte",
+          "value": 90
+        }
+      ],
+      "choices": [
+        {
+          "id": "rest",
+          "label": "쉰다",
+          "effectHint": "감각 -5, 피로 -20",
+          "ballDelta": -5,
+          "fatigueDelta": -20
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_CONFLICT_SENIOR",
+      "title": "선임과 부딪혔다",
+      "description": "사소한 일이 커졌습니다.\n생활관 공기가 무겁습니다.",
+      "minRank": 0,
+      "maxRank": 2,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 2,
+      "member": "MEM_GUNNER",
+      "conditions": [
+        {
+          "type": "relation_lte",
+          "member": "MEM_GUNNER",
+          "value": -20
+        }
+      ],
+      "choices": [
+        {
+          "id": "apologize",
+          "label": "먼저 사과한다",
+          "effectHint": "관계 +6, 사기 -2",
+          "relationDelta": 6,
+          "moraleDelta": -2
+        },
+        {
+          "id": "stand",
+          "label": "맞선다",
+          "effectHint": "관계 -8, 동기 관계 +3",
+          "relationDelta": -8
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_CONFLICT_OFFICER",
+      "title": "행정보급관 호출",
+      "description": "행보관이 따로 부릅니다.\n무슨 말이 나올지 압니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 10,
+      "weight": 2,
+      "member": "MEM_1SG",
+      "conditions": [
+        {
+          "type": "relation_lte",
+          "member": "MEM_1SG",
+          "value": -25
+        }
+      ],
+      "choices": [
+        {
+          "id": "accept",
+          "label": "수긍한다",
+          "effectHint": "관계 +4",
+          "relationDelta": 4
+        },
+        {
+          "id": "argue",
+          "label": "항변한다",
+          "effectHint": "관계 -6, 징계 후보",
+          "relationDelta": -6,
+          "penalty": "MIL_PENALTY_WARNING"
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_BOND_PEER",
+      "title": "동기와 밤을 새웠다",
+      "description": "불침번을 서다 이야기가 길어졌습니다.\n입대 전 얘기까지 나왔습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 10,
+      "weight": 2,
+      "member": "MEM_AMMO_PR",
+      "conditions": [
+        {
+          "type": "relation_gte",
+          "member": "MEM_AMMO_PR",
+          "value": 35
+        }
+      ],
+      "choices": [
+        {
+          "id": "talk",
+          "label": "끝까지 듣는다",
+          "effectHint": "사기 +4, 관계 +3, 피로 +2",
+          "moraleDelta": 4,
+          "relationDelta": 3,
+          "fatigueDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_MENTOR",
+      "title": "선임의 조언",
+      "description": "선임이 지나가듯 한마디 합니다.\n버티는 법에 대한 얘기입니다.",
+      "minRank": 0,
+      "maxRank": 1,
+      "once": false,
+      "cooldownWeeks": 12,
+      "weight": 2,
+      "member": "MEM_SIG_SR",
+      "conditions": [
+        {
+          "type": "relation_gte",
+          "member": "MEM_SIG_SR",
+          "value": 35
+        }
+      ],
+      "choices": [
+        {
+          "id": "listen",
+          "label": "새겨듣는다",
+          "effectHint": "사기 +3, 감각 +1, 관계 +2",
+          "moraleDelta": 3,
+          "ballDelta": 1,
+          "relationDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_JUNIOR_TROUBLE",
+      "title": "후임이 사고를 쳤다",
+      "description": "후임이 실수를 했고 간부가 찾고 있습니다.\n감쌀지 보고할지 정해야 합니다.",
+      "minRank": 2,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 2,
+      "member": "MEM_JR_1",
+      "conditions": [
+        {
+          "type": "member_present",
+          "member": "MEM_JR_1"
+        },
+        {
+          "type": "relation_lte",
+          "member": "MEM_JR_1",
+          "value": 0
+        }
+      ],
+      "choices": [
+        {
+          "id": "cover",
+          "label": "감싼다",
+          "effectHint": "후임 관계 +8, 간부 관계 -2",
+          "relationDelta": 8
+        },
+        {
+          "id": "report",
+          "label": "보고한다",
+          "effectHint": "간부 관계 +3, 후임 관계 -6",
+          "relationDelta": -6
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_MORALE_LOW",
+      "title": "바닥을 쳤다",
+      "description": "아무것도 하기 싫은 주가 왔습니다.\n뭐라도 해야 합니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 2,
+      "conditions": [
+        {
+          "type": "morale_lte",
+          "value": 35
+        }
+      ],
+      "choices": [
+        {
+          "id": "call",
+          "label": "집에 전화한다",
+          "effectHint": "사기 +6",
+          "moraleDelta": 6
+        },
+        {
+          "id": "train",
+          "label": "몸을 굴린다",
+          "effectHint": "피로 +4, 사기 +2, 감각 +1",
+          "fatigueDelta": 4,
+          "moraleDelta": 2,
+          "ballDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_REWARD_LEAVE",
+      "title": "포상휴가",
+      "description": "중대장이 포상휴가를 끊어 줬습니다.\n4일입니다.",
+      "minRank": 2,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 24,
+      "weight": 2,
+      "member": "MEM_CO",
+      "conditions": [
+        {
+          "type": "relation_gte",
+          "member": "MEM_CO",
+          "value": 20
+        }
+      ],
+      "choices": [
+        {
+          "id": "take",
+          "label": "나간다",
+          "effectHint": "휴가 4일, 사기 +6, 감각 +3",
+          "leaveDays": 4,
+          "moraleDelta": 6,
+          "ballDelta": 3
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_COMMENDATION",
+      "title": "표창",
+      "description": "지난 평가가 좋았습니다.\n연대장 표창장이 나왔습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 24,
+      "weight": 2,
+      "member": "MEM_CO",
+      "choices": [
+        {
+          "id": "receive",
+          "label": "받는다",
+          "effectHint": "사기 +8, 간부 관계 +5",
+          "award": "MIL_AWARD_COMMENDATION",
+          "moraleDelta": 8,
+          "relationDelta": 5
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_PENALTY",
+      "title": "징계",
+      "description": "결과가 나빴고 책임이 돌아왔습니다.\n한동안 포상은 없습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 24,
+      "weight": 2,
+      "member": "MEM_CO",
+      "choices": [
+        {
+          "id": "accept",
+          "label": "받는다",
+          "effectHint": "사기 -8, 간부 관계 -10",
+          "penalty": "MIL_PENALTY_WARNING",
+          "moraleDelta": -8,
+          "relationDelta": -10
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_SNOW",
+      "title": "제설",
+      "description": "밤새 눈이 쌓였습니다.\n연병장부터 위병소까지 다 치워야 합니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 3,
+      "weight": 2,
+      "conditions": [
+        {
+          "type": "week_between",
+          "from": 40,
+          "to": 48
+        }
+      ],
+      "choices": [
+        {
+          "id": "work",
+          "label": "제대로 치운다",
+          "effectHint": "피로 +6, 소단위 관계 +2",
+          "fatigueDelta": 6,
+          "relationDelta": 2
+        },
+        {
+          "id": "dodge",
+          "label": "요령껏 한다",
+          "effectHint": "피로 +2, 소단위 관계 -1",
+          "fatigueDelta": 2,
+          "relationDelta": -1
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_LETTER_CLUB",
+      "title": "돌아올 자리가 있다",
+      "description": "복무 전 몸담았던 곳에서 편지가 왔습니다.\n자리를 비워 두겠다는 말이 적혀 있습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": true,
+      "weight": 2,
+      "conditions": [
+        {
+          "type": "ballSense_lte",
+          "value": 45
+        }
+      ],
+      "choices": [
+        {
+          "id": "read",
+          "label": "몇 번을 읽는다",
+          "effectHint": "사기 +5, 감각 +2",
+          "moraleDelta": 5,
+          "ballDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_COND_TEAM_NEWS",
+      "title": "소속팀 소식",
+      "description": "밖에서는 시즌이 돌고 있습니다.\n순위표를 보니 마음이 복잡합니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 2,
+      "choices": [
+        {
+          "id": "glad",
+          "label": "잘 되고 있어 다행이다",
+          "effectHint": "사기 +3",
+          "moraleDelta": 3
+        },
+        {
+          "id": "restless",
+          "label": "내가 없는 게 보인다",
+          "effectHint": "사기 -3",
+          "moraleDelta": -3
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_VISIT",
+      "title": "면회",
+      "description": "주말에 면회 신청이 들어왔습니다.\n오랜만에 밖의 얼굴을 봅니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 10,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "meet",
+          "label": "만난다",
+          "effectHint": "사기 +6, 감각 +1",
+          "moraleDelta": 6,
+          "ballDelta": 1
+        },
+        {
+          "id": "cancel",
+          "label": "못 온다는 연락이 왔다",
+          "effectHint": "사기 -2",
+          "moraleDelta": -2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_LETTER",
+      "title": "편지",
+      "description": "행정반에 편지가 와 있습니다.\n손글씨를 오랜만에 봅니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "read",
+          "label": "읽는다",
+          "effectHint": "사기 +3",
+          "moraleDelta": 3
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_PX",
+      "title": "PX",
+      "description": "점호 전에 PX에 들렀습니다.\n동기가 먼저 계산했습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 4,
+      "weight": 1,
+      "member": "MEM_AMMO_PR",
+      "choices": [
+        {
+          "id": "share",
+          "label": "같이 먹는다",
+          "effectHint": "관계 +2, 사기 +2",
+          "relationDelta": 2,
+          "moraleDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_NIGHT_DUTY",
+      "title": "야간 근무",
+      "description": "선임과 둘이 밤을 섭니다.\n말이 길어집니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 1,
+      "member": "MEM_GUNNER",
+      "choices": [
+        {
+          "id": "listen",
+          "label": "들어 준다",
+          "effectHint": "관계 +8, 피로 +2",
+          "relationDelta": 8,
+          "fatigueDelta": 2
+        },
+        {
+          "id": "doze",
+          "label": "존다",
+          "effectHint": "관계 -4",
+          "relationDelta": -4
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_GUARD",
+      "title": "위병소 근무",
+      "description": "정문에서 하루를 섰습니다.\n지나가는 차만 셌습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "ok",
+          "label": "선다",
+          "effectHint": "피로 +3, 사기 -1",
+          "fatigueDelta": 3,
+          "moraleDelta": -1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_PT_TEST",
+      "title": "체력 검정",
+      "description": "분기 체력 검정입니다.\n운동을 하던 몸이 아직 남아 있습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 13,
+      "weight": 1,
+      "member": "MEM_1SG",
+      "choices": [
+        {
+          "id": "top",
+          "label": "상위로 끝낸다",
+          "effectHint": "간부 관계 +3, 사기 +3",
+          "relationDelta": 3,
+          "moraleDelta": 3
+        },
+        {
+          "id": "pass",
+          "label": "겨우 통과한다",
+          "effectHint": "피로 +4",
+          "fatigueDelta": 4
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_UNIT_GAME",
+      "title": "중대 대항전",
+      "description": "연병장에 베이스가 깔렸습니다.\n글러브를 오랜만에 낍니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 12,
+      "weight": 1,
+      "member": "MEM_AMMO_PR",
+      "choices": [
+        {
+          "id": "play",
+          "label": "던진다",
+          "effectHint": "감각 +4, 피로 +5, 소단위 관계 +2",
+          "ballDelta": 4,
+          "fatigueDelta": 5,
+          "relationDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_SOCCER",
+      "title": "축구",
+      "description": "일과 끝나고 공을 찼습니다.\n야구와는 다른 다리를 씁니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 5,
+      "weight": 1,
+      "member": "MEM_AMMO_PR",
+      "choices": [
+        {
+          "id": "play",
+          "label": "뛴다",
+          "effectHint": "피로 +4, 사기 +3, 관계 +1",
+          "fatigueDelta": 4,
+          "moraleDelta": 3,
+          "relationDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_KITCHEN",
+      "title": "취사 지원",
+      "description": "취사반에 손이 모자랍니다.\n하루 종일 배식대 뒤에 섰습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 1,
+      "member": "MEM_COOK",
+      "choices": [
+        {
+          "id": "help",
+          "label": "돕는다",
+          "effectHint": "취사병 관계 +4, 피로 +2",
+          "relationDelta": 4,
+          "fatigueDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_WORK",
+      "title": "작업",
+      "description": "이름 없는 작업이 하나 떨어졌습니다.\n다 같이 나갑니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 4,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "ok",
+          "label": "나간다",
+          "effectHint": "피로 +5, 소단위 관계 +1",
+          "fatigueDelta": 5,
+          "relationDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_STORM",
+      "title": "폭우",
+      "description": "밤새 비가 퍼부었습니다.\n배수로를 파느라 잠을 못 잤습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "ok",
+          "label": "치운다",
+          "effectHint": "피로 +4",
+          "fatigueDelta": 4
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_CHAPEL",
+      "title": "종교 행사",
+      "description": "일요일 오전에 앉아 있었습니다.\n초코파이를 받았습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 4,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "go",
+          "label": "간다",
+          "effectHint": "사기 +2, 피로 -2",
+          "moraleDelta": 2,
+          "fatigueDelta": -2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_LIBRARY",
+      "title": "병영 도서관",
+      "description": "구석에 야구 서적이 몇 권 있습니다.\n투구 폼 사진을 오래 봤습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "read",
+          "label": "읽는다",
+          "effectHint": "사기 +2, 감각 +1",
+          "moraleDelta": 2,
+          "ballDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_OVERNIGHT",
+      "title": "외박",
+      "description": "하룻밤 나갈 수 있게 됐습니다.\n읍내 여관에서 잤습니다.",
+      "minRank": 1,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 12,
+      "weight": 1,
+      "member": "MEM_AMMO_PR",
+      "choices": [
+        {
+          "id": "out",
+          "label": "나간다",
+          "effectHint": "사기 +5, 감각 +2",
+          "moraleDelta": 5,
+          "ballDelta": 2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_CO_VISIT",
+      "title": "지휘관 순시",
+      "description": "중대장이 생활관을 돕니다.\n관물대 앞에 섰습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 10,
+      "weight": 1,
+      "member": "MEM_CO",
+      "choices": [
+        {
+          "id": "clean",
+          "label": "제대로 받는다",
+          "effectHint": "간부 관계 +2",
+          "relationDelta": 2
+        },
+        {
+          "id": "miss",
+          "label": "하나를 놓친다",
+          "effectHint": "간부 관계 -3",
+          "relationDelta": -3
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_RESERVE",
+      "title": "예비군 훈련 지원",
+      "description": "예비군이 들어와 통제를 도왔습니다.\n2년 뒤의 내 모습을 봤습니다.",
+      "minRank": 1,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 14,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "help",
+          "label": "돕는다",
+          "effectHint": "피로 +3, 사기 +1",
+          "fatigueDelta": 3,
+          "moraleDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_RANGE",
+      "title": "분기 사격",
+      "description": "분기 사격이 돌아왔습니다.\n영점은 그대로였습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 13,
+      "weight": 1,
+      "member": "MEM_1SG",
+      "choices": [
+        {
+          "id": "top",
+          "label": "특등을 받는다",
+          "effectHint": "간부 관계 +2",
+          "relationDelta": 2
+        },
+        {
+          "id": "pass",
+          "label": "통과만 한다",
+          "effectHint": "변화 없음"
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_WIRE",
+      "title": "유선 가설",
+      "description": "산을 타고 선을 깔았습니다.\n드럼이 무겁습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 1,
+      "member": "MEM_SIG_SR",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "signal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "ok",
+          "label": "끝까지 깐다",
+          "effectHint": "선임 통신병 관계 +3, 피로 +4",
+          "relationDelta": 3,
+          "fatigueDelta": 4
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_OPS_NIGHT",
+      "title": "상황실 야근",
+      "description": "상황실에서 밤을 지켰습니다.\n무전이 한 번 들어왔습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 5,
+      "weight": 1,
+      "member": "MEM_1SG",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "signal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "handle",
+          "label": "제대로 받는다",
+          "effectHint": "행보관 관계 +3, 피로 +3",
+          "relationDelta": 3,
+          "fatigueDelta": 3
+        },
+        {
+          "id": "fumble",
+          "label": "놓친다",
+          "effectHint": "행보관 관계 -3, 피로 +3",
+          "relationDelta": -3,
+          "fatigueDelta": 3
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_ERRAND",
+      "title": "간부 심부름",
+      "description": "행정반 심부름으로 하루가 갔습니다.\n내 일은 밤에 했습니다.",
+      "minRank": 0,
+      "maxRank": 2,
+      "once": false,
+      "cooldownWeeks": 4,
+      "weight": 1,
+      "member": "MEM_1SG",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "signal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "ok",
+          "label": "다녀온다",
+          "effectHint": "간부 관계 +2, 사기 -1",
+          "relationDelta": 2,
+          "moraleDelta": -1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_GUN_MAINT",
+      "title": "포 정비",
+      "description": "포신을 닦고 부속을 점검했습니다.\n사수가 옆에서 봅니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 5,
+      "weight": 1,
+      "member": "MEM_GUNNER",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "mortar"
+        }
+      ],
+      "choices": [
+        {
+          "id": "ok",
+          "label": "끝까지 닦는다",
+          "effectHint": "사수 관계 +3, 피로 +3",
+          "relationDelta": 3,
+          "fatigueDelta": 3
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_AMMO",
+      "title": "탄약 정리",
+      "description": "탄약고를 다시 쌓았습니다.\n허리를 폈을 때 해가 졌습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 5,
+      "weight": 1,
+      "member": "MEM_SQ_LDR",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "mortar"
+        }
+      ],
+      "choices": [
+        {
+          "id": "ok",
+          "label": "다 옮긴다",
+          "effectHint": "포반장 관계 +2, 피로 +5",
+          "relationDelta": 2,
+          "fatigueDelta": 5
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_PATROL",
+      "title": "진지 순찰",
+      "description": "진지를 돌며 이상을 확인했습니다.\n눈이 발목까지 왔습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 1,
+      "conditions": [
+        {
+          "type": "role",
+          "value": "mortar"
+        }
+      ],
+      "choices": [
+        {
+          "id": "ok",
+          "label": "돈다",
+          "effectHint": "피로 +4, 소단위 관계 +1",
+          "fatigueDelta": 4,
+          "relationDelta": 1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_SQUAD_MEAL",
+      "title": "포반 회식",
+      "description": "포반끼리 치킨을 시켰습니다.\n생활관이 오랜만에 시끄럽습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 10,
+      "weight": 1,
+      "conditions": [
+        {
+          "type": "role",
+          "value": "mortar"
+        }
+      ],
+      "choices": [
+        {
+          "id": "join",
+          "label": "끼어든다",
+          "effectHint": "소단위 전원 관계 +3, 사기 +4",
+          "relationDelta": 3,
+          "moraleDelta": 4
+        }
+      ]
+    }
   ]
 }

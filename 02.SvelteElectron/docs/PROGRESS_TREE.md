@@ -89,7 +89,10 @@ B
 ├─ 8. ⬜ extract-modals 당겨 병합 요청 (A 가 병합한다)
 ├─ 9. ⬜ 전 무대 도달률 최종 한 장 (고교·대학·독립·프로·군)
 ├─ 10. ⬜ 빌드에서 소식함 눈확인 → 결함은 HANDOFF_B_TO_A
-├─ 11. ⬜ **병역** — 이벤트 60종 골격을 §28 형식으로 `events/pools/military_life.json` 에 (§36 표 그대로 · 문안 초안 포함) · 기존 군 풀 34종에 cooldownWeeks 추가 · 월간 부대 소식 문안 · A ① 뒤 check:militarydata 통과
+├─ 11. ✅ **병역** — A 의 캘린더 20종 위에 조건부 16 + 일상 24 를 얹어 **60종** · 기존 34종에
+│        cooldownWeeks 4(28건 · once 6건 제외) · military_general 의 statDelta 2건 제거
+│        (훈련소 command −1 → 감각 −2) · check:militarydata OK
+│        └─ ⓘ 월간 부대 소식은 A 가 이미 코드에 넣었다(militaryLife.ts:196) — 데이터 틀을 따로 안 만든다
 ├─ ✅ 병합됨 14커밋 (9f8ad99b5)
 └─ 🛑 동적 치환 23종
 ```

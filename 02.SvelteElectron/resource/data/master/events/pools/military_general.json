@@ -10,14 +10,13 @@
         {
           "id": "ok",
           "label": "이를 악물고 버틴다",
-          "effectHint": "커맨드 -1, 피로 +5, 사기 -2",
-          "statDelta": {
-            "command": -1
-          },
+          "effectHint": "감각 -2, 피로 +5, 사기 -2",
           "fatigueDelta": 5,
-          "moraleDelta": -2
+          "moraleDelta": -2,
+          "ballDelta": -2
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_BASEBALL_DREAM",
@@ -37,7 +36,8 @@
           "effectHint": "사기 -1",
           "moraleDelta": -1
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_SENIOR_CONFLICT",
@@ -58,7 +58,8 @@
           "effectHint": "사기 -1",
           "moraleDelta": -1
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_PHONE_CALL",
@@ -71,7 +72,8 @@
           "effectHint": "사기 +3",
           "moraleDelta": 3
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_SOLO_PRACTICE",
@@ -88,7 +90,8 @@
           },
           "moraleDelta": 1
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_NIGHT_PATROL",
@@ -103,7 +106,8 @@
           "fatigueDelta": 5,
           "moraleDelta": -2
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_SPECIAL_DUTY",
@@ -124,7 +128,8 @@
           "effectHint": "사기 -1",
           "moraleDelta": -1
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_FIELD_MARCH",
@@ -135,13 +140,11 @@
         {
           "id": "ok",
           "label": "완주한다",
-          "effectHint": "피로 +6, 스태미나 +1",
-          "fatigueDelta": 6,
-          "statDelta": {
-            "stamina": 1
-          }
+          "effectHint": "피로 +6",
+          "fatigueDelta": 6
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_PHYSICAL_TEST",
@@ -161,7 +164,8 @@
           "label": "적당히 한다",
           "effectHint": "변화 없음"
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_BASE_SPORTS",
@@ -176,7 +180,8 @@
           "moraleDelta": 2,
           "fatigueDelta": 2
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_COMMANDER_PRAISE",
@@ -190,7 +195,8 @@
           "effectHint": "사기 +3",
           "moraleDelta": 3
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_JUNIOR_TROUBLE",
@@ -210,7 +216,8 @@
           "effectHint": "사기 -1",
           "moraleDelta": -1
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_VACATION_EXTENDED",
@@ -225,7 +232,8 @@
           "moraleDelta": 5,
           "fatigueDelta": -4
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GEN_DISCHARGE_CEREMONY",
@@ -281,7 +289,8 @@
           },
           "fatigueDelta": 12
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GENERAL_FORGOTTEN",
@@ -306,7 +315,8 @@
           "diligenceDelta": 6,
           "fatigueDelta": 8
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GENERAL_LEAVE",
@@ -330,7 +340,8 @@
           "conditionDelta": 8,
           "fatigueDelta": 5
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GENERAL_NO_BALL",
@@ -354,7 +365,8 @@
           },
           "conditionDelta": 6
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     },
     {
       "id": "MIL_GENERAL_UNIT_GAME",
@@ -380,7 +392,8 @@
           "moraleDelta": 6,
           "conditionDelta": 4
         }
-      ]
+      ],
+      "cooldownWeeks": 4
     }
   ]
 }
