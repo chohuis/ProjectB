@@ -1,0 +1,46 @@
+{
+  "_note": "현역 군 생활 수치 정본 — PLAN_MILITARY_LIFE.md §26·§9·§10·§38. 사용자 확정(§35 · 2026-09-02): 제안값 그대로 1차, probe:military 로 잰 뒤 한 번에 조정. 코드에 이 숫자를 다시 적지 않는다.",
+  "serviceWeeks": 100,
+  "bootCampWeeks": 5,
+  "rankBandWeeks": [8, 34, 60],
+  "ballSense": {
+    "start": 60, "startPro": 70, "startStudent": 55,
+    "weeklyDecay": 1.5,
+    "gainByAccess": [0, 3, 5, 8],
+    "capPerAccessGap": 10,
+    "leaveGain": 4,
+    "hardWeekLoss": 3
+  },
+  "fatigue": {
+    "baseByIntensity": [0, 2, 4, 6, 8, 10],
+    "choice": { "ball": 4, "people": 1, "rest": -6 },
+    "natural": -3,
+    "leave": -20
+  },
+  "morale": {
+    "choice": { "people": 2, "rest": 1 },
+    "leave": 8
+  },
+  "relation": {
+    "weeklyDecay": 0.5,
+    "peopleByBand": [2, 2, 3, 4],
+    "sameSubunitWeight": 2,
+    "rewardLeaveOfficerSum": 40
+  },
+  "event": {
+    "weeklyChance": 0.40,
+    "defaultCooldown": 4
+  },
+  "perf": {
+    "bandCoef": 0.8,
+    "relationCoef": 0.02,
+    "fatigueThreshold": 70
+  },
+  "discharge": [
+    { "minSense": 80, "statDelta": 0,  "recoveryWeeks": 2 },
+    { "minSense": 60, "statDelta": -1, "recoveryWeeks": 4 },
+    { "minSense": 40, "statDelta": -2, "recoveryWeeks": 6 },
+    { "minSense": 20, "statDelta": -3, "recoveryWeeks": 8 },
+    { "minSense": 0,  "statDelta": -4, "velocityDelta": -1, "recoveryWeeks": 10 }
+  ]
+}

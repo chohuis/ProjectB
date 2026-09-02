@@ -473,6 +473,10 @@ event       { weeklyChance:0.40, commonShare:0.30 }        ← 지금 코드 값
 
 ## 20. 데이터 형식 — 보직 둘을 담는 변경 (§7 위에)
 
+> ⚠ **§37·§24 가 이 절을 대체했다 (09-02 밤).** 구현은 `roles[].subunit` + `members[].subunit·tags` 를 쓴다
+> (`squadMembers`·`platoon`·`squad` 는 안 쓴다). 정본은 `apps/ui/src/shared/types/militaryLife.ts` 와
+> `resource/data/master/military/*.json` · 검사 `npm run check:militarydata`.
+
 ```json
 // unit.json — roles 를 더한다. 나머지는 §7 그대로
 {

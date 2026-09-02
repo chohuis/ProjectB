@@ -367,6 +367,10 @@ export interface NpcLiveStat {
 export type NpcLiveStats = Record<string, NpcLiveStat>;
 
 // ── 군 이벤트 ─────────────────────────────────────────────────
+import type {
+  MilitaryUnit, MilitaryMember, MilitaryCalendarEntry, MilitaryLifeRules, MilitaryLifeEvent,
+} from "../types/militaryLife";
+
 export interface MilitaryEvent {
   id: string;
   title: string;
@@ -442,6 +446,12 @@ export interface MasterState {
   militaryCommonEvents: MilitaryEvent[];
   militarySportsEvents: MilitaryEvent[];
   militaryGeneralEvents: MilitaryEvent[];
+  /** 현역 군 생활 데이터 넷 + 풀 (PLAN_MILITARY_LIFE 4부) — 검사는 check:militarydata */
+  militaryUnit: MilitaryUnit | null;
+  militaryMembers: MilitaryMember[];
+  militaryCalendar: MilitaryCalendarEntry[];
+  militaryLifeRules: MilitaryLifeRules | null;
+  militaryLifeEvents: MilitaryLifeEvent[];
 }
 
 // ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
@@ -892,6 +902,11 @@ function createMasterStore() {
     militaryCommonEvents: [],
     militarySportsEvents: [],
     militaryGeneralEvents: [],
+    militaryUnit: null,
+    militaryMembers: [],
+    militaryCalendar: [],
+    militaryLifeRules: null,
+    militaryLifeEvents: [],
   });
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
@@ -946,6 +961,18 @@ function createMasterStore() {
         fetchMaster<{ events: MilitaryEvent[] }>("events/pools/military_general.json"),
         fetchMaster<Manifest>("_manifest.json"),
       ]);
+
+      // 현역 군 생활 데이터 넷 + 풀 (PLAN_MILITARY_LIFE 4부 §24·§28·§29·§37).
+      // ⚠ 없으면 빈 값으로 통과한다 — 어긋남은 `npm run check:militarydata` 가 잡는다.
+      //   (데이터가 코드와 어긋나도 게임은 안 죽고 콘텐츠만 사라지는 부류 — 검사가 소리를 낸다)
+      const [militaryUnitData, militaryMembersData, militaryCalendarData, militaryLifeRulesData, militaryLifeData] =
+        await Promise.all([
+          fetchMaster<MilitaryUnit>("military/unit.json"),
+          fetchMaster<MilitaryMember[]>("military/members.json"),
+          fetchMaster<MilitaryCalendarEntry[]>("military/calendar.json"),
+          fetchMaster<MilitaryLifeRules>("military/rules.json"),
+          fetchMaster<{ events: MilitaryLifeEvent[] }>("events/pools/military_life.json"),
+        ]);
 
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
@@ -1012,6 +1039,11 @@ function createMasterStore() {
         militaryCommonEvents:  militaryCommonData?.events  ?? [],
         militarySportsEvents:  militarySportsData?.events  ?? [],
         militaryGeneralEvents: militaryGeneralData?.events ?? [],
+        militaryUnit:          militaryUnitData ?? null,
+        militaryMembers:       Array.isArray(militaryMembersData)  ? militaryMembersData  : [],
+        militaryCalendar:      Array.isArray(militaryCalendarData) ? militaryCalendarData : [],
+        militaryLifeRules:     militaryLifeRulesData ?? null,
+        militaryLifeEvents:    militaryLifeData?.events ?? [],
       }));
 
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
