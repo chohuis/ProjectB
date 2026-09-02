@@ -30,6 +30,8 @@ const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 // 진로 판정마다 [진로]·[진로산식] 한 줄 — 지명 산식 분해가 여기서만 보인다
 globalThis.__PB_CAREER_LOG = true;
+// 병영생활 주간 선택 정책 — ball | people | rest | mix (기본 ball · 실제 플레이는 탭에서 고른다)
+globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
 const SEED = Number(process.env.PF_SEED || 20260731);
 const YEARS = Number(process.env.PF_YEARS || 12);
 

@@ -108,7 +108,12 @@ export async function runMilitaryLifeWeek(args: { nextWeek: number; seasonYear: 
   const calEvent = cal ? m.militaryLifeEvents.find((e) => e.id === cal.event) ?? null : null;
   const onLeave = !!cal?.leaveDays;
   const noChoice = bootCamp || onLeave || !!cal?.noChoice;
-  const choice = noChoice ? "none" : (state.nextChoice ?? "rest");
+  // 헤드리스 정책 — 계측(probe:paths · probe:military)이 `globalThis.__PB_MIL_CHOICE` 로 준다.
+  // 실제 플레이는 탭에서 미리 고른 nextChoice 뿐이고, 없으면 "쉰다"(§35). 여기 말고 다른 자리에 정책을 두지 않는다.
+  const policy = (globalThis as Record<string, unknown>).__PB_MIL_CHOICE;
+  const policyChoice = policy === "ball" || policy === "people" || policy === "rest" ? policy
+    : policy === "mix" ? (["ball", "people", "rest"] as const)[week % 3] : null;
+  const choice = noChoice ? "none" : (state.nextChoice ?? policyChoice ?? "rest");
 
   // ④ Rust — 자원 셋 · 관계 감쇠/가산 · 이벤트 굴림 (씨앗)
   const present = presentMembers(members, week);
