@@ -43,6 +43,8 @@ const PATHS = {
   draft: { draft: true,  university: false, independent: true },
   pro:   { draft: true,  university: false, independent: false },
   mil:   { draft: false, university: false, independent: false },
+  // 상무 입대 — 옛 군 풀(sports 20 · common 14 · military 5) 도달률 (B-9 가 못 잰 59종)
+  milsports: { draft: false, university: false, independent: false, sportsUnit: true },
 };
 const pi = process.argv.indexOf("--path");
 const PATH_KEY = pi !== -1 ? process.argv[pi + 1] : "pro";
@@ -126,6 +128,7 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   console.log(`  경력 이벤트: ${JSON.stringify(ev.reduce((m, t) => (m[t] = (m[t] || 0) + 1, m), {}))}`);
   // 병영 이벤트 도달 — 전역 뒤엔 militaryLife 가 null 이라 마지막 [병영] 스냅샷의 firedIds 를 쓴다
   if (lastMilFired) console.log(`[병영이벤트] ${lastMilFired.length}종 ${lastMilFired.join(" ")}`);
+  if (last.milSportsFired && last.milSportsFired.length) console.log(`[상무이벤트] ${last.milSportsFired.length}종 ${last.milSportsFired.join(" ")}`);
   console.log(`[END] ${why} · 최종 ${last.year}W${last.week} ${last.stage} ${last.team} ${last.age ?? ""}`);
   await headless.cleanup(tmp);
 })();

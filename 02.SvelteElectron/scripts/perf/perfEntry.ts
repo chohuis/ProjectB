@@ -384,13 +384,15 @@ export interface CareerPolicy {
   overseas: boolean;
   /** 허브에서 즉시 입대를 고른다 — 다른 신청을 무시한다 */
   enlistNow: boolean;
+  /** 입대 시 상무(체육부대)로 — 옛 군 풀(military_sports 20 + common 14 + 5) 도달률을 재려고 (B-9 · 2026-09-03) */
+  sportsUnit?: boolean;
   /** 지명 통보를 거부한다 (폴백 경로 확인용) */
   rejectDraft: boolean;
   /** 트레이드를 거부한다 — 노트레이드 조항이 있어야 실제로 먹힌다 */
   rejectTrade: boolean;
 }
 const DEFAULT_POLICY: CareerPolicy = {
-  draft: true, university: true, independent: true, overseas: true, enlistNow: false,
+  draft: true, university: true, independent: true, overseas: true, enlistNow: false, sportsUnit: false,
   rejectDraft: false, rejectTrade: false,
 };
 let _policy: CareerPolicy = { ...DEFAULT_POLICY };
@@ -411,7 +413,7 @@ export async function pushCareerForward(): Promise<string | null> {
       // 프로 경로 계측이 거기서 끝난다 (실제로 그렇게 막혔다).
       // 실제 플레이어도 보통 폴백을 같이 넣는다.
       if (_policy.enlistNow) {
-        await enlistProtagonist("general", get(seasonStore).currentWeek);
+        await enlistProtagonist(_policy.sportsUnit ? "sports" : "general", get(seasonStore).currentWeek);
         gameStore.setCareerApplicationsSubmitted(false);
         gameStore.clearCareerResults();
         seasonStore.resolvePendingAction("careerChoiceHub");
@@ -514,7 +516,7 @@ export async function pushCareerForward(): Promise<string | null> {
         // 계속할 수 없다 = 대학 4학년인데 갈 곳이 없다.
         // 화면의 "전원 탈락: 현역 입대"와 같은 결말이다 —
         // 예전엔 여기서 그냥 계속 눌러 **7년째 대학생**이 됐다
-        await enlistProtagonist("general");
+        await enlistProtagonist(_policy.sportsUnit ? "sports" : "general");
         gameStore.setCareerFinalChoice("general");
         gameStore.clearCareerResults();
         seasonStore.resolvePendingAction("careerChoice");
@@ -528,7 +530,7 @@ export async function pushCareerForward(): Promise<string | null> {
       // `CareerResultModal`의 **"전원 탈락: 현역 입대"** 버튼이 있는데
       // 헤드리스만 그 길을 몰랐다. 앱 결함으로 오해할 뻔했다.
       if (stage2 === "highschool") {
-        await enlistProtagonist("general");
+        await enlistProtagonist(_policy.sportsUnit ? "sports" : "general");
         gameStore.setCareerApplicationsSubmitted(false);
         gameStore.clearCareerResults();
         gameStore.setCareerFinalChoice("general");
@@ -3695,6 +3697,9 @@ export function pathSignals(): Record<string, unknown> {
       // 도달률 — 어느 이벤트가 떴나 (B-9 의 "군" 줄은 slotreach 가 못 재서 이 값이 정본 · 캘린더는 calendarDone)
       firedIds: [...Object.keys(p.militaryLife.cooldown), ...p.militaryLife.calendarDone],
     } : null,
+    // 상무·옛 군 풀(militaryLife 없음) — 옛 갈래는 발동을 소식 id(msg-mil-<EVT>-<year>-w<n>)로만 남긴다. 거기서 종류를 센다
+    milSportsFired: [...new Set(g.mailbox.map((m) => m.id).filter((id) => id.startsWith("msg-mil-") && !/^msg-mil-(ev|unit|digest|record)-/.test(id))
+      .map((id) => id.replace(/^msg-mil-/, "").replace(/-d{4}-wd+$/, "")))],
   };
 }
 
