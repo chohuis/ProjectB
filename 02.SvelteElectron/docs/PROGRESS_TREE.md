@@ -41,7 +41,7 @@ A
 ├─ 9. 🔄 회귀 전량 — ✅ vitest 195/1,728 · ✅ cargo 312 · ✅ svelte-check 0 · ✅ smoke:dist · check:* 33 → **29 OK · 4 FAIL**
 │     ├─ 🔴 check:teamrefs — CareerEndScreen.svelte 의 가짜 팀 ID 2건(TEAM_HS_DOSEONG_COA1 · TEAM_UNIV_HANYANG) → **C**
 │     ├─ 🔴 check:namelocale — HallOfFamePage·MatchPage 원본 스토어 읽음(예전부터) → **C** (이미 할당)
-│     ├─ 🔄 check:protransition — 기본 씨앗 03 이 오늘 세상에선 고교 미지명·군 경로라 "5시즌 안에 프로" 못 밟음 → 씨앗 02(2029 KBL)로 바꿔 재실행 중
+│     ├─ ✅ check:protransition — 기본 씨앗 03 → 02 (352d47f9f) · 재실행 통과 (2029 프로 1년차 · 연도·나이 ok)
 │     ├─ ⚠ check:determinism(67분) — 2026 W0 NPC 부상 상태부터 두 실행이 갈린다 · seedOf 는 0 을 안 낸다(실측) → Rust thread_rng 폴백 자리(npc_sim 621·4374) 중 하나가 W0 에 씨앗 없이 불린다 · 결정성 정책(계측 재현 수준)상 🛑 1.1
 │     └─ ⬜ test:releasescope · 문서 갱신
 ├─ 10. 빌드 · Steam
