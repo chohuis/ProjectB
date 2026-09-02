@@ -20,6 +20,7 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
+import { openProSeason } from "./proSeason";
 
 export type EnlistUnit = "sports" | "general";
 
@@ -139,7 +140,27 @@ export async function dischargeProtagonist(): Promise<boolean> {
     const indieTeams = ALL_TEAMS_BY_LEAGUE.LEAGUE_INDEPENDENT ?? [];
     // 상무는 복무 중인 선수의 자리다 — 전역자가 갈 팀이 아니다
     const target = indieTeams.filter((t) => !SANGMU_TEAM_IDS.has(t)).sort()[0];
-    if (target) gameStore.setProtagonistTeam(target, "LEAGUE_INDEPENDENT");
+    if (target) {
+      gameStore.setProtagonistTeam(target, "LEAGUE_INDEPENDENT");
+      // 🔴 **시즌도 독립으로 열어야 한다** (2026-09-02).
+      //
+      // 소속만 바꾸면 `seasonStore` 는 아직 **군 시즌**이다(`leagueId:
+      // LEAGUE_MILITARY` · 순위표 없음). 그 상태로 생존리그가 돌면
+      // `injectLeagueEntries` 가 주인공 리그가 아니라고 보고 일정을
+      // `leagueSchedules` 에 넣고, 배경 시뮬은 주인공 리그라고 건너뛴다 —
+      // **둘 다 안 돌린다.** 실측(`probe:bgsched --path pro` · 씨앗 20260803):
+      //
+      // ```
+      //   2031 [independent]  INDEPENDENT 175/0 (순위표 0팀)
+      // ```
+      //
+      // 고교 → 독립은 `careerDecision` 이 `openProSeason` 으로 연다. 여기가
+      // 그 짝이다 — 롤오버가 `runWorldSeasonEnd`·`advanceSeasonYear` 를
+      // 이미 돌렸으므로 그 둘은 부르지 않는다(연도 가드가 있지만 순서가 같다).
+      // `openProSeason` 은 독립이면 일정을 안 만들고(생존리그가 넣는다)
+      // `initSeason` 으로 리그·10팀 순위표를 세운 뒤 배경만 채운다.
+      await openProSeason("LEAGUE_INDEPENDENT", target);
+    }
   }
 
   gameStore.addCareerEvent({
