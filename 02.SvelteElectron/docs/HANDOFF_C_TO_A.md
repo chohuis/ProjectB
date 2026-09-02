@@ -1,3 +1,33 @@
+# C → A 회신 5차 (2026-09-02 밤) — C-2~C-7 눈확인 · 결함 셋
+
+커밋: `0644af6ec`(리그 순위 출처) · 이 문서 커밋. svelte-check 0/0. 스크린샷 `shots/p-*.png · d-*.png · f-*.png · r-*.png · z*.png · u2-*.png`.
+전부 새 게임 + dev 우회(`setCareerResults` → 「드래프트 지명」 → 입단/거부 · `setProtagonistTeam(_2)` · `enlistProtagonist`).
+
+| # | 결과 |
+|---|---|
+| C-2 2군 탭 | 화면 ✅(아래 결함 고침) · 🔴 엔진 결함 1 |
+| 시범경기 「친선」 | ✅ 프로 일정 탭 W1~4 "프리시즌 · 친선" 12경기 · 정규 W5~ |
+| C-3 재정 4탭 | ✅ 개요·스폰서·개인 트레이닝·투자 — 값은 Rust/`financeRules` 만 표시. 투자 3택은 `SeasonEndModal` 이 `financeRules.investment.options`·`minCash` 를 돌린다 — ⚠ 시즌 끝까지 안 가 화면은 못 봤다 |
+| C-4 지명 거부 | ✅ "거부 (대학 진학)" → university · 아산대 1학년 · 리그 탭 "대학 · 내 리그" |
+| C-5 대학 전 경로 | 🔄 진학 뒤 대학 순위표가 찬다(C조 내 권역 · 아산대 4-15). ⚠ 롤오버 → 대학 시즌 개막·4년·졸업 허브는 **못 봤다** — 아래 결함 3 |
+| C-6 관계 라벨 | ✅ "감독의 경고"(보통→서먹) 선택지 둘 · 고르면 선택 완료 · 사기 반영 |
+| C-7 해상도 | ✅ 1366×768 · 1920×1080 · 2560×1440 · 1100×640 — 소식·리그·일정·나·병역(일과/부대원/캘린더/경력) 깨짐 없음 |
+
+## 고친 것 — `0644af6ec` LeaguePage
+🔴 순위·리더보드의 "시즌 순위" 출처가 **주인공 리그**였다. 강등 뒤 "KBL 2군 · 내 리그" 탭이 1군 순위표를 그대로 보여줬고,
+진로 전환 창(주인공 리그 ≠ 시즌 리그)에서는 "대학 · 내 리그"에 고교 102팀이 "미분류"로 떴다. `$seasonStore.leagueId` 로 가른다.
+
+## A 에게 — 결함 셋
+1. 🔴 **강등 뒤 주인공 일정이 안 따라온다.** `setProtagonistTeam(_2, KBL_FARM)` 만 하면(market.ts 승강 경로와 같다) `s.schedule`(1군 780경기)은 그대로고
+   `mineInSchedule: 0` — 일정 탭은 1군 일정에서 상대가 전부 "부산 웨이브스"(옛 내 팀)로 찍히고, 우측 패널은 "예정된 경기 없음".
+   market.ts 주석 "2군 일정·순위표는 이미 있으므로 leagueId만 맞으면 그대로 뛴다"는 **순위표에만 맞고 일정엔 안 맞는다**. 재현: `demote-drive.txt`.
+2. ⚠ **W22 → W23 진행이 60초 넘게 걸린다** (새 게임 고교 1학년 · 2026). drive 가 `STUCK:go가 disabled … 진행 중...` 으로 두 번 멈췄다(`univ-drive.log` · `univ-drive2.log`).
+   나중엔 풀리니 정지가 아니라 **느린 주**다 — `TRADE_DEADLINE_WEEK = 22` 언저리. 다른 주는 5초 안이다. `measure:perf` 로 그 주만 재 볼 만하다.
+3. ℹ C-5 를 못 끝낸 이유가 2 다 — W52 롤오버까지 못 갔다. 헤드리스 `probe:paths univ` 가 있으니 A 쪽 실측이 있으면 그걸 근거로 ✅ 로 올려 달라.
+   독립 "개막 Wn" 한 줄은 `seasonWeeks.ts` 에 개막 상수가 없어(`INDIE_CAREER_HUB_WEEK`·`INDIE_SEASON_REVIEW_WEEK` 뿐) 안 넣었다.
+
+---
+
 # C → A 회신 4차 (2026-09-02 저녁) — 부상 띠 · namelocale · teamrefs · C-1 순위표 · C-1.5 해외 제안
 
 커밋: `6f4157959`(부상 띠) · `51e35dbc7`(namelocale) · `0ca87c5d9`(teamrefs) · `04fec3a36`(C-1.5) ·
