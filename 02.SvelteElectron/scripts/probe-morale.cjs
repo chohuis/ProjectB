@@ -22,6 +22,15 @@
  *
  *   npm run probe:morale -- --path univ
  *   PF_YEARS=8 PF_SEED=20260731 npm run probe:morale -- --path univ
+ *
+ * 실측 (2026-09-02 · 씨앗 20260731 · 대학 경로): 없는주 −1.8(회귀) ·
+ * 등판주 −2.6(승패) · **이벤트주 85% 에 +0.58** → 원천은 이벤트 효과 쏠림.
+ * 사용자 확정: B 가 데이터를 손질한다(HANDOFF_A_TO_B §3.6). 손질 전후를
+ * 이 프로브 같은 명령으로 잰다.
+ *
+ * ⚠ 군 복무 주는 이벤트가 `careerTriggeredEvents`(커리어 통)에 남아 여기
+ *   diff 에 안 잡힌다 — 없는주로 들어간다(실측 최대 +9). 군 사기를 가르려면
+ *   `moraleSnapshot` 에 그 통도 실어야 한다.
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
