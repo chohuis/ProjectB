@@ -1,0 +1,26 @@
+# smoke:dist — 패키지 실행파일로 새 게임 → W5 (2026-09-02)
+#
+#   npm run smoke:dist
+#   = cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt
+#
+# 선택자는 IntroScreen.svelte(`.btn.primary` 새 게임) · NewGamePage.svelte
+# (`#pname` · `.btn.next` · `button.team-list-item` · `.btn.start`)에서 읽었다.
+# 화면이 바뀌면 여기가 먼저 깨진다 — 그게 이 파일의 역할이다.
+launch
+wait .btn.primary
+click .btn.primary
+wait #pname
+fill #pname 스모크
+click .btn.next
+wait button.team-list-item
+click button.team-list-item
+click .btn.next
+click .btn.next
+wait .btn.start
+ss smoke-01-confirm
+click .btn.start
+wait .go
+ss smoke-02-w0
+advance 5 --auto
+ss smoke-03-w5
+quit

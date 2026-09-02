@@ -141,7 +141,8 @@
     "probe:morale": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-morale.cjs",
     "probe:paths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs",
     "dist:steam": "npm run pack && node scripts/dist-steam.cjs",
-    "dist:steam:verify": "node scripts/dist-steam.cjs"
+    "dist:steam:verify": "node scripts/dist-steam.cjs",
+    "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt"
   },
   "build": {
     "appId": "com.projectb.desktop",
