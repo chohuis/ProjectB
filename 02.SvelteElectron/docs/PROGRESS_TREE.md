@@ -61,7 +61,6 @@ A
 │      죽은 갈래 · 감사 재확인 · 계획 둘 · 인계 넷 · 프리즈 9/15 · 현황판
 ├─ 13. 🔄 **(당김 · 9/9 몫)** 전 경로 헤드리스 한 바퀴 — pro → univ (씨앗 02 · 12시즌) 도는 중 · indie·mil 은 밸런스 판 뒤
 ├─ 14. 🔄 **(당김 · 9/4 몫)** 병영 밸런스 1차 표 — 씨앗 3 × 정책 3 (1/9)
-├─ 9/4 몫 (당김) ✅ 시즌 종료 투자 3택 — SeasonEndModal 「개인」 탭에 `financeRules.investment.options` 셋(예금 3%·확정 / 펀드 8%±15 / 사업·주식 15%±45) · 현금 < `minCash`(500) 면 안 뜸 · 예금 선택 → +90만(3.0%) · investments 기록 (`invest-0[123]*.png` · 시즌 끝은 `seasonStore.advanceWeek()` 로 건너뜀 — 프로 주차가 느려 52주를 못 돌았다)
 ├─ 11. 📐 현역 군 생활 기획안 — PLAN_MILITARY_LIFE.md ✅ 1부(무엇) · 2부(어떻게) · **3부(설정: 화천 · 전투지원중대 조직도 · 통신병/박격포병 랜덤 · 화천 캘린더 · 확장 8)** · **§22 상위 탭 「병역」** · 결정 ✅
 │     └─ ✅ **4부 구현 명세 §23~39** (상태·주간 루프·자원 수식·카드·이벤트 형식·캘린더·전역·소식·화면·검사·순서 · 이벤트 카탈로그 60 · 부대원 15장 초안 · 아크/휴가/상벌 · 상무 탭)
 │           · §35 사용자 확정(제안값 1차 · 보직 반반 · 선택은 탭에서 · 착수는 기획 뒤) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
@@ -124,12 +123,13 @@ C
 ├─ 2. ✅ 2군 탭 — 화면 `0644af6ec` + 엔진 `27173a203`(A · switchProtagonistLeague) 재확인: 강등 뒤 일정 탭 상대 전부 "(2군)" · mine 99경기 · 우측 패널 다음 경기 "수원 나이츠 (2군)" · KBL 2군 순위표 (2군) 10팀 · 시범경기 「친선」 W1~4 ✅
 ├─ 3. ✅ 재정 4탭(개요·스폰서·개인 트레이닝·투자 — Rust·financeRules 값만 표시) · 투자 3택은 시즌 종료 모달이 `financeRules.investment.options/minCash` 를 돌린다 — ⚠ 시즌 끝까지 안 가 화면은 못 봄
 ├─ 4. ✅ 지명 거부 → 대학 폴백 (지명 통보 모달 "거부 (대학 진학)" → careerStage university · 아산대 1학년 · 리그 탭 "대학 · 내 리그") · 독립 폴백은 같은 함수의 다음 갈래 — 눈확인 안 함
-├─ 5. 🔄 대학 주인공 — 진학 뒤 대학 순위표가 찬다(C조 내 권역 · 아산대 4-15) ✅ · ⚠ 롤오버 → 대학 시즌 개막·4년·졸업 허브는 못 봄(드라이브 시간 · W22→23 느린 주 — HANDOFF 5차)
+├─ 5. 🔄 대학 주인공 — 진학 뒤 대학 순위표가 찬다(C조 내 권역) ✅ · 진학 뒤 대학 일정에 내 경기(W28 4건 · 우측 패널 "10/6 홈 소사대 · 42위/50팀 6승 13패") ✅ · ⚠ 롤오버(W52)까지는 두 번 다 못 감(당김 시도 · 고교 1학년 W19·22·25·27·28 이 60초+ — HANDOFF 8차) · A 의 probe:paths univ 실측이 정본
 ├─ 6. ✅ 관계 라벨 진입 메시지 — "감독의 경고"(보통→서먹) 선택지 둘(관계 +6·사기 −4 / −8·+6) · 고르면 "선택 완료" · 사기 반영
 ├─ 7. ✅ 해상도 4종 (1366×768 · 1920×1080 · 2560×1440 · 1100×640) — 소식·리그·일정·나·병역 탭 넷 전부 깨짐 없음 (`shots/z*.png`)
 ├─ 8. ✅ 자발적 은퇴(나 > 상태 > 기록 「은퇴한다」 · RetirementAskModal) → 「커리어 결산 보기」 → CareerEndScreen · 🔴 `militaryRecord` 를 읽는 화면이 없었다 → `MilitaryRecordCard`(기록 탭 · 결산 「병역」 절 · `591518cbd`) · 결산 어두운 바탕 글자색 둘 고침 `cd06cf1af`
 ├─ 9. ✅ 새 게임 → 고교 W30 → (dev 우회 결과) 드래프트 지명 통보(구단 제시 · 협상 없음) → 입단 → 2027 프로 W0 → W1~4 시범 12경기(친선) → W5 정규 개막 · 리그 탭 내 팀 강조 (`c9-*.png`)
 ├─ 10. ✅ 스크린샷 5장 1920×1080 — `resource/logs/shots/store-{news,match,league,military,ending}.png` (헤더로 실측 1920x1080) · store-match 는 W9 2회 초 3-0 장면으로 재촬영(당김)
+├─ 9/4 몫 (당김) ✅ 시즌 종료 투자 3택 — SeasonEndModal 「개인」 탭에 `financeRules.investment.options` 셋(예금 3%·확정 / 펀드 8%±15 / 사업·주식 15%±45) · 현금 < `minCash`(500) 면 안 뜸 · 예금 선택 → +90만(3.0%) · investments 기록 (`invest-0[123]*.png` · 시즌 끝은 `seasonStore.advanceWeek()` 로 건너뜀 — 프로 주차가 느려 52주를 못 돌았다)
 ├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드 (A 최종 pack 뒤)
 ├─ 14. 🔄 **(당김)** C-5 잔여(대학 롤오버·다음 시즌) · 시즌 종료 투자 3택 눈확인(9/4 몫) · store-match 재촬영
 ├─ 12. ✅ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility 복무 중만·맨 앞 · me>training 숨김 · 입대 주 currentTab 전환) + §32 화면 넷 `pages/military/MilitaryPage.svelte` + `features/military/ui/Military{Head,DailyPane,MembersPane,CalendarPane,CareerPane}.svelte` (상무는 옛 패널 + 한 줄 · §39 는 나중) · 공 카드 "부상 위험" 띠 `rules.fatigue.injuryWarn` · 눈확인 새 게임 → dev 우회 입대 → W7 (HANDOFF_C_TO_A 맨 위) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
