@@ -52,7 +52,8 @@ A
 │     ├─ ✅ smoke:dist 명령파일 + drive DRIVE_EXE (e1b2ba197) · 🔴→✅ 첫 실행이 **패키지 앱이 아예 안 뜨는 결함**을 잡음 —
 │     │     main.cjs 가 `dev-server.config.cjs` 를 요구하는데 build.files 에 없었다(MODULE_NOT_FOUND · "Error" 대화상자 · stderr 빈 채).
 │     │     files 에 추가 + 검증기에 상대 require↔asar 대조 + 드라이버 ERROR 시 exit 1 · ✅ 재 pack → verify OK → **smoke 통과** (새 게임 → W5 · 명령 파일의 슬롯 단계·fill 구문 두 곳 고침)
-│     ├─ ⬜ 구 세이브 3종 마이그레이션 · test:migration
+│     ├─ 🔄 구 세이브 — ✅ test:migration 6 ok · ✅ 이 기계의 옛 파일(5월 v1 slot_A.json · 6월 v2 projectb_v2.db · master_overlay.db)을 복사해 패키지 exe 로 열면 죽지 않고 "저장된 기록이 없습니다"(v1·v2 는 R3a-4d 에서 폐기 — 정상)
+│     │     ⚠ 6월·8월 v3 빌드의 slot3_*.db 가 이 기계엔 없다 → **사용자 확인**: 그런 세이브 폴더가 있으면 복사해 `DRIVE_USER_DATA=<복사본> npm run smoke:oldsaves` (원본 절대 넘기지 말 것 · 앱이 열면서 고친다)
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     └─ ⬜ 최종 빌드 → 프리즈 → 업로드 후보 → 사용자 확인
 ├─ ✅ 오늘 닫은 것 — 독립 순위표 · 배경 리그 정지 · 대학 0경기 · 시즌 여는 자리 6곳 ·

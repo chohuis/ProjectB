@@ -64,8 +64,12 @@ const COMMANDS = {
       // 화면 확인은 새 게임으로 하라는 규칙과도 어긋난다.
       args: [
         ...(packed ? [] : [path.join(APP_DIR, "apps/desktop/main.cjs")]),
+        // `DRIVE_USER_DATA=<존재하는 폴더>` 면 그 폴더를 userData 로 쓴다 (2026-09-02 · 구 세이브 마이그레이션 확인용 —
+        // 사용자 세이브를 **복사한** 폴더를 넘긴다. 원본 폴더를 넘기지 마라: 앱이 열면서 고친다)
         ...(process.env.DRIVE_USER_DATA
-          ? ["--user-data-dir=" + fs.mkdtempSync(path.join(os.tmpdir(), "drive-udd-"))]
+          ? ["--user-data-dir=" + (process.env.DRIVE_USER_DATA !== "1" && fs.existsSync(process.env.DRIVE_USER_DATA)
+              ? path.resolve(process.env.DRIVE_USER_DATA)
+              : fs.mkdtempSync(path.join(os.tmpdir(), "drive-udd-")))]
           : []),
       ],
       env,
