@@ -608,6 +608,10 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
 - 일정 만드는 블록은 **`seasonStore.reinitSeasonSchedules` 하나다.**
   예전엔 세 벌이었고 세 번 다 한쪽만 고쳐진 채 남았다
 - 새 무대로 넘어가는 경로를 만들면 **`s.leagueId` 를 같이 옮겼는지** 본다
+- **주인공의 `leagueId` 도 같이 옮긴다.** 입대가 단계만 바꾸고 리그를 둬서 배경 시뮬이
+  입대 전 리그를 "주인공 리그"로 건너뛰었다 — 복무 2년 동안 고교(프로 입대면 그 프로
+  리그)가 통째로 멈췄다(`HIGHSCHOOL 1020/0` · 씨앗 3). 배경 시뮬의 건너뛰기는
+  `protagonist.leagueId` 하나로 정해진다
 - 검사 `protagonistLeagueSchedule.test.ts` · 계측 `npm run probe:bgsched`
 
 ⚠ **`[일정끝]` 으로 판정하지 마라.** 그건 롤오버 **뒤**를 찍는다 — 고교만
