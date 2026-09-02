@@ -592,11 +592,18 @@ pub const CATCHER_BLOCK_PIVOT: f64 = 50.0;
 ///
 /// ⚠ 제구(`control`)가 나쁠수록 자주 낸다. 실제 KBO 는 팀당 시즌 3~8개라
 ///   **아주 드물게** 둔다.
-pub const BALK_BASE_PROB: f64 = 0.0012;
+///
+/// 🔴 **셋을 같이 절반으로** (2026-09-02). 0.0012 / 0.0018 / 0.006 에서
+///   KBL 1군 팀당 **10.9**(126경기 · 씨앗 3 · BALANCE_BASELINE §6)였고
+///   144경기로 늘리자 12.4 근처다 — 목표(3~8)의 두 배다. 판정은 주자가
+///   있을 때 투구마다 한 번이고 확률이 상수에 선형이라, 셋을 같은 비율로
+///   줄이면 **모양(제구 축·상한 비율)은 그대로**고 총량만 반으로 간다.
+///   기대값 ≈ 6/팀. 실측은 `measure:batting` 씨앗 3 으로 다시 잰다.
+pub const BALK_BASE_PROB: f64 = 0.0006;
 /// 제구가 50에서 아래로 벗어난 만큼 더해지는 폭
-pub const BALK_CONTROL_SPAN: f64 = 0.0018;
+pub const BALK_CONTROL_SPAN: f64 = 0.0009;
 /// 상한
-pub const BALK_MAX_PROB: f64 = 0.006;
+pub const BALK_MAX_PROB: f64 = 0.003;
 
 /// 견제사 — 1루에만 주자가 있을 때.
 ///
