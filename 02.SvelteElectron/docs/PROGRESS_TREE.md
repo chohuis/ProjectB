@@ -59,6 +59,8 @@ A
 ├─ ✅ 오늘 닫은 것 — 독립 순위표 · 배경 리그 정지 · 대학 0경기 · 시즌 여는 자리 6곳 ·
 │      팀당 144·시범 12 · 전역→독립(씨앗 3) · 사기 원천 · B 병합 · 마이그레이션 16필드 ·
 │      죽은 갈래 · 감사 재확인 · 계획 둘 · 인계 넷 · 프리즈 9/15 · 현황판
+├─ 13. 🔄 **(당김 · 9/9 몫)** 전 경로 헤드리스 한 바퀴 — pro → univ (씨앗 02 · 12시즌) 도는 중 · indie·mil 은 밸런스 판 뒤
+├─ 14. 🔄 **(당김 · 9/4 몫)** 병영 밸런스 1차 표 — 씨앗 3 × 정책 3 (1/9)
 ├─ 11. 📐 현역 군 생활 기획안 — PLAN_MILITARY_LIFE.md ✅ 1부(무엇) · 2부(어떻게) · **3부(설정: 화천 · 전투지원중대 조직도 · 통신병/박격포병 랜덤 · 화천 캘린더 · 확장 8)** · **§22 상위 탭 「병역」** · 결정 ✅
 │     └─ ✅ **4부 구현 명세 §23~39** (상태·주간 루프·자원 수식·카드·이벤트 형식·캘린더·전역·소식·화면·검사·순서 · 이벤트 카탈로그 60 · 부대원 15장 초안 · 아크/휴가/상벌 · 상무 탭)
 │           · §35 사용자 확정(제안값 1차 · 보직 반반 · 선택은 탭에서 · 착수는 기획 뒤) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
@@ -127,7 +129,8 @@ C
 ├─ 8. ✅ 자발적 은퇴(나 > 상태 > 기록 「은퇴한다」 · RetirementAskModal) → 「커리어 결산 보기」 → CareerEndScreen · 🔴 `militaryRecord` 를 읽는 화면이 없었다 → `MilitaryRecordCard`(기록 탭 · 결산 「병역」 절 · `591518cbd`) · 결산 어두운 바탕 글자색 둘 고침 `cd06cf1af`
 ├─ 9. ✅ 새 게임 → 고교 W30 → (dev 우회 결과) 드래프트 지명 통보(구단 제시 · 협상 없음) → 입단 → 2027 프로 W0 → W1~4 시범 12경기(친선) → W5 정규 개막 · 리그 탭 내 팀 강조 (`c9-*.png`)
 ├─ 10. ✅ 스크린샷 5장 1920×1080 — `resource/logs/shots/store-{news,match,league,military,ending}.png` (헤더로 실측 1920x1080)
-├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드
+├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드 (A 최종 pack 뒤)
+├─ 14. 🔄 **(당김)** C-5 잔여(대학 롤오버·다음 시즌) · 시즌 종료 투자 3택 눈확인(9/4 몫) · store-match 재촬영
 ├─ 12. ✅ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility 복무 중만·맨 앞 · me>training 숨김 · 입대 주 currentTab 전환) + §32 화면 넷 `pages/military/MilitaryPage.svelte` + `features/military/ui/Military{Head,DailyPane,MembersPane,CalendarPane,CareerPane}.svelte` (상무는 옛 패널 + 한 줄 · §39 는 나중) · 공 카드 "부상 위험" 띠 `rules.fatigue.injuryWarn` · 눈확인 새 게임 → dev 우회 입대 → W7 (HANDOFF_C_TO_A 맨 위) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
 ├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
