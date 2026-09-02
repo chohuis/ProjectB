@@ -19,6 +19,7 @@
   } from "../../../shared/utils/careerSummary";
   import { militaryHistory } from "../../../shared/utils/playerTraits";
   import TeamMark from "../../team/ui/TeamMark.svelte";
+  import MilitaryRecordCard from "../../military/ui/MilitaryRecordCard.svelte";
 
   import { onMount } from "svelte";
   import { slotRepo } from "../../../shared/repo/slotRepo";
@@ -274,6 +275,14 @@
                 </li>
               {/each}
             </ol>
+          </section>
+        {/if}
+
+        <!-- 병역 — 군 경력 한 장 (§30). 전역 환산·표창·관계 상위가 여기 접혀 있다 -->
+        {#if p.militaryRecord}
+          <section class="sec">
+            <h3>병역</h3>
+            <MilitaryRecordCard record={p.militaryRecord} showTitle={false} />
           </section>
         {/if}
 

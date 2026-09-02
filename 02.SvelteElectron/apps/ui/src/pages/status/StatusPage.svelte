@@ -9,6 +9,7 @@
   import { getFaThreshold } from "../../shared/utils/faEngine";
   import { canRetireVoluntarily, isRetired, retireProtagonist } from "../../shared/usecases/retirement";
   import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
+  import MilitaryRecordCard from "../../features/military/ui/MilitaryRecordCard.svelte";
   import { ipLabel, eraLabel, rateLabel, wpctLabel } from "../../shared/utils/baseballFormat";
 
   type StatusTab = "stats" | "record" | "career";
@@ -607,6 +608,12 @@
 
     <!-- ══ 기록 탭 ══ -->
     {:else if activeTab === "career"}
+      <!-- 군 경력 한 장 (§22·§30) — 전역했으면 시즌 기록이 없어도 뜬다 -->
+      {#if $gameStore.protagonist.militaryRecord}
+        <article class="card career-card">
+          <MilitaryRecordCard record={$gameStore.protagonist.militaryRecord} />
+        </article>
+      {/if}
       {#if careerRecords.length === 0}
         <article class="card record-card">
           <p class="pending">시즌을 마치면 기록이 쌓입니다.</p>
