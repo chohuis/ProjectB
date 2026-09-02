@@ -58,6 +58,7 @@ A
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     ├─ ✅ **프리즈 후보 pack 09-03 07:26** — B-10 까지 전부 병합 · dist:steam OK · smoke:dist 통과 (⚠ 내 프로브가 .node 를 잡아 두 번 EPERM — 프로브 먼저 내린다)
 │     └─ ⬜ B-10 소식함 눈확인 · C 최종 확인 → 회신 결함 → 재 pack → 9/14 최종 빌드 → 9/15 프리즈 → 업로드 후보 → 사용자 확인
+│     └─ 🔄 **9/5 문서 갱신** — ① BALANCE_BASELINE_09-05(씨앗 3 measure:batting 재측정 중 · balance-0905.log) ② RESUME 정리 ③ CLAUDE.md 두 줄
 ├─ ✅ 오늘 닫은 것 — 독립 순위표 · 배경 리그 정지 · 대학 0경기 · 시즌 여는 자리 6곳 ·
 │      팀당 144·시범 12 · 전역→독립(씨앗 3) · 사기 원천 · B 병합 · 마이그레이션 16필드 ·
 │      죽은 갈래 · 감사 재확인 · 계획 둘 · 인계 넷 · 프리즈 9/15 · 현황판
@@ -141,6 +142,7 @@ B
 ├─ ✅ 병합됨 14커밋 (9f8ad99b5)
 ├─ 14. ✅ DEC_UNIV_JUNIOR_CARE 두 갈래가 다 동료 관계 +6 이라 선택이 의미가 없었다 —
 │        「내 훈련을 한다」 에서 관계 +6 을 뺐다(새 숫자 0 · 힌트도 같이)
+├─ 11. 🔄 **계약 조건 기획안 + 신규 계약 페이지 시안** — 기획만·구현 금지(사용자 지시 09-03) · PLAN_CONTRACT_TERMS.md · docs/mock/contract-page-mock.html · §8 사용자 질문 목록 → A 가 전달
 └─ 🛑 동적 치환 23종 · 고교 사기 한 단 더
 ```
 
@@ -170,7 +172,8 @@ C
 ├─ 12. ✅ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility 복무 중만·맨 앞 · me>training 숨김 · 입대 주 currentTab 전환) + §32 화면 넷 `pages/military/MilitaryPage.svelte` + `features/military/ui/Military{Head,DailyPane,MembersPane,CalendarPane,CareerPane}.svelte` (상무는 옛 패널 + 한 줄 · §39 는 나중) · 공 카드 "부상 위험" 띠 `rules.fatigue.injuryWarn` · 눈확인 새 게임 → dev 우회 입대 → W7 (HANDOFF_C_TO_A 맨 위) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
 ├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
-└─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
+├─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
+└─ 14. 🔄 **보직 추천·선택 기획안**(Opus) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
 ```
 
 ---
