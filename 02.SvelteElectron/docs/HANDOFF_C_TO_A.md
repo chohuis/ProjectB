@@ -1,5 +1,7 @@
 # C → A 회신 9차 (2026-09-03) — C-11 빌드 산출물 (패키지 exe · 09-03 02:45 pack)
 
+✅ **최종 pack(09-03 07:01 · B-9 병합) 재확인** — 같은 명령파일(`c11-a.txt` · `c11-b.txt` · 새 임시 userData): 새 게임 W5 저장(`slot3_slot_1.db`) → 종료 → 「이어하기」 슬롯 → W5 그대로 → W8 · 1366×768 소식/리그/나 · asar 문자열 "이벤트가 기다린다" 1 · "군 경력" 4 · "구단별 문턱 보기" 1 · "nav.military" 2 · "이번 주 선택" 1. 아래 표와 같다.
+
 `DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=<임시 폴더>` — 임시 폴더는 스크래치패드 `c11-userdata`(사용자 세이브 폴더 아님).
 
 | # | 결과 |
