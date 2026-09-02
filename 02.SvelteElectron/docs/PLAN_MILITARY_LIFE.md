@@ -565,3 +565,242 @@ C   pages/military/MilitaryPage.svelte (2단 넷) · MainPage 분기 한 줄 · 
 
 ⚠ 지금 `MainPage.svelte` 의 pending → 탭 `switch` 가 `never` 로 못박혀 있어 `"military"` 를
 더하면 **컴파일이 먼저 깨진다** — 그게 의도다. 갈래를 빠뜨릴 수 없다.
+
+---
+
+# 4부 — 병영생활 상세: 항목과 동작 (2026-09-02 밤 · 사용자: "이제 병영 부분 항목들이나 동작 디테일하게 잡아보자")
+
+이 부는 **구현 명세**다. 1~3부의 결정을 그대로 두고, 코드가 매주 무엇을 어떤
+순서로 하는지·데이터가 어떤 모양인지·무엇을 검사하는지를 적는다. 값 중
+**❓ 표시는 밸런스라 사용자 확정 전까지 제안값**이다. 목업은
+[병역 탭 미리보기](https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252).
+
+## 23. 지금 코드가 매주 하는 것 (실측 · 2026-09-02) — 무엇을 바꾸는가
+
+```
+advanceWeek.ts ≈2160~   careerStage === "military" 갈래
+  ① seasonStore.advanceWeek · gameStore.advanceMilitaryWeek (serviceWeeks +1)
+  ② rankIndex = ≤8 → 0 · ≤34 → 1 · ≤60 → 2 · 그 밖 3      (계급 띠 — 그대로 둔다)
+  ③ 이벤트 후보 = minRank ≤ 띠 ≤ maxRank · once 는 careerTriggeredEvents 로 거름
+  ④ Rust calc_military_week — 현역이면 **커맨드·제구·회복을 확률로 깎는다**
+     (이병 0.75/0.65/0.20 … 병장 0.15/0/0) · 사기·피로 고정 델타 · 40% 로 풀 인덱스 하나 뽑음
+  ⑤ 뽑힌 이벤트 → pending {type:"event"} · 소식 한 통 · 주간 로그 한 줄
+  ⑥ 100주 → 롤오버가 dischargeProtagonist → 회복 6주 고정
+풀   military 5 · common 14 · general 20 · sports 20   (쿨다운 없음 · 복원추출)
+```
+
+**바꾸는 것** — ④의 능력치 감쇠를 **현역에서 뗀다**(✅ 09-02 "복무 중 안 깎고 전역 때
+환산"). 그 자리에 **캘린더 → 선택 → 자원 계산 → 이벤트 → 소식**의 주간 루프가 들어간다.
+상무(`isSportsUnit`)는 **지금 표 그대로** 둔다 — 탭만 같이 쓰고 안은 다르다.
+③의 거르기(띠·once)는 유지하고 **쿨다운·조건·부대원 재적**을 더한다.
+
+⚠ Rust 함수는 **새로 하나 더 만든다**(`calc_military_life_week`). `calc_military_week`
+는 상무가 계속 쓴다 — 갈래 하나를 고쳐서 두 무대가 같이 흔들리는 걸 막는다.
+
+## 24. 상태 — 세이브에 들어가는 것 (`protagonist.militaryLife`)
+
+```ts
+interface MilitaryLifeState {
+  unitId:        string;                       // unit.json 의 id
+  roleId:        "signal" | "mortar";          // W6 에 확정 · 그 전엔 null
+  ballSense:     number;                       // 0~100
+  relations:     Record<string, number>;       // memberId → −100~100 (기존 relations 축과 같은 척도)
+  frozen:        Record<string, number>;       // leaveWeek 지난 부대원 — 재회용으로 얼린 값
+  calendarDone:  string[];                     // 뜬 캘린더 이벤트 id (한 번만)
+  cooldown:      Record<string, number>;       // eventId → 마지막으로 뜬 복무 주
+  choiceLog:     Array<{ week: number; choice: "ball" | "people" | "rest" | null }>;  // 100칸 상한
+  leaveDays:     number;                       // 쓴 휴가 일수 누계
+  awards:        Array<{ week: number; id: string }>;
+  penalties:     Array<{ week: number; id: string }>;
+  perf:          Array<{ week: number; id: string; tier: number; note: string }>;   // 포사격·통신평가 결과
+  senseCurve:    number[];                     // 4주마다 ballSense 표본 (25칸) — 경력 탭 곡선
+}
+```
+
+- 입대 주에 `enlistProtagonist` 가 만든다. **현역만** — 상무는 `militaryLife: null`.
+- `migrateProtagonist` 에 `militaryLife: p.militaryLife ?? null` 한 줄 (16필드 규칙과 같다).
+- 계급·복무 주·다음 사건은 **파생**이다 — `militaryServiceWeeks` 하나에서 계산한다. 따로 안 둔다.
+- 전역 때 `militaryRecord`(§30) 한 장으로 접고 `militaryLife` 는 **null 로 비운다.**
+  탭 유무는 `careerStage` 하나가 정한다(§22) — 이 필드는 탭의 근거가 아니다.
+
+## 25. 주간 루프 — 순서가 곧 명세다
+
+```
+W = militaryServiceWeeks (1 부터) · 부대 = unit.json · 부대원 = members.json 중 joinWeek ≤ W < leaveWeek
+
+① 진급·전출     W 가 9/35/61 이면 띠가 바뀐다 — 소식 한 통 · 캘린더 필수 이벤트가 같은 주에 있으면 그게 대신
+                leaveWeek == W 인 부대원: relations → frozen 로 옮기고 소식 한 통 ("○○ 전역")
+                joinWeek == W 인 부대원: relations[id] = relationStart · 소식 한 통 ("후임 도착")
+② 캘린더        calendar.json 에 W 가 있으면 그 이벤트를 **확률 밖**으로 pending 에 올린다 (calendarDone 에 넣는다)
+                leaveDays 가 있으면 휴가 주 · fatigue/ballDelta 가 있으면 그대로 적용 (③ 이전에)
+③ 선택 여부     선택 없음 = 훈련소(W1~5) · 휴가 주 · 캘린더에 noChoice 가 붙은 주(혹한기·유격·진지 공사)
+                선택 있음 = 그 밖 전부. 선택은 **주 진행 전에** 화면에서 고른다 (§32 · 안 고르면 "쉰다")
+④ 자원 계산     Rust calc_military_life_week (§26) — 피로·사기·야구 감각·관계 델타를 한 번에
+⑤ 이벤트        캘린더 이벤트가 이미 떴으면 건너뜀. 아니면 40% 로 한 건 — 후보는 TS 가 거르고(§28) Rust 가 인덱스만 뽑는다
+⑥ 소식          이벤트 한 통 · 4주마다 "이번 달 부대 소식" 한 통 (id `msg-mil-digest-{year}-w{week}`)
+⑦ 저장          militaryLife 갱신 · W % 4 == 0 이면 senseCurve.push(ballSense)
+⑧ 100주         기존대로 롤오버 → dischargeProtagonist (§30 환산이 여기 들어간다)
+```
+
+⚠ **선택은 pending 이 아니다.** pending 으로 만들면 헤드리스(`probe:paths`)가 매주 멈춘다.
+"이번 주 선택"은 `militaryLife.nextChoice` 에 미리 적어 두는 값이고, 진행 버튼이 그걸 읽는다.
+안 적혀 있으면 "쉰다". 헤드리스는 정책으로 채운다(공 우선 등).
+
+## 26. 자원 수식 — Rust `calc_military_life_week` (❓ 는 제안값)
+
+입력: `dutyIntensity(1~5) · ballAccess(0~3) · rankBand(0~3) · choice · fatigue · morale · ballSense ·
+calendarFatigue · calendarBall · onLeave · noChoice · members[{id, relation, present, subunitSame}] · seed`
+
+```
+피로   base = {1:2, 2:4, 3:6, 4:8, 5:10}[dutyIntensity]  ❓
+       + choice {ball:+4, people:+1, rest:−6}  + calendarFatigue  − 3(자연 회복)
+       휴가 주: −20 고정 (선택 없음)                       clamp 0~100
+사기   기존 회귀 그대로: (60 − morale) × 0.05             (CLAUDE.md 사기 회귀)
+       + choice {people:+2, rest:+1} + 휴가 +8 + 이벤트 선택지 moraleDelta
+야구감각  −1.5 매주 ❓
+       + choice ball: {1:+3, 2:+5, 3:+8}[ballAccess]  (ballAccess 0 이면 카드 자체가 없다)
+       + 휴가 +4 · calendarBall(혹한기·유격 −3)
+       상한 100 − 10 × (3 − ballAccess) ❓ · 하한 0
+관계   전원 −0.5 매주 ❓ (안 챙기면 멀어진다)
+       choice people: 대상 1~2명 (같은 소단위 가중 2배 · 씨앗) 에 +{0:+2, 1:+2, 2:+3, 3:+4}[rankBand]
+       이벤트 선택지 relationDelta (member 지정) · clamp −100~100
+```
+
+**능력치는 건드리지 않는다.** 결과 구조체에 stat 칸이 없다 — 있으면 누가 쓴다.
+씨앗은 `seedOf(worldSeed, year, week, "military-life")` — `thread_rng()` 안 쓴다(결정성 정책).
+
+## 27. 선택 카드 셋 — 화면이 보여 주는 규칙
+
+| 카드 | 뜨는 조건 | 효과(화면에 적는 값) | 비고 |
+|---|---|---|---|
+| ㄱ 공을 만진다 | ballAccess ≥ 1 · 선택 있는 주 | 감각 +{3/5/8} · 피로 +4 | 감각이 상한이면 "상한 — 오르지 않는다" 표시 |
+| ㄴ 사람과 지낸다 | 재적 부대원 ≥ 1 | 관계 +{2/2/3/4} (1~2명) · 사기 +2 | 누구에게 갔는지 소식에 적는다 |
+| ㄷ 쉰다 | 항상 | 피로 −6 · 사기 +1 | 기본값 |
+
+- 카드는 **효과를 숨기지 않는다** — 값을 그대로 적는다(이벤트 `effectHint` 와 같은 원칙).
+- 피로 ≥ 85 면 ㄱ 카드에 경고 띠("부상 위험") — 부상은 §28 조건부 이벤트가 맡는다. 확률 부상은 없다.
+
+## 28. 이벤트 — 형식 · 조건 · 뽑기
+
+기존 `events/pools/military_general.json` 형식 위에 **넷을 더한다**: `member · cooldownWeeks ·
+conditions · weight`. 기존 20건은 이 형식으로 그대로 읽힌다(새 필드는 전부 선택).
+
+```jsonc
+{
+  "id": "MIL_LIFE_SNOW_SHOVEL",
+  "title": "제설",  "description": "…",
+  "minRank": 0, "maxRank": 3, "once": false,
+  "cooldownWeeks": 6,                       // 이 주 안에는 다시 안 뜬다 (기본 4 ❓)
+  "weight": 2,                              // 뽑힐 가중 (기본 1)
+  "member": "MEM_SGT_KIM",                  // 이 부대원이 재적 중일 때만 · 문안이 그를 가리킨다
+  "conditions": [
+    { "type": "week_between", "from": 40, "to": 48 },
+    { "type": "relation_gte", "member": "MEM_SGT_KIM", "value": -20 },
+    { "type": "ballSense_lte", "value": 30 },
+    { "type": "fatigue_gte", "value": 70 },
+    { "type": "role", "value": "mortar" }
+  ],
+  "choices": [
+    { "id": "a", "label": "…", "effectHint": "관계 +8 · 피로 +2",
+      "relationDelta": 8, "fatigueDelta": 2, "moraleDelta": 0, "ballDelta": 0,
+      "award": "MIL_AWARD_COMMENDATION", "leaveDays": 3 }
+  ]
+}
+```
+
+**조건 어휘** (전부 AND · 검사가 모르는 type 을 거부한다):
+`week_between · rank(band) · role · relation_gte/lte(member) · ballSense_gte/lte · fatigue_gte/lte ·
+morale_gte/lte · member_present(member) · season_month(1~12 · 시즌 주차에서 환산) · leave_recent(주)`
+
+**뽑기**: 후보 = 띠 ✓ · once ✓ · 쿨다운 ✓ · member 재적 ✓ · conditions 전부 ✓ →
+가중 누적 → Rust 가 `[0, Σweight)` 정수 하나 (씨앗) → 그 이벤트. 후보 0 이면 그 주는 없음.
+**필수(캘린더) 는 이 경로를 안 탄다** — §25 ② 에서 이미 떴다.
+
+**선택지 효과 필드** (전부 선택): `relationDelta(member 대상) · fatigueDelta · moraleDelta · ballDelta ·
+award · penalty · leaveDays · statDelta 는 현역에선 **무시하고 검사가 경고**`(능력치 안 건드린다).
+
+**성과 이벤트 판정** (§17 · "경기" 대체 · 캘린더에 박힘):
+```
+tier = clamp(1..6,  round( 3.5  − 0.8×(rankBand−1)  + 0.02×relation(포반장 or 행보관)  + (fatigue>70 ? +1 : 0) + 씨앗 ±1 ))  ❓
+포사격훈련(㉡ W16·W68)   tier 1~2 → 표창 후보 · tier 6 → 징계 후보 · 결과는 perf[] 와 소식
+통신평가(㉠ W28·W84)     같은 식 · 관계 대상이 행정보급관
+```
+결과 tier 는 문안 `{tier}` 로 이벤트 본문에 들어간다 — 이벤트 JSON 이 `perf` 필드로 어느 판정인지 가리킨다.
+
+## 29. 캘린더 — 형식과 검사
+
+```jsonc
+{ "week": 44, "event": "MIL_CAL_WINTER", "label": "혹한기", "fatigue": 12, "ballDelta": -3, "noChoice": true, "role": null }
+```
+`week`(1~100 · 유일) · `event`(풀 어딘가에 있는 id) · `label` · 선택: `leaveDays · fatigue · ballDelta · noChoice · role(㉠/㉡ 한쪽만)`.
+**§11 필수 14 는 반드시 있어야 한다** — 검사가 id 로 센다. §18 화천 사건은 그 위에 얹는다.
+같은 주에 둘이면 검사 실패(한 주 한 사건).
+
+## 30. 전역 — 환산·기록·재회
+
+```
+환산 (§9 표 · ❓ 폭)     ballSense 로 커맨드·제구·회복(·구속) 한 번에 · militaryRecoveryWeeks = {≥80:2, 60~79:4, 40~59:6, 20~39:8, <20:10}
+특성                     ㉠ 침착 (mentality +1)  ㉡ 단단함 (stamina +1 · recovery +1)  — playerTraits 에 한 줄씩
+군 경력 한 장            militaryRecord = { unit, role, finalRank, leaveDays, awards, penalties, perf, topRelations(3), senseCurve, highlights(캘린더 선택 6개) }
+                         → careerRecords 에 leagueId "LEAGUE_MILITARY" 한 행 + 인생 기록 화면 항목
+재회                     frozen ∪ relations 상위 2명 → 전역 후 첫 시즌 W10·W30 에 조건부 이벤트 (문안 사용자/B)
+```
+
+## 31. 소식 — id 와 통 수
+
+| 통 | id | 언제 |
+|---|---|---|
+| 이벤트 | `msg-mil-ev-{eventId}-{year}-w{week}` | 뜰 때마다 |
+| 진급·전입·전역 | `msg-mil-unit-{kind}-{year}-w{week}` | §25 ① |
+| 월간 부대 소식 | `msg-mil-digest-{year}-w{week}` | 4주마다 — 관계 변화 상위 3 · 감각 · 휴가 · 다음 사건 |
+| 전역 | 기존 전역 소식 그대로 + 군 경력 한 장 링크 | 100주 |
+
+id 에 연도를 넣는다(소식 id 규칙 — weekNum 은 시즌마다 리셋된다).
+
+## 32. 화면 상태 (C) — 병역 탭 넷의 데이터 바인딩과 빈 상태
+
+```
+머리      unit.name · unit.location · role 라벨 · 계급(띠→이병/일병/상병/병장) · W/100 막대 · 다음 캘린더 사건(주·라벨·n주 뒤)
+일과      자원 셋 막대(피로는 낮을수록 좋음 — 방향 표시) · 선택 카드 셋(§27 · 훈련소/휴가/noChoice 주엔 "이번 주는 선택이 없다 — 이유")
+          · 이번 주 이벤트(있으면 pending 그대로) · 월간 소식 마지막 한 통
+부대원    재적 카드(소단위별 묶음 · 관계 라벨 7단계 · 성격 · 역할) · 예정(joinWeek 미도달 · 흐림) · 전역(frozen · 흐림)
+캘린더    100주 축 · 지난 것은 calendarDone + 선택 · 다음 것 강조 · 휴가 표시
+경력      perf[] · awards/penalties · leaveDays · senseCurve 곡선 · 관계 상위 · 전역 환산 표에서 지금 구간 강조
+전환      입대 주 currentTab = "military" · 전역 주 탭 소멸(폴백 news) · 상무는 같은 탭, 일과 대신 "훈련" 내용
+```
+
+## 33. 검사·계측 — 무엇이 실패해야 하나
+
+```
+check:militarydata      unit/members/calendar/이벤트 넷을 실제 로더로 읽어서:
+                          member id 가 members.json 에 있다 · calendar week 1~100 유일 · 필수 14 id 전부 있다
+                          conditions.type 이 어휘 안이다 · cooldownWeeks ≥ 1 · statDelta 가 현역 풀에 있으면 경고
+                          role 값이 signal|mortar 다 · joinWeek < leaveWeek ≤ 100
+vitest (순수 함수)       주간 루프 순서(§25) · 자원 수식(§26 · 경계값) · 후보 거르기(§28 · 쿨다운·재적·조건) ·
+                          성과 tier · 전역 환산 표 · migrate 한 줄 · **변이**: 쿨다운 제거 → 같은 이벤트 연속 → 실패
+probe:military          씨앗 3 × 100주 헤드리스(정책: 공 우선 / 사람 우선 / 쉼) —
+                          감각 곡선 · 이벤트 종류 수와 반복 횟수 · 관계 분포 · 피로 NaN 0 · 전역 환산 결과 · 소식 통 수
+                          ⚠ `[일정끝]` 이 아니라 **주마다** 찍는다 (bgsched 함정)
+회귀                    probe:paths mil 경로 · militaryLeagueId.test · dischargeOpensSeason.test 그대로 통과
+```
+
+## 34. 순서 — 누가 먼저 (1.1 첫 항목 · 충돌 없이)
+
+```
+A  ① 형식·로더·검사 (§24 상태 · §28/29 형식 · check:militarydata · 빈 틀 파일 셋)    ← 사용자가 내용을 채울 수 있게 제일 먼저
+   ② Rust calc_military_life_week + 주간 루프 (§25/26) · 상무 갈래 분리 · migrate
+   ③ 전역 환산·기록·재회 훅 (§30) · 소식 (§31) · probe:military
+사용자  unit.json · members.json · calendar.json · 병영생활 이벤트 (A ① 뒤부터 가능)
+B  기존 34종 → 새 형식(쿨다운·조건) 변환 · 필수 14 문안 · 월간 소식 문안
+C  §22 탭 + §32 화면 넷 (A ① 의 타입이 나오면 목업 그대로 옮긴다)
+```
+
+## 35. ❓ 사용자 확정이 필요한 값 (밸런스 — 묻고 넣는다)
+
+1. 야구 감각 시작값 60 (프로 출신 70 · 학생 55) / 매주 −1.5 / 공 +3·5·8 / 상한 100−10×(3−ballAccess)
+2. 전역 환산 폭 (§9 표) 와 회복 주 2~10
+3. 피로 base {2,4,6,8,10} · 선택 델타 {+4,+1,−6} · 휴가 −20
+4. 관계 감쇠 −0.5 · 사람 카드 +2/+2/+3/+4 · 포상휴가 문턱 관계 합 +40
+5. 보직 배정 50/50 (씨앗) 인지 능력 기울임인지
+6. 성과 tier 식의 계수 (0.8 · 0.02 · 피로 문턱 70)
+7. 이벤트 기본 쿨다운 4주 · 주 확률 40% 유지
