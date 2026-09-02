@@ -3,7 +3,7 @@
   "type": "random",
   "messageTemplateId": "MSG_UNIV_LIFE_RECOVERY_DAY_01",
   "category": "team_life",
-  "decisionTemplateId": "DEC_RAND_TEAM_MEAL",
+  "decisionTemplateId": "DEC_RECOVERY_DAY",
   "weight": 15,
   "cooldownWeeks": 2,
   "priority": 290,

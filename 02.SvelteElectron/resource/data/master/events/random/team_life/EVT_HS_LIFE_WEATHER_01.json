@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_WEATHER_01",
-  "decisionTemplateId": "DEC_RAND_TEAM_MEAL"
+  "decisionTemplateId": "DEC_HS_COMMON_RAIN"
 }

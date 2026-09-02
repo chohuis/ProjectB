@@ -18,5 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_JUNIOR_MENTOR",
-  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
+  "decisionTemplateId": "DEC_UNIV_JUNIOR_CARE"
 }
