@@ -106,7 +106,7 @@ C
 ├─ 10. ⬜ 스크린샷 5장 (1920×1080 정확히) · 스토어 자산
 ├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드
 ├─ 12. ⬜ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility · 입대 주 전환) + §32 화면 넷 (일과·부대원·캘린더·경력 · 상무 분기) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252 그대로 · A ①② 끝났으니 착수 가능 (타입 types/militaryLife.ts · 상태 protagonist.militaryLife · 선택은 militaryLife.nextChoice 에 적는다)
-├─ 13. ⬜ 🔴 **이벤트 pending 모달이 없다** — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
+├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 └─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
 ```

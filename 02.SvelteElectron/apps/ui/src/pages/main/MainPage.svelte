@@ -40,6 +40,7 @@
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
+  import EventPendingModal from "../../features/events/ui/EventPendingModal.svelte";
   import { simulateSkippedGame } from "../../shared/usecases/simulateSkippedGame";
   import PreGameBriefingModal from "../../features/pre-game-briefing/ui/PreGameBriefingModal.svelte";
   import GameStatusModal from "../../features/game-status/ui/GameStatusModal.svelte";
@@ -134,6 +135,8 @@
   $: pendingRetirementAsk = $nextPendingAction?.type === "retirementAsk" ? $nextPendingAction : null;
   $: pendingInjuryTreatment  = $nextPendingAction?.type === "injuryTreatment"  ? $nextPendingAction : null;
   $: pendingConditionWarning = $nextPendingAction?.type === "conditionWarning" ? $nextPendingAction : null;
+  // 🔴 이걸 그리는 자리가 없어서 군 이벤트가 사람 플레이를 막았다 (C-13 · HANDOFF_A_TO_C §0.48)
+  $: pendingEvent = $nextPendingAction?.type === "event" ? $nextPendingAction : null;
   // 경기 전 브리핑 — 경기 창에서 여는 읽기 전용 창. 주 진행과 무관하다
   let briefingScheduleId: string | null = null;
   /**
@@ -580,6 +583,10 @@
 
 {#if pendingInjuryTreatment && currentTab === "news"}
   <InjuryTreatmentModal action={pendingInjuryTreatment} />
+{/if}
+
+{#if pendingEvent && currentTab === "news"}
+  <EventPendingModal action={pendingEvent} />
 {/if}
 
 <!-- ⚠ **PendingAction이 아니다.** 예전엔 경기 전에 강제로 뜨는 창이라
