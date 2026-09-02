@@ -539,7 +539,9 @@
     : standingsGroupsView;
 
   function getLeagueStandings(lid: string) {
-    if (lid === myLeagueId) {
+    // 🔴 **시즌의 리그로 가른다** — 주인공 리그(myLeagueId)로 가르면 2군 강등 뒤 "KBL 2군" 탭이
+    //   1군 순위(`$seasonStore.standings`)를 그대로 보여줬다(2026-09-02 눈확인). 시즌 순위는 시즌 리그 것이다.
+    if (lid === $seasonStore.leagueId) {
       return [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
     }
     return [...($seasonStore.leagueState[lid]?.standings ?? [])].sort(
@@ -562,7 +564,7 @@
     if (!lbLeagueId) return {} as Record<string, PlayerSeasonStats>;
     const ls = $seasonStore.leagueState[lbLeagueId];
     const base: Record<string, PlayerSeasonStats> = ls?.stats ? { ...ls.stats } : {};
-    if ($gameStore.protagonist.leagueId === lbLeagueId) {
+    if ($seasonStore.leagueId === lbLeagueId) {
       const hero = $seasonStore.stats[$gameStore.protagonist.id];
       if (hero) base[$gameStore.protagonist.id] = hero;
     }
