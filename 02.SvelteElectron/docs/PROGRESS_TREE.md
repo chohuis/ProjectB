@@ -173,7 +173,7 @@ C
 ├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 ├─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
-└─ 14. 🔄 **보직 추천·선택 기획안**(Opus) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
+└─ 14. ✅ **보직 추천·선택 기획안**(Opus · bb340b2f8 · 발견 넷 더: 로테이션 수 규칙/Rust 불일치 · 세부 보직이 등판에 무영향 · starterSlot 호출 0 · 복무 중 배정 없음 · §8 질문 열둘 → 사용자 대기) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
 ```
 
 ---
