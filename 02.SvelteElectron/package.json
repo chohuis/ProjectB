@@ -117,7 +117,7 @@
     "measure:mailbox": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-mailbox.cjs",
     "measure:messagekinds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-message-kinds.cjs",
     "check:militarydata": "node scripts/check-militarydata.cjs",
-    "check:seasonendguard":"cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-seasonend-guard.cjs",
+    "check:seasonendguard": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-seasonend-guard.cjs",
     "check:protransition": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-pro-transition.cjs",
     "measure:leaguegames": "node scripts/measure-league-games.cjs",
     "measure:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-growth.cjs",
@@ -143,7 +143,8 @@
     "probe:paths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs",
     "dist:steam": "npm run pack && node scripts/dist-steam.cjs",
     "dist:steam:verify": "node scripts/dist-steam.cjs",
-    "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt"
+    "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt",
+    "probe:military": "cross-env DRIVE_USER_DATA=1 PF_YEARS=6 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs --path mil"
   },
   "build": {
     "appId": "com.projectb.desktop",

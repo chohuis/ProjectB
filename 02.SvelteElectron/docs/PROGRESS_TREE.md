@@ -64,7 +64,7 @@ A
 │     └─ 🔄 **구현 착수 (사용자 09-02 13:40 "지금 구현 문서 기준으로 A·B·C 에 넣어 진행")** — 4부 §34 순서
 │           ├─ 12. ✅ A ① 타입 militaryLife.ts · 세이브 필드+migrate · 데이터 넷(unit/members 15장/calendar 20주/rules) · 풀 military_life.json 캘린더 20종 · 로더 · **check:militarydata**(변이 2종 실패 확인)
 │           ├─ 13. ✅ A ② Rust calc_military_life_week(씨앗 · cargo 5) · 주간 루프 usecases/militaryLife.ts(§25 ①~⑦) · 순수 규칙 utils/militaryLifeRules.ts(vitest 16) · 입대 시 상태 생성 · 이벤트 선택 효과 훅 · 상무·옛 세이브는 옛 갈래 · build:native 13:57 · ⏳ 헤드리스 probe:paths mil 6시즌
-│           ├─ 14. 🔄 A ③ ✅ 전역 환산(rules.discharge · 능력치 한 번 · 회복 주 덮음) · ✅ 군 경력 한 장(militaryRecord · 소식 한 통) · ✅ 소식(이벤트·전입/전출/진급·월간·전역) · ⬜ 재회 훅(전역 뒤 W10·W30 조건 이벤트 — B 문안 뒤) · ⬜ probe:military(씨앗 3×100주 · 정책 셋) · ✅ probe:paths mil 씨앗 0731 — 정책 공: 감각 90(상한) · 섞음: 59 · 캘린더 20/20 · 휴가 20일 · 성과 4건 · 아크 2 (100주 완주 · 랜덤 이벤트는 B-11 전이라 0)
+│           ├─ 14. 🔄 A ③ ✅ 전역 환산(rules.discharge · 능력치 한 번 · 회복 주 덮음) · ✅ 군 경력 한 장(militaryRecord · 소식 한 통) · ✅ 소식(이벤트·전입/전출/진급·월간·전역) · ⬜ 재회 훅(전역 뒤 W10·W30 조건 이벤트 — B 문안 뒤) · ✅ probe:military 명령 등록(= probe:paths mil · PF_SEED · PB_MIL_CHOICE) — 밸런스 조정 실행은 B-11 뒤(랜덤 이벤트가 있어야 재는 뜻이 있다) · ✅ probe:paths mil 씨앗 0731 — 정책 공: 감각 90(상한) · 섞음: 59 · 캘린더 20/20 · 휴가 20일 · 성과 4건 · 아크 2 (100주 완주 · 랜덤 이벤트는 B-11 전이라 0)
 │           └─ B·C 몫은 각 트리 (B-11 · C-12)
 └─ 🛑 1.1 — 독립 시장 · 중도 콜업 · 2군 예산 · 전역 기량 · 일반병 화면 · 동적 치환 ·
         상무 섞임 · FA 정교화 · OVR 드리프트 · 장타율 .461
