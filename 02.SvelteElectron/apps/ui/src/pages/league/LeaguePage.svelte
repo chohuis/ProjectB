@@ -215,7 +215,12 @@
       const res = JSON.parse(await window.projectB!.seasonGetHistoryYears(JSON.stringify({ slotId })));
       historyYears = Array.isArray(res) ? res : [];
       // 현재 시즌 순위 없고 과거 기록 있으면 가장 최근 연도 자동 선택
-      if (historyYears.length > 0 && selectedYear === 0 && $seasonStore.standings.length === 0) {
+      // 🔴 **내 리그만 보고 있었다** (2026-09-02 눈확인). 군 복무 중엔 내 리그(LEAGUE_MILITARY)에
+      //   순위가 없어서 리그 탭을 열면 **다른 리그가 돌고 있는데도 2025시즌 기록으로 튀었다.**
+      //   배경 리그 중 하나라도 순위가 있으면 "현재"다.
+      const anyCurrent = $seasonStore.standings.length > 0
+        || Object.values($seasonStore.leagueState).some((ls) => (ls?.standings?.length ?? 0) > 0);
+      if (historyYears.length > 0 && selectedYear === 0 && !anyCurrent) {
         selectedYear = historyYears[0];
       }
     } catch { historyYears = []; }
@@ -453,8 +458,12 @@
       locked: lockedLeagueSet,
     });
     const mine = ids.filter((id) => id === myLeagueId);
-    return [...mine, ...ids.filter((id) => id !== myLeagueId)];
+    // ⚠ 군 복무 중 내 리그는 `LEAGUE_MILITARY` — 순위표가 없는 자리표시자다. 목록에 넣으면
+    //   원문 id 가 "내 리그" 배지를 달고 맨 위에 뜬다(2026-09-02 눈확인). 뺀다.
+    return [...mine, ...ids.filter((id) => id !== myLeagueId)].filter((id) => id !== "LEAGUE_MILITARY");
   })();
+  // 내 리그가 목록에 없으면(복무 중) 첫 리그를 연다 — 빈 순위표 대신
+  $: if (allLeagueIds.length > 0 && !allLeagueIds.includes(selectedLeagueId)) selectedLeagueId = allLeagueIds[0];
 
   /**
    * 권역 2단 — 리그를 고르면 그 리그의 권역 목록이 옆에 열린다.
