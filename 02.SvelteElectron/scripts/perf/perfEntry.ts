@@ -440,6 +440,14 @@ export async function pushCareerForward(): Promise<string | null> {
           + " uni=" + (r?.universityPassed?.length ?? 0)
           + " ind=" + (r?.independentPassed?.length ?? 0)
           + " ovs=" + (r?.overseasPassed?.length ?? 0));
+        // 지명 산식 항별 분해 — 독립 재지원이 3씨앗 7년 동안 0회라 어느 항이
+        // 문턱(78) 아래로 누르는지 본다. 합만 보면 못 가른다
+        const pp = get(gameStore).protagonist;
+        const inj = pp.injuryHistory ?? [];
+        const sev = (k: string) => inj.filter((h) => h.severity === k).length;
+        console.log("[진로산식] ovr=" + pp.pitching.ovr + " scout=" + (pp.scoutScore ?? 0)
+          + " inj(m/s/x)=" + sev("moderate") + "/" + sev("severe") + "/" + sev("surgery")
+          + " " + JSON.stringify((globalThis as Record<string, unknown>).__lastDraftBreakdown ?? null));
       }
       if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
       // 🔴 **대학생은 진급이 먼저다.** 예전엔 독립 합격이 있으면 그쪽을 먼저 골라
