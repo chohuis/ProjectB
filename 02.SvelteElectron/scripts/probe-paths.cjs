@@ -58,6 +58,7 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   const positions = [];         // 보직 변경
   const seen = { postseason: 0, national: 0, farmIn: 0, farmOut: 0, tourStatWeeks: 0, indieDraftPending: 0, injuryAsk: 0, exempt: 0 };
   let prev = app.pathSignals();
+  let lastMilFired = null;        // 마지막 [병영] 스냅샷의 이벤트 id 목록 — 전역 뒤 도달률 표에 쓴다
   try {
     await app.boot({ slotId: "PP", worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy(POLICY);
@@ -84,7 +85,10 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
       // 독립리그 세계 — 해가 바뀔 때 한 줄 (재적 · 31세 초과 · 나이 중앙값) — 닫힌 세계인지 본다
       if (cur.year !== prev.year && cur.indie) console.log(`[독립세계] ${cur.year} ${JSON.stringify(cur.indie)}`);
       // 병영생활 — 4주마다 한 줄 (감각·아크·관계·캘린더·이벤트). 살았는지도 여기서 본다
-      if (cur.stage === "military" && cur.mil && cur.week % 4 === 0) console.log(`[병영] ${tag} ${JSON.stringify(cur.mil)}`);
+      if (cur.stage === "military" && cur.mil) {
+        lastMilFired = cur.mil.firedIds || lastMilFired;
+        if (cur.week % 4 === 0) { const { firedIds, ...rest } = cur.mil; console.log(`[병영] ${tag} ${JSON.stringify(rest)}`); }
+      }
       prev = cur;
       if (app.currentWeek() > w0) continue;
       // ── pending ──
@@ -120,6 +124,8 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   console.log(`  pending 종류: ${JSON.stringify(pendings)}`);
   console.log(`  무대 전환: ${stages.join(" · ") || "없음"}`);
   console.log(`  경력 이벤트: ${JSON.stringify(ev.reduce((m, t) => (m[t] = (m[t] || 0) + 1, m), {}))}`);
+  // 병영 이벤트 도달 — 전역 뒤엔 militaryLife 가 null 이라 마지막 [병영] 스냅샷의 firedIds 를 쓴다
+  if (lastMilFired) console.log(`[병영이벤트] ${lastMilFired.length}종 ${lastMilFired.join(" ")}`);
   console.log(`[END] ${why} · 최종 ${last.year}W${last.week} ${last.stage} ${last.team} ${last.age ?? ""}`);
   await headless.cleanup(tmp);
 })();

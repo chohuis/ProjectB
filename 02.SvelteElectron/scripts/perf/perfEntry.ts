@@ -3692,6 +3692,8 @@ export function pathSignals(): Record<string, unknown> {
       cal: p.militaryLife.calendarDone.length, fired: Object.keys(p.militaryLife.cooldown).length,
       leave: p.militaryLife.leaveDays, awards: p.militaryLife.awards.length, perf: p.militaryLife.perf.map((x) => x.tier),
       choice: p.militaryLife.choiceLog[p.militaryLife.choiceLog.length - 1]?.choice ?? null,
+      // 도달률 — 어느 이벤트가 떴나 (B-9 의 "군" 줄은 slotreach 가 못 재서 이 값이 정본 · 캘린더는 calendarDone)
+      firedIds: [...Object.keys(p.militaryLife.cooldown), ...p.militaryLife.calendarDone],
     } : null,
   };
 }
