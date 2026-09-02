@@ -620,6 +620,13 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
 ⚠ **주차 창으로 표본을 고르지 마라.** `autoRun` 은 W0 → W32 → W40 으로
 뛴다 — `W15~25` 창을 만들었더니 **한 줄도 안 나왔다.**
 
+## ⚠ 이벤트 조건은 단수·복수가 둘 다 산다 — 세는 코드는 `conditionEvaluator` 판정을 써라 (2026-09-02 · B 실측)
+
+`career_stage.stage` / `league_id.leagueId` 옆에 **`stages[]` / `leagueIds[]`** 가 있다(08-25 · 해외·2군을
+한 번에 가리키려고). 단수만 읽는 분석기는 프로 1군 이벤트 189종을 "전체" 로 흘린다 — 오늘 하루에
+B 의 분석기 둘과 `test:events` 가 같은 함정에 걸렸다(프로 5종으로 보였다). 정본은
+`shared/utils/conditionEvaluator.ts` 의 판정이고, 스크립트가 조건을 기계로 셀 땐 그 형태를 그대로 옮긴다.
+
 ## 현역 병영생활 — 배선 한 장 (2026-09-02 · docs/PLAN_MILITARY_LIFE.md 4부)
 
 ```
