@@ -60,7 +60,11 @@ const dstat = (v) => v.length
   // 무대별 세 통 + 이벤트별 누적(어느 이벤트가 올리나)
   const buckets = {};
   const byEvent = {};
-  const bucket = (stage) => (buckets[stage] ??= { 등판주: [], 이벤트주: [], 없는주: [], 이벤트수: 0, 주수: 0 });
+  // 🔴 **델타만으로는 목표를 못 잰다.** 손질의 목적은 "이벤트주 평균 0" 이 아니라
+  //   `morale_lte 40~60` 대학 아홉이 **닿는가** 다 — 그건 사기의 절대값이다.
+  //   그래서 주마다 절대 사기도 통에 넣고 60/50/40 아래 주수를 센다 (2026-09-02 · B).
+  const fireCount = {};
+  const bucket = (stage) => (buckets[stage] ??= { 등판주: [], 이벤트주: [], 없는주: [], 사기: [], 이벤트수: 0, 주수: 0 });
   try {
     await app.boot({ slotId: "MO", worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy(POLICY);
@@ -85,6 +89,8 @@ const dstat = (v) => v.length
         const b = bucket(cur.stage);
         b.주수++;
         b.이벤트수 += fired.length;
+        b.사기.push(cur.morale);
+        for (const id of fired) fireCount[id] = (fireCount[id] ?? 0) + 1;
         if (played > 0) b.등판주.push(d);
         else if (fired.length > 0) {
           b.이벤트주.push(d);
@@ -106,7 +112,15 @@ const dstat = (v) => v.length
     console.log(`     등판주   ${JSON.stringify(dstat(b.등판주))}`);
     console.log(`     이벤트주 ${JSON.stringify(dstat(b.이벤트주))}`);
     console.log(`     없는주   ${JSON.stringify(dstat(b.없는주))}   ← −1.9 근처면 회귀뿐`);
+    const m = b.사기;
+    const below = (t) => m.filter((v) => v <= t).length;
+    console.log(`     사기(절대) ${JSON.stringify(dstat(m))}` +
+      `  ≤60 ${below(60)}주 · ≤50 ${below(50)}주 · ≤40 ${below(40)}주   ← morale_lte 조건이 닿는가`);
   }
+  // 발동 횟수 — 쿨다운을 손대면 여기가 먼저 움직인다 (델타 합은 같은 주 여러 개면 섞인다)
+  const cnt = Object.entries(fireCount).sort((a, b) => b[1] - a[1]).slice(0, 15);
+  console.log("── 발동 횟수 상위 15 ───────────────────────────────────────");
+  for (const [id, n] of cnt) console.log(`  ×${String(n).padStart(3)}  ${id}`);
   // 어느 이벤트가 올리나 — 주간 델타 합이 큰 순
   const top = Object.entries(byEvent)
     .map(([id, v]) => [id, v.reduce((a, b) => a + b, 0), v.length])
