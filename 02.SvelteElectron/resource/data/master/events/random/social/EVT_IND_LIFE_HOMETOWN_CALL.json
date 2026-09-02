@@ -1,0 +1,18 @@
+{
+  "id": "EVT_IND_LIFE_HOMETOWN_CALL",
+  "type": "random",
+  "category": "social",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "weight": 22,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_HOMETOWN_CALL",
+  "decisionTemplateId": "DEC_HS_COMMON_PARENT_CALL"
+}
