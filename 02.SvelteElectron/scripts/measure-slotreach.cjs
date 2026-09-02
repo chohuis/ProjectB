@@ -41,6 +41,11 @@ const PATH_KEY = pi !== -1 ? process.argv[pi + 1] : "indie";
 const POLICY = PATHS[PATH_KEY];
 if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.exit(1); }
 
+// 병영생활 주간 선택 정책 — ball | people | rest | mix (`militaryLife.ts:114` 가 읽는다).
+// 안 주면 그 갈래가 기본으로만 돌아 **군 이벤트 재고의 절반이 안 열린다** —
+// 학습 모드(`PB_STUDY_MODE`)와 같은 함정이다 (2026-09-03 · B-9).
+globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
+
 const M = "resource/data/master/events";
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]));
