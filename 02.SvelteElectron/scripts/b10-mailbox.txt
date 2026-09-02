@@ -1,0 +1,35 @@
+# B-10 — 패키지 빌드에서 소식함 눈확인 (2026-09-03 · 트랙 B)
+#
+#   DRIVE_EXE=<OnePitch.exe> DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/b10-mailbox.txt
+#
+# 보는 것 넷:
+#   ① 소식이 빌드에서 실제로 쌓이나 (dev 우회 없이)
+#   ② 사기 손질 뒤 문안 — effectHint 숫자가 데이터와 같은가
+#   ③ B-4 로 바꾼 일곱 — 본문과 버튼이 맞물리나
+#   ④ 문장 은행 — 같은 이벤트가 두 번 뜰 때 문장이 갈리나
+launch
+wait .btn.primary
+click .btn.primary
+wait .slot-info
+click .slot-info
+wait #pname
+fill #pname|소식확인
+click .btn.next
+wait button.team-list-item
+click button.team-list-item
+click .btn.next
+click .btn.next
+wait .btn.start
+click .btn.start
+wait .go
+ss b10-01-start
+advance 12 --auto
+ss b10-02-w12
+# 소식 탭이 기본이다 (MainPage.svelte:57 currentTab = "news")
+text .feed
+advance 12 --auto
+ss b10-03-w24
+text .feed
+# 소식함 전수 — 화면이 자르는 것 말고 데이터로 센다
+eval (()=>{const m=window.__PB_MAILBOX__;return m?m.length:"(훅 없음)"})()
+quit

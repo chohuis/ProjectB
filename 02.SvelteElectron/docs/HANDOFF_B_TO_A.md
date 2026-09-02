@@ -504,6 +504,68 @@ A 의 `probe:military`(씨앗 3 × 정책 3) 값 **53/62 (85%)** 를 그대로 �
 
 ---
 
+## §K B-10 빌드에서 소식함 눈확인 — 패키지 exe
+
+`DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs`
+· 명령 파일 둘을 남겼다: `scripts/b10-mailbox.txt` · `scripts/b10-decisions.txt`
+(화면이 바뀌면 여기가 먼저 깨진다 — `smoke-dist.txt` 와 같은 역할)
+
+### ✅ ① 소식이 빌드에서 실제로 쌓인다
+
+새 게임 → W19~W26 까지 자동 진행. dev 서버 없이 `app://bundle/index.html` 로
+뜨고 소식함이 찬다. 이벤트 소식·관계 변화·주간 훈련·리그 결과·대회 소식이
+모두 보인다. 스크린샷 `b10-01-start` · `b10-02-w12` · `b10-03-w24` · `b10-04-feed`.
+
+### ✅ ② 사기 손질이 빌드에 실려 있고 **표시가 데이터와 같다**
+
+```
+인터뷰에 응한다      사기 +2, 피로 +3     ← DEC_RAND_LOCAL_INTERVIEW (8 → 2 · B-2)
+소화시키려 가볍게    컨디션 +4, 피로 +3
+솔직하게 말한다      성실도 +2, 사기 +5   ← 1회성이라 안 줄인 것(§F 대로다)
+```
+
+**`사기 +2` 가 화면에 그대로 나온다** — `d43a50b9d` 에서 8 → 2 로 줄이고
+`effectHint` 를 같이 고친 그 값이다. 표시와 동작이 갈리는 게 이 트랙의
+원점인데, 빌드까지 짝이 맞는 걸 눈으로 봤다.
+
+### ⚠ ③ B-4 의 일곱은 **빌드에서 못 봤다** — 안 떴다
+
+회복일·우천·라커룸·스카우트·후배 일곱이 26주 안에 한 번도 안 떴다. 전부
+`POOL_TEAM_LIFE`·`POOL_BODY` 의 가중 하나짜리라 드문 게 맞다(§J 의 창×가중과
+같은 자리다). **데이터로는 확인했다** — 가리키는 결정이 바뀌었고 `check:events`
+5종이 통과한다. 다만 **눈으로는 못 봤다고 적는다.** 더 보려면 씨앗을 바꿔
+여러 판 돌려야 하는데 한 판이 3~4분이다.
+
+### 🔴 계측 함정 하나 — 클릭 루프가 Svelte 를 안 기다린다
+
+선택 블록(`.dec`)은 **고른 소식 하나**의 상세창에만 그려진다(목록엔 없다).
+그래서 목록 줄을 눌러 가며 읽어야 하는데, `page.evaluate` 안에서 `.click()` 을
+동기 루프로 돌리면 **Svelte 가 다시 그리기 전에 읽어 열두 줄이 전부 같은
+내용으로 나온다.** 처음에 그걸 결함으로 읽을 뻔했다 — 한 번 누를 때마다
+기다리게 고쳤고, 명령 파일 주석에 적어 뒀다.
+
+### ✅ 죽은 풀 하나를 살렸다 — `events/pools/military.json`
+
+A 가 `probe:paths --path milsports` 에서 "5종이 0/5" 로 잡아 준 건이다.
+확인해 보니 **`masterStore` 가 그 파일을 아예 안 읽는다** — 959~961 줄이
+`military_common` · `military_sports` · `military_general` 셋만 fetch 한다.
+매니페스트도 안 탄다(`gen-manifest` 는 `POOL_*` + `baseRoll` 인 것만 고른다).
+**어디서도 안 뜨는 문안 다섯**이었다.
+
+지우는 대신 `military_common.json` 으로 옮겼다 — 상무·현역이 같이 타는 통이라
+다섯이 살아난다. 형식을 common 에 맞췄다(`choices` 한 갈래 · `effectHint` 는
+델타에서 지었다 · `cooldownWeeks` 4). **문안은 한 자도 안 고쳤다.**
+
+```
+military_common  14 → 19종      military.json 삭제 (참조 0건 확인)
+MIL_EVT_DRILL_EXCELLENCE 사기+3 피로-2 · FIELD_FATIGUE -1/+4 · UNIT_SUPPORT +2/+1
+MIL_EVT_REST_WINDOW +1/-4 · COMMAND_PRESSURE -2/+2
+```
+
+⚠ 상무 재고가 34 → 39 로 는다. A 의 79%(27/34) 는 이 커밋 **전** 값이다.
+
+---
+
 ## §C 곁가지 둘 — A 가 알아야 할 것
 
 1. **헤드리스는 `choices[0]` 고정이 아니다.** `runAutoAdvance.ts:51` 의
