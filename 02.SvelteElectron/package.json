@@ -138,7 +138,10 @@
     "probe:ovrimpact": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-ovrimpact.cjs",
     "probe:sangmu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-sangmu.cjs",
     "probe:bgsched": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-bgsched.cjs",
-    "probe:morale": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-morale.cjs"
+    "probe:morale": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-morale.cjs",
+    "probe:paths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs",
+    "dist:steam": "npm run pack && node scripts/dist-steam.cjs",
+    "dist:steam:verify": "node scripts/dist-steam.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
