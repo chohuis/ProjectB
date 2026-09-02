@@ -3,14 +3,18 @@
 #   npm run smoke:dist
 #   = cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt
 #
-# 선택자는 IntroScreen.svelte(`.btn.primary` 새 게임) · NewGamePage.svelte
+# 선택자는 IntroScreen.svelte(`.btn.primary` 새 게임) · SaveSlotScreen.svelte(`.slot-info`) · NewGamePage.svelte
 # (`#pname` · `.btn.next` · `button.team-list-item` · `.btn.start`)에서 읽었다.
 # 화면이 바뀌면 여기가 먼저 깨진다 — 그게 이 파일의 역할이다.
 launch
 wait .btn.primary
 click .btn.primary
+# 새 게임 → 세이브 슬롯 화면이 먼저 온다 (SaveSlotScreen.svelte `.slot-info`) — 첫 실행이 여기서 멈췄다
+wait .slot-info
+click .slot-info
 wait #pname
-fill #pname 스모크
+# fill 은 `선택자|값` — 공백으로 적으면 자손 선택자가 돼 30초 타임아웃이 난다
+fill #pname|스모크
 click .btn.next
 wait button.team-list-item
 click button.team-list-item
