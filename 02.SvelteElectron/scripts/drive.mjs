@@ -40,17 +40,30 @@ const COMMANDS = {
     // 쉬운데, 켜져 있으면 Electron이 창 없이 순수 Node로 돌아 `protocol`이
     // undefined가 된다 — main.cjs가 153줄에서 죽고 Playwright는
     // "Process failed to launch!"만 뱉어 원인이 안 보인다.
-    const env = { ...process.env, VITE_DEV_SERVER_URL: DEV_URL };
+    // 🔴 **`DRIVE_EXE` 가 있으면 패키지 실행파일을 띄운다** (2026-09-02 · smoke:dist).
+    //   `release/win-unpacked/OnePitch.exe` 는 dist/ui 를 자기 안에서 읽으므로
+    //   Vite 주소도, main.cjs 인자도 넘기지 않는다 — 넘기면 dev 모드로 오해한다.
+    //   나머지(임시 저장소·창 고르기·스크린샷)는 같다.
+    const packed = process.env.DRIVE_EXE
+      ? path.resolve(APP_DIR, process.env.DRIVE_EXE)
+      : null;
+    if (packed && !fs.existsSync(packed)) {
+      console.log(`ERROR: DRIVE_EXE 가 없다: ${packed} — 먼저 npm run pack`);
+      return;
+    }
+    const env = packed
+      ? { ...process.env }
+      : { ...process.env, VITE_DEV_SERVER_URL: DEV_URL };
     delete env.ELECTRON_RUN_AS_NODE;
 
     app = await electron.launch({
-      executablePath: electronBin,
+      executablePath: packed ?? electronBin,
       // ⚠ **`DRIVE_USER_DATA=1`이면 임시 저장소로 띄운다.**
       // 세이브 슬롯이 셋뿐이라 다 차 있으면 새 게임을 못 만든다. 확인하려고
       // 사용자 세이브를 지우거나 앞으로 돌리면 **그 세이브가 바뀐다** —
       // 화면 확인은 새 게임으로 하라는 규칙과도 어긋난다.
       args: [
-        path.join(APP_DIR, "apps/desktop/main.cjs"),
+        ...(packed ? [] : [path.join(APP_DIR, "apps/desktop/main.cjs")]),
         ...(process.env.DRIVE_USER_DATA
           ? ["--user-data-dir=" + fs.mkdtempSync(path.join(os.tmpdir(), "drive-udd-"))]
           : []),
