@@ -30,6 +30,8 @@ const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 // 진로 판정마다 [진로]·[진로산식] 한 줄 — 지명 산식 분해가 여기서만 보인다
 globalThis.__PB_CAREER_LOG = true;
+// 병영생활 주간 선택 정책 — ball | people | rest | mix (기본 ball · 실제 플레이는 탭에서 고른다)
+globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
 const SEED = Number(process.env.PF_SEED || 20260731);
 const YEARS = Number(process.env.PF_YEARS || 12);
 
@@ -76,6 +78,8 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
       if (!cur.farm && prev.farm && /^pro/.test(cur.stage)) seen.farmOut++;
       if (cur.tournamentGamesOfMyTeam > prev.tournamentGamesOfMyTeam && cur.myGames > prev.myGames) seen.tourStatWeeks++;
       if (cur.military === "면제" && prev.military !== "면제") seen.exempt++;
+      // 병영생활 — 4주마다 한 줄 (감각·아크·관계·캘린더·이벤트). 살았는지도 여기서 본다
+      if (cur.stage === "military" && cur.mil && cur.week % 4 === 0) console.log(`[병영] ${tag} ${JSON.stringify(cur.mil)}`);
       prev = cur;
       if (app.currentWeek() > w0) continue;
       // ── pending ──

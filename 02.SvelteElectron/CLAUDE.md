@@ -620,6 +620,25 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
 ⚠ **주차 창으로 표본을 고르지 마라.** `autoRun` 은 W0 → W32 → W40 으로
 뛴다 — `W15~25` 창을 만들었더니 **한 줄도 안 나왔다.**
 
+## 현역 병영생활 — 배선 한 장 (2026-09-02 · docs/PLAN_MILITARY_LIFE.md 4부)
+
+```
+데이터   resource/data/master/military/{unit,members,calendar,rules}.json + events/pools/military_life.json
+         내용은 사용자 데이터다 — A 는 형식·검사만 · 수치 정본은 rules.json (코드에 숫자 없음)
+상태     protagonist.militaryLife (현역만 · 상무 null) · 전역 뒤 militaryRecord 한 장 · 탭 유무는 careerStage 하나
+루프     usecases/militaryLife.ts  ①전입·전출·진급 ②캘린더(확률 밖) ③선택(탭 nextChoice · 없으면 쉰다)
+         ④Rust calc_military_life_week(씨앗) ⑤이벤트(쿨다운·조건·재적) ⑥소식 ⑦senseCurve·아크
+규칙     utils/militaryLifeRules.ts (순수 · vitest) · 검사 npm run check:militarydata · 계측 probe:paths --path mil
+갈래     advanceWeek 군 갈래에서 `!isSportsUnit && militaryLife` 면 새 루프, 아니면 옛 갈래(상무·옛 세이브)
+전역     dischargeProtagonist → rules.discharge 로 능력치 **한 번** 환산 + 회복 주 + 소식 (복무 중엔 능력치 안 건드림)
+화면     상위 탭 「병역」(features/military · pages/military) · 이벤트 pending 은 EventPendingModal → resolveEventPending
+```
+
+⚠ **`type:"event"` pending 은 2026-09-02 전까지 화면이 없었다** — 군 이벤트가 사람 플레이에서 진행을
+막고 있었고 헤드리스만 풀었다. 이제 `runAutoAdvance.resolveEventPending` 하나를 화면과 헤드리스가 같이 쓴다.
+⚠ 헤드리스 선택 정책은 `globalThis.__PB_MIL_CHOICE`(ball|people|rest|mix) 뿐이다 — 쉼만 고르면 감각이 W37 에 0.
+⚠ DecisionEffect 의 부대원 관계는 `memberRelationDelta` 다 — `relationDelta`(코치·동료 {kind,delta})와 다른 필드.
+
 ## ⚠ 인기도는 결함 목록에서 내렸다 (2026-09-02)
 
 전 무대에서 100 고정인 건 맞다(단조 증가만 있고 감쇠가 없다). 그런데

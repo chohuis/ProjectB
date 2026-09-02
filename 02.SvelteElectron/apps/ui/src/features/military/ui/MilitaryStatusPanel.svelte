@@ -1,8 +1,10 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { gaugeLabel } from "../../../shared/utils/baseballFormat";
+  import { SERVICE_WEEKS } from "../../../shared/usecases/militaryDecision";
 
-  const TOTAL_WEEKS = 100;
+  // 상무 갈래의 병역 탭 머리 (§39 · 현역은 MilitaryHead). 복무 주 정본은 전역 판정과 같은 SERVICE_WEEKS 다
+  const TOTAL_WEEKS = SERVICE_WEEKS;
 
   $: p = $gameStore.protagonist;
   $: remainingWeeks = Math.max(0, TOTAL_WEEKS - p.militaryServiceWeeks);

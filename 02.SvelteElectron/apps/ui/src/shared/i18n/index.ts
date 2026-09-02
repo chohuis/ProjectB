@@ -8,6 +8,7 @@ const STORAGE_KEY = "ui_language";
 const dictionaries: Record<Language, Record<string, string>> = {
   ko: {
     "nav.news": "\uc18c\uc2dd",
+    "nav.military": "\ubcd1\uc5ed",
     "nav.me": "\ub098",
     "nav.home": "\ud648",
     "nav.messages": "\uba54\uc2dc\uc9c0",
@@ -103,6 +104,7 @@ const dictionaries: Record<Language, Record<string, string>> = {
   },
   en: {
     "nav.news": "News",
+    "nav.military": "Military",
     "nav.me": "Me",
     "nav.home": "Home",
     "nav.messages": "Messages",

@@ -1,0 +1,17 @@
+[
+  { "id": "MEM_CO",      "name": "", "rank": "대위", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": ["decides_leave"] },
+  { "id": "MEM_XO",      "name": "", "rank": "중위", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_1SG",     "name": "", "rank": "상사", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 100, "tags": ["decides_leave", "grades_perf:signal"] },
+  { "id": "MEM_SIG_SR",  "name": "", "rank": "상병", "role": "senior",  "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 70,  "tags": ["mentor:signal"] },
+  { "id": "MEM_SUPPLY",  "name": "", "rank": "일병", "role": "peer",    "subunit": "HQ",   "trait": "", "relationStart": 5,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_COOK",    "name": "", "rank": "상병", "role": "peer",    "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 80,  "tags": [] },
+  { "id": "MEM_PLT_LDR", "name": "", "rank": "소위", "role": "officer", "subunit": "PLT1", "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_PLT_SGT", "name": "", "rank": "중사", "role": "officer", "subunit": "PLT1", "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_SQ_LDR",  "name": "", "rank": "하사", "role": "officer", "subunit": "SQ1",  "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": ["grades_perf:mortar"] },
+  { "id": "MEM_GUNNER",  "name": "", "rank": "병장", "role": "senior",  "subunit": "SQ1",  "trait": "", "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 30,  "tags": ["mentor:mortar"] },
+  { "id": "MEM_ASST",    "name": "", "rank": "상병", "role": "senior",  "subunit": "SQ1",  "trait": "", "relationStart": 5,   "joinWeek": 0,  "leaveWeek": 62,  "tags": [] },
+  { "id": "MEM_AMMO_PR", "name": "", "rank": "이병", "role": "peer",    "subunit": "SQ1",  "trait": "", "relationStart": 10,  "joinWeek": 0,  "leaveWeek": 100, "tags": ["ball_partner"] },
+  { "id": "MEM_DRIVER",  "name": "", "rank": "상병", "role": "peer",    "subunit": "SQ1",  "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 88,  "tags": [] },
+  { "id": "MEM_JR_1",    "name": "", "rank": "이병", "role": "junior",  "subunit": "SQ1",  "trait": "", "relationStart": 5,   "joinWeek": 36, "leaveWeek": 100, "tags": [] },
+  { "id": "MEM_JR_2",    "name": "", "rank": "이병", "role": "junior",  "subunit": "HQ",   "trait": "", "relationStart": 5,   "joinWeek": 62, "leaveWeek": 100, "tags": [] }
+]

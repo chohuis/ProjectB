@@ -7,6 +7,7 @@
   import { HS_REGIONS } from "../../../shared/utils/leagueTeams.generated";
   import { hsRegionMeta } from "../../../shared/utils/hsRegionLabel";
   import TeamMark from "../../team/ui/TeamMark.svelte";
+  import { SERVICE_WEEKS } from "../../../shared/usecases/militaryDecision";
 
   /**
    * B3 우측 패널 — **"최근 로그"에서 "내 상태"로 바뀌었다.**
@@ -56,15 +57,17 @@
     return `${days}일 뒤`;
   }
 
+  // ⚠ 반올림한다 — 병영생활 주간 계산(Rust)이 소수를 돌려줘 "사기 68.6280972890625" 가 그대로 찍혔다
   $: gauges = [
-    { key: "컨디션", value: pl.condition, inverted: false },
-    { key: "피로",   value: pl.fatigue,   inverted: true  },
-    { key: "사기",   value: pl.morale,    inverted: false },
+    { key: "컨디션", value: Math.round(pl.condition), inverted: false },
+    { key: "피로",   value: Math.round(pl.fatigue),   inverted: true  },
+    { key: "사기",   value: Math.round(pl.morale),    inverted: false },
   ];
 
-  // 상무 복무 중에는 소속팀 경기가 없다 — 빈 칸 대신 남은 주차를 보여준다
+  // 복무 중에는 소속팀 경기가 없다 — 빈 칸 대신 남은 주차를 보여준다
+  // ⚠ 예전엔 104 가 박혀 있었다 — 전역 판정(`SERVICE_WEEKS` · 100)과 4주 어긋났다
   $: militaryWeeksLeft = p.careerStage === "military"
-    ? Math.max(0, 104 - p.militaryServiceWeeks)
+    ? Math.max(0, SERVICE_WEEKS - p.militaryServiceWeeks)
     : null;
 </script>
 

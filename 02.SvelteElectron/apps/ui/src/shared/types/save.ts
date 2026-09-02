@@ -315,6 +315,14 @@ export interface ProtagonistSave {
   militaryHiatusStage: CareerStage | null;
   militaryHiatusUniversityWeek: number | null;
   militaryDeferPenalty: number;
+  /**
+   * 현역 군 생활 상태 (2026-09-02 · PLAN_MILITARY_LIFE 4부 §24).
+   * 입대 주에 `enlistProtagonist` 가 만들고 전역 때 `militaryRecord` 로 접은 뒤 null.
+   * 탭 유무는 `careerStage` 가 정한다 — 이 필드는 그 근거가 아니다.
+   */
+  militaryLife?: import("./militaryLife").MilitaryLifeState | null;
+  /** 전역 때 접은 군 경력 한 장 (§30) — 현역만 · 상무는 없다 */
+  militaryRecord?: import("./militaryLife").MilitaryRecord | null;
   sportsUnitApplied: boolean;
   /**
    * 은퇴 기록. **있으면 커리어가 끝난 것이다.**

@@ -25,9 +25,12 @@ A
 │              🔴 **독립 재지원 — 3씨앗 5~7년 매년 지원 · 지명 0회** → A-2 로 · ⚠ 트레이드·발탁·면제·강등→복귀·수술 은퇴: 프로 시즌 1~2년뿐이라 판정 불가 — KBL 지명 씨앗 필요
 ├─ 2. 🔄 1 에서 나온 결함 수정
 │     ├─ ✅ ① 독립 재지원 지명 0 — 원인은 **평생 누적 부상 감점** (씨앗 03: OVR 66→70→73→75 인데 감점 30→42→42→44 · 합 34→25→42→44)
-│     │     → 최근 세 시즌 창으로 좁힘 (149ab3217 · TS 만 · 고교 지원자 결과 그대로) · ⬜ 고친 뒤 재측정 (씨앗 03·0731 · "몇 년 안에 지명되나")
+│     │     → 최근 세 시즌 창으로 좁힘 (149ab3217 · TS 만 · 고교 지원자 결과 그대로) · ✅ **재측정 — 같은 씨앗 03: 감점 42→12→4 · 독립 4년차 90점 지명 → KBL 인천** (전엔 해외행)
 │     │     ⚠ 창을 좁혀도 독립 4년차는 71 근처 — 문턱 78·대회 −2·에이스 0 은 밸런스라 **사용자에게 묻는다**
-│     └─ ⬜ ② 나머지 미도달 행(트레이드·발탁·면제·강등→복귀·수술 은퇴)은 KBL 지명 씨앗(20260802 · 2029 KBL)이 돌고 있다 — 결과 보고 가른다
+│     └─ ✅ ② 미도달 다섯 행 — KBL 7시즌(씨앗 02·0731)에도 0 → 코드 조건을 읽어 가름: **전부 상황, 결함 아님**
+│           강등 = 팀 최하위 OVR 2명(market.ts 콜다운 · 주인공 포함) · 발탁 = ovr+form×8 상위 20(national_team.rs) · 면제 = 발탁→국제대회 우승
+│           수술 은퇴 = surgery 부상 뒤 나이별 확률(advanceWeek) · 트레이드 = Rust 제안에 주인공이 자산으로 걸릴 때(market.ts:567)
+│           → 씨앗을 더 돌려도 안 나온다. 표적 시나리오(devScenarios.ts) 눈확인은 C-11 빌드 확인에 얹는다
 ├─ 3. ✅ 복무 중 소속 리그 — 씨앗 3 확인 (20260731 · 20260802 · 20260803 전부 1020/0 → 1020/1020) f1e8a6d16
 ├─ 4. ✅ 밸런스 기준선 재측정 — BALANCE_BASELINE_2026-09-02.md (씨앗 3 · 144경기)
 ├─ 5. ✅ 밸런스 표 — 남긴 것 다섯(1군 ERA · 홈런 · 2군 ERA/타율 · 포일 · 대학 ERA) → 09-02 §4
@@ -35,14 +38,22 @@ A
 ├─ 7. ✅ 보크 12.4 → **5.4/팀** (씨앗 3: 6.7 · 4.3 · 5.1 · 목표 3~8) — 상수 셋 절반 · 폭투 33~44 · 포일 4.4~5.6 은 그대로
 ├─ 7.5 ✅ 해외 2군 직행 — 신청(3곳) → **구단 제안** (사용자 확정: 부모 1군 전력 문턱만 · 상한 없음) 2a708abbd · 화면 둘은 C-1.5
 ├─ 8. ⬜ B 재병합 (B 가 당겨 두면) · B·C 결함 회신 (인계 둘을 매 회차 읽는다)
-├─ 9. ⬜ 회귀 전량 (vitest · cargo · check 32 · smoke · test:releasescope) · 문서 갱신 (CLAUDE.md)
+├─ 9. 🔄 회귀 전량 — ✅ vitest 195/1,728 · ✅ cargo 312 · ✅ svelte-check 0 · ✅ smoke:dist · check:* 33 → **29 OK · 4 FAIL**
+│     ├─ ✅ check:teamrefs — CareerEndScreen.svelte 주석 속 예시 팀 ID 2건을 지웠다(표시용도 샘플도 아니고 주석이었다) → C
+│     ├─ ✅ check:namelocale — HallOfFamePage·MatchPage → teamMap(언어 반영본) → C
+│     ├─ ✅ check:protransition — 기본 씨앗 03 → 02 (352d47f9f) · 재실행 통과 (2029 프로 1년차 · 연도·나이 ok)
+│     ├─ ⚠ check:determinism(67분) — 2026 W0 NPC 부상 상태부터 두 실행이 갈린다 · seedOf 는 0 을 안 낸다(실측) → Rust thread_rng 폴백 자리(npc_sim 621·4374) 중 하나가 W0 에 씨앗 없이 불린다 · 결정성 정책(계측 재현 수준)상 🛑 1.1
+│     ├─ ✅ test:releasescope — 옛 전제(해외 범위 밖) 세 줄 + 주석에 걸린 변이 치환 + 팀 목록 l10n 스토어, 다섯 실패가 전부 낡은 잣대였다 · 변이(Set 에 넣으면 닫힘) 통과
+│     ├─ ✅ test:migration 6 ok
+│     └─ ✅ 문서 갱신 — CLAUDE.md 병영 배선 한 장 (2728f5de5)
 ├─ 10. 빌드 · Steam
 │     ├─ ✅ 현 상태 — dir 산출물이 곧 디포 · Cloud 는 Auto-Cloud (PLAN_RELEASE §8)
 │     ├─ ✅ dist:steam 검증기 (d6aa846e0) · ✅ 새 pack 검증 OK — 파일 1,506 · 441.4 MB · 누출 0 (09-02)
 │     ├─ ✅ smoke:dist 명령파일 + drive DRIVE_EXE (e1b2ba197) · 🔴→✅ 첫 실행이 **패키지 앱이 아예 안 뜨는 결함**을 잡음 —
 │     │     main.cjs 가 `dev-server.config.cjs` 를 요구하는데 build.files 에 없었다(MODULE_NOT_FOUND · "Error" 대화상자 · stderr 빈 채).
 │     │     files 에 추가 + 검증기에 상대 require↔asar 대조 + 드라이버 ERROR 시 exit 1 · ✅ 재 pack → verify OK → **smoke 통과** (새 게임 → W5 · 명령 파일의 슬롯 단계·fill 구문 두 곳 고침)
-│     ├─ ⬜ 구 세이브 3종 마이그레이션 · test:migration
+│     ├─ 🔄 구 세이브 — ✅ test:migration 6 ok · ✅ 이 기계의 옛 파일(5월 v1 slot_A.json · 6월 v2 projectb_v2.db · master_overlay.db)을 복사해 패키지 exe 로 열면 죽지 않고 "저장된 기록이 없습니다"(v1·v2 는 R3a-4d 에서 폐기 — 정상)
+│     │     ⚠ 6월·8월 v3 빌드의 slot3_*.db 가 이 기계엔 없다 → **사용자 확인**: 그런 세이브 폴더가 있으면 복사해 `DRIVE_USER_DATA=<복사본> npm run smoke:oldsaves` (원본 절대 넘기지 말 것 · 앱이 열면서 고친다)
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     └─ ⬜ 최종 빌드 → 프리즈 → 업로드 후보 → 사용자 확인
 ├─ ✅ 오늘 닫은 것 — 독립 순위표 · 배경 리그 정지 · 대학 0경기 · 시즌 여는 자리 6곳 ·
@@ -51,7 +62,11 @@ A
 ├─ 11. 📐 현역 군 생활 기획안 — PLAN_MILITARY_LIFE.md ✅ 1부(무엇) · 2부(어떻게) · **3부(설정: 화천 · 전투지원중대 조직도 · 통신병/박격포병 랜덤 · 화천 캘린더 · 확장 8)** · **§22 상위 탭 「병역」** · 결정 ✅
 │     └─ ✅ **4부 구현 명세 §23~39** (상태·주간 루프·자원 수식·카드·이벤트 형식·캘린더·전역·소식·화면·검사·순서 · 이벤트 카탈로그 60 · 부대원 15장 초안 · 아크/휴가/상벌 · 상무 탭)
 │           · §35 사용자 확정(제안값 1차 · 보직 반반 · 선택은 탭에서 · 착수는 기획 뒤) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
-│     └─ 🛑 1.1 첫 항목 — A 틀·데이터 형식·검사 4일 · 사용자 내용 · B 이벤트 변환 3일 · C 화면 3일
+│     └─ 🔄 **구현 착수 (사용자 09-02 13:40 "지금 구현 문서 기준으로 A·B·C 에 넣어 진행")** — 4부 §34 순서
+│           ├─ 12. ✅ A ① 타입 militaryLife.ts · 세이브 필드+migrate · 데이터 넷(unit/members 15장/calendar 20주/rules) · 풀 military_life.json 캘린더 20종 · 로더 · **check:militarydata**(변이 2종 실패 확인)
+│           ├─ 13. ✅ A ② Rust calc_military_life_week(씨앗 · cargo 5) · 주간 루프 usecases/militaryLife.ts(§25 ①~⑦) · 순수 규칙 utils/militaryLifeRules.ts(vitest 16) · 입대 시 상태 생성 · 이벤트 선택 효과 훅 · 상무·옛 세이브는 옛 갈래 · build:native 13:57 · ⏳ 헤드리스 probe:paths mil 6시즌
+│           ├─ 14. 🔄 A ③ ✅ 전역 환산(rules.discharge · 능력치 한 번 · 회복 주 덮음) · ✅ 군 경력 한 장(militaryRecord · 소식 한 통) · ✅ 소식(이벤트·전입/전출/진급·월간·전역) · ⬜ 재회 훅(전역 뒤 W10·W30 조건 이벤트 — B 문안 뒤) · ✅ probe:military 명령 등록(= probe:paths mil · PF_SEED · PB_MIL_CHOICE) — 밸런스 조정 실행은 B-11 뒤(랜덤 이벤트가 있어야 재는 뜻이 있다) · ✅ probe:paths mil 씨앗 0731 — 정책 공: 감각 90(상한) · 섞음: 59 · 캘린더 20/20 · 휴가 20일 · 성과 4건 · 아크 2 (100주 완주 · 랜덤 이벤트는 B-11 전이라 0)
+│           └─ B·C 몫은 각 트리 (B-11 · C-12)
 └─ 🛑 1.1 — 독립 시장 · 중도 콜업 · 2군 예산 · 전역 기량 · 일반병 화면 · 동적 치환 ·
         상무 섞임 · FA 정교화 · OVR 드리프트 · 장타율 .461
 ```
@@ -74,11 +89,12 @@ B
 ├─ 8. ⬜ extract-modals 당겨 병합 요청 (A 가 병합한다)
 ├─ 9. ⬜ 전 무대 도달률 최종 한 장 (고교·대학·독립·프로·군)
 ├─ 10. ⬜ 빌드에서 소식함 눈확인 → 결함은 HANDOFF_B_TO_A
+├─ 11. ⬜ **병역** — 이벤트 60종 골격을 §28 형식으로 `events/pools/military_life.json` 에 (§36 표 그대로 · 문안 초안 포함) · 기존 군 풀 34종에 cooldownWeeks 추가 · 월간 부대 소식 문안 · A ① 뒤 check:militarydata 통과
 ├─ ✅ 병합됨 14커밋 (9f8ad99b5)
 └─ 🛑 동적 치환 23종
 ```
 
-## C — 화면 · IPC
+## C — 화면 · IPC (A 가 연 세션 · ⚠ 09-02 14:50 API 한도로 멈춤 — 16:30 재개)
 
 ```
 C
@@ -88,7 +104,7 @@ C
 │     ├─ ⬜ 대학 — 순위표가 찬다
 │     ├─ ⬜ 군 복무 중 — 다른 리그 순위표
 │     └─ ⬜ 프로 일정에 시범경기 4주 · isFriendly 구분
-├─ 1.5 ⬜ 🔴 해외 2군 **제안** 화면 둘 — 허브 「신청」 버튼 → 안내 한 줄 · 결과 모달 최대 28개 (HANDOFF_A_TO_C §0.45 · A 판정은 끝났다)
+├─ 1.5 ✅ 해외 2군 **제안** 화면 둘 — 허브: 「신청」 버튼 → 안내 한 줄(제안 수를 `overseasOfferTeams` 로 미리 셈) + 읽기 전용 「구단별 문턱 보기」(부모 1군 전력으로) · 결과 모달: 리그·1군 전력★ · 스크롤 (HANDOFF_A_TO_C §0.45)
 ├─ 2. ⬜ 2군 탭 — 강등된 주인공이 자기 리그를 본다
 ├─ 3. ⬜ 재정 4탭 · 투자 3택 (프로 · 현금 500만 이상)
 ├─ 4. ⬜ 지명 거부 → 대학/독립 폴백 경로
@@ -99,6 +115,8 @@ C
 ├─ 9. ⬜ 새 게임 → 고교 → 진로 → 첫 프로 시즌 한 줄
 ├─ 10. ⬜ 스크린샷 5장 (1920×1080 정확히) · 스토어 자산
 ├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드
+├─ 12. ✅ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility 복무 중만·맨 앞 · me>training 숨김 · 입대 주 currentTab 전환) + §32 화면 넷 `pages/military/MilitaryPage.svelte` + `features/military/ui/Military{Head,DailyPane,MembersPane,CalendarPane,CareerPane}.svelte` (상무는 옛 패널 + 한 줄 · §39 는 나중) · 공 카드 "부상 위험" 띠 `rules.fatigue.injuryWarn` · 눈확인 새 게임 → dev 우회 입대 → W7 (HANDOFF_C_TO_A 맨 위) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
+├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 └─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
 ```

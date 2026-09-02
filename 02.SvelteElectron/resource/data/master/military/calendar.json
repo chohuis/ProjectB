@@ -1,0 +1,22 @@
+[
+  { "week": 1,   "event": "MIL_CAL_ENTRY",         "label": "입소",               "fatigue": 8,  "ballDelta": -2, "noChoice": true },
+  { "week": 2,   "event": "MIL_CAL_SHOOTING",      "label": "사격",               "ballDelta": -2, "noChoice": true },
+  { "week": 4,   "event": "MIL_CAL_MARCH",         "label": "행군",               "fatigue": 10, "ballDelta": -2, "noChoice": true },
+  { "week": 5,   "event": "MIL_CAL_GRADUATION",    "label": "수료 · 배치 통보",    "fatigue": -5, "noChoice": true },
+  { "week": 6,   "event": "MIL_CAL_FIRST_DAY",     "label": "자대 첫날" },
+  { "week": 12,  "event": "MIL_CAL_WORKS_SPRING",  "label": "진지 공사 (봄)",      "noChoice": true },
+  { "week": 16,  "event": "MIL_CAL_FIRE_1",        "label": "포사격훈련" },
+  { "week": 20,  "event": "MIL_CAL_FIRST_LEAVE",   "label": "첫 정기휴가",         "leaveDays": 10 },
+  { "week": 28,  "event": "MIL_CAL_INSPECTION_1",  "label": "대대 지휘검열" },
+  { "week": 35,  "event": "MIL_CAL_PROMOTE_2",     "label": "상병 진급" },
+  { "week": 44,  "event": "MIL_CAL_WINTER",        "label": "혹한기 훈련",         "fatigue": 12, "ballDelta": -3, "noChoice": true },
+  { "week": 46,  "event": "MIL_CAL_FESTIVAL",      "label": "산천어축제" },
+  { "week": 52,  "event": "MIL_CAL_SECOND_LEAVE",  "label": "정기휴가 2",          "leaveDays": 10 },
+  { "week": 61,  "event": "MIL_CAL_PROMOTE_3",     "label": "병장 진급" },
+  { "week": 64,  "event": "MIL_CAL_WORKS_FALL",    "label": "진지 공사 (가을)",    "noChoice": true },
+  { "week": 68,  "event": "MIL_CAL_FIRE_2",        "label": "포사격훈련 2" },
+  { "week": 70,  "event": "MIL_CAL_RANGER",        "label": "유격 훈련",           "fatigue": 10, "ballDelta": -3, "noChoice": true },
+  { "week": 84,  "event": "MIL_CAL_INSPECTION_2",  "label": "대대 지휘검열 2" },
+  { "week": 96,  "event": "MIL_CAL_D30",           "label": "전역 30일" },
+  { "week": 100, "event": "MIL_CAL_DISCHARGE",     "label": "전역",                "noChoice": true }
+]

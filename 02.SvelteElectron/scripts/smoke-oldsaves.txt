@@ -1,0 +1,18 @@
+# smoke:oldsaves — 구 세이브(5월 v1 json · 6월 v2 db)를 복사한 userData 로 띄워 "이어하기"가 사는지 (2026-09-02)
+#
+#   1) 사용자 세이브 폴더(%APPDATA%/projectb-desktop/saves)를 임시 폴더 <tmp>/saves 로 **복사**한다 (원본 불변)
+#   2) DRIVE_USER_DATA=<tmp> node scripts/drive.mjs scripts/smoke-oldsaves.txt
+#
+# 보는 것: 인트로의 「이어하기」(.btn.cont)가 활성인가 · 슬롯 화면에 옛 슬롯이 보이는가 · 열어서 한 주 진행이 되는가.
+# 페이지 오류([pageerror]·[page error])가 한 줄이라도 찍히면 마이그레이션 결함이다.
+launch
+wait .btn.primary
+ss oldsaves-00-intro
+click .btn.cont
+wait .slot-info
+ss oldsaves-01-slots
+click .slot-info
+ss oldsaves-02-opened
+advance 1 --auto
+ss oldsaves-03-w+1
+quit

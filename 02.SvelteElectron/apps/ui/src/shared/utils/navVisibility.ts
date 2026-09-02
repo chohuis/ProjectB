@@ -30,6 +30,10 @@ type Ctx = Pick<ProtagonistSave, "careerStage" | "retirement"> & {
 const ALWAYS = () => true;
 
 const NAV: Record<MainTabId, (p: Ctx) => boolean> = {
+  // 🔴 **입대하면 나오고 전역하면 사라진다** (사용자 확정 09-02 밤 · PLAN_MILITARY_LIFE §22).
+  //   근거는 `careerStage` 하나다 — 다른 플래그를 두면 한쪽만 바뀐 채 남는다.
+  //   상무(체육부대)도 careerStage 가 "military" 라 같은 규칙 · 안의 내용만 다르다.
+  military: (p) => p.careerStage === "military",
   news:     ALWAYS,
   me:       ALWAYS,
   team:     ALWAYS,
@@ -39,13 +43,14 @@ const NAV: Record<MainTabId, (p: Ctx) => boolean> = {
 };
 
 /** 사이드바에서 "나"와 "세계"를 가르는 자리 — 이 다음부터 세계 쪽이다 */
-export const NAV_ORDER: MainTabId[] = ["news", "me", "team", "league", "people", "schedule"];
+// 복무 중엔 병역이 "나" 그룹보다 앞이다 — "지금 내 생활"이 먼저고 나머지가 "밖의 세상"이다 (§22)
+export const NAV_ORDER: MainTabId[] = ["military", "news", "me", "team", "league", "people", "schedule"];
 export const NAV_GROUP_BREAK_AFTER: MainTabId = "me";
 
 const ME: Record<MeTabId, (p: Ctx) => boolean> = {
   status:       ALWAYS,
-  // 은퇴하면 더 클 일이 없다
-  training:     (p) => !p.retirement,
+  // 은퇴하면 더 클 일이 없다 · 복무 중엔 병역 > 일과가 대신한다 (§22 — 현역은 능력치를 안 건드린다)
+  training:     (p) => !p.retirement && p.careerStage !== "military",
   // 재학 중에만. 예전 `showAcademicsTab`와 같은 조건이고 정본을 여기로 옮겼다
   academics:    (p) => p.careerStage === "highschool" || p.careerStage === "university",
   // ⚠ 재정은 아마추어도 연다. `FinancePage`가 "학생·독립 무대에는 스폰서가

@@ -10,7 +10,7 @@
   //   이름·기록을 그때 조회할 수 있다. 다만 세이브가 커지면 훑는 비용이 드니
   //   **한 번만 만들고 반응형 캐시로 둔다.**
   import { gameStore } from "../../shared/stores/game";
-  import { masterStore } from "../../shared/stores/master";
+  import { teamMap } from "../../shared/stores/master";
 
   /** 목록 한 줄 */
   type Row = {
@@ -23,7 +23,8 @@
   $: hof = $gameStore.hallOfFame ?? {};
   $: npcById = new Map(($gameStore.npcs ?? []).map((n) => [n.npcId, n]));
   $: teamName = (id: string) =>
-    $masterStore.teams.find((t) => t.id === id)?.name ?? id;
+    // 언어 반영본(teamMap)을 읽는다 — 원본 스토어를 읽으면 이 화면만 한국어로 남는다 (check:namelocale)
+    $teamMap.get(id)?.name ?? id;
 
   // ⚠ **헌액 순서가 아니라 점수 순으로 보인다** — 명예의 전당은 연표가 아니라
   //   서열이다. 같은 점수면 먼저 헌액된 쪽이 위다.

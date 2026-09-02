@@ -23,7 +23,11 @@ const arg = (n, d) => {
   return i !== -1 ? (parseInt(process.argv[i + 1], 10) || d) : d;
 };
 const SEASONS = arg("seasons", 5);
-const SEED = arg("seed", 20260803);
+// ⚠ 기본 씨앗을 20260803 → 20260802 로 (2026-09-02). 보크 상수·일정(144경기)·부상 창이 바뀐 세상에서
+//   03 은 고교 미지명 → 군 → 독립(재지명은 2034 · 9시즌째)이라 "5시즌 안에 프로" 를 못 밟는다.
+//   02 는 2029 고교 지명 → KBL 이다(probe:paths 실측). 이 검사는 배선(연도·나이·전환)을 보는 것이지
+//   지명 확률을 보는 게 아니라, 프로에 닿는 씨앗이어야 한다.
+const SEED = arg("seed", 20260802);
 
 const log = (s) => process.stdout.write(s + "\n");
 

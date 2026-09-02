@@ -9,6 +9,10 @@
   import IndependentApplyModal from "./IndependentApplyModal.svelte";
   import OverseasApplyModal from "./OverseasApplyModal.svelte";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
+  import { overseasOfferTeams, calcIndividualScore } from "../../../shared/utils/universityUtils";
+  import { firstTeamIdOf } from "../../../shared/utils/ids";
+  import { ALL_TEAMS_BY_LEAGUE } from "../../../shared/utils/leagueScheduler";
+  import { isLeagueInScope } from "../../../shared/config/releaseScope";
 
   let resolving = false;
   let draftChecked = false;
@@ -26,14 +30,24 @@
   let universityModalOpen = false;
   let independentModalOpen = false;
   /**
-   * 해외 2군 직행 (실플 ②).
+   * 해외 2군 — **신청이 아니라 제안이다** (사용자 확정 09-02 · HANDOFF_A_TO_C §0.45).
    *
-   * ⚠ **무대 게이트를 안 건다.** 고교·대학·독립 셋 다에서 지원할 수 있고,
-   *   자격은 팀별 문턱(OVR + 개인 기여)이 본다 — 모달이 그걸 보여준다.
+   * 🔴 예전엔 여기서 3곳을 골라 저장했다. 판정이 더는 안 읽는다 —
+   *   W47 에 해외 2군 전부를 **부모 1군 전력** 문턱으로 보고 넘는 팀이 결과 화면에 온다.
+   *   여기는 그 수를 **판정과 같은 함수**(`overseasOfferTeams`)로 미리 세어 한 줄로 보여준다.
+   * ⚠ 무대 게이트는 없다 — 고교·대학·독립 셋 다 제안을 받을 수 있다.
    */
-  let overseasChoices: string[] = [];
-  let overseasChecked = false;
   let overseasModalOpen = false;
+  $: myOvr = $gameStore.protagonist.pitching.ovr;
+  $: myScore = calcIndividualScore($gameStore.protagonist.careerRecords ?? []);
+  $: overseasFarm = ["LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]
+    .filter((lid) => isLeagueInScope(lid))
+    .flatMap((lid) => ALL_TEAMS_BY_LEAGUE[lid] ?? [])
+    .map((id) => {
+      const parent = firstTeamIdOf(id);
+      return { id, parentPower: parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined };
+    });
+  $: overseasCount = overseasOfferTeams(myOvr, myScore, overseasFarm).length;
 
   function teamName(teamId: string): string {
     return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
@@ -46,8 +60,6 @@
     independentChoices = apps?.independentChoices ? [...apps.independentChoices] : [];
     universityChecked = universityChoices.length > 0;
     independentChecked = independentChoices.length > 0;
-    overseasChoices = apps?.overseasChoices ? [...apps.overseasChoices] : [];
-    overseasChecked = overseasChoices.length > 0;
   }
   $: setupDefaults();
 
@@ -57,7 +69,6 @@
       draftApplied: draftChecked,
       universityChoices: universityChoices.slice(0, 3),
       independentChoices: independentChoices.slice(0, 3),
-      overseasChoices: overseasChoices.slice(0, 3),
     });
     await gameStore.save();
   }
@@ -136,19 +147,17 @@
         {/if}
       {/if}
 
-      <!-- 해외 2군 직행 (실플 ②) — 무대 게이트가 없다. 자격은 모달이 보여준다 -->
-      <button class="opt-btn" type="button" on:click={() => (overseasModalOpen = true)}>
-        <span class="opt-label">해외 2군 신청 {overseasChecked ? `✓ (${overseasChoices.length}/3)` : ""}</span>
-      </button>
-      {#if overseasChecked}
-        <div class="opt-box"><div class="list">{#each overseasChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
-      {/if}
+      <!-- 해외 2군 — 신청이 아니라 제안 (§0.45). 여기선 안내 한 줄 + 문턱 보기 -->
+      <div class="opt-box overseas">
+        <span class="opt-label">해외 2군 제안은 시즌 결과(W47)에 온다 — 지금 내 OVR {myOvr}·기여 {Math.round(myScore)}로는 <strong>{overseasCount}/{overseasFarm.length}팀</strong></span>
+        <button class="link" type="button" on:click={() => (overseasModalOpen = true)}>구단별 문턱 보기</button>
+      </div>
 
       <button class="opt-btn danger" type="button" on:click={chooseMilitaryNow}>
         <span class="opt-label">군입대 (즉시 확정)</span>
       </button>
     </div>
-    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked || overseasChecked || isIndependent)} on:click={submitApplications}>신청 완료</button>
+    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked || isIndependent)} on:click={submitApplications}>신청 완료</button>
   </div>
 </div>
 
@@ -183,19 +192,8 @@
   />
 {/if}
 {#if overseasModalOpen}
-  <OverseasApplyModal
-    initialSelected={overseasChoices}
-    on:close={async () => {
-      overseasModalOpen = false;
-      await persistHubState();
-    }}
-    on:confirm={async (e) => {
-      overseasChoices = e.detail.selected.slice(0, 3);
-      overseasChecked = overseasChoices.length > 0;
-      overseasModalOpen = false;
-      await persistHubState();
-    }}
-  />
+  <!-- 읽기 전용 전망 — 저장할 게 없다 -->
+  <OverseasApplyModal on:close={() => (overseasModalOpen = false)} />
 {/if}
 
 <style>
@@ -206,6 +204,11 @@
   .body-text { margin: 0; color: var(--ink); }
   .options { display: grid; gap: 8px; }
   .opt-box { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--panel); }
+  .opt-box.overseas { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .opt-box.overseas .opt-label { font-weight: 500; font-size: 13px; color: var(--ink-mid); }
+  .opt-box.overseas strong { color: var(--ink); font-weight: 800; }
+  .link { background: none; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-mid); font-size: 12px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
+  .link:hover { border-color: var(--line-strong); color: var(--ink); }
   .opt-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: block; width: 100%; }
   .opt-btn.danger { background: rgba(179, 49, 31, 0.09); border-color: var(--bad); }
   .opt-label { color: var(--ink); font-weight: 600; }

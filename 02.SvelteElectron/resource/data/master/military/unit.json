@@ -1,0 +1,11 @@
+{
+  "id": "UNIT_CSC_HWACHEON",
+  "name": "제00보병사단 00연대 전투지원중대",
+  "location": "강원 화천",
+  "flavor": "전방. 겨울이 길다. 박격포 소리가 산에 울린다.",
+  "roles": [
+    { "id": "signal", "label": "통신병",           "subunit": "HQ",  "dutyIntensity": 2, "ballAccess": 2 },
+    { "id": "mortar", "label": "4.2인치 박격포병", "subunit": "SQ1", "dutyIntensity": 4, "ballAccess": 1 }
+  ],
+  "roleAssign": "random"
+}

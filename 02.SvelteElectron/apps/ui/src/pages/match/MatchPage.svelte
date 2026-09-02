@@ -3,7 +3,7 @@
   import { get } from "svelte/store";
   import BaseballField from "../../features/match-view/ui/BaseballField.svelte";
   import { gameStore } from "../../shared/stores/game";
-  import { masterStore, teamsL10n } from "../../shared/stores/master";
+  import { masterStore, teamsL10n, teamMap } from "../../shared/stores/master";
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
@@ -161,9 +161,9 @@
   $: defenseTeamId = half === "top" ? matchContext?.homeTeamId : matchContext?.awayTeamId;
   /** 공격 팀 — 수비의 **반대**다. 타자·주자가 이 색을 입는다 */
   $: offenseTeamId = half === "top" ? matchContext?.awayTeamId : matchContext?.homeTeamId;
-  $: defenseColors = (($masterStore.teams.find((t) => t.id === defenseTeamId)?.colors)
+  $: defenseColors = (($teamMap.get(defenseTeamId ?? "")?.colors)
     ?? ["#7a8a99", "#e8e8c8"]) as readonly [string, string];
-  $: offenseColors = (($masterStore.teams.find((t) => t.id === offenseTeamId)?.colors)
+  $: offenseColors = (($teamMap.get(offenseTeamId ?? "")?.colors)
     ?? ["#b0503f", "#f0ecc8"]) as readonly [string, string];
 
   $: awayAtBat = half === "top" ? awayLineupIndex % Math.max(1, awayLineup.length) : -1;

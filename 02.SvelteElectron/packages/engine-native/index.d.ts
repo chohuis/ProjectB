@@ -308,6 +308,8 @@ export declare function weekCalcHsAdmissionsNative(p: string): string
 export declare function weekCalcExamResultNative(p: string): string
 export declare function weekCalcWeeklyStudyNative(p: string): string
 export declare function weekCalcSemesterResultNative(p: string): string
+/** 현역 병영생활 주간 계산 (PLAN_MILITARY_LIFE 4부 §26) — 상무는 `week_calc_military_native` 그대로 */
+export declare function weekCalcMilitaryLifeNative(p: string): string
 export declare function weekCalcMilitaryNative(p: string): string
 export declare function weekCalcNpcFallbackNative(p: string): string
 export declare function weekRollRandomBatchNative(count: number, seed: number): string

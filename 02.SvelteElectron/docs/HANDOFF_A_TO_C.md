@@ -52,6 +52,23 @@ C 가 고칠 화면 둘 (전부 C 소유):
 확인하면 못 뜨는 게 정상이니 결함으로 적지 마라. 검증은 `npm run dist:steam:verify`
 (상대 require↔asar 대조가 들어갔다) → `npm run smoke:dist` (ERROR 면 exit 1).
 
+## 0.48 🔴 이벤트 pending 을 그리는 화면이 없다 — 병역 착수와 같이 (09-02 밤)
+
+`type: "event"` pending 은 군 복무 주간(옛 갈래·새 병영생활 갈래 둘 다)이 매주 최대 한 건 올린다.
+그런데 그걸 **그리는 Svelte 가 한 곳도 없다** — `resolvePendingAction("event", …)` 호출 0 ·
+`choices` 를 그리는 컴포넌트 0 (A 실측). 헤드리스 `runAutoAdvance.handleEvent` 만 푼다.
+사람이 복무 중이면 상단 버튼이 "이벤트 처리" 로 바뀌고 누르면 소식 탭으로 갈 뿐 **진행이 막힌다.**
+
+할 것 (C-13 · PROGRESS_TREE): 이벤트 모달 하나 — 제목·본문·선택지(effectHint)·확인.
+선택하면 `runAutoAdvance.ts` 의 `handleEvent` 와 **같은 셋**을 부른다:
+`gameStore.applyEventEffect(effects)` → `applySideEffects(effects)` → `applyMilitaryEventChoice(eventId, effects)`
+→ `seasonStore.resolvePendingAction("event", eventId)`. (그 함수를 export 해서 그대로 쓰는 게 제일 안전하다 — A 가 export 해 뒀다: `resolveEventPending`.)
+병역 탭(§22·§32)이 생기면 그 안 「일과」에 붙이고, 그 전엔 소식 탭 위에 띄워도 된다.
+
+병역 구현 A ①② 는 끝났다(09-02): 타입 `types/militaryLife.ts` · 상태 `protagonist.militaryLife`(현역만 · 상무 null) ·
+데이터 `resource/data/master/military/*.json` · 규칙 `rules.json` · 이번 주 선택은 `militaryLife.nextChoice`("ball"|"people"|"rest") 에
+적어 두면 다음 진행이 읽는다(안 적으면 쉰다) · 4주마다 "이번 달 부대 소식" 한 통 · 목업은 §0.46 링크.
+
 ## 0.46 📐 1.1 첫 항목 예고 — 현역 군 생활 화면 셋 (지금 하지 마라)
 
 [PLAN_MILITARY_LIFE.md §22](PLAN_MILITARY_LIFE.md): **상위 탭 「병역」**(복무 중에만 · 맨 앞) 안에 2단 넷 —

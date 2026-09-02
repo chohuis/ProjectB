@@ -24,14 +24,31 @@ const SUBMIT = read("apps/ui/src/shared/usecases/careerDecision.ts");
 const WEEK   = read("apps/ui/src/shared/usecases/advanceWeek.ts");
 
 describe("해외 2군 직행 배선", () => {
-  it("허브에 신청 버튼이 있다", () => {
+  /**
+   * 🔴 **신청이 아니라 제안이다** (2026-09-02 · 사용자 확정 · HANDOFF_A_TO_C §0.45).
+   *   허브는 신청 버튼 대신 안내 한 줄 — 제안 수를 **판정과 같은 함수**로 미리 센다.
+   *   허브에 "신청"·선택 저장이 다시 생기면 옛 모양이다.
+   */
+  it("허브가 제안 수를 판정과 같은 함수로 미리 센다 — 신청 버튼·선택 저장은 없다", () => {
+    expect(HUB.includes("overseasOfferTeams(")).toBe(true);
+    expect(HUB.includes("firstTeamIdOf(")).toBe(true);
+    expect(HUB.includes("해외 2군 신청")).toBe(false);
+    expect(HUB.includes("overseasChoices")).toBe(false);
+    // 문턱 보기(읽기 전용 전망)는 남는다 — 문턱을 숨기지 않는다
     expect(HUB.includes("overseasModalOpen = true")).toBe(true);
-    expect(HUB.includes("해외 2군 신청")).toBe(true);
   });
 
-  // 🔴 버튼만 있고 저장이 없으면 눌러도 아무 일이 없다
-  it("허브가 선택을 저장한다", () => {
-    expect(HUB.includes("overseasChoices: overseasChoices.slice(0, 3)")).toBe(true);
+  // 🔴 전망 모달이 2군 전력(전부 ★3)으로 세면 판정(부모 1군 전력)과 어긋난다
+  it("전망 모달이 부모 1군 전력으로 문턱을 센다", () => {
+    expect(MODAL.includes("firstTeamIdOf(")).toBe(true);
+    expect(MODAL.includes("dispatch(\"confirm\"")).toBe(false);
+  });
+
+  // 28팀까지 온다 — 리그·★이 같이 보이고 목록이 스크롤된다
+  it("결과 화면이 제안 목록에 리그·1군 전력★을 적고 스크롤한다", () => {
+    expect(RESULT.includes("firstTeamIdOf(")).toBe(true);
+    expect(RESULT.includes("overseas-list")).toBe(true);
+    expect(RESULT.includes("overflow-y: auto")).toBe(true);
   });
 
   it("제출이 해외를 함께 보낸다", () => {

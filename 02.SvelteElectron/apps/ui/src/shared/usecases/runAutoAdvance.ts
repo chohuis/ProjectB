@@ -4,6 +4,7 @@ import { applyDecision, applySideEffects } from "./decisions";
 import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
+import { applyMilitaryEventChoice } from "./militaryLife";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
@@ -221,8 +222,18 @@ async function handleMessage(messageId: string): Promise<void> {
 async function handleEvent(pa: Extract<PendingAction, { type: "event" }>): Promise<void> {
   const p = get(gameStore).protagonist;
   const choices = pa.choices ?? [];
-  const choiceId = pickChoice(choices, p.fatigue);
-  const chosen = choices.find((c) => c.id === choiceId);
+  return resolveEventPending(pa, pickChoice(choices, p.fatigue));
+}
+
+/**
+ * 이벤트 pending 을 한 선택으로 푼다 — **화면(이벤트 모달)과 헤드리스가 같은 셋을 부른다.**
+ *
+ * 🔴 2026-09-02 실측: `type:"event"` pending 을 그리는 Svelte 가 한 곳도 없었다 — 군 이벤트가
+ *   사람 플레이에선 진행을 막는다(HANDOFF_A_TO_C §0.48). 화면은 이 함수 하나만 부르면 된다.
+ */
+export async function resolveEventPending(pa: Extract<PendingAction, { type: "event" }>, choiceId: string): Promise<void> {
+  const choices = pa.choices ?? [];
+  const chosen = choices.find((c) => c.id === choiceId) ?? choices[0];
 
   // ⚠ **`applyEventEffect`만 부르면 관계도·사치품이 빠진다.** 그 둘은 slot.db·
   // Rust 왕복이라 store 동기 패처가 못 한다 — 메시지 경로(`handleMessage`)는
@@ -231,6 +242,8 @@ async function handleEvent(pa: Extract<PendingAction, { type: "event" }>): Promi
   if (chosen?.effects) {
     gameStore.applyEventEffect(chosen.effects);
     await applySideEffects(chosen.effects);
+    // 병영생활 몫(관계·감각·상벌·휴가·성과 보정) — militaryLife 가 있고 그 풀의 이벤트일 때만 움직인다
+    applyMilitaryEventChoice(pa.eventId, chosen.effects);
   }
 
   seasonStore.resolvePendingAction("event", pa.eventId);

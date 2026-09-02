@@ -34,6 +34,7 @@ import { buildMyBodyReport } from "./weekPhases/myBodyReport";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
 import { enlistProtagonist, dischargeProtagonist } from "./militaryDecision";
+import { runMilitaryLifeWeek } from "./militaryLife";
 import {
   isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
   loadRetirementRules, surgeryRetireChance,
@@ -2194,7 +2195,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       //
       // ⚠ **`once` 는 커리어 통을 쓴다**(`careerTriggeredEvents`).
       // `seasonStore.triggeredEvents` 는 `makeEmptySeason` 이 매 시즌 비우는데
-      // **군 복무는 104주(2시즌)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
+      // **군 복무는 100주(`SERVICE_WEEKS` · 52주 시즌 둘에 걸친다)** 라 그걸 쓰면 시즌 경계에서 되살아난다.
       //
       // ⚠ 뽑기는 Rust 가 한다 — 복원추출이고 쿨다운이 없다. 그래서 후보에
       // 남아 있는 한 계속 뽑힌다. **거르는 자리는 여기 하나뿐이다.**
@@ -2209,6 +2210,27 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const eligibleSports  = eligible(m.militarySportsEvents);
       const eligibleGeneral = eligible(m.militaryGeneralEvents);
       const eligibleCommon  = eligible(m.militaryCommonEvents);
+
+      // ── 현역 병영생활 (PLAN_MILITARY_LIFE 4부 · 2026-09-02) ───────────────
+      // 상무와 `militaryLife` 가 없는 옛 세이브는 아래 옛 갈래 그대로 간다.
+      // 이 갈래는 **능력치를 안 건드린다** — 전역 때 야구 감각으로 환산한다.
+      if (!isSportsUnit && g.protagonist.militaryLife) {
+        const life = await runMilitaryLifeWeek({ nextWeek, seasonYear: s.seasonYear });
+        if (life) {
+          gameStore.applyWeekResult(life.patch, life.logs, [], nextWeek, s.seasonYear);
+          for (const lifeMsg of life.messages) gameStore.addMessage(lifeMsg);
+          const lifeEntities = get(masterStore).entities;
+          seasonStore.applyWeeklyConditionRecovery(lifeEntities);
+          await seasonStore.simulateBackgroundLeaguesAsync(nextWeek, g.protagonist.leagueId, lifeEntities, g.protagonist.careerStage);
+          gameStore.save(); seasonStore.save();
+          const lifePending = get(seasonStore).pendingActions;
+          return {
+            processedWeek: nextWeek, logs: life.logs,
+            newMessages: life.messages.map((x) => x.id), matchResults: [],
+            stoppedBy: lifePending.length > 0 ? lifePending[0] : null,
+          };
+        }
+      }
 
       // ⚠ **정수로 반올림해서 넘긴다.** Rust `MilitaryWeekPayload`는 이 값들이
       // 전부 `u32`/`i32`인데 주인공 스탯은 소수다(피로 62.125 · 스태미나 54.3).

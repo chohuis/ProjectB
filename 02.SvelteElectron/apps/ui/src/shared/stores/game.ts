@@ -211,6 +211,8 @@ export const DEFAULT_PROTAGONIST: ProtagonistSave = {
   militaryHiatusStage: null,
   militaryHiatusUniversityWeek: null,
   militaryDeferPenalty: 0,
+  militaryLife: null,
+  militaryRecord: null,
   sportsUnitApplied: false,
   tradeAdaptationWeeks: 0,
   faNegotiationRound: 0,
@@ -637,6 +639,8 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     militaryServiceWeeks:         p.militaryServiceWeeks         ?? def.militaryServiceWeeks,
     militaryRecoveryWeeks:        p.militaryRecoveryWeeks        ?? def.militaryRecoveryWeeks,
     militaryDeferPenalty:         p.militaryDeferPenalty         ?? def.militaryDeferPenalty,
+    militaryLife:                 p.militaryLife                 ?? def.militaryLife,
+    militaryRecord:               p.militaryRecord               ?? def.militaryRecord,
     militaryEnlistWeek:           p.militaryEnlistWeek           ?? def.militaryEnlistWeek,
     militaryEnlistYear:           p.militaryEnlistYear           ?? def.militaryEnlistYear,
     militaryDischargeYear:        p.militaryDischargeYear        ?? def.militaryDischargeYear,
@@ -2429,6 +2433,41 @@ function createGameStore() {
       });
     },
 
+    /**
+     * 전역 환산 (PLAN_MILITARY_LIFE §30) — 복무 중 안 건드린 능력치를 야구 감각으로 한 번에 환산하고
+     * 군 경력 한 장을 남긴다. 값은 usecases/militaryDecision 이 rules.json 에서 계산해 넘긴다 — 여기선 적기만.
+     * ⚠ `completeMilitaryService` 뒤에 불러야 회복 주(고정 6)를 덮는다.
+     */
+    applyMilitaryDischarge(args: {
+      statDelta: number; velocityDelta: number; recoveryWeeks: number;
+      record: import("../types/militaryLife").MilitaryRecord;
+    }) {
+      update((s) => {
+        const p = s.protagonist;
+        const c99 = (v: number) => Math.max(1, Math.min(99, v));
+        const pitching = {
+          ...p.pitching,
+          command:  c99(p.pitching.command  + args.statDelta),
+          control:  c99(p.pitching.control  + args.statDelta),
+          recovery: c99(p.pitching.recovery + args.statDelta),
+          velocity: c99(p.pitching.velocity + args.velocityDelta),
+        };
+        const protagonist: ProtagonistSave = {
+          ...p, pitching,
+          militaryRecoveryWeeks: args.recoveryWeeks,
+          militaryLife: null,
+          militaryRecord: args.record,
+        };
+        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
+      });
+    },
+    /** 병영생활 상태 얇은 패처 — 계산은 usecases/militaryLife.ts · utils/militaryLifeRules.ts */
+    setMilitaryLife(next: import("../types/militaryLife").MilitaryLifeState | null) {
+      update((s) => {
+        const protagonist = { ...s.protagonist, militaryLife: next };
+        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
+      });
+    },
     advanceMilitaryWeek() {
       update((s) => ({
         ...s,

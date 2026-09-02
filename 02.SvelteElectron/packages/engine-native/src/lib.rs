@@ -1512,6 +1512,16 @@ pub fn week_calc_semester_result_native(p: String) -> String {
         .unwrap_or_else(|e| parse_err("weekCalcSemesterResultNative/serialize", e))
 }
 
+/// 현역 병영생활 주간 계산 (PLAN_MILITARY_LIFE 4부 §26) — 상무는 `week_calc_military_native` 그대로
+#[napi]
+pub fn week_calc_military_life_native(p: String) -> String {
+    let params: week_engine::MilitaryLifeWeekPayload = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("weekCalcMilitaryLifeNative", e),
+    };
+    serde_json::to_string(&week_engine::calc_military_life_week(params))
+        .unwrap_or_else(|e| parse_err("weekCalcMilitaryLifeNative/serialize", e))
+}
+
 #[napi]
 pub fn week_calc_military_native(p: String) -> String {
     let params: week_engine::MilitaryWeekPayload = match serde_json::from_str(&p) {
