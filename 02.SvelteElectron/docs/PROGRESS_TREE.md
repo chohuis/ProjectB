@@ -39,8 +39,8 @@ A
 ├─ 7.5 ✅ 해외 2군 직행 — 신청(3곳) → **구단 제안** (사용자 확정: 부모 1군 전력 문턱만 · 상한 없음) 2a708abbd · 화면 둘은 C-1.5
 ├─ 8. ⬜ B 재병합 (B 가 당겨 두면) · B·C 결함 회신 (인계 둘을 매 회차 읽는다)
 ├─ 9. 🔄 회귀 전량 — ✅ vitest 195/1,728 · ✅ cargo 312 · ✅ svelte-check 0 · ✅ smoke:dist · check:* 33 → **29 OK · 4 FAIL**
-│     ├─ 🔴 check:teamrefs — CareerEndScreen.svelte 의 가짜 팀 ID 2건(TEAM_HS_DOSEONG_COA1 · TEAM_UNIV_HANYANG) → **C**
-│     ├─ 🔴 check:namelocale — HallOfFamePage·MatchPage 원본 스토어 읽음(예전부터) → **C** (이미 할당)
+│     ├─ ✅ check:teamrefs — CareerEndScreen.svelte 주석 속 예시 팀 ID 2건을 지웠다(표시용도 샘플도 아니고 주석이었다) → C
+│     ├─ ✅ check:namelocale — HallOfFamePage·MatchPage → teamMap(언어 반영본) → C
 │     ├─ ✅ check:protransition — 기본 씨앗 03 → 02 (352d47f9f) · 재실행 통과 (2029 프로 1년차 · 연도·나이 ok)
 │     ├─ ⚠ check:determinism(67분) — 2026 W0 NPC 부상 상태부터 두 실행이 갈린다 · seedOf 는 0 을 안 낸다(실측) → Rust thread_rng 폴백 자리(npc_sim 621·4374) 중 하나가 W0 에 씨앗 없이 불린다 · 결정성 정책(계측 재현 수준)상 🛑 1.1
 │     ├─ ✅ test:releasescope — 옛 전제(해외 범위 밖) 세 줄 + 주석에 걸린 변이 치환 + 팀 목록 l10n 스토어, 다섯 실패가 전부 낡은 잣대였다 · 변이(Set 에 넣으면 닫힘) 통과
@@ -113,7 +113,7 @@ C
 ├─ 9. ⬜ 새 게임 → 고교 → 진로 → 첫 프로 시즌 한 줄
 ├─ 10. ⬜ 스크린샷 5장 (1920×1080 정확히) · 스토어 자산
 ├─ 11. ⬜ 빌드 산출물 — 설치 · 첫 실행 · 세이브 로드
-├─ 12. ✅ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility 복무 중만·맨 앞 · me>training 숨김 · 입대 주 currentTab 전환) + §32 화면 넷 `pages/military/MilitaryPage.svelte` + `features/military/ui/Military{Head,DailyPane,MembersPane,CalendarPane,CareerPane}.svelte` (상무는 옛 패널 + 한 줄 · §39 는 나중) · 눈확인 새 게임 → dev 우회 입대 → W7 (HANDOFF_C_TO_A 맨 위) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
+├─ 12. ✅ **병역** — §22 상위 탭 「병역」(MainTabId · navVisibility 복무 중만·맨 앞 · me>training 숨김 · 입대 주 currentTab 전환) + §32 화면 넷 `pages/military/MilitaryPage.svelte` + `features/military/ui/Military{Head,DailyPane,MembersPane,CalendarPane,CareerPane}.svelte` (상무는 옛 패널 + 한 줄 · §39 는 나중) · 공 카드 "부상 위험" 띠 `rules.fatigue.injuryWarn` · 눈확인 새 게임 → dev 우회 입대 → W7 (HANDOFF_C_TO_A 맨 위) · 목업 https://claude.ai/code/artifact/8e3a5831-89a1-4415-b5cf-b97e0bb50252
 ├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 └─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷

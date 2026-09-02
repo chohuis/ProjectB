@@ -41,6 +41,7 @@
     : null;
   $: present = presentMembers(members, nextWeek);
   $: atCap = ml.ballSense >= cap;
+  $: injuryWarn = fatigue >= rules.fatigue.injuryWarn;
   $: sense = Math.round(ml.ballSense);
   $: eventPending = $nextPendingAction?.type === "event";
   // 마지막 "이번 달 부대 소식" — id 접두어로 고른다 (usecases/militaryLife.ts 가 붙인 `msg-mil-digest-`)
@@ -100,8 +101,12 @@
   {:else}
     <div class="choices">
       {#if ballAccess >= 1}
-        <button type="button" class="choice" class:pick={ml.nextChoice === "ball"} on:click={() => pick("ball")}>
+        <button type="button" class="choice" class:pick={ml.nextChoice === "ball"} class:warn={injuryWarn} on:click={() => pick("ball")}>
           <b>ㄱ. 공을 만진다</b>
+          {#if injuryWarn}
+            <!-- §27 — 피로가 문턱(rules.fatigue.injuryWarn) 이상이면 띠. 부상 자체는 §28 조건부 이벤트가 맡는다 · 확률 부상은 없다 -->
+            <span class="band">부상 위험 — 피로 {Math.round(fatigue)} ≥ {rules.fatigue.injuryWarn}</span>
+          {/if}
           <span class="fx">
             {#if atCap}감각 <em>상한 — 오르지 않는다</em>{:else}감각 <em>{signed(ballGain)}</em>{/if} · 피로 {signed(rules.fatigue.choice.ball)}
             <small>공 접근 {ballAccess} · 상한 {cap}</small>
@@ -169,6 +174,8 @@
   .choice .fx { color: var(--ink-mid); font-size: 11.5px; }
   .choice .fx em { font-style: normal; color: var(--t-accent); font-weight: 700; }
   .choice .fx small { display: block; color: var(--ink-mute); margin-top: 2px; }
+  .choice.warn { border-color: var(--bad); }
+  .choice .band { display: inline-block; justify-self: start; background: rgba(179, 49, 31, 0.10); color: var(--bad); border: 1px solid var(--bad); border-radius: var(--radius); padding: 1px 7px; font-size: 11px; font-weight: 800; }
   .nochoice { margin: 0; color: var(--ink-mid); font-size: 13px; font-weight: 700; }
   .event { border-left: 3px solid var(--line-strong); }
   .event.live { border-left-color: var(--warn); }
