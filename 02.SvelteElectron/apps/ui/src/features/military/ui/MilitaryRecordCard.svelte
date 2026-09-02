@@ -38,10 +38,11 @@
 </div>
 
 <style>
-  .mil-record { display: grid; gap: 6px; color: var(--ink); }
-  h3 { margin: 0; font-size: 13px; color: var(--ink); }
-  .unit { margin: 0; font-weight: 700; color: var(--ink-mid); font-size: 12.5px; }
+  /* 색을 못박지 않는다 — 결산 화면은 어두운 바탕이라 var(--ink) 를 박으면 글자가 사라진다(2026-09-02 눈확인). 부모 색을 잇고 명도만 낮춘다 */
+  .mil-record { display: grid; gap: 6px; color: inherit; }
+  h3 { margin: 0; font-size: 13px; color: inherit; }
+  .unit { margin: 0; font-weight: 700; color: inherit; opacity: .9; font-size: 12.5px; }
   .kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 0; font-size: 12px; font-variant-numeric: tabular-nums; }
-  .kv dt { color: var(--ink-mute); white-space: nowrap; }
-  .kv dd { margin: 0; color: var(--ink); }
+  .kv dt { color: inherit; opacity: .6; white-space: nowrap; }
+  .kv dd { margin: 0; color: inherit; }
 </style>
