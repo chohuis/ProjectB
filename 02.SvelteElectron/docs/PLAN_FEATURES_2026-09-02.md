@@ -138,7 +138,7 @@
 | 상무 생성 26명 · 선발 Phase 1+2 · 팀당 3 | ✅ 08-28 | ✔ `probe:sangmu` `test:military` | — | — |
 | 상무 = 독립리그에서 실제 경기 · 성장 | ✅ | ✔ | — | — |
 | **입대 → 복무 → 전역 → 복귀** | ✅ 09-02 | 🧪 `--path mil` 씨앗 3 · ✔ `dischargeOpensSeason.test` `militaryLeagueId.test` | — | — |
-| **복무 중 세상이 돈다** | ✅ 09-02 | ✔ `probe:bgsched --path mil` — 고교 1020/0 → **1020/1020** (씨앗 20260731 · 둘 더 진행 중) · `militaryLeagueId.test` | — (입대 때 주인공 `leagueId` → `LEAGUE_MILITARY`, 전역 때 복구) | — |
+| **복무 중 세상이 돈다** | ✅ 09-02 | ✔ `probe:bgsched --path mil` — 고교 1020/0 → **1020/1020** (씨앗 3: 20260731 · 20260802 · 20260803) · `militaryLeagueId.test` | — (입대 때 주인공 `leagueId` → `LEAGUE_MILITARY`, 전역 때 복구) | — |
 | 복무 중 이벤트 (계급 `minRank/maxRank/once`) | ✅ 09-01 | ✔ `militaryOnce.test` | 상무 소식함 | B · W1 |
 | 국제대회 성과 → 면제 | ✅ | ✔ 7곳 | **주인공** 면제 경로 미밟음 | A · W2 |
 | 복무 중 **성장 · 컨디션** | ◐ | — | 무엇이 도는지 **재야** 한다 | A · W2 |
