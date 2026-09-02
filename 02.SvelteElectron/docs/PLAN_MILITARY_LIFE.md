@@ -335,7 +335,7 @@ C   3일   화면 넷
 나머지(조건부·랜덤)는 사용자가 짓는 만큼 — **주 40% × 94주 ≈ 38번** 뜨니
 쿨다운을 감안하면 **40~60종**이면 2년이 반복 없이 찬다.
 
-## 12. 화면 셋 (C) — 훈련 화면 자리에
+## 12. 화면 셋 (C) — ⚠ 09-02 밤에 **상위 탭 「병역」** 으로 바뀌었다 (§22 가 정본). 아래는 옛 안
 
 ```
 ① 군 일과 화면    위: 부대명 · 계급 · 복무 N/100주 · 다음 캘린더 사건까지 n주
@@ -507,3 +507,46 @@ members.json   중대본부 6 + 1포반 5 + 소대장·부소대장 2 + 2소대�
                "상황 한 줄 + 선택 1~3 · 효과는 relation/morale/fatigue/ball 넷" (§14)
 필수 14 + 보직 캘린더 6 문안
 ```
+
+---
+
+## 22. "병역" 탭 — 상위 탭으로 (✅ 사용자 확정 09-02 밤: "탭에 병역이라고 추가해서 거기서 동작")
+
+### 지금
+상위 탭은 `news · me · team · league · people · schedule` 여섯이고(`types/main.ts` · `navVisibility.ts`),
+복무 중엔 `MilitaryStatusPanel` 이 **어느 탭을 열어도 위에 끼어** 뜬다(`MainPage.svelte:486`).
+훈련(`me > training`)은 복무 중에도 그대로 보인다. 즉 병역은 "화면"이 아니라 "배너"다.
+
+### 설계
+
+```
+MainTabId  += "military"                       라벨 「병역」
+노출        careerStage === "military" 일 때만  (navVisibility NAV 표에 한 줄 — 유니온이라 빠지면 컴파일이 깨진다)
+순서        NAV_ORDER 의 맨 앞 — 복무 중엔 "나" 그룹보다 앞. 입대하는 주에 currentTab 을 "military" 로 옮긴다
+숨김        me > training (병역 > 일과가 대신한다) · 그 밖의 탭은 그대로 둔다
+            ⚠ 팀·리그·일정은 안 숨긴다 — 소속팀은 계속 경기하고(08-05 사용자 확정 "있는 정보를 지우지 않는다")
+              복무 중 세상이 도는 걸 오늘 고쳤다. 병역 탭이 "지금 내 생활", 나머지 탭이 "밖의 세상"이다
+배너        MilitaryStatusPanel 은 병역 탭 머리로 옮긴다 — 다른 탭 위에는 안 낀다
+모달        군 이벤트 pending 은 병역 탭에 묶는다 (진로 모달이 소식 탭에 묶이듯 `currentTab === "military"`)
+전역 뒤     탭은 사라진다. 군 경력 한 장은 나 > 상태 > 기록 과 인생 기록 화면에서 본다
+```
+
+### 병역 탭 안 — 2단 넷 (`MilitaryTabId`)
+
+| 2단 | 무엇 | 데이터 |
+|---|---|---|
+| **일과** (기본) | 머리: 부대 · 보직 · 계급 · 복무 N/100 · 다음 캘린더 사건까지 n주. 자원 셋 막대. **이번 주 선택 카드 셋**(공 · 사람 · 쉼). 이번 주 이벤트가 여기서 뜬다 | `militaryLife` 상태 · `unit.roles` |
+| **부대원** | 카드 — 이름 · 계급 · 소대/포반 · 성격 · 관계 라벨(기존 라벨 규칙) · 재적/전역 | `members.json` · `relations` |
+| **캘린더** | 100주 타임라인 — 지난 사건(겪은 것 · 선택) · 다음 사건 · 휴가 | `calendar.json` · `careerTriggeredEvents` |
+| **경력** | 누적 — 성과 이벤트 결과(포사격/통신평가) · 표창·징계 · 휴가 일수 · 야구 감각 곡선. 전역 때 "한 장"이 된다 | 주간 루프 누적 |
+
+### 소유권
+
+```
+A   types/main.ts (MainTabId · MilitaryTabId) · utils/navVisibility.ts (NAV 표 · ORDER · 입대 시 전환) · 상태 필드
+C   pages/military/MilitaryPage.svelte (2단 넷) · MainPage 분기 한 줄 · MilitaryStatusPanel 이동 · me>training 숨김 반영
+검사 navVisibility 검사에 "복무 중에만 military 가 보이고 training 은 안 보인다" · `_exhaustive` 가 switch 누락을 잡는다
+```
+
+⚠ 지금 `MainPage.svelte` 의 pending → 탭 `switch` 가 `never` 로 못박혀 있어 `"military"` 를
+더하면 **컴파일이 먼저 깨진다** — 그게 의도다. 갈래를 빠뜨릴 수 없다.

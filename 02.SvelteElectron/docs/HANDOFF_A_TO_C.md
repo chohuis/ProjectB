@@ -45,9 +45,10 @@ C 가 고칠 화면 둘 (전부 C 소유):
 
 ## 0.46 📐 1.1 첫 항목 예고 — 현역 군 생활 화면 셋 (지금 하지 마라)
 
-[PLAN_MILITARY_LIFE.md §12](PLAN_MILITARY_LIFE.md): 군 일과 화면(훈련 화면 자리 · 자원 셋 막대 ·
-선택 카드 셋) · 부대원 패널 · 군 경력 한 장. 프리즈 뒤다. 지금 눈확인에서 **훈련 화면**을
-볼 때 그 자리에 뭐가 들어갈지 한 번 봐 두면 된다.
+[PLAN_MILITARY_LIFE.md §22](PLAN_MILITARY_LIFE.md): **상위 탭 「병역」**(복무 중에만 · 맨 앞) 안에 2단 넷 —
+일과 · 부대원 · 캘린더 · 경력. `MilitaryStatusPanel` 은 그 탭 머리로 옮기고 다른 탭 위엔 안 낀다.
+`me > training` 은 복무 중 숨긴다. 프리즈 뒤다 — 지금은 `MainPage` 의 탭 분기와 pending→탭
+`switch`(`never` 가드)가 어디 있는지만 봐 두면 된다. 타입·`navVisibility` 는 A 가 먼저 만든다.
 
 ## 0.5 🔴 기능 단위 정본 — [PLAN_FEATURES_2026-09-02.md](PLAN_FEATURES_2026-09-02.md)
 
