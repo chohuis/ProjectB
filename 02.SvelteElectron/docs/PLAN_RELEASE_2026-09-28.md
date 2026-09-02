@@ -261,6 +261,8 @@ C   apps/ui/src/pages/**  ·  features/**  ·  apps/desktop/ipc/*.cjs
 가 디포에 들어가 있었다**(3,711 파일 · 356.6 MB). 지금 `files` 제외 목록엔
 있으니 새 pack 에서 통과해야 한다. 이 두 검사가 없었으면 그대로 올라갔다.
 
+올릴 때 보는 한 장은 [STEAM_DEPOT.md](STEAM_DEPOT.md) — App/Depot ID 는 사용자 빈칸.
+
 ### W3 에 만들 것 — 셋뿐이다
 
 ```
