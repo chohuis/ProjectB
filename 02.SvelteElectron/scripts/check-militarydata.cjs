@@ -171,12 +171,18 @@ for (const name of ["military_general.json", "military_common.json"]) {
 
 // ── calendar ──
 if (Array.isArray(calendar)) {
-  const weeks = new Set();
+  const weeks = new Map();   // week → roleKey ("*" = 둘 다)
   const calIds = new Set();
   for (const c of calendar) {
     if (!(Number.isInteger(c.week) && c.week >= 1 && c.week <= 100)) fail(`calendar: week ${c.week} 는 1~100`);
-    if (weeks.has(c.week)) fail(`calendar: 같은 주 둘 (W${c.week}) — 한 주 한 사건`);
-    weeks.add(c.week);
+    // 한 주 한 사건 — 단, **보직이 다른 두 줄**은 허용한다 (같은 사건을 보직별 다른 효과로 · §36-1 W12 진지 공사 +12/+6).
+    // 보직 없는 줄이 하나라도 섞이면 둘 다 뜰 수 있으니 실패.
+    const roleKey = c.role === undefined || c.role === null ? "*" : String(c.role);
+    if (weeks.has(c.week)) {
+      const prev = weeks.get(c.week);
+      if (prev === "*" || roleKey === "*" || prev === roleKey) fail(`calendar: 같은 주 둘 (W${c.week}) — 보직이 서로 다른 두 줄만 허용`);
+    }
+    weeks.set(c.week, roleKey);
     if (!c.event) fail(`calendar W${c.week}: event id 없음`);
     else { calIds.add(c.event); if (lifePool && !eventIds.has(c.event)) fail(`calendar W${c.week}: 이벤트 "${c.event}" 가 military_life.json 에 없다`); }
     if (!c.label) warn(`calendar W${c.week}: label 없음`);
