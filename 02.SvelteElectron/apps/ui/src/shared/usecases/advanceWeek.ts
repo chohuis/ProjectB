@@ -1064,7 +1064,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     //
     // 주인공은 NPC 드래프트 풀에 안 들어간다 — 진로 결과가 따로 정해지는 게
     // 설계다(`DraftBoardModal` 주석). 그 "따로 정하는" 호출이 빠져 있었다.
-    const { determineProtagonistDraft, hsDraftInputsOf, draftOrderOf } = await import("../utils/draftSystem");
+    const { determineProtagonistDraft, hsDraftInputsOf, draftOrderOf, draftInjuryCounts } = await import("../utils/draftSystem");
     // ⚠ **상대평가 입력을 모아 넘긴다.** 안 넘기면 Rust가 폴백으로 OVR을
     // 백분위처럼 쓰고, 그건 세계 전력이 바뀌면 어긋나는 옛 동작이다.
     //
@@ -1090,15 +1090,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // ⚠ **심각도별로 센다.** 예전엔 `severity !== "light"`를 한 덩어리로 넘겨서
     // 팔꿈치 염증과 UCL 파열이 같은 무게(건당 -12, 상한 없음)였다 — 실측 감점이
     // -252까지 갔고 30커리어 중 6명이 이 항 하나로 미지명이었다
-    const inj = p.injuryHistory ?? [];
-    const nInj = (sev: string) => inj.filter((h) => h.severity === sev).length;
+    // ⚠ **최근 세 시즌만 센다** — 이력은 평생 누적이라 전체를 세면 독립 재지원이
+    // 해마다 나빠진다 (`draftInjuryCounts` 주석 · 씨앗 20260803 실측)
+    const injuryCounts = draftInjuryCounts(p.injuryHistory ?? [], get(seasonStore).seasonYear);
 
     const draftOutcome = draftApplied
       ? await determineProtagonistDraft(p.scoutScore, p.pitching.ovr, get(seasonStore).seasonYear,
-          { peerOvrs, teamAceRank, ...hsInputs,
-            moderateInjuries: nInj("moderate"),
-            severeInjuries:   nInj("severe"),
-            surgeryInjuries:  nInj("surgery") },
+          { peerOvrs, teamAceRank, ...hsInputs, ...injuryCounts },
           // ⚠ **그 해 지명 순서를 넘긴다.** 안 넘기면 알파벳순 기본값이 쓰여
           // 순번은 맞는데 그 순번의 주인이 다른 팀이 된다
           draftOrderOf(get(seasonStore).prevSeasonKblStandings ?? []))

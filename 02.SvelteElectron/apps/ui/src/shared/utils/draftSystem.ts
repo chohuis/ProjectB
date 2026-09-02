@@ -455,6 +455,29 @@ export function hsDraftInputsOf(records: readonly CareerSeasonRecord[]): {
   return { tournamentScore: tour / hs.length, awardTitles: titles, awardMvps: mvps };
 }
 
+/**
+ * 드래프트 부상 감점에 넣을 건수 — **최근 세 시즌만** 센다.
+ *
+ * 🔴 예전엔 `injuryHistory` 전체를 셌다. 이력은 평생 누적이라 독립리그에서
+ * 재지원할수록 감점만 자랐다 — 씨앗 20260803 실측: 2년차 OVR 66→70 인데
+ * 감점 30→42, 합 34→25. 해마다 나빠지기만 하는 상태였고 3씨앗 5~7년 재지원이
+ * 전부 0회였다. Rust 주석 스스로 "무겁게 보는 건 수술 이력이지 지나간 염증이
+ * 아니다"라고 적어 놓고 지나간 염증을 세고 있었다.
+ *
+ * 창은 셋 — 산식(문턱 78·상한 45)이 3년 고교 커리어로 맞춰진 것이라, 고교
+ * 지원자는 결과가 바뀌지 않는다. 대학 4학년은 1학년 부상이 빠진다.
+ */
+export const DRAFT_INJURY_WINDOW_SEASONS = 3;
+export function draftInjuryCounts(
+  history: readonly { severity: string; year: number }[],
+  seasonYear: number,
+): { moderateInjuries: number; severeInjuries: number; surgeryInjuries: number } {
+  const from = seasonYear - (DRAFT_INJURY_WINDOW_SEASONS - 1);
+  const recent = history.filter((h) => h.year >= from);
+  const n = (sev: string) => recent.filter((h) => h.severity === sev).length;
+  return { moderateInjuries: n("moderate"), severeInjuries: n("severe"), surgeryInjuries: n("surgery") };
+}
+
 export async function determineProtagonistDraft(
   scoutScore:  number,
   pitchingOvr: number,

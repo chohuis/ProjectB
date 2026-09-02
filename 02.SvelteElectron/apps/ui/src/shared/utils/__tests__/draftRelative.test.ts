@@ -75,7 +75,10 @@ describe("주인공 드래프트 산식", () => {
   it("호출부가 또래 분포를 실제로 넘긴다 — 안 넘기면 폴백이 옛 동작이다", () => {
     const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
     expect(s).toMatch(/determineProtagonistDraft\([\s\S]{0,200}peerOvrs/);
-    expect(s).toMatch(/surgeryInjuries:  nInj\("surgery"\)/);
+    // 부상은 `draftInjuryCounts`(최근 세 시즌)를 거친다 — 전체 이력을 직접 세면
+    // 독립 재지원이 해마다 나빠진다 (draftInjuryWindow.test.ts)
+    expect(s).toContain("draftInjuryCounts(p.injuryHistory ?? [], get(seasonStore).seasonYear)");
+    expect(s).toContain("...hsInputs, ...injuryCounts }");
     // 대회·수상은 `hsDraftInputsOf`가 한 번에 만든다 — 호출부가 척도를
     // 다시 계산하면 `calcHsBaseballScore`(진학용 **합계**)를 그대로 넘기던
     // 옛 결함으로 돌아간다
