@@ -29,6 +29,7 @@
   let settingsOpen = false;
 
   const LABEL_KEY: Record<MainTabId, string> = {
+    military: "nav.military",
     news:     "nav.news",
     me:       "nav.me",
     team:     "nav.team",

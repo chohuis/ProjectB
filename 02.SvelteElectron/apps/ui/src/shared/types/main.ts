@@ -7,6 +7,8 @@
  *   test           → 개발 도구(Ctrl+Q)라 내비에 없었고 도달 경로도 없었다
  */
 export type MainTabId =
+  /** 복무 중에만 · 맨 앞 (PLAN_MILITARY_LIFE §22 · 유무는 careerStage 하나가 정한다) */
+  | "military"
   | "news"
   | "me"
   | "team"

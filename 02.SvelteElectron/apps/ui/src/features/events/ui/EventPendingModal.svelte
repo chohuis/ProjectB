@@ -39,7 +39,8 @@
     {#if choices.length > 0}
       <div class="choices">
         {#each choices as c (c.id)}
-          <button class="choice" type="button" disabled={resolving} on:click={() => choose(c.id)}>
+          <!-- `opt` 는 scripts/drive.mjs 가 "선택 대기의 선택지"로 알아보는 훅 — 소식의 결정 버튼과 같은 이름이라 드라이버가 첫 선택지를 고르고 넘어간다 -->
+          <button class="choice opt" type="button" disabled={resolving} on:click={() => choose(c.id)}>
             <span class="label">{c.label}</span>
             {#if c.effectHint}<span class="hint">{c.effectHint}</span>{/if}
           </button>

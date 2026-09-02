@@ -14,11 +14,28 @@ function ctx(careerStage: CareerStage, retired = false) {
   };
 }
 
-describe("내비 6칸", () => {
-  it("어느 단계에서도 여섯 칸이 다 보인다", () => {
-    for (const s of ["highschool", "university", "pro_kbl", "military", "independent"] as const) {
-      expect(visibleNavTabs(ctx(s))).toEqual(NAV_ORDER);
+describe("내비 6칸 + 병역", () => {
+  it("복무 밖에서는 병역을 뺀 여섯 칸이 다 보인다", () => {
+    for (const s of ["highschool", "university", "pro_kbl", "independent"] as const) {
+      expect(visibleNavTabs(ctx(s))).toEqual(NAV_ORDER.filter((x) => x !== "military"));
     }
+  });
+
+  // 사용자 확정 09-02 밤: "입대하면 나오고 제대하면 사라져야 한다" (PLAN_MILITARY_LIFE §22)
+  it("복무 중에만 병역이 보이고, 그때는 맨 앞이다", () => {
+    const v = visibleNavTabs(ctx("military"));
+    expect(v).toEqual(NAV_ORDER);
+    expect(v[0]).toBe("military");
+    for (const s of ["highschool", "university", "pro_kbl", "independent"] as const) {
+      expect(visibleNavTabs(ctx(s))).not.toContain("military");
+    }
+  });
+
+  it("복무 중엔 나 > 훈련이 숨는다 — 병역 > 일과가 대신한다", () => {
+    expect(visibleMeTabs(ctx("military"))).not.toContain("training");
+    expect(visibleMeTabs(ctx("pro_kbl"))).toContain("training");
+    // 보고 있던 훈련 탭은 첫 탭으로 밀린다
+    expect(fallbackMeTab(ctx("military"), "training")).toBe("status");
   });
 
   it("상무 복무 중에도 팀·리그·일정이 남는다", () => {
@@ -31,12 +48,12 @@ describe("내비 6칸", () => {
   });
 
   it("은퇴해도 내비는 그대로다 — 기록을 계속 봐야 한다", () => {
-    expect(visibleNavTabs(ctx("pro_kbl", true))).toEqual(NAV_ORDER);
+    expect(visibleNavTabs(ctx("pro_kbl", true))).toEqual(NAV_ORDER.filter((x) => x !== "military"));
   });
 
   it("그룹 구분선은 '나' 다음이고 실제 목록 안에 있다", () => {
     expect(NAV_ORDER).toContain(NAV_GROUP_BREAK_AFTER);
-    expect(NAV_ORDER.indexOf(NAV_GROUP_BREAK_AFTER)).toBe(1);
+    expect(NAV_ORDER.indexOf(NAV_GROUP_BREAK_AFTER)).toBe(NAV_ORDER.indexOf("me"));
   });
 });
 

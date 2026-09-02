@@ -31,7 +31,9 @@
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
   import TradeModal from "../../features/contract/ui/TradeModal.svelte";
   import FaMarketModal from "../../features/contract/ui/FaMarketModal.svelte";
-  import MilitaryStatusPanel from "../../features/military/ui/MilitaryStatusPanel.svelte";
+  import MilitaryPage from "../military/MilitaryPage.svelte";
+  import { SERVICE_WEEKS } from "../../shared/usecases/militaryDecision";
+  import type { CareerStage } from "../../shared/types/save";
   import SportsUnitApplicationModal from "../../features/military/ui/SportsUnitApplicationModal.svelte";
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import RetirementAskModal from "../../features/retirement/ui/RetirementAskModal.svelte";
@@ -106,6 +108,15 @@
   // 보이는 내비 — 판정의 정본은 `utils/navVisibility`다
   $: navTabs = visibleNavTabs($gameStore.protagonist);
   $: if (!navTabs.includes(currentTab)) currentTab = navTabs[0] ?? "news";
+  // 입대하는 주 — 탭이 생기는 순간 거기로 옮긴다 (§22 · 사용자 확정 "입대하면 나오고 제대하면 사라진다").
+  //   전역은 새 코드가 없다 — 위 폴백이 navTabs[0](news) 로 받는다.
+  //   ⚠ 첫 관측(lastStage null)엔 안 옮긴다 — 복무 중 세이브를 열 땐 탭이 있기만 하면 된다.
+  let lastStage: CareerStage | null = null;
+  $: {
+    const stage = $gameStore.protagonist.careerStage;
+    if (lastStage !== null && lastStage !== "military" && stage === "military") currentTab = "military";
+    lastStage = stage;
+  }
 
   // 소식 결정 pendingAction 시 소식 탭 자동 전환 (최대 1회)
   let handledMessageId: string | null = null;
@@ -357,9 +368,10 @@
 
   // 업적 알림 배지 갱신
   $: pendingAchievementCount = $gameStore.pendingAchievements.length;
+  // ⚠ 예전엔 104 가 박혀 있었다 — 전역 판정(`SERVICE_WEEKS` · 100)과 4주 어긋나 병역 탭 머리(N/100)와 달랐다
   $: militaryCountdownLabel =
     $gameStore.protagonist.careerStage === "military"
-      ? `전역까지 ${Math.max(0, 104 - $gameStore.protagonist.militaryServiceWeeks)}주 남음`
+      ? `전역까지 ${Math.max(0, SERVICE_WEEKS - $gameStore.protagonist.militaryServiceWeeks)}주 남음`
       : "";
 
 
@@ -486,12 +498,12 @@
 
       <main>
         <div class="tab-content">
-          {#if $gameStore.protagonist.careerStage === "military"}
-            <MilitaryStatusPanel />
-          {/if}
-          <!-- 여섯 갈래가 전부 구현돼 있다. "준비중" 안내와 그 문구를 조립하던
+          <!-- 군 복무 배너(MilitaryStatusPanel)는 병역 탭 머리로 옮겼다 — 다른 탭 위엔 안 낀다 (§22).
+               여섯 갈래가 전부 구현돼 있다. "준비중" 안내와 그 문구를 조립하던
                `tabPageKey`는 갈 곳이 없어져 같이 지웠다 -->
-          {#if currentTab === "news"}
+          {#if currentTab === "military"}
+            <MilitaryPage />
+          {:else if currentTab === "news"}
             <NewsPage />
           {:else if currentTab === "me"}
             <MePage />
@@ -585,7 +597,8 @@
   <InjuryTreatmentModal action={pendingInjuryTreatment} />
 {/if}
 
-{#if pendingEvent && currentTab === "news"}
+<!-- 군 이벤트는 병역 탭에서도 뜬다 (§22 · §32 "이번 주 이벤트는 모달이 맡는다") · 소식 탭은 상단 버튼의 도착지 -->
+{#if pendingEvent && (currentTab === "news" || currentTab === "military")}
   <EventPendingModal action={pendingEvent} />
 {/if}
 

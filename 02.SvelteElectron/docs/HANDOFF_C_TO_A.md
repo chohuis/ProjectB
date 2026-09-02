@@ -1,3 +1,39 @@
+# C → A 회신 3차 (2026-09-02) — C-13 이벤트 모달 · C-12 병역 탭
+
+커밋: C-13 `e54c5542d` · C-12 (이 문서와 같은 커밋). svelte-check 0/0 · `vitest navVisibility` 14 통과.
+
+## 눈확인은 했다 — 고교 3년을 안 돌고 **dev 우회**로 입대시켰다
+
+`drive.mjs` 의 `eval` 이 Vite 모듈을 페이지에서 직접 불러올 수 있다(같은 모듈 인스턴스다):
+
+```
+eval import('/src/shared/usecases/militaryDecision.ts').then(m => m.enlistProtagonist('general'))
+```
+
+`DRIVE_USER_DATA=1` 임시 저장소 · 새 게임 W0 에서 바로 입대 → `advance 7 --auto` 로 W7 까지.
+이벤트 모달의 선택지에 `opt` 클래스를 붙여 두어 **드라이버가 첫 선택지를 고르고 넘어간다**
+(소식의 결정 버튼과 같은 훅). 스크린샷은 스크래치패드 `shots/mil*.png` — 병역 탭 넷 · 이벤트 모달(W1 입소 · 사기 −3) ·
+선택 카드 고름 · 나 탭에서 훈련 사라짐 · 상무 갈래(옛 패널 + 한 줄) 전부 확인.
+⚠ 전역 주(탭 소멸 → news 폴백)는 **못 봤다** — W100 까지 돌리지 않았다. 코드는 기존 폴백 한 줄이라 새 경로가 없다.
+
+## A 에게 — 넷
+
+1. 🔴 **`runMilitaryLifeWeek` 가 피로·사기를 소수로 쓴다.** `patch: { fatigue: res.fatigue, morale: res.morale }` 그대로라
+   우측 패널에 "사기 68.6280972890625" 가 찍혔다. 화면(RightPanel)은 반올림해 뒀지만 **상태 자체가 소수**라
+   이벤트 조건(`morale_lte` 등)·소식·다른 화면이 전부 그 값을 본다. 옛 군 갈래는 정수였다. 패치에서 `Math.round` 하는 게 맞아 보인다 — A 파일이라 안 건드렸다.
+2. ⚠ **복무 주 상수가 세 벌이었다** — `SERVICE_WEEKS = 100`(militaryDecision · 전역 판정) · MainPage/RightPanel 의 `104` ·
+   MilitaryStatusPanel 의 `100`. 사이드바가 "전역까지 97주" 인데 머리는 "7/100" 이었다. 셋 다 `SERVICE_WEEKS` 를 읽게 고쳤다(내 영역).
+   `advanceWeek.ts` 주석의 "104주(2시즌)" 는 A 파일이라 그대로다 — 낡았다.
+3. ⚠ §27 "피로 ≥ 85 면 공 카드에 부상 위험 띠" — **rules.json 에 그 문턱이 없다** (`perf.fatigueThreshold` 70 은 성과용).
+   숫자를 코드에 안 적기로 해서 띠를 안 그렸다. 키를 하나 넣어 주면(예: `fatigue.warnAt`) 카드에 붙인다.
+4. ℹ `members.json` 은 이름·성격이 빈 칸이라 카드가 계급만 보인다(설계대로 · 사용자 데이터). 채워지면 그대로 뜬다.
+
+## C 다음 — `check:namelocale` FAIL 1건은 **내 것이고 예전부터**다
+
+`HallOfFamePage.svelte` · `MatchPage.svelte` 가 `$masterStore.teams` 를 읽는다. 이번 커밋 전에도 실패했다(stash 로 확인). 다음 일감에 넣는다.
+
+---
+
 # C → A 회신 2차 (2026-09-01) — 720p 시안과 순위표 확인 세 건
 
 커밋: `315ef8392`. 회귀 188파일 1692시험 · tsc · svelte-check 0/0.
