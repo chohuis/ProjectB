@@ -96,8 +96,7 @@
         {
           "id": "ok",
           "label": "판다",
-          "effectHint": "피로 +12(박격포병) / +6(통신병) · 같은 소단위 관계 +1",
-          "fatigueDelta": 12,
+          "effectHint": "피로는 캘린더(박격포 +12 / 통신 +6) · 같은 소단위 관계 +1",
           "relationDelta": 1
         }
       ]
@@ -298,8 +297,7 @@
         {
           "id": "ok",
           "label": "판다",
-          "effectHint": "피로 +10 (병장 절반) · 소단위 관계 +1",
-          "fatigueDelta": 10,
+          "effectHint": "피로는 캘린더(박격포 +10 / 통신 +5) · 소단위 관계 +1",
           "relationDelta": 1
         }
       ]
@@ -1276,7 +1274,7 @@
       "title": "간부 심부름",
       "description": "행정반 심부름으로 하루가 갔습니다.\n내 일은 밤에 했습니다.",
       "minRank": 0,
-      "maxRank": 2,
+      "maxRank": 3,
       "once": false,
       "cooldownWeeks": 4,
       "weight": 1,
@@ -1396,6 +1394,75 @@
           "effectHint": "소단위 전원 관계 +3, 사기 +4",
           "relationDelta": 3,
           "moraleDelta": 4
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_JR_SIGNAL_TRAIN",
+      "title": "후임 통신병 교육",
+      "description": "무전기 앞에 후임을 앉힌다. 내가 처음 배울 때가 떠오른다.",
+      "minRank": 3,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 8,
+      "weight": 1,
+      "member": "MEM_JR_2",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "signal"
+        },
+        {
+          "type": "member_present",
+          "member": "MEM_JR_2"
+        }
+      ],
+      "choices": [
+        {
+          "id": "teach",
+          "label": "하나씩 가르친다",
+          "effectHint": "후임 관계 +4, 피로 +2",
+          "relationDelta": 4,
+          "fatigueDelta": 2
+        },
+        {
+          "id": "leave",
+          "label": "알아서 하게 둔다",
+          "effectHint": "후임 관계 -2",
+          "relationDelta": -2
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_OPS_HANDOVER",
+      "title": "상황실 인수인계",
+      "description": "상황실 열쇠를 넘길 때가 됐다. 오늘 밤은 마지막으로 내가 선다.",
+      "minRank": 3,
+      "maxRank": 3,
+      "once": false,
+      "cooldownWeeks": 6,
+      "weight": 1,
+      "member": "MEM_1SG",
+      "conditions": [
+        {
+          "type": "role",
+          "value": "signal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "stand",
+          "label": "직접 선다",
+          "effectHint": "행보관 관계 +4, 피로 +3",
+          "relationDelta": 4,
+          "fatigueDelta": 3
+        },
+        {
+          "id": "watch",
+          "label": "후임에게 맡기고 지켜본다",
+          "effectHint": "행보관 관계 +1, 사기 +1",
+          "relationDelta": 1,
+          "moraleDelta": 1
         }
       ]
     }
