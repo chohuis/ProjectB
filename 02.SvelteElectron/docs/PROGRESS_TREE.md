@@ -93,6 +93,9 @@ B
 │        cooldownWeeks 4(28건 · once 6건 제외) · military_general 의 statDelta 2건 제거
 │        (훈련소 command −1 → 감각 −2) · check:militarydata OK
 │        └─ ⓘ 월간 부대 소식은 A 가 이미 코드에 넣었다(militaryLife.ts:196) — 데이터 틀을 따로 안 만든다
+├─ 12. ✅ **병역 보강** — 통신 후반 얇던 것: 일상 둘 추가(JR_SIGNAL_TRAIN W62+ · OPS_HANDOVER W60+) ·
+│        ERRAND maxRank 2→3 · 진지 공사 봄/가을의 fatigueDelta 제거(캘린더가 준다 · 이중 적용 방지)
+│        → 62종 · W70+ 전용 일상 통신 4 · 박격포 3 (전엔 1 대 3) · check:militarydata OK
 ├─ ✅ 병합됨 14커밋 (9f8ad99b5)
 └─ 🛑 동적 치환 23종
 ```
