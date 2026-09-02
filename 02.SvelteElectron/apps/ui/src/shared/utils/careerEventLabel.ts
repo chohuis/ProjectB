@@ -26,6 +26,7 @@ const LABEL: Record<string, string> = {
   // FA 미계약 → 원소속도 막혀 독립에서 재도전 (2026-08-29)
   fa_independent:   "독립 재도전",
   fa_unsigned_retire: "FA 미계약 은퇴",
+  indie_age_retire: "독립리그 나이 상한 은퇴",
   trade:            "트레이드",
   foreign_signing:  "용병 영입",
   promote:          "1군 승격",

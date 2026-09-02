@@ -2138,6 +2138,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut events: Vec<OffseasonEvent> = Vec::new();
     let mut new_pending: Vec<NpcSaveState> = Vec::new();
     let season_year = params.season_year;
+    // 독립리그 나이 상한 — 재적자도 시즌 끝에 내보낸다 (`retire_independent_over_age` 주석 · 2026-09-03)
+    let indie_age_cap = params.fa_independent_age_max;
     let mut processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
         if npc.current_league == "LEAGUE_HIGHSCHOOL" { return npc; }
 
@@ -2152,6 +2154,14 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
         if n.current_league == "LEAGUE_DRAFT_POOL" || n.current_league == "LEAGUE_FREE_AGENT" { return n; }
         if n.career_status != "active" { return n; }
+        // 독립리그 나이 상한 — 재적자도 시즌 끝에 은퇴 (닫힌 세계 · 2026-09-03)
+        if let Some(cap) = indie_age_cap {
+            if let Some(e) = retire_independent_over_age(&mut n, season_year, cap) {
+                events.push(e);
+                summary.indie_age_retired += 1;
+                return n;
+            }
+        }
 
         // 대학 처리: 학년 진급은 advance_all_grades에서, 여기서는 grade 4 졸업생만 pending 처리
         if n.current_league == "LEAGUE_UNIVERSITY" {
@@ -5170,6 +5180,34 @@ mod fa_fallback_tests {
     }
 
     /// FA를 막 잃은 프로 선수 — 소속은 비었고 원소속만 남아 있다
+    #[test]
+    fn indie_over_age_retires_at_offseason() {
+        // 독립리그 상한(31)을 넘긴 재적자는 은퇴 · 상한 이하·다른 리그·미소속은 그대로
+        let mut a = fa_npc(34);
+        a.current_league = "LEAGUE_INDEPENDENT".into();
+        a.current_team = "TEAM_IND_X".into();
+        a.career_status = "active".into();
+        let e = retire_independent_over_age(&mut a, 2027, 31).expect("상한 초과는 은퇴");
+        assert_eq!(e.kind, "indie_age_retire");
+        assert_eq!(a.career_status, "retired");
+        assert_eq!(a.current_league, "LEAGUE_RETIRED");
+        assert!(a.current_team.is_empty());
+        assert!(a.career_events.last().unwrap().detail.as_deref().unwrap().contains("독립리그 나이 상한"));
+
+        let mut b = fa_npc(31);
+        b.current_league = "LEAGUE_INDEPENDENT".into();
+        b.current_team = "TEAM_IND_X".into();
+        b.career_status = "active".into();
+        assert!(retire_independent_over_age(&mut b, 2027, 31).is_none(), "상한과 같으면 남는다");
+        assert_eq!(b.career_status, "active");
+
+        let mut c = fa_npc(36);
+        c.current_league = "LEAGUE_KBL".into();
+        c.current_team = "TEAM_KBL_Y_1".into();
+        c.career_status = "active".into();
+        assert!(retire_independent_over_age(&mut c, 2027, 31).is_none(), "프로는 이 규칙 밖");
+    }
+
     fn fa_npc(age: i32) -> NpcSaveState {
         let mut n: NpcSaveState = serde_json::from_str(&format!(r#"{{
             "npcId": "PLY_FA", "name": "테스트", "playerType": "pitcher", "position": "SP",
@@ -5467,4 +5505,41 @@ mod new_stat_tests {
         assert_eq!((outs, runs), (1, 0));
         assert_eq!(bases[2], Some(2), "그냥 아웃인데 3루 주자가 사라졌다");
     }
+}
+
+/// 독립리그 나이 상한 — **재적자도 내보낸다** (2026-09-03 · B measure:draft 씨앗 4242 실측).
+///
+/// 🔴 상한(rosterRules.LEAGUE_INDEPENDENT.ageMax = 31)이 **입단만** 막고 있었다. 방출은
+///   `maxPerTeam 3` 이라 9팀 × 3 = 27명/년이 최대인데 미지명 유입 수요는 수백이다 — 정원 45가 첫 해에
+///   꽉 차고 31세 초과 69명이 그대로 남아 **2027년부터 미지명→독립이 0** 이었다(닫힌 세계).
+///   주인공의 "독립 재지원 지명 0회"(A-2)와 뿌리가 같다.
+///
+/// 규칙: 시즌 끝에 상한을 넘긴 독립 선수는 **은퇴**한다(`retirement` · 독립리그는 재도전 무대지 종신 무대가 아니다).
+/// `quit_baseball` 이 아니다 — 인생 기록·경력 화면이 둘을 다르게 보여준다(fa_fallback 과 같은 원칙).
+/// 상무(`SANGMU`)는 `current_league` 가 다르므로 여기 안 걸린다. 상한이 없으면(None) 아무것도 안 한다.
+pub fn retire_independent_over_age(
+    n: &mut NpcSaveState,
+    season_year: i32,
+    age_max: i32,
+) -> Option<OffseasonEvent> {
+    if n.career_status != "active" || n.current_league != "LEAGUE_INDEPENDENT" || n.current_team.is_empty() {
+        return None;
+    }
+    if n.age <= age_max { return None; }
+    let team = n.current_team.clone();
+    n.career_events.push(NpcCareerEvent {
+        year: season_year,
+        event_type: "retirement".into(),
+        from_team_id: Some(team.clone()),
+        to_team_id: None,
+        from_league_id: Some("LEAGUE_INDEPENDENT".into()),
+        to_league_id: None,
+        detail: Some(format!("독립리그 나이 상한 은퇴 ({}세 · 상한 {})", n.age, age_max)),
+    });
+    n.career_status = "retired".into();
+    n.current_league = "LEAGUE_RETIRED".into();
+    n.current_team = String::new();
+    n.current_salary = 0;
+    n.contract_years = 0;
+    Some(ev("indie_age_retire", n, Some(team), Some(format!("{}세", n.age))))
 }
