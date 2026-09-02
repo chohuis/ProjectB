@@ -142,7 +142,7 @@
 | **복무 중 세상이 돈다** | ✅ 09-02 | ✔ `probe:bgsched --path mil` — 고교 1020/0 → **1020/1020** (씨앗 3: 20260731 · 20260802 · 20260803) · `militaryLeagueId.test` | — (입대 때 주인공 `leagueId` → `LEAGUE_MILITARY`, 전역 때 복구) | — |
 | 복무 중 이벤트 (계급 `minRank/maxRank/once`) | ✅ 09-01 | ✔ `militaryOnce.test` | 상무 소식함 | B · W1 |
 | 국제대회 성과 → 면제 | ✅ | ✔ 7곳 | **주인공** 면제 경로 미밟음 | A · W2 |
-| 복무 중 **성장 · 컨디션** | ◐ | — | 무엇이 도는지 **재야** 한다 | A · W2 |
+| 복무 중 **성장 · 컨디션** | ✅ 있다 | 코드 확인 09-02 — Rust `calc_military_week` 가 매주 커맨드·제구·회복을 확률로 깎고 사기·피로를 움직인다(일반 75/45/25/15% …) | "실제 군 생활" 기획안 → [PLAN_MILITARY_LIFE.md](PLAN_MILITARY_LIFE.md) ❓ | 사용자 |
 | 전역 후 기량 손실/회복 | ✖ | — | 설계 없음 — **1.1** | 1.1 |
 | 일반병 NPC 화면 추적 | ✖ | — | `LEAGUE_MILITARY` 화면 0회 — **1.1** | 1.1 |
 | 군 설계 문서 | ✅ | `MILITARY.md` · `design/military.md` | — | — |
