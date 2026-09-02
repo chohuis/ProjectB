@@ -162,3 +162,91 @@ C   3일   화면 넷
 
 ⚠ 상무는 이 문서 밖이다 — 경기가 있어 다른 틀이다. 다만 §3-1 캘린더·§3-4
 사람은 상무에도 그대로 얹을 수 있다.
+
+---
+
+## 7. 데이터 형식 예시 — 사용자가 채우는 넷 (A 가 이 모양으로 로더·검사를 만든다)
+
+이벤트 JSON 과 같은 방식이다. **값은 전부 예시**다 — 이름·위치·성격은 사용자 몫.
+
+### `resource/data/master/military/unit.json` — 부대 하나
+
+```json
+{
+  "id": "UNIT_MAIN",
+  "name": "제00보병사단 0연대 0대대 0중대",
+  "location": "강원 인제",
+  "role": "소총수",
+  "flavor": "전방. 겨울이 길고 야간 근무가 잦다.",
+  "dutyIntensity": 3,
+  "ballAccess": 1
+}
+```
+
+`dutyIntensity`(1~5) 는 주간 피로 폭, `ballAccess`(0~3) 는 야구 감각이 오를 수 있는 상한이다.
+
+### `resource/data/master/military/members.json` — 부대원
+
+```json
+[
+  { "id": "MEM_SGT_KIM",  "name": "김 병장", "rank": "병장", "role": "senior",  "trait": "무심",   "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 30 },
+  { "id": "MEM_LT_PARK",  "name": "박 소위", "rank": "소위", "role": "officer", "trait": "깐깐함", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100 },
+  { "id": "MEM_PVT_LEE",  "name": "이 이병", "rank": "이병", "role": "junior",  "trait": "살가움", "relationStart": 5,   "joinWeek": 36, "leaveWeek": 100 },
+  { "id": "MEM_PFC_CHOI", "name": "최 일병", "rank": "일병", "role": "peer",    "trait": "야구팬", "relationStart": 10,  "joinWeek": 0,  "leaveWeek": 100 }
+]
+```
+
+`role` 은 `senior | officer | junior | peer` 넷. `joinWeek`/`leaveWeek` 는 복무 주(0~100).
+관계값은 기존 `relations` 축(−100~100)을 그대로 쓴다.
+
+### `resource/data/master/military/calendar.json` — 고정 주 사건
+
+```json
+[
+  { "week": 1,  "event": "MIL_CAL_ENTRY",       "label": "입소" },
+  { "week": 5,  "event": "MIL_CAL_GRADUATION",  "label": "훈련소 수료" },
+  { "week": 6,  "event": "MIL_CAL_FIRST_DAY",   "label": "자대 첫날" },
+  { "week": 20, "event": "MIL_CAL_FIRST_LEAVE", "label": "첫 정기휴가", "leaveDays": 10 },
+  { "week": 35, "event": "MIL_CAL_PROMOTE_2",   "label": "상병 진급" },
+  { "week": 44, "event": "MIL_CAL_WINTER",      "label": "혹한기 훈련", "fatigue": 12 },
+  { "week": 61, "event": "MIL_CAL_PROMOTE_3",   "label": "병장 진급" },
+  { "week": 70, "event": "MIL_CAL_RANGER",      "label": "유격 훈련", "fatigue": 10 },
+  { "week": 96, "event": "MIL_CAL_D30",         "label": "전역 30일" },
+  { "week": 100,"event": "MIL_CAL_DISCHARGE",   "label": "전역" }
+]
+```
+
+`event` 는 이벤트 id 다 — **확률 밖**에서 그 주에 반드시 뜬다. 계급 띠(8/34/60)는 코드 그대로.
+
+### 병영생활 이벤트 — 부대원을 가리키는 예 (`events/pools/military_general.json` 형식 그대로)
+
+```json
+{
+  "id": "MIL_LIFE_NIGHT_DUTY_WITH_SENIOR",
+  "title": "야간 근무 — 김 병장과 둘이",
+  "description": "새벽 두 시. 김 병장이 말을 꺼낸다.",
+  "minRank": 1, "maxRank": 2,
+  "member": "MEM_SGT_KIM",
+  "cooldownWeeks": 8,
+  "conditions": [{ "type": "relation_gte", "member": "MEM_SGT_KIM", "value": -20 }],
+  "choices": [
+    { "id": "listen", "label": "들어 준다",      "effectHint": "관계 +8 · 피로 +2", "relationDelta": 8,  "fatigueDelta": 2 },
+    { "id": "sleep",  "label": "졸음을 참는다", "effectHint": "관계 −4",           "relationDelta": -4 }
+  ]
+}
+```
+
+새 필드 셋 — `member`(누구 이야기인가) · `cooldownWeeks` · `conditions[].member`.
+`ballDelta`(야구 감각 ±) 도 선택지 효과로 쓸 수 있다.
+
+### A 가 만드는 검사 `check:militarydata`
+
+```
+① 이벤트의 member · conditions[].member 가 members.json 에 다 있다
+② calendar.week 가 1~100 · event 가 실재한다 · 같은 주에 둘이 없다
+③ joinWeek < leaveWeek · role 이 넷 중 하나
+④ 부대원 id 로 관계가 실제로 움직인다 (헤드리스 — 배선 뺀 대조군 포함)
+```
+
+⚠ 이 넷이 없으면 "데이터가 코드와 어긋나도 아무도 안 죽고 로그도 안 남는"
+그 형태가 된다(CLAUDE.md). 형식이 먼저, 내용은 그 다음이다.
