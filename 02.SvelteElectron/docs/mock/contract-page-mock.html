@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>계약 협상 — 시안</title>
+<style>
+/* 색·치수는 apps/ui/src/styles.css 에서 그대로 가져왔다 — 시안이 실제 화면과 따로 놀지 않게 */
+:root{
+  --t-dark:#1E3050; --t-accent:#B3311F; --t-stripe:rgba(30,48,80,.055);
+  --surface:#F6F8FB; --panel:#FFF; --panel-sunk:#EEF2F8;
+  --line:#DDE3EE; --line-strong:#C3CDDE;
+  --ink:#0F1D3D; --ink-mid:#3B4863; --ink-mute:#5A6478; --ink-on-dark:#FFF;
+  --ok:#1F7A47; --warn:#9A6510; --bad:#B3311F;
+  --gap:12px; --pad:14px; --radius:3px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --t-dark:#0E1622; --t-stripe:rgba(255,255,255,.03);
+    --surface:#0E1218; --panel:#161B24; --panel-sunk:#1E242F;
+    --line:#2A3140; --line-strong:#3C4657;
+    --ink:#E6ECF7; --ink-mid:#B2BDCE; --ink-mute:#8391A5;
+    --ok:#4ADE80; --warn:#F0B65C; --bad:#F87171;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);
+  font-family:"Pretendard","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;font-size:14px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 48px}
+.note{background:var(--panel-sunk);border-left:3px solid var(--warn);padding:10px 13px;
+  border-radius:var(--radius);color:var(--ink-mid);font-size:12.5px;margin-bottom:18px}
+.hd{background:var(--t-dark);color:var(--ink-on-dark);border-radius:var(--radius);
+  padding:14px 18px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:var(--gap)}
+.hd h1{font-size:17px;margin:0;font-weight:800;letter-spacing:-.2px}
+.hd .sub{font-size:12.5px;opacity:.82}
+.hd .grow{flex:1}
+.hd .wk{font-variant-numeric:tabular-nums;font-size:12.5px;opacity:.82}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap)}
+@media (max-width:880px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:var(--pad)}
+.card h2{font-size:13px;margin:0 0 10px;color:var(--ink-mute);font-weight:700;
+  text-transform:none;letter-spacing:.2px;border-bottom:1px solid var(--line);padding-bottom:7px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row .k{color:var(--ink-mute);font-size:12.5px}
+.row .v{font-weight:700;font-variant-numeric:tabular-nums}
+.big{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.muted{color:var(--ink-mute);font-size:12px}
+.tag{display:inline-block;font-size:11.5px;padding:1.5px 7px;border-radius:999px;
+  border:1px solid var(--line-strong);color:var(--ink-mid);background:var(--panel-sunk);margin-right:4px}
+.tag.on{border-color:var(--ok);color:var(--ok)}
+.tag.off{opacity:.45;text-decoration:line-through}
+label.f{display:block;margin:12px 0 4px;font-size:12.5px;color:var(--ink-mute)}
+input[type=range]{width:100%;accent-color:var(--t-dark)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:56px;padding:7px 6px;border:1px solid var(--line-strong);background:var(--panel);
+  color:var(--ink);border-radius:var(--radius);cursor:pointer;font-size:12.5px;font-family:inherit}
+.seg button[aria-pressed=true]{background:var(--t-dark);color:var(--ink-on-dark);border-color:var(--t-dark);font-weight:700}
+.chk{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.chk:last-of-type{border-bottom:0}
+.chk input{margin-top:3px}
+.chk .t{font-size:13px}
+.chk .d{font-size:11.5px;color:var(--ink-mute)}
+.chk .amt{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left;font-variant-numeric:normal}
+thead th{background:var(--panel-sunk);color:var(--ink-mute);font-size:12px;font-weight:700}
+td.up{color:var(--ok);font-weight:700} td.dn{color:var(--bad);font-weight:700}
+.gauge{height:9px;border-radius:999px;background:var(--panel-sunk);overflow:hidden;margin:7px 0 4px}
+.gauge > i{display:block;height:100%;background:var(--ok);transition:width .18s}
+.gauge.mid > i{background:var(--warn)} .gauge.low > i{background:var(--bad)}
+.acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.acts button{flex:1;min-width:130px;padding:11px 12px;border-radius:var(--radius);cursor:pointer;
+  font-size:13.5px;font-weight:700;font-family:inherit;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink)}
+.acts button.primary{background:var(--t-dark);color:var(--ink-on-dark);border-color:var(--t-dark)}
+.acts button.danger{color:var(--bad);border-color:var(--bad)}
+.msg{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--t-accent);
+  border-radius:var(--radius);padding:12px var(--pad);margin-top:var(--gap)}
+.msg .mh{display:flex;gap:8px;align-items:baseline;font-size:12px;color:var(--ink-mute);margin-bottom:6px}
+.msg .ms{font-weight:800;margin-bottom:5px}
+.msg pre{margin:0;font:inherit;white-space:pre-wrap;color:var(--ink-mid);font-size:13px}
+h3.sec{font-size:13px;color:var(--ink-mute);margin:22px 0 8px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="note">
+    <b>시안이다 — 구현이 아니다.</b> 숫자는 배치를 보려고 넣은 예시이고 밸런스가 아니다.
+    색·치수·글꼴은 <code>apps/ui/src/styles.css</code> 의 토큰을 그대로 썼다.
+    수락 확률의 계수(노트레이드 ×0.95 · 팀옵션 ×1.05/1.10 · 선수옵션 ×0.97/0.94)만
+    <code>ContractNegotiationModal.svelte</code> 의 실제 값이다.
+  </div>
+
+  <div class="hd">
+    <h1>계약 협상</h1>
+    <span class="sub">인천 파이러츠 · KBL</span>
+    <span class="grow"></span>
+    <span class="wk">2031 W39 · 재계약</span>
+  </div>
+
+  <div class="cols">
+    <!-- ── 구단 제시 ─────────────────────────────────── -->
+    <section class="card">
+      <h2>구단 제시</h2>
+      <div class="row"><span class="k">연봉</span><span class="v big" id="oSal">18,000만원</span></div>
+      <div class="row"><span class="k">계약 기간</span><span class="v">2년</span></div>
+      <div class="row"><span class="k">계약금</span><span class="v">6,000만원</span></div>
+      <div class="row"><span class="k">조항</span><span class="v">
+        <span class="tag on">팀 옵션 1년</span><span class="tag off">노트레이드</span>
+      </span></div>
+      <div class="row"><span class="k">인센티브 후보</span><span class="v muted">아래에서 최대 3개</span></div>
+      <p class="muted" style="margin:10px 0 0">
+        구단은 지난 시즌 평가를 <b>B</b> 로 봤다. 승부수가 낮은 구단이라 팀 옵션을 걸었다.
+      </p>
+    </section>
+
+    <!-- ── 역제안 ────────────────────────────────────── -->
+    <section class="card">
+      <h2>역제안</h2>
+
+      <label class="f">연봉 <span class="muted">(제시 대비 <span id="pct">0%</span>)</span></label>
+      <input type="range" id="sal" min="-20" max="20" step="1" value="0">
+      <div class="row"><span class="k">요구 연봉</span><span class="v" id="salV">18,000만원</span></div>
+      <div class="row"><span class="k muted">최저연봉 바닥</span><span class="v muted">3,000만원 (KBL)</span></div>
+
+      <label class="f">계약 기간</label>
+      <div class="seg" id="yrs">
+        <button data-y="1">1년</button><button data-y="2" aria-pressed="true">2년</button><button data-y="3">3년</button>
+      </div>
+
+      <label class="f">조항</label>
+      <label class="chk"><input type="checkbox" id="nt"><span><span class="t">노트레이드</span><br>
+        <span class="d">트레이드 거부권 — 구단이 싫어한다</span></span><span class="amt" id="ntM">×0.95</span></label>
+      <label class="chk"><input type="checkbox" id="po"><span><span class="t">선수 옵션 1년</span><br>
+        <span class="d">내가 연장을 고른다</span></span><span class="amt">×0.97</span></label>
+      <label class="chk"><input type="checkbox" id="to" checked><span><span class="t">팀 옵션 1년 수용</span><br>
+        <span class="d">구단이 연장을 고른다 — 받아들이면 확률이 오른다</span></span><span class="amt">×1.05</span></label>
+    </section>
+  </div>
+
+  <!-- ── 인센티브 ─────────────────────────────────── -->
+  <h3 class="sec">인센티브 — 최대 3개 (선발 기준 후보)</h3>
+  <section class="card">
+    <label class="chk"><input type="checkbox" class="inc" data-b="1500" checked><span><span class="t">25등판</span><br>
+      <span class="d">한 시즌 선발 등판 25회 이상</span></span><span class="amt">+1,500만원</span></label>
+    <label class="chk"><input type="checkbox" class="inc" data-b="2500"><span><span class="t">150이닝</span><br>
+      <span class="d">규정이닝 근처 — 로테이션을 지켰다는 뜻</span></span><span class="amt">+2,500만원</span></label>
+    <label class="chk"><input type="checkbox" class="inc" data-b="3000"><span><span class="t">ERA 3.00 이하</span><br>
+      <span class="d">규정이닝을 채웠을 때만 센다</span></span><span class="amt">+3,000만원</span></label>
+    <label class="chk"><input type="checkbox" class="inc" data-b="2000"><span><span class="t">10승</span><br>
+      <span class="d">승은 팀을 탄다 — 문턱을 낮게 뒀다</span></span><span class="amt">+2,000만원</span></label>
+    <label class="chk"><input type="checkbox" class="inc" data-b="5000"><span><span class="t">골든글러브 수상</span><br>
+      <span class="d">받으면 한 번에 크다</span></span><span class="amt">+5,000만원</span></label>
+    <p class="muted" style="margin:10px 0 0">
+      고른 것 <b id="incN">1</b>개 · 다 달성하면 <b id="incSum">1,500</b>만원.
+      인센티브를 많이 걸수록 구단은 <b>연봉을 덜 올려도 된다</b>고 본다.
+    </p>
+  </section>
+
+  <!-- ── 비교 ─────────────────────────────────────── -->
+  <h3 class="sec">비교</h3>
+  <section class="card" style="overflow-x:auto">
+    <table>
+      <thead><tr><th>항목</th><th>지금 계약</th><th>구단 제시</th><th>내 역제안</th></tr></thead>
+      <tbody>
+        <tr><td>연봉</td><td>14,000</td><td>18,000</td><td id="cSal" class="up">18,000</td></tr>
+        <tr><td>기간</td><td>3년</td><td>2년</td><td id="cYr">2년</td></tr>
+        <tr><td>계약금</td><td>0</td><td>6,000</td><td>6,000</td></tr>
+        <tr><td>인센티브 최대</td><td>—</td><td>—</td><td id="cInc" class="up">1,500</td></tr>
+        <tr><td>노트레이드</td><td>없음</td><td>없음</td><td id="cNt">없음</td></tr>
+        <tr><td><b>총액(최대)</b></td><td><b>42,000</b></td><td><b>42,000</b></td><td id="cTot"><b>43,500</b></td></tr>
+      </tbody>
+    </table>
+    <p class="muted" style="margin:10px 0 0">총액 = 연봉 × 기간 + 계약금 + 인센티브 최대치. 단위 만원.</p>
+  </section>
+
+  <!-- ── 수락 확률 ────────────────────────────────── -->
+  <h3 class="sec">구단이 받아들일까</h3>
+  <section class="card">
+    <div class="gauge" id="g"><i id="gi" style="width:78%"></i></div>
+    <div class="row"><span class="k">수락 확률(추정)</span><span class="v" id="pv">78%</span></div>
+    <p class="muted" id="why" style="margin:8px 0 0">연봉을 그대로 받고 팀 옵션을 수용했다 — 구단이 마다할 이유가 적다.</p>
+    <div class="acts">
+      <button class="primary">역제안을 보낸다</button>
+      <button>제시를 그대로 수락</button>
+      <button class="danger">거절하고 FA 로</button>
+    </div>
+  </section>
+
+  <!-- ── 소식 문안 ────────────────────────────────── -->
+  <h3 class="sec">소식 문안 예 (B 소유)</h3>
+  <div class="msg">
+    <div class="mh"><span>시스템</span><span>·</span><span>에이전트</span><span>·</span><span>W39</span></div>
+    <div class="ms">구단 제시 — 인천 파이러츠</div>
+    <pre>구단이 재계약 조건을 보내왔습니다.
+
+연봉 18,000만원 / 2년 · 계약금 6,000만원
+팀 옵션 1년
+
+인센티브는 세 개까지 걸 수 있습니다.</pre>
+  </div>
+  <div class="msg">
+    <div class="mh"><span>시스템</span><span>·</span><span>에이전트</span><span>·</span><span>W40</span></div>
+    <div class="ms">계약 서명 완료</div>
+    <pre>인천 파이러츠와의 계약이 완료되었습니다.
+연봉: 18,000만원 / 2년
+계약금: 6,000만원
+팀 옵션 1년
+인센티브: 25등판 +1,500만원
+
+W52 새 시즌 시작 시 정식 적용됩니다.</pre>
+  </div>
+  <div class="msg">
+    <div class="mh"><span>시스템</span><span>·</span><span>구단</span><span>·</span><span>W51</span></div>
+    <div class="ms">인센티브 정산</div>
+    <pre>올해 조건 하나를 채웠습니다.
+
+25등판 — 달성 (28등판)  +1,500만원
+150이닝 — 미달 (141.2이닝)</pre>
+  </div>
+
+</div>
+
+<script>
+// 시안용 계산 — 계수는 ContractNegotiationModal.svelte 의 실제 값이다
+const $ = (s) => document.querySelector(s);
+const won = (n) => n.toLocaleString() + "만원";
+const BASE = 18000, BASE_YEARS = 2, BONUS = 6000, CUR_TOTAL = 42000;
+let years = 2;
+
+function calc() {
+  const pct = +$("#sal").value;
+  const sal = Math.round(BASE * (1 + pct / 100) / 100) * 100;
+  const nt = $("#nt").checked, po = $("#po").checked, to = $("#to").checked;
+  const incs = [...document.querySelectorAll(".inc")].filter((c) => c.checked);
+  const incSum = incs.reduce((a, c) => a + +c.dataset.b, 0);
+
+  $("#pct").textContent = (pct > 0 ? "+" : "") + pct + "%";
+  $("#salV").textContent = won(sal);
+  $("#incN").textContent = incs.length;
+  $("#incSum").textContent = incSum.toLocaleString();
+
+  // 비교표
+  const cSal = $("#cSal"); cSal.textContent = sal.toLocaleString();
+  cSal.className = sal > BASE ? "up" : sal < BASE ? "dn" : "";
+  $("#cYr").textContent = years + "년";
+  $("#cInc").textContent = incSum ? incSum.toLocaleString() : "—";
+  $("#cNt").textContent = nt ? "있음" : "없음";
+  const total = sal * years + BONUS + incSum;
+  $("#cTot").innerHTML = "<b>" + total.toLocaleString() + "</b>";
+
+  // 수락 확률 — 실제 계수 + 시안용 기저
+  let p = 0.86;
+  p *= 1 - Math.max(0, pct) * 0.022;          // 더 달라고 할수록 (시안용)
+  p *= 1 + Math.max(0, -pct) * 0.010;
+  p *= 1 - Math.max(0, years - BASE_YEARS) * 0.09;
+  if (nt) p *= 0.95;
+  if (po) p *= 0.97;
+  if (to) p *= 1.05;
+  p *= 1 + Math.min(incs.length, 3) * 0.02;   // 인센티브는 구단에 유리 (시안용)
+  const pv = Math.max(2, Math.min(98, Math.round(p * 100)));
+  $("#pv").textContent = pv + "%";
+  $("#gi").style.width = pv + "%";
+  $("#g").className = "gauge" + (pv < 40 ? " low" : pv < 65 ? " mid" : "");
+
+  const why = [];
+  if (pct > 8) why.push("연봉을 많이 올려 달라고 했다");
+  else if (pct < 0) why.push("연봉을 깎아 부르니 구단이 반긴다");
+  if (years > BASE_YEARS) why.push("기간을 늘려 달라고 했다");
+  if (nt) why.push("노트레이드는 구단이 싫어한다");
+  if (to) why.push("팀 옵션을 수용했다");
+  if (incs.length) why.push("인센티브를 " + incs.length + "개 걸어 고정 연봉 부담이 줄었다");
+  $("#why").textContent = why.length ? why.join(" · ") + "." : "제시 그대로다.";
+}
+
+$("#sal").addEventListener("input", calc);
+["#nt", "#po", "#to"].forEach((s) => $(s).addEventListener("change", calc));
+document.querySelectorAll(".inc").forEach((c) => c.addEventListener("change", calc));
+document.querySelectorAll("#yrs button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll("#yrs button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+  b.setAttribute("aria-pressed", "true"); years = +b.dataset.y; calc();
+}));
+calc();
+</script>
+</body>
+</html>
