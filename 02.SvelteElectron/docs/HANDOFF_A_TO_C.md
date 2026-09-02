@@ -43,6 +43,15 @@ C 가 고칠 화면 둘 (전부 C 소유):
 ⚠ `overseasWiring.test.ts` 의 허브 쪽 세 줄(`overseasModalOpen` · "해외 2군 신청" ·
 `slice(0, 3)`)은 **네가 화면을 바꾸면서 같이 바꿔라** — 지금은 옛 화면을 못박고 있다.
 
+## 0.47 ⚠ 빌드 확인은 **새 pack 뒤에** — 지금 `release/win-unpacked` 는 못 뜨는 빌드다 (09-02)
+
+`smoke:dist` 첫 실행이 잡았다: main.cjs 가 `dev-server.config.cjs` 를 요구하는데
+`build.files` 에 없어 패키지 앱이 MODULE_NOT_FOUND 로 "Error" 대화상자만 띄운 채
+선다(프로세스 1 · 창 없음 · stderr 빈 채). 포트 정본을 한 파일로 모은 뒤 줄곧 그랬다.
+`084b78a2b` 에서 고쳤고 재 pack 은 electron 이 0 일 때 A 가 건다 — 그 전에 exe 로
+확인하면 못 뜨는 게 정상이니 결함으로 적지 마라. 검증은 `npm run dist:steam:verify`
+(상대 require↔asar 대조가 들어갔다) → `npm run smoke:dist` (ERROR 면 exit 1).
+
 ## 0.46 📐 1.1 첫 항목 예고 — 현역 군 생활 화면 셋 (지금 하지 마라)
 
 [PLAN_MILITARY_LIFE.md §22](PLAN_MILITARY_LIFE.md): **상위 탭 「병역」**(복무 중에만 · 맨 앞) 안에 2단 넷 —
