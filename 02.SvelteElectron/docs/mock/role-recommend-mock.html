@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>보직 면담 시안 — 감독 추천</title>
+<style>
+  :root{
+    --bg:#0e1524; --panel:#182136; --panel-sunk:#131c2e;
+    --line:#25314a; --line-strong:#33425f;
+    --ink:#e8eefb; --ink-mid:#b3c0d8; --ink-mute:#7f8ea9;
+    --accent:#4f9dff; --warn:#f2a33c; --bad:#e2604f; --good:#4fbf8a;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:14px/1.6 "Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    padding:28px 20px 60px;
+  }
+  .page-head{max-width:1180px;margin:0 auto 26px}
+  .page-head h1{font-size:19px;margin:0 0 6px}
+  .page-head p{margin:0;color:var(--ink-mute);font-size:12.5px}
+  .board{max-width:1180px;margin:0 auto;display:grid;gap:22px;
+         grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+  .frame{display:grid;gap:10px;align-content:start}
+  .frame > .cap{font-size:12px;color:var(--ink-mute)}
+  .frame > .cap b{color:var(--ink-mid);font-weight:700}
+
+  /* ── 모달 ────────────────────────────── */
+  .stage{background:#0a0f1c;border:1px solid var(--line);border-radius:14px;
+         padding:22px 16px;display:flex;justify-content:center}
+  .modal{
+    width:100%;max-width:380px;background:var(--panel);color:var(--ink);
+    border:1px solid var(--line);border-top:4px solid var(--accent);
+    border-radius:var(--radius);padding:18px 18px 16px;display:grid;gap:13px;
+    box-shadow:0 14px 40px rgba(0,0,0,.45);
+  }
+  .modal.alert{border-top-color:var(--warn)}
+  .modal.danger{border-top-color:var(--bad)}
+  .chip{margin:0;font-size:10.5px;font-weight:700;letter-spacing:.07em;color:var(--accent)}
+  .modal.alert .chip{color:var(--warn)} .modal.danger .chip{color:var(--bad)}
+  h2{margin:2px 0 0;font-size:16.5px}
+  .who{margin:0;font-size:12px;color:var(--ink-mute)}
+  .quote{
+    margin:0;padding:10px 12px;background:var(--panel-sunk);
+    border-left:3px solid var(--accent);border-radius:6px;
+    font-size:13px;color:var(--ink-mid);white-space:pre-line;
+  }
+  .modal.alert .quote{border-left-color:var(--warn)}
+  .modal.danger .quote{border-left-color:var(--bad)}
+
+  /* ── 세 자리 표 ──────────────────────── */
+  .seats{display:grid;gap:6px}
+  .seat{display:grid;grid-template-columns:52px 1fr auto;gap:9px;align-items:center;
+        padding:7px 9px;background:var(--panel-sunk);border:1px solid var(--line);
+        border-radius:7px}
+  .seat.pick{border-color:var(--accent);background:#16273f}
+  .seat.blocked{opacity:.72}
+  .seat .nm{font-weight:700;font-size:12.5px}
+  .bar{height:6px;background:#0d1526;border-radius:4px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .seat.blocked .bar i{background:var(--ink-mute)}
+  .num{font-size:11px;color:var(--ink-mute);white-space:nowrap}
+  .num b{color:var(--ink-mid)}
+  .num .no{color:var(--bad)}
+  .num .ok{color:var(--good)}
+
+  /* ── 버튼 셋 ─────────────────────────── */
+  .picks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .pick-btn{
+    display:grid;gap:2px;justify-items:center;padding:10px 4px 9px;cursor:pointer;
+    background:var(--panel-sunk);color:var(--ink);
+    border:1px solid var(--line-strong);border-radius:8px;font:inherit;
+  }
+  .pick-btn:hover{border-color:var(--accent);background:#16273f}
+  .pick-btn .lb{font-weight:700;font-size:13.5px}
+  .pick-btn .sub{font-size:10.5px;color:var(--ink-mute)}
+  .pick-btn.rec{border-color:var(--accent);background:#16273f}
+  .pick-btn.rec .sub{color:var(--accent)}
+  .pick-btn.risk{border-color:#4a3a24}
+  .pick-btn.risk .sub{color:var(--warn)}
+  .pick-btn.sel{outline:2px solid var(--warn);outline-offset:-2px}
+
+  .note{margin:0;font-size:11.5px;color:var(--ink-mute)}
+  .warnbox{
+    margin:0;padding:9px 11px;border-radius:7px;font-size:12.5px;line-height:1.55;
+    background:#2a2113;border:1px solid #4a3a24;color:#f0cf9c;
+  }
+  .warnbox.hard{background:#2c1815;border-color:#4d2a24;color:#f2bdb4}
+  .warnbox b{color:#fff}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .btn{padding:9px 10px;border-radius:8px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;
+       border:1px solid var(--line-strong);background:var(--panel-sunk);color:var(--ink-mid)}
+  .btn.go{background:var(--bad);border-color:var(--bad);color:#fff}
+  .btn.back:hover{border-color:var(--accent);color:var(--ink)}
+  .foot{max-width:1180px;margin:30px auto 0;color:var(--ink-mute);font-size:11.5px;
+        border-top:1px solid var(--line);padding-top:14px}
+  .foot code{color:var(--ink-mid)}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>투수 보직 — 감독 추천 모달 시안</h1>
+  <p>PLAN_ROLE_RECOMMEND.md §4·§5 · 숫자는 문서의 예시값이고 계측이 아니다 · 세 자리 = 선발 / 중계 / 마무리</p>
+</div>
+
+<div class="board">
+
+  <!-- ① 기본 -->
+  <div class="frame">
+    <div class="cap"><b>① 추천</b> — pending <code>roleChoice</code> 가 뜬 직후</div>
+    <div class="stage">
+      <div class="modal">
+        <p class="chip">시즌 보직 면담</p>
+        <h2>2029시즌 보직을 정한다</h2>
+        <p class="who">감독 · 한동석</p>
+
+        <p class="quote">스태미나가 붙었고 구종도 넷이다.
+올해는 로테이션에서 보고 싶다 — <b>선발</b>로 간다.</p>
+
+        <div class="seats">
+          <div class="seat pick">
+            <span class="nm">선발</span>
+            <span class="bar"><i style="width:81%"></i></span>
+            <span class="num">적합 <b>81</b> · <span class="ok">2위 / 5자리</span></span>
+          </div>
+          <div class="seat">
+            <span class="nm">중계</span>
+            <span class="bar"><i style="width:64%"></i></span>
+            <span class="num">적합 <b>64</b> · <span class="ok">6위 / 7자리</span></span>
+          </div>
+          <div class="seat blocked">
+            <span class="nm">마무리</span>
+            <span class="bar"><i style="width:58%"></i></span>
+            <span class="num">적합 <b>58</b> · <span class="no">3위 / 1자리</span></span>
+          </div>
+        </div>
+
+        <div class="picks">
+          <button class="pick-btn rec"><span class="lb">선발</span><span class="sub">감독 추천</span></button>
+          <button class="pick-btn"><span class="lb">중계</span><span class="sub">자리 있음</span></button>
+          <button class="pick-btn risk"><span class="lb">마무리</span><span class="sub">자리 없음</span></button>
+        </div>
+
+        <p class="note">고른 자리는 이번 시즌 내내 간다. 다음 면담은 2030시즌 개막 주다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 경고 1 -->
+  <div class="frame">
+    <div class="cap"><b>② 경고 하나</b> — 추천이 아닌 자리를 눌렀다 (자리는 있다)</div>
+    <div class="stage">
+      <div class="modal alert">
+        <p class="chip">시즌 보직 면담</p>
+        <h2>2029시즌 보직을 정한다</h2>
+        <p class="who">감독 · 한동석</p>
+
+        <p class="quote">스태미나가 붙었고 구종도 넷이다.
+올해는 로테이션에서 보고 싶다 — <b>선발</b>로 간다.</p>
+
+        <div class="seats">
+          <div class="seat">
+            <span class="nm">선발</span>
+            <span class="bar"><i style="width:81%"></i></span>
+            <span class="num">적합 <b>81</b> · <span class="ok">2위 / 5자리</span></span>
+          </div>
+          <div class="seat pick">
+            <span class="nm">중계</span>
+            <span class="bar"><i style="width:64%"></i></span>
+            <span class="num">적합 <b>64</b> · <span class="ok">6위 / 7자리</span></span>
+          </div>
+          <div class="seat blocked">
+            <span class="nm">마무리</span>
+            <span class="bar"><i style="width:58%"></i></span>
+            <span class="num">적합 <b>58</b> · <span class="no">3위 / 1자리</span></span>
+          </div>
+        </div>
+
+        <div class="picks">
+          <button class="pick-btn rec"><span class="lb">선발</span><span class="sub">감독 추천</span></button>
+          <button class="pick-btn sel"><span class="lb">중계</span><span class="sub">선택함</span></button>
+          <button class="pick-btn risk"><span class="lb">마무리</span><span class="sub">자리 없음</span></button>
+        </div>
+
+        <p class="warnbox">감독은 <b>선발</b>을 추천했다.
+        불펜에는 자리가 있지만 6번째라, 등판이 <b>주 1회 아래</b>로 줄 수 있다.</p>
+
+        <div class="actions">
+          <button class="btn back">다시 고른다</button>
+          <button class="btn go" style="background:var(--warn);border-color:var(--warn);color:#20160a">그래도 중계</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 경고 2 -->
+  <div class="frame">
+    <div class="cap"><b>③ 경고 둘</b> — 자리가 없는 곳을 골랐다 (확정 확인)</div>
+    <div class="stage">
+      <div class="modal danger">
+        <p class="chip">확인</p>
+        <h2>정말 마무리로 가겠습니까?</h2>
+        <p class="who">감독 · 한동석 — 추천은 선발이었다</p>
+
+        <div class="seats">
+          <div class="seat blocked">
+            <span class="nm">선발</span>
+            <span class="bar"><i style="width:81%"></i></span>
+            <span class="num">적합 <b>81</b> · <span class="ok">2위 / 5자리</span></span>
+          </div>
+          <div class="seat blocked">
+            <span class="nm">중계</span>
+            <span class="bar"><i style="width:64%"></i></span>
+            <span class="num">적합 <b>64</b> · <span class="ok">6위 / 7자리</span></span>
+          </div>
+          <div class="seat pick" style="border-color:var(--bad);background:#2c1815">
+            <span class="nm">마무리</span>
+            <span class="bar"><i style="width:58%;background:var(--bad)"></i></span>
+            <span class="num">적합 <b>58</b> · <span class="no">3위 / 1자리</span></span>
+          </div>
+        </div>
+
+        <p class="warnbox hard">이 팀의 마무리 자리는 <b>1개</b>이고 당신은 <b>3순위</b>다.
+        승부처에 불릴 일이 드물어져 <b>등판이 크게 줄어든다</b>.
+        기록도 성장도 그만큼 얇아진다.
+
+        보직은 이번 시즌 내내 간다.</p>
+
+        <div class="actions">
+          <button class="btn back">다시 고른다</button>
+          <button class="btn go">그래도 마무리</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="foot">
+  적합도 = 세부 능력치(구위 velocity · 제구 control · 커맨드 command · 스태미나 stamina ·
+  무브 movement · 멘탈 mentality · 클러치 clutch · 견제 holdRunners)와 구종(개수·등급·계열)의 가중합.
+  순위 = 같은 팀 투수들을 같은 식으로 재서 매긴 등수. 자리 수 = <code>rosterOpsRules.rotationSize</code>(선발) ·
+  마무리 1 · 중계는 규칙 파일에 새로 둔다. 가중치는 전부 제안값이며 밸런스는 사용자 확정이다.
+</div>
+
+</body>
+</html>
