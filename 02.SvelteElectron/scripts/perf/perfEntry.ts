@@ -306,7 +306,27 @@ export function entityCount(): number { return get(masterStore).entities.length;
  * 자동 진행을 한 번 돌린다. `runAutoAdvance`는 W40·W51에서 스스로 멈추므로
  * 호출부가 반복한다 — 그 정지가 실제 게임 동작이라 우회하지 않는다.
  */
+/**
+ * 학습 모드 정책 (B-3 실측 2026-09-02): 헤드리스는 `setStudyMode` 를 한 번도 안 불러 GPA 가
+ * normal(0.55 → 2.48) 에 갇혔고, 대학 gpa_lte 2 · gpa_gte 3.5 이벤트 10종이 **계측 한계**로 못 닿았다.
+ *   focus | normal | rest — 고정 · alternate — 시즌 짝수해 focus · 홀수해 rest (양쪽 문턱을 다 밟는다)
+ * `PB_STUDY_MODE` 로 준다. 학기 GPA 가 주간 품질의 평균이라 주마다 바꾸면 normal 과 같아진다 — 시즌 단위로 바꾼다.
+ */
+type StudyPolicy = "focus" | "normal" | "rest" | "alternate" | null;
+let _studyPolicy: StudyPolicy = null;
+export function setStudyPolicy(p: StudyPolicy): void { _studyPolicy = p; }
+function applyStudyPolicy(): void {
+  if (!_studyPolicy) return;
+  const g = get(gameStore);
+  const st = g.protagonist.careerStage;
+  if (st !== "highschool" && st !== "university") return;
+  const year = get(seasonStore).seasonYear;
+  const mode = _studyPolicy === "alternate" ? (year % 2 === 0 ? "focus" : "rest") : _studyPolicy;
+  if (g.schoolState.weeklyStudyMode !== mode) gameStore.setStudyMode(mode);
+}
+
 export async function autoRun(): Promise<void> {
+  applyStudyPolicy();
   await runAutoAdvance();
   // ⚠ `runAutoAdvance`는 예외를 **삼키고** `stopReason`에만 남긴다. 헤드리스가
   // 그걸 안 보면 "주는 넘어갔으니 정상"으로 읽혀서, 매년 같은 자리에서
@@ -3823,6 +3843,7 @@ export async function oneWeek(): Promise<void> {
  * ⚠ `stop` 사유가 "오류:" 로 시작하지 않으므로 `autoRun` 이 던지지 않는다.
  */
 export async function runOneWeek(): Promise<void> {
+  applyStudyPolicy();
   const w0 = get(seasonStore).currentWeek;
   const unsub = seasonStore.subscribe((s) => {
     if (s.currentWeek > w0 && get(autoAdvanceStore).running) {

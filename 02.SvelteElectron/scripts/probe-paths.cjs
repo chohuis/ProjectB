@@ -32,6 +32,8 @@ const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 globalThis.__PB_CAREER_LOG = true;
 // 병영생활 주간 선택 정책 — ball | people | rest | mix (기본 ball · 실제 플레이는 탭에서 고른다)
 globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
+// 학습 모드 정책 — focus | normal | rest | alternate (기본 없음 = normal 고정 · B-3: GPA 게이트 10종을 재려면 alternate)
+const STUDY_POLICY = process.env.PB_STUDY_MODE || null;
 const SEED = Number(process.env.PF_SEED || 20260731);
 const YEARS = Number(process.env.PF_YEARS || 12);
 
@@ -59,6 +61,7 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   try {
     await app.boot({ slotId: "PP", worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy(POLICY);
+    if (STUDY_POLICY && app.setStudyPolicy) app.setStudyPolicy(STUDY_POLICY);
     prev = app.pathSignals();
     const start = app.currentSeason();
     let guard = 0;
