@@ -254,6 +254,13 @@ C   apps/ui/src/pages/**  ·  features/**  ·  apps/desktop/ipc/*.cjs
 ⚠ `npmRebuild: true` 라 `pack` 이 네이티브를 electron 33.4.11 로 다시 빌드한다 —
 **계측이 `.node` 를 잡고 있으면 EPERM** 이다. W3 빌드는 계측을 다 끝낸 뒤에.
 
+### 검증기 시운전 — 6월 빌드가 두 가지를 말했다 (2026-09-02)
+
+`scripts/dist-steam.cjs` 를 6월 `win-unpacked` 에 돌리니 **2건 실패**했다 —
+실행파일이 `ProjectB.exe`(지금은 `OnePitch`)이고, **`resource/data/master/entities/players`
+가 디포에 들어가 있었다**(3,711 파일 · 356.6 MB). 지금 `files` 제외 목록엔
+있으니 새 pack 에서 통과해야 한다. 이 두 검사가 없었으면 그대로 올라갔다.
+
 ### W3 에 만들 것 — 셋뿐이다
 
 ```

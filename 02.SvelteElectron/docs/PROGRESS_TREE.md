@@ -26,14 +26,14 @@ A
 ├─ 2. ⬜ 1 에서 나온 결함 수정 (나오는 대로 · 하나씩 · 전후 실측)
 ├─ 3. ⏳ 복무 중 소속 리그 — 씨앗 둘 확인만 남음 (코드·검사 ✅ f1e8a6d16)
 ├─ 4. ⬜ 밸런스 기준선 재측정  measure:batting 씨앗 3  (오늘 세상이 바뀌어 09-01 판이 무효)
-├─ 5. ⬜ 밸런스 표 — 대학 ERA 10 · 2군 타율 .329 · 보크 12.8 · 경기당타석 모수(규정타자 기준)
+├─ 5. ⬜ 밸런스 표 — 대학 ERA 10 · 2군 타율 .329 · 보크 · 경기당타석(✅ 프로브를 규정타자 기준으로 고침)
 ├─ 6. ❓ 값 확정 — 건마다 사용자 → ⬜ 반영 → ⬜ 재측정 → ⬜ BALANCE_BASELINE 새 판
-├─ 7. ⬜ 보크 12.8 → 3~8 (Rust · .node 잠금 없을 때)
+├─ 7. 🔄 보크 12.8 → 3~8 — 상수 셋 절반(0.0006/0.0009/0.003) · cargo 307 ✅ · build:native·실측 ⏳(.node 잠금)
 ├─ 8. ⬜ B 재병합 (B 가 당겨 두면) · B·C 결함 회신 (인계 둘을 매 회차 읽는다)
 ├─ 9. ⬜ 회귀 전량 (vitest · cargo · check 32 · smoke · test:releasescope) · 문서 갱신 (CLAUDE.md)
 ├─ 10. 빌드 · Steam
 │     ├─ ✅ 현 상태 — dir 산출물이 곧 디포 · Cloud 는 Auto-Cloud (PLAN_RELEASE §8)
-│     ├─ ⬜ dist:steam — pack → win-unpacked 검증 (.node · master.db 가 asar 밖)
+│     ├─ ✅ dist:steam 검증기 (d6aa846e0) — 6월 빌드에서 exe 이름·players 누출 2건 잡음 · ⬜ 새 pack 으로 통과
 │     ├─ ⬜ smoke:dist — 산출물 exe 로 새 게임 → W5
 │     ├─ ⬜ 구 세이브 3종 마이그레이션 · test:migration
 │     ├─ ⬜ depot 문서 (app id · 실행 경로 · Cloud 루트)
