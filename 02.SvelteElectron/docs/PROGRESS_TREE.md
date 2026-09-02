@@ -96,7 +96,9 @@ B
 │        회복일 2 → DEC_RECOVERY_DAY · 우천 2 → DEC_HS_COMMON_RAIN · 라커룸 → DEC_PRO_LOCKER_MOOD
 │        스카우트 → DEC_SCOUT_PRESSURE · 후배 → DEC_UNIV_JUNIOR_CARE(역할이 정반대였다)
 │        └─ check:playertype ② 상한 307 → 316 (콘텐츠가 는 게 아니라 옮긴 곳이 투구 XP 를 준다)
-├─ 5. ⬜ 상무 소식함 — 결과 소식 한 통씩 (✅ 확정)
+├─ 5. ✅ 상무 소식함 — **결과 소식 한 통씩**. 뜬 소식은 A 가 이미 넣었고(8091cde75)
+│        고른 결과가 모달에만 있고 아무 데도 안 남던 것을 채웠다
+│        utils/militaryResultMessage.ts (B) + resolveEventPending 두 줄 · 검사 7건 변이 확인
 ├─ 6. ⬜ 프로·독립 사교 풀 1종씩 · 문장 은행 나머지 27종
 ├─ 7. ⬜ 드래프트 지명률 판정 · B군 4종 축 옮기기
 ├─ 8. ✅ 병합됨 4649558e4 (A-8)

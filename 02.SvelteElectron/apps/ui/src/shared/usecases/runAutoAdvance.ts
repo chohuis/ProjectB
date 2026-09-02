@@ -5,6 +5,7 @@ import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { applyMilitaryEventChoice } from "./militaryLife";
+import { buildMilitaryResultMessage } from "../utils/militaryResultMessage";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
@@ -245,6 +246,11 @@ export async function resolveEventPending(pa: Extract<PendingAction, { type: "ev
     // 병영생활 몫(관계·감각·상벌·휴가·성과 보정) — militaryLife 가 있고 그 풀의 이벤트일 때만 움직인다
     applyMilitaryEventChoice(pa.eventId, chosen.effects);
   }
+
+  // 군 이벤트는 **고른 결과가 아무 데도 안 남았다** — 모달에만 있었다.
+  // 결과 소식 한 통 (사용자 확정 · 트랙 B B-5 · `militaryResultMessage.ts`)
+  const resMsg = buildMilitaryResultMessage(pa.eventId, pa.title, chosen);
+  if (resMsg) gameStore.addMessage(resMsg);
 
   seasonStore.resolvePendingAction("event", pa.eventId);
   await gameStore.save();
