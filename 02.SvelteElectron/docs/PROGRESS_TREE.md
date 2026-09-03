@@ -58,6 +58,7 @@ A
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     ├─ ✅ **프리즈 후보 pack 09-03 07:26** — B-10 까지 전부 병합 · dist:steam OK · smoke:dist 통과 (⚠ 내 프로브가 .node 를 잡아 두 번 EPERM — 프로브 먼저 내린다)
 │     └─ ⬜ B-10 소식함 눈확인 · C 최종 확인 → 회신 결함 → 재 pack → 9/14 최종 빌드 → 9/15 프리즈 → 업로드 후보 → 사용자 확인
+│     ├─ 🔄 **1.1 A① 보직 적합도 산식** — Rust `pitcher_role.rs`(cargo 7) · 규칙 `pitcherRoleRules`·`bullpenSize`(제안값) · TS 재료 `utils/pitcherRoleRules.ts`(vitest 12) 커밋 0ae9b586d · 남은 것: `recommendRole()` 교체 + master prime(편집 완료 · C⑤ 커밋 뒤 커밋) · .node 복사(프로브가 잡고 있음 · 프로브 뒤 build:native 재실행) · A③ measure:role 확장으로 추천 분포 실측 → 사용자 1차 확정
 │     ├─ ✅ 새 게임 첫 소식함 자리표시자 넷 삭제(사용자 결정 · 07cba2343 + 정정 fcef54508 · ⚠ C 진행분이 두 번째로 섞여 plumbing 으로 걷어냄 — C 가동 중 shared 파일 커밋 금지)
 │     ├─ ✅ **전 경로 한 바퀴 재실행(9/8 몫 당김)** — 프리즈 후보 코드 · 씨앗 20260802 · 10시즌 · pro/draft/univ/indie/mil **5/5 완주 · 예외 0**(08:54~12:15 · scratchpad/paths-0903.log) · 안 본 10행은 씨앗 상황값(대회기록 5/5 · 포스트시즌 4/5 · 독립 재지원 1 · 강등 3) · ⚠ 번들이 C① 이전이라 프로 W1 보직 갈래는 12시즌 pro 재실행으로 별도 확인 중
 │     └─ ✅ **9/5 문서 갱신 (09-03 에 당겨 닫음)** — ① BALANCE_BASELINE_09-05(씨앗 3 재측정 · 09-02 와 편차 안 · 움직인 지표 없음 · 포일만 1.1 목록에 추가) ② RESUME 09-03 머리 + 지난 기록 분리 ③ CLAUDE.md 두 줄
