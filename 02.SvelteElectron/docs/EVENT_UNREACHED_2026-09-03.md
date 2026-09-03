@@ -149,7 +149,7 @@ career_stage university · fatigue_gte 62 · condition_lte 55 · injured false
 | c8 | 현역 군 관계·사기 문턱 | 6 | 가중으로 갚아지지 않는다 — **문턱 문제**다. A 가 1.1 로 올렸다 | A · 1.1 |
 | c9 | 현역 군 창이 좁던 것 | 3 (`SNOW` · `GUN_MAINT` · `NIGHT_DUTY`) | **이미 갚았다** — `4dfbc2da5` 에서 가중 2→10 · 1→4 · 1→4. `SNOW` 는 0.21회/판이라 한 판 0회 확률이 81% 였다 | 🔴 **재측정 필요** |
 | c10 | 대학 학점 다섯 | 5 (`GPA_GOOD` · `SCHOLARSHIP` · `ATTENDANCE` · `WARN_1` · `Y1_FIRST_WARNING`) | **계측 한계였다.** `PB_STUDY_MODE=alternate` 로 다섯이 열렸다 | 열렸다 |
-| c11 | 상무 새로 살린 다섯 | 5 | 죽은 풀 `military.json` 에서 `military_common` 으로 옮긴 것들이다(`1a7b4a9c4`) — **옮긴 뒤 아무도 안 쟀다** | 🔴 **미측정** |
+| c11 | 상무 새로 살린 다섯 | 5 | 죽은 풀 `military.json` 에서 `military_common` 으로 옮긴 것들이다(`1a7b4a9c4`) — **D 09-04 재측정: 2/5 확인, 3/5 미확인(씨앗 1개)** | 🟡 **부분 확인 — 씨앗 더 필요** |
 
 ### c11 — 인용된 27/34 는 낡았다
 
@@ -160,8 +160,15 @@ career_stage university · fatigue_gte 62 · condition_lte 55 · injured false
 
 옮겨 온 다섯은 `MIL_EVT_DRILL_EXCELLENCE` · `MIL_EVT_FIELD_FATIGUE` ·
 `MIL_EVT_UNIT_SUPPORT` · `MIL_EVT_REST_WINDOW` · `MIL_EVT_COMMAND_PRESSURE` 다.
-**살린 뒤로 한 번도 안 쟀으므로 닿는지 모른다.** 상무 못닿음은
-「7종(34−27) + 미측정 5종」으로 읽어야 한다.
+
+**D 09-04 재측정** — `npm run probe:paths -- --path milsports`(씨앗 20260802 ·
+12시즌 · 상무 재직 1시즌). `MIL_EVT_UNIT_SUPPORT`(2030 W39) · `MIL_EVT_REST_WINDOW`
+(2030 W1) 는 떴다. `DRILL_EXCELLENCE`·`FIELD_FATIGUE`·`COMMAND_PRESSURE`는 이
+한 판에서 안 떴다 — 씨앗 하나·상무 재직 1시즌뿐이라 표본 부족일 개연성이 크고
+(`military_common.json` 자체가 19종 풀이라 주당 하나만 뽑힌다), 조건이 좁아서인지는
+씨앗을 더 돌려야 가른다. 로그 `resource/logs/d-regress/paths_milsports_20260802.log`.
+상무 못닿음은 「7종(34−27) + 확인 2종 + 미확인 3종」으로 읽는다 — 5종 전부가
+미측정이던 상태는 닫혔다.
 
 ---
 

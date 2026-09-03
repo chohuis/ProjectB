@@ -102,9 +102,11 @@
 ## 3. 병영 (PLAN_MILITARY_LIFE §40)
 감각 감쇠 −1.5 / 상한식 / 접근 1 의 +3 · 박격포 섞음 · 감각 0 전역 은퇴. 실측 §40 표.
 
-**상무 다섯의 두 번째 선택지 (B-25)** — `MIL_EVT_{DRILL_EXCELLENCE,FIELD_FATIGUE,UNIT_SUPPORT,REST_WINDOW,COMMAND_PRESSURE}` 에 성실 ±1~3 · 피로 -1~+5 · 사기 +3 · 컨디션 +5 를 제안값으로 달았다. 자리 `events/pools/military_common.json`. **실측 0** — 이 다섯은 죽은 풀에서 살린 뒤(`1a7b4a9c4`) 한 번도 안 쟀다. 재는 법: 상무 경로 한 판에서 다섯이 뜨는지와 선택 분포.
+**상무 다섯의 두 번째 선택지 (B-25)** — `MIL_EVT_{DRILL_EXCELLENCE,FIELD_FATIGUE,UNIT_SUPPORT,REST_WINDOW,COMMAND_PRESSURE}` 에 성실 ±1~3 · 피로 -1~+5 · 사기 +3 · 컨디션 +5 를 제안값으로 달았다. 자리 `events/pools/military_common.json`. **실측 2/5 (D 09-04 · `probe:paths --path milsports` 씨앗 20260802 · 12시즌 단발)** — `MIL_EVT_UNIT_SUPPORT`(2030 w39) · `MIL_EVT_REST_WINDOW`(2030 w1) 는 떴다. `DRILL_EXCELLENCE`·`FIELD_FATIGUE`·`COMMAND_PRESSURE` 는 이 한 판에서 안 떴다 — 풀이 크고(military_common.json 19종) 씨앗 하나·상무 재직 기간이 짧아 표본 부족일 개연성이 크다(뽑기 운 vs 조건 문제는 씨앗 3 이상 더 재야 가른다). 로그 `resource/logs/d-regress/paths_milsports_20260802.log`.
 
-**전역 뒤 재회 12종 (B-20 초안)** — 효과 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 · 돈 −15~−30만원 · 피로 +2~+4 · 조건 문턱(회복주 ≥2·≥4 · 주차 6~40 · 나이 25 · 명성 40 · 사기 40/55) · 우선순위 601~632. 자리 `resource/data/master/messages/military_reunion.json`. **실측 0** — 아직 `events/conditional/` 에 안 실렸다(잣대 한 줄이 막는다 · `HANDOFF_B_TO_A` B-20). 재는 법: 실은 뒤 `measure:messagekinds` 로 12종 통 수와 전역 뒤 시즌당 몇 통인지.
+**전역 뒤 재회 12종 (B-20 초안)** — 효과 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 · 돈 −15~−30만원 · 피로 +2~+4 · 조건 문턱(회복주 ≥2·≥4 · 주차 6~40 · 나이 25 · 명성 40 · 사기 40/55) · 우선순위 601~632. 자리 `resource/data/master/messages/military_reunion.json`. **실측 0/12 — 재확인(D 09-04)**. `resource/data/master/events/`(mandatory·conditional·random 전부)에 "REUNION" 문자열이 0건 — 아직 이벤트 풀에 실리지 않았다(파일만 있고 배선이 없다). `probe:paths --path mil`(씨앗 20260731·20260802 · 12시즌 각 1회 · `[병영이벤트]` 45/42종 전부 `MIL_CAL_`·`MIL_COND_`·`MIL_DAY_` 접두이고 REUNION 계열은 0건) 로도 같은 결과. 재는 법: 실은 뒤 `measure:messagekinds` 로 12종 통 수와 전역 뒤 시즌당 몇 통인지.
+
+**army 경로 도달률 (D 09-04 확인)** — `measure:slotreach --path army`(씨앗 20260803 · 3시즌): 전체공용 65%·고교 78% 도달, 대학·독립·KBL1군·KBL2군·ABL·JBL 전부 0%. **정상이다** — army 는 고교 졸업 직후 즉시 입대라 그 무대들을 커리어가 아예 안 지난다. 로그 `resource/logs/d-regress/slotreach_army.log`.
 
 ## 4. 경기·리그 (BALANCE_BASELINE_2026-09-05 §4)
 대학 ERA · 2군 타율 · 장타율(홈런 +25% · `resolve_hardness`) · K/9 · 포일(팀당 4~5 · 실제 5~15) · 도루 성공률 64~67%(실제 70~75) · 리그 ERA 5.1~5.4(실제 4.5).
