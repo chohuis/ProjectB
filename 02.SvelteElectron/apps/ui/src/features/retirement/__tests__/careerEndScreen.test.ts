@@ -1,6 +1,18 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+/**
+ * 🔴 **동적 `import()` 를 검사 안에서 하지 않는다** (2026-09-04).
+ *
+ * 예전엔 「신호는 한 번만 참이다」 검사가 본문에서 `await import(…)` 를 했다.
+ * 그러면 **모듈 적재가 검사 시간으로 잡힌다** — `retirement.ts` 는
+ * `gameStore` → 저장소 → 패키지까지 딸려 와 혼자 돌 때 **703ms**, 전체
+ * 실행에서 **1,544~1,759ms** 다(실측). 기본 제한이 5초라 기계가 바쁜 순간
+ * 넘어가고, **전체 실행에서만 3회 중 1회 깨졌다.**
+ *
+ * 정적으로 올리면 적재가 수집(collect) 단계로 가고 검사 본문은 값만 본다.
+ */
+import { careerEndPending, takeCareerEndPending } from "../../../shared/usecases/retirement";
 
 /**
  * 커리어 결산에 연도별·순위·사람이 실제로 붙어 있는가.
@@ -289,6 +301,13 @@ const STATUS = readFileSync(
   join(__dirname, "../../../pages/status/StatusPage.svelte"), "utf8");
 
 describe("은퇴 직후 결산이 저절로 열린다", () => {
+  /**
+   * ⚠ **모듈 스토어라 검사끼리 이어진다.** `careerEndPending` 은
+   *   `writable(false)` 하나뿐이라 앞 검사가 올려 두면 다음 검사가 그걸 본다 —
+   *   지금은 올리는 검사가 하나뿐이지만 늘면 조용히 깨진다. 매번 내려 둔다.
+   */
+  beforeEach(() => careerEndPending.set(false));
+
   it("`retireProtagonist` 가 저장을 끝낸 뒤에 신호를 올린다", () => {
     const fn = UC.slice(UC.indexOf("export async function retireProtagonist"));
 
@@ -308,10 +327,7 @@ describe("은퇴 직후 결산이 저절로 열린다", () => {
    *   따로 부르게 하면 그걸 빠뜨린 화면에서 결산을 닫는 순간 반응문이 다시
    *   돌아 **다시 열린다** — 닫을 수 없는 화면이 된다.
    */
-  it("신호는 한 번만 참이다 — 읽으면서 내린다", async () => {
-    const { careerEndPending, takeCareerEndPending } =
-      await import("../../../shared/usecases/retirement");
-
+  it("신호는 한 번만 참이다 — 읽으면서 내린다", () => {
     expect(takeCareerEndPending(), "아무 일도 없었는데 참이다").toBe(false);
 
     careerEndPending.set(true);
