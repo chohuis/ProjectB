@@ -235,6 +235,23 @@ function itemValueLabel(key: string, copy: TableCopy): string {
  * ⚠ **선택 열은 값이 없으면 안 그린다.** 「무」·「최근10」·「지난해」는 생산부가
  *   넘길 때만 뜻이 있다 — 빈 열을 그리면 표가 넓어지고 1366×768 에서 밀린다.
  */
+/**
+ * 값을 보고 정렬을 고른다 — **글자 열은 왼쪽, 숫자 열은 오른쪽**이다.
+ *
+ * ⚠ 첫 열만 왼쪽으로 두면 팀 이름·조건 같은 **글자 열이 숫자에 붙어 오른쪽에**
+ *   선다(1366×768 실측 · `docs/screens/c53-02-digest.png` 첫 판). 열 이름이
+ *   문안에서 오므로 생산부가 `align` 을 실어 보낼 자리가 없다 — 값으로 정한다.
+ *
+ * ⚠ 값이 하나도 없으면 `null` 이다. 그때는 부르는 쪽의 기본(첫 열만 왼쪽)이 남는다.
+ */
+export function inferAlign(
+  key: string, rows: TableMetadata["rows"],
+): "left" | "right" | null {
+  const vals = (rows ?? []).map((r) => r[key]).filter((v) => v != null && v !== "");
+  if (vals.length === 0) return null;
+  return vals.every((v) => isNumericCell(v)) ? "right" : "left";
+}
+
 export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnView[] {
   const given = md.columns ?? [];
   if (given.length > 0) {
@@ -242,7 +259,7 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
       key: c.key,
       label: c.label || copy.columns[c.key] || copy.optionalColumns[c.key]
              || itemValueLabel(c.key, copy) || c.key,
-      align: cellAlign(c, i),
+      align: c.align ?? inferAlign(c.key, md.rows) ?? cellAlign(c, i),
     }));
   }
 
@@ -274,7 +291,7 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   return keys.map((k, i) => ({
     key: k,
     label: copy.columns[k] || copy.optionalColumns[k] || itemValueLabel(k, copy) || k,
-    align: (i === 0 ? "left" : "right") as "left" | "right",
+    align: inferAlign(k, md.rows) ?? ((i === 0 ? "left" : "right") as "left" | "right"),
   }));
 }
 

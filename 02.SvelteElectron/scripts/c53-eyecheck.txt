@@ -1,0 +1,69 @@
+# C 눈확인 — 표 대시보드 셋 · 몸 상태 · FA 제안 카드 · 계약 협상 (2026-09-03 · 트랙 C)
+#
+#   SCREENSHOT_DIR=docs/screens DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/c53-eyecheck.txt
+#
+# ⚠ **자연 도달이 아니라 dev 우회다.** FA 는 프로 5년차 뒤, 재계약은 계약 만료
+#   W39 에서만 열린다 — 새 게임에서 거기까지 가려면 아홉 시즌(470주)이라 앞선 C 가
+#   긴 루프에서 죽었다. 여기서는 **살아 있는 스토어에 실제 규격의 값을 넣어**
+#   같은 컴포넌트를 같은 데이터 모양으로 띄운다. 보려는 것은 배치다.
+#
+# ⚠ 모듈은 앱 인스턴스를 잡아야 한다 — 맨 URL 로 import 하면 다른 인스턴스다
+#   (HANDOFF_C_TO_A §「눈확인 도구」).
+# ⚠ 목록 항목은 `click-text` 로 못 고른다 — 겉 요소가 먼저 잡힌다. `.item` 을
+#   번호로 누른다(위 §0.49 의 함정과 같은 자리).
+launch
+resize 1366x768
+wait .btn.primary
+click .btn.primary
+wait .slot-info
+click .slot-info
+wait #pname
+fill #pname|눈확인
+click .btn.next
+wait button.team-list-item
+click button.team-list-item
+click .btn.next
+click .btn.next
+wait .btn.start
+click .btn.start
+wait .go
+sleep 1500
+eval (async()=>{const R=async(imp,p)=>{const t=await (await fetch(imp)).text();const re=new RegExp('["\x27]([^"\x27]*'+p.split('.').join('[.]')+'([?]t=[0-9]+)?)["\x27]');const m=t.match(re);return import(m?m[1]:p)};window.__G=(await R('/src/pages/main/MainPage.svelte','/shared/stores/game.ts')).gameStore;window.__S=(await R('/src/pages/main/MainPage.svelte','/shared/stores/season.ts')).seasonStore;const M=await R('/src/pages/news/NewsPage.svelte','/shared/stores/master.ts');let t=[];M.teamsL10n.subscribe(v=>t=v)();window.__T=t.filter(x=>String(x.id).indexOf('KBL')>=0&&String(x.id).slice(-2)==='_1').slice(0,6);window.__P=(i)=>{const e=document.querySelectorAll('.item')[i];if(!e)return 'NO_ITEM';e.click();return 'OK'};return {teams:window.__T.length,league:(window.__T[0]||{}).leagueId}})()
+eval (()=>{const mk=(o)=>Object.assign({category:'system',sender:'리그 사무국',preview:'',body:'',createdAt:'W26',readAt:null},o);const T=window.__T;const nm=i=>(T[i]&&T[i].name)||('팀'+i);const ms=[];ms.push(mk({id:'zz-dev-1digest',subject:'[눈확인] 야구계 소식 — 6월',body:'리그 순위가 표로 선다.',metadata:{type:'table',kind:'digest',columns:[],deltaKey:'delta',rows:[{rank:1,teamId:nm(0),w:38,l:22,pct:'.633',delta:1},{rank:2,teamId:nm(1),w:35,l:25,pct:'.583',delta:-1},{rank:3,teamId:nm(2),w:33,l:27,pct:'.550',delta:2,myTeam:true},{rank:4,teamId:nm(3),w:30,l:30,pct:'.500',delta:0},{rank:5,teamId:nm(4),w:28,l:32,pct:'.467',delta:-2}]}}));ms.push(mk({id:'zz-dev-2seasonend',category:'coach',sender:'코칭스태프',subject:'[눈확인] 2031 시즌 종료',body:'W43부터 연봉협상과 FA 시장이 열립니다.',metadata:{type:'table',kind:'seasonEndPro',columns:[],rows:[{item:'w',value:13,prev:9},{item:'l',value:8,prev:10},{item:'sv',value:0,prev:0},{item:'hd',value:2,prev:1},{item:'ip',value:'168.1',prev:'141.2'},{item:'era',value:'2.94',prev:'3.61'},{item:'whip',value:'1.14',prev:'1.28'},{item:'k',value:151,prev:118}]}}));ms.push(mk({id:'zz-dev-3contract',category:'manager',sender:'에이전트',subject:'[눈확인] 계약 서명 완료',createdAt:'W40',body:'계약이 마무리됐습니다.',metadata:{type:'table',kind:'contractSigned',columns:[],rows:[{item:'teamId',value:nm(2)},{item:'salary',value:'18,000만원'},{item:'years',value:'2년'},{item:'bonus',value:'없음'},{item:'options',value:'팀 옵션 1년 · 노트레이드'}],extra:{type:'table',kind:'contractSigned.incentives',columns:[],rows:[{name:'등판',condition:'25회 이상',amount:'+1,500만원'},{name:'이닝',condition:'150이닝 이상',amount:'+2,500만원'},{name:'평균자책',condition:'3.00 미만',amount:'+2,000만원'}]}}}));ms.push(mk({id:'zz-dev-4mybody',category:'coach',sender:'코칭스태프',subject:'[눈확인] 4월 몸 상태 — 결장 3경기',createdAt:'W16',body:'이번 달 몸 상태입니다.',metadata:{type:'myBody',week:16,injury:{injuryType:'어깨 염증',severity:'moderate',weeksLeft:3,sinceWeek:13},events:[{week:13,kind:'absence',reason:'injury'},{week:14,kind:'absence',reason:'condition',condition:38},{week:14,kind:'warning',fatigue:82,riskPct:19},{week:15,kind:'absence',reason:'injury'},{week:16,kind:'warning',fatigue:77,riskPct:14}]}}));window.__G.addMessages(ms);return ms.length})()
+sleep 1200
+ss c53-01-list
+eval window.__P(0)
+sleep 700
+ss c53-02-digest
+text .m-body
+eval window.__P(1)
+sleep 700
+ss c53-03-seasonend
+text .m-body
+eval window.__P(2)
+sleep 700
+ss c53-04-contract
+text .m-body
+eval window.__P(3)
+sleep 700
+ss c53-05-mybody
+text .m-body
+# ── FA 제안 카드 (C②) ────────────────────────────────────────
+eval (()=>{const g=window.__G;let st;g.subscribe(v=>st=v)();const sv=g.toSaveGame();const T=window.__T;const p=sv.protagonist;p.careerStage='pro';p.leagueId=(T[2]||{}).leagueId||'LEAGUE_KBL';p.teamId=(T[2]||{}).id||p.teamId;p.proServiceYears=8;p.age=30;p.fame=70;p.scoutScore=80;if(p.pitching)p.pitching.ovr=82;g.hydrateFromSlot(sv,st.currentSlotId||'slot1');return {stage:p.careerStage,league:p.leagueId,ovr:p.pitching&&p.pitching.ovr}})()
+sleep 800
+eval (()=>{window.__S.pushPendingAction({type:'faMarket'});return 'faMarket'})()
+sleep 3500
+ss c53-06-famarket
+text .modal
+# ── 계약 협상 페이지 (C③) ────────────────────────────────────
+eval (()=>{window.__S.resolvePendingAction('faMarket');const t=window.__T[2]||{id:'TEAM_KBL_1'};window.__S.pushPendingAction({type:'salaryNegotiation',teamId:t.id,leagueId:t.leagueId||'LEAGUE_KBL',offeredSalary:18000,durationYears:2,minDurationYears:1,maxDurationYears:4,signingBonus:2000,context:'renewal'});return t.id})()
+sleep 2000
+ss c53-07-contract-page
+click .addbtn
+sleep 700
+ss c53-08-add-clause
+eval (()=>{const b=document.querySelectorAll('.addbtn');if(b.length<2)return 'addbtn '+b.length;b[1].click();return 'ok'})()
+sleep 700
+ss c53-09-add-incentive
+eval (()=>{const d=document.documentElement;const m=document.querySelector('.modal');const r=m?m.getBoundingClientRect():null;const menu=document.querySelector('.menu, .addmenu, .pop');const mr=menu?menu.getBoundingClientRect():null;return {win:[window.innerWidth,window.innerHeight],docScrollW:d.scrollWidth,docClientW:d.clientWidth,modal:r?[Math.round(r.width),Math.round(r.height),Math.round(r.top),Math.round(r.bottom)]:null,menu:mr?[Math.round(mr.left),Math.round(mr.right),Math.round(mr.top),Math.round(mr.bottom)]:null,overflowX:d.scrollWidth>d.clientWidth}})()
+quit
