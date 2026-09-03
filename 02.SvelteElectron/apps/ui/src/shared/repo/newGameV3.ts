@@ -539,7 +539,8 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   let careerSeed: CareerHistorySeed = { rows: [], teamByYear: new Map() };
   try {
     careerSeed = await buildCareerHistorySeed(
-      worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules);
+      worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules,
+      (rulesFile.faRules as { eligibleYears?: Record<string, number> } | undefined)?.eligibleYears);
   } catch (e) {
     console.warn("[newGameV3] 과거 경력 생성 실패 — 이력 없이 시작", e);
   }
@@ -757,6 +758,8 @@ async function buildCareerHistorySeed(
   seasonYear: number,
   npcs: Partial<RepoNpc>[],
   rules: unknown,
+  /** FA 자격 연차의 **정본** (`faRules.eligibleYears`) — 아래 §③ 참고 */
+  faEligibleYears?: Record<string, number>,
   pastYears = 5,
 ): Promise<CareerHistorySeed> {
   const empty: CareerHistorySeed = { rows: [], teamByYear: new Map() };
@@ -797,10 +800,21 @@ async function buildCareerHistorySeed(
     const leagueTeams = [...new Set(list.map((n) => n.currentTeam ?? "").filter(Boolean))];
     if (leagueTeams.length < 2) continue;   // 팀이 하나면 이적할 데가 없다
 
+    // 🔴 **FA 자격 연차의 정본은 `faRules.eligibleYears` 하나다** (B-29 D-3 ·
+    //   사용자 확정 ③). `careerHistoryRules.faEligibleYears` 는 8 이었고 게임은
+    //   KBL 5 · ABL 6 · JBL 4 였다 — 그래서 **KBL 자격자의 44% 가 과거에 FA
+    //   이적이 한 번도 없는 사람**이 됐다(5~7년차 구간이 통째로).
+    //   `faRules._note` 가 바로 이 형태를 경고해 뒀는데 사본이 셋이 됐던 것이다.
+    //   ⚠ 이력 생성은 리그를 이미 알고 있다 — 리그마다 값을 갈아 넘긴다.
+    const eligible = faEligibleYears?.[leagueId] ?? faEligibleYears?.default;
+    const leagueRules = eligible != null
+      ? { ...(rules as Record<string, unknown>), faEligibleYears: eligible }
+      : rules;
+
     const raw = await window.projectB!.engine("generateCareerHistoryNative", JSON.stringify({
       worldSeed: worldSeed >>> 0,
       seasonYear,
-      rules,
+      rules: leagueRules,
       skipEntry: NO_ENTRY_ROUTE_LEAGUES.has(leagueId),
       players: list.map((n) => ({
         npcId: n.npcId, name: n.name, age: n.age,
