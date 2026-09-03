@@ -31,3 +31,6 @@ resource/logs/shots/
 # UI 순회기(scripts/ui-walk.mjs)가 남기는 캡처. 한 번 돌 때 수십 장이라
 # 커밋에 섞이면 diff가 안 읽힌다
 resource/logs/uiwalk/
+
+# 계측 덤프 (probe-npc-dump.cjs 가 남기는 생성물 — DATA_POLICY §1 ③파생)
+resource/logs/d-regress/
