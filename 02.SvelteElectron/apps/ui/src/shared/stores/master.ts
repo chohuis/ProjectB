@@ -17,10 +17,15 @@ import { primeForeignRules } from "../utils/foreignSlots";
 import { primeCareerScoreRules } from "../utils/universityUtils";
 import { primeAcademicsHsRules } from "../utils/academicsEngine";
 import { primeRosterOpsRules } from "../utils/rosterEngine";
+import { primePitcherRoleRules } from "../utils/pitcherRoleRules";
 import { primeManagerStyleRules } from "../utils/managerStyle";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
+import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCopy";
+import { parseContractTermsCopy, type ContractTermsCopy } from "../utils/contractCopy";
+import { parseDashboardLabels, type DashboardLabels } from "../utils/dashboardCopy";
+import { primeContractRules } from "../utils/contractTerms";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -452,6 +457,16 @@ export interface MasterState {
   militaryCalendar: MilitaryCalendarEntry[];
   militaryLifeRules: MilitaryLifeRules | null;
   militaryLifeEvents: MilitaryLifeEvent[];
+  /** 보직 선택 문안 (B-12) — 정본은 messages/role_choice.json. 없으면 소식을 안 만든다 */
+  roleChoiceCopy: RoleChoiceCopy | null;
+  /** 계약 협상 문안 (B-13) — 정본은 messages/contract_terms.json. 없으면 안내 줄을 안 그린다 */
+  contractCopy: ContractTermsCopy | null;
+  /**
+   * 소식 대시보드 문안 (B-21) — 정본은 messages/dashboard_labels.json.
+   * 없으면 표를 없애는 게 아니라 **열 이름 자리에 키를 그대로** 쓴다
+   * (값은 이미 소식에 실려 왔다 — dashboardCopy.ts 머리말).
+   */
+  dashboardLabels: DashboardLabels | null;
 }
 
 // ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
@@ -493,6 +508,8 @@ function stageToCareerStage(stage: string): CareerStage | null {
 
 /** 오타 하나가 관계를 **조용히** 안 움직이게 한다 — 아는 것만 받는다 */
 const RELATION_KINDS = new Set<RelationKind>(["manager", "coach", "owner", "teammate", "rival"]);
+/** 주간 학습 강도 넷 (`types/save.StudyMode`). 문자열형 보상 `studyMode:focus` 의 문지기 */
+const STUDY_MODES = new Set<string>(["focus", "normal", "rest", "sleep"]);
 
 /**
  * effects 문자열 배열 → `DecisionEffect`.
@@ -528,6 +545,9 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
     else if (key === "removeTag")   { result.removeTag = [...(result.removeTag ?? []), rawVal]; }
     // "study:+0.5" — 주당 학습 품질(0~1)이 눈금이라 **소수를 쓴다**
     else if (key === "study")       { const f = parseFloat(rawVal); if (!isNaN(f)) result.studyQualityDelta = f; }
+    // "studyMode:focus" — 주간 학습 강도를 바꾼다 (B-24). 값이 숫자가 아니라 모드 이름이다.
+    // ⚠ 모르는 이름은 **버린다** — 조용히 이상한 모드가 박히면 학기 정산이 통째로 어긋난다
+    else if (key === "studyMode")   { if (STUDY_MODES.has(rawVal)) result.studyModeSet = rawVal as import("../types/save").StudyMode; }
     else if (key === "addTag")      result.addTag = [...(result.addTag ?? []), rawVal];
     else if (key.startsWith("xp.")) {
       if (!isNaN(val)) result.xp = { ...(result.xp ?? {}), [key.slice(3)]: val };
@@ -907,6 +927,9 @@ function createMasterStore() {
     militaryCalendar: [],
     militaryLifeRules: null,
     militaryLifeEvents: [],
+    roleChoiceCopy: null,
+    contractCopy: null,
+    dashboardLabels: null,
   });
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
@@ -973,6 +996,20 @@ function createMasterStore() {
           fetchMaster<MilitaryLifeRules>("military/rules.json"),
           fetchMaster<{ events: MilitaryLifeEvent[] }>("events/pools/military_life.json"),
         ]);
+
+      // 보직 선택 문안 (B-12 · PLAN_ROLE_RECOMMEND §4·§5). 문장은 전부 데이터다 —
+      // 코드에 한 벌 더 두면 한쪽만 고쳐진 채 남는다.
+      // ⚠ 못 읽으면 `null` 이고 보직 소식을 **안 만든다**. 어긋남은
+      //   `roleChoiceCopy.test.ts` 가 파일을 직접 읽어 잡는다.
+      const roleChoiceRaw = await fetchMaster<unknown>("messages/role_choice.json");
+
+      // 계약 협상 문안 (B-13 · PLAN_CONTRACT_TERMS §5·§6). 여기까지가 문장이고
+      // 항목 이름(연봉·기간·노트레이드)은 코드가 갖는다 — faOfferTerms.ts 와 같은 선이다.
+      const contractCopyRaw = await fetchMaster<unknown>("messages/contract_terms.json");
+
+      // 소식 대시보드 문안 (B-21 · PLAN_MESSAGE_DASHBOARDS §1·§2). 열 이름·빈 칸·
+      // 변동 틀이 전부 데이터다 — 「승」·「연봉」을 코드에 한 벌 더 두지 않는다.
+      const dashboardLabelsRaw = await fetchMaster<unknown>("messages/dashboard_labels.json");
 
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
@@ -1044,6 +1081,9 @@ function createMasterStore() {
         militaryCalendar:      Array.isArray(militaryCalendarData) ? militaryCalendarData : [],
         militaryLifeRules:     militaryLifeRulesData ?? null,
         militaryLifeEvents:    militaryLifeData?.events ?? [],
+        roleChoiceCopy:        parseRoleChoiceCopy(roleChoiceRaw),
+        contractCopy:          parseContractTermsCopy(contractCopyRaw),
+        dashboardLabels:       parseDashboardLabels(dashboardLabelsRaw),
       }));
 
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
@@ -1068,8 +1108,13 @@ function createMasterStore() {
           primeCareerScoreRules(genRules as Parameters<typeof primeCareerScoreRules>[0]);
           primeAcademicsHsRules(genRules as Parameters<typeof primeAcademicsHsRules>[0]);
           primeRosterOpsRules(genRules as Parameters<typeof primeRosterOpsRules>[0]);
+          // 투수 보직 추천(1.1 A①) — 안 실리면 옛 엔진(OVR 순위)으로 조용히 간다
+          primePitcherRoleRules(genRules as Parameters<typeof primePitcherRoleRules>[0]);
           // 감독 스타일 — 안 실으면 규칙이 늘 null 이라 **스타일이 다시 죽는다**
           primeManagerStyleRules((genRules as Record<string, unknown>).managerStyleRules);
+          // 계약 협상 — contractRules · salaryRules.minSalary · awardRules 를 한 번에 싣는다.
+          // ⚠ 안 실으면 최저연봉 하한이 0 이 되어 **협상 슬라이더가 바닥을 잃는다**
+          primeContractRules(genRules as Parameters<typeof primeContractRules>[0]);
         }
         // 경기 화면이 투구 선택의 스태미나 소모를 표시한다.
         // **엔진과 같은 파일**을 읽는다 — 숫자를 두 벌로 두지 않는다.

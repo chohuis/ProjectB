@@ -1,0 +1,31 @@
+{
+  "id": "EVT_MILREUNION_PARCEL",
+  "type": "conditional",
+  "category": "social",
+  "priority": 606,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 2
+    },
+    {
+      "type": "num_lte",
+      "path": "weeksSinceDischarge",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_PARCEL",
+  "decisionTemplateId": "DEC_MILREUNION_PARCEL"
+}

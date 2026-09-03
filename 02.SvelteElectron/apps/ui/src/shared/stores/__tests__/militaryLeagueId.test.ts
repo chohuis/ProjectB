@@ -48,6 +48,27 @@ describe("군 복무 중 소속 리그", () => {
     }
   });
 
+  // ── 전역 시점 (B-20 재회 · 2026-09-03) ────────────────────────
+  //
+  // 🔴 `militaryRecoveryWeeks` 는 전역 때 2(상무)·6(현역)으로 놓이고 0에서 멈춘다 —
+  //   그 뒤로 한 주가 지났는지 세 해가 지났는지 구분할 수 없었다. 「전역 후 첫 시즌
+  //   W10」 같은 재회 서사를 그래서 못 걸었다.
+  // ⚠ **환산(`applyMilitaryDischarge`)이 아니라 `completeMilitaryService` 에 적는다** —
+  //   환산은 현역 병영생활만 타므로 거기 두면 상무 출신이 통째로 빠진다.
+  it("전역하면 그 시점을 남긴다 — 상무도 지나는 자리에", () => {
+    const done = block(game, 'militaryStatus: "군필"', "militaryHiatusStage: null");
+    expect(done).toContain("dischargedSeason: at?.season");
+    expect(done).toContain("dischargedWeek:   at?.week");
+    // 호출부가 실제로 넘기는가 — 옵셔널 인자라 안 넘기면 조용히 안 적힌다
+    const md = read("shared/usecases/militaryDecision.ts");
+    expect(md).toContain("completeMilitaryService({ season: s.seasonYear, week: s.currentWeek })");
+  });
+
+  it("구 세이브는 기본값을 안 받는다 — 0 이면 「이번 주 전역」이 된다", () => {
+    expect(game).toContain("dischargedSeason:             p.dischargedSeason,");
+    expect(game).not.toContain("dischargedSeason:             p.dischargedSeason ??");
+  });
+
   it("독립 배치는 리그가 아니라 팀으로 판정한다", () => {
     const md = read("shared/usecases/militaryDecision.ts");
     const b = block(md, "const needsIndiePlacement", "gameStore.addCareerEvent");

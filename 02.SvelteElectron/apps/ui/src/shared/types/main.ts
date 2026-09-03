@@ -48,6 +48,13 @@ export interface DecisionEffect {
   fameDelta?:       number;                  // 명성 ± (0~200 clamp)
   popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
   diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
+  /**
+   * 투수 보직 선택 (PLAN_ROLE_RECOMMEND §4). `"SP"|"RP"|"CP"`.
+   *
+   * ⚠ `applyDecision` 이 아니라 `usecases/pitcherRole.applyRoleChoice` 가 읽는다 —
+   * 보직은 스탯 델타가 아니라 포지션·역할 배정이라 store 패처가 둘이다.
+   */
+  roleChoice?:      "SP" | "RP" | "CP";
   // ── 현역 병영생활 전용 (PLAN_MILITARY_LIFE §28) — `militaryLife` 가 있을 때만 읽는다 ──
   // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
   //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
@@ -84,6 +91,23 @@ export interface DecisionEffect {
    * ⚠ 대학이 아니면 조용히 무시한다(고교는 9등급 경로라 학점이 없다).
    */
   studyQualityDelta?: number;
+
+  /**
+   * 주간 학습 강도를 **바꾼다** (B-24 · 사용자 확정 2026-09-03 「학습 강도를
+   * 이벤트 선택지로」). `AcademicsPage` 의 네 버튼과 같은 축이고 정본도 같다
+   * (`schoolState.weeklyStudyMode`).
+   *
+   * 🔴 **`studyQualityDelta` 로는 대신할 수 없다.** 그건 이번 학기 누적에 한 번
+   *   더하는 값이라 **그 주만** 움직인다. 학점은 `qualityAccum / weeks` 평균이고
+   *   모드가 매주 품질을 정하므로, 한 번의 델타로는 평균을 못 끌어올린다 —
+   *   실제로 그 방식으로는 **GPA 3.5 를 한 번도 못 넘었다.**
+   *   「이번 학기는 야구를 접고 공부한다」 같은 선택은 **모드를 바꿔야** 뜻이 산다.
+   *
+   * ⚠ 대학이 아니어도 값은 적힌다 — 고교는 9등급 경로라 이 모드를 안 읽는다.
+   *   지우는 갈래를 따로 두면 「고교에서 고른 선택이 대학에서 되살아나나」를
+   *   또 판정해야 한다. 안 읽는 자리에 남아 있는 것이 더 조용하다.
+   */
+  studyModeSet?: import("./save").StudyMode;
 
   /**
    * 관계도 변화 (Phase 7-6c). **`effectHint`와 반드시 일치시킬 것.**
@@ -165,6 +189,84 @@ export interface Top10Metadata {
   columns: [Top10Column, Top10Column, Top10Column, Top10Column];
 }
 
+// ── 소식 대시보드 — 형태별 규격 셋 (PLAN_MESSAGE_DASHBOARDS §3) ──
+//
+// 🔴 **종류마다 타입을 만들지 않는다.** 대상이 48자리인데 그 수만큼 규격을
+//    만들면 화면도 48개가 된다. 화면이 실제로 보는 것은 `columns` 와 `rows`
+//    뿐이라, **형태**(표·순위·타임라인)로 셋만 둔다. 어느 소식인지는
+//    `kind` 문자열이 들고, 타입 안전은 **만드는 쪽**(각 `weekPhases` 모듈)이
+//    진다.
+//
+// ⚠ **값을 글자로 굳혀 보내지 않는다.** 지금 소식들은 `lines.join("\n")` 로
+//    본문 한 덩어리를 만들어 보내는데, 그러면 화면이 정렬도 강조도 못 한다 —
+//    그게 이 대시보드화가 고치려는 결함이다. 만드는 쪽이 배열을 넘긴다.
+
+/** 표 한 칸의 값. 화면이 정렬을 고르므로 숫자는 숫자로 싣는다 */
+export type TableCell = string | number | boolean | null;
+
+export interface TableColumn {
+  key: string;
+  label: string;
+  /** 기본은 첫 열만 왼쪽이고 나머지는 오른쪽이다 — 이 값이 그걸 뒤집는다 */
+  align?: "left" | "right" | "center";
+}
+
+/**
+ * 표 — 값이 여러 줄이고 열이 같은 소식 19자리가 이것 하나를 쓴다
+ * (다이제스트·경기 결과·시즌 결산·계약·로스터·대진 …).
+ */
+export interface TableMetadata {
+  type: "table";
+  /** 어느 소식인지 — 화면이 제목·단위를 고를 때만 쓴다 ("digest" | "bracket" | …) */
+  kind: string;
+  columns: TableColumn[];
+  /**
+   * 행. 열 `key` 로 값을 찾는다.
+   *
+   * ⚠ `myTeam: true` 를 실은 행은 굵게 그린다 — 대진은 **내 팀 행이 라운드마다
+   *   하나씩 여럿**이라 `highlightRow` 인덱스 하나로는 모자란다 (§3 대진).
+   */
+  rows: (Record<string, TableCell> & { myTeam?: boolean })[];
+  /** 강조할 행 하나 (내 팀·나). 여럿이면 행의 `myTeam` 을 쓴다 */
+  highlightRow?: number;
+  /**
+   * 순위 변동을 그릴 열. 각 행이 이 키에 **지난 값과의 차**를 든다 —
+   * 양수면 `↑n`, 음수면 `↓n`, 0 이면 `—`.
+   *
+   * ⚠ **지난 값이 없으면 이 키를 빼고 보낸다.** `0` 으로 채우면
+   *   「변동 없음」과 「모름」이 같아 보인다 (§3-1).
+   */
+  deltaKey?: string;
+  /** 표 아래 한 줄. 없으면 문안(dashboard_labels.json)의 것을 쓴다 */
+  footnote?: string;
+  /**
+   * 표 아래 붙는 **두 번째 표**. 계약 완료 소식이 「조건」(항목·값) 아래
+   * 「인센티브」(항목·조건·금액)를 다는 자리다 — 열이 아예 달라 한 표에
+   * 못 넣는다 (PLAN_MESSAGE_DASHBOARDS §5 시안 3).
+   *
+   * ⚠ **선택이다.** 안 실어 보내면 아무것도 안 그린다. 문안은 점으로 이어
+   *   찾으므로 `kind` 를 `"contractSigned.incentives"` 로 준다.
+   */
+  extra?: TableMetadata;
+}
+
+/** 순위 — 등수가 뜻을 갖는 소식 셋 (대회 최종 순위·대회 수상·2군 우승) */
+export interface RankListMetadata {
+  type: "rankList";
+  kind: string;
+  /** 제목 줄. 없으면 안 그린다 */
+  title?: string;
+  /** `delta` 는 지난 값과의 차. 없으면 변동을 안 그린다 (§3-1) */
+  items: { rank: number; label: string; sub?: string; isMe?: boolean; delta?: number }[];
+}
+
+/** 타임라인 — 시간 순서 자체가 뜻인 소식 셋 (군 경력·복무 연차·고교 연감) */
+export interface TimelineMetadata {
+  type: "timeline";
+  kind: string;
+  entries: { when: string; label: string; detail?: string }[];
+}
+
 /**
  * 오프시즌 결산. **`npcId`만 담고 이름·팀명은 안 담는다** —
  * 화면이 `npcs`에서 조회한다. 이유는 `utils/offseasonReport.ts` 머리말.
@@ -219,6 +321,39 @@ export interface MyBodyMetadata {
   events: MyBodyEvent[];
 }
 
+/**
+ * 보직 선택 소식 (PLAN_ROLE_RECOMMEND §4).
+ *
+ * 🔴 **적합도(fits)는 안 싣는다.** 화면이 안 그리는 값을 세이브에 넣으면
+ * 「보이지 않는데 저장되는 값」이 되고, 나중에 그걸 근거로 화면을 만들면 두 벌이 된다.
+ *
+ * ⚠ `ahead` 는 **화면이 다시 계산하지 않는다.** 소식이 들고 온 값을 그대로 쓴다 —
+ * 두 벌이 되면 한쪽만 고쳐진 채 남는다 (§5).
+ */
+export interface RoleChoiceMetadata {
+  type: "roleChoice";
+  /** 감독 추천 — 옵션 id 와 같은 눈금 */
+  recommended: "sp" | "rp" | "cp";
+  /** 그 자리를 지금 차지한 같은 팀 투수 수. 확인 문구가 쓰는 유일한 숫자 */
+  ahead: { sp: number; rp: number; cp: number };
+  /**
+   * 자리별 내 순위와 자리 수 — **고른 뒤 `roleFit` 으로 옮겨 적는 재료다** (§5 · 1.1 A④).
+   *
+   * ⚠ 화면은 안 쓴다(문구는 `ahead` 만 본다). 옛 산식 폴백·구 세이브엔 없어서 optional 이고,
+   *   없으면 깊이 0 = 불이익 없음으로 떨어진다.
+   */
+  ranks?: { sp: number; rp: number; cp: number };
+  seats?: { sp: number; rp: number; cp: number };
+  managerName: string;
+  year: number;
+  teamId: string;
+  week: number;
+  /** 왜 묻나 — 문안의 머리말 키 (season|stageMove|callup|demote|discharge) */
+  reason: import("../utils/roleChoiceCopy").RoleAskReason;
+  /** 추천 문안을 고른 무대 (highschool|university|independent|pro|farm) */
+  stage: import("../utils/roleChoiceCopy").RoleCopyStage;
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -230,6 +365,7 @@ export interface MessageItem {
   readAt: string | null;
   decision?: MessageDecision;
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
-           | MyBodyMetadata
+           | MyBodyMetadata | RoleChoiceMetadata
+           | TableMetadata | RankListMetadata | TimelineMetadata
            | { type: string };
 }

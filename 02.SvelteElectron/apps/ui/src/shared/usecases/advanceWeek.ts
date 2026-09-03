@@ -51,13 +51,15 @@ import type { MessageItem } from "../types/main";
 import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, PitchingAttributes, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
-import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
+import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch, starterWouldStart } from "../utils/pitcherRoleEngine";
+import { roleDepthOf } from "../utils/pitcherRoleRules";
 import {
   buildKblBracket, buildAblBracket, buildIndLadder, buildJblBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
+import { askRoleChoice, hasRoleChoiceThisSeason } from "./pitcherRole";
 import { loadRosterRules } from "../repo/newGameV3";
 import { campConditionBonus } from "../utils/clubEffects";
 import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
@@ -215,8 +217,28 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const m = get(masterStore);
   const logs: string[] = [];
 
+  // ── 보직 선택 — **각 리그의 개막 전 주** (PLAN_ROLE_RECOMMEND §4 · 확정 8) ──
+  //
+  // 🔴 새 pending 타입을 안 만든다. 소식을 넣기만 하면 아래 「미결정 메시지 확인」
+  //   갈래가 `{type:"message"}` pending 으로 그 주에서 멈춘다 (§4).
+  //
+  // ⚠ **W1 자동 배정보다 먼저 부른다.** 프로 1군은 묻는 주가 W1 이라(시범경기가
+  //   W1~4 에 12경기 있다) 순서가 뒤집히면 브리핑과 물음이 같은 주에 겹친다.
+  {
+    const askedId = await askRoleChoice(s.seasonYear, weekInYearOf(weekNum));
+    if (askedId) logs.push("[보직] 감독 추천 도착 — 선택 대기");
+  }
+
   // W1: 투수 포지션/역할 배정 + 시즌 시작 브리핑
-  if (weekNum === 1 && g.protagonist.playerType === "pitcher") {
+  //
+  // ⚠ **선택이 이미 있으면 덮어쓰지 않는다** (§7). 구 세이브·헤드리스 안전망으로
+  //   남긴 갈래다 — 물어본 시즌에는 주인공이 고른 보직이 정본이다.
+  //
+  // 🔴 **`g` 를 다시 읽는다.** 위 `askRoleChoice` 가 방금 가드를 세웠는데 함수
+  //   머리의 스냅샷에는 그게 없다 — 프로 1군은 묻는 주가 W1 이라 그대로 두면
+  //   같은 주에 물음과 브리핑이 **둘 다** 뜬다.
+  if (weekNum === 1 && g.protagonist.playerType === "pitcher"
+      && !hasRoleChoiceThisSeason(get(gameStore).protagonist, s.seasonYear)) {
     if (g.protagonist.careerStage === "highschool") {
       // 고교: SP / RP 두 범주만 사용
       const pos = await assignHighschoolPosition(g.protagonist, m.entities);
@@ -712,6 +734,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const eventCtx: EventContext = {
     protagonist:     afterP,
     currentWeek:     weekNum,
+    // 전역 뒤 경과(`weeksSinceDischarge`)가 시즌을 넘어 세려면 연도가 있어야 한다 (B-20 재회)
+    seasonYear:      s.seasonYear,
     seasonPhase:     s.schedule.find((e) => e.week === weekNum)?.phase ?? "season",
     // 🔴 **주인공 리그를 명시해 읽는다** (2026-09-01).
     //
@@ -2940,6 +2964,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const leagueIdR      = gCurrent.protagonist.leagueId;
       const lStateR        = sForReliever.leagueState[leagueIdR];
       const myCondR        = lStateR?.playerConditions?.[gCurrent.protagonist.id];
+      // 1.1 A④ §5 — 고른 자리에서 몇 칸 밖인가. 0 이면 아래 두 판정이 예전 그대로 돈다
+      const depthR         = roleDepthOf(gCurrent.protagonist.roleFit);
       const relieverPitching =
         !game.isProtagonistGame &&
         isTeamGame &&
@@ -2957,9 +2983,25 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             lastPitchCount:  myCondR?.lastPitchCount,
             gameDate:        game.gameDate,
           },
+          // §5-b — 자리 밖이면 등판 확률이 그만큼 깎인다
+          depthR,
         );
 
-      if (game.isProtagonistGame || relieverPitching) {
+      // ── §5-a 선발 등판 건너뛰기 ────────────────────────────────
+      // 로테이션 자리 밖 선발은 그 주를 건너뛴다. 건너뛰면 아래 `else` 갈래(`simulateGame`)로
+      // 떨어져 **팀·동료 기록이 정상으로 남는다** — MainPage 회피 갈래(`playerLines: []`)로 보내지 않는다.
+      // ⚠ 깊이 0 이면 엔진을 아예 안 부른다 — 경기마다 IPC 를 한 번 더 쓰지 않는다.
+      const starterSkips =
+        depthR.roleDepth > 0 &&
+        game.isProtagonistGame &&
+        isTeamGame &&
+        gCurrent.protagonist.playerType === "pitcher" &&
+        !!currentRole &&
+        !isReliefsRole(currentRole) &&
+        !(await starterWouldStart(depthR, seedOf(
+          sForReliever.worldSeed ?? 0, sForReliever.seasonYear, nextWeekNum, "starter-start", game.id)));
+
+      if ((game.isProtagonistGame && !starterSkips) || relieverPitching) {
         const eligibilityBlocked = gCurrent.schoolState.eligibilityBlocked;
         const isInjured          = !!gCurrent.protagonist.injury;
         const cond               = gCurrent.protagonist.condition;

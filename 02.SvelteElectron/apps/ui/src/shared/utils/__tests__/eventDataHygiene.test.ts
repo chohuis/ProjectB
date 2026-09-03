@@ -136,17 +136,55 @@ describe("군 이벤트는 규칙이 아니라 풀이다", () => {
   const MIL = resolve(__dirname, "../../../../../../resource/data/master/events/pools");
   type MilEvent = { id: string; title?: string; description?: string; minRank?: number; choices?: unknown[] };
 
-  it("이벤트 규칙에 군 조건이 없다 — 있으면 영영 안 뜬다", () => {
+  /**
+   * 🔴 **경로 이름이 아니라 값을 본다** (2026-09-03 · B-20 재회).
+   *
+   * 예전엔 `militaryStatus`·`militaryUnit`·`militaryServiceWeeks`·`militaryServedUnit`
+   * **네 이름을 통째로** 막았다. 근거는 위 「복무 중에는 엔진이 안 돈다」인데,
+   * 그 근거가 막는 것은 **복무 중을 요구하는 조건**이지 군 이야기 전부가 아니다.
+   *
+   * 전역하면 엔진이 돈다. 「전역 뒤 부대원 재회」는 `militaryStatus === "군필"` 로
+   * 시작하는데 옛 잣대는 그것도 막았다 — 재회 12종이 여기 걸려 도로 나왔다.
+   *
+   * 그래서 갈랐다.
+   *
+   * | 조건 | 복무 중에만 참인가 | 잣대 |
+   * |---|---|---|
+   * | `militaryStatus === "현역"` | 그렇다 | **막는다** |
+   * | `militaryStatus === "군필"`·`"미필"`·`"면제"` | 아니다 | 연다 |
+   * | `militaryUnit` | 그렇다 (전역 때 `null`) | **막는다** |
+   * | `militaryServiceWeeks` | 그렇다 (전역 때 0) | **막는다** |
+   * | `militaryServedUnit` | 아니다 (**전역 뒤에 남긴다**) | 연다 |
+   *
+   * ⚠ `military_phase`는 여기 있었는데 **타입 자체를 지웠다**(2026-08-26).
+   *   지금 그 조건을 쓰면 로드에서 잡힌다 — 여기까지 올 일이 없다.
+   */
+  it("이벤트 규칙이 **복무 중**을 요구하지 않는다 — 요구하면 영영 안 뜬다", () => {
+    /** 전역과 함께 값이 사라지는 필드 — 조건으로 쓰면 규칙 갈래에서 영영 거짓이다 */
+    const ONLY_WHILE_SERVING = ["militaryUnit", "militaryServiceWeeks"];
     const army = RULES
       .filter((r) => (r.conditions ?? []).some((c) => {
-        const p = (c as { path?: string }).path;
-        return p === "militaryStatus" || p === "militaryUnit" || p === "militaryServiceWeeks"
-          || p === "militaryServedUnit";
-        // ⚠ `military_phase`는 여기 있었는데 **타입 자체를 지웠다**(2026-08-26).
-        //   지금 그 조건을 쓰면 로드에서 잡힌다 — 여기까지 올 일이 없다.
+        const { path, value } = c as { path?: string; value?: unknown };
+        if (path === undefined) return false;
+        if (ONLY_WHILE_SERVING.includes(path)) return true;
+        return path === "militaryStatus" && value === "현역";
       }))
       .map((r) => r.id);
     expect(army).toEqual([]);
+  });
+
+  it("전역 뒤 조건은 막지 않는다 — 잣대가 값을 보는지 확인한다", () => {
+    // 🔴 대조군. 잣대를 옛 꼴(경로 이름만)로 되돌리면 이 검사가 깨진다 —
+    //   그래야 위 검사가 「복무 중」만 막고 있다는 게 증명된다.
+    const 군필 = { type: "eq", path: "militaryStatus", value: "군필" } as const;
+    const 현역 = { type: "eq", path: "militaryStatus", value: "현역" } as const;
+    const blocked = (c: { path?: string; value?: unknown }) =>
+      ["militaryUnit", "militaryServiceWeeks"].includes(c.path ?? "")
+      || (c.path === "militaryStatus" && c.value === "현역");
+    expect(blocked(군필)).toBe(false);
+    expect(blocked(현역)).toBe(true);
+    expect(blocked({ path: "militaryServedUnit", value: "general" })).toBe(false);
+    expect(blocked({ path: "weeksSinceDischarge", value: 10 })).toBe(false);
   });
 
   for (const pool of ["common", "sports", "general"]) {

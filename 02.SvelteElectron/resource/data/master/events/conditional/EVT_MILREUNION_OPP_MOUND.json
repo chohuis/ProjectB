@@ -1,0 +1,42 @@
+{
+  "id": "EVT_MILREUNION_OPP_MOUND",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 622,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 26
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_OPP_MOUND",
+  "decisionTemplateId": "DEC_MILREUNION_OPP_MOUND"
+}

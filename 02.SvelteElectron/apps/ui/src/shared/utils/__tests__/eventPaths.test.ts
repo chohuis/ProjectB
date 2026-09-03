@@ -157,3 +157,98 @@ describe("leagueYears", () => {
     expect(ev({ type: "num_gte", path: "leagueYears", value: 3 }, c)).toBe(false);
   });
 });
+
+// ── 병영 재회 (B-20 축소판 · 2026-09-03) ──────────────────────────
+//
+// 🔴 **복무 중에는 이벤트 엔진이 안 돈다. 전역 뒤에는 돈다.**
+//   군 조건이 통째로 막혀 있던 건 앞의 사실 때문인데, 재회는 뒤의 자리다.
+//   여기서 여는 것은 셋뿐이다 — 부대원 관계값 · 군 보직 · 전역 뒤 경과.
+//   이름 렌더러(`{memberName}`)와 인물 지정은 **안 만들었다**(B-20 초안의 남은 몫).
+const REC = {
+  unitId: "U1", unitName: "12사단", roleId: "signal", roleLabel: "통신병",
+  arcLabel: "", finalBallSense: 60, leaveDays: 12, awards: [], penalties: [], perf: [],
+  topRelations: [
+    { memberId: "M1", name: "김사수", value: 62 },
+    { memberId: "M2", name: "이후임", value: 40 },
+  ],
+  senseCurve: [], conversion: { statDelta: 0, velocityDelta: 0, recoveryWeeks: 6 },
+} as unknown as NonNullable<ProtagonistSave["militaryRecord"]>;
+
+/** 전역한 주인공 — 2030 W20 에 전역, 지금은 `year`/`week` */
+const 전역자 = (over: Partial<ProtagonistSave> = {}, year = 2030, week = 30) =>
+  ctx({
+    protagonist: proto({
+      militaryStatus: "군필", militaryServedUnit: "general", militaryRecord: REC,
+      dischargedSeason: 2030, dischargedWeek: 20, ...over,
+    }),
+    seasonYear: year, currentWeek: week,
+  });
+
+describe("병영 재회 조건", () => {
+  it("제일 가까웠던 부대원의 관계값을 읽는다", () => {
+    const c = 전역자();
+    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 60 }, c)).toBe(true);
+    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 70 }, c)).toBe(false);
+  });
+
+  it("군 경력이 없으면(상무·미필·구 세이브) 조용히 false 다 — 던지지 않는다", () => {
+    const c = ctx({ protagonist: proto({ militaryStatus: "군필" }) });
+    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 1 }, c)).toBe(false);
+    expect(resolvePath(c, "militaryRecord.roleId")).toBeUndefined();
+  });
+
+  it("군 보직으로 갈린다", () => {
+    const c = 전역자();
+    expect(ev({ type: "eq", path: "militaryRecord.roleId", value: "signal" }, c)).toBe(true);
+    expect(ev({ type: "eq", path: "militaryRecord.roleId", value: "mortar" }, c)).toBe(false);
+  });
+
+  it("전역 뒤 경과를 시즌을 넘어 센다", () => {
+    expect(resolvePath(전역자({}, 2030, 30), "weeksSinceDischarge")).toBe(10);
+    // 이듬해 W10 → 52 − 20 + 10 = 42
+    expect(resolvePath(전역자({}, 2031, 10), "weeksSinceDischarge")).toBe(42);
+    expect(ev({ type: "num_gte", path: "weeksSinceDischarge", value: 40 }, 전역자({}, 2031, 10))).toBe(true);
+  });
+
+  it("🔴 전역 기록이 없으면 못 잰 것이다 — 0 이 아니다", () => {
+    // 0 을 지어 내면 **군대를 안 다녀온 주인공이 「이번 주 전역」** 이 된다
+    const 구세이브 = ctx({ protagonist: proto({ dischargedSeason: undefined, dischargedWeek: undefined }), seasonYear: 2030 });
+    expect(resolvePath(구세이브, "weeksSinceDischarge")).toBeUndefined();
+    expect(ev({ type: "num_gte", path: "weeksSinceDischarge", value: 0 }, 구세이브)).toBe(false);
+    // 🔴 대조군 — `seasonYear` 배선을 빼면 못 잰다(연 차이를 못 구한다)
+    const 연도없음 = ctx({ protagonist: proto({ dischargedSeason: 2030, dischargedWeek: 20, militaryRecord: REC }), currentWeek: 30 });
+    expect(resolvePath(연도없음, "weeksSinceDischarge")).toBeUndefined();
+  });
+
+  it("표에 없는 군 경로는 그대로 던진다 — 문지기는 표다", () => {
+    expect(() => resolvePath(전역자(), "militaryRecord.leaveDays")).toThrow(/모르는 경로/);
+    expect(NUM_PATHS.has("militaryRecord.topRelations.0.value")).toBe(true);
+    expect(EQ_PATHS.has("militaryRecord.roleId")).toBe(true);
+  });
+});
+
+describe("관계 조건 — 부대원(unitmate)", () => {
+  it("부대원은 관계 테이블이 아니라 군 경력에서 읽는다", () => {
+    const c = 전역자();
+    expect(ev({ type: "relation_gte", kind: "unitmate", value: 60 }, c)).toBe(true);
+    expect(ev({ type: "relation_gte", kind: "unitmate", value: 70 }, c)).toBe(false);
+    // lte 는 제일 낮은 쪽을 본다 — "서먹해진 후임" 같은 갈래
+    expect(ev({ type: "relation_lte", kind: "unitmate", value: 40 }, c)).toBe(true);
+    expect(ev({ type: "relation_lte", kind: "unitmate", value: 39 }, c)).toBe(false);
+  });
+
+  it("🔴 `ctx.relations` 에 넣어도 안 읽는다 — 출처가 하나여야 한다", () => {
+    // 부대원은 slot.db 관계 테이블에 안 들어간다. 거기서 찾으면 영영 0건이다
+    const c = ctx({
+      protagonist: proto({ militaryStatus: "군필" }),
+      relations: [{ kind: "unitmate", value: 90 }] as unknown as EventContext["relations"],
+    });
+    expect(ev({ type: "relation_gte", kind: "unitmate", value: 10 }, c)).toBe(false);
+  });
+
+  it("다섯 종은 예전 그대로다", () => {
+    const c = ctx({ relations: [{ kind: "teammate", value: 55 }] as unknown as EventContext["relations"] });
+    expect(ev({ type: "relation_gte", kind: "teammate", value: 50 }, c)).toBe(true);
+    expect(ev({ type: "relation_gte", kind: "manager", value: 1 }, c)).toBe(false);
+  });
+});

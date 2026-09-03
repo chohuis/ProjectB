@@ -223,6 +223,25 @@ export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
 export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand";
 
+/**
+ * 인센티브 축 — **보직 셋과 1:1** (PLAN_CONTRACT_TERMS §5-3 · 스윙맨 없음).
+ *
+ * `era` 만 「이하」이고 나머지는 「이상」이다. `award` 는 보직과 무관하다.
+ */
+export type IncentiveKind = "games" | "innings" | "era" | "wins" | "saves" | "holds" | "award";
+
+export interface ContractIncentive {
+  kind: IncentiveKind;
+  /** era 는 「이하」, 나머지는 「이상」. award 는 1(받으면 달성) */
+  threshold: number;
+  /** kind === "award" 일 때만. `awardRules` 의 id (mvp · golden · …) */
+  awardId?: string;
+  /** 만원 */
+  bonus: number;
+  /** 정산한 해 — 다년 계약에서 **두 번 주는 걸 막는다**. 정산은 C④·A 몫이다 */
+  paidSeasons?: number[];
+}
+
 export interface ProContract {
   teamId: string;
   leagueId: string;
@@ -233,7 +252,18 @@ export interface ProContract {
   teamOptionYears: number;  // 0이면 없음
   playerOptionYears: number;  // 0이면 없음
   noTrade: boolean;
-  incentives?: { condition: string; bonus: number }[];
+  /**
+   * 인센티브 — **주인공 계약만** (PLAN_CONTRACT_TERMS §4-1 · 사용자 확정 §8 ①·⑤).
+   *
+   * 🔴 예전엔 `{ condition: string; bonus: number }` 였다. 문자열이라
+   * **기계가 판정할 수 없었고**, 그래서 채우는 코드가 0건인 죽은 필드였다.
+   * 정산(C④·A)이 성적과 대조하려면 축(`kind`)과 문턱(`threshold`)이 갈려 있어야 한다.
+   *
+   * ⚠ **NPC 계약에는 안 넣는다** (§4-2 사용자 확정). NPC 연봉은
+   * `calc_npc_renewal_salary` 한 곳에서 나오고 정산할 자리가 없다 —
+   * 붙이면 매 시즌 수천 명의 정산이 생긴다.
+   */
+  incentives?: ContractIncentive[];
   status: "active" | "expired" | "voided";
 }
 
@@ -323,6 +353,22 @@ export interface ProtagonistSave {
   militaryLife?: import("./militaryLife").MilitaryLifeState | null;
   /** 전역 때 접은 군 경력 한 장 (§30) — 현역만 · 상무는 없다 */
   militaryRecord?: import("./militaryLife").MilitaryRecord | null;
+  /**
+   * **실제로 전역한 시점** (B-20 재회 축소판 · 2026-09-03). 상무·현역 둘 다 남긴다.
+   *
+   * 🔴 `militaryDischargeYear` 와 다르다 — 그건 입대 때 정하는 **전역 「예정」** 이고
+   *   화면이 "전역 예정 {year}년 W48" 로 쓴다. 지난 시점이 아니라 앞으로의 약속이다.
+   *
+   * 이게 없어서 **전역 뒤 경과를 잴 수단이 아예 없었다.** `militaryRecoveryWeeks` 는
+   * 전역 때 2(상무)·6(현역)으로 놓이고 매주 1씩 줄어 0에서 멈춘다 — 0이 된 뒤로는
+   * 한 주가 지났는지 세 해가 지났는지 구분이 안 된다. 그래서 「전역 후 첫 시즌 W10」
+   * 같은 재회 서사를 못 걸었다 (PLAN_MILITARY_LIFE §30).
+   *
+   * ⚠ 구 세이브엔 없다(`undefined`). 이벤트 경로 `weeksSinceDischarge` 는 그때
+   *   `undefined` 를 내고 비교가 false 가 된다 — **군대를 안 다녀온 것과 같게 본다.**
+   */
+  dischargedSeason?: number;
+  dischargedWeek?: number;
   sportsUnitApplied: boolean;
   /**
    * 은퇴 기록. **있으면 커리어가 끝난 것이다.**
@@ -365,6 +411,34 @@ export interface ProtagonistSave {
     totalWeeks:        number;  // 시즌 총 경과 주 수
   };
   currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
+  /**
+   * 보직 선택을 **이미 물은 자리** — `"{연도}:{팀id}:W{시즌내주차}"` (PLAN_ROLE_RECOMMEND §7).
+   *
+   * 🔴 **소식 id `msg-role-{year}-{teamId}-w{week}` 와 같은 세 조각이어야 한다.**
+   * 한쪽만 주차를 빼면 갈래가 둘로 깨진다 — 가드에만 없으면 같은 주에 소식이
+   * 계속 생기고, id 에만 없으면 소식 키가 겹쳐 **세이브가 안 열린다**
+   * (CLAUDE.md 「소식 id 규칙」). `roleMessageId.test.ts` 가 둘을 같이 본다.
+   *
+   * ⚠ `ProtagonistSave` 안에 있어 세이브에 그대로 실린다 —
+   * CLAUDE.md 「한 해에 한 번 가드는 반드시 저장한다」.
+   */
+  lastRoleChoiceKey?: string;
+  /**
+   * 고른 자리에서의 내 깊이 (PLAN_ROLE_RECOMMEND §5 · 1.1 A④).
+   *
+   * `over = max(0, rank − seats)` 한 값이 선발 등판 건너뛰기 · 불펜 등판 확률 · 경기 진입
+   * 문턱 셋을 다 민다. **벌이 아니라 깊이다** — 추천을 따랐어도 세 자리에 다 못 들면 `over > 0`.
+   *
+   * ⚠ 세이브에 실린다. 없으면(구 세이브·야수) 깊이 0 = 예전 그대로다.
+   */
+  roleFit?: {
+    chosen: "SP" | "RP" | "CP";
+    recommended: "SP" | "RP" | "CP";
+    /** 고른 자리 후보 안에서의 내 순위 (1 = 최고) */
+    rank: number;
+    /** 그 자리 수 */
+    seats: number;
+  };
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
   careerEvents?: NpcCareerEvent[];  // 드래프트·트레이드·군입대 이벤트
   // 시즌 시작 스냅샷 (능력치 트렌드 화살표용)

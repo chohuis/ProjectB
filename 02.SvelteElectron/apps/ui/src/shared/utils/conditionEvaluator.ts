@@ -302,11 +302,15 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     // 이야기가 묻는 것이지 평균이 아니다.
     case "relation_gte":
     case "relation_lte": {
-      const rows = (ctx.relations ?? []).filter((r) => r.kind === cond.kind);
-      if (rows.length === 0) return false;
-      const best = cond.type === "relation_gte"
-        ? Math.max(...rows.map((r) => r.value))
-        : Math.min(...rows.map((r) => r.value));
+      // ⚠ **`unitmate` 는 출처가 다르다** (B-20 재회 · 2026-09-03). 부대원 관계는
+      //   관계 테이블(slot.db)에 안 들어간다 — 복무가 끝나면
+      //   `militaryRecord.topRelations` 상위 셋으로 접히고 그게 유일한 기록이다.
+      //   `ctx.relations` 에서 찾으면 **영영 0건**이라 조용히 false 가 된다.
+      const values = cond.kind === "unitmate"
+        ? (ctx.protagonist?.militaryRecord?.topRelations ?? []).map((r) => r.value)
+        : (ctx.relations ?? []).filter((r) => r.kind === cond.kind).map((r) => r.value);
+      if (values.length === 0) return false;
+      const best = cond.type === "relation_gte" ? Math.max(...values) : Math.min(...values);
       return cond.type === "relation_gte" ? best >= cond.value : best <= cond.value;
     }
   }

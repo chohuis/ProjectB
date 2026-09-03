@@ -2,6 +2,16 @@ import type { DecisionEffect } from "./main";
 import type { CareerStage, PlayerType, PitchingStatKey, ProtagonistSave, PlayerSeasonStats } from "./save";
 import type { SeasonPhase, Standing } from "./season";
 
+/**
+ * 관계 조건이 볼 수 있는 종류.
+ *
+ * `RelationKind` 다섯은 관계 테이블(slot.db)에서 오고, `unitmate` **하나만**
+ * `protagonist.militaryRecord.topRelations` 에서 온다 (B-20 재회 · 2026-09-03).
+ * 부대원은 전역과 함께 상위 셋으로 접히고 관계 테이블에는 안 남는다 —
+ * 종류를 하나 더 여는 대신 출처를 갈랐다.
+ */
+export type EventRelationKind = import("./relationship").RelationKind | "unitmate";
+
 // ── 이벤트 발생 조건 ──────────────────────────────────────────
 export type Condition =
   // 주차 / 시즌
@@ -102,8 +112,13 @@ export type Condition =
   // 🟡 **다른 조건과 성격이 다르다.** 관계는 slot.db에 있고 조회가 비동기인데
   // 평가기는 동기라, `EventContext.relations`에 **미리 실어 줘야** 한다.
   // 안 실리면 전부 false다(고교 등 관계가 없는 단계에선 그게 맞다).
-  | { type: "relation_gte"; kind: import("./relationship").RelationKind; value: number }
-  | { type: "relation_lte"; kind: import("./relationship").RelationKind; value: number }
+  //
+  // ⚠ **`unitmate` 만 출처가 다르다.** 부대원은 관계 테이블(slot.db)에 없다 —
+  // 군 관계는 복무가 끝나면 `militaryRecord.topRelations` 상위 셋으로 접히고
+  // 그게 유일한 기록이다. 그래서 `ctx.relations` 가 아니라 거기서 읽는다.
+  // 다섯 종(manager·coach·owner·teammate·rival)은 예전 그대로다.
+  | { type: "relation_gte"; kind: EventRelationKind; value: number }
+  | { type: "relation_lte"; kind: EventRelationKind; value: number }
 
   // ── 부상 (2026-08-23) ────────────────────────────────────────
   // 부상은 이 게임의 중심 사건인데 **이벤트가 그걸 못 봤다.** 세이브에
@@ -244,6 +259,12 @@ export interface DecisionTemplateOption {
 export interface EventContext {
   protagonist: ProtagonistSave;
   currentWeek: number;
+  /**
+   * 지금 시즌 연도 (2026-09-03). **주만으로는 시즌을 넘는 경과를 못 센다** —
+   * `weeksSinceDischarge` 가 「(연 차이 × 52) + 주 차이」로 재려면 이게 있어야 한다.
+   * 없으면 그 경로가 `undefined` 를 내고 비교는 false 다.
+   */
+  seasonYear?: number;
   seasonPhase: SeasonPhase;
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;
