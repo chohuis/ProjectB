@@ -220,8 +220,17 @@ export interface TableMetadata {
    *   「변동 없음」과 「모름」이 같아 보인다 (§3-1).
    */
   deltaKey?: string;
-  /** 표 아래 한 줄 */
+  /** 표 아래 한 줄. 없으면 문안(dashboard_labels.json)의 것을 쓴다 */
   footnote?: string;
+  /**
+   * 표 아래 붙는 **두 번째 표**. 계약 완료 소식이 「조건」(항목·값) 아래
+   * 「인센티브」(항목·조건·금액)를 다는 자리다 — 열이 아예 달라 한 표에
+   * 못 넣는다 (PLAN_MESSAGE_DASHBOARDS §5 시안 3).
+   *
+   * ⚠ **선택이다.** 안 실어 보내면 아무것도 안 그린다. 문안은 점으로 이어
+   *   찾으므로 `kind` 를 `"contractSigned.incentives"` 로 준다.
+   */
+  extra?: TableMetadata;
 }
 
 /** 순위 — 등수가 뜻을 갖는 소식 셋 (대회 최종 순위·대회 수상·2군 우승) */

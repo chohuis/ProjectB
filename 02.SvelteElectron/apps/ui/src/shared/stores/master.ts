@@ -24,6 +24,7 @@ import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
 import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCopy";
 import { parseContractTermsCopy, type ContractTermsCopy } from "../utils/contractCopy";
+import { parseDashboardLabels, type DashboardLabels } from "../utils/dashboardCopy";
 import { primeContractRules } from "../utils/contractTerms";
 
 export type { CoachAttributes, CoachSpecialty };
@@ -460,6 +461,12 @@ export interface MasterState {
   roleChoiceCopy: RoleChoiceCopy | null;
   /** 계약 협상 문안 (B-13) — 정본은 messages/contract_terms.json. 없으면 안내 줄을 안 그린다 */
   contractCopy: ContractTermsCopy | null;
+  /**
+   * 소식 대시보드 문안 (B-21) — 정본은 messages/dashboard_labels.json.
+   * 없으면 표를 없애는 게 아니라 **열 이름 자리에 키를 그대로** 쓴다
+   * (값은 이미 소식에 실려 왔다 — dashboardCopy.ts 머리말).
+   */
+  dashboardLabels: DashboardLabels | null;
 }
 
 // ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
@@ -917,6 +924,7 @@ function createMasterStore() {
     militaryLifeEvents: [],
     roleChoiceCopy: null,
     contractCopy: null,
+    dashboardLabels: null,
   });
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
@@ -994,6 +1002,10 @@ function createMasterStore() {
       // 항목 이름(연봉·기간·노트레이드)은 코드가 갖는다 — faOfferTerms.ts 와 같은 선이다.
       const contractCopyRaw = await fetchMaster<unknown>("messages/contract_terms.json");
 
+      // 소식 대시보드 문안 (B-21 · PLAN_MESSAGE_DASHBOARDS §1·§2). 열 이름·빈 칸·
+      // 변동 틀이 전부 데이터다 — 「승」·「연봉」을 코드에 한 벌 더 두지 않는다.
+      const dashboardLabelsRaw = await fetchMaster<unknown>("messages/dashboard_labels.json");
+
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
       // 풀은 **매니페스트가 정본**이다 — 파일을 더해도 코드를 안 고친다
@@ -1066,6 +1078,7 @@ function createMasterStore() {
         militaryLifeEvents:    militaryLifeData?.events ?? [],
         roleChoiceCopy:        parseRoleChoiceCopy(roleChoiceRaw),
         contractCopy:          parseContractTermsCopy(contractCopyRaw),
+        dashboardLabels:       parseDashboardLabels(dashboardLabelsRaw),
       }));
 
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.

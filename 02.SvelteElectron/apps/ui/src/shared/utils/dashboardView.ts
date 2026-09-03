@@ -14,13 +14,16 @@
 import type {
   RankListMetadata, TableCell, TableColumn, TableMetadata, Top10Metadata,
 } from "../types/main";
+import { fillCount, type TableCopy } from "./dashboardCopy";
 
 /** 변동 표시의 세 갈래. 색은 화면이 이 값으로 고른다 */
 export type DeltaDir = "up" | "down" | "flat";
 
 export interface DeltaMark {
   dir: DeltaDir;
-  /** 그대로 찍는 글자 — `↑2` · `↓1` · `—` */
+  /** 오른(내린) 칸 수 — 언제나 0 이상이다. 방향은 `dir` 가 든다 */
+  n: number;
+  /** 문안이 없을 때 그대로 찍는 글자 — `↑2` · `↓1` · `—` */
   text: string;
 }
 
@@ -36,9 +39,9 @@ export interface DeltaMark {
  */
 export function deltaMark(delta: number | null | undefined): DeltaMark | null {
   if (delta == null || !Number.isFinite(delta)) return null;
-  if (delta > 0) return { dir: "up", text: `↑${delta}` };
-  if (delta < 0) return { dir: "down", text: `↓${-delta}` };
-  return { dir: "flat", text: "—" };
+  if (delta > 0) return { dir: "up", n: delta, text: `↑${delta}` };
+  if (delta < 0) return { dir: "down", n: -delta, text: `↓${-delta}` };
+  return { dir: "flat", n: 0, text: "—" };
 }
 
 /**
@@ -59,9 +62,9 @@ export function cellAlign(col: TableColumn, index: number): "left" | "right" | "
  * ⚠ **숫자를 여기서 반올림하지 않는다.** 자릿수는 뜻이 있는 값이라
  *   (승률 `.633` · 이닝 `168.1`) 만드는 쪽이 정해서 문자열로 보낸다.
  */
-export function cellText(v: TableCell | undefined): string {
-  if (v == null || v === "") return "—";
-  if (typeof v === "boolean") return v ? "○" : "—";
+export function cellText(v: TableCell | undefined, empty = "—"): string {
+  if (v == null || v === "") return empty;
+  if (typeof v === "boolean") return v ? "○" : empty;
   return String(v);
 }
 
@@ -88,15 +91,22 @@ export interface TableRowView {
  *   아닌 표시가 행에 섞여 오기 때문이다. 반대로 열이 있는데 행에 값이 없으면
  *   `—` 로 채운다(칸 수가 어긋나면 표가 통째로 밀린다).
  */
-export function buildTableRows(md: TableMetadata): TableRowView[] {
-  const cols = md.columns ?? [];
+export function buildTableRows(
+  md: TableMetadata, cols?: TableColumnView[], copy?: TableCopy,
+): TableRowView[] {
+  const columns: TableColumnView[] = cols
+    ?? (md.columns ?? []).map((c, ci) => ({ key: c.key, label: c.label, align: cellAlign(c, ci) }));
+  const empty = copy?.emptyCell;
+  const rowLabels = copy && Object.keys(copy.rows).length > 0 ? copy.rows : null;
   return (md.rows ?? []).map((row, ri) => ({
-    cells: cols.map((c, ci) => ({
-      key: c.key,
-      text: cellText(row[c.key]),
-      align: cellAlign(c, ci),
-      numeric: isNumericCell(row[c.key]),
-    })),
+    cells: columns.map((c) => {
+      const raw = row[c.key];
+      // 항목 열의 값은 metadata 키다 — 「salary」 가 아니라 「연봉」 으로 그린다
+      const text = c.key === "item" && rowLabels && typeof raw === "string"
+        ? (rowLabels[raw] ?? cellText(raw, empty))
+        : cellText(raw, empty);
+      return { key: c.key, text, align: c.align, numeric: isNumericCell(raw) };
+    }),
     highlight: row.myTeam === true || md.highlightRow === ri,
     delta: md.deltaKey ? deltaMark(row[md.deltaKey] as number | null | undefined) : null,
   }));
@@ -178,4 +188,130 @@ export function buildRankList(md: Top10Metadata | RankListMetadata): RankListVie
       })),
     }],
   };
+}
+
+// ── 문안을 입힌 표 ─────────────────────────────────────────────
+//
+// 🔴 **열 이름을 화면이 짓지 않는다.** 정본은 `messages/dashboard_labels.json`
+//    (B-21)이고 `dashboardCopy.ts` 가 그 모양을 갖는다. 생산부가 열을 통째로
+//    안 실어 보내도 **문안이 선언한 순서**로 표가 선다 — A 가 넘길 것은 값이다.
+//
+// ⚠ **문안이 없으면 키를 그대로 쓴다.** 「승」 을 여기 한 벌 더 두면 데이터와
+//   두 벌이 되고 한쪽만 고쳐진 채 남는다.
+
+
+export interface TableColumnView {
+  key: string;
+  label: string;
+  align: "left" | "right" | "center";
+}
+
+export interface TableView {
+  /** 표가 둘일 때만 이름을 단다 — 하나뿐이면 소식 제목이 이미 이름이다 */
+  title: string;
+  columns: TableColumnView[];
+  rows: TableRowView[];
+  /** 변동 열 머리글. `null` 이면 그 열이 없다 */
+  deltaLabel: string | null;
+  /** 행이 하나도 없을 때 대신 그리는 한 줄 */
+  empty: string;
+  footnote: string;
+}
+
+/** 항목·값 두 칸짜리 표의 열 이름 — 문안의 `common.itemValue` 다 */
+function itemValueLabel(key: string, copy: TableCopy): string {
+  if (key === "item") return copy.itemValue.item;
+  if (key === "value") return copy.itemValue.value;
+  return "";
+}
+
+/**
+ * 열을 정한다.
+ *
+ * 생산부가 `columns` 를 실어 보내면 그 순서가 이긴다 — 이름만 비었으면 문안이
+ * 채운다. 아예 안 보내면 문안이 선언한 `columns` 순서로 세우고, 뒤에
+ * `optionalColumns` 중 **행에 실제로 값이 있는 것**만 붙인다.
+ *
+ * ⚠ **선택 열은 값이 없으면 안 그린다.** 「무」·「최근10」·「지난해」는 생산부가
+ *   넘길 때만 뜻이 있다 — 빈 열을 그리면 표가 넓어지고 1366×768 에서 밀린다.
+ */
+export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnView[] {
+  const given = md.columns ?? [];
+  if (given.length > 0) {
+    return given.map((c, i) => ({
+      key: c.key,
+      label: c.label || copy.columns[c.key] || copy.optionalColumns[c.key]
+             || itemValueLabel(c.key, copy) || c.key,
+      align: cellAlign(c, i),
+    }));
+  }
+
+  const rows = md.rows ?? [];
+  const has = (k: string) => rows.some((r) => r[k] != null);
+  const keys: string[] = [];
+
+  const declared = Object.keys(copy.columns);
+  if (declared.length > 0) {
+    // 행이 하나도 없으면 머리글이라도 서야 한다 — 그때는 전부 세운다
+    keys.push(...(rows.length === 0 ? declared : declared.filter(has)));
+  } else if (Object.keys(copy.rows).length > 0) {
+    keys.push("item", "value");
+  }
+
+  for (const k of Object.keys(copy.optionalColumns)) {
+    if (k === "delta" || k === md.deltaKey || keys.includes(k)) continue;
+    if (has(k)) keys.push(k);
+  }
+
+  if (keys.length === 0) {
+    for (const r of rows) {
+      for (const k of Object.keys(r)) {
+        if (k !== "myTeam" && k !== md.deltaKey && !keys.includes(k)) keys.push(k);
+      }
+    }
+  }
+
+  return keys.map((k, i) => ({
+    key: k,
+    label: copy.columns[k] || copy.optionalColumns[k] || itemValueLabel(k, copy) || k,
+    align: (i === 0 ? "left" : "right") as "left" | "right",
+  }));
+}
+
+/**
+ * 표 한 벌을 문안까지 입혀 화면이 그대로 그릴 모양으로 바꾼다.
+ *
+ * ⚠ **항목 열(`item`)의 값은 metadata 키다.** 「salary」 가 아니라 「연봉」 으로
+ *   그리려면 문안의 `rows` 를 거쳐야 한다 — 계약·시즌 결산이 그 꼴이다.
+ *   문안에 없는 키는 **그대로 둔다**(빈 칸이 되면 왜 비었는지 화면에 안 남는다).
+ *
+ * ⚠ **표가 하나뿐이면 이름을 안 단다** (`withTitle`). 소식 제목이 이미 그
+ *   이름이라 위에 한 줄 더 두면 부제가 된다.
+ */
+export function buildTableView(
+  md: TableMetadata, copy: TableCopy, withTitle = false,
+): TableView {
+  const cols = resolveColumns(md, copy);
+  const rows = buildTableRows(md, cols, copy);
+
+  return {
+    title: withTitle ? copy.title : "",
+    columns: cols,
+    rows,
+    deltaLabel: md.deltaKey ? (copy.deltaLabel || copy.optionalColumns.delta || "") : null,
+    empty: copy.empty,
+    footnote: md.footnote ?? copy.footnote,
+  };
+}
+
+/**
+ * 변동 칸에 찍을 글자. 틀은 데이터가 갖는다 (`↑{n}`).
+ *
+ * ⚠ **모름은 빈 문자열이다.** `unknown` 을 「—」 로 채우면 「변동 없음」과
+ *   같아 보인다 — 그래서 `deltaMark` 가 아예 `null` 을 준다 (§3-1).
+ */
+export function deltaText(mark: DeltaMark | null, copy: TableCopy): string {
+  if (!mark) return copy.delta.unknown;
+  if (mark.dir === "flat") return copy.delta.flat;
+  return fillCount(mark.dir === "up" ? copy.delta.up : copy.delta.down, mark.n);
 }
