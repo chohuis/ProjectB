@@ -261,8 +261,16 @@ export function buildRankList(
   }
 
   return {
-    // 제목은 소식이 실어 보내면 그것이고, 안 보내면 문안의 이름이다
-    subtitle: md.title ?? copy?.title ?? "",
+    /**
+     * 🔴 **제목의 정본은 문안이다** (`rankList.<kind>.title`).
+     *
+     * 예전엔 `md.title` 이 먼저였다 — 생산부가 한글 제목을 굳혀 실으면
+     * 표시 언어를 바꿔도 그 소식만 한글로 남는다. 이름을 id 로 싣게 한
+     * 규칙과 같은 이유다.
+     *
+     * ⚠ 문안이 없는 종류만 소식이 실어 온 말로 떨어진다.
+     */
+    subtitle: copy?.title || md.title || "",
     empty: copy?.empty ?? "",
     columns: [{
       label: "",

@@ -151,10 +151,20 @@ describe("순위 — 등수 이름은 문안이 갖는다", () => {
     expect(v.empty).toBe(copy.empty);
   });
 
-  it("소식이 제목을 실어 보내면 그게 이긴다", () => {
-    const v = buildRankList({ ...md, title: "8강 최종" }, copy, NAMES);
-    expect(v.subtitle).toBe("8강 최종");
-    expect(buildRankList(md, copy, NAMES).subtitle, "안 보내면 문안이다").toBe(copy.title);
+  /**
+   * 🔴 **제목의 정본은 문안이다** (`rankList.<kind>.title`). 예전엔 소식이
+   *    실어 보낸 말이 이겼는데, 생산부가 한글 제목을 굳혀 실으면 표시
+   *    언어를 바꿔도 그 소식만 한글로 남는다 — 이름을 id 로 싣게 한 규칙과
+   *    같은 이유다.
+   */
+  it("문안이 제목을 이긴다 — 소식이 실어 보내도", () => {
+    expect(buildRankList({ ...md, title: "8강 최종" }, copy, NAMES).subtitle).toBe(copy.title);
+  });
+
+  it("문안이 없는 종류만 소식이 실어 온 말로 떨어진다", () => {
+    const bare = rankCopy(LABELS, "없는종류");
+    expect(bare.title, "문안이 있으면 이 검사가 뜻을 잃는다").toBe("");
+    expect(buildRankList({ ...md, title: "8강 최종" }, bare, NAMES).subtitle).toBe("8강 최종");
   });
 
   /** ⚠ 유망주 랭킹은 등수 이름이 없다 — 「우승」이 붙으면 안 된다 */
@@ -454,5 +464,41 @@ describe("배선 — 네 갈래가 다 이어졌다", () => {
     const types = read("shared/types/main.ts");
     expect(types).toContain("BarsMetadata");
     expect(types).toContain("CardsMetadata");
+  });
+});
+
+// ── 말은 문안에 (2026-09-04) ───────────────────────────────────
+
+describe("코드가 들고 있던 말을 문안으로 옮겼다", () => {
+  /**
+   * 🔴 **유망주 랭킹에는 `kind` 가 없다** (`Top10Metadata`). 그래서 문안을
+   *    못 찾고 「해당 학년 선수 없음」을 **화면이** 들고 있었다 —
+   *    `rankList.top10` 자리를 만들어 옮겼다.
+   */
+  it("유망주 랭킹의 빈 학년 한 줄이 문안에 있다", () => {
+    expect(rankCopy(LABELS, "top10").empty, "rankList.top10 문안이 없다").not.toBe("");
+  });
+
+  it("화면이 그 말을 코드에 안 들고 있다", () => {
+    // ⚠ 낱말이 아니라 **폴백 연산자**를 본다 — 왜 옮겼는지는 주석에 남아야 한다
+    expect(RANK_SRC, "빈 줄을 화면이 말로 채운다").not.toContain('view.empty || "');
+    expect(RANK_SRC, "kind 가 없는 규격을 문안으로 못 잇는다").toContain('"top10"');
+  });
+
+  /** ⚠ 타임라인의 빈 줄도 같은 규칙이다 — 「기록이 없다」가 코드에 있었다 */
+  it("타임라인의 빈 줄도 문안에서 온다", () => {
+    expect(TIMELINE_SRC).not.toContain("기록이 없다");
+    expect(TIMELINE_SRC).toContain("view.empty");
+  });
+
+  /**
+   * 🔴 **본문을 패널이 대신하지 않는다** (사용자 확정 2026-09-04). 예전엔
+   *    `{:else}` 라 패널이 있으면 본문이 통째로 사라졌다 — 표는 값만 그리는데
+   *    본문에는 안내 문장이 같이 있었다.
+   */
+  it("소식 상세가 패널과 본문을 같이 그린다", () => {
+    expect(NEWS, "본문을 패널이 대신한다 — 안내 문장이 사라진다")
+      .toContain("{#if selected.body}");
+    expect(NEWS).toContain("m-text-after");
   });
 });

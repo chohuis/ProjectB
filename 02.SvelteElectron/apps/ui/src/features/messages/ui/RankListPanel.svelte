@@ -27,7 +27,15 @@
    * ⚠ 유망주 랭킹(`top10`)에는 `kind` 가 없다. 그때는 문안이 빈 채로
    *   들어가고 등수는 숫자로 선다 — 원래 그랬다.
    */
-  $: copy = rankCopy($masterStore.dashboardLabels, (metadata as { kind?: string }).kind ?? "");
+  /**
+   * ⚠ **유망주 랭킹에는 `kind` 가 없다** (`Top10Metadata`). 예전엔 그래서
+   *   문안을 못 찾고 「해당 학년 선수 없음」을 **코드가** 들고 있었다 —
+   *   말은 문안에 둔다(`rankList.top10`).
+   */
+  $: copy = rankCopy(
+    $masterStore.dashboardLabels,
+    (metadata as { kind?: string }).kind ?? (metadata.type === "top10" ? "top10" : ""),
+  );
   /**
    * 🔴 **id 를 이름으로 바꾸는 자리가 화면이다.** 대회 수상은 사람과 소속을
    *    id 로 싣는다(§1-2) — 만드는 쪽이 한글 이름을 굳혀 실으면 표시 언어를
@@ -82,7 +90,7 @@
           {#if col.entries.length === 0}
             <!-- ⚠ 빈 목록 한 줄도 문안이 갖는다. 대회 순위와 유망주 랭킹은
                  「없다」의 뜻이 달라 한 문장으로 묶으면 안 된다 -->
-            <li class="rank-empty">{view.empty || "해당 학년 선수 없음"}</li>
+            <li class="rank-empty">{view.empty}</li>
           {/if}
         </ol>
 
