@@ -5,11 +5,11 @@
     "_placeholders": "{team} {year} {week} {salary} {years} {bonus} {total} {actual} {rounds} {minSalary} {optYears} {incentive}",
     "_id": "msg-contract-{kind}-{year}-w{week} (§6). 연도와 주차를 둘 다 넣는다 — 겹치면 Svelte 목록이 죽고 세이브가 안 열린다",
     "_josa": "🔴 조사를 코드로 붙이지 않는다. {team}·{incentive} 는 받침이 제각각이라(웨이브스 / 라이온즈 / 파이러츠 · 25등판 / ERA 3.00 이하) **뒤에 조사를 안 붙인다.** 줄 끝에 두거나 제목에만 쓴다",
-    "_rule": "부제·대시 설명을 안 쓴다. 없는 조항은 줄 자체를 안 적는다"
+    "_rule": "부제·대시 설명을 안 쓴다. 없는 조항은 줄 자체를 안 적는다 🔴 **제목의 구분자 대시도 뺀다** (B-32 · 사용자 확정 2026-09-04). 화면에서는 구분자와 부제가 같은 꼴로 보인다. 팀·연도 같은 자리표시자를 **앞에 두고 띄어 쓴다** — 뒤에 두면 조사를 붙이고 싶어지고, 앞에 두면 뒤가 명사라 조사가 안 붙는다."
   },
   "offer": {
     "_note": "구단 제시 (msg-contract-offer)",
-    "subject": "재계약 제시 — {team}",
+    "subject": "{team} 재계약 제시",
     "head": "구단이 조건을 보내왔습니다.",
     "salary": "연봉 {salary}만원 / {years}년",
     "teamOption": "팀 옵션 {optYears}년",
@@ -20,7 +20,7 @@
   },
   "counter": {
     "_note": "역제안 회신 (msg-contract-counter). head 한 줄 + reason 한 줄",
-    "subject": "역제안 회신 — {team}",
+    "subject": "{team} 역제안 회신",
     "accept": "구단이 요구를 받아들였습니다.",
     "reject": "구단이 요구를 받아들이지 않았습니다.",
     "revise": "구단이 조건을 고쳐 다시 보내왔습니다.",
@@ -51,7 +51,7 @@
   },
   "option": {
     "_note": "옵션 행사 (msg-contract-option)",
-    "subject": "옵션 행사 — {team}",
+    "subject": "{team} 옵션 행사",
     "teamExercise": "구단이 팀 옵션을 행사했습니다. {year}시즌을 같은 조건으로 뜁니다.",
     "teamDecline": "구단이 팀 옵션을 포기했습니다.",
     "playerAsk": "선수 옵션을 행사하시겠습니까?",
@@ -60,7 +60,7 @@
   },
   "incentive": {
     "_note": "정산 (msg-contract-incentive) — 시즌 끝 한 번. 달성·미달을 한 통에 같이 적는다",
-    "subject": "인센티브 정산 — {year}시즌",
+    "subject": "{year}시즌 인센티브 정산",
     "met": "{incentive} 달성 ({actual})  +{bonus}만원",
     "missed": "{incentive} 미달 ({actual})",
     "unmeasurable": "{incentive} 미달 (보직이 바뀌었습니다)",
