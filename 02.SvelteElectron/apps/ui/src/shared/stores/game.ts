@@ -280,46 +280,12 @@ const DEFAULT_ACHIEVEMENTS: AchievementRuntime[] = [
   { id: "ACH_BASEBALL_FIRST_SAVE", progress: 0, unlockedAt: null, claimedAt: null },
 ];
 
-const DEFAULT_MAILBOX: MessageItem[] = [
-  {
-    id: "msg-000", category: "coach", sender: "투수 코치 오지경",
-    subject: "불펜 추가 세션 제안",
-    preview: "오늘 저녁 불펜 30구 추가 세션 진행 여부를 선택해 주세요.",
-    body: "오늘 저녁 추가 불펜 세션(30구)을 제안합니다.\n\n선택에 따라 오늘 컨디션과 내일 훈련 효율이 달라집니다.\n- 훈련한다: 컨디션 -4, 커맨드 경험치 +1\n- 훈련하지 않는다: 컨디션 +2, 변화 없음",
-    createdAt: "오늘 08:40", readAt: null,
-    decision: {
-      prompt: "추가 불펜 30구 세션을 진행하시겠습니까?",
-      options: [
-        { id: "do_train",   label: "훈련한다",       effectHint: "컨디션 -4, 커맨드 경험치 +1",
-          effects: { conditionDelta: -4, xp: { command: 1 } } },
-        { id: "skip_train", label: "훈련하지 않는다", effectHint: "컨디션 +2, 변화 없음",
-          effects: { conditionDelta: 2 } },
-      ],
-      selectedOptionId: null,
-    },
-  },
-  {
-    id: "msg-001", category: "coach", sender: "투수 코치 오지경",
-    subject: "릴리스 라인 체크 요청",
-    preview: "오늘 불펜 세션 후 하체 슬라이드-릴리스 타이밍을 다시 맞춰 봅시다.",
-    body: "오늘 불펜 세션에서 릴리스 라인이 3구간에서 조금 흔들렸습니다.\n\n하체 슬라이드 이후 상체가 먼저 열리는 구간만 줄이면 커맨드가 더 안정됩니다.",
-    createdAt: "오늘 09:20", readAt: null,
-  },
-  {
-    id: "msg-002", category: "manager", sender: "감독 임우현",
-    subject: "주말 리그 선발 확정",
-    preview: "토요일 1차전 선발로 준비하고 금요일은 투구 수를 제한합니다.",
-    body: "토요일 주말 리그 1차전 선발로 확정되었습니다.\n\n금요일 최종 점검은 투구 수 25구 제한으로 진행해 주세요.",
-    createdAt: "어제 18:05", readAt: null,
-  },
-  {
-    id: "msg-003", category: "system", sender: "시스템",
-    subject: "훈련 루틴 결과 반영",
-    preview: "불펜 루틴 숙련도 상승에 따라 커맨드 +1이 반영되었습니다.",
-    body: "훈련 루틴 분석 결과:\n- 불펜 루틴 숙련도 상승\n- 커맨드 +1 반영\n- 피로도 +2 반영",
-    createdAt: "어제 13:42", readAt: "어제 14:01",
-  },
-];
+// ⚠ **새 게임 소식함은 비어서 시작한다** (사용자 결정 2026-09-03).
+//   예전엔 자리표시자 넷(msg-000~003)이 박혀 있었다 — 보낸이 이름이 고정("투수 코치
+//   오지경"·"감독 임우현")이라 실제 코치·감독과 안 맞고, 보직과 무관하게 "선발 확정",
+//   안 한 훈련의 "커맨드 +1" 이 첫 소식함에 그대로 들어갔다(새 게임이 소식함을 안 비운다).
+//   첫 소식함은 시즌 브리핑·훈련 결과·보직 선택 같은 실제 시스템 소식이 채운다.
+const DEFAULT_MAILBOX: MessageItem[] = [];
 
 // ── 헬퍼: ProtagonistSave → player 호환 객체 ──────────────────
 /**
@@ -536,6 +502,38 @@ function buildInitialState(): GameStoreState {
  * 보고 이게 되살리는지 전수로 확인한다 — 안 되살리는 필드는 옛 세이브에서
  * `undefined` 로 남아 화면·계산이 조용히 어긋난다.
  */
+/**
+ * 옛 계약의 죽은 인센티브를 **비운다** (PLAN_CONTRACT_TERMS §4-1).
+ *
+ * 예전 타입은 `{ condition: string; bonus: number }` 였다. 문자열이라 기계가
+ * 판정할 수 없었고 **채우는 코드가 0건**이었다 — 그래서 실제로 값이 든 세이브는
+ * 없어야 하지만, 손으로 만든 세이브·개발 중 세이브에 남아 있을 수 있다.
+ *
+ * 🔴 **세이브를 지우거나 되돌리지 않는다.** 계약은 그대로 두고 `incentives`
+ * 배열에서 **새 모양이 아닌 항목만** 뺀다. 남는 게 없으면 필드 자체를 지운다 —
+ * 빈 배열을 두면 선수 상세가 「인센티브」 칸을 열고 아무것도 안 그린다.
+ */
+export function migrateContract(c: ProContract | undefined): ProContract | undefined {
+  if (!c) return c;
+  const raw = c.incentives as unknown;
+  if (!Array.isArray(raw)) {
+    // 배열이 아니면(옛 세이브의 잘못된 값) 필드를 지운다
+    if (raw === undefined) return c;
+    const { incentives: _drop, ...rest } = c;
+    return rest as ProContract;
+  }
+  // 새 모양은 `kind` 와 숫자 `threshold` 를 갖는다. 옛 `{condition}` 은 여기서 걸린다
+  const kept = raw.filter((i) => {
+    const o = i as { kind?: unknown; threshold?: unknown; bonus?: unknown };
+    return typeof o?.kind === "string" && typeof o?.threshold === "number" && typeof o?.bonus === "number";
+  }) as ProContract["incentives"];
+  if (kept && kept.length === raw.length) return c;
+  if (!kept || kept.length === 0) {
+    const { incentives: _drop, ...rest } = c;
+    return rest as ProContract;
+  }
+  return { ...c, incentives: kept };
+}
 export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] }): ProtagonistSave {
   const def = DEFAULT_PROTAGONIST;
 
@@ -652,6 +650,9 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     faNegotiationRound:           p.faNegotiationRound           ?? def.faNegotiationRound,
     faUnsignedWeeks:              p.faUnsignedWeeks              ?? def.faUnsignedWeeks,
     tradeAdaptationWeeks:         p.tradeAdaptationWeeks         ?? def.tradeAdaptationWeeks,
+    // 죽은 인센티브(`{condition}`)를 비운다 — 계약 자체는 그대로 둔다
+    contract:            migrateContract(p.contract),
+    pendingNextContract: migrateContract(p.pendingNextContract),
   };
 }
 
