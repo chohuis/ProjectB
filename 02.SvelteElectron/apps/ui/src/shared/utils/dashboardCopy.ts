@@ -58,6 +58,20 @@ export interface DashboardLabels {
    *    `"recordTab.contractHistory"` 처럼 뿌리를 달고 온다.
    */
   recordTab: Record<string, TableLabelBlock>;
+  /** 막대 둘 — 시험 결과 · 팀 분위기 (§1-3) */
+  bars: Record<string, TableLabelBlock>;
+  /** 카드 다섯 — 시즌 브리핑 · 연습경기 예정 · 대표팀 · 행사 · 올스타 (§1-4) */
+  cards: Record<string, TableLabelBlock>;
+  /**
+   * 보직 굴절 — `{ SP: "선발로" }`. **형태를 가리지 않는다**.
+   *
+   * 🔴 `role_choice.json` 의 같은 이름 표와 **값이 같아야 한다.** 「중계으로」가
+   *    안 나오는 이유가 이 표다 — `{role}` 을 그대로 끼우면 조사가 어긋난다.
+   *
+   * ⚠ **뿌리가 아니라 곁이다.** `kind` 로 내려가는 자리가 아니라 문안 전체가
+   *   하나만 갖는 표라서 `LABEL_ROOTS` 에 넣지 않는다.
+   */
+  roleAs: Record<string, string>;
 }
 
 /**
@@ -66,7 +80,7 @@ export interface DashboardLabels {
  * ⚠ **`table` 이 기본이다.** 소식 19자리가 뿌리 없이 `"digest"` 로 오므로
  *   못 박으면 그 열아홉이 다 깨진다.
  */
-const LABEL_ROOTS = ["table", "rankList", "timeline", "recordTab"] as const;
+const LABEL_ROOTS = ["table", "rankList", "timeline", "recordTab", "bars", "cards"] as const;
 
 /**
  * 읽은 JSON을 받는다. **모양만 본다** — 종류가 19개라 하나하나 있는지 세지
@@ -94,6 +108,11 @@ export function parseDashboardLabels(raw: unknown): DashboardLabels | null {
     rankList: o.rankList ?? {},
     timeline: o.timeline ?? {},
     recordTab: o.recordTab ?? {},
+    bars: o.bars ?? {},
+    cards: o.cards ?? {},
+    // ⚠ 여기서 빠뜨리면 시즌 브리핑의 마지막 줄이 통째로 안 그려진다 —
+    //   굴절형을 못 찾으면 그 줄을 지우는 규칙이라 조용히 사라진다
+    roleAs: isStringMap(o.roleAs) ? o.roleAs : {},
   };
 }
 
@@ -212,4 +231,126 @@ export function fillCount(tmpl: string, n: number): string {
  */
 export function fillVar(tmpl: string, name: string, v: string | number): string {
   return tmpl.split(`{${name}}`).join(String(v));
+}
+
+// ── 표가 아닌 형태 셋 — 순위 · 막대 · 카드 ─────────────────────
+//
+// 🔴 **`tableCopy` 를 늘리지 않는다.** 표는 열·행·변동을 갖고 순위는 등수
+//    이름을, 막대는 눈금을, 카드는 이름표를 갖는다 — 한 그릇에 담으면
+//    부르는 쪽이 「이 자리는 안 쓰는 값」을 매번 건너뛰게 된다.
+//
+// ⚠ **없으면 빈 문자열이다.** 그러면 화면이 키를 그대로 쓰거나 그 줄을
+//   안 그린다. 여기서 기본 문장을 지어내지 않는다.
+
+/** 문안 덩어리를 뿌리째 찾는다 — `kind` 가 뿌리를 달고 온다 */
+function blockOf(
+  labels: DashboardLabels | null, root: keyof DashboardLabels, kind: string,
+): TableLabelBlock | null {
+  if (!labels || !kind) return null;
+  const key = kind.startsWith(`${root}.`) ? kind : `${root}.${kind}`;
+  return tableLabelBlock(labels, key);
+}
+
+function stringMap(v: unknown): Record<string, string> {
+  return isStringMap(v) ? v : {};
+}
+function str(v: unknown): string {
+  return typeof v === "string" ? v : "";
+}
+
+/** 순위 목록 하나의 문안 */
+export interface RankCopy {
+  title: string;
+  /** 1·2·3 등의 이름 — 「우승」·「준우승」·「3위」. 없으면 숫자를 쓴다 */
+  podium: string[];
+  empty: string;
+}
+
+export function rankCopy(labels: DashboardLabels | null, kind: string): RankCopy {
+  const b = blockOf(labels, "rankList", kind);
+  return {
+    title: str(b?.title),
+    podium: [str(b?.first), str(b?.second), str(b?.third)],
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
+}
+
+/**
+ * 등수 한 칸에 찍을 글자.
+ *
+ * ⚠ **문안이 없으면 숫자다.** 「1위」를 코드가 만들면 데이터와 두 벌이 된다.
+ */
+export function rankText(rank: number, copy: RankCopy): string {
+  return copy.podium[rank - 1] || String(rank);
+}
+
+/** 막대 하나의 문안 */
+export interface BarsCopy {
+  title: string;
+  /** `{ metadata 키: 이름 }` — 과목·분위기·변화 */
+  labels: Record<string, string>;
+  /** 눈금. 데이터가 정한다 — 화면이 100 을 짐작하지 않는다 */
+  min: number;
+  max: number;
+  empty: string;
+}
+
+export function barsCopy(labels: DashboardLabels | null, kind: string): BarsCopy {
+  const b = blockOf(labels, "bars", kind);
+  const scale = b?.scale as { min?: unknown; max?: unknown } | undefined;
+  // 시험은 `columns`(과목·점수), 팀 분위기는 낱말이 바로 붙는다 — 둘을 합친다
+  const merged = { ...stringMap(b?.columns), ...stringMap(b?.labels) };
+  for (const k of ["mood", "delta", "gpa"]) {
+    if (typeof b?.[k] === "string") merged[k] = b[k] as string;
+  }
+  return {
+    title: str(b?.title),
+    labels: merged,
+    min: typeof scale?.min === "number" ? scale.min : 0,
+    max: typeof scale?.max === "number" ? scale.max : 100,
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
+}
+
+/** 카드 한 벌의 문안 */
+export interface CardsCopy {
+  title: string;
+  labels: Record<string, string>;
+  /** 참·거짓을 말로 — 올스타의 선정·미선정 */
+  yes: string;
+  no: string;
+  /** 카드 아래 한 줄의 틀 (`올해는 {roleAs} 시작합니다.`) */
+  noteTemplate: string;
+  /** 보직 굴절 — `role_choice.json` 과 값이 같아야 한다 */
+  roleAs: Record<string, string>;
+  empty: string;
+}
+
+export function cardsCopy(labels: DashboardLabels | null, kind: string): CardsCopy {
+  const b = blockOf(labels, "cards", kind);
+  return {
+    title: str(b?.title),
+    labels: stringMap(b?.labels),
+    yes: str(b?.selectedYes),
+    no: str(b?.selectedNo),
+    noteTemplate: str(b?.roleLine),
+    roleAs: labels?.roleAs ?? {},
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
+}
+
+/** 타임라인 하나의 문안 */
+export interface TimelineCopy {
+  title: string;
+  labels: Record<string, string>;
+  empty: string;
+}
+
+export function timelineCopy(labels: DashboardLabels | null, kind: string): TimelineCopy {
+  const b = blockOf(labels, "timeline", kind);
+  return {
+    title: str(b?.title),
+    labels: stringMap(b?.labels),
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
 }

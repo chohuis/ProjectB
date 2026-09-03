@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { RankListMetadata, Top10Metadata } from "../../../shared/types/main";
   import { buildRankList } from "../../../shared/utils/dashboardView";
+  import { rankCopy } from "../../../shared/utils/dashboardCopy";
+  import { masterStore, teamMap, entityMap } from "../../../shared/stores/master";
   import PlayerDetailModal from "../../player/ui/PlayerDetailModal.svelte";
 
   /**
@@ -19,7 +21,23 @@
 
   let detailEntityId = "";
 
-  $: view = buildRankList(metadata);
+  /**
+   * 문안 — 등수 이름(우승·준우승)과 빈 목록 한 줄이 여기서 온다.
+   *
+   * ⚠ 유망주 랭킹(`top10`)에는 `kind` 가 없다. 그때는 문안이 빈 채로
+   *   들어가고 등수는 숫자로 선다 — 원래 그랬다.
+   */
+  $: copy = rankCopy($masterStore.dashboardLabels, (metadata as { kind?: string }).kind ?? "");
+  /**
+   * 🔴 **id 를 이름으로 바꾸는 자리가 화면이다.** 대회 수상은 사람과 소속을
+   *    id 로 싣는다(§1-2) — 만드는 쪽이 한글 이름을 굳혀 실으면 표시 언어를
+   *    바꿔도 그 줄만 한글로 남는다.
+   */
+  $: names = {
+    team:   (id: string) => $teamMap.get(id)?.name,
+    person: (id: string) => $entityMap.get(id)?.name,
+  };
+  $: view = buildRankList(metadata, copy, names);
   /** 칸이 하나면 가로로 안 쪼갠다 — 대회 순위는 한 줄 목록이다 */
   $: single = view.columns.length <= 1;
 
@@ -52,7 +70,7 @@
               on:dblclick={() => openDetail(entry.id)}
               title={entry.isMe ? "나" : entry.id ? "더블클릭으로 상세 보기" : ""}
             >
-              <span class="rank-num">{entry.rank}</span>
+              <span class="rank-num">{entry.rankText}</span>
               <span class="rank-name">{entry.name}{#if entry.isMe} ◀{/if}</span>
               {#if entry.delta}
                 <span class="rank-delta d-{entry.delta.dir}">{entry.delta.text}</span>
@@ -62,7 +80,9 @@
           {/each}
 
           {#if col.entries.length === 0}
-            <li class="rank-empty">해당 학년 선수 없음</li>
+            <!-- ⚠ 빈 목록 한 줄도 문안이 갖는다. 대회 순위와 유망주 랭킹은
+                 「없다」의 뜻이 달라 한 문장으로 묶으면 안 된다 -->
+            <li class="rank-empty">{view.empty || "해당 학년 선수 없음"}</li>
           {/if}
         </ol>
 

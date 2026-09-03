@@ -254,17 +254,84 @@ export interface TableMetadata {
 export interface RankListMetadata {
   type: "rankList";
   kind: string;
-  /** 제목 줄. 없으면 안 그린다 */
+  /** 제목 줄. 없으면 문안의 이름을 쓴다 */
   title?: string;
-  /** `delta` 는 지난 값과의 차. 없으면 변동을 안 그린다 (§3-1) */
-  items: { rank: number; label: string; sub?: string; isMe?: boolean; delta?: number }[];
+  /**
+   * 한 줄.
+   *
+   * 🔴 **이름은 id 로 싣는다** (§1-2 — `standings[] {teamId,rank}` ·
+   *    `awards[] {award,playerId,teamId}`). `labelId`·`subId` 를 주면 화면이
+   *    이름으로 바꾼다 — 만드는 쪽이 한글 이름을 굳혀 실으면 표시 언어를
+   *    바꿔도 그 소식만 한글로 남는다.
+   *
+   * ⚠ `label` 은 id 가 아닌 말이 들어오는 자리다(상 이름). 둘 다 오면
+   *   **id 가 이긴다** — 이름을 못 찾을 때만 `label` 로 떨어진다.
+   *
+   * ⚠ `delta` 는 지난 값과의 차. 없으면 변동을 안 그린다 (§3-1)
+   */
+  items: {
+    rank: number;
+    label?: string;
+    labelId?: string;
+    sub?: string;
+    subId?: string;
+    isMe?: boolean;
+    delta?: number;
+  }[];
 }
 
 /** 타임라인 — 시간 순서 자체가 뜻인 소식 셋 (군 경력·복무 연차·고교 연감) */
 export interface TimelineMetadata {
   type: "timeline";
   kind: string;
-  entries: { when: string; label: string; detail?: string }[];
+  /**
+   * ⚠ `key` 를 주면 이름표를 **문안이** 준다(`timeline.<kind>.labels`). 군
+   *   경력의 부대·보직·계급이 그 자리다 — 「부대」를 소식에 굳혀 실으면
+   *   문안을 고쳐도 지난 소식만 옛 말로 남는다.
+   */
+  entries: { when: string; key?: string; label?: string; detail?: string }[];
+}
+
+/**
+ * 막대 — 값이 0~100 눈금인 소식 둘 (시험 결과·팀 분위기. §1-3).
+ *
+ * 🔴 **새 컴포넌트를 안 만든다** (§2). `TrainingStatBars` 의 막대를 그대로
+ *    쓴다 — 이름·막대·오른쪽 값 셋이 같은 모양이다.
+ */
+export interface BarsMetadata {
+  type: "bars";
+  kind: string;
+  /**
+   * 막대 하나. `key` 는 문안에서 이름을 찾는 자리고, 이름이 값인 자리
+   * (과목명)는 `label` 로 온다.
+   *
+   * ⚠ **눈금은 0~100 이다**(문안의 `scale`). 다른 눈금이 필요하면 만드는
+   *   쪽이 100 눈금으로 바꿔 보낸다 — 화면이 눈금을 짐작하면 두 벌이 된다.
+   */
+  bars: { key?: string; label?: string; value: number; delta?: number }[];
+  /** 막대 아래 항목·값 한 줄 (학점). `key` 로 이름을 찾는다 */
+  foot?: { key: string; value: string | number }[];
+}
+
+/**
+ * 카드·칩 — 항목이 짧고 여럿인 소식 다섯 (§1-4).
+ *
+ * 🔴 **새 컴포넌트를 안 만든다** (§2). `DigestCards` 를 **누를 수 없는 꼴**로
+ *    쓴다 — 숫자 한 줄과 이름 한 줄이 이미 이 모양이다.
+ */
+export interface CardsMetadata {
+  type: "cards";
+  kind: string;
+  /**
+   * 카드 하나 — 큰 값과 그 아래 이름.
+   *
+   * ⚠ `key` 가 `playerId`·`teamId` 면 값을 **이름으로 바꾼다**(표와 같은
+   *   규칙). 만드는 쪽은 id 를 싣는다.
+   * ⚠ `caption` 을 주면 그것이 이름이고, 없으면 문안의 `labels[key]` 다.
+   */
+  items: { key: string; value: TableCell; caption?: string }[];
+  /** 카드 아래 한 줄 (시즌 브리핑의 「올해는 선발로 시작합니다.」) */
+  note?: string;
 }
 
 /**
@@ -367,5 +434,6 @@ export interface MessageItem {
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
            | MyBodyMetadata | RoleChoiceMetadata
            | TableMetadata | RankListMetadata | TimelineMetadata
+           | BarsMetadata | CardsMetadata
            | { type: string };
 }

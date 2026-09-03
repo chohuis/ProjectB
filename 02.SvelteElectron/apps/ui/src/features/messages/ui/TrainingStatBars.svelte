@@ -1,33 +1,82 @@
 <script lang="ts">
   import type { TrainingStat } from "../../../shared/types/main";
   import { gaugeLabel } from "../../../shared/utils/baseballFormat";
-  export let stats: TrainingStat[];
+  import type { BarsView } from "../../../shared/utils/dashboardView";
+
+  /**
+   * 막대 목록 — 훈련 결과와 **시험 결과·팀 분위기**가 같은 그릇을 쓴다
+   * (`PLAN_MESSAGE_DASHBOARDS.md` §2 — 신설은 둘뿐이다).
+   *
+   * 🔴 **두 벌을 만들지 않았다.** 이름·막대·오른쪽 값 셋이 같은 모양이라
+   *    컴포넌트를 하나 더 만들면 색·높이·간격이 곧 갈린다.
+   *
+   * ⚠ 훈련만 갖는 것 셋(레벨업 별·컨디션 줄·덧글)은 **훈련이 넘길 때만**
+   *   그린다 — 시험 결과에 「컨디션 좋음」이 붙으면 안 된다.
+   */
+  export let stats: TrainingStat[] = [];
   export let condition: number = 0;
   export let fatigue: number = 0;
   export let morale: number = 0;
   export let extraLogs: string[] = [];
+  /** 컨디션·피로·사기 한 줄 — 훈련 결과에만 뜻이 있다 */
+  export let showStatus = true;
+  /** 막대 소식(시험·팀 분위기). 주면 `stats` 대신 이것을 그린다 */
+  export let bars: BarsView | null = null;
+
+  /**
+   * 그릴 막대들 — 훈련이면 `stats`, 소식이면 `bars` 다.
+   *
+   * ⚠ 훈련의 오른쪽 칸은 「현재 74」이고 시험은 「87」이다. 값을 여기서
+   *   지어내지 않고 만드는 쪽이 정한 글자를 그대로 쓴다.
+   */
+  $: rows = bars
+    ? bars.bars.map((b) => ({
+        label: b.label, pct: b.pct, leveled: false,
+        pctText: "", valueText: String(b.value), deltaText: b.delta?.text ?? "",
+      }))
+    : stats.map((s) => ({
+        label: s.label, pct: s.pct, leveled: s.leveledUp,
+        pctText: `${s.pct}%`,
+        valueText: s.leveledUp ? `${s.current} (+1) ★` : `현재 ${s.current}`,
+        deltaText: "",
+      }));
 </script>
 
 <div class="training-result">
   <div class="stat-list">
-    {#each stats as stat}
-      <div class="stat-row" class:leveled={stat.leveledUp}>
-        <span class="stat-label">{stat.label}</span>
+    {#each rows as row, i (i)}
+      <div class="stat-row" class:leveled={row.leveled}>
+        <span class="stat-label">{row.label}</span>
         <div class="bar-track">
-          <div class="bar-fill" style="width:{stat.pct}%"></div>
+          <div class="bar-fill" style="width:{row.pct}%"></div>
         </div>
-        <span class="stat-pct">{stat.pct}%</span>
+        <span class="stat-pct">{row.pctText || row.deltaText}</span>
         <span class="stat-cur">
-          {#if stat.leveledUp}
-            <span class="leveled-up">{stat.current} (+1) ★</span>
+          {#if row.leveled}
+            <span class="leveled-up">{row.valueText}</span>
           {:else}
-            현재 {stat.current}
+            {row.valueText}
           {/if}
         </span>
       </div>
     {/each}
   </div>
 
+  <!-- 막대 아래 항목·값 — 학점이 그 자리다. 훈련엔 없다 -->
+  {#if bars && bars.foot.length > 0}
+    <div class="status-row">
+      {#each bars.foot as f, i (i)}
+        {#if i > 0}<span class="sep">/</span>{/if}
+        <span class="status-item"><span class="status-key">{f.label}</span> {f.value}</span>
+      {/each}
+    </div>
+  {/if}
+
+  {#if rows.length === 0 && bars}
+    <p class="bars-empty">{bars.empty}</p>
+  {/if}
+
+  {#if showStatus}
   <div class="status-row">
     <span class="status-item"><span class="status-key">컨디션</span> {gaugeLabel(condition)}</span>
     <span class="sep">/</span>
@@ -35,6 +84,7 @@
     <span class="sep">/</span>
     <span class="status-item"><span class="status-key">사기</span> {gaugeLabel(morale)}</span>
   </div>
+  {/if}
 
   {#if extraLogs.length > 0}
     <div class="extra-logs">
@@ -149,5 +199,13 @@
     color: var(--ink-mid);
     margin: 0;
     line-height: 1.5;
+  }
+
+  .bars-empty {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-align: center;
+    padding: 10px;
   }
 </style>

@@ -205,7 +205,7 @@ describe("배선 — 화면이 셋을 다 그린다", () => {
   /** ⚠ 행을 화면에서 만들면 위 검사들이 한 줄도 못 잰다 */
   it("화면은 행을 스스로 만들지 않는다", () => {
     expect(TABLE, "StatTable 이 행을 스스로 만든다").toContain("buildTableView(metadata");
-    expect(RANK, "RankListPanel 이 두 규격을 화면에서 가른다").toContain("buildRankList(metadata)");
+    expect(RANK, "RankListPanel 이 두 규격을 화면에서 가른다").toContain("buildRankList(metadata");
   });
 
   /** ⚠ 넘치는 표가 상세 칸을 밀면 본문이 통째로 옆으로 흐른다 (1366×768) */

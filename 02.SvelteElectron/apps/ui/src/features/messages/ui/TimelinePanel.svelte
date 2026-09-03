@@ -1,5 +1,8 @@
 <script lang="ts">
   import type { TimelineMetadata } from "../../../shared/types/main";
+  import { masterStore } from "../../../shared/stores/master";
+  import { timelineCopy } from "../../../shared/utils/dashboardCopy";
+  import { buildTimeline } from "../../../shared/utils/dashboardView";
 
   /**
    * 타임라인 — 시간 순서 자체가 뜻인 소식 셋
@@ -16,12 +19,22 @@
    */
   export let metadata: TimelineMetadata;
 
-  $: entries = metadata.entries ?? [];
+  /**
+   * 문안 — 이름표(부대·보직·계급)와 빈 목록 한 줄이 여기서 온다.
+   *
+   * ⚠ **못 읽어도 항목을 안 없앤다.** 값은 이미 소식에 실려 왔다 —
+   *   이름표 자리에 키를 그대로 쓴다 (`StatTable` 과 같은 규칙).
+   */
+  $: copy = timelineCopy($masterStore.dashboardLabels, metadata.kind ?? "");
+  $: view = buildTimeline(metadata, copy);
+  $: entries = view.entries;
 </script>
 
 <div class="tl">
   {#if entries.length === 0}
-    <p class="empty">기록이 없다</p>
+    <!-- ⚠ 빈 목록 한 줄도 문안이 갖는다. 「남은 기록이 없습니다」와
+         「안내할 내용이 없습니다」는 다른 말이다 -->
+    <p class="empty">{view.empty}</p>
   {:else}
     <ol class="line">
       {#each entries as e, i (i)}
