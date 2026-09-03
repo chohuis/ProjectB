@@ -1,19 +1,41 @@
 # 진행 현황 — 이어서 할 일 (2026-09-03 판)
 
 > 🔴 **현황판은 [PROGRESS_TREE.md](PROGRESS_TREE.md)** — 세션별 트리 · 진행 아이콘. 상태가 바뀐 사람이 그 줄만 고친다.
-> 🔴 **9/28 Steam 빌드까지의 정본은 [PLAN_RELEASE_2026-09-28.md](PLAN_RELEASE_2026-09-28.md)** · 하루 정리는 [STATUS_2026-09-03.md](STATUS_2026-09-03.md).
+> 🔴 **9/28 Steam 빌드까지의 정본은 [PLAN_RELEASE_2026-09-28.md](PLAN_RELEASE_2026-09-28.md)** · 하루 정리는 [STATUS_2026-09-03.md](STATUS_2026-09-03.md)(오전) · [STATUS_2026-09-03_pm.md](STATUS_2026-09-03_pm.md)(오후).
 > 마감: 개발 마무리 **9/5** · 코드 프리즈 **9/15(화)** · 빌드 **9/28**. 날짜는 마감이지 시작이 아니다 — 의존이 풀린 것은 당겨 한다.
 
-## 지금 상태 (09-03 오전)
+## 출시 모델 (2026-09-03 오후 확정)
 
-| 무엇 | 상태 |
+지금 "1.1" 이라 불리던 구현 항목들은 1.1 이 아니라 **v1.0.0 의 구현 범위**다.
+A·B·C 표(PROGRESS_TREE "1.1 첫 묶음")의 18개 단위를 전부 구현하고 숫자만 남으면
+그 상태를 **v1.0.0 으로 고정**한다. 그 뒤 계측·수치 조정·테스트를 반복해 **1.0.1 로
+출시**한다. 밸런스 값은 구현 단계에서 제안값으로 넣고 묻지 않는다 —
+[BALANCE_BACKLOG.md](BALANCE_BACKLOG.md) 에 적어 뒀다가 조정 단계에서 건마다 사용자에게
+묻는다. 사용자 결정은 동작·구조·범위에만 받는다.
+
+## 지금 상태 (2026-09-03 14:20 · OP 체제)
+
+09-03 13:50 부터 OP(총괄)가 트렁크(`ProjectB` · `extract-modals`)에서 다섯 워크트리를
+지휘하는 구조로 바뀌었다. 병합은 OP 만 한다 — 각 세션은 자기 워크트리·브랜치에만 커밋한다.
+
+| 세션 | 워크트리 · 브랜치 | 맡은 일 | 상태 |
+|---|---|---|---|
+| **OP** | `ProjectB` · `extract-modals` | 총괄 · 트렁크 병합 · 다섯 세션 지휘 | 진행 중 |
+| **A** | `ProjectB-engine` · `track/engine` (Opus) | 엔진 · 세계 · Rust 전부 | A①·A② 닫힘 · A③(추천 분포 재측정)·A④(불이익 depthFactor)·A⑤(인센티브 계측) 진행 — [HANDOFF_OP_TO_A.md](HANDOFF_OP_TO_A.md) |
+| **B** | `ProjectB-events` · `track/events` | 이벤트 · 소식함 · 문안 | B-11~21 닫힘 · 남은 것은 1.1 이월(동적 치환 23종 · 고교 사기 등판 비중) — [track-B-events.md](track-B-events.md) |
+| **C** | `ProjectB-ui` · `track/ui` (Opus) | 화면 · IPC | C①~③·C⑤-a 닫힘 · 남은 것 C④·⑪~⑮(인센티브 정산 화면 · 상무 탭 §39 · 대시보드 컴포넌트·배선 · 기록 탭 카드) — [HANDOFF_C_TO_A.md](HANDOFF_C_TO_A.md) |
+| **D** | `ProjectB-measure` · `track/measure` | 계측 · 회귀 · pack/dist/smoke | 첫 일감 시작(회귀 전량 · §6-1-5 실측 · 보직 추천 분포 · 전 경로 프로브) — [HANDOFF_OP_TO_D.md](HANDOFF_OP_TO_D.md) |
+| **S** | `ProjectB-docs` · `track/docs` (Sonnet) | 문서 · PDF · 정리 | STATUS_pm · RESUME 머리 · PDF 묶음 진행 중 — [HANDOFF_OP_TO_S.md](HANDOFF_OP_TO_S.md) |
+
+## 인계 문서 색인
+
+| 문서 | 방향 |
 |---|---|
-| **프리즈 후보 pack** | 09-03 07:26 · `a4e6b4e57` · B-10 까지 전부 병합 · `dist:steam` OK · `smoke:dist` 통과 · `smoke:oldsaves`(v3 구 세이브 없음 — 항목 닫음) |
-| 회귀 전량 | vitest 1,764 · cargo 313 · svelte-check 0 · check 33(빨강은 determinism 하나 · 1.1) · test:events ALL PASS |
-| 밸런스 | [BALANCE_BASELINE_2026-09-05.md](BALANCE_BASELINE_2026-09-05.md) — 09-02 판과 씨앗 편차 안 · 다섯은 1.1(사용자 확정) |
-| 1.0 개발 몫 | **끝** — 남은 것은 회신 결함뿐. 현역 병영생활(1.1 첫 항목)은 통째로 들어갔다(배선 `CLAUDE.md` "현역 병영생활 — 배선 한 장") |
-| B | B-11 까지 ✅ (계약 조건 기획 · 사용자 질문 아홉 대기) · 트랙 문서 [track-B-events.md](track-B-events.md) |
-| C | C-14 보직 추천 기획 진행(Opus) · 결함은 [HANDOFF_C_TO_A.md](HANDOFF_C_TO_A.md) |
+| [HANDOFF_OP_TO_A.md](HANDOFF_OP_TO_A.md) | OP → A (엔진) |
+| [HANDOFF_OP_TO_D.md](HANDOFF_OP_TO_D.md) | OP → D (계측) |
+| [HANDOFF_OP_TO_S.md](HANDOFF_OP_TO_S.md) | OP → S (문서 · 이 문서) |
+| [HANDOFF_B_TO_A.md](HANDOFF_B_TO_A.md) | B (이벤트) → A 회신 |
+| [HANDOFF_C_TO_A.md](HANDOFF_C_TO_A.md) | C (화면) → A 회신 |
 
 ## 프리즈까지 (순서)
 
