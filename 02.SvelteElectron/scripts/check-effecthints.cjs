@@ -25,6 +25,8 @@ const WORDS = {
   luxurySpend: /돈|원|만원|관계|명성/,
   xp: /경험치|XP/i,
   statDelta: /\+\s*\d|즉시|상승/,
+  studyModeSet: /집중|몰입|휴식|수면|보통|학습 ?강도/,
+  roleChoice: /선발|중계|마무리|보직/,
 };
 
 const j = JSON.parse(fs.readFileSync(P, "utf8"));
