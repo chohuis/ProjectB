@@ -244,7 +244,7 @@
       "choices": [
         {
           "id": "ok",
-          "label": "설레는 마음으로 참여",
+          "label": "설레는 마음으로 간다",
           "effectHint": "사기 +4",
           "moraleDelta": 4
         }
