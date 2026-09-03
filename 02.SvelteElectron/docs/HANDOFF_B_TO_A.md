@@ -938,6 +938,76 @@ stores/game.ts:2481~2497  completeMilitaryService
 `_coverage` 에 **id 접두 ↔ 키** 대응을 다 적었다. 34자리가 전부 실재하는
 키를 가리키는지 기계로 확인했다.
 
+### B-22 못 닿는 이벤트 판정표 — `docs/EVENT_UNREACHED_2026-09-03.md`
+
+§J 도달률 표의 못닿음을 넷으로 갈랐다. **지우지도 고치지도 않았다.**
+새 계측은 안 돌렸고 기존 로그(§J·§H·§E·§D·`4dfbc2da5`)와 코드 정적 판정으로 냈다.
+
+```
+A 조건이 너무 좁다 (값 제안)   12종   → BALANCE_BACKLOG §7
+B 죽은 조건                     0종   → 게이트 넷이 이미 막고 있다
+C 상황상 못 닿음               11묶음  → 그대로 둔다
+D 지운다                        1종   → 어느 쪽을 지울지는 OP 몫
+```
+
+🔴 **B 가 0 이다.** 588종을 정적으로 훑어 서로 어긋나는 조건(10축) · 무대×리그
+어긋남 · `player_type: batter` · 학업 조건 오배치를 봤고 **넷 다 0건**이다.
+2026-08-22 에 44종이 필드 이름이 틀려 영원히 false 였던 그 형태는 지금
+재발할 수 없다 — `assertConditions` 가 로드에서 던지고 `check:eventranges` 가
+눈금을 지킨다.
+
+#### 새로 찾은 것 셋
+
+🔴 **① `EVT_UNIV_Y2_PART_TIME` 은 한 번도 못 뜬다 — 좁은 게 아니라 방향이 반대다.**
+
+```
+조건        money_lte 200          (단위 만원)
+시작 자산   1200                   (stores/game.ts:199)
+대학 순현금 (62 − 21) / 4.33 = 주 +9.5   (financeRules.stages.university)
+학생 과세   없다                   (financeRules.tax.studentExempt)
+```
+
+돈은 오르기만 한다. `money_lte` 를 쓰는 이벤트는 **전체에서 이것 하나**라
+다른 데서 검증될 기회도 없었다. 제안값 `1000` 을 백로그 §7 에 적었다.
+
+🔴 **② `EVT_UNIV_Y4_W50_YEAR_WRAP`(890) 은 영원히 안 뜬다.**
+`EVT_UNIV_Y4_W50_CAREER_GATE`(960) 와 **조건이 글자까지 같고 본문 템플릿도
+같다**(둘 다 `MSG_UNIV_YEAR_WRAP` · `decisionTemplateId` 는 null).
+
+⚠ **`test:events` [3] 이 이걸 못 잡는다.** 죽음 판정에
+`b.oncePolicy === "repeatable"` 이 붙어 있는데 둘 다 `once_per_stage_year` 라
+「경합 90쌍」 참고 줄로만 흘러갔다. 검사의 뜻에는 맞는데 조건이 걸러 냈다.
+**안 지웠다** — 어느 쪽을 남길지는 뜻의 문제라 OP 에 올렸다.
+
+🔴 **③ 「부진」 조건 넷이 한 종도 안 쓰인다.**
+2026-09-01 사용자 확정으로 `season_wins_lte`·`season_era_gte`·`season_ip_lte`·
+`season_k_lte` 가 열렸는데 **쓰는 이벤트가 0종**이다(`check:eventconditions` 의
+「안 쓰는 타입 12종」 목록에 넷이 다 있다). 「잘함」 쪽은 32종이 쓴다.
+그래서 부진 서사는 아직 `morale_lte` 가 대역하는데, 고교의 `morale_lte`
+다섯은 실측 최소(62) 아래라 안 뜬다 — **고교에는 「못하고 있다」를 말하는
+이벤트가 사실상 없다.** 1.1 콘텐츠 항목이다.
+
+#### 인용되는 상무 27/34 는 낡았다
+
+죽은 풀 `military.json` 다섯을 `military_common` 으로 옮긴 뒤(`1a7b4a9c4`)
+상무 재고가 **34 → 39** 다. 옮겨 온 다섯(`MIL_EVT_DRILL_EXCELLENCE` ·
+`FIELD_FATIGUE` · `UNIT_SUPPORT` · `REST_WINDOW` · `COMMAND_PRESSURE`)은
+**살린 뒤로 한 번도 안 쟀다.** 상무 못닿음은 「7종 + 미측정 5종」으로 읽어야 한다.
+
+#### 이름을 못 댄 자리 — 지어내지 않았다
+
+```
+고교 15~16   사기 5 + 순위 4 = 아홉까지만 안다. 나머지 6~7 은 모른다
+프로 22      갈래 이름만 (트레이드·강등·발탁·부상·방출)
+해외 75      체류 기간 — 12시즌 판에서 늦게 갔다
+현역 군 6    관계·사기 조건이 붙은 후보는 7종이다. 로그가 「여섯」이라 적어
+             하나가 어느 것인지 모른다
+```
+
+⚠ §J 가 고교를 「대회 상위 진출 계열」이라 적었는데 **id 에 대회·권역이 든
+고교 이벤트는 0종**이다 — 그 계열은 id 가 아니라 조건으로 갈린다.
+이름을 대려면 `measure:slotreach --full` 을 한 번 더 돌려야 한다.
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고
