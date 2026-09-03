@@ -19,7 +19,7 @@
 // 뛴다" 같은 어긋남이 생기고, 그걸 맞추려고 표를 두 번 관리하게 된다.
 // 다른 건 **결과를 강제하지 않는다**는 것뿐이다 — 제안하고 선택은 플레이어가 한다.
 
-import { get } from "svelte/store";
+import { get, writable } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
@@ -170,6 +170,40 @@ export async function calcMarketValueForProtagonist(p: ProtagonistSave): Promise
   return calcMarketSalary(ovr, p.fame, p.leagueId);
 }
 
+// ── 은퇴 직후 결산 자동 열기 ────────────────────────────────────
+//
+// 🔴 **은퇴 경로가 셋인데 결산이 자동으로 뜨는 건 하나뿐이었다.**
+//    `RetirementAskModal`(노쇠·부상)만 `onRetired()` 로 알려서 `MainPage`가
+//    결산을 열었고, `StatusPage`의 **자발적 은퇴는 아무한테도 안 알렸다** —
+//    은퇴 카드가 「커리어 결산 보기」 버튼으로 바뀔 뿐이라 **사용자가 직접
+//    눌러야** 15~20시즌의 결말을 봤다. 사용자 확정(2026-09-02): **연다.**
+//
+// 알리는 자리를 `retireProtagonist` 하나로 모은다. 화면마다 "은퇴시켰으니
+// 결산도 열어라"를 적으면 **경로가 늘 때마다 한 자리씩 빠진다** — 방금
+// 그렇게 빠져 있었다.
+//
+// ⚠ **세이브에 안 넣는다.** 「결산을 봤는가」를 세이브에 적으면 구 세이브에
+//    그 필드가 없어서 슬롯을 열 때마다 결산이 뜬다. 이건 **은퇴하는 그
+//    순간에만 참인 실행 중 플래그**고, 슬롯을 다시 열면 false로 시작한다.
+//
+// ⚠ **헤드리스는 안 바뀐다.** `runAutoAdvance`는 `retirementAsk`에서 멈추고
+//    `retireProtagonist`를 부르지 않는다 — 이 플래그를 보는 것도 화면뿐이다.
+
+/** 은퇴가 방금 확정됐다 — 화면이 결산을 띄울 신호. 세이브에 안 들어간다 */
+export const careerEndPending = writable(false);
+
+/**
+ * 신호를 **한 번만** 꺼내 쓴다 (읽으면서 내린다).
+ *
+ * 화면이 `set(false)`를 따로 부르게 하면 그걸 빠뜨린 화면에서 결산이
+ * 닫아도 닫아도 다시 뜬다. 꺼내는 행위와 내리는 행위를 갈라놓지 않는다.
+ */
+export function takeCareerEndPending(): boolean {
+  let was = false;
+  careerEndPending.update((cur) => { was = cur; return false; });
+  return was;
+}
+
 /**
  * 은퇴를 확정한다.
  *
@@ -225,4 +259,8 @@ export async function retireProtagonist(reason: RetirementReason): Promise<void>
 
   await gameStore.save();
   await seasonStore.save();
+
+  // ⚠ **저장이 끝난 뒤에 올린다.** 결산은 `careerRecords`를 읽으므로
+  //   기록이 확정되기 전에 띄우면 마지막 시즌이 빠진 채로 나온다.
+  careerEndPending.set(true);
 }

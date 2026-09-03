@@ -267,3 +267,106 @@ describe("절 순서", () => {
     expect(ev, "사람이 주요 사건보다 앞에 있다").toBeLessThan(pp);
   });
 });
+
+/**
+ * 은퇴 직후 결산 자동 열기 (1.1 C⑤-a · 사용자 확정 2026-09-02 "연다").
+ *
+ * 🔴 **은퇴 경로가 셋인데 결산이 자동으로 뜨는 건 하나뿐이었다.**
+ *    `RetirementAskModal`(노쇠·부상)만 `onRetired()` 로 알렸고,
+ *    `StatusPage` 의 **자발적 은퇴는 아무한테도 안 알렸다** — 카드가
+ *    「커리어 결산 보기」 버튼으로 바뀔 뿐이라 **사용자가 직접 눌러야**
+ *    15~20시즌의 결말을 봤다. 위 "엔딩 뒤" 절이 고친 것과 같은 모양의
+ *    결함이 **한 경로에만 남아 있었다.**
+ *
+ * 신호는 `retireProtagonist` 하나가 올린다 — 화면마다 "은퇴시켰으니 결산도
+ * 열어라"를 적으면 경로가 늘 때마다 한 자리씩 빠진다.
+ */
+const UC = readFileSync(
+  join(__dirname, "../../../shared/usecases/retirement.ts"), "utf8");
+const SAVE_T = readFileSync(
+  join(__dirname, "../../../shared/types/save.ts"), "utf8");
+const STATUS = readFileSync(
+  join(__dirname, "../../../pages/status/StatusPage.svelte"), "utf8");
+
+describe("은퇴 직후 결산이 저절로 열린다", () => {
+  it("`retireProtagonist` 가 저장을 끝낸 뒤에 신호를 올린다", () => {
+    const fn = UC.slice(UC.indexOf("export async function retireProtagonist"));
+
+    expect(fn.indexOf("careerEndPending.set(true)"),
+      "은퇴가 신호를 안 올린다 — 자발적 은퇴에서 결산이 안 뜬다")
+      .toBeGreaterThan(0);
+    /**
+     * ⚠ 결산은 `careerRecords` 를 읽는다. 저장 전에 올리면 마지막 시즌이
+     *   빠진 채로 나온다 — 은퇴 모달이 이미 같은 이유로 순서를 지킨다.
+     */
+    expect(fn.indexOf("careerEndPending.set(true)"), "저장보다 먼저 올린다")
+      .toBeGreaterThan(fn.indexOf("seasonStore.save()"));
+  });
+
+  /**
+   * ⚠ 꺼내는 행위와 내리는 행위를 갈라놓지 않는다. 화면이 `set(false)` 를
+   *   따로 부르게 하면 그걸 빠뜨린 화면에서 결산을 닫는 순간 반응문이 다시
+   *   돌아 **다시 열린다** — 닫을 수 없는 화면이 된다.
+   */
+  it("신호는 한 번만 참이다 — 읽으면서 내린다", async () => {
+    const { careerEndPending, takeCareerEndPending } =
+      await import("../../../shared/usecases/retirement");
+
+    expect(takeCareerEndPending(), "아무 일도 없었는데 참이다").toBe(false);
+
+    careerEndPending.set(true);
+    expect(takeCareerEndPending(), "올렸는데 안 잡힌다").toBe(true);
+    expect(takeCareerEndPending(), "두 번 잡힌다 — 결산이 닫히지 않는다").toBe(false);
+  });
+
+  it("신호를 읽으면서 내리는 함수가 하나로 있다", () => {
+    const fn = UC.slice(UC.indexOf("export function takeCareerEndPending"));
+    expect(fn.indexOf("careerEndPending.update("),
+      "꺼내면서 내리지 않는다 — 결산이 닫히지 않는다").toBeGreaterThan(0);
+    expect(fn.indexOf("return false;"), "내리는 자리가 없다").toBeGreaterThan(0);
+  });
+
+  it("MainPage 가 그 신호를 보고 결산을 연다", () => {
+    expect(MAIN, "MainPage 가 신호를 안 읽는다 — 자발적 은퇴가 결산을 못 연다")
+      .toContain("$careerEndPending && takeCareerEndPending()");
+    expect(MAIN, "결산을 여는 대입이 없다")
+      .toContain("takeCareerEndPending()) careerEndOpen = true");
+    expect(MAIN, "신호를 import 하지 않는다")
+      .toContain("import { careerEndPending, takeCareerEndPending }");
+  });
+
+  /**
+   * ⚠ **화면마다 여는 코드를 적지 않는다.** 그렇게 적으면 경로가 늘 때마다
+   *   한 자리씩 빠진다 — 방금 `StatusPage` 가 그렇게 빠져 있었다.
+   *   자발적 은퇴는 `retireProtagonist` 만 부르고 여는 건 `MainPage` 몫이다.
+   */
+  it("StatusPage 는 은퇴시키기만 하고 결산을 따로 안 연다", () => {
+    const fn = STATUS.slice(STATUS.indexOf("async function doVoluntaryRetire"),
+                            STATUS.indexOf("// ── 레이더 차트"));
+    expect(fn.indexOf('retireProtagonist("voluntary")'), "자발적 은퇴가 사라졌다")
+      .toBeGreaterThan(0);
+    expect(fn.indexOf("showCareerEnd = true"),
+      "화면이 스스로 결산을 연다 — 여는 자리가 둘이 됐다").toBe(-1);
+  });
+
+  /**
+   * ⚠ **세이브에 안 넣는다.** 「결산을 봤는가」를 세이브에 적으면 그 필드가
+   *   없는 구 세이브에서 슬롯을 열 때마다 결산이 뜬다.
+   */
+  it("세이브에 플래그를 새로 넣지 않았다", () => {
+    expect(SAVE_T, "결산 관람 여부가 세이브 타입에 들어갔다 — 구 세이브에서 매번 뜬다")
+      .not.toContain("careerEndSeen");
+    expect(SAVE_T).not.toContain("careerEndPending");
+  });
+
+  /**
+   * ⚠ 헤드리스는 안 바뀐다 — `runAutoAdvance` 는 `retirementAsk` 에서 멈추고
+   *   `retireProtagonist` 를 부르지 않는다.
+   */
+  it("자동 진행은 은퇴를 확정하지 않는다", () => {
+    const AUTO = readFileSync(
+      join(__dirname, "../../../shared/usecases/runAutoAdvance.ts"), "utf8");
+    expect(AUTO, "자동 진행이 은퇴를 확정한다 — 헤드리스가 결산 신호를 올린다")
+      .not.toContain("retireProtagonist");
+  });
+});
