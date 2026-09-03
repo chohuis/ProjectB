@@ -530,6 +530,20 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   //   **재는 자리와 쓰는 자리가 달랐다.**
   // ⚠ `createSlot` **앞**이어야 한다 — 거기서 NPC가 DB로 들어간다.
   // ⚠ 실패해도 새 게임은 성립해야 한다.
+  // ── 과거 경력 (Phase 6.5) — **만들기는 여기, 쓰기는 `createSlot` 뒤** ──
+  //
+  // 🔴 순서가 바뀌면 D-2 가 돌아온다 (B-29 · 사용자 확정 ②). 아래 과거 성적이
+  //   **연도별 소속팀을 이 결과에서 읽는다** — 예전엔 현재 팀을 5년 내내
+  //   박아서 같은 모달의 「팀 이력」과 정면으로 어긋났다.
+  // ⚠ 쓰기는 여전히 `createSlot` 뒤여야 한다 — 거기서 `transactions` 를 비운다.
+  let careerSeed: CareerHistorySeed = { rows: [], teamByYear: new Map() };
+  try {
+    careerSeed = await buildCareerHistorySeed(
+      worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules);
+  } catch (e) {
+    console.warn("[newGameV3] 과거 경력 생성 실패 — 이력 없이 시작", e);
+  }
+
   try {
     const past = buildPastPlayerStats(
       npcs.map((n) => ({
@@ -542,6 +556,8 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
           ? n.abilities?.pitching?.ovr
           : n.abilities?.batting?.ovr) ?? 60,
         playerType: n.playerType === "pitcher" ? "pitcher" as const : "batter" as const,
+        // 그 해 소속팀 — 이력이 없는 사람은 `undefined` 라 현재 팀으로 떨어진다
+        teamByYear: careerSeed.teamByYear.get(n.npcId ?? ""),
       })),
       worldSeed, opts.seasonYear);
     const byNpc = new Map<string, typeof past>();
@@ -578,14 +594,16 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     current_week: 0,
   });
 
-  // ── 과거 경력 (Phase 6.5) ────────────────────────────────────
+  // ── 과거 경력 쓰기 (Phase 6.5) ───────────────────────────────
   // createSlot **뒤에** 넣는다 — createSlot이 transactions를 비우기 때문이다.
+  // **만들기는 위에서 이미 끝났다** — 과거 성적이 그 결과를 봐야 해서다(D-2).
   // 실패해도 새 게임 자체는 성립해야 하므로 여기서 던지지 않는다.
   try {
-    await seedCareerHistory(
-      opts.slotId, worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules);
+    if (careerSeed.rows.length > 0) {
+      await slotRepo.addTransactions(opts.slotId, careerSeed.rows);
+    }
   } catch (e) {
-    console.warn("[newGameV3] 과거 경력 생성 실패 — 이력 없이 시작", e);
+    console.warn("[newGameV3] 과거 경력 저장 실패 — 이력 없이 시작", e);
   }
 
   // ── 과거 5년 순위 (A5) ────────────────────────────────────────
@@ -679,14 +697,70 @@ const NO_ENTRY_ROUTE_LEAGUES: ReadonlySet<string> = new Set([
  *
  * 리그별로 나눠 돌린다 — **과거 소속팀은 같은 리그에서만 골라야 한다.**
  */
-async function seedCareerHistory(
-  slotId: string,
+/**
+ * 과거 경력 한 벌 — **행과 「그 해 어느 팀이었나」를 같이 낸다** (B-29 D-2).
+ *
+ * 🔴 **쓰기와 갈랐다.** 예전엔 이 함수가 `createSlot` 뒤에 한 번에 돌았는데
+ *   (거기서 `transactions` 를 비우므로 뒤여야 한다), 그러면 **과거 성적
+ *   생성(`buildPastPlayerStats`)이 이력을 못 본다** — 그쪽은 `createSlot`
+ *   앞에서 `npc.extra` 에 붙기 때문이다. 그래서 같은 모달 안에서
+ *   「팀 이력」은 `2022 트레이드 A → B` 라 적는데 「연도별 성적」은 2022 년도
+ *   **B 팀**으로 적고 있었다(KBL 1군 이적자 39% 전부).
+ *
+ *   이제 **만들기는 앞, 쓰기는 뒤**다. 순서가 바뀌면 그 어긋남이 돌아온다.
+ */
+interface CareerHistorySeed {
+  rows: Array<Record<string, unknown>>;
+  /** npcId → (연도 → 그 해 소속팀). 이력이 없는 사람은 아예 없다 */
+  teamByYear: Map<string, Map<number, string>>;
+}
+
+/**
+ * 이력 사건에서 **연도별 소속팀**을 편다.
+ *
+ * ⚠ 첫 이적보다 **앞선 해**는 그 이적의 `fromTeamId` 가 답이다. 입단 기록이
+ *   없는 리그(해외 · `skipEntry`)엔 출발점이 그것뿐이다.
+ */
+export function teamByYearOf(
+  events: readonly { npcId: string; seasonYear: number; fromTeamId: string | null; toTeamId: string }[],
+  seasonYear: number,
+  years: number,
+): Map<string, Map<number, string>> {
+  const byNpc = new Map<string, typeof events[number][]>();
+  for (const e of events) {
+    const list = byNpc.get(e.npcId);
+    if (list) list.push(e); else byNpc.set(e.npcId, [e]);
+  }
+  const out = new Map<string, Map<number, string>>();
+  for (const [npcId, list] of byNpc) {
+    const sorted = [...list].sort((a, b) => a.seasonYear - b.seasonYear);
+    const m = new Map<number, string>();
+    for (let back = 1; back <= years; back++) {
+      const y = seasonYear - back;
+      // 그 해까지 일어난 마지막 사건의 **간 팀**이 그 해 소속이다
+      let team = "";
+      for (const e of sorted) {
+        if (e.seasonYear > y) break;
+        team = e.toTeamId;
+      }
+      // 첫 사건보다 앞이면 그 사건의 **떠난 팀**이 답이다
+      if (!team) team = sorted[0]?.fromTeamId ?? "";
+      if (team) m.set(y, team);
+    }
+    if (m.size > 0) out.set(npcId, m);
+  }
+  return out;
+}
+
+async function buildCareerHistorySeed(
   worldSeed: number,
   seasonYear: number,
   npcs: Partial<RepoNpc>[],
   rules: unknown,
-): Promise<void> {
-  if (!rules) return;
+  pastYears = 5,
+): Promise<CareerHistorySeed> {
+  const empty: CareerHistorySeed = { rows: [], teamByYear: new Map() };
+  if (!rules) return empty;
 
   // ⚠ **외국인을 국내 경력 생성에 넣으면 안 된다.** Rust `entry_route`는 입단
   // 나이로 고졸/대졸/독립을 매기는데, 용병은 이 리그 연차가 0~2년이라 입단
@@ -718,6 +792,7 @@ async function seedCareerHistory(
   }
 
   const rows: Array<Record<string, unknown>> = [];
+  const allEvents: Array<{ npcId: string; seasonYear: number; fromTeamId: string | null; toTeamId: string }> = [];
   for (const [leagueId, list] of byLeague) {
     const leagueTeams = [...new Set(list.map((n) => n.currentTeam ?? "").filter(Boolean))];
     if (leagueTeams.length < 2) continue;   // 팀이 하나면 이적할 데가 없다
@@ -753,6 +828,10 @@ async function seedCareerHistory(
         toTeamId: e.toTeamId, toLeagueId: e.leagueId,
         detail: e.detail, groupId: null,
       });
+      allEvents.push({
+        npcId: e.npcId, seasonYear: e.seasonYear,
+        fromTeamId: e.fromTeamId, toTeamId: e.toTeamId,
+      });
     }
   }
   // ── 용병 출신 시드 ──────────────────────────────────────────
@@ -786,7 +865,10 @@ async function seedCareerHistory(
     rows.push(...(seedRows as unknown as Record<string, unknown>[]));
   }
 
-  if (rows.length > 0) await slotRepo.addTransactions(slotId, rows);
+  // ⚠ 용병 시드는 **연도별 팀에 안 넣는다** — `buildForeignSeed` 는 온 해와
+  //   떠난 해를 적을 뿐 과거 소속 사슬이 아니고, 과거 5년 성적은 어차피
+  //   국내 프로 1·2군만 만든다.
+  return { rows, teamByYear: teamByYearOf(allEvents, seasonYear, pastYears) };
 }
 
 /**

@@ -36,6 +36,17 @@ export interface PastStatsInput {
   age: number;
   ovr: number;
   playerType: "pitcher" | "batter";
+  /**
+   * 그 해 소속팀 (연도 → teamId) — **이적 이력에서 온다** (B-29 D-2 ·
+   * 사용자 확정 ②).
+   *
+   * 🔴 예전엔 이 필드가 없어 **현재 팀을 5년 내내 박았다.** 같은 모달 안에서
+   *   「팀 이력」은 "2022 트레이드 A → B" 라 적는데 「연도별 성적」은 그 해를
+   *   **B 팀**으로 적었다 — 이적한 39%(KBL 1군) 전부가 그랬다.
+   * ⚠ 없거나 그 해가 비면 **현재 팀으로 떨어진다.** 이력이 없는 사람
+   *   (원클럽맨·해외)은 그게 맞는 답이다.
+   */
+  teamByYear?: ReadonlyMap<number, string>;
 }
 
 export interface PastStatsRow {
@@ -88,7 +99,9 @@ export function buildPastPlayerStats(
       const ovrThen = Math.max(40, Math.min(99, p.ovr + growth + around(0, 3, seed, 1)));
 
       out.push({
-        npcId: p.npcId, year, leagueId: p.leagueId, teamId: p.teamId,
+        npcId: p.npcId, year, leagueId: p.leagueId,
+        // 그 해 소속팀 — 이력이 없으면 현재 팀이다(원클럽맨이 그렇다)
+        teamId: p.teamByYear?.get(year) ?? p.teamId,
         ...(p.playerType === "pitcher"
           ? pitcherLine(ovrThen, isFarm, seed)
           : batterLine(ovrThen, isFarm, seed)),
