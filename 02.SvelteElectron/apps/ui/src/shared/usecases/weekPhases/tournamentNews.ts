@@ -272,7 +272,11 @@ export function buildChampionMessage(
     subject: `${def.name} 우승 — ${teamName(champ)}`,
     preview: runnerUp ? `준우승 ${teamName(runnerUp)}` : "",
     body: [
-      `${bracket.seasonYear} ${def.name}(${def.flower})이 막을 내렸습니다.`,
+      // 🔴 **조사를 붙이지 않는다** (B-28 · 눈확인에서 잡았다 — 「장미기(장미)이
+      //    막을 내렸습니다」). 대회 이름 뒤에 받침이 오는지는 데이터가 정한다.
+      //    자리표시자를 문장 끝에 두고 앞 조각은 체언 종지로 끊는다.
+      // ⚠ 꽃 이름 괄호도 뺐다 — 「장미기(장미)」 는 같은 말을 두 번 한다.
+      `${bracket.seasonYear} ${def.name}. 대회가 끝났습니다.`,
       "",
       `🏆 우승    ${teamName(champ)}`,
       ...(runnerUp ? [`   준우승  ${teamName(runnerUp)}`] : []),

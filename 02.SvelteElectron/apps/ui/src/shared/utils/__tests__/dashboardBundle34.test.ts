@@ -502,3 +502,19 @@ describe("코드가 들고 있던 말을 문안으로 옮겼다", () => {
     expect(NEWS).toContain("m-text-after");
   });
 });
+
+describe("등수 칸에 말이 들어온다 (눈확인 c58)", () => {
+  /**
+   * 🔴 **20px 로 못 박혀 있어 「준우승」 이 한 글자씩 세로로 쪼개졌다**
+   *    (2026-09-04 눈확인). 등수가 숫자면 20px 로 충분한데 대회 최종 순위는
+   *    **말**이 온다(`rankList.<kind>.first`) — 검사가 값만 보고 있어서
+   *    화면을 열기 전엔 안 보였다.
+   *
+   * ⚠ 바닥은 20px 그대로다. 숫자 줄이 들쭉날쭉해지면 안 된다.
+   */
+  it("등수 칸이 내용만큼 넓어지고 줄바꿈을 안 한다", () => {
+    expect(RANK_SRC, "등수 칸이 고정 폭이라 말이 쪼개진다")
+      .toContain("minmax(20px, max-content)");
+    expect(RANK_SRC, "말이 오는 칸인데 줄바꿈을 안 막았다").toContain("white-space: nowrap");
+  });
+});
