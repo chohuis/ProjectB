@@ -154,6 +154,38 @@ const pct = (n, d) => (d === 0 ? "0.0" : ((n / d) * 100).toFixed(1));
     // ⑥ W1 재배정이 실제로 도는가 — 한 주만 넘긴다.
     //   ⚠ **맨 끝에서 한다.** W1 이 신입생을 만들어 로스터가 커지므로
     //     앞의 표(입학 시점)와 같은 세계가 아니게 된다.
+    // ── A① 새 산식 — 적합도 + 자리 경쟁 추천 분포 (규칙 파일 pitcherRoleRules) ──
+    console.log(`\n== 새 산식 추천 (A①) ==  규칙 실림 ${role.rolesPrimed() ? "예" : "아니오(옛 엔진 폴백)"}`);
+    const recRows = await role.hsRecommendTable(presets);
+    console.log("유형        OVR  선발  중계  마무리  자리없음  적합도평균(SP/RP/CP)  마무리 팀 예시");
+    for (const p of presets) {
+      const rs = recRows.map((r) => r.byPreset[p.key]);
+      const cnt = (k) => rs.filter((x) => x.recommended === k).length;
+      const avg = (k) => (rs.reduce((s, x) => s + (x.fits ? x.fits[k] : 0), 0) / rs.length).toFixed(1);
+      const cpEx = recRows.filter((r) => r.byPreset[p.key].recommended === "cp").slice(0, 3)
+        .map((r) => `${r.name}(★${r.power})`).join(" ");
+      console.log(`${p.label.padEnd(10)} ${String(p.ovr).padStart(3)}  ` +
+        `${String(cnt("sp")).padStart(4)}  ${String(cnt("rp")).padStart(4)}  ${String(cnt("cp")).padStart(5)}   ` +
+        `${String(rs.filter((x) => x.noSeat).length).padStart(6)}   ` +
+        `${avg("sp")}/${avg("rp")}/${avg("cp")}   ${cpEx}`);
+    }
+    console.log("\n★별 추천 (SP/RP/CP · 유형 순)");
+    const recStars = [...new Set(recRows.map((r) => r.power))].sort();
+    for (const s of recStars) {
+      const g = recRows.filter((r) => r.power === s);
+      const cells = presets.map((p) => {
+        const c = (k) => g.filter((r) => r.byPreset[p.key].recommended === k).length;
+        return `${p.label}:${c("sp")}/${c("rp")}/${c("cp")}`;
+      });
+      console.log(`  ★${s} n=${String(g.length).padStart(2)}  ${cells.join("  ")}`);
+    }
+    console.log("\n선발 순위 분포 (유형별 · rankSP 1~6+)");
+    for (const p of presets) {
+      const hist = {};
+      for (const r of recRows) { const k = Math.min(r.byPreset[p.key].ranks?.sp ?? 0, 6); hist[k] = (hist[k] ?? 0) + 1; }
+      console.log(`  ${p.label.padEnd(10)} ` + [1, 2, 3, 4, 5, 6].map((h) => `${h === 6 ? "6+" : h}:${hist[h] ?? 0}`).join(" "));
+    }
+
     const before = role.heroProbe();
     await role.oneWeek();
     const after = role.heroProbe();

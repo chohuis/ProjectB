@@ -95,7 +95,56 @@ export async function hsRoleTable(ovrs: number[]): Promise<TeamRoleRow[]> {
 // ── W1 재배정이 실제로 도는가 ─────────────────────────────────
 import { gameStore } from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
+import { recommendRole, type RoleRecommendation } from "../../apps/ui/src/shared/usecases/pitcherRole";
+import { isPitcherRoleRulesPrimed } from "../../apps/ui/src/shared/utils/pitcherRoleRules";
 export { oneWeek } from "./perfEntry";
+
+// ── A① 새 산식 — 고교 102팀 × 유형별 추천 (PLAN_ROLE_RECOMMEND §2·§3) ─────────
+//
+// `recommendRole()` 을 그대로 부른다 — 규칙이 실려 있으면 Rust `recommend_pitcher_role`(적합도·자리
+// 경쟁), 아니면 옛 엔진(OVR 순위)으로 떨어지므로 `primed` 를 같이 낸다. 규칙을 스크립트에 다시 적지 않는다.
+
+export interface PresetSpec {
+  key: string;
+  label: string;
+  ovr: number;
+  stats: Record<string, number>;
+  pitches?: { id: string; grade: number }[];
+}
+
+export interface TeamRecommendRow {
+  teamId: string;
+  name: string;
+  power: number | null;
+  pitchers: number;
+  /** preset.key → 추천 결과 */
+  byPreset: Record<string, RoleRecommendation>;
+}
+
+export function rolesPrimed(): boolean { return isPitcherRoleRulesPrimed(); }
+
+export async function hsRecommendTable(presets: PresetSpec[]): Promise<TeamRecommendRow[]> {
+  const m = get(masterStore);
+  const ents = m.entities;
+  const teams = (m.teams ?? []).filter((t) => t.leagueId === HS);
+  const rows: TeamRecommendRow[] = [];
+  for (const t of teams) {
+    const pitchers = ents.filter((e) => e.teamId === t.id && e.role === "player"
+      && (e.details as any)?.player?.playerType === "pitcher").length;
+    const byPreset: TeamRecommendRow["byPreset"] = {};
+    for (const p of presets) {
+      const hero = {
+        id: "__hero_probe__", teamId: t.id, leagueId: HS, careerStage: "highschool",
+        pitching: { ...p.stats, ovr: p.ovr },
+        pitches: p.pitches ?? [{ id: "PITCH_FASTBALL", grade: 1 }],
+        position: "SP",
+      } as any;
+      byPreset[p.key] = await recommendRole(hero, ents, 0);
+    }
+    rows.push({ teamId: t.id, name: t.name, power: (t as any).power ?? null, pitchers, byPreset });
+  }
+  return rows;
+}
 
 export function heroProbe() {
   const p = get(gameStore).protagonist;

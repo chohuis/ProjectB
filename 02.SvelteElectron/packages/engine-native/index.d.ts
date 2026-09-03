@@ -146,6 +146,11 @@ export declare function calcProtagonistAgingNative(paramsJson: string): string
 export declare function resolveCareerChoiceNative(paramsJson: string): string
 /** 고교 투수 포지션 배정 (SP / RP) */
 export declare function assignHighschoolPositionNative(paramsJson: string): string
+/**
+ * 투수 보직 추천 — 세부 능력치 적합도 + 팀내 자리 경쟁 (PLAN_ROLE_RECOMMEND §2·§3 · 1.1 A①).
+ * 규칙(가중치·구종 계수)은 TS 가 `generation_rules.json` `pitcherRoleRules` 에서 읽어 넘긴다
+ */
+export declare function recommendPitcherRoleNative(paramsJson: string): string
 /** 주인공 투수 역할 배정 */
 export declare function assignProtagonistRoleNative(paramsJson: string): string
 /** 불펜 등판 판정 */
