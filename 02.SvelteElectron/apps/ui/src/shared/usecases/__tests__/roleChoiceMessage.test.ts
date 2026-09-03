@@ -147,7 +147,8 @@ describe("확정 소식", () => {
       pick: "rp", recommended: "rp", role: "중간계투", managerName: "한동석",
     });
     expect(m.body).toBe("올해는 중계로 갑니다.");
-    expect(m.subject).toBe("2029시즌 보직 — 중계");
+    // ⚠ 제목의 구분자 대시도 뺀다 (사용자 확정 · B-32 가 데이터에 못 반영하던 자리)
+    expect(m.subject).toBe("2029시즌 보직 중계");
   });
 
   it("거스르면 추천을 이름으로만 적는다 — 「감독은 …」 을 안 쓴다", () => {
