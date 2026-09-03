@@ -122,7 +122,8 @@
       "optionalColumns": {
         "prev": "지난해"
       },
-      "empty": "올해는 기록이 없습니다."
+      "empty": "올해는 기록이 없습니다.",
+      "_unusedPrev": "⏸ 「지난해」 열은 **아직 안 쓴다** (B-30). `pitcherSeasonTableMeta` 는 `prev` 를 받게 돼 있는데(`dashboardMeta.ts:119·141`) 호출부 둘(`advanceWeek.ts:1232·1271`)이 안 넘긴다 — `CareerRecord.statLine` 이 문자열이라 넘길 숫자가 없다. **키는 남긴다** — 생산부가 숫자를 갖게 되면 그날 바로 그려야 하고, 라벨이 없으면 머리글 없는 열이 뜬다"
     },
     "seasonEndIndie": {
       "title": "시즌 성적",
@@ -143,7 +144,8 @@
       "optionalColumns": {
         "prev": "지난해"
       },
-      "empty": "올해는 기록이 없습니다."
+      "empty": "올해는 기록이 없습니다.",
+      "_unusedPrev": "⏸ 「지난해」 열은 **아직 안 쓴다** (B-30). `pitcherSeasonTableMeta` 는 `prev` 를 받게 돼 있는데(`dashboardMeta.ts:119·141`) 호출부 둘(`advanceWeek.ts:1232·1271`)이 안 넘긴다 — `CareerRecord.statLine` 이 문자열이라 넘길 숫자가 없다. **키는 남긴다** — 생산부가 숫자를 갖게 되면 그날 바로 그려야 하고, 라벨이 없으면 머리글 없는 열이 뜬다"
     },
     "contractSigned": {
       "title": "계약 조건",
@@ -161,7 +163,8 @@
           "condition": "조건",
           "amount": "금액"
         },
-        "empty": "인센티브가 없습니다."
+        "empty": "인센티브가 없습니다.",
+        "_unusedCondition": "⏸ 「조건」 열은 **생산부가 아직 안 채운다** (B-30). `dashboardMeta.ts:207` 이 행을 `{name, amount}` 로만 만들고 `incentiveLabel()` 이 조건을 이름에 접어 넣는다. **그런데 지우면 안 된다** — `dashboardView.test.ts:453` 이 이 열이 있다고 못박고 있다(글자 열이라 왼쪽 정렬). 지울지 남길지는 그 검사와 같이 정해야 한다"
       },
       "empty": "계약 조건을 읽지 못했습니다.",
       "noBonus": "없음",
@@ -183,7 +186,8 @@
           "condition": "조건",
           "amount": "금액"
         },
-        "empty": "인센티브가 없습니다."
+        "empty": "인센티브가 없습니다.",
+        "_unusedCondition": "⏸ 「조건」 열은 **생산부가 아직 안 채운다** (B-30). `dashboardMeta.ts:207` 이 행을 `{name, amount}` 로만 만들고 `incentiveLabel()` 이 조건을 이름에 접어 넣는다. **그런데 지우면 안 된다** — `dashboardView.test.ts:453` 이 이 열이 있다고 못박고 있다(글자 열이라 왼쪽 정렬). 지울지 남길지는 그 검사와 같이 정해야 한다"
       },
       "empty": "계약 조건을 읽지 못했습니다."
     },
@@ -225,8 +229,8 @@
         "teamId": "구단",
         "players": "선수"
       },
-      "footnote": "사유",
-      "empty": "오간 선수가 없습니다."
+      "empty": "오간 선수가 없습니다.",
+      "_unusedFootnote": "🔴 「사유」 이름표를 뺐다 (B-30). `dashboardMeta.ts:300` 이 `footnote` 에 **사유 값 자체**를 넣고(`{...(reason ? { footnote: reason } : {})}`) 화면(`buildTableView`)에는 이름표와 값을 잇는 자리가 없다 — 이름표를 두면 어디에도 안 쓰인다"
     },
     "demote": {
       "title": "엔트리 말소",
@@ -541,6 +545,14 @@
         "msg-retire-",
         "msg-season-hs-sync-"
       ]
+    },
+    "_unused": {
+      "_note": "생산부(`dashboardMeta.ts`)가 안 쓰는 자리 — 다시 만들지 않게 적어 둔다 (B-30 · 2026-09-03)",
+      "table.contractSigned.incentives.columns.condition": "남겼다 — 생산부는 안 쓰는데 `dashboardView.test.ts:453` 이 있다고 못박는다",
+      "table.faSigned.incentives.columns.condition": "남겼다 — 위와 같다",
+      "table.npcTrade.footnote": "뺐다 — `footnote` 에는 사유 값이 들어간다. 이름표 자리가 없다",
+      "table.seasonEndPro.optionalColumns.prev": "남겼다 — 아직 안 넘기지만 넘기게 되면 바로 필요하다",
+      "table.seasonEndIndie.optionalColumns.prev": "남겼다 — 위와 같다"
     }
   }
 }
