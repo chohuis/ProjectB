@@ -1,0 +1,72 @@
+# 묶음 3·4 표시부 눈확인 — A 인계 §0.61 여덟 자리 중 대회 다섯
+#
+#   DEV_PORT=5175 npm run dev:ui         # 다른 창
+#   DRIVE_USER_DATA=1 VITE_DEV_SERVER_URL=http://localhost:5175 \
+#     SCREENSHOT_DIR=docs/screens node scripts/drive.mjs scripts/c58-eyecheck.txt
+#
+# ⚠ **D 세이브로는 못 본다.** 소식은 만들 때 metadata 가 같이 굳는데 그 세이브는
+#   A 의 생산부(7856b39f3) 전에 만들어졌다 — 새 게임으로 새로 받아야 한다.
+# ⚠ 고교 개나리기가 W9 에 열린다. 30주를 돌리면 개막·내 경기·진출·우승·수상이
+#   소식함에 다 있다.
+# ⚠ **대진표는 51행이다**(102팀 1라운드) — 상세 칸 세로 스크롤을 같이 잰다.
+launch
+resize 1366x768
+sleep 3000
+click-text 새 게임
+sleep 1500
+wait .slot-info
+click .slot-info
+sleep 3000
+fill .field input|묶음확인
+sleep 800
+click .btn.next
+sleep 4000
+wait .region-item
+click .region-item
+sleep 2000
+wait .team-list-item
+click .team-list-item
+sleep 2000
+click .btn.next
+sleep 2500
+click .btn.next
+sleep 2500
+click .btn.start
+sleep 30000
+# ⚠ **보직 선택에서 멈춘다** (W6 · 실측). 드라이버는 본 화면에서 `.go` 만 보는데
+#   보직은 소식 상세의 `RoleChoicePanel` 에서 고르고 확인까지 눌러야 풀린다.
+advance 8 --auto
+sleep 3000
+click-text 소식
+sleep 2500
+eval (() => { const el = document.querySelector('.item.pending') || [...document.querySelectorAll('.item')].find(e => e.innerText.indexOf('보직') >= 0); if (!el) return 'NO_PENDING'; el.click(); return 'OPENED'; })()
+sleep 2000
+eval (() => { const b = document.querySelector('.dec-opts button.opt'); if (!b) return 'NO_OPT'; b.click(); return 'PICKED'; })()
+sleep 1500
+eval (() => { const b = document.querySelector('.confirm button.go'); if (!b) return 'NO_CONFIRM'; b.click(); return 'CONFIRMED'; })()
+sleep 4000
+advance 26 --auto
+sleep 3000
+click-text 소식
+sleep 2500
+eval (() => { const ids = [...document.querySelectorAll('.item')].map(e => e.innerText.replace(/\s+/g, ' ').slice(0, 60)); return JSON.stringify(ids.slice(0, 40)); })()
+eval (() => { const el = [...document.querySelectorAll('.item')].find(e => e.innerText.indexOf('개막') >= 0); if (!el) return 'NO_OPEN'; el.scrollIntoView({block:'center'}); el.click(); return 'OPEN'; })()
+sleep 2500
+ss c58-01-tour-open-bracket
+eval (() => { const b = document.querySelector('.m-body'); const t = [...document.querySelectorAll('.st table tr')]; return JSON.stringify({ rows: t.length, scrollH: b && b.scrollHeight, clientH: b && b.clientHeight, first: t.slice(0,3).map(r => r.innerText.replace(/\s+/g,' ')), last: t.slice(-2).map(r => r.innerText.replace(/\s+/g,' ')) }); })()
+eval (() => { const b = document.querySelector('.m-body'); if (b) b.scrollTop = b.scrollHeight; return 'SCROLLED'; })()
+sleep 1200
+ss c58-02-tour-open-bottom
+eval (async () => { for (let k = 0; k < 12; k++) { const m = document.querySelector('.more-row button'); if (!m) break; m.click(); await new Promise(r => setTimeout(r, 250)); } return 'ITEMS ' + document.querySelectorAll('.item').length; })()
+sleep 1500
+eval (() => { const el = [...document.querySelectorAll('.item')].find(e => e.innerText.indexOf('우승 —') >= 0); if (!el) return 'NO_CHAMP'; el.scrollIntoView({block:'center'}); el.click(); return 'CHAMP ' + el.innerText.replace(/s+/g,' ').slice(0,50); })()
+sleep 2500
+ss c58-03-tour-champ-ranklist
+eval JSON.stringify({ rank: [...document.querySelectorAll('.rank-row')].map(e => e.innerText.replace(/s+/g,' ')), body: (document.querySelector('.m-text') || {}).innerText })
+eval (() => { const el = [...document.querySelectorAll('.item')].find(e => e.innerText.indexOf('시상') >= 0); if (!el) return 'NO_AWARD'; el.scrollIntoView({block:'center'}); el.click(); return 'AWARD ' + el.innerText.replace(/s+/g,' ').slice(0,50); })()
+sleep 2500
+ss c58-04-tour-award
+eval JSON.stringify({ rank: [...document.querySelectorAll('.rank-row')].map(e => e.innerText.replace(/s+/g,' ')), body: (document.querySelector('.m-text') || {}).innerText })
+eval (() => { const el = [...document.querySelectorAll('.item')].find(e => e.innerText.indexOf('내 대회') >= 0); if (!el) return 'NO_TOURMY'; el.scrollIntoView({block:'center'}); el.click(); return 'TOURMY ' + el.innerText.replace(/s+/g,' ').slice(0,50); })()
+sleep 2000
+ss c58-05-tour-my
