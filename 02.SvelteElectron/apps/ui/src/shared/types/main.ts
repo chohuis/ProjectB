@@ -172,6 +172,75 @@ export interface Top10Metadata {
   columns: [Top10Column, Top10Column, Top10Column, Top10Column];
 }
 
+// ── 소식 대시보드 — 형태별 규격 셋 (PLAN_MESSAGE_DASHBOARDS §3) ──
+//
+// 🔴 **종류마다 타입을 만들지 않는다.** 대상이 48자리인데 그 수만큼 규격을
+//    만들면 화면도 48개가 된다. 화면이 실제로 보는 것은 `columns` 와 `rows`
+//    뿐이라, **형태**(표·순위·타임라인)로 셋만 둔다. 어느 소식인지는
+//    `kind` 문자열이 들고, 타입 안전은 **만드는 쪽**(각 `weekPhases` 모듈)이
+//    진다.
+//
+// ⚠ **값을 글자로 굳혀 보내지 않는다.** 지금 소식들은 `lines.join("\n")` 로
+//    본문 한 덩어리를 만들어 보내는데, 그러면 화면이 정렬도 강조도 못 한다 —
+//    그게 이 대시보드화가 고치려는 결함이다. 만드는 쪽이 배열을 넘긴다.
+
+/** 표 한 칸의 값. 화면이 정렬을 고르므로 숫자는 숫자로 싣는다 */
+export type TableCell = string | number | boolean | null;
+
+export interface TableColumn {
+  key: string;
+  label: string;
+  /** 기본은 첫 열만 왼쪽이고 나머지는 오른쪽이다 — 이 값이 그걸 뒤집는다 */
+  align?: "left" | "right" | "center";
+}
+
+/**
+ * 표 — 값이 여러 줄이고 열이 같은 소식 19자리가 이것 하나를 쓴다
+ * (다이제스트·경기 결과·시즌 결산·계약·로스터·대진 …).
+ */
+export interface TableMetadata {
+  type: "table";
+  /** 어느 소식인지 — 화면이 제목·단위를 고를 때만 쓴다 ("digest" | "bracket" | …) */
+  kind: string;
+  columns: TableColumn[];
+  /**
+   * 행. 열 `key` 로 값을 찾는다.
+   *
+   * ⚠ `myTeam: true` 를 실은 행은 굵게 그린다 — 대진은 **내 팀 행이 라운드마다
+   *   하나씩 여럿**이라 `highlightRow` 인덱스 하나로는 모자란다 (§3 대진).
+   */
+  rows: (Record<string, TableCell> & { myTeam?: boolean })[];
+  /** 강조할 행 하나 (내 팀·나). 여럿이면 행의 `myTeam` 을 쓴다 */
+  highlightRow?: number;
+  /**
+   * 순위 변동을 그릴 열. 각 행이 이 키에 **지난 값과의 차**를 든다 —
+   * 양수면 `↑n`, 음수면 `↓n`, 0 이면 `—`.
+   *
+   * ⚠ **지난 값이 없으면 이 키를 빼고 보낸다.** `0` 으로 채우면
+   *   「변동 없음」과 「모름」이 같아 보인다 (§3-1).
+   */
+  deltaKey?: string;
+  /** 표 아래 한 줄 */
+  footnote?: string;
+}
+
+/** 순위 — 등수가 뜻을 갖는 소식 셋 (대회 최종 순위·대회 수상·2군 우승) */
+export interface RankListMetadata {
+  type: "rankList";
+  kind: string;
+  /** 제목 줄. 없으면 안 그린다 */
+  title?: string;
+  /** `delta` 는 지난 값과의 차. 없으면 변동을 안 그린다 (§3-1) */
+  items: { rank: number; label: string; sub?: string; isMe?: boolean; delta?: number }[];
+}
+
+/** 타임라인 — 시간 순서 자체가 뜻인 소식 셋 (군 경력·복무 연차·고교 연감) */
+export interface TimelineMetadata {
+  type: "timeline";
+  kind: string;
+  entries: { when: string; label: string; detail?: string }[];
+}
+
 /**
  * 오프시즌 결산. **`npcId`만 담고 이름·팀명은 안 담는다** —
  * 화면이 `npcs`에서 조회한다. 이유는 `utils/offseasonReport.ts` 머리말.
@@ -263,5 +332,6 @@ export interface MessageItem {
   decision?: MessageDecision;
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
            | MyBodyMetadata | RoleChoiceMetadata
+           | TableMetadata | RankListMetadata | TimelineMetadata
            | { type: string };
 }

@@ -1,43 +1,63 @@
 <script lang="ts">
-  import type { Top10Metadata } from "../../../shared/types/main";
+  import type { RankListMetadata, Top10Metadata } from "../../../shared/types/main";
+  import { buildRankList } from "../../../shared/utils/dashboardView";
   import PlayerDetailModal from "../../player/ui/PlayerDetailModal.svelte";
 
-  export let metadata: Top10Metadata;
+  /**
+   * 순위 목록 — 등수가 뜻을 갖는 소식이 다 이것을 쓴다.
+   *
+   * ✅ **이름이 `ProspectTop10Panel` 이었다** (§2 · §6 ④ 확정 2026-09-03).
+   *    유망주 전용처럼 보였는데 대회 최종 순위·대회 수상·2군 우승 셋이
+   *    같은 모양이라 **이름을 바꿔 재사용한다.** 하는 일은 그대로다.
+   *
+   * ⚠ **두 규격을 여기서 갈라 그리지 않는다.** `buildRankList` 가
+   *   `Top10Metadata`(학년 네 칸)와 `RankListMetadata`(한 줄 목록)를 한
+   *   모양으로 모은다 — 여기에 `{#if}` 를 두면 같은 순위 줄을 두 벌 적게
+   *   되고, vitest(`environment: "node"`)가 그걸 한 줄도 못 잰다.
+   */
+  export let metadata: Top10Metadata | RankListMetadata;
 
   let detailEntityId = "";
 
-  const typeKr = metadata.playerType === "pitcher" ? "투수" : "타자";
+  $: view = buildRankList(metadata);
+  /** 칸이 하나면 가로로 안 쪼갠다 — 대회 순위는 한 줄 목록이다 */
+  $: single = view.columns.length <= 1;
 
   function openDetail(id: string) {
-    if (id === "PLY_HERO") return;
+    // 상세를 못 여는 둘 — 나 자신과, id 를 안 싣는 순위(대회·2군)
+    if (!id || id === "PLY_HERO") return;
     detailEntityId = id;
   }
   function closeDetail() { detailEntityId = ""; }
 </script>
 
 <div class="top10-wrap">
-  <p class="top10-subtitle">
-    고교 {typeKr} 유망주 월간 랭킹 · W{metadata.week} · {metadata.seasonYear}시즌
-  </p>
+  {#if view.subtitle}
+    <p class="top10-subtitle">{view.subtitle}</p>
+  {/if}
 
-  <div class="top10-grid">
-    {#each metadata.columns as col}
+  <div class="top10-grid" class:single>
+    {#each view.columns as col (col.label)}
       <div class="top10-col">
-        <h4 class="col-title">{col.label}</h4>
+        {#if col.label}
+          <h4 class="col-title">{col.label}</h4>
+        {/if}
 
         <ol class="rank-list">
-          {#each col.entries as entry}
-            {@const isHero = entry.id === "PLY_HERO"}
+          {#each col.entries as entry (entry.rank + "-" + entry.name)}
             <li
               class="rank-row"
-              class:hero={isHero}
-              class:clickable={!isHero}
+              class:hero={entry.isMe}
+              class:clickable={!!entry.id && !entry.isMe}
               on:dblclick={() => openDetail(entry.id)}
-              title={isHero ? "나" : "더블클릭으로 상세 보기"}
+              title={entry.isMe ? "나" : entry.id ? "더블클릭으로 상세 보기" : ""}
             >
               <span class="rank-num">{entry.rank}</span>
-              <span class="rank-name">{entry.name}{#if isHero} ◀{/if}</span>
-              <span class="rank-team">{entry.teamName}</span>
+              <span class="rank-name">{entry.name}{#if entry.isMe} ◀{/if}</span>
+              {#if entry.delta}
+                <span class="rank-delta d-{entry.delta.dir}">{entry.delta.text}</span>
+              {/if}
+              <span class="rank-team">{entry.sub}</span>
             </li>
           {/each}
 
@@ -76,6 +96,8 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px;
   }
+  /* 칸이 하나면 네 갈래로 쪼개지 않는다 — 1366×768 에서 목록이 1/4 폭으로 눌린다 */
+  .top10-grid.single { grid-template-columns: minmax(0, 1fr); }
 
   .top10-col {
     display: flex;
@@ -121,6 +143,10 @@
     border: 1px solid transparent;
     transition: background 0.1s;
   }
+  /* 변동 칸이 붙으면 열이 넷이다. 없는 줄에는 아예 칸을 안 만든다 */
+  .rank-row:has(.rank-delta) {
+    grid-template-columns: 20px minmax(4.5em, 1fr) 2.6em minmax(0, auto);
+  }
 
   .rank-row.clickable {
     cursor: pointer;
@@ -156,6 +182,17 @@
   }
 
   .rank-row.hero .rank-name { color: var(--t-gold); }
+
+  .rank-delta {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .d-up { color: var(--ok); }
+  .d-down { color: var(--bad); }
+  .d-flat { color: var(--ink-mute); }
+  .rank-row.hero .rank-delta { color: var(--t-gold); }
 
   .rank-team {
     color: var(--ink-mute);

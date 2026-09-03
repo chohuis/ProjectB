@@ -1,7 +1,8 @@
 <script lang="ts">
   import type {
     MessageCategory, MessageItem, InjuryMetadata, MyBodyMetadata,
-    OffseasonMetadata, Top10Metadata, TrainingMetadata,
+    OffseasonMetadata, RankListMetadata, TableMetadata, TimelineMetadata,
+    Top10Metadata, TrainingMetadata,
   } from "../../shared/types/main";
   import { applyDecision } from "../../shared/usecases/decisions";
   import { gameStore } from "../../shared/stores/game";
@@ -10,7 +11,9 @@
   import { categoryMeta, FILTER_GROUPS } from "../../shared/utils/messageCategory";
   import { gaugeTone } from "../../shared/utils/myStatus";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
-  import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
+  import RankListPanel from "../../features/messages/ui/RankListPanel.svelte";
+  import StatTable from "../../features/messages/ui/StatTable.svelte";
+  import TimelinePanel from "../../features/messages/ui/TimelinePanel.svelte";
   import OffseasonPanel from "../../features/messages/ui/OffseasonPanel.svelte";
   import InjuryPanel from "../../features/messages/ui/InjuryPanel.svelte";
   import MyBodyPanel from "../../features/messages/ui/MyBodyPanel.svelte";
@@ -286,7 +289,15 @@
             <TrainingStatBars stats={tm.stats} condition={tm.condition} fatigue={tm.fatigue}
                               morale={tm.morale} extraLogs={tm.extraLogs} />
           {:else if selected.metadata?.type === "top10"}
-            <ProspectTop10Panel metadata={selected.metadata as Top10Metadata} />
+            <RankListPanel metadata={selected.metadata as Top10Metadata} />
+          {:else if selected.metadata?.type === "table"}
+            <!-- 표 19자리가 이 갈래 하나를 쓴다 (PLAN_MESSAGE_DASHBOARDS §2).
+                 종류마다 컴포넌트를 만들면 19개가 된다 — 열이 다를 뿐 구조는 같다 -->
+            <StatTable metadata={selected.metadata as TableMetadata} />
+          {:else if selected.metadata?.type === "rankList"}
+            <RankListPanel metadata={selected.metadata as RankListMetadata} />
+          {:else if selected.metadata?.type === "timeline"}
+            <TimelinePanel metadata={selected.metadata as TimelineMetadata} />
           {:else if selected.metadata?.type === "offseason"}
             <OffseasonPanel metadata={selected.metadata as OffseasonMetadata} />
           {:else if selected.metadata?.type === "injury"}
