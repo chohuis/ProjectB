@@ -1654,6 +1654,56 @@ export function ageServiceProbe(): Record<string, unknown> {
   }
   return out;
 }
+
+/**
+ * NPC 전원 덤프 — D §5 (2026-09-03 · A 지정 여덟 필드).
+ * 나이대별 군필률·계약 상한 확인, `careerHistory` 대 소속 일치율에 쓴다.
+ */
+export function npcDumpProbe(): Record<string, unknown>[] {
+  return get(gameStore).npcs.map((n) => {
+    const hist = n.careerHistory ?? [];
+    return {
+      npcId: n.npcId,
+      league: n.currentLeague,
+      currentTeam: n.currentTeam,
+      careerStatus: n.careerStatus,
+      age: n.age,
+      proServiceYears: n.proServiceYears ?? 0,
+      contractYears: n.contractYears ?? null,
+      salary: n.currentSalary ?? null,
+      militaryStatus: n.militaryStatus,
+      militaryServedUnit: n.militaryServedUnit ?? null,
+      lastHistoryTeam: hist.length ? hist[hist.length - 1].teamId : null,
+      historyLen: hist.length,
+    };
+  });
+}
+
+/** 오프시즌 결산 소식(`metadata.type === "offseason"`)의 event.kind 집계 — D §5 */
+export function offseasonEventTally(): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const m of get(gameStore).mailbox ?? []) {
+    const md = (m as { metadata?: { type?: string; events?: { kind?: string }[] } }).metadata;
+    if (md?.type !== "offseason") continue;
+    for (const e of md.events ?? []) {
+      const k = e.kind ?? "?";
+      out[k] = (out[k] ?? 0) + 1;
+    }
+  }
+  return out;
+}
+
+/** `league_transactions`(v3 `transactions`) category 집계 — D §5 */
+export async function transactionsTally(slotId: string): Promise<Record<string, unknown>> {
+  const rows = await slotRepo.getTransactions({ slotId, limit: 1000 });
+  const byCategory: Record<string, number> = {};
+  for (const r of rows) {
+    const cat = (r as { category?: string }).category ?? "?";
+    byCategory[cat] = (byCategory[cat] ?? 0) + 1;
+  }
+  return { 총건수: rows.length, 종류별: byCategory };
+}
+
 export function faTradeProbe(): Record<string, unknown> {
   const rows = get(gameStore).npcs.filter((n) => n.careerStatus !== "retired");
   const bucket = (y: number) => y <= 0 ? "0" : y <= 2 ? "1-2" : y <= 4 ? "3-4" : y <= 6 ? "5-6" : "7+";
