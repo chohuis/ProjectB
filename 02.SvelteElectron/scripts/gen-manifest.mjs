@@ -154,6 +154,11 @@ console.log(`  업적    ${totalAch.toString().padStart(4)}개`);
 if (totalEntities > 0) {
   console.log(`  선수    ${totalEntities.toString().padStart(4)}개  (entities/players/_index.json — ${entityLeagueStats})`);
 } else {
-  console.log(`  선수       0개  (npm run migrate:entities 미실행)`);
+  // ⚠ **`migrate:entities` 는 없는 스크립트다** (2026-09-04 실측). 이름난
+  //   선수 파일은 `npm run deploy`(scripts/deploy-staging.mjs)가 만들고,
+  //   **폴더가 통째로 없는 것이 지금 정상**이다(Phase 6A — NPC 는 slot.db 가
+  //   정본 · `generate_master_db.cjs` 도 그렇게 적어 뒀다). 없는 명령을
+  //   가리키면 다음 사람이 그걸 찾느라 시간을 쓴다.
+  console.log(`  선수       0개  (entities/players 없음 — Phase 6A 이후 정상 · 넣으려면 npm run deploy)`);
 }
 console.log(`  컨택트  ${totalContacts.toString().padStart(4)}개  (entities/players/_index.json#contacts)`);
