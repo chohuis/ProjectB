@@ -110,7 +110,7 @@
       "perf": "fire",
       "member": "MEM_SQ_LDR",
       "title": "포사격훈련",
-      "description": "포반 전원이 진지에 선다. 포반장 {member.name}이 탄약수 자리를 가리킨다. 결과 {tier}등급.",
+      "description": "포반 전원이 진지에 선다. 포반장 {member.name}.\n탄약수 자리를 가리킨다. 결과 {tier}등급.",
       "choices": [
         {
           "id": "calm",
@@ -190,7 +190,7 @@
         {
           "id": "ok",
           "label": "후임을 맞을 준비를 한다",
-          "effectHint": "사기 +3 · 포상휴가 조건 열림",
+          "effectHint": "사기 +3",
           "moraleDelta": 3
         }
       ]
@@ -375,7 +375,7 @@
         {
           "id": "ok",
           "label": "연락을 받는다",
-          "effectHint": "사기 +5 · 복귀 연락",
+          "effectHint": "사기 +5",
           "moraleDelta": 5
         }
       ]
@@ -570,7 +570,7 @@
         {
           "id": "argue",
           "label": "항변한다",
-          "effectHint": "관계 -6, 징계 후보",
+          "effectHint": "관계 -6, 징계",
           "relationDelta": -6,
           "penalty": "MIL_PENALTY_WARNING"
         }

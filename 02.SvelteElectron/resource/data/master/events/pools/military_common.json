@@ -1,22 +1,6 @@
 {
   "events": [
     {
-      "id": "MIL_COM_FIRST_DAY",
-      "title": "자대 배치 첫날",
-      "description": "드디어 자대에 배치받았습니다.\n낯선 환경과 규율에 긴장감이 감돌지만, 이제 적응해야 합니다.",
-      "minRank": 0,
-      "once": true,
-      "choices": [
-        {
-          "id": "ok",
-          "label": "받아들인다",
-          "effectHint": "사기 -1, 피로 +2",
-          "moraleDelta": -1,
-          "fatigueDelta": 2
-        }
-      ]
-    },
-    {
       "id": "MIL_COM_FAMILY_VISIT",
       "title": "면회",
       "description": "가족이 면회를 왔습니다.\n짧은 시간이지만 든든한 힘이 됩니다.",
@@ -276,6 +260,13 @@
           "effectHint": "사기 +3, 피로 -2",
           "moraleDelta": 3,
           "fatigueDelta": -2
+        },
+        {
+          "id": "push",
+          "label": "여기서 더 끌어올린다",
+          "effectHint": "성실 +3, 피로 +5",
+          "diligenceDelta": 3,
+          "fatigueDelta": 5
         }
       ]
     },
@@ -293,6 +284,13 @@
           "effectHint": "사기 -1, 피로 +4",
           "moraleDelta": -1,
           "fatigueDelta": 4
+        },
+        {
+          "id": "pace",
+          "label": "요령을 찾는다",
+          "effectHint": "피로 +2, 성실 -1",
+          "fatigueDelta": 2,
+          "diligenceDelta": -1
         }
       ]
     },
@@ -310,6 +308,14 @@
           "effectHint": "사기 +2, 피로 +1",
           "moraleDelta": 2,
           "fatigueDelta": 1
+        },
+        {
+          "id": "lead",
+          "label": "앞장선다",
+          "effectHint": "사기 +3, 성실 +2, 피로 +3",
+          "moraleDelta": 3,
+          "diligenceDelta": 2,
+          "fatigueDelta": 3
         }
       ]
     },
@@ -327,6 +333,13 @@
           "effectHint": "사기 +1, 피로 -4",
           "moraleDelta": 1,
           "fatigueDelta": -4
+        },
+        {
+          "id": "body",
+          "label": "몸을 푼다",
+          "effectHint": "컨디션 +5, 피로 -1",
+          "conditionDelta": 5,
+          "fatigueDelta": -1
         }
       ]
     },
@@ -344,6 +357,13 @@
           "effectHint": "사기 -2, 피로 +2",
           "moraleDelta": -2,
           "fatigueDelta": 2
+        },
+        {
+          "id": "prepare",
+          "label": "미리 맞춰 둔다",
+          "effectHint": "성실 +3, 피로 +4",
+          "diligenceDelta": 3,
+          "fatigueDelta": 4
         }
       ]
     }
