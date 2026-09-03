@@ -94,8 +94,10 @@ export function buildMyRoundMessage(
       `결과   ${won ? "승리" : "패배"}`,
       "",
       won
+        // 🔴 **조사를 붙이지 않는다** (B-28 — 꽃 이름 일곱 중 둘이 받침이라
+        //    「를」이 틀렸다: 왕중왕·여명). 자리표시자를 문장 끝에 둔다
         ? (isFinal
-            ? `${def.flower}를 들어올렸다.`
+            ? `${def.flower}. 우승입니다.`
             : `${roundName(round + 1, bracket.totalRounds)}에 오른다.`)
         : "여기서 대회를 마친다.",
     ].join("\n"),
