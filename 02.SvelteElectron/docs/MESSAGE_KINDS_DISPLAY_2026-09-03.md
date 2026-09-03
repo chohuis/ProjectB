@@ -17,7 +17,7 @@
 
 ```
 metadata.type === "training"    → TrainingStatBars
-                  "top10"       → ProspectTop10Panel
+                  "top10"       → RankListPanel
                   "offseason"   → OffseasonPanel
                   "injury"      → InjuryPanel
 그 밖 (metadata 가 없거나 위 넷이 아니면)
@@ -37,7 +37,7 @@ metadata.type === "training"    → TrainingStatBars
 | 종류 | id 접두 | 보낸이 | 언제 | 컴포넌트 | 무엇을 그리나 | metadata |
 |---|---|---|---|---|---|---|
 | 주간 훈련 결과 | `msg-train-w` | 코치 | 매주 | `TrainingStatBars` | 능력치 증가를 **막대**로 · 컨디션·피로·사기 한 줄 · 부가 로그 | `TrainingMetadata` `stats[] condition fatigue morale extraLogs[]` |
-| 유망주 TOP 10 | `msg-top10-` | 스포츠 매체 | 4주마다 (W4·W8·…) | `ProspectTop10Panel` | **순위 목록**(`<ol>`) · 내 자리 강조 | `Top10Metadata` |
+| 유망주 TOP 10 | `msg-top10-` | 스포츠 매체 | 4주마다 (W4·W8·…) | `RankListPanel` | **순위 목록**(`<ol>`) · 내 자리 강조 | `Top10Metadata` |
 | 오프시즌 연감 | `msg-offseason-` | 연감 | 시즌 끝 | `OffseasonPanel` | **표**(`<table>`) + `DigestCards` 카드·칩 | `OffseasonMetadata` |
 | 월간 부상 리포트 (NPC) | `msg-injury-w` | 리그 사무국 | 월간 | `InjuryPanel` | **표** + `DigestCards` | `InjuryMetadata` `npcId` 목록 |
 
