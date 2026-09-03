@@ -646,6 +646,12 @@ pub struct MatchState {
     pub pitch_limit: f64,
     #[serde(default)]
     pub pitch_soft: f64,
+    /// 선발 아웃 예산 계수 (1.1 A②). 0 이면 1.0 — 구 상태 JSON 호환
+    #[serde(default)]
+    pub starter_outs_factor: f64,
+    /// 의무 휴식이 안 차 이 경기엔 주인공(불펜)이 못 나온다 (§6-1-4)
+    #[serde(default)]
+    pub protagonist_rest_blocked: bool,
 
     pub protagonist_side: String,
 
@@ -857,12 +863,44 @@ pub struct ProtagonistExitCheck {
 
 // ── startMatch 옵션 ────────────────────────────────────────────────────────────
 
+/// 마무리 진입 문 (규칙 파일 `rosterOpsRules.closerGate.<리그>` · 1.1 A② §6-1-3)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CloserGate {
+    pub inning_threshold: u8,
+    pub max_lead_diff: i32,
+    pub min_lead_diff: i32,
+}
+
+/// 의무 휴식 검사 재료 — 세이브의 `lastPitchedDate`·`lastPitchCount` 와 이 경기 날짜 (§6-1-4)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RestGuard {
+    pub last_pitched_date: String,
+    pub last_pitch_count: u32,
+    pub game_date: String,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct MatchStartOptions {
     pub match_id: Option<String>,
     /// 이 경기가 속한 리그 — 투구수 상한이 리그별이다 (Phase 5-8)
     pub league_id: Option<String>,
+    /// 리그별 선발 투구수 상한 — 규칙 파일 `rosterOpsRules.starterPitchLimit` (1.1 A② · §6-1-2 ②).
+    /// 없으면 `tuning::league_pitch_limit` 폴백. 소프트캡은 이 값의 0.75
+    #[serde(default)]
+    pub pitch_limit_override: Option<f64>,
+    /// 선발 아웃 예산 계수 — `rosterOpsRules.starterOutsFactor` (§6-1-2 ③ · 고교 0.80 제안). 없거나 0 이면 1.0
+    #[serde(default)]
+    pub starter_outs_factor: Option<f64>,
+    /// 마무리 진입 문 — `rosterOpsRules.closerGate` (§6-1-3 · 고교 8회 고정 제안). 없으면 감독 clutchDecision 으로
+    #[serde(default)]
+    pub closer_gate: Option<CloserGate>,
+    /// 의무 휴식 검사 재료 — 불펜(RP/CP) 주인공이 직전 등판 뒤 쉬어야 할 날이 안 찼으면 이 경기엔 못 나온다
+    /// (§6-1-4 · 고교 마무리는 `reliever_would_pitch` 를 안 타서 연투가 안 막히던 결함)
+    #[serde(default)]
+    pub rest_guard: Option<RestGuard>,
     pub inning_limit: Option<u8>,
     /// 연장 상한. 없거나 0이면 무제한(예전 동작). 정규리그만 12를 넘긴다
     #[serde(default)]

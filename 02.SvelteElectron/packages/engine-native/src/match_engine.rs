@@ -368,10 +368,29 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
                 EntryTrigger::MidInning { inning: min_inning, max_outs: 3, score_diff_cap: 6 }
             }
             PitcherRole::CP => {
-                let inning_threshold = if clutch_decision >= 70.0 { 8 } else { 9 };
-                EntryTrigger::CloseGame { inning_threshold, max_lead_diff: 3, min_lead_diff: 1 }
+                // 1.1 A② §6-1-3 — 규칙 파일이 문을 주면(고교 8회 고정 제안) 감독 clutchDecision 을 안 본다
+                if let Some(g) = opts.closer_gate.as_ref() {
+                    EntryTrigger::CloseGame { inning_threshold: g.inning_threshold, max_lead_diff: g.max_lead_diff, min_lead_diff: g.min_lead_diff }
+                } else {
+                    let inning_threshold = if clutch_decision >= 70.0 { 8 } else { 9 };
+                    EntryTrigger::CloseGame { inning_threshold, max_lead_diff: 3, min_lead_diff: 1 }
+                }
             }
         });
+    // 리그별 투구수 상한 — 규칙 파일 값이 오면 그걸, 아니면 tuning 폴백 (1.1 A② §6-1-2 ②)
+    let league_key = opts.league_id.as_deref().unwrap_or("");
+    let pitch_limit = opts.pitch_limit_override.filter(|v| *v > 0.0).unwrap_or_else(|| T::league_pitch_limit(league_key));
+    let pitch_soft  = opts.pitch_limit_override.filter(|v| *v > 0.0).map(|v| v * 0.75).unwrap_or_else(|| T::league_pitch_soft(league_key));
+    let starter_outs_factor = opts.starter_outs_factor.filter(|v| *v > 0.0).unwrap_or(1.0);
+    // 의무 휴식 — 불펜 주인공이 직전 등판 뒤 쉴 날이 안 찼으면 이 경기엔 못 나온다 (§6-1-4 결함)
+    let protagonist_rest_blocked = match (&role, opts.rest_guard.as_ref()) {
+        (PitcherRole::SP, _) | (_, None) => false,
+        (_, Some(g)) => !crate::rest_rules::check_rest(crate::rest_rules::RestCheckParams {
+            last_pitched_date: g.last_pitched_date.clone(),
+            last_pitch_count: g.last_pitch_count,
+            game_date: g.game_date.clone(),
+        }).available,
+    };
 
     let pp_opts = opts.protagonist_pitcher.as_ref()
         .or(opts.pitcher.as_ref())
@@ -453,23 +472,25 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
             away: vec![0; inning_limit as usize],
         },
         pitch_count: 0,
-        pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")),
-        pitch_soft:  T::league_pitch_soft(opts.league_id.as_deref().unwrap_or("")),
+        pitch_limit,
+        pitch_soft,
+        starter_outs_factor,
+        protagonist_rest_blocked,
         protagonist_side,
         protagonist_pitcher, my_npc_pitcher, opponent_npc_pitcher,
         // C-1: 큐가 비면 위의 단일 투수를 그대로 쓴다 — 예전과 완전히 같다
         my_queue: {
             let ps = opts.my_pitchers.clone().unwrap_or_default();
             // ⚠ **우리 감독**이 우리 투수 운용을 정한다
-            let mo = queue_max_outs(&ps, rng, my_manager.bullpen_read);
-            PitcherQueue { pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")), lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
+            let mo = queue_max_outs(&ps, rng, my_manager.bullpen_read, starter_outs_factor);
+            PitcherQueue { pitch_limit, lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
         },
         opponent_queue: {
             let ps = opts.opponent_pitchers.clone().unwrap_or_default();
             // ⚠ **상대 감독**이 상대 투수 운용을 정한다 — 한쪽만 넘기면
             //   그쪽만 바뀌어 양 팀 기준이 갈린다
-            let mo = queue_max_outs(&ps, rng, opp_manager.bullpen_read);
-            PitcherQueue { pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")), lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
+            let mo = queue_max_outs(&ps, rng, opp_manager.bullpen_read, starter_outs_factor);
+            PitcherQueue { pitch_limit, lines: ps.iter().enumerate().map(|(i, p)| crate::types::PitcherLineAccum { player_id: p.name.clone().unwrap_or_else(|| format!("P{}", i)), ..Default::default() }).collect(), pitchers: ps, max_outs: mo, ..Default::default() }
         },
         home_lineup, away_lineup,
         home_lineup_index: 0, away_lineup_index: 0,
@@ -553,7 +574,9 @@ fn protagonist_max_outs(state: &MatchState) -> u32 {
     // ⚠ **현재 스태미나가 아니라 상한이다.** 현재값을 쓰면 던질수록 예산이
     // 줄어 자기 자신을 쫓아가는 식이 된다 — NPC는 `stamina_cap`으로 정한다
     let stam = state.protagonist_pitcher.stamina_cap.max(1.0);
-    (12.0 + (stam / 99.0) * 15.0).round().max(1.0) as u32
+    // 1.1 A② §6-1-2 ③ — 리그 계수(고교 0.80 제안)로 선발 이닝을 줄여 불펜 이닝을 만든다. 0 이면 구 상태 = 1.0
+    let factor = if state.starter_outs_factor > 0.0 { state.starter_outs_factor } else { 1.0 };
+    ((12.0 + (stam / 99.0) * 15.0) * factor).round().max(1.0) as u32
 }
 
 /// 투수마다 몇 아웃까지 맡기나.
@@ -565,13 +588,15 @@ fn protagonist_max_outs(state: &MatchState) -> u32 {
 /// ⚠ `bullpen_read` 가 높을수록 **선발을 일찍 내리고 불펜을 짧게 끊는다**
 ///   (불펜을 잘 읽는 감독). 50이 기준이라 **50이면 예전 값 그대로다.**
 fn queue_max_outs(pitchers: &[PartialPitcherStats], rng: &mut impl Rng,
-                  bullpen_read: f64) -> Vec<i32> {
+                  bullpen_read: f64, starter_outs_factor: f64) -> Vec<i32> {
+    // 1.1 A② — 주인공 예산과 같은 리그 계수(고교 0.80 제안). 0 이면 1.0
+    let factor = if starter_outs_factor > 0.0 { starter_outs_factor } else { 1.0 };
     // 70이면 선발 -3아웃(1이닝), 30이면 +2아웃꼴
     let k = (bullpen_read - 50.0) / 50.0;
     pitchers.iter().enumerate().map(|(i, p)| {
         let stam = p.stamina_cap.unwrap_or(50.0);
         if i == 0 {
-            let base = 12.0 + (stam / 99.0) * 15.0 + (rng.gen::<f64>() - 0.5) * 6.0;
+            let base = (12.0 + (stam / 99.0) * 15.0) * factor + (rng.gen::<f64>() - 0.5) * 6.0;
             (base - k * 5.0).round().max(6.0) as i32
         } else {
             // ⚠ **절단이다(`as i32`) — 반올림이 아니다.** 예전 식이
@@ -1723,6 +1748,8 @@ fn should_protagonist_enter(state: &MatchState) -> bool {
     // 🔴 **여기도 막아야 한다.** 시작만 막으면 `entry_trigger` 가 나중에
     //   불러들여서 6회쯤 기본값 투수가 등판한다 — 갈래가 둘이다.
     if state.no_protagonist { return false; }
+    // 의무 휴식이 안 찼다 — 불펜 주인공은 이 경기에 못 나온다 (1.1 A② §6-1-4 · 고교 주말 연투 결함)
+    if state.protagonist_rest_blocked { return false; }
     if state.protagonist_has_entered || state.protagonist_exited || state.is_finished { return false; }
     if !is_our_team_fielding(state) { return false; }
 
@@ -3560,7 +3587,7 @@ mod 감독_투수운용 {
             stamina_cap: Some(if i == 0 { 80.0 } else { 40.0 }),
             ..Default::default()
         }).collect();
-        queue_max_outs(&ps, &mut rng, bullpen_read)
+        queue_max_outs(&ps, &mut rng, bullpen_read, 1.0)
     }
 
     #[test]
@@ -3579,7 +3606,15 @@ mod 감독_투수운용 {
         let ps: Vec<PartialPitcherStats> = (0..3).map(|_| PartialPitcherStats {
             stamina_cap: Some(60.0), ..Default::default()
         }).collect();
-        let with_mgr = queue_max_outs(&ps, &mut r1, 50.0);
+        let with_mgr = queue_max_outs(&ps, &mut r1, 50.0, 1.0);
+        let _ = &with_mgr;
+        // 1.1 A② — 리그 계수 0.80 이면 선발 예산이 줄고(고교 §6-1-2 ③) 불펜은 그대로다
+        let mut r2 = rand::rngs::StdRng::seed_from_u64(7);
+        let mut r3 = rand::rngs::StdRng::seed_from_u64(7);
+        let full = queue_max_outs(&ps, &mut r2, 50.0, 1.0);
+        let cut  = queue_max_outs(&ps, &mut r3, 50.0, 0.80);
+        assert!(cut[0] < full[0], "선발 예산 {} → {}", full[0], cut[0]);
+        assert_eq!(cut[1..], full[1..]);
         let mut r2 = rand::rngs::StdRng::seed_from_u64(7);
         let old: Vec<i32> = ps.iter().enumerate().map(|(i, p)| {
             let stam = p.stamina_cap.unwrap_or(50.0);
