@@ -16,6 +16,13 @@
 | 00db08993 · 59f493a2f | **A② 고교 엔진** — `MatchStartOptions` 넷(투구수 상한 override · 선발 아웃 계수 · 마무리 문 · 의무 휴식) · 오프너 삭제 · 규칙 `starterPitchLimit` 95 / `starterOutsFactor` 0.80 / `closerGate` 8회(전부 제안) · cargo 54 | 호출부 셋 배선(`matchLeagueOptions.ts`)은 OP 가 C⑤ 뒤 커밋 |
 | 3d17e8ad8 | napi 선언 · `measure:role` 새 산식 표 | — |
 
+## §1-b 09-04 00:0x — D 실측(track/measure 병합 326a7fc9a)이 연 A 일감 · 이 순서로
+
+1. **🔴 `check:protransition` 빨강** — 씨앗 20260802 · 5시즌 헤드리스에서 고교 3학년(2028)에 멈춰 드래프트에 못 간다. 스크립트 주석은 "이 씨앗은 2029 지명"이라 적혀 있다. 로그 `resource/logs/d-regress/check_protransition_retry2.log`(D 워크트리 · 미추적). 가설부터 재라: A② 고교 엔진(선발 상한·마무리 문·휴식)이나 보직 선택 소식(`__PB_ROLE_CHOICE` 미응답 → 진행 멈춤?)이 의심 1순위. 원인·전후 한 줄.
+2. **묶음 3·4 마무리·커밋**(진행 중이던 것 · 미커밋 7).
+3. **단위 20 재확인** — D 덤프(NPC_HISTORY_REVIEW "D 실측" · `scripts/probe-npc-dump.cjs`): 새 게임 NPC 5,798명 중 29세+ 군필 84.4%(규칙 100%) · 33세+ 계약 3년 이상 57% · 36세+ 2년 이상 73%. 초기 생성 경로(리그별 생성기 · 외국인 · 독립리그)가 새 규칙(`contractYearsMaxByAge` · 병역 나이 채움)을 안 타는 자리를 찾아 고치고 같은 덤프로 전후를 잰다.
+4. **단위 17 재회 훅 배선** — 12종은 풀(`events/conditional/`)에 있으나 도달 0/12(D ffe0a00ed · `probe:paths --path mil` PF_YEARS=12). 전역 뒤 주간 이벤트 뽑기가 `weeksSinceDischarge`·`unitmate` 조건 풀을 안 본다(A 트리 14 「⬜ 재회 훅」). 배선 뒤 같은 명령으로 12종 중 몇이 닿는지 재라(문턱 값은 안 고침 · 백로그).
+
 ## §2 A 의 첫 일감 (순서대로)
 1. **주인공 자신의 등판 기록이 없다** (결함 · A② 실측에서 드러남). `applyGameOutcome.ts` 는 상대 선발·불펜 컨디션만 `pitcherConditions` 에 쓰고 **주인공(`protagonist.id`)은 안 쓴다** → `leagueState[lid].playerConditions[protagonist.id]` 가 늘 비어 있어 예전 불펜 의무 휴식 검사(`advanceWeek.ts` 2963 `myCondR`)도, 새 `restGuard`(`utils/matchLeagueOptions.ts`)도 재료가 없다. 주인공이 던진 경기(`outcome.pitchCount > 0`)마다 `{ fatigue, lastPitchedWeek, lastPitchedDate: gameDate, lastPitchCount: outcome.pitchCount, pitchOutsLast, consecutiveAppearances }` 를 두 갈래(친선·자동 · 201줄·449줄 근처) 모두에 쓴다. 검사 + 실측(`scratchpad/probe-hs-closer.cjs` 의 `휴식재료` 가 0 → N).
 2. **마무리 등판당 이닝이 이상하다** — 아래 §3 표에서 마무리 정책인데 등판당 2.7~3.2 이닝, 최대 88구. 9회 진입이면 나올 수 없는 값이다. `match:autoFinishFromEntry` 가 내는 `outsRecorded`·`pitchCount` 가 주인공 몫인지(팀 나머지 이닝을 세는지), `role: "CP"` 인데 진입 판정이 CloseGame 인지(`create_initial_match_state` 의 `entry_trigger`), 고교(`isProtagonistGame` 전부)에서 CP 가 어느 경로로 들어가는지 코드로 확인하고 고친다. 고치기 전에 재현부터(3회).
