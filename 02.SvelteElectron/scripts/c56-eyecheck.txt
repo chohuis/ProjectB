@@ -1,0 +1,65 @@
+# 단위 9 인센티브 정산 화면 + 상무 전역 주차 눈확인 (C 단위 9)
+#
+#   DEV_PORT=5175 npm run dev:ui         # 다른 창 (워크트리 포트)
+#   DRIVE_USER_DATA=1 VITE_DEV_SERVER_URL=http://localhost:5175 \
+#     SCREENSHOT_DIR=docs/screens node scripts/drive.mjs scripts/c56-eyecheck.txt
+#
+# ⚠ 프로까지 3년을 안 돈다 — `signContract` 를 직접 부른다. 그 함수가
+#   `careerStage` 를 리그 단계로 바꾸는 **그 길 그대로**라 우회가 아니다.
+# ⚠ 정산 소식은 생산부(`settleIncentives` + `incentiveSettlementTableMeta`)를
+#   그대로 불러 만든다 — 시즌 끝까지 안 돌고 **표시부만** 본다.
+launch
+resize 1366x768
+sleep 3000
+click-text 새 게임
+sleep 1500
+wait .slot-info
+click .slot-info
+sleep 3000
+fill .field input|정산확인
+sleep 800
+click .btn.next
+sleep 4000
+wait .region-item
+click .region-item
+sleep 2000
+wait .team-list-item
+click .team-list-item
+sleep 2000
+click .btn.next
+sleep 2500
+click .btn.next
+sleep 2500
+click .btn.start
+sleep 30000
+eval Promise.all([import('/src/shared/stores/game.ts'), import('/src/shared/utils/leagueScheduler.ts')]).then(([m, L]) => { const teamId = L.ALL_TEAMS_BY_LEAGUE.LEAGUE_KBL[0]; const inc = [{ kind: 'games', threshold: 25, bonus: 800 }, { kind: 'innings', threshold: 150, bonus: 1200 }, { kind: 'era', threshold: 3.5, bonus: 1500 }, { kind: 'award', awardId: 'golden', threshold: 1, bonus: 2000 }]; m.gameStore.signContract({ teamId, leagueId: 'LEAGUE_KBL', salary: 18000, durationYears: 3, remainingYears: 3, signingBonus: 5000, teamOptionYears: 0, playerOptionYears: 0, noTrade: false, status: 'active', incentives: inc }, { year: 2026, kind: 'new' }); return 'SIGNED ' + teamId; })
+sleep 3000
+click-text 나
+sleep 1500
+click-text 상태
+sleep 2500
+ss c56-01-contract-card-incentive
+eval JSON.stringify([...document.querySelectorAll('.info-row')].map(e => e.innerText.replace(/\s+/g, ' ')))
+eval Promise.all([import('/src/shared/utils/incentiveEngine.ts'), import('/src/shared/utils/dashboardMeta.ts'), import('/src/shared/stores/game.ts'), import('/src/shared/stores/master.ts')]).then(([e, d, g, s]) => { let ms; s.masterStore.subscribe(v => { ms = v; })(); let gs; g.gameStore.subscribe(v => { gs = v; })(); const st = e.settleIncentives({ seasonYear: 2028, role: 'SP', awardIds: [], incentives: gs.protagonist.contract.incentives, stats: { type: 'pitcher', g: 30, gs: 30, w: 14, l: 7, sv: 0, hd: 0, ip: 178 + 1 / 3, er: 61, h: 160, bb: 44, k: 152, hb: 5, era: 3.08, whip: 1.15 } }); const copy = ms.contractCopy.incentive; g.gameStore.addMessage({ id: 'msg-contract-incentive-2028-w52', category: 'system', sender: '에이전트', subject: copy.subject.split('{year}').join('2028'), preview: copy.total.split('{total}').join(String(st.total)), body: e.incentiveMessageBody(copy, st), metadata: d.incentiveSettlementTableMeta(st), createdAt: 'W52', readAt: null }); return 'MSG total=' + st.total + ' rows=' + st.rows.map(r => r.outcome).join(','); })
+sleep 2000
+click-text 소식
+sleep 2000
+click-text 인센티브 정산
+sleep 2000
+ss c56-02-incentive-news
+eval JSON.stringify({ table: [...document.querySelectorAll('.st table tr')].map(r => r.innerText.replace(/\s+/g, ' ')), foot: [...document.querySelectorAll('.st .foot')].map(e => e.innerText) })
+eval import('/src/shared/usecases/militaryDecision.ts').then(m => m.enlistProtagonist('sports', 50, true)).then(() => 'ENLISTED W50')
+sleep 25000
+advance 10 --auto
+sleep 2000
+click-text 병역
+sleep 2500
+ss c56-03-sangmu-discharge-week
+eval JSON.stringify(document.querySelector('.sports') ? document.querySelector('.sports').innerText.slice(0, 400) : 'NO .sports')
+
+# 🔴 **아래 계약 갈래는 안 돈다** (실측 3회 · 2026-09-04).
+#   `gameStore.signContract` 를 eval 로 부르면 **스토어 값은 바뀌는데**
+#   (`careerStage: "pro_kbl"` · `incentives: 4`) **화면이 고교로 남는다.**
+#   `save()` 도 `advance 1 --auto` 도 안 통했다 — 드라이버의 `import()` 가
+#   앱과 다른 모듈 실체를 잡는 것으로 보인다. 군 입대는 같은 방식으로 통한다.
+#   그래서 c56-01·c56-02 는 **안 찍었다.** 단위 9 는 검사 27건으로만 봤다.
