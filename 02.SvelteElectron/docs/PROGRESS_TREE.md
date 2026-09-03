@@ -158,6 +158,8 @@ B
 ├─ ✅ 병합됨 14커밋 (9f8ad99b5)
 ├─ 14. ✅ DEC_UNIV_JUNIOR_CARE 두 갈래가 다 동료 관계 +6 이라 선택이 의미가 없었다 —
 │        「내 훈련을 한다」 에서 관계 +6 을 뺐다(새 숫자 0 · 힌트도 같이)
+├─ 12. ✅ **1.1 B① 보직 선택 문안 데이터** role_choice.json (37205bb9c · 조사 굴절형 roleAs/roleObj · 본문에 감독 이름 없음)
+├─ 13. ✅ **1.1 B③ 계약 협상·인센티브 정산 문안 데이터** contract_terms.json (43d6cf762 · 합쇼체 · ❓ role_choice 평서체와 통일할지 사용자)
 ├─ 11. ✅ **계약 조건 기획안 + 신규 계약 페이지 시안** — f4bcb0498 · 병합 230e30d2b · 전제 반만 맞음(FA 는 엔진이 계약금·옵션·노트레이드를 이미 냄 · 재계약만 금액·기간) · 신규는 인센티브 하나 · 죽은 필드 incentives · §8 아홉 사용자 확정(09-03) → 확정본 2b593ff76 병합 · 시안 재작업(+추가 · 부제 제거) · 역제안 횟수 = 성적(calcSeasonRating)+구단주 관계 · 남은 셋 사용자 확정 → ad098ba23 병합 · **B-11 닫힘**(구현 1.1) · 못 잴 축 = ① 미달(사용자 확정 · 보직은 주인공이 고르므로) · 9909af5b6 병합 · ⚠ 1.1 구현 순서: 보직 선택(C-14) → 인센티브 정산 · PLAN_CONTRACT_TERMS.md · docs/mock/contract-page-mock.html · §8 사용자 질문 목록 → A 가 전달
 └─ 🛑 동적 치환 23종 · 고교 사기 한 단 더
 ```
@@ -189,7 +191,7 @@ C
 ├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 ├─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
-└─ 14. ✅ **보직 추천·선택 기획안**(Opus · bb340b2f8 · 발견 넷 더: 로테이션 수 규칙/Rust 불일치 · 세부 보직이 등판에 무영향 · starterSlot 호출 0 · 복무 중 배정 없음 · §8 열둘 사용자 확정(09-03) → ✅ 후속 512e72f90: 확정 반영 · 리그별 묻는 주(고교 W6·대학 W4·독립 W9·프로 W1·2군 W4) · 시안 = NewsPage 인라인 선택 · 새 pending 타입 불필요(message) · 남은 결정 둘: 고교 마무리(제안 안 둔다) · 상무에 묻나(제안 안 묻는다) → B 반영 ✅ de18b377d → **C 최종 5e14b29ee**: §8 열넷 전부 확정(고교 마무리 둔다 · 엔진 명세 §6-1 · 상무 안 묻음 · ahead=0 갈래 · 소식 id `msg-role-{year}-{teamId}-w{week}`) · **C-14 닫힘**(구현 1.1) · 코드 결함 둘 발견: 고교 105구가 주인공 경기에만 안 걸림(matchSimulateToEntry leagueId 누락 · MainPage 234 · runAutoAdvance 95) · 고교 마무리 의무 휴식 없음) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
+└─ 14. ✅ **보직 추천·선택 기획안**(Opus · bb340b2f8 · 발견 넷 더: 로테이션 수 규칙/Rust 불일치 · 세부 보직이 등판에 무영향 · starterSlot 호출 0 · 복무 중 배정 없음 · §8 열둘 사용자 확정(09-03) → ✅ 후속 512e72f90: 확정 반영 · 리그별 묻는 주(고교 W6·대학 W4·독립 W9·프로 W1·2군 W4) · 시안 = NewsPage 인라인 선택 · 새 pending 타입 불필요(message) · 남은 결정 둘: 고교 마무리(제안 안 둔다) · 상무에 묻나(제안 안 묻는다) → B 반영 ✅ de18b377d → **C 최종 5e14b29ee**: §8 열넷 전부 확정(고교 마무리 둔다 · 엔진 명세 §6-1 · 상무 안 묻음 · ahead=0 갈래 · 소식 id `msg-role-{year}-{teamId}-w{week}`) · **C-14 닫힘**(구현 1.1) · 코드 결함 둘: ✅ 고교 105구 leagueId 누락 → A 고침(사용자 지시 · 실측 전후 분포 동일 · 밸런스 변화 없음) · ⬜ 고교 마무리 의무 휴식 → 1.1 A②) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
 ```
 
 ---
