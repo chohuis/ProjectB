@@ -113,6 +113,21 @@ export interface TableCopy {
   itemValue: { item: string; value: string };
   /** 변동 열 머리글 */
   deltaLabel: string;
+  /**
+   * 「등판 없음」 — 내 기록(`myLine`) 칸이 빈 행에 찍는다 (대회 전적·대표팀 전적).
+   *
+   * ⚠ **`—` 와 뜻이 다르다.** 빈 칸은 「값이 없다」이고 이건 「안 나갔다」다.
+   *   경기는 있었는데 내가 안 던진 것이라 그 자리를 비워 두면 왜 비었는지
+   *   화면에 안 남는다. 없으면 `emptyCell` 로 떨어진다.
+   */
+  noAppearance: string;
+  /**
+   * 「{weeks}주간 재등록 불가」 — 엔트리 말소 표의 비고(`note`) 칸 틀.
+   *
+   * ⚠ **생산부는 주 수만 싣는다.** 문장을 소식에 굳혀 보내면 화면이 바뀔 때
+   *   지난 소식만 옛 문장으로 남는다 — 그게 이 대시보드화가 고치는 형태다.
+   */
+  lockNote: string;
 }
 
 /**
@@ -138,6 +153,8 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
     emptyCell,
     itemValue,
     deltaLabel: optional.delta ?? "",
+    noAppearance: typeof b?.noAppearance === "string" ? b.noAppearance : "",
+    lockNote: typeof b?.lockNote === "string" ? b.lockNote : "",
   };
 }
 
@@ -148,4 +165,12 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
  */
 export function fillCount(tmpl: string, n: number): string {
   return tmpl.split("{n}").join(String(n));
+}
+
+/**
+ * 이름 있는 자리표 하나를 채운다 (`{weeks}`). 규칙은 `fillCount` 와 같다 —
+ * 정규식을 안 쓰고, 값이 없는 자리표는 그대로 남긴다.
+ */
+export function fillVar(tmpl: string, name: string, v: string | number): string {
+  return tmpl.split(`{${name}}`).join(String(v));
 }

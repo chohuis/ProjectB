@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TableMetadata } from "../../../shared/types/main";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamMap, entityMap } from "../../../shared/stores/master";
   import { tableCopy } from "../../../shared/utils/dashboardCopy";
   import { buildTableView, deltaText } from "../../../shared/utils/dashboardView";
 
@@ -32,11 +32,23 @@
 
   $: copy = tableCopy($masterStore.dashboardLabels, metadata.kind);
   /**
+   * id 열을 이름으로 — 트레이드의 구단, 말소·웨이버의 선수가 그 자리다.
+   *
+   * 🔴 **이름을 소식에 굳혀 보내면 안 된다.** `teamMap`·`entityMap` 은
+   *    표시 언어를 물고 있는 파생 스토어다 — 만드는 쪽이 한글 이름을 실으면
+   *    영어로 바꿔도 **그 소식만 한글로 남는다**. 그래서 생산부는 id 를 싣고
+   *    바꾸는 자리는 화면 하나다.
+   */
+  $: names = {
+    team:   (id: string) => $teamMap.get(id)?.name,
+    person: (id: string) => $entityMap.get(id)?.name,
+  };
+  /**
    * 표가 둘이면 둘 다 이름을 단다 — 계약 완료가 「계약 조건」 아래
    * 「인센티브」를 다는 자리다. 하나뿐이면 소식 제목이 이미 그 이름이라
    * 위에 한 줄 더 두면 부제가 된다.
    */
-  $: view = buildTableView(metadata, copy, titled || !!metadata.extra);
+  $: view = buildTableView(metadata, copy, titled || !!metadata.extra, names);
 </script>
 
 <div class="st">
