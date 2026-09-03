@@ -3,7 +3,9 @@
   import { rankBandOf } from "../../../shared/types/militaryLife";
   import type { MessageItem } from "../../../shared/types/main";
   import type { MilitarySportsCopy } from "../../../shared/utils/militarySportsCopy";
-  import { fillSportsCopy, sportsCalendar, militaryNews } from "../../../shared/utils/militarySportsCopy";
+  import {
+    fillSportsCopy, sportsCalendar, militaryNews, dischargeWeekOf,
+  } from "../../../shared/utils/militarySportsCopy";
   import { gaugeLabel } from "../../../shared/utils/baseballFormat";
   import { RANK_LABELS } from "./militaryLabels";
 
@@ -34,6 +36,17 @@
   /** 총 복무 주 — 정본은 rules.json 이고 없으면 호출부가 SERVICE_WEEKS 를 준다 */
   export let total: number;
   export let dischargeYear: number | null = null;
+  /**
+   * 입대 주차 (`protagonist.militaryEnlistWeek`) — **전역 주차를 여기서 잰다.**
+   *
+   * 🔴 전역은 복무 주가 차는 주고(`militaryServiceWeeks >= 100`) 그 주차는
+   *    입대 주에 따라 달라진다. 옛 화면 둘이 「W48」을 박아 뒀는데 기본
+   *    입대 주(W50)면 **W46** 이다.
+   *
+   * ⚠ 옛 세이브엔 없다(`null`). 그때는 연도만 그린다 — 틀린 주차를
+   *   지어내는 것보다 안 적는 게 낫다.
+   */
+  export let enlistWeek: number | null = null;
   export let condition: number;
   export let fatigue: number;
   export let morale: number;
@@ -44,6 +57,7 @@
    */
   const NEWS_MAX = 12;
 
+  $: dischargeWeek = dischargeWeekOf(enlistWeek, total);
   $: remaining = Math.max(0, total - week);
   $: pct = Math.max(0, Math.min(100, Math.round((week / total) * 100)));
   $: band = rules ? rankBandOf(week, rules.rankBandWeeks) : null;
@@ -76,7 +90,14 @@
       {/if}
       <div class="of">{fillSportsCopy(copy.discharge.progress, { total, done: week })}</div>
       {#if dischargeYear}
-        <div class="of">{copy.discharge.dateLead} — {fillSportsCopy(copy.discharge.dateForm, { year: dischargeYear })}</div>
+        <div class="of">
+          {copy.discharge.dateLead}
+          {#if dischargeWeek !== null}
+            {fillSportsCopy(copy.discharge.dateForm, { year: dischargeYear, week: dischargeWeek })}
+          {:else}
+            {fillSportsCopy(copy.discharge.dateFormYear, { year: dischargeYear })}
+          {/if}
+        </div>
       {/if}
     </div>
     <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={week}

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  parseMilitarySportsCopy, fillSportsCopy, sportsCalendar, militaryNews,
+  parseMilitarySportsCopy, fillSportsCopy, sportsCalendar, militaryNews, dischargeWeekOf,
   MILITARY_MSG_PREFIX,
 } from "../militarySportsCopy";
 import type { MilitaryCalendarEntry } from "../../types/militaryLife";
@@ -119,5 +119,47 @@ describe("부대 소식 고르기", () => {
 
   it("군 소식이 없으면 빈 목록이다", () => {
     expect(militaryNews([{ id: "msg-news-1" }])).toHaveLength(0);
+  });
+});
+
+// ── 전역 주차 (C 단위 9 ④) ─────────────────────────────────────
+
+describe("전역 주차 — 입대 주가 정한다", () => {
+  /**
+   * 🔴 **화면 셋이 「W48」을 박아 두고 있었다.** 전역 판정은 주차 고정이 아니라
+   *    `militaryServiceWeeks >= SERVICE_WEEKS`(100) 하나고, 그래서 **입대 주가
+   *    인자다** — 기본 입대 주(W50)면 100주 뒤는 **W46** 이다 (B-28 실측).
+   */
+  it("기본 입대 주 W50 이면 W46 이다", () => {
+    expect(dischargeWeekOf(50, 100)).toBe(46);
+  });
+
+  it("입대 주가 바뀌면 전역 주차도 바뀐다", () => {
+    expect(dischargeWeekOf(1, 100)).toBe(49);
+    expect(dischargeWeekOf(4, 100)).toBe(52);
+    expect(dischargeWeekOf(5, 100)).toBe(1);
+  });
+
+  /** ⚠ 입대 주를 넣는 호출부 둘이 누적 주차와 시즌 안 주차를 섞어 쓴다 */
+  it("누적 주차가 와도 같은 답이다", () => {
+    expect(dischargeWeekOf(50 + 52 * 3, 100)).toBe(dischargeWeekOf(50, 100));
+  });
+
+  /**
+   * ⚠ **옛 세이브엔 입대 주가 없다.** 그때는 `null` 이고 화면이 연도만
+   *   그린다 — 「W48」을 지어내면 틀린 날짜가 화면에 선다.
+   */
+  it("입대 주를 모르면 null 이다 — 주차를 지어내지 않는다", () => {
+    expect(dischargeWeekOf(null, 100)).toBeNull();
+    expect(dischargeWeekOf(undefined, 100)).toBeNull();
+    expect(dischargeWeekOf(50, 0)).toBeNull();
+  });
+
+  it("문안이 두 틀을 갖는다 — 주차를 아는 것과 모르는 것", () => {
+    const copy = parseMilitarySportsCopy(RAW)!;
+    expect(fillSportsCopy(copy.discharge.dateForm, { year: 2028, week: 46 })).toBe("2028년 W46");
+    expect(fillSportsCopy(copy.discharge.dateFormYear, { year: 2028 })).toBe("2028년");
+    // ⚠ 자리표가 남은 문장이 화면에 서면 안 된다
+    expect(copy.discharge.dateFormYear).not.toContain("{week}");
   });
 });

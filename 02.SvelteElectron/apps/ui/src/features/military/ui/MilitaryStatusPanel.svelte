@@ -2,6 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { gaugeLabel } from "../../../shared/utils/baseballFormat";
   import { SERVICE_WEEKS } from "../../../shared/usecases/militaryDecision";
+  import { dischargeWeekOf } from "../../../shared/utils/militarySportsCopy";
 
   // 상무 갈래의 병역 탭 머리 (§39 · 현역은 MilitaryHead). 복무 주 정본은 전역 판정과 같은 SERVICE_WEEKS 다
   const TOTAL_WEEKS = SERVICE_WEEKS;
@@ -11,6 +12,7 @@
   $: progress = Math.round((p.militaryServiceWeeks / TOTAL_WEEKS) * 100);
   $: unitLabel = p.sportsUnitSelected ? "체육부대" : "일반부대";
   $: hasContract = !!p.contract;
+  $: dischargeWeek = dischargeWeekOf(p.militaryEnlistWeek, TOTAL_WEEKS);
 
   $: rank = (() => {
     const w = p.militaryServiceWeeks;
@@ -39,7 +41,9 @@
     <p>피로도: <strong>{gaugeLabel(p.fatigue)}</strong></p>
     <p>사기: <strong>{gaugeLabel(p.morale)}</strong></p>
     {#if p.militaryDischargeYear}
-      <p>전역 예정: <strong>{p.militaryDischargeYear}년 W48</strong></p>
+      <!-- ⚠ 「W48」이 박혀 있었다. 전역은 복무 100주가 차는 주라 입대 주에
+           따라 달라진다 — 기본 입대 주(W50)면 W46 이다 -->
+      <p>전역 예정: <strong>{p.militaryDischargeYear}년{dischargeWeek !== null ? ` W${dischargeWeek}` : ""}</strong></p>
     {/if}
   </div>
   <div class="bar">
