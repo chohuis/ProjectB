@@ -167,32 +167,43 @@ career_stage university · fatigue_gte 62 · condition_lte 55 · injured false
 
 ## 4. D — 지운다 (1종)
 
-### 🔴 `EVT_UNIV_Y4_W50_YEAR_WRAP` — 조건도 템플릿도 완전히 같은 짝이 있다
+### 🔴 `EVT_UNIV_Y4_W50_YEAR_WRAP` — 조건도 템플릿도 완전히 같은 짝이 있었다
 
 ```
-EVT_UNIV_Y4_W50_CAREER_GATE   pri 960   MSG_UNIV_YEAR_WRAP   dec null
-EVT_UNIV_Y4_W50_YEAR_WRAP     pri 890   MSG_UNIV_YEAR_WRAP   dec null
+EVT_UNIV_Y4_W50_CAREER_GATE   pri 960   MSG_UNIV_YEAR_WRAP   dec null   type: mandatory
+EVT_UNIV_Y4_W50_YEAR_WRAP     pri 890   MSG_UNIV_YEAR_WRAP   dec null   type: mandatory
 
 조건 (둘이 글자까지 같다)
   career_stage university · week_eq 27 · num_gte school.universityWeek 157
 ```
 
-조건부는 **주당 하나만** 발동한다(우선순위 내림차순 첫 번째). 조건이 같고
-우선순위가 낮으므로 **890 은 영원히 안 뜬다.** 게다가 띄워도 **같은 본문**이라
-같은 소식이 두 번 적힌 것이다.
+## 🔴 정정 (2026-09-03 · B-24 에서 잡았다) — 「영원히 안 뜬다」가 틀렸다
 
-⚠ **`test:events` [3] 이 이걸 못 잡는다.** 그 검사는 「조건이 같은데 우선순위만
-낮은 것」을 죽음으로 세는데, 죽음 판정에 `b.oncePolicy === "repeatable"` 이
-붙어 있다. 둘 다 `once_per_stage_year` 라 **경합 90쌍의 참고 줄로만** 흘러갔다.
-검사의 뜻(같은 이벤트를 두 번 적었다)에는 맞는데 **조건이 걸러 냈다.**
+처음에 **「조건부는 주당 하나라 890 은 영원히 안 뜬다」**고 적었다. **둘 다
+`mandatory` 다.** 필수 갈래는 우선순위로 하나를 고르는 게 아니라 **조건을
+통과한 것을 전부 띄운다**:
 
-| 무엇을 지우나 | 판단 |
-|---|---|
-| `EVT_UNIV_Y4_W50_YEAR_WRAP` (890) | 안 뜨는 쪽이다 |
-| ⚠ 다만 이름은 **이쪽이 템플릿과 맞는다**(`MSG_UNIV_YEAR_WRAP`) | 960 쪽 이름(`CAREER_GATE`)이 본문과 안 맞는 게 진짜 문제일 수 있다 |
+```
+eventEngine.ts:314   for (const rule of mandatory) tryEmit(rule, "mandatory");
+eventEngine.ts:326   conditional 만 「우선순위 내림차순 · 1개」다
+```
 
-🔴 **안 지웠다.** 어느 쪽을 남길지는 「4학년 W27 에 뜨는 게 진로 관문인가
-한 해 마무리인가」라는 뜻의 문제다 — **OP 에 올린다**(§7 ②).
+**그래서 890 은 안 뜨는 게 아니라, 4학년 W27 에 같은 본문이 두 통 온다.**
+결함이 더 크지 잘못 본 쪽이 아니다 — 조치(하나를 지운다)는 그대로다.
+
+⚠ **`test:events` [3] 이 이걸 못 잡는 이유도 하나가 아니라 둘이었다.**
+① 그 검사는 `type === "conditional"` 만 본다 — **필수는 아예 안 본다.**
+② 죽음 판정에 `b.oncePolicy === "repeatable"` 이 붙어 있다.
+잣대가 필수 갈래의 중복을 못 보는 자리는 **아직 열려 있다.**
+
+## ✅ 처리 — 사용자 확정대로 지웠다 (B-24 · 2026-09-03)
+
+```
+남긴다   EVT_UNIV_Y4_W50_CAREER_GATE (960 · 진로 관문)
+지웠다   EVT_UNIV_Y4_W50_YEAR_WRAP   (890)      → events 594 → 593
+```
+
+`MSG_UNIV_YEAR_WRAP` 은 960 이 계속 쓰므로 **템플릿은 고아가 안 된다.**
 
 ---
 
@@ -240,8 +251,8 @@ season_wins_lte · season_era_gte · season_ip_lte · season_k_lte
 
 | # | 질문 | 왜 값 문제가 아닌가 |
 |---|---|---|
-| 1 | **학습 강도를 이벤트로 고르게 하나.** `school.weeklyStudyMode` 가 `eventPaths` 에 허용 경로로 있는데 **쓰는 선택지가 0건**이고, 바꾸는 길이 화면 조작 하나뿐이다. 선택지를 하나 만들면 GPA 가 2.48 밴드 밖으로 나가고 §1-2 다섯이 저절로 열린다 | 문턱을 내려도 **밴드 안이면 여전히 안 뜬다.** 값으로 못 푼다 |
-| 2 | **`EVT_UNIV_Y4_W50_*` 둘 중 어느 쪽을 남기나.** 4학년 W27 이 진로 관문인가 한 해 마무리인가 | 뜻의 문제다. 지금은 본문이 하나뿐이라 어느 쪽이든 같은 글이 뜬다 |
+| 1 | ✅ **확정: 한다.** B-24 에서 `EVT_UNIV_STUDY_MODE_MID`·`_FINAL` 둘을 넣었다. 다만 **지속 모드가 아니라 학기 품질 한 번 밀기**다(§8 참고) — **학습 강도를 이벤트로 고르게 하나.** `school.weeklyStudyMode` 가 `eventPaths` 에 허용 경로로 있는데 **쓰는 선택지가 0건**이고, 바꾸는 길이 화면 조작 하나뿐이다. 선택지를 하나 만들면 GPA 가 2.48 밴드 밖으로 나가고 §1-2 다섯이 저절로 열린다 | 문턱을 내려도 **밴드 안이면 여전히 안 뜬다.** 값으로 못 푼다 |
+| 2 | ~~`EVT_UNIV_Y4_W50_*` 둘 중 어느 쪽을 남기나~~ → ✅ **확정: 960(진로 관문)을 남기고 890 을 지운다.** B-24 에서 지웠다 | 뜻의 문제였다 |
 
 ---
 
@@ -250,3 +261,6 @@ season_wins_lte · season_era_gte · season_ip_lte · season_k_lte
 `BALANCE_BACKLOG.md` §7 에 한 줄로 적었다 — 고교 사기 다섯 · 대학 학점 셋 ·
 `money_lte 200 → 1000` · `INJURY_SCARE_UNIV` 두 문턱. **전부 제안값이고
 사용자 확정 전이다.**
+
+B-24 에서 넣은 새 값 둘도 같은 §7 에 있다 — 학습 선택지의 `studyQualityDelta`
+±1.2 와 고교 부진 넷의 문턱(`era ≥ 5.0` · `wins ≤ 1` · `ip ≤ 15` · `k ≤ 12`).

@@ -1,0 +1,27 @@
+{
+  "id": "EVT_HS_SLUMP_NO_INNINGS",
+  "type": "conditional",
+  "category": "team",
+  "priority": 702,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "season_ip_lte",
+      "value": 15
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SLUMP_NO_INNINGS",
+  "decisionTemplateId": "DEC_HS_SLUMP_NO_INNINGS"
+}
