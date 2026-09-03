@@ -2869,7 +2869,7 @@
     {
       "id": "MSG_UNIV_EARLY_DRAFT",
       "category": "coach",
-      "subject": "얼리 드래프트",
+      "subject": "얼리 드래프트 신청",
       "body": "저학년 드래프트 신청을 고민할 시기입니다.\n\n지금 나가면 학위는 포기해야 합니다.",
       "decisionTemplateId": "DEC_UNIV_EARLY_DRAFT"
     },
@@ -3636,7 +3636,7 @@
     },
     {
       "id": "MSG_UNIV_Y3_EARLY_DRAFT",
-      "subject": "얼리 드래프트",
+      "subject": "얼리 드래프트 자격",
       "category": "career",
       "body": "3학년도 지명 대상이 될 수 있다는 이야기가 나왔습니다.\n\n나가면 한 해가 빨라지고, 남으면 한 해가 더 있습니다."
     },

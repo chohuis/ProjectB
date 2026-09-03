@@ -16,6 +16,11 @@
     {
       "type": "pitching_ovr_gte",
       "value": 65
+    },
+    {
+      "type": "num_lte",
+      "path": "school.universityWeek",
+      "value": 156
     }
   ],
   "messageTemplateId": "MSG_UNIV_EARLY_DRAFT",
