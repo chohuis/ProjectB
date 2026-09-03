@@ -33,7 +33,10 @@ export function buildMilitaryResultMessage(
   const isSportsUnit = g.protagonist.militaryUnit === "sports";
   const week = s.currentWeek;
 
-  const lines = [`「${choice.label}」을 골랐다.`];
+  // 🔴 **조사를 붙이지 않는다** (B-28 실측 — 선택지 176개 중 172개가 무받침이라
+  //    「…를 골랐다」가 맞는 자리였다). 자리표시자 뒤에 조사를 두면 받침을
+  //    코드가 봐야 하고, 그건 데이터가 늘 때마다 틀리는 형태다. 체언 종지다.
+  const lines = [`선택: ${choice.label}`];
   if (choice.effectHint) lines.push(choice.effectHint);
 
   return {
@@ -44,7 +47,8 @@ export function buildMilitaryResultMessage(
     id: `msg-mil-res-${eventId}-${s.seasonYear}-w${week}`,
     category: "system",
     sender: isSportsUnit ? "체육부대" : "군 복무",
-    subject: `${title} — 결과`,
+    // ⚠ 대시를 안 쓴다 (부제·대시 금지 규칙 · B-28)
+    subject: `${title} 결과`,
     preview: lines[0],
     body: lines.join("\n"),
     createdAt: `W${week}`,

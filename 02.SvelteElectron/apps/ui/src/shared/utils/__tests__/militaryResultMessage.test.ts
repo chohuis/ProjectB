@@ -28,7 +28,7 @@ describe("군 이벤트 결과 소식", () => {
   it("군 이벤트면 한 통을 만든다", () => {
     const m = buildMilitaryResultMessage("MIL_DAY_NIGHT_DUTY", "야간 근무", choice);
     expect(m).not.toBeNull();
-    expect(m!.subject).toBe("야간 근무 — 결과");
+    expect(m!.subject).toBe("야간 근무 결과");
     expect(m!.body).toContain("끝까지 듣는다");
     expect(m!.body).toContain("관계 +8, 피로 +2");
   });
@@ -64,6 +64,25 @@ describe("군 이벤트 결과 소식", () => {
 
   it("힌트가 없으면 고른 것만 남긴다", () => {
     const m = buildMilitaryResultMessage("MIL_DAY_PX", "PX", { id: "a", label: "간다" })!;
-    expect(m.body).toBe("「간다」을 골랐다.");
+    expect(m.body).toBe("선택: 간다");
+  });
+
+  /**
+   * 🔴 **자리표시자 뒤에 조사를 두지 않는다** (B-28 실측 — 선택지 라벨 176개
+   *    중 172개가 무받침이라 「을 골랐다」가 172자리에서 틀렸다).
+   *
+   * ⚠ 받침을 코드가 보게 만들면 데이터가 늘 때마다 틀린다. 체언 종지다.
+   */
+  it("이름 뒤에 조사를 안 붙인다", () => {
+    for (const label of ["간다", "새 폼에 도전", "멘탈 코치에게 상담"]) {
+      const m = buildMilitaryResultMessage("MIL_DAY_PX", "PX", { id: "a", label })!;
+      expect(m.body, `${label} 뒤에 조사가 붙었다`).toBe(`선택: ${label}`);
+    }
+  });
+
+  /** ⚠ 부제·대시 금지 — 제목에 대시를 안 쓴다 */
+  it("제목에 대시가 없다", () => {
+    const m = buildMilitaryResultMessage("MIL_DAY_PX", "PX", choice)!;
+    expect(m.subject).toBe("PX 결과");
   });
 });

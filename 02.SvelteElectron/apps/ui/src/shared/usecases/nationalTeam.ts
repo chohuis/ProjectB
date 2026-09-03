@@ -291,7 +291,9 @@ function emitTournamentResultNews(
     subject: `${year} ${def.name} — ${medalLine}`,
     preview: lead + (res.exemption ? " · 병역 특례 확정" : ""),
     body: [
-      `${year} ${def.name}이 막을 내렸습니다.`,
+      // 🔴 **조사를 붙이지 않는다** (B-28 — 대회 이름 일곱이 전부 무받침이라
+      //    「이」가 일곱 다 틀렸다). 자리표시자를 문장 끝에 둔다
+      `${year} ${def.name}. 대회가 끝났습니다.`,
       "",
       `최종 성적: ${medalLine}`,
       lead,

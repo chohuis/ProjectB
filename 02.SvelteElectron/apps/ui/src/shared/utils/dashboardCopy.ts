@@ -177,6 +177,15 @@ export interface TableCopy {
   kindLabel: Record<string, string>;
   /** 「국제」 — 대회 전적에서 국제대회 행에 붙는 짧은 표시 */
   intlMark: string;
+  /**
+   * 결말(`met`·`missed`·`unmeasurable`) → 그 말. 인센티브 정산 표의 「결과」
+   * 칸이 그 자리다 (`table.incentiveSettlement.outcomeLabel`).
+   *
+   * ⚠ **생산부는 낱말만 싣는다.** 「달성」을 소식에 굳혀 보내면 문안을 고쳐도
+   *   지난 소식만 옛 말로 남는다 — `kindLabel` 이 먼저 그은 선이다.
+   * ⚠ 없는 결말은 **키를 그대로** 쓴다. 빈 칸이면 왜 비었는지 안 남는다.
+   */
+  outcomeLabel: Record<string, string>;
 }
 
 /**
@@ -192,6 +201,7 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
   const itemValue = labels?.common.itemValue ?? { item: "", value: "" };
   const optional = b?.optionalColumns ?? {};
   const kindRaw = b?.kindLabel;
+  const outcomeRaw = b?.outcomeLabel;
   return {
     title: b?.title ?? "",
     columns: b?.columns ?? {},
@@ -207,6 +217,7 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
     lockNote: typeof b?.lockNote === "string" ? b.lockNote : "",
     kindLabel: isStringMap(kindRaw) ? kindRaw : {},
     intlMark: typeof b?.intlMark === "string" ? b.intlMark : "",
+    outcomeLabel: isStringMap(outcomeRaw) ? outcomeRaw : {},
   };
 }
 

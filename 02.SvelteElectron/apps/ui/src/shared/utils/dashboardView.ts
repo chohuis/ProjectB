@@ -170,6 +170,10 @@ export function buildTableRows(
       } else if (c.key === "note" && copy?.lockNote && isNumericCell(raw) && raw !== "") {
         // 말소 비고 — 생산부는 주 수만 싣고 문장은 문안이 갖는다
         text = fillVar(copy.lockNote, "weeks", raw as number);
+      } else if (c.key === "outcome" && typeof raw === "string" && raw !== ""
+                 && copy && Object.keys(copy.outcomeLabel).length > 0) {
+        // 결말은 낱말로 온다 — 「달성」·「미달」은 문안이 갖는다 (인센티브 정산)
+        text = copy.outcomeLabel[raw] ?? raw;
       } else {
         text = cellText(raw, empty);
       }
@@ -473,8 +477,21 @@ export function buildTableView(
     rows,
     deltaLabel: md.deltaKey ? (copy.deltaLabel || copy.optionalColumns.delta || "") : null,
     empty: copy.empty,
-    footnote: md.footnote ?? copy.footnote,
+    footnote: md.footnote ?? fillFootnote(copy.footnote, md.footnoteVars),
   };
+}
+
+/**
+ * 각주 틀을 채운다 — 「합계 +{total}만원」이 그 자리다.
+ *
+ * ⚠ **자리표가 남으면 각주를 안 그린다.** 값이 안 온 채로 `{total}` 이 화면에
+ *   서면 문안이 깨진 것으로 보인다 — 없는 줄로 두는 게 낫다.
+ */
+function fillFootnote(tmpl: string, vars?: Record<string, string | number>): string {
+  if (!tmpl) return "";
+  let out = tmpl;
+  for (const [k, v] of Object.entries(vars ?? {})) out = fillVar(out, k, v);
+  return out.includes("{") ? "" : out;
 }
 
 /**

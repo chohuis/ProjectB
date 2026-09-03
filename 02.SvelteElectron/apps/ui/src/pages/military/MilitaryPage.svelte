@@ -76,6 +76,7 @@
       week={p.militaryServiceWeeks}
       total={rules?.serviceWeeks ?? SERVICE_WEEKS}
       dischargeYear={p.militaryDischargeYear ?? null}
+      enlistWeek={p.militaryEnlistWeek ?? null}
       condition={p.condition}
       fatigue={p.fatigue}
       morale={p.morale}
