@@ -745,7 +745,8 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       sender: "리그 사무국",
       subject: `트레이드 성사: ${team1Name} ↔ ${team2Name}`,
       preview: `${p1Name} ↔ ${p2Name}`,
-      body: `[${team1Name}] ${p1Name} → [${team2Name}]\n[${team2Name}] ${p2Name} → [${team1Name}]\n사유: ${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason}`,
+      // 오간 두 줄과 사유는 **표와 각주가 든다** — 본문은 무슨 일인지 한 줄만 (OP ⑤)
+      body: `트레이드 성사: ${team1Name} ↔ ${team2Name}`,
       createdAt: `W${weekInYear}`,
       readAt: null,
       // 오가는 쪽이 두 열이다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
@@ -1067,7 +1068,11 @@ export async function processProTeamCallupCalldown(
         sender: "구단 사무국",
         subject: `2군 등록말소 ${names.length}명`,
         preview: `${names.slice(0, 2).join(", ")}${names.length > 2 ? ` 외 ${names.length - 2}명` : ""}`,
-        body: `${names.join("\n")}\n\n${lockWeeks}주간 1군 재등록이 불가하다.`,
+        // 🔴 **이름은 본문에서 뺐다** (2026-09-04 · OP ⑤). 표가 그 목록을 그대로
+        //   들고 오는데 본문이 또 적으면 같은 말이 두 번 뜬다 — 표시부가 본문과
+        //   패널을 **같이** 그리게 됐다(C 49c337788). 남기는 한 줄은 표에 없는
+        //   말이다(재등록 제한 · 비고 칸은 문안이 채운다)
+        body: `${lockWeeks}주간 1군 재등록이 불가하다.`,
         createdAt: `W${weekNum}`,
         readAt: null,
         // 사람마다 열이 같다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
@@ -1688,13 +1693,9 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                 ? (m.entities.find((e) => e.id === sg.compensationNpcId)?.name
                    ?? sg.compensationNpcId)
                 : null;
-              const lines = [
-                `■ ${sg.name} (${sg.grade}등급) ${gave ? "이적" : "영입"}`,
-                "",
-                compName ? `보상선수  ${compName}` : "보상선수  없음(보상금만)",
-                sg.compensationMoney > 0
-                  ? `보상금    ${sg.compensationMoney.toLocaleString()}만원` : "",
-              ].filter(Boolean);
+              // 보상선수·보상금은 **표가 든다**(`table.faComp`) — 본문은 누가
+              // 어디로 갔는지 한 줄이다 (OP ⑤)
+              const lines = [`■ ${sg.name} (${sg.grade}등급) ${gave ? "이적" : "영입"}`];
               gameStore.addMessage({
                 id: `msg-facomp-${s.seasonYear}-${sg.npcId}`,
                 category: "system",

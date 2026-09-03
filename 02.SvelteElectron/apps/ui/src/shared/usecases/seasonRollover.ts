@@ -230,8 +230,8 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
           sender: "구단 사무국",
           subject: `FA 잔류 ${resigned.length}명`,
           preview: `${resigned[0]}${resigned.length > 1 ? ` 외 ${resigned.length - 1}명` : ""} 잔류`,
-          body: [`■ 시장에서 계약처를 못 찾아 원소속으로 돌아왔다`, "",
-            ...resigned.map((x) => `   ${x}`)].join("\n"),
+          // 이름은 표가 든다 — 본문은 왜 돌아왔는지 한 줄이다 (OP ⑤)
+          body: "■ 시장에서 계약처를 못 찾아 원소속으로 돌아왔다",
           createdAt: `W1`,
           readAt: null,
           // 재계약 조건 표가 아니라 **이름 목록**이다 (B-35 · table.resign)
@@ -242,7 +242,8 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
 
     if (inbound.length > 0) {
       const lines: string[] = [];
-      lines.push(`■ 웨이버 영입 ${inbound.length}명`, ...inbound.map((x) => `   ${x}`));
+      // 이름은 **표가 든다** — 본문은 무슨 소식인지 한 줄이다 (OP ⑤)
+      lines.push(`■ 웨이버 영입 ${inbound.length}명`);
       gameStore.addMessage({
         id: `msg-waiver-${now}-${myTeam}`,
         category: "system",

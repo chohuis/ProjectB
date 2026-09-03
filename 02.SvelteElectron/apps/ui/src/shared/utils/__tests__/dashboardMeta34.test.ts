@@ -224,10 +224,29 @@ describe("배선과 본문", () => {
     expect(read(SRC_WEEK).includes('rankListMeta("tourAward"')).toBe(true);
   });
 
-  it("본문 문자열이 한 줄도 안 없어졌다", () => {
+  /**
+   * 🔴 **본문을 줄인 자리 다섯** (2026-09-04 · OP ⑤). 표시부가 본문과 패널을
+   *    같이 그리게 되자(C 49c337788) 값이 두 번 보였다 — 값은 패널이 들고
+   *    본문은 무슨 소식인지 한 줄만 남긴다. **줄인 것은 값 줄뿐이고 새 말을
+   *    짓지 않았다** — 남은 한 줄은 원래 본문에 있던 문장이다.
+   */
+  it("값만 있던 본문은 한 줄로 줄었다 — 새 말은 안 지었다", () => {
+    const market = read(SRC_MARKET);
+    const roll = read(SRC_ROLL);
+    // 값 줄이 빠졌다
+    expect(market.includes("보상선수  없음(보상금만)")).toBe(false);
+    expect(market.includes("${names.join")).toBe(false);
+    expect(roll.includes("...resigned.map((x) => `   ${x}`)")).toBe(false);
+    // 남은 한 줄은 원래 있던 문장이다
+    expect(market.includes("주간 1군 재등록이 불가하다.")).toBe(true);
+    expect(market.includes("트레이드 성사: ")).toBe(true);
+    expect(roll.includes("시장에서 계약처를 못 찾아 원소속으로 돌아왔다")).toBe(true);
+    expect(roll.includes("■ 웨이버 영입 ")).toBe(true);
+  });
+
+  it("안내가 든 본문은 그대로다", () => {
     expect(read(SRC_ROLL).includes("고교 시즌 종료 동기화가 완료되었습니다.")).toBe(true);
     expect(read(SRC_ROLL).includes("정규리그가 종료되었습니다.")).toBe(true);
-    expect(read(SRC_MARKET).includes("보상선수  없음(보상금만)")).toBe(true);
     expect(read(SRC_TOUR).includes("여기서 대회를 마친다.")).toBe(true);
   });
 
