@@ -168,6 +168,9 @@ export function buildRosterParams(
   // ⚠ **재능 분포는 신입생 생성과 같은 정본을 써야 한다.** 여기만 분산이 있고
   // 신입생이 고정값이면 창단 세대만 에이스가 되고 리그가 해마다 얇아진다.
   talent?: unknown,
+  // 새 게임 NPC 병역 (generation_rules.json 의 `militaryRules.pastService`).
+  // 안 넘기면 예전 동작 — 한국인 전원 미필이다 (B-29 D-5)
+  pastService?: unknown,
 ) {
   return {
     leagueId,
@@ -193,7 +196,18 @@ export function buildRosterParams(
     ...(entryRules ? { entryRules } : {}),
     ...(foreign ? { foreign } : {}),
     ...(talent ? { talent } : {}),
+    ...(pastService ? { pastService } : {}),
   };
+}
+
+/**
+ * 새 게임 NPC 병역 규칙 — `militaryRules.pastService` 가 정본이다 (B-29 D-5).
+ *
+ * ⚠ 없으면 `undefined` 다. 그러면 Rust 가 예전 동작으로 떨어진다(한국인 전원
+ *   미필) — 여기서 기본값을 지어내면 규칙 파일과 두 벌이 된다.
+ */
+export function pastServiceOf(rulesFile: GenerationRulesFile): unknown | undefined {
+  return (rulesFile.militaryRules as { pastService?: unknown } | undefined)?.pastService;
 }
 
 /**
@@ -370,10 +384,11 @@ async function generateLeagueNpcs(
   entryRules?: unknown,
   foreign?: unknown,
   talent?: unknown,
+  pastService?: unknown,
 ): Promise<Partial<RepoNpc>[]> {
   const params = buildRosterParams(
     leagueId, seasonYear, worldSeed, teams, rules, undefined,
-    salaryRules, powerRules, entryRules, foreign, talent);
+    salaryRules, powerRules, entryRules, foreign, talent, pastService);
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
@@ -501,7 +516,9 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     otherNpcs.push(
       ...(await generateLeagueNpcs(
         lid, opts.seasonYear, worldSeed, leagueTeams, rules,
-        salaryRules, powerRules, entryRules, foreignSlotsFor(lid, rulesFile))));
+        salaryRules, powerRules, entryRules, foreignSlotsFor(lid, rulesFile),
+        // ⚠ 재능 분포는 예전부터 안 넘겼다 — 여기서 같이 고치지 않는다(별건)
+        undefined, pastServiceOf(rulesFile))));
   }
 
   // ── 군경팀(상무) — 복무 중인 선수로 채운다 (Phase 6.5) ─────
@@ -916,7 +933,10 @@ export async function activateLeagueV3(
     leagueId, seasonYear, worldSeed, teams, rules, namePool,
     rulesFile.salaryRules, rulesFile.powerRules,
     (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry,
-    foreignSlotsFor(leagueId, rulesFile), rulesFile.talentRules);
+    foreignSlotsFor(leagueId, rulesFile), rulesFile.talentRules,
+    // ⚠ 이 경로도 같이 넘긴다 — 한쪽만 고치면 해외 진출로 열린 리그만
+    //   한국인이 전원 미필로 남는다(이 파일이 이미 이름 풀에서 겪은 형태다)
+    pastServiceOf(rulesFile));
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };

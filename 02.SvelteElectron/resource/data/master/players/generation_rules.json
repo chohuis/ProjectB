@@ -1166,7 +1166,14 @@
     "devRateMax": 85,
     "_devNote": "유망주 위주라 육성률이 일반 리그보다 높다",
     "salary": 300,
-    "_salaryNote": "군인 봉급(월 수십만원)이라 연 300만원 수준. 프로 최저연봉과 다르다"
+    "_salaryNote": "군인 봉급(월 수십만원)이라 연 300만원 수준. 프로 최저연봉과 다르다",
+    "pastService": {
+      "undecidedBelow": 26,
+      "servedFrom": 29,
+      "servedPct": 60,
+      "sportsPct": 20
+    },
+    "_pastServiceNote": "새 게임 NPC(한국인)의 병역을 나이로 채운다 (B-29 D-5 · 사용자 확정 2026-09-03). 25세 이하 전원 미필 · 26~28세는 씨앗 난수로 군필 60% / 미필 40% · 29세 이상 전원 군필. 🔴 예전엔 한국인 전원이 미필이라 30대는 어느 입대 게이트에도 안 걸려 영원히 미필이었다. sportsPct(상무 출신 비율)만 제안값이다 — 사용자가 정한 건 나이·군필 비율 셋이다. ⚠ 과거 성적에 복무 공백은 안 만든다(1.0.1 뒤). 읽는 곳: roster_gen.rs past_service_of"
   },
   "draftRules": {
     "_note": "11월 통합 드래프트 (Phase 7-1). 읽는 곳: engine-native/src/draft.rs",

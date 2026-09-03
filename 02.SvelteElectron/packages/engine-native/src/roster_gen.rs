@@ -151,6 +151,63 @@ pub struct GenerateLeagueRosterParams {
     /// 여기만 분산이 있고 신입생은 고정값이면 창단 세대만 에이스가 된다
     #[serde(default)]
     pub talent: Option<crate::sim_types::TalentRulesPayload>,
+    /// 새 게임 시점의 **병역 이력** (generation_rules.json `militaryRules.pastService`).
+    /// 없으면 예전 동작 — 한국인은 전원 미필이다 (B-29 D-5)
+    #[serde(default)]
+    pub past_service: Option<PastServiceRules>,
+}
+
+/// 새 게임 NPC 의 병역을 나이로 채운다 (B-29 D-5 · 사용자 확정 ④).
+///
+/// 🔴 예전엔 **한국인 전원이 미필**이었다 — 37세 KBL 베테랑도 그랬다.
+/// 입대 게이트(상무 20~29 · 일반병 28/26 · 조기 25~27)에 30대는 어느 문에도
+/// 안 걸리니 **영원히 미필로 남는다.**
+///
+/// ⚠ **과거 성적에 복무 공백은 안 만든다**(사용자 확정 · 1.0.1 뒤). 여기서
+/// 채우는 건 상태뿐이다.
+/// ⚠ 값의 정본은 규칙 파일이다 — 코드에 나이·비율을 안 박는다.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PastServiceRules {
+    /// 이 나이 미만은 전원 미필
+    pub undecided_below: i32,
+    /// 이 나이 이상은 전원 군필
+    pub served_from: i32,
+    /// 그 사이 나이의 군필 비율 (%). 씨앗 난수로 가른다
+    pub served_pct: f64,
+    /// 군필 중 상무(체육부대) 출신 비율 (%). 나머지는 현역이다
+    #[serde(default)]
+    pub sports_pct: f64,
+}
+
+/// 다녀온 부대 — 세이브의 `military.servedUnit` 과 **같은 자리**다.
+///
+/// ⚠ 복무 **중**(`unit`)이 아니다. 새 게임의 프로 선수는 이미 전역한
+/// 사람들이라 다녀온 자리만 채운다.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GenMilitary {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub served_unit: Option<String>,
+}
+
+/// 나이로 병역을 정한다. 한국인이 아니면 「면제」다(예전과 같다).
+///
+/// ⚠ **씨앗 난수다.** 같은 세계를 다시 열면 같은 사람이 같은 상태여야 한다 —
+/// `npc_id` 를 섞어 선수마다 독립 스트림을 만든다.
+fn past_service_of(
+    rules: Option<&PastServiceRules>, npc_id: &str, age: i32, is_korean: bool,
+) -> (String, Option<GenMilitary>) {
+    if !is_korean { return ("면제".into(), None); }
+    let Some(r) = rules else { return ("미필".into(), None); };
+    if age < r.undecided_below { return ("미필".into(), None); }
+
+    let mut rng = LcgRand::new(hash_str(npc_id) ^ 0x4D49_4C54);
+    if age < r.served_from && rng.next() * 100.0 >= r.served_pct {
+        return ("미필".into(), None);
+    }
+    let unit = if rng.next() * 100.0 < r.sports_pct { "sports" } else { "general" };
+    ("군필".into(), Some(GenMilitary { served_unit: Some(unit.into()) }))
 }
 
 /// 외국인 선수 규칙 — **KBL은 진행 중인 리그라 시작 시점에 이미 있어야 한다.**
@@ -245,6 +302,9 @@ pub struct GenNpc {
     pub contract_years: i32,
     pub pro_service_years: i32,
     pub military_status: String,
+    /// 다녀온 부대 (B-29 D-5). 미필·면제면 아예 안 실린다
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub military: Option<GenMilitary>,
     pub development_rate: i32,
     pub potential_hidden: i32,
     pub abilities: GenAbilities,
@@ -736,9 +796,15 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 None => gen_name_builtin(&mut rng),
             };
 
+            let npc_id = format!("PLY_{}{:02}_{}_{:03}",
+                prefix, p.season_year % 100, team_tag(&team.team_id), i + 1);
+            // ⚠ **선수마다 독립 스트림**이다 — 로스터 rng 를 쓰면 병역 하나가
+            //   뒤 선수의 이름·능력치를 통째로 밀어 같은 씨앗이 다른 세계가 된다
+            let (ms, mil) = past_service_of(
+                p.past_service.as_ref(), &npc_id, age, fgn.is_none() && nationality == "KOR");
+
             npcs.push(GenNpc {
-                npc_id: format!("PLY_{}{:02}_{}_{:03}",
-                    prefix, p.season_year % 100, team_tag(&team.team_id), i + 1),
+                npc_id,
                 name, name_en,
                 is_named: false,
                 player_type: if is_pitcher { "pitcher".into() } else { "batter".into() },
@@ -754,7 +820,8 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 current_league: p.league_id.clone(),
                 current_team: team.team_id.clone(),
                 salary, contract_years, pro_service_years,
-                military_status: if fgn.is_none() && nationality == "KOR" { "미필".into() } else { "면제".into() },
+                military_status: ms,
+                military: mil,
                 development_rate: dev_rate.round() as i32,
                 potential_hidden: potential as i32,
                 abilities,
@@ -894,6 +961,8 @@ pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRoste
                 contract_years: 1,
                 pro_service_years: 0,
                 military_status: "면제".into(),
+                // 외국인 교체 영입 — 전원 면제라 다녀온 부대가 없다
+                military: None,
                 development_rate: dev_rate.round() as i32,
                 potential_hidden: potential as i32,
                 abilities,
@@ -962,6 +1031,8 @@ mod tests {
             id_prefix: None,
             salary_rules, power_rules, entry_rules,
             foreign: None,
+            // 실데이터에서 — 병역 회귀가 규칙 파일 값을 그대로 재야 한다
+            past_service: serde_json::from_value(v["militaryRules"]["pastService"].clone()).ok(),
         }).npcs
     }
 
@@ -1035,7 +1106,7 @@ mod tests {
             league_id: "LEAGUE_KBL".into(), season_year: 2029, world_seed: 4242,
             teams, rules, name_pool: None, id_prefix: None,
             salary_rules: None, power_rules: None, entry_rules: None,
-            foreign: Some(f.clone()), talent: None,
+            foreign: Some(f.clone()), talent: None, past_service: None,
         }).npcs;
 
         // 외국인이 자리를 **늘리지 않는다** — 정원은 그대로다
@@ -1298,6 +1369,73 @@ mod tests {
                     "{}세인데 {}년차 — 늦깎이라도 한계가 있다", n.age, n.pro_service_years);
             }
         }
+    }
+
+    /// 병역이 나이를 본다 (B-29 D-5 · 사용자 확정 ④).
+    ///
+    /// 🔴 예전엔 **한국인 전원이 미필**이었다 — 37세 KBL 베테랑도 그랬고,
+    /// 입대 게이트가 20~29세라 30대는 어느 문에도 안 걸려 영원히 미필이었다.
+    #[test]
+    fn 새_게임_병역이_나이를_본다() {
+        let npcs = gen_with("LEAGUE_KBL", &[("T", Some(3.0), Some(1.0))], 30);
+        let kor: Vec<&GenNpc> = npcs.iter().filter(|n| n.nationality == "KOR").collect();
+        assert!(!kor.is_empty(), "한국인이 한 명도 없다 — 표본이 없다");
+
+        let rules = past_service_rules();
+        for n in &kor {
+            if n.age < rules.undecided_below {
+                assert_eq!(n.military_status, "미필",
+                    "{}세인데 {} — 그 나이엔 아직 안 갔다", n.age, n.military_status);
+            } else if n.age >= rules.served_from {
+                assert_eq!(n.military_status, "군필",
+                    "{}세인데 {} — 서른 넘은 미필이 남으면 영원히 미필이다",
+                    n.age, n.military_status);
+            }
+            // 군필이면 다녀온 부대가 있어야 한다 — 없으면 상무/현역 구분이 사라진다
+            if n.military_status == "군필" {
+                assert!(n.military.as_ref().and_then(|m| m.served_unit.as_ref()).is_some(),
+                    "{}세 군필인데 다녀온 부대가 없다", n.age);
+            } else {
+                assert!(n.military.is_none(), "미필인데 부대 기록이 있다");
+            }
+        }
+        // 사이 나이대는 **갈려야** 한다 — 한쪽만 나오면 확률이 죽은 것이다
+        let between: Vec<&&GenNpc> = kor.iter()
+            .filter(|n| n.age >= rules.undecided_below && n.age < rules.served_from).collect();
+        if between.len() >= 20 {
+            let served = between.iter().filter(|n| n.military_status == "군필").count();
+            assert!(served > 0 && served < between.len(),
+                "26~28세 {}명이 전부 한쪽이다 (군필 {served})", between.len());
+        }
+    }
+
+    /// 외국인은 예전 그대로 면제다 — 나이 규칙이 국적을 안 가리면 안 된다
+    #[test]
+    fn 외국인은_병역이_면제다() {
+        let npcs = gen_with("LEAGUE_KBL", &[("T", Some(3.0), Some(1.0))], 30);
+        for n in npcs.iter().filter(|n| n.nationality != "KOR") {
+            assert_eq!(n.military_status, "면제", "{} 국적인데 {}", n.nationality, n.military_status);
+        }
+    }
+
+    /// 같은 씨앗이면 같은 병역이어야 한다 — 세계를 다시 열면 같은 사람이다
+    #[test]
+    fn 병역은_씨앗에_대해_재현된다() {
+        let a = gen_with("LEAGUE_KBL", &[("T", Some(3.0), Some(1.0))], 30);
+        let b = gen_with("LEAGUE_KBL", &[("T", Some(3.0), Some(1.0))], 30);
+        let key = |v: &[GenNpc]| v.iter()
+            .map(|n| format!("{}:{}", n.npc_id, n.military_status)).collect::<Vec<_>>();
+        assert_eq!(key(&a), key(&b));
+    }
+
+    /// 검사 기댓값도 **규칙 파일에서** 읽는다 — 나이를 여기 또 적으면 두 벌이 된다
+    fn past_service_rules() -> PastServiceRules {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        serde_json::from_value(v["militaryRules"]["pastService"].clone())
+            .expect("militaryRules.pastService 가 없다 — 규칙 파일이 정본이다")
     }
 
     /// 야수 8포지션에 백업까지 있어야 한다 (한 명이 다치면 자리가 비지 않게)
