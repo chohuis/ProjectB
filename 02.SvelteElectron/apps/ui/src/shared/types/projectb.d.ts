@@ -50,6 +50,11 @@ declare global {
       windowGetState: () => Promise<{ ok: boolean; width?: number; height?: number; fullscreen?: boolean }>;
       matchStart: (request?: {
         leagueId?: string;
+        /** 1.1 A② §6-1 — 리그가 정하는 것 한 벌 (`utils/matchLeagueOptions.ts`) */
+        pitchLimitOverride?: number;
+        starterOutsFactor?: number;
+        closerGate?: { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number };
+        restGuard?: { lastPitchedDate: string; lastPitchCount: number; gameDate: string };
         matchId?: string;
         inningLimit?: number;
         initialStamina?: number;
@@ -154,6 +159,11 @@ declare global {
         /** 🔴 이 경기의 리그 — Rust `MatchStartOptions.league_id`. 안 넘기면 투구수 상한이
          *  리그 기본(120)이라 고교 105구가 안 걸린다 (2026-09-03) */
         leagueId?: string;
+        /** 1.1 A② §6-1 — 리그가 정하는 것 한 벌 (`utils/matchLeagueOptions.ts`). 규칙 파일이 정본 */
+        pitchLimitOverride?: number;
+        starterOutsFactor?: number;
+        closerGate?: { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number };
+        restGuard?: { lastPitchedDate: string; lastPitchCount: number; gameDate: string };
         protagonistSide?: "home" | "away";
         opponentLineup?: MatchBatterStats[];
         myTeamLineup?: MatchBatterStats[];

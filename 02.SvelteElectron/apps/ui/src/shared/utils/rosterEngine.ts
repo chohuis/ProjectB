@@ -65,6 +65,10 @@ const OPS_FALLBACK = {
   pitcherRest: { weeks2: 1.0, weeks1: 0.85, weeks0: 0.55 },
   freshnessWeight: 0.3,
   playThroughOvrMult: { light: 0.88, moderate: 0.70 } as Record<string, number>,
+  // 1.1 A② §6-1 — 리그별 선발 투구수 상한 · 선발 아웃 계수 · 마무리 문. 규칙 파일이 정본, 이건 못 읽었을 때
+  starterPitchLimit: { LEAGUE_HIGHSCHOOL: 105, default: 120 } as Record<string, number>,
+  starterOutsFactor: { default: 1.0 } as Record<string, number>,
+  closerGate: {} as Record<string, { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number }>,
 };
 let _ops = OPS_FALLBACK;
 
@@ -85,7 +89,24 @@ export function primeRosterOpsRules(rulesFile: {
     pitcherRest:    o.pitcherRest    ?? OPS_FALLBACK.pitcherRest,
     freshnessWeight: o.freshnessWeight ?? OPS_FALLBACK.freshnessWeight,
     playThroughOvrMult: { ...OPS_FALLBACK.playThroughOvrMult, ...(o.playThroughOvrMult ?? {}) },
+    starterPitchLimit: stripNotes({ ...OPS_FALLBACK.starterPitchLimit, ...(o.starterPitchLimit ?? {}) }),
+    starterOutsFactor: stripNotes({ ...OPS_FALLBACK.starterOutsFactor, ...(o.starterOutsFactor ?? {}) }),
+    closerGate: stripNotes({ ...OPS_FALLBACK.closerGate, ...(o.closerGate ?? {}) }),
   };
+}
+/** 규칙 파일의 `_note` 같은 설명 키를 뺀다 — 리그 id 로만 읽는다 */
+function stripNotes<T>(o: Record<string, T>): Record<string, T> {
+  return Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_"))) as Record<string, T>;
+}
+// ── 1.1 A② §6-1 — 리그별 선발 투구수 상한 · 아웃 계수 · 마무리 문 ─────────────
+export function starterPitchLimitForLeague(leagueId: string): number {
+  return _ops.starterPitchLimit[leagueId] ?? _ops.starterPitchLimit.default;
+}
+export function starterOutsFactorForLeague(leagueId: string): number {
+  return _ops.starterOutsFactor[leagueId] ?? _ops.starterOutsFactor.default ?? 1.0;
+}
+export function closerGateForLeague(leagueId: string): { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number } | undefined {
+  return _ops.closerGate[leagueId];
 }
 
 /** 피로 배수 — 표를 위에서부터 훑는다. 어디에도 안 걸리면 바닥이다 */

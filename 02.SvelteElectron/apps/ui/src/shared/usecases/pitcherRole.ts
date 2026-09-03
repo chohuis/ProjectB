@@ -39,6 +39,9 @@ import { masterStore, entitiesL10n, type EntityRow } from "../stores/master";
 import { isV3SlotActive } from "../repo/v3Mode";
 import { relationEffects } from "./relationships";
 import { assignHighschoolPosition, assignProtagonistRole } from "../utils/pitcherRoleEngine";
+import { pitcherRoleRules, buildRecommendParams, recommendPitcherRoleNative } from "../utils/pitcherRoleRules";
+import { npcLiveStatsStore } from "../stores/npcLiveStats";
+import type { NpcLiveStat } from "../stores/master";
 import { roleAskWeekOf } from "../utils/seasonWeeks";
 import { leagueOfTeam } from "../utils/ids";
 import {
@@ -64,8 +67,13 @@ export function choiceOfPosition(pos: string): RoleChoiceId {
 
 export interface RoleRecommendation {
   recommended: RoleChoiceId;
-  /** 그 자리를 지금 차지한 같은 팀 투수 수 */
+  /** 그 자리를 지금 차지한 같은 팀 투수 수 — A① 뒤엔 min(순위−1, 자리 수) */
   ahead: { sp: number; rp: number; cp: number };
+  /** A① 산식 결과 — 옛 엔진(OVR 순위) 폴백이면 없다 */
+  fits?: { sp: number; rp: number; cp: number };
+  ranks?: { sp: number; rp: number; cp: number };
+  seats?: { sp: number; rp: number; cp: number };
+  noSeat?: boolean;
 }
 
 // ── 소식 id 와 가드 — **같은 세 조각이다** ────────────────────
@@ -206,6 +214,22 @@ export async function recommendRole(
   entities: readonly EntityRow[],
   roleOvrBias = 0,
 ): Promise<RoleRecommendation> {
+  // A① — 세부 능력치 적합도 + 팀내 자리 경쟁 (Rust `recommend_pitcher_role` · 규칙 파일이 정본).
+  //   규칙이 안 실렸거나 엔진이 오류를 내면 아래 옛 엔진(OVR 순위)으로 간다 — 구 세이브·검사 안전망.
+  const rules = pitcherRoleRules();
+  if (rules) {
+    const params = buildRecommendParams({
+      protagonist, entities,
+      live: get(npcLiveStatsStore) as Record<string, NpcLiveStat | undefined>,
+      catalog: get(masterStore).pitchCatalog,
+      injuries: get(seasonStore).npcInjuries ?? {},
+      rules, roleOvrBias,
+    });
+    const res = await recommendPitcherRoleNative(params);
+    if (!res.error && res.recommended) {
+      return { recommended: res.recommended, ahead: res.ahead, fits: res.fits, ranks: res.ranks, seats: res.seats, noSeat: res.noSeat };
+    }
+  }
   const ahead = aheadOfTeam(protagonist.teamId, protagonist.id, entities);
 
   if (protagonist.careerStage === "highschool") {

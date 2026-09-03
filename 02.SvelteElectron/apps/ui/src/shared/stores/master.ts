@@ -17,6 +17,7 @@ import { primeForeignRules } from "../utils/foreignSlots";
 import { primeCareerScoreRules } from "../utils/universityUtils";
 import { primeAcademicsHsRules } from "../utils/academicsEngine";
 import { primeRosterOpsRules } from "../utils/rosterEngine";
+import { primePitcherRoleRules } from "../utils/pitcherRoleRules";
 import { primeManagerStyleRules } from "../utils/managerStyle";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
@@ -1089,6 +1090,8 @@ function createMasterStore() {
           primeCareerScoreRules(genRules as Parameters<typeof primeCareerScoreRules>[0]);
           primeAcademicsHsRules(genRules as Parameters<typeof primeAcademicsHsRules>[0]);
           primeRosterOpsRules(genRules as Parameters<typeof primeRosterOpsRules>[0]);
+          // 투수 보직 추천(1.1 A①) — 안 실리면 옛 엔진(OVR 순위)으로 조용히 간다
+          primePitcherRoleRules(genRules as Parameters<typeof primePitcherRoleRules>[0]);
           // 감독 스타일 — 안 실으면 규칙이 늘 null 이라 **스타일이 다시 죽는다**
           primeManagerStyleRules((genRules as Record<string, unknown>).managerStyleRules);
           // 계약 협상 — contractRules · salaryRules.minSalary · awardRules 를 한 번에 싣는다.

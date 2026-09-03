@@ -21,6 +21,7 @@
     type PitchResultCode, type BallInPlay,
   } from "../../shared/utils/matchResult";
   import { seasonStore } from "../../shared/stores/season";
+  import { leagueMatchOptions } from "../../shared/utils/matchLeagueOptions";
   import { settingsStore } from "../../shared/stores/settings";
   import {
     scaleMs, showsOverlay, overlayMs, reducesMotion, systemReducedMotion,
@@ -843,6 +844,10 @@
       const response = await window.projectB.matchStart({
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
         leagueId: $gameStore.protagonist.leagueId,
+        // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
+        ...leagueMatchOptions($gameStore.protagonist.leagueId,
+          $seasonStore.leagueState[$gameStore.protagonist.leagueId]?.playerConditions?.[$gameStore.protagonist.id],
+          $seasonStore.currentDate),
         initialStamina: player.condition,
         initialMental: 74,
         pitcher: { ...player.pitcherStats, name: player.name },
@@ -1190,6 +1195,9 @@
         const player = get(gameStore).player;
         await window.projectB.matchStart({
           leagueId: get(gameStore).protagonist.leagueId,
+          ...leagueMatchOptions(get(gameStore).protagonist.leagueId,
+            get(seasonStore).leagueState[get(gameStore).protagonist.leagueId]?.playerConditions?.[get(gameStore).protagonist.id],
+            get(seasonStore).currentDate),
           initialStamina: player.condition,
           initialMental: 74,
           pitcher: player.pitcherStats
