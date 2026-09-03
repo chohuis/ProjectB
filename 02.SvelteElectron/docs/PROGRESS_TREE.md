@@ -58,7 +58,7 @@ A
 │     ├─ ✅ depot 문서 STEAM_DEPOT.md (App/Depot ID 는 사용자 빈칸)
 │     ├─ ✅ **프리즈 후보 pack 09-03 07:26** — B-10 까지 전부 병합 · dist:steam OK · smoke:dist 통과 (⚠ 내 프로브가 .node 를 잡아 두 번 EPERM — 프로브 먼저 내린다)
 │     └─ ⬜ B-10 소식함 눈확인 · C 최종 확인 → 회신 결함 → 재 pack → 9/14 최종 빌드 → 9/15 프리즈 → 업로드 후보 → 사용자 확인
-│     ├─ 🔄 **A(Opus·engine) 첫 일감** — bc44f123b 주인공 등판 기록 결함 고침(휴식 재료 0 → 30) · 237a848ee 마무리 등판당 2.7~3.2이닝은 엔진이 아니라 평균 계산이 만든 숫자(계측 정정) · A③ 가중치 세 벌 진행 중 → 병합 a5b6144dc 뒤
+│     ├─ 🔄 **A(Opus·engine) 첫 일감** — bc44f123b 주인공 등판 기록 결함 고침(휴식 재료 0 → 30) · 237a848ee 마무리 등판당 2.7~3.2이닝은 엔진이 아니라 평균 계산이 만든 숫자(계측 정정) · A③ 세 벌 실측 뒤 SP arsenal 0.20→0.10 + developingWeight(습득중 구종 계수) 선택 · 제안값 · 백로그(300bb0393)
 │     ├─ 🔄 **1.1 A① 보직 적합도 산식** — Rust `pitcher_role.rs`(cargo 7) · 규칙 `pitcherRoleRules`·`bullpenSize`(제안값) · TS 재료 `utils/pitcherRoleRules.ts`(vitest 12) 커밋 0ae9b586d · 남은 것: `recommendRole()` 교체 + master prime(편집 완료 · C⑤ 커밋 뒤 커밋) · .node 복사(프로브가 잡고 있음 · 프로브 뒤 build:native 재실행) · A③ measure:role 1차: 선발 추천 0팀(신입 구종 1개 → SP 적합도 −5) → 가중치 셋 비교는 새 A(HANDOFF_OP_TO_A §2-3) → 사용자 확정
 │     ├─ 🔄 **1.1 A② 고교 엔진** — Rust 00db08993: MatchStartOptions 넷(투구수 상한 override · 선발 아웃 계수 · 마무리 문 · 의무 휴식) · 오프너 삭제 · 규칙 starterPitchLimit 고교 95 / starterOutsFactor 0.80 / closerGate 8회(전부 제안값) · TS 헬퍼 matchLeagueOptions.ts(vitest 8) · 호출부 셋 배선 ✅(8f922a58f · MainPage 는 다음 커밋) · recommendRole 교체 ✅ · **OP 체제 전환(13:4x)**: 이후 A 몫은 새 A(Opus · 워크트리 ProjectB-engine · track/engine · HANDOFF_OP_TO_A) 가 한다 · 상태 검사 4 ✅(59f493a2f) · .node 13:23 ✅ · §6-1-5 1차 실측(씨앗 1): 선발 계수 0.8 → 이닝 5.92→5.31 · 마무리 등판 8→9→12→9 · ⚠ 마무리 등판당 2.7~3.2이닝 의심 · ⚠ 주인공 등판 기록 없음(휴식 재료 0) → HANDOFF_OP_TO_A §2
 │     ├─ ✅ 새 게임 첫 소식함 자리표시자 넷 삭제(사용자 결정 · 07cba2343 + 정정 fcef54508 · ⚠ C 진행분이 두 번째로 섞여 plumbing 으로 걷어냄 — C 가동 중 shared 파일 커밋 금지)
@@ -107,7 +107,7 @@ A
 | 9 | 인센티브 정산 화면 (C④) | C | ⬜ |
 | 10 | 은퇴 직후 결산 자동 열기 (C⑤-a) | C | ✅ |
 | 11 | 상무 탭 §39 (C⑤-b) | C | ⬜ |
-| 12 | 대시보드 컴포넌트 — StatTable·타임라인·RankListPanel 범용화 (C) | C | ⬜ |
+| 12 | 대시보드 컴포넌트 — StatTable·타임라인·RankListPanel 범용화 (C) | C | ✅ ce349967f |
 | 13 | 대시보드 배선 30자리 4묶음 (C · A 생산부와 짝) | C | ⬜ |
 | 14 | 기록 탭 카드 둘 — 계약 이력·대회 전적 (C) | C | ⬜ |
 | 15 | 소식함 FIFO 한 줄 + 군 조건 위생 검사 정정 (C/A) | C | ⬜ |
@@ -115,7 +115,7 @@ A
 | 17 | 병영 재회 이벤트 — 축소판 배선(조건 키 둘 + 부대원 관계 종류) | A/C | ❓ 사용자 범위 결정 |
 | 18 | 회신 결함 수정 (빌드 눈확인 뒤) | 전원 | ⬜ |
 
-**완료 7 / 18 ≈ 39%** (09-03 14:2x). 1.0.0 고정 = 18 전부 ✅ · 그 뒤 BALANCE_BACKLOG 조정 → 1.0.1.
+**완료 8 / 18 ≈ 44%** (09-03 14:3x). 1.0.0 고정 = 18 전부 ✅ · 그 뒤 BALANCE_BACKLOG 조정 → 1.0.1.
 
 ## 1.1 첫 묶음 — 사용자 확정 표 (2026-09-03 · "이 표 보고 진행")
 
