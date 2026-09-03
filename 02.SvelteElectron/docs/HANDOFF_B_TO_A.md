@@ -1120,6 +1120,39 @@ season_k_lte 12      EVT_HS_SLUMP_NO_K         W30+   헛스윙이 안 나옵니
 ⚠ 넷 다 `player_type: pitcher` 를 선언했다(마운드·볼넷·삼진·제구 어휘).
 `check:playertype` ① 은 73 에서 안 늘었다.
 
+### B-25 병영 문안 — 결함만 고쳤다 (문체 결정은 대기)
+
+B-23 후보표 여덟 중 **결함인 것만** 고쳤다. 말투·제목·라벨·부호는
+사용자 문체 결정 뒤로 미뤘다.
+
+```
+② {member.name}이  → 이름을 문장 끝으로   MIL_CAL_FIRE_1
+④ 표시≠동작 셋     → 힌트를 사실에 맞춤   PROMOTE_2 · D30 · CONFLICT_OFFICER
+⑦ 자대 배치 두 번  → MIL_COM_FIRST_DAY 삭제  (상무 재고 39 → 38)
+⑧ 선택지 하나뿐 5  → 두 번째 선택지 (제안값)
+```
+
+`check:militarydata` OK · `test:events` ALL PASS · `npm test` 1767/1767 ·
+`check:mojibake` OK.
+
+🔴 **자리표시자 뒤 조사 — 네 풀 전수 0건**이 됐다. `military_life` ·
+`military_common` · `military_general` · `military_sports` 를 `{...}` 뒤
+조사 정규식으로 훑었다. **자리표시자는 체언 종지로 끝낸다**가 이 프로젝트의
+규칙이 돼야 한다 — 굴절형 표는 대상이 사람 15명이면 값이 안 맞는다.
+
+⚠ **부대원 이름 15명이 빈 건 결함이 아니다.** `PLAN_MILITARY_LIFE §37` 이
+「이름·성격은 빈 칸 · 사용자가 채운다」로 정했고 `check:militarydata` 가
+경고로 알린다. 폴백이 계급이라 화면은 돈다 — 「하사이」의 원인은 이름이
+아니라 **조사**였다.
+
+⚠ **④ 는 힌트만 고쳤고 배선 제안은 안 했다.** `PROMOTE_2` 의 「포상휴가
+조건 열림」·`D30` 의 「복귀 연락」은 **그 효과를 만드는 키가 아예 없다** —
+새로 만드는 건 문안이 아니라 설계다. `CONFLICT_OFFICER` 만 반대 방향이라
+(`penalty` 가 `militaryLifeRules.ts:150` 에서 조건 없이 붙는다) 「후보」를 뗐다.
+
+⚠ ⑧의 효과는 **전부 제안값**이고 백로그 §3 병영 절에 적었다. 첫 선택지와
+본문은 안 건드렸다.
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고

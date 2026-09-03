@@ -26,6 +26,8 @@
 ## 3. 병영 (PLAN_MILITARY_LIFE §40)
 감각 감쇠 −1.5 / 상한식 / 접근 1 의 +3 · 박격포 섞음 · 감각 0 전역 은퇴. 실측 §40 표.
 
+**상무 다섯의 두 번째 선택지 (B-25)** — `MIL_EVT_{DRILL_EXCELLENCE,FIELD_FATIGUE,UNIT_SUPPORT,REST_WINDOW,COMMAND_PRESSURE}` 에 성실 ±1~3 · 피로 -1~+5 · 사기 +3 · 컨디션 +5 를 제안값으로 달았다. 자리 `events/pools/military_common.json`. **실측 0** — 이 다섯은 죽은 풀에서 살린 뒤(`1a7b4a9c4`) 한 번도 안 쟀다. 재는 법: 상무 경로 한 판에서 다섯이 뜨는지와 선택 분포.
+
 **전역 뒤 재회 12종 (B-20 초안)** — 효과 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 · 돈 −15~−30만원 · 피로 +2~+4 · 조건 문턱(회복주 ≥2·≥4 · 주차 6~40 · 나이 25 · 명성 40 · 사기 40/55) · 우선순위 601~632. 자리 `resource/data/master/messages/military_reunion.json`. **실측 0** — 아직 `events/conditional/` 에 안 실렸다(잣대 한 줄이 막는다 · `HANDOFF_B_TO_A` B-20). 재는 법: 실은 뒤 `measure:messagekinds` 로 12종 통 수와 전역 뒤 시즌당 몇 통인지.
 
 ## 4. 경기·리그 (BALANCE_BASELINE_2026-09-05 §4)
