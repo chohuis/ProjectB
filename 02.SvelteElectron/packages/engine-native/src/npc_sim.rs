@@ -1132,6 +1132,14 @@ fn normalize_offseason_npcs(
                         // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
                         None if can_place => {
                             events.push(ev("release_roster", npc, Some(npc.current_team.clone()), None));
+                            // 🔴 **선수 경력에도 남긴다** (B-29 D-1 · 사용자 확정 ①).
+                            //   방출은 **팀이 바뀌는 일**이라 되짚을 수 있어야 한다 —
+                            //   `careerEventLabel` 에 「방출(정원)」이 있는데 그 유형이
+                            //   `career_events` 에 한 번도 안 들어가서 화면엔 영영 안 떴다.
+                            //   ⚠ 주간 승격·강등은 안 남긴다 — 정합성 보정이라 사건이 아니다
+                            //   (`position_change` 를 소식에서 뺀 것과 같은 판단이다).
+                            npc.career_events.push(career_ev(
+                                season_year, "release_roster", Some(npc.current_team.clone()), None));
                             npc.current_team = "".into();
                             (None, None)
                         }
@@ -1171,6 +1179,8 @@ fn normalize_offseason_npcs(
 /// 미지명자·FA 미계약자와 **같은 로직**이다.
 fn release_second_stage(
     npcs: &mut [NpcSaveState],
+    // 방출을 선수 경력에도 남기려면 해가 있어야 한다 (B-29 D-1)
+    season_year: i32,
     rules: &crate::free_agency::ReleaseRules,
     limits: &HashMap<String, RosterLimit>,
     events: &mut Vec<OffseasonEvent>,
@@ -1279,6 +1289,9 @@ fn release_second_stage(
         released += 1;
 
         events.push(ev("release_score", &npcs[idx], Some(team.clone()), Some(format!("{score:.0}"))));
+        // 선수 경력에도 남긴다 (B-29 D-1) — `career_ev` 머리말 참고
+        npcs[idx].career_events.push(career_ev(
+            season_year, "release_score", Some(team.clone()), Some(format!("{score:.0}"))));
         npcs[idx].current_team = String::new();
         npcs[idx].current_salary = 0;
         npcs[idx].contract_years = 0;
@@ -1301,6 +1314,8 @@ fn release_second_stage(
 /// ⚠ 예산이 없는 팀(상무·아마추어)은 건너뛴다.
 fn release_over_budget(
     npcs: &mut [NpcSaveState],
+    // 방출을 선수 경력에도 남기려면 해가 있어야 한다 (B-29 D-1)
+    season_year: i32,
     budgets: &HashMap<String, i64>,
     limits: &HashMap<String, RosterLimit>,
     profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
@@ -1371,9 +1386,12 @@ fn release_over_budget(
             cur -= npcs[idx].current_salary;
             have -= 1;
             released += 1;
-            events.push(ev("release_budget", &npcs[idx], Some(team.clone()),
-                Some(format!("예산 {budget} / 총연봉 {} · 점수 {score:.0}",
-                    payroll.get(&team).copied().unwrap_or(0)))));
+            let why = format!("예산 {budget} / 총연봉 {} · 점수 {score:.0}",
+                payroll.get(&team).copied().unwrap_or(0));
+            events.push(ev("release_budget", &npcs[idx], Some(team.clone()), Some(why.clone())));
+            // 선수 경력에도 남긴다 (B-29 D-1) — `career_ev` 머리말 참고
+            npcs[idx].career_events.push(career_ev(
+                season_year, "release_budget", Some(team.clone()), Some(why)));
             npcs[idx].current_team = String::new();
             npcs[idx].current_salary = 0;
             npcs[idx].contract_years = 0;
@@ -1926,6 +1944,32 @@ fn fa_fallback(
     npc.current_salary = 0;
     npc.contract_years = 0;
     events.push(ev("fa_unsigned_retire", npc, npc.original_team_id.clone(), None));
+}
+
+/// 선수 경력에 남기는 사건 (B-29 D-1 · 사용자 확정 ①).
+///
+/// `ev()`(오프시즌 요약)와 **짝이지 대체가 아니다.** 저쪽은 그 해 무슨 일이
+/// 몇 건 있었나를 세는 통이고, 이쪽은 **그 사람의 이력**이다.
+///
+/// 🔴 **팀이 바뀌는 것만 남긴다.** 방출·웨이버가 그렇고, 주간 승격·강등은
+/// 안 남긴다 — 매주 도는 정합성 보정이라 한 시즌에 213줄 규모가 되고
+/// 그건 사건이 아니다(`position_change` 를 소식에서 뺀 것과 같은 판단).
+///
+/// ⚠ `event_type` 은 `types/save.ts` 의 `NpcCareerEventType` 과 **같아야 한다.**
+/// Rust 쪽은 `String` 이라 컴파일러가 안 잡아준다 — 그 파일 주석이 같은
+/// 함정을 적어 뒀고 실제로 `release`·`quit_baseball` 이 그렇게 빠져 있었다.
+fn career_ev(year: i32, kind: &str, from_team: Option<String>, detail: Option<String>)
+    -> NpcCareerEvent
+{
+    NpcCareerEvent {
+        year,
+        event_type:   kind.into(),
+        from_team_id: from_team.filter(|t| !t.is_empty()),
+        to_team_id:   None,
+        from_league_id: None,
+        to_league_id:   None,
+        detail,
+    }
 }
 
 fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<String>)
@@ -2648,7 +2692,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
     if let Some(rr) = params.release_rules.as_ref() {
         release_second_stage(
-            &mut after_normalize, rr, &params.roster_limits, &mut events,
+            &mut after_normalize, season_year, rr, &params.roster_limits, &mut events,
             &params.perf_scores, &params.team_profiles, &is_foreign);
     }
 
@@ -2659,7 +2703,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 🔴 **예산 초과 방출** — 웨이버 **앞**에 둔다. 여기서 나온 사람도
     //   다른 구단이 데려갈 수 있어야 한다 — 방출 절차의 일부다.
     let _budget_released = release_over_budget(
-        &mut after_normalize, &params.team_budgets, &params.roster_limits,
+        &mut after_normalize, season_year, &params.team_budgets, &params.roster_limits,
         &params.team_profiles, &params.perf_scores, &is_foreign, &mut events);
 
     if let Some(wr) = params.waiver_rules.as_ref() {
@@ -3206,6 +3250,36 @@ pub struct SalaryRules {
     pub jitter: f64,
     pub league_mult: std::collections::HashMap<String, f64>,
     pub min_salary: std::collections::HashMap<String, f64>,
+    /// 계약 기간 **나이 상한** (B-29 D-4 · 사용자 확정 ⑤).
+    ///
+    /// 🔴 예전엔 기간이 나이도 연차도 안 봤다 — **37세 OVR 78 이 5년 계약**을
+    /// 받아 42세까지였다. `aging_from_age` 는 **연봉만** 깎고 기간은 안 건드린다.
+    ///
+    /// ⚠ 값은 제안이다(BALANCE_BACKLOG). 나이 내림차순으로 첫 번째로 걸리는
+    /// 칸이 이긴다 — 코드가 나이를 안 박는다.
+    #[serde(default)]
+    pub contract_years_max_by_age: Vec<ContractYearsCap>,
+}
+
+/// `fromAge` 이상이면 계약 기간이 `maxYears` 를 못 넘는다
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ContractYearsCap {
+    pub from_age: i32,
+    pub max_years: i32,
+}
+
+/// 나이 상한을 먹인다 — **제일 엄한 칸이 이긴다.**
+///
+/// ⚠ 표를 나이 순으로 정렬해 두지 않아도 되게 전부 훑는다. 규칙 파일의
+/// 줄 순서에 동작이 매달리면 값을 옮겨 적는 순간 조용히 달라진다.
+/// ⚠ 하한은 1년이다 — 0년 계약은 계약이 아니다.
+pub(crate) fn cap_contract_years(rules: &SalaryRules, age: i32, years: i32) -> i32 {
+    let mut out = years;
+    for c in &rules.contract_years_max_by_age {
+        if age >= c.from_age { out = out.min(c.max_years); }
+    }
+    out.max(1)
 }
 
 impl Default for SalaryRules {
@@ -3219,6 +3293,9 @@ impl Default for SalaryRules {
             team_index_min: 0.8, team_index_max: 1.35, jitter: 0.10,
             league_mult: std::collections::HashMap::new(),
             min_salary: std::collections::HashMap::new(),
+            // 폴백은 **상한 없음**이다 — 규칙 누락이 조용히 기간을 깎으면
+            // 어느 쪽이 정본인지 알 길이 없다
+            contract_years_max_by_age: Vec::new(),
         }
     }
 }
@@ -3270,6 +3347,10 @@ pub(crate) fn estimate_salary_and_contract(
                 else if ovr >= 68.0 { 2 + (rng.next() * 3.0) as i32 }
                 else if ovr >= 55.0 { 1 + (rng.next() * 2.0) as i32 }
                 else                { 1 };
+    // ⑥ 나이 상한 — **기간은 나이를 봐야 한다** (B-29 D-4).
+    //   ⚠ 난수는 **위에서 이미 뽑았다.** 상한을 뽑기 전에 걸면 씨앗이 밀려
+    //     같은 세계가 다른 로스터를 낸다
+    let years = cap_contract_years(rules, age, years);
     (salary, years)
 }
 
@@ -5542,4 +5623,73 @@ pub fn retire_independent_over_age(
     n.current_salary = 0;
     n.contract_years = 0;
     Some(ev("indie_age_retire", n, Some(team), Some(format!("{}세", n.age))))
+}
+
+// ── 계약 기간 나이 상한 (B-29 D-4 · 사용자 확정 ⑤) ───────────────────────────
+
+#[cfg(test)]
+mod contract_years_tests {
+    use super::*;
+
+    /// 규칙 파일이 정본이다 — 검사가 나이·연수를 따로 적지 않는다
+    fn rules() -> SalaryRules {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        serde_json::from_value(v["salaryRules"].clone()).expect("salaryRules")
+    }
+
+    #[test]
+    fn 규칙_파일에_나이_상한이_있다() {
+        assert!(!rules().contract_years_max_by_age.is_empty(),
+            "salaryRules.contractYearsMaxByAge 가 없다 — 코드에 나이를 안 박는다");
+    }
+
+    /// 🔴 **37세가 5년 계약을 받고 있었다** — 42세까지다.
+    /// `aging_from_age` 는 연봉만 깎고 기간은 안 건드렸다.
+    #[test]
+    fn 노장은_긴_계약을_못_받는다() {
+        let r = rules();
+        let oldest = r.contract_years_max_by_age.iter()
+            .max_by_key(|c| c.from_age).expect("칸이 없다").clone();
+        assert!(cap_contract_years(&r, oldest.from_age, 5) <= oldest.max_years,
+            "{}세인데 상한 {}년을 넘겼다", oldest.from_age, oldest.max_years);
+        assert!(cap_contract_years(&r, oldest.from_age + 3, 5) <= oldest.max_years);
+    }
+
+    /// **제일 엄한 칸이 이긴다** — 규칙 파일의 줄 순서에 동작이 매달리면 안 된다
+    #[test]
+    fn 겹치는_칸은_엄한_쪽이_이긴다() {
+        let mut r = SalaryRules::default();
+        r.contract_years_max_by_age = vec![
+            ContractYearsCap { from_age: 36, max_years: 1 },
+            ContractYearsCap { from_age: 33, max_years: 2 },
+        ];
+        assert_eq!(cap_contract_years(&r, 37, 5), 1);
+        assert_eq!(cap_contract_years(&r, 34, 5), 2);
+    }
+
+    /// 젊은 선수는 예전 그대로다 — 상한이 전 나이에 걸리면 장기계약이 사라진다
+    #[test]
+    fn 젊은_선수는_안_깎인다() {
+        let r = rules();
+        assert_eq!(cap_contract_years(&r, 25, 5), 5);
+        assert_eq!(cap_contract_years(&r, 28, 4), 4);
+    }
+
+    /// 0년 계약은 계약이 아니다
+    #[test]
+    fn 하한은_한_해다() {
+        let mut r = SalaryRules::default();
+        r.contract_years_max_by_age = vec![ContractYearsCap { from_age: 30, max_years: 0 }];
+        assert_eq!(cap_contract_years(&r, 40, 3), 1);
+    }
+
+    /// 규칙이 없으면 **예전 동작** — 조용히 기간을 깎지 않는다
+    #[test]
+    fn 규칙이_없으면_안_건드린다() {
+        let r = SalaryRules::default();
+        assert_eq!(cap_contract_years(&r, 40, 5), 5);
+    }
 }

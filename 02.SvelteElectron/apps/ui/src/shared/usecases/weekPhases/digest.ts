@@ -1,8 +1,9 @@
 import type { LeagueSeasonState, Standing } from "../../types/season";
-import type { MessageItem } from "../../types/main";
+import type { MessageItem, TableMetadata } from "../../types/main";
 import { calcMyRank, pctStr, type RegionNamer } from "./standingsNews";
 import { regionRankings } from "../../utils/tournament";
 import { HS_REGIONS } from "../../utils/leagueScheduler";
+import { standingsTableMeta } from "../../utils/dashboardMeta";
 
 // ── 리그 표시명 ───────────────────────────────────────────────
 export const LEAGUE_NAMES: Record<string, string> = {
@@ -145,6 +146,19 @@ export interface DigestInput {
    * 시즌 상태에 있고, 이 모듈은 순수 함수로 남아야 회귀에서 쓸 수 있다).
    */
   isLeagueActive?: (leagueId: string) => boolean;
+  /**
+   * **지난 다이제스트 때의 내 리그 순위표** — 순위 변동을 그릴 재료
+   * (PLAN_MESSAGE_DASHBOARDS §3-1 (나)).
+   *
+   * 정본은 `standingsSnapshots[myLeagueId].last_digest` 이고, 이 소식을 보낸
+   * 직후에 그 자리를 덮어쓴다(`advanceWeek`). 그래서 **한 달 전 값**이다.
+   *
+   * ⚠ **첫 달·첫 시즌엔 없다.** 없으면 변동 열을 통째로 안 그린다 — `0` 으로
+   *   채우면 「변동 없음」과 「모름」이 같아 보인다.
+   * ⚠ 순위를 여기서 **같은 방식으로 다시 매긴다.** 고교는 권역 순위, 그 밖은
+   *   리그 순위다 — 지금 표와 다른 자로 재면 변동이 거짓말이 된다.
+   */
+  prevStandings?: Standing[];
 }
 
 const sortStandings = (rows: Standing[]) =>
@@ -169,6 +183,20 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
   const regionName = input.regionName ?? ((id: string) => id.replace(/^STADIUM_/, ""));
   const sections: string[] = [];
   let headline = "";
+  // 🔴 **본문은 그대로 둔다.** 표는 얹기만 한다 — 문안을 못 읽는 자리에서
+  //   텍스트가 폴백이어야 한다 (PLAN_MESSAGE_DASHBOARDS §3).
+  let table: TableMetadata | null = null;
+
+  /** 지난 순위 찾기 — **지금 표와 같은 자**로 잰다 (권역 / 리그) */
+  const prevRankLookup = (teamIds: string[] | null): ((teamId: string) => number | undefined) | undefined => {
+    const prev = input.prevStandings;
+    if (!prev || prev.length === 0) return undefined;
+    const order = teamIds
+      ?? sortStandings(prev).map((s) => s.teamId);
+    const rankOf = new Map<string, number>();
+    order.forEach((tid, i) => rankOf.set(tid, i + 1));
+    return (teamId: string) => rankOf.get(teamId);
+  };
 
   // ── [내 자리] ──────────────────────────────────────────────
   if (on.mine) {
@@ -216,6 +244,22 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
           return `  ${i + 1}위  ${input.teamName(tid)}  ${recordOf(byTeam.get(tid))}${mark}`;
         });
         sections.push(`[내 무대] ${regionName(mine.regionId)}\n${lines.join("\n")}`);
+        // ⚠ 고교는 **권역 순위표**다 — 전국 102팀을 표로 만들면 100행이 된다
+        const prevRegion = input.prevStandings
+          ? regionRankings(input.prevStandings, regions).find((r) => r.regionId === mine.regionId)
+          : null;
+        table = standingsTableMeta({
+          rows: mine.rankedTeams.map((tid) => {
+            const st = byTeam.get(tid);
+            return {
+              teamId: tid, teamName: input.teamName(tid),
+              wins: st?.wins ?? 0, losses: st?.losses ?? 0, draws: st?.draws ?? 0,
+              winPct: st?.winPct ?? 0, streak: st?.streak ?? "",
+            };
+          }),
+          myTeamId: input.myTeamId,
+          prevRankOf: prevRegion ? prevRankLookup(prevRegion.rankedTeams) : undefined,
+        });
       }
     } else {
       const rows = sortStandings(input.myStandings);
@@ -227,6 +271,15 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
         sections.push(
           `[내 무대] ${LEAGUE_NAMES[input.myLeagueId] ?? input.myLeagueId}\n${lines.join("\n")}`,
         );
+        table = standingsTableMeta({
+          rows: rows.map((s) => ({
+            teamId: s.teamId, teamName: input.teamName(s.teamId),
+            wins: s.wins, losses: s.losses, draws: s.draws,
+            winPct: s.winPct, streak: s.streak ?? "",
+          })),
+          myTeamId: input.myTeamId,
+          prevRankOf: prevRankLookup(null),
+        });
       }
     }
   }
@@ -284,5 +337,8 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
     body:      `[야구계 소식 — ${input.monthLabel}]\n\n${sections.join("\n\n")}\n\n→ 세부 순위는 [기록] 탭`,
     createdAt: `W${input.weekNum}`,
     readAt:    null,
+    // 순위표를 **값으로도** 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 1).
+    // 본문은 위 그대로다 — 표를 못 그리는 자리에서 텍스트가 폴백이다
+    ...(table ? { metadata: table } : {}),
   };
 }

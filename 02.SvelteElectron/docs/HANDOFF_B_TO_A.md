@@ -1250,6 +1250,118 @@ B-25 의 규칙을 합쇼체로 옮기면서도 지켰다.
 후보표 §8 의 **본문 제안**이다. 그건 말투가 아니라 **새 문안**이라 별도
 결정이다. 지금은 두 번째 선택지만 달린 상태다(B-25).
 
+### B-28 상무 탭 문안 다듬기 · 🔴 조사 결함은 하나가 아니라 **여섯 자리**다
+
+#### ① `messages/military_sports.json` — 다섯 줄을 고쳤다 (키·구조 그대로)
+
+| 자리 | 왜 |
+|---|---|
+| `discharge.dateForm` `{year}년 W48` → `{year}년` | 🔴 **W48 은 근거가 없다.** 전역은 주차 고정이 아니라 `militaryServiceWeeks >= 100`(`militaryDecision.ts:139`)이고, 입대 주가 인자다(`enlistMilitary(… enlistWeek = MILITARY_RESULT_WEEK)` · 기본 **50**). W50 입대면 100주 뒤는 **W46**(Y+2)이다. 연도는 `militaryDischargeYear = enlistYear + 2` 로 맞으니 연도만 남겼다 |
+| `noGames.note` 「계약이 2년 늘어납니다」 → 「남은 계약이 있으면 복무 기간만큼 늘어납니다」 | 🔴 **조건부다.** `game.ts:2421` 이 `isPro && contract.remainingYears > 0` 일 때만 늘린다 — 만료된 계약은 연장 없이 전역 후 FA·재계약이다 |
+| `noGames.body` 「경기가 없습니다」 → 「내 경기가 없습니다」 | 상무는 **팀이 실제로 경기를 뛴다**(`MILITARY.md`). 없는 건 주인공 경기다(`PLAN_ROLE_RECOMMEND` §427 「주인공 경기 0」) |
+| `calendar.lead` 「반드시 지나가는 자리입니다」 → 「지나가는 날짜입니다」 | 🔴 **상무는 그 캘린더를 안 탄다.** `advanceWeek.ts:2216` 이 `!isSportsUnit && militaryLife` 일 때만 `military_life` 로 보낸다 — 여덟은 **이벤트가 아니라 날짜 눈금**이다 |
+| `head.lead` | 상관없는 두 사실이 쉼표로 붙어 있어 문장을 갈랐다 |
+
+`calendar.eventIds` 여덟은 `military/calendar.json` 에 다 있다(1·5·20·35·52·61·96·100주) — C 검사와 같은 걸로 확인했다.
+
+⚠ **이름이 겹친다.** `events/pools/military_sports.json`(상무 이벤트 20종)과
+`messages/military_sports.json`(이번 문안)은 **다른 파일**이다. 폴더가 다르지만
+둘 다 「military_sports」라 인계·로그에서 헷갈린다.
+
+#### ② 🔴 조사 결함 — C 가 본 건 여섯 자리 중 하나다
+
+C 가 짚은 자리는 **코드**다. 고치지 않았다(코드 금지) — 자리와 실측만 적는다.
+
+```
+apps/ui/src/shared/utils/militaryResultMessage.ts:36
+  const lines = [`「${choice.label}」을 골랐다.`];
+```
+
+**군 선택지 라벨 176개 중 172개가 무받침이다** — 「…한다」·「…간다」 꼴이라
+거의 전부다. 받침이 있는 건 넷뿐(「새 폼에 도전」·「멘탈 코치에게 상담」·
+「복귀 준비에 집중」·「마지막 경기에 집중」). **176 중 172 가 틀린다.**
+
+⚠ 같은 파일 48행 `subject: `${title} — 결과`` 도 **부제·대시 금지 규칙 위반**이다.
+둘 다 내가 B-5 에 쓴 것이고, 그때는 규칙이 정해지기 전이었다.
+
+**전수로 훑으니 같은 부류가 다섯 더 있다.** 이름 목록의 받침을 세어 봤다:
+
+| 자리 | 문장 | 실측 |
+|---|---|---|
+| `utils/militaryResultMessage.ts:36` | `「{label}」을 골랐다` | 🔴 **176 중 172 틀림** |
+| `usecases/nationalTeam.ts:294` | `{def.name}이 막을 내렸습니다` | 🔴 **7 중 7 전부 틀림** — 개나리기·장미기·무궁화기·국화기·패왕기·은하기·여명기 (전부 무받침 → 「가」) |
+| `usecases/militaryLife.ts:226` | `{ARC_LABELS…}이 됐다` | 🔴 **7 중 4 틀림** — 탄약수·부사수·사수·상황실 근무자 |
+| `usecases/weekPhases/tournamentNews.ts:98` | `{def.flower}를 들어올렸다` | 🔴 **7 중 2 틀림** — 왕중왕·여명 (받침 → 「을」) |
+| `usecases/weekPhases/injuries.ts:291` | `{injuryLabel}로 인한 은퇴` | ⚠ 부상명 받침이면 「으로」 — 목록을 따로 안 셌다 |
+| `usecases/contractDecision.ts:65·179·181` | `{teamName}와 계약이` | ✅ **지금은 안 틀린다** — 팀 238개 중 받침으로 끝나는 것 **0종**(200 무받침 + 38 비한글). `contract_terms.json:40` 의 기록과 같다. **팀 이름 하나만 받침으로 늘어도 깨진다** |
+
+고치는 법은 이 프로젝트가 이미 정한 그대로다 — **조사를 붙이지 않는다.**
+
+```
+militaryResultMessage.ts:36   `선택: ${choice.label}`        (체언 종지)
+militaryResultMessage.ts:48   `${title} 결과`                 (대시 제거)
+nationalTeam.ts:294           `${def.name}. 대회가 끝났습니다.`
+militaryLife.ts:226           `보직: ${ARC_LABELS[...][arc]}`
+tournamentNews.ts:98          `${def.flower}. 우승입니다.`
+injuries.ts:291               `${injuryLabel} 은퇴`
+```
+
+🔴 **잣대를 하나 두면 다시 안 난다.** 자리표시자(`${…}`·`{…}`) 바로 뒤에
+조사(을/를·이/가·은/는·으로/로·와/과)가 오는 줄을 코드와 데이터에서 훑는
+검사다. 내가 이번에 쓴 스캐너가 그대로 쓸 만하고, **데이터 쪽은 지금 0건**
+(맞은 셋은 전부 `_josa` 주석이다). **D 몫으로 넣어 달라.**
+
+### B-29 NPC 경력·계약 이력 검토 — `docs/NPC_HISTORY_REVIEW_2026-09-03.md`
+
+**검토만이다. 코드도 데이터도 안 고쳤다.** 숫자는 규칙 파일의 값으로 직접
+계산했다(`pick_age` 삼각분포 · `pick_entry_age` 를 그대로 옮겨 20만 표본).
+electron 을 못 써서 생성 결과와는 아직 대조를 못 했다 — §6 에 D 부탁 넷을 적었다.
+
+🔴 **뿌리 하나 — 이력이 세 군데에 나뉘어 있고 서로를 안 본다.**
+
+```
+careerHistory   연도별 성적   seedPastPlayerStats.ts → npc.extra   프로 1·2군 · 5년
+transactions    입단·이적     career_history.rs → seedCareerHistory  CONTRACT_LEAGUES 일곱
+careerEvents    진행 중 사건  npc_sim·draft·TS 몇 곳                 새 게임 시점 **0건**
+```
+
+`PlayerDetailModal` 이 셋을 **각각 다른 절**로 그린다. 아래 결함 대부분이 여기서 나온다.
+
+#### 높음 셋
+
+| # | 무엇 | 근거 |
+|---|---|---|
+| D-1 | **승격·강등·방출이 `careerEvents` 에 안 남는다.** `careerEventLabel` 에 라벨이 여섯이나 있는데 화면엔 영영 안 뜬다 | `npc_sim.rs:1416` 주석이 그렇다고 적고 있다 — `ev()` 로 `OffseasonEvent` 에만 간다 |
+| D-2 | **연도별 성적이 이적을 무시하고 현재 팀을 5년 내내 박는다.** 같은 모달의 「팀 이력」과 정면으로 어긋난다 | `seedPastPlayerStats.ts:88` `teamId: p.teamId` 대 `career_history.rs:200` 소속 사슬 |
+| D-3 | **FA 자격 연차 정본이 둘이고 값이 이미 갈렸다** — 이력 생성 8 / 게임 KBL 5·ABL 6·JBL 4 | KBL 자격자 61.8% 중 **44%** 가 과거에 FA 이적이 못 들어간다 |
+
+⚠ D-3 은 `faRules._note` 가 **바로 그 형태를 경고한 자리**다 — 「값이 같아도
+정본이 둘이면 언젠가 갈라진다」. 지금 세 번째 사본이고 값이 갈렸다.
+
+#### 중간 넷 · 낮음 셋
+
+```
+D-4  계약 기간이 나이를 안 본다 — OVR 만 본다(npc_sim.rs:3269). 37세가 5년 계약
+D-5  한국인 NPC 가 전원 미필로 시작한다. 30대는 입대 게이트에 안 걸려 영원히 미필
+D-6  연차 회귀 테스트가 지금 경로를 안 덮는다(entry_rules 없는 폴백을 잰다)
+D-7  주간 콜업/콜다운은 오프시즌 이벤트에도 안 남는다
+D-8  타입 유니온이 사실과 다르다 — waiver_claim·transfer·development_expired 가 선언에 없다
+D-9  독립리그만 짝이 안 맞는다 — 이적 이력은 있고 연도별 성적이 없다
+D-10 연차 분포가 톱니다(0:12% 1:5% 2:7%) — entry_age 가 20/24/25~27 로 끊겨 있어서다
+```
+
+#### ✅ 결함이 아닌 것 둘 — 물음에 그렇게 답한다
+
+「25세 프로가 연차 0」은 **설계다** — 입단 경로에 독립(25~27세 입단)이 있다.
+연차 0의 30%가 24세 대졸 신인이라 분포도 어긋나지 않는다.
+「32세 연차 2」는 **안 나온다** — `entry_age` 최대가 27이라 32세면 최소 5년차다.
+
+#### 사용자 결정 다섯
+
+승격·강등·방출을 경력에 남기나(통 수와 「무엇이 사건인가」) · 과거 성적의 팀을
+이적에 맞추나(생성 순서가 바뀐다) · FA 자격 연차 정본을 어디로 하나 · 새 게임
+NPC 병역을 나이로 채우나(과거 5년 공백 시즌과 얽힌다) · 계약 기간에 나이 상한을 두나.
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고

@@ -17,7 +17,18 @@ export const FIRST_HALF_END_WEEK =
 export const SECOND_HALF_START_WEEK =
   (TOURNAMENTS.find((t) => t.id === "TOUR_HS_MUGUNGHWA")?.endWeek ?? 22) + 1;
 
-export type SnapshotKey = "prev_season" | "first_half" | "second_half_base";
+/**
+ * 스냅샷 종류.
+ *
+ * 앞의 셋은 **대회 시드용**이다(머리말). `last_digest` 만 성격이 다르다 —
+ * 월간 다이제스트의 **순위 변동**을 그리려고 지난 달 순위표를 한 벌 남긴다
+ * (PLAN_MESSAGE_DASHBOARDS §3-1 (나) · A 단위 5).
+ *
+ * ⚠ **누적이 아니라 덮어쓴다.** 지난 달 한 벌이면 되고, 시즌이 바뀌면
+ *   `startNewSeason` 이 `prev_season` 만 넘기므로 자연히 비워진다 —
+ *   새 시즌 첫 달에 작년 최종 순위와 견주는 일이 없다.
+ */
+export type SnapshotKey = "prev_season" | "first_half" | "second_half_base" | "last_digest";
 
 /** leagueId → 스냅샷 종류 → 그 시점의 순위표 */
 export type StandingsSnapshots = Record<string, Partial<Record<SnapshotKey, Standing[]>>>;

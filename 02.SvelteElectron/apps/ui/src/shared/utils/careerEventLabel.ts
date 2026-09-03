@@ -28,6 +28,9 @@ const LABEL: Record<string, string> = {
   fa_unsigned_retire: "FA 미계약 은퇴",
   indie_age_retire: "독립리그 나이 상한 은퇴",
   trade:            "트레이드",
+  // FA 미계약 뒤 독립으로 옮겼다 (`npc_sim.rs`). **트레이드가 아니다** —
+  // 표에 없어서 화면에 「transfer」 가 그대로 뜨고 있었다 (B-29 D-8)
+  transfer:         "이적",
   foreign_signing:  "용병 영입",
   promote:          "1군 승격",
   // 강등 — 사유가 다르면 다른 일이다
@@ -39,6 +42,9 @@ const LABEL: Record<string, string> = {
   // 팀 총연봉이 예산을 넘어 잘렸다 (2026-08-31)
   release_budget:   "방출(예산)",
   release:          "방출",
+  // 방출된 선수를 다른 구단이 데려갔다. **표에 없어서 화면에 「waiver claim」
+  // 이 그대로 뜨고 있었다** — 엔진(`npc_sim.rs`)은 예전부터 이 유형을 냈다
+  waiver_claim:     "웨이버 영입",
   development_expired: "육성 만료",
   // 은퇴
   retirement:       "은퇴",

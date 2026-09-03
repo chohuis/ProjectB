@@ -926,6 +926,20 @@ export type NpcCareerEventType =
   | "trade"
   | "fa_signed"
   | "release"
+  // 방출 — **사유가 다르면 다른 일이다.** `careerEventLabel` 은 셋을 갈라
+  // 이름 붙여 뒀는데 그 유형이 `career_events` 에 한 번도 안 들어가서
+  // 화면엔 영영 안 떴다 (B-29 D-1 · 사용자 확정 ①). `npc_sim.rs` 가 낸다
+  | "release_roster"
+  | "release_score"
+  | "release_budget"
+  // 웨이버 청구 — 방출된 사람을 다른 구단이 데려간다. `npc_sim.rs` 가
+  // 예전부터 냈는데 **선언에만 없었다** (B-29 D-8)
+  | "waiver_claim"
+  // FA 미계약 뒤 독립리그 재도전 (`npc_sim.rs`). 트레이드가 아니다 —
+  // `trade` 와 구분해야 「독립 재도전」 이름표가 붙는다
+  | "transfer"
+  // 육성선수 단년 계약 만료 (`npc_sim.rs`)
+  | "development_expired"
   | "quit_baseball"
   | "military_enlist"
   | "military_discharge"

@@ -16,6 +16,8 @@ import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
 import { leagueStandingsOf } from "../../utils/season-helpers";
+// 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
+import { tradeTableMeta, playerListTableMeta, lockNoteOf } from "../../utils/dashboardMeta";
 
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
 function updateNpcsAndSync(npcs: import("../../types/save").NpcSaveState[]): void {
@@ -744,6 +746,15 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       body: `[${team1Name}] ${p1Name} → [${team2Name}]\n[${team2Name}] ${p2Name} → [${team1Name}]\n사유: ${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason}`,
       createdAt: `W${weekInYear}`,
       readAt: null,
+      // 오가는 쪽이 두 열이다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
+      // ⚠ 행은 「그 구단이 **받은** 선수」다. 본문의 화살표와 방향이 같다
+      metadata: tradeTableMeta(
+        [
+          { teamName: team2Name, playerNames: [p1Name] },
+          { teamName: team1Name, playerNames: [p2Name] },
+        ],
+        TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason,
+      ),
     });
 
     // 리그 거래 기록
@@ -1057,6 +1068,10 @@ export async function processProTeamCallupCalldown(
         body: `${names.join("\n")}\n\n${lockWeeks}주간 1군 재등록이 불가하다.`,
         createdAt: `W${weekNum}`,
         readAt: null,
+        // 사람마다 열이 같다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
+        // ⚠ 비고 문장은 **문안(`table.demote.lockNote`)에서** 온다. 못 읽으면
+        //   그 칸을 비운다 — 코드가 한 벌 더 적으면 한쪽만 고쳐진 채 남는다
+        metadata: playerListTableMeta("demote", names, lockNoteOf(m.dashboardLabels, lockWeeks)),
       });
     }
   }

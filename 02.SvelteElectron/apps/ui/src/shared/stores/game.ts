@@ -60,6 +60,8 @@ import { transitionReason, universityGradeOf, universityWeekOnEnroll } from "../
 import { careerSummaryOf } from "../utils/careerSummary";
 import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
+// 인센티브를 구분하는 열쇠 — **식이 둘이 되면 자물쇠가 안 맞는다**
+import { incentiveKey } from "../utils/contractTerms";
 import { masterStore } from "./master";
 
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
@@ -2577,6 +2579,39 @@ function createGameStore() {
           protagonist,
           player: toPlayerCompat(protagonist),
           school: toSchoolCompat(protagonist.careerStage, s.schoolState),
+        };
+      });
+    },
+
+    /**
+     * 인센티브 정산 자물쇠 (PLAN_CONTRACT_TERMS §7 ⑤).
+     *
+     * 정산한 해를 `paidSeasons` 에 찍는다 — **다년 계약에서 두 번 주는 걸
+     * 막는 게 이 필드의 목적**이다(`save.ts`). 미달한 줄도 찍는다:
+     * 안 찍으면 같은 해에 다시 불릴 때 미달 소식이 한 통 더 생긴다.
+     *
+     * ⚠ 계산은 `usecases/incentiveSettlement.ts` 가 한다 — 여기는 패치만이다.
+     */
+    markIncentivesSettled(seasonYear: number, keys: readonly string[]) {
+      if (keys.length === 0) return;
+      const set = new Set(keys);
+      update((s) => {
+        const c = s.protagonist.contract;
+        if (!c?.incentives?.length) return s;
+        return {
+          ...s,
+          protagonist: {
+            ...s.protagonist,
+            contract: {
+              ...c,
+              incentives: c.incentives.map((i) => {
+                if (!set.has(incentiveKey(i))) return i;
+                const paid = i.paidSeasons ?? [];
+                if (paid.includes(seasonYear)) return i;
+                return { ...i, paidSeasons: [...paid, seasonYear] };
+              }),
+            },
+          },
         };
       });
     },
