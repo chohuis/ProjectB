@@ -53,6 +53,21 @@ export function bullpenSizeForLeague(leagueId: string): number {
   return _bullpen[leagueId] ?? _bullpen.default ?? 0;
 }
 
+/**
+ * 추천 밖 깊이 재료 한 벌 (§5 · 1.1 A④) — 세 호출부(선발 건너뛰기 · 불펜 확률 · 경기 진입)가 같이 쓴다.
+ *
+ * 🔴 **계수 자체는 Rust 가 계산한다.** 여기서 `1 − k × over` 를 다시 적으면 두 벌이 되고
+ *   한쪽만 고쳐진 채 남는다. 이 함수는 `over` 와 규칙만 꺼내 넘긴다.
+ * ⚠ 규칙이 안 실렸으면 `offRecommendation` 이 undefined 다 — Rust 가 계수 1.0 으로 떨어뜨린다.
+ */
+export function roleDepthOf(
+  roleFit: { rank: number; seats: number } | undefined | null,
+): { roleDepth: number; offRecommendation?: { perSeatOver: number; floor: number } } {
+  const over = roleFit ? Math.max(0, Math.round(roleFit.rank) - Math.round(roleFit.seats)) : 0;
+  const off = _rules?.offRecommendation;
+  return off ? { roleDepth: over, offRecommendation: off } : { roleDepth: over };
+}
+
 // ── Rust 재료 ─────────────────────────────────────────────
 
 export interface RolePitcherRef {

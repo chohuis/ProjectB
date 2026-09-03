@@ -310,6 +310,14 @@ export interface RoleChoiceMetadata {
   recommended: "sp" | "rp" | "cp";
   /** 그 자리를 지금 차지한 같은 팀 투수 수. 확인 문구가 쓰는 유일한 숫자 */
   ahead: { sp: number; rp: number; cp: number };
+  /**
+   * 자리별 내 순위와 자리 수 — **고른 뒤 `roleFit` 으로 옮겨 적는 재료다** (§5 · 1.1 A④).
+   *
+   * ⚠ 화면은 안 쓴다(문구는 `ahead` 만 본다). 옛 산식 폴백·구 세이브엔 없어서 optional 이고,
+   *   없으면 깊이 0 = 불이익 없음으로 떨어진다.
+   */
+  ranks?: { sp: number; rp: number; cp: number };
+  seats?: { sp: number; rp: number; cp: number };
   managerName: string;
   year: number;
   teamId: string;

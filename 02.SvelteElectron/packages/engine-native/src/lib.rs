@@ -755,6 +755,17 @@ pub fn reliever_would_pitch_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("relieverWouldPitchNative/serialize", e))
 }
 
+/// 선발 등판 판정 — 추천 밖 깊이만큼 그 주 등판을 건너뛴다 (1.1 A④ §5-a)
+#[napi]
+pub fn starter_would_start_native(params_json: String) -> String {
+    let params: player_engine::StarterStartParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("starterWouldStartNative", e),
+    };
+    let result = player_engine::starter_would_start(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("starterWouldStartNative/serialize", e))
+}
+
 /// 시즌 레이팅 계산
 #[napi]
 pub fn calc_season_rating_native(params_json: String) -> String {

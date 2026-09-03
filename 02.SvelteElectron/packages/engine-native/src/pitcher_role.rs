@@ -69,6 +69,32 @@ pub struct ArsenalWeights {
     pub developing_weight: Option<f64>,
 }
 
+/// 추천 밖 자리 불이익 계수 (규칙 파일 `pitcherRoleRules.offRecommendation` · §5)
+#[derive(Debug, Clone, Copy, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OffRecommendation {
+    /// 자리 밖 한 칸당 깎는 비율 (제안 0.30)
+    pub per_seat_over: f64,
+    /// 아무리 밀려도 남기는 바닥 (제안 0.15)
+    pub floor: f64,
+}
+
+/// 깊이 계수 — **그 주에 마운드에 오를 확률에 곱하는 값**이다 (§5).
+///
+/// ```text
+///   over = max(0, rank − seats)          자리보다 몇 칸 밖인가
+///   depthFactor = clamp(1 − k × over, floor, 1)
+/// ```
+///
+/// ⚠ **벌이 아니라 깊이다.** 추천을 따랐어도 세 자리에 다 못 들면 `over > 0` 이고 같은 계수를 쓴다.
+/// ⚠ 규칙이 안 오면 **1.0** 이다 — 안 넘긴 호출부가 조용히 불이익을 받으면 안 된다.
+pub fn depth_factor(over: u32, off: Option<&OffRecommendation>) -> f64 {
+    let Some(o) = off else { return 1.0 };
+    if over == 0 { return 1.0; }
+    let raw = 1.0 - o.per_seat_over * over as f64;
+    raw.clamp(o.floor.clamp(0.0, 1.0), 1.0)
+}
+
 /// 규칙 — `weights.<ROLE>` 은 능력치 이름 → 가중치 (`arsenal` 키 포함)
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -372,6 +398,19 @@ mod tests {
         assert!((b.fits.cp - base.fits.cp - 6.0).abs() < 1e-9);
         // 동점 동료보다 앞선다 — 순위가 오른다
         assert!(b.ranks.sp <= base.ranks.sp);
+    }
+
+    #[test]
+    fn 깊이_계수는_자리_밖_칸수로_깎고_바닥에서_멈춘다() {
+        let off = OffRecommendation { per_seat_over: 0.30, floor: 0.15 };
+        // §5 표 그대로 — 자리 안 1.00 · 한 칸 0.70 · 두 칸 0.40 · 세 칸부터 바닥 0.15
+        assert!((depth_factor(0, Some(&off)) - 1.00).abs() < 1e-9);
+        assert!((depth_factor(1, Some(&off)) - 0.70).abs() < 1e-9);
+        assert!((depth_factor(2, Some(&off)) - 0.40).abs() < 1e-9);
+        assert!((depth_factor(3, Some(&off)) - 0.15).abs() < 1e-9);
+        assert!((depth_factor(9, Some(&off)) - 0.15).abs() < 1e-9);
+        // 🔴 규칙이 안 오면 불이익이 **없다** — 배선을 뺀 호출부가 조용히 깎이면 안 된다
+        assert!((depth_factor(3, None) - 1.0).abs() < 1e-9);
     }
 
     #[test]

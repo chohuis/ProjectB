@@ -1736,6 +1736,11 @@ function createGameStore() {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, position: pos } }));
     },
 
+    /** 고른 자리에서의 내 깊이 (PLAN_ROLE_RECOMMEND §5 · 1.1 A④) */
+    setRoleFit(fit: import("../types/save").ProtagonistSave["roleFit"]) {
+      update((s) => ({ ...s, protagonist: { ...s.protagonist, roleFit: fit } }));
+    },
+
     /**
      * 보직을 **이미 물은 자리** 를 적어 둔다 (PLAN_ROLE_RECOMMEND §7).
      *

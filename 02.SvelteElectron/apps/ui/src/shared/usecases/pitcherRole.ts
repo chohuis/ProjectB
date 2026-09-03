@@ -293,6 +293,10 @@ export function buildRoleChoiceMessage(input: RoleChoiceMessageInput): MessageIt
     type: "roleChoice",
     recommended: rec.recommended,
     ahead: rec.ahead,
+    // §5 A④ — 고른 뒤 깊이(`over = rank − seats`)를 적으려면 이 둘이 필요하다.
+    //   옛 산식 폴백은 안 주므로 그때는 안 싣는다(= 깊이 0)
+    ...(rec.ranks ? { ranks: rec.ranks } : {}),
+    ...(rec.seats ? { seats: rec.seats } : {}),
     managerName, year, teamId, week, reason, stage,
   };
   // 머리말 + 추천 한 줄 + 물음 한 줄. **감독 이름은 안 넣는다** — 보낸이 칸이 든다.
@@ -462,6 +466,13 @@ export async function applyRoleChoice(messageId: string, optionId: string): Prom
   gameStore.resolveDecision(messageId, pick);
   gameStore.setPosition(pos);
   gameStore.setCurrentRole(role);
+  // §5 A④ — 고른 자리에서의 내 깊이를 적는다. 순위·자리 수가 없으면(옛 산식 폴백·구 세이브)
+  //   `roleFit` 자체를 비워 둔다 — 0 을 지어 넣으면 "자리 안"과 구분이 안 된다
+  gameStore.setRoleFit(
+    (meta.ranks && meta.seats)
+      ? { chosen: pos, recommended: positionOfChoice(meta.recommended), rank: meta.ranks[pick], seats: meta.seats[pick] }
+      : undefined,
+  );
   if (m.roleChoiceCopy) {
     gameStore.addMessage(buildRoleConfirmMessage({
       copy: m.roleChoiceCopy,

@@ -51,7 +51,8 @@ import type { MessageItem } from "../types/main";
 import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, PitchingAttributes, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
-import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
+import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch, starterWouldStart } from "../utils/pitcherRoleEngine";
+import { roleDepthOf } from "../utils/pitcherRoleRules";
 import {
   buildKblBracket, buildAblBracket, buildIndLadder, buildJblBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
@@ -2961,6 +2962,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const leagueIdR      = gCurrent.protagonist.leagueId;
       const lStateR        = sForReliever.leagueState[leagueIdR];
       const myCondR        = lStateR?.playerConditions?.[gCurrent.protagonist.id];
+      // 1.1 A④ §5 — 고른 자리에서 몇 칸 밖인가. 0 이면 아래 두 판정이 예전 그대로 돈다
+      const depthR         = roleDepthOf(gCurrent.protagonist.roleFit);
       const relieverPitching =
         !game.isProtagonistGame &&
         isTeamGame &&
@@ -2978,9 +2981,25 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             lastPitchCount:  myCondR?.lastPitchCount,
             gameDate:        game.gameDate,
           },
+          // §5-b — 자리 밖이면 등판 확률이 그만큼 깎인다
+          depthR,
         );
 
-      if (game.isProtagonistGame || relieverPitching) {
+      // ── §5-a 선발 등판 건너뛰기 ────────────────────────────────
+      // 로테이션 자리 밖 선발은 그 주를 건너뛴다. 건너뛰면 아래 `else` 갈래(`simulateGame`)로
+      // 떨어져 **팀·동료 기록이 정상으로 남는다** — MainPage 회피 갈래(`playerLines: []`)로 보내지 않는다.
+      // ⚠ 깊이 0 이면 엔진을 아예 안 부른다 — 경기마다 IPC 를 한 번 더 쓰지 않는다.
+      const starterSkips =
+        depthR.roleDepth > 0 &&
+        game.isProtagonistGame &&
+        isTeamGame &&
+        gCurrent.protagonist.playerType === "pitcher" &&
+        !!currentRole &&
+        !isReliefsRole(currentRole) &&
+        !(await starterWouldStart(depthR, seedOf(
+          sForReliever.worldSeed ?? 0, sForReliever.seasonYear, nextWeekNum, "starter-start", game.id)));
+
+      if ((game.isProtagonistGame && !starterSkips) || relieverPitching) {
         const eligibilityBlocked = gCurrent.schoolState.eligibilityBlocked;
         const isInjured          = !!gCurrent.protagonist.injury;
         const cond               = gCurrent.protagonist.condition;

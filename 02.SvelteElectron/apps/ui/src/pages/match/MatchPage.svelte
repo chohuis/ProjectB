@@ -847,7 +847,7 @@
         // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
         ...leagueMatchOptions($gameStore.protagonist.leagueId,
           $seasonStore.leagueState[$gameStore.protagonist.leagueId]?.playerConditions?.[$gameStore.protagonist.id],
-          $seasonStore.currentDate),
+          $seasonStore.currentDate, $gameStore.protagonist.roleFit),
         initialStamina: player.condition,
         initialMental: 74,
         pitcher: { ...player.pitcherStats, name: player.name },
@@ -1197,7 +1197,7 @@
           leagueId: get(gameStore).protagonist.leagueId,
           ...leagueMatchOptions(get(gameStore).protagonist.leagueId,
             get(seasonStore).leagueState[get(gameStore).protagonist.leagueId]?.playerConditions?.[get(gameStore).protagonist.id],
-            get(seasonStore).currentDate),
+            get(seasonStore).currentDate, get(gameStore).protagonist.roleFit),
           initialStamina: player.condition,
           initialMental: 74,
           pitcher: player.pitcherStats
