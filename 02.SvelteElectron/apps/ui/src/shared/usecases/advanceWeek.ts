@@ -167,7 +167,7 @@ import {
 import { buildLeagueDigest, DIGEST_WEEKS, LEAGUE_NAMES } from "./weekPhases/digest";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
 import {
-  pitcherSeasonTableMeta, gameResultsTableMeta, rankListMeta,
+  pitcherSeasonTableMeta, gameResultsTableMeta, rankListMeta, coachReportTableMeta,
 } from "../utils/dashboardMeta";
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
@@ -1734,6 +1734,16 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         })`
       : null;
 
+    /**
+     * 시즌 시작 대비 변화. **없으면 `undefined` 다** — 구 세이브·시즌 첫 주엔
+     * 견줄 값이 없고, 0 을 채우면 「안 변했다」와 「모른다」가 같아 보인다.
+     */
+    const startPit = p.seasonStartPitching;
+    const deltaFromStart = (k: keyof typeof pit): number | undefined => {
+      const before = startPit?.[k as keyof typeof startPit];
+      return typeof before === "number" ? (pit[k] as number) - before : undefined;
+    };
+
     const fatigueTag = p.fatigue >= 70 ? "⚠ 위험" : p.fatigue >= 50 ? "주의" : "정상";
 
     type Choice = { id: string; label: string; effectHint: string;
@@ -1790,6 +1800,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       body: bodyLines.join("\n"),
       createdAt: `W${weekNum}`,
       readAt: null,
+      // 🔴 **지표 이름을 안 싣는다** — 키만 보내고 화면이 문안
+      //   (`table.coachReport.rows`)으로 이름을 붙인다 (B-35).
+      // ⚠ 변화는 시즌 시작 스냅샷이 있을 때만이다 — 없으면 그 칸이 안 그려진다
+      metadata: coachReportTableMeta([
+        { key: "velocity", value: pit.velocity, delta: deltaFromStart("velocity") },
+        { key: "command",  value: pit.command,  delta: deltaFromStart("command") },
+        { key: "control",  value: pit.control,  delta: deltaFromStart("control") },
+        { key: "stamina",  value: pit.stamina,  delta: deltaFromStart("stamina") },
+        { key: "condition", value: p.condition },
+        { key: "fatigue",   value: p.fatigue },
+        { key: "morale",    value: p.morale },
+      ]),
       decision: {
         prompt: "이번 주 방향을 선택하세요.",
         options: choices.map(c => ({

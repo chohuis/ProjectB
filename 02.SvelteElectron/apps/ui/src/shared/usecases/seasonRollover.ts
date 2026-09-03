@@ -32,7 +32,7 @@ import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
 import {
-  playerListTableMeta, pctSub, rankListMeta, timelineMeta,
+  playerListTableMeta, pctSub, rankListMeta, timelineMeta, militaryAnnualTableMeta,
 } from "../utils/dashboardMeta";
 
 /**
@@ -234,6 +234,8 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
             ...resigned.map((x) => `   ${x}`)].join("\n"),
           createdAt: `W1`,
           readAt: null,
+          // 재계약 조건 표가 아니라 **이름 목록**이다 (B-35 · table.resign)
+          metadata: playerListTableMeta("resign", resigned),
         });
       }
     }
@@ -832,6 +834,12 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
         preview: `입대 ${sports.length + general.length}명, 전역 ${discharged.length}명`,
         body: lines.join("\n\n"),
         createdAt: `Y${now}`, readAt: null,
+        // 구분은 **키로** 싣는다 — 「체육부대 입대」는 문안의 `kindLabel` 이다
+        metadata: militaryAnnualTableMeta([
+          { kind: "sports", names: sports },
+          { kind: "general", names: general },
+          { kind: "discharged", names: discharged },
+        ]),
       });
     }
     (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;

@@ -1,10 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { parseDashboardLabels, tableCopy, tableLabelBlock } from "../dashboardCopy";
-import { buildTableView, buildRankList } from "../dashboardView";
 import {
-  bracketTableMeta, rankListMeta, timelineMeta, rowsTableMeta, faCompTableMeta, pctSub,
+  cardsCopy, parseDashboardLabels, tableCopy, tableLabelBlock,
+} from "../dashboardCopy";
+import { buildCards, buildRankList, buildTableView } from "../dashboardView";
+import {
+  bracketTableMeta, cardsMeta, coachReportTableMeta, faCompTableMeta, faMarketTableMeta,
+  militaryAnnualTableMeta, pctSub, rankListMeta, rowsTableMeta, teamMoodTableMeta, timelineMeta,
 } from "../dashboardMeta";
 import {
   buildOpenMessage, buildMyRoundMessage, buildChampionMessage, buildRoundProgressMessage,
@@ -265,5 +268,99 @@ describe("문안 칸", () => {
     expect(copy.rows.week).toBe(copy.columns.week);
     // `columns` 를 따로 적은 칸에는 labels 가 안 끼어든다
     expect(tableCopy(labels, "digest").rows).toEqual({});
+  });
+});
+
+// ══ B-35 로 문안이 코드에 맞춰진 자리 여덟 ═══════════════════════
+//
+// 문안(`277b4cafd`)이 코드가 든 값으로 다시 적혔다. 여기서는 **생산부가 그
+// 새 키를 그대로 쓰는지** 와 **낱말을 안 싣는지**를 본다.
+describe("B-35 새 키", () => {
+  it("팀 분위기 — 사람 수 셋. 관계값은 안 싣는다", () => {
+    const md = teamMoodTableMeta(12, 4, 1);
+    expect(md.kind).toBe("bars.teamMood");
+    expect(md.rows.map((r) => r.item)).toEqual(["total", "cold", "hostile"]);
+    // 불신 0명도 줄이 남는다 — 「없다」와 「안 셌다」는 다르다
+    expect(teamMoodTableMeta(9, 2, 0).rows).toHaveLength(3);
+    const view = buildTableView(md, tableCopy(labels, "bars.teamMood"));
+    expect(view.rows[1].cells[0].text).toBe(labels!.bars.teamMood.rows!.cold);
+  });
+
+  it("연간 병역 — 구분은 키로 싣고 화면이 이름을 붙인다", () => {
+    const md = militaryAnnualTableMeta([
+      { kind: "sports", names: ["김철수", "이영호"] },
+      { kind: "general", names: [] },
+      { kind: "discharged", names: ["박민수"] },
+    ]);
+    // 사람이 없는 구분은 행이 없다
+    expect(md.rows.map((r) => r.kind)).toEqual(["sports", "discharged"]);
+    expect(md.rows[0].count).toBe(2);
+    const copy = tableCopy(labels, "timeline.militaryAnnual");
+    const view = buildTableView(md, copy);
+    expect(view.columns.map((c) => c.key)).toEqual(["kind", "count", "names"]);
+    expect(view.rows[0].cells[0].text, "구분이 키로 그려지면 안 된다")
+      .toBe(copy.kindLabel.sports);
+  });
+
+  it("FA 마감 — 미계약 0명이면 줄이 없다", () => {
+    const md = faMarketTableMeta({ total: 12, moved: 5, stayed: 7, unsigned: 0 });
+    expect(md.rows.map((r) => r.item)).toEqual(["total", "moved", "stayed"]);
+    expect(faMarketTableMeta({ total: 12, moved: 5, stayed: 6, unsigned: 1 })
+      .rows.map((r) => r.item)).toEqual(["total", "moved", "stayed", "unsigned"]);
+  });
+
+  it("코치 리포트 — 지표 이름을 안 싣는다", () => {
+    const md = coachReportTableMeta([
+      { key: "velocity", value: 142, delta: 2 },
+      { key: "command", value: 55 },
+      { key: "morale", value: 70, delta: 0 },
+    ]);
+    expect(md.rows.map((r) => r.name)).toEqual(["velocity", "command", "morale"]);
+    // 변화가 없거나 모르면 칸을 안 만든다
+    expect(md.rows[0].delta).toBe(2);
+    expect("delta" in md.rows[1]).toBe(false);
+    expect("delta" in md.rows[2]).toBe(false);
+    const copy = tableCopy(labels, "coachReport");
+    const view = buildTableView(md, copy);
+    expect(view.rows[0].cells[0].text, "화면이 이름을 붙인다").toBe(copy.rows.velocity);
+  });
+
+  it("카드 — 값이 키인 자리는 키로 싣는다", () => {
+    const md = cardsMeta("cards.scoutDay", [
+      { key: "total", value: 120 },
+      { key: "route", value: "recommend" },
+      { key: "standout", value: true },
+    ]);
+    expect(md.items.map((i) => i.value)).toEqual([120, "recommend", true]);
+    const view = buildCards(md, cardsCopy(labels, "cards.scoutDay"));
+    expect(view.cards[1].value, "초청 경로는 문안이 말로 바꾼다").toBe("팀 추천");
+    const decl = labels!.cards.scoutDay.labels as Record<string, string>;
+    expect(view.cards[0].caption).toBe(decl.total);
+  });
+
+  it("카드 — 문안에 없는 값은 폴백이다", () => {
+    const view = buildCards(
+      cardsMeta("cards.showcase", [{ key: "route", value: "club_pick" }]),
+      cardsCopy(labels, "cards.showcase"));
+    expect(view.cards[0].value).toBe(labels!.cards.showcase.routeFallback);
+  });
+
+  it("여덟 자리가 배선돼 있고 제목에서 대시를 뺐다", () => {
+    const REL = resolve(__dirname, "../relationMessages.ts");
+    const CAMPUS = resolve(__dirname, "../../usecases/campusEvents.ts");
+    expect(read(REL).includes("teamMoodTableMeta(total, cold, hostile)")).toBe(true);
+    expect(read(SRC_ROLL).includes("militaryAnnualTableMeta(")).toBe(true);
+    expect(read(SRC_ROLL).includes('playerListTableMeta("resign"')).toBe(true);
+    expect(read(SRC_MARKET).includes("faMarketTableMeta(")).toBe(true);
+    expect(read(SRC_WEEK).includes("coachReportTableMeta(")).toBe(true);
+    expect(read(CAMPUS).includes('cardsMeta("cards.scoutDay"')).toBe(true);
+    expect(read(CAMPUS).includes('cardsMeta("cards.showcase"')).toBe(true);
+    expect(read(CAMPUS).includes('cardsMeta("cards.allstar"')).toBe(true);
+    // 🔴 제목이 표·카드가 든 값을 또 적지 않는다 (OP ③)
+    expect(read(SRC_MARKET).includes("FA 시장 마감 — ${signings.length}")).toBe(false);
+    expect(read(CAMPUS).includes("전국대학선수쇼케이스 — ${res.total}")).toBe(false);
+    expect(read(CAMPUS).includes("고교 스카우트 데이 — ${res.total}")).toBe(false);
+    // 자동 진행 로그(autoLog)에는 남는다 — 화면에 안 뜨는 개발용 줄이라 안 본다
+    expect(read(CAMPUS).includes("subject: `${year} 대학 올스타전 — ")).toBe(false);
   });
 });

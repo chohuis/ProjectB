@@ -21,7 +21,7 @@
 //    자체가 뜻이라 화면이 반올림하면 안 된다(`dashboardView.cellText` 머리말).
 
 import type {
-  RankListMetadata, TableCell, TableColumn, TableMetadata, TimelineMetadata,
+  CardsMetadata, RankListMetadata, TableCell, TableColumn, TableMetadata, TimelineMetadata,
 } from "../types/main";
 import type { ContractIncentive, PitcherSeasonStats } from "../types/save";
 import { ipLabel, eraLabel } from "./baseballFormat";
@@ -543,4 +543,138 @@ export function rowsTableMeta(
   rows: readonly (Record<string, TableCell> & { myTeam?: boolean })[],
 ): TableMetadata {
   return { type: "table", kind, columns: [], rows: rows.map((r) => ({ ...r })) };
+}
+
+// ══ B-35 로 문안이 코드에 맞춰진 자리들 ════════════════════════
+//
+// A 인계 5차에서 「문안이 코드에 없는 값을 부른다」고 넘긴 일곱을 B 가
+// 코드가 든 값으로 다시 적었다(`277b4cafd`). 아래는 그 **새 키**로 값을
+// 싣는 자리다 — 열 이름·구분 이름은 전부 문안이 갖고 여기는 키만 보낸다.
+
+// ── 팀 분위기 (msg-team-mood-) ────────────────────────────────
+
+/**
+ * 라커룸 점검 → 항목·값 표.
+ *
+ * 🔴 **관계값을 숫자로 안 싣는다** (`relationship.ts:44` · 문안 `_valueNote`).
+ *    싣는 것은 **사람 수**다 — 동료 전체 · 서먹 이상 · 불신 이상.
+ *
+ * ⚠ **0~100 막대가 아니다.** 눈금이 0~동료 수라 문안이 `scale` 을 못 박았다
+ *   (B-35). 그래서 형태는 막대가 아니라 항목·값 표다 — `kind` 만 막대 칸을
+ *   가리킨다(`bars.teamMood` · 이름표가 거기 있다).
+ *
+ * ⚠ **불신 0명이어도 줄을 남긴다.** 「불신 이상 0명」은 값이다 — 줄을 빼면
+ *   「없다」와 「안 셌다」가 같아 보인다.
+ */
+export function teamMoodTableMeta(
+  total: number, cold: number, hostile: number,
+): TableMetadata {
+  return {
+    type: "table",
+    kind: "bars.teamMood",
+    columns: [],
+    rows: [
+      { item: "total", value: total },
+      { item: "cold", value: cold },
+      { item: "hostile", value: hostile },
+    ],
+  };
+}
+
+// ── 연간 병역 현황 (msg-military-annual-) ─────────────────────
+
+/**
+ * 리그 전체의 그해 병역 집계 → 구분·인원·명단 표.
+ *
+ * ⚠ **구분은 키로 싣는다** (`sports`·`general`·`discharged`). 화면이
+ *   문안의 `kindLabel` 로 말을 붙인다 — 낱말을 실으면 세이브에 굳는다.
+ *
+ * ⚠ **명단은 이름 배열이다.** NPC id 가 아니라 이름이 오는 자리라
+ *   (`__lastOffseasonSummary` 가 이름만 준다) 화면이 조회할 게 없다.
+ *
+ * ⚠ 사람이 없는 구분은 행을 안 만든다 — 「전역 0명」 줄은 뜻이 없다.
+ */
+export function militaryAnnualTableMeta(
+  groups: readonly { kind: string; names: readonly string[] }[],
+): TableMetadata {
+  return {
+    type: "table",
+    kind: "timeline.militaryAnnual",
+    columns: [],
+    rows: groups
+      .filter((g) => g.names.length > 0)
+      .map((g) => ({ kind: g.kind, count: g.names.length, names: g.names.join(", ") })),
+  };
+}
+
+// ── FA 시장 마감 (msg-fa-market-) ─────────────────────────────
+
+/**
+ * 리그 FA 마감 요약 → 항목·값 표.
+ *
+ * ⚠ **「받은 제안」이 아니다** (B-35). 내가 받은 제안은 다른 소식이다.
+ * ⚠ 미계약 0명이면 그 줄을 안 만든다 — 본문도 그때 그 줄을 안 적는다.
+ */
+export function faMarketTableMeta(
+  i: { total: number; moved: number; stayed: number; unsigned: number },
+): TableMetadata {
+  const rows: Record<string, TableCell>[] = [
+    { item: "total", value: i.total },
+    { item: "moved", value: i.moved },
+    { item: "stayed", value: i.stayed },
+  ];
+  if (i.unsigned > 0) rows.push({ item: "unsigned", value: i.unsigned });
+  return { type: "table", kind: "faMarket", columns: [], rows };
+}
+
+// ── 코치 리포트 (msg-coach-report-w) ──────────────────────────
+
+/**
+ * 최근 등판 분석 → 항목·값·변화 표.
+ *
+ * 🔴 **지표 이름을 안 싣는다** (문안 `table.coachReport.rows`). 「구속」을
+ *    소식에 실으면 이름을 못 고친다 — 키만 보내고 화면이 붙인다.
+ *
+ * ⚠ **변화는 있을 때만 싣는다.** 시즌 시작 스냅샷이 없는 첫 주엔 견줄 값이
+ *   없다 — 0 을 채우면 「안 변했다」와 「모른다」가 같아 보인다.
+ */
+export function coachReportTableMeta(
+  metrics: readonly { key: string; value: number; delta?: number }[],
+): TableMetadata {
+  return {
+    type: "table",
+    kind: "coachReport",
+    columns: [],
+    rows: metrics.map((m) => {
+      const row: Record<string, TableCell> = { name: m.key, value: m.value };
+      if (m.delta != null && m.delta !== 0) row.delta = m.delta;
+      return row;
+    }),
+  };
+}
+
+// ── 카드 (msg-scoutday- · msg-showcase- · msg-allstar-) ───────
+
+/**
+ * 카드 한 벌. **값만 싣는다** — 이름은 문안의 `labels`, 값이 키인 자리
+ * (초청 경로)는 `<키>Label` 이 붙인다.
+ *
+ * ⚠ **참·거짓을 말로 바꾸지 않는다.** 화면이 `selectedYes`·`selectedNo` 로
+ *   그린다 — 여기서 「선정」을 적으면 두 벌이 된다.
+ */
+export function cardsMeta(
+  kind: string,
+  items: readonly { key: string; value: TableCell; caption?: string }[],
+  note?: string,
+): CardsMetadata {
+  return {
+    type: "cards",
+    kind,
+    items: items.map((i) => ({
+      key: i.key,
+      value: i.value,
+      ...(i.caption ? { caption: i.caption } : {}),
+    })),
+    ...(note ? { note } : {}),
+  };
 }

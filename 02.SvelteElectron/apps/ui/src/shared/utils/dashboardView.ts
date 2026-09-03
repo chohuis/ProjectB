@@ -158,9 +158,18 @@ export function buildTableRows(
         text = (raw as unknown[])
           .map((v) => (typeof v === "string" ? (names?.[listKind]?.(v) ?? v) : cellText(v as TableCell, empty)))
           .join(LIST_JOIN) || cellText(null, empty);
-      } else if (c.key === "item" && rowLabels && typeof raw === "string") {
-        // 항목 열의 값은 metadata 키다 — 「salary」 가 아니라 「연봉」 으로 그린다
-        text = rowLabels[raw] ?? cellText(raw, empty);
+      } else if ((c.key === "item" || c.key === "name") && rowLabels
+                 && typeof raw === "string" && rowLabels[raw] !== undefined) {
+        // 항목 열의 값은 metadata 키다 — 「salary」 가 아니라 「연봉」 으로 그린다.
+        // ⚠ 열 이름이 `name` 인 표도 있다(코치 리포트) — 거기도 값이 키다.
+        // ⚠ **문안에 없는 값은 그대로 둔다** — 인센티브 표의 `name` 은 이미
+        //   말이라(`incentiveLabel`) 여기서 갈아치우면 안 된다
+        text = rowLabels[raw];
+      } else if (c.key === "kind" && copy && typeof raw === "string"
+                 && copy.kindLabel[raw] !== undefined) {
+        // 구분 열의 값도 키다 — 「sports」 가 아니라 「체육부대 입대」 로 그린다
+        // (문안의 `kindLabel`). 생산부가 낱말을 실으면 그 말이 세이브에 굳는다
+        text = copy.kindLabel[raw];
       } else if (idKind && typeof raw === "string" && raw !== "") {
         // id 열은 이름으로 — 못 찾으면 id 를 그대로 둔다(빈 칸이면 왜 비었는지 안 남는다)
         text = names?.[idKind]?.(raw) ?? raw;
@@ -583,10 +592,15 @@ export function buildCards(md: CardsMetadata, copy: CardsCopy, names?: NameLooku
     title: copy.title,
     cards: (md.items ?? []).map((it) => {
       const idKind = ID_COLUMN_KIND[it.key];
+      const wordOf = copy.valueLabel[it.key];
       let value: string;
       if (idKind && typeof it.value === "string" && it.value !== "") {
         // id 는 이름으로 — 못 찾으면 그대로 둔다(표와 같은 규칙)
         value = names?.[idKind]?.(it.value) ?? it.value;
+      } else if (wordOf && typeof it.value === "string") {
+        // 값이 키인 자리 — 「recommend」 가 아니라 「팀 추천」 으로 그린다.
+        // 표에 없으면 문안의 폴백이고, 그것도 없으면 키를 그대로 둔다
+        value = wordOf[it.value] ?? copy.valueFallback[it.key] ?? it.value;
       } else if (typeof it.value === "boolean" && (copy.yes || copy.no)) {
         // 참·거짓을 말로 — 올스타의 선정·미선정
         value = it.value ? copy.yes : copy.no;

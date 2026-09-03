@@ -19,6 +19,7 @@ import { autoLog } from "../stores/autoAdvance";
 import { loadRosterRules } from "../repo/newGameV3";
 // 🔴 팀 목록의 정본 — refs 에서 1군/2군을 **나눠 담는다**
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
+import { cardsMeta } from "../utils/dashboardMeta";
 
 // ── 남/북 판정 ────────────────────────────────────────────────
 //
@@ -250,7 +251,8 @@ function emitShowcaseNews(
     id: `msg-showcase-${year}-w${weekNum}`,
     category: "news",
     sender: "대학야구연맹",
-    subject: `${year} 전국대학선수쇼케이스 — ${res.total}명 참가`,
+    // 참가 인원은 카드가 든다 — 제목이 또 적으면 두 벌이다 (OP ③)
+    subject: `${year} 전국대학선수쇼케이스`,
     preview: mine
       ? `나도 참가했다${mine.standout ? " · 눈에 띄었다" : ""}`
       : `이번에는 초청받지 못했다`,
@@ -275,6 +277,16 @@ function emitShowcaseNews(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 값만 싣는다 — 이름표·초청 경로 이름은 문안이 갖는다 (B-35)
+    metadata: cardsMeta("cards.showcase", [
+      { key: "total", value: res.total },
+      ...(mine ? [
+        { key: "route", value: mine.route },
+        { key: "standout", value: mine.standout === true },
+        { key: "scoutDelta", value: Math.round(mine.scoutGain) },
+        { key: "fameDelta", value: Math.round(mine.fameGain) },
+      ] : []),
+    ]),
   });
 }
 
@@ -352,7 +364,9 @@ function emitAllStarNews(
     id: `msg-allstar-${year}-w${weekNum}`,
     category: "news",
     sender: "대학야구연맹",
-    subject: `${year} 대학 올스타전 — 북 ${res.northScore} : ${res.southScore} 남`,
+    // 🔴 **제목에 점수를 안 적는다** (2026-09-04 · OP ③). 카드가 든 값을
+    //   제목이 또 적으면 한쪽만 고쳐진 채 남는다 — 점수는 카드와 본문에 있다
+    subject: `${year} 대학 올스타전`,
     preview: res.protagonistSelected
       ? (isMvpMe ? "선발됐고 MVP까지 받았다" : "올스타에 선발됐다")
       : `MVP ${res.mvpName}`,
@@ -377,6 +391,14 @@ function emitAllStarNews(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 카드 다섯 — 참·거짓은 화면이 「선정」·「미선정」으로 그린다 (B-35)
+    metadata: cardsMeta("cards.allstar", [
+      { key: "score", value: `${res.northScore} : ${res.southScore}` },
+      { key: "winner", value: res.winner },
+      { key: "mvp", value: res.mvpName },
+      { key: "selected", value: res.protagonistSelected === true },
+      { key: "roster", value: res.north.length + res.south.length },
+    ]),
   });
 }
 
@@ -433,7 +455,8 @@ async function runScoutDay(rules: unknown, weekNum: number): Promise<string[]> {
     id: `msg-scoutday-${s.seasonYear}-w${weekNum}`,
     category: "news",
     sender: "고교야구연맹",
-    subject: `${s.seasonYear} 고교 스카우트 데이 — ${res.total}명 참가`,
+    // 참가 인원은 카드가 든다 (OP ③)
+    subject: `${s.seasonYear} 고교 스카우트 데이`,
     preview: mine
       ? `나도 참가했다${mine.standout ? " · 눈에 띄었다" : ""}`
       : "이번에는 초청받지 못했다",
@@ -458,6 +481,16 @@ async function runScoutDay(rules: unknown, weekNum: number): Promise<string[]> {
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 값만 싣는다 — 이름표·초청 경로 이름은 문안이 갖는다 (B-35)
+    metadata: cardsMeta("cards.scoutDay", [
+      { key: "total", value: res.total },
+      ...(mine ? [
+        { key: "route", value: mine.route },
+        { key: "standout", value: mine.standout === true },
+        { key: "scoutDelta", value: Math.round(mine.scoutGain) },
+        { key: "fameDelta", value: Math.round(mine.fameGain) },
+      ] : []),
+    ]),
   });
 
   return res.protagonistInvited

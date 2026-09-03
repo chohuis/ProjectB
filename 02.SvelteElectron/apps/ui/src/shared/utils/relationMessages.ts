@@ -9,6 +9,7 @@ import type { MessageItem } from "../types/main";
 import type { EntityRow } from "../stores/master";
 import type { RelationDelta } from "../usecases/relationships";
 import type { RelationKind } from "../types/relationship";
+import { teamMoodTableMeta } from "./dashboardMeta";
 
 /** 관계 라벨 7단계의 순서 — 오른 것과 내린 것을 구분하는 데 쓴다 */
 const LABEL_ORDER = ["적대", "불신", "서먹", "중립", "우호", "신뢰", "각별"];
@@ -393,5 +394,7 @@ export function buildTeamMoodMessage(
     ].join("\n"),
     createdAt: `W${week}`,
     readAt: null,
+    // 사람 수만 싣는다 — 관계값은 숫자로 안 낸다 (B-35 · relationship.ts:44)
+    metadata: teamMoodTableMeta(total, cold, hostile),
   };
 }

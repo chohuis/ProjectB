@@ -6,8 +6,10 @@ import {
   type NameLookup,
 } from "../dashboardView";
 import {
-  barsCopy, cardsCopy, parseDashboardLabels, rankCopy, rankText, timelineCopy,
+  barsCopy, cardsCopy, parseDashboardLabels, rankCopy, rankText, tableCopy, timelineCopy,
 } from "../dashboardCopy";
+import { buildTableView } from "../dashboardView";
+import { teamMoodTableMeta } from "../dashboardMeta";
 import type {
   BarsMetadata, CardsMetadata, RankListMetadata, TimelineMetadata, Top10Metadata,
 } from "../../types/main";
@@ -208,13 +210,22 @@ describe("막대 — 눈금을 화면이 짐작하지 않는다", () => {
     expect(buildBars(md, copy).foot).toEqual([{ label: "학점", value: "3.4" }]);
   });
 
-  it("정해진 자리는 문안이 이름을 준다 — 팀 분위기가 그 자리다", () => {
-    const mood = barsCopy(LABELS, "teamMood");
-    const v = buildBars({
-      type: "bars", kind: "teamMood", bars: [{ key: "mood", value: 68, delta: 3 }],
-    }, mood);
-    expect(v.bars[0].label).toBe("분위기");
-    expect(v.title).toBe("팀 분위기");
+  /**
+   * 🔴 **팀 분위기는 막대가 아니다** (B-35 · A 2026-09-04). 0~100 눈금이
+   *    아예 없고 세는 건 **사람 수**다 — 동료 · 서먹 이상 · 불신 이상.
+   *    그래서 생산부(`teamMoodTableMeta`)가 항목·값 표로 내고 `kind` 만
+   *    막대 칸(`bars.teamMood`)을 가리킨다 — 이름표가 거기 있다.
+   *    옛 `mood`·`delta` 기대는 지웠다(채울 값이 코드에 없다).
+   */
+  it("팀 분위기는 사람 수 표다 — 이름표는 막대 칸에서 온다", () => {
+    expect(barsCopy(LABELS, "teamMood").title).toBe("팀 분위기");
+    const copyT = tableCopy(LABELS, "bars.teamMood");
+    expect(Object.keys(copyT.rows)).toEqual(["total", "cold", "hostile"]);
+    const view = buildTableView(
+      teamMoodTableMeta(12, 4, 1), copyT);
+    expect(view.rows.map((r) => r.cells[0].text))
+      .toEqual([copyT.rows.total, copyT.rows.cold, copyT.rows.hostile]);
+    expect(view.rows.map((r) => r.cells[1].text)).toEqual(["12", "4", "1"]);
   });
 
   /** ⚠ 이름표가 없으면 키를 그대로 쓴다 — 값은 이미 실려 왔으니 줄을 지우지 않는다 */

@@ -343,6 +343,16 @@ export function barsCopy(labels: DashboardLabels | null, kind: string): BarsCopy
 export interface CardsCopy {
   title: string;
   labels: Record<string, string>;
+  /**
+   * **값 자체가 키인 자리**의 이름표 — `{ 카드 키: { 값: 말 } }`.
+   *
+   * 문안이 `<키>Label` 로 적어 둔 표를 그대로 담는다(`routeLabel` → 카드 키
+   * `route`). 생산부는 `recommend` 같은 **키만** 싣고 화면이 말을 붙인다 —
+   * 낱말을 소식에 실으면 문안을 고쳐도 지난 소식만 옛 말로 남는다.
+   */
+  valueLabel: Record<string, Record<string, string>>;
+  /** 표에 없는 값의 자리 — `<키>Fallback`. 초청 경로 셋 중 하나가 그렇다 */
+  valueFallback: Record<string, string>;
   /** 참·거짓을 말로 — 올스타의 선정·미선정 */
   yes: string;
   no: string;
@@ -355,9 +365,19 @@ export interface CardsCopy {
 
 export function cardsCopy(labels: DashboardLabels | null, kind: string): CardsCopy {
   const b = blockOf(labels, "cards", kind);
+  // `<키>Label`·`<키>Fallback` 을 모은다 — 종류마다 함수를 만들면 카드가 늘 때
+  // 마다 여기가 같이 는다. 이름 규칙 하나로 끝난다(`kindLabel` 이 먼저 그은 선)
+  const valueLabel: Record<string, Record<string, string>> = {};
+  const valueFallback: Record<string, string> = {};
+  for (const [k, v] of Object.entries(b ?? {})) {
+    if (k.endsWith("Label") && isStringMap(v)) valueLabel[k.slice(0, -5)] = v;
+    if (k.endsWith("Fallback") && typeof v === "string") valueFallback[k.slice(0, -8)] = v;
+  }
   return {
     title: str(b?.title),
     labels: stringMap(b?.labels),
+    valueLabel,
+    valueFallback,
     yes: str(b?.selectedYes),
     no: str(b?.selectedNo),
     noteTemplate: str(b?.roleLine),

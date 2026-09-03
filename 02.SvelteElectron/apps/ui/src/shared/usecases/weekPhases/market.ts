@@ -18,7 +18,7 @@ import { finiteOr } from "../../utils/payloadNum";
 import { leagueStandingsOf } from "../../utils/season-helpers";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
 import {
-  tradeTableMeta, playerListTableMeta, lockNoteOf, faCompTableMeta,
+  tradeTableMeta, playerListTableMeta, lockNoteOf, faCompTableMeta, faMarketTableMeta,
 } from "../../utils/dashboardMeta";
 
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
@@ -1887,7 +1887,10 @@ function emitFaMarketNews(
     id: `msg-fa-market-${seasonYear}-w${weekNum}`,
     category: "news",
     sender: "리그 사무국",
-    subject: `${seasonYear} FA 시장 마감 — ${signings.length}건 계약`,
+    // 🔴 **제목에 건수를 안 적는다** (2026-09-04 · OP ③). 표가 든 값을
+    //   제목이 또 적으면 표를 고쳐도 제목만 옛 값으로 남는다 — 건수는
+    //   본문과 표(`table.faMarket.rows.total`)에 있다
+    subject: `${seasonYear} FA 시장 마감`,
     preview: `이적 ${moved.length} · 잔류 ${stayed.length} · 미계약 ${unsignedCount}`,
     body: [
       `${seasonYear} 시즌 FA 시장이 마감됐습니다.`,
@@ -1907,5 +1910,10 @@ function emitFaMarketNews(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 리그 마감 요약 — 「받은 제안」이 아니다 (B-35 · table.faMarket)
+    metadata: faMarketTableMeta({
+      total: signings.length, moved: moved.length,
+      stayed: stayed.length, unsigned: unsignedCount,
+    }),
   });
 }
