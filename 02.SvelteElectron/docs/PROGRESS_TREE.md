@@ -60,7 +60,7 @@ A
 │     └─ ⬜ B-10 소식함 눈확인 · C 최종 확인 → 회신 결함 → 재 pack → 9/14 최종 빌드 → 9/15 프리즈 → 업로드 후보 → 사용자 확인
 │     ├─ 🔄 **A(Opus·engine) 첫 일감** — bc44f123b 주인공 등판 기록 결함 고침(휴식 재료 0 → 30) · 237a848ee 마무리 등판당 2.7~3.2이닝은 엔진이 아니라 평균 계산이 만든 숫자(계측 정정) · A③ 세 벌 실측 뒤 SP arsenal 0.20→0.10 + developingWeight(습득중 구종 계수) 선택 · 제안값 · 백로그(300bb0393)
 │     ├─ 🔄 **1.1 A① 보직 적합도 산식** — Rust `pitcher_role.rs`(cargo 7) · 규칙 `pitcherRoleRules`·`bullpenSize`(제안값) · TS 재료 `utils/pitcherRoleRules.ts`(vitest 12) 커밋 0ae9b586d · 남은 것: `recommendRole()` 교체 + master prime(편집 완료 · C⑤ 커밋 뒤 커밋) · .node 복사(프로브가 잡고 있음 · 프로브 뒤 build:native 재실행) · A③ measure:role 1차: 선발 추천 0팀(신입 구종 1개 → SP 적합도 −5) → 가중치 셋 비교는 새 A(HANDOFF_OP_TO_A §2-3) → 사용자 확정
-│     ├─ 🔄 **1.1 A② 고교 엔진** — Rust 00db08993: MatchStartOptions 넷(투구수 상한 override · 선발 아웃 계수 · 마무리 문 · 의무 휴식) · 오프너 삭제 · 규칙 starterPitchLimit 고교 95 / starterOutsFactor 0.80 / closerGate 8회(전부 제안값) · TS 헬퍼 matchLeagueOptions.ts(vitest 8) · 호출부 셋 배선 ✅(8f922a58f · MainPage 는 다음 커밋) · recommendRole 교체 ✅ · **OP 체제 전환(13:4x)**: 이후 A 몫은 새 A(Opus · 워크트리 ProjectB-engine · track/engine · HANDOFF_OP_TO_A) 가 한다 · 상태 검사 4 ✅(59f493a2f) · .node 13:23 ✅ · §6-1-5 1차 실측(씨앗 1): 선발 계수 0.8 → 이닝 5.92→5.31 · 마무리 등판 8→9→12→9 · ⚠ 마무리 등판당 2.7~3.2이닝 의심 · ⚠ 주인공 등판 기록 없음(휴식 재료 0) → HANDOFF_OP_TO_A §2
+│     ├─ 🔄 **1.1 A② 고교 엔진** — Rust 00db08993: MatchStartOptions 넷(투구수 상한 override · 선발 아웃 계수 · 마무리 문 · 의무 휴식) · 오프너 삭제 · 규칙 starterPitchLimit 고교 95 / starterOutsFactor 0.80 / closerGate 8회(전부 제안값) · TS 헬퍼 matchLeagueOptions.ts(vitest 8) · 호출부 셋 배선 ✅(8f922a58f · MainPage 는 다음 커밋) · recommendRole 교체 ✅ · **OP 체제 전환(13:4x)**: 이후 A 몫은 새 A(Opus · 워크트리 ProjectB-engine · track/engine · HANDOFF_OP_TO_A) 가 한다 · rank≤5 하드코딩 정리 ✅(eee08af21 · 3자리 무대에서 4·5선발 나오던 결함) · 상태 검사 4 ✅(59f493a2f) · .node 13:23 ✅ · §6-1-5 1차 실측(씨앗 1): 선발 계수 0.8 → 이닝 5.92→5.31 · 마무리 등판 8→9→12→9 · ⚠ 마무리 등판당 2.7~3.2이닝 의심 · ⚠ 주인공 등판 기록 없음(휴식 재료 0) → HANDOFF_OP_TO_A §2
 │     ├─ ✅ 새 게임 첫 소식함 자리표시자 넷 삭제(사용자 결정 · 07cba2343 + 정정 fcef54508 · ⚠ C 진행분이 두 번째로 섞여 plumbing 으로 걷어냄 — C 가동 중 shared 파일 커밋 금지)
 │     ├─ ✅ **전 경로 한 바퀴 재실행(9/8 몫 당김)** — 프리즈 후보 코드 · 씨앗 20260802 · 10시즌 · pro/draft/univ/indie/mil **5/5 완주 · 예외 0**(08:54~12:15 · scratchpad/paths-0903.log) · 안 본 10행은 씨앗 상황값(대회기록 5/5 · 포스트시즌 4/5 · 독립 재지원 1 · 강등 3) · ⚠ 번들이 C① 이전이라 프로 W1 보직 갈래는 12시즌 pro 재실행으로 별도 확인 중
 │     └─ ✅ **9/5 문서 갱신 (09-03 에 당겨 닫음)** — ① BALANCE_BASELINE_09-05(씨앗 3 재측정 · 09-02 와 편차 안 · 움직인 지표 없음 · 포일만 1.1 목록에 추가) ② RESUME 09-03 머리 + 지난 기록 분리 ③ CLAUDE.md 두 줄
@@ -122,7 +122,7 @@ D
 | 10 | 은퇴 직후 결산 자동 열기 (C⑤-a) | C | ✅ |
 | 11 | 상무 탭 §39 (C⑤-b) | C | ⬜ |
 | 12 | 대시보드 컴포넌트 — StatTable·타임라인·RankListPanel 범용화 (C) | C | ✅ ce349967f |
-| 13 | 대시보드 배선 30자리 4묶음 (C · A 생산부와 짝) | C | ⬜ |
+| 13 | 대시보드 배선 30자리 4묶음 (C · A 생산부와 짝) | C | 🔄 묶음 1 표시부 ✅ 2faa7712b(dashboardCopy · 문안 입힘) · 생산부(A) 대기 |
 | 14 | 기록 탭 카드 둘 — 계약 이력·대회 전적 (C) | C | ⬜ |
 | 15 | 소식함 FIFO 한 줄 + 군 조건 위생 검사 정정 (C/A) | C | ⬜ |
 | 16 | 문안 데이터 — 보직·계약·투구·대시보드 (B①~③) | B | ✅ |
