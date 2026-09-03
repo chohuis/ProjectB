@@ -14,7 +14,52 @@
 import type {
   RankListMetadata, TableCell, TableColumn, TableMetadata, Top10Metadata,
 } from "../types/main";
-import { fillCount, type TableCopy } from "./dashboardCopy";
+import { fillCount, fillVar, type TableCopy } from "./dashboardCopy";
+
+/**
+ * id 열을 이름으로 바꾸는 조회 — **화면이 준다.**
+ *
+ * 🔴 **여기서 이름을 못 만든다.** 이름은 표시 언어를 탄다(`teamMap`·
+ * `entityMap` 이 `language` 를 물고 있는 파생 스토어다). 만드는 쪽이 이름을
+ * 굳혀 보내면 영어로 바꿔도 **그 소식만 한글로 남는다** — 이 저장소가
+ * `teamsL10n` 을 만든 이유가 그거다. 그래서 생산부는 id 를 싣고
+ * (`PLAN_MESSAGE_DASHBOARDS.md` §1 — `sides[] {teamId,players[]}` ·
+ * `players[] {npcId}`) 화면이 이 조회로 바꾼다.
+ *
+ * ⚠ **못 찾으면 id 를 그대로 둔다.** 빈 칸으로 만들면 「사람이 없다」와
+ *   「이름을 못 찾았다」가 같아 보인다.
+ */
+export interface NameLookup {
+  team?: (id: string) => string | undefined;
+  person?: (id: string) => string | undefined;
+}
+
+/**
+ * 어느 열이 id 인가 — **키 이름 하나로 정한다.**
+ *
+ * ⚠ 종류(`kind`)별로 적으면 표가 늘 때마다 여기도 늘어난다. 키 이름은
+ *   §1 의 규격이 이미 통일해 뒀다(`teamId` · `npcId` · `playerId`).
+ */
+export const ID_COLUMN_KIND: Readonly<Record<string, "team" | "person">> = {
+  teamId: "team", fromTeamId: "team", toTeamId: "team", myTeamId: "team",
+  npcId: "person", playerId: "person",
+};
+
+/**
+ * **여럿이 한 칸에 드는 열** — 트레이드의 「선수」가 그 자리다
+ * (§1 — `sides[] {teamId, players[]}`).
+ *
+ * ⚠ `TableCell` 은 아직 배열을 안 담는다. 생산부가 이름을 이어 붙인 문자열을
+ *   보내면 그대로 그리고, 배열을 보내면 여기가 id 마다 이름을 찾아 잇는다 —
+ *   **어느 쪽이 와도 화면이 안 깨진다.** 규격을 여기서 못 박지 않는 이유는
+ *   생산부(A 몫)가 아직 만드는 중이기 때문이다.
+ */
+export const ID_LIST_COLUMN_KIND: Readonly<Record<string, "team" | "person">> = {
+  players: "person",
+};
+
+/** 여럿을 한 칸에 이을 때 쓰는 구분자 — 쉼표는 이름 안에 나올 수 있다 */
+export const LIST_JOIN = " · ";
 
 /** 변동 표시의 세 갈래. 색은 화면이 이 값으로 고른다 */
 export type DeltaDir = "up" | "down" | "flat";
@@ -92,7 +137,7 @@ export interface TableRowView {
  *   `—` 로 채운다(칸 수가 어긋나면 표가 통째로 밀린다).
  */
 export function buildTableRows(
-  md: TableMetadata, cols?: TableColumnView[], copy?: TableCopy,
+  md: TableMetadata, cols?: TableColumnView[], copy?: TableCopy, names?: NameLookup,
 ): TableRowView[] {
   const columns: TableColumnView[] = cols
     ?? (md.columns ?? []).map((c, ci) => ({ key: c.key, label: c.label, align: cellAlign(c, ci) }));
@@ -101,11 +146,32 @@ export function buildTableRows(
   return (md.rows ?? []).map((row, ri) => ({
     cells: columns.map((c) => {
       const raw = row[c.key];
-      // 항목 열의 값은 metadata 키다 — 「salary」 가 아니라 「연봉」 으로 그린다
-      const text = c.key === "item" && rowLabels && typeof raw === "string"
-        ? (rowLabels[raw] ?? cellText(raw, empty))
-        : cellText(raw, empty);
-      return { key: c.key, text, align: c.align, numeric: isNumericCell(raw) };
+      const idKind = ID_COLUMN_KIND[c.key];
+      const listKind = ID_LIST_COLUMN_KIND[c.key];
+      let text: string;
+      if (listKind && Array.isArray(raw)) {
+        // 배열이 오면 id 마다 이름을 찾아 잇는다. 문자열이면 아래 기본으로 간다
+        text = (raw as unknown[])
+          .map((v) => (typeof v === "string" ? (names?.[listKind]?.(v) ?? v) : cellText(v as TableCell, empty)))
+          .join(LIST_JOIN) || cellText(null, empty);
+      } else if (c.key === "item" && rowLabels && typeof raw === "string") {
+        // 항목 열의 값은 metadata 키다 — 「salary」 가 아니라 「연봉」 으로 그린다
+        text = rowLabels[raw] ?? cellText(raw, empty);
+      } else if (idKind && typeof raw === "string" && raw !== "") {
+        // id 열은 이름으로 — 못 찾으면 id 를 그대로 둔다(빈 칸이면 왜 비었는지 안 남는다)
+        text = names?.[idKind]?.(raw) ?? raw;
+      } else if (c.key === "myLine" && copy?.noAppearance && (raw == null || raw === "")) {
+        // 「등판 없음」은 `—` 와 뜻이 다르다 — 경기는 있었고 내가 안 나간 것이다
+        text = copy.noAppearance;
+      } else if (c.key === "note" && copy?.lockNote && isNumericCell(raw) && raw !== "") {
+        // 말소 비고 — 생산부는 주 수만 싣고 문장은 문안이 갖는다
+        text = fillVar(copy.lockNote, "weeks", raw as number);
+      } else {
+        text = cellText(raw, empty);
+      }
+      // 이름·문장으로 바뀐 칸은 숫자가 아니다 — `tabular-nums` 를 걸면 자간이 벌어진다
+      const numeric = !idKind && !listKind && c.key !== "note" && isNumericCell(raw);
+      return { key: c.key, text, align: c.align, numeric };
     }),
     highlight: row.myTeam === true || md.highlightRow === ri,
     delta: md.deltaKey ? deltaMark(row[md.deltaKey] as number | null | undefined) : null,
@@ -246,10 +312,35 @@ function itemValueLabel(key: string, copy: TableCopy): string {
  */
 export function inferAlign(
   key: string, rows: TableMetadata["rows"],
-): "left" | "right" | null {
+): "left" | "right" | "center" | null {
+  // id 열은 화면에서 이름으로 바뀐다 — 값만 보면 숫자 id 가 오른쪽에 선다
+  if (ID_COLUMN_KIND[key] || ID_LIST_COLUMN_KIND[key]) return "left";
   const vals = (rows ?? []).map((r) => r[key]).filter((v) => v != null && v !== "");
   if (vals.length === 0) return null;
+  // 점수(`3 : 1`)는 가운데다 — 오른쪽에 붙이면 두 팀 이름 사이에서 한쪽으로 쏠린다
+  if (vals.every(isScoreCell)) return "center";
   return vals.every((v) => isNumericCell(v)) ? "right" : "left";
+}
+
+/**
+ * 점수 칸인가 — `3 : 1` 처럼 **가운뎃점으로 두 수를 이은 것**.
+ *
+ * ⚠ `isNumericCell` 이 이미 `true` 를 준다(구분자에 `:` 가 들어 있다).
+ *   그래서 정렬만으로는 못 가른다 — 여기서 한 번 더 본다.
+ */
+export function isScoreCell(v: TableCell | undefined): boolean {
+  if (typeof v !== "string" || !v.includes(":")) return false;
+  const parts = v.split(":");
+  if (parts.length !== 2) return false;
+  return parts.every((p) => p.trim() !== "" && Number.isFinite(Number(p.trim())));
+}
+
+/**
+ * 문장이 되는 칸은 왼쪽이다 — 말소 비고(`note`)가 숫자로 실려 와도 화면엔
+ * 「{weeks}주간 재등록 불가」가 찍힌다. 값만 보면 오른쪽에 서 버린다.
+ */
+function sentenceColumn(key: string, copy: TableCopy): boolean {
+  return key === "note" && !!copy.lockNote;
 }
 
 export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnView[] {
@@ -259,7 +350,9 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
       key: c.key,
       label: c.label || copy.columns[c.key] || copy.optionalColumns[c.key]
              || itemValueLabel(c.key, copy) || c.key,
-      align: c.align ?? inferAlign(c.key, md.rows) ?? cellAlign(c, i),
+      align: c.align
+             ?? (sentenceColumn(c.key, copy) ? "left" : null)
+             ?? inferAlign(c.key, md.rows) ?? cellAlign(c, i),
     }));
   }
 
@@ -291,7 +384,8 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   return keys.map((k, i) => ({
     key: k,
     label: copy.columns[k] || copy.optionalColumns[k] || itemValueLabel(k, copy) || k,
-    align: inferAlign(k, md.rows) ?? ((i === 0 ? "left" : "right") as "left" | "right"),
+    align: (sentenceColumn(k, copy) ? "left" : null)
+           ?? inferAlign(k, md.rows) ?? ((i === 0 ? "left" : "right") as "left" | "right"),
   }));
 }
 
@@ -306,10 +400,10 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
  *   이름이라 위에 한 줄 더 두면 부제가 된다.
  */
 export function buildTableView(
-  md: TableMetadata, copy: TableCopy, withTitle = false,
+  md: TableMetadata, copy: TableCopy, withTitle = false, names?: NameLookup,
 ): TableView {
   const cols = resolveColumns(md, copy);
-  const rows = buildTableRows(md, cols, copy);
+  const rows = buildTableRows(md, cols, copy, names);
 
   return {
     title: withTitle ? copy.title : "",
