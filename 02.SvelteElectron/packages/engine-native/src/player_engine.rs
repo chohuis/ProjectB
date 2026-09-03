@@ -88,6 +88,15 @@ pub struct AssignRoleParams {
     /// 신뢰가 두터우면 같은 OVR로도 선발 경쟁에서 앞선다. 없으면 0(중립).
     #[serde(default)]
     pub role_ovr_bias: f64,
+    /// 이 리그의 선발 로테이션 자리 수 (`rosterOpsRules.rotationSize`).
+    ///
+    /// 🔴 예전엔 **리그와 무관하게 `rank <= 5`** 였다 — 로테이션이 3자리인 대학·고교에서
+    ///   「4선발」·「5선발」이 나왔다. **그 팀에 없는 자리다**
+    ///   (PLAN_ROLE_RECOMMEND §1 발견 a). 자리 수는 규칙 파일 하나가 정본이고
+    ///   여기 숫자를 적지 않는다 — TS 가 `rotationSizeForLeague()` 로 넘긴다.
+    /// ⚠ 없거나 0이면 **5** 다 — 안 넘긴 옛 호출부가 예전 그대로 돈다.
+    #[serde(default)]
+    pub rotation_size: Option<usize>,
 }
 
 #[derive(Debug, Serialize)]
@@ -110,8 +119,10 @@ pub fn assign_protagonist_role(params: AssignRoleParams) -> AssignRoleResult {
             else { "패전처리".into() }
         }
         _ => {
+            // 자리 수는 리그가 정한다. 안 오면 5 = 예전 동작
+            let seats = params.rotation_size.filter(|&n| n > 0).unwrap_or(5);
             let rank = 1 + params.team_sp_ovrs.iter().filter(|&&o| o > ovr).count();
-            if rank <= 5 { format!("{}선발", rank) }
+            if rank <= seats { format!("{}선발", rank) }
             else if ovr >= 60.0 { "스윙맨".into() }
             else { "롱릴리프".into() }
         }
@@ -944,6 +955,7 @@ mod tests {
             ovr: 70.0,
             team_sp_ovrs: vec![],
             role_ovr_bias: 0.0,
+            rotation_size: None,   // 🔴 대조군 — 안 넘기면 예전(5선발) 그대로다
         });
         assert_eq!(r.role, "마무리");
     }
@@ -957,6 +969,7 @@ mod tests {
                 ovr,
                 team_sp_ovrs: vec![],
                 role_ovr_bias: 0.0,
+                rotation_size: None,
             });
             assert_eq!(r.role, expected, "ovr={ovr}");
         }
@@ -970,6 +983,7 @@ mod tests {
             ovr: 80.0,
             team_sp_ovrs: vec![70.0, 65.0, 60.0],
             role_ovr_bias: 0.0,
+            rotation_size: None,   // 🔴 대조군 — 안 넘기면 예전(5선발) 그대로다
         });
         assert_eq!(r.role, "1선발");
     }
@@ -982,9 +996,31 @@ mod tests {
             ovr: 62.0,
             team_sp_ovrs: vec![90.0, 85.0, 80.0, 75.0, 70.0],
             role_ovr_bias: 0.0,
+            rotation_size: None,   // 🔴 대조군 — 안 넘기면 예전(5선발) 그대로다
         });
         assert_eq!(r.role, "스윙맨");
 
+    }
+
+    /// 로테이션 자리 수는 리그가 정한다 — 예전엔 어디서나 5선발까지 줬다
+    /// (PLAN_ROLE_RECOMMEND §1 발견 a). 대학·고교는 3자리라 4번째부터는 선발이 아니다.
+    #[test]
+    fn 로테이션_자리_수가_선발_한계를_정한다() {
+        // 나보다 나은 선발이 셋 → rank 4
+        let mk = |seats: Option<usize>, ovr: f64| assign_protagonist_role(AssignRoleParams {
+            position: None, ovr, team_sp_ovrs: vec![90.0, 85.0, 80.0], role_ovr_bias: 0.0,
+            rotation_size: seats,
+        }).role;
+        // 🔴 대조군 — 안 넘기면 예전 그대로 5선발까지다
+        assert_eq!(mk(None, 62.0), "4선발");
+        assert_eq!(mk(Some(5), 62.0), "4선발");
+        // 고교·대학 3자리 → 자리 밖이다
+        assert_eq!(mk(Some(3), 62.0), "스윙맨", "3자리인데 4선발을 줬다");
+        assert_eq!(mk(Some(3), 55.0), "롱릴리프", "자리 밖 + OVR 60 미만");
+        // 자리 안이면 자리 수와 무관하게 그대로다
+        assert_eq!(mk(Some(3), 95.0), "1선발");
+        // 0 은 「안 넘긴 것」과 같게 본다 — 자리 수 0 인 리그는 없다
+        assert_eq!(mk(Some(0), 62.0), "4선발");
     }
 
     /// 감독 관계가 보직을 실제로 가른다 (Phase 6C-5).
@@ -994,6 +1030,7 @@ mod tests {
         let rotation = vec![90.0, 85.0, 80.0, 70.0, 64.0];  // 5선발이 64
         let mk = |bias: f64| assign_protagonist_role(AssignRoleParams {
             position: None, ovr: 62.0, team_sp_ovrs: rotation.clone(), role_ovr_bias: bias,
+            rotation_size: None,
         }).role;
         assert_eq!(mk(0.0), "스윙맨", "중립이면 5선발(64)에 밀린다");
         assert_eq!(mk(6.0), "5선발", "각별(+6)이면 68로 평가돼 5선발을 밀어낸다");

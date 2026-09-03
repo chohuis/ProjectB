@@ -39,6 +39,24 @@ describe("투수 보직 배정 — live를 읽는다", () => {
     expect(src).toMatch(/live\[e\.id\]\?\.pitching\?\.ovr\s*\n?\s*\?\?\s*\(e\.details as any\)\?\.player\?\.pitching\?\.ovr/);
   });
 
+  // ── 로테이션 자리 수 (PLAN_ROLE_RECOMMEND §1 발견 a) ──────────────
+  //
+  // Rust 는 예전에 리그와 무관하게 `rank <= 5` 로 5선발까지 줬다. 로테이션이
+  // 3자리인 대학·고교에서 **그 팀에 없는 「4선발」·「5선발」**이 나왔다.
+  // ⚠ `serde(default)` 라 안 넘겨도 조용히 통과한다 — 넘기는지를 여기서 본다.
+  //   자리 수 값 자체는 규칙 파일이 정본이고 cargo 가 한계 판정을 본다.
+  it("리그별 로테이션 자리 수를 Rust 에 넘긴다", () => {
+    expect(src.includes("rotationSize: rotationSizeForLeague(protagonist.leagueId),")).toBe(true);
+    expect(src.includes('import { rotationSizeForLeague } from "./rosterEngine";')).toBe(true);
+  });
+
+  it("Rust 가 그 자리 수로 선발 한계를 정한다 — 리터럴 5 가 아니다", () => {
+    const rust = read("packages/engine-native/src/player_engine.rs");
+    expect(rust.includes("pub rotation_size: Option<usize>,")).toBe(true);
+    expect(rust.includes("if rank <= seats { format!(\"{}선발\", rank) }")).toBe(true);
+    expect(rust.includes("if rank <= 5 {")).toBe(false);
+  });
+
   it("스토어를 루프 밖에서 한 번만 읽는다", () => {
     // `.map` 안에서 get()을 부르면 팀 인원수만큼 스토어를 훑는다
     expect(src).not.toMatch(/\.map\(\(e\) => livePitcherOvr\(e, get\(/);

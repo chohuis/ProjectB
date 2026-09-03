@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 import type { ProtagonistSave, PitcherRole } from "../types/save";
 import type { EntityRow } from "../stores/master";
 import { npcLiveStatsStore } from "../stores/npcLiveStats";
+import { rotationSizeForLeague } from "./rosterEngine";
 
 /**
  * 팀 동료의 **지금** 투수 OVR — `details.player.pitching.ovr`은 생성값이다.
@@ -72,7 +73,13 @@ export async function assignProtagonistRole(
 
   const result = JSON.parse(
     await window.projectB!.pitcherAssignRole(
-      JSON.stringify({ position: protagonist.position, ovr: myOvr, teamSpOvrs, roleOvrBias })
+      JSON.stringify({
+        position: protagonist.position, ovr: myOvr, teamSpOvrs, roleOvrBias,
+        // 🔴 자리 수는 리그가 정한다. 예전엔 Rust 가 어디서나 `rank <= 5` 라
+        //   로테이션 3자리인 대학·고교에서 **그 팀에 없는 「4선발」·「5선발」**이 나왔다
+        //   (PLAN_ROLE_RECOMMEND §1 발견 a). 정본은 `rosterOpsRules.rotationSize` 하나다
+        rotationSize: rotationSizeForLeague(protagonist.leagueId),
+      })
     )
   );
   return result.role as PitcherRole;
