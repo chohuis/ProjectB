@@ -4270,6 +4270,87 @@ mod 방해 {
             "기본값이 false 여야 한다 — 예전 동작이 바뀌었다");
     }
 
+    // ── 1.1 A② §6-1 — 리그가 정하는 넷 ────────────────────────────
+
+    /// 규칙 파일 값이 오면 tuning 폴백을 덮고, 소프트캡은 0.75 배다. 안 오면 예전 그대로다
+    #[test]
+    fn 투구수_상한은_규칙값이_tuning을_덮는다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let base = MatchStartOptions { league_id: Some("LEAGUE_HIGHSCHOOL".into()), role: Some(PitcherRole::SP), ..Default::default() };
+        let st0 = create_initial_match_state(&base, &mut rng);
+        assert_eq!(st0.pitch_limit, T::league_pitch_limit("LEAGUE_HIGHSCHOOL"));
+        assert_eq!(st0.starter_outs_factor, 1.0);
+        let opts = MatchStartOptions { pitch_limit_override: Some(95.0), starter_outs_factor: Some(0.8), ..base.clone() };
+        let st = create_initial_match_state(&opts, &mut rng);
+        assert_eq!(st.pitch_limit, 95.0);
+        assert!((st.pitch_soft - 71.25).abs() < 1e-9);
+        assert_eq!(st.my_queue.pitch_limit, 95.0);
+        assert_eq!(st.starter_outs_factor, 0.8);
+        // 0 이면 무시 — 구 호출부·구 상태 호환
+        let zero = MatchStartOptions { pitch_limit_override: Some(0.0), starter_outs_factor: Some(0.0), ..base };
+        let stz = create_initial_match_state(&zero, &mut rng);
+        assert_eq!(stz.pitch_limit, T::league_pitch_limit("LEAGUE_HIGHSCHOOL"));
+        assert_eq!(stz.starter_outs_factor, 1.0);
+    }
+
+    /// 선발 아웃 예산에 계수가 곱해진다 — 0.80 이면 이닝이 준다
+    #[test]
+    fn 선발_아웃_예산에_리그_계수가_곱해진다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let mk = |f: Option<f64>| MatchStartOptions {
+            role: Some(PitcherRole::SP),
+            protagonist_pitcher: Some(PartialPitcherStats { stamina_cap: Some(60.0), ..Default::default() }),
+            starter_outs_factor: f,
+            ..Default::default()
+        };
+        let full = protagonist_max_outs(&create_initial_match_state(&mk(None), &mut rng));
+        let cut  = protagonist_max_outs(&create_initial_match_state(&mk(Some(0.8)), &mut rng));
+        assert_eq!(full, 21, "스태미나 60 → 12 + 60/99×15 = 21아웃");
+        assert_eq!(cut, 17, "×0.80 → 17아웃 (불펜 10아웃이 생긴다)");
+    }
+
+    /// 마무리 문: 규칙이 오면 감독 clutchDecision 을 안 보고 그 회차로 고정된다
+    #[test]
+    fn 마무리_문은_규칙값이_감독_판정을_덮는다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let low_clutch = PartialManagerStats { clutch_decision: Some(30.0), ..Default::default() };
+        let base = MatchStartOptions { role: Some(PitcherRole::CP), my_manager: Some(low_clutch), ..Default::default() };
+        let st0 = create_initial_match_state(&base, &mut rng);
+        assert!(matches!(st0.entry_trigger, EntryTrigger::CloseGame { inning_threshold: 9, .. }), "clutch 30 → 9회");
+        let gated = MatchStartOptions {
+            closer_gate: Some(crate::types::CloserGate { inning_threshold: 8, max_lead_diff: 3, min_lead_diff: 1 }),
+            ..base
+        };
+        let st = create_initial_match_state(&gated, &mut rng);
+        assert!(matches!(st.entry_trigger, EntryTrigger::CloseGame { inning_threshold: 8, max_lead_diff: 3, min_lead_diff: 1 }));
+    }
+
+    /// 의무 휴식이 안 찼으면 불펜 주인공은 못 나온다 — 선발은 검사 대상이 아니다
+    #[test]
+    fn 의무_휴식이_안_찼으면_불펜_주인공은_못_나온다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        // 어제 98구 → 5일 휴식(rest_rules) → 오늘은 못 나온다
+        let guard = crate::types::RestGuard { last_pitched_date: "2027-05-01".into(), last_pitch_count: 98, game_date: "2027-05-02".into() };
+        let rp = MatchStartOptions { role: Some(PitcherRole::RP), rest_guard: Some(guard.clone()), ..Default::default() };
+        let st = create_initial_match_state(&rp, &mut rng);
+        assert!(st.protagonist_rest_blocked);
+        let mut later = st.clone();
+        later.inning = 7; later.half = HalfInning::Top; later.outs = 0;
+        later.count = MatchCount { balls: 0, strikes: 0 };
+        assert!(!should_protagonist_enter(&later), "휴식이 안 찼는데 등판한다");
+        // 같은 재료라도 선발은 막지 않는다 (로테이션 휴식은 다른 규칙이 본다)
+        let sp = MatchStartOptions { role: Some(PitcherRole::SP), rest_guard: Some(guard.clone()), ..Default::default() };
+        assert!(!create_initial_match_state(&sp, &mut rng).protagonist_rest_blocked);
+        // 엿새 뒤면 나온다
+        let ok = crate::types::RestGuard { game_date: "2027-05-07".into(), ..guard };
+        let rp2 = MatchStartOptions { role: Some(PitcherRole::RP), rest_guard: Some(ok), ..Default::default() };
+        assert!(!create_initial_match_state(&rp2, &mut rng).protagonist_rest_blocked);
+    }
+
     /// ⚠ 대주자 확률에도 감독이 들어갈 자리가 있어야 한다 — 대타와 같다
     #[test]
     fn 대주자_확률에_감독이_들어갈_자리가_있다() {
