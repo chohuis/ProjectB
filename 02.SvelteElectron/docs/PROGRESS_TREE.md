@@ -271,7 +271,8 @@ C
 ├─ 19. ✅ **묶음 1·2 표시부 · 상무 탭 · FIFO**(2faa7712b · 6361438d9 · 5222916be · 2d8d7d601) · 대시보드 컴포넌트 범용화(ce349967f)
 ├─ 20. ✅ **기록 탭 카드 둘 + 묶음 3·4 표시부 갈래 넷**(1982a5fb4 · 56adfd633 · recordTabView.ts · c55-01)
 ├─ 21. ✅ **조사 여섯 · 상무 탭 전역 주차 `{week}` · 인센티브 정산 화면(단위 9)**(301768e50 · 57d2decc8 · e5bacd79d · condition 열 제거 · incentiveProgress.ts)
-├─ 22. 🔄 §0.55 정리 · 스크린샷 c56-* · 단위 18 준비(트렁크 svelte-check·vitest) → A 묶음 3·4 뒤 대시보드 눈확인
+├─ 22. ✅ §0.55 + c56 스크린샷(c812dfda3) · 조사 마지막 한 자리 check:josa 0(f70ece626) · role_choice 제목 대시 + 검사 줄(3174e39b3) · 결함 셋(`parseDashboardLabels` 가 roleAs 를 안 실어 시즌 브리핑 마지막 줄이 사라짐 · 전역 주차 W48 박힘 → W46 · contract_terms 충돌은 문안 쪽 꼴로) · vitest 2315 · svelte 0
+├─ 23. 🔄 (a) `careerEndScreen.test.ts:311` 전체 실행 3회 중 1회 깨짐(단독 통과 · D 도 부하 때 1회) — 검사 격리 고침 (b) 단위 9 게임 안 눈확인 — dev 우회 `signContract` 로는 화면이 안 바뀜(실측 3회) → D 가 헤드리스로 프로 계약+인센티브 세이브를 만들어 넘기면 그걸로 · OP 판정: dev 단계 점프 진입점은 안 만든다(1.0.0 범위 밖) · 인센티브 카드가 `paidSeasons` 비워 재는 것은 그대로(표시용)
 └─ 18. ✅ **C⑤ 결산 자동 열기 + 눈확인**(ea6b92c86 · 78655f659 · 스크린샷 10장 docs/screens/c53-* · 정렬 결함 하나 고침 · 넘침 0 · ⚠ FA 카드는 고교 세이브에 프로 NPC 가 없어 제안 0 — 만드는 법 §0.53 · 워크트리 눈확인은 DEV_PORT=5175) — 첫 시도(트렁크 · 12:57 시작 직후 사망 · WIP 는 stash@{0}) → **워크트리 ProjectB-ui(track/ui) 에서 재개**(Opus)
 ```
 
