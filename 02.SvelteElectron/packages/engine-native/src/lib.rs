@@ -13,6 +13,7 @@ mod sim_types;
 mod npc_sim;
 mod growth_engine;
 mod player_engine;
+mod pitcher_role;
 mod schedule_engine;
 mod tournament;
 mod group_stage;
@@ -718,6 +719,18 @@ pub fn assign_highschool_position_native(params_json: String) -> String {
     };
     let result = player_engine::assign_highschool_position(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("assignHighschoolPositionNative/serialize", e))
+}
+
+/// 투수 보직 추천 — 세부 능력치 적합도 + 팀내 자리 경쟁 (PLAN_ROLE_RECOMMEND §2·§3 · 1.1 A①).
+/// 규칙(가중치·구종 계수)은 TS 가 `generation_rules.json` `pitcherRoleRules` 에서 읽어 넘긴다
+#[napi]
+pub fn recommend_pitcher_role_native(params_json: String) -> String {
+    let params: pitcher_role::RecommendRoleParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("recommendPitcherRoleNative", e),
+    };
+    let result = pitcher_role::recommend_pitcher_role(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("recommendPitcherRoleNative/serialize", e))
 }
 
 /// 주인공 투수 역할 배정
