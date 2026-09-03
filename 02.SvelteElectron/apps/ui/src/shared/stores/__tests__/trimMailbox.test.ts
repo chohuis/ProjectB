@@ -5,11 +5,12 @@ import {
 import type { MessageItem } from "../../types/main";
 
 /**
- * 메일함 상한 정리.
+ * 메일함 상한 정리 — **미결 보존 + 나머지는 오래된 순(FIFO)**.
+ * (사용자 확정 2026-09-03 · `docs/PLAN_MESSAGE_DASHBOARDS.md` §8)
  *
- * 실측(`npm run measure:mailbox`, 2시즌): **1주차에 상한 도달 · 583건이 밀려났고
- * 그중 453건이 안 읽은 것**이었다. 예전 정리는 미결 선택지만 보존하고 나머지는
- * 순수 최신순이라, **읽은 새 소식이 안 읽은 옛 소식을 밀어냈다.**
+ * 🔴 예전엔 「안 읽음 우선」 단계가 미결과 나머지 사이에 하나 더 있었다.
+ * 그 단계가 **나이를 안 봐서** 안 읽었다는 이유만으로 지난 시즌 소식이 이번
+ * 주 소식보다 오래 버텼다. 지웠다.
  *
  * ⚠ 이 검사는 순서만 본다. 유실 총량은 상한 대비 생산량이 정하므로 여기서
  * 판정하지 않는다 — 숫자는 계측이 낸다.
@@ -64,16 +65,27 @@ describe("trimMailbox", () => {
     expect(trimMailbox(b)).toHaveLength(MAX_MAILBOX);
   });
 
-  it("읽은 새 소식보다 안 읽은 옛 소식을 먼저 남긴다", () => {
+  it("안 읽었다고 오래 버티지 않는다 — 꼬리(옛날)부터 밀린다", () => {
     // 앞(최신) MAX_MAILBOX건은 **읽음**, 뒤(옛날) OVER건은 **안읽음**.
-    // 순수 최신순이면 안 읽은 게 통째로 밀려난다
+    // 🔴 옛 규칙이면 안 읽은 꼬리 OVER건이 살아남고 읽은 최신 OVER건이 밀렸다.
+    //    FIFO 는 반대다 — 읽었든 아니든 **최신 1500칸**이 남는다.
     const b = box(TOTAL, (i) => ({ readAt: i < MAX_MAILBOX ? "방금" : null }));
     const kept = trimMailbox(b);
-    expect(kept.filter((m) => m.readAt === null)).toHaveLength(OVER);
-    expect(mailboxTrimStats.droppedUnread).toBe(0);
+    expect(kept.filter((m) => m.readAt === null)).toHaveLength(0);
+    expect(mailboxTrimStats.droppedUnread).toBe(OVER);
   });
 
-  it("미결 선택지는 안 읽은 것보다도 먼저 보존한다", () => {
+  it("밀려난 것은 전부 꼬리 쪽이다 — 남은 것이 앞에서부터 연속이다", () => {
+    // §8-4 셋째 줄: "밀려난 것의 나이는 전부 가장 오래된 쪽"이어야 한다.
+    // 나이를 재는 자리는 `createdAt`(주차뿐이다)이 아니라 **배열 위치**다.
+    // 읽음·안읽음을 번갈아 섞어 둬서, 남은 것이 앞에서부터 끊기지 않고
+    // 이어지는지로 판정한다 — 중간에 하나라도 빠지면 FIFO 가 아니다.
+    const b = box(TOTAL, (i) => ({ readAt: i % 3 === 0 ? "방금" : null }));
+    const expected = b.slice(0, MAX_MAILBOX).map((m) => m.id);
+    expect(trimMailbox(b).map((m) => m.id)).toEqual(expected);
+  });
+
+  it("미결 선택지는 가장 오래된 자리에 있어도 보존한다", () => {
     // 맨 뒤(가장 옛날)에 미결 하나. 앞은 전부 안읽음이라 자리 경쟁이 최대다
     const b = box(TOTAL, () => ({ readAt: null }));
     b[TOTAL - 1] = msg({
@@ -93,19 +105,19 @@ describe("trimMailbox", () => {
   });
 
   it("밀려난 건수를 안읽음·분류별로 센다", () => {
-    // ⚠ **읽은 것을 맨 앞(최신)에 둬야 판별력이 생긴다.** 처음엔 읽은 것을
-    // 맨 뒤에 뒀는데, 그러면 순수 최신순으로 되돌려도 결과가 같아서 이 검사가
-    // 변이를 못 잡았다 — 변이 검증에서 걸렸다.
-    // 최신 OVER건이 읽음, 나머지 MAX_MAILBOX건이 안읽음.
-    //   지금 동작 : 안 읽은 것을 전부 남긴다 → 안읽음 유실 0, 읽은 OVER건이 사라진다
-    //   옛 동작   : 최신순이라 읽은 OVER건이 살고 **안읽음 OVER건이 사라진다**
+    // 최신 OVER건이 읽음, 나머지(꼬리) MAX_MAILBOX건이 안읽음.
+    //   지금(FIFO) : 최신 MAX_MAILBOX칸이 남으므로 **꼬리 OVER건이 사라지고
+    //                그건 전부 안읽음**이다
+    //   옛 동작    : 안 읽은 것을 먼저 남겨 읽은 최신 OVER건이 사라졌다
+    // ⚠ `droppedUnread` 를 남긴 이유가 여기 있다 — 0 이던 값이 OVER 가 된다.
+    //   우선순위를 지운 대가가 얼마인지 계측이 이 숫자로 낸다.
     const b = box(TOTAL, (i) => ({
       readAt: i < OVER ? "방금" : null,
       category: i % 2 === 0 ? "news" : "system",
     }));
     trimMailbox(b);
     expect(mailboxTrimStats.dropped).toBe(OVER);
-    expect(mailboxTrimStats.droppedUnread).toBe(0);
+    expect(mailboxTrimStats.droppedUnread).toBe(OVER);
     const byCat = mailboxTrimStats.droppedByCategory;
     expect((byCat.news ?? 0) + (byCat.system ?? 0)).toBe(OVER);
   });
