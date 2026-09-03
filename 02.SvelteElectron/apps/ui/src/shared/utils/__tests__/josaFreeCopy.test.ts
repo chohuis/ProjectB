@@ -75,7 +75,7 @@ describe("고친 여섯 자리 — 조사가 돌아오지 않았다", () => {
     expect(s, "팀 이름 뒤에 「와」가 돌아왔다").not.toContain("}와 계약이");
     expect(s).not.toContain("}와의 계약이");
     expect(s).not.toContain("}와 FA 계약이");
-    expect(s).toContain("${teamName}. 계약이 완료되었습니다.");
-    expect(s).toContain("${teamName}. FA 계약이 완료되었습니다.");
+    expect(s).toContain("${teamName} 계약이 완료되었습니다.");
+    expect(s).toContain("${teamName} FA 계약이 완료되었습니다.");
   });
 });

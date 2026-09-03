@@ -68,12 +68,12 @@ export async function signNegotiatedContract(
       id: `msg-contract-signed-${get(seasonStore).seasonYear}-w${get(seasonStore).currentWeek}`,
       category: "system", sender: "에이전트",
       subject: "계약 서명 완료",
-      // 🔴 **자리표시자 뒤에 조사를 두지 않는다** (B-28). 팀 238개가 지금은
-      //    다 무받침이라 「와」가 맞지만, **이름 하나만 받침으로 늘어도 깨진다** —
-      //    받침을 코드가 보게 만드는 대신 이름을 문장 끝에 둔다
-      preview: `${teamName}. 계약이 완료되었습니다. W52 새 시즌부터 적용됩니다.`,
+      // 🔴 **자리표시자 뒤에 조사를 두지 않는다** (B-28 · B-31 이 문안 쪽을 같은 꼴로
+      //    고쳤다 — `contract_terms.json` `signed.head` 와 **같은 문장**이라 꼴을 맞춘다).
+      //    팀 238개 중 38종이 「(2군)」 으로 끝나 「… (2군)와의」 가 됐다
+      preview: `${teamName} 계약이 완료되었습니다. W52 새 시즌부터 적용됩니다.`,
       body: [
-        `${teamName}. 계약이 완료되었습니다.`,
+        `${teamName} 계약이 완료되었습니다.`,
         `연봉: ${contract.salary}만원 / ${contract.durationYears}년`,
         `계약금: ${contract.signingBonus}만원`,
         ``,
@@ -198,9 +198,9 @@ export async function signFaOffer(offer: FaOffer, salary: number): Promise<void>
     category: "system", sender: "에이전트",
     subject: "FA 계약 서명 완료",
     // 🔴 조사를 안 붙인다 — 위 계약 완료와 같은 이유다 (B-28)
-    preview: `${teamName}. FA 계약이 완료되었습니다.`,
+    preview: `${teamName} FA 계약이 완료되었습니다.`,
     body: [
-      `${teamName}. FA 계약이 완료되었습니다.`,
+      `${teamName} FA 계약이 완료되었습니다.`,
       `연봉: ${salary.toLocaleString()}만원 / ${offer.durationYears}년`,
       `계약금: ${offer.signingBonus.toLocaleString()}만원`,
       ``,
