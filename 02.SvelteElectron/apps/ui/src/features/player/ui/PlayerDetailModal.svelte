@@ -14,6 +14,7 @@
     rispSplit, rispTone,
   } from "../../../shared/utils/playerTraits";
   import { clubKeyOfTeam } from "../../../shared/utils/ids";
+  import { incentiveLabel } from "../../../shared/utils/contractTerms";
   import {
     getRecentGames, summarize, isPitcherLine, type RecentGame,
   } from "../../../shared/repo/gameLogRepo";
@@ -1185,7 +1186,7 @@
                         {#if (contract.incentives ?? []).length > 0}
                           <div class="ci ci-full">
                             <span>인센티브</span>
-                            <strong>{contract.incentives?.map((i) => `${i.condition} +${formatSalary(i.bonus)}`).join(" / ")}</strong>
+                            <strong>{contract.incentives?.map((i) => `${incentiveLabel(i)} +${formatSalary(i.bonus)}`).join(" / ")}</strong>
                           </div>
                         {/if}
                       </div>

@@ -107,10 +107,20 @@ describe("값과 표기", () => {
     expect(keysOf(offer({ durationYears: 1, signingBonus: 500 }))).toEqual(["signingBonus", "total"]);
   });
 
-  it("항목 이름은 협상 화면과 같은 말이다", () => {
-    const SRC = readFileSync(resolve(__dirname, "../../../features/contract/ui/ContractNegotiationModal.svelte"), "utf8");
-    for (const key of ["signingBonus", "teamOption", "playerOption", "total"] as const) {
-      expect(SRC.includes(FA_TERM_LABEL[key])).toBe(true);
+  /**
+   * 2026-09-03 — 검사를 **더 강한 쪽으로 바꿨다**.
+   *
+   * 예전엔 협상 화면 소스에 그 낱말이 있는지만 봤다. 그러면 화면이 이름을
+   * **따로 적어도 통과한다** — 두 벌이 되는 걸 못 막는다. 지금은 협상 화면의
+   * 조항·비교표 이름표가 **이 표에서 파생됐는지**를 본다(`contractTerms.ts`).
+   */
+  it("협상 화면의 항목 이름이 이 표에서 나온다 — 낱말을 따로 안 적는다", () => {
+    const TERMS = readFileSync(resolve(__dirname, "../contractTerms.ts"), "utf8");
+    expect(TERMS.includes('from "./faOfferTerms"')).toBe(true);
+    for (const key of ["signingBonus", "teamOption", "playerOption", "noTrade", "total"] as const) {
+      expect(TERMS.includes(`FA_TERM_LABEL.${key}`)).toBe(true);
+      // 같은 낱말을 문자열로 다시 적으면 두 벌이 된다
+      expect(TERMS.includes(`"${FA_TERM_LABEL[key]}"`)).toBe(false);
     }
   });
 

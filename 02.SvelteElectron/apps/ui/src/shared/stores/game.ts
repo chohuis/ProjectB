@@ -286,6 +286,7 @@ const DEFAULT_ACHIEVEMENTS: AchievementRuntime[] = [
 //   첫 소식함에 그대로 들어갔다(새 게임이 소식함을 안 비운다).
 //   첫 소식함은 시즌 브리핑·훈련 결과·보직 선택 같은 실제 시스템 소식이 채운다.
 const DEFAULT_MAILBOX: MessageItem[] = [];
+
 // ── 헬퍼: ProtagonistSave → player 호환 객체 ──────────────────
 /**
  * 마스터에 적힌 구단 성향을 꺼낸다 — 새 게임의 시작값이다.
@@ -501,6 +502,38 @@ function buildInitialState(): GameStoreState {
  * 보고 이게 되살리는지 전수로 확인한다 — 안 되살리는 필드는 옛 세이브에서
  * `undefined` 로 남아 화면·계산이 조용히 어긋난다.
  */
+/**
+ * 옛 계약의 죽은 인센티브를 **비운다** (PLAN_CONTRACT_TERMS §4-1).
+ *
+ * 예전 타입은 `{ condition: string; bonus: number }` 였다. 문자열이라 기계가
+ * 판정할 수 없었고 **채우는 코드가 0건**이었다 — 그래서 실제로 값이 든 세이브는
+ * 없어야 하지만, 손으로 만든 세이브·개발 중 세이브에 남아 있을 수 있다.
+ *
+ * 🔴 **세이브를 지우거나 되돌리지 않는다.** 계약은 그대로 두고 `incentives`
+ * 배열에서 **새 모양이 아닌 항목만** 뺀다. 남는 게 없으면 필드 자체를 지운다 —
+ * 빈 배열을 두면 선수 상세가 「인센티브」 칸을 열고 아무것도 안 그린다.
+ */
+export function migrateContract(c: ProContract | undefined): ProContract | undefined {
+  if (!c) return c;
+  const raw = c.incentives as unknown;
+  if (!Array.isArray(raw)) {
+    // 배열이 아니면(옛 세이브의 잘못된 값) 필드를 지운다
+    if (raw === undefined) return c;
+    const { incentives: _drop, ...rest } = c;
+    return rest as ProContract;
+  }
+  // 새 모양은 `kind` 와 숫자 `threshold` 를 갖는다. 옛 `{condition}` 은 여기서 걸린다
+  const kept = raw.filter((i) => {
+    const o = i as { kind?: unknown; threshold?: unknown; bonus?: unknown };
+    return typeof o?.kind === "string" && typeof o?.threshold === "number" && typeof o?.bonus === "number";
+  }) as ProContract["incentives"];
+  if (kept && kept.length === raw.length) return c;
+  if (!kept || kept.length === 0) {
+    const { incentives: _drop, ...rest } = c;
+    return rest as ProContract;
+  }
+  return { ...c, incentives: kept };
+}
 export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] }): ProtagonistSave {
   const def = DEFAULT_PROTAGONIST;
 
@@ -617,6 +650,9 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     faNegotiationRound:           p.faNegotiationRound           ?? def.faNegotiationRound,
     faUnsignedWeeks:              p.faUnsignedWeeks              ?? def.faUnsignedWeeks,
     tradeAdaptationWeeks:         p.tradeAdaptationWeeks         ?? def.tradeAdaptationWeeks,
+    // 죽은 인센티브(`{condition}`)를 비운다 — 계약 자체는 그대로 둔다
+    contract:            migrateContract(p.contract),
+    pendingNextContract: migrateContract(p.pendingNextContract),
   };
 }
 

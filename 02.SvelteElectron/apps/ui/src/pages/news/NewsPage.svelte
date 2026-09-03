@@ -1,7 +1,7 @@
 <script lang="ts">
   import type {
-    MessageCategory, MessageItem, InjuryMetadata, OffseasonMetadata,
-    Top10Metadata, TrainingMetadata,
+    MessageCategory, MessageItem, InjuryMetadata, MyBodyMetadata,
+    OffseasonMetadata, Top10Metadata, TrainingMetadata,
   } from "../../shared/types/main";
   import { applyDecision } from "../../shared/usecases/decisions";
   import { gameStore } from "../../shared/stores/game";
@@ -13,6 +13,7 @@
   import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
   import OffseasonPanel from "../../features/messages/ui/OffseasonPanel.svelte";
   import InjuryPanel from "../../features/messages/ui/InjuryPanel.svelte";
+  import MyBodyPanel from "../../features/messages/ui/MyBodyPanel.svelte";
   import RoleChoicePanel from "../../features/messages/ui/RoleChoicePanel.svelte";
 
   /**
@@ -290,6 +291,11 @@
             <OffseasonPanel metadata={selected.metadata as OffseasonMetadata} />
           {:else if selected.metadata?.type === "injury"}
             <InjuryPanel metadata={selected.metadata as InjuryMetadata} />
+          {:else if selected.metadata?.type === "myBody"}
+            <!-- 🔴 **다섯 번째 metadata 인데 그리는 갈래가 없었다**
+                 (MESSAGE_KINDS_DISPLAY_2026-09-03 §4). 구조가 잡힌 숫자를
+                 들고 와서 본문 텍스트로만 나가고 있었다 -->
+            <MyBodyPanel metadata={selected.metadata as MyBodyMetadata} />
           {:else}
             {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
               <p>{line || " "}</p>

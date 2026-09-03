@@ -1,3 +1,240 @@
+# C → A 회신 12차 (2026-09-03) — myBody 대시보드 · 노트레이드 통일 · 계약 협상 페이지
+
+## 0.52 소식 다섯째 갈래 · 「노트레이드」 한 말 · 협상 화면 새로 (1.1 C③)
+
+**Rust · 엔진 로직은 안 건드렸다. 밸런스 값 확정 0** — 새로 넣은 수치는 전부
+규칙 파일에 `_proposal` 로 적은 **제안값**이다. 검사에 정규식 0건.
+
+```
+vitest  209파일 1,959건 통과 (전 206파일 1,870건 · +89건 · 새 파일 3)
+npm run check:svelte   716파일 0 ERRORS 0 WARNINGS
+npm run check:mojibake OK
+```
+
+---
+
+### ① 결함 — myBody 소식이 텍스트로 나가던 것 (B-18 §4)
+
+`metadata` 를 실은 다섯째 종류인데 `NewsPage.svelte` 의 `metadata.type` 갈래에
+`myBody` 가 없어서, **구조가 잡힌 숫자를 들고 와 본문 텍스트로만** 나갔다.
+기존 넷과 같은 방식으로 갈래를 붙였다.
+
+```
+결장   표 — 주차 · 상대 · 사유 · 컨디션
+경고   표 — 주차 · 피로 · 부상 위험
+부상   카드 한 장 (있을 때만) — 이름 · 등급 · 발생 주 · 남은 주
+```
+
+행을 만드는 자리는 **`shared/utils/myBodyReportView.ts` 하나**다. `InjuryPanel`
+(NPC 월간)과 같은 배치다 — 화면 안에서 행을 만들면 이 저장소의 vitest
+(`environment: "node"`)가 **한 줄도 못 잰다.**
+
+⚠ **NPC 부상 리포트와 규격을 안 합쳤다.** `MyBodyMetadata` 주석이 이미
+못박아 둔 대로다 — 저쪽은 「사람 목록」이고 이쪽은 「내 한 달」이다.
+주기(월간)와 구조(표)만 같게 뒀다.
+
+⚠ 부제·대시 설명이 없다. 항목 이름과 값뿐이고 문장은 0줄이다.
+
+---
+
+### ② 「노트레이드」로 통일 (0.51 ⚠ 에서 A 판단으로 넘겼던 것)
+
+```
+전                                            후
+ContractNegotiationModal  트레이드 거부권  →  노트레이드   (조항 목록)
+TradeModal  "계약의 트레이드 거부권을…"    →  "계약의 노트레이드 조항을…"
+PlayerDetailModal  노트레이드                 (그대로)
+FaMarketModal      노트레이드                 (그대로)
+```
+
+`apps/ui/src` 전체에 **「트레이드 거부권」 0건**이고 검사가 그걸 지킨다.
+
+⚠ **문안 데이터 `contract_terms.json` 의 「노트레이드 조항」은 안 건드렸다** —
+B 소유다. 화면 이름표(「노트레이드」)와 소식 머리말(「노트레이드 조항」)이
+갈리는 건 의도로 봤다: 화면은 표의 칸 이름이고 소식은 문장 안의 말이다.
+**맞출 거면 B 에게 한 줄.**
+
+이름표 정본은 여전히 **`faOfferTerms.ts` 의 `FA_TERM_LABEL` 하나**다. 협상
+화면의 조항·비교표 이름이 전부 거기서 파생된다 — 화면이 낱말을 따로 적는지
+검사가 본다. 예전 검사는 "협상 화면 소스에 그 낱말이 있나"만 봐서 **두 벌이
+되는 걸 못 막았다. 더 강한 쪽으로 바꿨다.**
+
+---
+
+### ③ 1.1 C③ — 신규 계약 협상 페이지
+
+정본 `PLAN_CONTRACT_TERMS.md` §3·§4·§5·§5-2·§5-3·§8 · 시안
+`docs/mock/contract-page-mock.html`. 기존 `ContractNegotiationModal` 을 **시안
+구성으로 갈아치웠다**(새 컴포넌트를 안 만들었다 — 띄우는 자리가
+`MainPage.svelte:563` 하나라 배선을 바꿀 이유가 없다).
+
+```
+전                                        후
+조항 체크박스·버튼이 늘 떠 있었다     →  「＋ 추가」로 붙이고 「×」로 뺀다
+인센티브 없음 (죽은 필드)             →  최대 3개 (✅ 상한 확정)
+연봉 슬라이더에 바닥 없음             →  salaryRules.minSalary 로 친다 (✅ 확정)
+역제안 늘 한 번                       →  성적·구단주 관계로 1~3회 (§5-2)
+비교 제시/요청 두 칸                  →  지금·제시·역제안 세 칸 표
+수락 확률 게이지                      →  그대로 + 인센티브 항
+```
+
+#### 자료 구조 — 죽은 필드를 바꿨다
+
+```ts
+// 전: 문자열이라 기계가 판정할 수 없었다. 채우는 코드 0건
+incentives?: { condition: string; bonus: number }[];
+// 후
+incentives?: ContractIncentive[];   // { kind, threshold, awardId?, bonus, paidSeasons? }
+```
+
+`IncentiveKind` 는 `games | innings | era | wins | saves | holds | award` 다.
+`paidSeasons` 는 다년 계약에서 **두 번 주는 걸 막는 자리**이고 채우는 건
+정산(C④·A) 몫이다.
+
+🔴 **`buyout?` 은 안 넣었다.** §7 ① 이 "자리만" 이라 했는데, 쓰는 코드가 없는
+필드를 또 만드는 건 지금 고치고 있는 결함(`incentives` 가 죽어 있던 것)과 같은
+모양이다. **1.1 에서 쓸 때 넣는 게 맞다** — A 가 다르게 보면 한 줄이다.
+
+#### 구 세이브 — 지우지 않고 비운다
+
+`migrateContract()` 가 `contract` 와 `pendingNextContract` 둘 다 훑어
+`incentives` 배열에서 **새 모양이 아닌 항목만** 뺀다. 남는 게 없으면 필드째
+지운다(빈 배열을 두면 선수 상세가 「인센티브」 칸을 열고 아무것도 안 그린다).
+**계약의 나머지 값은 그대로다.**
+
+#### 규칙 파일 — `contractRules` 를 새로 (전부 제안값)
+
+`resource/data/master/players/generation_rules.json`
+
+```
+contractRules.incentives   maxPerContract 3 (✅) · totalPctOfSalary 25 (제안)
+                           perItemPctOfSalary 15 (제안) · acceptMultPerIncentive 1.02 (제안)
+                           byRole SP/RP/CP (✅ 셋뿐) · candidates 9종 (문턱·금액 제안)
+contractRules.renewalSigningBonus 0 (✅)
+contractRules.counterOffer  base 1 · max 3 · 65 · 30 · 40 · 0 (✅ 계수 넷)
+awardRules.golden.label     "골든글러브"  ← 없어서 더했다(mvp·rookie 는 이미 있다)
+```
+
+🔴 **문턱·금액은 KBO 감각으로 적은 숫자이고 실측 근거가 0이다**(§7-1).
+`_proposal` 주석에 그렇게 적어 뒀다. 계측(주인공 시즌별 등판·이닝·ERA·승 분포 ·
+달성률 20~50% 가 기준) 뒤에 사용자에게 확인받는 값이다.
+
+수상 이름표는 **`awardRules` 가 정본**이다 — 코드가 「골든글러브」를 또 적지 않는다.
+
+#### 계산은 전부 `shared/utils/contractTerms.ts` 로 뺐다
+
+예전 화면은 허용치 계수(×1.15 · ×0.95 …)와 총액 식을 **컴포넌트 안에** 갖고
+있어서 한 줄도 잴 수 없었다. 지금은 순수 함수고 화면은 부르기만 한다.
+
+```
+counterOfferRounds(성적, 관계)       1 + (≥65) + (≥30) − (<40 && <0) · clamp 1~3
+requestedSalaryOf(제시, 비율, 하한)  ±20% 뒤 최저연봉으로 바닥
+incentiveCandidates(보직, 연봉)      그 보직 축 + 수상 · 금액은 연봉 대비 %
+incentiveAddable(...)                개수 3 · 중복 · 총액 상한 셋을 다 본다
+acceptThresholdOf(...)               예전 식 그대로 + 인센티브 항(^1.02)
+compareRows(...)                     지금·제시·역제안 여섯 줄
+```
+
+⚠ **조항 계수 다섯(0.95 · 0.97 · 0.94 · 1.05 · 1.10)은 예전 값 그대로**
+코드에 남겼다. 규칙 파일로 옮기는 건 밸런스 소유(A·사용자) 판단이라 안 했다.
+
+#### 역제안 횟수가 실제로 준다
+
+예전엔 요구액이 허용치를 넘으면 역제안 버튼이 **잠기기만** 했다. 지금은:
+
+```
+허용치 안   구단이 받아들이고 서명한다      (예전과 같다)
+허용치 밖   횟수를 하나 쓰고 되받는다        ← 새로
+남은 0회    역제안이 잠기고 수락·거절만 남는다
+```
+
+되받는 줄은 `contract_terms.json` 의 `counter.reject` · `counter.reason.roundsOut`
+에서만 온다. **코드에 문장이 0줄이다.** 파일을 못 읽으면 줄이 안 보일 뿐 빈
+문장을 지어내지 않는다.
+
+⚠ **구단 판정에 난수를 안 넣었다** — 허용치 비교 하나로 갈린다. 판정에 주사위를
+넣는 건 엔진 몫이라 안 건드렸다.
+
+⚠ 관계 값을 **숫자로 안 쓴다**(`relationship.ts` 규칙). 화면에 나가는 건
+「역제안 2회 남음」과 제시액 배수뿐이다.
+
+#### 문안 로더를 붙였다 (B-13)
+
+`messages/contract_terms.json` → `masterStore.contractCopy`
+(`shared/utils/contractCopy.ts` 가 타입·자리표 채우기 · 어긋나면 `null`).
+지금 화면이 쓰는 문장은 **셋뿐**이다(최저연봉 안내 · 역제안 회신 둘).
+나머지(offer·signed·option·incentive)는 소식을 만드는 자리(C④·A)가 붙을 때
+쓰라고 타입만 미리 담았다.
+
+---
+
+### 바꾼 파일
+
+| 파일 | 무엇 |
+|---|---|
+| `shared/utils/myBodyReportView.ts` **(신설)** | 몸 상태 표 행 만들기 |
+| `features/messages/ui/MyBodyPanel.svelte` **(신설)** | 대시보드 갈래 |
+| `pages/news/NewsPage.svelte` | `myBody` 갈래 추가 (다섯째) |
+| `shared/utils/contractTerms.ts` **(신설)** | 조항·인센티브·역제안·허용치·비교표 |
+| `shared/utils/contractCopy.ts` **(신설)** | `contract_terms.json` 타입·로더 |
+| `features/contract/ui/ContractNegotiationModal.svelte` | 시안 구성으로 갈아치움 |
+| `features/contract/ui/TradeModal.svelte` | 「노트레이드 조항」 |
+| `features/player/ui/PlayerDetailModal.svelte` | 인센티브를 `incentiveLabel` 로 |
+| `shared/types/save.ts` | `ContractIncentive` · `IncentiveKind` |
+| `shared/stores/game.ts` | `migrateContract()` · 두 계약에 적용 |
+| `shared/stores/master.ts` | `primeContractRules` · `contractCopy` |
+| `resource/.../players/generation_rules.json` | `contractRules` · `awardRules.golden.label` |
+| `shared/utils/__tests__/myBodyReportView.test.ts` **(신설)** | 19건 |
+| `shared/utils/__tests__/contractTerms.test.ts` **(신설)** | 60건 |
+| `shared/stores/__tests__/contractMigration.test.ts` **(신설)** | 10건 |
+| `shared/utils/__tests__/faOfferTerms.test.ts` | 이름표 검사를 더 강하게 |
+
+검사가 보는 것: 갈래가 있는가 · metadata 예시로 행 수(대조군 포함) · 칸 이름을
+화면이 따로 안 적는가 · 조항 한 무리에 하나 · 계수 다섯이 예전 값인가 ·
+인센티브 상한 3·중복·총액 상한 · 보직 축만 나오는가 · 최저연봉 하한 넷 ·
+역제안 횟수 식 열한 갈래 + 전수 clamp · 허용치·확률 · 비교표 여섯 줄 ·
+마이그레이션 열 · 문안 파일이 로더를 통과하는가(대조군: 한 칸 비면 null) ·
+「트레이드 거부권」이 0건인가.
+
+---
+
+### 실측 — 못 했다. 왜 그런지 적는다
+
+🔴 **재계약·FA 협상이 열리는 세이브를 헤드리스로 못 만든다.** 재계약은 프로
+계약 만료(W39)에서만 열리고 `salaryNegotiation` pending 은 Electron 을 거쳐야
+뜬다. **electron 1개 규칙**이고 A 프로브가 도는 중이라 앱을 안 띄웠다.
+0.51 의 FA 카드와 **같은 이유**다.
+
+그래서 **컴포넌트 단위 검사로 대신했다**(A 지시대로) — 계산을 직접 재고,
+화면이 그 함수를 쓰는지는 소스 문자열로 본다.
+
+**눈확인이 둘 남는다** (슬롯이 나면 C 가 돌린다):
+
+```
+1  협상 화면 — 「＋ 추가」 목록이 카드 밖으로 안 넘치나 · 좁은 폭(1열)에서 표
+2  몸 상태 소식 — 결장·경고 표 둘이 상세 칸 폭에서 어떻게 보이나
+```
+
+---
+
+### A 가 이어서 볼 자리
+
+```
+1  §7 ③ 재계약에 인센티브 후보·팀 옵션을 싣기 (advanceWeek.ts:1306)
+   → 실리면 협상 화면은 「구단 제시」 칸에 줄만 늘면 된다. 화면은 이미 그 모양이다
+2  §7 ⑤⑥ 인센티브 정산 (utils/incentiveEngine.ts + runWorldSeasonEnd)
+   → paidSeasons 자리는 이미 있다. 문안도 contract_terms.json 에 다 있다
+3  §7-1 문턱 계측 — contractRules.incentives.candidates 9종이 전부 제안값이다
+4  🔴 **제시 수락의 서명액이 화면 표시와 다르다** — 화면은 effectiveOffer
+   (구단주 관계·예산 배수를 먹인 값)를 보이는데 서명은 action.offeredSalary 다.
+   **예전 화면부터 그랬다.** 역제안은 배수를 먹인 값으로 서명하므로
+   0% 역제안이 수락보다 유리하다. 금액을 바꾸는 건 밸런스라 안 건드렸다
+5  buyout? 필드를 지금 넣을지 (위 ③ 참고 — C 는 안 넣었다)
+6  contract_terms.json 의 「노트레이드 조항」을 그대로 둘지 (B 소유)
+```
+
+---
+
 # C → A 회신 11차 (2026-09-03) — C① 후속 한 줄 · C② FA 제안 카드 조건
 
 ## 0.51 확인 단계는 추천이 아닌 버튼에만 · FA 카드에 계약금·옵션·노트레이드

@@ -1,18 +1,60 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import {
-    isImmediateContract, signNegotiatedContract, rejectNegotiatedContract,
+    signNegotiatedContract, rejectNegotiatedContract,
   } from "../../../shared/usecases/contractDecision";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
+  import { slotRepo } from "../../../shared/repo/slotRepo";
   import type { PendingAction } from "../../../shared/types/season";
-  import type { PitcherSeasonStats, BatterSeasonStats, ProContract } from "../../../shared/types/save";
-  import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
+  import type {
+    PitcherSeasonStats, BatterSeasonStats, ProContract, ContractIncentive,
+  } from "../../../shared/types/save";
   import { calcMarketSalary, calcSeasonRating } from "../../../shared/utils/salaryEngine";
-  import { isFaEligible } from "../../../shared/utils/faEngine";
   import { relationEffects } from "../../../shared/usecases/relationships";
   import { staffModsOf } from "../../../shared/utils/staffEffects";
-  import { onMount } from "svelte";
+  import { fillContractCopy } from "../../../shared/utils/contractCopy";
+  import {
+    CLAUSE_OPTIONS, clauseById, clauseAddable, addClause, removeClause,
+    clauseTerms, incentiveCandidates, incentiveLabel, incentiveKey,
+    incentiveAddable, addIncentive, removeIncentive, incentiveTotal,
+    maxIncentives, minSalaryOf, requestedSalaryOf, contractTotalValue,
+    acceptThresholdOf, acceptProbabilityOf, counterOfferRounds, compareRows,
+    type ClauseId,
+  } from "../../../shared/utils/contractTerms";
+
+  /**
+   * 계약 협상 — 시안 `docs/mock/contract-page-mock.html` 구성 (1.1 C③).
+   * 정본은 `docs/PLAN_CONTRACT_TERMS.md` §3·§4·§5·§5-2·§5-3·§8.
+   *
+   * ## 예전과 무엇이 다른가
+   *
+   * ```
+   * 조항       체크박스·버튼이 늘 떠 있었다  → 「＋ 추가」로 붙이고 「×」로 뺀다
+   * 인센티브   없었다(죽은 필드)            → 최대 3개까지 고른다 (✅ 상한 확정)
+   * 최저연봉   슬라이더에 바닥이 없었다     → salaryRules.minSalary 로 친다 (✅ 확정)
+   * 역제안     늘 한 번                     → 성적·구단주 관계로 1~3회 (§5-2 ✅ 계수 확정)
+   * 비교       제시/요청 두 칸              → 지금·제시·역제안 세 칸 표
+   * ```
+   *
+   * ## 여기 없는 것 — 일부러다
+   *
+   * 🔴 **인센티브 정산을 안 넣는다** (C④·A 몫 · §7 ⑤⑥). 이 화면은 계약서에
+   * 항목을 **싣기만** 한다. 시즌 끝에 성적과 대조해 돈을 주는 자리는
+   * `runWorldSeasonEnd` 이고, 그건 엔진 쪽 순서가 따로 있다.
+   *
+   * 🔴 **구단이 조항을 제시하는 칸이 없다** (§7 ③ · `advanceWeek.ts:1306`).
+   * 지금 `salaryNegotiation` 은 연봉·기간·계약금만 싣는다 — 팀 옵션을 실어 보내는
+   * 건 그 자리를 고쳐야 하고 그건 A 몫이다. 실리면 이 화면은 **줄만 늘면 된다**.
+   *
+   * ⚠ **밸런스 값을 여기서 정하지 않는다.** 인센티브 후보·문턱·금액은
+   * `generation_rules.json` 의 `contractRules` 에서 오고 전부 **제안값**이다(§7-1).
+   * 조항 계수 다섯은 예전 화면에 있던 값 그대로다.
+   *
+   * ⚠ **관계 값을 숫자로 안 쓴다** (`relationship.ts`). 구단주 관계는 남은
+   * 역제안 횟수와 제시액 배수로만 나간다.
+   */
 
   export let action: Extract<PendingAction, { type: "salaryNegotiation" }>;
 
@@ -24,16 +66,15 @@
 
   let salaryRatio = 0;
   let selectedDuration = action.durationYears;
-  let noTrade = false;
-  let teamOptionYears = 0;
-  let playerOptionYears = 0;
+  let pickedClauses: ClauseId[] = [];
+  let pickedIncentives: ContractIncentive[] = [];
   let resolving = false;
+  /** 열려 있는 「＋ 추가」 목록. 한 번에 하나만 연다 */
+  let openMenu: "" | "clause" | "incentive" = "";
+  /** 구단이 되받은 줄. 문장은 `contract_terms.json` 에서만 온다 */
+  let replyLine = "";
 
   // ── 구단주 관계 · 예산 (§7-5 F-4 / 7-4 이월) ──────────────────
-  //
-  // 7-4는 구단주 관계를 **방출 우선순위**에만 썼다. 나를 안 좋아하는 구단주가
-  // 자르기만 하고 계약엔 아무 영향이 없으면 그 축이 절반만 사는 셈이다.
-  // 여기서 재계약 쪽 소비처가 생긴다.
   //
   // 두 입력이 다른 축이라는 게 요점이다:
   //   구단주 **관계**  — 나를 어떻게 보는가 (내가 쌓은 것)
@@ -41,6 +82,8 @@
   // 관계가 좋아도 궁핍한 구단은 못 준다.
   let ownerLabel = "중립";
   let ownerBonus = 0;
+  /** −100~+100 원값. **화면에 숫자로 안 쓴다** — 역제안 횟수 계산에만 들어간다 */
+  let ownerRelation = 0;
   $: budgetMod = staffModsOf($gameStore.protagonist.teamId ?? "", $entitiesL10n).budget;
 
   onMount(async () => {
@@ -53,63 +96,95 @@
     } catch {
       // 관계를 못 읽으면 중립으로 간다 — 보정 없음이 임의 보정보다 낫다
     }
+    try {
+      const rows = await slotRepo.getRelationships(slotId, { kind: "owner" });
+      // 구단주가 없는 팀(스태프가 아직 안 붙음)은 0 이다 — 성적만으로 1~2회가 된다
+      ownerRelation = rows[0]?.value ?? 0;
+    } catch {
+      ownerRelation = 0;
+    }
   });
 
   /** 구단주가 실제로 낼 수 있는 금액. 관계 × 예산 */
   $: ownerMult = (1 + ownerBonus) * budgetMod;
   $: effectiveOffer = Math.round((action.offeredSalary * ownerMult) / 100) * 100;
 
-  $: requestedSalary = Math.round(effectiveOffer * (1 + salaryRatio) / 100) * 100;
   $: teamName = $teamsL10n.find((t) => t.id === action.teamId)?.name ?? action.teamId;
-  $: totalValue = requestedSalary * selectedDuration + action.signingBonus;
+  $: copy = $masterStore.contractCopy;
 
-  // 허용 임계값: 옵션 조합에 따라 조정
-  $: acceptThreshold = (() => {
-    // 임계값도 같은 배수를 탄다 — 오퍼만 올리면 "더 주는데 더 짜다"가 된다
-    let base = effectiveOffer * 1.15;
-    const durDiff = selectedDuration - action.durationYears;
-    base *= (1 + durDiff * 0.03);
-    if (noTrade)               base *= 0.95;
-    if (teamOptionYears === 1) base *= 1.05;
-    if (teamOptionYears === 2) base *= 1.10;
-    if (playerOptionYears === 1) base *= 0.97;
-    if (playerOptionYears === 2) base *= 0.94;
-    return Math.round(base);
-  })();
+  // ── 최저연봉 하한 (§3 ✅ 사용자 확정 6) ──────────────────────
+  $: minSalary = minSalaryOf(action.leagueId);
+  $: rawRequest = Math.round((effectiveOffer * (1 + salaryRatio)) / 100) * 100;
+  $: requestedSalary = requestedSalaryOf(effectiveOffer, salaryRatio, minSalary);
+  /** 하한에 걸렸을 때만 안내 한 줄. 문장은 데이터에서 온다 */
+  $: floorHit = minSalary > 0 && rawRequest < minSalary;
 
-  $: acceptProb = (() => {
-    if (requestedSalary <= acceptThreshold) return Math.min(95, 95);
-    const over = (requestedSalary - acceptThreshold) / acceptThreshold;
-    return Math.max(0, Math.round(95 - over * 400));
-  })();
+  // ── 조항·인센티브 ────────────────────────────────────────────
+  $: role = $gameStore.protagonist.position;
+  $: incCandidates = incentiveCandidates(role, requestedSalary);
+  $: incTotal = incentiveTotal(pickedIncentives);
 
-  $: canCounter = requestedSalary <= acceptThreshold;
+  // ⚠ 연봉이 바뀌면 후보 금액도 바뀐다. **이미 고른 항목의 금액은 안 따라간다** —
+  //   고를 때의 금액으로 계약서에 실린다. 뒤에서 조용히 값이 변하면 표가 거짓말을 한다.
 
-  // 시즌 성적
+  // ── 구단 판정 ────────────────────────────────────────────────
+  $: acceptThreshold = acceptThresholdOf({
+    effectiveOffer,
+    offeredYears: action.durationYears,
+    requestedYears: selectedDuration,
+    clauses: pickedClauses,
+    incentiveCount: pickedIncentives.length,
+  });
+  $: acceptProb = acceptProbabilityOf(requestedSalary, acceptThreshold);
+  $: withinThreshold = requestedSalary <= acceptThreshold;
+
+  // ── 역제안 횟수 (§5-2) ───────────────────────────────────────
+  let seasonRating = 50;
+  let usedRounds = 0;
   $: myStats = ($seasonStore.stats[$gameStore.protagonist.id] ?? null);
   $: isPitcher = $gameStore.protagonist.playerType === "pitcher";
   $: pitcherStats = isPitcher ? (myStats as PitcherSeasonStats | null) : null;
   $: batterStats  = !isPitcher ? (myStats as BatterSeasonStats | null) : null;
-
-  let seasonRating = 50;
-  let marketSalary = 0;
   $: calcSeasonRating(pitcherStats ?? batterStats).then((r) => (seasonRating = r));
+
+  $: totalRounds = counterOfferRounds(seasonRating, ownerRelation);
+  $: roundsLeft = Math.max(0, totalRounds - usedRounds);
+
+  let marketSalary = 0;
   $: calcMarketSalary(
     isPitcher ? $gameStore.protagonist.pitching?.ovr ?? 50 : $gameStore.protagonist.batting?.ovr ?? 50,
     $gameStore.protagonist.fame,
     action.leagueId,
   ).then((r) => (marketSalary = r));
-
   $: marketRatioPct = marketSalary > 0 ? Math.round((requestedSalary / marketSalary) * 100) : 100;
+
+  // ── 비교표 ───────────────────────────────────────────────────
+  $: current = $gameStore.protagonist.contract ?? null;
+  $: rows = compareRows({
+    current: current
+      ? {
+          salary: current.salary, years: current.durationYears,
+          signingBonus: current.signingBonus, noTrade: current.noTrade,
+          incentiveTotal: incentiveTotal(current.incentives ?? []),
+        }
+      : null,
+    offered: { salary: effectiveOffer, years: action.durationYears, signingBonus: action.signingBonus },
+    counter: {
+      salary: requestedSalary, years: selectedDuration, signingBonus: action.signingBonus,
+      clauses: pickedClauses, incentives: pickedIncentives,
+    },
+    yes: "있음", no: "없음",
+  });
+
+  $: totalValue = contractTotalValue(requestedSalary, selectedDuration, action.signingBonus) + incTotal;
 
   function formatSalary(v: number): string {
     if (v >= 10000) return `${(v / 10000).toFixed(1)}억`;
     return `${v.toLocaleString()}만`;
   }
 
-  $: isImmediate = isImmediateContract(action.context);
-
-  function buildContract(salary: number, years: number): ProContract {
+  function buildContract(salary: number, years: number, incentives: ContractIncentive[], clauses: ClauseId[]): ProContract {
+    const t = clauseTerms(clauses);
     return {
       teamId: action.teamId,
       leagueId: action.leagueId,
@@ -117,24 +192,46 @@
       durationYears: years,
       remainingYears: years,
       signingBonus: action.signingBonus,
-      teamOptionYears,
-      playerOptionYears,
-      noTrade,
+      teamOptionYears: t.teamOptionYears,
+      playerOptionYears: t.playerOptionYears,
+      noTrade: t.noTrade,
+      ...(incentives.length > 0 ? { incentives } : {}),
       status: "active",
     };
   }
 
+  /**
+   * 제시 수락 — **조항도 인센티브도 안 붙인다.** 구단이 낸 그대로다.
+   *
+   * ⚠ 서명액이 `action.offeredSalary` 이고 화면이 보이는 건 `effectiveOffer`
+   * (구단주 관계·예산 배수를 먹인 값)다. **예전 화면부터 그랬다** — 배수는
+   * 표시와 역제안 기준에만 걸리고 서명액엔 안 걸린다. 금액을 바꾸는 건
+   * 밸런스라 이번에 안 건드렸다(HANDOFF §0.52 · A 판단 자리).
+   */
   async function accept() {
     if (resolving) return;
     resolving = true;
-    await signNegotiatedContract(action, buildContract(action.offeredSalary, action.durationYears), teamName);
+    await signNegotiatedContract(action, buildContract(action.offeredSalary, action.durationYears, [], []), teamName);
     resolving = false;
   }
 
+  /**
+   * 역제안 — 허용치 안이면 구단이 받아들이고 서명한다.
+   * 넘으면 **횟수를 하나 쓰고** 되받는다. 다 쓰면 수락·거절만 남는다.
+   */
   async function counter() {
-    if (resolving || !canCounter) return;
+    if (resolving || roundsLeft <= 0) return;
+    if (!withinThreshold) {
+      usedRounds += 1;
+      replyLine = copy
+        ? (roundsLeft - 1 <= 0 ? copy.counter.reason.roundsOut : copy.counter.reject)
+        : "";
+      return;
+    }
     resolving = true;
-    await signNegotiatedContract(action, buildContract(requestedSalary, selectedDuration), teamName);
+    await signNegotiatedContract(
+      action, buildContract(requestedSalary, selectedDuration, pickedIncentives, pickedClauses), teamName,
+    );
     resolving = false;
   }
 
@@ -149,129 +246,185 @@
     { length: action.maxDurationYears - action.minDurationYears + 1 },
     (_, i) => i + action.minDurationYears,
   );
+
+  function toggleMenu(which: "clause" | "incentive", e: MouseEvent) {
+    e.stopPropagation();
+    openMenu = openMenu === which ? "" : which;
+  }
 </script>
+
+<svelte:window on:click={() => (openMenu = "")} />
 
 <div class="overlay">
   <section class="modal">
     <header>
       <p class="badge">{CONTEXT_LABEL[action.context] ?? "계약 협상"}</p>
       <h2>{teamName}</h2>
+      <p class="rounds">역제안 {roundsLeft}회 남음</p>
     </header>
 
-    <!-- 제시 vs 요청 비교 -->
-    <div class="compare-grid">
-      <div class="compare-col">
-        <p class="col-label">팀 제시</p>
-        <p class="col-val">{formatSalary(effectiveOffer)}원</p>
-        <p class="col-sub">{action.durationYears}년 · 계약금 {formatSalary(action.signingBonus)}원</p>
-      </div>
-      <div class="arrow">→</div>
-      <div class="compare-col right">
-        <p class="col-label">내 요청</p>
-        <p class="col-val">{formatSalary(requestedSalary)}원</p>
-        <p class="col-sub">{selectedDuration}년 · 총액 {formatSalary(totalValue)}원</p>
-      </div>
-    </div>
-
-    <!-- 구단주 (§7-5 F-4) — 관계와 예산은 다른 축이다 -->
-    {#if ownerMult !== 1}
-      <p class="owner-line">
-        구단주 관계 <strong>{ownerLabel}</strong>
-        {#if ownerBonus !== 0}
-          ({ownerBonus > 0 ? "+" : ""}{(ownerBonus * 100).toFixed(0)}%)
+    <div class="cols">
+      <!-- ── 구단 제시 ── -->
+      <section class="card">
+        <p class="card-h">구단 제시</p>
+        <div class="row"><span class="k">연봉</span><span class="v big">{formatSalary(effectiveOffer)}원</span></div>
+        <div class="row"><span class="k">기간</span><span class="v">{action.durationYears}년</span></div>
+        <!-- 없는 조항은 줄 자체가 없다 — 「없음」·「0년」을 안 적는다 (§6) -->
+        {#if action.signingBonus > 0}
+          <div class="row"><span class="k">계약금</span><span class="v">{formatSalary(action.signingBonus)}원</span></div>
         {/if}
-        · 구단 예산 {budgetMod > 1 ? "여유" : budgetMod < 1 ? "빠듯" : "보통"}
-        ({budgetMod > 1 ? "+" : ""}{((budgetMod - 1) * 100).toFixed(0)}%)
-        <span class="owner-net" class:up={ownerMult > 1} class:down={ownerMult < 1}>
-          → 제시액 {ownerMult > 1 ? "+" : ""}{((ownerMult - 1) * 100).toFixed(1)}%
-        </span>
-      </p>
-    {/if}
+        {#if ownerMult !== 1}
+          <p class="owner-line">
+            구단주 관계 <strong>{ownerLabel}</strong>
+            · 구단 예산 {budgetMod > 1 ? "여유" : budgetMod < 1 ? "빠듯" : "보통"}
+            <span class="owner-net" class:up={ownerMult > 1} class:down={ownerMult < 1}>
+              → 제시액 {ownerMult > 1 ? "+" : ""}{((ownerMult - 1) * 100).toFixed(1)}%
+            </span>
+          </p>
+        {/if}
+      </section>
 
-    <!-- 시장가 게이지 -->
-    <div class="gauge-row">
-      <span class="gauge-label">시장가 대비</span>
-      <div class="gauge-track">
-        <div class="gauge-fill" style="width:{Math.min(100, marketRatioPct)}%"
-          class:over={marketRatioPct > 100}></div>
-      </div>
-      <span class="gauge-pct" class:over={marketRatioPct > 110}>{marketRatioPct}%</span>
+      <!-- ── 역제안 ── -->
+      <section class="card">
+        <p class="card-h">역제안</p>
+        <p class="f">연봉 <span class="pct">{salaryRatio > 0 ? "+" : ""}{Math.round(salaryRatio * 100)}%</span></p>
+        <input class="slider" type="range" min="-0.2" max="0.2" step="0.01" bind:value={salaryRatio} />
+        <div class="row"><span class="k">요구 연봉</span><span class="v">{formatSalary(requestedSalary)}원</span></div>
+        {#if minSalary > 0}
+          <div class="row"><span class="k">최저연봉</span><span class="v" class:floor={floorHit}>{formatSalary(minSalary)}원</span></div>
+        {/if}
+        {#if floorHit && copy}
+          <!-- 문장은 contract_terms.json 에서만 온다 (B-13) -->
+          <p class="note">{fillContractCopy(copy.minSalary.floor, { minSalary: minSalary.toLocaleString() })}</p>
+        {/if}
+        {#if durationRange.length > 1}
+          <p class="f">기간</p>
+          <div class="seg">
+            {#each durationRange as yr}
+              <button type="button" class="seg-b" class:on={selectedDuration === yr}
+                aria-pressed={selectedDuration === yr}
+                on:click={() => (selectedDuration = yr)}>{yr}년</button>
+            {/each}
+          </div>
+        {/if}
+      </section>
     </div>
 
-    <!-- 연봉 슬라이더 -->
-    <div class="section">
-      <p class="section-title">연봉 협상 <span class="muted">(±20%)</span></p>
-      <input class="slider" type="range" min="-0.2" max="0.2" step="0.01" bind:value={salaryRatio} />
-      <div class="range-labels">
-        <span>{formatSalary(effectiveOffer * 0.8)}원</span>
-        <span class="center-label">{formatSalary(requestedSalary)}원</span>
-        <span>{formatSalary(effectiveOffer * 1.2)}원</span>
-      </div>
-    </div>
-
-    <!-- 계약 기간 -->
-    {#if durationRange.length > 1}
-    <div class="section">
-      <p class="section-title">계약 기간</p>
-      <div class="dur-btns">
-        {#each durationRange as yr}
-          <button class="dur-btn" class:active={selectedDuration === yr}
-            on:click={() => (selectedDuration = yr)}>{yr}년</button>
-        {/each}
-      </div>
-    </div>
-    {/if}
-
-    <!-- 계약 옵션 -->
-    <div class="section">
-      <p class="section-title">계약 옵션</p>
-      <label class="opt-row">
-        <input type="checkbox" bind:checked={noTrade} />
-        <span>트레이드 거부권</span>
-        <span class="opt-effect">허용치 -5%</span>
-      </label>
-      <div class="opt-row">
-        <span>팀 옵션</span>
-        <div class="opt-btns">
-          {#each [0, 1, 2] as y}
-            <button class="opt-btn" class:active={teamOptionYears === y}
-              on:click={() => (teamOptionYears = y)}>{y === 0 ? "없음" : `${y}년`}</button>
+    <div class="cols">
+      <!-- ── 조항 ── -->
+      <section class="card">
+        <div class="card-h">
+          조항
+          <span class="menu">
+            <button type="button" class="addbtn" on:click={(e) => toggleMenu("clause", e)}>＋ 추가</button>
+            {#if openMenu === "clause"}
+              <!-- svelte-ignore a11y-no-static-element-interactions -->
+              <div class="pop" role="menu" tabindex="-1"
+                on:click={(e) => e.stopPropagation()} on:keydown={() => {}}>
+                {#each CLAUSE_OPTIONS as c}
+                  <button type="button" role="menuitem" disabled={!clauseAddable(pickedClauses, c.id)}
+                    on:click={() => { pickedClauses = addClause(pickedClauses, c.id); openMenu = ""; }}>
+                    <span>{c.label}</span><span class="am">×{c.mult}</span>
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </span>
+        </div>
+        <ul class="picked">
+          {#each pickedClauses as id (id)}
+            <li>
+              <span class="nm">{clauseById(id).label}</span>
+              <span class="am">×{clauseById(id).mult}</span>
+              <button type="button" class="rm" aria-label="빼기"
+                on:click={() => (pickedClauses = removeClause(pickedClauses, id))}>×</button>
+            </li>
+          {:else}
+            <li class="empty">없음</li>
           {/each}
-        </div>
-        {#if teamOptionYears > 0}
-          <span class="opt-effect pos">허용치 +{teamOptionYears * 5}%</span>
-        {/if}
-      </div>
-      <div class="opt-row">
-        <span>선수 옵션</span>
-        <div class="opt-btns">
-          {#each [0, 1, 2] as y}
-            <button class="opt-btn" class:active={playerOptionYears === y}
-              on:click={() => (playerOptionYears = y)}>{y === 0 ? "없음" : `${y}년`}</button>
-          {/each}
-        </div>
-        {#if playerOptionYears > 0}
-          <span class="opt-effect neg">허용치 -{playerOptionYears * 3}%</span>
-        {/if}
-      </div>
-    </div>
+        </ul>
+      </section>
 
-    <!-- 수락 가능성 -->
-    <div class="prob-section">
-      <div class="prob-row">
-        <span class="prob-label">팀 수락 가능성</span>
-        <div class="prob-track">
-          <div class="prob-fill" class:low={acceptProb < 50} style="width:{acceptProb}%"></div>
-        </div>
-        <span class="prob-num" class:low={acceptProb < 50}>{acceptProb}%</span>
-      </div>
-      {#if acceptProb < 60}
-        <p class="warn">역제안이 허용 범위를 초과합니다. 조건을 낮추세요.</p>
+      <!-- ── 인센티브 ── -->
+      {#if incCandidates.length > 0}
+        <section class="card">
+          <div class="card-h">
+            인센티브
+            <span class="cnt">{pickedIncentives.length} / {maxIncentives()}</span>
+            <span class="menu">
+              <button type="button" class="addbtn" on:click={(e) => toggleMenu("incentive", e)}>＋ 추가</button>
+              {#if openMenu === "incentive"}
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="pop" role="menu" tabindex="-1"
+                  on:click={(e) => e.stopPropagation()} on:keydown={() => {}}>
+                  {#each incCandidates as c (incentiveKey(c))}
+                    <button type="button" role="menuitem"
+                      disabled={!incentiveAddable(pickedIncentives, c, requestedSalary)}
+                      on:click={() => { pickedIncentives = addIncentive(pickedIncentives, c, requestedSalary); openMenu = ""; }}>
+                      <span>{incentiveLabel(c)}</span><span class="am">+{c.bonus.toLocaleString()}</span>
+                    </button>
+                  {/each}
+                </div>
+              {/if}
+            </span>
+          </div>
+          <ul class="picked">
+            {#each pickedIncentives as i (incentiveKey(i))}
+              <li>
+                <span class="nm">{incentiveLabel(i)}</span>
+                <span class="am">+{i.bonus.toLocaleString()}만원</span>
+                <button type="button" class="rm" aria-label="빼기"
+                  on:click={() => (pickedIncentives = removeIncentive(pickedIncentives, incentiveKey(i)))}>×</button>
+              </li>
+            {:else}
+              <li class="empty">없음</li>
+            {/each}
+          </ul>
+        </section>
       {/if}
     </div>
 
-    <!-- 성적 요약 -->
-    <div class="stats-row">
+    <!-- ── 비교 ── -->
+    <section class="card wide">
+      <p class="card-h">비교</p>
+      <table class="cmp">
+        <thead>
+          <tr><th>항목</th><th>지금 계약</th><th>구단 제시</th><th>내 역제안</th></tr>
+        </thead>
+        <tbody>
+          {#each rows as r (r.key)}
+            <tr class:total={r.key === "total"}>
+              <td>{r.label}</td>
+              <td>{r.current ?? "—"}</td>
+              <td>{r.offered}</td>
+              <td class:up={r.dir === "up"} class:dn={r.dir === "down"}>{r.counter}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ── 수락 확률 ── -->
+    <section class="card wide">
+      <p class="card-h">수락 확률</p>
+      <div class="gauge" class:mid={acceptProb < 65} class:low={acceptProb < 40}>
+        <i style="width:{acceptProb}%"></i>
+      </div>
+      <div class="row"><span class="k">추정</span><span class="v">{acceptProb}%</span></div>
+      <div class="row"><span class="k">시장가 대비</span><span class="v" class:over={marketRatioPct > 110}>{marketRatioPct}%</span></div>
+      {#if replyLine}
+        <p class="note">{replyLine}</p>
+      {/if}
+    </section>
+
+    <div class="actions">
+      <button class="btn-counter" disabled={resolving || roundsLeft <= 0} on:click={counter}>역제안</button>
+      <button class="btn-accept" disabled={resolving} on:click={accept}>
+제시 수락</button>
+      <button class="btn-reject" disabled={resolving} on:click={reject}>거절</button>
+    </div>
+
+    <p class="stats-row">
       {#if isPitcher}
         <span>ERA {pitcherStats?.era?.toFixed(2) ?? "-"}</span>
         <span>WHIP {pitcherStats?.whip?.toFixed(2) ?? "-"}</span>
@@ -283,89 +436,108 @@
       {/if}
       <span class="muted">시즌 평점 {seasonRating}</span>
       <span class="muted">시장가 {formatSalary(marketSalary)}원</span>
-    </div>
-
-    <div class="actions">
-      <button class="btn-accept" disabled={resolving} on:click={accept}>수락 (팀 제시 그대로)</button>
-      <button class="btn-counter" disabled={resolving || !canCounter} on:click={counter}>역제안</button>
-      <button class="btn-reject" disabled={resolving} on:click={reject}>거부 (FA)</button>
-    </div>
+      <span class="muted">총액 {formatSalary(totalValue)}원</span>
+    </p>
   </section>
 </div>
 
 <style>
-  /* ── 구단주 줄 (§7-5 F-4) ─────────────────────────────────────── */
-  .owner-line {
-    margin: 0 0 8px;
-    font-size: 11px;
-    color: var(--ink);
-    line-height: 1.6;
-  }
-  .owner-line strong { color: var(--ink); }
-  .owner-net { font-weight: 600; }
-  .owner-net.up { color: var(--ok); }
-  .owner-net.down { color: var(--warn); }
-
   .overlay { position:fixed; inset:0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:220; }
-  .modal { width:min(640px,94vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:16px; padding:24px; display:grid; gap:16px; max-height:92vh; overflow-y:auto; }
+  .modal { width:min(760px,95vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:16px; padding:22px; display:grid; gap:12px; max-height:92vh; overflow-y:auto; }
 
-  .badge { margin:0; font-size:11px; color:var(--ink); letter-spacing:.05em; }
-  h2 { margin:3px 0 0; color:var(--ink); font-size:19px; }
+  header { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .badge { margin:0; font-size:11px; color:var(--ink-mute); letter-spacing:.05em; }
+  h2 { margin:0; color:var(--ink); font-size:19px; }
+  .rounds { margin:0 0 0 auto; font-size:12px; color:var(--ink-mid); }
 
-  .compare-grid { display:grid; grid-template-columns:1fr 24px 1fr; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; }
-  .compare-col { display:grid; gap:3px; }
-  .compare-col.right { text-align:right; }
-  .col-label { margin:0; font-size:10px; color:var(--ink-mute); text-transform:uppercase; }
-  .col-val { margin:0; font-size:16px; color:var(--ink); font-weight:700; }
-  .col-sub { margin:0; font-size:11px; color:var(--ink-mid); }
-  .arrow { text-align:center; color:var(--ink-mute); font-size:16px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width: 700px) { .cols { grid-template-columns:1fr; } }
 
-  .gauge-row { display:flex; align-items:center; gap:10px; }
-  .gauge-label { font-size:12px; color:var(--ink-mid); white-space:nowrap; }
-  .gauge-track { flex:1; height:6px; background:var(--panel-sunk); border-radius:3px; overflow:hidden; }
-  .gauge-fill { height:100%; background:var(--ink-mute); border-radius:3px; transition:width .2s; }
-  .gauge-fill.over { background:var(--bad); }
-  .gauge-pct { font-size:12px; color:var(--ink); white-space:nowrap; }
-  .gauge-pct.over { color:var(--bad); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:12px; }
+  .card.wide { grid-column:1 / -1; }
+  .card-h {
+    margin:0 0 8px; font-size:12px; font-weight:700; color:var(--ink-mute);
+    border-bottom:1px solid var(--line); padding-bottom:6px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .cnt { color:var(--ink-mute); font-weight:400; margin-left:auto; }
+  .menu { position:relative; margin-left:auto; }
+  /* 개수 칸이 있으면 그게 auto 를 먹으므로 메뉴는 붙여 둔다 */
+  .cnt + .menu { margin-left:8px; }
 
-  .section { display:grid; gap:8px; }
-  .section-title { margin:0; font-size:12px; color:var(--ink-mid); font-weight:600; }
-  .muted { color:var(--ink-mute); font-weight:400; }
+  .row { display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:5px 0; border-bottom:1px dashed var(--line); }
+  .row:last-child { border-bottom:0; }
+  .k { color:var(--ink-mute); font-size:12px; }
+  .v { font-weight:700; color:var(--ink); font-size:13px; }
+  .v.big { font-size:19px; }
+  .v.floor { color:var(--warn); }
+  .v.over { color:var(--bad); }
 
+  .f { margin:9px 0 3px; font-size:12px; color:var(--ink-mute); }
+  .pct { color:var(--ink); font-weight:700; }
   .slider { width:100%; accent-color:var(--ink-mute); }
-  .range-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--ink-mute); }
-  .center-label { color:var(--ink); font-weight:600; }
+  .note { margin:6px 0 0; font-size:11.5px; color:var(--warn); }
 
-  .dur-btns { display:flex; gap:6px; }
-  .dur-btn { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:8px; padding:6px 14px; cursor:pointer; font-size:13px; }
-  .dur-btn.active { background:var(--line); border-color:var(--ink-mute); color:var(--ink); }
+  .seg { display:flex; gap:5px; }
+  .seg-b { flex:1; padding:6px 5px; border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:var(--radius); cursor:pointer; font-size:12.5px; font-family:inherit; }
+  .seg-b.on { background:var(--line); border-color:var(--ink-mute); font-weight:700; }
 
-  .opt-row { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--ink); }
-  .opt-btns { display:flex; gap:4px; }
-  .opt-btn { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:6px; padding:4px 10px; cursor:pointer; font-size:12px; }
-  .opt-btn.active { background:var(--line); border-color:var(--ink-mute); color:var(--ink); }
-  .opt-effect { font-size:11px; margin-left:auto; }
-  .opt-effect.pos { color:var(--ok); }
-  .opt-effect.neg { color:var(--bad); }
+  .addbtn {
+    border:1px solid var(--line); background:var(--panel-sunk); color:var(--ink-mid);
+    border-radius:var(--radius); cursor:pointer; font-family:inherit; font-size:11.5px;
+    padding:2px 8px; font-weight:700;
+  }
+  .addbtn:hover { border-color:var(--ink-mute); color:var(--ink); }
 
-  .prob-section { display:grid; gap:6px; }
-  .prob-row { display:flex; align-items:center; gap:10px; }
-  .prob-label { font-size:12px; color:var(--ink-mid); white-space:nowrap; }
-  .prob-track { flex:1; height:8px; background:var(--panel-sunk); border-radius:4px; overflow:hidden; }
-  .prob-fill { height:100%; background:var(--ok); border-radius:4px; transition:width .25s; }
-  .prob-fill.low { background:var(--bad); }
-  .prob-num { font-size:13px; color:var(--ok); font-weight:600; white-space:nowrap; }
-  .prob-num.low { color:var(--bad); }
-  .warn { margin:0; font-size:12px; color:var(--warn); background:rgba(154, 101, 16, 0.12); border-radius:6px; padding:6px 10px; }
+  .pop {
+    position:absolute; right:0; top:calc(100% + 4px); z-index:5; min-width:200px;
+    background:var(--panel); border:1px solid var(--ink-mute); border-radius:var(--radius);
+    box-shadow:0 6px 18px rgba(0,0,0,.18); padding:4px;
+  }
+  .pop button {
+    display:flex; width:100%; gap:10px; align-items:baseline; padding:6px 8px; border:0;
+    background:none; color:var(--ink); cursor:pointer; font-family:inherit; font-size:12.5px;
+    text-align:left; border-radius:var(--radius);
+  }
+  .pop button:hover:not(:disabled) { background:var(--panel-sunk); }
+  .pop button:disabled { opacity:.35; cursor:default; }
+  .pop .am { margin-left:auto; color:var(--ink-mute); font-size:11.5px; }
 
-  .stats-row { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink); background:var(--panel); border-radius:8px; padding:10px 12px; }
+  .picked { list-style:none; margin:0; padding:0; }
+  .picked li { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px dashed var(--line); font-size:12.5px; color:var(--ink); }
+  .picked li:last-child { border-bottom:0; }
+  .picked .nm { font-weight:700; }
+  .picked .am { margin-left:auto; color:var(--ink-mid); font-size:12px; }
+  .picked .empty { color:var(--ink-mute); }
+  .rm { border:0; background:none; color:var(--ink-mute); cursor:pointer; font-size:15px; line-height:1; padding:0 2px; font-family:inherit; }
+  .rm:hover { color:var(--bad); }
 
-  .actions { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-  .btn-accept  { background:var(--line); color:var(--ink); border:1px solid var(--ink-mute); border-radius:9px; padding:9px 14px; cursor:pointer; font-size:13px; }
-  .btn-counter { background:rgba(31, 122, 71, 0.10); color:var(--ok); border:1px solid var(--ok); border-radius:9px; padding:9px 14px; cursor:pointer; font-size:13px; }
-  .btn-reject  { background:rgba(179, 49, 31, 0.09); color:var(--bad); border:1px solid rgba(179, 49, 31, 0.26); border-radius:9px; padding:9px 14px; cursor:pointer; font-size:13px; }
+  .cmp { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .cmp th, .cmp td { padding:5px 7px; border-bottom:1px solid var(--line); text-align:right; color:var(--ink-mid); }
+  .cmp th:first-child, .cmp td:first-child { text-align:left; }
+  .cmp thead th { background:var(--panel-sunk); color:var(--ink-mute); font-size:11px; font-weight:700; }
+  .cmp tr.total td { font-weight:800; color:var(--ink); }
+  .cmp td.up { color:var(--ok); font-weight:700; }
+  .cmp td.dn { color:var(--bad); font-weight:700; }
+
+  .gauge { height:8px; border-radius:999px; background:var(--panel-sunk); overflow:hidden; margin:4px 0 6px; }
+  .gauge > i { display:block; height:100%; background:var(--ok); transition:width .18s; }
+  .gauge.mid > i { background:var(--warn); }
+  .gauge.low > i { background:var(--bad); }
+
+  .actions { display:flex; gap:8px; flex-wrap:wrap; }
+  .actions button { flex:1; padding:10px 12px; border-radius:9px; cursor:pointer; font-size:13px; font-family:inherit; }
+  .btn-counter { background:var(--line); color:var(--ink); border:1px solid var(--ink-mute); font-weight:700; }
+  .btn-accept  { background:var(--panel); color:var(--ink); border:1px solid var(--line); }
+  .btn-reject  { background:var(--panel); color:var(--bad); border:1px solid var(--bad); }
   button:disabled { opacity:.5; cursor:default; }
-  .btn-accept:not(:disabled):hover  { background:var(--line); }
-  .btn-counter:not(:disabled):hover { background:rgba(31, 122, 71, 0.10); }
-  .btn-reject:not(:disabled):hover  { background:rgba(179, 49, 31, 0.09); }
+
+  .stats-row { margin:0; display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink); background:var(--panel-sunk); border-radius:var(--radius); padding:8px 10px; }
+  .muted { color:var(--ink-mute); }
+
+  .owner-line { margin:8px 0 0; font-size:11px; color:var(--ink-mid); line-height:1.6; }
+  .owner-line strong { color:var(--ink); }
+  .owner-net { font-weight:600; }
+  .owner-net.up { color:var(--ok); }
+  .owner-net.down { color:var(--warn); }
 </style>

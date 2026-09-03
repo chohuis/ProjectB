@@ -112,7 +112,7 @@
     {/if}
 
     {#if hasNoTrade}
-      <p class="no-trade-note">계약의 트레이드 거부권을 행사할 수 있습니다.</p>
+      <p class="no-trade-note">계약의 노트레이드 조항을 행사할 수 있습니다.</p>
     {/if}
 
     <div class="actions">

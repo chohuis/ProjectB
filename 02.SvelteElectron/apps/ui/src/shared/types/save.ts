@@ -223,6 +223,25 @@ export type PlayerType   = "pitcher" | "batter" | "twoWay";
 export type Handedness   = "L" | "R" | "S";
 export type PitchingForm = "overhand" | "threeQuarter" | "sidearm" | "underhand";
 
+/**
+ * 인센티브 축 — **보직 셋과 1:1** (PLAN_CONTRACT_TERMS §5-3 · 스윙맨 없음).
+ *
+ * `era` 만 「이하」이고 나머지는 「이상」이다. `award` 는 보직과 무관하다.
+ */
+export type IncentiveKind = "games" | "innings" | "era" | "wins" | "saves" | "holds" | "award";
+
+export interface ContractIncentive {
+  kind: IncentiveKind;
+  /** era 는 「이하」, 나머지는 「이상」. award 는 1(받으면 달성) */
+  threshold: number;
+  /** kind === "award" 일 때만. `awardRules` 의 id (mvp · golden · …) */
+  awardId?: string;
+  /** 만원 */
+  bonus: number;
+  /** 정산한 해 — 다년 계약에서 **두 번 주는 걸 막는다**. 정산은 C④·A 몫이다 */
+  paidSeasons?: number[];
+}
+
 export interface ProContract {
   teamId: string;
   leagueId: string;
@@ -233,7 +252,18 @@ export interface ProContract {
   teamOptionYears: number;  // 0이면 없음
   playerOptionYears: number;  // 0이면 없음
   noTrade: boolean;
-  incentives?: { condition: string; bonus: number }[];
+  /**
+   * 인센티브 — **주인공 계약만** (PLAN_CONTRACT_TERMS §4-1 · 사용자 확정 §8 ①·⑤).
+   *
+   * 🔴 예전엔 `{ condition: string; bonus: number }` 였다. 문자열이라
+   * **기계가 판정할 수 없었고**, 그래서 채우는 코드가 0건인 죽은 필드였다.
+   * 정산(C④·A)이 성적과 대조하려면 축(`kind`)과 문턱(`threshold`)이 갈려 있어야 한다.
+   *
+   * ⚠ **NPC 계약에는 안 넣는다** (§4-2 사용자 확정). NPC 연봉은
+   * `calc_npc_renewal_salary` 한 곳에서 나오고 정산할 자리가 없다 —
+   * 붙이면 매 시즌 수천 명의 정산이 생긴다.
+   */
+  incentives?: ContractIncentive[];
   status: "active" | "expired" | "voided";
 }
 

@@ -22,6 +22,8 @@ import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
 import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCopy";
+import { parseContractTermsCopy, type ContractTermsCopy } from "../utils/contractCopy";
+import { primeContractRules } from "../utils/contractTerms";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -455,6 +457,8 @@ export interface MasterState {
   militaryLifeEvents: MilitaryLifeEvent[];
   /** 보직 선택 문안 (B-12) — 정본은 messages/role_choice.json. 없으면 소식을 안 만든다 */
   roleChoiceCopy: RoleChoiceCopy | null;
+  /** 계약 협상 문안 (B-13) — 정본은 messages/contract_terms.json. 없으면 안내 줄을 안 그린다 */
+  contractCopy: ContractTermsCopy | null;
 }
 
 // ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
@@ -911,6 +915,7 @@ function createMasterStore() {
     militaryLifeRules: null,
     militaryLifeEvents: [],
     roleChoiceCopy: null,
+    contractCopy: null,
   });
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
@@ -984,6 +989,10 @@ function createMasterStore() {
       //   `roleChoiceCopy.test.ts` 가 파일을 직접 읽어 잡는다.
       const roleChoiceRaw = await fetchMaster<unknown>("messages/role_choice.json");
 
+      // 계약 협상 문안 (B-13 · PLAN_CONTRACT_TERMS §5·§6). 여기까지가 문장이고
+      // 항목 이름(연봉·기간·노트레이드)은 코드가 갖는다 — faOfferTerms.ts 와 같은 선이다.
+      const contractCopyRaw = await fetchMaster<unknown>("messages/contract_terms.json");
+
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
       // 풀은 **매니페스트가 정본**이다 — 파일을 더해도 코드를 안 고친다
@@ -1055,6 +1064,7 @@ function createMasterStore() {
         militaryLifeRules:     militaryLifeRulesData ?? null,
         militaryLifeEvents:    militaryLifeData?.events ?? [],
         roleChoiceCopy:        parseRoleChoiceCopy(roleChoiceRaw),
+        contractCopy:          parseContractTermsCopy(contractCopyRaw),
       }));
 
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
@@ -1081,6 +1091,9 @@ function createMasterStore() {
           primeRosterOpsRules(genRules as Parameters<typeof primeRosterOpsRules>[0]);
           // 감독 스타일 — 안 실으면 규칙이 늘 null 이라 **스타일이 다시 죽는다**
           primeManagerStyleRules((genRules as Record<string, unknown>).managerStyleRules);
+          // 계약 협상 — contractRules · salaryRules.minSalary · awardRules 를 한 번에 싣는다.
+          // ⚠ 안 실으면 최저연봉 하한이 0 이 되어 **협상 슬라이더가 바닥을 잃는다**
+          primeContractRules(genRules as Parameters<typeof primeContractRules>[0]);
         }
         // 경기 화면이 투구 선택의 스태미나 소모를 표시한다.
         // **엔진과 같은 파일**을 읽는다 — 숫자를 두 벌로 두지 않는다.
