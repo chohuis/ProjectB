@@ -92,6 +92,8 @@ export async function relieverWouldPitch(
   lastPitchedWeek = 0,
   currentWeek = 0,
   rest?: { lastPitchedDate?: string; lastPitchCount?: number; gameDate?: string },
+  /** 추천 밖 깊이 재료 — `utils/pitcherRoleRules.roleDepthOf()` 가 만든다 (§5-b · A④) */
+  depth?: { roleDepth: number; offRecommendation?: { perSeatOver: number; floor: number } },
 ): Promise<boolean> {
   const result = JSON.parse(
     await window.projectB!.pitcherRelieverWouldPitch(
@@ -100,10 +102,32 @@ export async function relieverWouldPitch(
         lastPitchedDate: rest?.lastPitchedDate ?? "",
         lastPitchCount:  rest?.lastPitchCount ?? 0,
         gameDate:        rest?.gameDate ?? "",
+        ...(depth ?? {}),
       })
     )
   );
   return result.wouldPitch as boolean;
+}
+
+/**
+ * 선발이 그 주에 실제로 등판하나 (§5-a · A④).
+ *
+ * 🔴 **계수는 Rust 가 만든다** — 여기서 확률을 다시 적지 않는다. 깊이가 0 이면 Rust 가 늘 true 다.
+ * ⚠ 엔진을 못 부르는 환경(Vite 단독)에서는 **등판한다** — 못 부른다고 시즌 기록이 비면 안 된다.
+ */
+export async function starterWouldStart(
+  depth: { roleDepth: number; offRecommendation?: { perSeatOver: number; floor: number } },
+  seed = 0,
+): Promise<boolean> {
+  const api = window.projectB?.engine;
+  if (!api) return true;
+  try {
+    const r = JSON.parse(await api("starterWouldStartNative",
+      JSON.stringify({ seed, ...depth }))) as { wouldStart?: boolean; error?: string };
+    return r.error ? true : (r.wouldStart ?? true);
+  } catch {
+    return true;
+  }
 }
 
 /** 투구수별 의무 휴식을 채웠는가 (Phase 5-8) */

@@ -234,9 +234,11 @@ describe("누굴 쓸지 · 언제 바꿀지", () => {
   it("🔴 NPC 투수 교체가 감독을 본다", () => {
     // `bullpenRead` 가 **주인공 등판 시점에만** 쓰이고 NPC 교체는
     // 난수+리그값이라 감독이 누구든 똑같이 바꿨다
-    expect(rust.includes("bullpen_read: f64) -> Vec<i32> {")).toBe(true);
-    expect(rust.includes("queue_max_outs(&ps, rng, my_manager.bullpen_read)")).toBe(true);
-    expect(rust.includes("queue_max_outs(&ps, rng, opp_manager.bullpen_read)")).toBe(true);
+    // ⚠ 1.1 A② 에서 인자가 하나 늘었다(`starter_outs_factor` · 리그 계수).
+    //   감독 항은 그대로고 이 검사도 그대로 본다 — 문자열만 서명에 맞췄다.
+    expect(rust.includes("bullpen_read: f64, starter_outs_factor: f64) -> Vec<i32> {")).toBe(true);
+    expect(rust.includes("queue_max_outs(&ps, rng, my_manager.bullpen_read, starter_outs_factor)")).toBe(true);
+    expect(rust.includes("queue_max_outs(&ps, rng, opp_manager.bullpen_read, starter_outs_factor)")).toBe(true);
   });
 
   it("🔴 불펜은 절단이다 — 반올림으로 바꾸면 밸런스가 움직인다", () => {

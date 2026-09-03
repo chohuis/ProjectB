@@ -174,6 +174,49 @@ pub struct RelieverPitchParams {
     /// 등판하려는 경기 날짜
     #[serde(default)]
     pub game_date: Option<String>,
+    /// 추천 밖 깊이 — `over = max(0, rank − seats)` (1.1 A④ §5). 안 오면 0 = 불이익 없음
+    #[serde(default)]
+    pub role_depth: Option<u32>,
+    /// 깊이 계수 규칙 (`pitcherRoleRules.offRecommendation`). 안 오면 계수 1.0
+    #[serde(default)]
+    pub off_recommendation: Option<crate::pitcher_role::OffRecommendation>,
+}
+
+/// 선발이 그 주에 실제로 등판하나 (1.1 A④ §5-a).
+///
+/// 지금까지 `is_protagonist_game` 이 true 면 **무조건** 던졌다. 로테이션 자리보다 밖에 있으면
+/// 그만큼 건너뛴다 — 확률이 곧 `depth_factor` 다.
+///
+/// ⚠ 규칙(`off_recommendation`)이 안 오면 계수가 1.0 이라 **예전과 똑같이 항상 등판한다.**
+///   `serde(default)` 라 배선을 빼도 오류가 안 난다 — 검사에 대조군을 넣는다.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StarterStartParams {
+    #[serde(default)]
+    pub seed: u32,
+    #[serde(default)]
+    pub role_depth: Option<u32>,
+    #[serde(default)]
+    pub off_recommendation: Option<crate::pitcher_role::OffRecommendation>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StarterStartResult {
+    pub would_start: bool,
+    pub depth_factor: f64,
+}
+
+pub fn starter_would_start(params: StarterStartParams) -> StarterStartResult {
+    let factor = crate::pitcher_role::depth_factor(
+        params.role_depth.unwrap_or(0), params.off_recommendation.as_ref());
+    if factor >= 1.0 { return StarterStartResult { would_start: true, depth_factor: factor }; }
+    let roll = if params.seed != 0 {
+        crate::npc_sim::LcgRand::new(params.seed | 1).next()
+    } else {
+        rand::thread_rng().gen::<f64>()
+    };
+    StarterStartResult { would_start: roll < factor, depth_factor: factor }
 }
 
 #[derive(Debug, Serialize)]
@@ -212,7 +255,10 @@ pub fn reliever_would_pitch(params: RelieverPitchParams) -> RelieverPitchResult 
         }
     };
 
-    let chance = base * rest_penalty * rest_block;
+    // 1.1 A④ §5-b — 추천 밖 깊이만큼 등판 확률을 곱한다. 규칙이 안 오면 1.0(예전 그대로)
+    let depth = crate::pitcher_role::depth_factor(
+        params.role_depth.unwrap_or(0), params.off_recommendation.as_ref());
+    let chance = base * rest_penalty * rest_block * depth;
     // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
     let roll = if params.seed != 0 {
         crate::npc_sim::LcgRand::new(params.seed | 1).next()
@@ -1359,5 +1405,45 @@ mod prospect_tests {
         assert!(큰손_비싼선수 as f64 <= m * 1.35 + 1.0, "상한을 넘었다: {큰손_비싼선수}");
         let 짠구단_싼선수 = renewal(Some(0.0), 1, ovr);
         assert!(짠구단_싼선수 as f64 >= m * 0.55 - 1.0, "하한 아래다: {짠구단_싼선수}");
+    }
+// ── 1.1 A④ §5 — 추천 밖 깊이 불이익 ─────────────────────────────
+    fn off() -> crate::pitcher_role::OffRecommendation {
+        crate::pitcher_role::OffRecommendation { per_seat_over: 0.30, floor: 0.15 }
+    }
+
+    #[test]
+    fn 선발_건너뛰기는_깊이만큼만_걸린다() {
+        // 자리 안이면 씨앗과 무관하게 늘 등판한다
+        for seed in [1u32, 7, 12345, 99991] {
+            let r = starter_would_start(StarterStartParams { seed, role_depth: Some(0), off_recommendation: Some(off()) });
+            assert!(r.would_start, "자리 안인데 건너뛰었다");
+            assert!((r.depth_factor - 1.0).abs() < 1e-9);
+        }
+        // 🔴 대조군 — 규칙을 안 넘기면 불이익이 없다(배선 누락이 조용히 깎으면 안 된다)
+        for seed in [1u32, 7, 12345, 99991] {
+            assert!(starter_would_start(StarterStartParams { seed, role_depth: Some(3), off_recommendation: None }).would_start);
+        }
+        // 세 칸 밖이면 바닥 0.15 — 씨앗 200개 중 등판이 절반 밑이다
+        let n = (1..=200u32).filter(|s| starter_would_start(
+            StarterStartParams { seed: *s * 7919, role_depth: Some(3), off_recommendation: Some(off()) }).would_start).count();
+        assert!(n < 100, "바닥 0.15 인데 {n}/200 이 등판했다");
+    }
+
+    #[test]
+    fn 불펜_등판_확률에_깊이가_곱해진다() {
+        let mk = |seed: u32, depth: Option<u32>, rules: bool| RelieverPitchParams {
+            seed, role: "마무리".into(), pitch_outs_last: Some(0),
+            last_pitched_week: Some(0), current_week: Some(5),
+            last_pitched_date: None, last_pitch_count: None, game_date: None,
+            role_depth: depth,
+            off_recommendation: if rules { Some(off()) } else { None },
+        };
+        let cnt = |depth: Option<u32>, rules: bool| (1..=300u32)
+            .filter(|s| reliever_would_pitch(mk(*s * 7919, depth, rules)).would_pitch).count();
+        let base = cnt(Some(0), true);
+        let deep = cnt(Some(3), true);
+        assert!(deep < base, "깊이가 등판을 안 줄였다 {base} → {deep}");
+        // 🔴 대조군 — 규칙을 빼면 깊이가 있어도 base 와 같아야 한다
+        assert_eq!(cnt(Some(3), false), base);
     }
 }

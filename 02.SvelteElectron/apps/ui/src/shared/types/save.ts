@@ -407,6 +407,22 @@ export interface ProtagonistSave {
    * CLAUDE.md 「한 해에 한 번 가드는 반드시 저장한다」.
    */
   lastRoleChoiceKey?: string;
+  /**
+   * 고른 자리에서의 내 깊이 (PLAN_ROLE_RECOMMEND §5 · 1.1 A④).
+   *
+   * `over = max(0, rank − seats)` 한 값이 선발 등판 건너뛰기 · 불펜 등판 확률 · 경기 진입
+   * 문턱 셋을 다 민다. **벌이 아니라 깊이다** — 추천을 따랐어도 세 자리에 다 못 들면 `over > 0`.
+   *
+   * ⚠ 세이브에 실린다. 없으면(구 세이브·야수) 깊이 0 = 예전 그대로다.
+   */
+  roleFit?: {
+    chosen: "SP" | "RP" | "CP";
+    recommended: "SP" | "RP" | "CP";
+    /** 고른 자리 후보 안에서의 내 순위 (1 = 최고) */
+    rank: number;
+    /** 그 자리 수 */
+    seats: number;
+  };
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
   careerEvents?: NpcCareerEvent[];  // 드래프트·트레이드·군입대 이벤트
   // 시즌 시작 스냅샷 (능력치 트렌드 화살표용)

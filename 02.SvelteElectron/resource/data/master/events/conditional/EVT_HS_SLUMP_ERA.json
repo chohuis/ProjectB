@@ -1,0 +1,27 @@
+{
+  "id": "EVT_HS_SLUMP_ERA",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 706,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "season_era_gte",
+      "value": 5
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SLUMP_ERA",
+  "decisionTemplateId": "DEC_HS_SLUMP_ERA"
+}

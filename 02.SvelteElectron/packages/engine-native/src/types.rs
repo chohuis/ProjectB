@@ -901,6 +901,12 @@ pub struct MatchStartOptions {
     /// (§6-1-4 · 고교 마무리는 `reliever_would_pitch` 를 안 타서 연투가 안 막히던 결함)
     #[serde(default)]
     pub rest_guard: Option<RestGuard>,
+    /// 추천 밖 깊이 `over = max(0, rank − seats)` (1.1 A④ §5-c).
+    ///
+    /// 0 이거나 없으면 예전과 같다. 1 이상이면 불펜·마무리 **진입 문턱이 그만큼 늦어진다** —
+    /// 자리 밖 투수는 늦게, 여유 있는 상황에만 나간다.
+    #[serde(default)]
+    pub role_depth: Option<u32>,
     pub inning_limit: Option<u8>,
     /// 연장 상한. 없거나 0이면 무제한(예전 동작). 정규리그만 12를 넘긴다
     #[serde(default)]
