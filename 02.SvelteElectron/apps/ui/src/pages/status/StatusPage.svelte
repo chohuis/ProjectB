@@ -16,6 +16,11 @@
   import type { CareerSeasonRecord } from "../../shared/types/save";
   import { INJURY_LABEL } from "../../shared/types/save";
   import { getFaThreshold } from "../../shared/utils/faEngine";
+  import { INCENTIVE_SETTLEMENT_KIND } from "../../shared/utils/dashboardMeta";
+  import { SERVICE_WEEKS } from "../../shared/usecases/militaryDecision";
+  import { dischargeWeekOf } from "../../shared/utils/militarySportsCopy";
+  import { incentiveProgress, incentiveProgressText } from "../../shared/utils/incentiveProgress";
+  import type { PitcherSeasonStats } from "../../shared/types/save";
   import { canRetireVoluntarily, isRetired, retireProtagonist } from "../../shared/usecases/retirement";
   import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
   import MilitaryRecordCard from "../../features/military/ui/MilitaryRecordCard.svelte";
@@ -140,6 +145,28 @@
   $: contractExpireYear  = contract ? ($seasonStore.seasonYear + contract.remainingYears) : null;
   $: faYearsLeft         = Math.max(0, getFaThreshold(p.leagueId) - (p.proServiceYears ?? 0));
 
+  /**
+   * 「올해 인센티브」 — 정산은 시즌 끝 한 번이고 그 소식은 밀려난다. 다년
+   * 계약이면 그 뒤로도 같은 조건을 안고 사는데 **지금 몇 개를 채웠는지 보이는
+   * 자리가 없었다** (PLAN_CONTRACT_TERMS §5).
+   *
+   * 🔴 **판정을 화면이 다시 하지 않는다.** 정산 엔진(`settleIncentives`)을
+   *    그대로 부른다 — 문턱을 여기서 재면 카드와 정산 소식이 다른 답을 낸다.
+   *
+   * ⚠ 그 해 수상은 `careerRecords` 에 얹힌 뒤에야 잡힌다(시즌 종료 처리에서
+   *   수상 → 정산 순서다). 시즌 중엔 수상 줄이 미달로 서 있는 게 맞다.
+   */
+  $: incentiveCopy = tableCopy($masterStore.dashboardLabels, INCENTIVE_SETTLEMENT_KIND);
+  $: seasonStatsRaw = $seasonStore.stats[p.id];
+  $: incentiveNow = incentiveProgress({
+    seasonYear: $seasonStore.seasonYear,
+    incentives: contract?.incentives,
+    role: String(p.position ?? ""),
+    stats: seasonStatsRaw?.type === "pitcher" ? (seasonStatsRaw as PitcherSeasonStats) : undefined,
+    awardIds: (p.careerRecords ?? [])
+      .find((r) => r.year === $seasonStore.seasonYear)?.awards?.map((a) => a.id) ?? [],
+  });
+
   const LEAGUE_SHORT: Record<string, string> = {
     LEAGUE_KBL: "KBL", LEAGUE_ABL: "ABL", LEAGUE_INDEPENDENT: "독립리그",
   };
@@ -147,6 +174,9 @@
     if (s >= 10000) return `${(s / 10000).toFixed(1)}억 원`;
     return `${s.toLocaleString()}만 원`;
   }
+
+  /** 전역 예정 주차 — 입대 주가 정한다. 옛 세이브(입대 주 없음)는 `null` */
+  $: dischargeWeek = dischargeWeekOf(p.militaryEnlistWeek, SERVICE_WEEKS);
 
   $: milStatusDisplay = (() => {
     if (p.militaryStatus === "군필") return { text: "병역 완료", cls: "mil-done" };
@@ -466,6 +496,15 @@
               <span>FA 자격</span>
               <strong>{faYearsLeft > 0 ? `${faYearsLeft}년 후` : "FA 자격 보유"}</strong>
             </div>
+            <!-- 인센티브가 안 걸린 계약이면 줄을 안 그린다 — 구 세이브가 그렇다 -->
+            {#if incentiveNow.count > 0}
+              <div class="info-row">
+                <span>올해 인센티브</span>
+                <strong>
+                  {incentiveProgressText(incentiveNow, incentiveCopy.outcomeLabel.met ?? "", formatSalary)}
+                </strong>
+              </div>
+            {/if}
             {#if (p.proServiceYears ?? 0) > 0}
               <div class="info-row"><span>프로 경력</span><strong>{p.proServiceYears}년차</strong></div>
             {/if}
@@ -491,7 +530,11 @@
               <div class="info-row"><span>입대</span><strong>{p.militaryEnlistYear}년</strong></div>
             {/if}
             {#if p.militaryStatus === "현역" && p.militaryDischargeYear}
-              <div class="info-row"><span>전역 예정</span><strong>{p.militaryDischargeYear}년 W48</strong></div>
+              <!-- ⚠ 「W48」이 박혀 있었다. 전역 주차는 입대 주가 정한다 -->
+              <div class="info-row">
+                <span>전역 예정</span>
+                <strong>{p.militaryDischargeYear}년{dischargeWeek !== null ? ` W${dischargeWeek}` : ""}</strong>
+              </div>
             {/if}
             {#if p.militaryStatus === "현역" && (p.militaryServiceWeeks ?? 0) > 0}
               <div class="info-row"><span>복무 기간</span><strong>{p.militaryServiceWeeks}주 경과</strong></div>

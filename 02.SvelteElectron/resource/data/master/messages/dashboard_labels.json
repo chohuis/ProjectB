@@ -160,11 +160,10 @@
         "title": "인센티브",
         "columns": {
           "name": "항목",
-          "condition": "조건",
           "amount": "금액"
         },
         "empty": "인센티브가 없습니다.",
-        "_unusedCondition": "⏸ 「조건」 열은 **생산부가 아직 안 채운다** (B-30). `dashboardMeta.ts:207` 이 행을 `{name, amount}` 로만 만들고 `incentiveLabel()` 이 조건을 이름에 접어 넣는다. **그런데 지우면 안 된다** — `dashboardView.test.ts:453` 이 이 열이 있다고 못박고 있다(글자 열이라 왼쪽 정렬). 지울지 남길지는 그 검사와 같이 정해야 한다"
+        "_noConditionNote": "🔴 「조건」 열은 **없다** (C 단위 9 · B-30 을 닫았다). `incentiveLabel()` 이 문턱을 이름에 접어 넣어(「25등판」·「ERA 3.00 이하」) 조건 열을 세우면 같은 값이 두 칸에 선다. 조건을 따로 쓰려면 생산부가 이름과 문턱을 갈라 실어야 한다"
       },
       "empty": "계약 조건을 읽지 못했습니다.",
       "noBonus": "없음",
@@ -183,11 +182,10 @@
         "title": "인센티브",
         "columns": {
           "name": "항목",
-          "condition": "조건",
           "amount": "금액"
         },
         "empty": "인센티브가 없습니다.",
-        "_unusedCondition": "⏸ 「조건」 열은 **생산부가 아직 안 채운다** (B-30). `dashboardMeta.ts:207` 이 행을 `{name, amount}` 로만 만들고 `incentiveLabel()` 이 조건을 이름에 접어 넣는다. **그런데 지우면 안 된다** — `dashboardView.test.ts:453` 이 이 열이 있다고 못박고 있다(글자 열이라 왼쪽 정렬). 지울지 남길지는 그 검사와 같이 정해야 한다"
+        "_noConditionNote": "🔴 「조건」 열은 **없다** (C 단위 9 · B-30 을 닫았다). `incentiveLabel()` 이 문턱을 이름에 접어 넣어(「25등판」·「ERA 3.00 이하」) 조건 열을 세우면 같은 값이 두 칸에 선다. 조건을 따로 쓰려면 생산부가 이름과 문턱을 갈라 실어야 한다"
       },
       "empty": "계약 조건을 읽지 못했습니다."
     },
@@ -222,6 +220,25 @@
         "options": "조항"
       },
       "empty": "재계약 조건을 읽지 못했습니다."
+    },
+    "incentiveSettlement": {
+      "title": "인센티브 정산",
+      "_note": "정산 (msg-contract-incentive) — 시즌 끝 한 번. 본문 문장은 `messages/contract_terms.json` 의 `incentive` 통이 정본이고, 여기는 **같은 값을 표로** 세우는 자리다",
+      "columns": {
+        "name": "항목",
+        "outcome": "결과",
+        "actual": "실측",
+        "amount": "금액"
+      },
+      "_columnNote": "🔴 「조건」 열이 없다 — `incentiveLabel()` 이 문턱을 이름에 접어 넣는다(「25등판」). 대신 **실측**을 세운다. 그 해 값(등판 27·ERA 3.41)이 이름의 문턱과 나란히 서야 왜 달성인지 화면에 남는다",
+      "outcomeLabel": {
+        "met": "달성",
+        "missed": "미달",
+        "unmeasurable": "미달 (보직 변경)"
+      },
+      "_outcomeNote": "⚠ 생산부는 `met`·`missed`·`unmeasurable` 낱말만 싣고 한글은 여기서 온다. `unmeasurable` 은 다년 계약 중 보직이 바뀌어 못 잰 축이다 (PLAN_CONTRACT_TERMS §5-3 ①) — 미달과 결과는 같지만 이유가 달라 한 말로 묶으면 왜 미달인지 안 남는다",
+      "footnote": "합계 +{total}만원",
+      "empty": "올해 채운 조건은 없습니다."
     },
     "npcTrade": {
       "title": "트레이드",
@@ -492,6 +509,7 @@
       "msg-fa-market-": "table.faMarket",
       "msg-facomp-": "table.faComp",
       "msg-resign-": "table.resign",
+      "msg-contract-incentive-": "table.incentiveSettlement",
       "msg-npc-trade-": "table.npcTrade",
       "msg-demote-": "table.demote",
       "msg-waiver-": "table.waiver",
@@ -548,8 +566,8 @@
     },
     "_unused": {
       "_note": "생산부(`dashboardMeta.ts`)가 안 쓰는 자리 — 다시 만들지 않게 적어 둔다 (B-30 · 2026-09-03)",
-      "table.contractSigned.incentives.columns.condition": "남겼다 — 생산부는 안 쓰는데 `dashboardView.test.ts:453` 이 있다고 못박는다",
-      "table.faSigned.incentives.columns.condition": "남겼다 — 위와 같다",
+      "table.contractSigned.incentives.columns.condition": "🔴 뺐다 (C 단위 9) — 문턱이 이름에 접혀 있어 같은 값이 두 칸에 선다. 못박던 검사(`dashboardView.test.ts`)도 같이 고쳤다",
+      "table.faSigned.incentives.columns.condition": "뺐다 — 위와 같다",
       "table.npcTrade.footnote": "뺐다 — `footnote` 에는 사유 값이 들어간다. 이름표 자리가 없다",
       "table.seasonEndPro.optionalColumns.prev": "남겼다 — 아직 안 넘기지만 넘기게 되면 바로 필요하다",
       "table.seasonEndIndie.optionalColumns.prev": "남겼다 — 위와 같다"
