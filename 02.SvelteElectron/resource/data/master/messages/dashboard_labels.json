@@ -1,0 +1,546 @@
+{
+  "_note": "소식 대시보드 라벨·문구 (1.1 B-21 · PLAN_MESSAGE_DASHBOARDS §1·§7). 표 19 · 순위 3 · 막대 2 · 카드 6접두(5줄) · 타임라인 3 · 기록 탭 카드 2. 🔴 **데이터만이다 — 아직 아무 코드도 이 파일을 안 읽는다.** 배선은 C(표시)·A(생산부) 몫이다",
+  "_schema": {
+    "_tone": "🔴 **문장은 합쇼체다** — `role_choice.json` · `contract_terms.json` · `pitching_usage.json` · `military_reunion.json` 과 같다 (사용자 확정 2026-09-03). 다만 **열 이름·라벨은 문장이 아니라 이름이라 명사 그대로**다 (「순위」 지 「순위입니다」 가 아니다)",
+    "_rule": "부제·대시 설명을 안 쓴다. 열 이름은 짧게 — 표는 폭이 좁다",
+    "kind": "`TableMetadata.kind` 등이 그대로 이 표의 키다. id 접두 ↔ kind 대응은 `_coverage` 가 정본이다",
+    "columns": "`{ metadata 키: 열 이름 }`. **키를 metadata 선언과 똑같이 적는다** — 다르면 화면이 빈 칸을 그린다. 값이 빈 문자열인 열은 **머리글을 안 그린다**(대진표의 두 팀 칸)",
+    "rows": "항목·값 두 칸짜리 표. `{ metadata 키: 행 이름 }` 이고 열 이름은 `common.itemValue` 를 쓴다",
+    "empty": "그 표가 통째로 빌 때 대신 그리는 한 문장. 칸 하나가 빌 때는 `common.emptyCell` 이다"
+  },
+  "_rules": {
+    "_labels": "🔴 **낱말을 새로 만들지 않았다.** 코드가 이미 쓰는 것을 그대로 옮겼다 — `팀`(11자리) · `연도`(7) · `승`·`패`·`승률`(각 4) · `주차`(3) · `상대`(3) · `결과`(4) · `점수`(3) · `기록`(2) · `순위`(2) · `IP`·`ER`·`H`·`K`·`BB` · `투구수` · `사유` · `수상` · `연속` · `최근10`. 두 벌을 만들면 같은 값이 화면마다 다른 이름으로 불린다",
+    "_era": "⚠ **`ERA`·`WHIP` 로 적는다.** 「평균자책」 을 쓰는 화면이 **0개**이고 `ERA` 가 10개다 — 시안(`docs/mock/message-dashboards-mock.html`)에 「평균자책」 이라 적었던 것이 관례에서 벗어난 쪽이었다",
+    "_josa": "🔴 조사·어미를 코드로 붙이지 않는다. 이 파일의 자리표시자는 **`{n}` · `{weeks}` · `{year}` 같은 숫자**뿐이라 조사가 안 붙는다. 딱 하나 굴절이 필요한 자리가 보직이라 `roleAs` 를 아래에 뒀다 — 값은 `role_choice.json` 과 **같아야 한다**",
+    "_myTeam": "대진·순위에서 내 팀은 **말이 아니라 굵기로** 표시한다. 「(우리 팀)」 같은 꼬리표를 안 붙인다 — 표가 좁고, 팀 이름 뒤 조사가 갈린다. `common.myMark` 는 굵기를 못 쓰는 자리(읽어 주기·좁은 폭)용 대체다"
+  },
+  "_measured": {
+    "게임차 열을 안 넣었다": "🔴 `Standing`(`types/season.ts:140`)에 **게임차가 없다** — `teamId · wins · losses · draws · winPct · runsFor · runsAgainst · streak · last10` 이 전부다. 시안에 그렸던 「게임차」 는 계산해야 나오는 값이고 지금 그걸 만드는 자리가 없다. 대신 코드에 이미 있는 `streak`·`last10` 을 선택 열로 뒀다",
+    "무승부 열": "`Standing.draws` 가 있으므로 「무」 를 넣을 수 있다. 다만 §1-1 이 선언한 metadata 는 `{teamId,w,l,pct,rank}` 라 **선택 열**로 뒀다 — 생산부가 넘기면 그린다",
+    "지난해 열은 값의 출처가 없다": "🔴 `CareerRecord.statLine` 이 **문자열**이다(`types/save.ts:807` — \"15승 3패 ERA 2.41\"). 숫자로 비교하려면 생산부가 시즌 종료 때 숫자째로 남겨야 한다. 그래서 시즌 결산의 `prev` 열은 **선택**이고, 없으면 안 그린다"
+  },
+  "common": {
+    "_note": "형태를 가리지 않고 쓰는 것",
+    "itemValue": {
+      "item": "항목",
+      "value": "값"
+    },
+    "emptyCell": "—",
+    "emptyTable": "기록 없음",
+    "more": "그 밖 {n}건",
+    "myMark": "내 팀",
+    "recordTail": "기록 탭에 남습니다.",
+    "total": "합계",
+    "win": "승",
+    "lose": "패",
+    "draw": "무"
+  },
+  "roleAs": {
+    "_note": "🔴 `role_choice.json` 의 같은 이름 표와 **값이 같아야 한다.** 받침 ㄹ 은 「로」 를 쓴다(선발로)",
+    "SP": "선발로",
+    "RP": "중계로",
+    "CP": "마무리로"
+  },
+  "table": {
+    "digest": {
+      "title": "리그 순위",
+      "columns": {
+        "rank": "순위",
+        "teamId": "팀",
+        "w": "승",
+        "l": "패",
+        "pct": "승률"
+      },
+      "optionalColumns": {
+        "draws": "무",
+        "streak": "연속",
+        "last10": "최근10",
+        "delta": "변동"
+      },
+      "empty": "아직 순위가 매겨지지 않았습니다.",
+      "footnote": "세부 순위는 기록 탭에 있습니다.",
+      "delta": {
+        "up": "↑{n}",
+        "down": "↓{n}",
+        "flat": "—",
+        "unknown": ""
+      },
+      "_deltaNote": "🔴 `unknown` 은 **빈 문자열**이다. 지난 값이 없을 때 「—」 를 쓰면 「변동 없음」 과 「모름」 이 같아 보인다 (§3-1)"
+    },
+    "leagueResults": {
+      "title": "경기 결과",
+      "columns": {
+        "home": "홈",
+        "score": "점수",
+        "away": "원정"
+      },
+      "empty": "이번 주에는 경기가 없었습니다.",
+      "_scoreNote": "metadata 는 `hs`·`as` 로 따로 온다. `score` 칸은 생산부가 `{hs} : {as}` 로 합쳐 넘긴다 — 화면이 문자열을 만들면 정렬이 안 맞는다"
+    },
+    "officialResult": {
+      "title": "내 경기 기록",
+      "rows": {
+        "ip": "IP",
+        "h": "H",
+        "er": "ER",
+        "k": "K",
+        "bb": "BB",
+        "pitches": "투구수",
+        "dec": "결과"
+      },
+      "empty": "이번 경기에는 나가지 않았습니다."
+    },
+    "friendlyResult": {
+      "title": "연습경기 기록",
+      "rows": {
+        "ip": "IP",
+        "h": "H",
+        "er": "ER",
+        "k": "K",
+        "bb": "BB",
+        "pitches": "투구수",
+        "dec": "결과"
+      },
+      "empty": "이번 연습경기에는 나가지 않았습니다."
+    },
+    "seasonEndPro": {
+      "title": "시즌 성적",
+      "rows": {
+        "w": "승",
+        "l": "패",
+        "sv": "세이브",
+        "hd": "홀드",
+        "ip": "IP",
+        "era": "ERA",
+        "whip": "WHIP",
+        "k": "K"
+      },
+      "columns": {
+        "item": "항목",
+        "value": "올해"
+      },
+      "optionalColumns": {
+        "prev": "지난해"
+      },
+      "empty": "올해는 기록이 없습니다."
+    },
+    "seasonEndIndie": {
+      "title": "시즌 성적",
+      "rows": {
+        "w": "승",
+        "l": "패",
+        "sv": "세이브",
+        "hd": "홀드",
+        "ip": "IP",
+        "era": "ERA",
+        "whip": "WHIP",
+        "k": "K"
+      },
+      "columns": {
+        "item": "항목",
+        "value": "올해"
+      },
+      "optionalColumns": {
+        "prev": "지난해"
+      },
+      "empty": "올해는 기록이 없습니다."
+    },
+    "contractSigned": {
+      "title": "계약 조건",
+      "rows": {
+        "teamId": "구단",
+        "salary": "연봉",
+        "years": "기간",
+        "bonus": "계약금",
+        "options": "조항"
+      },
+      "incentives": {
+        "title": "인센티브",
+        "columns": {
+          "name": "항목",
+          "condition": "조건",
+          "amount": "금액"
+        },
+        "empty": "인센티브가 없습니다."
+      },
+      "empty": "계약 조건을 읽지 못했습니다.",
+      "noBonus": "없음",
+      "noOption": "없음"
+    },
+    "faSigned": {
+      "title": "FA 계약 조건",
+      "rows": {
+        "teamId": "구단",
+        "salary": "연봉",
+        "years": "기간",
+        "bonus": "계약금",
+        "options": "조항"
+      },
+      "incentives": {
+        "title": "인센티브",
+        "columns": {
+          "name": "항목",
+          "condition": "조건",
+          "amount": "금액"
+        },
+        "empty": "인센티브가 없습니다."
+      },
+      "empty": "계약 조건을 읽지 못했습니다."
+    },
+    "faMarket": {
+      "title": "받은 제안",
+      "columns": {
+        "teamId": "구단",
+        "salary": "연봉",
+        "years": "기간",
+        "bonus": "계약금",
+        "opts": "조항"
+      },
+      "empty": "아직 들어온 제안이 없습니다."
+    },
+    "faComp": {
+      "title": "FA 보상",
+      "rows": {
+        "grade": "등급",
+        "money": "보상금",
+        "playerId": "보상 선수"
+      },
+      "empty": "보상이 발생하지 않았습니다.",
+      "noPlayer": "선수 지명 없음"
+    },
+    "resign": {
+      "title": "재계약 조건",
+      "rows": {
+        "teamId": "구단",
+        "salary": "연봉",
+        "years": "기간",
+        "bonus": "계약금",
+        "options": "조항"
+      },
+      "empty": "재계약 조건을 읽지 못했습니다."
+    },
+    "npcTrade": {
+      "title": "트레이드",
+      "columns": {
+        "teamId": "구단",
+        "players": "선수"
+      },
+      "footnote": "사유",
+      "empty": "오간 선수가 없습니다."
+    },
+    "demote": {
+      "title": "엔트리 말소",
+      "columns": {
+        "npcId": "선수",
+        "note": "비고"
+      },
+      "lockNote": "{weeks}주간 재등록 불가",
+      "empty": "말소된 선수가 없습니다."
+    },
+    "waiver": {
+      "title": "웨이버 공시",
+      "columns": {
+        "npcId": "선수"
+      },
+      "empty": "공시된 선수가 없습니다."
+    },
+    "tourMy": {
+      "title": "대회 전적",
+      "columns": {
+        "round": "라운드",
+        "opp": "상대",
+        "score": "점수",
+        "result": "결과"
+      },
+      "optionalColumns": {
+        "myLine": "내 기록"
+      },
+      "empty": "치른 경기가 없습니다.",
+      "noAppearance": "등판 없음"
+    },
+    "natlResult": {
+      "title": "대표팀 전적",
+      "columns": {
+        "opp": "상대",
+        "score": "점수",
+        "myLine": "내 기록"
+      },
+      "empty": "치른 경기가 없습니다.",
+      "noAppearance": "등판 없음"
+    },
+    "coachReport": {
+      "title": "최근 등판 분석",
+      "columns": {
+        "name": "항목",
+        "value": "값",
+        "delta": "변화"
+      },
+      "empty": "분석할 등판이 없습니다."
+    },
+    "tourOpen": {
+      "title": "대진",
+      "columns": {
+        "round": "라운드",
+        "home": "",
+        "away": "",
+        "date": "일정"
+      },
+      "empty": "아직 대진이 나오지 않았습니다.",
+      "_myTeamNote": "`myTeam` 은 열이 아니라 **행 강조**다. 내 팀 경기가 라운드마다 하나씩 여럿일 수 있어 `highlightRow` 인덱스 하나로는 모자란다 (§3)"
+    },
+    "tourRound": {
+      "title": "대진",
+      "columns": {
+        "round": "라운드",
+        "home": "",
+        "away": "",
+        "date": "일정"
+      },
+      "empty": "아직 대진이 나오지 않았습니다."
+    }
+  },
+  "rankList": {
+    "tourChamp": {
+      "title": "최종 순위",
+      "first": "우승",
+      "second": "준우승",
+      "third": "3위",
+      "empty": "순위가 아직 나오지 않았습니다."
+    },
+    "tourAward": {
+      "title": "수상",
+      "columns": {
+        "award": "수상",
+        "playerId": "선수",
+        "teamId": "소속"
+      },
+      "empty": "수상자가 없습니다."
+    },
+    "farmChampion": {
+      "title": "2군 최종 순위",
+      "first": "우승",
+      "second": "준우승",
+      "third": "3위",
+      "empty": "순위가 아직 나오지 않았습니다."
+    }
+  },
+  "bars": {
+    "exam": {
+      "title": "시험 결과",
+      "columns": {
+        "name": "과목",
+        "score": "점수"
+      },
+      "gpa": "학점",
+      "scale": {
+        "min": 0,
+        "max": 100
+      },
+      "empty": "이번에는 치른 시험이 없습니다."
+    },
+    "teamMood": {
+      "title": "팀 분위기",
+      "mood": "분위기",
+      "delta": "변화",
+      "scale": {
+        "min": 0,
+        "max": 100
+      },
+      "empty": "분위기를 읽지 못했습니다."
+    }
+  },
+  "cards": {
+    "seasonBrief": {
+      "title": "올 시즌",
+      "labels": {
+        "role": "보직",
+        "teamRank": "팀 순위",
+        "games": "경기 수"
+      },
+      "roleLine": "올해는 {roleAs} 시작합니다.",
+      "_roleNote": "`{roleAs}` 는 위 `roleAs` 표에서 꺼낸다. `{role}` 을 그대로 쓰면 「중계으로」 가 된다",
+      "empty": "안내할 내용이 없습니다."
+    },
+    "friendlyPlan": {
+      "title": "연습경기 예정",
+      "labels": {
+        "week": "주차",
+        "opp": "상대"
+      },
+      "empty": "잡힌 연습경기가 없습니다."
+    },
+    "natlSquad": {
+      "title": "대표팀 명단",
+      "labels": {
+        "pos": "포지션",
+        "playerId": "선수"
+      },
+      "empty": "명단이 아직 나오지 않았습니다."
+    },
+    "scoutDay": {
+      "title": "스카우트 데이",
+      "labels": {
+        "week": "주차",
+        "where": "장소",
+        "scouts": "스카우트"
+      },
+      "empty": "잡힌 행사가 없습니다."
+    },
+    "showcase": {
+      "title": "쇼케이스",
+      "labels": {
+        "week": "주차",
+        "where": "장소",
+        "scouts": "스카우트"
+      },
+      "empty": "잡힌 행사가 없습니다."
+    },
+    "allstar": {
+      "title": "올스타",
+      "labels": {
+        "selected": "선정",
+        "votes": "득표"
+      },
+      "selectedYes": "선정",
+      "selectedNo": "미선정",
+      "empty": "발표가 아직 나오지 않았습니다."
+    }
+  },
+  "timeline": {
+    "milRecord": {
+      "title": "군 경력",
+      "labels": {
+        "unit": "부대",
+        "role": "보직",
+        "rank": "계급",
+        "leave": "휴가",
+        "awards": "표창",
+        "perf": "성과"
+      },
+      "empty": "남은 기록이 없습니다.",
+      "noAward": "없음",
+      "_recordNote": "🔴 **기록 탭에는 한 줄만 남는다** (`PLAN_MESSAGE_DASHBOARDS` §9 ② 확정). 부대·보직·계급·표창은 **이 소식 본문에만** 있다 — `NpcCareerEvent.detail` 이 문자열 한 줄뿐이라(`types/save.ts:851`) 커리어 타임라인이 세부를 못 든다"
+    },
+    "militaryAnnual": {
+      "title": "복무 현황",
+      "labels": {
+        "weeks": "복무 주",
+        "rank": "계급",
+        "nextEvent": "다음 일정"
+      },
+      "empty": "안내할 내용이 없습니다.",
+      "noNext": "잡힌 일정 없음"
+    },
+    "seasonHsSync": {
+      "title": "고교 연감",
+      "labels": {
+        "year": "연도",
+        "summary": "요약"
+      },
+      "empty": "남은 기록이 없습니다."
+    }
+  },
+  "recordTab": {
+    "_note": "§7-4 신설 카드 둘. **새 화면이 아니라 `me > status` 안의 카드**다. 표는 소식과 같은 `StatTable` 을 쓴다",
+    "contractHistory": {
+      "title": "계약 이력",
+      "_where": "me > status — 「계약 정보」 바로 아래",
+      "columns": {
+        "year": "연도",
+        "teamId": "구단",
+        "salary": "연봉",
+        "years": "기간",
+        "kind": "종류",
+        "options": "조항"
+      },
+      "kindLabel": {
+        "new": "신규",
+        "resign": "재계약",
+        "fa": "FA"
+      },
+      "empty": "아직 맺은 계약이 없습니다."
+    },
+    "tournamentRecord": {
+      "title": "대회 전적",
+      "_where": "me > status — 「경기 기록」 아래",
+      "columns": {
+        "year": "연도",
+        "tournament": "대회",
+        "round": "최종 라운드",
+        "myLine": "내 기록"
+      },
+      "intlMark": "국제",
+      "empty": "아직 나간 대회가 없습니다.",
+      "noAppearance": "등판 없음"
+    }
+  },
+  "_coverage": {
+    "_note": "id 접두 ↔ 이 파일의 키. **여기 없는 소식은 텍스트 유지 16종이다** (§1-6)",
+    "table": {
+      "msg-digest-": "table.digest",
+      "msg-league-results-w": "table.leagueResults",
+      "msg-official-result-w": "table.officialResult",
+      "msg-friendly-result-w": "table.friendlyResult",
+      "msg-pro-season-end-": "table.seasonEndPro",
+      "msg-indie-season-end-": "table.seasonEndIndie",
+      "msg-contract-signed-": "table.contractSigned",
+      "msg-fa-signed-": "table.faSigned",
+      "msg-fa-market-": "table.faMarket",
+      "msg-facomp-": "table.faComp",
+      "msg-resign-": "table.resign",
+      "msg-npc-trade-": "table.npcTrade",
+      "msg-demote-": "table.demote",
+      "msg-waiver-": "table.waiver",
+      "msg-tour-my-": "table.tourMy",
+      "msg-natl-result-": "table.natlResult",
+      "msg-coach-report-w": "table.coachReport",
+      "msg-tour-open-": "table.tourOpen",
+      "msg-tour-round-": "table.tourRound"
+    },
+    "rankList": {
+      "msg-tour-champ-": "rankList.tourChamp",
+      "msg-tour-award-": "rankList.tourAward",
+      "msg-farm-champion-": "rankList.farmChampion"
+    },
+    "bars": {
+      "msg-exam-w": "bars.exam",
+      "msg-team-mood-": "bars.teamMood"
+    },
+    "cards": {
+      "msg-season-brief-": "cards.seasonBrief",
+      "msg-friendly-plan-w": "cards.friendlyPlan",
+      "msg-natl-squad-": "cards.natlSquad",
+      "msg-scoutday-": "cards.scoutDay",
+      "msg-showcase-": "cards.showcase",
+      "msg-allstar-": "cards.allstar"
+    },
+    "timeline": {
+      "msg-mil-record-": "timeline.milRecord",
+      "msg-military-annual-": "timeline.militaryAnnual",
+      "msg-season-hs-sync-": "timeline.seasonHsSync"
+    },
+    "recordTab": {
+      "msg-contract-signed- · msg-fa-signed- · msg-resign-": "recordTab.contractHistory",
+      "msg-tour-my- · msg-natl-result-": "recordTab.tournamentRecord"
+    },
+    "_recordTail": {
+      "_note": "§7-5 — 본문 마지막에 `common.recordTail` 을 붙이는 소식. §7-3 배치표에서 「된다」 로 표시된 것들이다",
+      "ids": [
+        "msg-contract-signed-",
+        "msg-fa-signed-",
+        "msg-resign-",
+        "msg-facomp-",
+        "msg-pro-season-end-",
+        "msg-indie-season-end-",
+        "msg-mil-record-",
+        "msg-tour-my-",
+        "msg-tour-champ-",
+        "msg-tour-award-",
+        "msg-natl-result-",
+        "msg-farm-champion-",
+        "msg-retire-",
+        "msg-season-hs-sync-"
+      ]
+    }
+  }
+}
