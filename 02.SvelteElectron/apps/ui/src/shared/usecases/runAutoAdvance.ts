@@ -6,8 +6,6 @@ import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { applyMilitaryEventChoice } from "./militaryLife";
 import { buildMilitaryResultMessage } from "../utils/militaryResultMessage";
-import { applyRoleChoice, roleChoicePolicyPick } from "./pitcherRole";
-import type { RoleChoiceMetadata } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
@@ -215,15 +213,6 @@ async function handleMessage(messageId: string): Promise<void> {
   gameStore.markMessageRead(messageId);
 
   if (msg.decision && msg.decision.selectedOptionId === null) {
-    // 보직 소식은 **갈래가 따로다** (PLAN_ROLE_RECOMMEND §7 헤드리스).
-    //
-    // 🔴 `pickChoice(options, fatigue)` 는 일반 휴리스틱이라 **피로 값에 따라
-    //   보직이 정해진다.** 정책은 `globalThis.__PB_ROLE_CHOICE` 하나뿐이고
-    //   기본값은 「추천대로」다(확정 10) — 계측의 기준선이 그것이다.
-    if (msg.metadata?.type === "roleChoice") {
-      await applyRoleChoice(messageId, roleChoicePolicyPick(msg.metadata as RoleChoiceMetadata));
-      return;   // applyRoleChoice 가 pending 해제·저장까지 한다
-    }
     const choiceId = pickChoice(msg.decision.options, g.protagonist.fatigue);
     await applyDecision(messageId, choiceId);
   }
