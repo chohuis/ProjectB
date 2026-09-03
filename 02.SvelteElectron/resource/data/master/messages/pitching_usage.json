@@ -1,0 +1,74 @@
+{
+  "_note": "강판·불펜 등판·마무리·의무 휴식 소식 문안 초안 (1.1 B② · PLAN_ROLE_RECOMMEND §6-1). 데이터만이다 — 배선은 A②(엔진)·C 가 붙인다. 아직 아무 코드도 이 파일을 안 읽는다",
+  "_schema": {
+    "_tone": "🔴 **합쇼체다** — `role_choice.json` · `contract_terms.json` 과 같다 (사용자 확정 2026-09-03)",
+    "_placeholders": "{pitches} {limit} {innings} {days} {outs} {inningNo}",
+    "_josa": "🔴 조사·어미를 코드로 붙이지 않는다. 이 파일의 자리표시자는 **전부 숫자**라 조사가 안 붙는다 — 팀 이름·보직 이름을 넣게 되면 굴절형 표를 따로 둔다(`role_choice.json` 의 roleAs·roleObj·roleWas 가 그 꼴이다)",
+    "_stage": "무대마다 다른 줄만 `byStage` 에 둔다. 없으면 `common` 을 쓴다 — 두 벌을 만들면 한쪽만 고쳐진 채 남는다",
+    "_rule": "부제·대시 설명을 안 쓴다. 결과(승패·기록)는 경기 기록이 들고, 여기는 왜 내려왔나·왜 못 나가나만 적는다"
+  },
+
+  "_restTable": {
+    "_note": "🔴 **실제 표는 `rest_rules.rs:15~24` 다** — 0~30구 0일 · 31~45 1일 · 46~60 2일 · 61~75 3일 · 76~95 4일 · 96+ 5일. A 가 인계에서 '1~3일' 이라 전했는데 **코드는 0~5일**이다. 문안은 `{days}` 로만 쓰고 값은 엔진이 준다",
+    "days": { "0-30": 0, "31-45": 1, "46-60": 2, "61-75": 3, "76-95": 4, "96+": 5 }
+  },
+
+  "common": {
+    "pitchLimit": {
+      "_note": "투구수 상한 강판 (선발). limit 은 `rosterOpsRules.starterPitchLimit` 이 준다",
+      "subject": "강판",
+      "head": "투구수 {pitches}구에서 내려왔습니다.",
+      "limit": "{limit}구가 상한입니다.",
+      "line": "{innings}이닝 {pitches}구",
+      "soft": "{pitches}구를 넘기면서 불펜이 몸을 풀기 시작했습니다."
+    },
+    "bullpen": {
+      "_note": "불펜 등판 (중계). 상황 셋은 등판 시점 점수차로 갈린다",
+      "subject": "불펜 등판",
+      "head": "{inningNo}회에 올라갔습니다.",
+      "lead": "앞선 상황이었습니다.",
+      "tie": "동점이었습니다.",
+      "behind": "뒤진 상황이었습니다.",
+      "line": "{outs}아웃 {pitches}구"
+    },
+    "save": {
+      "_note": "마무리 등판. 성공·실패만 적고 세부 기록은 경기 기록이 든다",
+      "subject": "마무리 등판",
+      "chance": "{inningNo}회, 세이브 상황에서 올라갔습니다.",
+      "success": "그대로 지켰습니다.",
+      "blown": "동점을 내주고 내려왔습니다.",
+      "loss": "역전을 허용했습니다."
+    },
+    "rest": {
+      "_note": "의무 휴식으로 등판 불가. days 는 `rest_rules::mandatory_rest_days` 가 준다",
+      "subject": "등판 불가",
+      "blocked": "지난 등판에서 {pitches}구를 던졌습니다. {days}일은 쉬어야 합니다.",
+      "blockedToday": "오늘은 나가지 않습니다.",
+      "ready": "휴식이 끝났습니다. 오늘부터 던질 수 있습니다."
+    },
+    "backToBack": {
+      "_note": "연투 금지 — 어제 던졌으면 오늘은 안 나간다",
+      "subject": "등판 불가",
+      "blocked": "어제 던졌습니다. 오늘은 나가지 않습니다."
+    }
+  },
+
+  "byStage": {
+    "_note": "무대마다 다른 줄만 덮어쓴다. 지금은 고교뿐이고, 대학이 같은 틀을 쓸 때 여기에 키를 하나 더 둔다",
+    "highschool": {
+      "pitchLimit": {
+        "limit": "주말리그는 {limit}구가 상한입니다."
+      },
+      "save": {
+        "gate": "고교는 8회부터 마무리를 씁니다."
+      },
+      "backToBack": {
+        "blocked": "어제 던졌습니다. 주말 이틀 연속으로는 나가지 않습니다.",
+        "_note": "고교 주말리그는 토·일 연속이라 이 줄이 실제로 자주 뜬다 (§6-1 「딸려 오는 구멍 하나」)"
+      }
+    },
+    "university": {
+      "_note": "대학은 지금 common 그대로다. 다른 줄이 생기면 여기 적는다"
+    }
+  }
+}
