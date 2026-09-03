@@ -48,6 +48,13 @@ export interface DecisionEffect {
   fameDelta?:       number;                  // 명성 ± (0~200 clamp)
   popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
   diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
+  /**
+   * 투수 보직 선택 (PLAN_ROLE_RECOMMEND §4). `"SP"|"RP"|"CP"`.
+   *
+   * ⚠ `applyDecision` 이 아니라 `usecases/pitcherRole.applyRoleChoice` 가 읽는다 —
+   * 보직은 스탯 델타가 아니라 포지션·역할 배정이라 store 패처가 둘이다.
+   */
+  roleChoice?:      "SP" | "RP" | "CP";
   // ── 현역 병영생활 전용 (PLAN_MILITARY_LIFE §28) — `militaryLife` 가 있을 때만 읽는다 ──
   // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
   //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
@@ -219,6 +226,31 @@ export interface MyBodyMetadata {
   events: MyBodyEvent[];
 }
 
+/**
+ * 보직 선택 소식 (PLAN_ROLE_RECOMMEND §4).
+ *
+ * 🔴 **적합도(fits)는 안 싣는다.** 화면이 안 그리는 값을 세이브에 넣으면
+ * 「보이지 않는데 저장되는 값」이 되고, 나중에 그걸 근거로 화면을 만들면 두 벌이 된다.
+ *
+ * ⚠ `ahead` 는 **화면이 다시 계산하지 않는다.** 소식이 들고 온 값을 그대로 쓴다 —
+ * 두 벌이 되면 한쪽만 고쳐진 채 남는다 (§5).
+ */
+export interface RoleChoiceMetadata {
+  type: "roleChoice";
+  /** 감독 추천 — 옵션 id 와 같은 눈금 */
+  recommended: "sp" | "rp" | "cp";
+  /** 그 자리를 지금 차지한 같은 팀 투수 수. 확인 문구가 쓰는 유일한 숫자 */
+  ahead: { sp: number; rp: number; cp: number };
+  managerName: string;
+  year: number;
+  teamId: string;
+  week: number;
+  /** 왜 묻나 — 문안의 머리말 키 (season|stageMove|callup|demote|discharge) */
+  reason: import("../utils/roleChoiceCopy").RoleAskReason;
+  /** 추천 문안을 고른 무대 (highschool|university|independent|pro|farm) */
+  stage: import("../utils/roleChoiceCopy").RoleCopyStage;
+}
+
 export interface MessageItem {
   id: string;
   category: MessageCategory;
@@ -230,6 +262,6 @@ export interface MessageItem {
   readAt: string | null;
   decision?: MessageDecision;
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
-           | MyBodyMetadata
+           | MyBodyMetadata | RoleChoiceMetadata
            | { type: string };
 }

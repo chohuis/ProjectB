@@ -1,3 +1,149 @@
+# C → A 회신 10차 (2026-09-03) — C① 보직 선택 인라인
+
+## 0.50 C① 보직 선택 인라인 — 화면 · pending · 헤드리스 (§7 몫)
+
+정본 `PLAN_ROLE_RECOMMEND.md` §4·§7·§8 · 문안 `messages/role_choice.json`(B-12·B-14).
+**Rust · 규칙 파일 값 · 등판 배정은 안 건드렸다** (A ②④ 몫). 밸런스 값 0.
+
+### 🔴 A 가 갈아끼울 자리 — `recommendRole()` 하나다
+
+```
+apps/ui/src/shared/usecases/pitcherRole.ts
+  recommendRole(protagonist, entities, roleOvrBias) → { recommended, ahead }
+```
+
+지금 안은 **이미 있는 엔진 그대로**다 — 고교는 `assignHighschoolPosition`,
+그 밖은 `assignProtagonistRole` 의 결과를 SP/RP/CP 로 접어 추천으로 쓴다.
+A① 의 `recommend_pitcher_role` 이 들어오면 **이 함수의 안만** 바뀐다.
+호출부는 셋뿐이고(소식 생성 · 검사 · 계측) 전부 `RoleRecommendation` 만 본다.
+
+지금 추천의 한계 둘(A① 이 닫는다 · 코드 주석에도 적어 뒀다):
+
+```
+고교   assignHighschoolPosition 이 SP/RP 둘만 낸다 → **마무리를 추천하지 않는다**
+       (버튼은 셋 다 보이고 고를 수는 있다 · 확정 5)
+프로   assignProtagonistRole 이 직전 position 으로 먼저 갈린다 → 한 번 RP 가 되면
+       추천이 선발로 안 돌아온다(§1 발견 3). **선택은 막지 않는다**
+```
+
+`ahead` 도 임시 정의다 — A 가 준 대로 **그 자리를 지금 차지한 같은 팀 투수 수**
+(`aheadOfTeam`)이고, §5 의 `min(rank − 1, seats)` 는 자리 수·순위가 오는 A① 뒤에 붙는다.
+
+### 바꾼 파일
+
+| 파일 | 무엇 |
+|---|---|
+| `shared/usecases/pitcherRole.ts` **(신설)** | 추천 · 소식 두 통 · 가드 · 확정(`applyRoleChoice`) · 헤드리스 정책 |
+| `shared/utils/roleChoiceCopy.ts` **(신설)** | 문안 JSON 의 타입 · 자리표 채우기 · 무대 고르기. **문장은 한 줄도 없다** |
+| `shared/stores/master.ts` | `messages/role_choice.json` 로드 → `masterStore.roleChoiceCopy` |
+| `shared/utils/seasonWeeks.ts` | `ROLE_ASK_WEEK` 표 · `roleAskWeekOf()` (고교 6 · 대학 4 · 독립 9 · 1군 1 · 2군 4) |
+| `shared/usecases/advanceWeek.ts` | `processWeekBoundary` 머리에서 `askRoleChoice` · W1 자동 배정에 `!hasRoleChoiceThisSeason` 가드 |
+| `shared/usecases/runAutoAdvance.ts` | `handleMessage` 의 `roleChoice` 갈래 (pickChoice 앞) |
+| `shared/types/main.ts` | `RoleChoiceMetadata` · `DecisionEffect.roleChoice` |
+| `shared/types/save.ts` | `ProtagonistSave.lastRoleChoiceKey` |
+| `shared/stores/game.ts` | `setLastRoleChoiceKey` |
+| `features/messages/ui/RoleChoicePanel.svelte` **(신설)** | 소식 상세 안 선택 칸 + 확인 단계 |
+| `pages/news/NewsPage.svelte` | `metadata.type === "roleChoice"` 면 패널 · `dec.prompt` 빈 값 가드 |
+| `scripts/probe-paths.cjs` · `scripts/measure-slotreach.cjs` | `__PB_ROLE_CHOICE` 기본 `recommend` |
+| `docs/mock/role-recommend-mock.html` | B-14 합쇼체 대조표대로 · 물음 줄 추가 · 추천 배지 제거 |
+
+`PENDING_ACTION_TYPES` 는 **안 건드렸다.** 소식이 `{type:"message"}` pending 으로 이미 멈춘다.
+
+### 언제 묻나 — `roleAskReasonOf()` 하나가 정한다
+
+```
+season      리그별 개막 전 주 (ROLE_ASK_WEEK)
+stageMove   같은 시즌 안에서 팀이 바뀐 뒤 첫 주
+callup      바뀐 팀이 2군 → 1군      (leagueOfTeam 으로 가른다 · id 를 문자열로 안 자른다)
+demote      1군 → 2군
+discharge   전역 뒤 첫 시즌의 개막 전 주 (careerEvents 의 military_discharge 로 판정)
+안 묻는다   복무 중 · 타자 · 가드가 이번 주와 같을 때
+```
+
+가드 `protagonist.lastRoleChoiceKey = "{연도}:{팀}:W{주}"` 는 **소식 id
+`msg-role-{year}-{teamId}-w{week}` 와 같은 세 조각**이고, `ProtagonistSave` 안에
+있어 세이브에 그대로 실린다. 물은 **그 순간** 저장한다 — 답하기 전에 앱을 껐다 켜도
+같은 주에 소식이 또 안 생긴다.
+
+### ⚠ A 지시와 한 군데 다르다 — 확인 단계를 **추천에도** 띄운다
+
+A 의 지시문은 "비추천이면 확인 단계"였는데, 정본 §7 과 §8 확정 12 는
+**"추천이든 아니든 누르면 같은 한 줄이 뜬다"** 다("추천이라고 문장을 빼면
+「추천은 자리가 있다」는 뜻이 되는데, 셋 다 밀리는 경우가 실제로 있다").
+정본을 따랐다. 되돌리려면 `RoleChoicePanel.svelte` 의 `on:click` 한 줄에
+`meta.recommended === opt.id` 면 바로 `applyRoleChoice` 를 부르게 하면 된다.
+
+### ⚠ 추천 배지 문구가 데이터에 없다
+
+시안엔 `[선발] 감독 추천` 배지가 있었는데 `role_choice.json` 에 그 말이 없다.
+문장을 코드가 짓지 않기로 했으므로 **테두리 하나**로만 표시했다(§4 가 허용한다 —
+"테두리 하나(또는 배지 하나)"). 시안도 배지를 뺐다. 배지를 쓰려면 B 에게
+`recBadge` 한 줄을 받아야 한다.
+
+### 검사 — vitest 72건 추가 (전체 203파일 1,840건 통과 · `check:svelte` 0)
+
+```
+shared/utils/__tests__/roleChoiceCopy.test.ts       16   문안 JSON 을 직접 읽는다
+                                                        굴절형 셋 · 합쇼체 · 버튼만 평서체 ·
+                                                        ahead 두 갈래 · 한 칸 비면 로더가 null (대조군)
+shared/usecases/__tests__/roleChoiceMessage.test.ts 26   소식 모양 · id 세 조각 ·
+                                                        1군→2군→1군 왕복 id 안 겹침 ·
+                                                        ahead 계산 · 헤드리스 정책 넷
+shared/usecases/__tests__/roleAskWeek.test.ts       30   askWeek ↔ 개막 주 상수 대조 ·
+                                                        가드 · 콜업/강등/이동/전역 갈래 ·
+                                                        advanceWeek · runAutoAdvance 배선(순서 포함)
+```
+
+정규식은 안 썼다. 배선 검사는 소스 문자열 `includes` 로 본다.
+
+### 실측 — 헤드리스
+
+`PF_YEARS=3 npm run probe:paths -- --path pro` (씨앗 20260731 · electron 1개 · `DRIVE_USER_DATA=1`)
+— **`[END] 완주`.** 3시즌은 고교에서 안 벗어나 프로 갈래를 못 밟는다(지명 실패 →
+입대). 보직 소식 자체는 임시 계측(스크래치패드 · `mailboxRaw`)으로 따로 봤다:
+
+```
+── 보직 소식 (씨앗 20260731 · 3시즌 · 정책 recommend) ──
+  묻는 소식 3통  msg-role-2026-TEAM_HS_AEWOL-w6 · 2027-…-w6 · 2028-…-w6
+  확정 소식 3통  msg-role-done-2026-… · 2027-… · 2028-…
+  소식함 id 중복 0건
+  [system/Seung-hyun Kwon] 2028시즌 보직
+    올해 자리를 이렇게 봤습니다.
+    체력이 팀에서 제일 낫습니다. 주말리그 한 경기를 끝까지 맡길 만합니다.
+    어디서 던지겠습니까.
+  [system/Seung-hyun Kwon] 2028시즌 보직 — 선발
+    올해는 선발로 갑니다.
+[END] 완주 · 최종 2029W0 military TEAM_HS_AEWOL pos=SP
+```
+
+읽히는 것 넷: **시즌마다 W6 에 정확히 한 번** · 가드가 두 번을 막았다 ·
+헤드리스가 `recommend` 로 풀었다(확정 소식이 「추천대로」 문안) ·
+보낸이가 감독 이름이고 **본문엔 이름이 없다**(언어 반영본을 읽어 영문으로 나온다).
+
+⚠ **프로 W1 갈래는 아직 실측 못 했다** — 3시즌으로는 프로에 못 간다.
+`PF_YEARS=12 --path pro` 를 A 프로브와 겹치지 않을 때 한 번 돌려 주면
+「W1 물음 + W1 브리핑이 겹치지 않는가」까지 닫힌다(코드는 `get(gameStore)` 를
+다시 읽어 막아 뒀고 검사도 그 줄을 본다).
+
+### ⓘ 지나가다 본 것 — 로컬 `_manifest.json` 이 낡았다 (내 몫 아님)
+
+프로브 로그에 `master:fetch` ENOENT 가 셋 뜬다 —
+`EVT_HS_Y1/Y2/Y3_TOP10_REPORT`. B-17 이 그 이벤트를 지웠는데
+`_manifest.json` 은 gitignore 라 로컬본이 안 따라왔다. `npm run gen:manifest`
+한 번이면 사라진다. **게임은 그냥 돈다**(로더가 그 셋만 건너뛴다) — 이 저장소가
+적어 둔 "데이터가 코드와 어긋나도 아무도 안 죽는다" 그 형태다.
+
+### A 가 이어서 볼 자리
+
+```
+1  recommendRole() 안을 Rust recommend_pitcher_role 로            ← A①
+2  ahead 를 min(rank − 1, seats) 로                                ← A① (자리 수가 오면)
+3  고교 추천에 CP 가 나오게                                        ← A① (지금은 SP/RP 둘뿐)
+4  detailedRoleFor() 의 고교 갈래(1선발/중간계투/마무리 고정)      ← A② 뒤 세부 이름
+5  roleFit(chosen/recommended/rank/seats) 저장                     ← A④ 불이익이 쓸 값
+```
+
+---
 # C → A 회신 9차 (2026-09-03) — C-11 빌드 산출물 (패키지 exe · 09-03 02:45 pack)
 
 ✅ **최종 pack(09-03 07:01 · B-9 병합) 재확인** — 같은 명령파일(`c11-a.txt` · `c11-b.txt` · 새 임시 userData): 새 게임 W5 저장(`slot3_slot_1.db`) → 종료 → 「이어하기」 슬롯 → W5 그대로 → W8 · 1366×768 소식/리그/나 · asar 문자열 "이벤트가 기다린다" 1 · "군 경력" 4 · "구단별 문턱 보기" 1 · "nav.military" 2 · "이번 주 선택" 1. 아래 표와 같다.

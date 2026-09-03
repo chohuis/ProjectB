@@ -58,6 +58,7 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
+import { askRoleChoice, hasRoleChoiceThisSeason } from "./pitcherRole";
 import { loadRosterRules } from "../repo/newGameV3";
 import { campConditionBonus } from "../utils/clubEffects";
 import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
@@ -215,8 +216,28 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const m = get(masterStore);
   const logs: string[] = [];
 
+  // ── 보직 선택 — **각 리그의 개막 전 주** (PLAN_ROLE_RECOMMEND §4 · 확정 8) ──
+  //
+  // 🔴 새 pending 타입을 안 만든다. 소식을 넣기만 하면 아래 「미결정 메시지 확인」
+  //   갈래가 `{type:"message"}` pending 으로 그 주에서 멈춘다 (§4).
+  //
+  // ⚠ **W1 자동 배정보다 먼저 부른다.** 프로 1군은 묻는 주가 W1 이라(시범경기가
+  //   W1~4 에 12경기 있다) 순서가 뒤집히면 브리핑과 물음이 같은 주에 겹친다.
+  {
+    const askedId = await askRoleChoice(s.seasonYear, weekInYearOf(weekNum));
+    if (askedId) logs.push("[보직] 감독 추천 도착 — 선택 대기");
+  }
+
   // W1: 투수 포지션/역할 배정 + 시즌 시작 브리핑
-  if (weekNum === 1 && g.protagonist.playerType === "pitcher") {
+  //
+  // ⚠ **선택이 이미 있으면 덮어쓰지 않는다** (§7). 구 세이브·헤드리스 안전망으로
+  //   남긴 갈래다 — 물어본 시즌에는 주인공이 고른 보직이 정본이다.
+  //
+  // 🔴 **`g` 를 다시 읽는다.** 위 `askRoleChoice` 가 방금 가드를 세웠는데 함수
+  //   머리의 스냅샷에는 그게 없다 — 프로 1군은 묻는 주가 W1 이라 그대로 두면
+  //   같은 주에 물음과 브리핑이 **둘 다** 뜬다.
+  if (weekNum === 1 && g.protagonist.playerType === "pitcher"
+      && !hasRoleChoiceThisSeason(get(gameStore).protagonist, s.seasonYear)) {
     if (g.protagonist.careerStage === "highschool") {
       // 고교: SP / RP 두 범주만 사용
       const pos = await assignHighschoolPosition(g.protagonist, m.entities);

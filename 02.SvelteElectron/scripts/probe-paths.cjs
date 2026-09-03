@@ -32,6 +32,8 @@ const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
 globalThis.__PB_CAREER_LOG = true;
 // 병영생활 주간 선택 정책 — ball | people | rest | mix (기본 ball · 실제 플레이는 탭에서 고른다)
 globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
+// 보직 선택 정책 — recommend(기본 · 감독 말을 따른다) | sp | rp | cp (PLAN_ROLE_RECOMMEND §7 · 확정 10)
+globalThis.__PB_ROLE_CHOICE = process.env.PB_ROLE_CHOICE || "recommend";
 // 학습 모드 정책 — focus | normal | rest | alternate (기본 없음 = normal 고정 · B-3: GPA 게이트 10종을 재려면 alternate)
 const STUDY_POLICY = process.env.PB_STUDY_MODE || null;
 const SEED = Number(process.env.PF_SEED || 20260731);

@@ -45,6 +45,8 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
 // 안 주면 그 갈래가 기본으로만 돌아 **군 이벤트 재고의 절반이 안 열린다** —
 // 학습 모드(`PB_STUDY_MODE`)와 같은 함정이다 (2026-09-03 · B-9).
 globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
+// 보직 선택 정책 — recommend(기본 · 감독 말을 따른다) | sp | rp | cp (PLAN_ROLE_RECOMMEND §7 · 확정 10)
+globalThis.__PB_ROLE_CHOICE = process.env.PB_ROLE_CHOICE || "recommend";
 
 const M = "resource/data/master/events";
 const walk = (d) => fs.readdirSync(d, { withFileTypes: true })

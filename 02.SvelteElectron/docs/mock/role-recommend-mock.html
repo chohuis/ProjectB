@@ -95,10 +95,10 @@ body{
      padding:10px 13px;font:inherit;font-size:13px;color:var(--ink)}
 .opt:hover{border-color:var(--t-dark);background:var(--panel-sunk)}
 .opt-label{font-weight:700}
-/* 추천 표시 — 테두리 하나 + 배지 하나. 그 밖의 부제는 없다 */
+/* 추천 표시 — **테두리 하나뿐이다.** 배지 문구는 B-12 문안 데이터에 없어서 안 만든다
+   (§4 "추천 버튼에 테두리 하나(또는 배지 하나)만 준다") */
 .opt.rec{border-color:var(--t-dark);border-left:3px solid var(--t-dark)}
-.rec-badge{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.06em;
-           color:var(--ink-on-dark);background:var(--t-dark);border-radius:2px;padding:1px 7px}
+
 
 /* 확인 단계 — 같은 자리에서 한 줄 + 버튼 둘 */
 .confirm{background:var(--panel-sunk);border-radius:var(--radius);
@@ -160,7 +160,7 @@ body{
               <span class="time">W1</span>
             </span>
             <p class="subject"><span class="dot"></span><span class="subject-t">2029시즌 보직</span></p>
-            <p class="preview">올해는 로테이션에서 보고 싶다.</p>
+            <p class="preview">구종이 갖춰졌고 스태미나가 받쳐 줍니다. 로테이션에서 보고 싶습니다.</p>
           </button>
         </li>
         <li>
@@ -197,14 +197,13 @@ body{
       </header>
       <p class="m-meta">한동석 감독 · W1</p>
       <div class="m-body">
-        <p>스태미나가 붙었고 구종도 늘었다.
-올해는 로테이션에서 보고 싶다.
-
-어디서 던지겠나.</p>
+        <p>올해 자리를 이렇게 봤습니다.
+구종이 갖춰졌고 스태미나가 받쳐 줍니다. 로테이션에서 보고 싶습니다.
+어디서 던지겠습니까.</p>
       </div>
       <section class="dec">
         <div class="dec-opts">
-          <button class="opt rec"><span class="opt-label">선발</span><span class="rec-badge">감독 추천</span></button>
+          <button class="opt rec"><span class="opt-label">선발</span></button>
           <button class="opt"><span class="opt-label">중계</span></button>
           <button class="opt"><span class="opt-label">마무리</span></button>
         </div>
@@ -240,7 +239,7 @@ body{
               <span class="time">W1</span>
             </span>
             <p class="subject"><span class="subject-t">2029시즌 보직</span></p>
-            <p class="preview">올해는 로테이션에서 보고 싶다.</p>
+            <p class="preview">구종이 갖춰졌고 스태미나가 받쳐 줍니다. 로테이션에서 보고 싶습니다.</p>
           </button>
         </li>
         <li>
@@ -265,14 +264,13 @@ body{
       </header>
       <p class="m-meta">한동석 감독 · W1</p>
       <div class="m-body">
-        <p>스태미나가 붙었고 구종도 늘었다.
-올해는 로테이션에서 보고 싶다.
-
-어디서 던지겠나.</p>
+        <p>올해 자리를 이렇게 봤습니다.
+구종이 갖춰졌고 스태미나가 받쳐 줍니다. 로테이션에서 보고 싶습니다.
+어디서 던지겠습니까.</p>
       </div>
       <section class="dec">
         <div class="confirm">
-          <p>지금 그 자리에 1명 있다. 거기에 더해 들어간다.</p>
+          <p>지금 그 자리에 1명 있습니다. 거기에 더해 들어갑니다.</p>
           <div class="row">
             <button class="btn">다시 고른다</button>
             <button class="btn go">그래도 간다</button>
@@ -309,7 +307,7 @@ body{
               <span class="time">W1</span>
             </span>
             <p class="subject"><span class="dot"></span><span class="subject-t">2029시즌 보직 — 마무리</span></p>
-            <p class="preview">감독은 선발을 권했지만 당신은 마무리를 택했다.</p>
+            <p class="preview">추천은 선발이었습니다. 마무리를 택했습니다.</p>
           </button>
         </li>
         <li>
@@ -322,7 +320,7 @@ body{
               <span class="time">W1</span>
             </span>
             <p class="subject"><span class="subject-t">2029시즌 보직</span></p>
-            <p class="preview">올해는 로테이션에서 보고 싶다.</p>
+            <p class="preview">구종이 갖춰졌고 스태미나가 받쳐 줍니다. 로테이션에서 보고 싶습니다.</p>
           </button>
         </li>
       </ul>
@@ -335,10 +333,9 @@ body{
       </header>
       <p class="m-meta">한동석 감독 · W1</p>
       <div class="m-body">
-        <p>스태미나가 붙었고 구종도 늘었다.
-올해는 로테이션에서 보고 싶다.
-
-어디서 던지겠나.</p>
+        <p>올해 자리를 이렇게 봤습니다.
+구종이 갖춰졌고 스태미나가 받쳐 줍니다. 로테이션에서 보고 싶습니다.
+어디서 던지겠습니까.</p>
       </div>
       <section class="dec">
         <div class="dec-done">
@@ -389,15 +386,14 @@ body{
       </header>
       <p class="m-meta">코칭스태프 · W6</p>
       <div class="m-body">
-        <p>주말리그가 다음 주에 시작한다.
-공은 빠른데 아직 길게는 못 던진다.
-
-어디서 던지겠나.</p>
+        <p>올해 자리를 이렇게 봤습니다.
+공이 빠르고 변화가 큽니다. 짧게 나가 흐름을 끊는 쪽이 낫습니다.
+어디서 던지겠습니까.</p>
       </div>
       <section class="dec">
         <div class="dec-opts">
           <button class="opt"><span class="opt-label">선발</span></button>
-          <button class="opt rec"><span class="opt-label">중계</span><span class="rec-badge">감독 추천</span></button>
+          <button class="opt rec"><span class="opt-label">중계</span></button>
           <button class="opt"><span class="opt-label">마무리</span></button>
         </div>
       </section>
@@ -411,7 +407,7 @@ body{
 <div class="foot">
   버튼 부제·적합도 막대·순위 숫자는 없다. 화면에 나오는 숫자는 확인 단계의
   <code>N</code>(<code>metadata.ahead</code> = 그 자리를 이미 차지한 사람 수) 하나뿐이고,
-  <code>ahead = 0</code> 이면 숫자 없이 "그 자리는 비어 있다"로 바뀐다(갈래 둘).
+  <code>ahead = 0</code> 이면 숫자 없이 "그 자리는 비어 있습니다"로 바뀐다(갈래 둘).
   버튼은 무대와 무관하게 셋이다 — 고교도 마무리를 둔다(확정).
   멈춤은 기존 <code>{type:"message"}</code> pending 이 맡는다 — 새 pending 타입을 안 만든다.
   자리 수·가중치는 전부 제안값이며 밸런스는 사용자 확정이다.

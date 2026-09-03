@@ -13,6 +13,7 @@
   import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
   import OffseasonPanel from "../../features/messages/ui/OffseasonPanel.svelte";
   import InjuryPanel from "../../features/messages/ui/InjuryPanel.svelte";
+  import RoleChoicePanel from "../../features/messages/ui/RoleChoicePanel.svelte";
 
   /**
    * C1 소식 — 홈 대시보드와 수신함을 하나로 합친 화면.
@@ -296,9 +297,13 @@
           {/if}
         </div>
 
-        {#if dec}
+        {#if selected.metadata?.type === "roleChoice"}
+          <!-- 보직 선택은 같은 자리(.dec)를 쓰되 확인 단계가 하나 더 있다 —
+               PLAN_ROLE_RECOMMEND §4. 새 모달을 만들지 않는다 -->
+          <RoleChoicePanel msg={selected} />
+        {:else if dec}
           <section class="dec">
-            <p class="dec-prompt">{dec.prompt}</p>
+            {#if dec.prompt}<p class="dec-prompt">{dec.prompt}</p>{/if}
             {#if dec.selectedOptionId === null}
               <div class="dec-opts">
                 {#each dec.options as opt}

@@ -1735,6 +1735,17 @@ function createGameStore() {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, position: pos } }));
     },
 
+    /**
+     * 보직을 **이미 물은 자리** 를 적어 둔다 (PLAN_ROLE_RECOMMEND §7).
+     *
+     * 🔴 가드는 `ProtagonistSave` 에 있어 세이브에 그대로 실린다 — 세션에만
+     * 두면 앱을 껐다 켤 때 같은 주에 또 묻는다(CLAUDE.md 「한 해에 한 번
+     * 가드는 반드시 저장한다」).
+     */
+    setLastRoleChoiceKey(key: string) {
+      update((s) => ({ ...s, protagonist: { ...s.protagonist, lastRoleChoiceKey: key } }));
+    },
+
     // 시즌 시작 시 주인공 스탯 스냅샷 저장 (능력치 트렌드 화살표용)
     saveSeasonStartSnapshot() {
       update((s) => ({

@@ -365,6 +365,18 @@ export interface ProtagonistSave {
     totalWeeks:        number;  // 시즌 총 경과 주 수
   };
   currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
+  /**
+   * 보직 선택을 **이미 물은 자리** — `"{연도}:{팀id}:W{시즌내주차}"` (PLAN_ROLE_RECOMMEND §7).
+   *
+   * 🔴 **소식 id `msg-role-{year}-{teamId}-w{week}` 와 같은 세 조각이어야 한다.**
+   * 한쪽만 주차를 빼면 갈래가 둘로 깨진다 — 가드에만 없으면 같은 주에 소식이
+   * 계속 생기고, id 에만 없으면 소식 키가 겹쳐 **세이브가 안 열린다**
+   * (CLAUDE.md 「소식 id 규칙」). `roleMessageId.test.ts` 가 둘을 같이 본다.
+   *
+   * ⚠ `ProtagonistSave` 안에 있어 세이브에 그대로 실린다 —
+   * CLAUDE.md 「한 해에 한 번 가드는 반드시 저장한다」.
+   */
+  lastRoleChoiceKey?: string;
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
   careerEvents?: NpcCareerEvent[];  // 드래프트·트레이드·군입대 이벤트
   // 시즌 시작 스냅샷 (능력치 트렌드 화살표용)

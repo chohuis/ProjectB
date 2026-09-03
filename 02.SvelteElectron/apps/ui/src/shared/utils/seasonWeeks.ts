@@ -108,3 +108,42 @@ export const WEEKS_PER_SEASON = 52;
 export function weekInYearOf(weekNum: number): number {
   return ((weekNum - 1) % WEEKS_PER_SEASON) + 1;
 }
+
+// ── 투수 보직 — 묻는 주 ───────────────────────────────────────
+//
+// **각 리그의 시즌 시작 전 주**다 (PLAN_ROLE_RECOMMEND §4 · 확정 8).
+// W1 고정이 아니다 — 리그마다 개막이 다르고, 개막 뒤에 물으면 이미 옛 보직으로
+// 몇 경기를 치른 뒤가 된다.
+//
+// ```
+//   고교      개막 W7  (leagueScheduler.HS_START_WEEK)            → W6
+//   대학      개막 W5  (leagueScheduler.UNIV_REGULAR_START_WEEK)  → W4
+//   독립      개막 W10 (leagueTeams.generated SURVIVAL_STAGES[0]) → W9
+//   프로 1군  시범 W1  (leagueScheduler.PRESEASON_START_WEEK)     → W1
+//   프로 2군  개막 W5  (시범경기는 1군 셋뿐이다)                   → W4
+// ```
+//
+// ⚠ **프로 1군만 W1이다.** 시범경기가 W1~4에 팀당 12경기 있고 그 경기도 보직대로
+// 던진다 — W4에 물으면 이미 12경기를 옛 보직으로 치른 뒤다.
+//
+// ⚠ 값이 개막 주 상수와 어긋나면 `roleAskWeek.test.ts` 가 깨진다. 캘린더를
+// 바꾸면 여기도 같이 바꾼다 — 안 바꾸면 **오류 없이 그 시즌만 안 묻는다.**
+export const ROLE_ASK_WEEK: Record<string, number> = {
+  LEAGUE_HIGHSCHOOL:  6,
+  LEAGUE_UNIVERSITY:  4,
+  LEAGUE_INDEPENDENT: 9,
+  LEAGUE_KBL:         1,
+  LEAGUE_ABL:         1,
+  LEAGUE_JBL:         1,
+  LEAGUE_KBL_FARM:    4,
+  LEAGUE_ABL_FARM:    4,
+  LEAGUE_JBL_FARM:    4,
+};
+
+/** 표에 없는 리그 — 정규 개막(W5) 앞 주 */
+export const ROLE_ASK_WEEK_DEFAULT = 4;
+
+/** 그 리그에서 보직을 묻는 **시즌 안 주차** */
+export function roleAskWeekOf(leagueId: string): number {
+  return ROLE_ASK_WEEK[leagueId] ?? ROLE_ASK_WEEK_DEFAULT;
+}

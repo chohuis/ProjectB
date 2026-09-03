@@ -21,6 +21,7 @@ import { primeManagerStyleRules } from "../utils/managerStyle";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
+import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCopy";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -452,6 +453,8 @@ export interface MasterState {
   militaryCalendar: MilitaryCalendarEntry[];
   militaryLifeRules: MilitaryLifeRules | null;
   militaryLifeEvents: MilitaryLifeEvent[];
+  /** 보직 선택 문안 (B-12) — 정본은 messages/role_choice.json. 없으면 소식을 안 만든다 */
+  roleChoiceCopy: RoleChoiceCopy | null;
 }
 
 // ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
@@ -907,6 +910,7 @@ function createMasterStore() {
     militaryCalendar: [],
     militaryLifeRules: null,
     militaryLifeEvents: [],
+    roleChoiceCopy: null,
   });
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
@@ -973,6 +977,12 @@ function createMasterStore() {
           fetchMaster<MilitaryLifeRules>("military/rules.json"),
           fetchMaster<{ events: MilitaryLifeEvent[] }>("events/pools/military_life.json"),
         ]);
+
+      // 보직 선택 문안 (B-12 · PLAN_ROLE_RECOMMEND §4·§5). 문장은 전부 데이터다 —
+      // 코드에 한 벌 더 두면 한쪽만 고쳐진 채 남는다.
+      // ⚠ 못 읽으면 `null` 이고 보직 소식을 **안 만든다**. 어긋남은
+      //   `roleChoiceCopy.test.ts` 가 파일을 직접 읽어 잡는다.
+      const roleChoiceRaw = await fetchMaster<unknown>("messages/role_choice.json");
 
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
@@ -1044,6 +1054,7 @@ function createMasterStore() {
         militaryCalendar:      Array.isArray(militaryCalendarData) ? militaryCalendarData : [],
         militaryLifeRules:     militaryLifeRulesData ?? null,
         militaryLifeEvents:    militaryLifeData?.events ?? [],
+        roleChoiceCopy:        parseRoleChoiceCopy(roleChoiceRaw),
       }));
 
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
