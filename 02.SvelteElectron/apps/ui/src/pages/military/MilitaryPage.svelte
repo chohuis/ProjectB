@@ -7,13 +7,19 @@
   import MilitaryMembersPane from "../../features/military/ui/MilitaryMembersPane.svelte";
   import MilitaryCalendarPane from "../../features/military/ui/MilitaryCalendarPane.svelte";
   import MilitaryCareerPane from "../../features/military/ui/MilitaryCareerPane.svelte";
+  import SportsUnitPane from "../../features/military/ui/SportsUnitPane.svelte";
+  import { SERVICE_WEEKS } from "../../shared/usecases/militaryDecision";
 
   /**
    * 「병역」 상위 탭 (PLAN_MILITARY_LIFE §22 · §32 · 목업 그대로) — 2단 넷: 일과 · 부대원 · 캘린더 · 경력.
    *
    * 탭의 유무는 `careerStage` 하나가 정한다(navVisibility). 안의 갈래 키는 `militaryUnit === "sports"` 하나다(§39):
    *   현역(militaryLife 있음)  머리 + 2단 넷
-   *   상무 · 데이터 없는 옛 세이브  옛 MilitaryStatusPanel + 한 줄 (상무 넷은 §39 · 나중)
+   *   상무(체육부대)            SportsUnitPane 한 장 — 전역 카운트 · 성적 없음 · 부대 일정 · 부대 소식 (§39)
+   *   데이터 없는 옛 세이브      옛 MilitaryStatusPanel + 한 줄
+   *
+   * 🔴 **상무엔 2단이 없다** (사용자 결정 2026-09-03 · 복무 중엔 보직을 안 묻고 경기가 없다).
+   *   일과(보직 카드)·부대원(현역 members.json)은 상무에 주인이 없다 — 빈 카드를 그리는 대신 안 그린다.
    *
    * ⚠ 여기는 화면이다 — 값은 `rules.json`(masterStore.militaryLifeRules)에서 읽고 상태는 `protagonist.militaryLife` 만 본다.
    *   숫자를 코드에 적지 않는다. 주간 계산은 usecases/militaryLife.ts(Rust) 가 한다.
@@ -33,6 +39,9 @@
   $: unit = $masterStore.militaryUnit;
   $: isSports = p.militaryUnit === "sports";
   $: ready = !isSports && !!ml && !!rules && !!unit;
+  // 상무는 문안이 있어야 그린다 — 없으면 옛 배너로 떨어진다(militarySportsCopy.ts 머리말)
+  $: sportsCopy = $masterStore.militarySportsCopy;
+  $: sportsReady = isSports && !!sportsCopy;
 </script>
 
 <section class="military">
@@ -57,12 +66,26 @@
         <MilitaryCareerPane {ml} {rules} {unit} members={$masterStore.militaryMembers} />
       {/if}
     </div>
+  {:else if sportsReady && sportsCopy}
+    <!-- 상무 — 같은 탭, 다른 안 (§39). 2단이 없고 한 장이다 -->
+    <SportsUnitPane
+      copy={sportsCopy}
+      {rules}
+      calendar={$masterStore.militaryCalendar}
+      mailbox={$gameStore.mailbox}
+      week={p.militaryServiceWeeks}
+      total={rules?.serviceWeeks ?? SERVICE_WEEKS}
+      dischargeYear={p.militaryDischargeYear ?? null}
+      condition={p.condition}
+      fatigue={p.fatigue}
+      morale={p.morale}
+    />
   {:else}
-    <!-- 상무 — 같은 탭, 다른 안 (§39 는 나중). 옛 배너를 그대로 머리에 둔다 -->
+    <!-- 문안·데이터가 없는 갈래 — 옛 배너를 그대로 머리에 둔다 -->
     <MilitaryStatusPanel />
     <p class="note">
       {#if isSports}
-        상무는 훈련 성장이다 — 주간 훈련 표(Rust)가 능력치를 올리고, 소속팀은 그대로 경기를 한다. 병영생활 넷(일과·부대원·캘린더·경력)은 현역 전용이다.
+        체육부대 문안이 없다 — <code>messages/military_sports.json</code> 을 못 읽었다(§39 · 화면 대신 옛 배너로 떨어진다).
       {:else}
         병영생활 데이터가 없다 — 이 세이브는 옛 갈래로 복무한다(입대 전 세이브이거나 <code>military/*.json</code> 이 비었다 · <code>npm run check:militarydata</code>).
       {/if}
