@@ -11,6 +11,7 @@ import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
 import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance, type PitcherRole } from "../utils/friendlyMatchEngine";
 import { getTeamRotation, getTeamBullpen, rotationSizeForLeague, starterOfRotation } from "../utils/rosterEngine";
+import { protagonistPitchCondition, protagonistRestCondition } from "../utils/protagonistCondition";
 
 /**
  * 투수 승패 판정 — **규칙은 Rust `decide_pitcher`가 정본이다.**
@@ -114,6 +115,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       && Math.max(0, outcome.hitsAllowed) === 0
       && (outcome.pitchCount ?? 0) === 0;
     if (didNotPitch) {
+      // 안 던진 팀 경기는 주인공 연속 출전만 끊는다 (등판 기록은 안 만든다)
+      const restCond = protagonistRestCondition(lState?.playerConditions?.[protagonist.id]);
       await recordGameResult({
         kind: "friendly",
         scheduleId: outcome.scheduleId,
@@ -123,7 +126,7 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
         awayTeamId: outcome.awayTeamId,
         nextHomeRotIdx: homeRot + 1,
         nextAwayRotIdx: awayRot + 1,
-        pitcherConditions: {},
+        pitcherConditions: restCond ? { [protagonist.id]: restCond } : {},
       });
       seasonStore.resolvePendingAction("game", outcome.scheduleId);
       await gameStore.save();
@@ -196,6 +199,24 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     const oppRotation = getTeamRotation(oppTeamId, entities, undefined, rotSize);
     const oppPitcherId = starterOfRotation(oppRotation, oppRotIdx);
     const pitcherConditions: Record<string, PlayerCondition> = {};
+
+    // ── 주인공 자신의 등판 기록 ────────────────────────────────
+    // 🔴 여기가 비어 있어서 의무 휴식 재료(`restGuard`·`myCondR`)가 늘 없었다 (§6-1-4)
+    if ((outcome.pitchCount ?? 0) > 0 || safeOuts > 0) {
+      const myGameCount = (protagonist.teamId === outcome.homeTeamId) ? homeRot : awayRot;
+      pitcherConditions[protagonist.id] = protagonistPitchCondition({
+        prev:          lState?.playerConditions?.[protagonist.id],
+        isStarter:     role === "SP",
+        week:          outcome.week,
+        gameDate,
+        pitchCount:    outcome.pitchCount ?? 0,
+        outsRecorded:  safeOuts,
+        teamGameCount: myGameCount,
+        // 방금 applyWeekResult 로 민 값 — 여기서 지어내지 않는다
+        fatigue:       get(gameStore).protagonist.fatigue,
+      });
+    }
+
     if (oppPitcherId) {
       const prev = lState?.playerConditions?.[oppPitcherId];
       pitcherConditions[oppPitcherId] = {
@@ -439,6 +460,28 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     const oppBullpen2 = getTeamBullpen(oppTeamId2, entities2, oppRot2, undefined, lState2?.playerConditions, oppRotIdx2).bullpen;
 
     const rotConditions: Record<string, PlayerCondition> = {};
+
+    // ── 주인공 자신의 등판 기록 ────────────────────────────────
+    // 🔴 정식 경기 갈래도 상대 투수만 쓰고 주인공은 안 썼다 — 친선과 같은 결함이다 (§6-1-4)
+    const myPrevCond = lState2?.playerConditions?.[protagonist.id];
+    if (didEnter && ((outcome.pitchCount ?? 0) > 0 || safeOuts > 0)) {
+      const myGameCount = (myTeamId === outcome.homeTeamId)
+        ? (lState2?.teamRotationIndex?.[outcome.homeTeamId] ?? 0)
+        : (lState2?.teamRotationIndex?.[outcome.awayTeamId] ?? 0);
+      rotConditions[protagonist.id] = protagonistPitchCondition({
+        prev:          myPrevCond,
+        isStarter:     role === "SP",
+        week:          outcome.week,
+        gameDate,
+        pitchCount:    outcome.pitchCount ?? 0,
+        outsRecorded:  safeOuts,
+        teamGameCount: myGameCount,
+        fatigue:       get(gameStore).protagonist.fatigue,
+      });
+    } else {
+      const restCond = protagonistRestCondition(myPrevCond);
+      if (restCond) rotConditions[protagonist.id] = restCond;
+    }
 
     // SP 컨디션 업데이트
     if (oppSpId) {
