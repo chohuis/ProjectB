@@ -1,0 +1,75 @@
+{
+  "_note": "계약 협상·인센티브 정산 소식 문안 (1.1 B③ · PLAN_CONTRACT_TERMS §5·§6). 데이터만이다 — 로더·배선은 C ③④ 가 붙인다. 아직 아무 코드도 이 파일을 안 읽는다",
+  "_schema": {
+    "_tone": "🔴 **합쇼체다.** 기존 서명 소식(`contractDecision.ts:63`)이 합쇼체라 같은 갈래에서 말투가 갈리면 안 된다. `role_choice.json` 은 평서체인데 그건 C 기획이 그렇게 잡은 별개 갈래다",
+    "_placeholders": "{team} {year} {week} {salary} {years} {bonus} {total} {actual} {rounds} {minSalary} {optYears} {incentive}",
+    "_id": "msg-contract-{kind}-{year}-w{week} (§6). 연도와 주차를 둘 다 넣는다 — 겹치면 Svelte 목록이 죽고 세이브가 안 열린다",
+    "_josa": "🔴 조사를 코드로 붙이지 않는다. {team}·{incentive} 는 받침이 제각각이라(웨이브스 / 라이온즈 / 파이러츠 · 25등판 / ERA 3.00 이하) **뒤에 조사를 안 붙인다.** 줄 끝에 두거나 제목에만 쓴다",
+    "_rule": "부제·대시 설명을 안 쓴다. 없는 조항은 줄 자체를 안 적는다"
+  },
+  "offer": {
+    "_note": "구단 제시 (msg-contract-offer)",
+    "subject": "재계약 제시 — {team}",
+    "head": "구단이 조건을 보내왔습니다.",
+    "salary": "연봉 {salary}만원 / {years}년",
+    "teamOption": "팀 옵션 {optYears}년",
+    "playerOption": "선수 옵션 {optYears}년",
+    "noTrade": "노트레이드 조항",
+    "rounds": "역제안은 {rounds}번까지 할 수 있습니다.",
+    "roundsNone": "이번에는 역제안을 할 수 없습니다."
+  },
+  "counter": {
+    "_note": "역제안 회신 (msg-contract-counter). head 한 줄 + reason 한 줄",
+    "subject": "역제안 회신 — {team}",
+    "accept": "구단이 요구를 받아들였습니다.",
+    "reject": "구단이 요구를 받아들이지 않았습니다.",
+    "revise": "구단이 조건을 고쳐 다시 보내왔습니다.",
+    "reason": {
+      "_note": "성적·구단주 관계 갈래 (§5-2 의 두 입력을 그대로 읽는다)",
+      "goodRating": "지난 시즌 성적을 높게 봤습니다.",
+      "poorRating": "지난 시즌 성적으로는 근거가 약합니다.",
+      "ownerWarm": "구단은 오래 데리고 갈 생각입니다.",
+      "ownerCold": "구단은 서두르지 않습니다.",
+      "roundsOut": "더 부를 기회가 남지 않았습니다."
+    }
+  },
+  "signed": {
+    "_note": "서명 완료 (msg-contract-signed). 기존 소식에 조건 줄을 더한다 — 없는 조항은 안 적는다",
+    "subject": "계약 서명 완료",
+    "head": "{team}와의 계약이 완료되었습니다.",
+    "_headJosa": "⚠ 「{team}와」 는 팀 이름이 받침으로 끝나면 「과」 여야 한다. **오늘은 안전하다** — refs.json 팀 이름 238개 중 받침으로 끝나는 것이 0종이다(전부 「스」·「즈」 꼴). 다만 **38종이 「(2군)」 으로 끝나** 「부산 웨이브스 (2군)와의」 가 된다. 2군 팀이 계약 상대가 되는 자리(강등·육성)에서는 headSafe 를 쓴다",
+    "headSafe": "계약이 완료되었습니다.\n{team}",
+    "salary": "연봉 {salary}만원 / {years}년",
+    "signingBonus": "계약금 {bonus}만원",
+    "teamOption": "팀 옵션 {optYears}년",
+    "playerOption": "선수 옵션 {optYears}년",
+    "noTrade": "노트레이드 조항",
+    "incentiveHead": "인센티브",
+    "incentiveLine": "{incentive}  +{bonus}만원",
+    "tail": "W52 새 시즌 시작 시 정식 적용됩니다.",
+    "_headSafeNote": "팀 이름을 줄 끝에 두어 조사를 안 붙인다. 이름이 어떻게 끝나든 안 깨진다"
+  },
+  "option": {
+    "_note": "옵션 행사 (msg-contract-option)",
+    "subject": "옵션 행사 — {team}",
+    "teamExercise": "구단이 팀 옵션을 행사했습니다. {year}시즌을 같은 조건으로 뜁니다.",
+    "teamDecline": "구단이 팀 옵션을 포기했습니다.",
+    "playerAsk": "선수 옵션을 행사하시겠습니까?",
+    "playerExercise": "선수 옵션을 행사했습니다. {year}시즌을 같은 조건으로 뜁니다.",
+    "playerDecline": "선수 옵션을 포기했습니다."
+  },
+  "incentive": {
+    "_note": "정산 (msg-contract-incentive) — 시즌 끝 한 번. 달성·미달을 한 통에 같이 적는다",
+    "subject": "인센티브 정산 — {year}시즌",
+    "met": "{incentive} 달성 ({actual})  +{bonus}만원",
+    "missed": "{incentive} 미달 ({actual})",
+    "unmeasurable": "{incentive} 미달 (보직이 바뀌었습니다)",
+    "_unmeasurableNote": "§5-3 ① — 다년 계약 중 보직이 바뀌어 못 잴 축이 생기면 그 해는 미달이다. 보직은 주인공이 고르므로 그 결과도 주인공이 진다",
+    "total": "합계 +{total}만원",
+    "none": "올해 채운 조건은 없습니다."
+  },
+  "minSalary": {
+    "_note": "협상 화면 안내 — 요구액이 최저연봉 아래로 내려갈 때",
+    "floor": "최저연봉이 {minSalary}만원입니다. 그 아래로는 못 내립니다."
+  }
+}
