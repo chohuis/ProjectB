@@ -13,7 +13,17 @@ export function isMidtermEvent(eventId: string): boolean {
   return eventId.endsWith("_MIDTERM");
 }
 
-export function makeExamMessage(week: number, subject: string, body: string): MessageItem {
+/**
+ * 시험 결과 소식.
+ *
+ * ⚠ **막대는 부르는 쪽이 만든다.** 고교는 과목 백분위, 대학은 학점이라
+ *   눈금과 문안이 다르다(`bars.exam` · `byStage.university`) — 여기서
+ *   가르면 이 함수가 두 무대를 다 알아야 한다.
+ */
+export function makeExamMessage(
+  week: number, subject: string, body: string,
+  metadata?: import("../../types/main").BarsMetadata,
+): MessageItem {
   return {
     id: `msg-exam-w${week}-${Date.now()}`,
     category: "system",
@@ -23,5 +33,6 @@ export function makeExamMessage(week: number, subject: string, body: string): Me
     body,
     createdAt: `W${week}`,
     readAt: null,
+    ...(metadata ? { metadata } : {}),
   };
 }

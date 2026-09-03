@@ -18,6 +18,7 @@ import { MILITARY_RESULT_WEEK } from "../utils/seasonWeeks";
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
+import { militaryRecordTimelineMeta } from "../utils/dashboardMeta";
 import { startMilitaryLife } from "./militaryLife";
 import { masterStore } from "../stores/master";
 import { buildMilitaryRecord, dischargeConversion } from "../utils/militaryLifeRules";
@@ -157,6 +158,10 @@ export async function dischargeProtagonist(): Promise<boolean> {
       id: `msg-mil-record-${s.seasonYear}-w${s.currentWeek}`, category: "system", sender: "군 복무",
       subject: "군 경력 한 장", preview: lines.split("\n")[0], body: lines,
       createdAt: `W${s.currentWeek}`, readAt: null,
+      // 성과만 시간 순으로 — 표창·징계는 id 뿐이라 이름표가 없다(머리말).
+      // 성과가 없으면 안 싣는다 — 빈 타임라인은 「기록이 없다」로 보인다
+      ...(record.perf.length > 0
+        ? { metadata: militaryRecordTimelineMeta(record.perf) } : {}),
     });
   }
 

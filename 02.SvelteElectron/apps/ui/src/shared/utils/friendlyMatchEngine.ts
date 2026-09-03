@@ -1,7 +1,7 @@
 import { monthNameOf, monthWeekRange } from "./seasonCalendar";
 import { ipLabel } from "./baseballFormat";
 // 내 등판 기록 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
-import { myGameTableMeta } from "./dashboardMeta";
+import { myGameTableMeta, cardsMeta } from "./dashboardMeta";
 import type { ScheduleEntry } from "../types/season";
 import type { MessageItem } from "../types/main";
 
@@ -241,6 +241,12 @@ export function buildMonthlyNoticeMessage(
     body,
     createdAt: `W${weekNum}`,
     readAt:    null,
+    // 편성 한 줄이 카드 하나 — 큰 글씨가 상대, 작은 글씨가 주차다.
+    // ⚠ 본문에는 상대 요약·선발 예상이 더 있다. 카드는 「언제 누구와」만
+    //   든다 — 본문은 그대로 뜬다(표시부가 둘 다 그린다 · C 49c337788)
+    metadata: cardsMeta("cards.friendlyPlan", plan.entries.map((e) => ({
+      key: "opp", value: teamShort(e.awayTeamId, teamMap), caption: `W${e.week}`,
+    }))),
   };
 }
 

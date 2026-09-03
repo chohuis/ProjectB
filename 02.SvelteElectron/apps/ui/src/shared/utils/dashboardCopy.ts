@@ -325,8 +325,12 @@ export interface BarsCopy {
 export function barsCopy(labels: DashboardLabels | null, kind: string): BarsCopy {
   const b = blockOf(labels, "bars", kind);
   const scale = b?.scale as { min?: unknown; max?: unknown } | undefined;
-  // 시험은 `columns`(과목·점수), 팀 분위기는 낱말이 바로 붙는다 — 둘을 합친다
-  const merged = { ...stringMap(b?.columns), ...stringMap(b?.labels) };
+  // 시험은 `columns`(과목·백분위)+`subjects`(과목 이름), 팀 분위기는 낱말이
+  // 바로 붙는다 — 한 표로 모은다. 이름표가 어느 키에 적혔든 화면은 하나만 본다
+  const merged = {
+    ...stringMap(b?.columns), ...stringMap(b?.subjects),
+    ...stringMap(b?.rows), ...stringMap(b?.labels),
+  };
   for (const k of ["mood", "delta", "gpa"]) {
     if (typeof b?.[k] === "string") merged[k] = b[k] as string;
   }

@@ -2,12 +2,13 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  cardsCopy, parseDashboardLabels, tableCopy, tableLabelBlock,
+  barsCopy, cardsCopy, parseDashboardLabels, tableCopy, tableLabelBlock,
 } from "../dashboardCopy";
-import { buildCards, buildRankList, buildTableView } from "../dashboardView";
+import { buildBars, buildCards, buildRankList, buildTableView } from "../dashboardView";
 import {
   bracketTableMeta, cardsMeta, coachReportTableMeta, faCompTableMeta, faMarketTableMeta,
-  militaryAnnualTableMeta, pctSub, rankListMeta, rowsTableMeta, teamMoodTableMeta, timelineMeta,
+  examBarsMeta, militaryAnnualTableMeta, militaryRecordTimelineMeta, pctSub, rankListMeta,
+  rowsTableMeta, semesterBarsMeta, teamMoodTableMeta, timelineMeta,
 } from "../dashboardMeta";
 import {
   buildOpenMessage, buildMyRoundMessage, buildChampionMessage, buildRoundProgressMessage,
@@ -362,5 +363,59 @@ describe("B-35 새 키", () => {
     expect(read(CAMPUS).includes("고교 스카우트 데이 — ${res.total}")).toBe(false);
     // 자동 진행 로그(autoLog)에는 남는다 — 화면에 안 뜨는 개발용 줄이라 안 본다
     expect(read(CAMPUS).includes("subject: `${year} 대학 올스타전 — ")).toBe(false);
+  });
+});
+
+// ══ §0.6 다섯 — 본문+패널이 같이 그려진 뒤 (C 49c337788) ═════════
+describe("§0.6 다섯", () => {
+  it("시험 — 고교는 과목 백분위, 대학은 학점이고 눈금이 다르다", () => {
+    const hs = examBarsMeta({
+      kor: { percentile: 13 }, math: { percentile: 29 },
+    });
+    expect(hs.kind).toBe("bars.exam");
+    expect(hs.bars.map((b) => b.key)).toEqual(["kor", "math"]);
+    // 과목 이름을 안 싣는다 — 문안이 붙인다
+    expect(hs.bars[0].label).toBeUndefined();
+    const hsView = buildBars(hs, barsCopy(labels, "bars.exam"));
+    expect(hsView.bars[0].label).toBe(
+      (labels!.bars.exam.subjects as Record<string, string>).kor);
+    expect(hsView.bars[0].pct, "0~100 눈금이다").toBe(13);
+
+    const uni = semesterBarsMeta(3.4, 3.12);
+    expect(uni.kind).toBe("bars.exam.byStage.university");
+    const uniView = buildBars(uni, barsCopy(labels, "bars.exam.byStage.university"));
+    expect(uniView.bars[0].pct, "0~4.5 눈금이라 3.4 는 76%").toBe(76);
+    expect(uniView.foot[0].value).toBe("3.12");
+  });
+
+  it("군 경력 — 성과만 시간 순이다", () => {
+    const md = militaryRecordTimelineMeta([
+      { week: 40, note: "혹한기 3등급" }, { week: 12, note: "사격 2등급" },
+    ]);
+    expect(md.kind).toBe("timeline.milRecord");
+    expect(md.entries.map((e) => e.when)).toEqual(["W12", "W40"]);
+    expect(md.entries[0].label).toBe("사격 2등급");
+    expect(militaryRecordTimelineMeta([]).entries).toHaveLength(0);
+  });
+
+  it("시즌 브리핑 — 보직은 눈금 키고 문안이 조사를 붙인다", () => {
+    const md = cardsMeta("cards.seasonBrief", [{ key: "role", value: "RP" }]);
+    const copy = cardsCopy(labels, "cards.seasonBrief");
+    expect(buildCards(md, copy).note).toContain(labels!.roleAs.RP);
+    // 낱말을 실으면 굴절표를 못 찾아 그 줄이 통째로 사라진다
+    expect(buildCards(cardsMeta("cards.seasonBrief",
+      [{ key: "role", value: "중계" }]), copy).note).toBe("");
+  });
+
+  it("다섯 자리가 배선돼 있다", () => {
+    const NATL = resolve(__dirname, "../../usecases/nationalTeam.ts");
+    const FRIENDLY = resolve(__dirname, "../friendlyMatchEngine.ts");
+    const MIL = resolve(__dirname, "../../usecases/militaryDecision.ts");
+    expect(read(SRC_WEEK).includes("examBarsMeta(")).toBe(true);
+    expect(read(SRC_WEEK).includes("semesterBarsMeta(")).toBe(true);
+    expect(read(SRC_WEEK).includes('cardsMeta("cards.seasonBrief"')).toBe(true);
+    expect(read(NATL).includes('cardsMeta("cards.natlSquad"')).toBe(true);
+    expect(read(FRIENDLY).includes('cardsMeta("cards.friendlyPlan"')).toBe(true);
+    expect(read(MIL).includes("militaryRecordTimelineMeta(")).toBe(true);
   });
 });

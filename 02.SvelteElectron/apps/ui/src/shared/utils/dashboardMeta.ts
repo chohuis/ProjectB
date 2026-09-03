@@ -21,7 +21,8 @@
 //    자체가 뜻이라 화면이 반올림하면 안 된다(`dashboardView.cellText` 머리말).
 
 import type {
-  CardsMetadata, RankListMetadata, TableCell, TableColumn, TableMetadata, TimelineMetadata,
+  BarsMetadata, CardsMetadata, RankListMetadata, TableCell, TableColumn, TableMetadata,
+  TimelineMetadata,
 } from "../types/main";
 import type { ContractIncentive, PitcherSeasonStats } from "../types/save";
 import { ipLabel, eraLabel } from "./baseballFormat";
@@ -677,4 +678,67 @@ export function cardsMeta(
     })),
     ...(note ? { note } : {}),
   };
+}
+
+// ══ §0.6 다섯 — 표시부가 본문과 패널을 같이 그린 뒤 (2026-09-04) ══
+//
+// 🔴 **본문이 사라지지 않게 됐다** (C `49c337788` · 사용자 확정). 그전에는
+//    패널이 본문을 **대신** 그려서 안내가 든 소식에 표를 붙이면 그 안내가
+//    화면에서 없어졌다 — 그래서 다섯 자리를 일부러 비워 뒀다. 이제 싣는다.
+
+// ── 시험 결과 (msg-exam-w) ────────────────────────────────────
+
+/**
+ * 고교 시험 → 과목 막대.
+ *
+ * ⚠ **석차백분율은 낮을수록 좋다**(`SubjectScore.percentile` 1~100). 값을
+ *   뒤집지 않는다 — 문안이 그 이름을 「백분위」로 달아 뒀고, 여기서 100−x 로
+ *   바꾸면 화면 숫자와 저장값이 서로 다른 뜻이 된다.
+ *
+ * ⚠ **과목 이름을 안 싣는다.** 키(`kor`·`eng`…)만 보내고 문안의
+ *   `bars.exam.subjects` 가 이름을 붙인다.
+ */
+export function examBarsMeta(
+  scores: Record<string, { percentile: number }>,
+): BarsMetadata {
+  return {
+    type: "bars",
+    kind: "bars.exam",
+    bars: Object.entries(scores).map(([key, v]) => ({ key, value: v.percentile })),
+  };
+}
+
+/**
+ * 대학 학기 성적 → 학점 막대 하나.
+ *
+ * ⚠ **눈금이 다르다**(0~4.5). 문안이 `byStage.university` 로 갈라 뒀으므로
+ *   `kind` 도 그 자리를 가리킨다 — 고교 눈금(0~100)으로 그리면 학점 3.4 가
+ *   막대 3%가 된다.
+ */
+export function semesterBarsMeta(gpa: number, cumulative?: number): BarsMetadata {
+  return {
+    type: "bars",
+    kind: "bars.exam.byStage.university",
+    bars: [{ key: "gpa", value: gpa }],
+    ...(cumulative != null ? { foot: [{ key: "gpa", value: cumulative.toFixed(2) }] } : {}),
+  };
+}
+
+// ── 군 경력 (msg-mil-record-) ────────────────────────────────
+
+/**
+ * 복무 중 성과 → 타임라인.
+ *
+ * ⚠ **성과(`perf`)만 실을 수 있다.** 표창·징계는 id 뿐이고 이름표가 어디에도
+ *   없다(`MIL_AWARD_COMMENDATION` 하나 · 문안 없음) — id 를 그리면 화면에
+ *   대문자가 뜬다. 성과는 `note` 에 이미 말이 들어 있다(`militaryLife.ts`).
+ *
+ * ⚠ 성과가 없으면 빈 배열이다 — 부르는 쪽이 그때 metadata 를 안 싣는다.
+ */
+export function militaryRecordTimelineMeta(
+  perf: readonly { week: number; note: string }[],
+): TimelineMetadata {
+  return timelineMeta("timeline.milRecord",
+    perf.slice().sort((a, b) => a.week - b.week)
+      .map((x) => ({ when: `W${x.week}`, label: x.note })));
 }

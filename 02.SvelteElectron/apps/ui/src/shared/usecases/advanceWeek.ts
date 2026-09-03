@@ -168,6 +168,7 @@ import { buildLeagueDigest, DIGEST_WEEKS, LEAGUE_NAMES } from "./weekPhases/dige
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
 import {
   pitcherSeasonTableMeta, gameResultsTableMeta, rankListMeta, coachReportTableMeta,
+  examBarsMeta, semesterBarsMeta, cardsMeta,
 } from "../utils/dashboardMeta";
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
@@ -258,6 +259,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         body: `이번 시즌 당신의 보직은 [${posLabel}]로 배정되었습니다.\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
         createdAt: `W1`,
         readAt: null,
+        // 보직은 **눈금 키**(SP·RP·CP)로 싣는다 — 카드 아래 한 줄을 문안의
+        // 굴절표(`roleAs`)가 만든다. 낱말을 실으면 「중계으로」가 된다.
+        // ⚠ 상세 역할(`1선발`)과 그 설명은 본문이 든다 — 굴절표에 없다
+        metadata: cardsMeta("cards.seasonBrief", [{ key: "role", value: pos }]),
       });
       logs.push(`[보직 배정] ${posLabel}`);
     } else {
@@ -281,6 +286,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         body: `이번 시즌 당신의 역할은 [${role}]로 배정되었습니다.\n\n${ROLE_DESCRIPTION[role]}\n\n팀과 함께 최고의 시즌을 만들어 가세요.`,
         createdAt: `W1`,
         readAt: null,
+        // 보직은 **눈금 키**(SP·RP·CP)로 싣는다 — 카드 아래 한 줄을 문안의
+        // 굴절표(`roleAs`)가 만든다. 낱말을 실으면 「중계으로」가 된다.
+        // ⚠ 상세 역할(`1선발`)과 그 설명은 본문이 든다 — 굴절표에 없다
+        metadata: cardsMeta("cards.seasonBrief", [{ key: "role", value: pos }]),
       });
       logs.push(`[역할 배정] ${role}`);
     }
@@ -967,7 +976,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         major: sc.universityMajor,
       });
       gameStore.applySemesterResult(res, examType, s.seasonYear);
-      gameStore.addMessage(makeExamMessage(weekNum, res.messageSubject, res.messageBody));
+      // 대학은 학점 하나다 — 눈금이 0~4.5 라 문안도 `byStage.university` 다
+      gameStore.addMessage(makeExamMessage(weekNum, res.messageSubject, res.messageBody,
+        semesterBarsMeta(res.gpa, res.cumulativeGpa)));
       logs.push(`[학업] ${res.messageSubject} (학점 ${res.gpa.toFixed(2)} / 누적 ${res.cumulativeGpa.toFixed(2)})`);
       if (res.repeats) logs.push("[학업] 유급 — 졸업이 한 해 밀린다");
     } else {
@@ -977,7 +988,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType,
         seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "exam", examType));
       gameStore.applyExamResult(examRes);
-      gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody));
+      // 고교는 과목 백분위 다섯 — 이름은 문안(`bars.exam.subjects`)이 붙인다
+      gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody,
+        examBarsMeta(gAfterStudy.schoolState.subjectScores)));
       logs.push(`[시험] ${examRes.messageSubject}`);
     }
   }

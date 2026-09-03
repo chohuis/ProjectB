@@ -14,6 +14,7 @@
  */
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
+import { cardsMeta } from "../utils/dashboardMeta";
 import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { loadRosterRules } from "../repo/newGameV3";
@@ -255,6 +256,11 @@ function emitSquadNews(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 큰 글씨는 **선수 id**(화면이 이름으로 바꾼다) · 작은 글씨는 소속이다.
+    // ⚠ 포지션은 코드에 없다 — 문안도 `playerId`·`teamId` 로 다시 적혔다(B-35)
+    metadata: cardsMeta("cards.natlSquad", squad.squad.slice(0, 20).map((id) => ({
+      key: "playerId", value: id, caption: teamOf(id),
+    }))),
   });
 }
 
