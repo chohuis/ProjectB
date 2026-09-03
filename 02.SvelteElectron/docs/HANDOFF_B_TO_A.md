@@ -1362,6 +1362,37 @@ D-10 연차 분포가 톱니다(0:12% 1:5% 2:7%) — entry_age 가 20/24/25~27 �
 이적에 맞추나(생성 순서가 바뀐다) · FA 자격 연차 정본을 어디로 하나 · 새 게임
 NPC 병역을 나이로 채우나(과거 5년 공백 시즌과 얽힌다) · 계약 기간에 나이 상한을 두나.
 
+### B-30 `dashboard_labels.json` 안 쓰는 자리 정리 — 하나는 못 지웠다
+
+A 생산부(`dashboardMeta.ts`)가 안 쓰는 셋을 정리했다. `_coverage._unused` 에
+다섯 줄로 모아 뒀다 — **다시 만들지 않게** 적는 자리다.
+
+| 자리 | 처리 | 왜 |
+|---|---|---|
+| `npcTrade.footnote` 「사유」 | 🔴 **지웠다** | `dashboardMeta.ts:300` 이 `footnote` 에 **사유 값 자체**를 넣는다(`{...(reason ? { footnote: reason } : {})}`). 화면에는 이름표와 값을 잇는 자리가 없어 이름표가 갈 곳이 없다 |
+| `seasonEndPro/Indie.optionalColumns.prev` | ⏸ **남기고 표시** | `pitcherSeasonTableMeta` 는 `prev` 를 받게 돼 있는데(`:119`·`:141`) 호출부 둘(`advanceWeek.ts:1232`·`:1271`)이 안 넘긴다. 넘길 숫자가 없어서다(`CareerRecord.statLine` 이 문자열). **지우면 나중에 머리글 없는 열이 뜬다** |
+| `contractSigned/faSigned.incentives.columns.condition` | ⏸ **남기고 표시** | 🔴 **지웠다가 되돌렸다** |
+
+🔴 **`condition` 은 지울 수 없었다 — 검사가 있다고 못박는다.**
+
+```
+dashboardMeta.ts:207         rows: inc.map(x => ({ name: incentiveLabel(x), amount: … }))
+                             → 생산부는 condition 을 안 만든다 (OP 말이 맞다)
+dashboardView.test.ts:453    "인센티브의 조건 칸도 글자라 왼쪽이다"
+                             → 손으로 만든 행에 condition 을 넣고 열 셋을 기대한다
+```
+
+지우니 그 검사가 깨졌다(`Tests 1 failed`). **검사는 코드라 안 고쳤다.**
+생산부와 검사가 서로 다른 말을 하고 있다 — 어느 쪽이 맞는지는 A/C 판단이다:
+
+- 조건을 **이름에 접는 게 맞다**면(지금 `incentiveLabel` 이 그렇다) 열도 검사도 뺀다
+- 조건을 **따로 보여주는 게 맞다**면 생산부가 `condition` 을 채워야 한다
+
+`npm test` 2204/2204 · `check:mojibake` OK.
+
+⚠ **`a6715c00c` 는 대시보드 생산부가 아니다** — 「계약 기간에 나이 상한을 둔다 +
+NPC 이력 검사 (B-29 D-4 · 사용자 확정 ⑤)」다. B-29 의 D-4 가 이미 닫혔다.
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고
