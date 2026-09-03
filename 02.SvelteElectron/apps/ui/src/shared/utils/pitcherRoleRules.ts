@@ -16,7 +16,7 @@ import { rotationSizeForLeague } from "./rosterEngine";
 
 export interface PitcherRoleRules {
   weights: Record<string, Record<string, number>>;
-  arsenal: Record<string, { count?: number; countCap?: number; gradeAvg?: number; gradeBest2?: number; gradeBest?: number; groups?: number }>;
+  arsenal: Record<string, { count?: number; countCap?: number; gradeAvg?: number; gradeBest2?: number; gradeBest?: number; groups?: number; developingWeight?: number }>;
   closerSize?: number;
   offRecommendation?: { perSeatOver: number; floor: number };
 }
