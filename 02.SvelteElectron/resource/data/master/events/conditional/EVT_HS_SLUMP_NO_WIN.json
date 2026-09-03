@@ -1,0 +1,27 @@
+{
+  "id": "EVT_HS_SLUMP_NO_WIN",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 704,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "season_wins_lte",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 26
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_SLUMP_NO_WIN",
+  "decisionTemplateId": "DEC_HS_SLUMP_NO_WIN"
+}
