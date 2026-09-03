@@ -288,7 +288,8 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
               playerName: entityName,
               fromTeamId: entity?.teamId ?? "",
               fromLeagueId: retLeague,
-              detail: `${injuryLabel}로 인한 은퇴`,
+              // 🔴 **조사를 붙이지 않는다** (B-28 — 부상명이 받침이면 「으로」다)
+              detail: `${injuryLabel} 은퇴`,
             }],
           }));
         }

@@ -51,24 +51,36 @@ export interface DashboardLabels {
   rankList: Record<string, TableLabelBlock>;
   timeline: Record<string, TableLabelBlock>;
   /**
-   * 막대 둘·카드 여섯 (§1-3 · §1-4). **형태가 아니라 문안의 칸일 뿐이다** —
-   * 그리는 그릇은 `StatTable` 하나다(§2 는 「막대·카드는 기존 컴포넌트를
-   * 재사용한다」고 적었는데 그 둘이 `metadata` 를 안 받는다 · 실측 2026-09-03).
-   * 그래서 `kind` 를 찾을 때 이 두 칸도 같이 뒤진다(`tableLabelBlock`).
+   * 기록 탭 카드 둘 — 계약 이력 · 대회 전적 (§7-4).
+   *
+   * 🔴 **소식이 아니라 화면이 부르는 표다.** 그래서 `table` 아래가 아니라
+   *    따로 선다. 그리는 컴포넌트는 같은 `StatTable` 이고 `kind` 만
+   *    `"recordTab.contractHistory"` 처럼 뿌리를 달고 온다.
    */
+  recordTab: Record<string, TableLabelBlock>;
+  /** 막대 둘 — 시험 결과 · 팀 분위기 (§1-3) */
   bars: Record<string, TableLabelBlock>;
+  /** 카드 다섯 — 시즌 브리핑 · 연습경기 예정 · 대표팀 · 행사 · 올스타 (§1-4) */
   cards: Record<string, TableLabelBlock>;
+  /**
+   * 보직 굴절 — `{ SP: "선발로" }`. **형태를 가리지 않는다**.
+   *
+   * 🔴 `role_choice.json` 의 같은 이름 표와 **값이 같아야 한다.** 「중계으로」가
+   *    안 나오는 이유가 이 표다 — `{role}` 을 그대로 끼우면 조사가 어긋난다.
+   *
+   * ⚠ **뿌리가 아니라 곁이다.** `kind` 로 내려가는 자리가 아니라 문안 전체가
+   *   하나만 갖는 표라서 `LABEL_ROOTS` 에 넣지 않는다.
+   */
+  roleAs: Record<string, string>;
 }
 
 /**
- * `kind` 를 찾을 칸의 차례. **`table` 이 먼저다** — 같은 이름이 두 칸에 있으면
- * 표 쪽이 이긴다(지금은 겹치는 이름이 없다 · `_coverage` 가 정본).
+ * 문안의 뿌리들 — `kind` 첫 조각이 이 중 하나면 거기서부터 내려간다.
  *
- * ⚠ **형태마다 찾는 함수를 만들지 않는다.** 화면이 보는 것은 `columns`·`rows`
- *   뿐이고 이름표는 어느 칸에 있든 같은 모양이다 — 함수를 넷으로 가르면
- *   부르는 자리마다 어느 칸인지 알아야 하고, 문안이 칸을 옮기면 코드가 깨진다.
+ * ⚠ **`table` 이 기본이다.** 소식 19자리가 뿌리 없이 `"digest"` 로 오므로
+ *   못 박으면 그 열아홉이 다 깨진다.
  */
-const LABEL_SECTIONS = ["table", "bars", "cards", "timeline", "rankList"] as const;
+const LABEL_ROOTS = ["table", "rankList", "timeline", "recordTab", "bars", "cards"] as const;
 
 /**
  * 읽은 JSON을 받는다. **모양만 본다** — 종류가 19개라 하나하나 있는지 세지
@@ -95,8 +107,12 @@ export function parseDashboardLabels(raw: unknown): DashboardLabels | null {
     table: o.table,
     rankList: o.rankList ?? {},
     timeline: o.timeline ?? {},
+    recordTab: o.recordTab ?? {},
     bars: o.bars ?? {},
     cards: o.cards ?? {},
+    // ⚠ 여기서 빠뜨리면 시즌 브리핑의 마지막 줄이 통째로 안 그려진다 —
+    //   굴절형을 못 찾으면 그 줄을 지우는 규칙이라 조용히 사라진다
+    roleAs: isStringMap(o.roleAs) ? o.roleAs : {},
   };
 }
 
@@ -111,35 +127,16 @@ export function tableLabelBlock(
   labels: DashboardLabels | null, kind: string,
 ): TableLabelBlock | null {
   if (!labels || !kind) return null;
-  for (const section of LABEL_SECTIONS) {
-    let node: unknown = labels[section];
-    for (const part of kind.split(".")) {
-      if (!node || typeof node !== "object") { node = null; break; }
-      node = (node as Record<string, unknown>)[part];
-    }
-    if (node && typeof node === "object") return node as TableLabelBlock;
+  const parts = kind.split(".");
+  // 뿌리를 달고 왔으면 거기서부터 — 안 달고 왔으면 `table` 이다
+  const root = (LABEL_ROOTS as readonly string[]).includes(parts[0]) ? parts.shift()! : "table";
+  let node: unknown = (labels as unknown as Record<string, unknown>)[root];
+  for (const part of parts) {
+    if (!node || typeof node !== "object") return null;
+    node = (node as Record<string, unknown>)[part];
   }
-  return null;
-}
-
-/**
- * 이름표 지도 — 표는 `columns`(열 이름)·`rows`(항목 이름)로 나눠 적는데
- * 막대·카드·타임라인 칸은 **`labels` 하나**로 적는다(§1-3~1-5 문안).
- *
- * ⚠ **둘 다에 넣는다.** `labels` 만 있는 칸이 열 이름으로 쓰이는지
- *   (연습경기 예정 — 주차·상대가 열이다) 항목 이름으로 쓰이는지
- *   (시즌 브리핑 — 보직·순위·경기 수가 항목이다) 는 **생산부가 어느 모양으로
- *   행을 만드는가**가 정한다. 문안이 그걸 미리 못 가르므로 양쪽에 걸어 두고,
- *   `resolveColumns` 가 행에 값이 있는 쪽만 세운다.
- */
-function labelMapOf(b: TableLabelBlock | null): Record<string, string> | null {
-  const raw = b?.labels;
-  if (!raw || typeof raw !== "object") return null;
-  const out: Record<string, string> = {};
-  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
-    if (typeof v === "string") out[k] = v;
-  }
-  return Object.keys(out).length > 0 ? out : null;
+  if (!node || typeof node !== "object") return null;
+  return node as TableLabelBlock;
 }
 
 /** 표 하나를 그리는 데 필요한 문안 — 빈 자리를 다 채워서 돌려준다 */
@@ -170,6 +167,25 @@ export interface TableCopy {
    *   지난 소식만 옛 문장으로 남는다 — 그게 이 대시보드화가 고치는 형태다.
    */
   lockNote: string;
+  /**
+   * 계약 종류(`new`·`resign`·`fa`) → 그 말. 세이브에는 낱말이 들고 한글은
+   * 여기서 온다 (`recordTab.contractHistory.kindLabel`).
+   *
+   * ⚠ 없는 종류는 **키를 그대로** 쓴다. 빈 칸으로 만들면 「종류가 없다」와
+   *   「문안이 없다」가 같아 보인다.
+   */
+  kindLabel: Record<string, string>;
+  /** 「국제」 — 대회 전적에서 국제대회 행에 붙는 짧은 표시 */
+  intlMark: string;
+  /**
+   * 결말(`met`·`missed`·`unmeasurable`) → 그 말. 인센티브 정산 표의 「결과」
+   * 칸이 그 자리다 (`table.incentiveSettlement.outcomeLabel`).
+   *
+   * ⚠ **생산부는 낱말만 싣는다.** 「달성」을 소식에 굳혀 보내면 문안을 고쳐도
+   *   지난 소식만 옛 말로 남는다 — `kindLabel` 이 먼저 그은 선이다.
+   * ⚠ 없는 결말은 **키를 그대로** 쓴다. 빈 칸이면 왜 비었는지 안 남는다.
+   */
+  outcomeLabel: Record<string, string>;
 }
 
 /**
@@ -179,12 +195,29 @@ export interface TableCopy {
  */
 const FALLBACK_DELTA = { up: "↑{n}", down: "↓{n}", flat: "—", unknown: "" };
 
+/**
+ * 이름표 지도 — 표는 `columns`(열 이름)·`rows`(항목 이름)로 나눠 적는데
+ * 막대·카드 칸은 **`labels` 하나**로 적는다 (§1-3 · §1-4 문안).
+ *
+ * ⚠ **양쪽에 건다.** `labels` 만 있는 칸이 열 이름으로 쓰이는지(연습경기
+ *   예정 — 주차·상대가 열이다) 항목 이름으로 쓰이는지(시즌 브리핑 — 보직·
+ *   순위·경기 수가 항목이다) 는 **생산부가 어느 모양으로 행을 만드는가**가
+ *   정한다. 문안이 그걸 미리 못 가르므로 둘 다에 두고, `resolveColumns` 가
+ *   행에 값이 있는 쪽만 세운다.
+ */
+function labelMapOf(b: TableLabelBlock | null): Record<string, string> | null {
+  const raw = b?.labels;
+  return isStringMap(raw) ? raw : null;
+}
+
 export function tableCopy(labels: DashboardLabels | null, kind: string): TableCopy {
   const b = tableLabelBlock(labels, kind);
   const emptyCell = labels?.common.emptyCell ?? "—";
   const itemValue = labels?.common.itemValue ?? { item: "", value: "" };
   const optional = b?.optionalColumns ?? {};
   const labelMap = labelMapOf(b);
+  const kindRaw = b?.kindLabel;
+  const outcomeRaw = b?.outcomeLabel;
   return {
     title: b?.title ?? "",
     columns: b?.columns ?? labelMap ?? {},
@@ -198,7 +231,16 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
     deltaLabel: optional.delta ?? "",
     noAppearance: typeof b?.noAppearance === "string" ? b.noAppearance : "",
     lockNote: typeof b?.lockNote === "string" ? b.lockNote : "",
+    kindLabel: isStringMap(kindRaw) ? kindRaw : {},
+    intlMark: typeof b?.intlMark === "string" ? b.intlMark : "",
+    outcomeLabel: isStringMap(outcomeRaw) ? outcomeRaw : {},
   };
+}
+
+/** `{ 키: 말 }` 인가 — 문안 파일이 손으로 쓰이므로 모양을 한 번 본다 */
+function isStringMap(v: unknown): v is Record<string, string> {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+  return Object.values(v as Record<string, unknown>).every((x) => typeof x === "string");
 }
 
 /**
@@ -216,4 +258,126 @@ export function fillCount(tmpl: string, n: number): string {
  */
 export function fillVar(tmpl: string, name: string, v: string | number): string {
   return tmpl.split(`{${name}}`).join(String(v));
+}
+
+// ── 표가 아닌 형태 셋 — 순위 · 막대 · 카드 ─────────────────────
+//
+// 🔴 **`tableCopy` 를 늘리지 않는다.** 표는 열·행·변동을 갖고 순위는 등수
+//    이름을, 막대는 눈금을, 카드는 이름표를 갖는다 — 한 그릇에 담으면
+//    부르는 쪽이 「이 자리는 안 쓰는 값」을 매번 건너뛰게 된다.
+//
+// ⚠ **없으면 빈 문자열이다.** 그러면 화면이 키를 그대로 쓰거나 그 줄을
+//   안 그린다. 여기서 기본 문장을 지어내지 않는다.
+
+/** 문안 덩어리를 뿌리째 찾는다 — `kind` 가 뿌리를 달고 온다 */
+function blockOf(
+  labels: DashboardLabels | null, root: keyof DashboardLabels, kind: string,
+): TableLabelBlock | null {
+  if (!labels || !kind) return null;
+  const key = kind.startsWith(`${root}.`) ? kind : `${root}.${kind}`;
+  return tableLabelBlock(labels, key);
+}
+
+function stringMap(v: unknown): Record<string, string> {
+  return isStringMap(v) ? v : {};
+}
+function str(v: unknown): string {
+  return typeof v === "string" ? v : "";
+}
+
+/** 순위 목록 하나의 문안 */
+export interface RankCopy {
+  title: string;
+  /** 1·2·3 등의 이름 — 「우승」·「준우승」·「3위」. 없으면 숫자를 쓴다 */
+  podium: string[];
+  empty: string;
+}
+
+export function rankCopy(labels: DashboardLabels | null, kind: string): RankCopy {
+  const b = blockOf(labels, "rankList", kind);
+  return {
+    title: str(b?.title),
+    podium: [str(b?.first), str(b?.second), str(b?.third)],
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
+}
+
+/**
+ * 등수 한 칸에 찍을 글자.
+ *
+ * ⚠ **문안이 없으면 숫자다.** 「1위」를 코드가 만들면 데이터와 두 벌이 된다.
+ */
+export function rankText(rank: number, copy: RankCopy): string {
+  return copy.podium[rank - 1] || String(rank);
+}
+
+/** 막대 하나의 문안 */
+export interface BarsCopy {
+  title: string;
+  /** `{ metadata 키: 이름 }` — 과목·분위기·변화 */
+  labels: Record<string, string>;
+  /** 눈금. 데이터가 정한다 — 화면이 100 을 짐작하지 않는다 */
+  min: number;
+  max: number;
+  empty: string;
+}
+
+export function barsCopy(labels: DashboardLabels | null, kind: string): BarsCopy {
+  const b = blockOf(labels, "bars", kind);
+  const scale = b?.scale as { min?: unknown; max?: unknown } | undefined;
+  // 시험은 `columns`(과목·점수), 팀 분위기는 낱말이 바로 붙는다 — 둘을 합친다
+  const merged = { ...stringMap(b?.columns), ...stringMap(b?.labels) };
+  for (const k of ["mood", "delta", "gpa"]) {
+    if (typeof b?.[k] === "string") merged[k] = b[k] as string;
+  }
+  return {
+    title: str(b?.title),
+    labels: merged,
+    min: typeof scale?.min === "number" ? scale.min : 0,
+    max: typeof scale?.max === "number" ? scale.max : 100,
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
+}
+
+/** 카드 한 벌의 문안 */
+export interface CardsCopy {
+  title: string;
+  labels: Record<string, string>;
+  /** 참·거짓을 말로 — 올스타의 선정·미선정 */
+  yes: string;
+  no: string;
+  /** 카드 아래 한 줄의 틀 (`올해는 {roleAs} 시작합니다.`) */
+  noteTemplate: string;
+  /** 보직 굴절 — `role_choice.json` 과 값이 같아야 한다 */
+  roleAs: Record<string, string>;
+  empty: string;
+}
+
+export function cardsCopy(labels: DashboardLabels | null, kind: string): CardsCopy {
+  const b = blockOf(labels, "cards", kind);
+  return {
+    title: str(b?.title),
+    labels: stringMap(b?.labels),
+    yes: str(b?.selectedYes),
+    no: str(b?.selectedNo),
+    noteTemplate: str(b?.roleLine),
+    roleAs: labels?.roleAs ?? {},
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
+}
+
+/** 타임라인 하나의 문안 */
+export interface TimelineCopy {
+  title: string;
+  labels: Record<string, string>;
+  empty: string;
+}
+
+export function timelineCopy(labels: DashboardLabels | null, kind: string): TimelineCopy {
+  const b = blockOf(labels, "timeline", kind);
+  return {
+    title: str(b?.title),
+    labels: stringMap(b?.labels),
+    empty: str(b?.empty) || (labels?.common.emptyTable ?? ""),
+  };
 }

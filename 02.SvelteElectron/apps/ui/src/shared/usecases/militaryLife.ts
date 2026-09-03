@@ -222,8 +222,11 @@ export async function runMilitaryLifeWeek(args: { nextWeek: number; seasonYear: 
   const arc = arcStageFor({ roleId: state.roleId, week, current: state.arcStage, present, graderRelation, bestPerfTier: bestPerf, mySubunit });
   if (arc !== state.arcStage && state.roleId) {
     state.arcStage = arc;
-    messages.push(msg(`msg-mil-unit-arc-${args.seasonYear}-w${args.nextWeek}`, `보직 변화 — ${ARC_LABELS[state.roleId][arc]}`,
-      `${ARC_LABELS[state.roleId][arc]}이 됐다.`));
+    // 🔴 **조사를 붙이지 않는다** (B-28 — 보직 이름 일곱 중 넷이 받침이라
+    //    「이 됐다」가 네 자리에서 틀렸다). 체언 종지다
+    messages.push(msg(`msg-mil-unit-arc-${args.seasonYear}-w${args.nextWeek}`,
+      `보직 변화 ${ARC_LABELS[state.roleId][arc]}`,
+      `보직: ${ARC_LABELS[state.roleId][arc]}`));
     logs.push(`[군] ${ARC_LABELS[state.roleId][arc]}`);
   }
   logs.unshift(`군 복무(현역) — ${week}주차${choice === "none" ? (onLeave ? " · 휴가" : bootCamp ? " · 훈련소" : "") : ` · ${CHOICE_LABEL[choice]}`}`);

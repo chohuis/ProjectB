@@ -167,6 +167,31 @@ ok(`조건이 같은데 우선순위만 낮은 이벤트 없음 (조건부 ${con
   `영영 안 뜸 — 같은 이벤트를 두 번 적었다:\n      ${dead.join("\n      ")}`);
 console.log(`    (참고) 상위와 조건이 겹쳐 경합하는 쌍 ${partial.length}건 — 쿨다운 덕에 뜨긴 한다`);
 
+// ── 3.5. 필수 갈래 — 조건이 글자까지 같고 템플릿도 같은 쌍 ─────
+console.log("\n[3.5] 필수 이벤트 중 조건·템플릿이 완전히 같은 쌍이 없다");
+//
+// [3]은 conditional만 본다(우선순위 경합·함의 판정). 필수(mandatory)는 매주
+// **전부** 평가돼 경합 자체가 없으므로, 조건이 완전히 같고 템플릿(본문 또는
+// 선택지)까지 같으면 같은 사건을 파일 두 개로 적어 **매주 둘 다 뜨는** 결함이다
+// (B 실측 — EVT_UNIV_Y4_W50_* 두 통이 같은 주에 떴다. 890 삭제로 닫혔다).
+// 함의(부분집합) 판정은 필요 없다 — 문자 그대로 같은지만 본다.
+const litCond = (e) => JSON.stringify((e.conditions ?? []).map((c) => JSON.stringify(c)).sort());
+const sameTemplate = (a, b) =>
+  (!!a.messageTemplateId && a.messageTemplateId === b.messageTemplateId) ||
+  (!!a.decisionTemplateId && a.decisionTemplateId === b.decisionTemplateId);
+const mandatory = ALL.filter((e) => e.type === "mandatory");
+const mandatoryDup = [];
+for (let i = 0; i < mandatory.length; i++) {
+  for (let j = i + 1; j < mandatory.length; j++) {
+    const a = mandatory[i], b = mandatory[j];
+    if (litCond(a) !== litCond(b)) continue;
+    if (!sameTemplate(a, b)) continue;
+    mandatoryDup.push(`${a.id}(${a._file}) ≡ ${b.id}(${b._file})`);
+  }
+}
+ok(`필수 ${mandatory.length}개 중 조건·템플릿 완전 중복 없음`, mandatoryDup.length === 0,
+  mandatoryDup.join("\n      "));
+
 // ── 4. 무대별 밀도 ────────────────────────────────────────────
 console.log("\n[4] 무대별 이벤트 수");
 // ⚠ 무대는 `career_stage`로만 정해지지 않는다. **2군 강등은 학적 전이가

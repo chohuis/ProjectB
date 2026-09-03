@@ -40,7 +40,9 @@ export async function signNegotiatedContract(
   teamName: string,
 ): Promise<void> {
   if (isImmediateContract(action.context)) {
-    gameStore.signContract(contract);
+    // 연도·종류를 찍는다 — 기록 탭 「계약 이력」이 연도 행이라 이게 없으면
+    // 표가 안 선다 (§7-4). 입단·전역 복귀는 새로 맺는 계약이라 `new` 다
+    gameStore.signContract(contract, { year: get(seasonStore).seasonYear, kind: "new" });
     // 🔴 **다음 시즌을 열기 전에 이번 시즌의 세계를 닫는다.**
     //
     // `openProSeason`은 현재 연도 +1로 새 시즌을 직접 여는데, 그러면
@@ -59,14 +61,19 @@ export async function signNegotiatedContract(
     await runWorldSeasonEnd(get(seasonStore).seasonYear);
     await openProSeason(action.leagueId, contract.teamId);
   } else {
-    gameStore.setPendingNextContract(contract);
+    // 재계약·연장이 이 길로 온다. `renewal` 이 아닌 갈래(트레이드 뒤 재협상
+    // 등)도 원소속과 다시 맺는 것이라 같은 종류로 본다
+    gameStore.setPendingNextContract(contract, { year: get(seasonStore).seasonYear, kind: "resign" });
     gameStore.addMessage({
       id: `msg-contract-signed-${get(seasonStore).seasonYear}-w${get(seasonStore).currentWeek}`,
       category: "system", sender: "에이전트",
       subject: "계약 서명 완료",
-      preview: `${teamName}와 계약이 완료되었습니다. W52 새 시즌부터 적용됩니다.`,
+      // 🔴 **자리표시자 뒤에 조사를 두지 않는다** (B-28). 팀 238개가 지금은
+      //    다 무받침이라 「와」가 맞지만, **이름 하나만 받침으로 늘어도 깨진다** —
+      //    받침을 코드가 보게 만드는 대신 이름을 문장 끝에 둔다
+      preview: `${teamName}. 계약이 완료되었습니다. W52 새 시즌부터 적용됩니다.`,
       body: [
-        `${teamName}와의 계약이 완료되었습니다.`,
+        `${teamName}. 계약이 완료되었습니다.`,
         `연봉: ${contract.salary}만원 / ${contract.durationYears}년`,
         `계약금: ${contract.signingBonus}만원`,
         ``,
@@ -179,7 +186,7 @@ export async function signFaOffer(offer: FaOffer, salary: number): Promise<void>
   const contract = toContract({ ...offer, salary });
   const teamName = get(masterStore).teams.find((t) => t.id === contract.teamId)?.name ?? contract.teamId;
 
-  gameStore.setPendingNextContract(contract);
+  gameStore.setPendingNextContract(contract, { year: s.seasonYear, kind: "fa" });
   gameStore.addCareerEvent({
     year: s.seasonYear, eventType: "fa_signed",
     toTeamId: contract.teamId, toLeagueId: contract.leagueId,
@@ -190,9 +197,10 @@ export async function signFaOffer(offer: FaOffer, salary: number): Promise<void>
     id: `msg-fa-signed-${s.seasonYear}-w${s.currentWeek}`,
     category: "system", sender: "에이전트",
     subject: "FA 계약 서명 완료",
-    preview: `${teamName}와 FA 계약이 완료되었습니다.`,
+    // 🔴 조사를 안 붙인다 — 위 계약 완료와 같은 이유다 (B-28)
+    preview: `${teamName}. FA 계약이 완료되었습니다.`,
     body: [
-      `${teamName}와 FA 계약이 완료되었습니다.`,
+      `${teamName}. FA 계약이 완료되었습니다.`,
       `연봉: ${salary.toLocaleString()}만원 / ${offer.durationYears}년`,
       `계약금: ${offer.signingBonus.toLocaleString()}만원`,
       ``,

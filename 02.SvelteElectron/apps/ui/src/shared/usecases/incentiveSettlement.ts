@@ -16,6 +16,7 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { fillContractCopy } from "../utils/contractCopy";
 import { settleIncentives, incentiveMessageBody } from "../utils/incentiveEngine";
+import { incentiveSettlementTableMeta } from "../utils/dashboardMeta";
 import type { PitcherSeasonStats } from "../types/save";
 
 /**
@@ -64,6 +65,9 @@ export function settleSeasonIncentives(seasonYear: number): string[] {
         ? fillContractCopy(copy.total, { total: st.total })
         : copy.none,
       body: incentiveMessageBody(copy, st),
+      // 🔴 **본문을 대신하지 않고 나란히 선다** (PLAN_MESSAGE_DASHBOARDS 머리말).
+      //    표를 못 그리는 자리(문안 없음·구 화면)에서 위 `body` 가 폴백이다.
+      metadata: incentiveSettlementTableMeta(st),
       createdAt: `W${s.currentWeek}`,
       readAt: null,
     });

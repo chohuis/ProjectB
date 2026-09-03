@@ -1,0 +1,48 @@
+# 기록 탭 카드 둘 눈확인 — PLAN_MESSAGE_DASHBOARDS §7-4 (계약 이력 · 대회 전적)
+#
+#   npm run dev:ui                       # 다른 창 (워크트리는 DEV_PORT=5175)
+#   DRIVE_USER_DATA=<빈 폴더> VITE_DEV_SERVER_URL=http://localhost:5175 \
+#     SCREENSHOT_DIR=<폴더> node scripts/drive.mjs scripts/c55-eyecheck.txt
+#
+# ⚠ 대회 전적은 **고교에서 바로 보인다** — 개나리기가 W9 에 열린다.
+# ⚠ 계약 이력은 프로에 가야 뜬다(`showContractSection`). 프로까지 3년을 안 돌고
+#   `signContract` 를 직접 불러 **배선 그대로** 세 번 서명시킨다 — 이력을 쌓는
+#   자리가 그 함수 하나라서 우회가 아니라 그 길을 그대로 밟는 것이다.
+launch
+resize 1366x768
+sleep 3000
+click-text 새 게임
+sleep 1500
+wait .slot-info
+click .slot-info
+sleep 3000
+fill .field input|기록확인
+sleep 800
+click .btn.next
+sleep 4000
+wait .region-item
+click .region-item
+sleep 2000
+wait .team-list-item
+click .team-list-item
+sleep 2000
+click .btn.next
+sleep 2500
+click .btn.next
+sleep 2500
+click .btn.start
+sleep 30000
+advance 28 --auto
+sleep 3000
+click-text 나
+sleep 1500
+click-text 상태
+sleep 1500
+click-text 기록
+sleep 2000
+ss c55-01-tournament-record
+eval JSON.stringify([...document.querySelectorAll('.career-card')].map(e => e.innerText.slice(0, 240)))
+eval import('/src/shared/stores/game.ts').then(async m => { const s = await import('/src/shared/stores/master.ts'); let ms; s.masterStore.subscribe(v => { ms = v; })(); const teams = ms.teams.filter(t => t.leagueId === 'LEAGUE_KBL' && t.name.indexOf('2군') < 0); const mk = (teamId, salary, years, bonus) => ({ teamId, leagueId: 'LEAGUE_KBL', salary, durationYears: years, remainingYears: years, signingBonus: bonus, teamOptionYears: 0, playerOptionYears: 0, noTrade: false, status: 'active' }); m.gameStore.signContract(mk(teams[0].id, 3000, 3, 500), { year: 2028, kind: 'new' }); m.gameStore.signContract(mk(teams[0].id, 9000, 4, 2000), { year: 2031, kind: 'resign' }); m.gameStore.signContract(Object.assign(mk(teams[1].id, 22000, 5, 8000), { noTrade: true, teamOptionYears: 1 }), { year: 2035, kind: 'fa' }); return 'SIGNED ' + teams[0].name + ' / ' + teams[1].name; })
+sleep 3000
+ss c55-02-contract-history
+eval JSON.stringify([...document.querySelectorAll('.career-card')].map(e => e.innerText.slice(0, 300)))

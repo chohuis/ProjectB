@@ -26,6 +26,7 @@ import type {
 import type { ContractIncentive, PitcherSeasonStats } from "../types/save";
 import { ipLabel, eraLabel } from "./baseballFormat";
 import { incentiveLabel } from "./contractTerms";
+import type { IncentiveSettlement } from "./incentiveEngine";
 import { FA_TERM_LABEL } from "./faOfferTerms";
 import { tableLabelBlock } from "./dashboardCopy";
 
@@ -210,6 +211,57 @@ export function contractTableMeta(kind: string, i: ContractTableInput): TableMet
     };
   }
   return meta;
+}
+
+// ── 인센티브 정산 (msg-contract-incentive-) ────────────────────
+
+/** 정산 표의 종류 이름 — 문안(`table.incentiveSettlement`)의 키다 */
+export const INCENTIVE_SETTLEMENT_KIND = "incentiveSettlement";
+
+/**
+ * 시즌 끝 정산 → 항목·결과·실측·금액 표 (PLAN_CONTRACT_TERMS §5).
+ *
+ * 🔴 **판정을 다시 하지 않는다.** `settleIncentives` 가 낸 줄을 그대로 옮긴다 —
+ *    여기서 문턱을 다시 재면 본문(`incentiveMessageBody`)과 표가 **다른 답**을
+ *    낼 수 있다. 같은 `IncentiveSettlement` 하나에서 둘이 나와야 한다.
+ *
+ * 🔴 **「조건」 열이 없다.** `incentiveLabel()` 이 문턱을 이름에 접어 넣어
+ *    (「25등판」·「ERA 3.00 이하」) 조건 열을 세우면 같은 값이 두 칸에 선다
+ *    (B-30 이 남긴 물음의 답이다). 대신 **실측**을 세운다.
+ *
+ * ⚠ **미달한 줄의 금액은 빈 칸이다.** `0만원` 으로 적으면 「0원을 받았다」로
+ *   읽힌다 — 안 받은 것이라 `—` 가 맞다.
+ * ⚠ **수상 줄의 실측은 빈 칸이다.** 엔진이 `1`·`0` 을 주는데(`measure`)
+ *   「골든글러브 · 실측 1」은 읽을 수 있는 말이 아니다 — 받았는지는 결과
+ *   칸이 이미 말한다.
+ * ⚠ 합계는 각주 틀(`합계 +{total}만원`)에 **숫자만** 넘긴다. 지급이 없으면
+ *   각주를 안 그린다 — 「합계 +0만원」은 표 아래에 둘 말이 아니다.
+ */
+export function incentiveSettlementTableMeta(st: IncentiveSettlement): TableMetadata {
+  const meta: TableMetadata = {
+    type: "table",
+    kind: INCENTIVE_SETTLEMENT_KIND,
+    columns: [],
+    rows: st.rows.map((r) => ({
+      name: r.label,
+      // 낱말로 싣는다 — 「달성」은 문안이 갖는다 (`outcomeLabel`)
+      outcome: r.outcome,
+      actual: isAwardRow(r.key) || r.actual === "" ? null : r.actual,
+      amount: r.paid > 0 ? manwon(r.paid) : null,
+    })),
+  };
+  if (st.total > 0) meta.footnoteVars = { total: Math.round(st.total).toLocaleString() };
+  return meta;
+}
+
+/**
+ * 수상 축인가 — `incentiveKey` 가 `${kind}:${awardId}:${threshold}` 라 앞
+ * 조각이 축 이름이다 (`contractTerms.ts`).
+ *
+ * ⚠ **여기서 문턱을 다시 재지 않는다.** 축 이름만 본다 — 판정은 엔진 몫이다.
+ */
+function isAwardRow(key: string): boolean {
+  return key.split(":")[0] === "award";
 }
 
 // ── 경기 결과 (msg-league-results-w) ───────────────────────────

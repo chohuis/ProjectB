@@ -205,7 +205,7 @@ describe("배선 — 화면이 셋을 다 그린다", () => {
   /** ⚠ 행을 화면에서 만들면 위 검사들이 한 줄도 못 잰다 */
   it("화면은 행을 스스로 만들지 않는다", () => {
     expect(TABLE, "StatTable 이 행을 스스로 만든다").toContain("buildTableView(metadata");
-    expect(RANK, "RankListPanel 이 두 규격을 화면에서 가른다").toContain("buildRankList(metadata)");
+    expect(RANK, "RankListPanel 이 두 규격을 화면에서 가른다").toContain("buildRankList(metadata");
   });
 
   /** ⚠ 넘치는 표가 상세 칸을 밀면 본문이 통째로 옆으로 흐른다 (1366×768) */
@@ -450,13 +450,19 @@ describe("정렬 — 글자 열이 숫자에 붙어 오른쪽에 서지 않는�
     expect(by.rank).toBe("right");
   });
 
-  it("인센티브의 조건 칸도 글자라 왼쪽이다", () => {
+  /**
+   * 🔴 **「조건」 열이 없다** (C 단위 9 · B-30 이 남긴 물음의 답).
+   *    `incentiveLabel()` 이 문턱을 이름에 접어 넣어(「25등판」) 조건 열을
+   *    세우면 **같은 값이 두 칸에 선다** — 문안에서도 뺐다.
+   */
+  it("인센티브 표는 항목·금액 둘이고 항목은 글자라 왼쪽이다", () => {
     const inc = tableCopy(LABELS, "contractSigned.incentives");
     const v = buildTableView({
       type: "table", kind: "contractSigned.incentives", columns: [],
-      rows: [{ name: "등판", condition: "25회 이상", amount: "+1,500만원" }],
+      rows: [{ name: "25등판", amount: "+1,500만원" }],
     }, inc);
-    expect(v.columns.map((c) => c.align)).toEqual(["left", "left", "left"]);
+    expect(v.columns.map((c) => c.key)).toEqual(["name", "amount"]);
+    expect(v.columns.map((c) => c.align)).toEqual(["left", "left"]);
   });
 
   /** 생산부가 실어 보낸 `align` 이 값 추론을 이긴다 — 대진의 가운데 칸이 그 자리다 */

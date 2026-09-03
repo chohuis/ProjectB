@@ -265,6 +265,22 @@ export interface ProContract {
    */
   incentives?: ContractIncentive[];
   status: "active" | "expired" | "voided";
+  /**
+   * 서명한 해 — **계약 이력이 연도 행이라 이게 없으면 표가 안 선다**
+   * (`PLAN_MESSAGE_DASHBOARDS.md` §7-4 계약 이력 카드).
+   *
+   * ⚠ **구 세이브엔 없다.** 그때는 화면이 연도 칸을 `—` 로 둔다 — 0 을
+   *   채우면 「0년에 맺은 계약」이 된다.
+   */
+  signedYear?: number;
+  /**
+   * 어떻게 맺었나 — 신규 입단·재계약·FA. 문안은 `dashboard_labels.json`
+   * `recordTab.contractHistory.kindLabel` 이 갖는다.
+   *
+   * ⚠ **여기서 한글을 안 적는다.** 「재계약」을 세이브에 굳히면 표시 언어를
+   *   못 타고, 문안을 고쳐도 지난 계약만 옛 말로 남는다.
+   */
+  kind?: "new" | "resign" | "fa";
 }
 
 export interface ProtagonistSave {
@@ -400,6 +416,18 @@ export interface ProtagonistSave {
   faUnsignedWeeks: number;
   contract?: ProContract;
   pendingNextContract?: ProContract;  // 오프시즌 서명 완료, W52 시즌 리셋 시 적용
+  /**
+   * 지나간 계약들 — **오래된 것이 앞이다** (`PLAN_MESSAGE_DASHBOARDS.md` §7-3).
+   *
+   * 🔴 **현재 계약은 여기 없다.** `contract` 가 그것이고, 새 계약에 서명할 때
+   *    자리를 내주는 옛 계약이 여기로 온다. 둘 다 담으면 「계약 정보」와
+   *    「계약 이력」이 같은 줄을 두 번 그린다.
+   *
+   * ⚠ **구 세이브엔 없다**(`undefined`). 그때 이력 카드는 빈 카드 문구를
+   *   그린다 — 빈 배열로 채우면 「이력이 없다」와 「이력을 안 남기던 세이브」가
+   *   같아 보인다.
+   */
+  contractHistory?: ProContract[];
   consecutiveLowMoraleWeeks: number;
   consecutiveHighFatigueWeeks: number;
   injury?: InjuryState;

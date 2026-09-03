@@ -10,7 +10,9 @@
     "progress": "총 {total}주 중 {done}주",
     "done": "복무를 마쳤습니다.",
     "dateLead": "전역 예정",
-    "dateForm": "{year}년"
+    "dateForm": "{year}년 W{week}",
+    "dateFormYear": "{year}년",
+    "_dateNote": "🔴 전역은 복무 100주가 차는 주다(`SERVICE_WEEKS`). 그 주차는 **입대 주에 따라 달라진다** — 예전에 화면 둘이 「W48」을 박아 뒀는데 W50 입대면 W46 이다. `dateFormYear` 는 입대 주가 세이브에 없는 옛 세이브용이다"
   },
   "noGames": {
     "title": "이 기간의 성적",

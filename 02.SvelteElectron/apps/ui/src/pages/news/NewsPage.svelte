@@ -1,13 +1,16 @@
 <script lang="ts">
   import type {
-    MessageCategory, MessageItem, InjuryMetadata, MyBodyMetadata,
-    OffseasonMetadata, RankListMetadata, TableMetadata, TimelineMetadata,
-    Top10Metadata, TrainingMetadata,
+    MessageCategory, MessageItem, BarsMetadata, CardsMetadata, InjuryMetadata,
+    MyBodyMetadata, OffseasonMetadata, RankListMetadata, TableMetadata,
+    TimelineMetadata, Top10Metadata, TrainingMetadata,
   } from "../../shared/types/main";
+  import { barsCopy, cardsCopy } from "../../shared/utils/dashboardCopy";
+  import { buildBars, buildCards } from "../../shared/utils/dashboardView";
+  import DigestCards from "../../features/messages/ui/DigestCards.svelte";
   import { applyDecision } from "../../shared/usecases/decisions";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
-  import { teamMap } from "../../shared/stores/master";
+  import { teamMap, entityMap, masterStore } from "../../shared/stores/master";
   import { categoryMeta, FILTER_GROUPS } from "../../shared/utils/messageCategory";
   import { gaugeTone } from "../../shared/utils/myStatus";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
@@ -141,6 +144,17 @@
   $: pendingNextTeam = p.pendingNextContract
     ? ($teamMap.get(p.pendingNextContract.teamId)?.name ?? p.pendingNextContract.teamId)
     : null;
+
+  /**
+   * id → 이름 — 카드 소식(대표팀 명단·연습경기 예정)이 id 를 싣는다.
+   *
+   * 🔴 **표와 같은 규칙이다** (`StatTable` 머리말). 이름은 표시 언어를 타므로
+   *    만드는 쪽이 굳혀 실으면 영어로 바꿔도 그 소식만 한글로 남는다.
+   */
+  $: names = {
+    team:   (id: string) => $teamMap.get(id)?.name,
+    person: (id: string) => $entityMap.get(id)?.name,
+  };
 
   async function markAllRead() {
     gameStore.markAllMessagesRead();
@@ -298,6 +312,25 @@
             <RankListPanel metadata={selected.metadata as RankListMetadata} />
           {:else if selected.metadata?.type === "timeline"}
             <TimelinePanel metadata={selected.metadata as TimelineMetadata} />
+          {:else if selected.metadata?.type === "bars"}
+            <!-- 막대 둘(시험 결과·팀 분위기)이 훈련 결과와 같은 그릇을 쓴다
+                 (§2 — 신설은 둘뿐이다). 컨디션 줄은 훈련에만 뜻이 있어 끈다 -->
+            {@const bm = selected.metadata as BarsMetadata}
+            <TrainingStatBars showStatus={false}
+                              bars={buildBars(bm, barsCopy($masterStore.dashboardLabels, bm.kind))} />
+          {:else if selected.metadata?.type === "cards"}
+            {@const cm = selected.metadata as CardsMetadata}
+            {@const cv = buildCards(cm, cardsCopy($masterStore.dashboardLabels, cm.kind), names)}
+            <div class="cardsblock">
+              {#if cv.cards.length === 0}
+                <p class="cards-empty">{cv.empty}</p>
+              {:else}
+                <!-- 누를 수 없는 꼴로 쓴다 — 소식 카드는 거를 목록이 없다 -->
+                <DigestCards interactive={false} active={null} onPick={() => {}}
+                             cards={cv.cards.map((c, i) => ({ id: String(i), label: c.caption, count: c.value }))} />
+              {/if}
+              {#if cv.note}<p class="cards-note">{cv.note}</p>{/if}
+            </div>
           {:else if selected.metadata?.type === "offseason"}
             <OffseasonPanel metadata={selected.metadata as OffseasonMetadata} />
           {:else if selected.metadata?.type === "injury"}
@@ -558,6 +591,14 @@
    * 줄바꿈은 이미 `<p>`가 만든다 — 여기서는 **공백 보존**만 취한다.
    */
   .m-body :global(p) { margin: 0; white-space: pre-wrap; }
+
+  /* 카드 소식 — 카드 줄과 그 아래 한 줄 (§1-4) */
+  .cardsblock { display: flex; flex-direction: column; gap: 8px; }
+  .cards-note { margin: 0; font-size: 12px; color: var(--ink-mid); }
+  .cards-empty {
+    margin: 0; font-size: 11px; color: var(--ink-mute);
+    text-align: center; padding: 10px;
+  }
 
   .dec {
     border-top: 1px solid var(--line);

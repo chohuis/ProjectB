@@ -9,8 +9,23 @@
    * 적으면 소식이 늘 때마다 이 파일이 둘로 갈린다.
    */
 
-  export let cards: ReadonlyArray<{ id: string; label: string; count: number }>;
+  /**
+   * ⚠ **`count` 가 숫자가 아닐 수 있다** (소식 카드 다섯 — §1-4). 보직은
+   *   「선발」이고 상대는 팀 이름이다. 누를 수 있는 자리(오프시즌·부상)는
+   *   그대로 숫자다.
+   */
+  export let cards: ReadonlyArray<{ id: string; label: string; count: number | string }>;
   export let active: string | null;
+  /**
+   * 누를 수 있나 — **소식 카드는 못 누른다** (§2 · 재사용).
+   *
+   * 🔴 컴포넌트를 하나 더 만들지 않는다. 큰 값 한 줄과 그 아래 이름 한 줄이
+   *    이미 같은 모양이라, 갈라 두면 숫자 크기·간격이 곧 어긋난다.
+   *
+   * ⚠ **못 누를 때는 `<button>` 을 안 쓴다.** 누를 수 없는 버튼을 두면
+   *   키보드가 거기서 멈추고 읽어 주기가 「버튼」이라 읽는다.
+   */
+  export let interactive = true;
   /** 내 팀 / 아는 사람. 0이면 칩을 안 그린다 */
   export let mineCount = 0;
   export let knownCount = 0;
@@ -25,16 +40,25 @@
 <div class="head">
   <div class="cards" style="--n:{cards.length}">
     {#each cards as c}
-      <button
-        class="card"
-        class:on={active === c.id}
-        type="button"
-        disabled={c.count === 0}
-        on:click={() => onPick(c.id)}
-      >
-        <span class="num u-num">{c.count}</span>
-        <span class="lab">{c.label}</span>
-      </button>
+      {#if interactive}
+        <button
+          class="card"
+          class:on={active === c.id}
+          type="button"
+          disabled={c.count === 0}
+          on:click={() => onPick(c.id)}
+        >
+          <span class="num u-num">{c.count}</span>
+          <span class="lab">{c.label}</span>
+        </button>
+      {:else}
+        <!-- 값이 말이면 숫자 크기로 두면 넘친다 — 글자 수로 폭을 줄인다 -->
+        <div class="card">
+          <span class="num" class:u-num={typeof c.count === "number"}
+                class:word={typeof c.count !== "number"}>{c.count}</span>
+          <span class="lab">{c.label}</span>
+        </div>
+      {/if}
     {/each}
   </div>
 
@@ -71,6 +95,11 @@
   .card:disabled { opacity: 0.4; cursor: default; }
   .card.on { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
   .num { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  /* 팀 이름·보직처럼 말이 오는 칸 — 20px 로 두면 카드 밖으로 넘친다 */
+  .num.word {
+    font-size: 14px; line-height: 1.3; text-align: center;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;
+  }
   .card.on .num { color: var(--t-gold); }
   .lab { font-size: 11px; white-space: nowrap; }
 

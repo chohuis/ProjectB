@@ -12,9 +12,13 @@
 //    한쪽만 고쳐진 채 남는다 — 이 저장소가 여러 번 겪은 형태다.
 
 import type {
-  RankListMetadata, TableCell, TableColumn, TableMetadata, Top10Metadata,
+  BarsMetadata, CardsMetadata, RankListMetadata, TableCell, TableColumn,
+  TableMetadata, TimelineMetadata, Top10Metadata,
 } from "../types/main";
-import { fillCount, fillVar, type TableCopy } from "./dashboardCopy";
+import {
+  fillCount, fillVar, rankText as rankTextOf,
+  type BarsCopy, type CardsCopy, type RankCopy, type TableCopy, type TimelineCopy,
+} from "./dashboardCopy";
 
 /**
  * id 열을 이름으로 바꾸는 조회 — **화면이 준다.**
@@ -166,6 +170,10 @@ export function buildTableRows(
       } else if (c.key === "note" && copy?.lockNote && isNumericCell(raw) && raw !== "") {
         // 말소 비고 — 생산부는 주 수만 싣고 문장은 문안이 갖는다
         text = fillVar(copy.lockNote, "weeks", raw as number);
+      } else if (c.key === "outcome" && typeof raw === "string" && raw !== ""
+                 && copy && Object.keys(copy.outcomeLabel).length > 0) {
+        // 결말은 낱말로 온다 — 「달성」·「미달」은 문안이 갖는다 (인센티브 정산)
+        text = copy.outcomeLabel[raw] ?? raw;
       } else {
         text = cellText(raw, empty);
       }
@@ -192,6 +200,12 @@ export interface RankEntryView {
   /** NPC id 또는 `"PLY_HERO"`. 빈 문자열이면 상세를 못 연다 */
   id: string;
   rank: number;
+  /**
+   * 등수 칸에 찍을 글자 — 대회 최종 순위는 「우승」·「준우승」이다.
+   *
+   * ⚠ **문안이 없으면 숫자다.** 「1위」를 코드가 만들면 데이터와 두 벌이 된다.
+   */
+  rankText: string;
   name: string;
   /** 오른쪽 작은 글씨 — 팀명이거나 상 이름이다 */
   sub: string;
@@ -209,6 +223,8 @@ export interface RankColumnView {
 export interface RankListView {
   /** 목록 위 한 줄. 없으면 화면이 안 그린다 */
   subtitle: string;
+  /** 줄이 하나도 없을 때 대신 그리는 한 줄. 문안에서 온다 */
+  empty: string;
   columns: RankColumnView[];
 }
 
@@ -219,17 +235,22 @@ export interface RankListView {
  *   저장하는 자리가 없다 (§3-1). 없으면 `null` 이라 화면이 칸을 안 그린다 —
  *   `0` 으로 채우면 「변동 없음」과 「모름」이 같아 보인다.
  */
-export function buildRankList(md: Top10Metadata | RankListMetadata): RankListView {
+export function buildRankList(
+  md: Top10Metadata | RankListMetadata, copy?: RankCopy, names?: NameLookup,
+): RankListView {
   if (md.type === "top10") {
     const typeKr = md.playerType === "pitcher" ? "투수" : "타자";
     return {
       subtitle: `고교 ${typeKr} 유망주 월간 랭킹 · W${md.week} · ${md.seasonYear}시즌`,
+      empty: "",
       columns: md.columns.map((c) => ({
         label: c.label,
         heroRank: c.heroRank,
         entries: c.entries.map((e) => ({
           id: e.id,
           rank: e.rank,
+          // 유망주 랭킹은 등수가 숫자다 — 「우승」이 없다
+          rankText: String(e.rank),
           name: e.name,
           sub: e.teamName,
           isMe: e.id === "PLY_HERO",
@@ -240,20 +261,38 @@ export function buildRankList(md: Top10Metadata | RankListMetadata): RankListVie
   }
 
   return {
-    subtitle: md.title ?? "",
+    // 제목은 소식이 실어 보내면 그것이고, 안 보내면 문안의 이름이다
+    subtitle: md.title ?? copy?.title ?? "",
+    empty: copy?.empty ?? "",
     columns: [{
       label: "",
       heroRank: null,
       entries: (md.items ?? []).map((it) => ({
-        id: "",
+        // 상세를 열려면 id 가 있어야 한다 — 팀 순위엔 사람이 없어 빈 문자열이다
+        id: it.labelId ?? "",
         rank: it.rank,
-        name: it.label,
-        sub: it.sub ?? "",
+        rankText: copy ? rankTextOf(it.rank, copy) : String(it.rank),
+        // 🔴 **id 를 이름으로 바꾸는 자리가 화면이다.** 만드는 쪽이 한글
+        //    이름을 굳혀 실으면 표시 언어를 바꿔도 그 줄만 한글로 남는다
+        name: lookupName(it.labelId, names) ?? it.label ?? it.labelId ?? "",
+        sub: lookupName(it.subId, names) ?? it.sub ?? it.subId ?? "",
         isMe: it.isMe === true,
         delta: deltaMark(it.delta),
       })),
     }],
   };
+}
+
+/**
+ * id 하나를 이름으로 — **팀이든 사람이든 아는 쪽에서 답하면 그것이다.**
+ *
+ * ⚠ 순위 목록은 열 이름이 없어 `teamId`·`playerId` 로 갈라지지 않는다
+ *   (표는 열 키로 갈랐다). 둘 다 찾아보고 못 찾으면 `undefined` 다 —
+ *   그때 부르는 쪽이 id 를 그대로 둔다.
+ */
+function lookupName(id: string | undefined, names?: NameLookup): string | undefined {
+  if (!id || !names) return undefined;
+  return names.person?.(id) ?? names.team?.(id);
 }
 
 // ── 문안을 입힌 표 ─────────────────────────────────────────────
@@ -292,15 +331,17 @@ function itemValueLabel(key: string, copy: TableCopy): string {
 }
 
 /**
- * 열 이름 하나.
+ * 열 하나의 이름.
  *
- * 🔴 **빈 문자열도 답이다** (2026-09-03 · A 단위 5 묶음 3). 문안이
- *    `"home": ""` 으로 **머리글을 일부러 비워 둔 열**이 있다(대진표의 두 팀
- *    칸 — `dashboard_labels.json` `_schema.columns` 가 그렇게 못박았다).
- *    `||` 로 이으면 그 빈 문자열이 거짓이라 **키(`home`)가 머리글로 뜬다** —
- *    검사가 그걸 잡았다. 「선언했는가」와 「값이 있는가」를 갈라 본다.
+ * 🔴 **빈 문자열로 선언된 열은 머리글을 안 그린다** — 대진표의 두 팀 칸이
+ *    그 자리다(`dashboard_labels.json` `_schema.columns`). 예전엔 `||` 로
+ *    이어서 빈 이름이 키(`home`)로 떨어졌다 — 대진 위에 「home  away」가
+ *    영어로 섰다.
+ *
+ * ⚠ **선언 자체가 없는 열만** 키로 떨어진다. 「이름이 없다」와 「이름을
+ *   비워 뒀다」는 다른 말이다.
  */
-function columnLabel(key: string, copy: TableCopy): string {
+function declaredLabel(key: string, copy: TableCopy): string {
   if (key in copy.columns) return copy.columns[key];
   if (key in copy.optionalColumns) return copy.optionalColumns[key];
   return itemValueLabel(key, copy) || key;
@@ -363,7 +404,8 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   if (given.length > 0) {
     return given.map((c, i) => ({
       key: c.key,
-      label: c.label || columnLabel(c.key, copy),
+      // 생산부가 이름을 실어 보내면 그것이 이기고, 안 보내면 문안이 채운다
+      label: c.label || declaredLabel(c.key, copy),
       align: c.align
              ?? (sentenceColumn(c.key, copy) ? "left" : null)
              ?? inferAlign(c.key, md.rows) ?? cellAlign(c, i),
@@ -371,7 +413,17 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   }
 
   const rows = md.rows ?? [];
-  const has = (k: string) => rows.some((r) => r[k] != null);
+  /**
+   * 그 열을 행들이 들고 있나 — **키가 있으면 값이 비어도 든 것이다.**
+   *
+   * 🔴 예전엔 `r[k] != null` 이었다. 그러면 대회 전적에서 **한 번도 안 던진
+   *    선수의 「내 기록」 열이 통째로 사라져** 「등판 없음」이 그려질 자리가
+   *    없었다 — 값이 비어 있다는 것과 열이 없다는 것은 다른 말이다.
+   *
+   * ⚠ 「빈 열은 안 세운다」는 그대로다(묶음 1 규칙). 생산부가 **키를 아예
+   *   안 실은** 열은 여기서 걸린다 — 말소 표의 비고가 그 자리다.
+   */
+  const has = (k: string) => rows.some((r) => k in r);
   const keys: string[] = [];
 
   const declared = Object.keys(copy.columns);
@@ -397,7 +449,7 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
 
   return keys.map((k, i) => ({
     key: k,
-    label: columnLabel(k, copy),
+    label: declaredLabel(k, copy),
     align: (sentenceColumn(k, copy) ? "left" : null)
            ?? inferAlign(k, md.rows) ?? ((i === 0 ? "left" : "right") as "left" | "right"),
   }));
@@ -425,8 +477,21 @@ export function buildTableView(
     rows,
     deltaLabel: md.deltaKey ? (copy.deltaLabel || copy.optionalColumns.delta || "") : null,
     empty: copy.empty,
-    footnote: md.footnote ?? copy.footnote,
+    footnote: md.footnote ?? fillFootnote(copy.footnote, md.footnoteVars),
   };
+}
+
+/**
+ * 각주 틀을 채운다 — 「합계 +{total}만원」이 그 자리다.
+ *
+ * ⚠ **자리표가 남으면 각주를 안 그린다.** 값이 안 온 채로 `{total}` 이 화면에
+ *   서면 문안이 깨진 것으로 보인다 — 없는 줄로 두는 게 낫다.
+ */
+function fillFootnote(tmpl: string, vars?: Record<string, string | number>): string {
+  if (!tmpl) return "";
+  let out = tmpl;
+  for (const [k, v] of Object.entries(vars ?? {})) out = fillVar(out, k, v);
+  return out.includes("{") ? "" : out;
 }
 
 /**
@@ -439,4 +504,151 @@ export function deltaText(mark: DeltaMark | null, copy: TableCopy): string {
   if (!mark) return copy.delta.unknown;
   if (mark.dir === "flat") return copy.delta.flat;
   return fillCount(mark.dir === "up" ? copy.delta.up : copy.delta.down, mark.n);
+}
+
+// ── 막대 — 시험 결과 · 팀 분위기 (§1-3) ────────────────────────
+//
+// 🔴 **새 컴포넌트를 안 만든다** (§2). `TrainingStatBars` 의 막대를 그대로
+//    쓴다 — 이름·막대·오른쪽 값 셋이 같은 모양이다.
+//
+// ⚠ **눈금을 화면이 짐작하지 않는다.** 0~100 은 문안(`bars.<kind>.scale`)이
+//   정한다. 코드가 100 을 박으면 눈금이 바뀔 때 두 벌이 된다.
+
+export interface BarView {
+  label: string;
+  /** 0~100 으로 환산한 채움 — 눈금은 문안이 준다 */
+  pct: number;
+  /** 오른쪽에 찍는 값 그대로 */
+  value: number;
+  delta: DeltaMark | null;
+}
+
+export interface BarsView {
+  title: string;
+  bars: BarView[];
+  /** 막대 아래 항목·값 (학점). 없으면 안 그린다 */
+  foot: { label: string; value: string }[];
+  empty: string;
+}
+
+export function buildBars(md: BarsMetadata, copy: BarsCopy): BarsView {
+  const span = copy.max - copy.min;
+  return {
+    title: copy.title,
+    bars: (md.bars ?? []).map((b) => ({
+      // 이름이 값인 자리(과목명)는 소식이 싣고, 정해진 자리(분위기)는 문안이 준다
+      label: b.label ?? (b.key ? copy.labels[b.key] ?? b.key : ""),
+      pct: span > 0 ? clampPct(((b.value - copy.min) / span) * 100) : 0,
+      value: b.value,
+      delta: deltaMark(b.delta),
+    })),
+    foot: (md.foot ?? []).map((f) => ({
+      label: copy.labels[f.key] ?? f.key,
+      value: String(f.value),
+    })),
+    empty: copy.empty,
+  };
+}
+
+/** 눈금 밖 값은 끝에 붙인다 — 막대가 칸을 넘으면 옆 열을 밀어낸다 */
+function clampPct(v: number): number {
+  if (!Number.isFinite(v)) return 0;
+  return Math.max(0, Math.min(100, Math.round(v)));
+}
+
+// ── 카드·칩 — 시즌 브리핑 · 연습경기 · 대표팀 · 행사 · 올스타 ──
+//
+// 🔴 **새 컴포넌트를 안 만든다** (§2). `DigestCards` 를 **누를 수 없는 꼴**로
+//    쓴다 — 큰 값 한 줄과 그 아래 이름 한 줄이 이미 이 모양이다.
+
+export interface CardView {
+  /** 큰 글씨 — 값이다 */
+  value: string;
+  /** 작은 글씨 — 이름이다 */
+  caption: string;
+  /** 숫자면 폭이 안 흔들리게 `tabular-nums` 를 건다 */
+  numeric: boolean;
+}
+
+export interface CardsView {
+  title: string;
+  cards: CardView[];
+  /** 카드 아래 한 줄. 없으면 안 그린다 */
+  note: string;
+  empty: string;
+}
+
+export function buildCards(md: CardsMetadata, copy: CardsCopy, names?: NameLookup): CardsView {
+  return {
+    title: copy.title,
+    cards: (md.items ?? []).map((it) => {
+      const idKind = ID_COLUMN_KIND[it.key];
+      let value: string;
+      if (idKind && typeof it.value === "string" && it.value !== "") {
+        // id 는 이름으로 — 못 찾으면 그대로 둔다(표와 같은 규칙)
+        value = names?.[idKind]?.(it.value) ?? it.value;
+      } else if (typeof it.value === "boolean" && (copy.yes || copy.no)) {
+        // 참·거짓을 말로 — 올스타의 선정·미선정
+        value = it.value ? copy.yes : copy.no;
+      } else {
+        value = cellText(it.value, "");
+      }
+      return {
+        value,
+        caption: it.caption ?? copy.labels[it.key] ?? it.key,
+        numeric: !idKind && isNumericCell(it.value),
+      };
+    }),
+    note: cardsNote(md, copy),
+    empty: copy.empty,
+  };
+}
+
+/**
+ * 카드 아래 한 줄 — 시즌 브리핑의 「올해는 선발로 시작합니다.」
+ *
+ * 🔴 **조사를 코드로 붙이지 않는다.** 「선발로」·「중계로」는 `roleAs` 표가
+ *    갖는다 — `{role}` 을 그대로 끼우면 「중계으로」가 된다.
+ *
+ * ⚠ 소식이 문장을 실어 보내면 그것이 이긴다. 없을 때만 틀을 채운다.
+ */
+export function cardsNote(md: CardsMetadata, copy: CardsCopy): string {
+  if (md.note) return md.note;
+  if (!copy.noteTemplate) return "";
+  const role = (md.items ?? []).find((i) => i.key === "role");
+  const as = role && typeof role.value === "string" ? copy.roleAs[role.value] : undefined;
+  // 굴절형을 못 찾으면 그 줄을 안 그린다 — 자리표가 남은 문장을 보이면 안 된다
+  return as ? fillVar(copy.noteTemplate, "roleAs", as) : "";
+}
+
+// ── 타임라인 — 군 경력 · 복무 연차 · 고교 연감 (§1-5) ──────────
+
+export interface TimelineEntryView {
+  when: string;
+  label: string;
+  detail: string;
+}
+
+export interface TimelineView {
+  title: string;
+  entries: TimelineEntryView[];
+  empty: string;
+}
+
+/**
+ * ⚠ **여기서 순서를 다시 정하지 않는다.** 만드는 쪽이 실어 보낸 차례
+ *   그대로다 — `when` 이 `W21`·`2031`·`상병` 처럼 꼴이 제각각이라 비교할
+ *   수도 없다.
+ */
+export function buildTimeline(md: TimelineMetadata, copy: TimelineCopy): TimelineView {
+  return {
+    title: copy.title,
+    entries: (md.entries ?? []).map((e) => ({
+      when: e.when,
+      // 이름표는 문안이 준다 — 「부대」를 소식에 굳히면 지난 소식만 옛 말로 남는다
+      label: e.label ?? (e.key ? copy.labels[e.key] ?? e.key : ""),
+      detail: e.detail ?? "",
+    })),
+    empty: copy.empty,
+  };
 }

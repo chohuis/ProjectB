@@ -246,17 +246,20 @@ describe("배선과 본문", () => {
 
 // ── 문안 칸 — 막대·카드도 같은 창구로 찾는다 ──────────────────
 describe("문안 칸", () => {
-  it("표 밖의 칸도 kind 하나로 찾는다", () => {
+  it("뿌리를 달고 온 kind 는 그 칸에서 찾는다", () => {
+    // 뿌리가 없으면 표 칸이다 — 소식 19자리가 그렇게 온다
     expect(tableLabelBlock(labels, "digest")).toBeTruthy();
-    expect(tableLabelBlock(labels, "exam")).toBeTruthy();          // bars
-    expect(tableLabelBlock(labels, "seasonBrief")).toBeTruthy();   // cards
-    expect(tableLabelBlock(labels, "milRecord")).toBeTruthy();     // timeline
-    expect(tableLabelBlock(labels, "tourChamp")).toBeTruthy();     // rankList
+    expect(tableLabelBlock(labels, "bars.exam")).toBeTruthy();
+    expect(tableLabelBlock(labels, "cards.seasonBrief")).toBeTruthy();
+    expect(tableLabelBlock(labels, "timeline.milRecord")).toBeTruthy();
+    expect(tableLabelBlock(labels, "rankList.tourChamp")).toBeTruthy();
     expect(tableLabelBlock(labels, "없는칸")).toBeNull();
+    // ⚠ 뿌리를 빼면 못 찾는다 — 생산부가 kind 에 뿌리를 달아야 한다
+    expect(tableLabelBlock(labels, "exam")).toBeNull();
   });
 
   it("labels 하나뿐인 칸은 열 이름과 항목 이름 양쪽에 걸린다", () => {
-    const copy = tableCopy(labels, "friendlyPlan");
+    const copy = tableCopy(labels, "cards.friendlyPlan");
     const declared = labels!.cards.friendlyPlan.labels as Record<string, string>;
     expect(copy.columns.week).toBe(declared.week);
     expect(copy.rows.week).toBe(copy.columns.week);

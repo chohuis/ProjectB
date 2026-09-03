@@ -277,7 +277,7 @@ export async function acceptDraftOffer(action: {
     playerOptionYears: 0,
     noTrade: false,
     status: "active" as const,
-  });
+  }, { year: get(seasonStore).seasonYear, kind: "new" });
 
   // ⚠ **다음 시즌을 열기 전에 이번 시즌의 세계를 닫아야 한다.**
   // `openProSeason`은 현재 연도 +1로 새 시즌을 직접 여는데, 그러면
