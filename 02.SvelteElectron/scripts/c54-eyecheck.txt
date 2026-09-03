@@ -1,0 +1,44 @@
+# 상무(체육부대) 병역 탭 눈확인 — PLAN_MILITARY_LIFE §39
+#
+#   npm run dev:ui                       # 다른 창 (워크트리는 DEV_PORT=5175)
+#   DRIVE_USER_DATA=<빈 폴더> VITE_DEV_SERVER_URL=http://localhost:5175 \
+#     SCREENSHOT_DIR=<폴더> node scripts/drive.mjs scripts/c54-eyecheck.txt
+#
+# ⚠ 고교 3년을 안 돈다 — dev 우회로 바로 입대시킨다. 상무는 `sportsSelected=true` 다.
+# ⚠ 같은 userData 로 두 번 돌리면 「이어하기」로 갈라진다. 아래는 **첫 실행**이다.
+launch
+resize 1366x768
+sleep 3000
+click-text 새 게임
+sleep 1500
+wait .slot-info
+click .slot-info
+sleep 3000
+fill .field input|상무확인
+sleep 800
+click .btn.next
+sleep 4000
+wait .region-item
+click .region-item
+sleep 2000
+wait .team-list-item
+click .team-list-item
+sleep 2000
+click .btn.next
+sleep 2500
+click .btn.next
+sleep 2500
+click .btn.start
+sleep 30000
+eval import('/src/shared/usecases/militaryDecision.ts').then(m => m.enlistProtagonist('sports', 52, true)).then(() => 'ENLISTED')
+sleep 25000
+advance 22 --auto
+sleep 2000
+click-text 병역
+sleep 2000
+ss c54-01-sangmu-tab
+eval JSON.stringify(document.querySelector('.sports') ? document.querySelector('.sports').innerText.slice(0,600) : 'NO .sports')
+advance 14 --auto
+sleep 2000
+ss c54-02-sangmu-news
+eval JSON.stringify({rest: [...document.querySelectorAll('.sports .empty')].map(e=>e.innerText)})

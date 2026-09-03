@@ -1,0 +1,42 @@
+{
+  "id": "EVT_MILREUNION_UNIT_INVITE",
+  "type": "conditional",
+  "category": "media",
+  "priority": 632,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 52
+    },
+    {
+      "type": "fame_gte",
+      "value": 40
+    },
+    {
+      "type": "week_gte",
+      "value": 16
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_UNIT_INVITE",
+  "decisionTemplateId": "DEC_MILREUNION_UNIT_INVITE"
+}

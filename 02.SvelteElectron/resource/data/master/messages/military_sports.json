@@ -1,0 +1,46 @@
+{
+  "_note": "체육부대(상무) 병역 탭 문안 — PLAN_MILITARY_LIFE §39. 코드에 문장을 두지 않는다. 규칙: 합쇼체 · 부제·대시 금지 · 자리표시자는 체언 종지(조사를 안 붙인다) · 숫자만 자리표시자로 둔다. C 가 틀을 만들고 B 가 다듬었다(B-28).",
+  "head": {
+    "title": "체육부대 복무",
+    "lead": "야구를 하면서 병역을 마칩니다. 부대 훈련이 능력치를 올립니다. 보직은 묻지 않습니다."
+  },
+  "discharge": {
+    "title": "전역까지",
+    "unit": "주",
+    "progress": "총 {total}주 중 {done}주",
+    "done": "복무를 마쳤습니다.",
+    "dateLead": "전역 예정",
+    "dateForm": "{year}년"
+  },
+  "noGames": {
+    "title": "이 기간의 성적",
+    "body": "복무 중에는 내 경기가 없습니다. 이 기간에는 이닝도 타석도 쌓이지 않습니다.",
+    "note": "부대 훈련으로 얻은 성장은 능력치에 바로 들어갑니다. 전역하면 원래 팀으로 돌아갑니다. 남은 계약이 있으면 복무 기간만큼 늘어납니다."
+  },
+  "calendar": {
+    "title": "부대 일정",
+    "lead": "복무 기간에 지나가는 날짜입니다.",
+    "past": "지나온 일정",
+    "upcoming": "다가오는 일정",
+    "emptyPast": "아직 지나온 일정이 없습니다.",
+    "emptyUpcoming": "남은 일정이 없습니다.",
+    "ahead": "{n}주 뒤",
+    "leave": "휴가 {days}일",
+    "eventIds": [
+      "MIL_CAL_ENTRY",
+      "MIL_CAL_GRADUATION",
+      "MIL_CAL_FIRST_LEAVE",
+      "MIL_CAL_PROMOTE_2",
+      "MIL_CAL_SECOND_LEAVE",
+      "MIL_CAL_PROMOTE_3",
+      "MIL_CAL_D30",
+      "MIL_CAL_DISCHARGE"
+    ]
+  },
+  "news": {
+    "title": "부대 소식",
+    "lead": "복무 중에 받은 소식입니다.",
+    "empty": "아직 받은 소식이 없습니다.",
+    "more": "소식함에 {n}통 더 있습니다."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "EVT_MILREUNION_SAME_CLUB",
+  "type": "conditional",
+  "category": "team",
+  "priority": 618,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "weeksSinceDischarge",
+      "value": 52
+    },
+    {
+      "type": "week_lte",
+      "value": 8
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_SAME_CLUB",
+  "decisionTemplateId": "DEC_MILREUNION_SAME_CLUB"
+}

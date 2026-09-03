@@ -64,7 +64,14 @@
 
 **상무 다섯의 두 번째 선택지 (B-25)** — `MIL_EVT_{DRILL_EXCELLENCE,FIELD_FATIGUE,UNIT_SUPPORT,REST_WINDOW,COMMAND_PRESSURE}` 에 성실 ±1~3 · 피로 -1~+5 · 사기 +3 · 컨디션 +5 를 제안값으로 달았다. 자리 `events/pools/military_common.json`. **실측 0** — 이 다섯은 죽은 풀에서 살린 뒤(`1a7b4a9c4`) 한 번도 안 쟀다. 재는 법: 상무 경로 한 판에서 다섯이 뜨는지와 선택 분포.
 
-**전역 뒤 재회 12종 (B-20 초안)** — 효과 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 · 돈 −15~−30만원 · 피로 +2~+4 · 조건 문턱(회복주 ≥2·≥4 · 주차 6~40 · 나이 25 · 명성 40 · 사기 40/55) · 우선순위 601~632. 자리 `resource/data/master/messages/military_reunion.json`. **실측 0** — 아직 `events/conditional/` 에 안 실렸다(잣대 한 줄이 막는다 · `HANDOFF_B_TO_A` B-20). 재는 법: 실은 뒤 `measure:messagekinds` 로 12종 통 수와 전역 뒤 시즌당 몇 통인지.
+**전역 뒤 재회 12종 (B-20 초안)** — 효과 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 · 돈 −15~−30만원 · 피로 +2~+4 · 조건 문턱(회복주 ≥2·≥4 · 주차 6~40 · 나이 25 · 명성 40 · 사기 40/55) · 우선순위 601~632. 자리 `resource/data/master/messages/military_reunion.json`. **실측 0** — B-26 에서 `events/conditional/` 에 실었다(A 가 잣대를 값 기준으로 고쳤다). 아직 한 번도 안 쟀다. 재는 법: 실은 뒤 `measure:messagekinds` 로 12종 통 수와 전역 뒤 시즌당 몇 통인지.
+
+### 3-1. 재회 12종의 새 조건 문턱 (B-26 · 전부 제안값)
+| 값 | 자리 | 지금 실측 | 재는 법 |
+|---|---|---|---|
+| `weeksSinceDischarge` 창 — 직후 ≤6·≤12 · 중간 20~104 · 뒤 26·30·40·52·60·104 | 재회 12종 조건 | **실측 0.** 전역 뒤 몇 주에 무엇이 와야 하는지 잰 적이 없다 | `measure:slotreach --path draft --seasons 12 --full` 에서 12종이 뜨는지 · 전역 뒤 커리어 길이가 창을 덮는지 |
+| `relation_gte unitmate` **20**(FIRST_CALL) · **30**(UNIT_LETTER) | 같은 곳 | 🔴 **`topRelations` 값 분포를 아무도 안 쟀다.** 시작값이 −5~+10 이고 100주 동안 이벤트가 ±2~8 씩 민다 | `probe:military` 끝의 `militaryRecord.topRelations` 세 값 |
+| `militaryRecord.roleId == "mortar"`(BULLPEN_CATCH) | 같은 곳 | 보직은 `roleAssign: random` 이라 **절반**이다 | 통신 주인공은 이 한 종을 못 본다 — 12종 중 하나라 받아들일지 확인 |
 
 ## 4. 경기·리그 (BALANCE_BASELINE_2026-09-05 §4)
 대학 ERA · 2군 타율 · 장타율(홈런 +25% · `resolve_hardness`) · K/9 · 포일(팀당 4~5 · 실제 5~15) · 도루 성공률 64~67%(실제 70~75) · 리그 ERA 5.1~5.4(실제 4.5).
@@ -88,5 +95,5 @@
 ### 7-1. B-24 에서 새로 넣은 값 (2026-09-03)
 | 값 | 자리 | 지금 실측 | 재는 법 |
 |---|---|---|---|
-| 학습 선택지 `studyQualityDelta` **±1.2** | `DEC_UNIV_STUDY_MODE_MID` · `_FINAL` | 🔴 **밀기 폭이 학기 길이에 따라 두 배 넘게 갈린다.** 학점 = (품질누계 ÷ 주차) × 4.5 이고 주차를 안 늘리므로 밀기 = ±1.2/주차 × 4.5 — **중간(11주) ±0.49 · 기말(27주) ±0.20**(전공배수 1.0 — 체육교육·스포츠과학). 기본 갈래 2.48 에서 중간고사 선택만으로 2.97 / 1.99 까지 간다. ⚠ **일반전공은 배수 1.5 라 밀기도 1.5배**(중간 ±0.74)이고 기준선 자체가 3.71 이라 `gpa_lte 2` 로는 못 내려간다 | `measure:slotreach --path univ` 로 `UNIV_GPA_GOOD`(≥3.5)·`GPA_DANGER`(≤2)·`SCHOLARSHIP`(≥3)·`WARN_*` 가 뜨는지. ⚠ **≥3.5 는 한 번으로 못 닿는다** — 두 학기를 다 focus 해야 한다 |
+| ~~학습 선택지 `studyQualityDelta` ±1.2~~ → **`studyModeSet` 로 바뀜 (B-26)** | `DEC_UNIV_STUDY_MODE_MID` · `_FINAL` — 이제 `focus`/`normal`(유지)/`rest` 세 갈래다 | 🔴 **밀기 폭이 학기 길이에 따라 두 배 넘게 갈린다.** 학점 = (품질누계 ÷ 주차) × 4.5 이고 주차를 안 늘리므로 밀기 = ±1.2/주차 × 4.5 — **중간(11주) ±0.49 · 기말(27주) ±0.20**(전공배수 1.0 — 체육교육·스포츠과학). 기본 갈래 2.48 에서 중간고사 선택만으로 2.97 / 1.99 까지 간다. ⚠ **일반전공은 배수 1.5 라 밀기도 1.5배**(중간 ±0.74)이고 기준선 자체가 3.71 이라 `gpa_lte 2` 로는 못 내려간다 | `measure:slotreach --path univ` 로 `UNIV_GPA_GOOD`(≥3.5)·`GPA_DANGER`(≤2)·`SCHOLARSHIP`(≥3)·`WARN_*` 가 뜨는지. ⚠ **≥3.5 는 한 번으로 못 닿는다** — 두 학기를 다 focus 해야 한다 |
 | 고교 부진 문턱 `era_gte 5.0` · `wins_lte 1` · `ip_lte 15` · `k_lte 12` | `EVT_HS_SLUMP_{ERA,NO_WIN,NO_INNINGS,NO_K}` | 🔴 **고교 주인공 시즌 기록 분포를 아무도 안 쟀다.** 리그 ERA 는 5.1~5.4 목표에 실제 4.5(§4)인데 그건 리그 전체 값이지 주인공 값이 아니다 | `measure:slotreach --path hs --full` 로 넷이 뜨는지 · 넷이 다 뜨면 문턱이 너무 헐거운 것이다(부진이 매 시즌 넷 다 오면 안 된다) |

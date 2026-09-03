@@ -1,0 +1,42 @@
+{
+  "id": "EVT_MILREUNION_TICKETS",
+  "type": "conditional",
+  "category": "social",
+  "priority": 604,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 12
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "week_lte",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_TICKETS",
+  "decisionTemplateId": "DEC_MILREUNION_TICKETS"
+}

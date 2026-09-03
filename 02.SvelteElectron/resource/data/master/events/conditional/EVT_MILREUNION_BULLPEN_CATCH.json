@@ -1,0 +1,43 @@
+{
+  "id": "EVT_MILREUNION_BULLPEN_CATCH",
+  "type": "conditional",
+  "category": "training",
+  "priority": 608,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 30
+    },
+    {
+      "type": "eq",
+      "path": "militaryRecord.roleId",
+      "value": "mortar"
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_BULLPEN_CATCH",
+  "decisionTemplateId": "DEC_MILREUNION_BULLPEN_CATCH"
+}

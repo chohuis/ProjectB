@@ -54,7 +54,7 @@
       "choices": [
         {
           "id": "pass",
-          "label": "무사히 통과",
+          "label": "무사히 넘긴다",
           "effectHint": "사기 +2",
           "moraleDelta": 2
         },

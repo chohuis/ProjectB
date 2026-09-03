@@ -1,0 +1,35 @@
+{
+  "id": "EVT_MILREUNION_JUNIOR_ASK",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 602,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 20
+    },
+    {
+      "type": "num_lte",
+      "path": "weeksSinceDischarge",
+      "value": 104
+    },
+    {
+      "type": "morale_gte",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_JUNIOR_ASK",
+  "decisionTemplateId": "DEC_MILREUNION_JUNIOR_ASK"
+}
