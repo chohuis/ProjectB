@@ -3670,6 +3670,56 @@ export function incentiveProbe(): Record<string, unknown> {
   };
 }
 
+/**
+ * 세이브 산출 전용 손잡이 — 프로 베테랑으로 강제 전환 뒤 인센티브 조항이 붙은
+ * 계약을 맺는다 (D · 2026-09-04 · C 가 단위 9 화면 확인용 세이브가 필요해 요청).
+ *
+ * C 가 `c53-eyecheck.txt`에서 쓴 것과 같은 기법(`toSaveGame`→수정→
+ * `hydrateFromSlot`)이다 — FA→재계약 자연 도달은 9시즌(470주)이 걸려 그때
+ * 헤드리스가 죽었다고 기록에 있다. 여기서는 그 기법으로 **실제 slot.db에**
+ * 남긴다(C 의 눈확인은 메모리 스토어에만 남기고 저장은 안 했다).
+ *
+ * 그 뒤 정상 시즌을 한 번 더 돌려야 실제 성적이 쌓이고, `runWorldSeasonEnd`
+ * 안의 `settleSeasonIncentives`가 시즌 끝에 소식을 만든다.
+ */
+export async function fastForwardToProIncentiveContract(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const team = get(teamsL10n).find((t) => String(t.id).includes("KBL") && String(t.id).endsWith("_1"));
+  if (!team) throw new Error("[perfEntry] KBL 1군 팀을 못 찾았다");
+
+  const sv = gameStore.toSaveGame();
+  const p = sv.protagonist as unknown as Record<string, unknown>;
+  p.careerStage = "pro";
+  p.leagueId = (team as { leagueId?: string }).leagueId ?? "LEAGUE_KBL";
+  p.teamId = team.id;
+  p.proServiceYears = 8;
+  p.age = 30;
+  p.fame = 70;
+  p.scoutScore = 80;
+  if (!p.position) p.position = "SP";
+  const pitching = p.pitching as { ovr?: number } | undefined;
+  if (pitching) pitching.ovr = 85;
+  gameStore.hydrateFromSlot(sv, g.currentSlotId ?? "slot1");
+
+  (globalThis as Record<string, unknown>).__PB_INCENTIVES = true;
+  seasonStore.pushPendingAction({
+    type: "salaryNegotiation",
+    teamId: team.id, leagueId: (team as { leagueId?: string }).leagueId ?? "LEAGUE_KBL",
+    offeredSalary: 18000, durationYears: 2, minDurationYears: 1, maxDurationYears: 4,
+    signingBonus: 2000, context: "renewal",
+  });
+  const ok = await acceptNegotiation();
+  await gameStore.save();
+  const after = get(gameStore).protagonist;
+  return {
+    ok, teamId: team.id, leagueId: (team as { leagueId?: string }).leagueId,
+    position: after.position,
+    incentiveCount: (after.contract?.incentives ?? []).length,
+    incentives: (after.contract?.incentives ?? []).map(
+      (i) => `${i.kind}${i.awardId ? `(${i.awardId})` : ""} ${i.threshold}`),
+  };
+}
+
 // ── 헤드리스가 못 넘던 pending 넷 (2026-09-02 · probe-paths) ──────────
 //
 // `runAutoAdvance` 는 `retirementAsk`·`optionClause`·`faMarket`·`trade` 에서
