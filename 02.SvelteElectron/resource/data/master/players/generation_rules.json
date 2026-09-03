@@ -1018,7 +1018,18 @@
       "LEAGUE_ABL_FARM": 8000,
       "LEAGUE_JBL_FARM": 6000
     },
-    "_leagueMultFarmNote": "해외 2군은 항목이 아예 없어 배수 1.0으로 떨어졌고, withContract도 없어 절반 이상이 연봉 0이었다(실측 ABL_FARM·JBL_FARM p10/중앙 = 0/0). 값은 국내 비율을 그대로 옮긴 것이다 — 국내는 1군 1.0 / 2군 0.3이라 30%이고, 해외에 적용하면 ABL 3.5×0.3=1.05 · JBL 2.0×0.3=0.6이다. 최저연봉은 1군과 같게 뒀다(국내가 3000/3000이고 KBO도 2군 최저연봉이 1군과 같다). 사용자 확정 2026-08-22"
+    "_leagueMultFarmNote": "해외 2군은 항목이 아예 없어 배수 1.0으로 떨어졌고, withContract도 없어 절반 이상이 연봉 0이었다(실측 ABL_FARM·JBL_FARM p10/중앙 = 0/0). 값은 국내 비율을 그대로 옮긴 것이다 — 국내는 1군 1.0 / 2군 0.3이라 30%이고, 해외에 적용하면 ABL 3.5×0.3=1.05 · JBL 2.0×0.3=0.6이다. 최저연봉은 1군과 같게 뒀다(국내가 3000/3000이고 KBO도 2군 최저연봉이 1군과 같다). 사용자 확정 2026-08-22",
+    "contractYearsMaxByAge": [
+      {
+        "fromAge": 33,
+        "maxYears": 2
+      },
+      {
+        "fromAge": 36,
+        "maxYears": 1
+      }
+    ],
+    "_contractYearsNote": "🔴 제안값이다(BALANCE_BACKLOG). 계약 기간 나이 상한 — 예전엔 기간이 나이를 안 봐서 37세 OVR 78 이 5년 계약을 받았다(B-29 D-4). agingFromAge 34 는 연봉만 깎는다. 읽는 곳: npc_sim.rs estimate_salary_and_contract. 제일 엄한 칸이 이긴다"
   },
   "powerRules": {
     "_comment": "팀 전력★(1~5) → 로스터 OVR 보정. 중심을 ★3에 두고 한 단계당 shift만큼 민다. 스태프 생성(staff_rules.toml [power_bonus])과 같은 축이다",
