@@ -1132,6 +1132,14 @@ fn normalize_offseason_npcs(
                         // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
                         None if can_place => {
                             events.push(ev("release_roster", npc, Some(npc.current_team.clone()), None));
+                            // 🔴 **선수 경력에도 남긴다** (B-29 D-1 · 사용자 확정 ①).
+                            //   방출은 **팀이 바뀌는 일**이라 되짚을 수 있어야 한다 —
+                            //   `careerEventLabel` 에 「방출(정원)」이 있는데 그 유형이
+                            //   `career_events` 에 한 번도 안 들어가서 화면엔 영영 안 떴다.
+                            //   ⚠ 주간 승격·강등은 안 남긴다 — 정합성 보정이라 사건이 아니다
+                            //   (`position_change` 를 소식에서 뺀 것과 같은 판단이다).
+                            npc.career_events.push(career_ev(
+                                season_year, "release_roster", Some(npc.current_team.clone()), None));
                             npc.current_team = "".into();
                             (None, None)
                         }
@@ -1171,6 +1179,8 @@ fn normalize_offseason_npcs(
 /// 미지명자·FA 미계약자와 **같은 로직**이다.
 fn release_second_stage(
     npcs: &mut [NpcSaveState],
+    // 방출을 선수 경력에도 남기려면 해가 있어야 한다 (B-29 D-1)
+    season_year: i32,
     rules: &crate::free_agency::ReleaseRules,
     limits: &HashMap<String, RosterLimit>,
     events: &mut Vec<OffseasonEvent>,
@@ -1279,6 +1289,9 @@ fn release_second_stage(
         released += 1;
 
         events.push(ev("release_score", &npcs[idx], Some(team.clone()), Some(format!("{score:.0}"))));
+        // 선수 경력에도 남긴다 (B-29 D-1) — `career_ev` 머리말 참고
+        npcs[idx].career_events.push(career_ev(
+            season_year, "release_score", Some(team.clone()), Some(format!("{score:.0}"))));
         npcs[idx].current_team = String::new();
         npcs[idx].current_salary = 0;
         npcs[idx].contract_years = 0;
@@ -1301,6 +1314,8 @@ fn release_second_stage(
 /// ⚠ 예산이 없는 팀(상무·아마추어)은 건너뛴다.
 fn release_over_budget(
     npcs: &mut [NpcSaveState],
+    // 방출을 선수 경력에도 남기려면 해가 있어야 한다 (B-29 D-1)
+    season_year: i32,
     budgets: &HashMap<String, i64>,
     limits: &HashMap<String, RosterLimit>,
     profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
@@ -1371,9 +1386,12 @@ fn release_over_budget(
             cur -= npcs[idx].current_salary;
             have -= 1;
             released += 1;
-            events.push(ev("release_budget", &npcs[idx], Some(team.clone()),
-                Some(format!("예산 {budget} / 총연봉 {} · 점수 {score:.0}",
-                    payroll.get(&team).copied().unwrap_or(0)))));
+            let why = format!("예산 {budget} / 총연봉 {} · 점수 {score:.0}",
+                payroll.get(&team).copied().unwrap_or(0));
+            events.push(ev("release_budget", &npcs[idx], Some(team.clone()), Some(why.clone())));
+            // 선수 경력에도 남긴다 (B-29 D-1) — `career_ev` 머리말 참고
+            npcs[idx].career_events.push(career_ev(
+                season_year, "release_budget", Some(team.clone()), Some(why)));
             npcs[idx].current_team = String::new();
             npcs[idx].current_salary = 0;
             npcs[idx].contract_years = 0;
@@ -1926,6 +1944,32 @@ fn fa_fallback(
     npc.current_salary = 0;
     npc.contract_years = 0;
     events.push(ev("fa_unsigned_retire", npc, npc.original_team_id.clone(), None));
+}
+
+/// 선수 경력에 남기는 사건 (B-29 D-1 · 사용자 확정 ①).
+///
+/// `ev()`(오프시즌 요약)와 **짝이지 대체가 아니다.** 저쪽은 그 해 무슨 일이
+/// 몇 건 있었나를 세는 통이고, 이쪽은 **그 사람의 이력**이다.
+///
+/// 🔴 **팀이 바뀌는 것만 남긴다.** 방출·웨이버가 그렇고, 주간 승격·강등은
+/// 안 남긴다 — 매주 도는 정합성 보정이라 한 시즌에 213줄 규모가 되고
+/// 그건 사건이 아니다(`position_change` 를 소식에서 뺀 것과 같은 판단).
+///
+/// ⚠ `event_type` 은 `types/save.ts` 의 `NpcCareerEventType` 과 **같아야 한다.**
+/// Rust 쪽은 `String` 이라 컴파일러가 안 잡아준다 — 그 파일 주석이 같은
+/// 함정을 적어 뒀고 실제로 `release`·`quit_baseball` 이 그렇게 빠져 있었다.
+fn career_ev(year: i32, kind: &str, from_team: Option<String>, detail: Option<String>)
+    -> NpcCareerEvent
+{
+    NpcCareerEvent {
+        year,
+        event_type:   kind.into(),
+        from_team_id: from_team.filter(|t| !t.is_empty()),
+        to_team_id:   None,
+        from_league_id: None,
+        to_league_id:   None,
+        detail,
+    }
 }
 
 fn ev(kind: &str, npc: &NpcSaveState, from_team: Option<String>, detail: Option<String>)
@@ -2648,7 +2692,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
     if let Some(rr) = params.release_rules.as_ref() {
         release_second_stage(
-            &mut after_normalize, rr, &params.roster_limits, &mut events,
+            &mut after_normalize, season_year, rr, &params.roster_limits, &mut events,
             &params.perf_scores, &params.team_profiles, &is_foreign);
     }
 
@@ -2659,7 +2703,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 🔴 **예산 초과 방출** — 웨이버 **앞**에 둔다. 여기서 나온 사람도
     //   다른 구단이 데려갈 수 있어야 한다 — 방출 절차의 일부다.
     let _budget_released = release_over_budget(
-        &mut after_normalize, &params.team_budgets, &params.roster_limits,
+        &mut after_normalize, season_year, &params.team_budgets, &params.roster_limits,
         &params.team_profiles, &params.perf_scores, &is_foreign, &mut events);
 
     if let Some(wr) = params.waiver_rules.as_ref() {
@@ -5543,3 +5587,4 @@ pub fn retire_independent_over_age(
     n.contract_years = 0;
     Some(ev("indie_age_retire", n, Some(team), Some(format!("{}세", n.age))))
 }
+
