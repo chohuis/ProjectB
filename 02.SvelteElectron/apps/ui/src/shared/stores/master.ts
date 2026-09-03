@@ -501,6 +501,8 @@ function stageToCareerStage(stage: string): CareerStage | null {
 
 /** 오타 하나가 관계를 **조용히** 안 움직이게 한다 — 아는 것만 받는다 */
 const RELATION_KINDS = new Set<RelationKind>(["manager", "coach", "owner", "teammate", "rival"]);
+/** 주간 학습 강도 넷 (`types/save.StudyMode`). 문자열형 보상 `studyMode:focus` 의 문지기 */
+const STUDY_MODES = new Set<string>(["focus", "normal", "rest", "sleep"]);
 
 /**
  * effects 문자열 배열 → `DecisionEffect`.
@@ -536,6 +538,9 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
     else if (key === "removeTag")   { result.removeTag = [...(result.removeTag ?? []), rawVal]; }
     // "study:+0.5" — 주당 학습 품질(0~1)이 눈금이라 **소수를 쓴다**
     else if (key === "study")       { const f = parseFloat(rawVal); if (!isNaN(f)) result.studyQualityDelta = f; }
+    // "studyMode:focus" — 주간 학습 강도를 바꾼다 (B-24). 값이 숫자가 아니라 모드 이름이다.
+    // ⚠ 모르는 이름은 **버린다** — 조용히 이상한 모드가 박히면 학기 정산이 통째로 어긋난다
+    else if (key === "studyMode")   { if (STUDY_MODES.has(rawVal)) result.studyModeSet = rawVal as import("../types/save").StudyMode; }
     else if (key === "addTag")      result.addTag = [...(result.addTag ?? []), rawVal];
     else if (key.startsWith("xp.")) {
       if (!isNaN(val)) result.xp = { ...(result.xp ?? {}), [key.slice(3)]: val };

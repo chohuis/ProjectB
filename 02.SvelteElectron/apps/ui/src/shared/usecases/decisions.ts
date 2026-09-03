@@ -75,6 +75,21 @@ export async function applySideEffects(fx: DecisionEffect): Promise<void> {
     }
   }
 
+  // ── 주간 학습 강도 (B-24 · 사용자 확정 2026-09-03) ───────────
+  //
+  // 🔴 예전엔 `studyQualityDelta` 로 대신했다. 그건 이번 학기 누적에 **한 번**
+  //   더하는 값이라 그 주만 움직인다 — 학점은 `qualityAccum / weeks` 평균이고
+  //   매주 품질을 정하는 건 모드다. 그래서 그 방식으로는 **GPA 3.5 를 못 넘었다.**
+  //   「이번 학기는 공부한다」는 선택은 모드를 바꿔야 뜻이 산다.
+  //
+  // ⚠ 여기 둔 이유 — `applyDecision`(소식 선택)과 `resolveEventPending`(자동 진행·
+  //   이벤트 모달)이 **둘 다 `applySideEffects` 를 지난다.** store 패처 쪽에 두면
+  //   두 갈래 중 한쪽만 고쳐진 채 남는다(이 저장소가 그 형태로 여러 번 걸렸다).
+  if (fx.studyModeSet && g.schoolState.weeklyStudyMode !== fx.studyModeSet) {
+    gameStore.setStudyMode(fx.studyModeSet);
+    autoLog(`[학업] 학습 강도 ${g.schoolState.weeklyStudyMode} → ${fx.studyModeSet}`);
+  }
+
   // ── 관계도 ───────────────────────────────────────────────────
   if (fx.relationDelta && slotId) {
     const { kind, personId, delta } = fx.relationDelta;

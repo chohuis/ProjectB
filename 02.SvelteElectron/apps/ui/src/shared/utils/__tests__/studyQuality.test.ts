@@ -32,6 +32,60 @@ function applyStudyQuality<T extends { semesterQualityAccum?: number; semesterWe
   return { ...school, semesterQualityAccum: (school.semesterQualityAccum ?? 0) + delta };
 }
 
+const readSrc = (rel: string) => readFileSync(resolve(__dirname, "../../", rel), "utf8");
+
+/**
+ * **학습 강도를 이벤트 선택지로** (B-24 · 사용자 확정 2026-09-03).
+ *
+ * 🔴 `studyQualityDelta` 로는 대신할 수 없다. 그건 이번 학기 누적에 **한 번**
+ *   더하고 끝인데, 학점은 `qualityAccum / weeks` 평균이고 매주 품질을 정하는 건
+ *   **모드**다. 그래서 델타로 대신 쓰던 동안 **GPA 3.5 를 한 번도 못 넘었다.**
+ */
+describe("학습 강도 보상 (studyModeSet)", () => {
+  it("문자열형 `studyMode:focus` 를 읽는다", () => {
+    expect(parseEffectsArray(["studyMode:focus"]).studyModeSet).toBe("focus");
+    expect(parseEffectsArray(["studyMode:sleep"]).studyModeSet).toBe("sleep");
+  });
+
+  it("🔴 모르는 모드는 버린다 — 조용히 박히면 학기 정산이 통째로 어긋난다", () => {
+    expect(parseEffectsArray(["studyMode:hard"]).studyModeSet).toBeUndefined();
+    expect(parseEffectsArray(["studyMode:"]).studyModeSet).toBeUndefined();
+  });
+
+  it("안 쓰면 안 싣는다 — 안 고른 선택지가 모드를 되돌리면 안 된다", () => {
+    expect(parseEffectsArray(["study:+0.5"]).studyModeSet).toBeUndefined();
+  });
+
+  it("네 모드가 규칙 파일의 학습 모드 표와 같다", () => {
+    // 파서가 아는 넷과 학점 산식이 아는 넷이 갈리면 한쪽이 조용히 무시된다
+    const modes = Object.keys(RULES.university.studyModeGpa);
+    for (const m of ["focus", "normal", "rest", "sleep"]) {
+      expect(modes, `${m} 가 규칙 파일에 없다`).toContain(m);
+      expect(parseEffectsArray([`studyMode:${m}`]).studyModeSet).toBe(m);
+    }
+  });
+
+  it("선택을 적용하는 자리가 모드를 실제로 바꾼다", () => {
+    // ⚠ `applySideEffects` 에 둔다 — 소식 선택(`applyDecision`)과 자동 진행
+    //   (`resolveEventPending`) **둘 다** 여기를 지난다. store 패처 쪽에 두면
+    //   두 갈래 중 한쪽만 고쳐진 채 남는다
+    const src = readSrc("usecases/decisions.ts");
+    expect(src).toContain("if (fx.studyModeSet");
+    expect(src).toContain("gameStore.setStudyMode(fx.studyModeSet)");
+  });
+
+  it("🔴 대조군 — 두 축이 서로를 흉내내지 않는다", () => {
+    // `study` 는 이번 학기 누적 델타, `studyMode` 는 매주 품질을 정하는 모드다.
+    // 한쪽 키가 다른 쪽 필드를 채우면 힌트와 동작이 다시 갈린다
+    const 델타 = parseEffectsArray(["study:+0.5"]);
+    expect(델타.studyQualityDelta).toBe(0.5);
+    expect(델타.studyModeSet).toBeUndefined();
+    const 모드 = parseEffectsArray(["studyMode:focus"]);
+    expect(모드.studyModeSet).toBe("focus");
+    expect(모드.studyQualityDelta).toBeUndefined();
+  });
+});
+
 describe("학습 품질 보상", () => {
   it("문자열형이 소수를 싣는다 — 눈금이 0~1이라 정수로 자르면 안 된다", () => {
     expect(parseEffectsArray(["study:+0.5"]).studyQualityDelta).toBe(0.5);
