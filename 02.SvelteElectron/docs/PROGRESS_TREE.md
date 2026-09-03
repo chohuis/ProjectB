@@ -86,6 +86,22 @@ A
         상무 섞임 · FA 정교화 · OVR 드리프트 · 장타율 .461
 ```
 
+
+## 1.1 첫 묶음 — 사용자 확정 표 (2026-09-03 · "이 표 보고 진행")
+
+의존: **보직 선택(A① + C①) → 고교 엔진(A②) → 실측 확정 → 불이익(A④) · 인센티브(A⑤ → C④ → B④)**. 밸런스 값은 전부 계측 뒤 사용자 확정.
+
+| 순서 | A (엔진·계측·Rust) | C (화면·IPC · Opus) | B (문안·소식) |
+|---|---|---|---|
+| ① | 보직 적합도 산식 Rust + `pitcherRoleRules` · 팀내 순위 · 자리 수(`bullpenSize` 신설) | 보직 선택 인라인(소식 결정 방식 · runAutoAdvance 보직 갈래 · 헤드리스 `__PB_ROLE_CHOICE`) | 보직 선택·확인 문안 본문(ahead 갈래 둘) |
+| ② | **고교 엔진**: 리그별 선발 투구수 상한(`starterPitchLimit`) · 마무리 진입 문 고교 조정 · 주인공 CP 등판 갈래 · 결함 둘(105구 leagueId · 마무리 의무 휴식) | FA 제안 카드에 계약금·옵션·노트레이드 표시 | 고교 강판·불펜 등판 소식 문안 |
+| ③ | `measure:role` 확장 — 추천 분포 · 고교 마무리 시즌 등판(씨앗 3 · 전후) → **사용자 1차 확정** | 신규 계약 페이지(「＋ 추가」 · 역제안 횟수 · 최저연봉 하한) | 계약 협상·인센티브 정산 소식 문안 |
+| ④ | 불이익 depthFactor(세 자리) → 실측 → **사용자 2차 확정** | 인센티브 구조(kind+threshold) + 시즌 끝 정산 화면 | 계측 결과로 축 표·금액 확정값 갱신 |
+| ⑤ | 인센티브 문턱·금액 비율 계측(§7-1 · draft 12시즌 × 씨앗 3) → **사용자 확정** | 은퇴 직후 결산 자동 열기 · 상무 탭 §39 | 병영 문안 62종 초안(사용자가 다듬음) |
+
+프리즈 전(9/8~15)은 셋 다 **빌드 회신 결함만** — 9/14 최종 빌드 · 9/15 프리즈(App/Depot ID 사용자).
+정본: [PLAN_ROLE_RECOMMEND.md](PLAN_ROLE_RECOMMEND.md) · [PLAN_CONTRACT_TERMS.md](PLAN_CONTRACT_TERMS.md).
+
 ## B — 이벤트 · 소식함 (`ProjectB-events` · `track/events`)
 
 ```
@@ -173,7 +189,7 @@ C
 ├─ 13. ✅ **이벤트 pending 모달** — `features/events/ui/EventPendingModal.svelte` · MainPage 가 `type:"event"` 일 때 띄우고 선택은 `resolveEventPending` 하나만 부른다(효과·해제·저장이 그 안). 예전 기록: 🔴 이벤트 pending 모달이 없다 — `type:"event"` pending(군 이벤트 전부)을 그리는 Svelte 가 한 곳도 없다(A 실측 09-02: resolvePendingAction("event") 호출 0 · choices 를 그리는 컴포넌트 0). 헤드리스(runAutoAdvance)만 푼다 → 사람이 복무 중이면 "이벤트 처리" 버튼이 소식 탭으로만 보내고 **진행이 막힌다**. §32 대로 병역 탭 일과에 붙이되, 옛 군 풀(상무)도 같은 모달을 쓴다 · 효과 적용은 runAutoAdvance.handleEvent 와 같은 셋(applyEventEffect · applySideEffects · applyMilitaryEventChoice)
 ├─ ✅ 09-01 까지 — 계약 협상(타자) · 진로 허브 · 부상 치료 · 관전 · 엔딩 · 역대 탭 · 720p 판정
 ├─ 결함은 HANDOFF_C_TO_A.md — 재현 경로(drive.mjs 인자) + 스크린샷
-└─ 14. ✅ **보직 추천·선택 기획안**(Opus · bb340b2f8 · 발견 넷 더: 로테이션 수 규칙/Rust 불일치 · 세부 보직이 등판에 무영향 · starterSlot 호출 0 · 복무 중 배정 없음 · §8 열둘 사용자 확정(09-03) → ✅ 후속 512e72f90: 확정 반영 · 리그별 묻는 주(고교 W6·대학 W4·독립 W9·프로 W1·2군 W4) · 시안 = NewsPage 인라인 선택 · 새 pending 타입 불필요(message) · 남은 결정 둘: 고교 마무리(제안 안 둔다) · 상무에 묻나(제안 안 묻는다) → B 반영 ✅ de18b377d(§5-3 그 시즌 보직 = 시즌 전 주 확정 보직 · 축 1:1 · 순서 그림 · §7 선행) · B 가 C 문안 구멍 둘 찾음(ahead=0 갈래 · 소식 id 연도+팀) → 다음 C 스폰 때 반영) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
+└─ 14. ✅ **보직 추천·선택 기획안**(Opus · bb340b2f8 · 발견 넷 더: 로테이션 수 규칙/Rust 불일치 · 세부 보직이 등판에 무영향 · starterSlot 호출 0 · 복무 중 배정 없음 · §8 열둘 사용자 확정(09-03) → ✅ 후속 512e72f90: 확정 반영 · 리그별 묻는 주(고교 W6·대학 W4·독립 W9·프로 W1·2군 W4) · 시안 = NewsPage 인라인 선택 · 새 pending 타입 불필요(message) · 남은 결정 둘: 고교 마무리(제안 안 둔다) · 상무에 묻나(제안 안 묻는다) → B 반영 ✅ de18b377d → **C 최종 5e14b29ee**: §8 열넷 전부 확정(고교 마무리 둔다 · 엔진 명세 §6-1 · 상무 안 묻음 · ahead=0 갈래 · 소식 id `msg-role-{year}-{teamId}-w{week}`) · **C-14 닫힘**(구현 1.1) · 코드 결함 둘 발견: 고교 105구가 주인공 경기에만 안 걸림(matchSimulateToEntry leagueId 누락 · MainPage 234 · runAutoAdvance 95) · 고교 마무리 의무 휴식 없음) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
 ```
 
 ---
