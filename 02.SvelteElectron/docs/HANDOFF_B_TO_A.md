@@ -812,6 +812,92 @@ B-19  docs/PLAN_MESSAGE_DASHBOARDS.md            48자리 형태 제안
 
 `docs/mock/message-dashboards-mock.html` 에 대진표를 더해 **일곱**이 됐다.
 
+### B-20 (1.1) 전역 뒤 부대원 재회 이벤트 초안 12종 — 데이터 파일
+
+`resource/data/master/messages/military_reunion.json` (새 파일). **데이터만**이고
+**아직 아무 코드도 이 파일을 안 읽는다.** 규칙 12 · 문안 12 · 선택지 12를
+**한 파일에** 담았다 — 옮길 때 셋(`events/conditional/` 12파일 ·
+`templates.json` · `decision_templates.json`)으로 갈리는데, 갈라 두면 한쪽만
+고쳐진 채 남는다.
+
+🔴 **`events/conditional/` 에 넣었다가 도로 뺐다.** 넣은 상태로 게이트를
+전부 돌려 봤고 **여섯이 다 통과했다**:
+
+```
+test:events            ALL PASS   (이벤트 600 · [3] 함의 죽음 0)
+check:eventconditions  ok         모르는 타입·어긋난 필드 0
+check:effectkeys       ok         모르는 보상 키 0
+check:effecthints      ok         힌트가 보상을 다 언급
+check:playertype       ok         ① 73 (상한 75 · 안 늘었다) · ② 316
+check:eventranges      ok         눈금 밖·항상 참 0
+```
+
+**그런데 `npm test` 가 하나 빨간불이었다** — 그래서 뺐다.
+
+```
+apps/ui/src/shared/utils/__tests__/eventDataHygiene.test.ts:139~150
+  "이벤트 규칙에 군 조건이 없다 — 있으면 영영 안 뜬다"
+```
+
+🔴 **그 잣대가 이 경우엔 틀렸다.** 근거는 「복무 중에는 이벤트 엔진이 안
+돈다」(`advanceWeek` 가 `careerStage === "military"` 면 일찍 return)인데,
+**재회는 전역 뒤**라 엔진이 돈다. 잣대는 **경로 이름만 보고** `militaryStatus`
+· `militaryUnit` · `militaryServiceWeeks` · `militaryServedUnit` 넷을 통째로
+막는다. 막아야 할 것은 **값**이다 — `militaryStatus === "현역"` 은 막고
+`"군필"` 은 열어야 한다.
+
+⚠ **고치지 않았다 — 코드 금지다.** 검사 파일 한 줄이고 **A/C 몫**이다.
+그 한 줄이 좁혀지면 이 파일은 그대로 `events/conditional/` 로 간다.
+
+#### 실측 하나 — 전역 뒤 무대는 넷이고 **대학이 없다**
+
+```
+stores/game.ts:2481~2497  completeMilitaryService
+  hiatus 가 highschool·university 면 → null 로 지우고 독립으로 보낸다
+  주석: "학교로는 돌아가지 않는다 … 학생 신분에서 입대했으면 갈 곳은 독립리그다"
+```
+
+그래서 전역 뒤 `careerStage` 는 `pro_kbl` · `pro_abl` · `pro_jbl` ·
+`independent` 넷뿐이다. **B-20 지시에 있던 「대학 무대」 재회는 안 썼다** —
+쓰면 영영 안 뜨는 갈래가 된다.
+
+⚠ 상무도 뺐다. `militaryRecord` 는 현역만이고(`types/save.ts:325`)
+`militaryServedUnit` 이 전역 뒤에도 남으므로 `"general"` 로 갈랐다.
+
+#### 🔴 필요한 조건 키 — 만들지 않고 적어만 둔다 (A/C 몫)
+
+| 어디 | 무엇 | 왜 |
+|---|---|---|
+| `eventPaths.NUM_PATHS` | `militaryRecord.topRelations.0.value` | §30 이 「관계 상위 2명」 을 재회 후보로 정했는데 **읽을 경로가 없다** |
+| `eventPaths.NUM_PATHS` | `weeksSinceDischarge` (또는 `militaryDischargeYear` 를 EQ_PATHS 에) | §30 의 「전역 후 첫 시즌 W10·W30」 을 **못 건다.** `militaryRecoveryWeeks` 는 2~10 에서 0 까지 줄고 그 뒤로는 경과를 모른다 |
+| `eventPaths.EQ_PATHS` | `militaryRecord.roleId` | ㉠ 통신 / ㉡ 박격포로 재회 문안이 갈린다 |
+| `conditionEvaluator` | `relation_gte/lte` 에 `memberId` | 지금은 `kind` 다섯(manager·coach·owner·teammate·rival)뿐이다. **「부대원」 종류가 없다** |
+| `usecases/decisions.ts` | `relationDelta` 에 `personId` | 지금은 `kind` 의 「접촉 중인 첫 상대」 를 올린다(`decisions.ts:104`) — 재회한 그 사람을 못 올린다 |
+| 문안 렌더러 | `{memberName}` 자리표시자 | `templates.json` 526종 중 자리표시자를 쓰는 것이 **0건**이다. 이름을 넣으려면 렌더러가 먼저고, 조사 굴절형 표도 같이 필요하다 |
+
+**그래서 이 초안은 부대원을 이름으로 안 부른다** — 사수·후임·같은 중대 같은
+호칭으로만 부른다. 이름을 넣는 건 위 여섯이 생긴 뒤다.
+
+#### 12종
+
+```
+회복 주에 걸린 셋   FIRST_CALL(≥4) · PARCEL(≥2) · [JUNIOR_ASK 는 주차]
+프로 셋 전용         OPP_MOUND · SAME_CLUB · BULLPEN_CATCH · UNIT_INVITE · TICKETS
+독립 전용            INDIE_FIELD
+전 무대              JUNIOR_ASK · UNIT_LETTER · WEDDING · BALL_PARTNER_NEWS
+```
+
+🔴 **효과는 전부 제안값이다** — 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 ·
+돈 −15~−30(만원) · 피로 +2~+4. 사기 폭은 2026-09-03 에 재조정한 눈금
+(+1~+5) 안에 뒀다. **사용자 확정 전이다.**
+
+⚠ `relationDelta` 를 쓴 둘(OPP_MOUND `rival` · SAME_CLUB `teammate`)은
+**사람이 아니라 종류를 올린다.** 기존 90종이 이미 그 관례라 따랐고, 위 표의
+`personId` 가 생기면 그때 사람으로 바꾼다.
+
+⚠ 마운드·불펜이 든 둘은 `player_type: pitcher` 를 선언했다 — 안 하면
+`check:playertype` ① 이 73 에서 는다.
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고
