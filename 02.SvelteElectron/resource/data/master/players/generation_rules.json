@@ -2854,10 +2854,10 @@
     "_note": "투수 보직 추천 (PLAN_ROLE_RECOMMEND §2 · 1.1 A①). 읽는 곳: utils/pitcherRoleRules.ts → Rust pitcher_role.rs. 가중치·계수는 전부 제안값이고 밸런스는 사용자 확정(measure:role 실측 뒤). 없는 항목(구종 정보 없음)은 빼고 남은 가중치를 재정규화한다.",
     "weights": {
       "SP": {
-        "stamina": 0.28,
-        "control": 0.18,
+        "stamina": 0.34,
+        "control": 0.22,
         "command": 0.14,
-        "arsenal": 0.2,
+        "arsenal": 0.1,
         "velocity": 0.1,
         "recovery": 0.06,
         "movement": 0.04

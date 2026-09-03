@@ -62,6 +62,11 @@ pub struct ArsenalWeights {
     pub grade_best2: f64,
     pub grade_best: f64,
     pub groups: f64,
+    /// 습득중(1등급) 구종을 몇 개로 세나 — 없으면 1.0(= 예전과 같다).
+    ///
+    /// 1등급은 아직 경기에서 못 쓰는 구종인데 `count` 가 1개로 세고 있었다. 값을 낮추면
+    /// **구종 수** 항목만 줄고 등급 평균·계열 수는 그대로다 — 한 번에 한 축만 움직인다.
+    pub developing_weight: Option<f64>,
 }
 
 /// 규칙 — `weights.<ROLE>` 은 능력치 이름 → 가중치 (`arsenal` 키 포함)
@@ -131,7 +136,11 @@ fn arsenal_score(pitches: &[PitchRef], w: &ArsenalWeights) -> f64 {
     let n = pitches.len() as f64;
     if n == 0.0 { return 0.0; }
     let cap = w.count_cap.max(1.0);
-    let count = (n.min(cap)) / cap;
+    // 습득중(1등급)은 `developingWeight` 만큼만 센다 — 규칙 파일이 안 주면 1.0(예전 그대로)
+    let dev = w.developing_weight.unwrap_or(1.0);
+    let n_eff: f64 = pitches.iter().map(|p| if p.grade <= 1.0 { dev } else { 1.0 }).sum();
+    let count = (n_eff.min(cap)) / cap;
+    // ⚠ 등급 평균·최고는 **실제 구종 수**로 나눈다 — 세는 무게는 개수 항목에만 건다
     let g_avg = pitches.iter().map(|p| p.grade).sum::<f64>() / n / 5.0;
     let mut non_fb: Vec<f64> = pitches.iter().filter(|p| p.group != "fastball").map(|p| p.grade).collect();
     non_fb.sort_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));
@@ -363,6 +372,30 @@ mod tests {
         assert!((b.fits.cp - base.fits.cp - 6.0).abs() < 1e-9);
         // 동점 동료보다 앞선다 — 순위가 오른다
         assert!(b.ranks.sp <= base.ranks.sp);
+    }
+
+    #[test]
+    fn 습득중_구종_무게는_개수_항목만_민다() {
+        // 1등급 하나 + 3등급 하나. developingWeight 0.5 면 개수만 2 → 1.5 로 줄고 등급 평균은 그대로다.
+        let pitches = vec![
+            PitchRef { grade: 1.0, group: "fastball".into() },
+            PitchRef { grade: 3.0, group: "breaking".into() },
+        ];
+        let w1 = ArsenalWeights { count: 0.40, count_cap: 5.0, grade_avg: 0.35, groups: 0.25, ..Default::default() };
+        let mut w05 = w1.clone();
+        w05.developing_weight = Some(0.5);
+        let a1 = arsenal_score(&pitches, &w1);
+        let a05 = arsenal_score(&pitches, &w05);
+        // 개수 항목만 0.40 × (2−1.5)/5 = 0.04 → 4점 준다
+        assert!((a1 - a05 - 4.0).abs() < 1e-6, "{a1} {a05}");
+        // 값이 없으면 예전과 같다 — 기본은 안 바뀐다
+        assert!((arsenal_score(&pitches, &ArsenalWeights { developing_weight: None, ..w1.clone() }) - a1).abs() < 1e-9);
+        // 1등급이 하나도 없으면 무게가 아무 일도 안 한다
+        let grown = vec![
+            PitchRef { grade: 2.0, group: "fastball".into() },
+            PitchRef { grade: 3.0, group: "breaking".into() },
+        ];
+        assert!((arsenal_score(&grown, &w1) - arsenal_score(&grown, &w05)).abs() < 1e-9);
     }
 
     #[test]
