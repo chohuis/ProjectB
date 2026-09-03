@@ -107,7 +107,9 @@ D
 ├─ 2. ✅ 검사 셋 — test-events §3.5 필수 중복 · check-effecthints 낱말 둘 · `check:josa` 신설(실측 1건 `{team}와의` → B) · perfEntry NPC 덤프 probe 셋 (76c45a71e)
 ├─ 3. ✅ 고교 마무리 24판(4단계×2정책×3씨앗) — 마무리 등판 3~4→4~8 · 병목은 closerGate 가 아니라 진입(문 없는 판도 미진입 69~82%) → BALANCE_BACKLOG §1 (f9d369eed)
 ├─ 4. ✅ 도달률 둘 — 🔴 재회 12종 0/12(전역 뒤 조건 이벤트 훅 미배선 재확인 → A) · 상무 5종 중 2 확인·3 미확인(씨앗 1개) · army 경로 프로 4리그 0% 정상 → 백로그 §3 (ffe0a00ed)
-└─ 5. ✅ NPC 덤프 5,798명 + 오프시즌 1회 — 🔴 29세+ 군필 84.4%(기대 100) · 🔴 33+/36+ 계약 상한 위반 57%/73% → A 확인 · careerHistory 일치 87.2%(시차 가능성) · NPC_HISTORY_REVIEW "D 실측" (11dc3a058) · 다음 일감 없음
+└─ 5. ✅ NPC 덤프 5,798명 + 오프시즌 1회 — 🔴 29세+ 군필 84.4%(기대 100) · 🔴 33+/36+ 계약 상한 위반 57%/73% → A 확인 · careerHistory 일치 87.2%(시차 가능성) · NPC_HISTORY_REVIEW "D 실측" (11dc3a058)
+├─ 6. ✅ 트렁크 msgdup ok · careerEndScreen 3회 재측(부하 탓 · C 가 7b3562d53 로 근본 고침)
+└─ 7. ✅ C 눈확인용 세이브(3b717998c · `fastForwardToProIncentiveContract()` · `__PB_INCENTIVES` 손잡이 · 씨앗 20260802 · 2028 W0 · 인센티브 2건 · `resource/logs/d-saves/c9-incentive-*` 미추적 · 함정: renewal 계약은 다음 시즌 경계에 적용 → 시즌 둘 · 저장은 `saves/slot3_*.db` v3 + WAL 체크포인트) · 다음 일감 없음
 ```
 
 ## v1.0.0 까지 — 구현 단위 진행률 (OP 가 갱신 · 계측·밸런스는 제외 = 1.0.0 뒤 조정 단계)
