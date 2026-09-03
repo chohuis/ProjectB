@@ -1250,6 +1250,67 @@ B-25 의 규칙을 합쇼체로 옮기면서도 지켰다.
 후보표 §8 의 **본문 제안**이다. 그건 말투가 아니라 **새 문안**이라 별도
 결정이다. 지금은 두 번째 선택지만 달린 상태다(B-25).
 
+### B-28 상무 탭 문안 다듬기 · 🔴 조사 결함은 하나가 아니라 **여섯 자리**다
+
+#### ① `messages/military_sports.json` — 다섯 줄을 고쳤다 (키·구조 그대로)
+
+| 자리 | 왜 |
+|---|---|
+| `discharge.dateForm` `{year}년 W48` → `{year}년` | 🔴 **W48 은 근거가 없다.** 전역은 주차 고정이 아니라 `militaryServiceWeeks >= 100`(`militaryDecision.ts:139`)이고, 입대 주가 인자다(`enlistMilitary(… enlistWeek = MILITARY_RESULT_WEEK)` · 기본 **50**). W50 입대면 100주 뒤는 **W46**(Y+2)이다. 연도는 `militaryDischargeYear = enlistYear + 2` 로 맞으니 연도만 남겼다 |
+| `noGames.note` 「계약이 2년 늘어납니다」 → 「남은 계약이 있으면 복무 기간만큼 늘어납니다」 | 🔴 **조건부다.** `game.ts:2421` 이 `isPro && contract.remainingYears > 0` 일 때만 늘린다 — 만료된 계약은 연장 없이 전역 후 FA·재계약이다 |
+| `noGames.body` 「경기가 없습니다」 → 「내 경기가 없습니다」 | 상무는 **팀이 실제로 경기를 뛴다**(`MILITARY.md`). 없는 건 주인공 경기다(`PLAN_ROLE_RECOMMEND` §427 「주인공 경기 0」) |
+| `calendar.lead` 「반드시 지나가는 자리입니다」 → 「지나가는 날짜입니다」 | 🔴 **상무는 그 캘린더를 안 탄다.** `advanceWeek.ts:2216` 이 `!isSportsUnit && militaryLife` 일 때만 `military_life` 로 보낸다 — 여덟은 **이벤트가 아니라 날짜 눈금**이다 |
+| `head.lead` | 상관없는 두 사실이 쉼표로 붙어 있어 문장을 갈랐다 |
+
+`calendar.eventIds` 여덟은 `military/calendar.json` 에 다 있다(1·5·20·35·52·61·96·100주) — C 검사와 같은 걸로 확인했다.
+
+⚠ **이름이 겹친다.** `events/pools/military_sports.json`(상무 이벤트 20종)과
+`messages/military_sports.json`(이번 문안)은 **다른 파일**이다. 폴더가 다르지만
+둘 다 「military_sports」라 인계·로그에서 헷갈린다.
+
+#### ② 🔴 조사 결함 — C 가 본 건 여섯 자리 중 하나다
+
+C 가 짚은 자리는 **코드**다. 고치지 않았다(코드 금지) — 자리와 실측만 적는다.
+
+```
+apps/ui/src/shared/utils/militaryResultMessage.ts:36
+  const lines = [`「${choice.label}」을 골랐다.`];
+```
+
+**군 선택지 라벨 176개 중 172개가 무받침이다** — 「…한다」·「…간다」 꼴이라
+거의 전부다. 받침이 있는 건 넷뿐(「새 폼에 도전」·「멘탈 코치에게 상담」·
+「복귀 준비에 집중」·「마지막 경기에 집중」). **176 중 172 가 틀린다.**
+
+⚠ 같은 파일 48행 `subject: `${title} — 결과`` 도 **부제·대시 금지 규칙 위반**이다.
+둘 다 내가 B-5 에 쓴 것이고, 그때는 규칙이 정해지기 전이었다.
+
+**전수로 훑으니 같은 부류가 다섯 더 있다.** 이름 목록의 받침을 세어 봤다:
+
+| 자리 | 문장 | 실측 |
+|---|---|---|
+| `utils/militaryResultMessage.ts:36` | `「{label}」을 골랐다` | 🔴 **176 중 172 틀림** |
+| `usecases/nationalTeam.ts:294` | `{def.name}이 막을 내렸습니다` | 🔴 **7 중 7 전부 틀림** — 개나리기·장미기·무궁화기·국화기·패왕기·은하기·여명기 (전부 무받침 → 「가」) |
+| `usecases/militaryLife.ts:226` | `{ARC_LABELS…}이 됐다` | 🔴 **7 중 4 틀림** — 탄약수·부사수·사수·상황실 근무자 |
+| `usecases/weekPhases/tournamentNews.ts:98` | `{def.flower}를 들어올렸다` | 🔴 **7 중 2 틀림** — 왕중왕·여명 (받침 → 「을」) |
+| `usecases/weekPhases/injuries.ts:291` | `{injuryLabel}로 인한 은퇴` | ⚠ 부상명 받침이면 「으로」 — 목록을 따로 안 셌다 |
+| `usecases/contractDecision.ts:65·179·181` | `{teamName}와 계약이` | ✅ **지금은 안 틀린다** — 팀 238개 중 받침으로 끝나는 것 **0종**(200 무받침 + 38 비한글). `contract_terms.json:40` 의 기록과 같다. **팀 이름 하나만 받침으로 늘어도 깨진다** |
+
+고치는 법은 이 프로젝트가 이미 정한 그대로다 — **조사를 붙이지 않는다.**
+
+```
+militaryResultMessage.ts:36   `선택: ${choice.label}`        (체언 종지)
+militaryResultMessage.ts:48   `${title} 결과`                 (대시 제거)
+nationalTeam.ts:294           `${def.name}. 대회가 끝났습니다.`
+militaryLife.ts:226           `보직: ${ARC_LABELS[...][arc]}`
+tournamentNews.ts:98          `${def.flower}. 우승입니다.`
+injuries.ts:291               `${injuryLabel} 은퇴`
+```
+
+🔴 **잣대를 하나 두면 다시 안 난다.** 자리표시자(`${…}`·`{…}`) 바로 뒤에
+조사(을/를·이/가·은/는·으로/로·와/과)가 오는 줄을 코드와 데이터에서 훑는
+검사다. 내가 이번에 쓴 스캐너가 그대로 쓸 만하고, **데이터 쪽은 지금 0건**
+(맞은 셋은 전부 `_josa` 주석이다). **D 몫으로 넣어 달라.**
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고
