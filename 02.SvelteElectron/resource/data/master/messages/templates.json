@@ -486,27 +486,6 @@
       "decisionTemplateId": null
     },
     {
-      "id": "MSG_HS_TOP10_Y1",
-      "category": "news",
-      "subject": "고1 유망주 TOP 10 리포트",
-      "body": "지역 매체가 고1 투수 유망주 TOP 10을 발표했습니다.\n\n당신은 ‘차세대 선발 후보’로 분류되어 이름을 올렸습니다.",
-      "decisionTemplateId": null
-    },
-    {
-      "id": "MSG_HS_TOP10_Y2",
-      "category": "news",
-      "subject": "고2 유망주 TOP 10 중간 결산",
-      "body": "시즌 중반 기준으로 고2 투수 TOP 10이 공개되었습니다.\n\n스카우트들은 안정적인 이닝 소화를 강점으로 평가했습니다.",
-      "decisionTemplateId": null
-    },
-    {
-      "id": "MSG_HS_TOP10_Y3",
-      "category": "news",
-      "subject": "고3 드래프트 전 TOP 10 특집",
-      "body": "드래프트 전야 특집으로 고3 투수 TOP 10이 발표되었습니다.\n\n당신은 상위권 후보군으로 분류되며 본격 관심을 받고 있습니다.",
-      "decisionTemplateId": null
-    },
-    {
       "id": "MSG_HS_Y1_FIRST_TRAINING",
       "category": "coach",
       "subject": "첫 훈련 - 선배들의 속도를 따라가라",
