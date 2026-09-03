@@ -254,7 +254,7 @@ C
 ├─ 15. ✅ **1.1 C① 보직 선택 인라인**(Opus · d1dcbdac0 · 18파일 · vitest +72 → 1,840 · svelte-check 0) — 리그별 개막 전 주 소식 안 선택 · 새 pending 타입 0 · id 연도+팀+주 · 헤드리스 `__PB_ROLE_CHOICE` · 문안 전부 role_choice.json · A 가 갈아끼울 자리 `pitcherRole.ts recommendRole()` 하나 · ⚠ 프로 W1 갈래 실측은 A 가 12시즌 pro 로 · ⚠ 비추천 확인 단계 → C② 에서 비추천만 확인 단계로 (사용자 요구 3)
 ├─ 16. ✅ **1.1 C② FA 제안 카드 조건 표시**(Opus · 4bae911aa · 8파일 · vitest +27 → 1,867 · svelte-check 0) — 계약금·팀/선수 옵션·노트레이드·총액을 있는 줄만(faOfferTerms.ts 순수 함수) · C① 후속: 비추천 버튼만 확인 단계(needsRoleConfirm · 문서 세 자리 정정) · ⚠ 실측은 컴포넌트 검사로 대신(FA 는 5년차 뒤 · electron 슬롯) · ❓ 노트레이드 표기 셋(트레이드 거부권/노트레이드/노트레이드 조항) → C③ 에서 「노트레이드」로 통일
 ├─ 17. ✅ **myBody 대시보드 갈래 + 「노트레이드」 통일 + 1.1 C③ 계약 협상 페이지**(Opus · 885662a21 · 17파일 · vitest +89 → 1,959 · svelte-check 0) — 「＋ 추가」 조항·인센티브(상한 3 · `contractRules.incentives` 9종 제안값) · 최저연봉 하한 · 역제안 1~3회 소모 · 비교표 · 수락 확률 · incentives → {kind,threshold,bonus} + migrateContract · ⚠ 실측은 컴포넌트 검사 대신 · A 이어 볼 것: 재계약 제안에 인센티브·팀 옵션 싣기(advanceWeek 1306) · 정산(paidSeasons) · 문턱 계측 · 🔴 제시 수락 서명액 ≠ 화면 표시(예전부터 · 밸런스라 사용자)
-└─ 18. 🔄 **C⑤ 결산 자동 열기 + C②·C③ 눈확인** — ea6b92c86 결산 자동 열기 ✅(경로 셋 중 둘만 열리던 것) · 눈확인 진행 중 — 첫 시도(트렁크 · 12:57 시작 직후 사망 · WIP 는 stash@{0}) → **워크트리 ProjectB-ui(track/ui) 에서 재개**(Opus)
+└─ 18. ✅ **C⑤ 결산 자동 열기 + 눈확인**(ea6b92c86 · 78655f659 · 스크린샷 10장 docs/screens/c53-* · 정렬 결함 하나 고침 · 넘침 0 · ⚠ FA 카드는 고교 세이브에 프로 NPC 가 없어 제안 0 — 만드는 법 §0.53 · 워크트리 눈확인은 DEV_PORT=5175) — 첫 시도(트렁크 · 12:57 시작 직후 사망 · WIP 는 stash@{0}) → **워크트리 ProjectB-ui(track/ui) 에서 재개**(Opus)
 ```
 
 ---
