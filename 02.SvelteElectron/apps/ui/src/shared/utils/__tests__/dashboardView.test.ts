@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   buildRankList, buildTableRows, buildTableView, cellAlign, cellText, deltaMark,
-  deltaText, isNumericCell, resolveColumns,
+  deltaText, inferAlign, isNumericCell, resolveColumns,
 } from "../dashboardView";
 import { parseDashboardLabels, tableCopy, tableLabelBlock } from "../dashboardCopy";
 import type { RankListMetadata, TableMetadata, Top10Metadata } from "../../types/main";
@@ -427,5 +427,50 @@ describe("묶음 1-③ 계약 완료 조건 표", () => {
   it("화면이 두 번째 표를 그린다", () => {
     expect(TABLE, "extra 를 안 그린다 — 인센티브가 사라진다").toContain("metadata.extra");
     expect(TYPES, "규격에 두 번째 표 자리가 없다").toContain("extra?: TableMetadata");
+  });
+});
+
+describe("정렬 — 글자 열이 숫자에 붙어 오른쪽에 서지 않는다 (1366×768 실측)", () => {
+  const copy = tableCopy(LABELS, "digest");
+  const rows: TableMetadata["rows"] = [
+    { rank: 1, teamId: "부산 웨이브스", w: 38, l: 22, pct: ".633" },
+    { rank: 2, teamId: "창원 스타스", w: 35, l: 25, pct: ".583" },
+  ];
+
+  /**
+   * ⚠ 열 이름이 문안에서 오므로 생산부가 `align` 을 실어 보낼 자리가 없다 —
+   *   값으로 정한다. 첫 판 스크린샷에서 팀 이름이 오른쪽에 붙어 있었다.
+   */
+  it("팀 이름 열은 왼쪽, 숫자 열은 오른쪽이다", () => {
+    const v = buildTableView({ type: "table", kind: "digest", columns: [], rows }, copy);
+    const by = Object.fromEntries(v.columns.map((c) => [c.key, c.align]));
+    expect(by.teamId, "팀 이름이 숫자에 붙어 오른쪽에 선다").toBe("left");
+    expect(by.w).toBe("right");
+    expect(by.pct, "승률은 숫자다").toBe("right");
+    expect(by.rank).toBe("right");
+  });
+
+  it("인센티브의 조건 칸도 글자라 왼쪽이다", () => {
+    const inc = tableCopy(LABELS, "contractSigned.incentives");
+    const v = buildTableView({
+      type: "table", kind: "contractSigned.incentives", columns: [],
+      rows: [{ name: "등판", condition: "25회 이상", amount: "+1,500만원" }],
+    }, inc);
+    expect(v.columns.map((c) => c.align)).toEqual(["left", "left", "left"]);
+  });
+
+  /** 생산부가 실어 보낸 `align` 이 값 추론을 이긴다 — 대진의 가운데 칸이 그 자리다 */
+  it("열이 정렬을 실어 보내면 그게 이긴다", () => {
+    const v = buildTableView({
+      type: "table", kind: "bracket",
+      columns: [{ key: "round", label: "라운드" }, { key: "home", label: "", align: "center" }],
+      rows: [{ round: "8강", home: "한성고" }],
+    }, tableCopy(LABELS, "tourOpen"));
+    expect(v.columns[1].align).toBe("center");
+  });
+
+  it("값이 없으면 첫 열만 왼쪽이라는 기본이 남는다", () => {
+    expect(inferAlign("w", [])).toBeNull();
+    expect(inferAlign("w", [{ w: null }])).toBeNull();
   });
 });
