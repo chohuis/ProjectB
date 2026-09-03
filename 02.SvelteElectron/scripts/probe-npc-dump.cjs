@@ -29,12 +29,17 @@ const SLOT = "ND" + SEED;
       const served = rows.filter((n) => n.militaryStatus === "군필" || n.militaryStatus === "면제");
       return rows.length ? (100 * served.length / rows.length).toFixed(1) : "N/A";
     };
-    const b2628 = bucket(26, 28);
-    const b29p = bucket(29, null);
+    // 🔴 **병역 규칙은 한국인에게만 걸린다** (`roster_gen.past_service_of` —
+    //   외국인은 무조건 「면제」다). 전원을 세면 ABL·JBL 로스터가 통째로
+    //   군필로 잡혀 기대값을 넘는다 — 2026-09-04 실측 26~28세 87.0% 가
+    //   그것이었다(한국인만 세면 60.4%). 규칙과 같은 잣대로 센다.
+    const kor = (rows) => rows.filter((n) => (n.nationality ?? "KOR") === "KOR");
+    const b2628 = kor(bucket(26, 28));
+    const b29p = kor(bucket(29, null));
     const b33p = bucket(33, null);
     const b36p = bucket(36, null);
-    console.log(`[NPC덤프-군필] 26~28세 ${b2628.length}명 군필률 ${servedRate(b2628)}% (기대 60%)`);
-    console.log(`[NPC덤프-군필] 29세+ ${b29p.length}명 군필률 ${servedRate(b29p)}% (기대 100%)`);
+    console.log(`[NPC덤프-군필] 26~28세 한국인 ${b2628.length}명 군필률 ${servedRate(b2628)}% (기대 60%)`);
+    console.log(`[NPC덤프-군필] 29세+ 한국인 ${b29p.length}명 군필률 ${servedRate(b29p)}% (기대 100%)`);
 
     const contractOver = (rows, cap) => rows.filter((n) => n.contractYears != null && n.contractYears > cap);
     const withContract = (rows) => rows.filter((n) => n.contractYears != null);
