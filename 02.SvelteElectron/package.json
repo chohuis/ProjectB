@@ -169,7 +169,15 @@
       "!resource/data/balance/**",
       "!resource/data/master/entities/players/**",
       "!scripts/**",
-      "!docs/**"
+      "!docs/**",
+      "!resource/logs/**",
+      "!resource/data/seeds/**",
+      "!dist/ui/logs/**",
+      "!dist/ui/data/staging/**",
+      "!dist/ui/data/balance/**",
+      "!dist/ui/data/seeds/**",
+      "!dist/ui/data/master/entities/players/**",
+      "!dist/ui/master.db"
     ],
     "asarUnpack": [
       "resource/**",
