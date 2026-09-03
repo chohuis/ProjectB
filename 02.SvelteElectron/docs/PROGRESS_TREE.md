@@ -59,7 +59,7 @@ A
 │     ├─ ✅ **프리즈 후보 pack 09-03 07:26** — B-10 까지 전부 병합 · dist:steam OK · smoke:dist 통과 (⚠ 내 프로브가 .node 를 잡아 두 번 EPERM — 프로브 먼저 내린다)
 │     └─ ⬜ B-10 소식함 눈확인 · C 최종 확인 → 회신 결함 → 재 pack → 9/14 최종 빌드 → 9/15 프리즈 → 업로드 후보 → 사용자 확인
 │     ├─ 🔄 **1.1 A① 보직 적합도 산식** — Rust `pitcher_role.rs`(cargo 7) · 규칙 `pitcherRoleRules`·`bullpenSize`(제안값) · TS 재료 `utils/pitcherRoleRules.ts`(vitest 12) 커밋 0ae9b586d · 남은 것: `recommendRole()` 교체 + master prime(편집 완료 · C⑤ 커밋 뒤 커밋) · .node 복사(프로브가 잡고 있음 · 프로브 뒤 build:native 재실행) · A③ measure:role 1차: 선발 추천 0팀(신입 구종 1개 → SP 적합도 −5) → 가중치 셋 비교는 새 A(HANDOFF_OP_TO_A §2-3) → 사용자 확정
-│     ├─ 🔄 **1.1 A② 고교 엔진** — Rust 00db08993: MatchStartOptions 넷(투구수 상한 override · 선발 아웃 계수 · 마무리 문 · 의무 휴식) · 오프너 삭제 · 규칙 starterPitchLimit 고교 95 / starterOutsFactor 0.80 / closerGate 8회(전부 제안값) · TS 헬퍼 matchLeagueOptions.ts(vitest 8) · 호출부 셋(MainPage·runAutoAdvance·MatchPage) 편집 완료 → C⑤ 커밋 뒤 커밋 · 상태 검사 4 ✅(59f493a2f) · .node 13:23 ✅ · §6-1-5 1차 실측(씨앗 1): 선발 계수 0.8 → 이닝 5.92→5.31 · 마무리 등판 8→9→12→9 · ⚠ 마무리 등판당 2.7~3.2이닝 의심 · ⚠ 주인공 등판 기록 없음(휴식 재료 0) → HANDOFF_OP_TO_A §2
+│     ├─ 🔄 **1.1 A② 고교 엔진** — Rust 00db08993: MatchStartOptions 넷(투구수 상한 override · 선발 아웃 계수 · 마무리 문 · 의무 휴식) · 오프너 삭제 · 규칙 starterPitchLimit 고교 95 / starterOutsFactor 0.80 / closerGate 8회(전부 제안값) · TS 헬퍼 matchLeagueOptions.ts(vitest 8) · 호출부 셋 배선 ✅(8f922a58f · MainPage 는 다음 커밋) · recommendRole 교체 ✅ · **OP 체제 전환(13:4x)**: 이후 A 몫은 새 A(Opus · 워크트리 ProjectB-engine · track/engine · HANDOFF_OP_TO_A) 가 한다 · 상태 검사 4 ✅(59f493a2f) · .node 13:23 ✅ · §6-1-5 1차 실측(씨앗 1): 선발 계수 0.8 → 이닝 5.92→5.31 · 마무리 등판 8→9→12→9 · ⚠ 마무리 등판당 2.7~3.2이닝 의심 · ⚠ 주인공 등판 기록 없음(휴식 재료 0) → HANDOFF_OP_TO_A §2
 │     ├─ ✅ 새 게임 첫 소식함 자리표시자 넷 삭제(사용자 결정 · 07cba2343 + 정정 fcef54508 · ⚠ C 진행분이 두 번째로 섞여 plumbing 으로 걷어냄 — C 가동 중 shared 파일 커밋 금지)
 │     ├─ ✅ **전 경로 한 바퀴 재실행(9/8 몫 당김)** — 프리즈 후보 코드 · 씨앗 20260802 · 10시즌 · pro/draft/univ/indie/mil **5/5 완주 · 예외 0**(08:54~12:15 · scratchpad/paths-0903.log) · 안 본 10행은 씨앗 상황값(대회기록 5/5 · 포스트시즌 4/5 · 독립 재지원 1 · 강등 3) · ⚠ 번들이 C① 이전이라 프로 W1 보직 갈래는 12시즌 pro 재실행으로 별도 확인 중
 │     └─ ✅ **9/5 문서 갱신 (09-03 에 당겨 닫음)** — ① BALANCE_BASELINE_09-05(씨앗 3 재측정 · 09-02 와 편차 안 · 움직인 지표 없음 · 포일만 1.1 목록에 추가) ② RESUME 09-03 머리 + 지난 기록 분리 ③ CLAUDE.md 두 줄
@@ -92,6 +92,8 @@ A
 
 
 ## 1.1 첫 묶음 — 사용자 확정 표 (2026-09-03 · "이 표 보고 진행")
+
+> 🔴 **출시 모델(사용자 확정 09-03 오후)**: 이 표는 "1.1" 이 아니라 **v1.0.0 구현 범위**다. 구현을 전부 끝내고 숫자만 남으면 v1.0.0 으로 고정하고, 수치 조정·테스트 반복 뒤 **1.0.1 로 출시**한다. 밸런스 값은 제안값으로 넣고 넘어간다 — 묻지 않고 [BALANCE_BACKLOG.md](BALANCE_BACKLOG.md) 에 적는다. 사용자 결정은 동작·구조·범위만.
 
 의존: **보직 선택(A① + C①) → 고교 엔진(A②) → 실측 확정 → 불이익(A④) · 인센티브(A⑤ → C④ → B④)**. 밸런스 값은 전부 계측 뒤 사용자 확정.
 
@@ -169,7 +171,8 @@ B
 ├─ 16. ✅ 동적 치환 감사(4e42d5702) — 529 템플릿 중 치환 0 · 40종 · 고교 TOP10 이벤트 3종은 코드 소식이 2주 안에 덮음 → ❓ 사용자: 지울지 · 치환 설계는 조사 굴절형 원칙(EVENT_DEFERRED §7-4)
 ├─ 17. ✅ 고교 TOP10 이벤트 3종 + 전용 템플릿 3종 삭제(사용자 결정 · a49c018d6 · 591→588 · 도달률 분모 155→152 · 121/152 = 80% 산수값 · 다음 계측에서 확인)
 ├─ 18. ✅ 메시지 종류별 표시 형태 전수(사용자 지시 · c42db31c1 · MESSAGE_KINDS_DISPLAY) — 대시보드 4종(training·top10·offseason·injury) · 텍스트 49자리+이벤트 588 · 갈림선 NewsPage metadata.type 하나 · 🔴 myBody 는 metadata 있는데 갈래 없음(C 몫) · 후보 7(몸 상태·다이제스트·시즌 결산·계약 완료·내 대회·국대·인센티브 정산) · §7 통 수 실측 중
-├─ 19. ✅ **텍스트 소식 48자리 대시보드화 기획안**(59fcd1eb2 · 표 17·순위 3·막대 2·카드 5·타임라인 3·텍스트 유지 18 → 30 후보 · 신설 컴포넌트 둘(StatTable·타임라인) · 🔴 진짜 크기는 생산부(lines.join → 배열) = A 영역 · §6 여섯 확정(1484de168 · 30 바꿈 · 한 번에 · 순위 변동 = standingsSnapshots `last_digest` · RankListPanel · ③+② 기록 탭 + 보존 시즌 A2/B3/C4/D영구 제안 · ⑥ 미답 텍스트) · 기록 탭 없음 → me>status 카드 둘(계약 이력·대회 전적) · MessageItem.seasonYear 선행 · ❓ 사용자 셋: 보존 시즌 값 · 군 경력 세부 구조 · 대회 대진) · B-18 §7 통 수 실측(a05c20a6d · 1,974건 · 밀려남 474 = 24%)
+├─ 19. ✅ **텍스트 소식 48자리 대시보드화 기획안**(59fcd1eb2 · 표 17·순위 3·막대 2·카드 5·타임라인 3·텍스트 유지 18 → 30 후보 · 신설 컴포넌트 둘(StatTable·타임라인) · 🔴 진짜 크기는 생산부(lines.join → 배열) = A 영역 · §6 여섯 확정(1484de168 · 30 바꿈 · 한 번에 · 순위 변동 = standingsSnapshots `last_digest` · RankListPanel · ③+② 기록 탭 + 보존 시즌 A2/B3/C4/D영구 제안 · ⑥ 미답 텍스트) · 기록 탭 없음 → me>status 카드 둘(계약 이력·대회 전적) · MessageItem.seasonYear 선행 · §9 셋 확정(1db843c95 · 보존은 종류 구분 없이 FIFO = trimMailbox 한 줄 삭제 · seasonYear 제안 취소 · 군 경력 타임라인 한 줄 · 대진 표 → 표 19/텍스트 16) · **B-19 닫힘 — 열린 물음 없음** · 구현은 1.1 A(생산부 배열) + C(StatTable·RankListPanel)) · B-18 §7 통 수 실측(a05c20a6d · 1,974건 · 밀려남 474 = 24%)
+├─ 20. ✅ **병영 재회 이벤트 초안 12종**(9eb57d75c · messages/military_reunion.json 한 파일 · 아직 events/conditional 미적재) — ❓ 구조 셋: ① 위생 검사가 군 조건 경로를 통째로 막음(값 `군필` 은 열어야 · A) ② 전역 뒤 무대는 프로 셋+독립(대학 없음 · 설계) ③ 조건 키 여섯(militaryRecord 경로 · weeksSinceDischarge · 부대원 relation kind · relationDelta personId · 문안 {memberName} 렌더러) → **v1.0.0 범위에 넣나 사용자 결정** · ⚠ B 세션은 git merge 가 분류기에 막혀 파일 단위로만 받음
 ├─ 11. ✅ **계약 조건 기획안 + 신규 계약 페이지 시안** — f4bcb0498 · 병합 230e30d2b · 전제 반만 맞음(FA 는 엔진이 계약금·옵션·노트레이드를 이미 냄 · 재계약만 금액·기간) · 신규는 인센티브 하나 · 죽은 필드 incentives · §8 아홉 사용자 확정(09-03) → 확정본 2b593ff76 병합 · 시안 재작업(+추가 · 부제 제거) · 역제안 횟수 = 성적(calcSeasonRating)+구단주 관계 · 남은 셋 사용자 확정 → ad098ba23 병합 · **B-11 닫힘**(구현 1.1) · 못 잴 축 = ① 미달(사용자 확정 · 보직은 주인공이 고르므로) · 9909af5b6 병합 · ⚠ 1.1 구현 순서: 보직 선택(C-14) → 인센티브 정산 · PLAN_CONTRACT_TERMS.md · docs/mock/contract-page-mock.html · §8 사용자 질문 목록 → A 가 전달
 └─ 🛑 동적 치환 23종 · 고교 사기 한 단 더
 ```
@@ -204,7 +207,8 @@ C
 ├─ 14. ✅ **보직 추천·선택 기획안**(Opus · bb340b2f8 · 발견 넷 더: 로테이션 수 규칙/Rust 불일치 · 세부 보직이 등판에 무영향 · starterSlot 호출 0 · 복무 중 배정 없음 · §8 열둘 사용자 확정(09-03) → ✅ 후속 512e72f90: 확정 반영 · 리그별 묻는 주(고교 W6·대학 W4·독립 W9·프로 W1·2군 W4) · 시안 = NewsPage 인라인 선택 · 새 pending 타입 불필요(message) · 남은 결정 둘: 고교 마무리(제안 안 둔다) · 상무에 묻나(제안 안 묻는다) → B 반영 ✅ de18b377d → **C 최종 5e14b29ee**: §8 열넷 전부 확정(고교 마무리 둔다 · 엔진 명세 §6-1 · 상무 안 묻음 · ahead=0 갈래 · 소식 id `msg-role-{year}-{teamId}-w{week}`) · **C-14 닫힘**(구현 1.1) · 코드 결함 둘: ✅ 고교 105구 leagueId 누락 → A 고침(사용자 지시 · 실측 전후 분포 동일 · 밸런스 변화 없음) · ⬜ 고교 마무리 의무 휴식 → 1.1 A②) — 세부 능력치+팀내 경쟁력 산식 · 감독 추천 → 선발/중계/마무리 선택 pending · 비추천 선택 시 출전 감소 안내 · PLAN_ROLE_RECOMMEND.md · docs/mock/role-recommend-mock.html · §8 질문 → A 가 전달 (기획만)
 ├─ 15. ✅ **1.1 C① 보직 선택 인라인**(Opus · d1dcbdac0 · 18파일 · vitest +72 → 1,840 · svelte-check 0) — 리그별 개막 전 주 소식 안 선택 · 새 pending 타입 0 · id 연도+팀+주 · 헤드리스 `__PB_ROLE_CHOICE` · 문안 전부 role_choice.json · A 가 갈아끼울 자리 `pitcherRole.ts recommendRole()` 하나 · ⚠ 프로 W1 갈래 실측은 A 가 12시즌 pro 로 · ⚠ 비추천 확인 단계 → C② 에서 비추천만 확인 단계로 (사용자 요구 3)
 ├─ 16. ✅ **1.1 C② FA 제안 카드 조건 표시**(Opus · 4bae911aa · 8파일 · vitest +27 → 1,867 · svelte-check 0) — 계약금·팀/선수 옵션·노트레이드·총액을 있는 줄만(faOfferTerms.ts 순수 함수) · C① 후속: 비추천 버튼만 확인 단계(needsRoleConfirm · 문서 세 자리 정정) · ⚠ 실측은 컴포넌트 검사로 대신(FA 는 5년차 뒤 · electron 슬롯) · ❓ 노트레이드 표기 셋(트레이드 거부권/노트레이드/노트레이드 조항) → C③ 에서 「노트레이드」로 통일
-└─ 17. ✅ **myBody 대시보드 갈래 + 「노트레이드」 통일 + 1.1 C③ 계약 협상 페이지**(Opus · 885662a21 · 17파일 · vitest +89 → 1,959 · svelte-check 0) — 「＋ 추가」 조항·인센티브(상한 3 · `contractRules.incentives` 9종 제안값) · 최저연봉 하한 · 역제안 1~3회 소모 · 비교표 · 수락 확률 · incentives → {kind,threshold,bonus} + migrateContract · ⚠ 실측은 컴포넌트 검사 대신 · A 이어 볼 것: 재계약 제안에 인센티브·팀 옵션 싣기(advanceWeek 1306) · 정산(paidSeasons) · 문턱 계측 · 🔴 제시 수락 서명액 ≠ 화면 표시(예전부터 · 밸런스라 사용자)
+├─ 17. ✅ **myBody 대시보드 갈래 + 「노트레이드」 통일 + 1.1 C③ 계약 협상 페이지**(Opus · 885662a21 · 17파일 · vitest +89 → 1,959 · svelte-check 0) — 「＋ 추가」 조항·인센티브(상한 3 · `contractRules.incentives` 9종 제안값) · 최저연봉 하한 · 역제안 1~3회 소모 · 비교표 · 수락 확률 · incentives → {kind,threshold,bonus} + migrateContract · ⚠ 실측은 컴포넌트 검사 대신 · A 이어 볼 것: 재계약 제안에 인센티브·팀 옵션 싣기(advanceWeek 1306) · 정산(paidSeasons) · 문턱 계측 · 🔴 제시 수락 서명액 ≠ 화면 표시(예전부터 · 밸런스라 사용자)
+└─ 18. 🔄 **C⑤ 결산 자동 열기 + C②·C③ 눈확인** — 첫 시도(트렁크 · 12:57 시작 직후 사망 · WIP 는 stash@{0}) → **워크트리 ProjectB-ui(track/ui) 에서 재개**(Opus)
 ```
 
 ---
