@@ -3,247 +3,415 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>보직 면담 시안 — 감독 추천</title>
+<title>보직 선택 시안</title>
 <style>
-  :root{
-    --bg:#0e1524; --panel:#182136; --panel-sunk:#131c2e;
-    --line:#25314a; --line-strong:#33425f;
-    --ink:#e8eefb; --ink-mid:#b3c0d8; --ink-mute:#7f8ea9;
-    --accent:#4f9dff; --warn:#f2a33c; --bad:#e2604f; --good:#4fbf8a;
-    --radius:10px;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font:14px/1.6 "Malgun Gothic","맑은 고딕",system-ui,sans-serif;
-    padding:28px 20px 60px;
-  }
-  .page-head{max-width:1180px;margin:0 auto 26px}
-  .page-head h1{font-size:19px;margin:0 0 6px}
-  .page-head p{margin:0;color:var(--ink-mute);font-size:12.5px}
-  .board{max-width:1180px;margin:0 auto;display:grid;gap:22px;
-         grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
-  .frame{display:grid;gap:10px;align-content:start}
-  .frame > .cap{font-size:12px;color:var(--ink-mute)}
-  .frame > .cap b{color:var(--ink-mid);font-weight:700}
+/* ────────────────────────────────────────────────────────────
+   토큰은 apps/ui/src/styles.css 를 그대로 옮겼다.
+   레이아웃·클래스 이름은 apps/ui/src/pages/news/NewsPage.svelte 를 본떴다
+   (.cols / .feed / .item / .detail / .dec / .dec-opts / .opt / .dec-done).
+   ──────────────────────────────────────────────────────────── */
+:root{
+  --t-dark:#1E3050; --t-accent:#B3311F; --t-gold:#8FAFFF;
+  --t-stripe:rgba(30,48,80,.055);
+  --surface:#F6F8FB; --panel:#FFFFFF; --panel-sunk:#EEF2F8;
+  --line:#DDE3EE; --line-strong:#C3CDDE;
+  --ink:#0F1D3D; --ink-mid:#3B4863; --ink-mute:#5A6478; --ink-on-dark:#FFFFFF;
+  --ok:#1F7A47; --warn:#9A6510; --bad:#B3311F; --attn:#F0B65C;
+  --gap:12px; --pad:14px; --radius:3px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; color:var(--ink);
+  background-color:var(--surface);
+  background-image:repeating-linear-gradient(90deg,transparent 0 11px,var(--t-stripe) 11px 13px);
+  font:14px/1.6 "Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  padding:22px 18px 60px;
+}
+.sheet{max-width:1180px;margin:0 auto}
+.sheet > h1{font-size:17px;margin:0 0 4px}
+.sheet > .lead{margin:0 0 22px;color:var(--ink-mute);font-size:12.5px}
+.case{margin:0 0 26px}
+.case > .cap{font-size:12px;color:var(--ink-mute);margin:0 0 7px}
+.case > .cap b{color:var(--ink-mid)}
 
-  /* ── 모달 ────────────────────────────── */
-  .stage{background:#0a0f1c;border:1px solid var(--line);border-radius:14px;
-         padding:22px 16px;display:flex;justify-content:center}
-  .modal{
-    width:100%;max-width:380px;background:var(--panel);color:var(--ink);
-    border:1px solid var(--line);border-top:4px solid var(--accent);
-    border-radius:var(--radius);padding:18px 18px 16px;display:grid;gap:13px;
-    box-shadow:0 14px 40px rgba(0,0,0,.45);
-  }
-  .modal.alert{border-top-color:var(--warn)}
-  .modal.danger{border-top-color:var(--bad)}
-  .chip{margin:0;font-size:10.5px;font-weight:700;letter-spacing:.07em;color:var(--accent)}
-  .modal.alert .chip{color:var(--warn)} .modal.danger .chip{color:var(--bad)}
-  h2{margin:2px 0 0;font-size:16.5px}
-  .who{margin:0;font-size:12px;color:var(--ink-mute)}
-  .quote{
-    margin:0;padding:10px 12px;background:var(--panel-sunk);
-    border-left:3px solid var(--accent);border-radius:6px;
-    font-size:13px;color:var(--ink-mid);white-space:pre-line;
-  }
-  .modal.alert .quote{border-left-color:var(--warn)}
-  .modal.danger .quote{border-left-color:var(--bad)}
+/* ── u-card ── */
+.u-card{background:var(--panel);border-radius:var(--radius);padding:var(--pad);
+        box-shadow:0 1px 3px -1px rgba(15,29,61,.16)}
 
-  /* ── 세 자리 표 ──────────────────────── */
-  .seats{display:grid;gap:6px}
-  .seat{display:grid;grid-template-columns:52px 1fr auto;gap:9px;align-items:center;
-        padding:7px 9px;background:var(--panel-sunk);border:1px solid var(--line);
-        border-radius:7px}
-  .seat.pick{border-color:var(--accent);background:#16273f}
-  .seat.blocked{opacity:.72}
-  .seat .nm{font-weight:700;font-size:12.5px}
-  .bar{height:6px;background:#0d1526;border-radius:4px;overflow:hidden}
-  .bar i{display:block;height:100%;background:var(--accent)}
-  .seat.blocked .bar i{background:var(--ink-mute)}
-  .num{font-size:11px;color:var(--ink-mute);white-space:nowrap}
-  .num b{color:var(--ink-mid)}
-  .num .no{color:var(--bad)}
-  .num .ok{color:var(--good)}
+/* ── 2단 (NewsPage .cols) ── */
+.cols{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:10px}
 
-  /* ── 버튼 셋 ─────────────────────────── */
-  .picks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-  .pick-btn{
-    display:grid;gap:2px;justify-items:center;padding:10px 4px 9px;cursor:pointer;
-    background:var(--panel-sunk);color:var(--ink);
-    border:1px solid var(--line-strong);border-radius:8px;font:inherit;
-  }
-  .pick-btn:hover{border-color:var(--accent);background:#16273f}
-  .pick-btn .lb{font-weight:700;font-size:13.5px}
-  .pick-btn .sub{font-size:10.5px;color:var(--ink-mute)}
-  .pick-btn.rec{border-color:var(--accent);background:#16273f}
-  .pick-btn.rec .sub{color:var(--accent)}
-  .pick-btn.risk{border-color:#4a3a24}
-  .pick-btn.risk .sub{color:var(--warn)}
-  .pick-btn.sel{outline:2px solid var(--warn);outline-offset:-2px}
+/* ── 소식 목록 (NewsPage .feed) ── */
+.feed{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;padding:11px 12px}
+.feed-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.filters{display:flex;gap:4px;flex-wrap:nowrap;min-width:0}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);
+      background:var(--panel);color:var(--ink-mid);border-radius:999px;
+      font:inherit;font-size:11.5px;padding:4px 9px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--t-dark);border-color:var(--t-dark);color:var(--ink-on-dark)}
+.cnt{font-size:10px;color:var(--ink-mute)}
+.chip.on .cnt{color:var(--t-gold)}
+.tool{border:1px solid var(--line);background:none;color:var(--ink-mute);
+      border-radius:var(--radius);font:inherit;font-size:11.5px;padding:4px 10px;cursor:pointer}
 
-  .note{margin:0;font-size:11.5px;color:var(--ink-mute)}
-  .warnbox{
-    margin:0;padding:9px 11px;border-radius:7px;font-size:12.5px;line-height:1.55;
-    background:#2a2113;border:1px solid #4a3a24;color:#f0cf9c;
-  }
-  .warnbox.hard{background:#2c1815;border-color:#4d2a24;color:#f2bdb4}
-  .warnbox b{color:#fff}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-  .btn{padding:9px 10px;border-radius:8px;font:inherit;font-weight:700;font-size:13px;cursor:pointer;
-       border:1px solid var(--line-strong);background:var(--panel-sunk);color:var(--ink-mid)}
-  .btn.go{background:var(--bad);border-color:var(--bad);color:#fff}
-  .btn.back:hover{border-color:var(--accent);color:var(--ink)}
-  .foot{max-width:1180px;margin:30px auto 0;color:var(--ink-mute);font-size:11.5px;
-        border-top:1px solid var(--line);padding-top:14px}
-  .foot code{color:var(--ink-mid)}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.item{width:100%;text-align:left;cursor:pointer;background:var(--panel);
+      border:1px solid var(--line);border-left:3px solid var(--cat);
+      border-radius:var(--radius);padding:9px 12px;
+      display:flex;flex-direction:column;gap:2px;font:inherit;min-width:0}
+.item.pending{border-color:var(--warn);border-left-color:var(--warn)}
+.item.on{background:var(--panel-sunk)}
+.item-head{display:flex;align-items:baseline;gap:7px;min-width:0}
+.cat{font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--cat);flex-shrink:0}
+.sender{font-size:11.5px;color:var(--ink-mute);min-width:0;overflow:hidden;
+        text-overflow:ellipsis;white-space:nowrap}
+.grow{flex:1;min-width:0}
+.time{font-size:10.5px;color:var(--ink-mute);flex-shrink:0}
+.tag-pending{font-size:10px;font-weight:800;color:#6B4200;background:var(--attn);
+             border-radius:2px;padding:1px 6px}
+.tag-done{font-size:10px;color:var(--ok);font-weight:700}
+.subject{margin:0;font-size:13.5px;color:var(--ink);font-weight:800;
+         display:flex;align-items:center;gap:6px;min-width:0;width:100%}
+.subject-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--cat);flex-shrink:0}
+.preview{margin:0;font-size:12px;color:var(--ink-mute);min-width:0;width:100%;
+         overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── 상세 (NewsPage .detail) ── */
+.detail{display:flex;flex-direction:column;gap:8px;padding:14px 16px;color:var(--ink)}
+.m-head{display:flex;align-items:center;gap:10px}
+.m-cat{font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--cat)}
+.m-title{margin:0;flex:1;font-size:16px;font-weight:800;letter-spacing:-.01em}
+.m-meta{margin:0;font-size:11.5px;color:var(--ink-mute)}
+.m-body{margin-top:4px;padding-top:10px;border-top:1px solid var(--line);
+        font-size:13.5px;line-height:1.65;color:var(--ink-mid)}
+.m-body p{margin:0;white-space:pre-wrap}
+
+/* ── 선택 영역 (NewsPage .dec) ── */
+.dec{border-top:1px solid var(--line);padding-top:11px;margin-top:2px}
+.dec-opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;align-items:baseline;gap:10px;width:100%;text-align:left;cursor:pointer;
+     background:var(--panel);border:1px solid var(--line-strong);border-radius:var(--radius);
+     padding:10px 13px;font:inherit;font-size:13px;color:var(--ink)}
+.opt:hover{border-color:var(--t-dark);background:var(--panel-sunk)}
+.opt-label{font-weight:700}
+/* 추천 표시 — 테두리 하나 + 배지 하나. 그 밖의 부제는 없다 */
+.opt.rec{border-color:var(--t-dark);border-left:3px solid var(--t-dark)}
+.rec-badge{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.06em;
+           color:var(--ink-on-dark);background:var(--t-dark);border-radius:2px;padding:1px 7px}
+
+/* 확인 단계 — 같은 자리에서 한 줄 + 버튼 둘 */
+.confirm{background:var(--panel-sunk);border-radius:var(--radius);
+         border-left:3px solid var(--warn);padding:11px 13px;
+         display:flex;flex-direction:column;gap:10px}
+.confirm p{margin:0;font-size:13px;color:var(--ink)}
+.confirm .row{display:flex;gap:6px;justify-content:flex-end}
+.btn{padding:7px 14px;border-radius:var(--radius);font:inherit;font-size:12.5px;
+     font-weight:700;cursor:pointer;border:1px solid var(--line-strong);
+     background:var(--panel);color:var(--ink-mid)}
+.btn:hover{border-color:var(--t-dark);color:var(--ink)}
+.btn.go{background:var(--t-accent);border-color:var(--t-accent);color:var(--ink-on-dark)}
+
+/* 고른 뒤 (NewsPage .dec-done) */
+.dec-done{display:flex;align-items:baseline;gap:9px;background:var(--panel-sunk);
+          border-radius:var(--radius);padding:9px 13px;font-size:13px}
+.check{color:var(--ok);font-weight:800}
+.done-label{font-weight:700;color:var(--ink)}
+
+.foot{max-width:1180px;margin:8px auto 0;color:var(--ink-mute);font-size:11.5px;
+      border-top:1px solid var(--line);padding-top:12px}
+.foot code{color:var(--ink-mid)}
+
+@media (max-width:1100px){ .cols{grid-template-columns:minmax(0,1fr)} .feed{display:none} }
 </style>
 </head>
 <body>
+<div class="sheet">
 
-<div class="page-head">
-  <h1>투수 보직 — 감독 추천 모달 시안</h1>
-  <p>PLAN_ROLE_RECOMMEND.md §4·§5 · 숫자는 문서의 예시값이고 계측이 아니다 · 세 자리 = 선발 / 중계 / 마무리</p>
+<h1>투수 보직 선택</h1>
+<p class="lead">
+  PLAN_ROLE_RECOMMEND.md §4·§5 · 모달이 아니라 소식 상세 칸 안이다 ·
+  본뜬 것: <code>pages/news/NewsPage.svelte</code> 의 <code>.cols / .feed / .detail / .dec / .opt</code>
+</p>
+
+<!-- ────────── ① 소식이 도착했다 ────────── -->
+<div class="case">
+  <p class="cap"><b>①</b> 개막 전 주 · 소식함에 「선택 대기」로 들어온다 · 목록에서 늘 맨 위다</p>
+  <div class="cols">
+
+    <section class="u-card feed">
+      <header class="feed-head">
+        <div class="filters">
+          <button class="chip on">전체<span class="cnt">14</span></button>
+          <button class="chip">안읽음<span class="cnt">3</span></button>
+          <button class="chip">팀</button>
+          <button class="chip">경기</button>
+        </div>
+        <button class="tool">최신순</button>
+      </header>
+      <ul class="list">
+        <li>
+          <button class="item pending on" style="--cat:var(--t-dark)">
+            <span class="item-head">
+              <span class="cat">시스템</span>
+              <span class="sender">한동석 감독</span>
+              <span class="grow"></span>
+              <span class="tag-pending">선택 대기</span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="dot"></span><span class="subject-t">2029시즌 보직</span></p>
+            <p class="preview">올해는 로테이션에서 보고 싶다.</p>
+          </button>
+        </li>
+        <li>
+          <button class="item" style="--cat:var(--t-accent)">
+            <span class="item-head">
+              <span class="cat">경기</span>
+              <span class="sender">전력분석팀</span>
+              <span class="grow"></span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="subject-t">시범경기 일정이 나왔다</span></p>
+            <p class="preview">3월 첫 주부터 12경기.</p>
+          </button>
+        </li>
+        <li>
+          <button class="item" style="--cat:var(--ink-mute)">
+            <span class="item-head">
+              <span class="cat">팀</span>
+              <span class="sender">구단 사무국</span>
+              <span class="grow"></span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="subject-t">스프링캠프 명단</span></p>
+            <p class="preview">1군 캠프 38명 · 2군 캠프 21명.</p>
+          </button>
+        </li>
+      </ul>
+    </section>
+
+    <section class="u-card detail">
+      <header class="m-head" style="--cat:var(--t-dark)">
+        <span class="m-cat">시스템</span>
+        <p class="m-title">2029시즌 보직</p>
+      </header>
+      <p class="m-meta">한동석 감독 · W1</p>
+      <div class="m-body">
+        <p>스태미나가 붙었고 구종도 늘었다.
+올해는 로테이션에서 보고 싶다.
+
+어디서 던지겠나.</p>
+      </div>
+      <section class="dec">
+        <div class="dec-opts">
+          <button class="opt rec"><span class="opt-label">선발</span><span class="rec-badge">감독 추천</span></button>
+          <button class="opt"><span class="opt-label">중계</span></button>
+          <button class="opt"><span class="opt-label">마무리</span></button>
+        </div>
+      </section>
+    </section>
+
+  </div>
 </div>
 
-<div class="board">
+<!-- ────────── ② 추천이 아닌 자리를 눌렀다 ────────── -->
+<div class="case">
+  <p class="cap"><b>②</b> [마무리] 를 눌렀다 · 버튼 자리가 한 줄 + 버튼 둘로 바뀐다 · 숫자는 <code>N</code> 하나뿐</p>
+  <div class="cols">
 
-  <!-- ① 기본 -->
-  <div class="frame">
-    <div class="cap"><b>① 추천</b> — pending <code>roleChoice</code> 가 뜬 직후</div>
-    <div class="stage">
-      <div class="modal">
-        <p class="chip">시즌 보직 면담</p>
-        <h2>2029시즌 보직을 정한다</h2>
-        <p class="who">감독 · 한동석</p>
-
-        <p class="quote">스태미나가 붙었고 구종도 넷이다.
-올해는 로테이션에서 보고 싶다 — <b>선발</b>로 간다.</p>
-
-        <div class="seats">
-          <div class="seat pick">
-            <span class="nm">선발</span>
-            <span class="bar"><i style="width:81%"></i></span>
-            <span class="num">적합 <b>81</b> · <span class="ok">2위 / 5자리</span></span>
-          </div>
-          <div class="seat">
-            <span class="nm">중계</span>
-            <span class="bar"><i style="width:64%"></i></span>
-            <span class="num">적합 <b>64</b> · <span class="ok">6위 / 7자리</span></span>
-          </div>
-          <div class="seat blocked">
-            <span class="nm">마무리</span>
-            <span class="bar"><i style="width:58%"></i></span>
-            <span class="num">적합 <b>58</b> · <span class="no">3위 / 1자리</span></span>
-          </div>
+    <section class="u-card feed">
+      <header class="feed-head">
+        <div class="filters">
+          <button class="chip on">전체<span class="cnt">14</span></button>
+          <button class="chip">안읽음<span class="cnt">2</span></button>
+          <button class="chip">팀</button>
+          <button class="chip">경기</button>
         </div>
+        <button class="tool">최신순</button>
+      </header>
+      <ul class="list">
+        <li>
+          <button class="item pending on" style="--cat:var(--t-dark)">
+            <span class="item-head">
+              <span class="cat">시스템</span>
+              <span class="sender">한동석 감독</span>
+              <span class="grow"></span>
+              <span class="tag-pending">선택 대기</span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="subject-t">2029시즌 보직</span></p>
+            <p class="preview">올해는 로테이션에서 보고 싶다.</p>
+          </button>
+        </li>
+        <li>
+          <button class="item" style="--cat:var(--t-accent)">
+            <span class="item-head">
+              <span class="cat">경기</span>
+              <span class="sender">전력분석팀</span>
+              <span class="grow"></span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="subject-t">시범경기 일정이 나왔다</span></p>
+            <p class="preview">3월 첫 주부터 12경기.</p>
+          </button>
+        </li>
+      </ul>
+    </section>
 
-        <div class="picks">
-          <button class="pick-btn rec"><span class="lb">선발</span><span class="sub">감독 추천</span></button>
-          <button class="pick-btn"><span class="lb">중계</span><span class="sub">자리 있음</span></button>
-          <button class="pick-btn risk"><span class="lb">마무리</span><span class="sub">자리 없음</span></button>
-        </div>
+    <section class="u-card detail">
+      <header class="m-head" style="--cat:var(--t-dark)">
+        <span class="m-cat">시스템</span>
+        <p class="m-title">2029시즌 보직</p>
+      </header>
+      <p class="m-meta">한동석 감독 · W1</p>
+      <div class="m-body">
+        <p>스태미나가 붙었고 구종도 늘었다.
+올해는 로테이션에서 보고 싶다.
 
-        <p class="note">고른 자리는 이번 시즌 내내 간다. 다음 면담은 2030시즌 개막 주다.</p>
+어디서 던지겠나.</p>
       </div>
-    </div>
+      <section class="dec">
+        <div class="confirm">
+          <p>지금 그 자리에 1명 있다. 거기에 더해 들어간다.</p>
+          <div class="row">
+            <button class="btn">다시 고른다</button>
+            <button class="btn go">그래도 간다</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
   </div>
+</div>
 
-  <!-- ② 경고 1 -->
-  <div class="frame">
-    <div class="cap"><b>② 경고 하나</b> — 추천이 아닌 자리를 눌렀다 (자리는 있다)</div>
-    <div class="stage">
-      <div class="modal alert">
-        <p class="chip">시즌 보직 면담</p>
-        <h2>2029시즌 보직을 정한다</h2>
-        <p class="who">감독 · 한동석</p>
+<!-- ────────── ③ 골랐다 ────────── -->
+<div class="case">
+  <p class="cap"><b>③</b> 확정 뒤 · 목록 표시가 「선택 완료」로 바뀌고 상세는 고른 항목만 남는다</p>
+  <div class="cols">
 
-        <p class="quote">스태미나가 붙었고 구종도 넷이다.
-올해는 로테이션에서 보고 싶다 — <b>선발</b>로 간다.</p>
-
-        <div class="seats">
-          <div class="seat">
-            <span class="nm">선발</span>
-            <span class="bar"><i style="width:81%"></i></span>
-            <span class="num">적합 <b>81</b> · <span class="ok">2위 / 5자리</span></span>
-          </div>
-          <div class="seat pick">
-            <span class="nm">중계</span>
-            <span class="bar"><i style="width:64%"></i></span>
-            <span class="num">적합 <b>64</b> · <span class="ok">6위 / 7자리</span></span>
-          </div>
-          <div class="seat blocked">
-            <span class="nm">마무리</span>
-            <span class="bar"><i style="width:58%"></i></span>
-            <span class="num">적합 <b>58</b> · <span class="no">3위 / 1자리</span></span>
-          </div>
+    <section class="u-card feed">
+      <header class="feed-head">
+        <div class="filters">
+          <button class="chip on">전체<span class="cnt">15</span></button>
+          <button class="chip">안읽음<span class="cnt">1</span></button>
+          <button class="chip">팀</button>
+          <button class="chip">경기</button>
         </div>
+        <button class="tool">최신순</button>
+      </header>
+      <ul class="list">
+        <li>
+          <button class="item" style="--cat:var(--t-dark)">
+            <span class="item-head">
+              <span class="cat">시스템</span>
+              <span class="sender">코칭스태프</span>
+              <span class="grow"></span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="dot"></span><span class="subject-t">2029시즌 보직 — 마무리</span></p>
+            <p class="preview">감독은 선발을 권했지만 당신은 마무리를 택했다.</p>
+          </button>
+        </li>
+        <li>
+          <button class="item on" style="--cat:var(--t-dark)">
+            <span class="item-head">
+              <span class="cat">시스템</span>
+              <span class="sender">한동석 감독</span>
+              <span class="grow"></span>
+              <span class="tag-done">선택 완료</span>
+              <span class="time">W1</span>
+            </span>
+            <p class="subject"><span class="subject-t">2029시즌 보직</span></p>
+            <p class="preview">올해는 로테이션에서 보고 싶다.</p>
+          </button>
+        </li>
+      </ul>
+    </section>
 
-        <div class="picks">
-          <button class="pick-btn rec"><span class="lb">선발</span><span class="sub">감독 추천</span></button>
-          <button class="pick-btn sel"><span class="lb">중계</span><span class="sub">선택함</span></button>
-          <button class="pick-btn risk"><span class="lb">마무리</span><span class="sub">자리 없음</span></button>
-        </div>
+    <section class="u-card detail">
+      <header class="m-head" style="--cat:var(--t-dark)">
+        <span class="m-cat">시스템</span>
+        <p class="m-title">2029시즌 보직</p>
+      </header>
+      <p class="m-meta">한동석 감독 · W1</p>
+      <div class="m-body">
+        <p>스태미나가 붙었고 구종도 늘었다.
+올해는 로테이션에서 보고 싶다.
 
-        <p class="warnbox">감독은 <b>선발</b>을 추천했다.
-        불펜에는 자리가 있지만 6번째라, 등판이 <b>주 1회 아래</b>로 줄 수 있다.</p>
-
-        <div class="actions">
-          <button class="btn back">다시 고른다</button>
-          <button class="btn go" style="background:var(--warn);border-color:var(--warn);color:#20160a">그래도 중계</button>
-        </div>
+어디서 던지겠나.</p>
       </div>
-    </div>
+      <section class="dec">
+        <div class="dec-done">
+          <span class="check">✓</span>
+          <span class="done-label">마무리</span>
+        </div>
+      </section>
+    </section>
+
   </div>
+</div>
 
-  <!-- ③ 경고 2 -->
-  <div class="frame">
-    <div class="cap"><b>③ 경고 둘</b> — 자리가 없는 곳을 골랐다 (확정 확인)</div>
-    <div class="stage">
-      <div class="modal danger">
-        <p class="chip">확인</p>
-        <h2>정말 마무리로 가겠습니까?</h2>
-        <p class="who">감독 · 한동석 — 추천은 선발이었다</p>
+<!-- ────────── ④ 고교 ────────── -->
+<div class="case">
+  <p class="cap"><b>④</b> 고교 · 마무리를 안 두는 경우(제안)라면 버튼이 둘이다 · 추천 표시는 그대로 하나</p>
+  <div class="cols">
 
-        <div class="seats">
-          <div class="seat blocked">
-            <span class="nm">선발</span>
-            <span class="bar"><i style="width:81%"></i></span>
-            <span class="num">적합 <b>81</b> · <span class="ok">2위 / 5자리</span></span>
-          </div>
-          <div class="seat blocked">
-            <span class="nm">중계</span>
-            <span class="bar"><i style="width:64%"></i></span>
-            <span class="num">적합 <b>64</b> · <span class="ok">6위 / 7자리</span></span>
-          </div>
-          <div class="seat pick" style="border-color:var(--bad);background:#2c1815">
-            <span class="nm">마무리</span>
-            <span class="bar"><i style="width:58%;background:var(--bad)"></i></span>
-            <span class="num">적합 <b>58</b> · <span class="no">3위 / 1자리</span></span>
-          </div>
+    <section class="u-card feed">
+      <header class="feed-head">
+        <div class="filters">
+          <button class="chip on">전체<span class="cnt">6</span></button>
+          <button class="chip">안읽음<span class="cnt">2</span></button>
+          <button class="chip">학교</button>
         </div>
+        <button class="tool">최신순</button>
+      </header>
+      <ul class="list">
+        <li>
+          <button class="item pending on" style="--cat:var(--t-dark)">
+            <span class="item-head">
+              <span class="cat">시스템</span>
+              <span class="sender">코칭스태프</span>
+              <span class="grow"></span>
+              <span class="tag-pending">선택 대기</span>
+              <span class="time">W6</span>
+            </span>
+            <p class="subject"><span class="dot"></span><span class="subject-t">2027시즌 보직</span></p>
+            <p class="preview">주말리그가 다음 주에 시작한다.</p>
+          </button>
+        </li>
+      </ul>
+    </section>
 
-        <p class="warnbox hard">이 팀의 마무리 자리는 <b>1개</b>이고 당신은 <b>3순위</b>다.
-        승부처에 불릴 일이 드물어져 <b>등판이 크게 줄어든다</b>.
-        기록도 성장도 그만큼 얇아진다.
+    <section class="u-card detail">
+      <header class="m-head" style="--cat:var(--t-dark)">
+        <span class="m-cat">시스템</span>
+        <p class="m-title">2027시즌 보직</p>
+      </header>
+      <p class="m-meta">코칭스태프 · W6</p>
+      <div class="m-body">
+        <p>주말리그가 다음 주에 시작한다.
+공은 빠른데 아직 길게는 못 던진다.
 
-        보직은 이번 시즌 내내 간다.</p>
-
-        <div class="actions">
-          <button class="btn back">다시 고른다</button>
-          <button class="btn go">그래도 마무리</button>
-        </div>
+어디서 던지겠나.</p>
       </div>
-    </div>
+      <section class="dec">
+        <div class="dec-opts">
+          <button class="opt"><span class="opt-label">선발</span></button>
+          <button class="opt rec"><span class="opt-label">중계</span><span class="rec-badge">감독 추천</span></button>
+        </div>
+      </section>
+    </section>
+
   </div>
+</div>
 
 </div>
 
 <div class="foot">
-  적합도 = 세부 능력치(구위 velocity · 제구 control · 커맨드 command · 스태미나 stamina ·
-  무브 movement · 멘탈 mentality · 클러치 clutch · 견제 holdRunners)와 구종(개수·등급·계열)의 가중합.
-  순위 = 같은 팀 투수들을 같은 식으로 재서 매긴 등수. 자리 수 = <code>rosterOpsRules.rotationSize</code>(선발) ·
-  마무리 1 · 중계는 규칙 파일에 새로 둔다. 가중치는 전부 제안값이며 밸런스는 사용자 확정이다.
+  버튼 부제·적합도 막대·순위 숫자는 없다. 화면에 나오는 숫자는 확인 단계의
+  <code>N</code>(<code>metadata.ahead</code> = 그 자리를 이미 차지한 사람 수) 하나뿐이다.
+  멈춤은 기존 <code>{type:"message"}</code> pending 이 맡는다 — 새 pending 타입을 안 만든다.
+  자리 수·가중치는 전부 제안값이며 밸런스는 사용자 확정이다.
 </div>
 
 </body>
