@@ -9,8 +9,11 @@
 //
 // ⚠ 새 시뮬을 돌리지 않는다. 이미 확정된 브래킷과 일정 결과만 읽는다.
 
-import type { TournamentBracket, TournamentDef } from "../../utils/tournament";
+import type { BracketMatch, TournamentBracket, TournamentDef } from "../../utils/tournament";
 import type { MessageItem } from "../../types/main";
+import {
+  bracketTableMeta, rankListMeta, rowsTableMeta, type BracketRowInput,
+} from "../../utils/dashboardMeta";
 
 /** 라운드 번호 → 이름. 마지막 라운드가 결승이므로 뒤에서부터 센다 */
 export function roundName(round: number, totalRounds: number): string {
@@ -23,15 +26,59 @@ export function roundName(round: number, totalRounds: number): string {
   return `${round}라운드`;
 }
 
-/** 개막 — 참가 규모와 **내 팀이 나가는지**가 핵심이다 */
+/**
+ * 대진 한 라운드를 표 행으로 (§9 ③ · A 단위 5 묶음 3).
+ *
+ * ⚠ **부전승과 미정 짝은 뺀다.** 상대가 없는 짝은 한 칸이 비고, 빈 칸은
+ *   화면에서 `—` 가 되어 「상대를 모른다」로 읽힌다.
+ *
+ * ⚠ **일정은 `W{주차}`다.** 소식의 `createdAt` 과 같은 꼴이라 새 표기를
+ *   만들지 않는다 — `gameDate` 를 그대로 실으면 `2026-05-16` 이 뜬다.
+ *
+ * ⚠ **여기서 자르지 않는다.** 102팀 대회 1라운드는 51짝이라 표가 길지만,
+ *   조용히 잘라내면 **내 팀 경기가 사라질 수 있다**(슬롯 순이라 뒤에 온다).
+ */
+function bracketRows(
+  matches: readonly BracketMatch[],
+  round: number,
+  totalRounds: number,
+  myTeamId: string,
+  teamName: (id: string) => string,
+): BracketRowInput[] {
+  return matches
+    .filter((m) => m.round === round && !m.isBye && m.homeTeamId && m.awayTeamId)
+    .slice()
+    .sort((a, b) => a.slot - b.slot)
+    .map((m) => ({
+      round: roundName(round, totalRounds),
+      homeName: teamName(m.homeTeamId ?? ""),
+      awayName: teamName(m.awayTeamId ?? ""),
+      date: `W${m.week}`,
+      mine: m.homeTeamId === myTeamId || m.awayTeamId === myTeamId,
+    }));
+}
+
+/**
+ * 개막 — 참가 규모와 **내 팀이 나가는지**가 핵심이다.
+ *
+ * ⚠ **대진은 넉아웃 대회만 있다.** 은하기·여명기는 조 추첨이라 개막 시점에
+ *   브래킷이 없다(`openTournamentsForWeek` 가 `stage` 만 준다) — 그때는
+ *   `metadata` 를 안 싣고 본문이 그대로 뜬다.
+ */
 export function buildOpenMessage(
   def: TournamentDef,
   entrantIds: string[],
   myTeamId: string,
   weekNum: number,
   seasonYear: number,
+  /** 넉아웃이면 1라운드 대진을 표로 얹는다 (§1-1 `msg-tour-open-`) */
+  bracket?: TournamentBracket | null,
+  teamName: (id: string) => string = (id) => id,
 ): MessageItem {
   const joined = entrantIds.includes(myTeamId);
+  const rows = bracket
+    ? bracketRows(bracket.matches, 1, bracket.totalRounds, myTeamId, teamName)
+    : [];
   return {
     id: `msg-tour-open-${def.id}-${seasonYear}`,
     category: "news",
@@ -50,6 +97,8 @@ export function buildOpenMessage(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 값이 없으면 안 싣는다 — 조별예선 대회는 개막에 대진이 없다(머리말)
+    ...(rows.length > 0 ? { metadata: bracketTableMeta("tourOpen", rows) } : {}),
   };
 }
 
@@ -101,6 +150,14 @@ export function buildMyRoundMessage(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // ⚠ **점수 열은 안 채운다.** 브래킷에는 승자 id 만 있고 점수가 없다
+    //   (`BracketMatch` — `winnerTeamId` 뿐) — 값이 없는 열은 안 그려진다.
+    // ⚠ 「승리」·「패배」는 **바로 위 본문과 같은 글자다.** 문안에 이 두 낱말이
+    //   없어서(`common` 은 「승」·「패」뿐) 값을 여기서 낸다 — 한 함수 안의
+    //   같은 표현이라 두 벌로 갈라질 자리가 아니다.
+    metadata: rowsTableMeta("tourMy", [
+      { round: rn, opp: teamName(oppId ?? ""), result: won ? "승리" : "패배" },
+    ]),
   };
 }
 
@@ -166,6 +223,15 @@ export function buildRoundProgressMessage(
     lines.push("", `■ 우리 권역 탈락   ${fallen.map(teamName).join(", ")}`);
   }
 
+  // 다음 라운드 대진 — **이 소식이 알리는 것이 「누가 올라갔나」다.** 짝이
+  // 정해진 뒤라(`applyRoundResults` 가 부른 뒤에 온다) 진출 팀 전부가 표에 든다.
+  //
+  // ⚠ 본문의 「우리 권역」 표시는 표에 안 담긴다 — 권역 열이 문안에 없다
+  //   (`table.tourRound.columns` 는 라운드·두 팀·일정 넷).
+  const nextRows = bracketRows(
+    bracket.matches, round + 1, bracket.totalRounds, myTeamId, teamName,
+  );
+
   return {
     id: `msg-tour-round-${def.id}-r${round}-${bracket.seasonYear}`,
     category: "news",
@@ -177,6 +243,7 @@ export function buildRoundProgressMessage(
     body: lines.join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    ...(nextRows.length > 0 ? { metadata: bracketTableMeta("tourRound", nextRows) } : {}),
   };
 }
 
@@ -210,5 +277,11 @@ export function buildChampionMessage(
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
+    // 최종 순위 둘 — 「우승」·「준우승」 이라는 말은 순위 1·2 가 이미 뜻한다
+    // (문안 `rankList.tourChamp.first`·`second` 가 그 이름을 갖는다)
+    metadata: rankListMeta("tourChamp", [
+      { label: teamName(champ) },
+      ...(runnerUp ? [{ label: teamName(runnerUp) }] : []),
+    ]),
   };
 }

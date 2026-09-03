@@ -292,6 +292,21 @@ function itemValueLabel(key: string, copy: TableCopy): string {
 }
 
 /**
+ * 열 이름 하나.
+ *
+ * 🔴 **빈 문자열도 답이다** (2026-09-03 · A 단위 5 묶음 3). 문안이
+ *    `"home": ""` 으로 **머리글을 일부러 비워 둔 열**이 있다(대진표의 두 팀
+ *    칸 — `dashboard_labels.json` `_schema.columns` 가 그렇게 못박았다).
+ *    `||` 로 이으면 그 빈 문자열이 거짓이라 **키(`home`)가 머리글로 뜬다** —
+ *    검사가 그걸 잡았다. 「선언했는가」와 「값이 있는가」를 갈라 본다.
+ */
+function columnLabel(key: string, copy: TableCopy): string {
+  if (key in copy.columns) return copy.columns[key];
+  if (key in copy.optionalColumns) return copy.optionalColumns[key];
+  return itemValueLabel(key, copy) || key;
+}
+
+/**
  * 열을 정한다.
  *
  * 생산부가 `columns` 를 실어 보내면 그 순서가 이긴다 — 이름만 비었으면 문안이
@@ -348,8 +363,7 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   if (given.length > 0) {
     return given.map((c, i) => ({
       key: c.key,
-      label: c.label || copy.columns[c.key] || copy.optionalColumns[c.key]
-             || itemValueLabel(c.key, copy) || c.key,
+      label: c.label || columnLabel(c.key, copy),
       align: c.align
              ?? (sentenceColumn(c.key, copy) ? "left" : null)
              ?? inferAlign(c.key, md.rows) ?? cellAlign(c, i),
@@ -383,7 +397,7 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
 
   return keys.map((k, i) => ({
     key: k,
-    label: copy.columns[k] || copy.optionalColumns[k] || itemValueLabel(k, copy) || k,
+    label: columnLabel(k, copy),
     align: (sentenceColumn(k, copy) ? "left" : null)
            ?? inferAlign(k, md.rows) ?? ((i === 0 ? "left" : "right") as "left" | "right"),
   }));

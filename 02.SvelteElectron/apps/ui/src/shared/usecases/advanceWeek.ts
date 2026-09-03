@@ -166,7 +166,9 @@ import {
 } from "./weekPhases/market";
 import { buildLeagueDigest, DIGEST_WEEKS, LEAGUE_NAMES } from "./weekPhases/digest";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
-import { pitcherSeasonTableMeta, gameResultsTableMeta } from "../utils/dashboardMeta";
+import {
+  pitcherSeasonTableMeta, gameResultsTableMeta, rankListMeta,
+} from "../utils/dashboardMeta";
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
 import {
@@ -1932,8 +1934,12 @@ async function progressTournaments(week: number): Promise<boolean> {
         ? [...new Set(o.bracket.matches.flatMap((m) => [m.homeTeamId, m.awayTeamId]))]
             .filter((x): x is string => !!x)
         : (o.stage?.groups ?? []).flatMap((gr) => gr.teams);
+      // 브래킷을 같이 넘긴다 — 개막 소식이 1라운드 대진을 표로 얹는다
+      // (A 단위 5 묶음 3). 조별예선 대회(`o.stage`)는 대진이 아직 없어
+      // `null` 이고, 그러면 소식이 표를 안 싣는다
       gameStore.addMessage(buildOpenMessage(
         def, entrants, protagonistTeamId, week, get(seasonStore).seasonYear,
+        o.bracket, tName4Tour,
       ));
     }
   }
@@ -2075,6 +2081,14 @@ async function progressTournaments(week: number): Promise<boolean> {
                       ].join(String.fromCharCode(10)),
                       createdAt: `W${week}`,
                       readAt: null,
+                      // 상마다 사람이 붙는다 (§1-2). **소속 열은 안 싣는다** —
+                      // 여긴 `teamId === protagonistTeamId` 로 걸러진 우리 학교
+                      // 몫이라 전 행이 같은 팀이다(바로 위 `mineAw`)
+                      metadata: rankListMeta("tourAward", mineAw.map((a) => ({
+                        label: nameOf(a.playerId),
+                        sub: `${a.label} ${a.value}`,
+                        isMe: a.playerId === get(gameStore).protagonist.id,
+                      }))),
                     });
                   }
                 }
@@ -2965,9 +2979,21 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
     // 전·후반기 경계에서 순위 스냅샷 (Phase 5-5a).
     // 대회 개설보다 먼저 찍어야 그 주에 여는 대회가 새 스냅샷을 본다.
+    //
+    // 🔴 **내 리그가 빠져 있었다** (2026-09-03 실측 · A 단위 5).
+    //   `captureStandingsSnapshot` 은 `leagueState` 를 훑는데 **거기엔 내
+    //   리그가 없다**(`digest.myStandings` 주석 · `postseason.ts` 머리말) —
+    //   주인공 리그 순위표는 `s.standings` 에 따로 있다. 그래서 고교에
+    //   있는 동안 `first_half`·`second_half_base` 가 **한 번도 안 찍혔고**,
+    //   `standingsForSeed` 가 스냅샷을 못 찾아 늘 **현재 누적 순위**로
+    //   떨어졌다. 장미기·무궁화기(전반기 시드)와 패왕기(후반기 시드)가
+    //   시점을 보는 기능이 통째로 죽어 있었다는 뜻이다.
+    //   ⚠ 시드가 바뀌면 대회 진출 조합이 바뀐다 — BALANCE_BACKLOG 에 적었다.
     {
       const key = snapshotDueAt(nextWeekNum);
-      if (key) seasonStore.captureStandingsSnapshot(key);
+      if (key) {
+        seasonStore.captureStandingsSnapshot(key, get(gameStore).protagonist.leagueId);
+      }
     }
 
     // 독립 생존리그 단계 진행 (Phase 5-6)

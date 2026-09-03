@@ -17,7 +17,9 @@ import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
 import { leagueStandingsOf } from "../../utils/season-helpers";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
-import { tradeTableMeta, playerListTableMeta, lockNoteOf } from "../../utils/dashboardMeta";
+import {
+  tradeTableMeta, playerListTableMeta, lockNoteOf, faCompTableMeta,
+} from "../../utils/dashboardMeta";
 
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
 function updateNpcsAndSync(npcs: import("../../types/save").NpcSaveState[]): void {
@@ -1704,6 +1706,10 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                 body: lines.join(String.fromCharCode(10)),
                 createdAt: `W${s.currentWeek}`,
                 readAt: null,
+                // 누가 어디로 갔는지는 **제목이 든다** — 표는 보상 조건만이다
+                metadata: faCompTableMeta({
+                  grade: sg.grade, money: sg.compensationMoney, playerName: compName,
+                }),
               });
             }
           }

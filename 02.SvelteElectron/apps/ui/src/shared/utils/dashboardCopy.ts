@@ -50,7 +50,25 @@ export interface DashboardLabels {
   table: Record<string, TableLabelBlock>;
   rankList: Record<string, TableLabelBlock>;
   timeline: Record<string, TableLabelBlock>;
+  /**
+   * 막대 둘·카드 여섯 (§1-3 · §1-4). **형태가 아니라 문안의 칸일 뿐이다** —
+   * 그리는 그릇은 `StatTable` 하나다(§2 는 「막대·카드는 기존 컴포넌트를
+   * 재사용한다」고 적었는데 그 둘이 `metadata` 를 안 받는다 · 실측 2026-09-03).
+   * 그래서 `kind` 를 찾을 때 이 두 칸도 같이 뒤진다(`tableLabelBlock`).
+   */
+  bars: Record<string, TableLabelBlock>;
+  cards: Record<string, TableLabelBlock>;
 }
+
+/**
+ * `kind` 를 찾을 칸의 차례. **`table` 이 먼저다** — 같은 이름이 두 칸에 있으면
+ * 표 쪽이 이긴다(지금은 겹치는 이름이 없다 · `_coverage` 가 정본).
+ *
+ * ⚠ **형태마다 찾는 함수를 만들지 않는다.** 화면이 보는 것은 `columns`·`rows`
+ *   뿐이고 이름표는 어느 칸에 있든 같은 모양이다 — 함수를 넷으로 가르면
+ *   부르는 자리마다 어느 칸인지 알아야 하고, 문안이 칸을 옮기면 코드가 깨진다.
+ */
+const LABEL_SECTIONS = ["table", "bars", "cards", "timeline", "rankList"] as const;
 
 /**
  * 읽은 JSON을 받는다. **모양만 본다** — 종류가 19개라 하나하나 있는지 세지
@@ -77,6 +95,8 @@ export function parseDashboardLabels(raw: unknown): DashboardLabels | null {
     table: o.table,
     rankList: o.rankList ?? {},
     timeline: o.timeline ?? {},
+    bars: o.bars ?? {},
+    cards: o.cards ?? {},
   };
 }
 
@@ -91,13 +111,35 @@ export function tableLabelBlock(
   labels: DashboardLabels | null, kind: string,
 ): TableLabelBlock | null {
   if (!labels || !kind) return null;
-  let node: unknown = labels.table;
-  for (const part of kind.split(".")) {
-    if (!node || typeof node !== "object") return null;
-    node = (node as Record<string, unknown>)[part];
+  for (const section of LABEL_SECTIONS) {
+    let node: unknown = labels[section];
+    for (const part of kind.split(".")) {
+      if (!node || typeof node !== "object") { node = null; break; }
+      node = (node as Record<string, unknown>)[part];
+    }
+    if (node && typeof node === "object") return node as TableLabelBlock;
   }
-  if (!node || typeof node !== "object") return null;
-  return node as TableLabelBlock;
+  return null;
+}
+
+/**
+ * 이름표 지도 — 표는 `columns`(열 이름)·`rows`(항목 이름)로 나눠 적는데
+ * 막대·카드·타임라인 칸은 **`labels` 하나**로 적는다(§1-3~1-5 문안).
+ *
+ * ⚠ **둘 다에 넣는다.** `labels` 만 있는 칸이 열 이름으로 쓰이는지
+ *   (연습경기 예정 — 주차·상대가 열이다) 항목 이름으로 쓰이는지
+ *   (시즌 브리핑 — 보직·순위·경기 수가 항목이다) 는 **생산부가 어느 모양으로
+ *   행을 만드는가**가 정한다. 문안이 그걸 미리 못 가르므로 양쪽에 걸어 두고,
+ *   `resolveColumns` 가 행에 값이 있는 쪽만 세운다.
+ */
+function labelMapOf(b: TableLabelBlock | null): Record<string, string> | null {
+  const raw = b?.labels;
+  if (!raw || typeof raw !== "object") return null;
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    if (typeof v === "string") out[k] = v;
+  }
+  return Object.keys(out).length > 0 ? out : null;
 }
 
 /** 표 하나를 그리는 데 필요한 문안 — 빈 자리를 다 채워서 돌려준다 */
@@ -142,11 +184,12 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
   const emptyCell = labels?.common.emptyCell ?? "—";
   const itemValue = labels?.common.itemValue ?? { item: "", value: "" };
   const optional = b?.optionalColumns ?? {};
+  const labelMap = labelMapOf(b);
   return {
     title: b?.title ?? "",
-    columns: b?.columns ?? {},
+    columns: b?.columns ?? labelMap ?? {},
     optionalColumns: optional,
-    rows: b?.rows ?? {},
+    rows: b?.rows ?? labelMap ?? {},
     empty: b?.empty ?? labels?.common.emptyTable ?? emptyCell,
     footnote: b?.footnote ?? "",
     delta: { ...FALLBACK_DELTA, ...(b?.delta ?? {}) },

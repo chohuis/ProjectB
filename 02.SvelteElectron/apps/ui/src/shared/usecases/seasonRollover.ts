@@ -31,7 +31,9 @@ import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 //   `masterStore.teams` 를 `leagueId` 로 거르면 둘이 같이 딸려온다
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
-import { playerListTableMeta } from "../utils/dashboardMeta";
+import {
+  playerListTableMeta, pctSub, rankListMeta, timelineMeta,
+} from "../utils/dashboardMeta";
 
 /**
  * 세계 오프시즌을 한 해에 한 번만 돌게 하는 가드.
@@ -693,6 +695,14 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
           `준우승: ${runnerUp}`,
         ].join("\n"),
         createdAt: `W${get(seasonStore).currentWeek}`, readAt: null,
+        // 최종 순위 한 벌 (§1-2). **승패 대신 승률을 작은 글씨로 싣는다** —
+        // 순위 목록에는 칸이 둘(이름·작은 글씨)뿐이고 「승」·「패」 라는 낱말은
+        // 문안(`common.win`·`lose`)이 갖는데 생산부가 그걸 읽어 붙이면
+        // 그 말이 세이브에 굳는다. 승률은 낱말이 안 붙는 표기다
+        metadata: rankListMeta("farmChampion", sorted.map((row) => ({
+          label: get(masterStore).teams.find((t) => t.id === row.teamId)?.name ?? row.teamId,
+          sub: pctSub(row.winPct),
+        }))),
       });
     }
 
@@ -766,7 +776,30 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
   // ── 독립리그: 오프시즌 W39~W47에 careerChoiceHub로 이미 처리됨 ──
   // SeasonEndModal에서는 연간 정산만 진행
 
-  if (P().careerStage === "highschool" && P().schoolId) {
+  const hsYearbook = P().careerStage === "highschool" && !!P().schoolId;
+
+  await runWorldSeasonEnd(now);
+
+  // ── 고교 연감 ────────────────────────────────────────────────
+  //
+  // 🔴 **`runWorldSeasonEnd` 뒤로 옮겼다** (A 단위 5 묶음 4). 앞에 두면
+  //   `applyProtagonistSeasonRecord(now)` 가 아직 안 돌아 **올해 줄이 연감에
+  //   없다** — 연감인데 방금 끝난 시즌만 빠진다. 소식 자체는 그대로다.
+  //   (판정은 옮기기 전 상태로 잡아 둔다 — 세계 처리가 단계를 건드릴 수 있다.)
+  if (hsYearbook) {
+    // 시간 순서 자체가 뜻인 자리 (§1-5). `statLine` 은 이미 굳은 문자열이라
+    // 열로 못 쪼개는데(문안 `timeline.seasonHsSync.labels.summary` 가 그
+    // 「요약」이다) 타임라인은 한 줄이면 된다
+    const years = (P().careerRecords ?? [])
+      .filter((r) => r.leagueId === "LEAGUE_HIGHSCHOOL")
+      .slice()
+      .sort((a, b) => a.year - b.year)
+      .map((r) => ({
+        when: String(r.year),
+        label: r.statLine,
+        // 순위는 있을 때만 — 없는 시즌에 `0위` 를 적으면 최하위로 읽힌다
+        ...(r.rank && r.totalTeams ? { detail: `${r.rank}/${r.totalTeams}` } : {}),
+      }));
     gameStore.addMessage({
       id: `msg-season-hs-sync-${Date.now()}`,
       category: "news",
@@ -776,10 +809,9 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
       body: ["고교 시즌 종료 동기화가 완료되었습니다.", "NPC 학년 승급과 졸업 처리가 반영되었습니다.", "졸업 대상은 드래프트/진로 처리 풀로 이관되었습니다."].join("\n"),
       createdAt: `Y${now}`,
       readAt: null,
+      ...(years.length > 0 ? { metadata: timelineMeta("seasonHsSync", years) } : {}),
     });
   }
-
-  await runWorldSeasonEnd(now);
 
   // ── 연간 병역 현황 메시지 (processAllLeaguesSeasonEnd 이후 읽어야 정확한 데이터)
   type OffseasonSummary = { militaryEnlistedSports?: string[]; militaryEnlistedGeneral?: string[]; militaryDischargedNames?: string[] };
