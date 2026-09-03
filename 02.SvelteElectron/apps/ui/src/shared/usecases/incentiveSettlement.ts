@@ -47,9 +47,8 @@ export function settleSeasonIncentives(seasonYear: number): string[] {
   });
   if (st.settledKeys.length === 0) return [];
 
-  // 🔴 **돈보다 자물쇠를 먼저**는 아니다 — 둘 다 같은 턴에 돌고 실패할 자리가
-  //   없다. 다만 순서를 바꾸면 안 된다: 자물쇠를 먼저 찍고 예외가 나면
-  //   돈만 사라진다.
+  // ⚠ **돈이 먼저, 자물쇠가 뒤다.** 반대로 두면 자물쇠를 찍은 뒤 지급에서
+  //   예외가 났을 때 **그 해를 정산한 것으로 남고 돈만 사라진다.**
   if (st.total > 0) gameStore.applyMoneyChange(st.total);
   gameStore.markIncentivesSettled(seasonYear, st.settledKeys);
 
