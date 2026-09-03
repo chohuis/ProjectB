@@ -38,6 +38,7 @@
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import RetirementAskModal from "../../features/retirement/ui/RetirementAskModal.svelte";
   import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
+  import { careerEndPending, takeCareerEndPending } from "../../shared/usecases/retirement";
   import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
@@ -64,6 +65,16 @@
    *   **결산이 아예 안 떴다**(2026-09-01). 대기 동작과 수명을 끊는다.
    */
   let careerEndOpen = false;
+  /**
+   * 🔴 **은퇴 경로가 셋인데 결산을 여는 자리는 하나였다.** 아래 은퇴 모달의
+   *   `onRetired`만 열었고, `나 > 상태`의 **자발적 은퇴는 아무도 안 열었다** —
+   *   사용자가 「커리어 결산 보기」를 직접 눌러야 결말을 봤다.
+   *   사용자 확정(2026-09-02) "연다". 신호는 `retireProtagonist`가 올린다.
+   *
+   * ⚠ **읽으면서 내린다**(`takeCareerEndPending`). 안 내리면 결산을 닫는
+   *   순간 이 반응문이 다시 돌아 다시 열린다 — 닫을 수 없는 화면이 된다.
+   */
+  $: if ($careerEndPending && takeCareerEndPending()) careerEndOpen = true;
   let committedMatchScheduleIds = new Set<string>();
   let lastSeasonYear = 0;
 
