@@ -1,3 +1,64 @@
+# A → C 회신 5차 (2026-09-04) — 소식 생산부 묶음 3·4
+
+> 아래 4차(09-02) 기록은 그대로 둔다. 여기는 **단위 5 묶음 3·4 를 끝내며
+> C 쪽에 남는 것**만 적는다. 커밋 `7856b39f3` · 병합 `de673ff66`.
+
+## 0.6 🔴 표시부가 본문을 **대신** 그린다 — 그래서 다섯 자리를 못 실었다
+
+`NewsPage` 는 `metadata` 가 있으면 그 패널만 그리고 `body` 를 안 그린다
+(`{#if metadata.type === …}{:else}본문{/if}` · 실측 2026-09-04). 묶음 1·2 는
+본문이 값뿐이라 문제가 없었는데 **묶음 3·4 는 본문에 안내가 섞여 있다.**
+표를 붙이면 그 안내가 화면에서 사라진다.
+
+그래서 아래 다섯은 **일부러 metadata 를 안 실었다.** 값은 있는데 표에 담을
+칸이 없어서다:
+
+| 소식 | 표에 안 담기는 것 | 문안 |
+|---|---|---|
+| `msg-exam-w` | 「출전 자격 경고」·「이번 주 경기 출전 제한」·사기 증감 (Rust `week_engine.rs:668~`) | `bars.exam` 은 과목·점수·학점뿐 |
+| `msg-natl-squad-` | 「N위 이내 입상 시 병역 특례」·차출 기간 출전 불가 · 선수별 **소속** | `cards.natlSquad` 는 `pos`·`playerId` 인데 코드엔 `pos` 가 없다 |
+| `msg-friendly-plan-w` | 친선/공식 구분 · 상대 요약(팀 OVR·최근 성적) · 선발 예상 | `cards.friendlyPlan` 은 주차·상대 둘 |
+| `msg-season-brief-` | `ROLE_DESCRIPTION` 한 문단 | `cards.seasonBrief` 는 보직·팀 순위·경기 수 |
+| `msg-mil-record-` | 전역 환산(감각→커맨드·제구·회복 주) · 함께한 사람 셋 | `timeline.milRecord` 는 항목·값 여섯 |
+
+**C 가 정할 것 하나** — 표시부가 `본문 + 패널`을 같이 그리게 하면 이 다섯을
+그날 바로 실을 수 있다(생산부는 한 줄씩이다). 지금처럼 **대신** 그리는 규칙을
+지키면 다섯은 텍스트로 남는다. 어느 쪽이든 A 는 따른다.
+
+## 0.61 실은 자리 여덟 — 형과 `kind`
+
+| 소식 | 형 | `kind` | 값 |
+|---|---|---|---|
+| `msg-tour-open-` | table | `tourOpen` | 1라운드 대진 `{round, home, away, date, myTeam}` |
+| `msg-tour-round-` | table | `tourRound` | **다음** 라운드 대진 (같은 모양) |
+| `msg-tour-my-` | table | `tourMy` | 한 줄 `{round, opp, result}` — 점수는 브래킷에 없다 |
+| `msg-tour-champ-` | rankList | `tourChamp` | 우승·준우승 둘 |
+| `msg-tour-award-` | rankList | `tourAward` | `{label: 사람, sub: 상 이름+기록}` |
+| `msg-farm-champion-` | rankList | `farmChampion` | 2군 전체 순위 · `sub` 는 승률 |
+| `msg-season-hs-sync-` | timeline | `seasonHsSync` | 연도별 `statLine` · `detail` 은 `순위/팀수` |
+| `msg-facomp-` | table | `faComp` | 등급·보상금·보상선수 (없는 항목은 행이 없다) |
+
+⚠ **`rankList`·`timeline` 은 문안을 아직 아무도 안 읽는다.** `buildRankList` 는
+`md.title` 을 쓰고 `TimelinePanel` 은 「기록이 없다」를 **코드에 적어** 두고
+있다 — `rankList.tourChamp.title`·`timeline.*.labels` 가 그대로 놀고 있다.
+생산부는 제목을 안 싣는다(말이 세이브에 굳는다). 그 자리는 C 몫이다.
+
+⚠ **대진표는 길다.** 102팀 대회 1라운드는 51행이다 — 잘라내면 내 팀 경기가
+사라질 수 있어(슬롯 순) 안 잘랐다. 상세 칸 세로 스크롤을 확인해 달라.
+
+## 0.62 두 사람이 같은 결함을 같이 고쳤다 (병합 `de673ff66`)
+
+`resolveColumns` 가 문안이 **일부러 비운 머리글**(`"home": ""`)을 `||` 로
+이어서 키(`home`)로 되돌리던 자리 — C 의 `declaredLabel` 과 A 의
+`columnLabel` 이 같은 고침이었다. **C 것을 남겼다.** `LABEL_ROOTS`(뿌리 달린
+`kind`)도 C 것이다. A 것에서 살린 건 `labelMapOf` 하나 — `labels` 하나로만
+적힌 칸(막대·카드)을 **열 이름과 항목 이름 양쪽에** 건다.
+
+그래서 생산부가 막대·카드 문안을 쓰려면 `kind` 에 뿌리를 달아야 한다
+(`"cards.friendlyPlan"`). 검사가 그걸 못박아 뒀다(`dashboardMeta34.test.ts`).
+
+---
+
 # A → C 회신 4차 (2026-09-02) — 9/28 계획과 W1 할당
 
 > 정본은 [PLAN_RELEASE_2026-09-28.md](PLAN_RELEASE_2026-09-28.md) §4-C 다.
