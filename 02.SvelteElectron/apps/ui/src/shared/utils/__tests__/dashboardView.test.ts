@@ -2,8 +2,10 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  buildRankList, buildTableRows, cellAlign, cellText, deltaMark, isNumericCell,
+  buildRankList, buildTableRows, buildTableView, cellAlign, cellText, deltaMark,
+  deltaText, isNumericCell, resolveColumns,
 } from "../dashboardView";
+import { parseDashboardLabels, tableCopy, tableLabelBlock } from "../dashboardCopy";
 import type { RankListMetadata, TableMetadata, Top10Metadata } from "../../types/main";
 
 /**
@@ -35,12 +37,12 @@ describe("변동 표시 — 모름과 변동 없음을 가른다", () => {
   });
 
   it("0 은 「변동 없음」으로 그린다", () => {
-    expect(deltaMark(0)).toEqual({ dir: "flat", text: "—" });
+    expect(deltaMark(0)).toEqual({ dir: "flat", n: 0, text: "—" });
   });
 
   it("부호를 뒤집지 않는다 — 만드는 쪽이 맞춰 보낸다", () => {
-    expect(deltaMark(2), "오른 것을 내린 것으로 그린다").toEqual({ dir: "up", text: "↑2" });
-    expect(deltaMark(-1)).toEqual({ dir: "down", text: "↓1" });
+    expect(deltaMark(2), "오른 것을 내린 것으로 그린다").toEqual({ dir: "up", n: 2, text: "↑2" });
+    expect(deltaMark(-1)).toEqual({ dir: "down", n: 1, text: "↓1" });
   });
 });
 
@@ -112,7 +114,7 @@ describe("표 — 행 만들기", () => {
   });
 
   it("`highlightRow` 하나짜리도 받는다", () => {
-    const rows = buildTableRows({ ...md, rows: md.rows.map((r) => ({ ...r, myTeam: undefined })), highlightRow: 2 });
+    const rows = buildTableRows({ ...md, rows: md.rows.map((r) => ({ ...r, myTeam: false })), highlightRow: 2 });
     expect(rows[2].highlight).toBe(true);
     expect(rows[0].highlight).toBe(false);
   });
@@ -202,7 +204,7 @@ describe("배선 — 화면이 셋을 다 그린다", () => {
 
   /** ⚠ 행을 화면에서 만들면 위 검사들이 한 줄도 못 잰다 */
   it("화면은 행을 스스로 만들지 않는다", () => {
-    expect(TABLE, "StatTable 이 행을 스스로 만든다").toContain("buildTableRows(metadata)");
+    expect(TABLE, "StatTable 이 행을 스스로 만든다").toContain("buildTableView(metadata");
     expect(RANK, "RankListPanel 이 두 규격을 화면에서 가른다").toContain("buildRankList(metadata)");
   });
 
@@ -221,5 +223,209 @@ describe("배선 — 화면이 셋을 다 그린다", () => {
       expect(TYPES, `${t} 가 유니온에 없다 — 만드는 쪽이 타입을 못 쓴다`)
         .toContain(t);
     }
+  });
+});
+
+// ── 묶음 1 — 문안이 붙은 표 셋 (PLAN_MESSAGE_DASHBOARDS §4) ─────
+//
+// 🔴 **열 이름을 코드에서 세지 않는다.** 이 아래 검사는 전부 실제
+//    `messages/dashboard_labels.json`(B-21)을 읽어서 잰다 — 데이터가 바뀌면
+//    여기가 같이 움직여야 한다. 기대값을 코드에 박으면 두 벌이 된다.
+
+const MASTER = join(SRC_DIR, "../../..", "resource/data/master");
+const LABELS_RAW = JSON.parse(
+  readFileSync(join(MASTER, "messages/dashboard_labels.json"), "utf8"),
+);
+const LABELS = parseDashboardLabels(LABELS_RAW);
+const STORE = read("shared/stores/master.ts");
+
+describe("문안 — 정본은 dashboard_labels.json 이다", () => {
+  it("실제 파일이 그대로 읽힌다", () => {
+    expect(LABELS, "문안을 못 읽었다 — 표가 키 이름으로 그려진다").not.toBeNull();
+    expect(LABELS!.common.emptyCell, "빈 칸 기호가 없다").toBeTruthy();
+  });
+
+  it("master 로더가 이 파일을 부른다", () => {
+    expect(STORE, "로더가 안 읽는다 — 화면이 언제나 키를 그린다")
+      .toContain("messages/dashboard_labels.json");
+    expect(STORE).toContain("parseDashboardLabels");
+  });
+
+  /** ⚠ 「빈 문안」과 「문안 없음」이 같아 보이면 부르는 쪽이 기본값을 못 고른다 */
+  it("없는 종류는 null 이다", () => {
+    expect(tableLabelBlock(LABELS, "그런종류없음")).toBeNull();
+    expect(tableLabelBlock(null, "digest")).toBeNull();
+  });
+
+  /** 표 안의 표는 점으로 한 칸씩 내려간다 */
+  it("계약 인센티브를 점으로 찾는다", () => {
+    const inc = tableLabelBlock(LABELS, "contractSigned.incentives");
+    expect(inc, "표 안의 표를 못 찾는다 — 인센티브가 키 이름으로 그려진다").not.toBeNull();
+    expect(Object.keys(inc!.columns ?? {}).length, "인센티브 열이 없다").toBeGreaterThan(0);
+  });
+
+  /**
+   * 🔴 **못 읽어도 표를 안 없앤다.** 값은 이미 소식에 실려 왔다 —
+   *    열 이름 자리에 키를 그대로 쓴다.
+   */
+  it("문안이 없으면 키를 그대로 쓴다", () => {
+    const copy = tableCopy(null, "digest");
+    const cols = resolveColumns(
+      { type: "table", kind: "digest", columns: [], rows: [{ w: 3, l: 1 }] }, copy,
+    );
+    expect(cols.map((c) => c.label), "없는 말을 지어냈다").toEqual(["w", "l"]);
+    expect(copy.emptyCell, "빈 칸 기호까지 사라지면 표가 안 읽힌다").toBe("—");
+  });
+});
+
+describe("묶음 1-① 다이제스트 순위표", () => {
+  const copy = tableCopy(LABELS, "digest");
+  const rows: TableMetadata["rows"] = [
+    { rank: 1, teamId: "창원 스타스", w: 38, l: 22, pct: ".633", delta: 1 },
+    { rank: 2, teamId: "인천 파이러츠", w: 33, l: 27, pct: ".550", delta: -2, myTeam: true },
+    { rank: 3, teamId: "부산 웨이브스", w: 30, l: 30, pct: ".500", delta: 0 },
+  ];
+
+  /**
+   * 🔴 **생산부가 열을 안 실어 보내도 표가 선다** — A 가 넘길 것은 값이다.
+   *    열 순서는 문안이 선언한 순서다.
+   */
+  it("열을 안 보내도 문안 순서로 선다", () => {
+    const v = buildTableView({ type: "table", kind: "digest", columns: [], rows }, copy);
+    expect(v.columns.map((c) => c.key)).toEqual(Object.keys(copy.columns));
+    expect(v.columns[0].label).toBe(LABELS_RAW.table.digest.columns.rank);
+  });
+
+  /** ⚠ 빈 선택 열을 그리면 표가 넓어지고 1366×768 에서 밀린다 */
+  it("선택 열은 값이 있을 때만 그린다", () => {
+    const bare = buildTableView({ type: "table", kind: "digest", columns: [], rows }, copy);
+    expect(bare.columns.some((c) => c.key === "streak"), "빈 열을 그렸다").toBe(false);
+    const withStreak = buildTableView(
+      { type: "table", kind: "digest", columns: [],
+        rows: rows.map((r) => ({ ...r, streak: "3연승" })) }, copy,
+    );
+    expect(withStreak.columns.map((c) => c.key)).toContain("streak");
+  });
+
+  it("내 팀 행을 굵게 그린다", () => {
+    const v = buildTableView({ type: "table", kind: "digest", columns: [], rows }, copy);
+    expect(v.rows.map((r) => r.highlight)).toEqual([false, true, false]);
+  });
+
+  /** ⚠ 변동 글자는 데이터의 틀이다 — 코드가 「↑2」 를 짓지 않는다 */
+  it("변동은 문안의 틀로 그린다", () => {
+    const v = buildTableView(
+      { type: "table", kind: "digest", columns: [], rows, deltaKey: "delta" }, copy,
+    );
+    expect(v.deltaLabel, "변동 열 이름을 코드가 지었다")
+      .toBe(LABELS_RAW.table.digest.optionalColumns.delta);
+    expect(deltaText(v.rows[0].delta, copy)).toBe(
+      String(LABELS_RAW.table.digest.delta.up).split("{n}").join("1"));
+    expect(deltaText(v.rows[2].delta, copy)).toBe(LABELS_RAW.table.digest.delta.flat);
+  });
+
+  /** 🔴 「모름」은 「변동 없음」과 달라야 한다 (§3-1) */
+  it("지난 값이 없으면 변동 열이 통째로 없다", () => {
+    const v = buildTableView({ type: "table", kind: "digest", columns: [], rows }, copy);
+    expect(v.deltaLabel, "모르는데 변동 열을 그렸다").toBeNull();
+    expect(deltaText(null, copy)).toBe(LABELS_RAW.table.digest.delta.unknown);
+  });
+
+  it("행이 없으면 문안의 한 줄을 대신 그린다", () => {
+    const v = buildTableView({ type: "table", kind: "digest", columns: [], rows: [] }, copy);
+    expect(v.rows.length).toBe(0);
+    expect(v.empty).toBe(LABELS_RAW.table.digest.empty);
+    expect(v.columns.length, "행이 없다고 머리글까지 사라지면 안 된다").toBeGreaterThan(0);
+    expect(v.footnote).toBe(LABELS_RAW.table.digest.footnote);
+  });
+});
+
+describe("묶음 1-② 프로·독립 시즌 결산", () => {
+  /** 한 줄에 여섯 값이 뭉쳐 있던 자리다 — 항목·값 두 칸으로 가른다 */
+  for (const kind of ["seasonEndPro", "seasonEndIndie"]) {
+    it(kind + " — 항목 열의 키가 문안의 이름으로 바뀐다", () => {
+      const copy = tableCopy(LABELS, kind);
+      const v = buildTableView({
+        type: "table", kind, columns: [],
+        rows: [{ item: "era", value: "2.94" }, { item: "k", value: 151 }],
+      }, copy);
+      const names = v.rows.map((r) => r.cells[0].text);
+      expect(names, "키를 그대로 그렸다 — 「era」 가 화면에 나온다")
+        .toEqual([LABELS_RAW.table[kind].rows.era, LABELS_RAW.table[kind].rows.k]);
+      expect(v.columns.map((c) => c.label))
+        .toEqual([LABELS_RAW.table[kind].columns.item, LABELS_RAW.table[kind].columns.value]);
+    });
+  }
+
+  /** ⚠ 지난해 값은 출처가 없을 수 있다 (`_measured` — statLine 이 문자열이다) */
+  it("지난해 열은 실어 보낼 때만 뜬다", () => {
+    const copy = tableCopy(LABELS, "seasonEndPro");
+    const bare = buildTableView({
+      type: "table", kind: "seasonEndPro", columns: [], rows: [{ item: "w", value: 13 }],
+    }, copy);
+    expect(bare.columns.map((c) => c.key), "값이 없는데 열을 그렸다").not.toContain("prev");
+    const withPrev = buildTableView({
+      type: "table", kind: "seasonEndPro", columns: [],
+      rows: [{ item: "w", value: 13, prev: 9 }],
+    }, copy);
+    expect(withPrev.columns[withPrev.columns.length - 1].label)
+      .toBe(LABELS_RAW.table.seasonEndPro.optionalColumns.prev);
+  });
+
+  it("모르는 항목 키는 지우지 않고 그대로 둔다", () => {
+    const copy = tableCopy(LABELS, "seasonEndPro");
+    const v = buildTableView({
+      type: "table", kind: "seasonEndPro", columns: [], rows: [{ item: "qs", value: 14 }],
+    }, copy);
+    expect(v.rows[0].cells[0].text, "빈 칸이 되면 왜 비었는지 화면에 안 남는다").toBe("qs");
+  });
+});
+
+describe("묶음 1-③ 계약 완료 조건 표", () => {
+  const copy = tableCopy(LABELS, "contractSigned");
+
+  /** 열 선언이 없는 자리다 — 항목·값 두 칸은 `common.itemValue` 가 든다 */
+  it("항목·값 두 칸이 공통 문안에서 온다", () => {
+    const v = buildTableView({
+      type: "table", kind: "contractSigned", columns: [],
+      rows: [{ item: "salary", value: "18,000만원" }, { item: "years", value: "2년" }],
+    }, copy);
+    expect(v.columns.map((c) => c.label))
+      .toEqual([LABELS_RAW.common.itemValue.item, LABELS_RAW.common.itemValue.value]);
+    expect(v.rows[0].cells[0].text).toBe(LABELS_RAW.table.contractSigned.rows.salary);
+  });
+
+  /**
+   * 🔴 **표가 둘일 때만 이름을 단다.** 하나뿐이면 소식 제목이 이미 그
+   *    이름이라 위에 한 줄 더 두면 부제가 된다.
+   */
+  it("표가 하나면 이름을 안 달고, 둘이면 단다", () => {
+    const one = buildTableView({
+      type: "table", kind: "contractSigned", columns: [], rows: [],
+    }, copy);
+    expect(one.title, "표가 하나인데 부제를 달았다").toBe("");
+
+    const two = buildTableView({
+      type: "table", kind: "contractSigned", columns: [], rows: [],
+      extra: { type: "table", kind: "contractSigned.incentives", columns: [], rows: [] },
+    }, copy, true);
+    expect(two.title).toBe(LABELS_RAW.table.contractSigned.title);
+  });
+
+  it("인센티브는 열이 아예 달라 두 번째 표로 선다", () => {
+    const inc = tableCopy(LABELS, "contractSigned.incentives");
+    const v = buildTableView({
+      type: "table", kind: "contractSigned.incentives", columns: [],
+      rows: [{ name: "등판", condition: "25회 이상", amount: "+1,500만원" }],
+    }, inc, true);
+    expect(v.columns.map((c) => c.label))
+      .toEqual(Object.values(LABELS_RAW.table.contractSigned.incentives.columns));
+    expect(v.title).toBe(LABELS_RAW.table.contractSigned.incentives.title);
+    expect(v.empty).toBe(LABELS_RAW.table.contractSigned.incentives.empty);
+  });
+
+  it("화면이 두 번째 표를 그린다", () => {
+    expect(TABLE, "extra 를 안 그린다 — 인센티브가 사라진다").toContain("metadata.extra");
+    expect(TYPES, "규격에 두 번째 표 자리가 없다").toContain("extra?: TableMetadata");
   });
 });
