@@ -50,7 +50,23 @@ export interface DashboardLabels {
   table: Record<string, TableLabelBlock>;
   rankList: Record<string, TableLabelBlock>;
   timeline: Record<string, TableLabelBlock>;
+  /**
+   * 기록 탭 카드 둘 — 계약 이력 · 대회 전적 (§7-4).
+   *
+   * 🔴 **소식이 아니라 화면이 부르는 표다.** 그래서 `table` 아래가 아니라
+   *    따로 선다. 그리는 컴포넌트는 같은 `StatTable` 이고 `kind` 만
+   *    `"recordTab.contractHistory"` 처럼 뿌리를 달고 온다.
+   */
+  recordTab: Record<string, TableLabelBlock>;
 }
+
+/**
+ * 문안의 뿌리들 — `kind` 첫 조각이 이 중 하나면 거기서부터 내려간다.
+ *
+ * ⚠ **`table` 이 기본이다.** 소식 19자리가 뿌리 없이 `"digest"` 로 오므로
+ *   못 박으면 그 열아홉이 다 깨진다.
+ */
+const LABEL_ROOTS = ["table", "rankList", "timeline", "recordTab"] as const;
 
 /**
  * 읽은 JSON을 받는다. **모양만 본다** — 종류가 19개라 하나하나 있는지 세지
@@ -77,6 +93,7 @@ export function parseDashboardLabels(raw: unknown): DashboardLabels | null {
     table: o.table,
     rankList: o.rankList ?? {},
     timeline: o.timeline ?? {},
+    recordTab: o.recordTab ?? {},
   };
 }
 
@@ -91,8 +108,11 @@ export function tableLabelBlock(
   labels: DashboardLabels | null, kind: string,
 ): TableLabelBlock | null {
   if (!labels || !kind) return null;
-  let node: unknown = labels.table;
-  for (const part of kind.split(".")) {
+  const parts = kind.split(".");
+  // 뿌리를 달고 왔으면 거기서부터 — 안 달고 왔으면 `table` 이다
+  const root = (LABEL_ROOTS as readonly string[]).includes(parts[0]) ? parts.shift()! : "table";
+  let node: unknown = (labels as unknown as Record<string, unknown>)[root];
+  for (const part of parts) {
     if (!node || typeof node !== "object") return null;
     node = (node as Record<string, unknown>)[part];
   }
@@ -128,6 +148,16 @@ export interface TableCopy {
    *   지난 소식만 옛 문장으로 남는다 — 그게 이 대시보드화가 고치는 형태다.
    */
   lockNote: string;
+  /**
+   * 계약 종류(`new`·`resign`·`fa`) → 그 말. 세이브에는 낱말이 들고 한글은
+   * 여기서 온다 (`recordTab.contractHistory.kindLabel`).
+   *
+   * ⚠ 없는 종류는 **키를 그대로** 쓴다. 빈 칸으로 만들면 「종류가 없다」와
+   *   「문안이 없다」가 같아 보인다.
+   */
+  kindLabel: Record<string, string>;
+  /** 「국제」 — 대회 전적에서 국제대회 행에 붙는 짧은 표시 */
+  intlMark: string;
 }
 
 /**
@@ -142,6 +172,7 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
   const emptyCell = labels?.common.emptyCell ?? "—";
   const itemValue = labels?.common.itemValue ?? { item: "", value: "" };
   const optional = b?.optionalColumns ?? {};
+  const kindRaw = b?.kindLabel;
   return {
     title: b?.title ?? "",
     columns: b?.columns ?? {},
@@ -155,7 +186,15 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
     deltaLabel: optional.delta ?? "",
     noAppearance: typeof b?.noAppearance === "string" ? b.noAppearance : "",
     lockNote: typeof b?.lockNote === "string" ? b.lockNote : "",
+    kindLabel: isStringMap(kindRaw) ? kindRaw : {},
+    intlMark: typeof b?.intlMark === "string" ? b.intlMark : "",
   };
+}
+
+/** `{ 키: 말 }` 인가 — 문안 파일이 손으로 쓰이므로 모양을 한 번 본다 */
+function isStringMap(v: unknown): v is Record<string, string> {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return false;
+  return Object.values(v as Record<string, unknown>).every((x) => typeof x === "string");
 }
 
 /**

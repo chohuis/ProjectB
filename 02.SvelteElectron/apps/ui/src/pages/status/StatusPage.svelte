@@ -1,7 +1,16 @@
 <script lang="ts">
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
-  import { teamMap } from "../../shared/stores/master";
+  import { teamMap, masterStore } from "../../shared/stores/master";
+  import StatTable from "../../features/messages/ui/StatTable.svelte";
+  import { tableCopy } from "../../shared/utils/dashboardCopy";
+  import {
+    buildContractHistoryTable, buildTournamentRecordTable,
+    CONTRACT_HISTORY_KIND, TOURNAMENT_RECORD_KIND,
+    type TournamentRunInput,
+  } from "../../shared/utils/recordTabView";
+  import { TOURNAMENTS } from "../../shared/utils/leagueTeams.generated";
+  import type { TournamentBracket } from "../../shared/utils/tournament";
   import { t } from "../../shared/i18n";
   import type { PitcherGameLine } from "../../shared/types/season";
   import type { CareerSeasonRecord } from "../../shared/types/save";
@@ -165,8 +174,10 @@
     ? ($seasonStore.stats[$gameStore.protagonist.id] ?? null)
     : (selectedRecord?.stats ?? null);
 
-  $: selectedSeasonGames = (() => {
-    if (selectedYearStr === "current") {
+  // ⚠ **올해 등판 목록을 두 곳에서 만들지 않는다.** 성적 탭의 「경기 기록」과
+  //   기록 탭의 「대회 전적」이 같은 것을 본다 — 한쪽만 고치면 대회 전적의
+  //   내 기록이 성적 탭과 다른 값을 갖는다.
+  $: currentSeasonGames = (() => {
       const pid   = $gameStore.protagonist.id;
       const myTid = $gameStore.protagonist.teamId;
       return $seasonStore.schedule
@@ -189,9 +200,11 @@
             byInning: line.byInning,
           };
         });
-    }
-    return [...(selectedRecord?.gameLog ?? [])].sort((a, b) => b.week - a.week);
   })();
+
+  $: selectedSeasonGames = selectedYearStr === "current"
+    ? currentSeasonGames
+    : [...(selectedRecord?.gameLog ?? [])].sort((a, b) => b.week - a.week);
 
   const GAME_LOG_PAGE_SIZE = 5;
   let gameLogPage = 0;
@@ -226,6 +239,93 @@
 
   // ── 기록 탭 ───────────────────────────────────────────────────
   $: careerRecords = ($gameStore.protagonist.careerRecords ?? []).slice().reverse();
+
+  // ── 기록 탭 카드 둘 — 계약 이력 · 대회 전적 ────────────────────
+  //
+  // 🔴 **소식함은 흐르는 자리고 여기는 남는 자리다**
+  //    (`PLAN_MESSAGE_DASHBOARDS.md` §7). 계약 완료·대회 결과 소식은 1500칸
+  //    상한에 밀려 사라지는데, 그때 「2031년에 3년으로 재계약했다」가 게임
+  //    어디에도 안 남았다.
+  //
+  // 🔴 **새 화면을 안 만든다** (§7-4). 그리는 것은 소식과 **같은 `StatTable`**
+  //    이고 열 이름·빈 표 문구는 `dashboard_labels.json` `recordTab` 이 든다.
+  $: contractCopy = tableCopy($masterStore.dashboardLabels, CONTRACT_HISTORY_KIND);
+  $: tourRecordCopy = tableCopy($masterStore.dashboardLabels, TOURNAMENT_RECORD_KIND);
+
+  $: contractHistoryTable = buildContractHistoryTable(
+    p.contractHistory, contract ?? undefined,
+    {
+      salaryText: formatSalary,
+      kindLabel: contractCopy.kindLabel,
+      // 조항 낱말은 계약 협상 문안이 이미 갖는다 (B-13) — 두 벌을 안 만든다
+      terms: $masterStore.contractCopy?.signed ?? null,
+      emptyCell: contractCopy.emptyCell,
+    },
+  );
+
+  /**
+   * 지난 시즌 대회 대진 — **연도마다 한 번씩 부른다.**
+   *
+   * ⚠ `season:getHistoryTournaments` 가 `seasonYear` 를 필수로 받는다
+   *   (`LeaguePage` 의 우승 계보가 같은 이유로 같은 모양이다). 커리어가
+   *   길어야 25시즌이고 **탭을 열 때 한 번만** 부르므로 그대로 둔다.
+   *
+   * ⚠ **못 읽어도 카드를 없애지 않는다.** 올해 대회는 세이브에 있으므로
+   *   그것만이라도 선다.
+   */
+  type HistTourRow = { tour_id: string; tour_name: string; bracket_json: string };
+  let pastTourRuns: TournamentRunInput[] = [];
+  let tourHistState: "idle" | "loading" | "done" = "idle";
+
+  function parseBracket(raw: string | undefined): TournamentBracket | null {
+    if (!raw) return null;
+    try { return JSON.parse(raw) as TournamentBracket; } catch { return null; }
+  }
+
+  async function loadPastTournaments(): Promise<void> {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId || tourHistState !== "idle") return;
+    tourHistState = "loading";
+    const records = $gameStore.protagonist.careerRecords ?? [];
+    const thisYear = $seasonStore.seasonYear;
+    try {
+      const per = await Promise.all(
+        records.filter((r) => r.year !== thisYear).map(async (rec) => {
+          const raw = await window.projectB!.seasonGetHistoryTournaments(
+            JSON.stringify({ slotId, seasonYear: rec.year }));
+          const rows = (JSON.parse(raw) ?? []) as HistTourRow[];
+          return rows.map((row): TournamentRunInput => ({
+            year: rec.year,
+            // 이름은 **그때 저장된 값**을 쓴다 — 대회가 없어져도 행이 이름을 잃지 않는다
+            name: row.tour_name || row.tour_id,
+            teamId: rec.teamId,
+            bracket: parseBracket(row.bracket_json),
+            gameLog: rec.gameLog,
+          }));
+        }),
+      );
+      pastTourRuns = per.flat();
+    } catch {
+      pastTourRuns = [];
+    }
+    tourHistState = "done";
+  }
+
+  $: if (activeTab === "career") loadPastTournaments();
+
+  /** 올해 대회는 세이브 안에 있다 — 조회가 필요 없다 */
+  $: currentTourRuns = Object.entries($seasonStore.tournaments ?? {})
+    .map(([tourId, bracket]): TournamentRunInput => ({
+      year: $seasonStore.seasonYear,
+      name: TOURNAMENTS.find((t) => t.id === tourId)?.name ?? tourId,
+      teamId: $gameStore.protagonist.teamId,
+      bracket,
+      gameLog: currentSeasonGames,
+    }));
+
+  $: tournamentRecordTable = buildTournamentRecordTable(
+    [...currentTourRuns, ...pastTourRuns], { emptyCell: tourRecordCopy.emptyCell },
+  );
 
   function leagueShortName(lid: string): string {
     const map: Record<string, string> = {
@@ -614,6 +714,24 @@
           <MilitaryRecordCard record={$gameStore.protagonist.militaryRecord} />
         </article>
       {/if}
+      <!-- 계약 이력 (§7-4) — 「계약 정보」는 현재 계약 한 건뿐이라 지나간
+           계약이 게임 어디에도 안 남았다. 소식은 1500칸 상한에 밀린다 -->
+      {#if showContractSection}
+        <article class="card career-card">
+          <!-- ⚠ 이름도 문안이 갖는다. 못 읽으면 이름 없이 표만 선다 —
+               코드에 「계약 이력」을 적으면 데이터와 두 벌이 된다 -->
+          {#if contractCopy.title}<h3>{contractCopy.title}</h3>{/if}
+          <StatTable metadata={contractHistoryTable} />
+        </article>
+      {/if}
+
+      <!-- 대회 전적 (§7-4) — `league` 탭의 대회 기록은 **리그 전체**고
+           내가 어디까지 갔는지는 아니다 -->
+      <article class="card career-card">
+        {#if tourRecordCopy.title}<h3>{tourRecordCopy.title}</h3>{/if}
+        <StatTable metadata={tournamentRecordTable} />
+      </article>
+
       {#if careerRecords.length === 0}
         <article class="card record-card">
           <p class="pending">시즌을 마치면 기록이 쌓입니다.</p>

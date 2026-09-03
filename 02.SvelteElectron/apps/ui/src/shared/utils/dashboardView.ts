@@ -357,7 +357,17 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   }
 
   const rows = md.rows ?? [];
-  const has = (k: string) => rows.some((r) => r[k] != null);
+  /**
+   * 그 열을 행들이 들고 있나 — **키가 있으면 값이 비어도 든 것이다.**
+   *
+   * 🔴 예전엔 `r[k] != null` 이었다. 그러면 대회 전적에서 **한 번도 안 던진
+   *    선수의 「내 기록」 열이 통째로 사라져** 「등판 없음」이 그려질 자리가
+   *    없었다 — 값이 비어 있다는 것과 열이 없다는 것은 다른 말이다.
+   *
+   * ⚠ 「빈 열은 안 세운다」는 그대로다(묶음 1 규칙). 생산부가 **키를 아예
+   *   안 실은** 열은 여기서 걸린다 — 말소 표의 비고가 그 자리다.
+   */
+  const has = (k: string) => rows.some((r) => k in r);
   const keys: string[] = [];
 
   const declared = Object.keys(copy.columns);

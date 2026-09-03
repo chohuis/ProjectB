@@ -55,6 +55,7 @@ import type {
   SchoolScenario,
 } from "../types/save";
 import type { ProContract } from "../types/save";
+import { shiftContract, type ContractStamp } from "../utils/contractHistory";
 import { transitionReason, universityGradeOf, universityWeekOnEnroll } from "../utils/careerTransition";
 import { careerSummaryOf } from "../utils/careerSummary";
 import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
@@ -2248,8 +2249,10 @@ function createGameStore() {
       });
     },
 
-    signContract(contract: ProContract) {
+    signContract(contract: ProContract, stamp: ContractStamp = {}) {
       update((s) => {
+        const shift = shiftContract(s.protagonist.contract, contract, stamp,
+                                    s.protagonist.contractHistory);
         const leagueStage =
           contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
           contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
@@ -2257,7 +2260,10 @@ function createGameStore() {
           "pro_kbl";
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
-          contract: { ...contract, status: "active" },
+          contract: { ...shift.contract, status: "active" },
+          // 지나간 계약은 기록 탭 「계약 이력」이 읽는다 (§7-4). 소식은 밀려나도
+          // 여기는 남는다 — 그게 이 필드가 있는 이유다
+          contractHistory: shift.history,
           money: Math.max(0, s.protagonist.money + contract.signingBonus),
           careerStage: leagueStage,
           // 학년은 고교에서만 의미가 있다. `applyDraftDecision`은 이미 이렇게
@@ -2293,8 +2299,14 @@ function createGameStore() {
 
     // 오프시즌 계약 서명 — 즉시 시즌 초기화 없이 pendingNextContract에 보관
     // W52 SeasonEndModal에서 applyPendingNextContract 호출 시 실제 적용
-    setPendingNextContract(contract: ProContract) {
+    setPendingNextContract(contract: ProContract, stamp: ContractStamp = {}) {
       update((s) => {
+        // 🔴 **여기서 옛 계약을 밀지 않는다.** 서명은 오프시즌이고 옛 계약은
+        //    W52 까지 살아 있다 — 지금 밀면 「계약 정보」가 빈 채로 한 달이
+        //    지나간다. 이력은 `applyPendingNextContract` 가 넘길 때 쌓는다.
+        //    찍는 것(연도·종류)은 지금 해야 한다 — 그때는 몇 년에 서명했는지
+        //    모른다.
+        const shift = shiftContract(undefined, contract, stamp);
         const leagueStage =
           contract.leagueId === "LEAGUE_ABL"         ? "pro_abl" :
           contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
@@ -2302,7 +2314,7 @@ function createGameStore() {
           "pro_kbl";
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
-          pendingNextContract: { ...contract, status: "active" },
+          pendingNextContract: { ...shift.contract, status: "active" },
           careerStage: leagueStage,
           teamId: contract.teamId,
           leagueId: contract.leagueId,
@@ -2335,9 +2347,13 @@ function createGameStore() {
       update((s) => {
         const pending = s.protagonist.pendingNextContract;
         if (!pending) return s;
+        // 옛 계약이 자리를 내주는 순간이 여기다 — 재계약·FA 가 이 길로 온다
+        const shift = shiftContract(s.protagonist.contract, pending, {},
+                                    s.protagonist.contractHistory);
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
-          contract: pending,
+          contract: shift.contract,
+          contractHistory: shift.history,
           pendingNextContract: undefined,
         };
         return { ...s, protagonist, player: toPlayerCompat(protagonist) };
