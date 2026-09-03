@@ -6,6 +6,8 @@ import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { applyMilitaryEventChoice } from "./militaryLife";
 import { buildMilitaryResultMessage } from "../utils/militaryResultMessage";
+import { applyRoleChoice, roleChoicePolicyPick } from "./pitcherRole";
+import type { RoleChoiceMetadata } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
@@ -93,6 +95,9 @@ async function handleGame(scheduleId: string): Promise<void> {
 
   try {
     const raw = await window.projectB!.matchSimulateToEntry({
+      // ⚠ 리그를 안 넘기면 투구수 상한이 리그 기본(120)으로 떨어진다 —
+      //   고교 105구가 주인공 경기에만 안 걸렸다 (MainPage 와 같은 결함 · 2026-09-03)
+      leagueId: lid,
       pitcher: {
         // ⚠ **여덟 개를 다 넘긴다.** 예전엔 command·velocity·staminaCap·
         // mentalResil 넷뿐이라 **control(가중 2.0)·movement(1.5)·clutch·
@@ -210,6 +215,15 @@ async function handleMessage(messageId: string): Promise<void> {
   gameStore.markMessageRead(messageId);
 
   if (msg.decision && msg.decision.selectedOptionId === null) {
+    // 보직 소식은 **갈래가 따로다** (PLAN_ROLE_RECOMMEND §7 헤드리스).
+    //
+    // 🔴 `pickChoice(options, fatigue)` 는 일반 휴리스틱이라 **피로 값에 따라
+    //   보직이 정해진다.** 정책은 `globalThis.__PB_ROLE_CHOICE` 하나뿐이고
+    //   기본값은 「추천대로」다(확정 10) — 계측의 기준선이 그것이다.
+    if (msg.metadata?.type === "roleChoice") {
+      await applyRoleChoice(messageId, roleChoicePolicyPick(msg.metadata as RoleChoiceMetadata));
+      return;   // applyRoleChoice 가 pending 해제·저장까지 한다
+    }
     const choiceId = pickChoice(msg.decision.options, g.protagonist.fatigue);
     await applyDecision(messageId, choiceId);
   }

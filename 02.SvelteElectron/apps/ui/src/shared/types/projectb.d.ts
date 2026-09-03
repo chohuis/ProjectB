@@ -151,6 +151,9 @@ declare global {
           control?: number; movement?: number; clutch?: number; holdRunners?: number; };
         batterMean?: number;
         role?: "SP" | "RP" | "CP";
+        /** 🔴 이 경기의 리그 — Rust `MatchStartOptions.league_id`. 안 넘기면 투구수 상한이
+         *  리그 기본(120)이라 고교 105구가 안 걸린다 (2026-09-03) */
+        leagueId?: string;
         protagonistSide?: "home" | "away";
         opponentLineup?: MatchBatterStats[];
         myTeamLineup?: MatchBatterStats[];

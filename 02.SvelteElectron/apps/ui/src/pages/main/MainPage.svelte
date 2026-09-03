@@ -240,6 +240,10 @@
                    control: p.pitching.control, movement: p.pitching.movement,
                    clutch: p.pitching.clutch, holdRunners: p.pitching.holdRunners },
         role: (p.position as "SP" | "RP" | "CP") ?? "SP",
+        // ⚠ 리그를 안 넘기면 Rust `MatchStartOptions.league_id` 가 비어 투구수 상한이
+        //   기본 120구로 떨어진다 — 고교 105구가 **주인공 경기에만** 안 걸렸다
+        //   (자동 시뮬 갈래 `simulateSkippedGame` 은 처음부터 넘겼다 · 2026-09-03 C 실측)
+        leagueId: lid,
         protagonistSide: isHome ? "home" : "away",
         // ⚠ 수비를 안 넘기면 엔진이 평균 50으로 만든다. `buildFielders`는
         // import만 돼 있고 쓰이지 않았다 — 자기 팀 야수를 넘긴다
