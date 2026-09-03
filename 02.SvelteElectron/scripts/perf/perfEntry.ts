@@ -1674,6 +1674,10 @@ export function npcDumpProbe(): Record<string, unknown>[] {
       contractYears: n.contractYears ?? null,
       salary: n.currentSalary ?? null,
       militaryStatus: n.militaryStatus,
+      // 🔴 **병역 규칙은 한국인에게만 걸린다**(`roster_gen.past_service_of`).
+      //   국적을 안 주면 계측이 외국인의 「면제」를 군필로 세어 기대값(60%)을
+      //   넘는다 — 2026-09-04 실측에서 26~28세가 87% 로 보였다
+      nationality: n.nationality ?? "KOR",
       militaryServedUnit: n.militaryServedUnit ?? null,
       lastHistoryTeam: hist.length ? hist[hist.length - 1].teamId : null,
       historyLen: hist.length,

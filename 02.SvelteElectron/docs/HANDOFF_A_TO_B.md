@@ -1,3 +1,34 @@
+# A → B 인계 5차 (2026-09-04) — 문안이 코드에 없는 값을 부르는 자리 일곱
+
+> 아래 4차(09-02) 기록은 그대로 둔다. 커밋 `7856b39f3`.
+
+단위 5 묶음 3·4(소식 생산부 배열화)를 하며 `dashboard_labels.json` 의 선언과
+**코드가 실제로 들고 있는 값**을 자리마다 맞춰 봤다. 일곱이 어긋난다 —
+전부 §1 기획이 「이런 값일 것이다」로 적은 자리이고 실측을 안 한 것들이다.
+값이 없는 열은 생산부가 못 채우므로 **문안을 고쳐야 표가 선다.**
+
+| 문안 | 선언한 값 | 코드가 가진 값 | 어떻게 |
+|---|---|---|---|
+| `bars.teamMood` | `mood`·`delta` (0~100 눈금) | 동료 수 · 서먹 N명 · 불신 N명 (`relationMessages.buildTeamMoodMessage`) | 🔴 **0~100 축이 아예 없다.** 게다가 §1-6 이 같은 소식을 「텍스트 유지」에도 올려 뒀다 — 관계는 숫자로 노출 금지(`relationship.ts:44`)라서다. **문안을 지우거나** 「서먹/불신 사람 수」 표로 바꿔야 한다 |
+| `timeline.militaryAnnual` | `weeks`·`rank`·`nextEvent` (내 복무 현황) | 리그 전체 **병역 현황** — 체육부대 입대 N명 · 일반부대 N명 · 전역 N명 (`seasonRollover`) | 소식과 문안이 서로 다른 것을 말한다. 이름 목록 표(`구분`·`인원`·`명단`)로 다시 쓰거나 문안을 옮겨야 한다 |
+| `timeline.seasonHsSync` | `year`·`summary` | ✅ 맞다 — `careerRecords` 의 연도·`statLine` 을 실었다 | **A 가 배선했다.** 순위(`rank/totalTeams`)도 `detail` 로 간다 — 이름표를 줄 거면 `labels` 에 한 줄 |
+| `cards.natlSquad` | `pos`·`playerId` | 선수 id 목록 + **소속 팀** (`nationalTeam.emitSquadNews`) | 포지션이 없다. 대신 소속이 있다 — `playerId`·`teamId` 로 바꾸면 그날 실린다 |
+| `cards.scoutDay` · `cards.showcase` | `week`·`where`·`scouts` | 참가 N명 · 내 초청 경로 · Day2 점수 · 주목도/명성 증감 (`campusEvents`) | 장소·스카우트 수가 **코드에 없다**. 「참가·내 점수·주목도」로 바꾸는 게 값과 맞는다 |
+| `cards.allstar` | `selected`·`votes` | 북/남 점수 · 승패 · MVP 이름 · 내 선발 여부 · 포지션별 명단 | **득표(votes)가 없다.** 투표 산식 자체가 없다 |
+| `table.faMarket` | 「받은 제안」 `teamId·salary·years·bonus·opts` | `msg-fa-market-` 은 **리그 FA 마감 요약**(NPC 계약 N건 · 대형 계약 5 · 우리 팀 건) | 내가 받은 제안은 **다른 소식**(FA 제안 카드 · C②)이다. 접두 대응표(`_coverage`)가 틀렸다 |
+| `table.resign` | 「재계약 조건」 계약 항목·값 | `msg-resign-` 은 **FA 잔류 선수 이름 목록** (`seasonRollover`) | 이름 목록 표(`npcId`)로 바꾸면 그대로 실린다 — 지금 문안으로는 못 채운다 |
+
+⚠ **`table.coachReport`** 는 값이 있는데 안 실었다. 지표 이름(구속·커맨드·
+제구·스태미나·컨디션·피로·사기)이 **행의 값**으로 들어가야 해서, 생산부가
+낱말을 세이브에 굳히게 된다. `rows` 로 선언해 주면(`{velocity: "구속", …}`)
+생산부는 키만 싣고 화면이 이름을 붙인다 — 그때 실을 수 있다.
+
+⚠ `bars.exam` 은 **고교 갈래에 과목 점수가 있고**(`schoolState.subjectScores`)
+대학 갈래엔 없다(학점만). 표를 세우려면 「학점」 행이 고교에서 뭘 뜻하는지
+(9등급인데 학점 열이 있다) 먼저 갈라야 한다.
+
+---
+
 # A → B 인계 4차 (2026-09-02) — 9/28 계획과 W1 할당
 
 > 정본은 [PLAN_RELEASE_2026-09-28.md](PLAN_RELEASE_2026-09-28.md) §4-B 다.

@@ -195,18 +195,34 @@ export interface TableCopy {
  */
 const FALLBACK_DELTA = { up: "↑{n}", down: "↓{n}", flat: "—", unknown: "" };
 
+/**
+ * 이름표 지도 — 표는 `columns`(열 이름)·`rows`(항목 이름)로 나눠 적는데
+ * 막대·카드 칸은 **`labels` 하나**로 적는다 (§1-3 · §1-4 문안).
+ *
+ * ⚠ **양쪽에 건다.** `labels` 만 있는 칸이 열 이름으로 쓰이는지(연습경기
+ *   예정 — 주차·상대가 열이다) 항목 이름으로 쓰이는지(시즌 브리핑 — 보직·
+ *   순위·경기 수가 항목이다) 는 **생산부가 어느 모양으로 행을 만드는가**가
+ *   정한다. 문안이 그걸 미리 못 가르므로 둘 다에 두고, `resolveColumns` 가
+ *   행에 값이 있는 쪽만 세운다.
+ */
+function labelMapOf(b: TableLabelBlock | null): Record<string, string> | null {
+  const raw = b?.labels;
+  return isStringMap(raw) ? raw : null;
+}
+
 export function tableCopy(labels: DashboardLabels | null, kind: string): TableCopy {
   const b = tableLabelBlock(labels, kind);
   const emptyCell = labels?.common.emptyCell ?? "—";
   const itemValue = labels?.common.itemValue ?? { item: "", value: "" };
   const optional = b?.optionalColumns ?? {};
+  const labelMap = labelMapOf(b);
   const kindRaw = b?.kindLabel;
   const outcomeRaw = b?.outcomeLabel;
   return {
     title: b?.title ?? "",
-    columns: b?.columns ?? {},
+    columns: b?.columns ?? labelMap ?? {},
     optionalColumns: optional,
-    rows: b?.rows ?? {},
+    rows: b?.rows ?? labelMap ?? {},
     empty: b?.empty ?? labels?.common.emptyTable ?? emptyCell,
     footnote: b?.footnote ?? "",
     delta: { ...FALLBACK_DELTA, ...(b?.delta ?? {}) },

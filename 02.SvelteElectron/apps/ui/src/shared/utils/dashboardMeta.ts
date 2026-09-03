@@ -20,7 +20,9 @@
 // ⚠ **숫자 자릿수는 여기서 정한다.** 승률 `.633` · 이닝 `168.1` 처럼 자릿수
 //    자체가 뜻이라 화면이 반올림하면 안 된다(`dashboardView.cellText` 머리말).
 
-import type { TableCell, TableColumn, TableMetadata } from "../types/main";
+import type {
+  RankListMetadata, TableCell, TableColumn, TableMetadata, TimelineMetadata,
+} from "../types/main";
 import type { ContractIncentive, PitcherSeasonStats } from "../types/save";
 import { ipLabel, eraLabel } from "./baseballFormat";
 import { incentiveLabel } from "./contractTerms";
@@ -391,4 +393,154 @@ export function lockNoteOf(
   const tmpl = tableLabelBlock(labels, "demote")?.lockNote;
   if (typeof tmpl !== "string" || tmpl === "") return undefined;
   return tmpl.split("{weeks}").join(String(weeks));
+}
+
+// ── 대진 (msg-tour-open- · msg-tour-round-) ────────────────────
+
+export interface BracketRowInput {
+  /** 라운드 이름 — 정본은 `weekPhases/tournamentNews.roundName` 이다 */
+  round: string;
+  homeName: string;
+  awayName: string;
+  /** 일정 — `W{주차}`. 소식의 `createdAt` 과 같은 꼴이라 새 표기를 안 만든다 */
+  date: string;
+  /** 내 팀 경기인가 — 행을 굵게 그린다 */
+  mine?: boolean;
+}
+
+/**
+ * 대진 한 라운드 → 표 (§3 대진 · §9 ③ 확정).
+ *
+ * ⚠ **`myTeam` 은 열이 아니라 행 강조다.** 대진은 내 팀 행이 라운드마다
+ *   하나씩 여럿일 수 있어 `highlightRow` 인덱스 하나로는 모자란다.
+ *
+ * ⚠ **부전승은 안 싣는다.** 상대가 없는 짝이라 「홈 — 원정」 중 한 칸이 비고,
+ *   빈 칸이 `—` 로 그려지면 「상대를 모른다」로 읽힌다. 부르는 쪽이 건다.
+ */
+export function bracketTableMeta(
+  kind: string, rows: readonly BracketRowInput[],
+): TableMetadata {
+  return {
+    type: "table",
+    kind,
+    columns: [],
+    rows: rows.map((r) => {
+      const row: Record<string, TableCell> & { myTeam?: boolean } = {
+        round: r.round,
+        home: r.homeName,
+        away: r.awayName,
+        date: r.date,
+      };
+      if (r.mine) row.myTeam = true;
+      return row;
+    }),
+  };
+}
+
+// ── 순위 (msg-tour-champ- · msg-tour-award- · msg-farm-champion-) ─
+
+export interface RankEntryInput {
+  /** 큰 글씨 — 팀 이름이거나 사람 이름이다 */
+  label: string;
+  /** 오른쪽 작은 글씨 — 팀명·상 이름·승률 */
+  sub?: string;
+  isMe?: boolean;
+}
+
+/**
+ * 순위 목록 한 벌 → `RankListMetadata` (§1-2).
+ *
+ * ⚠ **순위는 순서다.** 부르는 쪽이 정렬해서 넘기고 여기서 다시 정렬하지
+ *   않는다 — 두 벌이 되면 한쪽만 고쳐진 채 남는다(`standingsTableMeta` 와
+ *   같은 규칙).
+ *
+ * ⚠ **변동(`delta`)을 안 싣는다.** 대회 최종 순위·2군 우승은 **한 시즌에
+ *   한 번**이라 견줄 지난 값이 세이브에 없다(§3-1 표 — `last_digest` 는
+ *   월간 다이제스트 몫이다). 없으면 화면이 칸을 안 그린다.
+ *
+ * ⚠ **제목(`title`)을 여기서 안 짓는다.** 문안(`rankList.*.title`)이 갖는데
+ *   `buildRankList` 가 아직 그걸 안 읽는다 — 실어 보내면 말이 세이브에
+ *   굳는다. C 가 문안을 입힐 때까지 소식 제목이 그 이름이다.
+ */
+export function rankListMeta(
+  kind: string, entries: readonly RankEntryInput[],
+): RankListMetadata {
+  return {
+    type: "rankList",
+    kind,
+    items: entries.map((e, i) => ({
+      rank: i + 1,
+      label: e.label,
+      ...(e.sub ? { sub: e.sub } : {}),
+      ...(e.isMe ? { isMe: true } : {}),
+    })),
+  };
+}
+
+/** 승률 문자열을 순위 목록의 작은 글씨로 — 낱말이 안 붙는 유일한 성적 표기다 */
+export function pctSub(winPct: number): string {
+  return pct(winPct);
+}
+
+// ── 타임라인 (msg-season-hs-sync-) ────────────────────────────
+
+/**
+ * 시간 순 기록 한 벌 → `TimelineMetadata` (§1-5).
+ *
+ * ⚠ **여기서 정렬하지 않는다.** `when` 은 `W21`·`2031` 처럼 꼴이 제각각이라
+ *   견줄 수도 없다(`TimelinePanel` 머리말이 같은 선을 그었다) — 부르는 쪽이
+ *   차례를 정해 넘긴다.
+ */
+export function timelineMeta(
+  kind: string, entries: readonly { when: string; label: string; detail?: string }[],
+): TimelineMetadata {
+  return {
+    type: "timeline",
+    kind,
+    entries: entries.map((e) => ({
+      when: e.when,
+      label: e.label,
+      ...(e.detail ? { detail: e.detail } : {}),
+    })),
+  };
+}
+
+// ── FA 보상 (msg-facomp-) ─────────────────────────────────────
+
+/**
+ * 보상 한 건 → 항목·값 표.
+ *
+ * ⚠ **등급 값에 「등급」을 안 붙인다.** 문안(`table.faComp.rows.grade`)이 그
+ *   이름을 이미 갖고 있어 붙이면 「등급 | 3등급」이 된다.
+ *
+ * ⚠ **보상선수가 없으면 그 행을 안 만든다.** 문안에 「선수 지명 없음」
+ *   (`noPlayer`)이 있는데 화면이 그 자리를 안 읽는다 — 없는 값을 빈 칸으로
+ *   두면 `—` 가 뜨고, 그건 「모른다」다. 보상금만인 건은 금액 행이 그 뜻을 든다.
+ */
+export function faCompTableMeta(
+  i: { grade: string; money: number; playerName?: string | null },
+): TableMetadata {
+  const rows: Record<string, TableCell>[] = [{ item: "grade", value: i.grade }];
+  if (i.money > 0) rows.push({ item: "money", value: manwon(i.money) });
+  if (i.playerName) rows.push({ item: "playerId", value: i.playerName });
+  return { type: "table", kind: "faComp", columns: [], rows };
+}
+
+// ── 행을 그대로 싣는 표 ───────────────────────────────────────
+
+/**
+ * 열이 **문안 선언 하나로** 정해지는 표. 행 배열만 실어 보낸다.
+ *
+ * 값의 모양이 자리마다 다른데 규칙은 같은 것들이 이걸 쓴다 — 대회 전적
+ * (`tourMy`)처럼 행이 하나뿐인 표가 그렇다.
+ *
+ * 🔴 **`metadata` 를 소식 자리에서 직접 짜지 않는다.** 이 파일 밖에서
+ *   `{ type: "table", … }` 를 적으면 규격이 바뀔 때 검사가 안 걸리는 자리가
+ *   남는다 — 생산부의 창구는 이 파일 하나다.
+ */
+export function rowsTableMeta(
+  kind: string,
+  rows: readonly (Record<string, TableCell> & { myTeam?: boolean })[],
+): TableMetadata {
+  return { type: "table", kind, columns: [], rows: rows.map((r) => ({ ...r })) };
 }

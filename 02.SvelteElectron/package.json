@@ -23,7 +23,7 @@
     "build:ui": "npm run gen:manifest && vite build --config vite.config.ts",
     "build:masterdb": "electron scripts/generate_master_db.cjs",
     "prebuild": "npm run build:native",
-    "build": "npm run build:masterdb && npm run build:packages && npm run build:ui",
+    "build": "npm run gen:manifest && npm run build:masterdb && npm run build:packages && npm run build:ui",
     "predeploy": "npm run build",
     "preview:ui": "vite preview --config vite.config.ts",
     "start": "electron apps/desktop/main.cjs",
