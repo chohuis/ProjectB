@@ -155,6 +155,8 @@ export declare function recommendPitcherRoleNative(paramsJson: string): string
 export declare function assignProtagonistRoleNative(paramsJson: string): string
 /** 불펜 등판 판정 */
 export declare function relieverWouldPitchNative(paramsJson: string): string
+/** 선발 등판 판정 — 추천 밖 깊이만큼 그 주 등판을 건너뛴다 (1.1 A④ §5-a) */
+export declare function starterWouldStartNative(paramsJson: string): string
 /** 시즌 레이팅 계산 */
 export declare function calcSeasonRatingNative(paramsJson: string): string
 /** 시장 연봉 계산 */

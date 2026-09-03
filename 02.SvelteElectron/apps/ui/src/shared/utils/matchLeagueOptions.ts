@@ -12,18 +12,22 @@
  * ⚠ 값은 전부 규칙 파일에서 온다. 여기 숫자를 적지 않는다.
  */
 import { starterPitchLimitForLeague, starterOutsFactorForLeague, closerGateForLeague } from "./rosterEngine";
+import { roleDepthOf } from "./pitcherRoleRules";
 
 export interface LeagueMatchOptions {
   pitchLimitOverride: number;
   starterOutsFactor: number;
   closerGate?: { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number };
   restGuard?: { lastPitchedDate: string; lastPitchCount: number; gameDate: string };
+  /** 추천 밖 깊이 — 불펜·마무리 진입 문턱이 이만큼 늦는다 (§5-c · A④). 0 이면 안 싣는다 */
+  roleDepth?: number;
 }
 
 export function leagueMatchOptions(
   leagueId: string,
   myCondition?: { lastPitchedDate?: string; lastPitchCount?: number } | null,
   gameDate?: string | null,
+  roleFit?: { rank: number; seats: number } | null,
 ): LeagueMatchOptions {
   const out: LeagueMatchOptions = {
     pitchLimitOverride: starterPitchLimitForLeague(leagueId),
@@ -39,5 +43,8 @@ export function leagueMatchOptions(
       gameDate,
     };
   }
+  // 깊이 0 이면 안 싣는다 — 0 을 넘겨도 Rust 는 같게 돌지만, 안 넘겨야 "예전 그대로"가 눈에 보인다
+  const depth = roleDepthOf(roleFit).roleDepth;
+  if (depth > 0) out.roleDepth = depth;
   return out;
 }

@@ -100,7 +100,7 @@ async function handleGame(scheduleId: string): Promise<void> {
       //   고교 105구가 주인공 경기에만 안 걸렸다 (MainPage 와 같은 결함 · 2026-09-03)
       leagueId: lid,
       // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
-      ...leagueMatchOptions(lid, conds?.[p.id], entry.gameDate),
+      ...leagueMatchOptions(lid, conds?.[p.id], entry.gameDate, p.roleFit),
       pitcher: {
         // ⚠ **여덟 개를 다 넘긴다.** 예전엔 command·velocity·staminaCap·
         // mentalResil 넷뿐이라 **control(가중 2.0)·movement(1.5)·clutch·

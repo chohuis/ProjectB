@@ -360,20 +360,33 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
     let role = opts.role.unwrap_or(PitcherRole::SP);
     let bullpen_read    = opts.my_manager.as_ref().and_then(|m| m.bullpen_read).unwrap_or(50.0);
     let clutch_decision = opts.my_manager.as_ref().and_then(|m| m.clutch_decision).unwrap_or(50.0);
+    // 1.1 A④ §5-c — 추천 밖 깊이. 자리 밖 한 칸당 진입이 한 이닝 늦고 상황이 좁아진다.
+    //   ⚠ 호출부가 `entry_trigger` 를 직접 넘긴 경우엔 안 건드린다 — 그건 화면·검사가 정한 자리다.
+    let depth = opts.role_depth.unwrap_or(0) as i32;
     let entry_trigger = opts.entry_trigger.clone()
         .unwrap_or_else(|| match role {
             PitcherRole::SP => EntryTrigger::InningStart { inning: 1 },
             PitcherRole::RP => {
                 let min_inning = if bullpen_read >= 70.0 { 5 } else if bullpen_read >= 40.0 { 6 } else { 7 };
-                EntryTrigger::MidInning { inning: min_inning, max_outs: 3, score_diff_cap: 6 }
+                EntryTrigger::MidInning {
+                    inning: (min_inning as i32 + depth).clamp(1, 9) as u8,
+                    max_outs: 3,
+                    // 지는 경기에만 나온다 — 깊이 한 칸당 2점씩 좁힌다. 0 밑으로는 안 내린다
+                    score_diff_cap: (6 - 2 * depth).max(0),
+                }
             }
             PitcherRole::CP => {
                 // 1.1 A② §6-1-3 — 규칙 파일이 문을 주면(고교 8회 고정 제안) 감독 clutchDecision 을 안 본다
-                if let Some(g) = opts.closer_gate.as_ref() {
-                    EntryTrigger::CloseGame { inning_threshold: g.inning_threshold, max_lead_diff: g.max_lead_diff, min_lead_diff: g.min_lead_diff }
+                let (base_inning, max_lead, min_lead) = if let Some(g) = opts.closer_gate.as_ref() {
+                    (g.inning_threshold, g.max_lead_diff, g.min_lead_diff)
                 } else {
-                    let inning_threshold = if clutch_decision >= 70.0 { 8 } else { 9 };
-                    EntryTrigger::CloseGame { inning_threshold, max_lead_diff: 3, min_lead_diff: 1 }
+                    (if clutch_decision >= 70.0 { 8 } else { 9 }, 3, 1)
+                };
+                EntryTrigger::CloseGame {
+                    inning_threshold: (base_inning as i32 + depth).clamp(1, 9) as u8,
+                    // 여유 있는 상황만 — 깊이 한 칸당 한 점씩 좁힌다. 최소 리드 밑으로는 안 내린다
+                    max_lead_diff: (max_lead as i32 - depth).max(min_lead as i32),
+                    min_lead_diff: min_lead,
                 }
             }
         });
@@ -4326,6 +4339,39 @@ mod 방해 {
         };
         let st = create_initial_match_state(&gated, &mut rng);
         assert!(matches!(st.entry_trigger, EntryTrigger::CloseGame { inning_threshold: 8, max_lead_diff: 3, min_lead_diff: 1 }));
+    }
+
+    /// 1.1 A④ §5-c — 추천 밖 깊이만큼 진입 문턱이 늦어지고 상황이 좁아진다
+    #[test]
+    fn 추천_밖_깊이가_진입_문턱을_늦춘다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(7);
+        let gate = crate::types::CloserGate { inning_threshold: 8, max_lead_diff: 3, min_lead_diff: 1 };
+        let cp = |d: Option<u32>| MatchStartOptions {
+            role: Some(PitcherRole::CP), closer_gate: Some(gate.clone()), role_depth: d, ..Default::default() };
+        // 🔴 대조군 — 안 넘기면 예전 그대로다
+        assert!(matches!(create_initial_match_state(&cp(None), &mut rng).entry_trigger,
+            EntryTrigger::CloseGame { inning_threshold: 8, max_lead_diff: 3, min_lead_diff: 1 }));
+        assert!(matches!(create_initial_match_state(&cp(Some(0)), &mut rng).entry_trigger,
+            EntryTrigger::CloseGame { inning_threshold: 8, max_lead_diff: 3, .. }));
+        // 한 칸 밖 → 9회에 · 리드 1~2 만
+        assert!(matches!(create_initial_match_state(&cp(Some(1)), &mut rng).entry_trigger,
+            EntryTrigger::CloseGame { inning_threshold: 9, max_lead_diff: 2, min_lead_diff: 1 }));
+        // 세 칸 밖이라도 9회를 넘지 않고 리드 폭은 최소 리드 밑으로 안 내려간다
+        assert!(matches!(create_initial_match_state(&cp(Some(3)), &mut rng).entry_trigger,
+            EntryTrigger::CloseGame { inning_threshold: 9, max_lead_diff: 1, min_lead_diff: 1 }));
+
+        // 중계 — 감독 bullpenRead 50 이면 6회. 한 칸 밖이면 7회 · 점수 폭 6 → 4
+        let rp = |d: Option<u32>| MatchStartOptions {
+            role: Some(PitcherRole::RP), role_depth: d, ..Default::default() };
+        assert!(matches!(create_initial_match_state(&rp(None), &mut rng).entry_trigger,
+            EntryTrigger::MidInning { inning: 6, score_diff_cap: 6, .. }));
+        assert!(matches!(create_initial_match_state(&rp(Some(1)), &mut rng).entry_trigger,
+            EntryTrigger::MidInning { inning: 7, score_diff_cap: 4, .. }));
+        // 선발은 이 갈래를 안 탄다 — 1회 시작 그대로다
+        let sp = MatchStartOptions { role: Some(PitcherRole::SP), role_depth: Some(3), ..Default::default() };
+        assert!(matches!(create_initial_match_state(&sp, &mut rng).entry_trigger,
+            EntryTrigger::InningStart { inning: 1 }));
     }
 
     /// 의무 휴식이 안 찼으면 불펜 주인공은 못 나온다 — 선발은 검사 대상이 아니다
