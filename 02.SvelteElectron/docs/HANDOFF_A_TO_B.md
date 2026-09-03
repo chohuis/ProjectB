@@ -1,3 +1,67 @@
+# A → B 인계 6차 (2026-09-04) — B-35 값을 다 실었다 · 남은 한 자리
+
+> 커밋 `9a86d069a`(여덟) · `08ead1beb`(§0.6 다섯) · `8a32059d7`(본문 줄이기).
+> B-35 문안(`277b4cafd`)의 **새 키를 생산부가 그대로 쓴다.** 아래 5차 기록은 둔다.
+
+## 0. 실은 자리 — 열셋
+
+| 소식 | 형 | `kind` | 싣는 값 |
+|---|---|---|---|
+| `msg-team-mood-` | table | `bars.teamMood` | `total`·`cold`·`hostile` **사람 수** |
+| `msg-military-annual-` | table | `timeline.militaryAnnual` | `kind`(키!)·`count`·`names` |
+| `msg-fa-market-` | table | `faMarket` | 총·이적·잔류·미계약 |
+| `msg-resign-` | table | `resign` | 이름 목록 |
+| `msg-coach-report-w` | table | `coachReport` | 지표 일곱 **키만** + 변화 |
+| `msg-scoutday-`·`msg-showcase-` | cards | `cards.*` | 참가·초청 경로(키)·주목·주목도·명성 |
+| `msg-allstar-` | cards | `cards.allstar` | 점수·승리·MVP·선발(참거짓)·명단 수 |
+| `msg-exam-w` | bars | `bars.exam` / `…byStage.university` | 과목 백분위 다섯 / 학점 |
+| `msg-natl-squad-` | cards | `cards.natlSquad` | 선수 id + 소속(작은 글씨) |
+| `msg-friendly-plan-w` | cards | `cards.friendlyPlan` | 상대 + 주차 |
+| `msg-season-brief-` | cards | `cards.seasonBrief` | 보직 **눈금 키**(SP·RP·CP) |
+| `msg-mil-record-` | timeline | `timeline.milRecord` | 성과(`perf`)만 |
+
+## 1. 🔴 B 몫 하나 — 「값만 있던 본문」의 한 줄
+
+표시부가 본문과 패널을 **같이** 그리게 돼(C `49c337788`) 값이 두 번 보인다.
+그래서 다섯 자리의 본문을 **원래 있던 한 문장**으로 줄였다(등록말소·트레이드·
+FA 보상·FA 잔류·웨이버). **새 말은 한 마디도 안 지었다.**
+
+⚠ **`msg-league-results-w` 만 못 줄였다.** 본문이 경기 줄뿐이라 남길 문장이
+없다 — 한 줄을 새로 쓰려면 문안에 키가 있어야 한다. B 가 `table.resign.lead`
+로 그 꼴을 이미 만들어 뒀으니, 같은 이름으로 한 줄만 주면 그날 줄인다:
+
+```
+table.leagueResults.lead   "이번 주 리그 경기 결과입니다." 같은 한 문장
+```
+
+같은 자리가 더 필요하면 `table.digest`·`table.officialResult` 도 후보다 —
+다만 그 둘은 본문에 표가 못 담는 값이 섞여 있어(내 자리·권역 순위) **지금은
+안 줄인다.**
+
+## 2. 문안 그대로 쓴 값 — 확인만
+
+- `cards.scoutDay.routeLabel`·`routeFallback` → **키로 싣는다**(`recommend`).
+  화면이 `<키>Label` 규칙으로 말을 붙인다(A 가 `cardsCopy` 에 그 규칙을 넣었다).
+- `timeline.militaryAnnual.kindLabel` → 구분도 키(`sports`)로 싣는다.
+- `table.coachReport.rows` → 지표 이름은 전부 문안이다. 생산부는 키만.
+- `bars.exam.subjects` → 과목 이름도 문안이다. `barsCopy` 가 `subjects`·`rows`
+  까지 한 표로 모은다.
+- `bars.teamMood` 는 **막대가 아니라 항목·값 표**로 낸다. 0~100 눈금이 없다는
+  `_note` 그대로다 — `mood`·`delta` 이름표는 아직 아무도 안 읽는다.
+
+## 3. 재회 12종 — 프로 전용이 다섯
+
+`_manifest.json` 이 낡아 12종이 아예 안 실리고 있었다(A `6c33079e0` 에서 고쳤다).
+이제 12/12 가 조건상 열린다(`milReunionReach.test.ts`). 다만:
+
+- **다섯이 `career_stage: pro_*` 다** — 학생 신분에서 입대하면 전역 무대가
+  독립이라 그 판에서는 영영 안 뜬다(BULLPEN_CATCH·OPP_MOUND·SAME_CLUB·
+  TICKETS·UNIT_INVITE). 설계면 그대로 두고, 아니면 `independent` 를 더한다.
+- 열둘을 같이 돌리면 **주당 한 칸**이라 넷만 닿는다. 창이 겹치는 종의
+  우선순위(610 고정)를 갈라 두면 더 고르게 뜬다 — 값은 B·사용자 몫이다.
+
+---
+
 # A → B 인계 5차 (2026-09-04) — 문안이 코드에 없는 값을 부르는 자리 일곱
 
 > 아래 4차(09-02) 기록은 그대로 둔다. 커밋 `7856b39f3`.
