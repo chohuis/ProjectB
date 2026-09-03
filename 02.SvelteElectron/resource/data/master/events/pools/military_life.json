@@ -8,12 +8,12 @@
       "minRank": 0,
       "maxRank": 0,
       "title": "입소",
-      "description": "훈련소 정문. 머리를 밀고 번호를 받는다. 다섯 주 동안 선택은 없다.",
+      "description": "훈련소 정문입니다. 머리를 밀고 번호를 받았습니다.\n다섯 주 동안 선택은 없습니다.",
       "choices": [
         {
           "id": "ok",
           "label": "들어간다",
-          "effectHint": "사기 −3",
+          "effectHint": "사기 -3",
           "moraleDelta": -3
         }
       ]
@@ -25,7 +25,7 @@
       "minRank": 0,
       "maxRank": 0,
       "title": "사격",
-      "description": "처음 잡는 소총. 공을 쥐던 손이 낯설다.",
+      "description": "처음 잡는 소총입니다. 공을 쥐던 손이 낯섭니다.",
       "choices": [
         {
           "id": "ok",
@@ -41,7 +41,7 @@
       "minRank": 0,
       "maxRank": 0,
       "title": "행군",
-      "description": "완전군장 20km. 발보다 어깨가 먼저 무너진다.",
+      "description": "완전군장 20km입니다. 발보다 어깨가 먼저 무너집니다.",
       "choices": [
         {
           "id": "ok",
@@ -56,13 +56,13 @@
       "once": true,
       "minRank": 0,
       "maxRank": 0,
-      "title": "수료 · 배치 통보",
-      "description": "수료식 뒤 종이 한 장. {unit.name} — {unit.location}.",
+      "title": "배치 통보",
+      "description": "수료식 뒤에 종이 한 장을 받았습니다.\n{unit.name} {unit.location}입니다.",
       "choices": [
         {
           "id": "ok",
           "label": "받는다",
-          "effectHint": "피로 −5 (캘린더)"
+          "effectHint": "피로 -5 (캘린더)"
         }
       ]
     },
@@ -73,12 +73,12 @@
       "minRank": 0,
       "maxRank": 1,
       "title": "자대 첫날",
-      "description": "생활관 문이 열린다. 보직은 {role.label}. 사람들이 한 명씩 이름을 댄다.",
+      "description": "생활관 문이 열립니다. 보직은 {role.label}입니다.\n사람들이 한 명씩 이름을 댑니다.",
       "choices": [
         {
           "id": "greet",
           "label": "한 명씩 인사한다",
-          "effectHint": "재적 부대원 전원 관계 +2 · 사기 +2",
+          "effectHint": "재적 부대원 전원 관계 +2, 사기 +2",
           "relationDelta": 2,
           "moraleDelta": 2
         }
@@ -90,13 +90,13 @@
       "once": true,
       "minRank": 0,
       "maxRank": 3,
-      "title": "진지 공사 (봄)",
-      "description": "언 땅이 풀리자마자 삽을 든다. 포반은 한 주 내내 산에 있다.",
+      "title": "봄 진지 공사",
+      "description": "언 땅이 풀리자마자 삽을 듭니다. 포반은 한 주 내내 산에 있습니다.",
       "choices": [
         {
           "id": "ok",
           "label": "판다",
-          "effectHint": "피로는 캘린더(박격포 +12 / 통신 +6) · 같은 소단위 관계 +1",
+          "effectHint": "피로는 캘린더(박격포 +12 / 통신 +6), 같은 소단위 관계 +1",
           "relationDelta": 1
         }
       ]
@@ -110,19 +110,19 @@
       "perf": "fire",
       "member": "MEM_SQ_LDR",
       "title": "포사격훈련",
-      "description": "포반 전원이 진지에 선다. 포반장 {member.name}.\n탄약수 자리를 가리킨다. 결과 {tier}등급.",
+      "description": "포반 전원이 진지에 섭니다. 포반장 {member.name}.\n탄약수 자리를 가리킵니다. 결과는 {tier}등급입니다.",
       "choices": [
         {
           "id": "calm",
           "label": "평정을 지킨다",
-          "effectHint": "포반장 관계 +3 · 피로 +6",
+          "effectHint": "포반장 관계 +3, 피로 +6",
           "relationDelta": 3,
           "fatigueDelta": 6
         },
         {
           "id": "tense",
           "label": "긴장한다",
-          "effectHint": "관계 −3 · 피로 +6",
+          "effectHint": "관계 -3, 피로 +6",
           "relationDelta": -3,
           "fatigueDelta": 6
         }
@@ -135,19 +135,19 @@
       "minRank": 1,
       "maxRank": 1,
       "title": "첫 정기휴가",
-      "description": "열흘. 위병소를 나서는 순간 공기가 다르다.",
+      "description": "열흘입니다. 위병소를 나서는 순간 공기가 다릅니다.",
       "choices": [
         {
           "id": "home",
-          "label": "집",
-          "effectHint": "사기 +10 · 감각 +2",
+          "label": "집으로 간다",
+          "effectHint": "사기 +10, 감각 +2",
           "moraleDelta": 10,
           "ballDelta": 2
         },
         {
           "id": "park",
-          "label": "야구장",
-          "effectHint": "감각 +6 · 사기 +6",
+          "label": "야구장에 간다",
+          "effectHint": "감각 +6, 사기 +6",
           "ballDelta": 6,
           "moraleDelta": 6
         }
@@ -162,19 +162,19 @@
       "perf": "inspection",
       "member": "MEM_1SG",
       "title": "대대 지휘검열",
-      "description": "통신병은 상황실에서 통신평가를, 박격포병은 진지에서 검열을 받는다. 결과 {tier}등급.",
+      "description": "통신병은 상황실에서 통신평가를 받고, 박격포병은 진지에서 검열을 받습니다.\n결과는 {tier}등급입니다.",
       "choices": [
         {
           "id": "diligent",
-          "label": "성실하게",
-          "effectHint": "판정 한 등급 유리 · 피로 +5",
+          "label": "성실하게 받는다",
+          "effectHint": "판정 한 등급 유리, 피로 +5",
           "perfTierDelta": -1,
           "fatigueDelta": 5
         },
         {
           "id": "smart",
-          "label": "요령껏",
-          "effectHint": "판정 그대로 · 피로 0"
+          "label": "요령껏 넘긴다",
+          "effectHint": "판정 그대로, 피로 0"
         }
       ]
     },
@@ -185,7 +185,7 @@
       "minRank": 2,
       "maxRank": 2,
       "title": "상병 진급",
-      "description": "계급장이 하나 늘었다. 다음 주에 후임이 온다고 한다.",
+      "description": "계급장이 하나 늘었습니다. 다음 주에 후임이 온다고 합니다.",
       "choices": [
         {
           "id": "ok",
@@ -202,12 +202,12 @@
       "minRank": 0,
       "maxRank": 3,
       "title": "혹한기 훈련",
-      "description": "화천 영하 20도. 텐트 안에서 손가락 감각이 먼저 사라진다.",
+      "description": "화천은 영하 20도입니다. 텐트 안에서 손가락 감각이 먼저 사라집니다.",
       "choices": [
         {
           "id": "ok",
           "label": "버틴다",
-          "effectHint": "피로 +12 · 감각 −3 (캘린더)"
+          "effectHint": "피로 +12, 감각 -3 (캘린더)"
         }
       ]
     },
@@ -218,20 +218,20 @@
       "minRank": 0,
       "maxRank": 3,
       "title": "산천어축제",
-      "description": "읍내가 사람으로 찬다. 외박 명단이 돈다.",
+      "description": "읍내가 사람으로 찹니다. 외박 명단이 돕니다.",
       "choices": [
         {
           "id": "out",
-          "label": "외박",
-          "effectHint": "사기 +6 · 감각 +2 · 동기 관계 +3",
+          "label": "외박을 나간다",
+          "effectHint": "사기 +6, 감각 +2, 동기 관계 +3",
           "moraleDelta": 6,
           "ballDelta": 2,
           "relationDelta": 3
         },
         {
           "id": "stay",
-          "label": "부대 잔류",
-          "effectHint": "피로 −6 · 간부 관계 +2",
+          "label": "부대에 남는다",
+          "effectHint": "피로 -6, 간부 관계 +2",
           "fatigueDelta": -6,
           "relationDelta": 2
         }
@@ -244,19 +244,19 @@
       "minRank": 2,
       "maxRank": 2,
       "title": "정기휴가 2",
-      "description": "두 번째 열흘. 이번엔 어디로 갈지 안다.",
+      "description": "두 번째 열흘입니다. 이번에는 어디로 갈지 압니다.",
       "choices": [
         {
           "id": "home",
-          "label": "집",
-          "effectHint": "사기 +10 · 감각 +2",
+          "label": "집으로 간다",
+          "effectHint": "사기 +10, 감각 +2",
           "moraleDelta": 10,
           "ballDelta": 2
         },
         {
           "id": "park",
-          "label": "야구장",
-          "effectHint": "감각 +6 · 사기 +6",
+          "label": "야구장에 간다",
+          "effectHint": "감각 +6, 사기 +6",
           "ballDelta": 6,
           "moraleDelta": 6
         }
@@ -269,7 +269,7 @@
       "minRank": 3,
       "maxRank": 3,
       "title": "병장 진급",
-      "description": "이제 생활관에서 제일 오래 있는 사람이다.",
+      "description": "이제 생활관에서 제일 오래 있는 사람입니다.",
       "choices": [
         {
           "id": "junior",
@@ -291,13 +291,13 @@
       "once": true,
       "minRank": 0,
       "maxRank": 3,
-      "title": "진지 공사 (가을)",
-      "description": "겨울 오기 전에 한 번 더. 병장은 감독이 반이다.",
+      "title": "가을 진지 공사",
+      "description": "겨울 오기 전에 한 번 더 합니다. 병장은 감독이 반입니다.",
       "choices": [
         {
           "id": "ok",
           "label": "판다",
-          "effectHint": "피로는 캘린더(박격포 +10 / 통신 +5) · 소단위 관계 +1",
+          "effectHint": "피로는 캘린더(박격포 +10 / 통신 +5), 소단위 관계 +1",
           "relationDelta": 1
         }
       ]
@@ -311,12 +311,12 @@
       "perf": "fire",
       "member": "MEM_SQ_LDR",
       "title": "포사격훈련 2",
-      "description": "사수라면 이번엔 내 성적이다. 결과 {tier}등급.",
+      "description": "사수라면 이번에는 내 성적입니다. 결과는 {tier}등급입니다.",
       "choices": [
         {
           "id": "calm",
           "label": "평정을 지킨다",
-          "effectHint": "포반장 관계 +3 · 피로 +6",
+          "effectHint": "포반장 관계 +3, 피로 +6",
           "relationDelta": 3,
           "fatigueDelta": 6
         }
@@ -329,12 +329,12 @@
       "minRank": 0,
       "maxRank": 3,
       "title": "유격 훈련",
-      "description": "PT 8번. 구호가 산을 넘는다.",
+      "description": "PT 8번입니다. 구호가 산을 넘습니다.",
       "choices": [
         {
           "id": "ok",
           "label": "버틴다",
-          "effectHint": "피로 +10 · 감각 −3 (캘린더)"
+          "effectHint": "피로 +10, 감각 -3 (캘린더)"
         }
       ]
     },
@@ -347,19 +347,19 @@
       "perf": "inspection",
       "member": "MEM_1SG",
       "title": "대대 지휘검열 2",
-      "description": "병장으로 받는 마지막 검열. 결과 {tier}등급.",
+      "description": "병장으로 받는 마지막 검열입니다. 결과는 {tier}등급입니다.",
       "choices": [
         {
           "id": "diligent",
-          "label": "성실하게",
-          "effectHint": "판정 한 등급 유리 · 피로 +5",
+          "label": "성실하게 받는다",
+          "effectHint": "판정 한 등급 유리, 피로 +5",
           "perfTierDelta": -1,
           "fatigueDelta": 5
         },
         {
           "id": "smart",
-          "label": "요령껏",
-          "effectHint": "판정 그대로 · 피로 0"
+          "label": "요령껏 넘긴다",
+          "effectHint": "판정 그대로, 피로 0"
         }
       ]
     },
@@ -370,7 +370,7 @@
       "minRank": 3,
       "maxRank": 3,
       "title": "전역 30일",
-      "description": "달력에 남은 칸이 서른. 밖에서 연락이 온다.",
+      "description": "달력에 남은 칸이 서른입니다. 밖에서 연락이 옵니다.",
       "choices": [
         {
           "id": "ok",
@@ -387,7 +387,7 @@
       "minRank": 3,
       "maxRank": 3,
       "title": "전역",
-      "description": "전역식. 군 경력 한 장이 접힌다.",
+      "description": "전역식입니다. 군 경력 한 장이 접힙니다.",
       "choices": [
         {
           "id": "ok",
@@ -1400,7 +1400,7 @@
     {
       "id": "MIL_DAY_JR_SIGNAL_TRAIN",
       "title": "후임 통신병 교육",
-      "description": "무전기 앞에 후임을 앉힌다. 내가 처음 배울 때가 떠오른다.",
+      "description": "무전기 앞에 후임을 앉혔습니다.\n내가 처음 배울 때가 떠오릅니다.",
       "minRank": 3,
       "maxRank": 3,
       "once": false,
@@ -1436,7 +1436,7 @@
     {
       "id": "MIL_DAY_OPS_HANDOVER",
       "title": "상황실 인수인계",
-      "description": "상황실 열쇠를 넘길 때가 됐다. 오늘 밤은 마지막으로 내가 선다.",
+      "description": "상황실 열쇠를 넘길 때가 됐습니다.\n오늘 밤은 마지막으로 내가 섭니다.",
       "minRank": 3,
       "maxRank": 3,
       "once": false,
