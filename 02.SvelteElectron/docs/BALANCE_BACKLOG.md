@@ -62,6 +62,8 @@
 ## 3. 병영 (PLAN_MILITARY_LIFE §40)
 감각 감쇠 −1.5 / 상한식 / 접근 1 의 +3 · 박격포 섞음 · 감각 0 전역 은퇴. 실측 §40 표.
 
+**상무 다섯의 두 번째 선택지 (B-25)** — `MIL_EVT_{DRILL_EXCELLENCE,FIELD_FATIGUE,UNIT_SUPPORT,REST_WINDOW,COMMAND_PRESSURE}` 에 성실 ±1~3 · 피로 -1~+5 · 사기 +3 · 컨디션 +5 를 제안값으로 달았다. 자리 `events/pools/military_common.json`. **실측 0** — 이 다섯은 죽은 풀에서 살린 뒤(`1a7b4a9c4`) 한 번도 안 쟀다. 재는 법: 상무 경로 한 판에서 다섯이 뜨는지와 선택 분포.
+
 **전역 뒤 재회 12종 (B-20 초안)** — 효과 사기 +1~+3 · 성실 +1~+3 · 관계 +4~+5 · 돈 −15~−30만원 · 피로 +2~+4 · 조건 문턱(회복주 ≥2·≥4 · 주차 6~40 · 나이 25 · 명성 40 · 사기 40/55) · 우선순위 601~632. 자리 `resource/data/master/messages/military_reunion.json`. **실측 0** — 아직 `events/conditional/` 에 안 실렸다(잣대 한 줄이 막는다 · `HANDOFF_B_TO_A` B-20). 재는 법: 실은 뒤 `measure:messagekinds` 로 12종 통 수와 전역 뒤 시즌당 몇 통인지.
 
 ## 4. 경기·리그 (BALANCE_BASELINE_2026-09-05 §4)
@@ -82,3 +84,9 @@
 | `INJURY_SCARE_UNIV` `fatigue_gte 62 → 55` · `condition_lte 55 → 65` | `EVT_UNIV_INJURY_SCARE_UNIV` | 씨앗 셋 전부 0회. **컨디션 분포는 아무도 안 쟀다** | `probe:condition`(없다) 이 있어야 어느 쪽이 병목인지 갈린다 |
 | 현역 군 창 좁던 셋의 가중 10·4·4 | `events/pools/military_life.json` | `4dfbc2da5` 에서 올렸고 **올린 뒤 안 쟀다** | `probe:military` 씨앗 3 × 정책 3 재측정 |
 | 상무 새로 살린 다섯 | `events/pools/military_common.json` | 🔴 **미측정.** 인용되는 27/34 는 재고 34 시절 값이고 지금은 39다 | 상무 경로로 도달률 한 판 |
+
+### 7-1. B-24 에서 새로 넣은 값 (2026-09-03)
+| 값 | 자리 | 지금 실측 | 재는 법 |
+|---|---|---|---|
+| 학습 선택지 `studyQualityDelta` **±1.2** | `DEC_UNIV_STUDY_MODE_MID` · `_FINAL` | 🔴 **밀기 폭이 학기 길이에 따라 두 배 넘게 갈린다.** 학점 = (품질누계 ÷ 주차) × 4.5 이고 주차를 안 늘리므로 밀기 = ±1.2/주차 × 4.5 — **중간(11주) ±0.49 · 기말(27주) ±0.20**(전공배수 1.0 — 체육교육·스포츠과학). 기본 갈래 2.48 에서 중간고사 선택만으로 2.97 / 1.99 까지 간다. ⚠ **일반전공은 배수 1.5 라 밀기도 1.5배**(중간 ±0.74)이고 기준선 자체가 3.71 이라 `gpa_lte 2` 로는 못 내려간다 | `measure:slotreach --path univ` 로 `UNIV_GPA_GOOD`(≥3.5)·`GPA_DANGER`(≤2)·`SCHOLARSHIP`(≥3)·`WARN_*` 가 뜨는지. ⚠ **≥3.5 는 한 번으로 못 닿는다** — 두 학기를 다 focus 해야 한다 |
+| 고교 부진 문턱 `era_gte 5.0` · `wins_lte 1` · `ip_lte 15` · `k_lte 12` | `EVT_HS_SLUMP_{ERA,NO_WIN,NO_INNINGS,NO_K}` | 🔴 **고교 주인공 시즌 기록 분포를 아무도 안 쟀다.** 리그 ERA 는 5.1~5.4 목표에 실제 4.5(§4)인데 그건 리그 전체 값이지 주인공 값이 아니다 | `measure:slotreach --path hs --full` 로 넷이 뜨는지 · 넷이 다 뜨면 문턱이 너무 헐거운 것이다(부진이 매 시즌 넷 다 오면 안 된다) |

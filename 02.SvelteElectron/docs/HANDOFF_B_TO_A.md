@@ -1049,6 +1049,110 @@ D 지운다                        1종   → 어느 쪽을 지울지는 OP 몫
 §9 에 **손대지 말 것**도 적었다 — 「해가 졌습니다」·「초코파이」·「구호가 산을
 넘는다」. 말투를 바꾸더라도 낱말은 그대로 두는 쪽으로 제안 문장을 썼다.
 
+### B-24 사용자 결정 셋 반영 — 중복 삭제 · 학습 선택지 2 · 고교 부진 4
+
+```
+③ EVT_UNIV_Y4_W50_YEAR_WRAP 삭제 + 매니페스트     이벤트 594 → 593
+② EVT_UNIV_STUDY_MODE_MID · _FINAL               학습 강도 선택지 2종
+④ EVT_HS_SLUMP_{ERA,NO_WIN,NO_INNINGS,NO_K}      고교 부진 4종
+```
+
+게이트 전부 통과 — `test:events` ALL PASS · `check:eventconditions` ·
+`check:effectkeys` · `check:effecthints` · `check:playertype`(① 73 유지) ·
+`check:eventranges` · `npm test` 1767/1767 · `check:mojibake`.
+
+🔴 **정정 — B-22 의 「890 은 영원히 안 뜬다」가 틀렸다.**
+
+```
+eventEngine.ts:314   for (const rule of mandatory) tryEmit(...)   ← 필수는 전부 띄운다
+eventEngine.ts:326   conditional 만 「우선순위 내림차순 · 1개」다
+```
+
+둘 다 `type: "mandatory"` 였다(`events/mandatory/` 에 있다). 그래서 890 은
+안 뜨던 게 아니라 **4학년 W27 에 같은 본문이 두 통 왔다.** 결함이 더 컸지
+잘못 본 쪽이 아니고, 조치(하나 삭제)는 그대로다. `EVENT_UNREACHED` §4 를
+정정으로 고쳐 놨다.
+
+⚠ **잣대가 못 보는 자리가 아직 열려 있다.** `test:events` [3] 은
+`type === "conditional"` 만 훑는다 — **필수 갈래의 중복은 아예 안 본다.**
+거기에 죽음 판정의 `oncePolicy === "repeatable"` 조건까지 겹쳤다. A/C 몫.
+
+#### ② 학습 강도 — `weeklyStudyMode` 를 바꾸는 효과 키는 **없다**
+
+| 있는 것 | `studyQualityDelta` (문자열형 `study:+0.5`) — `game.ts:1329`·`2057` 에서 `applyStudyQuality` 가 **`semesterQualityAccum` 에만 더한다**(주차는 안 늘린다) |
+|---|---|
+| **없는 것** | `weeklyStudyMode` 를 바꾸는 키. 지금은 화면의 `setStudyMode`(`game.ts:1784`) 하나뿐이다 |
+
+**만들지 않았다.** 대신 이미 있는 `studyQualityDelta` 로 썼다 — 지속 모드가
+아니라 **그 학기 평균을 한 번 미는** 방식이다. 산식은 Rust 가 정본이다:
+
+```
+week_engine.rs:1009~1010   gpa = (quality_accum / weeks) × gpa_max × gpa_gain_mult
+→ 밀기 = ±1.2 / 주차 × 4.5 × 배수
+   중간(11주) ±0.49 · 기말(27주) ±0.20   (배수 1.0)
+```
+
+🔴 **한 번으로는 `gpa_gte 3.5` 에 못 닿는다.** 기본 2.48 + 0.49 = 2.97 이라
+`SCHOLARSHIP`(≥3)은 두 학기를 다 focus 해야 넘고 `GPA_GOOD`(≥3.5)은
+그래도 모자란다. **지속 모드 키가 있으면 한 번에 열린다** — 필요한 키로
+적어 둔다: `DecisionEffect` 에 `studyModeSet?: "focus"|"normal"|"rest"|"sleep"`.
+
+⚠ 전공배수가 1.5 인 **일반전공은 기준선이 3.71** 이라 `gpa_lte 2` 쪽으로는
+애초에 안 내려간다. 학점 다섯 중 `GPA_DANGER`·`GRAD_RISK`·`Y3_GPA_VS_BALL`
+은 전공까지 봐야 한다.
+
+#### ④ 고교 부진 넷 — 안 쓰이던 축 넷을 처음 쓴다
+
+```
+season_era_gte 5.0   EVT_HS_SLUMP_ERA          W20+   맞고 있습니다
+season_wins_lte 1    EVT_HS_SLUMP_NO_WIN       W26+   승이 안 붙습니다
+season_ip_lte 15     EVT_HS_SLUMP_NO_INNINGS   W24+   기회가 안 옵니다
+season_k_lte 12      EVT_HS_SLUMP_NO_K         W30+   헛스윙이 안 나옵니다
+```
+
+`check:eventconditions` 의 「안 쓰는 타입」이 **12종 → 9종**이 됐다(넷이 빠지고
+`eq` 가 들었다 — 새 이벤트가 `eq` 를 안 써서다).
+
+⚠ **문턱 넷은 전부 제안값이다.** 고교 주인공의 시즌 기록 분포를 아무도 안
+쟀다. 리그 ERA 실측 4.5 는 리그 전체 값이지 주인공 값이 아니다.
+백로그 §7-1 에 재는 법과 함께 적었다 — **넷이 매 시즌 다 뜨면 문턱이 헐거운 것**이다.
+
+⚠ 넷 다 `player_type: pitcher` 를 선언했다(마운드·볼넷·삼진·제구 어휘).
+`check:playertype` ① 은 73 에서 안 늘었다.
+
+### B-25 병영 문안 — 결함만 고쳤다 (문체 결정은 대기)
+
+B-23 후보표 여덟 중 **결함인 것만** 고쳤다. 말투·제목·라벨·부호는
+사용자 문체 결정 뒤로 미뤘다.
+
+```
+② {member.name}이  → 이름을 문장 끝으로   MIL_CAL_FIRE_1
+④ 표시≠동작 셋     → 힌트를 사실에 맞춤   PROMOTE_2 · D30 · CONFLICT_OFFICER
+⑦ 자대 배치 두 번  → MIL_COM_FIRST_DAY 삭제  (상무 재고 39 → 38)
+⑧ 선택지 하나뿐 5  → 두 번째 선택지 (제안값)
+```
+
+`check:militarydata` OK · `test:events` ALL PASS · `npm test` 1767/1767 ·
+`check:mojibake` OK.
+
+🔴 **자리표시자 뒤 조사 — 네 풀 전수 0건**이 됐다. `military_life` ·
+`military_common` · `military_general` · `military_sports` 를 `{...}` 뒤
+조사 정규식으로 훑었다. **자리표시자는 체언 종지로 끝낸다**가 이 프로젝트의
+규칙이 돼야 한다 — 굴절형 표는 대상이 사람 15명이면 값이 안 맞는다.
+
+⚠ **부대원 이름 15명이 빈 건 결함이 아니다.** `PLAN_MILITARY_LIFE §37` 이
+「이름·성격은 빈 칸 · 사용자가 채운다」로 정했고 `check:militarydata` 가
+경고로 알린다. 폴백이 계급이라 화면은 돈다 — 「하사이」의 원인은 이름이
+아니라 **조사**였다.
+
+⚠ **④ 는 힌트만 고쳤고 배선 제안은 안 했다.** `PROMOTE_2` 의 「포상휴가
+조건 열림」·`D30` 의 「복귀 연락」은 **그 효과를 만드는 키가 아예 없다** —
+새로 만드는 건 문안이 아니라 설계다. `CONFLICT_OFFICER` 만 반대 방향이라
+(`penalty` 가 `militaryLifeRules.ts:150` 에서 조건 없이 붙는다) 「후보」를 뗐다.
+
+⚠ ⑧의 효과는 **전부 제안값**이고 백로그 §3 병영 절에 적었다. 첫 선택지와
+본문은 안 건드렸다.
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고

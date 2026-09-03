@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_STUDY_MODE_FINAL",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 740,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "week_lte",
+      "value": 35
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_STUDY_MODE_FINAL",
+  "decisionTemplateId": "DEC_UNIV_STUDY_MODE_FINAL"
+}
