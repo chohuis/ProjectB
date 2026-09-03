@@ -24,7 +24,7 @@
       "choices": [
         {
           "id": "change",
-          "label": "새 폼에 도전",
+          "label": "새 폼에 도전한다",
           "effectHint": "커맨드 -1 (적응 기간)",
           "statDelta": {
             "command": -1
@@ -32,7 +32,7 @@
         },
         {
           "id": "keep",
-          "label": "현재 폼 유지",
+          "label": "지금 폼을 지킨다",
           "effectHint": "변화 없음"
         }
       ]
@@ -138,7 +138,7 @@
       "choices": [
         {
           "id": "coach",
-          "label": "멘탈 코치에게 상담",
+          "label": "멘탈 코치와 상담한다",
           "effectHint": "사기 +2",
           "moraleDelta": 2
         },
@@ -227,7 +227,7 @@
       "choices": [
         {
           "id": "recovery",
-          "label": "복귀 준비에 집중",
+          "label": "복귀 준비를 한다",
           "effectHint": "회복력 +1",
           "statDelta": {
             "recovery": 1
@@ -235,7 +235,7 @@
         },
         {
           "id": "final",
-          "label": "마지막 경기에 집중",
+          "label": "마지막 경기에 집중한다",
           "effectHint": "사기 +2",
           "moraleDelta": 2
         }
