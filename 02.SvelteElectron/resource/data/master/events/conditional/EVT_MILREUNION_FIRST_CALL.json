@@ -1,0 +1,31 @@
+{
+  "id": "EVT_MILREUNION_FIRST_CALL",
+  "type": "conditional",
+  "category": "social",
+  "priority": 610,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "num_lte",
+      "path": "weeksSinceDischarge",
+      "value": 6
+    },
+    {
+      "type": "relation_gte",
+      "kind": "unitmate",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_FIRST_CALL",
+  "decisionTemplateId": "DEC_MILREUNION_FIRST_CALL"
+}

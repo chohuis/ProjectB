@@ -1153,6 +1153,67 @@ B-23 후보표 여덟 중 **결함인 것만** 고쳤다. 말투·제목·라벨
 ⚠ ⑧의 효과는 **전부 제안값**이고 백로그 §3 병영 절에 적었다. 첫 선택지와
 본문은 안 건드렸다.
 
+### B-26 재회 12종을 실었다 · 학습 강도를 모드로 바꿨다
+
+```
+① messages/military_reunion.json  →  events/conditional/ 12 + templates 12 + decisions 12
+                                     초안 파일은 지웠다 (두 벌이 남으면 한쪽만 고쳐진다)
+② DEC_UNIV_STUDY_MODE_{MID,FINAL}    studyQualityDelta ±1.2  →  studyModeSet
+이벤트 593 → 605 · 템플릿 544 · 선택지 411
+```
+
+게이트 전부 — `test:events` ALL PASS · `check:eventconditions`·`effectkeys`·
+`effecthints`·`playertype`(① 73 유지)·`eventranges` · `npm test` **1785/1785** ·
+`check:mojibake`.
+
+#### 트렁크에서 받은 코드 — **한 줄도 안 고쳤다**
+
+`01b4d5803`·`909965da7` 의 파일 열넷을 그대로 받았고, `master.ts` 가 끌어오는
+**의존 여섯을 더 받아야** 테스트가 섰다:
+
+```
+utils/pitcherRoleRules.ts · utils/roleChoiceCopy.ts · utils/contractCopy.ts
+utils/dashboardCopy.ts · utils/contractTerms.ts · utils/faOfferTerms.ts
+usecases/pitcherRole.ts
+```
+
+⚠ **파일 단위 수령의 한계가 여기서 보인다.** 두 커밋만 받으면 22 파일이
+`Cannot find module` 로 죽는다 — 트렁크 `master.ts` 가 29커밋치 앞서 있어서다.
+다음부터는 이런 건 **병합이 싸다.**
+
+#### ① 조건을 새 키로 다시 짰다
+
+| 무엇 | 어디에 |
+|---|---|
+| `weeksSinceDischarge` | **12종 전부.** `militaryRecoveryWeeks` 대리(2~10주 뒤 0 이 되면 못 잰다)를 걷어냈다 |
+| `relation_gte { kind: "unitmate" }` | `FIRST_CALL`(≥20) · `UNIT_LETTER`(≥30) |
+| `eq militaryRecord.roleId` | `BULLPEN_CATCH` = `"mortar"`. 공 받아 주던 후임(`MEM_AMMO_PR`)이 `SQ1` 소속이라 본문도 「포반에서」로 한 마디 고쳤다 |
+
+🔴 **`militaryRecord.topRelations.0.value` 는 안 썼다 — `unitmate` 와 같은 숫자다.**
+`topRelations` 는 값 내림차순이고 `relation_gte unitmate` 가 그 최대를 본다.
+두 문을 다 열어 두면 같은 축을 두 이름으로 부르게 된다. **한 문만 썼다** —
+다른 숫자와 견주는 자리가 생기면 그때 NUM 경로를 쓰면 된다.
+
+⚠ `roleId` 게이트는 **보직이 `roleAssign: random` 이라 절반만 본다.**
+12종 중 하나라 받아들일 만하다고 봤지만 **되돌리기 쉬운 한 줄**이다.
+
+#### ② 학습 강도 — 지속 모드로 바뀌었다
+
+```
+focus   학습 강도 집중, 성실 +3, 피로 +6      studyModeSet: "focus"
+normal  변화 없음                              효과 없음  ← 지금 강도를 그대로 둔다
+ball    학습 강도 최소, 사기 +3, 피로 +4      studyModeSet: "rest"
+```
+
+🔴 **「하던 대로 한다」에 `studyModeSet: "normal"` 을 넣지 않았다.** 넣으면
+지난 학기에 고른 `focus` 를 **되돌려 버린다** — 「하던 대로」가 「보통으로
+돌아간다」가 된다. 효과를 비워야 말과 동작이 같다.
+
+🔴 **힌트가 모드 변화를 말하게 고쳤다.** `check:effecthints` 의 낱말 표에
+`studyModeSet` 이 **없어서** 「성실 +3, 피로 +6」만 적어도 통과했다 —
+이 트랙이 `relationDelta` 를 만든 그 결함 모양이다. **낱말 표에
+`studyModeSet: /학습 강도|학업/` 과 `roleChoice` 를 더해 달라** (A/C 몫).
+
 ### B-15 (1.1 B②) 강판·불펜·마무리·휴식 문안 초안 — 데이터 파일
 
 `resource/data/master/messages/pitching_usage.json` (새 파일). **데이터만**이고

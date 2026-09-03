@@ -3899,6 +3899,90 @@
       "subject": "헛스윙이 안 나옵니다",
       "body": "올해 삼진이 손에 꼽습니다. 맞춰 잡는 것도 야구지만, 결정구가 없다는 말이기도 합니다.\n\n구종 하나가 아쉽습니다.",
       "decisionTemplateId": "DEC_HS_SLUMP_NO_K"
+    },
+    {
+      "id": "MSG_MILREUNION_FIRST_CALL",
+      "category": "social",
+      "subject": "부대에서 전화가 왔습니다",
+      "body": "전역한 지 얼마 되지 않았는데 부대에서 전화가 왔습니다.\n\n남은 사람들은 아직 그 안에 있습니다. 잘 지내냐고 묻습니다.",
+      "decisionTemplateId": "DEC_MILREUNION_FIRST_CALL"
+    },
+    {
+      "id": "MSG_MILREUNION_PARCEL",
+      "category": "social",
+      "subject": "소포가 하나 왔습니다",
+      "body": "보낸 곳이 부대입니다. 두고 온 물건과 쪽지 한 장이 들어 있습니다.\n\n글씨가 눈에 익습니다.",
+      "decisionTemplateId": "DEC_MILREUNION_PARCEL"
+    },
+    {
+      "id": "MSG_MILREUNION_JUNIOR_ASK",
+      "category": "mental",
+      "subject": "후임이 물어 왔습니다",
+      "body": "아직 부대에 있는 후임에게서 연락이 왔습니다. 전역하면 무엇부터 해야 하냐고 묻습니다.\n\n2년 전에 저도 같은 것을 묻고 싶었습니다.",
+      "decisionTemplateId": "DEC_MILREUNION_JUNIOR_ASK"
+    },
+    {
+      "id": "MSG_MILREUNION_OPP_MOUND",
+      "category": "team_life",
+      "subject": "상대 명단에서 이름을 봤습니다",
+      "body": "원정 경기 명단에 아는 이름이 있습니다. 같은 부대에서 2년을 보낸 사람입니다.\n\n그때는 둘 다 공을 만질 수 없었습니다. 오늘은 마운드에 서서 만납니다.",
+      "decisionTemplateId": "DEC_MILREUNION_OPP_MOUND"
+    },
+    {
+      "id": "MSG_MILREUNION_SAME_CLUB",
+      "category": "team",
+      "subject": "새로 들어온 얼굴을 봤습니다",
+      "body": "이번에 팀에 들어온 사람 중에 아는 얼굴이 있습니다. 같은 중대에서 지냈습니다.\n\n계급장을 떼고 만난 것은 처음입니다.",
+      "decisionTemplateId": "DEC_MILREUNION_SAME_CLUB"
+    },
+    {
+      "id": "MSG_MILREUNION_INDIE_FIELD",
+      "category": "team_life",
+      "subject": "관중석에서 이름을 부르는 소리가 들렸습니다",
+      "body": "경기가 끝나고 나오는데 관중석 쪽에서 저를 부릅니다. 전역하고 처음 보는 얼굴입니다.\n\n일부러 시간을 내서 왔다고 합니다.",
+      "decisionTemplateId": "DEC_MILREUNION_INDIE_FIELD"
+    },
+    {
+      "id": "MSG_MILREUNION_BULLPEN_CATCH",
+      "category": "training",
+      "subject": "공을 받아 주던 사람을 다시 만났습니다",
+      "body": "연습장에 낯익은 사람이 서 있습니다. 포반에서 제 공을 받아 주던 후임입니다.\n\n그때는 장비도 없이 받았습니다. 지금은 불펜에서 같은 일을 합니다.",
+      "decisionTemplateId": "DEC_MILREUNION_BULLPEN_CATCH"
+    },
+    {
+      "id": "MSG_MILREUNION_UNIT_INVITE",
+      "category": "media",
+      "subject": "부대에서 초청장이 왔습니다",
+      "body": "다녀온 부대에서 행사에 와 달라는 연락이 왔습니다. 후임들 앞에 서 달라고 합니다.\n\n다녀오면 이틀이 없어집니다.",
+      "decisionTemplateId": "DEC_MILREUNION_UNIT_INVITE"
+    },
+    {
+      "id": "MSG_MILREUNION_TICKETS",
+      "category": "social",
+      "subject": "표를 구할 수 있냐고 물어 왔습니다",
+      "body": "같이 복무한 사람들이 경기를 보러 오겠다고 합니다. 표를 몇 장 구할 수 있냐고 묻습니다.\n\n휴가를 맞춰 나오는 사람도 있다고 합니다.",
+      "decisionTemplateId": "DEC_MILREUNION_TICKETS"
+    },
+    {
+      "id": "MSG_MILREUNION_UNIT_LETTER",
+      "category": "social",
+      "subject": "편지가 한 묶음 왔습니다",
+      "body": "부대 후임들이 이름을 적어 보낸 편지입니다. 경기를 챙겨 본다고 적혀 있습니다.\n\n한 사람씩 글씨가 다릅니다.",
+      "decisionTemplateId": "DEC_MILREUNION_UNIT_LETTER"
+    },
+    {
+      "id": "MSG_MILREUNION_WEDDING",
+      "category": "social",
+      "subject": "청첩장을 받았습니다",
+      "body": "같은 부대에 있던 사람이 결혼을 합니다. 날짜는 시즌 중입니다.\n\n그때 제 이야기를 제일 오래 들어 준 사람입니다.",
+      "decisionTemplateId": "DEC_MILREUNION_WEDDING"
+    },
+    {
+      "id": "MSG_MILREUNION_BALL_PARTNER_NEWS",
+      "category": "mental",
+      "subject": "그 사람 소식을 들었습니다",
+      "body": "부대에서 제 공을 받아 주던 사람이 운동을 아예 그만뒀다는 이야기를 들었습니다.\n\n원래 선수도 아니었습니다. 그래도 한참 앉아 있었습니다.",
+      "decisionTemplateId": "DEC_MILREUNION_BALL_PARTNER_NEWS"
     }
   ]
 }

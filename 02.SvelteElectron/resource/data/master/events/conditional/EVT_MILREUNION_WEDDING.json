@@ -1,0 +1,26 @@
+{
+  "id": "EVT_MILREUNION_WEDDING",
+  "type": "conditional",
+  "category": "social",
+  "priority": 616,
+  "oncePolicy": "once_per_career",
+  "conditions": [
+    {
+      "type": "eq",
+      "path": "militaryStatus",
+      "value": "군필"
+    },
+    {
+      "type": "eq",
+      "path": "militaryServedUnit",
+      "value": "general"
+    },
+    {
+      "type": "num_gte",
+      "path": "weeksSinceDischarge",
+      "value": 104
+    }
+  ],
+  "messageTemplateId": "MSG_MILREUNION_WEDDING",
+  "decisionTemplateId": "DEC_MILREUNION_WEDDING"
+}
