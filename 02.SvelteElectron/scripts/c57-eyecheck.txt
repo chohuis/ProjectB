@@ -1,0 +1,39 @@
+# 단위 9 인센티브 정산 눈확인 — D 가 헤드리스로 만든 세이브를 불러서 본다
+#
+#   UDD=<빈 폴더>/saves 에 D 파일 둘을 이름 바꿔 넣는다
+#     c9-incentive-20260802-shared.db        → saves/projectb_v2.db
+#     c9-incentive-20260802-slot3_C9INC.db   → saves/slot3_C9INC.db
+#   DRIVE_USER_DATA=$UDD VITE_DEV_SERVER_URL=http://localhost:5175 \
+#     SCREENSHOT_DIR=docs/screens node scripts/drive.mjs scripts/c57-eyecheck.txt
+#
+# ⚠ **슬롯 파일 이름을 `slot3_slot_1.db` 로 바꿔 넣는다.** 화면은 `slot_1`~`slot_3`
+#   셋만 그린다(`SaveSlotScreen.SLOT_IDS`) — D 가 준 `slot3_C9INC.db` 는
+#   `listSlots` 가 찾아도 화면 목록엔 안 뜬다(빈 슬롯 셋으로 보인다 · 실측).
+#
+# 🔴 **사용자 세이브 폴더를 안 쓴다.** `DRIVE_USER_DATA=1` 은 매번 새 임시
+#   폴더라(`mkdtempSync`) 세이브를 미리 못 넣는다 — 내 폴더를 따로 만든다.
+# ⚠ 씨앗 20260802 · 2028 W0 · 인센티브 2건(25등판 +1400 · 150이닝 +2200)
+#   둘 다 미달(5등판 · 26.2이닝) — 이번 판은 **달성 줄이 없다**.
+launch
+resize 1366x768
+sleep 4000
+eval JSON.stringify(document.body.innerText.replace(/\s+/g, ' ').slice(0, 200))
+click-text 이어하기
+sleep 3000
+wait .slot-info
+click .slot-info
+sleep 15000
+eval import('/src/shared/stores/game.ts').then(m => { let g; m.gameStore.subscribe(v => { g = v; })(); const c = g.protagonist.contract; return JSON.stringify({ stage: g.protagonist.careerStage, team: g.protagonist.teamId, inc: c && c.incentives, msg: g.mailbox.filter(x => x.id.indexOf('incentive') >= 0).map(x => x.id) }); })
+click-text 소식
+sleep 2500
+ss c57-00-news-list
+click-text 인센티브 정산
+sleep 2500
+ss c57-01-incentive-news
+eval JSON.stringify({ table: [...document.querySelectorAll('.st table tr')].map(r => r.innerText.replace(/\s+/g, ' ')), foot: [...document.querySelectorAll('.st .foot')].map(e => e.innerText), body: (document.querySelector('.m-body') || {}).innerText })
+click-text 나
+sleep 2000
+click-text 상태
+sleep 2500
+ss c57-02-contract-card-incentive
+eval JSON.stringify([...document.querySelectorAll('.info-row')].map(e => e.innerText.replace(/\s+/g, ' ')))

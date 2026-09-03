@@ -53,6 +53,17 @@ describe("고친 여섯 자리 — 조사가 돌아오지 않았다", () => {
     expect(s).toContain("보직: ${ARC_LABELS");
   });
 
+  /**
+   * ⚠ **눈확인에서 잡았다** (c58 · 2026-09-04). B-28 목록에 없던 자리다 —
+   *   대표팀(`nationalTeam.ts`)만 고치고 대회 우승 소식은 같은 문장을
+   *   그대로 들고 있었다. 「장미기(장미)이 막을 내렸습니다」 로 떴다.
+   */
+  it("대회 우승 소식 본문도 이름을 문장 끝에", () => {
+    const s = read("usecases/weekPhases/tournamentNews.ts");
+    expect(s, "대회 이름 뒤에 「이」 가 붙어 있다").not.toContain("}이 막을 내렸습니다");
+    expect(s, "같은 말을 두 번 한다 — 이름과 꽃").not.toContain("(${def.flower})이");
+  });
+
   it("대회 우승 — 꽃 이름을 문장 끝에", () => {
     const s = read("usecases/weekPhases/tournamentNews.ts");
     expect(s, "왕중왕·여명은 받침이라 「를」이 틀린다")

@@ -156,6 +156,20 @@
     person: (id: string) => $entityMap.get(id)?.name,
   };
 
+  /**
+   * 패널을 그리는 종류인가 — **본문과 패널 사이에 선을 둘지**만 정한다.
+   *
+   * ⚠ 여기 없는 종류는 본문만 그린다. 새 갈래를 아래 `{#if}` 사슬에 더하면
+   *   **이 목록에도 더한다** — 안 더하면 선만 빠지고 조용히 붙어 보인다.
+   * ⚠ `roleChoice` 는 본문이 아니라 `.dec` 자리에 그린다. 여기 넣으면
+   *   본문 위에 없는 선이 생긴다.
+   */
+  const PANEL_TYPES = new Set([
+    "training", "top10", "table", "rankList", "timeline",
+    "bars", "cards", "offseason", "injury", "myBody",
+  ]);
+  $: hasPanel = PANEL_TYPES.has(selected?.metadata?.type ?? "");
+
   async function markAllRead() {
     gameStore.markAllMessagesRead();
     await gameStore.save();
@@ -340,10 +354,25 @@
                  (MESSAGE_KINDS_DISPLAY_2026-09-03 §4). 구조가 잡힌 숫자를
                  들고 와서 본문 텍스트로만 나가고 있었다 -->
             <MyBodyPanel metadata={selected.metadata as MyBodyMetadata} />
-          {:else}
-            {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
-              <p>{line || " "}</p>
-            {/each}
+          {/if}
+
+          <!--
+            🔴 **본문을 패널이 대신하지 않는다** (사용자 확정 2026-09-04).
+               예전엔 `{:else}` 라 **패널이 있으면 본문이 통째로 사라졌다** —
+               표는 값만 그리는데 본문에는 안내 문장이 같이 있어서
+               (「올해 채운 조건은 없습니다.」·「기록 탭에 남습니다」) 그 말이
+               화면에서 없어졌다. 패널 위 · 본문 아래로 **같이** 그린다.
+
+            ⚠ 묶음 1·2 처럼 본문이 값뿐인 자리는 표와 겹쳐 보인다. 그건
+              **생산부가 본문을 줄일 자리**지 화면이 지울 자리가 아니다 —
+              지우면 안내가 있는 소식까지 같이 잃는다.
+          -->
+          {#if selected.body}
+            <div class="m-text" class:m-text-after={hasPanel}>
+              {#each selected.body.replace(/\\n/g, "\n").split("\n") as line}
+                <p>{line || " "}</p>
+              {/each}
+            </div>
           {/if}
         </div>
 
@@ -591,6 +620,12 @@
    * 줄바꿈은 이미 `<p>`가 만든다 — 여기서는 **공백 보존**만 취한다.
    */
   .m-body :global(p) { margin: 0; white-space: pre-wrap; }
+
+  /* 패널 아래에 붙는 본문 — 선 하나로 가른다. 패널이 없으면 선도 없다 */
+  .m-text-after {
+    margin-top: 10px; padding-top: 9px;
+    border-top: 1px solid var(--line);
+  }
 
   /* 카드 소식 — 카드 줄과 그 아래 한 줄 (§1-4) */
   .cardsblock { display: flex; flex-direction: column; gap: 8px; }

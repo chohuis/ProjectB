@@ -27,7 +27,15 @@
    * ⚠ 유망주 랭킹(`top10`)에는 `kind` 가 없다. 그때는 문안이 빈 채로
    *   들어가고 등수는 숫자로 선다 — 원래 그랬다.
    */
-  $: copy = rankCopy($masterStore.dashboardLabels, (metadata as { kind?: string }).kind ?? "");
+  /**
+   * ⚠ **유망주 랭킹에는 `kind` 가 없다** (`Top10Metadata`). 예전엔 그래서
+   *   문안을 못 찾고 「해당 학년 선수 없음」을 **코드가** 들고 있었다 —
+   *   말은 문안에 둔다(`rankList.top10`).
+   */
+  $: copy = rankCopy(
+    $masterStore.dashboardLabels,
+    (metadata as { kind?: string }).kind ?? (metadata.type === "top10" ? "top10" : ""),
+  );
   /**
    * 🔴 **id 를 이름으로 바꾸는 자리가 화면이다.** 대회 수상은 사람과 소속을
    *    id 로 싣는다(§1-2) — 만드는 쪽이 한글 이름을 굳혀 실으면 표시 언어를
@@ -82,7 +90,7 @@
           {#if col.entries.length === 0}
             <!-- ⚠ 빈 목록 한 줄도 문안이 갖는다. 대회 순위와 유망주 랭킹은
                  「없다」의 뜻이 달라 한 문장으로 묶으면 안 된다 -->
-            <li class="rank-empty">{view.empty || "해당 학년 선수 없음"}</li>
+            <li class="rank-empty">{view.empty}</li>
           {/if}
         </ol>
 
@@ -154,7 +162,11 @@
        팀 이름이 길수록 선수 이름이 짧아지는 구조였다.
        ⚠ **이름이 더 중요하다** — 순위표에서 누구인지가 핵심이다.
          이름에 최소 폭을 보장하고, 넘치는 건 팀명이 잘린다(`ellipsis`가 이미 있다). */
-    grid-template-columns: 20px minmax(4.5em, 1fr) minmax(0, auto);
+    /* 🔴 **등수 칸이 20px 로 못 박혀 있었다** — 「준우승」 이 한 글자씩 세로로
+       쪼개져 그려졌다(눈확인 c58 · 2026-09-04). 등수가 숫자일 때는 20px 로
+       충분한데 대회 최종 순위는 **말**이 온다(`rankList.<kind>.first`).
+       ⚠ 바닥은 20px 그대로다 — 숫자 줄이 들쭉날쭉해지면 안 된다. */
+    grid-template-columns: minmax(20px, max-content) minmax(4.5em, 1fr) minmax(0, auto);
     align-items: center;
     gap: 5px;
     padding: 5px 6px;
@@ -189,6 +201,8 @@
     font-weight: 700;
     text-align: right;
     font-variant-numeric: tabular-nums;
+    /* 말이 오는 자리라 줄바꿈을 막는다 — 「준우승」 이 세로로 쪼개졌다 */
+    white-space: nowrap;
   }
 
   .rank-row.hero .rank-num { color: var(--t-gold); }
