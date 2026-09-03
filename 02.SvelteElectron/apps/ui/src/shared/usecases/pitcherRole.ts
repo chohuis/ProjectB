@@ -388,6 +388,26 @@ export async function askRoleChoice(seasonYear: number, weekInYear: number): Pro
   return msg.id;
 }
 
+// ── 확인 단계가 필요한가 (사용자 요구 3 · §4 「확인 단계」) ────
+
+/**
+ * 그 버튼이 **확인 단계를 거치나** — 추천이 아닌 자리를 고를 때만 참이다.
+ *
+ * 🔴 **추천은 바로 확정한다.** 확인 한 줄은 "추천이 아닌 보직을 고르면 출전
+ * 기회가 적어질 수 있다"는 안내(사용자 요구 3)이고, 추천을 눌렀을 땐 안내할
+ * 게 없다 — 한 번 더 묻는 것이 되어 버린다.
+ *
+ * ⚠ 문구가 추천이든 아니든 같은 한 줄인 것(§8 확정 12)과 **다른 얘기다.**
+ * 확정 12는 「추천 전용 문장을 따로 만들지 마라」이지 「추천도 한 번 더
+ * 물어라」가 아니다 — 앞선 구현이 그렇게 읽어 추천에도 확인 단계를 뒀다.
+ *
+ * 판정을 여기 두는 이유: 화면이 `meta.recommended === opt.id`를 직접 적으면
+ * 그 한 줄이 컴포넌트 안에만 있어 검사가 못 본다.
+ */
+export function needsRoleConfirm(recommended: RoleChoiceId, pick: RoleChoiceId): boolean {
+  return pick !== recommended;
+}
+
 // ── 확정 — **화면과 헤드리스가 같은 함수를 부른다** ───────────
 
 /**

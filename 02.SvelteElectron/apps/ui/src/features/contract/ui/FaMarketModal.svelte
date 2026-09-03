@@ -3,6 +3,14 @@
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { signFaOffer, waitFaMarket } from "../../../shared/usecases/contractDecision";
   import { generateFaOffers, isFaEligible, getFaThreshold, type FaOffer } from "../../../shared/utils/faEngine";
+  import { faOfferTermLines } from "../../../shared/utils/faOfferTerms";
+
+  /**
+   * 제안 카드는 **연봉·기간 두 줄뿐이었다** (PLAN_CONTRACT_TERMS §1-2 · §7 ②).
+   * Rust `eval_fa_bid` 가 내는 계약금·팀 옵션·노트레이드가 `toContract` 로
+   * 계약에 그대로 들어가는데, 고르기 전에는 안 보이고 **서명한 뒤 선수 상세에서야**
+   * 보였다. 줄은 `faOfferTermLines` 가 만든다 — 항목 이름을 화면에 적지 않는다.
+   */
 
   let resolving = false;
   let selectedTeamId: string | null = null;
@@ -63,6 +71,9 @@
         <button class:selected={selectedOffer?.teamId === offer.teamId} on:click={() => { selectedTeamId = offer.teamId; raiseRatio = 0; }}>
           <strong>{$teamsL10n.find((t) => t.id === offer.teamId)?.name ?? offer.teamId}</strong>
           <span>{offer.salary.toLocaleString()}만원 / {offer.durationYears}년</span>
+          {#each faOfferTermLines(offer) as term (term.key)}
+            <span class="term"><span class="term-label">{term.label}</span>{#if term.value}<span class="term-val">{term.value}</span>{/if}</span>
+          {/each}
         </button>
       {/each}
     </div>
@@ -97,6 +108,10 @@
   .offers button.selected { border-color:var(--ink-mid); background:var(--line); }
   .offers strong { font-size:14px; }
   .offers span { font-size:12px; color:var(--ink); }
+  /* 조건 줄 — 항목 이름과 값 둘뿐이다. 있는 조항만 그린다 */
+  .offers .term { display:flex; justify-content:space-between; gap:8px; font-size:11px; color:var(--ink-mid); }
+  .offers .term-label { font-size:11px; color:var(--ink-mid); }
+  .offers .term-val { font-size:11px; color:var(--ink); }
   .detail p { margin:0; color:var(--ink); }
   .warn { color:var(--warn); font-size:12px; margin-top:6px; }
   .actions { display:flex; gap:10px; justify-content:flex-end; }

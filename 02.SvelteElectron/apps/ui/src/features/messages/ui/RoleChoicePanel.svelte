@@ -2,7 +2,7 @@
   import type { MessageItem, RoleChoiceMetadata } from "../../../shared/types/main";
   import { masterStore } from "../../../shared/stores/master";
   import { roleConfirmLine } from "../../../shared/utils/roleChoiceCopy";
-  import { applyRoleChoice, type RoleChoiceId } from "../../../shared/usecases/pitcherRole";
+  import { applyRoleChoice, needsRoleConfirm, type RoleChoiceId } from "../../../shared/usecases/pitcherRole";
 
   /**
    * 보직 선택 — **모달이 아니라 소식 상세 안의 칸이다** (PLAN_ROLE_RECOMMEND §4).
@@ -22,8 +22,14 @@
    * 🔴 **부제를 안 단다.** `effectHint` 가 전부 빈 문자열이라 `.opt-hint` 가
    * 아예 안 그려진다(사용자 지시).
    *
-   * ⚠ **추천을 눌러도 확인 한 줄이 뜬다** (§7 · 확정 12). 추천이라고 문장을
-   * 빼면 "추천은 자리가 있다"는 뜻이 되는데, 셋 다 밀리는 경우가 실제로 있다(§8 ⑫).
+   * ## 확인 단계는 **추천이 아닌 버튼에만** 뜬다 (사용자 요구 3 · §4)
+   *
+   * 추천을 누르면 바로 확정한다. 확인 한 줄은 "추천이 아닌 자리를 고르면 출전
+   * 기회가 적어질 수 있다"는 안내라, 추천에도 띄우면 안내가 아니라 **한 번 더
+   * 묻는 것**이 된다. 갈래는 `needsRoleConfirm()` 하나가 정한다.
+   *
+   * ⚠ §8 확정 12(「추천이든 아니든 같은 한 줄」)는 **문구 얘기다** — 추천
+   * 전용 문장을 따로 만들지 말라는 것이지 추천에도 단계를 두라는 게 아니다.
    */
   export let msg: MessageItem;
 
@@ -38,15 +44,30 @@
   // 다른 소식으로 옮기면 확인 단계를 접는다
   $: if (msg.id) pendingPick = null;
 
-  async function commit() {
-    if (!pendingPick || busy) return;
+  /** 버튼을 눌렀을 때 — 추천이면 바로 확정, 아니면 확인 단계로 간다 */
+  async function pick(id: RoleChoiceId) {
+    if (busy) return;
+    if (needsRoleConfirm(meta.recommended, id)) {
+      pendingPick = id;
+      return;
+    }
+    await confirmPick(id);
+  }
+
+  async function confirmPick(id: RoleChoiceId) {
+    if (busy) return;
     busy = true;
     try {
-      await applyRoleChoice(msg.id, pendingPick);
+      await applyRoleChoice(msg.id, id);
     } finally {
       busy = false;
       pendingPick = null;
     }
+  }
+
+  async function commit() {
+    if (!pendingPick) return;
+    await confirmPick(pendingPick);
   }
 </script>
 
@@ -60,7 +81,8 @@
             class:rec={meta.recommended === opt.id}
             type="button"
             aria-pressed={meta.recommended === opt.id}
-            on:click={() => (pendingPick = opt.id as RoleChoiceId)}
+            disabled={busy}
+            on:click={() => pick(opt.id as RoleChoiceId)}
           >
             <span class="opt-label">{opt.label}</span>
           </button>
@@ -105,6 +127,7 @@
     font-size: 13px; color: var(--ink);
   }
   .opt:hover { border-color: var(--t-dark); background: var(--panel-sunk); }
+  .opt:disabled { opacity: .55; cursor: default; }
   .opt-label { font-weight: 700; }
 
   /* 추천 표시는 **하나뿐이다** — 테두리 하나. 나머지 둘은 아무 표시가 없고
