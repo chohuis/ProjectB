@@ -11,7 +11,8 @@
 | 불펜 자리 수 고교 4 · 대학 5 · 독립 3 · 프로 6 | `rosterOpsRules.bullpenSize` | — | 같은 표의 자리없음 열 |
 | 고교 선발 투구수 상한 95 | `rosterOpsRules.starterPitchLimit` | 선발 투구 평균 87→85 (거의 안 걸림) | HANDOFF_OP_TO_A §3 계기 · 씨앗 3 |
 | 고교 선발 아웃 계수 0.80 | `rosterOpsRules.starterOutsFactor` | 선발 등판당 이닝 5.92→5.31 · 마무리 등판 8→12 | 같음 |
-| 고교 마무리 문 8회 고정 · 리드 1~3 | `rosterOpsRules.closerGate` | 마무리 등판 9 (이닝 수치 검증 중) | 같음 |
+| 고교 마무리 문 8회 고정 · 리드 1~3 | `rosterOpsRules.closerGate` | **마무리 시즌 등판 6~9 · 등판당 1.48~1.83이닝 · 투구 평균 29~34 최대 45**(씨앗 20260802 · 3회) — 전부 8회top 진입 | `npm run probe:hscloser`(보직별 표) |
+| 고교 보직 물음 주차 6 | `utils/seasonWeeks.ROLE_ASK_WEEK.LEAGUE_HIGHSCHOOL` | **묻기 전에 이미 3경기를 선발로 던진다**(W2·W4·W6 · 13~17아웃 · 86~88구). 마무리를 골라도 그 시즌 선발 3등판이 기록에 남는다 | 같은 계기 `PB_DUMP=1` 의 등판 줄 |
 | 추천 밖 불이익 k=0.30 · 바닥 0.15 | `pitcherRoleRules.offRecommendation` | 미배선(A④) | probe:rolefit(신설 예정) |
 
 ## 2. 계약·인센티브 (PLAN_CONTRACT_TERMS)
