@@ -5839,7 +5839,7 @@
         {
           "id": "study",
           "label": "학업에 무게를 둔다",
-          "effectHint": "성실 +3 — 학업 쪽에 시간을 쓴다",
+          "effectHint": "성실 +3",
           "effects": {
             "diligenceDelta": 3
           }
@@ -6402,7 +6402,7 @@
       "options": [
         {
           "id": "apply",
-          "label": "신청한다 — 학위를 포기하고",
+          "label": "학위를 포기하고 신청한다",
           "effectHint": "명성 +6, 사기 +5",
           "effects": {
             "fameDelta": 6,
@@ -8031,7 +8031,7 @@
       "options": [
         {
           "id": "treat",
-          "label": "다 같이 간다 — 내가 낸다",
+          "label": "다 같이 가고 내가 낸다",
           "effectHint": "동료 관계 +6 (100만원), 피로 +3",
           "effects": [
             "luxury.teammate:100",
@@ -9207,8 +9207,8 @@
         },
         {
           "id": "mound_bat",
-          "label": "마운드만 손본다",
-          "effectHint": "타석 주변만 고른다 — 선구 경험치 +1, 피로 +3",
+          "label": "타석 주변만 고른다",
+          "effectHint": "선구 경험치 +1, 피로 +3",
           "conditions": [
             {
               "type": "player_type",

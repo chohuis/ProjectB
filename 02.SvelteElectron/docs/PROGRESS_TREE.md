@@ -122,7 +122,7 @@ D
 | 6 | 보직 선택 인라인 (C①) | C | ✅ |
 | 7 | FA 제안 카드 조건 (C②) | C | ✅ |
 | 8 | 계약 협상 페이지 「＋ 추가」 (C③) | C | ✅ |
-| 9 | 인센티브 정산 화면 (C④) | C | ⬜ |
+| 9 | 인센티브 정산 화면 (C④) | C | ✅ e5bacd79d(정산 소식 표 항목·결과·실측·금액 + 계약 카드 「올해 인센티브」 · 판정은 `settleIncentives` 하나 · 본문 폴백 유지 · `condition` 열 제거 · 미달 금액·수상 실측은 빈 칸) |
 | 10 | 은퇴 직후 결산 자동 열기 (C⑤-a) | C | ✅ |
 | 11 | 상무 탭 §39 (C⑤-b) | C | ✅ 5222916be (SportsUnitPane — 전역 카운트·성적 없음·부대 일정·부대 소식 · 문안 `messages/military_sports.json` B 가 다듬는다) |
 | 12 | 대시보드 컴포넌트 — StatTable·타임라인·RankListPanel 범용화 (C) | C | ✅ ce349967f |
@@ -135,7 +135,7 @@ D
 | 18 | 회신 결함 수정 (빌드 눈확인 뒤) | 전원 | ⬜ |
 | 20 | NPC 이력 결함 다섯 — 방출·웨이버 경력 기록 · 과거 성적 팀=이적 · FA 연차 정본 통일 · 병역 나이 채움(26~28 군필 60% · 29+ 전부) · 계약 기간 나이 상한 (B-29 · 사용자 확정 19:0x) | A | 🔄 **D 실측(11dc3a058 · 새 게임 5,798명): 29세+ 군필 84.4%(규칙 100) · 33+/36+ 계약 상한 위반 57%/73% — 초기 생성 경로가 새 규칙을 안 타는지 A 확인** · 코드 ✅ 981825b5d · 1846122ec · 3af6d588f · 77d590311 · a6715c00c (라벨 waiver_claim·transfer 추가 · 제안값 둘 백로그) |
 
-**완료 16 / 20 = 80%** (09-04 00:0x · D 실측이 17·20 을 다시 열었다 · 남은 것: 5 묶음 3·4(A 진행 중) · 9(C) · 17 재회 훅 배선(A) · 18 · 20 NPC 초기 생성 확인(A) · 🔴 A 우선: `check:protransition` 빨강부터). 1.0.0 고정 = 20 전부 ✅ · 그 뒤 BALANCE_BACKLOG 조정 → 1.0.1.
+**완료 17 / 20 = 85%** (09-04 03:1x · 남은 것: 5 묶음 3·4(A 진행 중) · 17 재회 훅 배선(A) · 18 회신 결함(빌드 눈확인 뒤 · C) · 20 NPC 초기 생성 확인(A) · 🔴 A 우선: `check:protransition` 빨강부터). C 몫은 전부 ✅ — 남은 C 일 = A 묶음 3·4 붙은 뒤 대시보드 눈확인 · 빌드 회신 결함. 1.0.0 고정 = 20 전부 ✅ · 그 뒤 BALANCE_BACKLOG 조정 → 1.0.1.
 
 ## 1.1 첫 묶음 — 사용자 확정 표 (2026-09-03 · "이 표 보고 진행")
 
@@ -221,7 +221,7 @@ B
 ├─ 20. ✅ **병영 재회 이벤트 초안 12종**(9eb57d75c · messages/military_reunion.json 한 파일 · 아직 events/conditional 미적재) — ❓ 구조 셋: ① 위생 검사가 군 조건 경로를 통째로 막음(값 `군필` 은 열어야 · A) ② 전역 뒤 무대는 프로 셋+독립(대학 없음 · 설계) ③ 조건 키 여섯(militaryRecord 경로 · weeksSinceDischarge · 부대원 relation kind · relationDelta personId · 문안 {memberName} 렌더러) → **v1.0.0 범위에 넣나 사용자 결정** · ⚠ B 세션은 git merge 가 분류기에 막혀 파일 단위로만 받음
 ├─ 21. ✅ **대시보드 문안 데이터** dashboard_labels.json(d85f87c14 · 34자리 · 코드가 이미 쓰는 낱말만 · ERA/WHIP · 게임차 열 없음(Standing 에 없음) · A 몫: 시즌 결산 「지난해」 열은 CareerRecord.statLine 이 문자열이라 숫자 출처 없음 → 선택 열)
 ├─ 22. ✅ **못 닿는 이벤트 판정표**(63882d8b3 · EVENT_UNREACHED) — 좁음 12(값 제안 · 백로그 §7) · 죽은 조건 0 · 상황상 11묶음 · 지움 후보 1 · 🔴 발견 셋: money_lte 200 은 방향이 반대(자산이 오르기만 · 제안 1000) · UNIV_Y4_W50 둘이 조건·본문 같음(890 vs 960) · 「부진」 조건 넷 쓰는 이벤트 0종(고교엔 못하고 있다 이벤트 없음) · 상무 재고 34→39(옮긴 5종 미측정) · ❓ 사용자 둘: 학습 강도를 이벤트 선택지로 고르게 하나 · Y4 W50 둘 중 무엇을 남기나
-├─ 32. 🔄 **B-32 제목 대시 셋 제거**(offer/counter/option.subject 「… — {team}」→「{team} …」 · 다른 파일 같은 꼴 함께 · `_rule` 한 줄) → 뒤 대기: C condition 열 · 상무 {week}
+├─ 32. ✅ **B-32 제목 대시 14자리**(420eb34d5 · contract_terms 넷 · templates 넷+본문 · decision_templates 다섯 — 그중 `DEC_IND_LIFE_FIELD_PREP` 선택지 라벨 둘이 같던 결함 고침 · `_rule` 한 줄) · `_coverage._unused` 잔재 둘 삭제(ce4962bbf) · condition 열·상무 dateForm 은 C 가 이미(e5bacd79d · 57d2decc8) · ⏸ `role_choice.json` 「{year}시즌 보직 — {role}」는 `roleChoiceMessage.test.ts:150` 이 못박아 C 에게 · 남은 「—」 둘은 빈 칸 기호(emptyCell · delta.flat) 유지 · vitest 2315 · `check:msgdup` 은 전자 슬롯 없어 D 에게
 ├─ 31. ✅ **B-31 `{team}와의` 조사 한 건**(5028bbc38 · D `check:josa` 실측 · 「{team} 계약이 완료되었습니다」 · headSafe 는 `need()` 요구라 남기고 용도 주석 · check:josa 0/777 · vitest 2275)
 ├─ 30. ✅ **B-30 안 쓰는 대시보드 문안 키**(4b7878974 · `npcTrade.footnote` 삭제 · `prev` 유지 · `condition` 은 검사가 요구해 C 뒤)
 ├─ 29. ✅ **B-29 NPC 생성 이력 검토**(cfb02acdf · NPC_HISTORY_REVIEW · 뿌리: 이력이 셋(과거 성적·입단/이적·진행 사건)으로 나뉘어 서로 안 봄 · 높음 3: 승격/강등/방출이 경력에 안 남음 · 과거 성적 팀이 이적 무시 · FA 자격 연차 정본 둘(8 vs 5/6/4) · 중간 4 · 낮음 3 · 25세 연차 0/32세 연차 2 는 결함 아님 · 사용자 결정 다섯 확정(권장 · 맞춤 · 통일 · 26~28 군필 60%/29+ 전부 · 상한 둠) → A 단위 20 · D 덤프 넷)
@@ -266,6 +266,10 @@ C
 ├─ 15. ✅ **1.1 C① 보직 선택 인라인**(Opus · d1dcbdac0 · 18파일 · vitest +72 → 1,840 · svelte-check 0) — 리그별 개막 전 주 소식 안 선택 · 새 pending 타입 0 · id 연도+팀+주 · 헤드리스 `__PB_ROLE_CHOICE` · 문안 전부 role_choice.json · A 가 갈아끼울 자리 `pitcherRole.ts recommendRole()` 하나 · ⚠ 프로 W1 갈래 실측은 A 가 12시즌 pro 로 · ⚠ 비추천 확인 단계 → C② 에서 비추천만 확인 단계로 (사용자 요구 3)
 ├─ 16. ✅ **1.1 C② FA 제안 카드 조건 표시**(Opus · 4bae911aa · 8파일 · vitest +27 → 1,867 · svelte-check 0) — 계약금·팀/선수 옵션·노트레이드·총액을 있는 줄만(faOfferTerms.ts 순수 함수) · C① 후속: 비추천 버튼만 확인 단계(needsRoleConfirm · 문서 세 자리 정정) · ⚠ 실측은 컴포넌트 검사로 대신(FA 는 5년차 뒤 · electron 슬롯) · ❓ 노트레이드 표기 셋(트레이드 거부권/노트레이드/노트레이드 조항) → C③ 에서 「노트레이드」로 통일
 ├─ 17. ✅ **myBody 대시보드 갈래 + 「노트레이드」 통일 + 1.1 C③ 계약 협상 페이지**(Opus · 885662a21 · 17파일 · vitest +89 → 1,959 · svelte-check 0) — 「＋ 추가」 조항·인센티브(상한 3 · `contractRules.incentives` 9종 제안값) · 최저연봉 하한 · 역제안 1~3회 소모 · 비교표 · 수락 확률 · incentives → {kind,threshold,bonus} + migrateContract · ⚠ 실측은 컴포넌트 검사 대신 · A 이어 볼 것: 재계약 제안에 인센티브·팀 옵션 싣기(advanceWeek 1306) · 정산(paidSeasons) · 문턱 계측 · 🔴 제시 수락 서명액 ≠ 화면 표시(예전부터 · 밸런스라 사용자)
+├─ 19. ✅ **묶음 1·2 표시부 · 상무 탭 · FIFO**(2faa7712b · 6361438d9 · 5222916be · 2d8d7d601) · 대시보드 컴포넌트 범용화(ce349967f)
+├─ 20. ✅ **기록 탭 카드 둘 + 묶음 3·4 표시부 갈래 넷**(1982a5fb4 · 56adfd633 · recordTabView.ts · c55-01)
+├─ 21. ✅ **조사 여섯 · 상무 탭 전역 주차 `{week}` · 인센티브 정산 화면(단위 9)**(301768e50 · 57d2decc8 · e5bacd79d · condition 열 제거 · incentiveProgress.ts)
+├─ 22. 🔄 §0.55 정리 · 스크린샷 c56-* · 단위 18 준비(트렁크 svelte-check·vitest) → A 묶음 3·4 뒤 대시보드 눈확인
 └─ 18. ✅ **C⑤ 결산 자동 열기 + 눈확인**(ea6b92c86 · 78655f659 · 스크린샷 10장 docs/screens/c53-* · 정렬 결함 하나 고침 · 넘침 0 · ⚠ FA 카드는 고교 세이브에 프로 NPC 가 없어 제안 0 — 만드는 법 §0.53 · 워크트리 눈확인은 DEV_PORT=5175) — 첫 시도(트렁크 · 12:57 시작 직후 사망 · WIP 는 stash@{0}) → **워크트리 ProjectB-ui(track/ui) 에서 재개**(Opus)
 ```
 
