@@ -190,15 +190,20 @@
       "empty": "계약 조건을 읽지 못했습니다."
     },
     "faMarket": {
-      "title": "받은 제안",
-      "columns": {
-        "teamId": "구단",
-        "salary": "연봉",
-        "years": "기간",
-        "bonus": "계약금",
-        "opts": "조항"
+      "title": "FA 시장 마감",
+      "_note": "🔴 **「받은 제안」이 아니다** (A 인계 5차). `msg-fa-market-` 은 리그 전체의 FA 마감 요약이다 — 내가 받은 제안은 **다른 소식**(FA 제안 카드 · C②)이다",
+      "rows": {
+        "total": "총 계약",
+        "moved": "이적",
+        "stayed": "원소속 잔류",
+        "unsigned": "미계약"
       },
-      "empty": "아직 들어온 제안이 없습니다."
+      "sections": {
+        "top": "대형 계약",
+        "mine": "우리 팀"
+      },
+      "unit": "건",
+      "empty": "올해는 FA 계약이 없었습니다."
     },
     "faComp": {
       "title": "FA 보상",
@@ -211,15 +216,14 @@
       "noPlayer": "선수 지명 없음"
     },
     "resign": {
-      "title": "재계약 조건",
-      "rows": {
-        "teamId": "구단",
-        "salary": "연봉",
-        "years": "기간",
-        "bonus": "계약금",
-        "options": "조항"
+      "title": "FA 잔류",
+      "_note": "🔴 **재계약 조건 표가 아니다** (A 인계 5차). `msg-resign-` 은 시장에서 계약처를 못 찾아 원소속으로 돌아온 **선수 이름 목록**이다 — 조건 항목은 채울 값이 없다",
+      "columns": {
+        "npcId": "선수"
       },
-      "empty": "재계약 조건을 읽지 못했습니다."
+      "lead": "시장에서 계약처를 못 찾아 원소속으로 돌아왔습니다.",
+      "unit": "명",
+      "empty": "잔류한 선수가 없습니다."
     },
     "incentiveSettlement": {
       "title": "인센티브 정산",
@@ -296,7 +300,17 @@
         "value": "값",
         "delta": "변화"
       },
-      "empty": "분석할 등판이 없습니다."
+      "empty": "분석할 등판이 없습니다.",
+      "rows": {
+        "velocity": "구속",
+        "command": "커맨드",
+        "control": "제구",
+        "stamina": "스태미나",
+        "condition": "컨디션",
+        "fatigue": "피로",
+        "morale": "사기"
+      },
+      "_rowsNote": "🔴 **지표 이름을 여기서 준다** (A 인계 5차). 생산부가 낱말을 세이브에 굳히면 이름을 못 고친다 — 생산부는 키만 싣고 화면이 이름을 붙인다"
     },
     "tourOpen": {
       "title": "대진",
@@ -348,26 +362,57 @@
   "bars": {
     "exam": {
       "title": "시험 결과",
+      "_note": "🔴 **고교와 대학이 다른 것을 잰다** (A 인계 5차). 기본은 **고교**다 — 과목 백분위(`schoolState.subjectScores` · 국·영·수·사·과)이고 눈금이 0~100 이라 막대가 선다. **대학은 과목이 없고 학점만** 있어 `byStage.university` 로 갈랐다(`pitching_usage.json` 과 같은 꼴). 두 벌을 만들면 한쪽만 고쳐진 채 남는다",
       "columns": {
         "name": "과목",
-        "score": "점수"
+        "score": "백분위",
+        "grade": "등급"
       },
-      "gpa": "학점",
+      "subjects": {
+        "kor": "국어",
+        "eng": "영어",
+        "math": "수학",
+        "soc": "사회",
+        "sci": "과학"
+      },
       "scale": {
         "min": 0,
         "max": 100
       },
-      "empty": "이번에는 치른 시험이 없습니다."
+      "_gradeNote": "「등급」은 9등급이다 — 백분위에서 나온다. **학점 열을 두지 않는다**",
+      "empty": "이번에는 치른 시험이 없습니다.",
+      "byStage": {
+        "university": {
+          "title": "학기 성적",
+          "rows": {
+            "gpa": "학점"
+          },
+          "scale": {
+            "min": 0,
+            "max": 4.5
+          },
+          "_scaleNote": "상한은 `academicsRules.university.gpaMax` 다 — 그 값이 바뀌면 여기도 바꾼다",
+          "empty": "이번 학기 성적이 아직 나오지 않았습니다."
+        }
+      },
+      "gpa": "학점",
+      "_gpaNote": "화면이 「막대 아래 한 줄」 이름표로 이 자리를 쓴다 — 고교에는 학점이 없으므로 **대학 갈래에서만 값이 온다**"
     },
     "teamMood": {
       "title": "팀 분위기",
+      "_note": "🔴 **0~100 눈금이 아니다** (A 인계 5차). `relationMessages.buildTeamMoodMessage` 가 세는 건 **사람 수**다 — 동료 전체 · 서먹(관계 ≤ -11) · 불신(≤ -31). 눈금은 0~동료 수라 `scale` 을 못 박는다",
+      "_valueNote": "🔴 **관계값을 숫자로 안 보여준다**(`relationship.ts:44`). 사람 수만 센다 — 「서먹 3명」은 되고 「관계 -14」는 안 된다",
+      "_dupNote": "§1-6 이 이 소식을 「텍스트 유지」에도 올려 뒀던 것은 **관계 숫자 노출이 걱정이어서**였다. 사람 수 표는 그 걱정에 안 걸리므로 중복이 아니다 — 표로 간다",
       "mood": "분위기",
       "delta": "변화",
-      "scale": {
-        "min": 0,
-        "max": 100
+      "_moodNote": "🔴 `mood`·`delta` 는 **막대 아래 한 줄의 이름표**다(화면이 그 자리를 쓴다). 0~100 눈금이 아니라 아래 `rows` 의 사람 수를 받는다",
+      "rows": {
+        "total": "동료",
+        "cold": "서먹 이상",
+        "hostile": "불신 이상"
       },
-      "empty": "분위기를 읽지 못했습니다."
+      "unit": "명",
+      "empty": "동료 관계를 읽지 못했습니다."
     }
   },
   "cards": {
@@ -392,39 +437,80 @@
     },
     "natlSquad": {
       "title": "대표팀 명단",
+      "_note": "🔴 **포지션이 없다** (A 인계 5차). `nationalTeam.emitSquadNews` 는 이름과 **소속 팀**을 싣는다",
       "labels": {
-        "pos": "포지션",
-        "playerId": "선수"
+        "playerId": "선수",
+        "teamId": "소속"
       },
+      "more": "외 {n}명",
+      "meSelected": "나도 뽑혔습니다.",
       "empty": "명단이 아직 나오지 않았습니다."
     },
     "scoutDay": {
       "title": "스카우트 데이",
+      "_note": "🔴 **장소·스카우트 수가 코드에 없다** (A 인계 5차). `campusEvents` 가 싣는 건 참가 인원 · 내 초청 경로 · 눈에 띄었는지 · 주목도·명성 증감이다",
       "labels": {
-        "week": "주차",
-        "where": "장소",
-        "scouts": "스카우트"
+        "total": "참가",
+        "route": "초청 경로",
+        "standout": "주목",
+        "scoutDelta": "주목도",
+        "fameDelta": "명성"
       },
-      "empty": "잡힌 행사가 없습니다."
+      "routeLabel": {
+        "recommend": "팀 추천",
+        "top_scout": "주목도 상위"
+      },
+      "routeFallback": "구단 지명",
+      "_routeNote": "`campusEvents` 가 `recommend`·`top_scout` 둘만 이름으로 갈고 나머지는 「구단 지명」으로 떨어뜨린다 — 그 폴백을 여기 둔다",
+      "standoutYes": "눈에 띄었습니다.",
+      "standoutNo": "이번에는 조용했습니다.",
+      "notInvited": "이번에는 초청받지 못했습니다.",
+      "unit": "명",
+      "empty": "행사가 열리지 않았습니다."
     },
     "showcase": {
       "title": "쇼케이스",
+      "_note": "🔴 **장소·스카우트 수가 코드에 없다** (A 인계 5차). `campusEvents` 가 싣는 건 참가 인원 · 내 초청 경로 · 눈에 띄었는지 · 주목도·명성 증감이다",
       "labels": {
-        "week": "주차",
-        "where": "장소",
-        "scouts": "스카우트"
+        "total": "참가",
+        "route": "초청 경로",
+        "standout": "주목",
+        "scoutDelta": "주목도",
+        "fameDelta": "명성"
       },
-      "empty": "잡힌 행사가 없습니다."
+      "routeLabel": {
+        "recommend": "팀 추천",
+        "top_scout": "주목도 상위"
+      },
+      "routeFallback": "구단 지명",
+      "_routeNote": "`campusEvents` 가 `recommend`·`top_scout` 둘만 이름으로 갈고 나머지는 「구단 지명」으로 떨어뜨린다 — 그 폴백을 여기 둔다",
+      "standoutYes": "눈에 띄었습니다.",
+      "standoutNo": "이번에는 조용했습니다.",
+      "notInvited": "이번에는 초청받지 못했습니다.",
+      "unit": "명",
+      "empty": "쇼케이스가 열리지 않았습니다."
     },
     "allstar": {
-      "title": "올스타",
+      "title": "올스타전",
+      "_note": "🔴 **득표(`votes`)가 없다** (A 인계 5차). 투표 산식 자체가 없다. `campusEvents` 는 북·남 점수 · 승패 · MVP · 내 선발 여부 · 포지션별 명단을 싣는다",
       "labels": {
-        "selected": "선정",
-        "votes": "득표"
+        "score": "점수",
+        "winner": "승리",
+        "mvp": "MVP",
+        "selected": "내 선발",
+        "roster": "명단"
+      },
+      "sideLabel": {
+        "north": "북",
+        "south": "남"
       },
       "selectedYes": "선정",
       "selectedNo": "미선정",
-      "empty": "발표가 아직 나오지 않았습니다."
+      "mvpMe": "MVP까지 받았습니다.",
+      "quotaMark": "쿼터",
+      "meMark": "나",
+      "empty": "발표가 아직 나오지 않았습니다.",
+      "_chipNote": "카드는 칩이라 짧게 쓴다 — 문장을 넣으면 칸을 넘는다"
     }
   },
   "timeline": {
@@ -443,22 +529,32 @@
       "_recordNote": "🔴 **기록 탭에는 한 줄만 남는다** (`PLAN_MESSAGE_DASHBOARDS` §9 ② 확정). 부대·보직·계급·표창은 **이 소식 본문에만** 있다 — `NpcCareerEvent.detail` 이 문자열 한 줄뿐이라(`types/save.ts:851`) 커리어 타임라인이 세부를 못 든다"
     },
     "militaryAnnual": {
-      "title": "복무 현황",
-      "labels": {
-        "weeks": "복무 주",
-        "rank": "계급",
-        "nextEvent": "다음 일정"
+      "title": "병역 현황",
+      "_note": "🔴 **내 복무 현황이 아니다** (A 인계 5차). `seasonRollover` 가 만드는 `msg-military-annual-` 은 **리그 전체**의 그해 병역 집계다 — 옛 선언(`weeks`·`rank`·`nextEvent`)은 채울 값이 없다",
+      "_shapeNote": "키가 `timeline` 아래 있는 건 §1-5 의 옛 분류다. 실제 꼴은 **구분·인원·명단 표**다 — 화면은 `columns` 를 본다",
+      "columns": {
+        "kind": "구분",
+        "count": "인원",
+        "names": "명단"
       },
-      "empty": "안내할 내용이 없습니다.",
-      "noNext": "잡힌 일정 없음"
+      "kindLabel": {
+        "sports": "체육부대 입대",
+        "general": "일반부대 입대",
+        "discharged": "전역"
+      },
+      "more": "외 {n}명",
+      "unit": "명",
+      "empty": "올해는 입대도 전역도 없었습니다."
     },
     "seasonHsSync": {
       "title": "고교 연감",
       "labels": {
         "year": "연도",
-        "summary": "요약"
+        "summary": "요약",
+        "detail": "순위"
       },
-      "empty": "남은 기록이 없습니다."
+      "empty": "남은 기록이 없습니다.",
+      "_detailNote": "`detail` 에는 그해 순위가 온다(`rank/totalTeams`) — A 가 배선했다. 이름표가 없으면 화면이 숫자만 그린다"
     }
   },
   "recordTab": {
@@ -496,7 +592,7 @@
     }
   },
   "_coverage": {
-    "_note": "id 접두 ↔ 이 파일의 키. **여기 없는 소식은 텍스트 유지 16종이다** (§1-6)",
+    "_note": "id 접두 ↔ 이 파일의 키. **여기 없는 소식은 텍스트 유지 16종이다** (§1-6) ⚠ 2026-09-04(B-35): A 인계 5차대로 일곱을 코드가 가진 값에 맞췄다 — 접두는 그대로이고 **키 안이 바뀌었다.**",
     "table": {
       "msg-digest-": "table.digest",
       "msg-league-results-w": "table.leagueResults",
@@ -506,9 +602,9 @@
       "msg-indie-season-end-": "table.seasonEndIndie",
       "msg-contract-signed-": "table.contractSigned",
       "msg-fa-signed-": "table.faSigned",
-      "msg-fa-market-": "table.faMarket",
+      "msg-fa-market-": "table.faMarket  (리그 FA 마감 요약 · 「받은 제안」이 아니다)",
       "msg-facomp-": "table.faComp",
-      "msg-resign-": "table.resign",
+      "msg-resign-": "table.resign  (FA 잔류 이름 목록)",
       "msg-contract-incentive-": "table.incentiveSettlement",
       "msg-npc-trade-": "table.npcTrade",
       "msg-demote-": "table.demote",
@@ -525,8 +621,8 @@
       "msg-farm-champion-": "rankList.farmChampion"
     },
     "bars": {
-      "msg-exam-w": "bars.exam",
-      "msg-team-mood-": "bars.teamMood"
+      "msg-exam-w": "bars.exam.byStage.highschool | .university  (무대로 갈린다)",
+      "msg-team-mood-": "bars.teamMood  (사람 수 표 · 0~100 눈금이 아니다)"
     },
     "cards": {
       "msg-season-brief-": "cards.seasonBrief",
@@ -538,7 +634,7 @@
     },
     "timeline": {
       "msg-mil-record-": "timeline.milRecord",
-      "msg-military-annual-": "timeline.militaryAnnual",
+      "msg-military-annual-": "timeline.militaryAnnual  (리그 병역 집계 · 내 복무 현황이 아니다)",
       "msg-season-hs-sync-": "timeline.seasonHsSync"
     },
     "recordTab": {
