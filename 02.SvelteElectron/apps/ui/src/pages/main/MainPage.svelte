@@ -52,6 +52,7 @@
   import type { InteractiveMatchContext, InteractiveMatchResult, UnifiedGameOutcome } from "../../shared/types/season";
   import { masterStore } from "../../shared/stores/master";
   import { buildBatterLineup, buildStarterStats, buildFielders, derivePreGameWeather, derivePreGamePark, rotIdxOf } from "../../shared/utils/matchLineupBuilder";
+  import { leagueMatchOptions } from "../../shared/utils/matchLeagueOptions";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -255,6 +256,8 @@
         //   기본 120구로 떨어진다 — 고교 105구가 **주인공 경기에만** 안 걸렸다
         //   (자동 시뮬 갈래 `simulateSkippedGame` 은 처음부터 넘겼다 · 2026-09-03 C 실측)
         leagueId: lid,
+        // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
+        ...leagueMatchOptions(lid, conds?.[p.id], $seasonStore.currentDate),
         protagonistSide: isHome ? "home" : "away",
         // ⚠ 수비를 안 넘기면 엔진이 평균 50으로 만든다. `buildFielders`는
         // import만 돼 있고 쓰이지 않았다 — 자기 팀 야수를 넘긴다

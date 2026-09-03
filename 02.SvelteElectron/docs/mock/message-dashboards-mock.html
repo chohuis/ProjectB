@@ -47,6 +47,8 @@ thead th{background:var(--panel-sunk);color:var(--ink-mute);font-size:11.5px;fon
 tr.me td{background:var(--t-wash);font-weight:700}
 td.up{color:var(--ok)} td.dn{color:var(--bad)} td.flat{color:var(--ink-mute)}
 .rec{color:var(--ink-mute);font-size:12px;margin:6px 0 0;border-top:1px solid var(--line);padding-top:6px}
+/* 대진표 — 두 팀 칸은 이름이라 가운데, 숫자 정렬을 끈다 */
+table.bracket td:nth-child(2),table.bracket td:nth-child(3){text-align:center;font-variant-numeric:normal}
 .foot{color:var(--ink-mute);font-size:12px;margin:4px 0 0}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px;margin:2px 0 6px}
 .kv dt{color:var(--ink-mute)}
@@ -57,7 +59,7 @@ td.up{color:var(--ok)} td.dn{color:var(--bad)} td.flat{color:var(--ink-mute)}
 <div class="wrap">
   <h1 class="top">소식 대시보드 — 시안</h1>
   <p class="top">NewsPage 상세 칸 그대로. 숫자는 배치를 보려고 넣은 예시다.<br>
-  순위 변동(↑↓)은 §6 ③ 확정 · 「기록 탭에 남습니다」는 §7-5 다.</p>
+  순위 변동(↑↓)은 §6 ③ 확정 · 「기록 탭에 남습니다」는 §7-5 · 대진표는 §9 ③ 이다.</p>
 
   <h2 class="sec">1. 다이제스트 — 순위표</h2>
   <section class="detail">
@@ -188,6 +190,27 @@ td.up{color:var(--ok)} td.dn{color:var(--bad)} td.flat{color:var(--ink-mute)}
           <tr><td>김도현</td><td>포수</td><td>등록</td><td>2군에서 콜업</td></tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <h2 class="sec">7. 대회 대진표</h2>
+  <section class="detail">
+    <div class="m-head" style="--cat:#8A5CB8">
+      <span class="m-cat">뉴스</span>
+      <p class="m-title">무궁화기 8강 대진</p>
+    </div>
+    <p class="m-meta">대회 본부 · W20</p>
+    <div class="m-body">
+      <table class="bracket">
+        <thead><tr><th>라운드</th><th></th><th></th><th>일정</th></tr></thead>
+        <tbody>
+          <tr class="me"><td>8강 1경기</td><td>한성고</td><td>기흥고</td><td>W21 토</td></tr>
+          <tr><td>8강 2경기</td><td>백석고</td><td>탄금고</td><td>W21 토</td></tr>
+          <tr><td>8강 3경기</td><td>동래고</td><td>세광고</td><td>W21 일</td></tr>
+          <tr><td>8강 4경기</td><td>광주일고</td><td>천안고</td><td>W21 일</td></tr>
+        </tbody>
+      </table>
+      <p class="foot">내 팀 경기는 굵게 나온다</p>
     </div>
   </section>
 
