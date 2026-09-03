@@ -37,3 +37,13 @@
 
 ## 6. 소식함
 상한 1500(FIFO) · 대시보드 전환 뒤 `mailboxTrimStats.droppedUnread` 추이.
+
+## 7. 못 닿는 이벤트 문턱 (EVENT_UNREACHED_2026-09-03 · B-22)
+| 값 | 자리 | 지금 실측 | 재는 법 |
+|---|---|---|---|
+| 고교 `morale_lte` 다섯 58·50·50·45·34 → **70·62·62·58·45** | `events/**/EVT_HS_{LIFE_CLASSMATE_01,Y1_AFTER_ERROR,Y2_TEAM_SLUMP,Y2_SLUMP,LIFE_SLUMP_CHECK}.json` | 고교 사기 최소 62~68 · ≤60 **0주**(씨앗 3) | `probe:morale --path hs` 전후 · **사용자가 1.0 에서는 안 고친다고 확정(§E)** — 1.1 에 등판 비중과 같이 본다 |
+| 대학 `gpa_lte 2` 셋 → **2.4** | `EVT_UNIV_{GPA_DANGER,GRAD_RISK,Y3_GPA_VS_BALL}` | 기본 갈래 GPA 가 2.48 에 갇힌다(normal 0.55 × 4.5) | `measure:slotreach --path univ` × `PB_STUDY_MODE` 셋. ⚠ **값보다 구조가 먼저다** — `school.weeklyStudyMode` 를 쓰는 선택지가 0건이다 |
+| `money_lte 200` → **1000** | `EVT_UNIV_Y2_PART_TIME` | 🔴 **한 번도 못 뜬다.** 시작 1200만원 · 대학 주 순현금 +9.5 · 학생 비과세 → 돈이 오르기만 한다. `money_lte` 를 쓰는 유일한 이벤트다 | 같은 판에서 이 한 종이 뜨는지만 보면 된다 |
+| `INJURY_SCARE_UNIV` `fatigue_gte 62 → 55` · `condition_lte 55 → 65` | `EVT_UNIV_INJURY_SCARE_UNIV` | 씨앗 셋 전부 0회. **컨디션 분포는 아무도 안 쟀다** | `probe:condition`(없다) 이 있어야 어느 쪽이 병목인지 갈린다 |
+| 현역 군 창 좁던 셋의 가중 10·4·4 | `events/pools/military_life.json` | `4dfbc2da5` 에서 올렸고 **올린 뒤 안 쟀다** | `probe:military` 씨앗 3 × 정책 3 재측정 |
+| 상무 새로 살린 다섯 | `events/pools/military_common.json` | 🔴 **미측정.** 인용되는 27/34 는 재고 34 시절 값이고 지금은 39다 | 상무 경로로 도달률 한 판 |
