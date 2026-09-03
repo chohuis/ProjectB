@@ -30,6 +30,8 @@ import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 // 🔴 팀 목록의 정본 — refs 에서 1군/2군을 **나눠 담는다**.
 //   `masterStore.teams` 를 `leagueId` 로 거르면 둘이 같이 딸려온다
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
+// 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
+import { playerListTableMeta } from "../utils/dashboardMeta";
 
 /**
  * 세계 오프시즌을 한 해에 한 번만 돌게 하는 가드.
@@ -246,6 +248,8 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
         body: lines.join("\n"),
         createdAt: `W1`,
         readAt: null,
+        // 사람마다 열이 같다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2)
+        metadata: playerListTableMeta("waiver", inbound),
       });
     }
   }

@@ -165,6 +165,8 @@ import {
   DEFAULT_TEAM_PROFILE,
 } from "./weekPhases/market";
 import { buildLeagueDigest, DIGEST_WEEKS, LEAGUE_NAMES } from "./weekPhases/digest";
+// 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
+import { pitcherSeasonTableMeta, gameResultsTableMeta } from "../utils/dashboardMeta";
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
 import {
@@ -1225,6 +1227,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         preview: "시즌이 종료되었습니다. 진로 신청을 진행하세요.",
         body: "독립리그 시즌이 종료되었습니다.\n드래프트 신청, 독립리그 재계약, 군입대 중 진로를 선택할 수 있습니다.\nW47에 최종 결과가 발표됩니다.",
         createdAt: `W${weekNum}`, readAt: null,
+        // 시즌 성적을 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1).
+        // ⚠ 본문엔 성적이 아예 없었다 — 표가 새로 보여주는 자리다
+        metadata: pitcherSeasonTableMeta(
+          "seasonEndIndie",
+          sOff.stats[gOff.protagonist.id]?.type === "pitcher"
+            ? (sOff.stats[gOff.protagonist.id] as import("../types/save").PitcherSeasonStats)
+            : undefined,
+        ),
       });
     }
 
@@ -1254,6 +1264,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           "W50 체육부대 신청, W52 새 시즌 시작.",
         ].join("\n"),
         createdAt: `W${weekNum}`, readAt: null,
+        // 한 줄에 여섯 값이 뭉쳐 있던 자리를 표로 갈라 싣는다
+        // (PLAN_MESSAGE_DASHBOARDS §1-1). 본문 줄은 그대로 둔다.
+        // ⚠ **지난해 열은 안 보낸다.** `CareerRecord.statLine` 이 이미 굳은
+        //   문자열이라 숫자로 못 쪼갠다 — 없으면 그 열을 아예 안 그린다
+        metadata: pitcherSeasonTableMeta("seasonEndPro", myStats ?? undefined),
       });
     }
 
@@ -1582,6 +1597,17 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         subject: `${monthLabel} ${leagueName} 경기 결과`,
         preview: lines[0] ?? "",
         body: lines.join("\n"),
+        // 경기마다 열이 같다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
+        // ⚠ **본문 줄 순서(원정 먼저)와 표 열 순서(홈 먼저)가 다르다.** 열 순서는
+        //   문안이 정한다 — 본문을 표에 맞춰 고치면 텍스트 폴백이 바뀐다
+        metadata: gameResultsTableMeta(myGames.map((e) => ({
+          homeName: teamById.get(e.homeTeamId) ?? e.homeTeamId,
+          awayName: teamById.get(e.awayTeamId) ?? e.awayTeamId,
+          homeScore: e.result!.homeScore,
+          awayScore: e.result!.awayScore,
+          mine: e.homeTeamId === gFinal.protagonist.teamId
+             || e.awayTeamId === gFinal.protagonist.teamId,
+        }))),
         createdAt: `W${weekNum}`,
         readAt: null,
       });
@@ -1636,8 +1662,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       },
       scoutScore: gFinal.protagonist.scoutScore ?? 0,
       isLeagueActive,
+      // 지난 달 순위 — 변동 열의 재료 (PLAN_MESSAGE_DASHBOARDS §3-1 (나)).
+      // 첫 달·첫 시즌엔 없고, 그러면 변동을 아예 안 그린다
+      prevStandings:
+        sAfterSim.standingsSnapshots?.[gFinal.protagonist.leagueId]?.last_digest,
     });
-    if (digest) gameStore.addMessage(digest);
+    if (digest) {
+      gameStore.addMessage(digest);
+      // 🔴 **소식을 보낸 뒤에 덮는다.** 앞에 두면 이번 달 순위와 자기 자신을
+      //   견주게 되어 변동이 늘 0 이다. 안 보낸 달은 안 덮는다 — 다음 달이
+      //   「마지막으로 본 순위」와 견주는 게 맞다
+      seasonStore.captureStandingsSnapshot("last_digest", gFinal.protagonist.leagueId);
+    }
   }
 
   // ── 월간 부상 리포트 ────────────────────────────────────────

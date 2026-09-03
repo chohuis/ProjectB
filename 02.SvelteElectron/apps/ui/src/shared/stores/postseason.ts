@@ -25,15 +25,33 @@ export function setTournamentBracket(
   return { ...s, tournaments: { ...(s.tournaments ?? {}), [bracket.tournamentId]: bracket } };
 }
 
+/**
+ * 순위표를 한 벌 떠 둔다.
+ *
+ * 🔴 **`leagueState` 에는 내 리그가 없다.** 주인공이 뛰는 리그의 순위표는
+ *   시즌 상태 최상위(`s.standings`)에 따로 있다 — `digest.ts` 의
+ *   `myStandings` 주석이 같은 함정을 적어 뒀다. 그래서 `ownLeagueId` 를
+ *   받은 자리만 내 리그도 같이 뜬다.
+ *
+ * ⚠ **대회 시드 셋(`prev_season`·`first_half`·`second_half_base`)은 안 건드린다.**
+ *   그쪽에 내 리그를 더하면 지금까지 「현재 순위」로 떨어지던 시드가 바뀐다 —
+ *   밸런스가 움직이는 변경이라 여기서 같이 하지 않는다(A·사용자 몫).
+ */
 export function captureStandingsSnapshot(
   s: SeasonStoreState,
   key: import("../utils/standingsSnapshot").SnapshotKey,
+  ownLeagueId?: string,
 ): SeasonStoreState {
   const snapshots = { ...(s.standingsSnapshots ?? {}) };
+  const put = (leagueId: string, rows: import("../types/season").Standing[]) => {
+    if (rows.length === 0) return;
+    snapshots[leagueId] = { ...(snapshots[leagueId] ?? {}), [key]: rows.map((x) => ({ ...x })) };
+  };
   for (const [leagueId, st] of Object.entries(s.leagueState)) {
-    if (!st?.standings || st.standings.length === 0) continue;
-    snapshots[leagueId] = { ...(snapshots[leagueId] ?? {}), [key]: st.standings.map((x) => ({ ...x })) };
+    if (!st?.standings) continue;
+    put(leagueId, st.standings);
   }
+  if (ownLeagueId) put(ownLeagueId, s.standings ?? []);
   return { ...s, standingsSnapshots: snapshots };
 }
 

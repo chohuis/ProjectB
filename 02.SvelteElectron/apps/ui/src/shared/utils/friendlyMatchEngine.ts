@@ -1,5 +1,7 @@
 import { monthNameOf, monthWeekRange } from "./seasonCalendar";
 import { ipLabel } from "./baseballFormat";
+// 내 등판 기록 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
+import { myGameTableMeta } from "./dashboardMeta";
 import type { ScheduleEntry } from "../types/season";
 import type { MessageItem } from "../types/main";
 
@@ -484,6 +486,9 @@ export function buildFriendlyResultMessage(
       body,
       createdAt: `W${scheduleEntry.week}`,
       readAt:    null,
+      // ⚠ **투구수를 안 넘긴다.** 연습경기 조립은 그 값을 아예 안 받는다 —
+      //   0 으로 채우면 「0구를 던졌다」가 된다
+      metadata: myGameTableMeta("friendlyResult", { ip, h, er, k, bb, dec: resultStr }),
     },
   };
 }
@@ -749,5 +754,10 @@ export function buildOfficialResultMessage(
     body,
     createdAt: `W${scheduleEntry.week}`,
     readAt:    null,
+    // 내 기록을 칸으로 갈라 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
+    // 본문의 「▶ 내 기록」 한 줄은 그대로 둔다 — 표를 못 그리면 그게 폴백이다
+    metadata: myGameTableMeta("officialResult", {
+      ip, h, er, k, bb, pitches: pitchCount, dec: resultStr,
+    }),
   };
 }

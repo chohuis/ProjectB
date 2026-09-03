@@ -754,8 +754,11 @@ function createSeasonStore() {
       update((s) => Postseason.updatePostseasonBracket(s, leagueId, updatedSeries));
     },
 
-    captureStandingsSnapshot(key: import("../utils/standingsSnapshot").SnapshotKey) {
-      update((s) => Postseason.captureStandingsSnapshot(s, key));
+    /** `ownLeagueId` 를 주면 내 리그(`s.standings`)도 같이 뜬다 — `postseason.ts` 머리말 */
+    captureStandingsSnapshot(
+      key: import("../utils/standingsSnapshot").SnapshotKey, ownLeagueId?: string,
+    ) {
+      update((s) => Postseason.captureStandingsSnapshot(s, key, ownLeagueId));
     },
 
     setStaffSlumpSeasons(map: Record<string, number>) {

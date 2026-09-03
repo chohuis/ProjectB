@@ -14,6 +14,8 @@ import { isFaEligible, toContract, type FaOffer } from "../utils/faEngine";
 import { openProSeason } from "./proSeason";
 import { runWorldSeasonEnd } from "./seasonRollover";
 import { TRADE_REASON_LABEL } from "./weekPhases/market";
+// 계약 조건 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
+import { contractTableMeta } from "../utils/dashboardMeta";
 import type { ProContract } from "../types/save";
 import type { PendingAction } from "../types/season";
 
@@ -71,6 +73,18 @@ export async function signNegotiatedContract(
         `W52 새 시즌 시작 시 정식 적용됩니다.`,
       ].join("\n"),
       createdAt: `W${get(seasonStore).currentWeek}`, readAt: null,
+      // 계약 조건을 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 1).
+      // 본문 줄은 그대로다 — 표를 못 그리는 자리에서 텍스트가 폴백이다
+      metadata: contractTableMeta("contractSigned", {
+        teamName,
+        salary: contract.salary,
+        years: contract.durationYears,
+        signingBonus: contract.signingBonus,
+        teamOptionYears: contract.teamOptionYears,
+        playerOptionYears: contract.playerOptionYears,
+        noTrade: contract.noTrade,
+        incentives: contract.incentives,
+      }),
     });
   }
   seasonStore.resolvePendingAction("salaryNegotiation");
@@ -185,6 +199,17 @@ export async function signFaOffer(offer: FaOffer, salary: number): Promise<void>
       `W52 새 시즌 시작 시 정식 적용됩니다.`,
     ].join("\n"),
     createdAt: `W${s.currentWeek}`, readAt: null,
+    // 재계약과 **같은 조립**이다 — 종류(`kind`)만 다르다
+    metadata: contractTableMeta("faSigned", {
+      teamName,
+      salary,
+      years: offer.durationYears,
+      signingBonus: offer.signingBonus,
+      teamOptionYears: contract.teamOptionYears,
+      playerOptionYears: contract.playerOptionYears,
+      noTrade: contract.noTrade,
+      incentives: contract.incentives,
+    }),
   });
   gameStore.resetFaProgress();
   seasonStore.resolvePendingAction("faMarket");
