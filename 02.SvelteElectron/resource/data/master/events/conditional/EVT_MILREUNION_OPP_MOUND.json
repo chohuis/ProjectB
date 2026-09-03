@@ -20,7 +20,8 @@
       "stages": [
         "pro_kbl",
         "pro_abl",
-        "pro_jbl"
+        "pro_jbl",
+        "independent"
       ]
     },
     {
