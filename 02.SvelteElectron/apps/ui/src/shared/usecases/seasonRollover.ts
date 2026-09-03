@@ -131,6 +131,19 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   applyProtagonistSeasonRecord(now);
   // 수상은 연도 기록이 만들어진 **뒤**여야 얹을 자리가 있다
   logsOf(await applySeasonAwards(now));
+  // 🔴 **인센티브 정산은 수상 뒤다** (PLAN_CONTRACT_TERMS §5 · §7 ⑥).
+  //   「골든글러브」·「MVP」 축은 그 해 `careerRecords[].awards` 를 읽는데
+  //   `applySeasonAwards` 가 방금 얹었다 — 앞에 두면 수상 인센티브가 영원히
+  //   미달이다. 계약 감산(`applySeasonContractProgress`)보다도 앞이라
+  //   **정산은 늘 그 시즌을 뛴 계약으로 한다.**
+  //   ⚠ 여기 하나뿐이다 — 롤오버·진로 결정 두 경로가 다 이 함수를 지난다.
+  try {
+    const { settleSeasonIncentives } = await import("./incentiveSettlement");
+    logsOf(settleSeasonIncentives(now));
+  } catch (e) {
+    // 정산이 실패해도 시즌 종료는 계속돼야 한다 (구단 재정 정산과 같은 선)
+    console.warn("[incentive] 정산 실패:", e);
+  }
   // 🔴 **수상 뒤여야 한다.** 헌액 점수는 `careerHistory[].highlights` 를
   //   세는데 그 문자열을 `applySeasonAwards` 가 방금 넣었다.
   //   앞에 두면 그 해 수상이 점수에 안 들어간다.

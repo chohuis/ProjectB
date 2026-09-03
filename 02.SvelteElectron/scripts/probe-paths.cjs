@@ -34,6 +34,8 @@ globalThis.__PB_CAREER_LOG = true;
 globalThis.__PB_MIL_CHOICE = process.env.PB_MIL_CHOICE || "ball";
 // 보직 선택 정책 — recommend(기본 · 감독 말을 따른다) | sp | rp | cp (PLAN_ROLE_RECOMMEND §7 · 확정 10)
 globalThis.__PB_ROLE_CHOICE = process.env.PB_ROLE_CHOICE || "recommend";
+// 인센티브 정책 — 1 이면 재계약 협상에서 후보를 상한까지 건다 (A 단위 4 · 기본 꺼짐)
+if (process.env.PB_INCENTIVES) globalThis.__PB_INCENTIVES = true;
 // 학습 모드 정책 — focus | normal | rest | alternate (기본 없음 = normal 고정 · B-3: GPA 게이트 10종을 재려면 alternate)
 const STUDY_POLICY = process.env.PB_STUDY_MODE || null;
 const SEED = Number(process.env.PF_SEED || 20260731);
@@ -131,6 +133,15 @@ if (!POLICY) { console.log("경로: " + Object.keys(PATHS).join(" ")); process.e
   // 병영 이벤트 도달 — 전역 뒤엔 militaryLife 가 null 이라 마지막 [병영] 스냅샷의 firedIds 를 쓴다
   if (lastMilFired) console.log(`[병영이벤트] ${lastMilFired.length}종 ${lastMilFired.join(" ")}`);
   if (last.milSportsFired && last.milSportsFired.length) console.log(`[상무이벤트] ${last.milSportsFired.length}종 ${last.milSportsFired.join(" ")}`);
+  if (app.incentiveProbe) {
+    const ip = app.incentiveProbe();
+    console.log(`[인센티브] 계약 ${ip.contract.length}건 ${ip.contract.join(" | ") || "없음"}`);
+    console.log(`[인센티브] 정산소식 ${ip.msgIds.length}통 ${ip.msgIds.join(" ")}`);
+    if (ip.lastBody.length) {
+      console.log("[인센티브] 마지막 통");
+      for (const l of ip.lastBody) console.log("    " + l);
+    }
+  }
   console.log(`[END] ${why} · 최종 ${last.year}W${last.week} ${last.stage} ${last.team} ${last.age ?? ""}`);
   await headless.cleanup(tmp);
 })();

@@ -35,6 +35,8 @@ import {
   acceptTrade, rejectTrade,
 } from "../../apps/ui/src/shared/usecases/contractDecision";
 import { generateFaOffers } from "../../apps/ui/src/shared/utils/faEngine";
+// 인센티브 후보·상한 — **협상 화면과 같은 함수**다. 헤드리스가 목록을 새로 짓지 않는다
+import { incentiveCandidates, incentiveAddable } from "../../apps/ui/src/shared/utils/contractTerms";
 import { loadAwardRules } from "../../apps/ui/src/shared/usecases/seasonAwards";
 import {
   retireProtagonist, isRetired, evalRetirementPressure, calcMarketValueForProtagonist,
@@ -50,7 +52,7 @@ import { facilityFactorOf, SANGMU_TEAM_IDS } from "../../apps/ui/src/shared/util
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { relationLabel } from "../../apps/ui/src/shared/types/relationship";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
-import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
+import type { ProtagonistSave, ContractIncentive } from "../../apps/ui/src/shared/types/save";
 // 조·권역 편성 — `conditionEvaluator` 가 순위를 이 안에서 센다
 import { GROUPS_BY_LEAGUE } from "../../apps/ui/src/shared/utils/leagueTeams.generated";
 
@@ -3562,14 +3564,60 @@ export async function acceptNegotiation(): Promise<boolean> {
   const pa = get(nextPendingAction);
   if (pa?.type !== "salaryNegotiation") return false;
   const teamName = get(masterStore).teams.find((t) => t.id === pa.teamId)?.name ?? pa.teamId;
+  const incentives = pickHeadlessIncentives(pa.offeredSalary);
   await signNegotiatedContract(pa, {
     teamId: pa.teamId, leagueId: pa.leagueId,
     salary: pa.offeredSalary,
     durationYears: pa.durationYears, remainingYears: pa.durationYears,
     signingBonus: pa.signingBonus,
     teamOptionYears: 0, playerOptionYears: 0, noTrade: false, status: "active",
+    ...(incentives.length > 0 ? { incentives } : {}),
   }, teamName);
   return true;
+}
+
+/**
+ * 인센티브를 골라 준다 — **계측 전용 손잡이** (`__PB_INCENTIVES`).
+ *
+ * 협상 화면에서 사람이 「＋ 추가」로 고르는 자리를 헤드리스가 대신 누른다.
+ * 후보·개수·총액 상한은 **화면과 같은 함수**에서 온다
+ * (`incentiveCandidates`·`incentiveAddable` · `contractTerms.ts`) — 목록을
+ * 여기서 새로 짓지 않는다.
+ *
+ * ⚠ **기본은 꺼짐이다.** 지금 자동 진행은 인센티브를 안 건다(사람 선택이라
+ *   그게 맞다). 켜면 시즌 끝 정산(`incentiveSettlement`)이 실제로 도는지
+ *   12시즌 한 판으로 볼 수 있다 — `PB_INCENTIVES=1 npm run probe:paths`.
+ * ⚠ 어떤 축을 고를지는 **그 시즌 보직**이 정한다(§5-3). 보직이 안 정해졌으면
+ *   수상 축만 남는다.
+ */
+function pickHeadlessIncentives(salary: number): ContractIncentive[] {
+  if (!(globalThis as Record<string, unknown>).__PB_INCENTIVES) return [];
+  const role = String(get(gameStore).protagonist.position ?? "");
+  const picked: ContractIncentive[] = [];
+  for (const c of incentiveCandidates(role, salary)) {
+    if (incentiveAddable(picked, c, salary)) picked.push(c);
+  }
+  return picked;
+}
+
+/**
+ * 인센티브 정산이 돌았나 (A 단위 4).
+ *
+ * 값이 아니라 **밟았는가**를 본다 — 문턱·금액은 §7-1 계측 몫이다.
+ */
+export function incentiveProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const msgs = g.mailbox.filter((m) => m.id.startsWith("msg-contract-incentive-"));
+  return {
+    position: p.position,
+    money: p.money,
+    contract: (p.contract?.incentives ?? []).map(
+      (i) => `${i.kind}${i.awardId ? `(${i.awardId})` : ""} ${i.threshold} +${i.bonus} paid[${(i.paidSeasons ?? []).join(",")}]`,
+    ),
+    msgIds: msgs.map((m) => m.id),
+    lastBody: msgs.length > 0 ? msgs[msgs.length - 1].body.split("\n") : [],
+  };
 }
 
 // ── 헤드리스가 못 넘던 pending 넷 (2026-09-02 · probe-paths) ──────────
