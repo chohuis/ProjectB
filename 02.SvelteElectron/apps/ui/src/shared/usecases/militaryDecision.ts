@@ -141,7 +141,8 @@ export async function dischargeProtagonist(): Promise<boolean> {
   // 현역 병영생활이면 전역 환산 — 능력치는 여기서 **한 번** 움직인다 (§30 · 사용자 확정 "복무 중 안 깎고 전역 때 환산")
   const life = p.militaryLife;
   const master = get(masterStore);
-  gameStore.completeMilitaryService();
+  // 전역 시점을 남긴다 — `weeksSinceDischarge` 가 이걸로 경과를 잰다 (B-20 재회)
+  gameStore.completeMilitaryService({ season: s.seasonYear, week: s.currentWeek });
   if (life && master.militaryLifeRules && master.militaryUnit) {
     const conversion = dischargeConversion(master.militaryLifeRules, life.ballSense);
     const record = buildMilitaryRecord(life, master.militaryUnit, master.militaryMembers, conversion);

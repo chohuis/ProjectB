@@ -353,6 +353,22 @@ export interface ProtagonistSave {
   militaryLife?: import("./militaryLife").MilitaryLifeState | null;
   /** 전역 때 접은 군 경력 한 장 (§30) — 현역만 · 상무는 없다 */
   militaryRecord?: import("./militaryLife").MilitaryRecord | null;
+  /**
+   * **실제로 전역한 시점** (B-20 재회 축소판 · 2026-09-03). 상무·현역 둘 다 남긴다.
+   *
+   * 🔴 `militaryDischargeYear` 와 다르다 — 그건 입대 때 정하는 **전역 「예정」** 이고
+   *   화면이 "전역 예정 {year}년 W48" 로 쓴다. 지난 시점이 아니라 앞으로의 약속이다.
+   *
+   * 이게 없어서 **전역 뒤 경과를 잴 수단이 아예 없었다.** `militaryRecoveryWeeks` 는
+   * 전역 때 2(상무)·6(현역)으로 놓이고 매주 1씩 줄어 0에서 멈춘다 — 0이 된 뒤로는
+   * 한 주가 지났는지 세 해가 지났는지 구분이 안 된다. 그래서 「전역 후 첫 시즌 W10」
+   * 같은 재회 서사를 못 걸었다 (PLAN_MILITARY_LIFE §30).
+   *
+   * ⚠ 구 세이브엔 없다(`undefined`). 이벤트 경로 `weeksSinceDischarge` 는 그때
+   *   `undefined` 를 내고 비교가 false 가 된다 — **군대를 안 다녀온 것과 같게 본다.**
+   */
+  dischargedSeason?: number;
+  dischargedWeek?: number;
   sportsUnitApplied: boolean;
   /**
    * 은퇴 기록. **있으면 커리어가 끝난 것이다.**

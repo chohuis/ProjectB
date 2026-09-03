@@ -639,6 +639,11 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     militaryDeferPenalty:         p.militaryDeferPenalty         ?? def.militaryDeferPenalty,
     militaryLife:                 p.militaryLife                 ?? def.militaryLife,
     militaryRecord:               p.militaryRecord               ?? def.militaryRecord,
+    // ⚠ **기본값을 두지 않는다.** 구 세이브는 `undefined` 인 채로 남아야
+    //   `weeksSinceDischarge` 가 "잴 수 없다"(false)로 떨어진다. 0 을 채우면
+    //   군대를 안 다녀온 주인공이 「전역 0주차」가 된다
+    dischargedSeason:             p.dischargedSeason,
+    dischargedWeek:               p.dischargedWeek,
     militaryEnlistWeek:           p.militaryEnlistWeek           ?? def.militaryEnlistWeek,
     militaryEnlistYear:           p.militaryEnlistYear           ?? def.militaryEnlistYear,
     militaryDischargeYear:        p.militaryDischargeYear        ?? def.militaryDischargeYear,
@@ -2495,7 +2500,12 @@ function createGameStore() {
       }));
     },
 
-    completeMilitaryService() {
+    /**
+     * @param at 실제로 전역한 시점. **상무·현역 둘 다 여기를 지난다** —
+     *   전역 환산(`applyMilitaryDischarge`)은 현역만 타므로 거기 두면 상무가 빠진다.
+     *   안 넘기면 안 적는다(옛 호출부·검사 호환).
+     */
+    completeMilitaryService(at?: { season: number; week: number }) {
       update((s) => {
         const p = s.protagonist;
         // 휴학 단계 복구: militaryHiatusStage 우선, 없으면 leagueId 기반.
@@ -2529,6 +2539,10 @@ function createGameStore() {
           militaryServiceWeeks: 0,
           militaryRecoveryWeeks: p.militaryUnit === "sports" ? 2 : 6,
           militaryStatus: "군필",
+          // 전역 뒤 경과를 재는 유일한 기준점 (B-20 §30). `militaryRecoveryWeeks` 는
+          // 0에서 멈춰 그 뒤를 못 센다
+          dischargedSeason: at?.season ?? p.dischargedSeason,
+          dischargedWeek:   at?.week   ?? p.dischargedWeek,
           militaryHiatusStage: null,
           militaryHiatusUniversityWeek: null,
           // 학년은 학생일 때만 의미가 있다. 전역자는 학교로 안 돌아가므로

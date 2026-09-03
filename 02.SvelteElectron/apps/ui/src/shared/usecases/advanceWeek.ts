@@ -734,6 +734,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const eventCtx: EventContext = {
     protagonist:     afterP,
     currentWeek:     weekNum,
+    // 전역 뒤 경과(`weeksSinceDischarge`)가 시즌을 넘어 세려면 연도가 있어야 한다 (B-20 재회)
+    seasonYear:      s.seasonYear,
     seasonPhase:     s.schedule.find((e) => e.week === weekNum)?.phase ?? "season",
     // 🔴 **주인공 리그를 명시해 읽는다** (2026-09-01).
     //

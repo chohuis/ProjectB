@@ -1,5 +1,6 @@
 import type { EventContext } from "../types/event";
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
+import { WEEKS_PER_SEASON } from "./seasonWeeks";
 
 /**
  * **경로로 값을 읽는다** — 조건 타입을 필드마다 하나씩 만들지 않기 위한 장치.
@@ -119,6 +120,18 @@ export const NUM_PATHS: ReadonlySet<string> = new Set([
   // 세면 나온다. 주인공 리그 이동은 `careerEvents`에 안 남아서(NPC만 남는다)
   // 그쪽으로는 못 구한다.
   "leagueYears",
+  // ── 병영 재회 (B-20 축소판 · 2026-09-03) ────────────────────────
+  //
+  // 🔴 **전역 뒤가 이야기의 자리다.** 복무 중에는 이벤트 엔진이 아예 안 돈다
+  //   (`advanceWeek` 가 `careerStage === "military"` 면 일찍 return). 그래서 군은
+  //   조건부 규칙이 아니라 풀(`events/pools/military_*.json`)로 돌린다 — 그건 그대로다.
+  //   **전역하면 엔진이 돈다.** 재회는 거기서 일어난다.
+  //
+  // 제일 가까웠던 부대원의 관계값. `topRelations` 는 값 내림차순 상위 셋이라 0번이 최고다
+  // (`buildMilitaryRecord`). 상무·구 세이브엔 `militaryRecord` 자체가 없어 undefined 다.
+  "militaryRecord.topRelations.0.value",
+  // 전역 뒤 몇 주 지났나. `militaryRecoveryWeeks` 는 0에서 멈춰 그 뒤를 못 센다
+  "weeksSinceDischarge",
 ]);
 
 /** `eq`로 읽을 수 있는 경로 전부 */
@@ -128,7 +141,29 @@ export const EQ_PATHS: ReadonlySet<string> = new Set([
   "contract.status", "injury.type", "injury.severity", "injury.source",
   "injury.treatmentChoice", "school.weeklyStudyMode", "school.universityMajor",
   "seasonPhase",
+  // 군 보직 — 통신병이었나 박격포반이었나로 재회 문안이 갈린다 (B-20)
+  "militaryRecord.roleId",
 ]);
+
+/**
+ * 전역 뒤 지난 주 수. **못 재면 `undefined`** — 비교가 false 가 되고, 그게
+ * 군대를 안 다녀온 주인공에게 맞는 답이다.
+ *
+ * 못 재는 경우 둘: 전역 기록이 없는 세이브(구 세이브·미필), 시즌 연도를 모를 때
+ * (`ctx.seasonYear` 미배선). **0 을 지어 내지 않는다** — 0 은 "이번 주에 전역했다"다.
+ *
+ * ⚠ 주는 시즌을 넘어 이어 센다: `(연 차이 × 52) + 주 차이`. 시즌 길이는
+ *   `WEEKS_PER_SEASON` 하나가 정본이고 여기 52를 적지 않는다.
+ */
+function weeksSinceDischargeOf(ctx: EventContext): number | undefined {
+  const p = ctx.protagonist;
+  if (p.dischargedSeason === undefined || p.dischargedWeek === undefined) return undefined;
+  if (ctx.seasonYear === undefined) return undefined;
+  const weeks = (ctx.seasonYear - p.dischargedSeason) * WEEKS_PER_SEASON
+    + (ctx.currentWeek - p.dischargedWeek);
+  // 음수는 재는 기준이 어긋난 것이다 — 지어 맞추지 않고 못 잰 것으로 본다
+  return weeks >= 0 ? weeks : undefined;
+}
 
 /**
  * 지금 리그에서 보낸 시즌 수. **이번 시즌을 1로 센다.**
@@ -174,7 +209,12 @@ export function resolvePath(ctx: EventContext, path: string): unknown {
   if (path === "week") return ctx.currentWeek;
   if (path === "leagueYears") return leagueYearsOf(ctx);
   if (path === "seasonPhase") return ctx.seasonPhase;
-  if (path === "seasonYear") return undefined;   // ctx에 없다 — 넣을 때 여기도 잇는다
+  // 표에는 있는데 **늘 `undefined` 였다**(「ctx에 없다 — 넣을 때 여기도 잇는다」).
+  // `weeksSinceDischarge` 가 시즌을 넘어 세려면 연도가 있어야 해서 이제 잇는다.
+  // ⚠ 데이터에서 `seasonYear` 를 조건으로 쓰는 곳은 **0건**이라(2026-09-03 확인)
+  //   이 배선이 기존 이벤트의 뜨고 안 뜨고를 바꾸지 않는다
+  if (path === "seasonYear") return ctx.seasonYear;
+  if (path === "weeksSinceDischarge") return weeksSinceDischargeOf(ctx);
 
   const dot = path.indexOf(".");
   if (dot === -1) return (p as unknown as Record<string, unknown>)[path];
@@ -203,6 +243,21 @@ export function resolvePath(ctx: EventContext, path: string): unknown {
     case "seasonHealth":return (p.seasonHealth as unknown as Record<string, unknown> | undefined)?.[rest];
     case "injury":      return (p.injury as unknown as Record<string, unknown> | undefined)?.[rest];
     case "school":      return (ctx.schoolState as unknown as Record<string, unknown> | undefined)?.[rest];
+    // 군 경력 한 장 (B-20 재회). **없으면 `undefined`** — 상무 출신·미필·구 세이브가
+    // 그렇고, 그때 조건이 false 가 되는 게 맞다. 경로가 틀린 것과는 다르다
+    case "militaryRecord": {
+      const rec = p.militaryRecord;
+      if (!rec) return undefined;
+      if (rest === "roleId") return rec.roleId ?? undefined;
+      // 관계 상위 셋 중 n번째의 값. 표에 연 것은 지금 `0.value` 하나뿐이라
+      // 여기서 다시 허용 목록을 두지 않는다 — `NUM_PATHS` 가 이미 문지기다
+      if (rest.startsWith("topRelations.")) {
+        const [idx, key] = rest.slice("topRelations.".length).split(".");
+        const row = (rec.topRelations ?? [])[Number(idx)];
+        return row ? (row as unknown as Record<string, unknown>)[key] : undefined;
+      }
+      return (rec as unknown as Record<string, unknown>)[rest];
+    }
     case "injuryHistory":  return (p.injuryHistory ?? []).length;
     case "careerRecords":  return (p.careerRecords ?? []).length;
     case "careerEvents":   return (p.careerEvents ?? []).length;
