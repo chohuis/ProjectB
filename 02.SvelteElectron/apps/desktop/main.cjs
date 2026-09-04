@@ -1,16 +1,13 @@
 const path = require("node:path");
 const fs = require("node:fs");
 const { pathToFileURL } = require("node:url");
-const { createHash } = require("node:crypto");
 const engineNative  = require("../../packages/engine-native");
 const { app, BrowserWindow, ipcMain, session, protocol, net } = require("electron");
-const Database = require("better-sqlite3");
 // 포트 정본 — CSP와 will-navigate가 같은 값을 봐야 한다
 const { DEV_ORIGIN } = require("../../dev-server.config.cjs");
 
 const {
-  openDatabase, applySchemaPatches,
-  masterRowToEntityRow, migrateOldDb,
+  openDatabase, applySchemaPatches, migrateOldDb,
 } = require("./ipc/db.cjs");
 const matchIpc   = require("./ipc/match.cjs");
 const tuningIpc  = require("./ipc/tuning.cjs");
@@ -49,30 +46,10 @@ function isPathInside(target, base) {
   return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
 }
 
-// ── 마스터 데이터 체크섬 (SHA-256) ──────────────────────────────────────────
-async function checkMasterIntegrity(masterDbPath, userDataDir) {
-  const checksumFile = path.join(userDataDir, "master_checksum.json");
-  try {
-    if (!fs.existsSync(masterDbPath)) return;
-    const buf = await fs.promises.readFile(masterDbPath);
-    const currentHash = createHash("sha256").update(buf).digest("hex");
-    if (fs.existsSync(checksumFile)) {
-      const stored = JSON.parse(await fs.promises.readFile(checksumFile, "utf8"));
-      if (stored.hash !== currentHash) {
-        console.warn("[integrity] master.db 체크섬 불일치 — 파일이 변경되었습니다.");
-        console.warn(`  이전: ${stored.hash}`);
-        console.warn(`  현재: ${currentHash}`);
-      }
-    }
-    await fs.promises.writeFile(
-      checksumFile,
-      JSON.stringify({ hash: currentHash, updatedAt: new Date().toISOString() }),
-      "utf8",
-    );
-  } catch (e) {
-    console.warn("[integrity] 마스터 체크섬 처리 실패:", e.message);
-  }
-}
+// ⚠ `checkMasterIntegrity`(master.db SHA-256 대조)는 2026-09-04에 지웠다 —
+// `master.db` 자체를 접으면서 지킬 파일이 없어졌다. 콘텐츠 무결성은
+// `resource/data/master/**` 쪽 문제이고, 지금은 `_manifest.json` 양방향 검사
+// (`eventManifest.test.ts`)가 그 자리를 본다.
 
 function loadTuningSchema(resourceBase) {
   const fullPath = path.resolve(resourceBase, tuningSchemaRelPath);
@@ -162,7 +139,6 @@ protocol.registerSchemesAsPrivileged([{
 app.whenReady().then(() => {
   const isDev        = !!process.env.VITE_DEV_SERVER_URL;
   const resourceBase = unpackedPath("resource", "data", "master");
-  const masterDbPath = unpackedPath("resource", "master.db");
   const rootDir      = path.resolve(__dirname, "../../");
   const tuningSchema = loadTuningSchema(resourceBase);
   const userDataDir  = app.getPath("userData");
@@ -205,21 +181,6 @@ app.whenReady().then(() => {
   });
   app.on("before-quit", () => slotManager.closeAll());
 
-  // master.db (read-only)
-  let masterDb = null;
-  try {
-    if (fs.existsSync(masterDbPath)) {
-      masterDb = new Database(masterDbPath, { readonly: true });
-      masterDb.pragma("journal_mode = WAL");
-    }
-  } catch (e) {
-    console.warn("[master.db] 열기 실패:", e.message);
-  }
-
-  if (!isDev) checkMasterIntegrity(masterDbPath, userDataDir).catch((e) => {
-    console.warn("[integrity] 체크섬 비동기 처리 실패:", e);
-  });
-
   tuningIpc.applyTuningFromFile(resourceBase, tuningSchema, loadCoreModule).then((res) => {
     if (!res.ok) console.warn("[tuning] invalid tuning file. fallback to defaults.", res.errors);
   }).catch((e) => {
@@ -252,26 +213,19 @@ app.whenReady().then(() => {
   // 없애면서 부르는 곳이 0이 됐다. 콘텐츠는 `resource/data/master/` 아래
   // 파일을 직접 고친다. 읽기(`master:fetch`)는 게임 경로라 그대로 산다
 
-  ipcMain.handle("master:loadEntities", (_event, leagueId, seasonYear) => {
-    try {
-      // NPC 런타임 상태는 npc_runtime(projectb_v2.db)에서 관리; master.db는 read-only 마스터 데이터
-      const sy = typeof seasonYear === "number" ? seasonYear : 9999;
-      const baseRows = masterDb
-        ? (typeof leagueId === "string" && leagueId
-            ? masterDb.prepare(`SELECT * FROM npc_master WHERE league_id = ? AND (entry_year IS NULL OR entry_year <= ?)`).all(leagueId, sy)
-            : masterDb.prepare(`SELECT * FROM npc_master WHERE entry_year IS NULL OR entry_year <= ?`).all(sy))
-        : [];
-      return baseRows.map(masterRowToEntityRow);
-    } catch (e) {
-      console.error("[master:loadEntities] error:", e);
-      return [];
-    }
-  });
-
-  // master:upsertEntity / master:deleteEntity / master:bulkUpsertEntities (master_overlay.db 기반)
-  // R3a-4d에서 완전 제거 — v3에서는 NPC 상태가 전부 slot.db(repo:call)로 관리되며,
-  // master:loadEntities는 애초에 overlay를 병합하지 않아 이 쓰기 경로는 죽은 코드였다
-  // (DESIGN.md §8.2 원칙 1 — slot.db 단일 정본)
+  // ⚠ `master:loadEntities`는 2026-09-04에 지웠다 — **`master.db`를 접었다.**
+  //
+  //   그 채널이 읽던 표는 `npc_master` 하나였고 Phase 6A 이후로 **0행**이다
+  //   (선수는 slot.db `npc`, 스태프는 slot.db `staff`가 정본 · 둘 다 런타임
+  //   절차 생성). 그런데 없으면 `masterDb = null`로 조용히 `[]`를 주는 바람에
+  //   **「빈 게 정상」과 「빌드가 빠졌다」가 같아 보였다** — 그 모호함이
+  //   지우는 이유다. 다시 쓸 일이 생기면 그때 되살린다.
+  //
+  //   같이 지운 것: `build:masterdb` · `scripts/generate_master_db.cjs` ·
+  //   `masterRowToEntityRow`(db.cjs) · preload 두 줄 · `checkMasterIntegrity`.
+  //
+  //   `master:upsertEntity`/`deleteEntity`/`bulkUpsertEntities`(overlay 기반)는
+  //   그 전(R3a-4d)에 이미 지웠다 — DESIGN.md §8.2 원칙 1(slot.db 단일 정본).
 
   // ── NPC 시뮬 IPC ─────────────────────────────────────────────────────────────
   // ── R2: Rust 엔진 호출 단일 채널 (DESIGN.md §8.2 원칙 5) ──────────────────

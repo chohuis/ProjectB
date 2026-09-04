@@ -17,16 +17,16 @@
 | | ① 정의 (Definition) | ② 상태 (State) | ③ 파생 (Derived) |
 |---|---|---|---|
 | **무엇** | 세계가 시작하기 전에 정해진 것 | 플레이하면서 변하는 것 | ①②에서 계산되는 것 |
-| **저장소** | `master.db` (read-only) | `slot.db` (슬롯당 파일 1개) | **메모리만** |
-| **git** | ⭕ 소스(CSV/TOML)만 | ❌ | ❌ |
-| **수정 시점** | 빌드타임 (`npm run build:masterdb`) | 런타임 (repo 커맨드) | 매번 재계산 |
+| **저장소** | `resource/data/master/**` JSON (read-only) | `slot.db` (슬롯당 파일 1개) | **메모리만** |
+| **git** | ⭕ 소스(CSV/TOML) + 콘텐츠 JSON | ❌ | ❌ |
+| **수정 시점** | 파일을 직접 고친다 (목록만 `gen:manifest`) | 런타임 (repo 커맨드) | 매번 재계산 |
 | **예** | 팀·구장·학교·리그 · 팀 특성 3슬롯 · 전력★ · 과거 5시즌 순위 · 라이벌 · 이벤트 · 업적 · 생성 규칙 · 이름 풀 · 밸런스 상수 | 선수 · 스태프 · 주인공 · 일정 · 순위 · 시즌 성적 · 거래 기록 · 관계도 | OVR · 팀 현재 전력 · 순위표 정렬 · 화면 표시용 집계 |
 
 ### 1-1. 판별 기준 — 셋 중 어디인가
 
 ```
 새 게임을 다시 시작해도 똑같은가?
-├─ 예 → ① 정의          (master.db)
+├─ 예 → ① 정의          (resource/data/master/**)
 └─ 아니오
     └─ 저장을 안 하면 잃어버리는가?
         ├─ 예   → ② 상태  (slot.db)
@@ -35,7 +35,14 @@
 
 ---
 
-## 2. ① 정의 — master.db
+## 2. ① 정의 — `resource/data/master/**`
+
+> ⚠ **2026-09-04에 `master.db` 를 접었다**(사용자 확정). 예전엔 소스를
+> `npm run build:masterdb` 로 SQLite 한 파일에 구웠는데, 실제로 그 DB 에
+> 남아 있던 표는 `npc_master` 하나였고 Phase 6A 이후 **0행**이었다 —
+> 콘텐츠는 진작부터 `resource/data/master/**` JSON 을 `master:fetch` 로
+> 직접 읽고 있었다. 빈 DB 가 「없어도 조용히 지나가는」 자리를 만들어
+> **「빈 게 정상」과 「빌드가 빠졌다」가 같아 보였다.** 그래서 지웠다.
 
 ### 2-1. 소스 포맷
 
@@ -45,8 +52,11 @@
 | **규칙** (중첩·가변) | **TOML** | `generation_rules.toml` · `personality_rules.toml` · `staff_rules.toml` |
 | **콘텐츠** (본문·선택지) | JSON | 이벤트 · 업적 · 메시지 템플릿 |
 
-- 빌드: `npm run build:masterdb` → `resource/master.db`
-- **`master.db` 자체는 git에 있지만 편집 대상이 아니다.** 소스를 고치고 다시 빌드한다.
+- 목록: `npm run gen:manifest` → `resource/data/master/_manifest.json`
+  (폴더를 훑어 만드는 **목록 파일**이다. 콘텐츠 자체는 굽지 않는다)
+- 읽기: `master:fetch` IPC 하나 — `resource/data/master/` 아래 상대경로로만 연다.
+- CSV/TOML 시드는 `resource/data/seeds/` 에 두고, 화면·엔진이 쓰는 형태로
+  옮긴 결과물(`leagueTeams.generated.ts` 등)은 git 에 커밋한다.
 
 ### 2-2. 금지
 
@@ -151,7 +161,7 @@ OVR · 팀 현재 전력 · 순위표 정렬 · 화면 집계는 **매번 ①②
 ## 6. 체크리스트 — 데이터를 추가할 때
 
 - [ ] ①②③ 중 어디인가? (§1-1 판별 기준)
-- [ ] ①이면: CSV/TOML 소스에 넣고 `build:masterdb`에 반영했는가? 결과물을 git에 커밋하려 하고 있진 않은가?
+- [ ] ①이면: `resource/data/master/` 아래 파일로 넣고 `gen:manifest` 목록에 잡히는가? (새 폴더면 로더도 봐야 한다)
 - [ ] ②이면: 마이그레이션을 추가했는가? `up()`이 재실행 안전한가? `npm run test:migration` 통과하는가?
 - [ ] ②이면: repo 커맨드를 거치는가? 스토어에서 직접 쓰고 있진 않은가?
 - [ ] ③이면: 저장하려 하고 있진 않은가?

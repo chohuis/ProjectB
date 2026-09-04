@@ -9,9 +9,13 @@
  * ```
  *   ① 실행파일          OnePitch.exe 가 있다 (productName 이 6월엔 ProjectB 였다)
  *   ② 네이티브          engine-native/*.node 가 asar 밖(app.asar.unpacked)에 있다
- *   ③ 마스터 DB         resource/master.db 가 asar 밖에 있다
+ *   ③ 마스터 데이터     resource/data/master/_manifest.json 이 asar 밖에 있다
  *   ④ 새지 않는다       scripts/ · docs/ · resource/data/staging · balance 가 없다
  *   ⑤ 크기·파일 수      기록해 두고 다음 빌드와 비교한다
+ *
+ * ⚠ ③ 은 2026-09-04 까지 `resource/master.db` 였다. 그 파일을 접으면서
+ *   **같은 자리에서 같은 것을 지키도록** 대상을 목록 파일로 옮겼다 —
+ *   `_manifest.json` 이 없으면 이벤트가 통째로 안 실린다(실제로 났던 결함).
  * ```
  *
  * ⚠ `pack` 은 `npmRebuild` 로 네이티브를 다시 빌드한다 — **계측이 `.node` 를
@@ -42,7 +46,10 @@ ok(fs.existsSync(unpacked), "app.asar.unpacked 가 없다 — asarUnpack 설정�
 const nodeDir = path.join(unpacked, "packages", "engine-native");
 const nodes = fs.existsSync(nodeDir) ? fs.readdirSync(nodeDir).filter((f) => f.endsWith(".node")) : [];
 ok(nodes.length === 1, `.node 가 asar 밖에 정확히 하나여야 한다: ${nodes.join(", ") || "(없음)"}`);
-ok(fs.existsSync(path.join(unpacked, "resource", "master.db")), "resource/master.db 가 asar 밖에 없다");
+ok(
+  fs.existsSync(path.join(unpacked, "resource", "data", "master", "_manifest.json")),
+  "resource/data/master/_manifest.json 이 asar 밖에 없다 — 이벤트·업적이 통째로 안 실린다",
+);
 
 // ④ 새지 않는다 — 있으면 안 되는 것
 for (const rel of ["scripts", "docs", "resource/data/staging", "resource/data/balance", "resource/data/master/entities/players"]) {

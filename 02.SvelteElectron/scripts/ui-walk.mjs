@@ -18,8 +18,8 @@
 // 것(순위가 실제와 다름)은 콘솔도 조용하고 DOM도 멀쩡하다 — 눈을 대체하지
 // 못하고, 눈이 볼 것을 줄여줄 뿐이다.
 //
-// ⚠ **electron이 `.node`와 `master.db`를 문다.** 도는 동안 `npm run dev`를
-// 쓸 수 없다.
+// ⚠ **electron이 `.node`를 문다.** 도는 동안 `npm run dev`를 쓸 수 없다.
+// (`master.db`도 물었는데 2026-09-04에 그 파일을 접었다.)
 
 import { _electron as electron } from "playwright-core";
 import * as fs from "node:fs";

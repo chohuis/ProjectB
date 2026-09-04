@@ -3755,7 +3755,8 @@ function createGameStore() {
     },
 
     // 시즌 종료 처리: ① 학년 진급 → ② 나이 일괄 +1
-    // 신입생은 다음 시즌 W1에 master.db entry_year 기반으로 자동 활성화됨
+    // 신입생은 다음 시즌 W1에 `generateFreshmenV3`(Rust)가 만든다
+    // (예전엔 master.db `entry_year` 기반이었다 — 09-04에 접었다)
     async processSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
 

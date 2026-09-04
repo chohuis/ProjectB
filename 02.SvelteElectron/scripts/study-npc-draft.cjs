@@ -6,8 +6,8 @@
 //
 //   ELECTRON_RUN_AS_NODE=1 npx electron scripts/study-npc-draft.cjs --years 6 --runs 3
 //
-// ⚠ electron이 `engine-native.node`와 `master.db`를 문다 — 돌리는 동안
-// `npm run dev`가 안 된다.
+// ⚠ electron이 `engine-native.node`를 문다 — 돌리는 동안 `npm run dev`가
+// 안 된다. (`master.db`도 물었는데 2026-09-04에 그 파일을 접었다.)
 
 const headless = require("./perf/headless.cjs");
 const fs = require("fs");

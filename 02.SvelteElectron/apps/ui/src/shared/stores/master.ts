@@ -441,9 +441,12 @@ export interface MasterState {
   stadiums: StadiumRef[];
   clubs: ClubRef[];
   teams: TeamRef[];
-  staffEntities: EntityRow[];       // 코치·감독·구단주 (master.db에서만 로드)
-  basePlayerEntities: EntityRow[]; // master.db 선수 전체 기본값 (HS/대학/독립/프로)
-  entities: EntityRow[];            // 전체 (staffEntities + basePlayerEntities/npcs 병합)
+  staffEntities: EntityRow[];       // 코치·감독·구단주 (slot.db `staff` — Phase 6A)
+  // ⚠ `basePlayerEntities`는 2026-09-04에 지웠다 — `master.db`를 접었다.
+  //   선수 기본값을 `npc_master`에서 받아 오던 칸인데 그 표가 0행이라
+  //   **늘 빈 배열**이었다. 선수는 slot.db `npc`가 정본이고, 화면이 보는
+  //   `entities`는 아래 `connectToGameStore`가 그걸로 다시 만든다.
+  entities: EntityRow[];            // 전체 (staffEntities + gameStore.npcs 병합)
   eventRules: EventRule[];
   messageTmpls: MessageTemplate[];
   decisionTmpls: DecisionTemplate[];
@@ -918,7 +921,6 @@ function createMasterStore() {
     clubs: [],
     teams: [],
     staffEntities: [],
-    basePlayerEntities: [],
     entities: [],
     eventRules: [],
     messageTmpls: [],
@@ -1170,17 +1172,22 @@ function createMasterStore() {
     update((s) => ({ ...s, achievements }));
   }
 
-  async function reloadEntities(seasonYear?: number, slotId?: string) {
+  /**
+   * 스태프를 slot.db 에서 다시 읽어 `entities` 를 맞춘다.
+   *
+   * ⚠ 2026-09-04 에 **선수 갈래가 사라졌다.** 예전엔 `master:loadEntities`
+   *   (= `master.db` `npc_master`)에서 선수 기본값을 받아 스태프 뒤에
+   *   붙였는데, 그 표는 Phase 6A 이후 **0행**이라 붙는 게 없었다. 표를
+   *   접으면서 이 함수도 스태프만 본다 — 선수는 `connectToGameStore` 가
+   *   `gameStore.npcs`(slot.db 정본)로 채운다.
+   *
+   * `seasonYear` 인자는 부르는 쪽(5자리) 무수정을 위해 남긴다 — 선수를 더는
+   * 안 읽으니 「미래 선수 노출 차단」 갈래도 함께 없어졌다.
+   */
+  async function reloadEntities(_seasonYear?: number, slotId?: string) {
     try {
-      let rows: EntityRow[];
-      if (window.projectB?.masterLoadEntities) {
-        rows = (await window.projectB.masterLoadEntities("", seasonYear, slotId)) as EntityRow[];
-      } else {
-        console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
-        return;
-      }
-      // 스태프는 **slot.db가 정본**이다 (Phase 6A). master.db의 스태프 행은
-      // 구 374 JSON에서 온 것이고 폐기됐다 — 절차 생성 결과를 읽는다.
+      // 스태프는 **slot.db가 정본**이다 (Phase 6A). 구 374 JSON 은 폐기됐고
+      // 절차 생성 결과를 읽는다.
       let staffEntities: EntityRow[] = [];
       if (slotId) {
         try {
@@ -1192,30 +1199,15 @@ function createMasterStore() {
           console.warn("[masterStore] slot.db 스태프 로드 실패 — 스태프 없이 계속", e);
         }
       }
-      // seasonYear 없이 호출되면 선수 로드 안 함 (미래 선수 노출 차단)
-      const basePlayerEntities = seasonYear !== undefined
-        ? rows.filter(r => r.role === "player")
-        : [];
       update((s) => ({
         ...s,
         staffEntities,
-        basePlayerEntities,
-        entities: [...staffEntities, ...basePlayerEntities],
+        // 선수는 `connectToGameStore` 가 npcs 로 다시 채운다. 여기서
+        // 스태프만 실어 두면 그쪽이 `[...staffEntities, ...npcPlayers]` 로 덮는다.
+        entities: [...staffEntities],
       }));
     } catch (e) {
       console.warn("[masterStore] reloadEntities failed", e);
-    }
-  }
-
-  // W1 신입생 활성화용: master.db에서 entryYear == seasonYear인 플레이어 직접 조회 (store 미갱신)
-  async function fetchEntryEntities(seasonYear: number): Promise<EntityRow[]> {
-    if (!window.projectB?.masterLoadEntities) return [];
-    try {
-      const all = (await window.projectB.masterLoadEntities("", seasonYear)) as EntityRow[];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return all.filter(e => e.role === "player" && (e as any).entryYear === seasonYear);
-    } catch {
-      return [];
     }
   }
 
@@ -1228,11 +1220,12 @@ function createMasterStore() {
     let prevNpcs: import("../types/save").NpcSaveState[] | null = null;
 
     function rebuild() {
-      const npcIds = new Set(currentNpcs.map(n => n.npcId));
+      // ⚠ 예전엔 여기서 `basePlayerEntities` 중 npcs 에 없는 것을 끼워 넣느라
+      //   `npcIds` 집합을 만들었다. 그 칸이 늘 비어 있었으므로(`master.db` 를
+      //   접었다) 지금은 스태프 + npcs 둘뿐이고 걸러 낼 것도 없다.
       update((s) => {
-        const baseOnly = s.basePlayerEntities.filter(e => !npcIds.has(e.id));
         const npcPlayers = currentNpcs.map(n => npcSaveStateToEntityRow(n, currentLiveStats));
-        return { ...s, entities: [...s.staffEntities, ...baseOnly, ...npcPlayers] };
+        return { ...s, entities: [...s.staffEntities, ...npcPlayers] };
       });
     }
 
@@ -1272,7 +1265,6 @@ function createMasterStore() {
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     connectToGameStore,
-    fetchEntryEntities,
   };
 }
 

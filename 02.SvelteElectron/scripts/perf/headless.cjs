@@ -100,6 +100,16 @@ function bundleEntry(outFile) {
  * 번들된 렌더러 진입점을 돌려준다.
  */
 async function boot(prefix) {
+  // 🔴 **잰 숫자가 옛 엔진 것이면 아무 소용이 없다.** `.node` 는 git 에 없고
+  //    cargo 가 캐시를 맞히면 파일 시각도 안 바뀌어서, Rust 를 고치고
+  //    `build:native` 를 빼먹어도 아무 데서도 안 알려 줬다 — 09-04 에 D 의
+  //    NPC 덤프(계약 상한 위반 57%·73%)가 그것이었다. 규칙은 이미 고쳐져
+  //    있었고 바이너리만 옛것이었다.
+  //
+  //    계측·회귀 스크립트 전부가 이 `boot()` 를 지난다. 여기서 한 번 본다.
+  //    (`PB_ALLOW_STALE_NATIVE=1` 이면 빨간 줄만 찍고 지나간다)
+  require("../native-stamp.cjs").assertFresh({ label: prefix });
+
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `${prefix}-`));
   const bundleFile = path.join(tmp, "perfEntry.cjs");
 

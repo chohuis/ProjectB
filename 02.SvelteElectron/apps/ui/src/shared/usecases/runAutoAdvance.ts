@@ -526,7 +526,8 @@ export async function runAutoAdvance(): Promise<void> {
 // (v3는 배경 선수도 전부 gameStore.npcs에 있음 — v2 시절의
 // "master.db 벌크 엔티티 vs 추적 NPC" 구분이 더 이상 존재하지 않는다).
 // 이 함수는 과거 master_overlay.db에 별도로 쓰던 경로였으나
-// master:loadEntities가 오버레이를 병합하지 않아 이미 죽은 코드였고,
+// 읽는 쪽(master:loadEntities)이 오버레이를 병합하지 않아 이미 죽은 코드였고
+// (그 채널도 master.db와 함께 2026-09-04에 지웠다),
 // 로직 자체도 processSeasonEnd와 중복이라 되살리면 이중 에이징이 된다.
 export async function runSeasonEndBgProcessing(_now: number): Promise<void> {
   return;
