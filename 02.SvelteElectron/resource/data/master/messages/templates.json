@@ -3,14 +3,14 @@
     {
       "id": "MSG_HS_SEASON_OPEN",
       "category": "system",
-      "subject": "새 시즌이 시작됩니다",
+      "subject": "시즌 개막",
       "body": "드디어 새 시즌이 개막했습니다.\n\n올 시즌도 최선을 다해 팀의 승리에 기여하세요. 훈련 루틴을 점검하고 컨디션 관리에 집중하는 것이 좋습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_HS_MIDTERM",
       "category": "system",
-      "subject": "중간고사 기간입니다",
+      "subject": "중간고사",
       "body": "이번 주는 중간고사 기간입니다.\n\n시험 준비로 인해 훈련 시간이 줄어들 수 있습니다. 학업과 훈련의 균형을 유지하면서 최선을 다해 주세요.",
       "decisionTemplateId": null
     },
@@ -24,7 +24,7 @@
     {
       "id": "MSG_HS_FINAL",
       "category": "system",
-      "subject": "기말고사 기간입니다",
+      "subject": "기말고사",
       "body": "이번 주는 기말고사 기간입니다.\n\n시험이 끝나면 곧 동계 훈련이 시작됩니다. 학업 마무리에 집중하고 몸 상태를 유지하세요.",
       "decisionTemplateId": null
     },
@@ -102,14 +102,14 @@
     {
       "id": "MSG_RAND_SPORTS_MEDIA",
       "category": "news",
-      "subject": "스포츠 매체에 이름이 언급됐습니다",
+      "subject": "스포츠 매체 언급",
       "body": "지역 스포츠 포털에 최근 경기 호투가 소개되었습니다.\n\n기사 내용: '올 시즌 주목해야 할 투수' 명단에 이름이 올랐습니다. 팀 관계자들도 주목하고 있습니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_RAND_FRIEND_VISIT",
       "category": "system",
-      "subject": "친구가 연락해왔습니다",
+      "subject": "친구의 연락",
       "body": "오랜 친구에게서 연락이 왔습니다. '요즘 어때? 오랜만에 얼굴 보자'\n\n잠깐이라도 얼굴을 보면 머리가 환기됩니다. 다만 오가는 시간은 시간입니다.",
       "bodies": [
         "오랜 친구에게서 연락이 왔습니다. '요즘 어때? 오랜만에 얼굴 보자'\n\n잠깐이라도 얼굴을 보면 머리가 환기됩니다. 다만 오가는 시간은 시간입니다.",
@@ -122,7 +122,7 @@
     {
       "id": "MSG_RAND_SOCIAL_MEDIA_MENTION",
       "category": "news",
-      "subject": "SNS에 경기 영상이 올라왔습니다",
+      "subject": "SNS에 오른 경기 영상",
       "body": "팬이 찍은 경기 하이라이트 영상이 SNS에서 공유되고 있습니다.\n\n댓글 반응: '이 선수 진짜 공 빠르다', '커맨드가 장난 아니네'\n\n작은 관심이지만 선수로서 보람을 느낍니다.",
       "decisionTemplateId": null,
       "bodies": [
@@ -135,7 +135,7 @@
     {
       "id": "MSG_RAND_SENIOR_ADVICE",
       "category": "coach",
-      "subject": "선배가 조언을 건네왔습니다",
+      "subject": "훈련 뒤 선배의 말",
       "body": "경험 많은 선배가 훈련 후 말을 걸어왔습니다.\n\n'나도 너만할 때 제일 힘들었어. 폼 잡는 게 평생 숙제야. 그래도 포기하지 마.'\n\n선배의 경험에서 무언가를 배울 수 있을 것 같습니다.",
       "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE",
       "bodies": [
@@ -148,7 +148,7 @@
     {
       "id": "MSG_RAND_TEAM_MEAL",
       "category": "system",
-      "subject": "팀 회식이 있습니다",
+      "subject": "팀 회식",
       "body": "오늘 저녁 팀 전체 회식이 잡혔습니다.\n\n분위기가 다소 가라앉아 있던 팀에 활력을 불어넣을 수 있는 기회입니다. 어떻게 참여할지 결정하세요.",
       "decisionTemplateId": "DEC_RAND_TEAM_MEAL",
       "bodies": [
@@ -270,7 +270,7 @@
     {
       "id": "MSG_UNIV_SEASON_OPEN",
       "category": "system",
-      "subject": "대학 시즌이 시작되었습니다",
+      "subject": "대학 시즌 개막",
       "body": "새 학기 시작과 함께 대학 시즌이 열렸습니다.\n\n훈련과 경기, 학업 관리를 균형 있게 유지하면서 성장해 보세요.",
       "decisionTemplateId": null
     },
@@ -305,14 +305,14 @@
     {
       "id": "MSG_UNIV_SCOUT_RUMOR",
       "category": "news",
-      "subject": "스카우트 시선이 존재합니다",
+      "subject": "스카우트의 시선",
       "body": "대학 리그 관계자 사이에서 스카우트가 당신의 최근 경기를 집중 관찰한다는 소문이 돕니다.\n\n루틴을 유지하고 일관성 있는 투구를 보여주는 것이 중요합니다.",
       "decisionTemplateId": null
     },
     {
       "id": "MSG_UNIV_DRAFT_STOCK_CHECK",
       "category": "system",
-      "subject": "드래프트 평가가 갱신되었습니다",
+      "subject": "드래프트 평가",
       "body": "최근 투구 지표와 시즌 흐름을 기준으로 드래프트 평가가 업데이트되었습니다.\n\n안정적인 이닝 소화와 삼진 지표가 핵심 평가 요소입니다.",
       "decisionTemplateId": null
     },
@@ -392,7 +392,7 @@
     {
       "id": "MSG_UNIV_LIFE_SOCIAL_MENTION",
       "category": "news",
-      "subject": "교내 SNS에서 이름이 오르내렸습니다",
+      "subject": "교내 SNS의 이름",
       "body": "교내 SNS에서 훈련 장면과 경기 하이라이트가 공유되고 있습니다.\n\n직접적인 보상은 작지만 여론 흐름을 만들 수 있습니다.",
       "bodies": [
         "교내 SNS에서 훈련 장면과 경기 하이라이트가 공유되고 있습니다.\n\n직접적인 보상은 작지만 여론 흐름을 만들 수 있습니다.",
@@ -3835,7 +3835,7 @@
     {
       "id": "MSG_PRO_LIFE_OLD_TEAMMATE",
       "category": "system",
-      "subject": "옛 동료에게서 연락이 왔습니다",
+      "subject": "옛 동료의 연락",
       "body": "한때 같은 유니폼을 입었던 선수에게서 연락이 왔습니다. 지금은 다른 팀입니다.\n\n원정 일정이 겹치는 날은 드뭅니다. 그렇다고 시간이 남는 것도 아닙니다.",
       "bodies": [
         "한때 같은 유니폼을 입었던 선수에게서 연락이 왔습니다. 지금은 다른 팀입니다.\n\n원정 일정이 겹치는 날은 드뭅니다. 그렇다고 시간이 남는 것도 아닙니다.",
@@ -3848,7 +3848,7 @@
     {
       "id": "MSG_IND_LIFE_HOMETOWN_CALL",
       "category": "system",
-      "subject": "집에서 전화가 왔습니다",
+      "subject": "집에서 온 전화",
       "body": "경기 전날 밤, 집에서 전화가 왔습니다. 잘 지내냐는 말이 먼저 나옵니다.\n\n길게 받으면 마음은 놓이는데 잠이 늦어집니다.",
       "bodies": [
         "경기 전날 밤, 집에서 전화가 왔습니다. 잘 지내냐는 말이 먼저 나옵니다.\n\n길게 받으면 마음은 놓이는데 잠이 늦어집니다.",
@@ -3861,126 +3861,126 @@
     {
       "id": "MSG_UNIV_STUDY_MODE_MID",
       "category": "academics",
-      "subject": "중간고사가 두 주 앞입니다",
+      "subject": "중간고사 준비",
       "body": "시험 범위가 붙었습니다. 이번 학기 성적이 여기서 반쯤 정해집니다.\n\n같은 시간에 훈련도 있습니다.",
       "decisionTemplateId": "DEC_UNIV_STUDY_MODE_MID"
     },
     {
       "id": "MSG_UNIV_STUDY_MODE_FINAL",
       "category": "academics",
-      "subject": "기말고사가 남았습니다",
+      "subject": "기말고사 준비",
       "body": "학기 끝이 보입니다. 지금 쌓은 것이 그대로 학점이 됩니다.\n\n시즌도 끝나 가는 참입니다.",
       "decisionTemplateId": "DEC_UNIV_STUDY_MODE_FINAL"
     },
     {
       "id": "MSG_HS_SLUMP_ERA",
       "category": "mental",
-      "subject": "맞고 있습니다",
+      "subject": "잦은 피안타",
       "body": "올해 들어 유난히 많이 맞고 있습니다. 같은 공을 던지는데 결과가 다릅니다.\n\n벤치에서 아무도 그 얘기를 꺼내지 않습니다.",
       "decisionTemplateId": "DEC_HS_SLUMP_ERA"
     },
     {
       "id": "MSG_HS_SLUMP_NO_WIN",
       "category": "mental",
-      "subject": "승이 안 붙습니다",
+      "subject": "승수 정체",
       "body": "던질 만큼 던졌는데 승수가 그대로입니다. 잘 던진 날에는 타선이 조용했습니다.\n\n기록지에는 그런 게 안 남습니다.",
       "decisionTemplateId": "DEC_HS_SLUMP_NO_WIN"
     },
     {
       "id": "MSG_HS_SLUMP_NO_INNINGS",
       "category": "team",
-      "subject": "기회가 안 옵니다",
+      "subject": "줄어든 등판 기회",
       "body": "이번 주도 몸만 풀고 들어왔습니다. 등판 순서가 뒤로 밀린 지 오래됐습니다.\n\n던져야 늘어난다는 걸 아는데 던질 자리가 없습니다.",
       "decisionTemplateId": "DEC_HS_SLUMP_NO_INNINGS"
     },
     {
       "id": "MSG_HS_SLUMP_NO_K",
       "category": "training",
-      "subject": "헛스윙이 안 나옵니다",
+      "subject": "삼진 감소",
       "body": "올해 삼진이 손에 꼽습니다. 맞춰 잡는 것도 야구지만, 결정구가 없다는 말이기도 합니다.\n\n구종 하나가 아쉽습니다.",
       "decisionTemplateId": "DEC_HS_SLUMP_NO_K"
     },
     {
       "id": "MSG_MILREUNION_FIRST_CALL",
       "category": "social",
-      "subject": "부대에서 전화가 왔습니다",
+      "subject": "부대에서 온 전화",
       "body": "전역한 지 얼마 되지 않았는데 부대에서 전화가 왔습니다.\n\n남은 사람들은 아직 그 안에 있습니다. 잘 지내냐고 묻습니다.",
       "decisionTemplateId": "DEC_MILREUNION_FIRST_CALL"
     },
     {
       "id": "MSG_MILREUNION_PARCEL",
       "category": "social",
-      "subject": "소포가 하나 왔습니다",
+      "subject": "부대에서 온 소포",
       "body": "보낸 곳이 부대입니다. 두고 온 물건과 쪽지 한 장이 들어 있습니다.\n\n글씨가 눈에 익습니다.",
       "decisionTemplateId": "DEC_MILREUNION_PARCEL"
     },
     {
       "id": "MSG_MILREUNION_JUNIOR_ASK",
       "category": "mental",
-      "subject": "후임이 물어 왔습니다",
+      "subject": "후임의 물음",
       "body": "아직 부대에 있는 후임에게서 연락이 왔습니다. 전역하면 무엇부터 해야 하냐고 묻습니다.\n\n2년 전에 저도 같은 것을 묻고 싶었습니다.",
       "decisionTemplateId": "DEC_MILREUNION_JUNIOR_ASK"
     },
     {
       "id": "MSG_MILREUNION_OPP_MOUND",
       "category": "team_life",
-      "subject": "상대 명단에서 이름을 봤습니다",
+      "subject": "상대 명단의 이름",
       "body": "원정 경기 명단에 아는 이름이 있습니다. 같은 부대에서 2년을 보낸 사람입니다.\n\n그때는 둘 다 공을 만질 수 없었습니다. 오늘은 마운드에 서서 만납니다.",
       "decisionTemplateId": "DEC_MILREUNION_OPP_MOUND"
     },
     {
       "id": "MSG_MILREUNION_SAME_CLUB",
       "category": "team",
-      "subject": "새로 들어온 얼굴을 봤습니다",
+      "subject": "새로 들어온 얼굴",
       "body": "이번에 팀에 들어온 사람 중에 아는 얼굴이 있습니다. 같은 중대에서 지냈습니다.\n\n계급장을 떼고 만난 것은 처음입니다.",
       "decisionTemplateId": "DEC_MILREUNION_SAME_CLUB"
     },
     {
       "id": "MSG_MILREUNION_INDIE_FIELD",
       "category": "team_life",
-      "subject": "관중석에서 이름을 부르는 소리가 들렸습니다",
+      "subject": "관중석에서 부르는 소리",
       "body": "경기가 끝나고 나오는데 관중석 쪽에서 저를 부릅니다. 전역하고 처음 보는 얼굴입니다.\n\n일부러 시간을 내서 왔다고 합니다.",
       "decisionTemplateId": "DEC_MILREUNION_INDIE_FIELD"
     },
     {
       "id": "MSG_MILREUNION_BULLPEN_CATCH",
       "category": "training",
-      "subject": "공을 받아 주던 사람을 다시 만났습니다",
+      "subject": "공을 받아 주던 사람",
       "body": "연습장에 낯익은 사람이 서 있습니다. 포반에서 제 공을 받아 주던 후임입니다.\n\n그때는 장비도 없이 받았습니다. 지금은 불펜에서 같은 일을 합니다.",
       "decisionTemplateId": "DEC_MILREUNION_BULLPEN_CATCH"
     },
     {
       "id": "MSG_MILREUNION_UNIT_INVITE",
       "category": "media",
-      "subject": "부대에서 초청장이 왔습니다",
+      "subject": "부대의 초청장",
       "body": "다녀온 부대에서 행사에 와 달라는 연락이 왔습니다. 후임들 앞에 서 달라고 합니다.\n\n다녀오면 이틀이 없어집니다.",
       "decisionTemplateId": "DEC_MILREUNION_UNIT_INVITE"
     },
     {
       "id": "MSG_MILREUNION_TICKETS",
       "category": "social",
-      "subject": "표를 구할 수 있냐고 물어 왔습니다",
+      "subject": "표를 구해 달라는 부탁",
       "body": "같이 복무한 사람들이 경기를 보러 오겠다고 합니다. 표를 몇 장 구할 수 있냐고 묻습니다.\n\n휴가를 맞춰 나오는 사람도 있다고 합니다.",
       "decisionTemplateId": "DEC_MILREUNION_TICKETS"
     },
     {
       "id": "MSG_MILREUNION_UNIT_LETTER",
       "category": "social",
-      "subject": "편지가 한 묶음 왔습니다",
+      "subject": "편지 한 묶음",
       "body": "부대 후임들이 이름을 적어 보낸 편지입니다. 경기를 챙겨 본다고 적혀 있습니다.\n\n한 사람씩 글씨가 다릅니다.",
       "decisionTemplateId": "DEC_MILREUNION_UNIT_LETTER"
     },
     {
       "id": "MSG_MILREUNION_WEDDING",
       "category": "social",
-      "subject": "청첩장을 받았습니다",
+      "subject": "청첩장",
       "body": "같은 부대에 있던 사람이 결혼을 합니다. 날짜는 시즌 중입니다.\n\n그때 제 이야기를 제일 오래 들어 준 사람입니다.",
       "decisionTemplateId": "DEC_MILREUNION_WEDDING"
     },
     {
       "id": "MSG_MILREUNION_BALL_PARTNER_NEWS",
       "category": "mental",
-      "subject": "그 사람 소식을 들었습니다",
+      "subject": "그 사람 소식",
       "body": "부대에서 제 공을 받아 주던 사람이 운동을 아예 그만뒀다는 이야기를 들었습니다.\n\n원래 선수도 아니었습니다. 그래도 한참 앉아 있었습니다.",
       "decisionTemplateId": "DEC_MILREUNION_BALL_PARTNER_NEWS"
     }
