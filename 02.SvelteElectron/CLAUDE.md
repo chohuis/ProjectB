@@ -194,6 +194,26 @@ cross-env DEV_PORT=5180 npm run dev   # 다른 프로젝트와 겹칠 때
 - TS/Svelte 수정: Vite HMR 자동 반영 (dev 재시작 불필요)
 - `packages/core/` 수정: `npm run build:packages` → Electron 재시작
 
+### `.node` 가 낡았는지는 이제 **기계가 본다** (2026-09-04)
+
+`build:native` 가 성공하면 그 순간의 **Rust 소스 해시**를 산물 옆
+(`packages/engine-native/.native-stamp.json`)에 찍는다. 대조하는 자리 셋:
+
+| 언제 | 무엇이 난다 |
+|---|---|
+| 계측·회귀 (`headless.boot()`) | 낡았으면 **던진다** — 계측을 시작하기 전에 |
+| `npm test` | `nativeStamp.test.ts` 가 빨개진다 |
+| 손으로 | `npm run check:native` |
+
+🔴 **시각(mtime)으로는 못 본다.** cargo 가 캐시를 맞히면(`Finished in 0.08s`)
+`.node` 를 새로 안 쓴다 — napi 는 `index.js`·`index.d.ts` 만 다시 뱉는다.
+실측으로 `index.js` 08:58 · `.node` 는 **전날 19:39** 이 나왔다. 그래서
+**내용 해시**다. 소스를 되돌리면 다시 안 빌드해도 초록으로 돌아온다.
+
+Rust 도구가 없는 자리는 `PB_ALLOW_STALE_NATIVE=1` 로 지나갈 수 있지만
+**그 판의 숫자는 근거로 쓰지 않는다.** 자세한 것은
+[docs/BUILD_ARTIFACTS_2026-09-04.md](docs/BUILD_ARTIFACTS_2026-09-04.md) §5.
+
 ## 코드 스타일
 
 - Rust 구조체 필드: `snake_case` (serde가 `camelCase`로 JS에 노출)
@@ -460,6 +480,11 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
 > ⚠ **새 워크트리를 팔 때 세울 것은 넷이다** (예전 문서엔 `.node` 하나만 있었다):
 > `npm install` · `npm run gen:manifest` · `npm run build:packages` · `.node` 복사
 >
+> ⚠ **`.node` 를 손으로 복사했으면 `npm run build:native` 를 한 번 돌려라**
+> (2026-09-04). 복사본에는 빌드 도장이 없어서 계측이 `NO_STAMP` 로 막힌다 —
+> 「이 바이너리가 어느 소스에서 나왔는지 아무도 모른다」가 맞는 상태다.
+> 사슬(`npm run build`·`pack`)을 한 번 돌려도 찍힌다.
+>
 > ⚠ 같은 형태가 다른 데서도 나온다 — **데이터가 코드와 어긋나도 아무도 안 죽고
 > 로그도 안 남는다.** 게임은 돌고 콘텐츠만 사라진다. B가 찾은 네 건이 전부
 > 그 부류였고(조건 오타로 35종 사망 · 업적 해금 불가 · 스텁 폴백),
@@ -544,6 +569,9 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
 > ⚠ **`.node` 함정에 또 걸렸다.** 배경 측정이 파일을 잡고 있어 빌드가 못 덮는데
 > `Finished`만 보고 넘어갔다. 첫 "고친 뒤" 수치가 통째로 무효였다 —
 > **빌드 뒤에 바이너리에 새 문자열이 있는지 확인해라.**
+>
+> → 2026-09-04 에 **손으로 안 봐도 되게 했다** (「빌드 규칙」의 도장 대조).
+> `headless.boot()` 가 낡은 `.node` 를 만나면 계측을 **시작하지 않는다.**
 
 > **남은 것 — 미계약 뒤 처리를 정교화한다** (사용자: "추후에 좀 더 정교화")
 >

@@ -15,7 +15,7 @@
 | ~~2~~ | ~~`resource/master.db`~~ | — | — | — | — | — |
 | 3 | `packages/{contracts,core}/dist` | `build:packages` (tsc) | ✅ | ✅ 지우고 재생성 | ⚠ 없음 (tsc 가 실패하면 사슬이 멈춘다) | ✅ `packages/*/dist/**` |
 | 4 | `dist/ui` (화면 번들) | `build:ui` (vite) | ✅ | ✅ 지우고 7.75s 재생성 | ⚠ 없음 | ✅ |
-| 5 | `packages/engine-native/*.node` | `build:native` ← **`prebuild`** | ✅ npm 이 자동으로 부른다 | ⏸ 안 돌렸다 (D 와 겹친다) | ⚠ **낡음을 아무도 안 본다** — Rust 를 고치고 안 빌드하면 옛 `.node` 로 돈다(09-04 D 덤프가 그 사례) | ✅ |
+| 5 | `packages/engine-native/*.node` | `build:native` ← **`prebuild`** | ✅ npm 이 자동으로 부른다 | ✅ 지우고 재생성 (cargo 캐시 0.08s · 전체 재컴파일 1m54s 둘 다) | ✅ **새로 걸었다** — 소스 해시 도장 대조 (`native-stamp.cjs` · `nativeStamp.test.ts` 16건 · §5) | ✅ |
 | 6 | `resource/data/master/entities/players/**` (+ `_index.json`) | `npm run deploy` (`deploy-staging.mjs`) | ❌ 안 걸린다 | — | — | ❌ 포장 제외 |
 | 7 | `apps/ui/src/shared/utils/leagueTeams.generated.ts` | `scripts/build_refs_from_seeds.py` | ❌ (커밋된 생성물) | ❌ 파이썬이 없어 못 만든다 | ✅ **새로 걸었다** — `refs.json` 과 팀 id 대조 (대회 주차는 `tournamentWeeks.test.ts` 가 CSV 와) | 소스라 번들에 포함 |
 | 8 | `release/` | electron-builder | `pack` | — (D 몫) | — | 산출물 자체 |
@@ -41,11 +41,11 @@
 `dist/ui` 쪽 여섯(같은 것들 + 이미 빼 둔 셋의 번들 사본).
 `buildArtifacts.test.ts` 가 **뺄 자리는 언제나 둘**이라는 걸 못박는다.
 
-## 3. 남은 위험 둘 — 값이 아니라 구조다
+## 3. 남은 위험 둘 — **09-04 저녁에 둘 다 닫았다**
 
 | 자리 | 무엇 | 왜 지금 안 고쳤나 |
 |---|---|---|
-| `.node` 낡음 | Rust 를 고치고 `build:native` 를 안 돌리면 **옛 엔진으로 돈다.** 09-04 에 D 덤프 셋(계약 상한 위반 57%·73%)이 그것 때문이었다 | 소스 해시를 `.node` 옆에 남기고 검사가 대조하는 방식이 맞다 — 빌드 산출물을 건드리는 변경이라 D 와 겹친다. **D 가 pack 을 끝낸 뒤** |
+| ~~`.node` 낡음~~ | — | **09-04 저녁에 붙였다** — §5 |
 | ~~`master.db` 없음~~ | — | **09-04 저녁에 접었다** — §4 |
 
 ⚠ `gen-manifest` 가 「`npm run migrate:entities` 미실행」이라고 찍고 있었는데
@@ -120,9 +120,80 @@ npc_master rows = 0
 하나다. 시간이 1초밖에 안 준 건 그 단계가 원래 electron 을 한 번 띄웠다
 내리는 것뿐이었기 때문이다 — **얻은 것은 시간이 아니라 모호함을 없앤 것**이다.
 
+⚠ 두 판 다 cargo 가 캐시를 맞힌 상태다(`prebuild` → `build:native` 0.08s).
+Rust 를 실제로 다시 컴파일하면 같은 사슬이 **127s** 다 — 전후 비교에서
+그 변수를 빼려고 같은 조건으로 두 번 쟀다.
+
 ### 4-4. 되살아나지 않게
 
 `buildArtifacts.test.ts` 에 묶음을 하나 더 걸었다(검사 12 → **16**). 다섯이
 각각 지운 자리를 지킨다: 스크립트 없음 · `build`/`dev:desktop`/`predeploy`/`pack`
 사슬에 없음 · 포장 목록에 줄 없음 · main·preload 에 핸들러/브리지 없음 ·
 `db.cjs` 가 행 변환기를 안 내보냄. 정규식은 안 쓴다(`includes` 로 본다).
+
+---
+
+## 5. `.node` 낡음 감지 (09-04 저녁)
+
+표 #5 의 「**낡음을 아무도 안 본다**」를 닫았다. 09-04 D 의 NPC 덤프가
+빨갛던 것(계약 상한 위반 57%·73%)은 규칙이 틀려서가 아니라 **바이너리만
+옛것**이어서였다. 하루를 그걸 찾는 데 썼고, 같은 일이 또 날 수 있었다.
+
+### 5-1. 시각으로는 못 본다 — 실측
+
+첫 생각은 「`.node` 가 소스보다 오래됐나」였는데 **안 된다.**
+
+```
+09-04 08:58  npm run build:native 을 돌렸다
+             cargo: Finished `release` profile in 0.08s   ← 캐시를 맞혔다
+             index.js     08:58   ← napi 가 다시 뱉는다
+             index.d.ts   08:58
+             .node     09-03 19:39   ← 안 건드린다
+```
+
+cargo 가 캐시를 맞히면 **napi 는 `.node` 를 새로 안 쓴다.** 그래서 시각을
+보면 방금 빌드한 산물도 「하루 지난 것」으로 나온다. 시각은 못 쓴다.
+
+### 5-2. 그래서 내용을 본다
+
+`scripts/native-stamp.cjs` — `build:native` 가 성공한 **그 순간의 소스
+해시**를 산물 옆(`packages/engine-native/.native-stamp.json`)에 적는다.
+나중에 소스를 다시 해싱해 대조한다.
+
+- 해싱 대상: `src/**.rs` 36개 + `Cargo.toml` + `Cargo.lock` (+ `build.rs`).
+  `target/` · `.node` · napi 가 만든 `index.*` 는 **산물이라 뺀다.**
+- 경로 + 길이 + 내용을 함께 넣는다 — 이름만 바꾼 것도, 이어붙이면 같아지는
+  짝(`ab`+`c` 대 `a`+`bc`)도 걸린다.
+- 산물 해시도 같이 적어 둔다 — 남이 `.node` 만 덮은 것도 잡는다.
+
+**캐시가 이렇게 안 보이게 된다.** cargo 가 0.08s 로 끝났든 1m54s 를 걸려
+다시 컴파일했든, 우리가 보는 건 「이 소스에서 나온 게 맞나」 하나뿐이다.
+
+### 5-3. 세 자리 중 어디에 뒀나 — 정한 이유
+
+| 자리 | 뒀나 | 왜 |
+|---|---|---|
+| 빌드 스크립트 (`build:native`) | ✅ **도장을 찍는다** | 대조할 기준이 여기서만 생긴다. `prebuild` 가 `build:native` 를 부르므로 `npm run build`·`pack` 도 자동으로 도장을 갱신한다 |
+| 헤드리스 진입 (`headless.boot()`) | ✅ **막는다** | 목표가 「고치고 안 빌드한 채 **계측**하면 그 자리에서 안다」였다. 계측·회귀 스크립트가 전부 이 함수 하나를 지난다 — 39개에 하나씩 붙일 필요가 없다. 임시 폴더를 만들기 **전에** 본다 |
+| 검사 (`nativeStamp.test.ts` 16건) | ✅ **못박는다** | 위 둘의 배선 + 해시 규칙. ④번 묶음은 **지금 작업 폴더**도 본다 — `npm test` 만 돌려도 「Rust 고치고 빌드 안 했다」가 빨개진다 |
+| 전자 앱 본체 (`main.cjs`) | ❌ | 포장된 앱에는 Rust 소스가 없다. 볼 것이 없다 |
+
+낡았으면 **던진다**(경고 아님). 옛 엔진으로 잰 숫자는 틀린 숫자이고, 틀린 줄
+모르는 게 제일 비싸다. `PB_ALLOW_STALE_NATIVE=1` 이면 빨간 줄만 찍고 지나간다.
+
+### 5-4. 실측 — 다섯 상태를 다 만들어 봤다
+
+| # | 만든 상황 | `check:native` | `headless.boot()` |
+|---|---|---|---|
+| ① | 방금 빌드했다 (cargo 캐시 0.08s) | ✅ exit 0 | 부팅 · IPC 37채널 |
+| ② | `.rs` 한 줄 고치고 안 빌드했다 | 🔴 `STALE` exit 1 | **던진다** (계측 시작 전) |
+| ③ | ② 를 되돌렸다 — **다시 안 빌드했는데** | ✅ exit 0 | — |
+| ④ | 도장을 지웠다 | 🔴 `NO_STAMP` exit 1 | — |
+| ⑤ | `.node` 에 1바이트를 붙였다 | 🔴 `NODE_CHANGED` exit 1 | — |
+| ⑥ | ② 상태에서 `npm test` | — | `nativeStamp.test.ts` 1건 빨강 |
+
+③ 이 중요하다 — **내용 해시라 되돌리면 그대로 초록**이다. 시각이었다면
+「다시 빌드해라」고 헛짚었을 자리다.
+
+⚠ D 에게: 워크트리에 도장이 없으면 계측이 `NO_STAMP` 로 **막힌다.**
+`npm run build:native` (또는 `npm run build`·`pack`) 을 한 번 돌리면 찍힌다.

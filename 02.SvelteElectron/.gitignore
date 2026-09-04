@@ -6,6 +6,9 @@ release/
 # Rust 빌드 아티팩트
 packages/engine-native/target/
 packages/engine-native/*.node
+# 그 산물이 **어느 소스에서 나왔는지** 적어 둔 도장 (scripts/native-stamp.cjs).
+# 산물과 짝이라 산물처럼 무시한다 — 커밋하면 남의 빌드 도장을 물려받는다
+packages/engine-native/.native-stamp.json
 
 # 빌드 시 자동 생성되는 마스터 데이터 인덱스
 resource/data/master/_manifest.json
