@@ -35,9 +35,10 @@ contextBridge.exposeInMainWorld("projectB", {
   dayAdvance: (state) => ipcRenderer.invoke("day:advance", state),
 
   // ── 마스터 데이터 ────────────────────────────────────────────────────────
+  // ⚠ `masterLoadEntities`·`masterBulkUpsertEntities`는 2026-09-04에 지웠다 —
+  //   `master.db`를 접었다(main.cjs `master:*` 주석 참고). 뒤엣것은 그 전부터
+  //   받는 쪽 핸들러가 없어 부르면 그냥 거절당하는 줄이었다.
   masterFetch: (relPath)       => ipcRenderer.invoke("master:fetch",        relPath),
-  masterLoadEntities: (leagueId, seasonYear, slotId) => ipcRenderer.invoke("master:loadEntities", leagueId, seasonYear, slotId),
-  masterBulkUpsertEntities: (p)      => ipcRenderer.invoke("master:bulkUpsertEntities", p),
 
   // ── 마운드 방문 ─────────────────────────────────────────────────────────
   matchMoundVisit:        ()    => ipcRenderer.invoke("match:mound-visit"),

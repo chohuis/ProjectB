@@ -340,34 +340,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // 안 돌면 보유 3명이 은퇴·부진 퇴출로 매년 줄어들기만 한다
       const fgn = await applyForeignTurnover(currentSeasonYear);
       for (const l of fgn.logs) logs.push(l);
-    } else {
-    // (레거시) entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
-    const yearEntrants = await masterStore.fetchEntryEntities(currentSeasonYear);
-    if (yearEntrants.length > 0) {
-      const { entityToNpcState } = await import("../utils/gradeAdvance");
-      // HS 신입생 → gameStore.npcs에 Grade 1으로 추가
-      const hsEntrants = yearEntrants.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (e) => (e as any).entryLeague === "LEAGUE_HIGHSCHOOL",
-      );
-      if (hsEntrants.length > 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const newNpcs = hsEntrants.map((e) => entityToNpcState(e as any, currentSeasonYear));
-        gameStore.addNpcs(newNpcs);
-      }
-      // Pro 즉전감 (ABL/JBL) → npcLiveStats 초기화 (팀 배정은 오프시즌 FA 처리)
-      const proEntrants = yearEntrants.filter(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (e) => ["LEAGUE_ABL", "LEAGUE_JBL"].includes((e as any).entryLeague ?? ""),
-      );
-      if (proEntrants.length > 0) seasonStore.initNpcLiveStats(proEntrants);
     }
-    }
+    // ⚠ 여기 `else` 갈래가 하나 있었다 — `master.db` `npc_master` 에서
+    //   `entry_year == 올해` 인 사전 생성 NPC 를 꺼내 고교 신입생·해외
+    //   즉전감으로 심는 **레거시 경로**다. 2026-09-04 에 지웠다: 그 표는
+    //   Phase 6A 이후 0행이라 **어느 갈래로 와도 아무 일도 안 일어났고**,
+    //   `master.db` 자체를 접으면서 재료가 사라졌다. 신입생은 위쪽
+    //   `generateFreshmenV3`(Rust 생성)가 만든다.
 
     // 기존 선수 전체 → npcLiveStats 초기화 (미등록 항목만)
     const currentEntities = get(masterStore).entities;
     seasonStore.initNpcLiveStats(currentEntities, currentSeasonYear);
-    // 프로 NPC 초기화: KBL/ABL/JBL 선수가 npcs에 없으면 master.db entities에서 변환·추가
+    // 프로 NPC 초기화: KBL/ABL/JBL 선수가 npcs에 없으면 `entities`에서 변환·추가
     gameStore.initProNpcsIfMissing(currentEntities, currentSeasonYear);
     seasonStore.snapNpcSeasonStart();
   }

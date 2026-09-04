@@ -5,17 +5,23 @@ import { resolve } from "node:path";
 /**
  * **생성물이 낡거나 새는 자리** (2026-09-04 · A 전수 조사).
  *
- * 🔴 이 저장소에는 커밋 안 하고 **만들어서 쓰는 것**이 여덟 가지다. 그중
+ * 🔴 이 저장소에는 커밋 안 하고 **만들어서 쓰는 것**이 일곱 가지다. 그중
  *    하나(`_manifest.json`)가 낡아 이벤트 18종이 조용히 안 실린 적이 있다.
  *    같은 형태가 더 없는지 훑어 **자리마다** 검사를 건다.
  *
- * 여기서 보는 것은 셋이다:
+ * 여기서 보는 것은 넷이다:
  *   ① 만드는 자리가 `npm run build` 사슬에 걸려 있는가
  *   ② 포장 목록(`build.files`)이 개발용 산출물을 빼는가
  *   ③ 생성 코드(파이썬)를 못 돌리는 자리는 **정본과 대조**되는가
+ *   ④ 접은 것이 **되살아나지 않았는가** (`master.db`)
  *
  * ⚠ **파일이 있는지는 안 본다.** 갓 받은 저장소엔 아직 없는 게 정상이고,
  *   「낡았다」와 「아직 안 만들었다」가 같아 보이면 안 된다.
+ *
+ * ⚠ 여덟에서 일곱이 됐다 — `resource/master.db` 를 **2026-09-04 에 접었다**
+ *   (사용자 확정). 그 파일이 담던 표는 `npc_master` 하나였고 Phase 6A 이후
+ *   0행이었는데, 없으면 `masterDb = null` 로 조용히 지나가서 「빈 게 정상」과
+ *   「빌드가 빠졌다」가 구분이 안 됐다. 아래 마지막 묶음이 그 자리를 지킨다.
  */
 
 const ROOT = resolve(__dirname, "../../../../../..");
@@ -41,7 +47,6 @@ describe("빌드 사슬 — 만드는 자리가 걸려 있다", () => {
 
   it.each([
     ["이벤트·업적 목록 (_manifest.json)", "gen:manifest"],
-    ["마스터 DB (resource/master.db)", "build:masterdb"],
     ["패키지 dist (contracts·core)", "build:packages"],
     ["화면 번들 (dist/ui)", "build:ui"],
   ])("%s 는 build 가 만든다", (_what, script) => {
@@ -77,10 +82,47 @@ describe("포장 목록 — 개발용이 안 실린다", () => {
     expect(has("!dist/ui/logs/**")).toBe(true);
   });
 
-  it("마스터 DB 는 resource 것만 실린다 — 번들 사본은 아무도 안 읽는다", () => {
-    // `main.cjs` 는 `unpackedPath("resource", "master.db")` 를 연다
-    expect(has("!dist/ui/master.db")).toBe(true);
+  it("resource 는 통째로 실린다 — 마스터 데이터·경기장 그림이 여기 있다", () => {
     expect(has("resource/**")).toBe(true);
+  });
+});
+
+/**
+ * **접은 것이 되살아나지 않는다** — `master.db` (2026-09-04 · 사용자 확정).
+ *
+ * 지운 자리가 여섯이다. 하나라도 슬며시 돌아오면 「빈 표를 만들어 아무도
+ * 안 읽는」 옛 상태로 되돌아간다 — 그걸 여기서 못박는다.
+ */
+describe("접은 산출물 — master.db 가 안 돌아온다", () => {
+  const ROOT_FILES = (p: string) => resolve(ROOT, p);
+
+  it("build 사슬에도 dev 사슬에도 build:masterdb 가 없다", () => {
+    expect(pkg.scripts["build:masterdb"], "build:masterdb 스크립트가 되살아났다").toBeUndefined();
+    for (const s of ["build", "dev:desktop", "predeploy", "pack"]) {
+      expect(pkg.scripts[s] ?? "", `${s} 가 build:masterdb 를 부른다`).not.toContain("masterdb");
+    }
+  });
+
+  it("만들던 스크립트 파일이 없다", () => {
+    expect(existsSync(ROOT_FILES("scripts/generate_master_db.cjs"))).toBe(false);
+  });
+
+  it("포장 목록에 master.db 줄이 남아 있지 않다", () => {
+    expect(pkg.build.files.filter((f) => f.includes("master.db"))).toEqual([]);
+  });
+
+  it("읽던 IPC 세 자리가 다 없다 — main·preload·타입 선언", () => {
+    const main = readFileSync(ROOT_FILES("apps/desktop/main.cjs"), "utf8");
+    const preload = readFileSync(ROOT_FILES("apps/desktop/preload.cjs"), "utf8");
+    // 핸들러 등록·브리지 노출만 본다. 「왜 지웠나」를 적은 주석은 남아 있어야 한다
+    expect(main.includes('ipcMain.handle("master:loadEntities"')).toBe(false);
+    expect(main.includes("new Database(masterDbPath")).toBe(false);
+    expect(preload.includes("masterLoadEntities:")).toBe(false);
+  });
+
+  it("행 변환기(masterRowToEntityRow)를 db.cjs 가 더는 내보내지 않는다", () => {
+    const db = readFileSync(ROOT_FILES("apps/desktop/ipc/db.cjs"), "utf8");
+    expect(db.includes("function masterRowToEntityRow")).toBe(false);
   });
 });
 

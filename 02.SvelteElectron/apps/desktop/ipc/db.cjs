@@ -837,74 +837,11 @@ function applySchemaPatches(db) {
 }
 
 // R3a-4d: dbListSlots/dbSaveSlot/dbLoadSlot(v2 game/season 블롭 세이브) 폐기
-// — slot.db(repo:call)이 유일 정본. 아래 masterRowToEntityRow는 master.db(read-only) 전용으로 계속 사용.
-
-
-function masterRowToEntityRow(r) {
-  const normalizedPlayerType =
-    r.player_type === "pitcher" || r.player_type === "batter" || r.player_type === "twoWay"
-      ? r.player_type
-      : "pitcher";
-  const player = {
-    playerType:      normalizedPlayerType,
-    handedness:      r.handedness     ?? "R",
-    position:        r.position       ?? "",
-    jerseyNumber:    r.jersey_number  ?? 18,
-    primaryPosition: r.primary_position ?? undefined,
-    positionRatings: r.position_ratings_json ? JSON.parse(r.position_ratings_json) : undefined,
-    pitches:         r.pitches_json ? JSON.parse(r.pitches_json) : undefined,
-    diligence:       r.diligence      ?? undefined,
-    popularity:      r.popularity     ?? undefined,
-    developmentRate: r.development_rate ?? 60,
-    potentialHidden: r.potential_hidden ?? 60,
-    proServiceYears: r.pro_service_years ?? undefined,
-    contract: r.contract_json ? JSON.parse(r.contract_json) : undefined,
-    militaryEnlistYear: r.military_enlist_year ?? undefined,
-    // 현역 엔티티에 한해 origin 정보로 originalLeagueId/TeamId 파생 (Phase 4-1 전역 복귀용)
-    originalLeagueId: r.military_status === "현역" ? (r.origin_league_id || undefined) : undefined,
-    originalTeamId:   r.military_status === "현역" && r.club_id
-      ? r.club_id.replace(/^CLUB_/, "TEAM_") + "_1"
-      : undefined,
-    pitching: r.pitch_ovr != null ? {
-      ovr: r.pitch_ovr, stamina: r.pitch_stamina, velocity: r.pitch_velocity,
-      command: r.pitch_command, control: r.pitch_control, movement: r.pitch_movement,
-      mentality: r.pitch_mentality, recovery: r.pitch_recovery,
-      clutch:      r.pitch_clutch      ?? r.pitch_ovr,
-      holdRunners: r.pitch_hold_runners ?? r.pitch_ovr,
-    } : null,
-    batting: r.bat_ovr != null ? {
-      ovr: r.bat_ovr, contact: r.bat_contact, power: r.bat_power, eye: r.bat_eye,
-      discipline: r.bat_discipline, speed: r.bat_speed,
-      baseInstinct: r.bat_base_instinct ?? r.bat_ovr,
-      bunting:      r.bat_bunting       ?? r.bat_ovr,
-      platoon:      r.bat_platoon       ?? 50,
-      fielding: r.bat_fielding,
-      arm: r.bat_arm, battingClutch: r.bat_batting_clutch ?? r.bat_ovr,
-    } : null,
-  };
-  const staffData = r.staff_json ? JSON.parse(r.staff_json) : {};
-  return {
-    id: r.id, name: r.name, nameEn: r.name_en ?? undefined,
-    role: r.role ?? "player", age: r.age ?? 18,
-    status: r.status ?? "active",
-    originLeagueId: r.origin_league_id ?? "",
-    leagueId: r.league_id ?? "", clubId: r.club_id ?? "",
-    teamId: r.team_id ?? "", schoolId: r.school_id ?? "",
-    grade: r.grade ?? undefined, notes: r.notes ?? "",
-    militaryStatus: r.military_status ?? undefined,
-    personality: r.personality_json ? JSON.parse(r.personality_json) : undefined,
-    entryYear:   r.entry_year   ?? undefined,
-    entryLeague: r.entry_league ?? undefined,
-    entryTeam:   r.entry_team   ?? undefined,
-    entryAge:    r.entry_age    ?? undefined,
-    details: {
-      player,
-      coach:   staffData.coach   ?? null,
-      manager: staffData.manager ?? null,
-      owner:   staffData.owner   ?? null,
-    },
-  };
-}
+// — slot.db(repo:call)이 유일 정본.
+//
+// ⚠ `masterRowToEntityRow`(master.db `npc_master` 행 → EntityRow)도
+//   2026-09-04에 지웠다 — `master.db` 자체를 접었다. 부르던 곳은
+//   `master:loadEntities` 하나였고 그 표는 0행이었다.
 
 function migrateOldDb(newDb, oldDbPath) {
   if (!fs.existsSync(oldDbPath)) return;
@@ -938,6 +875,5 @@ function migrateOldDb(newDb, oldDbPath) {
 module.exports = {
   openDatabase,
   applySchemaPatches,
-  masterRowToEntityRow,
   migrateOldDb,
 };

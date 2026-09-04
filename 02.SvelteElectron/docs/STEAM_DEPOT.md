@@ -10,7 +10,7 @@
 | 디포 폴더 | `release/win-unpacked/` **통째로** | electron-builder `dir` 타깃 — 설치기 없음, Steam 이 설치를 맡는다 |
 | 실행파일 | `OnePitch.exe` (폴더 루트) | `productName: "OnePitch"` — 6월 빌드는 `ProjectB.exe` 였다 |
 | 실행 인자 | 없음 | |
-| 검증 | `npm run dist:steam` (pack → `dist-steam.cjs`) | 실행파일 · asar 밖 `.node`/`master.db` · 새는 폴더 · 크기 |
+| 검증 | `npm run dist:steam` (pack → `dist-steam.cjs`) | 실행파일 · asar 밖 `.node`/`_manifest.json` · 새는 폴더 · 크기 |
 | 크기 감 | 6월 빌드 3,711 파일 · 356.6 MB (players 누출 포함) | 새 pack 은 더 작아야 한다 |
 
 ⚠ `pack` 은 `npmRebuild` 로 네이티브를 다시 빌드한다 — **계측이 `.node` 를 잡고

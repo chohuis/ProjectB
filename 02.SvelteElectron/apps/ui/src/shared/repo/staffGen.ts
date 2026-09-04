@@ -2,7 +2,8 @@
 //
 // 흐름: staff_rules.json(규칙) + refs.json(팀) → Rust generateStaffNative → slot.db staff
 //
-// 구 경로는 `entities/players/COA_*.json` 374파일을 master.db에 구워두고 읽는 것이었다.
+// 구 경로는 `entities/players/COA_*.json` 374파일을 master.db(2026-09-04에 접었다)에
+// 구워두고 읽는 것이었다.
 // 그건 "생성 결과물을 저장해두고 스크립트로 사후 수정"하는 패턴이고 DESIGN §8.3이 폐기했다.
 // 이제 git에 남는 건 규칙뿐이고, 규칙을 고치면 새 게임에 즉시 반영된다.
 

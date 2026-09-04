@@ -300,8 +300,9 @@ declare global {
       updatePlayerLoyaltyNative(p: string): Promise<string>;
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
-      masterLoadEntities: (leagueId: string, seasonYear?: number, slotId?: string) => Promise<unknown[]>;
-      masterBulkUpsertEntities: (p: { slotId: string; entities: unknown[] }) => Promise<string>;
+      // ⚠ `masterLoadEntities`·`masterBulkUpsertEntities` 둘은 2026-09-04에
+      // 지웠다 — `master.db`를 접었다. 읽던 표(`npc_master`)가 0행이었고,
+      // 선수·스태프는 slot.db가 정본이다.
       // ⚠ `masterSave`·`tuning*` 다섯은 2026-08-20에 지웠다 — Ctrl+Q의
       // 이벤트·업적 에디터와 매치 엔진 랩을 없애면서 부르는 곳이 0이 됐다.
       // 콘텐츠는 `resource/data/master/` 파일을 직접 고치고, 튜닝 수치도

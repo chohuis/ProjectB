@@ -123,12 +123,12 @@ async function hydrateStoresFromSlot(slotId: string): Promise<void> {
   // `staffStatsOf(teamId, entities)`가 전부 기본값 50을 돌려줬다 —
   // 7-5가 배선한 스태프 15종이 실제 게임에선 통째로 죽어 있었다.
   //
-  // ⚠ 순서가 중요하다. `reloadEntities`는 `entities`를
-  // `[...staffEntities, ...basePlayerEntities]`로 **덮어쓴다.** 그래서
-  // `setNpcs`보다 **먼저** 불러야 한다 — 뒤에 부르면 병합해둔 NPC가 지워진다
-  // (그게 예전에 "로스터에 주인공+코치+감독만 보이던" 버그였다).
-  // seasonYear를 넘기지 않는 건 의도다: v3에서 선수 정본은 slot.db고
-  // master.db의 `npc_master`는 Phase 6A에서 비웠다.
+  // ⚠ 순서가 중요하다. `reloadEntities`는 `entities`를 **스태프만으로
+  // 덮어쓴다.** 그래서 `setNpcs`보다 **먼저** 불러야 한다 — 뒤에 부르면
+  // 병합해둔 NPC가 지워진다 (그게 예전에 "로스터에 주인공+코치+감독만
+  // 보이던" 버그였다).
+  // 첫 인자(seasonYear)를 안 넘기는 건 이제 의미가 없다 — 2026-09-04에
+  // `master.db`를 접으면서 선수 갈래 자체가 사라졌다. 자리만 남긴다.
   await masterStore.reloadEntities(undefined, slotId);
 
   gameStore.setNpcs(npcs);  // 전체 교체 — updateNpcs(부분패치) 사용 금지. 이 호출이

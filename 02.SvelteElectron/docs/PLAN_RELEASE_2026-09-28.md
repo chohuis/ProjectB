@@ -246,7 +246,7 @@ C   apps/ui/src/pages/**  ·  features/**  ·  apps/desktop/ipc/*.cjs
 | 있는 것 | 실측 | Steam 에 어떻게 닿나 |
 |---|---|---|
 | `npm run pack` | electron-builder **`dir`** 타깃 → `release/win-unpacked/` | **그대로 디포다.** 설치기(nsis) 필요 없음 — Steam 이 설치를 맡는다 |
-| `asarUnpack` | `resource/**` · `packages/*/dist` · `engine-native/**` | `.node` 와 master.db 가 asar 밖 — 그대로 둔다 |
+| `asarUnpack` | `resource/**` · `packages/*/dist` · `engine-native/**` | `.node` 와 마스터 데이터가 asar 밖 — 그대로 둔다 (`master.db` 는 09-04 에 접었다) |
 | 세이브 경로 | `app.getPath("userData")/saves` = `%APPDATA%/OnePitch/saves` | Steam Cloud **Auto-Cloud** 루트 `WinAppDataRoaming` + 상대경로 `OnePitch/saves` — 코드 변경 0 |
 | 아이콘 | `build/icon.ico` · `icon.png` | 스토어 자산과 별개. 실행파일 아이콘은 이걸로 됨 |
 | `productName` | `OnePitch` (6월 산출물은 `ProjectB` 였다) | 실행파일 이름이 바뀌었다 — 디포 설정에 `OnePitch.exe` |
@@ -267,7 +267,7 @@ C   apps/ui/src/pages/**  ·  features/**  ·  apps/desktop/ipc/*.cjs
 ### W3 에 만들 것 — 셋뿐이다
 
 ```
-dist:steam     pack → win-unpacked/OnePitch.exe 존재 · .node/master.db 가 asar 밖 검증
+dist:steam     pack → win-unpacked/OnePitch.exe 존재 · .node/_manifest.json 이 asar 밖 검증
                → depot 폴더 정리(scripts·docs 제외 확인) → 크기·파일 수 기록
 smoke:dist     그 폴더의 exe 를 headless 로 띄워 새 게임 → W5 까지 (drive.mjs 재사용)
 depot 문서     app id · depot id · 실행 경로 · Cloud 루트 — 업로드는 SteamPipe GUI 로 (사용자)
