@@ -1,13 +1,29 @@
 "use strict";
 // D → C 세이브 산출 — 단위 9(인센티브 정산 화면) 눈확인용 · c9-incentive-*의 후속.
 //
-// ⚠ **c9(SP)는 "미달"만 났다** (2026-09-04 D 실측 — 5게임/26.2이닝, 문턱 25게임/150이닝).
+// 🔴 **2026-09-04 상태 — 미완주.** `overrideContractIncentives`가 처음엔
+//   `p.contract`를 바꿨는데 이 시점엔 그게 비어 있고(renewal은
+//   `pendingNextContract`에 있다 — 아래 주석) 실제로 안 먹었다. 그건 고쳤고
+//   (`overrideContractIncentives`가 이제 `pendingNextContract`도 같이 바꾼다·
+//   단독 실행으로 검증함 — before 문턱50/20 → after 12로 바뀐 것 확인),
+//   **문턱을 12로 낮춘 뒤의 전 구간 완주(달성 확인)는 아직 못 봤다** — 사용자가
+//   "포장본으로 직접 테스트"를 택해 헤드리스를 멈췄다. 다음에 이어받으면:
+//   `cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-make-c9b-save.cjs`
+//   그대로 다시 돌리면 된다(코드는 고쳐져 있다). 시즌당 세계 시뮬 비용이 커서
+//   5시즌 완주까지 30~40분 걸릴 수 있다 — 배경으로 걸고 주기적으로 로그를 본다.
+//
+// ⚠ **c9(SP)는 "미달"만 났다** (2026-09-04 D 1차 실측 — 5게임/26.2이닝, 문턱 25게임/150이닝).
 //   원인: `fastForwardToProIncentiveContract`가 강제로 만든 KBL 팀 로테이션에서
-//   주인공이 "5선발"로 밀려 그 시즌 내내 거의 등판을 못 받았다(선발 등판 확률이
-//   팀 내 순위 기반이라 순위가 낮으면 낮다 — `ROLE_ASSIGNMENT_2026-09-03.md`).
-//   RP는 순위가 아니라 OVR+감독관계bias 티어라 강제 OVR 85면 항상 "셋업맨"
-//   (경기당 등판확률 45%)로 떨어져 훨씬 안정적으로 문턱을 넘는다.
-// 이 스크립트는 `forceRole="RP"`로 그 함정을 피해 "최소 1건 달성" 세이브를 만든다.
+//   주인공이 "5선발"로 밀려 그 시즌 내내 거의 등판을 못 받았다.
+// ⚠ **RP(forceRole)만으로도 부족했다** (2026-09-04 D 2차 실측 — 4시즌 실등판
+//   24·3·3·25, 홀드 0~1). 불펜 등판이 "주당" 확률 판정(셋업맨 45%)이라
+//   시즌 상한 자체가 낮고, 자동 선택 인센티브(게임50+홀드20)의 세 번째 후보
+//   era 는 총액상한(연봉 25%) 때문에 자동으로는 절대 안 뽑힌다(§ perfEntry.ts
+//   `overrideContractIncentives` 주석 참고). 그래서 **문턱도 같이 낮춘다** —
+//   HANDOFF_OP_TO_D.md 가 준 두 대안("문턱을 낮추거나 등판 많은 보직으로")을
+//   같이 쓴다: RP(등판 많은 보직) + 게임 문턱 12(실측 최댓값 24~25의 절반 아래
+//   여유). 밸런스 파일(`generation_rules.json`)은 안 건드린다 — 이 세이브
+//   한 판의 계약 객체만 `overrideContractIncentives`로 바꾼다.
 //
 // ⚠ `context:"renewal"` 계약은 즉시 적용이 아니다 — `setPendingNextContract`로
 //   쌓였다가 다음 시즌 시작(W52 경계)에서 `p.contract`로 바뀐다.
@@ -15,7 +31,7 @@
 //   `saves/slot3_<slotId>.db`(R3a v3 스키마) — 둘 다 복사한다.
 // ⚠ journal_mode=WAL — 복사 전 `wal_checkpoint(TRUNCATE)`로 합친다.
 //
-//   node scripts/probe-make-c9b-save.cjs
+//   cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-make-c9b-save.cjs
 const path = require("node:path");
 const fs = require("node:fs");
 const ROOT = process.cwd();
@@ -46,6 +62,10 @@ function checkpoint(dbPath) {
 
     const ff = await app.fastForwardToProIncentiveContract("RP");
     console.log(`[C9B세이브] 강제전환(RP·재계약 서명) 결과 ${JSON.stringify(ff)}`);
+    // 자동 선택(게임50+홀드20)은 실전에서 거의 안 채워진다(스크립트 머리 주석) —
+    // 문턱을 실측 기반으로 낮춘다. 밸런스 파일은 안 건드린다(이 계약 객체만).
+    await app.overrideContractIncentives([{ kind: "games", threshold: 12, bonus: 1400 }]);
+    console.log(`[C9B세이브] 인센티브 문턱 낮춤 → games≥12 (실측 최댓값 24~25 대비 여유)`);
 
     const startSeason = app.currentSeason();
     let guard = 0;

@@ -1,15 +1,24 @@
 "use strict";
 // D → C 세이브 산출 — 묶음 3·4(대회·연감·2군·FA보상) 눈확인용.
 //
+// 🔴 **2026-09-04 — 아직 한 번도 못 돌렸다.** 작성만 하고 사용자가 "포장본으로
+//   직접 테스트"를 택해 회귀·포장을 먼저 끝내느라 순서가 안 왔다. 코드는
+//   완성 상태(빌드 에러 없음)지만 **실행해서 다섯 소식이 실제로 다 닿는지는
+//   미검증**이다. 다음에 이어받으면 그대로 돌리면 된다 — 아래 명령.
+//
 // 고교 3년 완주(대회 수상 msg-tour-award-·내 대회 msg-tour-my- · 연감
 // msg-season-hs-sync-) → 드래프트 → 프로 2군 시즌 끝(msg-farm-champion-) →
 // FA 보상(msg-facomp-)까지 자연 진행으로 닿는 판을 만든다. 전부 강제 주입
 // 없이 `probe-paths.cjs`와 같은 "pro" 진로 정책(고교→드래프트→프로)으로
-// autoRun만 돌려 자연 발생을 기다린다 — msg-farm-champion-·msg-facomp-는
-// 리그 전체 소식이라 주인공 개인 성적과 무관하게 해마다 난다.
+// autoRun만 돌려 자연 발생을 기다린다.
+// ⚠ **msg-facomp-는 리그 전체 소식이 아니다** — `market.ts` 1687~1691줄을
+//   보면 "우리 팀이 주거나 받을 때만"(gave||got) 보낸다. 주인공 팀이 그 해
+//   FA 보상 거래에 안 걸리면 그 시즌엔 안 온다 — PF_YEARS 를 넉넉히
+//   (기본 25) 줘서 여러 해에 걸쳐 걸릴 기회를 늘린다. 25년으로도 안 걸리면
+//   기본값을 더 올리거나(예 40) 팀을 바꿔 재시도한다.
 //
-//   node scripts/probe-make-c58-save.cjs
-//   PF_YEARS=25 PF_SEED=20260802 node scripts/probe-make-c58-save.cjs
+//   cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-make-c58-save.cjs
+//   cross-env PF_YEARS=25 PF_SEED=20260802 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-make-c58-save.cjs
 const path = require("node:path");
 const fs = require("node:fs");
 const ROOT = process.cwd();

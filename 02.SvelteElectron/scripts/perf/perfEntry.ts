@@ -3736,6 +3736,53 @@ export async function fastForwardToProIncentiveContract(
   };
 }
 
+/**
+ * 세이브 산출 전용 — 계약의 인센티브 항목을 통째로 교체한다. **밸런스 파일은
+ * 안 건드린다**(`generation_rules.json`의 문턱·배율은 그대로) — 이 세이브 한
+ * 판의 메모리 계약 객체만 바꾼다.
+ *
+ * 왜 필요한가 (2026-09-04 D 실측) — `pickHeadlessIncentives`가 자동으로 고르는
+ * 기본 두 항목(RP: 게임50+홀드20)은 **실전에서 거의 안 채워진다.** 강제전환
+ * RP·OVR85(＝"셋업맨", 등판확률 45%)로 4시즌을 실측하니 시즌당 실등판이
+ * 24·3·3·25 — "게임50" 문턱은 최댓값의 절반도 못 미친다(불펜 등판이 경기당이
+ * 아니라 **주당** 확률 판정이라 시즌 52주 상한 자체가 낮다). 홀드는 0~1로
+ * 사실상 안 잡힌다. 세 번째 항목(era)은 총액상한(연봉의 25%) 때문에 처음 두
+ * 항목만으로 이미 꽉 차 **자동으로는 절대 안 뽑힌다**(8%+10%=18%는 들어가도
+ * +15%=33%는 초과). 즉 자동 선택 그대로는 "달성" 세이브를 재현할 수 없다 —
+ * `docs/HANDOFF_OP_TO_D.md`가 준 두 대안(문턱을 낮추거나 등판 많은 보직으로)
+ * 중 **등판 많은 보직(RP) 만으로는 부족해서 문턱도 같이 낮췄다.**
+ */
+export async function overrideContractIncentives(
+  items: { kind: string; threshold: number; bonus: number; awardId?: string }[],
+): Promise<void> {
+  const g = get(gameStore);
+  const sv = gameStore.toSaveGame();
+  const p = sv.protagonist as unknown as {
+    contract?: { incentives?: unknown[] };
+    pendingNextContract?: { incentives?: unknown[] };
+  };
+  // ⚠ `fastForwardToProIncentiveContract`의 `context:"renewal"`은 즉시
+  //   `p.contract`가 아니다 — `pendingNextContract`에 쌓였다가 다음 시즌
+  //   W52→W1 롤오버에서만 `p.contract`로 바뀐다(contractDecision.ts
+  //   `setPendingNextContract`). 이 시점엔 `p.contract`가 비어 있을 수
+  //   있으므로 **둘 다** 있으면 바꾼다 — 어느 쪽이 실제로 쓰이는 계약인지
+  //   호출 시점을 스크립트가 안 가려도 되게 한다.
+  let touched = false;
+  if (p.contract) { p.contract.incentives = items; touched = true; }
+  if (p.pendingNextContract) { p.pendingNextContract.incentives = items; touched = true; }
+  if (!touched) throw new Error("[overrideContractIncentives] contract 도 pendingNextContract 도 없다 — 계약 서명이 먼저다");
+  gameStore.hydrateFromSlot(sv, g.currentSlotId ?? "slot1");
+  await gameStore.save();
+}
+
+/** 디버그 전용 — contract·pendingNextContract 원본을 그대로 본다 */
+export function contractDebugProbe(): Record<string, unknown> {
+  const p = get(gameStore).protagonist as unknown as {
+    contract?: unknown; pendingNextContract?: unknown;
+  };
+  return { contract: p.contract, pendingNextContract: p.pendingNextContract };
+}
+
 // ── 헤드리스가 못 넘던 pending 넷 (2026-09-02 · probe-paths) ──────────
 //
 // `runAutoAdvance` 는 `retirementAsk`·`optionClause`·`faMarket`·`trade` 에서
