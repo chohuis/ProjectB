@@ -16,7 +16,7 @@
 // ⚠ journal_mode=WAL 이라 최근 쓰기가 `-wal` 사이드카에 남는다 — 복사 전
 //   새 커넥션으로 `wal_checkpoint(TRUNCATE)` 해서 본 파일 하나로 합친다.
 //
-//   node scripts/probe-make-c9-save.cjs
+//   cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-make-c9-save.cjs
 const path = require("node:path");
 const fs = require("node:fs");
 const ROOT = process.cwd();

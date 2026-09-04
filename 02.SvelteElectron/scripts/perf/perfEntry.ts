@@ -3685,8 +3685,19 @@ export function incentiveProbe(): Record<string, unknown> {
  *
  * 그 뒤 정상 시즌을 한 번 더 돌려야 실제 성적이 쌓이고, `runWorldSeasonEnd`
  * 안의 `settleSeasonIncentives`가 시즌 끝에 소식을 만든다.
+ *
+ * @param forceRole 명시하면 `position`을 무조건 이 값으로 덮는다(안 넘기면
+ *   예전처럼 비어 있을 때만 "SP"). SP는 `assignProtagonistRole`이 **팀 내
+ *   선발 순위**로 등판 확률을 정해 5선발처럼 밀리면 인센티브(게임 25·이닝
+ *   150)가 시즌 내내 안 채워질 수 있다(2026-09-04 D 실측 — 5게임/26.2이닝).
+ *   RP는 순위와 무관하게 OVR+bias 로 티어가 정해지고(마무리는 첫 진입로가
+ *   없어 제외 — `docs/ROLE_ASSIGNMENT_2026-09-03.md`), OVR 85면 "셋업맨"
+ *   (등판확률 45%/경기)이라 시즌 144경기 기대 등판 ≈65 — 문턱(게임50·홀드20)을
+ *   여유 있게 넘는다. "인센티브가 최소 1건 달성"된 세이브가 필요하면 RP를 쓴다.
  */
-export async function fastForwardToProIncentiveContract(): Promise<Record<string, unknown>> {
+export async function fastForwardToProIncentiveContract(
+  forceRole?: "SP" | "RP" | "CP",
+): Promise<Record<string, unknown>> {
   const g = get(gameStore);
   const team = get(teamsL10n).find((t) => String(t.id).includes("KBL") && String(t.id).endsWith("_1"));
   if (!team) throw new Error("[perfEntry] KBL 1군 팀을 못 찾았다");
@@ -3700,7 +3711,8 @@ export async function fastForwardToProIncentiveContract(): Promise<Record<string
   p.age = 30;
   p.fame = 70;
   p.scoutScore = 80;
-  if (!p.position) p.position = "SP";
+  if (forceRole) p.position = forceRole;
+  else if (!p.position) p.position = "SP";
   const pitching = p.pitching as { ovr?: number } | undefined;
   if (pitching) pitching.ovr = 85;
   gameStore.hydrateFromSlot(sv, g.currentSlotId ?? "slot1");
@@ -3722,6 +3734,53 @@ export async function fastForwardToProIncentiveContract(): Promise<Record<string
     incentives: (after.contract?.incentives ?? []).map(
       (i) => `${i.kind}${i.awardId ? `(${i.awardId})` : ""} ${i.threshold}`),
   };
+}
+
+/**
+ * 세이브 산출 전용 — 계약의 인센티브 항목을 통째로 교체한다. **밸런스 파일은
+ * 안 건드린다**(`generation_rules.json`의 문턱·배율은 그대로) — 이 세이브 한
+ * 판의 메모리 계약 객체만 바꾼다.
+ *
+ * 왜 필요한가 (2026-09-04 D 실측) — `pickHeadlessIncentives`가 자동으로 고르는
+ * 기본 두 항목(RP: 게임50+홀드20)은 **실전에서 거의 안 채워진다.** 강제전환
+ * RP·OVR85(＝"셋업맨", 등판확률 45%)로 4시즌을 실측하니 시즌당 실등판이
+ * 24·3·3·25 — "게임50" 문턱은 최댓값의 절반도 못 미친다(불펜 등판이 경기당이
+ * 아니라 **주당** 확률 판정이라 시즌 52주 상한 자체가 낮다). 홀드는 0~1로
+ * 사실상 안 잡힌다. 세 번째 항목(era)은 총액상한(연봉의 25%) 때문에 처음 두
+ * 항목만으로 이미 꽉 차 **자동으로는 절대 안 뽑힌다**(8%+10%=18%는 들어가도
+ * +15%=33%는 초과). 즉 자동 선택 그대로는 "달성" 세이브를 재현할 수 없다 —
+ * `docs/HANDOFF_OP_TO_D.md`가 준 두 대안(문턱을 낮추거나 등판 많은 보직으로)
+ * 중 **등판 많은 보직(RP) 만으로는 부족해서 문턱도 같이 낮췄다.**
+ */
+export async function overrideContractIncentives(
+  items: { kind: string; threshold: number; bonus: number; awardId?: string }[],
+): Promise<void> {
+  const g = get(gameStore);
+  const sv = gameStore.toSaveGame();
+  const p = sv.protagonist as unknown as {
+    contract?: { incentives?: unknown[] };
+    pendingNextContract?: { incentives?: unknown[] };
+  };
+  // ⚠ `fastForwardToProIncentiveContract`의 `context:"renewal"`은 즉시
+  //   `p.contract`가 아니다 — `pendingNextContract`에 쌓였다가 다음 시즌
+  //   W52→W1 롤오버에서만 `p.contract`로 바뀐다(contractDecision.ts
+  //   `setPendingNextContract`). 이 시점엔 `p.contract`가 비어 있을 수
+  //   있으므로 **둘 다** 있으면 바꾼다 — 어느 쪽이 실제로 쓰이는 계약인지
+  //   호출 시점을 스크립트가 안 가려도 되게 한다.
+  let touched = false;
+  if (p.contract) { p.contract.incentives = items; touched = true; }
+  if (p.pendingNextContract) { p.pendingNextContract.incentives = items; touched = true; }
+  if (!touched) throw new Error("[overrideContractIncentives] contract 도 pendingNextContract 도 없다 — 계약 서명이 먼저다");
+  gameStore.hydrateFromSlot(sv, g.currentSlotId ?? "slot1");
+  await gameStore.save();
+}
+
+/** 디버그 전용 — contract·pendingNextContract 원본을 그대로 본다 */
+export function contractDebugProbe(): Record<string, unknown> {
+  const p = get(gameStore).protagonist as unknown as {
+    contract?: unknown; pendingNextContract?: unknown;
+  };
+  return { contract: p.contract, pendingNextContract: p.pendingNextContract };
 }
 
 // ── 헤드리스가 못 넘던 pending 넷 (2026-09-02 · probe-paths) ──────────
@@ -3894,6 +3953,9 @@ export async function runScenarios(): Promise<string> {
 
 /** 아직 slot.db에 안 쓴 변경이 있는가 — 낡은 읽기 회귀용 */
 export function isSaveDirty(): boolean { return gameStore.hasUnsavedChanges(); }
+
+/** 부작용 없는 강제 저장 — D 세이브 산출 스크립트가 마지막에 부른다 (2026-09-04) */
+export async function forceSave(): Promise<void> { await gameStore.save(); }
 
 // ── 회귀용 프로브 (test-savebatch.cjs 전용) ──────────────────────
 // 게임 로직이 아니라 **불변식을 때려보는 손잡이**다. 실제 코드 경로를
