@@ -32,3 +32,7 @@ resource/logs/uiwalk/
 
 # 계측 덤프 (probe-npc-dump.cjs 가 남기는 생성물 — DATA_POLICY §1 ③파생)
 resource/logs/d-regress/
+
+# D 세이브 산출물(probe-make-c9b-save.cjs 등) — slot.db 사본이라 판마다 수백 MB.
+# C 눈확인용이라 절대경로로 전달하지 커밋하지 않는다
+resource/logs/d-saves/
