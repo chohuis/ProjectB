@@ -22,6 +22,12 @@
  *   파일에서 서로를 정당화한다.
  *
  * ⚠ **`_` 로 시작하는 키는 개발 주석이다** — 플레이어가 안 본다. 안 센다.
+ *
+ * 🛑 **고교는 평서체가 그 무대의 문체다** (사용자 확정 2026-09-04). 처음 셌을 때
+ *   평서체 본문 72 중 **71 이 고교**였다 — 흩어진 실수가 아니라 한 무대의 목소리다.
+ *   그래서 R6 은 **고교에만 뜨는 소식을 안 센다.** 안 빼면 그 71 이 영원히 빚으로
+ *   남아 상한이 0 이 될 수 없고, 상한이 안 내려가는 규칙은 그 안에서 위반이
+ *   갈아치워질 때 못 잡는다.
  */
 const fs = require("node:fs");
 const path = require("node:path");
@@ -70,6 +76,39 @@ for (const { f, events } of pools) for (const e of events) {
   if (e.description) bodies.push([`${f}:${e.id}`, e.description]);
 }
 
+/**
+ * 템플릿 id → 그 소식을 띄우는 규칙들의 무대.
+ *
+ * 🔴 **id 접두(`MSG_HS_`)로 짐작하지 않는다.** 이름은 옮겨 다니고 규칙은 안 그렇다 —
+ *   이 저장소가 세 번 밟은 함정이라 `career_stage` 를 그대로 읽는다.
+ *   `stage` 하나와 `stages` 배열을 **둘 다** 본다(`conditionEvaluator` 와 같은 판정).
+ */
+const stagesByTemplate = (() => {
+  const walk = (d) => fs.readdirSync(d, { withFileTypes: true })
+    .flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]));
+  const map = new Map();
+  for (const lane of ["mandatory", "conditional", "random"]) {
+    const dir = path.join(M, "events", lane);
+    if (!fs.existsSync(dir)) continue;
+    for (const f of walk(dir).filter((x) => x.endsWith(".json"))) {
+      const r = JSON.parse(fs.readFileSync(f, "utf8"));
+      if (!r.messageTemplateId) continue;
+      const c = (r.conditions ?? []).find((x) => x.type === "career_stage");
+      const st = !c ? ["*"] : Array.isArray(c.stages) ? c.stages : c.stage ? [c.stage] : ["*"];
+      const cur = map.get(r.messageTemplateId) ?? new Set();
+      st.forEach((x) => cur.add(x));
+      map.set(r.messageTemplateId, cur);
+    }
+  }
+  return map;
+})();
+
+/** 고교에만 뜨는 소식인가 — 무대를 안 가리는 것(`*`)은 공용이라 아니다 */
+const isHighschoolOnly = (templateId) => {
+  const st = stagesByTemplate.get(String(templateId).replace(/\[\d+\]$/, ""));
+  return !!st && st.size > 0 && [...st].every((x) => x === "highschool");
+};
+
 /** 제목 */
 const subjects = templates.map((t) => [t.id, t.subject ?? ""]).filter(([, s]) => s);
 for (const { f, events } of pools) for (const e of events) if (e.title) subjects.push([`${f}:${e.id}`, e.title]);
@@ -111,17 +150,24 @@ const RULES = [
   //   이 상한을 내리지 마라(§ B-37 보고).
   { id: "R5", what: "버튼이 길다 (14자 넘음 · 관측값)", cap: 19,
     hits: labels.filter(([, l]) => [...l].length > 14) },
-  { id: "R6", what: "본문이 평서체다 — 본문은 합쇼체다", cap: 72,
-    hits: bodies.filter(([, b]) => {
+  // ✅ 72 → 1 → 0 (B-37). 고교 갈래 71 을 빼고 남은 하나(`MSG_COND_SLUMP`)를 고쳤다
+  { id: "R6", what: "본문이 평서체다 (고교 갈래 제외 — 그 무대의 문체다)", cap: 0,
+    hits: bodies.filter(([id, b]) => {
+      if (isHighschoolOnly(id)) return false;
       const ss = sentences(b);
       return ss.some(isPlain) && !ss.some(isHap);
     }) },
-  // ⚠ 100 은 소식 제목 88 + 군 이벤트 제목 12 다. 군 쪽은 「바닥을 쳤다」처럼
-  //   **장면 제목**이라 명사구로 바꾸면 결이 죽는다 — 상한을 내릴 때 그 열둘은
-  //   빼고 셈해야 한다(§ B-37 보고).
-  { id: "R7", what: "제목이 문장이다 — 제목은 명사구다", cap: 100,
-    hits: subjects.filter(([, s]) => /(니다|니까|다|까)[.?!]?$/.test(s)) },
-  { id: "R8", what: "제목이 길다 (22자 넘음)", cap: 1,
+  // ✅ 32 → 0 (B-37). 제목 544 중 444 가 이미 명사구였다 — 합쇼체로 안내하던
+  //   서른둘만 명사구로 옮겼다(「새 시즌이 시작됩니다」 → 「시즌 개막」).
+  { id: "R7", what: "제목이 합쇼체 문장이다 — 안내 제목은 명사구다", cap: 0,
+    hits: subjects.filter(([, s]) => HAP.test(s)) },
+  // ⚠ **여기는 상한을 안 내린다.** 「감각을 찾았다」·「돌아갈까」·「바닥을 쳤다」는
+  //   **장면 제목**이고 이 게임의 목소리다 — 명사구로 만들면 결이 죽는다.
+  //   세는 이유는 **늘어나는 걸 보려고**다(줄이려고가 아니다).
+  { id: "R7b", what: "제목이 평서체 장면 문장이다 (그대로 둔다 · 늘어나는지만 본다)", cap: 68,
+    hits: subjects.filter(([, s]) => !HAP.test(s) && /(다|까)[.?!]?$/.test(s)) },
+  // ✅ 1 → 0 (B-37). 그 하나가 R7 의 서른둘 안에 있었다
+  { id: "R8", what: "제목이 길다 (22자 넘음)", cap: 0,
     hits: subjects.filter(([, s]) => [...s].length > 22) },
   { id: "R9", what: "부제·구분자 대시", cap: 0, hits: dashHits },
 ];
