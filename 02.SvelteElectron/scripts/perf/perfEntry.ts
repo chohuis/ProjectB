@@ -3685,8 +3685,19 @@ export function incentiveProbe(): Record<string, unknown> {
  *
  * 그 뒤 정상 시즌을 한 번 더 돌려야 실제 성적이 쌓이고, `runWorldSeasonEnd`
  * 안의 `settleSeasonIncentives`가 시즌 끝에 소식을 만든다.
+ *
+ * @param forceRole 명시하면 `position`을 무조건 이 값으로 덮는다(안 넘기면
+ *   예전처럼 비어 있을 때만 "SP"). SP는 `assignProtagonistRole`이 **팀 내
+ *   선발 순위**로 등판 확률을 정해 5선발처럼 밀리면 인센티브(게임 25·이닝
+ *   150)가 시즌 내내 안 채워질 수 있다(2026-09-04 D 실측 — 5게임/26.2이닝).
+ *   RP는 순위와 무관하게 OVR+bias 로 티어가 정해지고(마무리는 첫 진입로가
+ *   없어 제외 — `docs/ROLE_ASSIGNMENT_2026-09-03.md`), OVR 85면 "셋업맨"
+ *   (등판확률 45%/경기)이라 시즌 144경기 기대 등판 ≈65 — 문턱(게임50·홀드20)을
+ *   여유 있게 넘는다. "인센티브가 최소 1건 달성"된 세이브가 필요하면 RP를 쓴다.
  */
-export async function fastForwardToProIncentiveContract(): Promise<Record<string, unknown>> {
+export async function fastForwardToProIncentiveContract(
+  forceRole?: "SP" | "RP" | "CP",
+): Promise<Record<string, unknown>> {
   const g = get(gameStore);
   const team = get(teamsL10n).find((t) => String(t.id).includes("KBL") && String(t.id).endsWith("_1"));
   if (!team) throw new Error("[perfEntry] KBL 1군 팀을 못 찾았다");
@@ -3700,7 +3711,8 @@ export async function fastForwardToProIncentiveContract(): Promise<Record<string
   p.age = 30;
   p.fame = 70;
   p.scoutScore = 80;
-  if (!p.position) p.position = "SP";
+  if (forceRole) p.position = forceRole;
+  else if (!p.position) p.position = "SP";
   const pitching = p.pitching as { ovr?: number } | undefined;
   if (pitching) pitching.ovr = 85;
   gameStore.hydrateFromSlot(sv, g.currentSlotId ?? "slot1");
@@ -3894,6 +3906,9 @@ export async function runScenarios(): Promise<string> {
 
 /** 아직 slot.db에 안 쓴 변경이 있는가 — 낡은 읽기 회귀용 */
 export function isSaveDirty(): boolean { return gameStore.hasUnsavedChanges(); }
+
+/** 부작용 없는 강제 저장 — D 세이브 산출 스크립트가 마지막에 부른다 (2026-09-04) */
+export async function forceSave(): Promise<void> { await gameStore.save(); }
 
 // ── 회귀용 프로브 (test-savebatch.cjs 전용) ──────────────────────
 // 게임 로직이 아니라 **불변식을 때려보는 손잡이**다. 실제 코드 경로를
