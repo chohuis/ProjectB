@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { get } from "svelte/store";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { gameStore } from "../game";
+import { gameStore, mailboxDupStats, resetMailboxDupStats } from "../game";
 import type { MessageItem } from "../../types/main";
 
 /**
@@ -115,5 +115,34 @@ describe("MainPage — 조용히 갇히지 않는다", () => {
   it("빠져나갈 길이 있다 — 탭이 전부 잠긴 채 열 창이 없기 때문이다", () => {
     expect(MAIN.includes("async function dropMissingGame(")).toBe(true);
     expect(MAIN.includes("이 경기를 건너뛴다")).toBe(true);
+  });
+});
+
+describe("걷어낸 사본을 센다 — 조용히 사라지지 않게", () => {
+  /**
+   * 🔴 **막는 것과 아는 것은 다른 일이다** (2026-09-06 · A).
+   *
+   * `dedupeMailbox` 는 사본을 버려 화면을 살린다. 그런데 **버렸다는 사실을
+   * 아무도 안 보면 소식 한 통이 그냥 사라진다** — 증상만 없어지고 만드는
+   * 쪽의 결함은 남는다. 실제로 그랬다: 대회 라운드가 주마다 다시 확정되며
+   * 소식을 다시 냈고, 화면을 고친 뒤에는 그게 조용히 버려지고 있었다.
+   *
+   * `check:msgdupid` 가 이 값을 0 으로 못 박는다.
+   */
+  it("같은 id 가 두 번 오면 센다", () => {
+    resetMailboxDupStats();
+    const id = `dup-count-${seq++}`;
+    gameStore.addMessage(msg({ id, subject: "먼저" }));
+    expect(mailboxDupStats.dropped).toBe(0);
+    gameStore.addMessage(msg({ id, subject: "나중" }));
+    expect(mailboxDupStats.dropped).toBe(1);
+    expect(mailboxDupStats.byId[id]).toBe(1);
+  });
+
+  it("id 가 다르면 안 센다", () => {
+    resetMailboxDupStats();
+    gameStore.addMessage(msg());
+    gameStore.addMessage(msg());
+    expect(mailboxDupStats.dropped).toBe(0);
   });
 });

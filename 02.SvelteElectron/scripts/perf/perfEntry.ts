@@ -11,6 +11,7 @@ import { get } from "svelte/store";
 import { masterStore, teamsL10n } from "../../apps/ui/src/shared/stores/master";
 import {
   gameStore, MAX_MAILBOX, mailboxTrimStats, mailboxProduceStats, messageKindOf,
+  mailboxDupStats, resetMailboxDupStats,
 } from "../../apps/ui/src/shared/stores/game";
 import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
@@ -5421,6 +5422,25 @@ export function mailboxCensus(): Record<string, unknown> {
 export function mailboxProduceProbe(): Record<string, unknown> {
   return { 총생산: mailboxProduceStats.total, 종류별: { ...mailboxProduceStats.byKind } };
 }
+
+/**
+ * **id 가 겹쳐 버려진 소식** — 0 이 아니면 만드는 쪽에 결함이 있다.
+ *
+ * 🔴 소식함은 사본을 조용히 걷어낸다(`dedupeMailbox` — 안 걷어내면 Svelte 가
+ *   키 중복으로 던져 **화면이 통째로 굳는다**). 걷어내는 것 자체는 옳지만
+ *   **걷어냈다는 사실을 아무도 안 보면 소식 한 통이 그냥 사라진다.**
+ *   여기가 그 창구다. `check:msgdupid` 가 이 값을 0 으로 못 박는다.
+ *
+ * ⚠ `check:msgdup` 과 다르다 — 그쪽은 「같은 id 로 **다른 소식**」,
+ *   여기는 「같은 id 가 **두 번**」이다. 둘 다 필요하다: 내용이 같아도
+ *   두 번 나면 한 통이 버려진 것이고, 그건 진행 로직이 같은 일을 두 번
+ *   했다는 뜻이다(대회 라운드 재확정이 그랬다).
+ */
+export function mailboxDupProbe(): Record<string, unknown> {
+  return { 버려진사본: mailboxDupStats.dropped, id별: { ...mailboxDupStats.byId } };
+}
+
+export function resetMailboxDup(): void { resetMailboxDupStats(); }
 
 /**
  * **시즌 종료 중복 실행 가드가 재시작을 견디는가** (2026-08-08 조사).

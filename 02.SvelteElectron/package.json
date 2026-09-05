@@ -150,7 +150,8 @@
     "dist:steam:verify": "node scripts/dist-steam.cjs",
     "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt",
     "probe:military": "cross-env DRIVE_USER_DATA=1 PF_YEARS=6 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs --path mil",
-    "smoke:oldsaves": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe node scripts/drive.mjs scripts/smoke-oldsaves.txt"
+    "smoke:oldsaves": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe node scripts/drive.mjs scripts/smoke-oldsaves.txt",
+    "check:msgdupid": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdupid.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
