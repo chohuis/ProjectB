@@ -106,6 +106,23 @@ pub struct NpcSaveState {
     pub career_status: String,
     pub current_league: String,
     pub current_team: String,
+    /// 병역 상태. **없으면 「미필」이다.**
+    ///
+    /// 🔴 `#[serde(default)]`가 없어서 실사용자 세이브가 죽었다 (2026-09-05).
+    ///   `slotdb.getAllNpcs`가 은퇴자를 좁게 읽느라 이 칼럼을 빼먹었고
+    ///   (`militaryStatus: undefined` → `JSON.stringify`가 키째 뺀다),
+    ///   드래프트 수락 → 시즌 종료 → `advanceAllGradesNative`가
+    ///   `missing field 'militaryStatus'`로 던졌다. 실측: 8,427명 중 869명.
+    ///   읽는 쪽(`slotdb.cjs`)은 고쳤지만 **이미 나간 세이브는 그 값이 없다** —
+    ///   여기서 받아 줘야 산다.
+    ///
+    /// 기본값 「미필」의 근거는 생성 규칙이다
+    /// (`generation_rules.json` `pastService`: `undecidedBelow: 26` —
+    ///  25세 이하는 전원 미필). 결측이 몰린 건 20세 미지명 은퇴자였다.
+    /// 25세 넘겨 은퇴한 사람까지 미필로 읽히는 건 정확하지 않지만,
+    /// **여기서 나이로 추정하지 않는다** — 실제 값은 DB에 있고
+    /// 그건 읽는 쪽이 고쳤다. 이 기본값은 옛 세이브가 죽지 않게 하는 안전망이다.
+    #[serde(default = "default_military_status")]
     pub military_status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub military_enlist_year: Option<i32>,
@@ -143,6 +160,13 @@ pub struct NpcSaveState {
     pub pitching: Option<NpcPitchingAttrs>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub batting: Option<NpcBattingAttrs>,
+    /// 성장률. **없으면 50이다** — `slotdb.npcToInsertParams`의 폴백과 같은 값이다.
+    ///
+    /// 🔴 `military_status` 다음으로 죽었을 자리다 (2026-09-05). 은퇴자 좁은
+    ///   읽기가 이 칼럼도 빼먹었는데, serde 는 **선언 순서로 첫 결측만**
+    ///   알려 줘서 `militaryStatus` 뒤에 숨어 있었다. 실측: 실사용자 세이브의
+    ///   은퇴자 869명 전원이 `development_rate = 50`(폴백값)이었다.
+    #[serde(default = "default_dev_rate")]
     pub development_rate: i32,
     #[serde(default = "default_potential")]
     pub potential_hidden: f64,
@@ -712,6 +736,11 @@ pub struct CalcEarlyEnlistResult {
 fn default_stamina_cap() -> f64 { 60.0 }
 fn default_one() -> i32 { 1 }
 fn default_potential() -> f64 { 75.0 }
+/// 병역 결측 폴백 — `generation_rules.json` `pastService.undecidedBelow: 26`
+/// (25세 이하 전원 미필)과 `slotdb.npcToInsertParams`의 폴백이 같은 값이다
+fn default_military_status() -> String { "미필".to_string() }
+/// 성장률 결측 폴백 — `slotdb.npcToInsertParams`의 `?? 50`과 같은 값이다
+fn default_dev_rate() -> i32 { 50 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

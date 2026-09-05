@@ -540,6 +540,27 @@ function createManager(savesDir, hooks = {}) {
   };
 }
 
+/**
+ * 은퇴자를 **좁게** 읽을 때의 칼럼 목록 (`getAllNpcs`).
+ *
+ * 🔴 **여기서 빠진 칼럼은 `undefined`가 되고, `JSON.stringify`가 키째 빼고,
+ *    Rust 가 `missing field`로 던진다.** 실사용자 세이브가 그렇게 죽었다
+ *    (2026-09-05 · `military_status` 결측 869명 → 드래프트 수락에서 크래시).
+ *    회귀 검사가 이 목록을 그대로 읽어 Rust 계약과 대조한다 —
+ *    `retiredNpcContract.test.ts`. **여기만 고치면 검사도 같이 움직인다.**
+ *
+ * 안 읽는 것은 **블롭뿐**이다: abilities_json · xp_json · form_json ·
+ * personality_json · injury_json · extra_json. (은퇴자가 전체의 36%라
+ * 이것들을 다 실으면 로드가 무거워진다 — 그게 이 좁은 읽기의 이유다.)
+ */
+const RETIRED_NPC_COLUMNS = [
+  "npc_id", "name", "name_en", "is_named", "player_type", "position", "handedness",
+  "jersey_number", "age", "grade", "school_id", "graduation_year", "nationality",
+  "career_status", "current_league", "current_team", "pro_service_years",
+  "salary", "contract_years", "military_status", "military_json",
+  "development_rate", "potential_hidden",
+];
+
 // ── row ↔ JS 매핑 (유일한 매핑 지점) ─────────────────────────────
 function mapNpcRow(r) {
   if (!r) return null;
@@ -706,6 +727,19 @@ function npcToInsertParams(n) {
     emotionJson: null,   // 폐기됨 (Phase 6C) — 위 스키마 주석 참고
     injuryJson: n.injury ? JSON.stringify(n.injury) : null,
     extraJson: n.extra ? JSON.stringify(n.extra) : null,
+    // 🔴 **안 읽은 블롭을 되쓰지 않는다** (2026-09-05).
+    //   `getAllNpcs`는 은퇴자의 블롭을 일부러 안 읽는다(36%가 은퇴자라 무겁다).
+    //   그런데 `syncNpcs`는 스토어 전체를 되쓰므로, 안 읽은 블롭이 **빈 값으로
+    //   덮여 지워졌다** — 실사용자 세이브 실측(2026-09-05)에서 은퇴자 869명의
+    //   `abilities_json`이 전원 `{"pitches":[]}`(14바이트)였다(현역은 460바이트대).
+    //   "빈 채로 온 블롭"만 기존 값을 남긴다 — 값이 실려 오면 그대로 쓴다.
+    //   그래서 **은퇴하는 그 주기**(현역으로 읽혀 값이 다 있다)는 정상 기록된다.
+    abilitiesLite: (n.abilities && (n.abilities.pitching || n.abilities.batting)) ? 0 : 1,
+    xpLite: (n.xp && (Object.keys(n.xp.pitchingXp ?? {}).length
+                   || Object.keys(n.xp.battingXp ?? {}).length)) ? 0 : 1,
+    formLite: n.form ? 0 : 1,
+    injuryLite: n.injury ? 0 : 1,
+    extraLite: n.extra ? 0 : 1,
   };
 }
 
@@ -1074,10 +1108,24 @@ const commands = {
         contract_years = excluded.contract_years, pro_service_years = excluded.pro_service_years,
         military_status = excluded.military_status, military_json = excluded.military_json,
         development_rate = excluded.development_rate, potential_hidden = excluded.potential_hidden,
-        abilities_json = excluded.abilities_json, xp_json = excluded.xp_json,
-        form_json = excluded.form_json, emotion_json = excluded.emotion_json,
-        injury_json = excluded.injury_json, extra_json = excluded.extra_json,
-        -- **여기 하나만 다르다** — 안 보냈으면(KEEP) 기존 값을 둔다
+        emotion_json = excluded.emotion_json,
+        -- 🔴 **은퇴자의 블롭은 안 읽고 왔을 수 있다** (2026-09-05).
+        --   getAllNpcs 가 은퇴자의 블롭을 일부러 안 읽는데(36%가 은퇴자),
+        --   여기서 되쓰면 **빈 값이 기존 값을 지운다.** 실사용자 세이브에서
+        --   은퇴자 869명의 능력치가 전부 그렇게 사라져 있었다.
+        --   "은퇴자 + 빈 채로 왔다"일 때만 기존 값을 둔다 — 값이 실려 오면
+        --   그대로 쓰므로 **은퇴하는 그 주기**는 정상 기록된다.
+        abilities_json = CASE WHEN excluded.career_status = 'retired' AND @abilitiesLite = 1
+          THEN npc.abilities_json ELSE excluded.abilities_json END,
+        xp_json = CASE WHEN excluded.career_status = 'retired' AND @xpLite = 1
+          THEN npc.xp_json ELSE excluded.xp_json END,
+        form_json = CASE WHEN excluded.career_status = 'retired' AND @formLite = 1
+          THEN npc.form_json ELSE excluded.form_json END,
+        injury_json = CASE WHEN excluded.career_status = 'retired' AND @injuryLite = 1
+          THEN npc.injury_json ELSE excluded.injury_json END,
+        extra_json = CASE WHEN excluded.career_status = 'retired' AND @extraLite = 1
+          THEN npc.extra_json ELSE excluded.extra_json END,
+        -- 안 보냈으면(KEEP) 기존 값을 둔다
         personality_json = CASE WHEN @personalityKeep = 1
           THEN npc.personality_json ELSE excluded.personality_json END`
     );
@@ -1109,12 +1157,26 @@ const commands = {
   getAllNpcs(db) {
     const active = db.prepare(
       "SELECT * FROM npc WHERE career_status != 'retired'").all().map(mapNpcRow);
-    // 은퇴자 — 이름 표시에 필요한 것만. `mapNpcRow`가 없는 칼럼을 undefined로 두게 둔다
+    // 은퇴자 — **블롭만 뺀다.** 스칼라 칼럼은 전부 읽는다.
+    //
+    // 🔴 실사용자 세이브가 여기서 죽었다 (2026-09-05). `military_status`가
+    //    이 목록에 없어서 `mapNpcRow`가 `militaryStatus: undefined`로 두고,
+    //    `JSON.stringify`가 키째 빼고, Rust `NpcSaveState.military_status`는
+    //    `String`(옵션 아님)이라 `advanceAllGradesNative`가
+    //    `missing field 'militaryStatus'`로 죽었다 — 드래프트 수락 순간이다.
+    //    실측: 은퇴자 869명 전원(전체 8,427명 중)이 결측이었다.
+    //
+    // 🔴 **읽기가 좁으면 쓰기가 지운다.** `syncNpcs`는 스토어 전체를 되쓰므로
+    //    안 읽은 칼럼이 `npcToInsertParams`의 폴백으로 덮인다. 실사용자
+    //    세이브 실측(2026-09-05 · 손대기 전):
+    //      military_status  은퇴자 869명 **전원 '미필'** (36세 KBL 은퇴자까지)
+    //      development_rate 869명 전원 50 · potential_hidden 869명 전원 75
+    //      salary           869명 전원 0
+    //    전부 폴백값이다. 스칼라는 크기가 고정이라 아껴서 얻는 게 없다 —
+    //    아끼는 건 블롭(abilities/xp/form/personality/injury/extra)뿐이다.
     const retired = db.prepare(
-      "SELECT npc_id, name, name_en, is_named, player_type, position, handedness, "
-      + "jersey_number, age, grade, school_id, graduation_year, nationality, "
-      + "career_status, current_league, current_team, pro_service_years "
-      + "FROM npc WHERE career_status = 'retired'").all().map(mapNpcRow);
+      `SELECT ${RETIRED_NPC_COLUMNS.join(", ")} FROM npc WHERE career_status = 'retired'`
+    ).all().map(mapNpcRow);
     return active.concat(retired);
   },
   getByLeague(db, p) {
@@ -1356,4 +1418,6 @@ module.exports = {
   createManager, dispatch, openSlot, SCHEMA_VERSION, _commands: commands,
   // 마이그레이션 (테스트·진단용)
   migrate, currentVersion, hasColumn, addColumn, MIGRATIONS,
+  // 은퇴자 좁은 읽기 — 회귀 검사가 Rust 계약과 대조한다
+  RETIRED_NPC_COLUMNS, mapNpcRow,
 };

@@ -142,6 +142,7 @@
     "probe:ovrimpact": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-ovrimpact.cjs",
     "probe:sangmu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-sangmu.cjs",
     "probe:bgsched": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-bgsched.cjs",
+    "probe:retiredroundtrip": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-mil-roundtrip.cjs",
     "probe:hscloser": "cross-env DRIVE_USER_DATA=1 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-hs-closer.cjs",
     "probe:morale": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-morale.cjs",
     "probe:paths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs",
