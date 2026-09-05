@@ -804,7 +804,7 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
         ...(r.rank && r.totalTeams ? { detail: `${r.rank}/${r.totalTeams}` } : {}),
       }));
     gameStore.addMessage({
-      id: `msg-season-hs-sync-${Date.now()}`,
+      id: `msg-season-hs-sync-${now}`,
       category: "news",
       sender: "연감",
       subject: `${now} 시즌 졸업/승급 반영`,

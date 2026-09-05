@@ -274,7 +274,8 @@ export async function runOffseasonProcessing(
 
   const mailboxEntry: MessageItem | null = events.length > 0
     ? {
-        id: `msg-offseason-${Date.now()}`,
+        // 🔴 **연도 하나로 유일하다** — 오프시즌 결산은 시즌당 한 통이다
+        id: `msg-offseason-${seasonYear}`,
         category: "news",
         sender: "연감",
         subject: "오프시즌 결산",

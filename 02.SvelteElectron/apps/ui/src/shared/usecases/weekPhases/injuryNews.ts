@@ -60,7 +60,9 @@ export function buildInjuryNews(p: BuildInjuryNewsParams): MessageItem | null {
   const preview = previewLine(counts);
 
   return {
-    id:        `msg-injury-w${p.weekNum}-${Date.now()}`,
+    // 🔴 **연도+주차**다. 한 주에 한 통뿐이라 그것으로 유일하다.
+    //   `Date.now()` 는 같은 세이브를 다시 열면 다른 id 를 낸다.
+    id:        `msg-injury-${p.season.seasonYear}-w${p.weekNum}`,
     category:  "system",
     sender:    "리그 사무국",
     subject:   `${p.monthLabel} 부상 리포트`,

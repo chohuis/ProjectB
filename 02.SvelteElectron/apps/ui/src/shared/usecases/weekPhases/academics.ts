@@ -21,11 +21,14 @@ export function isMidtermEvent(eventId: string): boolean {
  *   가르면 이 함수가 두 무대를 다 알아야 한다.
  */
 export function makeExamMessage(
-  week: number, subject: string, body: string,
+  seasonYear: number, week: number, subject: string, body: string,
   metadata?: import("../../types/main").BarsMetadata,
 ): MessageItem {
   return {
-    id: `msg-exam-w${week}-${Date.now()}`,
+    // 🔴 **연도+주차**다. 예전엔 `Date.now()`가 붙어 있어 같은 세이브를 다시
+    //   열면 다른 id 가 났다 — 재현이 안 되고, 같은 밀리초에 둘이면 겹친다.
+    //   시험은 한 주에 한 번뿐이라 연도+주차면 유일하다.
+    id: `msg-exam-${seasonYear}-w${week}`,
     category: "system",
     sender: "학업 시스템",
     subject,

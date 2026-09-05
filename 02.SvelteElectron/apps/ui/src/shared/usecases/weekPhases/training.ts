@@ -51,6 +51,7 @@ const PITCH_STAT_LABELS: Record<string, [string, (p: PitchingAttributes) => numb
 };
 
 export function makeTrainingMessage(
+  seasonYear: number,
   week: number,
   logs: string[],
   protagonist: ProtagonistSave,
@@ -86,7 +87,9 @@ export function makeTrainingMessage(
   };
 
   return {
-    id: `msg-train-w${week}-${Date.now()}`,
+    // 🔴 **연도+주차**다. 주간 훈련은 한 주에 한 통뿐이다.
+    //   `Date.now()` 는 같은 세이브를 다시 열면 다른 id 를 낸다
+    id: `msg-train-${seasonYear}-w${week}`,
     category: "system",
     sender: coachName,
     subject: `W${week} 주간 훈련 결과`,

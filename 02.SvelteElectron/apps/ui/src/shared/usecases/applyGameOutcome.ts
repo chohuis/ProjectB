@@ -538,7 +538,9 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     }
     const { INJURY_LABEL } = await import("../types/save");
     gameStore.addMessage({
-      id:        `msg-injury-game-w${outcome.week}-${Date.now()}`,
+      // 🔴 **경기 하나에 한 통**이다 — `scheduleId` 가 대상이다. 예전엔
+      //   `Date.now()` 라 재현이 안 됐다(같은 세이브를 다시 열면 다른 id).
+      id:        `msg-injury-game-${sBefore.seasonYear}-${outcome.scheduleId}`,
       category:  "system",
       sender:    "의무팀",
       subject:   `경기 중 부상 — ${INJURY_LABEL[injuryType as keyof typeof INJURY_LABEL] ?? injuryType}`,

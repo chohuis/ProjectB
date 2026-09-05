@@ -42,14 +42,14 @@ const briefOf = (id: string) => BRIEFS[id] ?? null;
 describe("월간 경기 편성 소식", () => {
   it("상대 정보를 안 넘기면 예전처럼 날짜·상대만 나온다", () => {
     // 호출부가 아직 배선을 안 해도 소식이 깨지지 않아야 한다
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap)!;
     expect(m.body).toContain("무심고");
     expect(m.body).not.toContain("팀 OVR");
     expect(m.body).not.toContain("선발 예상");
   });
 
   it("상대 정보를 넘기면 순위·성적·팀OVR·선발이 붙는다", () => {
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, briefOf)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     for (const s of ["12위 / 16팀", "8승 14패", "팀 OVR 54", "선발 예상", "최성원", "OVR 58"]) {
       expect(m.body, s).toContain(s);
     }
@@ -57,20 +57,20 @@ describe("월간 경기 편성 소식", () => {
 
   it("공식경기 상대에도 붙는다", () => {
     // 예전엔 친선만 상세가 있고 공식은 이름뿐인 식으로 갈리기 쉽다
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, briefOf)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     expect(m.body).toContain("류도기");
   });
 
   it("선발은 '예상'으로 적는다", () => {
     // 월초엔 로테이션이 확정이 아니다. 확정처럼 적으면 브리핑과 어긋난다
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, briefOf)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     expect(m.body).toContain("선발 예상");
   });
 
   it("상세가 그 경기 줄 바로 아래에 붙는다", () => {
     // ⚠ 예전엔 한 줄씩 만들어 `.sort()`로 날짜순을 잡았다. 상세가 여러 줄이
     // 되면 그 정렬이 **상세를 경기에서 떼어내 흩어놓는다**
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, briefOf)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     const lines = m.body.split("\n");
     const iA = lines.findIndex((l) => l.includes("무심고"));
     expect(iA).toBeGreaterThan(-1);
@@ -79,7 +79,7 @@ describe("월간 경기 편성 소식", () => {
   });
 
   it("날짜순으로 나온다", () => {
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, briefOf)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     const b = m.body;
     expect(b.indexOf("무심고")).toBeLessThan(b.indexOf("승주고"));   // 03/11 < 03/18
     expect(b.indexOf("승주고")).toBeLessThan(b.indexOf("은평고"));   // 03/18 < 03/24
@@ -88,7 +88,7 @@ describe("월간 경기 편성 소식", () => {
   it("없는 값은 지어내지 않는다", () => {
     const thin = (id: string): OpponentBrief =>
       ({ teamId: id, rank: null, total: null, record: null, teamOvr: null, starter: null });
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, thin)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, thin)!;
     expect(m.body).not.toContain("null");
     expect(m.body).not.toContain("위 / ");
     expect(m.body).not.toContain("선발 예상");
@@ -96,7 +96,7 @@ describe("월간 경기 편성 소식", () => {
 
   it("미리보기가 이번 달 최대 고비를 짚는다", () => {
     // "친선 2회 편성되었습니다"는 목록에서 열어볼 이유가 안 된다
-    const m = buildMonthlyNoticeMessage(plan, official, 10, teamMap, briefOf)!;
+    const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     expect(m.preview).toContain("은평고");   // 팀 OVR 63 이 최고
   });
 });
