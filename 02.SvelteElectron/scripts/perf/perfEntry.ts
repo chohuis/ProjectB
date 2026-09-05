@@ -8445,3 +8445,31 @@ export async function wpFunnel(): Promise<Record<string, unknown>> {
   const raw = await window.projectB!.engine("wpFunnelStatsNative", "{}");
   return JSON.parse(raw) as Record<string, unknown>;
 }
+
+/**
+ * D 세션(재현 2026-09-05) — 실사용자 세이브에서 `advanceAllGrades` 가
+ * `advanceAllGradesNative: missing field \`militaryStatus\`` 로 죽었다.
+ * Rust `NpcSaveState.military_status`는 `String`(옵션 아님)이라, JS
+ * 쪽에서 `militaryStatus`가 `undefined`인 채로 `JSON.stringify`에 실리면
+ * 그 키 자체가 통째로 빠진다 — `gameStore.npcs`를 그대로 훑어 몇 건이
+ * 그런지, 어떤 npcId·careerStatus·currentLeague 인지 찾는다. 게임 코드는
+ * 안 건드리고 **읽기만** 한다.
+ */
+export function npcMilitaryStatusAudit(): {
+  total: number;
+  missing: number;
+  samples: Array<Record<string, unknown>>;
+} {
+  const npcs = get(gameStore).npcs as unknown as Array<Record<string, unknown>>;
+  const bad: Array<Record<string, unknown>> = [];
+  for (const n of npcs) {
+    if (n.militaryStatus === undefined || n.militaryStatus === null) {
+      bad.push({
+        npcId: n.npcId, name: n.name, careerStatus: n.careerStatus,
+        currentLeague: n.currentLeague, currentTeam: n.currentTeam,
+        grade: n.grade, age: n.age, schoolId: n.schoolId,
+      });
+    }
+  }
+  return { total: npcs.length, missing: bad.length, samples: bad.slice(0, 20) };
+}
