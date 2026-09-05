@@ -181,6 +181,47 @@
   $: pendingGameEntry = pendingGame
     ? $seasonStore.schedule.find((e) => e.id === pendingGame!.scheduleId) ?? null
     : null;
+
+  /**
+   * 🔴 **못 찾으면 아무것도 안 뜨고, 그대로 갇힌다** (2026-09-05).
+   *
+   *   `?? null` 하나로 조용히 넘어가고 있었다. 그런데 경기 대기가 걸려 있으면
+   *   `SidebarNav`가 **탭을 전부 잠근다**(`nextPendingAction?.type === "game"`).
+   *   즉 열 창은 없는데 나갈 길도 없다 — 헤더의 [경기 시작]을 눌러도
+   *   `gameModalForced` 만 켰다가 바로 아래 반응형이 도로 끈다.
+   *   화면은 멀쩡해 보이는데 무엇을 눌러도 안 되는, 원인 찾기 제일 나쁜 형태다.
+   *
+   *   그래서 ① 콘솔에 **왜 못 찾았는지**를 남기고(대기 id·일정 건수·같은 주차에
+   *   무엇이 있는지) ② 사람에게 안내와 빠져나갈 단추를 준다.
+   *
+   * ⚠ 여기서 경기를 지어내지 않는다. 일정 항목이 없으면 상대도 주차도 모르므로
+   *   `skipBrokenGame`(0:1 자동 패배)조차 만들 수 없다 — 대기만 걷어낸다.
+   */
+  $: gameEntryMissing = !!pendingGame && !pendingGameEntry;
+  let loggedMissingScheduleId: string | null = null;
+  $: if (gameEntryMissing && pendingGame) reportMissingGameEntry(pendingGame.scheduleId);
+
+  function reportMissingGameEntry(scheduleId: string): void {
+    if (loggedMissingScheduleId === scheduleId) return;   // 반응형이 여러 번 돈다
+    loggedMissingScheduleId = scheduleId;
+    const s = $seasonStore;
+    console.error(
+      `[main] 경기 대기(${scheduleId})를 일정에서 못 찾았다 — 진행이 막힌다.`,
+      {
+        scheduleCount: s.schedule.length,
+        currentWeek: s.currentWeek,
+        seasonYear: s.seasonYear,
+        sameWeekIds: s.schedule.filter((e) => e.week === s.currentWeek).map((e) => e.id),
+        pendingActions: s.pendingActions,
+      },
+    );
+  }
+
+  async function dropMissingGame(): Promise<void> {
+    if (!pendingGame) return;
+    seasonStore.resolvePendingAction("game", pendingGame.scheduleId);
+    await seasonStore.save();
+  }
   $: isFriendlyGame = pendingGameEntry?.isFriendly === true;
   type GameSimState = "idle" | "loading" | "no_entry" | "ready" | "error";
   let gameSimState: GameSimState = "idle";
@@ -697,6 +738,24 @@
   </div>
 {/if}
 
+<!-- 경기 대기인데 일정에 그 경기가 없다 — 탭이 잠긴 채 열 창이 없는 상태다.
+     조용히 굳지 않게 안내하고 빠져나갈 길을 준다 (위 `gameEntryMissing` 주석) -->
+{#if !activeMatchContext && gameEntryMissing}
+  <div class="modal-overlay cond-warn-overlay" role="dialog" aria-modal="true">
+    <div class="cond-warn-modal">
+      <h3 class="cond-warn-title">⚠ 경기를 찾지 못했습니다</h3>
+      <p class="cond-warn-body">
+        치를 경기(<strong>{pendingGame?.scheduleId ?? "-"}</strong>)가 이번 시즌 일정에 없습니다.<br>
+        이대로 두면 다른 탭도 잠긴 채 진행이 멈춥니다.<br>
+        아래에서 이 경기를 건너뛰면 다음 주로 넘어갈 수 있습니다.
+      </p>
+      <div class="cond-warn-btns one">
+        <button class="cond-btn skip" on:click={dropMissingGame}>이 경기를 건너뛴다</button>
+      </div>
+    </div>
+  </div>
+{/if}
+
 {#if !activeMatchContext && pendingGameEntry && gameModalOpen}
   <GameStatusModal
     homeTeamName={tName(pendingGameEntry.homeTeamId)}
@@ -782,6 +841,8 @@
   .cond-warn-body  { margin: 0; font-size: 14px; color: var(--warn); line-height: 1.6; }
   .cond-warn-body strong { color: var(--warn); }
   .cond-warn-btns  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  /* 단추가 하나뿐인 안내(경기 못 찾음)는 한 칸을 다 쓴다 */
+  .cond-warn-btns.one { grid-template-columns: 1fr; }
   .cond-btn {
     padding: 10px; border-radius: 8px;
     font-size: 14px; font-weight: 600; cursor: pointer;

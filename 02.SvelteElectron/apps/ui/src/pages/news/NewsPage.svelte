@@ -60,7 +60,34 @@
   const PAGE = 60;
   let shown = PAGE;
 
-  $: msgs = $gameStore.mailbox;
+  /**
+   * 🔴 **id가 겹친 소식이 하나라도 있으면 이 화면이 앱을 죽인다.**
+   *   아래 목록은 `{#each visible as msg (msg.id)}`로 키를 쓰는데, Svelte 5는
+   *   키가 겹치면 `each_key_duplicate`를 **던진다.** 렌더 도중 던지므로
+   *   반응성이 통째로 멎어 화면이 굳고 **탭 전환조차 안 된다** — 테스터가
+   *   2028 W18 세이브에서 신고한 그 형태다(2026-09-05 · 실측 재현:
+   *   `msg-tour-my-TOUR_HS_JANGMI-r1-2028` at indexes 2 and 10).
+   *
+   * 겹치는 사본을 만드는 자리는 따로 고쳤다(`stores/game.ts`의 `pushMailbox` ·
+   * 불러오기의 `normalizeMailbox`). 그래도 **여기서 한 번 더 막는다** —
+   * 세 번째 경로가 생기면 그 대가가 "앱이 안 죽는다"가 아니라 "앱이 죽는다"라
+   * 방어값이 비용보다 크다. 먼저 온 것(최신)을 남긴다.
+   */
+  function dedupeById(list: MessageItem[]): MessageItem[] {
+    const seen = new Set<string>();
+    const out: MessageItem[] = [];
+    for (const m of list) {
+      if (seen.has(m.id)) continue;
+      seen.add(m.id);
+      out.push(m);
+    }
+    if (out.length !== list.length) {
+      console.warn(`[news] 소식 id가 겹쳐 ${list.length - out.length}건을 숨겼다 — 만드는 쪽을 봐야 한다`);
+    }
+    return out;
+  }
+
+  $: msgs = dedupeById($gameStore.mailbox);
   $: p = $gameStore.protagonist;
 
   $: counts = {
@@ -84,8 +111,18 @@
     return g ? g.cats.includes(m.category) : true;
   });
 
-  // 미결 선택지는 정렬과 무관하게 항상 위 — 게임이 멈춰 있는 이유이기 때문이다
-  $: pendingMsgs = filtered.filter((m) => m.decision?.selectedOptionId === null);
+  /**
+   * 미결 선택지는 **정렬·필터와 무관하게 항상 위** — 게임이 멈춰 있는 이유다.
+   *
+   * 🔴 예전엔 `filtered`에서 골랐다. 그래서 필터가 걸려 있으면 **막고 있는
+   *   소식도, 「선택을 기다리는 소식 N건」 경고도 함께 사라졌다** — 아래
+   *   `alerts`가 이 배열을 세기 때문이다. 진행이 왜 막혔는지 알려 줄 두 자리가
+   *   같은 조건으로 동시에 꺼진 셈이라, 플레이어에게는 그냥 고장으로 보인다.
+   *   미결은 목록의 성격이 다르다 — 읽을거리가 아니라 **처리할 것**이라
+   *   필터의 대상이 아니다.
+   */
+  $: pendingMsgs = msgs.filter((m) => m.decision?.selectedOptionId === null);
+  // ⚠ 미결을 여기서 빼야 위와 겹쳐 두 번 그리지 않는다 (키 중복 = 화면 사망)
   $: rest    = filtered.filter((m) => !m.decision || m.decision.selectedOptionId !== null);
   $: sorted  = [...pendingMsgs, ...(sortAsc ? [...rest].reverse() : rest)];
 
@@ -189,9 +226,24 @@
     if (e.key === "Escape" && selectedId) close();
   }
 
+  /**
+   * 🔴 **`await` 다.** 예전엔 효과 적용을 `void` 로 띄워 놓고 곧바로
+   *   저장했다. `applyDecision`의 뒷부분(관계도·사치품)은 slot.db·Rust 왕복이라
+   *   비동기인데, 그게 끝나기 전에 `save()`가 도는 것이다 —
+   *   **고른 효과가 빠진 채 저장되고**, 저장이 끝난 뒤에야 스토어가 바뀌니
+   *   다음 저장까지 디스크와 화면이 어긋난다. 게다가 왕복이 실패하면
+   *   `void`라 아무도 안 받는 rejection 이 되어 조용히 사라진다.
+   *   여기서 기다리면 그 둘이 없어진다.
+   */
   async function choose(optionId: string) {
     if (!selected) return;
-    void applyDecision(selected.id, optionId);
+    try {
+      await applyDecision(selected.id, optionId);
+    } catch (e) {
+      // 효과 일부가 못 붙어도 **선택 자체는 되돌리지 않는다** — 되돌리면
+      // 진행이 다시 막힌다(`decisions.ts` 머리말과 같은 판단이다)
+      console.error("[news] 선택지 효과 적용 실패 — 선택은 확정한다", e);
+    }
     seasonStore.resolvePendingAction("message", selected.id);
     await gameStore.save();
     await seasonStore.save();
