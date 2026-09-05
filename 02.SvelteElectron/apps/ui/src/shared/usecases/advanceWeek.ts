@@ -2024,8 +2024,11 @@ async function progressTournaments(week: number): Promise<boolean> {
       // 브래킷을 같이 넘긴다 — 개막 소식이 1라운드 대진을 표로 얹는다
       // (A 단위 5 묶음 3). 조별예선 대회(`o.stage`)는 대진이 아직 없어
       // `null` 이고, 그러면 소식이 표를 안 싣는다
+      // ⚠ 무대를 같이 넘긴다 — 남의 무대 대회에 「우리 팀은 출전권을 얻지
+      //   못했다」가 붙으면 프로·상무 주인공에게 해마다 여덟 통이 간다
       gameStore.addMessage(buildOpenMessage(
-        def, entrants, protagonistTeamId, week, get(seasonStore).seasonYear,
+        def, entrants, protagonistTeamId, get(gameStore).protagonist.leagueId ?? "",
+        week, get(seasonStore).seasonYear,
         o.bracket, tName4Tour,
       ));
     }
@@ -2175,7 +2178,14 @@ async function progressTournaments(week: number): Promise<boolean> {
                       //   같이 난다(`tournamentNews.ts` 머리말)
                       id: `msg-tour-award-${def.id}-${next.seasonYear}-w${week}`,
                       category: "news",
-                      sender: "고교야구연맹",
+                      // 🔴 **여기만 「고교야구연맹」으로 박혀 있었다** (2026-09-06).
+                      //   `TOURNAMENTS` 에는 고교 5개와 **대학 3개**(왕중왕전·
+                      //   은하기·여명기)가 같이 있고 이 루프는 여덟을 다 돈다 —
+                      //   대학 주인공이 왕중왕전에서 상을 받으면 「고교야구연맹」이
+                      //   보냈다. 형제 소식 넷은 `tournamentNews.ts` 에서 이미
+                      //   같은 식으로 갈라져 있었다(개막·라운드·우승)
+                      sender: def.leagueId === "LEAGUE_UNIVERSITY"
+                        ? "대학야구연맹" : "고교야구연맹",
                       subject: `${def.name} 시상 — 우리 학교 ${mineAw.length}명`,
                       preview: mineAw.map((a) => a.label).join(" · "),
                       body: [

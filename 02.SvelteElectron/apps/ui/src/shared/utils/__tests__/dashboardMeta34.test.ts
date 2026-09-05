@@ -170,7 +170,8 @@ describe("대회 소식 넷", () => {
 
   it("개막 — 대진이 있으면 1라운드가 표로 실리고 본문은 그대로다", () => {
     const msg = buildOpenMessage(
-      def, ["TEAM_A", "TEAM_B", "TEAM_C", "TEAM_D"], "TEAM_B", 18, 2026, bracket, tName);
+      def, ["TEAM_A", "TEAM_B", "TEAM_C", "TEAM_D"], "TEAM_B", "LEAGUE_HIGHSCHOOL",
+      18, 2026, bracket, tName);
     const md = msg.metadata as TableMetadata;
     expect(md.kind).toBe("tourOpen");
     expect(md.rows).toHaveLength(2);
@@ -182,9 +183,34 @@ describe("대회 소식 넷", () => {
   });
 
   it("개막 — 대진이 없으면(조별예선) metadata 를 안 싣는다", () => {
-    const msg = buildOpenMessage(def, ["TEAM_A"], "TEAM_A", 18, 2026, null, tName);
+    const msg = buildOpenMessage(
+      def, ["TEAM_A"], "TEAM_A", "LEAGUE_HIGHSCHOOL", 18, 2026, null, tName);
     expect(msg.metadata).toBeUndefined();
     expect(msg.body.length > 0).toBe(true);
+  });
+
+  /**
+   * 🔴 **남의 무대 대회에 「우리 팀」을 쓰지 않는다** (2026-09-06).
+   *   `progressTournaments` 는 주인공 무대와 무관하게 고교 5 · 대학 3 개
+   *   대회를 다 도는데, 개막 문안이 주인공이 그 무대에 있다고 전제했다 —
+   *   프로 주인공이 해마다 「개나리기 개막 … 우리 팀은 출전권을 얻지
+   *   못했다」를 여덟 통 받았다.
+   */
+  it("개막 — 남의 무대면 「우리 팀」이 안 나온다", () => {
+    for (const mine of ["LEAGUE_KBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", ""]) {
+      const msg = buildOpenMessage(def, ["TEAM_A"], "TEAM_A", mine, 18, 2026, null, tName);
+      expect(`${msg.preview} ${msg.body}`, mine).not.toContain("우리 팀");
+      expect(msg.body, mine).toContain("고교 무대의 대회다.");
+    }
+  });
+
+  it("개막 — 내 무대면 출전 여부를 그대로 알린다", () => {
+    const inn = buildOpenMessage(
+      def, ["TEAM_A"], "TEAM_A", "LEAGUE_HIGHSCHOOL", 18, 2026, null, tName);
+    expect(inn.body).toContain("우리 팀이 출전 명단에 들었다.");
+    const out = buildOpenMessage(
+      def, ["TEAM_A"], "TEAM_Z", "LEAGUE_HIGHSCHOOL", 18, 2026, null, tName);
+    expect(out.body).toContain("우리 팀은 이번 대회 출전권을 얻지 못했다.");
   });
 
   it("내 경기 — 라운드·상대·결과 한 줄", () => {

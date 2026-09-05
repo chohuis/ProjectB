@@ -82,13 +82,34 @@ export function buildOpenMessage(
   def: TournamentDef,
   entrantIds: string[],
   myTeamId: string,
+  /**
+   * 🔴 **주인공이 선 무대** (2026-09-06). 없으면 「우리 팀」이 성립하는지
+   *   판정할 수 없다 — 그래서 선택 인자로 안 뒀다.
+   *
+   *   `progressTournaments`는 주인공 무대와 **무관하게** 고교 5개·대학 3개
+   *   대회를 전부 돈다(설계대로다 — 배경 리그도 굴러야 한다). 그런데 이
+   *   문안이 **주인공 팀이 그 무대에 있다고 전제해서**, 프로·상무·은퇴
+   *   주인공이 해마다 「개나리기 개막 … 우리 팀은 출전권을 얻지 못했다」를
+   *   여덟 통씩 받았다. 못 나간 게 아니라 **애초에 남의 무대**다.
+   */
+  myLeagueId: string,
   weekNum: number,
   seasonYear: number,
   /** 넉아웃이면 1라운드 대진을 표로 얹는다 (§1-1 `msg-tour-open-`) */
   bracket?: TournamentBracket | null,
   teamName: (id: string) => string = (id) => id,
 ): MessageItem {
-  const joined = entrantIds.includes(myTeamId);
+  const onMyStage = def.leagueId === myLeagueId;
+  const joined = onMyStage && entrantIds.includes(myTeamId);
+  const stageWord = def.leagueId === "LEAGUE_UNIVERSITY" ? "대학" : "고교";
+  // 남의 무대면 「우리 팀」 대신 어느 무대 대회인지만 적는다.
+  // ⚠ 소식 자체는 남긴다 — 우승 통지가 이미 세계 소식이라(`buildChampionMessage`
+  //   머리말) 개막만 지우면 우승 소식이 맥락 없이 뜬다
+  const closing = !onMyStage
+    ? `${stageWord} 무대의 대회다.`
+    : joined
+      ? "우리 팀이 출전 명단에 들었다."
+      : "우리 팀은 이번 대회 출전권을 얻지 못했다.";
   const rows = bracket
     ? bracketRows(bracket.matches, 1, bracket.totalRounds, myTeamId, teamName)
     : [];
@@ -97,16 +118,16 @@ export function buildOpenMessage(
     category: "news",
     sender: def.leagueId === "LEAGUE_UNIVERSITY" ? "대학야구연맹" : "고교야구연맹",
     subject: `${seasonYear} ${def.name} 개막 — ${entrantIds.length}팀 참가`,
-    preview: joined ? "우리 팀도 출전한다." : "우리 팀은 출전하지 못했다.",
+    preview: !onMyStage
+      ? `${stageWord} 무대 대회가 열린다.`
+      : joined ? "우리 팀도 출전한다." : "우리 팀은 출전하지 못했다.",
     body: [
       `${def.name}(${def.flower}) 대회가 시작됩니다.`,
       "",
       `■ 참가   ${entrantIds.length}팀`,
       `■ 기간   W${def.startWeek} ~ W${def.endWeek}`,
       "",
-      joined
-        ? "우리 팀이 출전 명단에 들었다."
-        : "우리 팀은 이번 대회 출전권을 얻지 못했다.",
+      closing,
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
