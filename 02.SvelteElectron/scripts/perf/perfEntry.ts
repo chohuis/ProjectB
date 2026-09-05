@@ -326,6 +326,24 @@ export function tournamentState(): { id: string; rounds: number; done: number; c
   }));
 }
 
+/**
+ * **넉아웃 무승부 실측** (D 세션 §4-① · 2026-09-06).
+ *
+ * `s.tournaments`(브래킷형 대회)에 실린 것만 넉아웃이다 — 조별예선(은하기·
+ * 여명기 등)은 `s.tournaments`에 안 실리므로 여기 안 걸린다(무승부가
+ * 정상인 리그전이라 걸리면 안 된다). `result.loserId === null`이 무승부
+ * 표식이다(`MatchResult.loserId` 머리말).
+ */
+export function knockoutDrawAudit(): { tournamentId: string; total: number; draws: string[] }[] {
+  const s = get(seasonStore);
+  const all = [...s.schedule, ...Object.values(s.leagueSchedules ?? {}).flat()];
+  return Object.keys(s.tournaments ?? {}).map((tourId) => {
+    const games = all.filter((e) => e.id.startsWith(tourId) && e.result);
+    const draws = games.filter((e) => e.result!.loserId === null).map((e) => e.id);
+    return { tournamentId: tourId, total: games.length, draws };
+  });
+}
+
 export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }
