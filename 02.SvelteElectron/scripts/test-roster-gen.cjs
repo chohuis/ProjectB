@@ -51,48 +51,80 @@ console.log("\n포지션 깊이 (국내 전 팀)");
   const FIELD = ["C","1B","2B","3B","SS","LF","CF","RF"];
   const byL = {};
   for (const t of refs.teams) (byL[t.leagueId] ??= []).push(t.id);
+  // 🔴 국내(depth: true)만 백업 2명을 못 박는다. 해외 1군은 정원 28이라
+  //   **RF가 1명뿐이고 전 팀이 그렇다** (2026-09-06 실측 · ABL 16/16 · JBL 12/12).
+  //   정원을 30으로 올려야 풀리는데 세계 인구가 바뀌므로 BALANCE_BACKLOG로 넘겼다.
+  //   여기서는 **규칙 ↔ 생성기가 같은가**만 해외까지 잰다.
   const PLAN = [
-    ["LEAGUE_HIGHSCHOOL",  byL.LEAGUE_HIGHSCHOOL ?? []],
-    ["LEAGUE_UNIVERSITY",  byL.LEAGUE_UNIVERSITY ?? []],
-    ["LEAGUE_INDEPENDENT", byL.LEAGUE_INDEPENDENT ?? []],
-    ["LEAGUE_KBL",         (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_1"))],
-    ["LEAGUE_KBL_FARM",    (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_2"))],
+    ["LEAGUE_HIGHSCHOOL",  byL.LEAGUE_HIGHSCHOOL ?? [],                              true],
+    ["LEAGUE_UNIVERSITY",  byL.LEAGUE_UNIVERSITY ?? [],                              true],
+    ["LEAGUE_INDEPENDENT", byL.LEAGUE_INDEPENDENT ?? [],                             true],
+    ["LEAGUE_KBL",         (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_1")),   true],
+    ["LEAGUE_KBL_FARM",    (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_2")),   true],
+    ["LEAGUE_ABL",         (byL.LEAGUE_ABL ?? []).filter((i) => !i.endsWith("_2")),  false],
+    ["LEAGUE_ABL_FARM",    (byL.LEAGUE_ABL ?? []).filter((i) => i.endsWith("_2")),   false],
+    ["LEAGUE_JBL",         (byL.LEAGUE_JBL ?? []).filter((i) => !i.endsWith("_2")),  false],
+    ["LEAGUE_JBL_FARM",    (byL.LEAGUE_JBL ?? []).filter((i) => i.endsWith("_2")),   false],
   ];
   let teams = 0, thin = [], totalNpcs = 0;
-  for (const [lid, ids] of PLAN) {
+  const genSize = {};                       // lid → 실제로 생성된 팀당 인원 집합
+  for (const [lid, ids, depth] of PLAN) {
     const rule = rulesFile.rosterRules[lid];
     if (!rule || ids.length === 0) { check(`${lid} 규칙·팀 존재`, false, "없음"); continue; }
     const out = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify({
       leagueId: lid, seasonYear: 2029, worldSeed: 4242,
       teams: ids.map((id) => ({ teamId: id, schoolId: "" })), rules: rule,
     })));
-    totalNpcs += out.npcs.length;
     const byTeam = {};
     for (const n of out.npcs) (byTeam[n.currentTeam] ??= []).push(n);
-    for (const [tid, roster] of Object.entries(byTeam)) {
-      teams++;
-      const cnt = {};
-      for (const r of roster) cnt[r.position] = (cnt[r.position] ?? 0) + 1;
-      const min = Math.min(...FIELD.map((f) => cnt[f] ?? 0));
-      if (min < 2) thin.push(`${tid}(최소 ${min})`);
+    genSize[lid] = new Set(Object.values(byTeam).map((r) => r.length));
+    if (depth) {
+      totalNpcs += out.npcs.length;
+      for (const [tid, roster] of Object.entries(byTeam)) {
+        teams++;
+        const cnt = {};
+        for (const r of roster) cnt[r.position] = (cnt[r.position] ?? 0) + 1;
+        const min = Math.min(...FIELD.map((f) => cnt[f] ?? 0));
+        if (min < 2) thin.push(`${tid}(최소 ${min})`);
+      }
     }
     const sample = byTeam[ids[0]];
     const cnt = {};
     for (const r of sample) cnt[r.position] = (cnt[r.position] ?? 0) + 1;
+    // ⚠ CP(마무리)까지 적는다. 예전 줄은 SP·RP만 적어 **합이 정원보다 1 적었고**
+    //   "31명인데 포지션 합이 30"으로 읽혔다
     console.log(`    ${lid.padEnd(20)} ${String(sample.length).padStart(2)}명 · ` +
-      FIELD.map((f) => `${f}${cnt[f] ?? 0}`).join(" ") + ` SP${cnt.SP ?? 0} RP${cnt.RP ?? 0}`);
+      FIELD.map((f) => `${f}${cnt[f] ?? 0}`).join(" ") +
+      ` SP${cnt.SP ?? 0} CP${cnt.CP ?? 0} RP${cnt.RP ?? 0}`);
   }
   console.log(`    국내 ${totalNpcs}명 / ${teams}팀`);
 
   check(`국내 ${teams}팀 전부 야수 8포지션에 백업까지 있다`, thin.length === 0,
     thin.slice(0, 5).join(" "));
-  // 로스터 규모가 사용자 확정("현실 기준")대로인가 — 줄어들면 백업 보장이 깨진다
-  for (const [lid, want] of Object.entries({
-    LEAGUE_HIGHSCHOOL: 30, LEAGUE_UNIVERSITY: 32, LEAGUE_INDEPENDENT: 30,
-    LEAGUE_KBL: 30, LEAGUE_KBL_FARM: 34,
-  })) {
-    check(`  ${lid} 로스터 ${want}명`, rulesFile.rosterRules[lid]?.rosterSize === want,
-      `got ${rulesFile.rosterRules[lid]?.rosterSize}`);
+
+  // ── 정원 — **규칙 파일이 정본이다. 여기에 숫자를 또 적지 않는다** ──────
+  //
+  // 🔴 2026-09-06: 여기 `{HIGHSCHOOL:30, UNIVERSITY:32, ...}` 표가 박혀 있었고
+  //   고교만 빨강이 났다. `rosterRules.LEAGUE_HIGHSCHOOL.rosterSize`는 2026-08-31
+  //   사용자 확정으로 **30 → 31**(포수 3명)이 됐는데 **검사의 사본만 안 고쳐졌다.**
+  //   `hsCatcherSupply.test.ts`는 31로 이미 고쳐져 있었다 — 같은 숫자가 세 군데
+  //   있었고 한 군데만 남았던 것이다.
+  //
+  //   숫자를 두 벌 적으면 한쪽만 고쳐진 채 남는다. 표를 지우고 **불변식**을 잰다:
+  //     ① 규칙 ↔ 생성기가 같은가 — 생성기가 규칙을 안 따르면 여기서 잡힌다
+  //     ② rosterMin ≤ rosterSize ≤ rosterMax — 만들자마자 유지 상한을 넘지 않는다
+  //     ③ 정원이 줄어 백업이 깨지는 건 위 `thin` 검사가 이미 잡는다
+  //        (예전 표가 지키려던 것이 그거다)
+  for (const [lid, ids] of PLAN.map(([l, i]) => [l, i])) {
+    const rule = rulesFile.rosterRules[lid];
+    if (!rule || ids.length === 0) continue;
+    const sizes = [...(genSize[lid] ?? [])];
+    check(`  ${lid} 규칙 ${rule.rosterSize}명 = 생성 ${sizes.join("/")}`,
+      sizes.length === 1 && sizes[0] === rule.rosterSize,
+      `rules=${rule.rosterSize} gen=${sizes.join("/")}`);
+    check(`  ${lid} 정원이 유지 상하한 안에 있다 (${rule.rosterMin}~${rule.rosterMax})`,
+      rule.rosterSize >= rule.rosterMin && rule.rosterSize <= rule.rosterMax,
+      `rosterSize=${rule.rosterSize}`);
   }
 }
 const grades = [1, 2, 3].map(g => team0.filter(n => n.grade === g).length);
