@@ -231,8 +231,17 @@ console.log("\n[9] 주간 진행에 걸려 있다");
 
 const aw = read("apps/ui/src/shared/usecases/advanceWeek.ts");
 ok(/runCampusEventsWeek\(weekNum, weekInYear\)/.test(aw), "advanceWeek이 매주 부른다");
-ok(/careerStage;\s*\n\s*if \(stage !== "university" && stage !== "highschool"\) return \[\]/.test(src),
-   "학생 무대에서만 돈다 — 프로에게 대학 쇼케이스 소식은 잡음이다");
+// 🔴 **무대 판정은 여기서 안 본다** (2026-09-06). 예전엔 게이트 **문장을
+//   정규식으로** 찾았고, 2026-08-29 에 프로 올스타가 들어오며 문장이 바뀌자
+//   빨강이 났다 — 그런데 그때 실제로 샌 것은 게이트가 아니라 **문안**이었다
+//   (프로가 「대학야구연맹」의 「대학 올스타전」을 받았다). 검사가 엉뚱한
+//   것을 보고 있었다.
+//
+//   배분은 `campusEventFor` 순수 함수로 뽑았고, 무대 × 주차 52 전부를
+//   **값으로** 확인한다: `apps/ui/src/shared/usecases/__tests__/campusStageGate.test.ts`
+//   (vitest — 여기 .cjs 는 TS 를 못 부른다). 문안도 `allStarCopyOf` 로 같이 본다.
+ok(fs.existsSync(path.join(ROOT, "apps/ui/src/shared/usecases/__tests__/campusStageGate.test.ts")),
+   "무대 배분 검사(campusStageGate.test.ts)가 있다 — 무대 판정은 vitest 가 값으로 본다");
 ok(/isProtagonist: true/.test(src),
    "주인공을 후보에 따로 넣는다 — 엔티티가 아니라 빠뜨리면 본인만 못 나간다");
 ok(/applyScoutScoreChange/.test(src) && /applyPopularityChange/.test(src),

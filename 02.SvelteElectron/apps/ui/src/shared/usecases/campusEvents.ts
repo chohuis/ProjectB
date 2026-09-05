@@ -120,7 +120,13 @@ function gatherCandidates(leagueId: string): CampusCandidate[] {
     const p = g.protagonist;
     out.push({
       npcId: p.id, name: p.name, teamId: p.teamId,
-      region: regionOf(cityOf.get(p.teamId)),
+      // 🔴 **NPC와 같은 축을 써야 한다** (2026-09-06). 여기만 `regionOf`를
+      //   직접 불러서, 도시 축이 안 서는 해외(ABL·JBL)에서 **주인공은 늘
+      //   북군**이었다 — `regionOf`는 목록에 없는 도시를 전부 북으로 본다.
+      //   NPC는 바로 위에서 이미 `allStarSideOf`로 떨어지고 있었다.
+      region: cityAxisWorks
+        ? regionOf(cityOf.get(p.teamId))
+        : allStarSideOf(p.teamId, undefined, leagueTeamIds),
       position: p.position ?? "SP",
       ovr: p.playerType === "batter" ? p.batting.ovr : p.pitching.ovr,
       age: p.age, grade: p.grade ?? 0,
@@ -153,13 +159,63 @@ async function engine<T>(fn: string, params: unknown): Promise<T> {
   return out;
 }
 
+// ── 무대 배분 ─────────────────────────────────────────────────
+//
+// 🔴 **무대를 보는 자리를 하나로 모았다** (2026-09-06). 예전엔 `if` 넷이
+//   각자 `stage`를 봤고, 게이트는 위에서 한 번 더 봤다 — **같은 판정이 다섯
+//   군데**였다. 2026-08-29에 프로 올스타를 넣으면서 게이트만 넓히면 되던 것이
+//   그래서 위험해졌고, 검사는 게이트 **문자열**을 정규식으로 보고 있었다.
+//   여기 한 함수만 맞으면 샐 수 없고, 검사도 이 함수를 직접 부른다.
+
+/** 이 행사에 나가는 무대인가. 규칙 파일을 열기 전에 거르는 자리도 이걸 쓴다 */
+export function campusStageKind(
+  stage: string,
+): "university" | "highschool" | "pro" | null {
+  if (stage === "university") return "university";
+  if (stage === "highschool") return "highschool";
+  if (stage.startsWith("pro")) return "pro";
+  // 독립 · 상무 · 은퇴 — 이 무대의 소식이 아니다
+  return null;
+}
+
+export type CampusEventKind = "showcase" | "allstar" | "pro_allstar" | "scout_day";
+
+/**
+ * 이번 주에 이 무대에서 열리는 행사. 없으면 `null`.
+ *
+ * ⚠ **무대마다 자기 행사만 돌려준다.** 대학 쇼케이스가 프로에게 갈 길이
+ *   여기 없어야 한다 — 있으면 프로 소식함에 「대학야구연맹」이 뜬다.
+ */
+export function campusEventFor(
+  stage: string,
+  weekInYear: number,
+  weeks: { showcase: number; allstar: number; proAllstar?: number | null },
+): CampusEventKind | null {
+  switch (campusStageKind(stage)) {
+    case "university":
+      if (weekInYear === weeks.showcase) return "showcase";
+      if (weekInYear === weeks.allstar) return "allstar";
+      return null;
+    case "highschool":
+      // 고교는 쇼케이스와 **같은 주**에 축소판을 연다 (§A-9 "단계별 비대칭 축소").
+      // 대학 올스타 주차(`weeks.allstar`)에는 아무것도 안 연다
+      return weekInYear === weeks.showcase ? "scout_day" : null;
+    case "pro":
+      // 🔴 **프로 올스타전** (2026-08-29). 규칙이 없으면 안 연다.
+      //   쇼케이스·대학 올스타 주차에는 프로에게 아무것도 가지 않는다
+      return weeks.proAllstar != null && weekInYear === weeks.proAllstar
+        ? "pro_allstar" : null;
+    default:
+      return null;
+  }
+}
+
 // ── 주간 훅 ───────────────────────────────────────────────────
 
 /**
  * 매주 부른다. 해당 주차가 아니면 아무것도 안 한다.
  *
- * 대학·고교 무대에서만 돈다 — 프로 선수에게 대학 쇼케이스 소식을 보내는 건
- * 잡음이다.
+ * 무대 판정은 전부 `campusEventFor`가 한다 — 여기서 다시 보지 않는다.
  */
 export async function runCampusEventsWeek(
   weekNum: number,
@@ -167,9 +223,9 @@ export async function runCampusEventsWeek(
 ): Promise<string[]> {
   const g = get(gameStore);
   const stage = g.protagonist.careerStage;
-  // ⚠ 프로도 온다 — 올스타전 때문이다. 대학·고교만 받던 시절의 게이트였다
-  const isPro = stage.startsWith("pro");
-  if (stage !== "university" && stage !== "highschool" && !isPro) return [];
+  // 규칙 파일 읽기(IPC)를 아끼는 지름길일 뿐이다 — **판정은 아니다.**
+  // 그래서 배분표와 **같은 함수**를 쓴다
+  if (campusStageKind(stage) === null) return [];
 
   try {
     const rules = (await loadRosterRules() as unknown as {
@@ -181,19 +237,21 @@ export async function runCampusEventsWeek(
     }).campusEvents;
     if (!rules) return [];
 
-    if (stage === "university" && weekInYear === rules.showcase.week) {
-      return await runShowcase(rules.showcase, weekNum);
-    }
-    if (stage === "university" && weekInYear === rules.allstar.week) {
-      return await runAllStar(rules.allstar, weekNum, "LEAGUE_UNIVERSITY");
-    }
-    // 🔴 **프로 올스타전** (2026-08-29). 규칙이 없으면 안 연다
-    if (isPro && rules.proAllstar && weekInYear === rules.proAllstar.week) {
-      return await runAllStar(rules.proAllstar, weekNum, g.protagonist.leagueId ?? "");
-    }
-    // 고교는 쇼케이스와 같은 주에 축소판을 연다 (§A-9 "단계별 비대칭 축소")
-    if (stage === "highschool" && weekInYear === rules.showcase.week) {
-      return await runScoutDay(rules.showcase, weekNum);
+    switch (campusEventFor(stage, weekInYear, {
+      showcase: rules.showcase.week,
+      allstar: rules.allstar.week,
+      proAllstar: rules.proAllstar?.week ?? null,
+    })) {
+      case "showcase":
+        return await runShowcase(rules.showcase, weekNum);
+      case "allstar":
+        return await runAllStar(rules.allstar, weekNum, "LEAGUE_UNIVERSITY");
+      case "pro_allstar":
+        return await runAllStar(rules.proAllstar!, weekNum, g.protagonist.leagueId ?? "");
+      case "scout_day":
+        return await runScoutDay(rules.showcase, weekNum);
+      default:
+        break;
     }
   } catch (e) {
     // 이벤트가 못 돌아도 주간 진행은 막지 않는다
@@ -298,6 +356,35 @@ interface AllStarPick {
 }
 
 /**
+ * 올스타전 문안 — **무대마다 갈린다.**
+ *
+ * 🔴 기계는 2026-08-29에 리그 중립이 됐는데 **문안은 "대학"으로 박힌 채였다**
+ *   (2026-09-06 발견). 프로 주인공이 프로 올스타전을 뛰면 소식함에
+ *   「대학야구연맹」이 보낸 「2030 대학 올스타전」이 떴다 — 게이트가 샌 게
+ *   아니라 **문안이 무대를 안 봤다.** 기계를 공용으로 만들 때 같이 갈랐어야
+ *   할 것이 남아 있었다.
+ *
+ * `unit`은 꼬리말의 쿼터 단위다 — 대학은 "대학당", 프로는 "구단당"이다.
+ */
+export interface AllStarCopy { slug: string; org: string; title: string; unit: string }
+
+const ALLSTAR_COPY: Record<string, AllStarCopy> = {
+  LEAGUE_UNIVERSITY: { slug: "univ", org: "대학야구연맹",  title: "대학 올스타전", unit: "대학" },
+  LEAGUE_KBL:        { slug: "kbl",  org: "한국야구위원회", title: "KBL 올스타전",  unit: "구단" },
+  LEAGUE_ABL:        { slug: "abl",  org: "ABL 사무국",     title: "ABL 올스타전",  unit: "구단" },
+  LEAGUE_JBL:        { slug: "jbl",  org: "JBL 사무국",     title: "JBL 올스타전",  unit: "구단" },
+};
+
+/**
+ * 리그의 올스타 문안. **표에 없는 리그도 대학 문안으로 떨어지지 않는다** —
+ * 모르는 리그는 중립("올스타전")으로 쓴다. 예전 기본값이 대학이라 샜다.
+ */
+export function allStarCopyOf(leagueId: string): AllStarCopy {
+  return ALLSTAR_COPY[leagueId]
+    ?? { slug: "league", org: "리그 사무국", title: "올스타전", unit: "구단" };
+}
+
+/**
  * 올스타전. **리그 중립이다** — 대학도 프로도 같은 기계를 쓴다.
  *
  * 🔴 프로 올스타전이 **아예 없었다** (2026-08-29). `run_allstar`는 처음부터
@@ -319,8 +406,9 @@ async function runAllStar(rules: unknown, weekNum: number, leagueId: string): Pr
     rules, candidates, worldSeed: (s.worldSeed ?? 0) >>> 0, year: s.seasonYear,
   });
 
+  const copy = allStarCopyOf(leagueId);
   const r = rules as { selectFameGain: number; selectPopularityGain: number; mvpFameGain: number };
-  autoLog(`[올스타전] ${s.seasonYear} 북 ${res.northScore} : ${res.southScore} 남 · ` +
+  autoLog(`[올스타전] ${s.seasonYear} ${copy.title} 북 ${res.northScore} : ${res.southScore} 남 · ` +
     `MVP ${res.mvpName}${res.protagonistSelected ? " · 주인공 출전" : ""}`);
 
   if (res.protagonistSelected) {
@@ -331,9 +419,9 @@ async function runAllStar(rules: unknown, weekNum: number, leagueId: string): Pr
     }
   }
 
-  emitAllStarNews(res, weekNum, s.seasonYear, g.protagonist.id);
+  emitAllStarNews(res, weekNum, s.seasonYear, g.protagonist.id, copy);
 
-  const logs: string[] = [`대학 올스타전 — 북 ${res.northScore} : ${res.southScore} 남`];
+  const logs: string[] = [`${copy.title} — 북 ${res.northScore} : ${res.southScore} 남`];
   if (res.protagonistSelected) {
     logs.push(`올스타에 선발됐다 (${res.protagonistSide === "north" ? "북군" : "남군"})`);
     if (res.mvpNpcId === g.protagonist.id) logs.push("올스타전 MVP에 뽑혔다.");
@@ -351,6 +439,7 @@ function emitAllStarNews(
   weekNum: number,
   year: number,
   protagonistId: string,
+  copy: AllStarCopy,
 ): void {
   const m = get(masterStore);
   const teamName = (id: string) => m.teams.find((t) => t.id === id)?.name ?? id;
@@ -361,17 +450,19 @@ function emitAllStarNews(
   const isMvpMe = res.mvpNpcId === protagonistId;
 
   gameStore.addMessage({
-    id: `msg-allstar-${year}-w${weekNum}`,
+    // ⚠ 무대를 id 에 담는다 — 대시보드 배선은 `msg-allstar-` 접두사로 걸리므로
+    //   그대로고, 대학 판과 프로 판이 같은 id 로 겹칠 길이 없어진다
+    id: `msg-allstar-${copy.slug}-${year}-w${weekNum}`,
     category: "news",
-    sender: "대학야구연맹",
+    sender: copy.org,
     // 🔴 **제목에 점수를 안 적는다** (2026-09-04 · OP ③). 카드가 든 값을
     //   제목이 또 적으면 한쪽만 고쳐진 채 남는다 — 점수는 카드와 본문에 있다
-    subject: `${year} 대학 올스타전`,
+    subject: `${year} ${copy.title}`,
     preview: res.protagonistSelected
       ? (isMvpMe ? "선발됐고 MVP까지 받았다" : "올스타에 선발됐다")
       : `MVP ${res.mvpName}`,
     body: [
-      `${year} 대학 올스타전(북 vs 남)이 9이닝 단판으로 열렸습니다.`,
+      `${year} ${copy.title}(북 vs 남)이 9이닝 단판으로 열렸습니다.`,
       "",
       `최종 스코어: 북군 ${res.northScore} — ${res.southScore} 남군` +
         (res.winner === "draw" ? " (무승부)" : ` — ${res.winner === "north" ? "북군" : "남군"} 승`),
@@ -387,7 +478,7 @@ function emitAllStarNews(
       "■ 남군",
       ...res.south.map(line),
       "",
-      "* 표시는 포지션 쿼터로 선발된 선수입니다. 대학당 최대 인원 제한이 적용됩니다.",
+      `* 표시는 포지션 쿼터로 선발된 선수입니다. ${copy.unit}당 최대 인원 제한이 적용됩니다.`,
     ].join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,

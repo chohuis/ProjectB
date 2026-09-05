@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { allStarSideOf } from "../campusEvents";
+import { allStarSideOf, campusEventFor } from "../campusEvents";
 
 /**
  * **프로 올스타전 · FA 미계약 → 독립 재도전** (2026-08-29 · 3단계).
@@ -42,9 +42,20 @@ describe("프로 올스타전", () => {
     expect(body.includes('"LEAGUE_UNIVERSITY"')).toBe(false);
   });
 
-  it("프로 단계가 게이트를 통과한다", () => {
-    expect(CE).toContain('const isPro = stage.startsWith("pro");');
-    expect(CE).toContain("if (isPro && rules.proAllstar && weekInYear === rules.proAllstar.week)");
+  /**
+   * ⚠ 예전엔 게이트 **문장을 문자열로** 찾았다. 문장이 바뀌면 빨강인데
+   *   정작 무대가 새는지는 안 봤다 — 배분표를 값으로 본다
+   *   (전체 표는 `campusStageGate.test.ts`).
+   */
+  it("프로 세 단계가 프로 올스타 주차에 통과한다", () => {
+    const w = {
+      showcase: RULES.campusEvents.showcase.week,
+      allstar: RULES.campusEvents.allstar.week,
+      proAllstar: RULES.campusEvents.proAllstar.week,
+    };
+    for (const stage of ["pro_kbl", "pro_abl", "pro_jbl"]) {
+      expect(campusEventFor(stage, w.proAllstar, w), stage).toBe("pro_allstar");
+    }
   });
 
   /** 🔴 국내는 도시 축, 해외는 정렬 순서 — 한 편이 비면 경기가 안 선다 */
