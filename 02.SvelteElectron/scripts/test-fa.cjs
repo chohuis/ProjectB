@@ -302,8 +302,18 @@ console.log("\n방출 2단계");
     path.join(ROOT, "apps/ui/src/features/contract/ui/ContractNegotiationModal.svelte"), "utf-8");
   check("협상 화면이 구단주 관계를 읽는다", /contractBonus|ownerBonus/.test(modal));
   check("구단주 예산도 같이 본다 (관계와 다른 축이다)", /staffModsOf[\s\S]{0,120}budget/.test(modal));
+  // 🔴 **여기 있던 정규식은 낡은 것이었다** (2026-09-06 실측).
+  //   `/let base = effectiveOffer \* 1\.15/` 로 **화면 파일**을 뒤졌는데,
+  //   식은 그 뒤 `utils/contractTerms.ts:358 acceptThresholdOf` 로 옮겨 갔다
+  //   (`let base = i.effectiveOffer * 1.15;`). **동작은 내내 맞았고 검사만
+  //   빨강이었다** — `test:v3` 에서 `test:rostergen` 뒤에 가려져 있던 그 한 건이다.
+  //
+  //   식 자체는 `contractTerms.test.ts:275-297` 이 값으로 잰다
+  //   (`acceptThresholdOf({effectiveOffer:20000,...}) === 23000` 등).
+  //   여기서는 화면이 **배수를 먹인 값**을 그 함수에 넘기는지, 그 배선만 본다.
   check("임계값도 같은 배수를 탄다 — 오퍼만 올리면 '더 주는데 더 짜다'가 된다",
-    /let base = effectiveOffer \* 1\.15/.test(modal));
+    /acceptThresholdOf\(\{\s*\n\s*effectiveOffer,/.test(modal)
+    && /effectiveOffer = Math\.round\(\(action\.offeredSalary \* ownerMult\)/.test(modal));
 }
 
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
