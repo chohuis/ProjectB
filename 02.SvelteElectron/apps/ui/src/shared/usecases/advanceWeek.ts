@@ -19,7 +19,7 @@ import { applyWeeklyRelations, reconcileRelationships, relationEffects, training
 import { slotRepo } from "../repo/slotRepo";
 import { buildRelationMessages } from "../utils/relationMessages";
 import { simulateGame } from "../utils/gameSimulator";
-import { rotationSizeForStage } from "../utils/rosterEngine";
+import { rotationSizeForStage, rotationSizeForLeague } from "../utils/rosterEngine";
 import { calcTrainingGrowth } from "../utils/growthEngine";
 import {
   applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult,
@@ -177,7 +177,7 @@ import {
 } from "./weekPhases/tournamentNews";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
-import { winnerById, scheduledIdSet } from "../utils/scheduleView";
+import { winnerById, scheduledIdSet, knockoutMatchIds, allScheduleEntries } from "../utils/scheduleView";
 import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 // 팀 목록의 정본 — 생존리그 순위 모수를 **리그 전체**로 고정한다
@@ -1898,6 +1898,74 @@ async function progressIndependentLeague(week: number): Promise<void> {
 }
 
 /**
+ * 이 경기가 **넉아웃(대회 본선)인가** — 무승부로 끝나면 대진이 못 넘어간다.
+ *
+ * 🔴 시뮬 호출부마다 물어야 한다. 한 곳이라도 안 물으면 그 경로의 대회
+ *   경기만 12이닝 상한이 걸려 무승부가 나고, **그 대회가 그 라운드에서
+ *   죽는다**(장미기 2028 실측 — `knockoutMatchIds` 머리말).
+ *   배선이 빠졌는지는 `drawRule.test.ts` 가 호출부 수로 본다.
+ */
+function isKnockoutGame(scheduleId: string): boolean {
+  return knockoutMatchIds(get(seasonStore)).has(scheduleId);
+}
+
+/**
+ * **무승부로 끝난 넉아웃 경기를 재경기로 푼다** — 2026-09-06 이전 세이브용.
+ *
+ * 🔴 왜 필요한가: 넉아웃이 무승부면 `result.winnerId` 가 빈 문자열이고,
+ *   `advanceTournamentRoundNative` 는 참가팀이 아닌 승자를 무시한다. 그러면
+ *   그 라운드는 `live.every(winnerTeamId)` 를 **영영 못 채워** 주마다 다시
+ *   확정되고, `buildMyRoundMessage` 가 **같은 소식 id 를 다시 낸다** —
+ *   Svelte 가 키 중복으로 던져 화면이 통째로 굳었다(실사용자 신고).
+ *   그리고 그 대회는 거기서 죽는다(장미기 2028 은 2라운드 7경기를 치르고도
+ *   반영이 안 됐다 · 실측).
+ *
+ * ⚠ **만드는 쪽은 고쳤다**(`gameSimulator` 의 `knockout`). 여기는 이미
+ *   저장된 무승부를 푸는 자리라 새 세이브에서는 한 번도 안 돈다.
+ *
+ * ⚠ **결과를 통째로 갈아 끼우지 않는다.** `settleDrawnKnockout` 머리말 —
+ *   선수 기록은 이미 쌓여 있어 다시 쌓으면 이중 계상이다.
+ *
+ * @returns 재경기 승자. 못 풀면 `null`(그러면 대회는 그대로 멈춘 채다 —
+ *          없는 승자를 지어내지 않는다).
+ */
+async function replayDrawnKnockout(m: {
+  id: string; homeTeamId: string | null; awayTeamId: string | null;
+}): Promise<string | null> {
+  const s = get(seasonStore);
+  const entry = allScheduleEntries(s).find((e) => e.id === m.id);
+  const entities = get(masterStore).entities;
+  if (!entry || !m.homeTeamId || !m.awayTeamId || entities.length === 0) return null;
+
+  const lid = entry.leagueId ?? "";
+  const lState = s.leagueState[lid];
+  const sim = await simulateGame(m.homeTeamId, m.awayTeamId, entities, {
+    conditions: lState?.playerConditions ?? {},
+    homeRotIdx: lState?.teamRotationIndex?.[m.homeTeamId] ?? 0,
+    awayRotIdx: lState?.teamRotationIndex?.[m.awayTeamId] ?? 0,
+    week: entry.week,
+    phase: entry.phase,
+    knockout: true,               // ← 이것 때문에 다시 도는 것이다
+    npcInjuries: s.npcInjuries,
+    npcLiveStats: get(npcLiveStatsStore),
+    leagueId: lid,
+    rotationSize: rotationSizeForLeague(lid),
+    // 씨앗은 **원래 경기 그대로** 둔다 — 같은 세이브를 다시 열어도 같은
+    // 재경기가 나와야 한다(꼬리표를 붙이면 재현이 갈린다)
+    worldSeed: s.worldSeed,
+    scheduleId: m.id,
+  });
+  const w = sim.result.winnerId;
+  if (!w) return null;
+  console.warn(
+    `[대회] 넉아웃 무승부를 재경기로 풀었다 — ${m.id} `
+    + `${sim.result.homeScore}:${sim.result.awayScore} 승 ${w}`);
+  seasonStore.settleDrawnKnockout(
+    m.id, sim.result.homeScore, sim.result.awayScore, w, sim.result.loserId ?? null);
+  return w;
+}
+
+/**
  * 전국대회 진행 (Phase 5-4).
  *
  * 대회는 한 주에 여러 라운드가 들어간다(국화기 7R/4주). 다음 라운드 대진은
@@ -2013,10 +2081,26 @@ async function progressTournaments(week: number): Promise<boolean> {
         if (missing.length > 0) break;   // 경기를 치른 뒤 다시 부른다
       }
 
+      // 🔴 **승자 없는 결과** — 넉아웃 무승부다. 그대로 넘기면 승자가 안
+      //   찍혀 이 라운드가 **매 주 다시 확정된다**(`replayDrawnKnockout` 머리말).
+      for (const m of live) {
+        const w = resultOf.get(m.id);
+        if (w === undefined || w === m.homeTeamId || w === m.awayTeamId) continue;
+        const settled = await replayDrawnKnockout(m);
+        if (settled) resultOf.set(m.id, settled);
+      }
+
       const results = live
         .filter((m) => resultOf.has(m.id))
         .map((m) => ({ matchId: m.id, winnerTeamId: resultOf.get(m.id)! }));
       if (results.length < live.length) break;            // 아직 안 끝난 라운드
+      // 재경기로도 못 풀었으면 **이 라운드는 건너뛴다.** 승자 없는 결과를
+      // 그대로 넘기면 라운드가 안 닫히고 같은 소식이 주마다 다시 난다.
+      if (results.some((x) => !x.winnerTeamId)) {
+        console.error(
+          `[대회] ${bracket.tournamentId} r${r} — 승자 없는 경기가 남아 라운드를 못 닫는다`);
+        break;
+      }
 
       const { bracket: next, nextEntries } = await applyRoundResults(
         bracket, r, results, protagonistTeamId,
@@ -2087,7 +2171,9 @@ async function progressTournaments(week: number): Promise<boolean> {
                     const nameOf = (pid: string) =>
                       ents.find((e) => e.id === pid)?.name ?? pid;
                     gameStore.addMessage({
-                      id: `msg-tour-award-${def.id}-${next.seasonYear}`,
+                      // ⚠ 주차를 넣는다 — 이 소식도 대회 라운드 루프에서
+                      //   같이 난다(`tournamentNews.ts` 머리말)
+                      id: `msg-tour-award-${def.id}-${next.seasonYear}-w${week}`,
                       category: "news",
                       sender: "고교야구연맹",
                       subject: `${def.name} 시상 — 우리 학교 ${mineAw.length}명`,
@@ -2818,6 +2904,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               const sim2 = await simulateGame(game.homeTeamId, game.awayTeamId, entities2, {
                 conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
                 phase: game.phase,
+                // 🔴 넉아웃은 무승부가 나면 대진이 죽는다 (`isKnockoutGame` 머리말)
+                knockout: isKnockoutGame(game.id),
                 worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
                 npcInjuries: get(seasonStore).npcInjuries,
                 // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
@@ -2894,6 +2982,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             const _tradeWeeksNpc = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
             const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
               conditions, homeRotIdx, awayRotIdx, week: game.week, phase: game.phase,
+              // 🔴 넉아웃은 무승부가 나면 대진이 죽는다 (`isKnockoutGame` 머리말)
+              knockout: isKnockoutGame(game.id),
               worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
               npcInjuries: get(seasonStore).npcInjuries,
               // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수
@@ -3242,6 +3332,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           const _tradeWeeksPs = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
           const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
             conditions, homeRotIdx, awayRotIdx, week: game.week, phase: game.phase,
+            // 🔴 넉아웃은 무승부가 나면 대진이 죽는다 (`isKnockoutGame` 머리말)
+            knockout: isKnockoutGame(game.id),
               worldSeed: get(seasonStore).worldSeed, scheduleId: game.id,
             npcInjuries: get(seasonStore).npcInjuries,
             // ⚠ **leagueId를 넘긴다.** 안 넘기면 리그별 분기(C-4 풀 엔진 전환·투구수

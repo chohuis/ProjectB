@@ -212,6 +212,20 @@ export async function simulateGame(
      *   못 넘어간다. 안 넘기면 무제한(예전 동작)이라 조용히 안전하다.
      */
     phase?: import("../types/season").SeasonPhase;
+    /**
+     * **넉아웃(대회 본선) 경기인가.** 참이면 무승부를 허용하지 않는다.
+     *
+     * 🔴 **대회 경기는 `phase`가 `"season"`이다** (`bracket_to_schedule`가
+     *   그렇게 낸다 — `SeasonPhase`에 대회 값이 없다). 그래서 `phase`만 보면
+     *   대회 경기에 **정규시즌 연장 12이닝 상한**이 걸린다. 실제로 걸렸다:
+     *   장미기 1R 동래 4:4 거제(2028, 실사용자 세이브)에서 승자가 안 나와
+     *   그 대회가 1라운드에서 죽었고, 같은 라운드가 매 주 다시 확정되며
+     *   **같은 소식 id가 두 번 나서 화면이 통째로 굳었다**(2026-09-06 실측).
+     *
+     * ⚠ 조별예선(은하기·여명기)은 리그전이라 **여기 해당 없다** — 무승부가
+     *   정상이다. 가르는 기준은 `knockoutMatchIds`(브래킷에 있는 경기냐)다.
+     */
+    knockout?: boolean;
   },
 ): Promise<SimGameResult> {
   const {
@@ -229,6 +243,7 @@ export async function simulateGame(
     worldSeed,
     scheduleId,
     phase,
+    knockout = false,
   } = options ?? {};
 
   const entityMap = new Map(entities.map((e) => [e.id, e]));
@@ -288,7 +303,12 @@ export async function simulateGame(
     week,
     // 🔴 **연장 상한** — 정규시즌만 건다. 0이면 무제한(승부가 날 때까지).
     //   예전엔 이 값이 없어 **무승부가 구조상 안 나왔다.**
-    extraInningLimit: phase === "season" ? EXTRA_INNING_LIMIT : 0,
+    // 🔴 **넉아웃은 빼야 한다** (2026-09-06). 대회 경기도 `phase`가
+    //   `"season"`이라 여기서 12이닝 상한이 걸렸고, 무승부가 나면
+    //   `winnerId`가 빈 문자열이라 대진이 다음 라운드로 못 넘어갔다.
+    //   `should_auto_finish`의 주석("대회·포스트시즌은 승자가 나와야 한다")이
+    //   이미 이 규칙을 적어 뒀는데 **대회 쪽 배선만 없었다.**
+    extraInningLimit: (phase === "season" && !knockout) ? EXTRA_INNING_LIMIT : 0,
     homeTeamId,
     awayTeamId,
     worldSeed,

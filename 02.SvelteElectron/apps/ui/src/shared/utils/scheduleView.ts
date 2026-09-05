@@ -45,3 +45,30 @@ export function winnerById(season: ScheduleSource): Map<string, string> {
 export function scheduledIdSet(season: ScheduleSource): Set<string> {
   return new Set(allScheduleEntries(season).map((e) => e.id));
 }
+
+/**
+ * **넉아웃(대회 본선) 경기 id** — 무승부로 끝나면 안 되는 경기들.
+ *
+ * 🔴 **`isTournament` 로는 못 가른다.** 조별예선(은하기·여명기)도 그 깃발을
+ *   달고 있는데 예선은 리그전이라 무승부가 정상이다. 넉아웃인지는 **브래킷에
+ *   그 경기가 있는지**가 정한다 — 일정 id 와 `BracketMatch.id` 가 같은 값이다
+ *   (`bracket_to_schedule` 이 `m.id` 를 그대로 쓴다).
+ *
+ * 🔴 **왜 필요한가**: 넉아웃이 무승부면 `result.winnerId` 가 빈 문자열이고,
+ *   `advanceTournamentRoundNative` 는 참가팀이 아닌 승자를 무시하므로 그
+ *   경기에 승자가 안 찍힌다. 그 라운드는 `live.every(winnerTeamId)` 를 영영
+ *   못 채워 **매 주 다시 확정되고 같은 소식 id 가 다시 난다** — 실사용자
+ *   세이브의 `msg-tour-my-TOUR_HS_JANGMI-r1-2028`(장미기 R1 M02 · 동래 4:4
+ *   거제 · 2026-09-06 실측)이 그것이고, Svelte 가 키 중복으로 던져 화면이
+ *   통째로 굳었다. 대회는 그 라운드에서 죽는다(R2 는 7경기를 치르고도
+ *   반영이 안 됐다).
+ */
+export function knockoutMatchIds(
+  season: { tournaments?: Record<string, { matches?: readonly { id: string }[] }> | null },
+): Set<string> {
+  const out = new Set<string>();
+  for (const b of Object.values(season.tournaments ?? {})) {
+    for (const m of b?.matches ?? []) out.add(m.id);
+  }
+  return out;
+}

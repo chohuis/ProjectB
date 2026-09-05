@@ -456,6 +456,43 @@ function createSeasonStore() {
       });
     },
 
+    /**
+     * **넉아웃 무승부를 재경기로 덮는다** — 점수와 승패만 갈아 끼운다.
+     *
+     * 🔴 2026-09-06 이전 세이브에는 **무승부로 끝난 대회 본선 경기**가 들어
+     *   있다(`knockoutMatchIds` 머리말 — 장미기 2028 R1 M02 동래 4:4 거제).
+     *   그 라운드는 승자가 안 찍혀 **매 주 다시 확정되고 같은 소식 id 가 다시
+     *   나며**, 대회는 거기서 죽는다. 만드는 쪽은 고쳤으니 여기는 **이미
+     *   저장된 것**을 푸는 자리다.
+     *
+     * ⚠ **`playerLines` 는 안 건드린다.** 그 기록은 이미 `stats` 에 쌓여
+     *   있어서, 재경기 기록으로 갈아 끼우면 **이중 계상**이 된다(빼는 길이
+     *   없다). 재경기에서 가져오는 것은 **승패뿐**이다 — 대진을 넘기는 데
+     *   필요한 것이 그것뿐이기 때문이다.
+     *
+     * ⚠ **두 일정을 다 본다.** 대회 경기는 주인공 리그면 `schedule`,
+     *   아니면 `leagueSchedules[리그]` 에 있다(`scheduleView` 머리말).
+     */
+    settleDrawnKnockout(
+      scheduleId: string,
+      homeScore: number,
+      awayScore: number,
+      winnerId: string,
+      loserId: string | null,
+    ) {
+      update((s) => {
+        const patch = (e: ScheduleEntry): ScheduleEntry =>
+          e.id === scheduleId && e.result
+            ? { ...e, result: { ...e.result, homeScore, awayScore, winnerId, loserId } }
+            : e;
+        const leagueSchedules: Record<string, ScheduleEntry[]> = {};
+        for (const [lid, list] of Object.entries(s.leagueSchedules ?? {})) {
+          leagueSchedules[lid] = Array.isArray(list) ? list.map(patch) : list;
+        }
+        return { ...s, schedule: s.schedule.map(patch), leagueSchedules };
+      });
+    },
+
     applyFriendlyResult(
       scheduleId: string,
       result: MatchResult,

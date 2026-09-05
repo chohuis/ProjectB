@@ -8,6 +8,19 @@
 // 그 시즌에 무슨 일이 있었는지 알 수가 없다.
 //
 // ⚠ 새 시뮬을 돌리지 않는다. 이미 확정된 브래킷과 일정 결과만 읽는다.
+//
+// 🔴 **id 에 주차를 넣는다** (2026-09-06). 여기 네 소식은 `advanceWeek` 의
+//   대회 라운드 루프 **한 자리에서 같이 난다** — 그 라운드가 두 번 확정되면
+//   넷 다 같은 id 를 두 번 낸다. 실제로 났다: 넉아웃이 무승부로 끝나 승자가
+//   안 찍히는 바람에 장미기 1라운드가 주마다 다시 확정됐고,
+//   `msg-tour-my-TOUR_HS_JANGMI-r1-2028` 이 소식함에 둘 들어가
+//   **Svelte 가 키 중복으로 던져 화면이 통째로 굳었다**(실사용자 신고).
+//
+//   무승부 쪽은 고쳤다(`knockoutMatchIds`). 주차는 **그 다음 방어**다 —
+//   또 두 번 확정되는 일이 생기면 소식이 조용히 버려지는 대신 **두 통이
+//   남아 눈에 띈다.** 같은 주 안에서는 한 라운드가 한 번만 확정되므로
+//   (`live.every(winnerTeamId)` 가 그 주에 이미 참이 된다) 주차만으로 충분하다.
+//   버려진 통수는 `mailboxDupStats` 가 세고 `check:msgdupid` 가 본다.
 
 import type { BracketMatch, TournamentBracket, TournamentDef } from "../../utils/tournament";
 import type { MessageItem } from "../../types/main";
@@ -80,7 +93,7 @@ export function buildOpenMessage(
     ? bracketRows(bracket.matches, 1, bracket.totalRounds, myTeamId, teamName)
     : [];
   return {
-    id: `msg-tour-open-${def.id}-${seasonYear}`,
+    id: `msg-tour-open-${def.id}-${seasonYear}-w${weekNum}`,
     category: "news",
     sender: def.leagueId === "LEAGUE_UNIVERSITY" ? "대학야구연맹" : "고교야구연맹",
     subject: `${seasonYear} ${def.name} 개막 — ${entrantIds.length}팀 참가`,
@@ -131,7 +144,7 @@ export function buildMyRoundMessage(
     : `${rn} 탈락`;
 
   return {
-    id: `msg-tour-my-${def.id}-r${round}-${bracket.seasonYear}`,
+    id: `msg-tour-my-${def.id}-r${round}-${bracket.seasonYear}-w${weekNum}`,
     category: "news",
     sender: "대회 본부",
     subject: `${def.name} ${head}`,
@@ -235,7 +248,7 @@ export function buildRoundProgressMessage(
   );
 
   return {
-    id: `msg-tour-round-${def.id}-r${round}-${bracket.seasonYear}`,
+    id: `msg-tour-round-${def.id}-r${round}-${bracket.seasonYear}-w${weekNum}`,
     category: "news",
     sender: def.leagueId === "LEAGUE_UNIVERSITY" ? "대학야구연맹" : "고교야구연맹",
     subject: `${def.name} ${nextName} 진출 ${winners.length}팀`,
@@ -266,7 +279,7 @@ export function buildChampionMessage(
   if (champ === myTeamId) return null;
 
   return {
-    id: `msg-tour-champ-${def.id}-${bracket.seasonYear}`,
+    id: `msg-tour-champ-${def.id}-${bracket.seasonYear}-w${weekNum}`,
     category: "news",
     sender: def.leagueId === "LEAGUE_UNIVERSITY" ? "대학야구연맹" : "고교야구연맹",
     subject: `${def.name} 우승 — ${teamName(champ)}`,

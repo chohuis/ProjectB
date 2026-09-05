@@ -26,6 +26,7 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { npcLiveStatsStore } from "../stores/npcLiveStats";
 import { runSimBatch } from "../stores/backgroundLeague";
+import { knockoutMatchIds } from "../utils/scheduleView";
 import type { MatchResult } from "../types/season";
 
 /**
@@ -68,6 +69,8 @@ export async function simulateSkippedGame(
     gameDate: entry.gameDate ?? "",
     // ⚠ 안 실으면 연장 상한이 안 걸려 무승부가 안 난다
     phase: entry.phase,
+    // 🔴 넉아웃은 무승부가 나면 대진이 죽는다 (`knockoutMatchIds` 머리말)
+    knockout: knockoutMatchIds(s).has(entry.id),
   }];
 
   const parkRefs = { teams: m.teams ?? [], stadiums: m.stadiums ?? [] };

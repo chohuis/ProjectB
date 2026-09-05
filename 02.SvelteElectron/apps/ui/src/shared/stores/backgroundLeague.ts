@@ -12,6 +12,7 @@ import { rotationSizeForLeague } from "../utils/rosterEngine";
 import { autoLog } from "./autoAdvance";
 import { seedOf } from "../utils/seedOf";
 import { getLeagueRadius, RADIUS_GATED_LEAGUES } from "../utils/radiusGate";
+import { knockoutMatchIds } from "../utils/scheduleView";
 
 /**
  * 로테이션 운용 감각 — 감독 `bullpenRead`.
@@ -64,6 +65,8 @@ export async function runSimBatch(
         homeRotIdx:           g.homeRotIdx ?? 0,
         awayRotIdx:           g.awayRotIdx ?? 0,
         phase:                g.phase,
+        // 🔴 넉아웃은 무승부가 나면 대진이 죽는다 (`knockoutMatchIds` 머리말)
+        knockout:             g.knockout ?? false,
         week:                 g.week ?? 0,
         npcInjuries,
         npcLiveStats,
@@ -131,6 +134,9 @@ export async function simulateBackgroundLeagues(
   },
 ): Promise<SimBatchResult | null> {
   const batch: SimWorkerRequest["games"] = [];
+  // 🔴 **넉아웃 경기 id** — 무승부면 그 대회가 그 라운드에서 죽는다.
+  //   `phase` 로는 못 가른다(대회 경기도 `"season"` 이다) — `knockoutMatchIds` 머리말.
+  const knockoutIds = knockoutMatchIds(s);
   if (Object.keys(s.leagueSchedules).length === 0) {
     autoLog("[배경리그] leagueSchedules 비어있음 — 배경 리그 시뮬 스킵");
   }
@@ -165,6 +171,7 @@ export async function simulateBackgroundLeagues(
           gameDate: e.gameDate ?? "",
           // ⚠ 안 실으면 연장 상한이 안 걸려 무승부가 안 난다
           phase: e.phase,
+          knockout: knockoutIds.has(e.id),
         });
       }
     }

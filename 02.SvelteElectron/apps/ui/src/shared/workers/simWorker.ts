@@ -17,6 +17,12 @@ interface SimGame {
   gameDate?: string;
   /** ⚠ 안 실으면 **정규시즌 경기가 무승부를 못 낸다** — 연장 상한이 안 걸린다 */
   phase?: import("../types/season").SeasonPhase;
+  /**
+   * 🔴 **넉아웃(대회 본선)이면 무승부가 나면 안 된다.** 대회 경기도
+   *   `phase` 가 `"season"` 이라 `phase` 만으로는 못 가른다 — 안 실으면
+   *   그 대회가 무승부 난 라운드에서 죽는다(`knockoutMatchIds` 머리말).
+   */
+  knockout?: boolean;
 }
 
 export interface SimWorkerRequest {
@@ -51,6 +57,7 @@ self.onmessage = async (e: MessageEvent<SimWorkerRequest>) => {
       homeRotIdx:  g.homeRotIdx ?? 0,
       awayRotIdx:  g.awayRotIdx ?? 0,
       phase:       g.phase,
+      knockout:    g.knockout ?? false,
       week:        g.week ?? 0,
       worldSeed,
       scheduleId:  g.id,

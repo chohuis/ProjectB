@@ -869,6 +869,26 @@ export function resetMailboxProduceStats(): void {
 }
 
 /**
+ * **id 가 겹쳐 버려진 소식** — `dedupeMailbox` 가 걷어낼 때마다 센다.
+ *
+ * 🔴 `dedupeMailbox` 는 **막는 자리**다. 걸리는 게 있다면 그건 만드는 쪽의
+ *   결함이고, 세지 않으면 **소식 한 통이 조용히 사라진 채로 지나간다.**
+ *   이 값이 0 이 아니면 걸리게 하는 것이 `check:msgdupid` 다.
+ *
+ * ⚠ `check:msgdup` 과 다른 것이다 — 그쪽은 「같은 id 로 **다른 소식**」을,
+ *   여기는 「같은 id 가 **두 번**」을 본다.
+ */
+export const mailboxDupStats = {
+  dropped: 0,
+  byId: {} as Record<string, number>,
+};
+
+export function resetMailboxDupStats(): void {
+  mailboxDupStats.dropped = 0;
+  mailboxDupStats.byId = {};
+}
+
+/**
  * 선택지 효과를 주인공에게 적용한다 — **효과 계산의 정본이다.**
  *
  * ⚠ 예전엔 `resolveDecision`(화면 선택)과 `applyEventEffect`(자동 진행)가
@@ -982,7 +1002,13 @@ function dedupeMailbox(list: MessageItem[]): MessageItem[] {
   const seen = new Set<string>();
   const out: MessageItem[] = [];
   for (const m of list) {
-    if (seen.has(m.id)) continue;
+    if (seen.has(m.id)) {
+      // 🔴 **세고 찍는다.** 안 세면 소식 한 통이 조용히 사라진다 —
+      //   `mailboxDupStats` 머리말. 만드는 쪽이 고쳐지면 0 이 된다.
+      mailboxDupStats.dropped++;
+      mailboxDupStats.byId[m.id] = (mailboxDupStats.byId[m.id] ?? 0) + 1;
+      continue;
+    }
     seen.add(m.id);
     out.push(m);
   }

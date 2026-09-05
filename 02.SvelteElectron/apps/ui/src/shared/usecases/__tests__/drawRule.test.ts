@@ -46,7 +46,7 @@ describe("무승부 규칙", () => {
 
   /** ⚠ 대회·포스트시즌이 무승부로 끝나면 대진이 못 넘어간다 */
   it("정규시즌에만 상한을 건다", () => {
-    expect(GS).toContain('phase === "season" ? EXTRA_INNING_LIMIT : 0');
+    expect(GS).toContain('(phase === "season" && !knockout) ? EXTRA_INNING_LIMIT : 0');
     expect(GS).toContain("export const EXTRA_INNING_LIMIT = 12;");
   });
 
@@ -58,5 +58,49 @@ describe("무승부 규칙", () => {
     expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain("phase: e.phase");
     const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
     expect(AW.split("phase: game.phase").length - 1).toBe(3);
+  });
+
+  /**
+   * 🔴 **넉아웃은 `phase` 로 못 가른다** (2026-09-06).
+   *
+   * 대회 본선 경기도 `phase` 가 `"season"` 이다(`bracket_to_schedule` —
+   * `SeasonPhase` 에 대회 값이 없다). 그래서 정규시즌 연장 12이닝 상한이
+   * 그대로 걸렸고, 무승부가 나면 `winnerId` 가 빈 문자열이라
+   * `advance_tournament_round` 가 승자를 안 찍는다. 그 라운드는
+   * `live.every(winnerTeamId)` 를 영영 못 채워 **주마다 다시 확정되고
+   * 같은 소식 id 가 다시 났다** — 실사용자 세이브에서 장미기 1R 이
+   * 동래 4:4 거제로 그렇게 죽었다(2026-09-06 실측).
+   *
+   * ⚠ **한 호출부라도 빠지면 그 경로의 대회만 죽는다.** 그래서 수를 센다.
+   */
+  it("넉아웃은 무승부를 안 낸다 — 호출부마다 knockout 을 싣는다", () => {
+    // 가르는 규칙은 한 곳이다 — 브래킷에 있는 경기냐
+    expect(read("apps/ui/src/shared/utils/scheduleView.ts"))
+      .toContain("export function knockoutMatchIds(");
+    // 대회 경기가 도는 세 갈래: 주인공 리그 · 배경 리그 · 회피 경기
+    const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    expect(AW.split("knockout: isKnockoutGame(game.id)").length - 1).toBe(3);
+    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts"))
+      .toContain("knockout: knockoutIds.has(e.id)");
+    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts"))
+      .toContain("knockout:             g.knockout ?? false");
+    expect(read("apps/ui/src/shared/usecases/simulateSkippedGame.ts"))
+      .toContain("knockout: knockoutMatchIds(s).has(entry.id)");
+    expect(read("apps/ui/src/shared/workers/simWorker.ts"))
+      .toContain("knockout:    g.knockout ?? false");
+  });
+
+  /**
+   * ⚠ **이미 저장된 무승부**를 푸는 자리도 있어야 한다 — 만드는 쪽만 고치면
+   * 테스터 세이브의 장미기는 영영 1라운드에 갇힌 채다.
+   */
+  it("저장된 넉아웃 무승부를 재경기로 푼다", () => {
+    const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    expect(AW).toContain("async function replayDrawnKnockout(");
+    expect(AW).toContain("if (settled) resultOf.set(m.id, settled);");
+    // 못 풀면 **라운드를 안 닫는다** — 승자 없는 결과를 억지로 넘기지 않는다
+    expect(AW).toContain("if (results.some((x) => !x.winnerTeamId))");
+    expect(read("apps/ui/src/shared/stores/season.ts"))
+      .toContain("settleDrawnKnockout(");
   });
 });
