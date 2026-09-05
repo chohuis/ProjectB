@@ -21,7 +21,7 @@ import { managerEffect } from "../../apps/ui/src/shared/utils/managerStyle";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
 import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
-import { startNewGameV3, getFarmDevLog } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
+import { startNewGameV3, getFarmDevLog, loadGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
 import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
@@ -42,6 +42,9 @@ import {
   retireProtagonist, isRetired, evalRetirementPressure, calcMarketValueForProtagonist,
 } from "../../apps/ui/src/shared/usecases/retirement";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
+// `NewsPage.svelte`의 `choose()`와 같다 — D 세션 저장·재시작 재현이 소식을
+// runAutoAdvance의 자동 휴리스틱 없이 한 건씩 직접 고르려고 쓴다.
+import { applyDecision } from "../../apps/ui/src/shared/usecases/decisions";
 import { foreignRules, isForeignPlayer } from "../../apps/ui/src/shared/utils/foreignSlots";
 import { enlistProtagonist } from "../../apps/ui/src/shared/usecases/militaryDecision";
 import {
@@ -175,6 +178,31 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     teamId,
     entityCount: get(masterStore).entities.length,
   };
+}
+
+/**
+ * **D 세션 재시작 재현(2026-09-05)** — 실제 "이어하기"와 같은 순서.
+ *
+ * `App.svelte`의 `onMount`(마스터 로드 → connectToGameStore →
+ * initProTeamProfiles) + `handleSlotSelect`(비어있지 않음 갈래)의
+ * `loadGameV3(slotId)`를 그대로 따른다. `boot()`은 **항상 새 게임**이라
+ * (`startNewGameV3`) 저장한 슬롯을 불러오는 경로를 안 탄다 — 그래서 이
+ * 함수가 따로 있다.
+ *
+ * ⚠ 진짜 "껐다 켰다"이려면 저장한 프로세스와 이 함수를 부르는 프로세스가
+ *   **달라야** 한다 — `headless.boot(prefix, { userDataDir })`로 같은
+ *   slot.db 디렉터리를 새 프로세스에 넘겨서 쓴다. 같은 프로세스에서
+ *   불러봤자 모듈 전역 상태(예: 시즌 종료 가드)가 안 끊긴다
+ *   (`loadGameV3`의 `resetWorldSeasonEndGuard` 주석 참고).
+ */
+export async function bootContinue(slotId: string): Promise<boolean> {
+  await masterStore.load();
+  masterStore.connectToGameStore(
+    (fn) => gameStore.subscribe((s) => fn({ npcs: s.npcs })),
+    npcLiveStatsStore.subscribe,
+  );
+  gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
+  return loadGameV3(slotId);
 }
 
 // ── 주차별 타임라인 ──────────────────────────────────────────────
@@ -4137,6 +4165,15 @@ export function armDecisionChoice(idPattern: string, optionId: string): void {
             arm.re.test(m.id) && !arm.hits.includes(m.id)) {
           arm.hits.push(m.id);
           gameStore.resolveDecision(m.id, arm.optionId);
+          // ⚠ **D 세션 저장·재시작 재현(2026-09-05)** — 트랩이 걸리는 순간
+          //   `runAutoAdvance`를 멈춘다. 안 그러면 `autoRun()`이 이 뒤로도
+          //   계속 여러 주를 삼켜서, "power를 고른 바로 그 자리"에서 저장할
+          //   방법이 없어진다(트랩은 언제 걸렸는지만 기록하지 실행을 못
+          //   멈춘다). `runOneWeek()`와 같은 수법 — 조건이 되면 stop()만
+          //   부르고 루프 자체는 안 건드린다.
+          if (get(autoAdvanceStore).running) {
+            autoAdvanceStore.stop(`probe: armDecisionChoice(${arm.re.source}) 트랩 발동`);
+          }
         }
       }
     }
@@ -4193,6 +4230,17 @@ export function unresolvedMailboxDump(): Array<{ id: string; subject: string }> 
     .map((m) => ({ id: m.id, subject: m.subject }));
 }
 
+/**
+ * decision이 있는 소식 전부(이미 고른 것 포함) — id·subject·selectedOptionId.
+ * 저장·재시작 뒤 **이미 고른 선택이 살아 있는지**(null로 되돌아가지 않았는지)
+ * 를 보려면 `unresolvedMailboxDump`(미결만)로는 부족하다 — D 세션 #5.
+ */
+export function mailboxDecisionDump(): Array<{ id: string; subject: string; selectedOptionId: string | null }> {
+  return get(gameStore).mailbox
+    .filter((m) => !!m.decision)
+    .map((m) => ({ id: m.id, subject: m.subject, selectedOptionId: m.decision!.selectedOptionId }));
+}
+
 /** scheduleId 하나를 seasonStore.schedule과 leagueSchedules에서 찾는다 */
 export function scheduleFind(id: string): Record<string, unknown> | null {
   const s = get(seasonStore);
@@ -4241,6 +4289,44 @@ export function weekStageDump(): Record<string, unknown> {
     pending: s.pendingActions.map((a) => a.type),
     unresolvedMailbox: unresolvedMailboxDump(),
   };
+}
+
+/**
+ * 지금 pendingAction 하나를 **`NewsPage.svelte`의 `choose()`와 같은 방식으로**
+ * 직접 고른다 — `runAutoAdvance`의 `pickChoice` 휴리스틱을 거치지 않고 한
+ * 건씩, 실제 사용자 클릭과 같은 순서(`applyDecision` 뒤 `resolvePendingAction`)로
+ * 처리한다. type이 "message"가 아니면 아무 일도 안 하고 null.
+ *
+ * `optionId`를 안 주면 첫 선택지를 고른다(사용자가 "아무거나 눌렀다"에 해당).
+ */
+export async function resolveCurrentMessage(optionId?: string): Promise<string | null> {
+  const pa = get(nextPendingAction);
+  if (!pa || pa.type !== "message") return null;
+  const msg = get(gameStore).mailbox.find((m) => m.id === pa.messageId);
+  if (!msg) {
+    seasonStore.resolvePendingAction("message", pa.messageId);
+    return null;
+  }
+  let picked: string | null = null;
+  if (msg.decision && msg.decision.selectedOptionId === null) {
+    picked = optionId ?? msg.decision.options[0]?.id ?? null;
+    if (picked) await applyDecision(pa.messageId, picked);
+  }
+  seasonStore.resolvePendingAction("message", pa.messageId);
+  await gameStore.save();
+  await seasonStore.save();
+  return picked;
+}
+
+/** seasonStore.schedule 전체의 id 목록 — 저장 전/후 대조용(순서·개수까지) */
+export function scheduleIdList(): string[] {
+  return get(seasonStore).schedule.map((e) => e.id);
+}
+
+/** 슬롯에 그대로 쓴다 — 실제 저장 버튼과 같은 두 스토어 save() */
+export async function saveSlot(): Promise<void> {
+  await gameStore.save();
+  await seasonStore.save();
 }
 
 // ── 세계 상태 지문 ──────────────────────────────────────────────

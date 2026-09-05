@@ -99,7 +99,7 @@ function bundleEntry(outFile) {
  * 임시 디렉터리를 만들고 · main/preload를 로드하고 · `window`를 심고 ·
  * 번들된 렌더러 진입점을 돌려준다.
  */
-async function boot(prefix) {
+async function boot(prefix, opts) {
   // 🔴 **잰 숫자가 옛 엔진 것이면 아무 소용이 없다.** `.node` 는 git 에 없고
   //    cargo 가 캐시를 맞히면 파일 시각도 안 바뀌어서, Rust 를 고치고
   //    `build:native` 를 빼먹어도 아무 데서도 안 알려 줬다 — 09-04 에 D 의
@@ -110,7 +110,15 @@ async function boot(prefix) {
   //    (`PB_ALLOW_STALE_NATIVE=1` 이면 빨간 줄만 찍고 지나간다)
   require("../native-stamp.cjs").assertFresh({ label: prefix });
 
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `${prefix}-`));
+  // ⚠ **D 세션 재시작 재현(2026-09-05)** — `userDataDir` 를 주면 새 mkdtemp
+  //   대신 그 디렉터리를 그대로 쓴다. 진짜 "껐다 켰다"를 재현하려면 저장한
+  //   프로세스와 불러오는 프로세스가 **달라야** 한다(모듈 전역 상태가 안
+  //   남는다) — 그러려면 두 프로세스가 같은 slot.db 를 봐야 하므로 디렉터리를
+  //   고정해서 넘겨받는다. 안 주면 예전처럼 매번 새 임시 디렉터리다.
+  const tmp = opts && opts.userDataDir
+    ? opts.userDataDir
+    : fs.mkdtempSync(path.join(os.tmpdir(), `${prefix}-`));
+  fs.mkdirSync(tmp, { recursive: true });
   const bundleFile = path.join(tmp, "perfEntry.cjs");
 
   const t0 = Date.now();
