@@ -34,6 +34,35 @@ export interface SquadResult {
   squad: string[];
   protagonistSelected: boolean;
   squadStrength: number;
+  /**
+   * 주인공이 **후보 명단에 있었나.** 엔진이 아니라 후보를 만든 자리가 채운다.
+   *
+   * 🔴 이게 없어서 「이번에는 명단에 들지 못했다」가 고교 1학년·복무 중·은퇴에게
+   *   갔다. 후보 풀은 국내 프로 한국인 현역뿐이라 그들은 **애초에 후보가 아니다** —
+   *   떨어진 게 아니라 잴 자리에 없었던 것이다. 문안이 그걸 몰라 낙방으로 읽혔다.
+   *
+   * ⚠ 후보 목록에서 **직접** 만든다. 무대 이름으로 다시 판정하면 게이트와
+   *   문안이 갈린다 — 그게 이번에 고친 형태다.
+   */
+  protagonistEligible: boolean;
+}
+
+/**
+ * 대표팀 발표 소식에서 **주인공 한 줄**. 무대가 아니라 **후보 여부**가 가른다.
+ *
+ * 🔴 왜 0통으로 막지 않았나 (사용자 확정이 필요 없는 자리라 A 가 정했다).
+ *   국가대표 발표는 세계에서 제일 큰 사건 중 하나고, 새 게임은 고교 3년 +
+ *   대학 4년이라 **플레이어가 처음 만나는 몇 시간이 전부 아마추어 무대**다.
+ *   거기서 대회를 통째로 감추면 그 해에 올림픽이 없었던 것처럼 보인다.
+ *   문제는 소식이 온 것이 아니라 **낙방으로 읽힌 것**이었으므로, 문안을
+ *   갈라 세계 소식임이 드러나게 한다.
+ *
+ * ⚠ 후보인데 안 뽑힌 것과 **후보가 아닌 것**은 다른 문장이다. 셋을 한 함수에
+ *   모아 두는 이유다 — 부르는 쪽이 조합을 만들면 한 갈래가 반드시 빠진다.
+ */
+export function natlSquadSelfLine(eligible: boolean, selected: boolean): string {
+  if (!eligible) return "국내 프로 무대의 선수들이 태극마크를 달았다.";
+  return selected ? "명단에 내 이름이 있었다." : "이번에는 명단에 들지 못했다.";
 }
 
 export interface TournamentResult {
@@ -126,12 +155,16 @@ export async function callUpNationalSquad(seasonYear: number): Promise<SquadResu
 
   if (candidates.length === 0) return null;
 
-  const res = await engine<SquadResult>("selectNationalSquadNative", {
+  // 후보 목록이 정본이다 — 무대·리그를 여기서 다시 판정하지 않는다
+  const protagonistEligible = candidates.some((c) => c.isProtagonist);
+
+  const raw = await engine<SquadResult>("selectNationalSquadNative", {
     candidates, rules, year: seasonYear, worldSeed: (s.worldSeed ?? 0) >>> 0,
   });
-  if (!res.tournament || res.squad.length === 0) return null;
+  if (!raw.tournament || raw.squad.length === 0) return null;
+  const res: SquadResult = { ...raw, tournament: raw.tournament, protagonistEligible };
 
-  autoLog(`[국가대표] ${seasonYear} ${res.tournament.name} 발탁 ${res.squad.length}명 ` +
+  autoLog(`[국가대표] ${seasonYear} ${raw.tournament.name} 발탁 ${res.squad.length}명 ` +
     `(평균 ${res.squadStrength.toFixed(1)})${res.protagonistSelected ? " · 주인공 포함" : ""}`);
   return res;
 }
@@ -238,13 +271,12 @@ function emitSquadNews(
     category: "news",
     sender: "대한야구협회",
     subject: `${year} ${def.name} 국가대표 명단 발표`,
+    // ⚠ 미리보기도 무대를 본다 — 후보가 아니면 나를 아예 안 부른다
     preview: `${squad.squad.length}명 차출${squad.protagonistSelected ? " · 나도 포함됐다" : ""}`,
     body: [
       `${year} ${def.name}에 나설 국가대표 ${squad.squad.length}명이 발표됐습니다.`,
       "",
-      squad.protagonistSelected
-        ? "명단에 내 이름이 있었다."
-        : "이번에는 명단에 들지 못했다.",
+      natlSquadSelfLine(squad.protagonistEligible, squad.protagonistSelected),
       "",
       roster + more,
       "",
