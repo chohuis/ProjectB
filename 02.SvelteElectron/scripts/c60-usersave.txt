@@ -1,0 +1,27 @@
+# C-60 — 테스터 세이브(2028 W18 · 고교3) 화면 멈춤: 재현 → 고친 뒤 확인
+#
+#   원본 세이브를 **복사한** 폴더를 넘긴다 (원본은 절대 안 건드린다):
+#     DRIVE_USER_DATA=<사본> DEV_PORT=5175 VITE_DEV_SERVER_URL=http://localhost:5175 \
+#       SCREENSHOT_DIR=docs/screens node scripts/drive.mjs scripts/c60-usersave.txt
+#
+# 보는 것: [pageerror] each_key_duplicate 가 한 줄도 없어야 한다.
+#   고치기 전엔 W19~20 에서 그것이 터지고 주차가 거기서 멎었다 (탭도 전부 잠긴 채).
+launch
+wait .btn.primary
+click .btn.cont
+wait .slot-info
+click .slot-info
+sleep 8000
+ss c60-01-w18-game-modal
+# 경기 대기 창이 실제로 열려 있는가 (탭이 잠기는 동안 열려야 할 유일한 창)
+eval (()=>({wk:document.querySelector('.wk')?.innerText,go:document.querySelector('.go')?.innerText,tabsLocked:[...document.querySelectorAll('.tab')].every(b=>b.disabled),modal:(document.querySelector('.overlay')?.innerText??'(없음)').slice(0,60)}))()
+# 경기를 자동 시뮬로 넘기고 여러 주 진행 — 여기가 예전에 굳던 자리다
+advance 6 --auto
+ss c60-02-advanced
+eval (()=>({wk:document.querySelector('.wk')?.innerText,tabsLocked:[...document.querySelectorAll('.tab')].every(b=>b.disabled)}))()
+# ── 소식함: 필터를 걸어도 미결과 「선택을 기다리는 소식 N건」이 남는가 ──
+click-text 뉴스
+sleep 1200
+ss c60-03-news-filtered
+eval (()=>({filter:document.querySelector('.chip.on')?.innerText.replace(/\n/g,'|'),alerts:[...document.querySelectorAll('.alerts li')].map(e=>e.innerText),pending:document.querySelectorAll('.item.pending').length}))()
+quit

@@ -955,6 +955,40 @@ export function applyEffectToProtagonist(
   };
 }
 
+/**
+ * 소식함에서 **id가 겹치는 사본을 걷어낸다** — 앞(최신)에 있는 것을 남긴다.
+ *
+ * 🔴 **id가 겹치면 화면이 통째로 죽는다** (2026-09-05 · 실사용자 세이브).
+ *   `NewsPage`가 `{#each visible as msg (msg.id)}`로 그리는데 Svelte 5는
+ *   키가 겹치면 `each_key_duplicate`를 **던진다** — 렌더 도중 던지므로
+ *   반응성 자체가 멎어, 화면이 굳고 **탭 전환조차 안 된다.** 껐다 켜도
+ *   같은 소식함을 다시 읽으니 안 풀린다. 테스터가 신고한 형태가 이것이다:
+ *
+ *     [pageerror] each_key_duplicate
+ *     Keyed each block has duplicate key `msg-tour-my-TOUR_HS_JANGMI-r1-2028`
+ *     at indexes 2 and 10   in NewsPage.svelte
+ *
+ * ⚠ **id는 원래 유일해야 한다.** 소식을 읽음 처리(`markMessageRead`)·선택
+ *   확정(`resolveDecision`)·대기 해제(`resolvePendingAction("message", id)`)가
+ *   전부 id로 찾는다 — 사본이 있으면 그것들도 엉킨다. 그러니 여기서 지우는
+ *   것이 손실이 아니다.
+ *
+ * ⚠ 이건 **막는 자리**지 고치는 자리가 아니다. 사본을 만드는 쪽이 따로
+ *   있다(`advanceWeek`의 대회 라운드 루프가 같은 라운드를 다시 확정하면
+ *   `buildMyRoundMessage`가 같은 id를 또 만든다 — 그 id에는 주차가 없다).
+ *   그쪽은 엔진 진행 로직이라 여기서 손대지 않는다.
+ */
+function dedupeMailbox(list: MessageItem[]): MessageItem[] {
+  const seen = new Set<string>();
+  const out: MessageItem[] = [];
+  for (const m of list) {
+    if (seen.has(m.id)) continue;
+    seen.add(m.id);
+    out.push(m);
+  }
+  return out;
+}
+
 /** 들어오는 소식을 집계하고 상한을 적용한다. 메일함에 넣는 유일한 문이다 */
 function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageItem[] {
   for (const m of incoming) {
@@ -962,7 +996,7 @@ function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageIt
     const k = messageKindOf(m.id);
     mailboxProduceStats.byKind[k] = (mailboxProduceStats.byKind[k] ?? 0) + 1;
   }
-  return trimMailbox([...incoming, ...current]);
+  return trimMailbox(dedupeMailbox([...incoming, ...current]));
 }
 
 /**
