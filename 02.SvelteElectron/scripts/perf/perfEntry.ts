@@ -4112,6 +4112,137 @@ export async function probeWeek(): Promise<Record<string, unknown>> {
   };
 }
 
+// ── D 세션 계측 — EVT_HS_Y3_LAST_SCRIMMAGE 재현 (2026-09-05) ─────────
+//
+// 버그 리포트: 고교 3학년 W16~21 「졸업 전 마지막 연습경기 선발」에서
+// 「전력 투구한다」(power)를 고르면 다음 주로 안 넘어갔다. 이 소식은
+// `runAutoAdvance`의 `handleMessage`가 피로도 휴리스틱(`pickChoice`)으로
+// 자동으로 골라버리므로, 그 전에 가로채 "power"로 답해야 사용자가 실제로
+// 겪은 선택을 재현한다 — 아래 `armDecisionChoice`가 그 트랩이다.
+//
+// 원리: 소식은 `processWeekBoundary` 안에서 mailbox에 들어가고, 그 mailbox
+// 갱신은 `gameStore.update()`를 지나 **동기** 구독자를 즉시 깨운다.
+// `runAutoAdvance`가 이 소식을 pendingAction으로 옮기는 건 **다음
+// advanceWeek() 호출**(맨 앞 "미결정 메시지 확인")이라 아직 한 틱 여유가
+// 있다 — 그 사이에 `gameStore.resolveDecision`을 동기로 불러 선점한다.
+const _armedChoices: { re: RegExp; optionId: string; hits: string[] }[] = [];
+let _armedUnsub: (() => void) | null = null;
+export function armDecisionChoice(idPattern: string, optionId: string): void {
+  _armedChoices.push({ re: new RegExp(idPattern), optionId, hits: [] });
+  if (_armedUnsub) return;
+  _armedUnsub = gameStore.subscribe((s) => {
+    for (const arm of _armedChoices) {
+      for (const m of s.mailbox) {
+        if (m.decision && m.decision.selectedOptionId === null &&
+            arm.re.test(m.id) && !arm.hits.includes(m.id)) {
+          arm.hits.push(m.id);
+          gameStore.resolveDecision(m.id, arm.optionId);
+        }
+      }
+    }
+  });
+}
+export function armedChoiceHits(): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  for (const a of _armedChoices) out[a.re.source] = a.hits;
+  return out;
+}
+
+/**
+ * `type:"game"` pendingAction이 뜨는 **순간**을 붙잡는다 — `runAutoAdvance`의
+ * `handleGame`이 곧바로 자동 시뮬을 돌려버리므로, 시뮬 전에
+ * `seasonStore.schedule`에서 그 scheduleId를 실제로 찾을 수 있는지가 이
+ * 틱에서만 관측 가능하다(OP 가설 (a) — MainPage.svelte:182의 lookup과 같은 식).
+ */
+interface GameWatchRow {
+  scheduleId: string; atWeek: number; foundInSchedule: boolean;
+  entryWeek: number | null; isFriendly: boolean | null;
+  home: string | null; away: string | null;
+}
+const _gameWatch: GameWatchRow[] = [];
+const _gameWatchSeen = new Set<string>();
+let _gameWatchUnsub: (() => void) | null = null;
+export function armGameWatch(): void {
+  if (_gameWatchUnsub) return;
+  _gameWatchUnsub = seasonStore.subscribe((s) => {
+    for (const a of s.pendingActions) {
+      if (a.type === "game" && !_gameWatchSeen.has(a.scheduleId)) {
+        _gameWatchSeen.add(a.scheduleId);
+        const e = s.schedule.find((x) => x.id === a.scheduleId);
+        _gameWatch.push({
+          scheduleId: a.scheduleId, atWeek: s.currentWeek,
+          foundInSchedule: !!e, entryWeek: e?.week ?? null,
+          isFriendly: e?.isFriendly ?? null,
+          home: e?.homeTeamId ?? null, away: e?.awayTeamId ?? null,
+        });
+      }
+    }
+  });
+}
+export function gameWatchDump(): GameWatchRow[] { return _gameWatch; }
+
+/** pendingActions 전부 — type과 식별자를 그대로 편다 */
+export function pendingActionsDump(): Array<Record<string, unknown>> {
+  return get(seasonStore).pendingActions.map((a) => ({ ...a }));
+}
+
+/** mailbox 중 decision.selectedOptionId === null 인 것 — id·subject만 */
+export function unresolvedMailboxDump(): Array<{ id: string; subject: string }> {
+  return get(gameStore).mailbox
+    .filter((m) => m.decision && m.decision.selectedOptionId === null)
+    .map((m) => ({ id: m.id, subject: m.subject }));
+}
+
+/** scheduleId 하나를 seasonStore.schedule과 leagueSchedules에서 찾는다 */
+export function scheduleFind(id: string): Record<string, unknown> | null {
+  const s = get(seasonStore);
+  const e = s.schedule.find((x) => x.id === id);
+  if (e) {
+    return {
+      where: "seasonStore.schedule", week: e.week, isFriendly: e.isFriendly ?? false,
+      home: e.homeTeamId, away: e.awayTeamId, result: !!e.result, gameDate: e.gameDate,
+    };
+  }
+  for (const [lid, arr] of Object.entries(s.leagueSchedules ?? {})) {
+    if (!Array.isArray(arr)) continue;
+    const e2 = (arr as Array<{ id: string; week: number; isFriendly?: boolean }>).find((x) => x.id === id);
+    if (e2) return { where: `leagueSchedules.${lid}`, week: e2.week, isFriendly: e2.isFriendly ?? false };
+  }
+  return null;
+}
+
+/**
+ * pendingActions 배열이 바뀔 때마다(길이·내용) 스냅샷을 남긴다.
+ * `autoRun()`이 한 틱에 여러 주를 삼켜도, 그 사이 순간순간의 pending 조합을
+ * (예: game과 message가 동시에 큐에 걸린 순간이 있었는지) 놓치지 않는다.
+ */
+interface PendingLogRow { week: number; actions: Array<Record<string, unknown>> }
+const _pendingLog: PendingLogRow[] = [];
+let _pendingLogPrev = "";
+let _pendingLogUnsub: (() => void) | null = null;
+export function armPendingLog(): void {
+  if (_pendingLogUnsub) return;
+  _pendingLogUnsub = seasonStore.subscribe((s) => {
+    const sig = JSON.stringify(s.pendingActions);
+    if (sig === _pendingLogPrev) return;
+    _pendingLogPrev = sig;
+    _pendingLog.push({ week: s.currentWeek, actions: s.pendingActions.map((a) => ({ ...a })) });
+  });
+}
+export function pendingLogDump(): PendingLogRow[] { return _pendingLog; }
+
+/** 지금 시점의 주차·학년·스테이지·pending 요약 — 매 스텝 찍는다 */
+export function weekStageDump(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  const p = g.protagonist;
+  return {
+    year: s.seasonYear, week: s.currentWeek, stage: p.careerStage, grade: p.grade ?? null,
+    pending: s.pendingActions.map((a) => a.type),
+    unresolvedMailbox: unresolvedMailboxDump(),
+  };
+}
+
 // ── 세계 상태 지문 ──────────────────────────────────────────────
 // 메모리와 slot.db 양쪽을 **같은 함수로** 찍는다. 따로 적으면 두 지문이
 // 서로 다른 이유로 달라져도 구분이 안 된다.
