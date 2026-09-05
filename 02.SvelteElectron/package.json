@@ -65,7 +65,7 @@
     "test:stafflife": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-staff-lifecycle.cjs",
     "test:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-career-transition.cjs",
     "test:teamhistory": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-team-history.cjs",
-    "test:v3": "npm run test:migration && npm run test:slotdb && npm run test:rostergen && npm run test:newgame && npm run test:draftpool && npm run test:regional && npm run test:tournament && npm run test:groupstage && npm run test:survival && npm run test:propo && npm run test:pitchrules && npm run test:staffgen && npm run test:stafflife && npm run test:career && npm run test:teamhistory && npm run test:relationship && npm run test:releasescope && npm run test:draft && npm run test:promotion && npm run test:military && npm run test:fa && npm run test:staff && npm run test:injury && npm run test:finance && npm run test:sentencebank && npm run test:campus && npm run test:savebatch && npm run test:growth",
+    "test:v3": "npm run check:savecolumns && npm run test:migration && npm run test:slotdb && npm run test:rostergen && npm run test:newgame && npm run test:draftpool && npm run test:regional && npm run test:tournament && npm run test:groupstage && npm run test:survival && npm run test:propo && npm run test:pitchrules && npm run test:staffgen && npm run test:stafflife && npm run test:career && npm run test:teamhistory && npm run test:relationship && npm run test:releasescope && npm run test:draft && npm run test:promotion && npm run test:military && npm run test:fa && npm run test:staff && npm run test:injury && npm run test:finance && npm run test:sentencebank && npm run test:campus && npm run test:savebatch && npm run test:growth",
     "test:draftpool": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-draft-pool.cjs",
     "test:synthetic": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-synthetic-trajectory.cjs",
     "test:migration": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-migration.cjs",
@@ -151,7 +151,9 @@
     "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt",
     "probe:military": "cross-env DRIVE_USER_DATA=1 PF_YEARS=6 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs --path mil",
     "smoke:oldsaves": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe node scripts/drive.mjs scripts/smoke-oldsaves.txt",
-    "check:msgdupid": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdupid.cjs"
+    "check:msgdupid": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdupid.cjs",
+    "check:roundtrip": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-roundtrip.cjs",
+    "check:savecolumns": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-savecolumns.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

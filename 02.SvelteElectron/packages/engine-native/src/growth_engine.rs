@@ -573,8 +573,15 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
     let p_logs = apply_pitching_xp(&mut pitching, &mut pitching_xp, &pitching_gains_adj);
     let b_logs = apply_batting_xp(&mut batting, &mut batting_xp, &batting_gains_adj);
 
-    if !p_logs.is_empty() { pitching.ovr = calc_pitching_ovr(&pitching); }
-    if !b_logs.is_empty() { batting.ovr  = calc_batting_ovr(&batting); }
+    // 🔴 **로그 유무로 가르지 않는다** (2026-09-06). 예전엔 `if !logs.is_empty()`
+    //   였는데, 능력치가 올랐어도 **로그로 남을 만큼이 아니면** OVR 이 안
+    //   따라왔다. 그러면 저장된 OVR 이 능력치와 어긋난 채로 남고,
+    //   불러오기(`normalizeProtagonist`)가 그때서야 고친다 —
+    //   `check:roundtrip` 이 `batting.ovr 30 → 35` 로 잡았다.
+    //   OVR 은 파생값이다. 재계산은 싸고, 같으면 같은 값이 나온다.
+    pitching.ovr = calc_pitching_ovr(&pitching);
+    batting.ovr  = calc_batting_ovr(&batting);
+    let _ = (&p_logs, &b_logs);
 
     // ── 구종 개발 ─────────────────────────────────────────────
     let mut pitches_out: Option<Vec<PitchEntry>> = None;
@@ -690,8 +697,15 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
     let p_logs = apply_pitching_xp(&mut pitching, &mut pitching_xp, &pitching_gains_adj);
     let b_logs = apply_batting_xp(&mut batting, &mut batting_xp, &batting_gains_adj);
 
-    if !p_logs.is_empty() { pitching.ovr = calc_pitching_ovr(&pitching); }
-    if !b_logs.is_empty() { batting.ovr  = calc_batting_ovr(&batting); }
+    // 🔴 **로그 유무로 가르지 않는다** (2026-09-06). 예전엔 `if !logs.is_empty()`
+    //   였는데, 능력치가 올랐어도 **로그로 남을 만큼이 아니면** OVR 이 안
+    //   따라왔다. 그러면 저장된 OVR 이 능력치와 어긋난 채로 남고,
+    //   불러오기(`normalizeProtagonist`)가 그때서야 고친다 —
+    //   `check:roundtrip` 이 `batting.ovr 30 → 35` 로 잡았다.
+    //   OVR 은 파생값이다. 재계산은 싸고, 같으면 같은 값이 나온다.
+    pitching.ovr = calc_pitching_ovr(&pitching);
+    batting.ovr  = calc_batting_ovr(&batting);
+    let _ = (&p_logs, &b_logs);
 
     let base_morale = if params.won { 6.0 } else if params.score_diff >= 5 { -15.0 } else { -8.0 };
     // 좋은 감독은 승리를 키우고 패배의 충격을 줄인다 — 그래서 음수엔 역수를 쓴다.

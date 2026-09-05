@@ -58,6 +58,7 @@ import type { ProContract } from "../types/save";
 import { shiftContract, type ContractStamp } from "../utils/contractHistory";
 import { transitionReason, universityGradeOf, universityWeekOnEnroll } from "../utils/careerTransition";
 import { careerSummaryOf } from "../utils/careerSummary";
+import { pitchingOvrOf, battingOvrOf } from "../utils/ovr";
 import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 // 인센티브를 구분하는 열쇠 — **식이 둘이 되면 자물쇠가 안 맞는다**
@@ -554,17 +555,8 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     clutch:      p.pitching.clutch      ?? def.pitching.clutch,
     holdRunners: p.pitching.holdRunners ?? def.pitching.holdRunners,
   };
-  const weighted =
-    pitchingMerged.velocity    * 2.5 +
-    pitchingMerged.command     * 2.5 +
-    pitchingMerged.control     * 2.0 +
-    pitchingMerged.movement    * 1.5 +
-    pitchingMerged.stamina     * 1.5 +
-    pitchingMerged.mentality   * 1.0 +
-    pitchingMerged.recovery    * 0.5 +
-    pitchingMerged.clutch      * 0.3 +
-    pitchingMerged.holdRunners * 0.2;
-  pitchingMerged.ovr = Math.round(weighted / 12.0);
+  // 식은 `utils/ovr.ts` 하나다 — 여기 다시 적으면 이벤트 갈래와 갈린다
+  pitchingMerged.ovr = pitchingOvrOf(pitchingMerged);
 
   const battingMerged = {
     ...p.batting,
@@ -572,19 +564,7 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     bunting:      p.batting.bunting      ?? def.batting.bunting,
     platoon:      p.batting.platoon      ?? def.batting.platoon,
   };
-  const battingWeighted =
-    battingMerged.contact       * 2.0 +
-    battingMerged.power         * 1.8 +
-    battingMerged.eye           * 1.5 +
-    battingMerged.discipline    * 1.2 +
-    battingMerged.speed         * 1.3 +
-    battingMerged.baseInstinct  * 0.7 +
-    battingMerged.bunting       * 0.3 +
-    battingMerged.platoon       * 0.3 +
-    battingMerged.fielding      * 1.3 +
-    battingMerged.arm           * 0.8 +
-    battingMerged.battingClutch * 0.6;
-  battingMerged.ovr = Math.round(battingWeighted / 11.8);
+  battingMerged.ovr = battingOvrOf(battingMerged);
 
   // 구버전 injury 형식 ({ type: "light"|"moderate"|"severe" }) → InjuryState 변환
   const rawInjury = p.injury as unknown as { type?: string; severity?: string; recoveryWeeksLeft?: number } | undefined;
@@ -943,6 +923,14 @@ export function applyEffectToProtagonist(
   // 스프레드가 undefined를 만나면 빈 객체가 되고, 그 상태로 `stat in target`을
   // 물으면 조용히 아무것도 안 하는 대신 **위쪽에서 터진다.** 빈 객체로 받는다
   const batting  = { ...(p.batting ?? {}) } as typeof p.batting;
+  // 🔴 **파생값을 다시 계산한다** (2026-09-06). 예전엔 능력치만 올리고
+  //   `ovr`은 그대로 뒀다 — 아래 주석이 "능력치에서 계산된다"고 적어 놓고
+  //   **계산하는 코드가 없었다.** 그래서 이벤트로 오른 만큼 OVR 이 뒤처졌고
+  //   **불러오기 전까지 안 맞았다**(`normalizeProtagonist` 가 그때 고쳐 준다).
+  //   왕복 검사가 `batting.ovr 30 → 35` 로 잡았다.
+  //   ⚠ 화면만의 문제가 아니다 — `pitching.ovr` 은 주인공의 `overall` 로
+  //     나가 스카우트·드래프트 순위가 읽는다.
+  let pTouched = false, bTouched = false;
   if (fx.statDelta) {
     for (const [key, amt] of Object.entries(fx.statDelta)) {
       const [bucket, stat] = key.includes(".") ? key.split(".") : ["pitching", key];
@@ -952,9 +940,14 @@ export function applyEffectToProtagonist(
       if (stat in target) {
         (target as unknown as Record<string, number>)[stat] =
           clampStat((target as unknown as Record<string, number>)[stat] + amt);
+        if (bucket === "batting") bTouched = true; else pTouched = true;
       }
     }
   }
+  if (pTouched) pitching.ovr = pitchingOvrOf(pitching);
+  // ⚠ 옛 세이브엔 `batting`이 통째로 없다(바로 위 주석) — 빈 객체에 식을
+  //   돌리면 NaN 이 된다. 실제로 값이 바뀐 때만 다시 계산한다
+  if (bTouched) batting.ovr = battingOvrOf(batting);
 
   return {
     ...p,
