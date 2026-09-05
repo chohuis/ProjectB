@@ -288,8 +288,9 @@ C
 
 | # | 무엇 | 상태 |
 |---|---|---|
+| 1-a | 🔴 **원인 확정(D fba2666ee · 실사용자 세이브)** — NPC **8,427명 중 872명이 `militaryStatus` 결측**이다. 전부 `careerStatus:"retired"` · `LEAGUE_RETIRED` · 팀 없음 · 20세 · `PLY_HS26_*`(2026 고교 신입 세대 · 미지명 은퇴로 보인다). `undefined` 는 `JSON.stringify` 에서 키째 빠지고, Rust `NpcSaveState.military_status`(`sim_types.rs:109`)가 `Option` 이 아니라 `String` 이라 파싱이 죽는다. **고칠 곳 둘**: ① 은퇴 처리에서 값을 채운다(`careerTransition.ts`·`draftSystem.ts`·`weekPhases/market.ts` 근방 — 어느 자리인지는 미확정) ② Rust 를 `Option<String>` 으로 받아 옛 세이브도 살린다 | 🔴 **A · 1.0.0** |
 | 1 | **재시작 뒤 드래프트에서 죽는다** — 저장 → 새 프로세스로 이어하기 → W32 드래프트 수락에서 `advanceAllGradesNative: missing field 'militaryStatus'` 로 예외. **안 끊고 돌린 같은 씨앗은 통과한다** — 재시작이 유발한다. NPC 가 `slot.db` 왕복(`hydrateStoresFromSlot`) 뒤 `militaryStatus` 를 잃는 정황(D 72e2db994 · 로그 `hsy3-restart-phase2.log`) | 🔴 **A 몫 · 1.0.0 안에 고친다.** 데모가 나가 있고 누구나 만난다 |
-| 2 | **「졸업 전 마지막 연습경기」 뒤 진행 멈춤**(리포트) — 첫 멈춤은 재현됨(같은 주 미결 소식 여럿 · 주 진행은 하나만 대기로 올린다). **둘째 멈춤(다음 경기 무응답)은 재현 안 됨** — 스토어·slot.db 수준은 저장·재시작에도 깨끗했다(schedule id 1091건 그대로 · 고아 0 · 미결 232건 전부 보존). 화면 쪽이 남는다 | 🔄 리포터 세이브를 받아 확정한다 |
+| 2 | **「졸업 전 마지막 연습경기」 뒤 진행 멈춤**(리포트) — 🔴 **로직 층은 무죄로 확정**(D fba2666ee · 실사용자 세이브를 이어하기로 불러 W18 연습경기를 화면과 같은 순서로 처리 → **예외 없이 완주**, W19~22 까지 정상). 세이브 상태도 정상: 대기 1건(`FRIENDLY_W18_TEAM_HS_MUJIN`)이 일정 1,083건 안에 있고 상대 팀·선수 31명·병역값 모두 온전. **리포터는 탭 전환조차 안 됐다** → `MainPage.svelte` 의 `$:` 블록 하나가 try/catch 밖에서 던져 반응성이 통째로 죽은 정황. 화면을 실제로 띄워 콘솔을 봐야 한다 | 🔄 **C 몫** — 이 세이브로 앱을 열고 콘솔 오류를 잡는다 |
 | 2-a | 소식함 **필터가 걸려 있으면 막는 소식이 안 보인다** — 목록도 「선택을 기다리는 소식 N건」 경고도 필터를 거친다(`NewsPage.svelte:80-88`) | ⬜ 확인 뒤 고침 |
 | 2-b | 경기 대기가 일정에서 안 찾히면 **아무것도 안 뜬다**(`MainPage.svelte:182` `?? null`) — 지금은 고아가 안 나지만 나면 조용히 멈춘다 | ⬜ 방어 한 줄 |
 | 3 | **소식 선택이 저장을 안 기다린다** — `NewsPage.choose` 가 `void applyDecision(...)` 뒤 바로 저장. 관계 같은 비동기 효과가 저장 뒤에 끝날 수 있다 | ⬜ 작음 |
