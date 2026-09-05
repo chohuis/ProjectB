@@ -561,6 +561,23 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
         (salary_rules.ovr_base * salary_rules.ovr_growth.powf(mid - salary_rules.ovr_pivot)
             * mult).max(floor).max(1.0)
     };
+    // 🔴 **예산이 정원을 정하는 건 연봉이 있는 리그뿐이다** (2026-09-06).
+    //
+    //   `budgetOf`(newGameV3.ts)에 "고교·대학은 예산이 있어도 그건 운영비지
+    //   인건비가 아니다 — 그쪽은 엔진이 `league_mult`가 없어 예전 동작으로
+    //   떨어진다"고 적혀 있었다. **그 방어가 실제로는 없었다.** `league_mult`가
+    //   없으면 `unwrap_or(1.0)`이라 산식이 그대로 돌았고, 아마추어 예산은
+    //   프로 인건비 대비 두 자릿수 작아서 결과가 **늘 `roster_min`에 붙었다.**
+    //
+    //   실측(씨앗 20260802 · 생성 직후): 대학 50팀 평균 20.2 · 최소 20 ·
+    //   최대 29 — 정원 32의 63%다. 대학은 고교의 `generateFreshmenV3` 같은
+    //   연간 충원이 없고 미지명자 배정(팀당 연 8명 상한)만 들어오므로,
+    //   부족분이 **4년에 걸쳐 천천히** 메워진다. 3시즌 뒤 평균 23.1이라는
+    //   테스터 실측은 누수가 아니라 **이 낮은 출발점의 잔상**이었다.
+    //
+    //   `league_mult`에 항목이 있는 리그 = 연봉으로 돌아가는 리그다
+    //   (KBL·2군·독립·ABL·JBL과 그 팜). 고교·대학은 없다.
+    let budget_sizes_roster = salary_rules.league_mult.contains_key(&p.league_id);
     // 정원 하한 — 예산이 아무리 적어도 경기는 치러야 한다
     let roster_min = p.rules.roster_min.unwrap_or(BATTING_ORDER).max(BATTING_ORDER);
     // 정원 상한 — 부유한 팀은 기준(`roster_size`)보다 많이 데릴 수 있다.
@@ -601,8 +618,9 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 * mult).max(floor).max(1.0)
         };
         let roster = match team.budget {
-            Some(b) if b > 0 => (((b as f64 * spend) / team_head_cost).floor() as i32)
-                .clamp(roster_min, roster_max),
+            Some(b) if b > 0 && budget_sizes_roster =>
+                (((b as f64 * spend) / team_head_cost).floor() as i32)
+                    .clamp(roster_min, roster_max),
             _ => roster,
         };
         let raw_pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
