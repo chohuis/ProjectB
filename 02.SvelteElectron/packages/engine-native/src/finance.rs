@@ -480,6 +480,11 @@ pub struct InvestmentParams {
     pub option_id: String,
     /// 투자 원금 (만원)
     pub amount: i64,
+    /// 판정 씨앗. **0이면(안 넘기면) 예전 그대로 `thread_rng`다** — 실제
+    /// 플레이가 그쪽이다. 계측 모드에서만 호출부가 씨앗을 넘긴다
+    /// (`measureMode.ts` · `finance.ts resolveInvestment`).
+    #[serde(default)]
+    pub seed: u64,
 }
 
 #[derive(Debug, Serialize)]
@@ -513,7 +518,13 @@ pub fn resolve_investment(p: InvestmentParams) -> InvestmentResult {
     let rate = if opt.sd <= 0.0 {
         opt.mean
     } else {
-        let mut rng = rand::thread_rng();
+        // 씨앗이 있으면 재현된다 — 없으면 예전 그대로 `thread_rng`
+        let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+            use rand::SeedableRng;
+            Box::new(rand::rngs::StdRng::seed_from_u64(p.seed))
+        } else {
+            Box::new(rand::thread_rng())
+        };
         let u1: f64 = rng.gen::<f64>().max(1e-12);
         let u2: f64 = rng.gen();
         let z = (-2.0 * u1.ln()).sqrt() * (2.0 * std::f64::consts::PI * u2).cos();
@@ -709,6 +720,7 @@ mod tests {
         for _ in 0..2000 {
             let out = resolve_investment(InvestmentParams {
                 rules: r.investment.clone(), option_id: "VENTURE".into(), amount: 10_000,
+                seed: 0,   // 분포를 보는 검사라 매번 다른 게 맞다
             });
             if out.profit < 0 { any_loss = true; }
             assert!(out.payout > 0, "원금이 통째로 사라졌다 (payout {})", out.payout);
@@ -718,7 +730,7 @@ mod tests {
 
         // 예금은 확정
         let dep = resolve_investment(InvestmentParams {
-            rules: r.investment.clone(), option_id: "DEPOSIT".into(), amount: 10_000,
+            rules: r.investment.clone(), option_id: "DEPOSIT".into(), amount: 10_000, seed: 0,
         });
         assert!(dep.profit > 0 && dep.rate > 0.0);
     }

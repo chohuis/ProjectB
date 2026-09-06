@@ -175,11 +175,48 @@ pub fn match_to_result_native(params_json: String) -> String {
     serde_json::to_string(&r).unwrap_or_else(|e| parse_err("matchToResultNative/serialize", e))
 }
 
+/// 상태가 든 씨앗으로 한 번 돌리고 **다음 호출이 이어받을 씨앗**을 남긴다.
+///
+/// 🔴 **씨앗이 0이면 예전 그대로 `thread_rng`다** — 실제 플레이가 그쪽이다.
+/// 계측 모드(`headless.boot()`가 심는 `__PB_MEASURE__`)에서만 호출부가
+/// `startMatch`에 씨앗을 넘기고, 그 뒤로는 상태가 씨앗을 물고 다닌다.
+///
+/// ⚠ **돌린 뒤 씨앗을 갈아 끼운다.** 준 씨앗을 그대로 두면 다음 호출이
+/// 같은 난수열을 처음부터 다시 쓴다(`start_match_native`가 먼저 겪은 함정).
+/// 0은 "씨앗 없음"이라 `| 1`로 피한다.
+///
+/// ⚠ 상태를 안 돌려주는 갈래(`GamePhaseResult::PreEntrySim` 등)는 씨앗을
+/// 못 갈아 끼운다 — 그때는 다음 호출이 같은 씨앗에서 다시 시작한다.
+/// **재현은 되지만** 두 호출의 난수열이 겹친다는 뜻이다. 그 갈래들은
+/// 난수를 안 쓰고 분기만 하므로(→ `advance_game_phase`) 실해가 없다.
+/// ⚠ 넘어오는 건 `&mut &mut dyn RngCore` 다 — `match_engine` 쪽 함수들이
+/// `&mut impl Rng`(즉 `Sized`)를 받으므로 `dyn` 을 한 겹 더 싸야 통과한다.
+/// 그 한 겹 덕에 씨앗 갈래와 `thread_rng` 갈래를 **같은 클로저 하나로** 쓴다.
+fn seeded<T>(
+    seed: u64,
+    run: impl FnOnce(&mut &mut dyn rand::RngCore) -> T,
+    stamp: impl FnOnce(&mut T, u64),
+) -> T {
+    if seed != 0 {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+        let mut dyn_rng: &mut dyn rand::RngCore = &mut rng;
+        let mut out = run(&mut dyn_rng);
+        let next = rng.gen::<u64>() | 1;
+        stamp(&mut out, next);
+        out
+    } else {
+        let mut rng = rand::thread_rng();
+        let mut dyn_rng: &mut dyn rand::RngCore = &mut rng;
+        run(&mut dyn_rng)
+    }
+}
+
 /// 경기 상태를 만든다.
 ///
 /// **씨앗을 주면 재현된다** — 같은 씨앗·같은 입력이면 언제 몇 번을 돌려도
 /// 같은 경기가 된다. 리그 경기(`gameSimulator.ts`)가 그렇게 부른다.
-/// 안 주면 예전 그대로 `thread_rng`다 — 주인공 경기가 그쪽이다.
+/// 주인공 경기는 **계측 모드에서만** 씨앗을 받는다(`measureMode.ts`) —
+/// 실제 플레이는 안 주므로 예전 그대로 `thread_rng`다.
 #[napi]
 pub fn start_match_native(options_json: String) -> String {
     let opts: MatchStartOptions = match serde_json::from_str(&options_json) {
@@ -220,8 +257,12 @@ pub fn step_pitch_native(state_json: String, decision_json: String) -> String {
     if !match_engine::is_protagonist_pitching(&state) {
         return serde_json::json!({ "error": "현재 주인공 투구 차례가 아닙니다." }).to_string();
     }
-    let mut rng = rand::thread_rng();
-    let result = match_engine::step_pitch_core(&state, &decision, true, &mut rng);
+    // 상태가 든 씨앗을 이어받는다 — 0이면 예전 그대로 `thread_rng`(실제 플레이)
+    let result = seeded(
+        state.rng_seed,
+        |rng| match_engine::step_pitch_core(&state, &decision, true, rng),
+        |r, next| r.next_state.rng_seed = next,
+    );
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("stepPitchNative/serialize", e))
 }
 
@@ -253,8 +294,19 @@ pub fn advance_game_phase_native(state_json: String) -> String {
         Ok(v) => v,
         Err(e) => return parse_err("advanceGamePhaseNative", e),
     };
-    let mut rng = rand::thread_rng();
-    let result = match_engine::advance_game_phase(&state, &mut rng);
+    // 상태가 든 씨앗을 이어받는다 — 0이면 예전 그대로 `thread_rng`(실제 플레이).
+    // ⚠ 상태를 돌려주는 갈래에만 다음 씨앗을 심는다(→ `seeded` 머리말)
+    let result = seeded(
+        state.rng_seed,
+        |rng| match_engine::advance_game_phase(&state, rng),
+        |r, next| match r {
+            GamePhaseResult::ProtagonistEntry { state } => state.rng_seed = next,
+            GamePhaseResult::ProtagonistExit { state, .. } => state.rng_seed = next,
+            GamePhaseResult::AutoBatting { result } => result.next_state.rng_seed = next,
+            GamePhaseResult::GameOver { state, .. } => state.rng_seed = next,
+            _ => {}
+        },
+    );
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceGamePhaseNative/serialize", e))
 }
 
@@ -265,8 +317,13 @@ pub fn sim_until_entry(state_json: String) -> String {
         Ok(v) => v,
         Err(e) => return parse_err("simUntilEntry", e),
     };
-    let mut rng = rand::thread_rng();
-    let result = match_engine::auto_simulate_until_entry(&state, &mut rng);
+    // 🔴 **여기가 주인공 경기의 큰 구멍이었다** — 등판 전 이닝을 통째로
+    //    돌리면서 `thread_rng`였다. `simToGameEnd`만 씨앗을 이어받고 있었다.
+    let result = seeded(
+        state.rng_seed,
+        |rng| match_engine::auto_simulate_until_entry(&state, rng),
+        |s, next| s.rng_seed = next,
+    );
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simUntilEntry/serialize", e))
 }
 
@@ -279,15 +336,11 @@ pub fn sim_to_game_end(state_json: String) -> String {
     };
     // 상태가 씨앗을 들고 있으면 이어받는다 — `startMatchNative`가 심어 둔다.
     // 0이면 예전 그대로 `thread_rng`다
-    let result = if state.rng_seed != 0 {
-        let mut rng = rand::rngs::StdRng::seed_from_u64(state.rng_seed);
-        let mut r = match_engine::auto_simulate_to_game_end(&state, &mut rng);
-        r.rng_seed = rng.gen::<u64>() | 1;
-        r
-    } else {
-        let mut rng = rand::thread_rng();
-        match_engine::auto_simulate_to_game_end(&state, &mut rng)
-    };
+    let result = seeded(
+        state.rng_seed,
+        |rng| match_engine::auto_simulate_to_game_end(&state, rng),
+        |s, next| s.rng_seed = next,
+    );
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simToGameEnd/serialize", e))
 }
 
@@ -298,8 +351,11 @@ pub fn sim_half_inning(state_json: String) -> String {
         Ok(v) => v,
         Err(e) => return parse_err("simHalfInning", e),
     };
-    let mut rng = rand::thread_rng();
-    let result = match_engine::auto_simulate_half_inning(&state, &mut rng);
+    let result = seeded(
+        state.rng_seed,
+        |rng| match_engine::auto_simulate_half_inning(&state, rng),
+        |r, next| r.next_state.rng_seed = next,
+    );
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simHalfInning/serialize", e))
 }
 

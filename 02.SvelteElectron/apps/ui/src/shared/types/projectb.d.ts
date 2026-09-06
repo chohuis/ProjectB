@@ -49,6 +49,8 @@ declare global {
       windowSetSize: (size: string) => Promise<{ ok: boolean; mode?: string; reason?: string; width?: number; height?: number }>;
       windowGetState: () => Promise<{ ok: boolean; width?: number; height?: number; fullscreen?: boolean }>;
       matchStart: (request?: {
+        /** 🔴 **계측 모드에서만 넘긴다** — `utils/protagonistMatchSeed.ts` */
+        seed?: number;
         leagueId?: string;
         /** 1.1 A② §6-1 — 리그가 정하는 것 한 벌 (`utils/matchLeagueOptions.ts`) */
         pitchLimitOverride?: number;
@@ -149,6 +151,10 @@ declare global {
       matchNextInning: () => Promise<{ snapshot: MatchSnapshot; logs: string[]; batchStats: { hits: number; walks: number; errors: number; isTop: boolean } | null; protagonistJustExited: boolean; exitReason: string | null }>;
       matchRunSimpleGame: (paramsJson: string) => Promise<string>;
       matchSimulateToEntry: (request?: {
+        /** 🔴 **계측 모드에서만 넘긴다** — 실제 플레이는 안 넘겨서 Rust 가
+         *  `thread_rng` 로 돈다(`utils/protagonistMatchSeed.ts`). 0 은
+         *  "씨앗 없음"이라 못 쓴다 */
+        seed?: number;
         /** ⚠ **여덟 개를 다 받는다.** 넷만 선언해 두면 호출부가 control·movement를
          * 넘기려 해도 타입이 막고, 그대로 두면 OVR의 33%가 엔진에 안 간다 */
         pitcher?: { arsenal?: { type: string; grade: number }[]; developingDifficulty?: number; name?: string;

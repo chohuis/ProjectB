@@ -22,6 +22,7 @@
   } from "../../shared/utils/matchResult";
   import { seasonStore } from "../../shared/stores/season";
   import { leagueMatchOptions } from "../../shared/utils/matchLeagueOptions";
+  import { protagonistMatchSeed } from "../../shared/utils/protagonistMatchSeed";
   import { settingsStore } from "../../shared/stores/settings";
   import {
     scaleMs, showsOverlay, overlayMs, reducesMotion, systemReducedMotion,
@@ -841,7 +842,14 @@
         ? { ...oppManagerEntity.details.manager.stats,
             buntMult: oppMgrEff.buntMult, stealMult: oppMgrEff.stealMult }
         : undefined;
+      // 🔴 **계측 모드에서만 씨앗을 넘긴다** (사용자 확정 2026-09-07).
+      //   실제 플레이는 `undefined` → 예전 그대로 `thread_rng`
+      //   (`shared/utils/protagonistMatchSeed.ts`)
+      const matchSeed = protagonistMatchSeed(
+        $seasonStore.worldSeed, $seasonStore.seasonYear,
+        ctx?.week ?? 0, ctx?.scheduleId ?? "");
       const response = await window.projectB.matchStart({
+        ...(matchSeed === undefined ? {} : { seed: matchSeed }),
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
         leagueId: $gameStore.protagonist.leagueId,
         // 1.1 A② §6-1 — 리그가 정하는 투구수 상한·선발 아웃 계수·마무리 문·의무 휴식 (규칙 파일)
@@ -1193,7 +1201,12 @@
     if (engineAvailable && window.projectB?.matchStep) {
       if (!engineStarted && window.projectB.matchStart) {
         const player = get(gameStore).player;
+        // 계측 모드에서만 씨앗 — 위 `startEngineMatch` 와 같은 규약
+        const seed2 = protagonistMatchSeed(
+          get(seasonStore).worldSeed, get(seasonStore).seasonYear,
+          matchContext?.week ?? 0, matchContext?.scheduleId ?? "");
         await window.projectB.matchStart({
+          ...(seed2 === undefined ? {} : { seed: seed2 }),
           leagueId: get(gameStore).protagonist.leagueId,
           ...leagueMatchOptions(get(gameStore).protagonist.leagueId,
             get(seasonStore).leagueState[get(gameStore).protagonist.leagueId]?.playerConditions?.[get(gameStore).protagonist.id],

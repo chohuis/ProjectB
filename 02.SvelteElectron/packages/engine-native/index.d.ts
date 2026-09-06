@@ -47,7 +47,8 @@ export declare function matchToResultNative(paramsJson: string): string
  *
  * **씨앗을 주면 재현된다** — 같은 씨앗·같은 입력이면 언제 몇 번을 돌려도
  * 같은 경기가 된다. 리그 경기(`gameSimulator.ts`)가 그렇게 부른다.
- * 안 주면 예전 그대로 `thread_rng`다 — 주인공 경기가 그쪽이다.
+ * 주인공 경기는 **계측 모드에서만** 씨앗을 받는다(`measureMode.ts`) —
+ * 실제 플레이는 안 주므로 예전 그대로 `thread_rng`다.
  */
 export declare function startMatchNative(optionsJson: string): string
 /** 주인공 인터랙티브 투구 (1구) */

@@ -12,6 +12,9 @@
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
+import { seasonStore } from "../stores/season";
+import { seedOf } from "../utils/seedOf";
+import { isMeasureMode } from "../utils/measureMode";
 import { staffModsOf } from "../utils/staffEffects";
 import { facilityTierOf } from "../utils/ids";
 import type { ProtagonistSave } from "../types/save";
@@ -225,10 +228,19 @@ export interface InvestmentResult {
 export async function resolveInvestment(p: {
   optionId: string;
   amount: number;
+  seasonYear?: number;
 }): Promise<InvestmentResult> {
   const rules = await loadFinanceRules();
+  // 🔴 **계측 모드에서만 씨앗을 넘긴다** (사용자 확정 2026-09-07). `finance.rs
+  //   resolve_investment` 이 `thread_rng` 라 같은 세이브를 다시 열어도 수익이
+  //   달랐다 — 계측에서는 그게 노이즈가 된다. 실제 플레이는 안 넘기므로
+  //   0(= 씨앗 없음)이 되어 예전 그대로 굴린다.
+  const s = get(seasonStore);
+  const seed = isMeasureMode()
+    ? seedOf(s.worldSeed ?? 0, p.seasonYear ?? s.seasonYear, p.optionId, "investment")
+    : 0;
   return engine<InvestmentResult>("resolveInvestmentNative", {
-    rules: rules.investment, optionId: p.optionId, amount: p.amount,
+    rules: rules.investment, optionId: p.optionId, amount: p.amount, seed,
   });
 }
 

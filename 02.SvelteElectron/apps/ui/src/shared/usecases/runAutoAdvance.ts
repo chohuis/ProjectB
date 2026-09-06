@@ -16,6 +16,7 @@ import { applyGameOutcome } from "./applyGameOutcome";
 import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types/season";
 import { buildBatterLineup, buildStarterStats, buildFielders, rotIdxOf } from "../utils/matchLineupBuilder";
 import { leagueMatchOptions } from "../utils/matchLeagueOptions";
+import { protagonistMatchSeed } from "../utils/protagonistMatchSeed";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
 // ⚠ `draftNotification`이 여기 없으면 **프로 계약이 조용히 버려진다.**
@@ -95,7 +96,14 @@ async function handleGame(scheduleId: string): Promise<void> {
     : undefined;
 
   try {
+    // 🔴 **계측 모드에서만 씨앗을 넘긴다** (사용자 확정 2026-09-07). 실제
+    //   플레이는 `undefined` → Rust 가 예전 그대로 `thread_rng` 다.
+    //   이게 없어서 같은 씨앗·프리셋으로 돌린 드래프트가 매번 달랐다
+    //   (`protagonistMatchSeed.ts` 머리말 · `BALANCE_BASELINE_101 §2`)
+    const matchSeed = protagonistMatchSeed(
+      s.worldSeed, s.seasonYear, entry.week, entry.id);
     const raw = await window.projectB!.matchSimulateToEntry({
+      ...(matchSeed === undefined ? {} : { seed: matchSeed }),
       // ⚠ 리그를 안 넘기면 투구수 상한이 리그 기본(120)으로 떨어진다 —
       //   고교 105구가 주인공 경기에만 안 걸렸다 (MainPage 와 같은 결함 · 2026-09-03)
       leagueId: lid,
