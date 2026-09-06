@@ -323,5 +323,5 @@ SAME_CLUB·TICKETS·UNIT_INVITE 다섯이 `career_stage: pro_kbl` 조건이라 �
 
 ## 해시
 
-- 코드: `068450acf` (브랜치 `track/measure`)
+- 코드: `5bb32e5f0` (브랜치 `track/measure`)
 - 네이티브 도장: `fe72ef394d43...` (계측 시작 전 확인 · 변경 없음)
