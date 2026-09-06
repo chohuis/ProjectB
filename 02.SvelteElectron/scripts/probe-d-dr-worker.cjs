@@ -18,6 +18,14 @@
  * 코치 지시(2026-09-06): "E2 는 따로 돌리지 말고 DR·LOC 판에서 같이 뽑아라."
  * 훈련은 조건 없이 매주 돌므로 "경기 있던 주"와 "없던 주"의 스탯 증가분
  * 차이로 경기 1회의 증분을 역산한다(`probe-morale.cjs`와 같은 방식).
+ *
+ * 🔴 **훈련 몰빵은 DR 의 정본이 아니다(코치 정정 2026-09-06).** 결정 ⑭(시작
+ *   능력치) 전후 비교는 **보통 플레이어가 그냥 두는 기본 훈련**(부팅 시
+ *   기본 배정)을 기준으로 해야 한다 — 실제로 balanced 프리셋이 몰빵 전엔
+ *   2R11P 지명이었는데 몰빵 뒤엔 대학합격으로 바뀌었다(드래프트가 훈련
+ *   배분에 민감하다는 증거). 기본값은 **기본 훈련**이고, `PB_TRAIN_MONO=1`을
+ *   주면 몰빵(주 슬롯만) 모드로 돈다 — 두 값을 다 재서 "훈련 배분 민감도"로
+ *   나란히 남긴다.
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
@@ -40,7 +48,7 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
     await app.boot({ slotId: "DR" + SEED, worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy(POLICY);
     const first = await app.trainingProbe();
-    app.setTrainingSlots([first.계획[0]]);
+    if (process.env.PB_TRAIN_MONO === "1") app.setTrainingSlots([first.계획[0]]);
     prevStat = stat3(app.protagonistAbilities());
     const start = app.currentSeason();
     let guard = 0;
@@ -85,6 +93,7 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
   const ab = app.protagonistAbilities();
   const result = {
     preset: PRESET, seed: SEED, why,
+    trainMode: process.env.PB_TRAIN_MONO === "1" ? "몰빵" : "기본",
     지명: cp.지명 ?? null, 대학합격: cp.대학합격 ?? null, 독립합격: cp.독립합격 ?? null,
     병역: cp.병역 ?? null, ovr: ab.ovr ?? null, velocity: ab.velocity ?? null,
     velKmh: velKmh(ab.velocity ?? 0),
