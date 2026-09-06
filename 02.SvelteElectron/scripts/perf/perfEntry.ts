@@ -73,6 +73,35 @@ const PITCHING = {
   mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64,
 };
 
+// ── D 세션 계측 — 시작 프리셋 넷 (2026-09-06 · BALANCE_BASELINE_101 DR절) ──
+// `NewGamePage.svelte`의 PRESETS와 값을 그대로 옮겼다(정의는 그쪽 · 여기는
+// 계측용 픽스처 사본). `PB_START_PRESET` 환경변수로 고른다 — 안 주면
+// 기존 PITCHING(균형형)을 그대로 쓴다(다른 계측 스크립트의 동작을 안 바꾼다).
+const START_PRESETS: Record<string, { pitching: typeof PITCHING; pitches: { id: string; grade: number }[]; tags: string[] }> = {
+  balanced: {
+    pitching: { ovr: 70, velocity: 70, command: 70, control: 73, movement: 71, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+    tags: ["정통파", "균형형"],
+  },
+  power: {
+    pitching: { ovr: 68, velocity: 78, command: 64, control: 60, movement: 66, mentality: 68, stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
+    pitches: [{ id: "PITCH_FASTBALL", grade: 2 }],
+    tags: ["파워피처"],
+  },
+  control: {
+    pitching: { ovr: 68, velocity: 57, command: 78, control: 75, movement: 66, mentality: 68, stamina: 62, recovery: 65, clutch: 65, holdRunners: 62 },
+    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_CHANGEUP", grade: 1 }],
+    tags: ["멘탈관리", "제구형"],
+  },
+  stamina: {
+    pitching: { ovr: 69, velocity: 67, command: 65, control: 67, movement: 66, mentality: 77, stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+    tags: ["체력형", "이닝이터"],
+  },
+};
+const _presetKey = process.env.PB_START_PRESET || "balanced";
+const _preset = START_PRESETS[_presetKey] ?? START_PRESETS.balanced;
+
 export interface BootResult {
   npcCount: number;
   worldSeed: number;
@@ -105,21 +134,21 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     grade: 1,
     age: 17,
     playerType: "pitcher",
-    position: await assignHighschoolPosition({ teamId, pitching: PITCHING }, get(masterStore).entities),
+    position: await assignHighschoolPosition({ teamId, pitching: _preset.pitching }, get(masterStore).entities),
     handedness: "R",
     pitchingForm: "overhand",
     jerseyNumber: 18,
     condition: 80,
     fatigue: 10,
     morale: 70,
-    pitching: PITCHING,
+    pitching: _preset.pitching,
     batting: {
       ovr: 30, contact: 30, power: 25, eye: 28, discipline: 28,
       speed: 48, baseInstinct: 48, bunting: 45, platoon: 50,
       fielding: 40, arm: 50, battingClutch: 25,
     },
     primaryPosition: "SP",
-    positionRatings: { SP: PITCHING.ovr },
+    positionRatings: { SP: _preset.pitching.ovr },
     diligence: 60,
     popularity: 10,
     // ⚠ **게임의 중앙값이어야 한다.** `NewGamePage`가 `random(0..15)+73` ·
@@ -133,12 +162,12 @@ export async function boot(opts: { slotId: string; worldSeed: number; seasonYear
     developmentRate: 80,
     potentialHidden: 89,
     growthPoints: 0,
-    tags: ["정통파", "균형형"],
+    tags: [..._preset.tags],
     pitchingXP: {},
     battingXP: {},
     // ⚠ NewGamePage 균형형과 같아야 한다 — 어긋나면 계측이 게임과 다른
     // 주인공을 잰다(이번 세션에 프리셋·능력치로 두 번 겪었다)
-    pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
+    pitches: _preset.pitches.map((p) => ({ ...p })),
     birthday: "2010-04-01",
     money: 1200,
     fame: 5,
@@ -5145,6 +5174,90 @@ export function statDistribution(): Record<string, unknown> {
     타자: ops.length,
     OPS_p10: q(ops, 0.1), OPS_중앙: q(ops, 0.5), OPS_p90: q(ops, 0.9), OPS_최소: q(ops, 0.001),
   };
+}
+
+/**
+ * D 세션 계측 — LOC절(`BALANCE_BASELINE_101`). 리그 타율·ERA·삼진율·볼넷률과
+ * 주인공 자신의 ERA·BB/9를 한 번에 뽑는다. `PB_LOC_INTENT` 켠 판/안 켠 판을
+ * 나란히 재는 용도라 **표본 문턱을 낮게**(투수 IP≥10 · 타자 PA≥20) 잡는다 —
+ * `statDistribution()`의 문턱(40/120)은 풀시즌 기준이라 짧은 구간엔 너무 세다.
+ */
+export function leagueRateProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  let pIp = 0, pEr = 0, pK = 0, pBb = 0, pN = 0;
+  let bAb = 0, bH = 0, bBb = 0, bK = 0, bPa = 0, bN = 0;
+  const pushRows = (rows: Record<string, unknown> | undefined) => {
+    for (const st of Object.values(rows ?? {})) {
+      const r = st as { type?: string; ip?: number; er?: number; k?: number; bb?: number;
+        ab?: number; h?: number; pa?: number };
+      if (!r) continue;
+      if (r.type === "pitcher" && (r.ip ?? 0) >= 10) {
+        pIp += r.ip ?? 0; pEr += r.er ?? 0; pK += r.k ?? 0; pBb += r.bb ?? 0; pN++;
+      }
+      if (r.type === "batter" && (r.pa ?? 0) >= 20) {
+        bAb += r.ab ?? 0; bH += r.h ?? 0; bBb += r.bb ?? 0; bK += r.k ?? 0; bPa += r.pa ?? 0; bN++;
+      }
+    }
+  };
+  pushRows(s.stats as Record<string, unknown>);
+  for (const ls of Object.values(s.leagueState ?? {})) {
+    pushRows((ls as { stats?: Record<string, unknown> })?.stats);
+  }
+  // ⚠ **주인공이 2군/농장이면 `s.stats`(시즌 리그)엔 없다** — 실측(2026-09-06):
+  //   드래프트 직후 팜에 배치된 판에서 `s.stats[hero]`가 undefined였다.
+  //   `leagueState[리그].stats`까지 다 뒤진다(`pathSignals().myGames`가
+  //   `s.stats`만 보는 것과 다르다 — 거긴 원래도 "0"이 정답일 수 있어서
+  //   그대로 두고, 여기는 "ERA null"이 잘못된 결측이라 넓힌다).
+  let heroSt = s.stats?.[g.protagonist.id] as
+    { type?: string; ip?: number; er?: number; bb?: number; era?: number } | undefined;
+  if (!heroSt) {
+    for (const ls of Object.values(s.leagueState ?? {})) {
+      const cand = (ls as { stats?: Record<string, unknown> })?.stats?.[g.protagonist.id] as typeof heroSt;
+      if (cand) { heroSt = cand; break; }
+    }
+  }
+  return {
+    표본: { 투수: pN, 타자: bN },
+    리그_ERA: pIp > 0 ? Math.round((pEr * 9 / pIp) * 100) / 100 : null,
+    리그_K9: pIp > 0 ? Math.round((pK * 9 / pIp) * 100) / 100 : null,
+    리그_BB9: pIp > 0 ? Math.round((pBb * 9 / pIp) * 100) / 100 : null,
+    리그_타율: bAb > 0 ? Math.round((bH / bAb) * 1000) / 1000 : null,
+    주인공_ERA: heroSt?.type === "pitcher" ? heroSt.era ?? null : null,
+    주인공_BB9: heroSt?.type === "pitcher" && (heroSt.ip ?? 0) > 0
+      ? Math.round(((heroSt.bb ?? 0) * 9 / (heroSt.ip ?? 1)) * 100) / 100 : null,
+    주인공_IP: heroSt?.type === "pitcher" ? Math.round((heroSt.ip ?? 0) * 10) / 10 : null,
+  };
+}
+
+/**
+ * D 세션 계측 — MOR절. `probe-morale`의 등판/이벤트/없는주 세 통에 **승패**를
+ * 더한다. 사기 낙폭이 패배가 원인인지 이벤트가 원인인지 가르는 용도.
+ * 누적 w/l을 그대로 주므로 호출부가 직전 스냅샷과 차를 낸다(`moraleSnapshot`과 같은 계약).
+ */
+export function moraleWLProbe(): { stage: string; morale: number; gp: number; w: number; l: number } {
+  const p = get(gameStore).protagonist;
+  const s = get(seasonStore);
+  const st = s.stats?.[p.id] as { g?: number; w?: number; l?: number } | undefined;
+  return {
+    stage: p.careerStage ?? "?",
+    morale: p.morale ?? 0,
+    gp: st?.g ?? 0,
+    w: st?.w ?? 0,
+    l: st?.l ?? 0,
+  };
+}
+
+/**
+ * D 세션 계측 — REU절. 화면 흐름을 안 거치고 **바로 입대시킨다**
+ * (`MilitaryEnlistAskModal`이 부르는 `enlistProtagonist`와 같은 함수).
+ * 자동 진행이 그 모달에 닿기까지 기다리면 판마다 씨앗에 따라 도달 시점이
+ * 흔들려 "12종 중 몇이 닿나"를 재는 데 잡음만 보탠다 — 여기서는 입대
+ * 시점 자체를 고정하고 **전역 뒤 창**만 본다.
+ */
+export async function forceEnlist(unit: "general" | "sports" = "general"): Promise<void> {
+  await enlistProtagonist(unit, get(seasonStore).currentWeek);
+  await gameStore.save();
 }
 export function worldChecksum(): Record<string, string> {
   const g = get(gameStore);
