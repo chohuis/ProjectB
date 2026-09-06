@@ -51,20 +51,22 @@ console.log("\n포지션 깊이 (국내 전 팀)");
   const FIELD = ["C","1B","2B","3B","SS","LF","CF","RF"];
   const byL = {};
   for (const t of refs.teams) (byL[t.leagueId] ??= []).push(t.id);
-  // 🔴 국내(depth: true)만 백업 2명을 못 박는다. 해외 1군은 정원 28이라
-  //   **RF가 1명뿐이고 전 팀이 그렇다** (2026-09-06 실측 · ABL 16/16 · JBL 12/12).
-  //   정원을 30으로 올려야 풀리는데 세계 인구가 바뀌므로 BALANCE_BACKLOG로 넘겼다.
-  //   여기서는 **규칙 ↔ 생성기가 같은가**만 해외까지 잰다.
+  // 🔴 예전엔 국내(depth: true)만 백업 2명을 못 박았다. 해외 1군은 정원 28이라
+  //   **RF가 1명뿐이고 전 팀이 그랬다** (2026-09-06 실측 · ABL 16/16 · JBL 12/12) —
+  //   야수 8자리를 두 바퀴 돌려면 16이 필요한데 `pitcherRatio` 0.45 × 28 = 12.6 →
+  //   투수 13이 먼저 잘려 야수에 15자리만 남았다.
+  //   **2026-09-07 정원을 30으로 올려 풀었다**(`BALANCE_BACKLOG §8` · 결정 ⑬).
+  //   그래서 이제 **해외도 depth: true** 다 — 다시 얇아지면 여기서 잡힌다.
   const PLAN = [
     ["LEAGUE_HIGHSCHOOL",  byL.LEAGUE_HIGHSCHOOL ?? [],                              true],
     ["LEAGUE_UNIVERSITY",  byL.LEAGUE_UNIVERSITY ?? [],                              true],
     ["LEAGUE_INDEPENDENT", byL.LEAGUE_INDEPENDENT ?? [],                             true],
     ["LEAGUE_KBL",         (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_1")),   true],
     ["LEAGUE_KBL_FARM",    (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_2")),   true],
-    ["LEAGUE_ABL",         (byL.LEAGUE_ABL ?? []).filter((i) => !i.endsWith("_2")),  false],
-    ["LEAGUE_ABL_FARM",    (byL.LEAGUE_ABL ?? []).filter((i) => i.endsWith("_2")),   false],
-    ["LEAGUE_JBL",         (byL.LEAGUE_JBL ?? []).filter((i) => !i.endsWith("_2")),  false],
-    ["LEAGUE_JBL_FARM",    (byL.LEAGUE_JBL ?? []).filter((i) => i.endsWith("_2")),   false],
+    ["LEAGUE_ABL",         (byL.LEAGUE_ABL ?? []).filter((i) => !i.endsWith("_2")),  true],
+    ["LEAGUE_ABL_FARM",    (byL.LEAGUE_ABL ?? []).filter((i) => i.endsWith("_2")),   true],
+    ["LEAGUE_JBL",         (byL.LEAGUE_JBL ?? []).filter((i) => !i.endsWith("_2")),  true],
+    ["LEAGUE_JBL_FARM",    (byL.LEAGUE_JBL ?? []).filter((i) => i.endsWith("_2")),   true],
   ];
   let teams = 0, thin = [], totalNpcs = 0;
   const genSize = {};                       // lid → 실제로 생성된 팀당 인원 집합
@@ -97,9 +99,9 @@ console.log("\n포지션 깊이 (국내 전 팀)");
       FIELD.map((f) => `${f}${cnt[f] ?? 0}`).join(" ") +
       ` SP${cnt.SP ?? 0} CP${cnt.CP ?? 0} RP${cnt.RP ?? 0}`);
   }
-  console.log(`    국내 ${totalNpcs}명 / ${teams}팀`);
+  console.log(`    국내+해외 ${totalNpcs}명 / ${teams}팀`);
 
-  check(`국내 ${teams}팀 전부 야수 8포지션에 백업까지 있다`, thin.length === 0,
+  check(`${teams}팀 전부 야수 8포지션에 백업까지 있다`, thin.length === 0,
     thin.slice(0, 5).join(" "));
 
   // ── 정원 — **규칙 파일이 정본이다. 여기에 숫자를 또 적지 않는다** ──────
