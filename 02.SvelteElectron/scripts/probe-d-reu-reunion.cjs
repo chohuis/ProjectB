@@ -45,7 +45,7 @@ function runOne(pathKey, seed) {
     //   0/12 로 나온 표는 게임이 그런 게 아니라 타임아웃이었다.
     // ⚠ 60분도 빠듯했다(2차 시도 — 두 판 다 3,600~3,700초 선에서 시간 끝. 벽시계와
     //   CPU 시간이 거의 같아서 "다 됐는데 못 넘었다"였다). 80분으로 더 늘린다.
-    const timer = setTimeout(() => child.kill(), 4800000);
+    const timer = setTimeout(() => child.kill(), 1200000); // 코치 지시: 1200초 상한 (워커 자체 데드라인 1080초+정리 여유)
     child.on("close", () => {
       clearTimeout(timer);
       const line = out.split("\n").find((l) => l.startsWith("RESULT "));
