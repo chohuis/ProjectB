@@ -496,7 +496,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     calcWeeklyFinance({ protagonist: g.protagonist, seasonYear: s.seasonYear }),
     // 개인 트레이닝 구독 — 보너스가 팀 자원에 반비례한다 (DESIGN §7.3)
     calcTrainingBonus({ protagonist: g.protagonist }),
-    window.projectB!.weekRollRandomBatch(randCount),
+    // 🔴 **씨앗을 안 넘기고 있었다** (2026-09-07). `roll_random_batch` 는
+    //    씨앗이 0이면 `thread_rng` 로 떨어진다 — 그래서 **이벤트 뽑기가 실행마다
+    //    달랐고**, 선택지 효과가 능력치를 밀어 같은 씨앗·같은 경기 결과인데도
+    //    고교 3년 뒤 OVR·구속이 갈렸다(실측: 3회에 75/76/76 · 76/77/78).
+    //    같은 자리의 `injuries.ts` 는 처음부터 `seedOf` 를 넘기고 있었다 —
+    //    **한쪽만 배선된 형태**다.
+    window.projectB!.weekRollRandomBatch(
+      randCount,
+      seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "event-rands")),
   ]);
   const facilityEffMod = JSON.parse(facilityEffModRaw) as number;
   const injuryCalc = JSON.parse(injuryCalcRaw) as {
@@ -599,7 +607,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           .some((h) => h.severity === "surgery");
         const chance = surgeryRetireChance(g.protagonist.age, hadSurgery, retireRules);
         // TS에서 Math.random()은 금지 — 난수는 전부 Rust에서 온다
-        const roll = (JSON.parse(await window.projectB!.weekRollRandomBatch(1)) as number[])[0] ?? 1;
+        // ⚠ **씨앗도 넘긴다.** 안 넘기면 `thread_rng` 라 같은 세이브를 다시
+        //   열 때마다 은퇴 여부가 달라진다(2026-09-07 · 위 배치와 같은 결함)
+        const roll = (JSON.parse(await window.projectB!.weekRollRandomBatch(
+          1,
+          seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "surgery-retire"),
+        )) as number[])[0] ?? 1;
         if (roll < chance) {
           seasonStore.pushPendingAction({
             type: "retirementAsk", urgency: 1, reason: "injury",

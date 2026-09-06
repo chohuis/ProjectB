@@ -501,6 +501,41 @@ AMATEUR_SAMPLE_UNTIL   거기까지 oneWeek() 으로 한 주씩 올라 표본을
 >
 > ⚠ `test:foreign`(4회 중 1회 실패)·`test:rosterbalance`(3~4건 흔들림)은
 > 이 정책의 하위 증상이다. **기준선을 같이 재야 회귀인지 갈린다.**
+>
+> ### 계측 모드 — 주인공 경기·투자에만 씨앗을 준다 (사용자 확정 2026-09-07)
+>
+> 위 정책의 "계측이 재현되는 수준"을 **어디까지**로 할지가 남아 있었다.
+> 답: **계측 모드에서만** 주인공 경기가 씨앗을 받는다.
+>
+> 🔴 왜 필요했나 — 같은 씨앗·프리셋·훈련으로 고교 3년 → 드래프트를 세 번
+> 돌렸더니 **2R11P → 10R91P → 5R47P** 였다(`BALANCE_BASELINE_101 §2`).
+> 리그 경기(`gameSimulator.ts`)는 씨앗을 받는데 주인공 경기 호출부만 안
+> 넘겨서 `start_match`·`sim_until_entry`·`step_pitch`·`advance_game_phase`가
+> 전부 `thread_rng`였다. **그 상태로는 1.0.1 밸런스 전후를 못 잰다.**
+>
+> | 자리 | 무엇 |
+> |---|---|
+> | 정본 플래그 | `scripts/perf/headless.cjs boot()` 가 심는 `globalThis.__PB_MEASURE__` — 재현성을 보는 계측·회귀가 **전부** 이 부팅을 지난다. `DRIVE_USER_DATA=1` 은 사용자 데이터 디렉터리 스위치라 뜻이 다르다 |
+> | 읽는 곳 | `apps/ui/src/shared/utils/measureMode.ts` **한 곳** |
+> | 씨앗 식 | `seedOf(worldSeed, 시즌, 주차, scheduleEntry.id)` — `protagonistMatchSeed.ts`. 0 은 「씨앗 없음」이라 `seedOf` 가 이미 피한다 |
+> | 이어받기 | `lib.rs seeded()` 하나로 — 돌린 뒤 `state.rng_seed` 를 갈아 끼운다 |
+> | 투자 | `finance.rs resolve_investment` 도 같은 플래그에서 씨앗(`seedOf(worldSeed, 시즌, optionId, "investment")`) |
+> | 게이트 | 배선은 `protagonistMatchSeed.test.ts`(vitest) · 실제 재현은 `npm run check:measurerepro`(판당 ~10분이라 `test:v3` 밖) |
+>
+> 🔴 **실제 플레이는 한 줄도 안 바뀐다** — 렌더러에 `__PB_MEASURE__` 를 심는
+> 곳이 없어 `seed` 가 `undefined` 로 나가고, Rust 가 예전 그대로 `thread_rng` 다.
+>
+> ⚠ **같이 나온 결함 하나** — `weekRollRandomBatch` 두 호출부(이벤트 뽑기 ·
+> 수술 은퇴 판정)가 **씨앗을 안 넘기고 있었다.** 같은 자리의 `injuries.ts` 는
+> 처음부터 넘기고 있었다 — 한쪽만 배선된 형태다. 이건 계측 모드와 무관하게
+> 늘 씨앗을 넘긴다(같은 세이브를 다시 열면 같은 이벤트가 나는 게 설계다).
+>
+> 🔴 **아직 완전 재현은 아니다.** 배경 세계 NPC 능력치가 4~5주째에 한 명씩
+> 1 어긋나고, **갈리는 주가 판마다 옮겨 다닌다.** 씨앗을 안 준 난수는 아니다 —
+> 주인공 경기·배경 리그 경기·주간 성장 전부 「같은 입력 → 같은 값」이 실측으로
+> 확인됐다(프로세스를 바꿔도). 남은 건 **순서가 결과를 바꾸는 자리**다.
+> 자리를 좁히는 계기: `npm run probe:a:diverge`(두 판을 주 단위로 대조하고
+> 갈리는 NPC 를 집어 준다) · 게이트: `npm run check:measurerepro`.
 | 2 | ~~이벤트 로더 **0건**~~ — **틀렸다(2026-08-23 실측).** 아래 참고 | — | — |
 
 > **이벤트는 실제로 돌고 있다** — 트랙 B 실측 · A 검증 (2026-08-23)

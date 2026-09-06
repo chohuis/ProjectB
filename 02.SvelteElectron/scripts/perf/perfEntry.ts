@@ -8624,3 +8624,53 @@ export function npcMilitaryStatusAudit(): {
   }
   return { total: npcs.length, missing: bad.length, samples: bad.slice(0, 20) };
 }
+
+// ── 세계 순서 지문 (A · 2026-09-07) ─────────────────────────────
+//
+// 🔴 **주간 성장은 NPC 배열 순서에 걸린다.** `calc_weekly_npc_growth` 는 씨앗
+//   하나로 LCG 를 만들어 **넘어온 순서대로** `rand_f` 를 뽑는다. 그래서
+//   `masterStore.entities` 순서가 실행마다 다르면 같은 씨앗이어도 다른 선수가
+//   다른 난수를 받는다 — 결과는 「몇 주 뒤 어떤 NPC 능력치가 1 다르다」로 난다.
+//   그걸 눈으로 잡을 수 없어서 지문을 둔다(`probe-a-diverge.cjs`).
+export function entityOrderFingerprint(): Record<string, unknown> {
+  const ents = get(masterStore).entities;
+  let h = 0x811c9dc5;
+  for (const e of ents) {
+    for (let i = 0; i < e.id.length; i++) {
+      h ^= e.id.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+  }
+  return { count: ents.length, hash: h >>> 0, first: ents[0]?.id ?? null, last: ents[ents.length - 1]?.id ?? null };
+}
+
+/**
+ * NPC 능력치 지문 — **주간 성장이 어느 주에 갈리는지** 잡는다.
+ * `entityOrderFingerprint` 는 순서만 본다. 이쪽은 값이다.
+ * 갈리는 NPC 를 바로 알 수 있게 **처음 어긋나는 한 명**을 찾도록 목록도 준다.
+ */
+export function npcLiveFingerprint(): Record<string, unknown> {
+  const live = get(npcLiveStatsStore);
+  const ids = Object.keys(live).sort();
+  let h = 0x811c9dc5;
+  const mix = (s: string) => {
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  };
+  for (const id of ids) {
+    const v = live[id] as { pitching?: Record<string, number>; batting?: Record<string, number> };
+    mix(id);
+    for (const grp of [v.pitching, v.batting]) {
+      if (!grp) continue;
+      for (const k of Object.keys(grp).sort()) mix(`${k}=${grp[k]}`);
+    }
+  }
+  return { count: ids.length, hash: h >>> 0 };
+}
+
+/** NPC 능력치 전량 덤프 — `id:투수OVR:타자OVR` 한 줄. 갈리는 **사람**을 찾는다 */
+export function npcLiveDump(): string {
+  const live = get(npcLiveStatsStore) as Record<string, { pitching?: { ovr?: number }; batting?: { ovr?: number } }>;
+  return Object.keys(live).sort()
+    .map((id) => `${id}:${live[id]?.pitching?.ovr ?? "-"}:${live[id]?.batting?.ovr ?? "-"}`)
+    .join("\n");
+}

@@ -149,6 +149,8 @@
     "probe:paths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-paths.cjs",
     "probe:d:e2": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-e2-runall.cjs",
     "probe:d:dr": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-dr-draft.cjs",
+    "check:measurerepro": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-measure-repro.cjs",
+    "probe:a:slotmult": "node scripts/probe-a-slotmult.cjs",
     "probe:d:loc": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-loc-mode.cjs",
     "probe:d:mor": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-mor-morale.cjs",
     "probe:d:reu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-reu-reunion.cjs",
@@ -159,7 +161,8 @@
     "smoke:oldsaves": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe node scripts/drive.mjs scripts/smoke-oldsaves.txt",
     "check:msgdupid": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-msgdupid.cjs",
     "check:roundtrip": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-roundtrip.cjs",
-    "check:savecolumns": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-savecolumns.cjs"
+    "check:savecolumns": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-savecolumns.cjs",
+    "probe:a:diverge": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-diverge.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

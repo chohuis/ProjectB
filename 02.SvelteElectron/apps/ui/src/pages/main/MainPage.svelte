@@ -53,6 +53,7 @@
   import { masterStore } from "../../shared/stores/master";
   import { buildBatterLineup, buildStarterStats, buildFielders, derivePreGameWeather, derivePreGamePark, rotIdxOf } from "../../shared/utils/matchLineupBuilder";
   import { leagueMatchOptions } from "../../shared/utils/matchLeagueOptions";
+  import { protagonistMatchSeed } from "../../shared/utils/protagonistMatchSeed";
 
   export let onSeasonEnd: () => void = () => {};
 
@@ -284,7 +285,14 @@
                                     rotIdxOf($seasonStore.leagueState, lid, p.teamId), lid, $seasonStore.npcInjuries)
                                 : undefined;
 
+      // 🔴 **계측 모드에서만 씨앗을 넘긴다** (사용자 확정 2026-09-07).
+      //   실제 플레이는 `undefined` → 예전 그대로 `thread_rng`
+      //   (`shared/utils/protagonistMatchSeed.ts`)
+      const matchSeed = protagonistMatchSeed(
+        $seasonStore.worldSeed, $seasonStore.seasonYear,
+        pendingGameEntry.week, pendingGameEntry.id);
       const raw = await window.projectB!.matchSimulateToEntry({
+        ...(matchSeed === undefined ? {} : { seed: matchSeed }),
         // ⚠ **여덟 개를 다 넘긴다.** 넷만 넘기면 control·movement·clutch·
         // holdRunners가 빠져 OVR의 33%가 엔진에 안 간다 — 오류 없이 조용히
         // 기본값이 되고, 주인공 ERA가 같은 OVR NPC의 2배가 된다

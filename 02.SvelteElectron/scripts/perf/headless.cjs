@@ -157,6 +157,13 @@ async function boot(prefix, opts) {
 
   globalThis.window = globalThis;
   globalThis.window.projectB = bridge;
+  // 🔴 **계측 모드 표식** (2026-09-07 · 사용자 확정). 이게 켜져야 주인공
+  //   경기·투자가 씨앗을 받아 재현된다 — `apps/ui/src/shared/utils/measureMode.ts`
+  //   가 이 한 값만 본다. 실제 Electron 렌더러에는 심는 곳이 없으므로
+  //   **실제 플레이는 예전 그대로 `thread_rng`** 다.
+  //   ⚠ 번들을 `require` 하기 **전에** 심어야 한다 — 모듈 최상위에서 읽는
+  //     코드가 생기면 순서가 결과를 가른다.
+  globalThis.__PB_MEASURE__ = true;
   globalThis.localStorage = {
     _m: new Map(),
     getItem(k) { return this._m.has(k) ? this._m.get(k) : null; },

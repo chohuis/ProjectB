@@ -78,7 +78,8 @@
       "rosterMax": 34
     },
     "LEAGUE_ABL": {
-      "rosterSize": 28,
+      "rosterSize": 30,
+      "_rosterSizeNote": "28 → 30 (2026-09-07 · `BALANCE_BACKLOG §8` · 결정 ⑬). **해외 1군 전 팀이 RF 1명이었다** — ABL 16/16 · JBL 12/12(씨앗 4242). 생성기는 야수 8자리를 두 바퀴 돌아 백업 1명까지 보장하는데, `pitcherRatio` 0.45 × 28 = 12.6 → 투수 13 이 먼저 잘려 야수에 15자리만 남았다. 16 이 필요한데 15라 마지막 한 자리(RF)가 1명이 됐다. 30 이면 투수 13.5 → 14 · 야수 16 으로 정확히 맞는다(국내 KBL 30 과 같은 관계). ⚠ 세계 인구가 1군 28팀 × 2명 = **+56명** 늘어난다. `rosterMax` 는 ABL 34 · JBL 32 라 상한 안이다. 되돌릴 값은 28 하나뿐이다. 2군(`*_FARM` 34)은 그대로 — 그쪽은 처음부터 초록이었다.",
       "pitcherRatio": 0.45,
       "pitchingOvrMin": 62,
       "pitchingOvrMax": 92,
@@ -310,7 +311,8 @@
       }
     },
     "LEAGUE_JBL": {
-      "rosterSize": 28,
+      "rosterSize": 30,
+      "_rosterSizeNote": "28 → 30 (2026-09-07 · `LEAGUE_ABL` 의 `_rosterSizeNote` 와 같은 이유·같은 값).",
       "pitcherRatio": 0.45,
       "pitchingOvrMin": 60,
       "pitchingOvrMax": 90,
