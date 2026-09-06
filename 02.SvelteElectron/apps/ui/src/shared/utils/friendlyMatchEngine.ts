@@ -150,6 +150,8 @@ export function buildMonthlyNoticeMessage(
   plan: FriendlyPlan,
   officialEntries: ScheduleEntry[],
   weekNum: number,
+  /** 소식 id 에 들어간다 — 주차는 시즌마다 1로 돌아온다 */
+  seasonYear: number,
   teamMap?: Map<string, string>,
   /**
    * 상대 요약 조회. **없으면 지금까지와 똑같이 날짜·상대만 나온다** —
@@ -231,7 +233,9 @@ export function buildMonthlyNoticeMessage(
     : `친선경기 ${plan.entries.length}회 편성`;
 
   return {
-    id:        `msg-friendly-plan-w${weekNum}-${Date.now()}`,
+    // 🔴 **연도+주차**다. 월간 편성은 그 주에 한 통뿐이다. 연도는 첫
+    //   경기 날짜에서 온다 — `plan` 이 연도를 안 들고 있다
+    id:        `msg-friendly-plan-${seasonYear}-w${weekNum}`,
     category:  "manager",
     sender:    "감독",
     subject:   `${plan.monthLabel} 경기 편성 — ${countText}`,
@@ -484,7 +488,9 @@ export function buildFriendlyResultMessage(
 
   return {
     message: {
-      id:        `msg-friendly-result-w${scheduleEntry.week}-${Date.now()}`,
+      // 🔴 **경기 하나에 한 통**이다 — 한 주에 친선이 둘일 수 있어 주차만으로는
+      //   겹친다. 일정 id 가 대상이고, 날짜가 연도를 들고 있다
+      id:        `msg-friendly-result-${scheduleEntry.gameDate}-${scheduleEntry.id}`,
       category:  "system",
       sender:    "감독",
       subject:   `친선경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
@@ -752,7 +758,8 @@ export function buildOfficialResultMessage(
   ].join("\n");
 
   return {
-    id:        `msg-official-result-w${scheduleEntry.week}-${Date.now()}`,
+    // 🔴 **경기 하나에 한 통**이다 (위 친선과 같은 이유)
+    id:        `msg-official-result-${scheduleEntry.gameDate}-${scheduleEntry.id}`,
     category:  "manager",
     sender:    "감독",
     subject:   `공식경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,

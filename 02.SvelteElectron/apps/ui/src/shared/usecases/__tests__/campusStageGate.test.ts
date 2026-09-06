@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { allStarCopyOf, campusEventFor, campusStageKind } from "../campusEvents";
+import { natlSquadSelfLine } from "../nationalTeam";
 
 /**
  * **행사가 무대를 넘지 않는다** (2026-09-06).
@@ -137,5 +138,40 @@ describe("올스타 문안이 무대를 본다", () => {
     expect(new Set(slugs).size, slugs.join(",")).toBe(slugs.length);
     // 대시보드 배선은 `msg-allstar-` 접두사로 걸린다 — slug 가 그걸 안 깬다
     for (const s of slugs) expect(`msg-allstar-${s}-2030-w21`).toMatch(/^msg-allstar-/);
+  });
+});
+
+describe("대표팀 발표 문안이 후보 여부를 본다", () => {
+  // 🔴 후보 풀은 **국내 프로 한국인 현역**뿐인데(`callUpNationalSquad`)
+  //   본문이 「이번에는 명단에 들지 못했다」를 고교 1학년·복무 중·은퇴에게도
+  //   보냈다. 그들은 떨어진 게 아니라 **잴 자리에 없었다.**
+  //
+  //   0통으로 막지 않고 문안을 갈랐다 — 새 게임은 고교 3년 + 대학 4년이라
+  //   플레이어가 처음 만나는 몇 시간이 전부 아마추어 무대다. 거기서 대회를
+  //   통째로 감추면 그 해에 올림픽이 없었던 것처럼 보인다.
+
+  it("후보가 아니면 낙방으로 안 읽힌다 — 세계 소식이다", () => {
+    const line = natlSquadSelfLine(false, false);
+    expect(line).not.toContain("명단에 들지 못했다");
+    expect(line).not.toContain("내 이름");
+    // 「누가 뽑혔나」가 보여야 세계 소식으로 읽힌다
+    expect(line).toContain("프로");
+  });
+
+  it("후보인데 안 뽑히면 낙방 문안이다", () => {
+    expect(natlSquadSelfLine(true, false)).toContain("명단에 들지 못했다");
+  });
+
+  it("뽑히면 발탁 문안이다 — 후보 여부와 무관하게 같은 문장이다", () => {
+    expect(natlSquadSelfLine(true, true)).toContain("내 이름");
+  });
+
+  it("세 갈래가 서로 다른 문장이다 — 하나로 뭉개지지 않는다", () => {
+    const lines = [
+      natlSquadSelfLine(false, false),
+      natlSquadSelfLine(true, false),
+      natlSquadSelfLine(true, true),
+    ];
+    expect(new Set(lines).size, lines.join(" / ")).toBe(3);
   });
 });

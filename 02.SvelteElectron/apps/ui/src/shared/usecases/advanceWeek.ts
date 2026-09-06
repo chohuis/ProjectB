@@ -251,7 +251,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       gameStore.setPosition(pos);
       gameStore.setCurrentRole(pos === "SP" ? "1선발" : "중간계투");
       gameStore.addMessage({
-        id: `msg-season-brief-${Date.now()}`,
+        id: `msg-season-brief-${s.seasonYear}`,
         category: "system",
         sender: "코칭스태프",
         subject: `${s.seasonYear}시즌 시작 브리핑`,
@@ -278,7 +278,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       gameStore.setPosition(pos);
       gameStore.setCurrentRole(role);
       gameStore.addMessage({
-        id: `msg-season-brief-${Date.now()}`,
+        id: `msg-season-brief-${s.seasonYear}`,
         category: "system",
         sender: "코칭스태프",
         subject: `${s.seasonYear}시즌 시작 브리핑`,
@@ -723,7 +723,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const trainingScoutDelta = ovrAfter > ovrBefore ? Math.min(3, Math.max(1, ovrAfter - ovrBefore)) : 0;
   const afterP: ProtagonistSave = { ...g.protagonist, money: Math.max(0, g.protagonist.money + weeklyNet), ...growth.protagonistPatch };
   const coachName = getPitchCoachName(afterP.teamId, m.entities);
-  const trainingMsg = makeTrainingMessage(weekNum, growth.logs, afterP, coachName);
+  const trainingMsg = makeTrainingMessage(s.seasonYear, weekNum, growth.logs, afterP, coachName);
 
   // 이벤트 엔진 (미리 계산된 eventRands 사용)
   const updatedUniversityWeek = isUniversity ? (g.schoolState.universityWeek + 1) : (g.schoolState.universityWeek ?? 0);
@@ -932,7 +932,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         });
       };
       const noticeMsg = buildMonthlyNoticeMessage(
-        plan, officialThisMonth, weekNum, teamMap, briefOf,
+        plan, officialThisMonth, weekNum, sFriendly.seasonYear, teamMap, briefOf,
       );
       if (noticeMsg) gameStore.addMessage(noticeMsg);
       logs.push(`[친선경기] ${plan.monthLabel} ${plan.entries.length}회 편성`);
@@ -961,7 +961,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
       gameStore.applySemesterResult(res, examType, s.seasonYear);
       // 대학은 학점 하나다 — 눈금이 0~4.5 라 문안도 `byStage.university` 다
-      gameStore.addMessage(makeExamMessage(weekNum, res.messageSubject, res.messageBody,
+      gameStore.addMessage(makeExamMessage(s.seasonYear, weekNum, res.messageSubject, res.messageBody,
         semesterBarsMeta(res.gpa, res.cumulativeGpa)));
       logs.push(`[학업] ${res.messageSubject} (학점 ${res.gpa.toFixed(2)} / 누적 ${res.cumulativeGpa.toFixed(2)})`);
       if (res.repeats) logs.push("[학업] 유급 — 졸업이 한 해 밀린다");
@@ -973,7 +973,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear, weekNum, "exam", examType));
       gameStore.applyExamResult(examRes);
       // 고교는 과목 백분위 다섯 — 이름은 문안(`bars.exam.subjects`)이 붙인다
-      gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody,
+      gameStore.addMessage(makeExamMessage(s.seasonYear, weekNum, examRes.messageSubject, examRes.messageBody,
         examBarsMeta(gAfterStudy.schoolState.subjectScores)));
       logs.push(`[시험] ${examRes.messageSubject}`);
     }
@@ -1590,7 +1590,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         return `${away} ${r.awayScore} : ${r.homeScore} ${home}`;
       });
       gameStore.addMessage({
-        id: `msg-league-results-w${weekNum}-${Date.now()}`,
+        id: `msg-league-results-${sFinal.seasonYear}-w${weekNum}`,
         category: "system",
         sender: "리그 사무국",
         subject: `${monthLabel} ${leagueName} 경기 결과`,
@@ -1789,7 +1789,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     ];
 
     gameStore.addMessage({
-      id: `msg-coach-report-w${weekNum}-${Date.now()}`,
+      id: `msg-coach-report-${sFinal.seasonYear}-w${weekNum}`,
       category: "coach",
       sender: coachName,
       subject: `[코치 리포트] W${weekNum} 점검`,
@@ -2604,7 +2604,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       // 28세 입영 기간 만료 경고
       if (p.age === 28 && weekInYear === MILITARY_AGE_WARNING_WEEK) {
         gameStore.addMessage({
-          id: `msg-military-warning-${Date.now()}`,
+          id: `msg-military-warning-${s.seasonYear}`,
           category: "system", sender: "병무청",
           subject: "입영 기간 만료 통지",
           preview: "이번 시즌 W52에 입영 절차가 진행됩니다.",

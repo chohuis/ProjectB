@@ -66,6 +66,8 @@ function ruleToOutput(
   msgTmpl: MessageTemplate | undefined,
   decTmpl: DecisionTemplate | undefined,
   week: number,
+  /** 소식 id 에 들어간다 — 같은 규칙이 다음 시즌 같은 주에 또 뜰 수 있다 */
+  seasonYear: number,
   /** 선택지 조건을 재는 데 쓴다 — 조건 없는 선택지만 있으면 안 봐도 된다 */
   ctx: EventContext,
   /** 문장 뱅크 선택용. 뱅크가 없는 템플릿이면 안 쓴다 */
@@ -115,7 +117,10 @@ function ruleToOutput(
   }
 
   const message: MessageItem = {
-    id:        `evt-${rule.id}-w${week}-${Date.now()}`,
+    // 🔴 **연도+주차+규칙**이다. 한 규칙은 한 주에 한 번만 발동한다
+    //   (`oncePolicy`) — 그래도 두 번 나면 `check:msgdupid` 가 잡는다.
+    //   `Date.now()` 를 쓰던 시절엔 그 사본이 보이지 않았다
+    id:        `evt-${rule.id}-${seasonYear}-w${week}`,
     category:  EVENT_DISPLAY_CATEGORY[msgTmpl?.category ?? ""] ?? "system",
     sender:    "이벤트 시스템",
     subject:   title,
@@ -274,7 +279,7 @@ export function runEventEngine(
     }
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
-    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, ctx, bank);
+    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, seasonYear, ctx, bank);
 
     // 본문도 선택지도 없는 이벤트는 **메시지함에 빈 칸으로 보인다.**
     // `EVT_TRADE_RUMOR`·`EVT_TRADE_CONFIRMED`가 실제로 그랬다 — 그 둘은

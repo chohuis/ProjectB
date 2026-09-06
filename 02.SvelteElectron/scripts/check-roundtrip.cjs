@@ -324,20 +324,28 @@ function main() {
     };
     show("🔴 심은 값이 지워졌다 — 좁게 읽고 넓게 되썼다", wiped);
     show("🔴 왕복마다 계속 달라진다 — 저장이 고정점이 아니다", unstable);
-    show("⚠ 첫 왕복에서만 달라졌다 — 정규화(실패로 세지 않는다)", normalized);
+    show("🔴 첫 왕복에서만 달라졌다 — 새 게임과 불러오기의 모양이 다르다", normalized);
 
     if (process.argv.includes("--verbose")) {
       console.log("\n[못 심은 칸] — 이 칸들은 심기로는 못 봤다(원본 비교로만 본다)");
       for (const s of skipped) console.log(`    ${s}`);
     }
 
-    const bad = wiped.length + unstable.length;
+    // 🔴 **「정규화」도 실패로 센다** (2026-09-06). 예전엔 이름만 찍고 넘어갔다.
+    //   그 눈감음 뒤에 실제 결함 둘이 숨어 있었다:
+    //     · `season_stats` 의 null — 타자 기록을 투수로 읽어 **NaN** 이 났고
+    //       `JSON.stringify` 가 null 로 적었다(불러올 때 0 으로 덮여 안 보였다)
+    //     · 주인공 `militaryLife`/`militaryRecord` — 새 게임만 정규화를 안 타서
+    //       첫 저장과 불러온 뒤 저장의 **모양이 달랐다**
+    //   둘 다 "첫 왕복에서만 달라진다"라 무해해 보였는데 아니었다.
+    //   진짜로 정규화가 맞는 칸이 나오면 `VOLATILE` 에 **이유와 함께** 적는다.
+    const bad = wiped.length + unstable.length + normalized.length;
     console.log("");
     if (bad === 0) {
-      console.log(`  ok  심은 칸 ${planted.length}개가 전부 살아남았고 저장이 고정점이다`
-        + (normalized.length ? ` (정규화 ${normalized.length}칸은 위에 적었다)` : ""));
+      console.log(`  ok  심은 칸 ${planted.length}개가 전부 살아남았고 저장이 고정점이다`);
     } else {
-      console.log(`  FAIL  지워진 칸 ${wiped.length} · 안 멎는 칸 ${unstable.length}`);
+      console.log(`  FAIL  지워진 칸 ${wiped.length} · 안 멎는 칸 ${unstable.length}`
+        + ` · 첫 왕복에서 달라진 칸 ${normalized.length}`);
     }
     process.exit(bad === 0 ? 0 : 1);
   } finally {

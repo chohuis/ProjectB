@@ -85,6 +85,53 @@ describe("accumulateStats", () => {
     expect(s.hr).toBe(1);
   });
 
+  // ── 신분이 바뀐 선수 (2026-09-06) ────────────────────────────
+  //
+  // 🔴 `as PitcherSeasonStats` 는 검사가 아니라 **선언**이라 타자 기록도
+  //   투수로 통과했다. `prev.gs`·`prev.w` 가 undefined 라
+  //   `undefined + 0 = NaN` 이 되고 `JSON.stringify` 가 그걸 **null** 로
+  //   적었다 — 세이브에 `{"type":"pitcher","g":8,"gs":null,"w":null,…}` 이
+  //   들어갔다(`check:roundtrip` 실측). 불러올 때 `sanitizeStatsRecord` 가
+  //   0 으로 되돌려 **증상만 사라졌다.**
+  //
+  // 대학에 `position_change` 가 있어 실제로 도달하는 경로다.
+
+  it("타자 기록 위에 투수 등판이 와도 NaN 이 안 난다", () => {
+    const asBatter = accumulateStats({}, [
+      { role: "batter", playerId: "X1", ab: 4, h: 2, hr: 1, rbi: 2, bb: 1, k: 1, sb: 0 },
+    ]);
+    const after = accumulateStats(asBatter, [
+      { role: "pitcher", playerId: "X1", ip: 6, er: 2, h: 5, k: 7, bb: 2, decision: "W", gs: true },
+    ]);
+    const s = after["X1"] as unknown as Record<string, unknown>;
+    expect(s.type).toBe("pitcher");
+    // 숫자 칸 어디에도 NaN 이 없어야 한다 — 하나만 봐도 다음에 다른 칸이 샌다
+    for (const [k, v] of Object.entries(s)) {
+      if (typeof v === "number") expect(Number.isFinite(v), `${k} = ${v}`).toBe(true);
+    }
+    expect(s.g).toBe(1);   // 타자 누계를 얹지 않고 새로 시작한다
+    expect(s.gs).toBe(1);
+    expect(s.w).toBe(1);
+    // JSON 을 거쳐도 null 이 안 생긴다 — 세이브에 들어가는 모양이 이것이다
+    expect(JSON.stringify(s)).not.toContain("null");
+  });
+
+  it("투수 기록 위에 타석이 와도 NaN 이 안 난다", () => {
+    const asPitcher = accumulateStats({}, [
+      { role: "pitcher", playerId: "X2", ip: 6, er: 2, h: 5, k: 7, bb: 2, decision: "W" },
+    ]);
+    const after = accumulateStats(asPitcher, [
+      { role: "batter", playerId: "X2", ab: 4, h: 2, hr: 1, rbi: 2, bb: 1, k: 1, sb: 0 },
+    ]);
+    const s = after["X2"] as unknown as Record<string, unknown>;
+    expect(s.type).toBe("batter");
+    for (const [k, v] of Object.entries(s)) {
+      if (typeof v === "number") expect(Number.isFinite(v), `${k} = ${v}`).toBe(true);
+    }
+    expect(s.ab).toBe(4);
+    expect(JSON.stringify(s)).not.toContain("null");
+  });
+
   it("타자 누적 AVG 재계산", () => {
     const after1 = accumulateStats({}, [
       { role: "batter", playerId: "B1", ab: 4, h: 1, hr: 0, rbi: 0, bb: 0, k: 1, sb: 0 },

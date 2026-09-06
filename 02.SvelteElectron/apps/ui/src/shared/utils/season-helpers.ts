@@ -196,9 +196,27 @@ export function accumulateStats(
   const next = { ...stats };
   for (const line of lines) {
     if (line.role === "pitcher") {
-      const prev = (next[line.playerId] as PitcherSeasonStats | undefined) ?? {
-        type: "pitcher", g:0, gs:0, w:0, l:0, sv:0, hd:0, ip:0, er:0, h:0, k:0, bb:0, era:0, whip:0,
-      };
+      // 🔴 **앞 기록이 타자 것이면 투수로 읽으면 안 된다** (2026-09-06).
+      //
+      //   `as PitcherSeasonStats`는 검사가 아니라 **선언**이라 타자 기록도
+      //   그냥 통과했다. 그러면 `prev.gs`·`prev.w`가 `undefined`고,
+      //   `undefined + 0`은 **NaN**이며 `JSON.stringify`가 그걸 **null**로
+      //   적는다 — 세이브에 `{"type":"pitcher","g":8,"gs":null,"w":null,…}`이
+      //   들어갔다(`check:roundtrip` 실측 · 대학 선수 하나).
+      //   불러올 때 `sanitizeStatsRecord`가 0으로 되돌려서 **증상만 사라졌다.**
+      //
+      //   자리를 바꾼 선수(대학에 `position_change`가 있다)가 이 경로를 탄다.
+      //   기록은 선수당 한 벌이라 두 신분을 같이 못 들고 있다 — 타자 기록
+      //   위에 투수 누계를 얹는 대신 **새로 시작한다.**
+      // ⚠ 판정은 `sanitizeStatsRecord`와 **같은 식**이다("pitcher"가 아니면 타자).
+      const prevAny = next[line.playerId];
+      const prev: PitcherSeasonStats =
+        (prevAny as PitcherSeasonStats | undefined)?.type === "pitcher"
+          ? (prevAny as PitcherSeasonStats)
+          : {
+              type: "pitcher", g:0, gs:0, w:0, l:0, sv:0, hd:0, ip:0, er:0,
+              h:0, k:0, bb:0, era:0, whip:0,
+            };
       const safeNum = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
       const ip  = safeNum(prev.ip)  + safeNum(line.ip);
       const er  = safeNum(prev.er)  + safeNum(line.er);
@@ -235,9 +253,16 @@ export function accumulateStats(
         rispH:  safeNum(prev.rispH)  + safeNum(line.rispH),
       };
     } else {
-      const prev = (next[line.playerId] as BatterSeasonStats | undefined) ?? {
-        type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0, pb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
-      };
+      // 반대 방향도 같다 — 투수 기록을 타자로 읽으면 `pa`·`ab`가 undefined 라
+      // 같은 NaN 이 난다. 위 주석 참고
+      const prevAny = next[line.playerId];
+      const prev: BatterSeasonStats =
+        (prevAny as PitcherSeasonStats | undefined)?.type !== "pitcher" && prevAny
+          ? (prevAny as BatterSeasonStats)
+          : {
+              type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0,
+              pb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
+            };
       const ab  = prev.ab  + (line.ab  ?? 0);
       const h   = prev.h   + (line.h   ?? 0);
       const hr  = prev.hr  + (line.hr  ?? 0);

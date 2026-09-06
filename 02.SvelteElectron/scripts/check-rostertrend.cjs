@@ -22,6 +22,18 @@
  *
  * ⚠ **게임 경로를 그대로 탄다.** `repo:syncNpcs`를 가로채 **실제로 저장되는
  * 명단**을 센다. 스토어를 직접 읽으면 배선을 안 보게 된다.
+ *
+ * ── 2026-09-06: 계기에서 **검사로** 승격 ─────────────────────────
+ * 여기가 통과/실패를 안 걸어서 **대학이 정원 32에 20으로 생성되는 걸 아무도
+ * 못 봤다**(`roster_gen.rs` 예산 산식이 아마추어에도 돌았다 — 실측 평균 20.2).
+ * 표만 찍는 계기는 사람이 안 볼 때 아무것도 안 지킨다.
+ *
+ * 이제 마지막 시점에 **팀 평균이 정원 대비 하한** 아래면 실패한다:
+ *   · 연봉이 없는 리그(고교·대학) → `rosterSize × FLOOR_RATIO`
+ *     예산이 정원을 못 정하므로 `rosterSize`가 그대로 목표다
+ *   · 연봉이 있는 리그 → `rosterMin`
+ *     팀 예산이 정원을 정하는 게 **설계**라 `rosterSize`를 기준으로 삼으면
+ *     가난한 팀이 정상인데도 빨강이 된다. 규칙 파일이 정한 하한을 본다
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
@@ -40,7 +52,25 @@ const PRO_ONE = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
 const BAT_TARGET = 14;
 const BAT_CHECK = 12;
 
+/**
+ * 정원 대비 하한 — **제안값이다**(`docs/BALANCE_BACKLOG.md`).
+ *
+ * 0.85 를 고른 근거: 대학은 매 시즌 종료에 4학년(정원의 1/4)이 한꺼번에
+ * 나가고 신입이 그 자리를 메우므로, 경계 시점에 한 학년 몫이 잠깐 빈다.
+ * 그게 0.75 다. 0.85 는 "한 학년이 통째로 비는 것보다는 낫다"는 선이고,
+ * 고친 뒤 실측(3시즌 뒤 대학 평균 32.7 / 32 = 1.02)과 여유가 크다.
+ */
+const FLOOR_RATIO = 0.85;
+
+/** 정원 대비를 재는 리그 — 로스터 규칙에 `rosterSize`가 있는 리그 전부 */
+const CENSUS_LEAGUES = [
+  "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+  "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_ABL", "LEAGUE_JBL",
+];
+
 const rows = [];
+/** 마지막 시점의 리그별 팀 인원 — 게이트가 이걸 본다 */
+let lastCensus = new Map();
 let pending = null;   // 다음 저장에 붙일 주차 표시
 
 function onSync(npcs) {
@@ -87,6 +117,20 @@ function onSync(npcs) {
     };
   }
   rows.push({ tag: pending ?? "?", one: stat(one), two: stat(two), perLeague });
+
+  // 🔴 **정원 대비 인구조사** — 게이트가 보는 값이다.
+  //   `active`만 세지 않는다. 부상자도 로스터를 차지한다(자리를 비우는 건
+  //   은퇴뿐이다 — `generateFreshmenV3` 주석과 같은 기준).
+  const census = new Map();
+  for (const n of npcs) {
+    if (!n || n.careerStatus === "retired") continue;
+    if (!n.currentTeam || !n.currentLeague) continue;
+    if (!CENSUS_LEAGUES.includes(n.currentLeague)) continue;
+    let m = census.get(n.currentLeague);
+    if (!m) { m = new Map(); census.set(n.currentLeague, m); }
+    m.set(n.currentTeam, (m.get(n.currentTeam) ?? 0) + 1);
+  }
+  if (census.size) lastCensus = census;
 }
 
 headless.setInterceptor(async (channel, args, call) => {
@@ -107,7 +151,14 @@ async function main() {
 
     const start = app.currentSeason();
     let guard = 0;
-    while (guard++ < SEASONS * 52 * 60 && app.currentSeason() < start + SEASONS) {
+    // 🔴 **정착 주차까지 더 돈다** (2026-09-06). 시즌 경계에서 멈추면 마지막
+    //   스냅샷이 **졸업 직후·신입 직전**에 걸린다 — 고교가 평균 19.3(정원 31)
+    //   으로 찍혔는데 다음 주에 1,020명이 들어와 31로 돌아온다. 없는 결함을
+    //   가리키는 계기다. 새 시즌 초반까지 돌려 **채워진 뒤**를 잰다.
+    const SETTLE_WEEK = 6;
+    const done = () => app.currentSeason() > start + SEASONS
+      || (app.currentSeason() === start + SEASONS && app.currentWeek() >= SETTLE_WEEK);
+    while (guard++ < (SEASONS + 1) * 52 * 60 && !done()) {
       if (app.retired()) break;
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       const w0 = app.currentWeek(), s0 = app.currentSeason();
@@ -160,6 +211,43 @@ async function main() {
         console.log(`    ${lid.replace("LEAGUE_", "").padEnd(6)} ${v.teams}팀 중  ` +
           `<${BAT_TARGET}: ${v.under14}팀 · <${BAT_CHECK}: ${v.under12}팀 · 최소 ${v.min}명`);
       }
+    }
+
+    // ── 정원 대비 게이트 ────────────────────────────────────────
+    const rulesFile = JSON.parse(require("node:fs").readFileSync(
+      path.join(headless.ROOT, "resource/data/master/players/generation_rules.json"), "utf8"));
+    const rr = rulesFile.rosterRules;
+    // 연봉이 있는 리그 = `leagueMult`에 항목이 있는 리그. `roster_gen.rs`의
+    // `budget_sizes_roster`와 **같은 기준**이다 — 다르면 재는 자리와 고친
+    // 자리가 갈린다
+    const paid = new Set(Object.keys(rulesFile.salaryRules?.leagueMult ?? {}));
+
+    console.log("");
+    console.log(`  마지막 시점 · 정원 대비 (하한: 무보수 리그 정원×${FLOOR_RATIO} · 보수 리그 rosterMin)`);
+    const fails = [];
+    for (const lid of CENSUS_LEAGUES) {
+      const m = lastCensus.get(lid);
+      const r = rr[lid];
+      if (!m || !m.size || !r) { console.log(`    ${lid.padEnd(20)} (명단 0 — 못 잼)`); continue; }
+      const counts = [...m.values()].sort((a, b) => a - b);
+      const avg = counts.reduce((a, b) => a + b, 0) / counts.length;
+      const isPaid = paid.has(lid);
+      const floor = isPaid ? r.rosterMin : Math.round(r.rosterSize * FLOOR_RATIO);
+      const ok = avg >= floor;
+      if (!ok) fails.push(`${lid} 평균 ${avg.toFixed(1)} < 하한 ${floor}`);
+      console.log(`    ${lid.padEnd(20)} ${String(counts.length).padStart(3)}팀 · ` +
+        `평균 ${avg.toFixed(1).padStart(5)} / 정원 ${String(r.rosterSize).padStart(2)} ` +
+        `(${((avg / r.rosterSize) * 100).toFixed(0)}%) · 최소 ${String(counts[0]).padStart(2)} · ` +
+        `하한 ${String(floor).padStart(2)}${isPaid ? "(예산제)" : ""}  ${ok ? "OK" : "FAIL"}`);
+    }
+
+    console.log("");
+    if (fails.length) {
+      console.error(`[check-rostertrend] FAIL ${fails.length}건`);
+      for (const f of fails) console.error(`  · ${f}`);
+      process.exitCode = 1;
+    } else {
+      console.log("[check-rostertrend] PASS — 모든 리그가 정원 하한을 지킨다");
     }
   } finally {
     await headless.cleanup(tmp);

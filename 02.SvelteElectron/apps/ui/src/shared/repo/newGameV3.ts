@@ -273,9 +273,16 @@ const QUALITY_BY_PHILOSOPHY: Record<string, number> = {
 /**
  * 팀 연간 예산(만원). `refs.json` 은 원 단위라 10,000으로 나눈다.
  *
- * ⚠ **연봉이 없는 리그는 넘기면 안 된다** — 고교·대학은 예산이
- *   있어도 그건 운영비지 인건비가 아니다. 그쪽은 엔진이 `league_mult` 가
- *   없어 1인 연봉을 못 구하므로 안전하게 예전 동작으로 떨어진다.
+ * ⚠ **연봉이 없는 리그는 정원을 예산으로 정하면 안 된다** — 고교·대학은
+ *   예산이 있어도 그건 운영비지 인건비가 아니다.
+ *
+ * 🔴 예전엔 여기에 "그쪽은 엔진이 `league_mult` 가 없어 안전하게 예전 동작으로
+ *   떨어진다"고 적혀 있었는데 **그런 방어가 없었다**(2026-09-06 실측).
+ *   `league_mult` 가 없으면 1.0 으로 떨어져 산식이 그대로 돌았고, 아마추어
+ *   예산은 프로 인건비보다 두 자릿수 작아 결과가 늘 `rosterMin` 에 붙었다 —
+ *   대학이 정원 32 인데 20 으로 생성됐다.
+ *   방어는 이제 **`roster_gen.rs` 의 `budget_sizes_roster` 하나**다. 여기서
+ *   또 거르면 규칙이 두 벌이 된다 — 이 함수는 예산을 그대로 넘긴다.
  */
 export function budgetOf(t: { history?: { budget?: number | null } | null }): number | undefined {
   const b = t.history?.budget;

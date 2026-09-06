@@ -3750,7 +3750,17 @@ function createGameStore() {
       const cur = get({ subscribe });
       set({
         currentSlotId: slotId ?? cur.currentSlotId,
-        protagonist,
+        // 🔴 **새 게임도 불러오기와 같은 정규화를 지난다** (2026-09-06).
+        //
+        //   `fromSaveGame`만 `migrateProtagonist`를 태우고 여기는 화면이 만든
+        //   객체를 그대로 넣었다. 그래서 새 게임의 첫 저장과 그걸 불러온 뒤의
+        //   저장이 **모양이 달랐다** — `militaryLife`·`militaryRecord`가
+        //   새 게임엔 키 자체가 없고(undefined → JSON 에서 사라진다) 불러오면
+        //   `null`로 들어왔다(`check:roundtrip` 실측 2칸).
+        //
+        //   "저장이 고정점이다"가 깨지면 왕복 검사가 그 두 칸을 영영 「정규화」로
+        //   눈감아야 하고, 그 눈가리개 뒤로 진짜 유실이 숨는다.
+        protagonist: migrateProtagonist(protagonist),
         mailbox: [],
         trainingPlan: DEFAULT_TRAINING_PLAN,
         trainingPresets: DEFAULT_TRAINING_PRESETS,

@@ -223,7 +223,8 @@ export async function buildTop10Message(
     : `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 월간 랭킹`;
 
   return {
-    id:        `msg-top10-${curr.type}-w${weekNum}-${Date.now()}`,
+    // 🔴 **연도+종류+주차**다. 월간 랭킹이라 한 주에 종류당 한 통이다
+    id:        `msg-top10-${seasonYear ?? 0}-${curr.type}-w${weekNum}`,
     category:  "news",
     sender:    "스포츠 매체",
     subject,

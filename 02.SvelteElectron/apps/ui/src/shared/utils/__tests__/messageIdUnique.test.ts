@@ -29,8 +29,18 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-/** id 안에 "해마다 달라지는 것"이 하나라도 있으면 안전하다 */
-const HAS_YEAR = /seasonYear|\$\{year\}|\$\{now\}|Date\.now\(\)|\$\{y\}|\bYear\b/;
+/**
+ * id 안에 "해마다 달라지는 것"이 하나라도 있으면 안전하다.
+ *
+ * 🔴 **`Date.now()` 는 여기서 뺐다** (2026-09-06). 해가 달라지긴 하지만
+ *   **재현이 안 된다** — 같은 세이브를 다시 열면 다른 id 가 나고, 같은
+ *   밀리초에 둘이 나면 그대로 겹친다(이 검사가 막으려던 바로 그 죽음).
+ *   아래 두 번째 검사가 `Date.now()` 자체를 금지한다.
+ * ⚠ `gameDate`("2026-04-15")도 연도를 들고 있지만 **여기 넣지 않는다** —
+ *   그걸 허용하면 "연도가 있다"의 판정이 문자열 짐작이 된다. 연도가
+ *   필요하면 `seasonYear` 를 인자로 받는다.
+ */
+const HAS_YEAR = /seasonYear|\$\{year\}|\$\{now\}|\$\{y\}|\bYear\b/;
 
 /** 주차만으로 만든 id인가 — `w${week}` · `-${weekNum}` 류 */
 const WEEK_ONLY = /\$\{week(Num|InYear)?\}/;
@@ -55,6 +65,28 @@ describe("소식 id에 주차만 넣지 않는다", () => {
       }
     }
     expect(bad, `주차만 쓴 소식 id — 다음 시즌 같은 주차에 겹친다:\n  ${bad.join("\n  ")}`)
+      .toEqual([]);
+  });
+
+  // ── 시계로 만든 id는 재현이 안 된다 ────────────────────────────
+  //
+  // `Date.now()` 를 쓰면 **같은 세이브를 다시 열 때마다 다른 id** 가 난다.
+  // 두 가지가 따라온다:
+  //   ① 계측·회귀가 소식을 id 로 못 짚는다 — `check:msgdupid` 가 잡을
+  //      기회 자체가 없다(사본이 나도 id 가 달라 사본으로 안 보인다)
+  //   ② 같은 밀리초에 둘이 나면 그대로 겹친다 — 위 검사가 막으려던 죽음이
+  //      다른 문으로 들어온다
+  //
+  // 2026-09-06 에 소식 id 15자리를 연도·주차·대상으로 바꾸면서 이 검사를 걸었다.
+  it("소식 id를 시계로 만들지 않는다 (`Date.now()`)", () => {
+    const bad: string[] = [];
+    for (const f of files) {
+      const s = readFileSync(f, "utf8");
+      for (const m of s.matchAll(/\bid:\s*`((?:msg|evt)-[^`]*)`/g)) {
+        if (m[1].includes("Date.now()")) bad.push(`${f.slice(ROOT.length + 1)}  ${m[1]}`);
+      }
+    }
+    expect(bad, `시계로 만든 소식 id — 재현이 안 되고 같은 순간 둘이면 겹친다:\n  ${bad.join("\n  ")}`)
       .toEqual([]);
   });
 });

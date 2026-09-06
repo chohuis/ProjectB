@@ -98,6 +98,7 @@
     "check:eventconditions": "node scripts/check-eventconditions.cjs",
     "measure:eventfunnel": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-eventfunnel.cjs",
     "check:rostertrend": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-rostertrend.cjs",
+    "probe:univleak": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-univleak.cjs",
     "check:recentgames": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-recentgames.cjs",
     "check:namepair": "node scripts/check-namepair.cjs",
     "check:namelocale": "node scripts/check-namelocale.cjs",
