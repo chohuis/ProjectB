@@ -65,21 +65,31 @@ function runMode(mode) {
   process.env.PB_TEMPO = mode.tempo;
   process.env.PB_COURSE = mode.course;
   let h = 0, k = 0, bb = 0, p = 0, w = 0, games = 0, err = null;
+  // 🔴 **씨앗마다 따로도 남긴다.** 합계만 보면 방향이 씨앗 하나에서 온 것인지
+  //   셋 다에서 온 것인지 못 가른다 — 기준선 §3 이 씨앗별로 적힌 이유다
+  const bySeed = [];
   for (const seed of SEEDS) {
+    let sh = 0, sk = 0, sbb = 0, sp = 0, sw = 0, sg = 0;
     for (let i = 0; i < GAMES; i++) {
       const res = JSON.parse(engine.runSimpleGame(JSON.stringify({
         seed: seed + i, protagonistOvr: OVR, opponentOvr: OVR, pitcher: pitcher(OVR),
       })));
       if (res.error) { err = res.error; break; }
-      h += res.hits; k += res.strikeouts; bb += res.walks;
-      p += res.pitches ?? 0; w += res.whiffs ?? 0;
-      games++;
+      sh += res.hits; sk += res.strikeouts; sbb += res.walks;
+      sp += res.pitches ?? 0; sw += res.whiffs ?? 0;
+      sg++;
     }
+    h += sh; k += sk; bb += sbb; p += sp; w += sw; games += sg;
+    bySeed.push({ seed, ...rates(sh, sk, sbb, sp, sw, sg) });
     if (err) break;
   }
+  return { ...mode, games, err, bySeed, ...rates(h, k, bb, p, w, games) };
+}
+
+/** 원시 합계 → 비율. **한 자리에서만 만든다** — 씨앗별과 합계가 갈리면 안 된다 */
+function rates(h, k, bb, p, w, games) {
   const evt = h + k + bb;
   return {
-    ...mode, games, err,
     투구: p,
     헛스윙률: p > 0 ? (w / p) * 100 : null,
     피안타비중: evt > 0 ? h / evt : null,
@@ -118,6 +128,13 @@ const f3 = (v) => (v === null ? "  —  " : v.toFixed(3));
       `   삼진 ${d(r.삼진비중, base.삼진비중).padStart(7)}` +
       `   볼넷 ${d(r.볼넷비중, base.볼넷비중).padStart(7)}`
     );
+  }
+  console.log("");
+  console.log("── 씨앗별 헛스윙률 (모드별) ────────────────────────────");
+  console.log("씨앗          " + rows.map((r) => r.key.padEnd(11)).join(""));
+  for (let i = 0; i < SEEDS.length; i++) {
+    const cells = rows.map((r) => (r.bySeed && r.bySeed[i] ? f2(r.bySeed[i].헛스윙률) + "%" : "  —  ").padEnd(11));
+    console.log(String(SEEDS[i]).padEnd(14) + cells.join(""));
   }
   console.log("");
   console.log("⚠ 리그 ERA·타율·주인공 ERA 는 커리어 층이라 여기 안 나온다 —");
