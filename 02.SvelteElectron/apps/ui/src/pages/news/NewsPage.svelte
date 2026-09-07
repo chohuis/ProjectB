@@ -263,14 +263,32 @@
   // ⚠ **지금 상태에서 잰다.** 같은 「피로 −8」도 문턱(70·85) 앞뒤에서 폭이
   //   다르다 — `growthEngine.trainingEfficiencyDelta` 하나가 정한다.
   // ⚠ 사기는 안 센다 — `week_xp` 에 없다(슬럼프로 따로 걸린다).
-  function effHintTail(opt: { effects?: import("../../shared/types/main").DecisionEffect }): string {
-    const e = opt.effects;
-    if (!e) return "";
-    const d = trainingEfficiencyDelta(
-      { condition: p.condition, fatigue: p.fatigue, diligence: p.diligence },
-      { conditionDelta: e.conditionDelta, fatigueDelta: e.fatigueDelta, diligenceDelta: e.diligenceDelta },
-    );
-    return d === null ? "" : `→ 훈련 효율 ${d > 0 ? "+" : "−"}${Math.abs(d)}%`;
+  // ⚠ **엔진에 묻는다 — 화면이 계산하지 않는다** (2026-09-07). 계수 셋이
+  //   `growthEngine.ts` 에 옮겨 적혀 있던 것을 Rust 로 되돌렸고, 왕복이 IPC 라
+  //   `await` 이다. 그래서 **미리 한 번 재서 표에 담고** 본문은 그 표를 읽는다 —
+  //   `{@const}` 자리에서 `await` 을 할 수 없기도 하다.
+  // ⚠ 못 물으면 표가 비고 꼬리가 안 붙는다. 화면이 값을 지어 내면 그게 사본이다.
+  let effTails = new Map<string, string>();
+  // ⚠ **늦게 온 답이 새 답을 덮지 않게 한다.** 소식을 빠르게 넘기면 앞 소식의
+  //   왕복이 뒤에 도착할 수 있다 — 그러면 지금 소식에 **다른 소식의 꼬리**가 붙는다
+  let effSeq = 0;
+  $: void refreshEffTails(selected?.decision?.options, p.condition, p.fatigue, p.diligence);
+  async function refreshEffTails(
+    opts: readonly { id: string; effects?: import("../../shared/types/main").DecisionEffect }[] | undefined,
+    condition: number, fatigue: number, diligence: number,
+  ) {
+    const seq = ++effSeq;
+    const next = new Map<string, string>();
+    for (const opt of opts ?? []) {
+      const e = opt.effects;
+      if (!e) continue;
+      const d = await trainingEfficiencyDelta(
+        { condition, fatigue, diligence },
+        { conditionDelta: e.conditionDelta, fatigueDelta: e.fatigueDelta, diligenceDelta: e.diligenceDelta },
+      );
+      if (d !== null) next.set(opt.id, `→ 훈련 효율 ${d > 0 ? "+" : "−"}${Math.abs(d)}%`);
+    }
+    if (seq === effSeq) effTails = next;
   }
 
   /** effectHint의 부호로 색을 정한다 (+3 / -2 같은 표기) */
@@ -464,7 +482,7 @@
                 {#each dec.options as opt}
                   <!-- ⚠ `{@const}` 는 블록의 바로 아래여야 한다 — `<button>` 안에
                        두면 Svelte 가 컴파일을 거부한다 -->
-                  {@const effTail = effHintTail(opt)}
+                  {@const effTail = effTails.get(opt.id) ?? ""}
                   <button class="opt" data-tone={effectTone(opt.effectHint)} type="button" on:click={() => choose(opt.id)}>
                     <span class="opt-label">{opt.label}</span>
                     {#if opt.effectHint}<span class="opt-hint">{opt.effectHint}</span>{/if}

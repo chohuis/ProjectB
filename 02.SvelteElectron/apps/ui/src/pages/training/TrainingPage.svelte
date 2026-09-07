@@ -4,7 +4,7 @@
   import type { TrainingProgram } from "../../shared/stores/master";
   import {
     previewTraining, injuryChance, formPenalty, trainingEfficiency,
-    TRAINING_SLOT_MULTS, type TrainingPreview,
+    trainingSlotMults, type TrainingPreview, type TrainingEfficiency,
   } from "../../shared/utils/growthEngine";
   import { developingDifficultyOf, trainingIntensityOf } from "../../shared/utils/arsenal";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
@@ -314,12 +314,24 @@
   //   함수다. 화면마다 식을 적으면 두 자리가 갈린다(이 파일이 이미 겪었다).
   // ⚠ **성장률·잠재력·나이는 안 넣는다.** 이번 주에 내가 움직일 수 있는 축이
   //   아니라, 같이 곱하면 「내가 고른 것이 얼마나 바꿨나」가 안 보인다.
-  $: eff = trainingEfficiency({
-    condition: realCondition, fatigue: realFatigue, diligence: protagonist.diligence,
-  });
+  // ⚠ **엔진에 묻는다 — 여기서 계산하지 않는다** (2026-09-07). 계수 셋이
+  //   `growthEngine.ts` 에 옮겨 적혀 있던 것을 Rust 로 되돌렸다. 왕복이 IPC 라
+  //   `await` 이고, 못 물으면 `null` 이라 아래 칸을 **안 그린다** — 여기서
+  //   값을 지어 내면 그게 다시 사본이다.
+  let eff: TrainingEfficiency | null = null;
+  // ⚠ 늦게 온 답이 새 답을 덮지 않게 한다 — 슬라이더를 끌면 왕복이 겹친다
+  let effSeq = 0;
+  $: void refreshEff(realCondition, realFatigue, protagonist.diligence);
+  async function refreshEff(c: number, f: number, d: number) {
+    const seq = ++effSeq;
+    const r = await trainingEfficiency({ condition: c, fatigue: f, diligence: d });
+    if (seq === effSeq) eff = r;
+  }
+  let slotMults: readonly number[] = [];
+  trainingSlotMults().then((v) => { slotMults = v; });
   /** 계수 하나를 「+12%」·「−23%」 꼴로 */
   const factorPct = (f: number) => `${f >= 1 ? "+" : "−"}${Math.round(Math.abs(f - 1) * 100)}%`;
-  $: effRows = [
+  $: effRows = eff === null ? [] : [
     { label: "컨디션", value: Math.round(realCondition),        pct: factorPct(eff.condition) },
     { label: "피로",   value: Math.round(realFatigue),          pct: factorPct(eff.fatigue) },
     { label: "성실",   value: Math.round(protagonist.diligence), pct: factorPct(eff.diligence) },
@@ -693,7 +705,10 @@
             </div>
           {/if}
 
-          <!-- 이번 주 훈련 성과 — 계수가 XP 를 얼마나 밀거나 깎나 -->
+          <!-- 이번 주 훈련 성과 — 계수가 XP 를 얼마나 밀거나 깎나.
+               ⚠ 엔진이 없으면 통째로 안 그린다 — 화면이 계수를 지어 내면
+                  그게 사본이다 (`growthEngine.trainingEfficiency` 머리말) -->
+          {#if eff}
           <div class="eff-section">
             <div class="eff-head">
               <h3>이번 주 훈련 성과</h3>
@@ -714,10 +729,13 @@
             {#if slumpPct !== 0}
               <p class="eff-note danger">슬럼프 — 위 계수와 별도로 훈련 효율 {slumpPct}%</p>
             {/if}
-            <p class="eff-slots">
-              슬롯 배수 주 ×{TRAINING_SLOT_MULTS[0]} · 보조1 ×{TRAINING_SLOT_MULTS[1]} · 보조2 ×{TRAINING_SLOT_MULTS[2]}
-            </p>
+            {#if slotMults.length === 3}
+              <p class="eff-slots">
+                슬롯 배수 주 ×{slotMults[0]} · 보조1 ×{slotMults[1]} · 보조2 ×{slotMults[2]}
+              </p>
+            {/if}
           </div>
+          {/if}
 
           <!-- 예상 결과 -->
           <div class="result-section">

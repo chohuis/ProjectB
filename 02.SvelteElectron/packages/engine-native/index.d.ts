@@ -130,6 +130,19 @@ export declare function calcTrainingGrowthNative(paramsJson: string): string
  */
 export declare function previewTrainingNative(paramsJson: string): string
 /**
+ * 훈련 효율 계수 — **화면에 보여 줄 계수 셋과 그 곱.**
+ *
+ * 🔴 이 셋이 TS(`utils/growthEngine.ts`)에 **옮겨 적혀** 있었다 (결정 ④).
+ *   훈련 화면의 「이번 주 훈련 성과」와 소식 선택지의 「→ 훈련 효율 ±N%」가
+ *   그 사본을 썼고, 검사는 **Rust 파일을 문자열로 읽어** 식이 그대로인지
+ *   보는 것으로 겨우 막고 있었다. 계수가 나는 자리를 여기 하나로 모은다 —
+ *   `week_xp` 도 같은 함수(`condition_factor` 셋)를 부른다.
+ *
+ * ⚠ **여럿을 한 번에 묻는다**(`queries`). 화면은 「지금」과 「고른 뒤」를
+ *   나란히 재는데 하나씩 물으면 선택지마다 왕복이 둘씩 생긴다.
+ */
+export declare function trainingEfficiencyNative(paramsJson: string): string
+/**
  * 이번 주 부상 확률 — **`calc_injury`가 굴리는 것과 같은 식이다.**
  * 훈련 화면이 예상 피로로 이걸 물어 "부상위험 N%"를 낸다.
  */

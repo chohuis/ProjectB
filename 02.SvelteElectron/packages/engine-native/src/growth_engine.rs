@@ -202,14 +202,96 @@ fn age_train_factor(age: u32) -> f64 {
     }
 }
 
+// ── 주간 XP 계수 셋 — **화면도 이 함수를 부른다** ────────────────
+//
+// 🔴 이 셋이 TS(`utils/growthEngine.ts`)에 **옮겨 적혀** 있었다 (결정 ④).
+//   훈련 화면의 「이번 주 훈련 성과」와 소식 선택지의 「→ 훈련 효율 ±N%」가
+//   그 사본을 썼다. 사본이라 한쪽만 고쳐진 채 남을 수 있었고, `.ts` 쪽
+//   검사(`trainingEfficiency.test.ts`)가 **Rust 파일을 문자열로 읽어**
+//   식이 그대로인지 보는 것으로 겨우 막고 있었다.
+//
+//   2026-09-07 에 `training_efficiency`(아래)를 내서 사본을 없앴다.
+//   이제 값이 나는 자리가 여기 하나다 — `week_xp` 도 이 셋을 부른다.
+//
+// ⚠ **`week_xp` 가 이 셋을 안 부르면 다시 사본이 된다.** 곱해 쓰는 자리가
+//   달라도 계수는 같아야 한다.
+
+/// 컨디션 계수 — 100 에서 1.0
+pub fn condition_factor(condition: f64) -> f64 { condition / 100.0 }
+
+/// 피로 계수 — 85·70 에서 **계단으로** 떨어진다. 그 아래는 완만하고 0.80 이 바닥.
+/// ⚠ 계단이라 「피로 −1」이 문턱을 넘으면 효율이 한 번에 뛴다. 그게 원래 동작이다.
+pub fn fatigue_factor(fatigue: f64) -> f64 {
+    if fatigue >= 85.0 { 0.35 }
+    else if fatigue >= 70.0 { 0.65 }
+    else { (1.0 - fatigue / 200.0).max(0.80) }
+}
+
+/// 성실 계수 — 1 에서 0.608, 99 에서 1.4. 약 49.5 가 1.0 이다
+pub fn diligence_factor(diligence: f64) -> f64 { 0.6 + (diligence / 99.0) * 0.8 }
+
+/// 성장률 계수 — 62 가 1.0 이다
+pub fn dev_rate_factor(dev_rate: f64) -> f64 { dev_rate / 62.0 }
+
 fn week_xp(base: f64, condition: f64, fatigue: f64, dev_rate: f64, diligence: f64) -> f64 {
-    let cond_factor = condition / 100.0;
-    let fat_factor = if fatigue >= 85.0 { 0.35 }
-                     else if fatigue >= 70.0 { 0.65 }
-                     else { (1.0 - fatigue / 200.0).max(0.80) };
-    let dev_factor = dev_rate / 62.0;
-    let diligence_factor = 0.6 + (diligence / 99.0) * 0.8;
-    base * cond_factor * fat_factor * dev_factor * diligence_factor
+    base * condition_factor(condition) * fatigue_factor(fatigue)
+         * dev_rate_factor(dev_rate) * diligence_factor(diligence)
+}
+
+// ── 훈련 효율 — 화면에 보여 줄 계수·곱 (결정 ④ · 2026-09-07 A 단위 5) ──
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrainingEfficiencyQuery {
+    pub condition: f64,
+    pub fatigue: f64,
+    pub diligence: f64,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrainingEfficiencyParams {
+    /// 🔴 **여럿을 한 번에 받는다.** 화면은 「지금」과 「그 선택지를 고른 뒤」를
+    ///   나란히 재는데(소식 선택지 꼬리), 하나씩 물으면 선택지마다 왕복이
+    ///   둘씩 생긴다. 배열 하나면 화면 한 번에 왕복도 한 번이다.
+    pub queries: Vec<TrainingEfficiencyQuery>,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrainingEfficiencyOne {
+    pub condition: f64,
+    pub fatigue: f64,
+    pub diligence: f64,
+    /// 셋의 곱 — 기준(각 계수 1.0)이 1.0 이다
+    pub total: f64,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrainingEfficiencyResult {
+    pub entries: Vec<TrainingEfficiencyOne>,
+    /// 주/보조1/보조2 의 XP 배수 — `SLOT_MULTS` 의 첫 값이다
+    pub slot_mults: Vec<f64>,
+}
+
+/// 지금 상태가 훈련 XP 를 **몇 배로 밀거나 깎고 있나.**
+///
+/// ⚠ **성장률·잠재력·나이는 안 넣는다.** 이번 주에 선택지로 못 움직이는
+///   축이라 같이 곱하면 「내가 고른 것이 얼마나 바꿨나」가 안 보인다
+///   (그래서 `dev_rate_factor` 는 여기 안 쓴다 — `week_xp` 만 쓴다).
+pub fn training_efficiency(p: TrainingEfficiencyParams) -> TrainingEfficiencyResult {
+    let entries = p.queries.iter().map(|q| {
+        let condition = condition_factor(q.condition);
+        let fatigue = fatigue_factor(q.fatigue);
+        let diligence = diligence_factor(q.diligence);
+        TrainingEfficiencyOne { condition, fatigue, diligence,
+                                total: condition * fatigue * diligence }
+    }).collect();
+    TrainingEfficiencyResult {
+        entries,
+        slot_mults: SLOT_MULTS.iter().map(|(xp, _)| *xp).collect(),
+    }
 }
 
 fn try_level_up(current: f64, acc_xp: f64, gain_xp: f64) -> (f64, f64, i32) {
@@ -415,7 +497,8 @@ fn apply_batting_xp(
 /// 기본 플레이의 성장 총량은 거의 안 변하고(기본 훈련 실측 +0.7%), 바뀌는 건
 /// **칸 사이의 순서**다. 주 몰빵만 +12% 이득을 본다.
 ///
-/// ⚠ **제안값이다** — `docs/BALANCE_BACKLOG.md §12`. 확정은 조정 단계에서.
+/// ⚠ **제안값이다** — `docs/BALANCE_BACKLOG.md §11`. 확정은 조정 단계에서.
+///   (§12 라고 적혀 있었다 — 백로그에 그런 절이 없다. 2026-09-07 실측으로 고쳤다)
 const SLOT_MULTS: [(f64, f64); 3] = [(2.8, 1.0), (1.3, 0.5), (0.9, 0.5)];
 
 /// 피로 구간 승수 — 70/80/90에서 볼록하게 뛴다. 지칠수록 같은 훈련이 더 지치게 한다.

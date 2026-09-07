@@ -216,47 +216,26 @@ export async function calcProtagonistAging(
 
 // ── 이번 주 훈련 효율 — 화면에 보여 줄 계수 (결정 ④ 1단계) ───────
 //
-// 🔴 **정본은 Rust `growth_engine.rs::week_xp` 다.** 여기 있는 셋은 그 식을
-//    **보여 주려고** 옮겨 적은 것이고, 성장 계산에 쓰이지 않는다.
-//    (`calcTrainingGrowth` 는 그대로 엔진에 묻는다.)
+// 🔴 **정본은 Rust `growth_engine.rs` 다.** 여기서 계수를 **만들지 않는다.**
 //
-//    왜 옮겨 적었나 — 지금 Rust 에 「계수만 돌려주는」 문이 없다.
-//    `previewTrainingNative` 는 피로·컨디션 변화만 주고, XP 계수는 안 준다.
-//    화면에 안 보이면 선택지가 사기·피로·성실을 움직여도 그것이 훈련 성과로
-//    이어진다는 것을 **아무도 모른다** — 그게 사용자 확정 결정 ④ 다.
+//    2026-09-04 ~ 09-06 에는 컨디션·피로·성실 계수 셋과 슬롯 배수 셋이
+//    **여기 옮겨 적혀** 있었다(값은 Rust `week_xp` · `SLOT_MULTS` 를 본다 —
+//    여기 다시 적으면 그것이 곧 사본이다). Rust 에 「계수만 돌려주는 문」이
+//    없어서였다 —
+//    `previewTrainingNative` 는 피로·컨디션 변화만 주고 XP 계수는 안 준다.
+//    사본이라 한쪽만 고쳐진 채 남을 수 있었고, 검사는 **Rust 파일을 문자열로
+//    읽어** 식이 그대로인지 보는 것으로 겨우 막고 있었다.
 //
-// ⚠ **Rust 가 바뀌면 여기도 바뀌어야 한다.** 그 위험을 줄이려고
-//    `__tests__/trainingEfficiency.test.ts` 가 Rust 단위검사와 **같은 수**를
-//    못박아 뒀다(`week_xp_normal_conditions` · `week_xp_high_fatigue_cut` ·
-//    `week_xp_mid_fatigue_cut`). 갈리면 그 검사가 먼저 터진다.
-//    → A 에게 넘긴 것: `trainingEfficiencyNative` 하나면 이 사본이 없어진다.
+//    2026-09-07 에 `trainingEfficiencyNative` 를 내서 사본을 없앴다.
+//    Rust 쪽에서도 `week_xp` 가 그 계수 함수들을 부른다 — 자리가 하나다.
+//
+// ⚠ **비동기다.** 엔진 왕복이 IPC 라 동기로 못 만든다. 화면 둘(훈련 화면 ·
+//    소식 선택지 꼬리)이 그래서 `await` 로 바뀌었다 — 사본을 남기는 것보다
+//    이쪽이 싸다. 왕복 수를 줄이려고 **여러 지점을 한 번에** 묻는다.
+// ⚠ **엔진이 없으면 `null` 이다**(Vite 단독·검사). 여기서 값을 지어 내면
+//    그게 곧 사본이다 — 화면은 그때 효율 칸을 **안 그린다.**
 
-/**
- * 슬롯 배수 — 주/보조1/보조2 의 XP 배수.
- * 정본은 Rust `SLOT_MULTS`(`[(2.8, 1.0), (1.3, 0.5), (0.9, 0.5)]`) 의 첫 값이다.
- */
-export const TRAINING_SLOT_MULTS = [2.8, 1.3, 0.9] as const;
-
-/** 컨디션 계수 — 100 에서 1.0 */
-export function conditionFactor(condition: number): number {
-  return condition / 100;
-}
-
-/**
- * 피로 계수 — 85/70 에서 **계단으로** 떨어진다. 그 아래는 완만하고 0.80 이 바닥.
- * ⚠ 계단이라 「피로 −1」이 문턱을 넘으면 효율이 한 번에 뛴다. 그게 원래 동작이다.
- */
-export function fatigueFactor(fatigue: number): number {
-  if (fatigue >= 85) return 0.35;
-  if (fatigue >= 70) return 0.65;
-  return Math.max(0.80, 1 - fatigue / 200);
-}
-
-/** 성실 계수 — 1 에서 0.608, 99 에서 1.4. 약 49.5 가 1.0 이다 */
-export function diligenceFactor(diligence: number): number {
-  return 0.6 + (diligence / 99) * 0.8;
-}
-
+/** Rust `TrainingEfficiencyOne` — 계수 셋과 그 곱 */
 export interface TrainingEfficiency {
   /** 계수 셋 */
   condition: number;
@@ -268,6 +247,41 @@ export interface TrainingEfficiency {
   pct: number;
 }
 
+interface EfficiencyPoint { condition: number; fatigue: number; diligence: number }
+interface NativeEfficiency { entries: Omit<TrainingEfficiency, "pct">[]; slotMults: number[] }
+
+/**
+ * 여러 지점의 계수를 **한 번에** 묻는다.
+ *
+ * ⚠ 왕복을 늘리지 않으려고 배열로 받는다 — 선택지마다 「지금」과 「고른 뒤」
+ *   둘을 재는데 하나씩 물으면 왕복이 배가 된다.
+ */
+async function askEfficiency(points: readonly EfficiencyPoint[]): Promise<NativeEfficiency | null> {
+  // ⚠ `window` 자체가 없는 자리가 있다 (vitest node 환경 · 헤드리스 부팅 전).
+  //   `window.projectB` 만 보면 거기서 **던진다** — 없으면 없는 대로 null 이다
+  const api = typeof window === "undefined" ? undefined : window.projectB?.engine;
+  if (!api || points.length === 0) return null;
+  try {
+    const r = JSON.parse(await api("trainingEfficiencyNative",
+      JSON.stringify({ queries: points }))) as NativeEfficiency & { error?: string };
+    if (r.error || !Array.isArray(r.entries) || r.entries.length !== points.length) return null;
+    return r;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 슬롯 배수 — 주/보조1/보조2 의 XP 배수. **정본은 Rust `SLOT_MULTS` 다.**
+ *
+ * ⚠ 못 물으면 빈 배열이다 — 화면이 그때 그 줄을 안 그린다. 옛 값을 적어 두면
+ *   그게 다시 사본이다 — 뒤집기 전 옛 배수가 그래서 오래 남아 있었다.
+ */
+export async function trainingSlotMults(): Promise<readonly number[]> {
+  const r = await askEfficiency([{ condition: 100, fatigue: 0, diligence: 99 }]);
+  return r?.slotMults ?? [];
+}
+
 /**
  * 지금 상태가 훈련 XP 를 **몇 % 밀거나 깎고 있나.**
  *
@@ -275,14 +289,11 @@ export interface TrainingEfficiency {
  *   성장률·잠재력·나이는 **안 넣는다**: 선택지로 못 움직이는 축이라
  *   같이 곱하면 「내가 고른 것이 얼마나 바꿨나」가 안 보인다.
  */
-export function trainingEfficiency(p: {
-  condition: number; fatigue: number; diligence: number;
-}): TrainingEfficiency {
-  const condition = conditionFactor(p.condition);
-  const fatigue   = fatigueFactor(p.fatigue);
-  const diligence = diligenceFactor(p.diligence);
-  const total = condition * fatigue * diligence;
-  return { condition, fatigue, diligence, total, pct: Math.round((total - 1) * 100) };
+export async function trainingEfficiency(p: EfficiencyPoint): Promise<TrainingEfficiency | null> {
+  const r = await askEfficiency([p]);
+  if (!r) return null;
+  const e = r.entries[0];
+  return { ...e, pct: Math.round((e.total - 1) * 100) };
 }
 
 /**
@@ -294,21 +305,23 @@ export function trainingEfficiency(p: {
  *   같아 보인다.
  * ⚠ 값은 1~99 로 잘린다(`game.ts` 의 효과 적용과 같은 범위).
  */
-export function trainingEfficiencyDelta(
-  now: { condition: number; fatigue: number; diligence: number },
+export async function trainingEfficiencyDelta(
+  now: EfficiencyPoint,
   d: { conditionDelta?: number; fatigueDelta?: number; diligenceDelta?: number },
-): number | null {
+): Promise<number | null> {
   const dc = d.conditionDelta ?? 0, df = d.fatigueDelta ?? 0, dd = d.diligenceDelta ?? 0;
   if (dc === 0 && df === 0 && dd === 0) return null;
   const clamp = (v: number) => Math.max(1, Math.min(99, v));
-  const before = trainingEfficiency(now).total;
-  const after = trainingEfficiency({
+  // 🔴 **두 지점을 한 번에 묻는다** — 앞뒤를 따로 물으면 왕복이 둘이다
+  const r = await askEfficiency([now, {
     // ⚠ 컨디션은 100 까지다 — 1~99 로 자르면 컨디션 100 이 99 로 깎인다
     condition: Math.max(1, Math.min(100, now.condition + dc)),
     fatigue:   clamp(now.fatigue + df),
     diligence: clamp(now.diligence + dd),
-  }).total;
-  if (before <= 0) return null;
-  const pct = Math.round((after / before - 1) * 100);
+  }]);
+  if (!r) return null;
+  const [before, after] = r.entries;
+  if (before.total <= 0) return null;
+  const pct = Math.round((after.total / before.total - 1) * 100);
   return pct === 0 ? null : pct;
 }
