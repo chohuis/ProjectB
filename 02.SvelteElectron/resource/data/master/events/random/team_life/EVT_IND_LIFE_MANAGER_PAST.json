@@ -1,0 +1,21 @@
+{
+  "id": "EVT_IND_LIFE_MANAGER_PAST",
+  "type": "random",
+  "tier": "normal",
+  "theme": "train",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "weight": 16,
+  "poolId": "POOL_TRAIN_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_MANAGER_PAST",
+  "decisionTemplateId": "DEC_IND_LIFE_MANAGER_PAST",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

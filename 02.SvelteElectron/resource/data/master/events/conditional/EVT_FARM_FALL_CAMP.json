@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_FALL_CAMP",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 782,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 44
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_FALL_CAMP",
+  "decisionTemplateId": "DEC_FARM_FALL_CAMP",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

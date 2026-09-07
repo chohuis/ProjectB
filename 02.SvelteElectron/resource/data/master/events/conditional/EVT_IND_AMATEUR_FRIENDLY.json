@@ -1,0 +1,27 @@
+{
+  "id": "EVT_IND_AMATEUR_FRIENDLY",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
+  "category": "team",
+  "priority": 746,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_AMATEUR_FRIENDLY",
+  "decisionTemplateId": "DEC_IND_AMATEUR_FRIENDLY",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

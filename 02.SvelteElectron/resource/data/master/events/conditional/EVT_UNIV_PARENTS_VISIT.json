@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_PARENTS_VISIT",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
+  "category": "life",
+  "priority": 798,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_PARENTS_VISIT",
+  "decisionTemplateId": "DEC_UNIV_PARENTS_VISIT",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

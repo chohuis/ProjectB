@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_PROXY_ATTEND",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
+  "category": "mental",
+  "priority": 822,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_PROXY_ATTEND",
+  "decisionTemplateId": "DEC_UNIV_PROXY_ATTEND",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

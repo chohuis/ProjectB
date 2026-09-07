@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_LIBERAL_ARTS",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
+  "category": "academics",
+  "priority": 810,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_LIBERAL_ARTS",
+  "decisionTemplateId": "DEC_UNIV_LIBERAL_ARTS",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

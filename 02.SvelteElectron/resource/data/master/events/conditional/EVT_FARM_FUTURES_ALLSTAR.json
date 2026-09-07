@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_FUTURES_ALLSTAR",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
+  "category": "media",
+  "priority": 766,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 26
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_FUTURES_ALLSTAR",
+  "decisionTemplateId": "DEC_FARM_FUTURES_ALLSTAR",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

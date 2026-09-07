@@ -1,0 +1,21 @@
+{
+  "id": "EVT_IND_LIFE_FIRST_PITCH",
+  "type": "random",
+  "tier": "normal",
+  "theme": "media",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "weight": 16,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_FIRST_PITCH",
+  "decisionTemplateId": "DEC_IND_LIFE_FIRST_PITCH",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

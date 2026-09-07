@@ -1,0 +1,23 @@
+{
+  "id": "EVT_IND_HOSPITAL_BILL",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
+  "category": "health",
+  "priority": 734,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 15
+    }
+  ],
+  "messageTemplateId": "MSG_IND_HOSPITAL_BILL",
+  "decisionTemplateId": "DEC_IND_HOSPITAL_BILL",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_ACADEMY_JOB",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
+  "category": "life",
+  "priority": 722,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 46
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_ACADEMY_JOB",
+  "decisionTemplateId": "DEC_FARM_ACADEMY_JOB",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}
