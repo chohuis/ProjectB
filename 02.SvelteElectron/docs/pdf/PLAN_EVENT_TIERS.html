@@ -54,8 +54,9 @@
 <p>이 문서가 A(엔진)·B(데이터)·C(화면)·D(실측)의 정본이다. 값은 전부 <strong>제안값</strong>이고 5단계에서 잰다.</p>
 </blockquote>
 <h2>1. 흐름 (매주 · 등급 이벤트 한 줄기)</h2>
-<pre class="lang-text"><code>1. 히든 검사   — 숨겨진 조건을 채운 히든이 있으면 그것. 확률 굴리기 없음. 커리어 상한.
-2. 등급 추첨   — 노말·레어·유니크 가중 추첨(§3 규칙). 시즌 상한에 닿은 등급은 가중 0.
+<pre class="lang-text"><code>1. 등급 추첨   — 노말·레어·유니크·**히든** 넷을 가중 추첨(§3 규칙). 시즌 상한에 닿은 등급은 가중 0.
+   🔴 사용자 확정(09-08): **히든도 확률로 들어간다.** 히든에는 조건이 있는 것과 없는 것이 섞여 있다 — 조건 있는 히든은 채웠을 때만 후보, 없는 히든은 늘 후보.
+2. (자리 비움 — 히든 별도 검사는 없다)
 3. 등급 안에서 — 조건 통과 · 반복 정책 통과 · 「이번 시즌 안 뜬 것」 우선 · 밀린 주 가중 · 가중 추첨으로 하나.
 4. 비었으면    — 한 등급 아래로. 🔴 폴백이 한 번이라도 발동하면 `check:tiercoverage` 가 빨강(데이터 부족 신호).
 5. 선택        — 플레이어가 고른다. 크기는 등급이 · 종류는 선택지가.</code></pre>
@@ -67,18 +68,18 @@
 <tr><td>노말</td><td>늘 오는 것</td><td>40~50</td><td>없음</td><td>XP 1~3 · 사기·피로·관계·돈</td><td>없음</td><td>숫자 그대로</td></tr>
 <tr><td>레어</td><td>가끔 오는 것</td><td>4~6</td><td>6</td><td>XP 8~10 · 훈련 효율 N주 · 기회</td><td>가벼움(피로·돈)</td><td>숫자 그대로</td></tr>
 <tr><td>유니크</td><td>시즌의 사건</td><td>1~2</td><td>2</td><td>스탯 +1 · 영구 특성 · 멘토 · 성장률</td><td><strong>있음</strong>(관계·돈·다른 길 닫힘)</td><td>종류만</td></tr>
-<tr><td>히든</td><td>내가 그렇게 해서 만난 것</td><td>커리어 몇 번</td><td>커리어 상한(종당 1)</td><td>스탯 +3 · 구종 · 잠재력</td><td>되돌릴 수 없음</td><td>종류만</td></tr>
+<tr><td>히든</td><td>드물게 오는 사건 · 일부는 내가 그렇게 해서 만난 것</td><td><strong>주 1% · 시즌 0.5</strong></td><td>시즌 1 · 종당 커리어 1</td><td>스탯 +3 · 구종 · 잠재력</td><td>되돌릴 수 없음</td><td>종류만</td></tr>
 </tbody></table>
 <p><strong>앞서 확정한 결정과의 관계</strong>: ① 큰 갈림길 XP 8~10 = 레어 폭 · ② 즉시 스탯 상승 30~50건 = 유니크 총량 · ③ 주력 스탯 몰기 = 등급 안 선택지 설계 규칙. 셋은 따로 하지 않는다.</p>
 <h2>3. 등급 규칙 JSON 얼개 (<code>resource/data/master/events/tier_rules.json</code> · A)</h2>
 <pre class="lang-text"><code>{
-  "weights":   { "normal": 80, "rare": 15, "unique": 5 },          // 히든은 확률 밖
-  "seasonCap": { "rare": 6, "unique": 2 },                          // 닿으면 가중 0
+  "weights":   { "normal": 80, "rare": 14, "unique": 5, "hidden": 1 },
+  "seasonCap": { "rare": 6, "unique": 2, "hidden": 1 },              // 닿으면 가중 0
   "dryBoost":  { "rare": { "afterWeeks": 6, "perWeek": 3, "max": 30 } },  // 마른 시즌 방지
   "stateMod":  { "diligence": { "from": 60, "perPoint": 0.1, "max": 5 },  // 성실 60 위로 1점당 레어 +0.1
                  "condition": { "from": 80, "perPoint": 0.05, "max": 2 } },
   "starve":    { "perWeek": 1, "max": 10 },                         // 등급 안에서 밀린 주 가중
-  "hidden":    { "careerCap": 1 },                                  // 종당 커리어 1회
+  "hidden":    { "careerCapPerEvent": 1 },                          // 종당 커리어 1회 · 총량 상한 없음
   "fallback":  "step_down"                                          // 비면 한 단계 아래 · 검사가 잡는다
 }</code></pre>
 <h2>4. 이벤트 파일에 더하는 칸 (A 스키마 · B 데이터)</h2>
@@ -143,6 +144,9 @@
 <li>부족분 표를 무대×등급으로 내되 <strong>채우는 순서는 승격 → 읽기만 승격 → 새로 쓰기</strong>다: ① 남는 노말을 레어·유니크로 올린다(§6 승격 규칙) ② 읽기만 154종에 갈래를 붙여 얇은 무대의 노말을 채운다 ③ 그래도 모자란 칸만 새로 쓴다. 히든은 전부 새로.</li>
 </ol>
 <h2>8. 히든 아이디어 (12 · 사용자 검토용 · 조건은 화면에 안 보인다)</h2>
+<blockquote>
+<p>아래 12 는 전부 <strong>조건 있는</strong> 히든이다. 사용자 확정대로 <strong>조건 없는 히든</strong>을 무대마다 하나둘 더 둔다(예: 「낯선 스카우트의 명함」 · 「이름 없는 후원자」 · 「우연한 특별 훈련」 — 뜨는 것 자체가 사건). 총량 <strong>20~25</strong> — 주 1% 면 15년 커리어에 약 8건이고 종당 한 번이라 그보다 넉넉해야 빈 등급이 안 난다. 조건 있는 것 중 넷은 §12 의 새 조건 종류가 있어야 쓸 수 있다.</p>
+</blockquote>
 <table>
 <thead><tr><th>무대</th><th>이름</th><th>숨겨진 조건</th><th>보상</th><th>대가</th></tr></thead>
 <tbody>
@@ -174,6 +178,16 @@
 </ul>
 <h2>11. 순서</h2>
 <p>B 4-2(등급 달기 · 부족분 표) ∥ A 4-1(엔진 · 규칙 JSON · 검사) → A 4-3(효과 키) → B 4-4(부족분 쓰기 · 히든은 사용자 검토 뒤) → C 4-5 → D 4-6 → B 4-7(읽기만 하는 소식 줄이기).</p>
+<h2>12. 히든을 위해 더할 조건 종류 넷 (A 4-1)</h2>
+<p>지금 조건 50종은 전부 <strong>그 순간의 상태</strong>다. 히든(그리고 일부 레어·유니크)에는 넷이 더 필요하다.</p>
+<table>
+<thead><tr><th>종류</th><th>뜻</th><th>쓰는 히든</th><th>구현</th></tr></thead>
+<tbody>
+<tr><td><code>streak</code></td><td>N주 연속 어떤 상태(성실 90+ 를 20주)</td><td>새벽 운동장</td><td>주마다 세는 칸 하나</td></tr>
+<tr><td><code>tenure</code> / <code>count</code></td><td>같은 팀 N년 · 같은 포수와 N경기 · 지도한 후배 N</td><td>3학년의 마지막 공 · 포수의 사인 · 은퇴한 선배</td><td>누적 카운터 몇 개</td></tr>
+<tr><td><code>compare</code></td><td>나와 지정 NPC(라이벌·후배)의 스탯 비교</td><td>라이벌의 편지 · 후배가 넘어선 날</td><td>라이벌 등록부(<code>storyNpcs</code>)와 연결</td></tr>
+<tr><td><code>last_game</code></td><td>직전 경기 사건(완봉·완투·비 경기 삼진 N)</td><td>무명의 완봉 · 첫 완투 뒤 · 비 오는 날의 결정구</td><td>경기 결과는 이미 저장 — 읽는 자리만</td></tr>
+</tbody></table>
 
 </body>
 </html>
