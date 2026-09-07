@@ -252,6 +252,13 @@ function createSeasonStore() {
       //   병영 밸런스 아홉 판(씨앗 3)이 보직까지 **완전히 같은 결과**였다(씨앗 02 는 박격포병이어야 했다).
       //   시즌 롤오버(`startNewSeason`)는 보존하고 있었다 — 여기만 빠져 있었다.
       next.worldSeed = get({ subscribe }).worldSeed;
+      // 🔴 **문장 기억도 잃지 않는다** (2026-09-07 · `check:reportbank` 실측).
+      //   `sentenceMemory` 는 「직전에 쓴 문장」이라 **시즌 상태가 아니다** —
+      //   비우면 무대를 열 때마다 직전 제외가 초기화돼 같은 제목이 연달아
+      //   난다. 15년 헤드리스에서 훈련 3건·내 몸 4건이 그렇게 났다.
+      //   ⚠ `triggeredEvents` 와 다르다 — 그쪽은 `once_per_season` 정책의
+      //   입력이라 **비우는 게 맞다.**
+      next.sentenceMemory = { ...(get({ subscribe }).sentenceMemory ?? {}) };
       // ⚠ 고교·군은 `teamIds`가 빈 배열로 온다 — 그쪽은 뒤에 오는
       //   `initAllLeaguesV3`·`reinitHighschoolSeason`이 채운다
       if (teamIds.length > 0) {
@@ -315,6 +322,11 @@ function createSeasonStore() {
         }
         next.standingsSnapshots = carried;
         next.worldSeed = s.worldSeed;
+        // 🔴 **문장 기억은 시즌 상태가 아니다** (2026-09-07 · `check:reportbank`).
+        //   비우면 해가 바뀔 때마다 직전 제외가 초기화돼 같은 제목이 연달아
+        //   난다 — 소식함에서 「W52 주간 훈련 결과 / W1 주간 훈련 결과」로
+        //   같은 말이 두 줄 붙는다. `initSeason` 도 같이 고쳤다.
+        next.sentenceMemory = { ...(s.sentenceMemory ?? {}) };
         // 부진 누적은 시즌을 넘겨야 의미가 있다 (경질 판정의 입력)
         next.staffSlumpSeasons = { ...(s.staffSlumpSeasons ?? {}) };
         return next;
