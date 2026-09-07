@@ -28,8 +28,19 @@ function pitcher(over: Partial<ProtagonistSave> = {}): P {
 }
 
 describe("묻는 주 — 개막 주 상수와 맞는다", () => {
-  it("고교는 주말리그 개막(W7) 앞 주", () => {
-    expect(ROLE_ASK_WEEK.LEAGUE_HIGHSCHOOL).toBe(HS_START_WEEK - 1);
+  /**
+   * 🔴 **고교만 「개막 전 주」가 아니다** (2026-09-07 · 사용자 확정).
+   *
+   * W6(개막 W7 앞 주)이었는데, 새 게임은 W1에 자동으로 선발이 배정되고
+   * 다섯 주 뒤에 「보직을 고르라」가 왔다 — 사용자가 「처음 시작할 때
+   * 나오는 게 좋겠다」고 정했다.
+   *
+   * ⚠ 그래도 **개막보다는 앞이어야 한다** — 개막 뒤면 옛 보직으로 몇 경기를
+   *   치른 뒤가 된다. 그 선은 여기서 지킨다.
+   */
+  it("고교는 W1 이다 — 개막(W7)보다 앞이다", () => {
+    expect(ROLE_ASK_WEEK.LEAGUE_HIGHSCHOOL).toBe(1);
+    expect(ROLE_ASK_WEEK.LEAGUE_HIGHSCHOOL).toBeLessThan(HS_START_WEEK);
   });
 
   it("대학은 정규 개막(W5) 앞 주", () => {
@@ -68,9 +79,26 @@ describe("언제 묻나", () => {
     expect(roleAskReasonOf(pitcher(), 2029, 7)).toBeNull();
   });
 
-  it("고교는 W6 이다", () => {
+  // 🔴 새 게임 **첫 주**에 묻는다 (2026-09-07 · 사용자 확정). W6 은 없앴다 —
+  //   거기서 물으면 W1 자동 배정을 다섯 주 뒤에 뒤집는 소식이 된다
+  it("고교는 W1 이다 — W6 에는 안 묻는다", () => {
     const hs = pitcher({ careerStage: "highschool", leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_HS_A" });
-    expect(roleAskReasonOf(hs, 2026, 6)).toBe("season");
+    expect(roleAskReasonOf(hs, 2026, 1)).toBe("season");
+    expect(roleAskReasonOf(hs, 2026, 6)).toBeNull();
+  });
+
+  /**
+   * 🔴 **W1 자동 배정이 안 돌아야 한다.** 물음이 가드를 세우고
+   * `advanceWeek` 의 W1 갈래가 그 가드를 본다 — 순서가 뒤집히면 같은 주에
+   * 「선발로 배정되었습니다」와 「보직을 고르십시오」가 **둘 다** 뜬다.
+   * 프로 1군이 이미 그 길이라 배선은 있다(아래 「W1 자동 배정 배선」).
+   */
+  it("고교도 물으면 그 시즌 자동 배정이 막힌다", () => {
+    const hs = pitcher({
+      careerStage: "highschool", leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_HS_A",
+      lastRoleChoiceKey: roleChoiceGuardKey(2026, "TEAM_HS_A", 1),
+    });
+    expect(hasRoleChoiceThisSeason(hs as ProtagonistSave, 2026)).toBe(true);
     expect(roleAskReasonOf(hs, 2026, 1)).toBeNull();
   });
 

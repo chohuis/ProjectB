@@ -112,24 +112,35 @@ export function weekInYearOf(weekNum: number): number {
 // ── 투수 보직 — 묻는 주 ───────────────────────────────────────
 //
 // **각 리그의 시즌 시작 전 주**다 (PLAN_ROLE_RECOMMEND §4 · 확정 8).
-// W1 고정이 아니다 — 리그마다 개막이 다르고, 개막 뒤에 물으면 이미 옛 보직으로
+// 리그마다 개막이 달라 한 값으로 못 쓴다 — 개막 뒤에 물으면 이미 옛 보직으로
 // 몇 경기를 치른 뒤가 된다.
 //
 // ```
-//   고교      개막 W7  (leagueScheduler.HS_START_WEEK)            → W6
+//   고교      개막 W7  (leagueScheduler.HS_START_WEEK)            → W1  ⚠ 아래
 //   대학      개막 W5  (leagueScheduler.UNIV_REGULAR_START_WEEK)  → W4
 //   독립      개막 W10 (leagueTeams.generated SURVIVAL_STAGES[0]) → W9
 //   프로 1군  시범 W1  (leagueScheduler.PRESEASON_START_WEEK)     → W1
 //   프로 2군  개막 W5  (시범경기는 1군 셋뿐이다)                   → W4
 // ```
 //
-// ⚠ **프로 1군만 W1이다.** 시범경기가 W1~4에 팀당 12경기 있고 그 경기도 보직대로
+// ⚠ **프로 1군은 W1이다.** 시범경기가 W1~4에 팀당 12경기 있고 그 경기도 보직대로
 // 던진다 — W4에 물으면 이미 12경기를 옛 보직으로 치른 뒤다.
+//
+// 🔴 **고교도 W1이다** (2026-09-07 · 사용자 확정). 「개막 전 주」 규칙대로면
+//   W6이었는데, 새 게임을 시작하면 **W1에 자동으로 선발이 배정되고**
+//   (`advanceWeek` W1 갈래 · `assignHighschoolPosition`) 다섯 주 뒤 W6에
+//   「보직을 고르라」가 왔다. 사용자 말 그대로: 「시작하자마자 선발로
+//   정해지고 W6에 변경 소식이 오는데, 처음 시작할 때 나오는 게 좋겠다.」
+//
+//   W1로 옮기면 자동 배정이 **아예 안 돈다** — `advanceWeek` 이 물음을 먼저
+//   부르고, 그 물음이 세운 가드를 `hasRoleChoiceThisSeason` 이 보고 W1 갈래를
+//   건너뛴다(프로 1군이 이미 그 길이다). 개막(W7)까지 여섯 주가 남으므로
+//   「옛 보직으로 몇 경기를 치른 뒤」가 되지도 않는다.
 //
 // ⚠ 값이 개막 주 상수와 어긋나면 `roleAskWeek.test.ts` 가 깨진다. 캘린더를
 // 바꾸면 여기도 같이 바꾼다 — 안 바꾸면 **오류 없이 그 시즌만 안 묻는다.**
 export const ROLE_ASK_WEEK: Record<string, number> = {
-  LEAGUE_HIGHSCHOOL:  6,
+  LEAGUE_HIGHSCHOOL:  1,
   LEAGUE_UNIVERSITY:  4,
   LEAGUE_INDEPENDENT: 9,
   LEAGUE_KBL:         1,
