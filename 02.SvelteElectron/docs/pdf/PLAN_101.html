@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>1.0.1 실행 계획</title>
+<style>
+  body {
+    font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #1a1a1a;
+    background: #ffffff;
+    margin: 0;
+    padding: 18px 22px;
+    word-break: keep-all;
+  }
+  h1 { font-size: 20px; border-bottom: 2px solid #333; padding-bottom: 6px; margin: 0 0 12px; }
+  h2 { font-size: 16px; border-bottom: 1px solid #999; padding-bottom: 4px; margin: 20px 0 8px; }
+  h3 { font-size: 14px; margin: 16px 0 6px; }
+  h4, h5, h6 { font-size: 12.5px; margin: 12px 0 5px; }
+  p { margin: 4px 0; }
+  a { color: #1a5aab; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 14px 0; }
+  blockquote {
+    margin: 6px 0; padding: 4px 10px;
+    border-left: 3px solid #999; background: #f4f4f4; color: #444;
+  }
+  blockquote p { margin: 2px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 14px; font-size: 11px; }
+  th, td {
+    border: 1px solid #bbb; padding: 4px 7px; text-align: left;
+    vertical-align: top; word-break: keep-all;
+  }
+  th { background: #eee; font-weight: 700; }
+  tr:nth-child(even) td { background: #fafafa; }
+  ul, ol { margin: 4px 0 8px; padding-left: 22px; }
+  li { margin: 2px 0; }
+  code {
+    font-family: Consolas, "D2Coding", monospace;
+    background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 10.5px;
+  }
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 8px 10px; overflow-x: auto; margin: 8px 0 14px;
+  }
+  pre code { background: none; padding: 0; }
+  strong { font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>1.0.1 실행 계획 (2026-09-06)</h1>
+<blockquote>
+<p>결정 열넷은 전부 확정됐다(<code>TODO_101_2026-09-04.md</code> §B). 여기는 <strong>무엇을 어느 순서로 누가</strong> 하는지다.</p>
+<p>원칙 둘: <strong>수치는 먼저 재고 나서 만진다</strong> · <strong>한 번에 한 변수만 움직여 전후를 잰다.</strong> 세션은 한 번에 하나.</p>
+<p>시작 조건: 1.0.0 이 20/20 으로 닫히고 v1.0.0 태그가 옮겨진 뒤.</p>
+</blockquote>
+<h2>단계 0 — 실측부터 (D · 한 턴)</h2>
+<p>값을 바꾸기 전에 기준선을 남긴다. 이것 없이는 뒤 단계에서 무엇이 좋아졌는지 못 가린다.</p>
+<table>
+<thead><tr><th>무엇</th><th>왜</th></tr></thead>
+<tbody>
+<tr><td>E2 <strong>경기 출전이 성장에 얼마나 기여하나</strong> — 무대별 주인공 연간 등판·출전 수 × 경기당 XP</td><td>결정 ①②③(선택지 무게)의 전제. 프로처럼 출전이 많으면 훈련에 필적할 수 있다</td></tr>
+<tr><td><strong>드래프트 결과 분포 기준선</strong> — 씨앗 셋 × 프리셋 넷 → 3년 뒤 지명 순위·대학/독립 비율</td><td>결정 ⑭(시작 능력치)의 전후 비교 기준</td></tr>
+<tr><td><strong>코스 정확도 모드 전후</strong> — <code>PB_LOC_INTENT</code> 켠 판/안 켠 판 × 씨앗 셋 → 리그 타율·ERA·주인공 ERA</td><td>결정 ⑦</td></tr>
+<tr><td><strong>고교 사기 분포</strong> — 시즌 중 최저·평균</td><td>결정 ⑥(문턱을 얼마로 올릴지)</td></tr>
+<tr><td>재회 12종 무대별 도달 분포(우선순위 610 고정 관찰)</td><td>백로그 §3</td></tr>
+</tbody></table>
+<p>산출: <code>BALANCE_BASELINE_101.md</code> 한 장. 이 숫자가 뒤 단계의 「전」이다.</p>
+<h2>단계 1 — 값을 안 바꾸고 체감을 올리는 것 (C 한 턴 + A 한 턴)</h2>
+<table>
+<thead><tr><th>#</th><th>무엇</th><th>담당</th></tr></thead>
+<tbody>
+<tr><td>④</td><td><strong>선택지↔훈련 연결 화면</strong> — 훈련 화면에 「지금 컨디션·피로·성실이 이번 주 성과를 ±몇 % 밀고 있다」 · 선택지 효과 힌트에 「→ 훈련 효율」 꼬리</td><td>C</td></tr>
+<tr><td>⑤</td><td><strong>슬롯 배수</strong> — 주 슬롯이 피로 대비 최적이 되게(<code>SLOT_MULTS</code> · 코드 주석 「의도인지 미확정」을 확정으로)</td><td>A</td></tr>
+<tr><td>⑬</td><td><strong>해외 1군 정원 28 → 30</strong> — RF 1명 문제. 세계 인구 +56 · <code>BALANCE_BACKLOG §8</code></td><td>A</td></tr>
+<tr><td>C1</td><td><strong>못 닿는 이벤트 아홉 문턱</strong> — 대학 아르바이트(소지금 200→1,000) · 학점 위기 셋(2.0→2.4) · 부상 조짐(and→or) · 고교 사기 다섯은 단계 0 분포를 보고</td><td>B</td></tr>
+<tr><td>C2</td><td><strong>훈련 리포트 문안 은행</strong> — 무대 × 성과 × 종류 조합마다 4~6문장 · 부상·내 몸 리포트도</td><td>B</td></tr>
+</tbody></table>
+<h2>단계 2 — 투구 (A 두 턴 · 값은 제안값)</h2>
+<p>순서가 있다. 작은 것 → 노림수 → 그 위에 결정구.</p>
+<table>
+<thead><tr><th>#</th><th>무엇</th><th>메모</th></tr></thead>
+<tbody>
+<tr><td>⑧</td><td><strong>완급 조절</strong> — 직전 구속을 한 칸 남기고 낙차에 보너스</td><td>기억 한 칸 + 계수 하나</td></tr>
+<tr><td>⑨</td><td><strong>코스 반복 페널티</strong> — 구종 반복과 같은 꼴</td><td>같은 자리만 던지는 플레이를 막는다</td></tr>
+<tr><td>⑩</td><td><strong>타자 노림수</strong> — 최근 구종 이력을 타자가 참조해 같은 구종에 콘택트 상승</td><td>다양성이 「회피」에서 「전술」로 · 구종 개수 이득도 여기서 생긴다</td></tr>
+<tr><td>⑪</td><td><strong>결정구 보너스</strong> — 2스트라이크에 최고 등급 구종 · 유인 성공 시 추가</td><td>⑩ 뒤</td></tr>
+<tr><td>⑦</td><td><strong>코스 정확도 모드 확정</strong> — 단계 0 결과로 켤지 정하고 <strong>환경변수 대신 설정값</strong>으로 못박는다</td><td>두 모드가 떠 있는 상태를 끝낸다</td></tr>
+</tbody></table>
+<p>각 항목 전후: 씨앗 셋 × 리그 타율 · ERA · 헛스윙률 · 주인공 ERA. <code>BALANCE_BASELINE_101</code> 대비.</p>
+<h2>단계 3 — 선택지 무게와 시작점 (A · B · 단계 0 결과 뒤)</h2>
+<table>
+<thead><tr><th>#</th><th>무엇</th><th>담당</th></tr></thead>
+<tbody>
+<tr><td>⑭</td><td><strong>시작 능력치</strong> — 프리셋 OVR 58~62 · 파워피처 구속 70 안팎 → 씨앗 셋 드래프트 분포를 단계 0 기준선과 비교해 확정</td><td>A</td></tr>
+<tr><td>①</td><td><strong>큰 갈림길 XP 8~10</strong> — 어느 결정이 「큰 갈림길」인지 목록부터(커리어 한 번 사건 · 진로 · 계약)</td><td>B(목록) → B(값)</td></tr>
+<tr><td>②</td><td><strong>즉시 스탯 상승 30~50건</strong> — ①과 같은 목록에서</td><td>B</td></tr>
+<tr><td>③</td><td><strong>주력 스탯에 몰기</strong> — 무대·시기별 주력 스탯 표 → 선택지 효과를 그쪽으로</td><td>B</td></tr>
+<tr><td>⑥</td><td><strong>고교 사기 문턱</strong> — 단계 0 분포로 문턱을 정해 다섯을 살린다 · 그래도 0회면 감소 폭</td><td>B</td></tr>
+</tbody></table>
+<h2>단계 4 — 이벤트 체계 개편 (사용자 확정 2026-09-08 · 「물량이 아니라 폭」)</h2>
+<blockquote>
+<p>기존 콘텐츠 계획(<code>PLAN_CONTENT_101_2026-09-04.md</code>)은 버리지 않는다 — <strong>이 체계의 재료</strong>로 들어간다.</p>
+</blockquote>
+<p><strong>흐름 (사용자 확정)</strong></p>
+<ol>
+<li><strong>히든 조건 검사</strong> — 숨겨진 조건을 채운 히든이 있으면 그 주는 그것 · 확률 굴리기 건너뜀</li>
+<li><strong>등급 추첨</strong> — 노말 80 · 레어 15 · 유니크 5(제안값) + 시즌 상한(레어 6 · 유니크 2) + 마른 시즌 보정 + 성실·컨디션 약한 보정</li>
+<li>🔴 <strong>빈 등급은 없어야 한다</strong> — 사용자 확정. 내려가는 폴백은 두되 <strong>폴백이 발동하면 검사가 빨강</strong>(데이터가 모자란 신호)</li>
+<li><strong>등급 안에서 하나</strong> — 이번 시즌 안 뜬 것 먼저 · 밀린 주 가중 · 노말은 가중 추첨</li>
+<li><strong>선택</strong> — 크기는 등급이 · 종류는 선택지가 · 유니크 위는 대가 · 상위는 보상 종류만 표시</li>
+</ol>
+<ul>
+<li><strong>한 주에 하나.</strong> 전부 멈춘다. 긴급·주차 고정 필수·시스템 소식은 이 줄기 밖(지금처럼).</li>
+<li>랜덤 풀 다섯은 <strong>노말로 흡수</strong>(두 갈래 → 한 줄기).</li>
+</ul>
+<p><strong>등급표</strong></p>
+<table>
+<thead><tr><th>등급</th><th>감각</th><th>시즌 빈도</th><th>보상 폭</th><th>대가</th><th>표시</th></tr></thead>
+<tbody>
+<tr><td>노말</td><td>늘 오는 것</td><td>40~50</td><td>XP 1~3 · 사기·관계·돈</td><td>없음</td><td>숫자</td></tr>
+<tr><td>레어</td><td>가끔 오는 것</td><td>4~6</td><td>XP 8~10 · 훈련 효율 N주 · 기회</td><td>가벼움</td><td>숫자</td></tr>
+<tr><td>유니크</td><td>시즌의 사건</td><td>1~2</td><td>스탯 +1 · 특성 · 멘토 · 성장률</td><td><strong>있음</strong></td><td>종류만</td></tr>
+<tr><td>히든</td><td>내가 그렇게 해서 만난 것</td><td>커리어에 몇 번</td><td>스탯 +3 · 구종 · 잠재력(커리어 상한 +3)</td><td>되돌릴 수 없음</td><td>종류만</td></tr>
+</tbody></table>
+<p><strong>보상 종류</strong>(폭의 두 번째 축): 능력(XP·스탯·잠재력·성장률·훈련 효율 N주) · 구종(새 구종·등급·진행도 점프) · 몸(부상 위험↓·회복 배율·영구 특성) · 사람(관계 점프·멘토·라이벌 확정) · 기회(선발 보장·콜업·대표팀 후보·스카우트 주목·스폰서·협상 유리) · 이야기(태그·체인 열쇠·업적). <strong>뺀 것</strong>: 슬롯 4칸 · 해금 면제 · 상대 약점 공개.</p>
+<p><strong>데이터 충분량</strong>(빈 등급 0 을 위한 하한 · 무대마다)</p>
+<table>
+<thead><tr><th>등급</th><th>무대당 최소 종</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>노말</td><td>60</td><td>시즌 40~50 · 시즌 한 번 규칙 · 조건 미충족분</td></tr>
+<tr><td>레어</td><td>15</td><td>시즌 6 · 두 시즌 안 겹치게</td></tr>
+<tr><td>유니크</td><td>6</td><td>시즌 2 · 세 시즌</td></tr>
+<tr><td>히든</td><td>커리어 전체 12~15</td><td>무대 갈래마다 두셋</td></tr>
+</tbody></table>
+<p>무대 = 고교 · 대학 · 독립 · 2군 · 프로 초반 · 프로 중후반 · 군 → 노말 420 · 레어 105 · 유니크 42 · 히든 15 ≈ <strong>580종</strong>. 지금 605종 중 등급을 달아 재활용할 수 있는 것과 새로 쓸 것을 B 가 먼저 가른다.</p>
+<p><strong>작업</strong></p>
+<table>
+<thead><tr><th>#</th><th>무엇</th><th>담당</th></tr></thead>
+<tbody>
+<tr><td>4-1</td><td>등급 칸·등급 규칙 JSON(비율·상한·보정)·선택 알고리즘 갈아끼우기·랜덤 풀 흡수·폴백 발동 검사·태그 효과 키</td><td>A</td></tr>
+<tr><td>4-2</td><td>605종 등급 달기 + 재활용/폐기 판정 + 무대×등급 부족분 표</td><td>B</td></tr>
+<tr><td>4-3</td><td>새 보상 효과 키 — 구종·잠재력(상한)·성장률·훈련 효율 N주·특성·멘토·선발 보장</td><td>A</td></tr>
+<tr><td>4-4</td><td>부족분 쓰기 — 노말부터 · 프로 중후반 우선 · 기존 콘텐츠 계획(연차·라이벌·체인·인물)을 레어·유니크·히든 재료로</td><td>B</td></tr>
+<tr><td>4-5</td><td>등급 표시(칩) · 상위 등급 보상 감춤 · 시즌 결산 집계 · 위기 이벤트 표시</td><td>C</td></tr>
+<tr><td>4-6</td><td>커버리지 실측 — 무대별 3시즌 헤드리스에서 <strong>폴백 0</strong> · 등급별 실제 빈도 · 밀림 대기</td><td>D</td></tr>
+<tr><td>4-7</td><td>읽기만 하는 소식 3~6건/주 줄이기(문안 은행·묶음) — 「많다」의 나머지 절반</td><td>B</td></tr>
+</tbody></table>
+<h2>단계 5 — 밸런스 전량 (D → 사용자)</h2>
+<p>콘텐츠가 다 들어간 뒤 <code>BALANCE_BACKLOG</code> 여섯 묶음(보직 · 고교 엔진 · 계약·인센티브 · 병영 · 세계 · 투구)을 한꺼번에 잰다. 값마다 씨앗 셋 전후 → 사용자에게 표로 → 확정.</p>
+<h2>단계 6 — 마무리 (D · OP)</h2>
+<p>회귀 전량 · 재발 방지 검사 셋 초록 · 포장 · smoke · 사용자 테스트 → <strong>v1.0.1 태그</strong>.</p>
+<h2>안 하는 것 (1.0.2 후보)</h2>
+<ul>
+<li>⑫ 좌우 상성 — 엔진·생성·화면·NPC 까지 걸린다</li>
+<li>화면 반응 블록 예외 격리 · 세이브 무결성 검사 — <code>TODO_101</code> §F</li>
+<li>소리·음악 · JBL 팀 데이터</li>
+</ul>
+<h2>담당 요약</h2>
+<table>
+<thead><tr><th>세션</th><th>몫</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>슬롯 배수 · 해외 정원 · 투구 넷 · 코스 모드 확정 · 시작 능력치 · 태그 효과 키 · 라이벌 배선 · 주장/베테랑</td></tr>
+<tr><td>B</td><td>문턱 아홉 · 문안 은행 · 큰 갈림길 목록과 값 · 주력 스탯 표 · 콘텐츠 데이터 전량</td></tr>
+<tr><td>C</td><td>연결 화면 · 주장/후배 지도/트레이드 요구 화면 · 눈확인</td></tr>
+<tr><td>D</td><td>단계 0 기준선 · 각 단계 전후 실측 · 밸런스 전량 · 회귀·포장</td></tr>
+</tbody></table>
+
+</body>
+</html>

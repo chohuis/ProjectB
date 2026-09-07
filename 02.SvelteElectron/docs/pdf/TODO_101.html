@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>1.0.1 할 일</title>
+<style>
+  body {
+    font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #1a1a1a;
+    background: #ffffff;
+    margin: 0;
+    padding: 18px 22px;
+    word-break: keep-all;
+  }
+  h1 { font-size: 20px; border-bottom: 2px solid #333; padding-bottom: 6px; margin: 0 0 12px; }
+  h2 { font-size: 16px; border-bottom: 1px solid #999; padding-bottom: 4px; margin: 20px 0 8px; }
+  h3 { font-size: 14px; margin: 16px 0 6px; }
+  h4, h5, h6 { font-size: 12.5px; margin: 12px 0 5px; }
+  p { margin: 4px 0; }
+  a { color: #1a5aab; }
+  hr { border: none; border-top: 1px solid #ccc; margin: 14px 0; }
+  blockquote {
+    margin: 6px 0; padding: 4px 10px;
+    border-left: 3px solid #999; background: #f4f4f4; color: #444;
+  }
+  blockquote p { margin: 2px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 14px; font-size: 11px; }
+  th, td {
+    border: 1px solid #bbb; padding: 4px 7px; text-align: left;
+    vertical-align: top; word-break: keep-all;
+  }
+  th { background: #eee; font-weight: 700; }
+  tr:nth-child(even) td { background: #fafafa; }
+  ul, ol { margin: 4px 0 8px; padding-left: 22px; }
+  li { margin: 2px 0; }
+  code {
+    font-family: Consolas, "D2Coding", monospace;
+    background: #f0f0f0; padding: 1px 4px; border-radius: 3px; font-size: 10.5px;
+  }
+  pre {
+    background: #f4f4f4; border: 1px solid #ddd; border-radius: 4px;
+    padding: 8px 10px; overflow-x: auto; margin: 8px 0 14px;
+  }
+  pre code { background: none; padding: 0; }
+  strong { font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>1.0.1 할 일 — 한 장 (2026-09-04)</h1>
+<blockquote>
+<p>여러 문서에 흩어진 것을 모았다. 세부는 각 행의 「어디에」를 본다.</p>
+<p>🔴 <strong>먼저 사용자 결정이 필요한 것</strong>은 B 묶음이다. 그것부터 정하고 나머지를 순서대로 돈다.</p>
+</blockquote>
+<hr>
+<h2>A. 결함 — 동작이 잘못된 것</h2>
+<table>
+<thead><tr><th>#</th><th>무엇</th><th>크기</th><th>어디에</th></tr></thead>
+<tbody>
+<tr><td>A1</td><td><strong>계약 제시 수락 서명액이 화면 표시와 다르다</strong>(<code>effectiveOffer</code> 대 <code>offeredSalary</code> · 예전부터)</td><td>작음</td><td>BALANCE_BACKLOG §2</td></tr>
+<tr><td>A2</td><td><strong>코스 정확도 모드가 두 벌 떠 있다</strong> — 신·구 모드가 코드에 있고 켜는 자리가 없어 늘 구모드. 켜든 안 켜든 <strong>설정값으로 못박아야</strong> 한다</td><td>작음(판정은 B4)</td><td>PLAN_CONTENT §7-3</td></tr>
+<tr><td>A3</td><td><strong><code>platoon</code> 스탯이 죽어 있다</strong> — 늘 50 으로 초기화만 되고 아무도 안 읽는다. 살리거나 지운다</td><td>작음(살리면 B5)</td><td>PLAN_CONTENT §7-2</td></tr>
+<tr><td>A4</td><td><code>check:teamrefs</code> <strong>오탐</strong> — 스캐너가 주석을 안 벗겨 설명용 예시를 참조로 센다</td><td>작음</td><td>PROGRESS_TREE</td></tr>
+<tr><td>A5</td><td><code>check:determinism</code> 이 <strong>40분 넘겨 못 끝난다</strong> — 알려진 빨강이나 재확인이 안 된다</td><td>중간</td><td>PROGRESS_TREE</td></tr>
+<tr><td>A6</td><td><strong>죽은 코드 둘</strong> — <code>completePitchLearning()</code> · <code>advancePitchProgress()</code> 호출부 0</td><td>작음</td><td>PLAN_PITCH_LEARNING</td></tr>
+<tr><td>A7</td><td><strong>오프너 라벨이 남아 있다</strong> — 만드는 코드는 지웠는데 타입·설명 문자열에 남음</td><td>작음</td><td>09-04 확인</td></tr>
+<tr><td>A8</td><td><strong>슬롯 배수가 뒤집혀 있을 수 있다</strong> — 주 2.5 인데 피로 1 당 XP 는 보조1(3.00)이 낫다. 코드 주석이 「의도인지 미확정」</td><td>작음(판정은 B3)</td><td>PLAN_CONTENT §6-2</td></tr>
+<tr><td>A9</td><td><strong>사용자 테스트에서 나올 결함</strong> — 아직 안 나옴</td><td>?</td><td>테스트 뒤</td></tr>
+</tbody></table>
+<hr>
+<h2>B. 🔴 사용자 결정이 먼저인 것</h2>
+<table>
+<thead><tr><th>#</th><th>물음</th><th>OP 의견</th></tr></thead>
+<tbody>
+<tr><td>B1</td><td><strong>선택지의 무게를 어떻게 할까</strong> — 직접 XP 중앙값 2(훈련 0.4주) · 즉시 스탯 상승 10건(1%) · 효과가 9~11 스탯에 흩어짐</td><td>큰 갈림길만 8~10 으로 · 즉시 상승을 30~50건으로 · 무대별 주력 스탯에 몰아준다</td></tr>
+<tr><td>B2</td><td><strong>선택지와 훈련의 연결을 보이게 할까</strong> — 사기·컨디션·피로·성실이 훈련 산식에 곱으로 들어가는데 화면에 안 보인다</td><td>🔴 <strong>1순위.</strong> 수치를 안 바꾸고 체감을 올리는 가장 싼 길</td></tr>
+<tr><td>B3</td><td><strong>슬롯 배수(A8)가 의도인가</strong></td><td>의도가 아니면 고친다. 주 슬롯이 최적이 아니면 규칙을 잘못 배운다</td></tr>
+<tr><td>B4</td><td><strong>코스 정확도 모드를 켤까</strong>(A2)</td><td>🔴 켜면 커맨드가 뜻을 갖는다. 씨앗 3으로 켠 판·안 켠 판을 나란히 재고 정한다</td></tr>
+<tr><td>B5</td><td><strong>좌·우 상성을 넣을까</strong>(A3)</td><td>야구다움이 크게 오르지만 엔진·생성·화면·NPC 까지 걸린다. 다른 것이 자리 잡은 뒤</td></tr>
+<tr><td>B6</td><td><strong>타자에게 노림수를 줄까</strong></td><td>넣으면 다양성이 「페널티 회피」가 아니라 전술이 되고, 구종을 다섯 배울 이유도 생긴다</td></tr>
+<tr><td>B7</td><td><strong>고교 사기가 안 떨어지는 것</strong>(이벤트 5종이 0회) — 문턱을 올릴까, 사기 감소 폭을 키울까</td><td>문턱만 먼저 올려 재고, 그래도 안 뜨면 폭을 본다</td></tr>
+</tbody></table>
+<hr>
+<h2>C. 콘텐츠</h2>
+<table>
+<thead><tr><th>#</th><th>무엇</th><th>크기</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>C1</td><td><strong>못 닿는 이벤트 아홉 문턱 손보기</strong> — 대학 아르바이트(소지금 200) · 학점 위기 3종(2.0) · 고교 사기 5종 · 대학 부상 조짐</td><td>아주 작음</td><td>전부 실측 0회</td></tr>
+<tr><td>C2</td><td><strong>훈련 리포트 문안 다양화</strong> — 무대 × 성과 × 훈련 종류로 조합마다 4~6문장</td><td>작음</td><td>15년에 700회 이상 같은 글</td></tr>
+<tr><td>C3</td><td><strong>태그를 붙이는 효과 키</strong> — <code>has_tag</code> 로 읽기는 하는데 다는 표준 경로가 없다</td><td>작음</td><td>C4·C5 의 문</td></tr>
+<tr><td>C4</td><td><strong>라이벌을 사람으로</strong> — 인물 등록부(56명·훅 6종)를 읽어 이름을 붙이고 3부작을 잇는다</td><td>중간</td><td><code>storyHooks</code> 읽는 코드 0곳</td></tr>
+<tr><td>C5</td><td><strong>이벤트 체인 다섯 줄기</strong> — 부상 복귀 · 슬럼프 탈출 · 구종 완성 · 감독 갈등 · 팬 관계</td><td>중간</td><td>지금 체인 1개뿐</td></tr>
+<tr><td>C6</td><td><strong>프로 연차 이벤트 150종</strong> — 다섯 구간(1~2 · 3~5 · 6~9 · 10~13 · 14+)</td><td>큼</td><td>주당 밀도가 고교의 1/4</td></tr>
+<tr><td>C7</td><td><strong>프로 중후반 장치</strong> — 주장 · 후배 지도 · 베테랑 대우 · 트레이드 요구</td><td>중간~큼</td><td>고교·대학엔 있는데 프로엔 없다</td></tr>
+<tr><td>C8</td><td><strong>프로 인물 등록부</strong> — 20구단 × 3~5명 + 특성 라벨 20 → 40~60개</td><td>중간</td><td>이름 있는 NPC 가 고교 56명뿐</td></tr>
+<tr><td>C9</td><td><strong>관계 전용 이벤트</strong> — 문턱을 넘으면 그 사람 이야기가 열린다</td><td>중간</td><td>관계가 수치로만 존재</td></tr>
+<tr><td>C10</td><td><strong>독립·2군 주간 시장</strong> — FA·트레이드·콜업·스카우팅</td><td>큼</td><td>두 무대가 「그냥 주 넘기기」</td></tr>
+<tr><td>C11</td><td><strong>팀 얼굴 채우기</strong> — 프로 20 → 독립 10 → 대학 50 → 고교 102 · 라이벌·우승 이력·소개글</td><td>중간</td><td>238팀 중 56팀만 얼굴이 있다</td></tr>
+<tr><td>C12</td><td><strong>대학 학년별 전용 이벤트</strong></td><td>중간</td><td>학년 전용이 고교의 절반</td></tr>
+<tr><td>C13</td><td><strong>일반병 복무 화면</strong></td><td>중간</td><td>상무는 겪는데 일반병은 주차만 흐른다</td></tr>
+<tr><td>C14</td><td><strong>선택 없는 이벤트에 갈림길 붙이기</strong></td><td>중간</td><td>605 정의 대 411 템플릿</td></tr>
+<tr><td>C15</td><td><strong>구종 학습 안내·경고</strong> — 시작 전 손익 · 뺄 때 경고 · 안 배우는 중 소식 · 화면 이동</td><td>중간</td><td>PLAN_PITCH_LEARNING(조사 끝)</td></tr>
+<tr><td>C16</td><td><strong>병영 문안 62종 다듬기</strong></td><td>중간</td><td>1.0 은 초안</td></tr>
+<tr><td>C17</td><td><strong>세계 씨앗 선택</strong></td><td>작음</td><td>반복 플레이 축이 학교×프리셋 둘뿐</td></tr>
+<tr><td>C18</td><td><strong>은퇴 결산에 관계 이야기 한 줄</strong></td><td>작음</td><td>지금은 이름과 마지막 수치뿐</td></tr>
+</tbody></table>
+<hr>
+<h2>D. 밸런스 수치 (<code>BALANCE_BACKLOG.md</code>)</h2>
+<table>
+<thead><tr><th>묶음</th><th>잡을 것</th></tr></thead>
+<tbody>
+<tr><td>보직</td><td>적합도 가중치 · 불펜 자리 수 · 추천 밖 불이익 계수 · 균형형이 선발 추천을 못 받는 것</td></tr>
+<tr><td>고교 엔진</td><td>선발 투구수 상한 · 아웃 계수 · 마무리 문. <strong>실측상 문이 아니라 진입 자체가 막혀 있다</strong></td></tr>
+<tr><td>계약·인센티브</td><td>후보 9종 문턱·금액 · 총액 비율 · 역제안 계수 · 수락 확률</td></tr>
+<tr><td>병영</td><td>상무 선택지 다섯 · 재회 12종 문턱과 창 · 부대 관계 문턱(분포 미측정)</td></tr>
+<tr><td>세계</td><td>대회 시드 배선이 바뀌어 값이 움직였다 · 프로 진입이 5시즌 창에 아슬아슬</td></tr>
+<tr><td>투구</td><td>완급 낙차 보너스 · 코스 반복 페널티 · 결정구 보너스(B4·B6 결정 뒤)</td></tr>
+</tbody></table>
+<hr>
+<h2>E. 검사·계측·도구</h2>
+<table>
+<thead><tr><th>#</th><th>무엇</th></tr></thead>
+<tbody>
+<tr><td>E1</td><td>확인용 세이브 둘 마무리 — 인센티브 달성 판 · 고교 3년→프로 2군→FA 보상 판</td></tr>
+<tr><td>E2</td><td><strong>경기 출전이 성장에 얼마나 기여하는지 실측</strong> — 무대별 연간 등판·출전 수(B1 판단의 전제)</td></tr>
+<tr><td>E3</td><td>재회 12종 <strong>무대별</strong> 도달 분포 — 우선순위 610 고정이 앞쪽 넷만 뜨게 하는지</td></tr>
+<tr><td>E4</td><td>고교 마무리 진입률 재측(밸런스 D 와 짝)</td></tr>
+</tbody></table>
+<hr>
+<h2>F. 안 하기로 한 것 · 미룬 것</h2>
+<ul>
+<li><strong>소리와 음악</strong> — 볼륨 설정만 있고 재생기가 없다. 화면에 그렇게 밝혀 두었다</li>
+<li><strong>JBL(일본) 팀 데이터</strong> — 이벤트 문구만 있고 마스터 팀 파일이 0개. 사실상 확장팩 몫</li>
+</ul>
+<hr>
+<h2>권장 순서</h2>
+<ol>
+<li><strong>B 묶음 결정</strong>(특히 B2 · B4) → 정해져야 나머지가 갈린다</li>
+<li><strong>E2 실측</strong> → B1 의 전제</li>
+<li><strong>A1~A8 결함</strong> · <strong>C1·C2</strong>(가장 싸고 체감이 크다)</li>
+<li><strong>C3 → C4 → C5</strong>(태그가 문이다)</li>
+<li><strong>B2 화면</strong>(연결을 보이게) · <strong>투구 축 작은 것 둘</strong>(완급 · 코스 반복)</li>
+<li><strong>C6 · C8</strong>(오래 걸리는 데이터 · 일찍 시작해 나눠 넣는다)</li>
+<li><strong>C7 · C9 · C10 · C15</strong></li>
+<li><strong>D 밸런스 전량</strong> — 콘텐츠가 다 들어간 뒤 한꺼번에 잰다</li>
+<li>C11 ~ C18 중 남은 것</li>
+</ol>
+
+</body>
+</html>
