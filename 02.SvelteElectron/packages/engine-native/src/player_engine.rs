@@ -1171,13 +1171,50 @@ pub struct ProspectRankResult {
 
 /// NPC 스카우트 평가 (10~70) — **id·주차·학년으로 정해진다.**
 /// ⚠ 난수원이 아니라 **결정적 해시**다. 같은 주에 같은 선수는 같은 값이다.
+///
+/// 🔴 **id 뒤 세 자리만 보면 안 된다** (2026-09-07 · U2 · 실측으로 잡았다).
+///
+///   옛 식은 `(tail * 1000 + week*13 + grade*7) mod 600` 이었다.
+///   `gcd(1000, 600) = 200` 이라 `tail * 1000 mod 600` 이 **0 · 200 · 400
+///   셋뿐**이다 — 평가가 `tail mod 3` 세 통으로 갈리고 통 사이가 20점
+///   (가중 4점 · OVR 5점어치)이다.
+///
+///   그리고 기수마다 id 규칙이 다르다:
+///     · 개국 기수  `PLY_HS26_HS_<학교>_0NN`      (뒷자리 002~013)
+///     · 이후 기수  `GEN_SCHOOL_HS_<학교>_Y####_00N` (뒷자리 001~005)
+///   한 해에 생긴 선수들이 뒷자리를 좁게 나눠 갖기 때문에 **한 학년이 통째로
+///   한 통**에 들었다. 2028 W28 실측: 통합 상위 열 중 아홉이 뒷자리 005·002
+///   (=200 통)인 2학년이었고, OVR 83 인 3학년이 OVR 74~80 2학년들에게 밀려
+///   10위였다 — 3학년 OVR 평균(67.6)이 세 학년 중 제일 높은데도 그랬다.
+///
+///   그래서 **id 전체를 해시**한다. 뒷자리 규칙·기수와 무관해진다.
+///
+/// ⚠ **범위(10~70)와 가중(0.20)은 그대로다.** 폭이 OVR 차를 이기는 것은
+///   따로 남은 밸런스 문제다(`docs/BALANCE_BACKLOG.md` §12) — 여기서는
+///   「누가 어느 통에 드나」만 고친다. 값을 같이 움직이면 둘을 못 가른다.
 fn sim_npc_scout(npc_id: &str, week: i32, grade: i32) -> f64 {
-    // 뒤 세 자리를 숫자로 — 없으면 1
-    let tail: i64 = npc_id.chars().rev().take(3).collect::<String>()
-        .chars().rev().collect::<String>()
-        .parse().unwrap_or(1);
-    let seed = (tail * 1000 + week as i64 * 13 + grade as i64 * 7).rem_euclid(600);
-    10.0 + (seed as f64 / 600.0) * 60.0
+    // FNV-1a 64 — id 전체를 바이트로 먹인다
+    const FNV_PRIME: u64 = 0x0000_0100_0000_01b3;
+    let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+    for b in npc_id.as_bytes() {
+        h ^= *b as u64;
+        h = h.wrapping_mul(FNV_PRIME);
+    }
+    for v in [week as i64 as u64, grade as i64 as u64] {
+        for b in v.to_le_bytes() {
+            h ^= b as u64;
+            h = h.wrapping_mul(FNV_PRIME);
+        }
+    }
+    // splitmix64 마무리 — FNV 는 낮은 자리가 덜 흩어진다. `% 600` 이 낮은
+    // 자리를 보므로 이 한 단계가 없으면 다시 통이 생긴다
+    h ^= h >> 30;
+    h = h.wrapping_mul(0xbf58_476d_1ce4_e5b9);
+    h ^= h >> 27;
+    h = h.wrapping_mul(0x94d0_49bb_1331_11eb);
+    h ^= h >> 31;
+    // 눈금은 예전과 같다 — 600 칸 · 10~70
+    10.0 + ((h % 600) as f64 / 600.0) * 60.0
 }
 
 /// 주인공 점수 — 성적이 쌓일수록 능력치 비중이 줄고 성적 비중이 는다
@@ -1249,30 +1286,89 @@ pub fn calc_prospect_rank(p: ProspectRankParams) -> ProspectRankResult {
 mod prospect_tests {
     use super::*;
 
-    /// 🔴 **TS와 같은 값이 나와야 한다.** `simNpcScout`의 뒷자리 파싱이
-    ///   다르면 **순위가 통째로 달라진다** — 옮기기만 한 게 아니게 된다.
+    /// 🔴 **이게 U2 를 고친 자리다** (2026-09-07).
     ///
-    /// TS 원본은 `parseInt(npcId.slice(-3), 10) || 1`이다:
-    ///   "0001" → slice(-3) = "001" → 1
-    ///   "0123" → "123" → 123
-    ///   "1999" → "999" → 999
-    ///   "ABC"  → NaN → 1
-    ///   "00A"  → parseInt("00A") = 0 → `|| 1` → 1
+    /// 옛 식은 뒷자리 세 글자만 봤고 `tail*1000 mod 600` 이 **0·200·400
+    /// 셋뿐**이라 평가가 세 통으로 갈렸다. 통이 몇 개인지 직접 센다 —
+    /// 「퍼졌다」를 눈으로 말하면 다시 통으로 되돌려도 아무도 안 잡는다.
+    ///
+    /// ⚠ 실제 id 규칙 두 벌을 그대로 쓴다. 합성 id(`PLY_0000`)로만 재면
+    /// 옛 식도 통과했을 수 있다 — **기수마다 뒷자리가 좁은 것**이 원인이었다.
     #[test]
-    fn 뒷자리_파싱이_ts와_같다() {
-        // (id, 기대 tail)
-        let cases: [(&str, i64); 5] = [
-            ("PLY_HS_2026_0001", 1),
-            ("PLY_HS_2026_0123", 123),
-            ("PLY_HS_2026_1999", 999),
-            ("PLY_ABC", 1),
-            ("PLY_HS_X_00A", 1),
-        ];
-        for (id, tail) in cases {
-            let expect = 10.0 + (((tail * 1000 + 5 * 13 + 3 * 7).rem_euclid(600)) as f64 / 600.0) * 60.0;
-            let got = sim_npc_scout(id, 5, 3);
-            assert!((got - expect).abs() < 1e-9, "{id}: {got} != {expect}");
+    fn 평가가_세_통으로_갈리지_않는다() {
+        let ids: Vec<String> = (2..=13)
+            .map(|n| format!("PLY_HS26_HS_HANSEONG_{n:03}"))
+            .chain((1..=5).map(|n| format!("GEN_SCHOOL_HS_HANSEONG_Y2027_{n:03}")))
+            .collect();
+        // 0.1 눈금(600칸)이라 그대로 정수로 센다
+        let mut seen = std::collections::BTreeSet::new();
+        for id in &ids {
+            seen.insert(((sim_npc_scout(id, 20, 3) - 10.0) / 60.0 * 600.0).round() as i64);
         }
+        assert!(seen.len() >= ids.len() - 1,
+            "17명이 {}개 값에만 몰렸다 — 통이 생겼다: {seen:?}", seen.len());
+    }
+
+    /// 🔴 **한 학년이 통째로 한 통에 들면 안 된다.**
+    ///
+    /// U2 의 겉모습이 그것이었다 — 학년마다 id 규칙이 달라 평균이 갈렸다.
+    /// 학년별 평균이 전체 평균(40) 근처에 모여 있어야 한다.
+    #[test]
+    fn 학년별_평균이_안_갈린다() {
+        let mean_of = |ids: Vec<String>| -> f64 {
+            let n = ids.len() as f64;
+            ids.iter().map(|id| sim_npc_scout(id, 20, 3)).sum::<f64>() / n
+        };
+        // 개국 기수(뒷자리 002~013 · 102교) 대 이후 기수(001~005 · 102교)
+        let schools: Vec<String> = (0..102).map(|i| format!("SCH{i:03}")).collect();
+        let old_gen = mean_of(schools.iter()
+            .flat_map(|s| (2..=6).map(move |n| format!("PLY_HS26_HS_{s}_{n:03}"))).collect());
+        let new_gen = mean_of(schools.iter()
+            .flat_map(|s| (1..=5).map(move |n| format!("GEN_SCHOOL_HS_{s}_Y2027_{n:03}"))).collect());
+        // 전체 평균은 40(10~70 균등)이다. 기수 사이 격차가 3점을 넘으면
+        // 가중 0.20 에서 OVR 0.75점 이상 — 학년 하나가 통째로 밀린다
+        assert!((old_gen - 40.0).abs() < 3.0, "개국 기수 평균 {old_gen}");
+        assert!((new_gen - 40.0).abs() < 3.0, "이후 기수 평균 {new_gen}");
+        assert!((old_gen - new_gen).abs() < 3.0, "기수 격차 {old_gen} vs {new_gen}");
+    }
+
+    /// ⚠ **주차·학년이 값을 바꾼다** — 셋 중 하나만 달라도 다른 값이어야 한다.
+    /// 해시로 갈아끼우면서 인자 하나를 안 먹이는 실수를 잡는다.
+    #[test]
+    fn 인자_셋이_다_먹는다() {
+        let a = sim_npc_scout("PLY_HS26_HS_HANSEONG_006", 20, 3);
+        assert_ne!(a, sim_npc_scout("PLY_HS26_HS_HANSEONG_007", 20, 3), "id 가 안 먹었다");
+        assert_ne!(a, sim_npc_scout("PLY_HS26_HS_HANSEONG_006", 21, 3), "주차가 안 먹었다");
+        assert_ne!(a, sim_npc_scout("PLY_HS26_HS_HANSEONG_006", 20, 2), "학년이 안 먹었다");
+        // 같은 입력은 같은 값이다 — 난수원이 아니다
+        assert_eq!(a, sim_npc_scout("PLY_HS26_HS_HANSEONG_006", 20, 3));
+    }
+
+    /// 🔴 **OVR 이 순위를 이끌어야 한다.**
+    ///
+    /// 실측(2028 W28)에서 OVR 83 이 10위였고 OVR 74 가 6~9위였다. 평가 폭이
+    /// OVR 차를 개인 단위로 뒤집는 것은 밸런스(백로그 §12)로 남기지만,
+    /// **전체 상관까지 무너지면** 그건 결함이다 — 상위 10 안에 풀 상위 10%
+    /// 밖의 선수가 절반 넘게 들면 순위가 OVR 이 아니라 해시를 보고 있는 것이다.
+    #[test]
+    fn 순위가_ovr_을_따른다() {
+        // OVR 을 45~83 으로 고루 편 500명. id 는 실제 두 규칙을 섞는다
+        let npcs: Vec<ProspectNpc> = (0..500).map(|i| {
+            let id = if i % 2 == 0 { format!("PLY_HS26_HS_S{:03}_{:03}", i / 5, i % 12 + 2) }
+                     else { format!("GEN_SCHOOL_HS_S{:03}_Y2027_{:03}", i / 5, i % 5 + 1) };
+            ProspectNpc { id, name: format!("N{i}"), team_name: "T".into(),
+                          ovr: 45.0 + (i % 39) as f64, grade: 3 }
+        }).collect();
+        let ovr_of: std::collections::HashMap<String, f64> =
+            npcs.iter().map(|n| (n.id.clone(), n.ovr)).collect();
+        let mut p = base(40.0);
+        p.npcs = npcs;
+        p.week = 20;
+        let r = calc_prospect_rank(p);
+        // 상위 10 은 전부 OVR 상위권(78 이상 = 45~83 의 상위 15%)이어야 한다
+        let low = r.entries.iter().filter(|e| e.id != "PLY_HERO")
+            .filter(|e| ovr_of[&e.id] < 78.0).count();
+        assert!(low <= 2, "상위 10 중 {low}명이 OVR 78 미만이다 — 해시가 순위를 끌고 있다");
     }
 
     /// ⚠ 범위가 10~70이어야 한다 — 벗어나면 점수 축이 바뀐다
