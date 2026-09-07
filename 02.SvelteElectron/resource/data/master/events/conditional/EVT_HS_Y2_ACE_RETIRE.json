@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y2_ACE_RETIRE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "unique",
   "theme": "social",
   "category": "hs_life",
   "priority": 80,
@@ -25,5 +25,12 @@
     }
   ],
   "messageTemplateId": "MSG_HS_Y2_ACE_RETIRE",
-  "decisionTemplateId": "DEC_HS_Y2_ACE_RETIRE"
+  "decisionTemplateId": "DEC_HS_Y2_ACE_RETIRE",
+  "cost": {
+    "relationDelta": {
+      "kind": "teammate",
+      "delta": -6
+    }
+  },
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 내 몫을 챙기면 옆자리가 서운하다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
 }

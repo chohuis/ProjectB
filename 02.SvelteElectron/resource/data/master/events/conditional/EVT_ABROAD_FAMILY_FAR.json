@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_FAMILY_FAR",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "people",
   "category": "social",
   "priority": 650,

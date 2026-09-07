@@ -1,12 +1,11 @@
 {
   "id": "EVT_UNIV_INJURY_SCARE_UNIV_COND",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "body",
   "category": "health",
   "priority": 759,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 6,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

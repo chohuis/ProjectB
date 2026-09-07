@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_BIG_INNING",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "story",
   "category": "mental",
   "priority": 690,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 4,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

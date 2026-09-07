@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y2_ACE_OUT",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "hs_game",
   "priority": 85,

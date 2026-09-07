@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_ERA_ELITE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "media",
   "category": "media",
   "priority": 760,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 6,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

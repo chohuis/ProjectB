@@ -1,7 +1,7 @@
 {
   "id": "EVT_UNIV_STUDY_MODE_MID",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "career",
   "category": "academics",
   "priority": 742,

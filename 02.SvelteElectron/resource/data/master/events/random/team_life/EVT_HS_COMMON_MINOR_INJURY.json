@@ -1,12 +1,11 @@
 {
   "id": "EVT_HS_COMMON_MINOR_INJURY",
   "type": "random",
-  "tier": "normal",
+  "tier": "unique",
   "theme": "social",
   "category": "hs_life",
   "priority": 60,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 6,
+  "oncePolicy": "once_per_season",
   "weight": 15,
   "poolId": "POOL_BODY_DAILY",
   "conditions": [
@@ -28,5 +27,12 @@
     }
   ],
   "messageTemplateId": "MSG_HS_COMMON_MINOR_INJURY",
-  "decisionTemplateId": "DEC_HS_COMMON_MINOR_INJURY"
+  "decisionTemplateId": "DEC_HS_COMMON_MINOR_INJURY",
+  "cost": {
+    "relationDelta": {
+      "kind": "teammate",
+      "delta": -6
+    }
+  },
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 내 몫을 챙기면 옆자리가 서운하다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
 }

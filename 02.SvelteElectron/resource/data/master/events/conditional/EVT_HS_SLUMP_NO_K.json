@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_SLUMP_NO_K",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "training",
   "priority": 700,

@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y1_AWAY_BUS",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "social",
   "category": "hs_life",
   "priority": 50,

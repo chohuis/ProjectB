@@ -1,12 +1,11 @@
 {
   "id": "EVT_UNIV_ALUMNI",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "people",
   "category": "social",
   "priority": 645,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 8,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_SLUMP_NO_INNINGS",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "team",
   "priority": 702,

@@ -1,7 +1,7 @@
 {
   "id": "EVT_UNIV_SCHOLARSHIP",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "career",
   "category": "academics",
   "priority": 720,

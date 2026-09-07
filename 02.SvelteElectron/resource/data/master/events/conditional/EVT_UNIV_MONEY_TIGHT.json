@@ -1,12 +1,11 @@
 {
   "id": "EVT_UNIV_MONEY_TIGHT",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "money",
   "category": "career",
   "priority": 655,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 8,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

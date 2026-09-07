@@ -1,7 +1,7 @@
 {
   "id": "EVT_UNIV_GRAD_RISK",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "unique",
   "theme": "career",
   "category": "career",
   "priority": 765,
@@ -21,5 +21,9 @@
     }
   ],
   "messageTemplateId": "MSG_UNIV_GRAD_RISK",
-  "decisionTemplateId": "DEC_UNIV_GRAD_RISK"
+  "decisionTemplateId": "DEC_UNIV_GRAD_RISK",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 몸을 갈아 넣어 얻는다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
 }

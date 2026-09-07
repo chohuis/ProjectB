@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y1_INTRASQUAD",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "hs_game",
   "priority": 80,

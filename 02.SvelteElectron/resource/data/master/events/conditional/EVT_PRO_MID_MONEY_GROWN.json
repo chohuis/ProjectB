@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_MID_MONEY_GROWN",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "money",
   "category": "life",
   "priority": 660,

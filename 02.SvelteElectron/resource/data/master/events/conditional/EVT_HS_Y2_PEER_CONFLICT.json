@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y2_PEER_CONFLICT",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "social",
   "category": "hs_life",
   "priority": 60,

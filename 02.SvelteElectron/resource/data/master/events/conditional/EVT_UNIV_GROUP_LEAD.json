@@ -1,12 +1,11 @@
 {
   "id": "EVT_UNIV_GROUP_LEAD",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "team",
   "priority": 700,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 6,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

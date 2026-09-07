@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_COMMON_STADIUM_VOL",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "social",
   "category": "hs_life",
   "priority": 50,

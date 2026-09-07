@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_MEDIA_DAY",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "media",
   "category": "media",
   "priority": 635,

@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_NO_DECISION",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "story",
   "category": "mental",
   "priority": 650,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 5,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

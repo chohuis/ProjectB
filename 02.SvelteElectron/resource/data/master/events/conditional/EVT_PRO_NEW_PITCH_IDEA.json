@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_NEW_PITCH_IDEA",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "training",
   "priority": 670,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 8,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

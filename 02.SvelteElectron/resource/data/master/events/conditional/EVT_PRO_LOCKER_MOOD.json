@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_LOCKER_MOOD",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "team_life",
   "priority": 630,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 5,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

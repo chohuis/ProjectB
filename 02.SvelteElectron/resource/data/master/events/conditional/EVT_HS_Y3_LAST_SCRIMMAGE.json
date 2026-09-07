@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y3_LAST_SCRIMMAGE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "unique",
   "theme": "team",
   "category": "hs_game",
   "priority": 70,
@@ -25,5 +25,12 @@
     }
   ],
   "messageTemplateId": "MSG_HS_Y3_LAST_SCRIMMAGE",
-  "decisionTemplateId": "DEC_HS_Y3_LAST_SCRIMMAGE"
+  "decisionTemplateId": "DEC_HS_Y3_LAST_SCRIMMAGE",
+  "cost": {
+    "relationDelta": {
+      "kind": "manager",
+      "delta": -5
+    }
+  },
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 팀이 원한 것과 다른 길이다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
 }

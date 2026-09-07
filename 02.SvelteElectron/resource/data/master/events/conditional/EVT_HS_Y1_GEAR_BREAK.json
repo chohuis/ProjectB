@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y1_GEAR_BREAK",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "money",
   "category": "hs_life",
   "priority": 45,

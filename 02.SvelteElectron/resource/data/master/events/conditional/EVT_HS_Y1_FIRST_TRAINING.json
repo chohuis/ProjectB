@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y1_FIRST_TRAINING",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "social",
   "category": "hs_life",
   "priority": 90,

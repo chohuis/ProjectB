@@ -293,12 +293,12 @@
         {
           "id": "follow",
           "label": "죽어도 따라간다",
-          "effectHint": "스태미나 XP +3, 피로 +12, 동료 관계 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +16, 관계 +6",
           "effects": {
             "xp": {
-              "stamina": 3
+              "stamina": 9
             },
-            "fatigueDelta": 12,
+            "fatigueDelta": 16,
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
@@ -329,16 +329,17 @@
         {
           "id": "accept",
           "label": "감사히 받아들인다",
-          "effectHint": "멘탈리티 XP +2, 사기 +5, 동료 관계 +5",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 사기 +5, 관계 +5",
           "effects": {
             "xp": {
-              "mentality": 2
+              "mentality": 9
             },
             "moraleDelta": 5,
             "relationDelta": {
               "kind": "teammate",
               "delta": 5
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -362,12 +363,12 @@
         {
           "id": "velocity",
           "label": "전력 투구한다",
-          "effectHint": "구속 XP +3, 피로 +10",
+          "effectHint": "구속 경험치 +9, 피로 +14",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
@@ -401,15 +402,16 @@
         {
           "id": "holders",
           "label": "견제폼을 배운다",
-          "effectHint": "견제력 XP +3, 동료 관계 +6",
+          "effectHint": "주자견제 경험치 +9, 피로 +4, 관계 +6",
           "effects": {
             "xp": {
-              "holdRunners": 3
+              "holdRunners": 9
             },
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -446,10 +448,10 @@
         {
           "id": "later",
           "label": "시즌 끝나고 집중하겠다",
-          "effectHint": "제구 XP +2",
+          "effectHint": "제구 즉시 +1",
           "effects": {
-            "xp": {
-              "control": 2
+            "statDelta": {
+              "control": 1
             }
           }
         }
@@ -547,12 +549,13 @@
         {
           "id": "accept",
           "label": "받아들이고 최선을 다한다",
-          "effectHint": "멘탈리티 XP +3, 사기 -5",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 사기 -5",
           "effects": {
             "xp": {
-              "mentality": 3
+              "mentality": 9
             },
-            "moraleDelta": -5
+            "moraleDelta": -5,
+            "fatigueDelta": 4
           }
         },
         {
@@ -572,12 +575,12 @@
         {
           "id": "intense",
           "label": "더 독하게 준비한다",
-          "effectHint": "위기집중력 XP +2, 피로 +8",
+          "effectHint": "위기집중력 즉시 +1, 피로 +8",
           "effects": {
-            "xp": {
-              "clutch": 2
-            },
-            "fatigueDelta": 8
+            "fatigueDelta": 8,
+            "statDelta": {
+              "clutch": 1
+            }
           }
         },
         {
@@ -625,7 +628,7 @@
         {
           "id": "admit",
           "label": "바로 사과하고 처리한다",
-          "effectHint": "성실도 +3, 사기 +5, 돈 -20만원, 동료 관계 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +5, 성실 +3, 돈 20만원, 관계 +6",
           "effects": {
             "diligenceDelta": 3,
             "moraleDelta": 5,
@@ -633,7 +636,11 @@
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
-            }
+            },
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -692,12 +699,12 @@
         {
           "id": "push",
           "label": "더 독하게 한다",
-          "effectHint": "구속 XP +2, 피로 +10",
+          "effectHint": "구속 경험치 +9, 피로 +14",
           "effects": {
             "xp": {
-              "velocity": 2
+              "velocity": 9
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
@@ -737,12 +744,12 @@
         {
           "id": "video",
           "label": "영상 분석을 한다",
-          "effectHint": "커맨드 XP +2, 피로 +2",
+          "effectHint": "커맨드 경험치 +9, 피로 +6",
           "effects": {
             "xp": {
-              "command": 2
+              "command": 9
             },
-            "fatigueDelta": 2
+            "fatigueDelta": 6
           }
         }
       ]
@@ -754,16 +761,17 @@
         {
           "id": "talk",
           "label": "고민을 털어놓는다",
-          "effectHint": "멘탈리티 XP +2, 사기 +8, 코치 관계 +7",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 사기 +8, 관계 +7",
           "effects": {
             "xp": {
-              "mentality": 2
+              "mentality": 9
             },
             "moraleDelta": 8,
             "relationDelta": {
               "kind": "coach",
               "delta": 7
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -783,11 +791,14 @@
         {
           "id": "sign",
           "label": "흔쾌히 해준다",
-          "effectHint": "인기도 +5, 사기 +8, 피로 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +6, 사기 +8, 인기 +5",
           "effects": {
             "popularityDelta": 5,
             "moraleDelta": 8,
-            "fatigueDelta": 2
+            "fatigueDelta": 6,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -807,13 +818,13 @@
         {
           "id": "full",
           "label": "전부 소화한다",
-          "effectHint": "구속 XP +3, 스태미나 XP +2, 피로 +12, 감독 관계 +8",
+          "effectHint": "구속·스태미나 경험치 +5, 피로 +16, 관계 +8",
           "effects": {
             "xp": {
-              "velocity": 3,
-              "stamina": 2
+              "velocity": 5,
+              "stamina": 5
             },
-            "fatigueDelta": 12,
+            "fatigueDelta": 16,
             "relationDelta": {
               "kind": "manager",
               "delta": 8
@@ -855,12 +866,13 @@
         {
           "id": "trust",
           "label": "내 속도를 믿는다",
-          "effectHint": "멘탈리티 XP +3, 사기 +5",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 사기 +5",
           "effects": {
             "xp": {
-              "mentality": 3
+              "mentality": 9
             },
-            "moraleDelta": 5
+            "moraleDelta": 5,
+            "fatigueDelta": 4
           }
         }
       ]
@@ -919,12 +931,13 @@
         {
           "id": "command",
           "label": "제구로 승부한다",
-          "effectHint": "커맨드 XP +3, 제구 XP +2",
+          "effectHint": "커맨드·제구 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "command": 3,
-              "control": 2
-            }
+              "command": 5,
+              "control": 5
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -951,16 +964,17 @@
         {
           "id": "efficiency",
           "label": "투구 효율을 찾는다",
-          "effectHint": "커맨드 XP +3, 제구 XP +2, 감독 관계 +3",
+          "effectHint": "커맨드·제구 경험치 +5, 피로 +4, 관계 +3",
           "effects": {
             "xp": {
-              "command": 3,
-              "control": 2
+              "command": 5,
+              "control": 5
             },
             "relationDelta": {
               "kind": "manager",
               "delta": 3
-            }
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -972,22 +986,22 @@
         {
           "id": "follow",
           "label": "시키는 대로 따른다",
-          "effectHint": "무브먼트 XP +4, 피로 +8, 코치 관계 +7",
+          "effectHint": "무브먼트 즉시 +1, 피로 +8, 관계 +7",
           "effects": {
-            "xp": {
-              "movement": 4
-            },
             "fatigueDelta": 8,
             "relationDelta": {
               "kind": "coach",
               "delta": 7
+            },
+            "statDelta": {
+              "movement": 1
             }
           }
         },
         {
           "id": "speak",
           "label": "지금 폼을 지킨다",
-          "effectHint": "커맨드 즉시 +1, 코치 관계 -5",
+          "effectHint": "커맨드 즉시 +1, 관계 -5",
           "effects": {
             "statDelta": {
               "command": 1
@@ -1007,13 +1021,13 @@
         {
           "id": "accept",
           "label": "받아들인다",
-          "effectHint": "위기집중력 XP +3, 사기 +10, 피로 +10, 명성 +2",
+          "effectHint": "위기집중력 경험치 +9, 피로 +14, 사기 +10, 명성 +2",
           "effects": {
             "xp": {
-              "clutch": 3
+              "clutch": 9
             },
             "moraleDelta": 10,
-            "fatigueDelta": 10,
+            "fatigueDelta": 14,
             "fameDelta": 2
           }
         },
@@ -1045,12 +1059,12 @@
         {
           "id": "show",
           "label": "각별히 준비해서 보여준다",
-          "effectHint": "구속 XP +3, 피로 +8, 인기도 +3",
+          "effectHint": "구속 경험치 +9, 피로 +12, 인기 +3",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 8,
+            "fatigueDelta": 12,
             "popularityDelta": 3
           }
         }
@@ -1063,12 +1077,13 @@
         {
           "id": "basics",
           "label": "기초로 돌아간다",
-          "effectHint": "커맨드 XP +3, 제구 XP +2",
+          "effectHint": "커맨드·제구 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "command": 3,
-              "control": 2
-            }
+              "command": 5,
+              "control": 5
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -1102,12 +1117,12 @@
         {
           "id": "now",
           "label": "지금 당장 시작한다",
-          "effectHint": "무브먼트 XP +5, 피로 +10",
+          "effectHint": "무브먼트 경험치 +9, 피로 +14",
           "effects": {
             "xp": {
-              "movement": 5
+              "movement": 9
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
@@ -1139,11 +1154,12 @@
         {
           "id": "decline",
           "label": "거절한다",
-          "effectHint": "멘탈리티 XP +1",
+          "effectHint": "멘탈 경험치 +9, 피로 +4",
           "effects": {
             "xp": {
-              "mentality": 1
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -1192,13 +1208,13 @@
         {
           "id": "close",
           "label": "불펜 마무리를 자처한다",
-          "effectHint": "위기집중력 XP +3, 사기 +8, 피로 +6",
+          "effectHint": "위기집중력 즉시 +1, 피로 +6, 사기 +8",
           "effects": {
-            "xp": {
-              "clutch": 3
-            },
             "moraleDelta": 8,
-            "fatigueDelta": 6
+            "fatigueDelta": 6,
+            "statDelta": {
+              "clutch": 1
+            }
           }
         },
         {
@@ -1232,15 +1248,16 @@
         {
           "id": "compete",
           "label": "경쟁이니 신경 끈다",
-          "effectHint": "위기집중력 XP +2, 동료 관계 -5",
+          "effectHint": "위기집중력 경험치 +9, 피로 +4, 관계 -5",
           "effects": {
             "xp": {
-              "clutch": 2
+              "clutch": 9
             },
             "relationDelta": {
               "kind": "teammate",
               "delta": -5
-            }
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -1252,7 +1269,7 @@
         {
           "id": "now",
           "label": "흔쾌히 수락한다",
-          "effectHint": "구속 즉시 +1, 피로 +12, 코치 관계 +8",
+          "effectHint": "구속 즉시 +1, 피로 +12, 관계 +8",
           "effects": {
             "statDelta": {
               "velocity": 1
@@ -1267,15 +1284,15 @@
         {
           "id": "tomorrow",
           "label": "내일부터 하겠다",
-          "effectHint": "구속 XP +3, 피로 +6, 코치 관계 -3",
+          "effectHint": "구속 즉시 +1, 피로 +6, 관계 -3",
           "effects": {
-            "xp": {
-              "velocity": 3
-            },
             "fatigueDelta": 6,
             "relationDelta": {
               "kind": "coach",
               "delta": -3
+            },
+            "statDelta": {
+              "velocity": 1
             }
           }
         }
@@ -1288,13 +1305,13 @@
         {
           "id": "try",
           "label": "해본다",
-          "effectHint": "위기집중력 XP +3, 견제력 XP +2, 피로 +8",
+          "effectHint": "위기집중력·주자견제 경험치 +5, 피로 +12",
           "effects": {
             "xp": {
-              "clutch": 3,
-              "holdRunners": 2
+              "clutch": 5,
+              "holdRunners": 5
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
@@ -1316,12 +1333,12 @@
         {
           "id": "solo",
           "label": "책임감 갖고 혼자 판다",
-          "effectHint": "스태미나 XP +2, 피로 +10",
+          "effectHint": "스태미나 경험치 +9, 피로 +14",
           "effects": {
             "xp": {
-              "stamina": 2
+              "stamina": 9
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
@@ -1378,12 +1395,12 @@
         {
           "id": "go",
           "label": "나간다",
-          "effectHint": "위기집중력 XP +3, 피로 +8",
+          "effectHint": "위기집중력 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "clutch": 3
+              "clutch": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
@@ -1413,9 +1430,9 @@
         {
           "id": "skip",
           "label": "상담을 안 간다",
-          "effectHint": "멘탈리티 XP +1",
+          "effectHint": "멘탈 즉시 +1",
           "effects": {
-            "xp": {
+            "statDelta": {
               "mentality": 1
             }
           }
@@ -1429,14 +1446,17 @@
         {
           "id": "convince",
           "label": "진지하게 설득한다",
-          "effectHint": "사기 +5, 성실도 +2, 피로 +3, 동료 관계 +8",
+          "effectHint": "스태미나 경험치 +9, 피로 +7, 사기 +5, 성실 +2, 관계 +8",
           "effects": {
             "moraleDelta": 5,
             "diligenceDelta": 2,
-            "fatigueDelta": 3,
+            "fatigueDelta": 7,
             "relationDelta": {
               "kind": "teammate",
               "delta": 8
+            },
+            "xp": {
+              "stamina": 9
             }
           }
         },
@@ -1572,13 +1592,12 @@
         {
           "id": "all",
           "label": "모든 것을 쏟아붓는다",
-          "effectHint": "구속 XP +3, 스태미나 XP +3, 피로 +15",
+          "effectHint": "구속 즉시 +1, 피로 +15",
           "effects": {
-            "xp": {
-              "velocity": 3,
-              "stamina": 3
-            },
-            "fatigueDelta": 15
+            "fatigueDelta": 15,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         },
         {
@@ -1602,7 +1621,7 @@
         {
           "id": "honest",
           "label": "코치에게 솔직히 말한다",
-          "effectHint": "회복력 즉시 +1, 사기 -5, 컨디션 +5",
+          "effectHint": "회복 즉시 +1, 컨디션 +5, 사기 -5",
           "effects": {
             "statDelta": {
               "recovery": 1
@@ -1614,12 +1633,12 @@
         {
           "id": "hide",
           "label": "감추고 끝까지 던진다",
-          "effectHint": "위기집중력 XP +3, 피로 +15",
+          "effectHint": "위기집중력 즉시 +1, 피로 +15",
           "effects": {
-            "xp": {
-              "clutch": 3
-            },
-            "fatigueDelta": 15
+            "fatigueDelta": 15,
+            "statDelta": {
+              "clutch": 1
+            }
           }
         }
       ]
@@ -1671,15 +1690,15 @@
         {
           "id": "respect",
           "label": "각자의 선택을 존중한다",
-          "effectHint": "멘탈리티 XP +2, 사기 +5, 동료 관계 +5",
+          "effectHint": "멘탈 즉시 +1, 사기 +5, 관계 +5",
           "effects": {
-            "xp": {
-              "mentality": 2
-            },
             "moraleDelta": 5,
             "relationDelta": {
               "kind": "teammate",
               "delta": 5
+            },
+            "statDelta": {
+              "mentality": 1
             }
           }
         }
@@ -1692,14 +1711,13 @@
         {
           "id": "completegame",
           "label": "완투를 목표로 한다",
-          "effectHint": "위기집중력 XP +4, 구속 XP +2, 피로 +15, 명성 +3",
+          "effectHint": "위기집중력 즉시 +1, 피로 +15, 명성 +3",
           "effects": {
-            "xp": {
-              "clutch": 4,
-              "velocity": 2
-            },
             "fatigueDelta": 15,
-            "fameDelta": 3
+            "fameDelta": 3,
+            "statDelta": {
+              "clutch": 1
+            }
           }
         },
         {
@@ -1774,7 +1792,7 @@
         {
           "id": "analyze",
           "label": "성장을 비교 분석한다",
-          "effectHint": "멘탈리티 XP +3, 멘탈 즉시 +1",
+          "effectHint": "멘탈 즉시 +1, 멘탈 경험치 +3",
           "effects": {
             "xp": {
               "mentality": 3
@@ -1809,13 +1827,12 @@
         {
           "id": "focus",
           "label": "공을 손에 쥐고 각오를 다진다",
-          "effectHint": "멘탈리티 XP +3, 위기집중력 XP +2, 사기 +10",
+          "effectHint": "멘탈 즉시 +1, 사기 +10",
           "effects": {
-            "xp": {
-              "mentality": 3,
-              "clutch": 2
-            },
-            "moraleDelta": 10
+            "moraleDelta": 10,
+            "statDelta": {
+              "mentality": 1
+            }
           }
         }
       ]
@@ -1906,13 +1923,12 @@
         {
           "id": "power",
           "label": "전력 투구한다",
-          "effectHint": "구속 XP +3, 위기집중력 XP +3, 피로 +12",
+          "effectHint": "구속 즉시 +1, 피로 +12",
           "effects": {
-            "xp": {
-              "velocity": 3,
-              "clutch": 3
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         },
         {
@@ -2074,12 +2090,13 @@
         {
           "id": "video",
           "label": "그 시간에 영상 분석을 한다",
-          "effectHint": "커맨드 XP +2, 구속 XP +1",
+          "effectHint": "커맨드·구속 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "command": 2,
-              "velocity": 1
-            }
+              "command": 5,
+              "velocity": 5
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -2170,18 +2187,18 @@
         {
           "id": "continue",
           "label": "그냥 계속한다",
-          "effectHint": "위기집중력 XP +2, 피로 +10",
+          "effectHint": "위기집중력 즉시 +1, 피로 +10",
           "effects": {
-            "xp": {
-              "clutch": 2
-            },
-            "fatigueDelta": 10
+            "fatigueDelta": 10,
+            "statDelta": {
+              "clutch": 1
+            }
           }
         },
         {
           "id": "stop",
           "label": "멈추고 회복한다",
-          "effectHint": "회복력 즉시 +1, 컨디션 +6",
+          "effectHint": "회복 즉시 +1, 컨디션 +6",
           "effects": {
             "statDelta": {
               "recovery": 1
@@ -2416,11 +2433,14 @@
         {
           "id": "active",
           "label": "적극적으로 참여한다",
-          "effectHint": "인기도 +5, 사기 +5, 피로 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +10, 사기 +5, 인기 +5",
           "effects": {
             "popularityDelta": 5,
             "moraleDelta": 5,
-            "fatigueDelta": 6
+            "fatigueDelta": 10,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -2471,12 +2491,12 @@
         {
           "id": "gradual",
           "label": "점진적으로 교정한다",
-          "effectHint": "제구 XP +3, 피로 +5",
+          "effectHint": "제구 즉시 +1, 피로 +5",
           "effects": {
-            "xp": {
-              "control": 3
-            },
-            "fatigueDelta": 5
+            "fatigueDelta": 5,
+            "statDelta": {
+              "control": 1
+            }
           }
         }
       ]
@@ -2512,7 +2532,7 @@
         {
           "id": "personal",
           "label": "마음 써서 직접 고른다",
-          "effectHint": "사기 +5, 성실도 +2, 돈 -15만원, 동료 관계 +8",
+          "effectHint": "스태미나 즉시 +1, 사기 +5, 성실 +2, 돈 15만원, 관계 +8",
           "effects": {
             "moraleDelta": 5,
             "diligenceDelta": 2,
@@ -2520,6 +2540,9 @@
             "relationDelta": {
               "kind": "teammate",
               "delta": 8
+            },
+            "statDelta": {
+              "stamina": 1
             }
           }
         },
@@ -2838,10 +2861,14 @@
         {
           "id": "humble",
           "label": "아직 시즌이 길다고 말한다",
-          "effectHint": "명성 +3, 사기 +1",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +1, 명성 +3",
           "effects": {
             "fameDelta": 3,
-            "moraleDelta": 1
+            "moraleDelta": 1,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -2863,12 +2890,12 @@
         {
           "id": "hunt",
           "label": "삼진을 노린다",
-          "effectHint": "구속 XP +3, 피로 +8",
+          "effectHint": "구속 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
@@ -2988,12 +3015,12 @@
         {
           "id": "work",
           "label": "더 던진다",
-          "effectHint": "위기집중력 XP +3, 피로 +10",
+          "effectHint": "위기집중력 경험치 +9, 피로 +14",
           "effects": {
             "xp": {
-              "clutch": 3
+              "clutch": 9
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         }
       ]
@@ -3005,12 +3032,12 @@
         {
           "id": "bullpen",
           "label": "불펜에서 반복한다",
-          "effectHint": "컨트롤 XP +4, 피로 +8",
+          "effectHint": "제구 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "control": 4
+              "control": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
@@ -3105,10 +3132,13 @@
         {
           "id": "skip",
           "label": "한 차례 거른다",
-          "effectHint": "피로 -18, 사기 -5",
+          "effectHint": "스태미나 경험치 +3, 피로 -18, 사기 -5",
           "effects": {
             "fatigueDelta": -18,
-            "moraleDelta": -5
+            "moraleDelta": -5,
+            "xp": {
+              "stamina": 3
+            }
           }
         },
         {
@@ -3138,10 +3168,13 @@
         {
           "id": "light",
           "label": "가볍게 조절한다",
-          "effectHint": "컨디션 +10, 피로 -6",
+          "effectHint": "스태미나 경험치 +3, 컨디션 +10, 피로 -6",
           "effects": {
             "conditionDelta": 10,
-            "fatigueDelta": -6
+            "fatigueDelta": -6,
+            "xp": {
+              "stamina": 3
+            }
           }
         },
         {
@@ -3162,13 +3195,12 @@
         {
           "id": "push",
           "label": "훈련 강도를 올린다",
-          "effectHint": "구속 XP +3, 무브먼트 XP +2, 피로 +10",
+          "effectHint": "구속 즉시 +1, 피로 +10",
           "effects": {
-            "xp": {
-              "velocity": 3,
-              "movement": 2
-            },
-            "fatigueDelta": 10
+            "fatigueDelta": 10,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         },
         {
@@ -3191,10 +3223,13 @@
         {
           "id": "check",
           "label": "정밀 검진을 받는다",
-          "effectHint": "피로 -8, 사기 -3",
+          "effectHint": "스태미나 경험치 +3, 피로 -8, 사기 -3",
           "effects": {
             "fatigueDelta": -8,
-            "moraleDelta": -3
+            "moraleDelta": -3,
+            "xp": {
+              "stamina": 3
+            }
           }
         },
         {
@@ -3267,10 +3302,13 @@
         {
           "id": "stats",
           "label": "기록을 쌓는다",
-          "effectHint": "성실성 +3, 피로 +8",
+          "effectHint": "스태미나 즉시 +1, 피로 +8, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "fatigueDelta": 8
+            "fatigueDelta": 8,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -3314,11 +3352,10 @@
         {
           "id": "adapt",
           "label": "던지는 방식을 바꾼다",
-          "effectHint": "커맨드 XP +4, 무브먼트 XP +2",
+          "effectHint": "커맨드 즉시 +1",
           "effects": {
-            "xp": {
-              "command": 4,
-              "movement": 2
+            "statDelta": {
+              "command": 1
             }
           }
         },
@@ -3342,11 +3379,14 @@
         {
           "id": "accept",
           "label": "적극적으로 응한다",
-          "effectHint": "명성 +6, 인기 +8, 피로 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +10, 명성 +6, 인기 +8",
           "effects": {
             "fameDelta": 6,
             "popularityDelta": 8,
-            "fatigueDelta": 6
+            "fatigueDelta": 10,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -3367,10 +3407,14 @@
         {
           "id": "team",
           "label": "팀 덕분이라고 말한다",
-          "effectHint": "사기 +2, 명성 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 명성 +2",
           "effects": {
             "moraleDelta": 2,
-            "fameDelta": 2
+            "fameDelta": 2,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -3451,12 +3495,13 @@
         {
           "id": "insist",
           "label": "내 공을 고집한다",
-          "effectHint": "멘탈 XP +2, 무브먼트 XP +2",
+          "effectHint": "멘탈·무브먼트 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "mentality": 2,
-              "movement": 2
-            }
+              "mentality": 5,
+              "movement": 5
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -3468,10 +3513,13 @@
         {
           "id": "compete",
           "label": "실력으로 이긴다",
-          "effectHint": "성실성 +3, 피로 +10",
+          "effectHint": "스태미나 경험치 +9, 피로 +14, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "fatigueDelta": 10
+            "fatigueDelta": 14,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -3500,12 +3548,13 @@
         {
           "id": "stable",
           "label": "간격을 지킨다",
-          "effectHint": "컨디션 +8, 회복력 XP +2",
+          "effectHint": "회복 경험치 +9, 컨디션 +8, 피로 +4",
           "effects": {
             "conditionDelta": 8,
             "xp": {
-              "recovery": 2
-            }
+              "recovery": 9
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -3517,10 +3566,14 @@
         {
           "id": "speak",
           "label": "먼저 말을 꺼낸다",
-          "effectHint": "사기 +2, 명성 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 명성 +2",
           "effects": {
             "moraleDelta": 2,
-            "fameDelta": 2
+            "fameDelta": 2,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -3593,10 +3646,13 @@
         {
           "id": "accept",
           "label": "받아들이고 준비한다",
-          "effectHint": "성실성 +3, 사기 -3",
+          "effectHint": "스태미나 즉시 +1, 사기 -3, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "moraleDelta": -3
+            "moraleDelta": -3,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -3617,11 +3673,12 @@
         {
           "id": "control",
           "label": "내가 할 수 있는 것만 본다",
-          "effectHint": "멘탈 XP +3",
+          "effectHint": "멘탈 경험치 +9, 피로 +4",
           "effects": {
             "xp": {
-              "mentality": 3
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -3644,12 +3701,13 @@
         {
           "id": "analyze",
           "label": "그 이닝을 복기한다",
-          "effectHint": "컨트롤 XP +3, 멘탈 XP +2",
+          "effectHint": "제구·멘탈 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "control": 3,
-              "mentality": 2
-            }
+              "control": 5,
+              "mentality": 5
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -3724,12 +3782,12 @@
         {
           "id": "learn",
           "label": "배운다",
-          "effectHint": "무브먼트 XP +4, 피로 +8",
+          "effectHint": "무브먼트 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "movement": 4
+              "movement": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
@@ -3762,13 +3820,12 @@
         {
           "id": "mechanics",
           "label": "메커니즘을 손본다",
-          "effectHint": "구속 XP +3, 커맨드 XP +2, 피로 +8",
+          "effectHint": "구속 즉시 +1, 피로 +8",
           "effects": {
-            "xp": {
-              "velocity": 3,
-              "command": 2
-            },
-            "fatigueDelta": 8
+            "fatigueDelta": 8,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         }
       ]
@@ -3819,12 +3876,13 @@
         {
           "id": "command",
           "label": "제구를 다듬는다",
-          "effectHint": "커맨드 XP +3, 컨트롤 XP +3",
+          "effectHint": "커맨드·제구 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "command": 3,
-              "control": 3
-            }
+              "command": 5,
+              "control": 5
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -3870,10 +3928,10 @@
         {
           "id": "ignore",
           "label": "신경 쓰지 않는다",
-          "effectHint": "멘탈 XP +3",
+          "effectHint": "멘탈 즉시 +1",
           "effects": {
-            "xp": {
-              "mentality": 3
+            "statDelta": {
+              "mentality": 1
             }
           }
         },
@@ -3903,12 +3961,13 @@
         {
           "id": "invest",
           "label": "트레이닝에 투자한다",
-          "effectHint": "스태미나 XP +2, 성실성 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 성실 +2",
           "effects": {
             "xp": {
-              "stamina": 2
+              "stamina": 9
             },
-            "diligenceDelta": 2
+            "diligenceDelta": 2,
+            "fatigueDelta": 4
           }
         }
       ]
@@ -3945,10 +4004,14 @@
         {
           "id": "give",
           "label": "후원한다",
-          "effectHint": "인기 +8, 명성 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 명성 +4, 인기 +8",
           "effects": {
             "popularityDelta": 8,
-            "fameDelta": 4
+            "fameDelta": 4,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -3977,12 +4040,13 @@
         {
           "id": "stay",
           "label": "훈련장에 남는다",
-          "effectHint": "성실성 +3, 커맨드 XP +2",
+          "effectHint": "커맨드 경험치 +9, 피로 +4, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
             "xp": {
-              "command": 2
-            }
+              "command": 9
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -4022,10 +4086,14 @@
         {
           "id": "goal",
           "label": "구체적인 목표를 말한다",
-          "effectHint": "명성 +5, 사기 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +4, 명성 +5",
           "effects": {
             "fameDelta": 5,
-            "moraleDelta": 4
+            "moraleDelta": 4,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -4071,12 +4139,13 @@
         {
           "id": "adjust",
           "label": "수면 시간을 맞춘다",
-          "effectHint": "회복력 XP +2, 컨디션 +6",
+          "effectHint": "회복 경험치 +9, 컨디션 +6, 피로 +4",
           "effects": {
             "xp": {
-              "recovery": 2
+              "recovery": 9
             },
-            "conditionDelta": 6
+            "conditionDelta": 6,
+            "fatigueDelta": 4
           }
         },
         {
@@ -4099,12 +4168,13 @@
         {
           "id": "follow",
           "label": "그대로 따른다",
-          "effectHint": "컨트롤 XP +3, 커맨드 XP +2",
+          "effectHint": "제구·커맨드 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "control": 3,
-              "command": 2
-            }
+              "control": 5,
+              "command": 5
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -5922,12 +5992,12 @@
         {
           "id": "ball",
           "label": "야구를 우선한다",
-          "effectHint": "구속 XP +3, 피로 +8",
+          "effectHint": "구속 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         }
       ]
@@ -5939,10 +6009,13 @@
         {
           "id": "fix",
           "label": "당장 학업을 잡는다",
-          "effectHint": "성실성 +4, 피로 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +10, 성실 +4",
           "effects": {
             "diligenceDelta": 4,
-            "fatigueDelta": 6
+            "fatigueDelta": 10,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -5963,10 +6036,13 @@
         {
           "id": "cram",
           "label": "밤을 새운다",
-          "effectHint": "성실 +3, 피로 +12",
+          "effectHint": "스태미나 경험치 +9, 피로 +16, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "fatigueDelta": 12
+            "fatigueDelta": 16,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -5986,10 +6062,13 @@
         {
           "id": "ask",
           "label": "찾아가 설명한다",
-          "effectHint": "성실성 +3, 피로 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +8, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "fatigueDelta": 4
+            "fatigueDelta": 8,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -6018,12 +6097,12 @@
         {
           "id": "sharp",
           "label": "구위를 끌어올린다",
-          "effectHint": "구속 XP +3, 피로 +8",
+          "effectHint": "구속 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         }
       ]
@@ -6035,10 +6114,14 @@
         {
           "id": "appeal",
           "label": "코치에게 어필한다",
-          "effectHint": "사기 +2, 명성 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 명성 +2",
           "effects": {
             "moraleDelta": 2,
-            "fameDelta": 2
+            "fameDelta": 2,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6073,11 +6156,12 @@
         {
           "id": "own",
           "label": "내 훈련을 한다",
-          "effectHint": "커맨드 XP +3",
+          "effectHint": "커맨드 경험치 +9, 피로 +4",
           "effects": {
             "xp": {
-              "command": 3
-            }
+              "command": 9
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -6098,10 +6182,10 @@
         {
           "id": "long",
           "label": "길게 본다",
-          "effectHint": "멘탈 XP +3",
+          "effectHint": "멘탈 즉시 +1",
           "effects": {
-            "xp": {
-              "mentality": 3
+            "statDelta": {
+              "mentality": 1
             }
           }
         }
@@ -6114,10 +6198,13 @@
         {
           "id": "class",
           "label": "수업을 줄인다",
-          "effectHint": "피로 -10, 성실 -2",
+          "effectHint": "스태미나 경험치 +3, 피로 -10, 성실 -2",
           "effects": {
             "fatigueDelta": -10,
-            "diligenceDelta": -2
+            "diligenceDelta": -2,
+            "xp": {
+              "stamina": 3
+            }
           }
         },
         {
@@ -6138,12 +6225,13 @@
         {
           "id": "basics",
           "label": "기본으로 돌아간다",
-          "effectHint": "컨트롤 XP +3, 커맨드 XP +2",
+          "effectHint": "제구·커맨드 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "control": 3,
-              "command": 2
-            }
+              "control": 5,
+              "command": 5
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6164,13 +6252,13 @@
         {
           "id": "max",
           "label": "최고 구속을 던진다",
-          "effectHint": "구속 XP +3, 명성 +5, 피로 +10",
+          "effectHint": "구속 경험치 +9, 피로 +14, 명성 +5",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
             "fameDelta": 5,
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
@@ -6226,12 +6314,13 @@
         {
           "id": "manage",
           "label": "등판을 조절한다",
-          "effectHint": "컨디션 +8, 회복력 XP +2",
+          "effectHint": "회복 경험치 +9, 컨디션 +8, 피로 +4",
           "effects": {
             "conditionDelta": 8,
             "xp": {
-              "recovery": 2
-            }
+              "recovery": 9
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -6243,10 +6332,13 @@
         {
           "id": "show",
           "label": "실력을 보여준다",
-          "effectHint": "명성 +5, 피로 +8",
+          "effectHint": "스태미나 경험치 +9, 피로 +12, 명성 +5",
           "effects": {
             "fameDelta": 5,
-            "fatigueDelta": 8
+            "fatigueDelta": 12,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -6267,16 +6359,17 @@
         {
           "id": "pro",
           "label": "프로가 어떤지 묻는다",
-          "effectHint": "멘탈 XP +3, 사기 +1, 동료 관계 +5",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 사기 +1, 관계 +5",
           "effects": {
             "xp": {
-              "mentality": 3
+              "mentality": 9
             },
             "moraleDelta": 1,
             "relationDelta": {
               "kind": "teammate",
               "delta": 5
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6303,10 +6396,13 @@
         {
           "id": "yes",
           "label": "응한다",
-          "effectHint": "인기 +4, 피로 +3",
+          "effectHint": "스태미나 경험치 +9, 피로 +7, 인기 +4",
           "effects": {
             "popularityDelta": 4,
-            "fatigueDelta": 3
+            "fatigueDelta": 7,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -6335,11 +6431,12 @@
         {
           "id": "quiet",
           "label": "묵묵히 던진다",
-          "effectHint": "커맨드 XP +3",
+          "effectHint": "커맨드 경험치 +9, 피로 +4",
           "effects": {
             "xp": {
-              "command": 3
-            }
+              "command": 9
+            },
+            "fatigueDelta": 4
           }
         }
       ]
@@ -6351,13 +6448,13 @@
         {
           "id": "press",
           "label": "지금 밀어붙인다",
-          "effectHint": "구속 XP +3, 명성 +4, 피로 +10",
+          "effectHint": "구속 즉시 +1, 피로 +10, 명성 +4",
           "effects": {
-            "xp": {
-              "velocity": 3
-            },
             "fameDelta": 4,
-            "fatigueDelta": 10
+            "fatigueDelta": 10,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         },
         {
@@ -6380,10 +6477,13 @@
         {
           "id": "listen",
           "label": "귀를 기울인다",
-          "effectHint": "명성 +4, 사기 +5",
+          "effectHint": "스태미나 즉시 +1, 사기 +5, 명성 +4",
           "effects": {
             "fameDelta": 4,
-            "moraleDelta": 5
+            "moraleDelta": 5,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -6412,11 +6512,11 @@
         {
           "id": "stay",
           "label": "학년을 채운다",
-          "effectHint": "성실성 +3, 멘탈 XP +2",
+          "effectHint": "멘탈 즉시 +1, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "xp": {
-              "mentality": 2
+            "statDelta": {
+              "mentality": 1
             }
           }
         }
@@ -6429,13 +6529,13 @@
         {
           "id": "push",
           "label": "훈련을 늘린다",
-          "effectHint": "구속 XP +3, 무브먼트 XP +2, 피로 +10",
+          "effectHint": "구속·무브먼트 경험치 +5, 피로 +14",
           "effects": {
             "xp": {
-              "velocity": 3,
-              "movement": 2
+              "velocity": 5,
+              "movement": 5
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
@@ -6458,16 +6558,17 @@
         {
           "id": "meet",
           "label": "만나서 이야기한다",
-          "effectHint": "사기 -4, 멘탈 XP +3, 동료 관계 +6",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 사기 -4, 관계 +6",
           "effects": {
             "moraleDelta": -4,
             "xp": {
-              "mentality": 3
+              "mentality": 9
             },
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6491,12 +6592,12 @@
         {
           "id": "ball",
           "label": "야구에 더 쓴다",
-          "effectHint": "구속 XP +3, 피로 +8",
+          "effectHint": "구속 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
@@ -6517,13 +6618,12 @@
         {
           "id": "ball",
           "label": "야구에 전부 건다",
-          "effectHint": "구속 XP +3, 스태미나 XP +2, 피로 +10",
+          "effectHint": "구속 즉시 +1, 피로 +10",
           "effects": {
-            "xp": {
-              "velocity": 3,
-              "stamina": 2
-            },
-            "fatigueDelta": 10
+            "fatigueDelta": 10,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         },
         {
@@ -6553,12 +6653,12 @@
         {
           "id": "ball",
           "label": "야구에 건다",
-          "effectHint": "구속 XP +4, 사기 +5",
+          "effectHint": "구속 즉시 +1, 사기 +5",
           "effects": {
-            "xp": {
-              "velocity": 4
-            },
-            "moraleDelta": 5
+            "moraleDelta": 5,
+            "statDelta": {
+              "velocity": 1
+            }
           }
         }
       ]
@@ -6570,10 +6670,14 @@
         {
           "id": "self",
           "label": "내 기록을 본다",
-          "effectHint": "성실성 +3, 명성 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 성실 +3, 명성 +2",
           "effects": {
             "diligenceDelta": 3,
-            "fameDelta": 2
+            "fameDelta": 2,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6594,10 +6698,13 @@
         {
           "id": "push",
           "label": "대회까지 밀어붙인다",
-          "effectHint": "사기 +2, 피로 +8",
+          "effectHint": "스태미나 경험치 +9, 피로 +12, 사기 +2",
           "effects": {
             "moraleDelta": 2,
-            "fatigueDelta": 8
+            "fatigueDelta": 12,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -6642,10 +6749,13 @@
         {
           "id": "check",
           "label": "병원에 간다",
-          "effectHint": "피로 -10, 사기 -3",
+          "effectHint": "스태미나 경험치 +3, 피로 -6, 사기 -3",
           "effects": {
-            "fatigueDelta": -10,
-            "moraleDelta": -3
+            "fatigueDelta": -6,
+            "moraleDelta": -3,
+            "xp": {
+              "stamina": 3
+            }
           }
         },
         {
@@ -6675,12 +6785,12 @@
         {
           "id": "ball",
           "label": "야구로 답한다",
-          "effectHint": "구속 XP +3, 피로 +8",
+          "effectHint": "구속 경험치 +9, 피로 +12",
           "effects": {
             "xp": {
-              "velocity": 3
+              "velocity": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         }
       ]
@@ -6692,11 +6802,14 @@
         {
           "id": "work",
           "label": "아르바이트를 한다",
-          "effectHint": "피로 +10, 성실성 +2, 돈 +30만원",
+          "effectHint": "스태미나 경험치 +9, 피로 +14, 성실 +2, 돈 30만원",
           "effects": {
-            "fatigueDelta": 10,
+            "fatigueDelta": 14,
             "diligenceDelta": 2,
-            "moneyDelta": 30
+            "moneyDelta": 30,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -6718,11 +6831,15 @@
         {
           "id": "gear",
           "label": "장비에 투자한다",
-          "effectHint": "성실성 +2, 컨디션 +5, 돈 +120만원",
+          "effectHint": "스태미나 경험치 +9, 컨디션 +5, 피로 +4, 성실 +2, 돈 120만원",
           "effects": {
             "diligenceDelta": 2,
             "conditionDelta": 5,
-            "moneyDelta": 120
+            "moneyDelta": 120,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6743,16 +6860,17 @@
         {
           "id": "learn",
           "label": "옆에서 배운다",
-          "effectHint": "멘탈 XP +3, 커맨드 XP +2, 동료 관계 +4",
+          "effectHint": "멘탈·커맨드 경험치 +5, 피로 +4, 관계 +4",
           "effects": {
             "xp": {
-              "mentality": 3,
-              "command": 2
+              "mentality": 5,
+              "command": 5
             },
             "relationDelta": {
               "kind": "teammate",
               "delta": 4
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -6777,10 +6895,13 @@
         {
           "id": "serious",
           "label": "제대로 쓴다",
-          "effectHint": "성실성 +4, 피로 +10",
+          "effectHint": "스태미나 경험치 +9, 피로 +14, 성실 +4",
           "effects": {
             "diligenceDelta": 4,
-            "fatigueDelta": 10
+            "fatigueDelta": 14,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -6800,11 +6921,12 @@
         {
           "id": "next",
           "label": "내년을 본다",
-          "effectHint": "멘탈 XP +3",
+          "effectHint": "멘탈 경험치 +9, 피로 +4",
           "effects": {
             "xp": {
-              "mentality": 3
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9208,7 +9330,7 @@
         {
           "id": "mound_bat",
           "label": "타석 주변만 고른다",
-          "effectHint": "선구 경험치 +1, 피로 +3",
+          "effectHint": "batting.discipline 경험치 +1, 피로 +3",
           "conditions": [
             {
               "type": "player_type",
@@ -9335,14 +9457,17 @@
         {
           "id": "out",
           "label": "구단 사람들과 돌아다닌다",
-          "effectHint": "동료 관계 +8, 사기 +6, 피로 +5",
+          "effectHint": "스태미나 경험치 +9, 피로 +9, 사기 +6, 관계 +8",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 8
             },
             "moraleDelta": 6,
-            "fatigueDelta": 5
+            "fatigueDelta": 9,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -9416,7 +9541,7 @@
         {
           "id": "silent",
           "label": "야구로만 말한다",
-          "effectHint": "멘탈 경험치 +3, 동료 관계 -3",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 관계 -3",
           "conditions": [
             {
               "type": "player_type",
@@ -9425,12 +9550,13 @@
           ],
           "effects": {
             "xp": {
-              "mentality": 3
+              "mentality": 9
             },
             "relationDelta": {
               "kind": "teammate",
               "delta": -3
-            }
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9462,7 +9588,7 @@
         {
           "id": "adjust",
           "label": "던지는 자리를 옮긴다",
-          "effectHint": "제구 경험치 +4, 피로 +8",
+          "effectHint": "제구 경험치 +9, 피로 +12",
           "conditions": [
             {
               "type": "player_type",
@@ -9471,15 +9597,15 @@
           ],
           "effects": {
             "xp": {
-              "control": 4
+              "control": 9
             },
-            "fatigueDelta": 8
+            "fatigueDelta": 12
           }
         },
         {
           "id": "adjust_bat",
           "label": "노리는 자리를 옮긴다",
-          "effectHint": "선구 경험치 +4, 피로 +8",
+          "effectHint": "batting.discipline 경험치 +4, 피로 +8",
           "conditions": [
             {
               "type": "player_type",
@@ -9536,10 +9662,14 @@
         {
           "id": "buy",
           "label": "직접 사 먹는다",
-          "effectHint": "돈 -150만원, 컨디션 +10",
+          "effectHint": "스태미나 경험치 +9, 컨디션 +10, 피로 +4, 돈 150만원",
           "effects": {
             "moneyDelta": -150,
-            "conditionDelta": 10
+            "conditionDelta": 10,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9671,10 +9801,13 @@
         {
           "id": "call",
           "label": "시간을 맞춰 건다",
-          "effectHint": "사기 +8, 피로 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +8, 사기 +8",
           "effects": {
             "moraleDelta": 8,
-            "fatigueDelta": 4
+            "fatigueDelta": 8,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -9713,7 +9846,7 @@
         {
           "id": "keep",
           "label": "언제든 갈 수 있게 둔다",
-          "effectHint": "멘탈 경험치 +3",
+          "effectHint": "멘탈 경험치 +9, 피로 +4",
           "conditions": [
             {
               "type": "player_type",
@@ -9722,8 +9855,9 @@
           ],
           "effects": {
             "xp": {
-              "mentality": 3
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9751,10 +9885,14 @@
         {
           "id": "talk",
           "label": "그 나라 말로 답한다",
-          "effectHint": "인기 +7, 사기 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 인기 +7",
           "effects": {
             "popularityDelta": 7,
-            "moraleDelta": 2
+            "moraleDelta": 2,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9774,10 +9912,14 @@
         {
           "id": "stay",
           "label": "여기 남는다",
-          "effectHint": "사기 +6, 명성 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +6, 명성 +4",
           "effects": {
             "moraleDelta": 6,
-            "fameDelta": 4
+            "fameDelta": 4,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9809,13 +9951,16 @@
         {
           "id": "teach",
           "label": "손으로 보여준다",
-          "effectHint": "동료 관계 +8, 피로 +5",
+          "effectHint": "스태미나 경험치 +9, 피로 +9, 관계 +8",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 8
             },
-            "fatigueDelta": 5
+            "fatigueDelta": 9,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -9839,13 +9984,16 @@
         {
           "id": "match",
           "label": "똑같이 맞춘다",
-          "effectHint": "성실 +6, 피로 +16, 동료 관계 +7",
+          "effectHint": "스태미나 경험치 +9, 피로 +20, 성실 +6, 관계 +7",
           "effects": {
             "diligenceDelta": 6,
-            "fatigueDelta": 16,
+            "fatigueDelta": 20,
             "relationDelta": {
               "kind": "teammate",
               "delta": 7
+            },
+            "xp": {
+              "stamina": 9
             }
           }
         },
@@ -9882,7 +10030,7 @@
         {
           "id": "ask",
           "label": "선배에게 대놓고 묻는다",
-          "effectHint": "동료 관계 +8, 멘탈 경험치 +2",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 관계 +8",
           "conditions": [
             {
               "type": "player_type",
@@ -9895,8 +10043,9 @@
               "delta": 8
             },
             "xp": {
-              "mentality": 2
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -9928,7 +10077,7 @@
         {
           "id": "train",
           "label": "몸을 만든다",
-          "effectHint": "스태미나 경험치 +4, 피로 +10",
+          "effectHint": "스태미나 경험치 +9, 피로 +14",
           "conditions": [
             {
               "type": "player_type",
@@ -9937,15 +10086,15 @@
           ],
           "effects": {
             "xp": {
-              "stamina": 4
+              "stamina": 9
             },
-            "fatigueDelta": 10
+            "fatigueDelta": 14
           }
         },
         {
           "id": "train_bat",
           "label": "몸을 만든다",
-          "effectHint": "주력 경험치 +4, 피로 +10",
+          "effectHint": "batting.speed 경험치 +4, 피로 +10",
           "conditions": [
             {
               "type": "player_type",
@@ -9987,7 +10136,7 @@
         {
           "id": "respect",
           "label": "이야기를 더 듣는다",
-          "effectHint": "동료 관계 +7, 멘탈 경험치 +2",
+          "effectHint": "멘탈 경험치 +9, 피로 +4, 관계 +7",
           "conditions": [
             {
               "type": "player_type",
@@ -10000,8 +10149,9 @@
               "delta": 7
             },
             "xp": {
-              "mentality": 2
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -10118,7 +10268,7 @@
         {
           "id": "study_bat",
           "label": "상대 배터리를 파고든다",
-          "effectHint": "선구 경험치 +3, 피로 +6",
+          "effectHint": "batting.discipline 경험치 +3, 피로 +6",
           "conditions": [
             {
               "type": "player_type",
@@ -10328,7 +10478,7 @@
         {
           "id": "sport",
           "label": "체육 계열을 고른다",
-          "effectHint": "성실 +3, 회복 경험치 +2",
+          "effectHint": "회복 즉시 +1, 성실 +3",
           "conditions": [
             {
               "type": "player_type",
@@ -10337,8 +10487,8 @@
           ],
           "effects": {
             "diligenceDelta": 3,
-            "xp": {
-              "recovery": 2
+            "statDelta": {
+              "recovery": 1
             }
           }
         },
@@ -10540,7 +10690,7 @@
         {
           "id": "go",
           "label": "나간다",
-          "effectHint": "명성 +6, 클러치 경험치 +2, 피로 +12",
+          "effectHint": "위기집중력 경험치 +2, 피로 +12, 명성 +6",
           "conditions": [
             {
               "type": "player_type",
@@ -10558,7 +10708,7 @@
         {
           "id": "go_bat",
           "label": "나간다",
-          "effectHint": "명성 +6, 찬스 경험치 +2, 피로 +12",
+          "effectHint": "batting.battingClutch 경험치 +2, 피로 +12, 명성 +6",
           "conditions": [
             {
               "type": "player_type",
@@ -10641,11 +10791,14 @@
         {
           "id": "aim",
           "label": "올해를 노린다",
-          "effectHint": "명성 +5, 피로 +10, 성실 +4",
+          "effectHint": "스태미나 즉시 +1, 피로 +10, 성실 +4, 명성 +5",
           "effects": {
             "fameDelta": 5,
             "fatigueDelta": 10,
-            "diligenceDelta": 4
+            "diligenceDelta": 4,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -10793,7 +10946,7 @@
         {
           "id": "teach",
           "label": "시간을 낸다",
-          "effectHint": "동료 관계 +8, 멘탈 경험치 +2, 피로 +5",
+          "effectHint": "멘탈 경험치 +2, 피로 +5, 관계 +8",
           "conditions": [
             {
               "type": "player_type",
@@ -10814,7 +10967,7 @@
         {
           "id": "teach_bat",
           "label": "시간을 낸다",
-          "effectHint": "동료 관계 +8, 선구 경험치 +2, 피로 +5",
+          "effectHint": "batting.discipline 경험치 +2, 피로 +5, 관계 +8",
           "conditions": [
             {
               "type": "player_type",
@@ -10863,7 +11016,7 @@
         {
           "id": "manage",
           "label": "관리하며 간다",
-          "effectHint": "컨디션 +8, 회복 경험치 +2",
+          "effectHint": "회복 즉시 +1, 컨디션 +8",
           "conditions": [
             {
               "type": "player_type",
@@ -10872,8 +11025,8 @@
           ],
           "effects": {
             "conditionDelta": 8,
-            "xp": {
-              "recovery": 2
+            "statDelta": {
+              "recovery": 1
             }
           }
         },
@@ -10903,11 +11056,14 @@
         {
           "id": "push",
           "label": "남은 경기에 다 건다",
-          "effectHint": "성실 +6, 피로 +14, 명성 +3",
+          "effectHint": "스태미나 즉시 +1, 피로 +14, 성실 +6, 명성 +3",
           "effects": {
             "diligenceDelta": 6,
             "fatigueDelta": 14,
-            "fameDelta": 3
+            "fameDelta": 3,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -11026,7 +11182,7 @@
         {
           "id": "calm",
           "label": "평소처럼 던진다",
-          "effectHint": "멘탈 경험치 +3, 컨디션 +5",
+          "effectHint": "멘탈 즉시 +1, 컨디션 +5",
           "conditions": [
             {
               "type": "player_type",
@@ -11034,10 +11190,10 @@
             }
           ],
           "effects": {
-            "xp": {
-              "mentality": 3
-            },
-            "conditionDelta": 5
+            "conditionDelta": 5,
+            "statDelta": {
+              "mentality": 1
+            }
           }
         },
         {
@@ -11096,7 +11252,7 @@
         {
           "id": "stamina",
           "label": "이 몸을 유지한다",
-          "effectHint": "스태미나 경험치 +4, 사기 +10",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +10",
           "conditions": [
             {
               "type": "player_type",
@@ -11105,9 +11261,10 @@
           ],
           "effects": {
             "xp": {
-              "stamina": 4
+              "stamina": 9
             },
-            "moraleDelta": 10
+            "moraleDelta": 10,
+            "fatigueDelta": 4
           }
         },
         {
@@ -11177,13 +11334,17 @@
         {
           "id": "thanks",
           "label": "제대로 인사한다",
-          "effectHint": "동료 관계 +9, 사기 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +6, 관계 +9",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 9
             },
-            "moraleDelta": 6
+            "moraleDelta": 6,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -11204,13 +11365,17 @@
         {
           "id": "push",
           "label": "숫자를 말한다",
-          "effectHint": "구단주 관계 -5, 명성 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 명성 +4, 관계 -5",
           "effects": {
             "relationDelta": {
               "kind": "owner",
               "delta": -5
             },
-            "fameDelta": 4
+            "fameDelta": 4,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -11243,7 +11408,7 @@
         {
           "id": "copy",
           "label": "제일 오래 뛴 선배를 따른다",
-          "effectHint": "동료 관계 +7, 회복 경험치 +2",
+          "effectHint": "회복 경험치 +9, 피로 +4, 관계 +7",
           "conditions": [
             {
               "type": "player_type",
@@ -11256,8 +11421,9 @@
               "delta": 7
             },
             "xp": {
-              "recovery": 2
-            }
+              "recovery": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -11307,7 +11473,7 @@
         {
           "id": "skip",
           "label": "안 본다",
-          "effectHint": "멘탈 경험치 +2",
+          "effectHint": "멘탈 경험치 +9, 피로 +4",
           "conditions": [
             {
               "type": "player_type",
@@ -11316,8 +11482,9 @@
           ],
           "effects": {
             "xp": {
-              "mentality": 2
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -11355,7 +11522,7 @@
         {
           "id": "hold",
           "label": "지키는 쪽으로 간다",
-          "effectHint": "컨디션 +8, 회복 경험치 +2",
+          "effectHint": "회복 즉시 +1, 컨디션 +8",
           "conditions": [
             {
               "type": "player_type",
@@ -11364,8 +11531,8 @@
           ],
           "effects": {
             "conditionDelta": 8,
-            "xp": {
-              "recovery": 2
+            "statDelta": {
+              "recovery": 1
             }
           }
         },
@@ -11420,7 +11587,7 @@
         {
           "id": "own",
           "label": "내 것만 본다",
-          "effectHint": "멘탈 경험치 +3",
+          "effectHint": "멘탈 경험치 +9, 피로 +4",
           "conditions": [
             {
               "type": "player_type",
@@ -11429,8 +11596,9 @@
           ],
           "effects": {
             "xp": {
-              "mentality": 3
-            }
+              "mentality": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -11480,7 +11648,7 @@
         {
           "id": "quiet",
           "label": "조용히 기다린다",
-          "effectHint": "사기 -5, 멘탈 경험치 +3",
+          "effectHint": "멘탈 즉시 +1, 사기 -5",
           "conditions": [
             {
               "type": "player_type",
@@ -11489,8 +11657,8 @@
           ],
           "effects": {
             "moraleDelta": -5,
-            "xp": {
-              "mentality": 3
+            "statDelta": {
+              "mentality": 1
             }
           }
         },
@@ -11556,7 +11724,7 @@
         {
           "id": "save",
           "label": "길게 보고 아낀다",
-          "effectHint": "회복 경험치 +3, 컨디션 +10",
+          "effectHint": "회복 즉시 +1, 컨디션 +10",
           "conditions": [
             {
               "type": "player_type",
@@ -11564,10 +11732,10 @@
             }
           ],
           "effects": {
-            "xp": {
-              "recovery": 3
-            },
-            "conditionDelta": 10
+            "conditionDelta": 10,
+            "statDelta": {
+              "recovery": 1
+            }
           }
         },
         {
@@ -11596,12 +11764,16 @@
         {
           "id": "self",
           "label": "나에게 쓴다",
-          "effectHint": "돈 -1000만원, 명성 ±30",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 돈 지출",
           "effects": {
             "luxurySpend": {
               "cost": 1000,
               "onTeammate": false
-            }
+            },
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -11632,14 +11804,17 @@
         {
           "id": "speak",
           "label": "먼저 입을 연다",
-          "effectHint": "동료 관계 +9, 사기 +5, 피로 +5",
+          "effectHint": "스태미나 경험치 +9, 피로 +9, 사기 +5, 관계 +9",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 9
             },
             "moraleDelta": 5,
-            "fatigueDelta": 5
+            "fatigueDelta": 9,
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -11662,7 +11837,7 @@
         {
           "id": "remake",
           "label": "던지는 법을 바꾼다",
-          "effectHint": "제구 경험치 +5, 무브먼트 경험치 +3, 사기 -5",
+          "effectHint": "제구 즉시 +1, 사기 -5",
           "conditions": [
             {
               "type": "player_type",
@@ -11670,17 +11845,16 @@
             }
           ],
           "effects": {
-            "xp": {
-              "control": 5,
-              "movement": 3
-            },
-            "moraleDelta": -5
+            "moraleDelta": -5,
+            "statDelta": {
+              "control": 1
+            }
           }
         },
         {
           "id": "remake_bat",
           "label": "치는 법을 바꾼다",
-          "effectHint": "선구 경험치 +5, 컨택 경험치 +3, 사기 -5",
+          "effectHint": "batting.discipline·batting.contact 경험치 +5, 사기 -5",
           "conditions": [
             {
               "type": "player_type",
@@ -11713,14 +11887,17 @@
         {
           "id": "accept",
           "label": "받아들인다",
-          "effectHint": "감독 관계 +9, 사기 -4, 성실 +4",
+          "effectHint": "스태미나 즉시 +1, 사기 -4, 성실 +4, 관계 +9",
           "effects": {
             "relationDelta": {
               "kind": "manager",
               "delta": 9
             },
             "moraleDelta": -4,
-            "diligenceDelta": 4
+            "diligenceDelta": 4,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -11745,14 +11922,17 @@
         {
           "id": "mentor",
           "label": "제대로 가르친다",
-          "effectHint": "동료 관계 +12, 사기 +4, 피로 +6",
+          "effectHint": "스태미나 즉시 +1, 피로 +6, 사기 +4, 관계 +12",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 12
             },
             "moraleDelta": 4,
-            "fatigueDelta": 6
+            "fatigueDelta": 6,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -11777,11 +11957,14 @@
         {
           "id": "more",
           "label": "몸이 되는 데까지라고 한다",
-          "effectHint": "명성 +5, 인기 +4, 사기 +6",
+          "effectHint": "스태미나 즉시 +1, 사기 +6, 명성 +5, 인기 +4",
           "effects": {
             "fameDelta": 5,
             "popularityDelta": 4,
-            "moraleDelta": 6
+            "moraleDelta": 6,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -11810,14 +11993,17 @@
         {
           "id": "visit",
           "label": "찾아간다",
-          "effectHint": "라이벌 관계 +10, 사기 +8, 피로 +4",
+          "effectHint": "스태미나 즉시 +1, 피로 +4, 사기 +8, 관계 +10",
           "effects": {
             "relationDelta": {
               "kind": "rival",
               "delta": 10
             },
             "moraleDelta": 8,
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "statDelta": {
+              "stamina": 1
+            }
           }
         },
         {
@@ -11838,11 +12024,14 @@
         {
           "id": "pro",
           "label": "전담을 붙인다",
-          "effectHint": "돈 -800만원, 피로 -20, 컨디션 +10",
+          "effectHint": "스태미나 경험치 +3, 컨디션 +10, 피로 -20, 돈 800만원",
           "effects": {
             "moneyDelta": -800,
             "fatigueDelta": -20,
-            "conditionDelta": 10
+            "conditionDelta": 10,
+            "xp": {
+              "stamina": 3
+            }
           }
         },
         {
@@ -11913,11 +12102,14 @@
         {
           "id": "focus",
           "label": "도서관에 붙어 있는다",
-          "effectHint": "학습 강도 집중, 성실 +3, 피로 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +10, 성실 +3, 학습 강도",
           "effects": {
             "diligenceDelta": 3,
-            "fatigueDelta": 6,
-            "studyModeSet": "focus"
+            "fatigueDelta": 10,
+            "studyModeSet": "focus",
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -11944,11 +12136,14 @@
         {
           "id": "focus",
           "label": "남은 주는 학업에 쓴다",
-          "effectHint": "학습 강도 집중, 성실 +3, 피로 +6",
+          "effectHint": "스태미나 경험치 +9, 피로 +10, 성실 +3, 학습 강도",
           "effects": {
             "diligenceDelta": 3,
-            "fatigueDelta": 6,
-            "studyModeSet": "focus"
+            "fatigueDelta": 10,
+            "studyModeSet": "focus",
+            "xp": {
+              "stamina": 9
+            }
           }
         },
         {
@@ -11975,12 +12170,13 @@
         {
           "id": "video",
           "label": "영상을 다시 본다",
-          "effectHint": "성실 +3, 제구 경험치 +2",
+          "effectHint": "제구 경험치 +9, 피로 +4, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
             "xp": {
-              "control": 2
-            }
+              "control": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -12012,12 +12208,16 @@
         {
           "id": "team",
           "label": "팀 탓이 아니라고 말한다",
-          "effectHint": "동료 관계 +4",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 관계 +4",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 4
-            }
+            },
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -12046,13 +12246,17 @@
         {
           "id": "ask",
           "label": "감독에게 자리를 청한다",
-          "effectHint": "감독 관계 +3, 사기 +2",
+          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 관계 +3",
           "effects": {
             "relationDelta": {
               "kind": "manager",
               "delta": 3
             },
-            "moraleDelta": 2
+            "moraleDelta": 2,
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 4
           }
         },
         {
@@ -12084,7 +12288,7 @@
         {
           "id": "newpitch",
           "label": "결정구를 만든다",
-          "effectHint": "성실 +3, 무브먼트 경험치 +3, 피로 +4",
+          "effectHint": "무브먼트 경험치 +3, 피로 +4, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
             "xp": {
@@ -12096,12 +12300,13 @@
         {
           "id": "sharpen",
           "label": "지금 것을 더 날카롭게 한다",
-          "effectHint": "구위 경험치 +2, 제구 경험치 +2",
+          "effectHint": "구속·제구 경험치 +5, 피로 +4",
           "effects": {
             "xp": {
-              "velocity": 2,
-              "control": 2
-            }
+              "velocity": 5,
+              "control": 5
+            },
+            "fatigueDelta": 4
           }
         },
         {

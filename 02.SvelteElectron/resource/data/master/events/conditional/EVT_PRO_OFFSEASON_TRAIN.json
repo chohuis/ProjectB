@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_OFFSEASON_TRAIN",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "training",
   "priority": 640,

@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_EARLY_SENIOR_SPOT",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "people",
   "category": "team_life",
   "priority": 700,

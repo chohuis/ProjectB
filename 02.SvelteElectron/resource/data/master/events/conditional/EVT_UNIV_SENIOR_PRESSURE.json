@@ -1,12 +1,11 @@
 {
   "id": "EVT_UNIV_SENIOR_PRESSURE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "people",
   "category": "team",
   "priority": 685,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 8,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

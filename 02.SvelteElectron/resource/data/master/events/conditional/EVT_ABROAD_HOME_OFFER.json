@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_HOME_OFFER",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "career",
   "category": "career",
   "priority": 780,

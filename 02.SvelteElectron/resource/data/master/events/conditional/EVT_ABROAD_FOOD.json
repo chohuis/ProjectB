@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_FOOD",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "body",
   "category": "health",
   "priority": 660,

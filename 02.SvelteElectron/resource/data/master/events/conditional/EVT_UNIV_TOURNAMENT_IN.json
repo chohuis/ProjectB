@@ -1,12 +1,11 @@
 {
   "id": "EVT_UNIV_TOURNAMENT_IN",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "team",
   "priority": 740,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 6,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

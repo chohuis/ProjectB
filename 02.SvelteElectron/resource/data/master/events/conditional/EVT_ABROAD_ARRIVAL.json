@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_ARRIVAL",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "people",
   "category": "career",
   "priority": 830,

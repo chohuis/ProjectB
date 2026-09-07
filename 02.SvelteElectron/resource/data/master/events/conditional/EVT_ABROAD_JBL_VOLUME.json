@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_JBL_VOLUME",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "training",
   "priority": 740,

@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_CONTROL_ISSUE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "training",
   "priority": 710,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 5,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

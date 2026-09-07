@@ -1,11 +1,11 @@
 {
   "id": "EVT_ABROAD_LOCAL_FAN",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "media",
   "category": "media",
   "priority": 640,
-  "oncePolicy": "repeatable",
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

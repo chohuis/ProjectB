@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_INTERVIEW_AFTER_WIN",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "media",
   "category": "media",
   "priority": 620,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 2,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

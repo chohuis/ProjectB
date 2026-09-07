@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_JBL_SENIORITY",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "people",
   "category": "team_life",
   "priority": 645,

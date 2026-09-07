@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_SLUMP_ERA",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "story",
   "category": "mental",
   "priority": 706,

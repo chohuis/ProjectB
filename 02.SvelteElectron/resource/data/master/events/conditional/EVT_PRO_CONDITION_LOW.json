@@ -5,8 +5,7 @@
   "theme": "body",
   "category": "health",
   "priority": 790,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 3,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",
@@ -22,5 +21,6 @@
     }
   ],
   "messageTemplateId": "MSG_PRO_CONDITION_LOW",
-  "decisionTemplateId": "DEC_PRO_CONDITION_LOW"
+  "decisionTemplateId": "DEC_PRO_CONDITION_LOW",
+  "_tierNote": "⏸ **레어로 못 올렸다** (4-2). 이 이벤트에서 제일 큰 갈래가 **쉬는 쪽**이라(`fatigueDelta` 가 음수) 거기에 XP 8~10 을 얹으면 「쉬면 스태미나가 는다」가 된다. 장면 무게가 안 맞으면 안 올린다는 §6 규칙 그대로 노말로 둔다"
 }

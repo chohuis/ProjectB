@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y2_NEW_PITCH",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "hs_training",
   "priority": 65,

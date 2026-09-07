@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_EARLY_ROUTINE_BUILD",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "train",
   "category": "training",
   "priority": 680,

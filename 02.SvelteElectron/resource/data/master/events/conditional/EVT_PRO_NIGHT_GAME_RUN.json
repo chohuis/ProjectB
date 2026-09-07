@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_NIGHT_GAME_RUN",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "body",
   "category": "health",
   "priority": 655,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 4,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",

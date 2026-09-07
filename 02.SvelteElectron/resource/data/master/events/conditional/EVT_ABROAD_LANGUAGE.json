@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_LANGUAGE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "team_life",
   "priority": 760,

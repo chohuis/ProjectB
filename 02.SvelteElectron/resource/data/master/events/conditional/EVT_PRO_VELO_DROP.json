@@ -1,12 +1,11 @@
 {
   "id": "EVT_PRO_VELO_DROP",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "unique",
   "theme": "body",
   "category": "health",
   "priority": 750,
-  "oncePolicy": "repeatable",
-  "cooldownWeeks": 6,
+  "oncePolicy": "once_per_season",
   "conditions": [
     {
       "type": "career_stage",
@@ -27,5 +26,9 @@
     }
   ],
   "messageTemplateId": "MSG_PRO_VELO_DROP",
-  "decisionTemplateId": "DEC_PRO_VELO_DROP"
+  "decisionTemplateId": "DEC_PRO_VELO_DROP",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 몸을 갈아 넣어 얻는다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
 }

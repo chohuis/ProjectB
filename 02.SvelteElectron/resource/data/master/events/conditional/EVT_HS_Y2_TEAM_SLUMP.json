@@ -1,7 +1,7 @@
 {
   "id": "EVT_HS_Y2_TEAM_SLUMP",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "hs_game",
   "priority": 65,
