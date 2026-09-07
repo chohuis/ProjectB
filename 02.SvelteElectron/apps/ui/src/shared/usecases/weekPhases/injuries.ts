@@ -112,6 +112,15 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   //   ⚠ 데이터는 다 있었다 — 배경 리그도 `playerLines` 를 만든다
   //     (KBL 780경기 16,345줄 · ABL 1,296경기 27,027줄). **보는 쪽만 좁았다.**
   //   ⚠ 증분 캐시(`lastScannedWeek`)라 리그가 늘어도 매주 새 주차만 훑는다.
+  //   🔴 **여기 훑는 순서가 곧 부상 판정 순서다.** 아래 `players[]` 를 이
+  //     순서대로 쌓고, Rust `weekCalcNpcInjuries` 가 **배열 순서대로** 난수를
+  //     소비한다 — 순서가 흔들리면 **다치는 사람이 통째로 바뀐다.**
+  //     그래서 `leagueSchedules` 의 **키 순서**가 결정적이어야 한다:
+  //       · 만드는 쪽 `schedule_engine::generate_all_league_schedules` 가
+  //         `BTreeMap`(리그 id 오름차순) — 예전엔 `HashMap` 이라 판마다 달랐다
+  //       · 불러오는 쪽 `slotdb.readSeason` 이 `__leagueScheduleIds` 순서를 지킨다
+  //     ⚠ **여기서 다시 정렬하면 안 된다** — 고교·대학이 뒤에 붙는 순서까지
+  //       바뀌어 부상자가 달라진다. 순서는 만드는 쪽에서 고정한다 (2026-09-07)
   const allSchedules: (typeof s.schedule)[] = [s.schedule];
   for (const sch of Object.values(s.leagueSchedules ?? {})) {
     if (Array.isArray(sch)) allSchedules.push(sch);

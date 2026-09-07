@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
 use serde::{Deserialize, Serialize};
 
 // ── NPC 능력치 ─────────────────────────────────────────────────────────────────
@@ -964,7 +964,9 @@ pub struct SimGameResult {
     pub result: MatchResult,
     pub next_home_rot_idx: i32,
     pub next_away_rot_idx: i32,
-    pub pitcher_conditions: HashMap<String, SimPlayerCondition>,
+    /// 🔴 **`BTreeMap` 이다** — JSON 키 순서가 판마다 흔들리면 세이브 바이트가
+    ///   갈리고, 그 순서를 읽는 자리가 하나라도 있으면 결과가 갈린다 (2026-09-07)
+    pub pitcher_conditions: BTreeMap<String, SimPlayerCondition>,
 }
 
 // ── 주인공 학년 진급 결과 ─────────────────────────────────────────────────────
@@ -1263,10 +1265,12 @@ pub struct NpcLiveInput {
     pub potential_hidden: Option<f64>,  // 60~99; None → 75
     pub pitching: Option<NpcPitchingAttrs>,
     pub batting: Option<NpcBattingAttrs>,
+    // 🔴 **`BTreeMap` 이다** — 매주 JS 로 나갔다가 그대로 되돌아오는 값이라
+    //   `HashMap` 이면 키 순서가 판마다 달라져 세이브 바이트가 안 재현된다
     #[serde(default)]
-    pub pitching_xp: HashMap<String, f64>,
+    pub pitching_xp: BTreeMap<String, f64>,
     #[serde(default)]
-    pub batting_xp: HashMap<String, f64>,
+    pub batting_xp: BTreeMap<String, f64>,
     pub peak_ovr: Option<f64>,
     #[serde(default)]
     pub current_fame: f64,
@@ -1286,7 +1290,7 @@ pub struct NpcLiveInput {
     ///
     /// 이제 성장과 대칭으로 **1.0을 넘을 때 −1**을 적용한다.
     #[serde(default)]
-    pub aging_debt: HashMap<String, f64>,
+    pub aging_debt: BTreeMap<String, f64>,
 }
 
 /// 월간 성장 계산 출력 단위
@@ -1296,8 +1300,8 @@ pub struct NpcLiveOutput {
     pub npc_id: String,
     pub pitching: Option<NpcPitchingAttrs>,
     pub batting: Option<NpcBattingAttrs>,
-    pub pitching_xp: HashMap<String, f64>,
-    pub batting_xp: HashMap<String, f64>,
+    pub pitching_xp: BTreeMap<String, f64>,
+    pub batting_xp: BTreeMap<String, f64>,
     pub peak_ovr: f64,
     #[serde(default)]
     pub fame_delta: f64,
@@ -1307,7 +1311,7 @@ pub struct NpcLiveOutput {
     pub pitch_in_training: Option<NpcPitchTraining>,
     /// 미반영 노화 누적분 — 다음 주에 그대로 되돌려 받는다
     #[serde(default)]
-    pub aging_debt: HashMap<String, f64>,
+    pub aging_debt: BTreeMap<String, f64>,
 }
 
 /// 월간 성장 전체 파라미터

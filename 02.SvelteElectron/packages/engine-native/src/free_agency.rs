@@ -8,7 +8,7 @@
 // Rust `fa_eligibility_years`에 각각 있었다 — 값이 같아도 정본이 둘이면
 // 언젠가 갈라진다 (이 프로젝트에서 그 부류로만 결함이 열 번 나왔다).
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, BTreeMap};
 
 use serde::{Deserialize, Serialize};
 
@@ -183,7 +183,13 @@ pub fn resolve_market(params: FaMarketParams) -> FaMarketResult {
     let mut sorted_salaries = params.league_salaries.clone();
     sorted_salaries.sort_unstable_by(|a, b| b.cmp(a));
 
-    let mut teams: HashMap<String, FaTeam> = params.teams.into_iter()
+    // 🔴 **`BTreeMap` 이다 — `HashMap` 이면 안 된다.**
+    //   아래 `for t in teams.values()` 가 **팀마다 `rng.next()` 를 한 번씩**
+    //   쓴다. `HashMap` 순회 순서는 프로세스마다 달라서(`RandomState`),
+    //   같은 씨앗·같은 명단인데 **팀마다 다른 난수가 붙고 FA 계약이 갈렸다.**
+    //   동점 입찰의 승자도 순회 순서가 정했다. 값은 그대로 두고 팀 id
+    //   오름차순으로 고정한다 (2026-09-07).
+    let mut teams: BTreeMap<String, FaTeam> = params.teams.into_iter()
         .map(|t| (t.team_id.clone(), t)).collect();
 
     let mut players = params.players;
