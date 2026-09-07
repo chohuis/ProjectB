@@ -28,13 +28,21 @@ const SEED = Number(process.env.PF_SEED || 20260802);
 const YEARS = Number(process.env.PF_YEARS || 12);
 
 const PATHS = {
-  // ⚠ `overseas`는 기본 true(DEFAULT_POLICY)라 안 끄면 해외 2군(pro_farm)이
-  //   독립보다 우선해 뽑힌다(2026-09-07 실측 — 이 끄기 전엔 "indie" 라벨로
-  //   돌린 판이 실제로는 해외 2군 55주를 쟀다). 진짜 국내 독립리그를 보려면 끈다
-  indie: { draft: false, university: false, independent: true, overseas: false },
-  univ:  { draft: false, university: true,  independent: false },
-  pro:   { draft: true,  university: false, independent: false },
-  mil:   { draft: false, university: false, independent: false },
+  // 🔴 **`overseas` 는 네 줄 다 적는다** (2026-09-07).
+  //
+  //   기본이 true(DEFAULT_POLICY)인데다 해외 2군은 2026-09-02 부터
+  //   **신청이 아니라 제안**이라(허브에서 안 골라도 온다) 안 끄면 어느
+  //   경로로 돌리든 해외 2군이 먼저 뽑힌다 — "indie" 라벨로 돌린 판이
+  //   실제로는 해외 2군 55주를 쟀다.
+  //
+  //   ⚠ **끈다고 안 끝났다.** `overseas: false` 를 적어도 `perfEntry` 의
+  //     선택 갈래가 정책을 안 보고 있어 여전히 해외로 갔다(D 실측 2판).
+  //     그건 같은 날 `perfEntry.pushCareerForward` 에서 고쳤다 —
+  //     **여기만 고쳤으면 라벨과 실제가 계속 갈렸다.**
+  indie: { draft: false, university: false, independent: true,  overseas: false },
+  univ:  { draft: false, university: true,  independent: false, overseas: false },
+  pro:   { draft: true,  university: false, independent: false, overseas: false },
+  mil:   { draft: false, university: false, independent: false, overseas: false },
 };
 const pi = process.argv.indexOf("--path");
 const PATH_KEY = pi !== -1 ? process.argv[pi + 1] : "univ";

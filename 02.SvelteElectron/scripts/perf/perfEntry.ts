@@ -454,9 +454,21 @@ export interface CareerPolicy {
   university: boolean;
   independent: boolean;
   /**
-   * 해외 2군 직행에 지원한다 (실플 ②).
+   * 해외 2군 제안을 **받아들인다** (실플 ②).
    *
-   * ⚠ **기본은 켠다.** 문턱(★3 = OVR 78)이 높아 대부분 떨어지므로
+   * 🔴 **「지원한다」가 아니다** (2026-09-07 · D 실측으로 잡았다).
+   *   2026-09-02 사용자 확정으로 해외 2군은 **신청이 아니라 제안**이 됐다 —
+   *   `advanceWeek` 이 허브에서 고른 곳을 무시하고(로그: 「허브 신청 N곳은
+   *   무시」) OVR·개인 기여만 보고 28팀 중 넘는 곳이 제안한다. 그래서
+   *   `overseas: false` 로 두어도 `overseasPassed` 는 그대로 차고,
+   *   아래 선택 갈래가 해외를 맨 위에 두고 있어 **독립을 신청한 판이 두 번
+   *   다 해외 2군으로 갔다.** 정책이 아무것도 안 막고 있었다.
+   *
+   *   지원 여부로는 이제 못 막으므로 **고르는 자리에서** 본다.
+   *   화면(`CareerResultModal`)은 붙은 곳을 나란히 보여 주고 사람이 고른다 —
+   *   정책은 그 「사람」을 대신하는 값이다.
+   *
+   * ⚠ **기본은 켠다.** 문턱(★3 = OVR 78)이 높아 대부분 안 붙으므로
    *   켜 놔도 다른 진로를 안 밀어낸다 — 그리고 안 켜면 **도달률을 영영 못 잰다**
    *   (1~4단계에서 못 잰 것이 그것이다).
    */
@@ -579,9 +591,23 @@ export async function pushCareerForward(): Promise<string | null> {
       //   지명(확실한 프로)보다는 아래지만 대학·독립보다는 프로에 가깝다.
       //   ⚠ 문턱이 높아(★3 = OVR 78) 실제로 뜨는 판이 드물다 —
       //     대학 경로를 밀어낼 걱정은 실측으로 확인한다.
-      const ovs = r?.overseasPassed?.[0];
-      const uni = r?.universityPassed?.[0];
-      const ind = r?.independentPassed?.[0];
+      //
+      // 🔴 **정책이 여기서 걸린다** (2026-09-07 · D 실측). 예전엔 정책을
+      //   「지원할까」로만 봤는데(`careerChoiceHub`), 해외 2군은 2026-09-02
+      //   부터 신청이 아니라 **제안**이라 `overseas: false` 가 아무것도 안
+      //   막았다 — `independent: true · overseas: false` 로 돌린 두 판이 **둘
+      //   다 해외 2군**으로 갔고, 독립을 신청조차 안 한 `--path mil` 판이
+      //   오히려 독립(상무)에 닿았다. 정책이 죽어 있었던 것이다.
+      //
+      // ⚠ **게임 결함이 아니다.** 화면(`CareerResultModal`)은 붙은 곳을 나란히
+      //   보여 주고 사람이 고른다 — 강제하는 자리가 없다. 헤드리스만 차례를
+      //   못 박고 있었다. 그래서 고칠 자리도 여기(계기) 하나다.
+      //
+      // ⚠ 대학·독립도 같은 규칙으로 건다 — 셋 중 하나만 정책을 안 보면
+      //   그 갈래로 다시 샌다.
+      const ovs = _policy.overseas    ? r?.overseasPassed?.[0]    : undefined;
+      const uni = _policy.university  ? r?.universityPassed?.[0]  : undefined;
+      const ind = _policy.independent ? r?.independentPassed?.[0] : undefined;
       if (ovs) { await chooseSchoolOrIndependent("overseas", ovs); return "careerChoice(overseas)"; }
       if (uni) { await chooseSchoolOrIndependent("university", uni); return "careerChoice(university)"; }
       if (ind) { await chooseSchoolOrIndependent("independent", ind); return "careerChoice(independent)"; }
