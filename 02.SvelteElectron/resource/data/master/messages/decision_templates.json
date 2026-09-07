@@ -11154,10 +11154,10 @@
         {
           "id": "min",
           "label": "최소한만 맞춘다",
-          "effectHint": "성실 +2, 피로 +5",
+          "effectHint": "사기 +4, 성실 -1",
           "effects": {
-            "diligenceDelta": 2,
-            "fatigueDelta": 5
+            "moraleDelta": 4,
+            "diligenceDelta": -1
           }
         }
       ]

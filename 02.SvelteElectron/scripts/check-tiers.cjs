@@ -49,18 +49,24 @@ const noTier = R.filter((r) => !outOfTier(r) && !TIERS.includes(r.tier));
 const noTheme = R.filter((r) => !r.theme);
 const rareRepeat = R.filter((r) => ["rare", "unique", "hidden"].includes(r.tier) && r.oncePolicy === "repeatable");
 const uniqueNoCost = R.filter((r) => ["unique", "hidden"].includes(r.tier) && !r.cost);
-/** 노말 갈래 둘이 종류가 다른가 — 같은 종류 크기만 다르면 고를 이유가 없다 */
+/**
+ * 노말 갈래 둘이 종류가 다른가 (§7-4).
+ *
+ * 🔴 **「성장」처럼 뭉뚱그리면 안 된다.** 처음엔 축(성장·관계·돈·사기·몸·이름·
+ *   성실)으로 접어 셌더니 19건이 걸렸는데, 열여덟은 「릴리스를 잡는다(커맨드)」
+ *   대 「변화구를 손본다(무브먼트)」처럼 **다른 스탯**이었다 — 고를 이유가 있는
+ *   갈래를 결함으로 셌다. §7-4 가 말하는 건 「**같은 종류 크기만** 다르면」이라
+ *   **효과 키와 부호**까지 봐야 뜻이 맞는다. 그렇게 재니 1건이었다.
+ */
 const kindOf = (fx) => {
   if (!fx || Array.isArray(fx)) return "없음";
   const k = [];
-  if (fx.xp || fx.statDelta) k.push("성장");
-  if (fx.relationDelta) k.push("관계");
-  if (fx.moneyDelta || fx.luxurySpend) k.push("돈");
-  if (fx.moraleDelta) k.push("사기");
-  if (fx.fatigueDelta || fx.conditionDelta) k.push("몸");
-  if (fx.fameDelta || fx.popularityDelta) k.push("이름");
-  if (fx.diligenceDelta) k.push("성실");
-  return k.sort().join("+") || "없음";
+  for (const [key, v] of Object.entries(fx)) {
+    if (key === "xp" || key === "statDelta") { for (const [s, n] of Object.entries(v)) k.push(`${key}.${s}${n >= 0 ? "+" : "-"}`); }
+    else if (key === "relationDelta") k.push(`rel.${v.kind}${(v.delta ?? 0) >= 0 ? "+" : "-"}`);
+    else k.push(`${key}${typeof v === "number" ? (v >= 0 ? "+" : "-") : ""}`);
+  }
+  return k.sort().join(" ") || "없음";
 };
 const sameKind = R.filter((r) => {
   if (r.tier !== "normal" || !r.decisionTemplateId) return false;
@@ -91,6 +97,6 @@ rule(noTier.length, "등급 없는 이벤트(등급 밖 제외)", noTier);
 rule(noTheme.length, "결(theme) 없는 이벤트", noTheme);
 rule(rareRepeat.length, "레어 이상인데 repeatable", rareRepeat);
 rule(uniqueNoCost.length, "유니크 이상인데 cost 없음", uniqueNoCost);
-log(`  ⓘ  노말인데 갈래 둘이 같은 종류 ${sameKind.length}건 (§7-4 · 지금은 세기만 한다)`);
+rule(sameKind.length, "노말인데 갈래 둘이 효과 키·부호까지 같음(크기만 다름)", sameKind);
 log("");
 if (bad) { log(`  🔴 어긴 규칙 ${bad}개`); log(""); process.exitCode = 1; }
