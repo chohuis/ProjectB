@@ -22,8 +22,13 @@
     {
       "type": "fame_gte",
       "value": 35
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_YOUTH_CAMP",
-  "decisionTemplateId": "DEC_PRO_YOUTH_CAMP"
+  "decisionTemplateId": "DEC_PRO_YOUTH_CAMP",
+  "_yearNote": "중후반 (4-4 ① · 2026-09-08). 유소년 캠프에 **코치로** 초청 — 가르치는 쪽에 선다"
 }

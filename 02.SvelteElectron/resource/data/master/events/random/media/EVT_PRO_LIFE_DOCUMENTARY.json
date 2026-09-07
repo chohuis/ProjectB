@@ -17,8 +17,13 @@
         "pro_abl",
         "pro_jbl"
       ]
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_LIFE_DOCUMENTARY",
-  "decisionTemplateId": "DEC_PRO_LIFE_DOCUMENTARY"
+  "decisionTemplateId": "DEC_PRO_LIFE_DOCUMENTARY",
+  "_yearNote": "중후반 (4-4 ① · 2026-09-08). 구단 다큐가 하루 동선을 따라다닌다 — 주목이 쌓인 뒤의 장면"
 }

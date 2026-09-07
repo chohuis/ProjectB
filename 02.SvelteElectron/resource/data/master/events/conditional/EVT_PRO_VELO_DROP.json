@@ -23,6 +23,10 @@
       "type": "pitching_stat_lte",
       "stat": "velocity",
       "value": 50
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_VELO_DROP",
@@ -30,5 +34,6 @@
   "cost": {
     "fatigueDelta": 12
   },
-  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 몸을 갈아 넣어 얻는다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 몸을 갈아 넣어 얻는다. 값은 제안값이라 4-6 실측 뒤에 다시 본다",
+  "_yearNote": "중후반 (4-4 ① · 2026-09-08). 구속이 시즌 초보다 떨어졌다 · 「누적인지」 — 몸이 꺾이는 이야기"
 }

@@ -19,8 +19,14 @@
     {
       "type": "fame_gte",
       "value": 35
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
     }
   ],
   "messageTemplateId": "MSG_PRO_FAME_RISING",
-  "decisionTemplateId": null
+  "decisionTemplateId": null,
+  "_yearNote": "초반 (4-4 ① · 2026-09-08). 「프로 선수라는 게 실감 난다」 — 처음 알아보는 사람이 느는 장면"
 }

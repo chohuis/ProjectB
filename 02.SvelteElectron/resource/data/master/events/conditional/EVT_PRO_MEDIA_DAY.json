@@ -22,8 +22,13 @@
     {
       "type": "week_lte",
       "value": 8
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_MEDIA_DAY",
-  "decisionTemplateId": "DEC_PRO_MEDIA_DAY"
+  "decisionTemplateId": "DEC_PRO_MEDIA_DAY",
+  "_yearNote": "중후반 (4-4 ① · 2026-09-08). 「각 구단 **대표 선수**가 나와」 — 간판이 되어야 나가는 자리"
 }

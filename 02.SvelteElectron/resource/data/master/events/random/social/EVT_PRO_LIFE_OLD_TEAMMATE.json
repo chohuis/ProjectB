@@ -17,8 +17,13 @@
         "pro_abl",
         "pro_jbl"
       ]
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_LIFE_OLD_TEAMMATE",
-  "decisionTemplateId": "DEC_RAND_FRIEND_VISIT"
+  "decisionTemplateId": "DEC_RAND_FRIEND_VISIT",
+  "_yearNote": "중후반 (4-4 ① · 2026-09-08). 「한때 같은 유니폼을 입었던」 — 팀을 옮긴 이력이 쌓여야 성립한다"
 }

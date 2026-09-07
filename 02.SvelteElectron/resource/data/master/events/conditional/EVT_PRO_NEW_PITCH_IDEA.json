@@ -22,8 +22,14 @@
     {
       "type": "pitching_ovr_gte",
       "value": 62
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
     }
   ],
   "messageTemplateId": "MSG_PRO_NEW_PITCH_IDEA",
-  "decisionTemplateId": "DEC_PRO_NEW_PITCH_IDEA"
+  "decisionTemplateId": "DEC_PRO_NEW_PITCH_IDEA",
+  "_yearNote": "초반 (4-4 ① · 2026-09-08). 「지금 레퍼토리로는 읽힌다」 — 위 2년차 벽의 짝이다"
 }

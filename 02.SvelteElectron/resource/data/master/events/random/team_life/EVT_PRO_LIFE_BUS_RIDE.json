@@ -17,8 +17,14 @@
         "pro_abl",
         "pro_jbl"
       ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
     }
   ],
   "messageTemplateId": "MSG_PRO_LIFE_BUS_RIDE",
-  "decisionTemplateId": null
+  "decisionTemplateId": null,
+  "_yearNote": "초반 (4-4 ① · 2026-09-08). 「이 시간이 익숙해질 때쯤 프로 선수가 됩니다」 — 문안이 적응기를 가리킨다"
 }

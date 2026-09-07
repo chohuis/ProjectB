@@ -22,8 +22,13 @@
     {
       "type": "season_ip_gte",
       "value": 40
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_FAME_STAR",
-  "decisionTemplateId": "DEC_PRO_FAME_STAR"
+  "decisionTemplateId": "DEC_PRO_FAME_STAR",
+  "_yearNote": "중후반 (4-4 ① · 2026-09-08). 「팀의 얼굴」 — 한두 해로는 안 붙는 말이다"
 }
