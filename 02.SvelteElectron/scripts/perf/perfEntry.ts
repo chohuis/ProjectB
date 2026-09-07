@@ -8673,6 +8673,8 @@ export function npcLiveDump(): string {
   return Object.keys(live).sort()
     .map((id) => `${id}:${live[id]?.pitching?.ovr ?? "-"}:${live[id]?.batting?.ovr ?? "-"}`)
     .join("\n");
+}
+
 // ── D 계측: 주당 「고르는 것」 개수 (2026-09-07) ───────────────────
 //
 // `runAutoAdvance`는 `type:"message"`(사건 결정)를 **한 틱 안에서 조용히
