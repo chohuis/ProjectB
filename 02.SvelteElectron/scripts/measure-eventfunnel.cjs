@@ -148,12 +148,30 @@ if (RUNS > 1) { multiRun(); return; }
     log("");
     log("  ① 갈래별 — 조건 통과 → 발동");
     log("    갈래           조건통과   정책차단   빈메시지     발동    발동/주");
-    for (const lane of ["mandatory", "conditional", "random"]) {
+    for (const lane of ["mandatory", "conditional", "random", "grade"]) {
       const r = f[lane];
       const cp = lane === "random" ? r.eligible : r.condPass;
       log(`    ${lane.padEnd(14)}${String(cp).padStart(8)}${String(r.policyBlocked).padStart(11)}`
         + `${String(r.emptyDropped).padStart(11)}${String(r.emitted).padStart(9)}`
         + `${(r.emitted / f.주수).toFixed(2).padStart(11)}`);
+    }
+    log("");
+
+    // ── 등급 줄기 (2026-09-08 · §1) ───────────────────────────
+    log("  ①-2 등급 — 추첨 · 발동 · 상한 · 폴백");
+    {
+      const t = f.tier;
+      log("    등급        추첨     발동   상한막힘   후보0");
+      for (const g of ["normal", "rare", "unique", "hidden"]) {
+        log(`    ${g.padEnd(12)}${String(t.drawn[g] ?? 0).padStart(4)}`
+          + `${String(t.emitted[g] ?? 0).padStart(9)}${String(t.capBlocked[g] ?? 0).padStart(11)}`
+          + `${String(t.empty[g] ?? 0).padStart(8)}`);
+      }
+      log(`    🔴 폴백 ${t.fallback}회 — 0 이 아니면 그 무대·등급에 이야기가 없다는 뜻이다`);
+      for (const [k, v] of Object.entries(t.fallbackBy).sort((a, b) => b[1] - a[1]).slice(0, 10)) {
+        log(`        ${k.padEnd(24)}${String(v).padStart(6)}`);
+      }
+      log("    무대별 주 수: " + JSON.stringify(t.weeksByStage));
     }
     log("");
 
@@ -204,6 +222,8 @@ if (RUNS > 1) { multiRun(); return; }
       const walk = (d) => fsx.readdirSync(d, { withFileTypes: true })
         .flatMap((e) => e.isDirectory() ? walk(px.join(d, e.name)) : [px.join(d, e.name)]);
       const policy = {};
+      // ⚠ 여기 셋은 **폴더 이름**이다 — 갈래(`grade`)와 다르다. 등급 줄기는
+      //   폴더가 없다(세 폴더의 규칙이 `tier` 로 모인다)
       for (const lane of ["mandatory", "conditional", "random"]) {
         for (const p of walk(`resource/data/master/events/${lane}`).filter((x) => x.endsWith(".json"))) {
           const r = JSON.parse(fsx.readFileSync(p, "utf8"));

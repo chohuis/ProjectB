@@ -150,6 +150,22 @@ describe("등급 줄기 — 한 주에 하나", () => {
     expect(r.newMessages).toHaveLength(1);
   });
 
+  it("🔴 폴백도 시즌 상한을 본다 — 추첨만 보면 상한이 샌다", () => {
+    // 유니크가 뽑히고 유니크 후보가 0 이면 레어로 내려가는데,
+    // 레어가 이미 상한(6)이면 **내려가면 안 된다.** 처음엔 그 구멍이 있었다:
+    // 추첨은 상한을 봤는데 폴백은 안 봤다.
+    const c = ctx({ tierCounts: { rare: RULES.seasonCap.rare!, hidden: 99 } });
+    const r = run(
+      [rule({ id: "EVT_R", tier: "rare", oncePolicy: "once_per_season" }),
+       rule({ id: "EVT_N", tier: "normal" })],
+      c, new Array(12).fill(0.999),
+    );
+    // 레어는 상한이라 절대 안 뜬다 — 노말까지 내려가거나 아무것도 안 뜬다
+    expect(r.newMessages.map((m) => m.id).join()).not.toContain("EVT_R");
+    expect(eventFunnelStats.tier.capViolation).toBe(0);
+    expect(eventFunnelStats.tier.hiddenCareerViolation).toBe(0);
+  });
+
   it("히든은 종당 커리어 한 번이다 — `oncePolicy` 가 뭐라 적혔든", () => {
     const c = ctx({
       protagonist: proto({ careerTriggeredEvents: { EVT_H: 4 } }),

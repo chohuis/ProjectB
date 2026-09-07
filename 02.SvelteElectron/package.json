@@ -168,7 +168,8 @@
     "probe:a:growthreq": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-growthreq.cjs",
     "check:reportbank": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-reportbank.cjs",
     "probe:a:tempo": "node scripts/probe-a-tempo.cjs",
-    "probe:a:tempo:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-tempo-career.cjs"
+    "probe:a:tempo:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-tempo-career.cjs",
+    "check:tiercoverage": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-tiercoverage.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

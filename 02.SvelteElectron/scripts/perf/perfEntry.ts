@@ -7919,6 +7919,23 @@ export function eventFunnelProbe(): Record<string, unknown> {
     mandatory:   { ...f.mandatory },
     conditional: { ...f.conditional },
     random:      { ...f.random },
+    // 등급 줄기 (2026-09-08 · §1). `random` 은 이제 0 이어야 한다 —
+    // 0 이 아니면 옛 풀 경로가 어딘가 살아 있다는 뜻이다
+    grade:       { ...f.grade },
+    tier: {
+      drawn:      { ...f.tier.drawn },
+      emitted:    { ...f.tier.emitted },
+      capBlocked: { ...f.tier.capBlocked },
+      empty:      { ...f.tier.empty },
+      // 🔴 0 이 아니면 데이터가 모자란다는 뜻이다 (§10)
+      fallback:   f.tier.fallback,
+      fallbackBy: { ...f.tier.fallbackBy },
+      weeksByStage:   { ...f.tier.weeksByStage },
+      emittedByStage: { ...f.tier.emittedByStage },
+      // 🔴 둘 다 늘 0 이어야 한다 (§10)
+      capViolation:          f.tier.capViolation,
+      hiddenCareerViolation: f.tier.hiddenCareerViolation,
+    },
     // 조건도 정책도 통과했는데 주당 1건 상한에 밀린 것 — 이 트랙의 핵심 숫자
     "밀린 규칙 상위": top(f.crowdedByRule, 15),
     "빈 메시지로 버려진 규칙": top(f.emptyByRule, 10),

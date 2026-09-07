@@ -198,6 +198,17 @@ export const eventFunnelStats = {
     weeksByStage: {} as Record<string, number>,
     /** 「무대/등급」 → 발동 수 */
     emittedByStage: {} as Record<string, number>,
+    /**
+     * 🔴 **둘 다 늘 0 이어야 한다** (§10). 코드가 「막는다」고 적어 놓은 것을
+     *   실제로 재는 자리다 — 적어 놓기만 하고 안 재면 그게 바로 이 저장소가
+     *   반복해 겪은 형태다.
+     *
+     * `capViolation` 은 **폴백이 상한에 닿은 등급으로 내려간 경우**를 잡는다.
+     * 처음엔 실제로 그 구멍이 있었다: 추첨은 상한을 봤는데 폴백은 안 봤다.
+     */
+    capViolation: 0,
+    /** 히든 종당 커리어 상한을 넘겨 발동한 수 */
+    hiddenCareerViolation: 0,
   },
   /** 자리를 못 잡아 밀린 규칙 — 어떤 이야기가 못 뜨는지 */
   /**
@@ -238,6 +249,7 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.tier        = {
     drawn: {}, emitted: {}, capBlocked: {}, empty: {},
     fallback: 0, fallbackBy: {}, weeksByStage: {}, emittedByStage: {},
+    capViolation: 0, hiddenCareerViolation: 0,
   };
   eventFunnelStats.optionsOffered = 0;
   eventFunnelStats.optionsOpen = 0;
@@ -524,8 +536,16 @@ export function runEventEngine(
     let picked: EventRule | null = null;
     let at: EventGrade | null = drawn;
     if (drawn) eventFunnelStats.tier.drawn[drawn] = (eventFunnelStats.tier.drawn[drawn] ?? 0) + 1;
+    /** 이번 시즌 상한에 닿은 등급인가 — 추첨도 폴백도 같은 자를 쓴다 */
+    const capped = (g: EventGrade) => {
+      const cap = tierRules.seasonCap[g];
+      return cap !== undefined && (ctx.tierCounts?.[g] ?? 0) >= cap;
+    };
     while (at) {
-      const cands = byGrade.get(at) ?? [];
+      const cands = capped(at) ? [] : (byGrade.get(at) ?? []);
+      // 🔴 **폴백도 상한을 봐야 한다.** 처음엔 추첨만 봤다 — 유니크에서
+      //    내려온 폴백이 상한을 채운 레어로 떨어지면 시즌 상한이 새는데,
+      //    그 새는 자리를 `tier.capViolation` 이 재고 있었다(늘 0 이어야 한다).
       if (cands.length > 0) {
         // 「이번 시즌 안 뜬 것」이 먼저다 — 한 바퀴 돌기 전엔 아무도 두 번 안 뜬다.
         // ⚠ 띠가 비면 예전 것으로 떨어진다(상태 경고가 그렇게 지연된다)
@@ -555,6 +575,11 @@ export function runEventEngine(
     if (picked && at) {
       if (tryEmit(picked, "grade")) {
         gradeFired = at;
+        // 코드가 「막는다」고 적은 것을 실제로 잰다 — 늘 0 이어야 한다(§10)
+        if (capped(at)) eventFunnelStats.tier.capViolation++;
+        if (at === "hidden" && (ctx.protagonist.careerTriggeredEvents ?? {})[picked.id] !== undefined) {
+          eventFunnelStats.tier.hiddenCareerViolation++;
+        }
         eventFunnelStats.tier.emitted[at] = (eventFunnelStats.tier.emitted[at] ?? 0) + 1;
         const k = `${stageGroup}/${at}`;
         eventFunnelStats.tier.emittedByStage[k] = (eventFunnelStats.tier.emittedByStage[k] ?? 0) + 1;
