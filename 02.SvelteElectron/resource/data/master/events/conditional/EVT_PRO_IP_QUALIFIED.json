@@ -18,8 +18,14 @@
     {
       "type": "season_ip_gte",
       "value": 100
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
     }
   ],
   "messageTemplateId": "MSG_PRO_IP_QUALIFIED",
-  "decisionTemplateId": null
+  "decisionTemplateId": null,
+  "_yearNote": "초반 (4-4 ① · 2026-09-08). 규정이닝을 **처음** 채운 장면 — 「한 시즌을 온전히 버텼다는 뜻」"
 }

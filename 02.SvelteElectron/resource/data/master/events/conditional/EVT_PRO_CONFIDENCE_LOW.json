@@ -22,8 +22,14 @@
     {
       "type": "morale_lte",
       "value": 50
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
     }
   ],
   "messageTemplateId": "MSG_PRO_CONFIDENCE_LOW",
-  "decisionTemplateId": "DEC_PRO_CONFIDENCE_LOW"
+  "decisionTemplateId": "DEC_PRO_CONFIDENCE_LOW",
+  "_yearNote": "초반 (4-4 ① · 2026-09-08). 「프로에서는 누구나 한 번쯤 겪는다」 — 처음 부딪히는 벽을 달래는 말투다"
 }

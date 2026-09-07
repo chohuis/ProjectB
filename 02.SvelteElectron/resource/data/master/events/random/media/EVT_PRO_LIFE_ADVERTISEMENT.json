@@ -17,8 +17,14 @@
         "pro_abl",
         "pro_jbl"
       ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
     }
   ],
   "messageTemplateId": "MSG_PRO_LIFE_ADVERTISEMENT",
-  "decisionTemplateId": "DEC_PRO_LIFE_ADVERTISEMENT"
+  "decisionTemplateId": "DEC_PRO_LIFE_ADVERTISEMENT",
+  "_yearNote": "초반 (4-4 ① · 2026-09-08). 「지역 업체 · 큰 규모는 아니다」 — 이름이 막 붙기 시작한 자리"
 }
