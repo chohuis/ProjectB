@@ -12892,6 +12892,329 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_IND_DAY_JOB",
+      "prompt": "오전 시간을 어떻게 쓰겠습니까?",
+      "options": [
+        {
+          "id": "work",
+          "label": "일을 잡는다",
+          "effectHint": "피로 +6, 돈 30만원",
+          "effects": {
+            "moneyDelta": 30,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "ball",
+          "label": "야구만 한다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_TRYOUT_NOTICE",
+      "prompt": "트라이아웃을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "apply",
+          "label": "지원한다",
+          "effectHint": "피로 +5, 명성 +3",
+          "effects": {
+            "fameDelta": 3,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "season",
+          "label": "시즌을 마친다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LONG_WINTER",
+      "prompt": "겨울을 어떻게 보내겠습니까?",
+      "options": [
+        {
+          "id": "throw",
+          "label": "겨울에도 나간다",
+          "effectHint": "구속 경험치 +3, 피로 +6",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "rest",
+          "label": "몸을 쉬게 둔다",
+          "effectHint": "컨디션 +5",
+          "effects": {
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_SALARY_TALK",
+      "prompt": "계약을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "올려 달라고 한다",
+          "effectHint": "사기 +3, 감독 관계 -4",
+          "effects": {
+            "moraleDelta": 3,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": -4
+            }
+          }
+        },
+        {
+          "id": "sign",
+          "label": "조용히 사인한다",
+          "effectHint": "감독 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_RAINY_DAY",
+      "prompt": "비 오는 하루를 어떻게 쓰겠습니까?",
+      "options": [
+        {
+          "id": "indoor",
+          "label": "실내에서 던진다",
+          "effectHint": "제구 경험치 +3, 피로 +5",
+          "effects": {
+            "xp": {
+              "control": 3
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "rest",
+          "label": "하루를 쉰다",
+          "effectHint": "피로 -6",
+          "effects": {
+            "fatigueDelta": -6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_AMATEUR_FRIENDLY",
+      "prompt": "오늘 경기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "serious",
+          "label": "진짜처럼 던진다",
+          "effectHint": "커맨드 경험치 +3, 피로 +5",
+          "effects": {
+            "xp": {
+              "command": 3
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "teach",
+          "label": "후배들을 봐준다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_MANAGER_PAST",
+      "prompt": "그 이야기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "물어본다",
+          "effectHint": "감독 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "find",
+          "label": "기록을 찾아본다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_OVERSEAS_TALK",
+      "prompt": "그 이야기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "look",
+          "label": "알아본다",
+          "effectHint": "사기 -2, 인기 +3",
+          "effects": {
+            "popularityDelta": 3,
+            "moraleDelta": -2
+          }
+        },
+        {
+          "id": "stay",
+          "label": "국내에 남는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_QUIT_ADVICE",
+      "prompt": "그 말에 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "deny",
+          "label": "아니라고 말한다",
+          "effectHint": "사기 +4, 동료 관계 -3",
+          "effects": {
+            "moraleDelta": 4,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -3
+            }
+          }
+        },
+        {
+          "id": "listen",
+          "label": "듣고만 있는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_FIRST_PITCH",
+      "prompt": "행사에 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "go",
+          "label": "나간다",
+          "effectHint": "피로 +4, 인기 +4",
+          "effects": {
+            "popularityDelta": 4,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "train",
+          "label": "훈련에 남는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_HOSPITAL_BILL",
+      "prompt": "몸을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "clinic",
+          "label": "병원에 간다",
+          "effectHint": "컨디션 +5, 돈 80만원",
+          "effects": {
+            "moneyDelta": -80,
+            "conditionDelta": 5
+          }
+        },
+        {
+          "id": "endure",
+          "label": "참고 나간다",
+          "effectHint": "컨디션 -4, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "conditionDelta": -4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_FAMILY_WEDDING",
+      "prompt": "그날을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "wedding",
+          "label": "결혼식에 간다",
+          "effectHint": "피로 +5, 사기 +4",
+          "effects": {
+            "moraleDelta": 4,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "away",
+          "label": "원정을 간다",
+          "effectHint": "감독 관계 +3",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_CLUB_PROMO",
+      "prompt": "촬영을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "smile",
+          "label": "웃어 준다",
+          "effectHint": "인기 +4",
+          "effects": {
+            "popularityDelta": 4
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 끝낸다",
+          "effectHint": "피로 -4, 인기 -2",
+          "effects": {
+            "fatigueDelta": -4,
+            "popularityDelta": -2
+          }
+        }
+      ]
     }
   ]
 }

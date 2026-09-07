@@ -1,0 +1,23 @@
+{
+  "id": "EVT_IND_SALARY_TALK",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
+  "category": "life",
+  "priority": 750,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_IND_SALARY_TALK",
+  "decisionTemplateId": "DEC_IND_SALARY_TALK",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}
