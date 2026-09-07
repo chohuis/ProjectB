@@ -152,6 +152,7 @@
     "probe:d:loc": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-loc-mode.cjs",
     "probe:d:mor": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-mor-morale.cjs",
     "probe:d:reu": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-reu-reunion.cjs",
+    "probe:d:wc": "cross-env DRIVE_USER_DATA=1 ELECTRON_RUN_AS_NODE=1 electron scripts/probe-weekly-choices.cjs",
     "dist:steam": "npm run pack && node scripts/dist-steam.cjs",
     "dist:steam:verify": "node scripts/dist-steam.cjs",
     "smoke:dist": "cross-env DRIVE_EXE=release/win-unpacked/OnePitch.exe DRIVE_USER_DATA=1 node scripts/drive.mjs scripts/smoke-dist.txt",
