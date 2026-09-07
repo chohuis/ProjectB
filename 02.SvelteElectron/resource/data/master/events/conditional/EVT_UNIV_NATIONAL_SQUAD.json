@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_NATIONAL_SQUAD",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 818,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_NATIONAL_SQUAD",
+  "decisionTemplateId": "DEC_UNIV_NATIONAL_SQUAD",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

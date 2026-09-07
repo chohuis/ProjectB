@@ -1,0 +1,25 @@
+{
+  "id": "EVT_UNIV_INDOOR_CAGE",
+  "type": "random",
+  "tier": "normal",
+  "theme": "train",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "weight": 16,
+  "poolId": "POOL_TRAIN_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_INDOOR_CAGE",
+  "decisionTemplateId": "DEC_UNIV_INDOOR_CAGE",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}
