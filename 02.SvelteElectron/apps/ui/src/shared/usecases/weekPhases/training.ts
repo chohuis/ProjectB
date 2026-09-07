@@ -75,7 +75,8 @@ export function makeTrainingMessage(
   const leveledLabels = statsData.filter(s => s.leveledUp).map(s => `${s.label} +1`);
   const preview = leveledLabels.length > 0
     ? `★ ${leveledLabels.join(", ")} 레벨업!`
-    : `훈련 완료 — 컨디션 ${protagonist.condition} / 사기 ${protagonist.morale}`;
+    // ⚠ 사기만 소수다 — 다른 지표와 같은 자릿수로 찍는다(사용자 U4)
+    : `훈련 완료 — 컨디션 ${protagonist.condition} / 사기 ${Math.round(protagonist.morale)}`;
 
   const metadata: import("../../types/main").TrainingMetadata = {
     type: "training",

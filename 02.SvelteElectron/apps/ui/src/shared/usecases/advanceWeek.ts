@@ -1795,7 +1795,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       ...(eraLine ? [eraLine] : []),
       ``,
       `■ 상태`,
-      `  컨디션 ${p.condition}  /  피로도 ${p.fatigue} [${fatigueTag}]  /  사기 ${p.morale}`,
+      // ⚠ **사기만 소수다** — `moraleAfterWeek` 가 실수를 돌려주고 다른 셋은
+      //   정수다. 그대로 찍으면 「사기 63.42857142857143」이 된다(사용자 U4).
+      //   값을 반올림해 저장하지 않는다 — 보여 줄 때만 자릿수를 맞춘다
+      `  컨디션 ${p.condition}  /  피로도 ${p.fatigue} [${fatigueTag}]  /  사기 ${Math.round(p.morale)}`,
       ``,
       `■ 권고`,
       `  ${recommendation}`,
@@ -1820,7 +1823,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         { key: "stamina",  value: pit.stamina,  delta: deltaFromStart("stamina") },
         { key: "condition", value: p.condition },
         { key: "fatigue",   value: p.fatigue },
-        { key: "morale",    value: p.morale },
+        // ⚠ 표도 같은 자릿수다 — `cellText` 는 일부러 반올림을 안 한다
+        //   (승률 `.633` · 이닝 `168.1` 처럼 자릿수에 뜻이 있는 값이 있어서다).
+        //   자릿수를 정하는 건 만드는 쪽이라 여기서 끊는다
+        { key: "morale",    value: Math.round(p.morale) },
       ]),
       decision: {
         prompt: "이번 주 방향을 선택하세요.",

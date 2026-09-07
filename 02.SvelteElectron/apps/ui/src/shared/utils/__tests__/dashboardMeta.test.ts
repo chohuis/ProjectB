@@ -241,11 +241,14 @@ describe("묶음 2 — 경기·트레이드·말소·웨이버", () => {
       { homeName: "한성고", awayName: "기흥고", homeScore: 5, awayScore: 3, mine: true },
       { homeName: "북악고", awayName: "동래고", homeScore: 1, awayScore: 2 },
     ]);
-    expect(md.rows[0].score).toBe("5 : 3");
+    // ⚠ **원정이 먼저다**(사용자 U6). 본문 줄·주간 로그·경기 종료 화면이 다 그렇다 —
+    //   표만 홈이 먼저라 같은 경기가 서로 뒤집혀 보였다
+    expect(md.rows[0].score).toBe("3 : 5");
+    expect(md.rows[0].away).toBe("기흥고");
     expect(md.rows[0].myTeam).toBe(true);
     expect(md.rows[1].myTeam).toBeUndefined();
     const view = buildTableView(md, tableCopy(labels, "leagueResults"));
-    expect(view.columns.map((c) => c.key)).toEqual(["home", "score", "away"]);
+    expect(view.columns.map((c) => c.key)).toEqual(["away", "score", "home"]);
   });
 
   it("내 경기 — 연습경기는 투구수 줄이 없다", () => {

@@ -55,12 +55,13 @@ describe("문안이 다섯 자리를 갖는다", () => {
 describe("경기 결과 — 점수는 가운데다", () => {
   const md: TableMetadata = {
     type: "table", kind: "leagueResults", columns: [],
-    rows: [{ home: "북악고", score: "3 : 1", away: "한성고" }],
+    rows: [{ away: "한성고", score: "1 : 3", home: "북악고" }],
   };
 
   it("문안이 선언한 순서로 열이 선다", () => {
-    expect(view(md).columns.map((c) => c.key)).toEqual(["home", "score", "away"]);
-    expect(view(md).columns.map((c) => c.label)).toEqual(["홈", "점수", "원정"]);
+    // 원정이 먼저다 — 본문 줄과 같은 방향이어야 한다(사용자 U6)
+    expect(view(md).columns.map((c) => c.key)).toEqual(["away", "score", "home"]);
+    expect(view(md).columns.map((c) => c.label)).toEqual(["원정", "점수", "홈"]);
   });
 
   it("점수 칸은 가운데, 팀 이름은 왼쪽", () => {

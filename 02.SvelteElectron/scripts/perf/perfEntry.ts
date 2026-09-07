@@ -25,6 +25,7 @@ import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/store
 import { startNewGameV3, getFarmDevLog, loadGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
 import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
+import { buildTop10Metadata } from "../../apps/ui/src/shared/utils/top10Engine";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
@@ -8737,4 +8738,105 @@ export function weeklyChoiceLogDump(): { weeks: WeekVisitRow[]; messages: Weekly
 /** 전 규칙 발동 종수 — `eventFunnelProbe`는 상위 N종만 준다. 풀별 배분엔 전체가 필요하다 */
 export function eventEmittedByRuleFull(): Record<string, number> {
   return { ...eventFunnelStats.emittedByRule };
+}
+
+// ── C 세션 U2·U6 재현 계기 (2026-09-07) ───────────────────────
+//
+// 🔴 **게임 코드는 안 건드린다.** 아래 둘은 이미 도는 값을 그대로 꺼내
+//   보여 주기만 한다 — 사용자 신고 둘을 「화면인가 생산부인가」로 가르려고
+//   붙였다.
+//     U2  고교 투수 랭킹 「통합」에 3학년이 안 보인다
+//     U6  경기 경과 표의 홈·원정 자리와 본문 줄 순서
+
+/**
+ * 유망주 랭킹 네 컬럼을 **지금** 만들어 학년까지 붙여 돌려준다.
+ *
+ * ⚠ 소식함에 남은 것을 읽지 않는다 — 소식은 학년을 안 싣기 때문에
+ *   (`Top10Entry` 는 id·이름·팀·점수뿐) 학년은 여기서 붙여야 한다.
+ */
+export async function top10GradeProbe(): Promise<Record<string, unknown>> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const m = get(masterStore);
+  const teamName = (id: string) => m.teams.find((t) => t.id === id)?.name ?? id;
+  const stats = (s.stats?.[g.protagonist.id] ?? null) as never;
+  const md = await buildTop10Metadata(
+    g.protagonist, stats, m.entities, s.currentWeek, s.seasonYear, teamName,
+  );
+  const gradeOf = new Map<string, number | null>();
+  const poolByGrade: Record<string, number> = {};
+  for (const e of m.entities) {
+    if (e.role !== "player" || e.leagueId !== "LEAGUE_HIGHSCHOOL") continue;
+    const d = e.details?.player;
+    if (!d || d.playerType !== g.protagonist.playerType) continue;
+    gradeOf.set(e.id, e.grade ?? null);
+    const k = e.grade == null ? "없음" : String(e.grade);
+    poolByGrade[k] = (poolByGrade[k] ?? 0) + 1;
+  }
+  return {
+    주차: s.currentWeek, 시즌: s.seasonYear, 주인공학년: g.protagonist.grade,
+    "풀 학년별": poolByGrade,
+    컬럼: md.columns.map((c) => ({
+      이름표: c.label,
+      heroRank: c.heroRank,
+      줄수: c.entries.length,
+      entries: c.entries.map((e) => ({
+        rank: e.rank, name: e.name, id: e.id, score: Math.round(((e as unknown as {score:number}).score ?? 0) * 100) / 100,
+        grade: e.id === "PLY_HERO" ? (g.protagonist.grade ?? null) : (gradeOf.get(e.id) ?? "풀밖"),
+      })),
+    })),
+  };
+}
+
+/** 소식 원본 — id 앞자리로 골라 본문·metadata 를 그대로 준다 */
+export function msgRawProbe(idPrefix: string, limit = 2): unknown[] {
+  return (get(gameStore).mailbox ?? [])
+    .filter((x) => x.id.startsWith(idPrefix))
+    .slice(-limit)
+    .map((x) => ({ id: x.id, subject: x.subject, body: x.body, metadata: x.metadata }));
+}
+
+/**
+ * 고교 학년별 OVR 분포 — U2 를 「화면인가 생산부인가」로 가르는 자리.
+ *
+ * 통합 랭킹은 `ovr * 0.8 + 스카우트 * 0.2` 한 줄이라, 3학년이 안 보이면
+ * 3학년 OVR 이 낮다는 뜻이다. 그게 참인지 본다.
+ */
+export function hsOvrByGradeProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const type = g.protagonist.playerType;
+  const byGrade: Record<string, number[]> = {};
+  for (const e of m.entities) {
+    if (e.role !== "player" || e.leagueId !== "LEAGUE_HIGHSCHOOL") continue;
+    const d = e.details?.player;
+    if (!d || d.playerType !== type) continue;
+    const k = e.grade == null ? "없음" : String(e.grade);
+    (byGrade[k] ??= []).push(type === "pitcher" ? d.pitching.ovr : d.batting.ovr);
+  }
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(byGrade)) {
+    const s = [...v].sort((a, b) => a - b);
+    out[k] = {
+      n: s.length,
+      평균: Math.round((s.reduce((a, b) => a + b, 0) / s.length) * 10) / 10,
+      중앙: s[Math.floor(s.length / 2)],
+      p90: s[Math.floor(s.length * 0.9)],
+      최대: s[s.length - 1],
+    };
+  }
+  return out;
+}
+
+/** 같은 사람의 OVR 이 해를 넘기며 오르는가 — id 몇 개를 지목해 따라간다 */
+export function hsOvrOfProbe(ids: string[]): Record<string, unknown> {
+  const m = get(masterStore);
+  const out: Record<string, unknown> = {};
+  for (const id of ids) {
+    const e = m.entities.find((x) => x.id === id);
+    const d = e?.details?.player;
+    out[id] = e ? { name: e.name, grade: e.grade ?? null, team: e.teamId,
+      ovr: d ? (d.playerType === "pitcher" ? d.pitching.ovr : d.batting.ovr) : null } : "없음";
+  }
+  return out;
 }
