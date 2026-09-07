@@ -1,0 +1,76 @@
+{
+  "_doc": [
+    "이벤트 등급 추첨 규칙 — PLAN_EVENT_TIERS_2026-09-08 §3 이 정본이다.",
+    "값은 전부 제안값이고 5단계(D 4-6)에서 잰다. 밸런스는 동결이라 여기 값만 바꾼다.",
+    "🔴 코드에 같은 숫자를 두 번 적지 않는다 — `utils/tierRules.ts` 가 이 파일만 읽는다.",
+    "못 읽으면 게임이 던진다(조용히 기본값으로 굴러가면 어느 값으로 잰 건지 모른다)."
+  ],
+
+  "weights": { "normal": 80, "rare": 14, "unique": 5, "hidden": 1 },
+
+  "_seasonCapDoc": "닿으면 그 등급의 가중이 0 이 된다. 노말은 상한이 없다(§2).",
+  "seasonCap": { "rare": 6, "unique": 2, "hidden": 1 },
+
+  "_dryBoostDoc": [
+    "마른 시즌 방지 — 레어가 `afterWeeks` 주 넘게 안 뜨면 주당 `perWeek` 씩 가중을 올린다.",
+    "기준은 「이번 시즌 마지막으로 그 등급이 뜬 주」이고, 한 번도 안 떴으면 시즌 첫 주다."
+  ],
+  "dryBoost": { "rare": { "afterWeeks": 6, "perWeek": 3, "max": 30 } },
+
+  "_stateModDoc": [
+    "주인공 상태가 레어 가중을 민다. `from` 위로 1점당 `perPoint`, 최대 `max`.",
+    "성실·컨디션 둘 다 레어에만 걸린다 — 유니크·히든까지 밀면 상태가 좋은 판만 사건이 많아진다."
+  ],
+  "stateMod": {
+    "diligence": { "tier": "rare", "from": 60, "perPoint": 0.1, "max": 5 },
+    "condition": { "tier": "rare", "from": 80, "perPoint": 0.05, "max": 2 }
+  },
+
+  "_starveDoc": "등급 안에서 밀린 주 가중 — 후보였는데 안 뽑힌 주마다 `perWeek` 씩, 최대 `max`.",
+  "starve": { "perWeek": 1, "max": 10 },
+
+  "_hiddenDoc": "종당 커리어 1 회 — 총량 상한은 없다(§3). `careerTriggeredEvents` 가 기록한다.",
+  "hidden": { "careerCapPerEvent": 1 },
+
+  "_fallbackDoc": [
+    "등급 안에 후보가 없으면 한 단계 아래로 내려간다(히든→유니크→레어→노말).",
+    "🔴 한 번이라도 발동하면 `check:tiercoverage` 가 빨강이다 — 데이터 부족 신호다."
+  ],
+  "fallback": "step_down",
+
+  "_stageGroupsDoc": [
+    "무대 묶음 — 커버리지 검사가 무대×등급으로 센다.",
+    "🔴 **프로는 두 무대다** (사용자 확정 2026-09-08). §6 이 말한 대로 초반(1~5년차)과",
+    "   중후반(6년차+)을 다른 무대로 센다 — 각 무대 필요량은 노말 60 · 레어 15 · 유니크 6.",
+    "   B 실측(4-2)에서 프로 이벤트 140/173 이 연차를 안 가렸다. **연차 조건이 없는",
+    "   이벤트는 양쪽 무대에 다 후보로 센다** — 아직 안 붙인 것도, 일부러 안 붙일 것도",
+    "   있어서 한쪽에만 세면 없는 부족분이 생긴다(`check:tiercoverage` 가 그렇게 센다).",
+    "판정 순서는 배열 순서다 — 위에서 처음 맞는 것이 그 주의 무대다.",
+    "군이 맨 위인 이유: 복무 중에도 `careerStage` 는 소속이 남아 있어 프로로 읽힌다.",
+    "프로초반이 프로중후반보다 위인 이유: 둘 다 `pro_*` 라 좁은 쪽이 먼저여야 한다.",
+    "🔴 **눈금은 `proServiceYears` 다** — 데뷔 시즌이 0 이고 시즌 끝에 1 오른다",
+    "   (`game.ts` `advanceSeasonYear`). 그래서 **1~5년차 = 0~4 · 6년차+ = 5 이상**이다.",
+    "   B 가 이벤트에 붙인 조건(`num_lte proServiceYears 4` · `pro_year_gte 5`)과 같은 눈금이고,",
+    "   `check:tiercoverage` 의 무대 판정도 여기를 읽어 같이 간다."
+  ],
+  "stageGroups": [
+    { "id": "군",   "militaryStatus": ["현역"] },
+    { "id": "2군",  "leagueIds": ["LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"] },
+    { "id": "고교", "careerStages": ["highschool"] },
+    { "id": "대학", "careerStages": ["university"] },
+    { "id": "독립", "careerStages": ["independent"] },
+    { "id": "프로초반",   "careerStages": ["pro", "pro_kbl", "pro_abl", "pro_jbl"], "proYearLte": 4 },
+    { "id": "프로중후반", "careerStages": ["pro", "pro_kbl", "pro_abl", "pro_jbl"], "proYearGte": 5 }
+  ],
+
+  "_freqDoc": [
+    "§2 등급표의 시즌 빈도 — `check:tiercoverage` 가 실제 빈도를 이 범위와 맞춘다.",
+    "히든은 시즌 0.5 라 3시즌 판에서 0~2 다(상한이 시즌 1)."
+  ],
+  "seasonFreq": {
+    "normal": { "min": 30, "max": 52 },
+    "rare":   { "min": 3,  "max": 6 },
+    "unique": { "min": 1,  "max": 2 },
+    "hidden": { "min": 0,  "max": 1 }
+  }
+}

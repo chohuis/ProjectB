@@ -440,6 +440,15 @@ export interface MessageItem {
   createdAt: string;
   readAt: string | null;
   decision?: MessageDecision;
+  /**
+   * 이벤트 등급 (2026-09-08 · PLAN_EVENT_TIERS §9). 등급 줄기를 탄 소식만 있다 —
+   * 필수·긴급·시스템 소식엔 없다.
+   *
+   * ⚠ **엔진이 싣는다.** 화면이 규칙 id 로 되짚으면 소식함에 남은 옛 소식이
+   *   지금 데이터의 등급으로 보인다 — 소식은 스냅샷이다(`decision` 과 같은 선).
+   * 칩 색·표기는 C 4-5 가 정한다.
+   */
+  eventGrade?: import("../utils/tierRules").EventGrade;
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
            | MyBodyMetadata | RoleChoiceMetadata
            | TableMetadata | RankListMetadata | TimelineMetadata

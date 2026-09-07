@@ -142,7 +142,54 @@ export type Condition =
   // "학점이 위험하다" 같은 이벤트를 아예 쓸 수 없다
   | { type: "gpa_gte";              value: number }
   | { type: "gpa_lte";              value: number }
-  | { type: "academic_warning_gte"; value: number };
+  | { type: "academic_warning_gte"; value: number }
+
+  // ── 시간을 세는 조건 넷 (2026-09-08 · PLAN_EVENT_TIERS §12) ───
+  //
+  // 🔴 **위 50종은 전부 「그 순간의 상태」다.** 히든(그리고 일부 레어·유니크)이
+  //   말하려는 것은 「그렇게 해 왔다」인데, 지금 조건으로는 **한 주만 성실 90 을
+  //   찍어도 20주 유지한 사람과 구분이 안 된다.** 넷은 상태가 아니라 **경과**를
+  //   읽는다 — 그래서 넷 다 **세는 칸**이 따로 필요하다(`utils/eventCounters.ts`).
+  //
+  // ⚠ **없는 칸은 조용히 false 다.** 구 세이브·아직 안 배선된 카운터가 그렇다.
+  //   그건 「아직 안 채웠다」와 같은 뜻이라 맞다 — 다만 **끝내 못 채우는 카운터**는
+  //   `check:tiercoverage` 가 「후보 0」으로 잡는다.
+
+  /**
+   * N주 **연속** 어떤 상태였나 (「성실 90+ 를 20주」).
+   *
+   * `metric` 은 `eventPaths` 의 경로다(`diligence` · `condition` · `morale` …).
+   * 세는 칸은 `protagonist.streaks["<metric>:<op>:<value>"]` 이고, 매주
+   * `tickStreaks` 가 **이벤트 데이터에 실제로 쓰인 키만** 갱신한다.
+   */
+  | { type: "streak"; metric: string; op: "gte" | "lte"; value: number; weeks: number }
+
+  /**
+   * 누적 카운터 (같은 팀 N년 · 같은 포수와 N경기 · 지도 후배 N).
+   *
+   * `counter` 이름은 `utils/eventCounters.ts` 의 `COUNTERS` 표가 정본이다 —
+   * 모르는 이름은 **로드에서 잡힌다**(`check:eventconditions`).
+   */
+  | { type: "count"; counter: string; value: number }
+
+  /**
+   * 주인공 대 지정 NPC 스탯 비교 (라이벌·후배).
+   *
+   * ⚠ `storyNpcs` 등록부는 아직 없다 — 지금은 `npcId` 를 직접 적는다(§12).
+   *   등록부가 생기면 `role` 로도 가리킬 수 있게 여기만 넓힌다.
+   * ⚠ 상대를 못 찾으면 **false** 다. 「이겼다」로 읽으면 없는 라이벌을 이긴 게 된다.
+   */
+  | { type: "compare"; npcId?: string; role?: string; stat: string; op: "gte" | "lte"; margin?: number }
+
+  /**
+   * **직전 등판**에서 무슨 일이 있었나 (완봉·완투·삼진 N).
+   *
+   * 경기 결과는 이미 `season.schedule[].result` 에 있다 — 읽는 자리만 없었다.
+   * `ctx.lastGame` 이 그 한 경기를 접어 싣는다(`advanceWeek`).
+   * ⚠ 「비 경기」는 **데이터가 없다** — 시뮬에 우천 개념이 없어서 넣지 않았다.
+   */
+  | { type: "last_game"; field: "ip" | "er" | "k" | "bb" | "h" | "pitchCount" | "shutout" | "completeGame" | "won";
+      op: "gte" | "lte" | "eq"; value: number | boolean };
 
 // ── 이벤트 규칙 (마스터 JSON 구조) ───────────────────────────
 export type EventOncePolicy =
@@ -176,14 +223,48 @@ export type EventOncePolicy =
  */
 export type EventTier = "urgent" | "important" | "ambient";
 
+/**
+ * **등급** (2026-09-08 · PLAN_EVENT_TIERS §2). 위 `EventTier`(중요도)를 대신한다.
+ *
+ * 갈아타기가 끝났다 — `urgent` 만 남고(등급 줄기 **밖**: 부상 통보처럼 지금
+ * 벌어진 일) `important`·`ambient` 는 데이터에서 사라졌다(B 4-2 가 606종에
+ * 등급을 달았다). `tierOf` 의 `oncePolicy` 추론도 그래서 지웠다.
+ *
+ * | 등급 | 시즌 빈도 | 시즌 상한 | 보상 폭 |
+ * |---|---|---|---|
+ * | `normal` | 40~50 | 없음 | XP 1~3 · 사기·피로·관계·돈 |
+ * | `rare`   | 4~6   | 6     | XP 8~10 · 훈련 효율 N주 · 기회 |
+ * | `unique` | 1~2   | 2     | 스탯 +1 · 영구 특성 · 멘토 · 성장률 |
+ * | `hidden` | 0.5   | 1 · 종당 커리어 1 | 스탯 +3 · 구종 · 잠재력 |
+ */
+export type EventGrade = import("../utils/tierRules").EventGrade;
+
 export interface EventRule {
   id: string;
   title: string;
   type: "mandatory" | "conditional" | "random";
   category: string;
   priority: number;                          // 높을수록 먼저 처리
-  /** 중요도. 비우면 `oncePolicy`로 추론한다 (위 주석) */
-  tier?: EventTier;
+  /**
+   * 등급(§2) 또는 `urgent`(등급 밖).
+   *
+   * ⚠ **비우면 등급 줄기를 안 탄다.** 예전처럼 `oncePolicy` 로 추론하지 않는다 —
+   *   추론은 「발동 정책 = 중요도」라는 틀린 전제였고, 지금은 데이터에 다 적혀
+   *   있다(`check:tiers` 가 「등급 없는 이벤트 0」을 본다).
+   */
+  tier?: EventTier | EventGrade;
+  /**
+   * 결 — 노말 다양성·시즌 집계용(§4). 등급 안에서 고를 때는 안 본다.
+   * 랜덤 풀 다섯을 노말로 흡수하면서 **풀 대신 이것이 갈래**가 됐다.
+   */
+  theme?: "body" | "media" | "social" | "team" | "train" | "career" | "people" | "money" | "story";
+  /**
+   * 유니크·히든의 **대가**(§4). 선택지가 아니라 이벤트에 붙는다 —
+   * 어느 갈래를 골라도 낸다.
+   */
+  cost?: import("./main").DecisionEffect;
+  /** 히든만. **화면에 안 보인다**(§4). 평가는 `conditions` 와 같다 */
+  hiddenCondition?: Condition[];
   oncePolicy: EventOncePolicy;
   cooldownWeeks?: number;                    // 재발생 금지 주차 수
   conditions?: Condition[];                  // 모두 AND 조건
@@ -198,7 +279,14 @@ export interface EventPool {
   id: string;
   description?: string;
   baseRoll: { mode: "percent"; value: number }; // 이 풀을 이번 주에 검사할 확률
-  maxPicksPerWeek: number;                   // 주당 최대 선택 수
+  //
+  // 🔴 **`maxPicksPerWeek` 를 지웠다** (2026-09-08 · §1). 랜덤 풀 다섯이
+  //   노말 등급으로 흡수되면서 **풀이 더 이상 자리를 배분하지 않는다** —
+  //   한 주에 등급 이벤트는 하나고, 그 하나를 등급 추첨이 정한다.
+  //   풀 파일은 남는다(결 갈래의 이름표이고, `poolId` 로 규칙을 묶는다).
+  //
+  // ⚠ `baseRoll` 도 **엔진이 더 이상 안 굴린다.** 파일에 값은 남겨 뒀다 —
+  //   지우면 「풀별 등장 빈도가 이랬다」는 근거가 사라진다.
   //
   // ⚠ **`eventIds`가 있었는데 2026-08-24에 지웠다.** 엔진은 규칙 자신의
   // `poolId`로 풀을 만들고(`eventEngine` §3 `poolRuleMap`) 그 목록을 **안 읽었다.**
@@ -284,4 +372,40 @@ export interface EventContext {
    * `evaluateCondition`은 동기다. 안 실으면 관계 조건이 전부 false가 된다.
    */
   relations?: import("./relationship").Relationship[];
+
+  // ── 등급 줄기가 읽는 것 (2026-09-08 · §1·§3) ────────────────────
+
+  /**
+   * 이번 시즌 등급별 발동 수 — **시즌 상한**(rare 6 · unique 2 · hidden 1)을 잰다.
+   * 시즌 세이브에 있고 `startNewSeason` 이 비운다.
+   */
+  tierCounts?: Partial<Record<EventGrade, number>>;
+  /**
+   * 등급별 **마지막으로 뜬 주** — `dryBoost`(마른 시즌) 입력이다.
+   * 없으면 「이번 시즌 한 번도 안 떴다」이고 시즌 첫 주부터 센다.
+   */
+  tierLastWeek?: Partial<Record<EventGrade, number>>;
+  /**
+   * 규칙별 **밀린 주 수** — `starve` 가중의 입력이다. 후보였는데 안 뽑힌 주마다
+   * 1 오르고 뽑히면 지워진다.
+   *
+   * ⚠ 이걸 안 저장하면 밀린 이야기가 **매주 처음부터 다시 밀린다** —
+   *   한 시즌 내내 뒤에 선 규칙이 영원히 뒤에 선다.
+   */
+  eventStarve?: Record<string, number>;
+
+  /**
+   * 직전 등판 — `last_game` 조건이 읽는다. 없으면 그 조건은 전부 false 다
+   * (한 경기도 안 던진 주가 그렇다).
+   */
+  lastGame?: {
+    week: number; ip: number; er: number; h: number; k: number; bb: number;
+    pitchCount: number; won: boolean; shutout: boolean; completeGame: boolean;
+  };
+  /**
+   * `compare` 조건이 볼 NPC 들. **미리 실어 준다** — 평가기는 동기인데
+   * NPC 는 `masterStore.entities`(비동기 로드)에 있다.
+   * 키는 NPC id, 값은 비교할 수 있는 숫자 몇이다(`ovr` · `pitching.*`).
+   */
+  storyNpcs?: Record<string, Record<string, number>>;
 }

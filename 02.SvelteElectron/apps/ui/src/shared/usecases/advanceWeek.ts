@@ -69,6 +69,10 @@ import { applyForeignTurnover } from "./foreignPlayers";
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
+import { EVENT_LANE_RANDS } from "../utils/eventEngine";
+import { stageGroupOf } from "../utils/tierRules";
+import { collectStreakKeys, tickStreaks, lastGameOf } from "../utils/eventCounters";
+import { applySideEffects } from "./decisions";
 import {
   collectTournamentLines, tournamentAwards, weekRangeOf,
 } from "./tournamentAwards";
@@ -469,8 +473,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
    * ⚠ `Math.random()` 은 금지다(CLAUDE.md) — 문안 뽑기도 Rust 난수다.
    */
   const REPORT_RANDS = 6;
-  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0)
-    + NEWS_RANDS + REPORT_RANDS;
+  // 🔴 **풀 수로 세던 걸 상수로 바꿨다** (2026-09-08). 랜덤 풀이 노말 등급으로
+  //    흡수돼 `maxPicksPerWeek` 가 없어졌다 — 이제 이벤트가 쓰는 난수는
+  //    등급 추첨 1 + 등급 안 뽑기(폴백 포함) 최대 4 + 문장 뱅크다
+  //    (`eventEngine.EVENT_LANE_RANDS`).
+  const randCount = EVENT_LANE_RANDS + NEWS_RANDS + REPORT_RANDS;
 
   // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
   const [facilityEffModRaw, injuryCalcRaw, finance, trainingSub, eventRandsRaw] = await Promise.all([
@@ -774,6 +781,35 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 이벤트 엔진 (미리 계산된 eventRands 사용)
   const updatedUniversityWeek = isUniversity ? (g.schoolState.universityWeek + 1) : (g.schoolState.universityWeek ?? 0);
   const careerStageYear = calcCareerStageYear(afterP, weekNum, updatedUniversityWeek);
+
+  // ── 시간을 세는 조건 넷의 입력 (2026-09-08 · §12) ──────────────
+  //
+  // ⚠ **데이터가 실제로 쓰는 것만 준비한다.** 「쓸지도 모르니 다 세자」로 두면
+  //   세이브가 축마다 커지고 어느 칸이 읽히는지도 모르게 된다.
+  const streakKeys = collectStreakKeys(m.eventRules);
+  /** `compare` 가 가리키는 NPC 들의 비교값. 데이터에 적힌 id 만 훑는다 */
+  const compareNpcStats: Record<string, Record<string, number>> = {};
+  {
+    const wanted = new Set<string>();
+    for (const r of m.eventRules) {
+      for (const c of [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])]) {
+        if (c.type === "compare" && c.npcId) wanted.add(c.npcId);
+      }
+    }
+    if (wanted.size > 0) {
+      for (const e of m.entities) {
+        if (!wanted.has(e.id)) continue;
+        const d = e.details?.player;
+        if (!d) continue;
+        compareNpcStats[e.id] = {
+          // 「나와 그의 스탯」이라 주인공 경로와 **같은 이름**이어야 한다
+          "pitching.ovr": d.pitching?.ovr ?? 0,
+          "batting.ovr":  d.batting?.ovr ?? 0,
+        };
+      }
+    }
+  }
+
   const eventCtx: EventContext = {
     protagonist:     afterP,
     currentWeek:     weekNum,
@@ -803,17 +839,40 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     schoolState: get(gameStore).schoolState,
     // 관계도 조건이 읽는다 — 안 실으면 `relation_gte`/`relation_lte`가 항상 false다
     relations: relRows,
+
+    // ── 등급 줄기가 읽는 것 (2026-09-08 · §1·§3) ──────────────────
+    tierCounts:   s.tierCounts,
+    tierLastWeek: s.tierLastWeek,
+    eventStarve:  s.eventStarve,
+    // 직전 등판 — `last_game` 조건(§12). 못 찾으면 `undefined` 고 그 조건은 false 다
+    lastGame: lastGameOf(s.schedule, afterP.id, afterP.teamId),
+    // `compare` 조건(§12)이 볼 NPC 들. **미리 실어 준다** — 평가기는 동기다.
+    // ⚠ 데이터가 가리키는 id 만 싣는다. 엔티티 전부를 접으면 매주 수천 명을 훑는다
+    storyNpcs: compareNpcStats,
   };
+  // 🔴 **연속 주 수는 이벤트를 돌리기 전에 갱신한다** (§12). 나중에 하면
+  //    「이번 주도 성실 90 이었다」가 이번 주 이벤트에 안 잡혀 한 주씩 밀린다.
+  //    `tickStreaks` 가 유일한 갱신 자리다.
+  const nextStreaks = tickStreaks(afterP.streaks, streakKeys, eventCtx);
+  eventCtx.protagonist = { ...afterP, streaks: nextStreaks };
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,
     new Map(m.messageTmpls.map((t) => [t.id, t])),
     new Map(m.decisionTmpls.map((d) => [d.id, d])),
     eventCtx, s.seasonYear, careerStageYear,
     eventRands,
+    m.tierRules!,
+    stageGroupOf(m.tierRules!, afterP),
   );
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
   seasonStore.recordSentencePicks(evResult.sentencePicks);
   gameStore.recordCareerTriggeredEvents(evResult.careerUpdatedTriggers);
+  // 등급 줄기의 시즌 상태 — 상한·마른 시즌·밀린 주. 안 쓰면 상한이 안 걸리고
+  // 밀린 이야기가 매주 처음부터 다시 밀린다
+  seasonStore.recordTierState({
+    gradeFired: evResult.gradeFired, week: weekNum, starveUpdates: evResult.starveUpdates,
+  });
+  growth.protagonistPatch.streaks = nextStreaks;
 
   // 고교 월간 유망주 TOP 10 (4주마다)
   let top10Snap: import("../types/save").Top10Snapshot | undefined;
@@ -885,6 +944,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     moraleDelta:      rankMoraleDelta > 0 ? rankMoraleDelta : undefined,
     messages:         weekMessages,
   });
+
+  // ── 유니크·히든의 대가 (2026-09-08 · §4 `cost`) ────────────────
+  //
+  // 🔴 **선택지가 아니라 이벤트에 붙는다** — 어느 갈래를 골라도 낸다.
+  //    B 가 41종에 달아 놨는데 **읽는 코드가 없었다**: 데이터에만 있고 아무
+  //    일도 안 일어나는, 이 저장소가 반복해 겪은 형태다.
+  // ⚠ 스탯·돈은 store 패처가, 관계·사치품은 `applySideEffects` 가 낸다 —
+  //    정본 둘을 그대로 쓴다(여기서 계산을 다시 적으면 그게 사본이다).
+  for (const cost of evResult.costs) {
+    gameStore.applyEventEffect(cost);
+    await applySideEffects(cost);
+  }
 
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);

@@ -1,7 +1,9 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext, EventTier } from "../types/event";
 import { pickSentence, bodyBankOf, type SentenceMemory } from "./sentenceBank";
-import type { MessageCategory, MessageItem } from "../types/main";
+import type { DecisionEffect, MessageCategory, MessageItem } from "../types/main";
 import { evaluateConditions } from "./conditionEvaluator";
+import { resolveNumber } from "./eventPaths";
+import { GRADES, gradeBelow, type EventGrade, type TierRules } from "./tierRules";
 
 // 이벤트 내부 카테고리 → UI 표시 카테고리 매핑
 // JSON 템플릿의 category 필드는 내부 분류용이며 여기서 표시용으로 변환된다
@@ -128,6 +130,9 @@ function ruleToOutput(
     body,
     createdAt: `W${week}`,
     readAt:    null,
+    // 등급 칩(§9)의 근거 — **여기서 싣는다.** 화면이 나중에 규칙 id 로 되짚으면
+    // 옛 소식이 지금 데이터의 등급으로 보인다(소식은 스냅샷이다)
+    ...(gradeOf(rule) ? { eventGrade: gradeOf(rule)! } : {}),
     decision: openOptions.length > 0 ? {
       prompt: decTmpl!.prompt ?? title,
       options: openOptions.map((o) => ({
@@ -162,7 +167,38 @@ export const eventFunnelStats = {
                  freshPicked: 0, repeatPicked: 0, scarcePicked: 0, urgentPicked: 0 },
   // policyBlocked는 random에선 0이어야 한다 — 후보를 고르기 전에 이미 걸러서 넘긴다.
   // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
+  //
+  // 🔴 **`random` 갈래는 더 이상 안 돈다** (2026-09-08). 랜덤 풀 다섯이 노말
+  //    등급으로 흡수됐다(§1) — 전부 `grade` 갈래로 간다. 칸은 남겨 둔다:
+  //    0이 아니면 어딘가 옛 경로가 살아 있다는 뜻이라 그 자체가 신호다.
   random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
+  /** 등급 줄기 — 한 주에 하나. `urgent`·필수·시스템은 여기 안 든다 */
+  grade:       { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 },
+  /**
+   * 등급 추첨 계측 (§10 `check:tiercoverage` 의 입력).
+   *
+   * 🔴 **`fallback` 이 0 이 아니면 데이터가 모자란다는 뜻이다.** 어느 무대의
+   *   어느 등급이 비었는지가 `fallbackBy`(「무대/등급」)에 남는다 — 총합만
+   *   보면 「몇 번 났나」는 알아도 「무엇을 써야 하나」는 못 답한다.
+   */
+  tier: {
+    /** 추첨으로 뽑힌 등급 */
+    drawn:      {} as Record<string, number>,
+    /** 실제로 발동한 등급 */
+    emitted:    {} as Record<string, number>,
+    /** 시즌 상한에 닿아 가중 0 이 된 횟수 */
+    capBlocked: {} as Record<string, number>,
+    /** 추첨은 됐는데 후보가 0 이던 횟수 */
+    empty:      {} as Record<string, number>,
+    /** 폴백 발동 총수 */
+    fallback: 0,
+    /** 「무대/등급」 → 그 자리에서 폴백이 난 횟수 */
+    fallbackBy: {} as Record<string, number>,
+    /** 무대별 주 수 — 빈도를 나눌 분모다 */
+    weeksByStage: {} as Record<string, number>,
+    /** 「무대/등급」 → 발동 수 */
+    emittedByStage: {} as Record<string, number>,
+  },
   /** 자리를 못 잡아 밀린 규칙 — 어떤 이야기가 못 뜨는지 */
   /**
    * **후보에 올랐다** — 조건도 정책도 통과해 뽑기 대상이 된 횟수.
@@ -198,6 +234,11 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
                  freshPicked: 0, repeatPicked: 0, scarcePicked: 0, urgentPicked: 0 };
   eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
+  eventFunnelStats.grade       = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 };
+  eventFunnelStats.tier        = {
+    drawn: {}, emitted: {}, capBlocked: {}, empty: {},
+    fallback: 0, fallbackBy: {}, weeksByStage: {}, emittedByStage: {},
+  };
   eventFunnelStats.optionsOffered = 0;
   eventFunnelStats.optionsOpen = 0;
   eventFunnelStats.decisionsClosedOut = 0;
@@ -209,16 +250,37 @@ export function resetEventFunnelStats(): void {
 }
 
 /**
- * 규칙의 **중요도 등급**. 안 적혀 있으면 `oncePolicy`로 추론한다.
+ * 규칙의 **중요도 등급** — 지금은 `urgent` 하나만 뜻이 있다.
  *
- * ⚠ 추론은 임시방편이다 — **발동 정책은 중요도가 아니다.** 지금 데이터가
- * 그 규칙으로 돌고 있어서 등급을 안 적으면 동작이 안 바뀌게 해 둔 것뿐이고,
- * 등급을 적어 갈아타는 게 목표다.
+ * 🔴 **`oncePolicy` 추론을 지웠다** (2026-09-08). 「발동 정책 = 중요도」는 틀린
+ *   전제였고(그 주석이 스스로 임시방편이라 적어 뒀다), B 4-2 가 606종에 등급을
+ *   달아 갈아타기가 끝났다. 지금 추론을 남겨 두면 **등급을 빠뜨린 새 이벤트가
+ *   조용히 `important` 가 되어** 등급 줄기 밖에서 돈다 — 그게 이 저장소가
+ *   반복해 겪은 「아무 일도 안 일어남」의 형태다.
+ *
+ * 등급을 안 적은 규칙은 `null` 이고, 등급 줄기도 `urgent` 줄기도 안 탄다.
  */
-export function tierOf(rule: EventRule): EventTier {
-  if (rule.tier) return rule.tier;
-  return rule.oncePolicy === "repeatable" ? "ambient" : "important";
+export function tierOf(rule: EventRule): EventTier | null {
+  return rule.tier === "urgent" ? "urgent" : null;
 }
+
+/** 등급 넷 중 하나면 그것, 아니면 `null`(`urgent`·미기재) */
+export function gradeOf(rule: EventRule): EventGrade | null {
+  return GRADES.includes(rule.tier as EventGrade) ? (rule.tier as EventGrade) : null;
+}
+
+/**
+ * 이벤트 엔진이 한 주에 쓰는 난수 개수.
+ *
+ * 🔴 **풀 수로 세던 걸 상수로 바꿨다** (2026-09-08). 예전엔
+ * `pools.length + Σ maxPicksPerWeek` 였는데 풀이 자리를 안 배분하므로 뜻이 없다.
+ * 지금 쓰는 곳은 등급 추첨 1 + 등급 안 뽑기 최대 4(폴백 셋까지) + 문장 뱅크다.
+ *
+ * ⚠ **넉넉해야 한다.** 모자라면 `nextRand()` 가 0.5로 떨어져 **같은 것만 뽑힌다** —
+ *   오류도 로그도 없이 다양성만 사라지는 부류다. 주간 리포트 은행이 꼬리에서
+ *   6칸을 떼어 가므로(`advanceWeek` REPORT_RANDS) 그만큼 여유를 둔다.
+ */
+export const EVENT_LANE_RANDS = 12;
 
 // ── 가중치 기반 랜덤 선택 ─────────────────────────────────────
 function weightedPick<T extends { weight?: number }>(items: T[], rand01: number): T | null {
@@ -242,6 +304,55 @@ export interface EventEngineResult {
    * 되므로 **세이브에 남아야 한다** — 안 남기면 로드할 때마다 같은 문장이 나온다
    */
   sentencePicks: SentenceMemory;
+
+  // ── 등급 줄기가 남기는 것 (2026-09-08 · §1·§3) ─────────────────
+
+  /** 이번 주에 실제로 발동한 등급. 없으면 `null` — 시즌 상한을 이걸로 센다 */
+  gradeFired: EventGrade | null;
+  /**
+   * 폴백이 났으면 **처음 뽑힌 등급**. `gradeFired` 와 다르면 내려온 것이다.
+   * 🔴 한 번이라도 나면 `check:tiercoverage` 가 빨강이다(데이터 부족 신호).
+   */
+  fallbackFrom: EventGrade | null;
+  /**
+   * 규칙별 밀린 주 수 갱신. **뽑힌 규칙은 0** 으로 온다 —
+   * 안 되돌리면 한 번 뜬 이야기가 계속 큰 가중을 들고 다닌다.
+   */
+  starveUpdates: Record<string, number>;
+  /**
+   * 이벤트에 붙은 **대가**(§4 `cost`). 어느 갈래를 골라도 내므로 발동 즉시 낸다.
+   * ⚠ 여기서 적용하지 않는다 — 관계·돈은 비동기라 `advanceWeek` 가 낸다.
+   */
+  costs: DecisionEffect[];
+}
+
+/** 등급별 가중 — 시즌 상한·마른 시즌·상태 보정을 다 먹인 값 */
+function gradeWeights(rules: TierRules, ctx: EventContext, week: number): Record<EventGrade, number> {
+  const out = { ...rules.weights };
+  for (const g of GRADES) {
+    const cap = rules.seasonCap[g];
+    if (cap !== undefined && (ctx.tierCounts?.[g] ?? 0) >= cap) {
+      out[g] = 0;
+      eventFunnelStats.tier.capBlocked[g] = (eventFunnelStats.tier.capBlocked[g] ?? 0) + 1;
+      continue;
+    }
+    // 마른 시즌 방지 — 「마지막으로 뜬 주」에서 얼마나 지났나.
+    // ⚠ 한 번도 안 떴으면 0 이라 시즌 첫 주부터 센다(그게 「마르다」의 뜻이다)
+    const dry = rules.dryBoost[g];
+    if (!dry) continue;
+    const dryWeeks = Math.max(0, week - (ctx.tierLastWeek?.[g] ?? 0));
+    if (dryWeeks > dry.afterWeeks) {
+      out[g] += Math.min(dry.max, (dryWeeks - dry.afterWeeks) * dry.perWeek);
+    }
+  }
+  // 상태 보정 — 성실·컨디션이 레어를 민다. **상한에 닿아 0 이 된 등급은 안 민다**
+  for (const [metric, m] of Object.entries(rules.stateMod)) {
+    if (out[m.tier] <= 0) continue;
+    const v = resolveNumber(ctx, metric);
+    if (v === undefined || v <= m.from) continue;
+    out[m.tier] += Math.min(m.max, (v - m.from) * m.perPoint);
+  }
+  return out;
 }
 
 export function runEventEngine(
@@ -253,11 +364,19 @@ export function runEventEngine(
   seasonYear: number,
   careerStageYear: number,
   randoms: number[],
+  /** 등급 추첨 규칙 (§3). 정본은 `events/tier_rules.json` 이고 마스터가 읽어 준다 */
+  tierRules: TierRules,
+  /** 지금 무대(`stageGroupOf`). 폴백 표를 무대별로 내려고 받는다 */
+  stageGroup = "공용",
 ): EventEngineResult {
   const _t0 = performance.now();
   const newMessages: MessageItem[] = [];
   const updatedTriggers: Record<string, number> = {};
   const careerUpdatedTriggers: Record<string, number> = {};
+  const costs: DecisionEffect[] = [];
+  const starveUpdates: Record<string, number> = {};
+  let gradeFired: EventGrade | null = null;
+  let fallbackFrom: EventGrade | null = null;
   const week = ctx.currentWeek;
   let ri = 0;
   // 난수는 Rust가 뽑아 넘긴 것을 쓴다 (TS 게임 로직에서 Math.random 금지).
@@ -271,11 +390,12 @@ export function runEventEngine(
     rand: nextRand,
   };
 
-  type Lane = "mandatory" | "conditional" | "random";
-  function tryEmit(rule: EventRule, lane: Lane) {
+  type Lane = "mandatory" | "conditional" | "random" | "grade";
+  /** 실제로 소식이 나갔으면 `true`. 등급 줄기가 「이번 주 등급」을 이걸로 정한다 */
+  function tryEmit(rule: EventRule, lane: Lane): boolean {
     if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) {
       eventFunnelStats[lane].policyBlocked++;
-      return;
+      return false;
     }
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
@@ -293,16 +413,23 @@ export function runEventEngine(
       eventFunnelStats.emptyByRule[rule.id] = (eventFunnelStats.emptyByRule[rule.id] ?? 0) + 1;
       updatedTriggers[rule.id] = week;
       if (rule.oncePolicy === "once_per_career") careerUpdatedTriggers[rule.id] = week;
-      return;
+      return false;
     }
 
     eventFunnelStats[lane].emitted++;
     eventFunnelStats.emittedByRule[rule.id] = (eventFunnelStats.emittedByRule[rule.id] ?? 0) + 1;
     newMessages.push(message);
     updatedTriggers[rule.id] = week;
-    if (rule.oncePolicy === "once_per_career") {
+    // 🔴 **히든은 종당 커리어 한 번이다** (§3 `hidden.careerCapPerEvent`).
+    //   `oncePolicy` 가 뭐라 적혔든 커리어 기록을 남긴다 — 데이터가 실수로
+    //   `once_per_season` 을 달아도 히든이 두 번 나면 안 된다.
+    if (rule.oncePolicy === "once_per_career" || gradeOf(rule) === "hidden") {
       careerUpdatedTriggers[rule.id] = week;
     }
+    // 유니크·히든의 대가 — 어느 갈래를 골라도 낸다(§4). 여기서 적용하지 않고
+    // 넘긴다: 관계·돈은 비동기라 `advanceWeek` 가 store 를 지나 낸다
+    if (rule.cost) costs.push(rule.cost);
+    return true;
   }
 
   // ── 1. mandatory 이벤트 ───────────────────────────────────────
@@ -320,129 +447,137 @@ export function runEventEngine(
     tryEmit(rule, "mandatory");
   }
 
-  // ── 2. conditional 이벤트 (조건 통과, priority 내림차순, 1개만) ─
-  const conditional = rules
-    .filter((r) => r.type === "conditional")
-    .filter((r) => evaluateConditions(r.conditions ?? [], ctx))
-    .sort((a, b) => b.priority - a.priority);
-
-  eventFunnelStats.conditional.condPass += conditional.length;
-
-  if (conditional.length > 0) {
-    // `conditional`은 이미 priority 내림차순이다 — 아래 두 고르기가 그 순서를 탄다
-    const eligible = conditional.filter((r) =>
-      checkOncePolicy(r, ctx, seasonYear, careerStageYear)
-    );
-    for (const r of eligible) {
-      eventFunnelStats.candidateByRule[r.id] = (eventFunnelStats.candidateByRule[r.id] ?? 0) + 1;
-    }
-
-    // ── 두 띠로 고른다 (2026-08-22) ─────────────────────────────
-    // 예전엔 그냥 priority 최대 하나였다. 그러면 **높고 반복되는 것이 영원히
-    // 이긴다** — 실측에서 `repeatable` 89건이 priority 700 이상에 몰려 있고
-    // `once_per_*` 60건이 100 미만이라 6시즌 내내 한 번도 못 떴다.
-    // `EVT_COND_PEAK_FORM` 하나가 전체 발동의 16%(82건)를 먹었다.
-    //
-    // 그래서 **"이번 시즌 아직 안 뜬 것"을 먼저 준다.** 한 바퀴 다 돌기 전에는
-    // 아무도 두 번 못 뜬다는 뜻이고, 띠 안에서는 예전처럼 priority가 정한다.
-    //
-    // ⚠ **총량은 안 바뀐다 — 여전히 주당 1건이다.** 배분만 바꾼다. 상한을
-    //   올리는 건 별개 결정이고(밸런스), 그건 아직 동결이다.
-    //
-    // ⚠ 상태 경고(피로·부진)는 시즌 초엔 아직 안 뜬 상태라 **첫 번은 그대로
-    //   즉시 뜬다.** 두 번째부터가 새 이야기 뒤로 밀린다 — 억제가 아니라
-    //   지연이고, `repeatPicked`로 얼마나 밀리는지 잰다.
-    //
-    // ── 첫 띠 안에서 다시 한 번 가른다 (2026-08-23) ─────────────
-    // 위 두 띠만으로는 부족했다. **띠 안에서는 priority가 정하는데 그 priority가
-    // 정책과 거꾸로 매겨져 있다** (2026-08-23 실측, conditional 258건 중앙값):
-    //
-    //   repeatable          144건  중앙 710   ← 매주 또 온다
-    //   once_per_season      44건  중앙 740
-    //   once_per_stage_year  36건  중앙  60   ← 그 해 한 번뿐인데 최대가 85
-    //   once_per_career      34건  중앙  85   ← **평생 한 번**
-    //
-    // `once_per_stage_year` 36건은 최대가 85라 `repeatable` 144건의 **최소
-    // 580에도 못 미친다** — repeatable이 하나라도 조건을 통과하면 구조적으로
-    // 절대 못 이긴다. 그래서 고교 1학년 서사가 통째로 안 떴다:
-    // 기숙사 밤(p60) · 신입 환영회(p70) · 향수병(p55) · 주장 첫날(p90).
-    // 게다가 이들은 기회 창이 `week_lte 2~5`로 짧아 **두 겹으로 불리하다.**
-    //
-    // 그래서 **"다시 못 올 것"을 "다시 올 것"보다 먼저 준다.** 놓치면 끝인
-    // 이야기가 매주 또 오는 상태 알림에 밀리는 게 거꾸로다.
-    //
-    // ⚠ priority를 데이터에서 다시 매기는 안(70개 파일 수정)도 있었는데
-    //   이쪽을 골랐다 — **새 이벤트가 추가돼도 자동으로 적용되고**, 사람이
-    //   priority를 잘못 매겨도 같은 일이 안 생긴다.
-    //
-    // ⚠ `once_per_*`는 한 번 뜨면 정책이 막으므로 **후보에 남아 있다는 건
-    //   아직 안 떴다는 뜻**이다. 그래서 둘째 띠는 전부 repeatable이고 손댈 게 없다.
-    // ── 등급 (2026-08-23) ───────────────────────────────────────
-    // 위 두 판단(희소한가·처음인가)을 **등급이 대신한다.** 등급이 없으면
-    // `tierOf`가 `oncePolicy`로 추론하므로 **동작이 안 바뀐다** — 갈아타는
-    // 중이라 둘이 겹쳐 있다.
-    //
-    // 🔴 `urgent`는 **주당 1건 상한 밖이다.** 다쳤는데 다음 주에 알려주면
-    //    안 된다. 상한을 올리지 않고도 "지금 벌어진 일"이 즉시 뜬다.
-    const urgent = eligible.filter((r) => tierOf(r) === "urgent");
+  // ── 2. urgent — 등급 줄기 **밖**이다 (2026-08-23) ──────────────
+  //
+  // 🔴 다쳤는데 다음 주에 알려주면 안 된다. 주당 한 칸 상한을 안 탄다.
+  //    긴급·주차 고정 필수(mandatory)·시스템 소식 셋이 등급 밖이고(§1),
+  //    나머지 전부가 아래 등급 줄기 하나로 모인다.
+  {
+    const urgent = rules
+      .filter((r) => tierOf(r) === "urgent")
+      .filter((r) => evaluateConditions(r.conditions ?? [], ctx))
+      .sort((a, b) => b.priority - a.priority);
+    eventFunnelStats.conditional.condPass += urgent.length;
     for (const r of urgent) {
+      eventFunnelStats.candidateByRule[r.id] = (eventFunnelStats.candidateByRule[r.id] ?? 0) + 1;
       eventFunnelStats.conditional.urgentPicked++;
       tryEmit(r, "conditional");
     }
-
-    // 나머지는 예전처럼 **한 칸**을 두고 다툰다
-    const rest = eligible.filter((r) => tierOf(r) !== "urgent");
-    const freshOnes = rest.filter((r) => ctx.triggeredEvents[r.id] === undefined);
-    const fresh = freshOnes.find((r) => tierOf(r) === "important") ?? freshOnes[0];
-    const picked = fresh ?? rest[0];
-
-    if (picked) {
-      if (!fresh)                            eventFunnelStats.conditional.repeatPicked++;
-      else if (tierOf(fresh) === "important") eventFunnelStats.conditional.scarcePicked++;
-      else                                    eventFunnelStats.conditional.freshPicked++;
-      tryEmit(picked, "conditional");
-    }
-
-    // 뽑히지 못한 나머지 — 조건도 정책도 통과했는데 자리가 없어 밀린 것.
-    // `urgent`는 전부 나갔으므로 대기가 아니다
-    for (const r of rest) {
-      if (r === picked) continue;
-      eventFunnelStats.conditional.crowdedOut++;
-      eventFunnelStats.crowdedByRule[r.id] = (eventFunnelStats.crowdedByRule[r.id] ?? 0) + 1;
-    }
   }
 
-  // ── 3. random 이벤트 (풀 단위 확률 롤) ───────────────────────
-  const poolRuleMap = new Map<string, EventRule[]>();
-  for (const rule of rules.filter((r) => r.type === "random" && r.poolId)) {
-    const poolId = rule.poolId!;
-    if (!poolRuleMap.has(poolId)) poolRuleMap.set(poolId, []);
-    poolRuleMap.get(poolId)!.push(rule);
-  }
+  // ── 3. 등급 줄기 — 한 주에 **하나** (2026-09-08 · §1) ──────────
+  //
+  // 예전엔 여기가 둘이었다: conditional 이 「이번 시즌 안 뜬 것 우선 → priority」로
+  // 한 칸을 주고, random 이 풀 다섯을 확률로 굴려 또 다섯 칸까지 줬다. 그래서
+  // **한 주에 뜨는 이벤트 수가 풀 운에 달려 있었고**(0~6), 등급이라는 축이
+  // 아무 데도 없었다.
+  //
+  // 지금은 **등급이 먼저다**:
+  //   ① 등급 추첨(노말·레어·유니크·히든) — 시즌 상한에 닿은 등급은 가중 0
+  //   ② 그 등급 안에서 — 조건·정책 통과 · 이번 시즌 안 뜬 것 우선 · 밀린 주 가중
+  //   ③ 비었으면 한 등급 아래로 + **폴백 카운터**(데이터 부족 신호)
+  //
+  // ⚠ 랜덤 풀 다섯은 노말로 흡수됐다 — `poolId` 는 남아 결(`theme`)의 이름표다.
+  {
+    /** 등급별 후보. 조건·숨은 조건·정책·히든 커리어 상한을 다 통과한 것만 */
+    const byGrade = new Map<EventGrade, EventRule[]>();
+    for (const g of GRADES) byGrade.set(g, []);
 
-  for (const pool of pools) {
-    eventFunnelStats.random.poolRolls++;
-    if (nextRand() * 100 > pool.baseRoll.value) continue;
-    eventFunnelStats.random.poolPassed++;
-
-    const poolRules = poolRuleMap.get(pool.id) ?? [];
-
-    for (let i = 0; i < pool.maxPicksPerWeek; i++) {
-      const eligible = poolRules.filter((r) =>
-        evaluateConditions(r.conditions ?? [], ctx) &&
-        checkOncePolicy(r, ctx, seasonYear, careerStageYear) &&
-        !updatedTriggers[r.id]
-      );
-      eventFunnelStats.random.eligible += eligible.length;
-      for (const r of eligible) {
+    let condPass = 0;
+    for (const rule of rules) {
+      const g = gradeOf(rule);
+      if (!g) continue;                                   // urgent · 필수 · 미기재
+      if (!evaluateConditions(rule.conditions ?? [], ctx)) continue;
+      // 히든의 숨은 조건 — 화면엔 안 보이지만 평가는 똑같다(§4)
+      if (rule.hiddenCondition && !evaluateConditions(rule.hiddenCondition, ctx)) continue;
+      condPass++;
+      if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) {
+        eventFunnelStats.grade.policyBlocked++;
+        continue;
+      }
+      // 🔴 **히든은 종당 커리어 `careerCapPerEvent` 번**(§3). `oncePolicy` 와
+      //    따로 본다 — 데이터가 실수로 `once_per_season` 을 달아도 안 새게
+      if (g === "hidden") {
+        const fired = (ctx.protagonist.careerTriggeredEvents ?? {})[rule.id];
+        if (fired !== undefined && tierRules.hidden.careerCapPerEvent <= 1) {
+          eventFunnelStats.grade.policyBlocked++;
+          continue;
+        }
+      }
+      byGrade.get(g)!.push(rule);
+    }
+    eventFunnelStats.grade.condPass += condPass;
+    for (const list of byGrade.values()) {
+      for (const r of list) {
         eventFunnelStats.candidateByRule[r.id] = (eventFunnelStats.candidateByRule[r.id] ?? 0) + 1;
       }
-      const picked = weightedPick(eligible, nextRand());
-      if (!picked) break;
-      tryEmit(picked, "random");
     }
+
+    // ① 등급 추첨
+    const w = gradeWeights(tierRules, ctx, week);
+    const drawn = weightedPick(
+      GRADES.map((g) => ({ g, weight: w[g] })).filter((x) => x.weight > 0),
+      nextRand(),
+    )?.g ?? null;
+
+    // ②·③ 등급 안에서 고르고, 비면 한 단계 아래로
+    let picked: EventRule | null = null;
+    let at: EventGrade | null = drawn;
+    if (drawn) eventFunnelStats.tier.drawn[drawn] = (eventFunnelStats.tier.drawn[drawn] ?? 0) + 1;
+    while (at) {
+      const cands = byGrade.get(at) ?? [];
+      if (cands.length > 0) {
+        // 「이번 시즌 안 뜬 것」이 먼저다 — 한 바퀴 돌기 전엔 아무도 두 번 안 뜬다.
+        // ⚠ 띠가 비면 예전 것으로 떨어진다(상태 경고가 그렇게 지연된다)
+        const fresh = cands.filter((r) => ctx.triggeredEvents[r.id] === undefined);
+        const pool = fresh.length > 0 ? fresh : cands;
+        // 밀린 주 가중 — 후보였는데 안 뽑힌 주마다 붙는다. 안 쌓으면
+        // 가중이 낮은 이야기가 한 시즌 내내 뒤에 선다
+        const weighted = pool.map((r) => ({
+          r,
+          weight: (r.weight ?? 1)
+            + Math.min(tierRules.starve.max, tierRules.starve.perWeek * (ctx.eventStarve?.[r.id] ?? 0)),
+        }));
+        picked = weightedPick(weighted, nextRand())?.r ?? null;
+      }
+      if (picked) break;
+      eventFunnelStats.tier.empty[at] = (eventFunnelStats.tier.empty[at] ?? 0) + 1;
+      const below = gradeBelow(at);
+      if (!below) break;
+      // 🔴 폴백 — 한 번이라도 나면 `check:tiercoverage` 가 빨강이다
+      if (!fallbackFrom) fallbackFrom = drawn;
+      eventFunnelStats.tier.fallback++;
+      const key = `${stageGroup}/${at}`;
+      eventFunnelStats.tier.fallbackBy[key] = (eventFunnelStats.tier.fallbackBy[key] ?? 0) + 1;
+      at = below;
+    }
+
+    if (picked && at) {
+      if (tryEmit(picked, "grade")) {
+        gradeFired = at;
+        eventFunnelStats.tier.emitted[at] = (eventFunnelStats.tier.emitted[at] ?? 0) + 1;
+        const k = `${stageGroup}/${at}`;
+        eventFunnelStats.tier.emittedByStage[k] = (eventFunnelStats.tier.emittedByStage[k] ?? 0) + 1;
+      }
+    }
+
+    // 밀린 주 — 뽑힌 것은 0, 나머지 후보는 +1.
+    // ⚠ **뽑힌 것을 안 되돌리면** 한 번 뜬 이야기가 큰 가중을 계속 들고 다닌다
+    for (const list of byGrade.values()) {
+      for (const r of list) {
+        if (r === picked) { starveUpdates[r.id] = 0; continue; }
+        starveUpdates[r.id] = (ctx.eventStarve?.[r.id] ?? 0) + 1;
+        eventFunnelStats.grade.crowdedOut++;
+        eventFunnelStats.crowdedByRule[r.id] = (eventFunnelStats.crowdedByRule[r.id] ?? 0) + 1;
+      }
+    }
+    eventFunnelStats.tier.weeksByStage[stageGroup] =
+      (eventFunnelStats.tier.weeksByStage[stageGroup] ?? 0) + 1;
   }
 
   eventFunnelStats.elapsedMs += performance.now() - _t0;
-  return { newMessages, updatedTriggers, careerUpdatedTriggers, sentencePicks: bank.picked };
+  return {
+    newMessages, updatedTriggers, careerUpdatedTriggers, sentencePicks: bank.picked,
+    gradeFired, fallbackFrom, starveUpdates, costs,
+  };
 }
