@@ -348,6 +348,15 @@ C
 vitest **2,463** · cargo 339 · `test:v3` 29/29 · `check:rostertrend` PASS · `test:rosterbalance` 기존 1건(값이 6/10 → 3/10 으로 흔들림 · §10) · 도장 `b7dbe85f15e0`.
 **다음 A 턴**: `probe:a:diverge` 로 순서 결함 자리를 잡아 `check:measurerepro` 를 초록으로.
 
+## 1단계 · B 턴 ✅ (2026-09-08 · 22a162ad1 C1 · a3a0efe66 C2) → **1단계 데이터 닫힘**
+
+| # | 결과 |
+|---|---|
+| C1 | ✅ 문턱 아홉 → `BALANCE_BACKLOG §7-2`. 대학 아르바이트 200→**1000** · 학점 위기 셋 2→**2.4** · 고교 사기 다섯 58/50/50/45/34 → **70/67/65/62/60**(계단 — 같은 값이면 같은 주에 둘이 후보가 되고 조건부는 주당 하나라 하나만 뜬다 · p5 71 아래 · 최저 59.35 위). **부상 조짐은 이벤트를 둘로 갈랐다** — `evaluateConditions` 가 `every` 라 조건 문법에 or 가 없다(606종). 🔴 **`HS_LIFE_SLUMP_CHECK` 는 `condition_lte 40` 도 걸려 있는데 컨디션 분포를 아무도 안 쟀다** → D 4-6 때 함께 |
+| C2 | ✅ `messages/reports.json` 신설 — 훈련 무대×성과 15묶음×4 + 훈련 종류 12×3 + 제목 6 · 부상 제목 4 · 내 몸 제목 4+머리말 4 = **114문장 · 180조합**. 조합마다 4~6문장(900줄)은 손으로 못 지키므로 **무대×성과와 훈련 종류를 따로 두고 화면이 이어 붙인다**(같은 두 줄이 겹칠 확률 1/12). 제목에서 `W{week}` 뺌(소식함이 주차를 칸으로 든다). 부상·내 몸은 패널이 본문을 그리므로 제목만. 🔴 **아직 아무도 안 읽는다 — 배선 여섯(A)**: `stores/master.ts` fetch 한 줄 · `training.ts:96·98` 제목+본문 은행(성과 good/normal/poor 는 생산부가 XP 기대 대비로) · `injuryNews.ts:68` · `myBodyReport.ts:127` · 은행 기억 키를 `train#subject` 식으로 가르기 · `Math.random()` 금지(주간 루프의 Rust 난수) |
+
+⚠ 병합 뒤 `retiredNpcContract` 빨강은 `.node` 가 낡은 것(Rust 바뀜) — `build:native` 로 해소. vitest 2,485.
+
 ## 1단계 · A 둘째 턴 ✅ (2026-09-08 · 8ace8aca1 · 6083bfaed · 71bc360bc · 2cb311249 · 33fcaaa0a · 702422128)
 
 | # | 결과 |
