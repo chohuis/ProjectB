@@ -8673,4 +8673,66 @@ export function npcLiveDump(): string {
   return Object.keys(live).sort()
     .map((id) => `${id}:${live[id]?.pitching?.ovr ?? "-"}:${live[id]?.batting?.ovr ?? "-"}`)
     .join("\n");
+// ── D 계측: 주당 「고르는 것」 개수 (2026-09-07) ───────────────────
+//
+// `runAutoAdvance`는 `type:"message"`(사건 결정)를 **한 틱 안에서 조용히
+// 자동으로 골라 버린다** — 밖에서 `pendingKind()`로 훑으면 안 보인다.
+// 그런데 실제 플레이(수동)는 `advanceWeek`의 "미결정 메시지 확인" 블록이
+// **미결 선택지가 하나라도 있으면 그 주를 통째로 막는다** — 그래서
+// "몇 개가 뜨는가"는 `pendingKind()`가 아니라 **소식함에 실제로 뭐가
+// 새로 들어왔는가**로 재야 한다.
+//
+// 또 하나 — `autoRun()` 한 번이 여러 주를 삼킬 수 있다(`STOP_WEEKS`
+// 도달 전까지 pending 없이 쭉 진행). 그래서 바깥 루프에서 "이번 틱 이후
+// 주차"로 뭉뚱그려 붙이면 안 되고, **store 구독으로 주 경계마다** 찍어야
+// 한다 — 아래 훅이 그 자리다.
+interface WeekVisitRow { year: number; week: number; stage: string; grade: number | null; farm: boolean }
+interface WeeklyMsgRow { year: number; week: number; stage: string; grade: number | null; farm: boolean; id: string; decision: boolean }
+const _weeksVisited: WeekVisitRow[] = [];
+const _weeklyMsgLog: WeeklyMsgRow[] = [];
+const _wcSeenIds = new Set<string>();
+let _wvLastKey = "";
+let _wcArmed = false;
+
+/** 재기 직전에 한 번 부른다 — store 구독 둘(주 경계·소식함)을 건다 */
+export function armWeeklyChoiceLog(): void {
+  if (_wcArmed) return;
+  _wcArmed = true;
+  const stageOf = () => {
+    const g = get(gameStore).protagonist;
+    return { stage: g.careerStage, grade: g.grade ?? null, farm: /_2$/.test(g.teamId ?? "") };
+  };
+  seasonStore.subscribe((s) => {
+    const key = `${s.seasonYear}-${s.currentWeek}`;
+    if (key === _wvLastKey) return;
+    _wvLastKey = key;
+    _weeksVisited.push({ year: s.seasonYear, week: s.currentWeek, ...stageOf() });
+  });
+  // 🔴 **참조가 같으면 훑지 않는다.** `gameStore`는 소식함과 무관한 갱신(NPC
+  // 5,600명 스탯 등)에도 매번 새 바깥 객체를 만드는데, 그 갱신이 `mailbox`
+  // 자체를 안 건드리면 배열 참조는 그대로다. 매번 최대 1,500건을 훑으면
+  // 7시즌 세계 시뮬(배경 리그·독립·역대기록)의 갱신 빈도에 곱해져 계측
+  // 자체가 병목이 된다 — 참조 비교로 대부분의 호출을 O(1)에 넘긴다.
+  let _wcLastMailboxRef: unknown = null;
+  gameStore.subscribe((g) => {
+    if (g.mailbox === _wcLastMailboxRef) return;
+    _wcLastMailboxRef = g.mailbox;
+    const s = get(seasonStore);
+    const st = stageOf();
+    for (const m of g.mailbox ?? []) {
+      if (_wcSeenIds.has(m.id)) continue;
+      _wcSeenIds.add(m.id);
+      _weeklyMsgLog.push({ year: s.seasonYear, week: s.currentWeek, ...st, id: m.id, decision: !!m.decision });
+    }
+  });
+}
+
+/** 누적 로그 — {weeks: 밟은 주 전부, messages: 새로 들어온 소식 전부(주·무대 꼬리표 붙음)} */
+export function weeklyChoiceLogDump(): { weeks: WeekVisitRow[]; messages: WeeklyMsgRow[] } {
+  return { weeks: _weeksVisited, messages: _weeklyMsgLog };
+}
+
+/** 전 규칙 발동 종수 — `eventFunnelProbe`는 상위 N종만 준다. 풀별 배분엔 전체가 필요하다 */
+export function eventEmittedByRuleFull(): Record<string, number> {
+  return { ...eventFunnelStats.emittedByRule };
 }
