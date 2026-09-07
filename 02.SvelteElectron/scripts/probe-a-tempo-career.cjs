@@ -19,12 +19,19 @@ const path = require("node:path");
 const { spawn } = require("node:child_process");
 
 const SEEDS = (process.env.PF_SEEDS || "20260802,777,31337").split(",").map((s) => s.trim());
-const MODES = [
-  { key: "끔(전)",    tempo: "0", course: "0" },
-  { key: "완급만(⑧)", tempo: "1", course: "0" },
-  { key: "코스만(⑨)", tempo: "0", course: "1" },
-  { key: "둘 다(후)", tempo: "1", course: "1" },
+/**
+ * ⚠ **판 하나가 몇 분씩 걸린다** — 넷 × 씨앗 셋이면 열두 판이다. 급하면
+ *   `PB_MODES=00,11` 로 「끔/둘 다」만 돌린다(각 결정을 따로 가르는 것은
+ *   `probe:a:tempo` 가 훨씬 큰 표본으로 한다 — 여긴 커리어 층만 본다).
+ */
+const ALL_MODES = [
+  { id: "00", key: "끔(전)",    tempo: "0", course: "0" },
+  { id: "10", key: "완급만(⑧)", tempo: "1", course: "0" },
+  { id: "01", key: "코스만(⑨)", tempo: "0", course: "1" },
+  { id: "11", key: "둘 다(후)", tempo: "1", course: "1" },
 ];
+const WANT = (process.env.PB_MODES || "00,10,01,11").split(",").map((s) => s.trim());
+const MODES = ALL_MODES.filter((m) => WANT.includes(m.id));
 const CONCURRENCY = Number(process.env.PB_CONCURRENCY || 1);
 
 function runOne(m, seed) {
