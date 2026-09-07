@@ -26,6 +26,7 @@ import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCop
 import { parseContractTermsCopy, type ContractTermsCopy } from "../utils/contractCopy";
 import { parseDashboardLabels, type DashboardLabels } from "../utils/dashboardCopy";
 import { parseMilitarySportsCopy, type MilitarySportsCopy } from "../utils/militarySportsCopy";
+import { parseReportCopy, type ReportCopy } from "../utils/reportCopy";
 import { primeContractRules } from "../utils/contractTerms";
 
 export type { CoachAttributes, CoachSpecialty };
@@ -476,6 +477,12 @@ export interface MasterState {
    * 없으면 상무 화면을 **안 그리고** 옛 배너만 남는다 (militarySportsCopy.ts 머리말).
    */
   militarySportsCopy: MilitarySportsCopy | null;
+  /**
+   * 주간 리포트 문안 (C2) — 정본은 messages/reports.json.
+   * 없으면 소식을 없애는 게 아니라 **옛 문구 한 벌을 그대로** 쓴다
+   * (reportCopy.ts 머리말 — 여기서 문장을 지어내면 그게 곧 사본이다).
+   */
+  reportCopy: ReportCopy | null;
 }
 
 // ── masterFetch 헬퍼 (IPC 우선, fetch 폴백) ──────────────────────────────────────
@@ -939,6 +946,7 @@ function createMasterStore() {
     militarySportsCopy: null,
     contractCopy: null,
     dashboardLabels: null,
+    reportCopy: null,
   });
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
@@ -1024,6 +1032,10 @@ function createMasterStore() {
       // 상무에도 있는 부대 일정 목록(`calendar.eventIds`)까지 여기가 정본이다.
       const militarySportsRaw = await fetchMaster<unknown>("messages/military_sports.json");
 
+      // 주간 리포트 문안 (C2 · reports.json `_wiring`). 훈련·부상·내 몸 세 리포트의
+      // 제목과 본문 한두 줄이 코드에 굳어 있었다 — 15년이면 같은 제목이 900줄이다.
+      const reportCopyRaw = await fetchMaster<unknown>("messages/reports.json");
+
       const messageTmpls  = (msgTmplData?.templates  ?? []).map(parseMessageTemplate);
       const decisionTmpls = (decisionTmplData?.decisions ?? []).map(parseDecisionTemplate);
       // 풀은 **매니페스트가 정본**이다 — 파일을 더해도 코드를 안 고친다
@@ -1098,6 +1110,7 @@ function createMasterStore() {
         contractCopy:          parseContractTermsCopy(contractCopyRaw),
         dashboardLabels:       parseDashboardLabels(dashboardLabelsRaw),
         militarySportsCopy:    parseMilitarySportsCopy(militarySportsRaw),
+        reportCopy:            parseReportCopy(reportCopyRaw),
       }));
 
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.

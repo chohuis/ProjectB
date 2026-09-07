@@ -5582,6 +5582,27 @@ export function mailboxProduceProbe(): Record<string, unknown> {
 }
 
 /**
+ * **제목이 은행에서 나오고 있나** (C2 문안 은행 · `check:reportbank`).
+ *
+ * 🔴 배선을 하고도 **한 문장만 나오는** 결함이 조용하다 — 소식은 오고
+ *   개수도 맞고 제목만 늘 같다. `종류별제목` 의 가짓수가 1 이면 그것이다.
+ * ⚠ `연속반복` 은 0 이어야 한다. `pickSentence` 가 직전을 빼는데도 0 이
+ *   아니면 뽑은 인덱스가 세이브로 안 돌아온 것이다.
+ */
+export function reportBankProbe(): Record<string, unknown> {
+  const kinds: Record<string, unknown> = {};
+  for (const [k, subs] of Object.entries(mailboxProduceStats.subjectsByKind)) {
+    kinds[k] = {
+      통수: Object.values(subs).reduce((a, b) => a + b, 0),
+      가짓수: Object.keys(subs).length,
+      연속반복: mailboxProduceStats.repeatByKind[k] ?? 0,
+      제목: { ...subs },
+    };
+  }
+  return { 종류별제목: kinds };
+}
+
+/**
  * **id 가 겹쳐 버려진 소식** — 0 이 아니면 만드는 쪽에 결함이 있다.
  *
  * 🔴 소식함은 사본을 조용히 걷어낸다(`dedupeMailbox` — 안 걷어내면 Svelte 가

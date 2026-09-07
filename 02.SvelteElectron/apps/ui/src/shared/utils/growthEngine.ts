@@ -5,6 +5,16 @@ export interface GrowthResult {
   protagonistPatch: Partial<ProtagonistSave>;
   logs: string[];
   fameDelta: number;
+  /**
+   * 이번 주 XP 가 **기준 대비 몇 배인가** — 1.0 이 기준이다 (C2 문안 은행).
+   *
+   * 🔴 **정본은 Rust `growth_engine.rs::xp_ratio_of` 다.** 여기서 계수를 다시
+   *   곱하지 않는다 — 결정 ④ 가 지운 사본이 그 자리에서 되살아난다.
+   *
+   * ⚠ **구 엔진은 안 보낸다.** 없으면 `1.0`(= 기준)으로 읽어 「평소만큼」이
+   *   된다 — 없는 값을 좋은 쪽으로도 나쁜 쪽으로도 밀지 않는다.
+   */
+  xpRatio: number;
 }
 
 export async function calcTrainingGrowth(
@@ -89,7 +99,11 @@ export async function calcTrainingGrowth(
     delete (patch as any).trainingPitchState;
   }
 
-  return { protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta };
+  return {
+    protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta,
+    // ⚠ 없으면 기준(1.0)이다 — 구 엔진·검사 더미가 이 칸을 안 보낸다
+    xpRatio: typeof raw.xpRatio === "number" && Number.isFinite(raw.xpRatio) ? raw.xpRatio : 1.0,
+  };
 }
 
 export interface TrainingPreview {
@@ -186,7 +200,11 @@ export async function calcGameGrowth(
   delete (patch as any).pitchStateAction;
   delete (patch as any).trainingPitchState;
 
-  return { protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta };
+  return {
+    protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta,
+    // ⚠ 없으면 기준(1.0)이다 — 구 엔진·검사 더미가 이 칸을 안 보낸다
+    xpRatio: typeof raw.xpRatio === "number" && Number.isFinite(raw.xpRatio) ? raw.xpRatio : 1.0,
+  };
 }
 
 export interface AgingResult {

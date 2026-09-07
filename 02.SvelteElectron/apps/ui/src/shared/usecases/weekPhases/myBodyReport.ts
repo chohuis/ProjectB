@@ -1,5 +1,6 @@
 import type { MessageItem, MyBodyEvent, MyBodyMetadata } from "../../types/main";
 import { INJURY_LABEL } from "../../types/save";
+import type { BankPicker, ReportCopy } from "../../utils/reportCopy";
 
 /**
  * 주인공 몸 상태 월간 리포트.
@@ -51,6 +52,17 @@ export function buildMyBodyReport(
   seasonYear: number,
   monthLabel: string,
   teamName: (id: string) => string,
+  /**
+   * 제목 은행 + 패널 앞 한 줄 (C2 · `messages/reports.json` `myBody`).
+   *
+   * ⚠ **은행이 있으면 본문의 값 줄을 지운다.** 값은 `metadata` 로 패널이
+   *   그리고 있어서 본문에도 같은 줄을 실으면 화면에 두 번 나온다 —
+   *   리그 경기 결과가 `table.leagueResults.lead` 로 먼저 그은 선이다.
+   *   은행이 없으면 값 줄이 유일한 본문이므로 그때만 남긴다.
+   * ⚠ 화면은 본문을 **패널 아래**에 그린다(사용자 확정 2026-09-04 ·
+   *   `NewsPage.svelte`). 문안이 「패널 위」라 적었지만 자리는 화면이 정한다.
+   */
+  copyIn?: { copy: ReportCopy | null; picker: BankPicker },
 ): MessageItem | null {
   const injured = !!snapshot?.injuryType && (snapshot.recoveryWeeksLeft ?? 0) > 0;
   if (events.length === 0 && !injured) return null;
@@ -97,11 +109,23 @@ export function buildMyBodyReport(
       ? `결장 ${absences.length}경기` + (warnings.length ? ` · 피로 경고 ${warnings.length}회` : "")
       : `피로 경고 ${warnings.length}회`;
 
-  const subject = injured
+  // ── 문안 은행 (C2) ─────────────────────────────────────────
+  //
+  // ⚠ **제목에서 상태를 뺀다.** 「4월 몸 상태 — 피로 경고」가 15년이면 180줄
+  //   같은 꼴이다. 상태는 `preview` 가 그대로 들고 있으므로(「피로 경고 2회」)
+  //   목록에서 무슨 일인지는 그대로 읽힌다.
+  const bankSubject = copyIn
+    ? copyIn.picker.pick("mybody#subject", copyIn.copy?.myBody.subjects ?? [])
+    : "";
+  const lead = copyIn
+    ? copyIn.picker.pick("mybody#lead", copyIn.copy?.myBody.leads ?? [])
+    : "";
+
+  const subject = bankSubject || (injured
     ? `${monthLabel} 몸 상태 — 부상 회복 중`
     : absences.length > 0
       ? `${monthLabel} 몸 상태 — 결장 ${absences.length}경기`
-      : `${monthLabel} 몸 상태 — 피로 경고`;
+      : `${monthLabel} 몸 상태 — 피로 경고`);
 
   const metadata: MyBodyMetadata = {
     type: "myBody",
@@ -127,7 +151,8 @@ export function buildMyBodyReport(
     sender:    "코칭스태프",
     subject,
     preview,
-    body:      lines.join("\n"),
+    // 🔴 은행 한 줄이 있으면 그것뿐이다 — 값은 패널이 든다(위 머리말)
+    body:      lead || lines.join("\n"),
     createdAt: `W${weekNum}`,
     readAt:    null,
     metadata,

@@ -180,6 +180,7 @@ import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { winnerById, scheduledIdSet, knockoutMatchIds, allScheduleEntries } from "../utils/scheduleView";
 import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
+import { BankPicker } from "../utils/reportCopy";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 // 팀 목록의 정본 — 생존리그 순위 모수를 **리그 전체**로 고정한다
 import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
@@ -458,7 +459,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 이벤트 엔진은 앞에서부터 순서대로 소비하므로 뒤 두 개는 안 건드린다 —
   // TS 게임 로직에서 Math.random()은 금지라 난수는 전부 Rust에서 온다
   const NEWS_RANDS = 2;
-  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0) + NEWS_RANDS;
+  /**
+   * 주간 리포트 문안 은행 여섯 (C2) — `train#subject`·`train#body`·
+   * `train#program`·`injury#subject`·`mybody#subject`·`mybody#lead`.
+   *
+   * 🔴 **꼬리에서 가져간다.** 이벤트 엔진은 앞에서부터 순서대로 먹으므로
+   *   여기서 뒤를 떼어 써야 이벤트 뽑기가 안 밀린다 — 앞에서 떼면 같은
+   *   씨앗의 이벤트가 통째로 달라진다.
+   * ⚠ `Math.random()` 은 금지다(CLAUDE.md) — 문안 뽑기도 Rust 난수다.
+   */
+  const REPORT_RANDS = 6;
+  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0)
+    + NEWS_RANDS + REPORT_RANDS;
 
   // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
   const [facilityEffModRaw, injuryCalcRaw, finance, trainingSub, eventRandsRaw] = await Promise.all([
@@ -517,6 +529,19 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   };
   const weeklyNet = finance.netWeekly;
   const eventRands = JSON.parse(eventRandsRaw) as number[];
+  /**
+   * 문안 은행 하나 — 훈련·부상·내 몸 셋이 **같은 것을 쓴다.**
+   *
+   * 🔴 **하나여야 한다.** 리포트마다 따로 만들면 난수 꼬리를 셋이 같은
+   *   자리에서 떼어 가고, 같은 주 세 리포트가 늘 같은 인덱스를 뽑는다.
+   *   기억 키(`train#subject`·`injury#subject`…)는 은행마다 갈려 있으니
+   *   하나로 묶어도 서로를 안 흔든다(`reportCopy.BankPicker` 머리말).
+   * ⚠ 뽑은 인덱스는 아래에서 `sentenceMemory` 로 되돌린다 — 안 되돌리면
+   *   「직전 제외」가 매주 초기화돼 같은 제목이 연속으로 난다.
+   */
+  const reportPicker = new BankPicker(
+    get(seasonStore).sentenceMemory ?? {}, eventRands.slice(-REPORT_RANDS),
+  );
   const injuryJustOccurred = injuryCalc.justOccurred;
   const injuryJustHealed   = injuryCalc.justHealed;
 
@@ -737,7 +762,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const trainingScoutDelta = ovrAfter > ovrBefore ? Math.min(3, Math.max(1, ovrAfter - ovrBefore)) : 0;
   const afterP: ProtagonistSave = { ...g.protagonist, money: Math.max(0, g.protagonist.money + weeklyNet), ...growth.protagonistPatch };
   const coachName = getPitchCoachName(afterP.teamId, m.entities);
-  const trainingMsg = makeTrainingMessage(s.seasonYear, weekNum, growth.logs, afterP, coachName);
+  const trainingMsg = makeTrainingMessage(s.seasonYear, weekNum, growth.logs, afterP, coachName, {
+    copy: m.reportCopy,
+    picker: reportPicker,
+    // 🔴 **엔진이 판정 재료를 준다.** 계수 셋이 Rust 안이라 여기서 다시
+    //   곱하면 결정 ④ 가 지운 사본이 되살아난다(`growth_engine.rs::xp_ratio_of`)
+    xpRatio: growth.xpRatio,
+    primaryProgramId: g.trainingPlan.primaryProgramId,
+  });
 
   // 이벤트 엔진 (미리 계산된 eventRands 사용)
   const updatedUniversityWeek = isUniversity ? (g.schoolState.universityWeek + 1) : (g.schoolState.universityWeek ?? 0);
@@ -1708,6 +1740,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const news = buildInjuryNews({
       events: buffered, weekNum, weekInYear,
       season: get(seasonStore), monthLabel: weekToMonthLabel(weekNum),
+      subjectBank: { copy: mFinal.reportCopy, picker: reportPicker },
     });
     if (news) gameStore.addMessage(news);
 
@@ -1733,8 +1766,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       sFinal.seasonYear,
       weekToMonthLabel(weekNum),
       (id) => teamByIdMB.get(id) ?? id,
+      { copy: mFinal.reportCopy, picker: reportPicker },
     );
     if (myBody) gameStore.addMessage(myBody);
+  }
+
+  // 🔴 **뽑은 인덱스를 세이브로 되돌린다** (C2). 안 되돌리면 「직전 제외」가
+  //   매주 초기화돼 같은 제목이 연속으로 난다 — 이벤트 본문 은행이
+  //   `recordSentencePicks` 로 먼저 그은 선이고, 같은 칸을 쓴다.
+  // ⚠ **위 세 리포트를 다 만든 뒤다.** 앞에 두면 이번 주 훈련 제목만 남고
+  //   부상·내 몸이 뽑은 것은 안 남는다.
+  if (Object.keys(reportPicker.picks).length > 0) {
+    seasonStore.recordSentencePicks(reportPicker.picks);
   }
 
   // ── 코치 리포트 (3주마다, 군 복무·오프시즌 제외) ──────────────

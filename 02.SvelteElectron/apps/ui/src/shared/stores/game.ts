@@ -841,11 +841,31 @@ export function messageKindOf(id: string): string {
 export const mailboxProduceStats = {
   total: 0,
   byKind: {} as Record<string, number>,
+  /**
+   * 종류별 **제목 인구조사** (C2 문안 은행). `{ 종류: { 제목: 건수 } }`.
+   *
+   * 🔴 은행을 배선하고도 **한 문장만 나오는** 결함이 조용하다 — 소식은
+   *   오고 개수도 맞고 제목만 늘 같다. 세지 않으면 15년을 돌려도 안 보인다.
+   */
+  subjectsByKind: {} as Record<string, Record<string, number>>,
+  /** 종류별 직전 제목 — 연속 반복을 세는 입력 */
+  lastSubject: {} as Record<string, string>,
+  /**
+   * 종류별 **연속 반복 횟수** — 같은 제목이 바로 다음 통에 또 나온 수.
+   *
+   * ⚠ 0 이어야 한다. `pickSentence` 가 직전 인덱스를 빼는데도 0 이 아니면
+   *   기억(`sentenceMemory`)이 안 돌아온 것이다 — 세이브에 안 남기면
+   *   매주 −1 에서 시작해 같은 것이 이어 나온다.
+   */
+  repeatByKind: {} as Record<string, number>,
 };
 
 export function resetMailboxProduceStats(): void {
   mailboxProduceStats.total = 0;
   mailboxProduceStats.byKind = {};
+  mailboxProduceStats.subjectsByKind = {};
+  mailboxProduceStats.lastSubject = {};
+  mailboxProduceStats.repeatByKind = {};
 }
 
 /**
@@ -1014,6 +1034,15 @@ function pushMailbox(incoming: MessageItem[], current: MessageItem[]): MessageIt
     mailboxProduceStats.total++;
     const k = messageKindOf(m.id);
     mailboxProduceStats.byKind[k] = (mailboxProduceStats.byKind[k] ?? 0) + 1;
+    // 제목 인구조사 — 은행이 실제로 여러 문장을 내고 있나 (C2)
+    const subj = m.subject ?? "";
+    const bucket = mailboxProduceStats.subjectsByKind[k]
+      ?? (mailboxProduceStats.subjectsByKind[k] = {});
+    bucket[subj] = (bucket[subj] ?? 0) + 1;
+    if (mailboxProduceStats.lastSubject[k] === subj) {
+      mailboxProduceStats.repeatByKind[k] = (mailboxProduceStats.repeatByKind[k] ?? 0) + 1;
+    }
+    mailboxProduceStats.lastSubject[k] = subj;
   }
   return trimMailbox(dedupeMailbox([...incoming, ...current]));
 }

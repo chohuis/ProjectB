@@ -10,6 +10,7 @@ import {
   buildRows, countByClass, previewLine, type InjuryEvent,
 } from "../../utils/injuryReport";
 import { weekInYearOf } from "../../utils/seasonWeeks";
+import { fillReportVar, type BankPicker, type ReportCopy } from "../../utils/reportCopy";
 
 /** 4주마다. 기존 월간 순위표와 같은 리듬이라 소식이 한 주에 몰린다 */
 export const INJURY_NEWS_PERIOD = 4;
@@ -41,6 +42,15 @@ export interface BuildInjuryNewsParams {
   weekInYear: number;
   season: SaveSeason;
   monthLabel: string;
+  /**
+   * 제목 은행 (C2 · `messages/reports.json` `injury.subjects`).
+   *
+   * ⚠ **본문은 은행이 없다.** `body: preview` 는 패널을 못 읽는 경로용
+   *   대비책이고 실제 화면은 `metadata` 로 패널이 그린다 — 반복이 눈에
+   *   띄는 건 제목뿐이다.
+   * ⚠ 안 넘기면 옛 제목(`{월} 부상 리포트`)이다.
+   */
+  subjectBank?: { copy: ReportCopy | null; picker: BankPicker };
 }
 
 /**
@@ -59,13 +69,22 @@ export function buildInjuryNews(p: BuildInjuryNewsParams): MessageItem | null {
   }));
   const preview = previewLine(counts);
 
+  // ⚠ `{month}` 뒤에 조사를 안 붙인다 — 자리표시자 뒤가 띄어쓰기 + 명사다.
+  //   숫자·명사만 끼우는 규칙이라 「4월이 부상」 같은 게 안 난다.
+  const tmpl = p.subjectBank
+    ? p.subjectBank.picker.pick("injury#subject", p.subjectBank.copy?.injury.subjects ?? [])
+    : "";
+  const subject = tmpl
+    ? fillReportVar(tmpl, "month", p.monthLabel)
+    : `${p.monthLabel} 부상 리포트`;
+
   return {
     // 🔴 **연도+주차**다. 한 주에 한 통뿐이라 그것으로 유일하다.
     //   `Date.now()` 는 같은 세이브를 다시 열면 다른 id 를 낸다.
     id:        `msg-injury-${p.season.seasonYear}-w${p.weekNum}`,
     category:  "system",
     sender:    "리그 사무국",
-    subject:   `${p.monthLabel} 부상 리포트`,
+    subject,
     preview,
     // 본문은 패널이 그린다. 메타데이터를 못 읽는 경로를 위한 대비책만 둔다
     body:      preview,

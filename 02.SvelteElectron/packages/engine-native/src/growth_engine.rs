@@ -165,6 +165,26 @@ pub struct GrowthResult {
     pub protagonist_patch: GrowthPatch,
     pub logs: Vec<String>,
     pub fame_delta: i32,
+    /// 이번 주 XP 가 **기준 대비 몇 배인가** — 1.0 이 기준이다 (C2 문안 은행).
+    ///
+    /// 🔴 **화면이 이 값을 다시 만들지 않는다.** 주간 리포트 본문이 「잘 됐다 /
+    ///   평소만큼 / 못 했다」를 갈라 쓰려면 그 주가 기대 대비 어땠는지를 알아야
+    ///   하는데, 계수 셋(`condition_factor`·`fatigue_factor`·`diligence_factor`)이
+    ///   전부 여기 있다. TS 로 옮겨 적으면 결정 ④ 가 지운 사본이 되살아난다.
+    ///
+    /// ⚠ **성장률·잠재력·나이는 안 들어간다** — `training_efficiency` 와 같은
+    ///   규칙이다. 이번 주에 못 움직이는 축을 곱하면 「내가 한 것이 어땠나」가
+    ///   아니라 「내가 누구인가」가 된다(성장률 40 이면 늘 poor 가 된다).
+    ///   대신 `efficiency_mod`(부상·학사경고·시설·코치·구독)는 **들어간다** —
+    ///   부상 회복 중 −80% 는 그 주 훈련이 실제로 못 된 것이다.
+    pub xp_ratio: f64,
+}
+
+/// 기준 대비 배수. 계수 셋 × 그 주 효율 보정. **기준은 각 계수 1.0** 이다 —
+/// 컨디션 100 · 피로 0 · 성실 약 49.5 · 보정 없음.
+fn xp_ratio_of(condition: f64, fatigue: f64, diligence: f64, efficiency_mod: f64) -> f64 {
+    condition_factor(condition) * fatigue_factor(fatigue)
+        * diligence_factor(diligence) * efficiency_mod
 }
 
 // ── 훈련 프로그램 ─────────────────────────────────────────────
@@ -740,6 +760,10 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
         },
         logs: all_logs,
         fame_delta: 0,
+        // ⚠ `eff` 가 아니라 `efficiency_mod` 다 — `eff` 엔 나이 계수가 곱해져 있고
+        //   나이는 이번 주에 못 움직인다(위 `xp_ratio` 머리말).
+        xp_ratio: xp_ratio_of(p.condition, p.fatigue, diligence,
+                              params.efficiency_mod.unwrap_or(1.0)),
     }
 }
 
@@ -851,6 +875,10 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
         },
         logs: all_logs,
         fame_delta,
+        // ⚠ 경기 성장엔 효율 보정이 없다 — 1.0 을 넣는다. 이 값을 읽는 곳은
+        //   주간 훈련 리포트뿐이지만, 칸을 비워 두면 「보정이 없다」와
+        //   「모른다」가 같아 보인다.
+        xp_ratio: xp_ratio_of(p.condition, p.fatigue, p.diligence.unwrap_or(50.0), 1.0),
     }
 }
 

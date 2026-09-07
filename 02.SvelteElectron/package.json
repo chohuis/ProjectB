@@ -164,7 +164,8 @@
     "check:roundtrip": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-roundtrip.cjs",
     "check:savecolumns": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-savecolumns.cjs",
     "probe:a:diverge": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-diverge.cjs",
-    "probe:a:growthreq": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-growthreq.cjs"
+    "probe:a:growthreq": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-growthreq.cjs",
+    "check:reportbank": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-reportbank.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
