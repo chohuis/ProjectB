@@ -466,7 +466,10 @@ export function runEventEngine(
   //    나머지 전부가 아래 등급 줄기 하나로 모인다.
   {
     const urgent = rules
-      .filter((r) => tierOf(r) === "urgent")
+      // ⚠ **필수는 위에서 이미 나갔다.** 필수에 `urgent` 를 달면 두 번 뜨는데,
+      //   지금 데이터엔 없다(필수 101종 전부 등급이 없다) — 없다고 안 막으면
+      //   달리는 날 사본이 난다
+      .filter((r) => r.type !== "mandatory" && tierOf(r) === "urgent")
       .filter((r) => evaluateConditions(r.conditions ?? [], ctx))
       .sort((a, b) => b.priority - a.priority);
     eventFunnelStats.conditional.condPass += urgent.length;
@@ -497,8 +500,11 @@ export function runEventEngine(
 
     let condPass = 0;
     for (const rule of rules) {
+      // 필수는 달력이 정하는 자리라 등급 줄기를 안 탄다(§1) — 등급이 달려
+      // 있어도 여기 안 든다
+      if (rule.type === "mandatory") continue;
       const g = gradeOf(rule);
-      if (!g) continue;                                   // urgent · 필수 · 미기재
+      if (!g) continue;                                   // urgent · 미기재
       if (!evaluateConditions(rule.conditions ?? [], ctx)) continue;
       // 히든의 숨은 조건 — 화면엔 안 보이지만 평가는 똑같다(§4)
       if (rule.hiddenCondition && !evaluateConditions(rule.hiddenCondition, ctx)) continue;
