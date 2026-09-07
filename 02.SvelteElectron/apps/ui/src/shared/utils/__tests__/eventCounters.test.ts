@@ -194,4 +194,17 @@ describe("배선 — 넷이 실제로 실린다", () => {
   it("갱신한 연속 주 수를 세이브에 되돌린다 — 안 되돌리면 매주 0 에서 다시 센다", () => {
     expect(src).toContain("growth.protagonistPatch.streaks = nextStreaks");
   });
+
+  it("🔴 로더도 넷을 안다 — `CONDITION_FIELDS` 가 빠지면 데이터를 써도 조용히 버려진다", () => {
+    // 이 저장소가 「층은 맞는데 잇는 선이 없다」로 두 번 걸린 자리다
+    // (`master.ts` 의 `CONDITION_FIELDS` 머리말).
+    const m = readFileSync(resolve("apps/ui/src/shared/stores/master.ts"), "utf8");
+    expect(m).toContain('streak: ["metric", "op", "value", "weeks"]');
+    expect(m).toContain('count: ["counter", "value"]');
+    expect(m).toContain('compare: ["stat", "op"]');
+    expect(m).toContain('last_game: ["field", "op", "value"]');
+    // 가리키는 이름이 틀리면 **로드에서** 잡는다 — 몇 시즌 뒤가 아니라
+    expect(m).toContain("utils/eventCounters.ts의 COUNTERS에 없다");
+    expect(m).toContain("streak 의 모르는 축");
+  });
 });

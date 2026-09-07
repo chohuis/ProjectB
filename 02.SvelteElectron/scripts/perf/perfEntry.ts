@@ -7906,7 +7906,10 @@ export function drainSeasonEndSnapshots(): Record<string, unknown>[] {
  */
 export function eventFunnelProbe(): Record<string, unknown> {
   const f = eventFunnelStats;
-  const emitted = f.mandatory.emitted + f.conditional.emitted + f.random.emitted;
+  // ⚠ **등급 갈래를 안 더하면 총 발동이 통째로 빠진다** (2026-09-08). 실제로
+  //   첫 계측에서 「3시즌 33건」이 나왔는데, 뜬 규칙 종수는 101종이었다 —
+  //   합이 갈래 셋만 보고 있었기 때문이다. 갈래를 늘리면 여기도 늘려야 한다.
+  const emitted = f.mandatory.emitted + f.conditional.emitted + f.random.emitted + f.grade.emitted;
   const top = (m: Record<string, number>, n: number) =>
     Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n)
       .map(([id, v]) => ({ 규칙: id, 건수: v }));

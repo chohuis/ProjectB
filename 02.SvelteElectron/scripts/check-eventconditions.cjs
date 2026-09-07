@@ -105,7 +105,10 @@ function main() {
   const used = new Map();
 
   for (const r of rules) {
-    for (const c of r.conditions ?? []) {
+    // 🔴 **히든의 숨은 조건도 본다** (2026-09-08 · §4). 평가는 `conditions` 와
+    //   똑같고 화면에만 안 보인다 — 여기서 안 재면 히든 조건의 오타가
+    //   **뜨지 않는 이벤트**가 되고, 히든은 원래 잘 안 떠서 아무도 못 알아챈다.
+    for (const c of [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])]) {
       const t = c && c.type;
       used.set(t, (used.get(t) ?? 0) + 1);
       const row = { id: r.id, file: r.file, type: t, cond: JSON.stringify(c) };
