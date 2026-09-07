@@ -280,8 +280,14 @@ export interface GameLineInput {
  * 한 주치 경기 결과 → 표.
  *
  * ⚠ **점수 칸은 여기서 합친다.** 문안(`table.leagueResults._scoreNote`)이
- *   「생산부가 `{hs} : {as}` 로 합쳐 넘긴다」고 못박아 뒀다 — 화면이 두 값을
- *   문자열로 이으면 자릿수가 흔들려 표가 안 맞는다.
+ *   「생산부가 합쳐 넘긴다」고 못박아 뒀다 — 화면이 두 값을 문자열로 이으면
+ *   자릿수가 흔들려 표가 안 맞는다.
+ *
+ * 🔴 **원정이 먼저다** (사용자 U6 · 2026-09-07). 예전엔 `{홈} : {원정}`이었는데
+ *   같은 소식의 본문 줄은 「원정 n : m 홈」이라 표와 본문이 서로 뒤집혀 보였다.
+ *   경기 결과를 적는 다른 자리도 전부 원정이 먼저다(`applyGameOutcome` 주간 로그 ·
+ *   경기 종료 화면 · 스코어보드 첫 줄). **열 차례는 문안이 정한다** — 여기서
+ *   방향을 바꾸면 `dashboard_labels.json`의 `columns` 키 순서도 같이 바꿔야 한다.
  */
 export function gameResultsTableMeta(games: readonly GameLineInput[]): TableMetadata {
   return {
@@ -290,9 +296,9 @@ export function gameResultsTableMeta(games: readonly GameLineInput[]): TableMeta
     columns: [],
     rows: games.map((g) => {
       const row: Record<string, TableCell> & { myTeam?: boolean } = {
-        home: g.homeName,
-        score: `${g.homeScore} : ${g.awayScore}`,
         away: g.awayName,
+        score: `${g.awayScore} : ${g.homeScore}`,
+        home: g.homeName,
       };
       if (g.mine) row.myTeam = true;
       return row;
