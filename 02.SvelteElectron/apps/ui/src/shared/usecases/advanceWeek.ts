@@ -55,7 +55,7 @@ import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isRe
 import { roleDepthOf } from "../utils/pitcherRoleRules";
 import {
   buildKblBracket, buildAblBracket, buildIndLadder, buildJblBracket,
-  applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
+  applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries, postseasonSeed,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
@@ -2269,7 +2269,8 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
       return;
     }
     if (built.length === 0) return;
-    built = await resolveNonProtagonistSeries(built, protagonistId);
+    built = await resolveNonProtagonistSeries(built, protagonistId,
+      postseasonSeed(s.worldSeed ?? 0, seasonYear, leagueId, built));
     seasonStore.initPostseasonBracket(leagueId, built);
     return; // 다음 루프 이터레이션에서 경기 주입
   }
@@ -2291,7 +2292,8 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
     if (hasUnresolved) {
       seasonStore.updatePostseasonBracket(
         leagueId,
-        await resolveNonProtagonistSeries(bracket, protagonistId),
+        await resolveNonProtagonistSeries(bracket, protagonistId,
+          postseasonSeed(s.worldSeed ?? 0, seasonYear, leagueId, bracket)),
       );
     }
     return;
@@ -2326,7 +2328,8 @@ async function applyPostseasonResult(scheduleId: string, result: MatchResult): P
 
   if (updated.winner) {
     newBracket = await fillNextSeries(newBracket, updated);
-    newBracket = await resolveNonProtagonistSeries(newBracket, g.protagonist.teamId);
+    newBracket = await resolveNonProtagonistSeries(newBracket, g.protagonist.teamId,
+      postseasonSeed(s.worldSeed ?? 0, s.seasonYear, leagueId, newBracket));
   }
 
   seasonStore.updatePostseasonBracket(leagueId, newBracket);
@@ -2458,6 +2461,10 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         sportsEventCount:  eligibleSports.length,
         generalEventCount: eligibleGeneral.length,
         commonEventCount:  eligibleCommon.length,
+        // 씨앗 — 안 넘기면 Rust 가 `thread_rng` 라 복무 100주가 통째로
+        // 재현 밖이다(이 파일의 다른 주간 계산은 전부 넘기고 있었다)
+        seed: seedOf(get(seasonStore).worldSeed ?? 0, get(seasonStore).seasonYear,
+          get(seasonStore).currentWeek, "military-week", serviceWeeks),
       })));
       // ⚠ **오류를 삼키지 않는다.** 예전엔 `{error}`가 와도 그대로 필드를 읽어
       // undefined가 스탯에 들어갔다 — 조용히 NaN이 되는 자리다.

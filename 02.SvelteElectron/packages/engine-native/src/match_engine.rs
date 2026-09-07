@@ -3555,7 +3555,7 @@ pub fn to_sim_game_result(
     away_rot_idx: usize,
 ) -> crate::sim_types::SimGameResult {
     use crate::sim_types::{SimGameResult, SimPlayerCondition};
-    let mut conds = std::collections::HashMap::new();
+    let mut conds = std::collections::BTreeMap::new();
 
     // 주인공 쪽 큐가 홈인지 원정인지는 `protagonist_side`가 정한다
     let my_is_home = state.protagonist_side == "home";

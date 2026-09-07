@@ -1272,6 +1272,14 @@ pub struct MedicalTestParams {
     pub career_injury_count: i32,
     pub has_steroid_history: bool,
     pub receiving_team_medical_quality: f64,  // 0~100
+    /// 씨앗. **0이면 예전 그대로 `thread_rng`다.**
+    ///
+    /// 🔴 트레이드 넷 중 **메디컬만** 씨앗 밖에 남아 있었다(입찰·가치평가·
+    ///   응답은 이미 받는다). 고교 주인공이어도 배경 프로 리그가 매년
+    ///   두 번(마감·스토브) 트레이드를 도므로, 여기 한 번이 갈리면
+    ///   **로스터가 갈리고 그 뒤 세계가 통째로 달라진다** (2026-09-07).
+    #[serde(default)]
+    pub seed: u32,
 }
 
 #[derive(Debug, Serialize)]
@@ -1326,8 +1334,13 @@ pub fn eval_medical_test(p: MedicalTestParams) -> MedicalTestResult {
     let quality_factor = 0.7 + p.receiving_team_medical_quality * 0.006;
     let rejection_prob = (concern * quality_factor).clamp(0.0, 1.0);
 
-    let mut rng = rand::thread_rng();
-    let pass = rng.gen::<f64>() >= rejection_prob;
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let roll = if p.seed != 0 {
+        crate::npc_sim::LcgRand::new(p.seed | 1).next()
+    } else {
+        rand::thread_rng().gen::<f64>()
+    };
+    let pass = roll >= rejection_prob;
 
     MedicalTestResult {
         pass,

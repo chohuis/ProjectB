@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 // ── Shared output type ────────────────────────────────────────
 
@@ -536,9 +536,20 @@ pub struct GenerateAllLeagueSchedulesParams {
     pub season_year: Option<u32>,
 }
 
-pub fn generate_all_league_schedules(p: GenerateAllLeagueSchedulesParams) -> HashMap<String, Vec<ScheduleEntry>> {
+/// 🔴 **`BTreeMap` 이다 — `HashMap` 이면 안 된다.**
+/// 이 결과가 그대로 `season.leagueSchedules` 의 **키 순서**가 되고, 그
+/// 순서를 JS 쪽이 세 군데서 **읽는 순서**로 쓴다:
+///   · `weekPhases/injuries.ts` — `Object.values(leagueSchedules)` 로 훑어
+///     `players[]` 를 만들고, Rust 부상 판정이 그 **배열 순서대로** 난수를
+///     소비한다 → 다치는 사람이 통째로 바뀐다
+///   · `stores/backgroundLeague.ts` — 배경 리그를 도는 순서
+///   · `weekPhases/growth.ts` — 성적 집계 순서
+/// Rust `HashMap` 은 프로세스마다 다른 씨앗으로 순회한다(`RandomState`) —
+/// 그래서 같은 세이브·같은 씨앗인데 **판마다 다른 리그가 먼저** 실렸다.
+/// 값은 안 바뀐다. 순서만 리그 id 오름차순으로 고정한다 (2026-09-07).
+pub fn generate_all_league_schedules(p: GenerateAllLeagueSchedulesParams) -> BTreeMap<String, Vec<ScheduleEntry>> {
     let sy = p.season_year.unwrap_or(2026);
-    let mut result = HashMap::new();
+    let mut result = BTreeMap::new();
     for cfg in p.configs {
         let entries = generate_league_schedule(GenerateLeagueScheduleParams { league_id: cfg.league_id.clone(), teams: cfg.teams, start_week: cfg.start_week, end_week: cfg.end_week, cycles: cfg.cycles, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy), series_games: cfg.series_games });
         result.insert(cfg.league_id, entries);

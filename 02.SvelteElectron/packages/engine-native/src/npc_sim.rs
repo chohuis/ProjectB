@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, BTreeMap, BTreeSet};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
@@ -351,8 +351,13 @@ fn sim_half_inning_pitch(
     // 위기 보정 입력 — 이 둘이 없으면 후반 접전을 못 본다
     inning: i32,
     score_diff: i32,
-    pit_map: &mut HashMap<String, PitAccum>,
-    bat_map: &mut HashMap<String, BatAccum>,
+    // 🔴 **`BTreeMap` 이다.** 이 두 맵을 그대로 훑어 `player_lines` 를 만들고,
+    //   그 배열 순서가 JS 쪽 `weekPhases/injuries.ts` 의 `players[]` 순서가 된다
+    //   — 부상 판정이 그 순서대로 난수를 소비하므로 **다치는 사람이 바뀐다.**
+    //   `HashMap` 은 프로세스마다 순회 순서가 달라서 같은 씨앗이 재현되지 않았다
+    //   (2026-09-07 실측). 기록 값은 안 바뀐다 — 줄의 **순서**만 id 오름차순이다.
+    pit_map: &mut BTreeMap<String, PitAccum>,
+    bat_map: &mut BTreeMap<String, BatAccum>,
     rng: &mut impl Rng,
 ) -> (i32, usize, i32, f64) {  // (runs, new_lineup_pos, new_pit_outs, new_stamina)
     let mut bases: Bases = [None; 3];
@@ -639,7 +644,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
             },
             next_home_rot_idx: params.home_rot_idx as i32,
             next_away_rot_idx: params.away_rot_idx as i32,
-            pitcher_conditions: HashMap::new(),
+            pitcher_conditions: BTreeMap::new(),
         };
     }
 
@@ -659,8 +664,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         pit_max_map.insert(p.id.clone(), m);
     }
 
-    let mut pit_map: HashMap<String, PitAccum> = HashMap::new();
-    let mut bat_map: HashMap<String, BatAccum> = HashMap::new();
+    let mut pit_map: BTreeMap<String, PitAccum> = BTreeMap::new();
+    let mut bat_map: BTreeMap<String, BatAccum> = BTreeMap::new();
 
     // 경기 중 투수별 현재 스태미나 추적 (초기값 = stamina 필드)
     let mut pit_stamina_map: HashMap<String, f64> = HashMap::new();
@@ -858,7 +863,8 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         });
     }
 
-    let all_batter_ids: HashSet<String> = params.home_lineup.iter().chain(params.away_lineup.iter())
+    // 🔴 **`BTreeSet` 이다** — `pit_map` 과 같은 이유다(줄 순서가 부상 순서다)
+    let all_batter_ids: BTreeSet<String> = params.home_lineup.iter().chain(params.away_lineup.iter())
         .map(|b| b.id.clone()).collect();
     for id in &all_batter_ids {
         // ⚠ **`ab > 0`으로 거르면 볼넷만 얻은 타자가 통째로 사라진다.**
@@ -884,7 +890,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
     }
 
     // 투수 컨디션 업데이트 (아웃당 ~2.7pt 피로)
-    let mut pitcher_conditions: HashMap<String, SimPlayerCondition> = HashMap::new();
+    let mut pitcher_conditions: BTreeMap<String, SimPlayerCondition> = BTreeMap::new();
     for (id, acc) in &pit_map {
         let prev_fatigue = params.conditions.get(id).map(|c| c.fatigue).unwrap_or(100.0);
         let fatigue_loss = acc.outs as f64 * 2.7;
@@ -1669,6 +1675,11 @@ fn fill_first_teams(
         *count.entry(n.current_team.clone()).or_default() += 1;
     }
 
+    // 순회 순서를 고정한다 — `HashMap` 그대로 돌면 팀을 보는 순서가 판마다
+    // 다르다. 팀끼리 서로 안 건드리는 자리라 값은 안 바뀌지만, 순서에 기대는
+    // 자리를 남겨 두면 다음 사람이 그 위에 쌓는다 (2026-09-07)
+    let mut count: Vec<(String, usize)> = count.into_iter().collect();
+    count.sort_by(|a, b| a.0.cmp(&b.0));
     for (team_id, have) in count {
         let Some(base) = team_id.strip_suffix("_1") else { continue };
         // 이 팀이 속한 1군 리그를 인원에서 역추적한다
@@ -3984,7 +3995,15 @@ pub fn calc_sports_unit_selection(params: SportsUnitSelectionParams) -> SportsUn
         params.phase1_max);
     let protagonist_selected = params.applicants.iter()
         .any(|c| c.is_protagonist && selected.contains(&c.id));
-    SportsUnitSelectionResult { protagonist_selected, selected_ids: selected.into_iter().collect() }
+    // 🔴 **`HashSet` 을 그대로 `collect()` 하면 순서가 판마다 다르다.**
+    //   뽑히는 사람은 같은데 **명단 순서**가 흔들려서, 이 배열을 순서대로
+    //   처리하는 JS 쪽(입대 처리·소식)이 실행마다 달라졌다. 뽑는 규칙은
+    //   그대로 두고 **신청자 순서**로 낸다 — 입력이 이미 결정적이다 (2026-09-07)
+    let selected_ids: Vec<String> = pool.iter()
+        .filter(|(id, _, _, _)| selected.contains(id))
+        .map(|(id, _, _, _)| id.clone())
+        .collect();
+    SportsUnitSelectionResult { protagonist_selected, selected_ids }
 }
 
 // ── 일반병 입대 대상 랜덤 선택 (시즌당 최대 max_count명) ─────────────────────
@@ -4386,7 +4405,7 @@ fn calc_npc_batting_ovr(b: &NpcBattingAttrs) -> f64 {
 /// `debt`에 쌓아 1.0을 넘을 때 −1 한다.
 fn apply_weekly_aging_pitch(
     p: &mut NpcPitchingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str,
-    debt: &mut HashMap<String, f64>,
+    debt: &mut BTreeMap<String, f64>,
 ) {
     if age < 30 { return; }
 
@@ -4425,7 +4444,7 @@ fn apply_weekly_aging_pitch(
 /// 타자 주간 감퇴 — 투수와 같은 누적 방식 (위 주석 참고)
 fn apply_weekly_aging_bat(
     b: &mut NpcBattingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str,
-    debt: &mut HashMap<String, f64>,
+    debt: &mut BTreeMap<String, f64>,
 ) {
     if age < 30 { return; }
 

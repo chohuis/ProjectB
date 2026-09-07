@@ -20,24 +20,31 @@
  *   npm run check:measurerepro
  *   PB_REPRO_RUNS=3 PF_SEED=20260802 PB_START_PRESET=balanced npm run check:measurerepro
  *
- * ── 🔴 아직 빨강이다 (2026-09-07 현재) ─────────────────────────────────────
+ * ── ✅ 초록이다 (2026-09-07 · 3회 실측) ────────────────────────────────────
  *
- * 고친 것 둘로 **주인공 경기와 이벤트 뽑기는 재현된다**:
- *   ① 주인공 경기 호출부가 계측 모드에서 씨앗을 넘긴다(`protagonistMatchSeed.ts`)
- *   ② `weekRollRandomBatch` 두 호출부가 씨앗을 안 넘기고 있었다(`advanceWeek.ts`)
- * 실측 전후: 드래프트 **2R11P → 10R91P → 5R47P**(전) · 3년차 OVR 75/76/76 ·
- * 구속 76/77/78(후 · 여전히 완전 일치는 아님).
+ *   1  6R 58P TEAM_KBL_SUWON_KNIGHTS_1   3년차 OVR 75  구속 76  완주
+ *   2  6R 58P TEAM_KBL_SUWON_KNIGHTS_1   3년차 OVR 75  구속 76  완주
+ *   3  6R 58P TEAM_KBL_SUWON_KNIGHTS_1   3년차 OVR 75  구속 76  완주
  *
- * **남은 것 하나** — 배경 세계의 NPC 능력치가 4~5주째에 **한 명씩** 1 어긋난다
- * (`npm run probe:a:diverge` 로 자리를 좁혔다). 확인해 둔 것:
- *   · 주인공 경기는 씨앗이 같으면 **프로세스가 달라도** 결과가 같다(실측)
- *   · 배경 리그 경기도 그렇다(같은 페이로드 30건 × 두 프로세스 · 전부 동일)
- *   · `npcCalcWeeklyGrowth` 는 **같은 요청이면 값이 같다**(7,715명 전부 동일 ·
- *     JSON 문자열만 다르다 — Rust `HashMap` 직렬화 순서라 값과 무관하다)
- *   · 갈리는 주가 판마다 옮겨 다닌다(W03 · W04 · W04) — **프로세스마다 다른
- *     무엇**(Rust HashMap 해시 씨앗 같은)이 섞인다는 뜻이다
- * 즉 **씨앗을 안 준 난수는 아니다.** 주간 파이프라인 어딘가에서 순서가
- * 결과를 바꾸는 자리다. 자리를 더 좁히는 계기가 `probe-a-diverge.cjs` 다.
+ * 여기까지 온 길 — **두 종류**였다.
+ *
+ * ① 씨앗을 안 넘긴 호출부 (다섯)
+ *    · 주인공 경기 (`protagonistMatchSeed.ts`)
+ *    · `weekRollRandomBatch` 둘 (`advanceWeek.ts`)
+ *    · 비주인공 포스트시즌 (`postseasonEngine.ts` — 엔진엔 자리가 있었다)
+ *    · 트레이드 메디컬 (`weekPhases/market.ts` — 트레이드 넷 중 여기만)
+ *    · 군 복무 주간 (`advanceWeek.ts`)
+ *
+ * ② **Rust `HashMap` 순회 순서** — 이쪽이 마지막까지 남아 있던 것이다.
+ *    씨앗을 다 채워도 배경 NPC 한 명이 3~4주째에 1 어긋났고 **갈리는 주가
+ *    판마다 옮겨 다녔다**. 씨앗 없는 난수면 자리가 고정돼야 하니 아니었다 —
+ *    `HashMap` 은 프로세스마다 다른 씨앗으로 순회한다(`RandomState`).
+ *      · `generate_all_league_schedules` → `leagueSchedules` 키 순서 →
+ *        `injuries.ts` 의 `players[]` 순서 → **다치는 사람이 바뀐다**
+ *      · 배경 리그 `player_lines` 를 `pit_map`/`bat_map` 순회로 만들었다
+ *      · FA 입찰이 `teams.values()` 를 돌며 **팀마다 난수를 하나씩** 썼다
+ *    전부 `BTreeMap`/`BTreeSet` 으로 고정했다(값은 안 바뀐다).
+ *    자리를 좁힌 계기는 `probe:a:diverge` 와 `probe:a:growthreq` 다.
  */
 const path = require("node:path");
 const { spawn } = require("node:child_process");

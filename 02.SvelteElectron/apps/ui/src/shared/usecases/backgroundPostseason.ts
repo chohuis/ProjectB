@@ -8,7 +8,7 @@
 // "고교 시절엔 프로 한국시리즈 우승팀 기록이 없다"는 구멍이 생긴다.
 
 import type { PostseasonSeries, SaveSeason, Standing } from "../types/season";
-import { buildFarmBracket, buildKblBracket, resolveNonProtagonistSeries } from "../utils/postseasonEngine";
+import { buildFarmBracket, buildKblBracket, resolveNonProtagonistSeries, postseasonSeed } from "../utils/postseasonEngine";
 import { buildLadder, lastRegularStage } from "../utils/survivalLeague";
 
 /** 국내 리그만. 해외(ABL·JBL)는 Lazy 정책대로 진출 전까지 돌리지 않는다 (DESIGN §2.2) */
@@ -79,7 +79,9 @@ export async function runBackgroundPostseasons(
     if (built.length === 0) continue;
 
     // 주인공이 없는 리그라 전 시리즈가 한 번에 정리된다
-    const resolved = await resolveNonProtagonistSeries(built, protagonistTeamId);
+    // 씨앗을 넘긴다 — 안 넘기면 Rust 가 `thread_rng` 라 판마다 다른 팀이 우승한다
+    const resolved = await resolveNonProtagonistSeries(built, protagonistTeamId,
+      postseasonSeed(season.worldSeed ?? 0, season.seasonYear, leagueId, built));
     const final = resolved[resolved.length - 1];
     out.push({ leagueId, bracket: resolved, champion: final?.winner ?? null });
   }
