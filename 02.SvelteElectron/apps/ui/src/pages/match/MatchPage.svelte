@@ -227,42 +227,78 @@
     ];
   }
 
+  /**
+   * 루 번호 → 서 있을 자리. `0`은 타석(홈), `1·2·3`은 루, `4`는 득점(홈플레이트).
+   *
+   * ⚠ 4와 0이 같은 점인 건 야구가 그렇기 때문이다 — 한 바퀴 돌아 제자리다.
+   */
+  function baseStop(idx: number): FieldPoint {
+    if (idx <= 0 || idx >= 4) return { ...retroField.home };
+    return runnerPoint(idx === 1 ? 'first' : idx === 2 ? 'second' : 'third');
+  }
+
+  /**
+   * 주자 하나가 밟고 갈 길. **거쳐 갈 루를 다 넣는다.**
+   *
+   * 🔴 예전엔 `{from, to}` 두 점을 곧장 이었다(사용자 U5 · 2026-09-07).
+   *   2루타면 타자가 타석에서 2루로 **내야를 가로질렀고**, 3루타·홈런도
+   *   같은 꼴이었다(홈런은 홈→홈이라 아예 안 움직였다). 1루→3루로 가는
+   *   주자는 마운드를 뚫고 지나갔다.
+   */
+  function runPath(fromIdx: number, toIdx: number, start?: FieldPoint): FieldPoint[] {
+    const path: FieldPoint[] = [start ? { ...start } : baseStop(fromIdx)];
+    for (let i = fromIdx + 1; i <= toIdx; i++) path.push(baseStop(i));
+    return path;
+  }
+
+  function pathLength(p: FieldPoint[]): number {
+    let d = 0;
+    for (let i = 1; i < p.length; i++) d += Math.hypot(p[i].x - p[i - 1].x, p[i].y - p[i - 1].y);
+    return d;
+  }
+
+  /** 길 위에서 `dist` 만큼 간 자리 */
+  function pointAlong(p: FieldPoint[], dist: number): FieldPoint {
+    let left = dist;
+    for (let i = 1; i < p.length; i++) {
+      const seg = Math.hypot(p[i].x - p[i - 1].x, p[i].y - p[i - 1].y);
+      if (seg <= 0) continue;
+      if (left <= seg) {
+        const t = left / seg;
+        return { x: p[i - 1].x + (p[i].x - p[i - 1].x) * t, y: p[i - 1].y + (p[i].y - p[i - 1].y) * t };
+      }
+      left -= seg;
+    }
+    return { ...p[p.length - 1] };
+  }
+
   async function animateRetroRunners(
     resultCode: PitchResultCode,
     prevRunners: { first: boolean; second: boolean; third: boolean }
   ) {
-    type Movement = { from: FieldPoint; to: FieldPoint };
-    const f = retroField;
-    const movements: Movement[] = [];
+    const paths: FieldPoint[][] = [];
     const bFrom = retroBatterPos ?? getBatterPlatePos(batter.handedness);
+    /** 타자가 몇 루까지 가나 — 안타 종류가 그대로 진루 수다 */
+    const batterTo =
+      resultCode === 'HIT_SINGLE' || resultCode === 'WALK' ? 1
+      : resultCode === 'HIT_DOUBLE' ? 2
+      : resultCode === 'HIT_TRIPLE' ? 3
+      : resultCode === 'HOME_RUN'   ? 4 : 0;
 
-    if (resultCode === 'HIT_SINGLE') {
-      movements.push({ from: { ...bFrom }, to: runnerPoint('first') });
-      if (prevRunners.first)  movements.push({ from: runnerPoint('first'),  to: runnerPoint('second') });
-      if (prevRunners.second) movements.push({ from: runnerPoint('second'), to: runnerPoint('third') });
-      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
-    } else if (resultCode === 'HIT_DOUBLE') {
-      movements.push({ from: { ...bFrom }, to: runnerPoint('second') });
-      if (prevRunners.first)  movements.push({ from: runnerPoint('first'),  to: runnerPoint('third') });
-      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
-      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
-    } else if (resultCode === 'HIT_TRIPLE') {
-      movements.push({ from: { ...bFrom }, to: runnerPoint('third') });
-      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.home } });
-      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
-      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
-    } else if (resultCode === 'HOME_RUN') {
-      movements.push({ from: { ...bFrom }, to: { ...f.home } });
-      if (prevRunners.first)  movements.push({ from: { ...f.first },  to: { ...f.home } });
-      if (prevRunners.second) movements.push({ from: { ...f.second }, to: { ...f.home } });
-      if (prevRunners.third)  movements.push({ from: { ...f.third },  to: { ...f.home } });
-    } else if (resultCode === 'WALK') {
-      movements.push({ from: { ...bFrom }, to: runnerPoint('first') });
-      if (prevRunners.first) movements.push({ from: runnerPoint('first'), to: runnerPoint('second') });
-      if (prevRunners.first && prevRunners.second)
-        movements.push({ from: runnerPoint('second'), to: runnerPoint('third') });
-      if (prevRunners.first && prevRunners.second && prevRunners.third)
-        movements.push({ from: { ...f.third }, to: { ...f.home } });
+    if (batterTo > 0) {
+      paths.push(runPath(0, batterTo, bFrom));
+      if (resultCode === 'WALK') {
+        // 볼넷은 **밀어내기만** 간다 — 앞이 비어 있으면 그 주자는 안 움직인다
+        if (prevRunners.first) paths.push(runPath(1, 2));
+        if (prevRunners.first && prevRunners.second) paths.push(runPath(2, 3));
+        if (prevRunners.first && prevRunners.second && prevRunners.third) paths.push(runPath(3, 4));
+      } else {
+        // 안타는 타자가 간 만큼 앞 주자도 민다(단타 1·2루타 2·3루타 3·홈런 4)
+        const adv = batterTo;
+        if (prevRunners.first)  paths.push(runPath(1, Math.min(4, 1 + adv)));
+        if (prevRunners.second) paths.push(runPath(2, Math.min(4, 2 + adv)));
+        if (prevRunners.third)  paths.push(runPath(3, 4));
+      }
     } else if (isOutInPlay(resultCode)) {
       retroBatterPos = null;
       return;
@@ -270,20 +306,29 @@
       return;
     }
 
-    if (movements.length === 0) return;
+    if (paths.length === 0) return;
     retroBatterPos = null; // 타자 이동 시작 시 타자 스프라이트 숨김
 
-    const duration = 450;
+    /**
+     * ⚠ **모두 같은 속도로 뛴다.** 길이가 다른 주자를 같은 시간에 도착시키면
+     *   3루타 친 타자가 앞 주자를 앞질러 뛰는 것처럼 보인다 — 거리로 나눈다.
+     */
+    const lens = paths.map(pathLength);
+    const maxLen = Math.max(...lens, 1);
+    const oneBase = Math.max(1, Math.hypot(
+      retroField.first.x - retroField.home.x, retroField.first.y - retroField.home.y));
+    const duration = Math.min(1500, Math.round(450 * Math.max(1, maxLen / oneBase)));
     const frame = 16;
-    const steps = Math.round(duration / frame);
+    const steps = Math.max(1, Math.round(duration / frame));
 
     for (let step = 1; step <= steps; step++) {
       const t = step / steps;
       const eased = 1 - (1 - t) * (1 - t);
-      retroRunnerPositions = movements.map(m => ({
-        x: Math.round(m.from.x + (m.to.x - m.from.x) * eased),
-        y: Math.round(m.from.y + (m.to.y - m.from.y) * eased),
-      }));
+      const traveled = eased * maxLen;
+      retroRunnerPositions = paths.map((p, i) => {
+        const q = pointAlong(p, Math.min(traveled, lens[i]));
+        return { x: Math.round(q.x), y: Math.round(q.y) };
+      });
       await sleep(frame);
     }
   }
@@ -1404,23 +1449,63 @@
     );
   }
 
+  /**
+   * 한 이닝을 돌린다. `handlePostExitWatchInning`·`handlePostExitWatchAll`이
+   * 같은 몸통을 쓴다 — 두 벌로 적으면 로그·기록 반영이 한쪽만 고쳐진다.
+   *
+   * @returns 경기가 끝났으면 true
+   */
+  async function stepOneInning(): Promise<boolean> {
+    const response = await window.projectB!.matchNextInning!();
+    for (const log of response.logs) {
+      pushLog(log, "log-auto");
+      await sleep(ms(600));
+    }
+    applySnapshot(response.snapshot);
+    applyBatchStats(response.batchStats);
+    return !!response.snapshot.isFinished;
+  }
+
+  /** 「이번 이닝만」 — 한 이닝 보고 다시 물어본다 */
   async function handlePostExitWatchInning() {
     if (!window.projectB?.matchNextInning) return;
     postExitPopupVisible = false;
     isAutoSimming = true;
     try {
-      const response = await window.projectB.matchNextInning();
-      for (const log of response.logs) {
-        pushLog(log, "log-auto");
-        await sleep(ms(600));
+      if (await stepOneInning()) await handleGameOver();
+      else postExitPopupVisible = true;
+    } finally {
+      isAutoSimming = false;
+    }
+  }
+
+  /**
+   * 「진행 보기」 — **경기가 끝날 때까지** 잇달아 돌린다.
+   *
+   * 🔴 예전엔 이 버튼이 한 이닝만 돌고 팝업을 다시 띄웠다(사용자 U1 ·
+   *   2026-09-07). 9회까지 보려면 대여섯 번을 더 눌러야 했다 —
+   *   `handlePostExitWatchInning`이 `matchNextInning()`을 **한 번만** 부르고
+   *   `postExitPopupVisible = true`로 돌아갔기 때문이다. 한 이닝씩 보고 싶은
+   *   자리는 이제 「이번 이닝만」이 갖는다.
+   *
+   * ⚠ `protagonistJustExited`로 안 끊는다 — 이미 교체된 뒤라 그 깃발은 다시
+   *   서지 않고, 서더라도 여기서 멈출 이유가 없다.
+   * ⚠ 상한(`guard`)에 걸리면 **팝업을 되살린다.** 안 그러면 엔진이 끝을 못
+   *   내는 판에서 화면이 조작할 것 없이 굳는다.
+   */
+  async function handlePostExitWatchAll() {
+    if (!window.projectB?.matchNextInning) return;
+    postExitPopupVisible = false;
+    isAutoSimming = true;
+    try {
+      let guard = 0;
+      while (guard++ < 60 && !isGameOver) {
+        if (await stepOneInning()) {
+          await handleGameOver();
+          return;
+        }
       }
-      applySnapshot(response.snapshot);
-      applyBatchStats(response.batchStats);
-      if (response.snapshot.isFinished) {
-        await handleGameOver();
-      } else {
-        postExitPopupVisible = true;
-      }
+      if (!isGameOver) postExitPopupVisible = true;
     } finally {
       isAutoSimming = false;
     }
@@ -1933,9 +2018,14 @@
           <p class="gameover-summary">{postExitReason}</p>
         {/if}
         <p class="post-exit-question">남은 경기를 어떻게 볼까요?</p>
+        <!-- ⚠ 「진행 보기」는 **경기 끝까지**다(사용자 U1). 한 이닝씩 보려면
+             「이번 이닝만」 — 예전엔 그 둘이 한 버튼이었다 -->
         <div class="post-exit-btns">
-          <button class="post-exit-btn watch-btn" type="button" on:click={handlePostExitWatchInning} disabled={isAutoSimming}>
+          <button class="post-exit-btn watch-btn" type="button" on:click={handlePostExitWatchAll} disabled={isAutoSimming}>
             진행 보기
+          </button>
+          <button class="post-exit-btn inning-btn" type="button" on:click={handlePostExitWatchInning} disabled={isAutoSimming}>
+            이번 이닝만
           </button>
           <button class="post-exit-btn result-btn" type="button" on:click={handlePostExitShowResult} disabled={isAutoSimming}>
             결과 보기
@@ -3332,12 +3422,15 @@
 
   .post-exit-btns {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     margin-top: 4px;
+    /* 버튼이 셋이라 좁은 창에서 줄이 넘어갈 수 있다 — 넘겨서라도 다 보인다 */
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .post-exit-btn {
-    padding: 12px 28px;
+    padding: 12px 22px;
     border: none;
     border-radius: 10px;
     font-size: 15px;
@@ -3361,6 +3454,19 @@
   .watch-btn:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 6px 22px rgba(50, 100, 200, 0.55);
+  }
+
+  /* 「이번 이닝만」 — 「진행 보기」보다 한 단 낮게 보이게 한다 */
+  .inning-btn {
+    background: var(--panel-sunk);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(20, 40, 70, 0.28);
+  }
+
+  .inning-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(20, 40, 70, 0.4);
   }
 
   .result-btn {
