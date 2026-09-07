@@ -14,7 +14,7 @@
     },
     {
       "type": "morale_lte",
-      "value": 58
+      "value": 70
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_CLASSMATE_01",

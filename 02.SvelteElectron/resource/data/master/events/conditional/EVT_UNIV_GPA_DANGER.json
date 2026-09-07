@@ -11,7 +11,7 @@
     },
     {
       "type": "gpa_lte",
-      "value": 2
+      "value": 2.4
     },
     {
       "type": "week_gte",

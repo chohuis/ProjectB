@@ -1,0 +1,25 @@
+{
+  "id": "EVT_UNIV_INJURY_SCARE_UNIV_COND",
+  "type": "conditional",
+  "category": "health",
+  "priority": 759,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "condition_lte",
+      "value": 55
+    },
+    {
+      "type": "injured",
+      "value": false
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_INJURY_SCARE_UNIV",
+  "decisionTemplateId": "DEC_UNIV_INJURY_SCARE_UNIV",
+  "_splitNote": "🔴 **`EVT_UNIV_INJURY_SCARE_UNIV` 의 컨디션 갈래다** (1.0.1 C1). 둘이 같은 문안을 쓴다 — 조건 문법에 or 가 없어서 갈랐을 뿐 다른 이야기가 아니다. 우선순위를 하나 낮춰(759) 같은 주에 둘 다 서면 피로 쪽이 이기게 했다"
+}

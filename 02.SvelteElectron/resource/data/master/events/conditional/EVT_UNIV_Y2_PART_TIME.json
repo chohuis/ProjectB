@@ -22,7 +22,7 @@
     },
     {
       "type": "money_lte",
-      "value": 200
+      "value": 1000
     }
   ],
   "messageTemplateId": "MSG_UNIV_Y2_PART_TIME",

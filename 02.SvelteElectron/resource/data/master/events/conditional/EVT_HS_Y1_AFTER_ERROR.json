@@ -19,7 +19,7 @@
     },
     {
       "type": "morale_lte",
-      "value": 50
+      "value": 67
     }
   ],
   "messageTemplateId": "MSG_HS_Y1_AFTER_ERROR",

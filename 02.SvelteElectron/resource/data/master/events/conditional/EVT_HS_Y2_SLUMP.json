@@ -23,7 +23,7 @@
     },
     {
       "type": "morale_lte",
-      "value": 45
+      "value": 62
     }
   ],
   "messageTemplateId": "MSG_HS_Y2_SLUMP",

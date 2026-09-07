@@ -12,7 +12,7 @@
     },
     {
       "type": "morale_lte",
-      "value": 34
+      "value": 60
     },
     {
       "type": "condition_lte",
