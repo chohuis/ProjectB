@@ -369,6 +369,16 @@ function gradeWeights(rules: TierRules, ctx: EventContext, week: number): Record
 
 export function runEventEngine(
   rules: EventRule[],
+  /**
+   * 🔴 **더 이상 안 읽는다** (2026-09-08 · §1). 랜덤 풀 다섯이 노말 등급으로
+   * 흡수돼 풀이 자리를 배분하지 않는다 — 규칙을 묶는 `poolId` 는 규칙 파일에
+   * 남아 있고, 그것이 결(`theme`)의 이름표다.
+   *
+   * ⚠ **인자는 남긴다.** 지우면 호출부 넷과 검사 넷을 같이 고쳐야 하고,
+   *   풀이 다시 뜻을 갖는 날(예: 결별 빈도)에 다시 넣게 된다. 안 읽는다는
+   *   것을 여기 적어 두는 편이 조용히 사라지는 것보다 낫다.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   pools: EventPool[],
   msgTmplMap: Map<string, MessageTemplate>,
   decTmplMap: Map<string, DecisionTemplate>,
