@@ -170,6 +170,7 @@ import {
   pitcherSeasonTableMeta, gameResultsTableMeta, rankListMeta, coachReportTableMeta,
   examBarsMeta, semesterBarsMeta, cardsMeta,
 } from "../utils/dashboardMeta";
+import { tableCopy } from "../utils/dashboardCopy";
 import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { TOURNAMENTS } from "../utils/tournament";
 import {
@@ -1602,13 +1603,23 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         const r = e.result!;
         return `${away} ${r.awayScore} : ${r.homeScore} ${home}`;
       });
+      // 🔴 **본문은 한 줄이다** (U6② · 2026-09-07 · 사용자). 값은 아래 표가
+      //   든다 — 본문에도 같은 줄을 실으면 화면에 **두 번** 나온다.
+      //   2026-09-04 에 다른 다섯 자리를 이 규칙으로 줄였는데(`dashboardMeta34`
+      //   §본문) 여기만 **본문에 값 줄밖에 없어** 남길 문장이 없었다.
+      //   새 말을 짓지 않는 규칙이라 미뤘고, 이제 문안이 그 한 줄을 갖는다
+      //   (`dashboard_labels.json` `table.leagueResults.lead`).
+      //
+      // ⚠ **폴백은 문안이 없을 때만이다.** 문안을 못 읽으면 빈 본문이 되어
+      //   소식함에서 「내용 없음」과 구분이 안 된다 — 그때만 값 줄을 남긴다.
+      const lead = tableCopy(mFinal.dashboardLabels, "leagueResults").lead;
       gameStore.addMessage({
         id: `msg-league-results-${sFinal.seasonYear}-w${weekNum}`,
         category: "system",
         sender: "리그 사무국",
         subject: `${monthLabel} ${leagueName} 경기 결과`,
         preview: lines[0] ?? "",
-        body: lines.join("\n"),
+        body: lead || lines.join("\n"),
         // 경기마다 열이 같다 — 표로도 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
         // ⚠ **본문 줄 순서(원정 먼저)와 표 열 순서(홈 먼저)가 다르다.** 열 순서는
         //   문안이 정한다 — 본문을 표에 맞춰 고치면 텍스트 폴백이 바뀐다

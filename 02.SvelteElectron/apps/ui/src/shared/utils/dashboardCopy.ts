@@ -186,6 +186,19 @@ export interface TableCopy {
    * ⚠ 없는 결말은 **키를 그대로** 쓴다. 빈 칸이면 왜 비었는지 안 남는다.
    */
   outcomeLabel: Record<string, string>;
+  /**
+   * 표 앞의 한 줄 — **무슨 소식인지**만 말한다 (`table.leagueResults.lead`).
+   *
+   * 🔴 **본문이 표를 되풀이하지 않게 하는 자리다** (U6② · 2026-09-07).
+   *   2026-09-04 에 본문 다섯 자리를 「값은 패널이 들고 본문은 한 줄」로
+   *   줄였는데(`dashboardMeta34.test.ts` §본문), 리그 경기 결과만 **본문에
+   *   원래 값 줄밖에 없어** 줄일 문장이 없었다 — 새 말을 짓지 않는 규칙이라
+   *   미뤘다. 그 한 줄이 문안에 생겨서 이제 줄인다.
+   *
+   * ⚠ **없으면 빈 문자열이다.** 생산부가 그때만 값 줄을 남긴다 — 빈 본문은
+   *   소식함에서 「내용 없음」과 구분이 안 된다.
+   */
+  lead: string;
 }
 
 /**
@@ -234,6 +247,7 @@ export function tableCopy(labels: DashboardLabels | null, kind: string): TableCo
     kindLabel: isStringMap(kindRaw) ? kindRaw : {},
     intlMark: typeof b?.intlMark === "string" ? b.intlMark : "",
     outcomeLabel: isStringMap(outcomeRaw) ? outcomeRaw : {},
+    lead: typeof b?.lead === "string" ? b.lead : "",
   };
 }
 

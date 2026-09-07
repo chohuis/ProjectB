@@ -270,6 +270,32 @@ describe("배선과 본문", () => {
     expect(roll.includes("■ 웨이버 영입 ")).toBe(true);
   });
 
+  /**
+   * 🔴 **여섯째 자리** (U6② · 2026-09-07 · 사용자). 리그 경기 결과만 남아
+   *    있었다 — 본문이 `원정 n : m 홈` 줄뿐이라 표와 **글자까지 같았다.**
+   *    새 말을 안 짓는 규칙이라 문안에 한 줄이 생길 때까지 미뤘고,
+   *    `table.leagueResults.lead` 가 그것이다.
+   */
+  it("리그 경기 결과 본문이 표를 되풀이하지 않는다", () => {
+    const week = read(SRC_WEEK);
+    // 값 줄을 그대로 싣던 자리가 없어졌다
+    expect(week.includes("body: lines.join(")).toBe(false);
+    // 문안의 한 줄을 쓴다 — 화면과 같은 창구(`tableCopy`)로 찾는다
+    expect(week.includes('tableCopy(mFinal.dashboardLabels, "leagueResults").lead')).toBe(true);
+    expect(week.includes("body: lead || lines.join(")).toBe(true);
+  });
+
+  it("그 한 줄이 문안에 있다 — 코드가 말을 짓지 않는다", () => {
+    const lead = tableCopy(labels, "leagueResults").lead;
+    expect(lead.length).toBeGreaterThan(0);
+    // 값 자리표가 없다 — 경기 수·팀 이름이 들어가면 다시 표를 되풀이한다
+    expect(lead.includes("{")).toBe(false);
+  });
+
+  it("문안이 없으면 값 줄로 떨어진다 — 빈 본문은 「내용 없음」과 같아 보인다", () => {
+    expect(tableCopy(null, "leagueResults").lead).toBe("");
+  });
+
   it("안내가 든 본문은 그대로다", () => {
     expect(read(SRC_ROLL).includes("고교 시즌 종료 동기화가 완료되었습니다.")).toBe(true);
     expect(read(SRC_ROLL).includes("정규리그가 종료되었습니다.")).toBe(true);
