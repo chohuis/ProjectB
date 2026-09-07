@@ -13215,6 +13215,644 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_FARM_INNING_CAP",
+      "prompt": "이닝 상한을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "keep",
+          "label": "제한을 지킨다",
+          "effectHint": "컨디션 +5",
+          "effects": {
+            "conditionDelta": 5
+          }
+        },
+        {
+          "id": "more",
+          "label": "더 던진다",
+          "effectHint": "스태미나 경험치 +3, 피로 +6",
+          "effects": {
+            "xp": {
+              "stamina": 3
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_VELO_DAY",
+      "prompt": "측정에서 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "max",
+          "label": "최고로 던진다",
+          "effectHint": "구속 경험치 +3, 피로 +6",
+          "effects": {
+            "xp": {
+              "velocity": 3
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "form",
+          "label": "폼대로 던진다",
+          "effectHint": "제구 경험치 +2",
+          "effects": {
+            "xp": {
+              "control": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_VIDEO_ROOM",
+      "prompt": "무엇으로 찾겠습니까?",
+      "options": [
+        {
+          "id": "video",
+          "label": "영상을 본다",
+          "effectHint": "커맨드 경험치 +3",
+          "effects": {
+            "xp": {
+              "command": 3
+            }
+          }
+        },
+        {
+          "id": "body",
+          "label": "몸으로 찾는다",
+          "effectHint": "무브먼트 경험치 +2, 피로 +5",
+          "effects": {
+            "xp": {
+              "movement": 2
+            },
+            "fatigueDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_FALL_CAMP",
+      "prompt": "캠프를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "stay",
+          "label": "남는다",
+          "effectHint": "피로 +6, 성실 +4",
+          "effects": {
+            "diligenceDelta": 4,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "home",
+          "label": "집에 간다",
+          "effectHint": "컨디션 +5",
+          "effects": {
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_CAMP_ROSTER",
+      "prompt": "명단을 어떻게 기다리겠습니까?",
+      "options": [
+        {
+          "id": "ask",
+          "label": "코치에게 묻는다",
+          "effectHint": "코치 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "coach",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "wait",
+          "label": "기다린다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_WEIGHT_COACH",
+      "prompt": "웨이트를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "follow",
+          "label": "시키는 대로 한다",
+          "effectHint": "스태미나 경험치 +3, 피로 +5",
+          "effects": {
+            "xp": {
+              "stamina": 3
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "mine",
+          "label": "내 방식대로 한다",
+          "effectHint": "성실 +3, 코치 관계 -3",
+          "effects": {
+            "diligenceDelta": 3,
+            "relationDelta": {
+              "kind": "coach",
+              "delta": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_TEAM_DIET",
+      "prompt": "식단을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "keep",
+          "label": "지킨다",
+          "effectHint": "컨디션 +4",
+          "effects": {
+            "conditionDelta": 4
+          }
+        },
+        {
+          "id": "eat",
+          "label": "먹고 싶은 걸 먹는다",
+          "effectHint": "컨디션 -3, 사기 +3",
+          "effects": {
+            "moraleDelta": 3,
+            "conditionDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_CATCHER_SIGN",
+      "prompt": "사인을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "follow",
+          "label": "맞춰 준다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "shake",
+          "label": "내 공을 고집한다",
+          "effectHint": "무브먼트 경험치 +3, 동료 관계 -2",
+          "effects": {
+            "xp": {
+              "movement": 3
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LONG_WAIT",
+      "prompt": "대기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "warm",
+          "label": "계속 몸을 푼다",
+          "effectHint": "피로 +5, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "sit",
+          "label": "앉아서 본다",
+          "effectHint": "멘탈 경험치 +2",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_FUTURES_ALLSTAR",
+      "prompt": "올스타전을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "go",
+          "label": "간다",
+          "effectHint": "피로 +5, 인기 +4",
+          "effects": {
+            "popularityDelta": 4,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "pass",
+          "label": "사양한다",
+          "effectHint": "컨디션 +4",
+          "effects": {
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_FAN_SIGNING",
+      "prompt": "사인회를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "stay",
+          "label": "오래 남는다",
+          "effectHint": "피로 +4, 인기 +4",
+          "effects": {
+            "popularityDelta": 4,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "fill",
+          "label": "시간만 채운다",
+          "effectHint": "사기 +2, 인기 -2",
+          "effects": {
+            "moraleDelta": 2,
+            "popularityDelta": -2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_JERSEY_PICK",
+      "prompt": "번호를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "받은 대로 단다",
+          "effectHint": "사기 -2, 성실 +3",
+          "effects": {
+            "moraleDelta": -2,
+            "diligenceDelta": 3
+          }
+        },
+        {
+          "id": "ask",
+          "label": "원하는 번호를 말한다",
+          "effectHint": "사기 +3, 구단주 관계 -3",
+          "effects": {
+            "moraleDelta": 3,
+            "relationDelta": {
+              "kind": "owner",
+              "delta": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_FOREIGN_PLAYER",
+      "prompt": "그 선수를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "말을 걸어 본다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "watch",
+          "label": "던지는 걸 본다",
+          "effectHint": "커맨드 경험치 +2",
+          "effects": {
+            "xp": {
+              "command": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_ROOKIE_BONUS",
+      "prompt": "그 숫자를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ignore",
+          "label": "신경 쓰지 않는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        },
+        {
+          "id": "compare",
+          "label": "비교한다",
+          "effectHint": "피로 -3, 사기 -3",
+          "effects": {
+            "moraleDelta": -3,
+            "fatigueDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_AGENT_CALL",
+      "prompt": "그 연락을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sign",
+          "label": "맡긴다",
+          "effectHint": "인기 +3",
+          "effects": {
+            "popularityDelta": 3
+          }
+        },
+        {
+          "id": "alone",
+          "label": "혼자 한다",
+          "effectHint": "피로 +4, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_TEAMMATE_ENLIST",
+      "prompt": "그 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "keep",
+          "label": "연락처를 받아 둔다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "count",
+          "label": "내 나이를 센다",
+          "effectHint": "사기 -2, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "moraleDelta": -2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_SAME_AGE_PROSPECT",
+      "prompt": "훈련을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "together",
+          "label": "같이 한다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "alone",
+          "label": "따로 한다",
+          "effectHint": "피로 +4, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_COACH_CHANGE",
+      "prompt": "새 코치를 어떻게 대하겠습니까?",
+      "options": [
+        {
+          "id": "greet",
+          "label": "먼저 인사한다",
+          "effectHint": "코치 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "coach",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "keep",
+          "label": "하던 걸 지킨다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_MANAGER_VISIT",
+      "prompt": "오늘 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "show",
+          "label": "눈에 들게 한다",
+          "effectHint": "피로 +5, 감독 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 4
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "usual",
+          "label": "하던 대로 한다",
+          "effectHint": "컨디션 +4",
+          "effects": {
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_REPORT_MEETING",
+      "prompt": "면담을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "write",
+          "label": "받아 적는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        },
+        {
+          "id": "speak",
+          "label": "이유를 말한다",
+          "effectHint": "사기 +3, 코치 관계 -3",
+          "effects": {
+            "moraleDelta": 3,
+            "relationDelta": {
+              "kind": "coach",
+              "delta": -3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_WAIVER_NOTICE",
+      "prompt": "그 소식을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "look",
+          "label": "다른 팀을 알아본다",
+          "effectHint": "사기 -2, 인기 +3",
+          "effects": {
+            "popularityDelta": 3,
+            "moraleDelta": -2
+          }
+        },
+        {
+          "id": "stay",
+          "label": "여기서 버틴다",
+          "effectHint": "피로 +4, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_ACADEMY_JOB",
+      "prompt": "그 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "나간다",
+          "effectHint": "피로 +5, 돈 30만원",
+          "effects": {
+            "moneyDelta": 30,
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "train",
+          "label": "훈련에 남는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_SHUTTLE_BUS",
+      "prompt": "버스에서 무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "앞자리에서 이야기한다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "뒤에서 잔다",
+          "effectHint": "피로 -5",
+          "effects": {
+            "fatigueDelta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_WEIGHT_CHECK",
+      "prompt": "체중을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "cut",
+          "label": "저울을 맞춘다",
+          "effectHint": "컨디션 +5, 사기 -2",
+          "effects": {
+            "conditionDelta": 5,
+            "moraleDelta": -2
+          }
+        },
+        {
+          "id": "bulk",
+          "label": "힘을 붙인다",
+          "effectHint": "컨디션 -3, 사기 +3",
+          "effects": {
+            "moraleDelta": 3,
+            "conditionDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_TRAIN_ORDER",
+      "prompt": "순번을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "first",
+          "label": "먼저 달라고 한다",
+          "effectHint": "제구 경험치 +3, 동료 관계 -2",
+          "effects": {
+            "xp": {
+              "control": 3
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -2
+            }
+          }
+        },
+        {
+          "id": "wait",
+          "label": "순서를 기다린다",
+          "effectHint": "동료 관계 +3",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 3
+            }
+          }
+        }
+      ]
     }
   ]
 }

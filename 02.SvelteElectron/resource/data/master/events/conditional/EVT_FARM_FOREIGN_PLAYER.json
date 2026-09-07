@@ -1,0 +1,31 @@
+{
+  "id": "EVT_FARM_FOREIGN_PLAYER",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
+  "category": "life",
+  "priority": 758,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_FOREIGN_PLAYER",
+  "decisionTemplateId": "DEC_FARM_FOREIGN_PLAYER",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "EVT_FARM_FAN_SIGNING",
+  "type": "random",
+  "tier": "normal",
+  "theme": "social",
+  "category": "social",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "weight": 16,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_FAN_SIGNING",
+  "decisionTemplateId": "DEC_FARM_FAN_SIGNING",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

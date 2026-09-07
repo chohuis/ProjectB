@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_WAIVER_NOTICE",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
+  "category": "mental",
+  "priority": 726,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 42
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_WAIVER_NOTICE",
+  "decisionTemplateId": "DEC_FARM_WAIVER_NOTICE",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

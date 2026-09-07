@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_AGENT_CALL",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 750,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_AGENT_CALL",
+  "decisionTemplateId": "DEC_FARM_AGENT_CALL",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}

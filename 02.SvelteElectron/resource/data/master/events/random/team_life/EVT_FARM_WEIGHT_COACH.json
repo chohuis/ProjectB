@@ -1,0 +1,29 @@
+{
+  "id": "EVT_FARM_WEIGHT_COACH",
+  "type": "random",
+  "tier": "normal",
+  "theme": "body",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "weight": 16,
+  "poolId": "POOL_BODY_DAILY",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_WEIGHT_COACH",
+  "decisionTemplateId": "DEC_FARM_WEIGHT_COACH",
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+}
