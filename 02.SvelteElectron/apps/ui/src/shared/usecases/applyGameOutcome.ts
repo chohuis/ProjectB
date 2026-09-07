@@ -391,6 +391,25 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   //   이벤트로 100을 넘긴 명성을 경기 한 번에 깎았다. 정본은 200이다
   if (growth.fameDelta !== 0) gameStore.applyFameChange(growth.fameDelta);
 
+  // ── 누적 카운터 (2026-09-08 · §12 `count`) ─────────────────────
+  //
+  // 히든 조건이 읽는다: 「독립 2년차 · 완봉 1회」 · 「같은 포수와 30경기」.
+  // ⚠ 여기가 **공식 등판**의 유일한 자리다 — 연습·대회 경로는 위에서 이미
+  //   돌아 나간다(연습경기 완봉은 이야기가 안 산다).
+  if (didEnter) {
+    const cat = get(masterStore).entities
+      .filter((e) => e.role === "player" && e.teamId === myTeamId
+        && e.details?.player?.position === "C")
+      .sort((a, b) => (b.details?.player?.batting?.ovr ?? 0) - (a.details?.player?.batting?.ovr ?? 0))[0];
+    gameStore.recordGameCounters({
+      // 완투 = 9이닝을 혼자 · 완봉 = 그러면서 팀 실점 0 (`eventCounters.lastGameOf` 와 같은 잣대)
+      completeGame: inningsPitched >= 9,
+      shutout: inningsPitched >= 9 && oppScore === 0,
+      catcherId: cat?.id ?? null,
+      started: role === "SP",
+    });
+  }
+
   const gotSave = won && outcome.week > 3 && diff <= 3 ? 1 : 0;
   gameStore.recordBaseballAchievementMetric({
     strikeouts: Math.max(0, outcome.strikeouts),

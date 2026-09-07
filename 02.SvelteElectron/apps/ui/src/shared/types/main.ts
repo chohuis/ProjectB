@@ -136,6 +136,56 @@ export interface DecisionEffect {
     /** 동료 지목. 비우면 접촉 중인 첫 동료 */
     personId?: string;
   };
+
+  // ── 새 보상 열쇠 (2026-09-08 · PLAN_EVENT_TIERS §5 · A 4-3) ────
+  //
+  // 🔴 **왜 필요했나.** B 4-2 가 올린 레어 99 가 **전부 「XP + 피로」 한 가지
+  //   꼴**이다(4-2 보고 §5). §2 가 말한 레어의 보상 폭은 「XP 8~10 · **훈련
+  //   효율 N주** · **기회**」인데 뒤 둘을 쓸 열쇠가 없어서 못 썼다 — 그게
+  //   맞아서가 아니라 열쇠가 없어서였다.
+  //
+  // ⚠ **상한은 전부 커리어 누계로 잰다.** 「한 번에 +3 까지」로 재면 +1 짜리를
+  //   세 번 받아 넘는다. 준 만큼을 `potentialGranted`·`devRateGranted` 에 적어
+  //   둔다(`ProtagonistSave`).
+
+  /** 잠재력 +N. **커리어 누적 +3 상한** — 넘는 몫은 무시하고 로그를 남긴다 */
+  potentialDelta?: number;
+  /** 성장률 +N. 커리어 누적 +10 상한 */
+  devRateDelta?: number;
+  /**
+   * 훈련 효율 +N% 를 N주.
+   * ⚠ **겹치면 긴 쪽이 남는다**(§5) — 짧은 쪽으로 덮으면 준 보상을 뺏는 꼴이다.
+   */
+  trainEffBoost?: { pct: number; weeks: number };
+  /**
+   * 구종 습득(등급 1).
+   * ⚠ **이미 있으면 등급 +1** 이다(§5) — 「배웠다」가 아무 일도 안 하면 안 된다.
+   */
+  pitchGrant?: { id: string };
+  /** 구종 등급 +1 (상한 5). 없는 구종이면 조용히 넘긴다 */
+  pitchGradeUp?: { id: string };
+  /** 배우는 중인 구종의 진행도 +N%. 훈련 중이 아니면 아무 일도 안 한다 */
+  pitchProgressJump?: { pct: number };
+  /** 영구 특성. 정의는 `traits/protagonist.json`, 효과는 기존 계수(`StaffMods`) */
+  trait?: { id: string };
+  /**
+   * 멘토 **한 명** — 코치 효율 보너스가 지속된다.
+   * ⚠ 둘째가 오면 **덮어쓴다**(§5 「한 명」). 쌓이면 보너스가 무한이 된다.
+   */
+  mentor?: { npcId?: string; role?: string; pct: number };
+  /** 부상 위험 ±N% 를 N주. **음수가 덜 다치는 쪽**이다 */
+  injuryRiskMod?: { pct: number; weeks: number };
+  /** 선발 보장 N경기 — 그동안 자리 깊이(`roleFit.over`)를 0 으로 본다 */
+  startGuarantee?: { games: number };
+  /**
+   * 누적 카운터를 민다 (§12 `count` 의 입력).
+   *
+   * 🔴 **`menteeCount` 를 올릴 손이 없었다.** 「지도한 후배 N」은 선택지가
+   *   만드는 값인데 그걸 적을 열쇠가 없어 조건만 있고 세는 곳이 없었다.
+   * ⚠ 이름은 `utils/eventCounters.COUNTERS` 에 있어야 한다 — 모르는 이름은
+   *   `check:effectkeys` 가 잡는다.
+   */
+  counterDelta?: Record<string, number>;
 }
 
 export interface MessageDecisionOption {

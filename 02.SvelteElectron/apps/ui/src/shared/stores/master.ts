@@ -24,6 +24,7 @@ import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
 import { COUNTERS } from "../utils/eventCounters";
 import { parseTierRules, type TierRules } from "../utils/tierRules";
+import { primeProtagonistTraits } from "../utils/protagonistTraits";
 import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCopy";
 import { parseContractTermsCopy, type ContractTermsCopy } from "../utils/contractCopy";
 import { parseDashboardLabels, type DashboardLabels } from "../utils/dashboardCopy";
@@ -592,6 +593,39 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
     else if (key === "luxury" || key === "luxury.teammate") {
       if (!isNaN(val)) result.luxurySpend = { cost: Math.abs(val), onTeammate: key !== "luxury" };
     }
+    // ── 새 보상 열쇠 (2026-09-08 · §5 · A 4-3) ───────────────────
+    //
+    // ⚠ **객체형이 정본이다.** 문자열형은 기존 데이터가 쓰는 꼴이라 같이
+    //   열어 둔다 — 한쪽만 열면 B 가 쓴 표기가 조용히 버려진다
+    //   (`check:effectkeys` 머리말이 적은 그 형태다).
+    // ⚠ 「N주」·「N%」 둘이 필요한 것은 `/` 로 가른다: `trainEff:15/4`
+    else if (key === "potential")  { if (!isNaN(val)) result.potentialDelta = val; }
+    else if (key === "devRate")    { if (!isNaN(val)) result.devRateDelta   = val; }
+    else if (key === "trainEff" || key === "injuryRisk") {
+      const [a, b] = rawVal.split("/").map((x) => parseFloat(x));
+      if (!isNaN(a) && !isNaN(b)) {
+        const v = { pct: a, weeks: Math.max(0, Math.round(b)) };
+        if (key === "trainEff") result.trainEffBoost = v; else result.injuryRiskMod = v;
+      }
+    }
+    else if (key === "pitchGrant")    { result.pitchGrant   = { id: rawVal }; }
+    else if (key === "pitchGradeUp")  { result.pitchGradeUp = { id: rawVal }; }
+    else if (key === "pitchProgress") { const f = parseFloat(rawVal); if (!isNaN(f)) result.pitchProgressJump = { pct: f }; }
+    else if (key === "trait")         { result.trait = { id: rawVal }; }
+    else if (key === "mentor") {
+      // "mentor:PLY_X/10" — 상대와 보너스 %. 상대를 못 적으면 역할 이름이어도 된다
+      const [who, pct] = rawVal.split("/");
+      const f = parseFloat(pct ?? "");
+      if (who) result.mentor = { npcId: who, pct: isNaN(f) ? 5 : f };
+    }
+    else if (key === "startGuarantee") { if (!isNaN(val)) result.startGuarantee = { games: val }; }
+    // "counter.menteeCount:+1" — 이름은 `eventCounters.COUNTERS` 가 정본이다
+    else if (key.startsWith("counter.")) {
+      const name = key.slice(8);
+      if (!isNaN(val) && name in COUNTERS) {
+        result.counterDelta = { ...(result.counterDelta ?? {}), [name]: val };
+      }
+    }
   }
   return result;
 }
@@ -1115,6 +1149,11 @@ function createMasterStore() {
       // 등급 추첨 규칙 (§3 · A 4-1). **못 읽으면 던진다** — 아래 `parseTierRules`
       // 가 그 일을 한다. 풀과 달리 이건 한 파일이라 매니페스트를 안 탄다.
       const tierRules = parseTierRules(await fetchMaster<unknown>("events/tier_rules.json"));
+
+      // 주인공 영구 특성 (§5 `trait`). **효과는 기존 계수**라 표만 실어 준다.
+      // ⚠ 못 읽으면 빈 표다 — 특성을 받아도 계수가 안 붙는다.
+      //   그 어긋남은 `check:effectkeys` 가 「데이터가 가리키는 id 가 표에 있나」로 잡는다
+      primeProtagonistTraits(await fetchMaster<unknown>("traits/protagonist.json"));
       // refs가 팀의 유일한 정본이다 — 보충하지 않는다 (위 주석 참고)
       const mergedTeams = refsData?.teams ?? [];
 
