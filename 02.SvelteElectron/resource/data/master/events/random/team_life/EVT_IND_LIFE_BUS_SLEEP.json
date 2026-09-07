@@ -16,5 +16,5 @@
     }
   ],
   "messageTemplateId": "MSG_IND_LIFE_BUS_SLEEP",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_IND_LIFE_BUS_SLEEP"
 }

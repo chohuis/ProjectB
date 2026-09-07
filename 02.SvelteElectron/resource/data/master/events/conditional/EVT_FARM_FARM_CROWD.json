@@ -22,5 +22,5 @@
     }
   ],
   "messageTemplateId": "MSG_FARM_FARM_CROWD",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_FARM_FARM_CROWD"
 }

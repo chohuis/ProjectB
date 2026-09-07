@@ -17,5 +17,5 @@
     }
   ],
   "messageTemplateId": "MSG_IND_NO_SPONSOR",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_IND_NO_SPONSOR"
 }

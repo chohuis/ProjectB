@@ -20,5 +20,5 @@
     }
   ],
   "messageTemplateId": "MSG_IND_LIFE_NIGHT_LIGHT",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_IND_LIFE_NIGHT_LIGHT"
 }

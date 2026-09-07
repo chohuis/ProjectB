@@ -20,5 +20,5 @@
     }
   ],
   "messageTemplateId": "MSG_FARM_LIFE_FARM_UMPIRE",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_FARM_LIFE_FARM_UMPIRE"
 }

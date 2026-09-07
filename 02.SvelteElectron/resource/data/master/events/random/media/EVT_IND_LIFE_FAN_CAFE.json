@@ -16,5 +16,5 @@
     }
   ],
   "messageTemplateId": "MSG_IND_LIFE_FAN_CAFE",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_IND_LIFE_FAN_CAFE"
 }

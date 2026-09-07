@@ -12600,6 +12600,298 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_FARM_FARM_CROWD",
+      "prompt": "빈 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "throw",
+          "label": "그래도 던진다",
+          "effectHint": "성실 +2",
+          "effects": {
+            "diligenceDelta": 2
+          }
+        },
+        {
+          "id": "family",
+          "label": "가족을 찾아본다",
+          "effectHint": "사기 +3",
+          "effects": {
+            "moraleDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_NO_SPONSOR",
+      "prompt": "장비를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "buy",
+          "label": "좋은 걸로 산다",
+          "effectHint": "돈 80만원, 컨디션 +3",
+          "effects": {
+            "moneyDelta": -80,
+            "conditionDelta": 3
+          }
+        },
+        {
+          "id": "fix",
+          "label": "쓰던 걸 고쳐 쓴다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LIFE_FARM_STATS",
+      "prompt": "기록을 어떻게 보겠습니까?",
+      "options": [
+        {
+          "id": "read",
+          "label": "기록을 챙겨 본다",
+          "effectHint": "제구 경험치 +2",
+          "effects": {
+            "xp": {
+              "control": 2
+            }
+          }
+        },
+        {
+          "id": "ask",
+          "label": "코치에게 물어본다",
+          "effectHint": "코치 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "coach",
+              "delta": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LIFE_LOCAL_FARM_NEWS",
+      "prompt": "그 한 줄을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "send",
+          "label": "가족에게 보낸다",
+          "effectHint": "사기 +3",
+          "effects": {
+            "moraleDelta": 3
+          }
+        },
+        {
+          "id": "fuel",
+          "label": "더 올라갈 이유로 삼는다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LIFE_SCOUT_FARM",
+      "prompt": "오늘 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "show",
+          "label": "눈에 들게 던진다",
+          "effectHint": "구속 경험치 +2, 피로 +3",
+          "effects": {
+            "xp": {
+              "velocity": 2
+            },
+            "fatigueDelta": 3
+          }
+        },
+        {
+          "id": "usual",
+          "label": "하던 대로 한다",
+          "effectHint": "사기 +2",
+          "effects": {
+            "moraleDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_BLOG_POST",
+      "prompt": "그 글을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "reply",
+          "label": "댓글을 남긴다",
+          "effectHint": "인기 +3",
+          "effects": {
+            "popularityDelta": 3
+          }
+        },
+        {
+          "id": "close",
+          "label": "읽고 만다",
+          "effectHint": "사기 +2",
+          "effects": {
+            "moraleDelta": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_FAN_CAFE",
+      "prompt": "팬 카페를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "greet",
+          "label": "인사를 남긴다",
+          "effectHint": "인기 +4",
+          "effects": {
+            "popularityDelta": 4
+          }
+        },
+        {
+          "id": "focus",
+          "label": "경기에만 집중한다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_LOCAL_NEWS",
+      "prompt": "그 소식을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "tell",
+          "label": "가족에게 알린다",
+          "effectHint": "사기 +3",
+          "effects": {
+            "moraleDelta": 3
+          }
+        },
+        {
+          "id": "visit",
+          "label": "방송국에 인사한다",
+          "effectHint": "명성 +3",
+          "effects": {
+            "fameDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_LIFE_FARM_UMPIRE",
+      "prompt": "존을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "adapt",
+          "label": "존에 맞춰 던진다",
+          "effectHint": "제구 경험치 +2",
+          "effects": {
+            "xp": {
+              "control": 2
+            }
+          }
+        },
+        {
+          "id": "quiet",
+          "label": "불평하지 않는다",
+          "effectHint": "감독 관계 +3",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_BUS_SLEEP",
+      "prompt": "내려서 무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "stretch",
+          "label": "스트레칭을 한다",
+          "effectHint": "피로 -5",
+          "effects": {
+            "fatigueDelta": -5
+          }
+        },
+        {
+          "id": "talk",
+          "label": "옆자리와 이야기한다",
+          "effectHint": "동료 관계 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_NIGHT_LIGHT",
+      "prompt": "어두운 구장을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "adapt",
+          "label": "눈이 익을 때까지 본다",
+          "effectHint": "멘탈 경험치 +2",
+          "effects": {
+            "xp": {
+              "mentality": 2
+            }
+          }
+        },
+        {
+          "id": "report",
+          "label": "구단에 말한다",
+          "effectHint": "감독 관계 +3",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_LIFE_RIVAL_IND",
+      "prompt": "그 사람을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "talk",
+          "label": "말을 걸어 본다",
+          "effectHint": "라이벌 관계 +5",
+          "effects": {
+            "relationDelta": {
+              "kind": "rival",
+              "delta": 5
+            }
+          }
+        },
+        {
+          "id": "beat",
+          "label": "이겨서 말한다",
+          "effectHint": "위기집중력 경험치 +2, 피로 +3",
+          "effects": {
+            "xp": {
+              "clutch": 2
+            },
+            "fatigueDelta": 3
+          }
+        }
+      ]
     }
   ]
 }

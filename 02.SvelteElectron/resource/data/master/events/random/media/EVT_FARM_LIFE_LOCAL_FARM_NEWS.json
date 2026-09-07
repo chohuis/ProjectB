@@ -20,5 +20,5 @@
     }
   ],
   "messageTemplateId": "MSG_FARM_LIFE_LOCAL_FARM_NEWS",
-  "decisionTemplateId": null
+  "decisionTemplateId": "DEC_FARM_LIFE_LOCAL_FARM_NEWS"
 }
