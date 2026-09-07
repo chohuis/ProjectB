@@ -1,4 +1,5 @@
 import type { PostseasonSeries, ScheduleEntry, Standing } from "../types/season";
+import { seedOf } from "./seedOf";
 
 // ── 순수 TS 헬퍼 (계산만, 상태 없음) ────────────────────────────
 export function winsNeeded(bestOf: 1 | 3 | 5 | 7): number {
@@ -88,12 +89,37 @@ export async function fillNextSeries(
   return JSON.parse(raw);
 }
 
+/**
+ * 비주인공 시리즈 씨앗.
+ *
+ * 🔴 **씨앗을 안 넘기면 Rust 가 `thread_rng` 로 떨어진다** — 같은 세이브를
+ *   두 번 돌리면 **다른 팀이 우승한다**(2026-09-07 실측: 독립리그 준PO 승자가
+ *   판마다 갈렸다). 엔진에는 `seed` 자리가 처음부터 있었는데 **부르는 쪽이
+ *   안 채우고 있었다.**
+ *
+ * ⚠ **판마다 달라야 한다.** 한 포스트시즌에서 이 함수는 여러 번 불린다
+ *   (브라켓 생성 직후 · 주인공 탈락 뒤 · 주인공 시리즈가 끝날 때마다).
+ *   같은 씨앗을 그대로 재사용하면 LCG 가 매번 처음부터 같은 수열을 내서
+ *   **매 라운드 홈이 이기는** 편향이 생긴다. 그래서 **이미 승자가 정해진
+ *   시리즈 수**를 섞는다 — 브라켓이 나아갈 때마다 달라지는 값이다.
+ */
+export function postseasonSeed(
+  worldSeed: number,
+  seasonYear: number,
+  leagueId: string,
+  bracket: PostseasonSeries[],
+): number {
+  return seedOf(worldSeed, seasonYear, leagueId, "postseason",
+    bracket.filter((s) => s.winner).length);
+}
+
 export async function resolveNonProtagonistSeries(
   bracket: PostseasonSeries[],
   protagonistTeamId: string,
+  seed = 0,
 ): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.postseasonResolveNpc(
-    JSON.stringify({ bracket, protagonistTeamId })
+    JSON.stringify({ bracket, protagonistTeamId, seed })
   );
   return JSON.parse(raw);
 }

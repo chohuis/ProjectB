@@ -534,6 +534,9 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
         careerInjuryCount: offeredAsset.careerInjuryCount,
         hasSteroidHistory: offeredAsset.hasSteroidHistory,
         receivingTeamMedicalQuality: receivingProfile.medicalQuality,
+        // 씨앗 — 안 넘기면 Rust 가 `thread_rng` 라 같은 세이브도 판마다
+        // 다른 트레이드가 성사된다(트레이드 넷 중 메디컬만 빠져 있었다)
+        seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, offeredAsset.playerId ?? "", proposal.receivingTeamId, "medical"),
       }))
     ) as { pass: boolean; concernLevel: number; rejectionProbability: number; rejectionReason: string | null };
 
@@ -583,6 +586,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
             careerInjuryCount: protagonistAsset.careerInjuryCount,
             hasSteroidHistory: protagonistAsset.hasSteroidHistory,
             receivingTeamMedicalQuality: receivingProfile.medicalQuality,
+            seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, protagonistAsset.playerId ?? "", proposal.receivingTeamId, "medical"),
           }))
         ) as { pass: boolean; rejectionReason: string | null };
 
@@ -616,6 +620,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
           hasSteroidHistory: receivedAsset.hasSteroidHistory,
           receivingTeamMedicalQuality:
             getTeamProfile(g.protagonist.teamId, g, m)?.medicalQuality ?? 50,
+          seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, receivedAsset.playerId ?? "", g.protagonist.teamId, "medical"),
         }))
       ) as { concernLevel: number; rejectionReason: string | null };
 

@@ -701,6 +701,13 @@ pub struct MilitaryWeekPayload {
     pub sports_event_count: usize,
     pub general_event_count: usize,
     pub common_event_count: usize,
+    /// 판정 씨앗. **0이면 예전 그대로 `thread_rng`다**(구 페이로드 호환).
+    ///
+    /// 🔴 이 파일의 다른 주간 계산은 전부 씨앗을 받는데 **군 복무 주간만**
+    ///   빠져 있었다. 복무 2년이면 100주가 씨앗 밖이라, 전역 뒤 능력치가
+    ///   판마다 달라져 그 뒤를 잴 수 없다 (2026-09-07).
+    #[serde(default)]
+    pub seed: u32,
 }
 
 #[derive(Serialize)]
@@ -737,7 +744,12 @@ fn rank_index(service_weeks: u32) -> u32 {
 }
 
 pub fn calc_military_week(p: MilitaryWeekPayload) -> MilitaryWeekResult {
-    let mut rng = rand::thread_rng();
+    // 씨앗이 있으면 결정적으로 — 없으면 예전 그대로다
+    let mut rng: Box<dyn rand::RngCore> = if p.seed != 0 {
+        Box::new(crate::npc_sim::LcgRand::new(p.seed | 1))
+    } else {
+        Box::new(rand::thread_rng())
+    };
     let ri = rank_index(p.service_weeks);
 
     // ── 체육부대 계급별 스탯 변화 ────────────────────────────────
