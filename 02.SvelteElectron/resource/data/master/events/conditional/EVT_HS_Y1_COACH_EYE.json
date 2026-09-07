@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y1_COACH_EYE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "hs_training",
   "priority": 80,
   "oncePolicy": "once_per_career",

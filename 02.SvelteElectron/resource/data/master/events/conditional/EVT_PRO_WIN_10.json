@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_WIN_10",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 770,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_WIN_10",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "season_wins_gte",
       "value": 10
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_WIN_10",
+  "decisionTemplateId": null
 }

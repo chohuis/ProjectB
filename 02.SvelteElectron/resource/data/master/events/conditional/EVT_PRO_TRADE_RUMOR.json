@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_TRADE_RUMOR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 740,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_TRADE_RUMOR",
-  "decisionTemplateId": "DEC_PRO_TRADE_RUMOR",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -28,5 +29,6 @@
       "value": 6
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_TRADE_RUMOR",
+  "decisionTemplateId": "DEC_PRO_TRADE_RUMOR"
 }

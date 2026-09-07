@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_FRIEND_CALLED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 715,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "league_id",
@@ -18,7 +21,6 @@
       "value": 16
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_FARM_FRIEND_CALLED",
   "decisionTemplateId": "DEC_FARM_FRIEND_CALLED"
 }

@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_PARENTS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 75,
   "oncePolicy": "once_per_career",

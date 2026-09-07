@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_FIRST_CALL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 610,
   "oncePolicy": "once_per_career",

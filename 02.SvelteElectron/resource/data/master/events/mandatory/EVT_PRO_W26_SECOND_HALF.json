@@ -1,11 +1,10 @@
 {
   "id": "EVT_PRO_W26_SECOND_HALF",
   "type": "mandatory",
+  "theme": "career",
   "category": "season",
   "priority": 900,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_SECOND_HALF",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +18,7 @@
       "type": "week_eq",
       "value": 26
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_SECOND_HALF",
+  "decisionTemplateId": null
 }

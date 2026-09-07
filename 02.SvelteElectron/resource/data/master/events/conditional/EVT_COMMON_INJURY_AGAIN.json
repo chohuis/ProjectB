@@ -1,8 +1,9 @@
 {
   "id": "EVT_COMMON_INJURY_AGAIN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
-  "tier": "important",
   "priority": 880,
   "oncePolicy": "once_per_season",
   "conditions": [

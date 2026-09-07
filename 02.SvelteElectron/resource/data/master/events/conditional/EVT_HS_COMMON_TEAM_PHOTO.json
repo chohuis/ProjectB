@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_COMMON_TEAM_PHOTO",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 50,
   "oncePolicy": "once_per_stage_year",

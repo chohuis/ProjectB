@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_CONTROL_ISSUE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 710,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 5,
-  "messageTemplateId": "MSG_PRO_CONTROL_ISSUE",
-  "decisionTemplateId": "DEC_PRO_CONTROL_ISSUE",
   "conditions": [
     {
       "type": "career_stage",
@@ -25,5 +25,7 @@
       "stat": "control",
       "value": 45
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_CONTROL_ISSUE",
+  "decisionTemplateId": "DEC_PRO_CONTROL_ISSUE"
 }

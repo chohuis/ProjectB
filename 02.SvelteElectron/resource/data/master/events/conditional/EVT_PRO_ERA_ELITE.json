@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_ERA_ELITE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 760,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "messageTemplateId": "MSG_PRO_ERA_ELITE",
-  "decisionTemplateId": "DEC_PRO_ERA_ELITE",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "season_era_lte",
       "value": 2.5
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_ERA_ELITE",
+  "decisionTemplateId": "DEC_PRO_ERA_ELITE"
 }

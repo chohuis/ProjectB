@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_SALARY_FARM",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 670,
   "oncePolicy": "once_per_season",

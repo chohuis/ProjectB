@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_LATE_VELO_DROP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
-  "tier": "important",
   "priority": 800,
   "oncePolicy": "once_per_career",
   "conditions": [

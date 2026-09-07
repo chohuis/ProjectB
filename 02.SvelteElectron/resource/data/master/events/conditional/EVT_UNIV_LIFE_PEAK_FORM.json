@@ -1,4 +1,12 @@
 {
+  "id": "EVT_UNIV_LIFE_PEAK_FORM",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
+  "category": "training",
+  "priority": 800,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
   "conditions": [
     {
       "stage": "university",
@@ -13,12 +21,6 @@
       "type": "morale_gte"
     }
   ],
-  "id": "EVT_UNIV_LIFE_PEAK_FORM",
-  "type": "conditional",
   "messageTemplateId": "MSG_UNIV_LIFE_PEAK_FORM",
-  "category": "training",
-  "decisionTemplateId": "DEC_COND_PEAK_FORM",
-  "cooldownWeeks": 3,
-  "oncePolicy": "repeatable",
-  "priority": 800
+  "decisionTemplateId": "DEC_COND_PEAK_FORM"
 }

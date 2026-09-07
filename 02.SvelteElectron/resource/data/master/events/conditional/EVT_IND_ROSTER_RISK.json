@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_ROSTER_RISK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 745,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 15
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_IND_ROSTER_RISK",
   "decisionTemplateId": "DEC_IND_ROSTER_RISK"
 }

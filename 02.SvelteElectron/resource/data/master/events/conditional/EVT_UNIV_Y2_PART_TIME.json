@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y2_PART_TIME",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "life",
-  "tier": "ambient",
   "priority": 630,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

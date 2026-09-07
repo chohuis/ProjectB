@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_EARLY_DEMOTION_TALK",
   "type": "conditional",
-  "category": "career",
   "tier": "urgent",
+  "theme": "career",
+  "category": "career",
   "priority": 910,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

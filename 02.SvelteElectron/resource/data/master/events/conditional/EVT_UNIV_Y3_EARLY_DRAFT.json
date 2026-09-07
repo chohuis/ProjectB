@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y3_EARLY_DRAFT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 810,
   "oncePolicy": "once_per_career",
   "conditions": [

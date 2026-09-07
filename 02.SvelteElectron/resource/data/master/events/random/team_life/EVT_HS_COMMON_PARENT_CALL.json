@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_PARENT_CALL",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 55,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
   "weight": 17,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
   "conditions": [
     {
       "type": "career_stage",

@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_COACH_FEEDBACK_01",
   "type": "random",
-  "messageTemplateId": "MSG_HS_LIFE_COACH_FEEDBACK_01",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE",
-  "weight": 16,
-  "cooldownWeeks": 2,
   "priority": 300,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 16,
   "poolId": "POOL_TRAIN_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 6,
       "type": "week_gte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_HS_LIFE_COACH_FEEDBACK_01",
+  "decisionTemplateId": "DEC_RAND_SENIOR_ADVICE"
 }

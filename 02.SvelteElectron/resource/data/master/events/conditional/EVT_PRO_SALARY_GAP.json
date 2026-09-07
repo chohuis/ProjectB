@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_SALARY_GAP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 720,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_SALARY_GAP",
-  "decisionTemplateId": "DEC_PRO_SALARY_GAP",
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "morale_lte",
       "value": 55
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_SALARY_GAP",
+  "decisionTemplateId": "DEC_PRO_SALARY_GAP"
 }

@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_Y2_WEEKEND_TRAIN",
   "type": "random",
+  "tier": "normal",
+  "theme": "train",
   "category": "hs_training",
   "priority": 60,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "poolId": "POOL_TRAIN_DAILY",
   "weight": 15,
+  "poolId": "POOL_TRAIN_DAILY",
   "conditions": [
     {
       "type": "career_stage",

@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_TEACHER_ADVICE_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 282,
   "oncePolicy": "repeatable",

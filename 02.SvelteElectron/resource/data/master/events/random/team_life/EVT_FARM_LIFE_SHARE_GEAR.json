@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_LIFE_SHARE_GEAR",
   "type": "random",
+  "tier": "normal",
+  "theme": "money",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

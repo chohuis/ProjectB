@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_WEATHER_02",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 277,
   "oncePolicy": "repeatable",

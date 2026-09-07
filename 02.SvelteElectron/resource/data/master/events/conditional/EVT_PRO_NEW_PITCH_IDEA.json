@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_NEW_PITCH_IDEA",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 670,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_NEW_PITCH_IDEA",
-  "decisionTemplateId": "DEC_PRO_NEW_PITCH_IDEA",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 62
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_NEW_PITCH_IDEA",
+  "decisionTemplateId": "DEC_PRO_NEW_PITCH_IDEA"
 }

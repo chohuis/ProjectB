@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_ERA_GOOD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 740,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "messageTemplateId": "MSG_PRO_ERA_GOOD",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "season_era_lte",
       "value": 3.2
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_ERA_GOOD",
+  "decisionTemplateId": null
 }

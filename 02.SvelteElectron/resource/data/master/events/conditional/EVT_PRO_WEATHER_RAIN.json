@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_WEATHER_RAIN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 580,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_WEATHER_RAIN",
-  "decisionTemplateId": "DEC_PRO_WEATHER_RAIN",
+  "cooldownWeeks": 3,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 38
     }
   ],
-  "cooldownWeeks": 3
+  "messageTemplateId": "MSG_PRO_WEATHER_RAIN",
+  "decisionTemplateId": "DEC_PRO_WEATHER_RAIN"
 }

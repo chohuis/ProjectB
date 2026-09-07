@@ -1,14 +1,14 @@
 {
   "id": "EVT_PRO_LIFE_ADVERTISEMENT",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 300,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 14,
   "poolId": "POOL_MEDIA_DAILY",
-  "messageTemplateId": "MSG_PRO_LIFE_ADVERTISEMENT",
-  "decisionTemplateId": "DEC_PRO_LIFE_ADVERTISEMENT",
   "conditions": [
     {
       "type": "career_stage",
@@ -18,5 +18,7 @@
         "pro_jbl"
       ]
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_LIFE_ADVERTISEMENT",
+  "decisionTemplateId": "DEC_PRO_LIFE_ADVERTISEMENT"
 }

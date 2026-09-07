@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_BIG_GAME_SPOTLIGHT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 790,
   "oncePolicy": "repeatable",

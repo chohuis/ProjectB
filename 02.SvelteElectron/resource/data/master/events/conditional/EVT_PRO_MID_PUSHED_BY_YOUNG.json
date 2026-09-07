@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_MID_PUSHED_BY_YOUNG",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 770,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

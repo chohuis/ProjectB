@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_CLASS_FRIEND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 620,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 10
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_CLASS_FRIEND",
   "decisionTemplateId": null
 }

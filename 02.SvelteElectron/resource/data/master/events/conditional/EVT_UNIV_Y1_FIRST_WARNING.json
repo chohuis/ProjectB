@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y1_FIRST_WARNING",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academic",
-  "tier": "important",
   "priority": 780,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

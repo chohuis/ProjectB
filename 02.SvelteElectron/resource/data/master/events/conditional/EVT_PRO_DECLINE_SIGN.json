@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_DECLINE_SIGN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 715,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 8,
-  "messageTemplateId": "MSG_PRO_DECLINE_SIGN",
-  "decisionTemplateId": "DEC_PRO_DECLINE_SIGN",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "pitching_ovr_lte",
       "value": 62
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_DECLINE_SIGN",
+  "decisionTemplateId": "DEC_PRO_DECLINE_SIGN"
 }

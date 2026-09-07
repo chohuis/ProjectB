@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_FAMILY_DOUBT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 700,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 55
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_IND_FAMILY_DOUBT",
   "decisionTemplateId": "DEC_IND_FAMILY_DOUBT"
 }

@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_FOOD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
-  "tier": "ambient",
   "priority": 660,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

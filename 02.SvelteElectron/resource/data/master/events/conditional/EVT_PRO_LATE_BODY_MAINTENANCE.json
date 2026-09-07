@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_LATE_BODY_MAINTENANCE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
-  "tier": "ambient",
   "priority": 665,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_HOMESICK_UNIV",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 640,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 55
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_HOMESICK_UNIV",
   "decisionTemplateId": "DEC_UNIV_HOMESICK_UNIV"
 }

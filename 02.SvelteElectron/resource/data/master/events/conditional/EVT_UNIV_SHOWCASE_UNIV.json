@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_SHOWCASE_UNIV",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 740,
   "oncePolicy": "once_per_season",

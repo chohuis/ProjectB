@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_LIFE_CAMPUS_WALK",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

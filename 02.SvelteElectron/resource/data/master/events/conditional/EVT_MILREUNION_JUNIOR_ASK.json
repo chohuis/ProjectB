@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_JUNIOR_ASK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "mental",
   "priority": 602,
   "oncePolicy": "once_per_season",

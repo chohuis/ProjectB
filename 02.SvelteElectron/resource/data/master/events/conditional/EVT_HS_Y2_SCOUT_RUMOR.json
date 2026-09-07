@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y2_SCOUT_RUMOR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 70,
   "oncePolicy": "once_per_stage_year",

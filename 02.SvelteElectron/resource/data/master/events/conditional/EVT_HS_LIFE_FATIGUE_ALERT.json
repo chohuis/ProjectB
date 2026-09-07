@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_FATIGUE_ALERT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 860,
   "oncePolicy": "repeatable",

@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_BULLPEN_ROLE_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 298,
   "oncePolicy": "repeatable",

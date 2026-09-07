@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_SPONSOR_OFFER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 660,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_SPONSOR_OFFER",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "fame_gte",
       "value": 50
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_SPONSOR_OFFER",
+  "decisionTemplateId": null
 }

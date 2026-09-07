@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_STRIKE_ZONE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
-  "tier": "important",
   "priority": 750,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

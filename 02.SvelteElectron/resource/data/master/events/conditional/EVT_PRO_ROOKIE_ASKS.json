@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_ROOKIE_ASKS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 610,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 5,
-  "messageTemplateId": "MSG_PRO_ROOKIE_ASKS",
-  "decisionTemplateId": "DEC_PRO_ROOKIE_ASKS",
   "conditions": [
     {
       "type": "career_stage",
@@ -20,5 +20,7 @@
       "type": "pro_year_gte",
       "value": 5
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_ROOKIE_ASKS",
+  "decisionTemplateId": "DEC_PRO_ROOKIE_ASKS"
 }

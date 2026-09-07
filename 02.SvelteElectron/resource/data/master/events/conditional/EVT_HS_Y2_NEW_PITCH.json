@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y2_NEW_PITCH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "hs_training",
   "priority": 65,
   "oncePolicy": "once_per_stage_year",

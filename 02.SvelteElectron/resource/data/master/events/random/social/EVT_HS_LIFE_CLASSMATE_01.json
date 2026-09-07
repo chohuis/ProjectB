@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_CLASSMATE_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 281,
   "oncePolicy": "repeatable",

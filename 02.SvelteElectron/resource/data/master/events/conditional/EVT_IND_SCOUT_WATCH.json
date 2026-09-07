@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_SCOUT_WATCH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 740,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 58
     }
   ],
-  "cooldownWeeks": 5,
   "messageTemplateId": "MSG_IND_SCOUT_WATCH",
   "decisionTemplateId": "DEC_IND_SCOUT_WATCH"
 }

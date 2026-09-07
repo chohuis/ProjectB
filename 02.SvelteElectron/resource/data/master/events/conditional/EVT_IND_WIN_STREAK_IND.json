@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_WIN_STREAK_IND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 680,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 70
     }
   ],
-  "cooldownWeeks": 5,
   "messageTemplateId": "MSG_IND_WIN_STREAK_IND",
   "decisionTemplateId": "DEC_IND_WIN_STREAK_IND"
 }

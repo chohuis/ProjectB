@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_GOOD_ERA",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 710,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 3
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_GOOD_ERA",
   "decisionTemplateId": "DEC_IND_GOOD_ERA"
 }

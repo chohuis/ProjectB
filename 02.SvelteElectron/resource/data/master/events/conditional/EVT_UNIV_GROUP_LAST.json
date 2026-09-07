@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_GROUP_LAST",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 690,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 14
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_GROUP_LAST",
   "decisionTemplateId": "DEC_UNIV_GROUP_LAST"
 }

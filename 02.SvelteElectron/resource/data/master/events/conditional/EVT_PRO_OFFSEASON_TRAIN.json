@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_OFFSEASON_TRAIN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 640,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_OFFSEASON_TRAIN",
-  "decisionTemplateId": "DEC_PRO_OFFSEASON_TRAIN",
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "week_lte",
       "value": 50
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_OFFSEASON_TRAIN",
+  "decisionTemplateId": "DEC_PRO_OFFSEASON_TRAIN"
 }

@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_PERSONAL_TRAINER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 645,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_PERSONAL_TRAINER",
-  "decisionTemplateId": "DEC_PRO_PERSONAL_TRAINER",
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "fame_gte",
       "value": 30
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_PERSONAL_TRAINER",
+  "decisionTemplateId": "DEC_PRO_PERSONAL_TRAINER"
 }

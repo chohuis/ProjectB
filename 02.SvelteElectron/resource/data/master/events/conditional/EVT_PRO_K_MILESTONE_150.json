@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_K_MILESTONE_150",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 780,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_K_MILESTONE_150",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "season_k_gte",
       "value": 150
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_K_MILESTONE_150",
+  "decisionTemplateId": null
 }

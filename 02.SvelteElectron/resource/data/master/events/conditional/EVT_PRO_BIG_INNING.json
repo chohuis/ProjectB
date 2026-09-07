@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_BIG_INNING",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 690,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_BIG_INNING",
-  "decisionTemplateId": "DEC_PRO_BIG_INNING",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 50
     }
   ],
-  "cooldownWeeks": 4
+  "messageTemplateId": "MSG_PRO_BIG_INNING",
+  "decisionTemplateId": "DEC_PRO_BIG_INNING"
 }

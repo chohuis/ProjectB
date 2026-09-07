@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_SCOUT_PRESSURE_02",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 299,
   "oncePolicy": "repeatable",

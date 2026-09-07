@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_TRADE_TALK_FARM",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 735,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "league_id",
@@ -22,7 +25,6 @@
       "value": 30
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_FARM_TRADE_TALK_FARM",
   "decisionTemplateId": "DEC_FARM_TRADE_TALK_FARM"
 }

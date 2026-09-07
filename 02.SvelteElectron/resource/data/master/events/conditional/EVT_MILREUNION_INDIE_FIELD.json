@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_INDIE_FIELD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 614,
   "oncePolicy": "once_per_career",

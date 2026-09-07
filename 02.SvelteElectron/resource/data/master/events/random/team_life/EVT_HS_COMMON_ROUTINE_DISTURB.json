@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_ROUTINE_DISTURB",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 45,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 5,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
   "weight": 15,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
   "conditions": [
     {
       "type": "career_stage",

@@ -1,6 +1,8 @@
 {
   "id": "EVT_RAND_BULLPEN_EXTRA",
   "type": "random",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 310,
   "oncePolicy": "repeatable",

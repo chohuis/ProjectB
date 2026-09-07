@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_RAIN",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 60,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
   "weight": 21,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
   "conditions": [
     {
       "type": "career_stage",

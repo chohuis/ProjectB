@@ -1,8 +1,9 @@
 {
   "id": "EVT_CHAIN_FORM_REBUILD_MID",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
-  "tier": "important",
   "priority": 830,
   "oncePolicy": "once_per_season",
   "conditions": [

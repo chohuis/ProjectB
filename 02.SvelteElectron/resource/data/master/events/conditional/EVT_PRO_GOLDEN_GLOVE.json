@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_GOLDEN_GLOVE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 770,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_GOLDEN_GLOVE",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "season_era_lte",
       "value": 3
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_GOLDEN_GLOVE",
+  "decisionTemplateId": null
 }

@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_EQUIPMENT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 590,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_EQUIPMENT",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -20,5 +21,6 @@
       "value": 2
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_EQUIPMENT",
+  "decisionTemplateId": null
 }

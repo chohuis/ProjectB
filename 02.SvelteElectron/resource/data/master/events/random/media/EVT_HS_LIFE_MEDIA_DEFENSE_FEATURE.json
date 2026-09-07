@@ -1,9 +1,14 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_DEFENSE_FEATURE",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 282,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 13,
+  "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
       "type": "career_stage",
@@ -15,8 +20,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_DEFENSE_FEATURE",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 2,
-  "weight": 13,
-  "poolId": "POOL_MEDIA_DAILY"
+  "decisionTemplateId": null
 }

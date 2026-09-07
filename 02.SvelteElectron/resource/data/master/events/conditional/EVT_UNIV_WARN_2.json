@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_WARN_2",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academics",
   "priority": 800,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 2
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_WARN_2",
   "decisionTemplateId": "DEC_UNIV_WARN_2"
 }

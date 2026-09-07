@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y3_INJURY_HIDE",
   "type": "conditional",
-  "category": "health",
   "tier": "urgent",
+  "theme": "body",
+  "category": "health",
   "priority": 900,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

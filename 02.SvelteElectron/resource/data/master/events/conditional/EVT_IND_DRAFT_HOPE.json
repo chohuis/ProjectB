@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_DRAFT_HOPE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 735,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 3.5
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_IND_DRAFT_HOPE",
   "decisionTemplateId": "DEC_IND_DRAFT_HOPE"
 }

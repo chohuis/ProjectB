@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_MENTAL_LOW_FARM",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 745,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "league_id",
@@ -18,7 +21,6 @@
       "value": 42
     }
   ],
-  "cooldownWeeks": 5,
   "messageTemplateId": "MSG_FARM_MENTAL_LOW_FARM",
   "decisionTemplateId": "DEC_FARM_MENTAL_LOW_FARM"
 }

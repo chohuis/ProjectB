@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_ROLE_CLOSER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 730,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_ROLE_CLOSER",
-  "decisionTemplateId": "DEC_PRO_ROLE_CLOSER",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -25,5 +26,6 @@
       "value": 65
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_ROLE_CLOSER",
+  "decisionTemplateId": "DEC_PRO_ROLE_CLOSER"
 }

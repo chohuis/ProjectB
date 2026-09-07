@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_LINEUP_COMPETE_01",
   "type": "random",
-  "messageTemplateId": "MSG_HS_LIFE_LINEUP_COMPETE_01",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA",
-  "weight": 18,
-  "cooldownWeeks": 2,
   "priority": 300,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 18,
   "poolId": "POOL_TRAIN_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 8,
       "type": "week_gte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_HS_LIFE_LINEUP_COMPETE_01",
+  "decisionTemplateId": "DEC_RAND_BULLPEN_EXTRA"
 }

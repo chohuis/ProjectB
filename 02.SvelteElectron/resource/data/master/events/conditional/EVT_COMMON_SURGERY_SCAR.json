@@ -1,8 +1,9 @@
 {
   "id": "EVT_COMMON_SURGERY_SCAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
-  "tier": "important",
   "priority": 870,
   "oncePolicy": "once_per_career",
   "conditions": [

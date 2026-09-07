@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_TEAM_CHEM_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 288,
   "oncePolicy": "repeatable",

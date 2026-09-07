@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_INJURY_FEAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 755,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -22,7 +25,6 @@
       "value": false
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_INJURY_FEAR",
   "decisionTemplateId": "DEC_IND_INJURY_FEAR"
 }

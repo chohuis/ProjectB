@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_SCOUT_PRESSURE_01",
   "type": "random",
-  "messageTemplateId": "MSG_UNIV_LIFE_SCOUT_PRESSURE_01",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
-  "decisionTemplateId": null,
-  "weight": 14,
-  "cooldownWeeks": 3,
   "priority": 290,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 14,
   "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 30,
       "type": "week_gte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_SCOUT_PRESSURE_01",
+  "decisionTemplateId": null
 }

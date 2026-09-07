@@ -1,6 +1,8 @@
 {
   "id": "EVT_RAND_LOCAL_INTERVIEW",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 300,
   "oncePolicy": "repeatable",

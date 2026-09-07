@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y2_CAREER_CONSULT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 55,
   "oncePolicy": "once_per_stage_year",

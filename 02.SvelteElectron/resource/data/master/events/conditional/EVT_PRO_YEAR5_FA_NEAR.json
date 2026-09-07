@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_YEAR5_FA_NEAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 755,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_YEAR5_FA_NEAR",
-  "decisionTemplateId": "DEC_PRO_YEAR5_FA_NEAR",
   "conditions": [
     {
       "type": "career_stage",
@@ -15,5 +15,7 @@
       "type": "pro_year_gte",
       "value": 4
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_YEAR5_FA_NEAR",
+  "decisionTemplateId": "DEC_PRO_YEAR5_FA_NEAR"
 }

@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_TEAM_BUBBLE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 715,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 4,
-  "messageTemplateId": "MSG_PRO_TEAM_BUBBLE",
-  "decisionTemplateId": "DEC_PRO_TEAM_BUBBLE",
   "conditions": [
     {
       "type": "career_stage",
@@ -28,5 +28,7 @@
       "type": "week_gte",
       "value": 30
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_TEAM_BUBBLE",
+  "decisionTemplateId": "DEC_PRO_TEAM_BUBBLE"
 }

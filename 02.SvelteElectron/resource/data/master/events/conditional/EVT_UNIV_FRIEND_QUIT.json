@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_FRIEND_QUIT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 700,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 58
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_FRIEND_QUIT",
   "decisionTemplateId": "DEC_UNIV_FRIEND_QUIT"
 }

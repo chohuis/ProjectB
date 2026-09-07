@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_JBL_SENIORITY",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
-  "tier": "ambient",
   "priority": 645,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

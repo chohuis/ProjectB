@@ -1,6 +1,7 @@
 {
   "id": "EVT_FARM_W22_MIDSEASON_CALLUP",
   "type": "mandatory",
+  "theme": "career",
   "category": "career",
   "priority": 900,
   "oncePolicy": "once_per_season",

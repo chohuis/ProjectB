@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_COMMON_GEAR_OLD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "hs_life",
   "priority": 50,
   "oncePolicy": "once_per_stage_year",

@@ -1,8 +1,9 @@
 {
   "id": "EVT_CHAIN_FORM_REBUILD_DONE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
-  "tier": "important",
   "priority": 835,
   "oncePolicy": "once_per_career",
   "conditions": [

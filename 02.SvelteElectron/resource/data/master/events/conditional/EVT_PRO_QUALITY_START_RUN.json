@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_QUALITY_START_RUN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 700,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_QUALITY_START_RUN",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 3.3
     }
   ],
-  "cooldownWeeks": 5
+  "messageTemplateId": "MSG_PRO_QUALITY_START_RUN",
+  "decisionTemplateId": null
 }

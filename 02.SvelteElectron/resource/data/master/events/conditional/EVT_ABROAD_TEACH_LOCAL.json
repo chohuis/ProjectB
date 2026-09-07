@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_TEACH_LOCAL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "tier": "ambient",
   "priority": 630,
   "oncePolicy": "repeatable",
   "conditions": [

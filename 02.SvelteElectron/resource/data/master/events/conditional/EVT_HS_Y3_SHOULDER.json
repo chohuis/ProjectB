@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_SHOULDER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 80,
   "oncePolicy": "once_per_stage_year",

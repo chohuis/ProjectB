@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_SURVIVE_EDGE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 745,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -22,7 +25,6 @@
       "value": 17
     }
   ],
-  "cooldownWeeks": 4,
   "messageTemplateId": "MSG_IND_SURVIVE_EDGE",
   "decisionTemplateId": "DEC_IND_SURVIVE_EDGE"
 }

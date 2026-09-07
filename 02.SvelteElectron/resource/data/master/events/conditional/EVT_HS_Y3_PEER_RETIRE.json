@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_PEER_RETIRE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 65,
   "oncePolicy": "once_per_career",

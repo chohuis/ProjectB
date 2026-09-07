@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_OVERLOAD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 755,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 70
     }
   ],
-  "cooldownWeeks": 5,
   "messageTemplateId": "MSG_UNIV_OVERLOAD",
   "decisionTemplateId": "DEC_UNIV_OVERLOAD"
 }

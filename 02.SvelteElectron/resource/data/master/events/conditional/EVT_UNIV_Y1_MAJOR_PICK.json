@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y1_MAJOR_PICK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academic",
-  "tier": "important",
   "priority": 760,
   "oncePolicy": "once_per_career",
   "conditions": [

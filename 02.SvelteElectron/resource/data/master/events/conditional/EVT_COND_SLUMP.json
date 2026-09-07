@@ -1,6 +1,8 @@
 {
   "id": "EVT_COND_SLUMP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 850,
   "oncePolicy": "repeatable",

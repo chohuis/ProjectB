@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_NO_DECISION",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 650,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_NO_DECISION",
-  "decisionTemplateId": "DEC_PRO_NO_DECISION",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 2
     }
   ],
-  "cooldownWeeks": 5
+  "messageTemplateId": "MSG_PRO_NO_DECISION",
+  "decisionTemplateId": "DEC_PRO_NO_DECISION"
 }

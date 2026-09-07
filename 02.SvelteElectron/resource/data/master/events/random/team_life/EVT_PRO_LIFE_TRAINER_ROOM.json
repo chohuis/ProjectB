@@ -1,14 +1,14 @@
 {
   "id": "EVT_PRO_LIFE_TRAINER_ROOM",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 28,
   "poolId": "POOL_BODY_DAILY",
-  "messageTemplateId": "MSG_PRO_LIFE_TRAINER_ROOM",
-  "decisionTemplateId": "DEC_PRO_LIFE_TRAINER_ROOM",
   "conditions": [
     {
       "type": "career_stage",
@@ -22,5 +22,7 @@
       "type": "fatigue_gte",
       "value": 45
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_LIFE_TRAINER_ROOM",
+  "decisionTemplateId": "DEC_PRO_LIFE_TRAINER_ROOM"
 }

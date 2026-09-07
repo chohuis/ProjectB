@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_LATE_OLD_RIVAL_RETIRE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
-  "tier": "ambient",
   "priority": 685,
   "oncePolicy": "once_per_career",
   "conditions": [

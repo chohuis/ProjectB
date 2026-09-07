@@ -1,4 +1,12 @@
 {
+  "id": "EVT_UNIV_LIFE_SLUMP_CHECK",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
+  "category": "mental",
+  "priority": 850,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "stage": "university",
@@ -9,12 +17,6 @@
       "type": "morale_lte"
     }
   ],
-  "id": "EVT_UNIV_LIFE_SLUMP_CHECK",
-  "type": "conditional",
   "messageTemplateId": "MSG_UNIV_LIFE_SLUMP_CHECK",
-  "category": "mental",
-  "decisionTemplateId": "DEC_COND_SLUMP",
-  "cooldownWeeks": 4,
-  "oncePolicy": "repeatable",
-  "priority": 850
+  "decisionTemplateId": "DEC_COND_SLUMP"
 }

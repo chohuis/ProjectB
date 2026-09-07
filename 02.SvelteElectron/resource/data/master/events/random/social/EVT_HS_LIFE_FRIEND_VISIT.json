@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_FRIEND_VISIT",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 278,
   "oncePolicy": "repeatable",

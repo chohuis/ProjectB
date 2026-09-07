@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_INJURY_SCARE_UNIV_COND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 759,
   "oncePolicy": "repeatable",

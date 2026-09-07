@@ -1,6 +1,8 @@
 {
   "id": "EVT_RAND_SPORTS_MEDIA",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 280,
   "oncePolicy": "repeatable",

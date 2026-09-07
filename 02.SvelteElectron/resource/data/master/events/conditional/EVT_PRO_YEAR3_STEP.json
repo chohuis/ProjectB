@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_YEAR3_STEP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 710,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_YEAR3_STEP",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "pitching_ovr_gte",
       "value": 65
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_YEAR3_STEP",
+  "decisionTemplateId": null
 }

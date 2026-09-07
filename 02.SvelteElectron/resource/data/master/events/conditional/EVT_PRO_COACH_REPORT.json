@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_COACH_REPORT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 670,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_COACH_REPORT",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -20,5 +21,6 @@
       "value": 20
     }
   ],
-  "cooldownWeeks": 4
+  "messageTemplateId": "MSG_PRO_COACH_REPORT",
+  "decisionTemplateId": null
 }

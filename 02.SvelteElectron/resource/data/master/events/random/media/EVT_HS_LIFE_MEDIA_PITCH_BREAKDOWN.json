@@ -1,9 +1,14 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_PITCH_BREAKDOWN",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 289,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 14,
+  "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
       "type": "career_stage",
@@ -15,8 +20,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_PITCH_BREAKDOWN",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 3,
-  "weight": 14,
-  "poolId": "POOL_MEDIA_DAILY"
+  "decisionTemplateId": null
 }

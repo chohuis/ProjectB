@@ -1,6 +1,8 @@
 {
   "id": "EVT_IND_LIFE_RIVAL_IND",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

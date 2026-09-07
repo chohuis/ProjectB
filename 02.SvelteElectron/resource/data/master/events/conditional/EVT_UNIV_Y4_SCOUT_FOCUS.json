@@ -1,4 +1,12 @@
 {
+  "id": "EVT_UNIV_Y4_SCOUT_FOCUS",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 780,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "stage": "university",
@@ -18,12 +26,6 @@
       "value": 157
     }
   ],
-  "id": "EVT_UNIV_Y4_SCOUT_FOCUS",
-  "type": "conditional",
   "messageTemplateId": "MSG_UNIV_SCOUT_FOCUS",
-  "category": "career",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 4,
-  "oncePolicy": "repeatable",
-  "priority": 780
+  "decisionTemplateId": null
 }

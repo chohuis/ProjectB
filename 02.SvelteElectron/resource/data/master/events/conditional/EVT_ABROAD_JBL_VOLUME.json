@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_JBL_VOLUME",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
-  "tier": "important",
   "priority": 740,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

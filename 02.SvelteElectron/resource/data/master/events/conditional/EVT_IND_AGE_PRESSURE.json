@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_AGE_PRESSURE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 725,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 60
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_IND_AGE_PRESSURE",
   "decisionTemplateId": "DEC_IND_AGE_PRESSURE"
 }

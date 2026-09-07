@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_JUNIOR_MENTOR_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 291,
   "oncePolicy": "repeatable",

@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y1_MID_EVAL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 65,
   "oncePolicy": "once_per_stage_year",

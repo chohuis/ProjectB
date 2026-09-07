@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_MEDIA_MICRO_01",
   "type": "random",
-  "messageTemplateId": "MSG_UNIV_LIFE_MEDIA_MICRO_01",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
-  "decisionTemplateId": null,
-  "weight": 18,
-  "cooldownWeeks": 2,
   "priority": 280,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 18,
   "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 55,
       "type": "pitching_ovr_gte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_MEDIA_MICRO_01",
+  "decisionTemplateId": null
 }

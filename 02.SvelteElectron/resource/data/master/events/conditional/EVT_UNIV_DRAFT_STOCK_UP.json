@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_DRAFT_STOCK_UP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 745,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 3.2
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_DRAFT_STOCK_UP",
   "decisionTemplateId": "DEC_UNIV_DRAFT_STOCK_UP"
 }

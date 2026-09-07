@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_CLUTCH_ESCAPE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 685,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_CLUTCH_ESCAPE",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -25,5 +26,6 @@
       "value": 20
     }
   ],
-  "cooldownWeeks": 4
+  "messageTemplateId": "MSG_PRO_CLUTCH_ESCAPE",
+  "decisionTemplateId": null
 }

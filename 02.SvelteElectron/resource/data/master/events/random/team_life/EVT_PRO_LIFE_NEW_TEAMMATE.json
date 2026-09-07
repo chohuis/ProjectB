@@ -1,14 +1,14 @@
 {
   "id": "EVT_PRO_LIFE_NEW_TEAMMATE",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 18,
   "poolId": "POOL_TEAM_LIFE_DAILY",
-  "messageTemplateId": "MSG_PRO_LIFE_NEW_TEAMMATE",
-  "decisionTemplateId": "DEC_PRO_LIFE_NEW_TEAMMATE",
   "conditions": [
     {
       "type": "career_stage",
@@ -22,5 +22,7 @@
       "type": "week_gte",
       "value": 20
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_LIFE_NEW_TEAMMATE",
+  "decisionTemplateId": "DEC_PRO_LIFE_NEW_TEAMMATE"
 }

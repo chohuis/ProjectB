@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_BALL_PARTNER_NEWS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "mental",
   "priority": 611,
   "oncePolicy": "once_per_career",

@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_MAJOR_DOUBT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academics",
   "priority": 660,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 60
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_MAJOR_DOUBT",
   "decisionTemplateId": "DEC_UNIV_MAJOR_DOUBT"
 }

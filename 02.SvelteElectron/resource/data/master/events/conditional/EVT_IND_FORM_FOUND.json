@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_FORM_FOUND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 695,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 45
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_FORM_FOUND",
   "decisionTemplateId": "DEC_IND_FORM_FOUND"
 }

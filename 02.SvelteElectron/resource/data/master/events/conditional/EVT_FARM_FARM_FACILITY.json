@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_FARM_FACILITY",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 660,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -18,7 +21,6 @@
       "value": 65
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_FARM_FACILITY",
   "decisionTemplateId": "DEC_FARM_FARM_FACILITY"
 }

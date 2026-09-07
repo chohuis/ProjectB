@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_MENTOR_OLDER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 665,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 62
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_MENTOR_OLDER",
   "decisionTemplateId": "DEC_IND_MENTOR_OLDER"
 }

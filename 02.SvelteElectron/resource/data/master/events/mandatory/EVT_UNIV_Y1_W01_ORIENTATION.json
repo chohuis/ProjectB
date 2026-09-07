@@ -1,11 +1,10 @@
 {
   "id": "EVT_UNIV_Y1_W01_ORIENTATION",
-  "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_UNIV_SEASON_OPEN",
-  "category": "season",
   "type": "mandatory",
-  "decisionTemplateId": null,
+  "theme": "career",
+  "category": "season",
   "priority": 980,
+  "oncePolicy": "once_per_career",
   "conditions": [
     {
       "stage": "university",
@@ -25,5 +24,7 @@
       "path": "school.universityWeek",
       "value": 52
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_SEASON_OPEN",
+  "decisionTemplateId": null
 }

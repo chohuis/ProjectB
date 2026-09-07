@@ -1,6 +1,8 @@
 {
   "id": "EVT_IND_SEASON_SURVIVED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 730,
   "oncePolicy": "once_per_season",

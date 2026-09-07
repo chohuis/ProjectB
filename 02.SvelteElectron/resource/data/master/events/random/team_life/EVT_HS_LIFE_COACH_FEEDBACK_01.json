@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_COACH_FEEDBACK_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 304,
   "oncePolicy": "repeatable",

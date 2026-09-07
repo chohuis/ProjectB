@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_PRO_TEST",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 90,
   "oncePolicy": "once_per_career",

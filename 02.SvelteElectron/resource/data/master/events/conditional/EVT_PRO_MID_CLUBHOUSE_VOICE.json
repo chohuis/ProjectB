@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_MID_CLUBHOUSE_VOICE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "tier": "ambient",
   "priority": 675,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

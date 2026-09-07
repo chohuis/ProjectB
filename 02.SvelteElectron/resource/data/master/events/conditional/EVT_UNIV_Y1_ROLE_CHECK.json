@@ -1,4 +1,12 @@
 {
+  "id": "EVT_UNIV_Y1_ROLE_CHECK",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
+  "category": "team",
+  "priority": 760,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "stage": "university",
@@ -27,12 +35,6 @@
       "value": 52
     }
   ],
-  "id": "EVT_UNIV_Y1_ROLE_CHECK",
-  "type": "conditional",
   "messageTemplateId": "MSG_UNIV_ROLE_CHECK",
-  "category": "team",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 4,
-  "oncePolicy": "repeatable",
-  "priority": 760
+  "decisionTemplateId": null
 }

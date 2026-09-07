@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y2_TEAM_SLUMP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "hs_game",
   "priority": 65,
   "oncePolicy": "once_per_stage_year",

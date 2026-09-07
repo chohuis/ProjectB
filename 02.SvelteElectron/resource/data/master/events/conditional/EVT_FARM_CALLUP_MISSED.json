@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_CALLUP_MISSED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 770,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -26,7 +29,6 @@
       "value": 20
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_CALLUP_MISSED",
   "decisionTemplateId": "DEC_FARM_CALLUP_MISSED"
 }

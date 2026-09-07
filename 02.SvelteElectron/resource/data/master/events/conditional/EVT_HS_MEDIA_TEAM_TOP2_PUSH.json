@@ -1,9 +1,12 @@
 {
   "id": "EVT_HS_MEDIA_TEAM_TOP2_PUSH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 750,
   "oncePolicy": "once_per_season",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,6 +22,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_RIVAL_HEADLINE",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 6
+  "decisionTemplateId": null
 }

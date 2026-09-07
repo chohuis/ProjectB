@@ -1,9 +1,14 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_COMEBACK_NOTE",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 285,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 12,
+  "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
       "type": "career_stage",
@@ -23,8 +28,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_COMEBACK_NOTE",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 3,
-  "weight": 12,
-  "poolId": "POOL_MEDIA_DAILY"
+  "decisionTemplateId": null
 }

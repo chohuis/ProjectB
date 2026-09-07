@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y2_SCOUT_FIRST",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
-  "tier": "important",
   "priority": 700,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

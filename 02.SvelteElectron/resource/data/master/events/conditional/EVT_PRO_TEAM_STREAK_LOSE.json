@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_TEAM_STREAK_LOSE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 675,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 4,
-  "messageTemplateId": "MSG_PRO_TEAM_STREAK_LOSE",
-  "decisionTemplateId": "DEC_PRO_TEAM_STREAK_LOSE",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "morale_lte",
       "value": 50
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_TEAM_STREAK_LOSE",
+  "decisionTemplateId": "DEC_PRO_TEAM_STREAK_LOSE"
 }

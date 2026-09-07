@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_PRESSURE_HOME",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 665,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_PRESSURE_HOME",
-  "decisionTemplateId": "DEC_PRO_PRESSURE_HOME",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 5
     }
   ],
-  "cooldownWeeks": 5
+  "messageTemplateId": "MSG_PRO_PRESSURE_HOME",
+  "decisionTemplateId": "DEC_PRO_PRESSURE_HOME"
 }

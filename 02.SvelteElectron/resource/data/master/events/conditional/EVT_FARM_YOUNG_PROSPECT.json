@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_YOUNG_PROSPECT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 700,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -18,7 +21,6 @@
       "value": 3
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_YOUNG_PROSPECT",
   "decisionTemplateId": "DEC_FARM_YOUNG_PROSPECT"
 }

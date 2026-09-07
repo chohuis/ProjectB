@@ -1,6 +1,8 @@
 {
   "id": "EVT_IND_TEAM_FOLD_RUMOR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 740,
   "oncePolicy": "once_per_season",

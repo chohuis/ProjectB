@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_SCOUT_FOCUS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 800,
   "oncePolicy": "repeatable",

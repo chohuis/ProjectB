@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_SLUMP_CHECK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 840,
   "oncePolicy": "repeatable",

@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_LINEUP_COMPETE_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

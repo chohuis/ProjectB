@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_LIFE_SCOUT_FARM",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 300,
   "oncePolicy": "repeatable",

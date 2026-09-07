@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y4_JUNIOR_HAND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
-  "tier": "ambient",
   "priority": 655,
   "oncePolicy": "once_per_career",
   "conditions": [

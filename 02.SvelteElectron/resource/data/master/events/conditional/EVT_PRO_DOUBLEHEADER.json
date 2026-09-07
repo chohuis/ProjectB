@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_DOUBLEHEADER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 695,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_DOUBLEHEADER",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 55
     }
   ],
-  "cooldownWeeks": 5
+  "messageTemplateId": "MSG_PRO_DOUBLEHEADER",
+  "decisionTemplateId": null
 }

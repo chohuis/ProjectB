@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_K_RUN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 720,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 40
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_K_RUN",
   "decisionTemplateId": "DEC_IND_K_RUN"
 }

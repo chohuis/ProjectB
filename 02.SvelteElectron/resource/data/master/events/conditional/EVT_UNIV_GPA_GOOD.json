@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_GPA_GOOD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academics",
   "priority": 700,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 3.5
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_GPA_GOOD",
   "decisionTemplateId": "DEC_UNIV_GPA_GOOD"
 }

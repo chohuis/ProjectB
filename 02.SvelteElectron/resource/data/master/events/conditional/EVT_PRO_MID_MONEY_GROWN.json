@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_MID_MONEY_GROWN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "life",
-  "tier": "ambient",
   "priority": 660,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

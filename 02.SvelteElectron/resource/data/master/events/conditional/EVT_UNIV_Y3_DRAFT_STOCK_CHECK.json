@@ -1,4 +1,12 @@
 {
+  "id": "EVT_UNIV_Y3_DRAFT_STOCK_CHECK",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 740,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "stage": "university",
@@ -23,12 +31,6 @@
       "value": 156
     }
   ],
-  "id": "EVT_UNIV_Y3_DRAFT_STOCK_CHECK",
-  "type": "conditional",
   "messageTemplateId": "MSG_UNIV_DRAFT_STOCK_CHECK",
-  "category": "career",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 6,
-  "oncePolicy": "repeatable",
-  "priority": 740
+  "decisionTemplateId": null
 }

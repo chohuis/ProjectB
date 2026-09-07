@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_ASK_COACH",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 45,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 10,
-  "poolId": "POOL_TRAIN_DAILY",
   "weight": 13,
+  "poolId": "POOL_TRAIN_DAILY",
   "conditions": [
     {
       "type": "career_stage",

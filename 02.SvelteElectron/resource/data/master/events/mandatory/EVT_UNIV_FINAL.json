@@ -1,11 +1,10 @@
 {
   "id": "EVT_UNIV_FINAL",
   "type": "mandatory",
+  "theme": "career",
   "category": "academics",
   "priority": 950,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_UNIV_FINAL",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -15,5 +14,7 @@
       "type": "week_eq",
       "value": 38
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_FINAL",
+  "decisionTemplateId": null
 }

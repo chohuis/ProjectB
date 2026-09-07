@@ -1,6 +1,8 @@
 {
   "id": "EVT_COND_PEAK_FORM",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 800,
   "oncePolicy": "repeatable",

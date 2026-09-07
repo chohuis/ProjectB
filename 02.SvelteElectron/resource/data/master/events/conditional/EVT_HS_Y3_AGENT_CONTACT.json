@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_AGENT_CONTACT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 85,
   "oncePolicy": "once_per_career",

@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_RELEASE_RISK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 790,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "league_id",
@@ -26,7 +29,6 @@
       "value": 50
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_FARM_RELEASE_RISK",
   "decisionTemplateId": "DEC_FARM_RELEASE_RISK"
 }

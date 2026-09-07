@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y2_OLD_TEAMMATE_PRO",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
-  "tier": "ambient",
   "priority": 620,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

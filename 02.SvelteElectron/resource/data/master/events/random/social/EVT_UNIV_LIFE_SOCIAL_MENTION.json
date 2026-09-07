@@ -1,18 +1,20 @@
 {
   "id": "EVT_UNIV_LIFE_SOCIAL_MENTION",
   "type": "random",
-  "messageTemplateId": "MSG_UNIV_LIFE_SOCIAL_MENTION",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
-  "decisionTemplateId": null,
-  "weight": 16,
-  "cooldownWeeks": 1,
   "priority": 270,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 1,
+  "weight": 16,
   "poolId": "POOL_SOCIAL_DAILY",
   "conditions": [
     {
       "stage": "university",
       "type": "career_stage"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_SOCIAL_MENTION",
+  "decisionTemplateId": null
 }

@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_FORM_FIX",
   "type": "random",
+  "tier": "normal",
+  "theme": "train",
   "category": "hs_training",
   "priority": 50,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 10,
-  "poolId": "POOL_TRAIN_DAILY",
   "weight": 13,
+  "poolId": "POOL_TRAIN_DAILY",
   "conditions": [
     {
       "type": "career_stage",

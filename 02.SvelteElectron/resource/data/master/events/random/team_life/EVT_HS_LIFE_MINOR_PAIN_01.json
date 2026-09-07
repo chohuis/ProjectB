@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_MINOR_PAIN_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 290,
   "oncePolicy": "repeatable",

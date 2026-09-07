@@ -1,9 +1,14 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_BULLPEN_MIC",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 286,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 16,
+  "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
       "type": "career_stage",
@@ -19,8 +24,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_BULLPEN_MIC",
-  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW",
-  "cooldownWeeks": 2,
-  "weight": 16,
-  "poolId": "POOL_MEDIA_DAILY"
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
 }

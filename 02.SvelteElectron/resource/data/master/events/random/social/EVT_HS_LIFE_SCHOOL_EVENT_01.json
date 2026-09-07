@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_SCHOOL_EVENT_01",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 276,
   "oncePolicy": "repeatable",

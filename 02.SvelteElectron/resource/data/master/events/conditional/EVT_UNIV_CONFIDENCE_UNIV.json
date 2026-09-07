@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_CONFIDENCE_UNIV",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 665,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 15
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_CONFIDENCE_UNIV",
   "decisionTemplateId": "DEC_UNIV_CONFIDENCE_UNIV"
 }

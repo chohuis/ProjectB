@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_HOME_OFFER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 780,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

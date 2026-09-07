@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_LAST_CAMP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "hs_training",
   "priority": 85,
   "oncePolicy": "once_per_career",

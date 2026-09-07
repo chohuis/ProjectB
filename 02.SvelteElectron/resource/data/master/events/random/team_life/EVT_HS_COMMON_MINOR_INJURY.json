@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_MINOR_INJURY",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 60,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "poolId": "POOL_BODY_DAILY",
   "weight": 15,
+  "poolId": "POOL_BODY_DAILY",
   "conditions": [
     {
       "type": "career_stage",

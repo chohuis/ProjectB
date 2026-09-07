@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_DRAFT_STOCK_CHECK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 810,
   "oncePolicy": "repeatable",

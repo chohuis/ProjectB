@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y1_FIRST_MOUND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 800,
   "oncePolicy": "once_per_career",
   "conditions": [

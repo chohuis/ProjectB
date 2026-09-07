@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y1_DORM_HOMESICK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
-  "tier": "ambient",
   "priority": 640,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

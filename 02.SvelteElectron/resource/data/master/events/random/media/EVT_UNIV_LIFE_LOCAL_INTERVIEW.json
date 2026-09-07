@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_LOCAL_INTERVIEW",
   "type": "random",
-  "messageTemplateId": "MSG_UNIV_LIFE_LOCAL_INTERVIEW",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
-  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW",
-  "weight": 20,
-  "cooldownWeeks": 2,
   "priority": 280,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 20,
   "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 70,
       "type": "fatigue_lte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_LOCAL_INTERVIEW",
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
 }

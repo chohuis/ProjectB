@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_CAMPUS_PAPER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 630,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 10
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_CAMPUS_PAPER",
   "decisionTemplateId": "DEC_UNIV_CAMPUS_PAPER"
 }

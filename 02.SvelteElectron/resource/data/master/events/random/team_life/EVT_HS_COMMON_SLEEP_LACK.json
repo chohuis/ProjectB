@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_SLEEP_LACK",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 55,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 4,
-  "poolId": "POOL_BODY_DAILY",
   "weight": 17,
+  "poolId": "POOL_BODY_DAILY",
   "conditions": [
     {
       "type": "career_stage",

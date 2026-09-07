@@ -1,6 +1,7 @@
 {
   "id": "EVT_IND_W18_STAGE2_OPEN",
   "type": "mandatory",
+  "theme": "career",
   "category": "season",
   "priority": 900,
   "oncePolicy": "once_per_season",

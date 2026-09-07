@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_OLD_FRIEND_PRO",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 710,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 20
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_IND_OLD_FRIEND_PRO",
   "decisionTemplateId": "DEC_IND_OLD_FRIEND_PRO"
 }

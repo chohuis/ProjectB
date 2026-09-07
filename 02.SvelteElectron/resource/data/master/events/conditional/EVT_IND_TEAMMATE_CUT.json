@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_TEAMMATE_CUT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 730,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 24
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_TEAMMATE_CUT",
   "decisionTemplateId": "DEC_IND_TEAMMATE_CUT"
 }

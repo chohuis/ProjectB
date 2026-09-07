@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_FRIEND_VISIT",
   "type": "random",
-  "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
-  "decisionTemplateId": "DEC_RAND_FRIEND_VISIT",
-  "weight": 20,
-  "cooldownWeeks": 2,
   "priority": 275,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 20,
   "poolId": "POOL_SOCIAL_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 70,
       "type": "fatigue_lte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_RAND_FRIEND_VISIT",
+  "decisionTemplateId": "DEC_RAND_FRIEND_VISIT"
 }

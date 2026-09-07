@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_FIRST_HOME_CROWD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "ambient",
   "priority": 690,
   "oncePolicy": "once_per_career",
   "conditions": [

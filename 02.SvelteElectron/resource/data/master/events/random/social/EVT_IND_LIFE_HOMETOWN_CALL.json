@@ -1,6 +1,8 @@
 {
   "id": "EVT_IND_LIFE_HOMETOWN_CALL",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 300,
   "oncePolicy": "repeatable",

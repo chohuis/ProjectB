@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_NIGHT_GAME_RUN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 655,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_NIGHT_GAME_RUN",
-  "decisionTemplateId": "DEC_PRO_NIGHT_GAME_RUN",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 50
     }
   ],
-  "cooldownWeeks": 4
+  "messageTemplateId": "MSG_PRO_NIGHT_GAME_RUN",
+  "decisionTemplateId": "DEC_PRO_NIGHT_GAME_RUN"
 }

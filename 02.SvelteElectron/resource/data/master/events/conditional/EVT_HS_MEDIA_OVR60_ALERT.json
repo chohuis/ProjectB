@@ -1,9 +1,12 @@
 {
   "id": "EVT_HS_MEDIA_OVR60_ALERT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 40,
   "oncePolicy": "once_per_season",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -15,6 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_PITCH_BREAKDOWN",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 6
+  "decisionTemplateId": null
 }

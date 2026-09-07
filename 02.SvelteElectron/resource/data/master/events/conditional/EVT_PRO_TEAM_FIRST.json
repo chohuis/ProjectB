@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_TEAM_FIRST",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 700,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "messageTemplateId": "MSG_PRO_TEAM_FIRST",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "week_gte",
       "value": 20
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_TEAM_FIRST",
+  "decisionTemplateId": null
 }

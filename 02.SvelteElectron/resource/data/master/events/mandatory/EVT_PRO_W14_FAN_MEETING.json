@@ -1,11 +1,10 @@
 {
   "id": "EVT_PRO_W14_FAN_MEETING",
   "type": "mandatory",
+  "theme": "media",
   "category": "media",
   "priority": 900,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_FAN_MEETING",
-  "decisionTemplateId": "DEC_PRO_FAN_MEETING",
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +18,7 @@
       "type": "week_eq",
       "value": 14
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_FAN_MEETING",
+  "decisionTemplateId": "DEC_PRO_FAN_MEETING"
 }

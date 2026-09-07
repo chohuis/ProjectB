@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_PEAK_FORM",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 820,
   "oncePolicy": "repeatable",

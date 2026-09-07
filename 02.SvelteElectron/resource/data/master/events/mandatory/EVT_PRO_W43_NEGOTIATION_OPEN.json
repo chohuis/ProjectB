@@ -1,11 +1,10 @@
 {
   "id": "EVT_PRO_W43_NEGOTIATION_OPEN",
   "type": "mandatory",
+  "theme": "career",
   "category": "career",
   "priority": 900,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_NEGOTIATION_OPEN",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +18,7 @@
       "type": "week_eq",
       "value": 43
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_NEGOTIATION_OPEN",
+  "decisionTemplateId": null
 }

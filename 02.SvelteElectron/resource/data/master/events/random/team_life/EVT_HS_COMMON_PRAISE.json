@@ -1,12 +1,14 @@
 {
   "id": "EVT_HS_COMMON_PRAISE",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 50,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 4,
-  "poolId": "POOL_TEAM_LIFE_DAILY",
   "weight": 19,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
   "conditions": [
     {
       "type": "career_stage",

@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_POSTSEASON_START",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 780,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_POSTSEASON_START",
-  "decisionTemplateId": "DEC_PRO_POSTSEASON_START",
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "week_gte",
       "value": 40
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_POSTSEASON_START",
+  "decisionTemplateId": "DEC_PRO_POSTSEASON_START"
 }

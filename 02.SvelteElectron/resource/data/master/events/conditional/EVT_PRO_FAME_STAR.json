@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_FAME_STAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 720,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 8,
-  "messageTemplateId": "MSG_PRO_FAME_STAR",
-  "decisionTemplateId": "DEC_PRO_FAME_STAR",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "season_ip_gte",
       "value": 40
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_FAME_STAR",
+  "decisionTemplateId": "DEC_PRO_FAME_STAR"
 }

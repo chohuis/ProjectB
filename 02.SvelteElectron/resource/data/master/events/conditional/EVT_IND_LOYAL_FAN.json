@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_LOYAL_FAN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 650,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 14
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_IND_LOYAL_FAN",
   "decisionTemplateId": "DEC_IND_LOYAL_FAN"
 }

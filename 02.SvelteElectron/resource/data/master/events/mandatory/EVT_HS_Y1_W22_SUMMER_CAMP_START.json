@@ -1,6 +1,7 @@
 {
   "id": "EVT_HS_Y1_W22_SUMMER_CAMP_START",
   "type": "mandatory",
+  "theme": "train",
   "category": "training",
   "priority": 950,
   "oncePolicy": "once_per_career",

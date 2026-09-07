@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_FAMILY_FAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
-  "tier": "ambient",
   "priority": 650,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

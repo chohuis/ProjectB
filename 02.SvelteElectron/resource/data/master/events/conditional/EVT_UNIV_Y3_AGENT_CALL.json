@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y3_AGENT_CALL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "ambient",
   "priority": 670,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

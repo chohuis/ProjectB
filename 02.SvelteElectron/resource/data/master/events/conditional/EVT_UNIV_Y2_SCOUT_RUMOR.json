@@ -1,4 +1,12 @@
 {
+  "id": "EVT_UNIV_Y2_SCOUT_RUMOR",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
+  "category": "media",
+  "priority": 720,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "stage": "university",
@@ -23,12 +31,6 @@
       "value": 104
     }
   ],
-  "id": "EVT_UNIV_Y2_SCOUT_RUMOR",
-  "type": "conditional",
   "messageTemplateId": "MSG_UNIV_SCOUT_RUMOR",
-  "category": "media",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 6,
-  "oncePolicy": "repeatable",
-  "priority": 720
+  "decisionTemplateId": null
 }

@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_BAD_STRETCH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 705,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 45
     }
   ],
-  "cooldownWeeks": 5,
   "messageTemplateId": "MSG_IND_BAD_STRETCH",
   "decisionTemplateId": "DEC_IND_BAD_STRETCH"
 }

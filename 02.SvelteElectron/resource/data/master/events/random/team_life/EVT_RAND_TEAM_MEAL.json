@@ -1,6 +1,8 @@
 {
   "id": "EVT_RAND_TEAM_MEAL",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 290,
   "oncePolicy": "repeatable",

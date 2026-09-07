@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_SHORT",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 285,
   "oncePolicy": "repeatable",

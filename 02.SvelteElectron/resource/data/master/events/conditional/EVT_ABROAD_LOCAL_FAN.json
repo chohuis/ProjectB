@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_LOCAL_FAN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
-  "tier": "ambient",
   "priority": 640,
   "oncePolicy": "repeatable",
   "conditions": [

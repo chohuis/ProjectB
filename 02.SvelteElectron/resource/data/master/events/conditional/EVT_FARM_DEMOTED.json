@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_DEMOTED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 800,
   "oncePolicy": "once_per_season",

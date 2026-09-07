@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_ELIMINATED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "hs_game",
   "priority": 80,
   "oncePolicy": "once_per_career",

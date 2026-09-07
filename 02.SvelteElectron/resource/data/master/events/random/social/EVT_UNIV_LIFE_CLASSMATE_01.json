@@ -1,18 +1,20 @@
 {
   "id": "EVT_UNIV_LIFE_CLASSMATE_01",
   "type": "random",
-  "messageTemplateId": "MSG_UNIV_LIFE_CLASSMATE_01",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
-  "decisionTemplateId": "DEC_UNIV_LIFE_CLASSMATE_01",
-  "weight": 18,
-  "cooldownWeeks": 2,
   "priority": 280,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 18,
   "poolId": "POOL_SOCIAL_DAILY",
   "conditions": [
     {
       "stage": "university",
       "type": "career_stage"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_CLASSMATE_01",
+  "decisionTemplateId": "DEC_UNIV_LIFE_CLASSMATE_01"
 }

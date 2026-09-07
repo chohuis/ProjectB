@@ -1,6 +1,7 @@
 {
   "id": "EVT_HS_Y2_W01_NEW_TERM_RESET",
   "type": "mandatory",
+  "theme": "career",
   "category": "season",
   "priority": 980,
   "oncePolicy": "once_per_career",

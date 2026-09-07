@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_UNIT_INVITE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "media",
   "priority": 632,
   "oncePolicy": "once_per_career",

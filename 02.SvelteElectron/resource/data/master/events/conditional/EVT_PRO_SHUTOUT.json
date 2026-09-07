@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_SHUTOUT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 760,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_SHUTOUT",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 60
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_SHUTOUT",
+  "decisionTemplateId": null
 }

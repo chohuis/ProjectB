@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_CHARITY",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 620,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_CHARITY",
-  "decisionTemplateId": "DEC_PRO_CHARITY",
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "fame_gte",
       "value": 40
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_CHARITY",
+  "decisionTemplateId": "DEC_PRO_CHARITY"
 }

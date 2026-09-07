@@ -1,6 +1,7 @@
 {
   "id": "EVT_FARM_W50_FARM_WINTER",
   "type": "mandatory",
+  "theme": "team",
   "category": "team_life",
   "priority": 900,
   "oncePolicy": "once_per_season",

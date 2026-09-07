@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_SENIOR_TALK",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 295,
   "oncePolicy": "repeatable",

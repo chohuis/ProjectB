@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_GRAD_NEAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 750,
   "oncePolicy": "once_per_season",

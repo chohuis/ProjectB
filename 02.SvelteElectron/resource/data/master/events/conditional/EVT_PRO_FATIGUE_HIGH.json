@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_FATIGUE_HIGH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 800,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
-  "messageTemplateId": "MSG_PRO_FATIGUE_HIGH",
-  "decisionTemplateId": "DEC_PRO_FATIGUE_HIGH",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "fatigue_lte",
       "value": 74
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_FATIGUE_HIGH",
+  "decisionTemplateId": "DEC_PRO_FATIGUE_HIGH"
 }

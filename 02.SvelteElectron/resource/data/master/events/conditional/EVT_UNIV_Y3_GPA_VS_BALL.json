@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y3_GPA_VS_BALL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academic",
-  "tier": "important",
   "priority": 750,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_DRAFT_YEAR1",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 715,
   "oncePolicy": "once_per_season",

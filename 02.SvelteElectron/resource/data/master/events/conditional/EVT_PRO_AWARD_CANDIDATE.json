@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_AWARD_CANDIDATE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 765,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_AWARD_CANDIDATE",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "season_ip_gte",
       "value": 100
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_AWARD_CANDIDATE",
+  "decisionTemplateId": null
 }

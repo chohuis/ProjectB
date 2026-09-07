@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_FIRST_PAYCHECK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 630,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_FIRST_PAYCHECK",
-  "decisionTemplateId": "DEC_PRO_FIRST_PAYCHECK",
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "week_gte",
       "value": 10
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_FIRST_PAYCHECK",
+  "decisionTemplateId": "DEC_PRO_FIRST_PAYCHECK"
 }

@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_FARM_ERA_GOOD",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 720,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -22,7 +25,6 @@
       "value": 2.8
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_FARM_ERA_GOOD",
   "decisionTemplateId": "DEC_FARM_FARM_ERA_GOOD"
 }

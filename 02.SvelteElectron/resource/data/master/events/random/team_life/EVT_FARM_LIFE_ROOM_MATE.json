@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_LIFE_ROOM_MATE",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

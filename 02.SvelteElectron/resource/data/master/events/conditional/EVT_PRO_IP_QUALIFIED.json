@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_IP_QUALIFIED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 745,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_IP_QUALIFIED",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "season_ip_gte",
       "value": 100
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_IP_QUALIFIED",
+  "decisionTemplateId": null
 }

@@ -1,6 +1,7 @@
 {
   "id": "EVT_HS_Y2_W41_FINAL",
   "type": "mandatory",
+  "theme": "career",
   "category": "academics",
   "priority": 970,
   "oncePolicy": "once_per_career",

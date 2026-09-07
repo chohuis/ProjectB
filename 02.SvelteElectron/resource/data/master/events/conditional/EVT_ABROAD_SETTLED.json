@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_SETTLED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "ambient",
   "priority": 700,
   "oncePolicy": "once_per_career",
   "conditions": [

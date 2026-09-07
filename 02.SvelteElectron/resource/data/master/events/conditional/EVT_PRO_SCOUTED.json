@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_SCOUTED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 660,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_SCOUTED",
-  "decisionTemplateId": "DEC_PRO_SCOUTED",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 30
     }
   ],
-  "cooldownWeeks": 6
+  "messageTemplateId": "MSG_PRO_SCOUTED",
+  "decisionTemplateId": "DEC_PRO_SCOUTED"
 }

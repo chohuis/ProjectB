@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_WORKHORSE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 700,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 8,
-  "messageTemplateId": "MSG_PRO_WORKHORSE",
-  "decisionTemplateId": "DEC_PRO_WORKHORSE",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "fatigue_gte",
       "value": 60
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_WORKHORSE",
+  "decisionTemplateId": "DEC_PRO_WORKHORSE"
 }

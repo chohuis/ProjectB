@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_OPP_MOUND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 622,
   "oncePolicy": "once_per_career",

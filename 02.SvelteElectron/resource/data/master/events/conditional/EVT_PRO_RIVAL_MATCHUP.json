@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_RIVAL_MATCHUP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "media",
   "priority": 705,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_RIVAL_MATCHUP",
-  "decisionTemplateId": "DEC_PRO_RIVAL_MATCHUP",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 30
     }
   ],
-  "cooldownWeeks": 6
+  "messageTemplateId": "MSG_PRO_RIVAL_MATCHUP",
+  "decisionTemplateId": "DEC_PRO_RIVAL_MATCHUP"
 }

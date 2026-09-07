@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y4_CORP_TEAM_OFFER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 770,
   "oncePolicy": "once_per_career",
   "conditions": [

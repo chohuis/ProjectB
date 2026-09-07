@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_GO_BACK",
   "type": "conditional",
-  "category": "career",
   "tier": "urgent",
+  "theme": "career",
+  "category": "career",
   "priority": 920,
   "oncePolicy": "once_per_career",
   "conditions": [

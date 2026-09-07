@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_ROOKIE_WALL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 725,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_ROOKIE_WALL",
-  "decisionTemplateId": "DEC_PRO_ROOKIE_WALL",
   "conditions": [
     {
       "type": "career_stage",
@@ -27,5 +27,7 @@
       "type": "morale_lte",
       "value": 55
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_ROOKIE_WALL",
+  "decisionTemplateId": "DEC_PRO_ROOKIE_WALL"
 }

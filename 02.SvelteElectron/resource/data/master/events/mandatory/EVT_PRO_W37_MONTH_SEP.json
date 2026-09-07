@@ -1,11 +1,10 @@
 {
   "id": "EVT_PRO_W37_MONTH_SEP",
   "type": "mandatory",
+  "theme": "career",
   "category": "season",
   "priority": 900,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_MONTH_SEP",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +18,7 @@
       "type": "week_eq",
       "value": 37
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_MONTH_SEP",
+  "decisionTemplateId": null
 }

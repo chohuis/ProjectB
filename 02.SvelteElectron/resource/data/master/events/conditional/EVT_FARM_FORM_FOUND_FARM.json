@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_FORM_FOUND_FARM",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
   "priority": 705,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -22,7 +25,6 @@
       "value": 45
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_FORM_FOUND_FARM",
   "decisionTemplateId": "DEC_FARM_FORM_FOUND_FARM"
 }

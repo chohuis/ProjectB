@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_MOMENTUM_HIGH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 660,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_MOMENTUM_HIGH",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 75
     }
   ],
-  "cooldownWeeks": 4
+  "messageTemplateId": "MSG_PRO_MOMENTUM_HIGH",
+  "decisionTemplateId": null
 }

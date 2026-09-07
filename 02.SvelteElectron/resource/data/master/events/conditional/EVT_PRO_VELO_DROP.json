@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_VELO_DROP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 750,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_VELO_DROP",
-  "decisionTemplateId": "DEC_PRO_VELO_DROP",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -25,5 +26,6 @@
       "value": 50
     }
   ],
-  "cooldownWeeks": 6
+  "messageTemplateId": "MSG_PRO_VELO_DROP",
+  "decisionTemplateId": "DEC_PRO_VELO_DROP"
 }

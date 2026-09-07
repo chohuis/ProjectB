@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_LATE_ROLE_CHANGE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 785,
   "oncePolicy": "once_per_career",
   "conditions": [

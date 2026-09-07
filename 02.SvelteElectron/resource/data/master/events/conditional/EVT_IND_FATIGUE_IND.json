@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_FATIGUE_IND",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 760,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 74
     }
   ],
-  "cooldownWeeks": 4,
   "messageTemplateId": "MSG_IND_FATIGUE_IND",
   "decisionTemplateId": "DEC_IND_FATIGUE_IND"
 }

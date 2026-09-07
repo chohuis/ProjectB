@@ -1,9 +1,12 @@
 {
   "id": "EVT_HS_MEDIA_OVR65_ALERT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 42,
   "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -15,6 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_SCOUT_CAMERA_04",
-  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW",
-  "cooldownWeeks": 8
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
 }

@@ -1,9 +1,14 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_RAIN_GAME_NOTE",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 281,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 11,
+  "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
       "type": "career_stage",
@@ -19,8 +24,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_RAIN_GAME_NOTE",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 2,
-  "weight": 11,
-  "poolId": "POOL_MEDIA_DAILY"
+  "decisionTemplateId": null
 }

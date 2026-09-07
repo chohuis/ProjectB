@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_JUNIOR_CARE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
   "priority": 650,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 58
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_JUNIOR_CARE",
   "decisionTemplateId": "DEC_UNIV_JUNIOR_CARE"
 }

@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_REHAB_PLAYER",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 690,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -18,7 +21,6 @@
       "value": 10
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_REHAB_PLAYER",
   "decisionTemplateId": "DEC_FARM_REHAB_PLAYER"
 }

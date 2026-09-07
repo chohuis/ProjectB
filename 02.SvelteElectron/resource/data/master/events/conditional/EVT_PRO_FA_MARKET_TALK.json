@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_FA_MARKET_TALK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 750,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_FA_MARKET_TALK",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "week_gte",
       "value": 42
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_FA_MARKET_TALK",
+  "decisionTemplateId": null
 }

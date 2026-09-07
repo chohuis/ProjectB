@@ -1,9 +1,12 @@
 {
   "id": "EVT_IND_SANGMU_MATCH",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 715,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 10
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_IND_SANGMU_MATCH",
   "decisionTemplateId": "DEC_IND_SANGMU_MATCH"
 }

@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_FAMILY_ASK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 695,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "league_id",
@@ -22,7 +25,6 @@
       "value": 55
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_FARM_FAMILY_ASK",
   "decisionTemplateId": "DEC_FARM_FAMILY_ASK"
 }

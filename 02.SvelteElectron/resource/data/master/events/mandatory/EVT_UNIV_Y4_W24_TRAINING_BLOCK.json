@@ -1,11 +1,10 @@
 {
   "id": "EVT_UNIV_Y4_W24_TRAINING_BLOCK",
-  "oncePolicy": "once_per_stage_year",
-  "messageTemplateId": "MSG_UNIV_TRAINING_BLOCK",
-  "category": "training",
   "type": "mandatory",
-  "decisionTemplateId": "DEC_HS_SUMMER_CAMP",
+  "theme": "train",
+  "category": "training",
   "priority": 900,
+  "oncePolicy": "once_per_stage_year",
   "conditions": [
     {
       "stage": "university",
@@ -20,5 +19,7 @@
       "path": "school.universityWeek",
       "value": 157
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_TRAINING_BLOCK",
+  "decisionTemplateId": "DEC_HS_SUMMER_CAMP"
 }

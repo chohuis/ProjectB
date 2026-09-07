@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_FAME_RISING",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 665,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "messageTemplateId": "MSG_PRO_FAME_RISING",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -20,5 +20,7 @@
       "type": "fame_gte",
       "value": 35
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_FAME_RISING",
+  "decisionTemplateId": null
 }

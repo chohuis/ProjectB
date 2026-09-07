@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_MID_TRADE_RUMOR_MID",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 760,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

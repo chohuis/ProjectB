@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y4_GRAD_THESIS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "academic",
-  "tier": "important",
   "priority": 745,
   "oncePolicy": "once_per_career",
   "conditions": [

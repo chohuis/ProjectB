@@ -1,6 +1,7 @@
 {
   "id": "EVT_HS_Y3_W50_CAREER_CHOICE_GATE",
   "type": "mandatory",
+  "theme": "career",
   "category": "season",
   "priority": 980,
   "oncePolicy": "once_per_career",

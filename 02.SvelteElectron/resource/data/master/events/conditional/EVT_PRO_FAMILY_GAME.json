@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_FAMILY_GAME",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 615,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_FAMILY_GAME",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -20,5 +21,6 @@
       "value": 12
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_FAMILY_GAME",
+  "decisionTemplateId": null
 }

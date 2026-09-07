@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y4_LAST_SEASON",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 820,
   "oncePolicy": "once_per_career",
   "conditions": [

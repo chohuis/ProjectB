@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_LIFE_CLUB_FAIR",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 300,
   "oncePolicy": "repeatable",

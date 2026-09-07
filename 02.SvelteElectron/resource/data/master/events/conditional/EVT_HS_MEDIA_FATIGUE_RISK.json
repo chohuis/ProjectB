@@ -1,9 +1,12 @@
 {
   "id": "EVT_HS_MEDIA_FATIGUE_RISK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 735,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -15,6 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_SCOUT_CAMERA_04",
-  "decisionTemplateId": "DEC_COND_FATIGUE_WARNING",
-  "cooldownWeeks": 6
+  "decisionTemplateId": "DEC_COND_FATIGUE_WARNING"
 }

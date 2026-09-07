@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_ABL_DUAL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "tier": "ambient",
   "priority": 640,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_RECOVERY_ROUTINE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 640,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 4,
-  "messageTemplateId": "MSG_PRO_RECOVERY_ROUTINE",
-  "decisionTemplateId": "DEC_PRO_RECOVERY_ROUTINE",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "fatigue_lte",
       "value": 70
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_RECOVERY_ROUTINE",
+  "decisionTemplateId": "DEC_PRO_RECOVERY_ROUTINE"
 }

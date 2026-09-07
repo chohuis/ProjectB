@@ -1,13 +1,13 @@
 {
   "id": "EVT_UNIV_LIFE_RECOVERY_DAY_01",
   "type": "random",
-  "messageTemplateId": "MSG_UNIV_LIFE_RECOVERY_DAY_01",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "decisionTemplateId": "DEC_RECOVERY_DAY",
-  "weight": 15,
-  "cooldownWeeks": 2,
   "priority": 290,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 15,
   "poolId": "POOL_BODY_DAILY",
   "conditions": [
     {
@@ -18,5 +18,7 @@
       "value": 65,
       "type": "fatigue_lte"
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_RECOVERY_DAY_01",
+  "decisionTemplateId": "DEC_RECOVERY_DAY"
 }

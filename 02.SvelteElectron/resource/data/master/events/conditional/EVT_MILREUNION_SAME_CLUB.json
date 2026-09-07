@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_SAME_CLUB",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team",
   "priority": 618,
   "oncePolicy": "once_per_career",

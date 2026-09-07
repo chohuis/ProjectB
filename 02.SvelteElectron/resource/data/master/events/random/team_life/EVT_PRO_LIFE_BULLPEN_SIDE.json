@@ -1,14 +1,14 @@
 {
   "id": "EVT_PRO_LIFE_BULLPEN_SIDE",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
   "weight": 30,
   "poolId": "POOL_TRAIN_DAILY",
-  "messageTemplateId": "MSG_PRO_LIFE_BULLPEN_SIDE",
-  "decisionTemplateId": "DEC_PRO_LIFE_BULLPEN_SIDE",
   "conditions": [
     {
       "type": "career_stage",
@@ -22,5 +22,7 @@
       "type": "fatigue_lte",
       "value": 70
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_LIFE_BULLPEN_SIDE",
+  "decisionTemplateId": "DEC_PRO_LIFE_BULLPEN_SIDE"
 }

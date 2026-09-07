@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_ALUMNI",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 645,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 24
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_ALUMNI",
   "decisionTemplateId": "DEC_UNIV_ALUMNI"
 }

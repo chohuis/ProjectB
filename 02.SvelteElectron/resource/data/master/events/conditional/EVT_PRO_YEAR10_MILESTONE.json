@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_YEAR10_MILESTONE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 775,
   "oncePolicy": "once_per_career",
-  "messageTemplateId": "MSG_PRO_YEAR10_MILESTONE",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +19,7 @@
       "type": "pro_year_gte",
       "value": 10
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_YEAR10_MILESTONE",
+  "decisionTemplateId": null
 }

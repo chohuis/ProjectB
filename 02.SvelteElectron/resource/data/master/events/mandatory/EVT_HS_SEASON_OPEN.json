@@ -1,6 +1,7 @@
 {
   "id": "EVT_HS_SEASON_OPEN",
   "type": "mandatory",
+  "theme": "career",
   "category": "season",
   "priority": 1000,
   "oncePolicy": "once_per_season",

@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_ROLE_ACE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 745,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_ROLE_ACE",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -28,5 +29,6 @@
       "value": 70
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_ROLE_ACE",
+  "decisionTemplateId": null
 }

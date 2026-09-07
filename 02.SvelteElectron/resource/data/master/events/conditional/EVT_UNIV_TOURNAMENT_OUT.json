@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_TOURNAMENT_OUT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 710,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -18,7 +21,6 @@
       "value": 3
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_UNIV_TOURNAMENT_OUT",
   "decisionTemplateId": "DEC_UNIV_TOURNAMENT_OUT"
 }

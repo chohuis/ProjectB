@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_PARCEL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 606,
   "oncePolicy": "once_per_career",

@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_ROLE_SWING",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 680,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_ROLE_SWING",
-  "decisionTemplateId": "DEC_PRO_ROLE_SWING",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +25,6 @@
       "value": 20
     }
   ],
-  "cooldownWeeks": 6
+  "messageTemplateId": "MSG_PRO_ROLE_SWING",
+  "decisionTemplateId": "DEC_PRO_ROLE_SWING"
 }

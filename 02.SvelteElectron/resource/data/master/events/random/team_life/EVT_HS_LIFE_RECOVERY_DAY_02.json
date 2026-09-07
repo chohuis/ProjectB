@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_RECOVERY_DAY_02",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 286,
   "oncePolicy": "repeatable",

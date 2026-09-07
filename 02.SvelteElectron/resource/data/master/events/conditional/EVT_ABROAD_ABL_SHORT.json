@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_ABL_SHORT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 735,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

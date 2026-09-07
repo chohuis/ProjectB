@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y2_ROOKIE_IN",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "tier": "ambient",
   "priority": 650,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

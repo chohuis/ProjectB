@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_LIFE_FARM_STATS",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 300,
   "oncePolicy": "repeatable",

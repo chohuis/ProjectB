@@ -1,11 +1,12 @@
 {
   "id": "EVT_PRO_OLD_TEAMMATE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 625,
   "oncePolicy": "repeatable",
-  "messageTemplateId": "MSG_PRO_OLD_TEAMMATE",
-  "decisionTemplateId": null,
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -16,5 +17,6 @@
       "value": 4
     }
   ],
-  "cooldownWeeks": 8
+  "messageTemplateId": "MSG_PRO_OLD_TEAMMATE",
+  "decisionTemplateId": null
 }

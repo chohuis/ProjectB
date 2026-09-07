@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_COMMON_RETIRE_GIFT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 55,
   "oncePolicy": "once_per_stage_year",

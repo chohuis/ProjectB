@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y3_RIVAL_FINAL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "hs_game",
   "priority": 90,
   "oncePolicy": "once_per_career",

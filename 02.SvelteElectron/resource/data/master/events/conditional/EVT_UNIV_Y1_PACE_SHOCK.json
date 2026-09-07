@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y1_PACE_SHOCK",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "train",
   "category": "training",
-  "tier": "important",
   "priority": 720,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

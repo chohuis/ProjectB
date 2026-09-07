@@ -1,6 +1,8 @@
 {
   "id": "EVT_PRO_LIFE_OLD_TEAMMATE",
   "type": "random",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 300,
   "oncePolicy": "repeatable",
@@ -10,7 +12,11 @@
   "conditions": [
     {
       "type": "career_stage",
-      "stages": ["pro_kbl", "pro_abl", "pro_jbl"]
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
     }
   ],
   "messageTemplateId": "MSG_PRO_LIFE_OLD_TEAMMATE",

@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_MID_PRIME_BODY",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
-  "tier": "important",
   "priority": 720,
   "oncePolicy": "once_per_career",
   "conditions": [

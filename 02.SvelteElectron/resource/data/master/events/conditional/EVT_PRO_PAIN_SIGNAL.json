@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_PAIN_SIGNAL",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 795,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 6,
-  "messageTemplateId": "MSG_PRO_PAIN_SIGNAL",
-  "decisionTemplateId": "DEC_PRO_PAIN_SIGNAL",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "condition_lte",
       "value": 55
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_PAIN_SIGNAL",
+  "decisionTemplateId": "DEC_PRO_PAIN_SIGNAL"
 }

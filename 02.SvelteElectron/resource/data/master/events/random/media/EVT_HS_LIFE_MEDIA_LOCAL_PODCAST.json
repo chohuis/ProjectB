@@ -1,9 +1,14 @@
 {
   "id": "EVT_HS_LIFE_MEDIA_LOCAL_PODCAST",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 283,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "weight": 12,
+  "poolId": "POOL_MEDIA_DAILY",
   "conditions": [
     {
       "type": "career_stage",
@@ -15,8 +20,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_LOCAL_PODCAST",
-  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW",
-  "cooldownWeeks": 2,
-  "weight": 12,
-  "poolId": "POOL_MEDIA_DAILY"
+  "decisionTemplateId": "DEC_RAND_LOCAL_INTERVIEW"
 }

@@ -1,8 +1,9 @@
 {
   "id": "EVT_COMMON_INJURY_PRONE",
   "type": "conditional",
-  "category": "health",
   "tier": "urgent",
+  "theme": "body",
+  "category": "health",
   "priority": 950,
   "oncePolicy": "once_per_career",
   "conditions": [

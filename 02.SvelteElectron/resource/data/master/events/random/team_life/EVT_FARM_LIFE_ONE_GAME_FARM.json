@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_LIFE_ONE_GAME_FARM",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

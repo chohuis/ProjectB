@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_FARM_STRUGGLE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 730,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
   "conditions": [
     {
       "type": "league_id",
@@ -22,7 +25,6 @@
       "value": 50
     }
   ],
-  "cooldownWeeks": 5,
   "messageTemplateId": "MSG_FARM_FARM_STRUGGLE",
   "decisionTemplateId": "DEC_FARM_FARM_STRUGGLE"
 }

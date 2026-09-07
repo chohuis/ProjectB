@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_LIFE_SOCIAL_MENTION",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 275,
   "oncePolicy": "repeatable",

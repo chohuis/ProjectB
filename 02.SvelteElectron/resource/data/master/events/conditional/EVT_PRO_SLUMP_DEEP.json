@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_SLUMP_DEEP",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 730,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 5,
-  "messageTemplateId": "MSG_PRO_SLUMP_DEEP",
-  "decisionTemplateId": "DEC_PRO_SLUMP_DEEP",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "morale_lte",
       "value": 45
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_SLUMP_DEEP",
+  "decisionTemplateId": "DEC_PRO_SLUMP_DEEP"
 }

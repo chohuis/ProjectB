@@ -1,8 +1,9 @@
 {
   "id": "EVT_UNIV_Y2_SUMMER_LEAGUE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 710,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

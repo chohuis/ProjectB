@@ -1,6 +1,8 @@
 {
   "id": "EVT_RAND_SOCIAL_MEDIA_MENTION",
   "type": "random",
+  "tier": "normal",
+  "theme": "social",
   "category": "social",
   "priority": 260,
   "oncePolicy": "repeatable",

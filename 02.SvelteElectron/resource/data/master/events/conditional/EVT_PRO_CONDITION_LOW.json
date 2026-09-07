@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_CONDITION_LOW",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "body",
   "category": "health",
   "priority": 790,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 3,
-  "messageTemplateId": "MSG_PRO_CONDITION_LOW",
-  "decisionTemplateId": "DEC_PRO_CONDITION_LOW",
   "conditions": [
     {
       "type": "career_stage",
@@ -20,5 +20,7 @@
       "type": "condition_lte",
       "value": 45
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_CONDITION_LOW",
+  "decisionTemplateId": "DEC_PRO_CONDITION_LOW"
 }

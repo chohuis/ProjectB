@@ -1,8 +1,9 @@
 {
   "id": "EVT_ABROAD_LANGUAGE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
-  "tier": "important",
   "priority": 760,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

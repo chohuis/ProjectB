@@ -1,6 +1,7 @@
 {
   "id": "EVT_HS_Y1_W12_MIDTERM",
   "type": "mandatory",
+  "theme": "career",
   "category": "academics",
   "priority": 970,
   "oncePolicy": "once_per_career",

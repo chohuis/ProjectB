@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_OPTION_YEAR",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 715,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_OPTION_YEAR",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -23,5 +23,7 @@
       "type": "week_gte",
       "value": 42
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_OPTION_YEAR",
+  "decisionTemplateId": null
 }

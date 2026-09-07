@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_EARLY_FIRST_COMPLETE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
-  "tier": "important",
   "priority": 810,
   "oncePolicy": "once_per_career",
   "conditions": [

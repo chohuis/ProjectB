@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_FIRST_CALLUP_HOPE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 760,
   "oncePolicy": "once_per_career",

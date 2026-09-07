@@ -1,9 +1,12 @@
 {
   "id": "EVT_FARM_CALLUP_CLOSE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 780,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "league_id",
@@ -22,7 +25,6 @@
       "value": 3
     }
   ],
-  "cooldownWeeks": 6,
   "messageTemplateId": "MSG_FARM_CALLUP_CLOSE",
   "decisionTemplateId": "DEC_FARM_CALLUP_CLOSE"
 }

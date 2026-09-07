@@ -1,6 +1,8 @@
 {
   "id": "EVT_UNIV_LIFE_SCOUT_CAMPUS",
   "type": "random",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 300,
   "oncePolicy": "repeatable",

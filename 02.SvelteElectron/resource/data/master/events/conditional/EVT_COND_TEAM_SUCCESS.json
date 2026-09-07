@@ -1,6 +1,8 @@
 {
   "id": "EVT_COND_TEAM_SUCCESS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
   "category": "team",
   "priority": 700,
   "oncePolicy": "once_per_season",

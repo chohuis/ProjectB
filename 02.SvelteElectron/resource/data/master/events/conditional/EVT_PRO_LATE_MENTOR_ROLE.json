@@ -1,8 +1,9 @@
 {
   "id": "EVT_PRO_LATE_MENTOR_ROLE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "team_life",
-  "tier": "important",
   "priority": 730,
   "oncePolicy": "once_per_stage_year",
   "conditions": [

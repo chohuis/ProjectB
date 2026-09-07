@@ -1,12 +1,12 @@
 {
   "id": "EVT_PRO_CONFIDENCE_LOW",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "story",
   "category": "mental",
   "priority": 720,
   "oncePolicy": "repeatable",
   "cooldownWeeks": 4,
-  "messageTemplateId": "MSG_PRO_CONFIDENCE_LOW",
-  "decisionTemplateId": "DEC_PRO_CONFIDENCE_LOW",
   "conditions": [
     {
       "type": "career_stage",
@@ -24,5 +24,7 @@
       "type": "morale_lte",
       "value": 50
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_CONFIDENCE_LOW",
+  "decisionTemplateId": "DEC_PRO_CONFIDENCE_LOW"
 }

@@ -1,6 +1,8 @@
 {
   "id": "EVT_IND_LIFE_BUS_SLEEP",
   "type": "random",
+  "tier": "normal",
+  "theme": "team",
   "category": "team_life",
   "priority": 300,
   "oncePolicy": "repeatable",

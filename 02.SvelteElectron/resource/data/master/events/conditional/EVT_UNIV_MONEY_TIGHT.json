@@ -1,9 +1,12 @@
 {
   "id": "EVT_UNIV_MONEY_TIGHT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 655,
   "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
   "conditions": [
     {
       "type": "career_stage",
@@ -14,7 +17,6 @@
       "value": 16
     }
   ],
-  "cooldownWeeks": 8,
   "messageTemplateId": "MSG_UNIV_MONEY_TIGHT",
   "decisionTemplateId": "DEC_UNIV_MONEY_TIGHT"
 }

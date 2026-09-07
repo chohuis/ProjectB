@@ -1,9 +1,12 @@
 {
   "id": "EVT_HS_MEDIA_MILESTONE_K50",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "media",
   "category": "media",
   "priority": 760,
   "oncePolicy": "once_per_season",
+  "cooldownWeeks": 6,
   "conditions": [
     {
       "type": "career_stage",
@@ -15,6 +18,5 @@
     }
   ],
   "messageTemplateId": "MSG_HS_MEDIA_STRIKEOUT_CLIP",
-  "decisionTemplateId": null,
-  "cooldownWeeks": 6
+  "decisionTemplateId": null
 }

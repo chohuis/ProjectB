@@ -1,6 +1,7 @@
 {
   "id": "EVT_UNIV_W20_SUMMER_TERM",
   "type": "mandatory",
+  "theme": "career",
   "category": "academics",
   "priority": 900,
   "oncePolicy": "once_per_season",

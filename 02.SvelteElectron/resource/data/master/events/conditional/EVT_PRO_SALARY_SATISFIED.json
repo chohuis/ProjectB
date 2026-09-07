@@ -1,11 +1,11 @@
 {
   "id": "EVT_PRO_SALARY_SATISFIED",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "money",
   "category": "career",
   "priority": 655,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_SALARY_SATISFIED",
-  "decisionTemplateId": null,
   "conditions": [
     {
       "type": "career_stage",
@@ -27,5 +27,7 @@
       "type": "season_wins_gte",
       "value": 10
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_SALARY_SATISFIED",
+  "decisionTemplateId": null
 }

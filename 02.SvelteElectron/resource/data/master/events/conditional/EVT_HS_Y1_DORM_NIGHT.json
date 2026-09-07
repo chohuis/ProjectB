@@ -1,6 +1,8 @@
 {
   "id": "EVT_HS_Y1_DORM_NIGHT",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "social",
   "category": "hs_life",
   "priority": 60,
   "oncePolicy": "once_per_career",

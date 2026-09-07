@@ -1,11 +1,10 @@
 {
   "id": "EVT_PRO_W10_LONG_ROAD",
   "type": "mandatory",
+  "theme": "team",
   "category": "team_life",
   "priority": 900,
   "oncePolicy": "once_per_season",
-  "messageTemplateId": "MSG_PRO_LONG_ROAD",
-  "decisionTemplateId": "DEC_PRO_LONG_ROAD",
   "conditions": [
     {
       "type": "career_stage",
@@ -19,5 +18,7 @@
       "type": "week_eq",
       "value": 10
     }
-  ]
+  ],
+  "messageTemplateId": "MSG_PRO_LONG_ROAD",
+  "decisionTemplateId": "DEC_PRO_LONG_ROAD"
 }

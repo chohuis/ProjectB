@@ -1,6 +1,8 @@
 {
   "id": "EVT_FARM_FARM_MILESTONE",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
   "category": "career",
   "priority": 725,
   "oncePolicy": "once_per_season",

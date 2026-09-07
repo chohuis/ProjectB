@@ -1,6 +1,8 @@
 {
   "id": "EVT_MILREUNION_TICKETS",
   "type": "conditional",
+  "tier": "normal",
+  "theme": "people",
   "category": "social",
   "priority": 604,
   "oncePolicy": "once_per_season",
