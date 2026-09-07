@@ -56,7 +56,7 @@ import { facilityFactorOf, SANGMU_TEAM_IDS } from "../../apps/ui/src/shared/util
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { relationLabel } from "../../apps/ui/src/shared/types/relationship";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
-import type { ProtagonistSave, ContractIncentive } from "../../apps/ui/src/shared/types/save";
+import type { ProtagonistSave, ContractIncentive, PitchEntry } from "../../apps/ui/src/shared/types/save";
 // 조·권역 편성 — `conditionEvaluator` 가 순위를 이 안에서 센다
 import { GROUPS_BY_LEAGUE } from "../../apps/ui/src/shared/utils/leagueTeams.generated";
 
@@ -77,7 +77,7 @@ const PITCHING = {
 // `NewGamePage.svelte`의 PRESETS와 값을 그대로 옮겼다(정의는 그쪽 · 여기는
 // 계측용 픽스처 사본). `PB_START_PRESET` 환경변수로 고른다 — 안 주면
 // 기존 PITCHING(균형형)을 그대로 쓴다(다른 계측 스크립트의 동작을 안 바꾼다).
-const START_PRESETS: Record<string, { pitching: typeof PITCHING; pitches: { id: string; grade: number }[]; tags: string[] }> = {
+const START_PRESETS: Record<string, { pitching: typeof PITCHING; pitches: PitchEntry[]; tags: string[] }> = {
   balanced: {
     pitching: { ovr: 70, velocity: 70, command: 70, control: 73, movement: 71, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
     pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
