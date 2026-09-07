@@ -213,3 +213,102 @@ export async function calcProtagonistAging(
     await window.projectB!.growthCalcProtagonistAging(JSON.stringify(params))
   ) as AgingResult;
 }
+
+// ── 이번 주 훈련 효율 — 화면에 보여 줄 계수 (결정 ④ 1단계) ───────
+//
+// 🔴 **정본은 Rust `growth_engine.rs::week_xp` 다.** 여기 있는 셋은 그 식을
+//    **보여 주려고** 옮겨 적은 것이고, 성장 계산에 쓰이지 않는다.
+//    (`calcTrainingGrowth` 는 그대로 엔진에 묻는다.)
+//
+//    왜 옮겨 적었나 — 지금 Rust 에 「계수만 돌려주는」 문이 없다.
+//    `previewTrainingNative` 는 피로·컨디션 변화만 주고, XP 계수는 안 준다.
+//    화면에 안 보이면 선택지가 사기·피로·성실을 움직여도 그것이 훈련 성과로
+//    이어진다는 것을 **아무도 모른다** — 그게 사용자 확정 결정 ④ 다.
+//
+// ⚠ **Rust 가 바뀌면 여기도 바뀌어야 한다.** 그 위험을 줄이려고
+//    `__tests__/trainingEfficiency.test.ts` 가 Rust 단위검사와 **같은 수**를
+//    못박아 뒀다(`week_xp_normal_conditions` · `week_xp_high_fatigue_cut` ·
+//    `week_xp_mid_fatigue_cut`). 갈리면 그 검사가 먼저 터진다.
+//    → A 에게 넘긴 것: `trainingEfficiencyNative` 하나면 이 사본이 없어진다.
+
+/**
+ * 슬롯 배수 — 주/보조1/보조2 의 XP 배수.
+ * 정본은 Rust `SLOT_MULTS`(`[(2.8, 1.0), (1.3, 0.5), (0.9, 0.5)]`) 의 첫 값이다.
+ */
+export const TRAINING_SLOT_MULTS = [2.8, 1.3, 0.9] as const;
+
+/** 컨디션 계수 — 100 에서 1.0 */
+export function conditionFactor(condition: number): number {
+  return condition / 100;
+}
+
+/**
+ * 피로 계수 — 85/70 에서 **계단으로** 떨어진다. 그 아래는 완만하고 0.80 이 바닥.
+ * ⚠ 계단이라 「피로 −1」이 문턱을 넘으면 효율이 한 번에 뛴다. 그게 원래 동작이다.
+ */
+export function fatigueFactor(fatigue: number): number {
+  if (fatigue >= 85) return 0.35;
+  if (fatigue >= 70) return 0.65;
+  return Math.max(0.80, 1 - fatigue / 200);
+}
+
+/** 성실 계수 — 1 에서 0.608, 99 에서 1.4. 약 49.5 가 1.0 이다 */
+export function diligenceFactor(diligence: number): number {
+  return 0.6 + (diligence / 99) * 0.8;
+}
+
+export interface TrainingEfficiency {
+  /** 계수 셋 */
+  condition: number;
+  fatigue: number;
+  diligence: number;
+  /** 셋의 곱 — 기준(각 계수 1.0)이 1.0 이다 */
+  total: number;
+  /** 기준 대비 백분율 (+12 / −23). 반올림한 정수다 */
+  pct: number;
+}
+
+/**
+ * 지금 상태가 훈련 XP 를 **몇 % 밀거나 깎고 있나.**
+ *
+ * ⚠ 기준은 「각 계수 1.0」이다 — 컨디션 100 · 피로 0 · 성실 약 49.5.
+ *   성장률·잠재력·나이는 **안 넣는다**: 선택지로 못 움직이는 축이라
+ *   같이 곱하면 「내가 고른 것이 얼마나 바꿨나」가 안 보인다.
+ */
+export function trainingEfficiency(p: {
+  condition: number; fatigue: number; diligence: number;
+}): TrainingEfficiency {
+  const condition = conditionFactor(p.condition);
+  const fatigue   = fatigueFactor(p.fatigue);
+  const diligence = diligenceFactor(p.diligence);
+  const total = condition * fatigue * diligence;
+  return { condition, fatigue, diligence, total, pct: Math.round((total - 1) * 100) };
+}
+
+/**
+ * 선택지 하나가 훈련 효율을 몇 % 움직이나 — 「→ 훈련 효율 ±N%」 꼬리용.
+ *
+ * ⚠ **지금 값에서 잰다.** 같은 「피로 −8」도 피로 72 에서는 문턱(70)을 넘어
+ *   크게 튀고 피로 20 에서는 미미하다 — 고정 표를 적으면 거짓말이 된다.
+ * ⚠ 값이 안 움직이면 `null` — 0% 를 적으면 「효과 없음」과 「해당 없음」이
+ *   같아 보인다.
+ * ⚠ 값은 1~99 로 잘린다(`game.ts` 의 효과 적용과 같은 범위).
+ */
+export function trainingEfficiencyDelta(
+  now: { condition: number; fatigue: number; diligence: number },
+  d: { conditionDelta?: number; fatigueDelta?: number; diligenceDelta?: number },
+): number | null {
+  const dc = d.conditionDelta ?? 0, df = d.fatigueDelta ?? 0, dd = d.diligenceDelta ?? 0;
+  if (dc === 0 && df === 0 && dd === 0) return null;
+  const clamp = (v: number) => Math.max(1, Math.min(99, v));
+  const before = trainingEfficiency(now).total;
+  const after = trainingEfficiency({
+    // ⚠ 컨디션은 100 까지다 — 1~99 로 자르면 컨디션 100 이 99 로 깎인다
+    condition: Math.max(1, Math.min(100, now.condition + dc)),
+    fatigue:   clamp(now.fatigue + df),
+    diligence: clamp(now.diligence + dd),
+  }).total;
+  if (before <= 0) return null;
+  const pct = Math.round((after / before - 1) * 100);
+  return pct === 0 ? null : pct;
+}

@@ -13,6 +13,7 @@
   import { teamMap, entityMap, masterStore } from "../../shared/stores/master";
   import { categoryMeta, FILTER_GROUPS } from "../../shared/utils/messageCategory";
   import { gaugeTone } from "../../shared/utils/myStatus";
+  import { trainingEfficiencyDelta } from "../../shared/utils/growthEngine";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
   import RankListPanel from "../../features/messages/ui/RankListPanel.svelte";
   import StatTable from "../../features/messages/ui/StatTable.svelte";
@@ -158,7 +159,9 @@
     ...(gaugeTone(p.condition) === "bad"
       ? [{ tone: "bad" as const, text: `컨디션 ${p.condition} — 회복에 집중할 시점` }] : []),
     ...(gaugeTone(p.morale) === "bad"
-      ? [{ tone: "warn" as const, text: `사기 ${p.morale} — 반등할 계기가 필요하다` }] : []),
+      // ⚠ 사기만 소수다(`moraleAfterWeek` 가 실수를 돌려준다) — 다른 지표와
+      //   같은 자릿수로 찍는다. 반올림은 **보여 줄 때만**이고 값은 그대로 둔다
+      ? [{ tone: "warn" as const, text: `사기 ${Math.round(p.morale)} — 반등할 계기가 필요하다` }] : []),
     ...(pendingMsgs.length > 0
       ? [{ tone: "warn" as const, text: `선택을 기다리는 소식 ${pendingMsgs.length}건` }] : []),
     // 오프시즌 일정 안내. **옆단 카드였던 것을 여기로 옮겼다** — 옆단은
@@ -247,6 +250,27 @@
     seasonStore.resolvePendingAction("message", selected.id);
     await gameStore.save();
     await seasonStore.save();
+  }
+
+  // ── 선택지 꼬리 「→ 훈련 효율 ±N%」 (결정 ④ 1단계 · 사용자 확정) ──
+  //
+  // 🔴 **피로·컨디션·성실이 훈련 XP 로 이어진다는 걸 아무도 몰랐다.**
+  //   `week_xp` 가 그 셋을 곱하는데 힌트에는 「피로 −8」까지만 적혔다.
+  //
+  // ⚠ **`effectHint` 를 고쳐 쓰지 않는다.** 그 문장은 만드는 쪽(데이터·
+  //   생산부)이 갖는다 — 여기서 갈아치우면 두 벌이 된다. 뒤에 **덧붙이기만**
+  //   한다.
+  // ⚠ **지금 상태에서 잰다.** 같은 「피로 −8」도 문턱(70·85) 앞뒤에서 폭이
+  //   다르다 — `growthEngine.trainingEfficiencyDelta` 하나가 정한다.
+  // ⚠ 사기는 안 센다 — `week_xp` 에 없다(슬럼프로 따로 걸린다).
+  function effHintTail(opt: { effects?: import("../../shared/types/main").DecisionEffect }): string {
+    const e = opt.effects;
+    if (!e) return "";
+    const d = trainingEfficiencyDelta(
+      { condition: p.condition, fatigue: p.fatigue, diligence: p.diligence },
+      { conditionDelta: e.conditionDelta, fatigueDelta: e.fatigueDelta, diligenceDelta: e.diligenceDelta },
+    );
+    return d === null ? "" : `→ 훈련 효율 ${d > 0 ? "+" : "−"}${Math.abs(d)}%`;
   }
 
   /** effectHint의 부호로 색을 정한다 (+3 / -2 같은 표기) */
@@ -438,9 +462,15 @@
             {#if dec.selectedOptionId === null}
               <div class="dec-opts">
                 {#each dec.options as opt}
+                  <!-- ⚠ `{@const}` 는 블록의 바로 아래여야 한다 — `<button>` 안에
+                       두면 Svelte 가 컴파일을 거부한다 -->
+                  {@const effTail = effHintTail(opt)}
                   <button class="opt" data-tone={effectTone(opt.effectHint)} type="button" on:click={() => choose(opt.id)}>
                     <span class="opt-label">{opt.label}</span>
                     {#if opt.effectHint}<span class="opt-hint">{opt.effectHint}</span>{/if}
+                    <!-- 꼬리는 힌트와 **다른 줄**이다 — 한 줄로 이으면 어디까지가
+                         데이터의 말이고 어디부터가 화면의 계산인지 안 보인다 -->
+                    {#if effTail}<span class="opt-eff">{effTail}</span>{/if}
                   </button>
                 {/each}
               </div>
@@ -710,6 +740,16 @@
   .opt[data-tone="neg"]   .opt-hint { color: var(--bad); }
   .opt[data-tone="mixed"] .opt-hint { color: var(--warn); }
   .opt[data-tone="none"]  .opt-hint { color: var(--ink-mute); }
+  /* 훈련 효율 꼬리 — 힌트와 **다른 줄**에 둔다. 화면이 계산한 값이라
+     데이터가 준 문장(`.opt-hint`)과 섞여 보이면 안 된다 */
+  .opt { flex-wrap: wrap; }
+  .opt-eff {
+    flex-basis: 100%;
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
 
   .dec-done {
     display: flex; align-items: baseline; gap: 9px;

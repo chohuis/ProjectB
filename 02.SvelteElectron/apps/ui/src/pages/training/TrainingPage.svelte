@@ -2,7 +2,10 @@
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap, entitiesL10n, teamsL10n } from "../../shared/stores/master";
   import type { TrainingProgram } from "../../shared/stores/master";
-  import { previewTraining, injuryChance, formPenalty, type TrainingPreview } from "../../shared/utils/growthEngine";
+  import {
+    previewTraining, injuryChance, formPenalty, trainingEfficiency,
+    TRAINING_SLOT_MULTS, type TrainingPreview,
+  } from "../../shared/utils/growthEngine";
   import { developingDifficultyOf, trainingIntensityOf } from "../../shared/utils/arsenal";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
   import { INJURY_LABEL } from "../../shared/types/save";
@@ -299,6 +302,30 @@
     });
     if (chance !== null) projectedRisk = Math.round(chance * 100);
   }
+
+  // ── 이번 주 훈련 성과 (결정 ④ 1단계 · 사용자 확정) ────────────
+  //
+  // 🔴 **산식이 화면에 안 보였다.** 주간 XP 는
+  //   `기본 × 컨디션 × 피로 × 성장률 × 성실 × 슬롯배수 × 잠재력` 인데
+  //   화면에는 피로 게이지와 부상 확률뿐이라, 선택지가 사기·피로·성실을
+  //   움직여도 **그것이 훈련 성과로 이어진다는 것을 아무도 몰랐다.**
+  //
+  // ⚠ 계수는 `growthEngine` 하나에서 온다 — 선택지 꼬리(소식 화면)와 같은
+  //   함수다. 화면마다 식을 적으면 두 자리가 갈린다(이 파일이 이미 겪었다).
+  // ⚠ **성장률·잠재력·나이는 안 넣는다.** 이번 주에 내가 움직일 수 있는 축이
+  //   아니라, 같이 곱하면 「내가 고른 것이 얼마나 바꿨나」가 안 보인다.
+  $: eff = trainingEfficiency({
+    condition: realCondition, fatigue: realFatigue, diligence: protagonist.diligence,
+  });
+  /** 계수 하나를 「+12%」·「−23%」 꼴로 */
+  const factorPct = (f: number) => `${f >= 1 ? "+" : "−"}${Math.round(Math.abs(f - 1) * 100)}%`;
+  $: effRows = [
+    { label: "컨디션", value: Math.round(realCondition),        pct: factorPct(eff.condition) },
+    { label: "피로",   value: Math.round(realFatigue),          pct: factorPct(eff.fatigue) },
+    { label: "성실",   value: Math.round(protagonist.diligence), pct: factorPct(eff.diligence) },
+  ];
+  /** 슬럼프는 XP 가 아니라 `efficiencyMod` 로 걸린다 — 곱에 섞지 않고 따로 적는다 */
+  $: slumpPct = isSlump ? -30 : 0;
 
   $: trainingIntensity = trainingIntensityOf([selectedMain, selectedSub1, selectedSub2]);
 
@@ -665,6 +692,32 @@
               </div>
             </div>
           {/if}
+
+          <!-- 이번 주 훈련 성과 — 계수가 XP 를 얼마나 밀거나 깎나 -->
+          <div class="eff-section">
+            <div class="eff-head">
+              <h3>이번 주 훈련 성과</h3>
+              <strong class="eff-total" class:up={eff.pct > 0} class:down={eff.pct < 0}>
+                {eff.pct >= 0 ? "+" : "−"}{Math.abs(eff.pct)}%
+              </strong>
+            </div>
+            <p class="eff-sub">기본 대비 — 컨디션·피로·성실이 XP 를 미는 만큼이다</p>
+            <ul class="eff-rows">
+              {#each effRows as r (r.label)}
+                <li>
+                  <span class="eff-k">{r.label}</span>
+                  <span class="eff-v">{r.value}</span>
+                  <span class="eff-p" class:up={r.pct.startsWith("+")} class:down={r.pct.startsWith("−")}>{r.pct}</span>
+                </li>
+              {/each}
+            </ul>
+            {#if slumpPct !== 0}
+              <p class="eff-note danger">슬럼프 — 위 계수와 별도로 훈련 효율 {slumpPct}%</p>
+            {/if}
+            <p class="eff-slots">
+              슬롯 배수 주 ×{TRAINING_SLOT_MULTS[0]} · 보조1 ×{TRAINING_SLOT_MULTS[1]} · 보조2 ×{TRAINING_SLOT_MULTS[2]}
+            </p>
+          </div>
 
           <!-- 예상 결과 -->
           <div class="result-section">
@@ -1118,6 +1171,37 @@
     cursor: pointer;
   }
   .advice-dismiss-btn:hover { border-color: var(--line-strong); color: var(--ink-mid); }
+
+  /* -- 이번 주 훈련 성과 -- */
+  .eff-section {
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel-sunk);
+  }
+  .eff-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .eff-head h3 { margin: 0; font-size: 13px; }
+  .eff-total { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .eff-total.up   { color: var(--ok); }
+  .eff-total.down { color: var(--bad); }
+  .eff-sub { margin: 4px 0 8px; font-size: 11px; color: var(--ink-mute); }
+  .eff-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .eff-rows li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    align-items: baseline;
+    font-size: 12px;
+  }
+  .eff-k { color: var(--ink-mute); }
+  .eff-v { font-variant-numeric: tabular-nums; }
+  .eff-p { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 48px; text-align: right; }
+  .eff-p.up   { color: var(--ok); }
+  .eff-p.down { color: var(--bad); }
+  .eff-note { margin: 8px 0 0; font-size: 11px; }
+  .eff-note.danger { color: var(--bad); }
+  .eff-slots { margin: 8px 0 0; font-size: 11px; color: var(--ink-mute); }
 
   /* -- 예상 결과 -- */
   .result-section { display: grid; gap: 8px; }
