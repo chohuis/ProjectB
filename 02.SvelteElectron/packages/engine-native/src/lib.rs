@@ -399,8 +399,17 @@ pub fn run_simple_game(params_json: String) -> String {
         Ok(v) => v,
         Err(e) => return parse_err("runSimpleGame", e),
     };
-    let mut rng = rand::thread_rng();
-    let result = match_engine::run_simple_game(&params, &mut rng);
+    // ⚠ **0은 「씨앗 없음」이다** — `startMatchNative` 와 같은 규약이다
+    let result = match params.seed.filter(|s| *s != 0) {
+        Some(seed) => {
+            let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+            match_engine::run_simple_game(&params, &mut rng)
+        }
+        None => {
+            let mut rng = rand::thread_rng();
+            match_engine::run_simple_game(&params, &mut rng)
+        }
+    };
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("runSimpleGame/serialize", e))
 }
 

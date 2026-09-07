@@ -735,6 +735,28 @@ pub struct MatchState {
 
     pub pre_entry_logs: Vec<String>,
     pub last_pitch_types: Vec<PitchType>,
+    /**
+     * 직전 투구의 **구속(km/h)** — 완급 조절의 입력 (결정 ⑧ · 2026-09-07).
+     *
+     * 🔴 **한 칸이면 된다.** 낙차는 「직전 공과 이번 공」이고, 다섯 칸을
+     *   들면 「최근 다섯 중 제일 느린 것과의 차」 같은 다른 규칙이 슬쩍
+     *   가능해진다 — 그건 완급 조절이 아니라 구종 다양성이다.
+     * ⚠ **없으면 없는 것이다.** 첫 공·타자 교체 직후는 견줄 값이 없어
+     *   가산이 0 이다. 0.0 을 채우면 「느린 공이 있었다」가 되어 첫 공이
+     *   늘 큰 낙차로 잡힌다.
+     * ⚠ `#[serde(default)]` — 옛 세이브·옛 스냅샷에 이 칸이 없다.
+     */
+    #[serde(default)]
+    pub last_pitch_speed: Option<f64>,
+    /**
+     * 최근 5구의 **코스 칸** — 코스 반복 페널티의 입력 (결정 ⑨ · 2026-09-07).
+     *
+     * 3×3 존 격자(1~9)로 접고 존 밖은 칸 하나(0)다. `last_pitch_types` 와
+     * 같은 길이·같은 규칙으로 민다 — 두 페널티가 같은 창을 봐야 「구종은
+     * 바꿨는데 코스가 같다」가 제대로 잡힌다.
+     */
+    #[serde(default)]
+    pub last_pitch_zones: Vec<u8>,
 
     pub weather: WeatherType,
     pub park: ParkType,
@@ -837,6 +859,18 @@ pub struct HalfInningSimResult {
     pub strikeouts: i32,
     pub logs: Vec<String>,
     pub at_bats: Vec<AtBatLog>,
+    /**
+     * 던진 공 수 · 헛스윙 수 — **헛스윙률(SwStr%)의 재료다** (결정 ⑧⑨ 계측).
+     *
+     * 🔴 **투구 품질이 움직였는지는 안타·삼진만으로는 늦게 보인다.** 완급·
+     *   코스는 공 하나하나의 품질을 미는 것이라 타석 결과까지 가면 수비·
+     *   운이 섞인다. 헛스윙은 그 사이에 있는 유일한 원시 사건이다.
+     * ⚠ `#[serde(default)]` — 옛 스냅샷에 없다.
+     */
+    #[serde(default)]
+    pub pitches: i32,
+    #[serde(default)]
+    pub whiffs: i32,
 }
 
 // ── 게임 페이즈 결과 ──────────────────────────────────────────────────────────
@@ -966,6 +1000,16 @@ pub struct RunSimpleGameParams {
     pub pitcher: Option<PartialPitcherStats>,
     pub opponent_ovr: f64,
     pub protagonist_ovr: Option<f64>,
+    /**
+     * 씨앗. **0 이거나 없으면 `thread_rng`** — 예전과 같게 돈다.
+     *
+     * 🔴 씨앗이 없어서 이 문으로는 **전후 비교를 못 했다** (2026-09-07).
+     *   튜닝 랩·감사가 평균만 보고 있어 안 걸렸는데, 결정 하나를 켜고 끄며
+     *   재려면 같은 씨앗이어야 한다. `startMatchNative` 가 이미 같은 규약
+     *   (0 = 씨앗 없음)을 쓴다 — 여기만 안 따르고 있었다.
+     */
+    #[serde(default)]
+    pub seed: Option<u64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -978,6 +1022,12 @@ pub struct GameSummary {
     pub walks: i32,
     pub at_bat_logs: Vec<AtBatLog>,
     pub summary: String,
+    /// 던진 공 수 — 양쪽 반 합계 (헛스윙률의 분모)
+    #[serde(default)]
+    pub pitches: i32,
+    /// 헛스윙 — `STRIKE_SWING` + `STRIKEOUT_SWING`
+    #[serde(default)]
+    pub whiffs: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -530,6 +530,8 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         last_mound_visit_pitch: -10,
         pre_entry_logs: vec![],
         last_pitch_types: vec![],
+        last_pitch_speed: None,
+        last_pitch_zones: vec![],
         weather: opts.weather.unwrap_or(WeatherType::Sunny),
         park:    opts.park.unwrap_or(ParkType::Neutral),
         // ⚠ 안 넘기면 중립 기본값이다 — 예전과 같게 돈다
@@ -890,6 +892,15 @@ fn calculate_pitch_quality(
     let weather_mod = T::weather_quality_modifier(state.weather, decision.pitch_type);
     let park_mod    = T::park_quality_modifier(state.park);
     let pattern_mod = pitch_pattern_modifier(decision.pitch_type, &state.last_pitch_types);
+    // 완급 조절 (결정 ⑧) — 직전 공과의 km/h 낙차. 구종 반복 페널티와 **겹친다**
+    let speed_mod = T::speed_gap_bonus(
+        state.last_pitch_speed,
+        T::pitch_speed(pitcher.velocity, decision.pitch_type, decision.power),
+    );
+    // 코스 반복 (결정 ⑨) — 구종과 같은 꼴, 크기만 작다
+    let course_mod = course_pattern_modifier(
+        course_cell(intended_target(decision)), &state.last_pitch_zones,
+    );
     let jam_mod     = jam_pressure_modifier(state, mental, batter.batting_clutch);
     let clutch_mod  = clutch_modifier(state, pitcher.clutch);
 
@@ -906,7 +917,7 @@ fn calculate_pitch_quality(
         + count_mod + full_count_noise
         - batter_penalty
         + mental_bonus - stamina_penalty
-        + weather_mod + park_mod + pattern_mod + jam_mod + clutch_mod
+        + weather_mod + park_mod + pattern_mod + speed_mod + course_mod + jam_mod + clutch_mod
         + random_noise
     )
 }
@@ -1421,6 +1432,47 @@ fn pitch_pattern_modifier(pitch_type: PitchType, last: &[PitchType]) -> f64 {
     if !last.iter().rev().take(3).any(|&p| p == pitch_type) { 1.0 } else { 0.0 }
 }
 
+/// 존 밖 — **칸 하나다.** 사방으로 쪼갤지는 실측 뒤에 정한다 (`tuning.rs` 머리말)
+const COURSE_CELL_OUT: u8 = 0;
+
+/// 「같은 자리」의 뜻 — 코스를 칸으로 접는다 (결정 ⑨).
+///
+/// 🔴 **연속값이라 그대로는 못 센다.** `target` 은 XY 실수라 두 번 같은 값이
+///   나오는 일이 없다 — 접지 않으면 반복이 **영원히 0건**이다.
+///
+/// ⚠ **겨냥한 곳으로 센다(`target`), 꽂힌 곳이 아니다.** 구종 페널티가
+///   「고른 구종」을 보는 것과 같은 자리다 — 제구가 흔들려 딴 데 간 것을
+///   「코스를 바꿨다」로 쳐 주면 제구 나쁜 투수가 이득을 본다.
+/// ⚠ 존 밖(|x|>1 또는 |y|>1)은 한 칸이다. `target_to_zone` 은 존 밖도 3×3 에
+///   욱여넣으므로 여기서 먼저 가른다.
+fn course_cell(t: XY) -> u8 {
+    if t.x.abs() > 1.0 || t.y.abs() > 1.0 { return COURSE_CELL_OUT; }
+    target_to_zone(t)
+}
+
+/// 코스 반복 페널티 — `pitch_pattern_modifier` 와 **같은 꼴**이고 크기만 작다.
+///
+/// ⚠ 구종 페널티와 **겹쳐 걸린다.** 같은 구종을 같은 자리에 이어 던지면 둘 다
+///   맞는다 — 그게 이 결정의 뜻이다(하나만 바꿔도 벌이 준다).
+fn course_pattern_modifier(cell: u8, last: &[u8]) -> f64 {
+    if T::course_mode() <= 0.0 { return 0.0; }
+    if last.is_empty() { return 0.0; }
+    let mut consecutive = 0usize;
+    for &c in last.iter().rev() {
+        if c == cell { consecutive += 1; } else { break; }
+    }
+    if consecutive >= 3 { return T::COURSE_REPEAT_3; }
+    if consecutive >= 2 { return T::COURSE_REPEAT_2; }
+    if consecutive >= 1 { return T::COURSE_REPEAT_1; }
+    if !last.iter().rev().take(3).any(|&c| c == cell) { T::COURSE_FRESH_BONUS } else { 0.0 }
+}
+
+/// 이 결정이 겨냥한 자리. **`target` 이 없으면 존 좌표로 되돌린다** —
+/// 플레이어 입력은 `location`(1~9)만 올 수 있다
+fn intended_target(decision: &PitchDecision) -> XY {
+    decision.target.unwrap_or_else(|| zone_to_target(decision.location))
+}
+
 fn jam_pressure_modifier(state: &MatchState, mental: f64, batter_clutch: f64) -> f64 {
     if state.runners.second.is_none() && state.runners.third.is_none() { return 0.0; }
     let mut pressure = -1.0;
@@ -1693,6 +1745,29 @@ fn target_to_zone(t: XY) -> u8 {
 /// 만들었고 **둘 다 존 밖을 겨냥하지 않았다**(각각 최대 0.8, 1.1인데 볼
 /// 판정선은 1.2다). 그래서 200경기에 볼넷이 3개였다. 표를 두 곳에 두면
 /// 한쪽만 고쳐지므로 여기 하나로 모은다. 수치 정본은 `tuning.rs`.
+/// 코스를 고르되 **직전 칸을 피한다** (결정 ⑨ · 2026-09-07).
+///
+/// 🔴 **안 피하면 AI 만 손해다.** 코스 반복 페널티는 플레이어와 AI 에 똑같이
+///   걸리는데, 플레이어는 눈으로 보고 자리를 바꾸고 AI 는 계속 같은 칸에
+///   던진다 — 벌만 AI 가 먹는다. 구종 쪽은 `pick_from_arsenal` 이 이미
+///   보유 목록에서 섞어 뽑아 이 문제가 없다.
+///
+/// ⚠ **볼 3개면 안 피한다.** 그 카운트의 자리는 「존 한복판」 하나뿐이라
+///   피하게 만들면 볼넷을 피하려는 행동 자체가 무너진다 — 페널티(−0.5)보다
+///   볼넷 한 개가 훨씬 비싸다.
+/// ⚠ **다시 뽑는 것은 한 번뿐이다.** 유인구처럼 칸이 하나(존 밖)인 자리는
+///   몇 번을 다시 뽑아도 같은 칸이 나온다 — 무한 반복이 된다.
+fn pick_target_avoiding(balls: u8, strikes: u8, last_zones: &[u8], rng: &mut impl Rng) -> XY {
+    let first = pick_target(balls, strikes, rng);
+    // 🔴 **꺼져 있으면 난수를 한 방울도 더 안 먹는다.** 재추첨이 rng 를
+    //   당기므로, 여기서 안 막으면 「끈 상태」가 결정 ⑨ 이전과 달라진다
+    if T::course_mode() <= 0.0 { return first; }
+    if balls >= 3 { return first; }
+    let Some(&last) = last_zones.last() else { return first };
+    if course_cell(first) != last { return first; }
+    pick_target(balls, strikes, rng)
+}
+
 fn pick_target(balls: u8, strikes: u8, rng: &mut impl Rng) -> XY {
     let chase_prob = if balls >= 3 { T::AUTO_CHASE_PROB_BEHIND }
         else if strikes == 2 { T::AUTO_CHASE_PROB_AHEAD }
@@ -1724,7 +1799,7 @@ fn pick_target(balls: u8, strikes: u8, rng: &mut impl Rng) -> XY {
 
 fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
     let (balls, strikes) = (state.count.balls, state.count.strikes);
-    let target = pick_target(balls, strikes, rng);
+    let target = pick_target_avoiding(balls, strikes, &state.last_pitch_zones, rng);
     // ⚠ 구종은 **보유 목록에서** 나온다. 전략(공격적/안전)만 카운트가 정한다
     let pit = get_active_pitcher(state);
     let pitch_type = pick_from_arsenal(pit, balls, strikes, rng);
@@ -1738,6 +1813,12 @@ fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
 /// 항상 중립 카운트를 썼다. 그래서 `runSimpleGame`(감사가 쓰는 경로)은
 /// 볼 3개·스트라이크 2개의 코스 변화를 **재현하지 못했고**, 실제 자동진행
 /// (`auto_pick_decision`)과 다른 야구를 하고 있었다.
+///
+/// ⚠ **여기는 코스 반복을 안 피한다**(결정 ⑨). 이 함수가 서 있는 자리는
+///   **플레이어**다 — 자동진행의 AI 는 `auto_pick_decision` 이고 그쪽이
+///   `pick_target_avoiding` 을 쓴다. 여기까지 피하게 만들면 「손으로 던지면
+///   벌을 먹고 자동이면 안 먹는다」의 반대가 되어, 플레이어가 실제로 받는
+///   벌을 감사(`audit:engine`)가 못 본다.
 fn random_decision_for_sim(balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchDecision {
     let types    = [PitchType::Fastball, PitchType::Slider, PitchType::Curve, PitchType::Changeup];
     let strats   = [PitchStrategy::Aggressive, PitchStrategy::Balanced, PitchStrategy::Safe];
@@ -1804,6 +1885,9 @@ fn protagonist_enters_mid_inning(state: &MatchState) -> MatchState {
     next.pitch_count_since_entry = 0;
     next.inherited_runners = state.runners.clone();
     next.last_pitch_types = vec![];
+    // 완급·코스 기억도 같이 비운다 — 투수가 바뀌면 앞 사람의 배열이다
+    next.last_pitch_speed = None;
+    next.last_pitch_zones = vec![];
     next.pre_entry_logs.push(entry_log.clone());
     next.logs.push(entry_log);
     next
@@ -1920,6 +2004,8 @@ pub fn request_mound_visit(state: &MatchState) -> MatchState {
     next.protagonist_mental  = next_mental;
     next.protagonist_stamina = next_stamina;
     next.last_pitch_types    = vec![];
+    next.last_pitch_speed    = None;
+    next.last_pitch_zones    = vec![];
     next.mound_visits_left  -= 1;
     next.last_mound_visit_pitch = state.pitch_count as i32;
     next.logs.push(format!("마운드 방문 (멘탈+{:.1}, 체력+{})", mental_recovery, stamina_recovery));
@@ -2145,7 +2231,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let current_mental  = get_active_mental(&pre_state);
 
     // ── 3. 착탄 → 스윙 → 결과 ────────────────────────────────────────────────
-    let target = decision.target.unwrap_or_else(|| zone_to_target(decision.location));
+    let target = intended_target(decision);
     let lr = resolve_actual_landing(target, &current_pitcher, current_stamina, current_mental, &pre_state, rng);
     let quality = calculate_pitch_quality(&pre_state, &current_pitcher, &current_batter, current_stamina, current_mental, decision, lr.landing, rng);
     // 🔴 **히트앤런** (C-③). 주자를 뛰게 하면서 타자가 친다.
@@ -2842,6 +2928,16 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     next_last_types.push(decision.pitch_type);
     if next_last_types.len() > 5 { next_last_types.remove(0); }
 
+    // 코스 칸도 **같은 창(5구)** 으로 민다 (결정 ⑨). 길이가 다르면 「구종은
+    // 바꿨는데 코스가 같다」를 두 잣대로 보게 된다
+    let mut next_last_zones = pre_state.last_pitch_zones.clone();
+    next_last_zones.push(course_cell(target));
+    if next_last_zones.len() > 5 { next_last_zones.remove(0); }
+    // 완급은 **한 칸**이다 (결정 ⑧) — 낙차는 직전 공과의 차다
+    let next_last_speed = Some(
+        T::pitch_speed(current_pitcher.velocity, decision.pitch_type, decision.power),
+    );
+
     let is_protagonist_active = is_protagonist && is_protagonist_actively_pitching(&pre_state);
     let next_pc_since_entry = if is_protagonist_active {
         pre_state.pitch_count_since_entry + 1
@@ -2921,6 +3017,8 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         er_since_entry: next_er_since_entry,
         home_lineup_index: next_home_idx, away_lineup_index: next_away_idx,
         last_pitch_types: next_last_types,
+        last_pitch_zones: next_last_zones,
+        last_pitch_speed: next_last_speed,
         defense_stat: next_defense_stat,
         batter_accum: next_batter_accum,
         // 한 구를 던져도 씨앗은 그대로 이어진다 — 갱신은 진입부가 한다
@@ -3287,6 +3385,8 @@ pub fn auto_simulate_half_inning(state: &MatchState, rng: &mut impl Rng) -> Half
     let mut runs = 0i32; let mut hits = 0i32; let mut walks = 0i32; let mut strikeouts = 0i32;
     let mut logs: Vec<String> = vec![];
     let mut at_bats: Vec<AtBatLog> = vec![];
+    // 헛스윙률의 재료 (결정 ⑧⑨ 계측) — 공 하나가 단위다
+    let mut pitches = 0i32; let mut whiffs = 0i32;
     let mut safety = 300i32;
 
     let mut ab_pitch_count = 0u32;
@@ -3311,6 +3411,10 @@ pub fn auto_simulate_half_inning(state: &MatchState, rng: &mut impl Rng) -> Half
 
         runs += scored;
         ab_pitch_count += 1;
+        pitches += 1;
+        // 헛스윙은 **삼진째도 센다** — `StrikeoutSwing` 이 3스트라이크째의
+        // `StrikeSwing` 이라 안 세면 헛스윙률이 삼진만큼 깎인다
+        if matches!(code, PitchResultCode::StrikeSwing | PitchResultCode::StrikeoutSwing) { whiffs += 1; }
 
         if matches!(code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun) { hits += 1; }
         if code == PitchResultCode::Walk { walks += 1; }
@@ -3338,7 +3442,7 @@ pub fn auto_simulate_half_inning(state: &MatchState, rng: &mut impl Rng) -> Half
         s = step.next_state;
     }
 
-    HalfInningSimResult { next_state: s, runs, hits, walks, strikeouts, logs, at_bats }
+    HalfInningSimResult { next_state: s, runs, hits, walks, strikeouts, logs, at_bats, pitches, whiffs }
 }
 
 pub fn auto_simulate_until_entry(state: &MatchState, rng: &mut impl Rng) -> MatchState {
@@ -3416,6 +3520,10 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     let mut state = create_initial_match_state(&opts, rng);
     let mut strikeouts = 0i32; let mut hits = 0i32; let mut walks = 0i32;
     let mut at_bat_logs: Vec<crate::types::AtBatLog> = vec![];
+    // 헛스윙률 (결정 ⑧⑨ 계측). **양쪽 반을 다 센다** — 주인공이 던지는 반은
+    // `random_decision_for_sim`(플레이어 자리), 상대 반은 `auto_pick_decision`
+    // (AI 자리)이라 한쪽만 세면 코스 회피의 효과가 절반만 보인다
+    let mut pitches = 0i32; let mut whiffs = 0i32;
     let mut safety = 800i32;
 
     while !state.is_finished && safety > 0 {
@@ -3429,11 +3537,15 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
         if is_strikeout(code) { strikeouts += 1; }
         if matches!(code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun) { hits += 1; }
         if code == PitchResultCode::Walk { walks += 1; }
+        pitches += 1;
+        if matches!(code, PitchResultCode::StrikeSwing | PitchResultCode::StrikeoutSwing) { whiffs += 1; }
         state = step.next_state;
 
         if !state.is_finished && !is_protagonist_pitching(&state) {
             let sim = auto_simulate_half_inning(&state, rng);
             at_bat_logs.extend(sim.at_bats);
+            pitches += sim.pitches;
+            whiffs  += sim.whiffs;
             state = sim.next_state;
         }
     }
@@ -3448,7 +3560,7 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     let finish_note = state.logs.last().cloned().unwrap_or_default();
     let summary = if finish_note.contains("콜드게임") { finish_note } else { String::new() };
 
-    GameSummary { home_score, away_score, strikeouts, hits, walks, at_bat_logs, summary }
+    GameSummary { home_score, away_score, strikeouts, hits, walks, at_bat_logs, summary, pitches, whiffs }
 }
 
 // ── C-3: SimGameResult 어댑터 ────────────────────────────────────────────────
@@ -4418,5 +4530,159 @@ mod 방해 {
             T::PINCH_HIT_OVR_GAP, T::PINCH_HIT_OVR_GAP * 2.0);
         assert!(T::PINCH_HIT_MIN_INNING >= 6,
             "{}회부터면 선발 타순이 초반에 무너진다", T::PINCH_HIT_MIN_INNING);
+    }
+}
+
+#[cfg(test)]
+mod 완급과코스 {
+    use super::*;
+
+    // ── 결정 ⑧ 완급 조절 ────────────────────────────────────
+
+    /// 🔴 **표시식에 구종이 없어서 낙차를 못 쟀다.** 엔진 값은 구종을 본다.
+    #[test]
+    fn 구종마다_구속이_다르다() {
+        let v = 62.0;
+        let fast = T::pitch_speed(v, PitchType::Fastball, PitchPower::Normal);
+        let curve = T::pitch_speed(v, PitchType::Curve, PitchPower::Normal);
+        assert!(fast > curve, "직구({fast})가 커브({curve})보다 안 빠르다");
+        assert!((fast - curve - 20.0).abs() < 1e-9, "커브 오프셋이 표와 다르다");
+    }
+
+    /// ⚠ **바탕은 화면 표시식과 같아야 한다** (`MatchPage.statToKmh`).
+    ///   어긋나면 카드에 145 라 적히고 엔진은 딴 공을 던진다.
+    #[test]
+    fn 직구는_표시식과_같다() {
+        for stat in [30.0, 50.0, 62.0, 99.0] {
+            let shown = T::PITCH_SPEED_BASE + stat * T::PITCH_SPEED_PER_STAT;
+            let engine = T::pitch_speed(stat, PitchType::Fastball, PitchPower::Normal);
+            assert!((shown - engine).abs() < 1e-9, "스탯 {stat} 에서 갈렸다");
+        }
+    }
+
+    /// ⚠ **직전이 없으면 0** — 첫 공은 견줄 게 없다. 0.0 을 채우면 첫 공이
+    ///   늘 큰 낙차로 잡힌다.
+    #[test]
+    fn 첫공은_가산이_없다() {
+        assert_eq!(T::speed_gap_bonus(None, 140.0), 0.0);
+    }
+
+    /// 낙차 문턱은 **계단**이다 — 10 미만 0 · 10 이상 +1 · 20 이상 +2
+    #[test]
+    fn 낙차가_클수록_가산이_크다() {
+        assert_eq!(T::speed_gap_bonus(Some(140.0), 135.0), 0.0, "5km/h 는 가산이 없다");
+        assert_eq!(T::speed_gap_bonus(Some(140.0), 129.0), T::SPEED_GAP_SMALL_BONUS);
+        assert_eq!(T::speed_gap_bonus(Some(140.0), 118.0), T::SPEED_GAP_BIG_BONUS);
+    }
+
+    /// ⚠ **방향을 안 본다.** 느린 공 뒤의 빠른 공도 완급이다
+    #[test]
+    fn 느린공_뒤_빠른공도_같다() {
+        assert_eq!(T::speed_gap_bonus(Some(120.0), 145.0), T::speed_gap_bonus(Some(145.0), 120.0));
+    }
+
+    /// 같은 구종을 이어 던지면 낙차가 0 이라 **가산 없이 페널티만** 남는다
+    #[test]
+    fn 같은_구종_연속은_가산이_0이다() {
+        let s = T::pitch_speed(62.0, PitchType::Slider, PitchPower::Normal);
+        assert_eq!(T::speed_gap_bonus(Some(s), s), 0.0);
+        assert!(pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider]) < 0.0);
+    }
+
+    // ── 결정 ⑨ 코스 반복 ────────────────────────────────────
+
+    /// 🔴 **접지 않으면 반복이 영원히 0건이다** — `target` 은 실수다
+    #[test]
+    fn 존_안은_아홉_칸이다() {
+        let mut seen = std::collections::HashSet::new();
+        for y in [-0.7, 0.0, 0.7] {
+            for x in [-0.7, 0.0, 0.7] {
+                seen.insert(course_cell(XY { x, y }));
+            }
+        }
+        assert_eq!(seen.len(), 9, "아홉 칸이 안 나온다: {seen:?}");
+        assert!(!seen.contains(&COURSE_CELL_OUT), "존 안이 존 밖 칸으로 갔다");
+    }
+
+    /// ⚠ `target_to_zone` 은 존 밖도 3×3 에 욱여넣는다 — 먼저 갈라야 한다
+    #[test]
+    fn 존_밖은_한_칸이다() {
+        for (x, y) in [(1.4, 0.0), (-1.4, 0.0), (0.0, 1.4), (0.0, -1.4), (1.3, 1.3)] {
+            assert_eq!(course_cell(XY { x, y }), COURSE_CELL_OUT, "({x},{y}) 가 존 안으로 잡혔다");
+        }
+    }
+
+    /// 구종 페널티와 **같은 꼴**이고 크기만 작다
+    #[test]
+    fn 연속할수록_벌이_커진다() {
+        assert_eq!(course_pattern_modifier(5, &[5]), T::COURSE_REPEAT_1);
+        assert_eq!(course_pattern_modifier(5, &[5, 5]), T::COURSE_REPEAT_2);
+        assert_eq!(course_pattern_modifier(5, &[5, 5, 5]), T::COURSE_REPEAT_3);
+    }
+
+    #[test]
+    fn 새_칸은_가산이다() {
+        assert_eq!(course_pattern_modifier(1, &[5, 6, 7]), T::COURSE_FRESH_BONUS);
+        // 최근 3구 **안**에 있으면 가산이 없다 (직전은 아니라 벌도 아니다)
+        assert_eq!(course_pattern_modifier(1, &[5, 1, 6]), 0.0);
+        // 네 번째 앞이면 창 밖이라 다시 「새 칸」이다 — 창은 3구다
+        assert_eq!(course_pattern_modifier(1, &[1, 5, 6, 7]), T::COURSE_FRESH_BONUS);
+    }
+
+    #[test]
+    fn 첫공은_아무것도_안_한다() {
+        assert_eq!(course_pattern_modifier(5, &[]), 0.0);
+    }
+
+    /// 🔴 **구종보다 작아야 한다** — 코스는 접은 값이라 「같은 자리」가 덜 또렷하다
+    #[test]
+    fn 코스_벌이_구종보다_작다() {
+        assert!(T::COURSE_REPEAT_1.abs() < pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider]).abs());
+        assert!(T::COURSE_REPEAT_3.abs()
+            < pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider; 3]).abs());
+        assert!(T::COURSE_FRESH_BONUS < 1.0, "구종의 새 구종 가산(+1)보다 커졌다");
+    }
+
+    /// ⚠ **겹쳐 걸린다.** 같은 구종을 같은 자리에 던지면 둘 다 맞는다
+    #[test]
+    fn 구종과_코스는_서로를_안_지운다() {
+        let p = pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider, PitchType::Slider]);
+        let c = course_pattern_modifier(5, &[5, 5]);
+        assert!(p < 0.0 && c < 0.0);
+        assert!((p + c) < p, "합이 한쪽보다 작지 않다 — 겹쳐 걸리는 게 아니다");
+    }
+
+    /// 🔴 **AI 가 안 피하면 벌만 AI 가 먹는다.** 볼 3개만 예외다
+    #[test]
+    fn ai가_직전_칸을_피한다() {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(12345);
+        let mut repeats = 0usize;
+        let mut plain_repeats = 0usize;
+        for i in 0..2000 {
+            let last = 5u8;
+            let a = pick_target_avoiding(0, 1, &[last], &mut rng);
+            if course_cell(a) == last { repeats += 1; }
+            let b = pick_target(0, 1, &mut rng);
+            if course_cell(b) == last { plain_repeats += 1; }
+            let _ = i;
+        }
+        assert!(repeats < plain_repeats,
+            "피한 쪽({repeats})이 안 피한 쪽({plain_repeats})보다 안 줄었다");
+    }
+
+    /// ⚠ **볼 3개면 안 피한다** — 그 카운트의 자리는 한복판 하나뿐이라
+    ///   피하게 만들면 볼넷을 피하려는 행동 자체가 무너진다
+    #[test]
+    fn 볼_셋이면_안_피한다() {
+        use rand::SeedableRng;
+        let mut a = rand::rngs::StdRng::seed_from_u64(777);
+        let mut b = rand::rngs::StdRng::seed_from_u64(777);
+        for _ in 0..200 {
+            let x = pick_target_avoiding(3, 0, &[5], &mut a);
+            let y = pick_target(3, 0, &mut b);
+            assert!((x.x - y.x).abs() < 1e-12 && (x.y - y.y).abs() < 1e-12,
+                "볼 3개인데 다시 뽑았다 — 난수가 어긋났다");
+        }
     }
 }

@@ -67,6 +67,111 @@ pub fn pitch_base(t: PitchType) -> f64 {
     }
 }
 
+// ── 구속 · 완급 조절 (결정 ⑧ · 2026-09-07) ────────────────────
+//
+// 🔴 **엔진에 구속 값이 없었다.** 있는 것은 화면의 표시식(`MatchPage.svelte`
+//   `statToKmh` — `100 + 스탯×0.65`)뿐인데 그건 **구종을 안 본다.** 직구든
+//   커브든 같은 숫자가 나오니 그걸로는 낙차를 못 잰다. 그래서 여기 둔다.
+//
+// ⚠ **바탕은 표시식과 같게 맞췄다.** 직구일 때 화면 카드의 km/h 와 엔진의
+//   값이 어긋나면 「145 라더니 왜」가 된다 — 어긋날 이유가 없다. 구종 오프셋
+//   만 엔진이 더 안다.
+//
+// 오프셋 근거: 실제 야구의 구종별 평균 구속 차(4심 대비)다.
+//   싱커 −3 · 커터 −5 · 슬라이더 −11 · 스플리터 −13 · 스크류 −14 ·
+//   포크 −15 · 체인지업 −16 · 커브 −20 · 너클 −25
+// 조정은 `BALANCE_BACKLOG §투구`.
+
+/// 완급 조절을 켠다 (1.0). **0 이면 결정 ⑧ 이전과 완전히 같다** — 난수도
+/// 한 방울 안 다르게 흐른다. 계측용 환경변수 `PB_TEMPO`.
+pub const TEMPO_MODE: f64 = 1.0;
+pub fn tempo_mode() -> f64 {
+    match std::env::var("PB_TEMPO") {
+        Ok(v) => v.parse::<f64>().unwrap_or(TEMPO_MODE),
+        Err(_) => TEMPO_MODE,
+    }
+}
+
+/// 코스 반복 페널티를 켠다 (1.0). **0 이면 결정 ⑨ 이전과 완전히 같다** —
+/// AI 의 코스 재추첨까지 안 돈다(재추첨은 난수를 한 번 더 먹는다).
+/// 계측용 환경변수 `PB_COURSE`.
+pub const COURSE_MODE: f64 = 1.0;
+pub fn course_mode() -> f64 {
+    match std::env::var("PB_COURSE") {
+        Ok(v) => v.parse::<f64>().unwrap_or(COURSE_MODE),
+        Err(_) => COURSE_MODE,
+    }
+}
+
+pub const PITCH_SPEED_BASE: f64     = 100.0;
+pub const PITCH_SPEED_PER_STAT: f64 = 0.65;
+/// 힘조절 — 화면 표시식과 같은 ±5 km/h
+pub const PITCH_SPEED_POWER_DELTA: f64 = 5.0;
+
+/// 직구 대비 구속 차 (km/h). 음수만 있다 — 직구가 제일 빠르다
+pub fn pitch_speed_offset(t: PitchType) -> f64 {
+    match t {
+        PitchType::Fastball    =>   0.0,
+        PitchType::Sinker      =>  -3.0,
+        PitchType::Cutter      =>  -5.0,
+        PitchType::Slider      => -11.0,
+        PitchType::Splitter    => -13.0,
+        PitchType::Screwball   => -14.0,
+        PitchType::Forkball    => -15.0,
+        PitchType::Changeup    => -16.0,
+        PitchType::Curve       => -20.0,
+        PitchType::Knuckleball => -25.0,
+    }
+}
+
+/// 이 공의 구속 (km/h) — **엔진 안의 값이다.** 표시식과 바탕은 같다
+pub fn pitch_speed(velocity_stat: f64, t: PitchType, p: PitchPower) -> f64 {
+    let power = match p {
+        PitchPower::High   =>  PITCH_SPEED_POWER_DELTA,
+        PitchPower::Low    => -PITCH_SPEED_POWER_DELTA,
+        PitchPower::Normal =>  0.0,
+    };
+    PITCH_SPEED_BASE + velocity_stat * PITCH_SPEED_PER_STAT + pitch_speed_offset(t) + power
+}
+
+/// 낙차 문턱 (km/h)과 그때의 품질 가산.
+///
+/// ⚠ **구종 반복 페널티와 겹쳐 걸린다.** 같은 구종을 이어 던지면 낙차가 0 이라
+///   가산도 0 이고 페널티만 남는다 — 둘이 서로를 지우지 않는다.
+/// ⚠ 문턱이 계단이라 **슬라이더(−11)가 직구 뒤에 오면 바로 +1.0** 이다.
+///   커브(−20)·너클(−25)만 +2.0 에 닿는다.
+pub const SPEED_GAP_SMALL: f64       = 10.0;
+pub const SPEED_GAP_SMALL_BONUS: f64 =  1.0;
+pub const SPEED_GAP_BIG: f64         = 20.0;
+pub const SPEED_GAP_BIG_BONUS: f64   =  2.0;
+
+/// 직전 공과의 낙차가 주는 가산. **직전이 없으면 0** — 첫 공은 견줄 게 없다
+pub fn speed_gap_bonus(prev: Option<f64>, cur: f64) -> f64 {
+    if tempo_mode() <= 0.0 { return 0.0; }
+    let Some(p) = prev else { return 0.0 };
+    let gap = (p - cur).abs();
+    if gap >= SPEED_GAP_BIG { SPEED_GAP_BIG_BONUS }
+    else if gap >= SPEED_GAP_SMALL { SPEED_GAP_SMALL_BONUS }
+    else { 0.0 }
+}
+
+// ── 코스 반복 페널티 (결정 ⑨ · 2026-09-07) ────────────────────
+//
+// 구종 반복(`pitch_pattern_modifier`)과 **같은 꼴**이되 크기를 작게 뒀다.
+// 코스는 연속값이라 「같은 자리」가 구종만큼 또렷하지 않다 — 3×3 격자로
+// 접은 뒤에도 같은 칸 안에서 20cm 씩 움직인 것과 똑같이 꽂은 것이 구별되지
+// 않는다. 그래서 구종의 절반이다.
+//
+// ⚠ **존 밖은 칸 하나다**(`COURSE_CELL_OUT`). 유인구가 카운트별로 0.30~0.66
+//   확률이라 연속으로 나기 쉬운데, 이걸 사방으로 쪼개면 「바깥으로 계속
+//   뺐다」가 반복으로 안 잡힌다. 쪼갤지는 실측 뒤에 정한다
+//   (`BALANCE_BACKLOG §투구`).
+pub const COURSE_REPEAT_1: f64 = -0.5;
+pub const COURSE_REPEAT_2: f64 = -1.0;
+pub const COURSE_REPEAT_3: f64 = -2.0;
+/// 최근 3구에 없던 칸 — 구종의 +1 보다 작다
+pub const COURSE_FRESH_BONUS: f64 = 0.5;
+
 pub fn strategy_bonus(s: PitchStrategy) -> f64 {
     match s {
         PitchStrategy::Aggressive => 2.0,
