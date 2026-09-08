@@ -259,10 +259,11 @@ const COMMANDS = {
           // `RoleChoicePanel` 의 확인은 `.confirm .btn.go` 이고 헤더는 `.go:not(.btn)` 이다.
           // 그냥 `.go` 로 물으면 DOM 순서상 **헤더 것이 먼저 잡혀** 보직이 영영 안 정해지고,
           // 그 상태로 주 진행을 눌러 봐야 pending 이 그대로라 W1 을 못 넘긴다.
+          // ⚠ 갈래를 고르는 것은 **위의 `button.opt`** 가 이미 한다 —
+          //   `.dec-opts` 와 `.confirm` 은 서로 배타라(`{#if pendingPick === null}`)
+          //   고르고 나면 `.opt` 이 사라지고 이 확인만 남는다. 여기서 또 짚으면 죽은 줄이다
           const roleGo = document.querySelector(".confirm .btn.go:not([disabled])");
           if (roleGo) { roleGo.click(); return "ROLE_GO"; }
-          const rolePick = document.querySelector(".dec-opts button.opt");
-          if (rolePick) { rolePick.click(); return "ROLE_PICK"; }
 
           // 모달의 확인/닫기류
           const btns = [...document.querySelectorAll("button")];
