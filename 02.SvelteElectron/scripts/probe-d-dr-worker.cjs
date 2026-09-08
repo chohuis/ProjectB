@@ -80,7 +80,9 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
       if (await app.pushPendingForward()) { stallGuard.hit(true); continue; } // salaryNegotiation 등 계약 후속
       if (app.isSeasonEnded()) {
         const st = app.protagonistStatProbe();
-        if (st && st.역할 === "투수" && (st.경기 ?? 0) > 0) e2.연간.push({ g: st.경기, ip: st.ip });
+        // ⚠ 선발 등판(`선발`)도 남긴다 — 결정 ⑭ 가 「1학년이 선발을 잡나」를
+        //   이 값으로 잰다(OVR 을 내리면 자리 경쟁이 따라 움직인다)
+        if (st && st.역할 === "투수" && (st.경기 ?? 0) > 0) e2.연간.push({ g: st.경기, ip: st.ip, gs: st.선발 ?? 0 });
         await app.seasonRollover();
         prevG = 0; prevStat = stat3(app.protagonistAbilities());
         continue;
@@ -115,6 +117,8 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
     velKmh: velKmh(ab.velocity ?? 0),
     e2고교: {
       연간등판: avg(e2.연간.map((x) => x.g)), 연간이닝: avg(e2.연간.map((x) => x.ip)), 표본시즌: e2.연간.length,
+      // 결정 ⑭ — 학년별로 본다. 첫 칸이 1학년이다
+      시즌별: e2.연간.map((x) => ({ 등판: x.g, 선발: x.gs ?? 0, 이닝: Math.round(x.ip * 10) / 10 })),
       없는주: avg(e2.없는주), 없는주n: e2.없는주.length,
       등판주: avg(e2.등판주), 등판주n: e2.등판주.length,
       주당게임: avg(e2.게임수),
