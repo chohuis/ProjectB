@@ -409,6 +409,109 @@ export function exceptionProbe(): Record<string, unknown> {
 /** 판 시작에서 부른다 — 안 비우면 한 프로세스 두 판이 섞인다 */
 export function resetExceptions(): void { resetAutoAdvanceErrors(); }
 
+// ── 판 보고서 (2026-09-09 · 계측 2-4 · `PLAN_SIM_REPORT_2026-09-09.md`) ──
+//
+// 🔴 **데이터는 이미 다 있다 — 꺼내는 자리만 없었다**(서식 문서 마지막 표).
+//   새로 만드는 게 아니라 이어 붙이는 일이다.
+//
+// ⚠ **한 해가 한 줄**이다(사용자 확정). 15년 × 20판이면 300시즌이라 원본을
+//   다 남기면 파일이 커진다 — 필요하면 그 판만 다시 돌린다.
+
+/** 한 해 한 줄 — 서식 문서의 열 순서 그대로 */
+export interface SimYearRow {
+  연도: number; 나이: number; 무대: string; 소속: string; 연봉: number;
+  G: number; IP: number; ERA: number; 승: number; 패: number; OVR: number;
+  노말: number; 레어: number; 유니크: number; 히든: number; 통지: number;
+  일: string[];
+}
+
+/**
+ * **그해를 한 줄로 접는다.** 시즌이 끝나는 자리(롤오버 직전)에서 부른다.
+ *
+ * ⚠ 롤오버 **뒤에** 부르면 나이·학년·소속이 이미 다음 해 것이다.
+ * ⚠ 등급 수는 이 함수가 세지 않는다 — 호출부가 그해 시작·끝의 차를 넘긴다
+ *   (`eventFunnelStats` 는 판 전체 누계라 그대로 쓰면 해마다 커진다).
+ */
+export function simYearRow(tierDelta: Record<string, number>, noticeDelta: number): SimYearRow {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const p = g.protagonist;
+  const st = s.stats[p.id] as { g?: number; ip?: number; era?: number; w?: number; l?: number } | undefined;
+  // 「그해 있었던 일」의 정본은 `recentOutcomes` 와 `careerEvents` 다 —
+  // 따로 정의하지 않는다(서식 문서). 통지의 정의가 곧 중요 포인트다
+  const 일 = [
+    ...(p.recentOutcomes ?? []).filter((o) => o.year === s.seasonYear)
+      .map((o) => `${o.kind}${o.detail ? `(${o.detail})` : ""}`),
+    ...(p.careerEvents ?? []).filter((e) => e.year === s.seasonYear)
+      .map((e) => String(e.eventType)),
+  ];
+  return {
+    연도: s.seasonYear, 나이: p.age, 무대: p.careerStage, 소속: p.teamId ?? "",
+    연봉: p.contract?.salary ?? 0,
+    G: st?.g ?? 0, IP: Math.round((st?.ip ?? 0) * 10) / 10,
+    ERA: st?.era ?? 0, 승: st?.w ?? 0, 패: st?.l ?? 0,
+    OVR: Math.round(p.pitching?.ovr ?? 0),
+    노말: tierDelta.normal ?? 0, 레어: tierDelta.rare ?? 0,
+    유니크: tierDelta.unique ?? 0, 히든: tierDelta.hidden ?? 0,
+    통지: noticeDelta,
+    일,
+  };
+}
+
+/** 지금까지 발동한 등급 수 — `simYearRow` 의 그해 차를 내려고 호출부가 쓴다 */
+export function tierCounters(): { 등급: Record<string, number>; 통지: number } {
+  const f = eventFunnelProbe().tier as { emitted?: Record<string, number> };
+  return {
+    등급: { ...(f.emitted ?? {}) },
+    // 통지는 등급 밖이라 `conditional.urgentPicked` 가 센다(등급 줄기 밖 레인)
+    통지: (eventFunnelProbe() as Record<string, Record<string, number>>).conditional?.urgentPicked ?? 0,
+  };
+}
+
+/**
+ * **판 보고서 한 장** — `runs/#NN.json` 에 그대로 쓴다.
+ *
+ * 머리(씨앗·프리셋·성향…) · 해마다 한 줄 · 꼬리(진로·예외·폴백…).
+ * 서식 정본은 `docs/PLAN_SIM_REPORT_2026-09-09.md` 다.
+ */
+export function simRunReport(head: {
+  번호?: number; 씨앗: number; 프리셋: string; 학교?: string;
+}, years: SimYearRow[]): Record<string, unknown> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const f = eventFunnelProbe().tier as { fallback?: number; fallbackBy?: Record<string, number> };
+  const 최고OVR = years.length ? Math.max(...years.map((y) => y.OVR)) : Math.round(p.pitching?.ovr ?? 0);
+  const 통산승 = years.reduce((a, y) => a + y.승, 0);
+  const 프로해 = years.filter((y) => String(y.무대).startsWith("pro_"));
+  return {
+    머리: {
+      번호: head.번호 ?? null, 씨앗: head.씨앗, 프리셋: head.프리셋,
+      학교: head.학교 ?? null, 성향: currentPersona(),
+      최고OVR, 통산승, 은퇴나이: p.retirement ? p.age : null,
+    },
+    해마다: years,
+    꼬리: {
+      진로갈래: p.careerStage,
+      "1군정착나이": 프로해.find((y) => !String(y.소속).endsWith("_2"))?.나이 ?? null,
+      최고연봉: years.length ? Math.max(...years.map((y) => y.연봉)) : 0,
+      // ⚠ 회복 **주 수**는 이력에 안 남는다(`InjuryHistoryEntry` 는 발생 시점만
+      //   든다) — **부상 횟수**로 적는다. 날린 주를 재려면 주간 루프가 세야 하고
+      //   그건 이 보고서가 아니라 엔진 쪽 일이다
+      부상횟수: (p.injuryHistory ?? []).length,
+      수술횟수: (p.injuryHistory ?? []).filter((h) => h.severity === "surgery").length,
+      구종수: (p.pitches ?? []).length,
+      구종평균등급: (p.pitches ?? []).length
+        ? Math.round(((p.pitches ?? []).reduce((a, x) => a + x.grade, 0) / (p.pitches ?? []).length) * 10) / 10
+        : 0,
+      // 🔴 서식 문서가 꼬리에 콕 집어 둔 값이다 — 0 이 아니면 이 판을 믿으면 안 된다
+      예외: autoAdvanceErrorCount(),
+      예외표본: autoAdvanceErrors().map((e) => `${e.year}W${e.week} ${e.message}`).slice(-5),
+      폴백: f.fallback ?? 0,
+      폴백자리: { ...(f.fallbackBy ?? {}) },
+    },
+  };
+}
+
 /**
  * **계측 성향을 고른다** (2026-09-09 · 계측 2-3). 정본은 `globalThis.__PB_PERSONA__`
  * 하나이고 `usecases/simPersona.ts` 가 뜻을 갖는다. 안 주면 `growth` 다.

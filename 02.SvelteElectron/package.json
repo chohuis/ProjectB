@@ -170,6 +170,8 @@
     "probe:a:preseason": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-preseason-tier.cjs",
     "probe:a:demote": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-demote.cjs",
     "probe:a:startovr": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-startovr.cjs",
+    "probe:a:concurrency": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-concurrency.cjs",
+    "probe:a:simrun": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-simrun.cjs",
     "check:reportbank": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-reportbank.cjs",
     "probe:a:tempo": "node scripts/probe-a-tempo.cjs",
     "probe:a:tempo:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-tempo-career.cjs",
