@@ -1,0 +1,31 @@
+{
+  "id": "EVT_IND_U_TRYOUT_PASS",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "career",
+  "category": "career",
+  "priority": 670,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 42
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_U_TRYOUT_PASS",
+  "decisionTemplateId": "DEC_IND_U_TRYOUT_PASS",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 합격 통보를 받고도 그 주는 몸이 남지 않는다"
+}

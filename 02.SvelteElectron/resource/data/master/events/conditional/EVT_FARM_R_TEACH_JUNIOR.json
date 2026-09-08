@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_R_TEACH_JUNIOR",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "people",
+  "category": "life",
+  "priority": 676,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_R_TEACH_JUNIOR",
+  "decisionTemplateId": "DEC_FARM_R_TEACH_JUNIOR",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

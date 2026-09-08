@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_R_DEADLINE",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "career",
+  "category": "career",
+  "priority": 688,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 28
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_R_DEADLINE",
+  "decisionTemplateId": "DEC_FARM_R_DEADLINE",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

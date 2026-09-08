@@ -14188,6 +14188,1221 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_IND_R_SCOUT_RETURN",
+      "prompt": "오늘 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "all",
+          "label": "다 보여준다",
+          "effectHint": "피로 +14, 명성 +6",
+          "effects": {
+            "fameDelta": 6,
+            "fatigueDelta": 14
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 야구를 한다",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_K_NIGHT",
+      "prompt": "그 경기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "share",
+          "label": "널리 알린다",
+          "effectHint": "명성 +4, 인기 +8",
+          "effects": {
+            "popularityDelta": 8,
+            "fameDelta": 4
+          }
+        },
+        {
+          "id": "study",
+          "label": "영상으로 남긴다",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_SHUTOUT",
+      "prompt": "그 하루를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "rest",
+          "label": "몸을 챙긴다",
+          "effectHint": "부상 위험 -15% 6주, 컨디션 +6",
+          "effects": {
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            },
+            "conditionDelta": 6
+          }
+        },
+        {
+          "id": "tell",
+          "label": "집에 알린다",
+          "effectHint": "사기 +8, 인기 +3",
+          "effects": {
+            "moraleDelta": 8,
+            "popularityDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_TITLE_RACE",
+      "prompt": "남은 시즌을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "다 나간다",
+          "effectHint": "선발 보장 2경기, 피로 +16",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "fatigueDelta": 16
+          }
+        },
+        {
+          "id": "save",
+          "label": "간격을 지킨다",
+          "effectHint": "부상 위험 -15% 6주, 감독 관계 -4",
+          "effects": {
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            },
+            "relationDelta": {
+              "kind": "manager",
+              "delta": -4
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_WINTER_CAMP",
+      "prompt": "겨울을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "camp",
+          "label": "캠프에 간다",
+          "effectHint": "훈련 효율 +15% 6주, 돈 80만원",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 6
+            },
+            "moneyDelta": -80
+          }
+        },
+        {
+          "id": "home",
+          "label": "집에서 한다",
+          "effectHint": "컨디션 +4, 성실 +6",
+          "effects": {
+            "diligenceDelta": 6,
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_PRO_FRIENDLY",
+      "prompt": "그 경기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "swing",
+          "label": "전부 쏟는다",
+          "effectHint": "선발 보장 2경기, 피로 +14",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "fatigueDelta": 14
+          }
+        },
+        {
+          "id": "steady",
+          "label": "폼을 지킨다",
+          "effectHint": "커맨드 경험치 +9, 피로 +4",
+          "effects": {
+            "xp": {
+              "command": 9
+            },
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_ELBOW_SCAN",
+      "prompt": "검사를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "scan",
+          "label": "검사를 받는다",
+          "effectHint": "부상 위험 -20% 8주, 돈 80만원",
+          "effects": {
+            "injuryRiskMod": {
+              "pct": -20,
+              "weeks": 8
+            },
+            "moneyDelta": -80
+          }
+        },
+        {
+          "id": "later",
+          "label": "시즌 뒤로 미룬다",
+          "effectHint": "컨디션 -5, 성실 +6",
+          "effects": {
+            "diligenceDelta": 6,
+            "conditionDelta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_PITCH_COACH",
+      "prompt": "무엇을 받겠습니까?",
+      "options": [
+        {
+          "id": "grip",
+          "label": "그립을 배운다",
+          "effectHint": "배우는 구종 진행도 +30%, 피로 +6",
+          "effects": {
+            "pitchProgressJump": {
+              "pct": 30
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "form",
+          "label": "폼을 본다",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +6",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_DOCU_CREW",
+      "prompt": "취재를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "open",
+          "label": "다 보여준다",
+          "effectHint": "사기 -3, 인기 +10",
+          "effects": {
+            "popularityDelta": 10,
+            "moraleDelta": -3
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 끝낸다",
+          "effectHint": "컨디션 +4, 성실 +5",
+          "effects": {
+            "diligenceDelta": 5,
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_TEAM_OFFER",
+      "prompt": "제안을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "move",
+          "label": "옮긴다",
+          "effectHint": "선발 보장 3경기, 감독 관계 -6",
+          "effects": {
+            "startGuarantee": {
+              "games": 3
+            },
+            "relationDelta": {
+              "kind": "manager",
+              "delta": -6
+            }
+          }
+        },
+        {
+          "id": "stay",
+          "label": "남는다",
+          "effectHint": "사기 +4, 감독 관계 +8",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 8
+            },
+            "moraleDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_LADDER_FINAL",
+      "prompt": "심사를 어떻게 준비하겠습니까?",
+      "options": [
+        {
+          "id": "peak",
+          "label": "그날에 맞춘다",
+          "effectHint": "컨디션 +12, 피로 -6",
+          "effects": {
+            "conditionDelta": 12,
+            "fatigueDelta": -6
+          }
+        },
+        {
+          "id": "grind",
+          "label": "끝까지 던진다",
+          "effectHint": "구속 경험치 +10, 피로 +16",
+          "effects": {
+            "xp": {
+              "velocity": 10
+            },
+            "fatigueDelta": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_SPONSOR_FOUND",
+      "prompt": "후원을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "받는다",
+          "effectHint": "피로 +10, 돈 200만원",
+          "effects": {
+            "moneyDelta": 200,
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "decline",
+          "label": "사양한다",
+          "effectHint": "훈련 효율 +15% 4주, 성실 +4",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "diligenceDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_CLUB_CRISIS",
+      "prompt": "무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "stay",
+          "label": "끝까지 남는다",
+          "effectHint": "사기 -4, 동료 관계 +10",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 10
+            },
+            "moraleDelta": -4
+          }
+        },
+        {
+          "id": "look",
+          "label": "자리를 알아본다",
+          "effectHint": "선발 보장 2경기, 동료 관계 -5",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": -5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_FRIEND_DEBUT",
+      "prompt": "그 소식을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "cheer",
+          "label": "축하한다",
+          "effectHint": "사기 +4, 동료 관계 +10",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 10
+            },
+            "moraleDelta": 4
+          }
+        },
+        {
+          "id": "grind",
+          "label": "훈련장으로 간다",
+          "effectHint": "훈련 효율 +15% 4주, 사기 -3",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "moraleDelta": -3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_R_KEPT_HABIT",
+      "prompt": "이 습관을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "deepen",
+          "label": "더 밀어붙인다",
+          "effectHint": "성장률 +3, 피로 +12",
+          "effects": {
+            "devRateDelta": 3,
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "keep",
+          "label": "그대로 지킨다",
+          "effectHint": "훈련 효율 +20% 8주",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_TRYOUT_PASS",
+      "prompt": "무엇을 준비하겠습니까?",
+      "options": [
+        {
+          "id": "body",
+          "label": "몸부터 만든다",
+          "effectHint": "스태미나 즉시 +1, 컨디션 +8",
+          "effects": {
+            "statDelta": {
+              "stamina": 1
+            },
+            "conditionDelta": 8
+          }
+        },
+        {
+          "id": "mind",
+          "label": "여기를 정리한다",
+          "effectHint": "잠재력 +1, 동료 관계 +8",
+          "effects": {
+            "potentialDelta": 1,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_NAMELESS_GEM",
+      "prompt": "이 기회를 어떻게 쓰겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "이름을 굳힌다",
+          "effectHint": "명성 +12, 인기 +8",
+          "effects": {
+            "fameDelta": 12,
+            "popularityDelta": 8
+          }
+        },
+        {
+          "id": "grow",
+          "label": "실력으로 답한다",
+          "effectHint": "훈련 효율 +20% 6주, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_SCOUT_CARD",
+      "prompt": "그 명함을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "call",
+          "label": "먼저 연락한다",
+          "effectHint": "선발 보장 3경기, 명성 +8",
+          "effects": {
+            "startGuarantee": {
+              "games": 3
+            },
+            "fameDelta": 8
+          }
+        },
+        {
+          "id": "earn",
+          "label": "성적으로 부른다",
+          "effectHint": "커맨드 즉시 +1, 성실 +6",
+          "effects": {
+            "statDelta": {
+              "command": 1
+            },
+            "diligenceDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_LEAGUE_TITLE",
+      "prompt": "이 순간을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "team",
+          "label": "끝까지 함께한다",
+          "effectHint": "사기 +12, 동료 관계 +12",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 12
+            },
+            "moraleDelta": 12
+          }
+        },
+        {
+          "id": "next",
+          "label": "다음을 준비한다",
+          "effectHint": "훈련 효율 +20% 6주, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_IRON_SEASON",
+      "prompt": "이 몸을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "trait",
+          "label": "이 방식을 굳힌다",
+          "effectHint": "영구 특성",
+          "effects": {
+            "trait": {
+              "id": "TRAIT_IRON_ARM"
+            }
+          }
+        },
+        {
+          "id": "care",
+          "label": "겨울에 다 고친다",
+          "effectHint": "회복 즉시 +1, 부상 위험 -20% 12주",
+          "effects": {
+            "statDelta": {
+              "recovery": 1
+            },
+            "injuryRiskMod": {
+              "pct": -20,
+              "weeks": 12
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_MENTOR_LETTER",
+      "prompt": "추천서를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "받는다",
+          "effectHint": "멘토 (코치 효율 +15%), 명성 +8",
+          "effects": {
+            "mentor": {
+              "role": "coach",
+              "pct": 15
+            },
+            "fameDelta": 8
+          }
+        },
+        {
+          "id": "own",
+          "label": "혼자 해 본다",
+          "effectHint": "멘탈 즉시 +1, 성실 +8",
+          "effects": {
+            "statDelta": {
+              "mentality": 1
+            },
+            "diligenceDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_CALLUP_LIST",
+      "prompt": "오늘 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "show",
+          "label": "다 보여준다",
+          "effectHint": "선발 보장 2경기, 피로 +14",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "fatigueDelta": 14
+          }
+        },
+        {
+          "id": "ready",
+          "label": "몸을 맞춘다",
+          "effectHint": "컨디션 +10, 사기 +4",
+          "effects": {
+            "conditionDelta": 10,
+            "moraleDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_TEN_K",
+      "prompt": "그 경기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ride",
+          "label": "흐름을 탄다",
+          "effectHint": "명성 +4, 인기 +8",
+          "effects": {
+            "popularityDelta": 8,
+            "fameDelta": 4
+          }
+        },
+        {
+          "id": "keep",
+          "label": "영상으로 남긴다",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_COACH_CALL",
+      "prompt": "그 말을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "follow",
+          "label": "고쳐 본다",
+          "effectHint": "훈련 효율 +20% 6주, 피로 +8",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "hold",
+          "label": "내 것을 지킨다",
+          "effectHint": "커맨드 경험치 +9, 코치 관계 -5",
+          "effects": {
+            "xp": {
+              "command": 9
+            },
+            "relationDelta": {
+              "kind": "coach",
+              "delta": -5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_FUTURES_FINAL",
+      "prompt": "결승을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "start",
+          "label": "선발로 나간다",
+          "effectHint": "선발 보장 2경기, 피로 +16",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "fatigueDelta": 16
+          }
+        },
+        {
+          "id": "relief",
+          "label": "뒤를 맡는다",
+          "effectHint": "위기집중력 경험치 +9, 동료 관계 +6",
+          "effects": {
+            "xp": {
+              "clutch": 9
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_REHAB_START",
+      "prompt": "재활 등판을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "safe",
+          "label": "정해진 만큼만 한다",
+          "effectHint": "부상 위험 -20% 8주, 컨디션 +6",
+          "effects": {
+            "injuryRiskMod": {
+              "pct": -20,
+              "weeks": 8
+            },
+            "conditionDelta": 6
+          }
+        },
+        {
+          "id": "push",
+          "label": "끝까지 던진다",
+          "effectHint": "스태미나 경험치 +9, 피로 +16",
+          "effects": {
+            "xp": {
+              "stamina": 9
+            },
+            "fatigueDelta": 16
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_NEW_GRIP",
+      "prompt": "새 그립을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "game",
+          "label": "경기에서 던진다",
+          "effectHint": "배우는 구종 진행도 +30%, 피로 +8",
+          "effects": {
+            "pitchProgressJump": {
+              "pct": 30
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "pen",
+          "label": "불펜에서만 본다",
+          "effectHint": "무브먼트 경험치 +9, 컨디션 +4",
+          "effects": {
+            "xp": {
+              "movement": 9
+            },
+            "conditionDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_DEADLINE",
+      "prompt": "무엇을 말하겠습니까?",
+      "options": [
+        {
+          "id": "move",
+          "label": "가겠다고 한다",
+          "effectHint": "선발 보장 3경기, 감독 관계 -6",
+          "effects": {
+            "startGuarantee": {
+              "games": 3
+            },
+            "relationDelta": {
+              "kind": "manager",
+              "delta": -6
+            }
+          }
+        },
+        {
+          "id": "stay",
+          "label": "남겠다고 한다",
+          "effectHint": "사기 +4, 감독 관계 +8",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 8
+            },
+            "moraleDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_PROSPECT_RANK",
+      "prompt": "그 순위를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "use",
+          "label": "이름을 쓴다",
+          "effectHint": "피로 +6, 인기 +8",
+          "effects": {
+            "popularityDelta": 8,
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "ignore",
+          "label": "안 본다",
+          "effectHint": "훈련 효율 +15% 4주, 성실 +4",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "diligenceDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_WINTER_INVITE",
+      "prompt": "겨울 캠프를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "go",
+          "label": "따라간다",
+          "effectHint": "훈련 효율 +20% 8주, 피로 +12",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "rest",
+          "label": "몸을 만든다",
+          "effectHint": "부상 위험 -15% 6주, 컨디션 +12",
+          "effects": {
+            "conditionDelta": 12,
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_BULLPEN_JOIN",
+      "prompt": "그 며칠을 어떻게 쓰겠습니까?",
+      "options": [
+        {
+          "id": "ready",
+          "label": "매일 몸을 푼다",
+          "effectHint": "선발 보장 2경기, 피로 +12",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "watch",
+          "label": "1군을 본다",
+          "effectHint": "멘탈 경험치 +9, 동료 관계 +5",
+          "effects": {
+            "xp": {
+              "mentality": 9
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 5
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_SAME_BATTERY",
+      "prompt": "이 배터리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "trust",
+          "label": "다 맡긴다",
+          "effectHint": "컨디션 +5, 동료 관계 +10",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 10
+            },
+            "conditionDelta": 5
+          }
+        },
+        {
+          "id": "build",
+          "label": "배합을 판다",
+          "effectHint": "훈련 효율 +15% 6주, 피로 +6",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 6
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_THIRD_YEAR",
+      "prompt": "네 번째 해를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "root",
+          "label": "여기서 끝을 본다",
+          "effectHint": "성실 +6, 감독 관계 +10",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            },
+            "diligenceDelta": 6
+          }
+        },
+        {
+          "id": "change",
+          "label": "다르게 해 본다",
+          "effectHint": "성장률 +3, 피로 +12",
+          "effects": {
+            "devRateDelta": 3,
+            "fatigueDelta": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_TEACH_JUNIOR",
+      "prompt": "후배를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "teach",
+          "label": "봐 준다",
+          "effectHint": "지도 기록에 남음, 동료 관계 +8",
+          "effects": {
+            "counterDelta": {
+              "menteeCount": 1
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            }
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 것부터 한다",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +6",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            },
+            "fatigueDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_KEPT_ROUTINE",
+      "prompt": "루틴을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "more",
+          "label": "한 단계 올린다",
+          "effectHint": "성장률 +3, 피로 +12",
+          "effects": {
+            "devRateDelta": 3,
+            "fatigueDelta": 12
+          }
+        },
+        {
+          "id": "hold",
+          "label": "그대로 지킨다",
+          "effectHint": "훈련 효율 +20% 8주",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_R_SPRING_LIST",
+      "prompt": "캠프를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "match",
+          "label": "다 따라간다",
+          "effectHint": "선발 보장 2경기, 피로 +16",
+          "effects": {
+            "startGuarantee": {
+              "games": 2
+            },
+            "fatigueDelta": 16
+          }
+        },
+        {
+          "id": "pace",
+          "label": "내 속도로 한다",
+          "effectHint": "부상 위험 -15% 8주, 컨디션 +6",
+          "effects": {
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 8
+            },
+            "conditionDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_FIRST_CALLUP",
+      "prompt": "첫 주를 어떻게 보내겠습니까?",
+      "options": [
+        {
+          "id": "learn",
+          "label": "선배들을 본다",
+          "effectHint": "멘토 (코치 효율 +15%), 동료 관계 +8",
+          "effects": {
+            "mentor": {
+              "role": "coach",
+              "pct": 15
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            }
+          }
+        },
+        {
+          "id": "throw",
+          "label": "기회를 잡는다",
+          "effectHint": "위기집중력 즉시 +1, 선발 보장 3경기",
+          "effects": {
+            "startGuarantee": {
+              "games": 3
+            },
+            "statDelta": {
+              "clutch": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_NO_HITTER",
+      "prompt": "이 경기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "name",
+          "label": "이름을 굳힌다",
+          "effectHint": "명성 +12, 인기 +8",
+          "effects": {
+            "fameDelta": 12,
+            "popularityDelta": 8
+          }
+        },
+        {
+          "id": "next",
+          "label": "다음을 준비한다",
+          "effectHint": "훈련 효율 +20% 6주, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_TOP_PROSPECT",
+      "prompt": "그 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "lead",
+          "label": "앞에 선다",
+          "effectHint": "멘탈 즉시 +1, 명성 +12",
+          "effects": {
+            "fameDelta": 12,
+            "statDelta": {
+              "mentality": 1
+            }
+          }
+        },
+        {
+          "id": "same",
+          "label": "하던 대로 한다",
+          "effectHint": "잠재력 +1, 동료 관계 +8",
+          "effects": {
+            "potentialDelta": 1,
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_VETERAN_MENTOR",
+      "prompt": "그 제안을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "follow",
+          "label": "붙어 다닌다",
+          "effectHint": "멘토 (코치 효율 +20%), 동료 관계 +8",
+          "effects": {
+            "mentor": {
+              "role": "coach",
+              "pct": 20
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            }
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 것을 판다",
+          "effectHint": "제구 즉시 +1, 훈련 효율 +20% 6주",
+          "effects": {
+            "statDelta": {
+              "control": 1
+            },
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_NAME_ERASED",
+      "prompt": "무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "prove",
+          "label": "증명한다",
+          "effectHint": "성장률 +4, 피로 +14",
+          "effects": {
+            "devRateDelta": 4,
+            "fatigueDelta": 14
+          }
+        },
+        {
+          "id": "root",
+          "label": "쓸모를 만든다",
+          "effectHint": "주자견제 즉시 +1, 감독 관계 +10",
+          "effects": {
+            "statDelta": {
+              "holdRunners": 1
+            },
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_REBUILT_BODY",
+      "prompt": "겨울을 어디에 쓰겠습니까?",
+      "options": [
+        {
+          "id": "trait",
+          "label": "회복을 몸에 새긴다",
+          "effectHint": "영구 특성",
+          "effects": {
+            "trait": {
+              "id": "TRAIT_FAST_RECOVERY"
+            }
+          }
+        },
+        {
+          "id": "guard",
+          "label": "다시 안 다치게 한다",
+          "effectHint": "회복 즉시 +1, 부상 위험 -25% 12주",
+          "effects": {
+            "statDelta": {
+              "recovery": 1
+            },
+            "injuryRiskMod": {
+              "pct": -25,
+              "weeks": 12
+            }
+          }
+        }
+      ]
     }
   ]
 }

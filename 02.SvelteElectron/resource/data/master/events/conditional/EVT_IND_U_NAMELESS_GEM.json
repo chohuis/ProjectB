@@ -1,0 +1,33 @@
+{
+  "id": "EVT_IND_U_NAMELESS_GEM",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "career",
+  "category": "career",
+  "priority": 668,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "last_game",
+      "field": "completeGame",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_U_NAMELESS_GEM",
+  "decisionTemplateId": "DEC_IND_U_NAMELESS_GEM",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 완투한 다음 주는 어디서든 값을 치른다"
+}

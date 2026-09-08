@@ -1,0 +1,31 @@
+{
+  "id": "EVT_IND_U_MENTOR_LETTER",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "people",
+  "category": "life",
+  "priority": 660,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 32
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_U_MENTOR_LETTER",
+  "decisionTemplateId": "DEC_IND_U_MENTOR_LETTER",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 추천서를 받으러 다니는 며칠이 그대로 든다"
+}

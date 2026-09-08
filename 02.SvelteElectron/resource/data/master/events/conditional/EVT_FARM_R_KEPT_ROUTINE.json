@@ -1,0 +1,30 @@
+{
+  "id": "EVT_FARM_R_KEPT_ROUTINE",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "train",
+  "category": "training",
+  "priority": 674,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "streak",
+      "metric": "diligence",
+      "op": "gte",
+      "value": 70,
+      "weeks": 12
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_R_KEPT_ROUTINE",
+  "decisionTemplateId": "DEC_FARM_R_KEPT_ROUTINE",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

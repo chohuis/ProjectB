@@ -31,17 +31,50 @@ const DEC = new Map(JSON.parse(fs.readFileSync(`${M}/messages/decision_templates
 /** 무대 — `career_stage` 가 정본이다. `stage` 하나와 `stages` 배열을 둘 다 본다 */
 const stagesOf = (r) => { const c = (r.conditions ?? []).find((x) => x.type === "career_stage"); return !c ? [] : Array.isArray(c.stages) ? c.stages : c.stage ? [c.stage] : []; };
 const leaguesOf = (r) => { const c = (r.conditions ?? []).find((x) => x.type === "league_id"); return !c ? [] : Array.isArray(c.leagueIds) ? c.leagueIds : c.leagueId ? [c.leagueId] : []; };
-const bucket = (r) => {
-  if (r.id.startsWith("EVT_MILREUNION")) return "재회";
-  if (leaguesOf(r).some((l) => l.endsWith("_FARM"))) return "2군";
-  const st = stagesOf(r);
-  if (!st.length) return "공용";
-  if (st.includes("highschool")) return "고교";
-  if (st.includes("university")) return "대학";
-  if (st.every((x) => x === "independent")) return "독립";
-  if (st.some((x) => x.startsWith("pro"))) return "프로";
-  return "공용";
+/**
+ * 연차 구간 — **표기가 셋이라 셋 다 본다** (4-4 ① 실측).
+ *
+ * 🔴 처음엔 `pro_year_gte` 와 **id 이름**만 봤다. 그러면
+ *   `EVT_PRO_LATE_RETIRE_PRESSURE`(`num_gte proServiceYears 8`)처럼 조건이
+ *   멀쩡히 붙은 것을 「연차를 안 가린다」로 센다 — 그렇게 「프로 공통 140」이
+ *   나왔고 실제는 126 이었다.
+ * ⚠ 눈금은 `proServiceYears` 다 — 데뷔 시즌이 0 이라 **1~5년차 = 0~4 ·
+ *   6년차+ = 5 이상**이다(`tier_rules.json` 과 같은 눈금).
+ */
+const yearOf = (r) => {
+  let lo, hi;
+  for (const c of r.conditions ?? []) {
+    if (c.type === "pro_year_gte" || (c.type === "num_gte" && c.path === "proServiceYears")) lo = Math.max(lo ?? -1, c.value);
+    else if (c.type === "num_lte" && c.path === "proServiceYears") hi = Math.min(hi ?? 99, c.value);
+  }
+  return lo === undefined && hi === undefined ? null : [lo ?? 0, hi ?? 99];
 };
+/**
+ * 무대. **프로는 두 무대다**(사용자 확정 2026-09-08 · `tier_rules.json` 과 같다).
+ *
+ * 🔴 **연차를 안 가리는 이벤트는 양쪽에 다 센다.** 한쪽에만 세면 없는 부족분이
+ *   생긴다 — 4-2 표의 「프로 초반 N49」가 그렇게 나온 숫자였다. 그래서 이
+ *   함수는 무대를 **배열로** 돌려준다.
+ */
+const buckets = (r) => {
+  if (r.id.startsWith("EVT_MILREUNION")) return ["재회"];
+  if (leaguesOf(r).some((l) => l.endsWith("_FARM"))) return ["2군"];
+  const st = stagesOf(r);
+  if (!st.length) return ["공용"];
+  if (st.includes("highschool")) return ["고교"];
+  if (st.includes("university")) return ["대학"];
+  if (st.every((x) => x === "independent")) return ["독립"];
+  if (st.some((x) => x.startsWith("pro"))) {
+    const y = yearOf(r);
+    if (!y) return ["프로초반", "프로중후반"];
+    const out = [];
+    if (y[0] <= 4) out.push("프로초반");
+    if (y[1] >= 5) out.push("프로중후반");
+    return out.length ? out : ["프로초반"];
+  }
+  return ["공용"];
+};
+const bucket = (r) => buckets(r)[0];
 const outOfTier = (r) => r.type === "mandatory" || r.tier === "urgent";
 const TIERS = ["normal", "rare", "unique", "hidden"];
 
@@ -79,13 +112,13 @@ const log = (s) => process.stdout.write(s + "\n");
 log("");
 log(`[등급] 규칙 ${R.length} · 등급 밖 ${R.filter(outOfTier).length}(필수 ${R.filter((r) => r.type === "mandatory").length} · urgent ${R.filter((r) => r.tier === "urgent").length})`);
 log("");
-const B = ["프로", "고교", "대학", "독립", "2군", "공용", "재회"];
-log("무대".padEnd(8) + TIERS.map((t) => t.padStart(9)).join("") + "   읽기만      합");
+const B = ["프로초반", "프로중후반", "고교", "대학", "독립", "2군", "공용", "재회"];
+log("무대".padEnd(12) + TIERS.map((t) => t.padStart(9)).join("") + "   읽기만      합");
 for (const b of B) {
-  const rows = R.filter((r) => bucket(r) === b && !outOfTier(r));
+  const rows = R.filter((r) => buckets(r).includes(b) && !outOfTier(r));
   const cnt = TIERS.map((t) => rows.filter((r) => r.tier === t).length);
   const ro = rows.filter((r) => !r.decisionTemplateId || !(DEC.get(r.decisionTemplateId)?.options ?? []).length).length;
-  log(b.padEnd(8) + cnt.map((n) => String(n).padStart(9)).join("") + String(ro).padStart(9) + String(rows.length).padStart(9));
+  log(b.padEnd(12) + cnt.map((n) => String(n).padStart(9)).join("") + String(ro).padStart(9) + String(rows.length).padStart(9));
 }
 log("");
 let bad = 0;

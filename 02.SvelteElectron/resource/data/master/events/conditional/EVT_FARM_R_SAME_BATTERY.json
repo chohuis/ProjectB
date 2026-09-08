@@ -1,0 +1,28 @@
+{
+  "id": "EVT_FARM_R_SAME_BATTERY",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "team",
+  "category": "team",
+  "priority": 680,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "count",
+      "counter": "sameCatcherGames",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_R_SAME_BATTERY",
+  "decisionTemplateId": "DEC_FARM_R_SAME_BATTERY",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}
