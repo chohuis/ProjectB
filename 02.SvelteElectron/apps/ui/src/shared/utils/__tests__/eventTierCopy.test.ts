@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import {
   gradeChip, hidesNumbers, isCrisis, kindOnlyHint, costKindHint,
 } from "../eventTierCopy";
@@ -122,5 +124,54 @@ describe("대가 종류 (§4)", () => {
   it("🔴 대가에도 숫자가 없다", () => {
     expect(costKindHint([{ moneyDelta: -300, relationDelta: { kind: "manager", delta: -5 } }]))
       .not.toMatch(/\d/);
+  });
+});
+
+/**
+ * ⚠ 이 저장소의 vitest 는 `environment: "node"` 라 컴포넌트를 못 띄운다
+ * (`roleChoicePanel.test.ts` 가 그은 선). 규칙은 위에서 순수 함수로 재고,
+ * **화면이 그 규칙을 쓰는지는 소스 문자열로** 본다.
+ *
+ * 🔴 이게 없으면 다음 사람이 힌트 줄을 손보다가 `veiled` 분기를 지워도 검사가
+ *   전부 초록이다 — 유니크의 숫자가 다시 새는데 아무도 모른다.
+ */
+describe("화면이 가림 규칙을 실제로 쓰는가 (소스 문자열)", () => {
+  const src = (p: string) =>
+    readFileSync(resolve(__dirname, "../../../", p), "utf8");
+
+  it("소식함이 `hidesNumbers` 로 판정하고 `kindOnlyHint` 로 다시 짓는다", () => {
+    const s = src("pages/news/NewsPage.svelte");
+    expect(s).toContain("hidesNumbers");
+    expect(s).toContain("kindOnlyHint");
+    // 꼬리도 같이 뗀다 — 여기만 빠지면 퍼센트로 크기가 샌다
+    expect(s).toContain("effTail && !veiled");
+  });
+
+  it("이벤트 모달도 같은 규칙을 쓴다", () => {
+    const s = src("features/events/ui/EventPendingModal.svelte");
+    expect(s).toContain("hidesNumbers");
+    expect(s).toContain("kindOnlyHint");
+  });
+
+  it("칩은 한 컴포넌트가 그린다 — 세 자리가 각자 그리면 색이 셋으로 갈린다", () => {
+    for (const p of [
+      "pages/news/NewsPage.svelte",
+      "features/events/ui/EventPendingModal.svelte",
+      "features/season-end/ui/SeasonEndModal.svelte",
+    ]) {
+      expect(src(p)).toContain("EventTierChip");
+    }
+  });
+
+  it("대가 한 줄은 두 자리 다 있다", () => {
+    expect(src("pages/news/NewsPage.svelte")).toContain("COST_LEAD");
+    expect(src("features/events/ui/EventPendingModal.svelte")).toContain("COST_LEAD");
+  });
+
+  it("업적 셋의 열쇠가 계측에 실려 있다", () => {
+    const s = src("shared/utils/achievementEngine.ts");
+    for (const k of ["eventUniqueTotal", "eventHiddenTotal", "eventRareSeasonMax"]) {
+      expect(s).toContain(k);
+    }
   });
 });
