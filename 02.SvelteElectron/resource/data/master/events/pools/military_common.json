@@ -3,7 +3,7 @@
     {
       "id": "MIL_COM_FAMILY_VISIT",
       "title": "면회",
-      "description": "가족이 면회를 왔습니다.\n짧은 시간이지만 든든한 힘이 됩니다.",
+      "description": "가족이 면회를 왔습니다. 두 시간입니다.\n\n짐을 한 보따리 들고 왔습니다.",
       "choices": [
         {
           "id": "ok",
@@ -17,7 +17,7 @@
     {
       "id": "MIL_COM_BASEBALL_NEWS",
       "title": "야구 소식 접하기",
-      "description": "동기에게서 프로야구 소식을 들었습니다.\n아는 선수가 좋은 활약을 펼치고 있다는 소식에 복잡한 감정이 밀려옵니다.",
+      "description": "동기가 프로야구 소식을 전해 줬습니다.\n\n아는 이름이 잘하고 있다고 합니다.",
       "choices": [
         {
           "id": "motivated",
@@ -36,7 +36,7 @@
     {
       "id": "MIL_COM_SICK_BAY",
       "title": "의무대 방문",
-      "description": "몸 상태가 좋지 않아 의무대를 다녀왔습니다.\n잠시 쉬면서 피로를 회복했습니다.",
+      "description": "몸이 안 좋아 의무대에 다녀왔습니다.\n\n큰 건 아니라고 합니다. 하루를 누웠습니다.",
       "choices": [
         {
           "id": "ok",
@@ -50,7 +50,7 @@
     {
       "id": "MIL_COM_INSPECTION",
       "title": "부대 검열",
-      "description": "상급 부대 검열이 있었습니다.\n준비 상태에 따라 결과가 달라집니다.",
+      "description": "상급 부대 검열이 있었습니다.\n\n준비한 만큼만 나옵니다.",
       "choices": [
         {
           "id": "pass",
@@ -70,7 +70,7 @@
     {
       "id": "MIL_COM_VACATION",
       "title": "외박 획득",
-      "description": "이번 주 외박을 받았습니다.\n짧은 자유 시간이지만 충전이 됩니다.",
+      "description": "이번 주 외박이 나왔습니다.\n\n하루뿐이지만 부대 밖 공기는 다릅니다.",
       "minRank": 1,
       "choices": [
         {
@@ -86,7 +86,7 @@
     {
       "id": "MIL_COM_BUDDY_BOND",
       "title": "전우와 친해짐",
-      "description": "부대 동기와 가까워질 기회가 생겼습니다.\n함께 시간을 보낼지, 훈련에 집중할지 선택해야 합니다.",
+      "description": "동기가 저녁에 같이 있자고 합니다.\n\n그 시간에 하던 것이 있습니다.",
       "minRank": 1,
       "choices": [
         {
@@ -109,7 +109,7 @@
     {
       "id": "MIL_COM_JUNIOR_ENLIST",
       "title": "후임 입대",
-      "description": "새 후임이 입대했습니다.\n이제 내가 선임이 됐다는 실감이 납니다.",
+      "description": "새 후임이 들어왔습니다.\n\n내가 처음 왔을 때가 생각납니다.",
       "minRank": 2,
       "choices": [
         {
@@ -124,7 +124,7 @@
     {
       "id": "MIL_COM_EXTENDED_LEAVE",
       "title": "특별 휴가",
-      "description": "포상 특별 휴가를 받았습니다.\n오랜만에 충분히 쉴 수 있는 기회입니다.",
+      "description": "포상 휴가가 나왔습니다. 며칠 됩니다.\n\n오랜만에 시간이 통째로 비었습니다.",
       "minRank": 2,
       "choices": [
         {
@@ -140,7 +140,7 @@
     {
       "id": "MIL_COM_DISCHARGE_LETTER",
       "title": "전역 통보서 수령",
-      "description": "드디어 전역 일자가 명시된 통보서를 받았습니다.\n그날이 눈앞에 다가온 것이 실감납니다.",
+      "description": "전역 일자가 적힌 통보서를 받았습니다.\n\n종이 한 장에 날짜가 박혀 있습니다.",
       "minRank": 3,
       "once": true,
       "choices": [
@@ -249,14 +249,14 @@
     {
       "id": "MIL_EVT_DRILL_EXCELLENCE",
       "title": "훈련 우수자 선정",
-      "description": "기초 체력 훈련에서 상위 평가를 받았습니다.\n규율을 지키며 컨디션을 잘 관리했습니다.",
+      "description": "체력 훈련에서 상위 평가를 받았습니다.\n\n부대에서는 이런 것이 기록에 남습니다.",
       "minRank": 0,
       "maxRank": 3,
       "cooldownWeeks": 4,
       "choices": [
         {
           "id": "ok",
-          "label": "받아들인다",
+          "label": "받아 둔다",
           "effectHint": "사기 +3, 피로 -2",
           "moraleDelta": 3,
           "fatigueDelta": -2
@@ -273,14 +273,14 @@
     {
       "id": "MIL_EVT_FIELD_FATIGUE",
       "title": "야외 훈련 강행군",
-      "description": "강도 높은 야외 훈련이 이어졌습니다.\n피로가 누적되지만 정신력이 단단해집니다.",
+      "description": "야외 훈련이 며칠째 이어집니다.\n\n다리가 먼저 지칩니다.",
       "minRank": 0,
       "maxRank": 3,
       "cooldownWeeks": 4,
       "choices": [
         {
           "id": "ok",
-          "label": "받아들인다",
+          "label": "그냥 버틴다",
           "effectHint": "사기 -1, 피로 +4",
           "moraleDelta": -1,
           "fatigueDelta": 4
@@ -297,14 +297,14 @@
     {
       "id": "MIL_EVT_UNIT_SUPPORT",
       "title": "부대 동료와의 협력",
-      "description": "동료들과 협력해 임무를 완수했습니다.\n팀워크가 좋아져 심리적으로 안정감을 얻었습니다.",
+      "description": "동료들과 같이 붙어 임무를 끝냈습니다.\n\n혼자 하는 일이 아니었습니다.",
       "minRank": 0,
       "maxRank": 3,
       "cooldownWeeks": 4,
       "choices": [
         {
           "id": "ok",
-          "label": "받아들인다",
+          "label": "같이 간다",
           "effectHint": "사기 +2, 피로 +1",
           "moraleDelta": 2,
           "fatigueDelta": 1
@@ -322,14 +322,14 @@
     {
       "id": "MIL_EVT_REST_WINDOW",
       "title": "짧은 휴식 기간",
-      "description": "일정 사이 휴식 기간이 주어졌습니다.\n몸 상태를 회복하고 루틴을 정리할 수 있었습니다.",
+      "description": "일정 사이에 며칠이 비었습니다.\n\n부대 안에서 쓸 수 있는 시간입니다.",
       "minRank": 0,
       "maxRank": 3,
       "cooldownWeeks": 4,
       "choices": [
         {
           "id": "ok",
-          "label": "받아들인다",
+          "label": "쉬어 둔다",
           "effectHint": "사기 +1, 피로 -4",
           "moraleDelta": 1,
           "fatigueDelta": -4
@@ -346,14 +346,14 @@
     {
       "id": "MIL_EVT_COMMAND_PRESSURE",
       "title": "지휘관 특별 점검",
-      "description": "특별 점검으로 긴장감이 높아졌습니다.\n작은 실수도 허용되지 않는 주간이었습니다.",
+      "description": "특별 점검 주간입니다. 작은 것도 다 걸립니다.\n\n일주일 내내 각을 잡고 삽니다.",
       "minRank": 0,
       "maxRank": 3,
       "cooldownWeeks": 4,
       "choices": [
         {
           "id": "ok",
-          "label": "받아들인다",
+          "label": "맞춰 산다",
           "effectHint": "사기 -2, 피로 +2",
           "moraleDelta": -2,
           "fatigueDelta": 2
