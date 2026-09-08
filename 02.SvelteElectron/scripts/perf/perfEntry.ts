@@ -68,10 +68,10 @@ import { GROUPS_BY_LEAGUE } from "../../apps/ui/src/shared/utils/leagueTeams.gen
 // (따라갈 필요가 없다 — 성능은 프리셋 선택에 좌우되지 않는다).
 const PITCHING = {
   // ⚠ **균형형 프리셋과 같아야 한다** — 어긋나면 계측이 게임과 다른 주인공을
-  //   잰다(`startPresets.test.ts`가 그걸 잡는다). 2026-08-26에 구종이 하나로
-  //   줄고 구위·커맨드에 +5가 붙었다.
-  ovr: 70, velocity: 70, command: 70, control: 73, movement: 71,
-  mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64,
+  //   잰다(`startPresets.test.ts`가 그걸 잡는다).
+  //   2026-09-09 에 결정 ⑭ 로 넷 다 **일괄 −9** 됐다(OVR 70 → 61).
+  ovr: 61, velocity: 61, command: 61, control: 64, movement: 62,
+  mentality: 59, stamina: 59, recovery: 57, clutch: 54, holdRunners: 55,
 };
 
 // ── D 세션 계측 — 시작 프리셋 넷 (2026-09-06 · BALANCE_BASELINE_101 DR절) ──
@@ -80,22 +80,22 @@ const PITCHING = {
 // 기존 PITCHING(균형형)을 그대로 쓴다(다른 계측 스크립트의 동작을 안 바꾼다).
 const START_PRESETS: Record<string, { pitching: typeof PITCHING; pitches: PitchEntry[]; tags: string[] }> = {
   balanced: {
-    pitching: { ovr: 70, velocity: 70, command: 70, control: 73, movement: 71, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+    pitching: { ovr: 61, velocity: 61, command: 61, control: 64, movement: 62, mentality: 59, stamina: 59, recovery: 57, clutch: 54, holdRunners: 55 },
     pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     tags: ["정통파", "균형형"],
   },
   power: {
-    pitching: { ovr: 68, velocity: 78, command: 64, control: 60, movement: 66, mentality: 68, stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
+    pitching: { ovr: 59, velocity: 69, command: 55, control: 51, movement: 57, mentality: 59, stamina: 61, recovery: 54, clutch: 58, holdRunners: 57 },
     pitches: [{ id: "PITCH_FASTBALL", grade: 2 }],
     tags: ["파워피처"],
   },
   control: {
-    pitching: { ovr: 68, velocity: 57, command: 78, control: 75, movement: 66, mentality: 68, stamina: 62, recovery: 65, clutch: 65, holdRunners: 62 },
+    pitching: { ovr: 59, velocity: 48, command: 69, control: 66, movement: 57, mentality: 59, stamina: 53, recovery: 56, clutch: 56, holdRunners: 53 },
     pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_CHANGEUP", grade: 1 }],
     tags: ["멘탈관리", "제구형"],
   },
   stamina: {
-    pitching: { ovr: 69, velocity: 67, command: 65, control: 67, movement: 66, mentality: 77, stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+    pitching: { ovr: 60, velocity: 58, command: 56, control: 58, movement: 57, mentality: 68, stamina: 69, recovery: 69, clutch: 52, holdRunners: 52 },
     pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     tags: ["체력형", "이닝이터"],
   },
@@ -876,6 +876,52 @@ export async function hsDbCount(): Promise<Record<string, unknown>> {
     (n) => n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.careerStatus === "active").length;
   return { db활성: rows.length, db전체: allRows.length, 상태별: byStatus,
            db학년별: byGrade, db팀수: teams.size, 스토어: store };
+}
+
+/**
+ * **고교 투수의 학년별 OVR·구속 분포** — 시작 능력치를 백분위로 정하는 자 (2026-09-09 · 결정 ⑭ · 사용자 확정 방법 (c)).
+ *
+ * 🔴 사용자 지적: 「1학년부터 구속이 150 넘게 나오고 주인공은 선발로 막 뛰고
+ *   OVR 도 너무 높다」. 프리셋이 68~70 인데 **1학년 중앙이 59** 라면 새 주인공은
+ *   시작부터 3학년 평균이다 — 첫 1년이 성장이 아니라 확인이 된다.
+ *
+ * ⚠ 드래프트 결과로 정하지 않는다(잡음이 크다 · 사용자 확정 (c)) —
+ *   **또래 분포 대비 백분위**로 정하고, 바꾼 뒤 드래프트 분포로 확인한다.
+ * ⚠ 화면 구속 = `100 + velocity × 0.65` (`MatchPage.svelte`).
+ */
+export function hsGradeOvrProbe(mine?: { ovr: number; velocity: number }): Record<string, unknown> {
+  const npcs = get(gameStore).npcs.filter(
+    (n) => n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.careerStatus === "active"
+      && n.playerType === "pitcher");
+  const q = (xs: number[], f: number) => xs.length ? xs[Math.min(xs.length - 1, Math.floor(xs.length * f))] : 0;
+  const kmh = (v: number) => Math.round((100 + v * 0.65) * 10) / 10;
+  const out: Record<string, unknown> = {};
+  const all: number[] = [];
+  for (const g of [1, 2, 3]) {
+    const band = npcs.filter((n) => n.grade === g);
+    const ovr = band.map((n) => Math.round(n.pitching?.ovr ?? 0)).sort((a2, b2) => a2 - b2);
+    const vel = band.map((n) => Math.round(n.pitching?.velocity ?? 0)).sort((a2, b2) => a2 - b2);
+    all.push(...ovr);
+    out[`${g}학년`] = {
+      n: band.length,
+      OVR: { 중앙: q(ovr, 0.5), 상위25: q(ovr, 0.75), 상위10: q(ovr, 0.9), 상위5: q(ovr, 0.95), 최고: ovr[ovr.length - 1] ?? 0 },
+      구속: { 중앙: q(vel, 0.5), 상위10: q(vel, 0.9), 최고: vel[vel.length - 1] ?? 0,
+              중앙kmh: kmh(q(vel, 0.5)), 최고kmh: kmh(vel[vel.length - 1] ?? 0) },
+    };
+  }
+  if (mine) {
+    // 내 값이 1학년 분포에서 몇 %인가 — **이 자리를 보고 값을 정한다**
+    const g1 = npcs.filter((n) => n.grade === 1);
+    const o = g1.map((n) => Math.round(n.pitching?.ovr ?? 0));
+    const v = g1.map((n) => Math.round(n.pitching?.velocity ?? 0));
+    const pct = (xs: number[], x: number) => xs.length
+      ? Math.round((xs.filter((y) => y < x).length / xs.length) * 1000) / 10 : 0;
+    out["내값"] = {
+      ovr: mine.ovr, ovr백분위: pct(o, mine.ovr),
+      velocity: mine.velocity, 구속kmh: kmh(mine.velocity), 구속백분위: pct(v, mine.velocity),
+    };
+  }
+  return out;
 }
 
 export function hsGradeProbe(): Record<string, unknown> {
@@ -3593,11 +3639,11 @@ export function protagonistStatProbe(): Record<string, unknown> {
   if (!st) return { 기록: "없음", stage: g.careerStage, week: s.currentWeek };
   if (st.type === "pitcher") {
     const p = st as unknown as {
-      g: number; ip: number; er: number; h: number; k: number; bb: number;
+      g: number; gs?: number; ip: number; er: number; h: number; k: number; bb: number;
       era: number; whip: number; w: number; l: number; sv?: number; hd?: number;
     };
     return {
-      역할: "투수", 리그: g.leagueId, 경기: p.g,
+      역할: "투수", 리그: g.leagueId, 경기: p.g, 선발: p.gs ?? 0,
       ip: Math.round(p.ip * 10) / 10, era: p.era, whip: p.whip,
       "9이닝당피안타": p.ip > 0 ? Math.round((p.h * 9 / p.ip) * 10) / 10 : 0,
       "9이닝당K": p.ip > 0 ? Math.round((p.k * 9 / p.ip) * 10) / 10 : 0,
@@ -7392,18 +7438,23 @@ export async function presetEraCurve(games: number, batterMean: number,
       stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
       [{ type: "fastball", grade: 1 }, { type: "sinker", grade: 1 }]],
   ];
+  // 🔴 **여기가 드리프트해 있었다** (2026-09-09 발견). 균형형이 `75/75` 로
+  //   적혀 있었는데 게임 값은 `70/70` 이었다 — 2026-08-26 변경을 이 사본만
+  //   안 따라간 것이다. 사본이 셋이면 하나는 늘 뒤처진다.
+  //   지금은 결정 ⑭ 값(일괄 −9)이고, `startPresets.test.ts` 가 **세 사본이
+  //   페이지와 같은지** 매번 대조한다.
   const P: Array<[string, Record<string, number>, Array<{ type: string; grade: number }>]> = [
-    ["균형형", { velocity: 75, command: 75, control: 68, movement: 66, mentality: 68,
-      stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+    ["균형형", { velocity: 61, command: 61, control: 64, movement: 62, mentality: 59,
+      stamina: 59, recovery: 57, clutch: 54, holdRunners: 55 },
       [{ type: "fastball", grade: 1 }]],
-    ["파워피처", { velocity: 78, command: 64, control: 60, movement: 66, mentality: 68,
-      stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
+    ["파워피처", { velocity: 69, command: 55, control: 51, movement: 57, mentality: 59,
+      stamina: 61, recovery: 54, clutch: 58, holdRunners: 57 },
       [{ type: "fastball", grade: 2 }]],
-    ["제구형", { velocity: 57, command: 78, control: 75, movement: 66, mentality: 68,
-      stamina: 62, recovery: 65, clutch: 65, holdRunners: 62 },
+    ["제구형", { velocity: 48, command: 69, control: 66, movement: 57, mentality: 59,
+      stamina: 53, recovery: 56, clutch: 56, holdRunners: 53 },
       [{ type: "fastball", grade: 1 }, { type: "changeup", grade: 1 }]],
-    ["체력형", { velocity: 67, command: 65, control: 67, movement: 66, mentality: 77,
-      stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+    ["체력형", { velocity: 58, command: 56, control: 58, movement: 57, mentality: 68,
+      stamina: 69, recovery: 69, clutch: 52, holdRunners: 52 },
       [{ type: "fastball", grade: 1 }]],
   ];
   const out: Record<string, unknown> = {};

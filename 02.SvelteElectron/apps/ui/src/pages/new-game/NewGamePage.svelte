@@ -196,7 +196,7 @@
       //   특화형이 균형형보다 뾰족해야 한다는 규칙도 깨진다
       //   (가 그걸 잡았다).
       //   제구 68→73 · 무브먼트 66→71. 편차가 12→10으로 **더 고르게** 된다.
-      pitching: { ovr: 70, velocity: 70, command: 70, control: 73, movement: 71, mentality: 68, stamina: 68, recovery: 66, clutch: 63, holdRunners: 64 },
+      pitching: { ovr: 61, velocity: 61, command: 61, control: 64, movement: 62, mentality: 59, stamina: 59, recovery: 57, clutch: 54, holdRunners: 55 },
       // 🔴 **구종 하나로 시작한다** (사용자 확정 2026-08-26).
       //   둘째 구종을 배우는 것이 첫 목표가 된다.
       //
@@ -214,7 +214,7 @@
       label: "파워피처",
       desc: "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
       tags: ["급성장", "파워피처"],
-      pitching: { ovr: 68, velocity: 78, command: 64, control: 60, movement: 66, mentality: 68, stamina: 70, recovery: 63, clutch: 67, holdRunners: 66 },
+      pitching: { ovr: 59, velocity: 69, command: 55, control: 51, movement: 57, mentality: 59, stamina: 61, recovery: 54, clutch: 58, holdRunners: 57 },
       // 🔴 **Lv2 하나로 간다** (사용자 확정). 등급이 높아 손해가 작다 —
       //   실측 OVR68에서 Lv2 하나 6.34 대 Lv2+Lv1 둘 5.72다.
       //   ⚠ 그래서 **스탯 보정을 안 준다** — 균형·체력형과 사정이 다르다.
@@ -224,7 +224,7 @@
       label: "제구형",
       desc: "커맨드와 제구로 타자를 요리. 체인지업으로 타이밍을 뺏기 시작",
       tags: ["멘탈관리", "제구형"],
-      pitching: { ovr: 68, velocity: 57, command: 78, control: 75, movement: 66, mentality: 68, stamina: 62, recovery: 65, clutch: 65, holdRunners: 62 },
+      pitching: { ovr: 59, velocity: 48, command: 69, control: 66, movement: 57, mentality: 59, stamina: 53, recovery: 56, clutch: 56, holdRunners: 53 },
       pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_CHANGEUP", grade: 1 }],
     },
     stamina: {
@@ -235,7 +235,7 @@
       //   스태미나·회복은 이미 78이라 +5면 83 — **잠재력 하한 80을 넘어**
       //   시작부터 성장 여지가 사라진다(`startPresets.test.ts`가 그걸 잡는다).
       //   대신 제구 63→67 · 무브먼트 62→66. 한 쌍은 더 둘기 쉬워진다.
-      pitching: { ovr: 69, velocity: 67, command: 65, control: 67, movement: 66, mentality: 77, stamina: 78, recovery: 78, clutch: 61, holdRunners: 61 },
+      pitching: { ovr: 60, velocity: 58, command: 56, control: 58, movement: 57, mentality: 68, stamina: 69, recovery: 69, clutch: 52, holdRunners: 52 },
       // 구종 하나 — 근거는 균형형 쪽에 적었다
       pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     },

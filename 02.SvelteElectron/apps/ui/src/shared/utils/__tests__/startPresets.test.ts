@@ -64,22 +64,48 @@ describe("새 게임 시작 프리셋", () => {
    *
    * ⚠ 그래도 **너무 벌어지는 것은 막는다** — 66~70 안에 둔다.
    */
-  it("OVR이 66~70 안이다 — 벌어져도 한 급 안이다", () => {
+  it("OVR이 58~62 안이다 — 벌어져도 한 급 안이다", () => {
     for (const p of presets) {
-      expect(p.ovr).toBeGreaterThanOrEqual(66);
-      expect(p.ovr).toBeLessThanOrEqual(70);
+      expect(p.ovr).toBeGreaterThanOrEqual(58);
+      expect(p.ovr).toBeLessThanOrEqual(62);
     }
   });
 
-  it("또래 중앙(68) 근처다 — 66~70", () => {
-    // 실측(2026-08-10) 6안 비교에서 **68이 관문**이었다:
-    //   선발배정  56→0% · 60→17% · 64→67% · 68→100%
-    //   이닝      29.7 → 33.4 → 46.4 → **60.3**  ← 수상 자격선(60) 돌파
-    // 64 이하면 선발을 못 잡아 경기 XP가 안 붙고, 수상·상위픽이 통째로 막힌다
+  /**
+   * 🔴 **또래 위 얼마인가로 다시 잡았다** (2026-09-09 · 결정 ⑭ · 사용자 확정).
+   *
+   * 사용자 지적: 「1학년부터 구속이 150 넘게 나오고 주인공은 선발로 막 뛰고
+   * OVR 도 너무 높다」. **첫 1년이 성장이 아니라 확인**이 되고, 드래프트 상위픽이
+   * 거의 보장돼 **대학·독립 갈래를 겪을 이유가 없다**는 것이 문제였다.
+   *
+   * ⚠ **옛 근거(「또래 중앙 68」)는 틀렸다.** 그건 몇 시즌 굴린 세이브를 잰
+   *   값이다. 새 게임 직후를 재면(`npm run probe:a:startovr` · 씨앗 셋 ·
+   *   고교 투수 1,428명):
+   *
+   * ```
+   *   1학년  중앙 56~57 · 상위25 63 · 상위10 67 · 상위5 69 · 최고 76~77
+   *   3학년  중앙 56~57 · 상위25 62~63 · 상위10 66~67
+   * ```
+   *
+   *   즉 예전 프리셋(68~70)은 **1학년 백분위 96%** 였다 — 상위 4% 로 시작했다.
+   *   지금 값(59~61)은 **65~72%** 다: 상위권이되 손에 잡히는 자리.
+   *
+   * ⚠ 값은 **제안값이다** — 5단계에서 D 가 다시 잰다(`BALANCE_BACKLOG`).
+   */
+  it("또래 1학년 상위권이되 꼭대기는 아니다 — 58~62", () => {
     for (const p of presets) {
-      expect(p.ovr).toBeGreaterThanOrEqual(66);
-      expect(p.ovr).toBeLessThanOrEqual(70);
+      expect(p.ovr).toBeGreaterThanOrEqual(58);
+      expect(p.ovr).toBeLessThanOrEqual(62);
     }
+  });
+
+  /**
+   * 🔴 **구속 상한** — 사용자가 콕 집은 자리다(「1학년부터 150 넘게」).
+   *   화면 구속 = `100 + velocity × 0.65` 이므로 150 km/h 는 스탯 77 이다.
+   *   또래 1학년 최고가 76~77(154~155) 이므로 **프리셋이 거기 닿으면 안 된다.**
+   */
+  it("구속이 150 km/h 를 안 넘는다 — 스탯 77 미만", () => {
+    for (const p of presets) expect(p.velocity).toBeLessThan(77);
   });
 
   // ── 잠재력은 시작 스탯 위에서 시작한다 ──────────────────────
@@ -163,6 +189,49 @@ describe("새 게임 시작 프리셋", () => {
       expect(hd).not.toBeNull();
       expect(Number(hd![1])).toBe(mid(pr.devRateMin!, pr.devRateMax!));
     });
+  });
+
+  /**
+   * 🔴 **사본이 셋이면 하나는 늘 뒤처진다** (2026-09-09 실측).
+   *
+   * 프리셋 값이 세 군데에 있다 — 페이지(정본) · `perfEntry.PITCHING`(균형형
+   * 픽스처) · `perfEntry.START_PRESETS`(넷) · `perfEntry.presetEraCurve` 의 `P`.
+   * ⑭ 를 넣으며 훑어 보니 **`P` 가 이미 어긋나 있었다**: 균형형이 `75/75` 인데
+   * 게임 값은 `70/70` 이었다(2026-08-26 변경을 그 사본만 안 따라갔다).
+   * 그 상태로 「프리셋 넷의 전력이 비슷한가」를 재고 있었다.
+   *
+   * 여기서 **네 벌이 같은지** 매번 본다. 값이 아니라 **일치**를 지킨다 —
+   * 다음에 프리셋을 바꿔도 이 검사는 그대로 산다.
+   */
+  it("하네스 사본들이 페이지와 값이 같다 — 어긋나면 다른 주인공을 잰다", () => {
+    const harness = read("scripts/perf/perfEntry.ts");
+    const hp = parsePresets(harness);
+    // `START_PRESETS`(넷)이 잡힌다. `PITCHING`·`presetEraCurve` 의 `P` 는
+    // `pitching:` 꼴이 아니라 여기 안 든다 — 그 둘은 바로 아래·위 검사가 맡는다
+    expect(hp.length).toBeGreaterThanOrEqual(4);
+
+    const sig = (o: Record<string, number>) => Object.keys(W).map((k) => `${k}:${o[k]}`).join(",");
+    const pageSigs = new Set(presets.map(sig));
+    const stray = hp.filter((o) => !pageSigs.has(sig(o)));
+    expect(stray.map(sig), "페이지에 없는 값을 하네스가 들고 있다").toEqual([]);
+
+    // 넷이 **다** 하네스에 있어야 한다 — 하나가 빠지면 그 프리셋은 계측 밖이다
+    const harnessSigs = new Set(hp.map(sig));
+    expect(presets.map(sig).filter((x) => !harnessSigs.has(x))).toEqual([]);
+  });
+
+  /**
+   * `presetEraCurve` 의 `P` 는 `pitching:` 꼴이 아니라 위 검사에 안 든다.
+   * **거기가 실제로 어긋나 있던 자리**라(균형형 75/75 · 게임은 70/70) 따로 본다.
+   */
+  it("`presetEraCurve` 의 사본도 페이지와 같다", () => {
+    const harness = read("scripts/perf/perfEntry.ts");
+    for (const pr of presets) {
+      expect(harness, `velocity ${pr.velocity} · command ${pr.command} 짝이 하네스에 없다`)
+        .toContain(`velocity: ${pr.velocity}, command: ${pr.command}`);
+    }
+    // 옛 드리프트 값이 되살아나면 여기서 걸린다
+    expect(harness).not.toContain("velocity: 75, command: 75");
   });
 
   it("총합이 같아도 배분은 다르다 — 프리셋이 서로 구별된다", () => {
