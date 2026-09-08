@@ -11905,7 +11905,7 @@
         {
           "id": "accept",
           "label": "받아들인다",
-          "effectHint": "스태미나 즉시 +1, 사기 -4, 성실 +4, 관계 +9",
+          "effectHint": "스태미나 즉시 +1, 사기 -4, 성실 +4, 감독 관계 +9",
           "effects": {
             "relationDelta": {
               "kind": "manager",
