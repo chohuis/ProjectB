@@ -293,15 +293,16 @@
         {
           "id": "follow",
           "label": "죽어도 따라간다",
-          "effectHint": "스태미나 경험치 +9, 피로 +16, 관계 +6",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +16, 동료 관계 +6",
           "effects": {
-            "xp": {
-              "stamina": 9
-            },
             "fatigueDelta": 16,
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
+            },
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
             }
           }
         },
@@ -363,12 +364,12 @@
         {
           "id": "velocity",
           "label": "전력 투구한다",
-          "effectHint": "구속 경험치 +9, 피로 +14",
+          "effectHint": "선발 보장 2경기, 피로 +14",
           "effects": {
-            "xp": {
-              "velocity": 9
-            },
-            "fatigueDelta": 14
+            "fatigueDelta": 14,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -402,16 +403,17 @@
         {
           "id": "holders",
           "label": "견제폼을 배운다",
-          "effectHint": "주자견제 경험치 +9, 피로 +4, 관계 +6",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4, 동료 관계 +6",
           "effects": {
-            "xp": {
-              "holdRunners": 9
-            },
             "relationDelta": {
               "kind": "teammate",
               "delta": 6
             },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -818,16 +820,16 @@
         {
           "id": "full",
           "label": "전부 소화한다",
-          "effectHint": "구속·스태미나 경험치 +5, 피로 +16, 관계 +8",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +16, 감독 관계 +8",
           "effects": {
-            "xp": {
-              "velocity": 5,
-              "stamina": 5
-            },
             "fatigueDelta": 16,
             "relationDelta": {
               "kind": "manager",
               "delta": 8
+            },
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
             }
           }
         },
@@ -964,17 +966,17 @@
         {
           "id": "efficiency",
           "label": "투구 효율을 찾는다",
-          "effectHint": "커맨드·제구 경험치 +5, 피로 +4, 관계 +3",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4, 감독 관계 +3",
           "effects": {
-            "xp": {
-              "command": 5,
-              "control": 5
-            },
             "relationDelta": {
               "kind": "manager",
               "delta": 3
             },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         }
       ]
@@ -1021,14 +1023,14 @@
         {
           "id": "accept",
           "label": "받아들인다",
-          "effectHint": "위기집중력 경험치 +9, 피로 +14, 사기 +10, 명성 +2",
+          "effectHint": "선발 보장 2경기, 피로 +14, 사기 +10, 명성 +2",
           "effects": {
-            "xp": {
-              "clutch": 9
-            },
             "moraleDelta": 10,
             "fatigueDelta": 14,
-            "fameDelta": 2
+            "fameDelta": 2,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -1077,13 +1079,13 @@
         {
           "id": "basics",
           "label": "기초로 돌아간다",
-          "effectHint": "커맨드·제구 경험치 +5, 피로 +4",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
           "effects": {
-            "xp": {
-              "command": 5,
-              "control": 5
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -1117,12 +1119,12 @@
         {
           "id": "now",
           "label": "지금 당장 시작한다",
-          "effectHint": "무브먼트 경험치 +9, 피로 +14",
+          "effectHint": "배우는 구종 진행도 +25%, 피로 +14",
           "effects": {
-            "xp": {
-              "movement": 9
-            },
-            "fatigueDelta": 14
+            "fatigueDelta": 14,
+            "pitchProgressJump": {
+              "pct": 25
+            }
           }
         },
         {
@@ -1305,13 +1307,12 @@
         {
           "id": "try",
           "label": "해본다",
-          "effectHint": "위기집중력·주자견제 경험치 +5, 피로 +12",
+          "effectHint": "선발 보장 2경기, 피로 +12",
           "effects": {
-            "xp": {
-              "clutch": 5,
-              "holdRunners": 5
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -1395,12 +1396,12 @@
         {
           "id": "go",
           "label": "나간다",
-          "effectHint": "위기집중력 경험치 +9, 피로 +12",
+          "effectHint": "선발 보장 2경기, 피로 +12",
           "effects": {
-            "xp": {
-              "clutch": 9
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -2090,13 +2091,13 @@
         {
           "id": "video",
           "label": "그 시간에 영상 분석을 한다",
-          "effectHint": "커맨드·구속 경험치 +5, 피로 +4",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
           "effects": {
-            "xp": {
-              "command": 5,
-              "velocity": 5
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         }
       ]
@@ -3032,12 +3033,13 @@
         {
           "id": "bullpen",
           "label": "불펜에서 반복한다",
-          "effectHint": "제구 경험치 +9, 피로 +12",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +12",
           "effects": {
-            "xp": {
-              "control": 9
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -3513,12 +3515,12 @@
         {
           "id": "compete",
           "label": "실력으로 이긴다",
-          "effectHint": "스태미나 경험치 +9, 피로 +14, 성실 +3",
+          "effectHint": "선발 보장 2경기, 피로 +14, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
             "fatigueDelta": 14,
-            "xp": {
-              "stamina": 9
+            "startGuarantee": {
+              "games": 2
             }
           }
         },
@@ -3548,13 +3550,13 @@
         {
           "id": "stable",
           "label": "간격을 지킨다",
-          "effectHint": "회복 경험치 +9, 컨디션 +8, 피로 +4",
+          "effectHint": "선발 보장 2경기, 컨디션 +8, 피로 +4",
           "effects": {
             "conditionDelta": 8,
-            "xp": {
-              "recovery": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         }
       ]
@@ -3782,12 +3784,12 @@
         {
           "id": "learn",
           "label": "배운다",
-          "effectHint": "무브먼트 경험치 +9, 피로 +12",
+          "effectHint": "배우는 구종 진행도 +25%, 피로 +12",
           "effects": {
-            "xp": {
-              "movement": 9
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "pitchProgressJump": {
+              "pct": 25
+            }
           }
         },
         {
@@ -3876,13 +3878,13 @@
         {
           "id": "command",
           "label": "제구를 다듬는다",
-          "effectHint": "커맨드·제구 경험치 +5, 피로 +4",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
           "effects": {
-            "xp": {
-              "command": 5,
-              "control": 5
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -3961,13 +3963,14 @@
         {
           "id": "invest",
           "label": "트레이닝에 투자한다",
-          "effectHint": "스태미나 경험치 +9, 피로 +4, 성실 +2",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4, 성실 +2",
           "effects": {
-            "xp": {
-              "stamina": 9
-            },
             "diligenceDelta": 2,
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         }
       ]
@@ -4040,13 +4043,14 @@
         {
           "id": "stay",
           "label": "훈련장에 남는다",
-          "effectHint": "커맨드 경험치 +9, 피로 +4, 성실 +3",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4, 성실 +3",
           "effects": {
             "diligenceDelta": 3,
-            "xp": {
-              "command": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         }
       ]
@@ -4139,13 +4143,14 @@
         {
           "id": "adjust",
           "label": "수면 시간을 맞춘다",
-          "effectHint": "회복 경험치 +9, 컨디션 +6, 피로 +4",
+          "effectHint": "부상 위험 -15% 6주, 컨디션 +6, 피로 +4",
           "effects": {
-            "xp": {
-              "recovery": 9
-            },
             "conditionDelta": 6,
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            }
           }
         },
         {
@@ -4168,13 +4173,13 @@
         {
           "id": "follow",
           "label": "그대로 따른다",
-          "effectHint": "제구·커맨드 경험치 +5, 피로 +4",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
           "effects": {
-            "xp": {
-              "control": 5,
-              "command": 5
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -6114,14 +6119,14 @@
         {
           "id": "appeal",
           "label": "코치에게 어필한다",
-          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 명성 +2",
+          "effectHint": "선발 보장 2경기, 피로 +4, 사기 +2, 명성 +2",
           "effects": {
             "moraleDelta": 2,
             "fameDelta": 2,
-            "xp": {
-              "stamina": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -6156,12 +6161,13 @@
         {
           "id": "own",
           "label": "내 훈련을 한다",
-          "effectHint": "커맨드 경험치 +9, 피로 +4",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4",
           "effects": {
-            "xp": {
-              "command": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         }
       ]
@@ -6314,13 +6320,14 @@
         {
           "id": "manage",
           "label": "등판을 조절한다",
-          "effectHint": "회복 경험치 +9, 컨디션 +8, 피로 +4",
+          "effectHint": "부상 위험 -15% 6주, 컨디션 +8, 피로 +4",
           "effects": {
             "conditionDelta": 8,
-            "xp": {
-              "recovery": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            }
           }
         }
       ]
@@ -6529,13 +6536,13 @@
         {
           "id": "push",
           "label": "훈련을 늘린다",
-          "effectHint": "구속·무브먼트 경험치 +5, 피로 +14",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +14",
           "effects": {
-            "xp": {
-              "velocity": 5,
-              "movement": 5
-            },
-            "fatigueDelta": 14
+            "fatigueDelta": 14,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -6831,15 +6838,16 @@
         {
           "id": "gear",
           "label": "장비에 투자한다",
-          "effectHint": "스태미나 경험치 +9, 컨디션 +5, 피로 +4, 성실 +2, 돈 120만원",
+          "effectHint": "훈련 효율 +15% 4주, 컨디션 +5, 피로 +4, 성실 +2, 돈 120만원",
           "effects": {
             "diligenceDelta": 2,
             "conditionDelta": 5,
             "moneyDelta": 120,
-            "xp": {
-              "stamina": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -9588,7 +9596,7 @@
         {
           "id": "adjust",
           "label": "던지는 자리를 옮긴다",
-          "effectHint": "제구 경험치 +9, 피로 +12",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +12",
           "conditions": [
             {
               "type": "player_type",
@@ -9596,10 +9604,11 @@
             }
           ],
           "effects": {
-            "xp": {
-              "control": 9
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -9662,14 +9671,15 @@
         {
           "id": "buy",
           "label": "직접 사 먹는다",
-          "effectHint": "스태미나 경험치 +9, 컨디션 +10, 피로 +4, 돈 150만원",
+          "effectHint": "부상 위험 -15% 6주, 컨디션 +10, 피로 +4, 돈 150만원",
           "effects": {
             "moneyDelta": -150,
             "conditionDelta": 10,
-            "xp": {
-              "stamina": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            }
           }
         },
         {
@@ -9984,7 +9994,7 @@
         {
           "id": "match",
           "label": "똑같이 맞춘다",
-          "effectHint": "스태미나 경험치 +9, 피로 +20, 성실 +6, 관계 +7",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +20, 성실 +6, 동료 관계 +7",
           "effects": {
             "diligenceDelta": 6,
             "fatigueDelta": 20,
@@ -9992,8 +10002,9 @@
               "kind": "teammate",
               "delta": 7
             },
-            "xp": {
-              "stamina": 9
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
             }
           }
         },
@@ -11252,7 +11263,7 @@
         {
           "id": "stamina",
           "label": "이 몸을 유지한다",
-          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +10",
+          "effectHint": "부상 위험 -15% 6주, 피로 +4, 사기 +10",
           "conditions": [
             {
               "type": "player_type",
@@ -11260,11 +11271,12 @@
             }
           ],
           "effects": {
-            "xp": {
-              "stamina": 9
-            },
             "moraleDelta": 10,
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 6
+            }
           }
         },
         {
@@ -11334,17 +11346,17 @@
         {
           "id": "thanks",
           "label": "제대로 인사한다",
-          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +6, 관계 +9",
+          "effectHint": "선발 보장 2경기, 피로 +4, 사기 +6, 동료 관계 +9",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
               "delta": 9
             },
             "moraleDelta": 6,
-            "xp": {
-              "stamina": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -11408,7 +11420,7 @@
         {
           "id": "copy",
           "label": "제일 오래 뛴 선배를 따른다",
-          "effectHint": "회복 경험치 +9, 피로 +4, 관계 +7",
+          "effectHint": "훈련 효율 +15% 4주, 피로 +4, 동료 관계 +7",
           "conditions": [
             {
               "type": "player_type",
@@ -11420,10 +11432,11 @@
               "kind": "teammate",
               "delta": 7
             },
-            "xp": {
-              "recovery": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "trainEffBoost": {
+              "pct": 15,
+              "weeks": 4
+            }
           }
         },
         {
@@ -12246,17 +12259,17 @@
         {
           "id": "ask",
           "label": "감독에게 자리를 청한다",
-          "effectHint": "스태미나 경험치 +9, 피로 +4, 사기 +2, 관계 +3",
+          "effectHint": "선발 보장 2경기, 피로 +4, 사기 +2, 감독 관계 +3",
           "effects": {
             "relationDelta": {
               "kind": "manager",
               "delta": 3
             },
             "moraleDelta": 2,
-            "xp": {
-              "stamina": 9
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "startGuarantee": {
+              "games": 2
+            }
           }
         },
         {
@@ -12300,13 +12313,12 @@
         {
           "id": "sharpen",
           "label": "지금 것을 더 날카롭게 한다",
-          "effectHint": "구속·제구 경험치 +5, 피로 +4",
+          "effectHint": "배우는 구종 진행도 +25%, 피로 +4",
           "effects": {
-            "xp": {
-              "velocity": 5,
-              "control": 5
-            },
-            "fatigueDelta": 4
+            "fatigueDelta": 4,
+            "pitchProgressJump": {
+              "pct": 25
+            }
           }
         },
         {
@@ -14098,6 +14110,81 @@
           "effects": {
             "diligenceDelta": 3,
             "fatigueDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_SPOT_START",
+      "prompt": "대체 선발을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "raise",
+          "label": "손을 든다",
+          "effectHint": "피로 +6, 선발 보장 1경기",
+          "effects": {
+            "startGuarantee": {
+              "games": 1
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "wait",
+          "label": "준비되면 간다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_FIRST_TEAM_HOLE",
+      "prompt": "그 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ready",
+          "label": "맞춰 준비한다",
+          "effectHint": "피로 +5, 선발 보장 1경기",
+          "effects": {
+            "startGuarantee": {
+              "games": 1
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "keep",
+          "label": "지금 걸 한다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_EXHIBITION",
+      "prompt": "시범경기를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "한 이닝을 받는다",
+          "effectHint": "피로 +5, 선발 보장 1경기",
+          "effects": {
+            "startGuarantee": {
+              "games": 1
+            },
+            "fatigueDelta": 5
+          }
+        },
+        {
+          "id": "farm",
+          "label": "2군에 남는다",
+          "effectHint": "컨디션 +4",
+          "effects": {
+            "conditionDelta": 4
           }
         }
       ]

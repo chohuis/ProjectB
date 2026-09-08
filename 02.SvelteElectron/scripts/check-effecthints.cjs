@@ -27,6 +27,18 @@ const WORDS = {
   statDelta: /\+\s*\d|즉시|상승/,
   studyModeSet: /집중|몰입|휴식|수면|보통|학습 ?강도/,
   roleChoice: /선발|중계|마무리|보직/,
+  // ── 새 열쇠 열하나 (2026-09-08 · A 4-3) ────────────────────────
+  //
+  // 🔴 **열쇠는 열렸는데 이 표에 없었다.** 표에 없는 키는 `WORDS[k]`가
+  //   `undefined`라 조용히 넘어간다 — 이 검사가 막으려던 「표시와 동작이 다른
+  //   것」이 **새 열쇠에서만 그대로 열려 있었다.** B 4-4가 레어 서른셋을
+  //   「XP+피로」에서 이 열쇠들로 옮기면서 채웠다(그 서른셋이 첫 손님이다).
+  trainEffBoost: /훈련 ?효율/, injuryRiskMod: /부상 ?위험/,
+  startGuarantee: /선발 ?보장/, pitchProgressJump: /구종|진행도/,
+  pitchGrant: /구종/, pitchGradeUp: /구종|등급/,
+  potentialDelta: /잠재력/, devRateDelta: /성장률/,
+  trait: /특성/, mentor: /멘토|코치 ?효율/,
+  counterDelta: /기록|누적|지도/,
 };
 
 const j = JSON.parse(fs.readFileSync(P, "utf8"));
