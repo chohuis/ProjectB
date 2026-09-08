@@ -161,7 +161,21 @@ export interface EventChoice {
 export type PendingAction =
   | { type: "game";            scheduleId: string }
   | { type: "message";         messageId: string }
-  | { type: "event";           eventId: string; title: string; description: string; choices?: EventChoice[] }
+  | {
+      type: "event"; eventId: string; title: string; description: string; choices?: EventChoice[];
+      // ── 등급 표시 (2026-09-08 · PLAN_EVENT_TIERS §9 · C 4-5) ──
+      //
+      // 🔴 **지금 이 셋을 채워 보내는 자리는 없다**(2026-09-08 실측). 등급 줄기가
+      //   뿑은 이벤트는 **소식함으로** 가고(`MessageItem.eventGrade`), 이 pending 을
+      //   올리는 것은 병영생활·트레이드 둘뿐이라 둘 다 등급이 없다.
+      //   그래도 칸을 둔 이유: 모달과 소식이 **같은 칩·같은 「종류만」 규칙**을
+      //   쓰게 둘을 한 번에 맞춰 두지 않으면, 나중에 등급 이벤트가 모달로 오는 날
+      //   숨기는 규칙이 한쪽에만 있게 된다 — 숨기는 줄은 빠지면 **숫자가 새는** 쪽이다.
+      grade?: import("../utils/tierRules").EventGrade;
+      theme?: import("../utils/eventTierCopy").EventTheme;
+      /** 이벤트에 붙은 대가(§4). 어느 갈래를 골라도 낸다 — 모달은 종류만 적는다 */
+      cost?: DecisionEffect;
+    }
   | { type: "careerChoiceHub" }
   | { type: "careerResults" }
   | { type: "careerChoice" }

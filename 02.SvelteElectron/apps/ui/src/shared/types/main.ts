@@ -499,6 +499,19 @@ export interface MessageItem {
    * 칩 색·표기는 C 4-5 가 정한다.
    */
   eventGrade?: import("../utils/tierRules").EventGrade;
+  /**
+   * 이벤트의 **결**(§4 `theme`). 위기 표시(§9)의 입력이다 — 레어·유니크 중
+   * `body` 인 것이 위기다. 등급과 같은 이유로 **엔진이 싱는다**(스냅샷).
+   */
+  eventTheme?: import("../utils/eventTierCopy").EventTheme;
+  /**
+   * 이벤트에 붙은 **대가**(§4 `cost`). 어느 갈래를 골라도 내므로 선택지가
+   * 아니라 이벤트에 붙는다 — 화면은 「대가가 따른다」 한 줄을 **종류만** 그린다.
+   *
+   * ⚠ 여기 있는 값으로 효과를 내지 않는다. 내는 자리는 `advanceWeek` 의
+   *   `evResult.costs` 하나뿐이다(둘이 되면 대가를 두 번 낸다).
+   */
+  eventCost?: DecisionEffect;
   metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
            | MyBodyMetadata | RoleChoiceMetadata
            | TableMetadata | RankListMetadata | TimelineMetadata

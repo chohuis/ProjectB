@@ -901,6 +901,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   seasonStore.recordTierState({
     gradeFired: evResult.gradeFired, week: weekNum, starveUpdates: evResult.starveUpdates,
   });
+  // 업적 셋(첫 유니크 · 히든 3 · 한 시즌 레어 6)의 입력 — **커리어 통**이다
+  // (C 4-5). 시즌 통은 위가, 커리어 통은 아래가 든다. 소식함을 세면 상한에
+  // 밀려 지워진 옛 소식이 안 세진다
+  gameStore.recordEventGrade({
+    grade: evResult.gradeFired,
+    rareThisSeason: (s.tierCounts?.rare ?? 0) + (evResult.gradeFired === "rare" ? 1 : 0),
+  });
   growth.protagonistPatch.streaks = nextStreaks;
 
   // ── 지속 보정의 남은 주를 줄인다 (2026-09-08 · §5) ─────────────

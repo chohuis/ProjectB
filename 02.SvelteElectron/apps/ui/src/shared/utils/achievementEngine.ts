@@ -30,6 +30,14 @@ export function computeMetrics(
     winsTotal:          teamRow?.wins ?? 0,
     gamesPlayedTotal:   schedule.filter((e) => e.isProtagonistGame && !!e.result).length,
     messagesReadTotal:  mailbox.filter((m) => m.readAt !== null).length,
+    // ── 이벤트 등급 (2026-09-08 · §9 · C 4-5) ────────────────────
+    //
+    // ⚠ **소식함에서 세지 않는다.** 위 `messagesReadTotal` 은 지금 남아 있는
+    //   것만 세면 되는 값이지만, 등급 업적은 커리어 통이라 상한에 밀려 지워진
+    //   옛 소식까지 세야 한다 — 그래서 `achMetrics` 가 정본이다.
+    eventUniqueTotal:   achMetrics.eventUniqueTotal ?? 0,
+    eventHiddenTotal:   achMetrics.eventHiddenTotal ?? 0,
+    eventRareSeasonMax: achMetrics.eventRareSeasonMax ?? 0,
   };
 }
 

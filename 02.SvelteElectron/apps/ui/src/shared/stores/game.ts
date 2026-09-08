@@ -276,6 +276,9 @@ const DEFAULT_ACHIEVEMENT_METRICS: AchievementMetrics = {
   saveTotal: 0,
   trainingWeeksTotal: 0,
   gamesWonTotal: 0,
+  eventUniqueTotal: 0,
+  eventHiddenTotal: 0,
+  eventRareSeasonMax: 0,
 };
 
 const DEFAULT_ACHIEVEMENTS: AchievementRuntime[] = [
@@ -3913,6 +3916,28 @@ function createGameStore() {
           player: toPlayerCompat(updated),
           logs: [...raw.logs, ...st.logs].slice(0, 30),
         };
+      });
+    },
+
+    /**
+     * 이벤트 등급의 **커리어 누계** (2026-09-08 · §9 · 업적 셋의 입력).
+     *
+     * ⚠ `seasonStore.recordTierState` 와 **같은 자리에서 한 번만** 부른다.
+     *   둘로 나뉘면 시즌 통(상한)과 커리어 통(업적)이 어긋난다.
+     * ⚠ 레어는 **이번 시즌 수를 받아 최고 기록만 갱신**한다 — 여기서 다시 세면
+     *   시즌 경계를 두 곳이 판정하게 된다(정본은 `seasonStore.tierCounts`).
+     */
+    recordEventGrade(p: { grade: string | null; rareThisSeason: number }) {
+      if (!p.grade && p.rareThisSeason === 0) return;
+      update((st) => {
+        const m = st.achievementMetrics;
+        const next: AchievementMetrics = {
+          ...m,
+          eventUniqueTotal: (m.eventUniqueTotal ?? 0) + (p.grade === "unique" ? 1 : 0),
+          eventHiddenTotal: (m.eventHiddenTotal ?? 0) + (p.grade === "hidden" ? 1 : 0),
+          eventRareSeasonMax: Math.max(m.eventRareSeasonMax ?? 0, p.rareThisSeason),
+        };
+        return { ...st, achievementMetrics: next };
       });
     },
 

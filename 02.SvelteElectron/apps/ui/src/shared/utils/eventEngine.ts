@@ -133,6 +133,10 @@ function ruleToOutput(
     // 등급 칩(§9)의 근거 — **여기서 싣는다.** 화면이 나중에 규칙 id 로 되짚으면
     // 옛 소식이 지금 데이터의 등급으로 보인다(소식은 스냅샷이다)
     ...(gradeOf(rule) ? { eventGrade: gradeOf(rule)! } : {}),
+    // 결·대가도 같은 이유로 여기서 싱는다(C 4-5). 위기 표시(§9)와 「대가가
+    // 따른다」 한 줄의 입력이고, **효과를 내는 것은 `costs` 배열 하나만**이다
+    ...(rule.theme ? { eventTheme: rule.theme } : {}),
+    ...(rule.cost  ? { eventCost:  rule.cost  } : {}),
     decision: openOptions.length > 0 ? {
       prompt: decTmpl!.prompt ?? title,
       options: openOptions.map((o) => ({
