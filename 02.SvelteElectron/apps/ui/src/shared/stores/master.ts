@@ -651,8 +651,24 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
  * ⚠ **여기가 두 번째 정본이다.** 진짜 정본은 `conditionEvaluator.ts`이고,
  * `scripts/check-eventconditions.cjs`가 **그 소스에서 필드를 뽑아** 이 표와
  * 데이터를 함께 검사한다. 표를 늘렸는데 평가기가 안 늘면 거기서 잡힌다.
+ *
+ * ── 🔴 이제 **빠뜨리면 컴파일이 안 된다** (2026-09-08 · A) ──────────
+ *
+ * 2026-09-08 에 통지 조건 넷(`outcome_within` 외)이 **평가기에도 타입 유니온에도
+ * 있는데 이 표에만 없었다.** 그 조건을 쓴 이벤트가 들어오자 `assertConditions`
+ * 가 던지고 **마스터 로드가 통째로 죽어 게임이 안 떴다** — 증상은 「고교 팀이
+ * 없다 — refs.json 로드 실패」라 원인과 한참 떨어져 보인다.
+ *
+ * 검사 셋(`npm test` · `check:eventconditions` · `check:lanes`)이 다 통과했다.
+ * **표 넷 중 하나씩만 보고 있었기 때문**이다. 그래서 타입을
+ * `Record<string, …>` 에서 **`Record<Condition["type"], …>`** 으로 좁혔다 —
+ * 이제 유니온에 있는 타입을 여기 안 적으면 **`tsc` 가 그 자리에서 막는다.**
+ * 사람이 기억할 일을 컴파일러에 넘기는 것이 이 표의 성격에 맞다.
+ *
+ * ⚠ 나머지 두 방향(평가기 ↔ 이 표 · 데이터 ↔ 이 표)은 컴파일러가 못 본다 —
+ *   `__tests__/conditionSync.test.ts` 가 **넷을 한 번에** 대조한다.
  */
-const CONDITION_FIELDS: Record<string, readonly string[]> = {
+const CONDITION_FIELDS: Record<import("../types/event").Condition["type"], readonly string[]> = {
   week_gte: ["value"], week_lte: ["value"], week_eq: ["value"],
   season_phase: ["phase"],
   career_stage: [], league_id: [], grade: ["value"],
@@ -703,11 +719,26 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
  * 데이터가 코드와 어긋나면 **로드에서 죽는다.** 조용히 도는 것보다 낫다 —
  * 어긋난 이벤트는 어차피 영영 안 뜨는데, 그때는 원인을 찾을 단서가 없다.
  */
+/**
+ * **검사만 쓰는 창** (2026-09-08 · `__tests__/conditionSync.test.ts`).
+ *
+ * 🔴 이 표가 어긋나 **게임이 안 뜬 적이 있다**(L4 실사고). 그때 검사 셋이 다
+ *   통과한 이유는 **아무도 이 표를 실제로 못 봤기 때문**이다 — 소스를 정규식으로
+ *   긁는 검사만 있었고, 그건 표가 아니라 글자를 보는 것이다.
+ *   여기서 **값 자체**를 내보내 회귀가 데이터·평가기와 직접 대조한다.
+ *
+ * ⚠ 게임 코드는 이걸 쓰지 않는다 — 쓰면 정본이 둘이 된다.
+ */
+export const CONDITION_FIELDS_FOR_TEST = CONDITION_FIELDS;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function assertConditions(ruleId: string, conditions: any[]): void {
   for (const c of conditions) {
     const type = c?.type;
-    const want = CONDITION_FIELDS[type];
+    // ⚠ **데이터에서 온 문자열이라 유니온이 아니다.** 표를
+    //   `Record<Condition["type"], …>` 로 좁힌 뒤라 그냥은 못 짚는다 —
+    //   여기서 좁히지 않고 **없으면 아래에서 던지는 것**이 이 함수의 일이다
+    const want = (CONDITION_FIELDS as Record<string, readonly string[] | undefined>)[type];
     if (want === undefined) {
       throw new Error(`[master] ${ruleId}: 모르는 조건 타입 "${type}" — ${JSON.stringify(c)}`);
     }
