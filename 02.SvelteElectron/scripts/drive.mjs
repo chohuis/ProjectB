@@ -193,7 +193,9 @@ const COMMANDS = {
     // 경기 밖 화면(리그·대회 등)을 보려면 경기에서 멈추면 안 된다.
     const auto = parts.includes("--auto");
     const stopSel = parts.slice(1).filter((x) => x !== "--auto").join(" ") || null;
+    const weekText = () => page.evaluate(() => document.querySelector(".wk")?.innerText ?? "");
     for (let i = 0; i < n; i++) {
+      const wkBefore = await weekText();
       for (let guard = 0; guard < 12; guard++) {
         const state = await page.evaluate(({ stopSel, auto }) => {
           // 보러 온 화면에 닿으면 멈춘다
@@ -253,11 +255,27 @@ const COMMANDS = {
           const otherModal = document.querySelector("button.submit, button.btn-accept");
           const resultPick = document.querySelector(".opt-btn:not(.danger)");
           if (resultPick && !otherModal) { resultPick.click(); return "CAREER_PICK"; }
+          // 보직 선택 확인 — **헤더의 주 진행 버튼과 클래스가 겹친다** (C 제보 ㉯).
+          // `RoleChoicePanel` 의 확인은 `.confirm .btn.go` 이고 헤더는 `.go:not(.btn)` 이다.
+          // 그냥 `.go` 로 물으면 DOM 순서상 **헤더 것이 먼저 잡혀** 보직이 영영 안 정해지고,
+          // 그 상태로 주 진행을 눌러 봐야 pending 이 그대로라 W1 을 못 넘긴다.
+          // ⚠ 갈래를 고르는 것은 **위의 `button.opt`** 가 이미 한다 —
+          //   `.dec-opts` 와 `.confirm` 은 서로 배타라(`{#if pendingPick === null}`)
+          //   고르고 나면 `.opt` 이 사라지고 이 확인만 남는다. 여기서 또 짚으면 죽은 줄이다
+          const roleGo = document.querySelector(".confirm .btn.go:not([disabled])");
+          if (roleGo) { roleGo.click(); return "ROLE_GO"; }
+
           // 모달의 확인/닫기류
           const btns = [...document.querySelectorAll("button")];
           const confirm = btns.find((b) => /^(확인|닫기|계속|시작|넘어가기)$/.test(b.innerText.trim()));
           if (confirm) { confirm.click(); return "CONFIRM"; }
-          const go = document.querySelector(".go");
+          // 🔴 **`.go` 는 pending 이 있어도 disabled 가 아니다** (C 제보 ㉮).
+          //   `TopHeader.handleAdvance` 는 `$hasPendingAction` 이면 버튼을 잠그는 대신
+          //   **그 화면을 연다.** 그래서 「비활성이면 막힌 것」이라는 전제로 짜면
+          //   같은 pending 만 다시 열며 `GO` 를 63번 뱉고 **한 주도 안 간다**(실측).
+          //   여기서는 눌러 보되, **주가 실제로 바뀌었는지는 바깥(Node)이 확인한다** —
+          //   안 바뀌면 `GO` 를 주 진행으로 세지 않고 계속 막는 것을 치운다.
+          const go = document.querySelector(".go:not(.btn)");
           if (go && !go.disabled) { go.click(); return "GO"; }
           // 왜 막혔는지 말한다 — "STUCK"만 던지면 앱을 다시 띄워 손으로 뒤져야 한다
           return "STUCK:" + (go ? (go.disabled ? "go가 disabled" : "?") : ".go 없음")
@@ -265,11 +283,14 @@ const COMMANDS = {
         }, { stopSel, auto });
         if (state === "MATCH") { console.log(`week ${i}: 목표 화면 도달`); return; }
         await new Promise((r) => setTimeout(r, state === "GO" || state === "SIM" ? 5000 : 1200));
-        if (state === "GO") break;
+        // GO 를 눌렀는데 **주차 표시가 그대로면 주가 안 간 것이다** — pending 화면만
+        // 열렸을 뿐이다(㉮). 다음 바퀴에서 그걸 치운다
+        if (state === "GO" && (await weekText()) !== wkBefore) break;
         if (state.startsWith("STUCK")) { console.log(`week ${i}: ${state}`); return; }
       }
-      const label = await page.evaluate(() => document.querySelector(".go")?.innerText ?? "(없음)");
-      const wk = await page.evaluate(() => document.querySelector(".wk")?.innerText ?? "");
+      const label = await page.evaluate(() => document.querySelector(".go:not(.btn)")?.innerText ?? "(없음)");
+      const wk = await weekText();
+      if (wk === wkBefore) { console.log(`  week ${i + 1}: 주가 안 넘어갔다 (${wk}) — 막는 것을 12번 치우고도 그대로다`); return; }
       console.log(`  week ${i + 1}: ${wk} · 버튼 "${label}"`);
     }
   },

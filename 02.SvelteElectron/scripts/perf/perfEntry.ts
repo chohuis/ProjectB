@@ -378,6 +378,12 @@ export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }
 export function stopReason(): string | null { return get(autoAdvanceStore).stopReason; }
+/**
+ * 마지막 자동 진행 한 판의 로그(최근 100줄). `autoAdvanceStore.start()` 가
+ * 판마다 비우므로 **직전 `runOneWeek()` 이 무엇을 하다 멈췄는지** 그대로다.
+ * 주가 안 넘어갔을 때 어느 pending 을 몇 번 돌았는지 세는 데 쓴다.
+ */
+export function autoLogs(): string[] { return get(autoAdvanceStore).log; }
 export function npcCount(): number { return get(gameStore).npcs.length; }
 export function entityCount(): number { return get(masterStore).entities.length; }
 

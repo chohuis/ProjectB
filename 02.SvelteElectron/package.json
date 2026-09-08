@@ -166,6 +166,7 @@
     "check:savecolumns": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-savecolumns.cjs",
     "probe:a:diverge": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-diverge.cjs",
     "probe:a:growthreq": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-growthreq.cjs",
+    "probe:a:stall": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-w32stall.cjs",
     "check:reportbank": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-reportbank.cjs",
     "probe:a:tempo": "node scripts/probe-a-tempo.cjs",
     "probe:a:tempo:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-tempo-career.cjs",

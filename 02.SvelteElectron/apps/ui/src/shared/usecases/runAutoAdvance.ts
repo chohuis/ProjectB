@@ -378,6 +378,51 @@ export async function runAutoAdvance(): Promise<void> {
   let iter = 0;
   let tickStart = performance.now();
 
+  // ── 헛도는 자리를 그 자리에서 짚는다 (2026-09-08 · A) ─────────
+  //
+  // 🔴 왜 있나. **주가 안 넘어가면 세계가 멈춘다** — 사용자 신고 여섯 중
+  //   둘이 그것이었다(소식 id 사본 · 대회 무승부로 라운드가 안 닫힘).
+  //   그런데 이 루프는 그런 자리를 **조용히** 지나갔다: 같은 pending 을
+  //   1000번 돌고 `stop("최대 반복 횟수 초과")` 한 줄만 남겼다. 그 문구엔
+  //   **어느 pending 인지도, 몇 주차인지도 없다.**
+  //
+  //   ⚠ 계기가 된 「정지 2026W32」는 **여기가 아니었다** — 계측 루프가
+  //     `draftObserve` 를 치울 기회를 안 준 오탐이었다(`check-measure-repro.cjs`
+  //     머리말). 그걸 가리는 데 하루가 걸린 이유가 바로 이 한 줄짜리 사유다:
+  //     **진짜로 막힌 것인지 설계대로 멈춘 것인지 문구가 안 갈라 줬다.**
+  //     그래서 오탐이 아니라 **말해 주지 않는 것**을 고친다.
+  //
+  //   그래서 두 가지를 바꾼다.
+  //     ① **같은 pending 이 REPEAT_LIMIT 번 돌아오면 그 자리에서 멈춘다.**
+  //        1000번을 다 돌 필요가 없다 — 50번이면 이미 안 풀리는 것이다.
+  //        멈추는 문구에 **pending 종류·키·주차**를 적는다.
+  //     ② 사유를 `오류:` 로 시작하게 한다. 헤드리스(`perfEntry.autoRun`)가
+  //        `오류:` 만 던지므로, 이걸 안 붙이면 **계측이 정상 종료로 읽는다.**
+  //        화면에서도 「무엇이 막고 있는지」가 그대로 보이는 편이 낫다.
+  //
+  // ⚠ 상한을 **주 진행 쪽에도** 건다. pending 이 하나도 없는데 `advanceWeek`
+  //   이 주를 안 넘기고 돌아오는 형태(무승부 라운드가 그랬다)는 pending
+  //   히스토그램에 안 잡힌다.
+  const REPEAT_LIMIT = 50;
+  const seenPending = new Map<string, number>();
+  let sameWeekAdvances = 0;
+  let lastAdvanceWeekNo = -1;
+  const pendingKeyOf = (pa: PendingAction): string => {
+    const p = pa as PendingAction & { scheduleId?: string; messageId?: string; eventId?: string };
+    return `${pa.type}:${p.scheduleId ?? p.messageId ?? p.eventId ?? "-"}`;
+  };
+  /** 멈춘 자리를 사람이 읽을 수 있게 적는다 — 여기 적힌 문구가 곧 결함 신고다 */
+  const stall = (what: string): void => {
+    const s = get(seasonStore);
+    const top = [...seenPending.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3)
+      .map(([k, n]) => `${k}×${n}`).join(" · ");
+    const reason = `오류: 주 진행이 막혔다 — ${s.seasonYear}W${s.currentWeek} · ${what}`
+      + (top ? ` (반복 pending: ${top})` : "");
+    autoAdvanceStore.addLog(reason);
+    autoAdvanceStore.stop(reason);
+    autoLog(`[막힘] ${reason}`);
+  };
+
   // ── 저장 배치 (P8-2a) ───────────────────────────────────────
   // `gameStore.save()`는 NPC 5,596명 전원을 다시 쓴다. 자동 진행은 한 주에
   // advanceWeek 1회 + pending 처리 2회쯤 불러 **주간 시간의 55%**를 여기 태웠다.
@@ -427,8 +472,24 @@ export async function runAutoAdvance(): Promise<void> {
         }
         applyRecommendedTraining();
         autoLog(`[주진행] W${w} 시작`);
-        await advanceWeek();
+        const r = await advanceWeek();
         const wAfter = get(seasonStore).currentWeek;
+        // pending 도 없이 주가 안 넘어간 채 되돌아온 횟수 — 여기가 세계가 멈추는 자리다
+        if (wAfter === w) {
+          sameWeekAdvances = (lastAdvanceWeekNo === w ? sameWeekAdvances : 0) + 1;
+          lastAdvanceWeekNo = w;
+          if (sameWeekAdvances >= REPEAT_LIMIT) {
+            stall(`advanceWeek 이 ${sameWeekAdvances}회 연속 주를 안 넘겼다 (stoppedBy=${r?.stoppedBy?.type ?? "없음"})`);
+            return;
+          }
+        } else {
+          sameWeekAdvances = 0; lastAdvanceWeekNo = -1;
+          // ⚠ **주가 넘어갔으면 pending 셈도 비운다.** 안 비우면 한 판이
+          //   W1→W40 을 도는 실플에서 매주 뜨는 같은 이벤트가 40번 쌓여
+          //   없는 결함을 가리킬 수 있다. 세고 싶은 것은 「한 주 안에서 같은
+          //   pending 이 안 풀린다」이지 「한 판에 여러 번 떴다」가 아니다
+          seenPending.clear();
+        }
         // 주 경계 확정 — **주가 실제로 넘어갔을 때만** 쓴다.
         // `advanceWeek`은 pending(경기·메시지)을 밀어넣고 주를 안 넘긴 채
         // 돌아오는 경우가 있어, 무조건 쓰면 한 주에 두 번 쓰게 된다.
@@ -457,6 +518,15 @@ export async function runAutoAdvance(): Promise<void> {
       }
 
       // 4. pending 처리
+      {
+        const key = pendingKeyOf(pa);
+        const n = (seenPending.get(key) ?? 0) + 1;
+        seenPending.set(key, n);
+        if (n >= REPEAT_LIMIT) {
+          stall(`같은 pending 이 ${n}회 돌아왔다 — ${key} 가 안 풀린다`);
+          return;
+        }
+      }
       autoAdvanceStore.addLog(`처리: ${pa.type}`);
       autoLog(`[pending] type=${pa.type}`);
 
@@ -513,8 +583,9 @@ export async function runAutoAdvance(): Promise<void> {
   }
 
   if (iter >= MAX_ITER) {
-    autoAdvanceStore.stop("최대 반복 횟수 초과");
-    autoLog("[정지] 최대 반복 횟수 초과");
+    // 위 두 상한에 안 걸리고 여기까지 왔다면 **여러 pending 이 번갈아** 돈 것이다.
+    // 예전엔 "최대 반복 횟수 초과" 한 줄이라 무엇이 돌았는지 알 길이 없었다
+    stall(`${MAX_ITER}회 반복 상한`);
   }
 
   } finally {

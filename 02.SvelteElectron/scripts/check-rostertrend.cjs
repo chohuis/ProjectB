@@ -37,6 +37,7 @@
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
+const { makeStallGuard } = require(path.join(process.cwd(), "scripts/perf/weekLoop.cjs"));
 
 const arg = (n, d) => {
   const i = process.argv.indexOf(`--${n}`);
@@ -151,6 +152,7 @@ async function main() {
 
     const start = app.currentSeason();
     let guard = 0;
+    const stallGuard = makeStallGuard();
     // 🔴 **정착 주차까지 더 돈다** (2026-09-06). 시즌 경계에서 멈추면 마지막
     //   스냅샷이 **졸업 직후·신입 직전**에 걸린다 — 고교가 평균 19.3(정원 31)
     //   으로 찍혔는데 다음 주에 1,020명이 들어와 31로 돌아온다. 없는 결함을
@@ -171,7 +173,8 @@ async function main() {
         continue;
       }
       await app.autoRun();
-      if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
+      // 한 바퀴 안 움직인 것은 정지 pending 을 민 정상 경로일 수 있다 — `perf/weekLoop.cjs` 머리말
+      if (stallGuard.hit(app.currentWeek() !== w0 || app.currentSeason() !== s0)) break;
     }
 
     console.log(`[로스터 추이] 씨앗 ${SEED} · ${SEASONS}시즌 · 규칙 1군 하한 26 · 상한 34\n`);
