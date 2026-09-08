@@ -689,6 +689,14 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   count: ["counter", "value"],
   compare: ["stat", "op"],
   last_game: ["field", "op", "value"],
+  // 🔴 **통지 조건 넷이 여기 빠져 있었다** (2026-09-08 · L4 실측). 평가기에도
+  //   타입 유니온에도 있는데 이 표에만 없어서, `outcome_within` 을 쓴 이벤트가
+  //   들어오자 **`assertConditions` 가 던지고 마스터 로드가 통째로 죽었다** —
+  //   증상은 「고교 팀이 없다 — refs.json 로드 실패」라 원인과 한참 떨어져 보인다.
+  //   이 파일 머리말이 경고한 「넷이 어긋난다」가 그대로 났다.
+  season_games_gte: ["value"], season_games_lte: ["value"],
+  season_starts_gte: ["value"],
+  outcome_within: ["outcome", "weeks"],
 };
 
 /**
