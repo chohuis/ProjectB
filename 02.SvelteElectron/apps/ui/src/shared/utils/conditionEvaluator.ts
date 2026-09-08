@@ -1,5 +1,6 @@
 import type { Condition, EventContext } from "../types/event";
 import { resolveNumber, resolvePath } from "./eventPaths";
+import { streakKeyOf } from "./eventCounters";
 import type { PitcherSeasonStats } from "../types/save";
 import { GROUPS_BY_LEAGUE } from "./leagueTeams.generated";
 
@@ -312,6 +313,50 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       if (values.length === 0) return false;
       const best = cond.type === "relation_gte" ? Math.max(...values) : Math.min(...values);
       return cond.type === "relation_gte" ? best >= cond.value : best <= cond.value;
+    }
+
+    // ── 시간을 세는 조건 넷 (2026-09-08 · §12) ───────────────────
+    //
+    // ⚠ 넷 다 **세는 칸이 없으면 false** 다. 「아직 안 채웠다」와 같은 뜻이라
+    //   맞지만, **끝내 못 채우는 칸**은 다르다 — 그건 배선이 빠진 것이고
+    //   `check:tiercoverage` 가 「후보 0」으로 잡는다.
+
+    case "streak": {
+      const got = protagonist.streaks?.[streakKeyOf(cond)];
+      return got !== undefined && got >= cond.weeks;
+    }
+
+    case "count": {
+      const got = protagonist.counters?.[cond.counter];
+      return got !== undefined && got >= cond.value;
+    }
+
+    case "compare": {
+      // ⚠ `storyNpcs` 등록부가 아직 없다 — `npcId` 직접이 지금의 유일한 길이다(§12).
+      //   `role` 은 등록부가 생기면 잇는다. 지금 `role` 만 적으면 **false** 다.
+      const id = cond.npcId;
+      if (!id) return false;
+      const npc = ctx.storyNpcs?.[id];
+      if (!npc) return false;
+      const theirs = npc[cond.stat];
+      const mine = resolveNumber(ctx, cond.stat);
+      if (theirs === undefined || mine === undefined) return false;
+      const margin = cond.margin ?? 0;
+      return cond.op === "gte" ? mine >= theirs + margin : mine <= theirs - margin;
+    }
+
+    case "last_game": {
+      const g = ctx.lastGame;
+      if (!g) return false;
+      const v = (g as unknown as Record<string, number | boolean>)[cond.field];
+      if (v === undefined) return false;
+      if (typeof v === "boolean" || typeof cond.value === "boolean") {
+        // 참/거짓 칸(완봉·완투·승리)은 `eq` 만 뜻이 있다
+        return cond.op === "eq" && v === cond.value;
+      }
+      if (cond.op === "gte") return v >= cond.value;
+      if (cond.op === "lte") return v <= cond.value;
+      return v === cond.value;
     }
   }
 

@@ -7906,7 +7906,10 @@ export function drainSeasonEndSnapshots(): Record<string, unknown>[] {
  */
 export function eventFunnelProbe(): Record<string, unknown> {
   const f = eventFunnelStats;
-  const emitted = f.mandatory.emitted + f.conditional.emitted + f.random.emitted;
+  // ⚠ **등급 갈래를 안 더하면 총 발동이 통째로 빠진다** (2026-09-08). 실제로
+  //   첫 계측에서 「3시즌 33건」이 나왔는데, 뜬 규칙 종수는 101종이었다 —
+  //   합이 갈래 셋만 보고 있었기 때문이다. 갈래를 늘리면 여기도 늘려야 한다.
+  const emitted = f.mandatory.emitted + f.conditional.emitted + f.random.emitted + f.grade.emitted;
   const top = (m: Record<string, number>, n: number) =>
     Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, n)
       .map(([id, v]) => ({ 규칙: id, 건수: v }));
@@ -7919,6 +7922,23 @@ export function eventFunnelProbe(): Record<string, unknown> {
     mandatory:   { ...f.mandatory },
     conditional: { ...f.conditional },
     random:      { ...f.random },
+    // 등급 줄기 (2026-09-08 · §1). `random` 은 이제 0 이어야 한다 —
+    // 0 이 아니면 옛 풀 경로가 어딘가 살아 있다는 뜻이다
+    grade:       { ...f.grade },
+    tier: {
+      drawn:      { ...f.tier.drawn },
+      emitted:    { ...f.tier.emitted },
+      capBlocked: { ...f.tier.capBlocked },
+      empty:      { ...f.tier.empty },
+      // 🔴 0 이 아니면 데이터가 모자란다는 뜻이다 (§10)
+      fallback:   f.tier.fallback,
+      fallbackBy: { ...f.tier.fallbackBy },
+      weeksByStage:   { ...f.tier.weeksByStage },
+      emittedByStage: { ...f.tier.emittedByStage },
+      // 🔴 둘 다 늘 0 이어야 한다 (§10)
+      capViolation:          f.tier.capViolation,
+      hiddenCareerViolation: f.tier.hiddenCareerViolation,
+    },
     // 조건도 정책도 통과했는데 주당 1건 상한에 밀린 것 — 이 트랙의 핵심 숫자
     "밀린 규칙 상위": top(f.crowdedByRule, 15),
     "빈 메시지로 버려진 규칙": top(f.emptyByRule, 10),

@@ -969,8 +969,111 @@ export function applyEffectToProtagonist(
   //   돌리면 NaN 이 된다. 실제로 값이 바뀐 때만 다시 계산한다
   if (bTouched) batting.ovr = battingOvrOf(batting);
 
+  // ── 새 보상 열쇠 (2026-09-08 · PLAN_EVENT_TIERS §5 · A 4-3) ────
+  //
+  // 🔴 **상한은 커리어 누계로 잰다.** 「한 번에 +3 까지」로 재면 +1 짜리를
+  //   세 번 받아 넘는다 — 이 저장소가 「한 해에 한 번」 가드에서 두 번 밟은
+  //   형태다. 준 만큼(`potentialGranted`·`devRateGranted`)을 적어 둔다.
+  const POTENTIAL_CAREER_CAP = 3;
+  const DEVRATE_CAREER_CAP   = 10;
+
+  let potentialHidden  = p.potentialHidden;
+  let potentialGranted = p.potentialGranted ?? 0;
+  if (fx.potentialDelta) {
+    const room = Math.max(0, POTENTIAL_CAREER_CAP - potentialGranted);
+    const give = Math.min(fx.potentialDelta, room);
+    if (give > 0) {
+      // 잠재력은 99 가 상한이다(생성 규칙과 같은 눈금)
+      potentialHidden  = Math.min(99, potentialHidden + give);
+      potentialGranted += give;
+    }
+    if (give < fx.potentialDelta) {
+      // ⚠ **조용히 버리지 않는다.** 「아무 일도 안 일어남」이 이 저장소의 단골이다
+      console.warn(`[보상] 잠재력 커리어 상한(+${POTENTIAL_CAREER_CAP}) — `
+        + `${fx.potentialDelta} 중 ${give}만 반영 (누계 ${potentialGranted})`);
+    }
+  }
+
+  let developmentRate = p.developmentRate;
+  let devRateGranted  = p.devRateGranted ?? 0;
+  if (fx.devRateDelta) {
+    const room = Math.max(0, DEVRATE_CAREER_CAP - devRateGranted);
+    const give = Math.min(fx.devRateDelta, room);
+    if (give > 0) { developmentRate += give; devRateGranted += give; }
+    if (give < fx.devRateDelta) {
+      console.warn(`[보상] 성장률 커리어 상한(+${DEVRATE_CAREER_CAP}) — `
+        + `${fx.devRateDelta} 중 ${give}만 반영 (누계 ${devRateGranted})`);
+    }
+  }
+
+  // 훈련 효율·부상 위험 — **겹치면 긴 쪽이 남는다**(§5). 짧은 쪽으로 덮으면
+  // 준 보상을 뺏는 꼴이고, 더하면 같은 이벤트 두 번에 무한이 된다
+  const longerOf = (
+    cur: { pct: number; weeksLeft: number } | undefined,
+    add: { pct: number; weeks: number } | undefined,
+  ) => {
+    if (!add) return cur;
+    if (!cur || add.weeks >= cur.weeksLeft) return { pct: add.pct, weeksLeft: add.weeks };
+    return cur;
+  };
+
+  // 구종 — 습득·등급·진행도. 규칙은 `startPitchTraining`/`completePitchLearning`
+  // 과 같은 눈금이다(상한 5 · 보유 5종)
+  let pitches = p.pitches ?? [];
+  if (fx.pitchGrant) {
+    const has = pitches.find((e) => e.id === fx.pitchGrant!.id);
+    if (has) {
+      // 🔴 이미 있으면 **등급 +1** 이다(§5) — 「배웠다」가 아무 일도 안 하면 안 된다
+      pitches = pitches.map((e) => e.id === fx.pitchGrant!.id
+        ? { ...e, grade: Math.min(5, e.grade + 1) as PitchEntry["grade"] } : e);
+    } else if (pitches.length < 5) {
+      pitches = [...pitches, { id: fx.pitchGrant.id, grade: 1 }];
+    } else {
+      console.warn(`[보상] 구종 5종이 차서 ${fx.pitchGrant.id} 습득을 못 했다`);
+    }
+  }
+  if (fx.pitchGradeUp) {
+    const has = pitches.find((e) => e.id === fx.pitchGradeUp!.id);
+    if (has) {
+      pitches = pitches.map((e) => e.id === fx.pitchGradeUp!.id
+        ? { ...e, grade: Math.min(5, e.grade + 1) as PitchEntry["grade"] } : e);
+    } else {
+      console.warn(`[보상] 없는 구종의 등급을 올리려 했다: ${fx.pitchGradeUp.id}`);
+    }
+  }
+  // ⚠ 훈련 중이 아니면 아무 일도 안 한다 — 없는 훈련을 만들어 주지 않는다
+  const trainingPitchState = fx.pitchProgressJump && p.trainingPitchState
+    ? { ...p.trainingPitchState, progress: Math.min(100, p.trainingPitchState.progress + fx.pitchProgressJump.pct) }
+    : p.trainingPitchState;
+
+  // 특성 — **중복은 무시한다.** 같은 특성을 두 번 받아도 계수가 두 번 곱하면 안 된다
+  const traits = fx.trait && !(p.traits ?? []).includes(fx.trait.id)
+    ? [...(p.traits ?? []), fx.trait.id] : p.traits;
+
+  // 누적 카운터 — `count` 조건의 입력(§12). 이름 표는 `eventCounters.COUNTERS`
+  let counters = p.counters;
+  if (fx.counterDelta) {
+    counters = { ...(counters ?? {}) };
+    for (const [k, v] of Object.entries(fx.counterDelta)) {
+      if (typeof v === "number" && Number.isFinite(v)) counters[k] = (counters[k] ?? 0) + v;
+    }
+  }
+
   return {
     ...p,
+    potentialHidden, potentialGranted,
+    developmentRate, devRateGranted,
+    trainEffBoost: longerOf(p.trainEffBoost, fx.trainEffBoost),
+    injuryRiskMod: longerOf(p.injuryRiskMod, fx.injuryRiskMod),
+    // 멘토는 **한 명**이다 — 둘째가 오면 덮는다(§5). 쌓으면 보너스가 무한이 된다
+    mentor: fx.mentor
+      ? { id: fx.mentor.npcId ?? fx.mentor.role ?? "mentor", role: fx.mentor.role, pct: fx.mentor.pct }
+      : p.mentor,
+    // 선발 보장은 **더한다** — 「N경기 더 보장」이 두 번 오면 그만큼 더 보장이다
+    startGuaranteeGames: fx.startGuarantee
+      ? (p.startGuaranteeGames ?? 0) + Math.max(0, fx.startGuarantee.games)
+      : p.startGuaranteeGames,
+    pitches, trainingPitchState, traits, counters,
     condition:  clamp(p.condition + (fx.conditionDelta ?? 0)),
     fatigue:    clamp(p.fatigue   + (fx.fatigueDelta   ?? 0)),
     morale:     clamp(p.morale    + (fx.moraleDelta    ?? 0)),
@@ -2897,6 +3000,19 @@ function createGameStore() {
           fatigue: Math.max(0, p.fatigue - 30),
           seasonHealth: { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 },
           sportsUnitApplied: false,
+          // ── 같은 팀에서 보낸 해 (2026-09-08 · §12 `count`) ──────
+          //
+          // 🔴 **팀이 바뀌면 1 로 되돌린다** — 「3년 내내 같은 팀」이 물으려는
+          //   것은 누적 연차가 아니라 **끊기지 않은 기간**이다. 트레이드·이적·
+          //   진학이 그걸 끊는다.
+          // ⚠ 첫 시즌은 `lastSeasonTeamId` 가 없어 1 이다(그게 맞다 — 한 해를
+          //   보냈으니 1년이다). 구 세이브도 여기서 1부터 다시 센다.
+          counters: {
+            ...(p.counters ?? {}),
+            sameTeamYears: p.lastSeasonTeamId === p.teamId
+              ? (p.counters?.sameTeamYears ?? 0) + 1 : 1,
+          },
+          lastSeasonTeamId: p.teamId,
         };
 
         return {
@@ -2905,6 +3021,43 @@ function createGameStore() {
           player: toPlayerCompat(protagonist),
           school: toSchoolCompat(protagonist.careerStage, s.schoolState),
         };
+      });
+    },
+
+    /**
+     * 등판 하나가 남기는 누적 카운터 (2026-09-08 · §12 `count`).
+     *
+     * 🔴 **공식 등판에서만 부른다.** 연습경기 완봉이 「무명의 완봉」을 열면
+     *   이야기가 안 산다 — `lastGameOf` 도 같은 선으로 연습경기를 뺀다.
+     *
+     * ⚠ 포수는 **팀의 주전 포수**로 본다. 경기 줄(`BatterGameLine`)에 포지션이
+     *   없어서 라인업에서 누가 앉았는지는 못 읽는다 — 「같은 포수와 N경기」가
+     *   묻는 것은 배터리의 지속이고, 주전이 바뀌면 그게 끊긴 것이다.
+     */
+    recordGameCounters(p: {
+      completeGame: boolean; shutout: boolean; catcherId: string | null;
+      /** 선발 등판이었나 — 선발 보장(§5)을 여기서 한 경기 쓴다 */
+      started?: boolean;
+    }) {
+      update((s) => {
+        const pr = s.protagonist;
+        const c = { ...(pr.counters ?? {}) };
+        if (p.completeGame) c.completeGames = (c.completeGames ?? 0) + 1;
+        if (p.shutout)      c.shutouts      = (c.shutouts ?? 0) + 1;
+        if (p.catcherId) {
+          c.sameCatcherGames = pr.lastCatcherId === p.catcherId
+            ? (c.sameCatcherGames ?? 0) + 1 : 1;
+        }
+        // 🔴 **쓰는 자리가 없으면 보장이 영구가 된다.** 선발로 나간 경기마다
+        //   한 칸씩 쓴다 — 「N경기 보장」의 N 은 등판 수지 주 수가 아니다
+        const guard = pr.startGuaranteeGames ?? 0;
+        const nextGuard = p.started && guard > 0 ? guard - 1 : guard;
+        const protagonist: ProtagonistSave = {
+          ...pr, counters: c,
+          ...(nextGuard !== guard ? { startGuaranteeGames: nextGuard } : {}),
+          ...(p.catcherId ? { lastCatcherId: p.catcherId } : {}),
+        };
+        return { ...s, protagonist, player: toPlayerCompat(protagonist) };
       });
     },
 

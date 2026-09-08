@@ -140,11 +140,123 @@ log(`  데이터가 쓰는 것 ${used.size}종: ${[...used].sort().join(" ")}`);
 const never = [...exact, ...prefixes].filter((k) => ![...used].some((u) => u === k || u.startsWith(k)));
 if (never.length) log(`  ⓘ 파서엔 있는데 아무 데이터도 안 쓰는 키: ${never.join(" ")}`);
 
+let failed = false;
 if (unknown.size) {
   log(`  🔴 파서가 모르는 키 ${unknown.size}종 — **조용히 버려진다**`);
   for (const [k, where] of unknown) log(`      ${String(k).padEnd(24)}${where.slice(0, 3).join(" ")}`);
-  log("");
-  process.exit(1);
+  failed = true;
+} else {
+  log("  ok  모르는 보상 키가 없다");
 }
-log("  ok  모르는 보상 키가 없다");
+
+// ── 새 열쇠가 **가리키는 것**이 있는가 (2026-09-08 · §5 · A 4-3) ──
+//
+// 🔴 **키 이름이 맞아도 가리키는 id 가 없으면 아무 일도 안 한다.**
+//   `trait: { id: "TRAIT_없음" }` 은 파서를 통과하고 저장까지 되는데 계수가
+//   하나도 안 붙는다 — 로그도 없다. 위 「모르는 키」와 같은 층의 결함이라
+//   같은 자리에서 본다.
+// ⚠ 목록은 전부 **정본 파일에서 읽는다** — 여기 적으면 두 번째 정본이다.
 log("");
+{
+  const readJson = (p) => JSON.parse(fs.readFileSync(p, "utf8"));
+  const traitIds = new Set((readJson("resource/data/master/traits/protagonist.json").traits ?? [])
+    .map((t) => t.id));
+  const pitchIds = new Set((readJson("resource/data/master/training/pitch_catalog.json").pitches ?? [])
+    .map((p) => p.id));
+  // 카운터 이름은 `utils/eventCounters.ts` 의 `COUNTERS` 표가 정본이다 — 소스에서 읽는다
+  const CNT_SRC = fs.readFileSync("apps/ui/src/shared/utils/eventCounters.ts", "utf8");
+  const cntBlock = CNT_SRC.slice(CNT_SRC.indexOf("export const COUNTERS"));
+  const counterNames = new Set([...cntBlock.slice(0, cntBlock.indexOf("\n};"))
+    .matchAll(/^\s{2}(\w+):/gm)].map((m) => m[1]));
+  if (traitIds.size === 0 || pitchIds.size === 0 || counterNames.size === 0) {
+    log("  🔴 정본 목록을 못 읽었다 — 검사가 눈이 멀었다");
+    process.exit(1);
+  }
+
+  const dangling = [];
+  const visit = (fx, where) => {
+    if (!fx || typeof fx !== "object") return;
+    for (const e of Array.isArray(fx) ? fx : [fx]) {
+      if (typeof e !== "object" || e === null) continue;
+      if (e.trait?.id && !traitIds.has(e.trait.id)) dangling.push([`trait ${e.trait.id}`, where]);
+      for (const k of ["pitchGrant", "pitchGradeUp"]) {
+        if (e[k]?.id && !pitchIds.has(e[k].id)) dangling.push([`${k} ${e[k].id}`, where]);
+      }
+      for (const name of Object.keys(e.counterDelta ?? {})) {
+        if (!counterNames.has(name)) dangling.push([`counterDelta ${name}`, where]);
+      }
+    }
+  };
+  for (const d of DEC) for (const o of d.options ?? []) visit(o.effects, `${d.id}#${o.id}`);
+  // 이벤트에 붙은 대가(`cost`)도 같은 효과 객체다 — 여기 빠지면 유니크·히든만 안 본다
+  const walkDir = (dir) => fs.readdirSync(dir, { withFileTypes: true })
+    .flatMap((e) => (e.isDirectory() ? walkDir(require("node:path").join(dir, e.name))
+                                     : [require("node:path").join(dir, e.name)]));
+  for (const lane of ["mandatory", "conditional", "random"]) {
+    for (const f of walkDir(`resource/data/master/events/${lane}`).filter((x) => x.endsWith(".json"))) {
+      const r = JSON.parse(fs.readFileSync(f, "utf8"));
+      if (r.cost) visit(r.cost, `${r.id}#cost`);
+    }
+  }
+
+  log(`[가리키는 곳] 특성 ${traitIds.size}종 · 구종 ${pitchIds.size}종 · 카운터 ${counterNames.size}종`);
+  if (dangling.length) {
+    log(`  🔴 없는 것을 가리키는 보상 ${dangling.length}건 — **아무 일도 안 일어난다**`);
+    for (const [what, where] of dangling.slice(0, 10)) log(`      ${what.padEnd(30)}${where}`);
+    failed = true;
+  } else {
+    log("  ok  없는 특성·구종·카운터를 가리키는 보상이 없다");
+  }
+}
+
+// ── 태그 왕복 — **붙는 태그와 읽는 태그가 맞는가** (2026-09-08 · A 4-1) ──
+//
+// 🔴 `addTag` 로 붙이고 `has_tag` 로 읽는 것이 이벤트 연계의 열쇠다. 이름이
+//   한 글자만 달라도 **연계가 통째로 안 열리고 아무 로그도 안 남는다.**
+//   값 있는 태그(`라이벌:PLY_…`)는 앞부분(`라이벌`)까지만 맞으면 된다 —
+//   `has_tag` 는 완전 일치라 값까지 적어야 읽힌다.
+log("");
+{
+  const path2 = require("node:path");
+  const walk2 = (d) => fs.readdirSync(d, { withFileTypes: true })
+    .flatMap((e) => (e.isDirectory() ? walk2(path2.join(d, e.name)) : [path2.join(d, e.name)]));
+  const read = [];   // has_tag 가 읽는 태그
+  for (const lane of ["mandatory", "conditional", "random"]) {
+    for (const f of walk2(`resource/data/master/events/${lane}`).filter((x) => x.endsWith(".json"))) {
+      const r = JSON.parse(fs.readFileSync(f, "utf8"));
+      for (const c of [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])]) {
+        if (c.type === "has_tag" && typeof c.tag === "string") read.push([c.tag, r.id]);
+      }
+    }
+  }
+  const added = new Set();
+  const collectTags = (fx) => {
+    if (!fx || typeof fx !== "object") return;
+    for (const e of Array.isArray(fx) ? fx : [fx]) {
+      if (typeof e === "string") {
+        const i = e.indexOf(":");
+        if (i !== -1 && e.slice(0, i).trim() === "addTag") added.add(e.slice(i + 1).trim());
+        continue;
+      }
+      if (typeof e !== "object" || e === null) continue;
+      for (const t of e.addTag ?? []) added.add(t);
+    }
+  };
+  for (const d of DEC) for (const o of d.options ?? []) collectTags(o.effects);
+
+  const orphan = read.filter(([t]) => !added.has(t));
+  log(`[태그 왕복] 붙이는 태그 ${added.size}종 · 읽는 자리 ${read.length}곳`);
+  if (orphan.length) {
+    log(`  🔴 아무도 안 붙이는 태그를 읽는 곳 ${orphan.length}건 — **그 이벤트는 영원히 안 뜬다**`);
+    for (const [t, id] of orphan.slice(0, 10)) log(`      ${String(t).padEnd(24)}${id}`);
+    failed = true;
+  } else {
+    log("  ok  읽는 태그를 아무도 안 붙이는 자리가 없다");
+  }
+  // 반대쪽은 **결함이 아니다** — 붙여만 두고 아직 안 읽는 태그는 연계를 쓰는 중일 수 있다
+  const unread = [...added].filter((t) => !read.some(([x]) => x === t));
+  if (unread.length) log(`  ⓘ 붙이기만 하고 아무도 안 읽는 태그 ${unread.length}종: ${unread.slice(0, 8).join(" ")}`);
+}
+
+log("");
+if (failed) process.exit(1);

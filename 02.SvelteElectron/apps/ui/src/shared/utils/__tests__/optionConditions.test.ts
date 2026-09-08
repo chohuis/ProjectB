@@ -1,7 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { runEventEngine, resetEventFunnelStats, eventFunnelStats } from "../eventEngine";
+import { parseTierRules } from "../tierRules";
+import RAW_TIER_RULES from "../../../../../../resource/data/master/events/tier_rules.json";
 import type { EventRule, DecisionTemplate, MessageTemplate, EventContext } from "../../types/event";
 import type { ProtagonistSave } from "../../types/save";
+
+/** 등급 규칙은 진짜 파일에서 읽는다 — 여기 숫자를 적으면 두 번째 정본이 된다 */
+const TIER_RULES = parseTierRules(RAW_TIER_RULES);
 
 /**
  * **선택지 단위 조건** — "그 이야기 안에서 이 길이 열려 있는가".
@@ -48,7 +53,7 @@ const run = (dec: DecisionTemplate, p: ProtagonistSave) => {
   resetEventFunnelStats();
   return runEventEngine(
     [RULE], [], new Map([["MSG_T", MSG]]), new Map([["DEC_T", dec]]),
-    ctxOf(p), 2026, 0, [0.5, 0.5, 0.5, 0.5],
+    ctxOf(p), 2026, 0, [0.5, 0.5, 0.5, 0.5], TIER_RULES, "고교",
   );
 };
 
@@ -90,7 +95,7 @@ describe("선택지 단위 조건", () => {
     const r = runEventEngine(
       [RULE], [], new Map([["MSG_T", noBody]]),
       new Map([["DEC_T", dec([{ id: "x", label: "가", conditions: [{ type: "money_gte", value: 99999 }] }])]]),
-      ctxOf(proto({ money: 10 })), 2026, 0, [0.5],
+      ctxOf(proto({ money: 10 })), 2026, 0, [0.5], TIER_RULES, "고교",
     );
     expect(r.newMessages).toHaveLength(0);
     expect(eventFunnelStats.mandatory.emptyDropped).toBe(1);

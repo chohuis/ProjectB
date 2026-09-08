@@ -28,6 +28,8 @@ export function leagueMatchOptions(
   myCondition?: { lastPitchedDate?: string; lastPitchCount?: number } | null,
   gameDate?: string | null,
   roleFit?: { rank: number; seats: number } | null,
+  /** 남은 선발 보장 경기 — 보장 중이면 깊이가 0 이다 (2026-09-08 · §5) */
+  startGuaranteeGames?: number,
 ): LeagueMatchOptions {
   const out: LeagueMatchOptions = {
     pitchLimitOverride: starterPitchLimitForLeague(leagueId),
@@ -44,7 +46,7 @@ export function leagueMatchOptions(
     };
   }
   // 깊이 0 이면 안 싣는다 — 0 을 넘겨도 Rust 는 같게 돌지만, 안 넘겨야 "예전 그대로"가 눈에 보인다
-  const depth = roleDepthOf(roleFit).roleDepth;
+  const depth = roleDepthOf(roleFit, startGuaranteeGames).roleDepth;
   if (depth > 0) out.roleDepth = depth;
   return out;
 }

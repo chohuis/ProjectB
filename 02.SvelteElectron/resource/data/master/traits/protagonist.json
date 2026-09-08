@@ -1,0 +1,38 @@
+{
+  "_doc": [
+    "주인공 영구 특성 — PLAN_EVENT_TIERS §5 `trait` 보상이 여기 id 를 가리킨다.",
+    "🔴 **효과는 기존 산식 계수다.** 새 산식을 만들지 않는다 — `StaffMods` 축에",
+    "   곱해서 코치·구단 시설과 **같은 자리**로 들어간다(`utils/protagonistTraits.ts`).",
+    "   그래야 「특성이 얼마나 세나」를 이미 있는 계측으로 잴 수 있다.",
+    "⚠ 값은 전부 제안값이고 5단계(D 4-6)에서 잰다. 밸런스는 동결이다.",
+    "⚠ **셋만 먼저 연다**(사용자 확정 09-08 · 철완 · 빠른 회복 · 위기에 강함).",
+    "   B 가 유니크 보상으로 쓸 것이고, 늘리는 건 그다음이다."
+  ],
+  "traits": [
+    {
+      "id": "TRAIT_IRON_ARM",
+      "name": "철완",
+      "desc": "많이 던져도 팔이 버틴다.",
+      "mods": { "injuryPrevention": 1.15 },
+      "_note": "부상 발생 억제 축이다 — 1보다 크면 덜 다친다(`staffEffects.StaffMods`)."
+    },
+    {
+      "id": "TRAIT_FAST_RECOVERY",
+      "name": "빠른 회복",
+      "desc": "다쳐도 남보다 빨리 돌아온다.",
+      "mods": { "facility": 1.15 },
+      "_note": "구단 시설과 같은 축이다 — `weekCalcInjury` 의 `recoveryBoost` 로 들어가 회복 주차를 민다."
+    },
+    {
+      "id": "TRAIT_CLUTCH",
+      "name": "위기에 강함",
+      "desc": "몰려도 무너지지 않는다.",
+      "mods": { "slump": 1.20 },
+      "_note": [
+        "🔴 **등판 상황의 clutch 계수는 Rust 산식 안이고 밖으로 낼 축이 없다.**",
+        "   지어내지 않고 지금 있는 축(슬럼프 저항 — 사기가 무너져도 늦게 빠지고 덜 깎인다)에",
+        "   붙였다. 「위기」의 절반만 사는 셈이라 `docs/BALANCE_BACKLOG.md` 에 적어 뒀다."
+      ]
+    }
+  ]
+}

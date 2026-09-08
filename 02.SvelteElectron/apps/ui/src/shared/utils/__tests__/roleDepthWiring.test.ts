@@ -59,7 +59,7 @@ describe("경기 시작 옵션 (§5-c)", () => {
 describe("배선 — 네 호출부가 roleFit 을 넘긴다", () => {
   it("자동 진행", () => {
     expect(read("apps/ui/src/shared/usecases/runAutoAdvance.ts")
-      .includes("entry.gameDate, p.roleFit)")).toBe(true);
+      .includes("entry.gameDate, p.roleFit, p.startGuaranteeGames)")).toBe(true);
   });
   it("실제 플레이(MainPage)", () => {
     expect(read("apps/ui/src/pages/main/MainPage.svelte")
@@ -77,7 +77,7 @@ describe("배선 — 네 호출부가 roleFit 을 넘긴다", () => {
 describe("배선 — 주 경계의 두 판정 (§5-a · §5-b)", () => {
   const src = read("apps/ui/src/shared/usecases/advanceWeek.ts");
   it("깊이 재료를 한 번 만들어 둘 다에 쓴다", () => {
-    expect(src.includes("const depthR         = roleDepthOf(gCurrent.protagonist.roleFit);")).toBe(true);
+    expect(src.includes("const depthR         = roleDepthOf(gCurrent.protagonist.roleFit, gCurrent.protagonist.startGuaranteeGames);")).toBe(true);
   });
   it("불펜 판정에 넘긴다", () => {
     expect(src.includes("          depthR,\n        );")).toBe(true);

@@ -448,6 +448,23 @@ export interface SaveSeason {
    * 시즌이 바뀌어도 안 지운다 — 시즌 경계에서 같은 문장이 반복되면 그게 더 티난다
    */
   sentenceMemory?: Record<string, number>;
+
+  // ── 등급 줄기의 시즌 상태 (2026-09-08 · PLAN_EVENT_TIERS §3) ────
+  //
+  // 셋 다 **시즌마다 비운다**(`makeEmptySeason`) — 상한도 마른 시즌도 밀린 주도
+  // 시즌 단위 개념이다. 커리어를 넘는 것은 `careerTriggeredEvents`(히든 종당 1회)
+  // 하나뿐이고 그건 주인공 쪽에 있다.
+  /** 등급별 이번 시즌 발동 수 — 시즌 상한(rare 6 · unique 2 · hidden 1)을 잰다 */
+  tierCounts?: Record<string, number>;
+  /** 등급별 마지막으로 뜬 주 — `dryBoost`(마른 시즌 방지)의 입력 */
+  tierLastWeek?: Record<string, number>;
+  /**
+   * 규칙별 밀린 주 수 — 등급 안 가중(`starve`)의 입력.
+   *
+   * ⚠ **저장 안 하면 밀린 이야기가 매주 처음부터 다시 밀린다** —
+   *   가중이 낮은 규칙이 한 시즌 내내 뒤에 서게 된다.
+   */
+  eventStarve?: Record<string, number>;
   // L1: 멀티리그 지원
   leagueSchedules: Record<string, ScheduleEntry[]>;      // leagueId → 경기 일정
   leagueState: Record<string, LeagueSeasonState>;        // leagueId → 순위·스탯
@@ -551,6 +568,9 @@ export function makeEmptySeason(
     stats: {},
     triggeredEvents: {},
     sentenceMemory: {},
+    tierCounts: {},
+    tierLastWeek: {},
+    eventStarve: {},
     leagueSchedules: {},
     leagueState: {},
     postseasonBrackets: {},

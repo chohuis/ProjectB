@@ -62,7 +62,20 @@ export function bullpenSizeForLeague(leagueId: string): number {
  */
 export function roleDepthOf(
   roleFit: { rank: number; seats: number } | undefined | null,
+  /**
+   * 남은 선발 보장 경기 수 (2026-09-08 · §5 `startGuarantee`).
+   *
+   * 🔴 **보장 중에는 깊이가 0 이다.** 「선발을 보장한다」는 보상이 자리 깊이를
+   *   그대로 두면 아무 일도 안 한다 — 깊이가 미는 것이 바로 선발 등판
+   *   건너뛰기다. 0 으로 보는 것이 곧 「자리 안」이다.
+   * ⚠ 새 계수를 만들지 않는다 — 이미 있는 `over` 를 0 으로 볼 뿐이다.
+   */
+  startGuaranteeGames?: number,
 ): { roleDepth: number; offRecommendation?: { perSeatOver: number; floor: number } } {
+  if ((startGuaranteeGames ?? 0) > 0) {
+    const off0 = _rules?.offRecommendation;
+    return off0 ? { roleDepth: 0, offRecommendation: off0 } : { roleDepth: 0 };
+  }
   const over = roleFit ? Math.max(0, Math.round(roleFit.rank) - Math.round(roleFit.seats)) : 0;
   const off = _rules?.offRecommendation;
   return off ? { roleDepth: over, offRecommendation: off } : { roleDepth: over };

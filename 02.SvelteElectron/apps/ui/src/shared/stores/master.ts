@@ -22,6 +22,9 @@ import { primeManagerStyleRules } from "../utils/managerStyle";
 import { primeTraitDisplay } from "../utils/playerTraits";
 import { primePitchCost } from "../utils/pitchCost";
 import { NUM_PATHS, EQ_PATHS } from "../utils/eventPaths";
+import { COUNTERS } from "../utils/eventCounters";
+import { parseTierRules, type TierRules } from "../utils/tierRules";
+import { primeProtagonistTraits } from "../utils/protagonistTraits";
 import { parseRoleChoiceCopy, type RoleChoiceCopy } from "../utils/roleChoiceCopy";
 import { parseContractTermsCopy, type ContractTermsCopy } from "../utils/contractCopy";
 import { parseDashboardLabels, type DashboardLabels } from "../utils/dashboardCopy";
@@ -452,6 +455,13 @@ export interface MasterState {
   messageTmpls: MessageTemplate[];
   decisionTmpls: DecisionTemplate[];
   eventPools: EventPool[];
+  /**
+   * 등급 추첨 규칙 (§3) — 정본은 `events/tier_rules.json` 하나다.
+   *
+   * ⚠ **못 읽으면 로드가 던진다**(`parseTierRules`). 기본값으로 조용히
+   *   굴러가면 계측이 「어느 값으로 잰 것인가」를 못 답한다.
+   */
+  tierRules: TierRules | null;
   achievements: import("../utils/achievementEngine").MasterAchievement[];
   militaryCommonEvents: MilitaryEvent[];
   militarySportsEvents: MilitaryEvent[];
@@ -583,6 +593,39 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
     else if (key === "luxury" || key === "luxury.teammate") {
       if (!isNaN(val)) result.luxurySpend = { cost: Math.abs(val), onTeammate: key !== "luxury" };
     }
+    // ── 새 보상 열쇠 (2026-09-08 · §5 · A 4-3) ───────────────────
+    //
+    // ⚠ **객체형이 정본이다.** 문자열형은 기존 데이터가 쓰는 꼴이라 같이
+    //   열어 둔다 — 한쪽만 열면 B 가 쓴 표기가 조용히 버려진다
+    //   (`check:effectkeys` 머리말이 적은 그 형태다).
+    // ⚠ 「N주」·「N%」 둘이 필요한 것은 `/` 로 가른다: `trainEff:15/4`
+    else if (key === "potential")  { if (!isNaN(val)) result.potentialDelta = val; }
+    else if (key === "devRate")    { if (!isNaN(val)) result.devRateDelta   = val; }
+    else if (key === "trainEff" || key === "injuryRisk") {
+      const [a, b] = rawVal.split("/").map((x) => parseFloat(x));
+      if (!isNaN(a) && !isNaN(b)) {
+        const v = { pct: a, weeks: Math.max(0, Math.round(b)) };
+        if (key === "trainEff") result.trainEffBoost = v; else result.injuryRiskMod = v;
+      }
+    }
+    else if (key === "pitchGrant")    { result.pitchGrant   = { id: rawVal }; }
+    else if (key === "pitchGradeUp")  { result.pitchGradeUp = { id: rawVal }; }
+    else if (key === "pitchProgress") { const f = parseFloat(rawVal); if (!isNaN(f)) result.pitchProgressJump = { pct: f }; }
+    else if (key === "trait")         { result.trait = { id: rawVal }; }
+    else if (key === "mentor") {
+      // "mentor:PLY_X/10" — 상대와 보너스 %. 상대를 못 적으면 역할 이름이어도 된다
+      const [who, pct] = rawVal.split("/");
+      const f = parseFloat(pct ?? "");
+      if (who) result.mentor = { npcId: who, pct: isNaN(f) ? 5 : f };
+    }
+    else if (key === "startGuarantee") { if (!isNaN(val)) result.startGuarantee = { games: val }; }
+    // "counter.menteeCount:+1" — 이름은 `eventCounters.COUNTERS` 가 정본이다
+    else if (key.startsWith("counter.")) {
+      const name = key.slice(8);
+      if (!isNaN(val) && name in COUNTERS) {
+        result.counterDelta = { ...(result.counterDelta ?? {}), [name]: val };
+      }
+    }
   }
   return result;
 }
@@ -633,6 +676,13 @@ const CONDITION_FIELDS: Record<string, readonly string[]> = {
   injury_weeks_gte: ["value"], injury_count_gte: ["value"],
   season_injury_count_gte: ["value"], had_surgery: ["value"],
   gpa_gte: ["value"], gpa_lte: ["value"], academic_warning_gte: ["value"],
+  // 🔴 시간을 세는 조건 넷 (2026-09-08 · §12). 여기 없으면 **로드에서 던진다** —
+  //   그게 맞다: 위 50종과 달리 넷은 세는 칸이 있어야 뜻이 사는데, 칸 없이
+  //   조건만 데이터에 들어오면 그 이벤트는 영원히 false 다
+  streak: ["metric", "op", "value", "weeks"],
+  count: ["counter", "value"],
+  compare: ["stat", "op"],
+  last_game: ["field", "op", "value"],
 };
 
 /**
@@ -674,6 +724,27 @@ function assertConditions(ruleId: string, conditions: any[]): void {
       );
     }
 
+    // ── 시간을 세는 조건 넷 (2026-09-08 · §12) ───────────────────
+    //
+    // 🔴 **필드가 있는 것만으로는 모자란다.** 넷은 「세는 칸」을 가리키는데,
+    //   가리키는 이름이 틀리면 칸이 없어 **영원히 false** 다. 위 `num_gte`
+    //   경로 검증과 같은 이유로 **로드에서** 잡는다.
+    if (type === "streak" && typeof c.metric === "string" && !NUM_PATHS.has(c.metric)) {
+      throw new Error(`[master] ${ruleId}: streak 의 모르는 축 "${c.metric}" — eventPaths.ts의 NUM_PATHS에 없다`);
+    }
+    if (type === "count" && typeof c.counter === "string" && !(c.counter in COUNTERS)) {
+      throw new Error(
+        `[master] ${ruleId}: 모르는 카운터 "${c.counter}" — utils/eventCounters.ts의 COUNTERS에 없다. ` +
+        `아무도 안 올려 주는 칸이면 그 조건은 **영원히 false다**`
+      );
+    }
+    if (type === "compare" && c.npcId === undefined && c.role === undefined) {
+      throw new Error(
+        `[master] ${ruleId}: compare 에 npcId도 role도 없다 — 비교할 상대가 없다. ` +
+        `storyNpcs 등록부가 아직 없으므로 지금은 npcId 를 직접 적는다 (§12)`
+      );
+    }
+
     for (const k of want) {
       if (c[k] === undefined) {
         throw new Error(
@@ -712,11 +783,28 @@ function parseEventRule(raw: Record<string, any>): EventRule {
 
   assertConditions(String(raw.id ?? "(id 없음)"), conditions);
 
-  // 등급은 셋뿐이다. 오타를 조용히 `ambient`로 떨어뜨리면 그 이벤트가
-  // 왜 안 뜨는지 아무도 못 찾는다 — 조건 필드에서 이미 겪은 형태다
-  const TIERS = ["urgent", "important", "ambient"];
+  /**
+   * 히든의 **숨은 조건**(§4). 평가는 `conditions` 와 똑같고 화면에만 안 보인다 —
+   * 그래서 검증도 똑같이 받는다. 여기서 안 재면 히든 조건의 오타는
+   * **뜨지 않는 이벤트**가 되고, 히든은 원래 잘 안 떠서 아무도 못 알아챈다.
+   */
+  const hiddenCondition = Array.isArray(raw.hiddenCondition)
+    ? (raw.hiddenCondition as import("../types/event").Condition[]) : undefined;
+  if (hiddenCondition) assertConditions(`${raw.id}#hidden`, hiddenCondition);
+
+  // 등급 넷 + 등급 밖 `urgent`. 오타를 조용히 넘기면 그 이벤트가 왜 안 뜨는지
+  // 아무도 못 찾는다 — 조건 필드에서 이미 겪은 형태다.
+  //
+  // 🔴 **`important`·`ambient` 를 뺐다** (2026-09-08). 갈아타기가 끝났고
+  //   데이터엔 하나도 안 남았다(B 4-2). 남겨 두면 **새 이벤트가 옛 등급을 달아도
+  //   통과**하고, 그건 등급 줄기를 안 타는 이벤트가 조용히 생긴다는 뜻이다.
+  const TIERS = ["urgent", "normal", "rare", "unique", "hidden"];
   if (raw.tier !== undefined && !TIERS.includes(raw.tier)) {
     throw new Error(`[master] ${raw.id}: 모르는 tier "${raw.tier}" — ${TIERS.join("·")} 중 하나여야 한다`);
+  }
+  const THEMES = ["body", "media", "social", "team", "train", "career", "people", "money", "story"];
+  if (raw.theme !== undefined && !THEMES.includes(raw.theme)) {
+    throw new Error(`[master] ${raw.id}: 모르는 theme "${raw.theme}" — ${THEMES.join("·")} 중 하나여야 한다`);
   }
 
   return {
@@ -724,6 +812,10 @@ function parseEventRule(raw: Record<string, any>): EventRule {
     title: String(raw.title ?? raw.id ?? ""),
     type: (raw.type as EventRule["type"]) ?? "random",
     tier: raw.tier as EventRule["tier"] | undefined,
+    theme: raw.theme as EventRule["theme"] | undefined,
+    // 대가는 선택지가 아니라 이벤트에 붙는다 — 어느 갈래를 골라도 낸다(§4)
+    cost: raw.cost && typeof raw.cost === "object" ? raw.cost as EventRule["cost"] : undefined,
+    hiddenCondition,
     category: String(raw.category ?? ""),
     priority: Number(raw.priority ?? 0),
     oncePolicy: (raw.oncePolicy as EventRule["oncePolicy"]) ?? "repeatable",
@@ -793,8 +885,9 @@ function parseEventPool(raw: Record<string, any>): EventPool {
       mode: "percent",
       value: Number(raw.baseRoll?.value ?? raw.baseRollValue ?? 0),
     },
-    maxPicksPerWeek: Number(raw.maxPicksPerDay ?? raw.maxPicksPerWeek ?? 1),
-
+    // `maxPicksPerWeek` 는 안 읽는다 — 등급 줄기가 자리를 정하므로 풀은 더 이상
+    // 배분하지 않는다(2026-09-08 · types/event.ts `EventPool` 머리말).
+    // 파일에는 값이 남아 있다: 지우면 「풀별 빈도가 이랬다」는 근거가 사라진다.
   };
 }
 
@@ -933,6 +1026,7 @@ function createMasterStore() {
     messageTmpls: [],
     decisionTmpls: [],
     eventPools: [],
+    tierRules: null,
     achievements: [],
     militaryCommonEvents: [],
     militarySportsEvents: [],
@@ -1051,6 +1145,15 @@ function createMasterStore() {
         );
       }
       const eventPools = rawPools.map(parseEventPool);
+
+      // 등급 추첨 규칙 (§3 · A 4-1). **못 읽으면 던진다** — 아래 `parseTierRules`
+      // 가 그 일을 한다. 풀과 달리 이건 한 파일이라 매니페스트를 안 탄다.
+      const tierRules = parseTierRules(await fetchMaster<unknown>("events/tier_rules.json"));
+
+      // 주인공 영구 특성 (§5 `trait`). **효과는 기존 계수**라 표만 실어 준다.
+      // ⚠ 못 읽으면 빈 표다 — 특성을 받아도 계수가 안 붙는다.
+      //   그 어긋남은 `check:effectkeys` 가 「데이터가 가리키는 id 가 표에 있나」로 잡는다
+      primeProtagonistTraits(await fetchMaster<unknown>("traits/protagonist.json"));
       // refs가 팀의 유일한 정본이다 — 보충하지 않는다 (위 주석 참고)
       const mergedTeams = refsData?.teams ?? [];
 
@@ -1097,6 +1200,7 @@ function createMasterStore() {
         messageTmpls,
         decisionTmpls,
         eventPools,
+        tierRules,
         achievements,
         militaryCommonEvents:  militaryCommonData?.events  ?? [],
         militarySportsEvents:  militarySportsData?.events  ?? [],

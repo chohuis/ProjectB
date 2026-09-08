@@ -69,6 +69,11 @@ import { applyForeignTurnover } from "./foreignPlayers";
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
+import { EVENT_LANE_RANDS } from "../utils/eventEngine";
+import { stageGroupOf } from "../utils/tierRules";
+import { collectStreakKeys, tickStreaks, lastGameOf } from "../utils/eventCounters";
+import { applyTraitMods } from "../utils/protagonistTraits";
+import { applySideEffects } from "./decisions";
 import {
   collectTournamentLines, tournamentAwards, weekRangeOf,
 } from "./tournamentAwards";
@@ -431,10 +436,20 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     : [];
 
   // 능력치 보정과 관계 보정을 더한 뒤 clamp한다 — 각각 clamp하면 상한이 두 배가 된다
+  //
+  // ⚠ **멘토도 같은 통에 넣는다** (2026-09-08 · §5 `mentor`). 코치 지도력과
+  //   같은 축이라 따로 곱하면 상한(0.25)을 두 번 쓰게 된다 — 멘토가 붙었다고
+  //   효율이 두 배로 튀면 그건 산식이 둘이라는 뜻이다.
+  const mentorBonus = (g.protagonist.mentor?.pct ?? 0) / 100;
   const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
-    (coachTeaching - 50) * 0.004 + relEffects.trainingBonus));
+    (coachTeaching - 50) * 0.004 + relEffects.trainingBonus + mentorBonus));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
-  const myMods             = staffModsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" });
+  // 🔴 **특성은 계수에 곱한다** (2026-09-08 · §5 `trait`). 새 산식을 만들지
+  //    않고 코치·구단 시설과 **같은 자리**로 들어간다 — 그래야 「특성이 얼마나
+  //    세나」를 이미 있는 계측으로 잰다(`utils/protagonistTraits.ts` 머리말).
+  const myMods             = applyTraitMods(
+    staffModsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" }),
+    g.protagonist.traits);
   // 통솔력 있는 코치진이면 슬럼프에 늦게 빠지고 덜 깎인다 (§7-5 F-1).
   // 1.07배면 임계 3주 → 4주 · 페널티 0.70 → 0.72
   const slumpResist        = myMods.slump;
@@ -446,6 +461,17 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     ? Math.min(0.95, 1 - (1 - 0.70) / slumpResist)
     : 1.0;
   const alreadyInjured     = !!g.protagonist.injury;
+
+  // ── 새 보상의 지속 효과 (2026-09-08 · §5 `trainEffBoost`·`injuryRiskMod`) ──
+  //
+  // 🔴 **남은 주가 0이면 없는 것과 같다.** 주를 안 줄이면 한 번 받은 보정이
+  //    커리어 내내 남는다 — 아래 `growth.protagonistPatch` 에서 줄인다.
+  const teb = g.protagonist.trainEffBoost;
+  const trainEffFactor = teb && teb.weeksLeft > 0 ? 1 + teb.pct / 100 : 1;
+  const irm = g.protagonist.injuryRiskMod;
+  // `pct` 는 「위험이 몇 % 오르나」라 음수가 덜 다치는 쪽이다.
+  // `injuryPrevention` 은 **클수록 덜 다치는** 축이라 나눠서 부호를 맞춘다
+  const injuryRiskFactor = Math.max(0.2, irm && irm.weeksLeft > 0 ? 1 + irm.pct / 100 : 1);
 
   // 훈련 강도 — 정본은 `utils/arsenal.ts`의 `trainingIntensityOf` 하나다
   const trainingIntensity = trainingIntensityOf([
@@ -469,8 +495,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
    * ⚠ `Math.random()` 은 금지다(CLAUDE.md) — 문안 뽑기도 Rust 난수다.
    */
   const REPORT_RANDS = 6;
-  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0)
-    + NEWS_RANDS + REPORT_RANDS;
+  // 🔴 **풀 수로 세던 걸 상수로 바꿨다** (2026-09-08). 랜덤 풀이 노말 등급으로
+  //    흡수돼 `maxPicksPerWeek` 가 없어졌다 — 이제 이벤트가 쓰는 난수는
+  //    등급 추첨 1 + 등급 안 뽑기(폴백 포함) 최대 4 + 문장 뱅크다
+  //    (`eventEngine.EVENT_LANE_RANDS`).
+  const randCount = EVENT_LANE_RANDS + NEWS_RANDS + REPORT_RANDS;
 
   // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
   const [facilityEffModRaw, injuryCalcRaw, finance, trainingSub, eventRandsRaw] = await Promise.all([
@@ -500,8 +529,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       consecutiveLowMoraleWeeks: g.protagonist.consecutiveLowMoraleWeeks ?? 0,
       hasPriorInjurySameArea,
       priorSteroidUsed: g.protagonist.injury?.steroidUsed ?? false,
-      // 코치 관리력이 발생 확률을, 구단 시설이 회복 주차를 민다 (§7-5 F-1)
-      injuryPrevention: myMods.injuryPrevention,
+      // 코치 관리력이 발생 확률을, 구단 시설이 회복 주차를 민다 (§7-5 F-1).
+      // 🔴 **부상 위험 보정도 같은 축이다** (2026-09-08 · §5 `injuryRiskMod`).
+      //    `pct` 는 「위험이 몇 % 오르나」라 음수가 덜 다치는 쪽이고,
+      //    `injuryPrevention` 은 **클수록 덜 다치는** 축이라 부호를 뒤집어 나눈다.
+      //    ⚠ 새 인자를 만들지 않는다 — 만들면 Rust 쪽에 계수 자리가 둘이 된다.
+      injuryPrevention: myMods.injuryPrevention / injuryRiskFactor,
       recoveryBoost:    myMods.facility,
     })),
     // 개인 재정 (§7-5 F-3). 예전 `weekCalcWeeklyNet`은 무대별 상수 표가 Rust
@@ -585,6 +618,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // `univEffMod`는 학사 경고 단계의 훈련 효율 하락이다 (대학 전용, 없으면 1.0)
   const finalEffMod = studyResult.efficiencyMod * univEffMod
     * (1 + majorEffBonus + coachEffBonus + subBonus)
+    // 이벤트가 준 훈련 효율 보정 (§5 `trainEffBoost`) — 시설·개인 트레이닝과
+    // 같은 층이다. 안 곱하면 레어 보상이 데이터에만 있고 아무 일도 안 한다
+    * trainEffFactor
     * facilityEffMod * slumpPenalty * effectiveInjuryEffMod;
 
   // ⚠ **프로그램 표를 넘긴다.** 안 넘기면 Rust 역직렬화가 실패해 오류가 난다 —
@@ -774,6 +810,35 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // 이벤트 엔진 (미리 계산된 eventRands 사용)
   const updatedUniversityWeek = isUniversity ? (g.schoolState.universityWeek + 1) : (g.schoolState.universityWeek ?? 0);
   const careerStageYear = calcCareerStageYear(afterP, weekNum, updatedUniversityWeek);
+
+  // ── 시간을 세는 조건 넷의 입력 (2026-09-08 · §12) ──────────────
+  //
+  // ⚠ **데이터가 실제로 쓰는 것만 준비한다.** 「쓸지도 모르니 다 세자」로 두면
+  //   세이브가 축마다 커지고 어느 칸이 읽히는지도 모르게 된다.
+  const streakKeys = collectStreakKeys(m.eventRules);
+  /** `compare` 가 가리키는 NPC 들의 비교값. 데이터에 적힌 id 만 훑는다 */
+  const compareNpcStats: Record<string, Record<string, number>> = {};
+  {
+    const wanted = new Set<string>();
+    for (const r of m.eventRules) {
+      for (const c of [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])]) {
+        if (c.type === "compare" && c.npcId) wanted.add(c.npcId);
+      }
+    }
+    if (wanted.size > 0) {
+      for (const e of m.entities) {
+        if (!wanted.has(e.id)) continue;
+        const d = e.details?.player;
+        if (!d) continue;
+        compareNpcStats[e.id] = {
+          // 「나와 그의 스탯」이라 주인공 경로와 **같은 이름**이어야 한다
+          "pitching.ovr": d.pitching?.ovr ?? 0,
+          "batting.ovr":  d.batting?.ovr ?? 0,
+        };
+      }
+    }
+  }
+
   const eventCtx: EventContext = {
     protagonist:     afterP,
     currentWeek:     weekNum,
@@ -803,17 +868,56 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     schoolState: get(gameStore).schoolState,
     // 관계도 조건이 읽는다 — 안 실으면 `relation_gte`/`relation_lte`가 항상 false다
     relations: relRows,
+
+    // ── 등급 줄기가 읽는 것 (2026-09-08 · §1·§3) ──────────────────
+    tierCounts:   s.tierCounts,
+    tierLastWeek: s.tierLastWeek,
+    eventStarve:  s.eventStarve,
+    // 직전 등판 — `last_game` 조건(§12). 못 찾으면 `undefined` 고 그 조건은 false 다
+    lastGame: lastGameOf(s.schedule, afterP.id, afterP.teamId),
+    // `compare` 조건(§12)이 볼 NPC 들. **미리 실어 준다** — 평가기는 동기다.
+    // ⚠ 데이터가 가리키는 id 만 싣는다. 엔티티 전부를 접으면 매주 수천 명을 훑는다
+    storyNpcs: compareNpcStats,
   };
+  // 🔴 **연속 주 수는 이벤트를 돌리기 전에 갱신한다** (§12). 나중에 하면
+  //    「이번 주도 성실 90 이었다」가 이번 주 이벤트에 안 잡혀 한 주씩 밀린다.
+  //    `tickStreaks` 가 유일한 갱신 자리다.
+  const nextStreaks = tickStreaks(afterP.streaks, streakKeys, eventCtx);
+  eventCtx.protagonist = { ...afterP, streaks: nextStreaks };
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,
     new Map(m.messageTmpls.map((t) => [t.id, t])),
     new Map(m.decisionTmpls.map((d) => [d.id, d])),
     eventCtx, s.seasonYear, careerStageYear,
     eventRands,
+    m.tierRules!,
+    stageGroupOf(m.tierRules!, afterP),
   );
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
   seasonStore.recordSentencePicks(evResult.sentencePicks);
   gameStore.recordCareerTriggeredEvents(evResult.careerUpdatedTriggers);
+  // 등급 줄기의 시즌 상태 — 상한·마른 시즌·밀린 주. 안 쓰면 상한이 안 걸리고
+  // 밀린 이야기가 매주 처음부터 다시 밀린다
+  seasonStore.recordTierState({
+    gradeFired: evResult.gradeFired, week: weekNum, starveUpdates: evResult.starveUpdates,
+  });
+  growth.protagonistPatch.streaks = nextStreaks;
+
+  // ── 지속 보정의 남은 주를 줄인다 (2026-09-08 · §5) ─────────────
+  //
+  // 🔴 **안 줄이면 한 번 받은 보정이 커리어 내내 남는다.** 「4주 동안」이
+  //    영구가 되면 레어 하나가 유니크보다 세진다. 0 이 되면 지운다 —
+  //    `{ pct, weeksLeft: 0 }` 을 남겨 두면 계측이 「걸려 있다」로 읽는다.
+  if (teb && teb.weeksLeft > 0) {
+    const left = teb.weeksLeft - 1;
+    growth.protagonistPatch.trainEffBoost = left > 0 ? { ...teb, weeksLeft: left } : undefined;
+    if (left === 0) growth.logs.push(`[보상] 훈련 효율 +${teb.pct}% 가 끝났다`);
+  }
+  if (irm && irm.weeksLeft > 0) {
+    const left = irm.weeksLeft - 1;
+    growth.protagonistPatch.injuryRiskMod = left > 0 ? { ...irm, weeksLeft: left } : undefined;
+    if (left === 0) growth.logs.push(`[보상] 부상 위험 ${irm.pct > 0 ? "+" : ""}${irm.pct}% 가 끝났다`);
+  }
 
   // 고교 월간 유망주 TOP 10 (4주마다)
   let top10Snap: import("../types/save").Top10Snapshot | undefined;
@@ -885,6 +989,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     moraleDelta:      rankMoraleDelta > 0 ? rankMoraleDelta : undefined,
     messages:         weekMessages,
   });
+
+  // ── 유니크·히든의 대가 (2026-09-08 · §4 `cost`) ────────────────
+  //
+  // 🔴 **선택지가 아니라 이벤트에 붙는다** — 어느 갈래를 골라도 낸다.
+  //    B 가 41종에 달아 놨는데 **읽는 코드가 없었다**: 데이터에만 있고 아무
+  //    일도 안 일어나는, 이 저장소가 반복해 겪은 형태다.
+  // ⚠ 스탯·돈은 store 패처가, 관계·사치품은 `applySideEffects` 가 낸다 —
+  //    정본 둘을 그대로 쓴다(여기서 계산을 다시 적으면 그게 사본이다).
+  for (const cost of evResult.costs) {
+    gameStore.applyEventEffect(cost);
+    await applySideEffects(cost);
+  }
 
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);
@@ -3226,7 +3342,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const lStateR        = sForReliever.leagueState[leagueIdR];
       const myCondR        = lStateR?.playerConditions?.[gCurrent.protagonist.id];
       // 1.1 A④ §5 — 고른 자리에서 몇 칸 밖인가. 0 이면 아래 두 판정이 예전 그대로 돈다
-      const depthR         = roleDepthOf(gCurrent.protagonist.roleFit);
+      const depthR         = roleDepthOf(gCurrent.protagonist.roleFit, gCurrent.protagonist.startGuaranteeGames);
       const relieverPitching =
         !game.isProtagonistGame &&
         isTeamGame &&

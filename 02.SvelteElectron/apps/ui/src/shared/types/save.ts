@@ -475,6 +475,39 @@ export interface ProtagonistSave {
   birthday?: string;  // "2010-MM-DD" 주인공 전용
   // once_per_career 이벤트 기록 — startNewSeason() 에서 초기화되는 triggeredEvents와 달리 커리어 전체 유지
   careerTriggeredEvents?: Record<string, number>;  // eventId → 발동 시점 주차
+
+  // ── 이벤트가 세는 칸 (2026-09-08 · PLAN_EVENT_TIERS §12) ──────
+  //
+  // ⚠ 둘 다 **구 세이브엔 없다**(`undefined`). 그때 `streak`·`count` 조건은
+  //   전부 false 이고, 그건 「아직 안 채웠다」와 같은 뜻이라 맞다.
+  /** `"diligence:gte:90" → 연속 주 수`. 갱신은 `utils/eventCounters.tickStreaks` 하나다 */
+  streaks?: Record<string, number>;
+  /** 누적 카운터. 이름 표는 `utils/eventCounters.COUNTERS` 가 정본이다 */
+  counters?: Record<string, number>;
+  /** 같은 팀 해 세기의 기준 — 작년에 어디였나. `sameTeamYears` 를 올릴지 되돌릴지 정한다 */
+  lastSeasonTeamId?: string;
+  /** 같은 포수 경기 세기의 기준 — 직전 등판의 포수 */
+  lastCatcherId?: string;
+
+  // ── 새 보상 효과가 남기는 칸 (2026-09-08 · §5 · A 4-3) ────────
+  //
+  // 🔴 **상한은 커리어 누적으로 잰다.** 「한 번에 +3 까지」로 재면 +1 짜리를
+  //   세 번 받아 상한을 넘는다 — 이 저장소가 「한 해에 한 번」 가드에서
+  //   두 번 밟은 형태다. 그래서 **준 만큼을 적어 둔다.**
+  /** 이벤트로 올린 잠재력 누계 (상한 +3). `potentialHidden` 은 그것을 이미 반영한 값이다 */
+  potentialGranted?: number;
+  /** 이벤트로 올린 성장률 누계 (상한 +10) */
+  devRateGranted?: number;
+  /** 훈련 효율 보정 — `{ pct, weeksLeft }`. 겹치면 **긴 쪽**을 남긴다(§5) */
+  trainEffBoost?: { pct: number; weeksLeft: number };
+  /** 부상 위험 보정 — 음수가 「덜 다친다」다 */
+  injuryRiskMod?: { pct: number; weeksLeft: number };
+  /** 멘토 **한 명**. 코치 효율 보너스에 더해진다 */
+  mentor?: { id: string; role?: string; pct: number };
+  /** 남은 선발 보장 경기 수. 0 보다 크면 자리 깊이(`roleFit.over`)를 0 으로 본다 */
+  startGuaranteeGames?: number;
+  /** 영구 특성 id 들 — 정의는 `resource/data/master/traits/protagonist.json` 이다 */
+  traits?: string[];
 }
 
 // ── 고교 월간 유망주 TOP 10 ───────────────────────────────────

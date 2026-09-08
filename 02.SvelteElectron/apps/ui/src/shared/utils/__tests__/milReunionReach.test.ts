@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { runEventEngine, resetEventFunnelStats } from "../eventEngine";
+import { parseTierRules } from "../tierRules";
+import RAW_TIER_RULES from "../../../../../../resource/data/master/events/tier_rules.json";
 import type {
   DecisionTemplate, EventContext, EventRule, MessageTemplate,
 } from "../../types/event";
@@ -88,11 +90,14 @@ const ctxOf = (
  */
 const STAGES: readonly string[] = ["independent", "pro_kbl"];
 
+/** 등급 규칙은 진짜 파일에서 읽는다 — 여기 숫자를 적으면 두 번째 정본이 된다 */
+const TIER_RULES = parseTierRules(RAW_TIER_RULES);
+
 /** 한 주를 돌린다. 난수는 고정 — 씨앗이 결과를 가르면 검사가 아니다 */
 const runWeek = (ctx: EventContext) => {
   resetEventFunnelStats();
   return runEventEngine(rules, [], msgTmpls, decTmpls, ctx, 2030, 1,
-    [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
+    [0.5, 0.5, 0.5, 0.5, 0.5, 0.5], TIER_RULES, "공용");
 };
 
 describe("병영 재회 — 전역 뒤 도달", () => {
@@ -148,7 +153,7 @@ describe("병영 재회 — 전역 뒤 도달", () => {
               const ctx = ctxOf(w,
                 { careerStage: stage, morale } as Partial<ProtagonistSave>, cw);
               const out = runEventEngine(only, [], msgTmpls, decTmpls, ctx, 2030, 1,
-                [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]);
+                [0.5, 0.5, 0.5, 0.5, 0.5, 0.5], TIER_RULES, "공용");
               if (out.newMessages.length > 0) open++;
             }
           }

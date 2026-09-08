@@ -596,6 +596,36 @@ function createSeasonStore() {
     },
 
     /**
+     * 등급 줄기의 시즌 상태 (2026-09-08 · §3). 셋을 **한 번에** 쓴다 —
+     * 따로 쓰면 store 갱신이 셋이 되고, 상한만 오르고 마지막 주가 안 오르는
+     * 식으로 어긋날 자리가 생긴다.
+     *
+     * ⚠ `starve` 는 **통째로 갈아 끼우지 않고 덮어쓴다** — 엔진은 이번 주
+     *   후보만 돌려주므로, 갈아 끼우면 이번 주 조건을 못 넘긴 규칙의 밀린 주가
+     *   0 으로 지워진다(무대가 바뀌는 주에 특히 그렇다).
+     */
+    recordTierState(p: {
+      gradeFired: string | null;
+      week: number;
+      starveUpdates: Record<string, number>;
+    }) {
+      update((s) => {
+        const counts = { ...(s.tierCounts ?? {}) };
+        const lastWeek = { ...(s.tierLastWeek ?? {}) };
+        if (p.gradeFired) {
+          counts[p.gradeFired] = (counts[p.gradeFired] ?? 0) + 1;
+          lastWeek[p.gradeFired] = p.week;
+        }
+        return {
+          ...s,
+          tierCounts: counts,
+          tierLastWeek: lastWeek,
+          eventStarve: { ...(s.eventStarve ?? {}), ...p.starveUpdates },
+        };
+      });
+    },
+
+    /**
      * 문장 뱅크의 직전 선택 기록 (Phase 7-6). 저장 안 하면 로드할 때마다
      * 같은 문장이 나온다 — "직전 제외"의 입력이 사라지기 때문이다
      */
