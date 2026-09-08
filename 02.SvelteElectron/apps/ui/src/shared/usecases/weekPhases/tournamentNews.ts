@@ -23,7 +23,7 @@
 //   버려진 통수는 `mailboxDupStats` 가 세고 `check:msgdupid` 가 본다.
 
 import type { BracketMatch, TournamentBracket, TournamentDef } from "../../utils/tournament";
-import type { MessageItem } from "../../types/main";
+import type { MessageItem, TableMetadata } from "../../types/main";
 import {
   bracketTableMeta, rankListMeta, rowsTableMeta, type BracketRowInput,
 } from "../../utils/dashboardMeta";
@@ -323,5 +323,58 @@ export function buildChampionMessage(
       { label: teamName(champ) },
       ...(runnerUp ? [{ label: teamName(runnerUp) }] : []),
     ]),
+  };
+}
+
+/**
+ * **한 주의 「진출 명단」을 한 통으로 묶는다** (2026-09-08 · A · B 소식 실측).
+ *
+ * 🔴 왜 필요했나. 대회 소식이 **주당 0.45통 · 많으면 다섯 통**이라 「같은 주
+ *   같은 성격 여럿」의 제일 큰 자리로 나왔다(B 실측). 통수는
+ *   **(그 주 동시에 도는 대회 수) × (그 주에 닫힌 라운드 수)** 다 —
+ *   국화기는 102팀 7라운드를 4주에 몰아 치고(주당 2라운드), 무궁화기·은하기·
+ *   여명기·패왕기는 서로 겹치는 주가 있다.
+ *
+ * ⚠ **묶는 것은 「진출 명단」뿐이다.** 내 팀 경기 결과·개막·우승·시상은
+ *   각자 제 이야기라 그대로 둔다 — 읽는 사람의 이야기를 남 이야기와 같이
+ *   접으면 줄인 게 아니라 지운 것이 된다.
+ *
+ * ⚠ **표를 안 버린다.** 다섯 소식이 각각 다른 대시보드 메타를 다는데,
+ *   「진출 명단」은 전부 `bracketTableMeta("tourRound")` 라 **행을 이어 붙이면**
+ *   그대로 산다. 다른 종류였다면 묶는 순간 표 하나만 남고 나머지가 사라진다 —
+ *   그래서 같은 종류만 묶는다.
+ *
+ * @returns 묶은 한 통. 0~1 통이면 `null`(그때는 원본을 그대로 내보낸다)
+ */
+export function bundleRoundProgressMessages(
+  msgs: MessageItem[],
+  seasonYear: number,
+  weekNum: number,
+): MessageItem | null {
+  if (msgs.length < 2) return null;
+
+  const rows = msgs.flatMap((m) => {
+    const meta = m.metadata as TableMetadata | undefined;
+    return meta?.type === "table" ? meta.rows : [];
+  });
+  // 본문은 원본을 그대로 이어 붙인다 — 요약하면 「누가 올라갔나」가 사라진다
+  const body = msgs.map((m) => m.body).join("\n\n────────\n\n");
+
+  return {
+    // ⚠ 주차가 id 에 이미 들어 있어 그대로 유일하다. 대회·라운드 조각만 뺀다
+    id: `msg-tour-week-${seasonYear}-w${weekNum}`,
+    category: "news",
+    // 여러 연맹이 섞일 수 있다 — 한 통이 되면 어느 한쪽 이름을 붙일 수 없다
+    sender: "대회 본부",
+    subject: `이번 주 대회 진출 명단 ${msgs.length}건`,
+    preview: msgs.map((m) => m.subject).join(" · ").slice(0, 60),
+    body,
+    createdAt: `W${weekNum}`,
+    readAt: null,
+    // ⚠ `bracketTableMeta` 를 다시 안 부른다 — 그건 **원재료**를 행으로 바꾸는
+    //   함수이고 여기 있는 것은 이미 바뀐 행이다. 두 번 지나면 열 이름이 어긋난다
+    ...(rows.length > 0
+      ? { metadata: { type: "table", kind: "tourRound", columns: [], rows } as TableMetadata }
+      : {}),
   };
 }

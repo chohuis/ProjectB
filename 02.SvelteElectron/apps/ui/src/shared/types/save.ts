@@ -508,6 +508,60 @@ export interface ProtagonistSave {
   startGuaranteeGames?: number;
   /** 영구 특성 id 들 — 정의는 `resource/data/master/traits/protagonist.json` 이다 */
   traits?: string[];
+
+  /**
+   * **일어난 일** — 세계가 낸 신호의 짧은 기록 (2026-09-08 · L1 ·
+   * `PLAN_MESSAGE_LANES_2026-09-08.md`).
+   *
+   * 🔴 **왜 필요했나.** 「방금 승격/강등/탈락/수상/지명됐다」를 **읽을 조건이
+   *   없었다.** 신호는 이미 난다 — `roleAskReasonOf` 가 callup/demote 를 가르고,
+   *   `market.ts` 가 `logEvent` 로 콜업·콜다운을 적고, 시상·드래프트도 각자
+   *   확정 지점이 있다. **읽는 자리만 없어서** 통지가 조건을 주차로 대신 썼고,
+   *   그래서 「1군에서 내려왔습니다」가 처음부터 2군인 신인에게도 떴다.
+   *
+   * ⚠ **`careerEvents` 로 대신할 수 없다.** 그건 `year` 만 있고 **주차가 없다**
+   *   (`NpcCareerEvent`). 「방금」을 물으려면 주차가 있어야 하고, NPC 와 공용인
+   *   그 타입에 주차를 넣는 것은 이 목적에 비해 파장이 크다.
+   *
+   * ⚠ **짧게 유지한다** — 최근 `OUTCOME_KEEP` 건만 남긴다(`stores/game.ts`).
+   *   커리어 이력이 아니라 「최근에 무슨 일이 있었나」를 묻는 창이다.
+   * ⚠ **구 세이브엔 없다.** 그때 `outcome_within` 은 전부 거짓이고,
+   *   그것이 「그런 일이 없었다」와 같은 뜻이라 맞다.
+   */
+  recentOutcomes?: ProtagonistOutcome[];
+}
+
+/**
+ * 주인공에게 **일어난 일**의 종류. 주사위가 아니라 세계가 낸 것만 여기 든다.
+ *
+ * ⚠ **낼 자리가 있는 것만 적는다.** 조건은 있는데 아무도 안 내는 종류를 두면
+ *   그 조건을 쓴 이벤트가 **영원히 안 뜬다** — 오류도 로그도 없이. 늘릴 때는
+ *   내는 자리를 같이 만들어라(지금 내는 자리는 `recordOutcome` 호출부 다섯이다).
+ */
+export type OutcomeKind =
+  /** 2군 → 1군 (`market.ts` 승강) */
+  | "callup"
+  /** 1군 → 2군 */
+  | "demote"
+  /** 대회·생존리그에서 떨어졌다 */
+  | "eliminated"
+  /** 대회에서 우승했다 */
+  | "champion"
+  /** 시즌 시상에서 상을 받았다 */
+  | "award"
+  /** 드래프트에서 지명됐다 */
+  | "drafted"
+  /** 드래프트에서 미지명으로 끝났다 */
+  | "undrafted";
+
+export interface ProtagonistOutcome {
+  kind: OutcomeKind;
+  /** 시즌 연도 — 시즌을 넘는 「몇 주 전」을 재려면 있어야 한다 */
+  year: number;
+  /** 그 시즌의 주차 */
+  week: number;
+  /** 사람이 읽을 한 조각(팀 이름·상 이름 등). 조건은 안 읽는다 */
+  detail?: string;
 }
 
 // ── 고교 월간 유망주 TOP 10 ───────────────────────────────────

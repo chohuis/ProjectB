@@ -133,6 +133,11 @@ function ruleToOutput(
     // 등급 칩(§9)의 근거 — **여기서 싣는다.** 화면이 나중에 규칙 id 로 되짚으면
     // 옛 소식이 지금 데이터의 등급으로 보인다(소식은 스냅샷이다)
     ...(gradeOf(rule) ? { eventGrade: gradeOf(rule)! } : {}),
+    // 🔴 **갈래도 여기서 싣는다** (2026-09-08 · L3). 등급과 같은 이유로
+    //   스냅샷이어야 한다 — `applySideEffects` 가 상태 효과를 먹일지 말지를
+    //   이 값 하나로 정하므로, 나중에 규칙 id 로 되짚으면 **어제 뜬 이벤트가
+    //   오늘 통지가 되어 세계를 바꾼다.**
+    ...(noticeOf(rule) ? { lane: "notice" as const } : {}),
     // 결·대가도 같은 이유로 여기서 싱는다(C 4-5). 위기 표시(§9)와 「대가가
     // 따른다」 한 줄의 입력이고, **효과를 내는 것은 `costs` 배열 하나만**이다
     ...(rule.theme ? { eventTheme: rule.theme } : {}),
@@ -287,6 +292,21 @@ export function tierOf(rule: EventRule): EventTier | null {
   return rule.tier === "urgent" ? "urgent" : null;
 }
 
+/**
+ * **통지인가** (2026-09-08 · L3 · `PLAN_MESSAGE_LANES`).
+ *
+ * 🔴 `urgent` 도 참이다 — **통지의 옛 이름**이고 하는 일이 이미 같다(등급
+ *   줄기 밖 · 주 1건 상한 밖 · 「일어난 것」). 둘을 다른 갈래로 두면 정본이
+ *   둘이 되어 한쪽만 고쳐진 채 남는다. 데이터를 `notice` 로 바꾸는 것은
+ *   B 몫(L4)이고, **바꾸기 전에도 동작이 같아야** 옮기는 중에 구멍이 안 난다.
+ *
+ * ⚠ 등급 넷과 **배타**다 — `gradeOf` 가 등급 넷만 보므로 여기가 참이면
+ *   등급 추첨에 안 든다.
+ */
+export function noticeOf(rule: EventRule): boolean {
+  return rule.tier === "notice" || rule.tier === "urgent";
+}
+
 /** 등급 넷 중 하나면 그것, 아니면 `null`(`urgent`·미기재) */
 export function gradeOf(rule: EventRule): EventGrade | null {
   return GRADES.includes(rule.tier as EventGrade) ? (rule.tier as EventGrade) : null;
@@ -352,6 +372,26 @@ export interface EventEngineResult {
 /** 등급별 가중 — 시즌 상한·마른 시즌·상태 보정을 다 먹인 값 */
 function gradeWeights(rules: TierRules, ctx: EventContext, week: number): Record<EventGrade, number> {
   const out = { ...rules.weights };
+
+  // 🔴 **개막 전에는 노말만 뽑는다** (2026-09-08 · B 제보 ②).
+  //
+  //   고교 1~7주에 폴백이 11번 났다(레어 1~4주 · 유니크 1~7주). 개막 전이라
+  //   레어·유니크에 후보가 **하나도** 없어서 추첨이 매번 한 등급 아래로
+  //   내려간 것이다. 두 가지가 같이 망가진다:
+  //     ① `tier.fallback` 이 **데이터 부족 신호**인데 거짓 경보를 낸다
+  //        (`check:tiercoverage` 가 그 값으로 빨강을 낸다)
+  //     ② 그만큼 노말이 더 떠서 등급 분포가 그 주만 다르게 흐른다
+  //
+  //   ⚠ **데이터를 채워서 고칠 일이 아니다.** 「개막도 안 했는데 유니크가
+  //     뜨는」 쪽이 더 이상하다 — 그 주의 레어·유니크는 없는 것이 맞다.
+  //   ⚠ **노말은 그대로 둔다.** 개막 전 이야기(훈련·신학기)는 그 주의 것이라
+  //     같이 끄면 1~7주가 통째로 빈다.
+  //   ⚠ 신호가 없으면(구 경로) **열린 것으로 본다** — 모르는 것을 「안 열렸다」로
+  //     읽으면 레어·유니크가 통째로 사라진다.
+  if (ctx.seasonOpened === false) {
+    for (const g of GRADES) if (g !== "normal") out[g] = 0;
+    return out;
+  }
   for (const g of GRADES) {
     const cap = rules.seasonCap[g];
     if (cap !== undefined && (ctx.tierCounts?.[g] ?? 0) >= cap) {
@@ -480,17 +520,28 @@ export function runEventEngine(
     tryEmit(rule, "mandatory");
   }
 
-  // ── 2. urgent — 등급 줄기 **밖**이다 (2026-08-23) ──────────────
+  // ── 2. **통지 레인** — 등급 줄기 **밖**이다 (2026-08-23 → 2026-09-08) ─
   //
   // 🔴 다쳤는데 다음 주에 알려주면 안 된다. 주당 한 칸 상한을 안 탄다.
   //    긴급·주차 고정 필수(mandatory)·시스템 소식 셋이 등급 밖이고(§1),
   //    나머지 전부가 아래 등급 줄기 하나로 모인다.
+  //
+  // 🔴 **여기가 통지 자리다** (2026-09-08 · L3 · `PLAN_MESSAGE_LANES`).
+  //   새 레인을 만들지 않았다 — `urgent` 가 이미 등급 밖·상한 밖에 서 있고
+  //   통지가 요구하는 것이 정확히 그 둘이다. **하는 일이 같은 것을 둘로 두면
+  //   정본이 둘이 된다.** `noticeOf()` 가 `notice` 와 `urgent` 를 같이 본다.
+  //
+  // ⚠ **주 1건 상한에 안 걸린다** — 아래 등급 줄기가 `picked` 하나만 내보내는
+  //   것과 달리 여기는 조건을 통과한 것을 **전부** 내보낸다. 그래서 어떤 주는
+  //   이벤트 1 + 통지 2 가 같이 온다(설계다 · 계획 §「소식함이 시끄러워진다」).
+  // ⚠ **통지는 상태가 부른다.** 그러니 조건이 성적·상태여야 하고, 주차만
+  //   보는 통지는 매주 뜬다 — 그것을 데이터에서 막는 것이 L6 검사의 몫이다.
   {
     const urgent = rules
       // ⚠ **필수는 위에서 이미 나갔다.** 필수에 `urgent` 를 달면 두 번 뜨는데,
       //   지금 데이터엔 없다(필수 101종 전부 등급이 없다) — 없다고 안 막으면
       //   달리는 날 사본이 난다
-      .filter((r) => r.type !== "mandatory" && tierOf(r) === "urgent")
+      .filter((r) => r.type !== "mandatory" && noticeOf(r))
       .filter((r) => evaluateConditions(r.conditions ?? [], ctx))
       .sort((a, b) => b.priority - a.priority);
     eventFunnelStats.conditional.condPass += urgent.length;

@@ -619,6 +619,12 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
       if (who) result.mentor = { npcId: who, pct: isNaN(f) ? 5 : f };
     }
     else if (key === "startGuarantee") { if (!isNaN(val)) result.startGuarantee = { games: val }; }
+    // "rosterMove:demote" — 1군 ↔ 2군 (2026-09-08 · L2). **통지에서만 먹는다**
+    //   (`utils/stateEffects.ts` · `applySideEffects`). 여기서는 읽기만 한다 —
+    //   갈래 판정을 파서에 두면 정본이 둘이 된다
+    else if (key === "rosterMove") {
+      if (rawVal === "callup" || rawVal === "demote") result.rosterMove = rawVal;
+    }
     // "counter.menteeCount:+1" — 이름은 `eventCounters.COUNTERS` 가 정본이다
     else if (key.startsWith("counter.")) {
       const name = key.slice(8);
@@ -798,7 +804,10 @@ function parseEventRule(raw: Record<string, any>): EventRule {
   // 🔴 **`important`·`ambient` 를 뺐다** (2026-09-08). 갈아타기가 끝났고
   //   데이터엔 하나도 안 남았다(B 4-2). 남겨 두면 **새 이벤트가 옛 등급을 달아도
   //   통과**하고, 그건 등급 줄기를 안 타는 이벤트가 조용히 생긴다는 뜻이다.
-  const TIERS = ["urgent", "normal", "rare", "unique", "hidden"];
+  // 🔴 **`notice`(통지)를 넣는다** (2026-09-08 · L3 · `PLAN_MESSAGE_LANES`).
+  //   `urgent` 는 그 갈래의 옛 이름이라 둘 다 받는다 — 데이터를 옮기는 중에
+  //   한쪽이 막히면 그 이벤트가 **로드에서 통째로 죽는다**(여기는 던진다).
+  const TIERS = ["notice", "urgent", "normal", "rare", "unique", "hidden"];
   if (raw.tier !== undefined && !TIERS.includes(raw.tier)) {
     throw new Error(`[master] ${raw.id}: 모르는 tier "${raw.tier}" — ${TIERS.join("·")} 중 하나여야 한다`);
   }

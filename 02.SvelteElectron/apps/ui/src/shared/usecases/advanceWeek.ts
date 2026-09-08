@@ -180,6 +180,7 @@ import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promote
 import { TOURNAMENTS } from "../utils/tournament";
 import {
   buildOpenMessage, buildMyRoundMessage, buildChampionMessage, buildRoundProgressMessage,
+  bundleRoundProgressMessages,
 } from "./weekPhases/tournamentNews";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
@@ -873,6 +874,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     tierCounts:   s.tierCounts,
     tierLastWeek: s.tierLastWeek,
     eventStarve:  s.eventStarve,
+    // 개막했나 — **내 일정에 이번 주까지 온 경기가 있나**로 본다 (B 제보 ②).
+    // ⚠ 경기 **결과** 유무로 보지 않는다: 개막 주에 결과가 아직 없는 경우가
+    //   있고, 그때 「아직 안 열렸다」로 읽으면 그 주가 통째로 빈다
+    seasonOpened: s.schedule.some((e) => e.week <= weekNum),
     // 직전 등판 — `last_game` 조건(§12). 못 찾으면 `undefined` 고 그 조건은 false 다
     lastGame: lastGameOf(s.schedule, afterP.id, afterP.teamId),
     // `compare` 조건(§12)이 볼 NPC 들. **미리 실어 준다** — 평가기는 동기다.
@@ -1341,6 +1346,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       universityPassed: admissionsCalc.univPassed,
       independentPassed: admissionsCalc.indiePassed,
       overseasPassed,
+    });
+
+    // 🔴 **일어난 일을 적는다** (2026-09-08 · L1). 「올해도 지명되지 않았습니다」가
+    //   조건을 **독립 + 주차 + 사기**로 쓰고 있었다 — 실제 미지명을 안 봤다
+    gameStore.recordOutcome({
+      kind: draftOutcome.drafted ? "drafted" : "undrafted",
+      year: get(seasonStore).seasonYear,
+      week: weekNum,
+      detail: draftOutcome.teamId ?? undefined,
     });
 
     seasonStore.pushPendingAction({ type: "careerResults" });
@@ -2090,6 +2104,13 @@ async function progressIndependentLeague(week: number): Promise<void> {
   }
   if (r.eliminated.length > 0) {
     console.info(`[독립] ${r.state.stage - 1}차 Stage 종료 — 탈락 ${r.eliminated.length}팀`);
+    // 내 팀이 그 안에 있으면 **일어난 일**이다 (2026-09-08 · L1)
+    if (r.eliminated.includes(g.protagonist.teamId)) {
+      gameStore.recordOutcome({
+        kind: "eliminated", year: s.seasonYear, week,
+        detail: `독립 ${r.state.stage - 1}차`,
+      });
+    }
   }
 }
 
@@ -2171,7 +2192,22 @@ async function replayDrawnKnockout(m: {
  *
  * @returns 일정에 새 경기를 넣었으면 true
  */
-async function progressTournaments(week: number): Promise<boolean> {
+async function progressTournaments(
+  week: number,
+  /**
+   * 「진출 명단」 소식을 담을 그릇 (2026-09-08 · B 소식 실측).
+   *
+   * 🔴 이 함수는 **한 주에 여러 번 불린다** — 대회 하나당 한 번에 한 라운드만
+   *   닫고 빠지므로, 호출부가 경기를 치른 뒤 다시 부른다(`pass` 루프 · 상한 20).
+   *   그래서 여기서 바로 `addMessage` 하면 라운드마다 한 통씩 쌓인다 —
+   *   실측 주당 0.45통 · 많으면 다섯 통이고, 그게 「같은 주 같은 성격 여럿」의
+   *   제일 큰 자리였다.
+   *
+   * ⚠ **그릇을 안 주면 예전 그대로 바로 내보낸다.** 묶는 것은 주가 끝난 뒤에나
+   *   할 수 있는 일이라, 그 자리를 아는 호출부만 그릇을 준다.
+   */
+  roundNewsSink?: MessageItem[],
+): Promise<boolean> {
   const g = get(gameStore);
   // 앞 라운드가 늦게 끝나 주차를 넘긴 대회 경기를 이번 주로 당긴다.
   // 경기 처리 루프가 `e.week === 이번주`만 보므로, 안 당기면 영영 안 치러진다
@@ -2314,6 +2350,30 @@ async function progressTournaments(week: number): Promise<boolean> {
             def, next, r, protagonistTeamId, tName4Tour, week);
           if (mine) gameStore.addMessage(mine);
 
+          // 🔴 **일어난 일을 적는다** (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
+          //   통지가 `outcome_within` 으로 이걸 읽는다 — 예전엔
+          //   「대회에서 탈락했습니다」가 조건을 **`morale_lte 55`** 로 썼다
+          //   (진출은 `team_rank_lte 2` 인데 탈락은 사기라, 같은 대회를 두 축으로
+          //   판정하고 있었다 · `types/event.ts` 의 `season_*_lte` 머리말).
+          //
+          // ⚠ **소식이 아니라 브래킷을 본다.** `mine` 은 null 일 수 있고
+          //   (내 팀이 그 라운드에 없다) 소식 유무로 판정하면 「우승했는데
+          //   소식이 없어서 우승을 못 적는」 자리가 생긴다
+          {
+            const myMatch = next.matches.find(
+              (m) => m.round === r
+                && (m.homeTeamId === protagonistTeamId || m.awayTeamId === protagonistTeamId));
+            if (myMatch?.winnerTeamId) {
+              const won = myMatch.winnerTeamId === protagonistTeamId;
+              const yr = get(seasonStore).seasonYear;
+              if (!won) {
+                gameStore.recordOutcome({ kind: "eliminated", year: yr, week, detail: def.id });
+              } else if (r === next.totalRounds) {
+                gameStore.recordOutcome({ kind: "champion", year: yr, week, detail: def.id });
+              }
+            }
+          }
+
           // ⚠ **내 팀이 없는 라운드도 알린다** (32강부터, 사용자 확정 2026-08-08).
           // 예전엔 우리가 안 나간 대회는 개막·우승 두 통뿐이라 누가 올라갔는지
           // 알 수 없었고, 나간 대회도 탈락한 뒤로는 깜깜했다.
@@ -2321,7 +2381,13 @@ async function progressTournaments(week: number): Promise<boolean> {
           // 위 `mine`과 겹치지 않는다.
           const progress = buildRoundProgressMessage(
             def, next, r, protagonistTeamId, tName4Tour, week, myRegionTeamIds());
-          if (progress) gameStore.addMessage(progress);
+          // ⚠ **「진출 명단」만 그릇으로 간다.** 내 팀 경기 결과·개막·우승·시상은
+          //   각자 제 이야기라 그대로 나간다 — 읽는 사람의 이야기를 남 이야기와
+          //   같이 접으면 줄인 게 아니라 지운 것이 된다
+          if (progress) {
+            if (roundNewsSink) roundNewsSink.push(progress);
+            else gameStore.addMessage(progress);
+          }
 
           if (r === next.totalRounds) {
             const champ = buildChampionMessage(
@@ -2535,6 +2601,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
   }
 
   const accLogs: string[]       = [];
+  /** 이번 주 대회 「진출 명단」 — 주가 끝난 뒤 한 통으로 묶는다(아래 flush) */
+  const accTourRoundNews: MessageItem[] = [];
   const accResults: MatchResult[] = [];
 
   // ── R3a-4c (v3): 주인공 소속 리그 Lazy 활성화 보장 ────────────
@@ -3322,7 +3390,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     await progressIndependentLeague(nextWeekNum);
 
     // 대회 개막 라운드를 먼저 얹는다 (Phase 5-4)
-    await progressTournaments(nextWeekNum);
+    await progressTournaments(nextWeekNum, accTourRoundNews);
 
     // 이번 주 미결 경기를 gameDate 순으로 처리.
     // 대회는 한 주에 여러 라운드가 들어가고 다음 대진이 직전 결과에 달렸으므로,
@@ -3613,7 +3681,21 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
     // 방금 끝난 라운드로 다음 대진이 열리면 한 번 더 돈다.
     // 상한 20 = 국화기 7R + 여유. 무한 루프 방지용이지 정상 경로에서 닿지 않는다.
-    if (pass >= 20 || !(await progressTournaments(nextWeekNum))) break;
+    if (pass >= 20 || !(await progressTournaments(nextWeekNum, accTourRoundNews))) break;
+    }
+
+    // ── 이번 주 대회 「진출 명단」을 한 통으로 (2026-09-08) ──────
+    //
+    // 🔴 **여기가 유일하고 자연스러운 자리다.** 위 `pass` 루프가 그 주의 대회
+    //   라운드를 다 닫은 뒤라 「이번 주 대회 소식」이 그제야 성립한다.
+    // ⚠ 한 통이면 안 묶는다 — 묶음 제목이 붙어 오히려 읽기 나빠진다.
+    // ⚠ 표는 안 버린다: 「진출 명단」은 전부 같은 `tourRound` 표라 행을 이어
+    //   붙이면 그대로 산다(`bundleRoundProgressMessages` 머리말).
+    {
+      const bundled = bundleRoundProgressMessages(
+        accTourRoundNews, get(seasonStore).seasonYear, nextWeekNum);
+      if (bundled) gameStore.addMessage(bundled);
+      else for (const m of accTourRoundNews) gameStore.addMessage(m);
     }
 
     const sFinal = get(seasonStore);

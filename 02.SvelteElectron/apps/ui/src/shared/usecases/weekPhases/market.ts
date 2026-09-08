@@ -9,6 +9,7 @@ import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
 import {
   SANGMU_TEAM_IDS, leagueOfTeam, activeProLeagues, activeProLeaguesWithFarm,
+  farmTeamId, firstTeamIdOf,
 } from "../../utils/ids";
 import { isForeignPlayer, isForeignInQuotaLeague } from "../../utils/foreignSlots";
 import { isRegistrable } from "../../utils/developmentPlayer";
@@ -827,6 +828,93 @@ function getTeamEntityRefs(
 }
 
 /**
+ * **주인공을 1군 ↔ 2군으로 실제로 옮긴다** — 승강의 정본 한 자리
+ * (2026-09-08 · L2 · `PLAN_MESSAGE_LANES`).
+ *
+ * 🔴 **왜 꺼냈나.** 테스터가 「2군으로 가라는 메시지가 왔고 가겠다고 했는데도
+ *   안 내려갔다」고 했다. 훑어 보니 무대 이동을 말하는 이벤트 23건 중 상태를
+ *   바꾸는 것이 **0건**이었다 — 기계는 아래 월간 승강 안에 **박혀 있어서**
+ *   밖에서 부를 길이 없었다. 그래서 통지가 닿을 문으로 꺼냈다.
+ *
+ * ⚠ **두 벌을 만들지 않는다.** 월간 승강 기계도 이 함수를 부른다. 옮기는 일이
+ *   store 두 곳(소속·리그 / 일정·순위표)을 같이 건드려야 해서, 한쪽만 부르는
+ *   사본이 생기면 **순위표만 맞고 일정은 옛 리그**가 된다(2026-09-02 에 실제로
+ *   그랬다 — `switchProtagonistLeague` 머리말).
+ *
+ * ⚠ **기록을 남긴다.** `recordOutcome` 이 「방금 승격/강등됐다」를 적고,
+ *   통지가 `outcome_within` 으로 그걸 읽는다. 소식이 먼저 뜨고 상태가 따라가는
+ *   순서가 되면 안 된다 — 고치려던 것이 정확히 그 순서다.
+ *
+ * @returns 실제로 간 방향. 리그가 안 갈리면 `"stageMove"`(이적)다
+ */
+export function applyProtagonistTierMove(
+  toTeamId: string,
+  weekNum: number,
+): "callup" | "demote" | "stageMove" {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const fromLeague = g.protagonist.leagueId;
+  const toLeague = leagueOfTeam(toTeamId) ?? fromLeague;
+  // ⚠ 팀 id 를 문자열로 자르지 않는다 — 1군·2군은 **리그가 갈린다**(`_FARM`).
+  //   `roleAskReasonOf` 도 같은 자를 쓴다(둘이 갈리면 「강등됐는데 콜업이라고
+  //   묻는다」가 된다)
+  const wasFarm = fromLeague.endsWith("_FARM");
+  const isFarm  = toLeague.endsWith("_FARM");
+  const dir: "callup" | "demote" | "stageMove" =
+    wasFarm && !isFarm ? "callup" : !wasFarm && isFarm ? "demote" : "stageMove";
+
+  gameStore.setProtagonistTeam(toTeamId, toLeague);
+  seasonStore.switchProtagonistLeague(toLeague, toTeamId);
+  if (dir !== "stageMove") {
+    gameStore.recordOutcome({
+      kind: dir, year: s.seasonYear, week: weekNum,
+      detail: toTeamId,
+    });
+  }
+  autoLog(`[승강] 주인공 ${g.protagonist.teamId} → ${toTeamId} (${dir})`);
+  return dir;
+}
+
+/**
+ * **통지가 부르는 문** — 방향만 주면 갈 팀을 찾아 옮긴다 (2026-09-08 · L2).
+ *
+ * `DecisionEffect.rosterMove` 가 여기로 온다. 갈 팀은 같은 구단의 짝이다
+ * (`utils/ids` 의 `farmTeamId`·`firstTeamIdOf` — 파생 규칙의 정본).
+ *
+ * ⚠ **프로가 아니면 아무 일도 안 한다.** 고교생에게 「2군으로 내려간다」는 갈
+ *   곳이 없다. 조용히 false 를 주고 로그를 남긴다 — 던지면 그 주가 통째로
+ *   죽고, 조용히 넘기면 아무도 모른다.
+ * ⚠ **이미 그쪽이면 아무 일도 안 한다.** 2군인데 또 강등하면 같은 팀으로
+ *   옮기며 일정만 다시 갈린다.
+ *
+ * @returns 실제로 옮겼으면 true
+ */
+export function moveProtagonistBetweenTiers(
+  direction: "callup" | "demote",
+  weekNum: number,
+): boolean {
+  const p = get(gameStore).protagonist;
+  const cur = p.teamId ?? "";
+  const isFarm = (p.leagueId ?? "").endsWith("_FARM");
+  if (direction === "demote" && isFarm) {
+    autoLog(`[승강] 강등 요청 무시 — 이미 2군이다 (${cur})`);
+    return false;
+  }
+  if (direction === "callup" && !isFarm) {
+    autoLog(`[승강] 콜업 요청 무시 — 이미 1군이다 (${cur})`);
+    return false;
+  }
+  const to = direction === "demote" ? farmTeamId(cur) : firstTeamIdOf(cur);
+  if (!to) {
+    // 1·2군이 없는 무대다(고교·대학·독립). 갈 곳이 없다
+    autoLog(`[승강] ${direction} 요청 무시 — ${cur} 에는 짝이 되는 팀이 없다`);
+    return false;
+  }
+  applyProtagonistTierMove(to, weekNum);
+  return true;
+}
+
+/**
  * 프로 1군 ↔ 2군 승강.
  *
  * **주인공과 무관하게 국내 10구단 전부 돈다.** 예전엔 `careerStage`가 프로일
@@ -1122,10 +1210,11 @@ export async function processProTeamCallupCalldown(
     //   `switchProtagonistLeague` 가 `s.schedule` ↔ `leagueSchedules` 를 맞바꾼다.
     const protoTo = moveMap.get(g.protagonist.id);
     if (protoTo) {
-      const toLeague = leagueOfTeam(protoTo) ?? g.protagonist.leagueId;
-      gameStore.setProtagonistTeam(protoTo, toLeague);
-      seasonStore.switchProtagonistLeague(toLeague, protoTo);
-      logs.push(protoTo.endsWith("_2")
+      // ⚠ **여기서 직접 store 를 건드리지 않는다** (2026-09-08 · L2). 통지의
+      //   `rosterMove` 효과가 같은 이동을 해야 하는데, 두 벌이 되면 한쪽만
+      //   고쳐진 채 남는다 — 보직을 `applyRoleChoice` 하나로 모은 이유다
+      const moved = applyProtagonistTierMove(protoTo, weekNum);
+      logs.push(moved === "demote"
         ? `[W${weekNum}] 2군 강등 통보를 받았다.`
         : `[W${weekNum}] 1군 승격 통보를 받았다.`);
     }

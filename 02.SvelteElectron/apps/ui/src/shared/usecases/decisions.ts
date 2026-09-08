@@ -16,12 +16,15 @@
 
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
-import { seasonStore } from "../stores/season";
 import { slotRepo } from "../repo/slotRepo";
 import { autoLog } from "../stores/autoAdvance";
 import { calcLuxury } from "./finance";
 import type { DecisionEffect } from "../types/main";
 import type { RelationKind } from "../types/relationship";
+import type { MessageLane } from "../types/event";
+import { stateEffectsOf } from "../utils/stateEffects";
+import { moveProtagonistBetweenTiers } from "./weekPhases/market";
+import { seasonStore } from "../stores/season";
 
 /**
  * 선택지 하나를 적용한다. 화면·자동진행 양쪽이 **이 함수만** 부른다.
@@ -38,13 +41,62 @@ export async function applyDecision(messageId: string, optionId: string): Promis
   gameStore.resolveDecision(messageId, optionId);
   if (!fx) return;
 
-  await applySideEffects(fx);
+  // ⚠ **갈래는 소식에서 읽는다** (2026-09-08 · L3). 규칙 id 로 되짚으면
+  //   소식함에 남은 옛 소식이 지금 데이터의 갈래로 보인다 — 소식은 스냅샷이다
+  await applySideEffects(fx, { lane: msg?.lane });
 }
 
-/** 관계도·사치품 등 store 밖 효과. 이벤트 외 경로(협상 결과 등)도 쓸 수 있게 분리 */
-export async function applySideEffects(fx: DecisionEffect): Promise<void> {
+/**
+ * 관계도·사치품 등 store 밖 효과. 이벤트 외 경로(협상 결과 등)도 쓸 수 있게 분리.
+ *
+ * 🔴 **상태 효과는 갈래를 본다** (2026-09-08 · L2·L3 · `PLAN_MESSAGE_LANES`).
+ *
+ * > 주사위가 부른 것은 상태를 못 바꾸고, 상태가 부른 것만 상태를 바꾼다.
+ *
+ * `opts.lane === "notice"` 일 때만 `STATE_EFFECT_KEYS`(`utils/stateEffects.ts`)
+ * 를 먹인다. **검사(L6)만 두지 않고 여기서 막는 이유** — 검사는 데이터를 보는
+ * 것이지 동작을 막는 것이 아니다. 검사를 안 돌린 사이에 들어온 데이터가
+ * 그대로 세계를 바꾼다면 규칙은 규칙이 아니라 약속일 뿐이다.
+ *
+ * ⚠ **막을 때 조용히 넘어가지 않는다.** 무시했다는 사실을 로그로 남긴다 —
+ *   「아무 일도 안 일어남」이 이 저장소가 반복해 겪은 형태다.
+ * ⚠ 갈래를 **안 넘긴 호출부**(협상 결과 등)는 통지가 아니다. 그쪽은 애초에
+ *   상태 효과를 안 들고 오므로 달라지는 것이 없다.
+ */
+export async function applySideEffects(
+  fx: DecisionEffect,
+  opts: { lane?: MessageLane } = {},
+): Promise<void> {
   const g = get(gameStore);
   const slotId = g.currentSlotId;
+
+  // ── 상태 효과 — 통지만 ────────────────────────────────────────
+  {
+    const stateKeys = stateEffectsOf(fx);
+    if (stateKeys.length > 0) {
+      if (opts.lane !== "notice") {
+        // 이벤트(주사위)가 세계를 바꾸려 했다. 안 먹이고 남긴다
+        console.warn(
+          `[decisions] 통지가 아닌 갈래의 상태 효과를 무시했다 — ${stateKeys.join("·")}`
+          + ` (갈래 ${opts.lane ?? "없음"}). 규칙: 주사위가 부른 것은 상태를 못 바꾼다`,
+        );
+        autoLog(`[갈래] 상태 효과 무시 ${stateKeys.join("·")} — 갈래 ${opts.lane ?? "없음"}`);
+      } else {
+        const week = get(seasonStore).currentWeek;
+        if (fx.rosterMove) {
+          // ⚠ **승강 기계를 그대로 부른다** — 여기서 store 를 직접 건드리면
+          //   두 벌이 되고, 그러면 순위표만 맞고 일정은 옛 리그가 된다
+          const moved = moveProtagonistBetweenTiers(fx.rosterMove, week);
+          autoLog(`[통지] rosterMove ${fx.rosterMove} → ${moved ? "옮겼다" : "갈 곳이 없어 그대로"}`);
+        }
+        if (fx.startGuarantee) {
+          // 부여는 store 패처가 한다(`applyEffectToProtagonist`) — 여기서 또
+          // 더하면 두 번 준다. 로그만 남긴다
+          autoLog(`[통지] startGuarantee ${fx.startGuarantee.games}경기`);
+        }
+      }
+    }
+  }
 
   // ── 사치품 (§7-5 F-3의 이월) ─────────────────────────────────
   //
