@@ -161,10 +161,16 @@ function kindsOf(e: DecisionEffect | undefined): { gain: Set<string>; lose: Set<
  */
 export function kindOnlyHint(e: DecisionEffect | undefined): string {
   const { gain, lose } = kindsOf(e);
-  const out: string[] = [];
-  for (const k of KIND_ORDER) if (gain.has(k)) out.push(KIND[k].gain);
-  for (const k of KIND_ORDER) if (lose.has(k)) out.push(KIND[k].lose);
-  return out.slice(0, MAX_KINDS).join(" · ");
+  const gains = KIND_ORDER.filter((k) => gain.has(k)).map((k) => KIND[k].gain);
+  const loses = KIND_ORDER.filter((k) => lose.has(k)).map((k) => KIND[k].lose);
+  // 🔴 **얻는 쪽으로 줄을 채우면 내주는 쪽이 잘린다.** 앞에서부터 세 개를
+  //   자르는 방식으로 재 봤더니 실제 유니크(EVT_HS_COMMON_RETIRE_GIFT)에서
+  //   「큰 것을 얻는다 · 사람을 얻는다 · 마음이 놓인다」가 되어 **돈을 낸다는
+  //   말이 통째로 사라졌다.** 유니크의 요점은 얻는 것이 아니라 **무엇을 내주고
+  //   얻나**라(§2 「대가: 있음」) 내주는 쪽 한 자리를 먼저 떼어 둔다.
+  const g = gains.slice(0, loses.length > 0 ? MAX_KINDS - 1 : MAX_KINDS);
+  const l = loses.slice(0, MAX_KINDS - g.length);
+  return [...g, ...l].join(" · ");
 }
 
 /**
