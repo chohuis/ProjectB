@@ -15,6 +15,7 @@
   } from "../../../shared/usecases/seasonAwards";
   import { leagueStatsOf } from "../../../shared/utils/season-helpers";
   import TeamMark from "../../team/ui/TeamMark.svelte";
+  import EventTierChip from "../../events/ui/EventTierChip.svelte";
   import { qualificationOf } from "../../../shared/utils/leaderboard";
   import { splitByGroup } from "../../../shared/utils/standingsGroups";
   import { TOURNAMENTS } from "../../../shared/utils/leagueTeams.generated";
@@ -87,6 +88,23 @@
   }
 
   $: p = $gameStore.protagonist;
+
+  // ── 이번 시즌 사건 (2026-09-08 · PLAN_EVENT_TIERS §9 · C 4-5) ────
+  //
+  // **여기가 자리다.** §9 는 「시즌 결산·기록 탭」 둘 중 하나라 했고 결산을 골랐다 —
+  // `seasonStore.tierCounts` 는 **시즌마다 비는 값**이라(`makeEmptySeason`) 기록
+  // 탭에 두면 시즌이 넘어간 뒤엔 늘 0 을 보게 된다. 결산 모달은 롤오버(`runSeasonRollover`)
+  // **앞에** 뜨므로 여기서만 이번 시즌 값을 볼 수 있다.
+  //
+  // ⚠ **노말은 안 센다.** 시즌 40~50 건이라(§2) 다른 셋을 눌러 버리고, 칩도 없는
+  //   등급이라 화면에서 셀 이름이 없다.
+  $: tierCounts = $seasonStore.tierCounts ?? {};
+  $: tierTally = ([
+    { grade: "rare"   as const, n: tierCounts.rare   ?? 0 },
+    { grade: "unique" as const, n: tierCounts.unique ?? 0 },
+    { grade: "hidden" as const, n: tierCounts.hidden ?? 0 },
+  ]);
+  $: tierTotal = tierTally.reduce((a, x) => a + x.n, 0);
 
   /**
    * ⚠ **생 `grade` 를 쓰고 있었다.** 대학은 `universityWeek` 이 정본이고
@@ -475,6 +493,22 @@
                 </li>
               {/each}
             </ul>
+          </section>
+        {/if}
+
+        <!-- 이번 시즌 사건 (등급 집계) -->
+        {#if tierTotal > 0}
+          <section class="section">
+            <h4>이번 시즌 사건</h4>
+            <div class="tier-row">
+              {#each tierTally as t (t.grade)}
+                <div class="tier-cell" class:zero={t.n === 0}>
+                  <EventTierChip grade={t.grade} />
+                  <strong class="tier-n">{t.n}</strong>
+                </div>
+              {/each}
+            </div>
+            <p class="tier-note">노말은 세지 않는다 — 늘 오는 것이라 세면 나머지가 안 보인다.</p>
           </section>
         {/if}
 
@@ -1094,6 +1128,18 @@
   .dec-d { color: var(--ink); }
 
   .no-entry { color: #456 !important; font-style: italic; }
+
+  /* ── 이번 시즌 사건 (등급 집계) ───────────────────────────────── */
+  .tier-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tier-cell {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: var(--panel-sunk); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 8px 10px;
+  }
+  /* 0 건도 **자리는 남긴다** — 칸이 사라지면 「히든이 있었나」를 못 묻는다 */
+  .tier-cell.zero { opacity: .45; }
+  .tier-n { font-variant-numeric: tabular-nums; font-size: 17px; font-weight: 800; color: var(--ink); }
+  .tier-note { margin: 6px 0 0; font-size: 11.5px; color: var(--ink-mute); }
 
   /* ── 시상 ────────────────────────────────────────────────────── */
   .awards-grid {

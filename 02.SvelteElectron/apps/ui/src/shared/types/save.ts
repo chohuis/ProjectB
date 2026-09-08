@@ -845,6 +845,26 @@ export interface AchievementMetrics {
   saveTotal: number;
   trainingWeeksTotal: number;
   gamesWonTotal: number;
+
+  // ── 이벤트 등급 (2026-09-08 · PLAN_EVENT_TIERS §9 · C 4-5) ──────
+  //
+  // 🔴 **소식함을 세서 알 수 없다.** `computeMetrics` 가 `messagesReadTotal` 을
+  //   소식함에서 세듯 등급도 셀 수 있어 보이지만, 소식함은 상한에 밀려 오래된
+  //   것부터 지워진다(`trimMailbox`) — 15년이면 첫 유니크는 이미 없다.
+  //   업적은 **커리어 통**이라 지워지지 않는 자리에 따로 쌓는다.
+  //
+  // ⚠ 옛 세이브에 없다. `fromSaveGame` 이 `DEFAULT_ACHIEVEMENT_METRICS` 위에
+  //   덮어쓰므로 0 으로 시작한다 — 이미 만난 유니크는 안 세진다(되돌릴 방법이
+  //   없다. 소식함이 지운 것을 복원할 수 없으므로 그게 정직한 값이다).
+  /** 커리어 통산 유니크 발동 수 */
+  eventUniqueTotal?: number;
+  /** 커리어 통산 히든 발동 수 */
+  eventHiddenTotal?: number;
+  /**
+   * **한 시즌 최대** 레어 수. 지금 시즌 수가 아니라 **최고 기록**이다 —
+   * 「한 시즌 레어 6」 업적은 한 번 넘기면 그 뒤 시즌이 조용해도 남아야 한다.
+   */
+  eventRareSeasonMax?: number;
 }
 
 // ── 학교·NPC 마스터 타입 ──────────────────────────────────────

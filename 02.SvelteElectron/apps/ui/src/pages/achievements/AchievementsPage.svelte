@@ -20,6 +20,11 @@
     winsTotal:         (t) => `누적 승리 ${t}회 달성`,
     gamesPlayedTotal:  (t) => `경기 ${t}회 출전`,
     messagesReadTotal: (t) => `메시지 ${t}개 읽기`,
+    // 이벤트 등급 업적 (2026-09-08 · §9 · C 4-5). **정의는 데이터(B)** 이고
+    // 여기 있는 것은 설명 문장뿐이다 — 키가 없으면 아래 `desc` 가 「조건 달성」이다
+    eventUniqueTotal:   (t) => t === 1 ? "유니크 이벤트를 처음 만나기" : `유니크 이벤트 ${t}회`,
+    eventHiddenTotal:   (t) => `히든 이벤트 ${t}회`,
+    eventRareSeasonMax: (t) => `한 시즌에 레어 이벤트 ${t}회`,
   };
 
   function desc(metricKey: string, targetValue: number): string {
