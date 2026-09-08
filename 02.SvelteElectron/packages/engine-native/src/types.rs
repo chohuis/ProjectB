@@ -1028,6 +1028,11 @@ pub struct GameSummary {
     /// 헛스윙 — `STRIKE_SWING` + `STRIKEOUT_SWING`
     #[serde(default)]
     pub whiffs: i32,
+    /// 주인공이 상대한 **타석** 수 — 피안타율의 분모(타수 = 타석 − 볼넷)를
+    /// 만들려고 둔다(결정 ⑩ 구종 개수 실측). 위 hits/walks 와 **같은 반**만
+    /// 센다 — pitches/whiffs 는 양쪽 반 합계라 분모가 안 맞는다
+    #[serde(default)]
+    pub plate_appearances: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

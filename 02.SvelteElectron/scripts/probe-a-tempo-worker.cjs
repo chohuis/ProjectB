@@ -9,7 +9,8 @@
  *
  * ⚠ `PB_TEMPO`·`PB_COURSE` 는 Rust 가 매 투구마다 `std::env::var` 로 읽는다
  *   (`tuning.rs tempo_mode`·`course_mode`) — 이 프로세스에 심겨 있으면 그대로
- *   반영된다. 별도 배선이 필요 없다(`PB_LOC_INTENT` 와 같다).
+ *   반영된다. 별도 배선이 필요 없다(`PB_BATTER_READ`·`PB_PUTAWAY` 도 같다 —
+ *   `PB_LOC_INTENT` 는 결정 ⑦ 이 닫히면서 2026-09-08 에 없앴다).
  *
  * ⚠ **동시성 1.** 겹쳐 돌리면 CPU 경합으로 타임아웃난다(§3 의 경고 그대로).
  */

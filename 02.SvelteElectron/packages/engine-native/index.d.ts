@@ -33,6 +33,15 @@ export declare function wpFunnelStatsNative(): string
 /** 계측 전용 — 카운터 초기화 */
 export declare function resetContactBandsNative(): string
 /**
+ * 계측 전용 — 타자 노림수(결정 ⑩)가 얼마나 자주·크게 걸렸나.
+ *
+ * **구종 개수가 산식에 들어오는지**를 재는 자리다. 피안타율로는 잡음에
+ * 묻혀서 안 보인다 — `match_engine::READ_TALLY` 머리말 참고.
+ */
+export declare function readTallyStatsNative(): string
+/** 계측 전용 — 노림수 카운터 초기화 */
+export declare function resetReadTallyNative(): string
+/**
  * C-3 어댑터(완성) — 끝난 경기를 리그 계약(SimGameResult) 전체로 바꾼다.
  * rot_idx·pitcher_conditions까지 채운다 — 안 넘기면 투수가 무한정 던진다.
  */

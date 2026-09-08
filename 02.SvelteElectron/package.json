@@ -169,7 +169,9 @@
     "check:reportbank": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-reportbank.cjs",
     "probe:a:tempo": "node scripts/probe-a-tempo.cjs",
     "probe:a:tempo:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-tempo-career.cjs",
-    "check:tiercoverage": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-tiercoverage.cjs"
+    "check:tiercoverage": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-tiercoverage.cjs",
+    "probe:a:read": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-read.cjs",
+    "probe:a:cmd": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-cmd.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
