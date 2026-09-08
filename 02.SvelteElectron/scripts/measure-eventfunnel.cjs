@@ -59,6 +59,33 @@ const pct = (a, b) => (b ? (a / b * 100).toFixed(1) : "0.0").padStart(5) + "%";
 /** `--runs N` — 자기를 N번 자식으로 띄워 `--json` 결과를 모으고 폭을 찍는다 */
 function multiRun() {
   const { spawnSync } = require("node:child_process");
+  /**
+   * **자식이 왜 죽었는지 그대로 내놓는다** (2026-09-08 · A · L4 실사고).
+   *
+   * 🔴 왜 있나. 커버리지 하네스가 실패하면 **stdout 마지막 800자만** 찍었다.
+   *   그런데 그날의 진짜 오류는 **stderr 에 있었다** —
+   *   `[masterStore] load failed  …: 모르는 조건 타입 "outcome_within"`.
+   *   화면엔 「출력에 __TIERCOV_JSON__ 가 없다」만 떠서, B 가 단판을 손으로
+   *   직접 돌려서야 원인이 보였다. **하루를 태울 수 있는 자리다.**
+   *
+   * ⚠ **둘 다 낸다.** stderr 만 내면 진행 로그(stdout)가 사라지고, stdout 만 내면
+   *   이번 일이 또 난다. 어느 쪽이 비어 있는지도 적는다 — 「비었다」가 신호다.
+   * ⚠ 종료 코드·시그널도 적는다. maxBuffer 초과·타임아웃 킬은 출력이 아예 없어
+   *   두 통 다 비는데, 그때 코드/시그널이 유일한 단서다.
+   */
+  function childFailureReport(r, tail = 1500) {
+    const out = String(r.stdout || "");
+    const err = String(r.stderr || "");
+    const lines = [];
+    lines.push(`    종료코드 ${r.status ?? "없음"}${r.signal ? ` · 시그널 ${r.signal}` : ""}`
+      + (r.error ? ` · 띄우기 실패 ${r.error.message}` : ""));
+    lines.push(`    ── stderr (${err.length}자)${err ? "" : " — 비었다"}`);
+    if (err) lines.push(err.slice(-tail));
+    lines.push(`    ── stdout (${out.length}자)${out ? "" : " — 비었다"}`);
+    if (out) lines.push(out.slice(-tail));
+    return lines.join(String.fromCharCode(10));
+  }
+
   const base = process.argv.slice(2).filter((a) => a !== "--runs" && a !== String(RUNS));
   const rows = [];
   for (let i = 1; i <= RUNS; i++) {
@@ -68,7 +95,8 @@ function multiRun() {
     const line = String(r.stdout || "").split("\n").find((l) => l.startsWith(MARK));
     if (!line) {
       log(`  회차 ${i} 실패 — 출력에 ${MARK}가 없다`);
-      log(String(r.stdout || "").slice(-500));
+      // ⚠ stderr 를 먼저 낸다 — 진짜 오류는 대개 그쪽이다(2026-09-08 실사고)
+      log(childFailureReport(r));
       process.exit(1);
     }
     rows.push(JSON.parse(line.slice(MARK.length)));
