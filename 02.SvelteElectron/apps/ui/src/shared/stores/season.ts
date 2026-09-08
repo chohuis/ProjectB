@@ -341,6 +341,23 @@ function createSeasonStore() {
       update((s) => ({ ...s, currentWeek: s.currentWeek + 1 }));
     },
 
+    /**
+     * **성적을 심는다 — 계측·회귀 전용** (2026-09-08 · A).
+     *
+     * 🔴 왜 필요했나. 통지가 성적을 조건으로 읽게 됐는데
+     *   (`season_era_gte` · `season_games_gte`), 그 자리를 **자동 진행으로 못
+     *   만든다.** 「2년차 이하 · 방어율 5.5+ · 8경기+」인 판이 나올 때까지 씨앗을
+     *   돌리는 것은 재현도 안 되고 몇 시간이 든다. 그래서 상태를 심고 **그 뒤를**
+     *   진짜 코드로 돌린다 — 재는 것은 「조건이 읽히고 효과가 세계를 바꾸나」다.
+     *
+     * ⚠ **게임 코드는 이걸 안 부른다.** 부르는 곳은 `scripts/perf/perfEntry.ts`
+     *   하나뿐이고, 그 파일은 앱 번들에 안 들어간다.
+     * ⚠ 덮어쓰기다 — 누적이 아니다. 심는 자리는 「지금 이 상태였다면」을 만든다.
+     */
+    plantSeasonStats(playerId: string, stats: import("../types/save").PlayerSeasonStats) {
+      update((s) => ({ ...s, stats: { ...s.stats, [playerId]: stats } }));
+    },
+
     setCurrentDate(date: string) {
       update((s) => ({ ...s, currentDate: date }));
     },

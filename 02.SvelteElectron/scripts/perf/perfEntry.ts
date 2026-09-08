@@ -30,7 +30,7 @@ import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
 import { runSeasonRollover, setBeforeSeasonEndHook, setAfterSeasonEndHook } from "../../apps/ui/src/shared/usecases/seasonRollover";
-import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
+import { processTradeWindow, moveProtagonistBetweenTiers } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import {
   signNegotiatedContract, applyOptionClause, signFaOffer, waitFaMarket,
@@ -3631,6 +3631,103 @@ export function protagonistStatProbe(): Record<string, unknown> {
  * 강등 자체는 `setProtagonistTeam`이 하고(실제 승강 코드가 쓰는 것과 같은
  * 함수다), 여기서는 그 뒤 **승강 판정이 주인공을 다시 올리는가**를 본다.
  */
+/**
+ * 2군 → 1군으로 올린다 — **승강 정본을 그대로 부른다**(2026-09-08).
+ *
+ * 강등을 재려면 먼저 1군이어야 해서 만든 손잡이인데, 부르는 것이
+ * `market.ts` 의 `moveProtagonistBetweenTiers` 라 **콜업 방향도 여기서 재진다.**
+ * 사본을 만들지 않는다 — 사본이면 재는 것이 사본이 된다.
+ */
+export function callupProtagonistProbe(): Record<string, unknown> {
+  const b = get(gameStore).protagonist;
+  const before = { team: b.teamId, league: b.leagueId, 일정리그: get(seasonStore).leagueId };
+  const moved = moveProtagonistBetweenTiers("callup", get(seasonStore).currentWeek);
+  const a2 = get(gameStore).protagonist;
+  return {
+    moved, before,
+    after: { team: a2.teamId, league: a2.leagueId, 일정리그: get(seasonStore).leagueId },
+  };
+}
+
+/**
+ * **강등 통지가 진짜로 내려보내는가** — 테스터가 겪은 자리 (2026-09-08 · A).
+ *
+ * 🔴 신고: 「2군으로 가라는 메시지가 왔고 **가겠다고 했는데도 안 내려갔다**」.
+ *   무대 이동을 말하는 이벤트 23건 중 상태를 바꾸는 것이 0건이었다 —
+ *   승강 기계는 `market.ts` 에 있는데 **거기 닿는 문이 없었다**(L2 에서 뚫었다).
+ *
+ * 여기서 재는 것은 **끝에서 끝까지**다:
+ *   ① 성적을 심는다(자동 진행으로는 「2년차 이하 · ERA 5.5+ · 8경기+」를 못 만든다)
+ *   ② **진짜 이벤트 엔진**이 그 조건을 읽고 통지를 낸다
+ *   ③ **진짜 결정 경로**(`applyDecision`)로 「받아들인다」를 고른다
+ *   ④ 소속·리그·**일정**이 실제로 2군으로 갔는지 본다
+ *
+ * ⚠ ④ 에 **일정**이 들어가는 것이 핵심이다. 소속만 바뀌고 일정이 안 바뀌면
+ *   순위표만 맞고 **상대가 전부 옛 리그 팀**이 된다(2026-09-02 실측 자리).
+ * ⚠ 심는 것은 성적뿐이다. 그 뒤는 손대지 않는다 — 손대면 무엇을 잰 건지 흐려진다.
+ */
+export async function demotionNoticeProbe(): Promise<Record<string, unknown>> {
+  const g0 = get(gameStore);
+  const s0 = get(seasonStore);
+  const p0 = g0.protagonist;
+  const before = {
+    team: p0.teamId, league: p0.leagueId, stage: p0.careerStage,
+    week: s0.currentWeek,
+    일정리그: s0.leagueId,
+    내경기수: s0.schedule.filter((e) => e.isProtagonistGame).length,
+  };
+  if (!(p0.teamId ?? "").endsWith("_1")) {
+    return { ok: false, 이유: `1군 소속이 아니다 (${p0.teamId ?? "없음"})`, before };
+  }
+
+  // ① 성적을 심는다 — 조건은 ERA 5.5+ · 8경기+ · 2년차 이하 · W14+
+  seasonStore.plantSeasonStats(p0.id, {
+    type: "pitcher", g: 10, gs: 10, w: 1, l: 6, sv: 0, hd: 0,
+    ip: 40, er: 30, h: 60, k: 20, bb: 20,
+    era: 6.75, whip: 2.0,
+  } as never);
+  const planted = get(seasonStore).stats[p0.id] as { era?: number; g?: number } | undefined;
+
+  // ② 한 주를 진짜로 돌린다 — 통지는 주 1건 상한 밖이라 같은 주에 뜬다
+  await runOneWeek();
+
+  const mail = get(gameStore).mailbox.filter((m) => m.id.includes("EVT_PRO_EARLY_DEMOTION_TALK"));
+  const notice = mail[mail.length - 1];
+  if (!notice) {
+    return {
+      ok: false, 이유: "통지가 안 떴다", before,
+      심은성적: planted, 지금주: get(seasonStore).currentWeek,
+      소식수: get(gameStore).mailbox.length,
+    };
+  }
+  const 갈래 = notice.lane ?? null;
+  const 선택지 = notice.decision?.options.map((o) => o.id) ?? [];
+
+  // ③ 「받아들인다」 — 화면이 부르는 그 함수를 그대로 부른다
+  await applyDecision(notice.id, "accept");
+
+  // ④ 세계가 실제로 움직였나
+  const g1 = get(gameStore);
+  const s1 = get(seasonStore);
+  const p1 = g1.protagonist;
+  const after = {
+    team: p1.teamId, league: p1.leagueId, stage: p1.careerStage,
+    week: s1.currentWeek,
+    일정리그: s1.leagueId,
+    내경기수: s1.schedule.filter((e) => e.isProtagonistGame).length,
+  };
+  const 내려갔다 = (p1.teamId ?? "").endsWith("_2") && (p1.leagueId ?? "").endsWith("_FARM");
+  const 일정도갔다 = s1.leagueId === p1.leagueId;
+  return {
+    ok: 내려갔다 && 일정도갔다,
+    갈래, 선택지, 심은성적: planted,
+    소식제목: notice.subject,
+    before, after,
+    판정: { 소속내려감: 내려갔다, 일정도따라감: 일정도갔다 },
+    최근일어난일: (p1.recentOutcomes ?? []).slice(-3),
+  };
+}
+
 export function forceProtagonistToFarm(): Record<string, unknown> {
   const p = get(gameStore).protagonist;
   const before = { team: p.teamId, league: p.leagueId, stage: p.careerStage };
