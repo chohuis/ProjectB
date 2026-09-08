@@ -1,0 +1,40 @@
+{
+  "id": "EVT_PRO_U_FULL_HOUSE",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "story",
+  "category": "mental",
+  "priority": 692,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_U_FULL_HOUSE",
+  "decisionTemplateId": "DEC_PRO_U_FULL_HOUSE",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "4-4 둘째 턴 ④ — 프로 초반 전용 유니크 「처음의 무게」 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 그 소리 속에서 던진 하루는 다음 주까지 간다"
+}
