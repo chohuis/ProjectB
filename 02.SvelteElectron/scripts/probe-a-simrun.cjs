@@ -16,14 +16,39 @@
  *   같은 답이 나오면 성향을 나눈 뜻이 없다.
  */
 const path = require("node:path");
+const { SAFE_CONCURRENCY, runPool } = require(path.join(process.cwd(), "scripts/perf/concurrency.cjs"));
+const CONC = Number(process.env.PB_CONC || SAFE_CONCURRENCY);
 const fs = require("node:fs");
 const { spawn } = require("node:child_process");
 
-const RUNS = Number(process.env.PB_RUNS || 3);
-const SEASONS = Number(process.env.PB_SEASONS || 6);
-const SEEDS = String(process.env.PB_SEEDS || "20260802,777,31337").split(",").map(Number);
-const PERSONAS = String(process.env.PB_PERSONAS || process.env.PB_PERSONA || "growth").split(",");
-const PRESET = process.env.PB_PRESET || "balanced";
+/**
+ * **판 구성 — 30판** (사용자 확정 2026-09-09).
+ *
+ * ```
+ *   성장 우선  20판 (프리셋 4 × 씨앗 5)   ← 밸런스의 기준
+ *   안전         5판
+ *   대충         5판                      ← 폭 확인용
+ * ```
+ *
+ * ⚠ **성장 우선만 프리셋을 다 돈다.** 안전·대충은 「폭」을 보는 것이라 기준
+ *   프리셋(균형형) 하나로 씨앗만 흩는다 — 그쪽까지 4×5 로 돌리면 60판이 된다.
+ * ⚠ `PB_PLAN=quick` 이면 성향 셋 × 씨앗 하나(3판)다 — 배선 확인용.
+ */
+const SEASONS = Number(process.env.PB_SEASONS || 12);
+const PRESETS_ALL = ["balanced", "power", "control", "stamina"];
+const SEEDS_ALL = String(process.env.PB_SEEDS || "20260802,777,31337,4242,20260803")
+  .split(",").map(Number);
+
+function buildPlan() {
+  if (process.env.PB_PLAN === "quick") {
+    return ["growth", "safe", "lazy"].map((persona) => ({ persona, preset: "balanced", seed: SEEDS_ALL[0] }));
+  }
+  const jobs = [];
+  for (const preset of PRESETS_ALL) for (const seed of SEEDS_ALL) jobs.push({ persona: "growth", preset, seed });
+  for (const seed of SEEDS_ALL) jobs.push({ persona: "safe",  preset: "balanced", seed });
+  for (const seed of SEEDS_ALL) jobs.push({ persona: "lazy",  preset: "balanced", seed });
+  return jobs;
+}
 const OUT = path.join(process.cwd(), "resource/logs/runs");
 const MARK = "SIMRUN_JSON ";
 
@@ -38,13 +63,13 @@ function failReport(r) {
   ].filter(Boolean).join("\n");
 }
 
-function runOne(n, seed, persona) {
+function runOne(n, seed, persona, preset) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, [path.join(process.cwd(), "scripts/probe-a-simrun-worker.cjs")], {
       cwd: process.cwd(),
       env: { ...process.env, ELECTRON_RUN_AS_NODE: "1",
         PF_SEED: String(seed), PB_SEASONS: String(SEASONS),
-        PB_PERSONA: persona, PB_START_PRESET: PRESET, PB_RUN_NO: String(n) },
+        PB_PERSONA: persona, PB_START_PRESET: preset, PB_RUN_NO: String(n) },
     });
     let out = "", err = "";
     child.stdout.on("data", (d) => (out += d));
@@ -60,22 +85,25 @@ function runOne(n, seed, persona) {
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
-  const reports = [];
-  let n = 0;
-  for (const persona of PERSONAS) {
-    for (const seed of SEEDS.slice(0, RUNS)) {
-      n++;
-      process.stdout.write(`  [시작] #${n} 씨앗${seed} ${persona} ${PRESET} ${SEASONS}시즌\n`);
-      const r = await runOne(n, seed, persona);
-      if (!r.ok) { console.log(`  🔴 #${n} 실패`); console.log(failReport(r)); continue; }
-      const file = path.join(OUT, `#${String(n).padStart(2, "0")}.json`);
-      fs.writeFileSync(file, JSON.stringify(r.report, null, 1));
-      reports.push(r.report);
-      const h = r.report.머리, t = r.report.꼬리;
-      process.stdout.write(`  [끝]   #${n} ${t.진로갈래} · 최고OVR ${h.최고OVR} · 통산 ${h.통산승}승`
-        + ` · 예외 ${t.예외} · 폴백 ${t.폴백}\n`);
+  const plan = buildPlan();
+  const t0 = Date.now();
+  console.log(`  판 ${plan.length} · 각 ${SEASONS}시즌 · 동시 ${CONC}판 (실측 안전선 ${SAFE_CONCURRENCY})`);
+  const out = await runPool(plan, CONC, async (j, i) => {
+    const n = i + 1;
+    const r = await runOne(n, j.seed, j.persona, j.preset);
+    if (!r.ok) {
+      console.log(`  🔴 #${n} ${j.persona}/${j.preset}/${j.seed} 실패`);
+      console.log(failReport(r));
+      return null;
     }
-  }
+    fs.writeFileSync(path.join(OUT, `#${String(n).padStart(2, "0")}.json`), JSON.stringify(r.report, null, 1));
+    const h = r.report.머리, t = r.report.꼬리;
+    console.log(`  [끝] #${String(n).padStart(2)} ${j.persona}/${j.preset}/${j.seed}`
+      + ` ${t.진로갈래} · 최고OVR ${h.최고OVR} · 통산 ${h.통산승}승 · 예외 ${t.예외} · 폴백 ${t.폴백}`);
+    return r.report;
+  });
+  const reports = out.filter(Boolean);
+  const 벽시계분 = Math.round((Date.now() - t0) / 60000);
 
   // ── 통합 (서식 문서 「통합 summary.md」) ──────────────────────
   const rows = reports.map((r, i) => ({
@@ -91,7 +119,7 @@ function runOne(n, seed, persona) {
   const md = [
     `# 계측 통합 (${new Date().toISOString().slice(0, 10)})`,
     "",
-    `- 판 ${rows.length} · 프리셋 ${PRESET} · 성향 ${PERSONAS.join("·")} · 각 ${SEASONS}시즌`,
+    `- 판 ${rows.length}/${plan.length} · 각 ${SEASONS}시즌 · 동시 ${CONC}판 · 총 ${벽시계분}분`,
     `- 프로 도달 ${프로도달}/${rows.length}`,
     `- 🔴 **삼킨 예외가 난 판 ${예외판}** ${예외판 ? "— 그 판의 숫자는 믿으면 안 된다" : "(없다)"}`,
     `- 폴백 총 ${rows.reduce((a, x) => a + x.폴백, 0)} (목표 0)`,

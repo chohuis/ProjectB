@@ -432,7 +432,19 @@ export interface SimYearRow {
  * ⚠ 등급 수는 이 함수가 세지 않는다 — 호출부가 그해 시작·끝의 차를 넘긴다
  *   (`eventFunnelStats` 는 판 전체 누계라 그대로 쓰면 해마다 커진다).
  */
-export function simYearRow(tierDelta: Record<string, number>, noticeDelta: number): SimYearRow {
+/**
+ * @param at 그 해 **시작 시점**의 무대·소속. 안 주면 지금 값을 쓴다.
+ *
+ * 🔴 **안 주면 줄이 거짓말을 한다** (2026-09-09 실측). 진로 결정은 시즌
+ *   **끝 무렵**에 처리되므로, 접는 시점에는 이미 다음 무대의 소속이다 —
+ *   실제로 「2028 · 무대 university · 소속 TEAM_UNIV_NAMAK」인데 성적은
+ *   고교 3학년 것이 실린 줄이 나왔다. 성적과 소속이 다른 해를 가리킨다.
+ */
+export function simYearRow(
+  tierDelta: Record<string, number>,
+  noticeDelta: number,
+  at?: { 무대: string; 소속: string; 나이: number },
+): SimYearRow {
   const g = get(gameStore);
   const s = get(seasonStore);
   const p = g.protagonist;
@@ -446,7 +458,8 @@ export function simYearRow(tierDelta: Record<string, number>, noticeDelta: numbe
       .map((e) => String(e.eventType)),
   ];
   return {
-    연도: s.seasonYear, 나이: p.age, 무대: p.careerStage, 소속: p.teamId ?? "",
+    연도: s.seasonYear, 나이: at?.나이 ?? p.age,
+    무대: at?.무대 ?? p.careerStage, 소속: at?.소속 ?? p.teamId ?? "",
     연봉: p.contract?.salary ?? 0,
     G: st?.g ?? 0, IP: Math.round((st?.ip ?? 0) * 10) / 10,
     ERA: st?.era ?? 0, 승: st?.w ?? 0, 패: st?.l ?? 0,
@@ -463,8 +476,12 @@ export function tierCounters(): { 등급: Record<string, number>; 통지: number
   const f = eventFunnelProbe().tier as { emitted?: Record<string, number> };
   return {
     등급: { ...(f.emitted ?? {}) },
-    // 통지는 등급 밖이라 `conditional.urgentPicked` 가 센다(등급 줄기 밖 레인)
-    통지: (eventFunnelProbe() as Record<string, Record<string, number>>).conditional?.urgentPicked ?? 0,
+    // 🔴 **발동 수**를 센다 (2026-09-09 실측으로 고쳤다). 처음엔
+    //   `conditional.urgentPicked`(후보 수)를 썼는데 그건 **조건을 통과한 수**라
+    //   한 해가 52 로 찍혔다 — 매주 후보에 오르고 정책에 막힌 것까지 센 값이다.
+    //   통지 레인이 실제로 내보낸 것은 `conditional.emitted` 다(그 레인만 이
+    //   갈래를 쓴다 — 필수는 `mandatory`, 등급은 `grade`).
+    통지: (eventFunnelProbe() as Record<string, Record<string, number>>).conditional?.emitted ?? 0,
   };
 }
 

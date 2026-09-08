@@ -43,7 +43,9 @@ function runOne(seed) {
       clearTimeout(timer);
       const ms = Date.now() - t0;
       const ok = out.includes("CONC_OK");
-      resolve({ seed, ok, ms, code, signal, err: err.slice(-300) });
+      const line = out.split(String.fromCharCode(10)).find((l) => l.startsWith("CONC_OK "));
+      const phase = line ? JSON.parse(line.slice(8)) : null;
+      resolve({ seed, ok, ms, code, signal, phase, err: err.slice(-300) });
     });
   });
 }
@@ -74,6 +76,13 @@ function runOne(seed) {
       + `  성공 ${okN}/${n}`
       + `  판당 중앙 ${String(row.판당초_중앙).padStart(4)}초 · 최대 ${String(row.판당초_최대).padStart(4)}초`
       + `  처리량 ${row.처리량_판당분}분/판`);
+    // 🔴 단계별 — 어느 단계가 동시 수에 따라 늘어나는가
+    const ph = rs.map((r) => r.phase).filter(Boolean);
+    if (ph.length) {
+      const med = (k) => { const v = ph.map((x) => x[k]).sort((a, b) => a - b); return Math.round(v[Math.floor(v.length / 2)] / 100) / 10; };
+      row.단계초 = { 번들: med("번들ms"), 준비: med("준비ms"), 세계: med("세계ms"), 시뮬: med("시뮬ms") };
+      console.log(`        단계(초) 번들 ${row.단계초.번들} · 준비 ${row.단계초.준비} · 세계 ${row.단계초.세계} · 시뮬 ${row.단계초.시뮬}`);
+    }
     for (const r of rs.filter((x) => !x.ok)) {
       console.log(`      🔴 씨앗 ${r.seed} 실패 code=${r.code} signal=${r.signal ?? "-"} ${r.err.split("\n").slice(-2).join(" ")}`);
     }

@@ -1039,8 +1039,11 @@ export function applyEffectToProtagonist(
   if (fx.pitchGradeUp) {
     const has = pitches.find((e) => e.id === fx.pitchGradeUp!.id);
     if (has) {
+      // 🔴 **단계 수를 받는다** (2026-09-09). 히든은 두 단계다(보상안 §1) —
+      //   없으면 1 이라 옛 데이터는 그대로 돈다. 상한 5 는 그대로 걸린다
+      const steps = Math.max(1, Math.round(fx.pitchGradeUp.steps ?? 1));
       pitches = pitches.map((e) => e.id === fx.pitchGradeUp!.id
-        ? { ...e, grade: Math.min(5, e.grade + 1) as PitchEntry["grade"] } : e);
+        ? { ...e, grade: Math.min(5, e.grade + steps) as PitchEntry["grade"] } : e);
     } else {
       console.warn(`[보상] 없는 구종의 등급을 올리려 했다: ${fx.pitchGradeUp.id}`);
     }

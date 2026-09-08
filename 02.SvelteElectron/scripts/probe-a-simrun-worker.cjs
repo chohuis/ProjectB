@@ -21,6 +21,14 @@ const RUN_NO = Number(process.env.PB_RUN_NO || 1);
 
     let prev = app.tierCounters();
     const start = app.currentSeason();
+    // 🔴 **그 해 시작 시점의 무대·소속을 든다.** 진로 결정이 시즌 끝 무렵에
+    //   처리돼서, 접는 시점에는 이미 다음 무대의 소속이다 — 그대로 적으면
+    //   성적과 소속이 서로 다른 해를 가리킨다(실측으로 잡았다)
+    const snap = () => {
+      const st = app.protagonistState();
+      return { 무대: String(st.stage), 소속: String(st.team ?? ""), 나이: Number(st.age ?? 0) };
+    };
+    let yearAt = snap();
     const guard = makeStallGuard();
     let n = 0;
     while (n++ < SEASONS * 52 * 40 && app.currentSeason() - start < SEASONS) {
@@ -34,10 +42,11 @@ const RUN_NO = Number(process.env.PB_RUN_NO || 1);
         const now = app.tierCounters();
         const d = {};
         for (const k of ["normal", "rare", "unique", "hidden"]) d[k] = (now.등급[k] ?? 0) - (prev.등급[k] ?? 0);
-        years.push(app.simYearRow(d, now.통지 - prev.통지));
+        years.push(app.simYearRow(d, now.통지 - prev.통지, yearAt));
         prev = now;
         guard.hit(true);
         await app.seasonRollover();
+        yearAt = snap();   // 다음 해의 시작 시점
         continue;
       }
       await app.autoRun();
