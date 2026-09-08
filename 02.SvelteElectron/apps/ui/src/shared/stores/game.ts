@@ -1,6 +1,7 @@
 import { ipLabel, rateLabel, eraLabel } from "../utils/baseballFormat";
 import { MILITARY_RESULT_WEEK } from "../utils/seasonWeeks";
 import { weekLabelOf } from "../utils/seasonCalendar";
+import { gatePitchRewards } from "../utils/pitchRewards";
 import { derived, get, writable } from "svelte/store";
 import type { MessageItem } from "../types/main";
 import type {
@@ -1527,7 +1528,10 @@ function createGameStore() {
       update((s) => {
         const msg    = s.mailbox.find((m) => m.id === messageId);
         const option = msg?.decision?.options.find((o) => o.id === optionId);
-        const fx     = option?.effects;
+        // 🔴 **구종 보상은 유니크·히든에서만 먹는다** (2026-09-09 · R1).
+        //   등급은 소식에 **스냅샷으로** 실려 있다(`eventGrade`) — 규칙 id 로
+        //   되짚으면 소식함에 남은 옛 소식이 지금 데이터의 등급으로 보인다
+        const fx     = option?.effects && gatePitchRewards(option.effects, msg?.eventGrade);
 
         const mailbox = s.mailbox.map((m) => {
           if (m.id !== messageId || !m.decision) return m;
@@ -2276,12 +2280,20 @@ function createGameStore() {
      * ⚠ 관계도·사치품은 여기서 못 한다(비동기). 그게 필요한 경로는
      * `usecases/decisions.ts`의 `applySideEffects`를 이어서 불러야 한다.
      */
-    applyEventEffect(effect: import("../types/main").DecisionEffect) {
+    /**
+     * @param grade 이 효과가 실려 온 이벤트 등급. **구종 보상의 문지기다**
+     *   (2026-09-09 · R1) — 없으면 구종 보상은 안 먹는다.
+     */
+    applyEventEffect(
+      effect: import("../types/main").DecisionEffect,
+      grade?: import("../utils/tierRules").EventGrade,
+    ) {
       update((s) => {
-        const updated = applyEffectToProtagonist(s.protagonist, effect);
+        const gated = gatePitchRewards(effect, grade);
+        const updated = applyEffectToProtagonist(s.protagonist, gated);
         return {
           ...s, protagonist: updated, player: toPlayerCompat(updated),
-          schoolState: applyStudyQuality(s.schoolState, effect.studyQualityDelta),
+          schoolState: applyStudyQuality(s.schoolState, gated.studyQualityDelta),
         };
       });
     },

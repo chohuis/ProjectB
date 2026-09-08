@@ -97,6 +97,19 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "pitch_training":
       return protagonist.trainingPitchState?.id === cond.pitchId;
 
+    // ── 구종을 배우는 중인가 (2026-09-09 · R1) ───────────────────
+    //
+    // 🔴 **보상 후보를 가르는 조건이다** (`PLAN_REWARDS` §2③). 배우는 중이면
+    //   진행도 점프·등급업이 뜨고, 아니면 새 구종이 뜬다. 효과 키로 갈랐다면
+    //   「배우던 게 사라진다」와 「아무 일도 안 난다」가 둘 다 남는다.
+    //
+    // ⚠ **진행도 0 도 배우는 중이다.** 훈련을 막 시작한 주가 그렇고, 그때
+    //   새 구종을 얹으면 시작한 것이 지워진다 — 그게 막으려던 자리다.
+    case "pitch_learning": {
+      const learning = protagonist.trainingPitchState != null;
+      return learning === cond.value;
+    }
+
     // ── 태그 ──────────────────────────────────────────────────────
     case "has_tag":
       return protagonist.tags.includes(cond.tag);
