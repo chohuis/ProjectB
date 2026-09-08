@@ -176,7 +176,8 @@
     "check:tiercoverage": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-tiercoverage.cjs",
     "probe:a:read": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-read.cjs",
     "probe:a:cmd": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-cmd.cjs",
-    "check:lanes": "node scripts/check-lanes.cjs"
+    "check:lanes": "node scripts/check-lanes.cjs",
+    "check:rewards": "node scripts/check-rewards.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

@@ -1,7 +1,7 @@
 {
   "id": "EVT_FARM_FIRST_CALLUP_HOPE",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "career",
   "category": "career",
   "priority": 760,
@@ -30,5 +30,6 @@
   ],
   "messageTemplateId": "MSG_FARM_FIRST_CALLUP_HOPE",
   "decisionTemplateId": "DEC_FARM_FIRST_CALLUP_HOPE",
-  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 3 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 한 번뿐). 값은 제안값이고 5단계에서 잰다"
+  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 3 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 한 번뿐). 값은 제안값이고 5단계에서 잰다",
+  "_rewardNote": "노말 → **레어**(R3 · 2026-09-09). 3단계 ① 에서 **큰 갈림길**이라 XP 를 9 로 올린 자리인데, 보상안(§1)은 노말을 XP 1~3 으로 못박는다. 둘 중 하나를 되돌리는 대신 **등급을 장면에 맞췄다** — 커리어에 한 번뿐인 사건은 정의상 노말이 아니다"
 }

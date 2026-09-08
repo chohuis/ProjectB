@@ -1,11 +1,11 @@
 {
   "id": "EVT_HS_LIFE_TEAM_CHEM_01",
   "type": "random",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "team",
   "category": "team_life",
   "priority": 288,
-  "oncePolicy": "repeatable",
+  "oncePolicy": "once_per_season",
   "cooldownWeeks": 2,
   "weight": 16,
   "poolId": "POOL_TEAM_LIFE_DAILY",
@@ -20,5 +20,6 @@
     }
   ],
   "messageTemplateId": "MSG_HS_LIFE_TEAM_CHEM",
-  "decisionTemplateId": "DEC_PRO_LOCKER_MOOD"
+  "decisionTemplateId": "DEC_PRO_LOCKER_MOOD",
+  "_rewardNote": "노말 → **레어**(R3 · 2026-09-09). 3단계 ① 에서 **큰 갈림길**이라 XP 를 9 로 올린 자리인데, 보상안(§1)은 노말을 XP 1~3 으로 못박는다. 둘 중 하나를 되돌리는 대신 **등급을 장면에 맞췄다** — 커리어에 한 번뿐인 사건은 정의상 노말이 아니다"
 }

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_FARM_N_NIGHT_LIGHT",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
+  "category": "team",
+  "priority": 648,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_N_NIGHT_LIGHT",
+  "decisionTemplateId": "DEC_FARM_N_NIGHT_LIGHT",
+  "_newNote": "R3 에서 큰 갈림길 여섯을 레어로 올리며 노말 하한 60 이 깨진 자리를 메운다(2026-09-09). 주차 조건은 안 붙였다"
+}

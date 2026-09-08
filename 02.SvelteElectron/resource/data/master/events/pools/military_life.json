@@ -140,18 +140,17 @@
         {
           "id": "home",
           "label": "집으로 간다",
-          "effectHint": "사기 +10, 감각 +2",
-          "moraleDelta": 10,
-          "ballDelta": 2
+          "effectHint": "사기 +10",
+          "moraleDelta": 10
         },
         {
           "id": "park",
           "label": "야구장에 간다",
-          "effectHint": "감각 +6, 사기 +6",
-          "ballDelta": 6,
-          "moraleDelta": 6
+          "effectHint": "감각 +6",
+          "ballDelta": 6
         }
-      ]
+      ],
+      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09). 크기는 안 건드렸다 — 그건 5단계 D 몫이고, 여기서는 **종류가 갈리게만** 했다"
     },
     {
       "id": "MIL_CAL_INSPECTION_1",
@@ -249,18 +248,17 @@
         {
           "id": "home",
           "label": "집으로 간다",
-          "effectHint": "사기 +10, 감각 +2",
-          "moraleDelta": 10,
-          "ballDelta": 2
+          "effectHint": "사기 +10",
+          "moraleDelta": 10
         },
         {
           "id": "park",
           "label": "야구장에 간다",
-          "effectHint": "감각 +6, 사기 +6",
-          "ballDelta": 6,
-          "moraleDelta": 6
+          "effectHint": "감각 +6",
+          "ballDelta": 6
         }
-      ]
+      ],
+      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09). 크기는 안 건드렸다 — 그건 5단계 D 몫이고, 여기서는 **종류가 갈리게만** 했다"
     },
     {
       "id": "MIL_CAL_PROMOTE_3",
@@ -280,10 +278,12 @@
         {
           "id": "squad",
           "label": "소단위를 챙긴다",
-          "effectHint": "같은 소단위 전원 +2",
-          "relationDelta": 2
+          "effectHint": "같은 소단위 전원 +2, 성과 판정 유리",
+          "relationDelta": 2,
+          "perfTierDelta": -1
         }
-      ]
+      ],
+      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09) — 둘 다 관계 +N 이고 받는 사람도 안 갈렸다. `relationTarget` 을 붙이려 했으나 `check:militarydata` 가 **선택지 필드로 모르는 칸**이라 잡았다(맞다 · 배선이 없다). 소단위 쪽에 **성과 판정 보정**을 붙여 종류를 갈랐다 — 크기는 안 건드렸다"
     },
     {
       "id": "MIL_CAL_WORKS_FALL",

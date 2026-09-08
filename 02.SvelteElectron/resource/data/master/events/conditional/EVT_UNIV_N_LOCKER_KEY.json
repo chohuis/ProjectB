@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_N_LOCKER_KEY",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
+  "category": "team",
+  "priority": 794,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_N_LOCKER_KEY",
+  "decisionTemplateId": "DEC_UNIV_N_LOCKER_KEY",
+  "_newNote": "R3 에서 큰 갈림길 여섯을 레어로 올리며 노말 하한 60 이 깨진 자리를 메운다(2026-09-09). 주차 조건은 안 붙였다"
+}

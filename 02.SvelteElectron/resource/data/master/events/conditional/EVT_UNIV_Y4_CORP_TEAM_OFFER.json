@@ -1,7 +1,7 @@
 {
   "id": "EVT_UNIV_Y4_CORP_TEAM_OFFER",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "rare",
   "theme": "career",
   "category": "career",
   "priority": 770,
@@ -28,5 +28,6 @@
   "messageTemplateId": "MSG_UNIV_Y4_CORP_TEAM_OFFER",
   "decisionTemplateId": "DEC_UNIV_Y4_CORP_TEAM_OFFER",
   "_laneNote": "L5 — 이벤트에 남기고 **조건만 성적에 묶었다**(2026-09-08 · 소식 갈래 계획). 문안은 한 글자도 안 고쳤다. 🔴 **여기만 부호가 반대다.** 문안이 「지명이 확실치 않은 지금」이라 **프로 지명이 어려운 선수**에게 오는 제안이다. `gte` 로 걸면 문안과 거꾸로 간다",
-  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 3 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 진로). 값은 제안값이고 5단계에서 잰다"
+  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 3 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 진로). 값은 제안값이고 5단계에서 잰다",
+  "_rewardNote": "노말 → **레어**(R3 · 2026-09-09). 3단계 ① 에서 **큰 갈림길**이라 XP 를 9 로 올린 자리인데, 보상안(§1)은 노말을 XP 1~3 으로 못박는다. 둘 중 하나를 되돌리는 대신 **등급을 장면에 맞췄다** — 커리어에 한 번뿐인 사건은 정의상 노말이 아니다"
 }

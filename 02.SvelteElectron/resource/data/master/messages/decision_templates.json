@@ -145,8 +145,8 @@
           "effectHint": "피로 +10, 스피드·커맨드 경험치 +3",
           "effects": [
             "fatigue:+10",
-            "xp.velocity:+3",
-            "xp.command:+3"
+            "xp.velocity:+2",
+            "xp.command:+1"
           ]
         },
         {
@@ -1121,11 +1121,11 @@
         {
           "id": "now",
           "label": "지금 당장 시작한다",
-          "effectHint": "배우는 구종 진행도 +25%, 피로 +14",
+          "effectHint": "무브먼트 경험치 +9, 피로 +14",
           "effects": {
             "fatigueDelta": 14,
-            "pitchProgressJump": {
-              "pct": 25
+            "xp": {
+              "movement": 9
             }
           }
         },
@@ -1960,7 +1960,7 @@
           "effectHint": "멘탈리티 XP +4, 사기 +10, 명성 +2",
           "effects": {
             "xp": {
-              "mentality": 4
+              "mentality": 3
             },
             "moraleDelta": 10,
             "fameDelta": 2
@@ -2057,8 +2057,8 @@
           "effectHint": "스태미나 XP +3, 회복력 XP +2, 피로 +8",
           "effects": {
             "xp": {
-              "stamina": 3,
-              "recovery": 2
+              "stamina": 2,
+              "recovery": 1
             },
             "fatigueDelta": 8
           }
@@ -2327,8 +2327,8 @@
           "effectHint": "위기집중력 XP +3, 스태미나 XP +2, 피로 +12",
           "effects": {
             "xp": {
-              "clutch": 3,
-              "stamina": 2
+              "clutch": 2,
+              "stamina": 1
             },
             "fatigueDelta": 12
           }
@@ -2357,7 +2357,7 @@
           "effects": {
             "xp": {
               "control": 2,
-              "movement": 2
+              "movement": 1
             },
             "fatigueDelta": 4,
             "relationDelta": {
@@ -3633,7 +3633,7 @@
           "effectHint": "위기집중력 XP +4, 사기 +2",
           "effects": {
             "xp": {
-              "clutch": 4
+              "clutch": 3
             },
             "moraleDelta": 2
           }
@@ -3791,11 +3791,11 @@
         {
           "id": "learn",
           "label": "배운다",
-          "effectHint": "배우는 구종 진행도 +25%, 피로 +12",
+          "effectHint": "무브먼트 경험치 +9, 피로 +12",
           "effects": {
             "fatigueDelta": 12,
-            "pitchProgressJump": {
-              "pct": 25
+            "xp": {
+              "movement": 9
             }
           }
         },
@@ -3849,8 +3849,8 @@
           "effectHint": "커맨드 XP +3, 멘탈 XP +2",
           "effects": {
             "xp": {
-              "command": 3,
-              "mentality": 2
+              "command": 2,
+              "mentality": 1
             }
           }
         },
@@ -3992,8 +3992,8 @@
           "effectHint": "회복력 XP +3, 스태미나 XP +2",
           "effects": {
             "xp": {
-              "recovery": 3,
-              "stamina": 2
+              "recovery": 2,
+              "stamina": 1
             }
           }
         },
@@ -4236,7 +4236,7 @@
           "effectHint": "위기집중력 XP +4, 피로 +12",
           "effects": {
             "xp": {
-              "clutch": 4
+              "clutch": 3
             },
             "fatigueDelta": 12
           }
@@ -5052,8 +5052,8 @@
           "effectHint": "멘탈 XP +3, 컨트롤 XP +2",
           "effects": {
             "xp": {
-              "mentality": 3,
-              "control": 2
+              "mentality": 2,
+              "control": 1
             }
           }
         },
@@ -5477,8 +5477,8 @@
           "effectHint": "커맨드 XP +3, 멘탈 XP +2",
           "effects": {
             "xp": {
-              "command": 3,
-              "mentality": 2
+              "command": 2,
+              "mentality": 1
             }
           }
         }
@@ -7235,7 +7235,7 @@
           "effectHint": "커맨드 XP +4, 피로 +10",
           "effects": {
             "xp": {
-              "command": 4
+              "command": 3
             },
             "fatigueDelta": 10
           }
@@ -7311,7 +7311,7 @@
           "effectHint": "무브먼트 XP +4, 피로 +8",
           "effects": {
             "xp": {
-              "movement": 4
+              "movement": 3
             },
             "fatigueDelta": 8
           }
@@ -7322,7 +7322,7 @@
           "effectHint": "커맨드 XP +4",
           "effects": {
             "xp": {
-              "command": 4
+              "command": 3
             }
           }
         }
@@ -8538,7 +8538,7 @@
         {
           "id": "power",
           "label": "속도를 챙긴다",
-          "effectHint": "구속 +2, 사기 +10",
+          "effectHint": "구속 +2, 사기 +30",
           "conditions": [
             {
               "type": "player_type",
@@ -8546,14 +8546,14 @@
             }
           ],
           "effects": [
-            "stat.velocity:+2",
+            "xp.velocity:+3",
             "morale:+10"
           ]
         },
         {
           "id": "power_bat",
           "label": "힘을 챙긴다",
-          "effectHint": "파워 +2, 사기 +10",
+          "effectHint": "파워 +2, 사기 +30",
           "conditions": [
             {
               "type": "player_type",
@@ -8561,14 +8561,14 @@
             }
           ],
           "effects": [
-            "stat.batting.power:+2",
+            "xp.batting.power:+3",
             "morale:+10"
           ]
         },
         {
           "id": "control",
           "label": "제구를 챙긴다",
-          "effectHint": "제구 +2, 사기 +10",
+          "effectHint": "제구 +2, 사기 +30",
           "conditions": [
             {
               "type": "player_type",
@@ -8576,14 +8576,14 @@
             }
           ],
           "effects": [
-            "stat.control:+2",
+            "xp.control:+3",
             "morale:+10"
           ]
         },
         {
           "id": "control_bat",
           "label": "정확도를 챙긴다",
-          "effectHint": "컨택 +2, 사기 +10",
+          "effectHint": "컨택 +2, 사기 +30",
           "conditions": [
             {
               "type": "player_type",
@@ -8591,7 +8591,7 @@
             }
           ],
           "effects": [
-            "stat.batting.contact:+2",
+            "xp.batting.contact:+3",
             "morale:+10"
           ]
         }
@@ -12317,11 +12317,11 @@
         {
           "id": "sharpen",
           "label": "지금 것을 더 날카롭게 한다",
-          "effectHint": "배우는 구종 진행도 +25%, 피로 +4",
+          "effectHint": "무브먼트 경험치 +9, 피로 +4",
           "effects": {
             "fatigueDelta": 4,
-            "pitchProgressJump": {
-              "pct": 25
+            "xp": {
+              "movement": 9
             }
           }
         },
@@ -14400,12 +14400,12 @@
         {
           "id": "grip",
           "label": "그립을 배운다",
-          "effectHint": "배우는 구종 진행도 +30%, 피로 +6",
+          "effectHint": "무브먼트 경험치 +9, 피로 +6",
           "effects": {
-            "pitchProgressJump": {
-              "pct": 30
-            },
-            "fatigueDelta": 6
+            "fatigueDelta": 6,
+            "xp": {
+              "movement": 9
+            }
           }
         },
         {
@@ -14943,12 +14943,12 @@
         {
           "id": "game",
           "label": "경기에서 던진다",
-          "effectHint": "배우는 구종 진행도 +30%, 피로 +8",
+          "effectHint": "무브먼트 경험치 +9, 피로 +8",
           "effects": {
-            "pitchProgressJump": {
-              "pct": 30
-            },
-            "fatigueDelta": 8
+            "fatigueDelta": 8,
+            "xp": {
+              "movement": 9
+            }
           }
         },
         {
@@ -16486,6 +16486,51 @@
               "kind": "teammate",
               "delta": 5
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_N_LOCKER_KEY",
+      "prompt": "그 자리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "keep",
+          "label": "그대로 쓴다",
+          "effectHint": "사기 +4",
+          "effects": {
+            "moraleDelta": 4
+          }
+        },
+        {
+          "id": "clean",
+          "label": "싹 정리한다",
+          "effectHint": "성실 +3",
+          "effects": {
+            "diligenceDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_N_NIGHT_LIGHT",
+      "prompt": "남은 시간을 어떻게 쓰겠습니까?",
+      "options": [
+        {
+          "id": "more",
+          "label": "몇 개 더 던진다",
+          "effectHint": "피로 +4, 성실 +3",
+          "effects": {
+            "diligenceDelta": 3,
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "stop",
+          "label": "여기서 접는다",
+          "effectHint": "컨디션 +4",
+          "effects": {
+            "conditionDelta": 4
           }
         }
       ]

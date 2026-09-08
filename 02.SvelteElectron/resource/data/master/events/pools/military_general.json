@@ -55,11 +55,16 @@
         {
           "id": "communicate",
           "label": "솔직하게 소통한다",
-          "effectHint": "사기 -1",
-          "moraleDelta": -1
+          "effectHint": "사기 -1, 동료 관계 +4",
+          "moraleDelta": -1,
+          "relationDelta": {
+            "kind": "teammate",
+            "delta": 4
+          }
         }
       ],
-      "cooldownWeeks": 4
+      "cooldownWeeks": 4,
+      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09). 크기는 안 건드렸다 — 그건 5단계 D 몫이고, 여기서는 **종류가 갈리게만** 했다"
     },
     {
       "id": "MIL_GEN_PHONE_CALL",
