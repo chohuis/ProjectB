@@ -2,7 +2,7 @@
   "id": "EVT_HS_Y3_SHOULDER",
   "type": "conditional",
   "tier": "unique",
-  "theme": "social",
+  "theme": "body",
   "category": "hs_life",
   "priority": 80,
   "oncePolicy": "once_per_stage_year",
@@ -32,5 +32,6 @@
       "delta": -6
     }
   },
-  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 내 몫을 챙기면 옆자리가 서운하다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 내 몫을 챙기면 옆자리가 서운하다. 값은 제안값이라 4-6 실측 뒤에 다시 본다",
+  "_themeNote": "결을 `social` → `body` 로 고쳤다(2026-09-08 · C 가 찾음). 어깨 통증은 주인공 몸이다"
 }
