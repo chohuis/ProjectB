@@ -1,7 +1,7 @@
 {
   "id": "EVT_FARM_U_FIRST_CALLUP",
   "type": "conditional",
-  "tier": "unique",
+  "tier": "notice",
   "theme": "career",
   "category": "career",
   "priority": 670,
@@ -9,24 +9,19 @@
   "cooldownWeeks": 8,
   "conditions": [
     {
-      "type": "league_id",
-      "leagueIds": [
-        "LEAGUE_KBL_FARM",
-        "LEAGUE_ABL_FARM",
-        "LEAGUE_JBL_FARM"
-      ]
-    },
-    {
       "type": "player_type",
       "playerType": "pitcher"
+    },
+    {
+      "type": "outcome_within",
+      "outcome": "callup",
+      "weeks": 0
     }
   ],
   "messageTemplateId": "MSG_FARM_U_FIRST_CALLUP",
   "decisionTemplateId": "DEC_FARM_U_FIRST_CALLUP",
-  "cost": {
-    "fatigueDelta": 12
-  },
   "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
   "_tierNote": "유니크 대가는 피로 +12 다 — 올라가는 주에는 이동과 긴장이 그대로 몸에 남는다",
-  "_windowNote": "주차 창을 아예 없앴다(2026-09-08 · 커버리지 실측). 이 무대에서 **1주에 후보가 0** 이면 그 주 등급 추첨이 통째로 노말로 떨어진다 — 무대마다 「언제든 뜰 수 있는 것」이 하나는 있어야 한다"
+  "_windowNote": "주차 창을 아예 없앴다(2026-09-08 · 커버리지 실측). 이 무대에서 **1주에 후보가 0** 이면 그 주 등급 추첨이 통째로 노말로 떨어진다 — 무대마다 「언제든 뜰 수 있는 것」이 하나는 있어야 한다",
+  "_laneNote": "L4 — **통지로 옮겼다**(2026-09-08 · 소식 갈래 계획). 🔴 **실제로 콜업된 주에만.** 2군 소속 조건도 뗐다 — 올라간 주에는 이미 2군이 아니다"
 }

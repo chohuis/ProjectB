@@ -20,5 +20,6 @@
     }
   ],
   "messageTemplateId": "MSG_FARM_W22_MIDSEASON_CALLUP",
-  "decisionTemplateId": "DEC_FARM_W22_MIDSEASON_CALLUP"
+  "decisionTemplateId": "DEC_FARM_W22_MIDSEASON_CALLUP",
+  "_laneNote": "⏸ **안내로 남긴다**(L4 · 2026-09-08). 제목이 「중간 콜업 시기」라 **달력이 부르는 안내**이지 「올라갔다」는 통지가 아니다 — 실제 콜업 통지는 `EVT_FARM_U_FIRST_CALLUP`(`outcome_within callup`)이 맡는다. 등급도 상태 효과도 없다"
 }

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_FARM_N_GEAR_ROOM",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
+  "category": "team",
+  "priority": 650,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_N_GEAR_ROOM",
+  "decisionTemplateId": "DEC_FARM_N_GEAR_ROOM",
+  "_newNote": "L4 로 노말이 통지로 빠져 하한 60 이 깨진 자리를 메운다(2026-09-08). **주차 조건을 안 붙였다** — 빈 주를 다시 만들지 않는다"
+}

@@ -1,7 +1,7 @@
 {
   "id": "EVT_ABROAD_GO_BACK",
   "type": "conditional",
-  "tier": "urgent",
+  "tier": "notice",
   "theme": "career",
   "category": "career",
   "priority": 920,
@@ -30,5 +30,6 @@
   ],
   "messageTemplateId": "MSG_ABROAD_GO_BACK",
   "decisionTemplateId": "DEC_ABROAD_GO_BACK",
-  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 4 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 진로). 값은 제안값이고 5단계에서 잰다"
+  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 4 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 진로). 값은 제안값이고 5단계에서 잰다",
+  "_laneNote": "`urgent` → `notice` 로 이름을 모았다(L4 · 2026-09-08). 둘은 하는 일이 같아 `noticeOf()` 가 같이 보지만, 이름이 둘이면 정본이 둘이다"
 }

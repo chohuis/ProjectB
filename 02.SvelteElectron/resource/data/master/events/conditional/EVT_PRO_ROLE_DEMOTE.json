@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_ROLE_DEMOTE",
   "type": "conditional",
-  "tier": "unique",
+  "tier": "notice",
   "theme": "team",
   "category": "team",
   "priority": 735,
@@ -12,25 +12,21 @@
       "stage": "pro_kbl"
     },
     {
-      "type": "season_ip_gte",
-      "value": 30
+      "type": "eq",
+      "path": "currentRole",
+      "value": "SP"
     },
     {
-      "type": "morale_lte",
-      "value": 45
+      "type": "season_starts_gte",
+      "value": 5
     },
     {
-      "type": "team_rank_gte",
-      "value": 6
+      "type": "season_era_gte",
+      "value": 5
     }
   ],
   "messageTemplateId": "MSG_PRO_ROLE_DEMOTE",
   "decisionTemplateId": "DEC_PRO_ROLE_DEMOTE",
-  "cost": {
-    "relationDelta": {
-      "kind": "manager",
-      "delta": -5
-    }
-  },
-  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 팀이 원한 것과 다른 길이다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 팀이 원한 것과 다른 길이다. 값은 제안값이라 4-6 실측 뒤에 다시 본다",
+  "_laneNote": "L4 — **통지로 옮겼다**(2026-09-08 · 소식 갈래 계획). **선발로 다섯 번 넘게 나갔고 방어율이 무너졌을 때만.** ⚠ 실제로 로테이션에서 빼는 열쇠는 없다 — `roleChoice` 는 보직 물음 전용 경로(`applyRoleChoice`)만 읽는다. A 에게 넘긴다"
 }

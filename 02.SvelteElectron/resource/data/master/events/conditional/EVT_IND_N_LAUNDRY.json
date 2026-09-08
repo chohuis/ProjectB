@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_N_LAUNDRY",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "team",
+  "category": "team",
+  "priority": 652,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_N_LAUNDRY",
+  "decisionTemplateId": "DEC_IND_N_LAUNDRY",
+  "_newNote": "L4 로 노말이 통지로 빠져 하한 60 이 깨진 자리를 메운다(2026-09-08). **주차 조건을 안 붙였다** — 빈 주를 다시 만들지 않는다"
+}

@@ -1,7 +1,7 @@
 {
   "id": "EVT_FARM_FUTURES_ALLSTAR",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "notice",
   "theme": "media",
   "category": "media",
   "priority": 766,
@@ -19,9 +19,18 @@
     {
       "type": "week_gte",
       "value": 26
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3.2
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
     }
   ],
   "messageTemplateId": "MSG_FARM_FUTURES_ALLSTAR",
   "decisionTemplateId": "DEC_FARM_FUTURES_ALLSTAR",
-  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)",
+  "_laneNote": "L4 — **통지로 옮겼다**(2026-09-08 · 소식 갈래 계획). 「명단에 이름이 올랐습니다」 — 2군에서 던진 것이 있고 방어율이 좋을 때만 부른다"
 }

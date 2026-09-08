@@ -1,7 +1,7 @@
 {
   "id": "EVT_COMMON_INJURY_PRONE",
   "type": "conditional",
-  "tier": "urgent",
+  "tier": "notice",
   "theme": "body",
   "category": "health",
   "priority": 950,
@@ -13,5 +13,6 @@
     }
   ],
   "messageTemplateId": "MSG_COMMON_INJURY_PRONE",
-  "decisionTemplateId": "DEC_COMMON_INJURY_PRONE"
+  "decisionTemplateId": "DEC_COMMON_INJURY_PRONE",
+  "_laneNote": "`urgent` → `notice` 로 이름을 모았다(L4 · 2026-09-08). 둘은 하는 일이 같아 `noticeOf()` 가 같이 보지만, 이름이 둘이면 정본이 둘이다"
 }

@@ -1,7 +1,7 @@
 {
   "id": "EVT_PRO_EARLY_DEMOTION_TALK",
   "type": "conditional",
-  "tier": "urgent",
+  "tier": "notice",
   "theme": "career",
   "category": "career",
   "priority": 910,
@@ -21,14 +21,19 @@
       "value": 2
     },
     {
-      "type": "morale_lte",
-      "value": 55
-    },
-    {
       "type": "week_gte",
       "value": 14
+    },
+    {
+      "type": "season_era_gte",
+      "value": 5.5
+    },
+    {
+      "type": "season_games_gte",
+      "value": 8
     }
   ],
   "messageTemplateId": "MSG_PRO_EARLY_DEMOTION_TALK",
-  "decisionTemplateId": "DEC_PRO_EARLY_DEMOTION_TALK"
+  "decisionTemplateId": "DEC_PRO_EARLY_DEMOTION_TALK",
+  "_laneNote": "L4 — **통지로 옮겼다**(2026-09-08 · 소식 갈래 계획). 🔴 **테스터가 겪은 자리.** 「받아들인다」를 골라도 안 내려갔다 — 갈래에 `rosterMove: demote` 를 붙여 **진짜로 내려가게** 했다. 조건도 사기가 아니라 **성적**으로 바꿨다"
 }

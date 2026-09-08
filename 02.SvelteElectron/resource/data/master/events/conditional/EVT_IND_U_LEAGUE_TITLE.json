@@ -1,7 +1,7 @@
 {
   "id": "EVT_IND_U_LEAGUE_TITLE",
   "type": "conditional",
-  "tier": "unique",
+  "tier": "notice",
   "theme": "team",
   "category": "team",
   "priority": 664,
@@ -13,20 +13,19 @@
       "stage": "independent"
     },
     {
-      "type": "week_gte",
-      "value": 36
-    },
-    {
       "type": "player_type",
       "playerType": "pitcher"
+    },
+    {
+      "type": "outcome_within",
+      "outcome": "champion",
+      "weeks": 0
     }
   ],
   "messageTemplateId": "MSG_IND_U_LEAGUE_TITLE",
   "decisionTemplateId": "DEC_IND_U_LEAGUE_TITLE",
-  "cost": {
-    "fatigueDelta": 12
-  },
   "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
   "_tierNote": "유니크 대가는 피로 +12 다 — 우승까지 가는 마지막 몇 주가 몸에 남는다",
-  "_windowNote": "창을 앞으로 벌렸다(2026-09-08 · 커버리지 실측). `week_gte` 가 늦게 몰려 **앞주에 후보가 0** 이었고 그게 폴백 44 의 절반이었다"
+  "_windowNote": "창을 앞으로 벌렸다(2026-09-08 · 커버리지 실측). `week_gte` 가 늦게 몰려 **앞주에 후보가 0** 이었고 그게 폴백 44 의 절반이었다",
+  "_laneNote": "L4 — **통지로 옮겼다**(2026-09-08 · 소식 갈래 계획). 🔴 **실제로 우승한 주에만.** 예전엔 36주 넘으면 주사위로 떴다 — 지지 않은 팀에게도 우승 소식이 갈 수 있었다"
 }

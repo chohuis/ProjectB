@@ -1,7 +1,7 @@
 {
   "id": "EVT_FARM_DEMOTED",
   "type": "conditional",
-  "tier": "normal",
+  "tier": "notice",
   "theme": "career",
   "category": "career",
   "priority": 800,
@@ -16,10 +16,12 @@
       ]
     },
     {
-      "type": "week_gte",
-      "value": 2
+      "type": "outcome_within",
+      "outcome": "demote",
+      "weeks": 0
     }
   ],
   "messageTemplateId": "MSG_FARM_DEMOTED",
-  "decisionTemplateId": "DEC_FARM_DEMOTED"
+  "decisionTemplateId": "DEC_FARM_DEMOTED",
+  "_laneNote": "L4 — **통지로 옮겼다**(2026-09-08 · 소식 갈래 계획). 🔴 **실제로 내려온 주에만.** 예전엔 2군 소속에 2주만 넘으면 떠서 **처음부터 2군인 신인에게도** 「1군에서 내려왔습니다」가 왔다"
 }
