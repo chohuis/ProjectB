@@ -6,7 +6,7 @@
  *   여기는 4-2 가 스스로를 세는 자리이고, 그 검사가 오면 겹치는 줄을 지운다.
  *
  * ```
- * 등급 밖   주차 고정 필수(mandatory) · tier: "urgent"       — 등급 줄기를 안 탄다(§4)
+ * 등급 밖   주차 고정 필수(mandatory) · tier: "notice"/"urgent" — 등급 줄기를 안 탄다(§4)
  * 세 규칙   등급 없음 0 · 레어 이상 repeatable 0 · 유니크 이상 cost 없음 0
  * ```
  *
@@ -75,7 +75,10 @@ const buckets = (r) => {
   return ["공용"];
 };
 const bucket = (r) => buckets(r)[0];
-const outOfTier = (r) => r.type === "mandatory" || r.tier === "urgent";
+// 🔴 `notice`(통지)도 등급 밖이다 — 2026-09-08 에 선 갈래이고 `urgent` 는 그
+//   옛 이름이다(`PLAN_MESSAGE_LANES` · `eventEngine.noticeOf`). 여기 안 넣으면
+//   B 가 옮긴 통지가 「등급이 없다」로 빨강이 난다
+const outOfTier = (r) => r.type === "mandatory" || r.tier === "urgent" || r.tier === "notice";
 const TIERS = ["normal", "rare", "unique", "hidden"];
 
 const noTier = R.filter((r) => !outOfTier(r) && !TIERS.includes(r.tier));
@@ -110,7 +113,7 @@ const sameKind = R.filter((r) => {
 
 const log = (s) => process.stdout.write(s + "\n");
 log("");
-log(`[등급] 규칙 ${R.length} · 등급 밖 ${R.filter(outOfTier).length}(필수 ${R.filter((r) => r.type === "mandatory").length} · urgent ${R.filter((r) => r.tier === "urgent").length})`);
+log(`[등급] 규칙 ${R.length} · 등급 밖 ${R.filter(outOfTier).length}(필수 ${R.filter((r) => r.type === "mandatory").length} · 통지 ${R.filter((r) => r.tier === "urgent" || r.tier === "notice").length})`);
 log("");
 const B = ["프로초반", "프로중후반", "고교", "대학", "독립", "2군", "공용", "재회"];
 log("무대".padEnd(12) + TIERS.map((t) => t.padStart(9)).join("") + "   읽기만      합");
