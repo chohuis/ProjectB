@@ -372,6 +372,26 @@ export interface EventEngineResult {
 /** 등급별 가중 — 시즌 상한·마른 시즌·상태 보정을 다 먹인 값 */
 function gradeWeights(rules: TierRules, ctx: EventContext, week: number): Record<EventGrade, number> {
   const out = { ...rules.weights };
+
+  // 🔴 **개막 전에는 노말만 뽑는다** (2026-09-08 · B 제보 ②).
+  //
+  //   고교 1~7주에 폴백이 11번 났다(레어 1~4주 · 유니크 1~7주). 개막 전이라
+  //   레어·유니크에 후보가 **하나도** 없어서 추첨이 매번 한 등급 아래로
+  //   내려간 것이다. 두 가지가 같이 망가진다:
+  //     ① `tier.fallback` 이 **데이터 부족 신호**인데 거짓 경보를 낸다
+  //        (`check:tiercoverage` 가 그 값으로 빨강을 낸다)
+  //     ② 그만큼 노말이 더 떠서 등급 분포가 그 주만 다르게 흐른다
+  //
+  //   ⚠ **데이터를 채워서 고칠 일이 아니다.** 「개막도 안 했는데 유니크가
+  //     뜨는」 쪽이 더 이상하다 — 그 주의 레어·유니크는 없는 것이 맞다.
+  //   ⚠ **노말은 그대로 둔다.** 개막 전 이야기(훈련·신학기)는 그 주의 것이라
+  //     같이 끄면 1~7주가 통째로 빈다.
+  //   ⚠ 신호가 없으면(구 경로) **열린 것으로 본다** — 모르는 것을 「안 열렸다」로
+  //     읽으면 레어·유니크가 통째로 사라진다.
+  if (ctx.seasonOpened === false) {
+    for (const g of GRADES) if (g !== "normal") out[g] = 0;
+    return out;
+  }
   for (const g of GRADES) {
     const cap = rules.seasonCap[g];
     if (cap !== undefined && (ctx.tierCounts?.[g] ?? 0) >= cap) {
