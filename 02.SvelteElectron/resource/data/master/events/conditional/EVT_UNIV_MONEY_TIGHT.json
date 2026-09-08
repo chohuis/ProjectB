@@ -13,9 +13,10 @@
     },
     {
       "type": "week_gte",
-      "value": 16
+      "value": 12
     }
   ],
   "messageTemplateId": "MSG_UNIV_MONEY_TIGHT",
-  "decisionTemplateId": "DEC_UNIV_MONEY_TIGHT"
+  "decisionTemplateId": "DEC_UNIV_MONEY_TIGHT",
+  "_windowNote": "16주 → 12주(2026-09-08). 대학 레어의 **12~15주가 비어 있었다.** 생활비는 학기 중 어느 주에도 말이 되는 장면이라 창만 넓혔다"
 }

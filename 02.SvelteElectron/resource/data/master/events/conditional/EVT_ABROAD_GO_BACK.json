@@ -29,5 +29,6 @@
     }
   ],
   "messageTemplateId": "MSG_ABROAD_GO_BACK",
-  "decisionTemplateId": "DEC_ABROAD_GO_BACK"
+  "decisionTemplateId": "DEC_ABROAD_GO_BACK",
+  "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 4 → 9 로 올렸다(3단계 ① · 2026-09-08 · 기준: 진로). 값은 제안값이고 5단계에서 잰다"
 }

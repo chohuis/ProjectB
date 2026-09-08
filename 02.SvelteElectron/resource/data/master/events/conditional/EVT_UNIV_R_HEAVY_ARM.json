@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_R_HEAVY_ARM",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "body",
+  "category": "health",
+  "priority": 824,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_R_HEAVY_ARM",
+  "decisionTemplateId": "DEC_UNIV_R_HEAVY_ARM",
+  "_newNote": "대학 레어 1~5주가 비어 있어 **주차 조건 없는 것**을 새로 썼다(3단계 곁들여 · 2026-09-08)",
+  "_tierNote": "대학 레어의 **1~5주가 비어 있었다.** 남은 것들은 시험·쇼케이스처럼 주차에 매인 장면이라 창을 못 옮긴다 — 그래서 **주차 조건이 없는 것 하나**를 새로 썼다"
+}
