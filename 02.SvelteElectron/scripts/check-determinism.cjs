@@ -12,6 +12,12 @@
  *
  * ⚠ 계통을 나눠 본다 — 로스터·계약·부상·성적. 어느 쪽이 먼저 갈렸는지가
  * 원인을 가른다. 성적이 먼저면 경기, 부상이 먼저면 주간 판정이다.
+ *
+ * ⚠ **기본값 `--weeks 60` 은 「60주」가 아니라 「autoRun 60바퀴」다** (2026-09-08).
+ *   `autoRun()` 은 정지 주차(W40·W51)까지 한 번에 밀므로 한 바퀴가 수십 주다 —
+ *   60바퀴면 **10시즌쯤을 두 번** 돌아 한 시간 가까이 걸린다. 멈춘 게 아니다.
+ *   자리를 좁힐 때는 `npm run check:determinism -- --weeks 12` 로 시작해라
+ *   (12바퀴 · 11칸 · 몇 분).
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
