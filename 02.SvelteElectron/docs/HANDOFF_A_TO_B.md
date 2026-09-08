@@ -102,6 +102,75 @@
   가중을 올리면 없는 후보를 더 자주 뽑아 폴백만 는다. 거기는 데이터(4-4)다.
 
 ---
+## 0.12 `startGuarantee` 를 통지에서 주는 법 — 통째로
+
+```jsonc
+// events/conditional/EVT_PRO_MANAGER_TRUST.json  (예시 · 문안은 네 몫)
+{
+  "id": "EVT_PRO_MANAGER_TRUST",
+  "type": "conditional",
+  "tier": "notice",                 // ← 통지. 등급 칸을 지운다
+  "theme": "career",
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    { "type": "career_stage", "stage": ["pro_kbl"] },
+    { "type": "relation_gte", "kind": "manager", "value": 60 },   // ← 결정 2번: 선발 보장은 감독 관계로
+    { "type": "season_starts_gte", "value": 3 }                    // ← 이미 선발로 던지고 있다
+  ],
+  "messageTemplateId": "MSG_PRO_MANAGER_TRUST",
+  "decisionTemplateId": "DEC_PRO_MANAGER_TRUST"
+}
+```
+
+```jsonc
+// messages/decision_templates.json 의 한 갈래
+{
+  "id": "take", "label": "맡는다",
+  "effectHint": "다음 다섯 경기 선발 보장",
+  "effects": { "startGuarantee": { "games": 5 } }
+}
+```
+
+⚠ **`"tier": "notice"` 가 없으면 이 효과는 안 먹는다.** 무시하고 로그만 남는다 —
+  그게 규칙이고, 그 규칙을 코드가 지킨다(§0.7).
+⚠ 감독 관계는 **효과가 아니라 조건**이다. 관계가 자리를 주는 게 아니라,
+  관계가 「그 통지가 오게」 한다 — 그것이 결정 2번의 뜻이다.
+
+## 0.13 옛 현역 풀 20종을 새 경로에 이었다 (네가 넘긴 것)
+
+`military_general` 20종이 새 게임에서 한 번도 안 떴다는 제보가 맞았다. 사슬:
+`enlistProtagonist` 가 현역이면 **반드시** `militaryLife` 를 만들고 →
+`advanceWeek` 이 새 경로로 빠지고 → 그 경로가 `militaryLifeEvents` 만 읽었다.
+
+두 풀은 **id 가 하나도 안 겹친다**(실측 0/20). 겹쳤다면 「대체됐다」로 읽고 지우면
+되는데 겹치는 게 없으니 **다른 이야기 20편이 죽어 있었다** — 그래서 이었다(㉮).
+
+🔴 **그냥 섞으면 안 됐다** — `relationDelta` 가 두 풀에서 뜻이 다르다:
+
+| 풀 | `relationDelta` |
+|---|---|
+| `military_life` | **숫자** — 부대원 관계 |
+| `military_general` | **객체** `{kind,delta}` — 관계도 |
+
+`toLifeEvent` 가 병영생활 칸만 제자리에 놓고 나머지는 `extraEffects` 로 갈라 담는다.
+
+⚠ **내용의 주인은 너다.** 그 20종이 `military_life` 62종과 결이 안 맞는다고 보면
+  **파일을 지우면 된다** — 빈 풀이면 빈 배열이 나오고 아무 일도 안 일어난다.
+  새로 쓸 거면 `military_life.json` 쪽 형식(숫자 `relationDelta`)으로 써라.
+⚠ 옛 세이브(`militaryLife` 없음)는 예전 갈래를 그대로 탄다 — 안 건드렸다.
+
+## 0.14 L4 를 시작하기 전에 — 세 줄
+
+1. **커버리지를 먼저 끝내라.** 옮기는 열하나에 유니크가 넷이라 옮기는 순간
+   지금 잰 숫자가 무효가 된다(계획 §「등급 분포가 흔들린다」).
+2. **옮길 때 등급 칸을 지우고 `"tier": "notice"` 로 바꿔라.** 둘 다 있으면
+   `gradeOf` 가 등급을 먼저 보지 않는다 — `noticeOf` 가 참이면 등급 줄기에 안 든다.
+   그래도 **지워라**: 남겨 두면 다음 사람이 등급 이벤트로 읽는다.
+3. **⑨(`EVT_PRO_EARLY_DEMOTION_TALK`)는 `"rosterMove": "demote"` 를 붙여야
+   진짜로 내려간다.** 테스터가 겪은 자리다 — 「받아들인다」를 골라도 안 내려갔다.
+
+---
+
 # A → B 인계 6차 (2026-09-04) — B-35 값을 다 실었다 · 남은 한 자리
 
 > 커밋 `9a86d069a`(여덟) · `08ead1beb`(§0.6 다섯) · `8a32059d7`(본문 줄이기).
