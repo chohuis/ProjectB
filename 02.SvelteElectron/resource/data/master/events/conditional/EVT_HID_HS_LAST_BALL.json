@@ -1,0 +1,38 @@
+{
+  "id": "EVT_HID_HS_LAST_BALL",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "story",
+  "category": "mental",
+  "priority": 898,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_HS_LAST_BALL",
+  "decisionTemplateId": "DEC_HID_HS_LAST_BALL",
+  "cost": {
+    "moraleDelta": -8
+  },
+  "hiddenCondition": [
+    {
+      "type": "count",
+      "counter": "sameTeamYears",
+      "value": 3
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 의 특성 「기둥」과 대가 「대학 제안 하나 닫힘」은 **둘 다 없다** — 특성은 셋(철완·빠른 회복·위기에 강함)뿐이고 진로 제안을 닫는 열쇠도 없다. 뜻이 제일 가까운 것으로 바꿨다(잠재력·멘탈 · 사기 −8)"
+}

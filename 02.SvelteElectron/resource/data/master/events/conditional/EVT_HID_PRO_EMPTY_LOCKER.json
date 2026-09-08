@@ -1,0 +1,31 @@
+{
+  "id": "EVT_HID_PRO_EMPTY_LOCKER",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "story",
+  "category": "mental",
+  "priority": 862,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_HID_PRO_EMPTY_LOCKER",
+  "decisionTemplateId": "DEC_HID_PRO_EMPTY_LOCKER",
+  "cost": {
+    "moraleDelta": -8
+  },
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "조건 없는 히든이다 — 대가는 그 라커를 본 값이다"
+}

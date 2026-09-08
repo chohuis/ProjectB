@@ -1,0 +1,32 @@
+{
+  "id": "EVT_HID_HS_DAWN_FIELD",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "train",
+  "category": "training",
+  "priority": 900,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_HS_DAWN_FIELD",
+  "decisionTemplateId": "DEC_HID_HS_DAWN_FIELD",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "hiddenCondition": [
+    {
+      "type": "streak",
+      "metric": "diligence",
+      "op": "gte",
+      "value": 90,
+      "weeks": 20
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 은 「대가 없음(이미 냈다)」이라 했다. `check:tiers` 가 유니크 이상에 대가를 요구하므로, 조건이 이미 대가라는 뜻을 살려 **제일 작은 값**만 뒀다"
+}
