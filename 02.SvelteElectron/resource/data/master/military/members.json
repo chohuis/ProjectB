@@ -1,17 +1,195 @@
 [
-  { "id": "MEM_CO",      "name": "", "rank": "대위", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": ["decides_leave"] },
-  { "id": "MEM_XO",      "name": "", "rank": "중위", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
-  { "id": "MEM_1SG",     "name": "", "rank": "상사", "role": "officer", "subunit": "HQ",   "trait": "", "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 100, "tags": ["decides_leave", "grades_perf:signal"] },
-  { "id": "MEM_SIG_SR",  "name": "", "rank": "상병", "role": "senior",  "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 70,  "tags": ["mentor:signal"] },
-  { "id": "MEM_SUPPLY",  "name": "", "rank": "일병", "role": "peer",    "subunit": "HQ",   "trait": "", "relationStart": 5,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
-  { "id": "MEM_COOK",    "name": "", "rank": "상병", "role": "peer",    "subunit": "HQ",   "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 80,  "tags": [] },
-  { "id": "MEM_PLT_LDR", "name": "", "rank": "소위", "role": "officer", "subunit": "PLT1", "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
-  { "id": "MEM_PLT_SGT", "name": "", "rank": "중사", "role": "officer", "subunit": "PLT1", "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": [] },
-  { "id": "MEM_SQ_LDR",  "name": "", "rank": "하사", "role": "officer", "subunit": "SQ1",  "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 100, "tags": ["grades_perf:mortar"] },
-  { "id": "MEM_GUNNER",  "name": "", "rank": "병장", "role": "senior",  "subunit": "SQ1",  "trait": "", "relationStart": -5,  "joinWeek": 0,  "leaveWeek": 30,  "tags": ["mentor:mortar"] },
-  { "id": "MEM_ASST",    "name": "", "rank": "상병", "role": "senior",  "subunit": "SQ1",  "trait": "", "relationStart": 5,   "joinWeek": 0,  "leaveWeek": 62,  "tags": [] },
-  { "id": "MEM_AMMO_PR", "name": "", "rank": "이병", "role": "peer",    "subunit": "SQ1",  "trait": "", "relationStart": 10,  "joinWeek": 0,  "leaveWeek": 100, "tags": ["ball_partner"] },
-  { "id": "MEM_DRIVER",  "name": "", "rank": "상병", "role": "peer",    "subunit": "SQ1",  "trait": "", "relationStart": 0,   "joinWeek": 0,  "leaveWeek": 88,  "tags": [] },
-  { "id": "MEM_JR_1",    "name": "", "rank": "이병", "role": "junior",  "subunit": "SQ1",  "trait": "", "relationStart": 5,   "joinWeek": 36, "leaveWeek": 100, "tags": [] },
-  { "id": "MEM_JR_2",    "name": "", "rank": "이병", "role": "junior",  "subunit": "HQ",   "trait": "", "relationStart": 5,   "joinWeek": 62, "leaveWeek": 100, "tags": [] }
+  {
+    "id": "MEM_CO",
+    "name": "한재동",
+    "rank": "대위",
+    "role": "officer",
+    "subunit": "HQ",
+    "trait": "말이 짧다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": [
+      "decides_leave"
+    ]
+  },
+  {
+    "id": "MEM_XO",
+    "name": "오승표",
+    "rank": "중위",
+    "role": "officer",
+    "subunit": "HQ",
+    "trait": "원칙대로 간다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": []
+  },
+  {
+    "id": "MEM_1SG",
+    "name": "임철규",
+    "rank": "상사",
+    "role": "officer",
+    "subunit": "HQ",
+    "trait": "깐깐하다",
+    "relationStart": -5,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": [
+      "decides_leave",
+      "grades_perf:signal"
+    ]
+  },
+  {
+    "id": "MEM_SIG_SR",
+    "name": "박도현",
+    "rank": "상병",
+    "role": "senior",
+    "subunit": "HQ",
+    "trait": "가르치기를 좋아한다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 70,
+    "tags": [
+      "mentor:signal"
+    ]
+  },
+  {
+    "id": "MEM_SUPPLY",
+    "name": "정우람",
+    "rank": "일병",
+    "role": "peer",
+    "subunit": "HQ",
+    "trait": "잘 챙긴다",
+    "relationStart": 5,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": []
+  },
+  {
+    "id": "MEM_COOK",
+    "name": "황기태",
+    "rank": "상병",
+    "role": "peer",
+    "subunit": "HQ",
+    "trait": "손이 크다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 80,
+    "tags": []
+  },
+  {
+    "id": "MEM_PLT_LDR",
+    "name": "신동주",
+    "rank": "소위",
+    "role": "officer",
+    "subunit": "PLT1",
+    "trait": "아직 서툴다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": []
+  },
+  {
+    "id": "MEM_PLT_SGT",
+    "name": "강만호",
+    "rank": "중사",
+    "role": "officer",
+    "subunit": "PLT1",
+    "trait": "소리부터 낸다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": []
+  },
+  {
+    "id": "MEM_SQ_LDR",
+    "name": "서준영",
+    "rank": "하사",
+    "role": "officer",
+    "subunit": "SQ1",
+    "trait": "숫자를 본다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": [
+      "grades_perf:mortar"
+    ]
+  },
+  {
+    "id": "MEM_GUNNER",
+    "name": "조태식",
+    "rank": "병장",
+    "role": "senior",
+    "subunit": "SQ1",
+    "trait": "말을 안 섞는다",
+    "relationStart": -5,
+    "joinWeek": 0,
+    "leaveWeek": 30,
+    "tags": [
+      "mentor:mortar"
+    ]
+  },
+  {
+    "id": "MEM_ASST",
+    "name": "윤성재",
+    "rank": "상병",
+    "role": "senior",
+    "subunit": "SQ1",
+    "trait": "눈치가 빠르다",
+    "relationStart": 5,
+    "joinWeek": 0,
+    "leaveWeek": 62,
+    "tags": []
+  },
+  {
+    "id": "MEM_AMMO_PR",
+    "name": "최민규",
+    "rank": "이병",
+    "role": "peer",
+    "subunit": "SQ1",
+    "trait": "야구를 안다",
+    "relationStart": 10,
+    "joinWeek": 0,
+    "leaveWeek": 100,
+    "tags": [
+      "ball_partner"
+    ]
+  },
+  {
+    "id": "MEM_DRIVER",
+    "name": "장우진",
+    "rank": "상병",
+    "role": "peer",
+    "subunit": "SQ1",
+    "trait": "길을 잘 안다",
+    "relationStart": 0,
+    "joinWeek": 0,
+    "leaveWeek": 88,
+    "tags": []
+  },
+  {
+    "id": "MEM_JR_1",
+    "name": "이해든",
+    "rank": "이병",
+    "role": "junior",
+    "subunit": "SQ1",
+    "trait": "말수가 적다",
+    "relationStart": 5,
+    "joinWeek": 36,
+    "leaveWeek": 100,
+    "tags": []
+  },
+  {
+    "id": "MEM_JR_2",
+    "name": "김노아",
+    "rank": "이병",
+    "role": "junior",
+    "subunit": "HQ",
+    "trait": "겁이 없다",
+    "relationStart": 5,
+    "joinWeek": 62,
+    "leaveWeek": 100,
+    "tags": []
+  }
 ]
