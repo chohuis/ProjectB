@@ -16,6 +16,25 @@
 > `scripts/probe-d-e2-growth.cjs --path univ|indie`(대학·독립 무대 등판·이닝·
 > 훈련 vs 경기 증분 — 고교·프로 몫은 DR·LOC 판에 얹어 겸용으로 뽑는다).
 
+## 🔴 이 표를 읽기 전에 — 엔진 직접 호출 계측은 **잘못된 투수를 쟀다** (2026-09-08 · A)
+
+`random_decision_for_sim`(`runSimpleGame` 이 쓰는 자동 시뮬 결정 함수)이 **투수의
+보유 구종을 안 봤다.** 네 구종을 하드코딩해 균등하게 던졌고, `grade_of` 는
+arsenal 에 없는 구종에 기준값 3을 주므로 **숙련도도 안 걸렸다.**
+
+그래서 **엔진을 직접 부른 계측 전부**가 「구종 넷을 3등급으로 균등하게 던지는
+투수」를 재고 있었다 — `audit:engine` ② · `probe:a:tempo` · `probe:a:read` 가
+그렇다. 증상은 이미 표에 있었다: **구종 개수를 2~5로 바꿔도 피안타율이 소수점
+셋째 자리까지 같았다.** arsenal 이 산식에 닿지 않았기 때문이다.
+
+⚠ **실제 플레이와 이 문서의 나머지 절은 멀쩡하다.** 화면은 사람이 자기 구종을
+  고르고 NPC 는 `auto_pick_decision` → `pick_from_arsenal` 을 탄다. 아래 다섯
+  절(E2·DR·LOC·MOR·REU)은 전부 **판을 돌려**(`headless.boot`) 잰 것이라 이
+  함수를 안 지난다.
+
+⚠ **고쳤다**(`match_engine.rs` 의 `random_decision_for_sim` → `pick_from_arsenal`).
+  그러니 **고치기 전 엔진 직접 호출 표는 다시 안 쓴다** — 비교하려면 다시 잰다.
+
 ## 진행 현황 (씨앗 20260802 1차 — 다섯 절 다 참)
 
 | 절 | 상태 |
