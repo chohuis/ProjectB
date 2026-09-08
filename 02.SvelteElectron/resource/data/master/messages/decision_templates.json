@@ -364,11 +364,12 @@
         {
           "id": "velocity",
           "label": "전력 투구한다",
-          "effectHint": "선발 보장 2경기, 피로 +14",
+          "effectHint": "피로 +14, 감독 관계 +10",
           "effects": {
             "fatigueDelta": 14,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         },
@@ -1023,13 +1024,14 @@
         {
           "id": "accept",
           "label": "받아들인다",
-          "effectHint": "선발 보장 2경기, 피로 +14, 사기 +10, 명성 +2",
+          "effectHint": "피로 +14, 사기 +10, 명성 +2, 감독 관계 +10",
           "effects": {
             "moraleDelta": 10,
             "fatigueDelta": 14,
             "fameDelta": 2,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         },
@@ -1307,11 +1309,12 @@
         {
           "id": "try",
           "label": "해본다",
-          "effectHint": "선발 보장 2경기, 피로 +12",
+          "effectHint": "피로 +12, 감독 관계 +10",
           "effects": {
             "fatigueDelta": 12,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         },
@@ -1396,11 +1399,12 @@
         {
           "id": "go",
           "label": "나간다",
-          "effectHint": "선발 보장 2경기, 피로 +12",
+          "effectHint": "피로 +12, 감독 관계 +10",
           "effects": {
             "fatigueDelta": 12,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         },
@@ -3515,12 +3519,13 @@
         {
           "id": "compete",
           "label": "실력으로 이긴다",
-          "effectHint": "선발 보장 2경기, 피로 +14, 성실 +3",
+          "effectHint": "피로 +14, 성실 +3, 감독 관계 +10",
           "effects": {
             "diligenceDelta": 3,
             "fatigueDelta": 14,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         },
@@ -3550,12 +3555,13 @@
         {
           "id": "stable",
           "label": "간격을 지킨다",
-          "effectHint": "선발 보장 2경기, 컨디션 +8, 피로 +4",
+          "effectHint": "컨디션 +8, 피로 +4, 감독 관계 +10",
           "effects": {
             "conditionDelta": 8,
             "fatigueDelta": 4,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         }
@@ -6119,13 +6125,14 @@
         {
           "id": "appeal",
           "label": "코치에게 어필한다",
-          "effectHint": "선발 보장 2경기, 피로 +4, 사기 +2, 명성 +2",
+          "effectHint": "피로 +4, 사기 +2, 명성 +2, 감독 관계 +10",
           "effects": {
             "moraleDelta": 2,
             "fameDelta": 2,
             "fatigueDelta": 4,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
             }
           }
         },
@@ -11346,7 +11353,7 @@
         {
           "id": "thanks",
           "label": "제대로 인사한다",
-          "effectHint": "선발 보장 2경기, 피로 +4, 사기 +6, 동료 관계 +9",
+          "effectHint": "성장률 +3, 피로 +4, 사기 +6, 동료 관계 +9",
           "effects": {
             "relationDelta": {
               "kind": "teammate",
@@ -11354,9 +11361,7 @@
             },
             "moraleDelta": 6,
             "fatigueDelta": 4,
-            "startGuarantee": {
-              "games": 2
-            }
+            "devRateDelta": 3
           }
         },
         {
@@ -12259,17 +12264,14 @@
         {
           "id": "ask",
           "label": "감독에게 자리를 청한다",
-          "effectHint": "선발 보장 2경기, 피로 +4, 사기 +2, 감독 관계 +3",
+          "effectHint": "피로 +4, 사기 +2, 감독 관계 +10",
           "effects": {
             "relationDelta": {
               "kind": "manager",
-              "delta": 3
+              "delta": 10
             },
             "moraleDelta": 2,
-            "fatigueDelta": 4,
-            "startGuarantee": {
-              "games": 2
-            }
+            "fatigueDelta": 4
           }
         },
         {
@@ -14121,12 +14123,13 @@
         {
           "id": "raise",
           "label": "손을 든다",
-          "effectHint": "피로 +6, 선발 보장 1경기",
+          "effectHint": "피로 +6, 감독 관계 +6",
           "effects": {
-            "startGuarantee": {
-              "games": 1
-            },
-            "fatigueDelta": 6
+            "fatigueDelta": 6,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 6
+            }
           }
         },
         {
@@ -14146,12 +14149,13 @@
         {
           "id": "ready",
           "label": "맞춰 준비한다",
-          "effectHint": "피로 +5, 선발 보장 1경기",
+          "effectHint": "피로 +5, 감독 관계 +6",
           "effects": {
-            "startGuarantee": {
-              "games": 1
-            },
-            "fatigueDelta": 5
+            "fatigueDelta": 5,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 6
+            }
           }
         },
         {
@@ -14171,12 +14175,13 @@
         {
           "id": "take",
           "label": "한 이닝을 받는다",
-          "effectHint": "피로 +5, 선발 보장 1경기",
+          "effectHint": "피로 +5, 감독 관계 +6",
           "effects": {
-            "startGuarantee": {
-              "games": 1
-            },
-            "fatigueDelta": 5
+            "fatigueDelta": 5,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 6
+            }
           }
         },
         {
@@ -14277,12 +14282,13 @@
         {
           "id": "push",
           "label": "다 나간다",
-          "effectHint": "선발 보장 2경기, 피로 +16",
+          "effectHint": "피로 +16, 감독 관계 +10",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
-            "fatigueDelta": 16
+            "fatigueDelta": 16,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
           }
         },
         {
@@ -14336,12 +14342,13 @@
         {
           "id": "swing",
           "label": "전부 쏟는다",
-          "effectHint": "선발 보장 2경기, 피로 +14",
+          "effectHint": "피로 +14, 감독 관계 +10",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
-            "fatigueDelta": 14
+            "fatigueDelta": 14,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
           }
         },
         {
@@ -14444,15 +14451,13 @@
         {
           "id": "move",
           "label": "옮긴다",
-          "effectHint": "선발 보장 3경기, 감독 관계 -6",
+          "effectHint": "성장률 +3, 감독 관계 -6",
           "effects": {
-            "startGuarantee": {
-              "games": 3
-            },
             "relationDelta": {
               "kind": "manager",
               "delta": -6
-            }
+            },
+            "devRateDelta": 3
           }
         },
         {
@@ -14541,15 +14546,13 @@
         {
           "id": "look",
           "label": "자리를 알아본다",
-          "effectHint": "선발 보장 2경기, 동료 관계 -5",
+          "effectHint": "명성 +8, 동료 관계 -5",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
             "relationDelta": {
               "kind": "teammate",
               "delta": -5
-            }
+            },
+            "fameDelta": 8
           }
         }
       ]
@@ -14673,12 +14676,13 @@
         {
           "id": "call",
           "label": "먼저 연락한다",
-          "effectHint": "선발 보장 3경기, 명성 +8",
+          "effectHint": "명성 +8, 감독 관계 +14",
           "effects": {
-            "startGuarantee": {
-              "games": 3
-            },
-            "fameDelta": 8
+            "fameDelta": 8,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 14
+            }
           }
         },
         {
@@ -14790,12 +14794,13 @@
         {
           "id": "show",
           "label": "다 보여준다",
-          "effectHint": "선발 보장 2경기, 피로 +14",
+          "effectHint": "피로 +14, 감독 관계 +10",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
-            "fatigueDelta": 14
+            "fatigueDelta": 14,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
           }
         },
         {
@@ -14875,12 +14880,13 @@
         {
           "id": "start",
           "label": "선발로 나간다",
-          "effectHint": "선발 보장 2경기, 피로 +16",
+          "effectHint": "피로 +16, 감독 관계 +10",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
-            "fatigueDelta": 16
+            "fatigueDelta": 16,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
           }
         },
         {
@@ -14963,15 +14969,13 @@
         {
           "id": "move",
           "label": "가겠다고 한다",
-          "effectHint": "선발 보장 3경기, 감독 관계 -6",
+          "effectHint": "성장률 +3, 감독 관계 -6",
           "effects": {
-            "startGuarantee": {
-              "games": 3
-            },
             "relationDelta": {
               "kind": "manager",
               "delta": -6
-            }
+            },
+            "devRateDelta": 3
           }
         },
         {
@@ -15052,12 +15056,13 @@
         {
           "id": "ready",
           "label": "매일 몸을 푼다",
-          "effectHint": "선발 보장 2경기, 피로 +12",
+          "effectHint": "피로 +12, 감독 관계 +10",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
-            "fatigueDelta": 12
+            "fatigueDelta": 12,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
           }
         },
         {
@@ -15198,12 +15203,13 @@
         {
           "id": "match",
           "label": "다 따라간다",
-          "effectHint": "선발 보장 2경기, 피로 +16",
+          "effectHint": "피로 +16, 감독 관계 +10",
           "effects": {
-            "startGuarantee": {
-              "games": 2
-            },
-            "fatigueDelta": 16
+            "fatigueDelta": 16,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 10
+            }
           }
         },
         {
@@ -15242,13 +15248,14 @@
         {
           "id": "throw",
           "label": "기회를 잡는다",
-          "effectHint": "위기집중력 즉시 +1, 선발 보장 3경기",
+          "effectHint": "위기집중력 즉시 +1, 감독 관계 +14",
           "effects": {
-            "startGuarantee": {
-              "games": 3
-            },
             "statDelta": {
               "clutch": 1
+            },
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 14
             }
           }
         }
@@ -15470,11 +15477,12 @@
         {
           "id": "peak",
           "label": "그날에 맞춘다",
-          "effectHint": "선발 보장 3경기, 컨디션 +12",
+          "effectHint": "컨디션 +12, 감독 관계 +14",
           "effects": {
             "conditionDelta": 12,
-            "startGuarantee": {
-              "games": 3
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 14
             }
           }
         },
@@ -15499,12 +15507,13 @@
         {
           "id": "hold",
           "label": "자리를 지킨다",
-          "effectHint": "선발 보장 3경기, 피로 +10",
+          "effectHint": "피로 +10, 감독 관계 +14",
           "effects": {
-            "startGuarantee": {
-              "games": 3
-            },
-            "fatigueDelta": 10
+            "fatigueDelta": 10,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 14
+            }
           }
         },
         {
@@ -15693,12 +15702,13 @@
         {
           "id": "take",
           "label": "잡는다",
-          "effectHint": "선발 보장 5경기, 명성 +15",
+          "effectHint": "명성 +15, 감독 관계 +20",
           "effects": {
-            "startGuarantee": {
-              "games": 5
-            },
-            "fameDelta": 15
+            "fameDelta": 15,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 20
+            }
           }
         },
         {
@@ -15868,11 +15878,12 @@
         {
           "id": "call",
           "label": "연락한다",
-          "effectHint": "선발 보장 3경기, 명성 +15",
+          "effectHint": "명성 +15, 감독 관계 +16",
           "effects": {
             "fameDelta": 15,
-            "startGuarantee": {
-              "games": 3
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 16
             }
           }
         },
@@ -15952,12 +15963,13 @@
         {
           "id": "check",
           "label": "내일 확인한다",
-          "effectHint": "선발 보장 3경기, 명성 +12",
+          "effectHint": "명성 +12, 감독 관계 +16",
           "effects": {
-            "startGuarantee": {
-              "games": 3
-            },
-            "fameDelta": 12
+            "fameDelta": 12,
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 16
+            }
           }
         },
         {
@@ -15993,11 +16005,12 @@
         {
           "id": "prove",
           "label": "공으로 답한다",
-          "effectHint": "선발 보장 2경기, 잠재력 +1",
+          "effectHint": "잠재력 +1, 감독 관계 +16",
           "effects": {
             "potentialDelta": 1,
-            "startGuarantee": {
-              "games": 2
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 16
             }
           }
         }

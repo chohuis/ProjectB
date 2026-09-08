@@ -26,5 +26,6 @@
     }
   ],
   "messageTemplateId": "MSG_PRO_EARLY_SENIOR_SPOT",
-  "decisionTemplateId": "DEC_PRO_EARLY_SENIOR_SPOT"
+  "decisionTemplateId": "DEC_PRO_EARLY_SENIOR_SPOT",
+  "_swapNote": "선발 보장 → 감독 관계 교체(2026-09-08 · 사용자 확정)에서 **예외**다. 이 갈래에 동료 관계 +9 가 이미 있는데 `relationDelta` 는 한 갈래에 하나뿐인 칸이라, 감독 관계를 얹으면 **선배와의 관계를 덮어쓴다** — 선배가 자리를 내주는 장면에서 선배가 사라진다. 선배가 내준 자리에서 던지면 는다는 쪽(성장률 +3)으로 갔다"
 }
