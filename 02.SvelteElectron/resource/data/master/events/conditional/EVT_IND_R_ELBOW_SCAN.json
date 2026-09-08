@@ -14,7 +14,7 @@
     },
     {
       "type": "week_gte",
-      "value": 18
+      "value": 12
     },
     {
       "type": "player_type",
@@ -23,5 +23,6 @@
   ],
   "messageTemplateId": "MSG_IND_R_ELBOW_SCAN",
   "decisionTemplateId": "DEC_IND_R_ELBOW_SCAN",
-  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_windowNote": "창을 앞으로 벌렸다(2026-09-08 · 커버리지 실측). `week_gte` 가 늦게 몰려 **앞주에 후보가 0** 이었고 그게 폴백 44 의 절반이었다"
 }

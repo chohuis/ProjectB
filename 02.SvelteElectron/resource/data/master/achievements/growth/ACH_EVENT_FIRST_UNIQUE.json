@@ -1,0 +1,10 @@
+{
+  "id": "ACH_EVENT_FIRST_UNIQUE",
+  "title": "처음 만난 유니크",
+  "category": "growth",
+  "status": "active",
+  "metricKey": "eventUniqueTotal",
+  "targetValue": 1,
+  "hidden": false,
+  "reward": "명성 +2"
+}

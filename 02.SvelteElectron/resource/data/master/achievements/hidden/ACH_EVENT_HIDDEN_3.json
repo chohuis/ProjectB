@@ -1,0 +1,10 @@
+{
+  "id": "ACH_EVENT_HIDDEN_3",
+  "title": "숨은 이야기 셋",
+  "category": "hidden",
+  "status": "active",
+  "metricKey": "eventHiddenTotal",
+  "targetValue": 3,
+  "hidden": true,
+  "reward": "명성 +5"
+}

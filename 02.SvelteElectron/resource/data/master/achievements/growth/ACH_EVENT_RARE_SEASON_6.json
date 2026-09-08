@@ -1,0 +1,10 @@
+{
+  "id": "ACH_EVENT_RARE_SEASON_6",
+  "title": "사건이 많던 해",
+  "category": "growth",
+  "status": "active",
+  "metricKey": "eventRareSeasonMax",
+  "targetValue": 6,
+  "hidden": false,
+  "reward": "명성 +3"
+}
