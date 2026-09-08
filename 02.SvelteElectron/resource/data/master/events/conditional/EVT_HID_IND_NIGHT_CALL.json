@@ -1,0 +1,23 @@
+{
+  "id": "EVT_HID_IND_NIGHT_CALL",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "career",
+  "category": "career",
+  "priority": 874,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_IND_NIGHT_CALL",
+  "decisionTemplateId": "DEC_HID_IND_NIGHT_CALL",
+  "cost": {
+    "moraleDelta": -8
+  },
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "조건 없는 히든이다 — 밤에 오는 전화는 좋은 소식이든 아니든 그 밤을 가져간다"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "EVT_HID_UNIV_EARLY_CALL",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "career",
+  "category": "career",
+  "priority": 894,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "grade",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_HID_UNIV_EARLY_CALL",
+  "decisionTemplateId": "DEC_HID_UNIV_EARLY_CALL",
+  "cost": {
+    "studyQualityDelta": -1
+  },
+  "hiddenCondition": [
+    {
+      "type": "pitching_ovr_gte",
+      "value": 68
+    },
+    {
+      "type": "eq",
+      "path": "school.draftTriggered",
+      "value": false
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 의 대가는 「학점 경고」인데 경고를 직접 세우는 열쇠가 없다 — 학기 품질을 깎아 **같은 방향으로** 뒀다(눈금은 주당 0~1 이라 −1 이 한 주치다)"
+}

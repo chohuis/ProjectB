@@ -1,0 +1,51 @@
+{
+  "id": "EVT_HID_PRO_AFTER_CG",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "body",
+  "category": "health",
+  "priority": 888,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_PRO_AFTER_CG",
+  "decisionTemplateId": "DEC_HID_PRO_AFTER_CG",
+  "cost": {
+    "injuryRiskMod": {
+      "pct": 15,
+      "weeks": 4
+    }
+  },
+  "hiddenCondition": [
+    {
+      "type": "last_game",
+      "field": "completeGame",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 85
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 그대로 — 대가는 「부상 위험 +N% 4주」다. 구종 등급을 올릴 대상은 슬라이더로 잡았다(카탈로그에서 제일 흔한 변화구다)"
+}

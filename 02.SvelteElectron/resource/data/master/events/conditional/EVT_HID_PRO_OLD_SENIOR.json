@@ -1,0 +1,43 @@
+{
+  "id": "EVT_HID_PRO_OLD_SENIOR",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "people",
+  "category": "life",
+  "priority": 886,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 5
+    }
+  ],
+  "messageTemplateId": "MSG_HID_PRO_OLD_SENIOR",
+  "decisionTemplateId": "DEC_HID_PRO_OLD_SENIOR",
+  "cost": {
+    "moraleDelta": -8
+  },
+  "hiddenCondition": [
+    {
+      "type": "num_gte",
+      "path": "age",
+      "value": 30
+    },
+    {
+      "type": "count",
+      "counter": "sameTeamYears",
+      "value": 8
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 의 특성 「베테랑」과 대가 「선발 보장 포기」는 **둘 다 없다** — 특성은 셋뿐이고 보장을 되돌리는 열쇠도 없다. 멘토와 잠재력으로, 대가는 사기 −8 로 바꿨다"
+}

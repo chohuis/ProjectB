@@ -1,0 +1,43 @@
+{
+  "id": "EVT_PRO_U_OPENING_ROSTER",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "team",
+  "category": "team",
+  "priority": 694,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "week_lte",
+      "value": 4
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_U_OPENING_ROSTER",
+  "decisionTemplateId": "DEC_PRO_U_OPENING_ROSTER",
+  "cost": {
+    "relationDelta": {
+      "kind": "teammate",
+      "delta": -6
+    }
+  },
+  "_newNote": "4-4 둘째 턴 ④ — 프로 초반 전용 유니크 「처음의 무게」 (2026-09-08)",
+  "_tierNote": "유니크 대가는 동료 관계 −6 이다 — 내가 든 자리만큼 누군가는 2군에 남았다"
+}

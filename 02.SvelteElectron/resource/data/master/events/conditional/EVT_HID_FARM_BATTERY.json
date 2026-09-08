@@ -1,0 +1,38 @@
+{
+  "id": "EVT_HID_FARM_BATTERY",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "team",
+  "category": "team",
+  "priority": 890,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_FARM_BATTERY",
+  "decisionTemplateId": "DEC_HID_FARM_BATTERY",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "hiddenCondition": [
+    {
+      "type": "count",
+      "counter": "sameCatcherGames",
+      "value": 30
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 은 「대가 없음」이라 했다. `check:tiers` 가 유니크 이상에 대가를 요구하므로 제일 작은 값만 뒀다"
+}

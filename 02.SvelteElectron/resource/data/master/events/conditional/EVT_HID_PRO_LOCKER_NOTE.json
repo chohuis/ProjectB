@@ -1,0 +1,36 @@
+{
+  "id": "EVT_HID_PRO_LOCKER_NOTE",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "story",
+  "category": "mental",
+  "priority": 868,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_PRO_LOCKER_NOTE",
+  "decisionTemplateId": "DEC_HID_PRO_LOCKER_NOTE",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "조건 없는 히든이다 — 뜨는 것 자체가 사건이라 대가를 작게 뒀다"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "EVT_HID_IND_OLD_GLOVE",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "story",
+  "category": "mental",
+  "priority": 876,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_IND_OLD_GLOVE",
+  "decisionTemplateId": "DEC_HID_IND_OLD_GLOVE",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "조건 없는 히든이다 — 뜨는 것 자체가 사건이라 대가를 작게 뒀다"
+}

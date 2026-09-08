@@ -1,0 +1,42 @@
+{
+  "id": "EVT_PRO_U_FIRST_WIN",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "career",
+  "category": "career",
+  "priority": 698,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "last_game",
+      "field": "won",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_U_FIRST_WIN",
+  "decisionTemplateId": "DEC_PRO_U_FIRST_WIN",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "_newNote": "4-4 둘째 턴 ④ — 프로 초반 전용 유니크 「처음의 무게」 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +8 이다 — 첫 승 뒤 인터뷰와 자리로 그 주가 없어진다"
+}

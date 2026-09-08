@@ -1,0 +1,40 @@
+{
+  "id": "EVT_PRO_U_OPENING_START",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "career",
+  "category": "career",
+  "priority": 696,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "week_lte",
+      "value": 6
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 62
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_U_OPENING_START",
+  "decisionTemplateId": "DEC_PRO_U_OPENING_START",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "4-4 둘째 턴 ④ — 프로 초반 전용 유니크 「처음의 무게」 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 개막에 맞추는 몇 주가 그대로 든다"
+}

@@ -1,0 +1,26 @@
+{
+  "id": "EVT_HID_UNIV_STRANGE_CARD",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "career",
+  "category": "career",
+  "priority": 880,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_UNIV_STRANGE_CARD",
+  "decisionTemplateId": "DEC_HID_UNIV_STRANGE_CARD",
+  "cost": {
+    "relationDelta": {
+      "kind": "teammate",
+      "delta": -6
+    }
+  },
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "조건 없는 히든이다 — 대가는 라커룸이 먼저 안다는 값이다"
+}

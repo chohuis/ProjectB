@@ -1,0 +1,42 @@
+{
+  "id": "EVT_HID_IND_THE_CALL",
+  "type": "conditional",
+  "tier": "hidden",
+  "theme": "career",
+  "category": "career",
+  "priority": 892,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 12,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HID_IND_THE_CALL",
+  "decisionTemplateId": "DEC_HID_IND_THE_CALL",
+  "cost": {
+    "relationDelta": {
+      "kind": "teammate",
+      "delta": -10
+    }
+  },
+  "hiddenCondition": [
+    {
+      "type": "count",
+      "counter": "shutouts",
+      "value": 1
+    },
+    {
+      "type": "count",
+      "counter": "sameTeamYears",
+      "value": 2
+    }
+  ],
+  "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
+  "_tierNote": "§8 그대로 — 대가는 「팀 동료 관계 −10」이다. 보상 「콜업 확정」을 세우는 열쇠가 없어 **선발 보장 5경기**로 뒀다(가장 가까운 뜻이다)"
+}
