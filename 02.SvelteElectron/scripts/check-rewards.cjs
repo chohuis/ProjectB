@@ -72,7 +72,17 @@ const PITCH_KEYS = ["pitchGrant", "pitchGradeUp", "pitchProgressJump"];
 const BIG_KEYS = ["statDelta", "stat", "potentialDelta"];
 const GRADES = ["normal", "rare", "unique", "hidden"];
 
-const bigInNormal = [], statInRare = [], pitchLow = [], noCost = [], xpOver = [], allEmpty = [], sameKind = [];
+const bigInNormal = [], statInRare = [], pitchLow = [], noCost = [], xpOver = [], allEmpty = [], sameKind = [], pitchPair = [];
+/**
+ * 구종 보상의 **짝 조건** (정본 §2 · 사용자 확정).
+ *
+ * > 배우는 중이면 그 구종을 밀어 주고, 안 배우면 새 구종을 준다.
+ *
+ * 🔴 어긋나면 **조용히 아무 일도 안 난다** — 안 배우는데 진행도 점프를 받으면
+ *   밀 것이 없고, 배우는 중에 새 구종을 받으면 배우던 것이 사라진다.
+ *   오류도 로그도 없이 보상 한 번이 없어지는 자리라 검사로 잡는다.
+ */
+const PAIR_WANT = { pitchGrant: false, pitchGradeUp: true, pitchProgressJump: true };
 for (const r of RULES) {
   const d = DEC.get(r.decisionTemplateId);
   const opts = (d?.options ?? []).filter((o) => o && typeof o === "object");
@@ -96,6 +106,13 @@ for (const r of RULES) {
     if (r.tier === "normal" || r.tier === "rare") {
       for (const k of PITCH_KEYS) if (ks.has(k)) pitchLow.push([`${r.id}#${o.id}`, r.tier, k]);
     }
+    // 짝 조건 — 숨은 조건에 있어도 된다(히든은 그쪽에 적는다)
+    const pl = [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])].find((c) => c.type === "pitch_learning");
+    for (const k of PITCH_KEYS) {
+      if (!ks.has(k)) continue;
+      if (pl && pl.value === PAIR_WANT[k]) continue;
+      pitchPair.push([`${r.id}#${o.id}`, k, pl ? `pitch_learning ${pl.value}(원하는 값 ${PAIR_WANT[k]})` : "조건 없음"]);
+    }
   }
 }
 
@@ -117,7 +134,6 @@ rule(noCost, "유니크·히든인데 대가가 없다", ([id, t]) => `${id.padE
 rule(xpOver, "XP 가 등급 범위를 넘는다 (노말 4+ · 레어 11+)", ([w, t, n]) => `${w.padEnd(40)}${t} · XP ${n}`);
 rule(allEmpty, "갈래 둘 이상인데 전부 효과가 없다", ([id, t, n]) => `${id.padEnd(40)}${t} · 갈래 ${n}`);
 rule(sameKind, "갈래들의 효과가 서로 같다 — 고를 뜻이 없다", ([id, t, s]) => `${id.padEnd(40)}${t} · ${s}`);
-log("");
-log("  ⏸  구종 보상 조건 — 조건 타입 `pitch_learning`(A) 이 서면 여기에 붙인다");
+rule(pitchPair, "구종 보상인데 짝 조건(`pitch_learning`)이 없거나 어긋난다", ([w, k, got]) => `${w.padEnd(40)}${k} · ${got}`);
 log("");
 if (bad) { log(`  🔴 어긴 규칙 ${bad}개`); log(""); process.exitCode = 1; }

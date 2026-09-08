@@ -15,6 +15,10 @@
     {
       "type": "player_type",
       "playerType": "pitcher"
+    },
+    {
+      "type": "pitch_learning",
+      "value": false
     }
   ],
   "messageTemplateId": "MSG_HID_HS_CHANCE_LESSON",
@@ -23,5 +27,6 @@
     "fatigueDelta": 8
   },
   "_newNote": "4-4 둘째 턴 ⑤ — 히든 (2026-09-08 · §8 초안 + 조건 없는 것)",
-  "_tierNote": "조건 없는 히든이다 — 뜨는 것 자체가 사건이라 대가를 작게 뒀다"
+  "_tierNote": "조건 없는 히든이다 — 뜨는 것 자체가 사건이라 대가를 작게 뒀다",
+  "_rewardNote": "구종 보상 짝 조건을 붙였다(R2 뒤 · 2026-09-09). 새 구종을 준다 — **안 배우는 중일 때만**이다. 배우던 게 있는데 새것을 받으면 그게 사라진다(보상안 §2)"
 }

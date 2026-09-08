@@ -30,6 +30,10 @@
     {
       "type": "player_type",
       "playerType": "pitcher"
+    },
+    {
+      "type": "pitch_learning",
+      "value": true
     }
   ],
   "messageTemplateId": "MSG_PRO_U_DOUBLE_DIGIT_K",
@@ -38,5 +42,6 @@
     "fatigueDelta": 12
   },
   "_newNote": "4-4 둘째 턴 ④ — 프로 초반 전용 유니크 「처음의 무게」 (2026-09-08)",
-  "_tierNote": "유니크 대가는 피로 +12 다 — 백 구 넘게 던져 잡은 열 개다"
+  "_tierNote": "유니크 대가는 피로 +12 다 — 백 구 넘게 던져 잡은 열 개다",
+  "_rewardNote": "구종 보상 짝 조건을 붙였다(R2 뒤 · 2026-09-09). 배우던 구종의 진행도를 민다 — **배우는 중일 때만**이다. 안 배우면 밀 것이 없다"
 }
