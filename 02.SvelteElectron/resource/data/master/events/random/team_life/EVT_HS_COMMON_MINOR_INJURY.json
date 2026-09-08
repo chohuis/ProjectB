@@ -2,7 +2,7 @@
   "id": "EVT_HS_COMMON_MINOR_INJURY",
   "type": "random",
   "tier": "unique",
-  "theme": "social",
+  "theme": "body",
   "category": "hs_life",
   "priority": 60,
   "oncePolicy": "once_per_season",
@@ -34,5 +34,6 @@
       "delta": -6
     }
   },
-  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 내 몫을 챙기면 옆자리가 서운하다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 내 몫을 챙기면 옆자리가 서운하다. 값은 제안값이라 4-6 실측 뒤에 다시 본다",
+  "_themeNote": "결을 `social` → `body` 로 고쳤다(2026-09-08 · C 가 찾음). **주인공 자기 몸이 다치는 장면**인데 결이 사교로 적혀 있어 위기 칩이 안 떴다"
 }

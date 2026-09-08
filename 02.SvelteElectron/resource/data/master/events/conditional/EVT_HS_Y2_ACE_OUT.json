@@ -25,5 +25,6 @@
     }
   ],
   "messageTemplateId": "MSG_HS_Y2_ACE_OUT",
-  "decisionTemplateId": "DEC_HS_Y2_ACE_OUT"
+  "decisionTemplateId": "DEC_HS_Y2_ACE_OUT",
+  "_themeNote": "⏸ 결을 **`team` 그대로 둔다**(2026-09-08). 위 둘과 달리 **다치는 사람이 내가 아니다** — 이건 팀에 자리가 열리는 장면이고, 여기 위기 칩이 뜨면 「내가 다쳤다」로 읽혀 어긋난다"
 }
