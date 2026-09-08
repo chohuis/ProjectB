@@ -1,0 +1,27 @@
+{
+  "id": "EVT_IND_R_ELBOW_SCAN",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "body",
+  "category": "health",
+  "priority": 688,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_R_ELBOW_SCAN",
+  "decisionTemplateId": "DEC_IND_R_ELBOW_SCAN",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

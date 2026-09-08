@@ -1,0 +1,23 @@
+{
+  "id": "EVT_IND_R_CLUB_CRISIS",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "story",
+  "category": "mental",
+  "priority": 676,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 38
+    }
+  ],
+  "messageTemplateId": "MSG_IND_R_CLUB_CRISIS",
+  "decisionTemplateId": "DEC_IND_R_CLUB_CRISIS",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

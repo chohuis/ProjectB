@@ -15,6 +15,10 @@
     {
       "type": "week_gte",
       "value": 20
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
     }
   ],
   "messageTemplateId": "MSG_UNIV_PARENTS_VISIT",

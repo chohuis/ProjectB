@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_SPOT_START",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 794,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_SPOT_START",
+  "decisionTemplateId": "DEC_FARM_SPOT_START",
+  "_newNote": "4-4 둘째 턴 ① — `startGuarantee` 첫 사용처 (2026-09-08)"
+}

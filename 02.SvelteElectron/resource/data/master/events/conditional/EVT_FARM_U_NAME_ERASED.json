@@ -1,0 +1,35 @@
+{
+  "id": "EVT_FARM_U_NAME_ERASED",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "story",
+  "category": "mental",
+  "priority": 662,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 40
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_U_NAME_ERASED",
+  "decisionTemplateId": "DEC_FARM_U_NAME_ERASED",
+  "cost": {
+    "moraleDelta": -8
+  },
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_tierNote": "유니크 대가는 사기 −8 이다 — 방출 명단에 한 번 오른 이름은 지워져도 남는다"
+}

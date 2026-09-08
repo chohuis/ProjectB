@@ -1,0 +1,40 @@
+{
+  "id": "EVT_FARM_U_VETERAN_MENTOR",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "people",
+  "category": "life",
+  "priority": 664,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 22
+    },
+    {
+      "type": "count",
+      "counter": "sameTeamYears",
+      "value": 2
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_U_VETERAN_MENTOR",
+  "decisionTemplateId": "DEC_FARM_U_VETERAN_MENTOR",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 그 사람 시간표에 맞추면 내 하루가 길어진다"
+}

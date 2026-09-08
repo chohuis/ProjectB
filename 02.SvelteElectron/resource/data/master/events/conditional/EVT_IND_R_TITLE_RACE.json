@@ -1,0 +1,27 @@
+{
+  "id": "EVT_IND_R_TITLE_RACE",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "team",
+  "category": "team",
+  "priority": 694,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_R_TITLE_RACE",
+  "decisionTemplateId": "DEC_IND_R_TITLE_RACE",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

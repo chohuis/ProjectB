@@ -1,0 +1,29 @@
+{
+  "id": "EVT_IND_R_K_NIGHT",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "media",
+  "category": "media",
+  "priority": 698,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "last_game",
+      "field": "k",
+      "op": "gte",
+      "value": 10
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_R_K_NIGHT",
+  "decisionTemplateId": "DEC_IND_R_K_NIGHT",
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+}

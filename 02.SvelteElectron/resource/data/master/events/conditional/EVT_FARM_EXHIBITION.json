@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_EXHIBITION",
+  "type": "conditional",
+  "tier": "normal",
+  "theme": "career",
+  "category": "career",
+  "priority": 786,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 5,
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueIds": [
+        "LEAGUE_KBL_FARM",
+        "LEAGUE_ABL_FARM",
+        "LEAGUE_JBL_FARM"
+      ]
+    },
+    {
+      "type": "week_gte",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_EXHIBITION",
+  "decisionTemplateId": "DEC_FARM_EXHIBITION",
+  "_newNote": "4-4 둘째 턴 ① — `startGuarantee` 첫 사용처 (2026-09-08)"
+}
