@@ -907,16 +907,10 @@ fn calculate_pitch_quality(
     rng: &mut impl Rng,
 ) -> f64 {
     let dist = (landing.x * landing.x + landing.y * landing.y).sqrt();
-    // 의도 기준: 겨냥한 곳의 난이도 + 얼마나 정확히 꽂혔는가.
-    // 착탄 기준(예전): 중심에서 멀수록 좋다 — 흩어짐이 품질을 올려준다
-    let location_q = if T::location_intent_mode() > 0.0 {
-        let t = decision.target.unwrap_or(landing);
-        let t_dist = (t.x * t.x + t.y * t.y).sqrt();
-        let miss = ((landing.x - t.x).powi(2) + (landing.y - t.y).powi(2)).sqrt();
-        T::LOCATION_CENTER_PENALTY + t_dist * T::LOCATION_DISTANCE_SCALE - miss * T::LOCATION_MISS_PENALTY
-    } else {
-        T::LOCATION_CENTER_PENALTY + dist * T::LOCATION_DISTANCE_SCALE
-    };
+    // 착탄 기준 — 중심에서 멀수록 좋은 공이다. **모드는 하나뿐이다**(결정 ⑦ ·
+    // 확정 2026-09-08). 지운 「의도 기준」 갈래와 왜 지웠는지는 `tuning.rs`
+    // 「로케이션 품질」 절에 산식째로 남겨 뒀다
+    let location_q = T::LOCATION_CENTER_PENALTY + dist * T::LOCATION_DISTANCE_SCALE;
 
     // 능력치 기여는 배수를 탄다 — 잡음을 줄인 만큼 키워 균형을 맞춘다
     let sk = T::pitch_skill_scale();
