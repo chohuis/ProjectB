@@ -22,6 +22,8 @@
   import InjuryPanel from "../../features/messages/ui/InjuryPanel.svelte";
   import MyBodyPanel from "../../features/messages/ui/MyBodyPanel.svelte";
   import RoleChoicePanel from "../../features/messages/ui/RoleChoicePanel.svelte";
+  import EventTierChip from "../../features/events/ui/EventTierChip.svelte";
+  import { hidesNumbers, kindOnlyHint, costKindHint, COST_LEAD } from "../../shared/utils/eventTierCopy";
 
   /**
    * C1 소식 — 홈 대시보드와 수신함을 하나로 합친 화면.
@@ -291,6 +293,17 @@
     if (seq === effSeq) effTails = next;
   }
 
+  // ── 등급 (2026-09-08 · PLAN_EVENT_TIERS §2·§9 · C 4-5) ─────────
+  //
+  // 🔴 **유니크·히든은 선택지의 숫자를 안 보여 준다**(§2). 크기를 모른 채
+  //   고르는 것이 그 등급의 감각이라는 기획이고, 결과는 **고른 뒤** 아래
+  //   `dec-done` 에 숫자 그대로 나온다 — 감추는 게 아니라 **미루는 것**이다.
+  //
+  // ⚠ 등급은 `selected` 소식이 들고 있다(엔진이 실은 스냅샷). 규칙 id 로
+  //   되짚지 않는다 — 옛 소식이 지금 데이터의 등급으로 보인다.
+  $: veiled = hidesNumbers(selected?.eventGrade);
+  $: costHint = costKindHint(selected?.eventCost ? [selected.eventCost] : undefined);
+
   /** effectHint의 부호로 색을 정한다 (+3 / -2 같은 표기) */
   function effectTone(hint: string): "pos" | "neg" | "mixed" | "none" {
     const hasPos = /\+\d/.test(hint);
@@ -361,6 +374,8 @@
               >
                 <div class="item-head">
                   <span class="cat">{cat.label}</span>
+                  <!-- 등급 칩 — 노말은 아무것도 안 그린다(§9). 목록은 폭이 좁아 `small` -->
+                  <EventTierChip grade={msg.eventGrade} theme={msg.eventTheme} small />
                   <span class="sender">{msg.sender}</span>
                   <span class="grow"></span>
                   {#if isPending}<span class="tag-pending">선택 대기</span>
@@ -401,6 +416,7 @@
         <header class="m-head" style="--cat:{cat.accent}">
           <button class="m-back" type="button" on:click={close} aria-label="목록으로">‹ 목록</button>
           <span class="m-cat">{cat.label}</span>
+          <EventTierChip grade={selected.eventGrade} theme={selected.eventTheme} />
           <p class="m-title">{selected.subject}</p>
         </header>
         <p class="m-meta">{selected.sender} · {selected.createdAt}</p>
@@ -477,18 +493,29 @@
         {:else if dec}
           <section class="dec">
             {#if dec.prompt}<p class="dec-prompt">{dec.prompt}</p>{/if}
+            <!-- 대가는 **선택지가 아니라 이벤트에 붙는다**(§4) — 어느 갈래를
+                 골라도 낸다. 그래서 갈래 위에 한 줄로 두고 종류만 적는다 -->
+            {#if selected.eventCost && dec.selectedOptionId === null}
+              <p class="dec-cost">{COST_LEAD}{#if costHint} — {costHint}{/if}</p>
+            {/if}
             {#if dec.selectedOptionId === null}
               <div class="dec-opts">
                 {#each dec.options as opt}
                   <!-- ⚠ `{@const}` 는 블록의 바로 아래여야 한다 — `<button>` 안에
                        두면 Svelte 가 컴파일을 거부한다 -->
                   {@const effTail = effTails.get(opt.id) ?? ""}
-                  <button class="opt" data-tone={effectTone(opt.effectHint)} type="button" on:click={() => choose(opt.id)}>
+                  <!-- ⚠ **`effectHint` 문자열을 깎지 않는다.** 유니크·히든이면 그 문장을
+                       아예 안 쓰고 효과 객체에서 종류를 다시 짓는다 — 정규식으로 숫자만
+                       지우면 「+3」은 사라져도 「크게 오른다」는 남는 반쪽이 된다 -->
+                  {@const hint = veiled ? kindOnlyHint(opt.effects) : opt.effectHint}
+                  <button class="opt" data-tone={veiled ? "none" : effectTone(opt.effectHint)} type="button" on:click={() => choose(opt.id)}>
                     <span class="opt-label">{opt.label}</span>
-                    {#if opt.effectHint}<span class="opt-hint">{opt.effectHint}</span>{/if}
+                    {#if hint}<span class="opt-hint" class:veil={veiled}>{hint}</span>{/if}
                     <!-- 꼬리는 힌트와 **다른 줄**이다 — 한 줄로 이으면 어디까지가
-                         데이터의 말이고 어디부터가 화면의 계산인지 안 보인다 -->
-                    {#if effTail}<span class="opt-eff">{effTail}</span>{/if}
+                         데이터의 말이고 어디부터가 화면의 계산인지 안 보인다
+                         🔴 꼬리는 **퍼센트 숫자**라 감추는 등급에선 같이 뗀다 —
+                            힌트만 가리고 꼬리를 남기면 그리로 크기가 샌다 -->
+                    {#if effTail && !veiled}<span class="opt-eff">{effTail}</span>{/if}
                   </button>
                 {/each}
               </div>
@@ -740,6 +767,12 @@
     padding-top: 11px;
   }
   .dec-prompt { margin: 0 0 9px; font-size: 13px; font-weight: 700; color: var(--ink); }
+  /* 대가 — 갈래처럼 보이면 누를 수 있는 것으로 읽힌다. 왼쪽 띠 · 경고색 한 줄 */
+  .dec-cost {
+    margin: 0 0 9px; padding: 6px 9px; font-size: 12px; font-weight: 700;
+    color: var(--warn); background: var(--panel-sunk);
+    border-left: 3px solid var(--warn); border-radius: var(--radius);
+  }
 
   .dec-opts { display: flex; flex-direction: column; gap: 6px; }
   .opt {
@@ -758,6 +791,9 @@
   .opt[data-tone="neg"]   .opt-hint { color: var(--bad); }
   .opt[data-tone="mixed"] .opt-hint { color: var(--warn); }
   .opt[data-tone="none"]  .opt-hint { color: var(--ink-mute); }
+  /* 종류만 보이는 힌트(유니크·히든) — 기울임으로 **데이터의 말이 아님**을 표시한다.
+     색은 부호가 없으니 중립뿐이다(위 data-tone 이 늘 none 이라 저절로 그렇게 된다) */
+  .opt-hint.veil { font-style: italic; }
   /* 훈련 효율 꼬리 — 힌트와 **다른 줄**에 둔다. 화면이 계산한 값이라
      데이터가 준 문장(`.opt-hint`)과 섞여 보이면 안 된다 */
   .opt { flex-wrap: wrap; }
