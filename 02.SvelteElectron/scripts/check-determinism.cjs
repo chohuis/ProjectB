@@ -15,6 +15,7 @@
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
+const { makeStallGuard } = require(path.join(process.cwd(), "scripts/perf/weekLoop.cjs"));
 
 const arg = (n, d) => {
   const i = process.argv.indexOf(`--${n}`);
@@ -34,6 +35,7 @@ async function runOnce(label) {
     // 것인지 첫 주 처리가 갈린 것인지 구분이 안 된다
     trail.push({ tag: "생성직후", sum: app.worldChecksum(), rows: app.contractRows() });
     let guard = 0;
+    const stallGuard = makeStallGuard();
     while (guard++ < WEEKS) {
       if (app.retired()) break;
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
@@ -46,7 +48,8 @@ async function runOnce(label) {
       }
       await app.autoRun();
       trail.push({ tag: `${s0} W${w0}`, sum: app.worldChecksum(), rows: app.contractRows(), rrows: app.rosterRows(), srows: app.standingsSnapshot() });
-      if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
+      // 한 바퀴 안 움직인 것은 정지 pending 을 민 정상 경로일 수 있다 — `perf/weekLoop.cjs` 머리말
+      if (stallGuard.hit(app.currentWeek() !== w0 || app.currentSeason() !== s0)) break;
     }
   } finally {
     await headless.cleanup(tmp);

@@ -29,6 +29,7 @@
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
+const { makeStallGuard } = require(path.join(process.cwd(), "scripts/perf/weekLoop.cjs"));
 
 const SEED = Number(process.env.PF_SEED || 20260802);
 const PRESET = process.env.PB_START_PRESET || "balanced";
@@ -40,6 +41,10 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
 (async () => {
   const { app, tmp } = await headless.boot(`dr-${PRESET}-${SEED}`);
   let why = "미도달(4시즌 안에 결판 안 남)";
+  /** 주가 안 넘어간 판의 `autoAdvanceStore.stopReason` — 「정지」의 사유다 */
+  let stopWhy = null;
+  /** 주·시즌이 **연속으로** 안 움직였나 — 셈은 `perf/weekLoop.cjs` 가 갖는다 */
+  const stallGuard = makeStallGuard();
   let lastCareer = null;
   // E2용 — 주 슬롯 몰빵 훈련 기준 고교 등판주/없는주 스탯 증가분
   const e2 = { 등판주: [], 없는주: [], 게임수: [], 연간: [] };
@@ -66,9 +71,13 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
       if (stage !== "highschool" || mil === "현역" || mil === "군필") { why = "완주"; break; }
       if (app.currentSeason() - start >= 4) { why = "4시즌 넘김"; break; }
       const w0 = app.currentWeek(), s0 = app.currentSeason();
-      if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
-      if (await app.pushCareerForward()) continue;
-      if (await app.pushPendingForward()) continue; // salaryNegotiation 등 계약 후속
+      // ⚠ **막는 것을 하나라도 치웠으면 정지 셈을 0 으로 되돌린다.** 한 주에
+      //   정지 pending 이 연달아 셋 뜨는 자리가 있다(진로 허브 → 결과 → 지명 통보).
+      //   그때마다 `runOneWeek` 이 주를 안 넘기고 돌아오므로, 되돌리지 않으면
+      //   **정상 경로가 STUCK_LIMIT 을 채운다**
+      if (app.pendingKind() === "draftObserve") { stallGuard.hit(true); await app.skipDraftObserve(); continue; }
+      if (await app.pushCareerForward()) { stallGuard.hit(true); continue; }
+      if (await app.pushPendingForward()) { stallGuard.hit(true); continue; } // salaryNegotiation 등 계약 후속
       if (app.isSeasonEnded()) {
         const st = app.protagonistStatProbe();
         if (st && st.역할 === "투수" && (st.경기 ?? 0) > 0) e2.연간.push({ g: st.경기, ip: st.ip });
@@ -86,13 +95,20 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
         const delta = curStat - prevStat; prevStat = curStat;
         if (gDelta > 0) { e2.등판주.push(delta); e2.게임수.push(gDelta); } else e2.없는주.push(delta);
       }
-      if (w1 === w0 && s1 === s0) { why = `정지 ${s0}W${w0}`; break; }
+      // 🔴 **주가 안 넘어갔다고 곧바로 「정지」로 적지 않는다** (2026-09-08 · A).
+      //   `advanceWeek` 은 주를 안 넘긴 채 **정지 pending 을 밀어넣고** 돌아오는
+      //   경로가 여럿이다(연봉협상·FA·트레이드·은퇴 권고·체육부대 …). 사람이면
+      //   모달을 눌러 넘어가는 정상 경로인데, 예전 이 줄은 그때도 똑같이
+      //   「정지」라고 적고 판을 끝냈다 — 위 `pushCareerForward`·
+      //   `pushPendingForward` 가 처리할 기회를 **안 주고** 끊은 것이다.
+      //   한 바퀴 더 돌려 보고, **연속으로** 아무것도 안 움직일 때만 적는다.
+      if (stallGuard.hit(w1 !== w0 || s1 !== s0)) { why = `정지 ${s0}W${w0}`; stopWhy = app.stopReason(); break; }
     }
   } catch (e) { why = `예외 ${e && e.stack || e}`; }
   const cp = lastCareer || app.careerProbe();
   const ab = app.protagonistAbilities();
   const result = {
-    preset: PRESET, seed: SEED, why,
+    preset: PRESET, seed: SEED, why, stopWhy,
     trainMode: process.env.PB_TRAIN_MONO === "1" ? "몰빵" : "기본",
     지명: cp.지명 ?? null, 대학합격: cp.대학합격 ?? null, 독립합격: cp.독립합격 ?? null,
     병역: cp.병역 ?? null, ovr: ab.ovr ?? null, velocity: ab.velocity ?? null,

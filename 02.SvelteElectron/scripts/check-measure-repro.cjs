@@ -26,27 +26,45 @@
  *   2  6R 58P TEAM_KBL_SUWON_KNIGHTS_1   3년차 OVR 75  구속 76  완주
  *   3  6R 58P TEAM_KBL_SUWON_KNIGHTS_1   3년차 OVR 75  구속 76  완주
  *
- * ── 🔴 따로 적어 둘 것 — 씨앗 20260802 이 「정지 2026W32」로 선다 (2026-09-08)
+ * ── 🔴 「정지 2026W32」는 **엔진이 아니라 이 계측이 틀린 것이었다** (2026-09-08 · A)
  *
- *   결정 ⑩⑪(타자 노림수·결정구)을 넣은 뒤 이 검사가 **여전히 초록인데**
- *   (2회가 완전히 같다) 진행상태가 `완주` 가 아니라 **`정지 2026W32`** 다.
- *   위 초록 기록(2026-09-07)은 `완주` 였다.
+ *   2026-09-07 에 결정 ⑩⑪ 을 넣은 뒤 씨앗 20260802 이 `완주` 대신
+ *   **`정지 2026W32`** 로 섰다. 그때는 「⑩⑪ 이 시뮬을 다른 길로 밀었고 그
+ *   길 끝에 주가 안 넘어가는 자리가 있다」고 적었다. **틀렸다.**
  *
- *     ⑩⑪ 켬   20260802 **정지 2026W32** · 777 완주 · 31337 완주
- *     ⑩⑪ 끔   20260802 완주(11R 101P)
+ *   재현해서 그 주의 상태를 그대로 찍어 보니(`scripts/probe-a-w32stall.cjs`):
  *
- *   **재현성 결함이 아니다** — 두 판이 같으니 이 검사가 지키는 것은 지켜졌다.
- *   ⑩⑪ 이 시뮬을 다른 길로 밀었고 그 길 끝에 **주가 안 넘어가는 자리**가
- *   있다: `runOneWeek()` 이 돌았는데 주·시즌이 그대로고, `pushCareerForward`·
- *   `pushPendingForward`·`isSeasonEnded` 중 아무것도 안 걸린다
- *   (`probe-d-dr-worker.cjs` 의 정지 판정). 고교 **첫 시즌 32주차**다 —
- *   드래프트 실패로 갈 길이 없어진 게 아니라 그 전에 선다.
+ *     정지 2026W32   stopReason  = 정지: 진로 최종 선택
+ *                    pendingKind = draftObserve
+ *                    autoAdvance 로그 = 자동 진행 시작 / 처리: injuryTreatment
+ *                                       / [정지] 진로 최종 선택
  *
- *   ⚠ **세 씨앗 중 하나뿐이라 흔한 자리는 아니다.** 그래서 ⑩⑪ 을 되돌리지
- *     않았다 — 되돌려도 그 자리는 그대로 있고, 다른 씨앗·다른 밸런스가
- *     언제든 같은 데로 민다. **⑩⑪ 이 만든 결함이 아니라 드러낸 결함이다.**
- *   ⚠ 고치는 것은 이 검사의 일이 아니다(주 진행 쪽이다). 그대로 재현된다:
- *       PB_REPRO_RUNS=1 PF_SEED=20260802 npm run check:measurerepro
+ *   그 주 pending 이 **둘**이었다 — `[injuryTreatment, draftObserve]`.
+ *   `runAutoAdvance` 가 앞의 것을 처리하고 뒤의 것에서 **설계대로** 멈춘다
+ *   (`draftObserve` 는 `STOP_PENDING` 이다 — 사람이 관전/건너뛰기를 고른다).
+ *   주가 안 넘어간 것이 **맞고, 그게 정상이다.**
+ *
+ *   막힌 것은 `probe-d-dr-worker.cjs` 의 바깥 루프였다. 그 루프는 머리에서
+ *   `pendingKind() === "draftObserve"` 만 보는데 그때 머리에 있던 건
+ *   `injuryTreatment` 였고, `runOneWeek()` 뒤에 **곧바로** 주가 그대로인 걸
+ *   보고 판을 끊었다 — **한 바퀴만 더 돌았으면** `skipDraftObserve()` 로
+ *   지나갔다. 실제로 그렇게 고치니 같은 씨앗·같은 트리에서 완주한다.
+ *
+ *   고친 자리 둘:
+ *     · `probe-d-dr-worker.cjs` — **연속으로** 안 움직일 때만 「정지」로 센다
+ *       (`scripts/perf/weekLoop.cjs` 의 `makeStallGuard` · 상한 8 · 막는 것을
+ *        하나 치울 때마다 셈을 되돌린다. 같은 줄을 베껴 쓰던 검사 여섯도
+ *        같은 가드로 고쳤다)
+ *     · `runAutoAdvance` — **진짜로 헛도는 자리는 엔진이 먼저 말한다.** 같은
+ *       pending 이 50회 돌아오거나 `advanceWeek` 이 50회 연속 주를 안 넘기면
+ *       `오류: 주 진행이 막혔다 — 2026W32 · …` 로 멈춘다. 예전엔 1000회를
+ *       다 돌고 `최대 반복 횟수 초과` 한 줄만 남겨 **어느 pending 인지도
+ *       몇 주차인지도 알 수 없었다.**
+ *
+ *   ⚠ 그리고 **이 검사가 초록이었던 것 자체가 구멍이었다.** 두 판이 같은
+ *     자리에서 같이 멈추면 `keyOf` 비교가 통과한다 — 「멈춘 것이 재현되면
+ *     초록」이라는 뜻이다. 이제 `why !== "완주"` 면 재현 여부와 무관하게
+ *     빨강이다.
  *
  * 여기까지 온 길 — **두 종류**였다.
  *
@@ -119,6 +137,19 @@ function keyOf(r) {
     const outcome = (r.지명 && r.지명 !== "미지명") ? r.지명
       : (r.대학합격 ? `대학합격${r.대학합격}` : (r.독립합격 ? `독립합격${r.독립합격}` : "미지명"));
     console.log(`${String(r.run).padEnd(6)}${String(outcome).padEnd(34)}${String(r.ovr).padStart(8)}  ${String(r.velocity).padStart(4)}  ${r.why}`);
+    if (r.stopWhy) console.log(`      ↳ ${r.stopWhy}`);
+  }
+
+  // 🔴 **완주 못 한 판은 재현 여부와 무관하게 빨강이다** (2026-09-08 · A).
+  //   예전엔 여기가 `keyOf` 비교만 했다 — 두 판이 **같은 자리에서 같이 멈추면**
+  //   `why` 가 키에 들어 있어도 두 값이 같으니 **초록**이었다. 실제로 그렇게
+  //   지나갔다: 씨앗 20260802 가 「정지 2026W32」로 서는데 ✅ 가 찍혔다.
+  //   **멈춘 것이 재현되면 초록이 된다**는 뜻이라 검사 구멍이었다.
+  const stalled = rows.filter((r) => !r.fail && r.why !== "완주");
+  if (stalled.length > 0) {
+    console.log(`❌ ${stalled.length}판이 완주 못 했다 — 진행이 막히는 자리가 있다`);
+    for (const r of stalled) console.log(`   ${r.run}: ${r.why}${r.stopWhy ? ` — ${r.stopWhy}` : ""}`);
+    process.exit(1);
   }
 
   const keys = rows.map(keyOf);

@@ -18,6 +18,7 @@
  */
 const path = require("node:path");
 const headless = require(path.join(process.cwd(), "scripts/perf/headless.cjs"));
+const { makeStallGuard } = require(path.join(process.cwd(), "scripts/perf/weekLoop.cjs"));
 
 const arg = (n, d) => {
   const i = process.argv.indexOf(`--${n}`);
@@ -51,6 +52,7 @@ async function main() {
     await app.boot({ slotId: "MD", worldSeed: SEED, seasonYear: 2026 });
     const start = app.currentSeason();
     let guard = 0;
+    const stallGuard = makeStallGuard();
 
     while (guard++ < SEASONS * 52 * 60 && app.currentSeason() < start + SEASONS) {
       if (app.retired()) break;
@@ -60,7 +62,8 @@ async function main() {
       if (app.isSeasonEnded()) { await app.seasonRollover(); sample(app); continue; }
       await app.autoRun();
       sample(app);
-      if (app.currentWeek() === w0 && app.currentSeason() === s0) break;
+      // 한 바퀴 안 움직인 것은 정지 pending 을 민 정상 경로일 수 있다 — `perf/weekLoop.cjs` 머리말
+      if (stallGuard.hit(app.currentWeek() !== w0 || app.currentSeason() !== s0)) break;
     }
 
     console.log(`[소식 id] 씨앗 ${SEED} · ${SEASONS}시즌 · 본 id ${seen.size}개`);
