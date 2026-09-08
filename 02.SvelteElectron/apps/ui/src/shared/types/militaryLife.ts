@@ -98,6 +98,19 @@ export interface MilitaryLifeChoice {
   leaveDays?: number;
   /** 성과 판정 tier 보정 (성실 −1 등 · §36-1) */
   perfTierDelta?: number;
+  /**
+   * 🔴 **옛 현역 풀에서 온 몫** (2026-09-08 · B 제보 · `military_general` 배선).
+   *
+   * 그 풀의 선택지는 병영생활 칸 말고도 `relationDelta`(**객체** `{kind,delta}`) ·
+   * `moneyDelta` · `xp` · `diligenceDelta` · `conditionDelta` 를 쓴다.
+   *
+   * ⚠ **이름이 같은데 뜻이 다른 칸이 하나 있다.** 병영생활의 `relationDelta` 는
+   *   **부대원 관계(숫자)** 이고, 옛 현역 풀의 것은 **관계도(객체)** 다. 그대로
+   *   섞으면 `memberRelationDelta` 에 객체가 들어가 조용히 망가진다 — 이
+   *   저장소가 반복해 겪은 「에러 없이 아무 일도 안 일어남」의 형태다.
+   *   그래서 옮길 때 **여기로 따로 담는다**(`toLifeEvent`).
+   */
+  extraEffects?: import("./main").DecisionEffect;
 }
 
 /** 성과 이벤트 — "경기" 대체 (§17 · §28) */

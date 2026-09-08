@@ -103,6 +103,61 @@ export function eligibleEvents(events: readonly MilitaryLifeEvent[], ctx: Eligib
   return events.filter((e) => isEligible(e, ctx));
 }
 
+/**
+ * **옛 현역 풀(`military_general` 20종)을 병영생활 후보로 옮긴다** (2026-09-08).
+ *
+ * 🔴 왜 필요했나 (B 제보 · 실측으로 확인). `advanceWeek` 은 `militaryLife` 가
+ *   있으면 새 경로로 빠지고, 그 경로는 `militaryLifeEvents` 만 읽는다.
+ *   그런데 **새 게임의 현역 입대는 반드시 `militaryLife` 를 만든다**
+ *   (`militaryDecision.enlistProtagonist` — `unit === "general"` 이면 무조건).
+ *   그래서 `military_general` 20종이 **새 게임에서 한 번도 안 뜬다.**
+ *   두 풀은 id 가 하나도 안 겹친다(실측 0/20) — 다른 이야기가 통째로 죽은 것이다.
+ *
+ * ⚠ **`relationDelta` 는 이름이 같은데 뜻이 다르다.** 병영생활은 부대원 관계
+ *   (숫자), 옛 풀은 관계도(객체 `{kind,delta}`). 그대로 캐스팅하면
+ *   `memberRelationDelta` 에 객체가 들어가 조용히 망가진다 — 그래서 옛 풀의
+ *   `DecisionEffect` 몫은 `extraEffects` 로 **따로** 담는다.
+ *
+ * ⚠ **옛 세이브는 안 건드린다.** `militaryLife` 가 없는 세이브는 예전 갈래를
+ *   그대로 타고, 거기서 이 풀을 원래대로 읽는다.
+ * ⚠ **상무는 안 온다.** 새 경로 자체가 `!isSportsUnit` 일 때만이다.
+ * ⚠ 이 풀이 정말 필요 없다고 판단되면 **파일을 지우면 된다** — 빈 풀이면
+ *   여기서 빈 배열이 나오고 아무 일도 안 일어난다. 내용의 주인은 B 다.
+ */
+export function toLifeEvent(e: {
+  id: string; title: string; description: string;
+  minRank?: number; maxRank?: number; once?: boolean; cooldownWeeks?: number;
+  choices?: Array<{ id: string; label: string; effectHint?: string } & DecisionEffect>;
+}): MilitaryLifeEvent | null {
+  if (!e.choices || e.choices.length === 0) return null;
+  return {
+    id: e.id, title: e.title, description: e.description,
+    minRank: e.minRank, maxRank: e.maxRank, once: e.once, cooldownWeeks: e.cooldownWeeks,
+    choices: e.choices.map((c) => {
+      const {
+        id, label, effectHint,
+        fatigueDelta, moraleDelta, ballDelta, award, penalty, leaveDays, perfTierDelta,
+        ...rest
+      } = c as Record<string, unknown> & { id: string; label: string; effectHint?: string };
+      return {
+        id, label, effectHint,
+        fatigueDelta: fatigueDelta as number | undefined,
+        moraleDelta:  moraleDelta  as number | undefined,
+        ballDelta:    ballDelta    as number | undefined,
+        award:        award        as string | undefined,
+        penalty:      penalty      as string | undefined,
+        leaveDays:    leaveDays    as number | undefined,
+        perfTierDelta: perfTierDelta as number | undefined,
+        // 나머지(관계도 객체 · 돈 · XP · 성실 · 컨디션)는 그대로 둔다 —
+        // `applyEventEffect`·`applySideEffects` 가 읽는 이름 그대로다
+        ...(Object.keys(rest).length > 0
+          ? { extraEffects: rest as import("../types/main").DecisionEffect }
+          : {}),
+      };
+    }),
+  };
+}
+
 export function weightOf(e: MilitaryLifeEvent): number {
   return e.weight !== undefined && e.weight > 0 ? e.weight : 1;
 }

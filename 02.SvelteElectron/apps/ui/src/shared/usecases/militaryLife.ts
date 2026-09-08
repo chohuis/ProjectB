@@ -20,7 +20,7 @@ import type { MilitaryLifeEvent, MilitaryLifeState, MilitaryMember } from "../ty
 import { emptyMilitaryLife, rankBandOf } from "../types/militaryLife";
 import {
   ARC_LABELS, applyChoiceToState, arcStageFor, calendarEntryFor, eligibleEvents, fillText,
-  memberWithTag, perfTier, presentMembers, roleFromSeed, senseStartFor, weightOf,
+  memberWithTag, perfTier, presentMembers, roleFromSeed, senseStartFor, weightOf, toLifeEvent,
 } from "../utils/militaryLifeRules";
 
 /** 입대 주에 만든다 — 현역만. 데이터가 없으면 null (옛 갈래로 간다 · check:militarydata 가 알린다) */
@@ -121,7 +121,17 @@ export async function runMilitaryLifeWeek(args: { nextWeek: number; seasonYear: 
   const presentIds = new Set(present.map((x) => x.id));
   const month = Math.max(1, Math.min(12, Math.ceil(((args.nextWeek - 1) % 52 + 1) / 4.34)));
   const ctx = { week, band, roleId: state.roleId, state, present: presentIds, fatigue: p.fatigue, morale: p.morale, month, defaultCooldown: rules.event.defaultCooldown };
-  const candidates = calEvent ? [] : eligibleEvents(m.militaryLifeEvents, ctx);
+  // 🔴 **옛 현역 풀(`military_general`)도 후보다** (2026-09-08 · B 제보).
+  //   새 게임의 현역 입대는 반드시 `militaryLife` 를 만들어 이 경로로 오는데
+  //   여기가 `militaryLifeEvents` 만 읽어서 그 20종이 **한 번도 안 떴다.**
+  //   두 풀은 id 가 하나도 안 겹친다(실측 0/20) — 다른 이야기가 통째로 죽어 있었다.
+  //   ⚠ 뜻이 갈리는 칸(`relationDelta`)이 있어 그냥 못 섞는다 — `toLifeEvent` 머리말.
+  const legacyGeneral = m.militaryGeneralEvents
+    .map(toLifeEvent)
+    .filter((e): e is MilitaryLifeEvent => e !== null);
+  const candidates = calEvent
+    ? []
+    : eligibleEvents([...m.militaryLifeEvents, ...legacyGeneral], ctx);
   const payload = {
     seed: seedOf(worldSeed, args.seasonYear, args.nextWeek, "military-life"),
     dutyIntensity: role?.dutyIntensity ?? 5,
@@ -184,6 +194,9 @@ export async function runMilitaryLifeWeek(args: { nextWeek: number; seasonYear: 
       choices: fired.choices.map((c) => ({
         id: c.id, label: c.label, effectHint: c.effectHint,
         effects: {
+          // ⚠ **먼저 편다.** 옛 현역 풀의 관계도·돈·XP 몫이고, 아래 병영생활
+          //   칸과 이름이 안 겹친다(`toLifeEvent` 가 갈라 담았다)
+          ...(c.extraEffects ?? {}),
           fatigueDelta: c.fatigueDelta, moraleDelta: c.moraleDelta,
           memberRelationDelta: c.relationDelta, ballDelta: c.ballDelta,
           award: c.award, penalty: c.penalty, leaveDays: c.leaveDays, perfTierDelta: c.perfTierDelta,
