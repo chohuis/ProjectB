@@ -153,6 +153,10 @@ function runOne(i) {
       : (r.대학합격 ? `대학합격${r.대학합격}` : (r.독립합격 ? `독립합격${r.독립합격}` : "미지명"));
     console.log(`${String(r.run).padEnd(6)}${String(outcome).padEnd(34)}${String(r.ovr).padStart(8)}  ${String(r.velocity).padStart(4)}  ${r.why}`);
     if (r.stopWhy) console.log(`      ↳ ${r.stopWhy}`);
+    // 🔴 삼킨 예외 — 0 이 아니면 그 판의 숫자를 믿으면 안 된다(계측 2-1)
+    if (r.예외 && r.예외.예외 > 0) {
+      console.log(`      🔴 예외 ${r.예외.예외}회 — ${(r.예외.최근 ?? []).slice(-2).join(" | ")}`);
+    }
   }
 
   // 판정은 `perf/reproVerdict.cjs` 가 갖는다 — 회귀가 직접 때리는 자리다

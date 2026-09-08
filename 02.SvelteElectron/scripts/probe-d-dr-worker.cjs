@@ -111,6 +111,9 @@ const avg = (v) => v.length ? Math.round((v.reduce((a, b) => a + b, 0) / v.lengt
   const ab = app.protagonistAbilities();
   const result = {
     preset: PRESET, seed: SEED, why, stopWhy,
+    // 🔴 **삼킨 예외 횟수** (2026-09-09 · 계측 2-1). 0 이 아니면 이 판의 숫자는
+    //   의심해야 한다 — `runAutoAdvance` 는 예외를 잡아 stopReason 에만 남긴다
+    예외: app.exceptionProbe(),
     trainMode: process.env.PB_TRAIN_MONO === "1" ? "몰빵" : "기본",
     지명: cp.지명 ?? null, 대학합격: cp.대학합격 ?? null, 독립합격: cp.독립합격 ?? null,
     병역: cp.병역 ?? null, ovr: ab.ovr ?? null, velocity: ab.velocity ?? null,

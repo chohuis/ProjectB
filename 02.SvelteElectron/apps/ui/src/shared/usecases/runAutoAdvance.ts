@@ -7,7 +7,7 @@ import { masterStore } from "../stores/master";
 import { applyMilitaryEventChoice } from "./militaryLife";
 import { buildMilitaryResultMessage } from "../utils/militaryResultMessage";
 import { applyRoleChoice, roleChoicePolicyPick } from "./pitcherRole";
-import type { RoleChoiceMetadata } from "../types/main";
+import type { RoleChoiceMetadata, DecisionEffect } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
@@ -17,6 +17,9 @@ import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types
 import { buildBatterLineup, buildStarterStats, buildFielders, rotIdxOf } from "../utils/matchLineupBuilder";
 import { leagueMatchOptions } from "../utils/matchLeagueOptions";
 import { protagonistMatchSeed } from "../utils/protagonistMatchSeed";
+import {
+  SIM_PERSONAS, primaryStatsFor, bodyCost, growthValue, seededIndex, type SimPersona,
+} from "./simPersona";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
 // ⚠ `draftNotification`이 여기 없으면 **프로 계약이 조용히 버려진다.**
@@ -50,19 +53,98 @@ let _lastErrorStack: string | null = null;
 /** 자동 진행 중 마지막으로 삼킨 예외의 스택 — 진단용 */
 export function lastAutoAdvanceError(): string | null { return _lastErrorStack; }
 
+// ── 🔴 삼킨 예외를 **센다** (2026-09-09 · 계측 2-1) ──────────────
+//
+// 위 주석이 적어 둔 실측 — 「프로 2년차 한 시즌 내내 매주 터졌는데 25시즌
+// 런이 정상으로 보였다」 — 이 그대로 남아 있었다. `lastAutoAdvanceError()` 를
+// 만들어 두고도 **읽는 데가 `perfEntry.autoRun` 한 곳뿐**이라,
+// `runAutoAdvance` 를 직접 부르는 자리(화면 · 다른 계측 경로)에서는 아무도
+// 안 봤다. **지금 잰 숫자 중에 매주 터지던 판이 섞여 있을 수 있다.**
+//
+// 그래서 「마지막 하나」가 아니라 **횟수와 최근 몇 건**을 든다. 판 보고서에
+// 「예외 N회」로 실린다(`PLAN_SIM_REPORT_2026-09-09.md` 꼬리).
+//
+// ⚠ **판마다 비운다** — `resetAutoAdvanceErrors()` 를 계측 시작에서 부른다.
+//   안 비우면 한 프로세스에서 여러 판을 돌릴 때 앞판 것이 섞인다.
+// ⚠ 최근 것만 든다(`ERROR_KEEP`). 매주 터지면 수백 건이라 전부 들면 세이브가 아니라
+//   메모리가 샌다 — 세는 것은 **횟수**고 보관하는 것은 **표본**이다.
+const ERROR_KEEP = 20;
+export interface AutoAdvanceError { year: number; week: number; message: string }
+let _errorCount = 0;
+let _errors: AutoAdvanceError[] = [];
+
+/** 이번 판에서 **삼킨 예외 횟수**. 0 이 아니면 그 판의 숫자는 의심해야 한다 */
+export function autoAdvanceErrorCount(): number { return _errorCount; }
+/** 최근 예외 표본 (최대 `ERROR_KEEP` 건) */
+export function autoAdvanceErrors(): readonly AutoAdvanceError[] { return _errors; }
+/** 판 시작에서 부른다 — 안 비우면 앞판 것이 섞인다 */
+export function resetAutoAdvanceErrors(): void { _errorCount = 0; _errors = []; _lastErrorStack = null; }
+
 // ── 이벤트/메시지 선택지 피로도 기반 키워드 ───────────────────
 const REST_KW   = ["휴식", "거절", "패스", "쉬", "무시"];
 const ACTIVE_KW = ["훈련", "수락", "참가", "도전", "시작"];
 
-function pickChoice<T extends { id: string; label: string }>(choices: T[], fatigue: number): string {
+/**
+ * **계측 플레이어의 성향** — `globalThis.__PB_PERSONA__` 하나가 정본이다
+ * (2026-09-09 · 계측 2-3 · 사용자 확정). 안 주면 `growth`(밸런스 기준).
+ *
+ * ⚠ **실제 플레이는 안 지난다** — 화면은 사람이 고르고, 이 함수는 자동 진행이
+ *   대신 누를 때만 불린다.
+ */
+function persona(): SimPersona {
+  const v = (globalThis as Record<string, unknown>).__PB_PERSONA__;
+  return SIM_PERSONAS.includes(v as SimPersona) ? (v as SimPersona) : "growth";
+}
+
+/**
+ * 갈래 하나를 고른다.
+ *
+ * 🔴 **예전엔 대부분의 주에 `choices[0]` 이었다** (2026-09-09 · 사용자 지적).
+ *   키워드(휴식/훈련)가 안 맞으면 곧장 첫 갈래로 떨어졌는데, 첫 갈래는 사람의
+ *   취향이 아니라 **데이터 작성 순서**다. 그걸로 잰 밸런스는 「JSON 에 먼저
+ *   적힌 쪽」의 밸런스가 된다.
+ *
+ * 이제 성향 셋이 **서로 다른 자를 쓴다**:
+ *   `growth`  즉시 스탯이 있으면 그것 먼저 · 없으면 그 시기 주력 스탯
+ *   `safe`    몸에 나쁜 정도가 제일 작은 것(피로·컨디션·부상 위험)
+ *   `lazy`    씨앗 고정 무작위 — 순서에 안 매인다
+ *
+ * ⚠ 효과를 모르는 갈래(문안만 있는 것)는 **키워드 갈래**로 떨어진다 —
+ *   그때만 옛 규칙이 산다. 그 경우에도 `lazy` 는 무작위다.
+ */
+function pickChoice<T extends { id: string; label: string; effects?: DecisionEffect }>(
+  choices: T[],
+  fatigue: number,
+): string {
   if (!choices.length) return "ok";
   if (choices.length === 1) return choices[0].id;
+  const mode = persona();
+
+  if (mode === "lazy") {
+    // 씨앗 고정 — 같은 판을 다시 돌리면 같은 선택이 나온다
+    const s = get(seasonStore);
+    const seed = (s.worldSeed ?? 0) + s.seasonYear * 53 + s.currentWeek * 7 + choices.length;
+    return choices[seededIndex(seed, choices.length)].id;
+  }
+
+  const known = choices.filter((c) => c.effects && Object.keys(c.effects).length > 0);
+  if (known.length >= 2) {
+    if (mode === "safe") {
+      // 몸을 지킨다. 같으면 앞의 것 — 순서가 아니라 **동점**이라 뜻이 있다
+      return known.reduce((a, b) => (bodyCost(b.effects) < bodyCost(a.effects) ? b : a)).id;
+    }
+    const p = get(gameStore).protagonist;
+    const prim = primaryStatsFor(p.careerStage, (p.leagueId ?? "").endsWith("_FARM"));
+    return known.reduce((a, b) => (growthValue(b.effects, prim) > growthValue(a.effects, prim) ? b : a)).id;
+  }
+
+  // 효과를 모르는 갈래뿐 — 옛 키워드 규칙이 여기서만 산다
   if (fatigue >= 70) {
     const r = choices.find((c) => REST_KW.some((k) => c.label.includes(k)));
     if (r) return r.id;
   } else if (fatigue <= 30) {
-    const a = choices.find((c) => ACTIVE_KW.some((k) => c.label.includes(k)));
-    if (a) return a.id;
+    const a2 = choices.find((c) => ACTIVE_KW.some((k) => c.label.includes(k)));
+    if (a2) return a2.id;
   }
   return choices[0].id;
 }
@@ -336,7 +418,19 @@ function applyRecommendedTraining(): void {
   const p = get(gameStore).protagonist;
   let primary: string, sub1: string, sub2: string;
 
-  if (p.fatigue >= 70) {
+  // 🔴 **컨디션을 본다** (2026-09-09 · 계측 2-3 · 사용자 확정).
+  //
+  //   자동 진행이 컨디션을 **아예 안 봤다** — 피로·사기만 봤다. 그런데
+  //   컨디션은 훈련 산식에 **곱으로** 들어간다: 낮은 채로 훈련하면 같은 주를
+  //   써도 덜 큰다. 사람이면 쉬어서 올리고 훈련한다.
+  //
+  // ⚠ 피로보다 **먼저** 본다. 피로 70 은 아직 훈련이 되는 상태지만 컨디션이
+  //   바닥이면 그 주 훈련이 통째로 헐값이 된다.
+  // ⚠ 문턱 45 는 **제안값**이다 — `BALANCE_BACKLOG` 에 적었다. 회복 훈련이
+  //   컨디션을 올리는 폭과 같이 재야 하는 값이라 5단계에서 D 가 잰다.
+  if (p.condition < 45) {
+    primary = "TRN_RECOVERY"; sub1 = "TRN_MENTAL_P"; sub2 = "TRN_CTRL_CMD";
+  } else if (p.fatigue >= 70) {
     primary = "TRN_RECOVERY"; sub1 = "TRN_MENTAL_P"; sub2 = "TRN_CTRL_CMD";
   } else if (p.morale < 50) {
     primary = "TRN_MENTAL_P"; sub1 = "TRN_CTRL_CMD"; sub2 = "TRN_RECOVERY";
@@ -349,6 +443,9 @@ function applyRecommendedTraining(): void {
     // 구종 하나 차이가 ERA 9.07 vs 4.52였다.
     //
     // **NPC와 같은 규칙을 쓴다**: 목표 미달이면 새로 배우고, 채웠으면 등급을 올린다.
+    // ⚠ **구종 관리는 성향 셋이 다 같다**(사용자 확정) — `ensurePitchTraining`
+    //   규칙 그대로다. 구종은 취향이 아니라 이 게임의 축이라 성향으로 가르면
+    //   축이 흔들린다.
     primary = "TRN_CTRL_CMD"; sub1 = "TRN_VEL";
     sub2 = ensurePitchTraining(p) ? "TRN_PITCH_DEV" : "TRN_RECOVERY";
   }
@@ -578,6 +675,14 @@ export async function runAutoAdvance(): Promise<void> {
       const msg = err instanceof Error ? err.message : String(err);
       const stack = err instanceof Error ? (err.stack ?? "") : "";
       _lastErrorStack = `${get(seasonStore).seasonYear} W${get(seasonStore).currentWeek} | ${msg}\n${stack}`;
+      // 🔴 **센다** (2026-09-09 · 계측 2-1). 「마지막 하나」만 들고 있으면
+      //   매주 터지는 판과 한 번 터진 판이 같아 보인다
+      _errorCount++;
+      {
+        const sNow = get(seasonStore);
+        _errors = [..._errors, { year: sNow.seasonYear, week: sNow.currentWeek, message: msg }]
+          .slice(-ERROR_KEEP);
+      }
       autoAdvanceStore.addLog(`오류: ${msg}`);
       autoAdvanceStore.stop(`오류: ${msg}`);
       autoLog(`[오류] ${msg}`);
