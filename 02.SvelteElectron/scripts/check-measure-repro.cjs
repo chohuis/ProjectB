@@ -88,6 +88,7 @@
  */
 const path = require("node:path");
 const { spawn } = require("node:child_process");
+const { verdict } = require("./perf/reproVerdict.cjs");
 
 const RUNS   = Number(process.env.PB_REPRO_RUNS || 2);
 const SEED   = process.env.PF_SEED || "20260802";
@@ -112,13 +113,6 @@ function runOne(i) {
   });
 }
 
-/** 비교하는 값 — 진로 결말과 3년차 능력치. 여기가 같으면 3년이 같게 흘렀다는 뜻이다 */
-function keyOf(r) {
-  return JSON.stringify({
-    지명: r.지명 ?? null, 대학합격: r.대학합격 ?? null, 독립합격: r.독립합격 ?? null,
-    병역: r.병역 ?? null, ovr: r.ovr ?? null, velocity: r.velocity ?? null, why: r.why ?? null,
-  });
-}
 
 (async () => {
   const rows = [];
@@ -140,26 +134,9 @@ function keyOf(r) {
     if (r.stopWhy) console.log(`      ↳ ${r.stopWhy}`);
   }
 
-  // 🔴 **완주 못 한 판은 재현 여부와 무관하게 빨강이다** (2026-09-08 · A).
-  //   예전엔 여기가 `keyOf` 비교만 했다 — 두 판이 **같은 자리에서 같이 멈추면**
-  //   `why` 가 키에 들어 있어도 두 값이 같으니 **초록**이었다. 실제로 그렇게
-  //   지나갔다: 씨앗 20260802 가 「정지 2026W32」로 서는데 ✅ 가 찍혔다.
-  //   **멈춘 것이 재현되면 초록이 된다**는 뜻이라 검사 구멍이었다.
-  const stalled = rows.filter((r) => !r.fail && r.why !== "완주");
-  if (stalled.length > 0) {
-    console.log(`❌ ${stalled.length}판이 완주 못 했다 — 진행이 막히는 자리가 있다`);
-    for (const r of stalled) console.log(`   ${r.run}: ${r.why}${r.stopWhy ? ` — ${r.stopWhy}` : ""}`);
-    process.exit(1);
-  }
-
-  const keys = rows.map(keyOf);
-  const same = keys.every((k) => k === keys[0]);
+  // 판정은 `perf/reproVerdict.cjs` 가 갖는다 — 회귀가 직접 때리는 자리다
   console.log("");
-  if (rows.some((r) => r.fail)) { console.log("❌ 판이 안 끝났다 — 재현 여부를 못 가린다"); process.exit(1); }
-  if (!same) {
-    console.log(`❌ ${RUNS}회가 안 같다 — 아직 씨앗 밖의 난수가 남아 있다`);
-    keys.forEach((k, i) => console.log(`   ${i + 1}: ${k}`));
-    process.exit(1);
-  }
-  console.log(`✅ ${RUNS}회 전부 같다 — ${keys[0]}`);
+  const v = verdict(rows);
+  for (const l of v.lines) console.log(l);
+  if (!v.ok) process.exit(1);
 })();
