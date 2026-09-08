@@ -36,7 +36,15 @@ const arg = (n, d) => {
   const i = process.argv.indexOf(`--${n}`);
   return i !== -1 ? (process.argv[i + 1] ?? d) : d;
 };
-const SEASONS = parseInt(arg("seasons", "3"), 10) || 3;
+/**
+ * 🔴 **3시즌으로는 고교밖에 못 잰다** (2026-09-08 실측). §10 이 「무대별 3시즌」이라
+ *   적었는데, 주인공은 진로를 **고교 3년을 마친 뒤에** 고르므로 3시즌짜리 판은
+ *   전부 고교에서 끝난다(실측: 고교 408주 · 대학 20주 · 나머지 0주).
+ *   다음 무대에서도 3시즌을 보려면 **고교 3 + 그 뒤 3 = 7**이 있어야 한다.
+ * ⚠ 그만큼 오래 걸린다(한 판 20분쯤). 급하면 `--seasons 3` 으로 고교만 본다 —
+ *   그때 아래 「안 잰 무대」가 무엇을 못 봤는지 말한다.
+ */
+const SEASONS = parseInt(arg("seasons", "7"), 10) || 7;
 const QUICK = process.argv.includes("--quick");
 const SEEDS = String(arg("seeds", QUICK ? "20260803" : "20260803,31337,4242"))
   .split(",").map((s) => parseInt(s, 10)).filter(Boolean);
@@ -183,6 +191,22 @@ if (fallbackTotal === 0) {
   log(`  합계 ${fallbackTotal}회 / 주 ${totalWeeks}`);
 }
 log("");
+
+/**
+ * 🔴 **안 잰 무대를 이름으로 말한다.** 「검사가 무엇을 못 봤는지 말하지 않으면
+ *   통과가 거짓말이 된다」(`check-roundtrip.cjs` 머리말). 실제로 3시즌 판은
+ *   고교밖에 못 밟았는데, 그때 「폴백 27회」만 보면 **독립·2군이 초록인 줄 안다** —
+ *   거기는 레어·유니크가 0종이라 밟기만 하면 반드시 빨강인 자리다.
+ * ⚠ 이건 실패가 아니라 **계측의 구멍**이다. 세어서 이름으로 남긴다.
+ */
+const declared = (RULES.stageGroups ?? []).map((g) => g.id);
+const unseen = declared.filter((id) => (stageWeeks[id] ?? 0) < 26);   // 반 시즌 미만 = 못 잰 것
+if (unseen.length) {
+  log(`  ⚠ 반 시즌도 못 밟은 무대 ${unseen.length} — **안 잰 것이지 초록이 아니다**`);
+  log(`      ${unseen.map((id) => `${id}(${stageWeeks[id] ?? 0}주)`).join(" · ")}`);
+  log(`      ${SEASONS}시즌으로는 여기까지다. 더 보려면 --seasons 를 올려라`);
+  log("");
+}
 
 let bad = 0;
 const rule = (ok, what, extra) => {
