@@ -38,6 +38,14 @@
  *     await app.autoRun();
  *     if (guard.hit(app.currentWeek() !== w0 || app.currentSeason() !== s0)) break;
  *
+ * ⚠ **아직 이 가드를 안 쓴 계기가 열대여섯 남아 있다** (2026-09-08 기준).
+ *   `probe-fa` · `probe-hof` · `probe-hsweekly` · `probe-careerpath` 처럼
+ *   **일회성 계측**이라 릴리스를 막지 않는 것들이다. 옮긴 것은 검사 여섯
+ *   (`check:amateurworld` · `check:determinism` · `check:msgdup` ·
+ *   `check:msgdupid` · `check:reportbank` · `check:rostertrend`)과
+ *   `probe-d-dr-worker` 다 — **재는 시즌 수가 조용히 줄면 그쪽이 먼저 거짓말을
+ *   한다.** 남은 것도 손볼 일이 생기면 한 줄만 바꾸면 된다.
+ *
  * ⚠ **진짜로 막힌 자리는 엔진이 먼저 말한다.** `runAutoAdvance` 가 같은
  *   pending 이 50회 돌아오면 `오류: 주 진행이 막혔다 — …` 로 멈춘다. 여기는
  *   그 앞단의 **오탐만** 걷어내는 자리다.
