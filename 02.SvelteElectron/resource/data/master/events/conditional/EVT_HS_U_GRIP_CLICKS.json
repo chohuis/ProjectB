@@ -1,0 +1,31 @@
+{
+  "id": "EVT_HS_U_GRIP_CLICKS",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "train",
+  "category": "training",
+  "priority": 820,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "pitch_learning",
+      "value": true
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_HS_U_GRIP_CLICKS",
+  "decisionTemplateId": "DEC_HS_U_GRIP_CLICKS",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "_newNote": "R2 — 구종을 보상 축으로 세운다(2026-09-09 · 보상안 §2). **유니크부터**이고, `pitch_learning` 으로 짝을 갈랐다 — 배우는 중이면 그 구종을 밀어 주고, 안 배우면 새 구종을 준다. **훈련이 주고 이벤트는 가속**이라 안 떠도 늦어질 뿐이다",
+  "_tierNote": "유니크 대가는 피로 +8 이다 — 그 감각을 붙드느라 하루를 다 쓴다"
+}

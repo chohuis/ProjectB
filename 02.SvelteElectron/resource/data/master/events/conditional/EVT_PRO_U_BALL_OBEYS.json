@@ -1,0 +1,40 @@
+{
+  "id": "EVT_PRO_U_BALL_OBEYS",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "train",
+  "category": "training",
+  "priority": 686,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "pitch_learning",
+      "value": true
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_U_BALL_OBEYS",
+  "decisionTemplateId": "DEC_PRO_U_BALL_OBEYS",
+  "cost": {
+    "fatigueDelta": 8
+  },
+  "_newNote": "R2 — 구종을 보상 축으로 세운다(2026-09-09 · 보상안 §2). **유니크부터**이고, `pitch_learning` 으로 짝을 갈랐다 — 배우는 중이면 그 구종을 밀어 주고, 안 배우면 새 구종을 준다. **훈련이 주고 이벤트는 가속**이라 안 떠도 늦어질 뿐이다",
+  "_tierNote": "유니크 대가는 피로 +8 이다 — 그 감각을 붙드는 하루가 그대로 든다"
+}

@@ -16534,6 +16534,353 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_HS_U_GRIP_CLICKS",
+      "prompt": "이 감각을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "지금 더 던진다",
+          "effectHint": "배우는 구종 진행도 +40%, 피로 +6",
+          "effects": {
+            "pitchProgressJump": {
+              "pct": 40
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "keep",
+          "label": "몸을 남긴다",
+          "effectHint": "컨디션 +8, 성실 +4",
+          "effects": {
+            "conditionDelta": 8,
+            "diligenceDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_U_BULLPEN_BREAK",
+      "prompt": "이 감각을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "오늘 굳힌다",
+          "effectHint": "배우는 구종 진행도 +45%, 피로 +6",
+          "effects": {
+            "pitchProgressJump": {
+              "pct": 45
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "log",
+          "label": "영상으로 남긴다",
+          "effectHint": "훈련 효율 +20% 6주, 성실 +4",
+          "effects": {
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            },
+            "diligenceDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_NIGHT_GRIP",
+      "prompt": "그 그립을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "밤새 던진다",
+          "effectHint": "배우는 구종 진행도 +45%, 피로 +8",
+          "effects": {
+            "pitchProgressJump": {
+              "pct": 45
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "sleep",
+          "label": "자고 내일 본다",
+          "effectHint": "컨디션 +8, 사기 +5",
+          "effects": {
+            "conditionDelta": 8,
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_BATTERY_TIP",
+      "prompt": "그 조언을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "apply",
+          "label": "바로 고친다",
+          "effectHint": "구종 등급 +1, 피로 +6",
+          "effects": {
+            "pitchGradeUp": {
+              "id": "PITCH_SLIDER"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "thank",
+          "label": "다음에 갚는다",
+          "effectHint": "사기 +5, 동료 관계 +12",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 12
+            },
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_U_BALL_OBEYS",
+      "prompt": "이 감각을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "push",
+          "label": "실전에서 더 쓴다",
+          "effectHint": "배우는 구종 진행도 +50%, 피로 +8",
+          "effects": {
+            "pitchProgressJump": {
+              "pct": 50
+            },
+            "fatigueDelta": 8
+          }
+        },
+        {
+          "id": "hold",
+          "label": "아껴 둔다",
+          "effectHint": "커맨드 즉시 +1, 컨디션 +6",
+          "effects": {
+            "statDelta": {
+              "command": 1
+            },
+            "conditionDelta": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_U_OLD_HAND",
+      "prompt": "그 공을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "sharpen",
+          "label": "날을 세운다",
+          "effectHint": "구종 등급 +1, 피로 +6",
+          "effects": {
+            "pitchGradeUp": {
+              "id": "PITCH_SPLITTER"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "teach",
+          "label": "후배에게도 알려준다",
+          "effectHint": "멘토 (코치 효율 +15%), 동료 관계 +10",
+          "effects": {
+            "mentor": {
+              "role": "coach",
+              "pct": 15
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_U_COACH_TEACHES",
+      "prompt": "그 공을 배우겠습니까?",
+      "options": [
+        {
+          "id": "learn",
+          "label": "배운다",
+          "effectHint": "구종 습득, 피로 +6",
+          "effects": {
+            "pitchGrant": {
+              "id": "PITCH_CHANGEUP"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "sharpen",
+          "label": "지금 것을 다듬는다",
+          "effectHint": "커맨드 경험치 +9, 성실 +4",
+          "effects": {
+            "xp": {
+              "command": 9
+            },
+            "diligenceDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_U_SENIOR_GRIP",
+      "prompt": "그 그립을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "받는다",
+          "effectHint": "구종 습득, 피로 +6",
+          "effects": {
+            "pitchGrant": {
+              "id": "PITCH_SLIDER"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 것으로 간다",
+          "effectHint": "무브먼트 즉시 +1, 성실 +5",
+          "effects": {
+            "statDelta": {
+              "movement": 1
+            },
+            "diligenceDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_JOURNEYMAN",
+      "prompt": "무엇을 배우겠습니까?",
+      "options": [
+        {
+          "id": "curve",
+          "label": "커브를 배운다",
+          "effectHint": "구종 습득, 피로 +6",
+          "effects": {
+            "pitchGrant": {
+              "id": "PITCH_CURVE"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "story",
+          "label": "프로 이야기를 듣는다",
+          "effectHint": "멘탈 즉시 +1, 사기 +8",
+          "effects": {
+            "statDelta": {
+              "mentality": 1
+            },
+            "moraleDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_ONE_MORE_PITCH",
+      "prompt": "무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "add",
+          "label": "하나 더 배운다",
+          "effectHint": "구종 습득, 피로 +6",
+          "effects": {
+            "pitchGrant": {
+              "id": "PITCH_CUTTER"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "deepen",
+          "label": "있는 걸 더 판다",
+          "effectHint": "제구 즉시 +1, 훈련 효율 +20% 6주",
+          "effects": {
+            "statDelta": {
+              "control": 1
+            },
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_U_ARSENAL_GAP",
+      "prompt": "무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "add",
+          "label": "새로 하나 잡는다",
+          "effectHint": "구종 습득, 피로 +6",
+          "effects": {
+            "pitchGrant": {
+              "id": "PITCH_SPLITTER"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "hide",
+          "label": "배합으로 푼다",
+          "effectHint": "커맨드 즉시 +1, 동료 관계 +8",
+          "effects": {
+            "statDelta": {
+              "command": 1
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_U_LAST_TRICK",
+      "prompt": "무엇을 하겠습니까?",
+      "options": [
+        {
+          "id": "add",
+          "label": "물려받는다",
+          "effectHint": "구종 습득, 피로 +6",
+          "effects": {
+            "pitchGrant": {
+              "id": "PITCH_FORKBALL"
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "keep",
+          "label": "가진 걸로 간다",
+          "effectHint": "제구 즉시 +1, 부상 위험 -15% 8주",
+          "effects": {
+            "statDelta": {
+              "control": 1
+            },
+            "injuryRiskMod": {
+              "pct": -15,
+              "weeks": 8
+            }
+          }
+        }
+      ]
     }
   ]
 }
