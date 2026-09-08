@@ -619,6 +619,12 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
       if (who) result.mentor = { npcId: who, pct: isNaN(f) ? 5 : f };
     }
     else if (key === "startGuarantee") { if (!isNaN(val)) result.startGuarantee = { games: val }; }
+    // "rosterMove:demote" — 1군 ↔ 2군 (2026-09-08 · L2). **통지에서만 먹는다**
+    //   (`utils/stateEffects.ts` · `applySideEffects`). 여기서는 읽기만 한다 —
+    //   갈래 판정을 파서에 두면 정본이 둘이 된다
+    else if (key === "rosterMove") {
+      if (rawVal === "callup" || rawVal === "demote") result.rosterMove = rawVal;
+    }
     // "counter.menteeCount:+1" — 이름은 `eventCounters.COUNTERS` 가 정본이다
     else if (key.startsWith("counter.")) {
       const name = key.slice(8);

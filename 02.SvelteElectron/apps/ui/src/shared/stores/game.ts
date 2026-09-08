@@ -1117,6 +1117,15 @@ export function applyEffectToProtagonist(
  *   `buildMyRoundMessage`가 같은 id를 또 만든다 — 그 id에는 주차가 없다).
  *   그쪽은 엔진 진행 로직이라 여기서 손대지 않는다.
  */
+/**
+ * **일어난 일**을 몇 건까지 들고 있나 (2026-09-08 · L1).
+ *
+ * 커리어 이력이 아니라 「최근에 무슨 일이 있었나」를 묻는 창이다. 조건이 보는
+ * 폭이 길어야 몇 주(`outcome_within`)라 넉넉하다 — 그리고 **세이브에 매주
+ * 실리는 값**이라 무한히 쌓게 두지 않는다.
+ */
+const OUTCOME_KEEP = 24;
+
 function dedupeMailbox(list: MessageItem[]): MessageItem[] {
   const seen = new Set<string>();
   const out: MessageItem[] = [];
@@ -2873,6 +2882,32 @@ function createGameStore() {
           tradeAdaptationWeeks: Math.max(0, (s.protagonist.tradeAdaptationWeeks ?? 0) - 1),
         },
       }));
+    },
+
+    /**
+     * **일어난 일**을 적는다 (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
+     *
+     * 🔴 부르는 자리는 **세계가 그 일을 확정한 자리**여야 한다 — 소식을 내는
+     *   자리가 아니다. 소식은 이 기록을 **읽고** 뜬다(`outcome_within`).
+     *   순서가 뒤집히면 「소식이 떠서 일어난 일이 된다」가 되고, 그게 바로
+     *   고치려던 것이다.
+     *
+     * ⚠ **같은 주 같은 종류는 한 번만 적는다.** 대회 라운드 루프처럼 한 주에
+     *   여러 번 지나는 자리가 있어서, 안 막으면 「탈락」이 그 주에 다섯 번
+     *   쌓인다. 창을 세는 조건에는 지장이 없지만 기록이 거짓이 된다.
+     */
+    recordOutcome(o: import("../types/save").ProtagonistOutcome) {
+      update((s) => {
+        const prev = s.protagonist.recentOutcomes ?? [];
+        if (prev.some((x) => x.kind === o.kind && x.year === o.year && x.week === o.week)) return s;
+        return {
+          ...s,
+          protagonist: {
+            ...s.protagonist,
+            recentOutcomes: [...prev, o].slice(-OUTCOME_KEEP),
+          },
+        };
+      });
     },
 
     addCareerEvent(event: NpcCareerEvent) {

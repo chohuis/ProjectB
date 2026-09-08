@@ -175,7 +175,45 @@ export interface DecisionEffect {
   mentor?: { npcId?: string; role?: string; pct: number };
   /** 부상 위험 ±N% 를 N주. **음수가 덜 다치는 쪽**이다 */
   injuryRiskMod?: { pct: number; weeks: number };
-  /** 선발 보장 N경기 — 그동안 자리 깊이(`roleFit.over`)를 0 으로 본다 */
+  // ── 상태 효과 (2026-09-08 · `PLAN_MESSAGE_LANES` · L2) ────────
+  //
+  // 🔴 **아래 둘은 통지에서만 먹는다.** 규칙 한 줄이 「주사위가 부른 것은
+  //   상태를 못 바꾼다」이고, 그것을 **코드가 막는다** —
+  //   `utils/stateEffects.ts` 의 `STATE_EFFECT_KEYS` 가 목록의 정본이고
+  //   `applySideEffects` 가 갈래를 보고 거른다. 열쇠를 늘리면 그 목록에도 넣어라.
+
+  /**
+   * 1군 ↔ 2군 이동 (L2).
+   *
+   * 🔴 **테스터가 겪은 자리다** — 「2군으로 가라는 메시지가 왔고 가겠다고
+   *   했는데도 안 내려갔다」. 무대 이동을 말하는 이벤트 23건 중 상태를 바꾸는
+   *   것이 **0건**이었다. 승강 기계는 `weekPhases/market.ts` 에 진짜로 있는데
+   *   **거기 닿는 문이 없었다.**
+   *
+   * ⚠ **두 벌을 만들지 않는다.** 실제 이동은
+   *   `weekPhases/market.ts` 의 `moveProtagonistBetweenTiers` 하나가 한다 —
+   *   월간 승강 기계도 같은 함수를 부른다. 보직을 `applyRoleChoice` 하나로
+   *   모은 것과 같은 이유이고, 군 이벤트가 두 벌이 돼서 한쪽만 고쳐진 채 남은
+   *   전례가 `resolveEventPending` 주석에 적혀 있다.
+   * ⚠ 프로(1·2군이 있는 무대)가 아니면 조용히 아무 일도 안 한다 — 고교생에게
+   *   「2군으로 내려간다」는 갈 곳이 없다.
+   */
+  rosterMove?: "callup" | "demote";
+  /**
+   * 선발 보장 N경기 — 그동안 자리 깊이(`roleFit.over`)를 0 으로 본다.
+   *
+   * 🔴 **통지 전용이다** (2026-09-08 · 사용자 결정 2번 「선발 보장은 감독
+   *   관계로」). 배선은 끝까지 있는데(`game.ts` 부여 → `roleDepthOf` 깊이
+   *   강제 → `matchLeagueOptions` 반영 → `game.ts` 차감) **주는 데이터가
+   *   0 이었다** — 이름이 `startGuarantee 첫 사용처` 인 이벤트 셋
+   *   (`EVT_FARM_EXHIBITION`·`EVT_FARM_FIRST_TEAM_HOLE`·`EVT_FARM_SPOT_START`)
+   *   조차 실제로는 **감독 관계**를 준다(2026-09-08 실측).
+   *
+   *   죽은 갈래를 두지 않는다. **지우는 대신 갈래를 정했다** — 자리를 주는
+   *   것은 세계가 하는 일이지 주사위가 할 일이 아니므로 `STATE_EFFECT_KEYS`
+   *   에 넣어 **통지에서만** 먹게 했다. 감독 관계는 그 통지가 뜨는 **조건**
+   *   자리에서 본다(`relation_gte` manager) — 그것이 결정 2번의 뜻이다.
+   */
   startGuarantee?: { games: number };
   /**
    * 누적 카운터를 민다 (§12 `count` 의 입력).
@@ -499,6 +537,16 @@ export interface MessageItem {
    * 칩 색·표기는 C 4-5 가 정한다.
    */
   eventGrade?: import("../utils/tierRules").EventGrade;
+  /**
+   * 이 소식이 탄 **갈래**(2026-09-08 · L3). 지금은 `"notice"`(통지) 하나뿐이고,
+   * 없으면 이벤트·안내다.
+   *
+   * ⚠ **엔진이 싣는다 — 스냅샷이다.** `eventGrade` 와 같은 이유: 화면이나
+   *   `applyDecision` 이 규칙 id 로 되짚으면 소식함에 남은 옛 소식이 **지금
+   *   데이터의 갈래**로 보인다. 그러면 어제 뜬 이벤트가 오늘 통지가 되어
+   *   상태를 바꾸게 된다 — 이 값이 상태 효과의 문지기라서 특히 그렇다.
+   */
+  lane?: import("../types/event").MessageLane;
   /**
    * 이벤트의 **결**(§4 `theme`). 위기 표시(§9)의 입력이다 — 레어·유니크 중
    * `body` 인 것이 위기다. 등급과 같은 이유로 **엔진이 싱는다**(스냅샷).

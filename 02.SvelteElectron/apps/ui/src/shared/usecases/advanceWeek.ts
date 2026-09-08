@@ -1343,6 +1343,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       overseasPassed,
     });
 
+    // 🔴 **일어난 일을 적는다** (2026-09-08 · L1). 「올해도 지명되지 않았습니다」가
+    //   조건을 **독립 + 주차 + 사기**로 쓰고 있었다 — 실제 미지명을 안 봤다
+    gameStore.recordOutcome({
+      kind: draftOutcome.drafted ? "drafted" : "undrafted",
+      year: get(seasonStore).seasonYear,
+      week: weekNum,
+      detail: draftOutcome.teamId ?? undefined,
+    });
+
     seasonStore.pushPendingAction({ type: "careerResults" });
   }
 
@@ -2090,6 +2099,13 @@ async function progressIndependentLeague(week: number): Promise<void> {
   }
   if (r.eliminated.length > 0) {
     console.info(`[독립] ${r.state.stage - 1}차 Stage 종료 — 탈락 ${r.eliminated.length}팀`);
+    // 내 팀이 그 안에 있으면 **일어난 일**이다 (2026-09-08 · L1)
+    if (r.eliminated.includes(g.protagonist.teamId)) {
+      gameStore.recordOutcome({
+        kind: "eliminated", year: s.seasonYear, week,
+        detail: `독립 ${r.state.stage - 1}차`,
+      });
+    }
   }
 }
 
@@ -2313,6 +2329,30 @@ async function progressTournaments(week: number): Promise<boolean> {
           const mine = buildMyRoundMessage(
             def, next, r, protagonistTeamId, tName4Tour, week);
           if (mine) gameStore.addMessage(mine);
+
+          // 🔴 **일어난 일을 적는다** (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
+          //   통지가 `outcome_within` 으로 이걸 읽는다 — 예전엔
+          //   「대회에서 탈락했습니다」가 조건을 **`morale_lte 55`** 로 썼다
+          //   (진출은 `team_rank_lte 2` 인데 탈락은 사기라, 같은 대회를 두 축으로
+          //   판정하고 있었다 · `types/event.ts` 의 `season_*_lte` 머리말).
+          //
+          // ⚠ **소식이 아니라 브래킷을 본다.** `mine` 은 null 일 수 있고
+          //   (내 팀이 그 라운드에 없다) 소식 유무로 판정하면 「우승했는데
+          //   소식이 없어서 우승을 못 적는」 자리가 생긴다
+          {
+            const myMatch = next.matches.find(
+              (m) => m.round === r
+                && (m.homeTeamId === protagonistTeamId || m.awayTeamId === protagonistTeamId));
+            if (myMatch?.winnerTeamId) {
+              const won = myMatch.winnerTeamId === protagonistTeamId;
+              const yr = get(seasonStore).seasonYear;
+              if (!won) {
+                gameStore.recordOutcome({ kind: "eliminated", year: yr, week, detail: def.id });
+              } else if (r === next.totalRounds) {
+                gameStore.recordOutcome({ kind: "champion", year: yr, week, detail: def.id });
+              }
+            }
+          }
 
           // ⚠ **내 팀이 없는 라운드도 알린다** (32강부터, 사용자 확정 2026-08-08).
           // 예전엔 우리가 안 나간 대회는 개막·우승 두 통뿐이라 누가 올라갔는지

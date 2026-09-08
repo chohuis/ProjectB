@@ -158,6 +158,33 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       return s.k <= cond.value;
     }
 
+    // ── 등판·출전 수 (2026-09-08 · L1) ───────────────────────────
+    //
+    // 🔴 **여기가 없어서 「시즌에 몇 경기 뛰었나」를 못 물었다.** 이닝으로
+    //    대역이 안 된다 — 한 경기 완투와 다섯 경기 짧은 등판이 같은 이닝인데
+    //    「자리를 잡았나」는 정반대다. 통지(콜업·보직·명단)가 묻는 것은 뒤쪽이다.
+    //
+    // ⚠ **투수·타자 둘 다 읽는다.** `g` 는 두 표에 다 있다. `gs`(선발)는
+    //   투수 표에만 있어 타자면 아래에서 거짓이 된다.
+    case "season_games_gte": {
+      const s2 = stats[protagonist.id];
+      return s2 ? (s2.g ?? 0) >= cond.value : false;
+    }
+
+    case "season_games_lte": {
+      const s2 = stats[protagonist.id];
+      // ⚠ **기록이 없으면 거짓이다.** `season_*_lte` 와 같은 규칙 —
+      //   `0 <= N` 이 참이라고 「안 뛰었는데 기회가 없다」로 뜨면 데뷔 전·
+      //   부상 결장이 전부 걸린다
+      if (!s2 || (s2.g ?? 0) === 0) return false;
+      return s2.g <= cond.value;
+    }
+
+    case "season_starts_gte": {
+      const s2 = stats[protagonist.id] as PitcherSeasonStats | undefined;
+      return s2?.type === "pitcher" ? (s2.gs ?? 0) >= cond.value : false;
+    }
+
     // ── 팀 순위 ──────────────────────────────────────────────────
     //
     // 🔴 **조·권역이 있으면 그 안의 순위다** (2026-09-01 · 트랙 B 실측).
@@ -357,6 +384,32 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       if (cond.op === "gte") return v >= cond.value;
       if (cond.op === "lte") return v <= cond.value;
       return v === cond.value;
+    }
+
+    // ── 결과 조건 — 「방금 그 일이 일어났나」 (2026-09-08 · L1) ───
+    //
+    // 🔴 **통지가 서는 다리다.** 신호는 이미 났는데(`market.ts` 승강 ·
+    //   시상 · 드래프트 · 대회 탈락) **읽는 자리가 없어서** 통지 성격의
+    //   이벤트가 조건으로 주차를 썼다 — 「1군에서 내려왔습니다」가
+    //   2군소속+2주차라 **처음부터 2군인 신인에게도 떴다.**
+    case "outcome_within": {
+      const list = protagonist.recentOutcomes ?? [];
+      if (list.length === 0) return false;
+      // 시즌을 넘어도 세도록 절대 주로 편다. 지금 연도를 모르면(옛 경로)
+      // **같은 시즌만** 본다 — 모르는 해를 지어내는 것보다 좁게 보는 편이 낫다
+      const nowYear = ctx.seasonYear;
+      if (nowYear === undefined) {
+        return list.some((o) => o.kind === cond.outcome
+          && currentWeek - o.week >= 0 && currentWeek - o.week <= cond.weeks);
+      }
+      const nowAbs = nowYear * 52 + currentWeek;
+      return list.some((o) => {
+        if (o.kind !== cond.outcome) return false;
+        const d = nowAbs - (o.year * 52 + o.week);
+        // ⚠ 음수는 **미래 기록**이다 — 롤오버 순서가 어긋난 세이브에서 날 수
+        //   있고, 「아직 안 일어난 일」로 통지를 띄우면 안 된다
+        return d >= 0 && d <= cond.weeks;
+      });
     }
   }
 

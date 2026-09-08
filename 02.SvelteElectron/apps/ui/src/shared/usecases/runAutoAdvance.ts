@@ -267,7 +267,9 @@ export async function resolveEventPending(pa: Extract<PendingAction, { type: "ev
   // 고쳐지는 자리라 지금 이어둔다.
   if (chosen?.effects) {
     gameStore.applyEventEffect(chosen.effects);
-    await applySideEffects(chosen.effects);
+    // ⚠ **갈래를 넘긴다** (2026-09-08 · L3). 안 넘기면 통지 pending 의 상태
+    //   효과가 조용히 무시된다 — 그게 바로 「가겠다고 했는데 안 내려갔다」다
+    await applySideEffects(chosen.effects, { lane: pa.lane });
     // 병영생활 몫(관계·감각·상벌·휴가·성과 보정) — militaryLife 가 있고 그 풀의 이벤트일 때만 움직인다
     applyMilitaryEventChoice(pa.eventId, chosen.effects);
   }

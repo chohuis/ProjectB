@@ -81,10 +81,26 @@ describe("switchProtagonistLeague — 승강 때 주인공 일정을 맞바꾼�
     expect(s.leagueSchedules.LEAGUE_KBL_FARM).toHaveLength(2);
   });
 
-  it("승강 경로가 setProtagonistTeam 바로 뒤에 이 교체를 부른다", () => {
+  /**
+   * 🔴 **둘은 짝이다.** 소속·리그를 바꾸는 쪽(`setProtagonistTeam`)과 일정·순위표를
+   *   맞바꾸는 쪽(`switchProtagonistLeague`) 중 하나만 부르면 **순위표만 맞고
+   *   일정은 옛 리그**가 된다(2026-09-02 실측 · 상대가 전부 옛 팀이었다).
+   *
+   * ⚠ 2026-09-08 에 그 짝이 `applyProtagonistTierMove` **한 자리로 모였다**
+   *   (L2 — 통지의 `rosterMove` 가 같은 이동을 해야 해서 꺼냈다). 지켜야 할
+   *   자리가 하나로 줄었으니 검사도 그 자리를 본다.
+   */
+  it("승강 정본이 setProtagonistTeam 바로 뒤에 이 교체를 부른다", () => {
     const src = readFileSync(resolve(__dirname, "../../usecases/weekPhases/market.ts"), "utf8");
-    const at = src.indexOf("gameStore.setProtagonistTeam(protoTo, toLeague);");
+    const at = src.indexOf("gameStore.setProtagonistTeam(toTeamId, toLeague);");
     expect(at).toBeGreaterThan(0);
-    expect(src.slice(at, at + 200)).toContain("seasonStore.switchProtagonistLeague(toLeague, protoTo)");
+    expect(src.slice(at, at + 200)).toContain("seasonStore.switchProtagonistLeague(toLeague, toTeamId)");
+  });
+
+  it("월간 승강 기계가 store 를 직접 안 건드리고 그 정본을 부른다 — 두 벌이 되면 한쪽만 고쳐진다", () => {
+    const src = readFileSync(resolve(__dirname, "../../usecases/weekPhases/market.ts"), "utf8");
+    // 옛 사본(주인공 전용 인라인 이동)이 되살아나면 여기서 걸린다
+    expect(src).not.toContain("gameStore.setProtagonistTeam(protoTo,");
+    expect(src).toContain("applyProtagonistTierMove(protoTo, weekNum)");
   });
 });

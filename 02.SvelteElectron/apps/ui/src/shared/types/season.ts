@@ -175,6 +175,12 @@ export type PendingAction =
       theme?: import("../utils/eventTierCopy").EventTheme;
       /** 이벤트에 붙은 대가(§4). 어느 갈래를 골라도 낸다 — 모달은 종류만 적는다 */
       cost?: DecisionEffect;
+      /**
+       * 소식 갈래 (2026-09-08 · L3). `"notice"` 면 상태 효과가 먹는다.
+       * ⚠ **없으면 이벤트다** — 상태 효과는 무시되고 로그만 남는다
+       *   (`usecases/decisions.applySideEffects`).
+       */
+      lane?: import("./event").MessageLane;
     }
   | { type: "careerChoiceHub" }
   | { type: "careerResults" }

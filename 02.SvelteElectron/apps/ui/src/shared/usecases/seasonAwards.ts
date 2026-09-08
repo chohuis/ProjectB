@@ -469,6 +469,15 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   }
 
   gameStore.addProtagonistAwards(seasonYear, protAwards);
+  // 🔴 **일어난 일을 적는다** (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
+  //   시상은 확정되는데 **읽을 조건이 없어서** 수상 뒤 이야기를 못 걸었다.
+  // ⚠ 주차는 인자에 없다 — 시즌 종료 시점이라 `s.currentWeek` 가 그 주다
+  if (protAwards.length > 0) {
+    gameStore.recordOutcome({
+      kind: "award", year: seasonYear, week: s.currentWeek,
+      detail: protAwards.map((a) => a.label).join("·"),
+    });
+  }
   if (won.size === 0) return logs;
   gameStore.addSeasonHighlights(seasonYear, won);
 
