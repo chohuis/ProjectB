@@ -8547,7 +8547,8 @@
           ],
           "effects": [
             "xp.velocity:+3",
-            "morale:+10"
+            "morale:+10",
+            "removeTag:폼교정중"
           ]
         },
         {
@@ -8562,7 +8563,8 @@
           ],
           "effects": [
             "xp.batting.power:+3",
-            "morale:+10"
+            "morale:+10",
+            "removeTag:폼교정중"
           ]
         },
         {
@@ -8577,7 +8579,8 @@
           ],
           "effects": [
             "xp.control:+3",
-            "morale:+10"
+            "morale:+10",
+            "removeTag:폼교정중"
           ]
         },
         {
@@ -8592,7 +8595,8 @@
           ],
           "effects": [
             "xp.batting.contact:+3",
-            "morale:+10"
+            "morale:+10",
+            "removeTag:폼교정중"
           ]
         }
       ]
@@ -16878,6 +16882,62 @@
               "pct": -15,
               "weeks": 8
             }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_GLASS_SAME_SPOT",
+      "prompt": "몸을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "guard",
+          "label": "쓰는 법을 바꾼다",
+          "effectHint": "회복 경험치 +8, 부상 위험 -20% 10주",
+          "effects": {
+            "injuryRiskMod": {
+              "pct": -20,
+              "weeks": 10
+            },
+            "xp": {
+              "recovery": 8
+            }
+          }
+        },
+        {
+          "id": "ignore",
+          "label": "신경 쓰지 않는다",
+          "effectHint": "컨디션 -5, 사기 +6",
+          "effects": {
+            "moraleDelta": 6,
+            "conditionDelta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_GLASS_REBUILD_BODY",
+      "prompt": "몸을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "trait",
+          "label": "다시 짠다",
+          "effectHint": "영구 특성",
+          "effects": {
+            "trait": {
+              "id": "TRAIT_FAST_RECOVERY"
+            }
+          }
+        },
+        {
+          "id": "endure",
+          "label": "지금대로 간다",
+          "effectHint": "스태미나 즉시 +1, 사기 +8",
+          "effects": {
+            "statDelta": {
+              "stamina": 1
+            },
+            "moraleDelta": 8
           }
         }
       ]

@@ -1465,6 +1465,110 @@
           "moraleDelta": 1
         }
       ]
+    },
+    {
+      "id": "MIL_DAY_DRIVER_SHORTCUT",
+      "title": "운전병이 아는 길",
+      "member": "MEM_DRIVER",
+      "description": "운전병이 지름길 하나를 압니다. 정해진 길은 아닙니다.\n\n한 시간이 줄어듭니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "cooldownWeeks": 10,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "take",
+          "label": "그 길로 간다",
+          "effectHint": "피로 -4, 동료 관계 +2",
+          "fatigueDelta": -4,
+          "relationDelta": 2
+        },
+        {
+          "id": "rule",
+          "label": "정해진 길로 간다",
+          "effectHint": "사기 -1, 성과 판정 유리",
+          "moraleDelta": -1,
+          "perfTierDelta": -1
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_SUPPLY_KEEPS",
+      "title": "보급이 챙겨 둔 것",
+      "member": "MEM_SUPPLY",
+      "description": "보급병이 사이즈 맞는 것을 따로 빼 뒀다고 합니다.\n\n말은 안 했는데 알고 있었습니다.",
+      "minRank": 0,
+      "maxRank": 3,
+      "cooldownWeeks": 12,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "take",
+          "label": "받는다",
+          "effectHint": "사기 +4, 동료 관계 +3",
+          "moraleDelta": 4,
+          "relationDelta": 3
+        },
+        {
+          "id": "share",
+          "label": "다른 사람 주라고 한다",
+          "effectHint": "동료 관계 +6",
+          "relationDelta": 6
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_PLT_SGT_VOICE",
+      "title": "연병장의 목소리",
+      "member": "MEM_PLT_SGT",
+      "description": "소대 부사관은 말보다 소리가 먼저 나옵니다. 오늘은 내 차례입니다.\n\n틀린 말은 아니었습니다.",
+      "minRank": 0,
+      "maxRank": 2,
+      "cooldownWeeks": 8,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "endure",
+          "label": "듣고 만다",
+          "effectHint": "사기 -2, 성과 판정 유리",
+          "moraleDelta": -2,
+          "perfTierDelta": -1
+        },
+        {
+          "id": "fix",
+          "label": "바로 고친다",
+          "effectHint": "관계 +4, 피로 +3",
+          "relationDelta": 4,
+          "fatigueDelta": 3
+        }
+      ]
+    },
+    {
+      "id": "MIL_DAY_ASST_READS",
+      "title": "먼저 아는 사람",
+      "member": "MEM_ASST",
+      "description": "부사수가 오늘 분위기를 먼저 읽었습니다. 피하라고 했습니다.\n\n이유는 안 말했습니다.",
+      "minRank": 0,
+      "maxRank": 2,
+      "cooldownWeeks": 10,
+      "weight": 1,
+      "choices": [
+        {
+          "id": "follow",
+          "label": "말대로 한다",
+          "effectHint": "피로 -3, 관계 +3",
+          "fatigueDelta": -3,
+          "relationDelta": 3
+        },
+        {
+          "id": "ask",
+          "label": "왜냐고 묻는다",
+          "effectHint": "관계 +5, 사기 -1",
+          "relationDelta": 5,
+          "moraleDelta": -1
+        }
+      ]
     }
-  ]
+  ],
+  "_memberNote": "🔴 **성격은 말투가 아니라 「어떤 일이 일어나느냐」로 드러난다**(사용자 확정 2026-09-09). 문안이 성격을 읽는 게 아니라, `member` 로 **그 사람이 나오는 장면을 성격에 맞춰** 배정한다. 위 넷은 그렇게 새로 쓴 것이고 기존 120종은 손대지 않았다"
 }

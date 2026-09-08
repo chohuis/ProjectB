@@ -17,5 +17,6 @@
     }
   ],
   "messageTemplateId": "MSG_CHAIN_FORM_REBUILD_DONE",
-  "decisionTemplateId": "DEC_CHAIN_FORM_REBUILD_DONE"
+  "decisionTemplateId": "DEC_CHAIN_FORM_REBUILD_DONE",
+  "_tagNote": "체인이 끝나면 **「폼교정중」을 뗀다**(2026-09-09). 붙이는 쪽(`_START`)만 있고 떼는 쪽이 없어서, 교정이 끝난 뒤에도 「폼이 흔들린다」가 평생 후보로 섰다 — `removeTag` 가 파서에 있는데 쓰는 데이터가 0 이던 자리다"
 }
