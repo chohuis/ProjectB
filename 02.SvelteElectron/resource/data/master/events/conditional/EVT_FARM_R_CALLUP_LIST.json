@@ -19,9 +19,18 @@
     {
       "type": "week_gte",
       "value": 14
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3.5
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 15
     }
   ],
   "messageTemplateId": "MSG_FARM_R_CALLUP_LIST",
   "decisionTemplateId": "DEC_FARM_R_CALLUP_LIST",
-  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_laneNote": "L5 — 이벤트에 남기고 **조건만 성적에 묶었다**(2026-09-08 · 소식 갈래 계획). 문안은 한 글자도 안 고쳤다. 「확정은 아닙니다」라 이벤트에 남는다. 다만 **2군에서 던진 것이 있어야** 이름이 오른다"
 }

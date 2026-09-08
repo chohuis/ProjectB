@@ -18,10 +18,11 @@
     },
     {
       "type": "week_gte",
-      "value": 3
+      "value": 1
     }
   ],
   "messageTemplateId": "MSG_FARM_R_SPRING_LIST",
   "decisionTemplateId": "DEC_FARM_R_SPRING_LIST",
-  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_windowNote": "3주 → 1주(2026-09-08). L5 가 「유망주 순위」에 OVR 조건을 걸면서 **2군 레어의 1~2주가 다시 비었다** — 성적 조건을 더하면 후보가 되는 주가 준다는 것을 여기서 한 번 더 봤다. 캠프 명단은 시즌 초 장면이라 당겨도 뜻이 안 상한다"
 }

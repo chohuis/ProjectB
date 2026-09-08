@@ -19,9 +19,14 @@
     {
       "type": "week_gte",
       "value": 46
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
     }
   ],
   "messageTemplateId": "MSG_FARM_R_WINTER_INVITE",
   "decisionTemplateId": "DEC_FARM_R_WINTER_INVITE",
-  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)"
+  "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
+  "_laneNote": "L5 — 이벤트에 남기고 **조건만 성적에 묶었다**(2026-09-08 · 소식 갈래 계획). 문안은 한 글자도 안 고쳤다. 구단이 겨울에 부르는 자리다. 그해 이닝이 어느 정도 쌓인 선수를 부른다 — 방어율보다 **던진 양**이 축이다"
 }

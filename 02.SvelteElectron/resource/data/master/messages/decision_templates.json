@@ -16158,6 +16158,205 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_UNIV_U_ARMBAND",
+      "prompt": "완장을 어떻게 차겠습니까?",
+      "options": [
+        {
+          "id": "lead",
+          "label": "앞에서 끈다",
+          "effectHint": "멘탈 즉시 +1, 동료 관계 +15",
+          "effects": {
+            "statDelta": {
+              "mentality": 1
+            },
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 15
+            }
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 공으로 보인다",
+          "effectHint": "훈련 효율 +20% 8주, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_U_RIVAL_SCHOOL",
+      "prompt": "이 경기를 어떻게 던지겠습니까?",
+      "options": [
+        {
+          "id": "all",
+          "label": "전부 건다",
+          "effectHint": "위기집중력 즉시 +1, 피로 +14",
+          "effects": {
+            "statDelta": {
+              "clutch": 1
+            },
+            "fatigueDelta": 14
+          }
+        },
+        {
+          "id": "cool",
+          "label": "이길 공만 던진다",
+          "effectHint": "커맨드 즉시 +1, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "statDelta": {
+              "command": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_UNIV_U_PACKED_STAND",
+      "prompt": "그 소리를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "ride",
+          "label": "등에 업는다",
+          "effectHint": "위기집중력 즉시 +1, 인기 +15",
+          "effects": {
+            "statDelta": {
+              "clutch": 1
+            },
+            "popularityDelta": 15
+          }
+        },
+        {
+          "id": "shut",
+          "label": "귀를 닫는다",
+          "effectHint": "잠재력 +1, 성실 +8",
+          "effects": {
+            "potentialDelta": 1,
+            "diligenceDelta": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_HOME_GROUND",
+      "prompt": "이 하루를 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "show",
+          "label": "보여준다",
+          "effectHint": "구속 즉시 +1, 인기 +12",
+          "effects": {
+            "statDelta": {
+              "velocity": 1
+            },
+            "popularityDelta": 12
+          }
+        },
+        {
+          "id": "keep",
+          "label": "여기서 다시 시작한다",
+          "effectHint": "잠재력 +1, 사기 +12",
+          "effects": {
+            "potentialDelta": 1,
+            "moraleDelta": 12
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_IND_U_ONE_MORE_YEAR",
+      "prompt": "다음 시즌을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "stay",
+          "label": "한 해 더 한다",
+          "effectHint": "잠재력 +1, 성실 +10",
+          "effects": {
+            "potentialDelta": 1,
+            "diligenceDelta": 10
+          }
+        },
+        {
+          "id": "hedge",
+          "label": "밖도 알아본다",
+          "effectHint": "멘탈 즉시 +1, 명성 +10",
+          "effects": {
+            "statDelta": {
+              "mentality": 1
+            },
+            "fameDelta": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_FARM_U_LAST_SPOT",
+      "prompt": "이 주를 어떻게 보내겠습니까?",
+      "options": [
+        {
+          "id": "beat",
+          "label": "이겨서 간다",
+          "effectHint": "구속 즉시 +1, 피로 +14",
+          "effects": {
+            "statDelta": {
+              "velocity": 1
+            },
+            "fatigueDelta": 14
+          }
+        },
+        {
+          "id": "own",
+          "label": "내 것만 한다",
+          "effectHint": "훈련 효율 +20% 8주, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_U_ACE_WORD",
+      "prompt": "그 말을 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "받아들인다",
+          "effectHint": "멘탈 즉시 +1, 감독 관계 +14",
+          "effects": {
+            "statDelta": {
+              "mentality": 1
+            },
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 14
+            }
+          }
+        },
+        {
+          "id": "prove",
+          "label": "공으로 답한다",
+          "effectHint": "훈련 효율 +20% 8주, 잠재력 +1",
+          "effects": {
+            "potentialDelta": 1,
+            "trainEffBoost": {
+              "pct": 20,
+              "weeks": 8
+            }
+          }
+        }
+      ]
     }
   ]
 }

@@ -15,9 +15,18 @@
     {
       "type": "week_gte",
       "value": 24
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3.5
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
     }
   ],
   "messageTemplateId": "MSG_UNIV_NATIONAL_SQUAD",
   "decisionTemplateId": "DEC_UNIV_NATIONAL_SQUAD",
-  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)"
+  "_newNote": "얇은 무대 새로 쓰기 (4-4 ② · 2026-09-08 · 사용자 확정)",
+  "_laneNote": "L5 — 이벤트에 남기고 **조건만 성적에 묶었다**(2026-09-08 · 소식 갈래 계획). 문안은 한 글자도 안 고쳤다. 대표팀 **후보** 명단이다. 문안은 그대로 두고 「그해 던진 것이 있고 방어율이 괜찮다」를 조건으로 걸었다"
 }

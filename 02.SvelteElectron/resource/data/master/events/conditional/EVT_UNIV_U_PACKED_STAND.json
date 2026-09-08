@@ -1,0 +1,31 @@
+{
+  "id": "EVT_UNIV_U_PACKED_STAND",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "story",
+  "category": "mental",
+  "priority": 826,
+  "oncePolicy": "once_per_season",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_U_PACKED_STAND",
+  "decisionTemplateId": "DEC_UNIV_U_PACKED_STAND",
+  "cost": {
+    "moraleDelta": -8
+  },
+  "_newNote": "L4 로 유니크 넷이 통지로 빠져 생기는 자리를 미리 메운다(2026-09-08). **주차 조건을 안 붙였다** — 폴백 25 의 뿌리가 창 몰림이었다",
+  "_tierNote": "유니크 대가는 사기 −8 이다 — 그만큼 보는 눈이 늘면 다음 등판이 무거워진다"
+}

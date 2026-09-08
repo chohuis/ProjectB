@@ -1,0 +1,27 @@
+{
+  "id": "EVT_UNIV_U_ARMBAND",
+  "type": "conditional",
+  "tier": "unique",
+  "theme": "team",
+  "category": "team",
+  "priority": 830,
+  "oncePolicy": "once_per_career",
+  "cooldownWeeks": 8,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "player_type",
+      "playerType": "pitcher"
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_U_ARMBAND",
+  "decisionTemplateId": "DEC_UNIV_U_ARMBAND",
+  "cost": {
+    "fatigueDelta": 12
+  },
+  "_newNote": "L4 로 유니크 넷이 통지로 빠져 생기는 자리를 미리 메운다(2026-09-08). **주차 조건을 안 붙였다** — 폴백 25 의 뿌리가 창 몰림이었다",
+  "_tierNote": "유니크 대가는 피로 +12 다 — 완장을 차면 남의 일까지 내 일이 된다"
+}

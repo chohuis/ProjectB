@@ -19,10 +19,15 @@
     {
       "type": "week_gte",
       "value": 1
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 55
     }
   ],
   "messageTemplateId": "MSG_FARM_R_PROSPECT_RANK",
   "decisionTemplateId": "DEC_FARM_R_PROSPECT_RANK",
   "_newNote": "4-4 둘째 턴 ③ — 얇은 무대 레어·유니크 (2026-09-08)",
-  "_windowNote": "창을 앞으로 벌렸다(2026-09-08 · 커버리지 실측). `week_gte` 가 늦게 몰려 **앞주에 후보가 0** 이었고 그게 폴백 44 의 절반이었다"
+  "_windowNote": "창을 앞으로 벌렸다(2026-09-08 · 커버리지 실측). `week_gte` 가 늦게 몰려 **앞주에 후보가 0** 이었고 그게 폴백 44 의 절반이었다",
+  "_laneNote": "L5 — 이벤트에 남기고 **조건만 성적에 묶었다**(2026-09-08 · 소식 갈래 계획). 문안은 한 글자도 안 고쳤다. 매체 유망주 순위다. 문안이 「뒤쪽입니다」라 높은 선은 안 맞는다 — 명단에 들 만한 수준만 건다"
 }
