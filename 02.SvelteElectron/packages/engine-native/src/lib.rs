@@ -136,6 +136,28 @@ pub fn reset_contact_bands_native() -> String {
     "{\"ok\":true}".to_string()
 }
 
+/// 계측 전용 — 타자 노림수(결정 ⑩)가 얼마나 자주·크게 걸렸나.
+///
+/// **구종 개수가 산식에 들어오는지**를 재는 자리다. 피안타율로는 잡음에
+/// 묻혀서 안 보인다 — `match_engine::READ_TALLY` 머리말 참고.
+#[napi]
+pub fn read_tally_stats_native() -> String {
+    let (avg, rate, pitches) = match_engine::read_read_tally();
+    // ⚠ 분모는 **휘두른 공**이다 — `match_engine::READ_TALLY` 머리말 참고
+    serde_json::json!({
+        "휘두른공당평균읽힌몫": (avg * 1000.0).round() / 1000.0,
+        "읽힌비율": (rate * 10000.0).round() / 10000.0,
+        "휘두른공": pitches,
+    }).to_string()
+}
+
+/// 계측 전용 — 노림수 카운터 초기화
+#[napi]
+pub fn reset_read_tally_native() -> String {
+    match_engine::reset_read_tally();
+    "{\"ok\":true}".to_string()
+}
+
 /// C-3 어댑터(완성) — 끝난 경기를 리그 계약(SimGameResult) 전체로 바꾼다.
 /// rot_idx·pitcher_conditions까지 채운다 — 안 넘기면 투수가 무한정 던진다.
 #[napi]

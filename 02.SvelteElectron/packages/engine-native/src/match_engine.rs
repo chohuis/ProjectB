@@ -35,6 +35,44 @@ fn tally_contact_band(cq: f64) {
     CONTACT_SUM.with(|s| { let mut m = s.borrow_mut(); m.0 += cq; m.1 += 1; });
 }
 
+// ── 계측: 타자가 얼마나 자주·크게 읽는가 (결정 ⑩) ─────────────────────────
+//
+// 🔴 **구종 개수의 효과가 피안타율보다 훨씬 작다.** 실측(900경기/칸)에서
+//    피안타율의 잡음 폭이 ±0.010 인데 노림수 회피가 주는 몫은 그보다 작아
+//    묻힌다. 그래서 **결과가 아니라 산식 입력을 직접 센다** — 구종을 넓히면
+//    「읽히는 빈도·크기」가 정말 주는지는 이걸로만 또렷하게 보인다.
+thread_local! {
+    /// (읽힌 몫의 합, **휘두른** 공 수, 그중 읽힌 공 수)
+    ///
+    /// ⚠ **분모는 던진 공이 아니라 휘두른 공이다.** 이 카운터는
+    ///   `calculate_contact_quality` 안에서 도는데 그 함수는 타자가 휘둘렀을
+    ///   때만 불린다(안 휘두르면 볼·루킹스트라이크로 끝난다). 「던진 공」으로
+    ///   읽으면 비율이 통째로 틀린다.
+    /// ⚠ **양쪽 반을 다 센다.** 상대 반(`auto_simulate_half_inning`)도 같은
+    ///   `step_pitch_core` 를 타므로, 주인공 구종만 바꾸면 절반만 움직인다 —
+    ///   주인공 쪽 실제 크기는 여기 보이는 차의 **약 두 배**다.
+    pub static READ_TALLY: RefCell<(f64, u64, u64)> = const { RefCell::new((0.0, 0, 0)) };
+}
+
+fn tally_read(read: f64) {
+    READ_TALLY.with(|t| {
+        let mut m = t.borrow_mut();
+        m.0 += read; m.1 += 1;
+        if read > 0.0 { m.2 += 1; }
+    });
+}
+
+/// 계측값 읽기 — (휘두른 공당 평균 읽힌 몫, 읽힌 비율, 휘두른 공 수)
+pub fn read_read_tally() -> (f64, f64, u64) {
+    let (sum, n, hit) = READ_TALLY.with(|t| *t.borrow());
+    if n == 0 { return (0.0, 0.0, 0); }
+    (sum / n as f64, hit as f64 / n as f64, n)
+}
+
+pub fn reset_read_tally() {
+    READ_TALLY.with(|t| *t.borrow_mut() = (0.0, 0, 0));
+}
+
 /// 계측값 읽기 — (밴드별 횟수, 평균 contact_q)
 pub fn read_contact_bands() -> ([u64; 6], f64) {
     let bands = CONTACT_BANDS.with(|b| *b.borrow());
@@ -773,13 +811,31 @@ fn swing_decision(
 
 // ── Phase C/D: 컨택·히트 결정 ─────────────────────────────────────────────────
 
-fn calculate_contact_quality(pitch_q: f64, batter: &BatterStats, in_zone: bool, in_shadow: bool) -> f64 {
+/// 콘택트 품질 — **클수록 투수가 이긴 공이다**(`resolve_contact` 밴드 표).
+///
+/// ⚠ 인자가 늘었다(결정 ⑩⑪). 노림수는 **구종 이력**을, 결정구는 **카운트와
+///   투수 arsenal** 을 봐야 해서 `state`·`pitcher`·`decision` 을 통째로 받는다.
+///   값 몇 개만 뽑아 넘기면 부를 때마다 무엇을 넘길지 고르게 되고, 한 자리만
+///   빠뜨려도 조용히 꺼진다 — 이 저장소가 이미 여러 번 겪은 모양이다.
+fn calculate_contact_quality(
+    pitch_q: f64, state: &MatchState, pitcher: &PitcherStats, batter: &BatterStats,
+    decision: &PitchDecision, in_zone: bool, in_shadow: bool,
+) -> f64 {
     let extra = (batter.contact - 50.0) * 0.20;
     let chase_penalty = if !in_zone { if in_shadow { 5.0 } else { 12.0 } } else { 0.0 };
+    // 결정 ⑩ — 읽힌 공은 콘택트가 **오른다**. 그래서 품질에서 뺀다
+    let read = batter_read_modifier(decision.pitch_type, &state.last_pitch_types, batter);
+    tally_read(read);
+    // 결정 ⑪ — 2스트라이크 결정구를 **존 밖에서** 따라 나왔다. 여기서만 얹는다
+    // (존 안에 꽂힌 결정구 몫은 `calculate_pitch_quality` 의 PUTAWAY_BONUS 다)
+    let putaway_chase = if state.count.strikes >= 2 && !in_zone
+        && is_putaway_pitch(pitcher, decision.pitch_type) {
+        T::PUTAWAY_CHASE_BONUS
+    } else { 0.0 };
     // ⚠ **오프셋은 여기 한 곳에서만 더한다.** 밴드 표는 "동급 = 56"을
     // 전제하는데 실측 평균이 48이다 — 표를 다시 쓰는 대신 입력을 옮긴다.
     // 정본은 `tuning::CONTACT_Q_OFFSET`
-    round2(pitch_q - extra + chase_penalty + T::contact_q_offset())
+    round2(pitch_q - extra + chase_penalty - read + putaway_chase + T::contact_q_offset())
 }
 
 fn resolve_contact(pitch_q: f64, contact_q: f64, batter: &BatterStats, rng: &mut impl Rng) -> PitchResultCode {
@@ -908,6 +964,13 @@ fn calculate_pitch_quality(
     // 던지면 아무 차이가 없었다 — 계수가 배우는 속도에만 쓰였다.
     let grade_bonus = T::grade_quality_bonus(grade_of(pitcher, decision.pitch_type));
 
+    // 결정 ⑪ — 2스트라이크에 **최고 등급 구종**을 골랐다. 카운트 보정(0-2 +5)은
+    // 「그 카운트라서」지 「결정구를 잘 골랐다」가 아니다 — 그 자리를 여기가 맡는다.
+    // ⚠ 존 밖 유인에 타자가 따라 나온 몫은 `calculate_contact_quality` 가 얹는다
+    let putaway_mod = if state.count.strikes >= 2 && is_putaway_pitch(pitcher, decision.pitch_type) {
+        T::PUTAWAY_BONUS
+    } else { 0.0 };
+
     round2(
         T::pitch_base(decision.pitch_type) + grade_bonus
         + T::strategy_bonus(decision.strategy)
@@ -918,6 +981,7 @@ fn calculate_pitch_quality(
         - batter_penalty
         + mental_bonus - stamina_penalty
         + weather_mod + park_mod + pattern_mod + speed_mod + course_mod + jam_mod + clutch_mod
+        + putaway_mod
         + random_noise
     )
 }
@@ -1420,16 +1484,73 @@ fn apply_hit_upgrade(code: PitchResultCode, power: f64, weather: WeatherType, rn
     result
 }
 
+/// 구종 반복 페널티 — **⑩ 이후 이건 「투수 몫」의 절반뿐이다.**
+///
+/// 🔴 나머지 절반은 타자 쪽(`batter_read_modifier`)에 있다. 「같은 구종을
+///   이어 던지면 불리하다」는 **한 가지 사실**이라 두 곳에서 세면 반복이
+///   두 배로 벌 받는다. 크기 표는 `tuning.rs` 결정 ⑩ 머리말에 있다.
+/// ⚠ ⑩ 이 꺼져 있으면 예전 크기(−1/−2/−4 · +1)로 돌아간다 — 계측에서
+///   「⑩ 만 껐다」가 정말 예전과 같으려면 이쪽도 같이 되돌아가야 한다.
 fn pitch_pattern_modifier(pitch_type: PitchType, last: &[PitchType]) -> f64 {
     if last.is_empty() { return 0.0; }
+    let on = T::batter_read_mode() > 0.0;
+    let (r1, r2, r3, fresh) = if on {
+        (T::PITCH_REPEAT_1, T::PITCH_REPEAT_2, T::PITCH_REPEAT_3, T::PITCH_FRESH_BONUS)
+    } else {
+        (T::PITCH_REPEAT_1_LEGACY, T::PITCH_REPEAT_2_LEGACY,
+         T::PITCH_REPEAT_3_LEGACY, T::PITCH_FRESH_BONUS_LEGACY)
+    };
     let mut consecutive = 0usize;
     for &p in last.iter().rev() {
         if p == pitch_type { consecutive += 1; } else { break; }
     }
-    if consecutive >= 3 { return -4.0; }
-    if consecutive >= 2 { return -2.0; }
-    if consecutive >= 1 { return -1.0; }
-    if !last.iter().rev().take(3).any(|&p| p == pitch_type) { 1.0 } else { 0.0 }
+    if consecutive >= 3 { return r3; }
+    if consecutive >= 2 { return r2; }
+    if consecutive >= 1 { return r1; }
+    if !last.iter().rev().take(T::BATTER_READ_WINDOW).any(|&p| p == pitch_type) { fresh } else { 0.0 }
+}
+
+/// 타자 노림수 (결정 ⑩) — **최근 구종 이력을 타자가 읽는다.**
+///
+/// 🔴 반환값은 **콘택트 품질에서 뺄 몫**이다(양수 = 타자에게 유리).
+///   `contact_q` 는 클수록 투수가 이긴 공이므로(`resolve_contact` 밴드 표)
+///   읽힌 공은 그만큼 내려야 한다.
+/// ⚠ **직전과 같은 구종**이 제일 크고, 직전은 아니어도 **최근 3구에 두 번**
+///   나왔으면 그 다음이다. 둘은 안 겹친다 — 큰 쪽 하나만 준다.
+/// ⚠ 구종이 많을수록 이게 안 걸린다 — 그게 arsenal 을 넓히는 산식상 이유다.
+///   **던지는 이 공까지 세어 3구다**(`BATTER_READ_WINDOW`). 그래서 구종 둘을
+///   번갈아 던지면(…A,B 뒤에 A) 지금의 A 가 두 번째라 늘 걸리고, 셋 이상을
+///   돌리면 안 걸린다. 구종 개수별 실측은 `npm run probe:a:read`.
+fn batter_read_modifier(pitch_type: PitchType, last: &[PitchType], batter: &BatterStats) -> f64 {
+    if T::batter_read_mode() <= 0.0 { return 0.0; }
+    if last.is_empty() { return 0.0; }
+    // **이 공까지 세어 3구**라서 앞 2구만 뒤진다 (`BATTER_READ_WINDOW` 머리말).
+    // ⚠ 스윙마다 도는 자리라 **모으지 않는다** — 이터레이터로 훑는다
+    let back = T::BATTER_READ_WINDOW.saturating_sub(1);
+    let mut window = last.iter().rev().take(back);
+    // `next()` 가 직전 공이다. 아래 `any` 는 그 다음부터 이어서 본다 —
+    // 직전이 아닌 것을 이미 알고 보는 것이라 두 갈래가 안 겹친다
+    let base = if window.next() == Some(&pitch_type) {
+        T::BATTER_READ_SAME_AS_LAST
+    } else if window.any(|&p| p == pitch_type) {
+        T::BATTER_READ_TWICE_IN_WINDOW
+    } else {
+        return 0.0;
+    };
+    base * T::batter_read_scale(batter.eye, batter.discipline)
+}
+
+/// 결정구인가 (결정 ⑪) — **남들보다 잘 다듬은 공**이어야 한다.
+///
+/// ⚠ 전 구종이 같은 등급이면 **아무것도 결정구가 아니다.** 그렇게 안 하면
+///   2스트라이크에 무엇을 던지든 가산이 붙어 `count_modifier` 를 한 번 더
+///   더하는 것과 같아진다 — 「결정구를 잘 골랐다」가 아니다.
+fn is_putaway_pitch(pit: &PitcherStats, t: PitchType) -> bool {
+    if T::putaway_mode() <= 0.0 { return false; }
+    if pit.arsenal.len() < 2 { return false; }
+    let Some(top) = pit.arsenal.iter().map(|a| a.grade).max() else { return false };
+    if !pit.arsenal.iter().any(|a| a.grade < top) { return false; }
+    pit.arsenal.iter().any(|a| a.pitch_type == t && a.grade == top)
 }
 
 /// 존 밖 — **칸 하나다.** 사방으로 쪼갤지는 실측 뒤에 정한다 (`tuning.rs` 머리말)
@@ -1819,8 +1940,24 @@ fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
 ///   `pick_target_avoiding` 을 쓴다. 여기까지 피하게 만들면 「손으로 던지면
 ///   벌을 먹고 자동이면 안 먹는다」의 반대가 되어, 플레이어가 실제로 받는
 ///   벌을 감사(`audit:engine`)가 못 본다.
-fn random_decision_for_sim(balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchDecision {
-    let types    = [PitchType::Fastball, PitchType::Slider, PitchType::Curve, PitchType::Changeup];
+/// 🔴 **구종을 하드코딩으로 뽑고 있었다** (2026-09-08). `[Fastball, Slider,
+///   Curve, Changeup]` 넷을 균등 추첨했다 — `pick_from_arsenal` 이 예전에
+///   가지고 있던 바로 그 결함이고, 고칠 때 이 형제 함수까지 안 왔다.
+///
+///   ⚠ 새는 자리가 둘이었다:
+///   ① **안 가진 구종을 던졌다.** 너클볼만 익힌 투수도 여기선 슬라이더를 던진다.
+///   ② **숙련도가 안 걸렸다.** `grade_of` 는 arsenal 에 없으면 기준(3)을 주므로,
+///      넷 중 안 가진 구종은 늘 3등급으로 계산됐다.
+///
+///   그래서 **엔진 직접 호출 계측 전부**(`audit:engine` ② · `probe:a:tempo` ·
+///   `probe:a:read`)가 「구종 넷을 균등하게 던지는 투수」를 재고 있었다.
+///   구종 개수를 2~5로 바꿔도 피안타율이 소수점 셋째 자리까지 똑같이 나온
+///   것이 이 결함의 증상이다 — arsenal 이 산식에 아예 안 닿았다.
+///
+/// ⚠ 실제 플레이는 원래 멀쩡했다. 플레이어는 화면에서 자기 구종만 고르고
+///   NPC 는 `auto_pick_decision` → `pick_from_arsenal` 을 탄다. 이 함수는
+///   **계측·자동 시뮬 전용**이라 결함이 화면에 안 보였다.
+fn random_decision_for_sim(pitcher: &PitcherStats, balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchDecision {
     let strats   = [PitchStrategy::Aggressive, PitchStrategy::Balanced, PitchStrategy::Safe];
     let powers   = [PitchPower::Low, PitchPower::Normal, PitchPower::High];
     // 코스는 공통 함수를 쓴다 — 여기 좌표를 따로 적으면 `auto_pick_decision`과
@@ -1828,7 +1965,9 @@ fn random_decision_for_sim(balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchD
     // 카운트를 모르는 자리라 중립 카운트로 뽑는다
     let target   = pick_target(balls, strikes, rng);
     PitchDecision {
-        pitch_type: types[rng.gen_range(0..types.len())],
+        // **보유 구종에서 고른다** — 규칙은 `pick_from_arsenal` 이 정본이다.
+        // 여기 표를 다시 적으면 두 경로가 또 갈린다
+        pitch_type: pick_from_arsenal(pitcher, balls, strikes, rng),
         location:   target_to_zone(target),
         target:     Some(target),
         strategy:   strats[rng.gen_range(0..strats.len())],
@@ -2258,7 +2397,9 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let mut result_code = if !swings {
         if umpire_strike { PitchResultCode::StrikeLook } else { PitchResultCode::Ball }
     } else {
-        let cq = calculate_contact_quality(quality, &current_batter, lr.in_zone, lr.in_shadow);
+        let cq = calculate_contact_quality(
+            quality, &pre_state, &current_pitcher, &current_batter, decision, lr.in_zone, lr.in_shadow,
+        );
         tally_contact_band(cq);
         apply_hit_upgrade(resolve_contact(quality, cq, &current_batter, rng), current_batter.power, pre_state.weather, rng)
     };
@@ -3524,12 +3665,14 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     // `random_decision_for_sim`(플레이어 자리), 상대 반은 `auto_pick_decision`
     // (AI 자리)이라 한쪽만 세면 코스 회피의 효과가 절반만 보인다
     let mut pitches = 0i32; let mut whiffs = 0i32;
+    // 타석 — hits/walks 와 **같은 반**만 센다(아래 auto_simulate_half_inning 은 안 센다)
+    let mut plate_appearances = 0i32;
     let mut safety = 800i32;
 
     while !state.is_finished && safety > 0 {
         safety -= 1;
         let decision = if is_protagonist_pitching(&state) {
-            random_decision_for_sim(state.count.balls, state.count.strikes, rng)
+            random_decision_for_sim(get_active_pitcher(&state), state.count.balls, state.count.strikes, rng)
         } else { auto_pick_decision(&state, rng) };
         let step = step_pitch_core(&state, &decision, is_protagonist_pitching(&state), rng);
         let code = step.outcome.result_code;
@@ -3537,6 +3680,7 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
         if is_strikeout(code) { strikeouts += 1; }
         if matches!(code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun) { hits += 1; }
         if code == PitchResultCode::Walk { walks += 1; }
+        if is_ab_terminal(code) { plate_appearances += 1; }
         pitches += 1;
         if matches!(code, PitchResultCode::StrikeSwing | PitchResultCode::StrikeoutSwing) { whiffs += 1; }
         state = step.next_state;
@@ -3560,7 +3704,7 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     let finish_note = state.logs.last().cloned().unwrap_or_default();
     let summary = if finish_note.contains("콜드게임") { finish_note } else { String::new() };
 
-    GameSummary { home_score, away_score, strikeouts, hits, walks, at_bat_logs, summary, pitches, whiffs }
+    GameSummary { home_score, away_score, strikeouts, hits, walks, at_bat_logs, summary, pitches, whiffs, plate_appearances }
 }
 
 // ── C-3: SimGameResult 어댑터 ────────────────────────────────────────────────
@@ -4634,13 +4778,140 @@ mod 완급과코스 {
         assert_eq!(course_pattern_modifier(5, &[]), 0.0);
     }
 
-    /// 🔴 **구종보다 작아야 한다** — 코스는 접은 값이라 「같은 자리」가 덜 또렷하다
+    /// 🔴 **구종보다 작아야 한다** — 코스는 접은 값이라 「같은 자리」가 덜 또렷하다.
+    ///
+    /// ⚠ 견줄 상대가 **투수 몫 하나가 아니다**(결정 ⑩ 이후). 구종 반복의 벌은
+    ///   투수 쪽(`pitch_pattern_modifier`) 절반 + 타자 쪽(`batter_read_modifier`)
+    ///   절반으로 갈렸다 — 코스와 견주려면 **둘을 합친 값**이어야 한다.
+    ///   합치지 않고 투수 몫만 보면 「코스 −0.5 대 구종 −0.5」로 같아져서
+    ///   이 불변식이 거짓으로 깨진 것처럼 보인다.
     #[test]
     fn 코스_벌이_구종보다_작다() {
-        assert!(T::COURSE_REPEAT_1.abs() < pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider]).abs());
-        assert!(T::COURSE_REPEAT_3.abs()
-            < pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider; 3]).abs());
-        assert!(T::COURSE_FRESH_BONUS < 1.0, "구종의 새 구종 가산(+1)보다 커졌다");
+        let b = 평균타자();
+        let 구종1 = pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider]).abs()
+            + batter_read_modifier(PitchType::Slider, &[PitchType::Slider], &b).abs();
+        let 구종3 = pitch_pattern_modifier(PitchType::Slider, &[PitchType::Slider; 3]).abs()
+            + batter_read_modifier(PitchType::Slider, &[PitchType::Slider; 3], &b).abs();
+        assert!(T::COURSE_REPEAT_1.abs() < 구종1, "코스 {} 대 구종 {구종1}", T::COURSE_REPEAT_1.abs());
+        assert!(T::COURSE_REPEAT_3.abs() < 구종3, "코스 {} 대 구종 {구종3}", T::COURSE_REPEAT_3.abs());
+        assert!(T::COURSE_FRESH_BONUS <= T::PITCH_FRESH_BONUS, "새 구종 가산보다 커졌다");
+    }
+
+    // ── 결정 ⑩ 타자 노림수 ────────────────────────────────────
+
+    /// 계측·검사에서 같이 쓰는 **기준 타자**(전 능력 50) — 노림수 배수가 1.0 이다
+    fn 평균타자() -> BatterStats {
+        BatterStats {
+            id: None, name: None,
+            contact: 50.0, power: 50.0, eye: 50.0, discipline: 50.0,
+            batting_clutch: 50.0, platoon: 50.0, speed: 50.0, base_instinct: 50.0,
+            bunting: None, fielding: 50.0, arm: 50.0,
+        }
+    }
+
+    /// 🔴 **이중 계산을 안 한다.** 투수 쪽 페널티가 절반으로 내려가고 그만큼이
+    ///   타자 쪽으로 갔다 — 3연속의 **합**이 예전 −4.0 그대로여야 한다
+    #[test]
+    fn 반복_벌의_총량이_안_늘었다() {
+        let b = 평균타자();
+        let last = [PitchType::Slider; 3];
+        let 합 = pitch_pattern_modifier(PitchType::Slider, &last)
+               - batter_read_modifier(PitchType::Slider, &last, &b);
+        assert_eq!(합, T::PITCH_REPEAT_3_LEGACY, "3연속 총량이 예전과 다르다");
+        assert_eq!(T::PITCH_REPEAT_1, T::PITCH_REPEAT_1_LEGACY / 2.0);
+        assert_eq!(T::PITCH_REPEAT_2, T::PITCH_REPEAT_2_LEGACY / 2.0);
+        assert_eq!(T::PITCH_REPEAT_3, T::PITCH_REPEAT_3_LEGACY / 2.0);
+        assert_eq!(T::PITCH_FRESH_BONUS, T::PITCH_FRESH_BONUS_LEGACY / 2.0);
+    }
+
+    /// 🔴 **구종 개수가 산식에 들어온다.** 둘로 번갈아 던지면 최근 3구가
+    ///   [A,B,A] 라 A 가 늘 두 번이다 — 노림수가 걸린다. 다섯이면 안 걸린다
+    #[test]
+    fn 구종이_적으면_읽힌다() {
+        use PitchType::*;
+        let b = 평균타자();
+        // 둘로 번갈아: 직전 [Slider, Fastball, Slider] 뒤에 Slider
+        // 둘로 번갈아: …A,B 뒤에 A — 이 공까지 세면 최근 3구에 A 가 둘이다
+        let 둘 = batter_read_modifier(Slider, &[Slider, Fastball], &b);
+        assert_eq!(둘, T::BATTER_READ_TWICE_IN_WINDOW, "번갈아 던지기가 안 읽혔다");
+        // 셋 이상을 돌리면 안 걸린다 — …A,B,C 뒤에 A
+        let 셋 = batter_read_modifier(Slider, &[Slider, Fastball, Curve], &b);
+        assert_eq!(셋, 0.0, "구종 셋을 돌렸는데도 읽혔다");
+        let 다섯 = batter_read_modifier(Slider, &[Curve, Changeup, Fastball], &b);
+        assert_eq!(다섯, 0.0, "구종을 돌렸는데도 읽혔다");
+        // 투수 쪽 새 구종 가산은 **넷 이상**을 돌려야 붙는다 — 셋은 창(앞 3구)에 남는다
+        assert_eq!(pitch_pattern_modifier(Slider, &[Curve, Changeup, Fastball]), T::PITCH_FRESH_BONUS);
+        assert_eq!(pitch_pattern_modifier(Slider, &[Slider, Fastball, Curve]), 0.0);
+    }
+
+    /// 직전과 같은 구종이 제일 크고, 「최근 3구에 두 번」이 그 다음이다 — **안 겹친다**
+    #[test]
+    fn 직전이_더_크게_읽힌다() {
+        use PitchType::*;
+        let b = 평균타자();
+        let 직전 = batter_read_modifier(Slider, &[Fastball, Curve, Slider], &b);
+        // ⚠ 직전이 같으면 **직전 쪽**이다 — 둘을 더하지 않는다
+        let 둘다 = batter_read_modifier(Slider, &[Slider, Slider], &b);
+        let 두번만 = batter_read_modifier(Slider, &[Slider, Fastball], &b);
+        assert_eq!(직전, T::BATTER_READ_SAME_AS_LAST);
+        assert_eq!(둘다, T::BATTER_READ_SAME_AS_LAST, "직전이 같으면 직전 값이다");
+        assert_eq!(두번만, T::BATTER_READ_TWICE_IN_WINDOW);
+        assert!(두번만 < 직전);
+    }
+
+    /// 눈이 좋을수록 크게 읽는다 — **막아 둔다**(0.6~1.4)
+    #[test]
+    fn 눈이_좋으면_크게_읽는다() {
+        let mut 약 = 평균타자(); 약.eye = 10.0; 약.discipline = 10.0;
+        let mut 강 = 평균타자(); 강.eye = 95.0; 강.discipline = 95.0;
+        let last = [PitchType::Slider];
+        let a = batter_read_modifier(PitchType::Slider, &last, &약);
+        let s = batter_read_modifier(PitchType::Slider, &last, &강);
+        assert!(a < s, "눈이 결과를 안 가른다 ({a} vs {s})");
+        assert_eq!(a, T::BATTER_READ_SAME_AS_LAST * 0.6);
+        assert_eq!(s, T::BATTER_READ_SAME_AS_LAST * 1.4);
+    }
+
+    #[test]
+    fn 첫공은_안_읽힌다() {
+        assert_eq!(batter_read_modifier(PitchType::Slider, &[], &평균타자()), 0.0);
+    }
+
+    // ── 결정 ⑪ 결정구 ────────────────────────────────────
+
+    fn 투수(arsenal: &[(PitchType, u8)]) -> PitcherStats {
+        let mut p = build_pitcher(&PartialPitcherStats::default(), 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0);
+        p.arsenal = arsenal.iter().map(|&(pitch_type, grade)| ArsenalPitch { pitch_type, grade }).collect();
+        p
+    }
+
+    /// 🔴 **전 구종이 같은 등급이면 아무것도 결정구가 아니다.** 안 그러면
+    ///   2스트라이크에 무엇을 던지든 가산이 붙어 카운트 보정이 한 번 더 붙는 꼴이다
+    #[test]
+    fn 등급이_같으면_결정구가_없다() {
+        use PitchType::*;
+        let p = 투수(&[(Fastball, 3), (Slider, 3), (Curve, 3)]);
+        for t in [Fastball, Slider, Curve] {
+            assert!(!is_putaway_pitch(&p, t), "{t:?} 가 결정구로 잡혔다");
+        }
+    }
+
+    #[test]
+    fn 제일_다듬은_공만_결정구다() {
+        use PitchType::*;
+        let p = 투수(&[(Fastball, 3), (Slider, 5), (Curve, 2)]);
+        assert!(is_putaway_pitch(&p, Slider));
+        assert!(!is_putaway_pitch(&p, Fastball));
+        assert!(!is_putaway_pitch(&p, Curve));
+        // 안 가진 구종은 결정구가 아니다 — `grade_of` 는 없으면 3을 주지만
+        // 여기선 arsenal 에 실제로 있는지를 본다
+        assert!(!is_putaway_pitch(&p, Knuckleball));
+    }
+
+    /// 구종이 하나뿐이면 「고를 것」이 없다
+    #[test]
+    fn 구종이_하나면_결정구가_없다() {
+        assert!(!is_putaway_pitch(&투수(&[(PitchType::Fastball, 5)]), PitchType::Fastball));
     }
 
     /// ⚠ **겹쳐 걸린다.** 같은 구종을 같은 자리에 던지면 둘 다 맞는다
