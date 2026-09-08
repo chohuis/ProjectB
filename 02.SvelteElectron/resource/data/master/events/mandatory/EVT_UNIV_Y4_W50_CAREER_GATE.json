@@ -20,6 +20,7 @@
       "value": 157
     }
   ],
-  "messageTemplateId": "MSG_UNIV_YEAR_WRAP",
-  "decisionTemplateId": null
+  "messageTemplateId": "MSG_UNIV_CAREER_GATE",
+  "decisionTemplateId": null,
+  "_quietNote": "문안을 MSG_UNIV_YEAR_WRAP → MSG_UNIV_CAREER_GATE 로 갈았다(4-7 · 2026-09-08). **뜻이 다른데 남의 글을 쓰고 있었다** — 제목이 장면과 어긋나면 읽는 사람은 같은 소식이 또 온 줄 안다"
 }

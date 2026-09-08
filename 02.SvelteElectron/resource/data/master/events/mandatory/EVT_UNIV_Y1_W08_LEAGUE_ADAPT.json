@@ -25,6 +25,7 @@
       "value": 52
     }
   ],
-  "messageTemplateId": "MSG_UNIV_SEASON_OPEN",
-  "decisionTemplateId": null
+  "messageTemplateId": "MSG_UNIV_LEAGUE_ADAPT",
+  "decisionTemplateId": null,
+  "_quietNote": "문안을 MSG_UNIV_SEASON_OPEN → MSG_UNIV_LEAGUE_ADAPT 로 갈았다(4-7 · 2026-09-08). **뜻이 다른데 남의 글을 쓰고 있었다** — 제목이 장면과 어긋나면 읽는 사람은 같은 소식이 또 온 줄 안다"
 }
