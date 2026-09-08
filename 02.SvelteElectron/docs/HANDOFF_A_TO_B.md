@@ -1,3 +1,73 @@
+# A → B 인계 8차 (2026-09-09) — **R1 이 섰다. R2 를 받아라**
+
+> 커밋 `9400b43a7`. 정본은 `docs/PLAN_REWARDS_2026-09-09.md`.
+> 아래 7차 이하는 그대로 둔다.
+
+## 0.18 새 조건 `pitch_learning` — 구종 보상의 짝을 가른다
+
+```jsonc
+{ "type": "pitch_learning", "value": true }    // 아무 구종이든 배우는 중
+{ "type": "pitch_learning", "value": false }   // 안 배우는 중
+```
+
+⚠ `pitch_training` 과 다르다 — 그건 **특정 구종**(`pitchId`)을 묻고, 이건
+  **아무거나 배우는 중인지**를 묻는다. 보상은 대상을 안 가리므로 이쪽이다.
+⚠ **진행도 0 도 배우는 중이다** — 막 시작한 주가 그렇다.
+⚠ 둘은 **배타**다. 어느 쪽도 안 열리는 주가 없다(검사로 못박았다).
+
+## 0.19 R2 를 쓰는 법 — 짝으로 심는다
+
+**배우는 중** — 진행도 점프 또는 등급업:
+
+```jsonc
+// events/conditional/EVT_XXX_PITCH_BREAKTHROUGH.json
+{
+  "id": "EVT_XXX_PITCH_BREAKTHROUGH",
+  "type": "conditional",
+  "tier": "unique",              // ← 🔴 유니크부터. 노말·레어는 구종을 안 준다
+  "theme": "train",
+  "cost": { "fatigueDelta": 8 }, // 유니크는 대가가 있어야 한다(check:tiers)
+  "conditions": [
+    { "type": "pitch_learning", "value": true },   // ← 배우던 것이 헛되지 않는다
+    { "type": "career_stage", "stages": ["highschool"] }
+  ],
+  "decisionTemplateId": "DEC_XXX_PITCH_BREAKTHROUGH"
+}
+```
+```jsonc
+{ "id": "push", "label": "밀어붙인다", "effectHint": "배우던 구종 진행도 크게",
+  "effects": { "pitchProgressJump": { "pct": 40 }, "fatigueDelta": 6 } }
+```
+
+**안 배우는 중** — 새 구종:
+
+```jsonc
+  "tier": "unique",
+  "conditions": [ { "type": "pitch_learning", "value": false } ],
+  // 갈래 효과
+  "effects": { "pitchGrant": { "id": "PITCH_SLIDER" } }
+```
+
+### 🔴 노말·레어에 적으면 **안 먹는다**
+
+코드가 막는다(`utils/pitchRewards.ts` 의 `gatePitchRewards`). 등급이 유니크·히든이
+아니면 `pitchGrant`·`pitchGradeUp`·`pitchProgressJump` 를 **떼어 내고 로그를 남긴다**
+(`[보상] 구종 보상을 무시했다 — …`). 나머지 보상(사기·XP…)은 그대로 먹는다.
+
+⚠ **등급을 안 적어도 안 먹는다.** 필수·안내 소식엔 등급이 없고, 등급 없는
+  자리에서 구종이 나오면 출처를 모른다.
+⚠ 그래서 `check:rewards`(R4)는 **데이터가 그렇게 쓰인 것 자체**를 잡으면 된다 —
+  동작은 이미 막혀 있다. 두 겹이 되는 것이 맞다(`check:lanes` 와 같은 관계).
+
+## 0.20 R2 를 심을 때 같이 볼 것
+
+- **짝으로 심어라.** 「배우는 중」만 있으면 안 배우는 주에 유니크가 마르고,
+  반대도 같다. 무대마다 둘 다 있어야 한다.
+- **훈련이 주, 이벤트는 가속**(사용자 확정). 진행도 점프가 100%면 그건 훈련을
+  대신하는 것이다 — 40~60% 쯤이 「가속」이다(제안 · 값은 5단계에서 D 가 잰다).
+- 구종 관리 규칙은 계측 성향 셋이 다 같다(사용자 확정 · `ensurePitchTraining`).
+
+---
 # A → B 인계 7차 (2026-09-08) — **통지 레인이 섰다.** L4·L5·L6 이 네 몫이다
 
 > 커밋 `bb43a97f9`(L1·L2·L3) · `4ab7486fc`(등급 가중·개막 전 추첨·대회 소식).

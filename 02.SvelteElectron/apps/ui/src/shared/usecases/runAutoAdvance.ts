@@ -266,7 +266,9 @@ export async function resolveEventPending(pa: Extract<PendingAction, { type: "ev
   // `applyDecision`이 이어붙여 주는데 이쪽만 안 그랬다. 필드가 늘 때 한쪽만
   // 고쳐지는 자리라 지금 이어둔다.
   if (chosen?.effects) {
-    gameStore.applyEventEffect(chosen.effects);
+    // ⚠ **등급을 넘긴다** (2026-09-09 · R1). 안 넘기면 구종 보상이 조용히
+    //   무시된다 — pending 에도 등급이 실려 있다(`type: "event"` 의 `grade`)
+    gameStore.applyEventEffect(chosen.effects, pa.grade);
     // ⚠ **갈래를 넘긴다** (2026-09-08 · L3). 안 넘기면 통지 pending 의 상태
     //   효과가 조용히 무시된다 — 그게 바로 「가겠다고 했는데 안 내려갔다」다
     await applySideEffects(chosen.effects, { lane: pa.lane });

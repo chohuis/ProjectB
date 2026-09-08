@@ -88,8 +88,10 @@ describe("효과 적용 경로가 하나인가", () => {
   it("applyEventEffect 가 자기 계산을 갖지 않는다", () => {
     // 예전엔 이 함수가 clamp·xp·statDelta 를 따로 계산하면서 넷을 빠뜨렸다.
     // 정본(`applyEffectToProtagonist`)을 부르기만 해야 한다
+    // ⚠ 2026-09-09 에 인자가 둘이 되며(구종 보상 등급 문지기 · R1) 서명이
+    //   여러 줄로 나뉘었다 — 열린 괄호까지만 짚는다
     const src = read("../game.ts");
-    const body = src.slice(src.indexOf("applyEventEffect(effect"));
+    const body = src.slice(src.indexOf("applyEventEffect("));
     const fn = body.slice(0, body.indexOf("\n    },"));
     expect(fn).toContain("applyEffectToProtagonist");
     expect(fn).not.toContain("fatigueDelta");

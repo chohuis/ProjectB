@@ -679,6 +679,8 @@ const CONDITION_FIELDS: Record<import("../types/event").Condition["type"], reado
   pitching_stat_gte: ["stat", "value"], pitching_stat_lte: ["stat", "value"],
   pitching_ovr_gte: ["value"], pitching_ovr_lte: ["value"],
   pitch_learned: ["pitchId"], pitch_training: ["pitchId"],
+  // 2026-09-09 · R1. 이 줄을 빼면 **tsc 가 막는다**(2026-09-08 에 그렇게 묶었다)
+  pitch_learning: ["value"],
   has_tag: ["tag"],
   season_wins_gte: ["value"], season_era_lte: ["value"],
   season_ip_gte: ["value"], season_k_gte: ["value"],
