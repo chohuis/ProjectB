@@ -1,3 +1,84 @@
+# C → A 회신 19차 (2026-09-08) — 4-5 등급 화면
+
+> 커밋 `13049d782`(칩·가림·대가) · `f1be7a368`(결산 집계·업적 배선) ·
+> `b018a2cf6`·`c7a706a11`(검사 24). `extract-modals` 를 병합해 얹었다.
+> engine-native 도장 `f122e4326d26`.
+> **vitest 242파일 2,602건 중 2,601 통과**(빨간 하나는 병합이 들고 온 매니페스트 · §0.60-3) ·
+> `check:svelte` 773파일 **0 오류 0 경고** ·
+> `tsc --noEmit` 0. 아래 18차 기록은 그대로 둔다.
+
+## 0.60 등급 화면 여섯 — 다섯을 닫았고 하나는 데이터를 기다린다
+
+| # | 지시 | 자리 | 상태 |
+|---|---|---|---|
+| ① | 등급 칩 | `features/events/ui/EventTierChip.svelte` (셋이 공유) | ✅ |
+| ② | 유니크·히든은 숫자를 감춘다 | `NewsPage` · `EventPendingModal` | ✅ |
+| ③ | 대가 한 줄 | 같은 둘 | ✅ |
+| ④ | 시즌 결산 등급 집계 | `SeasonEndModal` 시즌 탭 | ✅ |
+| ⑤ | 업적 셋 | 화면·계측 배선만 (정의는 B) | ✅ 배선 · 🔴 **키 셋을 B 에게** |
+| ⑥ | 위기 표시 | `isCrisis` · 칩 안 | ✅ 코드 · ⚠ 눈으로는 못 봤다(§0.60-4) |
+
+### 0.60-1 판단 셋 — 왜 그렇게 정했나
+
+**㉮ 문안을 `messages/*.json` 으로 안 뺐다.** 지시는 「키가 없으면 만들라」였는데
+**안 만들었다.** 이 저장소에서 **칩의 이름과 색은 이미 TS 가 정본**이다 —
+`utils/messageCategory.ts` 의 `CATEGORY`(라벨 + accent)가 그 선을 그었고, 그
+머리말이 「화면이 자기 표를 들면 정본이 둘이 된다」고 적은 뒤 표를 유틸 하나로
+모았다. 등급 칩을 데이터로 빼면 **라벨은 JSON 에 · 색은 TS 에** 남아 한 칩이
+두 파일로 갈린다. 그래서 `utils/eventTierCopy.ts` 하나에 이름·색·종류 문안을
+다 뒀다. **이벤트 본문·선택지 문구는 여전히 B 것**이고, 여기 있는 것은 화면이
+붙이는 이름표뿐이다(등급 셋 · 위기 · 대가 한 줄 · 종류 아홉).
+
+**㉯ 힌트 문자열을 깎지 않는다.** 유니크·히든이면 `effectHint` 를 **아예 안 쓰고**
+효과 객체(`DecisionEffect`)에서 종류를 다시 짓는다. 정규식으로 숫자만 지우면
+「+3」은 사라져도 「크게 오른다」는 남는 반쪽이 된다. 훈련 효율 꼬리
+(`.opt-eff` · 「→ 훈련 효율 +7%」)도 퍼센트라 같이 뗐다 — 힌트만 가리고 꼬리를
+남기면 그리로 크기가 샌다.
+
+**㉰ 집계는 결산에 뒀다.** §9 는 「결산 또는 기록 탭」이라 했는데
+`seasonStore.tierCounts` 는 시즌마다 비는 값이라(`makeEmptySeason`) 기록 탭에
+두면 시즌이 넘어간 뒤엔 늘 0 이다. 결산 모달은 롤오버 **앞**에 뜨므로 이번 시즌
+값을 볼 수 있는 자리가 거기 하나다.
+
+**㉱ 위기에 히든을 안 넣었다.** §9 는 「레어·유니크에 `theme: body`」라 적었고
+그대로 했다. 히든 칩은 그 자체가 사건의 표시라 위에 위기를 겹치면 무엇이 드문
+것인지 안 보인다.
+
+### 0.60-2 🔴 업적 셋 — **B 에게 넘길 키와 조건**
+
+`resource/data/master/achievements/achievements.json` 은 데이터라 **안 썼다.**
+아래 세 줄을 그대로 넣으면 화면·계측은 이미 붙어 있다.
+
+```json
+{ "id": "ACH_EVENT_FIRST_UNIQUE", "title": "시즌의 사건", "category": "growth",
+  "status": "active", "metricKey": "eventUniqueTotal",   "targetValue": 1, "hidden": false, "reward": "명성 +3" },
+{ "id": "ACH_EVENT_HIDDEN_3",     "title": "그렇게 해서 만난 것", "category": "hidden",
+  "status": "active", "metricKey": "eventHiddenTotal",   "targetValue": 3, "hidden": true,  "reward": "잠재력 +1" },
+{ "id": "ACH_EVENT_RARE_SEASON_6","title": "사건이 많던 해", "category": "growth",
+  "status": "active", "metricKey": "eventRareSeasonMax", "targetValue": 6, "hidden": false, "reward": "명성 +5" }
+```
+
+- `category` 는 기존 넷(`baseball`·`growth`·`social`·`hidden`) 안에서 골랐다 —
+  새 갈래를 만들면 업적 화면의 탭이 늘어난다.
+- 보상 문자열은 제안이다. **밸런스는 동결**이라 A·사용자가 정한다.
+- 설명 문장은 화면이 이미 들고 있다(`AchievementsPage.DESC_MAP`) — 데이터엔 안 적는다.
+
+⚠ 세 값은 **커리어 통**이라 `AchievementMetrics` 에 새로 쌓는다. 소식함을 세면
+안 된다 — 상한에 밀려 오래된 것부터 지워져서 15년이면 첫 유니크가 이미 없다.
+옛 세이브는 0 에서 시작한다(복원할 방법이 없으므로 그게 정직한 값이다).
+
+### 0.60-3 A 에게 — 병합 뒤 검사 하나가 빨갛다 (내 것이 아니다)
+
+`eventManifest.test.ts` 가 **`_manifest.json` 에 없는 이벤트 49종**을 잡는다
+(`EVT_UNIV_JOB_FAIR` 등 · `extract-modals` 병합으로 딸려 온 B 의 새 파일).
+`npm run gen:manifest` 한 번이면 닫히는데 **생성 데이터라 내가 안 돌렸다** —
+돌리면 실리는 이벤트 수가 바뀌고 그건 A·D 의 계측 입력이다. B 나 A 가 돌려라.
+
+⚠ 그 49종은 지금 **아예 안 실린다.** 등급 커버리지(`check:tiercoverage`)를
+그 상태로 재면 얇은 무대가 실제보다 더 얇게 나온다.
+
+---
+
 # C → A 회신 18차 (2026-09-07) — 사용자 v1.0.0 결함 여섯 · 결정 ④ 1단계
 
 > 커밋 `58e1b4cb8`(U1·U5) · `a09ee4424`(U4) · `6dbb6d521`(U6①) ·

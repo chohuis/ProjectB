@@ -1,0 +1,47 @@
+# 21자리 눈확인 — A 생산부 여섯 회차(b12b13b80) 뒤 화면 쪽 확인
+#
+#   DRIVE_USER_DATA=1 VITE_DEV_SERVER_URL=http://localhost:5175 \
+#     SCREENSHOT_DIR=docs/screens node scripts/drive.mjs scripts/c59-eyecheck.txt
+#
+# ⚠ 고교 30주로 닿는 것만이다. 프로·군은 D 세이브(`c58-bundle34-*`)를 기다린다.
+# ⚠ **본문+패널이 겹말인지**를 같이 본다 — A 가 본문 다섯을 한 줄로 줄였다(§0.73).
+launch
+resize 1366x768
+sleep 3000
+click-text 새 게임
+sleep 1500
+wait .slot-info
+click .slot-info
+sleep 3000
+fill .field input|묶음확인
+sleep 800
+click .btn.next
+sleep 4000
+wait .region-item
+click .region-item
+sleep 2000
+wait .team-list-item
+click .team-list-item
+sleep 2000
+click .btn.next
+sleep 2500
+click .btn.next
+sleep 2500
+click .btn.start
+sleep 30000
+# ⚠ **보직 선택에서 멈춘다** (W6 · 실측). 드라이버는 본 화면에서 `.go` 만 보는데
+#   보직은 소식 상세의 `RoleChoicePanel` 에서 고르고 확인까지 눌러야 풀린다.
+advance 8 --auto
+sleep 3000
+click-text 소식
+sleep 2500
+eval (() => { const el = document.querySelector('.item.pending') || [...document.querySelectorAll('.item')].find(e => e.innerText.indexOf('보직') >= 0); if (!el) return 'NO_PENDING'; el.click(); return 'OPENED'; })()
+sleep 2000
+eval (() => { const b = document.querySelector('.dec-opts button.opt'); if (!b) return 'NO_OPT'; b.click(); return 'PICKED'; })()
+sleep 1500
+eval (() => { const b = document.querySelector('.confirm button.go'); if (!b) return 'NO_CONFIRM'; b.click(); return 'CONFIRMED'; })()
+sleep 4000
+advance 26 --auto
+eval (async () => { for (let k = 0; k < 20; k++) { const m = document.querySelector('.more-row button'); if (!m) break; m.click(); await new Promise(r => setTimeout(r, 200)); } return 'ITEMS ' + document.querySelectorAll('.item').length; })()
+sleep 1500
+eval (async () => { const out = []; const items = [...document.querySelectorAll('.item')]; for (let i = 0; i < items.length; i++) { items[i].click(); await new Promise(r => setTimeout(r, 260)); const st = document.querySelectorAll('.st table tr').length; const bars = document.querySelectorAll('.stat-row').length; const cards = document.querySelectorAll('.head .card').length; const rank = document.querySelectorAll('.rank-row').length; const tl = document.querySelectorAll('.tl li').length; if (!st && !bars && !cards && !rank && !tl) continue; const subj = (document.querySelector('.m-title') || {}).innerText || ''; const body = ((document.querySelector('.m-text') || {}).innerText || '').replace(/s+/g, ' '); out.push({ subj: subj.slice(0, 34), st, bars, cards, rank, tl, bodyLen: body.length, body: body.slice(0, 70) }); } return JSON.stringify(out); })()

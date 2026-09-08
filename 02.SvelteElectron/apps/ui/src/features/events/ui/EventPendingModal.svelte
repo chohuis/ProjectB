@@ -55,7 +55,8 @@
     <!-- 대가는 **이벤트에 붙는다** — 어느 갈래를 골라도 낸다(§4). 그래서
          선택지 안이 아니라 선택지 위에 한 줄로 둔다 -->
     {#if action.cost}
-      <p class="cost">{COST_LEAD}{#if costHint} — {costHint}{/if}</p>
+      <!-- ⚠ 구분자를 `{#if}` 밖에 두면 Svelte 가 앞뒤 공백을 지운다(NewsPage 와 같은 자리) -->
+      <p class="cost">{costHint ? `${COST_LEAD} — ${costHint}` : COST_LEAD}</p>
     {/if}
 
     {#if choices.length > 0}

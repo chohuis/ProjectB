@@ -496,7 +496,9 @@
             <!-- 대가는 **선택지가 아니라 이벤트에 붙는다**(§4) — 어느 갈래를
                  골라도 낸다. 그래서 갈래 위에 한 줄로 두고 종류만 적는다 -->
             {#if selected.eventCost && dec.selectedOptionId === null}
-              <p class="dec-cost">{COST_LEAD}{#if costHint} — {costHint}{/if}</p>
+              <!-- ⚠ 구분자를 `{#if}` 밖에 두면 Svelte 가 앞뒤 공백을 지워 「따른다— 관계를」이
+                   된다(2026-09-08 실측). 한 식으로 만들어 공백을 문자열 안에 넣는다 -->
+              <p class="dec-cost">{costHint ? `${COST_LEAD} — ${costHint}` : COST_LEAD}</p>
             {/if}
             {#if dec.selectedOptionId === null}
               <div class="dec-opts">
