@@ -21,7 +21,7 @@
     {
       "id": "MIL_GEN_BASEBALL_DREAM",
       "title": "야구가 그리울 때",
-      "description": "밤에 야구공 던지던 기억이 떠오릅니다.\n어떻게 마음을 다잡을지 선택하세요.",
+      "description": "밤에 야구공 던지던 꿈을 꿨습니다.\n\n깨고 나서 손을 한참 봤습니다.",
       "minRank": 0,
       "choices": [
         {
@@ -42,7 +42,7 @@
     {
       "id": "MIL_GEN_SENIOR_CONFLICT",
       "title": "선임과 갈등",
-      "description": "선임 병사와 크고 작은 마찰이 생겼습니다.\n어떻게 대처할지 결정해야 합니다.",
+      "description": "선임과 며칠째 부딪히고 있습니다.\n\n생활관은 좁고 전역은 멉니다.",
       "minRank": 0,
       "maxRank": 2,
       "choices": [
@@ -78,7 +78,7 @@
     {
       "id": "MIL_GEN_SOLO_PRACTICE",
       "title": "혼자 하는 투구 연습",
-      "description": "틈틈이 빈 공터에서 혼자 그림자 투구를 했습니다.\n작지만 소중한 루틴입니다.",
+      "description": "빈 공터에서 혼자 그림자 투구를 했습니다.\n\n공은 없지만 손은 기억합니다.",
       "minRank": 1,
       "choices": [
         {
