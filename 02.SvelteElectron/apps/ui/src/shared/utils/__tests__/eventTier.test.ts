@@ -50,13 +50,34 @@ const rule = (over: Partial<EventRule>): EventRule => ({
 const MSG: MessageTemplate = { id: "MSG_T", category: "system", subject: "제목", body: "본문" } as MessageTemplate;
 
 /** `rands` 를 안 주면 전부 0.5 다 — 뽑기가 가운데로 떨어진다 */
-const run = (rules: EventRule[], c: EventContext = ctx(), rands?: number[], stage = "고교") => {
+const run = (rules: EventRule[], c: EventContext = ctx(), rands?: number[], stage = "고교",
+             tierRules: TierRules = RULES) => {
   resetEventFunnelStats();
   return runEventEngine(
     rules, [], new Map([["MSG_T", MSG]]), new Map(), c, 2026, 0,
-    rands ?? new Array(12).fill(0.5), RULES, stage,
+    rands ?? new Array(12).fill(0.5), tierRules, stage,
   );
 };
+
+/**
+ * 🔴 **정본 데이터에는 시즌 상한이 없다** (2026-09-08 · `tier_rules.json`
+ *   `_seasonCapDoc` — 고교 1학년이 한 시즌에 레어 6·유니크 2 를 다 채워
+ *   시즌 후반이 노말만 남았다). 그래도 **읽는 코드는 남아 있다** — 옛
+ *   세이브·다른 규칙 JSON 이 상한을 들고 있어도 안 죽어야 하고, 되살리는
+ *   것이 데이터 한 줄이어야 하기 때문이다.
+ *
+ * 그 갈래를 지키려면 검사가 **상한을 직접 심어야** 한다. 예전엔 파일에서
+ *   `RULES.seasonCap.rare!` 를 읽었는데 이제 그 자리가 undefined 다.
+ * ⚠ 여기 6 은 「지금 규칙 값」이 아니라 **검사용 자리표**다 — 정본이 아니다.
+ */
+const CAP_RARE = 6;
+const CAPPED_RULES: TierRules = { ...RULES, seasonCap: { rare: CAP_RARE } };
+/**
+ * 「레어를 뽑히게 하려고 그 위를 막는다」는 **검사 기법**이다 — 유니크·히든에
+ * 상한을 걸고 `tierCounts` 를 채우면 가중이 0 이 되어 0.99 가 레어로 떨어진다.
+ * ⚠ 정본 데이터에는 상한이 없으므로 여기서 심어야 한다(위 주석).
+ */
+const CAPPED_ABOVE_RARE: TierRules = { ...RULES, seasonCap: { unique: 1, hidden: 1 } };
 
 describe("등급 줄기 — 한 주에 하나", () => {
   it("등급 넷만 줄기를 탄다 — `urgent`·미기재는 안 탄다", () => {
@@ -126,11 +147,12 @@ describe("등급 줄기 — 한 주에 하나", () => {
     expect(r.starveUpdates.EVT_LOW).toBe(1);
   });
 
-  it("시즌 상한에 닿은 등급은 가중 0 이다", () => {
-    // 레어 상한(6)까지 찼으면 레어만 있는 판에서 레어가 안 뽑히고 폴백이 난다
+  it("시즌 상한이 **선언돼 있으면** 닿은 등급은 가중 0 이다", () => {
+    // 레어 상한까지 찼으면 레어만 있는 판에서 레어가 안 뽑히고 폴백이 난다
     const r = run(
       [rule({ id: "EVT_R", tier: "rare", oncePolicy: "once_per_season" })],
-      ctx({ tierCounts: { rare: RULES.seasonCap.rare!, unique: 99, hidden: 99 } }),
+      ctx({ tierCounts: { rare: CAP_RARE, unique: 99, hidden: 99 } }),
+      undefined, "고교", CAPPED_RULES,
     );
     expect(r.newMessages).toHaveLength(0);   // 노말이 뽑혔는데 노말 후보가 없다
     expect(eventFunnelStats.tier.capBlocked.rare).toBe(1);
@@ -141,8 +163,9 @@ describe("등급 줄기 — 한 주에 하나", () => {
     // 노말 후보만 두고 상한으로 노말 위를 다 막으면 폴백이 안 난다 —
     // 반대로 **레어를 뽑히게 하고 레어 후보를 0** 으로 둔다
     const c = ctx({ tierCounts: { unique: 99, hidden: 99 } });
-    // 0.99 → 가중 80:14 에서 뒤쪽(레어)이 뽑힌다
-    const r = run([rule({ id: "EVT_N", tier: "normal" })], c, new Array(12).fill(0.99));
+    // 0.99 → 유니크·히든이 상한으로 0 이 된 뒤 가중 80:14 에서 뒤쪽(레어)이 뽑힌다
+    const r = run([rule({ id: "EVT_N", tier: "normal" })], c, new Array(12).fill(0.99),
+                  "고교", CAPPED_ABOVE_RARE);
     expect(eventFunnelStats.tier.fallback).toBeGreaterThan(0);
     expect(eventFunnelStats.tier.fallbackBy["고교/rare"]).toBe(1);
     expect(r.fallbackFrom).toBe("rare");
@@ -154,11 +177,11 @@ describe("등급 줄기 — 한 주에 하나", () => {
     // 유니크가 뽑히고 유니크 후보가 0 이면 레어로 내려가는데,
     // 레어가 이미 상한(6)이면 **내려가면 안 된다.** 처음엔 그 구멍이 있었다:
     // 추첨은 상한을 봤는데 폴백은 안 봤다.
-    const c = ctx({ tierCounts: { rare: RULES.seasonCap.rare!, hidden: 99 } });
+    const c = ctx({ tierCounts: { rare: CAP_RARE, hidden: 99 } });
     const r = run(
       [rule({ id: "EVT_R", tier: "rare", oncePolicy: "once_per_season" }),
        rule({ id: "EVT_N", tier: "normal" })],
-      c, new Array(12).fill(0.999),
+      c, new Array(12).fill(0.999), "고교", CAPPED_RULES,
     );
     // 레어는 상한이라 절대 안 뜬다 — 노말까지 내려가거나 아무것도 안 뜬다
     expect(r.newMessages.map((m) => m.id).join()).not.toContain("EVT_R");

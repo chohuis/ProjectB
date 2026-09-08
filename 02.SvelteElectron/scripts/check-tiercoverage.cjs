@@ -218,7 +218,17 @@ rule(outOfRange.length === 0, "등급별 빈도가 §2 범위 안", `${outOfRang
 for (const [st, g, per, range] of outOfRange.slice(0, 12)) {
   log(`        ${st.padEnd(12)}${g.padEnd(8)}${per.padStart(6)} / 기대 ${range}`);
 }
-rule(capViolation === 0, "시즌 상한 위반 0", `${capViolation}건`);
+// 🔴 **시즌 상한은 없앴다** (사용자 확정 2026-09-08 · `tier_rules.json`
+//    `_seasonCapDoc`). 상한을 아무도 안 걸면 `capViolation` 은 늘 0 이고
+//    **아무것도 안 지킨다** — 늘 초록인 줄을 규칙으로 두면 통과가 거짓말이 된다.
+//    그래서 **상한이 선언된 판에서만** 규칙으로 센다. 지금 등급 빈도를
+//    지키는 것은 위의 「무대별 등급 빈도」 표 하나뿐이다.
+const declaredCaps = Object.entries(RULES.seasonCap ?? {}).filter(([, v]) => typeof v === "number");
+if (declaredCaps.length > 0) {
+  rule(capViolation === 0, `시즌 상한 위반 0 (${declaredCaps.map(([g, v]) => `${g} ${v}`).join(" · ")})`, `${capViolation}건`);
+} else {
+  log("  --  시즌 상한 없음 — 등급 빈도는 위 표(`weights` 가 정한다)로만 본다");
+}
 rule(hiddenViolation === 0, "히든 커리어 상한 위반 0", `${hiddenViolation}건`);
 log("");
 if (bad) {

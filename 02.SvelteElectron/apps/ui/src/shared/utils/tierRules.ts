@@ -64,6 +64,11 @@ export function parseTierRules(raw: unknown): TierRules {
     weights[g] = w[g] as number;
   }
 
+  // ⚠ **없어도 된다** — 시즌 상한은 2026-09-08 에 데이터에서 뺐다
+  //   (`tier_rules.json` `_seasonCapDoc`). 열쇠가 없으면 빈 표가 되고
+  //   모든 `cap` 이 undefined 라 아무 등급도 안 막힌다. **읽는 코드는
+  //   남겨 둔다** — 옛 세이브·다른 규칙 JSON 이 상한을 들고 있어도 안 죽고,
+  //   되살리려면 데이터 한 줄이면 된다.
   const capRaw = (o.seasonCap ?? {}) as Record<string, unknown>;
   const seasonCap: Partial<Record<EventGrade, number>> = {};
   for (const g of GRADES) if (isNum(capRaw[g])) seasonCap[g] = capRaw[g] as number;
