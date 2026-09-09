@@ -43,13 +43,38 @@ const SEEDS_ALL = String(process.env.PB_SEEDS || "20260802,777,31337,4242,202608
 
 function buildPlan() {
   if (process.env.PB_PLAN === "quick") {
-    return ["growth", "safe", "lazy"].map((persona) => ({ persona, preset: "balanced", seed: SEEDS_ALL[0] }));
+    return ["growth", "safe", "lazy"]
+      .map((persona, i) => ({ n: i + 1, persona, preset: "balanced", seed: SEEDS_ALL[0] }));
   }
   const jobs = [];
   for (const preset of PRESETS_ALL) for (const seed of SEEDS_ALL) jobs.push({ persona: "growth", preset, seed });
   for (const seed of SEEDS_ALL) jobs.push({ persona: "safe",  preset: "balanced", seed });
   for (const seed of SEEDS_ALL) jobs.push({ persona: "lazy",  preset: "balanced", seed });
-  return jobs;
+  // 🔴 **번호는 계획 안에서 정해진다** — 골라 돌려도 `#NN` 이 안 밀린다.
+  //   예전엔 `runPool` 의 인덱스를 썼는데, 그러면 6판만 돌릴 때 그 여섯이
+  //   `#01~06` 으로 나가 **먼저 돈 24판을 덮어쓴다**(다시 돌리면 다섯 시간이다).
+  return jobs.map((j, i) => ({ n: i + 1, ...j }));
+}
+
+/**
+ * 골라 돌리기 — `PB_ONLY=25-30` · `PB_ONLY=3,7,9`.
+ *
+ * ⚠ 안 주면 전부다. 이미 있는 판을 다시 안 돌리려고 쓴다 —
+ *   12시즌 한 판이 80분이라 서른 판이면 일곱 시간이다.
+ */
+function pickJobs(plan) {
+  const only = process.env.PB_ONLY;
+  if (!only) return plan;
+  const want = new Set();
+  for (const part of only.split(",")) {
+    const m = part.trim().match(/^(d+)(?:-(d+))?$/);
+    if (!m) throw new Error(`[simrun] PB_ONLY 를 못 읽었다: ${part}`);
+    const lo = Number(m[1]), hi = Number(m[2] ?? m[1]);
+    for (let i = lo; i <= hi; i++) want.add(i);
+  }
+  const got = plan.filter((j) => want.has(j.n));
+  if (got.length === 0) throw new Error(`[simrun] PB_ONLY=${only} 가 아무 판도 안 고른다`);
+  return got;
 }
 const OUT = path.join(process.cwd(), "resource/logs/runs");
 const MARK = "SIMRUN_JSON ";
@@ -92,11 +117,20 @@ function runOne(n, seed, persona, preset) {
 
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
-  const plan = buildPlan();
+  const plan = pickJobs(buildPlan());
   const t0 = Date.now();
-  console.log(`  판 ${plan.length} · 각 ${SEASONS}시즌 · 동시 ${CONC}판 (실측 안전선 ${SAFE_CONCURRENCY})`);
-  const out = await runPool(plan, CONC, async (j, i) => {
-    const n = i + 1;
+  // 🔴 **덮어쓰기 가드.** 이미 있는 판을 다시 돌리면 다섯 시간이 날아간다 —
+  //   `PB_FORCE=1` 을 줘야 덮는다.
+  const 있는것 = plan.filter((j) => fs.existsSync(path.join(OUT, `#${String(j.n).padStart(2, "0")}.json`)));
+  if (있는것.length && process.env.PB_FORCE !== "1") {
+    console.log(`  🔴 이미 있는 판 ${있는것.length}개를 덮으려 한다: ${있는것.map((j) => "#" + j.n).join(" ")}`);
+    console.log("     `PB_ONLY` 로 없는 것만 고르거나, 정말 덮으려면 `PB_FORCE=1` 을 줘라");
+    process.exit(1);
+  }
+  console.log(`  판 ${plan.length}(${plan.map((j) => "#" + j.n).join(" ")}) · 각 ${SEASONS}시즌`
+    + ` · 동시 ${CONC}판 (실측 안전선 ${SAFE_CONCURRENCY})`);
+  const out = await runPool(plan, CONC, async (j) => {
+    const n = j.n;
     const r = await runOne(n, j.seed, j.persona, j.preset);
     if (!r.ok) {
       console.log(`  🔴 #${n} ${j.persona}/${j.preset}/${j.seed} 실패`);
