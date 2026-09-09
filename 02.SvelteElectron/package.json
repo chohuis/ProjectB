@@ -173,6 +173,7 @@
     "probe:a:concurrency": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-concurrency.cjs",
     "probe:a:simrun": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-simrun.cjs",
     "report:simruns": "node scripts/report-simruns.cjs",
+    "probe:a:bodyweight": "node scripts/probe-a-bodyweight.cjs",
     "check:reportbank": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-reportbank.cjs",
     "probe:a:tempo": "node scripts/probe-a-tempo.cjs",
     "probe:a:tempo:career": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-tempo-career.cjs",

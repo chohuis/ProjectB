@@ -43,3 +43,4 @@ resource/logs/d-saves/
 resource/master.db
 resource/master.db-shm
 resource/master.db-wal
+resource/logs/runs_before_2026-09-10/

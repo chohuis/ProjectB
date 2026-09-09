@@ -7,6 +7,7 @@ import { masterStore } from "../stores/master";
 import { applyMilitaryEventChoice } from "./militaryLife";
 import { buildMilitaryResultMessage } from "../utils/militaryResultMessage";
 import { applyRoleChoice, roleChoicePolicyPick } from "./pitcherRole";
+import { enlistProtagonist } from "./militaryDecision";
 import type { RoleChoiceMetadata, DecisionEffect } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
@@ -94,6 +95,25 @@ const ACTIVE_KW = ["훈련", "수락", "참가", "도전", "시작"];
 function persona(): SimPersona {
   const v = (globalThis as Record<string, unknown>).__PB_PERSONA__;
   return SIM_PERSONAS.includes(v as SimPersona) ? (v as SimPersona) : "growth";
+}
+
+/**
+ * **지금 입대할까** — 성향이 고른다 (2026-09-10 · 사용자 확정 ②).
+ *
+ * 화면 모달은 갈래가 둘이다(입대 · 연기). 자동 진행은 **늘 연기**를 골랐고
+ * 그래서 12시즌 30판에서 군을 한 판도 안 밟았다.
+ *
+ *   성장형  미룬다  — 프로에서 뛸 해를 안 버린다
+ *   안전형  간다    — 미루면 `militaryDeferPenalty` 가 쌓인다
+ *   대충    무작위  — 씨앗 고정(재현된다)
+ */
+function militaryEnlistPick(): boolean {
+  const mode = persona();
+  if (mode === "safe") return true;
+  if (mode === "growth") return false;
+  const s = get(seasonStore);
+  const seed = (s.worldSeed ?? 0) + s.seasonYear * 101 + s.currentWeek;
+  return seededIndex(seed, 2) === 1;
 }
 
 /**
@@ -661,8 +681,34 @@ export async function runAutoAdvance(): Promise<void> {
 
         // 단순 resolve — 결과가 상태에 남지 않는 알림성 pending만 여기 둔다.
         // 계약 관련(salaryNegotiation·optionClause·faMarket)은 STOP_PENDING이다
+        //
+        // 🔴 **셋째 줄이다** (2026-09-10 · 사용자 확정). 이 목록의 분류가 이미
+        //   두 번 틀렸다고 위에 적혀 있다 — 트레이드(소속이 바뀐다) · 강등
+        //   (테스터가 겪었다). **입대도 같았다.** 무대가 통째로 바뀌는데
+        //   「알림성」에 들어 있어서 그냥 resolve 했고, 그건 화면의
+        //   **「연기」와 같다**(`MilitaryEnlistAskModal` 의 갈래 둘 중 하나).
+        //   그래서 12시즌 30판에서 **군을 한 판도 안 밟았다**(실측 0/30).
+        //
+        // ⚠ 이제 **성향이 고른다**(사용자 확정):
+        //     성장형  미룬다 — 프로에서 뛸 해를 안 버린다
+        //     안전형  일찍 간다 — 미루면 대가가 쌓인다(`militaryDeferPenalty`)
+        //     대충    씨앗 고정 무작위
+        case "militaryEnlistAsk": {
+          if (militaryEnlistPick()) {
+            // 화면의 「입대」와 같은 함수다 — 사본을 만들지 않는다
+            await enlistProtagonist("general");
+          }
+          seasonStore.resolvePendingAction(pa.type);
+          await seasonStore.save();
+          break;
+        }
+
+        // ⚠ **체육부대 지원은 성향을 안 가른다**(사용자 확정 「구종 관리는 셋 다
+        //   같다」와 같은 결). 붙으면 야구를 계속하므로 **누구에게나 더 낫다** —
+        //   고를 이유가 없는 것을 성향으로 가르면 성향의 뜻이 흐려진다.
+        //   실제 갈래는 그 다음의 `militaryEnlistAsk`(현역 갈지 미룰지)다.
         case "sportsUnitApplication":
-        case "militaryEnlistAsk":
+          gameStore.setSportsUnitApplied(true);
           seasonStore.resolvePendingAction(pa.type);
           await seasonStore.save();
           break;

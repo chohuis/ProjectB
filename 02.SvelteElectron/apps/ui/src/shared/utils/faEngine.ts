@@ -313,7 +313,21 @@ export async function generateFaOffers(
 
   const params = {
     pitchingOvr:     protagonist.pitching.ovr,
-    fame:            protagonist.fame,
+    // 🔴 **연기 대가를 여기서 낸다** (2026-09-10 · 사용자 확정 ③).
+    //
+    //   `militaryDeferPenalty` 는 `advanceWeek` 이 26세 +3 · 27세+ +5 로 쌓는데
+    //   **읽는 자리가 코드 어디에도 없었다**(2026-09-10 실측). 모달은
+    //   「현재 누적 패널티: -Npt」라고 화면에 띄우는데 그 pt 가 아무 데도 안 갔다.
+    //   연기에 대가가 없으면 **「언제 갈 것인가」가 선택이 아니다.**
+    //
+    // ⚠ 왜 여기인가 — 미필은 **구단이 부르기를 꺼리는** 것이지 실력이 주는 게
+    //   아니다. 그러니 능력치가 아니라 **팀의 관심**에서 빠져야 한다. FA 관심도가
+    //   `fame` 을 보므로(Rust `eval_fa_bid`) 여기서 깎아 넘긴다.
+    // ⚠ **명성 자체를 안 깎는다.** 저장값을 건드리면 화면·이벤트·다른 판정이
+    //   전부 따라 움직여 어디서 빠졌는지 못 가린다. **이 계산에만** 뺀다.
+    // ⚠ 값은 **제안값**이다(`BALANCE_BACKLOG`) — 1pt 를 명성 1로 본다.
+    //   5단계에서 D 가 계수를 잰다.
+    fame:            Math.max(0, (protagonist.fame ?? 0) - (protagonist.militaryDeferPenalty ?? 0)),
     leagueId:        protagonist.leagueId,
     teamId:          protagonist.teamId,
     faUnsignedWeeks: protagonist.faUnsignedWeeks ?? 0,
