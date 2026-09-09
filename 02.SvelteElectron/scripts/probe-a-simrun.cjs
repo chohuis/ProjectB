@@ -67,7 +67,7 @@ function pickJobs(plan) {
   if (!only) return plan;
   const want = new Set();
   for (const part of only.split(",")) {
-    const m = part.trim().match(/^(d+)(?:-(d+))?$/);
+    const m = part.trim().match(/^([0-9]+)(?:-([0-9]+))?$/);
     if (!m) throw new Error(`[simrun] PB_ONLY 를 못 읽었다: ${part}`);
     const lo = Number(m[1]), hi = Number(m[2] ?? m[1]);
     for (let i = lo; i <= hi; i++) want.add(i);
