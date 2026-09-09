@@ -139,8 +139,18 @@ function runOne(n, seed, persona, preset) {
     }
     fs.writeFileSync(path.join(OUT, `#${String(n).padStart(2, "0")}.json`), JSON.stringify(r.report, null, 1));
     const h = r.report.머리, t = r.report.꼬리;
-    console.log(`  [끝] #${String(n).padStart(2)} ${j.persona}/${j.preset}/${j.seed}`
-      + ` ${t.진로갈래} · 최고OVR ${h.최고OVR} · 통산 ${h.통산승}승 · 예외 ${t.예외} · 폴백 ${t.폴백}`);
+    // 🔴 **끊긴 판을 「[끝]」이라고 적으면 안 된다** (2026-09-10 실측). 6판이
+    //   2시즌에서 막혔는데 이 줄은 「예외 0 · 폴백 2」라고만 말했고, 표를 낼
+    //   때까지 아무도 몰랐다 — 다섯 시간을 버릴 뻔했다. 여기서 바로 말한다.
+    const 연도폭 = (() => {
+      const ys = r.report.해마다 ?? [];
+      if (!ys.length) return 0;
+      return ys[ys.length - 1].연도 - ys[0].연도 + 1;
+    })();
+    const 끊김 = 연도폭 < SEASONS && h.은퇴나이 == null;
+    console.log(`  ${끊김 ? "🔴 [끊김]" : "  [끝]"} #${String(n).padStart(2)} ${j.persona}/${j.preset}/${j.seed}`
+      + ` ${t.진로갈래} · ${연도폭}/${SEASONS}시즌 · 최고OVR ${h.최고OVR} · 통산 ${h.통산승}승`
+      + ` · 예외 ${t.예외} · 폴백 ${t.폴백}`);
     return r.report;
   });
   const reports = out.filter(Boolean);

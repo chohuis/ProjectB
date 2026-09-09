@@ -2940,7 +2940,26 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       }
 
       // 체육부대 신청자 결과 처리
+      //
+      // 🔴 **같은 결함의 셋째 자리다** (2026-09-10 · A 실측). 바로 위 두
+      //   블록의 주석이 `sportsUnitPromptedYear`·`militaryAskedYear` 가드가
+      //   없으면 「주를 안 넘기고 pending만 밀어넣어 영영 그 주에 머문다」고
+      //   적어 뒀는데, **이 블록에는 아무 가드도 없었다.**
+      //
+      //   신청 → 탈락 → 모달의 「연기」 → 같은 주 → `sportsUnitApplied` 가
+      //   그대로 참 → 다시 탈락 → … 로 게임이 그 주에서 안 나간다.
+      //   실측: 2028W49 에서 `advanceWeek` 이 50회 연속 주를 안 넘겼다.
+      //
+      // ⚠ **아무도 못 밟고 있었다.** 화면에서 「신청」을 눌러야 참이 되는데
+      //   계측 하네스는 그 pending 을 그냥 resolve 했다(= 미신청). 성향별
+      //   군 갈래를 넣어 하네스가 처음 신청하자 그 자리에서 섰다.
+      //
+      // 고치는 자리는 가드가 아니라 **플래그다** — 결과를 처리하면 신청은
+      // 소진된다(탈락하면 모달이 「내년에 다시 도전」이라고 말한다).
+      // 가드만 걸면 `sportsUnitApplied` 가 영영 참으로 남아 **이듬해에는
+      // 신청도 안 했는데 선발 판정이 돈다.**
       if (weekInYear === MILITARY_RESULT_WEEK && p.sportsUnitApplied) {
+        gameStore.setSportsUnitApplied(false);
         const m = get(masterStore);
         const npcPool = m.entities
           .filter((e) => {
