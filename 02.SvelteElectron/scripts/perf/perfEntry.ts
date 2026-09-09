@@ -523,6 +523,13 @@ export function simRunReport(head: {
       // 🔴 서식 문서가 꼬리에 콕 집어 둔 값이다 — 0 이 아니면 이 판을 믿으면 안 된다
       예외: autoAdvanceErrorCount(),
       예외표본: autoAdvanceErrors().map((e) => `${e.year}W${e.week} ${e.message}`).slice(-5),
+      // 🔴 **연도 줄이 빠져도 이건 남는다** (2026-09-09). 진로가 갈리는 해는
+      //   줄을 못 접는데(무대가 바뀌며 새 시즌이 직접 열린다) 하필 그 해에
+      //   지명·진학이 일어난다 — 「고졸 직행 지명」을 줄로 세면 놓친다.
+      //   `careerEvents` 는 연도까지 온전하므로 여기 통째로 싣는다.
+      커리어이벤트: (p.careerEvents ?? []).map((e) => `${e.year}:${e.eventType}`),
+      // 무대별 주 수 — 폴백 비율을 무대마다 내려면 분모가 있어야 한다
+      무대주수: { ...((eventFunnelProbe().tier as { weeksByStage?: Record<string, number> }).weeksByStage ?? {}) },
       폴백: f.fallback ?? 0,
       폴백자리: { ...(f.fallbackBy ?? {}) },
     },
