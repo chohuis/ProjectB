@@ -32,6 +32,10 @@ resource/logs/uiwalk/
 
 # 계측 덤프 (probe-npc-dump.cjs 가 남기는 생성물 — DATA_POLICY §1 ③파생)
 resource/logs/d-regress/
+# 계측 판 보고서 (2026-09-09 · `npm run probe:a:simrun`). 30판 × 12시즌이면
+# 판마다 한 장씩 쌓인다 — **산출물이지 소스가 아니다.** 보고할 것은
+# `summary.md` 의 표이고 그건 보고서에 붙인다
+resource/logs/runs/
 
 # D 세이브 산출물(probe-make-c9b-save.cjs 등) — slot.db 사본이라 판마다 수백 MB.
 # C 눈확인용이라 절대경로로 전달하지 커밋하지 않는다

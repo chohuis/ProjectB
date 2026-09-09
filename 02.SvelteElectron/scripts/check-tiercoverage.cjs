@@ -141,24 +141,30 @@ log("── 등급 커버리지 (§10) ─────────────�
 log(`  씨앗 ${SEEDS.join(" ")} · 진로 ${PATHS.map((p) => p[0]).join(" ")} · 각 ${SEASONS}시즌`);
 log("  ⚠ 한 판이 8~9분이다 — 배경으로 걸어라");
 log("");
-for (const [name, policy] of PATHS) {
-  for (const seed of SEEDS) {
-    const r = spawnSync(process.execPath, [
-      __filename, "--json", "--seed", String(seed),
-      "--policy", JSON.stringify(policy), "--seasons", String(SEASONS),
-    ], { encoding: "utf8", env: process.env, maxBuffer: 64 * 1024 * 1024 });
-    const line = String(r.stdout || "").split("\n").find((l) => l.startsWith(MARK));
+// 🔴 **순차 하나였다** (2026-09-09 · 계측 2-2 에서 고쳤다). 12시즌 한 판이 두
+//   시간이라 아홉 판이면 열여덟 시간이었다 — 그 그림이 안 돈다.
+const JOBS = PATHS.flatMap(([name, policy]) => SEEDS.map((seed) => ({ name, policy, seed })));
+log(`  동시 ${CONC}판 (실측 안전선 ${SAFE_CONCURRENCY} · PB_CONC 로 바꾼다)`);
+
+(async () => {
+  const results = await runPool(JOBS, CONC, async (j) => {
+    const r = await runChild([
+      __filename, "--json", "--seed", String(j.seed),
+      "--policy", JSON.stringify(j.policy), "--seasons", String(SEASONS),
+    ]);
+    const line = String(r.stdout || "").split(String.fromCharCode(10)).find((l) => l.startsWith(MARK));
+    log(`  ${j.name}/${j.seed} ${line ? "끝" : "🔴 실패"}`);
+    return { j, r, line };
+  });
+  for (const { j, r, line } of results) {
     if (!line) {
-      log(`  🔴 ${name}/${seed} 실패 — 출력에 ${MARK} 가 없다`);
-      // ⚠ **stderr 를 먼저 낸다** — 예전엔 stdout 800자만 찍어서 진짜 오류를
-      //   통째로 버렸다(2026-09-08 실사고 · `childFailureReport` 머리말)
+      log(`  🔴 ${j.name}/${j.seed} 실패 — 출력에 ${MARK} 가 없다`);
+      // ⚠ **stderr 를 먼저 낸다** (2026-09-08 실사고 · `childFailureReport` 머리말)
       log(childFailureReport(r));
       process.exit(1);
     }
-    rows.push({ name, seed, ...JSON.parse(line.slice(MARK.length)) });
-    log(`  ${name}/${seed} 끝`);
+    rows.push({ name: j.name, seed: j.seed, ...JSON.parse(line.slice(MARK.length)) });
   }
-}
 log("");
 
 // 집계 — 무대별로 접는다. **어느 판에서 밟았는지가 아니라 무대가 축이다**
@@ -268,3 +274,5 @@ if (bad) {
   log("");
   process.exitCode = 1;
 }
+
+})();

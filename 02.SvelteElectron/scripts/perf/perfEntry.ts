@@ -24,7 +24,7 @@ import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/s
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog, loadGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
-import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
+import { runAutoAdvance, lastAutoAdvanceError , autoAdvanceErrorCount, autoAdvanceErrors, resetAutoAdvanceErrors } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
 import { buildTop10Metadata } from "../../apps/ui/src/shared/utils/top10Engine";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
@@ -112,6 +112,9 @@ export interface BootResult {
 
 /** App.svelte onMount + NewGamePage.doStartGame 과 같은 순서 */
 export async function boot(opts: { slotId: string; worldSeed: number; seasonYear: number }): Promise<BootResult> {
+  // 🔴 **판 시작에서 예외 셈을 비운다** (2026-09-09 · 계측 2-1). 한 프로세스에서
+  //   두 판을 돌리는 계기가 있어(오케스트레이터) 안 비우면 앞판 것이 섞인다
+  resetAutoAdvanceErrors();
   await masterStore.load();
   // setupContentWatcher는 dev 전용(onContentChanged 없으면 no-op)이라 건너뛴다
   masterStore.connectToGameStore(
@@ -384,6 +387,161 @@ export function stopReason(): string | null { return get(autoAdvanceStore).stopR
  * 주가 안 넘어갔을 때 어느 pending 을 몇 번 돌았는지 세는 데 쓴다.
  */
 export function autoLogs(): string[] { return get(autoAdvanceStore).log; }
+
+/**
+ * 🔴 **이 판이 삼킨 예외** (2026-09-09 · 계측 2-1).
+ *
+ * `runAutoAdvance` 는 예외를 잡아 `stopReason` 에 메시지만 남긴다. 그 주석이
+ * 적어 둔 실측 그대로다 — 「프로 2년차 한 시즌 내내 매주 터졌는데 25시즌 런이
+ * **정상으로 보였다**」. 읽는 데가 `autoRun` 하나뿐이라 `measure:*`·`probe:*` 는
+ * 아무도 안 봤다. **지금 잰 숫자 중에 매주 터지던 판이 섞여 있을 수 있다.**
+ *
+ * ⚠ **0 이 아니면 그 판의 숫자는 의심해야 한다.** 판 보고서 꼬리에 싣는다.
+ */
+export function exceptionProbe(): Record<string, unknown> {
+  return {
+    예외: autoAdvanceErrorCount(),
+    최근: autoAdvanceErrors().map((e) => `${e.year}W${e.week} ${e.message}`),
+    마지막스택: lastAutoAdvanceError(),
+  };
+}
+
+/** 판 시작에서 부른다 — 안 비우면 한 프로세스 두 판이 섞인다 */
+export function resetExceptions(): void { resetAutoAdvanceErrors(); }
+
+// ── 판 보고서 (2026-09-09 · 계측 2-4 · `PLAN_SIM_REPORT_2026-09-09.md`) ──
+//
+// 🔴 **데이터는 이미 다 있다 — 꺼내는 자리만 없었다**(서식 문서 마지막 표).
+//   새로 만드는 게 아니라 이어 붙이는 일이다.
+//
+// ⚠ **한 해가 한 줄**이다(사용자 확정). 15년 × 20판이면 300시즌이라 원본을
+//   다 남기면 파일이 커진다 — 필요하면 그 판만 다시 돌린다.
+
+/** 한 해 한 줄 — 서식 문서의 열 순서 그대로 */
+export interface SimYearRow {
+  연도: number; 나이: number; 무대: string; 소속: string; 연봉: number;
+  G: number; IP: number; ERA: number; 승: number; 패: number; OVR: number;
+  노말: number; 레어: number; 유니크: number; 히든: number; 통지: number;
+  일: string[];
+}
+
+/**
+ * **그해를 한 줄로 접는다.** 시즌이 끝나는 자리(롤오버 직전)에서 부른다.
+ *
+ * ⚠ 롤오버 **뒤에** 부르면 나이·학년·소속이 이미 다음 해 것이다.
+ * ⚠ 등급 수는 이 함수가 세지 않는다 — 호출부가 그해 시작·끝의 차를 넘긴다
+ *   (`eventFunnelStats` 는 판 전체 누계라 그대로 쓰면 해마다 커진다).
+ */
+/**
+ * @param at 그 해 **시작 시점**의 무대·소속. 안 주면 지금 값을 쓴다.
+ *
+ * 🔴 **안 주면 줄이 거짓말을 한다** (2026-09-09 실측). 진로 결정은 시즌
+ *   **끝 무렵**에 처리되므로, 접는 시점에는 이미 다음 무대의 소속이다 —
+ *   실제로 「2028 · 무대 university · 소속 TEAM_UNIV_NAMAK」인데 성적은
+ *   고교 3학년 것이 실린 줄이 나왔다. 성적과 소속이 다른 해를 가리킨다.
+ */
+export function simYearRow(
+  tierDelta: Record<string, number>,
+  noticeDelta: number,
+  at?: { 무대: string; 소속: string; 나이: number },
+): SimYearRow {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const p = g.protagonist;
+  const st = s.stats[p.id] as { g?: number; ip?: number; era?: number; w?: number; l?: number } | undefined;
+  // 「그해 있었던 일」의 정본은 `recentOutcomes` 와 `careerEvents` 다 —
+  // 따로 정의하지 않는다(서식 문서). 통지의 정의가 곧 중요 포인트다
+  const 일 = [
+    ...(p.recentOutcomes ?? []).filter((o) => o.year === s.seasonYear)
+      .map((o) => `${o.kind}${o.detail ? `(${o.detail})` : ""}`),
+    ...(p.careerEvents ?? []).filter((e) => e.year === s.seasonYear)
+      .map((e) => String(e.eventType)),
+  ];
+  return {
+    연도: s.seasonYear, 나이: at?.나이 ?? p.age,
+    무대: at?.무대 ?? p.careerStage, 소속: at?.소속 ?? p.teamId ?? "",
+    연봉: p.contract?.salary ?? 0,
+    G: st?.g ?? 0, IP: Math.round((st?.ip ?? 0) * 10) / 10,
+    ERA: st?.era ?? 0, 승: st?.w ?? 0, 패: st?.l ?? 0,
+    OVR: Math.round(p.pitching?.ovr ?? 0),
+    노말: tierDelta.normal ?? 0, 레어: tierDelta.rare ?? 0,
+    유니크: tierDelta.unique ?? 0, 히든: tierDelta.hidden ?? 0,
+    통지: noticeDelta,
+    일,
+  };
+}
+
+/** 지금까지 발동한 등급 수 — `simYearRow` 의 그해 차를 내려고 호출부가 쓴다 */
+export function tierCounters(): { 등급: Record<string, number>; 통지: number } {
+  const f = eventFunnelProbe().tier as { emitted?: Record<string, number> };
+  return {
+    등급: { ...(f.emitted ?? {}) },
+    // 🔴 **발동 수**를 센다 (2026-09-09 실측으로 고쳤다). 처음엔
+    //   `conditional.urgentPicked`(후보 수)를 썼는데 그건 **조건을 통과한 수**라
+    //   한 해가 52 로 찍혔다 — 매주 후보에 오르고 정책에 막힌 것까지 센 값이다.
+    //   통지 레인이 실제로 내보낸 것은 `conditional.emitted` 다(그 레인만 이
+    //   갈래를 쓴다 — 필수는 `mandatory`, 등급은 `grade`).
+    통지: (eventFunnelProbe() as Record<string, Record<string, number>>).conditional?.emitted ?? 0,
+  };
+}
+
+/**
+ * **판 보고서 한 장** — `runs/#NN.json` 에 그대로 쓴다.
+ *
+ * 머리(씨앗·프리셋·성향…) · 해마다 한 줄 · 꼬리(진로·예외·폴백…).
+ * 서식 정본은 `docs/PLAN_SIM_REPORT_2026-09-09.md` 다.
+ */
+export function simRunReport(head: {
+  번호?: number; 씨앗: number; 프리셋: string; 학교?: string;
+}, years: SimYearRow[]): Record<string, unknown> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  const f = eventFunnelProbe().tier as { fallback?: number; fallbackBy?: Record<string, number> };
+  const 최고OVR = years.length ? Math.max(...years.map((y) => y.OVR)) : Math.round(p.pitching?.ovr ?? 0);
+  const 통산승 = years.reduce((a, y) => a + y.승, 0);
+  const 프로해 = years.filter((y) => String(y.무대).startsWith("pro_"));
+  return {
+    머리: {
+      번호: head.번호 ?? null, 씨앗: head.씨앗, 프리셋: head.프리셋,
+      학교: head.학교 ?? null, 성향: currentPersona(),
+      최고OVR, 통산승, 은퇴나이: p.retirement ? p.age : null,
+    },
+    해마다: years,
+    꼬리: {
+      진로갈래: p.careerStage,
+      "1군정착나이": 프로해.find((y) => !String(y.소속).endsWith("_2"))?.나이 ?? null,
+      최고연봉: years.length ? Math.max(...years.map((y) => y.연봉)) : 0,
+      // ⚠ 회복 **주 수**는 이력에 안 남는다(`InjuryHistoryEntry` 는 발생 시점만
+      //   든다) — **부상 횟수**로 적는다. 날린 주를 재려면 주간 루프가 세야 하고
+      //   그건 이 보고서가 아니라 엔진 쪽 일이다
+      부상횟수: (p.injuryHistory ?? []).length,
+      수술횟수: (p.injuryHistory ?? []).filter((h) => h.severity === "surgery").length,
+      구종수: (p.pitches ?? []).length,
+      구종평균등급: (p.pitches ?? []).length
+        ? Math.round(((p.pitches ?? []).reduce((a, x) => a + x.grade, 0) / (p.pitches ?? []).length) * 10) / 10
+        : 0,
+      // 🔴 서식 문서가 꼬리에 콕 집어 둔 값이다 — 0 이 아니면 이 판을 믿으면 안 된다
+      예외: autoAdvanceErrorCount(),
+      예외표본: autoAdvanceErrors().map((e) => `${e.year}W${e.week} ${e.message}`).slice(-5),
+      폴백: f.fallback ?? 0,
+      폴백자리: { ...(f.fallbackBy ?? {}) },
+    },
+  };
+}
+
+/**
+ * **계측 성향을 고른다** (2026-09-09 · 계측 2-3). 정본은 `globalThis.__PB_PERSONA__`
+ * 하나이고 `usecases/simPersona.ts` 가 뜻을 갖는다. 안 주면 `growth` 다.
+ *
+ * ⚠ 여기 말고 다른 자리에 정책을 두지 않는다 — 군 선택(`__PB_MIL_CHOICE`)·
+ *   보직(`__PB_ROLE_CHOICE`)과 같은 규약이다.
+ */
+export function setPersona(v: "growth" | "safe" | "lazy"): void {
+  (globalThis as Record<string, unknown>).__PB_PERSONA__ = v;
+}
+export function currentPersona(): string {
+  return String((globalThis as Record<string, unknown>).__PB_PERSONA__ ?? "growth");
+}
 export function npcCount(): number { return get(gameStore).npcs.length; }
 export function entityCount(): number { return get(masterStore).entities.length; }
 

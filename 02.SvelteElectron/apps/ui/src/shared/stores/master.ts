@@ -609,7 +609,12 @@ export function parseEffectsArray(effects: string[]): DecisionEffect {
       }
     }
     else if (key === "pitchGrant")    { result.pitchGrant   = { id: rawVal }; }
-    else if (key === "pitchGradeUp")  { result.pitchGradeUp = { id: rawVal }; }
+    // "pitchGradeUp:PITCH_X" · "pitchGradeUp:PITCH_X/2" — 뒤가 단계 수(2026-09-09)
+    else if (key === "pitchGradeUp") {
+      const [pid, st] = rawVal.split("/");
+      const n2 = parseInt(st ?? "", 10);
+      result.pitchGradeUp = { id: pid, ...(Number.isFinite(n2) && n2 > 1 ? { steps: n2 } : {}) };
+    }
     else if (key === "pitchProgress") { const f = parseFloat(rawVal); if (!isNaN(f)) result.pitchProgressJump = { pct: f }; }
     else if (key === "trait")         { result.trait = { id: rawVal }; }
     else if (key === "mentor") {
