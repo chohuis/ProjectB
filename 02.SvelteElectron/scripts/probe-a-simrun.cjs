@@ -16,8 +16,10 @@
  *   같은 답이 나오면 성향을 나눈 뜻이 없다.
  */
 const path = require("node:path");
-const { SAFE_CONCURRENCY, runPool } = require(path.join(process.cwd(), "scripts/perf/concurrency.cjs"));
+const { SAFE_CONCURRENCY, timeoutFor, runPool } = require(path.join(process.cwd(), "scripts/perf/concurrency.cjs"));
 const CONC = Number(process.env.PB_CONC || SAFE_CONCURRENCY);
+/** 한 판 기본 상한 — 12시즌이 20분 안팎이라 넉넉히 잡는다 */
+const BASE_TIMEOUT = Number(process.env.PB_RUN_TIMEOUT_MS || 90 * 60 * 1000);
 const fs = require("node:fs");
 const { spawn } = require("node:child_process");
 
@@ -74,7 +76,12 @@ function runOne(n, seed, persona, preset) {
     let out = "", err = "";
     child.stdout.on("data", (d) => (out += d));
     child.stderr.on("data", (d) => (err += d));
+    // 🔴 **상한을 건다** — 없으면 한 판이 멈췄을 때 서른 판이 통째로 안 끝난다.
+    //   동시 수만큼 늘려 잡는다(`timeoutFor`) — 순차 기준 상한을 그대로 쓰면
+    //   **동시에 돌린다는 이유만으로** 죽는다(2026-09-09 실측으로 밝힌 자리)
+    const timer = setTimeout(() => child.kill(), timeoutFor(BASE_TIMEOUT, CONC));
     child.on("close", (code, signal) => {
+      clearTimeout(timer);
       const line = out.split("\n").find((l) => l.startsWith(MARK));
       resolve(line
         ? { ok: true, report: JSON.parse(line.slice(MARK.length)) }
