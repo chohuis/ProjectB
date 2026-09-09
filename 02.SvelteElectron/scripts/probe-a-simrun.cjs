@@ -35,6 +35,23 @@ const { spawn } = require("node:child_process");
  * ⚠ **성장 우선만 프리셋을 다 돈다.** 안전·대충은 「폭」을 보는 것이라 기준
  *   프리셋(균형형) 하나로 씨앗만 흩는다 — 그쪽까지 4×5 로 돌리면 60판이 된다.
  * ⚠ `PB_PLAN=quick` 이면 성향 셋 × 씨앗 하나(3판)다 — 배선 확인용.
+ *
+ * 🔴 **`PB_PLAN=pair` — 9판** (사용자 확정 2026-09-10). 씨앗·프리셋을 고정하고
+ *   **성향만 바꾼다**.
+ *
+ * ```
+ *   씨앗 20260802 × balanced × { growth, safe, lazy }
+ *   씨앗 777      × balanced × { growth, safe, lazy }
+ *   씨앗 31337    × balanced × { growth, safe, lazy }
+ * ```
+ *
+ *   왜 짝인가 — 답할 물음이 「성향 셋이 갈리는가」 하나다. **씨앗이 다르면
+ *   성향 차이인지 씨앗 운인지 못 가린다.** 같은 세계·같은 선수로 셋을 돌려야
+ *   차이가 순수하게 성향 것이다. 30판에서 안전형이 이긴 것이 진짜인지가
+ *   여기서 갈린다.
+ *
+ *   ⚠ 프리셋이 균형형 하나뿐이라 **프리셋별 비교는 못 한다** — 그건 30판 옛
+ *   표(`SIM_REPORT_2026-09-10_30run.md`)에 있다.
  */
 const SEASONS = Number(process.env.PB_SEASONS || 12);
 const PRESETS_ALL = ["balanced", "power", "control", "stamina"];
@@ -45,6 +62,14 @@ function buildPlan() {
   if (process.env.PB_PLAN === "quick") {
     return ["growth", "safe", "lazy"]
       .map((persona, i) => ({ n: i + 1, persona, preset: "balanced", seed: SEEDS_ALL[0] }));
+  }
+  if (process.env.PB_PLAN === "pair") {
+    // 씨앗을 바깥에 둔다 — 표에서 **같은 씨앗 셋이 붙어 있어야** 읽힌다
+    const jobs = [];
+    for (const seed of SEEDS_ALL.slice(0, 3)) {
+      for (const persona of ["growth", "safe", "lazy"]) jobs.push({ persona, preset: "balanced", seed });
+    }
+    return jobs.map((j, i) => ({ n: i + 1, ...j }));
   }
   const jobs = [];
   for (const preset of PRESETS_ALL) for (const seed of SEEDS_ALL) jobs.push({ persona: "growth", preset, seed });
