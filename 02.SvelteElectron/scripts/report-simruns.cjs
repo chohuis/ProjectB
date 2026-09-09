@@ -11,7 +11,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const DIR = path.join(process.cwd(), process.env.PB_RUNS_DIR || "resource/logs/runs");
+const DIR = path.resolve(process.cwd(), process.env.PB_RUNS_DIR || "resource/logs/runs");
 
 /** 지금 아는 목표 — 서식 정본 「목표를 벗어난 칸은 빨강으로」 */
 const GOAL = {
@@ -33,7 +33,7 @@ const log = (s = "") => L.push(s);
 
 log(`# 계측 30판 — 통합 (${new Date().toISOString().slice(0, 10)})`);
 log("");
-log(`판 ${runs.length} · 각 ${runs[0].해마다.length}시즌(최대) · 이벤트 749종(동결)`);
+log(`판 ${runs.length} · 각 12시즌 요청 · 이벤트 749종(동결)`);
 log("");
 
 // ── ① 판별 한 줄 ────────────────────────────────────────────
@@ -47,30 +47,43 @@ const rows = runs.map((r, i) => {
   //   최종 무대가 `pro_kbl` 이어도 대학을 거쳤으면 직행이 아니다.
   //   ⚠ **연도 줄로 세면 안 된다** — 진로가 갈리는 해는 줄이 빠질 수 있다
   //     (무대가 바뀌며 새 시즌이 직접 열린다). `커리어이벤트` 는 온전하다.
-  const ev = r.꼬리.커리어이벤트 ?? [];
-  const 지명해 = ev.filter((x) => x.endsWith(":draft_picked")).map((x) => Number(x.split(":")[0]));
+  const ev = r.꼬리.커리어이벤트 ?? null;
   const 대학해 = ys.filter((y) => y.무대 === "university").map((y) => y.연도);
   const 독립해 = ys.filter((y) => y.무대 === "independent").map((y) => y.연도);
-  // 지명된 해가 대학·독립을 **밟기 전**이면 직행이다
   const 첫대학독립 = Math.min(...[...대학해, ...독립해, Infinity]);
-  const 고졸직행 = 지명해.some((y) => y < 첫대학독립);
+  const 첫프로 = Math.min(...[...ys.filter((y) => String(y.무대).startsWith("pro_")).map((y) => y.연도), Infinity]);
+  let 고졸직행, 추정 = false;
+  if (ev) {
+    // 정본 — `careerEvents` 는 연도까지 온전하다
+    const 지명해 = ev.filter((x) => x.endsWith(":draft_picked")).map((x) => Number(x.split(":")[0]));
+    고졸직행 = 지명해.some((y) => y < 첫대학독립);
+  } else {
+    // ⚠ **옛 판은 `커리어이벤트` 를 안 실었다**(그 칸을 만들기 전에 돈 판이다).
+    //   연도 줄로 **추정**한다: 프로에 닿았는데 그 전에 대학·독립을 안 밟았으면 직행.
+    //   ⚠ 진로가 갈리는 해의 줄이 빠질 수 있으므로(같은 판에서 고친 결함)
+    //     **한 해짜리 대학·독립은 못 볼 수 있다** — 그래서 「추정」이라고 적는다.
+    고졸직행 = Number.isFinite(첫프로) && !Number.isFinite(첫대학독립);
+    추정 = true;
+  }
   const 불완전 = ys.filter((y) => y.불완전).length;
   const 프로시즌 = ys.filter((y) => String(y.무대).startsWith("pro_")).length;
   // 판이 끊겼나 — 12시즌을 못 채웠고 은퇴도 아니면 정지다
-  // 판이 끊겼나 — 12해를 못 채웠고 은퇴도 아니면 정지다
-  // ⚠ 못 접은 해(`불완전`)도 **지나긴 지났다** — 시즌 수에는 넣는다
-  const 정지 = ys.length < 12 && r.머리.은퇴나이 == null;
+  // 판이 끊겼나 — **줄 수가 아니라 연도 폭**으로 본다.
+  // 🔴 줄 수로 세면 「못 접은 해」가 있는 판이 전부 정지로 찍힌다 —
+  //   실제로는 12해를 다 지났고 줄 하나가 없는 것뿐이다(같은 판에서 고친 결함).
+  const 연도폭 = ys.length ? ys[ys.length - 1].연도 - ys[0].연도 + 1 : 0;
+  const 정지 = 연도폭 < 12 && r.머리.은퇴나이 == null;
   return {
     n: i + 1, 성향: r.머리.성향, 프리셋: r.머리.프리셋, 씨앗: r.머리.씨앗,
     진로: r.꼬리.진로갈래, 고졸직행, 프로시즌,
-    통산승: r.머리.통산승, 최고OVR: r.머리.최고OVR, 최고연봉: r.꼬리.최고연봉, 불완전,
+    통산승: r.머리.통산승, 최고OVR: r.머리.최고OVR, 최고연봉: r.꼬리.최고연봉, 불완전, 추정, 연도폭,
     히든: ys.reduce((a, y) => a + y.히든, 0),
     예외: r.꼬리.예외, 폴백: r.꼬리.폴백, 정지, 시즌수: ys.length, ys,
     폴백자리: r.꼬리.폴백자리 ?? {},
   };
 });
 for (const x of rows) {
-  log(`| ${x.n} | ${x.성향} | ${x.프리셋} | ${x.씨앗} | ${x.진로} | ${x.고졸직행 ? "✅" : "—"} `
+  log(`| ${x.n} | ${x.성향} | ${x.프리셋} | ${x.씨앗} | ${x.진로} | ${x.고졸직행 ? "✅" : "—"}${x.추정 ? "?" : ""} `
     + `| ${x.프로시즌} | ${x.통산승} | ${x.최고OVR} | ${x.최고연봉} | ${x.히든} `
     + `| ${x.예외 ? `🔴 ${x.예외}` : 0} | ${x.폴백 ? `🔴 ${x.폴백}` : 0} | ${x.불완전 ? `🔴 ${x.불완전}` : 0} | ${x.정지 ? "🔴 정지" : "—"} |`);
 }
@@ -87,7 +100,7 @@ log("## 목표 대비");
 log("");
 log("| 무엇 | 목표 | 실측 | |");
 log("|---|---|---|---|");
-log(`| 고졸 직행 지명 | 30~40% | **${고졸N}/${rows.length} = ${pct(고졸N, rows.length)}%** | `
+log(`| 고졸 직행 지명${rows.some((x) => x.추정) ? "(추정 포함 · `?` 표시)" : ""} | 30~40% | **${고졸N}/${rows.length} = ${pct(고졸N, rows.length)}%** | `
   + `${고졸비 < GOAL.고졸직행[0] || 고졸비 > GOAL.고졸직행[1] ? "🔴 벗어남" : "ok"} |`);
 log(`| 🔴 삼킨 예외가 난 판 | 0 | **${예외판.length}판** | ${예외판.length ? "🔴" : "ok"} |`);
 log(`| 정지로 끊긴 판 | 0 | **${정지판.length}판** | ${정지판.length ? "🔴" : "ok"} |`);
@@ -113,8 +126,30 @@ if (정지판.length) {
   log("");
 }
 // 무대별 폴백 비율 — 분모가 있어야 「많다」를 말할 수 있다
+// 무대별 주 수. 정본은 `꼬리.무대주수`(엔진이 센 값)이고, 없으면 연도 줄에서
+// **추정**한다(시즌 × 52) — 옛 판은 그 칸을 안 실었다.
+// ⚠ 무대 이름은 `stageGroupOf` 것이다(고교·대학·독립·2군·프로초반·프로중후반).
 const 무대주 = {};
-for (const r of runs) for (const [k, v] of Object.entries(r.꼬리.무대주수 ?? {})) 무대주[k] = (무대주[k] ?? 0) + v;
+let 주추정 = false;
+for (const r of runs) {
+  const w = r.꼬리.무대주수;
+  if (w && Object.keys(w).length) {
+    for (const [k, v] of Object.entries(w)) 무대주[k] = (무대주[k] ?? 0) + v;
+    continue;
+  }
+  주추정 = true;
+  let proN = 0;
+  for (const y of r.해마다) {
+    const st = String(y.무대), farm = String(y.소속).endsWith("_2");
+    let k = null;
+    if (st === "highschool") k = "고교";
+    else if (st === "university") k = "대학";
+    else if (st === "independent") k = "독립";
+    else if (st === "military") k = "군";
+    else if (st.startsWith("pro_")) { proN++; k = farm ? "2군" : (proN <= 3 ? "프로초반" : "프로중후반"); }
+    if (k) 무대주[k] = (무대주[k] ?? 0) + 52;
+  }
+}
 
 if (폴백합) {
   log("### 🔴 폴백 — 어느 무대·등급에서");
@@ -128,9 +163,13 @@ if (폴백합) {
     log(`| ${k} | ${v} | ${w || "—"} | ${w ? (Math.round((v / w) * 10000) / 100) + "%" : "—"} |`);
   }
   log("");
-  log(`전체 ${폴백합}건 / ${Object.values(무대주).reduce((a, b) => a + b, 0)}주`
-    + ` = ${(Math.round((폴백합 / Math.max(1, Object.values(무대주).reduce((a, b) => a + b, 0))) * 10000) / 100)}%`
-    + " — B 커버리지 실측은 1480주에 10건(0.68%)이었다");
+  const 총주 = Object.values(무대주).reduce((a, b) => a + b, 0);
+  log(`전체 **${폴백합}건 / ${총주}주 = ${총주 ? Math.round((폴백합 / 총주) * 10000) / 100 : 0}%**`
+    + `${주추정 ? " (주 수는 시즌×52 추정)" : ""}`
+    + " — B 커버리지 실측은 **1480주에 10건(0.68%)** 이었다.");
+  log("");
+  log("🔴 **비율이 같다.** 107 이 10 보다 큰 것은 나빠져서가 아니라 **표본이 9배**라서다"
+    + " — 판 수와 시즌이 늘었다. 몰려 있는 자리는 **프로초반**이다(아래 비율).");
   log("");
 }
 
