@@ -44,3 +44,9 @@ resource/master.db
 resource/master.db-shm
 resource/master.db-wal
 resource/logs/runs_before_2026-09-10/
+
+# D 5단계 밸런스 계측 원본(probe:a:simrun 산출물 사본) — 판마다 JSON.
+# 보고할 것은 docs/BALANCE_PROPOSAL_101.md 표이고 원본은 산출물이라 안 올린다
+resource/logs/d-balance101-before/
+resource/logs/d-balance101-after/
+resource/logs/d-balance101-before-report.txt
