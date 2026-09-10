@@ -36,22 +36,31 @@ const { spawn } = require("node:child_process");
  *   프리셋(균형형) 하나로 씨앗만 흩는다 — 그쪽까지 4×5 로 돌리면 60판이 된다.
  * ⚠ `PB_PLAN=quick` 이면 성향 셋 × 씨앗 하나(3판)다 — 배선 확인용.
  *
- * 🔴 **`PB_PLAN=pair` — 9판** (사용자 확정 2026-09-10). 씨앗·프리셋을 고정하고
- *   **성향만 바꾼다**.
+ * 🔴 **`PB_PLAN=pair` — 12판** (사용자 확정 2026-09-10). **씨앗을 하나로 묶고**
+ *   프리셋 넷 안에서 **성향만 바꾼다**.
  *
  * ```
- *   씨앗 20260802 × balanced × { growth, safe, lazy }
- *   씨앗 777      × balanced × { growth, safe, lazy }
- *   씨앗 31337    × balanced × { growth, safe, lazy }
+ *   balanced × 씨앗 20260802 × { growth, safe, lazy }
+ *   power    × 씨앗 20260802 × { growth, safe, lazy }
+ *   control  × 씨앗 20260802 × { growth, safe, lazy }
+ *   stamina  × 씨앗 20260802 × { growth, safe, lazy }
  * ```
  *
- *   왜 짝인가 — 답할 물음이 「성향 셋이 갈리는가」 하나다. **씨앗이 다르면
- *   성향 차이인지 씨앗 운인지 못 가린다.** 같은 세계·같은 선수로 셋을 돌려야
+ *   **왜 짝인가** — 답할 물음이 「성향 셋이 갈리는가」다. 씨앗이 다르면
+ *   성향 차이인지 씨앗 운인지 못 가린다. 같은 세계·같은 선수로 셋을 돌려야
  *   차이가 순수하게 성향 것이다. 30판에서 안전형이 이긴 것이 진짜인지가
  *   여기서 갈린다.
  *
- *   ⚠ 프리셋이 균형형 하나뿐이라 **프리셋별 비교는 못 한다** — 그건 30판 옛
- *   표(`SIM_REPORT_2026-09-10_30run.md`)에 있다.
+ *   **왜 네 짝을 씨앗이 아니라 프리셋으로 가르나** — 성향 물음에 대한 힘은
+ *   같은데(성향마다 4판), 프리셋 축이 하나를 더 답한다. 옛 30판에서 체력형이
+ *   눈에 띄게 뒤졌는데(성장형 프로시즌 중앙 4 · 균형·파워 7 · 최고OVR 79 대 81)
+ *   **그게 프리셋이 약해서인지 몸값을 안 보던 도구 탓인지 아직 모른다.**
+ *   그리고 옛 30판의 프리셋 비교표 자체가 그 도구로 잰 것이라, 체력형만 다시
+ *   재고 나머지를 옛 값으로 두면 **고친 도구와 안 고친 도구를 한 표에 섞는다.**
+ *
+ *   ⚠ **씨앗이 하나뿐이다.** 한 세계의 운이 섞이므로 **프리셋별 절대값을
+ *   단정하지 마라** — 볼 것은 같은 씨앗 안에서 프리셋 넷이 어떻게 갈리는지와
+ *   각 프리셋 안에서 성향 셋이 어떻게 갈리는지다. 씨앗 늘리기는 5단계다.
  */
 const SEASONS = Number(process.env.PB_SEASONS || 12);
 const PRESETS_ALL = ["balanced", "power", "control", "stamina"];
@@ -64,10 +73,10 @@ function buildPlan() {
       .map((persona, i) => ({ n: i + 1, persona, preset: "balanced", seed: SEEDS_ALL[0] }));
   }
   if (process.env.PB_PLAN === "pair") {
-    // 씨앗을 바깥에 둔다 — 표에서 **같은 씨앗 셋이 붙어 있어야** 읽힌다
+    // 프리셋을 바깥에 둔다 — 표에서 **한 프리셋의 성향 셋이 붙어 있어야** 읽힌다
     const jobs = [];
-    for (const seed of SEEDS_ALL.slice(0, 3)) {
-      for (const persona of ["growth", "safe", "lazy"]) jobs.push({ persona, preset: "balanced", seed });
+    for (const preset of PRESETS_ALL) {
+      for (const persona of ["growth", "safe", "lazy"]) jobs.push({ persona, preset, seed: SEEDS_ALL[0] });
     }
     return jobs.map((j, i) => ({ n: i + 1, ...j }));
   }
