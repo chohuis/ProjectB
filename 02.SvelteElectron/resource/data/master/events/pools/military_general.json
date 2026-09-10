@@ -55,8 +55,8 @@
         {
           "id": "communicate",
           "label": "솔직하게 소통한다",
-          "effectHint": "사기 -1, 동료 관계 +4",
-          "moraleDelta": -1,
+          "effectHint": "사기 -4, 동료 관계 +4",
+          "moraleDelta": -4,
           "relationDelta": {
             "kind": "teammate",
             "delta": 4
@@ -64,7 +64,7 @@
         }
       ],
       "cooldownWeeks": 4,
-      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09). 크기는 안 건드렸다 — 그건 5단계 D 몫이고, 여기서는 **종류가 갈리게만** 했다"
+      "_rewardNote": "갈래 둘이 **효과 종류까지 같아** 고를 뜻이 없었다(R3 · 2026-09-09) — 여기까진 종류만 갈랐다. 🔴 **크기는 5단계 D가 잡았다(2026-09-10 · 사용자 확정).** communicate 사기 -1은 endure(-3)를 사기·관계 둘 다에서 전방위로 지배해 고를 뜻이 없었다 — -4로 내려 '관계 +4를 더 깎인 사기로 사는' 실질 교환으로 만들었다"
     },
     {
       "id": "MIL_GEN_PHONE_CALL",
