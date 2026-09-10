@@ -51,10 +51,25 @@ ok(
   "resource/data/master/_manifest.json 이 asar 밖에 없다 — 이벤트·업적이 통째로 안 실린다",
 );
 
+// ── asar 목록 — ④·require 대조 둘 다 이걸 쓴다 ─────────────────────────
+const asar = require("@electron/asar");
+const listedEntries = asar.listPackage(path.join(OUT, "resources", "app.asar"))
+  .map((e) => String(e).split("\\").join("/"));
+const listed = new Set(listedEntries);
+const listedUnder = (prefix) => listedEntries.some((e) => e === prefix || e.startsWith(prefix + "/"));
+
 // ④ 새지 않는다 — 있으면 안 되는 것
-for (const rel of ["scripts", "docs", "resource/data/staging", "resource/data/balance", "resource/data/master/entities/players"]) {
+// asar 밖(unpacked) 자리와 asar 안(dist/ui — vite publicDir 가 resource/ 를
+// 통째로 복사해 만든 사본) 자리를 **둘 다** 본다. `build.files` 의 제외가
+// "resource/X" 하나만 있고 "dist/ui/X" 짝을 빠뜨리면 사본으로 새는데,
+// unpacked 폴더만 보면 그 사본은 안 보인다(asar 안에 그대로 있다) —
+// 실제로 logs 4.7MB·seeds 217KB 가 이렇게 샜다.
+for (const rel of ["scripts", "docs", "resource/data/staging", "resource/data/balance", "resource/data/master/entities/players", "resource/logs", "resource/data/seeds", "resource/master.db"]) {
   const p = path.join(unpacked, rel);
-  ok(!fs.existsSync(p), `디포에 새면 안 되는 폴더가 있다: ${rel}`);
+  ok(!fs.existsSync(p), `디포에 새면 안 되는 폴더가 있다(asar 밖): ${rel}`);
+}
+for (const rel of ["dist/ui/logs", "dist/ui/data/staging", "dist/ui/data/balance", "dist/ui/data/master/entities/players", "dist/ui/data/seeds", "dist/ui/master.db"]) {
+  ok(!listedUnder(rel), `디포에 새면 안 되는 사본이 있다(asar 안 — publicDir 복사분): ${rel}`);
 }
 
 // ⑤ 크기·파일 수
@@ -66,9 +81,6 @@ let files = 0, bytes = 0;
 //    파일로 모은 뒤(dev-server.config.cjs) 패키지 빌드가 한 번도 못 뜬 것이다.
 //    파일 수·용량·누출로는 안 보인다. 실제 경로를 asar 목록과 대조한다.
 {
-  const asar = require("@electron/asar");
-  const listed = new Set(asar.listPackage(path.join(OUT, "resources", "app.asar"))
-    .map((e) => String(e).split("\\").join("/")));
   const has = (rel) => listed.has(rel) || fs.existsSync(path.join(unpacked, rel));
   const resolves = (rel) => [rel, rel + ".js", rel + ".cjs", rel + "/index.js", rel + "/package.json"].some(has);
   const srcRoot = path.join(process.cwd(), "apps", "desktop");
