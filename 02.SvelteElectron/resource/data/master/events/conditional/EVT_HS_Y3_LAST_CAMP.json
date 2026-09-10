@@ -27,8 +27,8 @@
   "messageTemplateId": "MSG_HS_Y3_LAST_CAMP",
   "decisionTemplateId": "DEC_HS_Y3_LAST_CAMP",
   "cost": {
-    "fatigueDelta": 12
+    "moraleDelta": -8
   },
-  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 몸을 갈아 넣어 얻는다. 값은 제안값이라 4-6 실측 뒤에 다시 본다",
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다. 🔴 **피로 대가는 2026-09-10 5단계 D가 사기로 바꿨다**(사용자 확정 ⑦) — 이 옵션 자체가 갈래 피로 15를 이미 쓰고 있어(EVT_HS_Y3_LAST_CAMP) 대가 피로 12가 더해지면 합 27로 highFatigueWeeks 문턱(70)을 위험하게 넘겼다",
   "_forkNote": "**큰 갈림길**이라 제일 큰 갈래의 XP 를 4 → 10 로 올렸다(3단계 ① · 2026-09-08 · 기준: 한 번뿐). 값은 제안값이고 5단계에서 잰다"
 }

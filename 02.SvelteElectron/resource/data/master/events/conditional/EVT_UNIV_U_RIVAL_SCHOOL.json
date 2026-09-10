@@ -20,8 +20,8 @@
   "messageTemplateId": "MSG_UNIV_U_RIVAL_SCHOOL",
   "decisionTemplateId": "DEC_UNIV_U_RIVAL_SCHOOL",
   "cost": {
-    "fatigueDelta": 12
+    "moraleDelta": -8
   },
   "_newNote": "L4 로 유니크 넷이 통지로 빠져 생기는 자리를 미리 메운다(2026-09-08). **주차 조건을 안 붙였다** — 폴백 25 의 뿌리가 창 몰림이었다",
-  "_tierNote": "유니크 대가는 피로 +12 다 — 이 경기 한 주는 어디서든 값을 치른다"
+  "_tierNote": "🔴 유니크 대가는 사기 -8 이다 — 이 경기 한 주는 어디서든 값을 치른다. 피로였을 때는 갈래 피로 14와 겹쳐 합 26이었다(2026-09-10 5단계 D · 사용자 확정 ⑦로 사기로 바꿨다)"
 }

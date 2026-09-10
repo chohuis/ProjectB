@@ -23,7 +23,7 @@
   "messageTemplateId": "MSG_UNIV_DRAFT_STOCK_DOWN",
   "decisionTemplateId": "DEC_UNIV_DRAFT_STOCK_DOWN",
   "cost": {
-    "fatigueDelta": 12
+    "moraleDelta": -8
   },
-  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다 — 몸을 갈아 넣어 얻는다. 값은 제안값이라 4-6 실측 뒤에 다시 본다"
+  "_costNote": "🔴 **유니크의 대가다**(§4 · 4-2). 어느 갈래를 골라도 낸다. 🔴 피로 대가 → 사기로 (2026-09-10 5단계 D · 사용자 확정 ⑦ · 갈래 피로 10과 겹쳐 합 22이던 자리)"
 }
