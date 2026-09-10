@@ -224,7 +224,7 @@
       label: "제구형",
       desc: "커맨드와 제구로 타자를 요리. 체인지업으로 타이밍을 뺏기 시작",
       tags: ["멘탈관리", "제구형"],
-      pitching: { ovr: 59, velocity: 53, command: 67, control: 66, movement: 57, mentality: 59, stamina: 53, recovery: 56, clutch: 56, holdRunners: 53 },
+      pitching: { ovr: 59, velocity: 56, command: 64, control: 66, movement: 57, mentality: 59, stamina: 53, recovery: 56, clutch: 56, holdRunners: 53 },
       pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_CHANGEUP", grade: 1 }],
     },
     stamina: {

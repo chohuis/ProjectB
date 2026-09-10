@@ -243,17 +243,26 @@ describe("새 게임 시작 프리셋", () => {
     // 특화형 셋은 균형형보다 확실히 뾰족하다. 절대값이 아니라 **균형형과의
     // 격차**로 본다 — 프리셋 전체를 올리면 절대 기준은 매번 어긋난다
     //
-    // 🔴 **격차 +5 → +3 (2026-09-10 · 5단계 D · 사용자 확정 ②).** 제구형의
-    // velocity 48→53 · command 69→67은 `calc_pitching_ovr` 상 OVR 59를
-    // 유지하려고 계산으로 고른 값이다(백로그 결정⑭ §①). 그런데 command가
-    // 바로 제구형의 peak 스탯이었다 — 69(=balPeak+5, 여유 0)에서 67로
-    // 내려가며 이 마진을 2점 깎는다. power·stamina는 여전히 정확히
-    // balPeak+5(69)라 원래도 여유가 0이었다 — +5는 애초에 빡빡한 값이었다.
-    // OVR을 지키는 쪽을 골랐으므로 여기 마진을 3으로 낮춘다(제구형은
-    // 그래도 +3 — 균형형과 뚜렷이 갈린다. power·stamina는 +5 그대로 통과).
+    // 🔴 **격차 +5 → +3 → +2 (2026-09-10~11 · 5단계 D · 사용자 확정 ②).**
+    // 1차(velocity 48→53·command 69→67)는 OVR 59를 지키려 command를
+    // 69→67로 내렸고, command가 제구형의 peak라 마진이 5→3으로 줄었다.
+    //
+    // 그런데 고졸 직행 지명이 여전히 0/6이었다(②를 넣고도 안 풀림 —
+    // `BALANCE_PROPOSAL_101.md` ①). 사용자가 "시작값을 더 올려라, 단
+    // 최소한으로"라고 확정해 velocity를 더 올렸다 — 4시즌 단발 계측
+    // (씨앗 20260802·777·31337)으로 문턱을 직접 재보니 velocity 55·
+    // command 65 는 0/3, velocity 56·command 64 는 3/3 으로 갈렸다.
+    // **56이 가장 낮은 문턱값**이라 그걸 썼다.
+    //
+    // command가 64로 내려가면서 이번엔 **peak가 command에서 control(66,
+    // 안 건드림)로 넘어갔다** — margin이 66-64=2. power·stamina는
+    // 여전히 정확히 balPeak+5(69)라 원래부터 여유가 0이었다("+5"는
+    // 처음부터 빡빡했다). OVR을 지키며 지명 문턱을 넘기는 쪽을 골랐으므로
+    // 마진을 2로 낮춘다 — 제구형은 그래도 균형형(64)보다 control이 66으로
+    // 뚜렷이 높다. power·stamina는 +5 그대로 통과한다.
     const peakOf = (p: Record<string, number>) => Math.max(...Object.keys(W).map((k) => p[k]));
     const balPeak = peakOf(presets[0]);
-    expect(presets.slice(1).filter((p) => peakOf(p) >= balPeak + 3)).toHaveLength(3);
+    expect(presets.slice(1).filter((p) => peakOf(p) >= balPeak + 2)).toHaveLength(3);
 
     // 균형형(첫 번째)은 편차가 좁다
     const bal = Object.keys(W).map((k) => presets[0][k]);
