@@ -242,9 +242,18 @@ describe("새 게임 시작 프리셋", () => {
     // 고를 이유도 없다. **균형형은 예외다**: 튀는 스탯이 없는 게 그 정의다
     // 특화형 셋은 균형형보다 확실히 뾰족하다. 절대값이 아니라 **균형형과의
     // 격차**로 본다 — 프리셋 전체를 올리면 절대 기준은 매번 어긋난다
+    //
+    // 🔴 **격차 +5 → +3 (2026-09-10 · 5단계 D · 사용자 확정 ②).** 제구형의
+    // velocity 48→53 · command 69→67은 `calc_pitching_ovr` 상 OVR 59를
+    // 유지하려고 계산으로 고른 값이다(백로그 결정⑭ §①). 그런데 command가
+    // 바로 제구형의 peak 스탯이었다 — 69(=balPeak+5, 여유 0)에서 67로
+    // 내려가며 이 마진을 2점 깎는다. power·stamina는 여전히 정확히
+    // balPeak+5(69)라 원래도 여유가 0이었다 — +5는 애초에 빡빡한 값이었다.
+    // OVR을 지키는 쪽을 골랐으므로 여기 마진을 3으로 낮춘다(제구형은
+    // 그래도 +3 — 균형형과 뚜렷이 갈린다. power·stamina는 +5 그대로 통과).
     const peakOf = (p: Record<string, number>) => Math.max(...Object.keys(W).map((k) => p[k]));
     const balPeak = peakOf(presets[0]);
-    expect(presets.slice(1).filter((p) => peakOf(p) >= balPeak + 5)).toHaveLength(3);
+    expect(presets.slice(1).filter((p) => peakOf(p) >= balPeak + 3)).toHaveLength(3);
 
     // 균형형(첫 번째)은 편차가 좁다
     const bal = Object.keys(W).map((k) => presets[0][k]);
