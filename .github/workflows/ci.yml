@@ -76,6 +76,16 @@ jobs:
         run: cargo test --release
         working-directory: 02.SvelteElectron/packages/engine-native
 
+      # 🔴 **오늘 처음 돈다** (2026-09-11 · 개선 5). `#![deny(clippy::all)]` 이
+      #   `lib.rs` 맨 위에 있었는데 `cargo build` 는 clippy 를 안 봐서 **한 번도
+      #   안 돌았다** — CI 가 GitHub 안 읽는 폴더에 있던 것과 같은 모양이다.
+      # ⚠ 지금 **113건**이라 `-D warnings` 를 안 붙인다. 0 이 된 뒤에 붙이고
+      #   `lib.rs` 의 `warn` 도 `deny` 로 되돌린다. 지금 관문으로 걸면
+      #   첫날부터 빨강이라 아무도 안 본다.
+      - name: cargo clippy (수를 본다 · 관문 아님)
+        run: cargo clippy --release --all-targets
+        working-directory: 02.SvelteElectron/packages/engine-native
+
       - name: 데이터 위생 검사
         run: |
           npm run check:events

@@ -1222,6 +1222,7 @@ mod academics_tests {
 // 수치는 전부 페이로드로 받는다 — 정본은 `resource/data/master/military/rules.json` 이다.
 // 난수는 씨앗(`seed`)에서만 나온다 — 계측이 재현돼야 한다(결정성 정책).
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MilitaryLifeMember {

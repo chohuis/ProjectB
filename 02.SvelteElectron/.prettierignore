@@ -3,6 +3,12 @@
 resource/
 
 # 생성물 — 사람이 안 쓴다
+#
+# 🔴 **napi 가 다시 쓴다** (2026-09-11 실측). `build:native` 를 돌 때마다
+#   NAPI-RS 가 이 둘을 통째로 새로 낸다 — 포맷해 두면 **빌드 한 번에 도로
+#   풀리고 `format:check` 가 빨강**이 된다. 머리에 「auto-generated」라고 적혀 있다.
+packages/engine-native/index.js
+packages/engine-native/index.d.ts
 **/_manifest.json
 **/dist/
 **/build/

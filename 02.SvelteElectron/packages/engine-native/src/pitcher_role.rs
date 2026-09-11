@@ -26,6 +26,7 @@ pub struct PitchRef {
 }
 
 /// 투수 하나 — 없는 능력치는 None(재정규화 대상). `pitches` 가 None 이면 구종 항목을 뺀다
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RolePitcher {

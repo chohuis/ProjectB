@@ -464,9 +464,8 @@ fn gen_pitches(
     out
 }
 
-fn pick<'a>(list: &'a [String], rng: &mut LcgRand) -> &'a str {
-    &list[(rng.next() * list.len() as f64) as usize % list.len()]
-}
+// `pick` 을 지웠다 (2026-09-11 · 개선 5) — 부르는 곳이 없다.
+// 이름 뽑기는 `gen_name_pooled` 가 정본이다.
 
 /// 리그별 이름 풀로 이름을 만든다. `npc_sim::generate_freshmen`도 쓴다 —
 /// **해외 리그 신인이 한국 이름으로 나오던 것**을 막으려면 같은 함수여야 한다
@@ -554,13 +553,10 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
     //   생성 OVR 범위의 중앙값으로 잡는다. 정확한 평균은 만들어 봐야 알지만,
     //   그러면 난수 순서가 흔들려 같은 씨앗이 다른 로스터를 낸다.
     //   ⚠ 실측 평균 1,410만원 · 이 추정 1,318만원 — 7% 차이다.
-    let per_head: f64 = {
-        let mid = (p.rules.batting_ovr_min + p.rules.batting_ovr_max) as f64 / 2.0;
-        let mult = salary_rules.league_mult.get(&p.league_id).copied().unwrap_or(1.0);
-        let floor = salary_rules.min_salary.get(&p.league_id).copied().unwrap_or(0.0);
-        (salary_rules.ovr_base * salary_rules.ovr_growth.powf(mid - salary_rules.ovr_pivot)
-            * mult).max(floor).max(1.0)
-    };
+    //   ⚠ 여기 있던 **리그 공통 `per_head`** 를 지웠다 (2026-09-11 · 개선 5).
+    //     팀마다 `quality_bias` 로 수준이 갈리면서 아래 `team_head_cost` 가
+    //     그 자리를 가져갔고(팀별 OVR 로 다시 계산한다), 리그 공통값은 계산만
+    //     하고 아무 데도 안 썼다. 위 7% 실측은 `team_head_cost` 에도 그대로다.
     // 🔴 **예산이 정원을 정하는 건 연봉이 있는 리그뿐이다** (2026-09-06).
     //
     //   `budgetOf`(newGameV3.ts)에 "고교·대학은 예산이 있어도 그건 운영비지

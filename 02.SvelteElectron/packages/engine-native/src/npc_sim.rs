@@ -2400,7 +2400,10 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
     // 8-10. 군입대 판정/체육부대 선발/입대 처리 → TypeScript Phase 4 통합 처리로 이전
 
-    let mut logs: Vec<String> = Vec::new();
+    // ⚠ **일부러 비어 있다.** 아래 `OffseasonOutput` 주석대로 요약 줄은
+    //   `offseasonReport.ts` 가 사람 단위로 만든다 — 여기서 채우면 정본이 둘이다.
+    //   칸은 계약이라 남긴다(`npcEngine.ts:302` 가 읽는다).
+    let logs: Vec<String> = Vec::new();
 
     // 8. FA → 원래 리그의 **자리가 있는 팀**으로 재배치.
     //
@@ -3518,15 +3521,9 @@ fn scout_bias(npc_id: &str, year: i32, magnitude: f64) -> f64 {
 /// 백분위로 보면 95백분위와 60백분위가 **똑같이 7R**이었다.
 const SCOUT_BIAS: f64 = 4.0;
 
-fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
-    let total: f64 = weights.iter().sum();
-    let mut r = rng.next() * total;
-    for (i, &w) in weights.iter().enumerate() {
-        r -= w;
-        if r <= 0.0 { return i; }
-    }
-    weights.len().saturating_sub(1)
-}
+// `weighted_pick` 을 지웠다 (2026-09-11 · 개선 5). 아래 3578줄 주석이
+// 「예전엔 `weighted_pick`(점수 비례 확률)이었다」고 적어 뒀다 — 바꾼 뒤
+// 함수만 남아 있었다.
 
 pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
     let meta_map: HashMap<String, &NamedNpcMeta> = params.named_metas.iter()
@@ -3651,39 +3648,8 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
     DraftSimResult { year, picks, undrafted_ids }
 }
 
-// 팀별 빈 슬롯 탐색: 포지션 수요 우선(strict=true), 없으면 슬롯만 확인.
-// 배정 성공 시 roster를 즉시 업데이트하고 팀 ID 반환.
-fn find_slot(
-    roster: &mut HashMap<String, (usize, usize)>,
-    want_pitcher: bool,
-    team_ids: &[String],
-    max: usize,
-) -> Option<String> {
-    for strict in [true, false] {
-        let mut best: Option<(String, usize)> = None;
-        for tid in team_ids {
-            let (p, b) = roster.get(tid).copied().unwrap_or((0, 0));
-            let total = p + b;
-            if total >= max { continue; }
-            if strict {
-                let ratio = if total > 0 { p as f64 / total as f64 } else { 0.5 };
-                // 투수 비율 >0.65면 투수 추가 사양, <0.55면 타자 추가 사양
-                if  want_pitcher && ratio > 0.65 { continue; }
-                if !want_pitcher && ratio < 0.55 { continue; }
-            }
-            let slots = max - total;
-            if best.as_ref().map_or(true, |(_, s)| slots > *s) {
-                best = Some((tid.clone(), slots));
-            }
-        }
-        if let Some((tid, _)) = best {
-            let e = roster.entry(tid.clone()).or_insert((0, 0));
-            if want_pitcher { e.0 += 1; } else { e.1 += 1; }
-            return Some(tid);
-        }
-    }
-    None
-}
+// `find_slot` 을 지웠다 (2026-09-11 · 개선 5). 부르는 곳이 없다 —
+// 같은 이름의 `draft.rs::find_slot` 은 그대로 돈다(다른 함수다).
 
 pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     let pick_map: HashMap<String, &DraftPick> = params.result.picks.iter()

@@ -127,18 +127,17 @@ pub enum DraftRoute {
 
 impl DraftRoute {
     /// 미지명일 때 진로 배정을 받아야 하는가. 소속을 유지한 신청자는 제자리다
+    ///
+    /// ⚠ **검사가 부른다** (`소속을_유지한_신청자는_미지명이어도_제자리다`).
+    ///   `cargo build` 는 검사를 안 지으므로 「안 쓴다」고 말한다 — 그 말이 틀렸다.
+    ///   배정 자체는 TS 쪽이 하고, 이 함수는 **규칙을 못박는 자리**다.
+    #[allow(dead_code)]
     pub fn needs_placement(self) -> bool {
         matches!(self, DraftRoute::HighschoolGraduate | DraftRoute::UniversityGraduate)
     }
 
-    pub fn label(self) -> &'static str {
-        match self {
-            DraftRoute::HighschoolGraduate => "고졸",
-            DraftRoute::UniversityGraduate => "대졸",
-            DraftRoute::UniversityEarly    => "대학 재학",
-            DraftRoute::Independent        => "독립",
-        }
-    }
+    // `label` 을 지웠다 (2026-09-11 · 개선 5) — 부르는 곳이 검사에도 없다.
+    // 「고졸/대졸/대학 재학/독립」 글자는 TS 쪽 문안이 정본이다.
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

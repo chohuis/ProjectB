@@ -5,6 +5,7 @@ use crate::team_engine::fa_eligibility_years;
 
 // ── player_eval_fa_decision ──────────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FaDecisionParams {
@@ -77,6 +78,7 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
 
 // ── player_eval_trade_response ───────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TradeResponseParams {
@@ -149,6 +151,7 @@ pub fn player_eval_trade_response(p: TradeResponseParams) -> TradeResponseResult
 // ⚠ 되살릴 일이 생기면 git 에 있다.
 // ── player_eval_retirement_response ─────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RetirementResponseParams {
@@ -183,6 +186,7 @@ pub fn player_eval_retirement_response(p: RetirementResponseParams) -> Retiremen
 
 // ── player_rank_fa_offers ────────────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FaOfferWithTeam {
@@ -197,6 +201,7 @@ pub struct FaOfferWithTeam {
     pub is_current_team: bool,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RankFaOffersParams {

@@ -102,6 +102,7 @@ pub fn calc_scouting_improvement(p: ScoutingImprovementParams) -> ScoutingImprov
 
 // ── eval_callup_candidates ───────────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EvalCallupParams {
@@ -1262,6 +1263,7 @@ pub fn eval_trade_value(p: EvalTradeValueParams) -> TradeEvalResult {
 
 // ── eval_medical_test ─────────────────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MedicalTestParams {

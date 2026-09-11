@@ -63,6 +63,7 @@ pub struct SponsorRules {
     pub min_salary_base: i64,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TrainingTier {
@@ -96,6 +97,7 @@ pub struct InvestmentOption {
     pub floor: f64,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InvestmentRules {
@@ -113,6 +115,7 @@ pub struct LuxuryRules {
     pub self_fame_split_diligence: f64,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FinanceRules {
