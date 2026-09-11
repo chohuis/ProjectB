@@ -196,7 +196,12 @@ const COMMANDS = {
     const weekText = () => page.evaluate(() => document.querySelector(".wk")?.innerText ?? "");
     for (let i = 0; i < n; i++) {
       const wkBefore = await weekText();
-      for (let guard = 0; guard < 12; guard++) {
+      // 🔴 **가드를 12→20으로 올린다** (2026-09-11 · 선택 대기 둘 겹침 실측).
+      //   소식이 둘 겹치면 "열기·고르기·확인" 이 항목마다 최대 3번씩 든다 —
+      //   12는 둘을 겨우 채우는 값이라 셋 이상 겹치면 다시 부족해진다.
+      const seenStates = new Map();
+      let stuckState = null;
+      for (let guard = 0; guard < 20; guard++) {
         const state = await page.evaluate(({ stopSel, auto }) => {
           // 보러 온 화면에 닿으면 멈춘다
           if (stopSel && document.querySelector(stopSel)) return "MATCH";
@@ -211,14 +216,23 @@ const COMMANDS = {
           if (play) { play.click(); return "PLAY"; }
           const brief = document.querySelector("button.confirm-btn");
           if (brief) { brief.click(); return "BRIEF"; }
-          // 선택 대기 — 소식의 선택지 버튼
+          // 선택 대기 — 소식의 선택지 버튼(방금 연 항목의 첫 선택)
           const opt = document.querySelector("button.opt");
           if (opt) { opt.click(); return "CHOSE"; }
-          // 선택 대기 항목이 접혀 있으면 펼친다
-          const pend = document.querySelector(".item.pending");
-          if (pend) { pend.click(); return "OPENED"; }
 
-          // ── 반드시 골라야 넘어가는 모달들 ──────────────────────
+          // ── 지금 열려 있는 항목을 "마저" 끝내는 것들 — pending 재오픈보다 먼저 본다 ──
+          //
+          // 🔴 **소식이 둘 겹치면 여기가 순서를 정한다** (2026-09-11 실측·확정).
+          //   `.item.pending` 은 `selectedOptionId === null`인 동안 계속
+          //   "선택 대기"로 남는다 — **확인 단계(예: RoleChoicePanel의
+          //   `pendingPick` 세팅)에 들어간 뒤에도 그렇다.** 예전엔 이 확인용
+          //   버튼들(INJURY·HUB·CONTRACT·CAREER_PICK·ROLE_GO)을 `.item.pending`
+          //   **뒤에** 뒀다 — 그러면 항목이 둘일 때, 하나를 확인 단계까지
+          //   보내 놓고도 다음 바퀴에서 `.item.pending`(그 항목 자신이거나
+          //   남은 다른 항목)을 **다시 여는 쪽이 먼저 걸려** 확인 버튼을
+          //   영영 못 눌렀다 — 가드를 다 쓰고 "치웠는데도 그대로"로 멈췄다.
+          //   지금 열린 항목을 끝내는 액션을 **먼저** 보고, 더 열 것이 없을
+          //   때만 다음 pending 을 연다.
           //
           // ⚠ **닫기가 없다.** 부상 치료·진로 선택·계약은 사용자가 결정해야
           // 하는 일이라 취소 버튼이 없고, 그래서 `.go`가 disabled로 남는다.
@@ -265,6 +279,11 @@ const COMMANDS = {
           const roleGo = document.querySelector(".confirm .btn.go:not([disabled])");
           if (roleGo) { roleGo.click(); return "ROLE_GO"; }
 
+          // 선택 대기 항목이 접혀 있으면 펼친다 — **위의 "마저 끝내기" 액션들이
+          // 전부 없을 때만** 다음 항목을 연다(둘 겹침 대응, 위 주석 참고)
+          const pend = document.querySelector(".item.pending");
+          if (pend) { pend.click(); return "OPENED"; }
+
           // 모달의 확인/닫기류
           const btns = [...document.querySelectorAll("button")];
           const confirm = btns.find((b) => /^(확인|닫기|계속|시작|넘어가기)$/.test(b.innerText.trim()));
@@ -282,15 +301,26 @@ const COMMANDS = {
             + " | " + (document.body.innerText.slice(0, 60).replace(/\s+/g, " "));
         }, { stopSel, auto });
         if (state === "MATCH") { console.log(`week ${i}: 목표 화면 도달`); return; }
+        seenStates.set(state, (seenStates.get(state) ?? 0) + 1);
         await new Promise((r) => setTimeout(r, state === "GO" || state === "SIM" ? 5000 : 1200));
         // GO 를 눌렀는데 **주차 표시가 그대로면 주가 안 간 것이다** — pending 화면만
         // 열렸을 뿐이다(㉮). 다음 바퀴에서 그걸 치운다
         if (state === "GO" && (await weekText()) !== wkBefore) break;
-        if (state.startsWith("STUCK")) { console.log(`week ${i}: ${state}`); return; }
+        if (state.startsWith("STUCK")) { stuckState = state; break; }
       }
       const label = await page.evaluate(() => document.querySelector(".go:not(.btn)")?.innerText ?? "(없음)");
       const wk = await weekText();
-      if (wk === wkBefore) { console.log(`  week ${i + 1}: 주가 안 넘어갔다 (${wk}) — 막는 것을 12번 치우고도 그대로다`); return; }
+      if (wk === wkBefore) {
+        // 🔴 **어느 상태가 막았는지 적는다** — `runAutoAdvance.ts`의 `stall()`이
+        //   "반복 pending: X×N"을 적는 것과 같은 이유다. 여기서 안 밝히면
+        //   다음 사람이 이번처럼 화면을 다시 띄워 손으로 파야 한다.
+        const guardUsed = [...seenStates.values()].reduce((a, b) => a + b, 0);
+        const top = [...seenStates.entries()].sort((a, b) => b[1] - a[1])
+          .map(([k, n]) => `${k}×${n}`).join(" · ");
+        console.log(`  week ${i + 1}: 주가 안 넘어갔다 (${wk}) — 막는 것을 ${guardUsed}번 치우고도 그대로다`
+          + (stuckState ? ` · 마지막: ${stuckState}` : "") + (top ? ` · 상태 분포: ${top}` : ""));
+        return;
+      }
       console.log(`  week ${i + 1}: ${wk} · 버튼 "${label}"`);
     }
   },
