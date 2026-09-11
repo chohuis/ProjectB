@@ -55,6 +55,16 @@ jobs:
       - name: check:native (도장이 지금 소스에서 나왔나)
         run: npm run check:native
 
+      # 🔴 **tsc 앞이다** (2026-09-11 · 개선 4). 린트는 5초라 빨리 빨간불이 난다.
+      #   ⚠ 오류만 막는다 — 경고 94 는 관문이 아니다(`eslint.config.js` 머리말).
+      - name: lint
+        run: npm run lint
+
+      # ⚠ `.prettierignore` 가 **검사가 글자로 읽는 59 파일**을 빼고 있다.
+      #   그 목록이 줄어야 진짜 전량 포맷이다.
+      - name: format:check
+        run: npm run format:check
+
       - name: tsc
         run: npx tsc --noEmit
 
