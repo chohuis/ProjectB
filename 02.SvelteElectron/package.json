@@ -182,7 +182,12 @@
     "probe:a:read": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-read.cjs",
     "probe:a:cmd": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-a-cmd.cjs",
     "check:lanes": "node scripts/check-lanes.cjs",
-    "check:rewards": "node scripts/check-rewards.cjs"
+    "check:rewards": "node scripts/check-rewards.cjs",
+    "lint": "eslint \"apps/**/*.{ts,svelte,cjs}\" \"packages/*/src/**/*.ts\"",
+    "lint:fix": "eslint \"apps/**/*.{ts,svelte,cjs}\" \"packages/*/src/**/*.ts\" --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "simple-git-hooks"
   },
   "build": {
     "appId": "com.projectb.desktop",
@@ -234,18 +239,44 @@
   },
   "devDependencies": {
     "@electron/rebuild": "^4.0.4",
+    "@eslint/js": "^9.39.5",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@types/node": "^22.15.21",
     "concurrently": "^9.2.0",
     "cross-env": "^7.0.3",
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
+    "eslint": "^9.39.5",
+    "eslint-plugin-svelte": "^2.46.1",
+    "globals": "^17.12.0",
+    "lint-staged": "^17.5.1",
     "omggif": "^1.0.10",
     "playwright-core": "^1.62.1",
     "pngjs": "^7.0.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^3.5.2",
+    "simple-git-hooks": "^2.14.0",
     "svelte-check": "^4.7.6",
+    "svelte-eslint-parser": "^1.8.1",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.70.0",
     "vite": "^6.2.2",
     "vitest": "^3.2.6"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "cd 02.SvelteElectron && npx lint-staged"
+  },
+  "lint-staged": {
+    "apps/**/*.{ts,svelte,cjs}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "packages/*/src/**/*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
   }
 }

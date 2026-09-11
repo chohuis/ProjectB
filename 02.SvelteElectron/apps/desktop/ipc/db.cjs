@@ -843,37 +843,19 @@ function applySchemaPatches(db) {
 //   2026-09-04에 지웠다 — `master.db` 자체를 접었다. 부르던 곳은
 //   `master:loadEntities` 하나였고 그 표는 0행이었다.
 
-function migrateOldDb(newDb, oldDbPath) {
-  if (!fs.existsSync(oldDbPath)) return;
-  let oldDb;
-  try {
-    oldDb = new Database(oldDbPath, { readonly: true });
-    const hasSaveSlots = oldDb.prepare("SELECT COUNT(*) as c FROM sqlite_master WHERE type='table' AND name='save_slots'").get().c > 0;
-    if (!hasSaveSlots) { oldDb.close(); return; }
-    const hasGameJson = oldDb.prepare("SELECT COUNT(*) as c FROM pragma_table_info('save_slots') WHERE name='game_json'").get().c > 0;
-    if (!hasGameJson) { oldDb.close(); return; }
-    const slots = oldDb.prepare("SELECT * FROM save_slots").all();
-    for (const slot of slots) {
-      if (newDb.prepare("SELECT 1 FROM save_slots WHERE slot_id = ?").get(slot.slot_id)) continue;
-      try {
-        const game   = slot.game_json   ? JSON.parse(slot.game_json)   : null;
-        const season = slot.season_json ? JSON.parse(slot.season_json) : null;
-        dbSaveSlot(newDb, slot.slot_id, game, season);
-        if (slot.name) newDb.prepare("UPDATE save_slots SET name = ? WHERE slot_id = ?").run(slot.name, slot.slot_id);
-        console.log(`[db-migrate] slot ${slot.slot_id} 이전 완료`);
-      } catch (e) {
-        console.warn(`[db-migrate] slot ${slot.slot_id} 실패:`, e.message);
-      }
-    }
-    oldDb.close();
-  } catch (e) {
-    console.warn("[db-migrate] 구 DB 마이그레이션 오류:", e.message);
-    try { oldDb?.close(); } catch { /* ignore */ }
-  }
-}
+// 🔴 **`migrateOldDb` 를 지웠다** (2026-09-11 · ESLint 첫 실행이 잡았다).
+//
+//   위 R3a-4d 주석대로 `dbSaveSlot` 은 **폐기됐는데**, 구 DB(`projectb.db`)
+//   이전 함수가 그걸 계속 불렀다. `no-undef` 다 — 슬롯마다 `ReferenceError` 가
+//   나고 `catch` 가 삼켜서 `[db-migrate] slot N 실패: dbSaveSlot is not defined`
+//   만 찍혔다. **R3a-4d 이후로 단 한 슬롯도 옮긴 적이 없다.**
+//
+//   「지우거나 부르거나 둘 중 하나」인데 부를 함수가 없으므로 지운다.
+//   ⚠ **동작은 안 바뀐다** — 되던 일이 없었다. 경고 세 줄이 안 찍힐 뿐이다.
+//   ⚠ v2 블롭 세이브(`projectb.db`)를 진짜로 옮겨야 한다면 그건 **새로 짜는
+//     일**이지 이 함수를 되살리는 일이 아니다. slot.db(`repo:call`)가 정본이다.
 
 module.exports = {
   openDatabase,
   applySchemaPatches,
-  migrateOldDb,
 };

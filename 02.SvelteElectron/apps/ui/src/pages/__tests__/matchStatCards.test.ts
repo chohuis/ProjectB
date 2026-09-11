@@ -28,7 +28,7 @@ const SRC = readFileSync(
  *   그냥 `indexOf` 하면 그쪽을 먼저 잘라서, 이 검사가 **엉뚱한 규칙을 보고
  *   통과했다.** `@media` 안쪽을 걷어내고 기본 규칙을 찾는다.
  */
-const BASE = SRC.replace(/@media[^{]*\{[\s\S]*?\n  \}/g, "");
+const BASE = SRC.replace(/@media[^{]*\{[\s\S]*?\n {2}\}/g, "");
 
 const RULE = BASE.slice(
   BASE.indexOf(".bar-list, .line-list {"),

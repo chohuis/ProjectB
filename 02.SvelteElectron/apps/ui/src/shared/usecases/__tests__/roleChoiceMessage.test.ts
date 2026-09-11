@@ -181,7 +181,6 @@ describe("ahead — 그 자리를 지금 차지한 같은 팀 투수 수", () =>
     { id: "E", teamId: "T1", role: "player", status: "active",  details: { player: { playerType: "batter",  position: "C"  } } },
     { id: "F", teamId: "T2", role: "player", status: "active",  details: { player: { playerType: "pitcher", position: "RP" } } },
     { id: "ME", teamId: "T1", role: "player", status: "active", details: { player: { playerType: "pitcher", position: "SP" } } },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ] as any[];
 
   it("자기 팀 · 현역 투수만 센다 (자기 자신 제외)", () => {

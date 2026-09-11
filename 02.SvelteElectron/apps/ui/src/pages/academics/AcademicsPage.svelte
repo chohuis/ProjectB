@@ -5,7 +5,10 @@
     percentileToGrade, studyModeEffect, weeksUntilNextExam,
     UNIVERSITY_MAJORS, getUniversityEffBonus,
   } from "../../shared/utils/academicsEngine";
-  import { toGpa45 } from "../../shared/utils/universityUtils";
+  // ⚠ `toGpa45` 를 여기서 뺐다 — 쓰던 자리가 **한 번도 안 뜨는 갈래**였다
+  //   (아래 요약 헤더의 주석). 함수는 `universityUtils.ts` 에 그대로 두었다:
+  //   GPA 칸을 살릴지는 화면 담당이 정하고, 살리면 그때 다시 부른다.
+  //   지금 그 함수를 부르는 곳은 **아무 데도 없다.**
   import { universityGradeOf } from "../../shared/utils/careerTransition";
   import type { StudyMode } from "../../shared/types/save";
 
@@ -114,12 +117,12 @@
         <p class="lbl">평균 등급</p>
         <strong class={gradeClass(avgGrade)}>{avgGrade}등급</strong>
       </div>
-      {#if isUniv}
-        <div class="summary-item">
-          <p class="lbl">GPA</p>
-          <strong class={gradeClass(avgGrade)}>{toGpa45(avgPercentile).toFixed(1)} / 4.5</strong>
-        </div>
-      {/if}
+      <!--
+        🔴 여기 있던 **GPA 칸을 지웠다** (2026-09-11 · ESLint 가 첫 실행에서 잡았다).
+        `{#if isUniv}` 의 `{:else}` 안에 다시 `{#if isUniv}` 라 **한 번도 안 떴다.**
+        지금 화면을 바꾸지 않으려고 「지운다」로 끝낸다 — 그리는 쪽으로 옮길지는
+        화면 담당이 정할 일이다. 옮긴다면 위 `{#if isUniv}` 갈래 안이다.
+      -->
     {/if}
     <div class="summary-item">
       <p class="lbl">학업 상태</p>

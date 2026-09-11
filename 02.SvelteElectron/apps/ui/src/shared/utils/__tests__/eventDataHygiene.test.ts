@@ -50,7 +50,7 @@ describe("이벤트 데이터 위생", () => {
    * 힌트를 쓸 자리는 선택지의 `effectHint`다. 본문은 이야기만 한다.
    */
   it("본문이 효과를 약속하면 선택지가 있다", () => {
-    const HINT = /\[[^\]\n]*[+\-]\s*\d+[^\]\n]*\]/;
+    const HINT = /\[[^\]\n]*[+-]\s*\d+[^\]\n]*\]/;
     const liars = RULES
       .filter((r) => !r.decisionTemplateId)
       .filter((r) => bodiesOf(TMPL.get(r.messageTemplateId ?? "")).some((b) => HINT.test(b)))

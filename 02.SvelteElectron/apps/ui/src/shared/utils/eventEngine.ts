@@ -429,7 +429,6 @@ export function runEventEngine(
    *   풀이 다시 뜻을 갖는 날(예: 결별 빈도)에 다시 넣게 된다. 안 읽는다는
    *   것을 여기 적어 두는 편이 조용히 사라지는 것보다 낫다.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   pools: EventPool[],
   msgTmplMap: Map<string, MessageTemplate>,
   decTmplMap: Map<string, DecisionTemplate>,

@@ -1,5 +1,5 @@
 import { MONTH_STARTS_1 } from "../utils/seasonCalendar";
-﻿import { derived, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
@@ -810,7 +810,6 @@ function assertConditions(ruleId: string, conditions: any[]): void {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseEventRule(raw: Record<string, any>): EventRule {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let conditions: import("../types/event").Condition[] = [];
 
   if (Array.isArray(raw.conditions)) {
@@ -1100,7 +1099,6 @@ function createMasterStore() {
 
   // ── manifest 기반 이벤트 로드 ─────────────────────────────────
   async function loadEventsFromManifest(m: Manifest): Promise<EventRule[]> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [mandatory, conditional, media, social, teamLife] = await Promise.all([
       batchFetch<Record<string, unknown>>(m.events.mandatory,   (id) => `events/mandatory/${id}.json`),
       batchFetch<Record<string, unknown>>(m.events.conditional, (id) => `events/conditional/${id}.json`),

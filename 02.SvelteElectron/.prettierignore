@@ -1,0 +1,20 @@
+# ── 손대면 안 되는 것 ────────────────────────────────────────
+# 🔴 콘텐츠는 동결이다. JSON 포맷이 바뀌면 diff 가 4.2MB 다.
+resource/
+
+# 생성물 — 사람이 안 쓴다
+**/_manifest.json
+**/dist/
+**/build/
+**/release/
+**/target/
+**/node_modules/
+package-lock.json
+*.node
+
+# ⚠ 계측·검사 스크립트 236 파일은 범위 밖이다 (개선 4 의 단서).
+#   표를 찍는 `console.log` 정렬이 포맷으로 흐트러지면 읽기 나빠진다.
+scripts/
+
+# ⚠ 다른 프로젝트(`00.OneF` · `03.*` · `04.GodotOnePitch` · `_archive`)는
+#   **이 폴더 바깥**이라 `prettier --write .` 가 애초에 안 닿는다. 적을 필요 없다.
