@@ -32,6 +32,7 @@
     "check:mojibake": "node scripts/check-mojibake.mjs",
     "check:encoding": "npm run check:mojibake",
     "deploy": "node scripts/deploy-staging.mjs",
+    "pretest": "npm run gen:manifest",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:db": "electron scripts/db-perf.mjs",
