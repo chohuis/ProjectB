@@ -912,3 +912,9 @@ vitest **2,451 → 2,458** · cargo 339 · `test:v3` 29/29 · roundtrip · msgdu
 ✅ 고교 사기 — **1.1 로 둔다** (09-02 21:50 · 등판 비중과 같이 본다)     ✅ v3 구 세이브 — **없다 · 항목 닫음**
 ✅ Steam App/Depot ID — **프리즈(9/15) 때 사용자가 넣는다**     ✅ 병영 문안 62종 — **1.0 은 B 초안 · 1.1 에서 사용자가 다듬는다**
 ```
+
+## ✅ 1.0.1 테스터 빌드 (2026-09-12 · D · 트렁크 `de087b19c` 에서)
+`ProjectB-measure/02.SvelteElectron/release/OnePitch-1.0.1-test.zip` · **177.9 MB** · SHA256 `70b014b5ff22ec8aff6bd395fe92e9024d8c53d630706e137e2953453b72e9ec`
+exe SHA256 `b6454ad8f9dcfd6dcf5ad66eda8e9c051c805475eec8bef4069772e40c946ddf` · 1,116 파일 · 355.3 MB · 날짜 잠금 **없음**
+회귀 전량 초록(vitest 2,719 · cargo 365 · test:v3 29 · roundtrip · measurerepro 2회 동일 · lint 0 · format · tsc 0) · smoke 1→5주 · 포장본에서 학점 칸 확인(기말 2.47 화면 실측 · 「—·첫 학기 진행 중」은 asar 번들에서 리터럴로 확인) · `demo-20260920/` 삭제.
+**다음**: 테스터 → 회신 → v1.0.1 태그 + `package.json` 1.0.1 → 1.0.2 B 축.
