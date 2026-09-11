@@ -7,7 +7,7 @@ const { app, BrowserWindow, ipcMain, session, protocol, net } = require("electro
 const { DEV_ORIGIN } = require("../../dev-server.config.cjs");
 
 const {
-  openDatabase, applySchemaPatches, migrateOldDb,
+  openDatabase, applySchemaPatches,
 } = require("./ipc/db.cjs");
 const matchIpc   = require("./ipc/match.cjs");
 const tuningIpc  = require("./ipc/tuning.cjs");
@@ -144,11 +144,9 @@ app.whenReady().then(() => {
   const userDataDir  = app.getPath("userData");
   const savesDir     = path.join(userDataDir, "saves");
   const dbPath       = path.join(savesDir, "projectb_v2.db");
-  const oldDbPath    = path.join(savesDir, "projectb.db");
 
   const db = openDatabase(dbPath);
   applySchemaPatches(db);
-  migrateOldDb(db, oldDbPath);
 
   // ── R3a: 슬롯 DB v3 (파일=슬롯) — repo:call 단일 채널 ──────────────────────
   const slotdb = require("./ipc/slotdb.cjs");

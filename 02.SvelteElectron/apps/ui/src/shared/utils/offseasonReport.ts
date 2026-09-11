@@ -15,13 +15,19 @@
 import { clubKeyOfTeam } from "./ids";
 
 export type OffseasonKind =
-  | "retire_age" | "retire_no_team"
-  | "release_roster" | "release_score"
-  | "demote_roster" | "demote_fielder" | "promote"
-  | "fa_unsigned" | "fa_contract"
+  | "retire_age"
+  | "retire_no_team"
+  | "release_roster"
+  | "release_score"
+  | "demote_roster"
+  | "demote_fielder"
+  | "promote"
+  | "fa_unsigned"
+  | "fa_contract"
   // FA 미계약 뒤 — 원소속 잔류 또는 은퇴. 예전엔 진로 배정으로 넘어가
   // 프로 경력자가 `quit_baseball`이 됐다(실측 미계약자의 67%)
-  | "fa_rehome" | "fa_unsigned_retire"
+  | "fa_rehome"
+  | "fa_unsigned_retire"
   // 독립리그 나이 상한 은퇴 (2026-09-03) — 상한이 입단만 막아 2027부터 닫힌 세계였다
   | "indie_age_retire";
 
@@ -60,18 +66,18 @@ interface KindMeta {
  * 이 프로젝트에서 "정본이 둘"로 어긋난 사례가 반복해서 나왔다.
  */
 const KIND: Record<OffseasonKind, KindMeta> = {
-  retire_age:      { group: "retire",  reason: "나이",          short: "은퇴" },
-  retire_no_team:  { group: "retire",  reason: "갈 팀 없음",     short: "은퇴" },
-  release_roster:  { group: "release", reason: "로스터 초과",    short: "방출" },
-  release_score:   { group: "release", reason: "하위 평가",      short: "방출" },
-  demote_roster:   { group: "move",    reason: "2군 강등",       short: "2군" },
-  demote_fielder:  { group: "move",    reason: "2군 (야수 자리)", short: "2군" },
-  promote:         { group: "move",    reason: "1군 승격",       short: "1군" },
-  fa_unsigned:     { group: "fa",      reason: "FA 미계약",      short: "미계약" },
-  fa_contract:     { group: "fa",      reason: "FA 계약",        short: "계약" },
-  fa_rehome:       { group: "fa",      reason: "원소속 잔류",     short: "잔류" },
-  fa_unsigned_retire: { group: "fa",   reason: "미계약 은퇴",     short: "은퇴" },
-  indie_age_retire:   { group: "fa",   reason: "독립 나이 상한 은퇴", short: "은퇴" },
+  retire_age: { group: "retire", reason: "나이", short: "은퇴" },
+  retire_no_team: { group: "retire", reason: "갈 팀 없음", short: "은퇴" },
+  release_roster: { group: "release", reason: "로스터 초과", short: "방출" },
+  release_score: { group: "release", reason: "하위 평가", short: "방출" },
+  demote_roster: { group: "move", reason: "2군 강등", short: "2군" },
+  demote_fielder: { group: "move", reason: "2군 (야수 자리)", short: "2군" },
+  promote: { group: "move", reason: "1군 승격", short: "1군" },
+  fa_unsigned: { group: "fa", reason: "FA 미계약", short: "미계약" },
+  fa_contract: { group: "fa", reason: "FA 계약", short: "계약" },
+  fa_rehome: { group: "fa", reason: "원소속 잔류", short: "잔류" },
+  fa_unsigned_retire: { group: "fa", reason: "미계약 은퇴", short: "은퇴" },
+  indie_age_retire: { group: "fa", reason: "독립 나이 상한 은퇴", short: "은퇴" },
 };
 
 export function isKnownKind(k: string): k is OffseasonKind {
@@ -88,7 +94,7 @@ export function isKnownKind(k: string): k is OffseasonKind {
 export function relationTag(kind: string): string | null {
   if (kind === "rival") return "라이벌";
   if (kind === "teammate") return "동료";
-  return null;   // 감독·코치·구단주는 선수 목록에 안 나온다
+  return null; // 감독·코치·구단주는 선수 목록에 안 나온다
 }
 
 /** 화면이 조회에 쓰는 최소 정보. 저장 타입 전체를 끌고 오지 않는다 */
@@ -141,9 +147,10 @@ export function buildRows(p: BuildParams): OffseasonRow[] {
 
   const byPerson = new Map<string, OffseasonEvent[]>();
   for (const e of p.events) {
-    if (!isKnownKind(e.kind)) continue;   // 모르는 종류를 지어내 표시하지 않는다
+    if (!isKnownKind(e.kind)) continue; // 모르는 종류를 지어내 표시하지 않는다
     const list = byPerson.get(e.npcId);
-    if (list) list.push(e); else byPerson.set(e.npcId, [e]);
+    if (list) list.push(e);
+    else byPerson.set(e.npcId, [e]);
   }
 
   const rows: OffseasonRow[] = [];
@@ -161,25 +168,26 @@ export function buildRows(p: BuildParams): OffseasonRow[] {
 
     // 겹치면 경로로. 같은 말이 반복되면(2군 → 2군) 결론만 쓴다
     const first = KIND[list[0].kind as OffseasonKind];
-    const reason = list.length > 1 && first.short !== meta.short
-      ? `${first.short} → ${meta.short}`
-      : meta.reason;
+    const reason =
+      list.length > 1 && first.short !== meta.short
+        ? `${first.short} → ${meta.short}`
+        : meta.reason;
 
     rows.push({
       npcId,
       // ⚠ 조회가 빈 경우를 이름 자리에 ID로 채우지 않는다 — 그게 이번에 고친
       // 결함 그 자체다. 사람을 못 찾으면 모른다고 쓴다
-      name:     who?.name ?? "(기록 없음)",
-      age:      who?.age ?? 0,
+      name: who?.name ?? "(기록 없음)",
+      age: who?.age ?? 0,
       position: who?.position ?? "-",
       teamId,
-      group:    meta.group,
+      group: meta.group,
       reason,
-      detail:   last.detail,
+      detail: last.detail,
       // ⚠ **양쪽을 다 본다.** 떠난 팀만 보면 내 팀이 데려온 FA가 안 잡힌다 —
       //   영입이야말로 가장 보고 싶은 소식이다.
-      mine:     myClub !== null && [toId, fromId].some(
-                  (t) => t !== null && clubKeyOfTeam(t) === myClub),
+      mine:
+        myClub !== null && [toId, fromId].some((t) => t !== null && clubKeyOfTeam(t) === myClub),
       relation: p.relations?.get(npcId) ?? null,
     });
   }
@@ -200,11 +208,12 @@ export function countByGroup(rows: readonly OffseasonRow[]): Record<OffseasonGro
  */
 export function sortRows(rows: readonly OffseasonRow[]): OffseasonRow[] {
   const rank = (r: OffseasonRow) => (r.mine ? 0 : r.relation ? 1 : 2);
-  return [...rows].sort((a, b) =>
-    rank(a) - rank(b)
-    || b.age - a.age
-    || a.name.localeCompare(b.name, "ko")
-    || a.npcId.localeCompare(b.npcId),
+  return [...rows].sort(
+    (a, b) =>
+      rank(a) - rank(b) ||
+      b.age - a.age ||
+      a.name.localeCompare(b.name, "ko") ||
+      a.npcId.localeCompare(b.npcId),
   );
 }
 
@@ -215,8 +224,8 @@ export function sortRows(rows: readonly OffseasonRow[]): OffseasonRow[] {
  * 아무 일 없던 시즌인지 목록에서 구분이 안 됐다.**
  */
 export function previewLine(counts: Record<OffseasonGroup, number>): string {
-  const parts = GROUP_ORDER
-    .filter((g) => counts[g] > 0)
-    .map((g) => `${GROUP_LABEL[g]} ${counts[g]}`);
+  const parts = GROUP_ORDER.filter((g) => counts[g] > 0).map(
+    (g) => `${GROUP_LABEL[g]} ${counts[g]}`,
+  );
   return parts.length > 0 ? parts.join(" · ") : "특별한 이동이 없었다";
 }

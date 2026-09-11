@@ -55,7 +55,9 @@ export function incentiveProgress(input: IncentiveSettleInput): IncentiveProgres
  *   두 번 하는 것이고, 달성 수가 이미 0 이라고 적혀 있다.
  */
 export function incentiveProgressText(
-  pr: IncentiveProgress, metWord: string, moneyText: (v: number) => string,
+  pr: IncentiveProgress,
+  metWord: string,
+  moneyText: (v: number) => string,
 ): string {
   const head = metWord ? `${metWord} ${pr.met}/${pr.count}` : `${pr.met}/${pr.count}`;
   return pr.amount > 0 ? `${head} · +${moneyText(pr.amount)}` : head;

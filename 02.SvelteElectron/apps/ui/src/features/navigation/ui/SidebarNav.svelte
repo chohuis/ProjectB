@@ -30,21 +30,21 @@
 
   const LABEL_KEY: Record<MainTabId, string> = {
     military: "nav.military",
-    news:     "nav.news",
-    me:       "nav.me",
-    team:     "nav.team",
-    league:   "nav.league",
-    people:   "nav.people",
+    news: "nav.news",
+    me: "nav.me",
+    team: "nav.team",
+    league: "nav.league",
+    people: "nav.people",
     schedule: "nav.schedule",
   };
 
   /** 배지 — 안 읽은 소식은 소식에, 미확인 업적은 "나"에 붙는다(업적이 그 안에 있으므로) */
   function badgeOf(id: MainTabId): { n: number; kind: "info" | "gold" } | null {
     if (id === "news" && unreadMessageCount > 0) return { n: unreadMessageCount, kind: "info" };
-    if (id === "me"   && pendingAchievementCount > 0) return { n: pendingAchievementCount, kind: "gold" };
+    if (id === "me" && pendingAchievementCount > 0)
+      return { n: pendingAchievementCount, kind: "gold" };
     return null;
   }
-
 </script>
 
 <nav class="nav">
@@ -56,13 +56,21 @@
     {#each tabs as id (id)}
       {@const badge = badgeOf(id)}
       {@const pending = pendingByTab[id] ?? 0}
-      <button class="tab" class:on={id === currentTab} class:locked type="button"
-              disabled={locked} on:click={() => onSelectTab(id)}>
+      <button
+        class="tab"
+        class:on={id === currentTab}
+        class:locked
+        type="button"
+        disabled={locked}
+        on:click={() => onSelectTab(id)}
+      >
         <span class="label">{$t(LABEL_KEY[id])}</span>
         {#if pending > 0}
           <strong class="badge red">{pending > 99 ? "99+" : pending}</strong>
         {:else if badge}
-          <strong class="badge" class:gold={badge.kind === "gold"}>{badge.n > 99 ? "99+" : badge.n}</strong>
+          <strong class="badge" class:gold={badge.kind === "gold"}
+            >{badge.n > 99 ? "99+" : badge.n}</strong
+          >
         {/if}
       </button>
       <!-- "나"와 "세계"를 가르는 선. 글자를 안 늘리면서 성격이 갈리는 걸 보여준다 -->
@@ -71,7 +79,12 @@
   </div>
 
   <div class="settings">
-    <button class="gear" type="button" on:click={() => (settingsOpen = true)} aria-label={$t("settings.title")}>
+    <button
+      class="gear"
+      type="button"
+      on:click={() => (settingsOpen = true)}
+      aria-label={$t("settings.title")}
+    >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
           d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.07 7.07 0 0 0-1.69-.98l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.56-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.63L4.57 11c-.05.32-.07.65-.07 1s.03.68.08 1l-2.11 1.65a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .61.22l2.49-1c.52.42 1.08.75 1.69.99l.38 2.64a.5.5 0 0 0 .49.42h4a.5.5 0 0 0 .49-.42l.38-2.64c.61-.24 1.17-.57 1.69-.99l2.49 1a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.63L19.43 13zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"
@@ -94,7 +107,13 @@
     padding: 12px 10px;
   }
 
-  .list { display: flex; flex-direction: column; gap: 2px; align-content: start; min-height: 0; }
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-content: start;
+    min-height: 0;
+  }
 
   .military {
     background: var(--panel);
@@ -122,12 +141,20 @@
     padding: 9px 10px;
     cursor: pointer;
   }
-  .tab:hover:not(:disabled) { background: var(--panel); color: var(--ink); }
+  .tab:hover:not(:disabled) {
+    background: var(--panel);
+    color: var(--ink);
+  }
 
   /* 잠김 — 진행 중이거나 경기 차례다. **왜 안 눌리는지 보여야** 한다.
      아무 반응이 없으면 고장으로 읽힌다 */
-  .tab.locked { opacity: 0.45; cursor: not-allowed; }
-  .tab.locked.on { opacity: 0.75; }
+  .tab.locked {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .tab.locked.on {
+    opacity: 0.75;
+  }
 
   /* 선택은 **왼쪽 띠**로 표시한다. 칸 전체를 팀 색으로 채우면 여섯 칸 중
      하나가 늘 어둡게 떠서 지면의 밝은 인상을 깨뜨린다 */
@@ -138,7 +165,12 @@
     font-weight: 800;
   }
 
-  .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .split {
     height: 1px;
@@ -147,32 +179,55 @@
   }
 
   .badge {
-    min-width: 19px; height: 19px;
+    min-width: 19px;
+    height: 19px;
     border-radius: 999px;
     padding: 0 6px;
-    display: inline-flex; align-items: center; justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--t-dark);
     color: var(--ink-on-dark);
-    font-size: 10.5px; font-weight: 800; line-height: 1;
+    font-size: 10.5px;
+    font-weight: 800;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
     flex-shrink: 0;
   }
-  .badge.gold { background: var(--warn); }
+  .badge.gold {
+    background: var(--warn);
+  }
   /* 빨강은 **막혀 있다**는 뜻이다 — 처리하기 전엔 주가 안 넘어간다 */
-  .badge.red  { background: var(--bad); }
+  .badge.red {
+    background: var(--bad);
+  }
 
-  .settings { position: relative; display: flex; }
+  .settings {
+    position: relative;
+    display: flex;
+  }
 
   .gear {
-    width: 32px; height: 32px;
-    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    cursor: pointer; padding: 0;
+    cursor: pointer;
+    padding: 0;
   }
-  .gear:hover { border-color: var(--t-dark); }
-  .gear svg { width: 16px; height: 16px; fill: var(--ink-mute); }
-  .gear:hover svg { fill: var(--t-dark); }
-
+  .gear:hover {
+    border-color: var(--t-dark);
+  }
+  .gear svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--ink-mute);
+  }
+  .gear:hover svg {
+    fill: var(--t-dark);
+  }
 </style>

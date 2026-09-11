@@ -20,15 +20,15 @@ import { universityGradeOf } from "../../shared/utils/careerTransition";
  * ⚠ **주석을 걷고 본다.** 왜 고쳤는지를 주석에 적으면 그 안의 옛 식이
  *   검사에 걸린다 — 저장소의 다른 검사도 같은 `strip` 을 쓴다.
  */
-const SRC = readFileSync(
-  resolve(__dirname, "../academics/AcademicsPage.svelte"), "utf8")
+const SRC = readFileSync(resolve(__dirname, "../academics/AcademicsPage.svelte"), "utf8")
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/^\s*\/\/.*$/gm, "");
 
 describe("대학 학년은 정본에서 읽는다", () => {
   it("학년을 직접 세지 않는다", () => {
-    expect(SRC, "universityWeek 를 52 로 나눠 학년을 따로 세고 있다")
-      .not.toMatch(/universityWeek\s*\/\s*52/);
+    expect(SRC, "universityWeek 를 52 로 나눠 학년을 따로 세고 있다").not.toMatch(
+      /universityWeek\s*\/\s*52/,
+    );
   });
 
   it("`universityGradeOf` 를 쓴다", () => {
@@ -37,8 +37,9 @@ describe("대학 학년은 정본에서 읽는다", () => {
 
   /** 학기도 같은 축이다 — `-1` 이 빠지면 26주차에 2학기가 된다 */
   it("학기도 같은 축을 쓴다", () => {
-    expect(SRC, "학기가 -1 없이 26 으로 나뉜다 — 학년과 한 주 어긋난다")
-      .not.toMatch(/universityWeek\s*\/\s*26/);
+    expect(SRC, "학기가 -1 없이 26 으로 나뉜다 — 학년과 한 주 어긋난다").not.toMatch(
+      /universityWeek\s*\/\s*26/,
+    );
   });
 });
 
@@ -48,8 +49,14 @@ describe("대학 학년은 정본에서 읽는다", () => {
  */
 describe("학년 경계", () => {
   it.each([
-    [1, 1], [51, 1], [52, 1], [53, 2],
-    [104, 2], [105, 3], [157, 4], [300, 4],
+    [1, 1],
+    [51, 1],
+    [52, 1],
+    [53, 2],
+    [104, 2],
+    [105, 3],
+    [157, 4],
+    [300, 4],
   ])("universityWeek %i → %i학년", (w, grade) => {
     expect(universityGradeOf(undefined, w)).toBe(grade);
   });

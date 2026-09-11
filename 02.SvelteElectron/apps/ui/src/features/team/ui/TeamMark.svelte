@@ -26,6 +26,12 @@
 </span>
 
 <style>
-  .tm { display: inline-block; flex-shrink: 0; line-height: 0; }
-  .tm :global(svg) { display: block; }
+  .tm {
+    display: inline-block;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+  .tm :global(svg) {
+    display: block;
+  }
 </style>

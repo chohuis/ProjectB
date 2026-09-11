@@ -1,7 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  allScheduleEntries, winnerById, scheduledIdSet,
-} from "../../utils/scheduleView";
+import { allScheduleEntries, winnerById, scheduledIdSet } from "../../utils/scheduleView";
 import type { ScheduleEntry } from "../../types/season";
 
 /**
@@ -27,10 +25,15 @@ import type { ScheduleEntry } from "../../types/season";
 
 const entry = (id: string, won?: string): ScheduleEntry =>
   ({
-    id, week: 14, gameDate: "2026-05-01",
-    homeTeamId: "T_A", awayTeamId: "T_B", phase: "season", isFriendly: false,
+    id,
+    week: 14,
+    gameDate: "2026-05-01",
+    homeTeamId: "T_A",
+    awayTeamId: "T_B",
+    phase: "season",
+    isFriendly: false,
     result: won ? { winnerId: won, loserId: "T_B", homeScore: 3, awayScore: 1 } : undefined,
-  } as unknown as ScheduleEntry);
+  }) as unknown as ScheduleEntry;
 
 describe("모든 경기 모으기", () => {
   it("⚠ 내 리그 밖의 경기도 들어온다 — 이게 빠져서 대학 대회가 멎었다", () => {
@@ -46,8 +49,9 @@ describe("모든 경기 모으기", () => {
 
   it("한쪽이 비어도 된다", () => {
     expect(allScheduleEntries({ schedule: [entry("A")] }).map((e) => e.id)).toEqual(["A"]);
-    expect(allScheduleEntries({ leagueSchedules: { L: [entry("B")] } }).map((e) => e.id))
-      .toEqual(["B"]);
+    expect(allScheduleEntries({ leagueSchedules: { L: [entry("B")] } }).map((e) => e.id)).toEqual([
+      "B",
+    ]);
     expect(allScheduleEntries({})).toEqual([]);
   });
 
@@ -77,7 +81,7 @@ describe("승자 표", () => {
 });
 
 describe("일정 id 집합", () => {
-  it("결과 여부와 무관하게 전부 — \"이 라운드가 일정에 있나\"를 묻는 자리다", () => {
+  it('결과 여부와 무관하게 전부 — "이 라운드가 일정에 있나"를 묻는 자리다', () => {
     const s = scheduledIdSet({
       schedule: [entry("A")],
       leagueSchedules: { L: [entry("B", "T_A")] },

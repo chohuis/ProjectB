@@ -46,7 +46,9 @@ describe("폭투·포일 배선", () => {
   it("🔴 포일은 포수 줄에 단다 (PB) — 수비 팀이다", () => {
     // 공격 팀 타자 줄에 달면 엉뚱한 사람 기록이 된다
     expect(ty.includes("    pub pb: i32,")).toBe(true);
-    expect(me.includes("                let dl = if is_top { &mut next_state.home_bat_lines }")).toBe(true);
+    expect(
+      me.includes("                let dl = if is_top { &mut next_state.home_bat_lines }"),
+    ).toBe(true);
     expect(me.includes("                    b.pb += pb_count;")).toBe(true);
   });
 
@@ -60,7 +62,11 @@ describe("폭투·포일 배선", () => {
   });
 
   it("🔴 3루 주자가 홈에 오면 득점이다", () => {
-    expect(me.includes("        add_runs(loose_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);")).toBe(true);
+    expect(
+      me.includes(
+        "        add_runs(loose_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);",
+      ),
+    ).toBe(true);
   });
 
   it("결과 줄에 실린다", () => {

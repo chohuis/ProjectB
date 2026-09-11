@@ -19,8 +19,13 @@ import { gameStore, MAX_MAILBOX } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore, type EntityDetails, type EntityRow } from "../stores/master";
 import {
-  loadFinanceRules, calcWeeklyFinance, calcSponsorOffers, calcTrainingBonus,
-  financeOf, sponsorAnnualOf, finalAssets,
+  loadFinanceRules,
+  calcWeeklyFinance,
+  calcSponsorOffers,
+  calcTrainingBonus,
+  financeOf,
+  sponsorAnnualOf,
+  finalAssets,
 } from "./finance";
 import { loadRosterRules } from "../repo/newGameV3";
 import { staffStatsOf, staffModsOf, MANAGER_STATS, COACH_STATS } from "../utils/staffEffects";
@@ -67,9 +72,13 @@ class Ctx {
     else this.problems.push(`✗ ${claim}${detail ? ` — ${detail}` : ""}`);
     return cond;
   }
-  info(line: string): void { this.notes.push(`· ${line}`); }
+  info(line: string): void {
+    this.notes.push(`· ${line}`);
+  }
   /** 이 상태에서는 확인할 수 없다 — 무엇이 있어야 확인되는지 적는다 */
-  skip(reason: string): void { this.skipped = reason; }
+  skip(reason: string): void {
+    this.skipped = reason;
+  }
 }
 
 interface Scenario {
@@ -90,8 +99,15 @@ const S_NEWGAME: Scenario = {
 
     // Phase 7이 규칙 키를 7개 추가했다 — 하나라도 없으면 그 기능이 조용히 죽는다
     const r = rules as unknown as Record<string, unknown>;
-    for (const key of ["rosterRules", "salaryRules", "powerRules", "careerHistoryRules",
-                       "financeRules", "campusEvents", "draftRules"]) {
+    for (const key of [
+      "rosterRules",
+      "salaryRules",
+      "powerRules",
+      "careerHistoryRules",
+      "financeRules",
+      "campusEvents",
+      "draftRules",
+    ]) {
       c.ok(`규칙 키 ${key}`, r[key] != null, "없음 — 그 기능이 기본값으로 조용히 돈다");
     }
 
@@ -101,7 +117,9 @@ const S_NEWGAME: Scenario = {
 
     // 리그마다 로스터 규칙이 있는가 — 없으면 그 리그가 빈 채로 활성화된다
     const leagues = [...new Set(m.teams.map((t) => t.leagueId))].filter(Boolean);
-    const missing = leagues.filter((l) => !(rules.rosterRules as Record<string, unknown>)[l as string]);
+    const missing = leagues.filter(
+      (l) => !(rules.rosterRules as Record<string, unknown>)[l as string],
+    );
     c.ok("모든 리그에 로스터 규칙이 있다", missing.length === 0, `누락: ${missing.join(", ")}`);
     c.info(`리그 ${leagues.length}종 · 팀 ${m.teams.length} · 엔티티 ${m.entities.length}`);
   },
@@ -122,8 +140,11 @@ const S_DRAFT: Scenario = {
     // 관전과 스킵이 **같은 결과**를 봐야 한다. 둘 다 이 로그를 재생한다
     c.info(`픽 ${log.length}건`);
     const nos = log.map((p) => p.pickNo);
-    c.ok("픽 번호가 오름차순", nos.every((n, i) => i === 0 || n > nos[i - 1]),
-      `순서 깨짐: ${nos.slice(0, 12).join(",")}`);
+    c.ok(
+      "픽 번호가 오름차순",
+      nos.every((n, i) => i === 0 || n > nos[i - 1]),
+      `순서 깨짐: ${nos.slice(0, 12).join(",")}`,
+    );
     c.ok("픽 번호 중복 없음", new Set(nos).size === nos.length);
     c.ok("선수 중복 지명 없음", new Set(log.map((p) => p.playerId)).size === log.length);
 
@@ -135,7 +156,11 @@ const S_DRAFT: Scenario = {
     const perRound = new Map<number, number>();
     for (const p of log) perRound.set(p.round, (perRound.get(p.round) ?? 0) + 1);
     const rounds = [...perRound.keys()].sort((a, b) => a - b);
-    c.ok("라운드가 1부터 연속", rounds.every((r, i) => r === i + 1), `라운드: ${rounds.join(",")}`);
+    c.ok(
+      "라운드가 1부터 연속",
+      rounds.every((r, i) => r === i + 1),
+      `라운드: ${rounds.join(",")}`,
+    );
     c.info(`라운드별 지명 수: ${rounds.map((r) => `${r}R:${perRound.get(r)}`).join(" ")}`);
   },
 };
@@ -156,7 +181,9 @@ const S_FINANCE: Scenario = {
     const weekly = await calcWeeklyFinance({ protagonist: p, seasonYear });
     c.ok("주간 수지 계산", !!weekly && typeof weekly.netWeekly === "number");
     if (weekly) {
-      c.info(`주간 순수지 ${weekly.netWeekly}만원 (수입 ${weekly.grossWeekly ?? "?"} / 세금 ${weekly.taxWeekly ?? "?"})`);
+      c.info(
+        `주간 순수지 ${weekly.netWeekly}만원 (수입 ${weekly.grossWeekly ?? "?"} / 세금 ${weekly.taxWeekly ?? "?"})`,
+      );
       // 화면 상단 요약이 이 숫자를 그대로 쓴다 — NaN이면 "NaN만원"이 그대로 보인다
       for (const [k, v] of Object.entries(weekly)) {
         if (typeof v === "number") c.ok(`  ${k}가 유한수`, Number.isFinite(v), `${v}`);
@@ -168,7 +195,9 @@ const S_FINANCE: Scenario = {
     if (bonus) {
       c.ok("주간 구독비가 유한수", Number.isFinite(bonus.weeklyCost), `${bonus.weeklyCost}`);
       c.ok("역보정이 유한수", Number.isFinite(bonus.inverseFactor), `${bonus.inverseFactor}`);
-      c.info(`구독 ${bonus.byArea.length}종 · 주간비 ${bonus.weeklyCost}만원 · 팀자원 역보정 ${bonus.inverseFactor.toFixed(3)}`);
+      c.info(
+        `구독 ${bonus.byArea.length}종 · 주간비 ${bonus.weeklyCost}만원 · 팀자원 역보정 ${bonus.inverseFactor.toFixed(3)}`,
+      );
       for (const a of bonus.byArea) {
         c.ok(`  ${a.areaId} 실효 보너스가 유한수`, Number.isFinite(a.effective), `${a.effective}`);
       }
@@ -176,7 +205,9 @@ const S_FINANCE: Scenario = {
 
     const so = await calcSponsorOffers({ protagonist: p, seasonYear });
     c.ok("스폰서 오퍼 계산", Array.isArray(so?.offers));
-    c.info(`스폰서 오퍼 ${so?.offers?.length ?? 0}건 (명성 ${p.fame}${so?.capped ? ", 상한 도달" : ""})`);
+    c.info(
+      `스폰서 오퍼 ${so?.offers?.length ?? 0}건 (명성 ${p.fame}${so?.capped ? ", 상한 도달" : ""})`,
+    );
     if ((so?.offers?.length ?? 0) === 0) {
       c.info("오퍼 0건 — 명성이 낮으면 정상이다. 화면 스폰서 탭이 비는 게 버그인지 여기서 갈린다");
     }
@@ -191,9 +222,14 @@ const S_FINANCE: Scenario = {
     for (const [k, v] of Object.entries(assets)) {
       c.ok(`자산 ${k}가 유한수`, Number.isFinite(v), `${v}`);
     }
-    c.ok("화면의 현금이 protagonist.money와 같다", assets.cash === p.money,
-      `${assets.cash} vs ${p.money} — 재정 화면이 딴 숫자를 보여주고 있다`);
-    c.info(`현금 ${assets.cash} · 투자원금 ${assets.totalInvested} · 손익 ${assets.totalProfit} · 납세 ${assets.taxPaid} (만원)`);
+    c.ok(
+      "화면의 현금이 protagonist.money와 같다",
+      assets.cash === p.money,
+      `${assets.cash} vs ${p.money} — 재정 화면이 딴 숫자를 보여주고 있다`,
+    );
+    c.info(
+      `현금 ${assets.cash} · 투자원금 ${assets.totalInvested} · 손익 ${assets.totalProfit} · 납세 ${assets.taxPaid} (만원)`,
+    );
   },
 };
 
@@ -205,15 +241,21 @@ const S_INVEST: Scenario = {
   async run(c) {
     const p = get(gameStore).protagonist;
     const rules = await loadFinanceRules();
-    const opts = (rules as unknown as { investment?: { options?: unknown[] } })?.investment?.options;
-    c.ok("투자 선택지가 규칙 파일에 있다", Array.isArray(opts) && opts.length > 0,
-      `options=${JSON.stringify(opts)?.slice(0, 80)}`);
+    const opts = (rules as unknown as { investment?: { options?: unknown[] } })?.investment
+      ?.options;
+    c.ok(
+      "투자 선택지가 규칙 파일에 있다",
+      Array.isArray(opts) && opts.length > 0,
+      `options=${JSON.stringify(opts)?.slice(0, 80)}`,
+    );
     if (Array.isArray(opts)) c.info(`선택지 ${opts.length}종`);
 
     const isPro = p.careerStage === "pro" || p.careerStage.startsWith("pro_");
     c.info(`현재 단계 ${p.careerStage} · 현금 ${p.money}만원`);
     if (!isPro) {
-      c.skip(`프로 단계에서만 뜬다 (지금 ${p.careerStage}). 프로 진입 후 시즌 종료 화면에서 확인할 것`);
+      c.skip(
+        `프로 단계에서만 뜬다 (지금 ${p.careerStage}). 프로 진입 후 시즌 종료 화면에서 확인할 것`,
+      );
       return;
     }
     c.ok("노출 조건 충족 (프로 + 현금 500만원 이상)", p.money >= 500, `현금 ${p.money}만원`);
@@ -228,16 +270,26 @@ const S_CONTRACT: Scenario = {
   async run(c) {
     const p = get(gameStore).protagonist;
     const m = get(masterStore);
-    if (!p.teamId) { c.skip("소속팀이 없다"); return; }
+    if (!p.teamId) {
+      c.skip("소속팀이 없다");
+      return;
+    }
 
     const owner = m.entities.find((e) => e.teamId === p.teamId && e.role === "owner");
-    c.ok("소속팀 구단주 엔티티 존재", !!owner,
-      `팀 ${p.teamId}에 role=owner가 없다 — 협상 화면의 구단주 줄이 통째로 안 뜬다`);
+    c.ok(
+      "소속팀 구단주 엔티티 존재",
+      !!owner,
+      `팀 ${p.teamId}에 role=owner가 없다 — 협상 화면의 구단주 줄이 통째로 안 뜬다`,
+    );
     if (owner) {
       const od = (owner.details as EntityDetails)?.owner;
       c.ok("구단주 능력치 존재", !!od?.stats, "stats가 없어 화면이 '-'로 뜬다");
       if (od?.stats) {
-        c.info(`구단주 ${owner.name}: ${Object.entries(od.stats).map(([k, v]) => `${k}=${v}`).join(" ")}`);
+        c.info(
+          `구단주 ${owner.name}: ${Object.entries(od.stats)
+            .map(([k, v]) => `${k}=${v}`)
+            .join(" ")}`,
+        );
         for (const [k, v] of Object.entries(od.stats)) {
           c.ok(`  ${k}가 수치`, typeof v === "number", `${typeof v}`);
         }
@@ -247,10 +299,14 @@ const S_CONTRACT: Scenario = {
     // 예산·구단주 보정이 실제로 제시액에 반영되려면 이 두 값이 있어야 한다
     const mods = staffModsOf(p.teamId, m.entities);
     c.ok("스태프 보정 계산", !!mods);
-    c.info(`예산 ${mods.budget.toFixed(3)} · 관계 ${mods.relation.toFixed(3)} · 명성 ${mods.fame.toFixed(3)}`);
-    c.ok("보정이 전부 중립(1.0)은 아니다",
+    c.info(
+      `예산 ${mods.budget.toFixed(3)} · 관계 ${mods.relation.toFixed(3)} · 명성 ${mods.fame.toFixed(3)}`,
+    );
+    c.ok(
+      "보정이 전부 중립(1.0)은 아니다",
       Object.values(mods).some((v) => v !== 1),
-      "전 항목 1.0 — 스태프 능력치가 계산에 안 닿고 있다");
+      "전 항목 1.0 — 스태프 능력치가 계산에 안 닿고 있다",
+    );
   },
 };
 
@@ -267,16 +323,28 @@ const S_MAILBOX: Scenario = {
     const stage = g.protagonist.careerStage;
     const grade = g.protagonist.grade ?? 0;
     c.info(`메시지 ${box.length}건 · ${stage}${grade ? ` ${grade}학년` : ""} W${week}`);
-    if (box.length === 0) { c.skip("메시지가 없다 — 몇 주 진행한 뒤 확인할 것"); return; }
+    if (box.length === 0) {
+      c.skip("메시지가 없다 — 몇 주 진행한 뒤 확인할 것");
+      return;
+    }
 
     const byCat = new Map<string, number>();
     for (const msg of box) byCat.set(msg.category, (byCat.get(msg.category) ?? 0) + 1);
     c.info(`분류별: ${[...byCat].map(([k, v]) => `${k}:${v}`).join(" ")}`);
 
     const empty = box.filter((msg) => !msg.body || msg.body.trim() === "");
-    c.ok("본문이 빈 메시지 없음", empty.length === 0,
-      `${empty.length}건: ${empty.slice(0, 3).map((m) => m.id).join(", ")}`);
-    c.ok("제목 없는 메시지 없음", box.every((msg) => !!msg.subject));
+    c.ok(
+      "본문이 빈 메시지 없음",
+      empty.length === 0,
+      `${empty.length}건: ${empty
+        .slice(0, 3)
+        .map((m) => m.id)
+        .join(", ")}`,
+    );
+    c.ok(
+      "제목 없는 메시지 없음",
+      box.every((msg) => !!msg.subject),
+    );
 
     // ── 뉴스가 왔어야 하는가 ────────────────────────────────────
     //
@@ -289,39 +357,65 @@ const S_MAILBOX: Scenario = {
       c.info("  '안 왔다'를 증명할 수 없다. 아래 판정은 '못 찾음'까지만 말한다");
     }
 
-    const scoutWeek = ((await loadRosterRules()) as unknown as
-      { campusEvents?: { showcase?: { week: number }; allstar?: { week: number } } }).campusEvents;
+    const scoutWeek = (
+      (await loadRosterRules()) as unknown as {
+        campusEvents?: { showcase?: { week: number }; allstar?: { week: number } };
+      }
+    ).campusEvents;
 
     // [이름, 본문/제목 패턴, 이번 세이브에서 나왔어야 하는가]
     const EXPECT: [string, RegExp, boolean, string][] = [
       // 넷(분기 다이제스트·내 팀 순위·인접권역·월간 순위표)이 2026-08-08에
       // `msg-digest` 하나로 합쳐졌다. 항목을 안 지우면 없어진 메시지를 계속 찾는다
-      ["야구계 소식 (통합 다이제스트)", /\[내 자리\]/,
+      [
+        "야구계 소식 (통합 다이제스트)",
+        /\[내 자리\]/,
         [...DIGEST_WEEKS].some((w) => w <= week),
-        "커리어 전 구간 · 월 1회"],
-      ["다이제스트 — 내 무대 순위표", /\[내 무대\]/,
+        "커리어 전 구간 · 월 1회",
+      ],
+      [
+        "다이제스트 — 내 무대 순위표",
+        /\[내 무대\]/,
         [...DIGEST_WEEKS].some((w) => w <= week),
-        "커리어 전 구간 · 월 1회"],
-      ["다이제스트 — 다른 무대", /\[다른 무대\]/,
+        "커리어 전 구간 · 월 1회",
+      ],
+      [
+        "다이제스트 — 다른 무대",
+        /\[다른 무대\]/,
         stage !== "highschool" || grade >= 2,
-        "고교 1학년 제외"],
-      ["고교 스카우트 데이", /스카우트 데이/,
+        "고교 1학년 제외",
+      ],
+      [
+        "고교 스카우트 데이",
+        /스카우트 데이/,
         stage === "highschool" && (scoutWeek?.showcase?.week ?? 99) <= week,
-        `고교만 · W${scoutWeek?.showcase?.week}`],
-      ["대학 쇼케이스", /쇼케이스/,
+        `고교만 · W${scoutWeek?.showcase?.week}`,
+      ],
+      [
+        "대학 쇼케이스",
+        /쇼케이스/,
         stage === "university" && (scoutWeek?.showcase?.week ?? 99) <= week,
-        `대학만 · W${scoutWeek?.showcase?.week}`],
-      ["대학 올스타", /올스타/,
+        `대학만 · W${scoutWeek?.showcase?.week}`,
+      ],
+      [
+        "대학 올스타",
+        /올스타/,
         stage === "university" && (scoutWeek?.allstar?.week ?? 99) <= week,
-        `대학만 · W${scoutWeek?.allstar?.week}`],
-      ["FA 시장", /FA|자유계약/,
-        stage.startsWith("pro"), "프로만"],
+        `대학만 · W${scoutWeek?.allstar?.week}`,
+      ],
+      ["FA 시장", /FA|자유계약/, stage.startsWith("pro"), "프로만"],
     ];
 
     for (const [label, re, expected, gate] of EXPECT) {
       const hit = box.some((msg) => re.test(msg.subject ?? "") || re.test(msg.body ?? ""));
-      if (!expected) { c.info(`${label}: 대상 아님 (${gate})`); continue; }
-      if (hit) { c.notes.push(`✓ ${label} 도착 (${gate})`); continue; }
+      if (!expected) {
+        c.info(`${label}: 대상 아님 (${gate})`);
+        continue;
+      }
+      if (hit) {
+        c.notes.push(`✓ ${label} 도착 (${gate})`);
+        continue;
+      }
       if (capped) c.info(`${label}: 못 찾음 — 상한에 밀렸을 수 있다 (${gate})`);
       else c.problems.push(`✗ ${label}가 왔어야 하는데 없다 (${gate})`);
     }
@@ -342,42 +436,77 @@ const S_RELATION: Scenario = {
     // 저쪽이 바뀔 때 조용히 어긋난다 (실제로 그렇게 헛 실패가 났다)
     const catalog = relationSceneCatalog();
     c.ok("장면 카탈로그가 비어 있지 않다", catalog.length > 0);
-    c.info(`정의된 장면 ${catalog.length}종: ` +
-      catalog.map((x) => `${x.kind}/${x.label}${x.hasOptions ? "*" : ""}`).join(" "));
+    c.info(
+      `정의된 장면 ${catalog.length}종: ` +
+        catalog.map((x) => `${x.kind}/${x.label}${x.hasOptions ? "*" : ""}`).join(" "),
+    );
 
-    const person = m.entities.find((e) => e.teamId === g.protagonist.teamId && e.role === "manager")
-      ?? m.entities.find((e) => e.role === "manager");
-    if (!person) { c.skip("감독 엔티티가 없다"); return; }
+    const person =
+      m.entities.find((e) => e.teamId === g.protagonist.teamId && e.role === "manager") ??
+      m.entities.find((e) => e.role === "manager");
+    if (!person) {
+      c.skip("감독 엔티티가 없다");
+      return;
+    }
 
     // 카탈로그의 **모든** 장면이 실제로 메시지가 되는지 하나씩 확인한다
     let missing = 0;
     let noOptions = 0;
     for (const sc of catalog) {
       const built = buildRelationMessages(
-        [{ personId: person.id, delta: 10, value: 60, prevValue: 40,
-           label: sc.label, prevLabel: "보통", labelChanged: true }],
-        week, m.entities, new Map([[person.id, sc.kind]]),
+        [
+          {
+            personId: person.id,
+            delta: 10,
+            value: 60,
+            prevValue: 40,
+            label: sc.label,
+            prevLabel: "보통",
+            labelChanged: true,
+          },
+        ],
+        week,
+        m.entities,
+        new Map([[person.id, sc.kind]]),
       );
-      if (built.length === 0) { missing++; c.problems.push(`✗ ${sc.kind}/${sc.label} 장면이 메시지를 안 만든다`); continue; }
+      if (built.length === 0) {
+        missing++;
+        c.problems.push(`✗ ${sc.kind}/${sc.label} 장면이 메시지를 안 만든다`);
+        continue;
+      }
       const opts = built[0].decision?.options?.length ?? 0;
       if (sc.hasOptions && opts === 0) {
         noOptions++;
         c.problems.push(`✗ ${sc.kind}/${sc.label}에 선택지가 정의돼 있는데 메시지엔 안 붙었다`);
       }
       if (!built[0].subject) c.problems.push(`✗ ${sc.kind}/${sc.label} 제목이 비었다`);
-      if (!built[0].body)    c.problems.push(`✗ ${sc.kind}/${sc.label} 본문이 비었다`);
+      if (!built[0].body) c.problems.push(`✗ ${sc.kind}/${sc.label} 본문이 비었다`);
     }
     c.ok("모든 장면이 메시지가 된다", missing === 0);
     c.ok("선택지가 정의된 장면은 전부 선택지가 붙는다", noOptions === 0);
 
     // 장면이 없는 라벨은 건조한 통보로 폴백해야 한다 — 조용히 사라지면 안 된다
     const fallback = buildRelationMessages(
-      [{ personId: person.id, delta: 10, value: 60, prevValue: 40,
-         label: "__없는라벨__", prevLabel: "보통", labelChanged: true }],
-      week, m.entities, new Map([[person.id, "manager"]]),
+      [
+        {
+          personId: person.id,
+          delta: 10,
+          value: 60,
+          prevValue: 40,
+          label: "__없는라벨__",
+          prevLabel: "보통",
+          labelChanged: true,
+        },
+      ],
+      week,
+      m.entities,
+      new Map([[person.id, "manager"]]),
     );
-    c.ok("장면 없는 라벨도 통보 메시지는 나온다", fallback.length === 1,
-      "라벨 변화가 조용히 사라진다");
+    c.ok(
+      "장면 없는 라벨도 통보 메시지는 나온다",
+      fallback.length === 1,
+      "라벨 변화가 조용히 사라진다",
+    );
   },
 };
 
@@ -389,8 +518,8 @@ const S_DETAIL: Scenario = {
   async run(c) {
     const m = get(masterStore);
     const managers = m.entities.filter((e) => e.role === "manager");
-    const coaches  = m.entities.filter((e) => e.role === "coach");
-    const owners   = m.entities.filter((e) => e.role === "owner");
+    const coaches = m.entities.filter((e) => e.role === "coach");
+    const owners = m.entities.filter((e) => e.role === "owner");
     c.info(`감독 ${managers.length} · 코치 ${coaches.length} · 구단주 ${owners.length}`);
     if (managers.length === 0 && coaches.length === 0) {
       c.skip("스태프 엔티티가 없다 — 새 게임을 만들어야 한다");
@@ -400,24 +529,33 @@ const S_DETAIL: Scenario = {
     // 화면은 `mm.stats?.tacticalIQ` 식으로 읽고 없으면 "-"를 찍는다.
     // 그러니 **키 이름이 하나만 어긋나도 전부 '-'가 된다** (7-5에서 실제로 그랬다)
     const badMgr = managers.filter((e) => {
-      const st = (e.details as EntityDetails)?.manager?.stats as Record<string, unknown> | undefined;
+      const st = (e.details as EntityDetails)?.manager?.stats as
+        Record<string, unknown> | undefined;
       return !st || MANAGER_STATS.some((k) => typeof st[k] !== "number");
     });
-    c.ok(`감독 ${MANAGER_STATS.length}종이 전원 수치`, badMgr.length === 0,
+    c.ok(
+      `감독 ${MANAGER_STATS.length}종이 전원 수치`,
+      badMgr.length === 0,
       `${badMgr.length}/${managers.length}명이 비었다 — 예: ${badMgr[0]?.name} ` +
-      JSON.stringify((badMgr[0]?.details as EntityDetails)?.manager?.stats));
+        JSON.stringify((badMgr[0]?.details as EntityDetails)?.manager?.stats),
+    );
 
     const badCoach = coaches.filter((e) => {
       const st = (e.details as EntityDetails)?.coach?.stats as Record<string, unknown> | undefined;
       return !st || COACH_STATS.some((k) => typeof st[k] !== "number");
     });
-    c.ok(`코치 ${COACH_STATS.length}종이 전원 수치`, badCoach.length === 0,
+    c.ok(
+      `코치 ${COACH_STATS.length}종이 전원 수치`,
+      badCoach.length === 0,
       `${badCoach.length}/${coaches.length}명이 비었다 — 예: ${badCoach[0]?.name} ` +
-      JSON.stringify((badCoach[0]?.details as EntityDetails)?.coach?.stats));
+        JSON.stringify((badCoach[0]?.details as EntityDetails)?.coach?.stats),
+    );
 
     // 신인·상무는 표시 경로가 달라 결함이 났던 자리다
-    const rookies = m.entities.filter((e) => e.role === "player" && (e as EntityRow & { grade?: number }).grade === 1);
-    const sangmu  = m.entities.filter((e) => (e.teamId ?? "").includes("SANGMU"));
+    const rookies = m.entities.filter(
+      (e) => e.role === "player" && (e as EntityRow & { grade?: number }).grade === 1,
+    );
+    const sangmu = m.entities.filter((e) => (e.teamId ?? "").includes("SANGMU"));
     c.info(`1학년 ${rookies.length} · 상무 소속 ${sangmu.length}`);
     const noName = m.entities.filter((e) => !e.name || e.name.trim() === "");
     c.ok("이름 빈 엔티티 없음", noName.length === 0, `${noName.length}건`);
@@ -443,18 +581,31 @@ const S_FARM: Scenario = {
       c.info(`진로 전환 대기 — ${s.leagueId} 시즌 안에서 소속만 ${p.leagueId}로 바뀐 상태다`);
       c.info("  새 리그 일정은 시즌 롤오버에서 열린다. 여기서 어긋나는 게 정상");
     } else {
-      c.ok("주인공 리그 == 시즌 리그", p.leagueId === s.leagueId,
-        `${p.leagueId} vs ${s.leagueId} — 시즌 중 소속이 바뀌었는데 일정이 안 따라왔다`);
+      c.ok(
+        "주인공 리그 == 시즌 리그",
+        p.leagueId === s.leagueId,
+        `${p.leagueId} vs ${s.leagueId} — 시즌 중 소속이 바뀌었는데 일정이 안 따라왔다`,
+      );
 
       const mine = s.schedule.filter((e) => e.homeTeamId === p.teamId || e.awayTeamId === p.teamId);
-      c.ok("일정에 내 팀 경기가 있다", mine.length > 0,
-        `0경기 — 소속팀(${p.teamId})이 이 리그 일정에 없다`);
+      c.ok(
+        "일정에 내 팀 경기가 있다",
+        mine.length > 0,
+        `0경기 — 소속팀(${p.teamId})이 이 리그 일정에 없다`,
+      );
       c.info(`내 팀 경기 ${mine.length}건 / 전체 ${s.schedule.length}건`);
 
-      const teamIds = new Set(get(masterStore).teams.filter((t) => t.leagueId === s.leagueId).map((t) => t.id));
+      const teamIds = new Set(
+        get(masterStore)
+          .teams.filter((t) => t.leagueId === s.leagueId)
+          .map((t) => t.id),
+      );
       if (teamIds.size > 0) {
-        c.ok("소속팀이 이 리그 소속이다", teamIds.has(p.teamId),
-          `${p.teamId}는 ${s.leagueId} 소속이 아니다`);
+        c.ok(
+          "소속팀이 이 리그 소속이다",
+          teamIds.has(p.teamId),
+          `${p.teamId}는 ${s.leagueId} 소속이 아니다`,
+        );
       }
     }
 
@@ -462,9 +613,11 @@ const S_FARM: Scenario = {
     const st = staffStatsOf(p.teamId, get(masterStore).entities);
     c.ok("소속팀 스태프 능력치 조회", !!st);
     c.info(`지도력 ${st.teaching} · 전술 ${st.tacticalIQ} · 불펜운용 ${st.bullpenRead}`);
-    c.ok("스태프 값이 기본값 50에만 머물지 않는다",
+    c.ok(
+      "스태프 값이 기본값 50에만 머물지 않는다",
       !(st.teaching === 50 && st.tacticalIQ === 50 && st.bullpenRead === 50),
-      "전부 50 — 소속팀 스태프를 못 찾고 기본값으로 도는 상태다");
+      "전부 50 — 소속팀 스태프를 못 찾고 기본값으로 도는 상태다",
+    );
   },
 };
 
@@ -486,20 +639,33 @@ const S_LEAGUES: Scenario = {
     for (const [lid, ls] of Object.entries(s.leagueState)) {
       if (hasPlayedGames(ls)) played.push(lid);
     }
-    c.info(`경기가 도는 리그 ${played.length}종: ${played.map((l) => l.replace("LEAGUE_", "")).join(" ")}`);
+    c.info(
+      `경기가 도는 리그 ${played.length}종: ${played.map((l) => l.replace("LEAGUE_", "")).join(" ")}`,
+    );
 
     for (const lid of played) {
-      if (!isLeagueInScope(lid)) { c.info(`${lid}: 출시 범위 밖 — 안 보이는 게 맞다`); continue; }
-      c.ok(`${lid.replace("LEAGUE_", "")} 순위표에 보인다`, visible.has(lid),
-        "경기가 도는데 화면 목록에 없다");
+      if (!isLeagueInScope(lid)) {
+        c.info(`${lid}: 출시 범위 밖 — 안 보이는 게 맞다`);
+        continue;
+      }
+      c.ok(
+        `${lid.replace("LEAGUE_", "")} 순위표에 보인다`,
+        visible.has(lid),
+        "경기가 도는데 화면 목록에 없다",
+      );
       c.ok(`${lid.replace("LEAGUE_", "")} 리더보드에 보인다`, lb.has(lid));
     }
 
     // 주인공 리그는 경기 수와 무관하게 항상 보여야 한다 (2군 강등 포함)
-    c.ok("주인공 리그가 순위표에 보인다", visible.has(myLeagueId),
-      `${myLeagueId} — 강등되면 자기 리그를 못 보는 상태다`);
-    c.ok("주인공 리그가 리더보드 맨 앞이다",
-      leaderboardLeagueIds({ leagueState: s.leagueState, myLeagueId })[0] === myLeagueId);
+    c.ok(
+      "주인공 리그가 순위표에 보인다",
+      visible.has(myLeagueId),
+      `${myLeagueId} — 강등되면 자기 리그를 못 보는 상태다`,
+    );
+    c.ok(
+      "주인공 리그가 리더보드 맨 앞이다",
+      leaderboardLeagueIds({ leagueState: s.leagueState, myLeagueId })[0] === myLeagueId,
+    );
 
     // 범위 밖 리그가 새어나오지 않는가
     const leaked = [...visible].filter((lid) => !isLeagueInScope(lid));
@@ -512,27 +678,38 @@ const S_LEAGUES: Scenario = {
     const stadiums = new Map(get(masterStore).stadiums.map((x) => [x.id, x.name]));
     const sName = (id: string) => stadiums.get(id) ?? id.replace(/^STADIUM_/, "");
     for (const [lid, expectGroups] of [
-      ["LEAGUE_HIGHSCHOOL", 8], ["LEAGUE_UNIVERSITY", 5],
+      ["LEAGUE_HIGHSCHOOL", 8],
+      ["LEAGUE_UNIVERSITY", 5],
     ] as [string, number][]) {
       const st = s.leagueState[lid]?.standings ?? [];
-      if (st.length === 0) { c.info(`${lid}: 순위표 없음 — 건너뜀`); continue; }
+      if (st.length === 0) {
+        c.info(`${lid}: 순위표 없음 — 건너뜀`);
+        continue;
+      }
       const parts = splitByGroup(lid, st, sName);
-      c.ok(`${lid.replace("LEAGUE_", "")} 순위표가 ${expectGroups}개로 쪼개진다`,
-        parts.length === expectGroups, `${parts.length}개: ${parts.map((p) => p.label).join(" ")}`);
-      c.ok(`  ${lid.replace("LEAGUE_", "")} 미분류 팀 없음`,
+      c.ok(
+        `${lid.replace("LEAGUE_", "")} 순위표가 ${expectGroups}개로 쪼개진다`,
+        parts.length === expectGroups,
+        `${parts.length}개: ${parts.map((p) => p.label).join(" ")}`,
+      );
+      c.ok(
+        `  ${lid.replace("LEAGUE_", "")} 미분류 팀 없음`,
         !parts.some((p) => p.label === "미분류"),
-        "권역·조에 안 잡힌 팀이 있다 — refs와 그룹 정의가 어긋났다");
+        "권역·조에 안 잡힌 팀이 있다 — refs와 그룹 정의가 어긋났다",
+      );
       const total = parts.reduce((a, p) => a + p.rows.length, 0);
-      c.ok(`  ${lid.replace("LEAGUE_", "")} 팀이 새거나 겹치지 않는다`, total === st.length,
-        `${total} vs ${st.length}`);
+      c.ok(
+        `  ${lid.replace("LEAGUE_", "")} 팀이 새거나 겹치지 않는다`,
+        total === st.length,
+        `${total} vs ${st.length}`,
+      );
       c.info(`  ${parts.map((p) => `${p.label}:${p.rows.length}`).join(" ")}`);
     }
 
     // 프로는 10팀이라 통짜가 맞다 — 쪼개면 5팀짜리 표 두 개가 된다
     const kbl = s.leagueState["LEAGUE_KBL"]?.standings ?? [];
     if (kbl.length > 0) {
-      c.ok("프로 1군은 통짜 한 표다",
-        splitByGroup("LEAGUE_KBL", kbl, sName).length === 1);
+      c.ok("프로 1군은 통짜 한 표다", splitByGroup("LEAGUE_KBL", kbl, sName).length === 1);
     }
   },
 };
@@ -545,7 +722,10 @@ const S_TOURNAMENT: Scenario = {
   async run(c) {
     const s = get(seasonStore);
     const brackets = Object.values(s.tournaments ?? {});
-    if (brackets.length === 0) { c.skip("아직 열린 대회가 없다 — W2를 지나야 한다"); return; }
+    if (brackets.length === 0) {
+      c.skip("아직 열린 대회가 없다 — W2를 지나야 한다");
+      return;
+    }
 
     c.info(`열린 대회 ${brackets.length}개`);
     // ⚠ 이 검사가 잡는 것: **대진은 확정됐는데 일정에 없는 라운드.**
@@ -561,17 +741,23 @@ const S_TOURNAMENT: Scenario = {
       const orphan = ready.filter((m) => !scheduled.has(m.id));
       if (orphan.length > 0) {
         stuck++;
-        c.problems.push(`✗ ${b.tournamentId} R${orphan[0].round}: 대진 확정 ${orphan.length}경기가 일정에 없다`);
+        c.problems.push(
+          `✗ ${b.tournamentId} R${orphan[0].round}: 대진 확정 ${orphan.length}경기가 일정에 없다`,
+        );
       }
     }
     c.ok("대진 확정 경기가 전부 일정에 있다", stuck === 0);
 
     // 주차가 지났는데 안 치러진 대회 경기 — 있으면 그 대회는 멈춘 것이다
-    const overdue = s.schedule.filter(
-      (e) => e.isTournament && !e.result && e.week < s.currentWeek,
+    const overdue = s.schedule.filter((e) => e.isTournament && !e.result && e.week < s.currentWeek);
+    c.ok(
+      "주차 지난 미처리 대회 경기 없음",
+      overdue.length === 0,
+      `${overdue.length}건: ${overdue
+        .slice(0, 3)
+        .map((e) => `${e.id}(w${e.week})`)
+        .join(" ")}`,
     );
-    c.ok("주차 지난 미처리 대회 경기 없음", overdue.length === 0,
-      `${overdue.length}건: ${overdue.slice(0, 3).map((e) => `${e.id}(w${e.week})`).join(" ")}`);
 
     // 기간이 끝난 대회는 우승팀이 나와야 한다
     const done = brackets.filter((b) => {
@@ -587,8 +773,17 @@ const S_TOURNAMENT: Scenario = {
 };
 
 const SCENARIOS: Scenario[] = [
-  S_NEWGAME, S_DRAFT, S_FINANCE, S_INVEST, S_CONTRACT,
-  S_MAILBOX, S_RELATION, S_DETAIL, S_FARM, S_LEAGUES, S_TOURNAMENT,
+  S_NEWGAME,
+  S_DRAFT,
+  S_FINANCE,
+  S_INVEST,
+  S_CONTRACT,
+  S_MAILBOX,
+  S_RELATION,
+  S_DETAIL,
+  S_FARM,
+  S_LEAGUES,
+  S_TOURNAMENT,
 ];
 
 // ── 러너 ─────────────────────────────────────────────────────────
@@ -598,8 +793,14 @@ export async function runDevScenarios(
   const consoleErrors: string[] = [];
   const origError = console.error;
   const origWarn = console.warn;
-  console.error = (...a: unknown[]) => { consoleErrors.push(`[error] ${a.map(String).join(" ")}`); origError(...a); };
-  console.warn  = (...a: unknown[]) => { consoleErrors.push(`[warn]  ${a.map(String).join(" ")}`); origWarn(...a); };
+  console.error = (...a: unknown[]) => {
+    consoleErrors.push(`[error] ${a.map(String).join(" ")}`);
+    origError(...a);
+  };
+  console.warn = (...a: unknown[]) => {
+    consoleErrors.push(`[warn]  ${a.map(String).join(" ")}`);
+    origWarn(...a);
+  };
 
   const results: ScenarioResult[] = [];
   try {
@@ -614,11 +815,19 @@ export async function runDevScenarios(
         // 예외 자체가 결과다 — `curYear` ReferenceError가 정확히 이렇게 잡힌다
         c.problems.push(`✗ 예외: ${e instanceof Error ? `${e.name}: ${e.message}` : String(e)}`);
         if (e instanceof Error && e.stack) {
-          c.problems.push(`   ${e.stack.split("\n").slice(1, 4).map((l) => l.trim()).join(" | ")}`);
+          c.problems.push(
+            `   ${e.stack
+              .split("\n")
+              .slice(1, 4)
+              .map((l) => l.trim())
+              .join(" | ")}`,
+          );
         }
       }
       results.push({
-        id: sc.id, title: sc.title, eyeOnly: sc.eyeOnly,
+        id: sc.id,
+        title: sc.title,
+        eyeOnly: sc.eyeOnly,
         status: c.problems.length > 0 ? "fail" : c.skipped ? "skip" : "pass",
         notes: c.skipped ? [...c.notes, `⊘ 건너뜀: ${c.skipped}`] : c.notes,
         problems: c.problems,
@@ -643,17 +852,28 @@ export async function runDevScenarios(
     `${g.protagonist.grade ? ` ${g.protagonist.grade}학년` : ""} · ${g.protagonist.teamId}` +
     ` · NPC ${g.npcs.length} · 엔티티 ${get(masterStore).entities.length}`;
 
-  return { ranAt: new Date().toISOString(), context, results, consoleErrors, summary, text: buildText(results, context, consoleErrors, summary) };
+  return {
+    ranAt: new Date().toISOString(),
+    context,
+    results,
+    consoleErrors,
+    summary,
+    text: buildText(results, context, consoleErrors, summary),
+  };
 }
 
 function buildText(
-  results: ScenarioResult[], context: string,
-  consoleErrors: string[], summary: { pass: number; fail: number; skip: number },
+  results: ScenarioResult[],
+  context: string,
+  consoleErrors: string[],
+  summary: { pass: number; fail: number; skip: number },
 ): string {
   const L: string[] = [];
   const bar = "─".repeat(72);
   L.push(bar);
-  L.push(`테스트 시나리오 결과   통과 ${summary.pass} · 실패 ${summary.fail} · 건너뜀 ${summary.skip}`);
+  L.push(
+    `테스트 시나리오 결과   통과 ${summary.pass} · 실패 ${summary.fail} · 건너뜀 ${summary.skip}`,
+  );
   L.push(`상태: ${context}`);
   L.push(bar);
 

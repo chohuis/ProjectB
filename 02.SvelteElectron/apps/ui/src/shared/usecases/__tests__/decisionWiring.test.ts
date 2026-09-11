@@ -27,7 +27,7 @@ describe("승패·선발 등판 배선", () => {
   const GS = read("apps/ui/src/shared/utils/gameSimulator.ts");
 
   it("match_engine이 decision을 비워 두지 않는다", () => {
-    expect(ME.includes('decision: String::new()')).toBe(false);
+    expect(ME.includes("decision: String::new()")).toBe(false);
   });
 
   /** ⚠ 규칙은 한 곳이다 — 여기서 다시 적으면 주인공과 NPC가 갈린다 */
@@ -56,13 +56,14 @@ describe("승패·선발 등판 배선", () => {
   });
 
   it("주인공 라인도 선발 여부를 싣는다", () => {
-    expect(read("apps/ui/src/shared/usecases/applyGameOutcome.ts"))
-      .toContain('gs: role === "SP"');
+    expect(read("apps/ui/src/shared/usecases/applyGameOutcome.ts")).toContain('gs: role === "SP"');
   });
 
   /** 🔴 마무리가 큐에 두 번 들어가면 6~7회에 소모되고 9회에 없다 */
   it("마무리를 큐에 두 번 싣지 않는다", () => {
     expect(GS).toContain("const queueOf = (");
-    expect(GS.includes("...params.homeBullpen,\n                        ...(params.homeCloser")).toBe(false);
+    expect(
+      GS.includes("...params.homeBullpen,\n                        ...(params.homeCloser"),
+    ).toBe(false);
   });
 });

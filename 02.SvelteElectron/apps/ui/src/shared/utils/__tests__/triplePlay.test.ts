@@ -19,7 +19,10 @@ import { logLabel, logClass, isOutInPlay } from "../matchResult";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 const stripComments = (s: string) =>
-  s.split("\n").filter((ln) => !ln.trimStart().startsWith("//")).join("\n");
+  s
+    .split("\n")
+    .filter((ln) => !ln.trimStart().startsWith("//"))
+    .join("\n");
 
 describe("삼중살 엔진", () => {
   const me = read("packages/engine-native/src/match_engine.rs");
@@ -42,7 +45,9 @@ describe("삼중살 엔진", () => {
   });
 
   it("주자가 다 죽는다", () => {
-    expect(me.includes("        return (3, MatchRunners { first: None, second: None, third: None });")).toBe(true);
+    expect(
+      me.includes("        return (3, MatchRunners { first: None, second: None, third: None });"),
+    ).toBe(true);
   });
 
   it("드문 사건이다 — 실제 KBO는 시즌 0~2건", () => {
@@ -58,7 +63,9 @@ describe("삼중살 엔진", () => {
     // ③ 타수
     expect(code.includes("DoublePlay | TriplePlay | FieldingError => { b.ab += 1; }")).toBe(true);
     // ④ 히트앤런이 낮춘다 — 안 그러면 작전을 걸고도 주자 둘이 죽는다
-    expect(code.includes("PitchResultCode::DoublePlay | PitchResultCode::TriplePlay => {")).toBe(true);
+    expect(code.includes("PitchResultCode::DoublePlay | PitchResultCode::TriplePlay => {")).toBe(
+      true,
+    );
   });
 });
 
@@ -76,10 +83,12 @@ describe("삼중살 화면", () => {
 
   it("수비 위치를 붙여 읽는다", () => {
     const label = logLabel("TRIPLE_PLAY", {
-      hitType: "groundBall", zone: "SS", hardness: 3,
+      hitType: "groundBall",
+      zone: "SS",
+      hardness: 3,
     } as never);
     expect(label.includes("삼중살")).toBe(true);
-    expect(label).not.toBe("삼중살!!");   // 위치가 붙었다
+    expect(label).not.toBe("삼중살!!"); // 위치가 붙었다
   });
 
   it("타구 정보가 없으면 지어내지 않는다", () => {

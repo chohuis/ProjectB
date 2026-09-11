@@ -23,22 +23,60 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 const P: PitchingAttributes = {
-  ovr: 0, stamina: 58, velocity: 52, command: 60, control: 55,
-  movement: 50, mentality: 57, recovery: 55, clutch: 50, holdRunners: 50,
+  ovr: 0,
+  stamina: 58,
+  velocity: 52,
+  command: 60,
+  control: 55,
+  movement: 50,
+  mentality: 57,
+  recovery: 55,
+  clutch: 50,
+  holdRunners: 50,
 };
 const B: BattingAttributes = {
-  ovr: 0, contact: 35, power: 28, eye: 32, discipline: 30, speed: 50,
-  baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30,
+  ovr: 0,
+  contact: 35,
+  power: 28,
+  eye: 32,
+  discipline: 30,
+  speed: 50,
+  baseInstinct: 50,
+  bunting: 45,
+  platoon: 50,
+  fielding: 45,
+  arm: 55,
+  battingClutch: 30,
 };
 
 describe("OVR 식", () => {
   it("가중합을 나눈 값이다", () => {
     // 손으로 한 번 더 셈한다 — 식이 바뀌면 여기가 먼저 걸린다
-    const p = (52 * 2.5 + 60 * 2.5 + 55 * 2.0 + 50 * 1.5 + 58 * 1.5
-      + 57 * 1.0 + 55 * 0.5 + 50 * 0.3 + 50 * 0.2) / 12.0;
+    const p =
+      (52 * 2.5 +
+        60 * 2.5 +
+        55 * 2.0 +
+        50 * 1.5 +
+        58 * 1.5 +
+        57 * 1.0 +
+        55 * 0.5 +
+        50 * 0.3 +
+        50 * 0.2) /
+      12.0;
     expect(pitchingOvrOf(P)).toBe(Math.round(p));
-    const b = (35 * 2.0 + 28 * 1.8 + 32 * 1.5 + 30 * 1.2 + 50 * 1.3 + 50 * 0.7
-      + 45 * 0.3 + 50 * 0.3 + 45 * 1.3 + 55 * 0.8 + 30 * 0.6) / 11.8;
+    const b =
+      (35 * 2.0 +
+        28 * 1.8 +
+        32 * 1.5 +
+        30 * 1.2 +
+        50 * 1.3 +
+        50 * 0.7 +
+        45 * 0.3 +
+        50 * 0.3 +
+        45 * 1.3 +
+        55 * 0.8 +
+        30 * 0.6) /
+      11.8;
     expect(battingOvrOf(B)).toBe(Math.round(b));
   });
 
@@ -64,17 +102,31 @@ describe("OVR 식", () => {
   it("Rust 와 계수가 같다", () => {
     const GE = read("packages/engine-native/src/growth_engine.rs");
     for (const [stat, w] of [
-      ["velocity", "2.5"], ["command", "2.5"], ["control", "2.0"], ["movement", "1.5"],
-      ["stamina", "1.5"], ["mentality", "1.0"], ["recovery", "0.5"],
-      ["clutch", "0.3"], ["hold_runners", "0.2"],
+      ["velocity", "2.5"],
+      ["command", "2.5"],
+      ["control", "2.0"],
+      ["movement", "1.5"],
+      ["stamina", "1.5"],
+      ["mentality", "1.0"],
+      ["recovery", "0.5"],
+      ["clutch", "0.3"],
+      ["hold_runners", "0.2"],
     ] as const) {
       expect(GE).toContain(`p.${stat}`);
       expect(GE).toContain(`* ${w}`);
     }
     for (const [stat, w] of [
-      ["contact", "2.0"], ["power", "1.8"], ["eye", "1.5"], ["discipline", "1.2"],
-      ["speed", "1.3"], ["base_instinct", "0.7"], ["bunting", "0.3"],
-      ["platoon", "0.3"], ["fielding", "1.3"], ["arm", "0.8"], ["batting_clutch", "0.6"],
+      ["contact", "2.0"],
+      ["power", "1.8"],
+      ["eye", "1.5"],
+      ["discipline", "1.2"],
+      ["speed", "1.3"],
+      ["base_instinct", "0.7"],
+      ["bunting", "0.3"],
+      ["platoon", "0.3"],
+      ["fielding", "1.3"],
+      ["arm", "0.8"],
+      ["batting_clutch", "0.6"],
     ] as const) {
       expect(GE).toContain(`b.${stat}`);
       expect(GE).toContain(`* ${w}`);

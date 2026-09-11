@@ -31,8 +31,7 @@ describe("진로 결과 — 체육부대 갈래는 없다", () => {
   it("`sportsMilitaryPassed` 를 읽지 않는다", () => {
     // 주석에는 남는다 — 왜 지웠는지가 사라지면 다음 사람이 또 넣는다
     const code = MODAL.replace(/\/\/.*$/gm, "").replace(/<!--[\s\S]*?-->/g, "");
-    expect(code, "죽은 필드를 다시 읽고 있다")
-      .not.toMatch(/sportsMilitaryPassed/);
+    expect(code, "죽은 필드를 다시 읽고 있다").not.toMatch(/sportsMilitaryPassed/);
   });
 
   it("`hasSports` 갈래가 없다", () => {
@@ -50,8 +49,9 @@ describe("진짜 체육부대 경로는 그대로다", () => {
   const ADVANCE = read("apps/ui/src/shared/usecases/advanceWeek.ts");
 
   it("`sportsUnitApplied` 로 W50 결과를 처리한다", () => {
-    expect(ADVANCE, "체육부대 결과 처리가 사라졌다")
-      .toMatch(/MILITARY_RESULT_WEEK && p\.sportsUnitApplied/);
+    expect(ADVANCE, "체육부대 결과 처리가 사라졌다").toMatch(
+      /MILITARY_RESULT_WEEK && p\.sportsUnitApplied/,
+    );
   });
 
   it("후보 공개(W46)가 살아 있다", () => {
@@ -63,7 +63,8 @@ describe("진짜 체육부대 경로는 그대로다", () => {
    *   C 가 2주차에 빠진 걸 찾아 채웠다 — 없으면 위 W50 갈래가 안 돈다.
    */
   it("새 게임이 `sportsUnitApplied` 를 넣는다", () => {
-    expect(read("apps/ui/src/pages/new-game/NewGamePage.svelte"))
-      .toMatch(/sportsUnitApplied: false/);
+    expect(read("apps/ui/src/pages/new-game/NewGamePage.svelte")).toMatch(
+      /sportsUnitApplied: false/,
+    );
   });
 });

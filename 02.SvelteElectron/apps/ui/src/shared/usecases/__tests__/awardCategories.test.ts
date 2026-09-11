@@ -19,9 +19,8 @@ import type { PlayerSeasonStats } from "../../types/save";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const RULES = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-).awardRules as AwardRules;
+const RULES = JSON.parse(read("resource/data/master/players/generation_rules.json"))
+  .awardRules as AwardRules;
 
 describe("수상 부문", () => {
   it("KBO 부문이 다 있다", () => {
@@ -53,10 +52,24 @@ describe("수상 부문", () => {
 
   /** 비율 부문은 야구 관습 표기다 — `.312` / 장타율 1.0 이상은 앞자리를 살린다 */
   it("비율 부문 표기", () => {
-    const mk = (o: Partial<PlayerSeasonStats>) => ({
-      type: "batter", g: 100, pa: 300, ab: 250, h: 80, hr: 10, rbi: 40,
-      sb: 10, bb: 40, k: 50, avg: 0.32, obp: 0.4, slg: 0.55, ops: 0.95, ...o,
-    } as PlayerSeasonStats);
+    const mk = (o: Partial<PlayerSeasonStats>) =>
+      ({
+        type: "batter",
+        g: 100,
+        pa: 300,
+        ab: 250,
+        h: 80,
+        hr: 10,
+        rbi: 40,
+        sb: 10,
+        bb: 40,
+        k: 50,
+        avg: 0.32,
+        obp: 0.4,
+        slg: 0.55,
+        ops: 0.95,
+        ...o,
+      }) as PlayerSeasonStats;
     const w = computeAwards(RULES, { P1: mk({}), P2: mk({ avg: 0.28, obp: 0.35, slg: 0.46 }) });
     expect(w.find((x) => x.defId === "obp")?.valueText).toBe(".400");
     expect(w.find((x) => x.defId === "slg")?.valueText).toBe(".550");
@@ -65,17 +78,27 @@ describe("수상 부문", () => {
   /** 🔴 삼진 코드가 좁혀진 뒤 누적이 옛 이름을 보고 있었다 */
   it("엔진이 좁혀진 삼진 코드를 센다", () => {
     const ME = read("packages/engine-native/src/match_engine.rs");
-    expect(ME).toContain("PitchResultCode::StrikeoutSwing | PitchResultCode::StrikeoutLook\n                        => line.k += 1,");
-    expect(ME).toContain("StrikeoutSwing | StrikeoutLook => {\n                        b.ab += 1; b.k += 1;");
+    expect(ME).toContain(
+      "PitchResultCode::StrikeoutSwing | PitchResultCode::StrikeoutLook\n                        => line.k += 1,",
+    );
+    expect(ME).toContain(
+      "StrikeoutSwing | StrikeoutLook => {\n                        b.ab += 1; b.k += 1;",
+    );
     // 옛 갈래가 돌아오지 않는다
-    expect(ME.includes("PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook\n                        if cnt_reset => line.k += 1,")).toBe(false);
+    expect(
+      ME.includes(
+        "PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook\n                        if cnt_reset => line.k += 1,",
+      ),
+    ).toBe(false);
   });
 
   /** 🔴 도루는 로그만 남기고 기록을 안 남겼다 */
   it("엔진이 도루를 기록한다", () => {
     const ME = read("packages/engine-native/src/match_engine.rs");
     expect(ME).toContain("if let Some(id) = r.player_id.clone() { stole.push(id); }");
-    expect(ME).toContain("if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.sb += 1; }");
+    expect(ME).toContain(
+      "if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.sb += 1; }",
+    );
   });
 
   /** 승률은 파생값이다 — 저장된 값을 안 믿는다 */

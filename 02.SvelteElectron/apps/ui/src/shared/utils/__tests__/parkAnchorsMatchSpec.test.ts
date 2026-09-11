@@ -18,13 +18,21 @@ import { PARK_COORDS, PARK_VIEWBOX, PARK_SPRITE_OFFSETS, type ParkTier } from ".
 
 const TIERS: ParkTier[] = ["pro", "university", "highschool"];
 const FIELD: Array<[keyof typeof PARK_COORDS.pro.field, string]> = [
-  ["home", "HOME"], ["first", "B1"], ["second", "B2"], ["third", "B3"], ["mound", "P"],
+  ["home", "HOME"],
+  ["first", "B1"],
+  ["second", "B2"],
+  ["third", "B3"],
+  ["mound", "P"],
 ];
 
 type XY = [number, number];
-const tiers = spec.tiers as unknown as Record<string, {
-  field: Record<string, XY>; defense: Record<string, XY>;
-}>;
+const tiers = spec.tiers as unknown as Record<
+  string,
+  {
+    field: Record<string, XY>;
+    defense: Record<string, XY>;
+  }
+>;
 
 describe("parkAnchors.ts가 정본과 같은가", () => {
   it.each(TIERS)("%s — 베이스와 투수판이 정본 그대로다", (tier) => {
@@ -40,8 +48,9 @@ describe("parkAnchors.ts가 정본과 같은가", () => {
     const m = tiers[tier].defense;
     expect(d.length).toBe(Object.keys(m).length);
     for (const one of d) {
-      expect([one.x, one.y], `${tier}.${one.pos} — 정본 ${JSON.stringify(m[one.pos])}`)
-        .toEqual(m[one.pos]);
+      expect([one.x, one.y], `${tier}.${one.pos} — 정본 ${JSON.stringify(m[one.pos])}`).toEqual(
+        m[one.pos],
+      );
     }
   });
 
@@ -49,11 +58,14 @@ describe("parkAnchors.ts가 정본과 같은가", () => {
     expect(PARK_VIEWBOX.width).toBe(spec.coordSpace.width);
     expect(PARK_VIEWBOX.height).toBe(spec.coordSpace.height);
     const so = spec.spriteOffsets as unknown as {
-      batter: { dx: number; dy: number }; runner: Record<string, XY>;
+      batter: { dx: number; dy: number };
+      runner: Record<string, XY>;
     };
     expect(PARK_SPRITE_OFFSETS.batter).toEqual(so.batter);
     const R: Array<[keyof typeof PARK_SPRITE_OFFSETS.runner, string]> = [
-      ["first", "B1"], ["second", "B2"], ["third", "B3"],
+      ["first", "B1"],
+      ["second", "B2"],
+      ["third", "B3"],
     ];
     for (const [k, K] of R) {
       const r = PARK_SPRITE_OFFSETS.runner[k];

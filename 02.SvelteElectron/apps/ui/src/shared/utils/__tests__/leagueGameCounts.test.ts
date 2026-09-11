@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
-  DEFAULT_LEAGUE_CONFIGS, ALL_TEAMS_BY_LEAGUE,
-  PRO_START_WEEK, PRO_END_WEEK,
+  DEFAULT_LEAGUE_CONFIGS,
+  ALL_TEAMS_BY_LEAGUE,
+  PRO_START_WEEK,
+  PRO_END_WEEK,
 } from "../leagueScheduler";
 
 /**
@@ -47,7 +49,8 @@ describe("2군은 1군보다 적게 뛴다", () => {
   ];
 
   it.each(PAIRS)("%s 2군이 1군보다 적다", (first, farm) => {
-    const a = perTeam(first), b = perTeam(farm);
+    const a = perTeam(first),
+      b = perTeam(farm);
     expect(b, `1군 ${a} · 2군 ${b}`).toBeLessThan(a);
   });
 
@@ -63,10 +66,12 @@ describe("2군은 1군보다 적게 뛴다", () => {
 
 describe("설정이 팀 목록과 어긋나지 않는다", () => {
   it.each(DEFAULT_LEAGUE_CONFIGS.map((c) => c.leagueId))(
-      "%s 설정의 팀이 ALL_TEAMS_BY_LEAGUE와 같다", (lid) => {
-    const cfg = DEFAULT_LEAGUE_CONFIGS.find((c) => c.leagueId === lid)!;
-    expect(cfg.teams.length).toBe((ALL_TEAMS_BY_LEAGUE[lid] ?? []).length);
-  });
+    "%s 설정의 팀이 ALL_TEAMS_BY_LEAGUE와 같다",
+    (lid) => {
+      const cfg = DEFAULT_LEAGUE_CONFIGS.find((c) => c.leagueId === lid)!;
+      expect(cfg.teams.length).toBe((ALL_TEAMS_BY_LEAGUE[lid] ?? []).length);
+    },
+  );
 
   it("팀 수가 짝수다 — 홀수면 매 경기일에 한 팀이 논다", () => {
     for (const c of DEFAULT_LEAGUE_CONFIGS) {
@@ -93,7 +98,7 @@ describe("정규 기간이 실제 야구와 같은 밀도인가", () => {
     // 🔴 예전엔 W1~50이라 주 2.9였다. 경기 수는 실제와 같은데 기간이 두 배였다
     for (const lid of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
       const cfg = DEFAULT_LEAGUE_CONFIGS.find((c) => c.leagueId === lid)!;
-      const per = (cfg.teams.length - 1) * cfg.cycles / WEEKS;
+      const per = ((cfg.teams.length - 1) * cfg.cycles) / WEEKS;
       expect(per, `${lid} 주 ${per.toFixed(2)}경기`).toBeGreaterThanOrEqual(5.5);
       expect(per, `${lid} 주 ${per.toFixed(2)}경기`).toBeLessThanOrEqual(6.5);
     }
@@ -105,7 +110,7 @@ describe("정규 기간이 실제 야구와 같은 밀도인가", () => {
     // 원본(MLB)도 주 6.2로 6을 살짝 넘는다
     for (const lid of ["LEAGUE_KBL", "LEAGUE_JBL"]) {
       const cfg = DEFAULT_LEAGUE_CONFIGS.find((c) => c.leagueId === lid)!;
-      const per = (cfg.teams.length - 1) * cfg.cycles / WEEKS;
+      const per = ((cfg.teams.length - 1) * cfg.cycles) / WEEKS;
       expect(per, `${lid} 주 ${per.toFixed(2)}`).toBeLessThanOrEqual(6.0);
     }
   });

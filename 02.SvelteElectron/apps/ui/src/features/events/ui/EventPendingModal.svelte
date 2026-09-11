@@ -2,7 +2,12 @@
   import type { PendingAction } from "../../../shared/types/season";
   import { resolveEventPending } from "../../../shared/usecases/runAutoAdvance";
   import EventTierChip from "./EventTierChip.svelte";
-  import { hidesNumbers, kindOnlyHint, costKindHint, COST_LEAD } from "../../../shared/utils/eventTierCopy";
+  import {
+    hidesNumbers,
+    kindOnlyHint,
+    costKindHint,
+    COST_LEAD,
+  } from "../../../shared/utils/eventTierCopy";
 
   /**
    * `type: "event"` pending 을 그리는 유일한 자리 (C-13 · HANDOFF_A_TO_C §0.48).
@@ -63,7 +68,12 @@
       <div class="choices">
         {#each choices as c (c.id)}
           <!-- `opt` 는 scripts/drive.mjs 가 "선택 대기의 선택지"로 알아보는 훅 — 소식의 결정 버튼과 같은 이름이라 드라이버가 첫 선택지를 고르고 넘어간다 -->
-          <button class="choice opt" type="button" disabled={resolving} on:click={() => choose(c.id)}>
+          <button
+            class="choice opt"
+            type="button"
+            disabled={resolving}
+            on:click={() => choose(c.id)}
+          >
             <span class="label">{c.label}</span>
             <!-- ⚠ **`effectHint` 를 깎지 않는다.** 유니크·히든이면 그 문장을 아예
                  안 쓰고 효과 객체에서 종류를 다시 짓는다(`kindOnlyHint`) — 문자열을
@@ -80,46 +90,116 @@
     {:else}
       <!-- 선택지가 없는 이벤트 — 읽고 넘긴다. resolveEventPending 은 choices[0] 폴백이라 빈 배열이어도 pending 을 지운다 -->
       <div class="actions">
-        <button class="choice single" type="button" disabled={resolving} on:click={() => choose("")}>확인</button>
+        <button class="choice single" type="button" disabled={resolving} on:click={() => choose("")}
+          >확인</button
+        >
       </div>
     {/if}
   </div>
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display: flex; align-items: center; justify-content: center; z-index: 245; }
-  .modal {
-    width: min(520px, 92vw); max-height: 88vh; overflow-y: auto;
-    background: var(--panel); color: var(--ink);
-    border: 1px solid var(--line); border-top: 4px solid var(--warn); border-radius: var(--radius);
-    padding: 22px 24px; display: grid; gap: 14px;
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 245;
   }
-  .chips { display: flex; align-items: center; gap: 6px; }
-  .chip { margin: 0; font-size: 11px; font-weight: 700; color: var(--warn); letter-spacing: .06em; }
-  h2 { margin: 4px 0 0; font-size: 18px; color: var(--ink); }
-  .body-text { margin: 0; color: var(--ink-mid); font-size: 13.5px; white-space: pre-line; line-height: 1.6; }
+  .modal {
+    width: min(520px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    display: grid;
+    gap: 14px;
+  }
+  .chips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--warn);
+    letter-spacing: 0.06em;
+  }
+  h2 {
+    margin: 4px 0 0;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .body-text {
+    margin: 0;
+    color: var(--ink-mid);
+    font-size: 13.5px;
+    white-space: pre-line;
+    line-height: 1.6;
+  }
   /* 대가는 선택지가 아니라 **조건**이라 갈래와 같은 무게로 그리지 않는다 —
      한 줄 · 왼쪽 띠 · 경고색. 갈래처럼 보이면 누를 수 있는 것으로 읽힌다 */
   .cost {
-    margin: 0; padding: 7px 10px; font-size: 12px; font-weight: 700;
-    color: var(--warn); background: var(--panel-sunk);
-    border-left: 3px solid var(--warn); border-radius: var(--radius);
+    margin: 0;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--warn);
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
   }
-  .choices { display: grid; gap: 8px; }
+  .choices {
+    display: grid;
+    gap: 8px;
+  }
   .choice {
-    display: grid; gap: 3px; text-align: left;
-    border: 1px solid var(--line-strong); border-radius: var(--radius);
-    background: var(--panel-sunk); color: var(--ink);
-    padding: 10px 12px; cursor: pointer;
+    display: grid;
+    gap: 3px;
+    text-align: left;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
+    color: var(--ink);
+    padding: 10px 12px;
+    cursor: pointer;
   }
-  .choice:hover:not(:disabled) { border-color: var(--t-accent); background: var(--panel); }
-  .choice:disabled { opacity: .5; cursor: default; }
-  .choice .label { font-weight: 700; font-size: 13.5px; }
+  .choice:hover:not(:disabled) {
+    border-color: var(--t-accent);
+    background: var(--panel);
+  }
+  .choice:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .choice .label {
+    font-weight: 700;
+    font-size: 13.5px;
+  }
   /* 효과는 숨기지 않는다 — 값을 그대로 적는다 (§27 · effectHint 원칙)
      ⚠ 예외는 유니크·히든뿐이다(§2 「보상 표시: 종류만」) — 그건 감추는 게 아니라
        **크기를 모른 채 고르는 것이 그 등급의 감각**이라는 기획이다 */
-  .choice .hint { color: var(--ink-mute); font-size: 11.5px; }
-  .choice .hint.veil { font-style: italic; }
-  .actions { display: flex; justify-content: flex-end; }
-  .choice.single { text-align: center; padding: 9px 20px; }
+  .choice .hint {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+  }
+  .choice .hint.veil {
+    font-style: italic;
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .choice.single {
+    text-align: center;
+    padding: 9px 20px;
+  }
 </style>

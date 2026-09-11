@@ -24,7 +24,7 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
 const RUST = read("packages/engine-native/src/player_engine.rs");
-const TS   = read("apps/ui/src/shared/utils/faEngine.ts");
+const TS = read("apps/ui/src/shared/utils/faEngine.ts");
 
 describe("해외 제안은 문이 하나다", () => {
   /** 선언 형태로 본다 — 주석에 남은 이름에 걸리지 않게 */

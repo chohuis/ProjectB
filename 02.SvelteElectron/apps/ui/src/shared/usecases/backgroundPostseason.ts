@@ -8,15 +8,16 @@
 // "고교 시절엔 프로 한국시리즈 우승팀 기록이 없다"는 구멍이 생긴다.
 
 import type { PostseasonSeries, SaveSeason, Standing } from "../types/season";
-import { buildFarmBracket, buildKblBracket, resolveNonProtagonistSeries, postseasonSeed } from "../utils/postseasonEngine";
+import {
+  buildFarmBracket,
+  buildKblBracket,
+  resolveNonProtagonistSeries,
+  postseasonSeed,
+} from "../utils/postseasonEngine";
 import { buildLadder, lastRegularStage } from "../utils/survivalLeague";
 
 /** 국내 리그만. 해외(ABL·JBL)는 Lazy 정책대로 진출 전까지 돌리지 않는다 (DESIGN §2.2) */
-const BACKGROUND_LEAGUES = [
-  "LEAGUE_KBL",
-  "LEAGUE_KBL_FARM",
-  "LEAGUE_INDEPENDENT",
-] as const;
+const BACKGROUND_LEAGUES = ["LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_INDEPENDENT"] as const;
 
 export interface BackgroundPostseasonResult {
   leagueId: string;
@@ -41,9 +42,15 @@ function seedStandings(leagueId: string, season: SaveSeason): Standing[] {
     // 3차 Stage 최종 순위가 정본. 순위 자체가 시드라 승률은 자리표시용이다.
     const ranked = season.survival?.finalRanking ?? [];
     return ranked.map((teamId, i) => ({
-      teamId, wins: ranked.length - i, losses: i, draws: 0,
+      teamId,
+      wins: ranked.length - i,
+      losses: i,
+      draws: 0,
       winPct: (ranked.length - i) / ranked.length,
-      runsFor: 0, runsAgainst: 0, streak: "", last10: "",
+      runsFor: 0,
+      runsAgainst: 0,
+      streak: "",
+      last10: "",
     }));
   }
   return season.leagueState?.[leagueId]?.standings ?? [];
@@ -71,7 +78,7 @@ export async function runBackgroundPostseasons(
 
   for (const leagueId of BACKGROUND_LEAGUES) {
     if (leagueId === protagonistLeagueId) continue;
-    if (season.postseasonBrackets?.[leagueId]?.length) continue;   // 이미 치렀다
+    if (season.postseasonBrackets?.[leagueId]?.length) continue; // 이미 치렀다
     if (!regularSeasonDone(leagueId, season)) continue;
 
     const standings = seedStandings(leagueId, season);
@@ -80,8 +87,11 @@ export async function runBackgroundPostseasons(
 
     // 주인공이 없는 리그라 전 시리즈가 한 번에 정리된다
     // 씨앗을 넘긴다 — 안 넘기면 Rust 가 `thread_rng` 라 판마다 다른 팀이 우승한다
-    const resolved = await resolveNonProtagonistSeries(built, protagonistTeamId,
-      postseasonSeed(season.worldSeed ?? 0, season.seasonYear, leagueId, built));
+    const resolved = await resolveNonProtagonistSeries(
+      built,
+      protagonistTeamId,
+      postseasonSeed(season.worldSeed ?? 0, season.seasonYear, leagueId, built),
+    );
     const final = resolved[resolved.length - 1];
     out.push({ leagueId, bracket: resolved, champion: final?.winner ?? null });
   }

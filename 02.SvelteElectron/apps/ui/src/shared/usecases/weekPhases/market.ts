@@ -1140,7 +1140,7 @@ export async function processProTeamCallupCalldown(
     }
   }
 
-  let _callupDbOk = true;
+  const _callupDbOk = true;
   // 🔴 **내려간 주차를 남긴다.** 이걸 안 저장하면 등록말소 기간을 못 잰다 —
   //   `demotionWeek` 는 세이브에도 실린다(앱을 껐다 켜도 유지).
   if (_demotedIds.length > 0) gameStore.markDemotions(_demotedIds, weekNum);

@@ -3,9 +3,16 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseRoleChoiceCopy } from "../../utils/roleChoiceCopy";
 import {
-  buildRoleChoiceMessage, buildRoleConfirmMessage,
-  roleChoiceMessageId, roleChoiceGuardKey, roleConfirmMessageId, parseRoleChoiceGuardKey,
-  roleChoicePolicyPick, aheadOfTeam, positionOfChoice, choiceOfPosition,
+  buildRoleChoiceMessage,
+  buildRoleConfirmMessage,
+  roleChoiceMessageId,
+  roleChoiceGuardKey,
+  roleConfirmMessageId,
+  parseRoleChoiceGuardKey,
+  roleChoicePolicyPick,
+  aheadOfTeam,
+  positionOfChoice,
+  choiceOfPosition,
   type RoleRecommendation,
 } from "../pitcherRole";
 import type { RoleChoiceMetadata } from "../../types/main";
@@ -30,8 +37,14 @@ const REC: RoleRecommendation = { recommended: "sp", ahead: { sp: 2, rp: 4, cp: 
 
 function ask(year: number, teamId: string, week: number) {
   return buildRoleChoiceMessage({
-    copy: COPY, year, teamId, week,
-    reason: "season", stage: "pro", managerName: "한동석", rec: REC,
+    copy: COPY,
+    year,
+    teamId,
+    week,
+    reason: "season",
+    stage: "pro",
+    managerName: "한동석",
+    rec: REC,
   });
 }
 
@@ -47,8 +60,9 @@ describe("소식 id 와 가드 — 같은 세 조각", () => {
     expect(parsed.teamId).toBe("TEAM_KBL_A_1");
     expect(parsed.week).toBe(1);
     // id 와 가드가 같은 셋에서 나온다 — 한쪽만 조각이 빠지면 여기가 깨진다
-    expect(roleChoiceMessageId(parsed.year, parsed.teamId, parsed.week))
-      .toBe("msg-role-2029-TEAM_KBL_A_1-w1");
+    expect(roleChoiceMessageId(parsed.year, parsed.teamId, parsed.week)).toBe(
+      "msg-role-2029-TEAM_KBL_A_1-w1",
+    );
   });
 
   it("1군 → 2군 → 1군 왕복에서 id 가 안 겹친다", () => {
@@ -67,8 +81,9 @@ describe("소식 id 와 가드 — 같은 세 조각", () => {
   });
 
   it("확정 소식 id 는 묻는 소식과 다르다", () => {
-    expect(roleConfirmMessageId(2029, "TEAM_KBL_A_1", 1))
-      .not.toBe(roleChoiceMessageId(2029, "TEAM_KBL_A_1", 1));
+    expect(roleConfirmMessageId(2029, "TEAM_KBL_A_1", 1)).not.toBe(
+      roleChoiceMessageId(2029, "TEAM_KBL_A_1", 1),
+    );
   });
 });
 
@@ -123,8 +138,14 @@ describe("묻는 소식의 모양", () => {
 
   it("무대마다 추천 문안이 갈린다", () => {
     const hs = buildRoleChoiceMessage({
-      copy: COPY, year: 2026, teamId: "TEAM_HS_A", week: 6,
-      reason: "season", stage: "highschool", managerName: "코칭스태프", rec: REC,
+      copy: COPY,
+      year: 2026,
+      teamId: "TEAM_HS_A",
+      week: 6,
+      reason: "season",
+      stage: "highschool",
+      managerName: "코칭스태프",
+      rec: REC,
     });
     expect(hs.body.split("\n")[1]).toBe(COPY.recommend.highschool.SP);
     expect(hs.body.split("\n")[1]).not.toBe(msg.body.split("\n")[1]);
@@ -132,8 +153,14 @@ describe("묻는 소식의 모양", () => {
 
   it("콜업·강등은 머리말이 다르다", () => {
     const up = buildRoleChoiceMessage({
-      copy: COPY, year: 2029, teamId: "TEAM_KBL_A_1", week: 9,
-      reason: "callup", stage: "pro", managerName: "한동석", rec: REC,
+      copy: COPY,
+      year: 2029,
+      teamId: "TEAM_KBL_A_1",
+      week: 9,
+      reason: "callup",
+      stage: "pro",
+      managerName: "한동석",
+      rec: REC,
     });
     expect(up.body.split("\n")[0]).toBe(COPY.lead.callup);
     expect(up.body.split("\n")[0]).not.toBe(COPY.lead.season);
@@ -143,8 +170,14 @@ describe("묻는 소식의 모양", () => {
 describe("확정 소식", () => {
   it("추천대로면 굴절형으로 한 줄", () => {
     const m = buildRoleConfirmMessage({
-      copy: COPY, year: 2029, teamId: "T", week: 1,
-      pick: "rp", recommended: "rp", role: "중간계투", managerName: "한동석",
+      copy: COPY,
+      year: 2029,
+      teamId: "T",
+      week: 1,
+      pick: "rp",
+      recommended: "rp",
+      role: "중간계투",
+      managerName: "한동석",
     });
     expect(m.body).toBe("올해는 중계로 갑니다.");
     // ⚠ 제목의 구분자 대시도 뺀다 (사용자 확정 · B-32 가 데이터에 못 반영하던 자리)
@@ -153,8 +186,14 @@ describe("확정 소식", () => {
 
   it("거스르면 추천을 이름으로만 적는다 — 「감독은 …」 을 안 쓴다", () => {
     const m = buildRoleConfirmMessage({
-      copy: COPY, year: 2029, teamId: "T", week: 1,
-      pick: "cp", recommended: "sp", role: "마무리", managerName: "한동석",
+      copy: COPY,
+      year: 2029,
+      teamId: "T",
+      week: 1,
+      pick: "cp",
+      recommended: "sp",
+      role: "마무리",
+      managerName: "한동석",
     });
     expect(m.body.split("\n")[0]).toBe("추천은 선발이었습니다. 마무리를 택했습니다.");
     expect(m.body.includes("감독은")).toBe(false);
@@ -164,8 +203,14 @@ describe("확정 소식", () => {
   // 🔴 서술격을 코드가 붙이면 「중계이었습니다」가 나온다 — 굴절형 표를 쓰는지 본다
   it("추천이 중계면 「중계였습니다」다", () => {
     const m = buildRoleConfirmMessage({
-      copy: COPY, year: 2029, teamId: "T", week: 1,
-      pick: "sp", recommended: "rp", role: "3선발", managerName: "한동석",
+      copy: COPY,
+      year: 2029,
+      teamId: "T",
+      week: 1,
+      pick: "sp",
+      recommended: "rp",
+      role: "3선발",
+      managerName: "한동석",
     });
     expect(m.body.split("\n")[0]).toBe("추천은 중계였습니다. 선발을 택했습니다.");
     expect(m.body.includes("중계이었습니다")).toBe(false);
@@ -174,14 +219,55 @@ describe("확정 소식", () => {
 
 describe("ahead — 그 자리를 지금 차지한 같은 팀 투수 수", () => {
   const rows = [
-    { id: "A", teamId: "T1", role: "player", status: "active",  details: { player: { playerType: "pitcher", position: "SP" } } },
-    { id: "B", teamId: "T1", role: "player", status: "active",  details: { player: { playerType: "pitcher", position: "SP" } } },
-    { id: "C", teamId: "T1", role: "player", status: "active",  details: { player: { playerType: "pitcher", position: "CP" } } },
-    { id: "D", teamId: "T1", role: "player", status: "retired", details: { player: { playerType: "pitcher", position: "RP" } } },
-    { id: "E", teamId: "T1", role: "player", status: "active",  details: { player: { playerType: "batter",  position: "C"  } } },
-    { id: "F", teamId: "T2", role: "player", status: "active",  details: { player: { playerType: "pitcher", position: "RP" } } },
-    { id: "ME", teamId: "T1", role: "player", status: "active", details: { player: { playerType: "pitcher", position: "SP" } } },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    {
+      id: "A",
+      teamId: "T1",
+      role: "player",
+      status: "active",
+      details: { player: { playerType: "pitcher", position: "SP" } },
+    },
+    {
+      id: "B",
+      teamId: "T1",
+      role: "player",
+      status: "active",
+      details: { player: { playerType: "pitcher", position: "SP" } },
+    },
+    {
+      id: "C",
+      teamId: "T1",
+      role: "player",
+      status: "active",
+      details: { player: { playerType: "pitcher", position: "CP" } },
+    },
+    {
+      id: "D",
+      teamId: "T1",
+      role: "player",
+      status: "retired",
+      details: { player: { playerType: "pitcher", position: "RP" } },
+    },
+    {
+      id: "E",
+      teamId: "T1",
+      role: "player",
+      status: "active",
+      details: { player: { playerType: "batter", position: "C" } },
+    },
+    {
+      id: "F",
+      teamId: "T2",
+      role: "player",
+      status: "active",
+      details: { player: { playerType: "pitcher", position: "RP" } },
+    },
+    {
+      id: "ME",
+      teamId: "T1",
+      role: "player",
+      status: "active",
+      details: { player: { playerType: "pitcher", position: "SP" } },
+    },
   ] as any[];
 
   it("자기 팀 · 현역 투수만 센다 (자기 자신 제외)", () => {
@@ -197,8 +283,12 @@ describe("헤드리스 정책 — __PB_ROLE_CHOICE", () => {
   const meta = { type: "roleChoice", recommended: "rp" } as RoleChoiceMetadata;
   const g = globalThis as { __PB_ROLE_CHOICE?: unknown };
 
-  beforeEach(() => { delete g.__PB_ROLE_CHOICE; });
-  afterEach(()  => { delete g.__PB_ROLE_CHOICE; });
+  beforeEach(() => {
+    delete g.__PB_ROLE_CHOICE;
+  });
+  afterEach(() => {
+    delete g.__PB_ROLE_CHOICE;
+  });
 
   it("기본은 추천대로다 (확정 10)", () => {
     expect(roleChoicePolicyPick(meta)).toBe("rp");

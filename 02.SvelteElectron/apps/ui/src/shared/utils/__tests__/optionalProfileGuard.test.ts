@@ -51,8 +51,10 @@ describe("optional 프로필 필드를 무방비로 쓰지 않는다", () => {
         }
       }
     }
-    expect(bad, `optional 배열을 무방비로 씁니다 — 값이 없으면 화면이 통째로 안 열립니다:\n  ${bad.join("\n  ")}`)
-      .toEqual([]);
+    expect(
+      bad,
+      `optional 배열을 무방비로 씁니다 — 값이 없으면 화면이 통째로 안 열립니다:\n  ${bad.join("\n  ")}`,
+    ).toEqual([]);
   });
 });
 

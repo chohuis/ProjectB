@@ -77,8 +77,8 @@ export async function applySideEffects(
       if (opts.lane !== "notice") {
         // 이벤트(주사위)가 세계를 바꾸려 했다. 안 먹이고 남긴다
         console.warn(
-          `[decisions] 통지가 아닌 갈래의 상태 효과를 무시했다 — ${stateKeys.join("·")}`
-          + ` (갈래 ${opts.lane ?? "없음"}). 규칙: 주사위가 부른 것은 상태를 못 바꾼다`,
+          `[decisions] 통지가 아닌 갈래의 상태 효과를 무시했다 — ${stateKeys.join("·")}` +
+            ` (갈래 ${opts.lane ?? "없음"}). 규칙: 주사위가 부른 것은 상태를 못 바꾼다`,
         );
         autoLog(`[갈래] 상태 효과 무시 ${stateKeys.join("·")} — 갈래 ${opts.lane ?? "없음"}`);
       } else {
@@ -87,7 +87,9 @@ export async function applySideEffects(
           // ⚠ **승강 기계를 그대로 부른다** — 여기서 store 를 직접 건드리면
           //   두 벌이 되고, 그러면 순위표만 맞고 일정은 옛 리그가 된다
           const moved = moveProtagonistBetweenTiers(fx.rosterMove, week);
-          autoLog(`[통지] rosterMove ${fx.rosterMove} → ${moved ? "옮겼다" : "갈 곳이 없어 그대로"}`);
+          autoLog(
+            `[통지] rosterMove ${fx.rosterMove} → ${moved ? "옮겼다" : "갈 곳이 없어 그대로"}`,
+          );
         }
         if (fx.startGuarantee) {
           // 부여는 store 패처가 한다(`applyEffectToProtagonist`) — 여기서 또
@@ -116,10 +118,10 @@ export async function applySideEffects(
       }
       autoLog(
         `[사치품] ${res.cost}만원 지출 — ` +
-        (fx.luxurySpend.onTeammate
-          ? `동료 관계 +${res.relationDelta.toFixed(1)}`
-          : `명성 ${res.fameDelta >= 0 ? "+" : ""}${res.fameDelta.toFixed(1)}` +
-            ` (성실도 ${g.protagonist.diligence})`),
+          (fx.luxurySpend.onTeammate
+            ? `동료 관계 +${res.relationDelta.toFixed(1)}`
+            : `명성 ${res.fameDelta >= 0 ? "+" : ""}${res.fameDelta.toFixed(1)}` +
+              ` (성실도 ${g.protagonist.diligence})`),
       );
     } catch (e) {
       console.warn("[decisions] 사치품 계산 실패 — 지출만 반영", e);
@@ -175,11 +177,13 @@ async function bumpRelation(
     const next = Math.max(-100, Math.min(100, target.value + delta));
     if (next === target.value) return;
 
-    await slotRepo.upsertRelationships(slotId, [{
-      ...target,
-      value: next,
-      updatedWeek: get(seasonStore).currentWeek,
-    }]);
+    await slotRepo.upsertRelationships(slotId, [
+      {
+        ...target,
+        value: next,
+        updatedWeek: get(seasonStore).currentWeek,
+      },
+    ]);
     autoLog(`[관계] ${kind} ${target.personId} ${delta >= 0 ? "+" : ""}${delta} → ${next}`);
   } catch (e) {
     // 관계를 못 써도 선택 자체는 이미 반영됐다 — 여기서 throw하면 화면이 멈춘다

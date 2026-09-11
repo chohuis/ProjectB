@@ -24,12 +24,12 @@
   export let tab: MeTabId = "status";
 
   const LABEL_KEY: Record<MeTabId, string> = {
-    status:       "nav.status",
-    training:     "nav.training",
-    academics:    "nav.academics",
-    finance:      "nav.finance",
+    status: "nav.status",
+    training: "nav.training",
+    academics: "nav.academics",
+    finance: "nav.finance",
     achievements: "nav.achievements",
-    hallOfFame:   "nav.hallOfFame",
+    hallOfFame: "nav.hallOfFame",
   };
 
   $: p = $gameStore.protagonist;
@@ -38,8 +38,10 @@
   $: hofCtx = {
     ...p,
     hallOfFameCount: Object.keys($gameStore.hallOfFame ?? {}).length,
-    retiredNumberCount: Object.values($gameStore.retiredNumbers ?? {})
-      .reduce((a, b) => a + (b?.length ?? 0), 0),
+    retiredNumberCount: Object.values($gameStore.retiredNumbers ?? {}).reduce(
+      (a, b) => a + (b?.length ?? 0),
+      0,
+    ),
   };
   $: tabs = visibleMeTabs(hofCtx);
 
@@ -114,12 +116,18 @@
     cursor: pointer;
     white-space: nowrap;
   }
-  .tab:hover { color: var(--ink); }
-  .tab.on { color: var(--t-dark); border-bottom-color: var(--t-dark); }
+  .tab:hover {
+    color: var(--ink);
+  }
+  .tab.on {
+    color: var(--t-dark);
+    border-bottom-color: var(--t-dark);
+  }
 
   .dot {
     display: inline-block;
-    width: 5px; height: 5px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: var(--warn);
     vertical-align: 3px;
@@ -131,5 +139,8 @@
     overflow: hidden;
     padding: 12px;
   }
-  .body > :global(*) { height: 100%; min-height: 0; }
+  .body > :global(*) {
+    height: 100%;
+    min-height: 0;
+  }
 </style>

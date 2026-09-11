@@ -25,33 +25,51 @@ import type { Standing } from "../../types/season";
  * 그래서 **문턱은 하나도 안 고쳤다.**
  */
 
-const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave => ({
-  id: "PLY_HERO", name: "검사", careerStage: "highschool",
-  leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_HS_GYERYONG",
-  grade: 1, age: 17, playerType: "pitcher", position: "SP",
-  ...over,
-} as unknown as ProtagonistSave);
+const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave =>
+  ({
+    id: "PLY_HERO",
+    name: "검사",
+    careerStage: "highschool",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    teamId: "TEAM_HS_GYERYONG",
+    grade: 1,
+    age: 17,
+    playerType: "pitcher",
+    position: "SP",
+    ...over,
+  }) as unknown as ProtagonistSave;
 
-const ctxOf = (p: ProtagonistSave, standings: Standing[]): EventContext => ({
-  protagonist: p, currentWeek: 10, seasonPhase: "season",
-  standings, stats: {}, triggeredEvents: {},
-} as unknown as EventContext);
+const ctxOf = (p: ProtagonistSave, standings: Standing[]): EventContext =>
+  ({
+    protagonist: p,
+    currentWeek: 10,
+    seasonPhase: "season",
+    standings,
+    stats: {},
+    triggeredEvents: {},
+  }) as unknown as EventContext;
 
 /** 승률만 다른 순위표를 만든다 — 앞에 올수록 강하다 */
 const st = (teamIds: string[]): Standing[] =>
   teamIds.map((teamId, i) => ({
-    teamId, wins: 100 - i, losses: i, draws: 0,
-    winPct: (100 - i) / 100, runsFor: 0, runsAgainst: 0, streak: "", last10: "",
+    teamId,
+    wins: 100 - i,
+    losses: i,
+    draws: 0,
+    winPct: (100 - i) / 100,
+    runsFor: 0,
+    runsAgainst: 0,
+    streak: "",
+    last10: "",
   })) as unknown as Standing[];
 
-const lte = (value: number): Condition => ({ type: "team_rank_lte", value } as Condition);
-const gte = (value: number): Condition => ({ type: "team_rank_gte", value } as Condition);
+const lte = (value: number): Condition => ({ type: "team_rank_lte", value }) as Condition;
+const gte = (value: number): Condition => ({ type: "team_rank_gte", value }) as Condition;
 
 // 실제 편성에서 가져온다 — 검사에 팀 이름을 적으면 편성이 바뀔 때 안 따라간다
 const HS_REGION = Object.values(GROUPS_BY_LEAGUE.LEAGUE_HIGHSCHOOL)[0];
 const UNIV_GROUP = Object.values(GROUPS_BY_LEAGUE.LEAGUE_UNIVERSITY)[0];
-const HS_OTHERS = Object.values(GROUPS_BY_LEAGUE.LEAGUE_HIGHSCHOOL)
-  .slice(1).flat();
+const HS_OTHERS = Object.values(GROUPS_BY_LEAGUE.LEAGUE_HIGHSCHOOL).slice(1).flat();
 
 describe("고교 — 권역 안에서 센다", () => {
   it("대조군: 편성이 실제로 있다", () => {
@@ -95,7 +113,8 @@ describe("대학 — 조 안에서 센다", () => {
     const standings = st([...UNIV_GROUP, ...others]);
     const ctx = ctxOf(
       proto({ leagueId: "LEAGUE_UNIVERSITY", teamId: me, careerStage: "university" }),
-      standings);
+      standings,
+    );
     expect(evaluateCondition(gte(4), ctx)).toBe(true);
   });
 
@@ -107,7 +126,8 @@ describe("대학 — 조 안에서 센다", () => {
     const standings = st([...others, ...UNIV_GROUP]);
     const ctx = ctxOf(
       proto({ leagueId: "LEAGUE_UNIVERSITY", teamId: me, careerStage: "university" }),
-      standings);
+      standings,
+    );
     expect(evaluateCondition(lte(1), ctx)).toBe(true);
   });
 });
@@ -118,14 +138,16 @@ describe("프로 — 조가 없으면 리그 전체가 모수다", () => {
   it("리그 1위면 lte 1 이 참이다", () => {
     const ctx = ctxOf(
       proto({ leagueId: "LEAGUE_KBL", teamId: KBL[0], careerStage: "pro_kbl" }),
-      st(KBL));
+      st(KBL),
+    );
     expect(evaluateCondition(lte(1), ctx)).toBe(true);
   });
 
   it("리그 3위면 lte 2 가 거짓이다", () => {
     const ctx = ctxOf(
       proto({ leagueId: "LEAGUE_KBL", teamId: KBL[2], careerStage: "pro_kbl" }),
-      st(KBL));
+      st(KBL),
+    );
     expect(evaluateCondition(lte(2), ctx)).toBe(false);
   });
 });

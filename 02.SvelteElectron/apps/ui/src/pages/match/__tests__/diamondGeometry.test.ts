@@ -80,8 +80,9 @@ function shrunkBox(): number | null {
 }
 
 /** 기본 크기와 **짧은 높이에서 줄어든 크기**. 둘 다에서 마름모여야 한다. */
-const SIZES = [px("diamond", "width"), shrunkBox()]
-  .filter((v): v is number => typeof v === "number");
+const SIZES = [px("diamond", "width"), shrunkBox()].filter(
+  (v): v is number => typeof v === "number",
+);
 
 describe.each(SIZES)("상황판 다이아몬드 (%dpx)", (BOX) => {
   const SZ = px("base", "width");
@@ -95,20 +96,17 @@ describe.each(SIZES)("상황판 다이아몬드 (%dpx)", (BOX) => {
   };
 
   const P = {
-    home: centerOf("home"), b1: centerOf("b1"),
-    b2: centerOf("b2"), b3: centerOf("b3"),
+    home: centerOf("home"),
+    b1: centerOf("b1"),
+    b2: centerOf("b2"),
+    b3: centerOf("b3"),
   };
-  const dist = (a: [number, number], b: [number, number]) =>
-    Math.hypot(a[0] - b[0], a[1] - b[1]);
+  const dist = (a: [number, number], b: [number, number]) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
   it("네 변의 길이가 같다 — 마름모의 정의다", () => {
-    const sides = [
-      dist(P.home, P.b1), dist(P.b1, P.b2),
-      dist(P.b2, P.b3), dist(P.b3, P.home),
-    ];
+    const sides = [dist(P.home, P.b1), dist(P.b1, P.b2), dist(P.b2, P.b3), dist(P.b3, P.home)];
     for (const s of sides) {
-      expect(s, `변 길이 ${sides.map((v) => v.toFixed(1)).join(" / ")}`)
-        .toBeCloseTo(sides[0], 5);
+      expect(s, `변 길이 ${sides.map((v) => v.toFixed(1)).join(" / ")}`).toBeCloseTo(sides[0], 5);
     }
   });
 

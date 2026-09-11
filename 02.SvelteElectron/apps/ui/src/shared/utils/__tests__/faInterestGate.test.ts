@@ -19,7 +19,7 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
 const RUST = read("packages/engine-native/src/player_engine.rs");
-const TS   = read("apps/ui/src/shared/utils/faEngine.ts");
+const TS = read("apps/ui/src/shared/utils/faEngine.ts");
 
 describe("주인공 FA 관심도 판정", () => {
   it("문턱이 켜져 있다 — 0이면 예전 제비뽑기로 떨어진다", () => {

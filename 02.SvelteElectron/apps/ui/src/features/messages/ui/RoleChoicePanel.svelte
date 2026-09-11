@@ -2,7 +2,11 @@
   import type { MessageItem, RoleChoiceMetadata } from "../../../shared/types/main";
   import { masterStore } from "../../../shared/stores/master";
   import { roleConfirmLine } from "../../../shared/utils/roleChoiceCopy";
-  import { applyRoleChoice, needsRoleConfirm, type RoleChoiceId } from "../../../shared/usecases/pitcherRole";
+  import {
+    applyRoleChoice,
+    needsRoleConfirm,
+    type RoleChoiceId,
+  } from "../../../shared/usecases/pitcherRole";
 
   /**
    * 보직 선택 — **모달이 아니라 소식 상세 안의 칸이다** (PLAN_ROLE_RECOMMEND §4).
@@ -34,7 +38,7 @@
   export let msg: MessageItem;
 
   $: meta = msg.metadata as RoleChoiceMetadata;
-  $: dec  = msg.decision!;
+  $: dec = msg.decision!;
   $: copy = $masterStore.roleChoiceCopy;
 
   /** 아직 확정 안 한 선택 — `applyDecision` 을 부르지 않고 여기까지만 담는다 */
@@ -116,23 +120,43 @@
     border-top: 1px solid var(--line);
     padding-top: 11px;
   }
-  .dec-opts { display: flex; flex-direction: column; gap: 6px; }
+  .dec-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
   .opt {
-    display: flex; align-items: baseline; gap: 10px;
-    width: 100%; text-align: left; cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
     background: var(--panel);
     border: 1px solid var(--line-strong);
     border-radius: var(--radius);
     padding: 10px 13px;
-    font-size: 13px; color: var(--ink);
+    font-size: 13px;
+    color: var(--ink);
   }
-  .opt:hover { border-color: var(--t-dark); background: var(--panel-sunk); }
-  .opt:disabled { opacity: .55; cursor: default; }
-  .opt-label { font-weight: 700; }
+  .opt:hover {
+    border-color: var(--t-dark);
+    background: var(--panel-sunk);
+  }
+  .opt:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .opt-label {
+    font-weight: 700;
+  }
 
   /* 추천 표시는 **하나뿐이다** — 테두리 하나. 나머지 둘은 아무 표시가 없고
      「자리 있음」·「자리 없음」 같은 부제도 안 단다 (§4 · 사용자 지시) */
-  .opt.rec { border-color: var(--t-dark); border-left: 3px solid var(--t-dark); }
+  .opt.rec {
+    border-color: var(--t-dark);
+    border-left: 3px solid var(--t-dark);
+  }
 
   /* 확인 단계 — 같은 자리에서 한 줄 + 버튼 둘 */
   .confirm {
@@ -140,27 +164,60 @@
     border-radius: var(--radius);
     border-left: 3px solid var(--warn);
     padding: 11px 13px;
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
-  .confirm p { margin: 0; font-size: 13px; color: var(--ink); }
-  .confirm .row { display: flex; gap: 6px; justify-content: flex-end; }
+  .confirm p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .confirm .row {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+  }
   .btn {
-    padding: 7px 14px; border-radius: var(--radius);
-    font: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
     border: 1px solid var(--line-strong);
-    background: var(--panel); color: var(--ink-mid);
+    background: var(--panel);
+    color: var(--ink-mid);
   }
-  .btn:hover { border-color: var(--t-dark); color: var(--ink); }
-  .btn.go { background: var(--t-accent); border-color: var(--t-accent); color: var(--ink-on-dark); }
-  .btn:disabled { opacity: .55; cursor: default; }
+  .btn:hover {
+    border-color: var(--t-dark);
+    color: var(--ink);
+  }
+  .btn.go {
+    background: var(--t-accent);
+    border-color: var(--t-accent);
+    color: var(--ink-on-dark);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
 
   .dec-done {
-    display: flex; align-items: baseline; gap: 9px;
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
     background: var(--panel-sunk);
     border-radius: var(--radius);
     padding: 9px 13px;
     font-size: 13px;
   }
-  .check { color: var(--ok); font-weight: 800; }
-  .done-label { font-weight: 700; color: var(--ink); }
+  .check {
+    color: var(--ok);
+    font-weight: 800;
+  }
+  .done-label {
+    font-weight: 700;
+    color: var(--ink);
+  }
 </style>

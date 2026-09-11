@@ -598,7 +598,7 @@ export function getTeamLineup(
   }
 
   // 포지션 미충족 시 남은 타자로 보충
-  let remaining = batters
+  const remaining = batters
     .filter((e) => !used.has(e.id))
     .sort((a, b) => batScore(b) - batScore(a));
 

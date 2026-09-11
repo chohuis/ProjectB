@@ -46,13 +46,14 @@ describe("삼진 코드", () => {
    */
   it("Rust가 내는 결과 코드를 화면이 전부 안다", () => {
     const src = readFileSync(
-      resolve(__dirname, "../../../../../../packages/engine-native/src/types.rs"), "utf8");
+      resolve(__dirname, "../../../../../../packages/engine-native/src/types.rs"),
+      "utf8",
+    );
     const at = src.indexOf("pub enum PitchResultCode");
     expect(at, "PitchResultCode를 못 찾았다").toBeGreaterThan(0);
     const body = src.slice(at, src.indexOf("\n}", at));
     const codes = [...body.matchAll(/rename = "([A-Z_]+)"/g)].map((m) => m[1]);
-    expect(codes.length, "코드를 하나도 못 읽었다 — 정규식이 소스와 어긋났다")
-      .toBeGreaterThan(10);
+    expect(codes.length, "코드를 하나도 못 읽었다 — 정규식이 소스와 어긋났다").toBeGreaterThan(10);
     const unknown = codes.filter((c) => flashLabel(c as PitchResultCode) === c);
     expect(unknown, `화면이 모르는 코드: ${unknown.join(", ")}`).toEqual([]);
   });

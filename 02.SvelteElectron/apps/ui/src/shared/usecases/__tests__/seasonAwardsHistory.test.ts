@@ -13,25 +13,25 @@ import { join } from "node:path";
  *   ID로 떨어진다. `LeaguePage`의 `histPersonName` 주석이 같은 함정을 적어 뒀다.
  */
 const AWARDS = readFileSync(join(__dirname, "../seasonAwards.ts"), "utf8");
-const PAGE   = readFileSync(
-  join(__dirname, "../../../pages/league/LeaguePage.svelte"), "utf8");
-const REPO   = readFileSync(join(__dirname, "../../repo/slotRepo.ts"), "utf8");
+const PAGE = readFileSync(join(__dirname, "../../../pages/league/LeaguePage.svelte"), "utf8");
+const REPO = readFileSync(join(__dirname, "../../repo/slotRepo.ts"), "utf8");
 
 describe("수상을 연감에 남긴다", () => {
   it("`saveHistoryLeague`를 kind=awards로 부른다", () => {
     expect(AWARDS).toMatch(/saveSeasonAwards/);
-    expect(AWARDS, "kind가 awards가 아니면 다른 연감을 덮어쓴다")
-      .toMatch(/kind:\s*"awards"/);
+    expect(AWARDS, "kind가 awards가 아니면 다른 연감을 덮어쓴다").toMatch(/kind:\s*"awards"/);
   });
 
   it("타입이 awards를 허용한다", () => {
-    expect(REPO, "slotRepo의 kind 유니온에 awards가 없다 — 한쪽만 고치면 조용히 막힌다")
-      .toMatch(/"standings"\s*\|\s*"leaders"\s*\|\s*"postseason"\s*\|\s*"awards"/);
+    expect(REPO, "slotRepo의 kind 유니온에 awards가 없다 — 한쪽만 고치면 조용히 막힌다").toMatch(
+      /"standings"\s*\|\s*"leaders"\s*\|\s*"postseason"\s*\|\s*"awards"/,
+    );
   });
 
   it("이름을 그때 값으로 박는다 (ID를 안 흘린다)", () => {
-    expect(AWARDS, "이름이 비면 안 남겨야 한다 — ID가 화면에 뜨면 안 된다")
-      .toMatch(/if \(!row\.name\) continue/);
+    expect(AWARDS, "이름이 비면 안 남겨야 한다 — ID가 화면에 뜨면 안 된다").toMatch(
+      /if \(!row\.name\) continue/,
+    );
   });
 
   it("연감 저장이 실패해도 시즌 종료는 계속된다", () => {
@@ -42,12 +42,12 @@ describe("수상을 연감에 남긴다", () => {
 describe("히스토리 화면이 수상을 읽는다", () => {
   it("`getHistoryLeague`로 조회한다", () => {
     expect(PAGE).toMatch(/getHistoryLeague/);
-    expect(PAGE, "kind로 안 거르면 순위표까지 섞여 들어온다")
-      .toMatch(/r\.kind === "awards"/);
+    expect(PAGE, "kind로 안 거르면 순위표까지 섞여 들어온다").toMatch(/r\.kind === "awards"/);
   });
 
   it("연도를 바꾸면 초기화한다", () => {
-    expect(PAGE, "historyAwards를 안 비우면 이전 연도 수상이 남는다")
-      .toMatch(/historyAwards\s*=\s*\[\]/);
+    expect(PAGE, "historyAwards를 안 비우면 이전 연도 수상이 남는다").toMatch(
+      /historyAwards\s*=\s*\[\]/,
+    );
   });
 });

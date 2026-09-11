@@ -1,24 +1,52 @@
 import { describe, it, expect } from "vitest";
 import {
-  isOutInPlay, isHit, isStrike, isAtBatOver,
-  flashLabel, logLabel, logClass, flashColor,
-  type PitchResultCode, type BallInPlay,
+  isOutInPlay,
+  isHit,
+  isStrike,
+  isAtBatOver,
+  flashLabel,
+  logLabel,
+  logClass,
+  flashColor,
+  type PitchResultCode,
+  type BallInPlay,
 } from "../matchResult";
 
 const ALL: PitchResultCode[] = [
-  "STRIKE_SWING", "STRIKE_LOOK", "BALL", "FOUL",
-  "INPLAY_OUT", "GROUND_OUT", "FLY_OUT", "LINE_OUT", "DOUBLE_PLAY",
-  "FIELDING_ERROR", "HIT_SINGLE", "HIT_DOUBLE", "HIT_TRIPLE", "HOME_RUN",
-  "WALK", "GAME_OVER",
+  "STRIKE_SWING",
+  "STRIKE_LOOK",
+  "BALL",
+  "FOUL",
+  "INPLAY_OUT",
+  "GROUND_OUT",
+  "FLY_OUT",
+  "LINE_OUT",
+  "DOUBLE_PLAY",
+  "FIELDING_ERROR",
+  "HIT_SINGLE",
+  "HIT_DOUBLE",
+  "HIT_TRIPLE",
+  "HOME_RUN",
+  "WALK",
+  "GAME_OVER",
 ];
 
-const ball = (o: Partial<BallInPlay> = {}): BallInPlay =>
-  ({ hitType: "groundBall", zone: "SS", hardness: 3, ...o });
+const ball = (o: Partial<BallInPlay> = {}): BallInPlay => ({
+  hitType: "groundBall",
+  zone: "SS",
+  hardness: 3,
+  ...o,
+});
 
 describe("분류", () => {
   it("인플레이 아웃 다섯 (중간값 포함)", () => {
-    expect(ALL.filter(isOutInPlay)).toEqual(
-      ["INPLAY_OUT", "GROUND_OUT", "FLY_OUT", "LINE_OUT", "DOUBLE_PLAY"]);
+    expect(ALL.filter(isOutInPlay)).toEqual([
+      "INPLAY_OUT",
+      "GROUND_OUT",
+      "FLY_OUT",
+      "LINE_OUT",
+      "DOUBLE_PLAY",
+    ]);
   });
 
   it("⚠ 병살은 인플레이 아웃이다 — 아웃 집계에서 빠지면 이닝이 안 끝난다", () => {
@@ -60,7 +88,9 @@ describe("문구", () => {
   it("타구 정보가 있으면 누구 앞이었는지까지 쓴다", () => {
     expect(logLabel("GROUND_OUT", ball({ zone: "SS" }))).toBe("유격수 땅볼 아웃");
     expect(logLabel("FLY_OUT", ball({ zone: "CF", hitType: "flyBall" }))).toBe("중견수 뜬공 아웃");
-    expect(logLabel("LINE_OUT", ball({ zone: "2B", hitType: "lineDrive" }))).toBe("2루수 직선타 아웃");
+    expect(logLabel("LINE_OUT", ball({ zone: "2B", hitType: "lineDrive" }))).toBe(
+      "2루수 직선타 아웃",
+    );
   });
 
   it("팝업도 뜬공으로 부른다", () => {
@@ -74,8 +104,12 @@ describe("문구", () => {
   it("⚠ '병살타'는 땅볼에만 쓴다 — 직선타 병살은 다른 말이다", () => {
     // 엔진은 직선타에서도 병살을 낸다(잡아서 주자를 묶는 경우).
     // 그때 "중견수 병살타"라고 쓰면 틀린 야구 용어가 된다 — 실제로 화면에 찍혔다
-    expect(logLabel("DOUBLE_PLAY", ball({ zone: "CF", hitType: "lineDrive" }))).toBe("중견수 직선타 병살");
-    expect(logLabel("DOUBLE_PLAY", ball({ zone: "SS", hitType: "groundBall" }))).toBe("유격수 병살타");
+    expect(logLabel("DOUBLE_PLAY", ball({ zone: "CF", hitType: "lineDrive" }))).toBe(
+      "중견수 직선타 병살",
+    );
+    expect(logLabel("DOUBLE_PLAY", ball({ zone: "SS", hitType: "groundBall" }))).toBe(
+      "유격수 병살타",
+    );
   });
 
   it("⚠ 타구 정보가 없으면 지어내지 않는다", () => {
@@ -109,7 +143,10 @@ describe("색", () => {
   });
 
   it("인플레이 아웃 셋은 같은 색", () => {
-    expect(new Set(["GROUND_OUT", "FLY_OUT", "LINE_OUT"].map((c) => logClass(c as PitchResultCode))).size).toBe(1);
+    expect(
+      new Set(["GROUND_OUT", "FLY_OUT", "LINE_OUT"].map((c) => logClass(c as PitchResultCode)))
+        .size,
+    ).toBe(1);
   });
 
   it("모든 코드에 큰 글자 색이 있다", () => {

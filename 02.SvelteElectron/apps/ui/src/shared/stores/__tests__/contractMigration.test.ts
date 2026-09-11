@@ -16,10 +16,17 @@ const NEW: ProContract["incentives"] = [{ kind: "games", threshold: 25, bonus: 1
 
 function contract(over: Partial<ProContract> = {}): ProContract {
   return {
-    teamId: "TEAM_KBL_1", leagueId: "LEAGUE_KBL",
-    salary: 18000, durationYears: 2, remainingYears: 2, signingBonus: 0,
-    teamOptionYears: 0, playerOptionYears: 0, noTrade: false,
-    status: "active", ...over,
+    teamId: "TEAM_KBL_1",
+    leagueId: "LEAGUE_KBL",
+    salary: 18000,
+    durationYears: 2,
+    remainingYears: 2,
+    signingBonus: 0,
+    teamOptionYears: 0,
+    playerOptionYears: 0,
+    noTrade: false,
+    status: "active",
+    ...over,
   };
 }
 
@@ -34,7 +41,9 @@ describe("migrateContract", () => {
 
   it("계약의 나머지는 그대로다 — 되돌리지 않는다", () => {
     const old = contract({
-      salary: 21000, noTrade: true, teamOptionYears: 1,
+      salary: 21000,
+      noTrade: true,
+      teamOptionYears: 1,
       incentives: [{ condition: "10승", bonus: 2000 }] as unknown as ProContract["incentives"],
     });
     const out = migrateContract(old)!;

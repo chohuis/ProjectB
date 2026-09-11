@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  buildTableView, inferAlign, isScoreCell, ID_COLUMN_KIND, ID_LIST_COLUMN_KIND,
+  buildTableView,
+  inferAlign,
+  isScoreCell,
+  ID_COLUMN_KIND,
+  ID_LIST_COLUMN_KIND,
   type NameLookup,
 } from "../dashboardView";
 import { parseDashboardLabels, tableCopy } from "../dashboardCopy";
@@ -25,11 +29,13 @@ const LABELS = parseDashboardLabels(
   JSON.parse(readFileSync(join(MASTER, "messages/dashboard_labels.json"), "utf8")),
 );
 const TABLE_SRC = readFileSync(
-  join(__dirname, "../../../features/messages/ui/StatTable.svelte"), "utf8");
+  join(__dirname, "../../../features/messages/ui/StatTable.svelte"),
+  "utf8",
+);
 
 /** 이름표 — 아는 id 만 답한다. 모르는 id 는 화면이 그대로 둬야 한다 */
 const NAMES: NameLookup = {
-  team:   (id) => ({ TEAM_A: "북악고", TEAM_B: "한성고" })[id],
+  team: (id) => ({ TEAM_A: "북악고", TEAM_B: "한성고" })[id],
   person: (id) => ({ NPC_1: "김민수", NPC_2: "박정호" })[id],
 };
 
@@ -46,15 +52,18 @@ describe("문안이 다섯 자리를 갖는다", () => {
 
   it("빈 표의 한 줄도 종류마다 따로다", () => {
     // 「경기가 없었다」와 「말소된 선수가 없다」는 다른 말이다 — 하나로 묶으면 뜻이 샌다
-    const empties = ["leagueResults", "officialResult", "npcTrade", "demote", "waiver"]
-      .map((k) => tableCopy(LABELS, k).empty);
+    const empties = ["leagueResults", "officialResult", "npcTrade", "demote", "waiver"].map(
+      (k) => tableCopy(LABELS, k).empty,
+    );
     expect(new Set(empties).size).toBe(empties.length);
   });
 });
 
 describe("경기 결과 — 점수는 가운데다", () => {
   const md: TableMetadata = {
-    type: "table", kind: "leagueResults", columns: [],
+    type: "table",
+    kind: "leagueResults",
+    columns: [],
     rows: [{ away: "한성고", score: "1 : 3", home: "북악고" }],
   };
 
@@ -90,8 +99,13 @@ describe("경기 결과 — 점수는 가운데다", () => {
 
 describe("내 경기 — 항목·값 두 칸이다", () => {
   const md: TableMetadata = {
-    type: "table", kind: "officialResult", columns: [],
-    rows: [{ item: "ip", value: "6.0" }, { item: "dec", value: "승" }],
+    type: "table",
+    kind: "officialResult",
+    columns: [],
+    rows: [
+      { item: "ip", value: "6.0" },
+      { item: "dec", value: "승" },
+    ],
   };
 
   it("열이 항목·값 둘이다", () => {
@@ -112,7 +126,9 @@ describe("내 경기 — 항목·값 두 칸이다", () => {
 
 describe("트레이드 — 구단 id 가 이름이 된다", () => {
   const md: TableMetadata = {
-    type: "table", kind: "npcTrade", columns: [],
+    type: "table",
+    kind: "npcTrade",
+    columns: [],
     rows: [{ teamId: "TEAM_A", players: ["NPC_1", "NPC_2"] } as never],
   };
 
@@ -148,7 +164,9 @@ describe("트레이드 — 구단 id 가 이름이 된다", () => {
 
 describe("엔트리 말소 — 비고는 문안이 만든다", () => {
   const md: TableMetadata = {
-    type: "table", kind: "demote", columns: [],
+    type: "table",
+    kind: "demote",
+    columns: [],
     rows: [{ npcId: "NPC_1", note: 10 }],
   };
 
@@ -179,7 +197,10 @@ describe("엔트리 말소 — 비고는 문안이 만든다", () => {
 
 describe("웨이버 공시 — 한 열이다", () => {
   const md: TableMetadata = {
-    type: "table", kind: "waiver", columns: [], rows: [{ npcId: "NPC_2" }],
+    type: "table",
+    kind: "waiver",
+    columns: [],
+    rows: [{ npcId: "NPC_2" }],
   };
 
   it("선수 이름 한 열", () => {
@@ -195,7 +216,9 @@ describe("웨이버 공시 — 한 열이다", () => {
 
 describe("등판 없음 — 빈 칸과 뜻이 다르다", () => {
   const md: TableMetadata = {
-    type: "table", kind: "tourMy", columns: [],
+    type: "table",
+    kind: "tourMy",
+    columns: [],
     rows: [{ round: "8강", opp: "한성고", score: "3 : 1", result: "승", myLine: "" }],
   };
 
@@ -208,7 +231,9 @@ describe("등판 없음 — 빈 칸과 뜻이 다르다", () => {
 
   it("대표팀 전적도 같다", () => {
     const natl = view({
-      type: "table", kind: "natlResult", columns: [],
+      type: "table",
+      kind: "natlResult",
+      columns: [],
       rows: [
         { opp: "일본", score: "2 : 4", myLine: "5이닝 2실점" },
         { opp: "대만", score: "6 : 1", myLine: null },

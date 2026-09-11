@@ -35,21 +35,21 @@ export async function calcTrainingGrowth(
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
-      age:              protagonist.age,
-      condition:        protagonist.condition,
-      fatigue:          protagonist.fatigue,
+      age: protagonist.age,
+      condition: protagonist.condition,
+      fatigue: protagonist.fatigue,
       // 코치 분석력이 성장률을 민다 — 지도력(훈련 효율)과 다른 축이다
-      developmentRate:  protagonist.developmentRate * mods.devRate,
-      diligence:        protagonist.diligence,
-      potentialHidden:  protagonist.potentialHidden,
-      pitching:         protagonist.pitching,
-      batting:          protagonist.batting,
-      pitchingXP:       protagonist.pitchingXP ?? {},
-      battingXP:        protagonist.battingXP  ?? {},
+      developmentRate: protagonist.developmentRate * mods.devRate,
+      diligence: protagonist.diligence,
+      potentialHidden: protagonist.potentialHidden,
+      pitching: protagonist.pitching,
+      batting: protagonist.batting,
+      pitchingXP: protagonist.pitchingXP ?? {},
+      battingXP: protagonist.battingXP ?? {},
       trainingPitchState: protagonist.trainingPitchState,
-      pitches:          protagonist.pitches ?? [],
-      playerType:       protagonist.playerType,
-      morale:           protagonist.morale,
+      pitches: protagonist.pitches ?? [],
+      playerType: protagonist.playerType,
+      morale: protagonist.morale,
     },
     plan,
     efficiencyMod,
@@ -70,14 +70,14 @@ export async function calcTrainingGrowth(
     chk("fatigue", params.protagonist.fatigue);
     chk("mods.devRate", mods.devRate);
     if (bad.length > 0) {
-      throw new Error(`[훈련] 성장 입력이 숫자가 아니다: ${bad.join(", ")}`
-        + ` (팀 ${protagonist.teamId} · 단계 ${protagonist.careerStage})`);
+      throw new Error(
+        `[훈련] 성장 입력이 숫자가 아니다: ${bad.join(", ")}` +
+          ` (팀 ${protagonist.teamId} · 단계 ${protagonist.careerStage})`,
+      );
     }
   }
 
-  const raw = JSON.parse(
-    await window.projectB!.growthCalcTraining(JSON.stringify(params))
-  );
+  const raw = JSON.parse(await window.projectB!.growthCalcTraining(JSON.stringify(params)));
 
   // ⚠ 엔진이 역직렬화에 실패하면 `{error}`만 온다. 예전엔 그대로
   // `raw.protagonistPatch.pitchStateAction`을 읽어 **"undefined의 속성을 읽을 수
@@ -100,7 +100,9 @@ export async function calcTrainingGrowth(
   }
 
   return {
-    protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta,
+    protagonistPatch: patch,
+    logs: raw.logs,
+    fameDelta: raw.fameDelta,
     // ⚠ 없으면 기준(1.0)이다 — 구 엔진·검사 더미가 이 칸을 안 보낸다
     xpRatio: typeof raw.xpRatio === "number" && Number.isFinite(raw.xpRatio) ? raw.xpRatio : 1.0,
   };
@@ -131,9 +133,7 @@ export async function previewTraining(p: {
   plan: TrainingPlanState;
   programs: readonly import("../stores/master").TrainingProgram[];
 }): Promise<TrainingPreview | null> {
-  const raw = JSON.parse(
-    await window.projectB!.engine("previewTrainingNative", JSON.stringify(p)),
-  );
+  const raw = JSON.parse(await window.projectB!.engine("previewTrainingNative", JSON.stringify(p)));
   if (raw?.error || raw?.fatigueDelta === undefined) return null;
   return raw as TrainingPreview;
 }
@@ -153,8 +153,10 @@ export async function injuryChance(payload: Record<string, unknown>): Promise<nu
  * 폼 무너짐 하락폭 — **경기에 걸리는 것과 같은 식이다.**
  * 화면이 자기 식으로 적으면 표시와 실제가 갈린다.
  */
-export async function formPenalty(difficulty: number, control: number):
-  Promise<{ command: number; control: number }> {
+export async function formPenalty(
+  difficulty: number,
+  control: number,
+): Promise<{ command: number; control: number }> {
   if (difficulty <= 0) return { command: 0, control: 0 };
   const raw = JSON.parse(
     await window.projectB!.engine("formPenaltyNative", JSON.stringify({ difficulty, control })),
@@ -172,36 +174,36 @@ export async function calcGameGrowth(
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
-      age:             protagonist.age,
-      condition:       protagonist.condition,
-      fatigue:         protagonist.fatigue,
+      age: protagonist.age,
+      condition: protagonist.condition,
+      fatigue: protagonist.fatigue,
       developmentRate: protagonist.developmentRate * mods.devRate,
-      diligence:       protagonist.diligence,
+      diligence: protagonist.diligence,
       potentialHidden: protagonist.potentialHidden,
-      pitching:        protagonist.pitching,
-      batting:         protagonist.batting,
-      pitchingXP:      protagonist.pitchingXP ?? {},
-      battingXP:       protagonist.battingXP  ?? {},
-      playerType:      protagonist.playerType,
-      morale:          protagonist.morale,
+      pitching: protagonist.pitching,
+      batting: protagonist.batting,
+      pitchingXP: protagonist.pitchingXP ?? {},
+      battingXP: protagonist.battingXP ?? {},
+      playerType: protagonist.playerType,
+      morale: protagonist.morale,
     },
     won,
     scoreDiff,
     strikeouts,
     moraleMod: mods.morale,
-    fameMod:   mods.fame,
+    fameMod: mods.fame,
   };
 
-  const raw = JSON.parse(
-    await window.projectB!.growthCalcGame(JSON.stringify(params))
-  );
+  const raw = JSON.parse(await window.projectB!.growthCalcGame(JSON.stringify(params)));
 
   const patch: Partial<ProtagonistSave> = { ...raw.protagonistPatch };
   delete (patch as any).pitchStateAction;
   delete (patch as any).trainingPitchState;
 
   return {
-    protagonistPatch: patch, logs: raw.logs, fameDelta: raw.fameDelta,
+    protagonistPatch: patch,
+    logs: raw.logs,
+    fameDelta: raw.fameDelta,
     // ⚠ 없으면 기준(1.0)이다 — 구 엔진·검사 더미가 이 칸을 안 보낸다
     xpRatio: typeof raw.xpRatio === "number" && Number.isFinite(raw.xpRatio) ? raw.xpRatio : 1.0,
   };
@@ -209,26 +211,29 @@ export async function calcGameGrowth(
 
 export interface AgingResult {
   pitching: ProtagonistSave["pitching"];
-  batting:  ProtagonistSave["batting"];
-  logs:     string[];
+  batting: ProtagonistSave["batting"];
+  logs: string[];
 }
 
-export async function calcProtagonistAging(
-  protagonist: ProtagonistSave,
-): Promise<AgingResult> {
-  const sh = protagonist.seasonHealth ?? { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 };
+export async function calcProtagonistAging(protagonist: ProtagonistSave): Promise<AgingResult> {
+  const sh = protagonist.seasonHealth ?? {
+    lowConditionWeeks: 0,
+    highFatigueWeeks: 0,
+    injuryCount: 0,
+    totalWeeks: 0,
+  };
   const params = {
-    age:               protagonist.age,
+    age: protagonist.age,
     lowConditionWeeks: sh.lowConditionWeeks,
-    highFatigueWeeks:  sh.highFatigueWeeks,
-    injuryCount:       sh.injuryCount,
-    totalWeeks:        sh.totalWeeks,
-    pitching:          protagonist.pitching,
-    batting:           protagonist.batting,
-    playerType:        protagonist.playerType,
+    highFatigueWeeks: sh.highFatigueWeeks,
+    injuryCount: sh.injuryCount,
+    totalWeeks: sh.totalWeeks,
+    pitching: protagonist.pitching,
+    batting: protagonist.batting,
+    playerType: protagonist.playerType,
   };
   return JSON.parse(
-    await window.projectB!.growthCalcProtagonistAging(JSON.stringify(params))
+    await window.projectB!.growthCalcProtagonistAging(JSON.stringify(params)),
   ) as AgingResult;
 }
 
@@ -265,8 +270,15 @@ export interface TrainingEfficiency {
   pct: number;
 }
 
-interface EfficiencyPoint { condition: number; fatigue: number; diligence: number }
-interface NativeEfficiency { entries: Omit<TrainingEfficiency, "pct">[]; slotMults: number[] }
+interface EfficiencyPoint {
+  condition: number;
+  fatigue: number;
+  diligence: number;
+}
+interface NativeEfficiency {
+  entries: Omit<TrainingEfficiency, "pct">[];
+  slotMults: number[];
+}
 
 /**
  * 여러 지점의 계수를 **한 번에** 묻는다.
@@ -280,8 +292,9 @@ async function askEfficiency(points: readonly EfficiencyPoint[]): Promise<Native
   const api = typeof window === "undefined" ? undefined : window.projectB?.engine;
   if (!api || points.length === 0) return null;
   try {
-    const r = JSON.parse(await api("trainingEfficiencyNative",
-      JSON.stringify({ queries: points }))) as NativeEfficiency & { error?: string };
+    const r = JSON.parse(
+      await api("trainingEfficiencyNative", JSON.stringify({ queries: points })),
+    ) as NativeEfficiency & { error?: string };
     if (r.error || !Array.isArray(r.entries) || r.entries.length !== points.length) return null;
     return r;
   } catch {
@@ -327,16 +340,21 @@ export async function trainingEfficiencyDelta(
   now: EfficiencyPoint,
   d: { conditionDelta?: number; fatigueDelta?: number; diligenceDelta?: number },
 ): Promise<number | null> {
-  const dc = d.conditionDelta ?? 0, df = d.fatigueDelta ?? 0, dd = d.diligenceDelta ?? 0;
+  const dc = d.conditionDelta ?? 0,
+    df = d.fatigueDelta ?? 0,
+    dd = d.diligenceDelta ?? 0;
   if (dc === 0 && df === 0 && dd === 0) return null;
   const clamp = (v: number) => Math.max(1, Math.min(99, v));
   // 🔴 **두 지점을 한 번에 묻는다** — 앞뒤를 따로 물으면 왕복이 둘이다
-  const r = await askEfficiency([now, {
-    // ⚠ 컨디션은 100 까지다 — 1~99 로 자르면 컨디션 100 이 99 로 깎인다
-    condition: Math.max(1, Math.min(100, now.condition + dc)),
-    fatigue:   clamp(now.fatigue + df),
-    diligence: clamp(now.diligence + dd),
-  }]);
+  const r = await askEfficiency([
+    now,
+    {
+      // ⚠ 컨디션은 100 까지다 — 1~99 로 자르면 컨디션 100 이 99 로 깎인다
+      condition: Math.max(1, Math.min(100, now.condition + dc)),
+      fatigue: clamp(now.fatigue + df),
+      diligence: clamp(now.diligence + dd),
+    },
+  ]);
   if (!r) return null;
   const [before, after] = r.entries;
   if (before.total <= 0) return null;

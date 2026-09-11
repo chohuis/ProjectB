@@ -52,3 +52,6 @@ resource/logs/d-balance101-after/
 resource/logs/d-balance101-combined/
 resource/logs/d-balance101-final/
 resource/logs/d-balance101-before-report.txt
+
+# 커버리지 산출물 (개선 6) — 관문이 아니라 숫자를 볼 때만 낸다
+coverage/

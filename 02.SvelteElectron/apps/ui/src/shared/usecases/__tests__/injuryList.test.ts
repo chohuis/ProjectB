@@ -16,8 +16,7 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
 describe("부상자 명단(IL)", () => {
   const src = strip(read("apps/ui/src/shared/usecases/weekPhases/market.ts"));
@@ -54,7 +53,9 @@ describe("부상자 명단(IL)", () => {
 
   it("⚠ 상시 콜다운은 **초과일 때만** 돈다", () => {
     // 늘 돌면 매주 로스터가 출렁인다 — 기존 주석의 경고다
-    expect(src.includes("if (!urgentOnly && activeCount > minRosterSize)"),
-      "무조건 상시로 바꾸면 안 된다").toBe(false);
+    expect(
+      src.includes("if (!urgentOnly && activeCount > minRosterSize)"),
+      "무조건 상시로 바꾸면 안 된다",
+    ).toBe(false);
   });
 });

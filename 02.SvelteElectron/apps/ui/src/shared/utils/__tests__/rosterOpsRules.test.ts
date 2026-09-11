@@ -2,7 +2,10 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  primeRosterOpsRules, rotationRestGames, rotationSizeForLeague, rotationSizeForStage,
+  primeRosterOpsRules,
+  rotationRestGames,
+  rotationSizeForLeague,
+  rotationSizeForStage,
 } from "../rosterEngine";
 
 /**
@@ -23,8 +26,14 @@ describe("로스터 운용 규칙", () => {
   it("규칙 파일에 표가 있다", () => {
     const o = RULES.rosterOpsRules;
     expect(o).toBeTruthy();
-    for (const k of ["rotationSize", "restGames", "pitcherFatigue",
-                     "batterFatigue", "pitcherRest", "playThroughOvrMult"]) {
+    for (const k of [
+      "rotationSize",
+      "restGames",
+      "pitcherFatigue",
+      "batterFatigue",
+      "pitcherRest",
+      "playThroughOvrMult",
+    ]) {
       expect(o[k], k).toBeTruthy();
     }
     expect(o.freshnessWeight).toBeGreaterThan(0);
@@ -34,15 +43,21 @@ describe("로스터 운용 규칙", () => {
   it("옮기면서 값을 안 바꿨다", () => {
     const o = RULES.rosterOpsRules;
     expect(o.rotationSize).toMatchObject({
-      LEAGUE_HIGHSCHOOL: 3, LEAGUE_UNIVERSITY: 3, LEAGUE_INDEPENDENT: 4, default: 5,
+      LEAGUE_HIGHSCHOOL: 3,
+      LEAGUE_UNIVERSITY: 3,
+      LEAGUE_INDEPENDENT: 4,
+      default: 5,
     });
     expect(o.restGames).toMatchObject({
-      LEAGUE_HIGHSCHOOL: 2, LEAGUE_UNIVERSITY: 2, LEAGUE_INDEPENDENT: 2, default: 4,
+      LEAGUE_HIGHSCHOOL: 2,
+      LEAGUE_UNIVERSITY: 2,
+      LEAGUE_INDEPENDENT: 2,
+      default: 4,
     });
     expect(o.pitcherFatigue.floor).toBe(0.65);
     expect(o.batterFatigue.floor).toBe(0.78);
     expect(o.freshnessWeight).toBe(0.3);
-    expect(o.playThroughOvrMult).toMatchObject({ light: 0.88, moderate: 0.70 });
+    expect(o.playThroughOvrMult).toMatchObject({ light: 0.88, moderate: 0.7 });
   });
 
   /**
@@ -57,10 +72,12 @@ describe("로스터 운용 규칙", () => {
   });
 
   it("규칙 파일 값이 실제로 걸린다", () => {
-    primeRosterOpsRules({ rosterOpsRules: {
-      rotationSize: { LEAGUE_KBL: 7, default: 5 } as Record<string, number>,
-      restGames: { LEAGUE_KBL: 9, default: 4 } as Record<string, number>,
-    } });
+    primeRosterOpsRules({
+      rosterOpsRules: {
+        rotationSize: { LEAGUE_KBL: 7, default: 5 } as Record<string, number>,
+        restGames: { LEAGUE_KBL: 9, default: 4 } as Record<string, number>,
+      },
+    });
     expect(rotationSizeForLeague("LEAGUE_KBL")).toBe(7);
     expect(rotationRestGames("LEAGUE_KBL")).toBe(9);
     // 되돌린다 — 다른 검사에 새면 안 된다

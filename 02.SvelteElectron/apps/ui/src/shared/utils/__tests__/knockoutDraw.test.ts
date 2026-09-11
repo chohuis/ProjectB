@@ -80,8 +80,8 @@ describe("무승부 결과의 모양", () => {
     } as unknown as Parameters<typeof winnerById>[0];
     const w = winnerById(s);
     expect(w.has("G1")).toBe(true);
-    expect(w.has("G2")).toBe(true);      // ← 있다
-    expect(w.get("G2")).toBe("");        // ← 그런데 승자가 없다
+    expect(w.has("G2")).toBe(true); // ← 있다
+    expect(w.get("G2")).toBe(""); // ← 그런데 승자가 없다
     expect(w.has("G3")).toBe(false);
     expect(allScheduleEntries(s).length).toBe(3);
   });

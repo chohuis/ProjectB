@@ -12,21 +12,34 @@ let matchReadyState = null;
  */
 const AUTO_SIM_AB_LABEL = {
   // 투구 단위 — 타석 결과로는 안 오지만 같은 코드 공간이라 함께 둔다
-  STRIKE_SWING: "헛스윙", STRIKE_LOOK: "루킹",
-  FOUL: "파울", BALL: "볼",
+  STRIKE_SWING: "헛스윙",
+  STRIKE_LOOK: "루킹",
+  FOUL: "파울",
+  BALL: "볼",
   // 🔴 **삼진이 여기 없었다** (2026-09-01). 엔진이 3스트라이크째에 코드를
   //   좁히는데(`STRIKE_* → STRIKEOUT_*`) 이 표가 좁히기 전 것만 갖고 있어서
   //   화면에 **`STRIKEOUT_SWING` 이라는 영문이 그대로 떴다.**
-  STRIKEOUT_SWING: "삼진", STRIKEOUT_LOOK: "삼진(루킹)",
-  WALK: "볼넷", FIELDING_ERROR: "실책",
+  STRIKEOUT_SWING: "삼진",
+  STRIKEOUT_LOOK: "삼진(루킹)",
+  WALK: "볼넷",
+  FIELDING_ERROR: "실책",
   // 인플레이 아웃이 넷으로 쪼개졌다 (엔진 `narrow_inplay_out`)
-  INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
-  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살타", TRIPLE_PLAY: "삼중살",
-  HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
-  HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
+  INPLAY_OUT: "아웃",
+  GROUND_OUT: "땅볼 아웃",
+  FLY_OUT: "뜬공 아웃",
+  LINE_OUT: "직선타 아웃",
+  DOUBLE_PLAY: "병살타",
+  TRIPLE_PLAY: "삼중살",
+  HIT_SINGLE: "안타",
+  HIT_DOUBLE: "2루타",
+  HIT_TRIPLE: "3루타",
+  HOME_RUN: "홈런",
   // 타수가 아닌 것들 — 드물어서 여태 아무도 못 봤다
-  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해",
-  SAC_BUNT: "희생번트", SAC_FLY: "희생플라이", SQUEEZE: "스퀴즈 번트",
+  HIT_BY_PITCH: "몸에 맞는 공",
+  INTERFERENCE: "수비 방해",
+  SAC_BUNT: "희생번트",
+  SAC_FLY: "희생플라이",
+  SQUEEZE: "스퀴즈 번트",
   GAME_OVER: "경기 종료",
 };
 
@@ -44,18 +57,19 @@ function abLabel(code) {
 
 function toSnapshotDto(state, autoSimLogs, core) {
   const currentLineup = state.half === "top" ? state.awayLineup : state.homeLineup;
-  const currentIdx    = state.half === "top" ? state.awayLineupIndex : state.homeLineupIndex;
+  const currentIdx = state.half === "top" ? state.awayLineupIndex : state.homeLineupIndex;
   const currentBatter = currentLineup?.[currentIdx % Math.max(1, currentLineup?.length ?? 1)];
 
   const ourTeamFielding =
-    (state.half === "top"    && state.protagonistSide === "home") ||
+    (state.half === "top" && state.protagonistSide === "home") ||
     (state.half === "bottom" && state.protagonistSide === "away");
-  const isProtagonistPitching = ourTeamFielding && state.protagonistHasEntered && !state.protagonistExited;
+  const isProtagonistPitching =
+    ourTeamFielding && state.protagonistHasEntered && !state.protagonistExited;
   const phase = state.isFinished
     ? "game_over"
     : isProtagonistPitching
-    ? "protagonist_pitch"
-    : "auto_inning";
+      ? "protagonist_pitch"
+      : "auto_inning";
 
   return {
     matchId: state.matchId,
@@ -66,7 +80,11 @@ function toSnapshotDto(state, autoSimLogs, core) {
     count: state.count,
     score: state.score,
     inningScores: state.inningScores,
-    runners: { first: !!state.runners.first, second: !!state.runners.second, third: !!state.runners.third },
+    runners: {
+      first: !!state.runners.first,
+      second: !!state.runners.second,
+      third: !!state.runners.third,
+    },
     pitchCount: state.pitchCount,
     protagonistStamina: state.protagonistStamina,
     protagonistMental: state.protagonistMental,
@@ -192,11 +210,14 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
   ipcMain.handle("match:next-inning", async () => {
     const core = await loadCoreModule();
     if (!activeMatchState || activeMatchState.isFinished) {
-      return { snapshot: toSnapshotDto(activeMatchState ?? core.startMatch({}), [], core), logs: [] };
+      return {
+        snapshot: toSnapshotDto(activeMatchState ?? core.startMatch({}), [], core),
+        logs: [],
+      };
     }
 
     const prevInning = activeMatchState.inning;
-    const prevHalf   = activeMatchState.half;
+    const prevHalf = activeMatchState.half;
     const phase = core.advanceGamePhase(activeMatchState);
     const allLogs = [];
     let batchStats = null;
@@ -211,14 +232,21 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       for (const ab of halfResult.atBats) {
         const label = abLabel(ab.resultCode);
         const runMark = ab.runsScored > 0 ? ` ★${ab.runsScored}득점` : "";
-        allLogs.push(`투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${label} (${ab.pitchCount}구)${runMark}`);
+        allLogs.push(
+          `투수: ${ab.pitcherName} / 타자: ${ab.batterName} → ${label} (${ab.pitchCount}구)${runMark}`,
+        );
       }
     }
 
     if (phase.phase === "auto_batting") {
       activeMatchState = phase.result.nextState;
-      const errors = phase.result.atBats.filter(ab => ab.resultCode === "FIELDING_ERROR").length;
-      batchStats = { hits: phase.result.hits, walks: phase.result.walks, errors, isTop: prevHalf === "top" };
+      const errors = phase.result.atBats.filter((ab) => ab.resultCode === "FIELDING_ERROR").length;
+      batchStats = {
+        hits: phase.result.hits,
+        walks: phase.result.walks,
+        errors,
+        isTop: prevHalf === "top",
+      };
       pushHalfInningLogs(phase.result, prevInning, prevHalf);
     } else if (phase.phase === "protagonist_entry") {
       activeMatchState = phase.state;
@@ -230,9 +258,9 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       activeMatchState = phase.state;
       const exitReasonMap = {
         pitch_limit: "투구수 제한으로 교체됩니다",
-        stamina:     "체력 부족으로 교체됩니다",
+        stamina: "체력 부족으로 교체됩니다",
         performance: "성적 부진으로 교체됩니다",
-        tactical:    "전술적 교체를 합니다",
+        tactical: "전술적 교체를 합니다",
       };
       exitReason = exitReasonMap[phase.reason] ?? "교체됩니다";
       const lastLog = phase.state.logs[phase.state.logs.length - 1];
@@ -241,12 +269,23 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
     } else if (phase.phase === "post_exit_sim") {
       const halfResult = core.autoSimulateHalfInning(activeMatchState);
       activeMatchState = halfResult.nextState;
-      const errors = halfResult.atBats.filter(ab => ab.resultCode === "FIELDING_ERROR").length;
-      batchStats = { hits: halfResult.hits, walks: halfResult.walks, errors, isTop: prevHalf === "top" };
+      const errors = halfResult.atBats.filter((ab) => ab.resultCode === "FIELDING_ERROR").length;
+      batchStats = {
+        hits: halfResult.hits,
+        walks: halfResult.walks,
+        errors,
+        isTop: prevHalf === "top",
+      };
       pushHalfInningLogs(halfResult, prevInning, prevHalf);
     }
 
-    return { snapshot: toSnapshotDto(activeMatchState, [], core), logs: allLogs, batchStats, protagonistJustExited, exitReason };
+    return {
+      snapshot: toSnapshotDto(activeMatchState, [], core),
+      logs: allLogs,
+      batchStats,
+      protagonistJustExited,
+      exitReason,
+    };
   });
 
   ipcMain.handle("match:finish", async () => {
@@ -280,22 +319,22 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
 
   function buildMatchSummary(state) {
     return {
-      inningScores:         state.inningScores         ?? { home: [], away: [] },
-      batterAccum:          state.batterAccum           ?? {},
-      homeLineup:           (state.homeLineup  ?? []).map(b => ({ id: b.id ?? "", name: b.name ?? "" })),
-      awayLineup:           (state.awayLineup  ?? []).map(b => ({ id: b.id ?? "", name: b.name ?? "" })),
-      oppPitcherName:       state.opponentNpcPitcher?.name  ?? null,
+      inningScores: state.inningScores ?? { home: [], away: [] },
+      batterAccum: state.batterAccum ?? {},
+      homeLineup: (state.homeLineup ?? []).map((b) => ({ id: b.id ?? "", name: b.name ?? "" })),
+      awayLineup: (state.awayLineup ?? []).map((b) => ({ id: b.id ?? "", name: b.name ?? "" })),
+      oppPitcherName: state.opponentNpcPitcher?.name ?? null,
       oppPitcherPitchCount: state.npcPitcherPitchCount?.opponent ?? 0,
-      oppPitcherStamina:    state.npcPitcherStamina?.opponent    ?? 100,
-      myPitcherName:        state.myNpcPitcher?.name        ?? null,
-      myPitcherPitchCount:  state.npcPitcherPitchCount?.my  ?? 0,
-      myPitcherStamina:     state.npcPitcherStamina?.my     ?? 100,
-      preEntryLogs:         state.preEntryLogs ?? [],
-      currentOuts:          state.outs ?? 0,
+      oppPitcherStamina: state.npcPitcherStamina?.opponent ?? 100,
+      myPitcherName: state.myNpcPitcher?.name ?? null,
+      myPitcherPitchCount: state.npcPitcherPitchCount?.my ?? 0,
+      myPitcherStamina: state.npcPitcherStamina?.my ?? 100,
+      preEntryLogs: state.preEntryLogs ?? [],
+      currentOuts: state.outs ?? 0,
       runners: {
-        first:  !!(state.runners?.first),
-        second: !!(state.runners?.second),
-        third:  !!(state.runners?.third),
+        first: !!state.runners?.first,
+        second: !!state.runners?.second,
+        third: !!state.runners?.third,
       },
     };
   }
@@ -325,8 +364,10 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       matchReadyState = state;
       return JSON.stringify({
         entryReached: true,
-        inning: state.inning, half: state.half,
-        homeScore: state.score.home, awayScore: state.score.away,
+        inning: state.inning,
+        half: state.half,
+        homeScore: state.score.home,
+        awayScore: state.score.away,
         ...buildMatchSummary(state),
       });
     } catch (e) {
@@ -339,13 +380,13 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       const core = await loadCoreModule();
       if (!activeMatchState) return JSON.stringify({ error: "no active match state" });
       let state = core.autoSimulateToGameEnd(activeMatchState);
-      const strikeouts   = state.kSinceEntry    ?? 0;
-      const hitsAllowed  = state.hSinceEntry    ?? 0;
-      const walksAllowed = state.bbSinceEntry   ?? 0;
+      const strikeouts = state.kSinceEntry ?? 0;
+      const hitsAllowed = state.hSinceEntry ?? 0;
+      const walksAllowed = state.bbSinceEntry ?? 0;
       const outsRecorded = state.outsSinceEntry ?? 0;
-      const pitchCount   = state.pitchCountSinceEntry ?? 0;
+      const pitchCount = state.pitchCountSinceEntry ?? 0;
       // ⚠ 예전엔 이 값이 없어서 호출측이 `피안타 × 0.35`로 자책점을 역산했다
-      const earnedRuns   = state.erSinceEntry ?? 0;
+      const earnedRuns = state.erSinceEntry ?? 0;
       const result = core.finishMatch(state);
       activeMatchState = result.nextState;
       matchReadyState = null;
@@ -354,7 +395,12 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
         homeScore: ns.score.home,
         awayScore: ns.score.away,
         summary: result.summary ?? "",
-        strikeouts, hitsAllowed, walksAllowed, outsRecorded, pitchCount, earnedRuns,
+        strikeouts,
+        hitsAllowed,
+        walksAllowed,
+        outsRecorded,
+        pitchCount,
+        earnedRuns,
         batterLines: result.batterLines ?? [],
         playerLines: result.playerLines ?? [],
       });

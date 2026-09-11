@@ -27,7 +27,11 @@ function walk(dir: string, out: string[] = []): string[] {
 
 function luminance(hex: string): number {
   let h = hex.replace("#", "");
-  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  if (h.length === 3)
+    h = h
+      .split("")
+      .map((c) => c + c)
+      .join("");
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
   const f = (c: number) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
   return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
@@ -39,8 +43,8 @@ function contrast(a: string, b: string): number {
 }
 
 const RULE = /([^{}]+)\{([^{}]*)\}/g;
-const BG   = /background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,8})/;
-const COL  = /(?<!-)\bcolor\s*:\s*([^;}]+)/;
+const BG = /background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,8})/;
+const COL = /(?<!-)\bcolor\s*:\s*([^;}]+)/;
 
 /** 어두운 바탕 위에서 읽히는 토큰 — hex가 아니라 변수로 쓴 경우 */
 const LIGHT_TOKENS = ["--ink-on-dark", "--t-gold", "--attn", "--surface", "--panel"];
@@ -55,8 +59,12 @@ function isReadableOn(bgHex: string, colorValue: string): boolean {
   const v = colorValue.trim();
   if (LIGHT_TOKENS.some((tok) => v.includes(tok))) return true;
   const hex = /#[0-9a-fA-F]{3,8}/.exec(v);
-  if (!hex) return false;              // rgba()·currentColor 등은 판정 보류
-  try { return contrast(bgHex, hex[0]) >= 3; } catch { return false; }
+  if (!hex) return false; // rgba()·currentColor 등은 판정 보류
+  try {
+    return contrast(bgHex, hex[0]) >= 3;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -90,7 +98,11 @@ function unsafeFiles(): string[] {
       const bg = BG.exec(body);
       if (!bg) continue;
       let lum: number;
-      try { lum = luminance(bg[1]); } catch { continue; }
+      try {
+        lum = luminance(bg[1]);
+      } catch {
+        continue;
+      }
       if (lum > 0.18) continue;
       hasDarkBg = true;
       const c = COL.exec(body);
@@ -118,7 +130,7 @@ describe("어두운 섬이 전역 글자색에 기대지 않는다", () => {
     // #2a1010 위의 #e07070 — 명도는 0.285(낮다)지만 대비 4.4:1로 읽힌다.
     // 명도 컷오프로 재면 이걸 결함으로 잘못 잡는다
     expect(isReadableOn("#2a1010", "#e07070")).toBe(true);
-    expect(isReadableOn("#0e1a30", "#0f1d3d")).toBe(false);   // 검은 바탕에 검은 글씨
+    expect(isReadableOn("#0e1a30", "#0f1d3d")).toBe(false); // 검은 바탕에 검은 글씨
     expect(isReadableOn("#2A5D8F", "var(--ink-on-dark)")).toBe(true);
     expect(isReadableOn("#1E3050", "var(--t-gold)")).toBe(true);
   });
@@ -134,7 +146,9 @@ describe("어두운 섬이 전역 글자색에 기대지 않는다", () => {
     const remaining = walk(SRC).filter((p) => {
       const src = readFileSync(p, "utf8");
       const i = src.indexOf("<style>");
-      return i >= 0 && !isConverted(src.slice(i)) && /background[^;]*#[0-9a-fA-F]{6}/.test(src.slice(i));
+      return (
+        i >= 0 && !isConverted(src.slice(i)) && /background[^;]*#[0-9a-fA-F]{6}/.test(src.slice(i))
+      );
     });
     expect(remaining.length).toBeGreaterThan(0);
   });

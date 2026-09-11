@@ -97,8 +97,9 @@ describe("주인공 수상 후보", () => {
     });
 
     it("수상보다 먼저 부른다 — 순서가 뒤집히면 얹을 자리가 없다", () => {
-      expect(roll.indexOf("applyProtagonistSeasonRecord(now)"))
-        .toBeLessThan(roll.indexOf("applySeasonAwards(now)"));
+      expect(roll.indexOf("applyProtagonistSeasonRecord(now)")).toBeLessThan(
+        roll.indexOf("applySeasonAwards(now)"),
+      );
     });
 
     it("모달은 더 이상 기록을 만들지 않는다 — 중복 방지", () => {
@@ -142,6 +143,6 @@ describe("주인공 수상 후보", () => {
     );
     expect(byLabel["다승왕"]).toBe(40);
     expect(byLabel["탈삼진왕"]).toBe(40);
-    expect(byLabel["방어율왕"]).toBe(45);   // 규정이닝 성격이라 한 단계 위
+    expect(byLabel["방어율왕"]).toBe(45); // 규정이닝 성격이라 한 단계 위
   });
 });

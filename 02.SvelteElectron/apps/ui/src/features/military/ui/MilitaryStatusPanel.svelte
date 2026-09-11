@@ -16,7 +16,7 @@
 
   $: rank = (() => {
     const w = p.militaryServiceWeeks;
-    if (w <= 8)  return "이병";
+    if (w <= 8) return "이병";
     if (w <= 34) return "일병";
     if (w <= 60) return "상병";
     return "병장";
@@ -43,7 +43,11 @@
     {#if p.militaryDischargeYear}
       <!-- ⚠ 「W48」이 박혀 있었다. 전역은 복무 100주가 차는 주라 입대 주에
            따라 달라진다 — 기본 입대 주(W50)면 W46 이다 -->
-      <p>전역 예정: <strong>{p.militaryDischargeYear}년{dischargeWeek !== null ? ` W${dischargeWeek}` : ""}</strong></p>
+      <p>
+        전역 예정: <strong
+          >{p.militaryDischargeYear}년{dischargeWeek !== null ? ` W${dischargeWeek}` : ""}</strong
+        >
+      </p>
     {/if}
   </div>
   <div class="bar">
@@ -95,7 +99,7 @@
   .badge.badge-sports {
     color: var(--ok);
     border-color: var(--ok);
-    background: rgba(31, 122, 71, 0.10);
+    background: rgba(31, 122, 71, 0.1);
   }
   .badge.badge-contract {
     color: var(--warn);

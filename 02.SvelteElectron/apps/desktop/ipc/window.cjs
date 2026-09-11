@@ -13,7 +13,7 @@
 /** 받아들이는 크기. `BrowserWindow`의 minWidth 1600 / minHeight 900 이상이어야 한다 */
 const SIZES = {
   // 1280x800 - 1440x900은 뺐다 (사용자 확정 2026-08-28) - 표가 깨진다
-  "1600x900":  { width: 1600, height: 900 },
+  "1600x900": { width: 1600, height: 900 },
   "1920x1080": { width: 1920, height: 1080 },
 };
 

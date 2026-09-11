@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  BankPicker, fillReportVar, parseReportCopy, reportStageOf, trainingBody,
+  BankPicker,
+  fillReportVar,
+  parseReportCopy,
+  reportStageOf,
+  trainingBody,
   type ReportCopy,
 } from "../reportCopy";
 import { MIN_BANK_SIZE } from "../sentenceBank";
@@ -24,8 +28,9 @@ const PROGRAMS = join(ROOT, "resource/data/master/training/programs.json");
 
 const raw = JSON.parse(readFileSync(REPORTS, "utf8")) as Record<string, unknown>;
 const copy = parseReportCopy(raw)!;
-const programIds: string[] =
-  (JSON.parse(readFileSync(PROGRAMS, "utf8")).programs as { id: string }[]).map((p) => p.id);
+const programIds: string[] = (
+  JSON.parse(readFileSync(PROGRAMS, "utf8")).programs as { id: string }[]
+).map((p) => p.id);
 
 /** 밑줄로 시작하는 칸은 설명이다 — 은행이 아니다 */
 const realKeys = (o: unknown) =>
@@ -51,8 +56,10 @@ describe("파일이 파서를 그대로 통과한다", () => {
       for (const outcome of ["good", "normal", "poor"] as const) {
         const bank = copy.training.byStageOutcome[stage]?.[outcome];
         expect(bank, `${stage}.${outcome} 을 파서가 버렸다`).toBeDefined();
-        expect(bank!.length, `${stage}.${outcome} 은행이 ${MIN_BANK_SIZE} 미만이다`)
-          .toBeGreaterThanOrEqual(MIN_BANK_SIZE);
+        expect(
+          bank!.length,
+          `${stage}.${outcome} 은행이 ${MIN_BANK_SIZE} 미만이다`,
+        ).toBeGreaterThanOrEqual(MIN_BANK_SIZE);
       }
     }
   });
@@ -65,14 +72,17 @@ describe("파일이 파서를 그대로 통과한다", () => {
     const bankIds = Object.keys(copy.training.byProgram).sort();
     expect(bankIds).toEqual([...programIds].sort());
     for (const [id, bank] of Object.entries(copy.training.byProgram)) {
-      expect(bank.length, `${id} 은행이 ${MIN_BANK_SIZE} 미만이다`)
-        .toBeGreaterThanOrEqual(MIN_BANK_SIZE);
+      expect(bank.length, `${id} 은행이 ${MIN_BANK_SIZE} 미만이다`).toBeGreaterThanOrEqual(
+        MIN_BANK_SIZE,
+      );
     }
   });
 
   it("`{month}` 말고 다른 자리표시자가 없다", () => {
     const all = [
-      ...copy.training.subjects, ...copy.myBody.subjects, ...copy.myBody.leads,
+      ...copy.training.subjects,
+      ...copy.myBody.subjects,
+      ...copy.myBody.leads,
       ...Object.values(copy.training.byStageOutcome).flatMap((m) => Object.values(m).flat()),
       ...Object.values(copy.training.byProgram).flat(),
     ];
@@ -149,7 +159,7 @@ describe("뽑기 — 직전 것을 뺀다", () => {
    *    6개인데 본문 은행이 4개면 인덱스 5 를 「직전」으로 물려받는다.
    */
   it("키가 다르면 기억이 안 섞인다", () => {
-    const picker = new BankPicker({ "a": 0 }, [0.0, 0.0]);
+    const picker = new BankPicker({ a: 0 }, [0.0, 0.0]);
     const bank = ["가", "나", "다"];
     expect(picker.pick("a", bank), "직전(0)을 안 뺐다").toBe("나");
     expect(picker.pick("b", bank), "다른 키인데 a 의 기억을 봤다").toBe("가");
@@ -158,8 +168,10 @@ describe("뽑기 — 직전 것을 뺀다", () => {
   it("뽑은 인덱스를 되돌린다", () => {
     const picker = new BankPicker({}, [0.99]);
     picker.pick("k", ["가", "나", "다"]);
-    expect(picker.picks["k"], "picks 가 비었다 — sentenceMemory 로 못 돌아간다")
-      .toBeGreaterThanOrEqual(0);
+    expect(
+      picker.picks["k"],
+      "picks 가 비었다 — sentenceMemory 로 못 돌아간다",
+    ).toBeGreaterThanOrEqual(0);
   });
 
   /** ⚠ 난수가 모자라면 0.5 다 — `Math.random()` 으로 새면 계측이 안 재현된다 */

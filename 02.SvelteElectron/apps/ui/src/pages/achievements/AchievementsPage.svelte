@@ -15,15 +15,15 @@
   };
 
   const DESC_MAP: Record<string, (target: number) => string> = {
-    strikeoutTotal:    (t) => `누적 삼진 ${t}개 달성`,
-    saveTotal:         (t) => `누적 세이브 ${t}개 달성`,
-    winsTotal:         (t) => `누적 승리 ${t}회 달성`,
-    gamesPlayedTotal:  (t) => `경기 ${t}회 출전`,
+    strikeoutTotal: (t) => `누적 삼진 ${t}개 달성`,
+    saveTotal: (t) => `누적 세이브 ${t}개 달성`,
+    winsTotal: (t) => `누적 승리 ${t}회 달성`,
+    gamesPlayedTotal: (t) => `경기 ${t}회 출전`,
     messagesReadTotal: (t) => `메시지 ${t}개 읽기`,
     // 이벤트 등급 업적 (2026-09-08 · §9 · C 4-5). **정의는 데이터(B)** 이고
     // 여기 있는 것은 설명 문장뿐이다 — 키가 없으면 아래 `desc` 가 「조건 달성」이다
-    eventUniqueTotal:   (t) => t === 1 ? "유니크 이벤트를 처음 만나기" : `유니크 이벤트 ${t}회`,
-    eventHiddenTotal:   (t) => `히든 이벤트 ${t}회`,
+    eventUniqueTotal: (t) => (t === 1 ? "유니크 이벤트를 처음 만나기" : `유니크 이벤트 ${t}회`),
+    eventHiddenTotal: (t) => `히든 이벤트 ${t}회`,
     eventRareSeasonMax: (t) => `한 시즌에 레어 이벤트 ${t}회`,
   };
 
@@ -48,22 +48,22 @@
       const liveVal = metrics[d.metricKey] ?? 0;
       const progress = Math.max(rt?.progress ?? 0, liveVal);
       const unlocked = !!rt?.unlockedAt;
-      const claimed  = !!rt?.claimedAt;
+      const claimed = !!rt?.claimedAt;
       const pct = Math.min((progress / d.targetValue) * 100, 100);
       return { ...d, progress, unlocked, claimed, pct, unlockedAt: rt?.unlockedAt ?? null };
     })
     .filter((x) => category === "all" || x.category === category);
 
-  $: totalActive  = $masterStore.achievements.filter((d) => d.status === "active").length;
-  $: doneCount    = items.filter((x) => x.unlocked).length;
-  $: claimable    = items.filter((x) => x.unlocked && !x.claimed).length;
+  $: totalActive = $masterStore.achievements.filter((d) => d.status === "active").length;
+  $: doneCount = items.filter((x) => x.unlocked).length;
+  $: claimable = items.filter((x) => x.unlocked && !x.claimed).length;
 </script>
 
 <!-- ⚠ 제목("업적")을 뺐다 — "나"의 상위 탭이 이미 그 이름이다 -->
 <section class="page">
   <header class="head">
     <div class="u-subtabs">
-      {#each (["all", "baseball", "growth", "social", "hidden"] as Category[]) as c}
+      {#each ["all", "baseball", "growth", "social", "hidden"] as Category[] as c}
         <button class:on={category === c} on:click={() => (category = c)}>
           {CAT_LABELS[c]}
         </button>
@@ -80,7 +80,7 @@
   <div class="list">
     {#each items as a (a.id)}
       {@const isHiddenLocked = !!a.hidden && !a.unlocked}
-      <article class="item" class:unlocked={a.unlocked} >
+      <article class="item" class:unlocked={a.unlocked}>
         <div class="row-title">
           <span class="badge-status" class:done={a.unlocked} class:claimed={a.claimed}>
             {a.claimed ? "수령 완료" : a.unlocked ? "달성" : "진행중"}
@@ -91,7 +91,9 @@
           {/if}
         </div>
 
-        <p class="item-desc">{isHiddenLocked ? "숨겨진 업적입니다." : desc(a.metricKey, a.targetValue)}</p>
+        <p class="item-desc">
+          {isHiddenLocked ? "숨겨진 업적입니다." : desc(a.metricKey, a.targetValue)}
+        </p>
 
         <div class="progress-row">
           <div class="bar-wrap">
@@ -101,7 +103,13 @@
         </div>
 
         {#if a.unlocked && !a.claimed}
-          <button class="btn-claim" on:click={() => { gameStore.claimAchievement(a.id); gameStore.save(); }}>
+          <button
+            class="btn-claim"
+            on:click={() => {
+              gameStore.claimAchievement(a.id);
+              gameStore.save();
+            }}
+          >
             보상 수령
           </button>
         {:else if a.claimed}
@@ -132,15 +140,36 @@
     flex-wrap: wrap;
   }
 
-  .counts { display: flex; gap: 14px; align-items: baseline; }
-  .cnt { display: flex; align-items: baseline; gap: 5px; }
-  .cnt i {
-    font-style: normal; font-size: 9.5px; font-weight: 800;
-    letter-spacing: 0.12em; color: var(--ink-mute);
+  .counts {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
   }
-  .cnt b { font-size: 15px; font-weight: 800; color: var(--ink); }
-  .cnt s { text-decoration: none; font-size: 11px; color: var(--ink-mute); }
-  .cnt.warn b { color: var(--warn); }
+  .cnt {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .cnt i {
+    font-style: normal;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+  }
+  .cnt b {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .cnt s {
+    text-decoration: none;
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
+  .cnt.warn b {
+    color: var(--warn);
+  }
 
   .list {
     min-height: 0;
@@ -161,22 +190,41 @@
     gap: 6px;
   }
   /* 달성한 줄만 초록 띠 — 목록을 훑을 때 끝난 것과 남은 것이 즉시 갈린다 */
-  .item.unlocked { border-left-color: var(--ok); }
+  .item.unlocked {
+    border-left-color: var(--ok);
+  }
 
-  .row-title { display: flex; align-items: center; gap: 8px; }
+  .row-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
   .badge-status {
-    font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
     padding: 2px 7px;
     border-radius: 2px;
     background: var(--panel-sunk);
     color: var(--ink-mute);
     white-space: nowrap;
   }
-  .badge-status.done    { background: var(--ok);      color: var(--ink-on-dark); }
-  .badge-status.claimed { background: var(--panel-sunk); color: var(--ink-mid); }
+  .badge-status.done {
+    background: var(--ok);
+    color: var(--ink-on-dark);
+  }
+  .badge-status.claimed {
+    background: var(--panel-sunk);
+    color: var(--ink-mid);
+  }
 
-  .title { font-size: 13px; font-weight: 700; color: var(--ink); flex: 1; }
+  .title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    flex: 1;
+  }
 
   .reward-tag {
     font-size: 10.5px;
@@ -187,9 +235,17 @@
     white-space: nowrap;
   }
 
-  .item-desc { margin: 0; font-size: 12px; color: var(--ink-mute); }
+  .item-desc {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
 
-  .progress-row { display: flex; align-items: center; gap: 9px; }
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
 
   .bar-wrap {
     flex: 1;
@@ -205,7 +261,9 @@
     border-radius: 3px;
     transition: width 0.3s ease;
   }
-  .item.unlocked .bar-fill { background: var(--ok); }
+  .item.unlocked .bar-fill {
+    background: var(--ok);
+  }
 
   .prog-text {
     font-size: 11px;
@@ -228,13 +286,25 @@
     font-weight: 700;
     cursor: pointer;
   }
-  .btn-claim:hover { filter: brightness(1.1); }
+  .btn-claim:hover {
+    filter: brightness(1.1);
+  }
 
-  .claimed-label { font-size: 11px; color: var(--ok); font-weight: 700; }
+  .claimed-label {
+    font-size: 11px;
+    color: var(--ok);
+    font-weight: 700;
+  }
 
-  .empty { margin: 24px auto; color: var(--ink-mute); font-size: 13px; }
+  .empty {
+    margin: 24px auto;
+    color: var(--ink-mute);
+    font-size: 13px;
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    .bar-fill { transition: none; }
+    .bar-fill {
+      transition: none;
+    }
   }
 </style>

@@ -26,10 +26,10 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 describe("주인공 경기 기록", () => {
-  const ME  = read("packages/engine-native/src/match_engine.rs");
-  const TY  = read("packages/engine-native/src/types.rs");
+  const ME = read("packages/engine-native/src/match_engine.rs");
+  const TY = read("packages/engine-native/src/types.rs");
   const CJS = read("apps/desktop/ipc/match.cjs");
-  const MP  = read("apps/ui/src/pages/match/MatchPage.svelte");
+  const MP = read("apps/ui/src/pages/match/MatchPage.svelte");
   const AGO = read("apps/ui/src/shared/usecases/applyGameOutcome.ts");
 
   it("엔진이 경기 종료에서 player_lines를 만든다", () => {
@@ -50,13 +50,12 @@ describe("주인공 경기 기록", () => {
   });
 
   it("화면이 엔진 자책점을 먼저 본다", () => {
-    expect(MP).toContain("typeof engineEarnedRuns === \"number\"");
+    expect(MP).toContain('typeof engineEarnedRuns === "number"');
     // 역산은 **마지막 폴백으로만** 남는다
     const at = MP.indexOf("const runsAllowed =");
     expect(at).toBeGreaterThan(0);
     const body = MP.slice(at, at + 400);
-    expect(body.indexOf("engineEarnedRuns"))
-      .toBeLessThan(body.indexOf("totalHitsAllowed * 0.35"));
+    expect(body.indexOf("engineEarnedRuns")).toBeLessThan(body.indexOf("totalHitsAllowed * 0.35"));
   });
 
   it("직접 플레이 경기도 자책점을 넘긴다", () => {

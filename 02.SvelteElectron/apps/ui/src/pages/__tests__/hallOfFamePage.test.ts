@@ -13,9 +13,11 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/<!--[\s\S]*?-->/g, "")
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) =>
+  s
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
 
 describe("명예의 전당 화면", () => {
   const page = strip(read("apps/ui/src/pages/hall-of-fame/HallOfFamePage.svelte"));

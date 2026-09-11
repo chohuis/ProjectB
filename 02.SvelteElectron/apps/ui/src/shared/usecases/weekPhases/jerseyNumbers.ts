@@ -52,7 +52,10 @@ export async function processJerseyNumbers(): Promise<string[]> {
   for (const [teamId, nums] of byTeam) {
     const seen = new Set<number>();
     for (const num of nums) {
-      if (num <= 0 || seen.has(num)) { badTeams.add(teamId); break; }
+      if (num <= 0 || seen.has(num)) {
+        badTeams.add(teamId);
+        break;
+      }
       seen.add(num);
     }
   }
@@ -60,19 +63,24 @@ export async function processJerseyNumbers(): Promise<string[]> {
 
   // 그 팀 선수를 **모두** 보낸다 — Rust 가 팀 단위로 빈 번호를 세므로
   // 일부만 보내면 이미 쓰는 번호를 다시 준다
-  const payload = g.npcs.filter((n) =>
-    n.careerStatus !== "retired" && n.careerStatus !== "free_agent"
-    && badTeams.has(n.currentTeam ?? ""));
+  const payload = g.npcs.filter(
+    (n) =>
+      n.careerStatus !== "retired" &&
+      n.careerStatus !== "free_agent" &&
+      badTeams.has(n.currentTeam ?? ""),
+  );
 
   let changes: Array<{ npcId: string; teamId: string; from: number; to: number }> = [];
   try {
     const raw = await window.projectB!.engine(
       // ⚠ **영구결번을 넘긴다.** 안 넘기면 결번한 번호를 새 선수가 받는다 —
       //   `serde(default)` 라 안 넘겨도 조용히 통과한다.
-      "fixJerseyNumbersNative", JSON.stringify({
+      "fixJerseyNumbersNative",
+      JSON.stringify({
         npcs: payload,
         retiredNumbers: g.retiredNumbers ?? {},
-      }));
+      }),
+    );
     changes = (JSON.parse(raw)?.changes ?? []) as typeof changes;
   } catch (e) {
     // ⚠ **조용히 삼키지 않는다.** 실패가 "아무 일도 안 일어남"으로 나타나면
@@ -83,8 +91,9 @@ export async function processJerseyNumbers(): Promise<string[]> {
   if (changes.length === 0) return [];
 
   const numOf = new Map(changes.map((c) => [c.npcId, c.to]));
-  gameStore.updateNpcs(g.npcs.map((n) =>
-    numOf.has(n.npcId) ? { ...n, jerseyNumber: numOf.get(n.npcId)! } : n));
+  gameStore.updateNpcs(
+    g.npcs.map((n) => (numOf.has(n.npcId) ? { ...n, jerseyNumber: numOf.get(n.npcId)! } : n)),
+  );
 
   // 한 줄로 묶는다 — 신입생이 들어온 주에는 1,000건이 넘는다
   return [`[등번호] ${changes.length}명에게 번호 배정 (${badTeams.size}팀)`];

@@ -56,8 +56,12 @@ function buildResults(
   slumpSeasons: Record<string, number>,
   powerOf: Map<string, number>,
 ): {
-  teamId: string; leagueId: string; power: number;
-  rank: number; leagueSize: number; slumpSeasons: number;
+  teamId: string;
+  leagueId: string;
+  power: number;
+  rank: number;
+  leagueSize: number;
+  slumpSeasons: number;
 }[] {
   const s = get(seasonStore);
   const out: ReturnType<typeof buildResults> = [];
@@ -65,13 +69,14 @@ function buildResults(
   for (const leagueId of LIFECYCLE_LEAGUES) {
     const standings: Standing[] = s.leagueState?.[leagueId]?.standings ?? [];
     const played = standings.filter((st) => st.wins + st.losses + st.draws > 0);
-    if (played.length === 0) continue;   // 안 돈 리그 — 경질 판정 제외
+    if (played.length === 0) continue; // 안 돈 리그 — 경질 판정 제외
 
     const ranked = [...standings].sort(
-      (a, b) => b.winPct - a.winPct
-        || b.runsFor - a.runsFor
-        || a.runsAgainst - b.runsAgainst
-        || a.teamId.localeCompare(b.teamId),
+      (a, b) =>
+        b.winPct - a.winPct ||
+        b.runsFor - a.runsFor ||
+        a.runsAgainst - b.runsAgainst ||
+        a.teamId.localeCompare(b.teamId),
     );
     ranked.forEach((st, i) => {
       out.push({
@@ -114,13 +119,16 @@ export async function processStaffSeasonEnd(
     return { events: [], slumpSeasons: prevSlumpSeasons };
   }
 
-  const raw = await window.projectB!.engine("advanceStaffSeasonNative", JSON.stringify({
-    worldSeed: worldSeed >>> 0,
-    seasonYear,
-    staff: current,
-    results: buildResults(prevSlumpSeasons, powerOf),
-    rules: lifecycle,
-  }));
+  const raw = await window.projectB!.engine(
+    "advanceStaffSeasonNative",
+    JSON.stringify({
+      worldSeed: worldSeed >>> 0,
+      seasonYear,
+      staff: current,
+      results: buildResults(prevSlumpSeasons, powerOf),
+      rules: lifecycle,
+    }),
+  );
   const parsed = JSON.parse(raw) as AdvanceResult | { error?: string };
   if (!("staff" in parsed) || !Array.isArray(parsed.staff)) {
     console.error("[staffLifecycle] Rust 오류:", (parsed as { error?: string }).error);
@@ -140,20 +148,26 @@ export async function processStaffSeasonEnd(
     const refTeams = teams.filter((t) => byTeam.has(t.id));
 
     // 시즌마다 다른 사람이 나와야 하므로 seed에 시즌을 섞는다
-    const fresh = await generateStaffForTeams(refTeams, worldSeed ^ (seasonYear * 2654435761), seasonYear + 1);
+    const fresh = await generateStaffForTeams(
+      refTeams,
+      worldSeed ^ (seasonYear * 2654435761),
+      seasonYear + 1,
+    );
     const have = new Set(staff.map((s) => s.staffId));
 
     for (const v of vacant) {
       // 그 팀·그 역할의 새 사람. 같은 팀에 여러 자리가 비면 순번으로 구분한다
       const candidates = fresh.filter((f) => f.teamId === v.teamId && f.role === v.role);
-      const pick = candidates.find((c) => !have.has(c.staffId))
-        ?? candidates[0];
+      const pick = candidates.find((c) => !have.has(c.staffId)) ?? candidates[0];
       if (!pick) continue;
 
       // ID 충돌 방지 — 은퇴자가 같은 ID를 이미 점유하고 있다
       let id = pick.staffId;
       let n = 2;
-      while (have.has(id)) { id = `${pick.staffId}_v${n}`; n += 1; }
+      while (have.has(id)) {
+        id = `${pick.staffId}_v${n}`;
+        n += 1;
+      }
       have.add(id);
 
       const hired: StaffRow = { ...pick, staffId: id, joinedSeason: seasonYear + 1 };
@@ -176,8 +190,13 @@ export async function processStaffSeasonEnd(
   const updates = staff
     .filter((s) => existing.has(s.staffId))
     .map((s) => ({
-      staffId: s.staffId, age: s.age, status: s.status, years: s.years,
-      teamId: s.teamId, leagueId: s.leagueId, stats: s.stats,
+      staffId: s.staffId,
+      age: s.age,
+      status: s.status,
+      years: s.years,
+      teamId: s.teamId,
+      leagueId: s.leagueId,
+      stats: s.stats,
     }));
   if (updates.length > 0) await slotRepo.updateStaff(slotId, updates);
 
@@ -191,15 +210,24 @@ export async function processStaffSeasonEnd(
 export function describeStaffEvent(e: StaffEvent, teamName: (id: string) => string): string {
   const role = e.role === "manager" ? "감독" : e.role === "coach" ? "코치" : "구단주";
   switch (e.kind) {
-    case "retired":    return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 은퇴`;
-    case "retired_fa": return `${e.name} 전 ${role}(${e.age}세) 지도자 생활 마감`;
-    case "fired":      return `${teamName(e.teamId)} ${e.name} ${role} 경질`;
-    case "fallout":    return `${teamName(e.teamId)} ${e.name} ${role} 동반 사퇴 (감독 경질)`;
-    case "demoted":    return `${e.name} ${role}(${e.age}세) ${teamName(e.teamId)} 떠남 — 거취 미정`;
-    case "moved":      return `${e.name} ${role} — ${teamName(e.fromTeamId ?? "")} → ${teamName(e.teamId)} 영전`;
-    case "rehired":    return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 부임 — 전 ${teamName(e.fromTeamId ?? "")}`;
-    case "hired":      return `${teamName(e.teamId)} 신임 ${e.name} ${role}(${e.age}세) 부임`;
-    default:           return "";
+    case "retired":
+      return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 은퇴`;
+    case "retired_fa":
+      return `${e.name} 전 ${role}(${e.age}세) 지도자 생활 마감`;
+    case "fired":
+      return `${teamName(e.teamId)} ${e.name} ${role} 경질`;
+    case "fallout":
+      return `${teamName(e.teamId)} ${e.name} ${role} 동반 사퇴 (감독 경질)`;
+    case "demoted":
+      return `${e.name} ${role}(${e.age}세) ${teamName(e.teamId)} 떠남 — 거취 미정`;
+    case "moved":
+      return `${e.name} ${role} — ${teamName(e.fromTeamId ?? "")} → ${teamName(e.teamId)} 영전`;
+    case "rehired":
+      return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 부임 — 전 ${teamName(e.fromTeamId ?? "")}`;
+    case "hired":
+      return `${teamName(e.teamId)} 신임 ${e.name} ${role}(${e.age}세) 부임`;
+    default:
+      return "";
   }
 }
 

@@ -9,7 +9,6 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
   const { protagonist, currentWeek, seasonPhase, standings, stats, schoolState } = ctx;
 
   switch (cond.type) {
-
     // ── 주차 / 시즌 ─────────────────────────────────────────────
     case "week_gte":
       return currentWeek >= cond.value;
@@ -53,8 +52,11 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       // 겸업은 투수이기도 하고 타자이기도 하다 — 엔진도 그렇게 본다
       // (`gradeAdvance.ts`가 `twoWay`를 `pitcher`로 접는다).
       if (protagonist.playerType === "twoWay") {
-        return cond.playerType === "pitcher" || cond.playerType === "batter"
-          || cond.playerType === "twoWay";
+        return (
+          cond.playerType === "pitcher" ||
+          cond.playerType === "batter" ||
+          cond.playerType === "twoWay"
+        );
       }
       return protagonist.playerType === cond.playerType;
 
@@ -226,9 +228,7 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       const myGroup = groups
         ? Object.values(groups).find((ids) => ids.includes(protagonist.teamId))
         : undefined;
-      const pool = myGroup
-        ? standings.filter((s) => myGroup.includes(s.teamId))
-        : standings;
+      const pool = myGroup ? standings.filter((s) => myGroup.includes(s.teamId)) : standings;
       const sorted = [...pool].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       const rank = sorted.findIndex((s) => s.teamId === protagonist.teamId) + 1;
       if (rank === 0) return false; // 팀이 순위표에 없음
@@ -286,19 +286,18 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       return protagonist.proServiceYears >= cond.value;
 
     // 🔴 **`military_phase`를 지웠다 (2026-08-26).**
-    // 
+    //
     // `return false`만 하는 스텁이었다 — 걸어도 **영원히 안 뜨고 로그도 안 남는다.**
     // 쓰는 데이터는 **0건**이었다(`check:eventconditions`가 그렇게 보고했다).
-    // 
+    //
     // ⚠ **살릴 자리가 아니다.** 군 복무 중엔 이벤트 엔진이 아예 안 돈다
     //   (`advanceWeek:1602`에서 별도 경로로 빠진다). 트랙 B가 군 서사 14종을
     //   조건부 이벤트로 만들었다가 계측 0회를 보고 알았고,
     //   **`events/pools/military_*.json` 54종으로 옮겼다** — Rust가 계급으로 고른다.
     //   그 자리는 이미 채워졌다.
-    // 
+    //
     // ⚠ 지웠으므로 이제 이 조건을 쓰면 **로드에서 잡힌다**(`assertConditions`).
     //   스텁일 때는 조용히 false였다 — 그게 더 나쁘다.
-
 
     // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
     //
@@ -310,8 +309,10 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     case "gpa_lte":
       // ⚠ 학기를 한 번도 안 마쳤으면(이력 0) 학점이 0인 게 아니라 **없는** 것이다.
       // 그대로 0으로 비교하면 입학 첫 주부터 "학점이 위험하다"가 뜬다
-      return (schoolState?.semesterGpaHistory?.length ?? 0) > 0
-        && (schoolState?.universityGpa ?? 0) <= cond.value;
+      return (
+        (schoolState?.semesterGpaHistory?.length ?? 0) > 0 &&
+        (schoolState?.universityGpa ?? 0) <= cond.value
+      );
 
     case "academic_warning_gte":
       return (schoolState?.academicWarningLevel ?? 0) >= cond.value;
@@ -347,9 +348,10 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       //   관계 테이블(slot.db)에 안 들어간다 — 복무가 끝나면
       //   `militaryRecord.topRelations` 상위 셋으로 접히고 그게 유일한 기록이다.
       //   `ctx.relations` 에서 찾으면 **영영 0건**이라 조용히 false 가 된다.
-      const values = cond.kind === "unitmate"
-        ? (ctx.protagonist?.militaryRecord?.topRelations ?? []).map((r) => r.value)
-        : (ctx.relations ?? []).filter((r) => r.kind === cond.kind).map((r) => r.value);
+      const values =
+        cond.kind === "unitmate"
+          ? (ctx.protagonist?.militaryRecord?.topRelations ?? []).map((r) => r.value)
+          : (ctx.relations ?? []).filter((r) => r.kind === cond.kind).map((r) => r.value);
       if (values.length === 0) return false;
       const best = cond.type === "relation_gte" ? Math.max(...values) : Math.min(...values);
       return cond.type === "relation_gte" ? best >= cond.value : best <= cond.value;
@@ -412,8 +414,12 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
       // **같은 시즌만** 본다 — 모르는 해를 지어내는 것보다 좁게 보는 편이 낫다
       const nowYear = ctx.seasonYear;
       if (nowYear === undefined) {
-        return list.some((o) => o.kind === cond.outcome
-          && currentWeek - o.week >= 0 && currentWeek - o.week <= cond.weeks);
+        return list.some(
+          (o) =>
+            o.kind === cond.outcome &&
+            currentWeek - o.week >= 0 &&
+            currentWeek - o.week <= cond.weeks,
+        );
       }
       const nowAbs = nowYear * 52 + currentWeek;
       return list.some((o) => {
@@ -437,7 +443,7 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
   // 그건 `checkConditionShape`가 막는다. 여긴 타입 자체가 틀린 경우다.
   throw new Error(
     `[conditionEvaluator] 모르는 조건 타입: ${JSON.stringify(cond)} — ` +
-    `오타이거나 엔진에 없는 조건이다. 조용히 넘기면 그 이벤트가 영영 안 뜬다`
+      `오타이거나 엔진에 없는 조건이다. 조용히 넘기면 그 이벤트가 영영 안 뜬다`,
   );
 }
 

@@ -8,7 +8,10 @@
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
   import IndependentApplyModal from "./IndependentApplyModal.svelte";
   import OverseasApplyModal from "./OverseasApplyModal.svelte";
-  import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
+  import {
+    canApplyToUniversity,
+    canApplyToIndependent,
+  } from "../../../shared/utils/careerTransition";
   import { overseasOfferTeams, calcIndividualScore } from "../../../shared/utils/universityUtils";
   import { firstTeamIdOf } from "../../../shared/utils/ids";
   import { ALL_TEAMS_BY_LEAGUE } from "../../../shared/utils/leagueScheduler";
@@ -45,7 +48,10 @@
     .flatMap((lid) => ALL_TEAMS_BY_LEAGUE[lid] ?? [])
     .map((id) => {
       const parent = firstTeamIdOf(id);
-      return { id, parentPower: parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined };
+      return {
+        id,
+        parentPower: parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined,
+      };
     });
   $: overseasCount = overseasOfferTeams(myOvr, myScore, overseasFarm).length;
 
@@ -80,7 +86,9 @@
   function onClickDraftApply() {
     draftChecked = !draftChecked;
     if (draftChecked) {
-      alert("드래프트 참가 신청이 완료되었습니다. W47주차 결과 확인 화면에서 드래프트 보드를 볼 수 있습니다.");
+      alert(
+        "드래프트 참가 신청이 완료되었습니다. W47주차 결과 확인 화면에서 드래프트 보드를 볼 수 있습니다.",
+      );
     }
   }
 
@@ -118,10 +126,18 @@
   <div class="modal">
     <div class="modal-header">
       <span class="chip">진로 결정</span>
-      <h2>{$gameStore.protagonist.careerStage === "highschool" ? "W44" : $gameStore.protagonist.careerStage === "university" ? "W42" : "W39"} 진로 신청 허브</h2>
+      <h2>
+        {$gameStore.protagonist.careerStage === "highschool"
+          ? "W44"
+          : $gameStore.protagonist.careerStage === "university"
+            ? "W42"
+            : "W39"} 진로 신청 허브
+      </h2>
     </div>
     <p class="body-text">
-      {isIndependent ? "KBL 드래프트에 신청하세요. 미신청 시 독립리그를 계속합니다." : "각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 눌러 다음 주로 진행하세요."}
+      {isIndependent
+        ? "KBL 드래프트에 신청하세요. 미신청 시 독립리그를 계속합니다."
+        : "각 진로 페이지를 확인하고 체크한 뒤 신청 완료를 눌러 다음 주로 진행하세요."}
     </p>
 
     <div class="options">
@@ -131,33 +147,58 @@
 
       {#if canUniv}
         <button class="opt-btn" type="button" on:click={() => (universityModalOpen = true)}>
-          <span class="opt-label">대학 진학 신청 {universityChecked ? `✓ (${universityChoices.length}/3)` : ""}</span>
+          <span class="opt-label"
+            >대학 진학 신청 {universityChecked ? `✓ (${universityChoices.length}/3)` : ""}</span
+          >
         </button>
         {#if universityChecked}
-          <div class="opt-box"><div class="list">{#each universityChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
+          <div class="opt-box">
+            <div class="list">
+              {#each universityChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}
+            </div>
+          </div>
         {/if}
       {/if}
 
       {#if canIndie}
         <button class="opt-btn" type="button" on:click={() => (independentModalOpen = true)}>
-          <span class="opt-label">독립리그 신청 {independentChecked ? `✓ (${independentChoices.length}/3)` : ""}</span>
+          <span class="opt-label"
+            >독립리그 신청 {independentChecked ? `✓ (${independentChoices.length}/3)` : ""}</span
+          >
         </button>
         {#if independentChecked}
-          <div class="opt-box"><div class="list">{#each independentChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
+          <div class="opt-box">
+            <div class="list">
+              {#each independentChoices as teamId}<div class="picked">
+                  {teamName(teamId)}
+                </div>{/each}
+            </div>
+          </div>
         {/if}
       {/if}
 
       <!-- 해외 2군 — 신청이 아니라 제안 (§0.45). 여기선 안내 한 줄 + 문턱 보기 -->
       <div class="opt-box overseas">
-        <span class="opt-label">해외 2군 제안은 시즌 결과(W47)에 온다 — 지금 내 OVR {myOvr}·기여 {Math.round(myScore)}로는 <strong>{overseasCount}/{overseasFarm.length}팀</strong></span>
-        <button class="link" type="button" on:click={() => (overseasModalOpen = true)}>구단별 문턱 보기</button>
+        <span class="opt-label"
+          >해외 2군 제안은 시즌 결과(W47)에 온다 — 지금 내 OVR {myOvr}·기여 {Math.round(
+            myScore,
+          )}로는 <strong>{overseasCount}/{overseasFarm.length}팀</strong></span
+        >
+        <button class="link" type="button" on:click={() => (overseasModalOpen = true)}
+          >구단별 문턱 보기</button
+        >
       </div>
 
       <button class="opt-btn danger" type="button" on:click={chooseMilitaryNow}>
         <span class="opt-label">군입대 (즉시 확정)</span>
       </button>
     </div>
-    <button class="submit" disabled={resolving || !(draftChecked || universityChecked || independentChecked || isIndependent)} on:click={submitApplications}>신청 완료</button>
+    <button
+      class="submit"
+      disabled={resolving ||
+        !(draftChecked || universityChecked || independentChecked || isIndependent)}
+      on:click={submitApplications}>신청 완료</button
+    >
   </div>
 </div>
 
@@ -197,23 +238,117 @@
 {/if}
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display: flex; align-items: center; justify-content: center; z-index: 200; }
-  .modal { background: var(--panel); border: 1px solid var(--ink-mute); border-radius: 16px; padding: 24px; width: min(760px, 94vw); display: grid; gap: 14px; }
-  .chip { font-size: 11px; color: var(--ink-mid); }
-  h2 { margin: 0; color: var(--ink); }
-  .body-text { margin: 0; color: var(--ink); }
-  .options { display: grid; gap: 8px; }
-  .opt-box { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--panel); }
-  .opt-box.overseas { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .opt-box.overseas .opt-label { font-weight: 500; font-size: 13px; color: var(--ink-mid); }
-  .opt-box.overseas strong { color: var(--ink); font-weight: 800; }
-  .link { background: none; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-mid); font-size: 12px; padding: 4px 10px; cursor: pointer; white-space: nowrap; }
-  .link:hover { border-color: var(--line-strong); color: var(--ink); }
-  .opt-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: block; width: 100%; }
-  .opt-btn.danger { background: rgba(179, 49, 31, 0.09); border-color: var(--bad); }
-  .opt-label { color: var(--ink); font-weight: 600; }
-  .list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-  .picked { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
-  .submit { background: var(--ink-mute); color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer; }
-  .submit:disabled { opacity: 0.5; cursor: default; }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: 16px;
+    padding: 24px;
+    width: min(760px, 94vw);
+    display: grid;
+    gap: 14px;
+  }
+  .chip {
+    font-size: 11px;
+    color: var(--ink-mid);
+  }
+  h2 {
+    margin: 0;
+    color: var(--ink);
+  }
+  .body-text {
+    margin: 0;
+    color: var(--ink);
+  }
+  .options {
+    display: grid;
+    gap: 8px;
+  }
+  .opt-box {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    background: var(--panel);
+  }
+  .opt-box.overseas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .opt-box.overseas .opt-label {
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--ink-mid);
+  }
+  .opt-box.overseas strong {
+    color: var(--ink);
+    font-weight: 800;
+  }
+  .link {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-mid);
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .link:hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+  .opt-btn {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+  }
+  .opt-btn.danger {
+    background: rgba(179, 49, 31, 0.09);
+    border-color: var(--bad);
+  }
+  .opt-label {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .picked {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px;
+  }
+  .submit {
+    background: var(--ink-mute);
+    color: #fff;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+  }
+  .submit:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 </style>

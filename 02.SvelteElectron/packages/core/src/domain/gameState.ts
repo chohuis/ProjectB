@@ -1,9 +1,4 @@
-export type StageId =
-  | "highschool"
-  | "university"
-  | "independent"
-  | "pro_korea"
-  | "pro_usa";
+export type StageId = "highschool" | "university" | "independent" | "pro_korea" | "pro_usa";
 
 export interface GameState {
   day: number;
@@ -21,7 +16,6 @@ export function createInitialGameState(): GameState {
     stage: "highschool",
     playerName: "신인 투수",
     teamName: "서울 이노베이션 고",
-    morale: 60
+    morale: 60,
   };
 }
-

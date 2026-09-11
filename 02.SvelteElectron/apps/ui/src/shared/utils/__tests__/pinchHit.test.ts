@@ -29,32 +29,56 @@ import type { EntityRow } from "../../stores/master";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
-const bat = (id: string, ovr: number): EntityRow => ({
-  // ⚠ `role`·`teamId`·`status` 는 **최상위**다 — `getTeamPlayers` 가
-  //   거기서 거른다. `details.player` 에만 넣으면 로스터가 통째로 비고
-  //   검사가 조용히 0을 낸다 — 처음에 그렇게 짠다.
-  id, name: id, role: "player", teamId: "TEAM_X", status: "active",
-  details: {
-    player: {
-      teamId: "TEAM_X", playerType: "batter", position: "LF", age: 25,
-      batting: {
-        ovr, contact: ovr, power: ovr, eye: ovr, discipline: ovr,
-        speed: ovr, baseInstinct: ovr, battingClutch: ovr,
-        bunting: ovr, fielding: ovr, arm: ovr,
+const bat = (id: string, ovr: number): EntityRow =>
+  ({
+    // ⚠ `role`·`teamId`·`status` 는 **최상위**다 — `getTeamPlayers` 가
+    //   거기서 거른다. `details.player` 에만 넣으면 로스터가 통째로 비고
+    //   검사가 조용히 0을 낸다 — 처음에 그렇게 짠다.
+    id,
+    name: id,
+    role: "player",
+    teamId: "TEAM_X",
+    status: "active",
+    details: {
+      player: {
+        teamId: "TEAM_X",
+        playerType: "batter",
+        position: "LF",
+        age: 25,
+        batting: {
+          ovr,
+          contact: ovr,
+          power: ovr,
+          eye: ovr,
+          discipline: ovr,
+          speed: ovr,
+          baseInstinct: ovr,
+          battingClutch: ovr,
+          bunting: ovr,
+          fielding: ovr,
+          arm: ovr,
+        },
       },
     },
-  },
-} as unknown as EntityRow);
+  }) as unknown as EntityRow;
 
-const pit = (id: string, ovr: number): EntityRow => ({
-  id, name: id, role: "player", teamId: "TEAM_X", status: "active",
-  details: {
-    player: {
-      teamId: "TEAM_X", playerType: "pitcher", position: "SP", age: 25,
-      pitching: { ovr, command: ovr, velocity: ovr, stamina: ovr, control: ovr, movement: ovr },
+const pit = (id: string, ovr: number): EntityRow =>
+  ({
+    id,
+    name: id,
+    role: "player",
+    teamId: "TEAM_X",
+    status: "active",
+    details: {
+      player: {
+        teamId: "TEAM_X",
+        playerType: "pitcher",
+        position: "SP",
+        age: 25,
+        pitching: { ovr, command: ovr, velocity: ovr, stamina: ovr, control: ovr, movement: ovr },
+      },
     },
-  },
-} as unknown as EntityRow);
+  }) as unknown as EntityRow;
 
 describe("대타 — 벤치가 실제로 만들어진다", () => {
   // 타자 14 + 투수 5 — 라인업 9를 채우고도 남는다

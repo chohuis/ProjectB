@@ -57,7 +57,9 @@ describe("구단주 성향 배선", () => {
    *   연수와 연봉이 서로 다른 팀의 성향을 볼 수 있다.
    */
   it("연수와 같은 프로필을 쓴다", () => {
-    expect(M).toContain("const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;");
+    expect(M).toContain(
+      "const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;",
+    );
     expect(M).toContain("developmentFocus:    profile.developmentFocus,");
   });
 
@@ -90,7 +92,7 @@ describe("구단주 성향 배선", () => {
   /** 생성된 타입 선언에서도 사라져야 한다 — 남으면 호출이 컴파일된다 */
   it("생성된 index.d.ts 에도 안 남았다", () => {
     const dts = resolve(ROOT, "packages/engine-native/index.d.ts");
-    if (!existsSync(dts)) return;   // 빌드 전이면 건너뛴다
+    if (!existsSync(dts)) return; // 빌드 전이면 건너뛴다
     const D = readFileSync(dts, "utf8");
     expect(D).not.toContain("evalRenewalOfferNative");
     expect(D).not.toContain("playerEvalContractOfferNative");

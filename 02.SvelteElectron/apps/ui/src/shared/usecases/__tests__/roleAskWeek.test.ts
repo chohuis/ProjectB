@@ -2,9 +2,19 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { ROLE_ASK_WEEK, ROLE_ASK_WEEK_DEFAULT, roleAskWeekOf } from "../../utils/seasonWeeks";
-import { HS_START_WEEK, UNIV_REGULAR_START_WEEK, PRESEASON_START_WEEK, PRO_START_WEEK } from "../../utils/leagueScheduler";
+import {
+  HS_START_WEEK,
+  UNIV_REGULAR_START_WEEK,
+  PRESEASON_START_WEEK,
+  PRO_START_WEEK,
+} from "../../utils/leagueScheduler";
 import { SURVIVAL_STAGES } from "../../utils/leagueTeams.generated";
-import { roleAskReasonOf, shouldAskRoleChoice, hasRoleChoiceThisSeason, roleChoiceGuardKey } from "../pitcherRole";
+import {
+  roleAskReasonOf,
+  shouldAskRoleChoice,
+  hasRoleChoiceThisSeason,
+  roleChoiceGuardKey,
+} from "../pitcherRole";
 import type { ProtagonistSave } from "../../types/save";
 
 /**
@@ -82,7 +92,11 @@ describe("언제 묻나", () => {
   // 🔴 새 게임 **첫 주**에 묻는다 (2026-09-07 · 사용자 확정). W6 은 없앴다 —
   //   거기서 물으면 W1 자동 배정을 다섯 주 뒤에 뒤집는 소식이 된다
   it("고교는 W1 이다 — W6 에는 안 묻는다", () => {
-    const hs = pitcher({ careerStage: "highschool", leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_HS_A" });
+    const hs = pitcher({
+      careerStage: "highschool",
+      leagueId: "LEAGUE_HIGHSCHOOL",
+      teamId: "TEAM_HS_A",
+    });
     expect(roleAskReasonOf(hs, 2026, 1)).toBe("season");
     expect(roleAskReasonOf(hs, 2026, 6)).toBeNull();
   });
@@ -95,7 +109,9 @@ describe("언제 묻나", () => {
    */
   it("고교도 물으면 그 시즌 자동 배정이 막힌다", () => {
     const hs = pitcher({
-      careerStage: "highschool", leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_HS_A",
+      careerStage: "highschool",
+      leagueId: "LEAGUE_HIGHSCHOOL",
+      teamId: "TEAM_HS_A",
       lastRoleChoiceKey: roleChoiceGuardKey(2026, "TEAM_HS_A", 1),
     });
     expect(hasRoleChoiceThisSeason(hs as ProtagonistSave, 2026)).toBe(true);
@@ -109,7 +125,11 @@ describe("언제 묻나", () => {
   // 🔴 확정 9 — 복무 중엔 주인공 경기가 0이다. 보직만 정해 두면 화면엔
   //   보직이 떠 있는데 기록이 안 쌓여 "왜 안 던졌나"의 답이 없다
   it("복무 중엔 안 묻는다 — 상무도 현역도", () => {
-    const mil = pitcher({ careerStage: "military", leagueId: "LEAGUE_INDEPENDENT", teamId: "TEAM_IND_SANGMU_PHOENIX" });
+    const mil = pitcher({
+      careerStage: "military",
+      leagueId: "LEAGUE_INDEPENDENT",
+      teamId: "TEAM_IND_SANGMU_PHOENIX",
+    });
     expect(roleAskReasonOf(mil, 2033, 9)).toBeNull();
   });
 });
@@ -148,7 +168,9 @@ describe("시즌 중에 다시 묻는 자리 — 셋만 연다", () => {
 
   it("강등 — 1군에서 2군으로", () => {
     const p = pitcher({
-      careerStage: "pro_kbl", leagueId: "LEAGUE_KBL_FARM", teamId: "TEAM_KBL_A_2",
+      careerStage: "pro_kbl",
+      leagueId: "LEAGUE_KBL_FARM",
+      teamId: "TEAM_KBL_A_2",
       lastRoleChoiceKey: roleChoiceGuardKey(2029, "TEAM_KBL_A_1", 1),
     });
     expect(roleAskReasonOf(p, 2029, 12)).toBe("demote");
@@ -179,14 +201,18 @@ describe("시즌 중에 다시 묻는 자리 — 셋만 연다", () => {
 
   it("전역 뒤 첫 시즌은 머리말이 다르다", () => {
     const p = pitcher({
-      careerEvents: [{ year: 2033, eventType: "military_discharge", detail: "전역" }] as ProtagonistSave["careerEvents"],
+      careerEvents: [
+        { year: 2033, eventType: "military_discharge", detail: "전역" },
+      ] as ProtagonistSave["careerEvents"],
     });
     expect(roleAskReasonOf(p, 2034, 1)).toBe("discharge");
   });
 
   it("전역이 오래됐으면 평범한 개막 전 주다", () => {
     const p = pitcher({
-      careerEvents: [{ year: 2030, eventType: "military_discharge", detail: "전역" }] as ProtagonistSave["careerEvents"],
+      careerEvents: [
+        { year: 2030, eventType: "military_discharge", detail: "전역" },
+      ] as ProtagonistSave["careerEvents"],
     });
     expect(roleAskReasonOf(p, 2034, 1)).toBe("season");
   });
@@ -217,11 +243,15 @@ describe("W1 자동 배정 배선", () => {
   //   머리의 `g` 에는 없다. 프로 1군은 묻는 주가 W1 이라 그대로 두면 같은 주에
   //   물음과 브리핑이 둘 다 뜬다
   it("W1 갈래가 hasRoleChoiceThisSeason 으로 막히고, store 를 다시 읽는다", () => {
-    expect(SRC.includes("!hasRoleChoiceThisSeason(get(gameStore).protagonist, s.seasonYear)")).toBe(true);
+    expect(SRC.includes("!hasRoleChoiceThisSeason(get(gameStore).protagonist, s.seasonYear)")).toBe(
+      true,
+    );
   });
 
   it("둘 다 import 되어 있다", () => {
-    expect(SRC.includes('import { askRoleChoice, hasRoleChoiceThisSeason } from "./pitcherRole"')).toBe(true);
+    expect(
+      SRC.includes('import { askRoleChoice, hasRoleChoiceThisSeason } from "./pitcherRole"'),
+    ).toBe(true);
   });
 });
 
@@ -244,14 +274,19 @@ describe("헤드리스 배선", () => {
 
   it("갈래가 pickChoice 앞에 있다 — 뒤면 아무 소용이 없다", () => {
     const branch = SRC.indexOf('if (msg.metadata?.type === "roleChoice")');
-    const heur   = SRC.indexOf("const choiceId = pickChoice(msg.decision.options");
+    const heur = SRC.indexOf("const choiceId = pickChoice(msg.decision.options");
     expect(branch).toBeGreaterThan(-1);
     expect(heur).toBeGreaterThan(-1);
     expect(branch).toBeLessThan(heur);
   });
 
   it("프로브가 정책 기본값을 심는다", () => {
-    const PROBE = readFileSync(resolve(__dirname, "../../../../../../scripts/probe-paths.cjs"), "utf8");
-    expect(PROBE.includes('globalThis.__PB_ROLE_CHOICE = process.env.PB_ROLE_CHOICE || "recommend"')).toBe(true);
+    const PROBE = readFileSync(
+      resolve(__dirname, "../../../../../../scripts/probe-paths.cjs"),
+      "utf8",
+    );
+    expect(
+      PROBE.includes('globalThis.__PB_ROLE_CHOICE = process.env.PB_ROLE_CHOICE || "recommend"'),
+    ).toBe(true);
   });
 });

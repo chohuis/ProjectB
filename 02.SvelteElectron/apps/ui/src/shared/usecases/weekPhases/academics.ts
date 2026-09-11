@@ -4,8 +4,10 @@ import type { MessageItem } from "../../types/main";
 // `career_stage: highschool` 전용이라 대학에서는 아예 안 뜬다 — 9-C-1이
 // 붙인 학점 확정 경로가 영영 실행되지 않았다.
 export const EXAM_EVENT_IDS = new Set([
-  "EVT_HS_MIDTERM", "EVT_HS_FINAL",
-  "EVT_UNIV_MIDTERM", "EVT_UNIV_FINAL",
+  "EVT_HS_MIDTERM",
+  "EVT_HS_FINAL",
+  "EVT_UNIV_MIDTERM",
+  "EVT_UNIV_FINAL",
 ]);
 
 /** 중간고사인가 — id가 무대별로 둘씩이라 이름으로 가른다 */
@@ -21,7 +23,10 @@ export function isMidtermEvent(eventId: string): boolean {
  *   가르면 이 함수가 두 무대를 다 알아야 한다.
  */
 export function makeExamMessage(
-  seasonYear: number, week: number, subject: string, body: string,
+  seasonYear: number,
+  week: number,
+  subject: string,
+  body: string,
   metadata?: import("../../types/main").BarsMetadata,
 ): MessageItem {
   return {

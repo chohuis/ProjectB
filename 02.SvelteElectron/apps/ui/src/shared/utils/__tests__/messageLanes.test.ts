@@ -12,10 +12,16 @@ import { evaluateCondition } from "../conditionEvaluator";
 import type { EventRule, EventContext } from "../../types/event";
 import type { ProtagonistSave } from "../../types/save";
 
-const rule = (tier: string): EventRule => ({
-  id: "EVT_X", title: "t", type: "conditional", category: "c", priority: 1,
-  tier: tier as EventRule["tier"], oncePolicy: "repeatable",
-} as EventRule);
+const rule = (tier: string): EventRule =>
+  ({
+    id: "EVT_X",
+    title: "t",
+    type: "conditional",
+    category: "c",
+    priority: 1,
+    tier: tier as EventRule["tier"],
+    oncePolicy: "repeatable",
+  }) as EventRule;
 
 describe("갈래 판정", () => {
   it("`notice` 는 통지다", () => {
@@ -52,7 +58,13 @@ describe("상태 효과 — 세계를 바꾸는 열쇠", () => {
   });
 
   it("성장·사기·관계는 상태 효과가 아니다 — 이벤트가 줘도 되는 것들이다", () => {
-    expect(hasStateEffect({ moraleDelta: 5, xp: { command: 8 }, relationDelta: { kind: "manager", delta: 6 } })).toBe(false);
+    expect(
+      hasStateEffect({
+        moraleDelta: 5,
+        xp: { command: 8 },
+        relationDelta: { kind: "manager", delta: 6 },
+      }),
+    ).toBe(false);
     expect(hasStateEffect({})).toBe(false);
     expect(hasStateEffect(undefined)).toBe(false);
   });
@@ -63,72 +75,120 @@ const ctxWith = (
   outcomes: ProtagonistSave["recentOutcomes"],
   week: number,
   year: number | undefined,
-): EventContext => ({
-  protagonist: { id: "P", recentOutcomes: outcomes } as unknown as ProtagonistSave,
-  currentWeek: week,
-  seasonYear: year,
-  seasonPhase: "season",
-  standings: [],
-  stats: {},
-  triggeredEvents: {},
-} as unknown as EventContext);
+): EventContext =>
+  ({
+    protagonist: { id: "P", recentOutcomes: outcomes } as unknown as ProtagonistSave,
+    currentWeek: week,
+    seasonYear: year,
+    seasonPhase: "season",
+    standings: [],
+    stats: {},
+    triggeredEvents: {},
+  }) as unknown as EventContext;
 
 describe("`outcome_within` — 「방금 그 일이 일어났나」", () => {
   const demoted = [{ kind: "demote" as const, year: 2028, week: 10 }];
 
   it("이번 주에 일어났으면 `weeks: 0` 으로 잡힌다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 0 },
-      ctxWith(demoted, 10, 2028))).toBe(true);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 0 },
+        ctxWith(demoted, 10, 2028),
+      ),
+    ).toBe(true);
   });
 
   it("창 밖이면 거짓 — 「방금」이 아니다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 2 },
-      ctxWith(demoted, 15, 2028))).toBe(false);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 2 },
+        ctxWith(demoted, 15, 2028),
+      ),
+    ).toBe(false);
   });
 
   it("🔴 시즌을 넘어도 센다 — 주차만 보면 W51 → W2 가 51주 전으로 보인다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 6 },
-      ctxWith([{ kind: "demote", year: 2028, week: 50 }], 4, 2029))).toBe(true);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 6 },
+        ctxWith([{ kind: "demote", year: 2028, week: 50 }], 4, 2029),
+      ),
+    ).toBe(true);
   });
 
   it("다른 종류는 안 잡는다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "callup", weeks: 4 },
-      ctxWith(demoted, 12, 2028))).toBe(false);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "callup", weeks: 4 },
+        ctxWith(demoted, 12, 2028),
+      ),
+    ).toBe(false);
   });
 
   it("기록이 없으면 거짓 — 구 세이브가 그렇고, 그게 맞다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 4 },
-      ctxWith(undefined, 12, 2028))).toBe(false);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 4 },
+        ctxWith(undefined, 12, 2028),
+      ),
+    ).toBe(false);
   });
 
   it("⚠ 미래 기록은 안 잡는다 — 아직 안 일어난 일로 통지를 띄우면 안 된다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 8 },
-      ctxWith([{ kind: "demote", year: 2029, week: 3 }], 40, 2028))).toBe(false);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 8 },
+        ctxWith([{ kind: "demote", year: 2029, week: 3 }], 40, 2028),
+      ),
+    ).toBe(false);
   });
 
   it("연도를 모르는 옛 경로에서는 같은 시즌만 본다 — 모르는 해를 지어내지 않는다", () => {
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 4 },
-      ctxWith(demoted, 12, undefined))).toBe(true);
-    expect(evaluateCondition(
-      { type: "outcome_within", outcome: "demote", weeks: 1 },
-      ctxWith(demoted, 12, undefined))).toBe(false);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 4 },
+        ctxWith(demoted, 12, undefined),
+      ),
+    ).toBe(true);
+    expect(
+      evaluateCondition(
+        { type: "outcome_within", outcome: "demote", weeks: 1 },
+        ctxWith(demoted, 12, undefined),
+      ),
+    ).toBe(false);
   });
 });
 
 // ── 등판·출전 수 ─────────────────────────────────────────────
-const statCtx = (g: number | undefined, gs = 0): EventContext => ({
-  protagonist: { id: "P" } as unknown as ProtagonistSave,
-  currentWeek: 20, seasonPhase: "season", standings: [],
-  stats: g === undefined ? {} : { P: { type: "pitcher", g, gs, ip: 0, er: 0, h: 0, k: 0, bb: 0, w: 0, l: 0, sv: 0, hd: 0, era: 0, whip: 0 } },
-  triggeredEvents: {},
-} as unknown as EventContext);
+const statCtx = (g: number | undefined, gs = 0): EventContext =>
+  ({
+    protagonist: { id: "P" } as unknown as ProtagonistSave,
+    currentWeek: 20,
+    seasonPhase: "season",
+    standings: [],
+    stats:
+      g === undefined
+        ? {}
+        : {
+            P: {
+              type: "pitcher",
+              g,
+              gs,
+              ip: 0,
+              er: 0,
+              h: 0,
+              k: 0,
+              bb: 0,
+              w: 0,
+              l: 0,
+              sv: 0,
+              hd: 0,
+              era: 0,
+              whip: 0,
+            },
+          },
+    triggeredEvents: {},
+  }) as unknown as EventContext;
 
 describe("`season_games_gte` — 「시즌에 몇 경기 뛰었나」", () => {
   it("등판 수를 그대로 본다", () => {
@@ -137,7 +197,9 @@ describe("`season_games_gte` — 「시즌에 몇 경기 뛰었나」", () => {
   });
 
   it("기록이 아예 없으면 거짓", () => {
-    expect(evaluateCondition({ type: "season_games_gte", value: 1 }, statCtx(undefined))).toBe(false);
+    expect(evaluateCondition({ type: "season_games_gte", value: 1 }, statCtx(undefined))).toBe(
+      false,
+    );
   });
 
   it("`lte` 는 0 등판을 안 잡는다 — 안 뛴 것과 적게 뛴 것은 다르다", () => {

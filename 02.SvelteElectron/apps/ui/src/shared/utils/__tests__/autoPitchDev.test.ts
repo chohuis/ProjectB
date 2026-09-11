@@ -42,7 +42,9 @@ describe("자동 진행 구종 개발", () => {
 
   it("미달이면 새로 배우고, 채웠으면 등급을 올린다", () => {
     expect(src).toMatch(/owned\.length < target/);
-    expect(src).toMatch(/\.filter\(\(x\) => x\.grade < 5\)\.sort\(\(a, b\) => a\.grade - b\.grade\)/);
+    expect(src).toMatch(
+      /\.filter\(\(x\) => x\.grade < 5\)\.sort\(\(a, b\) => a\.grade - b\.grade\)/,
+    );
   });
 
   it("난이도 낮은 구종부터 고른다", () => {

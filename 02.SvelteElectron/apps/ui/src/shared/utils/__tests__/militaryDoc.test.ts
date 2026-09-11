@@ -2,7 +2,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  SPORTS_UNIT_CANDIDATES_WEEK, MILITARY_AGE_WARNING_WEEK, MILITARY_RESULT_WEEK,
+  SPORTS_UNIT_CANDIDATES_WEEK,
+  MILITARY_AGE_WARNING_WEEK,
+  MILITARY_RESULT_WEEK,
 } from "../seasonWeeks";
 
 /**
@@ -15,9 +17,12 @@ import {
  * 이 검사는 **문서에 박아 둔 숫자**가 코드와 갈라지면 깨진다.
  */
 const DOC = readFileSync(join(__dirname, "../../../../../../docs/MILITARY.md"), "utf8");
-const RULES = JSON.parse(readFileSync(
-  join(__dirname, "../../../../../../resource/data/master/players/generation_rules.json"),
-  "utf8")) as { militaryRules?: Record<string, unknown> };
+const RULES = JSON.parse(
+  readFileSync(
+    join(__dirname, "../../../../../../resource/data/master/players/generation_rules.json"),
+    "utf8",
+  ),
+) as { militaryRules?: Record<string, unknown> };
 
 describe("병역 문서가 코드와 맞는다", () => {
   it("주차 셋이 맞는다", () => {
@@ -61,7 +66,8 @@ describe("병역 문서가 코드와 맞는다", () => {
   });
 
   it("모르는 것을 모른다고 적었다", () => {
-    expect(DOC, "확인 못 한 것을 적어 두지 않으면 다음 사람이 다 안다고 읽는다")
-      .toMatch(/아직 안 적힌 것/);
+    expect(DOC, "확인 못 한 것을 적어 두지 않으면 다음 사람이 다 안다고 읽는다").toMatch(
+      /아직 안 적힌 것/,
+    );
   });
 });

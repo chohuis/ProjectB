@@ -7,8 +7,11 @@ import { getLeagueRadius } from "../../utils/radiusGate";
 import { seedOf } from "../../utils/seedOf";
 import { slotRepo } from "../../repo/slotRepo";
 import {
-  facilityTierOf, facilityFactorOf, loadFacilityFactors,
-  loadGrowthXpRules, growthXpRules,
+  facilityTierOf,
+  facilityFactorOf,
+  loadFacilityFactors,
+  loadGrowthXpRules,
+  growthXpRules,
 } from "../../utils/ids";
 import { staffStatsOf, factorOf } from "../../utils/staffEffects";
 import { primeForeignRules } from "../../utils/foreignSlots";
@@ -29,7 +32,7 @@ function aggregateMonthlyPerf(
   endWeek: number,
 ): Record<string, { gamesPlayed: number; era?: number; battingAvg?: number }> {
   const pitcherStats: Record<string, { er: number; ip: number }> = {};
-  const batterStats:  Record<string, { h: number; ab: number }> = {};
+  const batterStats: Record<string, { h: number; ab: number }> = {};
 
   for (const entry of schedule) {
     if (!entry.result || entry.week < startWeek || entry.week > endWeek) continue;
@@ -46,16 +49,25 @@ function aggregateMonthlyPerf(
 
   const result: Record<string, { gamesPlayed: number; era?: number; battingAvg?: number }> = {};
   for (const [id, st] of Object.entries(pitcherStats)) {
-    result[id] = { gamesPlayed: 1, era: st.ip > 0 ? Math.round((st.er * 9) / st.ip * 100) / 100 : undefined };
+    result[id] = {
+      gamesPlayed: 1,
+      era: st.ip > 0 ? Math.round(((st.er * 9) / st.ip) * 100) / 100 : undefined,
+    };
   }
   for (const [id, st] of Object.entries(batterStats)) {
-    result[id] = { gamesPlayed: 1, battingAvg: st.ab > 0 ? Math.round((st.h / st.ab) * 1000) / 1000 : undefined };
+    result[id] = {
+      gamesPlayed: 1,
+      battingAvg: st.ab > 0 ? Math.round((st.h / st.ab) * 1000) / 1000 : undefined,
+    };
   }
   return result;
 }
 
 // 모든 선수 NPC 주간 성장 처리 (매주 실행)
-export async function processWeeklyNpcGrowth(weekNum: number, careerStage: CareerStage): Promise<void> {
+export async function processWeeklyNpcGrowth(
+  weekNum: number,
+  careerStage: CareerStage,
+): Promise<void> {
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
@@ -94,12 +106,12 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
   const allSchedule = [
     ...s.schedule.filter((e) => e.result && e.week >= perfStartWeek && e.week <= prevWeek),
     ...Object.values(s.leagueSchedules).flatMap((sched) =>
-      sched.filter((e) => e.result && e.week >= perfStartWeek && e.week <= prevWeek)
+      sched.filter((e) => e.result && e.week >= perfStartWeek && e.week <= prevWeek),
     ),
   ];
   const perfData = aggregateMonthlyPerf(allSchedule, perfStartWeek, prevWeek);
 
-  const namedFameMap = new Map(g.npcs.map(n => [n.npcId, n.fame ?? 0]));
+  const namedFameMap = new Map(g.npcs.map((n) => [n.npcId, n.fame ?? 0]));
 
   // 반경 2/3 리그의 Named NPC — 합성 주간 성적으로 perfData 보강 (R3b, DESIGN.md §4.2)
   const syntheticCandidates: { npcId: string; ovr: number; playerType: string }[] = [];
@@ -109,18 +121,27 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
     if (getLeagueRadius(careerStage, e.leagueId ?? "") === 1) continue; // 실제 경기로 이미 처리됨
     if (perfData[e.id]) continue; // 이번 주 이미 실데이터 있음(예외 케이스 방어)
     const live = get(npcLiveStatsStore)[e.id];
-    const p    = (e.details as import("../../stores/master").EntityDetails)?.player;
-    const ovr  = live?.pitching?.ovr ?? live?.batting?.ovr ?? p?.pitching?.ovr ?? p?.batting?.ovr ?? 50;
+    const p = (e.details as import("../../stores/master").EntityDetails)?.player;
+    const ovr =
+      live?.pitching?.ovr ?? live?.batting?.ovr ?? p?.pitching?.ovr ?? p?.batting?.ovr ?? 50;
     syntheticCandidates.push({ npcId: e.id, ovr, playerType: p?.playerType ?? "pitcher" });
   }
 
   if (syntheticCandidates.length > 0) {
     const meta = await slotRepo.getMeta(g.currentSlotId ?? "");
     const worldSeed = Number(meta.world_seed ?? 0) >>> 0;
-    const raw = await window.projectB!.engine("syntheticWeeklyPerfNative", JSON.stringify({
-      worldSeed, seasonYear: s.seasonYear, week: weekNum, npcs: syntheticCandidates,
-    }));
-    const synth = JSON.parse(raw) as { results?: Array<{ npcId: string; missed: boolean; era?: number; battingAvg?: number }> };
+    const raw = await window.projectB!.engine(
+      "syntheticWeeklyPerfNative",
+      JSON.stringify({
+        worldSeed,
+        seasonYear: s.seasonYear,
+        week: weekNum,
+        npcs: syntheticCandidates,
+      }),
+    );
+    const synth = JSON.parse(raw) as {
+      results?: Array<{ npcId: string; missed: boolean; era?: number; battingAvg?: number }>;
+    };
     if (Array.isArray(synth.results)) {
       for (const r of synth.results) {
         if (r.missed) continue; // 결장 구간 — 합성 부상, perfData 미생성
@@ -143,68 +164,73 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
     })
     .map((e) => {
       const live = get(npcLiveStatsStore)[e.id];
-      const p    = (e.details as import("../../stores/master").EntityDetails)?.player;
+      const p = (e.details as import("../../stores/master").EntityDetails)?.player;
       return {
-        npcId:           e.id,
-        teamId:          e.teamId,
-        playerType:      p?.playerType ?? "pitcher",
-        age:             e.age,
+        npcId: e.id,
+        teamId: e.teamId,
+        playerType: p?.playerType ?? "pitcher",
+        age: e.age,
         developmentRate: p?.developmentRate ?? 50,
         potentialHidden: p?.potentialHidden ?? 75,
-        pitching:        live?.pitching ?? p?.pitching,
-        batting:         live?.batting  ?? p?.batting,
-        pitchingXp:      live?.pitchingXp ?? {},
-        battingXp:       live?.battingXp  ?? {},
-        peakOvr:         live?.peakOvr,
-        currentFame:     namedFameMap.get(e.id) ?? 0,
-        pitches:         live?.pitches ?? p?.pitches ?? [],
-        pitcherRole:     p?.position ?? "",
+        pitching: live?.pitching ?? p?.pitching,
+        batting: live?.batting ?? p?.batting,
+        pitchingXp: live?.pitchingXp ?? {},
+        battingXp: live?.battingXp ?? {},
+        peakOvr: live?.peakOvr,
+        currentFame: namedFameMap.get(e.id) ?? 0,
+        pitches: live?.pitches ?? p?.pitches ?? [],
+        pitcherRole: p?.position ?? "",
         pitchInTraining: live?.pitchInTraining,
         // 노화 누적분 — 안 넘기면 매주 0에서 시작해 노화가 영영 안 걸린다
-        agingDebt:       live?.agingDebt ?? {},
+        agingDebt: live?.agingDebt ?? {},
       };
     });
 
   if (npcs.length === 0) return;
 
   const result = JSON.parse(
-    await window.projectB!.npcCalcWeeklyGrowth(JSON.stringify({
-      npcs,
-      teamContexts,
-      perfData,
-      currentPhase,
-      monthIndex: 0,  // 주간 모드에서는 사용 안 함
-      // ⚠ **씨앗을 넘긴다.** 성장이 능력치를 만들고 능력치가 성적을
-      //   만든다 — 안 넘기면 같은 세이브도 실행마다 다른 리그가 된다.
-      seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "npc-growth"),
-      pitchCatalogIds: m.pitchCatalog.map((p) => p.id),
-      // 성장 속도 정본은 규칙 파일이다 — Rust의 표는 폴백일 뿐이다
-      xpRules: growthXpRules(),
-    }))
-  ) as { updated?: Array<{
-    npcId: string;
-    pitching?: any;
-    batting?: any;
-    pitchingXp: Record<string, number>;
-    battingXp: Record<string, number>;
-    peakOvr: number;
-    fameDelta: number;
-    pitches: Array<{ id: string; grade: 1 | 2 | 3 | 4 | 5 }>;
-    pitchInTraining?: { id: string; progress: number; isNew: boolean };
-  }>; error?: string };
+    await window.projectB!.npcCalcWeeklyGrowth(
+      JSON.stringify({
+        npcs,
+        teamContexts,
+        perfData,
+        currentPhase,
+        monthIndex: 0, // 주간 모드에서는 사용 안 함
+        // ⚠ **씨앗을 넘긴다.** 성장이 능력치를 만들고 능력치가 성적을
+        //   만든다 — 안 넘기면 같은 세이브도 실행마다 다른 리그가 된다.
+        seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "npc-growth"),
+        pitchCatalogIds: m.pitchCatalog.map((p) => p.id),
+        // 성장 속도 정본은 규칙 파일이다 — Rust의 표는 폴백일 뿐이다
+        xpRules: growthXpRules(),
+      }),
+    ),
+  ) as {
+    updated?: Array<{
+      npcId: string;
+      pitching?: any;
+      batting?: any;
+      pitchingXp: Record<string, number>;
+      battingXp: Record<string, number>;
+      peakOvr: number;
+      fameDelta: number;
+      pitches: Array<{ id: string; grade: 1 | 2 | 3 | 4 | 5 }>;
+      pitchInTraining?: { id: string; progress: number; isNew: boolean };
+    }>;
+    error?: string;
+  };
 
   if (!Array.isArray(result.updated)) {
-    console.error('[processWeeklyNpcGrowth] npcCalcWeeklyGrowth 실패:', result.error ?? result);
+    console.error("[processWeeklyNpcGrowth] npcCalcWeeklyGrowth 실패:", result.error ?? result);
     return;
   }
 
   seasonStore.applyNpcLiveGrowth(result.updated);
 
   // fame 업데이트
-  const fameDeltas = result.updated.filter(u => u.fameDelta !== 0 && namedFameMap.has(u.npcId));
+  const fameDeltas = result.updated.filter((u) => u.fameDelta !== 0 && namedFameMap.has(u.npcId));
   if (fameDeltas.length > 0) {
-    const updatedNpcs = get(gameStore).npcs.map(n => {
-      const delta = fameDeltas.find(u => u.npcId === n.npcId)?.fameDelta ?? 0;
+    const updatedNpcs = get(gameStore).npcs.map((n) => {
+      const delta = fameDeltas.find((u) => u.npcId === n.npcId)?.fameDelta ?? 0;
       if (delta === 0) return n;
       return { ...n, fame: Math.max(0, Math.min(100, (n.fame ?? 0) + delta)) };
     });

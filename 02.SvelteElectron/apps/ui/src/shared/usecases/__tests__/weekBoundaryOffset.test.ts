@@ -19,8 +19,7 @@ import { resolve } from "node:path";
 // 단위 테스트로 재현하려면 세계 전체를 세워야 하고, 그러면 검사가 아니라
 // 두 번째 구현이 된다.
 
-const src = () =>
-  readFileSync(resolve(__dirname, "../advanceWeek.ts"), "utf8");
+const src = () => readFileSync(resolve(__dirname, "../advanceWeek.ts"), "utf8");
 
 /** `processWeekBoundary` 본문만 잘라낸다 — 바깥의 다른 weekNum 용법에 안 걸리게 */
 function boundaryBody(s: string): string {

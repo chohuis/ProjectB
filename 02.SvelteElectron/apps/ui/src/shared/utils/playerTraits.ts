@@ -45,7 +45,10 @@ const GRADES: readonly TraitGrade[] = ["A", "B", "C", "D", "E"];
  * KBL의 92%가 A였고 D·E는 전 리그에서 0%였다 — 등급이 리그 이름을 다시 말할 뿐이다.
  * 여지로 재면 중앙값이 리그를 가리지 않는다(고교 24 · 대학 24 · 독립 23 · KBL 25).
  */
-export function growthRoom(potentialHidden: number | undefined, ovr: number | undefined): number | null {
+export function growthRoom(
+  potentialHidden: number | undefined,
+  ovr: number | undefined,
+): number | null {
   if (typeof potentialHidden !== "number" || typeof ovr !== "number") return null;
   return potentialHidden - ovr;
 }
@@ -66,7 +69,6 @@ export function gradeTone(g: TraitGrade | null): "good" | "mid" | "low" {
   if (g === "C") return "mid";
   return "low";
 }
-
 
 export interface ScoutedGrade {
   /** 정확한 등급. 관측이 흐린 선수는 null */
@@ -113,26 +115,41 @@ export function scoutedGrade(
  * 특징이지만 낮은 쪽은 실측 최소가 50이라 애초에 극단이 없다.
  */
 export type PersonalityAxis =
-  | "loyalty" | "ambition" | "greed" | "competitiveDrive"
-  | "stabilityPreference" | "professionalism" | "overseasAmbition" | "marketPreference";
+  | "loyalty"
+  | "ambition"
+  | "greed"
+  | "competitiveDrive"
+  | "stabilityPreference"
+  | "professionalism"
+  | "overseasAmbition"
+  | "marketPreference";
 
-interface AxisCopy { hi: string | null; lo: string | null }
+interface AxisCopy {
+  hi: string | null;
+  lo: string | null;
+}
 
 const AXIS_COPY: Record<PersonalityAxis, AxisCopy> = {
-  loyalty:             { hi: "팀에 헌신적",   lo: "팀에 미련 없음" },
-  ambition:            { hi: "야망이 크다",   lo: "욕심이 없다" },
-  greed:               { hi: "돈에 민감",     lo: "돈에 무심" },
-  competitiveDrive:    { hi: "승부욕 강함",   lo: "승부에 담담" },
-  stabilityPreference: { hi: "안정 지향",     lo: "변화를 즐김" },
-  professionalism:     { hi: "프로 의식",     lo: null },
-  overseasAmbition:    { hi: "해외 지향",     lo: "국내 잔류형" },
-  marketPreference:    { hi: "큰 무대 선호",  lo: "연고 우선" },
+  loyalty: { hi: "팀에 헌신적", lo: "팀에 미련 없음" },
+  ambition: { hi: "야망이 크다", lo: "욕심이 없다" },
+  greed: { hi: "돈에 민감", lo: "돈에 무심" },
+  competitiveDrive: { hi: "승부욕 강함", lo: "승부에 담담" },
+  stabilityPreference: { hi: "안정 지향", lo: "변화를 즐김" },
+  professionalism: { hi: "프로 의식", lo: null },
+  overseasAmbition: { hi: "해외 지향", lo: "국내 잔류형" },
+  marketPreference: { hi: "큰 무대 선호", lo: "연고 우선" },
 };
 
 /** 태그가 겹칠 때 남길 순서. 앞이 사람을 더 잘 설명한다 */
 const AXIS_PRIORITY: readonly PersonalityAxis[] = [
-  "ambition", "competitiveDrive", "loyalty", "overseasAmbition",
-  "greed", "stabilityPreference", "marketPreference", "professionalism",
+  "ambition",
+  "competitiveDrive",
+  "loyalty",
+  "overseasAmbition",
+  "greed",
+  "stabilityPreference",
+  "marketPreference",
+  "professionalism",
 ];
 
 export interface PersonalityTag {
@@ -204,10 +221,16 @@ export function militaryHistory(
 // ── 국적 ──────────────────────────────────────────────────────────────
 
 const NATION_LABEL: Record<string, string> = {
-  KOR: "한국", JPN: "일본", USA: "미국", OTHER: "기타",
+  KOR: "한국",
+  JPN: "일본",
+  USA: "미국",
+  OTHER: "기타",
 };
 
-export interface ForeignBadge { code: string; label: string }
+export interface ForeignBadge {
+  code: string;
+  label: string;
+}
 
 /**
  * 외국인 슬롯 보유자일 때만 배지를 준다. 판정은 **`isForeignPlayer`가 정본**이라
@@ -265,7 +288,8 @@ export function rispSplit(
     label,
     avg,
     text: `${fmtAvg(avg)} (${h}/${ab})`,
-    ab, h,
+    ab,
+    h,
     delta: seasonAvg == null ? null : avg - seasonAvg,
   };
 }

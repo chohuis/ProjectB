@@ -17,21 +17,49 @@ import type { ProtagonistSave } from "../../types/save";
  * 🔴 **상한은 커리어 누계로 잰다.** 「한 번에 +3 까지」로 재면 +1 짜리를 세 번
  *   받아 넘는다 — 이 저장소가 「한 해에 한 번」 가드에서 두 번 밟은 형태다.
  */
-const base = (over: Partial<ProtagonistSave> = {}): ProtagonistSave => ({
-  condition: 50, fatigue: 50, morale: 50, money: 1000,
-  fame: 50, popularity: 50, diligence: 50, tags: [],
-  developmentRate: 50, potentialHidden: 70,
-  pitches: [{ id: "PITCH_FASTBALL", grade: 3 }],
-  battingXP: {}, batting: {
-    ovr: 30, contact: 35, power: 28, eye: 30, discipline: 30, speed: 50,
-    baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30,
-  },
-  pitchingXP: {}, pitching: {
-    ovr: 60, stamina: 60, velocity: 60, command: 60, control: 60,
-    movement: 60, mentality: 60, recovery: 60, clutch: 60, holdRunners: 60,
-  },
-  ...over,
-} as unknown as ProtagonistSave);
+const base = (over: Partial<ProtagonistSave> = {}): ProtagonistSave =>
+  ({
+    condition: 50,
+    fatigue: 50,
+    morale: 50,
+    money: 1000,
+    fame: 50,
+    popularity: 50,
+    diligence: 50,
+    tags: [],
+    developmentRate: 50,
+    potentialHidden: 70,
+    pitches: [{ id: "PITCH_FASTBALL", grade: 3 }],
+    battingXP: {},
+    batting: {
+      ovr: 30,
+      contact: 35,
+      power: 28,
+      eye: 30,
+      discipline: 30,
+      speed: 50,
+      baseInstinct: 50,
+      bunting: 45,
+      platoon: 50,
+      fielding: 45,
+      arm: 55,
+      battingClutch: 30,
+    },
+    pitchingXP: {},
+    pitching: {
+      ovr: 60,
+      stamina: 60,
+      velocity: 60,
+      command: 60,
+      control: 60,
+      movement: 60,
+      mentality: 60,
+      recovery: 60,
+      clutch: 60,
+      holdRunners: 60,
+    },
+    ...over,
+  }) as unknown as ProtagonistSave;
 
 describe("잠재력·성장률 — 커리어 누계 상한", () => {
   it("잠재력은 커리어 누적 +3 까지고, 넘는 몫은 무시한다", () => {
@@ -101,19 +129,22 @@ describe("구종 셋", () => {
   });
 
   it("진행도 점프는 훈련 중일 때만 — 없는 훈련을 만들어 주지 않는다", () => {
-    expect(applyEffectToProtagonist(base(), { pitchProgressJump: { pct: 30 } })
-      .trainingPitchState).toBeUndefined();
+    expect(
+      applyEffectToProtagonist(base(), { pitchProgressJump: { pct: 30 } }).trainingPitchState,
+    ).toBeUndefined();
     const p = applyEffectToProtagonist(
       base({ trainingPitchState: { id: "PITCH_SLIDER", progress: 80 } }),
-      { pitchProgressJump: { pct: 30 } });
+      { pitchProgressJump: { pct: 30 } },
+    );
     expect(p.trainingPitchState).toEqual({ id: "PITCH_SLIDER", progress: 100 });
   });
 });
 
 describe("특성·멘토·선발 보장·카운터", () => {
   beforeAll(() => {
-    primeProtagonistTraits(JSON.parse(
-      readFileSync(resolve("resource/data/master/traits/protagonist.json"), "utf8")));
+    primeProtagonistTraits(
+      JSON.parse(readFileSync(resolve("resource/data/master/traits/protagonist.json"), "utf8")),
+    );
   });
 
   it("특성은 중복이 안 쌓인다 — 두 번 받아도 계수가 두 번 곱하면 안 된다", () => {
@@ -155,8 +186,12 @@ describe("문자열형 표기도 같은 열쇠로 온다", () => {
     expect(parseEffectsArray(["devRate:+5"]).devRateDelta).toBe(5);
     expect(parseEffectsArray(["trainEff:15/4"]).trainEffBoost).toEqual({ pct: 15, weeks: 4 });
     expect(parseEffectsArray(["injuryRisk:-20/6"]).injuryRiskMod).toEqual({ pct: -20, weeks: 6 });
-    expect(parseEffectsArray(["pitchGrant:PITCH_SLIDER"]).pitchGrant).toEqual({ id: "PITCH_SLIDER" });
-    expect(parseEffectsArray(["pitchGradeUp:PITCH_SLIDER"]).pitchGradeUp).toEqual({ id: "PITCH_SLIDER" });
+    expect(parseEffectsArray(["pitchGrant:PITCH_SLIDER"]).pitchGrant).toEqual({
+      id: "PITCH_SLIDER",
+    });
+    expect(parseEffectsArray(["pitchGradeUp:PITCH_SLIDER"]).pitchGradeUp).toEqual({
+      id: "PITCH_SLIDER",
+    });
     expect(parseEffectsArray(["pitchProgress:+30"]).pitchProgressJump).toEqual({ pct: 30 });
     expect(parseEffectsArray(["trait:TRAIT_IRON_ARM"]).trait).toEqual({ id: "TRAIT_IRON_ARM" });
     expect(parseEffectsArray(["mentor:PLY_A/10"]).mentor).toEqual({ npcId: "PLY_A", pct: 10 });
@@ -181,6 +216,6 @@ describe("선발 보장이 자리 깊이를 0 으로 본다", () => {
     const src = readFileSync(resolve("apps/ui/src/shared/stores/game.ts"), "utf8");
     expect(src).toContain("p.started && guard > 0 ? guard - 1 : guard");
     const app = readFileSync(resolve("apps/ui/src/shared/usecases/applyGameOutcome.ts"), "utf8");
-    expect(app).toContain("started: role === \"SP\"");
+    expect(app).toContain('started: role === "SP"');
   });
 });

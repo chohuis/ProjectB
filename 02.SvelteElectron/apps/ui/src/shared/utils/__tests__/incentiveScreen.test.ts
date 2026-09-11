@@ -36,19 +36,35 @@ const LABELS = parseDashboardLabels(
 const COPY = tableCopy(LABELS, INCENTIVE_SETTLEMENT_KIND);
 
 const SRC_USECASE = read(resolve(__dirname, "../../usecases/incentiveSettlement.ts"));
-const SRC_STATUS  = read(resolve(__dirname, "../../../pages/status/StatusPage.svelte"));
+const SRC_STATUS = read(resolve(__dirname, "../../../pages/status/StatusPage.svelte"));
 
 beforeAll(() => {
   primeContractRules(JSON.parse(read(join(MASTER, "players/generation_rules.json"))));
 });
 
-const stats = (o: Partial<PitcherSeasonStats>): PitcherSeasonStats => ({
-  type: "pitcher", g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, ip: 0, er: 0, h: 0,
-  bb: 0, k: 0, hb: 0, era: 0, whip: 0, ...o,
-} as PitcherSeasonStats);
+const stats = (o: Partial<PitcherSeasonStats>): PitcherSeasonStats =>
+  ({
+    type: "pitcher",
+    g: 0,
+    gs: 0,
+    w: 0,
+    l: 0,
+    sv: 0,
+    hd: 0,
+    ip: 0,
+    er: 0,
+    h: 0,
+    bb: 0,
+    k: 0,
+    hb: 0,
+    era: 0,
+    whip: 0,
+    ...o,
+  }) as PitcherSeasonStats;
 
-const inc = (o: Partial<ContractIncentive> & Pick<ContractIncentive, "kind">): ContractIncentive =>
-  ({ threshold: 1, bonus: 1000, ...o });
+const inc = (
+  o: Partial<ContractIncentive> & Pick<ContractIncentive, "kind">,
+): ContractIncentive => ({ threshold: 1, bonus: 1000, ...o });
 
 /** 선발 셋 — 등판 달성 · 이닝 미달 · 골든글러브 미수상 */
 const SP_THREE = [
@@ -56,11 +72,15 @@ const SP_THREE = [
   inc({ kind: "innings", threshold: 150, bonus: 1200 }),
   inc({ kind: "award", awardId: "golden", bonus: 2000 }),
 ];
-const settled = () => settleIncentives({
-  seasonYear: 2030, role: "SP", awardIds: [],
-  // ⚠ 이닝은 실수다 — `120.1` 은 120과 1/3 이지 120.1 이 아니다(`ipToOuts` 머리말)
-  incentives: SP_THREE, stats: stats({ g: 30, ip: 120 + 1 / 3 }),
-});
+const settled = () =>
+  settleIncentives({
+    seasonYear: 2030,
+    role: "SP",
+    awardIds: [],
+    // ⚠ 이닝은 실수다 — `120.1` 은 120과 1/3 이지 120.1 이 아니다(`ipToOuts` 머리말)
+    incentives: SP_THREE,
+    stats: stats({ g: 30, ip: 120 + 1 / 3 }),
+  });
 
 // ── 문안 ───────────────────────────────────────────────────────
 
@@ -77,8 +97,10 @@ describe("문안 — 정산 표 자리가 있다", () => {
    */
   it("계약 완료 인센티브 표에 조건 열이 없다", () => {
     for (const k of ["contractSigned.incentives", "faSigned.incentives"]) {
-      expect(Object.keys(tableCopy(LABELS, k).columns), `${k} 에 조건 열이 남았다`)
-        .toEqual(["name", "amount"]);
+      expect(Object.keys(tableCopy(LABELS, k).columns), `${k} 에 조건 열이 남았다`).toEqual([
+        "name",
+        "amount",
+      ]);
     }
   });
 
@@ -96,8 +118,9 @@ describe("문안 — 정산 표 자리가 있다", () => {
 
   it("소식함 대응표에 정산이 올라 있다", () => {
     const raw = JSON.parse(read(join(MASTER, "messages/dashboard_labels.json")));
-    expect(raw._coverage.table["msg-contract-incentive-"])
-      .toBe(`table.${INCENTIVE_SETTLEMENT_KIND}`);
+    expect(raw._coverage.table["msg-contract-incentive-"]).toBe(
+      `table.${INCENTIVE_SETTLEMENT_KIND}`,
+    );
   });
 });
 
@@ -115,7 +138,9 @@ describe("정산 표 — 판정 하나에서 표가 나온다", () => {
     const rows = buildTableRows(md, resolveColumns(md, COPY), COPY);
     const outcomeCol = rows.map((r) => r.cells[1].text);
     expect(outcomeCol).toEqual([
-      COPY.outcomeLabel.met, COPY.outcomeLabel.missed, COPY.outcomeLabel.missed,
+      COPY.outcomeLabel.met,
+      COPY.outcomeLabel.missed,
+      COPY.outcomeLabel.missed,
     ]);
   });
 
@@ -153,22 +178,30 @@ describe("정산 표 — 판정 하나에서 표가 나온다", () => {
 
   /** ⚠ 「합계 +0만원」은 표 아래에 둘 말이 아니다 — 미달만 있으면 각주가 없다 */
   it("지급이 없으면 각주를 안 그린다", () => {
-    const none = incentiveSettlementTableMeta(settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [],
-      incentives: [inc({ kind: "games", threshold: 25, bonus: 800 })],
-      stats: stats({ g: 3 }),
-    }));
+    const none = incentiveSettlementTableMeta(
+      settleIncentives({
+        seasonYear: 2030,
+        role: "SP",
+        awardIds: [],
+        incentives: [inc({ kind: "games", threshold: 25, bonus: 800 })],
+        stats: stats({ g: 3 }),
+      }),
+    );
     expect(none.footnoteVars).toBeUndefined();
     expect(buildTableView(none, COPY).footnote, "자리표가 남은 각주가 떴다").toBe("");
   });
 
   /** 🔴 다년 계약에서 보직이 바뀌면 그 축은 못 잰다 (§5-3 ①) */
   it("못 잰 축도 줄로 선다 — 왜 미달인지가 남는다", () => {
-    const md2 = incentiveSettlementTableMeta(settleIncentives({
-      seasonYear: 2031, role: "CP", awardIds: [],
-      incentives: [inc({ kind: "innings", threshold: 150, bonus: 1200 })],
-      stats: stats({ ip: 40 }),
-    }));
+    const md2 = incentiveSettlementTableMeta(
+      settleIncentives({
+        seasonYear: 2031,
+        role: "CP",
+        awardIds: [],
+        incentives: [inc({ kind: "innings", threshold: 150, bonus: 1200 })],
+        stats: stats({ ip: 40 }),
+      }),
+    );
     expect(md2.rows[0].outcome).toBe("unmeasurable");
     const rows = buildTableRows(md2, resolveColumns(md2, COPY), COPY);
     expect(rows[0].cells[1].text).toBe(COPY.outcomeLabel.unmeasurable);
@@ -192,8 +225,9 @@ describe("정산 표 — 판정 하나에서 표가 나온다", () => {
 
 describe("배선 — 소식에 표가 실린다", () => {
   it("정산 소식이 metadata 를 싣는다", () => {
-    expect(SRC_USECASE, "표를 안 실어 보낸다 — 본문 텍스트로만 나간다")
-      .toContain("incentiveSettlementTableMeta(st)");
+    expect(SRC_USECASE, "표를 안 실어 보낸다 — 본문 텍스트로만 나간다").toContain(
+      "incentiveSettlementTableMeta(st)",
+    );
   });
 
   /** 🔴 표를 붙여도 `body` 는 그대로 둔다 — 못 그리는 자리의 폴백이다 */
@@ -217,7 +251,9 @@ describe("배선 — 소식에 표가 실린다", () => {
 
 describe("카드 한 줄 — 올해 인센티브", () => {
   const args = {
-    seasonYear: 2030, role: "SP", awardIds: [] as string[],
+    seasonYear: 2030,
+    role: "SP",
+    awardIds: [] as string[],
     stats: stats({ g: 30, ip: 120 + 1 / 3 }),
   };
 
@@ -233,8 +269,11 @@ describe("카드 한 줄 — 올해 인센티브", () => {
    */
   it("이미 정산한 해도 그대로 보여준다", () => {
     const paid = SP_THREE.map((i) => ({ ...i, paidSeasons: [2030] }));
-    expect(incentiveProgress({ ...args, incentives: paid }))
-      .toEqual({ count: 3, met: 1, amount: 800 });
+    expect(incentiveProgress({ ...args, incentives: paid })).toEqual({
+      count: 3,
+      met: 1,
+      amount: 800,
+    });
     // 판정 쪽은 건너뛰는 게 맞다 — 카드만 비워서 본다
     expect(settleIncentives({ ...args, incentives: paid }).rows).toHaveLength(0);
   });
@@ -248,14 +287,14 @@ describe("카드 한 줄 — 올해 인센티브", () => {
   const money = (v: number) => `${v.toLocaleString()}만 원`;
 
   it("글자는 달성 수와 금액 둘이다", () => {
-    expect(incentiveProgressText({ count: 4, met: 2, amount: 3000 }, "달성", money))
-      .toBe("달성 2/4 · +3,000만 원");
+    expect(incentiveProgressText({ count: 4, met: 2, amount: 3000 }, "달성", money)).toBe(
+      "달성 2/4 · +3,000만 원",
+    );
   });
 
   /** ⚠ 「+0만 원」은 채운 게 없다는 말을 두 번 하는 것이다 */
   it("지급이 없으면 금액을 안 붙인다", () => {
-    expect(incentiveProgressText({ count: 4, met: 0, amount: 0 }, "달성", money))
-      .toBe("달성 0/4");
+    expect(incentiveProgressText({ count: 4, met: 0, amount: 0 }, "달성", money)).toBe("달성 0/4");
   });
 
   it("문안이 없으면 숫자만 그린다 — 말을 지어내지 않는다", () => {

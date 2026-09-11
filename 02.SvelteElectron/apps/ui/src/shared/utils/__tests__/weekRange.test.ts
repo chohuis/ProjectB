@@ -53,8 +53,11 @@ describe("주차 조건", () => {
   it("🔴 week_eq / week_gte가 52를 넘지 않는다 — 넘으면 영원히 false다", () => {
     const bad = RULES.flatMap((r) =>
       (r.conditions ?? [])
-        .filter((c) => (c.type === "week_eq" || c.type === "week_gte") && (c.value ?? 0) > SEASON_WEEKS)
-        .map((c) => `${r.id} ${c.type} ${c.value}`));
+        .filter(
+          (c) => (c.type === "week_eq" || c.type === "week_gte") && (c.value ?? 0) > SEASON_WEEKS,
+        )
+        .map((c) => `${r.id} ${c.type} ${c.value}`),
+    );
     expect(bad).toEqual([]);
   });
 
@@ -63,18 +66,22 @@ describe("주차 조건", () => {
    * 주차로 학년을 구분하려던 게 위 결함의 원인이다.
    */
   it("학년 규칙은 grade 조건을 갖는다", () => {
-    const missing = RULES
-      .filter((r) => /^EVT_HS_Y[123]_/.test(r.id))
+    const missing = RULES.filter((r) => /^EVT_HS_Y[123]_/.test(r.id))
       .filter((r) => !(r.conditions ?? []).some((c) => c.type === "grade"))
       .map((r) => r.id);
     expect(missing).toEqual([]);
   });
 
   it("🔴 고교 3학년 주차가 진로 허브(W28)를 안 넘는다", () => {
-    const late = RULES
-      .filter((r) => (r.conditions ?? []).some((c) => c.type === "grade" && c.value === 3))
-      .filter((r) => (r.conditions ?? []).some((c) =>
-        (c.type === "week_eq" || c.type === "week_gte") && (c.value ?? 0) >= HS_CAREER_HUB_WEEK))
+    const late = RULES.filter((r) =>
+      (r.conditions ?? []).some((c) => c.type === "grade" && c.value === 3),
+    )
+      .filter((r) =>
+        (r.conditions ?? []).some(
+          (c) =>
+            (c.type === "week_eq" || c.type === "week_gte") && (c.value ?? 0) >= HS_CAREER_HUB_WEEK,
+        ),
+      )
       .map((r) => r.id);
     expect(late).toEqual([]);
   });

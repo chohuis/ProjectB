@@ -12,20 +12,28 @@ import type { PitchEntry } from "../types/save";
 
 /** 엔진이 아는 구종 이름 — Rust `PitchType`의 serde 이름과 같아야 한다 */
 export type EnginePitchType =
-  | "fastball" | "sinker" | "cutter" | "slider" | "curve"
-  | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball";
+  | "fastball"
+  | "sinker"
+  | "cutter"
+  | "slider"
+  | "curve"
+  | "changeup"
+  | "splitter"
+  | "forkball"
+  | "screwball"
+  | "knuckleball";
 
 /** **정본은 여기 하나다.** 경기 화면도 자동 시뮬도 이걸 쓴다 */
 export const PITCH_ID_TO_ENGINE: Record<string, EnginePitchType> = {
-  PITCH_FASTBALL:    "fastball",
-  PITCH_SINKER:      "sinker",
-  PITCH_CUTTER:      "cutter",
-  PITCH_SLIDER:      "slider",
-  PITCH_CURVE:       "curve",
-  PITCH_CHANGEUP:    "changeup",
-  PITCH_SPLITTER:    "splitter",
-  PITCH_FORKBALL:    "forkball",
-  PITCH_SCREWBALL:   "screwball",
+  PITCH_FASTBALL: "fastball",
+  PITCH_SINKER: "sinker",
+  PITCH_CUTTER: "cutter",
+  PITCH_SLIDER: "slider",
+  PITCH_CURVE: "curve",
+  PITCH_CHANGEUP: "changeup",
+  PITCH_SPLITTER: "splitter",
+  PITCH_FORKBALL: "forkball",
+  PITCH_SCREWBALL: "screwball",
   PITCH_KNUCKLEBALL: "knuckleball",
 };
 
@@ -50,7 +58,7 @@ export function toEngineArsenal(
   for (const p of pitches ?? []) {
     const t = PITCH_ID_TO_ENGINE[p.id];
     if (!t) continue;
-    if (out.some((x) => x.type === t)) continue;   // 중복은 하나로
+    if (out.some((x) => x.type === t)) continue; // 중복은 하나로
     out.push({ type: t, grade: Math.max(1, Math.min(5, p.grade ?? 3)) });
   }
   if (out.length === 0) out.push({ type: "fastball", grade: 3 });

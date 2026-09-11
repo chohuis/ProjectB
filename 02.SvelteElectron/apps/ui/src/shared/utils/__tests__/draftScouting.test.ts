@@ -14,11 +14,10 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-const rules = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-) as { draftScoutingRules?: { span?: number } };
+const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+  draftScoutingRules?: { span?: number };
+};
 
 describe("드래프트 스카우팅", () => {
   const rust = read("packages/engine-native/src/npc_sim.rs");
@@ -55,8 +54,9 @@ describe("드래프트 스카우팅", () => {
 
   it("해시를 두 벌로 두지 않는다", () => {
     // `scouting_engine` 의 것을 그대로 쓴다 — 갈리면 뷰가 안 맞는다
-    expect(read("packages/engine-native/src/scouting_engine.rs")
-      .includes("pub fn simple_hash")).toBe(true);
+    expect(
+      read("packages/engine-native/src/scouting_engine.rs").includes("pub fn simple_hash"),
+    ).toBe(true);
   });
 
   it("품질이 낮을수록 크게 흔들린다", () => {

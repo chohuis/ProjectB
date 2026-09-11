@@ -30,7 +30,9 @@ describe("주인공 드래프트 좌석", () => {
   it("팀과 순번을 따로 굴리지 않는다", () => {
     // 슬롯 하나만 뽑고 팀은 그 자리의 주인이어야 한다
     expect(rust).not.toMatch(/let t_idx\s+=/);
-    expect(rust).toMatch(/let slot = \(rng\.next\(\) \* teams\.len\(\) as f64\) as usize % teams\.len\(\)/);
+    expect(rust).toMatch(
+      /let slot = \(rng\.next\(\) \* teams\.len\(\) as f64\) as usize % teams\.len\(\)/,
+    );
     expect(rust).toMatch(/team_id: Some\(teams\[slot\]\.clone\(\)\)/);
   });
 
@@ -51,7 +53,9 @@ describe("주인공 드래프트 좌석", () => {
   it("밀려난 사람이 미지명 경로를 탄다", () => {
     // `picks`에도 `undraftedIds`에도 없으면 KBL로도 안 가고 진로 배정도
     // 안 탄다 — 어디에도 안 속한 채 원 소속에 남는다. 조용한 결함이다
-    expect(store).toMatch(/simResult\.undraftedIds = \[\.\.\.simResult\.undraftedIds, displacedNpcId\]/);
+    expect(store).toMatch(
+      /simResult\.undraftedIds = \[\.\.\.simResult\.undraftedIds, displacedNpcId\]/,
+    );
   });
 
   it("번호를 다시 매긴다 — 밀린 뒤 자리가 한 칸씩 어긋난다", () => {
@@ -63,7 +67,9 @@ describe("주인공 드래프트 좌석", () => {
   it("주인공의 최종 순번·팀은 보드가 정한 값이다", () => {
     // 산식이 낸 값과 다를 수 있다(앞사람이 밀렸다). 화면·계약이 읽는 건
     // 보드 결과여야 한다 — 두 값이 갈리면 통보 창과 보드가 어긋난다
-    expect(store).toMatch(/draftRound: mine\.round, draftPick: mine\.pick, draftTeamId: mine\.teamId/);
+    expect(store).toMatch(
+      /draftRound: mine\.round, draftPick: mine\.pick, draftTeamId: mine\.teamId/,
+    );
   });
 
   it("화면은 더 이상 끼워 넣지 않는다 — 이중 편입 방지", () => {
@@ -81,7 +87,9 @@ describe("주인공 드래프트 좌석", () => {
   it("주인공이 후보 명단에서 빠지지 않는다", () => {
     // `npcInfoMap`엔 주인공이 없어 `filter(!!n)`이 그 줄을 떨어뜨린다 —
     // 보드 후보가 지명자보다 한 명 모자라게 된다
-    expect(store).toMatch(/p\.npcId === s\.protagonist\.id \? heroRow : npcInfoMap\.get\(p\.npcId\)/);
+    expect(store).toMatch(
+      /p\.npcId === s\.protagonist\.id \? heroRow : npcInfoMap\.get\(p\.npcId\)/,
+    );
   });
 
   it("로그에 주인공 이름·OVR이 제대로 찍힌다", () => {

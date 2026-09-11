@@ -26,7 +26,10 @@ export function ipLabel(ip: number): string {
   if (!Number.isFinite(ip) || ip < 0) return "-";
   let whole = Math.floor(ip + 1e-9);
   let outs = Math.round((ip - whole) * 3);
-  if (outs >= 3) { whole += 1; outs = 0; }
+  if (outs >= 3) {
+    whole += 1;
+    outs = 0;
+  }
   return outs > 0 ? `${whole}.${outs}` : `${whole}`;
 }
 
@@ -52,7 +55,7 @@ export function ipToOuts(ip: number): number {
 export function rateLabel(v: number | null | undefined): string {
   if (v === null || v === undefined || !Number.isFinite(v)) return "-";
   const s = Math.abs(v).toFixed(3);
-  const body = Math.abs(v) < 1 ? s.slice(1) : s;   // 0.286 → .286
+  const body = Math.abs(v) < 1 ? s.slice(1) : s; // 0.286 → .286
   return v < 0 ? `-${body}` : body;
 }
 
@@ -122,10 +125,13 @@ export function wpctLabel(w: number | null | undefined, l: number | null | undef
  *   0을 찍으면 "루타 0인 타자"가 되어 거짓이다.
  */
 export function totalBases(
-  h: number, hr: number,
-  b2: number | undefined, b3: number | undefined,
+  h: number,
+  hr: number,
+  b2: number | undefined,
+  b3: number | undefined,
 ): number | undefined {
   if (b2 === undefined && b3 === undefined) return undefined;
-  const d = b2 ?? 0, t = b3 ?? 0;
-  return (h - d - t - hr) + d * 2 + t * 3 + hr * 4;
+  const d = b2 ?? 0,
+    t = b3 ?? 0;
+  return h - d - t - hr + d * 2 + t * 3 + hr * 4;
 }

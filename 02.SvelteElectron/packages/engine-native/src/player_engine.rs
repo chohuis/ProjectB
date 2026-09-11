@@ -398,6 +398,7 @@ pub fn calc_market_salary(params: CalcMarketSalaryParams) -> i64 {
     (base * league_salary_mult(&params.league_id, &params.league_mult)).round() as i64
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalcOfferedSalaryParams {

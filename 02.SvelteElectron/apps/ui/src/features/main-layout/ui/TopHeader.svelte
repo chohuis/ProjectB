@@ -33,10 +33,15 @@
    *   "이벤트 처리"는 동사인데 이것만 상태 표현이라 못 누르는 줄 안다.
    */
   $: btnLabel =
-    $nextPendingAction?.type === "game"            ? "경기 시작" :
-    $nextPendingAction?.type === "message"         ? "메시지 확인" :
-    $nextPendingAction?.type === "event"           ? "이벤트 처리" :
-    advancing ? "진행 중..." : "다음 주 진행";
+    $nextPendingAction?.type === "game"
+      ? "경기 시작"
+      : $nextPendingAction?.type === "message"
+        ? "메시지 확인"
+        : $nextPendingAction?.type === "event"
+          ? "이벤트 처리"
+          : advancing
+            ? "진행 중..."
+            : "다음 주 진행";
 
   /** 메타 줄 — 빈 값이 있어도 가운뎃점이 겹치지 않게 조립한다 */
   $: metaParts = [
@@ -119,7 +124,12 @@
     padding: 10px 18px;
   }
 
-  .id { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .id {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
 
   /* 등번호 — 데이터는 계속 있었는데 화면에 한 번도 안 나왔다 */
   .num {
@@ -134,7 +144,9 @@
     border-right: 1px solid rgba(255, 255, 255, 0.18);
   }
 
-  .who { min-width: 0; }
+  .who {
+    min-width: 0;
+  }
 
   h1 {
     margin: 0;
@@ -152,7 +164,10 @@
     color: rgba(255, 255, 255, 0.72);
     white-space: nowrap;
   }
-  .sep { opacity: 0.45; margin: 0 5px; }
+  .sep {
+    opacity: 0.45;
+    margin: 0 5px;
+  }
 
   .when {
     display: flex;
@@ -161,8 +176,16 @@
     flex-shrink: 0;
   }
 
-  .date { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
-  .date strong { font-size: 14px; font-weight: 700; }
+  .date {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+  }
+  .date strong {
+    font-size: 14px;
+    font-weight: 700;
+  }
   .wk {
     font-size: 10px;
     letter-spacing: 0.14em;
@@ -181,16 +204,23 @@
     white-space: nowrap;
     transition: filter 0.12s;
   }
-  .go:hover:not(:disabled) { filter: brightness(1.06); }
-  .go:disabled { cursor: default; }
+  .go:hover:not(:disabled) {
+    filter: brightness(1.06);
+  }
+  .go:disabled {
+    cursor: default;
+  }
 
-  .go.advancing { background: rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.55); }
+  .go.advancing {
+    background: rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.55);
+  }
 
   /* 처리할 게 남았을 때. **팀 색이 아니라 고정 호박색** —
      "할 일이 있다"는 뜻은 팀이 바뀌어도 같아야 한다 */
   .go.pending {
     background: var(--attn);
-    color: #3A2600;
+    color: #3a2600;
     box-shadow: 0 0 0 3px rgba(240, 182, 92, 0.22);
   }
 </style>

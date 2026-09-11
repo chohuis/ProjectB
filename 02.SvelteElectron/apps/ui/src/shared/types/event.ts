@@ -1,5 +1,11 @@
 import type { DecisionEffect } from "./main";
-import type { CareerStage, PlayerType, PitchingStatKey, ProtagonistSave, PlayerSeasonStats } from "./save";
+import type {
+  CareerStage,
+  PlayerType,
+  PitchingStatKey,
+  ProtagonistSave,
+  PlayerSeasonStats,
+} from "./save";
 import type { SeasonPhase, Standing } from "./season";
 
 /**
@@ -15,34 +21,34 @@ export type EventRelationKind = import("./relationship").RelationKind | "unitmat
 // ── 이벤트 발생 조건 ──────────────────────────────────────────
 export type Condition =
   // 주차 / 시즌
-  | { type: "week_gte";        value: number }        // 현재 주차 이상
-  | { type: "week_lte";        value: number }        // 현재 주차 이하
-  | { type: "week_eq";         value: number }        // 정확히 이 주차
-  | { type: "season_phase";    phase: SeasonPhase }   // 시즌 페이즈 일치
+  | { type: "week_gte"; value: number } // 현재 주차 이상
+  | { type: "week_lte"; value: number } // 현재 주차 이하
+  | { type: "week_eq"; value: number } // 정확히 이 주차
+  | { type: "season_phase"; phase: SeasonPhase } // 시즌 페이즈 일치
 
   // 커리어 / 소속
-  | { type: "career_stage";    stage?: CareerStage; stages?: (CareerStage)[];}   // 커리어 단계 일치
-  | { type: "league_id";       leagueId?: string; leagueIds?: string[] }  // 소속 리그 일치 (하나 또는 여럿)
-  | { type: "grade";           value: 1 | 2 | 3 }    // 학년 일치 (고교·대학)
-  | { type: "player_type";     playerType: PlayerType } // 투수/타자/양방향 일치
+  | { type: "career_stage"; stage?: CareerStage; stages?: CareerStage[] } // 커리어 단계 일치
+  | { type: "league_id"; leagueId?: string; leagueIds?: string[] } // 소속 리그 일치 (하나 또는 여럿)
+  | { type: "grade"; value: 1 | 2 | 3 } // 학년 일치 (고교·대학)
+  | { type: "player_type"; playerType: PlayerType } // 투수/타자/양방향 일치
 
   // 컨디션 상태
-  | { type: "fatigue_gte";     value: number }        // 피로도 이상
-  | { type: "fatigue_lte";     value: number }        // 피로도 이하
-  | { type: "condition_gte";   value: number }        // 컨디션 이상
-  | { type: "condition_lte";   value: number }        // 컨디션 이하
-  | { type: "morale_gte";      value: number }        // 사기 이상
-  | { type: "morale_lte";      value: number }        // 사기 이하
+  | { type: "fatigue_gte"; value: number } // 피로도 이상
+  | { type: "fatigue_lte"; value: number } // 피로도 이하
+  | { type: "condition_gte"; value: number } // 컨디션 이상
+  | { type: "condition_lte"; value: number } // 컨디션 이하
+  | { type: "morale_gte"; value: number } // 사기 이상
+  | { type: "morale_lte"; value: number } // 사기 이하
 
   // 투구 능력치
   | { type: "pitching_stat_gte"; stat: PitchingStatKey; value: number } // 특정 투구 스탯 이상
   | { type: "pitching_stat_lte"; stat: PitchingStatKey; value: number } // 특정 투구 스탯 이하
-  | { type: "pitching_ovr_gte";  value: number }      // 투구 OVR 이상
-  | { type: "pitching_ovr_lte";  value: number }      // 투구 OVR 이하
+  | { type: "pitching_ovr_gte"; value: number } // 투구 OVR 이상
+  | { type: "pitching_ovr_lte"; value: number } // 투구 OVR 이하
 
   // 구종
-  | { type: "pitch_learned";   pitchId: string }      // 특정 구종 보유 중
-  | { type: "pitch_training";  pitchId: string }      // 특정 구종 훈련 중
+  | { type: "pitch_learned"; pitchId: string } // 특정 구종 보유 중
+  | { type: "pitch_training"; pitchId: string } // 특정 구종 훈련 중
   /**
    * 🔴 **구종을 배우는 중인가** (2026-09-09 · R1 · `PLAN_REWARDS_2026-09-09.md` §2③).
    *
@@ -62,16 +68,16 @@ export type Condition =
    * ⚠ `pitch_training` 과 다르다 — 그건 **특정 구종**을 훈련 중인지 묻고,
    *   이건 **아무거나 배우는 중인지**를 묻는다. 보상은 대상을 안 가리므로 이쪽이다.
    */
-  | { type: "pitch_learning"; value: boolean }        // 아무 구종이든 배우는 중인가
+  | { type: "pitch_learning"; value: boolean } // 아무 구종이든 배우는 중인가
 
   // 태그
-  | { type: "has_tag";         tag: string }          // 특정 태그 보유
+  | { type: "has_tag"; tag: string } // 특정 태그 보유
 
   // 시즌 누적 스탯 (주인공 기준)
-  | { type: "season_wins_gte"; value: number }        // 시즌 승수 이상
-  | { type: "season_era_lte";  value: number }        // 시즌 ERA 이하
-  | { type: "season_ip_gte";   value: number }        // 시즌 이닝 이상
-  | { type: "season_k_gte";    value: number }        // 시즌 탈삼진 이상
+  | { type: "season_wins_gte"; value: number } // 시즌 승수 이상
+  | { type: "season_era_lte"; value: number } // 시즌 ERA 이하
+  | { type: "season_ip_gte"; value: number } // 시즌 이닝 이상
+  | { type: "season_k_gte"; value: number } // 시즌 탈삼진 이상
   /**
    * 🔴 **반대쪽** (2026-09-01 · 사용자 확정).
    *
@@ -92,10 +98,10 @@ export type Condition =
    * 같이 움직이고 문턱을 올리면 42종의 문안이 같이 어긋난다.**
    * 제 축으로 옮길 수 있는 것을 옮겨 그 부담을 던다.
    */
-  | { type: "season_wins_lte"; value: number }        // 시즌 승수 이하 — 안 이긴다
-  | { type: "season_era_gte";  value: number }        // 시즌 ERA 이상 — 얻어맞는다
-  | { type: "season_ip_lte";   value: number }        // 시즌 이닝 이하 — 기회가 없다
-  | { type: "season_k_lte";    value: number }        // 시즌 탈삼진 이하 — 못 잡는다
+  | { type: "season_wins_lte"; value: number } // 시즌 승수 이하 — 안 이긴다
+  | { type: "season_era_gte"; value: number } // 시즌 ERA 이상 — 얻어맞는다
+  | { type: "season_ip_lte"; value: number } // 시즌 이닝 이하 — 기회가 없다
+  | { type: "season_k_lte"; value: number } // 시즌 탈삼진 이하 — 못 잡는다
 
   /**
    * 🔴 **등판·출전 수** (2026-09-08 · L1 · `PLAN_MESSAGE_LANES`).
@@ -113,25 +119,25 @@ export type Condition =
    * ⚠ **0 이면 거짓이다.** `season_*_lte` 쪽 주석과 같은 이유 — 안 나간 것과
    *   적게 나간 것은 다르다. `gte` 는 값이 0 이어도 기록이 없으면 거짓으로 둔다.
    */
-  | { type: "season_games_gte";  value: number }      // 시즌 등판·출전 수 이상
-  | { type: "season_games_lte";  value: number }      // 시즌 등판·출전 수 이하 — 기회가 없다
-  | { type: "season_starts_gte"; value: number }      // 시즌 선발 등판 수 이상 (투수 전용)
+  | { type: "season_games_gte"; value: number } // 시즌 등판·출전 수 이상
+  | { type: "season_games_lte"; value: number } // 시즌 등판·출전 수 이하 — 기회가 없다
+  | { type: "season_starts_gte"; value: number } // 시즌 선발 등판 수 이상 (투수 전용)
 
   // 팀 순위
-  | { type: "team_rank_lte";   value: number }        // 현재 팀 순위 이하 (1위=1)
-  | { type: "team_rank_gte";   value: number }        // 현재 팀 순위 이상
+  | { type: "team_rank_lte"; value: number } // 현재 팀 순위 이하 (1위=1)
+  | { type: "team_rank_gte"; value: number } // 현재 팀 순위 이상
 
   // ── 반쪽이던 축 (2026-08-22) ─────────────────────────────────
   // 셋 다 **보상으로 바꿀 수는 있는데 조건으로 못 읽었다**
   // (`moneyDelta`·`diligenceDelta`·`popularityDelta`는 예전부터 있다).
   // 한쪽만 있으면 "그 선택의 결과를 다음 이야기가 알아보지 못한다" —
   // 돈을 쓰게 해놓고 가난해진 걸 아무도 못 읽는 식이다.
-  | { type: "money_gte";       value: number }        // 소지금 이상
-  | { type: "money_lte";       value: number }        // 소지금 이하
-  | { type: "diligence_gte";   value: number }        // 성실도 이상 (1~99)
-  | { type: "diligence_lte";   value: number }        // 성실도 이하
-  | { type: "popularity_gte";  value: number }        // 인기도 이상 (0~100)
-  | { type: "popularity_lte";  value: number }        // 인기도 이하
+  | { type: "money_gte"; value: number } // 소지금 이상
+  | { type: "money_lte"; value: number } // 소지금 이하
+  | { type: "diligence_gte"; value: number } // 성실도 이상 (1~99)
+  | { type: "diligence_lte"; value: number } // 성실도 이하
+  | { type: "popularity_gte"; value: number } // 인기도 이상 (0~100)
+  | { type: "popularity_lte"; value: number } // 인기도 이하
 
   // ── 일반 조건 (2026-08-24) ───────────────────────────────────
   // **필드마다 조건 타입 하나**를 만들던 걸 여기서 멈춘다. 45종까지 그렇게
@@ -143,10 +149,10 @@ export type Condition =
   //
   //   { "type": "num_gte", "path": "batting.contact", "value": 60 }
   //   { "type": "eq",      "path": "currentRole",     "value": "1선발" }
-  | { type: "num_gte";  path: string; value: number }
-  | { type: "num_lte";  path: string; value: number }
-  | { type: "eq";       path: string; value: string | number | boolean }
-  | { type: "neq";      path: string; value: string | number | boolean }
+  | { type: "num_gte"; path: string; value: number }
+  | { type: "num_lte"; path: string; value: number }
+  | { type: "eq"; path: string; value: string | number | boolean }
+  | { type: "neq"; path: string; value: string | number | boolean }
 
   // ── 관계도 (2026-08-24) ──────────────────────────────────────
   // 🟡 **다른 조건과 성격이 다르다.** 관계는 slot.db에 있고 조회가 비동기인데
@@ -166,22 +172,22 @@ export type Condition =
   // "다치고 돌아온 뒤"·"수술까지 갔던 몸"·"올해만 세 번째" 같은 이야기를
   // 쓸 수가 없었다. 부상 소식(`msg-injury`)은 코드가 따로 만들어 내보낸다 —
   // 그건 통보고, 이건 이야기다.
-  | { type: "injured";           value: boolean }     // 지금 부상 중인가
-  | { type: "injury_severity";   severity: import("./save").InjurySeverity }  // 지금 부상의 정도
-  | { type: "injury_weeks_gte";  value: number }      // 남은 회복 주차 이상
-  | { type: "injury_count_gte";  value: number }      // **커리어** 누적 부상 횟수 이상
+  | { type: "injured"; value: boolean } // 지금 부상 중인가
+  | { type: "injury_severity"; severity: import("./save").InjurySeverity } // 지금 부상의 정도
+  | { type: "injury_weeks_gte"; value: number } // 남은 회복 주차 이상
+  | { type: "injury_count_gte"; value: number } // **커리어** 누적 부상 횟수 이상
   | { type: "season_injury_count_gte"; value: number } // **이번 시즌** 부상 횟수 이상
-  | { type: "had_surgery";       value: boolean }     // 커리어에 수술 이력이 있는가
+  | { type: "had_surgery"; value: boolean } // 커리어에 수술 이력이 있는가
 
   // ── 미래 필드 (evaluator에서 false 반환, 추후 구현) ──────────
-  | { type: "fame_gte";        value: number }        // 명성 이상 — protagonist.fame 추가 후 구현
-  | { type: "pro_year_gte";    value: number }        // 프로 연차 이상 — 추가 후 구현
+  | { type: "fame_gte"; value: number } // 명성 이상 — protagonist.fame 추가 후 구현
+  | { type: "pro_year_gte"; value: number } // 프로 연차 이상 — 추가 후 구현
 
   // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
   // 대학 이벤트가 학점·경고를 조건으로 걸 수 있어야 한다. 이게 없으면
   // "학점이 위험하다" 같은 이벤트를 아예 쓸 수 없다
-  | { type: "gpa_gte";              value: number }
-  | { type: "gpa_lte";              value: number }
+  | { type: "gpa_gte"; value: number }
+  | { type: "gpa_lte"; value: number }
   | { type: "academic_warning_gte"; value: number }
 
   // ── 시간을 세는 조건 넷 (2026-09-08 · PLAN_EVENT_TIERS §12) ───
@@ -219,7 +225,14 @@ export type Condition =
    *   등록부가 생기면 `role` 로도 가리킬 수 있게 여기만 넓힌다.
    * ⚠ 상대를 못 찾으면 **false** 다. 「이겼다」로 읽으면 없는 라이벌을 이긴 게 된다.
    */
-  | { type: "compare"; npcId?: string; role?: string; stat: string; op: "gte" | "lte"; margin?: number }
+  | {
+      type: "compare";
+      npcId?: string;
+      role?: string;
+      stat: string;
+      op: "gte" | "lte";
+      margin?: number;
+    }
 
   /**
    * **직전 등판**에서 무슨 일이 있었나 (완봉·완투·삼진 N).
@@ -228,8 +241,12 @@ export type Condition =
    * `ctx.lastGame` 이 그 한 경기를 접어 싣는다(`advanceWeek`).
    * ⚠ 「비 경기」는 **데이터가 없다** — 시뮬에 우천 개념이 없어서 넣지 않았다.
    */
-  | { type: "last_game"; field: "ip" | "er" | "k" | "bb" | "h" | "pitchCount" | "shutout" | "completeGame" | "won";
-      op: "gte" | "lte" | "eq"; value: number | boolean }
+  | {
+      type: "last_game";
+      field: "ip" | "er" | "k" | "bb" | "h" | "pitchCount" | "shutout" | "completeGame" | "won";
+      op: "gte" | "lte" | "eq";
+      value: number | boolean;
+    }
 
   /**
    * 🔴 **결과 조건** — 「방금 그 일이 일어났나」 (2026-09-08 · L1 ·
@@ -252,10 +269,10 @@ export type Condition =
 
 // ── 이벤트 규칙 (마스터 JSON 구조) ───────────────────────────
 export type EventOncePolicy =
-  | "repeatable"         // 매주 발생 가능
-  | "once_per_season"    // 시즌당 1회
-  | "once_per_stage_year"// 커리어 단계(고교/대학 등) 연도당 1회
-  | "once_per_career";   // 커리어 전체 1회
+  | "repeatable" // 매주 발생 가능
+  | "once_per_season" // 시즌당 1회
+  | "once_per_stage_year" // 커리어 단계(고교/대학 등) 연도당 1회
+  | "once_per_career"; // 커리어 전체 1회
 
 /**
  * **중요도 등급** (2026-08-23 → 2026-09-08 에 `urgent` 하나만 남았다).
@@ -334,7 +351,7 @@ export interface EventRule {
   title: string;
   type: "mandatory" | "conditional" | "random";
   category: string;
-  priority: number;                          // 높을수록 먼저 처리
+  priority: number; // 높을수록 먼저 처리
   /**
    * 등급(§2) 또는 `urgent`(등급 밖).
    *
@@ -356,12 +373,12 @@ export interface EventRule {
   /** 히든만. **화면에 안 보인다**(§4). 평가는 `conditions` 와 같다 */
   hiddenCondition?: Condition[];
   oncePolicy: EventOncePolicy;
-  cooldownWeeks?: number;                    // 재발생 금지 주차 수
-  conditions?: Condition[];                  // 모두 AND 조건
-  weight?: number;                           // random 전용 가중치 (1 이상)
-  poolId?: string;                           // random 전용 풀 ID
-  messageTemplateId?: string | null;         // 메시지 본문 템플릿
-  decisionTemplateId?: string | null;        // 선택지 템플릿 (없으면 단순 알림)
+  cooldownWeeks?: number; // 재발생 금지 주차 수
+  conditions?: Condition[]; // 모두 AND 조건
+  weight?: number; // random 전용 가중치 (1 이상)
+  poolId?: string; // random 전용 풀 ID
+  messageTemplateId?: string | null; // 메시지 본문 템플릿
+  decisionTemplateId?: string | null; // 선택지 템플릿 (없으면 단순 알림)
 }
 
 // ── 이벤트 풀 (random 이벤트 그룹) ───────────────────────────
@@ -413,7 +430,7 @@ export interface DecisionTemplate {
 export interface DecisionTemplateOption {
   id: string;
   label: string;
-  effectHint?: string;      // 표시용 효과 설명
+  effectHint?: string; // 표시용 효과 설명
   effects?: DecisionEffect; // 실제 적용 효과
   /**
    * **이 선택지가 보일 조건** (2026-08-23). 비우면 항상 보인다.
@@ -446,7 +463,7 @@ export interface EventContext {
   seasonPhase: SeasonPhase;
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;
-  triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
+  triggeredEvents: Record<string, number>; // eventId → 마지막 발생 주차
   /**
    * 학업 상태 — 대학 이벤트가 학점·경고를 조건으로 읽는다 (Phase 9-C).
    * 없으면 학업 조건은 전부 거짓이 된다(고교·프로에서는 그게 맞다).
@@ -508,8 +525,16 @@ export interface EventContext {
    * (한 경기도 안 던진 주가 그렇다).
    */
   lastGame?: {
-    week: number; ip: number; er: number; h: number; k: number; bb: number;
-    pitchCount: number; won: boolean; shutout: boolean; completeGame: boolean;
+    week: number;
+    ip: number;
+    er: number;
+    h: number;
+    k: number;
+    bb: number;
+    pitchCount: number;
+    won: boolean;
+    shutout: boolean;
+    completeGame: boolean;
   };
   /**
    * `compare` 조건이 볼 NPC 들. **미리 실어 준다** — 평가기는 동기인데

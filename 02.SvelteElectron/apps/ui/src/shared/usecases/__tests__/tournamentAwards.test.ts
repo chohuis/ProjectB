@@ -17,8 +17,18 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 type Row = Parameters<typeof pitcherScore>[0];
 const P = (o: Partial<Row> & { playerId: string; teamId: string }): Row => ({
-  outs: 0, er: 0, k: 0, w: 0, sv: 0, hd: 0,
-  ab: 0, h: 0, hr: 0, rbi: 0, tb: 0, ...o,
+  outs: 0,
+  er: 0,
+  k: 0,
+  w: 0,
+  sv: 0,
+  hd: 0,
+  ab: 0,
+  h: 0,
+  hr: 0,
+  rbi: 0,
+  tb: 0,
+  ...o,
 });
 const mapOf = (...rows: Row[]) => new Map(rows.map((r) => [r.playerId, r]));
 
@@ -28,55 +38,65 @@ describe("대회 수상", () => {
 
   it("MVP는 우승팀 안에서만 나온다", () => {
     // 진 팀 에이스가 더 잘 던져도 MVP는 우승팀 것이다
-    const aw = tournamentAwards(mapOf(
-      P({ playerId: "C1", teamId: "", outs: 27, er: 2, k: 12, w: 2 }),
-      P({ playerId: "O1", teamId: "", outs: 36, er: 0, k: 30, w: 3 }),
-    ), "TEAM_CHAMP", teamOf);
+    const aw = tournamentAwards(
+      mapOf(
+        P({ playerId: "C1", teamId: "", outs: 27, er: 2, k: 12, w: 2 }),
+        P({ playerId: "O1", teamId: "", outs: 36, er: 0, k: 30, w: 3 }),
+      ),
+      "TEAM_CHAMP",
+      teamOf,
+    );
     expect(aw.find((a) => a.id === "tour_mvp")?.playerId).toBe("C1");
   });
 
   it("부문상은 참가팀 전체에서 나온다", () => {
     // 8강에서 져도 우수투수상은 받을 수 있다
-    const aw = tournamentAwards(mapOf(
-      P({ playerId: "C1", teamId: "", outs: 27, er: 5, k: 8, w: 2 }),
-      P({ playerId: "O1", teamId: "", outs: 36, er: 0, k: 30, w: 3 }),
-    ), "TEAM_CHAMP", teamOf);
+    const aw = tournamentAwards(
+      mapOf(
+        P({ playerId: "C1", teamId: "", outs: 27, er: 5, k: 8, w: 2 }),
+        P({ playerId: "O1", teamId: "", outs: 36, er: 0, k: 30, w: 3 }),
+      ),
+      "TEAM_CHAMP",
+      teamOf,
+    );
     expect(aw.find((a) => a.id === "tour_pitcher")?.playerId).toBe("O1");
   });
 
   it("🔴 소속을 못 찾으면 후보에서 뺀다", () => {
     // 폴백으로 흡수하면 호출부의 리그 게이트가 무력해진다
-    const aw = tournamentAwards(mapOf(
-      P({ playerId: "X1", teamId: "TEAM_CHAMP", outs: 99, er: 0, k: 99, w: 9 }),
-    ), "TEAM_CHAMP", teamOf);
+    const aw = tournamentAwards(
+      mapOf(P({ playerId: "X1", teamId: "TEAM_CHAMP", outs: 99, er: 0, k: 99, w: 9 })),
+      "TEAM_CHAMP",
+      teamOf,
+    );
     expect(aw.length).toBe(0);
   });
 
   it("이닝이 얕으면 투수 후보가 아니다", () => {
     // 넉아웃이라 한 경기 완봉이 전부인 선수가 나온다
     expect(pitcherScore(P({ playerId: "a", teamId: "t", outs: 15, er: 0 }))).toBe(-1);
-    expect(pitcherScore(P({ playerId: "a", teamId: "t", outs: 18, er: 0 })))
-      .toBeGreaterThan(0);
+    expect(pitcherScore(P({ playerId: "a", teamId: "t", outs: 18, er: 0 }))).toBeGreaterThan(0);
   });
 
   it("타수가 얕으면 타자 후보가 아니다", () => {
     // 하한이 없으면 1타수 1안타(1.000)가 타격상을 받는다
     expect(batterScore(P({ playerId: "a", teamId: "t", ab: 1, h: 1 }))).toBe(-1);
-    expect(batterScore(P({ playerId: "a", teamId: "t", ab: 8, h: 4 })))
-      .toBeGreaterThan(0);
+    expect(batterScore(P({ playerId: "a", teamId: "t", ab: 8, h: 4 }))).toBeGreaterThan(0);
   });
 
   it("아무도 자격이 없으면 상을 안 준다", () => {
-    const aw = tournamentAwards(mapOf(
-      P({ playerId: "C1", teamId: "", outs: 3, ab: 2, h: 1 }),
-    ), "TEAM_CHAMP", teamOf);
+    const aw = tournamentAwards(
+      mapOf(P({ playerId: "C1", teamId: "", outs: 3, ab: 2, h: 1 })),
+      "TEAM_CHAMP",
+      teamOf,
+    );
     expect(aw.length).toBe(0);
   });
 
   it("총루타가 장타를 센다", () => {
     // 장타를 단타로 뭉개면 근사가 된다
     const single = batterScore(P({ playerId: "a", teamId: "t", ab: 10, h: 4, tb: 4 }));
-    const extra  = batterScore(P({ playerId: "a", teamId: "t", ab: 10, h: 4, tb: 10 }));
+    const extra = batterScore(P({ playerId: "a", teamId: "t", ab: 10, h: 4, tb: 10 }));
     expect(extra).toBeGreaterThan(single);
   });
 });

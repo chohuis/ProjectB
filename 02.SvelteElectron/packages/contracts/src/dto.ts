@@ -1,9 +1,4 @@
-export type StageId =
-  | "highschool"
-  | "university"
-  | "independent"
-  | "pro_korea"
-  | "pro_usa";
+export type StageId = "highschool" | "university" | "independent" | "pro_korea" | "pro_usa";
 
 export interface GameSnapshotDto {
   day: number;
@@ -18,4 +13,3 @@ export interface AdvanceDayResultDto {
   snapshot: GameSnapshotDto;
   logs: string[];
 }
-

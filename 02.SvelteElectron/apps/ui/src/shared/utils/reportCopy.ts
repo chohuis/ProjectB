@@ -57,8 +57,12 @@ export interface ReportCopy {
  */
 export function reportStageOf(careerStage: string): ReportStage | null {
   if (careerStage.startsWith("pro")) return "pro";
-  if (careerStage === "highschool" || careerStage === "university"
-      || careerStage === "independent" || careerStage === "military") {
+  if (
+    careerStage === "highschool" ||
+    careerStage === "university" ||
+    careerStage === "independent" ||
+    careerStage === "military"
+  ) {
     return careerStage;
   }
   return null;
@@ -117,9 +121,10 @@ export function parseReportCopy(raw: unknown): ReportCopy | null {
     myBody: { subjects: bank(mb.subjects), leads: bank(mb.leads) },
   };
 
-  const anySubject = copy.training.subjects.length > 0
-    || copy.injury.subjects.length > 0
-    || copy.myBody.subjects.length > 0;
+  const anySubject =
+    copy.training.subjects.length > 0 ||
+    copy.injury.subjects.length > 0 ||
+    copy.myBody.subjects.length > 0;
   return anySubject ? copy : null;
 }
 

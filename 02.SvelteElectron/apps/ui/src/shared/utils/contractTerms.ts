@@ -29,7 +29,7 @@ import { FA_TERM_LABEL } from "./faOfferTerms";
  */
 export type ClauseGroup = "noTrade" | "playerOption" | "teamOption";
 export type ClauseId =
-  | "noTrade" | "playerOption1" | "playerOption2" | "teamOption1" | "teamOption2";
+  "noTrade" | "playerOption1" | "playerOption2" | "teamOption1" | "teamOption2";
 
 export interface ClauseOption {
   id: ClauseId;
@@ -52,15 +52,38 @@ export interface ClauseOption {
  * ```
  */
 export const CLAUSE_OPTIONS: readonly ClauseOption[] = [
-  { id: "noTrade",       group: "noTrade",      label: FA_TERM_LABEL.noTrade,             years: 0, mult: 0.95 },
-  { id: "playerOption1", group: "playerOption", label: `${FA_TERM_LABEL.playerOption} 1년`, years: 1, mult: 0.97 },
-  { id: "playerOption2", group: "playerOption", label: `${FA_TERM_LABEL.playerOption} 2년`, years: 2, mult: 0.94 },
-  { id: "teamOption1",   group: "teamOption",   label: `${FA_TERM_LABEL.teamOption} 1년`,   years: 1, mult: 1.05 },
-  { id: "teamOption2",   group: "teamOption",   label: `${FA_TERM_LABEL.teamOption} 2년`,   years: 2, mult: 1.10 },
+  { id: "noTrade", group: "noTrade", label: FA_TERM_LABEL.noTrade, years: 0, mult: 0.95 },
+  {
+    id: "playerOption1",
+    group: "playerOption",
+    label: `${FA_TERM_LABEL.playerOption} 1년`,
+    years: 1,
+    mult: 0.97,
+  },
+  {
+    id: "playerOption2",
+    group: "playerOption",
+    label: `${FA_TERM_LABEL.playerOption} 2년`,
+    years: 2,
+    mult: 0.94,
+  },
+  {
+    id: "teamOption1",
+    group: "teamOption",
+    label: `${FA_TERM_LABEL.teamOption} 1년`,
+    years: 1,
+    mult: 1.05,
+  },
+  {
+    id: "teamOption2",
+    group: "teamOption",
+    label: `${FA_TERM_LABEL.teamOption} 2년`,
+    years: 2,
+    mult: 1.1,
+  },
 ];
 
-export const clauseById = (id: ClauseId): ClauseOption =>
-  CLAUSE_OPTIONS.find((c) => c.id === id)!;
+export const clauseById = (id: ClauseId): ClauseOption => CLAUSE_OPTIONS.find((c) => c.id === id)!;
 
 /** 이미 고른 무리는 다시 못 고른다 — 그 자리는 「＋ 추가」 목록에서 잠긴다 */
 export function clauseAddable(picked: readonly ClauseId[], id: ClauseId): boolean {
@@ -79,12 +102,14 @@ export function removeClause(picked: readonly ClauseId[], id: ClauseId): ClauseI
 
 /** 고른 조항 → 계약서 칸. 화면이 따로 세지 않게 한 자리에서 낸다 */
 export function clauseTerms(picked: readonly ClauseId[]): {
-  noTrade: boolean; teamOptionYears: number; playerOptionYears: number;
+  noTrade: boolean;
+  teamOptionYears: number;
+  playerOptionYears: number;
 } {
   const of = (g: ClauseGroup) => picked.map(clauseById).find((c) => c.group === g);
   return {
-    noTrade:           picked.includes("noTrade"),
-    teamOptionYears:   of("teamOption")?.years ?? 0,
+    noTrade: picked.includes("noTrade"),
+    teamOptionYears: of("teamOption")?.years ?? 0,
     playerOptionYears: of("playerOption")?.years ?? 0,
   };
 }
@@ -114,9 +139,12 @@ export interface ContractRules {
   };
   renewalSigningBonus: number;
   counterOffer: {
-    base: number; max: number;
-    ratingBonusAt: number; ownerBonusAt: number;
-    penaltyRatingBelow: number; penaltyOwnerBelow: number;
+    base: number;
+    max: number;
+    ratingBonusAt: number;
+    ownerBonusAt: number;
+    penaltyRatingBelow: number;
+    penaltyOwnerBelow: number;
   };
 }
 
@@ -140,9 +168,12 @@ const FALLBACK: ContractRules = {
   },
   renewalSigningBonus: 0,
   counterOffer: {
-    base: 1, max: 3,
-    ratingBonusAt: 65, ownerBonusAt: 30,
-    penaltyRatingBelow: 40, penaltyOwnerBelow: 0,
+    base: 1,
+    max: 3,
+    ratingBonusAt: 65,
+    ownerBonusAt: 30,
+    penaltyRatingBelow: 40,
+    penaltyOwnerBelow: 0,
   },
 };
 
@@ -198,12 +229,12 @@ export function primeContractRules(rulesFile: {
 // ── 인센티브 ───────────────────────────────────────────────────
 /** 축 이름 — 문턱 뒤에 붙는 말. 「25등판」의 「등판」이다 */
 export const INCENTIVE_UNIT: Record<Exclude<IncentiveKind, "award">, string> = {
-  games:   "등판",
+  games: "등판",
   innings: "이닝",
-  era:     "ERA",
-  wins:    "승",
-  saves:   "세이브",
-  holds:   "홀드",
+  era: "ERA",
+  wins: "승",
+  saves: "세이브",
+  holds: "홀드",
 };
 
 /**
@@ -212,15 +243,18 @@ export const INCENTIVE_UNIT: Record<Exclude<IncentiveKind, "award">, string> = {
  * ⚠ **조사를 안 붙인다.** 받침이 제각각이라 코드가 이어 붙이면 깨진다
  * (`contract_terms.json` 의 `_josa` 가 같은 규칙을 못박아 뒀다).
  */
-export function incentiveLabel(i: Pick<ContractIncentive, "kind" | "threshold" | "awardId">): string {
+export function incentiveLabel(
+  i: Pick<ContractIncentive, "kind" | "threshold" | "awardId">,
+): string {
   if (i.kind === "award") return awardLabelOf(i.awardId ?? "");
-  if (i.kind === "era")   return `ERA ${i.threshold.toFixed(2)} 이하`;
+  if (i.kind === "era") return `ERA ${i.threshold.toFixed(2)} 이하`;
   return `${i.threshold}${INCENTIVE_UNIT[i.kind]}`;
 }
 
 /** 인센티브를 구분하는 키. 같은 축·같은 문턱을 두 번 걸 수 없다 */
-export const incentiveKey = (i: Pick<ContractIncentive, "kind" | "threshold" | "awardId">): string =>
-  `${i.kind}:${i.awardId ?? ""}:${i.threshold}`;
+export const incentiveKey = (
+  i: Pick<ContractIncentive, "kind" | "threshold" | "awardId">,
+): string => `${i.kind}:${i.awardId ?? ""}:${i.threshold}`;
 
 /** 만원 단위로 100 자리에서 끊는다 — 연봉과 같은 눈금이다 */
 const round100 = (v: number) => Math.max(0, Math.round(v / 100) * 100);
@@ -269,7 +303,9 @@ export const incentiveTotal = (picked: readonly ContractIncentive[]): number =>
  * ```
  */
 export function incentiveAddable(
-  picked: readonly ContractIncentive[], cand: ContractIncentive, salary: number,
+  picked: readonly ContractIncentive[],
+  cand: ContractIncentive,
+  salary: number,
 ): boolean {
   if (picked.length >= maxIncentives()) return false;
   if (picked.some((p) => incentiveKey(p) === incentiveKey(cand))) return false;
@@ -277,14 +313,17 @@ export function incentiveAddable(
 }
 
 export function addIncentive(
-  picked: readonly ContractIncentive[], cand: ContractIncentive, salary: number,
+  picked: readonly ContractIncentive[],
+  cand: ContractIncentive,
+  salary: number,
 ): ContractIncentive[] {
   if (!incentiveAddable(picked, cand, salary)) return [...picked];
   return [...picked, cand];
 }
 
 export function removeIncentive(
-  picked: readonly ContractIncentive[], key: string,
+  picked: readonly ContractIncentive[],
+  key: string,
 ): ContractIncentive[] {
   return picked.filter((p) => incentiveKey(p) !== key);
 }
@@ -385,12 +424,12 @@ export interface CompareRow {
 }
 
 export const COMPARE_LABEL: Record<CompareKey, string> = {
-  salary:       "연봉",
-  years:        "기간",
+  salary: "연봉",
+  years: "기간",
   signingBonus: FA_TERM_LABEL.signingBonus,
-  incentive:    "인센티브 최대",
-  noTrade:      FA_TERM_LABEL.noTrade,
-  total:        FA_TERM_LABEL.total,
+  incentive: "인센티브 최대",
+  noTrade: FA_TERM_LABEL.noTrade,
+  total: FA_TERM_LABEL.total,
 };
 
 const num = (v: number) => v.toLocaleString();
@@ -398,9 +437,21 @@ const dirOf = (a: number, b: number): "up" | "down" | "same" =>
   a > b ? "up" : a < b ? "down" : "same";
 
 export interface CompareInput {
-  current: { salary: number; years: number; signingBonus: number; noTrade: boolean; incentiveTotal: number } | null;
+  current: {
+    salary: number;
+    years: number;
+    signingBonus: number;
+    noTrade: boolean;
+    incentiveTotal: number;
+  } | null;
   offered: { salary: number; years: number; signingBonus: number };
-  counter: { salary: number; years: number; signingBonus: number; clauses: readonly ClauseId[]; incentives: readonly ContractIncentive[] };
+  counter: {
+    salary: number;
+    years: number;
+    signingBonus: number;
+    clauses: readonly ClauseId[];
+    incentives: readonly ContractIncentive[];
+  };
   /** 조항이 걸렸나 없나 — 두 글자 */
   yes: string;
   no: string;
@@ -416,47 +467,64 @@ export function compareRows(i: CompareInput): CompareRow[] {
   const cur = i.current;
   const cTerms = clauseTerms(i.counter.clauses);
   const cInc = incentiveTotal(i.counter.incentives);
-  const counterTotal = contractTotalValue(i.counter.salary, i.counter.years, i.counter.signingBonus) + cInc;
-  const offeredTotal = contractTotalValue(i.offered.salary, i.offered.years, i.offered.signingBonus);
+  const counterTotal =
+    contractTotalValue(i.counter.salary, i.counter.years, i.counter.signingBonus) + cInc;
+  const offeredTotal = contractTotalValue(
+    i.offered.salary,
+    i.offered.years,
+    i.offered.signingBonus,
+  );
   const currentTotal = cur
     ? contractTotalValue(cur.salary, cur.years, cur.signingBonus) + cur.incentiveTotal
     : 0;
 
   return [
     {
-      key: "salary", label: COMPARE_LABEL.salary,
+      key: "salary",
+      label: COMPARE_LABEL.salary,
       current: cur ? num(cur.salary) : null,
-      offered: num(i.offered.salary), counter: num(i.counter.salary),
+      offered: num(i.offered.salary),
+      counter: num(i.counter.salary),
       dir: dirOf(i.counter.salary, i.offered.salary),
     },
     {
-      key: "years", label: COMPARE_LABEL.years,
+      key: "years",
+      label: COMPARE_LABEL.years,
       current: cur ? `${cur.years}년` : null,
-      offered: `${i.offered.years}년`, counter: `${i.counter.years}년`,
+      offered: `${i.offered.years}년`,
+      counter: `${i.counter.years}년`,
       dir: dirOf(i.counter.years, i.offered.years),
     },
     {
-      key: "signingBonus", label: COMPARE_LABEL.signingBonus,
+      key: "signingBonus",
+      label: COMPARE_LABEL.signingBonus,
       current: cur ? num(cur.signingBonus) : null,
-      offered: num(i.offered.signingBonus), counter: num(i.counter.signingBonus),
+      offered: num(i.offered.signingBonus),
+      counter: num(i.counter.signingBonus),
       dir: dirOf(i.counter.signingBonus, i.offered.signingBonus),
     },
     {
-      key: "incentive", label: COMPARE_LABEL.incentive,
+      key: "incentive",
+      label: COMPARE_LABEL.incentive,
       current: cur ? num(cur.incentiveTotal) : null,
-      offered: "0", counter: num(cInc),
+      offered: "0",
+      counter: num(cInc),
       dir: dirOf(cInc, 0),
     },
     {
-      key: "noTrade", label: COMPARE_LABEL.noTrade,
+      key: "noTrade",
+      label: COMPARE_LABEL.noTrade,
       current: cur ? (cur.noTrade ? i.yes : i.no) : null,
-      offered: i.no, counter: cTerms.noTrade ? i.yes : i.no,
+      offered: i.no,
+      counter: cTerms.noTrade ? i.yes : i.no,
       dir: "same",
     },
     {
-      key: "total", label: COMPARE_LABEL.total,
+      key: "total",
+      label: COMPARE_LABEL.total,
       current: cur ? num(currentTotal) : null,
-      offered: num(offeredTotal), counter: num(counterTotal),
+      offered: num(offeredTotal),
+      counter: num(counterTotal),
       dir: dirOf(counterTotal, offeredTotal),
     },
   ];

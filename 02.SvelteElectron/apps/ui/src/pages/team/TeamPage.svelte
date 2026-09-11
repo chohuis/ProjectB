@@ -10,17 +10,18 @@
 
   type LeagueTab = "all" | "hs" | "univ" | "ind" | "kbl" | "abl" | "jbl";
   const LEAGUE_MAP: Record<Exclude<LeagueTab, "all">, string> = {
-    hs:   "LEAGUE_HIGHSCHOOL",
+    hs: "LEAGUE_HIGHSCHOOL",
     univ: "LEAGUE_UNIVERSITY",
-    ind:  "LEAGUE_INDEPENDENT",
-    kbl:  "LEAGUE_KBL",
-    abl:  "LEAGUE_ABL",
-    jbl:  "LEAGUE_JBL",
+    ind: "LEAGUE_INDEPENDENT",
+    kbl: "LEAGUE_KBL",
+    abl: "LEAGUE_ABL",
+    jbl: "LEAGUE_JBL",
   };
 
   /** 범위 밖 리그 탭은 아예 안 그린다 (확장팩에서 releaseScope Set을 비우면 돌아온다) */
-  const SCOPED_TABS: LeagueTab[] = (["all", "hs", "univ", "ind", "kbl", "abl", "jbl"] as LeagueTab[])
-    .filter((t) => t === "all" || isLeagueInScope(LEAGUE_MAP[t as Exclude<LeagueTab, "all">]));
+  const SCOPED_TABS: LeagueTab[] = (
+    ["all", "hs", "univ", "ind", "kbl", "abl", "jbl"] as LeagueTab[]
+  ).filter((t) => t === "all" || isLeagueInScope(LEAGUE_MAP[t as Exclude<LeagueTab, "all">]));
 
   let leagueTab: LeagueTab = "all";
   let selectedTeamId = "";
@@ -31,17 +32,25 @@
 
   function leagueLabel(tab: LeagueTab): string {
     const labels: Record<LeagueTab, string> = {
-      all: "전체", hs: "고교리그", univ: "대학리그",
-      ind: "독립리그", kbl: "KBL", abl: "ABL", jbl: "JBL",
+      all: "전체",
+      hs: "고교리그",
+      univ: "대학리그",
+      ind: "독립리그",
+      kbl: "KBL",
+      abl: "ABL",
+      jbl: "JBL",
     };
     return labels[tab] ?? tab;
   }
 
   function teamLeagueLabel(leagueId: string): string {
     const map: Record<string, string> = {
-      LEAGUE_HIGHSCHOOL: "고교", LEAGUE_UNIVERSITY: "대학",
-      LEAGUE_INDEPENDENT: "독립", LEAGUE_KBL: "KBL",
-      LEAGUE_ABL: "ABL", LEAGUE_JBL: "JBL",
+      LEAGUE_HIGHSCHOOL: "고교",
+      LEAGUE_UNIVERSITY: "대학",
+      LEAGUE_INDEPENDENT: "독립",
+      LEAGUE_KBL: "KBL",
+      LEAGUE_ABL: "ABL",
+      LEAGUE_JBL: "JBL",
     };
     return map[leagueId] ?? leagueId;
   }
@@ -52,8 +61,19 @@
     return team.leagueId === LEAGUE_MAP[leagueTab as Exclude<LeagueTab, "all">];
   });
 
-  const TIER_ORDER: Record<string, number> = { "1군": 0, "메이저": 0, "2군": 1, "마이너": 1, "육성": 2, AAA: 3, AA: 4, A: 5 };
-  function tierOrd(t?: string) { return t != null ? (TIER_ORDER[t] ?? 6) : 0; }
+  const TIER_ORDER: Record<string, number> = {
+    "1군": 0,
+    메이저: 0,
+    "2군": 1,
+    마이너: 1,
+    육성: 2,
+    AAA: 3,
+    AA: 4,
+    A: 5,
+  };
+  function tierOrd(t?: string) {
+    return t != null ? (TIER_ORDER[t] ?? 6) : 0;
+  }
 
   $: sortedTeams = [...filteredTeams].sort((a, b) => {
     if (a.id === myTeamId) return -1;
@@ -73,9 +93,18 @@
     const p = $gameStore.protagonist;
     if (!p.teamId) return null;
     return {
-      id: p.id, name: p.name, role: "player" as const,
-      teamId: p.teamId, age: p.age, status: "active" as const,
-      details: { player: { position: p.position, playerType: p.playerType } as EntityDetails["player"], coach: null, manager: null, owner: null },
+      id: p.id,
+      name: p.name,
+      role: "player" as const,
+      teamId: p.teamId,
+      age: p.age,
+      status: "active" as const,
+      details: {
+        player: { position: p.position, playerType: p.playerType } as EntityDetails["player"],
+        coach: null,
+        manager: null,
+        owner: null,
+      },
     };
   })();
 
@@ -110,7 +139,9 @@
     <header class="top-row">
       <div class="u-subtabs">
         {#each SCOPED_TABS as tab}
-          <button class:on={leagueTab === tab} on:click={() => (leagueTab = tab)}>{leagueLabel(tab)}</button>
+          <button class:on={leagueTab === tab} on:click={() => (leagueTab = tab)}
+            >{leagueLabel(tab)}</button
+          >
         {/each}
       </div>
       <span class="count u-num">{sortedTeams.length}팀</span>
@@ -132,7 +163,10 @@
                 class:my-team={team.id === myTeamId}
                 style="--stripe:{stripeOf(team.colors)}"
                 on:click={() => (selectedTeamId = team.id)}
-                on:dblclick={() => { detailTeamId = team.id; detailOpen = true; }}
+                on:dblclick={() => {
+                  detailTeamId = team.id;
+                  detailOpen = true;
+                }}
                 title="더블클릭: 팀 상세 정보"
               >
                 <strong class="team-name-cell">
@@ -161,7 +195,10 @@
               <span class="my-team-tag">소속팀</span>
             {/if}
           </h3>
-          <p class="meta">{teamLeagueLabel(selectedTeam.leagueId)}{#if selectedTeam.city} · {selectedTeam.city}{/if}</p>
+          <p class="meta">
+            {teamLeagueLabel(selectedTeam.leagueId)}{#if selectedTeam.city}
+              · {selectedTeam.city}{/if}
+          </p>
 
           <div class="metrics">
             <div><span>선수</span><strong>{playerCount}</strong></div>
@@ -184,7 +221,17 @@
                       <span class="me-tag">나</span>
                     {/if}
                   </strong>
-                  <span>{row.role === "player" ? (p?.position ?? "-") : row.role === "manager" ? "감독" : row.role === "coach" ? "코치" : row.role === "owner" ? "구단주" : row.role}</span>
+                  <span
+                    >{row.role === "player"
+                      ? (p?.position ?? "-")
+                      : row.role === "manager"
+                        ? "감독"
+                        : row.role === "coach"
+                          ? "코치"
+                          : row.role === "owner"
+                            ? "구단주"
+                            : row.role}</span
+                  >
                 </div>
               {/each}
             {/if}
@@ -194,23 +241,44 @@
         {/if}
       </aside>
     </div>
-
   </div>
 </section>
 
-<TeamDetailModal
-  teamId={detailTeamId}
-  open={detailOpen}
-  on:close={() => (detailOpen = false)}
-/>
+<TeamDetailModal teamId={detailTeamId} open={detailOpen} on:close={() => (detailOpen = false)} />
 
 <style>
-  .page { display: grid; grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0; overflow: hidden; }
-  .board { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; min-height: 0; overflow: hidden; }
-  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
-  .count { font-size: 10.5px; color: var(--ink-mute); }
+  .page {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .board {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .count {
+    font-size: 10.5px;
+    color: var(--ink-mute);
+  }
 
-  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 0; }
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    min-height: 0;
+  }
 
   .panel {
     background: var(--panel);
@@ -221,15 +289,33 @@
     overflow: hidden;
   }
 
-  .team-list { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 6px; }
-  .head, .rows button { display: grid; grid-template-columns: 1fr 0.5fr; gap: 8px; align-items: center; font-size: 12.5px; }
+  .team-list {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 6px;
+  }
+  .head,
+  .rows button {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;
+    gap: 8px;
+    align-items: center;
+    font-size: 12.5px;
+  }
   .head {
-    font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
     color: var(--ink-mute);
     padding: 0 10px 6px;
     border-bottom: 2px solid var(--t-dark);
   }
-  .rows { min-height: 0; overflow: auto; display: grid; align-content: start; }
+  .rows {
+    min-height: 0;
+    overflow: auto;
+    display: grid;
+    align-content: start;
+  }
 
   /* 왼쪽 3px가 그 팀의 색이다 — 182팀을 훑을 때 이름보다 색이 먼저 잡힌다 */
   .rows button {
@@ -242,63 +328,172 @@
     text-align: left;
     cursor: pointer;
   }
-  .rows button:hover { background: var(--panel-sunk); }
-  .rows button.selected { background: var(--panel-sunk); color: var(--ink); font-weight: 700; }
-  .rows button.my-team .team-name-cell { color: var(--t-dark); font-weight: 800; }
-  .rows button strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lg { color: var(--ink-mute); font-size: 11px; }
+  .rows button:hover {
+    background: var(--panel-sunk);
+  }
+  .rows button.selected {
+    background: var(--panel-sunk);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .rows button.my-team .team-name-cell {
+    color: var(--t-dark);
+    font-weight: 800;
+  }
+  .rows button strong {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lg {
+    color: var(--ink-mute);
+    font-size: 11px;
+  }
 
-  .team-name-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
-  .my-team-tag, .me-tag {
+  .team-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+  .my-team-tag,
+  .me-tag {
     flex-shrink: 0;
-    font-size: 9px; font-weight: 800;
-    background: var(--t-dark); color: var(--t-gold);
-    border-radius: 2px; padding: 1px 5px;
+    font-size: 9px;
+    font-weight: 800;
+    background: var(--t-dark);
+    color: var(--t-gold);
+    border-radius: 2px;
+    padding: 1px 5px;
     white-space: nowrap;
   }
 
   .tier-sep {
-    color: var(--ink-mute); font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     padding: 10px 10px 4px;
-    display: flex; align-items: center; gap: 7px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
   }
-  .tier-sep::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .tier-sep::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
 
   /* -- 오른쪽 상세 -- */
-  .detail { display: grid; grid-template-rows: auto auto auto auto auto minmax(0, 1fr); gap: 8px; position: relative; }
-  .detail-head { display: flex; align-items: center; gap: 12px; }
-  .detail-stripe { height: 4px; border-radius: 2px; flex: 1; }
-  .detail h3 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 7px; }
-  .meta { margin: 0; color: var(--ink-mute); font-size: 12px; }
+  .detail {
+    display: grid;
+    grid-template-rows: auto auto auto auto auto minmax(0, 1fr);
+    gap: 8px;
+    position: relative;
+  }
+  .detail-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .detail-stripe {
+    height: 4px;
+    border-radius: 2px;
+    flex: 1;
+  }
+  .detail h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .meta {
+    margin: 0;
+    color: var(--ink-mute);
+    font-size: 12px;
+  }
 
-  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-  .metrics div { background: var(--panel-sunk); border-radius: var(--radius); padding: 8px 9px; display: grid; gap: 1px; }
-  .metrics span   { color: var(--ink-mute); font-size: 10px; }
-  .metrics strong { color: var(--ink); font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .metrics div {
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 8px 9px;
+    display: grid;
+    gap: 1px;
+  }
+  .metrics span {
+    color: var(--ink-mute);
+    font-size: 10px;
+  }
+  .metrics strong {
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
 
   .roster-head {
-    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
-    color: var(--ink-mute); text-transform: uppercase;
-    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--t-dark);
   }
-  .roster-rows { min-height: 0; overflow: auto; display: grid; }
+  .roster-rows {
+    min-height: 0;
+    overflow: auto;
+    display: grid;
+  }
   .roster-row {
     border-bottom: 1px solid var(--line);
     padding: 7px 2px;
-    display: grid; grid-template-columns: 1fr auto; gap: 8px;
-    align-items: center; font-size: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
     color: var(--ink-mid);
   }
-  .roster-row:last-child { border-bottom: 0; }
-  .roster-row strong {
-    display: flex; align-items: center; gap: 5px;
-    color: var(--ink); font-weight: 600;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  .roster-row:last-child {
+    border-bottom: 0;
   }
-  .roster-row span { color: var(--ink-mute); white-space: nowrap; }
-  .roster-row.hero-row strong { color: var(--t-dark); font-weight: 800; }
+  .roster-row strong {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--ink);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .roster-row span {
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+  .roster-row.hero-row strong {
+    color: var(--t-dark);
+    font-weight: 800;
+  }
 
-  .empty { color: var(--ink-mute); font-size: 12.5px; }
+  .empty {
+    color: var(--ink-mute);
+    font-size: 12.5px;
+  }
 
-  @media (max-width: 1180px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 1180px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

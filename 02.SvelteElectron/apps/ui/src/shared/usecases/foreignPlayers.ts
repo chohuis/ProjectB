@@ -38,12 +38,15 @@ import type { NpcSaveState } from "../types/save";
 
 /** 이 리그의 1군 팀 (팜 `_2`는 외국인을 두지 않는다) */
 function firstTeamsOf(leagueId: string): string[] {
-  return get(masterStore).teams
-    .filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"))
+  return get(masterStore)
+    .teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"))
     .map((t) => t.id);
 }
 
-function ovrOf(n: NpcSaveState, live: Record<string, import("../types/season").NpcLiveStat>): number {
+function ovrOf(
+  n: NpcSaveState,
+  live: Record<string, import("../types/season").NpcLiveStat>,
+): number {
   const ls = live[n.npcId];
   return n.playerType === "pitcher"
     ? (ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0)
@@ -69,9 +72,15 @@ async function formOf(
   n: { npcId: string; playerType?: string },
   stats: Record<string, unknown>,
 ): Promise<number> {
-  const row = stats[n.npcId] as {
-    ip?: number; era?: number; g?: number; pa?: number; ops?: number;
-  } | undefined;
+  const row = stats[n.npcId] as
+    | {
+        ip?: number;
+        era?: number;
+        g?: number;
+        pa?: number;
+        ops?: number;
+      }
+    | undefined;
   if (!row) return 0;
   const perf = {
     games: row.g ?? 0,
@@ -82,7 +91,9 @@ async function formOf(
   };
   try {
     const raw = await window.projectB!.engine(
-      "formScoreNative", JSON.stringify({ perf, isPitcher: n.playerType === "pitcher" }));
+      "formScoreNative",
+      JSON.stringify({ perf, isPitcher: n.playerType === "pitcher" }),
+    );
     const v = JSON.parse(raw);
     return typeof v === "number" && Number.isFinite(v) ? v : 0;
   } catch {
@@ -119,9 +130,11 @@ export async function applyForeignTurnover(
     for (const [pid, row] of Object.entries(st.stats ?? {})) seasonStats[pid] = row;
   }
 
-  const renew = (F as unknown as {
-    renew?: { ovrMin: number; ageMax: number; formWeight?: number };
-  }).renew;
+  const renew = (
+    F as unknown as {
+      renew?: { ovrMin: number; ageMax: number; formWeight?: number };
+    }
+  ).renew;
   const live = get(npcLiveStatsStore);
   const logs: string[] = [];
 
@@ -162,9 +175,11 @@ export async function applyForeignTurnover(
       const eff = ovr + form * (renew.formWeight ?? 0);
       if (eff >= renew.ovrMin && n.age <= renew.ageMax) continue;
       releasedIds.push(n.npcId);
-      logs.push(`[외국인] ${n.name} 재계약 불가 ` +
-        `(OVR ${Math.round(ovr)}${form ? ` 성적 ${form > 0 ? "+" : ""}${Math.round(form * (renew.formWeight ?? 0))}` : ""}` +
-        ` · ${n.age}세)`);
+      logs.push(
+        `[외국인] ${n.name} 재계약 불가 ` +
+          `(OVR ${Math.round(ovr)}${form ? ` 성적 ${form > 0 ? "+" : ""}${Math.round(form * (renew.formWeight ?? 0))}` : ""}` +
+          ` · ${n.age}세)`,
+      );
     }
   }
 
@@ -177,8 +192,8 @@ export async function applyForeignTurnover(
     const back = originRulesOf(F).returnLeague;
     // 돌아갈 팀 — 그 리그에서 제일 인원이 적은 팀. 한 팀에 몰아넣지 않는다
     const backTeams = back
-      ? get(masterStore).teams
-          .filter((t) => (leagueOfTeam(t.id) ?? t.leagueId) === back)
+      ? get(masterStore)
+          .teams.filter((t) => (leagueOfTeam(t.id) ?? t.leagueId) === back)
           .map((t) => t.id)
       : [];
     const sizeOf = new Map<string, number>();
@@ -188,8 +203,7 @@ export async function applyForeignTurnover(
     }
     const pickBackTeam = (): string | null => {
       if (backTeams.length === 0) return null;
-      const t = backTeams.reduce((a, b) =>
-        (sizeOf.get(a) ?? 0) <= (sizeOf.get(b) ?? 0) ? a : b);
+      const t = backTeams.reduce((a, b) => ((sizeOf.get(a) ?? 0) <= (sizeOf.get(b) ?? 0) ? a : b));
       sizeOf.set(t, (sizeOf.get(t) ?? 0) + 1);
       return t;
     };
@@ -200,36 +214,53 @@ export async function applyForeignTurnover(
       if (t) {
         backTo.set(npcId, t);
         await slotRepo.transfer({
-          slotId, npcId, toTeamId: t, toLeagueId: back,
-          seasonYear, category: "release",
+          slotId,
+          npcId,
+          toTeamId: t,
+          toLeagueId: back,
+          seasonYear,
+          category: "release",
           detail: "재계약 불가 — 본국 복귀",
         });
       } else {
         // 돌아갈 리그가 없으면(게이트가 닫혀 있으면) 예전대로 은퇴다 —
         // 소속 없는 현역을 만들면 화면과 시뮬이 둘 다 깨진다
         await slotRepo.retire({
-          slotId, npcId, seasonYear, detail: "재계약 불가 — 본국 복귀",
+          slotId,
+          npcId,
+          seasonYear,
+          detail: "재계약 불가 — 본국 복귀",
         });
       }
     }
-    gameStore.updateNpcs(g.npcs.map((n) => {
-      if (!rel.has(n.npcId)) return n;
-      const t = backTo.get(n.npcId);
-      const ev = {
-        year: seasonYear,
-        eventType: "release" as const,
-        fromTeamId: n.currentTeam,
-        fromLeagueId: n.currentLeague,
-        ...(t ? { toTeamId: t, toLeagueId: back } : {}),
-        detail: "재계약 불가 — 본국 복귀",
-      };
-      return t
-        ? { ...n, currentLeague: back, currentTeam: t,
-            careerEvents: [...(n.careerEvents ?? []), ev] }
-        : { ...n, careerStatus: "retired" as const,
-            currentLeague: "LEAGUE_RETIRED", currentTeam: "",
-            careerEvents: [...(n.careerEvents ?? []), ev] };
-    }));
+    gameStore.updateNpcs(
+      g.npcs.map((n) => {
+        if (!rel.has(n.npcId)) return n;
+        const t = backTo.get(n.npcId);
+        const ev = {
+          year: seasonYear,
+          eventType: "release" as const,
+          fromTeamId: n.currentTeam,
+          fromLeagueId: n.currentLeague,
+          ...(t ? { toTeamId: t, toLeagueId: back } : {}),
+          detail: "재계약 불가 — 본국 복귀",
+        };
+        return t
+          ? {
+              ...n,
+              currentLeague: back,
+              currentTeam: t,
+              careerEvents: [...(n.careerEvents ?? []), ev],
+            }
+          : {
+              ...n,
+              careerStatus: "retired" as const,
+              currentLeague: "LEAGUE_RETIRED",
+              currentTeam: "",
+              careerEvents: [...(n.careerEvents ?? []), ev],
+            };
+      }),
+    );
     const wentBack = backTo.size;
     if (wentBack > 0) logs.push(`[외국인] 본국 복귀 ${wentBack}명`);
   }
@@ -242,17 +273,27 @@ export async function applyForeignTurnover(
   // 해외에서 데려올 후보. **이미 KBL에 있는 용병은 후보가 아니다**
   const origin = originRulesOf(F);
   const liveNow = get(npcLiveStatsStore);
-  const pool: Candidate[] = Object.keys(origin.weights).length === 0 ? [] : after
-    .filter((n) => n.careerStatus === "active"
-      && !!n.currentTeam
-      && n.currentLeague in origin.weights
-      && n.age >= (F.ageMin ?? 0) && n.age <= (F.ageMax ?? 99))
-    .map((n) => ({
-      npcId: n.npcId, league: n.currentLeague ?? "", ovr: ovrOf(n, liveNow),
-      age: n.age, playerType: n.playerType,
-    }))
-    // 규칙선(66~94)에 드는 사람만 — 아무나 데려오면 용병이 국내 신인만 못하다
-    .filter((c) => c.ovr >= (F.ovrMin ?? 0) && c.ovr <= (F.ovrMax ?? 99));
+  const pool: Candidate[] =
+    Object.keys(origin.weights).length === 0
+      ? []
+      : after
+          .filter(
+            (n) =>
+              n.careerStatus === "active" &&
+              !!n.currentTeam &&
+              n.currentLeague in origin.weights &&
+              n.age >= (F.ageMin ?? 0) &&
+              n.age <= (F.ageMax ?? 99),
+          )
+          .map((n) => ({
+            npcId: n.npcId,
+            league: n.currentLeague ?? "",
+            ovr: ovrOf(n, liveNow),
+            age: n.age,
+            playerType: n.playerType,
+          }))
+          // 규칙선(66~94)에 드는 사람만 — 아무나 데려오면 용병이 국내 신인만 못하다
+          .filter((c) => c.ovr >= (F.ovrMin ?? 0) && c.ovr <= (F.ovrMax ?? 99));
 
   const takenFromPool = new Set<string>();
   /** 이적시킬 사람들. 팀별로 모아 두고 루프가 끝난 뒤 한 번에 적용한다 */
@@ -266,13 +307,19 @@ export async function applyForeignTurnover(
 
   for (const leagueId of F.leagues) {
     const requests: Array<{
-      teamId: string; pitchers: number; batters: number; salaryIndex?: number;
+      teamId: string;
+      pitchers: number;
+      batters: number;
+      salaryIndex?: number;
     }> = [];
 
     for (const teamId of firstTeamsOf(leagueId)) {
-      const held = after.filter((n) =>
-        n.careerStatus === "active" && n.currentTeam === teamId
-        && isForeignPlayer(n.currentLeague ?? "", n.nationality));
+      const held = after.filter(
+        (n) =>
+          n.careerStatus === "active" &&
+          n.currentTeam === teamId &&
+          isForeignPlayer(n.currentLeague ?? "", n.nationality),
+      );
       const short = F.perTeam - held.length;
       if (short <= 0) continue;
 
@@ -283,7 +330,10 @@ export async function applyForeignTurnover(
       // ── 실제 해외 선수를 먼저 데려온다 ──────────────────────
       const picked = pickForeigners({
         candidates: pool.filter((c) => !takenFromPool.has(c.npcId)),
-        rules: origin, pitchers, batters: short - pitchers, rand,
+        rules: origin,
+        pitchers,
+        batters: short - pitchers,
+        rand,
       });
       for (const c of picked) {
         takenFromPool.add(c.npcId);
@@ -292,10 +342,15 @@ export async function applyForeignTurnover(
 
       // 못 채운 만큼만 생성으로 — 자리를 비우지 않는다
       const restP = Math.max(0, pitchers - picked.filter((c) => c.playerType === "pitcher").length);
-      const restB = Math.max(0, (short - pitchers) - picked.filter((c) => c.playerType !== "pitcher").length);
+      const restB = Math.max(
+        0,
+        short - pitchers - picked.filter((c) => c.playerType !== "pitcher").length,
+      );
       if (restP + restB === 0) continue;
       requests.push({
-        teamId, pitchers: restP, batters: restB,
+        teamId,
+        pitchers: restP,
+        batters: restB,
         salaryIndex: salaryIndex.get(teamId),
       });
     }
@@ -303,13 +358,20 @@ export async function applyForeignTurnover(
 
     const worldSeed = Number(meta.world_seed ?? 0) >>> 0;
     const gen = JSON.parse(
-      await window.projectB!.engine("generateForeignPlayersNative", JSON.stringify({
-        leagueId, seasonYear, worldSeed, requests, foreign: F,
-        salaryRules: rulesFile.salaryRules,
-        // 같은 해에 여러 번 돌아도 ID가 겹치지 않게 한다 —
-        // 팀별 인덱스는 1부터 다시 시작하므로 연도만으로는 안 갈린다
-        idOffset: signed,
-      })),
+      await window.projectB!.engine(
+        "generateForeignPlayersNative",
+        JSON.stringify({
+          leagueId,
+          seasonYear,
+          worldSeed,
+          requests,
+          foreign: F,
+          salaryRules: rulesFile.salaryRules,
+          // 같은 해에 여러 번 돌아도 ID가 겹치지 않게 한다 —
+          // 팀별 인덱스는 1부터 다시 시작하므로 연도만으로는 안 갈린다
+          idOffset: signed,
+        }),
+      ),
     ) as { npcs?: NpcSaveState[]; error?: string };
     if (!Array.isArray(gen.npcs)) {
       logs.push(`[외국인] ${leagueId} 영입 실패: ${gen.error ?? "unknown"}`);
@@ -317,7 +379,10 @@ export async function applyForeignTurnover(
     }
 
     const fresh = gen.npcs as unknown as Array<NpcSaveState & { abilities?: unknown }>;
-    await slotRepo.insertNpcs(slotId, gen.npcs as unknown as Parameters<typeof slotRepo.insertNpcs>[1]);
+    await slotRepo.insertNpcs(
+      slotId,
+      gen.npcs as unknown as Parameters<typeof slotRepo.insertNpcs>[1],
+    );
     // 생성기 출력은 slot.db shape(`abilities`)다 — 스토어가 읽는 평면 형태로 편다.
     //
     // ⚠ **빈 배열 필드를 반드시 채운다.** 로드 경로는 `repoNpcToSaveState`가
@@ -329,7 +394,8 @@ export async function applyForeignTurnover(
       const ab = (n.abilities ?? {}) as { pitching?: unknown; batting?: unknown };
       return {
         ...n,
-        pitching: ab.pitching, batting: ab.batting,
+        pitching: ab.pitching,
+        batting: ab.batting,
         isNamed: false,
         fame: 0,
         achievements: [],
@@ -342,9 +408,12 @@ export async function applyForeignTurnover(
       const next = { ...st };
       for (const n of asSave) {
         next[n.npcId] = {
-          pitching: n.pitching, batting: n.batting,
-          pitchingXp: {}, battingXp: {},
-          seasonStartPitching: n.pitching, seasonStartBatting: n.batting,
+          pitching: n.pitching,
+          batting: n.batting,
+          pitchingXp: {},
+          battingXp: {},
+          seasonStartPitching: n.pitching,
+          seasonStartBatting: n.batting,
           peakOvr: n.pitching?.ovr ?? n.batting?.ovr,
           pitches: [],
         };
@@ -387,9 +456,12 @@ export async function applyForeignTurnover(
     for (const mv of moves) {
       const n = byId.get(mv.cand.npcId);
       await slotRepo.transfer({
-        slotId, npcId: mv.cand.npcId,
-        toTeamId: mv.toTeamId, toLeagueId: mv.toLeagueId,
-        seasonYear, category: "fa",
+        slotId,
+        npcId: mv.cand.npcId,
+        toTeamId: mv.toTeamId,
+        toLeagueId: mv.toLeagueId,
+        seasonYear,
+        category: "fa",
         detail: `외국인 영입 — ${originLabel(n?.currentLeague ?? "")} 출신`,
       });
     }
@@ -399,8 +471,11 @@ export async function applyForeignTurnover(
       const k = originLabel(mv.cand.league);
       byOrigin.set(k, (byOrigin.get(k) ?? 0) + 1);
     }
-    logs.push(`[외국인] 해외 영입 ${moves.length}명 (`
-      + [...byOrigin].map(([k, v]) => `${k} ${v}`).join(" · ") + ")");
+    logs.push(
+      `[외국인] 해외 영입 ${moves.length}명 (` +
+        [...byOrigin].map(([k, v]) => `${k} ${v}`).join(" · ") +
+        ")",
+    );
   }
 
   if (signed > 0) logs.push(`[외국인] ${seasonYear} 영입 ${signed}명`);

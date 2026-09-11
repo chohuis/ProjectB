@@ -22,7 +22,8 @@ function csvRows(): Array<Record<string, string>> {
   const lines = readFileSync(CSV, "utf8").split(/\r?\n/).filter(Boolean);
   const head = lines[0].split(",");
   return lines.slice(1).map((l) => {
-    const c = l.split(","); const o: Record<string, string> = {};
+    const c = l.split(",");
+    const o: Record<string, string> = {};
     head.forEach((h, i) => (o[h] = c[i]));
     return o;
   });
@@ -70,19 +71,22 @@ describe("대회가 실제 시기에 있다", () => {
 
   it("같은 리그 대회끼리 안 겹친다", () => {
     for (const lid of ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY"]) {
-      const ts = TOURNAMENTS.filter((t) => t.leagueId === lid)
-        .sort((a, b) => a.startWeek - b.startWeek);
+      const ts = TOURNAMENTS.filter((t) => t.leagueId === lid).sort(
+        (a, b) => a.startWeek - b.startWeek,
+      );
       for (let i = 1; i < ts.length; i++) {
-        expect(ts[i].startWeek, `${ts[i - 1].name} → ${ts[i].name}`)
-          .toBeGreaterThan(ts[i - 1].endWeek);
+        expect(ts[i].startWeek, `${ts[i - 1].name} → ${ts[i].name}`).toBeGreaterThan(
+          ts[i - 1].endWeek,
+        );
       }
     }
   });
 
   it("고교 마지막 대회가 주말리그 종료(W26) 언저리다", () => {
     // 패왕기는 시즌 최종 왕중왕이라 리그가 끝난 뒤여야 뜻이 산다
-    const last = TOURNAMENTS.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
-      .reduce((a, b) => (a.endWeek > b.endWeek ? a : b));
+    const last = TOURNAMENTS.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL").reduce((a, b) =>
+      a.endWeek > b.endWeek ? a : b,
+    );
     expect(last.startWeek).toBeGreaterThanOrEqual(HS_END_WEEK);
   });
 });

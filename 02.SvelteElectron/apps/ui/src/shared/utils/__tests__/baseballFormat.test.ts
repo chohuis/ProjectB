@@ -1,5 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { ipLabel, ipToOuts, rateLabel, eraLabel, gaugeLabel, seasonLabel, wpctLabel, totalBases } from "../baseballFormat";
+import {
+  ipLabel,
+  ipToOuts,
+  rateLabel,
+  eraLabel,
+  gaugeLabel,
+  seasonLabel,
+  wpctLabel,
+  totalBases,
+} from "../baseballFormat";
 
 /**
  * 야구 기록 표기 — **관례가 있는 숫자들이다.**
@@ -43,7 +52,7 @@ describe("이닝(IP)", () => {
   // ⚠ **야구 표기를 넣으면 틀린다.** `31.2`는 실수로 31.2이닝이라 93개다 —
   //   31과 2/3(95개)가 아니다. 엔진이 두 형식을 섞고 있어 적어 둔다.
   it("야구 표기를 넣으면 값이 다르다 — 섞으면 안 된다", () => {
-    expect(ipToOuts(31.2)).toBe(94);   // 실수 31.2이닝 = 93.6아웃
+    expect(ipToOuts(31.2)).toBe(94); // 실수 31.2이닝 = 93.6아웃
     expect(ipToOuts(31 + 2 / 3)).toBe(95);
   });
 });

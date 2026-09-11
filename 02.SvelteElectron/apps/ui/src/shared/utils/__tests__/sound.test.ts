@@ -1,7 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  effectiveVolume, playSfx, playBgm, setPlayer, hasPlayer, type Volumes,
-} from "../sound";
+import { effectiveVolume, playSfx, playBgm, setPlayer, hasPlayer, type Volumes } from "../sound";
 
 const v = (o: Partial<Volumes> = {}): Volumes => ({ master: 70, sfx: 70, bgm: 50, ...o });
 

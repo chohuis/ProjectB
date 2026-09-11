@@ -34,8 +34,9 @@ const RULES: Rule[] = ["mandatory", "conditional", "random"]
   .map((p) => JSON.parse(readFileSync(p, "utf8")) as Rule);
 
 const TMPL = new Map<string, Tmpl>(
-  (JSON.parse(readFileSync(join(MASTER, "messages/templates.json"), "utf8")).templates as Tmpl[])
-    .map((t) => [t.id, t]),
+  (
+    JSON.parse(readFileSync(join(MASTER, "messages/templates.json"), "utf8")).templates as Tmpl[]
+  ).map((t) => [t.id, t]),
 );
 
 const bodiesOf = (t: Tmpl | undefined): string[] =>
@@ -50,9 +51,8 @@ describe("이벤트 데이터 위생", () => {
    * 힌트를 쓸 자리는 선택지의 `effectHint`다. 본문은 이야기만 한다.
    */
   it("본문이 효과를 약속하면 선택지가 있다", () => {
-    const HINT = /\[[^\]\n]*[+\-]\s*\d+[^\]\n]*\]/;
-    const liars = RULES
-      .filter((r) => !r.decisionTemplateId)
+    const HINT = /\[[^\]\n]*[+-]\s*\d+[^\]\n]*\]/;
+    const liars = RULES.filter((r) => !r.decisionTemplateId)
       .filter((r) => bodiesOf(TMPL.get(r.messageTemplateId ?? "")).some((b) => HINT.test(b)))
       .map((r) => r.id);
     expect(liars).toEqual([]);
@@ -97,8 +97,9 @@ describe("이벤트 데이터 위생", () => {
      * 예전엔 그걸 세서 지표가 실제 결함보다 훨씬 커 보였다(25 vs 2).
      */
     const stagesOf = (r: Rule): string[] => {
-      const c = (r.conditions ?? []).find((x) => (x as { type?: string }).type === "career_stage") as
-        { stage?: string; stages?: string[] } | undefined;
+      const c = (r.conditions ?? []).find(
+        (x) => (x as { type?: string }).type === "career_stage",
+      ) as { stage?: string; stages?: string[] } | undefined;
       if (!c) return ["*"];
       return Array.isArray(c.stages) ? c.stages : c.stage ? [c.stage] : ["*"];
     };
@@ -134,7 +135,13 @@ describe("이벤트 데이터 위생", () => {
  */
 describe("군 이벤트는 규칙이 아니라 풀이다", () => {
   const MIL = resolve(__dirname, "../../../../../../resource/data/master/events/pools");
-  type MilEvent = { id: string; title?: string; description?: string; minRank?: number; choices?: unknown[] };
+  type MilEvent = {
+    id: string;
+    title?: string;
+    description?: string;
+    minRank?: number;
+    choices?: unknown[];
+  };
 
   /**
    * 🔴 **경로 이름이 아니라 값을 본다** (2026-09-03 · B-20 재회).
@@ -162,14 +169,14 @@ describe("군 이벤트는 규칙이 아니라 풀이다", () => {
   it("이벤트 규칙이 **복무 중**을 요구하지 않는다 — 요구하면 영영 안 뜬다", () => {
     /** 전역과 함께 값이 사라지는 필드 — 조건으로 쓰면 규칙 갈래에서 영영 거짓이다 */
     const ONLY_WHILE_SERVING = ["militaryUnit", "militaryServiceWeeks"];
-    const army = RULES
-      .filter((r) => (r.conditions ?? []).some((c) => {
+    const army = RULES.filter((r) =>
+      (r.conditions ?? []).some((c) => {
         const { path, value } = c as { path?: string; value?: unknown };
         if (path === undefined) return false;
         if (ONLY_WHILE_SERVING.includes(path)) return true;
         return path === "militaryStatus" && value === "현역";
-      }))
-      .map((r) => r.id);
+      }),
+    ).map((r) => r.id);
     expect(army).toEqual([]);
   });
 
@@ -179,8 +186,8 @@ describe("군 이벤트는 규칙이 아니라 풀이다", () => {
     const 군필 = { type: "eq", path: "militaryStatus", value: "군필" } as const;
     const 현역 = { type: "eq", path: "militaryStatus", value: "현역" } as const;
     const blocked = (c: { path?: string; value?: unknown }) =>
-      ["militaryUnit", "militaryServiceWeeks"].includes(c.path ?? "")
-      || (c.path === "militaryStatus" && c.value === "현역");
+      ["militaryUnit", "militaryServiceWeeks"].includes(c.path ?? "") ||
+      (c.path === "militaryStatus" && c.value === "현역");
     expect(blocked(군필)).toBe(false);
     expect(blocked(현역)).toBe(true);
     expect(blocked({ path: "militaryServedUnit", value: "general" })).toBe(false);
@@ -189,13 +196,17 @@ describe("군 이벤트는 규칙이 아니라 풀이다", () => {
 
   for (const pool of ["common", "sports", "general"]) {
     it(`military_${pool} — 제목·본문·선택지가 다 있다`, () => {
-      const j = JSON.parse(readFileSync(join(MIL, `military_${pool}.json`), "utf8")) as { events: MilEvent[] };
+      const j = JSON.parse(readFileSync(join(MIL, `military_${pool}.json`), "utf8")) as {
+        events: MilEvent[];
+      };
       const bad = j.events
         .filter((e) => !e.title || !e.description || !(e.choices ?? []).length)
         .map((e) => e.id);
       expect(bad).toEqual([]);
       // 계급은 0~3이다 (advanceWeek.ts:1897 — 8/34/60주 경계)
-      const badRank = j.events.filter((e) => (e.minRank ?? 0) < 0 || (e.minRank ?? 0) > 3).map((e) => e.id);
+      const badRank = j.events
+        .filter((e) => (e.minRank ?? 0) < 0 || (e.minRank ?? 0) > 3)
+        .map((e) => e.id);
       expect(badRank).toEqual([]);
     });
   }

@@ -68,10 +68,11 @@ export function pickForeigners(p: PickParams): Candidate[] {
   while (needP + needB > 0) {
     const wantPitcher = needP > 0 && (needB === 0 || p.rand() < needP / (needP + needB));
     const picked = drawOne(pool, p.rules.weights, wantPitcher, taken, p.rand);
-    if (!picked) break;   // 후보가 마르면 멈춘다 — 없는 사람을 지어내지 않는다
+    if (!picked) break; // 후보가 마르면 멈춘다 — 없는 사람을 지어내지 않는다
     taken.add(picked.npcId);
     out.push(picked);
-    if (picked.playerType === "pitcher") needP--; else needB--;
+    if (picked.playerType === "pitcher") needP--;
+    else needB--;
   }
   return out;
 }
@@ -107,9 +108,9 @@ function drawOne(
 
 /** 출신 리그 라벨 — 화면이 "마이너 출신"을 말할 수 있게 */
 export function originLabel(leagueId: string): string {
-  if (leagueId === "LEAGUE_ABL")      return "메이저";
+  if (leagueId === "LEAGUE_ABL") return "메이저";
   if (leagueId === "LEAGUE_ABL_FARM") return "마이너";
-  if (leagueId === "LEAGUE_JBL")      return "일본";
+  if (leagueId === "LEAGUE_JBL") return "일본";
   if (leagueId === "LEAGUE_JBL_FARM") return "일본 2군";
   return "해외";
 }

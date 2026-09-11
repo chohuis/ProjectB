@@ -24,11 +24,19 @@ import type { BatterSeasonStats, PitcherSeasonStats } from "../../types/save";
  */
 
 const bat = (o: Partial<Extract<PlayerGameLine, { role: "batter" }>>): PlayerGameLine => ({
-  role: "batter", playerId: "P", ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0, ...o,
+  role: "batter",
+  playerId: "P",
+  ab: 0,
+  h: 0,
+  hr: 0,
+  rbi: 0,
+  bb: 0,
+  k: 0,
+  sb: 0,
+  ...o,
 });
 
-const runBat = (lines: PlayerGameLine[]) =>
-  accumulateStats({}, lines)["P"] as BatterSeasonStats;
+const runBat = (lines: PlayerGameLine[]) => accumulateStats({}, lines)["P"] as BatterSeasonStats;
 
 describe("타석 · 출루율", () => {
   it("타석이 사구·희생타를 센다", () => {
@@ -48,7 +56,7 @@ describe("타석 · 출루율", () => {
   it("구 세이브는 옛 식으로 떨어진다", () => {
     const s = runBat([bat({ ab: 4, h: 1, bb: 1 })]);
     expect(s.pa).toBe(5);
-    expect(s.obp).toBe(0.4);      // 2/5
+    expect(s.obp).toBe(0.4); // 2/5
     expect(s.hbp).toBeUndefined();
   });
 });
@@ -89,11 +97,21 @@ describe("장타율 · 루타", () => {
 
 describe("투수 기록", () => {
   const pit = (o: Partial<Extract<PlayerGameLine, { role: "pitcher" }>>): PlayerGameLine => ({
-    role: "pitcher", playerId: "P", ip: 0, er: 0, h: 0, k: 0, bb: 0, decision: "ND", ...o,
+    role: "pitcher",
+    playerId: "P",
+    ip: 0,
+    er: 0,
+    h: 0,
+    k: 0,
+    bb: 0,
+    decision: "ND",
+    ...o,
   });
 
   it("피홈런·사구가 쌓인다", () => {
-    const s = accumulateStats({}, [pit({ ip: 6, h: 5, hr: 2, bb: 1, hbp: 1 })])["P"] as PitcherSeasonStats;
+    const s = accumulateStats({}, [pit({ ip: 6, h: 5, hr: 2, bb: 1, hbp: 1 })])[
+      "P"
+    ] as PitcherSeasonStats;
     expect(s.hr).toBe(2);
     expect(s.hbp).toBe(1);
   });

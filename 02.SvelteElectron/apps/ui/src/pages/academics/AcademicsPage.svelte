@@ -2,28 +2,38 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import {
-    percentileToGrade, studyModeEffect, weeksUntilNextExam,
-    UNIVERSITY_MAJORS, getUniversityEffBonus,
+    percentileToGrade,
+    studyModeEffect,
+    weeksUntilNextExam,
+    UNIVERSITY_MAJORS,
+    getUniversityEffBonus,
   } from "../../shared/utils/academicsEngine";
-  import { toGpa45 } from "../../shared/utils/universityUtils";
+  // ⚠ `toGpa45` 를 여기서 뺐다 — 쓰던 자리가 **한 번도 안 뜨는 갈래**였다
+  //   (아래 요약 헤더의 주석). 함수는 `universityUtils.ts` 에 그대로 두었다:
+  //   GPA 칸을 살릴지는 화면 담당이 정하고, 살리면 그때 다시 부른다.
+  //   지금 그 함수를 부르는 곳은 **아무 데도 없다.**
   import { universityGradeOf } from "../../shared/utils/careerTransition";
   import type { StudyMode } from "../../shared/types/save";
 
   const SUBJECT_NAMES: Record<string, string> = {
-    kor: "국어", eng: "영어", math: "수학", soc: "사회", sci: "과학",
+    kor: "국어",
+    eng: "영어",
+    math: "수학",
+    soc: "사회",
+    sci: "과학",
   };
 
   const STUDY_MODE_OPTIONS: Array<{ id: StudyMode; name: string; desc: string }> = [
-    { id: "focus",  name: "집중 수업",    desc: `학업 +8점/주, 훈련 효율 75%` },
-    { id: "normal", name: "일반 수업",    desc: `학업 +4점/주, 훈련 효율 90%` },
-    { id: "rest",   name: "수업 중 휴식", desc: `학업 +1점/주, 훈련 효율 100%, 출석 -3%` },
-    { id: "sleep",  name: "수업 중 수면", desc: `학업 0점/주, 훈련 효율 105%, 경고 위험` },
+    { id: "focus", name: "집중 수업", desc: `학업 +8점/주, 훈련 효율 75%` },
+    { id: "normal", name: "일반 수업", desc: `학업 +4점/주, 훈련 효율 90%` },
+    { id: "rest", name: "수업 중 휴식", desc: `학업 +1점/주, 훈련 효율 100%, 출석 -3%` },
+    { id: "sleep", name: "수업 중 수면", desc: `학업 0점/주, 훈련 효율 105%, 경고 위험` },
   ];
 
-  $: school      = $gameStore.schoolState;
+  $: school = $gameStore.schoolState;
   $: careerStage = $gameStore.protagonist.careerStage;
-  $: isUniv      = careerStage === "university";
-  $: curWeek     = $seasonStore.currentWeek;
+  $: isUniv = careerStage === "university";
+  $: curWeek = $seasonStore.currentWeek;
 
   /*
     🔴 **여기서 학년을 따로 셌다.** `universityWeek / 52` 는 정본
@@ -40,11 +50,11 @@
 
   $: subjects = Object.entries(school.subjectScores).map(([id, s]) => ({
     id,
-    name:       SUBJECT_NAMES[id] ?? id,
+    name: SUBJECT_NAMES[id] ?? id,
     percentile: s.percentile,
     attendance: s.attendance,
     assignment: s.assignment,
-    grade:      percentileToGrade(s.percentile),
+    grade: percentileToGrade(s.percentile),
   }));
 
   $: avgPercentile = subjects.length
@@ -53,11 +63,11 @@
   $: avgGrade = percentileToGrade(avgPercentile);
 
   $: nextExam = weeksUntilNextExam(curWeek);
-  $: accumPct  = Math.min(100, Math.round(school.examAccumScore));
+  $: accumPct = Math.min(100, Math.round(school.examAccumScore));
 
   // 현재 전공 효율 보너스
   $: majorEffPct = Math.round(getUniversityEffBonus(school.universityMajor) * 100);
-  $: isGeneral   = school.universityMajor === "일반전공";
+  $: isGeneral = school.universityMajor === "일반전공";
 
   function gradeClass(g: number): string {
     if (g <= 2) return "g-top";
@@ -114,12 +124,12 @@
         <p class="lbl">평균 등급</p>
         <strong class={gradeClass(avgGrade)}>{avgGrade}등급</strong>
       </div>
-      {#if isUniv}
-        <div class="summary-item">
-          <p class="lbl">GPA</p>
-          <strong class={gradeClass(avgGrade)}>{toGpa45(avgPercentile).toFixed(1)} / 4.5</strong>
-        </div>
-      {/if}
+      <!--
+        🔴 여기 있던 **GPA 칸을 지웠다** (2026-09-11 · ESLint 가 첫 실행에서 잡았다).
+        `{#if isUniv}` 의 `{:else}` 안에 다시 `{#if isUniv}` 라 **한 번도 안 떴다.**
+        지금 화면을 바꾸지 않으려고 「지운다」로 끝낸다 — 그리는 쪽으로 옮길지는
+        화면 담당이 정할 일이다. 옮긴다면 위 `{#if isUniv}` 갈래 안이다.
+      -->
     {/if}
     <div class="summary-item">
       <p class="lbl">학업 상태</p>
@@ -135,7 +145,9 @@
     </div>
     <div class="summary-item">
       <p class="lbl">경고 누적</p>
-      <strong class={school.warningCount >= 2 ? "g-risk" : school.warningCount >= 1 ? "g-low" : "ok"}>
+      <strong
+        class={school.warningCount >= 2 ? "g-risk" : school.warningCount >= 1 ? "g-low" : "ok"}
+      >
         {school.warningCount}회
       </strong>
     </div>
@@ -148,7 +160,9 @@
   {#if isUniv && !school.majorSelected}
     <div class="major-select-banner">
       <p class="major-select-title">전공을 선택해주세요</p>
-      <p class="major-select-hint">전공은 훈련 효율에 영구적으로 영향을 줍니다. 신중하게 선택하세요.</p>
+      <p class="major-select-hint">
+        전공은 훈련 효율에 영구적으로 영향을 줍니다. 신중하게 선택하세요.
+      </p>
       <div class="major-list">
         {#each UNIVERSITY_MAJORS as m}
           <button class="major-btn" on:click={() => pickMajor(m.id)} type="button">
@@ -234,10 +248,13 @@
           ></div>
         </div>
         <p class="bar-hint">
-          {accumPct >= 80 ? "우수한 준비 상태" :
-           accumPct >= 50 ? "평균 수준, 꾸준히 유지하세요" :
-           accumPct >= 25 ? "주의: 집중 수업을 늘리세요" :
-           "위험: 즉시 학업 집중이 필요합니다"}
+          {accumPct >= 80
+            ? "우수한 준비 상태"
+            : accumPct >= 50
+              ? "평균 수준, 꾸준히 유지하세요"
+              : accumPct >= 25
+                ? "주의: 집중 수업을 늘리세요"
+                : "위험: 즉시 학업 집중이 필요합니다"}
         </p>
       </div>
 
@@ -246,7 +263,11 @@
           <p class="lbl">직전 시험 성적</p>
           <span class="grade-badge {gradeClass(school.lastGrade)}">{school.lastGrade}등급</span>
           <span class="risk-tag {riskClass(school.lastGradeRisk)}">
-            {school.lastGradeRisk === "ok" ? "정상" : school.lastGradeRisk === "warn" ? "주의" : "경고"}
+            {school.lastGradeRisk === "ok"
+              ? "정상"
+              : school.lastGradeRisk === "warn"
+                ? "주의"
+                : "경고"}
           </span>
         </div>
       {/if}
@@ -276,10 +297,23 @@
     gap: 10px;
   }
 
-  .major-select-title { margin: 0; font-size: 14px; font-weight: 800; color: var(--ink); }
-  .major-select-hint  { margin: 0; font-size: 12px; color: var(--ink-mute); }
+  .major-select-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .major-select-hint {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
 
-  .major-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .major-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
 
   .major-btn {
     background: var(--panel-sunk);
@@ -291,9 +325,19 @@
     display: grid;
     gap: 3px;
   }
-  .major-btn:hover { border-color: var(--t-dark); background: var(--panel); }
-  .major-btn strong { font-size: 13.5px; font-weight: 800; color: var(--ink); }
-  .major-btn span   { font-size: 11px; color: var(--ink-mute); }
+  .major-btn:hover {
+    border-color: var(--t-dark);
+    background: var(--panel);
+  }
+  .major-btn strong {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .major-btn span {
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
 
   /* ── 요약 헤더 ───────────────────────────────────────────── */
   .summary-row {
@@ -307,7 +351,11 @@
     flex-wrap: wrap;
   }
 
-  .summary-item { display: grid; gap: 1px; min-width: 70px; }
+  .summary-item {
+    display: grid;
+    gap: 1px;
+    min-width: 70px;
+  }
 
   .lbl {
     margin: 0;
@@ -355,7 +403,12 @@
     overflow: hidden;
   }
 
-  h3 { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink); }
+  h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+  }
 
   /* ── 과목 표 ─────────────────────────────────────────────── */
   .subject-head,
@@ -377,20 +430,36 @@
     border-bottom: 2px solid var(--t-dark);
   }
 
-  .subject-rows { display: grid; min-height: 0; overflow-y: auto; }
+  .subject-rows {
+    display: grid;
+    min-height: 0;
+    overflow-y: auto;
+  }
 
   .subject-row {
     border-bottom: 1px solid var(--line);
     padding: 8px;
     color: var(--ink-mid);
   }
-  .subject-row:last-child { border-bottom: 0; }
-  .subject-row strong { color: var(--ink); font-weight: 700; }
+  .subject-row:last-child {
+    border-bottom: 0;
+  }
+  .subject-row strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
 
   /* ── 주간 선택 ───────────────────────────────────────────── */
-  .mode-hint { margin: -4px 0 0; font-size: 11.5px; color: var(--ink-mute); }
+  .mode-hint {
+    margin: -4px 0 0;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
 
-  .mode-list { display: grid; gap: 7px; }
+  .mode-list {
+    display: grid;
+    gap: 7px;
+  }
 
   .mode-btn {
     border: 1px solid var(--line);
@@ -403,15 +472,35 @@
     display: grid;
     gap: 3px;
   }
-  .mode-btn:hover  { background: var(--panel-sunk); }
-  .mode-btn.active { border-color: var(--t-dark); border-left-color: var(--t-dark); background: var(--panel-sunk); }
+  .mode-btn:hover {
+    background: var(--panel-sunk);
+  }
+  .mode-btn.active {
+    border-color: var(--t-dark);
+    border-left-color: var(--t-dark);
+    background: var(--panel-sunk);
+  }
 
   /* 수면 모드는 성적을 깎는다 — 고르기 전에 보이게 한다 */
-  .mode-btn.risk        { border-left-color: var(--warn); }
-  .mode-btn.risk.active { border-color: var(--warn); border-left-color: var(--warn); }
+  .mode-btn.risk {
+    border-left-color: var(--warn);
+  }
+  .mode-btn.risk.active {
+    border-color: var(--warn);
+    border-left-color: var(--warn);
+  }
 
-  .mode-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .mode-top strong { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  .mode-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .mode-top strong {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+  }
 
   .eff-badge {
     font-size: 10.5px;
@@ -421,13 +510,29 @@
     padding: 2px 7px;
     font-variant-numeric: tabular-nums;
   }
-  .mode-btn.active .eff-badge { background: var(--t-dark); color: var(--t-gold); }
+  .mode-btn.active .eff-badge {
+    background: var(--t-dark);
+    color: var(--t-gold);
+  }
 
-  .mode-desc { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
+  .mode-desc {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
 
   /* ── 시험 준비 ───────────────────────────────────────────── */
-  .exam-next { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
-  .exam-next strong { font-size: 15px; font-weight: 800; color: var(--ink); }
+  .exam-next {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  .exam-next strong {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--ink);
+  }
 
   .weeks-left {
     font-size: 12px;
@@ -439,7 +544,10 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .accum-bar-wrap { display: grid; gap: 5px; }
+  .accum-bar-wrap {
+    display: grid;
+    gap: 5px;
+  }
 
   .bar-label {
     display: flex;
@@ -456,12 +564,26 @@
     overflow: hidden;
   }
 
-  .bar-fill { height: 100%; border-radius: 999px; transition: width 0.3s; }
-  .bar-good { background: var(--ok); }
-  .bar-mid  { background: var(--warn); }
-  .bar-low  { background: var(--bad); }
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s;
+  }
+  .bar-good {
+    background: var(--ok);
+  }
+  .bar-mid {
+    background: var(--warn);
+  }
+  .bar-low {
+    background: var(--bad);
+  }
 
-  .bar-hint { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
+  .bar-hint {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
 
   .last-grade-row {
     display: flex;
@@ -489,25 +611,54 @@
   /* ── 등급 색 ──────────────────────────────────────────────
      성적은 좋고 나쁨이 전부다 — 의미색이고 팀 색과 섞지 않는다.
      "보통"(g-mid)만 중성으로 둔다. 전부 색이 있으면 나쁜 게 안 보인다 */
-  .g-top  { color: var(--ok); }
-  .g-mid  { color: var(--ink); }
-  .g-low  { color: var(--warn); }
-  .g-risk { color: var(--bad); }
-  .ok     { color: var(--ok); }
-  .warn   { color: var(--warn); }
-  .danger { color: var(--bad); }
+  .g-top {
+    color: var(--ok);
+  }
+  .g-mid {
+    color: var(--ink);
+  }
+  .g-low {
+    color: var(--warn);
+  }
+  .g-risk {
+    color: var(--bad);
+  }
+  .ok {
+    color: var(--ok);
+  }
+  .warn {
+    color: var(--warn);
+  }
+  .danger {
+    color: var(--bad);
+  }
 
   /* 배지로 쓰일 때는 배경까지 채운다 */
-  .risk-tag.ok     { background: var(--ok);   color: var(--ink-on-dark); }
-  .risk-tag.warn   { background: var(--warn); color: var(--ink-on-dark); }
-  .risk-tag.danger { background: var(--bad);  color: var(--ink-on-dark); }
+  .risk-tag.ok {
+    background: var(--ok);
+    color: var(--ink-on-dark);
+  }
+  .risk-tag.warn {
+    background: var(--warn);
+    color: var(--ink-on-dark);
+  }
+  .risk-tag.danger {
+    background: var(--bad);
+    color: var(--ink-on-dark);
+  }
 
   @media (max-width: 1280px) {
-    .main-grid { grid-template-columns: 1.4fr 1.2fr; }
-    .exam-panel { grid-column: 1 / -1; }
+    .main-grid {
+      grid-template-columns: 1.4fr 1.2fr;
+    }
+    .exam-panel {
+      grid-column: 1 / -1;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bar-fill { transition: none; }
+    .bar-fill {
+      transition: none;
+    }
   }
 </style>

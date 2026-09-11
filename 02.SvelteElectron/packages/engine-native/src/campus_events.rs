@@ -16,6 +16,7 @@ use std::collections::HashMap;
 
 // ── 규칙 ──────────────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ShowcaseRules {
@@ -34,6 +35,7 @@ pub struct ShowcaseRules {
     pub attend_fame_gain: f64,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AllStarRules {
@@ -50,6 +52,11 @@ pub struct AllStarRules {
     pub mvp_fame_gain: f64,
 }
 
+/// ⚠ **검사가 만든다** — `generation_rules.json` 의 `campusEvents` 를 통째로
+///   이 꼴로 읽어 「규칙 파일이 지금도 이 모양인가」를 못박는다(검사 여덟).
+///   실행 코드는 `ShowcaseRules`·`AllStarRules` 를 따로 받으므로 `cargo build`
+///   는 「안 만든다」고 말한다 — **그 말이 틀렸다.**
+#[allow(dead_code)]
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CampusEventRules {
@@ -59,6 +66,7 @@ pub struct CampusEventRules {
 
 // ── 후보 ──────────────────────────────────────────────────────
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CampusCandidate {

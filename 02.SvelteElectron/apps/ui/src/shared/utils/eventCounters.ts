@@ -30,7 +30,10 @@ export function collectStreakKeys(rules: readonly EventRule[]): string[] {
   const walk = (conds: Condition[] | undefined) => {
     for (const c of conds ?? []) if (c.type === "streak") keys.add(streakKeyOf(c));
   };
-  for (const r of rules) { walk(r.conditions); walk(r.hiddenCondition); }
+  for (const r of rules) {
+    walk(r.conditions);
+    walk(r.hiddenCondition);
+  }
   return [...keys].sort();
 }
 
@@ -52,8 +55,8 @@ export function tickStreaks(
     const [metric, op, raw] = key.split(":");
     const value = Number(raw);
     const now = resolveNumber(ctx, metric);
-    const ok = now !== undefined && !Number.isNaN(value)
-      && (op === "gte" ? now >= value : now <= value);
+    const ok =
+      now !== undefined && !Number.isNaN(value) && (op === "gte" ? now >= value : now <= value);
     out[key] = ok ? (prev?.[key] ?? 0) + 1 : 0;
   }
   return out;
@@ -81,16 +84,16 @@ export const COUNTERS: Record<string, string> = {
   completeGames: "gameRecorded",
 };
 
-export function bumpCounter(
-  p: ProtagonistSave, name: string, by = 1,
-): ProtagonistSave["counters"] {
+export function bumpCounter(p: ProtagonistSave, name: string, by = 1): ProtagonistSave["counters"] {
   const cur = { ...(p.counters ?? {}) };
   cur[name] = (cur[name] ?? 0) + by;
   return cur;
 }
 
 export function setCounter(
-  p: ProtagonistSave, name: string, v: number,
+  p: ProtagonistSave,
+  name: string,
+  v: number,
 ): ProtagonistSave["counters"] {
   return { ...(p.counters ?? {}), [name]: v };
 }
@@ -117,11 +120,15 @@ export function lastGameOf(
     if (!line) continue;
     if (best && e.week <= best.week) continue;
     const isHome = e.homeTeamId === myTeamId;
-    const myScore  = isHome ? e.result.homeScore : e.result.awayScore;
+    const myScore = isHome ? e.result.homeScore : e.result.awayScore;
     const oppScore = isHome ? e.result.awayScore : e.result.homeScore;
     best = {
       week: e.week,
-      ip: line.ip, er: line.er, h: line.h, k: line.k, bb: line.bb,
+      ip: line.ip,
+      er: line.er,
+      h: line.h,
+      k: line.k,
+      bb: line.bb,
       pitchCount: line.pitchCount ?? 0,
       won: myScore > oppScore,
       // 완투 = 9이닝을 혼자 · 완봉 = 그러면서 **팀 실점이 0**

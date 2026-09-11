@@ -16,29 +16,27 @@ import { resolve } from "node:path";
  * ⚠ **헤드리스 계측으로는 못 잡는다.** 매번 새 프로세스라 가드가 늘 초기값이다.
  *   그래서 소스로 고정한다.
  */
-const SRC = readFileSync(
-  resolve(__dirname, "../slotLifecycleV3.ts"), "utf8",
-);
+const SRC = readFileSync(resolve(__dirname, "../slotLifecycleV3.ts"), "utf8");
 
 describe("시즌 종료 가드 리셋", () => {
   it("🔴 슬롯 로드가 가드를 되돌린다", () => {
     const load = SRC.slice(SRC.indexOf("export async function loadGameV3"));
     const body = load.slice(0, load.indexOf("\n}"));
-    expect(body, "loadGameV3가 resetWorldSeasonEndGuard를 안 부른다")
-      .toContain("resetWorldSeasonEndGuard()");
+    expect(body, "loadGameV3가 resetWorldSeasonEndGuard를 안 부른다").toContain(
+      "resetWorldSeasonEndGuard()",
+    );
   });
 
   it("🔴 새 게임도 가드를 되돌린다", () => {
     const nw = SRC.slice(SRC.indexOf("export async function startNewGameV3"));
     const body = nw.slice(0, nw.indexOf("\n}"));
-    expect(body, "startNewGameV3가 resetWorldSeasonEndGuard를 안 부른다")
-      .toContain("resetWorldSeasonEndGuard()");
+    expect(body, "startNewGameV3가 resetWorldSeasonEndGuard를 안 부른다").toContain(
+      "resetWorldSeasonEndGuard()",
+    );
   });
 
   it("가드 리셋 함수가 여전히 export되어 있다 — 대조군", () => {
-    const roll = readFileSync(
-      resolve(__dirname, "../../usecases/seasonRollover.ts"), "utf8",
-    );
+    const roll = readFileSync(resolve(__dirname, "../../usecases/seasonRollover.ts"), "utf8");
     expect(roll).toMatch(/export function resetWorldSeasonEndGuard/);
   });
 });

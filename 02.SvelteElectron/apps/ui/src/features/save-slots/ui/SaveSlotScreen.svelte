@@ -115,8 +115,11 @@
                 </div>
                 <div class="slot-detail">
                   {#if tm}<TeamMark teamId={tm.id} size={22} /><b>{tm.name}</b>{/if}
-                  {#if careerStageLabel(pv.careerStage)}<span class="sep">·</span>{careerStageLabel(pv.careerStage)}{/if}
-                  {#if pv.seasonYear}<span class="sep">·</span>{pv.seasonYear}년{#if pv.currentWeek} {pv.currentWeek}주차{/if}{/if}
+                  {#if careerStageLabel(pv.careerStage)}<span class="sep">·</span>{careerStageLabel(
+                      pv.careerStage,
+                    )}{/if}
+                  {#if pv.seasonYear}<span class="sep">·</span>{pv.seasonYear}년{#if pv.currentWeek}
+                      {pv.currentWeek}주차{/if}{/if}
                 </div>
                 <!-- 통산 성적 — 없으면 줄을 안 그린다(새 슬롯·구 세이브) -->
                 {#if pv.careerSeasons}
@@ -142,8 +145,16 @@
                     on:blur={confirmRename}
                   />
                 {:else}
-                  <button class="act-btn" type="button" on:click|stopPropagation={() => startRename(meta)}>이름변경</button>
-                  <button class="act-btn danger" type="button" on:click|stopPropagation={() => (confirmDeleteSlotId = slotId)}>삭제</button>
+                  <button
+                    class="act-btn"
+                    type="button"
+                    on:click|stopPropagation={() => startRename(meta)}>이름변경</button
+                  >
+                  <button
+                    class="act-btn danger"
+                    type="button"
+                    on:click|stopPropagation={() => (confirmDeleteSlotId = slotId)}>삭제</button
+                  >
                 {/if}
               </div>
             {/if}
@@ -162,10 +173,18 @@
       aria-label="삭제 취소"
       on:click={() => (confirmDeleteSlotId = null)}
     ></button>
-    <div class="confirm-box" role="dialog" tabindex="-1" aria-modal="true" aria-label="슬롯 삭제 확인">
+    <div
+      class="confirm-box"
+      role="dialog"
+      tabindex="-1"
+      aria-modal="true"
+      aria-label="슬롯 삭제 확인"
+    >
       <p>세이브 슬롯을 삭제하시겠습니까?<br />삭제한 데이터는 복구할 수 없습니다.</p>
       <div class="confirm-btns">
-        <button class="btn-cancel" type="button" on:click={() => (confirmDeleteSlotId = null)}>취소</button>
+        <button class="btn-cancel" type="button" on:click={() => (confirmDeleteSlotId = null)}
+          >취소</button
+        >
         <button class="btn-confirm" type="button" on:click={confirmDelete}>삭제</button>
       </div>
     </div>
@@ -181,101 +200,230 @@
     justify-content: center;
   }
 
-  .panel { width: 520px; display: flex; flex-direction: column; gap: 14px; }
+  .panel {
+    width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
 
-  .header { display: flex; align-items: baseline; gap: 14px; }
+  .header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
   .back-btn {
-    background: none; border: 0; color: var(--ink-mute);
-    font-size: 13px; cursor: pointer; padding: 4px 0;
+    background: none;
+    border: 0;
+    color: var(--ink-mute);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 0;
   }
-  .back-btn:hover { color: var(--t-accent); }
+  .back-btn:hover {
+    color: var(--t-accent);
+  }
   .title {
-    margin: 0; font-size: 20px; font-weight: 800;
-    letter-spacing: -0.02em; color: var(--t-dark);
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--t-dark);
   }
 
-  .slot-list { display: flex; flex-direction: column; gap: 8px; }
+  .slot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
   .slot {
-    display: flex; align-items: stretch;
+    display: flex;
+    align-items: stretch;
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     overflow: hidden;
   }
-  .slot.filled { box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.18); }
+  .slot.filled {
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.18);
+  }
 
   /* 카드 전체가 버튼이다 — 빈 슬롯도 눌러서 새로 시작한다 */
   .slot-info {
     position: relative;
-    flex: 1; min-width: 0; text-align: left;
-    background: none; border: 0; cursor: pointer;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    background: none;
+    border: 0;
+    cursor: pointer;
     padding: 12px 14px 12px 18px;
-    display: flex; flex-direction: column; gap: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     color: var(--ink);
   }
-  .slot-info:hover { background: var(--panel-sunk); }
+  .slot-info:hover {
+    background: var(--panel-sunk);
+  }
 
   /* 팀 색 띠 */
-  .stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+  .stripe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+  }
 
-  .slot-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-  .slot-name { font-size: 14px; font-weight: 700; }
-  .slot-date { font-size: 11px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .slot-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .slot-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .slot-date {
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
 
-  .slot-detail { font-size: 12px; color: var(--ink-mid); display: flex; gap: 6px; align-items: center; }
-  .slot-detail b { font-weight: 700; }
-  .sep { opacity: 0.45; }
+  .slot-detail {
+    font-size: 12px;
+    color: var(--ink-mid);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .slot-detail b {
+    font-weight: 700;
+  }
+  .sep {
+    opacity: 0.45;
+  }
 
-  .slot-career { display: flex; gap: 14px; margin-top: 2px; }
-  .slot-career span { font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 650; }
+  .slot-career {
+    display: flex;
+    gap: 14px;
+    margin-top: 2px;
+  }
+  .slot-career span {
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+  }
   .slot-career i {
-    font-style: normal; font-size: 9.5px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--ink-mute); font-weight: 700;
+    font-style: normal;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 700;
     margin-right: 5px;
   }
 
-  .slot-empty { font-size: 13px; color: var(--ink-mute); padding: 6px 0; }
-
-  .slot-actions { display: flex; align-items: center; gap: 4px; padding: 0 10px 0 4px; }
-  .act-btn {
-    background: none; border: 1px solid var(--line);
-    border-radius: var(--radius); color: var(--ink-mute);
-    font-size: 11.5px; padding: 5px 9px; cursor: pointer;
+  .slot-empty {
+    font-size: 13px;
+    color: var(--ink-mute);
+    padding: 6px 0;
   }
-  .act-btn:hover { border-color: var(--t-dark); color: var(--t-dark); }
-  .act-btn.danger:hover { border-color: var(--bad); color: var(--bad); }
+
+  .slot-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 10px 0 4px;
+  }
+  .act-btn {
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink-mute);
+    font-size: 11.5px;
+    padding: 5px 9px;
+    cursor: pointer;
+  }
+  .act-btn:hover {
+    border-color: var(--t-dark);
+    color: var(--t-dark);
+  }
+  .act-btn.danger:hover {
+    border-color: var(--bad);
+    color: var(--bad);
+  }
 
   .rename-input {
-    width: 150px; padding: 5px 8px;
-    border: 1px solid var(--t-dark); border-radius: var(--radius);
-    background: var(--panel); color: var(--ink); font-size: 12.5px;
+    width: 150px;
+    padding: 5px 8px;
+    border: 1px solid var(--t-dark);
+    border-radius: var(--radius);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 12.5px;
   }
 
-  .hint { color: var(--ink-mute); font-size: 13px; }
+  .hint {
+    color: var(--ink-mute);
+    font-size: 13px;
+  }
 
   /* ── 삭제 확인 ── */
   .overlay {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .overlay-dismiss {
-    position: absolute; inset: 0; border: 0; cursor: default;
+    position: absolute;
+    inset: 0;
+    border: 0;
+    cursor: default;
     background: rgba(10, 18, 34, 0.55);
   }
   .confirm-box {
     position: relative;
-    background: var(--panel); border-radius: var(--radius);
-    padding: 20px 22px; width: 340px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    width: 340px;
     box-shadow: 0 18px 40px -22px rgba(8, 16, 36, 0.7);
     border-top: 4px solid var(--bad);
   }
-  .confirm-box p { margin: 0 0 16px; font-size: 13.5px; line-height: 1.6; color: var(--ink); }
-  .confirm-btns { display: flex; gap: 8px; justify-content: flex-end; }
-  .btn-cancel, .btn-confirm {
-    border-radius: var(--radius); font-size: 13px; font-weight: 700;
-    padding: 8px 16px; cursor: pointer;
+  .confirm-box p {
+    margin: 0 0 16px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink);
   }
-  .btn-cancel { background: none; border: 1px solid var(--line); color: var(--ink-mute); }
-  .btn-confirm { background: var(--bad); border: 0; color: var(--ink-on-dark); }
+  .confirm-btns {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .btn-cancel,
+  .btn-confirm {
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-mute);
+  }
+  .btn-confirm {
+    background: var(--bad);
+    border: 0;
+    color: var(--ink-on-dark);
+  }
 </style>

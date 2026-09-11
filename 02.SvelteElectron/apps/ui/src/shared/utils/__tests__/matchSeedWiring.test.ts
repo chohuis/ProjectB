@@ -14,7 +14,7 @@ import { join } from "node:path";
  * 그래서 **호출부를 세는 검사**를 둔다. 새 호출부가 생겨도 여기서 걸린다.
  */
 
-const SRC = join(__dirname, "../..");   // shared/
+const SRC = join(__dirname, "../.."); // shared/
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -32,10 +32,14 @@ function callsOf(src: string): string[] {
   const marker = "await simulateGame(";
   let i = src.indexOf(marker);
   while (i >= 0) {
-    let depth = 0, j = i + marker.length - 1;
+    let depth = 0,
+      j = i + marker.length - 1;
     for (; j < src.length; j++) {
       if (src[j] === "(") depth++;
-      else if (src[j] === ")") { depth--; if (depth === 0) break; }
+      else if (src[j] === ")") {
+        depth--;
+        if (depth === 0) break;
+      }
     }
     out.push(src.slice(i, j + 1));
     i = src.indexOf(marker, j);
@@ -57,8 +61,7 @@ describe("경기 씨앗 배선", () => {
       }
     }
     // 대상이 0이면 이 검사가 헛돈다 — 호출부가 사라졌다는 뜻이니 그때 지운다
-    expect(total, "simulateGame 호출부가 하나도 없다 — 검사가 헛돈다")
-      .toBeGreaterThan(3);
+    expect(total, "simulateGame 호출부가 하나도 없다 — 검사가 헛돈다").toBeGreaterThan(3);
     expect(missing, `씨앗을 안 넘기는 호출부:\n${missing.join("\n")}`).toEqual([]);
   });
 

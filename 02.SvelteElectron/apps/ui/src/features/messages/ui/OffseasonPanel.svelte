@@ -3,8 +3,14 @@
   import { gameStore } from "../../../shared/stores/game";
   import { teamMap } from "../../../shared/stores/master";
   import {
-    buildRows, countByGroup, sortRows, relationTag,
-    GROUP_ORDER, GROUP_LABEL, type OffseasonGroup, type OffseasonRow,
+    buildRows,
+    countByGroup,
+    sortRows,
+    relationTag,
+    GROUP_ORDER,
+    GROUP_LABEL,
+    type OffseasonGroup,
+    type OffseasonRow,
   } from "../../../shared/utils/offseasonReport";
   import { onMount } from "svelte";
   import type { Relationship } from "../../../shared/types/relationship";
@@ -45,7 +51,11 @@
   onMount(async () => {
     const slotId = $gameStore.currentSlotId;
     if (!slotId) return;
-    try { related = await slotRepo.getRelationships(slotId, {}); } catch { related = []; }
+    try {
+      related = await slotRepo.getRelationships(slotId, {});
+    } catch {
+      related = [];
+    }
   });
 
   // `personId`가 npcId와 같다 (people.md §4). 라벨 규칙은 `relationTag` 하나다
@@ -59,7 +69,10 @@
   $: rows = buildRows({
     events: metadata.events,
     people: $gameStore.npcs.map((n) => ({
-      npcId: n.npcId, name: n.name, age: n.age, position: n.position,
+      npcId: n.npcId,
+      name: n.name,
+      age: n.age,
+      position: n.position,
     })),
     myTeamId: p.teamId,
     relations,
@@ -73,10 +86,9 @@
   $: knownCount = rows.filter((r) => r.relation !== null).length;
 
   $: visible = sortRows(
-    rows.filter((r) =>
-      r.group === group
-      && (!mineOnly || r.mine)
-      && (!knownOnly || r.relation !== null)),
+    rows.filter(
+      (r) => r.group === group && (!mineOnly || r.mine) && (!knownOnly || r.relation !== null),
+    ),
   );
 
   // 탭·필터를 바꾸면 다시 처음부터 — 안 그러면 3건짜리 목록에 "더 보기"가 남는다
@@ -97,8 +109,10 @@
   <DigestCards
     {cards}
     active={group}
-    {mineCount} {knownCount}
-    mineOn={mineOnly} knownOn={knownOnly}
+    {mineCount}
+    {knownCount}
+    mineOn={mineOnly}
+    knownOn={knownOnly}
     onPick={(id) => pick(id as OffseasonGroup)}
     onToggleMine={() => (mineOnly = !mineOnly)}
     onToggleKnown={() => (knownOnly = !knownOnly)}
@@ -154,46 +168,113 @@
 {/if}
 
 <style>
-  .off { display: flex; flex-direction: column; gap: 10px; }
+  .off {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-  .rows { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .rows {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
   .rows th {
-    text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
-    color: var(--ink-mute); padding: 0 6px 5px; border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding: 0 6px 5px;
+    border-bottom: 1px solid var(--line);
   }
-  .rows td { padding: 5px 6px; border-bottom: 1px solid var(--line); color: var(--ink-mid); }
-  .rows tbody tr:hover { background: var(--panel-sunk); }
-  .rows tbody tr.mine { background: var(--panel-sunk); }
+  .rows td {
+    padding: 5px 6px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-mid);
+  }
+  .rows tbody tr:hover {
+    background: var(--panel-sunk);
+  }
+  .rows tbody tr.mine {
+    background: var(--panel-sunk);
+  }
 
-  .c-age, .c-pos { width: 44px; }
-  .c-age { text-align: right; }
-  .c-team { width: 34%; }
-  .c-why { width: 26%; }
+  .c-age,
+  .c-pos {
+    width: 44px;
+  }
+  .c-age {
+    text-align: right;
+  }
+  .c-team {
+    width: 34%;
+  }
+  .c-why {
+    width: 26%;
+  }
 
-  .c-name { color: var(--ink); }
+  .c-name {
+    color: var(--ink);
+  }
   .dot {
-    display: inline-block; width: 5px; height: 5px; border-radius: 50%;
-    background: var(--t-accent); margin-right: 5px; vertical-align: middle;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--t-accent);
+    margin-right: 5px;
+    vertical-align: middle;
   }
-  .nm { font-weight: 600; }
+  .nm {
+    font-weight: 600;
+  }
   .rel {
-    font-size: 10px; color: var(--ink-mute);
-    border: 1px solid var(--line); border-radius: 2px; padding: 0 4px; margin-left: 5px;
+    font-size: 10px;
+    color: var(--ink-mute);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0 4px;
+    margin-left: 5px;
   }
   /* 🔴 **td에 display:flex를 걸면 안 된다** — 그 칸이 표의 열 계산에서 빠져
      열 정렬이 어긋나고 이름이 한두 글자로 잘린다. 배치는 안쪽 래퍼가 맡는다.
      (부상 리포트에서 "탄…", "금…"으로 나온 것과 같은 원인이다) */
-  .team-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
-  .tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .det {
-    font-size: 10.5px; color: var(--ink-mute);
-    background: var(--panel-sunk); border-radius: 2px; padding: 0 4px; margin-left: 5px;
+  .team-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
   }
-  .empty { color: var(--ink-mute); padding: 14px 6px; }
+  .tn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .det {
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    background: var(--panel-sunk);
+    border-radius: 2px;
+    padding: 0 4px;
+    margin-left: 5px;
+  }
+  .empty {
+    color: var(--ink-mute);
+    padding: 14px 6px;
+  }
 
   .more {
-    border: 1px solid var(--line); background: none; color: var(--ink-mute);
-    border-radius: var(--radius); font-size: 11.5px; padding: 6px; cursor: pointer;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mute);
+    border-radius: var(--radius);
+    font-size: 11.5px;
+    padding: 6px;
+    cursor: pointer;
   }
-  .more:hover { border-color: var(--t-dark); color: var(--t-dark); }
+  .more:hover {
+    border-color: var(--t-dark);
+    color: var(--t-dark);
+  }
 </style>

@@ -13,9 +13,7 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const rules = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-) as {
+const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
   medicalRules?: { recoverySpan?: number; minWeeks?: number };
   campRules?: { conditionBonus?: number; weeks?: number };
   clubFinanceRules?: { expense?: { operations?: { camp?: number } } };

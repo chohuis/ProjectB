@@ -32,7 +32,10 @@ const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 const FIELD = read("apps/ui/src/features/match-view/ui/BaseballField.svelte");
 const ANCHORS = JSON.parse(read("resource/park/_spec/anchors.json")) as {
   coordSpace: { width: number; height: number };
-  tiers: Record<string, { field: Record<string, [number, number]>; defense: Record<string, [number, number]> }>;
+  tiers: Record<
+    string,
+    { field: Record<string, [number, number]>; defense: Record<string, [number, number]> }
+  >;
 };
 
 /** `BaseballField`의 알 반지름 — 스프라이트가 차지하는 반경이다 */

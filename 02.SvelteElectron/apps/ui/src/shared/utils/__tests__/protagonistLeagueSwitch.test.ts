@@ -7,18 +7,38 @@ type PlayerSeasonStats = LeagueSeasonState["stats"][string];
 
 // 강등(1군 → 2군) 뒤 주인공 일정이 옛 리그에 남던 결함 (C 눈확인 09-02) — 순수 함수로 잰다.
 const game = (id: string, home: string, away: string, mine: boolean, week = 10): ScheduleEntry =>
-  ({ id, week, homeTeamId: home, awayTeamId: away, isProtagonistGame: mine, gameDate: "2026-06-01", result: null } as unknown as ScheduleEntry);
-const st = (teamId: string, wins: number): Standing => ({ teamId, wins, losses: 0 } as unknown as Standing);
+  ({
+    id,
+    week,
+    homeTeamId: home,
+    awayTeamId: away,
+    isProtagonistGame: mine,
+    gameDate: "2026-06-01",
+    result: null,
+  }) as unknown as ScheduleEntry;
+const st = (teamId: string, wins: number): Standing =>
+  ({ teamId, wins, losses: 0 }) as unknown as Standing;
 
 function state() {
-  const stats = (o: Record<string, { g: number }>) => o as unknown as Record<string, PlayerSeasonStats>;
+  const stats = (o: Record<string, { g: number }>) =>
+    o as unknown as Record<string, PlayerSeasonStats>;
   const leagueSchedules: Record<string, ScheduleEntry[]> = {
     LEAGUE_KBL_FARM: [game("f1", "T_A_2", "T_B_2", false), game("f2", "T_B_2", "T_C_2", false)],
     LEAGUE_ABL: [game("a1", "X", "Y", false)],
   };
   const leagueState: Record<string, LeagueSeasonState> = {
-    LEAGUE_KBL: { standings: [st("T_A_1", 5)], stats: {}, playerConditions: {}, teamRotationIndex: {} },
-    LEAGUE_KBL_FARM: { standings: [st("T_A_2", 2)], stats: stats({ npc: { g: 1 } }), playerConditions: {}, teamRotationIndex: { T_A_2: 3 } },
+    LEAGUE_KBL: {
+      standings: [st("T_A_1", 5)],
+      stats: {},
+      playerConditions: {},
+      teamRotationIndex: {},
+    },
+    LEAGUE_KBL_FARM: {
+      standings: [st("T_A_2", 2)],
+      stats: stats({ npc: { g: 1 } }),
+      playerConditions: {},
+      teamRotationIndex: { T_A_2: 3 },
+    },
   };
   return {
     leagueId: "LEAGUE_KBL",
@@ -58,13 +78,19 @@ describe("switchProtagonistLeague — 승강 때 주인공 일정을 맞바꾼�
     const down = switchProtagonistLeague(state(), "LEAGUE_KBL_FARM", "T_A_2");
     const up = switchProtagonistLeague(down, "LEAGUE_KBL", "T_A_1");
     expect(up.leagueId).toBe("LEAGUE_KBL");
-    expect(up.schedule.map((e) => [e.id, e.isProtagonistGame])).toEqual([["k1", true], ["k2", false]]);
+    expect(up.schedule.map((e) => [e.id, e.isProtagonistGame])).toEqual([
+      ["k1", true],
+      ["k2", false],
+    ]);
     expect(up.leagueSchedules.LEAGUE_KBL_FARM?.map((e) => e.id)).toEqual(["f1", "f2"]);
   });
 
   it("같은 리그 안에서 팀만 바뀌면(트레이드) 일정은 그대로, 표시만 새 팀으로", () => {
     const n = switchProtagonistLeague(state(), "LEAGUE_KBL", "T_C_1");
-    expect(n.schedule.map((e) => [e.id, e.isProtagonistGame])).toEqual([["k1", false], ["k2", true]]);
+    expect(n.schedule.map((e) => [e.id, e.isProtagonistGame])).toEqual([
+      ["k1", false],
+      ["k2", true],
+    ]);
     expect(n.leagueSchedules).toEqual(state().leagueSchedules);
   });
 
@@ -94,7 +120,9 @@ describe("switchProtagonistLeague — 승강 때 주인공 일정을 맞바꾼�
     const src = readFileSync(resolve(__dirname, "../../usecases/weekPhases/market.ts"), "utf8");
     const at = src.indexOf("gameStore.setProtagonistTeam(toTeamId, toLeague);");
     expect(at).toBeGreaterThan(0);
-    expect(src.slice(at, at + 200)).toContain("seasonStore.switchProtagonistLeague(toLeague, toTeamId)");
+    expect(src.slice(at, at + 200)).toContain(
+      "seasonStore.switchProtagonistLeague(toLeague, toTeamId)",
+    );
   });
 
   it("월간 승강 기계가 store 를 직접 안 건드리고 그 정본을 부른다 — 두 벌이 되면 한쪽만 고쳐진다", () => {

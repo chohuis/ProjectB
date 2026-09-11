@@ -1,7 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  trimMailbox, MAX_MAILBOX, mailboxTrimStats, resetMailboxTrimStats,
-} from "../game";
+import { trimMailbox, MAX_MAILBOX, mailboxTrimStats, resetMailboxTrimStats } from "../game";
 import type { MessageItem } from "../../types/main";
 
 /**
@@ -38,11 +36,14 @@ const box = (n: number, over: (i: number) => Partial<MessageItem> = () => ({})) 
  * 50 → 200으로 바뀌자 표본이 상한보다 작아져 `trimMailbox`가 아무것도 안 자르고
  * 검사가 **통과해 버렸다**(자르는 경로를 한 번도 안 밟는다). 상한 상대값으로 둔다.
  */
-const OVER = 30;                        // 상한을 이만큼 넘긴다
+const OVER = 30; // 상한을 이만큼 넘긴다
 const TOTAL = MAX_MAILBOX + OVER;
 
 describe("trimMailbox", () => {
-  beforeEach(() => { seq = 0; resetMailboxTrimStats(); });
+  beforeEach(() => {
+    seq = 0;
+    resetMailboxTrimStats();
+  });
 
   it("상한 이하면 그대로 둔다", () => {
     const b = box(MAX_MAILBOX);

@@ -38,27 +38,27 @@ export function protagonistPitchCondition(input: ProtagonistPitchInput): PlayerC
   const prev = input.prev ?? undefined;
   const outs = Math.max(0, Math.round(input.outsRecorded));
   const base = {
-    fatigue:         Math.max(0, Math.min(100, Math.round(input.fatigue))),
+    fatigue: Math.max(0, Math.min(100, Math.round(input.fatigue))),
     lastPitchedWeek: input.week,
     lastPitchedDate: input.gameDate,
-    lastPitchCount:  Math.max(0, Math.round(input.pitchCount)),
-    pitchOutsLast:   outs,
+    lastPitchCount: Math.max(0, Math.round(input.pitchCount)),
+    pitchOutsLast: outs,
   };
   if (input.isStarter) {
     return {
       ...base,
-      lastStartGameCount:      input.teamGameCount,
+      lastStartGameCount: input.teamGameCount,
       lastAppearanceGameCount: prev?.lastAppearanceGameCount,
-      consecutiveAppearances:  0,
+      consecutiveAppearances: 0,
     };
   }
   const prevCount = prev?.lastAppearanceGameCount ?? -99;
   const wasConsecutive = prevCount === input.teamGameCount - 1;
   return {
     ...base,
-    lastStartGameCount:      prev?.lastStartGameCount,
+    lastStartGameCount: prev?.lastStartGameCount,
     lastAppearanceGameCount: input.teamGameCount,
-    consecutiveAppearances:  wasConsecutive ? (prev?.consecutiveAppearances ?? 0) + 1 : 1,
+    consecutiveAppearances: wasConsecutive ? (prev?.consecutiveAppearances ?? 0) + 1 : 1,
   };
 }
 

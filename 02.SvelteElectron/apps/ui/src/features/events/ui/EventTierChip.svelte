@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { gradeChip, isCrisis, CRISIS_LABEL, type EventTheme } from "../../../shared/utils/eventTierCopy";
+  import {
+    gradeChip,
+    isCrisis,
+    CRISIS_LABEL,
+    type EventTheme,
+  } from "../../../shared/utils/eventTierCopy";
   import type { EventGrade } from "../../../shared/utils/tierRules";
 
   /**
@@ -36,19 +41,30 @@
     /* 지면이 바뀌어도 같은 칩이 되려면 값 둘을 다 실어야 한다 — 인라인 스타일은
        미디어쿼리를 못 타므로 **둘 다 넣고 고르는 것은 CSS 가** 한다 */
     --tier: var(--tier-l);
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 10.5px; font-weight: 800; letter-spacing: .04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
     color: var(--tier);
     border: 1px solid color-mix(in srgb, var(--tier) 45%, transparent);
     background: color-mix(in srgb, var(--tier) 10%, transparent);
-    border-radius: 999px; padding: 1px 7px; white-space: nowrap;
+    border-radius: 999px;
+    padding: 1px 7px;
+    white-space: nowrap;
   }
-  :global(:root[data-theme="dark"]) .tier { --tier: var(--tier-d); }
-  .tier.small { font-size: 9.5px; padding: 0 6px; }
+  :global(:root[data-theme="dark"]) .tier {
+    --tier: var(--tier-d);
+  }
+  .tier.small {
+    font-size: 9.5px;
+    padding: 0 6px;
+  }
   /* 위기는 등급색을 안 쓴다 — 등급과 위기는 **다른 축**이라 같은 색이면
      「빨간 유니크」가 새 등급처럼 보인다 */
   .crisis {
-    color: var(--bad, #B4321E);
+    color: var(--bad, #b4321e);
     border-left: 1px solid color-mix(in srgb, var(--tier) 35%, transparent);
     padding-left: 4px;
   }

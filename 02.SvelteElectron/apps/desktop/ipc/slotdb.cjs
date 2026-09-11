@@ -117,7 +117,10 @@ const BASELINE_SQL = `
 
 // ── 마이그레이션 헬퍼 ─────────────────────────────────────────────
 function hasColumn(db, table, col) {
-  return db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === col);
+  return db
+    .prepare(`PRAGMA table_info(${table})`)
+    .all()
+    .some((c) => c.name === col);
 }
 
 /** 컬럼이 없을 때만 추가 — up()을 재실행해도 안전하게 만드는 유일한 수단 */
@@ -188,7 +191,6 @@ const SEASON_TABLES_SQL = `
   );
 `;
 
-
 const STAFF_TABLES_SQL = `
   -- ── 스태프 1명 = 1행 (Phase 6A) ─────────────────────────────────
   -- 선수(npc)와 **테이블을 나눈다**. OnePitch는 한 테이블에 동거시키고 position으로
@@ -256,7 +258,9 @@ const MIGRATIONS = [
     v: 1,
     name: "baseline — slot.db v3 스키마",
     // 전부 IF NOT EXISTS라 기존 슬롯(user_version=0)에 적용해도 무해하다.
-    up(db) { db.exec(BASELINE_SQL); },
+    up(db) {
+      db.exec(BASELINE_SQL);
+    },
   },
   {
     v: 2,
@@ -267,7 +271,11 @@ const MIGRATIONS = [
       const legacy = db.prepare("SELECT json FROM season WHERE id = 1").get();
       if (legacy) {
         let parsed = null;
-        try { parsed = JSON.parse(legacy.json); } catch { parsed = null; }
+        try {
+          parsed = JSON.parse(legacy.json);
+        } catch {
+          parsed = null;
+        }
         if (parsed && typeof parsed === "object") writeSeason(db, parsed);
       }
       db.exec("DROP TABLE IF EXISTS season");
@@ -279,7 +287,9 @@ const MIGRATIONS = [
     // 기존 슬롯에는 스태프가 없다. people.md §5가 정한 대로 세이브를 클린 브레이크
     // 하지 않고도 열리게만 해둔다 — 스태프가 빈 슬롯은 화면에 스태프가 안 보일 뿐
     // 크래시하지 않는다. 새 게임부터 채워진다.
-    up(db) { db.exec(STAFF_TABLES_SQL); },
+    up(db) {
+      db.exec(STAFF_TABLES_SQL);
+    },
   },
   {
     v: 4,
@@ -288,7 +298,9 @@ const MIGRATIONS = [
     // 줄어드는데 어느 축을 관계값으로 볼지는 자의적이고, 그 자의적 환산이
     // 세이브에 굳으면 나중에 되돌릴 수 없다. 기존 슬롯은 관계가 빈 상태로
     // 열리고 만나는 사람부터 다시 쌓인다 (세이브 폐기는 사용자 확정).
-    up(db) { db.exec(RELATIONSHIP_TABLES_SQL); },
+    up(db) {
+      db.exec(RELATIONSHIP_TABLES_SQL);
+    },
   },
 ];
 
@@ -316,7 +328,7 @@ function migrate(db) {
     if (applied.length > 0) {
       db.prepare(
         "INSERT INTO meta (key, value) VALUES ('schema_version', ?) " +
-        "ON CONFLICT(key) DO UPDATE SET value = excluded.value"
+          "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
       ).run(String(SCHEMA_VERSION));
     }
     return { from, to: currentVersion(db), applied };
@@ -356,26 +368,34 @@ function writeSeason(db, season, scheduleDelta) {
   }
 
   const insSchedule = db.prepare(
-    "INSERT OR REPLACE INTO schedule (bucket, league_id, entry_id, ord, week, has_result, json) VALUES (?,?,?,?,?,?,?)"
+    "INSERT OR REPLACE INTO schedule (bucket, league_id, entry_id, ord, week, has_result, json) VALUES (?,?,?,?,?,?,?)",
   );
   const insStanding = db.prepare(
-    "INSERT OR REPLACE INTO standings (bucket, league_id, team_id, ord, json) VALUES (?,?,?,?,?)"
+    "INSERT OR REPLACE INTO standings (bucket, league_id, team_id, ord, json) VALUES (?,?,?,?,?)",
   );
   const insStat = db.prepare(
-    "INSERT OR REPLACE INTO season_stats (bucket, league_id, player_id, json) VALUES (?,?,?,?)"
+    "INSERT OR REPLACE INTO season_stats (bucket, league_id, player_id, json) VALUES (?,?,?,?)",
   );
   const insCond = db.prepare(
-    "INSERT OR REPLACE INTO player_condition (league_id, player_id, json) VALUES (?,?,?)"
+    "INSERT OR REPLACE INTO player_condition (league_id, player_id, json) VALUES (?,?,?)",
   );
   const insRot = db.prepare(
-    "INSERT OR REPLACE INTO team_rotation (league_id, team_id, idx) VALUES (?,?,?)"
+    "INSERT OR REPLACE INTO team_rotation (league_id, team_id, idx) VALUES (?,?,?)",
   );
 
   const putSchedule = (bucket, leagueId, list) => {
     if (!Array.isArray(list)) return;
     list.forEach((e, i) => {
       if (!e || typeof e.id !== "string") return;
-      insSchedule.run(bucket, leagueId, e.id, i, e.week ?? null, e.result ? 1 : 0, JSON.stringify(e));
+      insSchedule.run(
+        bucket,
+        leagueId,
+        e.id,
+        i,
+        e.week ?? null,
+        e.result ? 1 : 0,
+        JSON.stringify(e),
+      );
     });
   };
   const putStandings = (bucket, leagueId, list) => {
@@ -387,16 +407,17 @@ function writeSeason(db, season, scheduleDelta) {
   };
   const putStats = (bucket, leagueId, map) => {
     if (!map || typeof map !== "object") return;
-    for (const [pid, v] of Object.entries(map)) insStat.run(bucket, leagueId, pid, JSON.stringify(v));
+    for (const [pid, v] of Object.entries(map))
+      insStat.run(bucket, leagueId, pid, JSON.stringify(v));
   };
 
   if (partial) {
     // 기존 `ord`를 살리고, 없던 항목만 뒤에 붙인다
     const ordOf = db.prepare(
-      "SELECT ord FROM schedule WHERE bucket = ? AND league_id = ? AND entry_id = ?"
+      "SELECT ord FROM schedule WHERE bucket = ? AND league_id = ? AND entry_id = ?",
     );
     const maxOrd = db.prepare(
-      "SELECT COALESCE(MAX(ord), -1) m FROM schedule WHERE bucket = ? AND league_id = ?"
+      "SELECT COALESCE(MAX(ord), -1) m FROM schedule WHERE bucket = ? AND league_id = ?",
     );
     const nextOrd = new Map();
     for (const d of scheduleDelta) {
@@ -411,8 +432,15 @@ function writeSeason(db, season, scheduleDelta) {
         ord = nextOrd.get(k);
         nextOrd.set(k, ord + 1);
       }
-      insSchedule.run(bucket, leagueId, entry.id, ord,
-        entry.week ?? null, entry.result ? 1 : 0, JSON.stringify(entry));
+      insSchedule.run(
+        bucket,
+        leagueId,
+        entry.id,
+        ord,
+        entry.week ?? null,
+        entry.result ? 1 : 0,
+        JSON.stringify(entry),
+      );
     }
   } else {
     putSchedule("primary", "", season.schedule);
@@ -421,13 +449,16 @@ function writeSeason(db, season, scheduleDelta) {
   putStats("primary", "", season.stats);
 
   if (!partial) {
-    for (const [lid, list] of Object.entries(season.leagueSchedules ?? {})) putSchedule("league", lid, list);
+    for (const [lid, list] of Object.entries(season.leagueSchedules ?? {}))
+      putSchedule("league", lid, list);
   }
   for (const [lid, st] of Object.entries(season.leagueState ?? {})) {
     putStandings("league", lid, st?.standings);
     putStats("league", lid, st?.stats);
-    for (const [pid, c] of Object.entries(st?.playerConditions ?? {})) insCond.run(lid, pid, JSON.stringify(c));
-    for (const [tid, idx] of Object.entries(st?.teamRotationIndex ?? {})) insRot.run(lid, tid, Number(idx) || 0);
+    for (const [pid, c] of Object.entries(st?.playerConditions ?? {}))
+      insCond.run(lid, pid, JSON.stringify(c));
+    for (const [tid, idx] of Object.entries(st?.teamRotationIndex ?? {}))
+      insRot.run(lid, tid, Number(idx) || 0);
   }
 
   // 나머지 스칼라·작은 맵 + 빈 컬렉션도 복원해야 하므로 키 목록을 남긴다
@@ -437,7 +468,9 @@ function writeSeason(db, season, scheduleDelta) {
   }
   meta.__leagueScheduleIds = Object.keys(season.leagueSchedules ?? {});
   meta.__leagueStateIds = Object.keys(season.leagueState ?? {});
-  db.prepare("INSERT OR REPLACE INTO season_meta (id, json) VALUES (1, ?)").run(JSON.stringify(meta));
+  db.prepare("INSERT OR REPLACE INTO season_meta (id, json) VALUES (1, ?)").run(
+    JSON.stringify(meta),
+  );
 }
 
 /** 테이블들 → SaveSeason (분해 전과 동일한 형태). 없으면 null. */
@@ -456,23 +489,40 @@ function readSeason(db) {
   season.standings = [];
   season.stats = {};
   season.leagueSchedules = Object.fromEntries(leagueScheduleIds.map((id) => [id, []]));
-  season.leagueState = Object.fromEntries(leagueStateIds.map((id) => [id, {
-    standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {},
-  }]));
+  season.leagueState = Object.fromEntries(
+    leagueStateIds.map((id) => [
+      id,
+      {
+        standings: [],
+        stats: {},
+        playerConditions: {},
+        teamRotationIndex: {},
+      },
+    ]),
+  );
 
   const ensureState = (lid) => {
     if (!season.leagueState[lid]) {
-      season.leagueState[lid] = { standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {} };
+      season.leagueState[lid] = {
+        standings: [],
+        stats: {},
+        playerConditions: {},
+        teamRotationIndex: {},
+      };
     }
     return season.leagueState[lid];
   };
 
-  for (const r of db.prepare("SELECT bucket, league_id, json FROM schedule ORDER BY bucket, league_id, ord").all()) {
+  for (const r of db
+    .prepare("SELECT bucket, league_id, json FROM schedule ORDER BY bucket, league_id, ord")
+    .all()) {
     const e = JSON.parse(r.json);
     if (r.bucket === "primary") season.schedule.push(e);
     else (season.leagueSchedules[r.league_id] ??= []).push(e);
   }
-  for (const r of db.prepare("SELECT bucket, league_id, json FROM standings ORDER BY bucket, league_id, ord").all()) {
+  for (const r of db
+    .prepare("SELECT bucket, league_id, json FROM standings ORDER BY bucket, league_id, ord")
+    .all()) {
     const s = JSON.parse(r.json);
     if (r.bucket === "primary") season.standings.push(s);
     else ensureState(r.league_id).standings.push(s);
@@ -529,14 +579,25 @@ function createManager(savesDir, hooks = {}) {
     engine: hooks.engine ?? null,
     get(slotId) {
       let db = open.get(slotId);
-      if (!db) { db = openSlot(savesDir, slotId); open.set(slotId, db); }
+      if (!db) {
+        db = openSlot(savesDir, slotId);
+        open.set(slotId, db);
+      }
       return db;
     },
     close(slotId) {
       const db = open.get(slotId);
-      if (db) { db.close(); open.delete(slotId); }
+      if (db) {
+        db.close();
+        open.delete(slotId);
+      }
     },
-    closeAll() { for (const [id, db] of open) { db.close(); } open.clear(); },
+    closeAll() {
+      for (const [id, db] of open) {
+        db.close();
+      }
+      open.clear();
+    },
   };
 }
 
@@ -554,28 +615,58 @@ function createManager(savesDir, hooks = {}) {
  * 이것들을 다 실으면 로드가 무거워진다 — 그게 이 좁은 읽기의 이유다.)
  */
 const RETIRED_NPC_COLUMNS = [
-  "npc_id", "name", "name_en", "is_named", "player_type", "position", "handedness",
-  "jersey_number", "age", "grade", "school_id", "graduation_year", "nationality",
-  "career_status", "current_league", "current_team", "pro_service_years",
-  "salary", "contract_years", "military_status", "military_json",
-  "development_rate", "potential_hidden",
+  "npc_id",
+  "name",
+  "name_en",
+  "is_named",
+  "player_type",
+  "position",
+  "handedness",
+  "jersey_number",
+  "age",
+  "grade",
+  "school_id",
+  "graduation_year",
+  "nationality",
+  "career_status",
+  "current_league",
+  "current_team",
+  "pro_service_years",
+  "salary",
+  "contract_years",
+  "military_status",
+  "military_json",
+  "development_rate",
+  "potential_hidden",
 ];
 
 // ── row ↔ JS 매핑 (유일한 매핑 지점) ─────────────────────────────
 function mapNpcRow(r) {
   if (!r) return null;
   return {
-    npcId: r.npc_id, name: r.name, nameEn: r.name_en ?? undefined,
+    npcId: r.npc_id,
+    name: r.name,
+    nameEn: r.name_en ?? undefined,
     isNamed: !!r.is_named,
-    playerType: r.player_type, position: r.position, handedness: r.handedness,
-    jerseyNumber: r.jersey_number, age: r.age, grade: r.grade ?? undefined,
-    schoolId: r.school_id, graduationYear: r.graduation_year,
-    nationality: r.nationality, careerStatus: r.career_status,
-    currentLeague: r.current_league, currentTeam: r.current_team,
-    salary: r.salary, contractYears: r.contract_years, proServiceYears: r.pro_service_years,
+    playerType: r.player_type,
+    position: r.position,
+    handedness: r.handedness,
+    jerseyNumber: r.jersey_number,
+    age: r.age,
+    grade: r.grade ?? undefined,
+    schoolId: r.school_id,
+    graduationYear: r.graduation_year,
+    nationality: r.nationality,
+    careerStatus: r.career_status,
+    currentLeague: r.current_league,
+    currentTeam: r.current_team,
+    salary: r.salary,
+    contractYears: r.contract_years,
+    proServiceYears: r.pro_service_years,
     militaryStatus: r.military_status,
     military: r.military_json ? JSON.parse(r.military_json) : undefined,
-    developmentRate: r.development_rate, potentialHidden: r.potential_hidden,
+    developmentRate: r.development_rate,
+    potentialHidden: r.potential_hidden,
     abilities: JSON.parse(r.abilities_json || "{}"),
     xp: JSON.parse(r.xp_json || "{}"),
     form: r.form_json ? JSON.parse(r.form_json) : undefined,
@@ -672,7 +763,9 @@ function relRowToObject(r) {
     memories: r.memories_json ? JSON.parse(r.memories_json) : [],
     updatedWeek: r.updated_week,
     // person VIEW 조인 시에만 채워진다 (화면용)
-    ...(r.name !== undefined ? { name: r.name, teamId: r.team_id, leagueId: r.league_id, age: r.age } : {}),
+    ...(r.name !== undefined
+      ? { name: r.name, teamId: r.team_id, leagueId: r.league_id, age: r.age }
+      : {}),
   };
 }
 
@@ -695,20 +788,29 @@ const INSERT_NPC_SQL = `
 
 function npcToInsertParams(n) {
   return {
-    npcId: n.npcId, name: n.name, nameEn: n.nameEn ?? null,
+    npcId: n.npcId,
+    name: n.name,
+    nameEn: n.nameEn ?? null,
     isNamed: n.isNamed ? 1 : 0,
-    playerType: n.playerType ?? "pitcher", position: n.position ?? "",
-    handedness: n.handedness ?? "R", jerseyNumber: n.jerseyNumber ?? 0,
-    age: n.age, grade: n.grade ?? null,
-    schoolId: n.schoolId ?? "", graduationYear: n.graduationYear ?? 0,
+    playerType: n.playerType ?? "pitcher",
+    position: n.position ?? "",
+    handedness: n.handedness ?? "R",
+    jerseyNumber: n.jerseyNumber ?? 0,
+    age: n.age,
+    grade: n.grade ?? null,
+    schoolId: n.schoolId ?? "",
+    graduationYear: n.graduationYear ?? 0,
     nationality: n.nationality ?? "KOR",
     careerStatus: n.careerStatus ?? "active",
-    currentLeague: n.currentLeague ?? "", currentTeam: n.currentTeam ?? "",
-    salary: n.salary ?? 0, contractYears: n.contractYears ?? 0,
+    currentLeague: n.currentLeague ?? "",
+    currentTeam: n.currentTeam ?? "",
+    salary: n.salary ?? 0,
+    contractYears: n.contractYears ?? 0,
     proServiceYears: n.proServiceYears ?? 0,
     militaryStatus: n.militaryStatus ?? "미필",
     militaryJson: n.military ? JSON.stringify(n.military) : null,
-    developmentRate: n.developmentRate ?? 50, potentialHidden: n.potentialHidden ?? 75,
+    developmentRate: n.developmentRate ?? 50,
+    potentialHidden: n.potentialHidden ?? 75,
     abilitiesJson: JSON.stringify(n.abilities ?? {}),
     xpJson: JSON.stringify(n.xp ?? {}),
     formJson: n.form ? JSON.stringify(n.form) : null,
@@ -723,8 +825,8 @@ function npcToInsertParams(n) {
     personalityJson: n.personality ? JSON.stringify(n.personality) : null,
     // 1이면 "안 보냈다 — 기존 값을 둬라". 새 행이면 어차피 둘 게 없어 null이 된다.
     // ⚠ **sentinel을 DB에 넣지 않는다.** 값 자리엔 늘 실제 값(또는 null)만 간다
-    personalityKeep: ("personality" in n) ? 0 : 1,
-    emotionJson: null,   // 폐기됨 (Phase 6C) — 위 스키마 주석 참고
+    personalityKeep: "personality" in n ? 0 : 1,
+    emotionJson: null, // 폐기됨 (Phase 6C) — 위 스키마 주석 참고
     injuryJson: n.injury ? JSON.stringify(n.injury) : null,
     extraJson: n.extra ? JSON.stringify(n.extra) : null,
     // 🔴 **안 읽은 블롭을 되쓰지 않는다** (2026-09-05).
@@ -734,9 +836,12 @@ function npcToInsertParams(n) {
     //   `abilities_json`이 전원 `{"pitches":[]}`(14바이트)였다(현역은 460바이트대).
     //   "빈 채로 온 블롭"만 기존 값을 남긴다 — 값이 실려 오면 그대로 쓴다.
     //   그래서 **은퇴하는 그 주기**(현역으로 읽혀 값이 다 있다)는 정상 기록된다.
-    abilitiesLite: (n.abilities && (n.abilities.pitching || n.abilities.batting)) ? 0 : 1,
-    xpLite: (n.xp && (Object.keys(n.xp.pitchingXp ?? {}).length
-                   || Object.keys(n.xp.battingXp ?? {}).length)) ? 0 : 1,
+    abilitiesLite: n.abilities && (n.abilities.pitching || n.abilities.batting) ? 0 : 1,
+    xpLite:
+      n.xp &&
+      (Object.keys(n.xp.pitchingXp ?? {}).length || Object.keys(n.xp.battingXp ?? {}).length)
+        ? 0
+        : 1,
     formLite: n.form ? 0 : 1,
     injuryLite: n.injury ? 0 : 1,
     extraLite: n.extra ? 0 : 1,
@@ -747,7 +852,8 @@ function npcToInsertParams(n) {
 function applyMove(db, npcId, to, tx) {
   const cur = db.prepare("SELECT * FROM npc WHERE npc_id = ?").get(npcId);
   if (!cur) throw new Error(`npc not found: ${npcId}`);
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE npc SET
       current_team    = @toTeamId,
       current_league  = COALESCE(@toLeagueId, current_league),
@@ -755,7 +861,8 @@ function applyMove(db, npcId, to, tx) {
       contract_years  = COALESCE(@contractYears, contract_years),
       career_status   = COALESCE(@careerStatus, career_status)
     WHERE npc_id = @npcId
-  `).run({
+  `,
+  ).run({
     npcId,
     toTeamId: to.toTeamId,
     toLeagueId: to.toLeagueId ?? null,
@@ -763,17 +870,25 @@ function applyMove(db, npcId, to, tx) {
     contractYears: to.contractYears ?? null,
     careerStatus: to.careerStatus ?? null,
   });
-  db.prepare(`
+  db.prepare(
+    `
     INSERT INTO transactions (season_year, week, category, npc_id, npc_name,
       from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id)
     VALUES (@seasonYear, @week, @category, @npcId, @npcName,
       @fromTeamId, @fromLeagueId, @toTeamId, @toLeagueId, @detail, @groupId)
-  `).run({
-    seasonYear: tx.seasonYear, week: tx.week ?? null, category: tx.category,
-    npcId, npcName: cur.name,
-    fromTeamId: cur.current_team, fromLeagueId: cur.current_league,
-    toTeamId: to.toTeamId, toLeagueId: to.toLeagueId ?? cur.current_league,
-    detail: tx.detail ?? null, groupId: tx.groupId ?? null,
+  `,
+  ).run({
+    seasonYear: tx.seasonYear,
+    week: tx.week ?? null,
+    category: tx.category,
+    npcId,
+    npcName: cur.name,
+    fromTeamId: cur.current_team,
+    fromLeagueId: cur.current_league,
+    toTeamId: to.toTeamId,
+    toLeagueId: to.toLeagueId ?? cur.current_league,
+    detail: tx.detail ?? null,
+    groupId: tx.groupId ?? null,
   });
 }
 
@@ -785,8 +900,20 @@ const commands = {
   createSlot(db, p) {
     const t = db.transaction(() => {
       for (const tbl of [
-        "npc", "staff", "relationship", "transactions", "career_history", "history_league", "protagonist", "meta",
-        "season_meta", "schedule", "standings", "season_stats", "player_condition", "team_rotation",
+        "npc",
+        "staff",
+        "relationship",
+        "transactions",
+        "career_history",
+        "history_league",
+        "protagonist",
+        "meta",
+        "season_meta",
+        "schedule",
+        "standings",
+        "season_stats",
+        "player_condition",
+        "team_rotation",
       ]) {
         db.prepare(`DELETE FROM ${tbl}`).run();
       }
@@ -797,7 +924,9 @@ const commands = {
       setMeta.run("created_at", now);
       setMeta.run("updated_at", now);
       setMeta.run("slot_name", p.name ?? "");
-      db.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)").run(JSON.stringify(p.protagonist ?? {}));
+      db.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)").run(
+        JSON.stringify(p.protagonist ?? {}),
+      );
       writeSeason(db, p.season ?? {});
       if (Array.isArray(p.npcs) && p.npcs.length > 0) {
         const ins = db.prepare(INSERT_NPC_SQL);
@@ -827,24 +956,44 @@ const commands = {
   getStaff(db, p = {}) {
     const where = [];
     const args = [];
-    if (p.teamId)   { where.push("team_id = ?");   args.push(p.teamId); }
-    if (p.role)     { where.push("role = ?");      args.push(p.role); }
-    if (p.leagueId) { where.push("league_id = ?"); args.push(p.leagueId); }
-    if (p.status)   { where.push("status = ?");    args.push(p.status); }
+    if (p.teamId) {
+      where.push("team_id = ?");
+      args.push(p.teamId);
+    }
+    if (p.role) {
+      where.push("role = ?");
+      args.push(p.role);
+    }
+    if (p.leagueId) {
+      where.push("league_id = ?");
+      args.push(p.leagueId);
+    }
+    if (p.status) {
+      where.push("status = ?");
+      args.push(p.status);
+    }
     const sql = `SELECT * FROM staff${where.length ? " WHERE " + where.join(" AND ") : ""} ORDER BY staff_id`;
-    return db.prepare(sql).all(...args).map(staffRowToObject);
+    return db
+      .prepare(sql)
+      .all(...args)
+      .map(staffRowToObject);
   },
 
   /** 스태프 상태 변경 (6B 생멸에서 쓴다 — 나이·은퇴·이적) */
   updateStaff(db, p) {
     const t = db.transaction(() => {
       const stmt = db.prepare(
-        "UPDATE staff SET age = ?, status = ?, years = ?, team_id = ?, league_id = ?, stats_json = ? WHERE staff_id = ?"
+        "UPDATE staff SET age = ?, status = ?, years = ?, team_id = ?, league_id = ?, stats_json = ? WHERE staff_id = ?",
       );
       for (const u of p.updates) {
         stmt.run(
-          u.age, u.status, u.years, u.teamId, u.leagueId,
-          JSON.stringify(u.stats ?? {}), u.staffId,
+          u.age,
+          u.status,
+          u.years,
+          u.teamId,
+          u.leagueId,
+          JSON.stringify(u.stats ?? {}),
+          u.staffId,
         );
       }
     });
@@ -861,8 +1010,14 @@ const commands = {
   getRelationships(db, p = {}) {
     const where = [];
     const args = [];
-    if (p.kind)     { where.push("r.kind = ?");     args.push(p.kind); }
-    if (p.contact)  { where.push("r.contact = ?");  args.push(p.contact); }
+    if (p.kind) {
+      where.push("r.kind = ?");
+      args.push(p.kind);
+    }
+    if (p.contact) {
+      where.push("r.contact = ?");
+      args.push(p.contact);
+    }
     if (Array.isArray(p.personIds) && p.personIds.length > 0) {
       where.push(`r.person_id IN (${p.personIds.map(() => "?").join(",")})`);
       args.push(...p.personIds);
@@ -873,7 +1028,10 @@ const commands = {
            FROM relationship r LEFT JOIN person pv ON pv.person_id = r.person_id
           ${cond} ORDER BY r.value DESC, r.person_id`
       : `SELECT r.* FROM relationship r${cond} ORDER BY r.person_id`;
-    return db.prepare(sql).all(...args).map(relRowToObject);
+    return db
+      .prepare(sql)
+      .all(...args)
+      .map(relRowToObject);
   },
 
   /** 관계 일괄 쓰기 (신규 생성 + 갱신 동일 경로). 1 트랜잭션 */
@@ -898,8 +1056,9 @@ const commands = {
         for (const id of p.personIds) stmt.run(p.contact, id);
       }
       if (p.fromTeam) {
-        db.prepare("UPDATE relationship SET contact = ? WHERE last_team = ? AND contact = 'together'")
-          .run(p.contact, p.fromTeam);
+        db.prepare(
+          "UPDATE relationship SET contact = ? WHERE last_team = ? AND contact = 'together'",
+        ).run(p.contact, p.fromTeam);
       }
     });
     t();
@@ -934,7 +1093,9 @@ const commands = {
     return r ? JSON.parse(r.json) : null;
   },
   setProtagonist(db, p) {
-    db.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)").run(JSON.stringify(p.data));
+    db.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)").run(
+      JSON.stringify(p.data),
+    );
     return { ok: true };
   },
   // season은 5개 테이블로 분해 저장되지만, 경계에서 SaveSeason 형태로 왕복한다
@@ -953,9 +1114,23 @@ const commands = {
   // ---- 상태 변이 커맨드 (각 1 트랜잭션) ----
   transfer(db, p) {
     const t = db.transaction(() => {
-      applyMove(db, p.npcId,
-        { toTeamId: p.toTeamId, toLeagueId: p.toLeagueId, salary: p.salary, contractYears: p.contractYears },
-        { seasonYear: p.seasonYear, week: p.week, category: p.category ?? "fa", detail: p.detail, groupId: p.groupId });
+      applyMove(
+        db,
+        p.npcId,
+        {
+          toTeamId: p.toTeamId,
+          toLeagueId: p.toLeagueId,
+          salary: p.salary,
+          contractYears: p.contractYears,
+        },
+        {
+          seasonYear: p.seasonYear,
+          week: p.week,
+          category: p.category ?? "fa",
+          detail: p.detail,
+          groupId: p.groupId,
+        },
+      );
     });
     t();
     return { ok: true };
@@ -964,10 +1139,18 @@ const commands = {
   swapTeams(db, p) {
     const groupId = p.groupId ?? `trade-${p.a.npcId}-${p.b.npcId}-${p.seasonYear}-${p.week ?? 0}`;
     const t = db.transaction(() => {
-      applyMove(db, p.a.npcId, { toTeamId: p.a.toTeamId, toLeagueId: p.a.toLeagueId },
-        { seasonYear: p.seasonYear, week: p.week, category: "trade", detail: p.detail, groupId });
-      applyMove(db, p.b.npcId, { toTeamId: p.b.toTeamId, toLeagueId: p.b.toLeagueId },
-        { seasonYear: p.seasonYear, week: p.week, category: "trade", detail: p.detail, groupId });
+      applyMove(
+        db,
+        p.a.npcId,
+        { toTeamId: p.a.toTeamId, toLeagueId: p.a.toLeagueId },
+        { seasonYear: p.seasonYear, week: p.week, category: "trade", detail: p.detail, groupId },
+      );
+      applyMove(
+        db,
+        p.b.npcId,
+        { toTeamId: p.b.toTeamId, toLeagueId: p.b.toLeagueId },
+        { seasonYear: p.seasonYear, week: p.week, category: "trade", detail: p.detail, groupId },
+      );
     });
     t();
     return { ok: true, groupId };
@@ -976,11 +1159,27 @@ const commands = {
   assignDraft(db, p) {
     const t = db.transaction(() => {
       for (const pick of p.picks) {
-        applyMove(db, pick.npcId,
-          { toTeamId: pick.teamId, toLeagueId: pick.leagueId, salary: pick.salary, contractYears: pick.contractYears, careerStatus: "active" },
-          { seasonYear: p.seasonYear, week: p.week, category: "draft",
-            detail: pick.detail ?? `R${pick.round} P${pick.pickNo}`, groupId: `draft-${p.seasonYear}` });
-        db.prepare("UPDATE npc SET pro_service_years = 0, grade = NULL, school_id = '' WHERE npc_id = ?").run(pick.npcId);
+        applyMove(
+          db,
+          pick.npcId,
+          {
+            toTeamId: pick.teamId,
+            toLeagueId: pick.leagueId,
+            salary: pick.salary,
+            contractYears: pick.contractYears,
+            careerStatus: "active",
+          },
+          {
+            seasonYear: p.seasonYear,
+            week: p.week,
+            category: "draft",
+            detail: pick.detail ?? `R${pick.round} P${pick.pickNo}`,
+            groupId: `draft-${p.seasonYear}`,
+          },
+        );
+        db.prepare(
+          "UPDATE npc SET pro_service_years = 0, grade = NULL, school_id = '' WHERE npc_id = ?",
+        ).run(pick.npcId);
       }
     });
     t();
@@ -992,14 +1191,31 @@ const commands = {
       const cur = db.prepare("SELECT * FROM npc WHERE npc_id = ?").get(p.npcId);
       if (!cur) throw new Error(`npc not found: ${p.npcId}`);
       const military = {
-        unit: p.unit, enlistYear: p.enlistYear, dischargeYear: p.dischargeYear,
-        originalLeagueId: cur.current_league, originalTeamId: cur.current_team,
+        unit: p.unit,
+        enlistYear: p.enlistYear,
+        dischargeYear: p.dischargeYear,
+        originalLeagueId: cur.current_league,
+        originalTeamId: cur.current_team,
       };
-      applyMove(db, p.npcId,
-        { toTeamId: p.toTeamId ?? "TEAM_SPORTS_UNIT", toLeagueId: p.toLeagueId ?? "LEAGUE_MILITARY", careerStatus: "military" },
-        { seasonYear: p.seasonYear, week: p.week, category: "military", detail: p.unit === "sports" ? "상무 입대" : "일반 입대" });
-      db.prepare("UPDATE npc SET military_status = '현역', military_json = ? WHERE npc_id = ?")
-        .run(JSON.stringify(military), p.npcId);
+      applyMove(
+        db,
+        p.npcId,
+        {
+          toTeamId: p.toTeamId ?? "TEAM_SPORTS_UNIT",
+          toLeagueId: p.toLeagueId ?? "LEAGUE_MILITARY",
+          careerStatus: "military",
+        },
+        {
+          seasonYear: p.seasonYear,
+          week: p.week,
+          category: "military",
+          detail: p.unit === "sports" ? "상무 입대" : "일반 입대",
+        },
+      );
+      db.prepare("UPDATE npc SET military_status = '현역', military_json = ? WHERE npc_id = ?").run(
+        JSON.stringify(military),
+        p.npcId,
+      );
     });
     t();
     return { ok: true };
@@ -1012,9 +1228,12 @@ const commands = {
       const mil = cur.military_json ? JSON.parse(cur.military_json) : {};
       const toTeam = p.toTeamId ?? mil.originalTeamId ?? "";
       const toLeague = p.toLeagueId ?? mil.originalLeagueId ?? "LEAGUE_INDEPENDENT";
-      applyMove(db, p.npcId,
+      applyMove(
+        db,
+        p.npcId,
         { toTeamId: toTeam, toLeagueId: toLeague, careerStatus: "active" },
-        { seasonYear: p.seasonYear, week: p.week, category: "military", detail: "전역" });
+        { seasonYear: p.seasonYear, week: p.week, category: "military", detail: "전역" },
+      );
       db.prepare("UPDATE npc SET military_status = '군필' WHERE npc_id = ?").run(p.npcId);
     });
     t();
@@ -1023,9 +1242,12 @@ const commands = {
 
   retire(db, p) {
     const t = db.transaction(() => {
-      applyMove(db, p.npcId,
+      applyMove(
+        db,
+        p.npcId,
         { toTeamId: "", toLeagueId: "LEAGUE_RETIRED", careerStatus: "retired" },
-        { seasonYear: p.seasonYear, week: p.week, category: "retirement", detail: p.detail });
+        { seasonYear: p.seasonYear, week: p.week, category: "retirement", detail: p.detail },
+      );
     });
     t();
     return { ok: true };
@@ -1054,7 +1276,11 @@ const commands = {
           xpJson: u.xp ? JSON.stringify(u.xp) : null,
           formJson: u.form ? JSON.stringify(u.form) : null,
           // injury는 명시적 갱신/해제 (clearInjury: true → NULL)
-          injuryJsonKeep: u.clearInjury ? null : (u.injury ? JSON.stringify(u.injury) : cur.injury_json),
+          injuryJsonKeep: u.clearInjury
+            ? null
+            : u.injury
+              ? JSON.stringify(u.injury)
+              : cur.injury_json,
           extraJson: u.extra ? JSON.stringify(u.extra) : null,
           age: u.age ?? null,
           careerStatus: u.careerStatus ?? null,
@@ -1073,7 +1299,10 @@ const commands = {
       `);
       for (const r of p.rows) {
         stmt.run({
-          npcId: r.npcId, year: r.year, leagueId: r.leagueId, teamId: r.teamId,
+          npcId: r.npcId,
+          year: r.year,
+          leagueId: r.leagueId,
+          teamId: r.teamId,
           statLine: r.statLine ?? "",
           statsJson: r.stats ? JSON.stringify(r.stats) : null,
           highlightsJson: r.highlights ? JSON.stringify(r.highlights) : null,
@@ -1085,8 +1314,9 @@ const commands = {
   },
 
   saveHistoryLeague(db, p) {
-    db.prepare("INSERT OR REPLACE INTO history_league (year, league_id, kind, json) VALUES (?, ?, ?, ?)")
-      .run(p.year, p.leagueId, p.kind, JSON.stringify(p.data));
+    db.prepare(
+      "INSERT OR REPLACE INTO history_league (year, league_id, kind, json) VALUES (?, ?, ?, ?)",
+    ).run(p.year, p.leagueId, p.kind, JSON.stringify(p.data));
     return { ok: true };
   },
 
@@ -1096,7 +1326,8 @@ const commands = {
     // 안 보낸 필드가 NULL이 된다 — `personality`를 아끼려고 빼는 순간
     // 성향이 전원 날아간다. upsert로 바꾸고 **KEEP인 필드만 기존 값을 남긴다.**
     const up = db.prepare(
-      INSERT_NPC_SQL + `
+      INSERT_NPC_SQL +
+        `
       ON CONFLICT(npc_id) DO UPDATE SET
         name = excluded.name, name_en = excluded.name_en, is_named = excluded.is_named,
         player_type = excluded.player_type, position = excluded.position,
@@ -1127,7 +1358,7 @@ const commands = {
           THEN npc.extra_json ELSE excluded.extra_json END,
         -- 안 보냈으면(KEEP) 기존 값을 둔다
         personality_json = CASE WHEN @personalityKeep = 1
-          THEN npc.personality_json ELSE excluded.personality_json END`
+          THEN npc.personality_json ELSE excluded.personality_json END`,
     );
     const t = db.transaction(() => {
       for (const n of p.npcs) up.run(npcToInsertParams(n));
@@ -1137,7 +1368,9 @@ const commands = {
   },
 
   // ---- 조회 ----
-  getNpc(db, p) { return mapNpcRow(db.prepare("SELECT * FROM npc WHERE npc_id = ?").get(p.npcId)); },
+  getNpc(db, p) {
+    return mapNpcRow(db.prepare("SELECT * FROM npc WHERE npc_id = ?").get(p.npcId));
+  },
   /**
    * 로드용 NPC 목록.
    *
@@ -1155,8 +1388,10 @@ const commands = {
    *   (은퇴한 사람의 구속을 쓰는 화면은 없다. 필요해지면 `getNpc`로 한 명씩 읽는다)
    */
   getAllNpcs(db) {
-    const active = db.prepare(
-      "SELECT * FROM npc WHERE career_status != 'retired'").all().map(mapNpcRow);
+    const active = db
+      .prepare("SELECT * FROM npc WHERE career_status != 'retired'")
+      .all()
+      .map(mapNpcRow);
     // 은퇴자 — **블롭만 뺀다.** 스칼라 칼럼은 전부 읽는다.
     //
     // 🔴 실사용자 세이브가 여기서 죽었다 (2026-09-05). `military_status`가
@@ -1174,9 +1409,10 @@ const commands = {
     //      salary           869명 전원 0
     //    전부 폴백값이다. 스칼라는 크기가 고정이라 아껴서 얻는 게 없다 —
     //    아끼는 건 블롭(abilities/xp/form/personality/injury/extra)뿐이다.
-    const retired = db.prepare(
-      `SELECT ${RETIRED_NPC_COLUMNS.join(", ")} FROM npc WHERE career_status = 'retired'`
-    ).all().map(mapNpcRow);
+    const retired = db
+      .prepare(`SELECT ${RETIRED_NPC_COLUMNS.join(", ")} FROM npc WHERE career_status = 'retired'`)
+      .all()
+      .map(mapNpcRow);
     return active.concat(retired);
   },
   getByLeague(db, p) {
@@ -1185,26 +1421,54 @@ const commands = {
       : "SELECT * FROM npc WHERE current_league = ?";
     return db.prepare(sql).all(p.leagueId).map(mapNpcRow);
   },
-  getByTeam(db, p) { return db.prepare("SELECT * FROM npc WHERE current_team = ?").all(p.teamId).map(mapNpcRow); },
-  getNamed(db) { return db.prepare("SELECT * FROM npc WHERE is_named = 1").all().map(mapNpcRow); },
+  getByTeam(db, p) {
+    return db.prepare("SELECT * FROM npc WHERE current_team = ?").all(p.teamId).map(mapNpcRow);
+  },
+  getNamed(db) {
+    return db.prepare("SELECT * FROM npc WHERE is_named = 1").all().map(mapNpcRow);
+  },
   countByTeam(db) {
-    return db.prepare("SELECT current_team AS teamId, COUNT(*) AS n FROM npc WHERE career_status = 'active' GROUP BY current_team").all();
+    return db
+      .prepare(
+        "SELECT current_team AS teamId, COUNT(*) AS n FROM npc WHERE career_status = 'active' GROUP BY current_team",
+      )
+      .all();
   },
   getTransactions(db, p) {
-    const cond = ["1=1"]; const args = [];
-    if (p.seasonYear != null) { cond.push("season_year = ?"); args.push(p.seasonYear); }
-    if (p.category)   { cond.push("category = ?");   args.push(p.category); }
-    if (p.leagueId)   { cond.push("(from_league_id = ? OR to_league_id = ?)"); args.push(p.leagueId, p.leagueId); }
-    if (p.npcId)      { cond.push("npc_id = ?");     args.push(p.npcId); }
+    const cond = ["1=1"];
+    const args = [];
+    if (p.seasonYear != null) {
+      cond.push("season_year = ?");
+      args.push(p.seasonYear);
+    }
+    if (p.category) {
+      cond.push("category = ?");
+      args.push(p.category);
+    }
+    if (p.leagueId) {
+      cond.push("(from_league_id = ? OR to_league_id = ?)");
+      args.push(p.leagueId, p.leagueId);
+    }
+    if (p.npcId) {
+      cond.push("npc_id = ?");
+      args.push(p.npcId);
+    }
     const limit = Math.min(1000, Math.max(1, p.limit ?? 200));
-    return db.prepare(
-      `SELECT * FROM transactions WHERE ${cond.join(" AND ")} ORDER BY id DESC LIMIT ${limit}`
-    ).all(...args);
+    return db
+      .prepare(
+        `SELECT * FROM transactions WHERE ${cond.join(" AND ")} ORDER BY id DESC LIMIT ${limit}`,
+      )
+      .all(...args);
   },
   getCareerHistory(db, p) {
-    return db.prepare("SELECT * FROM career_history WHERE npc_id = ? ORDER BY year").all(p.npcId)
+    return db
+      .prepare("SELECT * FROM career_history WHERE npc_id = ? ORDER BY year")
+      .all(p.npcId)
       .map((r) => ({
-        npcId: r.npc_id, year: r.year, leagueId: r.league_id, teamId: r.team_id,
+        npcId: r.npc_id,
+        year: r.year,
+        leagueId: r.league_id,
+        teamId: r.team_id,
         statLine: r.stat_line,
         stats: r.stats_json ? JSON.parse(r.stats_json) : undefined,
         highlights: r.highlights_json ? JSON.parse(r.highlights_json) : undefined,
@@ -1219,16 +1483,32 @@ const commands = {
   getHistoryLeague(db, p) {
     const where = [];
     const args = [];
-    if (p.year != null) { where.push("year = ?");      args.push(p.year); }
-    if (p.leagueId)     { where.push("league_id = ?"); args.push(p.leagueId); }
+    if (p.year != null) {
+      where.push("year = ?");
+      args.push(p.year);
+    }
+    if (p.leagueId) {
+      where.push("league_id = ?");
+      args.push(p.leagueId);
+    }
     // `kind` 로 걸러 두면 수상만 볼 때 나머지 두 종을 안 실어 온다
-    if (p.kind)         { where.push("kind = ?");      args.push(p.kind); }
-    const rows = db.prepare(
-      "SELECT * FROM history_league"
-      + (where.length ? " WHERE " + where.join(" AND ") : "")
-      + " ORDER BY year DESC"
-    ).all(...args);
-    return rows.map((r) => ({ year: r.year, leagueId: r.league_id, kind: r.kind, data: JSON.parse(r.json) }));
+    if (p.kind) {
+      where.push("kind = ?");
+      args.push(p.kind);
+    }
+    const rows = db
+      .prepare(
+        "SELECT * FROM history_league" +
+          (where.length ? " WHERE " + where.join(" AND ") : "") +
+          " ORDER BY year DESC",
+      )
+      .all(...args);
+    return rows.map((r) => ({
+      year: r.year,
+      leagueId: r.league_id,
+      kind: r.kind,
+      data: JSON.parse(r.json),
+    }));
   },
 };
 
@@ -1238,24 +1518,29 @@ const commands = {
 const compatCommands = {
   // npc:getByLeague — NpcTradeRow[] shape (능력치는 abilities JSON에서 — NULL 컬럼 클래스 소멸)
   compatGetByLeague(db, p) {
-    return db.prepare(
-      "SELECT * FROM npc WHERE current_league = ? AND career_status = 'active'"
-    ).all(p.leagueId).map((r) => {
-      const ab = JSON.parse(r.abilities_json || "{}");
-      return {
-        npcId: r.npc_id, position: r.position,
-        currentTeam: r.current_team, currentLeague: r.current_league,
-        currentSalary: r.salary, contractYears: Math.max(1, r.contract_years),
-        proServiceYears: r.pro_service_years,
-        pitchOvr: ab.pitching?.ovr ?? null, batOvr: ab.batting?.ovr ?? null,
-        age: r.age,
-        // ⚠ **이게 빠져 있어서 트레이드가 외국인을 걸러내지 못했다.**
-        // 호출측은 `nationality ?? "KOR"`로 폴백하므로 컬럼이 없으면
-        // 전원이 내국인으로 읽힌다 — 오류도 경고도 없이 필터만 무력해진다.
-        // 실측: 8시즌 뒤 한 팀 4명·다른 팀 2명(사건 기록은 빈 채로).
-        nationality: r.nationality,
-      };
-    });
+    return db
+      .prepare("SELECT * FROM npc WHERE current_league = ? AND career_status = 'active'")
+      .all(p.leagueId)
+      .map((r) => {
+        const ab = JSON.parse(r.abilities_json || "{}");
+        return {
+          npcId: r.npc_id,
+          position: r.position,
+          currentTeam: r.current_team,
+          currentLeague: r.current_league,
+          currentSalary: r.salary,
+          contractYears: Math.max(1, r.contract_years),
+          proServiceYears: r.pro_service_years,
+          pitchOvr: ab.pitching?.ovr ?? null,
+          batOvr: ab.batting?.ovr ?? null,
+          age: r.age,
+          // ⚠ **이게 빠져 있어서 트레이드가 외국인을 걸러내지 못했다.**
+          // 호출측은 `nationality ?? "KOR"`로 폴백하므로 컬럼이 없으면
+          // 전원이 내국인으로 읽힌다 — 오류도 경고도 없이 필터만 무력해진다.
+          // 실측: 8시즌 뒤 한 팀 4명·다른 팀 2명(사건 기록은 빈 채로).
+          nationality: r.nationality,
+        };
+      });
   },
   // npc:swapTeams — 팀만 갱신 (tx 기록은 레거시 콜사이트가 addTransactions로 따로 보냄)
   compatMoveTeams(db, p) {
@@ -1270,9 +1555,10 @@ const compatCommands = {
   compatUpdateContracts(db, p) {
     const t = db.transaction(() => {
       const stmt = db.prepare(
-        "UPDATE npc SET salary = ?, contract_years = ?, pro_service_years = ? WHERE npc_id = ?"
+        "UPDATE npc SET salary = ?, contract_years = ?, pro_service_years = ? WHERE npc_id = ?",
       );
-      for (const u of p.updates) stmt.run(u.currentSalary ?? 0, u.contractYears ?? 0, u.proServiceYears ?? 0, u.npcId);
+      for (const u of p.updates)
+        stmt.run(u.currentSalary ?? 0, u.contractYears ?? 0, u.proServiceYears ?? 0, u.npcId);
     });
     t();
     return { ok: true };
@@ -1286,9 +1572,19 @@ const compatCommands = {
         VALUES (?,?,?,?,?,?,?,?,?,?,?)
       `);
       for (const r of p.rows) {
-        stmt.run(r.seasonYear, r.week ?? null, r.category, r.playerId ?? "", r.playerName ?? "",
-          r.fromTeamId ?? null, r.fromLeagueId ?? null, r.toTeamId ?? null, r.toLeagueId ?? null,
-          r.detail ?? null, r.groupId ?? null);
+        stmt.run(
+          r.seasonYear,
+          r.week ?? null,
+          r.category,
+          r.playerId ?? "",
+          r.playerName ?? "",
+          r.fromTeamId ?? null,
+          r.fromLeagueId ?? null,
+          r.toTeamId ?? null,
+          r.toLeagueId ?? null,
+          r.detail ?? null,
+          r.groupId ?? null,
+        );
       }
     });
     t();
@@ -1297,15 +1593,26 @@ const compatCommands = {
   // league:getTransactions — 레거시 camelCase shape
   compatGetTransactions(db, p) {
     const rows = commands.getTransactions(db, {
-      slotId: p.slotId, seasonYear: p.seasonYear, category: p.category,
-      leagueId: p.leagueId, npcId: p.playerId, limit: p.limit,
+      slotId: p.slotId,
+      seasonYear: p.seasonYear,
+      category: p.category,
+      leagueId: p.leagueId,
+      npcId: p.playerId,
+      limit: p.limit,
     });
     return rows.map((r) => ({
-      id: r.id, seasonYear: r.season_year, week: r.week, category: r.category,
-      playerId: r.npc_id, playerName: r.npc_name,
-      fromTeamId: r.from_team_id, fromLeagueId: r.from_league_id,
-      toTeamId: r.to_team_id, toLeagueId: r.to_league_id,
-      detail: r.detail, groupId: r.group_id,
+      id: r.id,
+      seasonYear: r.season_year,
+      week: r.week,
+      category: r.category,
+      playerId: r.npc_id,
+      playerName: r.npc_name,
+      fromTeamId: r.from_team_id,
+      fromLeagueId: r.from_league_id,
+      toTeamId: r.to_team_id,
+      toLeagueId: r.to_league_id,
+      detail: r.detail,
+      groupId: r.group_id,
     }));
   },
 };
@@ -1322,7 +1629,9 @@ function listSlots(manager) {
       const db = manager.get(m[1]);
       const meta = commands.getMeta(db);
       out.push({ slotId: m[1], ...meta });
-    } catch { /* 손상 슬롯은 목록에서 제외 */ }
+    } catch {
+      /* 손상 슬롯은 목록에서 제외 */
+    }
   }
   return out;
 }
@@ -1331,10 +1640,18 @@ function deleteSlot(manager, slotId) {
   manager.close(slotId);
   const base = slotFilePath(manager.savesDir, slotId);
   for (const suffix of ["", "-wal", "-shm"]) {
-    try { fs.rmSync(base + suffix, { force: true }); } catch { /* ignore */ }
+    try {
+      fs.rmSync(base + suffix, { force: true });
+    } catch {
+      /* ignore */
+    }
   }
   // slot.db 파일만 지우면 **공용 DB의 시즌 기록이 남는다**
-  try { manager.hooks?.onSlotReset?.(slotId); } catch { /* 정리 실패가 삭제를 막지 않는다 */ }
+  try {
+    manager.hooks?.onSlotReset?.(slotId);
+  } catch {
+    /* 정리 실패가 삭제를 막지 않는다 */
+  }
   return { ok: true };
 }
 
@@ -1358,9 +1675,13 @@ function signProtagonist(manager, db, json) {
   const e = manager.engine;
   if (!e || typeof e.computeSaveSig !== "function") return;
   try {
-    db.prepare("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)")
-      .run(SIG_KEY, e.computeSaveSig(json));
-  } catch { /* 서명 실패가 저장을 막지 않는다 */ }
+    db.prepare("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)").run(
+      SIG_KEY,
+      e.computeSaveSig(json),
+    );
+  } catch {
+    /* 서명 실패가 저장을 막지 않는다 */
+  }
 }
 
 /**
@@ -1372,11 +1693,17 @@ function verifyProtagonist(manager, db, json) {
   const e = manager.engine;
   if (!e || typeof e.verifySaveSig !== "function") return "none";
   let row;
-  try { row = db.prepare("SELECT value FROM meta WHERE key = ?").get(SIG_KEY); }
-  catch { return "none"; }
+  try {
+    row = db.prepare("SELECT value FROM meta WHERE key = ?").get(SIG_KEY);
+  } catch {
+    return "none";
+  }
   if (!row || !row.value) return "none";
-  try { return e.verifySaveSig(json, row.value) ? "ok" : "mismatch"; }
-  catch { return "none"; }
+  try {
+    return e.verifySaveSig(json, row.value) ? "ok" : "mismatch";
+  } catch {
+    return "none";
+  }
 }
 
 function dispatch(manager, cmd, payload) {
@@ -1385,7 +1712,8 @@ function dispatch(manager, cmd, payload) {
     if (cmd === "deleteSlot") return deleteSlot(manager, payload.slotId);
     const fn = commands[cmd];
     if (!fn) return { error: `[repo:call] unknown cmd: ${String(cmd)}` };
-    if (!payload || typeof payload.slotId !== "string") return { error: `[repo:call] slotId required for ${cmd}` };
+    if (!payload || typeof payload.slotId !== "string")
+      return { error: `[repo:call] slotId required for ${cmd}` };
     const db = manager.get(payload.slotId);
     const out = fn(db, payload);
 
@@ -1406,7 +1734,11 @@ function dispatch(manager, cmd, payload) {
     // 비우지만 공용 DB의 시즌 기록은 그대로 남아, 새 게임이 옛 세계의 순위표를
     // 자기 것으로 읽는다. 삭제만 훅에 걸면 "지우지 않고 덮어쓰는" 이 경로가 샌다.
     if (cmd === "createSlot" && !out?.error) {
-      try { manager.hooks?.onSlotReset?.(payload.slotId); } catch { /* 정리 실패가 생성을 막지 않는다 */ }
+      try {
+        manager.hooks?.onSlotReset?.(payload.slotId);
+      } catch {
+        /* 정리 실패가 생성을 막지 않는다 */
+      }
     }
     return out;
   } catch (e) {
@@ -1415,9 +1747,18 @@ function dispatch(manager, cmd, payload) {
 }
 
 module.exports = {
-  createManager, dispatch, openSlot, SCHEMA_VERSION, _commands: commands,
+  createManager,
+  dispatch,
+  openSlot,
+  SCHEMA_VERSION,
+  _commands: commands,
   // 마이그레이션 (테스트·진단용)
-  migrate, currentVersion, hasColumn, addColumn, MIGRATIONS,
+  migrate,
+  currentVersion,
+  hasColumn,
+  addColumn,
+  MIGRATIONS,
   // 은퇴자 좁은 읽기 — 회귀 검사가 Rust 계약과 대조한다
-  RETIRED_NPC_COLUMNS, mapNpcRow,
+  RETIRED_NPC_COLUMNS,
+  mapNpcRow,
 };

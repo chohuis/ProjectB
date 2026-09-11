@@ -29,10 +29,10 @@ describe("주인공 리그 일정과 순위표", () => {
       leagueId,
       schedule: [],
       leagueSchedules: {},
-    } as unknown as SeasonStoreState);
+    }) as unknown as SeasonStoreState;
 
   const entry = (id: string, leagueId: string): ScheduleEntry =>
-    ({ id, leagueId, week: 3, homeTeamId: "A", awayTeamId: "B" } as unknown as ScheduleEntry);
+    ({ id, leagueId, week: 3, homeTeamId: "A", awayTeamId: "B" }) as unknown as ScheduleEntry;
 
   it("주인공 리그 일정은 s.schedule 로 간다", () => {
     const s = base("LEAGUE_INDEPENDENT");
@@ -54,8 +54,12 @@ describe("주인공 리그 일정과 순위표", () => {
 
   it("같은 주를 두 번 처리해도 주인공 일정이 중복되지 않는다", () => {
     const s = base("LEAGUE_INDEPENDENT");
-    const once = injectLeagueEntries(s, "LEAGUE_INDEPENDENT", [entry("INDS1_1", "LEAGUE_INDEPENDENT")]);
-    const twice = injectLeagueEntries(once, "LEAGUE_INDEPENDENT", [entry("INDS1_1", "LEAGUE_INDEPENDENT")]);
+    const once = injectLeagueEntries(s, "LEAGUE_INDEPENDENT", [
+      entry("INDS1_1", "LEAGUE_INDEPENDENT"),
+    ]);
+    const twice = injectLeagueEntries(once, "LEAGUE_INDEPENDENT", [
+      entry("INDS1_1", "LEAGUE_INDEPENDENT"),
+    ]);
     expect(twice.schedule).toHaveLength(1);
     // 바뀐 게 없으면 같은 객체를 준다 — 화면이 헛돌지 않게
     expect(twice).toBe(once);
@@ -77,14 +81,24 @@ describe("주인공 리그 일정과 순위표", () => {
 
     it("순위표 전체를 넘기면 팀 수가 유지된다", () => {
       const full = makeStandings(TEN);
-      const next = makeEmptySeason("LEAGUE_INDEPENDENT", 2027, 52, full.map((st) => st.teamId));
+      const next = makeEmptySeason(
+        "LEAGUE_INDEPENDENT",
+        2027,
+        52,
+        full.map((st) => st.teamId),
+      );
       expect(next.standings).toHaveLength(10);
     });
 
     it("🔴 부분 집합을 넘기면 그만큼 준다 — 이게 회귀의 형태다", () => {
       // 생존리그 3단계: 10팀 중 4팀만 살아 있다
       const survivors = makeStandings(TEN.slice(0, 4));
-      const next = makeEmptySeason("LEAGUE_INDEPENDENT", 2027, 52, survivors.map((st) => st.teamId));
+      const next = makeEmptySeason(
+        "LEAGUE_INDEPENDENT",
+        2027,
+        52,
+        survivors.map((st) => st.teamId),
+      );
       expect(next.standings).toHaveLength(4);
       // 다음 시즌에 또 얹으면 4 → 그보다 적게. 돌아올 길이 없다
     });

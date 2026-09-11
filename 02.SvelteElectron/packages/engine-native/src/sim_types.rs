@@ -1531,16 +1531,10 @@ pub struct FaPlayerRef {
     pub current_league: String,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ContractOfferResult {
-    pub offer_salary: i64,
-    pub offer_years: i32,
-    pub signing_bonus: i64,
-    pub team_option_years: i32,
-    pub player_option_years: i32,
-    pub no_trade_clause: bool,
-}
+// `ContractOfferResult` 를 지웠다 (2026-09-11 · 개선 5).
+// 만드는 쪽도 받는 쪽도 없다 — `player_agent.rs:141` 주석이
+// 「인자로 받던 `ContractOfferResult` 를 만드는 쪽(`eval_renewal_offer`)도」
+// 라고 옛 배선을 적어 뒀고, 그 배선은 이미 갈아엎었다.
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

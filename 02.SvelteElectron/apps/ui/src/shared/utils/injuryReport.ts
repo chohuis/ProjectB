@@ -42,15 +42,19 @@ export interface InjuryEvent {
 export type InjuryClass = "retired" | "surgery" | "season_out" | "long" | "short";
 
 export const CLASS_ORDER: readonly InjuryClass[] = [
-  "retired", "surgery", "season_out", "long", "short",
+  "retired",
+  "surgery",
+  "season_out",
+  "long",
+  "short",
 ];
 
 export const CLASS_LABEL: Record<InjuryClass, string> = {
-  retired:    "부상 은퇴",
-  surgery:    "수술",
+  retired: "부상 은퇴",
+  surgery: "수술",
   season_out: "시즌 아웃",
-  long:       "장기",
-  short:      "단기",
+  long: "장기",
+  short: "단기",
 };
 
 /** 장기의 하한(주). 한 달 넘게 빠지면 팀 구성이 바뀐다 */
@@ -129,16 +133,16 @@ export function buildRows(p: BuildParams): InjuryRow[] {
     rows.push({
       npcId,
       // 못 찾은 사람 자리에 ID를 채우지 않는다
-      name:       who?.name ?? "(기록 없음)",
-      age:        who?.age ?? 0,
-      position:   who?.position ?? "-",
+      name: who?.name ?? "(기록 없음)",
+      age: who?.age ?? 0,
+      position: who?.position ?? "-",
       teamId,
       cls,
       injuryType: e.injuryType,
-      weeks:      e.weeks,
-      week:       e.week,
-      mine:       myClub !== null && teamId !== null && clubKeyOfTeam(teamId) === myClub,
-      relation:   p.relations?.get(npcId) ?? null,
+      weeks: e.weeks,
+      week: e.week,
+      mine: myClub !== null && teamId !== null && clubKeyOfTeam(teamId) === myClub,
+      relation: p.relations?.get(npcId) ?? null,
     });
   }
   return rows;
@@ -146,7 +150,11 @@ export function buildRows(p: BuildParams): InjuryRow[] {
 
 export function countByClass(rows: readonly InjuryRow[]): Record<InjuryClass, number> {
   const out: Record<InjuryClass, number> = {
-    retired: 0, surgery: 0, season_out: 0, long: 0, short: 0,
+    retired: 0,
+    surgery: 0,
+    season_out: 0,
+    long: 0,
+    short: 0,
   };
   for (const r of rows) out[r.cls]++;
   return out;
@@ -155,11 +163,12 @@ export function countByClass(rows: readonly InjuryRow[]): Record<InjuryClass, nu
 /** 내 팀 → 아는 사람 → 오래 빠지는 순 */
 export function sortRows(rows: readonly InjuryRow[]): InjuryRow[] {
   const pri = (r: InjuryRow) => (r.mine ? 0 : r.relation ? 1 : 2);
-  return [...rows].sort((a, b) =>
-    pri(a) - pri(b)
-    || b.weeks - a.weeks
-    || a.name.localeCompare(b.name, "ko")
-    || a.npcId.localeCompare(b.npcId),
+  return [...rows].sort(
+    (a, b) =>
+      pri(a) - pri(b) ||
+      b.weeks - a.weeks ||
+      a.name.localeCompare(b.name, "ko") ||
+      a.npcId.localeCompare(b.npcId),
   );
 }
 
@@ -170,9 +179,9 @@ export function sortRows(rows: readonly InjuryRow[]): InjuryRow[] {
  * 그게 이 소식에서 정작 알아야 할 것이다.
  */
 export function previewLine(counts: Record<InjuryClass, number>): string {
-  const parts = CLASS_ORDER
-    .filter((c) => c !== "short" && counts[c] > 0)
-    .map((c) => `${CLASS_LABEL[c]} ${counts[c]}`);
+  const parts = CLASS_ORDER.filter((c) => c !== "short" && counts[c] > 0).map(
+    (c) => `${CLASS_LABEL[c]} ${counts[c]}`,
+  );
   if (parts.length > 0) return parts.join(" · ");
   return counts.short > 0 ? `가벼운 부상 ${counts.short}건` : "새 부상이 없었다";
 }

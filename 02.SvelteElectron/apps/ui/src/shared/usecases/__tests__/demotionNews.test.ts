@@ -12,8 +12,7 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
 describe("등록말소 소식", () => {
   const src = strip(read("apps/ui/src/shared/usecases/weekPhases/market.ts"));

@@ -50,11 +50,13 @@ export function primaryStatsFor(stage: CareerStage, farm: boolean): readonly str
 /** 이 효과가 **몸에 나쁜** 정도 — 클수록 나쁘다. `safe` 가 작은 쪽을 고른다 */
 export function bodyCost(fx: DecisionEffect | undefined): number {
   if (!fx) return 0;
-  return (fx.fatigueDelta ?? 0)
+  return (
+    (fx.fatigueDelta ?? 0) -
     // 컨디션은 **낮아지는 것이 나쁘다** — 부호를 뒤집어 더한다
-    - (fx.conditionDelta ?? 0)
+    (fx.conditionDelta ?? 0) +
     // 부상 위험은 음수가 「덜 다친다」다(`types/main`) — 그대로 더하면 부호가 맞는다
-    + (fx.injuryRiskMod ? fx.injuryRiskMod.pct : 0);
+    (fx.injuryRiskMod ? fx.injuryRiskMod.pct : 0)
+  );
 }
 
 /**
@@ -123,7 +125,7 @@ export function growthValue(
   let v = 0;
   // ① 즉시 스탯 — 자리값을 크게 준다(「있으면 그것 먼저」)
   for (const [k, amt] of Object.entries(fx.statDelta ?? {})) {
-    if (key(k) === "ovr") continue;               // 파생값이라 안 오른다
+    if (key(k) === "ovr") continue; // 파생값이라 안 오른다
     v += amt * (primary.includes(key(k)) ? 120 : 80);
   }
   // ② 잠재력·성장률 — 스탯은 아니지만 성장의 상한을 민다
@@ -155,8 +157,10 @@ export function seededIndex(seed: number, n: number): number {
   if (n <= 1) return 0;
   // xorshift 한 바퀴 — 값이 아니라 흩어짐만 필요하다
   let x = (seed ^ 0x9e3779b9) >>> 0;
-  x ^= x << 13; x >>>= 0;
+  x ^= x << 13;
+  x >>>= 0;
   x ^= x >> 17;
-  x ^= x << 5;  x >>>= 0;
+  x ^= x << 5;
+  x >>>= 0;
   return x % n;
 }

@@ -37,8 +37,10 @@ import type { ProtagonistSave } from "../../types/save";
 
 const MASTER = resolve(process.cwd(), "resource/data/master");
 
-const walk = (d: string): string[] => readdirSync(d, { withFileTypes: true })
-  .flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+const walk = (d: string): string[] =>
+  readdirSync(d, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)],
+  );
 
 /** 데이터가 실제로 쓰는 조건 — 숨은 조건·선택지 조건까지 전부 */
 function conditionsInData(): { type: string; ruleId: string; raw: unknown }[] {
@@ -49,7 +51,8 @@ function conditionsInData(): { type: string; ruleId: string; raw: unknown }[] {
       const id = String(r.id ?? f);
       const lists = [r.conditions, r.hiddenCondition].filter(Array.isArray) as unknown[][];
       for (const list of lists) {
-        for (const c of list) out.push({ type: String((c as { type?: unknown })?.type), ruleId: id, raw: c });
+        for (const c of list)
+          out.push({ type: String((c as { type?: unknown })?.type), ruleId: id, raw: c });
       }
     }
   }
@@ -59,8 +62,18 @@ function conditionsInData(): { type: string; ruleId: string; raw: unknown }[] {
 /** 조건 하나를 **실제로 평가해 본다** — 모르는 타입이면 평가기가 던지게 돼 있다 */
 function evaluatorKnows(type: string): boolean {
   const ctx = {
-    protagonist: { id: "P", tags: [], pitches: [], pitching: {}, batting: {} } as unknown as ProtagonistSave,
-    currentWeek: 1, seasonPhase: "season", standings: [], stats: {}, triggeredEvents: {},
+    protagonist: {
+      id: "P",
+      tags: [],
+      pitches: [],
+      pitching: {},
+      batting: {},
+    } as unknown as ProtagonistSave,
+    currentWeek: 1,
+    seasonPhase: "season",
+    standings: [],
+    stats: {},
+    triggeredEvents: {},
   } as unknown as EventContext;
   try {
     evaluateCondition({ type } as unknown as Condition, ctx);
@@ -87,8 +100,13 @@ describe("조건 타입 — 표 넷 대조", () => {
   });
 
   it("🔴 ④ → ②  데이터가 쓰는 타입이 표에 전부 있다 — 없으면 **로드가 죽어 게임이 안 뜬다**", () => {
-    const missing = [...new Set(used.filter((u) => !(u.type in CONDITION_FIELDS_FOR_TEST))
-      .map((u) => `${u.type} (${u.ruleId})`))];
+    const missing = [
+      ...new Set(
+        used
+          .filter((u) => !(u.type in CONDITION_FIELDS_FOR_TEST))
+          .map((u) => `${u.type} (${u.ruleId})`),
+      ),
+    ];
     expect(missing).toEqual([]);
   });
 
@@ -101,7 +119,7 @@ describe("조건 타입 — 표 넷 대조", () => {
     const bad: string[] = [];
     for (const u of used) {
       const want = CONDITION_FIELDS_FOR_TEST[u.type as keyof typeof CONDITION_FIELDS_FOR_TEST];
-      if (!want || want.length === 0) continue;   // 빈 배열은 `assertConditions` 가 따로 본다
+      if (!want || want.length === 0) continue; // 빈 배열은 `assertConditions` 가 따로 본다
       const c = u.raw as Record<string, unknown>;
       if (!want.some((k) => c[k] !== undefined)) bad.push(`${u.ruleId}: ${JSON.stringify(c)}`);
     }

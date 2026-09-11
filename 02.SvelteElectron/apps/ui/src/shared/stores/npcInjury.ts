@@ -1,7 +1,11 @@
 import type { NpcInjuryEntry } from "../types/save";
 import type { SeasonStoreState } from "./season";
 
-export function setNpcInjury(s: SeasonStoreState, playerId: string, entry: NpcInjuryEntry): SeasonStoreState {
+export function setNpcInjury(
+  s: SeasonStoreState,
+  playerId: string,
+  entry: NpcInjuryEntry,
+): SeasonStoreState {
   return { ...s, npcInjuries: { ...s.npcInjuries, [playerId]: entry } };
 }
 

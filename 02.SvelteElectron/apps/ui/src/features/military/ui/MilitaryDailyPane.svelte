@@ -3,7 +3,12 @@
   import { nextPendingAction } from "../../../shared/stores/season";
   import type { MessageItem } from "../../../shared/types/main";
   import type {
-    MilitaryCalendarEntry, MilitaryLifeRules, MilitaryLifeState, MilitaryMember, MilitaryUnit, MilitaryWeekChoice,
+    MilitaryCalendarEntry,
+    MilitaryLifeRules,
+    MilitaryLifeState,
+    MilitaryMember,
+    MilitaryUnit,
+    MilitaryWeekChoice,
   } from "../../../shared/types/militaryLife";
   import { rankBandOf } from "../../../shared/types/militaryLife";
   import { calendarEntryFor, presentMembers } from "../../../shared/utils/militaryLifeRules";
@@ -34,11 +39,15 @@
   $: bootCamp = nextWeek <= rules.bootCampWeeks;
   $: cal = calendarEntryFor(calendar, nextWeek, ml.roleId);
   $: discharged = nextWeek > rules.serviceWeeks;
-  $: noChoiceReason = discharged ? "다음 주가 전역이다"
-    : bootCamp ? `훈련소 (W1~${rules.bootCampWeeks}) — 일과가 전부다`
-    : cal?.leaveDays ? `휴가 주 — ${cal.label} ${cal.leaveDays}일`
-    : cal?.noChoice ? `${cal.label} — 이 주는 부대가 다 가져간다`
-    : null;
+  $: noChoiceReason = discharged
+    ? "다음 주가 전역이다"
+    : bootCamp
+      ? `훈련소 (W1~${rules.bootCampWeeks}) — 일과가 전부다`
+      : cal?.leaveDays
+        ? `휴가 주 — ${cal.label} ${cal.leaveDays}일`
+        : cal?.noChoice
+          ? `${cal.label} — 이 주는 부대가 다 가져간다`
+          : null;
   $: present = presentMembers(members, nextWeek);
   $: atCap = ml.ballSense >= cap;
   $: injuryWarn = fatigue >= rules.fatigue.injuryWarn;
@@ -48,8 +57,11 @@
   $: digest = [...mailbox].reverse().find((m) => m.id.startsWith("msg-mil-digest-")) ?? null;
   $: digestLines = digest ? digest.body.split("\n").filter(Boolean) : [];
 
-  $: peopleGain = rules.relation.peopleByBand[Math.min(band, rules.relation.peopleByBand.length - 1)] ?? 0;
-  $: ballGain = rules.ballSense.gainByAccess[Math.min(ballAccess, rules.ballSense.gainByAccess.length - 1)] ?? 0;
+  $: peopleGain =
+    rules.relation.peopleByBand[Math.min(band, rules.relation.peopleByBand.length - 1)] ?? 0;
+  $: ballGain =
+    rules.ballSense.gainByAccess[Math.min(ballAccess, rules.ballSense.gainByAccess.length - 1)] ??
+    0;
 
   function pick(choice: MilitaryWeekChoice) {
     if (noChoiceReason) return;
@@ -62,17 +74,27 @@
     <h2>자원 셋 <span>· 주간 계산은 Rust</span></h2>
     <div class="res">
       <span class="lbl">피로</span>
-      <div class="trk"><i style="width:{Math.max(0, Math.min(100, fatigue))}%;background:var(--warn)"></i></div>
+      <div class="trk">
+        <i style="width:{Math.max(0, Math.min(100, fatigue))}%;background:var(--warn)"></i>
+      </div>
       <span class="val">{Math.round(fatigue)}</span>
     </div>
     <div class="res">
       <span class="lbl">사기</span>
-      <div class="trk"><i style="width:{Math.max(0, Math.min(100, morale))}%;background:var(--t-dark)"></i></div>
+      <div class="trk">
+        <i style="width:{Math.max(0, Math.min(100, morale))}%;background:var(--t-dark)"></i>
+      </div>
       <span class="val">{Math.round(morale)}</span>
     </div>
     <div class="res">
       <span class="lbl">야구 감각</span>
-      <div class="trk"><i style="width:{Math.max(0, Math.min(100, sense))}%;background:var(--t-accent)"></i><span class="cap" style="left:{cap}%" title="상한 {cap}"></span></div>
+      <div class="trk">
+        <i style="width:{Math.max(0, Math.min(100, sense))}%;background:var(--t-accent)"></i><span
+          class="cap"
+          style="left:{cap}%"
+          title="상한 {cap}"
+        ></span>
+      </div>
       <span class="val">{sense}</span>
     </div>
     <p class="hint">
@@ -95,50 +117,84 @@
 </div>
 
 <div class="card block">
-  <h2>이번 주 선택 <span>· W{nextWeek} · 셋 중 하나 — 일과는 부대가 정하고, 고르는 건 남는 시간</span></h2>
+  <h2>
+    이번 주 선택 <span>· W{nextWeek} · 셋 중 하나 — 일과는 부대가 정하고, 고르는 건 남는 시간</span>
+  </h2>
   {#if noChoiceReason}
     <p class="nochoice">이번 주는 선택이 없다 — {noChoiceReason}</p>
   {:else}
     <div class="choices">
       {#if ballAccess >= 1}
-        <button type="button" class="choice" class:pick={ml.nextChoice === "ball"} class:warn={injuryWarn} on:click={() => pick("ball")}>
+        <button
+          type="button"
+          class="choice"
+          class:pick={ml.nextChoice === "ball"}
+          class:warn={injuryWarn}
+          on:click={() => pick("ball")}
+        >
           <b>ㄱ. 공을 만진다</b>
           {#if injuryWarn}
             <!-- §27 — 피로가 문턱(rules.fatigue.injuryWarn) 이상이면 띠. 부상 자체는 §28 조건부 이벤트가 맡는다 · 확률 부상은 없다 -->
-            <span class="band">부상 위험 — 피로 {Math.round(fatigue)} ≥ {rules.fatigue.injuryWarn}</span>
+            <span class="band"
+              >부상 위험 — 피로 {Math.round(fatigue)} ≥ {rules.fatigue.injuryWarn}</span
+            >
           {/if}
           <span class="fx">
-            {#if atCap}감각 <em>상한 — 오르지 않는다</em>{:else}감각 <em>{signed(ballGain)}</em>{/if} · 피로 {signed(rules.fatigue.choice.ball)}
+            {#if atCap}감각 <em>상한 — 오르지 않는다</em>{:else}감각 <em>{signed(ballGain)}</em
+              >{/if} · 피로 {signed(rules.fatigue.choice.ball)}
             <small>공 접근 {ballAccess} · 상한 {cap}</small>
           </span>
         </button>
       {/if}
       {#if present.length >= 1}
-        <button type="button" class="choice" class:pick={ml.nextChoice === "people"} on:click={() => pick("people")}>
+        <button
+          type="button"
+          class="choice"
+          class:pick={ml.nextChoice === "people"}
+          on:click={() => pick("people")}
+        >
           <b>ㄴ. 사람과 지낸다</b>
           <span class="fx">
-            부대원 1~2명 관계 <em>{signed(peopleGain)}</em> · 사기 {signed(rules.morale.choice.people ?? 0)} · 피로 {signed(rules.fatigue.choice.people)}
-            <small>같은 소단위 가중 ×{rules.relation.sameSubunitWeight} · 계급이 오르면 폭이 커진다</small>
+            부대원 1~2명 관계 <em>{signed(peopleGain)}</em> · 사기 {signed(
+              rules.morale.choice.people ?? 0,
+            )} · 피로 {signed(rules.fatigue.choice.people)}
+            <small
+              >같은 소단위 가중 ×{rules.relation.sameSubunitWeight} · 계급이 오르면 폭이 커진다</small
+            >
           </span>
         </button>
       {/if}
-      <button type="button" class="choice" class:pick={ml.nextChoice === "rest"} on:click={() => pick("rest")}>
+      <button
+        type="button"
+        class="choice"
+        class:pick={ml.nextChoice === "rest"}
+        on:click={() => pick("rest")}
+      >
         <b>ㄷ. 쉰다</b>
         <span class="fx">
-          피로 <em>{signed(rules.fatigue.choice.rest)}</em> · 사기 {signed(rules.morale.choice.rest ?? 0)}
+          피로 <em>{signed(rules.fatigue.choice.rest)}</em> · 사기 {signed(
+            rules.morale.choice.rest ?? 0,
+          )}
           <small>기본값 — 고르지 않으면 쉰다</small>
         </span>
       </button>
     </div>
     <p class="hint">
-      {#if ml.nextChoice}골라 뒀다 — 진행하면 W{nextWeek}에 적용된다.{:else}아직 안 골랐다 — 진행하면 쉰다.{/if}
-      {#if ballAccess === 0 && !role} 보직이 정해지기 전이라 공 카드가 없다.{/if}
+      {#if ml.nextChoice}골라 뒀다 — 진행하면 W{nextWeek}에 적용된다.{:else}아직 안 골랐다 —
+        진행하면 쉰다.{/if}
+      {#if ballAccess === 0 && !role}
+        보직이 정해지기 전이라 공 카드가 없다.{/if}
     </p>
   {/if}
 </div>
 
 <div class="card block event" class:live={eventPending}>
-  <h2>이번 주 이벤트 <span>· 주 {Math.round(rules.event.weeklyChance * 100)}% 한 건 · 쿨다운 {rules.event.defaultCooldown}주</span></h2>
+  <h2>
+    이번 주 이벤트 <span
+      >· 주 {Math.round(rules.event.weeklyChance * 100)}% 한 건 · 쿨다운 {rules.event
+        .defaultCooldown}주</span
+    >
+  </h2>
   {#if eventPending}
     <p class="t">이벤트가 기다린다 — 이 화면 위에 뜬 창에서 고른다.</p>
   {:else}
@@ -147,38 +203,174 @@
 </div>
 
 <style>
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; min-width: 0; color: var(--ink); }
-  .block { margin-top: 10px; }
-  h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-mute); font-weight: 700; }
-  h2 span { text-transform: none; letter-spacing: 0; font-weight: 500; }
-  .res { display: grid; grid-template-columns: 76px 1fr 44px; gap: 8px; align-items: center; margin: 6px 0; font-variant-numeric: tabular-nums; }
-  .res .lbl { font-weight: 700; color: var(--ink-mid); }
-  .res .trk { height: 8px; background: var(--panel-sunk); border-radius: 4px; overflow: visible; position: relative; }
-  .res .trk i { display: block; height: 100%; border-radius: 4px; }
-  .res .trk .cap { position: absolute; top: -3px; width: 2px; height: 14px; background: var(--ink-mute); }
-  .res .val { text-align: right; font-weight: 800; }
-  .hint { color: var(--ink-mute); font-size: 11.5px; margin: 6px 0 0; line-height: 1.5; }
-  .empty { color: var(--ink-mute); font-size: 12px; margin: 0; }
-  .when { color: var(--ink-mute); font-size: 11px; margin: 0 0 4px; }
-  .news { font-size: 12px; color: var(--ink-mid); margin: 0; padding-left: 16px; }
-  .news li { margin: 3px 0; }
-  .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .choice {
-    display: grid; gap: 4px; text-align: left; font: inherit; cursor: pointer;
-    border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 10px; background: var(--panel-sunk); color: var(--ink);
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
   }
-  .choice:hover { border-color: var(--t-dark); }
-  .choice.pick { border-color: var(--t-accent); background: var(--panel); box-shadow: inset 0 0 0 1px var(--t-accent); }
-  .choice b { display: block; font-size: 13px; color: var(--t-dark); }
-  .choice .fx { color: var(--ink-mid); font-size: 11.5px; }
-  .choice .fx em { font-style: normal; color: var(--t-accent); font-weight: 700; }
-  .choice .fx small { display: block; color: var(--ink-mute); margin-top: 2px; }
-  .choice.warn { border-color: var(--bad); }
-  .choice .band { display: inline-block; justify-self: start; background: rgba(179, 49, 31, 0.10); color: var(--bad); border: 1px solid var(--bad); border-radius: var(--radius); padding: 1px 7px; font-size: 11px; font-weight: 800; }
-  .nochoice { margin: 0; color: var(--ink-mid); font-size: 13px; font-weight: 700; }
-  .event { border-left: 3px solid var(--line-strong); }
-  .event.live { border-left-color: var(--warn); }
-  .event .t { margin: 0; font-weight: 800; color: var(--ink); font-size: 13px; }
-  @media (max-width: 720px) { .choices { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    min-width: 0;
+    color: var(--ink);
+  }
+  .block {
+    margin-top: 10px;
+  }
+  h2 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    font-weight: 700;
+  }
+  h2 span {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  .res {
+    display: grid;
+    grid-template-columns: 76px 1fr 44px;
+    gap: 8px;
+    align-items: center;
+    margin: 6px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .res .lbl {
+    font-weight: 700;
+    color: var(--ink-mid);
+  }
+  .res .trk {
+    height: 8px;
+    background: var(--panel-sunk);
+    border-radius: 4px;
+    overflow: visible;
+    position: relative;
+  }
+  .res .trk i {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+  }
+  .res .trk .cap {
+    position: absolute;
+    top: -3px;
+    width: 2px;
+    height: 14px;
+    background: var(--ink-mute);
+  }
+  .res .val {
+    text-align: right;
+    font-weight: 800;
+  }
+  .hint {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+    margin: 6px 0 0;
+    line-height: 1.5;
+  }
+  .empty {
+    color: var(--ink-mute);
+    font-size: 12px;
+    margin: 0;
+  }
+  .when {
+    color: var(--ink-mute);
+    font-size: 11px;
+    margin: 0 0 4px;
+  }
+  .news {
+    font-size: 12px;
+    color: var(--ink-mid);
+    margin: 0;
+    padding-left: 16px;
+  }
+  .news li {
+    margin: 3px 0;
+  }
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .choice {
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 10px;
+    background: var(--panel-sunk);
+    color: var(--ink);
+  }
+  .choice:hover {
+    border-color: var(--t-dark);
+  }
+  .choice.pick {
+    border-color: var(--t-accent);
+    background: var(--panel);
+    box-shadow: inset 0 0 0 1px var(--t-accent);
+  }
+  .choice b {
+    display: block;
+    font-size: 13px;
+    color: var(--t-dark);
+  }
+  .choice .fx {
+    color: var(--ink-mid);
+    font-size: 11.5px;
+  }
+  .choice .fx em {
+    font-style: normal;
+    color: var(--t-accent);
+    font-weight: 700;
+  }
+  .choice .fx small {
+    display: block;
+    color: var(--ink-mute);
+    margin-top: 2px;
+  }
+  .choice.warn {
+    border-color: var(--bad);
+  }
+  .choice .band {
+    display: inline-block;
+    justify-self: start;
+    background: rgba(179, 49, 31, 0.1);
+    color: var(--bad);
+    border: 1px solid var(--bad);
+    border-radius: var(--radius);
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .nochoice {
+    margin: 0;
+    color: var(--ink-mid);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .event {
+    border-left: 3px solid var(--line-strong);
+  }
+  .event.live {
+    border-left-color: var(--warn);
+  }
+  .event .t {
+    margin: 0;
+    font-weight: 800;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  @media (max-width: 720px) {
+    .choices {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>

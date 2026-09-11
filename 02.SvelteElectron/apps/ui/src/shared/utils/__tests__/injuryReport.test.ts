@@ -1,15 +1,29 @@
 import { describe, it, expect } from "vitest";
 import {
-  buildRows, countByClass, sortRows, previewLine, classify,
-  type InjuryEvent, type PersonLookup,
+  buildRows,
+  countByClass,
+  sortRows,
+  previewLine,
+  classify,
+  type InjuryEvent,
+  type PersonLookup,
 } from "../injuryReport";
 
 const ev = (o: Partial<InjuryEvent> = {}): InjuryEvent => ({
-  npcId: "N1", injuryType: "UCL_PARTIAL", severity: "moderate",
-  weeks: 4, week: 10, teamId: "TEAM_A_1", ...o,
+  npcId: "N1",
+  injuryType: "UCL_PARTIAL",
+  severity: "moderate",
+  weeks: 4,
+  week: 10,
+  teamId: "TEAM_A_1",
+  ...o,
 });
-const who = (npcId: string, name: string, age = 25): PersonLookup =>
-  ({ npcId, name, age, position: "SP" });
+const who = (npcId: string, name: string, age = 25): PersonLookup => ({
+  npcId,
+  name,
+  age,
+  position: "SP",
+});
 
 describe("등급", () => {
   it("심한 순서로 갈린다", () => {
@@ -89,15 +103,17 @@ describe("내 팀", () => {
 
 describe("집계와 정렬", () => {
   it("사람 수를 센다 — 두 번 다쳐도 하나", () => {
-    const counts = countByClass(buildRows({
-      events: [
-        ev({ npcId: "N1", weeks: 3 }),
-        ev({ npcId: "N1", severity: "surgery", weeks: 40 }),
-        ev({ npcId: "N2", weeks: 3 }),
-      ],
-      people: [who("N1", "가"), who("N2", "나")],
-      weeksLeftInSeason: 20,
-    }));
+    const counts = countByClass(
+      buildRows({
+        events: [
+          ev({ npcId: "N1", weeks: 3 }),
+          ev({ npcId: "N1", severity: "surgery", weeks: 40 }),
+          ev({ npcId: "N2", weeks: 3 }),
+        ],
+        people: [who("N1", "가"), who("N2", "나")],
+        weeksLeftInSeason: 20,
+      }),
+    );
     expect(counts).toEqual({ retired: 0, surgery: 1, season_out: 0, long: 0, short: 1 });
   });
 
@@ -116,11 +132,14 @@ describe("집계와 정렬", () => {
   });
 
   it("⚠ preview에 단기를 앞세우지 않는다 — 수술 3건이 묻힌다", () => {
-    expect(previewLine({ retired: 1, surgery: 3, season_out: 0, long: 4, short: 200 }))
-      .toBe("부상 은퇴 1 · 수술 3 · 장기 4");
-    expect(previewLine({ retired: 0, surgery: 0, season_out: 0, long: 0, short: 12 }))
-      .toBe("가벼운 부상 12건");
-    expect(previewLine({ retired: 0, surgery: 0, season_out: 0, long: 0, short: 0 }))
-      .toBe("새 부상이 없었다");
+    expect(previewLine({ retired: 1, surgery: 3, season_out: 0, long: 4, short: 200 })).toBe(
+      "부상 은퇴 1 · 수술 3 · 장기 4",
+    );
+    expect(previewLine({ retired: 0, surgery: 0, season_out: 0, long: 0, short: 12 })).toBe(
+      "가벼운 부상 12건",
+    );
+    expect(previewLine({ retired: 0, surgery: 0, season_out: 0, long: 0, short: 0 })).toBe(
+      "새 부상이 없었다",
+    );
   });
 });

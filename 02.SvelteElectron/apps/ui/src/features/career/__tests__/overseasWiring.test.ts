@@ -17,11 +17,11 @@ import { resolve } from "node:path";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
-const HUB    = read("apps/ui/src/features/career/ui/CareerChoiceHubModal.svelte");
-const MODAL  = read("apps/ui/src/features/career/ui/OverseasApplyModal.svelte");
+const HUB = read("apps/ui/src/features/career/ui/CareerChoiceHubModal.svelte");
+const MODAL = read("apps/ui/src/features/career/ui/OverseasApplyModal.svelte");
 const RESULT = read("apps/ui/src/features/career/ui/CareerResultModal.svelte");
 const SUBMIT = read("apps/ui/src/shared/usecases/careerDecision.ts");
-const WEEK   = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+const WEEK = read("apps/ui/src/shared/usecases/advanceWeek.ts");
 
 describe("해외 2군 직행 배선", () => {
   /**
@@ -41,7 +41,7 @@ describe("해외 2군 직행 배선", () => {
   // 🔴 전망 모달이 2군 전력(전부 ★3)으로 세면 판정(부모 1군 전력)과 어긋난다
   it("전망 모달이 부모 1군 전력으로 문턱을 센다", () => {
     expect(MODAL.includes("firstTeamIdOf(")).toBe(true);
-    expect(MODAL.includes("dispatch(\"confirm\"")).toBe(false);
+    expect(MODAL.includes('dispatch("confirm"')).toBe(false);
   });
 
   // 28팀까지 온다 — 리그·★이 같이 보이고 목록이 스크롤된다

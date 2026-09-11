@@ -11,16 +11,17 @@ import { resolve } from "node:path";
  *
  * usecase 는 A 가 만들었고(`simulateSkippedGame`), 화면 배선이 C 몫이다.
  */
-const SRC = readFileSync(
-  resolve(__dirname, "../main/MainPage.svelte"), "utf8");
+const SRC = readFileSync(resolve(__dirname, "../main/MainPage.svelte"), "utf8");
 const SKIP = SRC.slice(SRC.indexOf('class="cond-btn skip"'));
 
 describe("회피 갈래", () => {
   it("진짜 시뮬을 먼저 부른다", () => {
-    expect(SRC, "simulateSkippedGame 을 import 안 했다")
-      .toMatch(/import \{ simulateSkippedGame \}/);
-    expect(SKIP, "회피 갈래가 usecase 를 안 부른다")
-      .toMatch(/await simulateSkippedGame\(schedId\)/);
+    expect(SRC, "simulateSkippedGame 을 import 안 했다").toMatch(
+      /import \{ simulateSkippedGame \}/,
+    );
+    expect(SKIP, "회피 갈래가 usecase 를 안 부른다").toMatch(
+      /await simulateSkippedGame\(schedId\)/,
+    );
   });
 
   /**
@@ -28,8 +29,9 @@ describe("회피 갈래", () => {
    *   (`null`), 그때는 점수라도 나와야 일정이 안 막힌다.
    */
   it("폴백을 지우지 않았다", () => {
-    expect(SKIP, "weekCalcNpcFallback 을 지웠다 — 로스터가 비면 일정이 막힌다")
-      .toMatch(/weekCalcNpcFallback/);
+    expect(SKIP, "weekCalcNpcFallback 을 지웠다 — 로스터가 비면 일정이 막힌다").toMatch(
+      /weekCalcNpcFallback/,
+    );
   });
 
   it("빈 playerLines 는 폴백 갈래에만 남는다", () => {
@@ -45,8 +47,7 @@ describe("회피 갈래", () => {
    */
   it("정규 갈래도 로테이션·피로를 넘긴다", () => {
     const call = SKIP.slice(SKIP.indexOf("applyMatchResult"));
-    expect(call, "applyMatchResult 에 rot 을 안 넘긴다")
-      .toMatch(/nextHomeRotIdx/);
+    expect(call, "applyMatchResult 에 rot 을 안 넘긴다").toMatch(/nextHomeRotIdx/);
     expect(call).toMatch(/pitcherConditions/);
   });
 });

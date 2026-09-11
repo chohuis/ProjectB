@@ -30,11 +30,14 @@ describe("커리어 이벤트 이름", () => {
    */
   it("Rust가 내는 유형을 전부 안다", () => {
     const src = readFileSync(
-      resolve(__dirname, "../../../../../../packages/engine-native/src/npc_sim.rs"), "utf8");
-    const emitted = new Set(
-      [...src.matchAll(/\bev(?:_to)?\("([a-z_]+)"/g)].map((m) => m[1]));
-    expect(emitted.size, "Rust에서 이벤트 유형을 하나도 못 읽었다 — 정규식이 소스와 어긋났다")
-      .toBeGreaterThan(3);
+      resolve(__dirname, "../../../../../../packages/engine-native/src/npc_sim.rs"),
+      "utf8",
+    );
+    const emitted = new Set([...src.matchAll(/\bev(?:_to)?\("([a-z_]+)"/g)].map((m) => m[1]));
+    expect(
+      emitted.size,
+      "Rust에서 이벤트 유형을 하나도 못 읽었다 — 정규식이 소스와 어긋났다",
+    ).toBeGreaterThan(3);
     const unknown = [...emitted].filter((t) => !KNOWN_CAREER_EVENTS.includes(t));
     expect(unknown, `표에 없는 유형: ${unknown.join(", ")}`).toEqual([]);
   });
@@ -49,12 +52,12 @@ describe("커리어 이벤트 이름", () => {
    * ⚠ 여기도 목록을 손으로 적지 않는다 — `NpcCareerEventType` 유니온을 긁는다.
    */
   it("TS 타입이 정의한 유형을 전부 안다", () => {
-    const src = readFileSync(
-      resolve(__dirname, "../../types/save.ts"), "utf8");
+    const src = readFileSync(resolve(__dirname, "../../types/save.ts"), "utf8");
     const union = src.match(/export type NpcCareerEventType =([\s\S]*?);/)?.[1] ?? "";
     const declared = [...union.matchAll(/"([a-z_]+)"/g)].map((m) => m[1]);
-    expect(declared.length, "유니온을 못 읽었다 — 정규식이 타입 선언과 어긋났다")
-      .toBeGreaterThan(5);
+    expect(declared.length, "유니온을 못 읽었다 — 정규식이 타입 선언과 어긋났다").toBeGreaterThan(
+      5,
+    );
     const unknown = declared.filter((t) => !KNOWN_CAREER_EVENTS.includes(t));
     expect(unknown, `표에 없는 유형: ${unknown.join(", ")}`).toEqual([]);
   });

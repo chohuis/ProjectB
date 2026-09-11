@@ -19,9 +19,7 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 /** 주석을 지운다 — **안 쓰는 이유를 적어 둔 주석이 통과시키면 안 된다** */
 function strip(src: string): string {
-  return src
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/^\s*\/\/.*$/gm, "");
+  return src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 }
 
 describe("등번호 유일성", () => {
@@ -40,16 +38,20 @@ describe("등번호 유일성", () => {
   it("오프시즌과 주 경계 **둘 다** 돈다", () => {
     // 오프시즌만 돌면 시즌 중 유입이 한 해 내내 0번으로 남는다
     // (실측: 롤오버만 돌렸을 때 1,216건 잔존)
-    expect(rust.split("fix_jersey_numbers(&mut").length - 1,
-      "Rust 호출 두 자리").toBeGreaterThanOrEqual(2);
+    expect(
+      rust.split("fix_jersey_numbers(&mut").length - 1,
+      "Rust 호출 두 자리",
+    ).toBeGreaterThanOrEqual(2);
     expect(advance.includes("processJerseyNumbers()"), "주 경계 호출").toBe(true);
   });
 
   it("상무를 빠뜨리지 않는다", () => {
     // 🔴 `careerStatus` 는 5종이고 상무는 `"military"` 다.
     //   active·injured 만 보던 시절 **상무만 13건** 남았다.
-    expect(week.includes('n.careerStatus === "active" && n.careerStatus === "injured"'),
-      "좁은 필터가 남아 있으면 안 된다").toBe(false);
+    expect(
+      week.includes('n.careerStatus === "active" && n.careerStatus === "injured"'),
+      "좁은 필터가 남아 있으면 안 된다",
+    ).toBe(false);
     expect(week.includes('n.careerStatus === "retired"'), "retired 제외").toBe(true);
     expect(week.includes('n.careerStatus === "free_agent"'), "free_agent 제외").toBe(true);
   });

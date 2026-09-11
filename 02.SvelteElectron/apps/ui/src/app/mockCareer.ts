@@ -39,8 +39,8 @@ export const mockCareerSchool: CareerSchoolState = {
     "\uccb4\uc721\uad50\uc721",
     "\uc2a4\ud3ec\uce20\uacbd\uc601",
     "\uc0dd\ud65c\uccb4\uc721",
-    "\uc2a4\ud3ec\uce20\uc7ac\ud65c"
-  ]
+    "\uc2a4\ud3ec\uce20\uc7ac\ud65c",
+  ],
 };
 
 export const mockCareerProfile: CareerProfile = {
@@ -60,7 +60,6 @@ export const mockCareerProfile: CareerProfile = {
     command: 62,
     velocity: 52,
     staminaCap: 58,
-    mentalResil: 57
-  }
+    mentalResil: 57,
+  },
 };
-

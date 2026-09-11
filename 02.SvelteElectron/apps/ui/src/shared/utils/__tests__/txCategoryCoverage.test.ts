@@ -23,8 +23,8 @@ import { resolve } from "node:path";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
-const SAVE   = read("apps/ui/src/shared/types/save.ts");
-const REPO   = read("apps/ui/src/shared/repo/slotRepo.ts");
+const SAVE = read("apps/ui/src/shared/types/save.ts");
+const REPO = read("apps/ui/src/shared/repo/slotRepo.ts");
 const LEAGUE = read("apps/ui/src/pages/league/LeaguePage.svelte");
 
 /** `"a" | "b" | ...` 꼴에서 값을 뽑는다 */
@@ -39,8 +39,9 @@ function unionValues(src: string, anchor: string): string[] {
 describe("거래 기록 종류", () => {
   /** ⚠ 값을 못 뽑으면 아래 검사가 통째로 무의미하다 */
   it("목록을 실제로 뽑는다", () => {
-    expect(unionValues(SAVE, "export type LeagueTransactionCategory =").length)
-      .toBeGreaterThanOrEqual(5);
+    expect(
+      unionValues(SAVE, "export type LeagueTransactionCategory =").length,
+    ).toBeGreaterThanOrEqual(5);
     expect(unionValues(REPO, "  category:").length).toBeGreaterThanOrEqual(5);
   });
 
@@ -57,7 +58,7 @@ describe("거래 기록 종류", () => {
    */
   it("화면이 모든 종류의 아이콘을 안다", () => {
     const type = unionValues(SAVE, "export type LeagueTransactionCategory =");
-    const missing = type.filter((c) => !LEAGUE.includes(c + ": \""));
+    const missing = type.filter((c) => !LEAGUE.includes(c + ': "'));
     expect(missing).toEqual([]);
   });
 

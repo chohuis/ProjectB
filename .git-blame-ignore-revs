@@ -1,0 +1,8 @@
+# git blame 에서 무시할 커밋 — **스타일만 바꾼 것**만 적는다.
+#
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# 안 적으면 `git blame` 이 거의 모든 줄을 포맷 커밋으로 가리킨다.
+
+# style: prettier 전량 포맷 — 445 파일 (2026-09-11 · 개선 4)
+28fcc90480ebc491b9fcd30d3ba7c5a4f0d83e30

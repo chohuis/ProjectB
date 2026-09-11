@@ -68,14 +68,22 @@ export interface MilitaryCalendarEntry {
 
 /** §28 조건 어휘 — 검사가 이 밖의 type 을 거부한다 */
 export const MILITARY_CONDITION_TYPES = [
-  "week_between", "rank", "role",
-  "relation_gte", "relation_lte",
-  "ballSense_gte", "ballSense_lte",
-  "fatigue_gte", "fatigue_lte",
-  "morale_gte", "morale_lte",
-  "member_present", "season_month", "leave_recent",
+  "week_between",
+  "rank",
+  "role",
+  "relation_gte",
+  "relation_lte",
+  "ballSense_gte",
+  "ballSense_lte",
+  "fatigue_gte",
+  "fatigue_lte",
+  "morale_gte",
+  "morale_lte",
+  "member_present",
+  "season_month",
+  "leave_recent",
 ] as const;
-export type MilitaryConditionType = typeof MILITARY_CONDITION_TYPES[number];
+export type MilitaryConditionType = (typeof MILITARY_CONDITION_TYPES)[number];
 export interface MilitaryCondition {
   type: MilitaryConditionType;
   value?: number | string;
@@ -146,7 +154,9 @@ export interface MilitaryLifeRules {
   /** 계급 띠 상한 주 — [8, 34, 60] : 0=이병 1=일병 2=상병 3=병장 */
   rankBandWeeks: number[];
   ballSense: {
-    start: number; startPro: number; startStudent: number;
+    start: number;
+    startPro: number;
+    startStudent: number;
     weeklyDecay: number;
     /** ballAccess 0~3 → 공 카드 증가 */
     gainByAccess: number[];
@@ -185,7 +195,12 @@ export interface MilitaryLifeRules {
     fatigueThreshold: number;
   };
   /** 전역 환산 — ballSense 하한별 · 위에서부터 첫 일치 (§9) */
-  discharge: Array<{ minSense: number; statDelta: number; velocityDelta?: number; recoveryWeeks: number }>;
+  discharge: Array<{
+    minSense: number;
+    statDelta: number;
+    velocityDelta?: number;
+    recoveryWeeks: number;
+  }>;
 }
 
 /** 세이브 상태 (§24) — 현역만 · 상무는 ballSense 100 고정 · roleId null */
@@ -234,16 +249,29 @@ export interface MilitaryRecord {
 
 export function emptyMilitaryLife(unitId: string, ballSense: number): MilitaryLifeState {
   return {
-    unitId, roleId: null, arcStage: 0, ballSense,
-    relations: {}, frozen: {}, calendarDone: [], cooldown: {},
-    choiceLog: [], nextChoice: null, leaveDays: 0,
-    awards: [], penalties: [], perf: [], senseCurve: [],
+    unitId,
+    roleId: null,
+    arcStage: 0,
+    ballSense,
+    relations: {},
+    frozen: {},
+    calendarDone: [],
+    cooldown: {},
+    choiceLog: [],
+    nextChoice: null,
+    leaveDays: 0,
+    awards: [],
+    penalties: [],
+    perf: [],
+    senseCurve: [],
   };
 }
 
 /** 계급 띠 — 코드 띠(8/34/60) 그대로 · rules.rankBandWeeks 가 정본 */
 export function rankBandOf(serviceWeeks: number, bands: readonly number[]): number {
   let band = 0;
-  for (const upper of bands) { if (serviceWeeks > upper) band++; }
+  for (const upper of bands) {
+    if (serviceWeeks > upper) band++;
+  }
   return Math.min(band, bands.length);
 }

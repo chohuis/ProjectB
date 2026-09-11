@@ -93,11 +93,17 @@ export function parseTierRules(raw: unknown): TierRules {
     if (!isNum(v.from) || !isNum(v.perPoint) || !isNum(v.max)) {
       return bad(`\`stateMod.${k}\` 에 from·perPoint·max 가 다 있어야 한다`);
     }
-    stateMod[k] = { tier, from: v.from as number, perPoint: v.perPoint as number, max: v.max as number };
+    stateMod[k] = {
+      tier,
+      from: v.from as number,
+      perPoint: v.perPoint as number,
+      max: v.max as number,
+    };
   }
 
   const st = o.starve as Record<string, unknown> | undefined;
-  if (!st || !isNum(st.perWeek) || !isNum(st.max)) return bad("`starve.perWeek`·`starve.max` 가 없다");
+  if (!st || !isNum(st.perWeek) || !isNum(st.max))
+    return bad("`starve.perWeek`·`starve.max` 가 없다");
 
   const hd = o.hidden as Record<string, unknown> | undefined;
   if (!hd || !isNum(hd.careerCapPerEvent)) return bad("`hidden.careerCapPerEvent` 가 없다");
@@ -111,10 +117,10 @@ export function parseTierRules(raw: unknown): TierRules {
     return {
       id: g.id,
       militaryStatus: g.militaryStatus as string[] | undefined,
-      leagueIds:      g.leagueIds as string[] | undefined,
-      careerStages:   g.careerStages as string[] | undefined,
-      proYearGte:     isNum(g.proYearGte) ? g.proYearGte : undefined,
-      proYearLte:     isNum(g.proYearLte) ? g.proYearLte : undefined,
+      leagueIds: g.leagueIds as string[] | undefined,
+      careerStages: g.careerStages as string[] | undefined,
+      proYearGte: isNum(g.proYearGte) ? g.proYearGte : undefined,
+      proYearLte: isNum(g.proYearLte) ? g.proYearLte : undefined,
     };
   });
 
@@ -126,11 +132,15 @@ export function parseTierRules(raw: unknown): TierRules {
   }
 
   return {
-    weights, seasonCap, dryBoost, stateMod,
+    weights,
+    seasonCap,
+    dryBoost,
+    stateMod,
     starve: { perWeek: st.perWeek as number, max: st.max as number },
     hidden: { careerCapPerEvent: hd.careerCapPerEvent as number },
     fallback: "step_down",
-    stageGroups, seasonFreq,
+    stageGroups,
+    seasonFreq,
   };
 }
 
@@ -150,8 +160,14 @@ export function stageGroupOf(rules: TierRules, p: ProtagonistSave): string {
     if (g.proYearGte !== undefined && (p.proServiceYears ?? 0) < g.proYearGte) continue;
     if (g.proYearLte !== undefined && (p.proServiceYears ?? 0) > g.proYearLte) continue;
     // 아무 조건도 안 적힌 묶음은 「나머지 전부」다
-    if (!g.militaryStatus && !g.leagueIds && !g.careerStages
-        && g.proYearGte === undefined && g.proYearLte === undefined) return g.id;
+    if (
+      !g.militaryStatus &&
+      !g.leagueIds &&
+      !g.careerStages &&
+      g.proYearGte === undefined &&
+      g.proYearLte === undefined
+    )
+      return g.id;
     return g.id;
   }
   return "공용";

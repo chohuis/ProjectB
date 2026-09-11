@@ -69,6 +69,10 @@ pub struct FaRules {
 }
 
 impl FaRules {
+    /// ⚠ **검사가 부른다** (`자격_연수가_규칙_파일에서_온다`) — 규칙 파일이
+    ///   리그별 자격 연수를 실제로 내는지 못박는다. `cargo build` 는 검사를
+    ///   안 지으므로 「안 쓴다」고 말한다. 자격 판정 자체는 TS 쪽이 한다.
+    #[allow(dead_code)]
     pub fn eligible_years_of(&self, league_id: &str) -> i32 {
         self.eligible_years.get(league_id)
             .or_else(|| self.eligible_years.get("default"))

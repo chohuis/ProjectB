@@ -13,12 +13,19 @@ import { resolve } from "node:path";
  *   같았다.** 그래서 그쪽 것을 그대로 옮겼다.
  */
 
-const RULES = JSON.parse(readFileSync(resolve(__dirname,
-  "../../../../../../resource/data/master/players/generation_rules.json"), "utf8"));
+const RULES = JSON.parse(
+  readFileSync(
+    resolve(__dirname, "../../../../../../resource/data/master/players/generation_rules.json"),
+    "utf8",
+  ),
+);
 
 type Pool = {
-  western?: boolean; surnames: string[]; givenA: string[];
-  surnamesKo?: string[]; givenAKo?: string[];
+  western?: boolean;
+  surnames: string[];
+  givenA: string[];
+  surnamesKo?: string[];
+  givenAKo?: string[];
 };
 
 /** `western: true`인 풀 — 원본이 영문이라 한글 짝이 필요하다 */
@@ -46,8 +53,10 @@ describe("외국인 이름 풀", () => {
   // 🔴 짝이 없으면 엔진이 영문을 그대로 쓴다
   it("서양식 풀은 전부 한글 짝을 갖는다", () => {
     const bad = pools.filter(([, p]) => !p.surnamesKo?.length || !p.givenAKo?.length);
-    expect(bad.map(([n]) => n), `한글 짝이 없는 풀: ${bad.map(([n]) => n).join(", ")}`)
-      .toEqual([]);
+    expect(
+      bad.map(([n]) => n),
+      `한글 짝이 없는 풀: ${bad.map(([n]) => n).join(", ")}`,
+    ).toEqual([]);
   });
 
   // 🔴 인덱스로 짝을 짓는다 — 길이가 다르면 엉뚱한 이름이 붙는다
@@ -79,8 +88,9 @@ describe("외국인 이름 풀", () => {
       if (group.length < 2) continue;
       const first = JSON.stringify([group[0][1].surnamesKo, group[0][1].givenAKo]);
       for (const [n, p] of group.slice(1)) {
-        expect(JSON.stringify([p.surnamesKo, p.givenAKo]), `${n}이 ${group[0][0]}과 다르다`)
-          .toBe(first);
+        expect(JSON.stringify([p.surnamesKo, p.givenAKo]), `${n}이 ${group[0][0]}과 다르다`).toBe(
+          first,
+        );
       }
     }
   });

@@ -33,25 +33,47 @@ import type { ProtagonistSave } from "../../types/save";
  * 전부 "부진"으로 걸리면 그 이벤트는 아무 뜻이 없어진다.
  */
 
-const proto = (): ProtagonistSave => ({
-  id: "PLY_HERO", name: "검사", careerStage: "pro_kbl",
-  leagueId: "LEAGUE_KBL", teamId: "TEAM_KBL_A_1",
-  playerType: "pitcher", position: "SP",
-} as unknown as ProtagonistSave);
+const proto = (): ProtagonistSave =>
+  ({
+    id: "PLY_HERO",
+    name: "검사",
+    careerStage: "pro_kbl",
+    leagueId: "LEAGUE_KBL",
+    teamId: "TEAM_KBL_A_1",
+    playerType: "pitcher",
+    position: "SP",
+  }) as unknown as ProtagonistSave;
 
 /** 투수 시즌 기록 — 안 준 칸은 0 */
 const pitcher = (over: Record<string, number>) => ({
   type: "pitcher" as const,
-  g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, ip: 0, er: 0, h: 0, k: 0, bb: 0,
-  era: 0, whip: 0, ...over,
+  g: 0,
+  gs: 0,
+  w: 0,
+  l: 0,
+  sv: 0,
+  hd: 0,
+  ip: 0,
+  er: 0,
+  h: 0,
+  k: 0,
+  bb: 0,
+  era: 0,
+  whip: 0,
+  ...over,
 });
 
-const ctxOf = (stat: unknown): EventContext => ({
-  protagonist: proto(), currentWeek: 30, seasonPhase: "season",
-  standings: [], stats: stat ? { PLY_HERO: stat } : {}, triggeredEvents: {},
-} as unknown as EventContext);
+const ctxOf = (stat: unknown): EventContext =>
+  ({
+    protagonist: proto(),
+    currentWeek: 30,
+    seasonPhase: "season",
+    standings: [],
+    stats: stat ? { PLY_HERO: stat } : {},
+    triggeredEvents: {},
+  }) as unknown as EventContext;
 
-const c = (type: string, value: number) => ({ type, value } as unknown as Condition);
+const c = (type: string, value: number) => ({ type, value }) as unknown as Condition;
 
 describe("반대쪽 조건이 실제로 판정한다", () => {
   it("승수가 적으면 season_wins_lte 가 참이다", () => {
@@ -60,13 +82,19 @@ describe("반대쪽 조건이 실제로 판정한다", () => {
   });
 
   it("얻어맞으면 season_era_gte 가 참이다", () => {
-    expect(evaluateCondition(c("season_era_gte", 5), ctxOf(pitcher({ ip: 50, era: 6.2 })))).toBe(true);
-    expect(evaluateCondition(c("season_era_gte", 5), ctxOf(pitcher({ ip: 50, era: 3.1 })))).toBe(false);
+    expect(evaluateCondition(c("season_era_gte", 5), ctxOf(pitcher({ ip: 50, era: 6.2 })))).toBe(
+      true,
+    );
+    expect(evaluateCondition(c("season_era_gte", 5), ctxOf(pitcher({ ip: 50, era: 3.1 })))).toBe(
+      false,
+    );
   });
 
   it("이닝이 적으면 season_ip_lte 가 참이다", () => {
     expect(evaluateCondition(c("season_ip_lte", 30), ctxOf(pitcher({ g: 8, ip: 21 })))).toBe(true);
-    expect(evaluateCondition(c("season_ip_lte", 30), ctxOf(pitcher({ g: 25, ip: 140 })))).toBe(false);
+    expect(evaluateCondition(c("season_ip_lte", 30), ctxOf(pitcher({ g: 25, ip: 140 })))).toBe(
+      false,
+    );
   });
 
   it("삼진이 적으면 season_k_lte 가 참이다", () => {
@@ -136,7 +164,9 @@ describe("세 층이 다 이어져 있다", () => {
 
   it("눈금 검사가 축을 안다 — 없으면 항상 참인 값을 못 잡는다", () => {
     const src = readFileSync(
-      resolve(__dirname, "../../../../../../scripts/check-eventranges.cjs"), "utf8");
+      resolve(__dirname, "../../../../../../scripts/check-eventranges.cjs"),
+      "utf8",
+    );
     for (const t of NEW) expect(src, `${t} 가 눈금 표에 없다`).toContain(`${t}:`);
   });
 });

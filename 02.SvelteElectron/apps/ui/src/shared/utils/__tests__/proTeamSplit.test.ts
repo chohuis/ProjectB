@@ -31,7 +31,7 @@ import { ALL_TEAMS_BY_LEAGUE } from "../leagueScheduler";
  * ⚠ **주석은 그 자리를 보는 사람에게만 말한다.** 그래서 검사로 바꾼다.
  */
 
-const ROOT = resolve(__dirname, "../../..");   // apps/ui/src
+const ROOT = resolve(__dirname, "../../.."); // apps/ui/src
 
 /** 근거가 본체 주석에 적힌 면제 — 프로 1군 목록이 아닌 자리 */
 const EXEMPT = ["shared/usecases/tournaments.ts", "shared/usecases/devScenarios.ts"];
@@ -43,7 +43,10 @@ function sources(): { path: string; body: string }[] {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       if (e.name === "__tests__" || e.name === "node_modules") continue;
       const p = join(d, e.name);
-      if (e.isDirectory()) { walk(p); continue; }
+      if (e.isDirectory()) {
+        walk(p);
+        continue;
+      }
       if (!/\.(ts|svelte)$/.test(e.name)) continue;
       if (e.name.endsWith(".test.ts")) continue;
       out.push({
@@ -71,8 +74,14 @@ describe("1군/2군이 같은 leagueId 를 쓴다 — 팀 목록을 리그로만
     expect(first.length).toBeGreaterThan(0);
     expect(farm.length).toBeGreaterThan(0);
     // 이게 이 검사의 전제다 — 접미사가 갈림선이다
-    expect(first.every((id) => id.endsWith("_1")), "LEAGUE_KBL 에 _2 가 섞였다").toBe(true);
-    expect(farm.every((id) => id.endsWith("_2")), "LEAGUE_KBL_FARM 에 _1 이 섞였다").toBe(true);
+    expect(
+      first.every((id) => id.endsWith("_1")),
+      "LEAGUE_KBL 에 _2 가 섞였다",
+    ).toBe(true);
+    expect(
+      farm.every((id) => id.endsWith("_2")),
+      "LEAGUE_KBL_FARM 에 _1 이 섞였다",
+    ).toBe(true);
   });
 
   it("파일을 실제로 읽었다", () => {
@@ -134,8 +143,9 @@ describe("1군/2군이 같은 leagueId 를 쓴다 — 팀 목록을 리그로만
         // 검사를 만든 이유가 "주석은 그 자리를 보는 사람에게만 말한다" 였는데,
         // **검사도 자기가 아는 이름에게만 말하고 있었다.**
         // 오른쪽이 무엇이든 `…leagueId` 로 끝나면 리그끼리 견주는 것이다.
-        const touchesPro = PRO.some((l) => nearby.includes(l))
-          || /leagueId\s*===\s*(?:[\w$]+\.)*leagueId\b/.test(line);
+        const touchesPro =
+          PRO.some((l) => nearby.includes(l)) ||
+          /leagueId\s*===\s*(?:[\w$]+\.)*leagueId\b/.test(line);
         if (!touchesPro) continue;
         // 면제 셋
         if (nearby.includes("ALL_TEAMS_BY_LEAGUE")) continue;
@@ -164,8 +174,8 @@ describe("1군/2군이 같은 leagueId 를 쓴다 — 팀 목록을 리그로만
     }
     expect(
       bad,
-      "프로 팀 목록을 `leagueId` 로만 걸렀다 — 1군+2군 20팀이 된다.\n"
-      + "`ALL_TEAMS_BY_LEAGUE` 를 쓰거나 `_1`/`_2` 를 명시해라",
+      "프로 팀 목록을 `leagueId` 로만 걸렀다 — 1군+2군 20팀이 된다.\n" +
+        "`ALL_TEAMS_BY_LEAGUE` 를 쓰거나 `_1`/`_2` 를 명시해라",
     ).toEqual([]);
   });
 });

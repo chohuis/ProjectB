@@ -16,9 +16,18 @@ import type { TeamRef } from "../stores/master";
 
 /** 한 시즌 한 팀의 과거 순위 한 줄 */
 export interface PastStandingRow {
-  leagueId: string; teamId: string; groupLabel: string; teamName: string;
-  wins: number; losses: number; draws: number; winPct: number;
-  runsFor: number; runsAgainst: number; streak: string; last10: string;
+  leagueId: string;
+  teamId: string;
+  groupLabel: string;
+  teamName: string;
+  wins: number;
+  losses: number;
+  draws: number;
+  winPct: number;
+  runsFor: number;
+  runsAgainst: number;
+  streak: string;
+  last10: string;
 }
 
 /** 과거를 만들 리그 — 프로 1군만. 2군·아마추어는 순위표를 안 쓴다 */
@@ -26,7 +35,9 @@ const PAST_LEAGUES = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
 
 /** 리그별 시즌 경기 수 — 순위표 합이 맞아야 화면이 어색하지 않다 */
 const GAMES: Record<string, number> = {
-  LEAGUE_KBL: 144, LEAGUE_ABL: 162, LEAGUE_JBL: 143,
+  LEAGUE_KBL: 144,
+  LEAGUE_ABL: 162,
+  LEAGUE_JBL: 143,
 };
 
 /**
@@ -54,7 +65,7 @@ export function buildPastStandings(
   const byLeague = new Map<string, TeamRef[]>();
   for (const t of teams) {
     if (!PAST_LEAGUES.has(t.leagueId)) continue;
-    if (!t.id.endsWith("_1")) continue;      // 2군은 순위표를 안 쓴다
+    if (!t.id.endsWith("_1")) continue; // 2군은 순위표를 안 쓴다
     if (!byLeague.has(t.leagueId)) byLeague.set(t.leagueId, []);
     byLeague.get(t.leagueId)!.push(t);
   }
@@ -77,16 +88,24 @@ export function buildPastStandings(
         const pct = Math.min(0.72, Math.max(0.28, center + (r1 - 0.5) * 0.12));
 
         const wins = Math.round(g * pct);
-        const draws = r2 < 0.35 ? Math.round(r2 * 6) : 0;   // 무승부는 가끔
+        const draws = r2 < 0.35 ? Math.round(r2 * 6) : 0; // 무승부는 가끔
         const losses = Math.max(0, g - wins - draws);
         // 득실 — 승률과 어긋나지 않게 만든다. 리그 평균 득점을 4.7로 본다
         const rf = Math.round(g * (4.7 + (pct - 0.5) * 2.2));
         const ra = Math.round(g * (4.7 - (pct - 0.5) * 2.2));
         rows.push({
-          leagueId, teamId: t.id, groupLabel: "", teamName: t.name ?? t.id,
-          wins, losses, draws,
+          leagueId,
+          teamId: t.id,
+          groupLabel: "",
+          teamName: t.name ?? t.id,
+          wins,
+          losses,
+          draws,
           winPct: Math.round((wins / Math.max(1, wins + losses)) * 1000) / 1000,
-          runsFor: rf, runsAgainst: ra, streak: "", last10: "",
+          runsFor: rf,
+          runsAgainst: ra,
+          streak: "",
+          last10: "",
         });
       }
     }

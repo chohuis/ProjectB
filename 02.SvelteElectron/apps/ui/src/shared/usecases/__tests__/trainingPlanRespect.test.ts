@@ -32,7 +32,9 @@ describe("자동 진행이 플레이어 계획을 존중한다", () => {
 
   it("스토어가 누가 썼는지 구분한다", () => {
     const s = read("stores/game.ts");
-    expect(s).toMatch(/setTrainingPlan\(plan: Partial<TrainingPlanState>, opts\?: \{ auto\?: boolean \}\)/);
+    expect(s).toMatch(
+      /setTrainingPlan\(plan: Partial<TrainingPlanState>, opts\?: \{ auto\?: boolean \}\)/,
+    );
     // 자동이 아니면 userSet이 켜져야 한다
     expect(s).toMatch(/userSet: opts\?\.auto \? \(s\.trainingPlan\.userSet \?\? false\) : true/);
   });

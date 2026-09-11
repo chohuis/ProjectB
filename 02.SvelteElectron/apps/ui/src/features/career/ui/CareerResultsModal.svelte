@@ -36,8 +36,8 @@
 
   $: canProceed =
     (!draftApplied || draftRevealed) &&
-    (!hasUniv     || universityRevealed) &&
-    (!hasIndie    || indieRevealed);
+    (!hasUniv || universityRevealed) &&
+    (!hasIndie || indieRevealed);
 
   function teamName(teamId: string | null): string {
     if (!teamId) return "-";
@@ -48,9 +48,15 @@
     phase = "draft-board";
   }
 
-  async function onDraftCompleted(e: CustomEvent<{
-    drafted: boolean; teamId: string | null; round: number | null; pick: number | null; signingBonus: number;
-  }>) {
+  async function onDraftCompleted(
+    e: CustomEvent<{
+      drafted: boolean;
+      teamId: string | null;
+      round: number | null;
+      pick: number | null;
+      signingBonus: number;
+    }>,
+  ) {
     const { drafted, teamId, round, pick, signingBonus } = e.detail;
     gameStore.setCareerResults({
       ...(results ?? {
@@ -82,10 +88,7 @@
 </script>
 
 {#if phase === "draft-board"}
-  <DraftBoardModal
-    on:completed={onDraftCompleted}
-    on:close={onDraftClose}
-  />
+  <DraftBoardModal on:completed={onDraftCompleted} on:close={onDraftClose} />
 {:else}
   <div class="overlay">
     <section class="modal">
@@ -95,7 +98,6 @@
       </header>
 
       <div class="results-grid">
-
         {#if draftApplied}
           <div
             class="result-block"
@@ -107,8 +109,12 @@
             {#if !draftRevealed}
               <button class="reveal-btn" on:click={revealDraft}>드래프트 보드 확인 →</button>
             {:else if results?.draftDrafted}
-              <p class="block-main">{teamName(results.draftTeamId)} / {results.draftRound}R {results.draftPick}P</p>
-              <p class="block-sub">계약금 {(results.draftSigningBonus ?? 0).toLocaleString()}만원</p>
+              <p class="block-main">
+                {teamName(results.draftTeamId)} / {results.draftRound}R {results.draftPick}P
+              </p>
+              <p class="block-sub">
+                계약금 {(results.draftSigningBonus ?? 0).toLocaleString()}만원
+              </p>
             {:else}
               <p class="block-main fail-text">미지명</p>
             {/if}
@@ -124,7 +130,9 @@
           >
             <p class="block-label">대학 지원</p>
             {#if !universityRevealed}
-              <button class="reveal-btn" on:click={() => (universityRevealed = true)}>결과 확인 →</button>
+              <button class="reveal-btn" on:click={() => (universityRevealed = true)}
+                >결과 확인 →</button
+              >
             {:else if results?.universityPassed?.length}
               {#each results.universityPassed as teamId}
                 <p class="block-main">{teamName(teamId)} 합격</p>
@@ -144,7 +152,8 @@
           >
             <p class="block-label">독립리그 지원</p>
             {#if !indieRevealed}
-              <button class="reveal-btn" on:click={() => (indieRevealed = true)}>결과 확인 →</button>
+              <button class="reveal-btn" on:click={() => (indieRevealed = true)}>결과 확인 →</button
+              >
             {:else if results?.independentPassed?.length}
               {#each results.independentPassed as teamId}
                 <p class="block-main">{teamName(teamId)} 합격</p>
@@ -154,11 +163,12 @@
             {/if}
           </div>
         {/if}
-
       </div>
 
       <p class="guide">
-        {canProceed ? "다음 화면에서 최종 진로를 선택합니다." : "모든 결과를 확인한 후 진행할 수 있습니다."}
+        {canProceed
+          ? "다음 화면에서 최종 진로를 선택합니다."
+          : "모든 결과를 확인한 후 진행할 수 있습니다."}
       </p>
 
       <div class="actions">
@@ -170,9 +180,12 @@
 
 <style>
   .overlay {
-    position: fixed; inset: 0;
+    position: fixed;
+    inset: 0;
     background: rgba(10, 18, 38, 0.52);
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 260;
   }
   .modal {
@@ -184,10 +197,20 @@
     display: grid;
     gap: 16px;
   }
-  .chip { margin: 0; font-size: 11px; color: var(--ink); }
-  h2 { margin: 4px 0 0; color: var(--ink); }
+  .chip {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink);
+  }
+  h2 {
+    margin: 4px 0 0;
+    color: var(--ink);
+  }
 
-  .results-grid { display: grid; gap: 10px; }
+  .results-grid {
+    display: grid;
+    gap: 10px;
+  }
 
   .result-block {
     border-radius: 10px;
@@ -197,14 +220,38 @@
     border: 1px solid var(--line);
     background: var(--panel-sunk);
   }
-  .result-block.pass    { background: rgba(31, 122, 71, 0.10); border-color: var(--ok); }
-  .result-block.fail    { background: var(--panel); border-color: rgba(179, 49, 31, 0.26); }
-  .result-block.pending { background: var(--panel); border-color: var(--line); }
+  .result-block.pass {
+    background: rgba(31, 122, 71, 0.1);
+    border-color: var(--ok);
+  }
+  .result-block.fail {
+    background: var(--panel);
+    border-color: rgba(179, 49, 31, 0.26);
+  }
+  .result-block.pending {
+    background: var(--panel);
+    border-color: var(--line);
+  }
 
-  .block-label { margin: 0; font-size: 11px; color: var(--ink-mid); }
-  .block-main  { margin: 0; font-size: 15px; font-weight: 700; color: var(--ink); }
-  .block-sub   { margin: 0; font-size: 12px; color: var(--ink-mid); }
-  .fail-text   { color: var(--bad); }
+  .block-label {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink-mid);
+  }
+  .block-main {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .block-sub {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink-mid);
+  }
+  .fail-text {
+    color: var(--bad);
+  }
 
   .reveal-btn {
     background: var(--panel-sunk);
@@ -218,15 +265,31 @@
     text-align: left;
     width: fit-content;
   }
-  .reveal-btn:hover { background: var(--line); }
-
-  .guide { margin: 0; font-size: 13px; color: var(--ink-mid); }
-
-  .actions { display: flex; justify-content: flex-end; }
-  button:not(.reveal-btn) {
-    background: var(--line); border: 1px solid var(--ink-mute);
-    color: var(--ink); border-radius: 8px;
-    padding: 9px 18px; cursor: pointer; font-size: 14px;
+  .reveal-btn:hover {
+    background: var(--line);
   }
-  button:not(.reveal-btn):disabled { opacity: 0.5; cursor: default; }
+
+  .guide {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-mid);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  button:not(.reveal-btn) {
+    background: var(--line);
+    border: 1px solid var(--ink-mute);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 9px 18px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button:not(.reveal-btn):disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 </style>

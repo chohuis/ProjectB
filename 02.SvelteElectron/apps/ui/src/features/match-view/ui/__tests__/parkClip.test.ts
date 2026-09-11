@@ -55,8 +55,7 @@ describe("구장이 칸 안에 들어간다", () => {
     const at = page.indexOf(".field-stage-wrap {");
     expect(at, ".field-stage-wrap 규칙이 있다").toBeGreaterThan(-1);
     const blk = page.slice(at, at + page.slice(at).indexOf("}"));
-    expect(blk.includes("align-items: stretch;"),
-      "그 블록 안에 있어야 한다").toBe(true);
+    expect(blk.includes("align-items: stretch;"), "그 블록 안에 있어야 한다").toBe(true);
   });
 
   it("비율이 viewBox와 같다 — 틀이 구장을 감싼다", () => {

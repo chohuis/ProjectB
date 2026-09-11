@@ -38,8 +38,8 @@ const RIM_RATIO = 0.16;
  */
 export function inkFor(bg: string): string {
   const l = luminanceOf(bg);
-  const onDark = (l + 0.05) / 0.05;      // 검은 글자를 얹었을 때
-  const onLight = 1.05 / (l + 0.05);     // 흰 글자를 얹었을 때
+  const onDark = (l + 0.05) / 0.05; // 검은 글자를 얹었을 때
+  const onLight = 1.05 / (l + 0.05); // 흰 글자를 얹었을 때
   return onDark >= onLight ? "#14141A" : "#FFFFFF";
 }
 
@@ -54,11 +54,15 @@ export function luminanceOf(hex: string): number {
 
 function rgbOf(hex: string): [number, number, number] {
   const h = hex.replace("#", "").trim();
-  const s = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const s =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
   const n = Number.parseInt(s.slice(0, 6), 16);
-  return Number.isFinite(n)
-    ? [(n >> 16) & 255, (n >> 8) & 255, n & 255]
-    : [128, 128, 128];
+  return Number.isFinite(n) ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : [128, 128, 128];
 }
 
 /** 색을 어둡게 — `Color.darkened(amount)`와 같다 */

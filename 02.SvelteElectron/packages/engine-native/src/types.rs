@@ -440,7 +440,8 @@ pub struct BatterLineAccum {
 }
 
 impl PitcherQueue {
-    pub fn is_empty(&self) -> bool { self.pitchers.is_empty() }
+    // `is_empty` 를 지웠다 (2026-09-11 · 개선 5) — 부르는 곳이 없고,
+    // 아래 `should_switch` 가 `self.pitchers.is_empty()` 를 직접 본다.
     /// 지금 투수를 바꿔야 하는가 — 아웃 한계 **또는 투구수 상한**을 넘었을 때.
     ///
     /// ⚠ **투구수도 봐야 한다.** 아웃 한계만 보면 7이닝에 114구를 던진 선발이

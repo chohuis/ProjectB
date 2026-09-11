@@ -2,8 +2,13 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  parseRoleChoiceCopy, roleConfirmLine, roleCopyStageOf, fillRoleCopy,
-  ROLE_ASK_REASONS, ROLE_COPY_STAGES, ROLE_POSITIONS,
+  parseRoleChoiceCopy,
+  roleConfirmLine,
+  roleCopyStageOf,
+  fillRoleCopy,
+  ROLE_ASK_REASONS,
+  ROLE_COPY_STAGES,
+  ROLE_POSITIONS,
 } from "../roleChoiceCopy";
 
 /**
@@ -82,10 +87,14 @@ describe("보직 문안 데이터", () => {
 
   it("채우면 조사·서술격이 맞는 문장이 된다", () => {
     const copy = parseRoleChoiceCopy(RAW)!;
-    expect(fillRoleCopy(copy.decided.follow, { roleAs: copy.roleAs.RP }))
-      .toBe("올해는 중계로 갑니다.");
-    expect(fillRoleCopy(copy.decided.defy, { recWas: copy.roleWas.SP, roleObj: copy.roleObj.CP }).split("\n")[0])
-      .toBe("추천은 선발이었습니다. 마무리를 택했습니다.");
+    expect(fillRoleCopy(copy.decided.follow, { roleAs: copy.roleAs.RP })).toBe(
+      "올해는 중계로 갑니다.",
+    );
+    expect(
+      fillRoleCopy(copy.decided.defy, { recWas: copy.roleWas.SP, roleObj: copy.roleObj.CP }).split(
+        "\n",
+      )[0],
+    ).toBe("추천은 선발이었습니다. 마무리를 택했습니다.");
   });
 
   // ── ③ 감독 이름 ────────────────────────────────────────────
@@ -94,7 +103,9 @@ describe("보직 문안 데이터", () => {
     const bodies = [
       ...ROLE_ASK_REASONS.map((r) => copy.lead[r]),
       ...ROLE_COPY_STAGES.flatMap((st) => ROLE_POSITIONS.map((pos) => copy.recommend[st][pos])),
-      copy.decided.follow, copy.decided.defy, copy.tail.ask,
+      copy.decided.follow,
+      copy.decided.defy,
+      copy.tail.ask,
     ];
     for (const b of bodies) {
       expect(b.includes("{manager}")).toBe(false);
@@ -121,14 +132,31 @@ describe("보직 문안 데이터", () => {
     const bodies = [
       ...ROLE_ASK_REASONS.map((r) => copy.lead[r]),
       ...ROLE_COPY_STAGES.flatMap((st) => ROLE_POSITIONS.map((pos) => copy.recommend[st][pos])),
-      copy.tail.ask, copy.confirm.crowded, copy.confirm.empty,
-      copy.decided.follow, copy.decided.defy,
+      copy.tail.ask,
+      copy.confirm.crowded,
+      copy.confirm.empty,
+      copy.decided.follow,
+      copy.decided.defy,
     ];
     for (const b of bodies) {
       const last = b.split("\n").pop()!.trim();
-      expect(last.endsWith("다.") || last.endsWith("까.") || last.endsWith("다") || last.endsWith("시다.")).toBe(true);
+      expect(
+        last.endsWith("다.") ||
+          last.endsWith("까.") ||
+          last.endsWith("다") ||
+          last.endsWith("시다."),
+      ).toBe(true);
       // 평서체 어미가 남아 있으면 안 된다
-      for (const bad of ["봤다.", "낫다.", "싶다.", "간다.", "택했다.", "있다.", "다르다.", "던지겠나."]) {
+      for (const bad of [
+        "봤다.",
+        "낫다.",
+        "싶다.",
+        "간다.",
+        "택했다.",
+        "있다.",
+        "다르다.",
+        "던지겠나.",
+      ]) {
         expect(b.includes(bad)).toBe(false);
       }
     }

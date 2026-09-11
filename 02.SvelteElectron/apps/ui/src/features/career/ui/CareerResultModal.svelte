@@ -2,9 +2,18 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
-  import { chooseDraft, chooseSchoolOrIndependent, continueCurrentStage } from "../../../shared/usecases/careerDecision";
+  import {
+    chooseDraft,
+    chooseSchoolOrIndependent,
+    continueCurrentStage,
+  } from "../../../shared/usecases/careerDecision";
   import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
-  import { canApplyToUniversity, canApplyToIndependent, universityGradeOf, isUniversityFinalYear } from "../../../shared/utils/careerTransition";
+  import {
+    canApplyToUniversity,
+    canApplyToIndependent,
+    universityGradeOf,
+    isUniversityFinalYear,
+  } from "../../../shared/utils/careerTransition";
   import { firstTeamIdOf } from "../../../shared/utils/ids";
   import { ALL_TEAMS_BY_LEAGUE } from "../../../shared/utils/leagueScheduler";
 
@@ -25,24 +34,46 @@
    */
   // ⚠ refs 의 2군 팀은 `leagueId` 가 1군 리그다(tier "마이너") — 소속은 판정과 같은 출처(ALL_TEAMS_BY_LEAGUE)로 본다
   const farmLeagueOf = (teamId: string): string | undefined =>
-    (["LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"] as const).find((lid) => (ALL_TEAMS_BY_LEAGUE[lid] ?? []).includes(teamId));
+    (["LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"] as const).find((lid) =>
+      (ALL_TEAMS_BY_LEAGUE[lid] ?? []).includes(teamId),
+    );
   const leagueLabel = (id: string | undefined) =>
     id === "LEAGUE_ABL_FARM" ? "ABL 2군" : id === "LEAGUE_JBL_FARM" ? "JBL 2군" : "";
   $: overseasRows = overseasPassed
     .map((id) => {
       const t = $teamsL10n.find((x) => x.id === id);
       const parent = firstTeamIdOf(id);
-      const power = Math.max(0, Math.min(5, Math.round((parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined) ?? 0)));
-      return { id, name: t?.name ?? id, league: leagueLabel(farmLeagueOf(id)), power, stars: "★".repeat(power) + "☆".repeat(5 - power) };
+      const power = Math.max(
+        0,
+        Math.min(
+          5,
+          Math.round((parent ? $teamsL10n.find((x) => x.id === parent)?.power : undefined) ?? 0),
+        ),
+      );
+      return {
+        id,
+        name: t?.name ?? id,
+        league: leagueLabel(farmLeagueOf(id)),
+        power,
+        stars: "★".repeat(power) + "☆".repeat(5 - power),
+      };
     })
-    .sort((a, b) => a.league.localeCompare(b.league) || b.power - a.power || a.name.localeCompare(b.name, "ko"));
+    .sort(
+      (a, b) =>
+        a.league.localeCompare(b.league) || b.power - a.power || a.name.localeCompare(b.name, "ko"),
+    );
 
   // 대학 재학 중 여부 및 학년 — 판정은 `careerTransition`이 정본이다.
   // 예전엔 여기서 `universityWeek / 52`로 따로 계산해 `protagonist.grade`와
   // 정본이 둘이었다 (그리고 grade는 대학 진학 시 지워지고 있었다).
   $: isUniversity = $gameStore.protagonist.careerStage === "university";
-  $: univGrade = universityGradeOf($gameStore.protagonist.grade, $gameStore.schoolState.universityWeek);
-  $: isFinalYear = isUniversity && isUniversityFinalYear($gameStore.protagonist.grade, $gameStore.schoolState.universityWeek);
+  $: univGrade = universityGradeOf(
+    $gameStore.protagonist.grade,
+    $gameStore.schoolState.universityWeek,
+  );
+  $: isFinalYear =
+    isUniversity &&
+    isUniversityFinalYear($gameStore.protagonist.grade, $gameStore.schoolState.universityWeek);
   $: canContinue = isUniversity && !isFinalYear && !draftPassed;
 
   // 독립리그 계속 여부
@@ -61,7 +92,10 @@
     resolving = false;
   }
 
-  async function chooseResult(kind: "draft" | "university" | "independent" | "overseas" | "sports" | "general", teamId?: string) {
+  async function chooseResult(
+    kind: "draft" | "university" | "independent" | "overseas" | "sports" | "general",
+    teamId?: string,
+  ) {
     if (resolving) return;
     resolving = true;
 
@@ -110,7 +144,9 @@
       {/if}
       {#if draftPassed}
         <button class="opt-btn" type="button" on:click={() => chooseResult("draft")}>
-          <span class="opt-label">드래프트 지명: {teamName(results?.draftTeamId ?? "-")} / {results?.draftRound}R {results?.draftPick}P</span>
+          <span class="opt-label"
+            >드래프트 지명: {teamName(results?.draftTeamId ?? "-")} / {results?.draftRound}R {results?.draftPick}P</span
+          >
         </button>
       {/if}
       {#each univPassed as teamId}
@@ -126,11 +162,18 @@
       <!-- 해외 2군 제안 — 계약은 `salaryNegotiation`이 이어받는다(독립과 같은 흐름) -->
       {#if overseasRows.length > 0}
         <div class="overseas">
-          <p class="overseas-head">해외 2군 제안 <strong>{overseasRows.length}팀</strong> <small>· 리그 → 1군 전력★ 순</small></p>
+          <p class="overseas-head">
+            해외 2군 제안 <strong>{overseasRows.length}팀</strong>
+            <small>· 리그 → 1군 전력★ 순</small>
+          </p>
           <div class="overseas-list">
             {#each overseasRows as row (row.id)}
               {@const teamId = row.id}
-              <button class="opt-btn overseas-btn" type="button" on:click={() => chooseResult("overseas", teamId)}>
+              <button
+                class="opt-btn overseas-btn"
+                type="button"
+                on:click={() => chooseResult("overseas", teamId)}
+              >
                 <span class="opt-label">{row.name}</span>
                 <span class="opt-meta">{row.league} · 1군 {row.stars}</span>
               </button>
@@ -143,8 +186,7 @@
            갈 곳이 없으면 이 버튼이 또 떴다.** 60회 조사에서 한 커리어가
            군 복무를 **세 번** 하는 경로가 나왔다.
            군필·면제·현역에게는 위의 "독립리그 계속"이 남는다. -->
-      {#if !draftPassed && univPassed.length === 0 && indiePassed.length === 0
-           && $gameStore.protagonist.militaryStatus === "미필"}
+      {#if !draftPassed && univPassed.length === 0 && indiePassed.length === 0 && $gameStore.protagonist.militaryStatus === "미필"}
         <button class="opt-btn danger" type="button" on:click={() => chooseResult("general")}>
           <span class="opt-label">전원 탈락: 현역 입대</span>
         </button>
@@ -154,24 +196,107 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display: flex; align-items: center; justify-content: center; z-index: 200; }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
   /* U5 안전망 — 전역이 밝아져 색 없는 자식(.opt-btn 등)이 안 보인다 */
-  .modal { background: var(--panel); border: 1px solid var(--ink-mute); border-radius: 16px; padding: 24px; width: min(700px, 92vw); max-height: 90vh; overflow-y: auto; display: grid; color: var(--ink); gap: 14px; }
-  .overseas { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; gap: 8px; }
-  .overseas-head { margin: 0; font-size: 13px; color: var(--ink-mid); }
-  .overseas-head strong { color: var(--ink); }
-  .overseas-head small { color: var(--ink-mute); }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: 16px;
+    padding: 24px;
+    width: min(700px, 92vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    color: var(--ink);
+    gap: 14px;
+  }
+  .overseas {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+  }
+  .overseas-head {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-mid);
+  }
+  .overseas-head strong {
+    color: var(--ink);
+  }
+  .overseas-head small {
+    color: var(--ink-mute);
+  }
   /* 28줄이 와도 모달이 화면을 넘지 않는다 */
-  .overseas-list { max-height: 38vh; overflow-y: auto; display: grid; gap: 6px; padding-right: 4px; }
-  .overseas-btn { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .opt-meta { color: var(--ink-mute); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .chip { font-size: 11px; color: var(--ink-mid); }
-  h2 { margin: 0; color: var(--ink); }
-  .body-text { margin: 0; color: var(--ink); }
-  .options { display: grid; gap: 8px; }
-  .opt-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: grid; width: 100%; gap: 2px; }
-  .opt-btn.danger { background: rgba(179, 49, 31, 0.09); border-color: var(--bad); }
-  .opt-btn.continue { background: rgba(31, 122, 71, 0.10); border-color: var(--ok); }
-  .opt-label { color: var(--ink); font-weight: 600; }
-  .opt-sub { color: var(--ok); font-size: 11px; }
+  .overseas-list {
+    max-height: 38vh;
+    overflow-y: auto;
+    display: grid;
+    gap: 6px;
+    padding-right: 4px;
+  }
+  .overseas-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .opt-meta {
+    color: var(--ink-mute);
+    font-size: 12px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip {
+    font-size: 11px;
+    color: var(--ink-mid);
+  }
+  h2 {
+    margin: 0;
+    color: var(--ink);
+  }
+  .body-text {
+    margin: 0;
+    color: var(--ink);
+  }
+  .options {
+    display: grid;
+    gap: 8px;
+  }
+  .opt-btn {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: left;
+    cursor: pointer;
+    display: grid;
+    width: 100%;
+    gap: 2px;
+  }
+  .opt-btn.danger {
+    background: rgba(179, 49, 31, 0.09);
+    border-color: var(--bad);
+  }
+  .opt-btn.continue {
+    background: rgba(31, 122, 71, 0.1);
+    border-color: var(--ok);
+  }
+  .opt-label {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .opt-sub {
+    color: var(--ok);
+    font-size: 11px;
+  }
 </style>

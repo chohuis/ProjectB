@@ -376,7 +376,7 @@ export const JBL_FARM_TEAMS: string[] = [
 
 /** 고교 8권역 — 거점구장 공유 그룹. 5-3 주말리그 편성의 기준 */
 export const HS_REGIONS: Record<string, string[]> = {
-  "STADIUM_GYERYONG": [
+  STADIUM_GYERYONG: [
     "TEAM_HS_BAEKSEOK",
     "TEAM_HS_GEUMGANG",
     "TEAM_HS_GEUMSAN",
@@ -390,7 +390,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_YESAN",
     "TEAM_HS_YUSEONG",
   ],
-  "STADIUM_HALLA": [
+  STADIUM_HALLA: [
     "TEAM_HS_AEWOL",
     "TEAM_HS_HALLA",
     "TEAM_HS_HANNAE",
@@ -398,7 +398,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_SEOGWI",
     "TEAM_HS_SEONGSAN",
   ],
-  "STADIUM_HANGANG": [
+  STADIUM_HANGANG: [
     "TEAM_HS_BUGAK",
     "TEAM_HS_CHEONGRAM",
     "TEAM_HS_CHEONGUN",
@@ -416,7 +416,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_SINJEONG",
     "TEAM_HS_YANGCHEON",
   ],
-  "STADIUM_MUJIGAE": [
+  STADIUM_MUJIGAE: [
     "TEAM_HS_BAEKHO",
     "TEAM_HS_BUNDANG",
     "TEAM_HS_CHEONGNA",
@@ -438,7 +438,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_SUSEONG",
     "TEAM_HS_YEONSU",
   ],
-  "STADIUM_NAKDONG": [
+  STADIUM_NAKDONG: [
     "TEAM_HS_BULMO",
     "TEAM_HS_BUNSEONG",
     "TEAM_HS_CHOKSEOK",
@@ -456,7 +456,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_TAEJONG",
     "TEAM_HS_TONGYEONG",
   ],
-  "STADIUM_PALGONG": [
+  STADIUM_PALGONG: [
     "TEAM_HS_DALSEONG",
     "TEAM_HS_GEUMO",
     "TEAM_HS_GYERIM",
@@ -470,7 +470,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_YEONGIL",
     "TEAM_HS_YEONGNAM",
   ],
-  "STADIUM_SEORAK_HS": [
+  STADIUM_SEORAK_HS: [
     "TEAM_HS_BONGUII",
     "TEAM_HS_CHIAK",
     "TEAM_HS_GYEONGPO",
@@ -478,7 +478,7 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_SEORAK",
     "TEAM_HS_TAEBAEK",
   ],
-  "STADIUM_YEONGSAN": [
+  STADIUM_YEONGSAN: [
     "TEAM_HS_BAEGYANG",
     "TEAM_HS_BITGOEUL",
     "TEAM_HS_GANGJIN",
@@ -498,7 +498,7 @@ export const HS_REGIONS: Record<string, string[]> = {
 
 /** 대학 5조(A~E) — 거점구장 공유 그룹. 고교 권역과 같은 규칙 */
 export const UNIV_GROUPS: Record<string, string[]> = {
-  "STADIUM_BYEOLBIT": [
+  STADIUM_BYEOLBIT: [
     "TEAM_UNIV_BANWOL",
     "TEAM_UNIV_BYEOLLAE",
     "TEAM_UNIV_GWANGGYO",
@@ -510,7 +510,7 @@ export const UNIV_GROUPS: Record<string, string[]> = {
     "TEAM_UNIV_SOSA",
     "TEAM_UNIV_WOLMI",
   ],
-  "STADIUM_GEUMGANG_UNIV": [
+  STADIUM_GEUMGANG_UNIV: [
     "TEAM_UNIV_ASAN",
     "TEAM_UNIV_BAEKJE",
     "TEAM_UNIV_CHIAK",
@@ -522,7 +522,7 @@ export const UNIV_GROUPS: Record<string, string[]> = {
     "TEAM_UNIV_SEOSAN",
     "TEAM_UNIV_YUSEONG",
   ],
-  "STADIUM_MIREU": [
+  STADIUM_MIREU: [
     "TEAM_UNIV_BAEKSAN",
     "TEAM_UNIV_BUKHANSAN",
     "TEAM_UNIV_GWANAK",
@@ -534,7 +534,7 @@ export const UNIV_GROUPS: Record<string, string[]> = {
     "TEAM_UNIV_SONGDO",
     "TEAM_UNIV_SURI",
   ],
-  "STADIUM_NOEUL": [
+  STADIUM_NOEUL: [
     "TEAM_UNIV_BISEUL",
     "TEAM_UNIV_BITGOEUL",
     "TEAM_UNIV_DALGUBEOL",
@@ -546,7 +546,7 @@ export const UNIV_GROUPS: Record<string, string[]> = {
     "TEAM_UNIV_WANSAN",
     "TEAM_UNIV_YUDAL",
   ],
-  "STADIUM_TAEJONG": [
+  STADIUM_TAEJONG: [
     "TEAM_UNIV_BUNSEONG",
     "TEAM_UNIV_GEOJE",
     "TEAM_UNIV_GEUMJEONG",
@@ -567,7 +567,9 @@ export const GROUPS_BY_LEAGUE: Record<string, Record<string, string[]>> = {
 };
 
 export interface LeagueGroupMeta {
-  leagueId: string; stadiumId: string; label: string;
+  leagueId: string;
+  stadiumId: string;
+  label: string;
   /** 주 안의 날짜 오프셋. 고교 주말리그의 6·7과 같은 축 */
   dayOffsets: number[];
   note: string;
@@ -575,20 +577,53 @@ export interface LeagueGroupMeta {
 
 /** 조별 요일 패턴. 정본: seeds/onepitch/league_groups.csv */
 export const LEAGUE_GROUP_META: LeagueGroupMeta[] = [
-  { leagueId: "LEAGUE_UNIVERSITY", stadiumId: "STADIUM_MIREU", label: "A", dayOffsets: [1, 2, 3, 4], note: "화수목금 격주 (서울6+경인4)" },
-  { leagueId: "LEAGUE_UNIVERSITY", stadiumId: "STADIUM_BYEOLBIT", label: "B", dayOffsets: [1, 2, 3, 4], note: "화수목금 격주 (경인10)" },
-  { leagueId: "LEAGUE_UNIVERSITY", stadiumId: "STADIUM_GEUMGANG_UNIV", label: "C", dayOffsets: [3, 4], note: "매주 목금 (충청8+강원2)" },
-  { leagueId: "LEAGUE_UNIVERSITY", stadiumId: "STADIUM_NOEUL", label: "D", dayOffsets: [3, 4], note: "매주 목금 (호남7+대경3)" },
-  { leagueId: "LEAGUE_UNIVERSITY", stadiumId: "STADIUM_TAEJONG", label: "E", dayOffsets: [3, 4, 1, 2], note: "기획서는 4월 목금·5월 화수 — 라운드 순환으로 근사 (부경울7+대경2+제주1)" },
+  {
+    leagueId: "LEAGUE_UNIVERSITY",
+    stadiumId: "STADIUM_MIREU",
+    label: "A",
+    dayOffsets: [1, 2, 3, 4],
+    note: "화수목금 격주 (서울6+경인4)",
+  },
+  {
+    leagueId: "LEAGUE_UNIVERSITY",
+    stadiumId: "STADIUM_BYEOLBIT",
+    label: "B",
+    dayOffsets: [1, 2, 3, 4],
+    note: "화수목금 격주 (경인10)",
+  },
+  {
+    leagueId: "LEAGUE_UNIVERSITY",
+    stadiumId: "STADIUM_GEUMGANG_UNIV",
+    label: "C",
+    dayOffsets: [3, 4],
+    note: "매주 목금 (충청8+강원2)",
+  },
+  {
+    leagueId: "LEAGUE_UNIVERSITY",
+    stadiumId: "STADIUM_NOEUL",
+    label: "D",
+    dayOffsets: [3, 4],
+    note: "매주 목금 (호남7+대경3)",
+  },
+  {
+    leagueId: "LEAGUE_UNIVERSITY",
+    stadiumId: "STADIUM_TAEJONG",
+    label: "E",
+    dayOffsets: [3, 4, 1, 2],
+    note: "기획서는 4월 목금·5월 화수 — 라운드 순환으로 근사 (부경울7+대경2+제주1)",
+  },
 ];
 
 export interface SurvivalStageDef {
-  leagueId: string; stage: number; name: string;
+  leagueId: string;
+  stage: number;
+  name: string;
   /** 이 단계 시작 시점의 팀 수 (검증용 — 실제 팀은 앞 단계 생존팀) */
   teamCount: number;
   /** 팀당 경기 수 (1차 18 · 2차 14 · 3차 3) */
   targetGames: number;
-  startWeek: number; endWeek: number;
+  startWeek: number;
+  endWeek: number;
   /** 다음 단계로 올릴 팀 수. 마지막 단계는 teamCount와 같다 */
   advanceCount: number;
   note: string;
@@ -596,22 +631,57 @@ export interface SurvivalStageDef {
 
 /** 독립 4단계 생존리그 (04_독립.md §3). 정본: seeds/onepitch/survival_stages.csv */
 export const SURVIVAL_STAGES: SurvivalStageDef[] = [
-  { leagueId: "LEAGUE_INDEPENDENT", stage: 1, name: "1차 Stage", teamCount: 10, targetGames: 18, startWeek: 10, endWeek: 17, advanceCount: 8, note: "전체 더블라운드로빈 → 하위 2팀 탈락" },
-  { leagueId: "LEAGUE_INDEPENDENT", stage: 2, name: "2차 Stage", teamCount: 8, targetGames: 14, startWeek: 18, endWeek: 23, advanceCount: 4, note: "생존팀 더블라운드로빈 → 하위 4팀 탈락" },
-  { leagueId: "LEAGUE_INDEPENDENT", stage: 3, name: "3차 Stage", teamCount: 4, targetGames: 3, startWeek: 24, endWeek: 25, advanceCount: 4, note: "생존팀 싱글라운드로빈 → 최종 정규 순위 확정" },
+  {
+    leagueId: "LEAGUE_INDEPENDENT",
+    stage: 1,
+    name: "1차 Stage",
+    teamCount: 10,
+    targetGames: 18,
+    startWeek: 10,
+    endWeek: 17,
+    advanceCount: 8,
+    note: "전체 더블라운드로빈 → 하위 2팀 탈락",
+  },
+  {
+    leagueId: "LEAGUE_INDEPENDENT",
+    stage: 2,
+    name: "2차 Stage",
+    teamCount: 8,
+    targetGames: 14,
+    startWeek: 18,
+    endWeek: 23,
+    advanceCount: 4,
+    note: "생존팀 더블라운드로빈 → 하위 4팀 탈락",
+  },
+  {
+    leagueId: "LEAGUE_INDEPENDENT",
+    stage: 3,
+    name: "3차 Stage",
+    teamCount: 4,
+    targetGames: 3,
+    startWeek: 24,
+    endWeek: 25,
+    advanceCount: 4,
+    note: "생존팀 싱글라운드로빈 → 최종 정규 순위 확정",
+  },
 ];
 
 /** 대회 시드 산출 기준 */
 export type TournamentSeedSource =
-  | "prev_season"  /* 전년 권역 순위 */
-  | "first_half"   /* 전반기 권역 순위 */
-  | "second_half"  /* 후반기 권역 순위 */
-  | "open";        /* 전원 참가 */
+  | "prev_season" /* 전년 권역 순위 */
+  | "first_half" /* 전반기 권역 순위 */
+  | "second_half" /* 후반기 권역 순위 */
+  | "open"; /* 전원 참가 */
 
 export interface TournamentDef {
-  id: string; leagueId: string; name: string; flower: string;
-  startWeek: number; endWeek: number;
-  totalSlots: number; wildcardSlots: number;
+  id: string;
+  leagueId: string;
+  name: string;
+  flower: string;
+  startWeek: number;
+  endWeek: number;
+  totalSlots: number;
+  wildcardSlots: number;
   seedSource: TournamentSeedSource;
   /** 조당 자동 진출 수 고정 (대학 왕중왕전 = 조 1위만). null이면 조 크기 비례 배분 */
   perGroupSlots: number | null;
@@ -630,12 +700,148 @@ export interface TournamentDef {
 
 /** 대회 카탈로그 (고교 5종 · 대학 3종). 정본: seeds/onepitch/tournaments.csv */
 export const TOURNAMENTS: TournamentDef[] = [
-  { id: "TOUR_HS_GAENARI", leagueId: "LEAGUE_HIGHSCHOOL", name: "개나리기", flower: "개나리", startWeek: 9, endWeek: 10, totalSlots: 32, wildcardSlots: 8, seedSource: "prev_season", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 1 },
-  { id: "TOUR_HS_JANGMI", leagueId: "LEAGUE_HIGHSCHOOL", name: "장미기", flower: "장미", startWeek: 14, endWeek: 15, totalSlots: 32, wildcardSlots: 8, seedSource: "first_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 2 },
-  { id: "TOUR_HS_MUGUNGHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "무궁화기", flower: "무궁화", startWeek: 19, endWeek: 21, totalSlots: 48, wildcardSlots: 12, seedSource: "first_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 3 },
-  { id: "TOUR_HS_GUKHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "국화기", flower: "국화", startWeek: 22, endWeek: 25, totalSlots: 102, wildcardSlots: 0, seedSource: "open", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 4 },
-  { id: "TOUR_HS_PAEWANG", leagueId: "LEAGUE_HIGHSCHOOL", name: "패왕기", flower: "왕중왕", startWeek: 26, endWeek: 27, totalSlots: 24, wildcardSlots: 0, seedSource: "second_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 5 },
-  { id: "TOUR_UNIV_WANGJUNGWANG", leagueId: "LEAGUE_UNIVERSITY", name: "왕중왕전", flower: "왕중왕", startWeek: 11, endWeek: 12, totalSlots: 8, wildcardSlots: 3, seedSource: "first_half", perGroupSlots: 1, wildcardMaxGroupRank: 2, autoSeedsFirst: true, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 1 },
-  { id: "TOUR_UNIV_EUNHA", leagueId: "LEAGUE_UNIVERSITY", name: "은하기", flower: "은하", startWeek: 18, endWeek: 21, totalSlots: 24, wildcardSlots: 4, seedSource: "first_half", perGroupSlots: 4, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: 8, advancePerGroup: 1, qualifyWeeks: 2, order: 2 },
-  { id: "TOUR_UNIV_YEOMYEONG", leagueId: "LEAGUE_UNIVERSITY", name: "여명기", flower: "여명", startWeek: 25, endWeek: 28, totalSlots: 20, wildcardSlots: 5, seedSource: "first_half", perGroupSlots: 3, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: 4, advancePerGroup: 2, qualifyWeeks: 2, order: 3 },
+  {
+    id: "TOUR_HS_GAENARI",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    name: "개나리기",
+    flower: "개나리",
+    startWeek: 9,
+    endWeek: 10,
+    totalSlots: 32,
+    wildcardSlots: 8,
+    seedSource: "prev_season",
+    perGroupSlots: null,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: null,
+    advancePerGroup: null,
+    qualifyWeeks: 0,
+    order: 1,
+  },
+  {
+    id: "TOUR_HS_JANGMI",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    name: "장미기",
+    flower: "장미",
+    startWeek: 14,
+    endWeek: 15,
+    totalSlots: 32,
+    wildcardSlots: 8,
+    seedSource: "first_half",
+    perGroupSlots: null,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: null,
+    advancePerGroup: null,
+    qualifyWeeks: 0,
+    order: 2,
+  },
+  {
+    id: "TOUR_HS_MUGUNGHWA",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    name: "무궁화기",
+    flower: "무궁화",
+    startWeek: 19,
+    endWeek: 21,
+    totalSlots: 48,
+    wildcardSlots: 12,
+    seedSource: "first_half",
+    perGroupSlots: null,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: null,
+    advancePerGroup: null,
+    qualifyWeeks: 0,
+    order: 3,
+  },
+  {
+    id: "TOUR_HS_GUKHWA",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    name: "국화기",
+    flower: "국화",
+    startWeek: 22,
+    endWeek: 25,
+    totalSlots: 102,
+    wildcardSlots: 0,
+    seedSource: "open",
+    perGroupSlots: null,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: null,
+    advancePerGroup: null,
+    qualifyWeeks: 0,
+    order: 4,
+  },
+  {
+    id: "TOUR_HS_PAEWANG",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    name: "패왕기",
+    flower: "왕중왕",
+    startWeek: 26,
+    endWeek: 27,
+    totalSlots: 24,
+    wildcardSlots: 0,
+    seedSource: "second_half",
+    perGroupSlots: null,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: null,
+    advancePerGroup: null,
+    qualifyWeeks: 0,
+    order: 5,
+  },
+  {
+    id: "TOUR_UNIV_WANGJUNGWANG",
+    leagueId: "LEAGUE_UNIVERSITY",
+    name: "왕중왕전",
+    flower: "왕중왕",
+    startWeek: 11,
+    endWeek: 12,
+    totalSlots: 8,
+    wildcardSlots: 3,
+    seedSource: "first_half",
+    perGroupSlots: 1,
+    wildcardMaxGroupRank: 2,
+    autoSeedsFirst: true,
+    groupCount: null,
+    advancePerGroup: null,
+    qualifyWeeks: 0,
+    order: 1,
+  },
+  {
+    id: "TOUR_UNIV_EUNHA",
+    leagueId: "LEAGUE_UNIVERSITY",
+    name: "은하기",
+    flower: "은하",
+    startWeek: 18,
+    endWeek: 21,
+    totalSlots: 24,
+    wildcardSlots: 4,
+    seedSource: "first_half",
+    perGroupSlots: 4,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: 8,
+    advancePerGroup: 1,
+    qualifyWeeks: 2,
+    order: 2,
+  },
+  {
+    id: "TOUR_UNIV_YEOMYEONG",
+    leagueId: "LEAGUE_UNIVERSITY",
+    name: "여명기",
+    flower: "여명",
+    startWeek: 25,
+    endWeek: 28,
+    totalSlots: 20,
+    wildcardSlots: 5,
+    seedSource: "first_half",
+    perGroupSlots: 3,
+    wildcardMaxGroupRank: null,
+    autoSeedsFirst: false,
+    groupCount: 4,
+    advancePerGroup: 2,
+    qualifyWeeks: 2,
+    order: 3,
+  },
 ];

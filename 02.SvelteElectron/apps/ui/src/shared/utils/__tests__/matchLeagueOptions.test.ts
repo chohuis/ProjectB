@@ -2,7 +2,12 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { leagueMatchOptions } from "../matchLeagueOptions";
-import { primeRosterOpsRules, starterPitchLimitForLeague, starterOutsFactorForLeague, closerGateForLeague } from "../rosterEngine";
+import {
+  primeRosterOpsRules,
+  starterPitchLimitForLeague,
+  starterOutsFactorForLeague,
+  closerGateForLeague,
+} from "../rosterEngine";
 
 // ── 1.1 A② §6-1 — 리그가 정하는 경기 옵션 한 벌 ─────────────────────
 //
@@ -19,7 +24,9 @@ beforeEach(() => {
 
 describe("규칙 접근자", () => {
   it("고교 투구수 상한이 기본보다 낮고 설명 키는 안 실린다", () => {
-    expect(starterPitchLimitForLeague("LEAGUE_HIGHSCHOOL")).toBeLessThan(starterPitchLimitForLeague("LEAGUE_KBL"));
+    expect(starterPitchLimitForLeague("LEAGUE_HIGHSCHOOL")).toBeLessThan(
+      starterPitchLimitForLeague("LEAGUE_KBL"),
+    );
     expect(starterPitchLimitForLeague("_note")).toBe(starterPitchLimitForLeague("LEAGUE_KBL"));
   });
   it("고교 선발 아웃 계수가 1 보다 작고 프로는 1 이다", () => {
@@ -42,20 +49,41 @@ describe("경기 옵션 한 벌", () => {
     expect(pro.starterOutsFactor).toBe(1);
   });
   it("의무 휴식 재료는 셋이 다 있을 때만 붙는다", () => {
-    expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL", { lastPitchedDate: "2027-05-01", lastPitchCount: 98 }, "2027-05-02").restGuard)
-      .toEqual({ lastPitchedDate: "2027-05-01", lastPitchCount: 98, gameDate: "2027-05-02" });
-    expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL", { lastPitchedDate: "2027-05-01", lastPitchCount: 0 }, "2027-05-02").restGuard).toBeUndefined();
+    expect(
+      leagueMatchOptions(
+        "LEAGUE_HIGHSCHOOL",
+        { lastPitchedDate: "2027-05-01", lastPitchCount: 98 },
+        "2027-05-02",
+      ).restGuard,
+    ).toEqual({ lastPitchedDate: "2027-05-01", lastPitchCount: 98, gameDate: "2027-05-02" });
+    expect(
+      leagueMatchOptions(
+        "LEAGUE_HIGHSCHOOL",
+        { lastPitchedDate: "2027-05-01", lastPitchCount: 0 },
+        "2027-05-02",
+      ).restGuard,
+    ).toBeUndefined();
     expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL", null, "2027-05-02").restGuard).toBeUndefined();
-    expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL", { lastPitchedDate: "2027-05-01", lastPitchCount: 98 }, undefined).restGuard).toBeUndefined();
+    expect(
+      leagueMatchOptions(
+        "LEAGUE_HIGHSCHOOL",
+        { lastPitchedDate: "2027-05-01", lastPitchCount: 98 },
+        undefined,
+      ).restGuard,
+    ).toBeUndefined();
   });
 });
 
 describe("배선 — 주인공 경기 호출부 셋이 같은 헬퍼를 쓴다", () => {
   it("자동 진행", () => {
-    expect(read("apps/ui/src/shared/usecases/runAutoAdvance.ts").includes("...leagueMatchOptions(lid,")).toBe(true);
+    expect(
+      read("apps/ui/src/shared/usecases/runAutoAdvance.ts").includes("...leagueMatchOptions(lid,"),
+    ).toBe(true);
   });
   it("실제 플레이(MainPage)", () => {
-    expect(read("apps/ui/src/pages/main/MainPage.svelte").includes("...leagueMatchOptions(lid,")).toBe(true);
+    expect(
+      read("apps/ui/src/pages/main/MainPage.svelte").includes("...leagueMatchOptions(lid,"),
+    ).toBe(true);
   });
   it("경기 화면(MatchPage) 시작 둘", () => {
     const s = read("apps/ui/src/pages/match/MatchPage.svelte");
@@ -63,7 +91,12 @@ describe("배선 — 주인공 경기 호출부 셋이 같은 헬퍼를 쓴다",
   });
   it("Rust 옵션이 넷을 받는다", () => {
     const t = read("packages/engine-native/src/types.rs");
-    for (const f of ["pub pitch_limit_override: Option<f64>", "pub starter_outs_factor: Option<f64>", "pub closer_gate: Option<CloserGate>", "pub rest_guard: Option<RestGuard>"]) {
+    for (const f of [
+      "pub pitch_limit_override: Option<f64>",
+      "pub starter_outs_factor: Option<f64>",
+      "pub closer_gate: Option<CloserGate>",
+      "pub rest_guard: Option<RestGuard>",
+    ]) {
       expect(t.includes(f)).toBe(true);
     }
   });

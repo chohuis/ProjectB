@@ -25,14 +25,12 @@ import { careerEndPending, takeCareerEndPending } from "../../../shared/usecases
  *   "−100~+100. 플레이어에게 숫자로 노출하지 않는다 — 라벨만 보여준다"고
  *   못박아 뒀다. 처음에 `{r.value}`를 그대로 쓸 뻔했다.
  */
-const SRC = readFileSync(
-  join(__dirname, "../ui/CareerEndScreen.svelte"), "utf8");
+const SRC = readFileSync(join(__dirname, "../ui/CareerEndScreen.svelte"), "utf8");
 
 describe("커리어 결산 — 아래로 이은 세 절", () => {
   it("연도별 펼치기가 있다", () => {
     expect(SRC).toMatch(/showYears/);
-    expect(SRC, "연도 오름차순 정렬이 없다 — 데뷔부터 읽혀야 한다")
-      .toMatch(/a\.year - b\.year/);
+    expect(SRC, "연도 오름차순 정렬이 없다 — 데뷔부터 읽혀야 한다").toMatch(/a\.year - b\.year/);
   });
 
   it("순위와 포스트시즌을 읽는다", () => {
@@ -59,8 +57,9 @@ describe("규칙 — 관계 값은 라벨로만", () => {
   });
 
   it("관계 값을 숫자 그대로 찍지 않는다", () => {
-    expect(SRC, "{r.value}를 그대로 노출하고 있다 — 타입 주석이 금지한다")
-      .not.toMatch(/\{r\.value\}/);
+    expect(SRC, "{r.value}를 그대로 노출하고 있다 — 타입 주석이 금지한다").not.toMatch(
+      /\{r\.value\}/,
+    );
   });
 });
 
@@ -77,10 +76,16 @@ describe("실제 필드 이름을 쓴다", () => {
 
 describe("있던 것을 안 지웠다", () => {
   it("한 장 요약이 그대로 있다", () => {
-    for (const fn of ["careerTotalsOf", "careerHighsOf", "teamStintsOf",
-                      "awardTallyOf", "titleCountOf"]) {
-      expect(SRC, `${fn}가 사라졌다 — 아래로 잇기로 했지 갈아엎기로 하지 않았다`)
-        .toMatch(new RegExp(fn));
+    for (const fn of [
+      "careerTotalsOf",
+      "careerHighsOf",
+      "teamStintsOf",
+      "awardTallyOf",
+      "titleCountOf",
+    ]) {
+      expect(SRC, `${fn}가 사라졌다 — 아래로 잇기로 했지 갈아엎기로 하지 않았다`).toMatch(
+        new RegExp(fn),
+      );
     }
   });
 });
@@ -94,8 +99,7 @@ describe("있던 것을 안 지웠다", () => {
  */
 describe("주요 사건", () => {
   it("`careerEvents`를 읽는다", () => {
-    expect(SRC, "careerEvents를 안 읽는다 — 사건이 저장만 되고 안 보인다")
-      .toMatch(/careerEvents/);
+    expect(SRC, "careerEvents를 안 읽는다 — 사건이 저장만 되고 안 보인다").toMatch(/careerEvents/);
   });
 
   it("연도 오름차순이다", () => {
@@ -112,20 +116,24 @@ describe("주요 사건", () => {
    */
   it("통산 기록 분기 **바깥**에 있다", () => {
     const outside = /^ {6}\{\/if\}\r?\n\r?\n {6}<!-- 주요 사건/m;
-    expect(SRC, "사건 절이 records 분기 안에 들어갔다 — 기록 없는 커리어에서 사라진다")
-      .toMatch(outside);
+    expect(SRC, "사건 절이 records 분기 안에 들어갔다 — 기록 없는 커리어에서 사라진다").toMatch(
+      outside,
+    );
   });
 
   it("유형 이름은 공용 표에서 읽는다", () => {
-    expect(SRC, "화면에 번역표를 또 만들면 안 된다 (careerEventLabel.ts 머리말)")
-      .toMatch(/careerEventLabel\(/);
-    expect(SRC, "eventType을 그대로 찍고 있다 — 코드가 화면에 샌다")
-      .not.toMatch(/\{e\.eventType\}/);
+    expect(SRC, "화면에 번역표를 또 만들면 안 된다 (careerEventLabel.ts 머리말)").toMatch(
+      /careerEventLabel\(/,
+    );
+    expect(SRC, "eventType을 그대로 찍고 있다 — 코드가 화면에 샌다").not.toMatch(
+      /\{e\.eventType\}/,
+    );
   });
 
   it("팀 이름은 `teamName`으로 읽는다", () => {
-    expect(SRC, "teamId를 그대로 찍으면 그 화면만 영문 id가 뜬다")
-      .not.toMatch(/\{e\.fromTeamId\}|\{e\.toTeamId\}/);
+    expect(SRC, "teamId를 그대로 찍으면 그 화면만 영문 id가 뜬다").not.toMatch(
+      /\{e\.fromTeamId\}|\{e\.toTeamId\}/,
+    );
   });
 });
 
@@ -140,12 +148,12 @@ describe("주요 사건", () => {
  *
  * 사용자 확정: **둘 다 준다** — 둘러보기(메인에 남는다) · 마치기(타이틀로).
  */
-const ASK = readFileSync(
-  join(__dirname, "../ui/RetirementAskModal.svelte"), "utf8");
-const MAIN = readFileSync(
-  join(__dirname, "../../../pages/main/MainPage.svelte"), "utf8");
+const ASK = readFileSync(join(__dirname, "../ui/RetirementAskModal.svelte"), "utf8");
+const MAIN = readFileSync(join(__dirname, "../../../pages/main/MainPage.svelte"), "utf8");
 const SEASON_END = readFileSync(
-  join(__dirname, "../../season-end/ui/SeasonEndModal.svelte"), "utf8");
+  join(__dirname, "../../season-end/ui/SeasonEndModal.svelte"),
+  "utf8",
+);
 
 describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
   it("결산 화면이 `onExit` 을 받는다", () => {
@@ -153,8 +161,7 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
   });
 
   it("두 버튼을 다 준다 — 둘러보기 · 마치기", () => {
-    expect(SRC, "마치기 버튼이 없다 — 나가는 길이 다시 사라졌다")
-      .toContain("마치기");
+    expect(SRC, "마치기 버튼이 없다 — 나가는 길이 다시 사라졌다").toContain("마치기");
     expect(SRC).toContain("둘러보기");
   });
 
@@ -176,16 +183,19 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
    *   `나 > 상태 > 기록` 재관람만 살아 있어서 여태 안 드러났다.
    */
   it("은퇴 모달은 결산을 들지 않는다", () => {
-    expect(ASK, "결산이 다시 은퇴 모달 안으로 들어갔다 — 언마운트되면 같이 죽는다")
-      .not.toMatch(/CareerEndScreen/);
+    expect(ASK, "결산이 다시 은퇴 모달 안으로 들어갔다 — 언마운트되면 같이 죽는다").not.toMatch(
+      /CareerEndScreen/,
+    );
     expect(ASK, "끝났다고 알리지 않는다").toMatch(/onRetired\(\)/);
   });
 
   it("MainPage 가 결산을 형제로 든다", () => {
-    expect(MAIN, "MainPage 가 CareerEndScreen 을 안 그린다")
-      .toMatch(/<CareerEndScreen[\s\S]{0,120}?onExit=\{onSeasonEnd\}/);
-    expect(MAIN, "은퇴 모달이 끝났다고 알릴 길이 없다")
-      .toMatch(/onRetired=\{\(\) => \(careerEndOpen = true\)\}/);
+    expect(MAIN, "MainPage 가 CareerEndScreen 을 안 그린다").toMatch(
+      /<CareerEndScreen[\s\S]{0,120}?onExit=\{onSeasonEnd\}/,
+    );
+    expect(MAIN, "은퇴 모달이 끝났다고 알릴 길이 없다").toMatch(
+      /onRetired=\{\(\) => \(careerEndOpen = true\)\}/,
+    );
   });
 
   /**
@@ -193,11 +203,14 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
    *   저장 전에 알리면 마지막 시즌이 빠진 채로 나온다.
    */
   it("저장이 끝난 뒤에 알린다", () => {
-    const fn = ASK.slice(ASK.indexOf("async function retire()"),
-                         ASK.indexOf("async function keepPlaying"));
+    const fn = ASK.slice(
+      ASK.indexOf("async function retire()"),
+      ASK.indexOf("async function keepPlaying"),
+    );
     expect(fn.indexOf("seasonStore.save()"), "save 를 안 부른다").toBeGreaterThan(0);
-    expect(fn.indexOf("onRetired()"), "save 보다 먼저 알린다")
-      .toBeGreaterThan(fn.indexOf("seasonStore.save()"));
+    expect(fn.indexOf("onRetired()"), "save 보다 먼저 알린다").toBeGreaterThan(
+      fn.indexOf("seasonStore.save()"),
+    );
   });
 
   /**
@@ -206,10 +219,12 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
    *    같은 죽은 배선이 다시 생긴다.
    */
   it("시즌 종료 모달에는 `onExit` 이 없다", () => {
-    expect(SEASON_END, "SeasonEndModal 에 죽은 onExit 이 되살아났다")
-      .not.toMatch(/export let onExit/);
-    expect(MAIN, "MainPage 가 SeasonEndModal 에 다시 onExit 을 넘긴다")
-      .not.toMatch(/<SeasonEndModal[^>]*onExit/);
+    expect(SEASON_END, "SeasonEndModal 에 죽은 onExit 이 되살아났다").not.toMatch(
+      /export let onExit/,
+    );
+    expect(MAIN, "MainPage 가 SeasonEndModal 에 다시 onExit 을 넘긴다").not.toMatch(
+      /<SeasonEndModal[^>]*onExit/,
+    );
   });
 });
 
@@ -227,10 +242,10 @@ describe("엔딩 뒤 — 타이틀로 나가는 길", () => {
  */
 describe("이름이 원문 id 로 새지 않는다", () => {
   it("관계 이름은 `npcs` 를 안 뒤진다 — `Relationship.name` 을 쓴다", () => {
-    expect(SRC, "npcs 에서 찾으면 코치·감독이 id 로 떨어진다")
-      .not.toMatch(/npcs \?\? \[\]\)\.find\(\(n\) => n\.npcId === id\)/);
-    expect(SRC, "person VIEW 가 채워 주는 name 을 안 쓴다")
-      .toMatch(/r\.name \|\|/);
+    expect(SRC, "npcs 에서 찾으면 코치·감독이 id 로 떨어진다").not.toMatch(
+      /npcs \?\? \[\]\)\.find\(\(n\) => n\.npcId === id\)/,
+    );
+    expect(SRC, "person VIEW 가 채워 주는 name 을 안 쓴다").toMatch(/r\.name \|\|/);
   });
 
   it("이름이 없으면 역할명으로 대체한다 (`PeoplePage` 와 같게)", () => {
@@ -238,8 +253,9 @@ describe("이름이 원문 id 로 새지 않는다", () => {
   });
 
   it("팀 이름 폴백이 id 가 아니다", () => {
-    expect(SRC, "못 찾은 팀을 id 로 찍고 있다")
-      .not.toMatch(/find\(\(t\) => t\.id === id\)\?\.name \?\? id/);
+    expect(SRC, "못 찾은 팀을 id 로 찍고 있다").not.toMatch(
+      /find\(\(t\) => t\.id === id\)\?\.name \?\? id/,
+    );
     expect(SRC).toMatch(/const GONE = "\(기록 없음\)"/);
   });
 });
@@ -253,15 +269,13 @@ describe("이름이 원문 id 로 새지 않는다", () => {
 describe("태그가 읽힌다", () => {
   it("없는 토큰에 기대지 않는다", () => {
     const css = SRC.slice(SRC.indexOf("<style>"));
-    expect(css, "--accent-weak 는 정의된 적이 없다")
-      .not.toMatch(/background: var\(--accent-weak/);
+    expect(css, "--accent-weak 는 정의된 적이 없다").not.toMatch(/background: var\(--accent-weak/);
   });
 
   it("연도별 수상·포스트시즌 태그가 글자색을 정한다", () => {
     for (const cls of ["yr-ps", "yr-aw"]) {
       const rule = SRC.slice(SRC.indexOf(`.${cls} {`), SRC.indexOf(`.${cls} {`) + 200);
-      expect(rule, `${cls} 가 색을 안 정한다 — 지면이 어두워 안 읽힌다`)
-        .toMatch(/color: #/);
+      expect(rule, `${cls} 가 색을 안 정한다 — 지면이 어두워 안 읽힌다`).toMatch(/color: #/);
     }
   });
 });
@@ -293,12 +307,9 @@ describe("절 순서", () => {
  * 신호는 `retireProtagonist` 하나가 올린다 — 화면마다 "은퇴시켰으니 결산도
  * 열어라"를 적으면 경로가 늘 때마다 한 자리씩 빠진다.
  */
-const UC = readFileSync(
-  join(__dirname, "../../../shared/usecases/retirement.ts"), "utf8");
-const SAVE_T = readFileSync(
-  join(__dirname, "../../../shared/types/save.ts"), "utf8");
-const STATUS = readFileSync(
-  join(__dirname, "../../../pages/status/StatusPage.svelte"), "utf8");
+const UC = readFileSync(join(__dirname, "../../../shared/usecases/retirement.ts"), "utf8");
+const SAVE_T = readFileSync(join(__dirname, "../../../shared/types/save.ts"), "utf8");
+const STATUS = readFileSync(join(__dirname, "../../../pages/status/StatusPage.svelte"), "utf8");
 
 describe("은퇴 직후 결산이 저절로 열린다", () => {
   /**
@@ -311,15 +322,17 @@ describe("은퇴 직후 결산이 저절로 열린다", () => {
   it("`retireProtagonist` 가 저장을 끝낸 뒤에 신호를 올린다", () => {
     const fn = UC.slice(UC.indexOf("export async function retireProtagonist"));
 
-    expect(fn.indexOf("careerEndPending.set(true)"),
-      "은퇴가 신호를 안 올린다 — 자발적 은퇴에서 결산이 안 뜬다")
-      .toBeGreaterThan(0);
+    expect(
+      fn.indexOf("careerEndPending.set(true)"),
+      "은퇴가 신호를 안 올린다 — 자발적 은퇴에서 결산이 안 뜬다",
+    ).toBeGreaterThan(0);
     /**
      * ⚠ 결산은 `careerRecords` 를 읽는다. 저장 전에 올리면 마지막 시즌이
      *   빠진 채로 나온다 — 은퇴 모달이 이미 같은 이유로 순서를 지킨다.
      */
-    expect(fn.indexOf("careerEndPending.set(true)"), "저장보다 먼저 올린다")
-      .toBeGreaterThan(fn.indexOf("seasonStore.save()"));
+    expect(fn.indexOf("careerEndPending.set(true)"), "저장보다 먼저 올린다").toBeGreaterThan(
+      fn.indexOf("seasonStore.save()"),
+    );
   });
 
   /**
@@ -337,18 +350,23 @@ describe("은퇴 직후 결산이 저절로 열린다", () => {
 
   it("신호를 읽으면서 내리는 함수가 하나로 있다", () => {
     const fn = UC.slice(UC.indexOf("export function takeCareerEndPending"));
-    expect(fn.indexOf("careerEndPending.update("),
-      "꺼내면서 내리지 않는다 — 결산이 닫히지 않는다").toBeGreaterThan(0);
+    expect(
+      fn.indexOf("careerEndPending.update("),
+      "꺼내면서 내리지 않는다 — 결산이 닫히지 않는다",
+    ).toBeGreaterThan(0);
     expect(fn.indexOf("return false;"), "내리는 자리가 없다").toBeGreaterThan(0);
   });
 
   it("MainPage 가 그 신호를 보고 결산을 연다", () => {
-    expect(MAIN, "MainPage 가 신호를 안 읽는다 — 자발적 은퇴가 결산을 못 연다")
-      .toContain("$careerEndPending && takeCareerEndPending()");
-    expect(MAIN, "결산을 여는 대입이 없다")
-      .toContain("takeCareerEndPending()) careerEndOpen = true");
-    expect(MAIN, "신호를 import 하지 않는다")
-      .toContain("import { careerEndPending, takeCareerEndPending }");
+    expect(MAIN, "MainPage 가 신호를 안 읽는다 — 자발적 은퇴가 결산을 못 연다").toContain(
+      "$careerEndPending && takeCareerEndPending()",
+    );
+    expect(MAIN, "결산을 여는 대입이 없다").toContain(
+      "takeCareerEndPending()) careerEndOpen = true",
+    );
+    expect(MAIN, "신호를 import 하지 않는다").toContain(
+      "import { careerEndPending, takeCareerEndPending }",
+    );
   });
 
   /**
@@ -357,12 +375,17 @@ describe("은퇴 직후 결산이 저절로 열린다", () => {
    *   자발적 은퇴는 `retireProtagonist` 만 부르고 여는 건 `MainPage` 몫이다.
    */
   it("StatusPage 는 은퇴시키기만 하고 결산을 따로 안 연다", () => {
-    const fn = STATUS.slice(STATUS.indexOf("async function doVoluntaryRetire"),
-                            STATUS.indexOf("// ── 레이더 차트"));
-    expect(fn.indexOf('retireProtagonist("voluntary")'), "자발적 은퇴가 사라졌다")
-      .toBeGreaterThan(0);
-    expect(fn.indexOf("showCareerEnd = true"),
-      "화면이 스스로 결산을 연다 — 여는 자리가 둘이 됐다").toBe(-1);
+    const fn = STATUS.slice(
+      STATUS.indexOf("async function doVoluntaryRetire"),
+      STATUS.indexOf("// ── 레이더 차트"),
+    );
+    expect(fn.indexOf('retireProtagonist("voluntary")'), "자발적 은퇴가 사라졌다").toBeGreaterThan(
+      0,
+    );
+    expect(
+      fn.indexOf("showCareerEnd = true"),
+      "화면이 스스로 결산을 연다 — 여는 자리가 둘이 됐다",
+    ).toBe(-1);
   });
 
   /**
@@ -370,8 +393,10 @@ describe("은퇴 직후 결산이 저절로 열린다", () => {
    *   없는 구 세이브에서 슬롯을 열 때마다 결산이 뜬다.
    */
   it("세이브에 플래그를 새로 넣지 않았다", () => {
-    expect(SAVE_T, "결산 관람 여부가 세이브 타입에 들어갔다 — 구 세이브에서 매번 뜬다")
-      .not.toContain("careerEndSeen");
+    expect(
+      SAVE_T,
+      "결산 관람 여부가 세이브 타입에 들어갔다 — 구 세이브에서 매번 뜬다",
+    ).not.toContain("careerEndSeen");
     expect(SAVE_T).not.toContain("careerEndPending");
   });
 
@@ -381,8 +406,11 @@ describe("은퇴 직후 결산이 저절로 열린다", () => {
    */
   it("자동 진행은 은퇴를 확정하지 않는다", () => {
     const AUTO = readFileSync(
-      join(__dirname, "../../../shared/usecases/runAutoAdvance.ts"), "utf8");
-    expect(AUTO, "자동 진행이 은퇴를 확정한다 — 헤드리스가 결산 신호를 올린다")
-      .not.toContain("retireProtagonist");
+      join(__dirname, "../../../shared/usecases/runAutoAdvance.ts"),
+      "utf8",
+    );
+    expect(AUTO, "자동 진행이 은퇴를 확정한다 — 헤드리스가 결산 신호를 올린다").not.toContain(
+      "retireProtagonist",
+    );
   });
 });

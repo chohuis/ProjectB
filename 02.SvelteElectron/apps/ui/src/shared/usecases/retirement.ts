@@ -40,8 +40,10 @@ import type { ProtagonistSave, RetirementReason } from "../types/save";
 // **수치 정본은 `generation_rules.json`의 `retirementRules`다.**
 
 export interface SurgeryRetireRules {
-  ageHigh: number; chanceHigh: number;
-  ageMid: number;  chanceMid: number;
+  ageHigh: number;
+  chanceHigh: number;
+  ageMid: number;
+  chanceMid: number;
   priorSurgeryChance: number;
   baseChance: number;
 }
@@ -59,9 +61,9 @@ export function surgeryRetireChance(
   r: SurgeryRetireRules,
 ): number {
   if (age >= r.ageHigh) return r.chanceHigh;
-  if (age >= r.ageMid)  return r.chanceMid;
+  if (age >= r.ageMid) return r.chanceMid;
   // 젊어도 재수술이면 높다 — 나이 조건보다 뒤에 둔다
-  if (hasPriorSurgery)  return r.priorSurgeryChance;
+  if (hasPriorSurgery) return r.priorSurgeryChance;
   return r.baseChance;
 }
 
@@ -131,14 +133,16 @@ export async function evalRetirementPressure(
     fame: p.fame,
   };
 
-  const raw = await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
-    player,
-    teamProfile: profile,
-    ovrTrend,
-    currentSalary: p.contract?.salary ?? 0,
-    marketValue,
-    prospectOvrAtPosition: prospectOvr,
-  }));
+  const raw = await window.projectB!.evalRetirementSuggestionNative(
+    JSON.stringify({
+      player,
+      teamProfile: profile,
+      ovrTrend,
+      currentSalary: p.contract?.salary ?? 0,
+      marketValue,
+      prospectOvrAtPosition: prospectOvr,
+    }),
+  );
   const r = JSON.parse(raw) as RetirementSuggestion & { error?: string };
   // 조용히 삼키지 않는다 — 여기가 막히면 커리어가 끝나지 않는다
   if (r.error) throw new Error(`[은퇴판정] 엔진 오류: ${r.error}`);
@@ -200,7 +204,10 @@ export const careerEndPending = writable(false);
  */
 export function takeCareerEndPending(): boolean {
   let was = false;
-  careerEndPending.update((cur) => { was = cur; return false; });
+  careerEndPending.update((cur) => {
+    was = cur;
+    return false;
+  });
   return was;
 }
 
@@ -217,9 +224,12 @@ export async function retireProtagonist(reason: RetirementReason): Promise<void>
   const p = g.protagonist;
   if (isRetired(p)) return;
 
-  const label = reason === "voluntary" ? "자발적 은퇴"
-    : reason === "decline" ? "노쇠·계약 불발"
-    : "부상으로 인한 은퇴";
+  const label =
+    reason === "voluntary"
+      ? "자발적 은퇴"
+      : reason === "decline"
+        ? "노쇠·계약 불발"
+        : "부상으로 인한 은퇴";
 
   gameStore.retire({ year: s.seasonYear, week: s.currentWeek, reason });
   gameStore.addCareerEvent({
@@ -232,20 +242,29 @@ export async function retireProtagonist(reason: RetirementReason): Promise<void>
 
   const slotId = g.currentSlotId;
   if (slotId) {
-    await window.projectB!.leagueAddTransactions(JSON.stringify({
-      slotId,
-      rows: [{
-        seasonYear: s.seasonYear, week: s.currentWeek, category: "retirement",
-        playerId: p.id, playerName: p.name,
-        fromTeamId: p.teamId || null, fromLeagueId: p.leagueId || null,
-        detail: label,
-      }],
-    }));
+    await window.projectB!.leagueAddTransactions(
+      JSON.stringify({
+        slotId,
+        rows: [
+          {
+            seasonYear: s.seasonYear,
+            week: s.currentWeek,
+            category: "retirement",
+            playerId: p.id,
+            playerName: p.name,
+            fromTeamId: p.teamId || null,
+            fromLeagueId: p.leagueId || null,
+            detail: label,
+          },
+        ],
+      }),
+    );
   }
 
   gameStore.addMessage({
     id: `msg-retire-${s.seasonYear}`,
-    category: "system", sender: "구단",
+    category: "system",
+    sender: "구단",
     subject: "은퇴",
     preview: `${s.seasonYear}시즌을 끝으로 선수 생활을 마칩니다.`,
     body: [
@@ -254,7 +273,8 @@ export async function retireProtagonist(reason: RetirementReason): Promise<void>
       `사유: ${label}`,
       `통산 ${(p.careerRecords ?? []).length}시즌`,
     ].join("\n"),
-    createdAt: `Y${s.seasonYear}`, readAt: null,
+    createdAt: `Y${s.seasonYear}`,
+    readAt: null,
   });
 
   await gameStore.save();

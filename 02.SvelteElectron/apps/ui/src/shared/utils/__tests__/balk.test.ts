@@ -38,11 +38,17 @@ describe("보크 배선", () => {
   it("🔴 3루 주자가 홈에 오면 득점이다", () => {
     // 판정만 하고 점수를 안 올리면 주자가 사라지기만 한다
     expect(me.includes("            if let Some(r3) = pre_runners.third.take() {")).toBe(true);
-    expect(me.includes("        add_runs(balk_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);")).toBe(true);
+    expect(
+      me.includes(
+        "        add_runs(balk_runs, &mut next_score, &mut next_inning_scores, next_half, next_inning);",
+      ),
+    ).toBe(true);
   });
 
   it("주자가 없으면 안 난다", () => {
-    expect(me.includes("    if pre_runners.first.is_some() || pre_runners.second.is_some()")).toBe(true);
+    expect(me.includes("    if pre_runners.first.is_some() || pre_runners.second.is_some()")).toBe(
+      true,
+    );
   });
 
   it("🔴 투수 기록에 남는다 (BK)", () => {
@@ -58,6 +64,8 @@ describe("보크 배선", () => {
 
   it("로그가 두 갈래다 — 득점 여부로 갈린다", () => {
     expect(me.includes('                "보크! 3루 주자가 홈을 밟는다".to_string()')).toBe(true);
-    expect(me.includes('                "보크! 주자가 한 베이스씩 진루한다".to_string()')).toBe(true);
+    expect(me.includes('                "보크! 주자가 한 베이스씩 진루한다".to_string()')).toBe(
+      true,
+    );
   });
 });

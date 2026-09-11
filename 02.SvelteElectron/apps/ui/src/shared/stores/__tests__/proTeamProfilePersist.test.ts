@@ -19,25 +19,55 @@ import { join } from "node:path";
  * 아무 일도 안 일어나는데, 그건 오류가 아니라 "조용히 예전 동작"으로 나타난다.
  */
 
-const P = { protagonist: {}, mailbox: [], trainingPlan: {}, schoolState: {},
-  achievements: [], achievementMetrics: {}, recentLogs: [], recentUpcoming: [], npcs: [] } as never;
+const P = {
+  protagonist: {},
+  mailbox: [],
+  trainingPlan: {},
+  schoolState: {},
+  achievements: [],
+  achievementMetrics: {},
+  recentLogs: [],
+  recentUpcoming: [],
+  npcs: [],
+} as never;
 
 describe("구단 성향 저장", () => {
   it("makeSaveGame이 성향을 싣는다", () => {
     const profiles = { TEAM_KBL_A_1: { winNowPressure: 82, stability: 40 } };
     const save = makeSaveGame(
-      P as never, [], {} as never, {} as never, [], {} as never, [], [], [], undefined,
+      P as never,
+      [],
+      {} as never,
+      {} as never,
+      [],
+      {} as never,
+      [],
+      [],
+      [],
+      undefined,
       { proTeamProfiles: profiles },
     ) as SaveGame;
     expect(save.proTeamProfiles, "저장 blob에 성향이 없다").toBeTruthy();
-    expect((save.proTeamProfiles as Record<string, { winNowPressure: number }>)
-      .TEAM_KBL_A_1.winNowPressure).toBe(82);
+    expect(
+      (save.proTeamProfiles as Record<string, { winNowPressure: number }>).TEAM_KBL_A_1
+        .winNowPressure,
+    ).toBe(82);
   });
 
   it("성향을 안 넘기면 필드가 비어 있다 — 대조군", () => {
     // 이 검사가 없으면 위 검사가 "항상 통과"일 수 있다
     const save = makeSaveGame(
-      P as never, [], {} as never, {} as never, [], {} as never, [], [], [], undefined, {},
+      P as never,
+      [],
+      {} as never,
+      {} as never,
+      [],
+      {} as never,
+      [],
+      [],
+      [],
+      undefined,
+      {},
     ) as SaveGame;
     expect(save.proTeamProfiles).toBeUndefined();
   });

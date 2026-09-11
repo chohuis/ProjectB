@@ -50,7 +50,9 @@ export function diffStandings(current: Standing[], base: Standing[]): Standing[]
     const played = wins + losses + draws;
     return {
       ...c,
-      wins, losses, draws,
+      wins,
+      losses,
+      draws,
       winPct: played > 0 ? wins / played : 0,
       runsFor: c.runsFor - b.runsFor,
       runsAgainst: c.runsAgainst - b.runsAgainst,
@@ -71,19 +73,21 @@ export function syntheticStandings(
   return teams.map((t) => {
     const ranks = t.history?.seasonRanks ?? [];
     // 과거 순위는 낮을수록 강하다. 없으면 중위(6)로 둔다.
-    const avgRank = ranks.length > 0
-      ? ranks.reduce((a, r) => a + r.rank, 0) / ranks.length
-      : 6;
+    const avgRank = ranks.length > 0 ? ranks.reduce((a, r) => a + r.rank, 0) / ranks.length : 6;
     // 전력★ 1~5를 0~1로, 과거순위 1~12위를 1~0으로 정규화해 반반 섞는다.
     const powerScore = ((t.power ?? 3) - 1) / 4;
     const rankScore = Math.max(0, Math.min(1, (12 - avgRank) / 11));
     const winPct = 0.5 * powerScore + 0.5 * rankScore;
     return {
       teamId: t.id,
-      wins: 0, losses: 0, draws: 0,
+      wins: 0,
+      losses: 0,
+      draws: 0,
       winPct,
-      runsFor: 0, runsAgainst: 0,
-      streak: "", last10: "",
+      runsFor: 0,
+      runsAgainst: 0,
+      streak: "",
+      last10: "",
     };
   });
 }

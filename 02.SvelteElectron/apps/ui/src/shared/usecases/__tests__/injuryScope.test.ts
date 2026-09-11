@@ -21,8 +21,7 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 /** 주석을 지운다 — 안 쓰는 이유를 적어 둔 주석이 통과시키면 안 된다 */
-const strip = (s: string) => s
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
 describe("부상 범위", () => {
   const src = strip(read("apps/ui/src/shared/usecases/weekPhases/injuries.ts"));

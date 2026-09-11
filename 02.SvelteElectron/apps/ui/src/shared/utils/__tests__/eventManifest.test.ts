@@ -34,9 +34,7 @@ const LANES = ["mandatory", "conditional"] as const;
 
 describe("이벤트 목록", () => {
   const has = existsSync(MANIFEST);
-  const manifest: Manifest = has
-    ? (JSON.parse(readFileSync(MANIFEST, "utf8")) as Manifest)
-    : {};
+  const manifest: Manifest = has ? (JSON.parse(readFileSync(MANIFEST, "utf8")) as Manifest) : {};
 
   const filesOf = (lane: string): string[] => {
     const dir = resolve(MASTER, "events", lane);
@@ -48,7 +46,7 @@ describe("이벤트 목록", () => {
   };
 
   it.each(LANES)("%s — 폴더에 있는 이벤트가 목록에도 다 있다", (lane) => {
-    if (!has) return;                       // 아직 안 만든 저장소는 넘어간다
+    if (!has) return; // 아직 안 만든 저장소는 넘어간다
     const listed = new Set((manifest.events?.[lane] as string[]) ?? []);
     const missing = filesOf(lane).filter((id) => !listed.has(id));
     expect(missing, `목록에 없는 ${lane} 이벤트 — npm run gen:manifest`).toEqual([]);

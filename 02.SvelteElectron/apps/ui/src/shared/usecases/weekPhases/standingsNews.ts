@@ -30,7 +30,6 @@ import type { MessageItem } from "../../types/main";
  */
 export type RegionNamer = (stadiumId: string) => string;
 
-
 /**
  * 승률 표기 — `.526` 형식. **1.000은 앞자리를 살린다.**
  * (`.1000`으로 찍혀서 열 자리가 밀리는 걸 실측에서 봤다)
@@ -70,10 +69,11 @@ export function calcMyRank(
   // 전국 순위 — 정렬 기준을 권역 순위와 같게 둔다. 다르면 "권역 1위인데
   // 전국 30위" 같은 설명 불가능한 조합이 나온다
   const national = [...standings].sort(
-    (a, b) => b.winPct - a.winPct
-      || b.runsFor - a.runsFor
-      || a.runsAgainst - b.runsAgainst
-      || a.teamId.localeCompare(b.teamId),
+    (a, b) =>
+      b.winPct - a.winPct ||
+      b.runsFor - a.runsFor ||
+      a.runsAgainst - b.runsAgainst ||
+      a.teamId.localeCompare(b.teamId),
   );
   const nIdx = national.findIndex((s) => s.teamId === myTeamId);
   if (nIdx < 0) return null;
@@ -86,4 +86,3 @@ export function calcMyRank(
     nationalTotal: national.length,
   };
 }
-

@@ -12,8 +12,7 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
 describe("원소속 재계약 소식", () => {
   const src = strip(read("apps/ui/src/shared/usecases/seasonRollover.ts"));
@@ -26,7 +25,7 @@ describe("원소속 재계약 소식", () => {
 
   it("🔴 detail로 FA 취득과 가른다", () => {
     // 종류만 보면 FA 를 **얻은** 사람까지 센다
-    expect(src.includes('원소속 재계약')).toBe(true);
+    expect(src.includes("원소속 재계약")).toBe(true);
     expect(src.includes("e.detail")).toBe(true);
   });
 

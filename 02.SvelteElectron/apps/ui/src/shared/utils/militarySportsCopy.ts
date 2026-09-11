@@ -28,8 +28,11 @@ import { weekInYearOf } from "./seasonWeeks";
 export interface MilitarySportsCopy {
   head: { title: string; lead: string };
   discharge: {
-    title: string; unit: string; progress: string;
-    done: string; dateLead: string;
+    title: string;
+    unit: string;
+    progress: string;
+    done: string;
+    dateLead: string;
     /**
      * 「{year}년 W{week}」 — 전역 예정.
      *
@@ -43,8 +46,14 @@ export interface MilitarySportsCopy {
   };
   noGames: { title: string; body: string; note: string };
   calendar: {
-    title: string; lead: string; past: string; upcoming: string;
-    emptyPast: string; emptyUpcoming: string; ahead: string; leave: string;
+    title: string;
+    lead: string;
+    past: string;
+    upcoming: string;
+    emptyPast: string;
+    emptyUpcoming: string;
+    ahead: string;
+    leave: string;
     /** 상무에도 있는 일정의 `event` id. 없으면 보직 전용만 뺀 전부 */
     eventIds?: string[];
   };
@@ -62,10 +71,32 @@ export function parseMilitarySportsCopy(raw: unknown): MilitarySportsCopy | null
   const o = raw as Partial<MilitarySportsCopy> | null;
   if (!o || typeof o !== "object") return null;
   if (!filled(o.head, ["title", "lead"])) return null;
-  if (!filled(o.discharge,
-    ["title", "unit", "progress", "done", "dateLead", "dateForm", "dateFormYear"])) return null;
+  if (
+    !filled(o.discharge, [
+      "title",
+      "unit",
+      "progress",
+      "done",
+      "dateLead",
+      "dateForm",
+      "dateFormYear",
+    ])
+  )
+    return null;
   if (!filled(o.noGames, ["title", "body", "note"])) return null;
-  if (!filled(o.calendar, ["title", "lead", "past", "upcoming", "emptyPast", "emptyUpcoming", "ahead", "leave"])) return null;
+  if (
+    !filled(o.calendar, [
+      "title",
+      "lead",
+      "past",
+      "upcoming",
+      "emptyPast",
+      "emptyUpcoming",
+      "ahead",
+      "leave",
+    ])
+  )
+    return null;
   if (!filled(o.news, ["title", "lead", "empty", "more"])) return null;
   const ids = (o.calendar as MilitarySportsCopy["calendar"]).eventIds;
   return {
@@ -112,7 +143,8 @@ export function fillSportsCopy(
  *   (`weekInYearOf` · 입대 주를 넣는 호출부 둘이 누적과 시즌 안을 섞어 쓴다).
  */
 export function dischargeWeekOf(
-  enlistWeek: number | null | undefined, serviceWeeks: number,
+  enlistWeek: number | null | undefined,
+  serviceWeeks: number,
 ): number | null {
   if (enlistWeek == null || !Number.isFinite(enlistWeek)) return null;
   if (!Number.isFinite(serviceWeeks) || serviceWeeks <= 0) return null;
@@ -126,7 +158,8 @@ export function dischargeWeekOf(
  *   므로 `role` 이 붙은 자리는 주인이 없다.
  */
 export function sportsCalendar(
-  calendar: MilitaryCalendarEntry[], eventIds: string[] | undefined,
+  calendar: MilitaryCalendarEntry[],
+  eventIds: string[] | undefined,
 ): MilitaryCalendarEntry[] {
   const allow = eventIds ? new Set(eventIds) : null;
   return calendar

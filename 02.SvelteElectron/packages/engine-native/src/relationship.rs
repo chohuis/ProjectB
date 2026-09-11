@@ -314,6 +314,7 @@ pub struct WeeklyContext {
     pub faced_rivals: Vec<String>,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct WeeklyRelationParams {

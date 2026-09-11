@@ -69,13 +69,13 @@ describe("포장 목록 — 개발용이 안 실린다", () => {
    *    를 통째로 넣는다 — 그래서 `!resource/…` 로 뺀 것이 **번들 사본으로
    *    그대로 들어간다.** 뺄 자리는 언제나 둘이다.
    */
-  it.each([
-    ["data/staging"], ["data/balance"], ["data/seeds"],
-    ["data/master/entities/players"],
-  ])("%s 는 resource·dist/ui 양쪽에서 빠진다", (p) => {
-    expect(has(`!resource/${p}/**`), `!resource/${p}/** 이 없다`).toBe(true);
-    expect(has(`!dist/ui/${p}/**`), `!dist/ui/${p}/** 이 없다 — 번들 사본이 실린다`).toBe(true);
-  });
+  it.each([["data/staging"], ["data/balance"], ["data/seeds"], ["data/master/entities/players"]])(
+    "%s 는 resource·dist/ui 양쪽에서 빠진다",
+    (p) => {
+      expect(has(`!resource/${p}/**`), `!resource/${p}/** 이 없다`).toBe(true);
+      expect(has(`!dist/ui/${p}/**`), `!dist/ui/${p}/** 이 없다 — 번들 사본이 실린다`).toBe(true);
+    },
+  );
 
   it("계측 로그는 양쪽에서 빠진다 — 4.7MB 가 실리고 있었다", () => {
     expect(has("!resource/logs/**")).toBe(true);
@@ -142,7 +142,13 @@ describe("생성물 대 정본 — 파이썬을 못 돌리는 자리", () => {
     const src = readFileSync(GEN, "utf8");
     const inGen = new Set((src.match(/"TEAM_[A-Z0-9_]+"/g) ?? []).map((s) => s.slice(1, -1)));
     const inRefs = new Set(refs.teams.map((t) => t.id));
-    expect([...inGen].filter((id) => !inRefs.has(id)), "생성물에만 있는 팀").toEqual([]);
-    expect([...inRefs].filter((id) => !inGen.has(id)), "refs 에만 있는 팀").toEqual([]);
+    expect(
+      [...inGen].filter((id) => !inRefs.has(id)),
+      "생성물에만 있는 팀",
+    ).toEqual([]);
+    expect(
+      [...inRefs].filter((id) => !inGen.has(id)),
+      "refs 에만 있는 팀",
+    ).toEqual([]);
   });
 });

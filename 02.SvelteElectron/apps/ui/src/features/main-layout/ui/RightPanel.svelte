@@ -60,15 +60,14 @@
   // ⚠ 반올림한다 — 병영생활 주간 계산(Rust)이 소수를 돌려줘 "사기 68.6280972890625" 가 그대로 찍혔다
   $: gauges = [
     { key: "컨디션", value: Math.round(pl.condition), inverted: false },
-    { key: "피로",   value: Math.round(pl.fatigue),   inverted: true  },
-    { key: "사기",   value: Math.round(pl.morale),    inverted: false },
+    { key: "피로", value: Math.round(pl.fatigue), inverted: true },
+    { key: "사기", value: Math.round(pl.morale), inverted: false },
   ];
 
   // 복무 중에는 소속팀 경기가 없다 — 빈 칸 대신 남은 주차를 보여준다
   // ⚠ 예전엔 104 가 박혀 있었다 — 전역 판정(`SERVICE_WEEKS` · 100)과 4주 어긋났다
-  $: militaryWeeksLeft = p.careerStage === "military"
-    ? Math.max(0, SERVICE_WEEKS - p.militaryServiceWeeks)
-    : null;
+  $: militaryWeeksLeft =
+    p.careerStage === "military" ? Math.max(0, SERVICE_WEEKS - p.militaryServiceWeeks) : null;
 </script>
 
 <aside class="rp">
@@ -87,7 +86,11 @@
             <span class="g-val u-num">{g.value}</span>
           </div>
           <div class="g-track">
-            <div class="g-fill" data-tone={gaugeTone(g.value, g.inverted)} style="width:{Math.max(0, Math.min(100, g.value))}%"></div>
+            <div
+              class="g-fill"
+              data-tone={gaugeTone(g.value, g.inverted)}
+              style="width:{Math.max(0, Math.min(100, g.value))}%"
+            ></div>
           </div>
         </div>
       {/each}
@@ -138,7 +141,10 @@
           <span class="rk-of u-num">/ {rank.of}팀</span>
         </div>
       {/if}
-      <p class="rk-rec u-num">{rank.wins}승 {rank.losses}패{#if rank.draws > 0} {rank.draws}무{/if} · {rank.winPctText}</p>
+      <p class="rk-rec u-num">
+        {rank.wins}승 {rank.losses}패{#if rank.draws > 0}
+          {rank.draws}무{/if} · {rank.winPctText}
+      </p>
       {#if rank.streak}<p class="rk-streak">{rank.streak}</p>{/if}
     {:else}
       <p class="none">순위 없음</p>
@@ -170,7 +176,9 @@
     gap: 10px;
   }
 
-  .u-card { padding: 11px 12px; }
+  .u-card {
+    padding: 11px 12px;
+  }
 
   /* ── OVR + 게이지 ── */
   .ovr-row {
@@ -180,13 +188,34 @@
     padding-bottom: 8px;
     border-bottom: 2px solid var(--t-dark);
   }
-  .ovr { font-size: 28px; font-weight: 800; line-height: 1; color: var(--t-dark); }
+  .ovr {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--t-dark);
+  }
 
-  .gauges { display: flex; flex-direction: column; gap: 7px; margin-top: 9px; }
+  .gauges {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 9px;
+  }
 
-  .g-top { display: flex; justify-content: space-between; align-items: baseline; }
-  .g-key { font-size: 11.5px; color: var(--ink-mid); }
-  .g-val { font-size: 12px; font-weight: 700; color: var(--ink); }
+  .g-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .g-key {
+    font-size: 11.5px;
+    color: var(--ink-mid);
+  }
+  .g-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+  }
 
   .g-track {
     height: 4px;
@@ -195,13 +224,26 @@
     border-radius: 2px;
     overflow: hidden;
   }
-  .g-fill { height: 100%; }
+  .g-fill {
+    height: 100%;
+  }
   /* 의미색은 팀 색과 섞지 않는다 — 좋고 나쁨은 팀이 바뀌어도 같은 뜻이다 */
-  .g-fill[data-tone="ok"]   { background: var(--ok); }
-  .g-fill[data-tone="warn"] { background: var(--warn); }
-  .g-fill[data-tone="bad"]  { background: var(--bad); }
+  .g-fill[data-tone="ok"] {
+    background: var(--ok);
+  }
+  .g-fill[data-tone="warn"] {
+    background: var(--warn);
+  }
+  .g-fill[data-tone="bad"] {
+    background: var(--bad);
+  }
 
-  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 10px;
+  }
   .tag {
     font-size: 10.5px;
     color: var(--t-dark);
@@ -211,8 +253,18 @@
   }
 
   /* ── 다음 경기 ── */
-  .nx-top { display: flex; align-items: baseline; gap: 7px; margin-top: 6px; }
-  .nx-date { font-size: 19px; font-weight: 800; color: var(--ink); line-height: 1; }
+  .nx-top {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 6px;
+  }
+  .nx-date {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1;
+  }
   .nx-side {
     font-size: 10px;
     font-weight: 700;
@@ -222,17 +274,50 @@
     background: var(--panel-sunk);
     color: var(--ink-mute);
   }
-  .nx-side.home { background: var(--t-dark); color: var(--t-gold); }
+  .nx-side.home {
+    background: var(--t-dark);
+    color: var(--t-gold);
+  }
 
-  .nx-opp { margin: 5px 0 0; font-size: 13px; font-weight: 700; color: var(--ink);
-            display: flex; align-items: center; gap: 6px; }
-  .nx-when { margin: 1px 0 0; font-size: 11px; color: var(--ink-mute); }
+  .nx-opp {
+    margin: 5px 0 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nx-when {
+    margin: 1px 0 0;
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
 
   /* ── 순위 ── */
-  .rk-top { display: flex; align-items: baseline; gap: 3px; margin-top: 6px; }
-  .rk { font-size: 26px; font-weight: 800; line-height: 1; color: var(--t-dark); }
-  .rk-top i { font-style: normal; font-size: 12px; font-weight: 700; color: var(--ink-mid); }
-  .rk-of { font-size: 11px; color: var(--ink-mute); margin-left: 4px; }
+  .rk-top {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    margin-top: 6px;
+  }
+  .rk {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--t-dark);
+  }
+  .rk-top i {
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-mid);
+  }
+  .rk-of {
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-left: 4px;
+  }
   /* 어느 범위의 순위인지 — 안 적으면 권역인지 전국인지 모른다 */
   .rk-scope {
     margin-left: auto;
@@ -248,14 +333,33 @@
     font-size: 11.5px;
     color: var(--ink-mute);
   }
-  .rk-nat b { color: var(--ink-mid); font-weight: 700; }
+  .rk-nat b {
+    color: var(--ink-mid);
+    font-weight: 700;
+  }
 
-  .rk-rec { margin: 5px 0 0; font-size: 12px; color: var(--ink-mid); }
-  .rk-streak { margin: 2px 0 0; font-size: 11px; color: var(--ink-mute); letter-spacing: 0.06em; }
+  .rk-rec {
+    margin: 5px 0 0;
+    font-size: 12px;
+    color: var(--ink-mid);
+  }
+  .rk-streak {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+  }
 
   /* ── 로그 ── */
-  .logs { min-height: 0; }
-  .log-list { margin-top: 6px; display: flex; flex-direction: column; gap: 5px; }
+  .logs {
+    min-height: 0;
+  }
+  .log-list {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
   .log-list p {
     margin: 0;
     font-size: 11.5px;
@@ -265,5 +369,9 @@
     border-left: 2px solid var(--line);
   }
 
-  .none { margin: 6px 0 0; font-size: 12px; color: var(--ink-mute); }
+  .none {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
 </style>

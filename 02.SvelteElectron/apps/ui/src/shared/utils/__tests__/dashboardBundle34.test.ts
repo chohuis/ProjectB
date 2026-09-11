@@ -2,16 +2,30 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  buildBars, buildCards, buildRankList, buildTimeline, cardsNote,
+  buildBars,
+  buildCards,
+  buildRankList,
+  buildTimeline,
+  cardsNote,
   type NameLookup,
 } from "../dashboardView";
 import {
-  barsCopy, cardsCopy, parseDashboardLabels, rankCopy, rankText, tableCopy, timelineCopy,
+  barsCopy,
+  cardsCopy,
+  parseDashboardLabels,
+  rankCopy,
+  rankText,
+  tableCopy,
+  timelineCopy,
 } from "../dashboardCopy";
 import { buildTableView } from "../dashboardView";
 import { teamMoodTableMeta } from "../dashboardMeta";
 import type {
-  BarsMetadata, CardsMetadata, RankListMetadata, TimelineMetadata, Top10Metadata,
+  BarsMetadata,
+  CardsMetadata,
+  RankListMetadata,
+  TimelineMetadata,
+  Top10Metadata,
 } from "../../types/main";
 
 /**
@@ -47,7 +61,7 @@ const TIMELINE_SRC = read("features/messages/ui/TimelinePanel.svelte");
 
 /** 이름표 — 아는 id 만 답한다. 모르는 id 는 화면이 그대로 둬야 한다 */
 const NAMES: NameLookup = {
-  team:   (id) => ({ TEAM_A: "북악고", TEAM_B: "한성고" })[id],
+  team: (id) => ({ TEAM_A: "북악고", TEAM_B: "한성고" })[id],
   person: (id) => ({ NPC_1: "김민수", PLY_HERO: "나" })[id],
 };
 
@@ -61,7 +75,14 @@ describe("문안이 열넷을 다 갖는다", () => {
     for (const k of ["exam", "teamMood"]) {
       expect(barsCopy(LABELS, k).title, `bars.${k} 문안이 없다`).not.toBe("");
     }
-    for (const k of ["seasonBrief", "friendlyPlan", "natlSquad", "scoutDay", "showcase", "allstar"]) {
+    for (const k of [
+      "seasonBrief",
+      "friendlyPlan",
+      "natlSquad",
+      "scoutDay",
+      "showcase",
+      "allstar",
+    ]) {
       expect(cardsCopy(LABELS, k).title, `cards.${k} 문안이 없다`).not.toBe("");
     }
     for (const k of ["milRecord", "militaryAnnual", "seasonHsSync"]) {
@@ -74,16 +95,13 @@ describe("문안이 열넷을 다 갖는다", () => {
     expect(rankCopy(LABELS, "rankList.tourChamp")).toEqual(rankCopy(LABELS, "tourChamp"));
     expect(barsCopy(LABELS, "bars.exam")).toEqual(barsCopy(LABELS, "exam"));
     expect(cardsCopy(LABELS, "cards.allstar")).toEqual(cardsCopy(LABELS, "allstar"));
-    expect(timelineCopy(LABELS, "timeline.milRecord"))
-      .toEqual(timelineCopy(LABELS, "milRecord"));
+    expect(timelineCopy(LABELS, "timeline.milRecord")).toEqual(timelineCopy(LABELS, "milRecord"));
   });
 
   it("빈 목록 한 줄은 종류마다 뜻이 다르다", () => {
     // 「순위가 아직 안 나왔다」와 「치른 시험이 없다」는 다른 말이다
-    expect(rankCopy(LABELS, "tourChamp").empty)
-      .not.toBe(barsCopy(LABELS, "exam").empty);
-    expect(cardsCopy(LABELS, "friendlyPlan").empty)
-      .not.toBe(cardsCopy(LABELS, "allstar").empty);
+    expect(rankCopy(LABELS, "tourChamp").empty).not.toBe(barsCopy(LABELS, "exam").empty);
+    expect(cardsCopy(LABELS, "friendlyPlan").empty).not.toBe(cardsCopy(LABELS, "allstar").empty);
   });
 
   /** ⚠ 못 읽어도 화면이 서야 한다 — 문안이 없으면 빈 문자열이고 화면이 키를 쓴다 */
@@ -113,7 +131,8 @@ describe("순위 — 등수 이름은 문안이 갖는다", () => {
   });
 
   const md: RankListMetadata = {
-    type: "rankList", kind: "tourChamp",
+    type: "rankList",
+    kind: "tourChamp",
     items: [
       { rank: 1, labelId: "TEAM_A", delta: 2 },
       { rank: 2, labelId: "TEAM_B" },
@@ -138,10 +157,15 @@ describe("순위 — 등수 이름은 문안이 갖는다", () => {
   });
 
   it("사람과 소속을 같이 싣는다 — 상 목록이 그 자리다", () => {
-    const v = buildRankList({
-      type: "rankList", kind: "tourAward",
-      items: [{ rank: 1, labelId: "NPC_1", subId: "TEAM_A" }],
-    }, rankCopy(LABELS, "tourAward"), NAMES);
+    const v = buildRankList(
+      {
+        type: "rankList",
+        kind: "tourAward",
+        items: [{ rank: 1, labelId: "NPC_1", subId: "TEAM_A" }],
+      },
+      rankCopy(LABELS, "tourAward"),
+      NAMES,
+    );
     expect(v.columns[0].entries[0].name).toBe("김민수");
     expect(v.columns[0].entries[0].sub).toBe("북악고");
     expect(v.columns[0].entries[0].id, "상세를 못 연다").toBe("NPC_1");
@@ -173,10 +197,14 @@ describe("순위 — 등수 이름은 문안이 갖는다", () => {
   it("유망주 랭킹은 등수가 숫자로 남는다", () => {
     // ⚠ 규격이 네 칸 짜리 튜플이고 이름표도 넷으로 못 박혀 있다
     const md10: Top10Metadata = {
-      type: "top10", playerType: "pitcher", week: 12, seasonYear: 2026,
+      type: "top10",
+      playerType: "pitcher",
+      week: 12,
+      seasonYear: 2026,
       columns: [
         {
-          label: "1학년", heroRank: 3,
+          label: "1학년",
+          heroRank: 3,
           entries: [{ id: "PLY_HERO", rank: 1, name: "나", teamName: "북악고" }],
         },
         { label: "2학년", heroRank: null, entries: [] },
@@ -203,8 +231,12 @@ describe("막대 — 눈금을 화면이 짐작하지 않는다", () => {
   });
 
   const md: BarsMetadata = {
-    type: "bars", kind: "exam",
-    bars: [{ label: "국어", value: 87 }, { label: "수학", value: 42, delta: -5 }],
+    type: "bars",
+    kind: "exam",
+    bars: [
+      { label: "국어", value: 87 },
+      { label: "수학", value: 42, delta: -5 },
+    ],
     foot: [{ key: "gpa", value: "3.4" }],
   };
 
@@ -231,10 +263,12 @@ describe("막대 — 눈금을 화면이 짐작하지 않는다", () => {
     expect(barsCopy(LABELS, "teamMood").title).toBe("팀 분위기");
     const copyT = tableCopy(LABELS, "bars.teamMood");
     expect(Object.keys(copyT.rows)).toEqual(["total", "cold", "hostile"]);
-    const view = buildTableView(
-      teamMoodTableMeta(12, 4, 1), copyT);
-    expect(view.rows.map((r) => r.cells[0].text))
-      .toEqual([copyT.rows.total, copyT.rows.cold, copyT.rows.hostile]);
+    const view = buildTableView(teamMoodTableMeta(12, 4, 1), copyT);
+    expect(view.rows.map((r) => r.cells[0].text)).toEqual([
+      copyT.rows.total,
+      copyT.rows.cold,
+      copyT.rows.hostile,
+    ]);
     expect(view.rows.map((r) => r.cells[1].text)).toEqual(["12", "4", "1"]);
   });
 
@@ -246,17 +280,26 @@ describe("막대 — 눈금을 화면이 짐작하지 않는다", () => {
 
   /** ⚠ 막대가 칸을 넘으면 옆 열을 밀어낸다 (1366×768) */
   it("눈금 밖 값은 끝에 붙인다", () => {
-    const v = buildBars({
-      type: "bars", kind: "exam",
-      bars: [{ label: "체육", value: 140 }, { label: "음악", value: -20 }],
-    }, copy);
+    const v = buildBars(
+      {
+        type: "bars",
+        kind: "exam",
+        bars: [
+          { label: "체육", value: 140 },
+          { label: "음악", value: -20 },
+        ],
+      },
+      copy,
+    );
     expect(v.bars.map((b) => b.pct)).toEqual([100, 0]);
     expect(v.bars[0].value, "값 자체는 안 깎는다").toBe(140);
   });
 
   it("눈금이 0 폭이면 막대를 안 채운다 — 0 나누기를 안 한다", () => {
-    const v = buildBars({ type: "bars", kind: "exam", bars: [{ label: "x", value: 5 }] },
-      { ...copy, min: 5, max: 5 });
+    const v = buildBars(
+      { type: "bars", kind: "exam", bars: [{ label: "x", value: 5 }] },
+      { ...copy, min: 5, max: 5 },
+    );
     expect(v.bars[0].pct).toBe(0);
   });
 
@@ -271,10 +314,18 @@ describe("막대 — 눈금을 화면이 짐작하지 않는다", () => {
 
 describe("카드 — id 는 이름으로, 참·거짓은 말로", () => {
   it("대표팀 명단의 선수 id 가 이름으로 선다", () => {
-    const v = buildCards({
-      type: "cards", kind: "natlSquad",
-      items: [{ key: "playerId", value: "NPC_1" }, { key: "pos", value: "SP" }],
-    }, cardsCopy(LABELS, "natlSquad"), NAMES);
+    const v = buildCards(
+      {
+        type: "cards",
+        kind: "natlSquad",
+        items: [
+          { key: "playerId", value: "NPC_1" },
+          { key: "pos", value: "SP" },
+        ],
+      },
+      cardsCopy(LABELS, "natlSquad"),
+      NAMES,
+    );
     expect(v.cards[0].value).toBe("김민수");
     expect(v.cards[0].caption).toBe("선수");
     expect(v.cards[0].numeric, "이름은 숫자가 아니다").toBe(false);
@@ -282,41 +333,72 @@ describe("카드 — id 는 이름으로, 참·거짓은 말로", () => {
   });
 
   it("모르는 id 는 그대로 둔다", () => {
-    const v = buildCards({
-      type: "cards", kind: "natlSquad", items: [{ key: "playerId", value: "NPC_9" }],
-    }, cardsCopy(LABELS, "natlSquad"), NAMES);
+    const v = buildCards(
+      {
+        type: "cards",
+        kind: "natlSquad",
+        items: [{ key: "playerId", value: "NPC_9" }],
+      },
+      cardsCopy(LABELS, "natlSquad"),
+      NAMES,
+    );
     expect(v.cards[0].value).toBe("NPC_9");
   });
 
   it("올스타의 참·거짓이 「선정」·「미선정」이 된다", () => {
     const copy = cardsCopy(LABELS, "allstar");
-    const yes = buildCards({
-      type: "cards", kind: "allstar",
-      items: [{ key: "selected", value: true }, { key: "votes", value: 12043 }],
-    }, copy);
+    const yes = buildCards(
+      {
+        type: "cards",
+        kind: "allstar",
+        items: [
+          { key: "selected", value: true },
+          { key: "votes", value: 12043 },
+        ],
+      },
+      copy,
+    );
     expect(yes.cards[0].value).toBe("선정");
     expect(yes.cards[1].value).toBe("12043");
     expect(yes.cards[1].numeric, "득표는 숫자라 폭이 안 흔들려야 한다").toBe(true);
 
-    const no = buildCards({
-      type: "cards", kind: "allstar", items: [{ key: "selected", value: false }],
-    }, copy);
+    const no = buildCards(
+      {
+        type: "cards",
+        kind: "allstar",
+        items: [{ key: "selected", value: false }],
+      },
+      copy,
+    );
     expect(no.cards[0].value, "○ 와 빈 칸으로 그리면 뜻이 안 보인다").toBe("미선정");
   });
 
   it("이름표는 소식이 실어 보내면 그게 이기고, 없으면 문안이다", () => {
     const copy = cardsCopy(LABELS, "friendlyPlan");
-    const v = buildCards({
-      type: "cards", kind: "friendlyPlan",
-      items: [{ key: "week", value: "W21", caption: "첫 경기" }, { key: "opp", value: "한성고" }],
-    }, copy, NAMES);
+    const v = buildCards(
+      {
+        type: "cards",
+        kind: "friendlyPlan",
+        items: [
+          { key: "week", value: "W21", caption: "첫 경기" },
+          { key: "opp", value: "한성고" },
+        ],
+      },
+      copy,
+      NAMES,
+    );
     expect(v.cards.map((c) => c.caption)).toEqual(["첫 경기", "상대"]);
   });
 
   it("모르는 키는 키를 그대로 쓴다 — 카드를 지우지 않는다", () => {
-    const v = buildCards({
-      type: "cards", kind: "allstar", items: [{ key: "zzz", value: 1 }],
-    }, cardsCopy(LABELS, "allstar"));
+    const v = buildCards(
+      {
+        type: "cards",
+        kind: "allstar",
+        items: [{ key: "zzz", value: 1 }],
+      },
+      cardsCopy(LABELS, "allstar"),
+    );
     expect(v.cards[0].caption).toBe("zzz");
   });
 
@@ -337,39 +419,66 @@ describe("카드 아래 한 줄 — 조사를 코드로 붙이지 않는다", ()
    *   첫 판이 실제로 그랬다(뿌리 목록에만 넣고 `roleAs` 를 빠뜨렸다).
    */
   it("문안을 읽으면 굴절 표가 살아 있다", () => {
-    expect(Object.keys(LABELS?.roleAs ?? {}).length, "roleAs 가 파싱에서 사라졌다")
-      .toBeGreaterThan(0);
+    expect(Object.keys(LABELS?.roleAs ?? {}).length, "roleAs 가 파싱에서 사라졌다").toBeGreaterThan(
+      0,
+    );
   });
 
   /** 🔴 `{role}` 을 그대로 끼우면 「중계으로 시작합니다」가 된다 */
   it("굴절형은 roleAs 표가 갖는다", () => {
     expect(copy.roleAs.SP).toBe("선발로");
     expect(copy.roleAs.RP).toBe("중계로");
-    const note = cardsNote({
-      type: "cards", kind: "seasonBrief", items: [{ key: "role", value: "RP" }],
-    }, copy);
+    const note = cardsNote(
+      {
+        type: "cards",
+        kind: "seasonBrief",
+        items: [{ key: "role", value: "RP" }],
+      },
+      copy,
+    );
     expect(note).toBe("올해는 중계로 시작합니다.");
     expect(note, "자리표가 남았다").not.toContain("{");
   });
 
   it("굴절형을 못 찾으면 그 줄을 안 그린다", () => {
-    expect(cardsNote({
-      type: "cards", kind: "seasonBrief", items: [{ key: "role", value: "XX" }],
-    }, copy)).toBe("");
+    expect(
+      cardsNote(
+        {
+          type: "cards",
+          kind: "seasonBrief",
+          items: [{ key: "role", value: "XX" }],
+        },
+        copy,
+      ),
+    ).toBe("");
     expect(cardsNote({ type: "cards", kind: "seasonBrief", items: [] }, copy)).toBe("");
   });
 
   it("소식이 문장을 실어 보내면 그게 이긴다", () => {
-    expect(cardsNote({
-      type: "cards", kind: "seasonBrief", note: "부상에서 돌아왔습니다.",
-      items: [{ key: "role", value: "SP" }],
-    }, copy)).toBe("부상에서 돌아왔습니다.");
+    expect(
+      cardsNote(
+        {
+          type: "cards",
+          kind: "seasonBrief",
+          note: "부상에서 돌아왔습니다.",
+          items: [{ key: "role", value: "SP" }],
+        },
+        copy,
+      ),
+    ).toBe("부상에서 돌아왔습니다.");
   });
 
   it("틀이 없는 종류엔 줄이 없다", () => {
-    expect(cardsNote({
-      type: "cards", kind: "allstar", items: [{ key: "role", value: "SP" }],
-    }, cardsCopy(LABELS, "allstar"))).toBe("");
+    expect(
+      cardsNote(
+        {
+          type: "cards",
+          kind: "allstar",
+          items: [{ key: "role", value: "SP" }],
+        },
+        cardsCopy(LABELS, "allstar"),
+      ),
+    ).toBe("");
   });
 });
 
@@ -380,7 +489,8 @@ describe("타임라인 — 이름표는 문안이 준다", () => {
 
   it("부대·보직·계급이 문안에서 온다", () => {
     const md: TimelineMetadata = {
-      type: "timeline", kind: "milRecord",
+      type: "timeline",
+      kind: "milRecord",
       entries: [
         { when: "W1", key: "unit", detail: "제1보병사단" },
         { when: "W52", key: "rank", detail: "상병" },
@@ -393,18 +503,27 @@ describe("타임라인 — 이름표는 문안이 준다", () => {
   });
 
   it("소식이 이름표를 실어 보내면 그게 이긴다 — 연감의 요약이 그 자리다", () => {
-    const v = buildTimeline({
-      type: "timeline", kind: "seasonHsSync",
-      entries: [{ when: "2026", label: "1학년", detail: "8강" }],
-    }, timelineCopy(LABELS, "seasonHsSync"));
+    const v = buildTimeline(
+      {
+        type: "timeline",
+        kind: "seasonHsSync",
+        entries: [{ when: "2026", label: "1학년", detail: "8강" }],
+      },
+      timelineCopy(LABELS, "seasonHsSync"),
+    );
     expect(v.entries[0].label).toBe("1학년");
   });
 
   /** ⚠ 값은 이미 실려 왔다 — 이름표를 못 찾아도 항목을 안 없앤다 */
   it("모르는 키도 항목을 지우지 않는다", () => {
-    const v = buildTimeline({
-      type: "timeline", kind: "milRecord", entries: [{ when: "W3", key: "zzz" }],
-    }, copy);
+    const v = buildTimeline(
+      {
+        type: "timeline",
+        kind: "milRecord",
+        entries: [{ when: "W3", key: "zzz" }],
+      },
+      copy,
+    );
     expect(v.entries).toHaveLength(1);
     expect(v.entries[0].label).toBe("zzz");
   });
@@ -414,10 +533,17 @@ describe("타임라인 — 이름표는 문안이 준다", () => {
    *    꼴이 제각각이라 비교할 수도 없다 — 만드는 쪽 차례가 정본이다.
    */
   it("실어 온 차례를 그대로 둔다", () => {
-    const v = buildTimeline({
-      type: "timeline", kind: "milRecord",
-      entries: [{ when: "W52", key: "rank" }, { when: "W1", key: "unit" }],
-    }, copy);
+    const v = buildTimeline(
+      {
+        type: "timeline",
+        kind: "milRecord",
+        entries: [
+          { when: "W52", key: "rank" },
+          { when: "W1", key: "unit" },
+        ],
+      },
+      copy,
+    );
     expect(v.entries.map((e) => e.when)).toEqual(["W52", "W1"]);
   });
 
@@ -432,8 +558,10 @@ describe("타임라인 — 이름표는 문안이 준다", () => {
 describe("배선 — 네 갈래가 다 이어졌다", () => {
   it("NewsPage 에 막대·카드 갈래가 있다", () => {
     for (const t of ["bars", "cards"]) {
-      expect(NEWS, `metadata.type "${t}" 갈래가 없다 — 구조가 잡힌 값이 본문 텍스트로 나간다`)
-        .toContain(`selected.metadata?.type === "${t}"`);
+      expect(
+        NEWS,
+        `metadata.type "${t}" 갈래가 없다 — 구조가 잡힌 값이 본문 텍스트로 나간다`,
+      ).toContain(`selected.metadata?.type === "${t}"`);
     }
     expect(NEWS, "막대를 화면이 스스로 만든다").toContain("buildBars(");
     expect(NEWS, "카드를 화면이 스스로 만든다").toContain("buildCards(");
@@ -444,8 +572,12 @@ describe("배선 — 네 갈래가 다 이어졌다", () => {
    *    카드는 `DigestCards` 다 — 갈라 두면 숫자 크기·간격이 곧 어긋난다.
    */
   it("막대·카드에 새 컴포넌트를 안 만들었다", () => {
-    expect(NEWS, "막대에 컴포넌트를 하나 더 만들었다").toContain("<TrainingStatBars showStatus={false}");
-    expect(NEWS, "카드에 컴포넌트를 하나 더 만들었다").toContain("<DigestCards interactive={false}");
+    expect(NEWS, "막대에 컴포넌트를 하나 더 만들었다").toContain(
+      "<TrainingStatBars showStatus={false}",
+    );
+    expect(NEWS, "카드에 컴포넌트를 하나 더 만들었다").toContain(
+      "<DigestCards interactive={false}",
+    );
     expect(BARS_SRC, "훈련 막대가 소식 막대를 안 받는다").toContain("export let bars");
     expect(CARDS_SRC, "카드가 못 누르는 꼴을 안 받는다").toContain("export let interactive");
   });
@@ -508,8 +640,7 @@ describe("코드가 들고 있던 말을 문안으로 옮겼다", () => {
    *    본문에는 안내 문장이 같이 있었다.
    */
   it("소식 상세가 패널과 본문을 같이 그린다", () => {
-    expect(NEWS, "본문을 패널이 대신한다 — 안내 문장이 사라진다")
-      .toContain("{#if selected.body}");
+    expect(NEWS, "본문을 패널이 대신한다 — 안내 문장이 사라진다").toContain("{#if selected.body}");
     expect(NEWS).toContain("m-text-after");
   });
 });
@@ -524,8 +655,7 @@ describe("등수 칸에 말이 들어온다 (눈확인 c58)", () => {
    * ⚠ 바닥은 20px 그대로다. 숫자 줄이 들쭉날쭉해지면 안 된다.
    */
   it("등수 칸이 내용만큼 넓어지고 줄바꿈을 안 한다", () => {
-    expect(RANK_SRC, "등수 칸이 고정 폭이라 말이 쪼개진다")
-      .toContain("minmax(20px, max-content)");
+    expect(RANK_SRC, "등수 칸이 고정 폭이라 말이 쪼개진다").toContain("minmax(20px, max-content)");
     expect(RANK_SRC, "말이 오는 칸인데 줄바꿈을 안 막았다").toContain("white-space: nowrap");
   });
 });

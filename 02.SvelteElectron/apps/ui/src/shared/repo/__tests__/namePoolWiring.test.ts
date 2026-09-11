@@ -27,8 +27,9 @@ const RULES = JSON.parse(
 
 const TEAMS = [{ teamId: "TEAM_X" }, { teamId: "TEAM_Y" }];
 const paramsFor = (leagueId: string, override?: Parameters<typeof buildRosterParams>[5]) =>
-  buildRosterParams(leagueId, 2026, 1234, TEAMS, RULES.rosterRules[leagueId], override) as
-    { namePool?: { western?: boolean; sep?: string; surnames: string[] } };
+  buildRosterParams(leagueId, 2026, 1234, TEAMS, RULES.rosterRules[leagueId], override) as {
+    namePool?: { western?: boolean; sep?: string; surnames: string[] };
+  };
 
 describe("이름 풀 배선", () => {
   it("호출부가 안 넘겨도 규칙 파일의 풀이 실린다 — 이게 샜던 자리다", () => {
@@ -58,8 +59,9 @@ describe("이름 풀 배선", () => {
     // `rules.namePool`을 지운 규칙으로 부르면 풀이 안 실린다.
     // 이게 통과하면 위 검사가 배선이 아니라 다른 걸 보고 있는 것이다
     const stripped = { ...RULES.rosterRules.LEAGUE_ABL, namePool: undefined };
-    const p = buildRosterParams("LEAGUE_ABL", 2026, 1234, TEAMS, stripped) as
-      { namePool?: unknown };
+    const p = buildRosterParams("LEAGUE_ABL", 2026, 1234, TEAMS, stripped) as {
+      namePool?: unknown;
+    };
     expect(p.namePool).toBeUndefined();
   });
 });
@@ -80,7 +82,10 @@ describe("이름 풀 데이터", () => {
   });
 
   it("2군은 1군과 같은 풀을 쓴다 — 나고야 2군에 김우찬이 있으면 안 된다", () => {
-    for (const [one, farm] of [["LEAGUE_ABL", "LEAGUE_ABL_FARM"], ["LEAGUE_JBL", "LEAGUE_JBL_FARM"]]) {
+    for (const [one, farm] of [
+      ["LEAGUE_ABL", "LEAGUE_ABL_FARM"],
+      ["LEAGUE_JBL", "LEAGUE_JBL_FARM"],
+    ]) {
       const a = RULES.rosterRules[one].namePool as unknown as { surnames: string[] };
       const b = RULES.rosterRules[farm].namePool as unknown as { surnames: string[] };
       expect(b.surnames, `${farm}`).toEqual(a.surnames);

@@ -18,14 +18,19 @@ const team = (mean: number, n = 12): number[] =>
 
 function mk(over: Partial<PostingInput> = {}): PostingInput {
   return {
-    teamPitcherOvrs: team(80), pitchingOvr: 76, scoutScore: 40,
-    fame: 40, proServiceYears: 5, awardCount: 0, ...over,
+    teamPitcherOvrs: team(80),
+    pitchingOvr: 76,
+    scoutScore: 40,
+    fame: 40,
+    proServiceYears: 5,
+    awardCount: 0,
+    ...over,
   };
 }
 
 describe("포스팅 관심도", () => {
   it("같은 선수라도 팀이 세면 관심이 낮다", () => {
-    const weak = postingInterest(mk({ teamPitcherOvrs: team(73) }));   // ABL 최약
+    const weak = postingInterest(mk({ teamPitcherOvrs: team(73) })); // ABL 최약
     const strong = postingInterest(mk({ teamPitcherOvrs: team(85) })); // ABL 최강
     expect(weak).toBeGreaterThan(strong);
   });
@@ -38,19 +43,21 @@ describe("포스팅 관심도", () => {
   });
 
   it("잘하면 관심이 높다", () => {
-    expect(postingInterest(mk({ pitchingOvr: 88 })))
-      .toBeGreaterThan(postingInterest(mk({ pitchingOvr: 68 })));
+    expect(postingInterest(mk({ pitchingOvr: 88 }))).toBeGreaterThan(
+      postingInterest(mk({ pitchingOvr: 68 })),
+    );
   });
 
   it("성적이 좋으면 관심이 오른다", () => {
-    expect(postingInterest(mk({ recentEra: 2.5 })))
-      .toBeGreaterThan(postingInterest(mk({ recentEra: 5.5 })));
+    expect(postingInterest(mk({ recentEra: 2.5 }))).toBeGreaterThan(
+      postingInterest(mk({ recentEra: 5.5 })),
+    );
   });
 
   // ⚠ 없는 것을 나쁨으로 보면 안 된다 — 부상·2군 체류로 표본이 없을 수 있다
   it("성적이 없으면 중립이다 — 벌하지 않는다", () => {
     const none = postingInterest(mk({ recentEra: undefined }));
-    const bad  = postingInterest(mk({ recentEra: 6.5 }));
+    const bad = postingInterest(mk({ recentEra: 6.5 }));
     const good = postingInterest(mk({ recentEra: 2.5 }));
     expect(none).toBeGreaterThan(bad);
     expect(none).toBeLessThan(good);
@@ -94,8 +101,9 @@ describe("포스팅 관심도", () => {
   });
 
   it("잘 키운 선수는 약체 팀의 관심을 받는다", () => {
-    const v = postingInterest(mk({ pitchingOvr: 84, teamPitcherOvrs: team(73),
-      scoutScore: 55, recentEra: 3.1 }));
+    const v = postingInterest(
+      mk({ pitchingOvr: 84, teamPitcherOvrs: team(73), scoutScore: 55, recentEra: 3.1 }),
+    );
     expect(v, `관심도 ${v.toFixed(1)}`).toBeGreaterThan(POSTING_INTEREST_MIN);
   });
 });

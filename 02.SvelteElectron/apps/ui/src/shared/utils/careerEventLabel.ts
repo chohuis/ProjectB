@@ -13,56 +13,56 @@
  */
 const LABEL: Record<string, string> = {
   // 입단·이적
-  draft_picked:     "드래프트 지명",
-  draft_undrafted:  "미지명",
-  fa_signed:        "FA 취득",
-  fa_contract:      "FA 계약",
-  fa_unsigned:      "FA 미계약",
+  draft_picked: "드래프트 지명",
+  draft_undrafted: "미지명",
+  fa_signed: "FA 취득",
+  fa_contract: "FA 계약",
+  fa_unsigned: "FA 미계약",
   // FA 미계약 뒤 — 원소속으로 돌아가거나, 갈 곳이 없으면 은퇴다.
   // ⚠ **"야구를 그만둔다"가 아니다.** 예전엔 진로 배정으로 넘겨서 프로
   //   경력자가 미지명 졸업생과 같은 통에서 `quit_baseball`이 됐다
   //   (실측 2026-08-27: 미계약자의 67%).
-  fa_rehome:        "FA 미계약 · 원소속 잔류",
+  fa_rehome: "FA 미계약 · 원소속 잔류",
   // FA 미계약 → 원소속도 막혀 독립에서 재도전 (2026-08-29)
-  fa_independent:   "독립 재도전",
+  fa_independent: "독립 재도전",
   fa_unsigned_retire: "FA 미계약 은퇴",
   indie_age_retire: "독립리그 나이 상한 은퇴",
-  trade:            "트레이드",
+  trade: "트레이드",
   // FA 미계약 뒤 독립으로 옮겼다 (`npc_sim.rs`). **트레이드가 아니다** —
   // 표에 없어서 화면에 「transfer」 가 그대로 뜨고 있었다 (B-29 D-8)
-  transfer:         "이적",
-  foreign_signing:  "용병 영입",
-  promote:          "1군 승격",
+  transfer: "이적",
+  foreign_signing: "용병 영입",
+  promote: "1군 승격",
   // 강등 — 사유가 다르면 다른 일이다
-  demote_roster:    "2군 강등",
-  demote_fielder:   "2군 강등(야수 정원)",
+  demote_roster: "2군 강등",
+  demote_fielder: "2군 강등(야수 정원)",
   // 방출 — 정원 초과와 성적 부진은 다른 일이다
-  release_roster:   "방출(정원)",
-  release_score:    "방출(성적)",
+  release_roster: "방출(정원)",
+  release_score: "방출(성적)",
   // 팀 총연봉이 예산을 넘어 잘렸다 (2026-08-31)
-  release_budget:   "방출(예산)",
-  release:          "방출",
+  release_budget: "방출(예산)",
+  release: "방출",
   // 방출된 선수를 다른 구단이 데려갔다. **표에 없어서 화면에 「waiver claim」
   // 이 그대로 뜨고 있었다** — 엔진(`npc_sim.rs`)은 예전부터 이 유형을 냈다
-  waiver_claim:     "웨이버 영입",
+  waiver_claim: "웨이버 영입",
   development_expired: "육성 만료",
   // 은퇴
-  retirement:       "은퇴",
-  retired:          "은퇴",
-  retire_age:       "은퇴(나이)",
-  retire_no_team:   "은퇴(무소속)",
+  retirement: "은퇴",
+  retired: "은퇴",
+  retire_age: "은퇴(나이)",
+  retire_no_team: "은퇴(무소속)",
   // 병역
-  military_enlist:    "입대",
+  military_enlist: "입대",
   military_discharge: "전역",
   // 국제대회 입상으로 병역이 면제됐다. **전역과 다른 일이다** — 복무를
   // 안 했으므로 공백 시즌이 없다 (`game.ts` 가 낸다)
-  military_exempt:    "병역 면제",
+  military_exempt: "병역 면제",
   // 아마추어에서 야구를 그만뒀다. **은퇴와 구분한다** — 프로 경력이 없다
-  quit_baseball:      "야구를 그만둠",
+  quit_baseball: "야구를 그만둠",
   // 대학 졸업 (`careerDecision.ts`). 미지명이어도 진로가 갈린다
-  graduation:         "대학 졸업",
+  graduation: "대학 졸업",
   // 기타
-  position_change:  "보직 변경",
+  position_change: "보직 변경",
 };
 
 /**

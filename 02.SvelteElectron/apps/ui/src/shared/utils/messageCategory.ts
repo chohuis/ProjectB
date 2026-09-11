@@ -16,10 +16,10 @@ export interface CategoryMeta {
 }
 
 export const CATEGORY: Record<MessageCategory, CategoryMeta> = {
-  system:  { label: "시스템", accent: "#5A6478" },
-  news:    { label: "뉴스",   accent: "#9A6510" },
-  coach:   { label: "코치",   accent: "#1F5FA8" },
-  manager: { label: "감독",   accent: "#5B3AA8" },
+  system: { label: "시스템", accent: "#5A6478" },
+  news: { label: "뉴스", accent: "#9A6510" },
+  coach: { label: "코치", accent: "#1F5FA8" },
+  manager: { label: "감독", accent: "#5B3AA8" },
 };
 
 /** 필터 순서 — 자주 쓰는 것부터 */
@@ -44,9 +44,9 @@ export interface FilterGroup {
 }
 
 export const FILTER_GROUPS: FilterGroup[] = [
-  { id: "staff",  label: "코치·감독", cats: ["coach", "manager"] },
-  { id: "news",   label: "뉴스",     cats: ["news"] },
-  { id: "system", label: "시스템",   cats: ["system"] },
+  { id: "staff", label: "코치·감독", cats: ["coach", "manager"] },
+  { id: "news", label: "뉴스", cats: ["news"] },
+  { id: "system", label: "시스템", cats: ["system"] },
 ];
 
 export function categoryMeta(c: MessageCategory): CategoryMeta {

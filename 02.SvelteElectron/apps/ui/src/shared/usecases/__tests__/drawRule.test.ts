@@ -34,7 +34,7 @@ describe("무승부 규칙", () => {
   /** 🔴 동점이면 홈 승으로 적고 있었다 */
   it("동점을 홈 승으로 적지 않는다", () => {
     expect(ME.includes("if home >= away { (home_team_id, away_team_id) }")).toBe(false);
-    expect(ME).toContain("if home == away { (\"\", None) }");
+    expect(ME).toContain('if home == away { ("", None) }');
     expect(ST).toContain("pub loser_id: Option<String>");
   });
 
@@ -54,7 +54,9 @@ describe("무승부 규칙", () => {
   it("모든 경로가 phase 를 싣는다", () => {
     expect(GS).toContain("extraInningLimit: params.extraInningLimit ?? 0");
     expect(read("apps/ui/src/shared/workers/simWorker.ts")).toContain("phase:       g.phase");
-    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain("phase:                g.phase");
+    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain(
+      "phase:                g.phase",
+    );
     expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain("phase: e.phase");
     const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
     expect(AW.split("phase: game.phase").length - 1).toBe(3);
@@ -75,19 +77,24 @@ describe("무승부 규칙", () => {
    */
   it("넉아웃은 무승부를 안 낸다 — 호출부마다 knockout 을 싣는다", () => {
     // 가르는 규칙은 한 곳이다 — 브래킷에 있는 경기냐
-    expect(read("apps/ui/src/shared/utils/scheduleView.ts"))
-      .toContain("export function knockoutMatchIds(");
+    expect(read("apps/ui/src/shared/utils/scheduleView.ts")).toContain(
+      "export function knockoutMatchIds(",
+    );
     // 대회 경기가 도는 세 갈래: 주인공 리그 · 배경 리그 · 회피 경기
     const AW = read("apps/ui/src/shared/usecases/advanceWeek.ts");
     expect(AW.split("knockout: isKnockoutGame(game.id)").length - 1).toBe(3);
-    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts"))
-      .toContain("knockout: knockoutIds.has(e.id)");
-    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts"))
-      .toContain("knockout:             g.knockout ?? false");
-    expect(read("apps/ui/src/shared/usecases/simulateSkippedGame.ts"))
-      .toContain("knockout: knockoutMatchIds(s).has(entry.id)");
-    expect(read("apps/ui/src/shared/workers/simWorker.ts"))
-      .toContain("knockout:    g.knockout ?? false");
+    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain(
+      "knockout: knockoutIds.has(e.id)",
+    );
+    expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain(
+      "knockout:             g.knockout ?? false",
+    );
+    expect(read("apps/ui/src/shared/usecases/simulateSkippedGame.ts")).toContain(
+      "knockout: knockoutMatchIds(s).has(entry.id)",
+    );
+    expect(read("apps/ui/src/shared/workers/simWorker.ts")).toContain(
+      "knockout:    g.knockout ?? false",
+    );
   });
 
   /**
@@ -100,7 +107,6 @@ describe("무승부 규칙", () => {
     expect(AW).toContain("if (settled) resultOf.set(m.id, settled);");
     // 못 풀면 **라운드를 안 닫는다** — 승자 없는 결과를 억지로 넘기지 않는다
     expect(AW).toContain("if (results.some((x) => !x.winnerTeamId))");
-    expect(read("apps/ui/src/shared/stores/season.ts"))
-      .toContain("settleDrawnKnockout(");
+    expect(read("apps/ui/src/shared/stores/season.ts")).toContain("settleDrawnKnockout(");
   });
 });

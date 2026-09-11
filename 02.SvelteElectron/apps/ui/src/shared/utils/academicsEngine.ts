@@ -13,20 +13,48 @@ import { weekInYearOf } from "./seasonWeeks";
 //   (`docs/ENGINE_OWNERSHIP.md` 참고). **산식은 Rust에 있다.**
 
 interface StudyModeEffect {
-  examGain: number;           // 시험 점수 주당 누적
-  efficiencyMod: number;      // 훈련 효율 배율 (1.0 = 100%)
+  examGain: number; // 시험 점수 주당 누적
+  efficiencyMod: number; // 훈련 효율 배율 (1.0 = 100%)
   attendanceDelta: number;
   assignmentDelta: number;
-  percentileDelta: number;    // 양수 = 등수 하락 (나쁜 방향)
+  percentileDelta: number; // 양수 = 등수 하락 (나쁜 방향)
   warningIncrement: boolean;
 }
 
 /** 규칙 파일을 못 읽었을 때. **0으로 두면 학업이 통째로 멈춘다** */
 const MODE_FALLBACK: Record<StudyMode, StudyModeEffect> = {
-  focus:  { examGain: 8, efficiencyMod: 0.70, attendanceDelta:  1, assignmentDelta:  2, percentileDelta: -2, warningIncrement: false },
-  normal: { examGain: 4, efficiencyMod: 0.85, attendanceDelta:  0, assignmentDelta:  1, percentileDelta: -1, warningIncrement: false },
-  rest:   { examGain: 1, efficiencyMod: 1.00, attendanceDelta: -3, assignmentDelta: -6, percentileDelta:  4, warningIncrement: false },
-  sleep:  { examGain: 0, efficiencyMod: 1.05, attendanceDelta: -8, assignmentDelta: -9, percentileDelta:  7, warningIncrement: true  },
+  focus: {
+    examGain: 8,
+    efficiencyMod: 0.7,
+    attendanceDelta: 1,
+    assignmentDelta: 2,
+    percentileDelta: -2,
+    warningIncrement: false,
+  },
+  normal: {
+    examGain: 4,
+    efficiencyMod: 0.85,
+    attendanceDelta: 0,
+    assignmentDelta: 1,
+    percentileDelta: -1,
+    warningIncrement: false,
+  },
+  rest: {
+    examGain: 1,
+    efficiencyMod: 1.0,
+    attendanceDelta: -3,
+    assignmentDelta: -6,
+    percentileDelta: 4,
+    warningIncrement: false,
+  },
+  sleep: {
+    examGain: 0,
+    efficiencyMod: 1.05,
+    attendanceDelta: -8,
+    assignmentDelta: -9,
+    percentileDelta: 7,
+    warningIncrement: true,
+  },
 };
 const CUTS_FALLBACK = [4, 11, 23, 40, 60, 77, 89, 96];
 const EXAM_WEEKS_FALLBACK = { midterm: 11, final: 38 };
@@ -92,12 +120,17 @@ export async function applyWeeklyStudy(school: SchoolState): Promise<WeeklyStudy
   const api = window.projectB?.engine;
   if (!api) return NEUTRAL_STUDY;
   try {
-    return JSON.parse(await api("weekCalcWeeklyStudyNative", JSON.stringify({
-      mode: school.weeklyStudyMode,
-      modes: _modes,
-      examAccumScore: school.examAccumScore,
-      subjectScores: school.subjectScores,
-    }))) as WeeklyStudyResult;
+    return JSON.parse(
+      await api(
+        "weekCalcWeeklyStudyNative",
+        JSON.stringify({
+          mode: school.weeklyStudyMode,
+          modes: _modes,
+          examAccumScore: school.examAccumScore,
+          subjectScores: school.subjectScores,
+        }),
+      ),
+    ) as WeeklyStudyResult;
   } catch {
     return NEUTRAL_STUDY;
   }
@@ -112,7 +145,7 @@ export function percentileToGrade(pct: number): number {
 
 // ── 시험 결과 계산 ─────────────────────────────────────────────
 export interface ExamResult {
-  grade: number;        // 1~9
+  grade: number; // 1~9
   riskLevel: GradeRisk;
   moraleDelta: number;
   eligibilityBlocked: boolean;
@@ -127,9 +160,11 @@ export async function calcExamResult(
   /** 🔴 안 넘기면 엔진이 `thread_rng`로 떨어져 **진로가 실행마다 갈린다** */
   seed = 0,
 ): Promise<ExamResult> {
-  const raw = JSON.parse(await window.projectB!.weekCalcExamResult(
-    JSON.stringify({ accumScore, warningCount, examType, seed })
-  )) as ExamResult;
+  const raw = JSON.parse(
+    await window.projectB!.weekCalcExamResult(
+      JSON.stringify({ accumScore, warningCount, examType, seed }),
+    ),
+  ) as ExamResult;
   return raw;
 }
 
@@ -140,12 +175,12 @@ export async function calcExamResult(
 // 주간 루프는 `majorEffects()`로 규칙 파일만 읽는다 — 두 값이 갈라지면
 // `npm run test:events`가 잡는다(전공 대조).
 export const UNIVERSITY_MAJORS = [
-  { id: "체육교육",   effBonus: 0.05, desc: "전반적인 훈련 효율 +5%" },
+  { id: "체육교육", effBonus: 0.05, desc: "전반적인 훈련 효율 +5%" },
   { id: "스포츠과학", effBonus: 0.08, desc: "전반적인 훈련 효율 +8%" },
-  { id: "일반전공",   effBonus: 0.00, desc: "훈련 효율 보너스 없음, 학업 점수 획득 +50%" },
+  { id: "일반전공", effBonus: 0.0, desc: "훈련 효율 보너스 없음, 학업 점수 획득 +50%" },
 ] as const;
 
-export type UniversityMajorId = typeof UNIVERSITY_MAJORS[number]["id"];
+export type UniversityMajorId = (typeof UNIVERSITY_MAJORS)[number]["id"];
 
 /** @deprecated 규칙 파일이 정본이다 — `majorEffects(rules, major).trainingEffBonus`를 쓴다 */
 export function getUniversityEffBonus(major: string): number {
@@ -165,7 +200,7 @@ export function getUniversityEffBonus(major: string): number {
 export function weeksUntilNextExam(currentWeek: number): { label: string; weeksLeft: number } {
   const w = weekInYearOf(currentWeek);
   if (w < _examWeeks.midterm) return { label: "중간고사", weeksLeft: _examWeeks.midterm - w };
-  if (w < _examWeeks.final)   return { label: "기말고사", weeksLeft: _examWeeks.final   - w };
+  if (w < _examWeeks.final) return { label: "기말고사", weeksLeft: _examWeeks.final - w };
   return { label: "다음 시즌 중간고사", weeksLeft: 52 - w + _examWeeks.midterm };
 }
 
@@ -194,14 +229,17 @@ export interface AcademicsRules {
     warningEffects: WarningEffect[];
     studyModeGpa: Record<string, number>;
   };
-  majors: Record<string, {
-    trainingEffBonus: number;
-    xpBonus: Record<string, number>;
-    injuryMod: number;
-    gpaGainMult: number;
-    coachPath?: boolean;
-    careerNet?: boolean;
-  }>;
+  majors: Record<
+    string,
+    {
+      trainingEffBonus: number;
+      xpBonus: Record<string, number>;
+      injuryMod: number;
+      gpaGainMult: number;
+      coachPath?: boolean;
+      careerNet?: boolean;
+    }
+  >;
 }
 
 let _rules: AcademicsRules | null = null;
@@ -209,18 +247,25 @@ let _rules: AcademicsRules | null = null;
 /** 규칙 파일에서 읽는다. 한 번 읽고 캐시한다 (주간 경로에서 매번 부른다) */
 export async function loadAcademicsRules(): Promise<AcademicsRules> {
   if (_rules) return _rules;
-  const raw = await window.projectB!.masterFetch("players/generation_rules.json") as
-    { academicsRules?: AcademicsRules } | null;
-  if (!raw?.academicsRules) throw new Error("[academics] generation_rules.json academicsRules 없음");
+  const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as {
+    academicsRules?: AcademicsRules;
+  } | null;
+  if (!raw?.academicsRules)
+    throw new Error("[academics] generation_rules.json academicsRules 없음");
   _rules = raw.academicsRules;
   return _rules;
 }
 
 /** 전공 효과 — 없는 전공이면 무보정. 화면·훈련·부상이 전부 여기를 본다 */
 export function majorEffects(rules: AcademicsRules, major: string) {
-  return rules.majors[major] ?? {
-    trainingEffBonus: 0, xpBonus: {}, injuryMod: 1, gpaGainMult: 1,
-  };
+  return (
+    rules.majors[major] ?? {
+      trainingEffBonus: 0,
+      xpBonus: {},
+      injuryMod: 1,
+      gpaGainMult: 1,
+    }
+  );
 }
 
 /** 지금 경고 단계의 효과. 단계가 없으면 무보정 */
@@ -258,8 +303,8 @@ export async function settleSemester(
     qualityAccum: number;
     /** 이번 학기 주차 수 — 길이가 다르므로 반드시 나눈다 */
     weeks: number;
-    priorCumulative: number;     // 직전까지의 누적 학점
-    semestersDone: number;       // 이번 학기 포함 전 학기 수
+    priorCumulative: number; // 직전까지의 누적 학점
+    semestersDone: number; // 이번 학기 포함 전 학기 수
     warningLevel: number;
     major: string;
   },
@@ -267,23 +312,31 @@ export async function settleSemester(
   const api = window.projectB?.engine;
   if (!api) {
     return {
-      gpa: 0, cumulativeGpa: opts.priorCumulative,
+      gpa: 0,
+      cumulativeGpa: opts.priorCumulative,
       newWarningLevel: (opts.warningLevel || 0) as 0 | 1 | 2 | 3,
-      repeats: false, label: "정상",
-      messageSubject: "학기 성적 발표", messageBody: "",
+      repeats: false,
+      label: "정상",
+      messageSubject: "학기 성적 발표",
+      messageBody: "",
     };
   }
-  return JSON.parse(await api("weekCalcSemesterResultNative", JSON.stringify({
-    gpaMax: rules.university.gpaMax,
-    warningGpa: rules.university.warningGpa,
-    warningEffects: rules.university.warningEffects,
-    gpaGainMult: majorEffects(rules, opts.major).gpaGainMult,
-    qualityAccum: opts.qualityAccum,
-    weeks: opts.weeks,
-    priorCumulative: opts.priorCumulative,
-    semestersDone: opts.semestersDone,
-    warningLevel: opts.warningLevel,
-  }))) as SemesterResult;
+  return JSON.parse(
+    await api(
+      "weekCalcSemesterResultNative",
+      JSON.stringify({
+        gpaMax: rules.university.gpaMax,
+        warningGpa: rules.university.warningGpa,
+        warningEffects: rules.university.warningEffects,
+        gpaGainMult: majorEffects(rules, opts.major).gpaGainMult,
+        qualityAccum: opts.qualityAccum,
+        weeks: opts.weeks,
+        priorCumulative: opts.priorCumulative,
+        semestersDone: opts.semestersDone,
+        warningLevel: opts.warningLevel,
+      }),
+    ),
+  ) as SemesterResult;
 }
 
 /** 졸업할 수 있는가 — 4학년을 마쳤고 누적 학점이 기준 이상 */

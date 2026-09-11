@@ -61,8 +61,9 @@ describe("`safe` — 몸에 나쁜 정도", () => {
   });
 
   it("부상 위험은 음수가 「덜 다친다」다", () => {
-    expect(bodyCost({ injuryRiskMod: { pct: -20, weeks: 4 } }))
-      .toBeLessThan(bodyCost({ injuryRiskMod: { pct: 20, weeks: 4 } }));
+    expect(bodyCost({ injuryRiskMod: { pct: -20, weeks: 4 } })).toBeLessThan(
+      bodyCost({ injuryRiskMod: { pct: 20, weeks: 4 } }),
+    );
   });
 
   it("🔴 `growth` 와 반대로 고른다 — 스탯을 주지만 몸을 갈아 넣는 갈래", () => {

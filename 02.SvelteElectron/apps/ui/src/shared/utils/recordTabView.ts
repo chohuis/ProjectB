@@ -56,8 +56,10 @@ export interface ContractHistoryOptions {
 export function contractTermsText(c: ProContract, w?: ContractTermWords | null): string {
   if (!w) return "";
   const out: string[] = [];
-  if (c.teamOptionYears > 0) out.push(w.teamOption.split("{optYears}").join(String(c.teamOptionYears)));
-  if (c.playerOptionYears > 0) out.push(w.playerOption.split("{optYears}").join(String(c.playerOptionYears)));
+  if (c.teamOptionYears > 0)
+    out.push(w.teamOption.split("{optYears}").join(String(c.teamOptionYears)));
+  if (c.playerOptionYears > 0)
+    out.push(w.playerOption.split("{optYears}").join(String(c.playerOptionYears)));
   if (c.noTrade) out.push(w.noTrade);
   return out.join(" · ");
 }
@@ -87,7 +89,9 @@ export function buildContractHistoryTable(
     ...(current ? [{ c: current, isCurrent: true }] : []),
   ];
   // 연도를 모르는 줄은 뒤로 — 위에 두면 「모르는 해」가 제일 최근처럼 보인다
-  const sorted = [...all].sort((a, b) => (b.c.signedYear ?? -Infinity) - (a.c.signedYear ?? -Infinity));
+  const sorted = [...all].sort(
+    (a, b) => (b.c.signedYear ?? -Infinity) - (a.c.signedYear ?? -Infinity),
+  );
 
   const rows = sorted.map(({ c, isCurrent }) => {
     const row: Record<string, TableCell> & { myTeam?: boolean } = {
@@ -152,10 +156,12 @@ export function myTournamentLine(
     (m) => !m.isBye && (m.homeTeamId === teamId || m.awayTeamId === teamId),
   );
   if (mine.length === 0) return null;
-  const keys = new Set(mine.map((m) => {
-    const opp = m.homeTeamId === teamId ? m.awayTeamId : m.homeTeamId;
-    return `${m.week}:${opp ?? ""}`;
-  }));
+  const keys = new Set(
+    mine.map((m) => {
+      const opp = m.homeTeamId === teamId ? m.awayTeamId : m.homeTeamId;
+      return `${m.week}:${opp ?? ""}`;
+    }),
+  );
   const games = gameLog.filter((g) => keys.has(`${g.week}:${g.opponentId}`));
   if (games.length === 0) return null;
 

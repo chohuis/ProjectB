@@ -7,8 +7,12 @@
   import type { Relationship } from "../../../shared/types/relationship";
   import { relationTag } from "../../../shared/utils/offseasonReport";
   import {
-    buildRows, countByClass, sortRows,
-    CLASS_ORDER, CLASS_LABEL, type InjuryClass,
+    buildRows,
+    countByClass,
+    sortRows,
+    CLASS_ORDER,
+    CLASS_LABEL,
+    type InjuryClass,
   } from "../../../shared/utils/injuryReport";
   import { INJURY_LABEL } from "../../../shared/types/save";
   import TeamMark from "../../team/ui/TeamMark.svelte";
@@ -38,7 +42,11 @@
   onMount(async () => {
     const slotId = $gameStore.currentSlotId;
     if (!slotId) return;
-    try { related = await slotRepo.getRelationships(slotId, {}); } catch { related = []; }
+    try {
+      related = await slotRepo.getRelationships(slotId, {});
+    } catch {
+      related = [];
+    }
   });
 
   $: relations = new Map<string, string>(
@@ -51,7 +59,10 @@
   $: rows = buildRows({
     events: metadata.events,
     people: $gameStore.npcs.map((n) => ({
-      npcId: n.npcId, name: n.name, age: n.age, position: n.position,
+      npcId: n.npcId,
+      name: n.name,
+      age: n.age,
+      position: n.position,
     })),
     weeksLeftInSeason: metadata.weeksLeftInSeason,
     myTeamId: p.teamId,
@@ -67,10 +78,9 @@
   $: knownCount = rows.filter((r) => r.relation !== null).length;
 
   $: visible = sortRows(
-    rows.filter((r) =>
-      r.cls === cls
-      && (!mineOnly || r.mine)
-      && (!knownOnly || r.relation !== null)),
+    rows.filter(
+      (r) => r.cls === cls && (!mineOnly || r.mine) && (!knownOnly || r.relation !== null),
+    ),
   );
 
   $: if (cls || mineOnly || knownOnly) shown = PAGE;
@@ -90,8 +100,10 @@
   <DigestCards
     {cards}
     active={cls}
-    {mineCount} {knownCount}
-    mineOn={mineOnly} knownOn={knownOnly}
+    {mineCount}
+    {knownCount}
+    mineOn={mineOnly}
+    knownOn={knownOnly}
     onPick={(id) => (cls = id as InjuryClass)}
     onToggleMine={() => (mineOnly = !mineOnly)}
     onToggleKnown={() => (knownOnly = !knownOnly)}
@@ -147,44 +159,110 @@
 {/if}
 
 <style>
-  .inj { display: flex; flex-direction: column; gap: 10px; }
-
-  .rows { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  .rows th {
-    text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
-    color: var(--ink-mute); padding: 0 6px 5px; border-bottom: 1px solid var(--line);
+  .inj {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
-  .rows td { padding: 5px 6px; border-bottom: 1px solid var(--line); color: var(--ink-mid); }
-  .rows tbody tr:hover { background: var(--panel-sunk); }
-  .rows tbody tr.mine { background: var(--panel-sunk); }
 
-  .c-age, .c-pos { width: 44px; }
-  .c-age, .c-wk { text-align: right; }
-  .c-wk { width: 54px; }
+  .rows {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .rows th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding: 0 6px 5px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rows td {
+    padding: 5px 6px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-mid);
+  }
+  .rows tbody tr:hover {
+    background: var(--panel-sunk);
+  }
+  .rows tbody tr.mine {
+    background: var(--panel-sunk);
+  }
+
+  .c-age,
+  .c-pos {
+    width: 44px;
+  }
+  .c-age,
+  .c-wk {
+    text-align: right;
+  }
+  .c-wk {
+    width: 54px;
+  }
   /* 🔴 **td에 display:flex를 걸면 안 된다.** 그러면 그 칸이 표의 열 계산에서
      빠져 **열 정렬이 통째로 어긋나고**, 안쪽 이름이 한두 글자로 잘린다
      (실제 플레이에서 "탄…", "금…"으로 나왔다). 배치는 안쪽 래퍼가 맡는다. */
-  .c-team { width: 28%; }
-  .team-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
-  .c-inj { width: 24%; }
-
-  .c-name { color: var(--ink); }
-  .dot {
-    display: inline-block; width: 5px; height: 5px; border-radius: 50%;
-    background: var(--t-accent); margin-right: 5px; vertical-align: middle;
+  .c-team {
+    width: 28%;
   }
-  .nm { font-weight: 600; }
+  .team-cell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+  .c-inj {
+    width: 24%;
+  }
+
+  .c-name {
+    color: var(--ink);
+  }
+  .dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--t-accent);
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .nm {
+    font-weight: 600;
+  }
   .rel {
-    font-size: 10px; color: var(--ink-mute);
-    border: 1px solid var(--line); border-radius: 2px; padding: 0 4px; margin-left: 5px;
+    font-size: 10px;
+    color: var(--ink-mute);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0 4px;
+    margin-left: 5px;
   }
   /* ⚠ 부모에 min-width:0이 없으면 flex 기본값(auto) 때문에 줄임표가 안 먹는다 */
-  .tn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .empty { color: var(--ink-mute); padding: 14px 6px; }
+  .tn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .empty {
+    color: var(--ink-mute);
+    padding: 14px 6px;
+  }
 
   .more {
-    border: 1px solid var(--line); background: none; color: var(--ink-mute);
-    border-radius: var(--radius); font-size: 11.5px; padding: 6px; cursor: pointer;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mute);
+    border-radius: var(--radius);
+    font-size: 11.5px;
+    padding: 6px;
+    cursor: pointer;
   }
-  .more:hover { border-color: var(--t-dark); color: var(--t-dark); }
+  .more:hover {
+    border-color: var(--t-dark);
+    color: var(--t-dark);
+  }
 </style>

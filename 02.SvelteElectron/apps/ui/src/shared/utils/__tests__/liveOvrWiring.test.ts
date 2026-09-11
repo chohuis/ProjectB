@@ -22,7 +22,7 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 const LIVE = {
   P_GROWN: { pitching: { ovr: 70 }, batting: { ovr: 0 } },
-  B_GROWN: { pitching: { ovr: 0 },  batting: { ovr: 68 } },
+  B_GROWN: { pitching: { ovr: 0 }, batting: { ovr: 68 } },
 } as any;
 
 describe("liveOvrOf — 성장값을 먼저 본다", () => {
@@ -75,12 +75,16 @@ describe("배선 — 드래프트가 생성값을 읽지 않는다", () => {
     const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
     expect(s).toMatch(/const peerOvrs = [\s\S]{0,300}livePitchingOvrOf\(n, liveStats\)/);
     // 옛 형태가 남아 있으면 안 된다
-    expect(s).not.toMatch(/const peerOvrs = [\s\S]{0,300}\.map\(\(n\) => n\.pitching\?\.ovr \?\? 0\)/);
+    expect(s).not.toMatch(
+      /const peerOvrs = [\s\S]{0,300}\.map\(\(n\) => n\.pitching\?\.ovr \?\? 0\)/,
+    );
   });
 
   it("팀 에이스 순위가 live를 쓴다", () => {
     const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
-    expect(s).toMatch(/teamAceRank = [\s\S]{0,300}livePitchingOvrOf\(n, liveStats\) > p\.pitching\.ovr/);
+    expect(s).toMatch(
+      /teamAceRank = [\s\S]{0,300}livePitchingOvrOf\(n, liveStats\) > p\.pitching\.ovr/,
+    );
   });
 
   it("NPC 지명 순서 정렬이 live를 쓴다", () => {
@@ -93,7 +97,9 @@ describe("배선 — 드래프트가 생성값을 읽지 않는다", () => {
     // 범위를 넉넉히 둔다 — 사이에 주석·주인공 분기가 들어와도 "루프 밖에서
     // 한 번 읽어 안에서 쓴다"는 성질은 그대로다. 좁게 잡았더니 주인공을
     // 보드에 편입하면서 넣은 몇 줄에 검사가 먼저 깨졌다
-    expect(s).toMatch(/const _liveForLog = get\(npcLiveStatsStore\);[\s\S]{0,600}liveOvrOf\(npc, _liveForLog\)/);
+    expect(s).toMatch(
+      /const _liveForLog = get\(npcLiveStatsStore\);[\s\S]{0,600}liveOvrOf\(npc, _liveForLog\)/,
+    );
   });
 
   it("드래프트 보드 OVR이 live를 쓴다", () => {

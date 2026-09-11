@@ -17,9 +17,10 @@ import { resolve } from "node:path";
  * 독립 배치(`dischargeProtagonist`)는 리그가 아니라 **팀**으로 판정한다 —
  * 리그가 이미 독립이면 리그로 봐선 그 갈래를 영영 안 탄다.
  */
-const read = (p: string) => readFileSync(resolve(__dirname, "../../../", p), "utf8")
-  .replace(/\/\*[\s\S]*?\*\//g, "")
-  .replace(/^\s*\/\/.*$/gm, "");
+const read = (p: string) =>
+  readFileSync(resolve(__dirname, "../../../", p), "utf8")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
 
 const block = (src: string, start: string, end: string) => {
   const a = src.indexOf(start);
@@ -32,7 +33,7 @@ describe("군 복무 중 소속 리그", () => {
   const game = read("shared/stores/game.ts");
 
   it("입대하면 leagueId 가 LEAGUE_MILITARY 다", () => {
-    const enlist = block(game, "enlistMilitary(", "markMilitaryAsked(") ;
+    const enlist = block(game, "enlistMilitary(", "markMilitaryAsked(");
     expect(enlist).toContain('leagueId: "LEAGUE_MILITARY"');
   });
 

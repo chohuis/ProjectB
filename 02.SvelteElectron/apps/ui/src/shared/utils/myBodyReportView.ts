@@ -27,12 +27,15 @@ import { INJURY_LABEL } from "../types/save";
 
 /** 부상 등급 한글. `weekPhases/myBodyReport.ts` 의 표와 **같은 말이어야 한다** */
 export const MY_BODY_SEVERITY_LABEL: Record<string, string> = {
-  light: "경미", moderate: "중등도", severe: "중증", surgery: "수술",
+  light: "경미",
+  moderate: "중등도",
+  severe: "중증",
+  surgery: "수술",
 };
 
 /** 결장 사유 — 두 갈래뿐이다(`MyBodyEvent.reason`) */
 export const ABSENCE_REASON_LABEL: Record<"injury" | "condition", string> = {
-  injury:    "부상",
+  injury: "부상",
   condition: "컨디션",
 };
 
@@ -41,17 +44,17 @@ export const ABSENCE_REASON_LABEL: Record<"injury" | "condition", string> = {
  * 한쪽만 고쳐진 채 남는다.
  */
 export const MY_BODY_LABEL = {
-  injury:    "부상",
-  absence:   "결장",
-  warning:   "경고",
-  week:      "주차",
-  opponent:  "상대",
-  reason:    "사유",
+  injury: "부상",
+  absence: "결장",
+  warning: "경고",
+  week: "주차",
+  opponent: "상대",
+  reason: "사유",
   condition: "컨디션",
-  fatigue:   "피로",
-  risk:      "부상 위험",
+  fatigue: "피로",
+  risk: "부상 위험",
   weeksLeft: "남은 주",
-  since:     "발생",
+  since: "발생",
 } as const;
 
 export interface MyBodyInjuryRow {
@@ -106,21 +109,23 @@ function byWeek<T extends { week: number }>(rows: T[]): T[] {
 export function buildMyBodyRows(metadata: MyBodyMetadata): MyBodyRows {
   const events: MyBodyEvent[] = Array.isArray(metadata.events) ? metadata.events : [];
 
-  const absences: MyBodyAbsenceRow[] = byWeek(events.filter((e) => e.kind === "absence"))
-    .map((e) => ({
+  const absences: MyBodyAbsenceRow[] = byWeek(events.filter((e) => e.kind === "absence")).map(
+    (e) => ({
       week: e.week,
       opponentTeamId: e.opponentTeamId ?? null,
       // 사유가 안 실린 옛 소식은 부상으로 보지 않는다 — 컨디션이 기본이다
       reason: e.reason === "injury" ? "injury" : "condition",
       condition: typeof e.condition === "number" ? e.condition : null,
-    }));
+    }),
+  );
 
-  const warnings: MyBodyWarningRow[] = byWeek(events.filter((e) => e.kind === "warning"))
-    .map((e) => ({
+  const warnings: MyBodyWarningRow[] = byWeek(events.filter((e) => e.kind === "warning")).map(
+    (e) => ({
       week: e.week,
       fatigue: typeof e.fatigue === "number" ? e.fatigue : null,
       riskPct: typeof e.riskPct === "number" ? e.riskPct : null,
-    }));
+    }),
+  );
 
   const inj = metadata.injury;
   const injury: MyBodyInjuryRow | null = inj

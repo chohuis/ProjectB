@@ -22,7 +22,8 @@ const MIN_CONTRAST = 4.0;
 
 /** WCAG 명도 대비 — 1(같음) ~ 21(흑백) */
 function contrast(a: string, b: string): number {
-  const la = luminanceOf(a), lb = luminanceOf(b);
+  const la = luminanceOf(a),
+    lb = luminanceOf(b);
   const [hi, lo] = la > lb ? [la, lb] : [lb, la];
   return (hi + 0.05) / (lo + 0.05);
 }
@@ -36,7 +37,8 @@ describe("알 표식", () => {
   // 🔴 **원본이 묻혔다고 기록한 그 색쌍이다.** 밝기 차 0.00 —
   //   보조색을 글자에 쓰면 안 읽히고, 흰/검을 고르면 읽힌다
   it("밝기가 같은 색쌍에서도 글자가 읽힌다 (be47b2 / 8a6512)", () => {
-    const main = "#be47b2", sub = "#8a6512";
+    const main = "#be47b2",
+      sub = "#8a6512";
     expect(Math.abs(luminanceOf(main) - luminanceOf(sub))).toBeLessThan(0.05);
     // 보조색을 글자로 쓰면 대비가 모자란다
     expect(contrast(main, sub)).toBeLessThan(2);
@@ -46,18 +48,23 @@ describe("알 표식", () => {
 
   // ⚠ 한두 색만 보면 못 잡는다 — 색 공간을 훑어 **한 곳도 빠짐없이** 본다
   it(`어떤 색이 와도 글자 대비가 ${MIN_CONTRAST}:1을 넘는다`, () => {
-    let worst = Infinity, worstHex = "";
+    let worst = Infinity,
+      worstHex = "";
     for (let r = 0; r < 256; r += 15) {
       for (let g = 0; g < 256; g += 15) {
         for (let b = 0; b < 256; b += 15) {
           const hex = `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
           const c = contrast(hex, inkFor(hex));
-          if (c < worst) { worst = c; worstHex = hex; }
+          if (c < worst) {
+            worst = c;
+            worstHex = hex;
+          }
         }
       }
     }
-    expect(worst, `가장 나쁜 색 ${worstHex} — 대비 ${worst.toFixed(2)}`)
-      .toBeGreaterThan(MIN_CONTRAST);
+    expect(worst, `가장 나쁜 색 ${worstHex} — 대비 ${worst.toFixed(2)}`).toBeGreaterThan(
+      MIN_CONTRAST,
+    );
   });
 
   it("darken이 색을 어둡게 하고 형식을 지킨다", () => {

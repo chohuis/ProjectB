@@ -4,25 +4,38 @@ import type { PostseasonSeries } from "../../types/season";
 
 function sr(o: Partial<PostseasonSeries> & { id: string }): PostseasonSeries {
   return {
-    leagueId: "LEAGUE_KBL", round: "라운드", homeTeamId: "H", awayTeamId: "A",
-    bestOf: 5, homeWins: 0, awayWins: 0, winner: null,
-    homeFrom: null, awayFrom: null, nextSeriesId: null, nextSeriesSlot: null,
+    leagueId: "LEAGUE_KBL",
+    round: "라운드",
+    homeTeamId: "H",
+    awayTeamId: "A",
+    bestOf: 5,
+    homeWins: 0,
+    awayWins: 0,
+    winner: null,
+    homeFrom: null,
+    awayFrom: null,
+    nextSeriesId: null,
+    nextSeriesSlot: null,
     ...o,
   };
 }
 
 /** KBL식 4단계: 와일드카드 → 준PO → PO → 한국시리즈 */
 const KBL: PostseasonSeries[] = [
-  sr({ id: "KS",   round: "한국시리즈", bestOf: 7, nextSeriesId: null }),
-  sr({ id: "PO",   round: "플레이오프", bestOf: 5, nextSeriesId: "KS",  nextSeriesSlot: "away" }),
-  sr({ id: "SPO",  round: "준플레이오프", bestOf: 3, nextSeriesId: "PO", nextSeriesSlot: "away" }),
-  sr({ id: "WC",   round: "와일드카드", bestOf: 1, nextSeriesId: "SPO", nextSeriesSlot: "away" }),
+  sr({ id: "KS", round: "한국시리즈", bestOf: 7, nextSeriesId: null }),
+  sr({ id: "PO", round: "플레이오프", bestOf: 5, nextSeriesId: "KS", nextSeriesSlot: "away" }),
+  sr({ id: "SPO", round: "준플레이오프", bestOf: 3, nextSeriesId: "PO", nextSeriesSlot: "away" }),
+  sr({ id: "WC", round: "와일드카드", bestOf: 1, nextSeriesId: "SPO", nextSeriesSlot: "away" }),
 ];
 
 describe("라운드 풀기", () => {
   it("먼저 하는 경기가 왼쪽, 결승이 오른쪽", () => {
-    expect(toRounds(KBL).map((r) => r.label))
-      .toEqual(["와일드카드", "준플레이오프", "플레이오프", "한국시리즈"]);
+    expect(toRounds(KBL).map((r) => r.label)).toEqual([
+      "와일드카드",
+      "준플레이오프",
+      "플레이오프",
+      "한국시리즈",
+    ]);
   });
 
   it("깊이는 결승이 0이다", () => {
@@ -34,18 +47,18 @@ describe("라운드 풀기", () => {
   it("⚠ 라운드 이름으로 정렬하지 않는다 — 리그마다 이름이 다르다", () => {
     // ABL식: 같은 구조인데 이름만 다름. 이름 정렬이면 순서가 뒤집힌다
     const abl = [
-      sr({ id: "F",  round: "월드시리즈", nextSeriesId: null }),
-      sr({ id: "CS", round: "챔피언십",   nextSeriesId: "F" }),
-      sr({ id: "DS", round: "디비전",     nextSeriesId: "CS" }),
+      sr({ id: "F", round: "월드시리즈", nextSeriesId: null }),
+      sr({ id: "CS", round: "챔피언십", nextSeriesId: "F" }),
+      sr({ id: "DS", round: "디비전", nextSeriesId: "CS" }),
     ];
     expect(toRounds(abl).map((r) => r.label)).toEqual(["디비전", "챔피언십", "월드시리즈"]);
   });
 
   it("같은 깊이의 시리즈는 한 라운드로 묶인다", () => {
     const two = [
-      sr({ id: "F",   nextSeriesId: null, round: "결승" }),
-      sr({ id: "S1",  nextSeriesId: "F",  round: "4강" }),
-      sr({ id: "S2",  nextSeriesId: "F",  round: "4강" }),
+      sr({ id: "F", nextSeriesId: null, round: "결승" }),
+      sr({ id: "S1", nextSeriesId: "F", round: "4강" }),
+      sr({ id: "S2", nextSeriesId: "F", round: "4강" }),
     ];
     const rounds = toRounds(two);
     expect(rounds).toHaveLength(2);
@@ -57,10 +70,7 @@ describe("라운드 풀기", () => {
   });
 
   it("순환 참조가 있어도 멈춘다 — 데이터가 깨져도 화면은 살아야 한다", () => {
-    const loop = [
-      sr({ id: "A", nextSeriesId: "B" }),
-      sr({ id: "B", nextSeriesId: "A" }),
-    ];
+    const loop = [sr({ id: "A", nextSeriesId: "B" }), sr({ id: "B", nextSeriesId: "A" })];
     expect(() => toRounds(loop)).not.toThrow();
     expect(toRounds(loop).length).toBeGreaterThan(0);
   });

@@ -41,7 +41,11 @@ export function nextProtagonistGame(
   for (const e of schedule) {
     if (e.result) continue;
     if (e.homeTeamId !== teamId && e.awayTeamId !== teamId) continue;
-    if (!best || e.gameDate < best.gameDate || (e.gameDate === best.gameDate && e.week < best.week)) {
+    if (
+      !best ||
+      e.gameDate < best.gameDate ||
+      (e.gameDate === best.gameDate && e.week < best.week)
+    ) {
       best = e;
     }
   }
@@ -83,9 +87,8 @@ export function teamRank(
   within?: readonly string[] | null,
 ): TeamRank | null {
   if (!teamId || standings.length === 0) return null;
-  const pool = within && within.length > 0
-    ? standings.filter((s) => within.includes(s.teamId))
-    : standings;
+  const pool =
+    within && within.length > 0 ? standings.filter((s) => within.includes(s.teamId)) : standings;
   if (pool.length === 0) return null;
   const sorted = [...pool].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
   const i = sorted.findIndex((s) => s.teamId === teamId);
@@ -150,7 +153,8 @@ export function recentResults(
         scheduleId: e.id,
         won: my > opp,
         drew: my === opp,
-        my, opp,
+        my,
+        opp,
         opponentId: isHome ? e.awayTeamId : e.homeTeamId,
       };
     });

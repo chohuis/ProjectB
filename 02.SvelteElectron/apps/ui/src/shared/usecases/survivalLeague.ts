@@ -5,8 +5,14 @@
 
 import type { SaveSeason, ScheduleEntry } from "../types/season";
 import {
-  IND_LEAGUE_ID, cutoff, generateStageSchedule, lastRegularStage,
-  stageComplete, stageDef, stageStandings, stageStartingAt,
+  IND_LEAGUE_ID,
+  cutoff,
+  generateStageSchedule,
+  lastRegularStage,
+  stageComplete,
+  stageDef,
+  stageStandings,
+  stageStartingAt,
   type SurvivalState,
 } from "../utils/survivalLeague";
 
@@ -53,11 +59,19 @@ export async function progressSurvival(
       };
       // 다음 단계가 이번 주에 시작하면 일정까지 같이 짠다
       const nextDef = stageDef(next.stage);
-      const entries = nextDef && nextDef.startWeek <= week
-        ? await generateStageSchedule(nextDef, next.activeTeams, protagonistTeamId, season.seasonYear)
-        : [];
+      const entries =
+        nextDef && nextDef.startWeek <= week
+          ? await generateStageSchedule(
+              nextDef,
+              next.activeTeams,
+              protagonistTeamId,
+              season.seasonYear,
+            )
+          : [];
       return {
-        state: next, entries, eliminated: cut.eliminated,
+        state: next,
+        entries,
+        eliminated: cut.eliminated,
         finalRanking: isLast ? cut.ranked : null,
       };
     }
@@ -70,7 +84,9 @@ export async function progressSurvival(
     const entries = await generateStageSchedule(due, teams, protagonistTeamId, season.seasonYear);
     return {
       state: { ...state, stage: due.stage, activeTeams: teams },
-      entries, eliminated: [], finalRanking: null,
+      entries,
+      eliminated: [],
+      finalRanking: null,
     };
   }
 

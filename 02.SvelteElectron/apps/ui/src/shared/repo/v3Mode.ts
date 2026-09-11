@@ -4,5 +4,9 @@
 
 let _v3Active = false;
 
-export function setV3SlotActive(v: boolean): void { _v3Active = v; }
-export function isV3SlotActive(): boolean { return _v3Active; }
+export function setV3SlotActive(v: boolean): void {
+  _v3Active = v;
+}
+export function isV3SlotActive(): boolean {
+  return _v3Active;
+}

@@ -1,7 +1,14 @@
 import { describe, it, expect } from "vitest";
 import {
-  MONTH_STARTS_1, MONTH_NAMES, monthIndexOf, monthNameOf,
-  isMonthStart, weekInMonthOf, weekLabelOf, prevMonthRange, monthWeekRange,
+  MONTH_STARTS_1,
+  MONTH_NAMES,
+  monthIndexOf,
+  monthNameOf,
+  isMonthStart,
+  weekInMonthOf,
+  weekLabelOf,
+  prevMonthRange,
+  monthWeekRange,
 } from "../seasonCalendar";
 
 /**
@@ -14,13 +21,29 @@ import {
 
 // ── 옛 구현 (game.ts · top10Engine.ts — 0-based) ──────────────
 const OLD_STARTS_0 = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
-const OLD_NAMES = ["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"];
+const OLD_NAMES = [
+  "3월",
+  "4월",
+  "5월",
+  "6월",
+  "7월",
+  "8월",
+  "9월",
+  "10월",
+  "11월",
+  "12월",
+  "1월",
+  "2월",
+];
 
 function oldWeekLabel(week: number, seasonYear: number): string {
   const w = (Math.max(1, week) - 1) % 52;
   let monthIdx = 0;
   for (let i = OLD_STARTS_0.length - 1; i >= 0; i -= 1) {
-    if (w >= OLD_STARTS_0[i]) { monthIdx = i; break; }
+    if (w >= OLD_STARTS_0[i]) {
+      monthIdx = i;
+      break;
+    }
   }
   const weekInMonth = w - OLD_STARTS_0[monthIdx] + 1;
   return `${seasonYear}년 ${OLD_NAMES[monthIdx]} ${weekInMonth}주차`;
@@ -30,7 +53,10 @@ function oldMonthLabel(weekInYear: number): string {
   const w = Math.max(0, (weekInYear - 1) % 52);
   let idx = 0;
   for (let i = OLD_STARTS_0.length - 1; i >= 0; i--) {
-    if (w >= OLD_STARTS_0[i]) { idx = i; break; }
+    if (w >= OLD_STARTS_0[i]) {
+      idx = i;
+      break;
+    }
   }
   return OLD_NAMES[idx];
 }
@@ -115,36 +141,40 @@ describe("master.ts의 월→주차 변환도 같은 표를 쓴다", () => {
   };
   const newScheduleToWeek = (month: number, weekOfMonth: number) => {
     const idx = month >= 3 ? month - 3 : month + 9;
-    return ((MONTH_STARTS_1[idx] ?? 1) - 1) + weekOfMonth;
+    return (MONTH_STARTS_1[idx] ?? 1) - 1 + weekOfMonth;
   };
 
   it("열두 달 × 1~5주차가 전부 같다", () => {
     for (let m = 1; m <= 12; m++) {
       for (let w = 1; w <= 5; w++) {
-        expect(newScheduleToWeek(m, w), `${m}월 ${w}주차`)
-          .toBe(oldScheduleToWeek(m, w));
+        expect(newScheduleToWeek(m, w), `${m}월 ${w}주차`).toBe(oldScheduleToWeek(m, w));
       }
     }
   });
 });
 
-describe('monthWeekRange — 친선경기가 쓴다', () => {
+describe("monthWeekRange — 친선경기가 쓴다", () => {
   const OLD_S1 = [1, 6, 10, 14, 19, 23, 27, 32, 36, 40, 45, 49];
   const oldRange = (w: number): [number, number] => {
     let idx = 0;
-    for (let i = OLD_S1.length - 1; i >= 0; i--) { if (w >= OLD_S1[i]) { idx = i; break; } }
+    for (let i = OLD_S1.length - 1; i >= 0; i--) {
+      if (w >= OLD_S1[i]) {
+        idx = i;
+        break;
+      }
+    }
     return [OLD_S1[idx], idx + 1 < OLD_S1.length ? OLD_S1[idx + 1] - 1 : 52];
   };
 
-  it('옛 friendlyMatchEngine과 52주 전부 같다', () => {
+  it("옛 friendlyMatchEngine과 52주 전부 같다", () => {
     for (let w = 1; w <= 52; w++) expect(monthWeekRange(w)).toEqual(oldRange(w));
   });
 
-  it('범위가 그 주를 담는다', () => {
+  it("범위가 그 주를 담는다", () => {
     for (let w = 1; w <= 52; w++) {
       const [s2, e] = monthWeekRange(w);
-      expect(s2, 'W' + w).toBeLessThanOrEqual(w);
-      expect(e, 'W' + w).toBeGreaterThanOrEqual(w);
+      expect(s2, "W" + w).toBeLessThanOrEqual(w);
+      expect(e, "W" + w).toBeGreaterThanOrEqual(w);
     }
   });
 });

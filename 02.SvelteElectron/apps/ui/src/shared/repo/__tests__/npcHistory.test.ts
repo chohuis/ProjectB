@@ -19,7 +19,9 @@ const rulesFile = JSON.parse(read("resource/data/master/players/generation_rules
 
 const NPC_SIM = read("packages/engine-native/src/npc_sim.rs");
 /** 여러 줄에 걸친 호출을 찾으려고 한 줄로 편다. **정규식을 안 쓴다**(CLAUDE.md) */
-const NPC_SIM_FLAT = NPC_SIM.split("\n").map((l) => l.trim()).join(" ");
+const NPC_SIM_FLAT = NPC_SIM.split("\n")
+  .map((l) => l.trim())
+  .join(" ");
 const ROSTER_GEN = read("packages/engine-native/src/roster_gen.rs");
 const SAVE_TS = read("apps/ui/src/shared/types/save.ts");
 const NEWGAME = read("apps/ui/src/shared/repo/newGameV3.ts");
@@ -35,9 +37,9 @@ function rustCareerEventTypes(src: string): string[] {
   const out = new Set<string>();
   const grab = (head: string) => {
     for (const chunk of src.split(head).slice(1)) {
-      const q = chunk.indexOf("\"");
+      const q = chunk.indexOf('"');
       if (q < 0) continue;
-      const end = chunk.indexOf("\"", q + 1);
+      const end = chunk.indexOf('"', q + 1);
       if (end < 0) continue;
       const v = chunk.slice(q + 1, end);
       // 변수로 넘기는 자리(`kind.into()`)는 문자열이 아니라 건너뛴다
@@ -80,8 +82,8 @@ describe("방출·웨이버가 경력에 남는다", () => {
 // ── ② 과거 성적의 팀이 이적 이력을 따른다 (D-2) ──────────────
 describe("연도별 성적이 이적을 따른다", () => {
   const events = [
-    { npcId: "N1", seasonYear: 2021, fromTeamId: null, toTeamId: "A" },   // 입단
-    { npcId: "N1", seasonYear: 2023, fromTeamId: "A", toTeamId: "B" },    // 이적
+    { npcId: "N1", seasonYear: 2021, fromTeamId: null, toTeamId: "A" }, // 입단
+    { npcId: "N1", seasonYear: 2023, fromTeamId: "A", toTeamId: "B" }, // 이적
   ];
 
   it("이적 전 해는 옛 팀, 이적 뒤는 새 팀이다", () => {
@@ -93,7 +95,10 @@ describe("연도별 성적이 이적을 따른다", () => {
 
   it("입단 기록이 없어도(해외) 첫 이적의 떠난 팀이 출발점이다", () => {
     const m = teamByYearOf(
-      [{ npcId: "N2", seasonYear: 2024, fromTeamId: "X", toTeamId: "Y" }], 2026, 5)!.get("N2")!;
+      [{ npcId: "N2", seasonYear: 2024, fromTeamId: "X", toTeamId: "Y" }],
+      2026,
+      5,
+    )!.get("N2")!;
     expect(m.get(2022)).toBe("X");
     expect(m.get(2024)).toBe("Y");
   });
@@ -103,10 +108,26 @@ describe("연도별 성적이 이적을 따른다", () => {
   });
 
   it("과거 성적이 그 표를 실제로 읽는다", () => {
-    const teamByYear = new Map([[2025, "B"], [2024, "A"]]);
+    const teamByYear = new Map([
+      [2025, "B"],
+      [2024, "A"],
+    ]);
     const rows = buildPastPlayerStats(
-      [{ npcId: "N1", leagueId: "LEAGUE_KBL", teamId: "NOW", age: 30, ovr: 70,
-         playerType: "pitcher", teamByYear }], 12345, 2026, 3);
+      [
+        {
+          npcId: "N1",
+          leagueId: "LEAGUE_KBL",
+          teamId: "NOW",
+          age: 30,
+          ovr: 70,
+          playerType: "pitcher",
+          teamByYear,
+        },
+      ],
+      12345,
+      2026,
+      3,
+    );
     expect(rows.find((r) => r.year === 2025)!.teamId).toBe("B");
     expect(rows.find((r) => r.year === 2024)!.teamId).toBe("A");
     // 표에 없는 해는 현재 팀이다 (원클럽맨이 그렇다)
@@ -115,7 +136,7 @@ describe("연도별 성적이 이적을 따른다", () => {
 
   it("만들기가 쓰기보다 앞이다 — 순서가 바뀌면 D-2 가 돌아온다", () => {
     const iBuild = NEWGAME.indexOf("buildCareerHistorySeed(");
-    const iPast  = NEWGAME.indexOf("buildPastPlayerStats(");
+    const iPast = NEWGAME.indexOf("buildPastPlayerStats(");
     const iWrite = NEWGAME.indexOf("addTransactions(opts.slotId");
     expect(iBuild).toBeGreaterThan(0);
     expect(iPast).toBeGreaterThan(iBuild);
@@ -163,9 +184,19 @@ describe("새 게임 NPC 병역", () => {
 
   it("생성 파라미터에 실린다 — 안 실으면 조용히 예전 동작이다", () => {
     const p = buildRosterParams(
-      "LEAGUE_KBL", 2026, 1, [], { rosterSize: 30 } as never,
-      undefined, undefined, undefined, undefined, undefined, undefined,
-      rulesFile.militaryRules.pastService) as Record<string, unknown>;
+      "LEAGUE_KBL",
+      2026,
+      1,
+      [],
+      { rosterSize: 30 } as never,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      rulesFile.militaryRules.pastService,
+    ) as Record<string, unknown>;
     expect(p.pastService).toBeTruthy();
   });
 
@@ -188,8 +219,9 @@ describe("계약 기간 나이 상한", () => {
   });
 
   it("나이가 많을수록 상한이 짧다", () => {
-    const caps = [...rulesFile.salaryRules.contractYearsMaxByAge]
-      .sort((a: { fromAge: number }, b: { fromAge: number }) => a.fromAge - b.fromAge);
+    const caps = [...rulesFile.salaryRules.contractYearsMaxByAge].sort(
+      (a: { fromAge: number }, b: { fromAge: number }) => a.fromAge - b.fromAge,
+    );
     for (let i = 1; i < caps.length; i++) {
       expect(caps[i].maxYears).toBeLessThanOrEqual(caps[i - 1].maxYears);
     }

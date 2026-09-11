@@ -64,11 +64,14 @@ export function regionRankings(
 ): { regionId: string; rankedTeams: string[] }[] {
   const byTeam = new Map(standings.map((s) => [s.teamId, s]));
   const cmp = (a: string, b: string) => {
-    const sa = byTeam.get(a), sb = byTeam.get(b);
-    return (sb?.winPct ?? 0) - (sa?.winPct ?? 0)
-      || (sb?.runsFor ?? 0) - (sa?.runsFor ?? 0)
-      || (sa?.runsAgainst ?? 0) - (sb?.runsAgainst ?? 0)
-      || a.localeCompare(b);
+    const sa = byTeam.get(a),
+      sb = byTeam.get(b);
+    return (
+      (sb?.winPct ?? 0) - (sa?.winPct ?? 0) ||
+      (sb?.runsFor ?? 0) - (sa?.runsFor ?? 0) ||
+      (sa?.runsAgainst ?? 0) - (sb?.runsAgainst ?? 0) ||
+      a.localeCompare(b)
+    );
   };
   return Object.entries(regions)
     .map(([regionId, teams]) => ({ regionId, rankedTeams: [...teams].sort(cmp) }))
@@ -86,14 +89,17 @@ export function winPctMap(standings: Standing[]): Record<string, number> {
 /** 권역 순위 → 참가팀 선발 (권역 크기 비례 배분 + 와일드카드) */
 export async function selectEntrants(
   regions: { regionId: string; rankedTeams: string[] }[],
-  def: Pick<TournamentDef,
-    "totalSlots" | "wildcardSlots" | "perGroupSlots" | "wildcardMaxGroupRank" | "autoSeedsFirst">,
+  def: Pick<
+    TournamentDef,
+    "totalSlots" | "wildcardSlots" | "perGroupSlots" | "wildcardMaxGroupRank" | "autoSeedsFirst"
+  >,
   winPct: Record<string, number>,
 ): Promise<SelectEntrantsResult> {
   return call<SelectEntrantsResult>(
     "selectTournamentEntrantsNative",
     {
-      regions, winPct,
+      regions,
+      winPct,
       totalSlots: def.totalSlots,
       wildcardSlots: def.wildcardSlots,
       perGroupSlots: def.perGroupSlots ?? null,
@@ -114,9 +120,13 @@ export async function generateBracket(
   const b = await call<TournamentBracket | null>(
     "generateTournamentBracketNative",
     {
-      tournamentId: def.id, leagueId: def.leagueId, seededTeams,
-      startWeek: def.startWeek, endWeek: def.endWeek,
-      protagonistTeamId, seasonYear,
+      tournamentId: def.id,
+      leagueId: def.leagueId,
+      seededTeams,
+      startWeek: def.startWeek,
+      endWeek: def.endWeek,
+      protagonistTeamId,
+      seasonYear,
     },
     null,
   );
@@ -173,10 +183,15 @@ export async function openTournament(
 }
 
 /** 주차에 해당하는 대회 (겹치면 order 순으로 앞선 것) */
-export function tournamentAtWeek(week: number, leagueId = "LEAGUE_HIGHSCHOOL"): TournamentDef | null {
-  return TOURNAMENTS
-    .filter((t) => t.leagueId === leagueId && week >= t.startWeek && week <= t.endWeek)
-    .sort((a, b) => a.order - b.order)[0] ?? null;
+export function tournamentAtWeek(
+  week: number,
+  leagueId = "LEAGUE_HIGHSCHOOL",
+): TournamentDef | null {
+  return (
+    TOURNAMENTS.filter(
+      (t) => t.leagueId === leagueId && week >= t.startWeek && week <= t.endWeek,
+    ).sort((a, b) => a.order - b.order)[0] ?? null
+  );
 }
 
 // ── 조별예선 (Phase 5-5d) ─────────────────────────────────────
@@ -186,8 +201,11 @@ export function tournamentAtWeek(week: number, leagueId = "LEAGUE_HIGHSCHOOL"): 
 
 export interface GroupStanding {
   teamId: string;
-  wins: number; losses: number; draws: number;
-  runsFor: number; runsAgainst: number;
+  wins: number;
+  losses: number;
+  draws: number;
+  runsFor: number;
+  runsAgainst: number;
 }
 
 export interface QualifyingGroup {
@@ -225,11 +243,16 @@ export async function buildGroupStage(
   return call<GroupStage | null>(
     "buildGroupStageNative",
     {
-      tournamentId: def.id, leagueId: def.leagueId, seededTeams,
-      groupCount: def.groupCount, advancePerGroup: def.advancePerGroup,
+      tournamentId: def.id,
+      leagueId: def.leagueId,
+      seededTeams,
+      groupCount: def.groupCount,
+      advancePerGroup: def.advancePerGroup,
       startWeek: def.startWeek,
       endWeek: def.startWeek + Math.max(0, def.qualifyWeeks - 1),
-      protagonistTeamId, seasonYear, worldSeed,
+      protagonistTeamId,
+      seasonYear,
+      worldSeed,
       // 예선은 평일 포함 매일 — 대회 기간이 짧다
       dayOffsets: [],
     },
@@ -247,9 +270,10 @@ export async function applyGroupResults(
 
 /** 예선 통과팀 (본선 시드 순) */
 export async function groupQualifiers(stage: GroupStage): Promise<QualifiersResult> {
-  return call<QualifiersResult>(
-    "groupStageQualifiersNative", stage, { qualified: [], groupRanks: {} },
-  );
+  return call<QualifiersResult>("groupStageQualifiersNative", stage, {
+    qualified: [],
+    groupRanks: {},
+  });
 }
 
 /** 본선(8강) 브래킷 — 예선 통과팀으로 만든다. 예선이 끝난 다음 주부터. */
@@ -263,9 +287,13 @@ export async function buildFinalBracket(
   return call<TournamentBracket | null>(
     "generateTournamentBracketNative",
     {
-      tournamentId: def.id, leagueId: def.leagueId, seededTeams: qualified,
-      startWeek: finalStart, endWeek: def.endWeek,
-      protagonistTeamId, seasonYear,
+      tournamentId: def.id,
+      leagueId: def.leagueId,
+      seededTeams: qualified,
+      startWeek: finalStart,
+      endWeek: def.endWeek,
+      protagonistTeamId,
+      seasonYear,
     },
     null,
   );

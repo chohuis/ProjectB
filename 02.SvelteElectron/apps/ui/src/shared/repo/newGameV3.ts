@@ -20,22 +20,31 @@ import { buildForeignSeed } from "../utils/foreignSeed";
  * `surnamesKo`가 짝이다.
  */
 export interface NamePoolData {
-  surnames: string[]; givenA: string[]; givenB: string[];
+  surnames: string[];
+  givenA: string[];
+  givenB: string[];
   western?: boolean;
   /** 성-이름 구분자. 일본식은 " "(사토 하루토), 한국식은 ""(김우찬) */
   sep?: string;
-  surnamesEn?: string[]; givenAEn?: string[];
-  surnamesKo?: string[]; givenAKo?: string[];
+  surnamesEn?: string[];
+  givenAEn?: string[];
+  surnamesKo?: string[];
+  givenAKo?: string[];
 }
 
 // Rust RosterRules와 1:1 (generation_rules.json rosterRules[leagueId])
 export interface RosterRulesData {
   rosterSize: number;
-  pitchingOvrMin: number; pitchingOvrMax: number;
-  battingOvrMin: number; battingOvrMax: number;
-  devRateMin: number; devRateMax: number;
-  gradeMax?: number; ageBase?: number;
-  ageMin?: number; ageMax?: number;
+  pitchingOvrMin: number;
+  pitchingOvrMax: number;
+  battingOvrMin: number;
+  battingOvrMax: number;
+  devRateMin: number;
+  devRateMax: number;
+  gradeMax?: number;
+  ageBase?: number;
+  ageMin?: number;
+  ageMax?: number;
   pitcherRatio?: number;
   withContract?: boolean;
   nationality?: string;
@@ -146,8 +155,15 @@ export function buildRosterParams(
   leagueId: string,
   seasonYear: number,
   worldSeed: number,
-  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number;
-           budget?: number; spendRatio?: number; qualityBias?: number }[],
+  teams: {
+    teamId: string;
+    schoolId?: string;
+    salaryIndex?: number;
+    power?: number;
+    budget?: number;
+    spendRatio?: number;
+    qualityBias?: number;
+  }[],
   rules: RosterRulesData,
   /**
    * 이름 풀 **덮어쓰기**. 보통은 넘기지 않는다 — 안 넘기면 `rules.namePool`을 쓴다.
@@ -244,29 +260,29 @@ export function foreignSlotsFor(
  */
 const SPEND_BY_RESOURCE: Record<string, number> = {
   // 궁핍한 팀은 남길 여유가 없다 — 있는 걸 다 쓴다
-  궁핍: 1.00,
+  궁핍: 1.0,
   // 알뜰한 팀은 아껴 두고 시장에서 기회를 본다
   알뜰: 0.75,
   안정: 0.85,
   // 부유한 팀은 많이 쓰되 여유도 크다
-  부유: 0.90,
+  부유: 0.9,
 };
 
 const QUALITY_BY_PHILOSOPHY: Record<string, number> = {
   // 인원을 많이 데리고 키운다
-  육성중심: 0.20,
+  육성중심: 0.2,
   "젊은피(세대교체)": 0.25,
-  "스파르타(혹독훈련)": 0.30,
+  "스파르타(혹독훈련)": 0.3,
   "부상방지/재활특화": 0.35,
   // 중간
   "근성/언더독": 0.45,
   스몰볼: 0.45,
-  "수비/짜임새": 0.50,
-  데이터중심: 0.50,
+  "수비/짜임새": 0.5,
+  데이터중심: 0.5,
   "전통/정통": 0.55,
   // 좋은 선수를 적게
   투수왕국: 0.65,
-  "공격야구(화력)": 0.70,
+  "공격야구(화력)": 0.7,
   베테랑우대: 0.75,
 };
 
@@ -298,8 +314,12 @@ export function squadPlanOf(t: {
   const spendRatio = res ? SPEND_BY_RESOURCE[res] : undefined;
   // ⚠ 성향이 없으면 전력★로 떨어진다 — ABL·JBL 28팀이 그렇다.
   //   1~5 를 0.3~0.7 로 편다. 강팀일수록 질적이다.
-  const qualityBias = phi !== undefined ? QUALITY_BY_PHILOSOPHY[phi]
-    : (typeof t.power === "number" ? 0.3 + (t.power - 1) * 0.1 : undefined);
+  const qualityBias =
+    phi !== undefined
+      ? QUALITY_BY_PHILOSOPHY[phi]
+      : typeof t.power === "number"
+        ? 0.3 + (t.power - 1) * 0.1
+        : undefined;
   return {
     ...(spendRatio !== undefined ? { spendRatio } : {}),
     ...(qualityBias !== undefined ? { qualityBias } : {}),
@@ -316,9 +336,7 @@ export function squadPlanOf(t: {
  * 2군은 **같은 구단 1군의 지수를 물려받는다.** 별도 예산이 없고,
  * 실제로도 모기업 사정이 2군 연봉을 정한다.
  */
-export function buildSalaryIndex(
-  teams: import("../stores/master").TeamRef[],
-): Map<string, number> {
+export function buildSalaryIndex(teams: import("../stores/master").TeamRef[]): Map<string, number> {
   const out = new Map<string, number>();
   const byLeague = new Map<string, import("../stores/master").TeamRef[]>();
   for (const t of teams) {
@@ -345,8 +363,11 @@ export function buildSalaryIndex(
 }
 
 export async function loadRosterRules(): Promise<GenerationRulesFile> {
-  const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as GenerationRulesFile | null;
-  if (!raw?.rosterRules) throw new Error("[newGameV3] generation_rules.json rosterRules 없음 — v2 데이터 필요");
+  const raw = (await window.projectB!.masterFetch(
+    "players/generation_rules.json",
+  )) as GenerationRulesFile | null;
+  if (!raw?.rosterRules)
+    throw new Error("[newGameV3] generation_rules.json rosterRules 없음 — v2 데이터 필요");
   return raw;
 }
 
@@ -383,8 +404,15 @@ async function generateLeagueNpcs(
   leagueId: string,
   seasonYear: number,
   worldSeed: number,
-  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number;
-           budget?: number; spendRatio?: number; qualityBias?: number }[],
+  teams: {
+    teamId: string;
+    schoolId?: string;
+    salaryIndex?: number;
+    power?: number;
+    budget?: number;
+    spendRatio?: number;
+    qualityBias?: number;
+  }[],
   rules: RosterRulesData,
   salaryRules?: unknown,
   powerRules?: unknown,
@@ -394,10 +422,21 @@ async function generateLeagueNpcs(
   pastService?: unknown,
 ): Promise<Partial<RepoNpc>[]> {
   const params = buildRosterParams(
-    leagueId, seasonYear, worldSeed, teams, rules, undefined,
-    salaryRules, powerRules, entryRules, foreign, talent, pastService);
+    leagueId,
+    seasonYear,
+    worldSeed,
+    teams,
+    rules,
+    undefined,
+    salaryRules,
+    powerRules,
+    entryRules,
+    foreign,
+    talent,
+    pastService,
+  );
   const gen = JSON.parse(
-    await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
+    await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params)),
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
   if (!Array.isArray(gen.npcs)) {
     throw new Error(`[newGameV3] ${leagueId} 로스터 생성 실패: ${gen.error ?? "unknown"}`);
@@ -446,19 +485,26 @@ export async function previewTeamRoster(
   const entryRules = (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry;
 
   const npcs = await generateLeagueNpcs(
-    team.leagueId, seasonYear, worldSeed,
-    [{
-      teamId,
-      schoolId: team.schoolId ?? "",
-      salaryIndex: salaryIndex.get(teamId),
-      power: team.power,
-      // 🔴 예산과 편성 성향 — 안 넘기면 예전처럼 전 팀이 같은 인원이 된다
-      budget: budgetOf(team),
-      ...squadPlanOf(team),
-    }],
+    team.leagueId,
+    seasonYear,
+    worldSeed,
+    [
+      {
+        teamId,
+        schoolId: team.schoolId ?? "",
+        salaryIndex: salaryIndex.get(teamId),
+        power: team.power,
+        // 🔴 예산과 편성 성향 — 안 넘기면 예전처럼 전 팀이 같은 인원이 된다
+        budget: budgetOf(team),
+        ...squadPlanOf(team),
+      },
+    ],
     rules,
-    rulesFile.salaryRules, rulesFile.powerRules, entryRules,
-    foreignSlotsFor(team.leagueId, rulesFile), rulesFile.talentRules,
+    rulesFile.salaryRules,
+    rulesFile.powerRules,
+    entryRules,
+    foreignSlotsFor(team.leagueId, rulesFile),
+    rulesFile.talentRules,
   );
 
   const { generateStaffForTeams } = await import("./staffGen");
@@ -501,13 +547,23 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
 
   const teams = opts.teams ?? HS_ACTIVE_TEAMS_V3.map((teamId) => ({ teamId }));
   const hsNpcs = await generateLeagueNpcs(
-    "LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed,
+    "LEAGUE_HIGHSCHOOL",
+    opts.seasonYear,
+    worldSeed,
     teams.map((t) => {
       const ref = teamOf.get(t.teamId);
-      return { ...t, salaryIndex: salaryIndex.get(t.teamId), power: powerOf.get(t.teamId),
-        ...(ref ? { budget: budgetOf(ref), ...squadPlanOf(ref) } : {}) };
+      return {
+        ...t,
+        salaryIndex: salaryIndex.get(t.teamId),
+        power: powerOf.get(t.teamId),
+        ...(ref ? { budget: budgetOf(ref), ...squadPlanOf(ref) } : {}),
+      };
     }),
-    hsRules, salaryRules, powerRules, entryRules);
+    hsRules,
+    salaryRules,
+    powerRules,
+    entryRules,
+  );
 
   // 나머지 국내 리그 — 팀 목록은 leagueScheduler가 정본이다 (refs에서 파생)
   const otherNpcs: Partial<RepoNpc>[] = [];
@@ -522,17 +578,30 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     if (leagueTeams.length === 0) continue;
     otherNpcs.push(
       ...(await generateLeagueNpcs(
-        lid, opts.seasonYear, worldSeed, leagueTeams, rules,
-        salaryRules, powerRules, entryRules, foreignSlotsFor(lid, rulesFile),
+        lid,
+        opts.seasonYear,
+        worldSeed,
+        leagueTeams,
+        rules,
+        salaryRules,
+        powerRules,
+        entryRules,
+        foreignSlotsFor(lid, rulesFile),
         // ⚠ 재능 분포는 예전부터 안 넘겼다 — 여기서 같이 고치지 않는다(별건)
-        undefined, pastServiceOf(rulesFile))));
+        undefined,
+        pastServiceOf(rulesFile),
+      )),
+    );
   }
 
   // ── 군경팀(상무) — 복무 중인 선수로 채운다 (Phase 6.5) ─────
   // 별도 생성이고 원소속만 실재 프로/2군 팀으로 지정한다 (사용자 확정).
   // 원팀에서 빼내면 8포지션 백업 보장이 깨진다.
   const militaryNpcs = await generateMilitaryRoster(
-    opts.seasonYear, worldSeed, rulesFile.militaryRules);
+    opts.seasonYear,
+    worldSeed,
+    rulesFile.militaryRules,
+  );
 
   const npcs = [...hsNpcs, ...otherNpcs, ...militaryNpcs, ...(opts.namedNpcs ?? [])];
 
@@ -563,8 +632,12 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   let careerSeed: CareerHistorySeed = { rows: [], teamByYear: new Map() };
   try {
     careerSeed = await buildCareerHistorySeed(
-      worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules,
-      (rulesFile.faRules as { eligibleYears?: Record<string, number> } | undefined)?.eligibleYears);
+      worldSeed,
+      opts.seasonYear,
+      npcs,
+      rulesFile.careerHistoryRules,
+      (rulesFile.faRules as { eligibleYears?: Record<string, number> } | undefined)?.eligibleYears,
+    );
   } catch (e) {
     console.warn("[newGameV3] 과거 경력 생성 실패 — 이력 없이 시작", e);
   }
@@ -577,14 +650,16 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
         teamId: n.currentTeam ?? "",
         age: n.age ?? 0,
         // ⚠ 투수는 투구 OVR, 타자는 타격 OVR — 섞으면 엉뚱한 과거가 나온다
-        ovr: (n.playerType === "pitcher"
-          ? n.abilities?.pitching?.ovr
-          : n.abilities?.batting?.ovr) ?? 60,
-        playerType: n.playerType === "pitcher" ? "pitcher" as const : "batter" as const,
+        ovr:
+          (n.playerType === "pitcher" ? n.abilities?.pitching?.ovr : n.abilities?.batting?.ovr) ??
+          60,
+        playerType: n.playerType === "pitcher" ? ("pitcher" as const) : ("batter" as const),
         // 그 해 소속팀 — 이력이 없는 사람은 `undefined` 라 현재 팀으로 떨어진다
         teamByYear: careerSeed.teamByYear.get(n.npcId ?? ""),
       })),
-      worldSeed, opts.seasonYear);
+      worldSeed,
+      opts.seasonYear,
+    );
     const byNpc = new Map<string, typeof past>();
     for (const r of past) byNpc.set(r.npcId, [...(byNpc.get(r.npcId) ?? []), r]);
     for (const n of npcs) {
@@ -595,10 +670,20 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
       // ⚠ 오래된 해부터 — 화면이 그 순서를 뒤집어 최근부터 보여준다
       const ex = (n.extra ??= {});
       const prev = (ex.careerHistory as unknown[] | undefined) ?? [];
-      ex.careerHistory = [...prev, ...rows
-        .slice().sort((x, y) => x.year - y.year)
-        .map((r) => ({ year: r.year, leagueId: r.leagueId, teamId: r.teamId,
-          statLine: r.statLine, highlights: [], stats: r.stats }))];
+      ex.careerHistory = [
+        ...prev,
+        ...rows
+          .slice()
+          .sort((x, y) => x.year - y.year)
+          .map((r) => ({
+            year: r.year,
+            leagueId: r.leagueId,
+            teamId: r.teamId,
+            statLine: r.statLine,
+            highlights: [],
+            stats: r.stats,
+          })),
+      ];
     }
   } catch (e) {
     console.warn("[newGameV3] 과거 성적 생성 실패 — 연도별 성적 없이 시작", e);
@@ -651,7 +736,8 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     const past = buildPastStandings(opts.allTeams ?? [], worldSeed, opts.seasonYear);
     for (const [year, rows] of past) {
       await window.projectB!.seasonSaveHistoryStandings(
-        JSON.stringify({ slotId: opts.slotId, seasonYear: year, rows }));
+        JSON.stringify({ slotId: opts.slotId, seasonYear: year, rows }),
+      );
     }
   } catch (e) {
     console.warn("[newGameV3] 과거 순위 생성 실패 — 연감 없이 시작", e);
@@ -674,13 +760,22 @@ async function generateMilitaryRoster(
   if (!rules) return [];
   const originTeams = [
     ...(ALL_TEAMS_BY_LEAGUE.LEAGUE_KBL ?? []).map((teamId) => ({ teamId, leagueId: "LEAGUE_KBL" })),
-    ...(ALL_TEAMS_BY_LEAGUE.LEAGUE_KBL_FARM ?? []).map((teamId) => ({ teamId, leagueId: "LEAGUE_KBL_FARM" })),
+    ...(ALL_TEAMS_BY_LEAGUE.LEAGUE_KBL_FARM ?? []).map((teamId) => ({
+      teamId,
+      leagueId: "LEAGUE_KBL_FARM",
+    })),
   ];
   if (originTeams.length === 0) return [];
 
-  const raw = await window.projectB!.engine("generateMilitaryRosterNative", JSON.stringify({
-    worldSeed: worldSeed >>> 0, seasonYear, rules, originTeams,
-  }));
+  const raw = await window.projectB!.engine(
+    "generateMilitaryRosterNative",
+    JSON.stringify({
+      worldSeed: worldSeed >>> 0,
+      seasonYear,
+      rules,
+      originTeams,
+    }),
+  );
   const parsed = JSON.parse(raw) as { npcs?: Partial<RepoNpc>[]; error?: string };
   if (!Array.isArray(parsed.npcs)) {
     console.warn("[newGameV3] 상무 로스터 생성 실패 — 빈 팀으로 진행", parsed.error);
@@ -691,10 +786,15 @@ async function generateMilitaryRoster(
 
 /** 계약·이적이 있는 리그. 학교 리그(고교·대학)엔 그런 개념이 없다 */
 const CONTRACT_LEAGUES: ReadonlySet<string> = new Set([
-  "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_INDEPENDENT",
+  "LEAGUE_KBL",
+  "LEAGUE_KBL_FARM",
+  "LEAGUE_INDEPENDENT",
   // 해외를 열면서 빠져 있었다 — ABL·JBL 선수는 과거 이적이 **0건**이었다
   // (국내는 1,254건). 12년차 베테랑도 한 팀에서만 뛴 세계였다
-  "LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM",
+  "LEAGUE_ABL",
+  "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL",
+  "LEAGUE_JBL_FARM",
 ]);
 
 /**
@@ -710,7 +810,10 @@ const CONTRACT_LEAGUES: ReadonlySet<string> = new Set([
  * 리그별 입단 규칙을 정하면 그때 이 목록에서 뺀다.
  */
 const NO_ENTRY_ROUTE_LEAGUES: ReadonlySet<string> = new Set([
-  "LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM",
+  "LEAGUE_ABL",
+  "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL",
+  "LEAGUE_JBL_FARM",
 ]);
 
 /**
@@ -747,14 +850,20 @@ interface CareerHistorySeed {
  *   없는 리그(해외 · `skipEntry`)엔 출발점이 그것뿐이다.
  */
 export function teamByYearOf(
-  events: readonly { npcId: string; seasonYear: number; fromTeamId: string | null; toTeamId: string }[],
+  events: readonly {
+    npcId: string;
+    seasonYear: number;
+    fromTeamId: string | null;
+    toTeamId: string;
+  }[],
   seasonYear: number,
   years: number,
 ): Map<string, Map<number, string>> {
-  const byNpc = new Map<string, typeof events[number][]>();
+  const byNpc = new Map<string, (typeof events)[number][]>();
   for (const e of events) {
     const list = byNpc.get(e.npcId);
-    if (list) list.push(e); else byNpc.set(e.npcId, [e]);
+    if (list) list.push(e);
+    else byNpc.set(e.npcId, [e]);
   }
   const out = new Map<string, Map<number, string>>();
   for (const [npcId, list] of byNpc) {
@@ -813,16 +922,24 @@ async function buildCareerHistorySeed(
     // KBL 용병(USA)은 여전히 여기로 빠진다 — 그쪽은 `buildForeignSeed`가 맡는다.
     //
     // ⚠ 같은 함정에 트레이드 윈도우도 걸렸었다(f6fb04fe7). **다섯 번째다.**
-    if (isForeignPlayer(lid, n.nationality)) { foreigners.push(n); continue; }
+    if (isForeignPlayer(lid, n.nationality)) {
+      foreigners.push(n);
+      continue;
+    }
     if (!byLeague.has(lid)) byLeague.set(lid, []);
     byLeague.get(lid)!.push(n);
   }
 
   const rows: Array<Record<string, unknown>> = [];
-  const allEvents: Array<{ npcId: string; seasonYear: number; fromTeamId: string | null; toTeamId: string }> = [];
+  const allEvents: Array<{
+    npcId: string;
+    seasonYear: number;
+    fromTeamId: string | null;
+    toTeamId: string;
+  }> = [];
   for (const [leagueId, list] of byLeague) {
     const leagueTeams = [...new Set(list.map((n) => n.currentTeam ?? "").filter(Boolean))];
-    if (leagueTeams.length < 2) continue;   // 팀이 하나면 이적할 데가 없다
+    if (leagueTeams.length < 2) continue; // 팀이 하나면 이적할 데가 없다
 
     // 🔴 **FA 자격 연차의 정본은 `faRules.eligibleYears` 하나다** (B-29 D-3 ·
     //   사용자 확정 ③). `careerHistoryRules.faEligibleYears` 는 8 이었고 게임은
@@ -831,26 +948,39 @@ async function buildCareerHistorySeed(
     //   `faRules._note` 가 바로 이 형태를 경고해 뒀는데 사본이 셋이 됐던 것이다.
     //   ⚠ 이력 생성은 리그를 이미 알고 있다 — 리그마다 값을 갈아 넘긴다.
     const eligible = faEligibleYears?.[leagueId] ?? faEligibleYears?.default;
-    const leagueRules = eligible != null
-      ? { ...(rules as Record<string, unknown>), faEligibleYears: eligible }
-      : rules;
+    const leagueRules =
+      eligible != null
+        ? { ...(rules as Record<string, unknown>), faEligibleYears: eligible }
+        : rules;
 
-    const raw = await window.projectB!.engine("generateCareerHistoryNative", JSON.stringify({
-      worldSeed: worldSeed >>> 0,
-      seasonYear,
-      rules: leagueRules,
-      skipEntry: NO_ENTRY_ROUTE_LEAGUES.has(leagueId),
-      players: list.map((n) => ({
-        npcId: n.npcId, name: n.name, age: n.age,
-        proServiceYears: n.proServiceYears ?? 0,
-        currentTeam: n.currentTeam, currentLeague: leagueId,
-      })),
-      leagueTeams,
-    }));
+    const raw = await window.projectB!.engine(
+      "generateCareerHistoryNative",
+      JSON.stringify({
+        worldSeed: worldSeed >>> 0,
+        seasonYear,
+        rules: leagueRules,
+        skipEntry: NO_ENTRY_ROUTE_LEAGUES.has(leagueId),
+        players: list.map((n) => ({
+          npcId: n.npcId,
+          name: n.name,
+          age: n.age,
+          proServiceYears: n.proServiceYears ?? 0,
+          currentTeam: n.currentTeam,
+          currentLeague: leagueId,
+        })),
+        leagueTeams,
+      }),
+    );
     const parsed = JSON.parse(raw) as {
       events?: Array<{
-        npcId: string; npcName: string; seasonYear: number; category: string;
-        fromTeamId: string | null; toTeamId: string; leagueId: string; detail: string;
+        npcId: string;
+        npcName: string;
+        seasonYear: number;
+        category: string;
+        fromTeamId: string | null;
+        toTeamId: string;
+        leagueId: string;
+        detail: string;
       }>;
       error?: string;
     };
@@ -860,15 +990,23 @@ async function buildCareerHistorySeed(
     }
     for (const e of parsed.events) {
       rows.push({
-        seasonYear: e.seasonYear, week: null, category: e.category,
-        playerId: e.npcId, playerName: e.npcName,
-        fromTeamId: e.fromTeamId, fromLeagueId: e.fromTeamId ? e.leagueId : null,
-        toTeamId: e.toTeamId, toLeagueId: e.leagueId,
-        detail: e.detail, groupId: null,
+        seasonYear: e.seasonYear,
+        week: null,
+        category: e.category,
+        playerId: e.npcId,
+        playerName: e.npcName,
+        fromTeamId: e.fromTeamId,
+        fromLeagueId: e.fromTeamId ? e.leagueId : null,
+        toTeamId: e.toTeamId,
+        toLeagueId: e.leagueId,
+        detail: e.detail,
+        groupId: null,
       });
       allEvents.push({
-        npcId: e.npcId, seasonYear: e.seasonYear,
-        fromTeamId: e.fromTeamId, toTeamId: e.toTeamId,
+        npcId: e.npcId,
+        seasonYear: e.seasonYear,
+        fromTeamId: e.fromTeamId,
+        toTeamId: e.toTeamId,
       });
     }
   }
@@ -880,25 +1018,34 @@ async function buildCareerHistorySeed(
     const rulesFile = await loadRosterRules();
     const origin = originRulesOf(rulesFile.foreignRules);
     // 시드 난수 — 같은 세계를 다시 열면 같은 기록이어야 한다
-    let x = (worldSeed ^ 0x5EEDF09D) >>> 0;
-    const rand = () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; };
+    let x = (worldSeed ^ 0x5eedf09d) >>> 0;
+    const rand = () => {
+      x = (x * 1664525 + 1013904223) >>> 0;
+      return x / 4294967296;
+    };
 
     // 떠난 용병은 **작년에 나간 사람들**이라 이름이 세계에 없다. 남아 있는
     // 용병 이름 풀에서 빌려 오면 같은 이름이 둘이 되므로, 팀당 한 명씩
     // 실제 로스터에서 **빠진 자리**만큼만 만든다 — 여기선 팀 수의 3분의 1
-    const teamsWithForeign = [...new Set(foreigners.map((n) => n.currentTeam ?? ""))]
-      .filter(Boolean);
+    const teamsWithForeign = [...new Set(foreigners.map((n) => n.currentTeam ?? ""))].filter(
+      Boolean,
+    );
     const departedNames = teamsWithForeign
       .slice(0, Math.max(1, Math.round(teamsWithForeign.length / 3)))
       .map((teamId, i) => ({ name: `Foreign Departed ${i + 1}`, teamId }));
 
     const seedRows = buildForeignSeed({
       players: foreigners.map((n) => ({
-        npcId: n.npcId ?? "", name: n.name ?? "",
-        teamId: n.currentTeam ?? "", proServiceYears: n.proServiceYears ?? 0,
+        npcId: n.npcId ?? "",
+        name: n.name ?? "",
+        teamId: n.currentTeam ?? "",
+        proServiceYears: n.proServiceYears ?? 0,
       })),
-      rules: origin, seasonYear, rand,
-      departed: departedNames.length, departedNames,
+      rules: origin,
+      seasonYear,
+      rand,
+      departed: departedNames.length,
+      departedNames,
     });
     rows.push(...(seedRows as unknown as Record<string, unknown>[]));
   }
@@ -937,17 +1084,26 @@ export async function activateLeagueV3(
   // 폴백은 `buildRosterParams`가 한다 — 예전엔 이 자리에서만 막아서
   // 새 게임 경로가 그대로 샜다(ABL·JBL 784명이 한국 이름)
   const params = buildRosterParams(
-    leagueId, seasonYear, worldSeed, teams, rules, namePool,
-    rulesFile.salaryRules, rulesFile.powerRules,
+    leagueId,
+    seasonYear,
+    worldSeed,
+    teams,
+    rules,
+    namePool,
+    rulesFile.salaryRules,
+    rulesFile.powerRules,
     (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry,
-    foreignSlotsFor(leagueId, rulesFile), rulesFile.talentRules,
+    foreignSlotsFor(leagueId, rulesFile),
+    rulesFile.talentRules,
     // ⚠ 이 경로도 같이 넘긴다 — 한쪽만 고치면 해외 진출로 열린 리그만
     //   한국인이 전원 미필로 남는다(이 파일이 이미 이름 풀에서 겪은 형태다)
-    pastServiceOf(rulesFile));
+    pastServiceOf(rulesFile),
+  );
   const gen = JSON.parse(
-    await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
+    await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params)),
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
-  if (!Array.isArray(gen.npcs)) throw new Error(`[activateLeagueV3] 생성 실패: ${gen.error ?? "unknown"}`);
+  if (!Array.isArray(gen.npcs))
+    throw new Error(`[activateLeagueV3] 생성 실패: ${gen.error ?? "unknown"}`);
 
   const r = await slotRepo.insertNpcs(slotId, gen.npcs);
   return { inserted: r.inserted };

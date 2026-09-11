@@ -33,18 +33,19 @@ const BLOCK = HEAD < 0 ? "" : CODE.slice(HEAD, CODE.indexOf("\n  }", HEAD));
 
 describe("짧은 높이에서 카드가 살아 있다", () => {
   it("짧은 높이 블록이 있다", () => {
-    expect(HEAD, "720p 대응 블록이 사라졌다 — 카드가 다시 이름만 남는다")
-      .toBeGreaterThan(-1);
+    expect(HEAD, "720p 대응 블록이 사라졌다 — 카드가 다시 이름만 남는다").toBeGreaterThan(-1);
   });
 
   it("목록을 두 열로 눕힌다", () => {
-    expect(BLOCK, "세로로 쌓으면 1280×720 에 안 들어간다")
-      .toMatch(/\.bar-list, \.line-list \{[^}]*grid-template-columns:\s*1fr 1fr/);
+    expect(BLOCK, "세로로 쌓으면 1280×720 에 안 들어간다").toMatch(
+      /\.bar-list, \.line-list \{[^}]*grid-template-columns:\s*1fr 1fr/,
+    );
   });
 
   it("상황 패널이 자리를 내준다", () => {
-    expect(BLOCK, "내주는 데가 없으면 카드 행이 46px 에 머문다")
-      .toMatch(/\.diamond \{[^}]*width:\s*88px/);
+    expect(BLOCK, "내주는 데가 없으면 카드 행이 46px 에 머문다").toMatch(
+      /\.diamond \{[^}]*width:\s*88px/,
+    );
     expect(BLOCK).toMatch(/\.sbo-label \{[^}]*font-size/);
   });
 
@@ -54,8 +55,9 @@ describe("짧은 높이에서 카드가 살아 있다", () => {
    *    이 검사는 나중에 누가 "높이가 모자라니 존을 줄이자"로 되돌리는 걸 막는다.
    */
   it("존 캔버스는 안 건드린다", () => {
-    expect(BLOCK, "존을 줄여도 행 높이는 안 준다 — 조준 정밀도만 잃는다")
-      .not.toMatch(/\.zone-canvas/);
+    expect(BLOCK, "존을 줄여도 행 높이는 안 준다 — 조준 정밀도만 잃는다").not.toMatch(
+      /\.zone-canvas/,
+    );
     expect(BLOCK).not.toMatch(/\.sz-inner-box/);
   });
 });
@@ -70,7 +72,9 @@ describe("짧은 높이에서 카드가 살아 있다", () => {
  *   실측: 88px 에서 네 거리 [22,22,22,22] · 104px 에서 [27,27,27,27].
  */
 describe("다이아몬드가 줄어도 베이스가 제자리다", () => {
-  const R = (n: string) => CODE.match(new RegExp(`\.${n} \{[^}]*\}`))?.[0] ?? "";
+  // ⚠ **템플릿 문자열이 한 겹 벗긴다** — `\.` 은 정규식에 `.` 으로 들어간다.
+  //   탈출이 아무 일도 안 하고 있었으니 지운다(찾는 값은 그대로다).
+  const R = (n: string) => CODE.match(new RegExp(`.${n} {[^}]*}`))?.[0] ?? "";
 
   it("네 베이스가 다 있다", () => {
     for (const n of ["b1", "b2", "b3", "home"]) expect(R(n), `${n} 이 없다`).not.toBe("");
@@ -78,15 +82,17 @@ describe("다이아몬드가 줄어도 베이스가 제자리다", () => {
 
   it("px 로 박아 두지 않았다", () => {
     for (const n of ["b1", "b2", "b3", "home"]) {
-      expect(R(n), `${n} 이 px 고정이라 다이아몬드가 줄면 자리를 벗어난다`)
-        .not.toMatch(/:\s*\d+px[;\s]/);
+      expect(R(n), `${n} 이 px 고정이라 다이아몬드가 줄면 자리를 벗어난다`).not.toMatch(
+        /:\s*\d+px[;\s]/,
+      );
     }
   });
 
   it("가운데 축은 절반에서 베이스 절반을 뺀다", () => {
     for (const n of ["b1", "b2", "b3", "home"]) {
-      expect(R(n), `${n} 의 가운데 축이 어긋난다 — 홈과 1루만 붙어 보인 적이 있다`)
-        .toMatch(/calc\(50% - 8px\)/);
+      expect(R(n), `${n} 의 가운데 축이 어긋난다 — 홈과 1루만 붙어 보인 적이 있다`).toMatch(
+        /calc\(50% - 8px\)/,
+      );
     }
   });
 });

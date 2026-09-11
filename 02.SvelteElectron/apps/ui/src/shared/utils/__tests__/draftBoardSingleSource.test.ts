@@ -74,7 +74,7 @@ describe("드래프트 보드 — 정본 하나", () => {
   it("index.d.ts가 실제로 재생성됐다", () => {
     // `build:native`가 자동 생성한다 — 안 돌렸으면 죽은 export가 남는다
     const dts = resolve(ROOT, "packages/engine-native/index.d.ts");
-    if (!existsSync(dts)) return;   // 빌드 전 환경에서는 건너뛴다
+    if (!existsSync(dts)) return; // 빌드 전 환경에서는 건너뛴다
     expect(readFileSync(dts, "utf8")).not.toMatch(/runDraftBoardNative/);
   });
 });

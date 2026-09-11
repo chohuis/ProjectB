@@ -36,8 +36,7 @@ const COUNT = CODE.slice(
 
 describe("탈삼진을 정확히 센다", () => {
   it("셈하는 자리를 찾았다", () => {
-    expect(CODE, "`totalStrikeouts++` 가 사라졌다 — 검사가 헛돈다")
-      .toContain("totalStrikeouts++");
+    expect(CODE, "`totalStrikeouts++` 가 사라졌다 — 검사가 헛돈다").toContain("totalStrikeouts++");
   });
 
   it("`isStrikeout` 으로 가른다", () => {
@@ -46,8 +45,9 @@ describe("탈삼진을 정확히 센다", () => {
 
   /** ⚠ 이것이 옛 간접 판정이다. 되돌리면 이 줄이 잡는다. */
   it("아웃 수 증가로 짐작하지 않는다", () => {
-    expect(COUNT, "간접 판정으로 돌아갔다 — 도루 저지가 삼진으로 셈된다")
-      .not.toMatch(/isStrike\([\s\S]{0,60}count\.out\s*>\s*prevOuts/);
+    expect(COUNT, "간접 판정으로 돌아갔다 — 도루 저지가 삼진으로 셈된다").not.toMatch(
+      /isStrike\([\s\S]{0,60}count\.out\s*>\s*prevOuts/,
+    );
   });
 
   it("`isStrikeout` 을 실제로 들여온다", () => {
@@ -72,13 +72,13 @@ describe("경기 중에 탈삼진이 보인다", () => {
    *   자세한 계측은 docs/TRACK_C_EYECHECK.md.
    */
   it("머리글에 K 표식이 있다", () => {
-    expect(CODE, "던지는 동안 탈삼진이 안 보인다 — 0 이어도 눈에 안 띈다")
-      .toMatch(/class="k-tag"[^>]*>K \{totalStrikeouts\}</);
+    expect(CODE, "던지는 동안 탈삼진이 안 보인다 — 0 이어도 눈에 안 띈다").toMatch(
+      /class="k-tag"[^>]*>K \{totalStrikeouts\}</,
+    );
   });
 
   it("목록에 넣지 않았다", () => {
-    expect(CODE, "실사용 해상도에서 목록은 접혀 있어 넣어도 안 보인다")
-      .not.toMatch(/bl">탈삼진</);
+    expect(CODE, "실사용 해상도에서 목록은 접혀 있어 넣어도 안 보인다").not.toMatch(/bl">탈삼진</);
   });
 
   /**
@@ -86,10 +86,8 @@ describe("경기 중에 탈삼진이 보인다", () => {
    *    그걸 붙이면 경기 내내 0 이라, 있으나 마나다.
    */
   it("경기 중에도 늘어나는 값을 쓴다", () => {
-    const TAG = CODE.slice(CODE.indexOf('class="k-tag"'),
-      CODE.indexOf('class="k-tag"') + 120);
-    expect(TAG, "종료 때만 채워지는 값이라 경기 내내 0 이다")
-      .not.toMatch(/gameResult\.strikeouts/);
+    const TAG = CODE.slice(CODE.indexOf('class="k-tag"'), CODE.indexOf('class="k-tag"') + 120);
+    expect(TAG, "종료 때만 채워지는 값이라 경기 내내 0 이다").not.toMatch(/gameResult\.strikeouts/);
     expect(TAG).toMatch(/\{totalStrikeouts\}/);
   });
 
@@ -97,8 +95,10 @@ describe("경기 중에 탈삼진이 보인다", () => {
   it("쓰는 색 토큰이 실재한다", () => {
     const RULE = CODE.slice(CODE.indexOf(".k-tag {"), CODE.indexOf(".k-tag {") + 300);
     for (const t of RULE.match(/var\(--[a-z-]+\)/g) ?? []) {
-      expect(SRC.includes(t.slice(4, -1) + ":") || DEFINED.includes(t.slice(4, -1) + ":"),
-        `${t} 이 어디에도 정의돼 있지 않다`).toBe(true);
+      expect(
+        SRC.includes(t.slice(4, -1) + ":") || DEFINED.includes(t.slice(4, -1) + ":"),
+        `${t} 이 어디에도 정의돼 있지 않다`,
+      ).toBe(true);
     }
   });
 });

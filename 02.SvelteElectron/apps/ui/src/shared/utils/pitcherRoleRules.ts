@@ -11,12 +11,28 @@
  *   자리를 차지하지 않는 사람을 세면 `ahead` 가 부풀어 "N명 있다" 가 거짓이 된다.
  */
 import type { EntityRow, NpcLiveStat, PitchEntry as CatalogPitch } from "../stores/master";
-import type { NpcInjuryEntry, PitchEntry, PitchingAttributes, ProtagonistSave } from "../types/save";
+import type {
+  NpcInjuryEntry,
+  PitchEntry,
+  PitchingAttributes,
+  ProtagonistSave,
+} from "../types/save";
 import { rotationSizeForLeague } from "./rosterEngine";
 
 export interface PitcherRoleRules {
   weights: Record<string, Record<string, number>>;
-  arsenal: Record<string, { count?: number; countCap?: number; gradeAvg?: number; gradeBest2?: number; gradeBest?: number; groups?: number; developingWeight?: number }>;
+  arsenal: Record<
+    string,
+    {
+      count?: number;
+      countCap?: number;
+      gradeAvg?: number;
+      gradeBest2?: number;
+      gradeBest?: number;
+      groups?: number;
+      developingWeight?: number;
+    }
+  >;
   closerSize?: number;
   offRecommendation?: { perSeatOver: number; floor: number };
 }
@@ -32,7 +48,10 @@ export function primePitcherRoleRules(rulesFile: {
   if (r && r.weights && r.arsenal) {
     // `_note` 같은 설명 키는 뺀다 — Rust 가 역할 이름으로만 읽는다
     const clean = (o: Record<string, unknown>) =>
-      Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_"))) as Record<string, never>;
+      Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_"))) as Record<
+        string,
+        never
+      >;
     _rules = {
       weights: clean(r.weights as Record<string, unknown>),
       arsenal: clean(r.arsenal as Record<string, unknown>),
@@ -41,13 +60,24 @@ export function primePitcherRoleRules(rulesFile: {
     };
   }
   const b = rulesFile.rosterOpsRules?.bullpenSize;
-  if (b) _bullpen = Object.fromEntries(Object.entries(b).filter(([k]) => !k.startsWith("_"))) as Record<string, number>;
+  if (b)
+    _bullpen = Object.fromEntries(Object.entries(b).filter(([k]) => !k.startsWith("_"))) as Record<
+      string,
+      number
+    >;
 }
 
 /** 검사용 — 실린 규칙을 되돌린다 */
-export function resetPitcherRoleRulesForTest(): void { _rules = null; _bullpen = {}; }
-export function isPitcherRoleRulesPrimed(): boolean { return _rules !== null; }
-export function pitcherRoleRules(): PitcherRoleRules | null { return _rules; }
+export function resetPitcherRoleRulesForTest(): void {
+  _rules = null;
+  _bullpen = {};
+}
+export function isPitcherRoleRulesPrimed(): boolean {
+  return _rules !== null;
+}
+export function pitcherRoleRules(): PitcherRoleRules | null {
+  return _rules;
+}
 
 export function bullpenSizeForLeague(leagueId: string): number {
   return _bullpen[leagueId] ?? _bullpen.default ?? 0;
@@ -85,8 +115,15 @@ export function roleDepthOf(
 
 export interface RolePitcherRef {
   id: string;
-  stamina?: number; velocity?: number; command?: number; control?: number; movement?: number;
-  mentality?: number; recovery?: number; clutch?: number; holdRunners?: number;
+  stamina?: number;
+  velocity?: number;
+  command?: number;
+  control?: number;
+  movement?: number;
+  mentality?: number;
+  recovery?: number;
+  clutch?: number;
+  holdRunners?: number;
   pitches?: { grade: number; group: string }[];
 }
 
@@ -110,7 +147,10 @@ export interface RecommendResult {
   error?: string;
 }
 
-function pitchRefs(pitches: PitchEntry[] | undefined, catalog: readonly CatalogPitch[]): { grade: number; group: string }[] | undefined {
+function pitchRefs(
+  pitches: PitchEntry[] | undefined,
+  catalog: readonly CatalogPitch[],
+): { grade: number; group: string }[] | undefined {
   if (!pitches || pitches.length === 0) return undefined;
   const groupOf = new Map(catalog.map((c) => [c.id, c.group] as const));
   return pitches.map((p) => ({ grade: p.grade, group: groupOf.get(p.id) ?? "" }));
@@ -119,8 +159,15 @@ function pitchRefs(pitches: PitchEntry[] | undefined, catalog: readonly CatalogP
 function attrs(p: Partial<PitchingAttributes> | undefined): Omit<RolePitcherRef, "id" | "pitches"> {
   if (!p) return {};
   return {
-    stamina: p.stamina, velocity: p.velocity, command: p.command, control: p.control, movement: p.movement,
-    mentality: p.mentality, recovery: p.recovery, clutch: p.clutch, holdRunners: p.holdRunners,
+    stamina: p.stamina,
+    velocity: p.velocity,
+    command: p.command,
+    control: p.control,
+    movement: p.movement,
+    mentality: p.mentality,
+    recovery: p.recovery,
+    clutch: p.clutch,
+    holdRunners: p.holdRunners,
   };
 }
 
@@ -161,7 +208,9 @@ export function buildRecommendParams(args: {
 }
 
 /** Rust `recommend_pitcher_role` 호출 — 오류면 `error` 가 든 채 돌아온다(호출부가 폴백) */
-export async function recommendPitcherRoleNative(params: RecommendParams): Promise<RecommendResult> {
+export async function recommendPitcherRoleNative(
+  params: RecommendParams,
+): Promise<RecommendResult> {
   const raw = await window.projectB!.engine("recommendPitcherRoleNative", JSON.stringify(params));
   return JSON.parse(raw) as RecommendResult;
 }

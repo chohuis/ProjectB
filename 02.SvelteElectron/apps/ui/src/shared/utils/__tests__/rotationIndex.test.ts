@@ -48,25 +48,40 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
  * "선발이 undefined"로 실패한다 — 처음에 그렇게 짰다.
  */
 function makeTeam(teamId: string): EntityRow[] {
-  const row = (id: string, player: Record<string, unknown>) => ({
-    id, role: "player", teamId, status: "active",
-    details: { player },
-  }) as unknown as EntityRow;
+  const row = (id: string, player: Record<string, unknown>) =>
+    ({
+      id,
+      role: "player",
+      teamId,
+      status: "active",
+      details: { player },
+    }) as unknown as EntityRow;
 
   const sp = (n: number, ovr: number) =>
     row(`PLY_SP_${n}`, {
-      teamId, playerType: "pitcher", position: "SP",
-      pitching: { ovr }, batting: { ovr: 20 }, age: 18,
+      teamId,
+      playerType: "pitcher",
+      position: "SP",
+      pitching: { ovr },
+      batting: { ovr: 20 },
+      age: 18,
     });
   // 타자도 있어야 라인업이 선다 — 로테이션 판정엔 안 쓰인다
   const bat = (n: number) =>
     row(`PLY_BAT_${n}`, {
-      teamId, playerType: "batter", position: "CF",
-      batting: { ovr: 60 }, pitching: { ovr: 0 }, age: 18,
+      teamId,
+      playerType: "batter",
+      position: "CF",
+      batting: { ovr: 60 },
+      pitching: { ovr: 0 },
+      age: 18,
     });
 
   return [
-    sp(1, 78), sp(2, 72), sp(3, 66), sp(4, 60),
+    sp(1, 78),
+    sp(2, 72),
+    sp(3, 66),
+    sp(4, 60),
     ...Array.from({ length: 9 }, (_, i) => bat(i)),
   ];
 }
@@ -155,7 +170,13 @@ describe("로테이션 인덱스", () => {
       // 피로 없음 · rotIdx 0 · rotationSize 5 · leagueId "" (통합 엔진 미적용)
       // · npcLiveStats 없음(생성값 OVR). 값이 있고 타입도 맞아 조용했다
       const g = read("apps/ui/src/shared/usecases/weekPhases/games.ts");
-      for (const k of ["conditions:", "homeRotIdx", "rotationSize:", "npcLiveStats:", "leagueId,"]) {
+      for (const k of [
+        "conditions:",
+        "homeRotIdx",
+        "rotationSize:",
+        "npcLiveStats:",
+        "leagueId,",
+      ]) {
         expect(g).toContain(k);
       }
       expect(g).toMatch(/nextHomeRotIdx: sim\.nextHomeRotIdx/);

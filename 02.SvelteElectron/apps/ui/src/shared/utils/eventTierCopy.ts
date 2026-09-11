@@ -25,8 +25,7 @@ import type { EventGrade } from "./tierRules";
  */
 
 export type EventTheme =
-  | "body" | "media" | "social" | "team" | "train"
-  | "career" | "people" | "money" | "story";
+  "body" | "media" | "social" | "team" | "train" | "career" | "people" | "money" | "story";
 
 export interface GradeChip {
   label: string;
@@ -50,9 +49,9 @@ export interface GradeChip {
  * 목록에서 분류 칩과 등급 칩이 나란히 서므로 같은 색이면 둘을 못 가른다.
  */
 export const GRADE_CHIP: Partial<Record<EventGrade, GradeChip>> = {
-  rare:   { label: "레어",   accent: "#1B6AA5", accentDark: "#6BB6F0" },
+  rare: { label: "레어", accent: "#1B6AA5", accentDark: "#6BB6F0" },
   unique: { label: "유니크", accent: "#7B3FA0", accentDark: "#C79BE8" },
-  hidden: { label: "히든",   accent: "#8A6100", accentDark: "#F0C25C" },
+  hidden: { label: "히든", accent: "#8A6100", accentDark: "#F0C25C" },
 };
 
 export function gradeChip(g: EventGrade | undefined | null): GradeChip | null {
@@ -71,7 +70,10 @@ export function hidesNumbers(g: EventGrade | undefined | null): boolean {
  *   표시라 위에 위기를 겹치면 무엇이 드문 것인지 안 보인다.
  */
 export const CRISIS_LABEL = "위기";
-export function isCrisis(g: EventGrade | undefined | null, theme: string | undefined | null): boolean {
+export function isCrisis(
+  g: EventGrade | undefined | null,
+  theme: string | undefined | null,
+): boolean {
   if (g !== "rare" && g !== "unique") return false;
   return theme === "body" || theme === "crisis";
 }
@@ -84,22 +86,35 @@ export const COST_LEAD = "이 선택에는 대가가 따른다";
 // ⚠ **얻는 말과 내주는 말을 따로 둔다.** 「관계」 한 낱말만 보이면 얻는지
 //   내주는지를 모른다 — §2 의 예문(「큰 것을 얻는다 · 관계를 내준다」)이
 //   부호를 말로 들고 있다.
-interface KindCopy { gain: string; lose: string }
+interface KindCopy {
+  gain: string;
+  lose: string;
+}
 
 const KIND: Record<string, KindCopy> = {
-  growth: { gain: "큰 것을 얻는다",   lose: "가진 것을 잃는다" },
-  train:  { gain: "실력이 는다",       lose: "훈련이 밀린다" },
-  chance: { gain: "기회가 열린다",     lose: "기회가 닫힌다" },
-  people: { gain: "사람을 얻는다",     lose: "관계를 내준다" },
-  money:  { gain: "돈이 들어온다",     lose: "돈을 내준다" },
-  body:   { gain: "몸이 편해진다",     lose: "몸을 갈아 넣는다" },
-  mind:   { gain: "마음이 놓인다",     lose: "마음을 다친다" },
-  fame:   { gain: "이름이 알려진다",   lose: "이름값을 깎는다" },
-  study:  { gain: "학업이 오른다",     lose: "학업을 미룬다" },
+  growth: { gain: "큰 것을 얻는다", lose: "가진 것을 잃는다" },
+  train: { gain: "실력이 는다", lose: "훈련이 밀린다" },
+  chance: { gain: "기회가 열린다", lose: "기회가 닫힌다" },
+  people: { gain: "사람을 얻는다", lose: "관계를 내준다" },
+  money: { gain: "돈이 들어온다", lose: "돈을 내준다" },
+  body: { gain: "몸이 편해진다", lose: "몸을 갈아 넣는다" },
+  mind: { gain: "마음이 놓인다", lose: "마음을 다친다" },
+  fame: { gain: "이름이 알려진다", lose: "이름값을 깎는다" },
+  study: { gain: "학업이 오른다", lose: "학업을 미룬다" },
 };
 
 /** 종류를 세우는 순서 — 큰 것부터. 표시는 이 순서로 자른다 */
-const KIND_ORDER = ["growth", "chance", "train", "people", "fame", "money", "body", "mind", "study"];
+const KIND_ORDER = [
+  "growth",
+  "chance",
+  "train",
+  "people",
+  "fame",
+  "money",
+  "body",
+  "mind",
+  "study",
+];
 
 /** 한 줄에 몇 종류까지. 넷을 넘기면 힌트가 본문만큼 길어져 종류가 안 읽힌다 */
 const MAX_KINDS = 3;
@@ -117,7 +132,10 @@ function kindsOf(e: DecisionEffect | undefined): { gain: Set<string>; lose: Set<
   const gain = new Set<string>();
   const lose = new Set<string>();
   if (!e) return { gain, lose };
-  const put = (k: string, v: number) => { if (v > 0) gain.add(k); else if (v < 0) lose.add(k); };
+  const put = (k: string, v: number) => {
+    if (v > 0) gain.add(k);
+    else if (v < 0) lose.add(k);
+  };
 
   // 큰 것 — 즉시 스탯·잠재력·성장률·구종·특성. 유니크·히든의 몫이다
   put("growth", sumOf(e.statDelta));

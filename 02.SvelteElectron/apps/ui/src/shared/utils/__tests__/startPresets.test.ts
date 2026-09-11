@@ -21,8 +21,15 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 /** OVR 가중합 — 가중치 합이 12.0이라 분모와 같다 */
 const W: Record<string, number> = {
-  velocity: 2.5, command: 2.5, control: 2.0, movement: 1.5, stamina: 1.5,
-  mentality: 1.0, recovery: 0.5, clutch: 0.3, holdRunners: 0.2,
+  velocity: 2.5,
+  command: 2.5,
+  control: 2.0,
+  movement: 1.5,
+  stamina: 1.5,
+  mentality: 1.0,
+  recovery: 0.5,
+  clutch: 0.3,
+  holdRunners: 0.2,
 };
 const ovrOf = (p: Record<string, number>) =>
   Math.round(Object.entries(W).reduce((s, [k, w]) => s + p[k] * w, 0) / 12);
@@ -124,9 +131,9 @@ describe("새 게임 시작 프리셋", () => {
     //   `Math.random()`으로 굴려서 여기서 그 식을 정규식으로 읽었다.
     //   난수를 Rust로 옮기면서 값은 `protagonistRules`가 정본이 됐고,
     //   **코드가 맞는데 검사가 옛 모양을 지켜 빨간불이었다.**
-    const rules = JSON.parse(
-      read("resource/data/master/players/generation_rules.json"),
-    ) as { protagonistRules?: { potentialMin?: number; potentialMax?: number } };
+    const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+      protagonistRules?: { potentialMin?: number; potentialMax?: number };
+    };
     const pMin = rules.protagonistRules?.potentialMin;
     const pMax = rules.protagonistRules?.potentialMax;
 
@@ -150,7 +157,8 @@ describe("새 게임 시작 프리셋", () => {
     });
 
     it("굴리기가 성장 속도를 실제로 가른다 — 상·중·하가 다른 구간에 든다", () => {
-      const span = pMax! - pMin! + 1, floor = pMin!;
+      const span = pMax! - pMin! + 1,
+        floor = pMin!;
       const cap = (cur: number, pot: number) => {
         const r = cur / pot;
         return r < 0.75 ? 1.0 : r < 0.85 ? 0.7 : r < 0.95 ? 0.35 : 0.1;
@@ -175,9 +183,9 @@ describe("새 게임 시작 프리셋", () => {
       // 중앙은 (min + max) / 2 — 반값이면 내림한다
       const mid = (lo: number, hi: number) => Math.floor((lo + hi) / 2);
       const harness = read("scripts/perf/perfEntry.ts");
-      const r2 = JSON.parse(
-        read("resource/data/master/players/generation_rules.json"),
-      ) as { protagonistRules?: Record<string, number> };
+      const r2 = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+        protagonistRules?: Record<string, number>;
+      };
       const pr = r2.protagonistRules ?? {};
 
       const hp = harness.match(/potentialHidden: (\d+)/);
@@ -210,7 +218,10 @@ describe("새 게임 시작 프리셋", () => {
     // `pitching:` 꼴이 아니라 여기 안 든다 — 그 둘은 바로 아래·위 검사가 맡는다
     expect(hp.length).toBeGreaterThanOrEqual(4);
 
-    const sig = (o: Record<string, number>) => Object.keys(W).map((k) => `${k}:${o[k]}`).join(",");
+    const sig = (o: Record<string, number>) =>
+      Object.keys(W)
+        .map((k) => `${k}:${o[k]}`)
+        .join(",");
     const pageSigs = new Set(presets.map(sig));
     const stray = hp.filter((o) => !pageSigs.has(sig(o)));
     expect(stray.map(sig), "페이지에 없는 값을 하네스가 들고 있다").toEqual([]);
@@ -227,15 +238,21 @@ describe("새 게임 시작 프리셋", () => {
   it("`presetEraCurve` 의 사본도 페이지와 같다", () => {
     const harness = read("scripts/perf/perfEntry.ts");
     for (const pr of presets) {
-      expect(harness, `velocity ${pr.velocity} · command ${pr.command} 짝이 하네스에 없다`)
-        .toContain(`velocity: ${pr.velocity}, command: ${pr.command}`);
+      expect(
+        harness,
+        `velocity ${pr.velocity} · command ${pr.command} 짝이 하네스에 없다`,
+      ).toContain(`velocity: ${pr.velocity}, command: ${pr.command}`);
     }
     // 옛 드리프트 값이 되살아나면 여기서 걸린다
     expect(harness).not.toContain("velocity: 75, command: 75");
   });
 
   it("총합이 같아도 배분은 다르다 — 프리셋이 서로 구별된다", () => {
-    const sig = presets.map((p) => Object.keys(W).map((k) => p[k]).join(","));
+    const sig = presets.map((p) =>
+      Object.keys(W)
+        .map((k) => p[k])
+        .join(","),
+    );
     expect(new Set(sig).size).toBe(4);
 
     // 특화형 셋은 확실한 강점이 있어야 한다 — 총합이 같으니 강점이 없으면
@@ -302,7 +319,7 @@ describe("새 게임 시작 프리셋", () => {
     expect(m).not.toBeNull();
     const hp: Record<string, number> = {};
     for (const f of m![1].matchAll(/(\w+):\s*(\d+)/g)) hp[f[1]] = Number(f[2]);
-    const balanced = presets[0];   // NewGamePage의 첫 프리셋이 균형형
+    const balanced = presets[0]; // NewGamePage의 첫 프리셋이 균형형
     for (const k of [...Object.keys(W), "ovr"]) expect(hp[k]).toBe(balanced[k]);
   });
 });

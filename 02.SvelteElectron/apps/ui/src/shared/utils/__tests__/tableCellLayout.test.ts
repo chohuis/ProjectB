@@ -53,7 +53,10 @@ function badCells(src: string): string[] {
   for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
     if (!/display:\s*(flex|grid)/.test(m[2])) continue;
     for (const sel of m[1].split(",")) {
-      const parts = sel.trim().split(/[\s>+~]+/).filter(Boolean);
+      const parts = sel
+        .trim()
+        .split(/[\s>+~]+/)
+        .filter(Boolean);
       const last = parts[parts.length - 1] ?? "";
       for (const c of classes) {
         // ⚠ **경계가 없으면 짧은 이름이 긴 이름에 걸린다** — `.l`이 `.lb-card-list`에
@@ -70,20 +73,23 @@ describe("표 칸 배치", () => {
   it("패턴이 실제로 잡는다", () => {
     const broken = `<td class="c-team">x</td><style>.c-team { width: 28%; display: flex; }</style>`;
     expect(badCells(broken)).toEqual(["c-team"]);
-    const ok = `<td class="c-team"><span class="cell">x</span></td>`
-             + `<style>.c-team { width: 28%; } .cell { display: flex; }</style>`;
+    const ok =
+      `<td class="c-team"><span class="cell">x</span></td>` +
+      `<style>.c-team { width: 28%; } .cell { display: flex; }</style>`;
     expect(badCells(ok)).toEqual([]);
     // ⚠ 짧은 이름이 긴 이름에 걸리면 안 된다 — 실제로 `.l`이 `.lb-card-list`에 걸렸다
     const prefix = `<td class="l">x</td><style>.lb-card-list .tm { display: flex; }</style>`;
     expect(badCells(prefix)).toEqual([]);
     // ⚠ 주석에 적힌 이름에 걸리면 안 된다 — 실제로 `.tm`이 주석에서 걸려
     //   틈이 주석 끝을 넘어 다음 규칙의 `display: grid`에 닿았다
-    const inComment = `<td class="tm">x</td>`
-      + `<style>/* .tm 은 좁은 칸에서 숨긴다 */ .card li { display: grid; }</style>`;
+    const inComment =
+      `<td class="tm">x</td>` +
+      `<style>/* .tm 은 좁은 칸에서 숨긴다 */ .card li { display: grid; }</style>`;
     expect(badCells(inComment)).toEqual([]);
     // 🔴 **안쪽 래퍼로 옮긴 건 정상이다.** 조상까지 걸면 고친 코드가 계속 빨간불이다
-    const wrapped = `<th class="team-col"><span class="team-cell">x</span></th>`
-      + `<style>.board tbody th.team-col .team-cell { display: flex; }</style>`;
+    const wrapped =
+      `<th class="team-col"><span class="team-cell">x</span></th>` +
+      `<style>.board tbody th.team-col .team-cell { display: flex; }</style>`;
     expect(badCells(wrapped)).toEqual([]);
   });
 
@@ -91,7 +97,8 @@ describe("표 칸 배치", () => {
     const hits: string[] = [];
     for (const p of svelteFiles(UI)) {
       const bad = badCells(readFileSync(p, "utf8"));
-      if (bad.length) hits.push(`${p.slice(ROOT.length + 1).replace(/\\/g, "/")} → .${bad.join(", .")}`);
+      if (bad.length)
+        hits.push(`${p.slice(ROOT.length + 1).replace(/\\/g, "/")} → .${bad.join(", .")}`);
     }
     expect(hits).toEqual([]);
   });

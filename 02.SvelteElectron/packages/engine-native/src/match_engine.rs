@@ -3199,7 +3199,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         // 성적이 안 남아서 통합하면 **리그 순위표가 통째로 빈다.**
         // `sim_game`의 `PitAccum`과 같은 항목을 큐 안에 쌓는다.
         if !protagonist_on_mound {
-            let cnt_reset = next_state.count.strikes == 0 && next_state.count.balls == 0;
+            // ⚠ 여기 있던 `cnt_reset`(카운트가 0-0 으로 돌아갔나)을 지웠다
+            //   (2026-09-11 · 개선 5). 아래 삼진 자리 주석이 「삼진은 늘 타석을
+            //   끝내므로 `cnt_reset` 조건이 필요 없다」고 적어 뒀다 — 조건을 뺀
+            //   뒤 값만 남아 있었다.
             let scored = (next_state.score.home + next_state.score.away)
                 - (state.score.home + state.score.away);
             let q = if ours { &mut next_state.my_queue } else { &mut next_state.opponent_queue };

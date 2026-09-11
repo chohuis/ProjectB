@@ -42,8 +42,9 @@ describe("고친 여섯 자리 — 조사가 돌아오지 않았다", () => {
 
   it("대표팀 대회 종료 — 이름을 문장 끝에", () => {
     const s = read("usecases/nationalTeam.ts");
-    expect(s, "대회 이름 일곱이 전부 무받침인데 「이」가 붙어 있다")
-      .not.toContain("}이 막을 내렸습니다");
+    expect(s, "대회 이름 일곱이 전부 무받침인데 「이」가 붙어 있다").not.toContain(
+      "}이 막을 내렸습니다",
+    );
     expect(s).toContain("대회가 끝났습니다.");
   });
 
@@ -66,8 +67,7 @@ describe("고친 여섯 자리 — 조사가 돌아오지 않았다", () => {
 
   it("대회 우승 — 꽃 이름을 문장 끝에", () => {
     const s = read("usecases/weekPhases/tournamentNews.ts");
-    expect(s, "왕중왕·여명은 받침이라 「를」이 틀린다")
-      .not.toContain("}를 들어올렸다");
+    expect(s, "왕중왕·여명은 받침이라 「를」이 틀린다").not.toContain("}를 들어올렸다");
     expect(s).toContain("우승입니다.");
   });
 

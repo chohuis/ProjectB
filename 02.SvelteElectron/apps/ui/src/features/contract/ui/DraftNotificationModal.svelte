@@ -46,7 +46,9 @@
     <header>
       <p class="badge">드래프트 지명 통보</p>
       <h2>{teamName}</h2>
-      <p class="pick-info">{action.round}라운드 {ordinal(pickInRound(action.pickNo, action.round))}순위 (전체 {action.pickNo}번)</p>
+      <p class="pick-info">
+        {action.round}라운드 {ordinal(pickInRound(action.pickNo, action.round))}순위 (전체 {action.pickNo}번)
+      </p>
     </header>
 
     <div class="contract-card">
@@ -71,7 +73,9 @@
     <p class="notice">구단 제시 조건으로 계약이 진행됩니다. 협상은 불가합니다.</p>
 
     {#if action.altUniversityTeamId || action.altIndependentTeamId}
-      <p class="alt-notice">거부 시 {action.altUniversityTeamId ? "대학" : "독립리그"}로 진로를 변경합니다.</p>
+      <p class="alt-notice">
+        거부 시 {action.altUniversityTeamId ? "대학" : "독립리그"}로 진로를 변경합니다.
+      </p>
     {:else}
       <p class="alt-notice warn">거부 시 대안 없음 — 현역 입대로 처리됩니다.</p>
     {/if}
@@ -79,34 +83,135 @@
     <div class="actions">
       <button class="btn-accept" disabled={resolving} on:click={accept}>입단하기</button>
       <button class="btn-reject" disabled={resolving} on:click={reject}>
-        {action.altUniversityTeamId ? "거부 (대학 진학)" : action.altIndependentTeamId ? "거부 (독립리그)" : "거부 (현역 입대)"}
+        {action.altUniversityTeamId
+          ? "거부 (대학 진학)"
+          : action.altIndependentTeamId
+            ? "거부 (독립리그)"
+            : "거부 (현역 입대)"}
       </button>
     </div>
   </section>
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:225; }
-  .modal { width:min(500px,92vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:16px; padding:26px; display:grid; gap:16px; }
-  .badge { margin:0; font-size:11px; color:var(--ink); text-transform:uppercase; letter-spacing:.05em; }
-  h2 { margin:4px 0 0; color:var(--ink); font-size:20px; }
-  .pick-info { margin:2px 0 0; color:var(--ink); font-size:13px; }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 225;
+  }
+  .modal {
+    width: min(500px, 92vw);
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: 16px;
+    padding: 26px;
+    display: grid;
+    gap: 16px;
+  }
+  .badge {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  h2 {
+    margin: 4px 0 0;
+    color: var(--ink);
+    font-size: 20px;
+  }
+  .pick-info {
+    margin: 2px 0 0;
+    color: var(--ink);
+    font-size: 13px;
+  }
 
-  .contract-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; display:grid; gap:10px; }
-  .ci { display:flex; justify-content:space-between; align-items:center; }
-  .ci span { color:var(--ink-mid); font-size:13px; }
-  .ci strong { color:var(--ink); font-size:14px; }
-  .ci.total { border-top:1px solid var(--line); padding-top:10px; margin-top:2px; }
-  .ci.total strong { color:var(--ink); font-size:16px; }
+  .contract-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    display: grid;
+    gap: 10px;
+  }
+  .ci {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ci span {
+    color: var(--ink-mid);
+    font-size: 13px;
+  }
+  .ci strong {
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .ci.total {
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+    margin-top: 2px;
+  }
+  .ci.total strong {
+    color: var(--ink);
+    font-size: 16px;
+  }
 
-  .notice { margin:0; color:var(--ink); font-size:12px; }
-  .alt-notice { margin:0; font-size:12px; color:var(--ink); background:var(--panel-sunk); border-radius:8px; padding:8px 12px; }
-  .alt-notice.warn { color:var(--warn); background:rgba(154, 101, 16, 0.12); }
+  .notice {
+    margin: 0;
+    color: var(--ink);
+    font-size: 12px;
+  }
+  .alt-notice {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--panel-sunk);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .alt-notice.warn {
+    color: var(--warn);
+    background: rgba(154, 101, 16, 0.12);
+  }
 
-  .actions { display:flex; gap:10px; }
-  .btn-accept { flex:2; background:var(--line); color:var(--ink); border:1px solid var(--ink-mute); border-radius:10px; padding:11px; cursor:pointer; font-size:14px; font-weight:600; }
-  .btn-accept:not(:disabled):hover { background:var(--ink-mute); }
-  .btn-reject { flex:1; background:var(--panel); color:var(--ink-mid); border:1px solid var(--line); border-radius:10px; padding:11px; cursor:pointer; font-size:13px; }
-  .btn-reject:not(:disabled):hover { background:var(--panel-sunk); }
-  button:disabled { opacity:.5; cursor:default; }
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn-accept {
+    flex: 2;
+    background: var(--line);
+    color: var(--ink);
+    border: 1px solid var(--ink-mute);
+    border-radius: 10px;
+    padding: 11px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .btn-accept:not(:disabled):hover {
+    background: var(--ink-mute);
+  }
+  .btn-reject {
+    flex: 1;
+    background: var(--panel);
+    color: var(--ink-mid);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .btn-reject:not(:disabled):hover {
+    background: var(--panel-sunk);
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 </style>

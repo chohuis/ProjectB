@@ -61,23 +61,24 @@ export interface PostingInput {
 export function postingInterest(p: PostingInput): number {
   // ① 그 팀에서 몇 퍼센타일인가 — 팀 전력★이 여기 자동으로 반영된다
   const pool = p.teamPitcherOvrs;
-  const pct = pool.length === 0
-    ? p.pitchingOvr
-    : pool.filter((o) => o < p.pitchingOvr).length / pool.length * 100;
+  const pct =
+    pool.length === 0
+      ? p.pitchingOvr
+      : (pool.filter((o) => o < p.pitchingOvr).length / pool.length) * 100;
 
   // ② 순수 실력 — 팀운과 무관한 축. 백분위만 쓰면 약체 팀이 너무 쉬워진다
   //   ⚠ 척도는 프로 띠(55~95)다. 드래프트는 고졸 띠(40~85)라 다르다
-  const ovrNorm = Math.min(100, Math.max(0, (p.pitchingOvr - 55) / 40 * 100));
+  const ovrNorm = Math.min(100, Math.max(0, ((p.pitchingOvr - 55) / 40) * 100));
 
   const base = pct * 0.6 + ovrNorm * 0.4;
 
   // ③ 종합 평가 — 훈련·순위·성적이 쌓인 값
-  const scoutAdj = (p.scoutScore - 30) * 0.20;
+  const scoutAdj = (p.scoutScore - 30) * 0.2;
 
   // ④ 성적 — **최근 한 시즌**. 없으면 0(중립)이다.
   //   ⚠ 없는 것을 나쁨으로 보면 안 된다 — 부상·2군 체류로 표본이 없을 수 있다
-  const eraAdj = p.recentEra === undefined ? 0
-    : Math.max(-12, Math.min(12, (4.20 - p.recentEra) * 4));
+  const eraAdj =
+    p.recentEra === undefined ? 0 : Math.max(-12, Math.min(12, (4.2 - p.recentEra) * 4));
 
   // ⑤ 명성·수상 — 시장이 아는 이름인가
   const fameAdj = (p.fame - 40) * 0.12;
@@ -85,9 +86,8 @@ export function postingInterest(p: PostingInput): number {
 
   // ⑥ 연차 — **어릴수록 산다.** 서른 넘어 나가는 건 드물다
   //   ⚠ KBL FA가 5년차라 그 근처를 중립으로 둔다
-  const yearAdj = p.proServiceYears <= 2 ? -8
-    : p.proServiceYears <= 7 ? 0 : -(p.proServiceYears - 7) * 2.5;
+  const yearAdj =
+    p.proServiceYears <= 2 ? -8 : p.proServiceYears <= 7 ? 0 : -(p.proServiceYears - 7) * 2.5;
 
-  return Math.max(0, Math.min(100,
-    base + scoutAdj + eraAdj + fameAdj + awardAdj + yearAdj));
+  return Math.max(0, Math.min(100, base + scoutAdj + eraAdj + fameAdj + awardAdj + yearAdj));
 }

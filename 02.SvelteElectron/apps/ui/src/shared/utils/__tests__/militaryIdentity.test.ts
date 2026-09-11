@@ -84,7 +84,11 @@ describe("야수 OVR — 성장이 없던 블록을 만들지 않는다", () => 
    * 보는 식(45곳)이 야수를 **전부 0** 으로 판정한다.
    */
   it("없던 능력 블록을 만들지 않는다", () => {
-    expect(SE).toContain("pitching:        prev && prev.pitching === undefined ? undefined : u.pitching,");
-    expect(SE).toContain("batting:         prev && prev.batting  === undefined ? undefined : u.batting,");
+    expect(SE).toContain(
+      "pitching:        prev && prev.pitching === undefined ? undefined : u.pitching,",
+    );
+    expect(SE).toContain(
+      "batting:         prev && prev.batting  === undefined ? undefined : u.batting,",
+    );
   });
 });

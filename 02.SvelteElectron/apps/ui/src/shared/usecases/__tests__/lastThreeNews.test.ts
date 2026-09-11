@@ -9,9 +9,11 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/<!--[\s\S]*?-->/g, "")
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) =>
+  s
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
 
 describe("보상선수 소식", () => {
   const src = strip(read("apps/ui/src/shared/usecases/weekPhases/market.ts"));
@@ -45,9 +47,9 @@ describe("독립리그 재도전 소식", () => {
   it("🔴 detail로 가른다 — `transfer`는 트레이드에도 쓰인다", () => {
     // ⚠ **`"독립리그 재도전"` 은 소식 제목에도 있다.** 그것만 보면 필터를
     //   지워도 통과한다(변이로 확인) — **필터 줄 통째로** 본다.
-    expect(src.includes(
-      `if (!String(e.detail ?? "").includes("독립리그 재도전")) continue;`
-    )).toBe(true);
+    expect(src.includes(`if (!String(e.detail ?? "").includes("독립리그 재도전")) continue;`)).toBe(
+      true,
+    );
     // Rust 쪽 문자열도 함께 못박는다 — 한쪽만 바뀌면 조용히 0건이 된다
     expect(rust.includes('Some("FA 미계약 → 독립리그 재도전".into())')).toBe(true);
   });

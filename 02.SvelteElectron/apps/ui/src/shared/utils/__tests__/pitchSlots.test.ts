@@ -67,7 +67,7 @@ describe("숙련도", () => {
   it("⚠ 등급을 모르면 null — 0으로 그리면 '숙련도 0'이라는 거짓이 된다", () => {
     expect(gradeFraction(null)).toBeNull();
     expect(gradeFraction(undefined as unknown as null)).toBeNull();
-    expect(gradeFraction(0)).toBe(0);   // 0은 진짜 0일 때만
+    expect(gradeFraction(0)).toBe(0); // 0은 진짜 0일 때만
   });
 
   it("범위를 벗어나도 0~1을 넘지 않는다", () => {

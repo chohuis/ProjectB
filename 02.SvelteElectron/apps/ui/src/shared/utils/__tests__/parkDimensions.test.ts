@@ -19,8 +19,18 @@ import { resolve } from "node:path";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
-interface Dist { lf: number; cf: number; rf: number; fence: number }
-interface Stadium { id: string; name: string; pf: string; dist: Dist }
+interface Dist {
+  lf: number;
+  cf: number;
+  rf: number;
+  fence: number;
+}
+interface Stadium {
+  id: string;
+  name: string;
+  pf: string;
+  dist: Dist;
+}
 
 const parks = JSON.parse(read("resource/park/_spec/stadiums.json")) as Stadium[];
 const avgOf = (pf: string, k: keyof Dist) => {

@@ -59,7 +59,13 @@ describe("이벤트 규칙 ↔ 템플릿 배선", () => {
   it("트레이드 통보는 규칙이 아니라 pendingAction으로만 온다", () => {
     // 되돌아오면 여기서 잡는다 — 위 검사들과 달리 이름을 못박는 게 목적이다
     const ids = walk(join(MASTER, "events"))
-      .map((p) => { try { return JSON.parse(readFileSync(p, "utf8")) as Rule; } catch { return {}; } })
+      .map((p) => {
+        try {
+          return JSON.parse(readFileSync(p, "utf8")) as Rule;
+        } catch {
+          return {};
+        }
+      })
       .map((r) => r.id);
     expect(ids).not.toContain("EVT_TRADE_RUMOR");
     expect(ids).not.toContain("EVT_TRADE_CONFIRMED");
@@ -122,19 +128,31 @@ describe("정본이 하나인가", () => {
 describe("규칙이 가리키는 템플릿이 실재하는가", () => {
   const MASTER2 = resolve(__dirname, "../../../../../../resource/data/master");
   const TMPL_IDS = new Set(
-    (JSON.parse(readFileSync(join(MASTER2, "messages/templates.json"), "utf8")).templates as { id: string }[])
-      .map((t) => t.id));
+    (
+      JSON.parse(readFileSync(join(MASTER2, "messages/templates.json"), "utf8")).templates as {
+        id: string;
+      }[]
+    ).map((t) => t.id),
+  );
   const DEC_IDS = new Set(
-    (JSON.parse(readFileSync(join(MASTER2, "messages/decision_templates.json"), "utf8")).decisions as { id: string }[])
-      .map((d) => d.id));
+    (
+      JSON.parse(readFileSync(join(MASTER2, "messages/decision_templates.json"), "utf8"))
+        .decisions as { id: string }[]
+    ).map((d) => d.id),
+  );
 
   for (const lane of ["mandatory", "conditional", "random"]) {
     it(`${lane} — 없는 템플릿을 가리키는 규칙이 없다`, () => {
       const orphans: string[] = [];
       for (const f of walk(join(MASTER2, "events", lane))) {
-        const r = JSON.parse(readFileSync(f, "utf8")) as Rule & { messageTemplateId?: string | null; decisionTemplateId?: string | null };
-        if (r.messageTemplateId && !TMPL_IDS.has(r.messageTemplateId)) orphans.push(`${r.id} → ${r.messageTemplateId}`);
-        if (r.decisionTemplateId && !DEC_IDS.has(r.decisionTemplateId)) orphans.push(`${r.id} → ${r.decisionTemplateId}`);
+        const r = JSON.parse(readFileSync(f, "utf8")) as Rule & {
+          messageTemplateId?: string | null;
+          decisionTemplateId?: string | null;
+        };
+        if (r.messageTemplateId && !TMPL_IDS.has(r.messageTemplateId))
+          orphans.push(`${r.id} → ${r.messageTemplateId}`);
+        if (r.decisionTemplateId && !DEC_IDS.has(r.decisionTemplateId))
+          orphans.push(`${r.id} → ${r.decisionTemplateId}`);
       }
       expect(orphans).toEqual([]);
     });

@@ -2,11 +2,22 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  buildMarkIndex, fallbackSpec, teamMarkSvg, markKey, groupKey,
-  SHELL, type MarkTeam,
+  buildMarkIndex,
+  fallbackSpec,
+  teamMarkSvg,
+  markKey,
+  groupKey,
+  SHELL,
+  type MarkTeam,
 } from "../teamMark";
 
-interface RefTeam { id: string; name: string; leagueId: string; stadium?: string; colors?: string[] }
+interface RefTeam {
+  id: string;
+  name: string;
+  leagueId: string;
+  stadium?: string;
+  colors?: string[];
+}
 const refs = JSON.parse(
   readFileSync(join(process.cwd(), "resource/data/master/entities/refs.json"), "utf8"),
 ) as { teams: RefTeam[] };
@@ -25,10 +36,12 @@ describe("마크 키", () => {
   });
 
   it("고교는 권역이 그룹이고 나머지는 리그다", () => {
-    expect(groupKey({ id: "x", name: "", leagueId: "LEAGUE_HIGHSCHOOL", stadium: "STADIUM_HALLA" }))
-      .toBe("STADIUM_HALLA");
-    expect(groupKey({ id: "x", name: "", leagueId: "LEAGUE_KBL", stadium: "STADIUM_X" }))
-      .toBe("LEAGUE_KBL");
+    expect(
+      groupKey({ id: "x", name: "", leagueId: "LEAGUE_HIGHSCHOOL", stadium: "STADIUM_HALLA" }),
+    ).toBe("STADIUM_HALLA");
+    expect(groupKey({ id: "x", name: "", leagueId: "LEAGUE_KBL", stadium: "STADIUM_X" })).toBe(
+      "LEAGUE_KBL",
+    );
   });
 });
 
@@ -129,7 +142,7 @@ describe("SVG 만들기", () => {
 
   it("배정표에 없는 팀도 폴백으로 그려진다", () => {
     const s = fallbackSpec("TEAM_NEW_TEAM_1");
-    expect(fallbackSpec("TEAM_NEW_TEAM_2")).toEqual(s);   // 1군·2군 같음
+    expect(fallbackSpec("TEAM_NEW_TEAM_2")).toEqual(s); // 1군·2군 같음
     expect(SHELL[s.shell]).toBeTruthy();
   });
 });

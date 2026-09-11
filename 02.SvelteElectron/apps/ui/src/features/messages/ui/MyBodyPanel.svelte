@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { MyBodyMetadata } from "../../../shared/types/main";
   import { teamMap } from "../../../shared/stores/master";
-  import { buildMyBodyRows, MY_BODY_LABEL, ABSENCE_REASON_LABEL } from "../../../shared/utils/myBodyReportView";
+  import {
+    buildMyBodyRows,
+    MY_BODY_LABEL,
+    ABSENCE_REASON_LABEL,
+  } from "../../../shared/utils/myBodyReportView";
 
   /**
    * 몸 상태 월간 리포트 — 대시보드 갈래.
@@ -33,7 +37,9 @@
       <div class="card bad">
         <span class="ck">{MY_BODY_LABEL.injury}</span>
         <span class="cv">{rows.injury.name}</span>
-        <span class="cs">{rows.injury.severity} · W{rows.injury.sinceWeek} · {rows.injury.weeksLeft}주</span>
+        <span class="cs"
+          >{rows.injury.severity} · W{rows.injury.sinceWeek} · {rows.injury.weeksLeft}주</span
+        >
       </div>
     {/if}
     <div class="card">
@@ -98,35 +104,97 @@
 </div>
 
 <style>
-  .mb { display: flex; flex-direction: column; gap: 10px; }
+  .mb {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-  .cards { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .card {
-    display: flex; flex-direction: column; gap: 2px; min-width: 76px;
-    border: 1px solid var(--line); border-radius: var(--radius);
-    background: var(--panel-sunk); padding: 7px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 76px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
+    padding: 7px 10px;
   }
-  .card.bad { border-color: var(--bad); }
-  .ck { font-size: 10px; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-mute); }
-  .cv { font-size: 14px; font-weight: 700; color: var(--ink); }
-  .cs { font-size: 11px; color: var(--ink-mid); }
+  .card.bad {
+    border-color: var(--bad);
+  }
+  .ck {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+  .cv {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .cs {
+    font-size: 11px;
+    color: var(--ink-mid);
+  }
 
-  .blk { display: flex; flex-direction: column; gap: 5px; }
+  .blk {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
   .blk h4 {
-    margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; color: var(--ink-mute);
+    margin: 0;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
   }
 
-  .rows { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .rows {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
   .rows th {
-    text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
-    color: var(--ink-mute); padding: 0 6px 5px; border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding: 0 6px 5px;
+    border-bottom: 1px solid var(--line);
   }
-  .rows td { padding: 5px 6px; border-bottom: 1px solid var(--line); color: var(--ink-mid); }
-  .rows tbody tr:hover { background: var(--panel-sunk); }
+  .rows td {
+    padding: 5px 6px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-mid);
+  }
+  .rows tbody tr:hover {
+    background: var(--panel-sunk);
+  }
 
-  .c-wk { width: 52px; }
-  .c-why { width: 74px; }
+  .c-wk {
+    width: 52px;
+  }
+  .c-why {
+    width: 74px;
+  }
   /* 오른쪽 정렬은 숫자 칸만이다 — 이름 칸까지 밀면 표가 가운데서 갈린다 */
-  .c-num { width: 78px; text-align: right; }
-  .c-opp { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .c-num {
+    width: 78px;
+    text-align: right;
+  }
+  .c-opp {
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 </style>

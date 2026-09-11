@@ -85,9 +85,12 @@ export function parseSettings(raw: unknown): Settings {
   else if (RETIRED_SIZES.includes(o.windowSize as string)) s.windowSize = "fullscreen";
   if (typeof o.reduceMotion === "boolean") s.reduceMotion = o.reduceMotion;
 
-  const m = clampVolume(o.volumeMaster); if (m !== null) s.volumeMaster = m;
-  const x = clampVolume(o.volumeSfx);    if (x !== null) s.volumeSfx = x;
-  const b = clampVolume(o.volumeBgm);    if (b !== null) s.volumeBgm = b;
+  const m = clampVolume(o.volumeMaster);
+  if (m !== null) s.volumeMaster = m;
+  const x = clampVolume(o.volumeSfx);
+  if (x !== null) s.volumeSfx = x;
+  const b = clampVolume(o.volumeBgm);
+  if (b !== null) s.volumeBgm = b;
 
   return s;
 }
@@ -107,7 +110,9 @@ function createSettingsStore() {
 
   const persist = (s: Settings) => {
     if (typeof window === "undefined") return;
-    try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch {}
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    } catch {}
   };
 
   return {

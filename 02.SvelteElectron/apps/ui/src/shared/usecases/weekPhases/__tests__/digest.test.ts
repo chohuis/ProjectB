@@ -1,7 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  buildLeagueDigest, digestTierOf, DIGEST_SECTIONS, type DigestInput,
-} from "../digest";
+import { buildLeagueDigest, digestTierOf, DIGEST_SECTIONS, type DigestInput } from "../digest";
 import type { Standing } from "../../../types/season";
 
 /**
@@ -15,12 +13,18 @@ import type { Standing } from "../../../types/season";
  * 문구 자체는 검사하지 않는다 — 문장이 바뀔 때마다 깨지는 검사는 못 쓴다.
  */
 
-const st = (teamId: string, wins: number, losses: number, over: Partial<Standing> = {}): Standing => ({
-  teamId, wins, losses, draws: 0,
-  winPct: wins + losses > 0 ? wins / (wins + losses) : 0,
-  runsFor: wins * 5, runsAgainst: losses * 5, streak: "W1",
-  ...over,
-} as Standing);
+const st = (teamId: string, wins: number, losses: number, over: Partial<Standing> = {}): Standing =>
+  ({
+    teamId,
+    wins,
+    losses,
+    draws: 0,
+    winPct: wins + losses > 0 ? wins / (wins + losses) : 0,
+    runsFor: wins * 5,
+    runsAgainst: losses * 5,
+    streak: "W1",
+    ...over,
+  }) as Standing;
 
 /** 권역 2개 × 3팀. 내 팀은 REG_A의 2위 */
 const REGIONS = {
@@ -28,8 +32,12 @@ const REGIONS = {
   STADIUM_B: ["TEAM_B1", "TEAM_B2", "TEAM_B3"],
 };
 const HS_STANDINGS = [
-  st("TEAM_A1", 10, 2), st("TEAM_A2", 8, 4), st("TEAM_A3", 3, 9),
-  st("TEAM_B1", 9, 3), st("TEAM_B2", 6, 6), st("TEAM_B3", 2, 10),
+  st("TEAM_A1", 10, 2),
+  st("TEAM_A2", 8, 4),
+  st("TEAM_A3", 3, 9),
+  st("TEAM_B1", 9, 3),
+  st("TEAM_B2", 6, 6),
+  st("TEAM_B3", 2, 10),
 ];
 
 const base: DigestInput = {
@@ -62,12 +70,16 @@ const base: DigestInput = {
  * 화면을 띄워 보고서야 찾았다.
  */
 const KBL_STANDINGS = [
-  st("TEAM_KBL_1", 40, 20), st("TEAM_KBL_2", 30, 30), st("TEAM_KBL_3", 20, 40),
+  st("TEAM_KBL_1", 40, 20),
+  st("TEAM_KBL_2", 30, 30),
+  st("TEAM_KBL_3", 20, 40),
 ];
 const PRO = (): DigestInput => ({
   ...base,
-  careerStage: "pro_kbl", hsGrade: undefined,
-  myTeamId: "TEAM_KBL_2", myLeagueId: "LEAGUE_KBL",
+  careerStage: "pro_kbl",
+  hsGrade: undefined,
+  myTeamId: "TEAM_KBL_2",
+  myLeagueId: "LEAGUE_KBL",
   myStandings: KBL_STANDINGS,
   // 내 리그는 여기 **없다** — 그게 실제 모양이다
   leagueState: {
@@ -118,10 +130,17 @@ describe("buildLeagueDigest — 섹션 노출", () => {
     const cases: [string, number | undefined, DigestInput][] = [
       ["highschool", 1, { ...base, hsGrade: 1 }],
       ["highschool", 3, base],
-      ["university", undefined, {
-        ...PRO(), careerStage: "university", hsGrade: undefined,
-        myLeagueId: "LEAGUE_UNIVERSITY", leagueState: base.leagueState,
-      }],
+      [
+        "university",
+        undefined,
+        {
+          ...PRO(),
+          careerStage: "university",
+          hsGrade: undefined,
+          myLeagueId: "LEAGUE_UNIVERSITY",
+          leagueState: base.leagueState,
+        },
+      ],
       ["pro_kbl", undefined, PRO()],
     ];
     for (const [stage, grade, input] of cases) {
@@ -139,11 +158,14 @@ describe("buildLeagueDigest — 섹션 노출", () => {
    * 통째로 빠진 게 지나갔다(내 리그 순위표를 `leagueState`에서 찾고 있었다).
    */
   it("표가 켜라고 한 섹션은 데이터가 있으면 반드시 나온다", () => {
-    for (const [name, input] of [["고교3", base], ["프로", PRO()]] as const) {
+    for (const [name, input] of [
+      ["고교3", base],
+      ["프로", PRO()],
+    ] as const) {
       const tier = digestTierOf(input.careerStage, input.hsGrade);
       const m = buildLeagueDigest(input)!;
       expect(m, `${name} 가 null`).not.toBeNull();
-      if (DIGEST_SECTIONS[tier].mine)  expect(m.body, `${name} mine`).toContain("[내 자리]");
+      if (DIGEST_SECTIONS[tier].mine) expect(m.body, `${name} mine`).toContain("[내 자리]");
       if (DIGEST_SECTIONS[tier].stage) expect(m.body, `${name} stage`).toContain("[내 무대]");
     }
   });
@@ -155,7 +177,7 @@ describe("buildLeagueDigest — 섹션 노출", () => {
     expect(m.body).toContain("[내 자리]");
     expect(m.body).toContain("[내 무대]");
     expect(m.body).toContain("← 우리");
-    expect(m.preview).toContain("2위");   // 3팀 중 30승30패 = 2위
+    expect(m.preview).toContain("2위"); // 3팀 중 30승30패 = 2위
   });
 });
 
@@ -186,7 +208,8 @@ describe("buildLeagueDigest — 빈 데이터", () => {
     // 시즌 초엔 전부 0-0이다. 그때 "선두 ○○ (.000)"을 내보내면 거짓 정보다
     const zero = HS_STANDINGS.map((s) => st(s.teamId, 0, 0));
     const m = buildLeagueDigest({
-      ...base, myStandings: zero,
+      ...base,
+      myStandings: zero,
       leagueState: { LEAGUE_KBL: { standings: [st("TEAM_KBL_1", 0, 0)] } } as never,
     });
     if (m) {
@@ -198,8 +221,11 @@ describe("buildLeagueDigest — 빈 데이터", () => {
   it("담을 게 하나도 없으면 null이다", () => {
     // 빈 껍데기를 보내면 "소식이 왔는데 아무것도 없다"가 된다
     const m = buildLeagueDigest({
-      ...base, myStandings: [], leagueState: {} as never,
-      myTeamId: "TEAM_NONE", myLeagueId: "LEAGUE_NONE",
+      ...base,
+      myStandings: [],
+      leagueState: {} as never,
+      myTeamId: "TEAM_NONE",
+      myLeagueId: "LEAGUE_NONE",
     });
     expect(m).toBeNull();
   });

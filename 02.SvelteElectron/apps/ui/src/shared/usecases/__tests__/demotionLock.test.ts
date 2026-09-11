@@ -15,12 +15,11 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const strip = (s: string) => s
-  .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
-const rules = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-) as { promotionRules?: { demotionLockWeeks?: number } };
+const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+  promotionRules?: { demotionLockWeeks?: number };
+};
 
 describe("등록말소 기간", () => {
   const market = strip(read("apps/ui/src/shared/usecases/weekPhases/market.ts"));
@@ -58,8 +57,9 @@ describe("등록말소 기간", () => {
   it("⚠ IL 예외를 넣지 않는다", () => {
     // "부상자가 있으면 락 무시"는 팀당 부상 2~3명인 실측에서 거의 항상 참이라
     // 락이 사실상 사라진다. 부상 대체는 순증 콜업이 감당한다.
-    expect(market.includes("lockWeeks > 0 && ilCount === 0"),
-      "IL 예외가 남아 있으면 안 된다").toBe(false);
+    expect(market.includes("lockWeeks > 0 && ilCount === 0"), "IL 예외가 남아 있으면 안 된다").toBe(
+      false,
+    );
     expect(market.includes("if (lockWeeks > 0) {")).toBe(true);
   });
 });

@@ -26,10 +26,10 @@
    */
   type MilitaryTabId = "daily" | "members" | "calendar" | "career";
   const TABS: Array<{ id: MilitaryTabId; label: string }> = [
-    { id: "daily",    label: "일과" },
-    { id: "members",  label: "부대원" },
+    { id: "daily", label: "일과" },
+    { id: "members", label: "부대원" },
     { id: "calendar", label: "캘린더" },
-    { id: "career",   label: "경력" },
+    { id: "career", label: "경력" },
   ];
   let tab: MilitaryTabId = "daily";
 
@@ -46,22 +46,55 @@
 
 <section class="military">
   {#if ready && ml && rules && unit}
-    <MilitaryHead {ml} {rules} {unit} calendar={$masterStore.militaryCalendar} week={p.militaryServiceWeeks} />
+    <MilitaryHead
+      {ml}
+      {rules}
+      {unit}
+      calendar={$masterStore.militaryCalendar}
+      week={p.militaryServiceWeeks}
+    />
 
     <div class="subtabs" role="tablist" aria-label="병역">
       {#each TABS as x (x.id)}
-        <button type="button" role="tab" class:on={tab === x.id} aria-selected={tab === x.id} on:click={() => (tab = x.id)}>{x.label}</button>
+        <button
+          type="button"
+          role="tab"
+          class:on={tab === x.id}
+          aria-selected={tab === x.id}
+          on:click={() => (tab = x.id)}>{x.label}</button
+        >
       {/each}
     </div>
 
     <div class="pane">
       {#if tab === "daily"}
-        <MilitaryDailyPane {ml} {rules} {unit} members={$masterStore.militaryMembers} calendar={$masterStore.militaryCalendar}
-                           week={p.militaryServiceWeeks} fatigue={p.fatigue} morale={p.morale} mailbox={$gameStore.mailbox} />
+        <MilitaryDailyPane
+          {ml}
+          {rules}
+          {unit}
+          members={$masterStore.militaryMembers}
+          calendar={$masterStore.militaryCalendar}
+          week={p.militaryServiceWeeks}
+          fatigue={p.fatigue}
+          morale={p.morale}
+          mailbox={$gameStore.mailbox}
+        />
       {:else if tab === "members"}
-        <MilitaryMembersPane {ml} {rules} {unit} members={$masterStore.militaryMembers} week={p.militaryServiceWeeks} />
+        <MilitaryMembersPane
+          {ml}
+          {rules}
+          {unit}
+          members={$masterStore.militaryMembers}
+          week={p.militaryServiceWeeks}
+        />
       {:else if tab === "calendar"}
-        <MilitaryCalendarPane {ml} {rules} calendar={$masterStore.militaryCalendar} events={$masterStore.militaryLifeEvents} week={p.militaryServiceWeeks} />
+        <MilitaryCalendarPane
+          {ml}
+          {rules}
+          calendar={$masterStore.militaryCalendar}
+          events={$masterStore.militaryLifeEvents}
+          week={p.militaryServiceWeeks}
+        />
       {:else if tab === "career"}
         <MilitaryCareerPane {ml} {rules} {unit} members={$masterStore.militaryMembers} />
       {/if}
@@ -86,25 +119,65 @@
     <MilitaryStatusPanel />
     <p class="note">
       {#if isSports}
-        체육부대 문안이 없다 — <code>messages/military_sports.json</code> 을 못 읽었다(§39 · 화면 대신 옛 배너로 떨어진다).
+        체육부대 문안이 없다 — <code>messages/military_sports.json</code> 을 못 읽었다(§39 · 화면 대신
+        옛 배너로 떨어진다).
       {:else}
-        병영생활 데이터가 없다 — 이 세이브는 옛 갈래로 복무한다(입대 전 세이브이거나 <code>military/*.json</code> 이 비었다 · <code>npm run check:militarydata</code>).
+        병영생활 데이터가 없다 — 이 세이브는 옛 갈래로 복무한다(입대 전 세이브이거나 <code
+          >military/*.json</code
+        >
+        이 비었다 · <code>npm run check:militarydata</code>).
       {/if}
     </p>
   {/if}
 </section>
 
 <style>
-  .military { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-  /* 상위는 밑줄 — 하위 페이지의 알약(.u-subtabs)과 형태로 갈린다 (목업 그대로) */
-  .subtabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line-strong); }
-  .subtabs button {
-    border: 0; background: none; font: inherit; font-size: 13px; padding: 8px 12px;
-    color: var(--ink-mid); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  .military {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
   }
-  .subtabs button.on { color: var(--t-dark); font-weight: 800; border-bottom-color: var(--t-accent); }
-  .subtabs button:focus-visible { outline: 2px solid var(--t-accent); outline-offset: -2px; }
-  .pane { min-width: 0; }
-  .note { margin: 0; color: var(--ink-mute); font-size: 12px; line-height: 1.5; }
-  .note code { font-family: ui-monospace, Consolas, monospace; font-size: 11px; background: var(--panel-sunk); padding: 0 4px; border-radius: 2px; }
+  /* 상위는 밑줄 — 하위 페이지의 알약(.u-subtabs)과 형태로 갈린다 (목업 그대로) */
+  .subtabs {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .subtabs button {
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 13px;
+    padding: 8px 12px;
+    color: var(--ink-mid);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .subtabs button.on {
+    color: var(--t-dark);
+    font-weight: 800;
+    border-bottom-color: var(--t-accent);
+  }
+  .subtabs button:focus-visible {
+    outline: 2px solid var(--t-accent);
+    outline-offset: -2px;
+  }
+  .pane {
+    min-width: 0;
+  }
+  .note {
+    margin: 0;
+    color: var(--ink-mute);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .note code {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 11px;
+    background: var(--panel-sunk);
+    padding: 0 4px;
+    border-radius: 2px;
+  }
 </style>

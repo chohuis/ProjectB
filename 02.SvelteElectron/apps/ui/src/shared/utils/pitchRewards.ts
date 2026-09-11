@@ -52,8 +52,8 @@ export function gatePitchRewards(
   const next = { ...fx } as Record<string, unknown>;
   for (const k of keys) delete next[k];
   console.warn(
-    `[보상] 구종 보상을 무시했다 — ${keys.join("·")} (등급 ${grade ?? "없음"}).`
-    + ` 구종은 ${PITCH_REWARD_GRADES.join("·")} 에서만 먹는다`,
+    `[보상] 구종 보상을 무시했다 — ${keys.join("·")} (등급 ${grade ?? "없음"}).` +
+      ` 구종은 ${PITCH_REWARD_GRADES.join("·")} 에서만 먹는다`,
   );
   return next as DecisionEffect;
 }

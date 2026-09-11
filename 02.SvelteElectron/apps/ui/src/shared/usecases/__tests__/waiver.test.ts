@@ -14,9 +14,9 @@ import { resolve } from "node:path";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const rules = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-) as { waiverRules?: { enabled?: boolean; ovrMargin?: number; maxPerTeam?: number } };
+const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+  waiverRules?: { enabled?: boolean; ovrMargin?: number; maxPerTeam?: number };
+};
 
 describe("웨이버 공시", () => {
   const rust = read("packages/engine-native/src/npc_sim.rs");
@@ -43,8 +43,10 @@ describe("웨이버 공시", () => {
   it("🔴 그 해 **방출된 사람만** 대상이다", () => {
     // "팀이 빈 사람"이면 졸업생·미배정자까지 걸린다
     expect(rust.includes("released_ids.contains(&n.npc_id)")).toBe(true);
-    expect(rust.includes("n.career_events.iter().any(|e| e.year == season_year"),
-      "career_events 로 찾으면 아무도 안 걸린다").toBe(false);
+    expect(
+      rust.includes("n.career_events.iter().any(|e| e.year == season_year"),
+      "career_events 로 찾으면 아무도 안 걸린다",
+    ).toBe(false);
   });
 
   it("방출자를 `events` 에서 모은다", () => {

@@ -622,12 +622,13 @@ pub fn calc_training_growth(params: TrainingGrowthParams) -> GrowthResult {
 
     // ⚠ 피로·컨디션은 **`plan_load`가 정본이다.** 훈련 화면 미리보기가 같은
     // 함수를 부른다 — 화면이 자기 식을 두면 표시와 실제가 갈린다.
-    let (mut fatigue_delta, mut condition_delta) =
-        plan_load(p.fatigue, &params.plan, &params.programs);
+    let (fatigue_delta, condition_delta) = plan_load(p.fatigue, &params.plan, &params.programs);
 
-    let fat_zone_mult = fatigue_zone_mult(p.fatigue);
-
-    for (prog_id_opt, xp_mult, fat_mult) in programs {
+    // ⚠ `fat_zone_mult`(피로 구간 배수)과 슬롯의 `fat_mult` 을 여기서 뺐다
+    //   (2026-09-11 · 개선 5). 위 주석대로 **피로·컨디션은 `plan_load` 가
+    //   정본**이 된 뒤로 둘 다 계산만 하고 아무 데도 안 썼다. 남겨 두면
+    //   「여기서도 피로를 곱하는구나」로 읽힌다.
+    for (prog_id_opt, xp_mult, _fat_mult) in programs {
         let prog_id = match prog_id_opt { Some(id) => id, None => continue };
         // ⚠ 표는 데이터에서 온다(`programs.json`). 여기 하드코딩이 있던 시절엔
         // 마스터·화면과 값이 서로 달라서 화면이 거짓말을 했다.
@@ -1003,6 +1004,7 @@ pub struct NpcPerfEntry {
     pub batting_avg: Option<f64>,
 }
 
+#[allow(dead_code)] // payload 미러 — lib.rs 머리말 「안 읽는 칸」 참고
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CalcNpcFameDeltaParams {

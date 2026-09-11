@@ -4,8 +4,15 @@ import { isLeagueInScope } from "../config/releaseScope";
 // ── 빈 순위표 생성 (pure TS) ──────────────────────────────────
 export function makeStandings(teamIds: string[]): Standing[] {
   return teamIds.map((teamId) => ({
-    teamId, wins: 0, losses: 0, draws: 0, winPct: 0,
-    runsFor: 0, runsAgainst: 0, streak: "", last10: "",
+    teamId,
+    wins: 0,
+    losses: 0,
+    draws: 0,
+    winPct: 0,
+    runsFor: 0,
+    runsAgainst: 0,
+    streak: "",
+    last10: "",
   }));
 }
 
@@ -31,7 +38,16 @@ export async function generateLeagueSchedule(
   seriesGames?: number,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleLeague(
-    JSON.stringify({ leagueId, teams, startWeek, endWeek, cycles, protagonistTeamId, seasonYear, seriesGames })
+    JSON.stringify({
+      leagueId,
+      teams,
+      startWeek,
+      endWeek,
+      cycles,
+      protagonistTeamId,
+      seasonYear,
+      seriesGames,
+    }),
   );
   return JSON.parse(raw);
 }
@@ -97,17 +113,27 @@ export async function generateRegionalSchedule(
 ): Promise<ScheduleEntry[]> {
   // 조별 요일 — 대학은 조마다 다르다 (league_groups.csv). 없으면 상위 기본값.
   const dayOf = new Map(
-    LEAGUE_GROUP_META.filter((g) => g.leagueId === leagueId).map((g) => [g.stadiumId, g.dayOffsets]),
+    LEAGUE_GROUP_META.filter((g) => g.leagueId === leagueId).map((g) => [
+      g.stadiumId,
+      g.dayOffsets,
+    ]),
   );
   const raw = await window.projectB!.engine(
     "generateRegionalScheduleNative",
     JSON.stringify({
       leagueId,
       regions: Object.entries(regions).map(([regionId, teams]) => ({
-        regionId, teams: [...teams], dayOffsets: dayOf.get(regionId) ?? [],
+        regionId,
+        teams: [...teams],
+        dayOffsets: dayOf.get(regionId) ?? [],
       })),
-      targetGames, startWeek, endWeek, protagonistTeamId, seasonYear,
-      idPrefix: opts.idPrefix, defaultDayOffsets: opts.defaultDayOffsets ?? [],
+      targetGames,
+      startWeek,
+      endWeek,
+      protagonistTeamId,
+      seasonYear,
+      idPrefix: opts.idPrefix,
+      defaultDayOffsets: opts.defaultDayOffsets ?? [],
     }),
   );
   const parsed = JSON.parse(raw);
@@ -124,7 +150,7 @@ export async function generateAllLeagueSchedules(
   seasonYear = 2026,
 ): Promise<Record<string, ScheduleEntry[]>> {
   const raw = await window.projectB!.scheduleAllLeagues(
-    JSON.stringify({ configs, protagonistTeamId, seasonYear })
+    JSON.stringify({ configs, protagonistTeamId, seasonYear }),
   );
   const parsed = JSON.parse(raw);
   if (parsed && typeof parsed === "object" && "error" in parsed) {
@@ -138,20 +164,33 @@ export async function generateAllLeagueSchedules(
 // refs.json에서 생성된다 (scripts/build_refs_from_seeds.py) — 손으로 박으면 refs와
 // 드리프트하고, 그걸 잡으려고 부팅 검사(validateTeamRefs)가 생겼다. 이제 같은 소스다.
 export {
-  HS_ALL_TEAMS, HS_SELECTABLE_TEAMS, HS_REGIONS, UNIV_GROUPS,
-  GROUPS_BY_LEAGUE, LEAGUE_GROUP_META,
-  UNIV_TEAMS, IND_TEAMS,
-  KBL_TEAMS, KBL_FARM_TEAMS,
-  ABL_TEAMS, ABL_FARM_TEAMS,
-  JBL_TEAMS, JBL_FARM_TEAMS,
+  HS_ALL_TEAMS,
+  HS_SELECTABLE_TEAMS,
+  HS_REGIONS,
+  UNIV_GROUPS,
+  GROUPS_BY_LEAGUE,
+  LEAGUE_GROUP_META,
+  UNIV_TEAMS,
+  IND_TEAMS,
+  KBL_TEAMS,
+  KBL_FARM_TEAMS,
+  ABL_TEAMS,
+  ABL_FARM_TEAMS,
+  JBL_TEAMS,
+  JBL_FARM_TEAMS,
 } from "./leagueTeams.generated";
 
 import { LEAGUE_GROUP_META } from "./leagueTeams.generated";
 import {
-  HS_ALL_TEAMS as _HS, UNIV_TEAMS as _UNIV, IND_TEAMS as _IND,
-  KBL_TEAMS as _KBL, KBL_FARM_TEAMS as _KBLF,
-  ABL_TEAMS as _ABL, ABL_FARM_TEAMS as _ABLF,
-  JBL_TEAMS as _JBL, JBL_FARM_TEAMS as _JBLF,
+  HS_ALL_TEAMS as _HS,
+  UNIV_TEAMS as _UNIV,
+  IND_TEAMS as _IND,
+  KBL_TEAMS as _KBL,
+  KBL_FARM_TEAMS as _KBLF,
+  ABL_TEAMS as _ABL,
+  ABL_FARM_TEAMS as _ABLF,
+  JBL_TEAMS as _JBL,
+  JBL_FARM_TEAMS as _JBLF,
 } from "./leagueTeams.generated";
 
 /**
@@ -162,15 +201,15 @@ import {
 export const HS_ACTIVE_TEAMS_V3: string[] = _HS;
 
 export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
-  LEAGUE_HIGHSCHOOL:  [..._HS],
-  LEAGUE_UNIVERSITY:  [..._UNIV],
+  LEAGUE_HIGHSCHOOL: [..._HS],
+  LEAGUE_UNIVERSITY: [..._UNIV],
   LEAGUE_INDEPENDENT: [..._IND],
-  LEAGUE_KBL:         [..._KBL],
-  LEAGUE_ABL:         [..._ABL],
-  LEAGUE_JBL:         [..._JBL],
-  LEAGUE_KBL_FARM:    [..._KBLF],
-  LEAGUE_ABL_FARM:    [..._ABLF],
-  LEAGUE_JBL_FARM:    [..._JBLF],
+  LEAGUE_KBL: [..._KBL],
+  LEAGUE_ABL: [..._ABL],
+  LEAGUE_JBL: [..._JBL],
+  LEAGUE_KBL_FARM: [..._KBLF],
+  LEAGUE_ABL_FARM: [..._ABLF],
+  LEAGUE_JBL_FARM: [..._JBLF],
 };
 
 /**
@@ -201,30 +240,68 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
 export const PRO_START_WEEK = 5;
 export const PRO_END_WEEK = 28;
 
-export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
-  // 프로 1군 10팀 × 16차전 = 팀당 144경기 (DESIGN.md §7)
-  { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 16 },
-  // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
-  { leagueId: "LEAGUE_KBL_FARM", teams: [..._KBLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 11 },
-  // 해외 — **2026-08-20부터 국내와 같이 풀 시뮬한다.** 경기 수도 실제 리그에
-  // 맞췄다(CALENDAR_V2.md):
-  //
-  // ABL은 **MLB를 축소한 가상 리그**다(사용자 확정). MLB가 30팀 162경기인데
-  // 16팀이면 상대가 15명이라 162를 채우려면 10.8차전이 된다 — 10차전 150이
-  // 가장 가깝고, 정규 24주에 넣으면 주 6.25로 MLB(6.2)와 거의 같다.
-  { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 10 },
-  // JBL은 NPB다 — 12팀 143경기. 13차전이면 정확히 143이 된다
-  { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 13 },
-  // ⚠ 해외 팜은 **항목 자체가 없었다.** 확장팩 게이트를 열어도 1군 일정만
-  // 깔리고 팜은 0경기였다 — 승강할 곳이 없으면 로스터가 고인다.
-  //
-  // 🔴 **차수를 11로 통일했더니 ABL 2군이 1군보다 많아졌다**(16팀 × 11 = 165
-  // vs 1군 150). 2군은 1군보다 적게 뛰는 게 맞다 — 8차전 120으로 내린다.
-  // 1군 대비 0.8인데, KBL 2군은 0.69(99/144) · JBL 2군은 0.85(121/143)라
-  // 그 사이다.
-  { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 8  },
-  { leagueId: "LEAGUE_JBL_FARM", teams: [..._JBLF], startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK, cycles: 11 },
-] as LeagueConfig[]).filter((c) => isLeagueInScope(c.leagueId));
+export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = (
+  [
+    // 프로 1군 10팀 × 16차전 = 팀당 144경기 (DESIGN.md §7)
+    {
+      leagueId: "LEAGUE_KBL",
+      teams: [..._KBL],
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+      cycles: 16,
+    },
+    // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
+    {
+      leagueId: "LEAGUE_KBL_FARM",
+      teams: [..._KBLF],
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+      cycles: 11,
+    },
+    // 해외 — **2026-08-20부터 국내와 같이 풀 시뮬한다.** 경기 수도 실제 리그에
+    // 맞췄다(CALENDAR_V2.md):
+    //
+    // ABL은 **MLB를 축소한 가상 리그**다(사용자 확정). MLB가 30팀 162경기인데
+    // 16팀이면 상대가 15명이라 162를 채우려면 10.8차전이 된다 — 10차전 150이
+    // 가장 가깝고, 정규 24주에 넣으면 주 6.25로 MLB(6.2)와 거의 같다.
+    {
+      leagueId: "LEAGUE_ABL",
+      teams: [..._ABL],
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+      cycles: 10,
+    },
+    // JBL은 NPB다 — 12팀 143경기. 13차전이면 정확히 143이 된다
+    {
+      leagueId: "LEAGUE_JBL",
+      teams: [..._JBL],
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+      cycles: 13,
+    },
+    // ⚠ 해외 팜은 **항목 자체가 없었다.** 확장팩 게이트를 열어도 1군 일정만
+    // 깔리고 팜은 0경기였다 — 승강할 곳이 없으면 로스터가 고인다.
+    //
+    // 🔴 **차수를 11로 통일했더니 ABL 2군이 1군보다 많아졌다**(16팀 × 11 = 165
+    // vs 1군 150). 2군은 1군보다 적게 뛰는 게 맞다 — 8차전 120으로 내린다.
+    // 1군 대비 0.8인데, KBL 2군은 0.69(99/144) · JBL 2군은 0.85(121/143)라
+    // 그 사이다.
+    {
+      leagueId: "LEAGUE_ABL_FARM",
+      teams: [..._ABLF],
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+      cycles: 8,
+    },
+    {
+      leagueId: "LEAGUE_JBL_FARM",
+      teams: [..._JBLF],
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+      cycles: 11,
+    },
+  ] as LeagueConfig[]
+).filter((c) => isLeagueInScope(c.leagueId));
 
 // ── 시범경기 (CALENDAR_V2.md) ─────────────────────────────────
 
@@ -261,12 +338,20 @@ export async function generatePreseasonSchedules(
     const teams = ALL_TEAMS_BY_LEAGUE[lid] ?? [];
     if (teams.length < 2) continue;
     const entries = await generateRegionalSchedule(
-      lid, { ALL: teams }, PRESEASON_GAMES,
-      PRESEASON_START_WEEK, PRESEASON_END_WEEK, protagonistTeamId, seasonYear,
+      lid,
+      { ALL: teams },
+      PRESEASON_GAMES,
+      PRESEASON_START_WEEK,
+      PRESEASON_END_WEEK,
+      protagonistTeamId,
+      seasonYear,
       { idPrefix: `PRE_${lid.replace("LEAGUE_", "")}` },
     );
     out[lid] = entries.map((e) => ({
-      ...e, leagueId: lid, phase: "preseason" as const, isFriendly: true,
+      ...e,
+      leagueId: lid,
+      phase: "preseason" as const,
+      isFriendly: true,
     }));
   }
   return out;

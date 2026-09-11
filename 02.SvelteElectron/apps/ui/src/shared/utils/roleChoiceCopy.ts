@@ -32,10 +32,20 @@ export type RoleAskReason = "season" | "stageMove" | "callup" | "demote" | "disc
 /** 추천 문안을 고르는 무대 다섯 */
 export type RoleCopyStage = "highschool" | "university" | "independent" | "pro" | "farm";
 
-export const ROLE_ASK_REASONS: readonly RoleAskReason[] =
-  ["season", "stageMove", "callup", "demote", "discharge"];
-export const ROLE_COPY_STAGES: readonly RoleCopyStage[] =
-  ["highschool", "university", "independent", "pro", "farm"];
+export const ROLE_ASK_REASONS: readonly RoleAskReason[] = [
+  "season",
+  "stageMove",
+  "callup",
+  "demote",
+  "discharge",
+];
+export const ROLE_COPY_STAGES: readonly RoleCopyStage[] = [
+  "highschool",
+  "university",
+  "independent",
+  "pro",
+  "farm",
+];
 export const ROLE_POSITIONS: readonly RolePosition[] = ["SP", "RP", "CP"];
 
 export interface RoleChoiceCopy {
@@ -70,7 +80,9 @@ export function roleCopyStageOf(careerStage: string, leagueId: string): RoleCopy
   return "pro";
 }
 
-export type RoleCopyVars = Partial<Record<"year" | "role" | "recWas" | "roleAs" | "roleObj" | "ahead", string | number>>;
+export type RoleCopyVars = Partial<
+  Record<"year" | "role" | "recWas" | "roleAs" | "roleObj" | "ahead", string | number>
+>;
 
 /**
  * 틀을 채운다. **정규식을 안 쓴다** — 자리표 이름이 여섯뿐이라 그대로 잇는다.
@@ -90,9 +102,7 @@ export function fillRoleCopy(template: string, vars: RoleCopyVars): string {
 
 /** 확인 한 줄 — 갈래는 `ahead ≥ 1` / `ahead = 0` 둘뿐이다 (§7 「ahead — 두 갈래」) */
 export function roleConfirmLine(copy: RoleChoiceCopy, ahead: number): string {
-  return ahead >= 1
-    ? fillRoleCopy(copy.confirm.crowded, { ahead })
-    : copy.confirm.empty;
+  return ahead >= 1 ? fillRoleCopy(copy.confirm.crowded, { ahead }) : copy.confirm.empty;
 }
 
 /**
@@ -103,8 +113,20 @@ export function roleConfirmLine(copy: RoleChoiceCopy, ahead: number): string {
 export function parseRoleChoiceCopy(raw: unknown): RoleChoiceCopy | null {
   const o = raw as RoleChoiceCopy | null;
   if (!o || typeof o !== "object") return null;
-  if (!o.roleLabel || !o.roleAs || !o.roleObj || !o.roleWas || !o.subject || !o.lead
-      || !o.recommend || !o.tail || !o.confirm || !o.decided || !o.fallback) return null;
+  if (
+    !o.roleLabel ||
+    !o.roleAs ||
+    !o.roleObj ||
+    !o.roleWas ||
+    !o.subject ||
+    !o.lead ||
+    !o.recommend ||
+    !o.tail ||
+    !o.confirm ||
+    !o.decided ||
+    !o.fallback
+  )
+    return null;
   for (const pos of ROLE_POSITIONS) {
     if (!o.roleLabel[pos] || !o.roleAs[pos] || !o.roleObj[pos] || !o.roleWas[pos]) return null;
   }
@@ -114,7 +136,8 @@ export function parseRoleChoiceCopy(raw: unknown): RoleChoiceCopy | null {
     if (!row) return null;
     for (const pos of ROLE_POSITIONS) if (!row[pos]) return null;
   }
-  if (!o.confirm.crowded || !o.confirm.empty || !o.confirm.buttons?.back || !o.confirm.buttons?.go) return null;
+  if (!o.confirm.crowded || !o.confirm.empty || !o.confirm.buttons?.back || !o.confirm.buttons?.go)
+    return null;
   if (!o.decided.follow || !o.decided.defy) return null;
   if (!o.tail.ask) return null;
   if (!o.subject.ask || !o.subject.decided) return null;

@@ -16,9 +16,7 @@ export function getActiveSeries(bracket: PostseasonSeries[]): PostseasonSeries |
 
 // ── Rust IPC 래퍼 ────────────────────────────────────────────────
 export async function buildKblBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonBuildKbl(
-    JSON.stringify({ standings })
-  );
+  const raw = await window.projectB!.postseasonBuildKbl(JSON.stringify({ standings }));
   return JSON.parse(raw);
 }
 
@@ -27,7 +25,7 @@ export async function buildAblBracket(
   westStandings: Standing[],
 ): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.postseasonBuildAbl(
-    JSON.stringify({ eastStandings, westStandings })
+    JSON.stringify({ eastStandings, westStandings }),
   );
   return JSON.parse(raw);
 }
@@ -44,7 +42,8 @@ export async function buildAblBracket(
  */
 export async function buildFarmBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.engine(
-    "buildFarmBracketNative", JSON.stringify({ standings }),
+    "buildFarmBracketNative",
+    JSON.stringify({ standings }),
   );
   return JSON.parse(raw);
 }
@@ -56,16 +55,12 @@ export async function buildFarmBracket(standings: Standing[]): Promise<Postseaso
  * 구 buildIndBracket은 "1위 vs 2위 단판" 하나뿐이라 4팀 사다리를 표현하지 못했다.
  */
 export async function buildIndLadder(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.engine(
-    "buildIndLadderNative", JSON.stringify({ standings }),
-  );
+  const raw = await window.projectB!.engine("buildIndLadderNative", JSON.stringify({ standings }));
   return JSON.parse(raw);
 }
 
 export async function buildJblBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonBuildJbl(
-    JSON.stringify({ standings })
-  );
+  const raw = await window.projectB!.postseasonBuildJbl(JSON.stringify({ standings }));
   return JSON.parse(raw);
 }
 
@@ -73,9 +68,7 @@ export async function applyGameToSeries(
   series: PostseasonSeries,
   winnerId: string,
 ): Promise<PostseasonSeries> {
-  const raw = await window.projectB!.postseasonApplyGame(
-    JSON.stringify({ series, winnerId })
-  );
+  const raw = await window.projectB!.postseasonApplyGame(JSON.stringify({ series, winnerId }));
   return JSON.parse(raw);
 }
 
@@ -83,9 +76,7 @@ export async function fillNextSeries(
   bracket: PostseasonSeries[],
   completed: PostseasonSeries,
 ): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonFillNext(
-    JSON.stringify({ bracket, completed })
-  );
+  const raw = await window.projectB!.postseasonFillNext(JSON.stringify({ bracket, completed }));
   return JSON.parse(raw);
 }
 
@@ -109,8 +100,13 @@ export function postseasonSeed(
   leagueId: string,
   bracket: PostseasonSeries[],
 ): number {
-  return seedOf(worldSeed, seasonYear, leagueId, "postseason",
-    bracket.filter((s) => s.winner).length);
+  return seedOf(
+    worldSeed,
+    seasonYear,
+    leagueId,
+    "postseason",
+    bracket.filter((s) => s.winner).length,
+  );
 }
 
 export async function resolveNonProtagonistSeries(
@@ -119,7 +115,7 @@ export async function resolveNonProtagonistSeries(
   seed = 0,
 ): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.postseasonResolveNpc(
-    JSON.stringify({ bracket, protagonistTeamId, seed })
+    JSON.stringify({ bracket, protagonistTeamId, seed }),
   );
   return JSON.parse(raw);
 }
@@ -132,7 +128,7 @@ export async function makeSeriesGame(
   seasonYear: number,
 ): Promise<ScheduleEntry> {
   const raw = await window.projectB!.postseasonMakeGame(
-    JSON.stringify({ series, gameNum, baseWeek, protagonistTeamId, seasonYear })
+    JSON.stringify({ series, gameNum, baseWeek, protagonistTeamId, seasonYear }),
   );
   return JSON.parse(raw);
 }
@@ -140,8 +136,6 @@ export async function makeSeriesGame(
 export async function shuffleAblConferences(
   allTeams: string[],
 ): Promise<{ east: string[]; west: string[] }> {
-  const raw = await window.projectB!.postseasonShuffleAbl(
-    JSON.stringify({ allTeams })
-  );
+  const raw = await window.projectB!.postseasonShuffleAbl(JSON.stringify({ allTeams }));
   return JSON.parse(raw);
 }

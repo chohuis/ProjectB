@@ -1,0 +1,113 @@
+# ── 손대면 안 되는 것 ────────────────────────────────────────
+# 🔴 콘텐츠는 동결이다. JSON 포맷이 바뀌면 diff 가 4.2MB 다.
+resource/
+
+# 생성물 — 사람이 안 쓴다
+#
+# 🔴 **napi 가 다시 쓴다** (2026-09-11 실측). `build:native` 를 돌 때마다
+#   NAPI-RS 가 이 둘을 통째로 새로 낸다 — 포맷해 두면 **빌드 한 번에 도로
+#   풀리고 `format:check` 가 빨강**이 된다. 머리에 「auto-generated」라고 적혀 있다.
+packages/engine-native/index.js
+packages/engine-native/index.d.ts
+**/_manifest.json
+**/dist/
+**/build/
+**/release/
+**/target/
+**/node_modules/
+package-lock.json
+*.node
+
+# ⚠ 계측·검사 스크립트 236 파일은 범위 밖이다 (개선 4 의 단서).
+#   표를 찍는 `console.log` 정렬이 포맷으로 흐트러지면 읽기 나빠진다.
+scripts/
+
+# 🔴 **문서는 안 건드린다** (107장 · 34,000줄). 결정 기록이라 표와 줄바꿈이
+#   손으로 맞춰져 있고, 풀어 놓으면 포맷 diff 가 **문서 136장으로 불어난다**
+#   — 무엇이 스타일이고 무엇이 뜻인지 못 가린다.
+#   `docs/pdf/**`·`docs/mock/**` 의 html 과 `docs/reports/*.json` 은 생성물이다.
+docs/
+# 뿌리의 문서도 같다 — `CLAUDE.md` 806줄은 규칙이지 코드가 아니다.
+*.md
+
+# ⚠ 다른 프로젝트(`00.OneF` · `03.*` · `04.GodotOnePitch` · `_archive`)는
+#   **이 폴더 바깥**이라 `prettier --write .` 가 애초에 안 닿는다. 적을 필요 없다.
+
+# ════════════════════════════════════════════════════════════
+# 🔴 **아직 포맷 안 한 59 파일** (2026-09-11 · 개선 4)
+#
+# 전량 포맷을 돌렸더니 **검사 63건이 깨졌다**(39 파일). 이 저장소의 검사는
+# **소스를 글자로 읽는다** — `readFileSync` 를 쓰는 검사 파일이 255 중 190 이고,
+# 그중 상당수가 들여쓰기·줄바꿈까지 못박는다:
+#
+#   · `roleDepthWiring` — `"          depthR,\n        );"` 를 그대로 찾는다
+#   · `diamondGeometry` — `.svelte` 의 `<style>` 을 잘라 **좌표를 계산**한다
+#   · `matchStatCards`  — `@media` 블록을 `\n  }` 로 자른다
+#
+# 포매터가 이 파일들을 다시 짜면 그 검사들이 **조용히 헛돌거나 깨진다.**
+# 고치려면 63건을 하나씩 열어 「무엇을 지키던 검사였나」를 다시 적어야 하는데,
+# 그건 `style:` 커밋에 넣을 일이 아니다 — **안전망을 스타일 커밋 안에서
+# 손보게 된다.**
+#
+# 그래서 **나머지 445 파일만 포맷하고 이 59 는 미뤘다.**
+# 푸는 법: 그 파일을 진짜로 고칠 때 `--write` 하고, 깨지는 검사를 **그 자리에서
+# 뜻을 보며** 고친 뒤 이 목록에서 한 줄 지운다. 한 번에 하지 않는다.
+apps/desktop/ipc/db.cjs
+apps/desktop/main.cjs
+apps/desktop/preload.cjs
+apps/ui/src/features/career/ui/DraftBoardModal.svelte
+apps/ui/src/features/contract/ui/FaMarketModal.svelte
+apps/ui/src/features/messages/ui/DigestCards.svelte
+apps/ui/src/features/messages/ui/RankListPanel.svelte
+apps/ui/src/features/messages/ui/TimelinePanel.svelte
+apps/ui/src/features/messages/ui/TrainingStatBars.svelte
+apps/ui/src/features/player/ui/PlayerDetailModal.svelte
+apps/ui/src/features/retirement/ui/CareerEndScreen.svelte
+apps/ui/src/features/season-end/ui/SeasonEndModal.svelte
+apps/ui/src/features/team/ui/TeamDetailModal.svelte
+apps/ui/src/pages/league/LeaguePage.svelte
+apps/ui/src/pages/main/MainPage.svelte
+apps/ui/src/pages/match/MatchPage.svelte
+apps/ui/src/pages/news/NewsPage.svelte
+apps/ui/src/pages/status/StatusPage.svelte
+apps/ui/src/shared/repo/slotRepo.ts
+apps/ui/src/shared/repo/staffGen.ts
+apps/ui/src/shared/stores/backgroundLeague.ts
+apps/ui/src/shared/stores/game.ts
+apps/ui/src/shared/stores/master.ts
+apps/ui/src/shared/stores/season.ts
+apps/ui/src/shared/types/projectb.d.ts
+apps/ui/src/shared/types/save.ts
+apps/ui/src/shared/usecases/advanceWeek.ts
+apps/ui/src/shared/usecases/applyGameOutcome.ts
+apps/ui/src/shared/usecases/campusEvents.ts
+apps/ui/src/shared/usecases/clubFinance.ts
+apps/ui/src/shared/usecases/contractDecision.ts
+apps/ui/src/shared/usecases/militaryDecision.ts
+apps/ui/src/shared/usecases/nationalTeam.ts
+apps/ui/src/shared/usecases/pitcherRole.ts
+apps/ui/src/shared/usecases/recordGameResult.ts
+apps/ui/src/shared/usecases/runAutoAdvance.ts
+apps/ui/src/shared/usecases/seasonAwards.ts
+apps/ui/src/shared/usecases/seasonCareerRecord.ts
+apps/ui/src/shared/usecases/seasonRollover.ts
+apps/ui/src/shared/usecases/simulateSkippedGame.ts
+apps/ui/src/shared/usecases/weekPhases/games.ts
+apps/ui/src/shared/usecases/weekPhases/injuries.ts
+apps/ui/src/shared/usecases/weekPhases/market.ts
+apps/ui/src/shared/usecases/weekPhases/tournamentNews.ts
+apps/ui/src/shared/utils/careerSummary.ts
+apps/ui/src/shared/utils/draftSystem.ts
+apps/ui/src/shared/utils/friendlyMatchEngine.ts
+apps/ui/src/shared/utils/gameSimulator.ts
+apps/ui/src/shared/utils/matchLineupBuilder.ts
+apps/ui/src/shared/utils/matchResult.ts
+apps/ui/src/shared/utils/militaryRules.ts
+apps/ui/src/shared/utils/npcEngine.ts
+apps/ui/src/shared/utils/ovr.ts
+apps/ui/src/shared/utils/relationMessages.ts
+apps/ui/src/shared/utils/rosterEngine.ts
+apps/ui/src/shared/utils/salaryEngine.ts
+apps/ui/src/shared/utils/scheduleView.ts
+apps/ui/src/shared/utils/season-helpers.ts
+apps/ui/src/shared/workers/simWorker.ts

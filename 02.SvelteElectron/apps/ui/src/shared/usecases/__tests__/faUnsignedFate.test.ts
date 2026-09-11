@@ -27,7 +27,7 @@ import { resolve } from "node:path";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
-const NPC    = read("packages/engine-native/src/npc_sim.rs");
+const NPC = read("packages/engine-native/src/npc_sim.rs");
 const MARKET = read("apps/ui/src/shared/usecases/weekPhases/market.ts");
 
 describe("FA 미계약자 진로", () => {
@@ -64,7 +64,9 @@ describe("FA 미계약자 진로", () => {
    */
   it("재계약이 팀 집계를 갱신한다", () => {
     expect(NPC.includes("*team_active_count.entry(team.clone()).or_default() += 1;")).toBe(true);
-    expect(NPC.includes("*team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;")).toBe(true);
+    expect(
+      NPC.includes("*team_payroll.entry(team.clone()).or_insert(0) += npc.current_salary;"),
+    ).toBe(true);
   });
 
   /**

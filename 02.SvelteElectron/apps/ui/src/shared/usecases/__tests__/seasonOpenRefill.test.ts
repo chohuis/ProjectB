@@ -27,7 +27,7 @@ import { resolve, join } from "node:path";
  * ⚠ 아무도 안 죽고 로그도 안 남는다 — 게임은 돌고 세상만 멈춘다.
  */
 
-const ROOT = resolve(__dirname, "../../..");   // apps/ui/src
+const ROOT = resolve(__dirname, "../../.."); // apps/ui/src
 
 function sources(): { path: string; body: string }[] {
   const out: { path: string; body: string }[] = [];
@@ -35,7 +35,10 @@ function sources(): { path: string; body: string }[] {
     for (const e of readdirSync(d, { withFileTypes: true })) {
       if (e.name === "__tests__" || e.name === "node_modules") continue;
       const p = join(d, e.name);
-      if (e.isDirectory()) { walk(p); continue; }
+      if (e.isDirectory()) {
+        walk(p);
+        continue;
+      }
       if (!/\.(ts|svelte)$/.test(e.name)) continue;
       if (e.name.endsWith(".test.ts")) continue;
       out.push({
@@ -85,8 +88,8 @@ describe("무대를 여는 자리는 배경 리그를 다시 채운다", () => {
     }
     expect(
       bad,
-      "`initSeason` 은 `leagueSchedules` 를 비운다 — 그 시즌 배경 리그가 통째로 멈춘다.\n"
-      + "`seasonStore.reinitSeasonSchedules(내리그, 팀id, { keepOwnSchedule })` 를 이어 불러라",
+      "`initSeason` 은 `leagueSchedules` 를 비운다 — 그 시즌 배경 리그가 통째로 멈춘다.\n" +
+        "`seasonStore.reinitSeasonSchedules(내리그, 팀id, { keepOwnSchedule })` 를 이어 불러라",
     ).toEqual([]);
   });
 });

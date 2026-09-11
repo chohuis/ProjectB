@@ -1,7 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { collectStreakKeys, streakKeyOf, tickStreaks, lastGameOf, COUNTERS } from "../eventCounters";
+import {
+  collectStreakKeys,
+  streakKeyOf,
+  tickStreaks,
+  lastGameOf,
+  COUNTERS,
+} from "../eventCounters";
 import { evaluateCondition } from "../conditionEvaluator";
 import type { EventContext, EventRule, Condition } from "../../types/event";
 import type { ProtagonistSave } from "../../types/save";
@@ -18,25 +24,58 @@ import type { ScheduleEntry } from "../../types/season";
  * 「아직 안 채웠다」와 같은 뜻이라 맞다 — 다만 **끝내 못 채우는 칸**은
  * 결함이라 아래 배선 검사가 「올려 주는 자리가 있는가」를 본다.
  */
-const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave => ({
-  id: "PLY_HERO", careerStage: "highschool", leagueId: "LEAGUE_HIGHSCHOOL",
-  teamId: "TEAM_A", condition: 80, fatigue: 10, morale: 70, diligence: 60,
-  money: 0, fame: 0, popularity: 0, tags: [], pitches: [],
-  pitching: { ovr: 60, stamina: 60, velocity: 60, command: 60, control: 60,
-    movement: 60, mentality: 60, recovery: 60, clutch: 60, holdRunners: 60 },
-  batting: { ovr: 30 },
-  ...over,
-} as unknown as ProtagonistSave);
+const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave =>
+  ({
+    id: "PLY_HERO",
+    careerStage: "highschool",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    teamId: "TEAM_A",
+    condition: 80,
+    fatigue: 10,
+    morale: 70,
+    diligence: 60,
+    money: 0,
+    fame: 0,
+    popularity: 0,
+    tags: [],
+    pitches: [],
+    pitching: {
+      ovr: 60,
+      stamina: 60,
+      velocity: 60,
+      command: 60,
+      control: 60,
+      movement: 60,
+      mentality: 60,
+      recovery: 60,
+      clutch: 60,
+      holdRunners: 60,
+    },
+    batting: { ovr: 30 },
+    ...over,
+  }) as unknown as ProtagonistSave;
 
 const ctx = (over: Partial<EventContext> = {}): EventContext => ({
-  protagonist: proto(), currentWeek: 10, seasonPhase: "season",
-  standings: [], stats: {}, triggeredEvents: {},
+  protagonist: proto(),
+  currentWeek: 10,
+  seasonPhase: "season",
+  standings: [],
+  stats: {},
+  triggeredEvents: {},
   ...over,
 });
 
 const rule = (conds: Condition[], hidden?: Condition[]): EventRule =>
-  ({ id: "EVT_X", title: "t", type: "conditional", category: "c", priority: 1,
-     oncePolicy: "repeatable", conditions: conds, hiddenCondition: hidden } as EventRule);
+  ({
+    id: "EVT_X",
+    title: "t",
+    type: "conditional",
+    category: "c",
+    priority: 1,
+    oncePolicy: "repeatable",
+    conditions: conds,
+    hiddenCondition: hidden,
+  }) as EventRule;
 
 // ── streak ──────────────────────────────────────────────────────
 
@@ -67,8 +106,12 @@ describe("streak — N주 연속", () => {
 
   it("조건은 세는 칸이 문턱을 넘어야 참이다", () => {
     const c: Condition = { type: "streak", metric: "diligence", op: "gte", value: 90, weeks: 20 };
-    expect(evaluateCondition(c, ctx({ protagonist: proto({ streaks: { "diligence:gte:90": 19 } }) }))).toBe(false);
-    expect(evaluateCondition(c, ctx({ protagonist: proto({ streaks: { "diligence:gte:90": 20 } }) }))).toBe(true);
+    expect(
+      evaluateCondition(c, ctx({ protagonist: proto({ streaks: { "diligence:gte:90": 19 } }) })),
+    ).toBe(false);
+    expect(
+      evaluateCondition(c, ctx({ protagonist: proto({ streaks: { "diligence:gte:90": 20 } }) })),
+    ).toBe(true);
     // 칸이 없으면 false — 「아직 안 채웠다」와 같은 뜻이다
     expect(evaluateCondition(c, ctx())).toBe(false);
   });
@@ -78,14 +121,23 @@ describe("streak — N주 연속", () => {
 
 describe("count — 누적 카운터", () => {
   it("표에 있는 이름만 쓴다", () => {
-    expect(Object.keys(COUNTERS).sort())
-      .toEqual(["completeGames", "menteeCount", "sameCatcherGames", "sameTeamYears", "shutouts"]);
+    expect(Object.keys(COUNTERS).sort()).toEqual([
+      "completeGames",
+      "menteeCount",
+      "sameCatcherGames",
+      "sameTeamYears",
+      "shutouts",
+    ]);
   });
 
   it("문턱을 넘어야 참이다", () => {
     const c: Condition = { type: "count", counter: "sameCatcherGames", value: 30 };
-    expect(evaluateCondition(c, ctx({ protagonist: proto({ counters: { sameCatcherGames: 29 } }) }))).toBe(false);
-    expect(evaluateCondition(c, ctx({ protagonist: proto({ counters: { sameCatcherGames: 30 } }) }))).toBe(true);
+    expect(
+      evaluateCondition(c, ctx({ protagonist: proto({ counters: { sameCatcherGames: 29 } }) })),
+    ).toBe(false);
+    expect(
+      evaluateCondition(c, ctx({ protagonist: proto({ counters: { sameCatcherGames: 30 } }) })),
+    ).toBe(true);
     expect(evaluateCondition(c, ctx())).toBe(false);
   });
 
@@ -99,7 +151,10 @@ describe("count — 누적 카운터", () => {
     expect(game).toContain("c.sameCatcherGames = pr.lastCatcherId === p.catcherId");
     // 지도 후배 — 선택지의 `counterDelta`
     expect(game).toContain("fx.counterDelta");
-    const outcome = readFileSync(resolve("apps/ui/src/shared/usecases/applyGameOutcome.ts"), "utf8");
+    const outcome = readFileSync(
+      resolve("apps/ui/src/shared/usecases/applyGameOutcome.ts"),
+      "utf8",
+    );
     expect(outcome).toContain("gameStore.recordGameCounters(");
   });
 });
@@ -114,62 +169,111 @@ describe("compare — 주인공 대 지정 NPC", () => {
   });
 
   it("내가 크면 참이다", () => {
-    expect(evaluateCondition(c, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 55 } } }))).toBe(true);
-    expect(evaluateCondition(c, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 70 } } }))).toBe(false);
+    expect(evaluateCondition(c, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 55 } } }))).toBe(
+      true,
+    );
+    expect(evaluateCondition(c, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 70 } } }))).toBe(
+      false,
+    );
   });
 
   it("`margin` 은 「얼마나 앞서야 하는가」다", () => {
     const m: Condition = { ...c, margin: 10 } as Condition;
     // 나 60 · 상대 55 → 10 앞서지는 못했다
-    expect(evaluateCondition(m, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 55 } } }))).toBe(false);
-    expect(evaluateCondition(m, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 45 } } }))).toBe(true);
+    expect(evaluateCondition(m, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 55 } } }))).toBe(
+      false,
+    );
+    expect(evaluateCondition(m, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 45 } } }))).toBe(
+      true,
+    );
   });
 
   it("`role` 만 적으면 false 다 — `storyNpcs` 등록부가 아직 없다(§12)", () => {
-    expect(evaluateCondition({ type: "compare", role: "rival", stat: "pitching.ovr", op: "gte" },
-      ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 1 } } }))).toBe(false);
+    expect(
+      evaluateCondition(
+        { type: "compare", role: "rival", stat: "pitching.ovr", op: "gte" },
+        ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 1 } } }),
+      ),
+    ).toBe(false);
   });
 });
 
 // ── last_game ───────────────────────────────────────────────────
 
-const sched = (o: { week: number; ip: number; k?: number; oppScore?: number; friendly?: boolean }): ScheduleEntry => ({
-  id: `SCH_W${o.week}`, week: o.week, gameDate: "2026-04-01",
-  homeTeamId: "TEAM_A", awayTeamId: "TEAM_B", isProtagonistGame: true, phase: "season",
-  isFriendly: o.friendly ?? false,
-  result: {
-    homeScore: 3, awayScore: o.oppScore ?? 0,
-    winnerId: "TEAM_A", loserId: "TEAM_B", events: [],
-    playerLines: [{ role: "pitcher", playerId: "PLY_HERO", ip: o.ip, er: o.oppScore ?? 0, h: 2,
-      k: o.k ?? 8, bb: 1, decision: "W", pitchCount: 110 }],
-  },
-} as unknown as ScheduleEntry);
+const sched = (o: {
+  week: number;
+  ip: number;
+  k?: number;
+  oppScore?: number;
+  friendly?: boolean;
+}): ScheduleEntry =>
+  ({
+    id: `SCH_W${o.week}`,
+    week: o.week,
+    gameDate: "2026-04-01",
+    homeTeamId: "TEAM_A",
+    awayTeamId: "TEAM_B",
+    isProtagonistGame: true,
+    phase: "season",
+    isFriendly: o.friendly ?? false,
+    result: {
+      homeScore: 3,
+      awayScore: o.oppScore ?? 0,
+      winnerId: "TEAM_A",
+      loserId: "TEAM_B",
+      events: [],
+      playerLines: [
+        {
+          role: "pitcher",
+          playerId: "PLY_HERO",
+          ip: o.ip,
+          er: o.oppScore ?? 0,
+          h: 2,
+          k: o.k ?? 8,
+          bb: 1,
+          decision: "W",
+          pitchCount: 110,
+        },
+      ],
+    },
+  }) as unknown as ScheduleEntry;
 
 describe("last_game — 직전 등판", () => {
   it("가장 나중 주의 공식 경기를 고른다", () => {
-    const g = lastGameOf([sched({ week: 3, ip: 6 }), sched({ week: 9, ip: 9 }), sched({ week: 5, ip: 7 })],
-      "PLY_HERO", "TEAM_A");
+    const g = lastGameOf(
+      [sched({ week: 3, ip: 6 }), sched({ week: 9, ip: 9 }), sched({ week: 5, ip: 7 })],
+      "PLY_HERO",
+      "TEAM_A",
+    );
     expect(g?.week).toBe(9);
     expect(g?.completeGame).toBe(true);
-    expect(g?.shutout).toBe(true);   // 상대 0점
+    expect(g?.shutout).toBe(true); // 상대 0점
   });
 
   it("연습경기는 안 본다 — 연습경기 완봉이 히든을 열면 이야기가 안 산다", () => {
-    expect(lastGameOf([sched({ week: 9, ip: 9, friendly: true })], "PLY_HERO", "TEAM_A"))
-      .toBeUndefined();
+    expect(
+      lastGameOf([sched({ week: 9, ip: 9, friendly: true })], "PLY_HERO", "TEAM_A"),
+    ).toBeUndefined();
   });
 
   it("한 경기도 안 던졌으면 그 조건은 전부 false 다", () => {
-    expect(evaluateCondition({ type: "last_game", field: "shutout", op: "eq", value: true }, ctx()))
-      .toBe(false);
+    expect(
+      evaluateCondition({ type: "last_game", field: "shutout", op: "eq", value: true }, ctx()),
+    ).toBe(false);
   });
 
   it("참/거짓 칸은 `eq` 로, 숫자 칸은 대소로 잰다", () => {
     const lastGame = lastGameOf([sched({ week: 9, ip: 9, k: 12 })], "PLY_HERO", "TEAM_A");
     const c1 = ctx({ lastGame });
-    expect(evaluateCondition({ type: "last_game", field: "shutout", op: "eq", value: true }, c1)).toBe(true);
-    expect(evaluateCondition({ type: "last_game", field: "k", op: "gte", value: 10 }, c1)).toBe(true);
-    expect(evaluateCondition({ type: "last_game", field: "k", op: "gte", value: 13 }, c1)).toBe(false);
+    expect(
+      evaluateCondition({ type: "last_game", field: "shutout", op: "eq", value: true }, c1),
+    ).toBe(true);
+    expect(evaluateCondition({ type: "last_game", field: "k", op: "gte", value: 10 }, c1)).toBe(
+      true,
+    );
+    expect(evaluateCondition({ type: "last_game", field: "k", op: "gte", value: 13 }, c1)).toBe(
+      false,
+    );
   });
 
   it("완투인데 실점이 있으면 완봉이 아니다", () => {

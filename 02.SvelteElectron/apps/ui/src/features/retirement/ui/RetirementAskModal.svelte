@@ -48,10 +48,10 @@
   $: title = forced ? "재기 불가 판정" : "은퇴 권고";
   $: bodyText = forced
     ? `${detail || "부상"}\n\n의료진이 선수 생활 지속이 어렵다고 판단했습니다.\n${p.age}세, 통산 ${seasons}시즌.`
-    : `계약이 끝났고 어느 구단도 다시 부르지 않습니다.\n${p.age}세, 통산 ${seasons}시즌.\n\n`
-      + (urgency >= 0.7
-          ? "복귀 가능성은 거의 없어 보입니다."
-          : "무소속으로 한 해 더 기다려 볼 수는 있습니다.");
+    : `계약이 끝났고 어느 구단도 다시 부르지 않습니다.\n${p.age}세, 통산 ${seasons}시즌.\n\n` +
+      (urgency >= 0.7
+        ? "복귀 가능성은 거의 없어 보입니다."
+        : "무소속으로 한 해 더 기다려 볼 수는 있습니다.");
 
   async function retire() {
     if (resolving) return;
@@ -95,14 +95,74 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:245; }
-  .modal { width:min(440px,90vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:12px; padding:24px; display:grid; gap:14px; }
-  .chip { margin:0; font-size:11px; color:var(--ink); }
-  h2 { margin:4px 0 0; color:var(--ink); }
-  .body-text { margin:0; color:var(--ink); font-size:14px; white-space:pre-line; line-height:1.6; }
-  .warning-box { background:rgba(179, 49, 31, 0.09); border:1px solid var(--bad); border-radius:8px; padding:10px 14px; color:var(--bad); font-size:13px; }
-  .actions { display:flex; gap:10px; justify-content:flex-end; }
-  .btn-keep { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
-  .btn-retire { border:1px solid rgba(154, 101, 16, 0.30); background:rgba(154, 101, 16, 0.12); color:var(--warn); border-radius:8px; padding:9px 20px; cursor:pointer; font-size:13px; font-weight:700; }
-  button:disabled { opacity:.5; cursor:default; }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 245;
+  }
+  .modal {
+    width: min(440px, 90vw);
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: 12px;
+    padding: 24px;
+    display: grid;
+    gap: 14px;
+  }
+  .chip {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink);
+  }
+  h2 {
+    margin: 4px 0 0;
+    color: var(--ink);
+  }
+  .body-text {
+    margin: 0;
+    color: var(--ink);
+    font-size: 14px;
+    white-space: pre-line;
+    line-height: 1.6;
+  }
+  .warning-box {
+    background: rgba(179, 49, 31, 0.09);
+    border: 1px solid var(--bad);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--bad);
+    font-size: 13px;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .btn-keep {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .btn-retire {
+    border: 1px solid rgba(154, 101, 16, 0.3);
+    background: rgba(154, 101, 16, 0.12);
+    color: var(--warn);
+    border-radius: 8px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 </style>

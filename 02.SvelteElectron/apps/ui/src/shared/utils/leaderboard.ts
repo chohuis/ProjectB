@@ -42,35 +42,215 @@ const two = (v: number) => v.toFixed(2);
 const ipText = (v: number) => ipLabel(v);
 const int = (v: number) => String(Math.round(v));
 
-const P = (f: (p: PitcherSeasonStats) => number) =>
-  (s: PitcherSeasonStats | BatterSeasonStats) => f(s as PitcherSeasonStats);
-const B = (f: (b: BatterSeasonStats) => number) =>
-  (s: PitcherSeasonStats | BatterSeasonStats) => f(s as BatterSeasonStats);
+const P = (f: (p: PitcherSeasonStats) => number) => (s: PitcherSeasonStats | BatterSeasonStats) =>
+  f(s as PitcherSeasonStats);
+const B = (f: (b: BatterSeasonStats) => number) => (s: PitcherSeasonStats | BatterSeasonStats) =>
+  f(s as BatterSeasonStats);
 
 export const CATEGORIES: StatCategory[] = [
   // ── 투수 ──
-  { key: "era",  label: "평균자책점", side: "pitcher", dir: "asc",  kind: "rate",  card: true,  value: P((p) => p.era),  format: two },
-  { key: "w",    label: "다승",       side: "pitcher", dir: "desc", kind: "count", card: true,  value: P((p) => p.w),    format: int },
-  { key: "k",    label: "탈삼진",     side: "pitcher", dir: "desc", kind: "count", card: true,  value: P((p) => p.k),    format: int },
-  { key: "sv",   label: "세이브",     side: "pitcher", dir: "desc", kind: "count", card: true,  value: P((p) => p.sv),   format: int },
-  { key: "hd",   label: "홀드",       side: "pitcher", dir: "desc", kind: "count", card: true,  value: P((p) => p.hd),   format: int },
-  { key: "whip", label: "WHIP",       side: "pitcher", dir: "asc",  kind: "rate",  card: false, value: P((p) => p.whip), format: two },
-  { key: "ip",   label: "이닝",       side: "pitcher", dir: "desc", kind: "count", card: false, value: P((p) => p.ip),   format: ipText },
-  { key: "g",    label: "경기",       side: "pitcher", dir: "desc", kind: "count", card: false, value: P((p) => p.g),    format: int },
-  { key: "l",    label: "패",         side: "pitcher", dir: "desc", kind: "count", card: false, value: P((p) => p.l),    format: int },
-  { key: "bb_p", label: "볼넷",       side: "pitcher", dir: "desc", kind: "count", card: false, value: P((p) => p.bb),   format: int },
+  {
+    key: "era",
+    label: "평균자책점",
+    side: "pitcher",
+    dir: "asc",
+    kind: "rate",
+    card: true,
+    value: P((p) => p.era),
+    format: two,
+  },
+  {
+    key: "w",
+    label: "다승",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: P((p) => p.w),
+    format: int,
+  },
+  {
+    key: "k",
+    label: "탈삼진",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: P((p) => p.k),
+    format: int,
+  },
+  {
+    key: "sv",
+    label: "세이브",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: P((p) => p.sv),
+    format: int,
+  },
+  {
+    key: "hd",
+    label: "홀드",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: P((p) => p.hd),
+    format: int,
+  },
+  {
+    key: "whip",
+    label: "WHIP",
+    side: "pitcher",
+    dir: "asc",
+    kind: "rate",
+    card: false,
+    value: P((p) => p.whip),
+    format: two,
+  },
+  {
+    key: "ip",
+    label: "이닝",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: P((p) => p.ip),
+    format: ipText,
+  },
+  {
+    key: "g",
+    label: "경기",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: P((p) => p.g),
+    format: int,
+  },
+  {
+    key: "l",
+    label: "패",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: P((p) => p.l),
+    format: int,
+  },
+  {
+    key: "bb_p",
+    label: "볼넷",
+    side: "pitcher",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: P((p) => p.bb),
+    format: int,
+  },
 
   // ── 타자 ──
-  { key: "avg",  label: "타율",   side: "batter", dir: "desc", kind: "rate",  card: true,  value: B((b) => b.avg), format: rate3 },
-  { key: "hr",   label: "홈런",   side: "batter", dir: "desc", kind: "count", card: true,  value: B((b) => b.hr),  format: int },
-  { key: "rbi",  label: "타점",   side: "batter", dir: "desc", kind: "count", card: true,  value: B((b) => b.rbi), format: int },
-  { key: "sb",   label: "도루",   side: "batter", dir: "desc", kind: "count", card: true,  value: B((b) => b.sb),  format: int },
-  { key: "ops",  label: "OPS",    side: "batter", dir: "desc", kind: "rate",  card: true,  value: B((b) => b.ops), format: rate3 },
-  { key: "obp",  label: "출루율", side: "batter", dir: "desc", kind: "rate",  card: false, value: B((b) => b.obp), format: rate3 },
-  { key: "slg",  label: "장타율", side: "batter", dir: "desc", kind: "rate",  card: false, value: B((b) => b.slg), format: rate3 },
-  { key: "h_b",  label: "안타",   side: "batter", dir: "desc", kind: "count", card: false, value: B((b) => b.h),   format: int },
-  { key: "ab",   label: "타수",   side: "batter", dir: "desc", kind: "count", card: false, value: B((b) => b.ab),  format: int },
-  { key: "bb_b", label: "볼넷",   side: "batter", dir: "desc", kind: "count", card: false, value: B((b) => b.bb),  format: int },
+  {
+    key: "avg",
+    label: "타율",
+    side: "batter",
+    dir: "desc",
+    kind: "rate",
+    card: true,
+    value: B((b) => b.avg),
+    format: rate3,
+  },
+  {
+    key: "hr",
+    label: "홈런",
+    side: "batter",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: B((b) => b.hr),
+    format: int,
+  },
+  {
+    key: "rbi",
+    label: "타점",
+    side: "batter",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: B((b) => b.rbi),
+    format: int,
+  },
+  {
+    key: "sb",
+    label: "도루",
+    side: "batter",
+    dir: "desc",
+    kind: "count",
+    card: true,
+    value: B((b) => b.sb),
+    format: int,
+  },
+  {
+    key: "ops",
+    label: "OPS",
+    side: "batter",
+    dir: "desc",
+    kind: "rate",
+    card: true,
+    value: B((b) => b.ops),
+    format: rate3,
+  },
+  {
+    key: "obp",
+    label: "출루율",
+    side: "batter",
+    dir: "desc",
+    kind: "rate",
+    card: false,
+    value: B((b) => b.obp),
+    format: rate3,
+  },
+  {
+    key: "slg",
+    label: "장타율",
+    side: "batter",
+    dir: "desc",
+    kind: "rate",
+    card: false,
+    value: B((b) => b.slg),
+    format: rate3,
+  },
+  {
+    key: "h_b",
+    label: "안타",
+    side: "batter",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: B((b) => b.h),
+    format: int,
+  },
+  {
+    key: "ab",
+    label: "타수",
+    side: "batter",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: B((b) => b.ab),
+    format: int,
+  },
+  {
+    key: "bb_b",
+    label: "볼넷",
+    side: "batter",
+    dir: "desc",
+    kind: "count",
+    card: false,
+    value: B((b) => b.bb),
+    format: int,
+  },
 ];
 
 export function categoriesFor(side: StatSide): StatCategory[] {
@@ -92,7 +272,11 @@ export function categoryByKey(key: string): StatCategory | undefined {
  * ⚠ 바닥값(10이닝 · 20타석)을 남겨 둔다. 고교처럼 경기 수가 적은 리그에서
  * 비례식만 쓰면 자격자가 **0명**이 되어 순위표가 통째로 빈다.
  */
-export interface Qual { ip: number; pa: number; games: number }
+export interface Qual {
+  ip: number;
+  pa: number;
+  games: number;
+}
 
 export function qualificationOf(gamesPlayed: number): Qual {
   return {

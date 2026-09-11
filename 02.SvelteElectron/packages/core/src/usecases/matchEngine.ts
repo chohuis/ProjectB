@@ -1,7 +1,4 @@
-import type {
-  MatchState,
-  MatchStartOptions,
-} from "../domain/matchState";
+import type { MatchState, MatchStartOptions } from "../domain/matchState";
 import type {
   BallInPlay,
   FieldingResult,
@@ -46,10 +43,10 @@ export interface MatchStepResult {
 
 export interface AtBatLog {
   pitcherName: string;
-  batterName:  string;
-  resultCode:  PitchResultCode;
-  pitchCount:  number;
-  runsScored:  number;
+  batterName: string;
+  resultCode: PitchResultCode;
+  pitchCount: number;
+  runsScored: number;
 }
 
 export interface HalfInningSimResult {
@@ -107,7 +104,9 @@ export function setNativeEngine(native: NativeEngine): void {
 
 function n(): NativeEngine {
   if (!_native) {
-    throw new Error("[core/matchEngine] 네이티브 엔진이 초기화되지 않았습니다. setNativeEngine()을 먼저 호출하세요.");
+    throw new Error(
+      "[core/matchEngine] 네이티브 엔진이 초기화되지 않았습니다. setNativeEngine()을 먼저 호출하세요.",
+    );
   }
   return _native;
 }
@@ -135,7 +134,16 @@ export function startMatch(options: MatchStartOptions = {}): MatchState {
 export function finishMatch(state: MatchState): {
   nextState: MatchState;
   summary: string;
-  batterLines: Array<{ playerId: string; pa: number; ab: number; h: number; hr: number; rbi: number; bb: number; k: number }>;
+  batterLines: Array<{
+    playerId: string;
+    pa: number;
+    ab: number;
+    h: number;
+    hr: number;
+    rbi: number;
+    bb: number;
+    k: number;
+  }>;
   playerLines: Array<Record<string, unknown>>;
   protagonistEntered: boolean;
 } {
@@ -147,7 +155,9 @@ export function isProtagonistPitching(state: MatchState): boolean {
 }
 
 export function stepPitch(state: MatchState, decision: PitchDecision): MatchStepResult {
-  return parse<MatchStepResult>(n().stepPitchNative(JSON.stringify(state), JSON.stringify(decision)));
+  return parse<MatchStepResult>(
+    n().stepPitchNative(JSON.stringify(state), JSON.stringify(decision)),
+  );
 }
 
 export function advanceGamePhase(state: MatchState): GamePhaseResult {
@@ -174,9 +184,10 @@ export function requestMoundVisit(state: MatchState): MatchState {
   return parse<MatchState>(n().requestMoundVisitNative(JSON.stringify(state)));
 }
 
-export function shouldProtagonistExit(
-  state: MatchState
-): { shouldExit: boolean; reason: ExitReason | null } {
+export function shouldProtagonistExit(state: MatchState): {
+  shouldExit: boolean;
+  reason: ExitReason | null;
+} {
   return parse(n().shouldProtagonistExitNative(JSON.stringify(state)));
 }
 
@@ -185,5 +196,7 @@ export function runSimpleGame(
   opponentOvr: number,
   protagonistOvr = 62,
 ): GameSummary {
-  return parse<GameSummary>(n().runSimpleGame(JSON.stringify({ pitcher, opponentOvr, protagonistOvr })));
+  return parse<GameSummary>(
+    n().runSimpleGame(JSON.stringify({ pitcher, opponentOvr, protagonistOvr })),
+  );
 }

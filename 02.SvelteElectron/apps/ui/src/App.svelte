@@ -12,7 +12,12 @@
   import { listSlotsV3, loadGameV3 } from "./shared/repo/slotLifecycleV3";
   import { teamTokens, applyTeamTokens } from "./shared/utils/teamTheme";
   import { settingsStore } from "./shared/stores/settings";
-  import { resolveTone, applyTone, systemPrefersDark, applyReducedMotion } from "./shared/utils/theme";
+  import {
+    resolveTone,
+    applyTone,
+    systemPrefersDark,
+    applyReducedMotion,
+  } from "./shared/utils/theme";
   import { reducesMotion, systemReducedMotion } from "./shared/utils/effectTiming";
 
   // ── 팀 색을 문서 루트에 바른다 ────────────────────────────────
@@ -57,7 +62,7 @@
     masterStore.setupContentWatcher();
     // gameStore.npcs 또는 npcLiveStats 변경 시 masterStore.entities 자동 재생성
     masterStore.connectToGameStore(
-      (fn) => gameStore.subscribe(s => fn({ npcs: s.npcs })),
+      (fn) => gameStore.subscribe((s) => fn({ npcs: s.npcs })),
       npcLiveStatsStore.subscribe,
     );
     gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
@@ -107,10 +112,7 @@
     onContinue={() => (phase = "slotSelect")}
   />
 {:else if phase === "slotSelect"}
-  <SaveSlotScreen
-    onSelect={handleSlotSelect}
-    onBack={() => (phase = "intro")}
-  />
+  <SaveSlotScreen onSelect={handleSlotSelect} onBack={() => (phase = "intro")} />
   {#if loadError}
     <div class="load-error">{loadError}</div>
   {/if}
@@ -122,10 +124,17 @@
 
 <style>
   .load-error {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: #2a1010; border: 1px solid #8a3030;
-    color: #e07070; font-size: 13px; padding: 10px 20px;
-    border-radius: 8px; z-index: 200;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2a1010;
+    border: 1px solid #8a3030;
+    color: #e07070;
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 200;
   }
   .loading-screen {
     width: 100vw;

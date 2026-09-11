@@ -34,11 +34,46 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:230; }
-  .modal { width:min(520px,92vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:12px; padding:20px; display:grid; gap:12px; }
-  h2 { margin:0; color:var(--ink); }
-  p { margin:0; color:var(--ink); }
-  .actions { display:flex; gap:10px; }
-  button { border:1px solid var(--ink-mute); background:var(--panel-sunk); color:var(--ink); border-radius:8px; padding:8px 12px; cursor:pointer; }
-  button:disabled { opacity:.6; cursor:default; }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 230;
+  }
+  .modal {
+    width: min(520px, 92vw);
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: 12px;
+    padding: 20px;
+    display: grid;
+    gap: 12px;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ink);
+  }
+  p {
+    margin: 0;
+    color: var(--ink);
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  button {
+    border: 1px solid var(--ink-mute);
+    background: var(--panel-sunk);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
 </style>

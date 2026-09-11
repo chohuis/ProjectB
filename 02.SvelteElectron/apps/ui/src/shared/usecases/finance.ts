@@ -31,7 +31,14 @@ export interface FinanceRulesFile {
   sponsor: {
     proOnly: boolean;
     maxTotalPct: number;
-    categories: { id: string; name: string; fameMin: number; pctMin: number; pctMax: number; termYears: number }[];
+    categories: {
+      id: string;
+      name: string;
+      fameMin: number;
+      pctMin: number;
+      pctMax: number;
+      termYears: number;
+    }[];
     fameSpan: number;
     minSalaryBase: number;
   };
@@ -56,8 +63,9 @@ let cached: FinanceRulesFile | null = null;
 
 export async function loadFinanceRules(): Promise<FinanceRulesFile> {
   if (cached) return cached;
-  const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as
-    { financeRules?: FinanceRulesFile } | null;
+  const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as {
+    financeRules?: FinanceRulesFile;
+  } | null;
   if (!raw?.financeRules) {
     throw new Error("[finance] generation_rules.json financeRules 없음 — Phase 7-5 데이터 필요");
   }
@@ -66,7 +74,9 @@ export async function loadFinanceRules(): Promise<FinanceRulesFile> {
 }
 
 /** 테스트·슬롯 전환용 */
-export function resetFinanceRulesCache(): void { cached = null; }
+export function resetFinanceRulesCache(): void {
+  cached = null;
+}
 
 // ── 저장 상태 ─────────────────────────────────────────────────
 
@@ -86,8 +96,12 @@ export interface FinanceState {
   subscriptions: { areaId: string; tier: number }[];
   /** 시즌말 투자 이력 — 은퇴 화면이 읽는다 */
   investments: {
-    season: number; optionId: string; name: string;
-    principal: number; rate: number; profit: number;
+    season: number;
+    optionId: string;
+    name: string;
+    principal: number;
+    rate: number;
+    profit: number;
   }[];
   /** 누적 납세액 (표시용) */
   taxPaid: number;
@@ -96,7 +110,11 @@ export interface FinanceState {
 }
 
 export const EMPTY_FINANCE: FinanceState = {
-  sponsors: [], subscriptions: [], investments: [], taxPaid: 0, lastOfferSeason: 0,
+  sponsors: [],
+  subscriptions: [],
+  investments: [],
+  taxPaid: 0,
+  lastOfferSeason: 0,
 };
 
 export function financeOf(p: ProtagonistSave): FinanceState {
@@ -105,9 +123,7 @@ export function financeOf(p: ProtagonistSave): FinanceState {
 
 /** 유효한 스폰서의 연 수입 합 */
 export function sponsorAnnualOf(f: FinanceState, seasonYear: number): number {
-  return f.sponsors
-    .filter((s) => s.untilSeason >= seasonYear)
-    .reduce((a, s) => a + s.annual, 0);
+  return f.sponsors.filter((s) => s.untilSeason >= seasonYear).reduce((a, s) => a + s.annual, 0);
 }
 
 // ── 엔진 호출 ─────────────────────────────────────────────────
@@ -119,7 +135,10 @@ async function engine<T>(fn: string, params: unknown): Promise<T> {
   return out;
 }
 
-export interface FinanceLine { label: string; amount: number }
+export interface FinanceLine {
+  label: string;
+  amount: number;
+}
 
 export interface WeeklyFinance {
   income: FinanceLine[];
@@ -157,8 +176,11 @@ export async function calcWeeklyFinance(p: {
 }
 
 export interface SponsorOffer {
-  categoryId: string; name: string; annual: number;
-  termYears: number; pctOfSalary: number;
+  categoryId: string;
+  name: string;
+  annual: number;
+  termYears: number;
+  pctOfSalary: number;
 }
 
 /** 명성 연동 스폰서 오퍼. 구단주 홍보력이 금액을 민다 (§7-5 F-1) */
@@ -202,7 +224,7 @@ export async function calcTrainingBonus(p: {
   const teamRef = m.teams.find((t) => t.id === p.protagonist.teamId);
   const mods = staffModsOf(p.protagonist.teamId ?? "", m.entities);
   // 리그 기본 시설 × 구단주 투자. 학생 무대는 구단주가 없어 1.0이 온다
-  const leagueBase = teamRef ? LEAGUE_FACILITY[facilityTierOf(teamRef.leagueId)] ?? 1.0 : 1.0;
+  const leagueBase = teamRef ? (LEAGUE_FACILITY[facilityTierOf(teamRef.leagueId)] ?? 1.0) : 1.0;
   return engine<TrainingBonusResult>("calcTrainingBonusNative", {
     rules: rules.training,
     subscriptions: f.subscriptions,
@@ -216,12 +238,20 @@ export async function calcTrainingBonus(p: {
  * 1.0을 중립으로 두고 프로 1군이 가장 좋다.
  */
 const LEAGUE_FACILITY: Record<string, number> = {
-  "1군": 1.15, "2군": 1.00, "대학": 0.95, "고교": 0.90, "독립": 0.85,
+  "1군": 1.15,
+  "2군": 1.0,
+  대학: 0.95,
+  고교: 0.9,
+  독립: 0.85,
 };
 
 export interface InvestmentResult {
-  optionId: string; name: string; principal: number;
-  rate: number; profit: number; payout: number;
+  optionId: string;
+  name: string;
+  principal: number;
+  rate: number;
+  profit: number;
+  payout: number;
 }
 
 /** 시즌말 투자 정산. 원금 손실 가능 (2026-07-31 사용자 확정) */
@@ -240,19 +270,31 @@ export async function resolveInvestment(p: {
     ? seedOf(s.worldSeed ?? 0, p.seasonYear ?? s.seasonYear, p.optionId, "investment")
     : 0;
   return engine<InvestmentResult>("resolveInvestmentNative", {
-    rules: rules.investment, optionId: p.optionId, amount: p.amount, seed,
+    rules: rules.investment,
+    optionId: p.optionId,
+    amount: p.amount,
+    seed,
   });
 }
 
-export interface LuxuryResult { cost: number; relationDelta: number; fameDelta: number }
+export interface LuxuryResult {
+  cost: number;
+  relationDelta: number;
+  fameDelta: number;
+}
 
 /** 사치품 — 동료면 관계도, 자기 소비면 성격에 따라 명성 ± */
 export async function calcLuxury(p: {
-  cost: number; onTeammate: boolean; diligence: number;
+  cost: number;
+  onTeammate: boolean;
+  diligence: number;
 }): Promise<LuxuryResult> {
   const rules = await loadFinanceRules();
   return engine<LuxuryResult>("calcLuxuryNative", {
-    rules: rules.luxury, cost: p.cost, onTeammate: p.onTeammate, diligence: p.diligence,
+    rules: rules.luxury,
+    cost: p.cost,
+    onTeammate: p.onTeammate,
+    diligence: p.diligence,
   });
 }
 
@@ -296,19 +338,26 @@ export async function toggleSubscription(areaId: string): Promise<void> {
     return {
       ...f,
       subscriptions: f.subscriptions.map((s) =>
-        s.areaId === areaId ? { ...s, tier: s.tier + 1 } : s),
+        s.areaId === areaId ? { ...s, tier: s.tier + 1 } : s,
+      ),
     };
   });
 }
 
 /** 시즌말 투자 실행 — 원금을 빼고 결과를 더한다 */
 export async function applyInvestment(p: {
-  optionId: string; amount: number; seasonYear: number;
+  optionId: string;
+  amount: number;
+  seasonYear: number;
 }): Promise<InvestmentResult> {
   const res = await resolveInvestment(p);
   gameStore.applyInvestmentResult({
-    season: p.seasonYear, optionId: res.optionId, name: res.name,
-    principal: res.principal, rate: res.rate, profit: res.profit,
+    season: p.seasonYear,
+    optionId: res.optionId,
+    name: res.name,
+    principal: res.principal,
+    rate: res.rate,
+    profit: res.profit,
   });
   return res;
 }
@@ -331,7 +380,10 @@ export function expireSponsors(seasonYear: number): SponsorContract[] {
  * 인생을 점수로 매기는 화면이 아니다.
  */
 export function finalAssets(p: ProtagonistSave): {
-  cash: number; totalInvested: number; totalProfit: number; taxPaid: number;
+  cash: number;
+  totalInvested: number;
+  totalProfit: number;
+  taxPaid: number;
 } {
   const f = financeOf(p);
   return {

@@ -8,22 +8,11 @@
  */
 export type MainTabId =
   /** 복무 중에만 · 맨 앞 (PLAN_MILITARY_LIFE §22 · 유무는 careerStage 하나가 정한다) */
-  | "military"
-  | "news"
-  | "me"
-  | "team"
-  | "league"
-  | "people"
-  | "schedule";
+  "military" | "news" | "me" | "team" | "league" | "people" | "schedule";
 
 /** "나" 안의 상위 탭. 각 탭은 자기 하위 탭을 또 갖는다(2단) */
 export type MeTabId =
-  | "status"
-  | "training"
-  | "academics"
-  | "finance"
-  | "achievements"
-  | "hallOfFame";
+  "status" | "training" | "academics" | "finance" | "achievements" | "hallOfFame";
 
 export interface MainSnapshot {
   dayLabel: string;
@@ -39,33 +28,33 @@ export type MessageCategory = "system" | "news" | "coach" | "manager";
 
 // 선택지 실제 효과 (타입 기반 적용)
 export interface DecisionEffect {
-  conditionDelta?:  number;
-  fatigueDelta?:    number;
-  moraleDelta?:     number;
-  moneyDelta?:      number;
-  xp?:              Record<string, number>;  // PitchingStatKey → XP 적립량
-  statDelta?:       Record<string, number>;  // PitchingStatKey → 즉시 스탯 증가량
-  fameDelta?:       number;                  // 명성 ± (0~200 clamp)
-  popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
-  diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
+  conditionDelta?: number;
+  fatigueDelta?: number;
+  moraleDelta?: number;
+  moneyDelta?: number;
+  xp?: Record<string, number>; // PitchingStatKey → XP 적립량
+  statDelta?: Record<string, number>; // PitchingStatKey → 즉시 스탯 증가량
+  fameDelta?: number; // 명성 ± (0~200 clamp)
+  popularityDelta?: number; // 인기도 ± (0~100 clamp)
+  diligenceDelta?: number; // 성실도 ± (1~99 clamp)
   /**
    * 투수 보직 선택 (PLAN_ROLE_RECOMMEND §4). `"SP"|"RP"|"CP"`.
    *
    * ⚠ `applyDecision` 이 아니라 `usecases/pitcherRole.applyRoleChoice` 가 읽는다 —
    * 보직은 스탯 델타가 아니라 포지션·역할 배정이라 store 패처가 둘이다.
    */
-  roleChoice?:      "SP" | "RP" | "CP";
+  roleChoice?: "SP" | "RP" | "CP";
   // ── 현역 병영생활 전용 (PLAN_MILITARY_LIFE §28) — `militaryLife` 가 있을 때만 읽는다 ──
   // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
   //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
-  memberRelationDelta?: number;              // 부대원 관계 ± (대상은 relationTarget)
-  relationTarget?:  string;                  // 부대원 id · "all" · "subunit" · "junior" (없으면 이벤트의 member → 없으면 all)
-  ballDelta?:       number;                  // 야구 감각 ±
-  award?:           string;                  // 표창 id
-  penalty?:         string;                  // 징계 id
-  leaveDays?:       number;                  // 휴가 일수 +
-  perfTierDelta?:   number;                  // 성과 판정 tier 보정 (−1 이 유리)
-  addTag?:          string[];                // 태그 추가 (중복 무시)
+  memberRelationDelta?: number; // 부대원 관계 ± (대상은 relationTarget)
+  relationTarget?: string; // 부대원 id · "all" · "subunit" · "junior" (없으면 이벤트의 member → 없으면 all)
+  ballDelta?: number; // 야구 감각 ±
+  award?: string; // 표창 id
+  penalty?: string; // 징계 id
+  leaveDays?: number; // 휴가 일수 +
+  perfTierDelta?: number; // 성과 판정 tier 보정 (−1 이 유리)
+  addTag?: string[]; // 태그 추가 (중복 무시)
   /**
    * 태그 제거.
    *
@@ -74,7 +63,7 @@ export interface DecisionEffect {
    *   연계가 끝나도 그 갈래가 계속 후보로 남아 다른 이야기를 밀어낸다.
    * ⚠ 없는 태그를 지우는 건 조용히 넘어간다 — 순서가 어긋나도 안 터진다.
    */
-  removeTag?:       string[];
+  removeTag?: string[];
   /**
    * 이번 학기 **학습 품질**을 더한다 (주당 품질 0~1이 눈금이다).
    *
@@ -241,8 +230,8 @@ export interface DecisionEffect {
 export interface MessageDecisionOption {
   id: string;
   label: string;
-  effectHint: string;         // 표시용 효과 설명
-  effects?: DecisionEffect;   // 실제 적용 효과
+  effectHint: string; // 표시용 효과 설명
+  effects?: DecisionEffect; // 실제 적용 효과
 }
 
 export interface MessageDecision {
@@ -269,7 +258,7 @@ export interface TrainingMetadata {
 }
 
 export interface Top10ColumnEntry {
-  id: string;       // "PLY_HERO" or NPC id
+  id: string; // "PLY_HERO" or NPC id
   name: string;
   teamName: string;
   rank: number;
@@ -278,7 +267,7 @@ export interface Top10ColumnEntry {
 export interface Top10Column {
   label: "통합" | "3학년" | "2학년" | "1학년";
   entries: Top10ColumnEntry[];
-  heroRank: number | null;  // 통합 컬럼에서만 top10 밖 순위, 나머지 null
+  heroRank: number | null; // 통합 컬럼에서만 top10 밖 순위, 나머지 null
 }
 
 export interface Top10Metadata {
@@ -572,9 +561,17 @@ export interface MessageItem {
    *   `evResult.costs` 하나뿐이다(둘이 되면 대가를 두 번 낸다).
    */
   eventCost?: DecisionEffect;
-  metadata?: TrainingMetadata | Top10Metadata | OffseasonMetadata | InjuryMetadata
-           | MyBodyMetadata | RoleChoiceMetadata
-           | TableMetadata | RankListMetadata | TimelineMetadata
-           | BarsMetadata | CardsMetadata
-           | { type: string };
+  metadata?:
+    | TrainingMetadata
+    | Top10Metadata
+    | OffseasonMetadata
+    | InjuryMetadata
+    | MyBodyMetadata
+    | RoleChoiceMetadata
+    | TableMetadata
+    | RankListMetadata
+    | TimelineMetadata
+    | BarsMetadata
+    | CardsMetadata
+    | { type: string };
 }

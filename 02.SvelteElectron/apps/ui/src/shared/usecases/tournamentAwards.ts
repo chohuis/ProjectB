@@ -23,15 +23,34 @@ interface TourLine {
   playerId: string;
   teamId: string;
   /** 투수 */
-  outs: number; er: number; k: number; w: number; sv: number; hd: number;
+  outs: number;
+  er: number;
+  k: number;
+  w: number;
+  sv: number;
+  hd: number;
   /** 타자 */
-  ab: number; h: number; hr: number; rbi: number; tb: number;
+  ab: number;
+  h: number;
+  hr: number;
+  rbi: number;
+  tb: number;
 }
 
 const empty = (playerId: string, teamId: string): TourLine => ({
-  playerId, teamId,
-  outs: 0, er: 0, k: 0, w: 0, sv: 0, hd: 0,
-  ab: 0, h: 0, hr: 0, rbi: 0, tb: 0,
+  playerId,
+  teamId,
+  outs: 0,
+  er: 0,
+  k: 0,
+  w: 0,
+  sv: 0,
+  hd: 0,
+  ab: 0,
+  h: 0,
+  hr: 0,
+  rbi: 0,
+  tb: 0,
 });
 
 /**
@@ -48,7 +67,10 @@ export function collectTournamentLines(
   const acc = new Map<string, TourLine>();
   const put = (id: string, teamId: string): TourLine => {
     let r = acc.get(id);
-    if (!r) { r = empty(id, teamId); acc.set(id, r); }
+    if (!r) {
+      r = empty(id, teamId);
+      acc.set(id, r);
+    }
     return r;
   };
   for (const e of schedule) {
@@ -95,8 +117,8 @@ function r0(e: ScheduleEntry, _playerId: string): string {
  */
 export function pitcherScore(r: TourLine): number {
   const ip = r.outs / 3;
-  if (ip < 6) return -1;                      // 두 경기치는 던져야 후보다
-  const era = r.er * 9 / Math.max(1, ip);
+  if (ip < 6) return -1; // 두 경기치는 던져야 후보다
+  const era = (r.er * 9) / Math.max(1, ip);
   return (9 - Math.min(9, era)) * 6 + ip * 1.5 + r.k * 0.8 + r.w * 8 + r.sv * 4 + r.hd * 2;
 }
 
@@ -138,8 +160,15 @@ export function tournamentAwards(
   const out: TourAward[] = [];
 
   const best = <T>(arr: T[], score: (x: T) => number): T | null => {
-    let b: T | null = null; let bs = -Infinity;
-    for (const x of arr) { const s = score(x); if (s > bs) { bs = s; b = x; } }
+    let b: T | null = null;
+    let bs = -Infinity;
+    for (const x of arr) {
+      const s = score(x);
+      if (s > bs) {
+        bs = s;
+        b = x;
+      }
+    }
     return bs <= 0 ? null : b;
   };
 
@@ -148,21 +177,23 @@ export function tournamentAwards(
   if (mvp) {
     const asP = pitcherScore(mvp) >= batterScore(mvp);
     out.push({
-      id: "tour_mvp", label: "대회 MVP",
-      playerId: mvp.playerId, teamId: mvp.teamId,
-      value: asP
-        ? `${ipLabel(mvp.outs / 3)}이닝 ${mvp.k}탈삼진`
-        : `${mvp.h}안타 ${mvp.rbi}타점`,
+      id: "tour_mvp",
+      label: "대회 MVP",
+      playerId: mvp.playerId,
+      teamId: mvp.teamId,
+      value: asP ? `${ipLabel(mvp.outs / 3)}이닝 ${mvp.k}탈삼진` : `${mvp.h}안타 ${mvp.rbi}타점`,
     });
   }
 
   const p = best(rows, pitcherScore);
   if (p) {
     const ip = p.outs / 3;
-    const era = p.er * 9 / Math.max(1, ip);
+    const era = (p.er * 9) / Math.max(1, ip);
     out.push({
-      id: "tour_pitcher", label: "우수투수상",
-      playerId: p.playerId, teamId: p.teamId,
+      id: "tour_pitcher",
+      label: "우수투수상",
+      playerId: p.playerId,
+      teamId: p.teamId,
       value: `${ipLabel(ip)}이닝 방어율 ${era.toFixed(2)}`,
     });
   }
@@ -171,8 +202,10 @@ export function tournamentAwards(
   if (b) {
     const avg = b.ab > 0 ? b.h / b.ab : 0;
     out.push({
-      id: "tour_batter", label: "타격상",
-      playerId: b.playerId, teamId: b.teamId,
+      id: "tour_batter",
+      label: "타격상",
+      playerId: b.playerId,
+      teamId: b.teamId,
       value: `타율 ${avg.toFixed(3).replace(/^0/, "")} ${b.hr}홈런`,
     });
   }
@@ -181,11 +214,13 @@ export function tournamentAwards(
 
 /** 시즌에서 그 대회의 주차 범위를 찾는다 */
 export function weekRangeOf(
-  season: SaveSeason, tournamentId: string,
+  season: SaveSeason,
+  tournamentId: string,
 ): { start: number; end: number } | null {
   const b = season.tournaments?.[tournamentId];
   if (!b) return null;
-  const weeks = b.matches.map((m: { week?: number }) => m.week)
+  const weeks = b.matches
+    .map((m: { week?: number }) => m.week)
     .filter((w): w is number => w != null);
   if (weeks.length === 0) return null;
   return { start: Math.min(...weeks), end: Math.max(...weeks) };

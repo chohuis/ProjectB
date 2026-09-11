@@ -1,4 +1,11 @@
-import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext, EventTier } from "../types/event";
+import type {
+  EventRule,
+  EventPool,
+  MessageTemplate,
+  DecisionTemplate,
+  EventContext,
+  EventTier,
+} from "../types/event";
 import { pickSentence, bodyBankOf, type SentenceMemory } from "./sentenceBank";
 import type { DecisionEffect, MessageCategory, MessageItem } from "../types/main";
 import { evaluateConditions } from "./conditionEvaluator";
@@ -8,12 +15,12 @@ import { GRADES, gradeBelow, type EventGrade, type TierRules } from "./tierRules
 // 이벤트 내부 카테고리 → UI 표시 카테고리 매핑
 // JSON 템플릿의 category 필드는 내부 분류용이며 여기서 표시용으로 변환된다
 const EVENT_DISPLAY_CATEGORY: Record<string, MessageCategory> = {
-  media:       "news",
-  social:      "news",
-  training:    "coach",
+  media: "news",
+  social: "news",
+  training: "coach",
   hs_training: "coach",
-  health:      "coach",
-  mental:      "coach",
+  health: "coach",
+  mental: "coach",
 };
 
 // ── oncePolicy 통과 여부 ───────────────────────────────────────
@@ -82,20 +89,26 @@ function ruleToOutput(
   // 문장 뱅크 — 직전에 쓴 문장을 빼고 뽑는다 (Phase 7-6, DESIGN §7.3).
   // 뱅크가 없으면 예전처럼 `body` 한 줄이다
   let title = msgTmpl?.subject ?? rule.title;
-  let body  = msgTmpl?.body   ?? "";
+  let body = msgTmpl?.body ?? "";
 
   if (bank && msgTmpl) {
     const bodyBank = bodyBankOf(msgTmpl);
     if (bodyBank.length > 1) {
       const key = `${msgTmpl.id}#body`;
       const got = pickSentence(bodyBank, bank.rand(), bank.memory[key] ?? -1);
-      if (got) { body = got.text; bank.picked[key] = got.index; }
+      if (got) {
+        body = got.text;
+        bank.picked[key] = got.index;
+      }
     }
     const subjBank = msgTmpl.subjects ?? [];
     if (subjBank.length > 1) {
       const key = `${msgTmpl.id}#subject`;
       const got = pickSentence(subjBank, bank.rand(), bank.memory[key] ?? -1);
-      if (got) { title = got.text; bank.picked[key] = got.index; }
+      if (got) {
+        title = got.text;
+        bank.picked[key] = got.index;
+      }
     }
   }
 
@@ -111,10 +124,11 @@ function ruleToOutput(
   );
   if (decTmpl) {
     eventFunnelStats.optionsOffered += allOptions.length;
-    eventFunnelStats.optionsOpen    += openOptions.length;
+    eventFunnelStats.optionsOpen += openOptions.length;
     if (allOptions.length > 0 && openOptions.length === 0) {
       eventFunnelStats.decisionsClosedOut++;
-      eventFunnelStats.closedOutByRule[rule.id] = (eventFunnelStats.closedOutByRule[rule.id] ?? 0) + 1;
+      eventFunnelStats.closedOutByRule[rule.id] =
+        (eventFunnelStats.closedOutByRule[rule.id] ?? 0) + 1;
     }
   }
 
@@ -122,14 +136,14 @@ function ruleToOutput(
     // 🔴 **연도+주차+규칙**이다. 한 규칙은 한 주에 한 번만 발동한다
     //   (`oncePolicy`) — 그래도 두 번 나면 `check:msgdupid` 가 잡는다.
     //   `Date.now()` 를 쓰던 시절엔 그 사본이 보이지 않았다
-    id:        `evt-${rule.id}-${seasonYear}-w${week}`,
-    category:  EVENT_DISPLAY_CATEGORY[msgTmpl?.category ?? ""] ?? "system",
-    sender:    "이벤트 시스템",
-    subject:   title,
-    preview:   body.slice(0, 60),
+    id: `evt-${rule.id}-${seasonYear}-w${week}`,
+    category: EVENT_DISPLAY_CATEGORY[msgTmpl?.category ?? ""] ?? "system",
+    sender: "이벤트 시스템",
+    subject: title,
+    preview: body.slice(0, 60),
     body,
     createdAt: `W${week}`,
-    readAt:    null,
+    readAt: null,
     // 등급 칩(§9)의 근거 — **여기서 싣는다.** 화면이 나중에 규칙 id 로 되짚으면
     // 옛 소식이 지금 데이터의 등급으로 보인다(소식은 스냅샷이다)
     ...(gradeOf(rule) ? { eventGrade: gradeOf(rule)! } : {}),
@@ -141,17 +155,20 @@ function ruleToOutput(
     // 결·대가도 같은 이유로 여기서 싱는다(C 4-5). 위기 표시(§9)와 「대가가
     // 따른다」 한 줄의 입력이고, **효과를 내는 것은 `costs` 배열 하나만**이다
     ...(rule.theme ? { eventTheme: rule.theme } : {}),
-    ...(rule.cost  ? { eventCost:  rule.cost  } : {}),
-    decision: openOptions.length > 0 ? {
-      prompt: decTmpl!.prompt ?? title,
-      options: openOptions.map((o) => ({
-        id:         o.id,
-        label:      o.label,
-        effectHint: o.effectHint ?? "",
-        effects:    o.effects,
-      })),
-      selectedOptionId: null,
-    } : undefined,
+    ...(rule.cost ? { eventCost: rule.cost } : {}),
+    decision:
+      openOptions.length > 0
+        ? {
+            prompt: decTmpl!.prompt ?? title,
+            options: openOptions.map((o) => ({
+              id: o.id,
+              label: o.label,
+              effectHint: o.effectHint ?? "",
+              effects: o.effects,
+            })),
+            selectedOptionId: null,
+          }
+        : undefined,
   };
   return { message };
 }
@@ -171,18 +188,34 @@ export const eventFunnelStats = {
   weeks: 0,
   /** 엔진이 쓴 시간 누계(ms) — 구조 판단용 */
   elapsedMs: 0,
-  mandatory:   { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
-  conditional: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
-                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0, urgentPicked: 0 },
+  mandatory: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
+  conditional: {
+    condPass: 0,
+    policyBlocked: 0,
+    emptyDropped: 0,
+    emitted: 0,
+    crowdedOut: 0,
+    freshPicked: 0,
+    repeatPicked: 0,
+    scarcePicked: 0,
+    urgentPicked: 0,
+  },
   // policyBlocked는 random에선 0이어야 한다 — 후보를 고르기 전에 이미 걸러서 넘긴다.
   // 그래도 갈래마다 모양을 맞춰 둔다: 0이 아니면 두 곳의 판정이 어긋났다는 신호다
   //
   // 🔴 **`random` 갈래는 더 이상 안 돈다** (2026-09-08). 랜덤 풀 다섯이 노말
   //    등급으로 흡수됐다(§1) — 전부 `grade` 갈래로 간다. 칸은 남겨 둔다:
   //    0이 아니면 어딘가 옛 경로가 살아 있다는 뜻이라 그 자체가 신호다.
-  random:      { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 },
+  random: {
+    poolRolls: 0,
+    poolPassed: 0,
+    eligible: 0,
+    policyBlocked: 0,
+    emptyDropped: 0,
+    emitted: 0,
+  },
   /** 등급 줄기 — 한 주에 하나. `urgent`·필수·시스템은 여기 안 든다 */
-  grade:       { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 },
+  grade: { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 },
   /**
    * 등급 추첨 계측 (§10 `check:tiercoverage` 의 입력).
    *
@@ -192,13 +225,13 @@ export const eventFunnelStats = {
    */
   tier: {
     /** 추첨으로 뽑힌 등급 */
-    drawn:      {} as Record<string, number>,
+    drawn: {} as Record<string, number>,
     /** 실제로 발동한 등급 */
-    emitted:    {} as Record<string, number>,
+    emitted: {} as Record<string, number>,
     /** 시즌 상한에 닿아 가중 0 이 된 횟수 */
     capBlocked: {} as Record<string, number>,
     /** 추첨은 됐는데 후보가 0 이던 횟수 */
-    empty:      {} as Record<string, number>,
+    empty: {} as Record<string, number>,
     /** 폴백 발동 총수 */
     fallback: 0,
     /** 「무대/등급」 → 그 자리에서 폴백이 난 횟수 */
@@ -246,7 +279,7 @@ export const eventFunnelStats = {
   decisionsClosedOut: 0,
   closedOutByRule: {} as Record<string, number>,
   /** 본문도 선택지도 없어 버려진 규칙 */
-  emptyByRule:   {} as Record<string, number>,
+  emptyByRule: {} as Record<string, number>,
   /**
    * 실제로 뜬 규칙 — **종수**가 핵심이다. 정의는 537건인데 커리어 내내 몇 종이
    * 화면에 닿는가. 발동 "건수"만 보면 같은 이야기를 반복해 뽑아도 커 보인다
@@ -257,15 +290,44 @@ export const eventFunnelStats = {
 export function resetEventFunnelStats(): void {
   eventFunnelStats.weeks = 0;
   eventFunnelStats.elapsedMs = 0;
-  eventFunnelStats.mandatory   = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
-  eventFunnelStats.conditional = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0,
-                 freshPicked: 0, repeatPicked: 0, scarcePicked: 0, urgentPicked: 0 };
-  eventFunnelStats.random      = { poolRolls: 0, poolPassed: 0, eligible: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
-  eventFunnelStats.grade       = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0, crowdedOut: 0 };
-  eventFunnelStats.tier        = {
-    drawn: {}, emitted: {}, capBlocked: {}, empty: {},
-    fallback: 0, fallbackBy: {}, weeksByStage: {}, emittedByStage: {},
-    capViolation: 0, hiddenCareerViolation: 0,
+  eventFunnelStats.mandatory = { condPass: 0, policyBlocked: 0, emptyDropped: 0, emitted: 0 };
+  eventFunnelStats.conditional = {
+    condPass: 0,
+    policyBlocked: 0,
+    emptyDropped: 0,
+    emitted: 0,
+    crowdedOut: 0,
+    freshPicked: 0,
+    repeatPicked: 0,
+    scarcePicked: 0,
+    urgentPicked: 0,
+  };
+  eventFunnelStats.random = {
+    poolRolls: 0,
+    poolPassed: 0,
+    eligible: 0,
+    policyBlocked: 0,
+    emptyDropped: 0,
+    emitted: 0,
+  };
+  eventFunnelStats.grade = {
+    condPass: 0,
+    policyBlocked: 0,
+    emptyDropped: 0,
+    emitted: 0,
+    crowdedOut: 0,
+  };
+  eventFunnelStats.tier = {
+    drawn: {},
+    emitted: {},
+    capBlocked: {},
+    empty: {},
+    fallback: 0,
+    fallbackBy: {},
+    weeksByStage: {},
+    emittedByStage: {},
+    capViolation: 0,
+    hiddenCareerViolation: 0,
   };
   eventFunnelStats.optionsOffered = 0;
   eventFunnelStats.optionsOpen = 0;
@@ -273,7 +335,7 @@ export function resetEventFunnelStats(): void {
   eventFunnelStats.closedOutByRule = {};
   eventFunnelStats.candidateByRule = {};
   eventFunnelStats.crowdedByRule = {};
-  eventFunnelStats.emptyByRule   = {};
+  eventFunnelStats.emptyByRule = {};
   eventFunnelStats.emittedByRule = {};
 }
 
@@ -340,8 +402,8 @@ function weightedPick<T extends { weight?: number }>(items: T[], rand01: number)
 // ── 이벤트 엔진 메인 ──────────────────────────────────────────
 export interface EventEngineResult {
   newMessages: MessageItem[];
-  updatedTriggers: Record<string, number>;        // 시즌 트리거 (startNewSeason으로 초기화)
-  careerUpdatedTriggers: Record<string, number>;  // 커리어 트리거 (once_per_career 전용, 영구 유지)
+  updatedTriggers: Record<string, number>; // 시즌 트리거 (startNewSeason으로 초기화)
+  careerUpdatedTriggers: Record<string, number>; // 커리어 트리거 (once_per_career 전용, 영구 유지)
   /**
    * 이번 주에 뽑은 문장 인덱스 (Phase 7-6). 다음 주에 "직전 것 제외"의 입력이
    * 되므로 **세이브에 남아야 한다** — 안 남기면 로드할 때마다 같은 문장이 나온다
@@ -370,7 +432,11 @@ export interface EventEngineResult {
 }
 
 /** 등급별 가중 — 시즌 상한·마른 시즌·상태 보정을 다 먹인 값 */
-function gradeWeights(rules: TierRules, ctx: EventContext, week: number): Record<EventGrade, number> {
+function gradeWeights(
+  rules: TierRules,
+  ctx: EventContext,
+  week: number,
+): Record<EventGrade, number> {
   const out = { ...rules.weights };
 
   // 🔴 **개막 전에는 노말만 뽑는다** (2026-09-08 · B 제보 ②).
@@ -429,7 +495,6 @@ export function runEventEngine(
    *   풀이 다시 뜻을 갖는 날(예: 결별 빈도)에 다시 넣게 된다. 안 읽는다는
    *   것을 여기 적어 두는 편이 조용히 사라지는 것보다 낫다.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   pools: EventPool[],
   msgTmplMap: Map<string, MessageTemplate>,
   decTmplMap: Map<string, DecisionTemplate>,
@@ -576,7 +641,7 @@ export function runEventEngine(
       // 있어도 여기 안 든다
       if (rule.type === "mandatory") continue;
       const g = gradeOf(rule);
-      if (!g) continue;                                   // urgent · 미기재
+      if (!g) continue; // urgent · 미기재
       if (!evaluateConditions(rule.conditions ?? [], ctx)) continue;
       // 히든의 숨은 조건 — 화면엔 안 보이지만 평가는 똑같다(§4)
       if (rule.hiddenCondition && !evaluateConditions(rule.hiddenCondition, ctx)) continue;
@@ -605,10 +670,11 @@ export function runEventEngine(
 
     // ① 등급 추첨
     const w = gradeWeights(tierRules, ctx, week);
-    const drawn = weightedPick(
-      GRADES.map((g) => ({ g, weight: w[g] })).filter((x) => x.weight > 0),
-      nextRand(),
-    )?.g ?? null;
+    const drawn =
+      weightedPick(
+        GRADES.map((g) => ({ g, weight: w[g] })).filter((x) => x.weight > 0),
+        nextRand(),
+      )?.g ?? null;
 
     // ②·③ 등급 안에서 고르고, 비면 한 단계 아래로
     let picked: EventRule | null = null;
@@ -633,8 +699,12 @@ export function runEventEngine(
         // 가중이 낮은 이야기가 한 시즌 내내 뒤에 선다
         const weighted = pool.map((r) => ({
           r,
-          weight: (r.weight ?? 1)
-            + Math.min(tierRules.starve.max, tierRules.starve.perWeek * (ctx.eventStarve?.[r.id] ?? 0)),
+          weight:
+            (r.weight ?? 1) +
+            Math.min(
+              tierRules.starve.max,
+              tierRules.starve.perWeek * (ctx.eventStarve?.[r.id] ?? 0),
+            ),
         }));
         picked = weightedPick(weighted, nextRand())?.r ?? null;
       }
@@ -655,12 +725,16 @@ export function runEventEngine(
         gradeFired = at;
         // 코드가 「막는다」고 적은 것을 실제로 잰다 — 늘 0 이어야 한다(§10)
         if (capped(at)) eventFunnelStats.tier.capViolation++;
-        if (at === "hidden" && (ctx.protagonist.careerTriggeredEvents ?? {})[picked.id] !== undefined) {
+        if (
+          at === "hidden" &&
+          (ctx.protagonist.careerTriggeredEvents ?? {})[picked.id] !== undefined
+        ) {
           eventFunnelStats.tier.hiddenCareerViolation++;
         }
         eventFunnelStats.tier.emitted[at] = (eventFunnelStats.tier.emitted[at] ?? 0) + 1;
         const k = `${stageGroup}/${at}`;
-        eventFunnelStats.tier.emittedByStage[k] = (eventFunnelStats.tier.emittedByStage[k] ?? 0) + 1;
+        eventFunnelStats.tier.emittedByStage[k] =
+          (eventFunnelStats.tier.emittedByStage[k] ?? 0) + 1;
       }
     }
 
@@ -668,7 +742,10 @@ export function runEventEngine(
     // ⚠ **뽑힌 것을 안 되돌리면** 한 번 뜬 이야기가 큰 가중을 계속 들고 다닌다
     for (const list of byGrade.values()) {
       for (const r of list) {
-        if (r === picked) { starveUpdates[r.id] = 0; continue; }
+        if (r === picked) {
+          starveUpdates[r.id] = 0;
+          continue;
+        }
         starveUpdates[r.id] = (ctx.eventStarve?.[r.id] ?? 0) + 1;
         eventFunnelStats.grade.crowdedOut++;
         eventFunnelStats.crowdedByRule[r.id] = (eventFunnelStats.crowdedByRule[r.id] ?? 0) + 1;
@@ -680,7 +757,13 @@ export function runEventEngine(
 
   eventFunnelStats.elapsedMs += performance.now() - _t0;
   return {
-    newMessages, updatedTriggers, careerUpdatedTriggers, sentencePicks: bank.picked,
-    gradeFired, fallbackFrom, starveUpdates, costs,
+    newMessages,
+    updatedTriggers,
+    careerUpdatedTriggers,
+    sentencePicks: bank.picked,
+    gradeFired,
+    fallbackFrom,
+    starveUpdates,
+    costs,
   };
 }

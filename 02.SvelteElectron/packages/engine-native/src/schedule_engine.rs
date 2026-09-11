@@ -119,13 +119,8 @@ fn build_round_robin(teams: &[String]) -> Vec<Vec<(String, String)>> {
     rounds
 }
 
-fn build_double_round_robin(teams: &[String]) -> Vec<Vec<(String, String)>> {
-    let half = build_round_robin(teams);
-    let rev: Vec<Vec<(String, String)>> = half.iter()
-        .map(|r| r.iter().map(|(h, a)| (a.clone(), h.clone())).collect())
-        .collect();
-    [half, rev].concat()
-}
+// `build_double_round_robin` 을 지웠다 (2026-09-11 · 개선 5).
+// 부르는 곳이 없다 — 일정은 `build_round_robin` 을 필요한 만큼 되풀이해 짠다.
 
 fn assign_rounds_to_weeks(
     rounds: &[Vec<(String, String)>],

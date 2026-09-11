@@ -88,7 +88,7 @@ export function buildForeignSeed(p: BuildSeedParams): SeedRow[] {
 
   for (const pl of p.players) {
     const league = pickOriginLeague(p.rules, p.rand());
-    if (!league) break;   // 규칙이 없으면 아무것도 안 만든다
+    if (!league) break; // 규칙이 없으면 아무것도 안 만든다
     const back = Math.min(SIGNING_SPREAD - 1, Math.max(0, pl.proServiceYears ?? 0));
     rows.push({
       seasonYear: p.seasonYear - back,

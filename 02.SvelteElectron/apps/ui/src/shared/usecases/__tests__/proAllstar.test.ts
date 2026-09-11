@@ -33,7 +33,9 @@ describe("프로 올스타전", () => {
 
   /** ⚠ 대학 올스타와 **같은 기계**를 쓴다 — 두 벌이면 저울이 갈린다 */
   it("리그를 인자로 받는다", () => {
-    expect(CE).toContain("async function runAllStar(rules: unknown, weekNum: number, leagueId: string)");
+    expect(CE).toContain(
+      "async function runAllStar(rules: unknown, weekNum: number, leagueId: string)",
+    );
     expect(CE).toContain("gatherCandidates(leagueId)");
     // ⚠ 올스타에는 리그를 박아 놓은 자리가 남아 있지 않다.
     //   **쇼케이스는 대학 전용이 맞다** — 그건 세지 않는다
@@ -87,10 +89,10 @@ describe("FA 미계약 → 독립 재도전", () => {
 
   /** 🔴 안 넘기면 갈래가 꺼져 **바로 은퇴**한다 */
   it("호출부가 나이 상한을 넘긴다", () => {
-    expect(read("apps/ui/src/shared/stores/game.ts"))
-      .toContain("independentAgeMax?: number");
-    expect(read("apps/ui/src/shared/utils/npcEngine.ts"))
-      .toContain("...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {})");
+    expect(read("apps/ui/src/shared/stores/game.ts")).toContain("independentAgeMax?: number");
+    expect(read("apps/ui/src/shared/utils/npcEngine.ts")).toContain(
+      "...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {})",
+    );
   });
 
   it("엔진이 독립 갈래를 갖는다", () => {

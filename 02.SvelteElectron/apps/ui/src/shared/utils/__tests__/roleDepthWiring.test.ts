@@ -1,7 +1,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { primePitcherRoleRules, resetPitcherRoleRulesForTest, roleDepthOf } from "../pitcherRoleRules";
+import {
+  primePitcherRoleRules,
+  resetPitcherRoleRulesForTest,
+  roleDepthOf,
+} from "../pitcherRoleRules";
 import { leagueMatchOptions } from "../matchLeagueOptions";
 import { primeRosterOpsRules } from "../rosterEngine";
 
@@ -48,43 +52,61 @@ describe("깊이 재료", () => {
 
 describe("경기 시작 옵션 (§5-c)", () => {
   it("자리 안이면 roleDepth 를 아예 안 싣는다", () => {
-    expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL", null, null, { rank: 1, seats: 3 }).roleDepth).toBeUndefined();
+    expect(
+      leagueMatchOptions("LEAGUE_HIGHSCHOOL", null, null, { rank: 1, seats: 3 }).roleDepth,
+    ).toBeUndefined();
     expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL").roleDepth).toBeUndefined();
   });
   it("자리 밖이면 칸 수를 싣는다", () => {
-    expect(leagueMatchOptions("LEAGUE_HIGHSCHOOL", null, null, { rank: 6, seats: 4 }).roleDepth).toBe(2);
+    expect(
+      leagueMatchOptions("LEAGUE_HIGHSCHOOL", null, null, { rank: 6, seats: 4 }).roleDepth,
+    ).toBe(2);
   });
 });
 
 describe("배선 — 네 호출부가 roleFit 을 넘긴다", () => {
   it("자동 진행", () => {
-    expect(read("apps/ui/src/shared/usecases/runAutoAdvance.ts")
-      .includes("entry.gameDate, p.roleFit, p.startGuaranteeGames)")).toBe(true);
+    expect(
+      read("apps/ui/src/shared/usecases/runAutoAdvance.ts").includes(
+        "entry.gameDate, p.roleFit, p.startGuaranteeGames)",
+      ),
+    ).toBe(true);
   });
   it("실제 플레이(MainPage)", () => {
-    expect(read("apps/ui/src/pages/main/MainPage.svelte")
-      .includes("$seasonStore.currentDate, p.roleFit)")).toBe(true);
+    expect(
+      read("apps/ui/src/pages/main/MainPage.svelte").includes(
+        "$seasonStore.currentDate, p.roleFit)",
+      ),
+    ).toBe(true);
   });
   it("경기 화면(MatchPage) 시작 둘", () => {
     const s = read("apps/ui/src/pages/match/MatchPage.svelte");
     expect(s.split("protagonist.roleFit)").length - 1).toBe(2);
   });
   it("Rust 가 roleDepth 를 받는다", () => {
-    expect(read("packages/engine-native/src/types.rs").includes("pub role_depth: Option<u32>")).toBe(true);
+    expect(
+      read("packages/engine-native/src/types.rs").includes("pub role_depth: Option<u32>"),
+    ).toBe(true);
   });
 });
 
 describe("배선 — 주 경계의 두 판정 (§5-a · §5-b)", () => {
   const src = read("apps/ui/src/shared/usecases/advanceWeek.ts");
   it("깊이 재료를 한 번 만들어 둘 다에 쓴다", () => {
-    expect(src.includes("const depthR         = roleDepthOf(gCurrent.protagonist.roleFit, gCurrent.protagonist.startGuaranteeGames);")).toBe(true);
+    expect(
+      src.includes(
+        "const depthR         = roleDepthOf(gCurrent.protagonist.roleFit, gCurrent.protagonist.startGuaranteeGames);",
+      ),
+    ).toBe(true);
   });
   it("불펜 판정에 넘긴다", () => {
     expect(src.includes("          depthR,\n        );")).toBe(true);
   });
   it("선발 건너뛰기가 갈래를 바꾼다", () => {
     expect(src.includes("await starterWouldStart(depthR, seedOf(")).toBe(true);
-    expect(src.includes("if ((game.isProtagonistGame && !starterSkips) || relieverPitching) {")).toBe(true);
+    expect(
+      src.includes("if ((game.isProtagonistGame && !starterSkips) || relieverPitching) {"),
+    ).toBe(true);
   });
   it("깊이 0 이면 엔진을 안 부른다 — 판정 첫 줄이 깊이다", () => {
     const at = src.indexOf("const starterSkips =");

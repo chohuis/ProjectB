@@ -2,7 +2,10 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  managerEffect, primeManagerStyleRules, NEUTRAL_STYLE, styleNoiseOf,
+  managerEffect,
+  primeManagerStyleRules,
+  NEUTRAL_STYLE,
+  styleNoiseOf,
 } from "../managerStyle";
 
 /**
@@ -30,8 +33,8 @@ describe("감독 효과", () => {
   it("규칙 파일에 스타일 9종이 다 있다", () => {
     // 생성 규칙(`staff_rules.json`)의 9종과 하나라도 어긋나면
     // 그 스타일 감독은 조용히 중립이 된다
-    const gen = JSON.parse(read("resource/data/master/players/staff_rules.json"))
-      .rules.manager.styles as string[];
+    const gen = JSON.parse(read("resource/data/master/players/staff_rules.json")).rules.manager
+      .styles as string[];
     expect(gen.length).toBe(9);
     for (const s of gen) {
       expect(Object.keys(rules.styles), `표에 없는 스타일: ${s}`).toContain(s);
@@ -50,16 +53,24 @@ describe("감독 효과", () => {
   });
 
   it("공격 지향은 파워를 올리고 번트를 줄인다", () => {
-    const e = managerEffect({ style: "공격 지향", tacticalIQ: 50,
-      offenseMind: 50, riskTolerance: 50 });
+    const e = managerEffect({
+      style: "공격 지향",
+      tacticalIQ: 50,
+      offenseMind: 50,
+      riskTolerance: 50,
+    });
     expect(e.power).toBeGreaterThan(0);
     expect(e.buntMult).toBeLessThan(1);
     expect(e.stealMult).toBeGreaterThan(1);
   });
 
   it("수비 조직은 반대다", () => {
-    const e = managerEffect({ style: "수비 조직", tacticalIQ: 50,
-      offenseMind: 50, riskTolerance: 50 });
+    const e = managerEffect({
+      style: "수비 조직",
+      tacticalIQ: 50,
+      offenseMind: 50,
+      riskTolerance: 50,
+    });
     expect(e.buntMult).toBeGreaterThan(1);
     expect(e.stealMult).toBeLessThan(1);
   });
@@ -173,9 +184,11 @@ describe("상대 감독", () => {
   });
 
   it("공격 쪽은 수비 쪽의 반대다", () => {
-    expect(rust.includes(
-      "if is_our_team_fielding(state) { &state.opponent_manager } else { &state.my_manager }"
-    )).toBe(true);
+    expect(
+      rust.includes(
+        "if is_our_team_fielding(state) { &state.opponent_manager } else { &state.my_manager }",
+      ),
+    ).toBe(true);
   });
 
   it("번트·도루가 공격 쪽 감독을 쓴다", () => {
@@ -196,16 +209,21 @@ describe("상대 감독", () => {
 
   it("🔴 감독 없던 리그 다섯에 감독을 만든다", () => {
     // 실측: 감독 있는 팀 182 · 없는 팀 56 (ABL·JBL·2군 전부)
-    for (const lg of ["LEAGUE_ABL", "LEAGUE_JBL",
-                      "LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]) {
+    for (const lg of [
+      "LEAGUE_ABL",
+      "LEAGUE_JBL",
+      "LEAGUE_KBL_FARM",
+      "LEAGUE_ABL_FARM",
+      "LEAGUE_JBL_FARM",
+    ]) {
       expect(staff.includes(`"${lg}"`), `${lg} 가 빠졌다`).toBe(true);
     }
   });
 
   it("감독 기량이 기존 리그 순서를 따른다", () => {
     // 지어낸 값이 아니라 OVR 상한·연봉 배수와 같은 순서다
-    const lb = JSON.parse(read("resource/data/master/players/staff_rules.json"))
-      .rules.league_bonus as Record<string, number>;
+    const lb = JSON.parse(read("resource/data/master/players/staff_rules.json")).rules
+      .league_bonus as Record<string, number>;
     expect(lb.LEAGUE_ABL).toBeGreaterThan(lb.LEAGUE_JBL);
     expect(lb.LEAGUE_JBL).toBeGreaterThan(lb.LEAGUE_KBL);
     expect(lb.LEAGUE_KBL).toBeGreaterThan(lb.LEAGUE_ABL_FARM);
@@ -237,14 +255,20 @@ describe("누굴 쓸지 · 언제 바꿀지", () => {
     // ⚠ 1.1 A② 에서 인자가 하나 늘었다(`starter_outs_factor` · 리그 계수).
     //   감독 항은 그대로고 이 검사도 그대로 본다 — 문자열만 서명에 맞췄다.
     expect(rust.includes("bullpen_read: f64, starter_outs_factor: f64) -> Vec<i32> {")).toBe(true);
-    expect(rust.includes("queue_max_outs(&ps, rng, my_manager.bullpen_read, starter_outs_factor)")).toBe(true);
-    expect(rust.includes("queue_max_outs(&ps, rng, opp_manager.bullpen_read, starter_outs_factor)")).toBe(true);
+    expect(
+      rust.includes("queue_max_outs(&ps, rng, my_manager.bullpen_read, starter_outs_factor)"),
+    ).toBe(true);
+    expect(
+      rust.includes("queue_max_outs(&ps, rng, opp_manager.bullpen_read, starter_outs_factor)"),
+    ).toBe(true);
   });
 
   it("🔴 불펜은 절단이다 — 반올림으로 바꾸면 밸런스가 움직인다", () => {
     // 예전 식이 `3 + (rng * 4.0) as i32` 라 3~6인데 반올림하면 3~7이 된다.
     // 감독을 얹는 김에 조용히 바뀌었고 cargo 검사가 잡았다.
-    expect(rust.includes("(3 + (rng.gen::<f64>() * 4.0) as i32 - (k * 1.5).round() as i32).max(1)")).toBe(true);
+    expect(
+      rust.includes("(3 + (rng.gen::<f64>() * 4.0) as i32 - (k * 1.5).round() as i32).max(1)"),
+    ).toBe(true);
   });
 });
 
@@ -256,7 +280,9 @@ describe("새 작전 셋 (C-①②④)", () => {
   it("🔴 고의사구 — 1루가 비어야 건다", () => {
     // 1루가 차 있으면 밀어내기 위험만 늘고 포스 상황도 안 생긴다
     expect(rust.includes("let first_open = pre_state.runners.first.is_none();")).toBe(true);
-    expect(rust.includes("if first_open && scoring && pre_state.outs >= 1 && diff <= 3 {")).toBe(true);
+    expect(rust.includes("if first_open && scoring && pre_state.outs >= 1 && diff <= 3 {")).toBe(
+      true,
+    );
   });
 
   it("🔴 고의사구는 수비 쪽 감독이 정한다", () => {
@@ -278,7 +304,9 @@ describe("새 작전 셋 (C-①②④)", () => {
   it("🔴 스퀴즈는 3루 주자를 홈에 보내고 희생번트는 안 보낸다", () => {
     // 둘이 갈려 있어야 한다 — 기존 주석이 그렇게 적어 뒀다
     expect(rust.includes("if let Some(r3) = next_runners.third.take() {")).toBe(true);
-    expect(rust.includes("// ⚠ 3루 주자는 홈으로 안 보낸다. 그건 스퀴즈고 다른 작전이다.")).toBe(true);
+    expect(rust.includes("// ⚠ 3루 주자는 홈으로 안 보낸다. 그건 스퀴즈고 다른 작전이다.")).toBe(
+      true,
+    );
   });
 
   it("스퀴즈 실패는 대가가 크다", () => {
@@ -325,16 +353,22 @@ describe("히트앤런 (C-③)", () => {
 
   it("2스트라이크엔 안 건다", () => {
     // 헛스윙 삼진 + 도루사로 이닝이 한 번에 끝난다
-    expect(rust.includes("        && pre_state.count.strikes < 2\n        && rng.gen::<f64>() < T::HIT_AND_RUN_PROB")).toBe(true);
+    expect(
+      rust.includes(
+        "        && pre_state.count.strikes < 2\n        && rng.gen::<f64>() < T::HIT_AND_RUN_PROB",
+      ),
+    ).toBe(true);
   });
 
   it("🔴 병살을 땅볼로 낮춘다 — 그게 이 작전의 값이다", () => {
     // ⚠ 2단계에서 **삼중살도 같이 낮추게** 됐다 — 안 그러면 히트앤런을
     //   걸고도 주자 둘이 죽어 작전을 거는 이유가 사라진다.
-    expect(rust.includes(
-      "            PitchResultCode::DoublePlay | PitchResultCode::TriplePlay => {\n" +
-      "                result_code = PitchResultCode::GroundOut;"
-    )).toBe(true);
+    expect(
+      rust.includes(
+        "            PitchResultCode::DoublePlay | PitchResultCode::TriplePlay => {\n" +
+          "                result_code = PitchResultCode::GroundOut;",
+      ),
+    ).toBe(true);
   });
 
   it("🔴 헛치면 주자가 죽는다", () => {

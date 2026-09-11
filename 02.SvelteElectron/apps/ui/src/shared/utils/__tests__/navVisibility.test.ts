@@ -1,7 +1,11 @@
 import { describe, it, expect } from "vitest";
 import {
-  visibleNavTabs, visibleMeTabs, fallbackMeTab,
-  NAV_ORDER, ME_ORDER, NAV_GROUP_BREAK_AFTER,
+  visibleNavTabs,
+  visibleMeTabs,
+  fallbackMeTab,
+  NAV_ORDER,
+  ME_ORDER,
+  NAV_GROUP_BREAK_AFTER,
 } from "../navVisibility";
 import type { CareerStage, RetirementReason } from "../../types/save";
 
@@ -57,7 +61,7 @@ describe("내비 6칸 + 병역", () => {
   });
 });
 
-describe("\"나\" 탭", () => {
+describe('"나" 탭', () => {
   it("고교생은 학업이 보이고 프로는 안 보인다", () => {
     expect(visibleMeTabs(ctx("highschool"))).toContain("academics");
     expect(visibleMeTabs(ctx("university"))).toContain("academics");
@@ -77,8 +81,16 @@ describe("\"나\" 탭", () => {
   });
 
   it("어떤 단계에서도 최소 한 탭은 남는다 — 빈 화면이 나오면 안 된다", () => {
-    for (const s of ["highschool", "university", "pro", "pro_kbl", "pro_abl", "pro_jbl",
-                     "military", "independent"] as const) {
+    for (const s of [
+      "highschool",
+      "university",
+      "pro",
+      "pro_kbl",
+      "pro_abl",
+      "pro_jbl",
+      "military",
+      "independent",
+    ] as const) {
       expect(visibleMeTabs(ctx(s)).length).toBeGreaterThan(0);
       expect(visibleMeTabs(ctx(s, true)).length).toBeGreaterThan(0);
     }

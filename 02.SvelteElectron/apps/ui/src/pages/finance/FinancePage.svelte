@@ -13,9 +13,18 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import {
-    loadFinanceRules, calcWeeklyFinance, calcSponsorOffers, calcTrainingBonus,
-    financeOf, sponsorAnnualOf, signSponsor, toggleSubscription,
-    type FinanceRulesFile, type WeeklyFinance, type SponsorOffer, type TrainingBonusResult,
+    loadFinanceRules,
+    calcWeeklyFinance,
+    calcSponsorOffers,
+    calcTrainingBonus,
+    financeOf,
+    sponsorAnnualOf,
+    signSponsor,
+    toggleSubscription,
+    type FinanceRulesFile,
+    type WeeklyFinance,
+    type SponsorOffer,
+    type TrainingBonusResult,
   } from "../../shared/usecases/finance";
 
   type FinanceTab = "overview" | "sponsor" | "training" | "invest";
@@ -36,16 +45,23 @@
   $: isPro = p.careerStage === "pro" || p.careerStage.startsWith("pro_");
 
   $: stageLabel =
-    p.careerStage === "highschool" ? "고등학교" :
-    p.careerStage === "university" ? "대학교" :
-    p.careerStage === "military" ? "군 복무" :
-    p.careerStage === "independent" ? "독립리그" : "프로";
+    p.careerStage === "highschool"
+      ? "고등학교"
+      : p.careerStage === "university"
+        ? "대학교"
+        : p.careerStage === "military"
+          ? "군 복무"
+          : p.careerStage === "independent"
+            ? "독립리그"
+            : "프로";
 
   // 주인공 상태가 바뀌면 다시 계산한다 — 화면이 스스로 추정하지 않는다
   $: refreshKey = `${p.careerStage}|${p.contract?.salary ?? 0}|${p.fame}|${sponsorAnnual}|${JSON.stringify(fin.subscriptions)}`;
   $: if (refreshKey) void refresh();
 
-  onMount(() => { void refresh(); });
+  onMount(() => {
+    void refresh();
+  });
 
   async function refresh(): Promise<void> {
     try {
@@ -64,15 +80,23 @@
   async function onSign(o: SponsorOffer): Promise<void> {
     if (busy) return;
     busy = true;
-    try { await signSponsor(o, seasonYear); await refresh(); }
-    finally { busy = false; }
+    try {
+      await signSponsor(o, seasonYear);
+      await refresh();
+    } finally {
+      busy = false;
+    }
   }
 
   async function onToggle(areaId: string): Promise<void> {
     if (busy) return;
     busy = true;
-    try { await toggleSubscription(areaId); await refresh(); }
-    finally { busy = false; }
+    try {
+      await toggleSubscription(areaId);
+      await refresh();
+    } finally {
+      busy = false;
+    }
   }
 
   /** 만원 단위를 사람이 읽는 문자열로. 1억(10,000만원)부터는 억으로 */
@@ -108,23 +132,25 @@
     </div>
     <div class="u-subtabs">
       <button class:on={tab === "overview"} on:click={() => (tab = "overview")}>개요</button>
-      <button class:on={tab === "sponsor"}  on:click={() => (tab = "sponsor")}>스폰서</button>
-      <button class:on={tab === "training"} on:click={() => (tab = "training")}>개인 트레이닝</button>
-      <button class:on={tab === "invest"}   on:click={() => (tab = "invest")}>투자</button>
+      <button class:on={tab === "sponsor"} on:click={() => (tab = "sponsor")}>스폰서</button>
+      <button class:on={tab === "training"} on:click={() => (tab = "training")}
+        >개인 트레이닝</button
+      >
+      <button class:on={tab === "invest"} on:click={() => (tab = "invest")}>투자</button>
     </div>
   </header>
 
   <div class="board">
-
     {#if loadError}
       <section class="panel err">
         <h3>재정 규칙을 못 읽었습니다</h3>
         <p class="sub">{loadError}</p>
-        <p class="sub">`generation_rules.json`의 <code>financeRules</code>가 필요합니다 (Phase 7-5).</p>
+        <p class="sub">
+          `generation_rules.json`의 <code>financeRules</code>가 필요합니다 (Phase 7-5).
+        </p>
       </section>
     {:else if !weekly}
       <section class="panel"><p class="sub">계산 중…</p></section>
-
     {:else if tab === "overview"}
       <div class="overview-grid">
         <section class="panel kpi-grid">
@@ -138,10 +164,18 @@
           <article><span>연 총수입</span><strong>{won(weekly.grossAnnual)}</strong></article>
           <article>
             <span>실효 세율</span>
-            <strong>{weekly.taxAnnual > 0 ? `${(weekly.effectiveTaxRate * 100).toFixed(1)}%` : "비과세"}</strong>
+            <strong
+              >{weekly.taxAnnual > 0
+                ? `${(weekly.effectiveTaxRate * 100).toFixed(1)}%`
+                : "비과세"}</strong
+            >
           </article>
           <article><span>명성</span><strong>{Math.round(p.fame)}</strong></article>
-          <article><span>스폰서 계약</span><strong>{fin.sponsors.filter((s) => s.untilSeason >= seasonYear).length}건</strong></article>
+          <article>
+            <span>스폰서 계약</span><strong
+              >{fin.sponsors.filter((s) => s.untilSeason >= seasonYear).length}건</strong
+            >
+          </article>
         </section>
 
         <section class="panel ledger-panel">
@@ -177,12 +211,15 @@
           </div>
         </section>
       </div>
-
     {:else if tab === "sponsor"}
       <div class="overview-grid">
         <section class="panel">
           <h3>계약 중</h3>
-          <p class="sub">연 합계 {won(sponsorAnnual)} · 기타소득 분리과세 {rules ? (rules.tax.otherIncomeRate * 100).toFixed(0) : "-"}%</p>
+          <p class="sub">
+            연 합계 {won(sponsorAnnual)} · 기타소득 분리과세 {rules
+              ? (rules.tax.otherIncomeRate * 100).toFixed(0)
+              : "-"}%
+          </p>
           <ul>
             {#each fin.sponsors.filter((s) => s.untilSeason >= seasonYear) as s}
               <li>
@@ -201,10 +238,12 @@
             {#if !isPro}
               학생·독립 무대에는 스폰서가 붙지 않습니다 (아마추어 규정).
             {:else if offers.length === 0}
-              지금 명성({Math.round(p.fame)})으로 들어온 제안이 없습니다.
-              가장 낮은 문턱은 명성 {rules?.sponsor.categories[0]?.fameMin ?? "-"}입니다.
+              지금 명성({Math.round(p.fame)})으로 들어온 제안이 없습니다. 가장 낮은 문턱은 명성 {rules
+                ?.sponsor.categories[0]?.fameMin ?? "-"}입니다.
             {:else}
-              명성이 오르면 금액도 같이 오릅니다{offersCapped ? " · 연봉 대비 상한에 걸려 조정됐습니다" : ""}.
+              명성이 오르면 금액도 같이 오릅니다{offersCapped
+                ? " · 연봉 대비 상한에 걸려 조정됐습니다"
+                : ""}.
             {/if}
           </p>
           <ul>
@@ -212,7 +251,11 @@
               <li class="offer">
                 <div class="offer-left">
                   <strong>{o.name}</strong>
-                  <span>{won(o.annual)} / 년 · {o.termYears}년 · 연봉의 {(o.pctOfSalary * 100).toFixed(1)}%</span>
+                  <span
+                    >{won(o.annual)} / 년 · {o.termYears}년 · 연봉의 {(o.pctOfSalary * 100).toFixed(
+                      1,
+                    )}%</span
+                  >
                 </div>
                 <button class="act" disabled={busy} on:click={() => onSign(o)}>계약</button>
               </li>
@@ -220,7 +263,6 @@
           </ul>
         </section>
       </div>
-
     {:else if tab === "training"}
       <section class="panel training-panel">
         <h3>개인 트레이닝 구독</h3>
@@ -244,29 +286,33 @@
                 <span>
                   {tierLabel(a.id)}
                   {#if tierOf(a.id) > 0}
-                    · 효율 +{(effectiveOf(a.id) * 100).toFixed(1)}%
-                    · 주 {rules?.training.tiers.find((x) => x.tier === tierOf(a.id))?.weeklyCost ?? 0}만원
+                    · 효율 +{(effectiveOf(a.id) * 100).toFixed(1)}% · 주 {rules?.training.tiers.find(
+                      (x) => x.tier === tierOf(a.id),
+                    )?.weeklyCost ?? 0}만원
                   {/if}
                 </span>
               </div>
               <button class="act" disabled={busy} on:click={() => onToggle(a.id)}>
-                {tierOf(a.id) === 0 ? "구독" : tierOf(a.id) >= (rules?.training.tiers.length ?? 2) ? "해지" : "상향"}
+                {tierOf(a.id) === 0
+                  ? "구독"
+                  : tierOf(a.id) >= (rules?.training.tiers.length ?? 2)
+                    ? "해지"
+                    : "상향"}
               </button>
             </li>
           {/each}
         </ul>
         <p class="sub">
-          주간 구독료 합계 <strong>{won(bonus?.weeklyCost ?? 0)}</strong> —
-          위 개요 탭의 순현금에 이미 반영돼 있습니다.
+          주간 구독료 합계 <strong>{won(bonus?.weeklyCost ?? 0)}</strong> — 위 개요 탭의 순현금에 이미
+          반영돼 있습니다.
         </p>
       </section>
-
     {:else}
       <section class="panel">
         <h3>투자</h3>
         <p class="sub">
-          투자는 <strong>시즌 종료 화면</strong>에서 한 번만 선택합니다.
-          여기서는 지금까지의 결과만 봅니다.
+          투자는 <strong>시즌 종료 화면</strong>에서 한 번만 선택합니다. 여기서는 지금까지의 결과만
+          봅니다.
           {#if rules && p.money < rules.investment.minCash}
             <br />현금이 {won(rules.investment.minCash)} 이상이어야 선택지가 열립니다.
           {/if}
@@ -287,8 +333,10 @@
         {#if fin.investments.length > 0}
           <p class="sub">
             누적 손익
-            <strong class:up={fin.investments.reduce((a, i) => a + i.profit, 0) >= 0}
-                    class:down={fin.investments.reduce((a, i) => a + i.profit, 0) < 0}>
+            <strong
+              class:up={fin.investments.reduce((a, i) => a + i.profit, 0) >= 0}
+              class:down={fin.investments.reduce((a, i) => a + i.profit, 0) < 0}
+            >
               {won(fin.investments.reduce((a, i) => a + i.profit, 0))}
             </strong>
           </p>
@@ -308,7 +356,10 @@
     overflow: hidden;
   }
 
-  h3, p { margin: 0; }
+  h3,
+  p {
+    margin: 0;
+  }
 
   .head {
     display: flex;
@@ -325,10 +376,20 @@
     border-left: 3px solid var(--t-dark);
     padding-left: 10px;
   }
-  .stage strong { font-size: 13.5px; font-weight: 800; color: var(--ink); }
-  .stage span   { font-size: 11.5px; color: var(--ink-mute); }
+  .stage strong {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .stage span {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
 
-  .board { min-height: 0; overflow: hidden; }
+  .board {
+    min-height: 0;
+    overflow: hidden;
+  }
 
   .overview-grid {
     height: 100%;
@@ -349,9 +410,15 @@
     gap: 8px;
     align-content: start;
   }
-  .panel h3 { font-size: 13px; font-weight: 800; color: var(--ink); }
+  .panel h3 {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+  }
 
-  .err { border-left: 3px solid var(--bad); }
+  .err {
+    border-left: 3px solid var(--bad);
+  }
 
   .kpi-grid {
     display: grid;
@@ -367,25 +434,50 @@
     display: grid;
     gap: 1px;
   }
-  .kpi-grid span   { color: var(--ink-mute); font-size: 10.5px; }
+  .kpi-grid span {
+    color: var(--ink-mute);
+    font-size: 10.5px;
+  }
   .kpi-grid strong {
-    color: var(--ink); font-size: 15px; font-weight: 800;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 800;
     font-variant-numeric: tabular-nums;
   }
 
   /* 돈은 늘고 주는 게 전부다 — 의미색을 쓰고 팀 색과 섞지 않는다 */
-  .up   { color: var(--ok); }
-  .down { color: var(--bad); }
+  .up {
+    color: var(--ok);
+  }
+  .down {
+    color: var(--bad);
+  }
 
-  .ledger-panel { grid-template-rows: auto auto minmax(0, 1fr); }
-  .ledger-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; min-height: 0; }
+  .ledger-panel {
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+  .ledger-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    min-height: 0;
+  }
   .ledger-title {
-    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
-    margin-bottom: 6px; padding-bottom: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
     border-bottom: 1px solid var(--line);
   }
 
-  ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1px;
+  }
   li {
     border-bottom: 1px solid var(--line);
     padding: 7px 2px;
@@ -396,23 +488,46 @@
     color: var(--ink-mid);
     font-size: 12px;
   }
-  li:last-child { border-bottom: 0; }
+  li:last-child {
+    border-bottom: 0;
+  }
   li strong {
-    color: var(--ink); font-size: 12px; font-weight: 700;
-    font-variant-numeric: tabular-nums; text-align: right;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
   }
 
-  .sub { color: var(--ink-mute); font-size: 11.5px; line-height: 1.55; }
-  .sub strong { color: var(--ink); }
+  .sub {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+    line-height: 1.55;
+  }
+  .sub strong {
+    color: var(--ink);
+  }
   .sub code {
-    background: var(--panel-sunk); border-radius: 2px;
-    padding: 1px 4px; color: var(--ink-mid);
+    background: var(--panel-sunk);
+    border-radius: 2px;
+    padding: 1px 4px;
+    color: var(--ink-mid);
   }
 
-  .offer { align-items: center; }
-  .offer-left { display: grid; gap: 1px; }
-  .offer-left strong { text-align: left; }
-  .offer-left span { color: var(--ink-mute); font-size: 11px; }
+  .offer {
+    align-items: center;
+  }
+  .offer-left {
+    display: grid;
+    gap: 1px;
+  }
+  .offer-left strong {
+    text-align: left;
+  }
+  .offer-left span {
+    color: var(--ink-mute);
+    font-size: 11px;
+  }
 
   .act {
     border: 0;
@@ -426,11 +541,19 @@
     white-space: nowrap;
     flex-shrink: 0;
   }
-  .act:disabled { opacity: 0.4; cursor: default; }
+  .act:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 
-  .training-panel { grid-template-rows: auto auto minmax(0, 1fr) auto; }
+  .training-panel {
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+  }
 
   @media (max-width: 1100px) {
-    .overview-grid, .ledger-grid { grid-template-columns: 1fr; }
+    .overview-grid,
+    .ledger-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

@@ -14,25 +14,74 @@ import type { ProtagonistSave } from "../../types/save";
  * 🔴 **제일 중요한 검사는 "모르는 경로면 던진다"**이다. 조용히 `undefined`를
  * 돌려주면 비교가 false가 되고, 그게 2026-08-22에 35종을 죽인 형태다.
  */
-const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave => ({
-  id: "PLY_HERO", name: "검사", careerStage: "highschool",
-  leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_A", grade: 1, age: 17,
-  playerType: "pitcher", position: "SP", handedness: "R", pitchingForm: "overhand",
-  jerseyNumber: 18, condition: 80, fatigue: 10, morale: 70,
-  pitching: { ovr: 50, stamina: 50, velocity: 50, command: 50, control: 50,
-    movement: 50, mentality: 50, recovery: 50, clutch: 50, holdRunners: 50 },
-  batting: { ovr: 30, contact: 42, power: 25, eye: 28, discipline: 28, speed: 48,
-    baseInstinct: 48, bunting: 45, platoon: 50, fielding: 40, arm: 50, battingClutch: 25 },
-  primaryPosition: "SP", positionRatings: { SP: 50 },
-  diligence: 60, popularity: 10, developmentRate: 1, potentialHidden: 70,
-  growthPoints: 0, tags: [], pitchingXP: {}, battingXP: {}, pitches: [],
-  money: 1000, fame: 0, scoutScore: 0, proServiceYears: 0,
-  ...over,
-} as unknown as ProtagonistSave);
+const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave =>
+  ({
+    id: "PLY_HERO",
+    name: "검사",
+    careerStage: "highschool",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    teamId: "TEAM_A",
+    grade: 1,
+    age: 17,
+    playerType: "pitcher",
+    position: "SP",
+    handedness: "R",
+    pitchingForm: "overhand",
+    jerseyNumber: 18,
+    condition: 80,
+    fatigue: 10,
+    morale: 70,
+    pitching: {
+      ovr: 50,
+      stamina: 50,
+      velocity: 50,
+      command: 50,
+      control: 50,
+      movement: 50,
+      mentality: 50,
+      recovery: 50,
+      clutch: 50,
+      holdRunners: 50,
+    },
+    batting: {
+      ovr: 30,
+      contact: 42,
+      power: 25,
+      eye: 28,
+      discipline: 28,
+      speed: 48,
+      baseInstinct: 48,
+      bunting: 45,
+      platoon: 50,
+      fielding: 40,
+      arm: 50,
+      battingClutch: 25,
+    },
+    primaryPosition: "SP",
+    positionRatings: { SP: 50 },
+    diligence: 60,
+    popularity: 10,
+    developmentRate: 1,
+    potentialHidden: 70,
+    growthPoints: 0,
+    tags: [],
+    pitchingXP: {},
+    battingXP: {},
+    pitches: [],
+    money: 1000,
+    fame: 0,
+    scoutScore: 0,
+    proServiceYears: 0,
+    ...over,
+  }) as unknown as ProtagonistSave;
 
 const ctx = (over: Partial<EventContext> = {}): EventContext => ({
-  protagonist: proto(), currentWeek: 10, seasonPhase: "season",
-  standings: [], stats: {}, triggeredEvents: {},
+  protagonist: proto(),
+  currentWeek: 10,
+  seasonPhase: "season",
+  standings: [],
+  stats: {},
+  triggeredEvents: {},
   ...over,
 });
 
@@ -84,7 +133,15 @@ describe("경로 조건", () => {
   it("순위표 — 내 팀 행을 찾는다", () => {
     const c = ctx({
       standings: [
-        { teamId: "TEAM_A", wins: 12, losses: 3, draws: 0, winPct: 0.8, runsFor: 60, runsAgainst: 30 },
+        {
+          teamId: "TEAM_A",
+          wins: 12,
+          losses: 3,
+          draws: 0,
+          winPct: 0.8,
+          runsFor: 60,
+          runsAgainst: 30,
+        },
       ] as EventContext["standings"],
     });
     expect(ev({ type: "num_gte", path: "standing.wins", value: 10 }, c)).toBe(true);
@@ -123,10 +180,14 @@ describe("경로 조건", () => {
  */
 describe("leagueYears", () => {
   const withRecs = (leagueId: string, recs: { year: number; leagueId: string }[]) =>
-    ctx({ protagonist: proto({ leagueId, careerRecords: recs } as unknown as Partial<ProtagonistSave>) });
+    ctx({
+      protagonist: proto({ leagueId, careerRecords: recs } as unknown as Partial<ProtagonistSave>),
+    });
 
   it("기록이 없으면 1년차 — 진입 첫 시즌", () => {
-    expect(ev({ type: "num_lte", path: "leagueYears", value: 1 }, withRecs("LEAGUE_ABL", []))).toBe(true);
+    expect(ev({ type: "num_lte", path: "leagueYears", value: 1 }, withRecs("LEAGUE_ABL", []))).toBe(
+      true,
+    );
   });
 
   it("같은 리그가 이어지면 센다", () => {
@@ -165,35 +226,55 @@ describe("leagueYears", () => {
 //   여기서 여는 것은 셋뿐이다 — 부대원 관계값 · 군 보직 · 전역 뒤 경과.
 //   이름 렌더러(`{memberName}`)와 인물 지정은 **안 만들었다**(B-20 초안의 남은 몫).
 const REC = {
-  unitId: "U1", unitName: "12사단", roleId: "signal", roleLabel: "통신병",
-  arcLabel: "", finalBallSense: 60, leaveDays: 12, awards: [], penalties: [], perf: [],
+  unitId: "U1",
+  unitName: "12사단",
+  roleId: "signal",
+  roleLabel: "통신병",
+  arcLabel: "",
+  finalBallSense: 60,
+  leaveDays: 12,
+  awards: [],
+  penalties: [],
+  perf: [],
   topRelations: [
     { memberId: "M1", name: "김사수", value: 62 },
     { memberId: "M2", name: "이후임", value: 40 },
   ],
-  senseCurve: [], conversion: { statDelta: 0, velocityDelta: 0, recoveryWeeks: 6 },
+  senseCurve: [],
+  conversion: { statDelta: 0, velocityDelta: 0, recoveryWeeks: 6 },
 } as unknown as NonNullable<ProtagonistSave["militaryRecord"]>;
 
 /** 전역한 주인공 — 2030 W20 에 전역, 지금은 `year`/`week` */
 const 전역자 = (over: Partial<ProtagonistSave> = {}, year = 2030, week = 30) =>
   ctx({
     protagonist: proto({
-      militaryStatus: "군필", militaryServedUnit: "general", militaryRecord: REC,
-      dischargedSeason: 2030, dischargedWeek: 20, ...over,
+      militaryStatus: "군필",
+      militaryServedUnit: "general",
+      militaryRecord: REC,
+      dischargedSeason: 2030,
+      dischargedWeek: 20,
+      ...over,
     }),
-    seasonYear: year, currentWeek: week,
+    seasonYear: year,
+    currentWeek: week,
   });
 
 describe("병영 재회 조건", () => {
   it("제일 가까웠던 부대원의 관계값을 읽는다", () => {
     const c = 전역자();
-    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 60 }, c)).toBe(true);
-    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 70 }, c)).toBe(false);
+    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 60 }, c)).toBe(
+      true,
+    );
+    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 70 }, c)).toBe(
+      false,
+    );
   });
 
   it("군 경력이 없으면(상무·미필·구 세이브) 조용히 false 다 — 던지지 않는다", () => {
     const c = ctx({ protagonist: proto({ militaryStatus: "군필" }) });
-    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 1 }, c)).toBe(false);
+    expect(ev({ type: "num_gte", path: "militaryRecord.topRelations.0.value", value: 1 }, c)).toBe(
+      false,
+    );
     expect(resolvePath(c, "militaryRecord.roleId")).toBeUndefined();
   });
 
@@ -207,16 +288,24 @@ describe("병영 재회 조건", () => {
     expect(resolvePath(전역자({}, 2030, 30), "weeksSinceDischarge")).toBe(10);
     // 이듬해 W10 → 52 − 20 + 10 = 42
     expect(resolvePath(전역자({}, 2031, 10), "weeksSinceDischarge")).toBe(42);
-    expect(ev({ type: "num_gte", path: "weeksSinceDischarge", value: 40 }, 전역자({}, 2031, 10))).toBe(true);
+    expect(
+      ev({ type: "num_gte", path: "weeksSinceDischarge", value: 40 }, 전역자({}, 2031, 10)),
+    ).toBe(true);
   });
 
   it("🔴 전역 기록이 없으면 못 잰 것이다 — 0 이 아니다", () => {
     // 0 을 지어 내면 **군대를 안 다녀온 주인공이 「이번 주 전역」** 이 된다
-    const 구세이브 = ctx({ protagonist: proto({ dischargedSeason: undefined, dischargedWeek: undefined }), seasonYear: 2030 });
+    const 구세이브 = ctx({
+      protagonist: proto({ dischargedSeason: undefined, dischargedWeek: undefined }),
+      seasonYear: 2030,
+    });
     expect(resolvePath(구세이브, "weeksSinceDischarge")).toBeUndefined();
     expect(ev({ type: "num_gte", path: "weeksSinceDischarge", value: 0 }, 구세이브)).toBe(false);
     // 🔴 대조군 — `seasonYear` 배선을 빼면 못 잰다(연 차이를 못 구한다)
-    const 연도없음 = ctx({ protagonist: proto({ dischargedSeason: 2030, dischargedWeek: 20, militaryRecord: REC }), currentWeek: 30 });
+    const 연도없음 = ctx({
+      protagonist: proto({ dischargedSeason: 2030, dischargedWeek: 20, militaryRecord: REC }),
+      currentWeek: 30,
+    });
     expect(resolvePath(연도없음, "weeksSinceDischarge")).toBeUndefined();
   });
 
@@ -247,7 +336,9 @@ describe("관계 조건 — 부대원(unitmate)", () => {
   });
 
   it("다섯 종은 예전 그대로다", () => {
-    const c = ctx({ relations: [{ kind: "teammate", value: 55 }] as unknown as EventContext["relations"] });
+    const c = ctx({
+      relations: [{ kind: "teammate", value: 55 }] as unknown as EventContext["relations"],
+    });
     expect(ev({ type: "relation_gte", kind: "teammate", value: 50 }, c)).toBe(true);
     expect(ev({ type: "relation_gte", kind: "manager", value: 1 }, c)).toBe(false);
   });
