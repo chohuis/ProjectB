@@ -187,7 +187,8 @@
     "lint:fix": "eslint \"apps/**/*.{ts,svelte,cjs}\" \"packages/*/src/**/*.ts\" --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks",
+    "coverage": "vitest run --coverage.enabled --coverage.provider=v8 --coverage.reporter=json-summary --coverage.reporter=text-summary --coverage.reportsDirectory=coverage --coverage.include=apps/ui/src/** --coverage.exclude=**/__tests__/**"
   },
   "build": {
     "appId": "com.projectb.desktop",
