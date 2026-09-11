@@ -1,7 +1,10 @@
 name: Build Native Addon (Windows)
 
 # 🔴 2026-09-11 에 02.SvelteElectron/.github/ 에서 저장소 루트로 옮겼다 — GitHub 는 루트의
-#   .github/ 만 읽어서 그 전엔 한 번도 안 돌았다. 경로도 루트 기준으로 고쳤다.
+#   .github/ 만 읽어서 그 전엔 한 번도 안 돌았다.
+# 🔴 옮긴 첫 실행이 빨강이었다(`ac8c8848a`) — 옛 방식대로 packages/engine-native 안에서
+#   `npm install` 을 했는데, engine-native 는 **npm 워크스페이스**라 lockfile 이 루트 하나뿐이고
+#   `@napi-rs/cli` 도 루트에 풀린다. 본체 CI(ci.yml)가 하는 대로 루트 `npm ci` → `build:native` 로 맞췄다.
 #   테스트·검사는 ci.yml 이 돈다. 여기는 엔진이 바뀔 때 .node 를 산출물로 올리는 것만.
 
 on:
@@ -12,11 +15,16 @@ on:
       - '02.SvelteElectron/packages/engine-native/Cargo.toml'
       - '02.SvelteElectron/packages/engine-native/Cargo.lock'
       - '02.SvelteElectron/packages/engine-native/build.rs'
+      - '.github/workflows/build-native.yml'
   pull_request:
     paths:
       - '02.SvelteElectron/packages/engine-native/src/**'
       - '02.SvelteElectron/packages/engine-native/Cargo.toml'
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: 02.SvelteElectron
 
 jobs:
   build:
@@ -26,19 +34,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Node 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: 02.SvelteElectron/package-lock.json
 
-      - name: Install Rust
+      - name: Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-msvc
 
-      - name: Cache Cargo
+      - name: Cache cargo
         uses: actions/cache@v4
         with:
           path: |
@@ -48,17 +56,21 @@ jobs:
           key: cargo-${{ runner.os }}-${{ hashFiles('02.SvelteElectron/packages/engine-native/Cargo.lock', '02.SvelteElectron/packages/engine-native/Cargo.toml') }}
           restore-keys: cargo-${{ runner.os }}-
 
-      - name: Install engine-native deps
-        run: npm install
-        working-directory: 02.SvelteElectron/packages/engine-native
+      # 워크스페이스라 루트에서 한 번. 패키지 폴더 안에서 npm install 하면 lockfile 이 없어 깨진다.
+      - name: npm ci
+        run: npm ci
 
-      - name: Build .node binary
-        run: npm run build
-        working-directory: 02.SvelteElectron/packages/engine-native
+      - name: build:native (napi build + 도장)
+        run: npm run build:native
+
+      - name: check:native
+        run: npm run check:native
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: engine-native-win32-x64
-          path: 02.SvelteElectron/packages/engine-native/engine-native.win32-x64-msvc.node
+          path: |
+            02.SvelteElectron/packages/engine-native/engine-native.win32-x64-msvc.node
+            02.SvelteElectron/packages/engine-native/.native-stamp.json
           if-no-files-found: error
