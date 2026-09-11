@@ -7,11 +7,9 @@
     weeksUntilNextExam,
     UNIVERSITY_MAJORS,
     getUniversityEffBonus,
+    gpaBandOf,
+    universityGpaScale,
   } from "../../shared/utils/academicsEngine";
-  // ⚠ `toGpa45` 를 여기서 뺐다 — 쓰던 자리가 **한 번도 안 뜨는 갈래**였다
-  //   (아래 요약 헤더의 주석). 함수는 `universityUtils.ts` 에 그대로 두었다:
-  //   GPA 칸을 살릴지는 화면 담당이 정하고, 살리면 그때 다시 부른다.
-  //   지금 그 함수를 부르는 곳은 **아무 데도 없다.**
   import { universityGradeOf } from "../../shared/utils/careerTransition";
   import type { StudyMode } from "../../shared/types/save";
 
@@ -62,6 +60,27 @@
     : 50;
   $: avgGrade = percentileToGrade(avgPercentile);
 
+  // ── 대학 학점 ─────────────────────────────────────────────
+  //
+  // 🔴 **엔진 값을 그린다.** 2026-09-11 까지 이 자리엔 `toGpa45(avgPercentile)`
+  //   — **지금 과목 백분위를 4.5 로 환산한 다른 숫자** — 가 있었다. 정본은
+  //   `schoolState.universityGpa` 다: `settleSemester` 가 학기마다 정산하고
+  //   이벤트 8건(`gpa_gte`·`gpa_lte`)과 진로 결정(`careerDecision`)이 그걸 본다.
+  //   그대로 살렸으면 화면은 3.8 인데 이벤트는 "학점이 위험하다(≤2.4)" 를
+  //   띄운다 — **정본이 둘이 되는 자리**였다.
+  //
+  // 🔴 **첫 학기 전엔 0 이 아니라 "없다".** 이력이 비었으면 학점이 0 인 게
+  //   아니다. `conditionEvaluator` 의 `gpa_lte` 가 같은 함정을 이력 길이로
+  //   막는다("입학 첫 주부터 학점이 위험하다가 뜬다") — 화면도 같아야 한다.
+  $: gpaScale = universityGpaScale();
+  $: semesterHistory = school.semesterGpaHistory ?? [];
+  $: hasGpa = semesterHistory.length > 0;
+  $: univGpa = school.universityGpa ?? 0;
+  $: gpaBand = gpaBandOf(univGpa);
+  $: lastSemester = hasGpa ? semesterHistory[semesterHistory.length - 1] : null;
+  // 졸업선을 넘겼는가 — 이력이 없으면 판단하지 않는다
+  $: gradClear = hasGpa && univGpa >= gpaScale.graduationGpa;
+
   $: nextExam = weeksUntilNextExam(curWeek);
   $: accumPct = Math.min(100, Math.round(school.examAccumScore));
 
@@ -74,6 +93,22 @@
     if (g <= 4) return "g-mid";
     if (g <= 6) return "g-low";
     return "g-risk";
+  }
+
+  /** 학점 띠 → 색. **문턱은 `academicsEngine` 하나뿐이다** — 여기서 다시 세지 않는다 */
+  function gpaClass(band: string): string {
+    if (band === "danger") return "g-risk";
+    if (band === "normal") return "g-low";
+    if (band === "fair") return "g-mid";
+    return "g-top";
+  }
+
+  function gpaLabel(band: string): string {
+    if (band === "danger") return "위험";
+    if (band === "normal") return "보통";
+    if (band === "fair") return "양호";
+    if (band === "good") return "좋음";
+    return "최상";
   }
 
   function riskClass(r: string): string {
@@ -101,6 +136,44 @@
         <p class="lbl">재학 상태</p>
         <strong class="g-top">{univYear}학년 {univSemester % 2 === 1 ? "1학기" : "2학기"}</strong>
       </div>
+      <!--
+        학점 — **엔진 정본**(`schoolState.universityGpa`). 색 문턱은
+        `UNIVERSITY_GPA_BANDS` 하나에서 오고 그 값은 이벤트 데이터와
+        검사로 묶여 있다(`academicsGpaBands.test.ts`).
+      -->
+      <div class="summary-item gpa-item">
+        <p class="lbl">학점</p>
+        {#if hasGpa}
+          <strong class={gpaClass(gpaBand)}>
+            {univGpa.toFixed(2)}<span class="gpa-max">/{gpaScale.gpaMax.toFixed(1)}</span>
+          </strong>
+          <span class="sub {gpaClass(gpaBand)}">{gpaLabel(gpaBand)}</span>
+        {:else}
+          <strong class="g-mid">—</strong>
+          <span class="sub">첫 학기 진행 중</span>
+        {/if}
+      </div>
+      <div class="summary-item">
+        <p class="lbl">이번 학기</p>
+        {#if lastSemester}
+          <strong class={gpaClass(gpaBandOf(lastSemester.gpa))}>
+            {lastSemester.term === "midterm" ? "중간" : "기말"}
+            {lastSemester.gpa.toFixed(2)}
+          </strong>
+        {:else}
+          <strong class="g-mid">—</strong>
+          <span class="sub">성적 발표 전</span>
+        {/if}
+      </div>
+      <div class="summary-item">
+        <p class="lbl">졸업선</p>
+        <strong class={hasGpa ? (gradClear ? "g-top" : "g-risk") : "g-mid"}>
+          {gpaScale.graduationGpa.toFixed(2)}
+        </strong>
+        {#if hasGpa}
+          <span class="sub {gradClear ? 'ok' : 'danger'}">{gradClear ? "충족" : "미달"}</span>
+        {/if}
+      </div>
       <div class="summary-item">
         <p class="lbl">전공</p>
         <strong class={school.majorSelected ? "g-mid" : "g-low"}>
@@ -125,10 +198,13 @@
         <strong class={gradeClass(avgGrade)}>{avgGrade}등급</strong>
       </div>
       <!--
-        🔴 여기 있던 **GPA 칸을 지웠다** (2026-09-11 · ESLint 가 첫 실행에서 잡았다).
-        `{#if isUniv}` 의 `{:else}` 안에 다시 `{#if isUniv}` 라 **한 번도 안 떴다.**
-        지금 화면을 바꾸지 않으려고 「지운다」로 끝낸다 — 그리는 쪽으로 옮길지는
-        화면 담당이 정할 일이다. 옮긴다면 위 `{#if isUniv}` 갈래 안이다.
+        🔴 여기 있던 **GPA 칸은 위 `{#if isUniv}` 갈래로 옮겼다** (2026-09-11).
+        `{#if isUniv}` 의 `{:else}` 안에 다시 `{#if isUniv}` 라 **한 번도 안 떴다**
+        (ESLint 첫 실행이 잡았다 · `cb327423c`). 옮기면서 그리는 값도 바꿨다 —
+        `toGpa45(avgPercentile)` 가 아니라 엔진 정본 `schoolState.universityGpa` 다.
+
+        ⚠ 여기(고교)엔 학점을 두지 않는다. **고교는 9등급 축**이고 학점 축이
+        아니다 — 아래 「평균 등급」과 과목표가 그 자리다.
       -->
     {/if}
     <div class="summary-item">
@@ -370,6 +446,23 @@
     font-weight: 800;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* 학점 칸 — 상한은 작게 붙인다. 큰 숫자가 학점이라야 한눈에 읽힌다 */
+  .gpa-max {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink-mute);
+  }
+
+  .sub {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: var(--ink-mute);
+  }
+
+  .gpa-item {
+    min-width: 86px;
   }
 
   .block-banner {

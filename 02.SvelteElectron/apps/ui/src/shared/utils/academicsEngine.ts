@@ -343,3 +343,82 @@ export async function settleSemester(
 export function canGraduate(rules: AcademicsRules, cumulativeGpa: number): boolean {
   return cumulativeGpa >= rules.university.graduationGpa;
 }
+
+// ══ 대학 학점 문턱 — **정본은 이벤트 데이터다** ═══════════════════
+//
+// 🔴 **화면이 학점 문턱을 따로 들면 안 된다.** 2026-09-11 까지 요약 헤더의
+//   GPA 칸은 `toGpa45(avgPercentile)` 를 그렸다 — **누적 학점이 아니라 지금
+//   과목 백분위를 4.5 로 환산한 다른 숫자**였다. 그 칸이 `{#if isUniv}` 의
+//   `{:else}` 안에 또 `{#if isUniv}` 라 한 번도 안 떠서 어긋난 걸 아무도 못 봤다
+//   (ESLint 첫 실행이 잡았다 · `cb327423c`). 살리면서 **엔진 값
+//   (`schoolState.universityGpa`)** 으로 바꿨다.
+//
+// ⚠ 여기 숫자는 `resource/data/master/events/**` 의 `gpa_gte`·`gpa_lte` 와
+//   **같아야 한다.** 어긋나면 화면은 "좋음"인데 이벤트는 "학점이 위험하다"를
+//   띄운다. `academicsGpaBands.test.ts` 가 이벤트 JSON 을 실제로 훑어 대조한다.
+//
+//     2.4  gpa_lte  EVT_UNIV_GPA_DANGER · EVT_UNIV_GRAD_RISK · EVT_UNIV_Y3_GPA_VS_BALL
+//     3.0  gpa_gte  EVT_UNIV_SCHOLARSHIP
+//     3.5  gpa_gte  EVT_UNIV_GPA_GOOD
+//     4.0  gpa_gte  EVT_HID_UNIV_PROFESSOR
+//
+// ⚠ **졸업선(2.0)은 여기 없다.** 그건 `generation_rules.json` 의
+//   `academicsRules.university.graduationGpa` 가 정본이고
+//   (`canGraduate` 가 쓴다) `universityGpaScale()` 로 읽는다.
+export const UNIVERSITY_GPA_BANDS = {
+  /** 이하면 위험 — 이벤트가 `gpa_lte` 로 보는 선 */
+  danger: 2.4,
+  /** 이상이면 장학금 권 */
+  fair: 3.0,
+  /** 이상이면 좋음 */
+  good: 3.5,
+  /** 이상이면 최상 — 히든(교수 제안)이 보는 선 */
+  top: 4.0,
+} as const;
+
+export type GpaBand = "danger" | "normal" | "fair" | "good" | "top";
+
+/**
+ * 누적 학점 → 띠. **화면이 색과 말을 여기서 받는다.**
+ *
+ * ⚠ 첫 학기 전(`semesterGpaHistory` 가 빔)은 여기 오면 안 된다 — 학점이 0 인 게
+ *   아니라 **없는** 것이다. `conditionEvaluator` 의 `gpa_lte` 가 같은 함정을
+ *   이력 길이로 막는다. 부르는 쪽이 먼저 거른다.
+ */
+export function gpaBandOf(gpa: number): GpaBand {
+  if (gpa <= UNIVERSITY_GPA_BANDS.danger) return "danger";
+  if (gpa < UNIVERSITY_GPA_BANDS.fair) return "normal";
+  if (gpa < UNIVERSITY_GPA_BANDS.good) return "fair";
+  if (gpa < UNIVERSITY_GPA_BANDS.top) return "good";
+  return "top";
+}
+
+/** 대학 학점 눈금 — 상한과 졸업선. 규칙 파일이 정본이고 못 읽으면 폴백 */
+const UNIV_SCALE_FALLBACK = { gpaMax: 4.5, graduationGpa: 2 };
+let _univScale = UNIV_SCALE_FALLBACK;
+
+/**
+ * 규칙 파일의 대학 눈금을 주입한다. `primeAcademicsHsRules` 와 같은 자리
+ * (`stores/master`)에서 부른다 — 화면이 **동기로** 읽어야 하기 때문이다
+ * (`loadAcademicsRules` 는 async 라 `$:` 에서 못 쓴다).
+ */
+export function primeAcademicsUnivRules(rulesFile: {
+  academicsRules?: { university?: { gpaMax?: number; graduationGpa?: number } };
+}): void {
+  const u = rulesFile.academicsRules?.university;
+  if (!u) return;
+  _univScale = {
+    gpaMax: u.gpaMax ?? UNIV_SCALE_FALLBACK.gpaMax,
+    graduationGpa: u.graduationGpa ?? UNIV_SCALE_FALLBACK.graduationGpa,
+  };
+}
+
+/** 화면이 학점 눈금을 그릴 때 읽는다. **상수가 아니다** — 규칙 파일이 정본 */
+export function universityGpaScale(): { gpaMax: number; graduationGpa: number } {
+  return _univScale;
+}
+
+/** 검사용 — 주입 전 상태로 되돌린다 */
+export function resetAcademicsUnivRulesForTest(): void {
+  _univScale = UNIV_SCALE_FALLBACK;
+}
