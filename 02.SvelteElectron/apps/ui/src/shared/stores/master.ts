@@ -15,7 +15,7 @@ import { HS_REGIONS } from "../utils/leagueTeams.generated";
 import { buildMarkIndex } from "../utils/teamMark";
 import { primeForeignRules } from "../utils/foreignSlots";
 import { primeCareerScoreRules } from "../utils/universityUtils";
-import { primeAcademicsHsRules } from "../utils/academicsEngine";
+import { primeAcademicsHsRules, primeAcademicsUnivRules } from "../utils/academicsEngine";
 import { primeRosterOpsRules } from "../utils/rosterEngine";
 import { primePitcherRoleRules } from "../utils/pitcherRoleRules";
 import { primeManagerStyleRules } from "../utils/managerStyle";
@@ -1291,6 +1291,9 @@ function createMasterStore() {
           // ⚠ 안 채우면 코드의 폴백이 쓰인다 — 조용히 0이 되지는 않는다
           primeCareerScoreRules(genRules as Parameters<typeof primeCareerScoreRules>[0]);
           primeAcademicsHsRules(genRules as Parameters<typeof primeAcademicsHsRules>[0]);
+          // 대학 학점 눈금(상한·졸업선) — 화면이 동기로 읽는다.
+          // ⚠ 안 실으면 폴백(4.5 / 2.0)이라 조용히 0 이 되지는 않는다
+          primeAcademicsUnivRules(genRules as Parameters<typeof primeAcademicsUnivRules>[0]);
           primeRosterOpsRules(genRules as Parameters<typeof primeRosterOpsRules>[0]);
           // 투수 보직 추천(1.1 A①) — 안 실리면 옛 엔진(OVR 순위)으로 조용히 간다
           primePitcherRoleRules(genRules as Parameters<typeof primePitcherRoleRules>[0]);

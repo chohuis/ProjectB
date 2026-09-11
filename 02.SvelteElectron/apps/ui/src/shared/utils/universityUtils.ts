@@ -84,18 +84,18 @@ export function pctToGrade(pct: number): number {
   return 9;
 }
 
-// ── 석차백분율 → GPA 4.5 환산 ────────────────────────────────────
-export function toGpa45(pct: number): number {
-  if (pct <= 4) return 4.5;
-  if (pct <= 11) return 4.2;
-  if (pct <= 23) return 3.8;
-  if (pct <= 40) return 3.5;
-  if (pct <= 60) return 3.0;
-  if (pct <= 77) return 2.5;
-  if (pct <= 89) return 2.0;
-  if (pct <= 96) return 1.5;
-  return 1.0;
-}
+// 🔴 **`toGpa45`를 지웠다** (2026-09-11).
+//
+//   석차백분율을 4.5 만점으로 환산하던 표다. 부르는 곳은 `AcademicsPage`의
+//   요약 헤더 한 자리뿐이었고 그 자리는 `{#if isUniv}`의 `{:else}` 안에 다시
+//   `{#if isUniv}`라 **한 번도 안 떴다** (ESLint 첫 실행이 잡았다 · `cb327423c`).
+//
+// ⚠ **되살리면 안 된다.** 대학 학점의 정본은 `schoolState.universityGpa`고
+//   그건 `settleSemester`가 학기마다 정산하는 **누적 학점**이다. 이 함수는
+//   **지금 과목 백분위**를 환산한 다른 숫자라, 화면에 그리면 이벤트
+//   (`gpa_gte`·`gpa_lte` 8건)·진로 결정과 **정본이 둘로 갈린다** —
+//   화면은 3.8인데 이벤트는 "학점이 위험하다(≤2.4)"를 띄운다.
+//   화면은 이제 엔진 값을 그린다(`academicsEngine.UNIVERSITY_GPA_BANDS`).
 
 // ── 진로 점수 표 (2026-08-28) ────────────────────────────────────
 //
