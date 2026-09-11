@@ -736,3 +736,68 @@ control(66)·command(64) 축이 여전히 이 프리셋의 정체성이다.
 **5단계는 여기서 닫는다.** 남은 열린 항목(제구형의 "고졸직행" 판정이
 같은 해 대학 진입과 겹칠 때 안 세는 문제)은 위에 정직하게 적었고
 추가로 재지 않는다 — 사용자 확정대로 다음은 포장이다.
+
+---
+
+## 포장 (2026-09-11 · 데모 날짜 잠금 없음 — 사용자 확정 `e56717107`)
+
+**절차.** electron 0 확인 → 회귀 전량 재확인(위와 동일, 전부 초록) →
+`npm run gen:manifest`(이벤트 749종 확인) → `npm run pack` → `node
+scripts/dist-steam.cjs`(개선판, 아래) → SHA256 → `npm run smoke:dist`.
+
+**포장 검증 개선 (`514f9c637`).** 기존 `dist-steam.cjs` ④ 검사는
+asar 밖(unpacked) 폴더만 봐서, `dist/ui/**`(vite `publicDir`가
+`resource/`를 통째로 복사한 사본, asar 안에 그대로 남는다)로 새는
+`logs`·`seeds`·`master.db` 사본을 못 잡았다 — 실제로 예전에 이렇게
+샜다. `@electron/asar`로 asar 목록을 대조해 `dist/ui/{logs,
+data/staging,data/balance,data/master/entities/players,data/seeds,
+master.db}` 부재를 추가로 확인하게 고쳤다.
+
+**결과 — 전부 초록.**
+
+| 항목 | 결과 |
+|---|---|
+| 실행파일 | `OnePitch.exe` |
+| 네이티브 `.node` | asar 밖에 정확히 1개 |
+| `_manifest.json`(이벤트 749종) | asar 밖에 있음 |
+| 새는 폴더(asar 밖 6종·asar 안 dist/ui 사본 6종) | 전부 없음 |
+| require 상대경로 대조 | 7건 전부 해소 |
+| 파일 수 | **1,116**(v1.0.0은 966) |
+| 용량 | **355.3 MB**(v1.0.0은 354.2MB) |
+| exe SHA256 | `7AD79E85A7787F0CFB5278E04B9BE729448CD0A71BBEA665973BDE16B408478B` |
+
+파일 수·용량이 v1.0.0보다 소폭 늘었다 — 이벤트가 늘고(749종) 이번
+5단계에서 문서·로그가 늘어난 만큼은 제외 목록이 걸러낸다(위 표에서
+확인).
+
+### smoke — 새 게임 → 주 진행
+
+`npm run smoke:dist`(자동 스크립트)가 **1주차에서 멈췄다.** 원인을
+직접 추적했다 — 게임 자체는 멀쩡하다:
+
+- 새 게임 생성(이름 입력 → 팀 선택 → 확인 → 시작)까지는 스크립트가
+  전부 통과했다.
+- 시즌 시작 시점에 **선택 대기 소식이 2건**(코치의 지나가는 칭찬 ·
+  2026시즌 보직) 있었고, `advanceWeek`의 설계대로 **미결 선택지가
+  있으면 주 진행을 막는다** — 이건 의도된 동작이다.
+- `smoke:dist`의 범용 자동 진행 로직(`drive.mjs`의 `advance --auto`)이
+  이 2건을 순서대로 처리하다 막혔다. **손으로 같은 절차**(항목1 열기 →
+  `button.opt` 고르기 → 항목2 열기 → `button.opt` 고르기 → 확인 단계
+  `.confirm .btn.go` 누르기 → `.go` 눌러 주 진행)를 그대로 재현하니
+  **1주차 → 2주차로 정상 진행됐다.** `.item.pending`·`button.opt`·
+  `.confirm .btn.go` 클래스는 실제 DOM과 전부 일치했다 — 선택지가
+  **둘 겹칠 때** 범용 드라이버의 상태기계가 막히는 것으로 보인다.
+- 이 UI(`RoleChoicePanel.svelte`)는 이번 5단계 변경과 무관하다(안
+  건드렸다) — **드라이버 스크립트의 기존 한계**이지 이번 변경이 낸
+  결함이 아니다.
+
+**결론.** 게임 자체는 정상이다(수동 재현으로 확인). `scripts/drive.mjs`
+의 `advance --auto`가 **한 주에 선택 대기가 둘 이상 겹칠 때** 막히는
+한계가 있다 — 별도로 고칠 항목으로 남긴다(포장을 막을 사안은 아니다).
+
+### 회귀·도장 (포장 시점)
+
+- 회귀 전량 — 포장 직전 재확인: vitest 2702 · cargo 365 · test:v3
+  29단계 · check:roundtrip · check:measurerepro(2회 동일) · tsc 0
+- 네이티브 도장 `d36f56d91d1f`(변경 없음)
+- 포장물: `release/win-unpacked/`(1,116파일 · 355.3MB)
