@@ -87,8 +87,10 @@ export async function continueCurrentStage(): Promise<boolean> {
   // 단 **학점이 모자라면 졸업을 못 한다** — 그때는 한 해 더 다닌다(Phase 9-C).
   // 유급 자체는 `applySemesterResult`가 `universityWeek`을 되돌려 내므로
   // 여기서는 "졸업 자격이 없으면 최종 학년이어도 계속할 수 있다"만 본다.
-  if (p.careerStage === "university"
-      && isUniversityFinalYear(p.grade, g.schoolState.universityWeek)) {
+  if (
+    p.careerStage === "university" &&
+    isUniversityFinalYear(p.grade, g.schoolState.universityWeek)
+  ) {
     const rules = await loadAcademicsRules();
     const gpa = g.schoolState.universityGpa ?? 0;
     if (canGraduate(rules, gpa)) {
@@ -105,7 +107,7 @@ export async function continueCurrentStage(): Promise<boolean> {
         fromLeagueId: "LEAGUE_UNIVERSITY",
         detail: `졸업 · ${g.schoolState.universityMajor} · 학점 ${gpa.toFixed(2)} · 대안 경로 ${path}`,
       });
-      return false;          // 졸업 — 진로를 정해야 한다
+      return false; // 졸업 — 진로를 정해야 한다
     }
     // 학점 미달 — 한 해 더 다닌다. **여기서 반환하면 안 된다**:
     // 아래 해소 블록을 건너뛰면 `careerChoice` pending이 남아 같은 주가
@@ -137,8 +139,11 @@ export async function chooseDraft(): Promise<void> {
 
   const contractRules = (await loadRosterRules()).draftRules?.contract;
   if (!contractRules) throw new Error("[careerDecision] draftRules.contract 없음");
-  const { salary, durationYears, signingBonus } =
-    calcKblDraftContract(pickNo, contractRules, teamIndex);
+  const { salary, durationYears, signingBonus } = calcKblDraftContract(
+    pickNo,
+    contractRules,
+    teamIndex,
+  );
 
   seasonStore.resolvePendingAction("careerChoice");
   seasonStore.pushPendingAction({
@@ -146,9 +151,13 @@ export async function chooseDraft(): Promise<void> {
     teamId,
     leagueId: "LEAGUE_KBL",
     round: results?.draftRound ?? 10,
-    pickNo, salary, durationYears, signingBonus,
+    pickNo,
+    salary,
+    durationYears,
+    signingBonus,
     altUniversityTeamId: canApplyToUniversity(g.protagonist.careerStage)
-      ? results?.universityPassed?.[0] : undefined,
+      ? results?.universityPassed?.[0]
+      : undefined,
     altIndependentTeamId: results?.independentPassed?.[0],
   });
   // clearCareerResults는 계약 수락/거절이 처리한다
@@ -162,14 +171,16 @@ export async function chooseSchoolOrIndependent(
 ): Promise<void> {
   // 🔴 **해외는 팀에서 리그를 읽는다.** ABL 2군인지 JBL 2군인지는 그 팀이 안다 —
   //   여기서 하나로 정하면 둘 중 하나가 잘못 들어간다.
-  const leagueId = kind === "university" ? "LEAGUE_UNIVERSITY"
-    : kind === "independent" ? "LEAGUE_INDEPENDENT"
-    : (get(masterStore).teams.find((t) => t.id === teamId)?.leagueId ?? "LEAGUE_ABL_FARM");
+  const leagueId =
+    kind === "university"
+      ? "LEAGUE_UNIVERSITY"
+      : kind === "independent"
+        ? "LEAGUE_INDEPENDENT"
+        : (get(masterStore).teams.find((t) => t.id === teamId)?.leagueId ?? "LEAGUE_ABL_FARM");
   // 🔴 **무대는 리그가 정한다.** `overseas`는 진로 선택의 이름이고,
   //   실제 `careerStage`는 `pro_abl`/`pro_jbl`이다 — 그 둘은 이미 있다.
-  const stage: CareerStage = kind === "overseas"
-    ? (leagueId.startsWith("LEAGUE_JBL") ? "pro_jbl" : "pro_abl")
-    : kind;
+  const stage: CareerStage =
+    kind === "overseas" ? (leagueId.startsWith("LEAGUE_JBL") ? "pro_jbl" : "pro_abl") : kind;
   // 🔴 대학이면 진학 주차를 같이 넘긴다 — 학년 계수기의 원점이다.
   //   `applyDraftDecision`이 없으면 던진다(store 쪽 주석에 근거가 있다).
   gameStore.applyDraftDecision({ stage, leagueId, teamId, enrollWeekInYear: enrollWeek() });
@@ -185,12 +196,14 @@ export async function chooseSchoolOrIndependent(
     //  캐스팅으로 덮으면 협상 화면이 undefined를 읽는다)
     seasonStore.pushPendingAction({
       type: "salaryNegotiation",
-      teamId, leagueId,
+      teamId,
+      leagueId,
       // ⚠ **해외 2군은 조건이 다르다.** 독립은 1년 단기지만 해외는 육성 계약이라
       //   여러 해를 준다 — 1년으로 두면 매년 재계약을 물어 흐름이 끊긴다.
-      offeredSalary: kind === "overseas"
-        ? Math.max(2000, Math.round((ovr - 40) * 140))
-        : Math.max(800, Math.round((ovr - 40) * 60)),
+      offeredSalary:
+        kind === "overseas"
+          ? Math.max(2000, Math.round((ovr - 40) * 140))
+          : Math.max(800, Math.round((ovr - 40) * 60)),
       durationYears: kind === "overseas" ? 3 : 1,
       minDurationYears: kind === "overseas" ? 2 : 1,
       maxDurationYears: kind === "overseas" ? 4 : 1,
@@ -221,14 +234,18 @@ export async function rejectDraftOffer(
   // 대학 대안은 고교생만 — 대학 재학생이 미지명 시 여기로 오면 두 번 입학이 된다
   if (action.altUniversityTeamId && canApplyToUniversity(p.careerStage)) {
     gameStore.applyDraftDecision({
-      stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId: action.altUniversityTeamId,
+      stage: "university",
+      leagueId: "LEAGUE_UNIVERSITY",
+      teamId: action.altUniversityTeamId,
       enrollWeekInYear: enrollWeek(),
     });
     gameStore.setCareerFinalChoice("university");
     went = "university";
   } else if (action.altIndependentTeamId) {
     gameStore.applyDraftDecision({
-      stage: "independent", leagueId: "LEAGUE_INDEPENDENT", teamId: action.altIndependentTeamId,
+      stage: "independent",
+      leagueId: "LEAGUE_INDEPENDENT",
+      teamId: action.altIndependentTeamId,
     });
     gameStore.setCareerFinalChoice("independent");
     const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
@@ -237,8 +254,11 @@ export async function rejectDraftOffer(
       teamId: action.altIndependentTeamId,
       leagueId: "LEAGUE_INDEPENDENT",
       offeredSalary: Math.max(800, Math.round((ovr - 40) * 60)),
-      durationYears: 1, minDurationYears: 1, maxDurationYears: 1,
-      signingBonus: 0, context: "initial",
+      durationYears: 1,
+      minDurationYears: 1,
+      maxDurationYears: 1,
+      signingBonus: 0,
+      context: "initial",
     });
     went = "independent";
   } else {
@@ -263,21 +283,27 @@ export async function rejectDraftOffer(
  * 이걸 컴포넌트에 두면 "계약은 됐는데 일정이 고교 그대로"가 조용히 난다.
  */
 export async function acceptDraftOffer(action: {
-  teamId: string; leagueId: string;
-  salary: number; durationYears: number; signingBonus: number;
+  teamId: string;
+  leagueId: string;
+  salary: number;
+  durationYears: number;
+  signingBonus: number;
 }): Promise<void> {
-  gameStore.signContract({
-    teamId: action.teamId,
-    leagueId: action.leagueId,
-    salary: action.salary,
-    durationYears: action.durationYears,
-    remainingYears: action.durationYears,
-    signingBonus: action.signingBonus,
-    teamOptionYears: 0,
-    playerOptionYears: 0,
-    noTrade: false,
-    status: "active" as const,
-  }, { year: get(seasonStore).seasonYear, kind: "new" });
+  gameStore.signContract(
+    {
+      teamId: action.teamId,
+      leagueId: action.leagueId,
+      salary: action.salary,
+      durationYears: action.durationYears,
+      remainingYears: action.durationYears,
+      signingBonus: action.signingBonus,
+      teamOptionYears: 0,
+      playerOptionYears: 0,
+      noTrade: false,
+      status: "active" as const,
+    },
+    { year: get(seasonStore).seasonYear, kind: "new" },
+  );
 
   // ⚠ **다음 시즌을 열기 전에 이번 시즌의 세계를 닫아야 한다.**
   // `openProSeason`은 현재 연도 +1로 새 시즌을 직접 여는데, 그러면

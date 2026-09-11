@@ -79,7 +79,10 @@ describe("② 도장을 보는 자리 — 계측이 여기를 지난다", () => 
 
 describe("③ 해시 규칙 — 임시 폴더로 확인한다 (진짜 소스는 안 건드린다)", () => {
   /** 파일 몇 개를 만들고 해시를 받아 온다 */
-  const withFixture = <T>(files: Record<string, string>, fn: (dir: string, paths: string[]) => T): T => {
+  const withFixture = <T>(
+    files: Record<string, string>,
+    fn: (dir: string, paths: string[]) => T,
+  ): T => {
     const dir = mkdtempSync(join(tmpdir(), "native-stamp-"));
     try {
       const paths = Object.entries(files).map(([name, body]) => {
@@ -94,20 +97,26 @@ describe("③ 해시 규칙 — 임시 폴더로 확인한다 (진짜 소스는 
   };
 
   it("같은 내용·같은 이름이면 같은 해시다", () => {
-    const a = withFixture({ "a.rs": "fn a() {}", "b.rs": "fn b() {}" }, (d, p) => stampMod.hashFiles(p, d));
-    const b = withFixture({ "a.rs": "fn a() {}", "b.rs": "fn b() {}" }, (d, p) => stampMod.hashFiles(p, d));
+    const a = withFixture({ "a.rs": "fn a() {}", "b.rs": "fn b() {}" }, (d, p) =>
+      stampMod.hashFiles(p, d),
+    );
+    const b = withFixture({ "a.rs": "fn a() {}", "b.rs": "fn b() {}" }, (d, p) =>
+      stampMod.hashFiles(p, d),
+    );
     expect(a).toBe(b);
   });
 
   it("목록 순서가 달라도 같은 해시다 — 파일 시스템 순서에 안 기댄다", () => {
-    const [fwd, rev] = withFixture({ "a.rs": "x", "b.rs": "y" }, (d, p) =>
-      [stampMod.hashFiles(p, d), stampMod.hashFiles([...p].reverse(), d)]);
+    const [fwd, rev] = withFixture({ "a.rs": "x", "b.rs": "y" }, (d, p) => [
+      stampMod.hashFiles(p, d),
+      stampMod.hashFiles([...p].reverse(), d),
+    ]);
     expect(fwd).toBe(rev);
   });
 
   it("한 글자만 바뀌어도 해시가 달라진다 — 이게 잡으려던 것이다", () => {
     const before = withFixture({ "a.rs": "let x = 1;" }, (d, p) => stampMod.hashFiles(p, d));
-    const after  = withFixture({ "a.rs": "let x = 2;" }, (d, p) => stampMod.hashFiles(p, d));
+    const after = withFixture({ "a.rs": "let x = 2;" }, (d, p) => stampMod.hashFiles(p, d));
     expect(after).not.toBe(before);
   });
 
@@ -177,6 +186,9 @@ describe("④ 지금 이 작업 폴더", () => {
   it("탈출구 이름이 안내 문구와 같다", () => {
     expect(stampMod.ESCAPE_ENV).toBe("PB_ALLOW_STALE_NATIVE");
     const headless = readFileSync(resolve(ROOT, "scripts/perf/headless.cjs"), "utf8");
-    expect(headless.includes(stampMod.ESCAPE_ENV), "헤드리스 주석이 탈출구를 다르게 적어 뒀다").toBe(true);
+    expect(
+      headless.includes(stampMod.ESCAPE_ENV),
+      "헤드리스 주석이 탈출구를 다르게 적어 뒀다",
+    ).toBe(true);
   });
 });

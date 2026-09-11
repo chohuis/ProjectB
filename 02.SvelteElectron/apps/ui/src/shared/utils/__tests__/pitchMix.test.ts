@@ -25,21 +25,31 @@ describe("구종별 배선", () => {
 
   it("① 구조체가 있다", () => {
     expect(ty.includes("pub struct PitchMixLine {")).toBe(true);
-    expect(ty.includes("pub pitch_mix: std::collections::HashMap<String, PitchMixLine>,")).toBe(true);
+    expect(ty.includes("pub pitch_mix: std::collections::HashMap<String, PitchMixLine>,")).toBe(
+      true,
+    );
   });
 
   it("🔴 ② 매 투구에 센다", () => {
-    expect(me.includes("let key = format!(\"{:?}\", decision.pitch_type).to_lowercase();")).toBe(true);
+    expect(me.includes('let key = format!("{:?}", decision.pitch_type).to_lowercase();')).toBe(
+      true,
+    );
     expect(me.includes("                    m.pc += 1;")).toBe(true);
   });
 
   it("삼진과 안타를 구종에 단다 — 결정구가 뭔지 보인다", () => {
-    expect(me.includes("                        | PitchResultCode::StrikeoutLook => m.k += 1,")).toBe(true);
+    expect(
+      me.includes("                        | PitchResultCode::StrikeoutLook => m.k += 1,"),
+    ).toBe(true);
     expect(me.includes("                            => m.h += 1,")).toBe(true);
   });
 
   it("③ 결과 줄에 실린다", () => {
-    expect(st.includes("        pitch_mix: std::collections::HashMap<String, crate::types::PitchMixLine>,")).toBe(true);
+    expect(
+      st.includes(
+        "        pitch_mix: std::collections::HashMap<String, crate::types::PitchMixLine>,",
+      ),
+    ).toBe(true);
     expect(me.includes("                pitch_mix: l.pitch_mix.clone(),")).toBe(true);
   });
 
@@ -98,7 +108,9 @@ describe("화면", () => {
   });
 
   it("타입에 칸이 있다", () => {
-    expect(save.includes("  pitchMix?: Record<string, { pc: number; k: number; h: number }>;")).toBe(true);
+    expect(
+      save.includes("  pitchMix?: Record<string, { pc: number; k: number; h: number }>;"),
+    ).toBe(true);
   });
 
   it("표에 주무기가 보인다", () => {
@@ -108,11 +120,13 @@ describe("화면", () => {
 
   it("구종 이름이 엔진 키와 짝이다", () => {
     // 엔진은 소문자 키를 쓴다 — 어긋나면 키가 그대로 뜬다
-    expect(status.includes("fastball: \"직구\", sinker: \"싱커\", cutter: \"커터\", slider: \"슬라\",")).toBe(true);
+    expect(
+      status.includes('fastball: "직구", sinker: "싱커", cutter: "커터", slider: "슬라",'),
+    ).toBe(true);
   });
 
   it("구종이 없으면 —다", () => {
     // 배경 리그 경기가 그렇다
-    expect(status.includes("    if (!mix) return \"—\";")).toBe(true);
+    expect(status.includes('    if (!mix) return "—";')).toBe(true);
   });
 });

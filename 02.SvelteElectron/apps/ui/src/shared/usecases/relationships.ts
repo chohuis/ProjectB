@@ -79,7 +79,10 @@ export interface RelationDelta {
   kind?: RelationKind;
 }
 
-interface DeltaResult { deltas: RelationDelta[]; changed: number }
+interface DeltaResult {
+  deltas: RelationDelta[];
+  changed: number;
+}
 
 /** Rust 델타에 kind를 붙인다 (메시지 문구용) */
 function withKind(deltas: RelationDelta[], rows: Relationship[]): RelationDelta[] {
@@ -127,11 +130,7 @@ function toEngineRows(rows: Relationship[], specialtyOf: Map<string, string>) {
 }
 
 /** Rust 델타를 기존 행에 얹어 저장 형태로 만든다 */
-function applyDeltas(
-  rows: Relationship[],
-  deltas: RelationDelta[],
-  week: number,
-): Relationship[] {
+function applyDeltas(rows: Relationship[], deltas: RelationDelta[], week: number): Relationship[] {
   const byId = new Map(deltas.map((d) => [d.personId, d]));
   const out: Relationship[] = [];
   for (const r of rows) {
@@ -185,16 +184,15 @@ export async function syncTeamRelationships(p: {
 
   if (unknown.length > 0) {
     const rules = await loadRelationRules();
-    const res = await callEngine<{ rows: Array<{ personId: string; kind: string; value: number }> }>(
-      "initRelationsNative",
-      {
-        worldSeed: p.worldSeed >>> 0,
-        rules,
-        people: unknown,
-        draftRound: p.draftRound ?? 0,
-        draftedContext: p.draftedContext ?? false,
-      },
-    );
+    const res = await callEngine<{
+      rows: Array<{ personId: string; kind: string; value: number }>;
+    }>("initRelationsNative", {
+      worldSeed: p.worldSeed >>> 0,
+      rules,
+      people: unknown,
+      draftRound: p.draftRound ?? 0,
+      draftedContext: p.draftedContext ?? false,
+    });
     for (const row of res?.rows ?? []) {
       const rel: Relationship = {
         personId: row.personId,
@@ -216,7 +214,12 @@ export async function syncTeamRelationships(p: {
   for (const x of reunitedSrc) {
     const prev = byId.get(x.personId)!;
     // 값은 손대지 않는다 — 감쇠는 이동·오프시즌에 이미 적용됐다
-    const rel: Relationship = { ...prev, contact: "together", lastTeam: p.teamId, updatedWeek: p.week };
+    const rel: Relationship = {
+      ...prev,
+      contact: "together",
+      lastTeam: p.teamId,
+      updatedWeek: p.week,
+    };
     writes.push(rel);
     reunited.push(rel);
   }
@@ -250,16 +253,15 @@ export async function applyWeeklyRelations(p: {
   const knownIds = new Set(rows.map((r) => r.personId));
   const newRivals = facedRivals.filter((id) => !knownIds.has(id));
   if (newRivals.length > 0) {
-    const res = await callEngine<{ rows: Array<{ personId: string; kind: string; value: number }> }>(
-      "initRelationsNative",
-      {
-        worldSeed: p.worldSeed >>> 0,
-        rules,
-        people: newRivals.map((id) => ({ personId: id, kind: "rival" })),
-        draftRound: 0,
-        draftedContext: false,
-      },
-    );
+    const res = await callEngine<{
+      rows: Array<{ personId: string; kind: string; value: number }>;
+    }>("initRelationsNative", {
+      worldSeed: p.worldSeed >>> 0,
+      rules,
+      people: newRivals.map((id) => ({ personId: id, kind: "rival" })),
+      draftRound: 0,
+      draftedContext: false,
+    });
     for (const r of res?.rows ?? []) {
       const rel: Relationship = {
         personId: r.personId,
@@ -274,7 +276,10 @@ export async function applyWeeklyRelations(p: {
       };
       rows.push(rel);
     }
-    await slotRepo.upsertRelationships(p.slotId, rows.filter((r) => newRivals.includes(r.personId)));
+    await slotRepo.upsertRelationships(
+      p.slotId,
+      rows.filter((r) => newRivals.includes(r.personId)),
+    );
   }
 
   if (rows.length === 0) return [];
@@ -399,7 +404,11 @@ export async function reconcileRelationships(p: {
   );
   let leftBehind = 0;
   for (const from of staleTeams) {
-    const { decayed } = await onProtagonistTeamChange({ slotId: p.slotId, fromTeamId: from, week: p.week });
+    const { decayed } = await onProtagonistTeamChange({
+      slotId: p.slotId,
+      fromTeamId: from,
+      week: p.week,
+    });
     leftBehind += decayed;
   }
 
@@ -432,9 +441,12 @@ export async function addRelationMemory(
   const merged = [...row.memories, memory];
   if (merged.length > MAX_MEMORIES) {
     merged.sort((a, b) =>
-      a.intensity !== b.intensity ? a.intensity - b.intensity
-        : a.season !== b.season ? a.season - b.season
-        : a.week - b.week);
+      a.intensity !== b.intensity
+        ? a.intensity - b.intensity
+        : a.season !== b.season
+          ? a.season - b.season
+          : a.week - b.week,
+    );
     merged.splice(0, merged.length - MAX_MEMORIES);
   }
   await slotRepo.upsertRelationships(slotId, [{ ...row, memories: merged }]);
@@ -467,8 +479,12 @@ export interface RelationEffects {
 }
 
 const NEUTRAL_EFFECTS: RelationEffects = {
-  roleOvrBias: 0, trainingBonus: 0, contractBonus: 0,
-  managerLabel: "중립", coachLabel: "중립", ownerLabel: "중립",
+  roleOvrBias: 0,
+  trainingBonus: 0,
+  contractBonus: 0,
+  managerLabel: "중립",
+  coachLabel: "중립",
+  ownerLabel: "중립",
 };
 
 /**
@@ -504,14 +520,18 @@ export async function relationEffects(p: {
           (e.details as { coach?: { specialty?: string } } | undefined)?.coach?.specialty,
         ]),
       );
-      coachValue = rows.find(
-        (r) => r.kind === "coach" && staffById.get(r.personId) === p.coachSpecialty,
-      )?.value ?? 0;
+      coachValue =
+        rows.find((r) => r.kind === "coach" && staffById.get(r.personId) === p.coachSpecialty)
+          ?.value ?? 0;
     }
 
     const res = await callEngine<{
-      roleOvrBias: number; trainingBonus: number; contractBonus: number;
-      managerLabel: string; coachLabel: string; ownerLabel: string;
+      roleOvrBias: number;
+      trainingBonus: number;
+      contractBonus: number;
+      managerLabel: string;
+      coachLabel: string;
+      ownerLabel: string;
     }>("relationEffectsNative", { rules, managerValue, coachValue, ownerValue });
     return res ?? NEUTRAL_EFFECTS;
   } catch (e) {

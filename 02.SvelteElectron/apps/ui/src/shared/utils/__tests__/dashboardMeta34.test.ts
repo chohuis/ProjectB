@@ -2,16 +2,34 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  barsCopy, cardsCopy, parseDashboardLabels, tableCopy, tableLabelBlock,
+  barsCopy,
+  cardsCopy,
+  parseDashboardLabels,
+  tableCopy,
+  tableLabelBlock,
 } from "../dashboardCopy";
 import { buildBars, buildCards, buildRankList, buildTableView } from "../dashboardView";
 import {
-  bracketTableMeta, cardsMeta, coachReportTableMeta, faCompTableMeta, faMarketTableMeta,
-  examBarsMeta, militaryAnnualTableMeta, militaryRecordTimelineMeta, pctSub, rankListMeta,
-  rowsTableMeta, semesterBarsMeta, teamMoodTableMeta, timelineMeta,
+  bracketTableMeta,
+  cardsMeta,
+  coachReportTableMeta,
+  faCompTableMeta,
+  faMarketTableMeta,
+  examBarsMeta,
+  militaryAnnualTableMeta,
+  militaryRecordTimelineMeta,
+  pctSub,
+  rankListMeta,
+  rowsTableMeta,
+  semesterBarsMeta,
+  teamMoodTableMeta,
+  timelineMeta,
 } from "../dashboardMeta";
 import {
-  buildOpenMessage, buildMyRoundMessage, buildChampionMessage, buildRoundProgressMessage,
+  buildOpenMessage,
+  buildMyRoundMessage,
+  buildChampionMessage,
+  buildRoundProgressMessage,
 } from "../../usecases/weekPhases/tournamentNews";
 import type { RankListMetadata, TableMetadata } from "../../types/main";
 
@@ -42,8 +60,13 @@ const SRC_ROLL = resolve(__dirname, "../../usecases/seasonRollover.ts");
 const SRC_MARKET = resolve(__dirname, "../../usecases/weekPhases/market.ts");
 const SRC_WEEK = resolve(__dirname, "../../usecases/advanceWeek.ts");
 
-const bracketRow = (round: string, home: string, away: string, week: number, mine = false) =>
-  ({ round, homeName: home, awayName: away, date: `W${week}`, mine });
+const bracketRow = (round: string, home: string, away: string, week: number, mine = false) => ({
+  round,
+  homeName: home,
+  awayName: away,
+  date: `W${week}`,
+  mine,
+});
 
 describe("묶음 3 — 대진·순위", () => {
   it("대진 — 행이 경기 한 짝이고 내 팀만 강조가 붙는다", () => {
@@ -143,22 +166,42 @@ describe("묶음 4 — 타임라인·FA 보상", () => {
 // ── 소식을 실제로 만들어 본다 (순수 함수라 화면이 필요 없다) ────
 describe("대회 소식 넷", () => {
   const def = {
-    id: "TOUR_HS_ROSE", name: "장미기", flower: "장미",
-    leagueId: "LEAGUE_HIGHSCHOOL", startWeek: 18, endWeek: 22,
+    id: "TOUR_HS_ROSE",
+    name: "장미기",
+    flower: "장미",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    startWeek: 18,
+    endWeek: 22,
   } as unknown as Parameters<typeof buildOpenMessage>[0];
 
   const match = (
-    id: string, round: number, slot: number,
-    home: string | null, away: string | null, winner: string | null, week = 20,
+    id: string,
+    round: number,
+    slot: number,
+    home: string | null,
+    away: string | null,
+    winner: string | null,
+    week = 20,
   ) => ({
-    id, round, slot, week, gameDate: `2026-05-${10 + week}`,
-    homeTeamId: home, awayTeamId: away, isBye: false, winnerTeamId: winner,
+    id,
+    round,
+    slot,
+    week,
+    gameDate: `2026-05-${10 + week}`,
+    homeTeamId: home,
+    awayTeamId: away,
+    isBye: false,
+    winnerTeamId: winner,
     isProtagonistGame: false,
   });
 
   const bracket = {
-    tournamentId: def.id, leagueId: def.leagueId, seasonYear: 2026,
-    bracketSize: 4, totalRounds: 2, byeCount: 0,
+    tournamentId: def.id,
+    leagueId: def.leagueId,
+    seasonYear: 2026,
+    bracketSize: 4,
+    totalRounds: 2,
+    byeCount: 0,
     matches: [
       match("m1", 1, 0, "TEAM_A", "TEAM_B", "TEAM_A"),
       match("m2", 1, 1, "TEAM_C", "TEAM_D", "TEAM_C"),
@@ -170,8 +213,15 @@ describe("대회 소식 넷", () => {
 
   it("개막 — 대진이 있으면 1라운드가 표로 실리고 본문은 그대로다", () => {
     const msg = buildOpenMessage(
-      def, ["TEAM_A", "TEAM_B", "TEAM_C", "TEAM_D"], "TEAM_B", "LEAGUE_HIGHSCHOOL",
-      18, 2026, bracket, tName);
+      def,
+      ["TEAM_A", "TEAM_B", "TEAM_C", "TEAM_D"],
+      "TEAM_B",
+      "LEAGUE_HIGHSCHOOL",
+      18,
+      2026,
+      bracket,
+      tName,
+    );
     const md = msg.metadata as TableMetadata;
     expect(md.kind).toBe("tourOpen");
     expect(md.rows).toHaveLength(2);
@@ -184,7 +234,15 @@ describe("대회 소식 넷", () => {
 
   it("개막 — 대진이 없으면(조별예선) metadata 를 안 싣는다", () => {
     const msg = buildOpenMessage(
-      def, ["TEAM_A"], "TEAM_A", "LEAGUE_HIGHSCHOOL", 18, 2026, null, tName);
+      def,
+      ["TEAM_A"],
+      "TEAM_A",
+      "LEAGUE_HIGHSCHOOL",
+      18,
+      2026,
+      null,
+      tName,
+    );
     expect(msg.metadata).toBeUndefined();
     expect(msg.body.length > 0).toBe(true);
   });
@@ -206,10 +264,26 @@ describe("대회 소식 넷", () => {
 
   it("개막 — 내 무대면 출전 여부를 그대로 알린다", () => {
     const inn = buildOpenMessage(
-      def, ["TEAM_A"], "TEAM_A", "LEAGUE_HIGHSCHOOL", 18, 2026, null, tName);
+      def,
+      ["TEAM_A"],
+      "TEAM_A",
+      "LEAGUE_HIGHSCHOOL",
+      18,
+      2026,
+      null,
+      tName,
+    );
     expect(inn.body).toContain("우리 팀이 출전 명단에 들었다.");
     const out = buildOpenMessage(
-      def, ["TEAM_A"], "TEAM_Z", "LEAGUE_HIGHSCHOOL", 18, 2026, null, tName);
+      def,
+      ["TEAM_A"],
+      "TEAM_Z",
+      "LEAGUE_HIGHSCHOOL",
+      18,
+      2026,
+      null,
+      tName,
+    );
     expect(out.body).toContain("우리 팀은 이번 대회 출전권을 얻지 못했다.");
   });
 
@@ -314,8 +388,11 @@ describe("배선과 본문", () => {
     const src = read(SRC_WEEK);
     const at = src.indexOf("snapshotDueAt(nextWeekNum)");
     expect(at > 0).toBe(true);
-    expect(src.slice(at, at + 400)
-      .includes("captureStandingsSnapshot(key, get(gameStore).protagonist.leagueId)")).toBe(true);
+    expect(
+      src
+        .slice(at, at + 400)
+        .includes("captureStandingsSnapshot(key, get(gameStore).protagonist.leagueId)"),
+    ).toBe(true);
   });
 });
 
@@ -370,15 +447,15 @@ describe("B-35 새 키", () => {
     const copy = tableCopy(labels, "timeline.militaryAnnual");
     const view = buildTableView(md, copy);
     expect(view.columns.map((c) => c.key)).toEqual(["kind", "count", "names"]);
-    expect(view.rows[0].cells[0].text, "구분이 키로 그려지면 안 된다")
-      .toBe(copy.kindLabel.sports);
+    expect(view.rows[0].cells[0].text, "구분이 키로 그려지면 안 된다").toBe(copy.kindLabel.sports);
   });
 
   it("FA 마감 — 미계약 0명이면 줄이 없다", () => {
     const md = faMarketTableMeta({ total: 12, moved: 5, stayed: 7, unsigned: 0 });
     expect(md.rows.map((r) => r.item)).toEqual(["total", "moved", "stayed"]);
-    expect(faMarketTableMeta({ total: 12, moved: 5, stayed: 6, unsigned: 1 })
-      .rows.map((r) => r.item)).toEqual(["total", "moved", "stayed", "unsigned"]);
+    expect(
+      faMarketTableMeta({ total: 12, moved: 5, stayed: 6, unsigned: 1 }).rows.map((r) => r.item),
+    ).toEqual(["total", "moved", "stayed", "unsigned"]);
   });
 
   it("코치 리포트 — 지표 이름을 안 싣는다", () => {
@@ -413,7 +490,8 @@ describe("B-35 새 키", () => {
   it("카드 — 문안에 없는 값은 폴백이다", () => {
     const view = buildCards(
       cardsMeta("cards.showcase", [{ key: "route", value: "club_pick" }]),
-      cardsCopy(labels, "cards.showcase"));
+      cardsCopy(labels, "cards.showcase"),
+    );
     expect(view.cards[0].value).toBe(labels!.cards.showcase.routeFallback);
   });
 
@@ -441,15 +519,15 @@ describe("B-35 새 키", () => {
 describe("§0.6 다섯", () => {
   it("시험 — 고교는 과목 백분위, 대학은 학점이고 눈금이 다르다", () => {
     const hs = examBarsMeta({
-      kor: { percentile: 13 }, math: { percentile: 29 },
+      kor: { percentile: 13 },
+      math: { percentile: 29 },
     });
     expect(hs.kind).toBe("bars.exam");
     expect(hs.bars.map((b) => b.key)).toEqual(["kor", "math"]);
     // 과목 이름을 안 싣는다 — 문안이 붙인다
     expect(hs.bars[0].label).toBeUndefined();
     const hsView = buildBars(hs, barsCopy(labels, "bars.exam"));
-    expect(hsView.bars[0].label).toBe(
-      (labels!.bars.exam.subjects as Record<string, string>).kor);
+    expect(hsView.bars[0].label).toBe((labels!.bars.exam.subjects as Record<string, string>).kor);
     expect(hsView.bars[0].pct, "0~100 눈금이다").toBe(13);
 
     const uni = semesterBarsMeta(3.4, 3.12);
@@ -461,7 +539,8 @@ describe("§0.6 다섯", () => {
 
   it("군 경력 — 성과만 시간 순이다", () => {
     const md = militaryRecordTimelineMeta([
-      { week: 40, note: "혹한기 3등급" }, { week: 12, note: "사격 2등급" },
+      { week: 40, note: "혹한기 3등급" },
+      { week: 12, note: "사격 2등급" },
     ]);
     expect(md.kind).toBe("timeline.milRecord");
     expect(md.entries.map((e) => e.when)).toEqual(["W12", "W40"]);
@@ -474,8 +553,9 @@ describe("§0.6 다섯", () => {
     const copy = cardsCopy(labels, "cards.seasonBrief");
     expect(buildCards(md, copy).note).toContain(labels!.roleAs.RP);
     // 낱말을 실으면 굴절표를 못 찾아 그 줄이 통째로 사라진다
-    expect(buildCards(cardsMeta("cards.seasonBrief",
-      [{ key: "role", value: "중계" }]), copy).note).toBe("");
+    expect(
+      buildCards(cardsMeta("cards.seasonBrief", [{ key: "role", value: "중계" }]), copy).note,
+    ).toBe("");
   });
 
   it("다섯 자리가 배선돼 있다", () => {

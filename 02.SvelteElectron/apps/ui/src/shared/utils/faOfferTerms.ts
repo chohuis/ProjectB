@@ -46,10 +46,10 @@ export interface FaTermLine {
 /** 항목 이름 — 한 곳에만 둔다. 화면이 따로 적으면 두 벌이 된다 */
 export const FA_TERM_LABEL: Record<FaTermKey, string> = {
   signingBonus: "계약금",
-  teamOption:   "팀 옵션",
+  teamOption: "팀 옵션",
   playerOption: "선수 옵션",
-  noTrade:      "노트레이드",
-  total:        "총액",
+  noTrade: "노트레이드",
+  total: "총액",
 };
 
 function manwon(v: number): string {
@@ -76,13 +76,25 @@ export function faOfferTermLines(o: FaOfferTermsInput): FaTermLine[] {
   const lines: FaTermLine[] = [];
 
   if ((o.signingBonus ?? 0) > 0) {
-    lines.push({ key: "signingBonus", label: FA_TERM_LABEL.signingBonus, value: manwon(o.signingBonus!) });
+    lines.push({
+      key: "signingBonus",
+      label: FA_TERM_LABEL.signingBonus,
+      value: manwon(o.signingBonus!),
+    });
   }
   if ((o.teamOptionYears ?? 0) > 0) {
-    lines.push({ key: "teamOption", label: FA_TERM_LABEL.teamOption, value: `${o.teamOptionYears}년` });
+    lines.push({
+      key: "teamOption",
+      label: FA_TERM_LABEL.teamOption,
+      value: `${o.teamOptionYears}년`,
+    });
   }
   if ((o.playerOptionYears ?? 0) > 0) {
-    lines.push({ key: "playerOption", label: FA_TERM_LABEL.playerOption, value: `${o.playerOptionYears}년` });
+    lines.push({
+      key: "playerOption",
+      label: FA_TERM_LABEL.playerOption,
+      value: `${o.playerOptionYears}년`,
+    });
   }
   // 조항은 있고 없고뿐이라 값이 없다 — 이름 하나로 그린다
   if (o.noTrade === true) {

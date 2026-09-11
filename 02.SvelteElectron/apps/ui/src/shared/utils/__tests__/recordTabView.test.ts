@@ -2,8 +2,12 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  buildContractHistoryTable, buildTournamentRecordTable, contractTermsText,
-  myTournamentLine, CONTRACT_HISTORY_KIND, TOURNAMENT_RECORD_KIND,
+  buildContractHistoryTable,
+  buildTournamentRecordTable,
+  contractTermsText,
+  myTournamentLine,
+  CONTRACT_HISTORY_KIND,
+  TOURNAMENT_RECORD_KIND,
 } from "../recordTabView";
 import { shiftContract, sameContract } from "../contractHistory";
 import { parseDashboardLabels, tableCopy } from "../dashboardCopy";
@@ -23,16 +27,22 @@ const MASTER = resolve(__dirname, "../../../../../../resource/data/master");
 const LABELS = parseDashboardLabels(
   JSON.parse(readFileSync(join(MASTER, "messages/dashboard_labels.json"), "utf8")),
 );
-const TERMS = JSON.parse(
-  readFileSync(join(MASTER, "messages/contract_terms.json"), "utf8"),
-).signed as { teamOption: string; playerOption: string; noTrade: string };
+const TERMS = JSON.parse(readFileSync(join(MASTER, "messages/contract_terms.json"), "utf8"))
+  .signed as { teamOption: string; playerOption: string; noTrade: string };
 
 const salaryText = (v: number) => `${v}만원`;
 const contract = (over: Partial<ProContract> = {}): ProContract => ({
-  teamId: "TEAM_A", leagueId: "LEAGUE_KBL",
-  salary: 5000, durationYears: 3, remainingYears: 3,
-  signingBonus: 0, teamOptionYears: 0, playerOptionYears: 0,
-  noTrade: false, status: "active", ...over,
+  teamId: "TEAM_A",
+  leagueId: "LEAGUE_KBL",
+  salary: 5000,
+  durationYears: 3,
+  remainingYears: 3,
+  signingBonus: 0,
+  teamOptionYears: 0,
+  playerOptionYears: 0,
+  noTrade: false,
+  status: "active",
+  ...over,
 });
 
 const copyOf = (kind: string) => tableCopy(LABELS, kind);
@@ -54,15 +64,13 @@ describe("문안 — 기록 탭도 같은 파일에서 온다", () => {
 
   it("빈 표 한 줄이 카드마다 다르다", () => {
     // 「맺은 계약이 없다」와 「나간 대회가 없다」는 다른 말이다
-    expect(copyOf(CONTRACT_HISTORY_KIND).empty)
-      .not.toBe(copyOf(TOURNAMENT_RECORD_KIND).empty);
+    expect(copyOf(CONTRACT_HISTORY_KIND).empty).not.toBe(copyOf(TOURNAMENT_RECORD_KIND).empty);
   });
 });
 
 describe("계약 이력 — 지금 계약도 한 줄이다", () => {
   it("이력이 없어도 지금 계약이 선다", () => {
-    const md = buildContractHistoryTable(undefined, contract({ signedYear: 2030 }),
-                                         { salaryText });
+    const md = buildContractHistoryTable(undefined, contract({ signedYear: 2030 }), { salaryText });
     expect(md.rows).toHaveLength(1);
     expect(md.rows[0].myTeam).toBe(true);
   });
@@ -70,37 +78,42 @@ describe("계약 이력 — 지금 계약도 한 줄이다", () => {
   it("최근이 위다 — 「시즌별 성적」과 같은 방향", () => {
     const md = buildContractHistoryTable(
       [contract({ signedYear: 2028 }), contract({ signedYear: 2031 })],
-      contract({ signedYear: 2034 }), { salaryText },
+      contract({ signedYear: 2034 }),
+      { salaryText },
     );
     expect(md.rows.map((r) => r.year)).toEqual([2034, 2031, 2028]);
   });
 
   it("연도를 모르는 계약은 맨 아래고 칸이 `—` 다", () => {
     // 구 세이브엔 `signedYear` 가 없다. 위에 두면 모르는 해가 제일 최근처럼 보인다
-    const md = buildContractHistoryTable([contract({})], contract({ signedYear: 2030 }),
-                                         { salaryText });
+    const md = buildContractHistoryTable([contract({})], contract({ signedYear: 2030 }), {
+      salaryText,
+    });
     expect(md.rows[1].year).toBeNull();
     expect(rowsOf(CONTRACT_HISTORY_KIND, md)[1][0]).toBe(copyOf(CONTRACT_HISTORY_KIND).emptyCell);
   });
 
   it("종류는 세이브에 낱말이 들고 한글은 문안이 준다", () => {
     const md = buildContractHistoryTable(undefined, contract({ signedYear: 2030, kind: "fa" }), {
-      salaryText, kindLabel: copyOf(CONTRACT_HISTORY_KIND).kindLabel,
+      salaryText,
+      kindLabel: copyOf(CONTRACT_HISTORY_KIND).kindLabel,
     });
     expect(md.rows[0].kind).toBe("FA");
   });
 
   it("모르는 종류는 키를 그대로 둔다 — 빈 칸이면 왜 비었는지 안 남는다", () => {
     const md = buildContractHistoryTable(
-      undefined, { ...contract({ signedYear: 2030 }), kind: "loan" as never },
+      undefined,
+      { ...contract({ signedYear: 2030 }), kind: "loan" as never },
       { salaryText, kindLabel: copyOf(CONTRACT_HISTORY_KIND).kindLabel },
     );
     expect(md.rows[0].kind).toBe("loan");
   });
 
   it("열 여섯이 문안 순서대로 선다", () => {
-    const md = buildContractHistoryTable(undefined, contract({ signedYear: 2030, kind: "new" }),
-                                         { salaryText });
+    const md = buildContractHistoryTable(undefined, contract({ signedYear: 2030, kind: "new" }), {
+      salaryText,
+    });
     const cols = buildTableView(md, copyOf(CONTRACT_HISTORY_KIND)).columns.map((c) => c.key);
     expect(cols).toEqual(["year", "teamId", "salary", "years", "kind", "options"]);
   });
@@ -148,8 +161,12 @@ describe("계약 이력을 쌓는 자리 — 옛 것이 뒤로 간다", () => {
     // 재계약은 `setPendingNextContract` 로 한 번, W52 롤오버로 또 한 번 온다
     const prev = contract({ signedYear: 2030 });
     const first = shiftContract(prev, contract({ signedYear: 2033, salary: 9000 }), {}, []);
-    const again = shiftContract(prev, contract({ signedYear: 2033, salary: 9000 }), {},
-                                first.history);
+    const again = shiftContract(
+      prev,
+      contract({ signedYear: 2033, salary: 9000 }),
+      {},
+      first.history,
+    );
     expect(again.history).toHaveLength(1);
   });
 
@@ -171,13 +188,24 @@ describe("계약 이력을 쌓는 자리 — 옛 것이 뒤로 간다", () => {
 /** 4팀 대회 — 1라운드 둘, 결승 하나 */
 function bracket(winners: [string, string, string]): TournamentBracket {
   const m = (round: number, slot: number, week: number, h: string, a: string, w: string) => ({
-    id: `M${round}-${slot}`, round, slot, week, gameDate: "",
-    homeTeamId: h, awayTeamId: a, isBye: false, winnerTeamId: w,
+    id: `M${round}-${slot}`,
+    round,
+    slot,
+    week,
+    gameDate: "",
+    homeTeamId: h,
+    awayTeamId: a,
+    isBye: false,
+    winnerTeamId: w,
     isProtagonistGame: false,
   });
   return {
-    tournamentId: "TOUR_A", leagueId: "LEAGUE_HIGHSCHOOL", seasonYear: 2030,
-    bracketSize: 4, totalRounds: 2, byeCount: 0,
+    tournamentId: "TOUR_A",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    seasonYear: 2030,
+    bracketSize: 4,
+    totalRounds: 2,
+    byeCount: 0,
     matches: [
       m(1, 0, 10, "TEAM_A", "TEAM_B", winners[0]),
       m(1, 1, 10, "TEAM_C", "TEAM_D", winners[1]),
@@ -187,16 +215,29 @@ function bracket(winners: [string, string, string]): TournamentBracket {
 }
 
 const log = (over: Partial<CareerGameLogEntry>): CareerGameLogEntry => ({
-  week: 10, opponentId: "TEAM_B", myScore: 3, oppScore: 1,
-  ip: 6, er: 1, h: 4, k: 7, bb: 1, decision: "W", pitchCount: 92, ...over,
+  week: 10,
+  opponentId: "TEAM_B",
+  myScore: 3,
+  oppScore: 1,
+  ip: 6,
+  er: 1,
+  h: 4,
+  k: 7,
+  bb: 1,
+  decision: "W",
+  pitchCount: 92,
+  ...over,
 });
 
 describe("대회 전적 — 나간 대회만 선다", () => {
-  const run = (over: Record<string, unknown> = {}) => ({
-    year: 2030, name: "개나리기", teamId: "TEAM_A",
-    bracket: bracket(["TEAM_A", "TEAM_C", "TEAM_A"]),
-    ...over,
-  }) as Parameters<typeof buildTournamentRecordTable>[0][number];
+  const run = (over: Record<string, unknown> = {}) =>
+    ({
+      year: 2030,
+      name: "개나리기",
+      teamId: "TEAM_A",
+      bracket: bracket(["TEAM_A", "TEAM_C", "TEAM_A"]),
+      ...over,
+    }) as Parameters<typeof buildTournamentRecordTable>[0][number];
 
   it("안 나간 대회는 줄이 없다", () => {
     // 해마다 여덟 줄씩 「미출전」이 쌓이면 표가 안 읽힌다
@@ -211,9 +252,12 @@ describe("대회 전적 — 나간 대회만 선다", () => {
   });
 
   it("탈락한 라운드가 결과다", () => {
-    const md = buildTournamentRecordTable([run({
-      teamId: "TEAM_B", bracket: bracket(["TEAM_A", "TEAM_C", "TEAM_A"]),
-    })]);
+    const md = buildTournamentRecordTable([
+      run({
+        teamId: "TEAM_B",
+        bracket: bracket(["TEAM_A", "TEAM_C", "TEAM_A"]),
+      }),
+    ]);
     expect(md.rows[0].round).toContain("탈락");
     expect(md.rows[0].myTeam).toBeUndefined();
   });
@@ -235,16 +279,24 @@ describe("내 기록 칸 — 「등판 없음」과 「모른다」가 다르다
   });
 
   it("여러 경기는 합쳐서 한 줄이다", () => {
-    const line = myTournamentLine(b, "TEAM_A",
-      [log({}), log({ week: 12, opponentId: "TEAM_C", ip: 3, k: 4 })]);
+    const line = myTournamentLine(b, "TEAM_A", [
+      log({}),
+      log({ week: 12, opponentId: "TEAM_C", ip: 3, k: 4 }),
+    ]);
     expect(line).toBe("9이닝 11K");
   });
 
   it("나갔는데 안 던졌으면 `null` — 화면이 「등판 없음」을 찍는다", () => {
     expect(myTournamentLine(b, "TEAM_A", [])).toBeNull();
-    const md = buildTournamentRecordTable([{
-      year: 2030, name: "개나리기", teamId: "TEAM_A", bracket: b, gameLog: [],
-    }]);
+    const md = buildTournamentRecordTable([
+      {
+        year: 2030,
+        name: "개나리기",
+        teamId: "TEAM_A",
+        bracket: b,
+        gameLog: [],
+      },
+    ]);
     const copy = copyOf(TOURNAMENT_RECORD_KIND);
     expect(rowsOf(TOURNAMENT_RECORD_KIND, md)[0][3]).toBe(copy.noAppearance);
     expect(copy.noAppearance).not.toBe(copy.emptyCell);
@@ -256,8 +308,7 @@ describe("내 기록 칸 — 「등판 없음」과 「모른다」가 다르다
       [{ year: 2030, name: "개나리기", teamId: "TEAM_A", bracket: b }],
       { emptyCell: copyOf(TOURNAMENT_RECORD_KIND).emptyCell },
     );
-    expect(rowsOf(TOURNAMENT_RECORD_KIND, md)[0][3])
-      .toBe(copyOf(TOURNAMENT_RECORD_KIND).emptyCell);
+    expect(rowsOf(TOURNAMENT_RECORD_KIND, md)[0][3]).toBe(copyOf(TOURNAMENT_RECORD_KIND).emptyCell);
   });
 });
 
@@ -272,8 +323,7 @@ describe("빈 카드 — 왜 비었는지가 화면에 남는다", () => {
   });
 
   it("나간 대회가 없으면 대회 전적도 그렇다", () => {
-    const view = buildTableView(buildTournamentRecordTable([]),
-                                copyOf(TOURNAMENT_RECORD_KIND));
+    const view = buildTableView(buildTournamentRecordTable([]), copyOf(TOURNAMENT_RECORD_KIND));
     expect(view.rows).toHaveLength(0);
     expect(view.empty).toBe(copyOf(TOURNAMENT_RECORD_KIND).empty);
   });

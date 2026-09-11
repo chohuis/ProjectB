@@ -20,31 +20,37 @@
   let selected: Relationship | null = null;
 
   const KIND_LABEL: Record<RelationKind, string> = {
-    manager: "감독", coach: "코치", owner: "구단주",
-    teammate: "동료", rival: "라이벌",
+    manager: "감독",
+    coach: "코치",
+    owner: "구단주",
+    teammate: "동료",
+    rival: "라이벌",
   };
 
   // 효과는 **방향만** 문장으로. 수치는 relationship_rules.toml이 정본이고
   // 여기 숫자를 적으면 튜닝할 때마다 화면이 거짓말이 된다.
   const EFFECT_UP: Record<RelationKind, string> = {
-    manager:  "출전 기회와 보직 배정에서 유리합니다.",
-    coach:    "담당 영역 훈련 효율이 오릅니다.",
-    owner:    "재계약 협상에서 여유를 두고 봅니다.",
+    manager: "출전 기회와 보직 배정에서 유리합니다.",
+    coach: "담당 영역 훈련 효율이 오릅니다.",
+    owner: "재계약 협상에서 여유를 두고 봅니다.",
     teammate: "팀 분위기와 동료 이벤트에 좋게 반영됩니다.",
-    rival:    "서로를 인정하는 사이입니다.",
+    rival: "서로를 인정하는 사이입니다.",
   };
   const EFFECT_DOWN: Record<RelationKind, string> = {
-    manager:  "출전 기회 배정에서 뒤로 밀릴 수 있습니다.",
-    coach:    "담당 영역 훈련 효율이 떨어집니다.",
-    owner:    "재계약·방출 판정이 냉정해집니다.",
+    manager: "출전 기회 배정에서 뒤로 밀릴 수 있습니다.",
+    coach: "담당 영역 훈련 효율이 떨어집니다.",
+    owner: "재계약·방출 판정이 냉정해집니다.",
     teammate: "팀 분위기에 부담이 됩니다.",
-    rival:    "적대감이 짙습니다.",
+    rival: "적대감이 짙습니다.",
   };
   const EFFECT_NEUTRAL = "아직 특별한 영향은 없습니다.";
 
   const MEMORY_LABEL: Record<string, string> = {
-    humiliation: "굴욕", gratitude: "은혜", betrayal: "배신",
-    witness: "목격", shared_ordeal: "고락",
+    humiliation: "굴욕",
+    gratitude: "은혜",
+    betrayal: "배신",
+    witness: "목격",
+    shared_ordeal: "고락",
   };
 
   // 표시 순서는 역할 우선 — 감독·구단주가 위에 있어야 "누가 나를 쓰는가"가 먼저 보인다
@@ -108,7 +114,9 @@
   {:else if error}
     <p class="msg err">{error}</p>
   {:else if rows.length === 0}
-    <p class="msg">아직 관계가 쌓인 인물이 없습니다. 한 주를 진행하면 팀 사람들과의 관계가 생깁니다.</p>
+    <p class="msg">
+      아직 관계가 쌓인 인물이 없습니다. 한 주를 진행하면 팀 사람들과의 관계가 생깁니다.
+    </p>
   {:else}
     <div class="cols">
       <!-- 지금 함께 -->
@@ -160,7 +168,9 @@
               <li>
                 <div class="row past" class:ended={r.contact === "ended"}>
                   <span class="nm">{nameOf(r)}</span>
-                  <span class="kd">{KIND_LABEL[r.kind] ?? r.kind}{r.contact === "ended" ? " · 은퇴" : ""}</span>
+                  <span class="kd"
+                    >{KIND_LABEL[r.kind] ?? r.kind}{r.contact === "ended" ? " · 은퇴" : ""}</span
+                  >
                   <span class="lb tone-{lab.tone}">{lab.label}</span>
                 </div>
                 {#if r.memories.length > 0 || r.metSeason > 0}
@@ -178,7 +188,9 @@
               </li>
             {/each}
           </ul>
-          <p class="note">헤어진 관계는 시즌이 지날수록 옅어집니다. 다시 만나면 그 자리에서 이어집니다.</p>
+          <p class="note">
+            헤어진 관계는 시즌이 지날수록 옅어집니다. 다시 만나면 그 자리에서 이어집니다.
+          </p>
         {/if}
       </div>
     </div>
@@ -199,7 +211,11 @@
     overflow: hidden;
   }
 
-  .sub { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
+  .sub {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
 
   /* ⚠ 여기 `align-items: start`가 있었다. 그러면 `.col`이 **행 높이로 늘어나지
      않고 내용 높이로 줄어들어** 안쪽 `minmax(0, 1fr)`이 잡을 높이가 없어진다.
@@ -209,14 +225,23 @@
 
      위 `.people` 주석의 높이 관리는 이 줄 때문에 반만 듣고 있었다. */
   .cols {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-    min-height: 0; overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    min-height: 0;
+    overflow: hidden;
   }
-  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
 
   .col {
-    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
-    gap: 7px; min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 7px;
+    min-height: 0;
     background: var(--panel);
     border-radius: var(--radius);
     box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
@@ -224,23 +249,39 @@
   }
   .col h3 {
     margin: 0;
-    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
-    color: var(--ink-mute); text-transform: uppercase;
-    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
-    display: flex; justify-content: space-between;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--t-dark);
+    display: flex;
+    justify-content: space-between;
   }
-  .count { color: var(--ink-mute); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .count {
+    color: var(--ink-mute);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
 
   .list {
-    list-style: none; margin: 0; padding: 0;
-    display: flex; flex-direction: column;
-    min-height: 0; overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: auto;
   }
 
   .row {
     width: 100%;
-    display: grid; grid-template-columns: 1fr auto auto; gap: 9px;
-    align-items: center; text-align: left;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 9px;
+    align-items: center;
+    text-align: left;
     border: 0;
     border-bottom: 1px solid var(--line);
     background: none;
@@ -249,42 +290,111 @@
     font-size: 12.5px;
     cursor: pointer;
   }
-  .row:hover { background: var(--panel-sunk); }
-  .row.sel { background: var(--panel-sunk); }
-  .row.past { cursor: default; }
-  .row.past.ended { opacity: 0.55; }
+  .row:hover {
+    background: var(--panel-sunk);
+  }
+  .row.sel {
+    background: var(--panel-sunk);
+  }
+  .row.past {
+    cursor: default;
+  }
+  .row.past.ended {
+    opacity: 0.55;
+  }
 
-  .nm { font-weight: 700; color: var(--ink); }
-  .kd { color: var(--ink-mute); font-size: 11px; }
+  .nm {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .kd {
+    color: var(--ink-mute);
+    font-size: 11px;
+  }
 
   /* 관계 7단계 — **숫자를 안 보여주는 게 이 화면의 원칙**이라 색이 곧 수치다.
      적대에서 신뢰까지 한 방향으로 흐르게 하고, 양 끝만 꽉 채운다 */
   .lb {
-    border-radius: 999px; padding: 2px 9px;
-    font-size: 10.5px; font-weight: 800; white-space: nowrap;
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-size: 10.5px;
+    font-weight: 800;
+    white-space: nowrap;
   }
-  .tone-hostile  { background: var(--bad);        color: var(--ink-on-dark); }
-  .tone-distrust { background: #F3DAD6;           color: #8A2617; }
-  .tone-cold     { background: var(--panel-sunk); color: var(--ink-mute); }
-  .tone-neutral  { background: var(--panel-sunk); color: var(--ink-mid); }
-  .tone-friendly { background: #DCE7F5;           color: #1F4E85; }
-  .tone-trusted  { background: #D5EADD;           color: #17603A; }
-  .tone-close    { background: var(--ok);         color: var(--ink-on-dark); }
+  .tone-hostile {
+    background: var(--bad);
+    color: var(--ink-on-dark);
+  }
+  .tone-distrust {
+    background: #f3dad6;
+    color: #8a2617;
+  }
+  .tone-cold {
+    background: var(--panel-sunk);
+    color: var(--ink-mute);
+  }
+  .tone-neutral {
+    background: var(--panel-sunk);
+    color: var(--ink-mid);
+  }
+  .tone-friendly {
+    background: #dce7f5;
+    color: #1f4e85;
+  }
+  .tone-trusted {
+    background: #d5eadd;
+    color: #17603a;
+  }
+  .tone-close {
+    background: var(--ok);
+    color: var(--ink-on-dark);
+  }
 
   .detail {
     padding: 8px 2px 10px 12px;
     border-left: 2px solid var(--t-accent);
     margin: 0 0 4px 2px;
-    font-size: 11.5px; color: var(--ink-mid);
+    font-size: 11.5px;
+    color: var(--ink-mid);
   }
-  .eff  { margin: 0 0 6px; }
-  .meta { margin: 0 0 4px; color: var(--ink-mute); }
-  .mem  { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
-  .mem li { color: var(--ink-mute); font-size: 11px; }
-  .mem b  { color: var(--ink); font-weight: 700; }
+  .eff {
+    margin: 0 0 6px;
+  }
+  .meta {
+    margin: 0 0 4px;
+    color: var(--ink-mute);
+  }
+  .mem {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .mem li {
+    color: var(--ink-mute);
+    font-size: 11px;
+  }
+  .mem b {
+    color: var(--ink);
+    font-weight: 700;
+  }
 
-  .msg { font-size: 12px; color: var(--ink-mute); }
-  .msg.small { font-size: 11px; }
-  .msg.err { color: var(--bad); }
-  .note { margin: 8px 0 0; font-size: 10.5px; color: var(--ink-mute); line-height: 1.5; }
+  .msg {
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .msg.small {
+    font-size: 11px;
+  }
+  .msg.err {
+    color: var(--bad);
+  }
+  .note {
+    margin: 8px 0 0;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+  }
 </style>

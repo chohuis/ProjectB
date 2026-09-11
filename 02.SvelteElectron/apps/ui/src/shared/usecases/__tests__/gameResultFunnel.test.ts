@@ -30,7 +30,8 @@ const ALLOWED = [
   "shared/usecases/applyGameOutcome.ts",
 ];
 
-const APPLY = /seasonStore\.apply(MatchResult|ProtagonistGroupNpcResult|TournamentResult|FriendlyResult)\s*\(/g;
+const APPLY =
+  /seasonStore\.apply(MatchResult|ProtagonistGroupNpcResult|TournamentResult|FriendlyResult)\s*\(/g;
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -71,7 +72,10 @@ describe("경기 결과 깔때기", () => {
 
   it("예외로 둔 파일들이 실제로 존재한다 — 사라진 예외는 죽은 가드다", () => {
     for (const rel of ALLOWED) {
-      expect(files.some((f) => f.rel === rel), `${rel}이 없다`).toBe(true);
+      expect(
+        files.some((f) => f.rel === rel),
+        `${rel}이 없다`,
+      ).toBe(true);
     }
   });
 

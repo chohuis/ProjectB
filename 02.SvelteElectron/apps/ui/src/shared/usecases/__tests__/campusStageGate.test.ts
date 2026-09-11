@@ -18,8 +18,9 @@ import { natlSquadSelfLine } from "../nationalTeam";
  */
 
 const ROOT = resolve(__dirname, "../../../../../..");
-const RULES = JSON.parse(readFileSync(
-  resolve(ROOT, "resource/data/master/players/generation_rules.json"), "utf8"));
+const RULES = JSON.parse(
+  readFileSync(resolve(ROOT, "resource/data/master/players/generation_rules.json"), "utf8"),
+);
 
 /** 규칙 파일이 정본이다 — 주차를 여기 또 적지 않는다 */
 const CE = RULES.campusEvents;
@@ -30,8 +31,14 @@ const WEEKS = {
 };
 
 const ALL_STAGES = [
-  "highschool", "university", "independent", "military",
-  "pro_kbl", "pro_abl", "pro_jbl", "retired",
+  "highschool",
+  "university",
+  "independent",
+  "military",
+  "pro_kbl",
+  "pro_abl",
+  "pro_jbl",
+  "retired",
 ];
 
 describe("행사 주차가 서로 안 겹친다", () => {
@@ -47,9 +54,11 @@ describe("무대 판정", () => {
     expect(kinds).toEqual({
       highschool: "highschool",
       university: "university",
-      independent: null,       // 🔴 독립은 학생도 프로도 아니다
-      military: null,          // 🔴 상무 복무 중에 올스타에 뽑히지 않는다
-      pro_kbl: "pro", pro_abl: "pro", pro_jbl: "pro",
+      independent: null, // 🔴 독립은 학생도 프로도 아니다
+      military: null, // 🔴 상무 복무 중에 올스타에 뽑히지 않는다
+      pro_kbl: "pro",
+      pro_abl: "pro",
+      pro_jbl: "pro",
       retired: null,
     });
   });
@@ -122,7 +131,7 @@ describe("올스타 문안이 무대를 본다", () => {
       const c = allStarCopyOf(lid);
       const all = `${c.org} ${c.title} ${c.unit}`;
       expect(all, `${lid} 문안: ${all}`).not.toContain("대학");
-      expect(c.unit, lid).toBe("구단");     // 쿼터 단위는 구단이다
+      expect(c.unit, lid).toBe("구단"); // 쿼터 단위는 구단이다
     }
   });
 
@@ -133,8 +142,9 @@ describe("올스타 문안이 무대를 본다", () => {
   });
 
   it("리그마다 소식 id 가 갈린다 — 같은 해에 두 판이 겹치지 않는다", () => {
-    const slugs = ["LEAGUE_UNIVERSITY", "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]
-      .map((l) => allStarCopyOf(l).slug);
+    const slugs = ["LEAGUE_UNIVERSITY", "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].map(
+      (l) => allStarCopyOf(l).slug,
+    );
     expect(new Set(slugs).size, slugs.join(",")).toBe(slugs.length);
     // 대시보드 배선은 `msg-allstar-` 접두사로 걸린다 — slug 가 그걸 안 깬다
     for (const s of slugs) expect(`msg-allstar-${s}-2030-w21`).toMatch(/^msg-allstar-/);

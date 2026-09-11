@@ -32,18 +32,24 @@ const COLS = slotdb.RETIRED_NPC_COLUMNS;
 
 describe("은퇴자 로드 분리", () => {
   it("은퇴자에게 무거운 json 칼럼을 안 읽는다", () => {
-    for (const heavy of ["abilities_json", "xp_json", "form_json",
-                         "personality_json", "injury_json", "extra_json",
-                         "stats_json", "emotion_json", "highlights_json"]) {
-      expect(COLS, `은퇴자 조회에 ${heavy}가 들어 있다 — 절감이 사라진다`)
-        .not.toContain(heavy);
+    for (const heavy of [
+      "abilities_json",
+      "xp_json",
+      "form_json",
+      "personality_json",
+      "injury_json",
+      "extra_json",
+      "stats_json",
+      "emotion_json",
+      "highlights_json",
+    ]) {
+      expect(COLS, `은퇴자 조회에 ${heavy}가 들어 있다 — 절감이 사라진다`).not.toContain(heavy);
     }
   });
 
   it("이름과 소속은 남긴다 (ID로 떨어지면 안 된다)", () => {
     for (const keep of ["npc_id", "name", "current_team", "current_league"]) {
-      expect(COLS, `은퇴자 조회에 ${keep}가 없다 — 화면이 ID를 흘린다`)
-        .toContain(keep);
+      expect(COLS, `은퇴자 조회에 ${keep}가 없다 — 화면이 ID를 흘린다`).toContain(keep);
     }
   });
 
@@ -52,11 +58,18 @@ describe("은퇴자 로드 분리", () => {
     //    좁게 읽은 값이 `syncNpcs`의 폴백으로 되쓰여 은퇴자 869명이 전원
     //    「미필」·성장률 50·잠재 75·연봉 0이 돼 있었다. 스칼라는 크기가
     //    고정이라 아껴서 얻는 게 없다 — 아끼는 건 블롭뿐이다.
-    for (const scalar of ["military_status", "military_json", "development_rate",
-                          "potential_hidden", "salary", "contract_years",
-                          "pro_service_years", "age", "career_status"]) {
-      expect(COLS, `은퇴자 조회에 ${scalar}가 없다 — 저장이 폴백값으로 덮는다`)
-        .toContain(scalar);
+    for (const scalar of [
+      "military_status",
+      "military_json",
+      "development_rate",
+      "potential_hidden",
+      "salary",
+      "contract_years",
+      "pro_service_years",
+      "age",
+      "career_status",
+    ]) {
+      expect(COLS, `은퇴자 조회에 ${scalar}가 없다 — 저장이 폴백값으로 덮는다`).toContain(scalar);
     }
   });
 });

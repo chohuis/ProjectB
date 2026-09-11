@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { calcIndividualScore, calcHsBaseballScore, passesOverseasFarm }
-  from "../universityUtils";
+import { calcIndividualScore, calcHsBaseballScore, passesOverseasFarm } from "../universityUtils";
 import type { CareerSeasonRecord } from "../../types/save";
 
 /**
@@ -13,45 +12,58 @@ import type { CareerSeasonRecord } from "../../types/save";
 
 function rec(over: Partial<CareerSeasonRecord> = {}): CareerSeasonRecord {
   return {
-    year: 2026, leagueId: "LEAGUE_HIGHSCHOOL", teamId: "T", statLine: "",
-    ovr: 70, awards: [], ...over,
+    year: 2026,
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    teamId: "T",
+    statLine: "",
+    ovr: 70,
+    awards: [],
+    ...over,
   } as CareerSeasonRecord;
 }
 
 /** 그 시즌 투수 성적 */
 const pit = (ip: number, era: number) => ({
-  type: "pitcher" as const, g: 10, gs: 8, w: 5, l: 3, sv: 0, hd: 0,
-  ip, er: Math.round(era * ip / 9), h: 50, k: 60, bb: 20, era, whip: 1.2,
+  type: "pitcher" as const,
+  g: 10,
+  gs: 8,
+  w: 5,
+  l: 3,
+  sv: 0,
+  hd: 0,
+  ip,
+  er: Math.round((era * ip) / 9),
+  h: 50,
+  k: 60,
+  bb: 20,
+  era,
+  whip: 1.2,
 });
 
 describe("개인 기여 점수", () => {
   // 🔴 이게 이번에 고친 것이다
   it("우승팀 벤치가 던진 사람을 못 이긴다", () => {
     const bench = calcIndividualScore([rec({ psResult: "champion" })]);
-    const ace = calcIndividualScore([
-      rec({ psResult: "notQualified", stats: pit(70, 2.20) }),
-    ]);
+    const ace = calcIndividualScore([rec({ psResult: "notQualified", stats: pit(70, 2.2) })]);
     expect(ace).toBeGreaterThan(bench);
   });
 
   // ⚠ 옛 식은 반대였다 — 그 차이가 이 검사의 값이다
   it("팀 점수 식은 벤치를 더 높게 본다 — 그래서 안 쓴다", () => {
     const bench = calcHsBaseballScore([rec({ psResult: "champion" })]);
-    const ace = calcHsBaseballScore([
-      rec({ psResult: "notQualified", stats: pit(70, 2.20) }),
-    ]);
+    const ace = calcHsBaseballScore([rec({ psResult: "notQualified", stats: pit(70, 2.2) })]);
     expect(bench).toBeGreaterThan(ace);
   });
 
   it("많이 던질수록 높다", () => {
-    const few = calcIndividualScore([rec({ stats: pit(10, 3.00) })]);
-    const many = calcIndividualScore([rec({ stats: pit(70, 3.00) })]);
+    const few = calcIndividualScore([rec({ stats: pit(10, 3.0) })]);
+    const many = calcIndividualScore([rec({ stats: pit(70, 3.0) })]);
     expect(many).toBeGreaterThan(few);
   });
 
   it("잘 던질수록 높다", () => {
-    const good = calcIndividualScore([rec({ stats: pit(60, 1.80) })]);
-    const bad = calcIndividualScore([rec({ stats: pit(60, 5.50) })]);
+    const good = calcIndividualScore([rec({ stats: pit(60, 1.8) })]);
+    const bad = calcIndividualScore([rec({ stats: pit(60, 5.5) })]);
     expect(good).toBeGreaterThan(bad);
   });
 
@@ -60,14 +72,15 @@ describe("개인 기여 점수", () => {
       rec({ awards: [{ year: 2026, awardId: "M", label: "MVP" }] as never }),
     ]);
     const champ = calcIndividualScore([rec({ psResult: "champion" })]);
-    expect(award).toBeLessThan(champ + 20);   // 우승 25 vs 수상 20 — 비슷한 급
+    expect(award).toBeLessThan(champ + 20); // 우승 25 vs 수상 20 — 비슷한 급
     expect(award).toBeGreaterThan(0);
   });
 
   // ⚠ 큰 무대를 밟은 경험은 값이 있다 — 0으로 만들지 않는다
   it("팀 성적을 없애지는 않는다", () => {
-    expect(calcIndividualScore([rec({ psResult: "champion" })]))
-      .toBeGreaterThan(calcIndividualScore([rec({ psResult: "semiFinal" })]));
+    expect(calcIndividualScore([rec({ psResult: "champion" })])).toBeGreaterThan(
+      calcIndividualScore([rec({ psResult: "semiFinal" })]),
+    );
   });
 
   it("성적이 없으면 0에서 시작한다 — 벌하지 않는다", () => {
@@ -88,9 +101,9 @@ describe("개인 기여 점수", () => {
   it("직행 판정이 개인 점수로 갈린다", () => {
     // 고교 3년 — 에이스로 뛴 선수
     const ace = calcIndividualScore([
-      rec({ year: 2024, stats: pit(60, 2.60) }),
-      rec({ year: 2025, stats: pit(70, 2.20), psResult: "semiFinal" }),
-      rec({ year: 2026, stats: pit(75, 2.00), psResult: "runnerUp" }),
+      rec({ year: 2024, stats: pit(60, 2.6) }),
+      rec({ year: 2025, stats: pit(70, 2.2), psResult: "semiFinal" }),
+      rec({ year: 2026, stats: pit(75, 2.0), psResult: "runnerUp" }),
     ]);
     // 3년 내내 우승팀이었지만 던진 적이 없는 선수
     const bench = calcIndividualScore([

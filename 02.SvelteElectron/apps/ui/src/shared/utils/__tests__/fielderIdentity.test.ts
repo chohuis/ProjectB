@@ -36,7 +36,7 @@ describe("수비수 신원", () => {
 
   /** 🔴 리그 경기가 **포지션 문자열**을 이름으로 쓰고 있었다 */
   it("리그 경기가 실제 선수를 싣는다", () => {
-    expect(GS).toContain("playerId: b?.id ?? \"\",");
+    expect(GS).toContain('playerId: b?.id ?? "",');
     // 옛 동작이 돌아오지 않는다
     expect(GS.includes("return { position: p, name: p,")).toBe(false);
   });
@@ -51,7 +51,7 @@ describe("수비수 신원", () => {
 
   /** ⚠ 이름만으론 동명이인을 못 가린다 */
   it("주인공 경기도 id를 싣는다", () => {
-    expect(ML).toContain("playerId: src?.id ?? \"\",");
+    expect(ML).toContain('playerId: src?.id ?? "",');
   });
 
   /** ⚠ 두 경로가 같은 축을 써야 한다 — 하나만 고치면 또 갈린다 */

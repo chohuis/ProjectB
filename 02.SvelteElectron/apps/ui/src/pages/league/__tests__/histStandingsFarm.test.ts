@@ -13,16 +13,19 @@ import { join } from "node:path";
  *   해외만 같은 id를 쓴다. 그래서 여태 안 드러났다.
  */
 const SRC = readFileSync(join(__dirname, "../LeaguePage.svelte"), "utf8");
-const REFS = JSON.parse(readFileSync(
-  join(__dirname, "../../../../../../resource/data/master/entities/refs.json"),
-  "utf8")) as { teams?: { id: string; leagueId: string }[] };
+const REFS = JSON.parse(
+  readFileSync(
+    join(__dirname, "../../../../../../resource/data/master/entities/refs.json"),
+    "utf8",
+  ),
+) as { teams?: { id: string; leagueId: string }[] };
 
 describe("역대 순위표", () => {
   it("2군을 걸러낸다", () => {
     expect(SRC, "2군 필터가 없다 — 해외 순위표에 팜이 섞인다")
       // ⚠ **느슨하게 찾으면 안 된다.** `endsWith("_2")`는 이 파일에 원래 있어서
       //   필터를 지워도 통과했다 — 변이 검증이 그걸 잡았다. 필터 전체를 본다.
-      .toContain("!r.team_id.endsWith(\"_2\")");
+      .toContain('!r.team_id.endsWith("_2")');
   });
 });
 

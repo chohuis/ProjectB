@@ -37,8 +37,10 @@ describe("구단 연표 배선", () => {
     // 🔴 **이름이 아니라 호출을 본다.** 가드 절
     //   (`!window.projectB?.seasonGetTeamHistory`)에도 같은 이름이 있어서,
     //   `includes(이름)` 만 보면 **호출을 지워도 통과한다**(변이로 확인).
-    expect(modal.includes("await window.projectB.seasonGetTeamHistory("),
-      "화면이 실제로 부른다").toBe(true);
+    expect(
+      modal.includes("await window.projectB.seasonGetTeamHistory("),
+      "화면이 실제로 부른다",
+    ).toBe(true);
   });
 
   it("팀이 바뀌면 다시 읽는다", () => {

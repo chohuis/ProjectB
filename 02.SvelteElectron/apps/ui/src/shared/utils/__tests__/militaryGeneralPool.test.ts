@@ -15,14 +15,22 @@ import { toLifeEvent, isEligible } from "../militaryLifeRules";
 import type { MilitaryLifeState } from "../../types/militaryLife";
 
 const pool = (name: string) => {
-  const raw = JSON.parse(readFileSync(
-    resolve(__dirname, `../../../../../../resource/data/master/events/pools/${name}.json`), "utf8"));
+  const raw = JSON.parse(
+    readFileSync(
+      resolve(__dirname, `../../../../../../resource/data/master/events/pools/${name}.json`),
+      "utf8",
+    ),
+  );
   return (Array.isArray(raw) ? raw : raw.events) as Array<Record<string, unknown>>;
 };
 
-const emptyState = () => ({
-  cooldown: {}, relations: {}, roleId: null, calendarDone: [],
-} as unknown as MilitaryLifeState);
+const emptyState = () =>
+  ({
+    cooldown: {},
+    relations: {},
+    roleId: null,
+    calendarDone: [],
+  }) as unknown as MilitaryLifeState;
 
 describe("옛 현역 풀 → 병영생활 후보", () => {
   const general = pool("military_general");
@@ -43,7 +51,10 @@ describe("옛 현역 풀 → 병영생활 후보", () => {
   it("🔴 `relationDelta` 를 부대원 관계로 안 읽는다 — 객체가 숫자 칸에 들어가면 조용히 망가진다", () => {
     // 옛 풀은 `{kind,delta}`(관계도), 병영생활은 숫자(부대원 관계)다
     const src = general.find((e) =>
-      (e.choices as Array<Record<string, unknown>>).some((c) => typeof c.relationDelta === "object"));
+      (e.choices as Array<Record<string, unknown>>).some(
+        (c) => typeof c.relationDelta === "object",
+      ),
+    );
     expect(src).toBeDefined();
     const moved = toLifeEvent(src as never)!;
     const withRel = moved.choices.find((c) => c.extraEffects?.relationDelta);
@@ -66,8 +77,15 @@ describe("옛 현역 풀 → 병영생활 후보", () => {
   it("옮긴 뒤에도 계급 띠 규칙이 그대로 걸린다 — 훈련소 이벤트가 병장 때 안 뜬다", () => {
     const boot = toLifeEvent(general.find((e) => e.id === "MIL_GEN_BOOT_CAMP") as never)!;
     const ctx = (band: number) => ({
-      week: 20, band, roleId: null, state: emptyState(),
-      present: new Set<string>(), fatigue: 50, morale: 50, month: 6, defaultCooldown: 8,
+      week: 20,
+      band,
+      roleId: null,
+      state: emptyState(),
+      present: new Set<string>(),
+      fatigue: 50,
+      morale: 50,
+      month: 6,
+      defaultCooldown: 8,
     });
     expect(isEligible(boot, ctx(0))).toBe(true);
     expect(isEligible(boot, ctx(3))).toBe(false);

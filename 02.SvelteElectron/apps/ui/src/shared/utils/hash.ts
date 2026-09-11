@@ -25,6 +25,6 @@ export function fnv1a32(s: string): number {
  */
 export function seedFrom(s: string): number {
   const lo = fnv1a32(s);
-  const hi = fnv1a32(`${s}#`) >>> 11;   // 21비트
+  const hi = fnv1a32(`${s}#`) >>> 11; // 21비트
   return hi * 0x100000000 + lo;
 }

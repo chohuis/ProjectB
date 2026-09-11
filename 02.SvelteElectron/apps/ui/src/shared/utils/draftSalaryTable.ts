@@ -10,7 +10,11 @@
  * 다른 표를 쓰면 화면에 나란히 뜨는 순간 어긋난다.
  */
 
-export interface PickContract { untilPick: number; salary: number; bonus: number }
+export interface PickContract {
+  untilPick: number;
+  salary: number;
+  bonus: number;
+}
 
 export interface DraftContractRules {
   durationYears: number;
@@ -34,8 +38,8 @@ export function calcKblDraftContract(
   rules: DraftContractRules,
   teamIndex = 1.0,
 ): DraftContract {
-  const row = rules.byPick.find((r) => pickNo <= r.untilPick)
-    ?? rules.byPick[rules.byPick.length - 1];
+  const row =
+    rules.byPick.find((r) => pickNo <= r.untilPick) ?? rules.byPick[rules.byPick.length - 1];
   if (!row) return { salary: 0, durationYears: rules.durationYears, signingBonus: 0 };
 
   const lo = rules.teamIndexMin ?? 0.85;

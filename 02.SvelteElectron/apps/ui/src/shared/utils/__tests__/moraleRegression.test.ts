@@ -28,8 +28,7 @@ import { moraleAfterWeek } from "../../usecases/advanceWeek";
  * 재고 그 값은 `BALANCE_BASELINE` 에 남긴다.
  */
 
-const SRC = readFileSync(
-  resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+const SRC = readFileSync(resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
 
 /** 소스에서 상수를 읽는다 — 검사에 값을 적으면 코드와 어긋나도 초록이다 */
 function constOf(name: string): number {
@@ -95,7 +94,7 @@ describe("사기 평균 회귀 — 산식의 성질", () => {
   it("소수를 유지한다 — 사기 70 근처에서도 움직인다", () => {
     const near = step(70);
     expect(near).not.toBe(70);
-    expect(Math.abs(near - 70)).toBeLessThan(1);   // 1 미만이라 반올림하면 사라진다
+    expect(Math.abs(near - 70)).toBeLessThan(1); // 1 미만이라 반올림하면 사라진다
   });
 
   /**
@@ -104,26 +103,23 @@ describe("사기 평균 회귀 — 산식의 성질", () => {
    */
   it("100 에서의 회귀량이 TOP10 최대 보상과 같은 자릿수다", () => {
     const pullAt100 = Math.abs(step(100) - 100);
-    expect(pullAt100, "회귀가 너무 약하면 TOP10 보상에 밀려 다시 천장에 붙는다")
-      .toBeGreaterThan(0.5);
-    expect(pullAt100, "회귀가 너무 세면 사기가 늘 기준값에 눌린다")
-      .toBeLessThan(5);
+    expect(pullAt100, "회귀가 너무 약하면 TOP10 보상에 밀려 다시 천장에 붙는다").toBeGreaterThan(
+      0.5,
+    );
+    expect(pullAt100, "회귀가 너무 세면 사기가 늘 기준값에 눌린다").toBeLessThan(5);
   });
 });
 
 describe("코드가 회귀를 실제로 적용한다", () => {
   /** 주석을 걷고 본다 — 왜 고쳤는지를 적으면 그 안의 옛 식이 걸린다 */
-  const BODY = SRC
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/^\s*\/\/.*$/gm, "");
+  const BODY = SRC.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
   it("주간 패치에 morale 을 넣는다", () => {
     expect(BODY).toMatch(/protagonistPatch\.morale\s*=/);
   });
 
   it("기준값 쪽으로 끌어당기는 식을 쓴다", () => {
-    expect(BODY, "MORALE_PIVOT 을 안 쓰면 회귀가 아니다")
-      .toMatch(/MORALE_PIVOT\s*-\s*cur/);
+    expect(BODY, "MORALE_PIVOT 을 안 쓰면 회귀가 아니다").toMatch(/MORALE_PIVOT\s*-\s*cur/);
     expect(BODY).toMatch(/MORALE_WEEKLY_PULL/);
   });
 });

@@ -55,11 +55,19 @@ const talentOf = (rf: { talentRules?: Record<string, unknown> }) => rf.talentRul
  * 무너뜨렸다). **병목을 재고 나서 숫자를 만진다.**
  */
 export interface FarmDevRecord {
-  year: number; teamId: string; pit: number; bat: number;
-  short: number; want: number; capped: boolean; noCatcher: boolean;
+  year: number;
+  teamId: string;
+  pit: number;
+  bat: number;
+  short: number;
+  want: number;
+  capped: boolean;
+  noCatcher: boolean;
 }
 const farmDevLog: FarmDevRecord[] = [];
-export function getFarmDevLog(): FarmDevRecord[] { return farmDevLog; }
+export function getFarmDevLog(): FarmDevRecord[] {
+  return farmDevLog;
+}
 import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
@@ -131,7 +139,7 @@ async function hydrateStoresFromSlot(slotId: string): Promise<void> {
   // `master.db`를 접으면서 선수 갈래 자체가 사라졌다. 자리만 남긴다.
   await masterStore.reloadEntities(undefined, slotId);
 
-  gameStore.setNpcs(npcs);  // 전체 교체 — updateNpcs(부분패치) 사용 금지. 이 호출이
+  gameStore.setNpcs(npcs); // 전체 교체 — updateNpcs(부분패치) 사용 금지. 이 호출이
   // connectToGameStore 구독을 통해 masterStore.entities를 스태프+NPC로 반응형 재구성한다.
   npcLiveStatsStore.set(liveStats);
   setV3SlotActive(true);
@@ -155,9 +163,9 @@ export async function loadGameV3(slotId: string): Promise<boolean> {
   //    `resetWorldSeasonEndGuard`는 이걸 위해 만들어졌는데 **호출부가 0건**이었다.
   //    ⚠ 헤드리스 계측은 매번 새 프로세스라 이 결함을 못 잡는다.
   resetWorldSeasonEndGuard();
-  gameStore.hydrateFromSlot(game, slotId);      // slim blob (npcs 없음)
-  seasonStore.hydrateFromSlot(season);          // slim blob (npcLiveStats 없음)
-  await hydrateStoresFromSlot(slotId);          // npcs·능력치는 npc 테이블에서
+  gameStore.hydrateFromSlot(game, slotId); // slim blob (npcs 없음)
+  seasonStore.hydrateFromSlot(season); // slim blob (npcLiveStats 없음)
+  await hydrateStoresFromSlot(slotId); // npcs·능력치는 npc 테이블에서
   return true;
 }
 
@@ -239,45 +247,64 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
     if (batters < BATTING_ORDER) want = Math.max(want, BATTING_ORDER - batters);
     if (want <= 0) continue;
     const raw = JSON.parse(
-      await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
-        schoolId: teamId.replace("TEAM_HS_", "SCHOOL_HS_"),
-        teamId,
-        annualRosterSize: want,
-        pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
-        battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
-        devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
-        namedNpcs: [], seasonYear, idOffset: 0,
-        // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
-        // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
-        // ⚠ **여기서 비율을 0으로 만들지 않는다.** `neededPositions`가 이미
-        //   `minBatters`(9)를 보고 자리를 지정하며 **비율까지 직접 지킨다**
-        //   (그 함수 주석에 두 번 틀린 기록이 있다 — 백업을 다 채웠다가,
-        //    아예 뺐다가 포수가 사라졌다). 그 위에 0을 덮으면 **포수가 밀린다.**
-        pitcherRatio: pitcherRatioOf(rules),
-        talent: talentOf(rulesFile),
-        // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
-        // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
-        // ⚠ **비율을 안 넘기면 `neededPositions`의 기본 인자로 돈다.** 생성
-        // 페이로드(`pitcherRatio`)만 규칙 파일을 따르고 자리 배정은 기본값을
-        // 쓰면, 규칙 파일을 바꿔도 **자리는 옛 비율로 잡힌다** — 층마다 맞는데
-        // 잇는 선이 없는 그 형태다. `minBatters`는 undefined로 기본값을 유지한다
-        neededPositions: neededPositions(
-          cur, want, HS_MIN_PITCHERS, undefined, pitcherRatioOf(rules)),
-      })),
+      await window.projectB!.engine(
+        "generateFreshmenNative",
+        JSON.stringify({
+          schoolId: teamId.replace("TEAM_HS_", "SCHOOL_HS_"),
+          teamId,
+          annualRosterSize: want,
+          pitchingOvrMin: rules.pitchingOvrMin,
+          pitchingOvrMax: rules.pitchingOvrMax,
+          battingOvrMin: rules.battingOvrMin,
+          battingOvrMax: rules.battingOvrMax,
+          devRateMin: rules.devRateMin,
+          devRateMax: rules.devRateMax,
+          namedNpcs: [],
+          seasonYear,
+          idOffset: 0,
+          // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
+          // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
+          // ⚠ **여기서 비율을 0으로 만들지 않는다.** `neededPositions`가 이미
+          //   `minBatters`(9)를 보고 자리를 지정하며 **비율까지 직접 지킨다**
+          //   (그 함수 주석에 두 번 틀린 기록이 있다 — 백업을 다 채웠다가,
+          //    아예 뺐다가 포수가 사라졌다). 그 위에 0을 덮으면 **포수가 밀린다.**
+          pitcherRatio: pitcherRatioOf(rules),
+          talent: talentOf(rulesFile),
+          // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
+          // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
+          // ⚠ **비율을 안 넘기면 `neededPositions`의 기본 인자로 돈다.** 생성
+          // 페이로드(`pitcherRatio`)만 규칙 파일을 따르고 자리 배정은 기본값을
+          // 쓰면, 규칙 파일을 바꿔도 **자리는 옛 비율로 잡힌다** — 층마다 맞는데
+          // 잇는 선이 없는 그 형태다. `minBatters`는 undefined로 기본값을 유지한다
+          neededPositions: neededPositions(
+            cur,
+            want,
+            HS_MIN_PITCHERS,
+            undefined,
+            pitcherRatioOf(rules),
+          ),
+        }),
+      ),
     ) as NpcSaveState[];
     if (Array.isArray(raw)) newOnes.push(...raw);
   }
   if (newOnes.length === 0) return 0;
 
-  await slotRepo.insertNpcs(slotId, newOnes.map((n) => saveStateToRepoNpc(n)));
+  await slotRepo.insertNpcs(
+    slotId,
+    newOnes.map((n) => saveStateToRepoNpc(n)),
+  );
   gameStore.addNpcs(newOnes);
   npcLiveStatsStore.update((st) => {
     const next = { ...st };
     for (const n of newOnes) {
       next[n.npcId] = {
-        pitching: n.pitching, batting: n.batting,
-        pitchingXp: {}, battingXp: {},
-        seasonStartPitching: n.pitching, seasonStartBatting: n.batting,
+        pitching: n.pitching,
+        batting: n.batting,
+        pitchingXp: {},
+        battingXp: {},
+        seasonStartPitching: n.pitching,
+        seasonStartBatting: n.batting,
         peakOvr: n.pitching?.ovr ?? n.batting?.ovr,
         pitches: [],
       };
@@ -340,20 +367,29 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
       const want = rules.rosterSize - (sizeByTeam.get(teamId) ?? 0);
       if (want <= 0) continue;
       const raw = JSON.parse(
-        await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
-          schoolId: teamId, teamId,
-          annualRosterSize: want,
-          pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
-          battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
-          devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
-          namedNpcs: [], seasonYear, idOffset: 0,
-          pitcherRatio: pitcherRatioOf(rules),
-          talent: talentOf(rulesAll),
-          // ⚠ **안 넘기면 내장 한국식 풀이 나온다.** 실측에서 ABL·JBL 941명 중
-          // 931명이 한국 이름이었다 — 나고야 팀에 "김우찬"이 뛰었다.
-          // 정본은 규칙 파일의 `rosterRules[리그].namePool`.
-          namePool: (rules as { namePool?: unknown }).namePool,
-        })),
+        await window.projectB!.engine(
+          "generateFreshmenNative",
+          JSON.stringify({
+            schoolId: teamId,
+            teamId,
+            annualRosterSize: want,
+            pitchingOvrMin: rules.pitchingOvrMin,
+            pitchingOvrMax: rules.pitchingOvrMax,
+            battingOvrMin: rules.battingOvrMin,
+            battingOvrMax: rules.battingOvrMax,
+            devRateMin: rules.devRateMin,
+            devRateMax: rules.devRateMax,
+            namedNpcs: [],
+            seasonYear,
+            idOffset: 0,
+            pitcherRatio: pitcherRatioOf(rules),
+            talent: talentOf(rulesAll),
+            // ⚠ **안 넘기면 내장 한국식 풀이 나온다.** 실측에서 ABL·JBL 941명 중
+            // 931명이 한국 이름이었다 — 나고야 팀에 "김우찬"이 뛰었다.
+            // 정본은 규칙 파일의 `rosterRules[리그].namePool`.
+            namePool: (rules as { namePool?: unknown }).namePool,
+          }),
+        ),
       ) as NpcSaveState[];
       if (!Array.isArray(raw)) continue;
       // 생성기는 리그를 모른다 — 팀에서 파생한 값으로 맞춘다
@@ -366,15 +402,21 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
   }
   if (newOnes.length === 0) return 0;
 
-  await slotRepo.insertNpcs(slotId, newOnes.map((n) => saveStateToRepoNpc(n)));
+  await slotRepo.insertNpcs(
+    slotId,
+    newOnes.map((n) => saveStateToRepoNpc(n)),
+  );
   gameStore.addNpcs(newOnes);
   npcLiveStatsStore.update((st) => {
     const next = { ...st };
     for (const n of newOnes) {
       next[n.npcId] = {
-        pitching: n.pitching, batting: n.batting,
-        pitchingXp: {}, battingXp: {},
-        seasonStartPitching: n.pitching, seasonStartBatting: n.batting,
+        pitching: n.pitching,
+        batting: n.batting,
+        pitchingXp: {},
+        battingXp: {},
+        seasonStartPitching: n.pitching,
+        seasonStartBatting: n.batting,
         peakOvr: n.pitching?.ovr ?? n.batting?.ovr,
         pitches: [],
       };
@@ -408,11 +450,19 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
   if (!slotId) return 0;
 
   const rulesFile = await loadRosterRules();
-  const dev = (rulesFile as { developmentPlayerRules?: {
-    leagues?: string[]; minPitchers?: number; minBatters?: number; maxPerYear?: number;
-    /** 육성선수 시작 능력치 — 정식 2군보다 낮다. 천장은 안 낮춘다 */
-    ovrMin?: number; ovrMax?: number;
-  } }).developmentPlayerRules;
+  const dev = (
+    rulesFile as {
+      developmentPlayerRules?: {
+        leagues?: string[];
+        minPitchers?: number;
+        minBatters?: number;
+        maxPerYear?: number;
+        /** 육성선수 시작 능력치 — 정식 2군보다 낮다. 천장은 안 낮춘다 */
+        ovrMin?: number;
+        ovrMax?: number;
+      };
+    }
+  ).developmentPlayerRules;
   if (!dev?.leagues?.length) return 0;
 
   const teamsAll = get(masterStore).teams;
@@ -422,7 +472,9 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
     const rules = rulesFile.rosterRules[leagueId];
     if (!rules) continue;
     const base = leagueId.endsWith("_FARM") ? leagueId.slice(0, -"_FARM".length) : leagueId;
-    const teams = teamsAll.filter((t) => t.leagueId === base && t.id.endsWith("_2")).map((t) => t.id);
+    const teams = teamsAll
+      .filter((t) => t.leagueId === base && t.id.endsWith("_2"))
+      .map((t) => t.id);
 
     // 팀별 현재 구성 — 한 번만 훑는다
     const roster = new Map<string, Array<{ playerType?: string; position?: string }>>();
@@ -440,8 +492,8 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
       const bat = cur.length - pit;
       // ⚠ 총원이 아니라 **부류별로** 본다. 야수 25명·투수 4명인 팀은 총원으로는
       // 멀쩡해 보이지만 등판이 안 돈다 — 이 프로젝트에서 반복된 형태다.
-      let short = Math.max(0, (dev.minPitchers ?? 0) - pit)
-                + Math.max(0, (dev.minBatters ?? 0) - bat);
+      let short =
+        Math.max(0, (dev.minPitchers ?? 0) - pit) + Math.max(0, (dev.minBatters ?? 0) - bat);
       // ⚠ **부류별로 봐도 자리는 못 본다.** 야수 21·투수 21인데 포수가 0명인
       // 팀은 `short === 0`이라 한 명도 안 만들어진다 — 이 프로젝트에서 반복된
       // "몇 명은 맞고 어느 자리가 틀렸다"의 그 형태다. 콜업 쪽은 2군의
@@ -460,7 +512,12 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
       // 계측 — 판단의 입력과 결과를 그대로 남긴다
       if (farmDevLog.length < 4000) {
         farmDevLog.push({
-          year: seasonYear, teamId, pit, bat, short, want,
+          year: seasonYear,
+          teamId,
+          pit,
+          bat,
+          short,
+          want,
           capped: short > (dev.maxPerYear ?? 4),
           noCatcher: !cur.some((p) => p.position === "C"),
         });
@@ -468,27 +525,39 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
       if (want <= 0) continue;
 
       const raw = JSON.parse(
-        await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
-          schoolId: teamId, teamId,
-          annualRosterSize: want,
-          // ⚠ **육성선수는 지명자보다 약하게 시작한다** (사용자 확정 2026-08-07).
-          // 안 그러면 미지명자를 2군에 흘려보낸 순간 드래프트가 무의미해진다
-          pitchingOvrMin: dev.ovrMin ?? rules.pitchingOvrMin,
-          pitchingOvrMax: dev.ovrMax ?? rules.pitchingOvrMax,
-          battingOvrMin: dev.ovrMin ?? rules.battingOvrMin,
-          battingOvrMax: dev.ovrMax ?? rules.battingOvrMax,
-          // ⚠ **천장은 안 낮춘다.** 안 넘기면 천장이 `ovrMax * pot_mult`라
-          // 시작 능력치와 같이 내려가고, "지금은 약하지만 클 수 있다"가 그냥
-          // 약한 선수가 된다 — 육성선수가 프로가 되는 경로 자체가 없어진다
-          potentialOvrMax: Math.max(rules.pitchingOvrMax ?? 0, rules.battingOvrMax ?? 0),
-          devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
-          namedNpcs: [], seasonYear, idOffset: 0,
-          pitcherRatio: pitcherRatioOf(rules),
-          talent: talentOf(rulesFile),
-          // 포수 0명인 팀이 여기서 메워진다 — 빈 야수 자리가 맨 앞이다
-          neededPositions: neededPositions(
-            cur, want, dev.minPitchers ?? 0, undefined, pitcherRatioOf(rules)),
-        })),
+        await window.projectB!.engine(
+          "generateFreshmenNative",
+          JSON.stringify({
+            schoolId: teamId,
+            teamId,
+            annualRosterSize: want,
+            // ⚠ **육성선수는 지명자보다 약하게 시작한다** (사용자 확정 2026-08-07).
+            // 안 그러면 미지명자를 2군에 흘려보낸 순간 드래프트가 무의미해진다
+            pitchingOvrMin: dev.ovrMin ?? rules.pitchingOvrMin,
+            pitchingOvrMax: dev.ovrMax ?? rules.pitchingOvrMax,
+            battingOvrMin: dev.ovrMin ?? rules.battingOvrMin,
+            battingOvrMax: dev.ovrMax ?? rules.battingOvrMax,
+            // ⚠ **천장은 안 낮춘다.** 안 넘기면 천장이 `ovrMax * pot_mult`라
+            // 시작 능력치와 같이 내려가고, "지금은 약하지만 클 수 있다"가 그냥
+            // 약한 선수가 된다 — 육성선수가 프로가 되는 경로 자체가 없어진다
+            potentialOvrMax: Math.max(rules.pitchingOvrMax ?? 0, rules.battingOvrMax ?? 0),
+            devRateMin: rules.devRateMin,
+            devRateMax: rules.devRateMax,
+            namedNpcs: [],
+            seasonYear,
+            idOffset: 0,
+            pitcherRatio: pitcherRatioOf(rules),
+            talent: talentOf(rulesFile),
+            // 포수 0명인 팀이 여기서 메워진다 — 빈 야수 자리가 맨 앞이다
+            neededPositions: neededPositions(
+              cur,
+              want,
+              dev.minPitchers ?? 0,
+              undefined,
+              pitcherRatioOf(rules),
+            ),
+          }),
+        ),
       ) as NpcSaveState[];
       if (!Array.isArray(raw)) continue;
       // 생성기는 리그를 모른다 — 팀에서 파생한 값으로 맞춘다
@@ -498,15 +567,21 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
   }
   if (newOnes.length === 0) return 0;
 
-  await slotRepo.insertNpcs(slotId, newOnes.map((n) => saveStateToRepoNpc(n)));
+  await slotRepo.insertNpcs(
+    slotId,
+    newOnes.map((n) => saveStateToRepoNpc(n)),
+  );
   gameStore.addNpcs(newOnes);
   npcLiveStatsStore.update((st) => {
     const next = { ...st };
     for (const n of newOnes) {
       next[n.npcId] = {
-        pitching: n.pitching, batting: n.batting,
-        pitchingXp: {}, battingXp: {},
-        seasonStartPitching: n.pitching, seasonStartBatting: n.batting,
+        pitching: n.pitching,
+        batting: n.batting,
+        pitchingXp: {},
+        battingXp: {},
+        seasonStartPitching: n.pitching,
+        seasonStartBatting: n.batting,
         peakOvr: n.pitching?.ovr ?? n.batting?.ovr,
         pitches: [],
       };
@@ -517,9 +592,12 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
 }
 
 /** 주인공 소속 리그 로스터 보장 — 진학/프로 진입 후 첫 주 진행 시 Lazy 활성화 (DESIGN.md §2.2) */
-export async function ensureLeagueActivatedV3(leagueId: string, seasonYear: number): Promise<number> {
+export async function ensureLeagueActivatedV3(
+  leagueId: string,
+  seasonYear: number,
+): Promise<number> {
   if (!isV3SlotActive()) return 0;
-  if (leagueId === "LEAGUE_HIGHSCHOOL") return 0;  // 시작 리그 — 새 게임에서 생성됨
+  if (leagueId === "LEAGUE_HIGHSCHOOL") return 0; // 시작 리그 — 새 게임에서 생성됨
   const g = get(gameStore);
   const slotId = g.currentSlotId;
   if (!slotId) return 0;
@@ -531,12 +609,10 @@ export async function ensureLeagueActivatedV3(leagueId: string, seasonYear: numb
   const isFarm = leagueId.endsWith("_FARM");
   const baseLeague = isFarm ? leagueId.slice(0, -"_FARM".length) : leagueId;
   const isPro = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(baseLeague);
-  const teams = get(masterStore).teams
-    .filter((t) => t.leagueId === baseLeague)
+  const teams = get(masterStore)
+    .teams.filter((t) => t.leagueId === baseLeague)
     // 상무는 Lazy 활성화 대상이 아니다 — 로스터는 military_roster.rs가 따로 만든다
-    .filter((t) => (isPro
-      ? t.id.endsWith(isFarm ? "_2" : "_1")
-      : !SANGMU_TEAM_IDS.has(t.id)))
+    .filter((t) => (isPro ? t.id.endsWith(isFarm ? "_2" : "_1") : !SANGMU_TEAM_IDS.has(t.id)))
     .map((t) => ({ teamId: t.id }));
   if (teams.length === 0) return 0;
 
@@ -567,7 +643,9 @@ export interface StartNewGameV3Options {
 }
 
 /** v3 새 게임: 스토어 초기화 → 시즌 생성 → 로스터 생성·슬롯 생성 → hydrate */
-export async function startNewGameV3(opts: StartNewGameV3Options): Promise<{ npcCount: number; worldSeed: number }> {
+export async function startNewGameV3(
+  opts: StartNewGameV3Options,
+): Promise<{ npcCount: number; worldSeed: number }> {
   // 새 게임도 마찬가지다 — 앞 게임의 연도 가드가 남아 있으면
   // 새 세계의 그 해가 스킵된다.
   resetWorldSeasonEndGuard();

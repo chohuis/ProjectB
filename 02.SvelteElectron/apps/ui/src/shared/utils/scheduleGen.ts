@@ -30,7 +30,15 @@ export async function generateSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleGeneric(
-    JSON.stringify({ teamIds, protagonistTeamId, totalWeeks, seasonStart, seasonEnd, postseasonEnd, seasonYear })
+    JSON.stringify({
+      teamIds,
+      protagonistTeamId,
+      totalWeeks,
+      seasonStart,
+      seasonEnd,
+      postseasonEnd,
+      seasonYear,
+    }),
   );
   return JSON.parse(raw);
 }
@@ -41,7 +49,13 @@ export async function generateKblSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleKbl(
-    JSON.stringify({ teamIds, protagonistTeamId, seasonYear, startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK })
+    JSON.stringify({
+      teamIds,
+      protagonistTeamId,
+      seasonYear,
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+    }),
   );
   return JSON.parse(raw);
 }
@@ -52,7 +66,13 @@ export async function generateAblSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleAbl(
-    JSON.stringify({ teamIds, protagonistTeamId, seasonYear, startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK })
+    JSON.stringify({
+      teamIds,
+      protagonistTeamId,
+      seasonYear,
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+    }),
   );
   return JSON.parse(raw);
 }
@@ -63,8 +83,13 @@ export async function generateJblSchedule(
   seasonYear = 2026,
 ): Promise<ScheduleEntry[]> {
   const raw = await window.projectB!.scheduleJbl(
-    JSON.stringify({ teamIds, protagonistTeamId, seasonYear, startWeek: PRO_START_WEEK, endWeek: PRO_END_WEEK })
+    JSON.stringify({
+      teamIds,
+      protagonistTeamId,
+      seasonYear,
+      startWeek: PRO_START_WEEK,
+      endWeek: PRO_END_WEEK,
+    }),
   );
   return JSON.parse(raw);
 }
-

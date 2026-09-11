@@ -10,16 +10,13 @@ import { resolve } from "node:path";
  *    진짜로 없던 것은 **여러 해를 가로지르는 뷰**다. 15~20시즌을 뛰고 나면
  *    "어느 해에 누가 우승했나"를 알려면 연도 선택을 스무 번 돌려야 했다.
  */
-const SRC = readFileSync(
-  resolve(__dirname, "../league/LeaguePage.svelte"), "utf8");
-const STORE = readFileSync(
-  resolve(__dirname, "../../shared/stores/leagueUiStore.ts"), "utf8");
+const SRC = readFileSync(resolve(__dirname, "../league/LeaguePage.svelte"), "utf8");
+const STORE = readFileSync(resolve(__dirname, "../../shared/stores/leagueUiStore.ts"), "utf8");
 
 describe("역대 탭 — 여러 해를 가로지른다", () => {
   it("탭 유니온의 정본에 `history` 가 있다", () => {
     // ⚠ 페이지가 아니라 스토어가 정본이다 — 그 파일 주석이 못박아 뒀다
-    expect(STORE, "leagueUiStore 의 LeagueTab 에 history 가 없다")
-      .toMatch(/\| "history"/);
+    expect(STORE, "leagueUiStore 의 LeagueTab 에 history 가 없다").toMatch(/\| "history"/);
   });
 
   it("탭 버튼이 있다", () => {
@@ -36,8 +33,9 @@ describe("역대 탭 — 여러 해를 가로지른다", () => {
    *    A 회신 §2 가 "빈 상태를 정상으로 다뤄라"라고 못박았다.
    */
   it("빈 상태를 결함처럼 보이게 쓰지 않는다", () => {
-    expect(SRC, "빈 상태 안내가 없다 — 첫 시즌 전에는 늘 비어 있다")
-      .toMatch(/아직 지나간 시즌이 없습니다/);
+    expect(SRC, "빈 상태 안내가 없다 — 첫 시즌 전에는 늘 비어 있다").toMatch(
+      /아직 지나간 시즌이 없습니다/,
+    );
   });
 
   /**
@@ -72,11 +70,11 @@ describe("수상은 한 번에 읽는다", () => {
   });
 
   it("slotdb 가 연도 없이도 읽는다", () => {
-    const DB = readFileSync(
-      resolve(__dirname, "../../../../desktop/ipc/slotdb.cjs"), "utf8");
+    const DB = readFileSync(resolve(__dirname, "../../../../desktop/ipc/slotdb.cjs"), "utf8");
     const fn = DB.slice(DB.indexOf("getHistoryLeague(db, p)"));
-    expect(fn, "leagueId 를 필수로 요구하면 전 연도 조회가 깨진다")
-      .not.toMatch(/WHERE league_id = \?"\)\.all\(p\.leagueId\)/);
+    expect(fn, "leagueId 를 필수로 요구하면 전 연도 조회가 깨진다").not.toMatch(
+      /WHERE league_id = \?"\)\.all\(p\.leagueId\)/,
+    );
     expect(fn).toMatch(/if \(p\.kind\)/);
   });
 });
@@ -101,9 +99,11 @@ describe("수상은 한 번에 읽는다", () => {
  */
 describe("2군 순위표가 사라지지 않는다 (B8)", () => {
   it("`_2` 제외를 1군 화면에서만 한다", () => {
-    expect(SRC, "2군을 무조건 빼고 있다 — 팜 리그 과거 순위가 통째로 사라진다")
-      .not.toMatch(/\.filter\(r => !r\.team_id\.endsWith\("_2"\)\)/);
-    expect(SRC, "1군 보호가 사라졌다 — 옛 세이브에서 32팀이 다시 뜬다")
-      .toMatch(/lid\.endsWith\("_FARM"\) \|\| !r\.team_id\.endsWith\("_2"\)/);
+    expect(SRC, "2군을 무조건 빼고 있다 — 팜 리그 과거 순위가 통째로 사라진다").not.toMatch(
+      /\.filter\(r => !r\.team_id\.endsWith\("_2"\)\)/,
+    );
+    expect(SRC, "1군 보호가 사라졌다 — 옛 세이브에서 32팀이 다시 뜬다").toMatch(
+      /lid\.endsWith\("_FARM"\) \|\| !r\.team_id\.endsWith\("_2"\)/,
+    );
   });
 });

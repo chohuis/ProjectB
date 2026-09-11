@@ -25,14 +25,14 @@ export interface HsRegionMeta {
 }
 
 const META: Record<string, HsRegionMeta> = {
-  STADIUM_HANGANG:   { label: "한강",   area: "서울",                 order: 1 },
-  STADIUM_MUJIGAE:   { label: "무지개", area: "경기 · 인천",          order: 2 },
-  STADIUM_GYERYONG:  { label: "계룡",   area: "충청 · 대전",          order: 3 },
-  STADIUM_SEORAK_HS: { label: "설악",   area: "강원",                 order: 4 },
-  STADIUM_YEONGSAN:  { label: "영산",   area: "호남 · 광주",          order: 5 },
-  STADIUM_PALGONG:   { label: "팔공",   area: "대구 · 경북",          order: 6 },
-  STADIUM_NAKDONG:   { label: "낙동",   area: "부산 · 경남 · 울산",   order: 7 },
-  STADIUM_HALLA:     { label: "한라",   area: "제주",                 order: 8 },
+  STADIUM_HANGANG: { label: "한강", area: "서울", order: 1 },
+  STADIUM_MUJIGAE: { label: "무지개", area: "경기 · 인천", order: 2 },
+  STADIUM_GYERYONG: { label: "계룡", area: "충청 · 대전", order: 3 },
+  STADIUM_SEORAK_HS: { label: "설악", area: "강원", order: 4 },
+  STADIUM_YEONGSAN: { label: "영산", area: "호남 · 광주", order: 5 },
+  STADIUM_PALGONG: { label: "팔공", area: "대구 · 경북", order: 6 },
+  STADIUM_NAKDONG: { label: "낙동", area: "부산 · 경남 · 울산", order: 7 },
+  STADIUM_HALLA: { label: "한라", area: "제주", order: 8 },
 };
 
 /** 모르는 권역이 와도 화면이 비지 않게 ID를 그대로 돌려준다 */

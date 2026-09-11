@@ -21,8 +21,15 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 const rec = (stats: CareerSeasonRecord["stats"]): CareerSeasonRecord =>
-  ({ year: 2030, leagueId: "LEAGUE_KBL", teamId: "T", statLine: "", ovr: 70,
-     awards: [], stats } as CareerSeasonRecord);
+  ({
+    year: 2030,
+    leagueId: "LEAGUE_KBL",
+    teamId: "T",
+    statLine: "",
+    ovr: 70,
+    awards: [],
+    stats,
+  }) as CareerSeasonRecord;
 
 describe("기록 표시 배선", () => {
   it("리그 버킷도 로드에서 정리한다", () => {
@@ -45,38 +52,97 @@ describe("기록 표시 배선", () => {
   it("통산 출루율이 사구를 세고 희생번트를 안 센다", () => {
     // AB 100 · H 30 · BB 10 · HBP 5 · SAC 4 · SF 1
     // OBP = (30+10+5) / (100+10+5+1) = 45/116 = .388
-    const t = careerTotalsOf([rec({
-      type: "batter", g: 100, pa: 120, ab: 100, h: 30, hr: 5, rbi: 20,
-      sb: 0, bb: 10, k: 20, avg: 0.3, obp: 0, slg: 0.5, ops: 0,
-      hbp: 5, sac: 4, sf: 1,
-    } as CareerSeasonRecord["stats"])]);
+    const t = careerTotalsOf([
+      rec({
+        type: "batter",
+        g: 100,
+        pa: 120,
+        ab: 100,
+        h: 30,
+        hr: 5,
+        rbi: 20,
+        sb: 0,
+        bb: 10,
+        k: 20,
+        avg: 0.3,
+        obp: 0,
+        slg: 0.5,
+        ops: 0,
+        hbp: 5,
+        sac: 4,
+        sf: 1,
+      } as CareerSeasonRecord["stats"]),
+    ]);
     expect(t.batting?.obp).toBe(".388");
   });
 
   /** ⚠ 구 세이브엔 사구·희생타가 없다 — 옛 식(AB+BB)으로 떨어져야 한다 */
   it("구 세이브는 옛 식으로 떨어진다", () => {
     // (30+10) / (100+10) = .364
-    const t = careerTotalsOf([rec({
-      type: "batter", g: 100, pa: 110, ab: 100, h: 30, hr: 5, rbi: 20,
-      sb: 0, bb: 10, k: 20, avg: 0.3, obp: 0, slg: 0.5, ops: 0,
-    } as CareerSeasonRecord["stats"])]);
+    const t = careerTotalsOf([
+      rec({
+        type: "batter",
+        g: 100,
+        pa: 110,
+        ab: 100,
+        h: 30,
+        hr: 5,
+        rbi: 20,
+        sb: 0,
+        bb: 10,
+        k: 20,
+        avg: 0.3,
+        obp: 0,
+        slg: 0.5,
+        ops: 0,
+      } as CareerSeasonRecord["stats"]),
+    ]);
     expect(t.batting?.obp).toBe(".364");
   });
 
   /** 🔴 없는 것과 0을 가른다 — 0이면 "통산 피홈런 0인 투수"가 되어 거짓이다 */
   it("구 세이브의 없는 칸을 0으로 만들지 않는다", () => {
-    const t = careerTotalsOf([rec({
-      type: "pitcher", g: 30, gs: 30, w: 10, l: 10, sv: 0, hd: 0,
-      ip: 180, er: 60, h: 170, k: 150, bb: 50, era: 3.0, whip: 1.2,
-    } as CareerSeasonRecord["stats"])]);
+    const t = careerTotalsOf([
+      rec({
+        type: "pitcher",
+        g: 30,
+        gs: 30,
+        w: 10,
+        l: 10,
+        sv: 0,
+        hd: 0,
+        ip: 180,
+        er: 60,
+        h: 170,
+        k: 150,
+        bb: 50,
+        era: 3.0,
+        whip: 1.2,
+      } as CareerSeasonRecord["stats"]),
+    ]);
     expect(t.pitching?.hr).toBeUndefined();
     expect(t.pitching?.hbp).toBeUndefined();
   });
 
   it("있으면 통산으로 합친다", () => {
-    const one = { type: "pitcher", g: 30, gs: 30, w: 10, l: 10, sv: 0, hd: 0,
-      ip: 180, er: 60, h: 170, k: 150, bb: 50, era: 3.0, whip: 1.2,
-      hr: 14, hbp: 6 } as CareerSeasonRecord["stats"];
+    const one = {
+      type: "pitcher",
+      g: 30,
+      gs: 30,
+      w: 10,
+      l: 10,
+      sv: 0,
+      hd: 0,
+      ip: 180,
+      er: 60,
+      h: 170,
+      k: 150,
+      bb: 50,
+      era: 3.0,
+      whip: 1.2,
+      hr: 14,
+      hbp: 6,
+    } as CareerSeasonRecord["stats"];
     const t = careerTotalsOf([rec(one), rec(one)]);
     expect(t.pitching?.hr).toBe(28);
     expect(t.pitching?.hbp).toBe(12);

@@ -22,14 +22,11 @@ import { defForLeague } from "../seasonAwards";
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const rules = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-).awardRules as {
+const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")).awardRules as {
   batter: Array<Record<string, unknown>>;
   pitcher: Array<Record<string, unknown>>;
 };
-const byId = (id: string) =>
-  [...rules.pitcher, ...rules.batter].find((d) => d.id === id)!;
+const byId = (id: string) => [...rules.pitcher, ...rules.batter].find((d) => d.id === id)!;
 
 describe("리그별 자격선", () => {
   it("안 적은 리그는 기본값 그대로다", () => {
@@ -67,7 +64,8 @@ describe("리그별 자격선", () => {
 
 describe("배선", () => {
   const src = read("apps/ui/src/shared/usecases/seasonAwards.ts")
-    .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
 
   it("🔴 판정이 리그를 받는다", () => {
     // 안 넘기면 기본값이라 **조용히 예전 동작**이 된다 — 고교가 다시 0건
@@ -83,9 +81,11 @@ describe("배선", () => {
   it("결산 화면도 같은 규칙을 쓴다", () => {
     // ⚠ 정본이 둘이면 **모달에 뜬 수상자와 경력기록이 달라진다** — 겪은 결함이다
     const modal = read("apps/ui/src/features/season-end/ui/SeasonEndModal.svelte");
-    expect(modal.includes(
-      "computeAwards(awardRules, leagueStatsOf($seasonStore, $seasonStore.leagueId), $seasonStore.leagueId)"
-    )).toBe(true);
+    expect(
+      modal.includes(
+        "computeAwards(awardRules, leagueStatsOf($seasonStore, $seasonStore.leagueId), $seasonStore.leagueId)",
+      ),
+    ).toBe(true);
   });
 
   it("🔴 계측도 같은 규칙을 읽는다", () => {

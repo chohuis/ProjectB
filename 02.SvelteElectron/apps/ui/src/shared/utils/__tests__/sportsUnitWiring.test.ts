@@ -22,23 +22,32 @@ import { sportsVacatingPositions, sportsVacatingFromNpcs } from "../militaryRule
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
-const GAME  = read("apps/ui/src/shared/stores/game.ts");
-const WEEK  = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+const GAME = read("apps/ui/src/shared/stores/game.ts");
+const WEEK = read("apps/ui/src/shared/usecases/advanceWeek.ts");
 const RULES = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
-  militaryRules?: { rosterSize?: number; serviceMonths?: number; phase1Ratio?: number; maxPerTeam?: number };
+  militaryRules?: {
+    rosterSize?: number;
+    serviceMonths?: number;
+    phase1Ratio?: number;
+    maxPerTeam?: number;
+  };
 };
 
 describe("체육부대 선발 배선", () => {
   /** 🔴 호출부가 늘면 이 수가 바뀐다 — 그때 새 자리도 배선했는지 본다 */
   it("호출부가 둘이다", () => {
-    const n = (GAME.split("militaryCalcSelection").length - 1)
-            + (WEEK.split("militaryCalcSelection").length - 1);
-    expect(n).toBe(3);   // game.ts 2회(호출 + 오류 로그) · advanceWeek 1회
+    const n =
+      GAME.split("militaryCalcSelection").length -
+      1 +
+      (WEEK.split("militaryCalcSelection").length - 1);
+    expect(n).toBe(3); // game.ts 2회(호출 + 오류 로그) · advanceWeek 1회
   });
 
   it("두 호출부가 모두 전역자 포지션을 넘긴다", () => {
     expect(GAME.includes("vacatingPositions: sportsVacatingPositions(discharging)")).toBe(true);
-    expect(WEEK.includes("vacatingPositions: sportsVacatingFromNpcs(g.npcs, s.seasonYear)")).toBe(true);
+    expect(WEEK.includes("vacatingPositions: sportsVacatingFromNpcs(g.npcs, s.seasonYear)")).toBe(
+      true,
+    );
   });
 
   it("두 호출부가 모두 Phase 1 몫을 넘긴다", () => {
@@ -74,9 +83,9 @@ describe("전역자 포지션 뽑기", () => {
    */
   it("엔티티 쪽 — 일반병을 뺀다", () => {
     const rows = [
-      { details: { player: { militaryUnit: "sports",  position: "SP" } } },
+      { details: { player: { militaryUnit: "sports", position: "SP" } } },
       { details: { player: { militaryUnit: "general", position: "RP" } } },
-      { details: { player: { militaryUnit: "sports",  position: "" } } },   // 포지션 미정
+      { details: { player: { militaryUnit: "sports", position: "" } } }, // 포지션 미정
       { details: { player: {} } },
     ];
     expect(sportsVacatingPositions(rows)).toEqual(["SP"]);
@@ -88,10 +97,30 @@ describe("전역자 포지션 뽑기", () => {
    */
   it("NPC 쪽 — 올해 전역하는 상무만", () => {
     const npcs = [
-      { militaryUnit: "sports",  militaryStatus: "현역", militaryDischargeYear: 2030, position: "SP" },
-      { militaryUnit: "sports",  militaryStatus: "현역", militaryDischargeYear: 2031, position: "RP" }, // 내년
-      { militaryUnit: "general", militaryStatus: "현역", militaryDischargeYear: 2030, position: "CP" }, // 일반병
-      { militaryUnit: "sports",  militaryStatus: "군필", militaryDischargeYear: 2030, position: "SP" }, // 이미 전역
+      {
+        militaryUnit: "sports",
+        militaryStatus: "현역",
+        militaryDischargeYear: 2030,
+        position: "SP",
+      },
+      {
+        militaryUnit: "sports",
+        militaryStatus: "현역",
+        militaryDischargeYear: 2031,
+        position: "RP",
+      }, // 내년
+      {
+        militaryUnit: "general",
+        militaryStatus: "현역",
+        militaryDischargeYear: 2030,
+        position: "CP",
+      }, // 일반병
+      {
+        militaryUnit: "sports",
+        militaryStatus: "군필",
+        militaryDischargeYear: 2030,
+        position: "SP",
+      }, // 이미 전역
     ];
     expect(sportsVacatingFromNpcs(npcs, 2030)).toEqual(["SP"]);
   });

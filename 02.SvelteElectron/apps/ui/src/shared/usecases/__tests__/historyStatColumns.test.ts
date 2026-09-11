@@ -23,20 +23,19 @@ const PIT = ["hr_p", "hbp_p", "risp_ab_p", "risp_h_p"];
 const BAT = ["b2", "b3", "r_b", "hbp_b", "sac", "sf", "risp_ab_b", "risp_h_b"];
 
 describe("과거 시즌 기록 칸", () => {
-  const DB   = read("apps/desktop/ipc/db.cjs");
+  const DB = read("apps/desktop/ipc/db.cjs");
   const MAIN = read("apps/desktop/main.cjs");
   const ROLL = read("apps/ui/src/shared/usecases/seasonRollover.ts");
-  const LP   = read("apps/ui/src/pages/league/LeaguePage.svelte");
+  const LP = read("apps/ui/src/pages/league/LeaguePage.svelte");
 
   it("스키마에 12칸이 있다", () => {
-    expect(DB).toContain('if (currentVersion < 12) {');
+    expect(DB).toContain("if (currentVersion < 12) {");
     for (const c of [...PIT, ...BAT]) expect(DB, c).toContain(`"${c}"`);
   });
 
   /** 🔴 v12를 v11 **앞**에 넣으면 뒤 블록이 버전을 덮어써 영원히 다시 돈다 */
   it("v12가 v11 뒤에 온다", () => {
-    expect(DB.indexOf("currentVersion < 12"))
-      .toBeGreaterThan(DB.indexOf("currentVersion < 11"));
+    expect(DB.indexOf("currentVersion < 12")).toBeGreaterThan(DB.indexOf("currentVersion < 11"));
   });
 
   it("INSERT가 12칸을 싣는다", () => {
@@ -51,8 +50,20 @@ describe("과거 시즌 기록 칸", () => {
   });
 
   it("저장이 12칸을 보낸다", () => {
-    for (const k of ["hrP:", "hbpP:", "rispAbP:", "rispHP:",
-                     "b2:", "b3:", "rB:", "hbpB:", "sac:", "sf:", "rispAbB:", "rispHB:"]) {
+    for (const k of [
+      "hrP:",
+      "hbpP:",
+      "rispAbP:",
+      "rispHP:",
+      "b2:",
+      "b3:",
+      "rB:",
+      "hbpB:",
+      "sac:",
+      "sf:",
+      "rispAbB:",
+      "rispHB:",
+    ]) {
       expect(ROLL, k).toContain(k);
     }
   });

@@ -1,5 +1,11 @@
 import { monthNameOf } from "./seasonCalendar";
-import type { ProtagonistSave, Top10Entry, Top10Snapshot, PitcherSeasonStats, BatterSeasonStats } from "../types/save";
+import type {
+  ProtagonistSave,
+  Top10Entry,
+  Top10Snapshot,
+  PitcherSeasonStats,
+  BatterSeasonStats,
+} from "../types/save";
 import type { EntityRow } from "../stores/master";
 import type { MessageItem, Top10Column, Top10Metadata } from "../types/main";
 
@@ -23,7 +29,11 @@ const weekToMonthLabel = monthNameOf;
 
 /** Rust에 넘길 NPC 한 명 — **필요한 것만** 보낸다(주당 1,377명이다) */
 interface ProspectNpcPayload {
-  id: string; name: string; teamName: string; ovr: number; grade: number;
+  id: string;
+  name: string;
+  teamName: string;
+  ovr: number;
+  grade: number;
 }
 
 /** 후보 풀을 만든다. 한 번 만들어 네 컬럼이 돌려 쓴다 */
@@ -40,7 +50,9 @@ function buildNpcPayload(
     if (!d || d.playerType !== type) continue;
     if (n.entryYear && seasonYear && n.entryYear > seasonYear) continue;
     out.push({
-      id: n.id, name: n.name, teamName: teamNameOf(n.teamId),
+      id: n.id,
+      name: n.name,
+      teamName: teamNameOf(n.teamId),
       ovr: type === "pitcher" ? d.pitching.ovr : d.batting.ovr,
       grade: n.grade ?? 3,
     });
@@ -57,7 +69,10 @@ function heroStatsPayload(stats: PitcherSeasonStats | BatterSeasonStats | null) 
   return { hasStats: true, isPitcher: false, pa: stats.pa ?? 0, avg: stats.avg, ops: stats.ops };
 }
 
-interface RankResult { entries: (Top10Entry & { score: number })[]; heroRank: number }
+interface RankResult {
+  entries: (Top10Entry & { score: number })[];
+  heroRank: number;
+}
 
 /**
  * Rust에 순위를 물어본다.
@@ -77,16 +92,22 @@ async function rankFromEngine(
   if (!api) return { entries: [], heroRank: 0 };
   const isPitcher = protagonist.playerType === "pitcher";
   try {
-    return JSON.parse(await api("calcProspectRankNative", JSON.stringify({
-      npcs, week,
-      heroName: protagonist.name,
-      heroTeamName: teamName,
-      heroOvr: isPitcher ? protagonist.pitching.ovr : protagonist.batting.ovr,
-      heroScoutScore: protagonist.scoutScore,
-      heroGrade: protagonist.grade ?? 1,
-      gradeFilter,
-      ...heroStatsPayload(stats),
-    }))) as RankResult;
+    return JSON.parse(
+      await api(
+        "calcProspectRankNative",
+        JSON.stringify({
+          npcs,
+          week,
+          heroName: protagonist.name,
+          heroTeamName: teamName,
+          heroOvr: isPitcher ? protagonist.pitching.ovr : protagonist.batting.ovr,
+          heroScoutScore: protagonist.scoutScore,
+          heroGrade: protagonist.grade ?? 1,
+          gradeFilter,
+          ...heroStatsPayload(stats),
+        }),
+      ),
+    ) as RankResult;
   } catch {
     return { entries: [], heroRank: 0 };
   }
@@ -101,7 +122,6 @@ async function rankFromEngine(
 // 이름의 정본은 `refs.json` → `masterStore.teams`다. 부르는 쪽이 넘긴다.
 type TeamNameLookup = (teamId: string) => string;
 
-
 // ── TOP 10 생성 ───────────────────────────────────────────────
 export async function generateTop10(
   protagonist: ProtagonistSave,
@@ -115,7 +135,12 @@ export async function generateTop10(
   const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
   const npcs = buildNpcPayload(allEntities, type, seasonYear, teamNameOf);
   const r = await rankFromEngine(
-    npcs, protagonist, stats, teamNameOf(protagonist.teamId), seasonWeek, 0,
+    npcs,
+    protagonist,
+    stats,
+    teamNameOf(protagonist.teamId),
+    seasonWeek,
+    0,
   );
   return { type, grade, week: seasonWeek, entries: r.entries };
 }
@@ -154,7 +179,7 @@ export async function buildTop10Metadata(
     week: weekNum,
     seasonYear,
     columns: [
-      await makeCol("통합",  0, true),
+      await makeCol("통합", 0, true),
       await makeCol("3학년", 3, heroGrade === 3),
       await makeCol("2학년", 2, heroGrade === 2),
       await makeCol("1학년", 1, heroGrade === 1),
@@ -164,9 +189,9 @@ export async function buildTop10Metadata(
 
 // ── IN/OUT/이동 계산 ─────────────────────────────────────────
 interface Changes {
-  ins:   Top10Entry[];
-  outs:  Top10Entry[];
-  moves: Record<string, number>;  // id → 순위 변동 (양수=상승)
+  ins: Top10Entry[];
+  outs: Top10Entry[];
+  moves: Record<string, number>; // id → 순위 변동 (양수=상승)
 }
 
 function calcChanges(curr: Top10Snapshot, last: Top10Snapshot | null): Changes {
@@ -175,7 +200,7 @@ function calcChanges(curr: Top10Snapshot, last: Top10Snapshot | null): Changes {
   const lastMap = new Map(last.entries.map((e) => [e.id, e.rank]));
   const currSet = new Set(curr.entries.map((e) => e.id));
 
-  const ins  = curr.entries.filter((e) => !lastMap.has(e.id));
+  const ins = curr.entries.filter((e) => !lastMap.has(e.id));
   const outs = last.entries.filter((e) => !currSet.has(e.id));
   const moves: Record<string, number> = {};
   for (const e of curr.entries) {
@@ -204,7 +229,7 @@ export async function buildTop10Message(
   seasonYear: number | undefined,
   teamNameOf: TeamNameLookup,
 ): Promise<MessageItem> {
-  const typeKr  = curr.type === "pitcher" ? "투수" : "타자";
+  const typeKr = curr.type === "pitcher" ? "투수" : "타자";
   const monthKr = weekToMonthLabel(weekNum);
   const gradeKr = `고${curr.grade}`;
 
@@ -214,7 +239,12 @@ export async function buildTop10Message(
   // ⚠ **메타를 먼저 만든다.** 통합 컬럼의 `heroRank`가 TOP10 밖일 때의
   //   순위다 — 예전엔 그걸 `heroRankInAll`로 **다시 계산**했다.
   const metadata = await buildTop10Metadata(
-    protagonist, stats, allEntities, weekNum, seasonYear ?? 0, teamNameOf,
+    protagonist,
+    stats,
+    allEntities,
+    weekNum,
+    seasonYear ?? 0,
+    teamNameOf,
   );
   const overallHeroRank = heroEntry?.rank ?? metadata.columns[0]?.heroRank ?? 0;
 
@@ -224,23 +254,27 @@ export async function buildTop10Message(
 
   return {
     // 🔴 **연도+종류+주차**다. 월간 랭킹이라 한 주에 종류당 한 통이다
-    id:        `msg-top10-${seasonYear ?? 0}-${curr.type}-w${weekNum}`,
-    category:  "news",
-    sender:    "스포츠 매체",
+    id: `msg-top10-${seasonYear ?? 0}-${curr.type}-w${weekNum}`,
+    category: "news",
+    sender: "스포츠 매체",
     subject,
-    preview:   inTop10 ? `통합 ${overallHeroRank}위 진입` : `통합 순위 ${overallHeroRank}위권`,
-    body:      subject,
+    preview: inTop10 ? `통합 ${overallHeroRank}위 진입` : `통합 순위 ${overallHeroRank}위권`,
+    body: subject,
     createdAt: `W${weekNum}`,
-    readAt:    null,
+    readAt: null,
     metadata,
   };
 }
 
 // ── 효과 수치 ─────────────────────────────────────────────────
-export function rankEffect(rank: number): { popularity: number; scoutScore: number; morale: number } {
-  if (rank === 1)           return { popularity: 10, scoutScore: 5, morale: 5 };
-  if (rank <= 3)            return { popularity:  7, scoutScore: 3, morale: 3 };
-  if (rank <= 5)            return { popularity:  5, scoutScore: 2, morale: 2 };
-  if (rank <= 10)           return { popularity:  3, scoutScore: 1, morale: 1 };
-  return                           { popularity:  0, scoutScore: 0, morale: 0 };
+export function rankEffect(rank: number): {
+  popularity: number;
+  scoutScore: number;
+  morale: number;
+} {
+  if (rank === 1) return { popularity: 10, scoutScore: 5, morale: 5 };
+  if (rank <= 3) return { popularity: 7, scoutScore: 3, morale: 3 };
+  if (rank <= 5) return { popularity: 5, scoutScore: 2, morale: 2 };
+  if (rank <= 10) return { popularity: 3, scoutScore: 1, morale: 1 };
+  return { popularity: 0, scoutScore: 0, morale: 0 };
 }

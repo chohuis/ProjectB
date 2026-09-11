@@ -3,13 +3,32 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { ContractIncentive } from "../../types/save";
 import {
-  CLAUSE_OPTIONS, clauseById, clauseAddable, addClause, removeClause,
-  clauseTerms, clauseMultiplier,
-  primeContractRules, contractRules, minSalaryOf, awardLabelOf,
-  incentiveCandidates, incentiveLabel, incentiveKey, incentiveAddable,
-  addIncentive, removeIncentive, incentiveTotal, incentiveTotalCap, maxIncentives,
-  counterOfferRounds, requestedSalaryOf, contractTotalValue,
-  acceptThresholdOf, acceptProbabilityOf, compareRows,
+  CLAUSE_OPTIONS,
+  clauseById,
+  clauseAddable,
+  addClause,
+  removeClause,
+  clauseTerms,
+  clauseMultiplier,
+  primeContractRules,
+  contractRules,
+  minSalaryOf,
+  awardLabelOf,
+  incentiveCandidates,
+  incentiveLabel,
+  incentiveKey,
+  incentiveAddable,
+  addIncentive,
+  removeIncentive,
+  incentiveTotal,
+  incentiveTotalCap,
+  maxIncentives,
+  counterOfferRounds,
+  requestedSalaryOf,
+  contractTotalValue,
+  acceptThresholdOf,
+  acceptProbabilityOf,
+  compareRows,
   type ClauseId,
 } from "../contractTerms";
 
@@ -31,7 +50,10 @@ const RULES_PATH = resolve(ROOT, "resource/data/master/players/generation_rules.
 const read = (p: string) => readFileSync(p, "utf8");
 const rulesFile = JSON.parse(read(RULES_PATH)) as Record<string, never>;
 
-const SRC_MODAL = resolve(__dirname, "../../../features/contract/ui/ContractNegotiationModal.svelte");
+const SRC_MODAL = resolve(
+  __dirname,
+  "../../../features/contract/ui/ContractNegotiationModal.svelte",
+);
 const SRC_MASTER = resolve(__dirname, "../../stores/master.ts");
 
 beforeAll(() => {
@@ -82,8 +104,11 @@ describe("조항", () => {
   it("계수 다섯이 예전 화면 값 그대로다", () => {
     const m = Object.fromEntries(CLAUSE_OPTIONS.map((c) => [c.id, c.mult]));
     expect(m).toEqual({
-      noTrade: 0.95, playerOption1: 0.97, playerOption2: 0.94,
-      teamOption1: 1.05, teamOption2: 1.10,
+      noTrade: 0.95,
+      playerOption1: 0.97,
+      playerOption2: 0.94,
+      teamOption1: 1.05,
+      teamOption2: 1.1,
     });
   });
 
@@ -106,8 +131,11 @@ describe("조항", () => {
   });
 
   it("고른 조항이 계약서 칸으로 간다", () => {
-    expect(clauseTerms(["noTrade", "teamOption2", "playerOption1"]))
-      .toEqual({ noTrade: true, teamOptionYears: 2, playerOptionYears: 1 });
+    expect(clauseTerms(["noTrade", "teamOption2", "playerOption1"])).toEqual({
+      noTrade: true,
+      teamOptionYears: 2,
+      playerOptionYears: 1,
+    });
     expect(clauseTerms([])).toEqual({ noTrade: false, teamOptionYears: 0, playerOptionYears: 0 });
   });
 
@@ -235,17 +263,17 @@ describe("최저연봉 하한", () => {
 describe("역제안 횟수 = 1 + (성적≥65) + (관계≥30) − (성적<40 && 관계<0)", () => {
   const cases: [number, number, number][] = [
     // 성적, 관계, 기대
-    [50,   0, 1],   // 아무것도 안 걸린다
-    [65,   0, 2],   // 성적만
-    [64,   0, 1],   // 문턱 바로 아래
-    [50,  30, 2],   // 관계만
-    [50,  29, 1],
-    [65,  30, 3],   // 둘 다
-    [100, 100, 3],  // 상한
-    [39,  -1, 1],   // 둘 다 나쁘면 1 − 1 = 0 → clamp 1
-    [39,   0, 1],   // 관계가 0 이면 벌칙이 안 걸린다 (penaltyOwnerBelow 0)
-    [40,  -1, 1],   // 성적이 40 이면 벌칙이 안 걸린다
-    [0,  -100, 1],  // 하한
+    [50, 0, 1], // 아무것도 안 걸린다
+    [65, 0, 2], // 성적만
+    [64, 0, 1], // 문턱 바로 아래
+    [50, 30, 2], // 관계만
+    [50, 29, 1],
+    [65, 30, 3], // 둘 다
+    [100, 100, 3], // 상한
+    [39, -1, 1], // 둘 다 나쁘면 1 − 1 = 0 → clamp 1
+    [39, 0, 1], // 관계가 0 이면 벌칙이 안 걸린다 (penaltyOwnerBelow 0)
+    [40, -1, 1], // 성적이 40 이면 벌칙이 안 걸린다
+    [0, -100, 1], // 하한
   ];
 
   for (const [rating, owner, want] of cases) {
@@ -268,8 +296,11 @@ describe("역제안 횟수 = 1 + (성적≥65) + (관계≥30) − (성적<40 &&
 // ── ⑥ 구단 판정 ──────────────────────────────────────────────
 describe("허용치와 수락 확률", () => {
   const base = {
-    effectiveOffer: 20000, offeredYears: 2, requestedYears: 2,
-    clauses: [] as ClauseId[], incentiveCount: 0,
+    effectiveOffer: 20000,
+    offeredYears: 2,
+    requestedYears: 2,
+    clauses: [] as ClauseId[],
+    incentiveCount: 0,
   };
 
   it("기본 허용치는 제시액 × 1.15 다 — 예전 식 그대로", () => {
@@ -277,16 +308,19 @@ describe("허용치와 수락 확률", () => {
   });
 
   it("기간을 늘리면 허용치가 는다 (+3%/년)", () => {
-    expect(acceptThresholdOf({ ...base, requestedYears: 3 }))
-      .toBe(Math.round(20000 * 1.15 * 1.03));
+    expect(acceptThresholdOf({ ...base, requestedYears: 3 })).toBe(Math.round(20000 * 1.15 * 1.03));
   });
 
   it("노트레이드를 걸면 허용치가 준다", () => {
-    expect(acceptThresholdOf({ ...base, clauses: ["noTrade"] })).toBeLessThan(acceptThresholdOf(base));
+    expect(acceptThresholdOf({ ...base, clauses: ["noTrade"] })).toBeLessThan(
+      acceptThresholdOf(base),
+    );
   });
 
   it("팀 옵션을 받으면 허용치가 는다", () => {
-    expect(acceptThresholdOf({ ...base, clauses: ["teamOption2"] })).toBeGreaterThan(acceptThresholdOf(base));
+    expect(acceptThresholdOf({ ...base, clauses: ["teamOption2"] })).toBeGreaterThan(
+      acceptThresholdOf(base),
+    );
   });
 
   it("인센티브를 걸수록 허용치가 는다 (제안 1.02)", () => {
@@ -312,15 +346,25 @@ describe("비교표 (지금 / 제시 / 역제안)", () => {
     current: { salary: 14000, years: 3, signingBonus: 0, noTrade: false, incentiveTotal: 0 },
     offered: { salary: 18000, years: 2, signingBonus: 0 },
     counter: {
-      salary: 18000, years: 2, signingBonus: 0,
-      clauses: [] as ClauseId[], incentives: [] as ContractIncentive[],
+      salary: 18000,
+      years: 2,
+      signingBonus: 0,
+      clauses: [] as ClauseId[],
+      incentives: [] as ContractIncentive[],
     },
-    yes: "있음", no: "없음",
+    yes: "있음",
+    no: "없음",
   };
 
   it("여섯 줄이다", () => {
-    expect(compareRows(input).map((r) => r.key))
-      .toEqual(["salary", "years", "signingBonus", "incentive", "noTrade", "total"]);
+    expect(compareRows(input).map((r) => r.key)).toEqual([
+      "salary",
+      "years",
+      "signingBonus",
+      "incentive",
+      "noTrade",
+      "total",
+    ]);
   });
 
   it("지금 계약이 없으면 그 칸이 null 이다 — 0 으로 안 채운다", () => {
@@ -339,8 +383,7 @@ describe("비교표 (지금 / 제시 / 역제안)", () => {
     const inc: ContractIncentive[] = [{ kind: "games", threshold: 25, bonus: 1500 }];
     const rows = compareRows({ ...input, counter: { ...input.counter, incentives: inc } });
     expect(rows.find((r) => r.key === "incentive")!.counter).toBe("1,500");
-    expect(rows.find((r) => r.key === "total")!.counter)
-      .toBe((18000 * 2 + 1500).toLocaleString());
+    expect(rows.find((r) => r.key === "total")!.counter).toBe((18000 * 2 + 1500).toLocaleString());
   });
 
   it("노트레이드는 조항을 걸어야 「있음」이 된다", () => {
@@ -360,8 +403,13 @@ describe("협상 화면이 이 함수들을 쓴다", () => {
 
   it("계산을 화면 안에서 다시 하지 않는다", () => {
     for (const fn of [
-      "acceptThresholdOf", "acceptProbabilityOf", "counterOfferRounds",
-      "requestedSalaryOf", "minSalaryOf", "incentiveCandidates", "compareRows",
+      "acceptThresholdOf",
+      "acceptProbabilityOf",
+      "counterOfferRounds",
+      "requestedSalaryOf",
+      "minSalaryOf",
+      "incentiveCandidates",
+      "compareRows",
     ]) {
       expect(src.includes(`${fn}(`)).toBe(true);
     }

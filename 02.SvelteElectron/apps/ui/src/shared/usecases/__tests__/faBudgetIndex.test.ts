@@ -67,7 +67,7 @@ describe("FA 예산 지수", () => {
     const kbl = avg(b["LEAGUE_KBL"] ?? []);
     const abl = avg(b["LEAGUE_ABL"] ?? []);
     expect(kbl).toBeGreaterThan(0);
-    expect(abl / kbl).toBeGreaterThan(4);   // 실측 8.5배
+    expect(abl / kbl).toBeGreaterThan(4); // 실측 8.5배
   });
 
   /**
@@ -89,7 +89,9 @@ describe("FA 예산 지수", () => {
 
   /** ⚠ 팀이 하나뿐인 리그도 죽지 않아야 한다 */
   it("예산이 없으면 지수 1로 떨어진다", () => {
-    expect(MARKET.includes("avgBudget > 0 ? (t.history?.budget ?? avgBudget) / avgBudget : 1")).toBe(true);
+    expect(
+      MARKET.includes("avgBudget > 0 ? (t.history?.budget ?? avgBudget) / avgBudget : 1"),
+    ).toBe(true);
   });
 });
 

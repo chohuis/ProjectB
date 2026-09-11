@@ -50,7 +50,10 @@ export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
     currentSalary: r.salary,
     contractYears: r.contractYears,
     injuryStatus: r.injury
-      ? { severity: (r.injury.severity ?? "moderate") as InjurySeverity, recoveryWeeksLeft: r.injury.weeksLeft }
+      ? {
+          severity: (r.injury.severity ?? "moderate") as InjurySeverity,
+          recoveryWeeksLeft: r.injury.weeksLeft,
+        }
       : undefined,
     // 확장 필드 (extra 보존)
     // Named 여부는 npc 테이블 is_named가 정본이다. 구 세이브는 extra.emotionRole에
@@ -78,7 +81,8 @@ export function repoNpcToLiveStat(r: RepoNpc): NpcLiveStat {
     battingXp: r.xp.battingXp ?? {},
     peakOvr: ((r.extra ?? {}) as { peakOvr?: number }).peakOvr,
     pitches: r.abilities.pitches,
-    pitchInTraining: ((r.extra ?? {}) as { pitchInTraining?: NpcLiveStat["pitchInTraining"] }).pitchInTraining,
+    pitchInTraining: ((r.extra ?? {}) as { pitchInTraining?: NpcLiveStat["pitchInTraining"] })
+      .pitchInTraining,
   };
 }
 
@@ -182,8 +186,8 @@ const _lastPersonality = new Map<string, string>();
 
 /** 직전에 보낸 것과 달라졌는가. `null`(지우기)은 늘 보낸다 */
 function personalityChanged(n: { npcId: string; personality?: unknown }): boolean {
-  if (n.personality === undefined) return false;   // 애초에 값이 없다
-  if (n.personality === null) return true;          // 지우라는 뜻 — 반드시 전달한다
+  if (n.personality === undefined) return false; // 애초에 값이 없다
+  if (n.personality === null) return true; // 지우라는 뜻 — 반드시 전달한다
   const cur = JSON.stringify(n.personality);
   if (_lastPersonality.get(n.npcId) === cur) return false;
   _lastPersonality.set(n.npcId, cur);

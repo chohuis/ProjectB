@@ -35,8 +35,8 @@ export function settleSeasonIncentives(seasonYear: number): string[] {
   const s = get(seasonStore);
   const raw = s.stats?.[p.id];
   const stats = raw?.type === "pitcher" ? (raw as PitcherSeasonStats) : undefined;
-  const awardIds = (p.careerRecords ?? [])
-    .find((r) => r.year === seasonYear)?.awards?.map((a) => a.id) ?? [];
+  const awardIds =
+    (p.careerRecords ?? []).find((r) => r.year === seasonYear)?.awards?.map((a) => a.id) ?? [];
 
   const st = settleIncentives({
     seasonYear,
@@ -61,9 +61,7 @@ export function settleSeasonIncentives(seasonYear: number): string[] {
       // 계약 갈래의 보낸이는 「에이전트」다 (§5 — 사람이 아니라 말투다)
       sender: "에이전트",
       subject: fillContractCopy(copy.subject, { year: seasonYear }),
-      preview: st.total > 0
-        ? fillContractCopy(copy.total, { total: st.total })
-        : copy.none,
+      preview: st.total > 0 ? fillContractCopy(copy.total, { total: st.total }) : copy.none,
       body: incentiveMessageBody(copy, st),
       // 🔴 **본문을 대신하지 않고 나란히 선다** (PLAN_MESSAGE_DASHBOARDS 머리말).
       //    표를 못 그리는 자리(문안 없음·구 화면)에서 위 `body` 가 폴백이다.
@@ -72,7 +70,9 @@ export function settleSeasonIncentives(seasonYear: number): string[] {
       readAt: null,
     });
   } else {
-    console.error("[incentive] 정산 문안(messages/contract_terms.json)을 못 읽었다 — 소식을 안 만든다");
+    console.error(
+      "[incentive] 정산 문안(messages/contract_terms.json)을 못 읽었다 — 소식을 안 만든다",
+    );
   }
 
   const met = st.rows.filter((r) => r.outcome === "met").length;

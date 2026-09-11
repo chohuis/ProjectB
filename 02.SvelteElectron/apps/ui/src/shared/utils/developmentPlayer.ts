@@ -37,7 +37,7 @@ export function isRegistrable(
   seasonYear: number,
   month: number,
 ): boolean {
-  if (developmentSince == null) return true;      // 정식 등록 선수
+  if (developmentSince == null) return true; // 정식 등록 선수
   if (developmentSince < seasonYear) return true; // 입단 연도가 지났다
   return month >= DEV_REGISTRATION_MONTH;
 }

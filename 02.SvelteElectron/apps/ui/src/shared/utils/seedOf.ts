@@ -32,11 +32,11 @@ function hashOf(s: string): number {
  * @example seedOf(worldSeed, 2027, npcId, teamId)    // 팀마다 다른 판단
  */
 export function seedOf(worldSeed: number, ...parts: Array<string | number>): number {
-  let h = (worldSeed >>> 0) || 0x9e3779b1;
+  let h = worldSeed >>> 0 || 0x9e3779b1;
   for (const part of parts) {
-    const v = typeof part === "number" ? (part >>> 0) : hashOf(part);
-    h = (Math.imul(h ^ v, 0x9e3779b1) >>> 0);
+    const v = typeof part === "number" ? part >>> 0 : hashOf(part);
+    h = Math.imul(h ^ v, 0x9e3779b1) >>> 0;
   }
   // 0이면 씨앗 없음으로 읽힌다 — 절대 안 돌려준다
-  return (h >>> 0) || 1;
+  return h >>> 0 || 1;
 }

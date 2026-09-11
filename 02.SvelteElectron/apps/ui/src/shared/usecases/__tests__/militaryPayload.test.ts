@@ -24,10 +24,16 @@ describe("군 복무 주간 계산 페이로드", () => {
   it("스탯을 정수로 반올림해서 넘긴다", () => {
     const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
     const call = s.slice(s.indexOf("weekCalcMilitary("), s.indexOf("weekCalcMilitary(") + 900);
-    for (const f of ["stamina", "recovery", "command", "control", "velocity", "morale", "fatigue"]) {
-      expect(call, `${f}가 반올림 없이 넘어간다`).toMatch(
-        new RegExp(`${f}:\\s*Math\\.round\\(`),
-      );
+    for (const f of [
+      "stamina",
+      "recovery",
+      "command",
+      "control",
+      "velocity",
+      "morale",
+      "fatigue",
+    ]) {
+      expect(call, `${f}가 반올림 없이 넘어간다`).toMatch(new RegExp(`${f}:\\s*Math\\.round\\(`));
     }
   });
 
@@ -45,14 +51,26 @@ describe("군 복무 주간 계산 페이로드", () => {
   it("다른 페이로드에 같은 함정이 없다 — 정수형에 소수 스탯을 받는 구조체", () => {
     // ⚠ 개별 확인이 아니라 **전수**로 본다. 군 복무만 고치고 끝내면
     // 다음 IPC에서 같은 모양이 또 생긴다.
-    const FLOATY = new Set(["stamina", "recovery", "command", "control", "velocity",
-      "movement", "mentality", "clutch", "hold_runners", "fatigue", "condition", "morale"]);
+    const FLOATY = new Set([
+      "stamina",
+      "recovery",
+      "command",
+      "control",
+      "velocity",
+      "movement",
+      "mentality",
+      "clutch",
+      "hold_runners",
+      "fatigue",
+      "condition",
+      "morale",
+    ]);
     const dir = resolve(ROOT, "packages/engine-native/src");
     const bad: string[] = [];
     for (const f of readdirSync(dir).filter((x) => x.endsWith(".rs"))) {
       const s = readFileSync(resolve(dir, f), "utf8");
       for (const m of s.matchAll(/pub struct (\w*(?:Payload|Params))\b[^{]*\{([\s\S]*?)\n\}/g)) {
-        if (m[1] === "MilitaryWeekPayload") continue;      // 알려진 자리 — 위에서 반올림한다
+        if (m[1] === "MilitaryWeekPayload") continue; // 알려진 자리 — 위에서 반올림한다
         for (const fm of m[2].matchAll(/pub (\w+):\s*(?:u8|u32|i32|usize|u64|i64)\b/g)) {
           if (FLOATY.has(fm[1])) bad.push(`${m[1]}.${fm[1]}`);
         }

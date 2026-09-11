@@ -2,7 +2,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  primeCareerScoreRules, calcHsBaseballScore, calcIndividualScore,
+  primeCareerScoreRules,
+  calcHsBaseballScore,
+  calcIndividualScore,
 } from "../universityUtils";
 import type { CareerSeasonRecord } from "../../types/save";
 
@@ -38,7 +40,7 @@ const AW2 = [
 ];
 
 const rec = (o: Partial<CareerSeasonRecord>): CareerSeasonRecord =>
-  ({ year: 2026, leagueId: "LEAGUE_HIGHSCHOOL", teamId: "T", ...o } as CareerSeasonRecord);
+  ({ year: 2026, leagueId: "LEAGUE_HIGHSCHOOL", teamId: "T", ...o }) as CareerSeasonRecord;
 
 describe("진로 점수 표", () => {
   it("규칙 파일에 두 표가 있다", () => {
@@ -61,12 +63,24 @@ describe("진로 점수 표", () => {
   it("옮기면서 값을 바꾸지 않았다", () => {
     const hs = RULES.careerScoreRules!.highschool!;
     expect(hs).toMatchObject({
-      champion: 100, runnerUp: 60, semiFinal: 30, notQualified: 10, perAward: 15,
+      champion: 100,
+      runnerUp: 60,
+      semiFinal: 30,
+      notQualified: 10,
+      perAward: 15,
     });
     const ind = RULES.careerScoreRules!.individual!;
     expect(ind).toMatchObject({
-      champion: 25, runnerUp: 15, semiFinal: 8, perAward: 20,
-      ipPerInning: 0.5, ipCap: 30, eraBase: 3.0, eraPerRun: 8, eraMin: -15, eraMax: 25,
+      champion: 25,
+      runnerUp: 15,
+      semiFinal: 8,
+      perAward: 20,
+      ipPerInning: 0.5,
+      ipCap: 30,
+      eraBase: 3.0,
+      eraPerRun: 8,
+      eraMin: -15,
+      eraMax: 25,
     });
   });
 
@@ -88,9 +102,7 @@ describe("진로 점수 표", () => {
     // ⚠ **소스에서 폴백 값을 직접 읽는다.** `primeCareerScoreRules({})`만으로는
     //   앞선 검사가 채워 둔 표가 남아 있어 **폴백을 0으로 만들어도 통과**한다
     //   (변이 검증에서 걸렸다). 상태에 기대지 않고 코드를 본다.
-    const src = readFileSync(
-      resolve(ROOT, "apps/ui/src/shared/utils/universityUtils.ts"), "utf8",
-    );
+    const src = readFileSync(resolve(ROOT, "apps/ui/src/shared/utils/universityUtils.ts"), "utf8");
     const at = src.indexOf("const HS_FALLBACK");
     expect(at, "폴백 표를 못 찾았다").toBeGreaterThan(0);
     const body = src.slice(at, src.indexOf("};", at));
@@ -117,7 +129,8 @@ describe("진로 점수 표", () => {
   it("개인 기여는 이닝·ERA를 함께 본다", () => {
     primeCareerScoreRules(RULES);
     const r = rec({
-      psResult: "semiFinal", awards: [],
+      psResult: "semiFinal",
+      awards: [],
       stats: { type: "pitcher", ip: 60, era: 3.0 } as CareerSeasonRecord["stats"],
     });
     // 4강 8 + 이닝 min(30, 60×0.5)=30 + ERA (3.0−3.0)×8=0 → 38

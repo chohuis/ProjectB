@@ -14,23 +14,33 @@ import type { CoachSpecialty } from "../types/save";
 
 /** 감독 5종 — 이름은 `staff_rules.json manager.stats`와 같다 */
 export const MANAGER_STATS = [
-  "tacticalIQ", "bullpenRead", "offenseMind", "motivator", "clutchDecision",
+  "tacticalIQ",
+  "bullpenRead",
+  "offenseMind",
+  "motivator",
+  "clutchDecision",
 ] as const;
 
 /** 코치 5종 */
 export const COACH_STATS = [
-  "teaching", "analysis", "communication", "discipline", "leadership",
+  "teaching",
+  "analysis",
+  "communication",
+  "discipline",
+  "leadership",
 ] as const;
 
 /** 구단주 5종 */
 export const OWNER_STATS = [
-  "budgetSupport", "patience", "prInfluence", "facilityInvestment", "staffTrust",
+  "budgetSupport",
+  "patience",
+  "prInfluence",
+  "facilityInvestment",
+  "staffTrust",
 ] as const;
 
 export type StaffStatName =
-  | (typeof MANAGER_STATS)[number]
-  | (typeof COACH_STATS)[number]
-  | (typeof OWNER_STATS)[number];
+  (typeof MANAGER_STATS)[number] | (typeof COACH_STATS)[number] | (typeof OWNER_STATS)[number];
 
 /** 팀 하나의 스태프 능력치 15종. 스태프가 없으면 전부 50 */
 export type TeamStaffStats = Record<StaffStatName, number>;
@@ -114,8 +124,7 @@ export interface StaffLookupOptions {
 export function managerProfileOf(
   teamId: string,
   entities: readonly EntityRow[],
-): { style: string | null; tacticalIQ: number; offenseMind: number;
-     riskTolerance: number } | null {
+): { style: string | null; tacticalIQ: number; offenseMind: number; riskTolerance: number } | null {
   if (!teamId) return null;
   for (const e of entities) {
     if (e.teamId !== teamId || e.role !== "manager") continue;
@@ -125,8 +134,8 @@ export function managerProfileOf(
     const mg = d.manager as unknown as Record<string, unknown>;
     return {
       style: (mg.style as string) ?? null,
-      tacticalIQ:    num(st.tacticalIQ) ?? 50,
-      offenseMind:   num(st.offenseMind) ?? 50,
+      tacticalIQ: num(st.tacticalIQ) ?? 50,
+      offenseMind: num(st.offenseMind) ?? 50,
       riskTolerance: num(mg.riskTolerance) ?? num(st.riskTolerance) ?? 50,
     };
   }
@@ -169,8 +178,13 @@ export function staffStatsOf(
       let sum = 0;
       let n = 0;
       for (const c of source) {
-        const v = num(((c.details as EntityDetails).coach!.stats as unknown as Record<string, unknown>)[k]);
-        if (v !== null) { sum += v; n++; }
+        const v = num(
+          ((c.details as EntityDetails).coach!.stats as unknown as Record<string, unknown>)[k],
+        );
+        if (v !== null) {
+          sum += v;
+          n++;
+        }
       }
       if (n > 0) out[k] = sum / n;
     }
@@ -225,21 +239,29 @@ export function staffModsOf(
 ): StaffMods {
   const s = staffStatsOf(teamId, entities, opts);
   return {
-    morale:           factorOf("motivator", s.motivator),
-    fame:             factorOf("prInfluence", s.prInfluence),
-    devRate:          factorOf("analysis", s.analysis),
-    training:         factorOf("teaching", s.teaching),
-    facility:         factorOf("facilityInvestment", s.facilityInvestment),
+    morale: factorOf("motivator", s.motivator),
+    fame: factorOf("prInfluence", s.prInfluence),
+    devRate: factorOf("analysis", s.analysis),
+    training: factorOf("teaching", s.teaching),
+    facility: factorOf("facilityInvestment", s.facilityInvestment),
     injuryPrevention: factorOf("discipline", s.discipline),
-    relation:         factorOf("communication", s.communication),
-    slump:            factorOf("leadership", s.leadership),
-    budget:           factorOf("budgetSupport", s.budgetSupport),
-    callup:           factorOf("clutchDecision", s.clutchDecision),
+    relation: factorOf("communication", s.communication),
+    slump: factorOf("leadership", s.leadership),
+    budget: factorOf("budgetSupport", s.budgetSupport),
+    callup: factorOf("clutchDecision", s.clutchDecision),
   };
 }
 
 /** 스태프가 없는 무대(학생·독립·군)에서 쓰는 중립값 */
 export const NEUTRAL_MODS: StaffMods = {
-  morale: 1, fame: 1, devRate: 1, training: 1, facility: 1,
-  injuryPrevention: 1, relation: 1, slump: 1, budget: 1, callup: 1,
+  morale: 1,
+  fame: 1,
+  devRate: 1,
+  training: 1,
+  facility: 1,
+  injuryPrevention: 1,
+  relation: 1,
+  slump: 1,
+  budget: 1,
+  callup: 1,
 };

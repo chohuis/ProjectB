@@ -45,16 +45,22 @@ describe("한 장 만들기", () => {
 
   it("불펜은 바로 앞 경기에서 던졌으면 연속이 는다", () => {
     const prev: PlayerCondition = {
-      fatigue: 40, lastPitchedWeek: 11, pitchOutsLast: 3,
-      lastAppearanceGameCount: 6, consecutiveAppearances: 2,
+      fatigue: 40,
+      lastPitchedWeek: 11,
+      pitchOutsLast: 3,
+      lastAppearanceGameCount: 6,
+      consecutiveAppearances: 2,
     };
     expect(protagonistPitchCondition({ ...base, prev }).consecutiveAppearances).toBe(3);
   });
 
   it("불펜이 한 경기 쉬었으면 연속이 1 로 다시 센다", () => {
     const prev: PlayerCondition = {
-      fatigue: 40, lastPitchedWeek: 9, pitchOutsLast: 3,
-      lastAppearanceGameCount: 4, consecutiveAppearances: 2,
+      fatigue: 40,
+      lastPitchedWeek: 9,
+      pitchOutsLast: 3,
+      lastAppearanceGameCount: 4,
+      consecutiveAppearances: 2,
     };
     expect(protagonistPitchCondition({ ...base, prev }).consecutiveAppearances).toBe(1);
   });
@@ -70,13 +76,22 @@ describe("안 던진 경기", () => {
     expect(protagonistRestCondition(undefined)).toBeNull();
   });
   it("이미 0 이면 다시 안 쓴다", () => {
-    const prev: PlayerCondition = { fatigue: 40, lastPitchedWeek: 9, pitchOutsLast: 0, consecutiveAppearances: 0 };
+    const prev: PlayerCondition = {
+      fatigue: 40,
+      lastPitchedWeek: 9,
+      pitchOutsLast: 0,
+      consecutiveAppearances: 0,
+    };
     expect(protagonistRestCondition(prev)).toBeNull();
   });
   it("연속만 끊고 등판 기록은 그대로 둔다", () => {
     const prev: PlayerCondition = {
-      fatigue: 40, lastPitchedWeek: 9, pitchOutsLast: 3,
-      lastPitchedDate: "2027-04-20", lastPitchCount: 31, consecutiveAppearances: 2,
+      fatigue: 40,
+      lastPitchedWeek: 9,
+      pitchOutsLast: 3,
+      lastPitchedDate: "2027-04-20",
+      lastPitchCount: 31,
+      consecutiveAppearances: 2,
     };
     const c = protagonistRestCondition(prev)!;
     expect(c.consecutiveAppearances).toBe(0);
@@ -94,7 +109,9 @@ describe("배선 — applyGameOutcome 두 갈래가 다 쓴다", () => {
     expect(src.split("protagonistPitchCondition({").length - 1).toBe(2);
   });
   it("두 갈래 다 주인공 id 를 키로 쓴다", () => {
-    expect(src.includes("pitcherConditions[protagonist.id] = protagonistPitchCondition({")).toBe(true);
+    expect(src.includes("pitcherConditions[protagonist.id] = protagonistPitchCondition({")).toBe(
+      true,
+    );
     expect(src.includes("rotConditions[protagonist.id] = protagonistPitchCondition({")).toBe(true);
   });
   it("안 던진 갈래에서 연속만 끊는다", () => {

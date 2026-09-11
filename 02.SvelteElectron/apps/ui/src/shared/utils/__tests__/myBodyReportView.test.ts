@@ -3,8 +3,12 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { MyBodyEvent, MyBodyMetadata } from "../../types/main";
 import {
-  buildMyBodyRows, myBodyRowCount, myBodyInjuryName,
-  MY_BODY_SEVERITY_LABEL, ABSENCE_REASON_LABEL, MY_BODY_LABEL,
+  buildMyBodyRows,
+  myBodyRowCount,
+  myBodyInjuryName,
+  MY_BODY_SEVERITY_LABEL,
+  ABSENCE_REASON_LABEL,
+  MY_BODY_LABEL,
 } from "../myBodyReportView";
 
 /**
@@ -24,22 +28,34 @@ function meta(over: Partial<MyBodyMetadata> = {}): MyBodyMetadata {
   return { type: "myBody", week: 12, injury: null, events: [], ...over };
 }
 
-const absence = (o: Partial<MyBodyEvent> = {}): MyBodyEvent =>
-  ({ kind: "absence", week: 5, reason: "condition", condition: 41, ...o });
-const warning = (o: Partial<MyBodyEvent> = {}): MyBodyEvent =>
-  ({ kind: "warning", week: 6, fatigue: 82, riskPct: 24, ...o });
+const absence = (o: Partial<MyBodyEvent> = {}): MyBodyEvent => ({
+  kind: "absence",
+  week: 5,
+  reason: "condition",
+  condition: 41,
+  ...o,
+});
+const warning = (o: Partial<MyBodyEvent> = {}): MyBodyEvent => ({
+  kind: "warning",
+  week: 6,
+  fatigue: 82,
+  riskPct: 24,
+  ...o,
+});
 
 // ── ① 갈래가 있는가 (결함 자체) ───────────────────────────────
 describe("NewsPage 에 myBody 갈래가 있다", () => {
   const src = read(SRC);
 
-  it("metadata.type === \"myBody\" 갈래를 연다", () => {
+  it('metadata.type === "myBody" 갈래를 연다', () => {
     expect(src.includes('selected.metadata?.type === "myBody"')).toBe(true);
   });
 
   it("그 갈래가 MyBodyPanel 을 그린다", () => {
     expect(src.includes("<MyBodyPanel")).toBe(true);
-    expect(src.includes('import MyBodyPanel from "../../features/messages/ui/MyBodyPanel.svelte"')).toBe(true);
+    expect(
+      src.includes('import MyBodyPanel from "../../features/messages/ui/MyBodyPanel.svelte"'),
+    ).toBe(true);
   });
 
   it("기존 넷도 그대로 있다 — 갈래를 더하며 지우지 않았다", () => {
@@ -67,12 +83,17 @@ describe("metadata 예시 → 렌더 항목 수", () => {
   });
 
   it("결장 2 · 경고 3 이면 행이 5다", () => {
-    const r = buildMyBodyRows(meta({
-      events: [
-        absence({ week: 3 }), absence({ week: 7 }),
-        warning({ week: 2 }), warning({ week: 5 }), warning({ week: 8 }),
-      ],
-    }));
+    const r = buildMyBodyRows(
+      meta({
+        events: [
+          absence({ week: 3 }),
+          absence({ week: 7 }),
+          warning({ week: 2 }),
+          warning({ week: 5 }),
+          warning({ week: 8 }),
+        ],
+      }),
+    );
     expect(r.absences).toHaveLength(2);
     expect(r.warnings).toHaveLength(3);
     expect(myBodyRowCount(r)).toBe(5);
@@ -81,10 +102,12 @@ describe("metadata 예시 → 렌더 항목 수", () => {
   it("부상이 있으면 한 줄이 더 는다 — 대조군", () => {
     const events = [absence(), warning()];
     const without = buildMyBodyRows(meta({ events }));
-    const withInjury = buildMyBodyRows(meta({
-      events,
-      injury: { injuryType: "ELBOW_INFLAM", severity: "moderate", weeksLeft: 4, sinceWeek: 9 },
-    }));
+    const withInjury = buildMyBodyRows(
+      meta({
+        events,
+        injury: { injuryType: "ELBOW_INFLAM", severity: "moderate", weeksLeft: 4, sinceWeek: 9 },
+      }),
+    );
     expect(myBodyRowCount(withInjury)).toBe(myBodyRowCount(without) + 1);
     expect(withInjury.counts.injuryWeeksLeft).toBe(4);
   });
@@ -115,20 +138,31 @@ describe("행이 들고 나가는 값", () => {
   });
 
   it("부상 결장은 컨디션 값이 없다 — 없는 값을 0 으로 만들지 않는다", () => {
-    const r = buildMyBodyRows(meta({ events: [absence({ reason: "injury", condition: undefined })] }));
+    const r = buildMyBodyRows(
+      meta({ events: [absence({ reason: "injury", condition: undefined })] }),
+    );
     expect(r.absences[0].reason).toBe("injury");
     expect(r.absences[0].condition).toBeNull();
   });
 
   it("경고의 피로·위험이 비면 null 이다", () => {
-    const r = buildMyBodyRows(meta({ events: [warning({ fatigue: undefined, riskPct: undefined })] }));
+    const r = buildMyBodyRows(
+      meta({ events: [warning({ fatigue: undefined, riskPct: undefined })] }),
+    );
     expect(r.warnings[0]).toEqual({ week: 6, fatigue: null, riskPct: null });
   });
 
   it("주차 오름차순으로 정렬한다", () => {
-    const r = buildMyBodyRows(meta({
-      events: [absence({ week: 9 }), absence({ week: 2 }), warning({ week: 8 }), warning({ week: 1 })],
-    }));
+    const r = buildMyBodyRows(
+      meta({
+        events: [
+          absence({ week: 9 }),
+          absence({ week: 2 }),
+          warning({ week: 8 }),
+          warning({ week: 1 }),
+        ],
+      }),
+    );
     expect(r.absences.map((a) => a.week)).toEqual([2, 9]);
     expect(r.warnings.map((w) => w.week)).toEqual([1, 8]);
   });
@@ -137,9 +171,11 @@ describe("행이 들고 나가는 값", () => {
 // ── ④ 이름표 — 소식 본문과 같은 말이어야 한다 ──────────────────
 describe("이름표", () => {
   it("부상 이름은 INJURY_LABEL 을 거친다 — 코드가 그대로 새지 않는다", () => {
-    const r = buildMyBodyRows(meta({
-      injury: { injuryType: "SHOULDER_INFLAM", severity: "moderate", weeksLeft: 3, sinceWeek: 2 },
-    }));
+    const r = buildMyBodyRows(
+      meta({
+        injury: { injuryType: "SHOULDER_INFLAM", severity: "moderate", weeksLeft: 3, sinceWeek: 2 },
+      }),
+    );
     expect(r.injury!.name).not.toBe("SHOULDER_INFLAM");
     expect(r.injury!.name.length).toBeGreaterThan(0);
   });

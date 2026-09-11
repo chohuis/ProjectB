@@ -62,8 +62,10 @@ describe("FA 목적지", () => {
    *   고쳤을 때 아무 일도 안 일어난다 — 실제로 그래서 한 번 헛돌았다.
    */
   it("Rust는 리그로 다시 거르지 않는다", () => {
-    const src = readFileSync(resolve(__dirname,
-      "../../../../../../packages/engine-native/src/player_engine.rs"), "utf8");
+    const src = readFileSync(
+      resolve(__dirname, "../../../../../../packages/engine-native/src/player_engine.rs"),
+      "utf8",
+    );
     const at = src.indexOf("pub fn generate_fa_offers");
     expect(at, "generate_fa_offers를 못 찾았다").toBeGreaterThan(0);
     const body = src.slice(at, at + 1200);

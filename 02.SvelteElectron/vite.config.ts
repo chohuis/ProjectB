@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@core": path.resolve(__dirname, "packages/core/src"),
-    }
+    },
   },
   base: mode === "production" ? "app://bundle/" : "./",
   build: {
@@ -22,7 +22,6 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     port: DEV_PORT,
-    strictPort: true
-  }
+    strictPort: true,
+  },
 }));
-

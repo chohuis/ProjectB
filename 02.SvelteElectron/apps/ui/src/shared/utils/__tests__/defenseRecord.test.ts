@@ -46,7 +46,9 @@ describe("선수별 수비 기록", () => {
 
   /** 🔴 수비수는 **공격 팀의 반대편**이다 — 타자 줄과 정반대다 */
   it("수비 기록이 수비 팀에 붙는다", () => {
-    expect(ME).toContain("let lines = if is_top { &mut next_state.home_bat_lines }\n                        else      { &mut next_state.away_bat_lines };");
+    expect(ME).toContain(
+      "let lines = if is_top { &mut next_state.home_bat_lines }\n                        else      { &mut next_state.away_bat_lines };",
+    );
   });
 
   /** 던진 사람이 보살, 받은 사람이 자살 · 송구 없는 아웃은 잡은 사람이 자살 */
@@ -62,10 +64,12 @@ describe("선수별 수비 기록", () => {
 
   /** 🔴 호출부가 안 넘기면 **원정 수비가 다시 사라진다** */
   it("두 경로가 상대 수비진을 넘긴다", () => {
-    expect(read("apps/ui/src/shared/utils/gameSimulator.ts"))
-      .toContain("opponentFielders: buildFieldersFromLineup(params.awayLineup, awayStarter)");
-    expect(read("apps/ui/src/pages/main/MainPage.svelte"))
-      .toContain("opponentFielders: buildFielders(opponentTeamId, $entitiesL10n)");
+    expect(read("apps/ui/src/shared/utils/gameSimulator.ts")).toContain(
+      "opponentFielders: buildFieldersFromLineup(params.awayLineup, awayStarter)",
+    );
+    expect(read("apps/ui/src/pages/main/MainPage.svelte")).toContain(
+      "opponentFielders: buildFielders(opponentTeamId, $entitiesL10n)",
+    );
   });
 });
 
@@ -87,7 +91,9 @@ describe("선수별 수비 기록", () => {
  */
 describe("지명타자제", () => {
   const GS = readFileSync(
-    resolve(__dirname, "../../../../../../apps/ui/src/shared/utils/gameSimulator.ts"), "utf8");
+    resolve(__dirname, "../../../../../../apps/ui/src/shared/utils/gameSimulator.ts"),
+    "utf8",
+  );
 
   /** 🔴 타순이 곧 수비 자리가 아니다 */
   it("포지션으로 수비 자리를 맞춘다", () => {
@@ -97,7 +103,7 @@ describe("지명타자제", () => {
 
   /** 🔴 P 자리에 타자가 서 있었다 */
   it("투수 자리에 실제 선발이 선다", () => {
-    expect(GS).toContain("playerId: starter?.id ?? \"\",");
+    expect(GS).toContain('playerId: starter?.id ?? "",');
     expect(GS).toContain("buildFieldersFromLineup(params.homeLineup, homeStarter)");
     expect(GS).toContain("buildFieldersFromLineup(params.awayLineup, awayStarter)");
   });

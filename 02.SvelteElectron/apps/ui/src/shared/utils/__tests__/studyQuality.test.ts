@@ -8,9 +8,12 @@ import { resolve } from "node:path";
  * ⚠ **`loadAcademicsRules`를 안 쓴다** — 그건 `window.projectB`를 타서
  *   노드 환경에서 못 돈다. 규칙 파일을 직접 읽어 **같은 값**을 쓴다.
  */
-const RULES = JSON.parse(readFileSync(resolve(__dirname,
-  "../../../../../../resource/data/master/players/generation_rules.json"), "utf8"))
-  .academicsRules as Parameters<typeof settleSemester>[0];
+const RULES = JSON.parse(
+  readFileSync(
+    resolve(__dirname, "../../../../../../resource/data/master/players/generation_rules.json"),
+    "utf8",
+  ),
+).academicsRules as Parameters<typeof settleSemester>[0];
 
 /**
  * **학점을 건드릴 보상** — `studyQualityDelta`.
@@ -26,7 +29,8 @@ const RULES = JSON.parse(readFileSync(resolve(__dirname,
 
 /** `game.ts`의 `applyStudyQuality`와 같은 규칙 */
 function applyStudyQuality<T extends { semesterQualityAccum?: number; semesterWeeks?: number }>(
-  school: T, delta?: number,
+  school: T,
+  delta?: number,
 ): T {
   if (!delta || (school.semesterWeeks ?? 0) <= 0) return school;
   return { ...school, semesterQualityAccum: (school.semesterQualityAccum ?? 0) + delta };
@@ -127,18 +131,34 @@ describe("학습 품질 보상", () => {
       projectB: {
         engine: (_fn: string, json: string) => {
           seen.push(JSON.parse(json));
-          return Promise.resolve(JSON.stringify({
-            gpa: 0, cumulativeGpa: 0, newWarningLevel: 0,
-            repeats: false, label: "", messageSubject: "", messageBody: "",
-          }));
+          return Promise.resolve(
+            JSON.stringify({
+              gpa: 0,
+              cumulativeGpa: 0,
+              newWarningLevel: 0,
+              repeats: false,
+              label: "",
+              messageSubject: "",
+              messageBody: "",
+            }),
+          );
         },
       },
     };
-    const base = { qualityAccum: 4, weeks: 8, priorCumulative: 3.0,
-                   semestersDone: 2, warningLevel: 0, major: "" };
+    const base = {
+      qualityAccum: 4,
+      weeks: 8,
+      priorCumulative: 3.0,
+      semestersDone: 2,
+      warningLevel: 0,
+      major: "",
+    };
     await settleSemester(RULES, base);
-    await settleSemester(RULES, { ...base, qualityAccum: applyStudyQuality(
-      { semesterQualityAccum: 4, semesterWeeks: 8 }, 1.0).semesterQualityAccum! });
+    await settleSemester(RULES, {
+      ...base,
+      qualityAccum: applyStudyQuality({ semesterQualityAccum: 4, semesterWeeks: 8 }, 1.0)
+        .semesterQualityAccum!,
+    });
 
     expect(seen).toHaveLength(2);
     expect(seen[0].qualityAccum).toBe(4);
@@ -151,16 +171,31 @@ describe("학습 품질 보상", () => {
   it("규칙 파일의 학점 상한·경고선을 엔진에 넘긴다", async () => {
     const seen: Record<string, unknown>[] = [];
     (globalThis as unknown as { window: unknown }).window = {
-      projectB: { engine: (_fn: string, json: string) => {
-        seen.push(JSON.parse(json));
-        return Promise.resolve(JSON.stringify({
-          gpa: 0, cumulativeGpa: 0, newWarningLevel: 0,
-          repeats: false, label: "", messageSubject: "", messageBody: "",
-        }));
-      } },
+      projectB: {
+        engine: (_fn: string, json: string) => {
+          seen.push(JSON.parse(json));
+          return Promise.resolve(
+            JSON.stringify({
+              gpa: 0,
+              cumulativeGpa: 0,
+              newWarningLevel: 0,
+              repeats: false,
+              label: "",
+              messageSubject: "",
+              messageBody: "",
+            }),
+          );
+        },
+      },
     };
-    await settleSemester(RULES, { qualityAccum: 4, weeks: 8, priorCumulative: 3.0,
-                                  semestersDone: 2, warningLevel: 0, major: "일반전공" });
+    await settleSemester(RULES, {
+      qualityAccum: 4,
+      weeks: 8,
+      priorCumulative: 3.0,
+      semestersDone: 2,
+      warningLevel: 0,
+      major: "일반전공",
+    });
     expect(seen[0].gpaMax).toBe(RULES.university.gpaMax);
     expect(seen[0].warningGpa).toBe(RULES.university.warningGpa);
     // 전공 배수도 함께 — 안 넘기면 전공이 학점에 아무 영향이 없다

@@ -8,10 +8,20 @@ const state = {
 };
 
 vi.mock("../../stores/game", () => ({
-  gameStore: { subscribe: (fn: (v: unknown) => void) => { fn({ protagonist: { militaryUnit: state.militaryUnit } }); return () => {}; } },
+  gameStore: {
+    subscribe: (fn: (v: unknown) => void) => {
+      fn({ protagonist: { militaryUnit: state.militaryUnit } });
+      return () => {};
+    },
+  },
 }));
 vi.mock("../../stores/season", () => ({
-  seasonStore: { subscribe: (fn: (v: unknown) => void) => { fn({ seasonYear: state.seasonYear, currentWeek: state.currentWeek }); return () => {}; } },
+  seasonStore: {
+    subscribe: (fn: (v: unknown) => void) => {
+      fn({ seasonYear: state.seasonYear, currentWeek: state.currentWeek });
+      return () => {};
+    },
+  },
 }));
 
 const { buildMilitaryResultMessage } = await import("../militaryResultMessage");

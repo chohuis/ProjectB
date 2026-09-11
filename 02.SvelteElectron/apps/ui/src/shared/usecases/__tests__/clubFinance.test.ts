@@ -88,8 +88,7 @@ describe("배선", () => {
   /** ⚠ 산식은 Rust에 있다 — TS는 재료를 모으고 결과를 저장한다 */
   it("산식이 Rust에 있다", () => {
     expect(CF).toContain('"calcClubRevenueNative"');
-    expect(read("packages/engine-native/src/finance.rs"))
-      .toContain("pub fn calc_club_revenue(");
+    expect(read("packages/engine-native/src/finance.rs")).toContain("pub fn calc_club_revenue(");
     // TS 에 흥행률 산식이 없다
     expect(CF.includes("winPctSpan *")).toBe(false);
   });
@@ -104,14 +103,16 @@ describe("배선", () => {
   /** ⚠ 성향 갱신 **뒤**여야 그 해 값으로 관중을 잰다 */
   it("시즌 종료에서 성향 갱신 뒤에 돈다", () => {
     const R = read("apps/ui/src/shared/usecases/seasonRollover.ts");
-    expect(R.indexOf("settleClubFinance"))
-      .toBeGreaterThan(R.indexOf("await updateProTeamProfiles()"));
+    expect(R.indexOf("settleClubFinance")).toBeGreaterThan(
+      R.indexOf("await updateProTeamProfiles()"),
+    );
   });
 
   /** ⚠ 리그마다 따로 정산하므로 덮어쓰면 다른 리그가 지워진다 */
   it("예산을 덮어쓰지 않고 합친다", () => {
-    expect(read("apps/ui/src/shared/stores/game.ts"))
-      .toContain("clubBudgets: { ...s.clubBudgets, ...next }");
+    expect(read("apps/ui/src/shared/stores/game.ts")).toContain(
+      "clubBudgets: { ...s.clubBudgets, ...next }",
+    );
   });
 });
 
@@ -133,16 +134,21 @@ describe("배선", () => {
  */
 describe("구단 지출", () => {
   const CF = read("apps/ui/src/shared/usecases/clubFinance.ts");
-  const E = (RULES as unknown as { expense: {
-    operations: { stadium: number; farm: number; camp: number };
-    minBudgetRatio: number; maxBudgetRatio: number; budgetAdjustRate: number;
-    staff: { managerBase: number; coachBase: number; abilityExp: number };
-  } }).expense;
+  const E = (
+    RULES as unknown as {
+      expense: {
+        operations: { stadium: number; farm: number; camp: number };
+        minBudgetRatio: number;
+        maxBudgetRatio: number;
+        budgetAdjustRate: number;
+        staff: { managerBase: number; coachBase: number; abilityExp: number };
+      };
+    }
+  ).expense;
 
   it("지출 규칙이 있다", () => {
     expect(E.staff.managerBase).toBeGreaterThan(E.staff.coachBase);
-    expect(E.operations.stadium + E.operations.farm + E.operations.camp)
-      .toBeGreaterThan(0.3);
+    expect(E.operations.stadium + E.operations.farm + E.operations.camp).toBeGreaterThan(0.3);
   });
 
   /** 🔴 **되먹임을 끊는다** — 수입·지출은 정적 기준을 본다 */
@@ -181,7 +187,6 @@ describe("구단 지출", () => {
 
   it("산식이 Rust에 있다", () => {
     expect(CF).toContain('"calcClubExpenseNative"');
-    expect(read("packages/engine-native/src/finance.rs"))
-      .toContain("pub fn calc_club_expense(");
+    expect(read("packages/engine-native/src/finance.rs")).toContain("pub fn calc_club_expense(");
   });
 });

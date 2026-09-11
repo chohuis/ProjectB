@@ -16,8 +16,12 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 const R = JSON.parse(read("resource/data/master/entities/refs.json")) as {
   stadiums: { id: string; name: string; capacity?: number }[];
   teams: {
-    id: string; name: string; nameEn: string;
-    leagueId: string; stadium: string; capacity?: number;
+    id: string;
+    name: string;
+    nameEn: string;
+    leagueId: string;
+    stadium: string;
+    capacity?: number;
     profile?: { desc?: string };
     history?: { foundedYear?: number | null; parentCompany?: string; titles?: unknown[] };
   }[];
@@ -35,8 +39,10 @@ describe("구장 수용인원", () => {
   it("국내 팀이 쓰는 구장이 다 채워졌다", () => {
     const capOf = new Map(R.stadiums.map((s) => [s.id, s.capacity ?? 0]));
     const domestic = R.teams.filter((t) =>
-      ["LEAGUE_KBL", "LEAGUE_UNIVERSITY", "LEAGUE_HIGHSCHOOL", "LEAGUE_INDEPENDENT"]
-        .includes(t.leagueId));
+      ["LEAGUE_KBL", "LEAGUE_UNIVERSITY", "LEAGUE_HIGHSCHOOL", "LEAGUE_INDEPENDENT"].includes(
+        t.leagueId,
+      ),
+    );
     for (const t of domestic) {
       expect(capOf.get(t.stadium) ?? 0, `${t.id} → ${t.stadium}`).toBeGreaterThan(0);
     }
@@ -45,8 +51,8 @@ describe("구장 수용인원", () => {
   /** ⚠ 규모가 리그를 따라야 한다 — 고교가 프로보다 크면 수입이 뒤집힌다 */
   it("규모 대역이 리그를 따른다", () => {
     const capOf = new Map(R.stadiums.map((s) => [s.id, s.capacity ?? 0]));
-    const maxOf = (lg: string) => Math.max(...R.teams
-      .filter((t) => t.leagueId === lg).map((t) => capOf.get(t.stadium) ?? 0));
+    const maxOf = (lg: string) =>
+      Math.max(...R.teams.filter((t) => t.leagueId === lg).map((t) => capOf.get(t.stadium) ?? 0));
     expect(maxOf("LEAGUE_KBL")).toBeGreaterThan(maxOf("LEAGUE_UNIVERSITY"));
     expect(maxOf("LEAGUE_UNIVERSITY")).toBeGreaterThan(maxOf("LEAGUE_HIGHSCHOOL"));
   });
@@ -59,8 +65,9 @@ describe("모기업", () => {
    *   자기 자신을 가리킨다. 그래서 **팀**에 붙였다(`budget`이 있는 자리).
    */
   it("프로 1군에 다 있다", () => {
-    const pro1 = R.teams.filter((t) =>
-      ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"));
+    const pro1 = R.teams.filter(
+      (t) => ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"),
+    );
     expect(pro1.length).toBeGreaterThan(0);
     for (const t of pro1) {
       expect(t.history?.parentCompany, `${t.id} 모기업 없음`).toBeTruthy();
@@ -76,12 +83,15 @@ describe("모기업", () => {
    * 통과했다 — 있는지가 아니라 **무엇인지**를 봐야 한다.
    */
   it("모기업이 팀 이름을 베끼지 않았다", () => {
-    const pro1 = R.teams.filter((t) =>
-      ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"));
+    const pro1 = R.teams.filter(
+      (t) => ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(t.leagueId) && t.id.endsWith("_1"),
+    );
     for (const t of pro1) {
       const co = String(t.history?.parentCompany ?? "");
       // 팀 이름(한글·영문)의 고유 부분이 회사명에 통째로 들어가면 자리표시자다
-      const stem = String(t.nameEn ?? "").replace(/\s*\((1st|2nd|Farm)\)$/, "").trim();
+      const stem = String(t.nameEn ?? "")
+        .replace(/\s*\((1st|2nd|Farm)\)$/, "")
+        .trim();
       expect(stem.length, `${t.id} nameEn 이 비었다`).toBeGreaterThan(0);
       expect(co.includes(stem), `${t.id} 모기업이 팀 이름 베낌: ${co}`).toBe(false);
       expect(co.includes(String(t.name)), `${t.id} 모기업이 팀 이름 베낌: ${co}`).toBe(false);
@@ -95,8 +105,10 @@ describe("모기업", () => {
       expect(teams.length, `${lg} 팀 없음`).toBeGreaterThan(0);
       for (const t of teams) {
         if (t.id.endsWith("_1")) {
-          expect(/1군|\(1st\)/.test(`${t.name}${t.nameEn}`),
-            `${t.id} 1군에 이름표가 붙었다: ${t.name}`).toBe(false);
+          expect(
+            /1군|\(1st\)/.test(`${t.name}${t.nameEn}`),
+            `${t.id} 1군에 이름표가 붙었다: ${t.name}`,
+          ).toBe(false);
         } else if (t.id.endsWith("_2")) {
           expect(t.name.endsWith("(2군)"), `${t.id} 2군 표기가 다르다: ${t.name}`).toBe(true);
           expect(t.nameEn.endsWith("(Farm)"), `${t.id} 2군 영문이 다르다: ${t.nameEn}`).toBe(true);
@@ -108,8 +120,10 @@ describe("모기업", () => {
   /** 🔴 **새 밸런스 수치를 만들지 않는다** — 지원 규모는 `budget`에서 유도한다 */
   it("지원 규모를 따로 두지 않았다", () => {
     for (const t of R.teams) {
-      expect((t.history as Record<string, unknown> | undefined)?.supportIndex,
-        `${t.id} 에 supportIndex 가 생겼다`).toBeUndefined();
+      expect(
+        (t.history as Record<string, unknown> | undefined)?.supportIndex,
+        `${t.id} 에 supportIndex 가 생겼다`,
+      ).toBeUndefined();
     }
   });
 });
@@ -140,10 +154,13 @@ describe("문사 데이터", () => {
   /** ⚠ **우승은 지어내지 않는다** — `seasonRanks` 1위만 남긴다 */
   it("우승 이력이 과거 순위와 맞는다", () => {
     for (const t of R.teams) {
-      const ranks = (t.history as { seasonRanks?: { rank: number }[] } | undefined)?.seasonRanks ?? [];
+      const ranks =
+        (t.history as { seasonRanks?: { rank: number }[] } | undefined)?.seasonRanks ?? [];
       const firsts = ranks.filter((x) => x.rank === 1).length;
       const titles = t.history?.titles?.length ?? 0;
-      expect(titles, `${t.id} 우승 ${titles} vs 1위 ${firsts}`).toBeLessThanOrEqual(Math.max(firsts, titles));
+      expect(titles, `${t.id} 우승 ${titles} vs 1위 ${firsts}`).toBeLessThanOrEqual(
+        Math.max(firsts, titles),
+      );
     }
   });
 });
@@ -158,7 +175,8 @@ describe("화면 배선", () => {
   });
 
   it("모기업을 표시한다", () => {
-    expect(read("apps/ui/src/features/team/ui/TeamDetailModal.svelte"))
-      .toContain("team.history.parentCompany");
+    expect(read("apps/ui/src/features/team/ui/TeamDetailModal.svelte")).toContain(
+      "team.history.parentCompany",
+    );
   });
 });

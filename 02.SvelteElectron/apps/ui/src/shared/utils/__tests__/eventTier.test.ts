@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { runEventEngine, resetEventFunnelStats, eventFunnelStats, tierOf, gradeOf } from "../eventEngine";
+import {
+  runEventEngine,
+  resetEventFunnelStats,
+  eventFunnelStats,
+  tierOf,
+  gradeOf,
+} from "../eventEngine";
 import { parseTierRules, stageGroupOf, gradeBelow, type TierRules } from "../tierRules";
 import type { EventRule, MessageTemplate, EventContext } from "../../types/event";
 import type { ProtagonistSave } from "../../types/save";
@@ -17,45 +23,119 @@ import RAW_TIER_RULES from "../../../../../../resource/data/master/events/tier_r
  */
 const RULES: TierRules = parseTierRules(RAW_TIER_RULES);
 
-const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave => ({
-  id: "PLY_HERO", name: "검사", careerStage: "highschool",
-  leagueId: "LEAGUE_HIGHSCHOOL", teamId: "TEAM_HS_A", grade: 1, age: 17,
-  playerType: "pitcher", position: "SP", handedness: "R", pitchingForm: "overhand",
-  jerseyNumber: 18, condition: 80, fatigue: 10, morale: 70,
-  pitching: { ovr: 50, stamina: 50, velocity: 50, command: 50, control: 50,
-    movement: 50, mentality: 50, recovery: 50, clutch: 50, holdRunners: 50 },
-  batting: { ovr: 30, contact: 30, power: 25, eye: 28, discipline: 28, speed: 48,
-    baseInstinct: 48, bunting: 45, platoon: 50, fielding: 40, arm: 50, battingClutch: 25 },
-  primaryPosition: "SP", positionRatings: { SP: 50 },
-  diligence: 60, popularity: 10, developmentRate: 1, potentialHidden: 70,
-  growthPoints: 0, tags: [], pitchingXP: {}, battingXP: {}, pitches: [],
-  money: 1000, fame: 0, scoutScore: 0, proServiceYears: 0,
-  militaryStatus: "미필",
-  ...over,
-} as unknown as ProtagonistSave);
+const proto = (over: Partial<ProtagonistSave> = {}): ProtagonistSave =>
+  ({
+    id: "PLY_HERO",
+    name: "검사",
+    careerStage: "highschool",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    teamId: "TEAM_HS_A",
+    grade: 1,
+    age: 17,
+    playerType: "pitcher",
+    position: "SP",
+    handedness: "R",
+    pitchingForm: "overhand",
+    jerseyNumber: 18,
+    condition: 80,
+    fatigue: 10,
+    morale: 70,
+    pitching: {
+      ovr: 50,
+      stamina: 50,
+      velocity: 50,
+      command: 50,
+      control: 50,
+      movement: 50,
+      mentality: 50,
+      recovery: 50,
+      clutch: 50,
+      holdRunners: 50,
+    },
+    batting: {
+      ovr: 30,
+      contact: 30,
+      power: 25,
+      eye: 28,
+      discipline: 28,
+      speed: 48,
+      baseInstinct: 48,
+      bunting: 45,
+      platoon: 50,
+      fielding: 40,
+      arm: 50,
+      battingClutch: 25,
+    },
+    primaryPosition: "SP",
+    positionRatings: { SP: 50 },
+    diligence: 60,
+    popularity: 10,
+    developmentRate: 1,
+    potentialHidden: 70,
+    growthPoints: 0,
+    tags: [],
+    pitchingXP: {},
+    battingXP: {},
+    pitches: [],
+    money: 1000,
+    fame: 0,
+    scoutScore: 0,
+    proServiceYears: 0,
+    militaryStatus: "미필",
+    ...over,
+  }) as unknown as ProtagonistSave;
 
 const ctx = (over: Partial<EventContext> = {}): EventContext => ({
-  protagonist: proto(), currentWeek: 10, seasonPhase: "season",
-  standings: [], stats: {}, triggeredEvents: {},
+  protagonist: proto(),
+  currentWeek: 10,
+  seasonPhase: "season",
+  standings: [],
+  stats: {},
+  triggeredEvents: {},
   ...over,
 });
 
-const rule = (over: Partial<EventRule>): EventRule => ({
-  id: "EVT_X", title: "검사", type: "conditional", category: "career",
-  priority: 100, oncePolicy: "repeatable", conditions: [],
-  messageTemplateId: "MSG_T", decisionTemplateId: null,
-  ...over,
-} as EventRule);
+const rule = (over: Partial<EventRule>): EventRule =>
+  ({
+    id: "EVT_X",
+    title: "검사",
+    type: "conditional",
+    category: "career",
+    priority: 100,
+    oncePolicy: "repeatable",
+    conditions: [],
+    messageTemplateId: "MSG_T",
+    decisionTemplateId: null,
+    ...over,
+  }) as EventRule;
 
-const MSG: MessageTemplate = { id: "MSG_T", category: "system", subject: "제목", body: "본문" } as MessageTemplate;
+const MSG: MessageTemplate = {
+  id: "MSG_T",
+  category: "system",
+  subject: "제목",
+  body: "본문",
+} as MessageTemplate;
 
 /** `rands` 를 안 주면 전부 0.5 다 — 뽑기가 가운데로 떨어진다 */
-const run = (rules: EventRule[], c: EventContext = ctx(), rands?: number[], stage = "고교",
-             tierRules: TierRules = RULES) => {
+const run = (
+  rules: EventRule[],
+  c: EventContext = ctx(),
+  rands?: number[],
+  stage = "고교",
+  tierRules: TierRules = RULES,
+) => {
   resetEventFunnelStats();
   return runEventEngine(
-    rules, [], new Map([["MSG_T", MSG]]), new Map(), c, 2026, 0,
-    rands ?? new Array(12).fill(0.5), tierRules, stage,
+    rules,
+    [],
+    new Map([["MSG_T", MSG]]),
+    new Map(),
+    c,
+    2026,
+    0,
+    rands ?? new Array(12).fill(0.5),
+    tierRules,
+    stage,
   );
 };
 
@@ -115,7 +195,7 @@ describe("등급 줄기 — 한 주에 하나", () => {
     const r = run([
       rule({ id: "EVT_HURT1", tier: "urgent" }),
       rule({ id: "EVT_HURT2", tier: "urgent" }),
-      rule({ id: "EVT_CHAT",  tier: "normal" }),
+      rule({ id: "EVT_CHAT", tier: "normal" }),
     ]);
     expect(r.newMessages).toHaveLength(3);
     expect(eventFunnelStats.conditional.urgentPicked).toBe(2);
@@ -124,8 +204,10 @@ describe("등급 줄기 — 한 주에 하나", () => {
 
   it("이번 시즌 안 뜬 것이 먼저다", () => {
     const r = run(
-      [rule({ id: "EVT_OLD", tier: "normal", weight: 100 }),
-       rule({ id: "EVT_NEW", tier: "normal", weight: 1 })],
+      [
+        rule({ id: "EVT_OLD", tier: "normal", weight: 100 }),
+        rule({ id: "EVT_NEW", tier: "normal", weight: 1 }),
+      ],
       ctx({ triggeredEvents: { EVT_OLD: 3 } }),
     );
     // 가중이 100배인데도 「아직 안 뜬 것」 띠가 이긴다
@@ -135,8 +217,10 @@ describe("등급 줄기 — 한 주에 하나", () => {
   it("밀린 주 가중이 붙는다 — 안 붙으면 낮은 가중이 시즌 내내 뒤에 선다", () => {
     // 둘 다 이번 시즌 안 떴다. 가중 1 대 1 인데 한쪽이 10주 밀렸다
     const r = run(
-      [rule({ id: "EVT_LOW", tier: "normal", weight: 1 }),
-       rule({ id: "EVT_STARVED", tier: "normal", weight: 1 })],
+      [
+        rule({ id: "EVT_LOW", tier: "normal", weight: 1 }),
+        rule({ id: "EVT_STARVED", tier: "normal", weight: 1 }),
+      ],
       ctx({ eventStarve: { EVT_STARVED: 10 } }),
       // 가중 1 : 11 → 0.5 는 뒤쪽(누계 12 중 6)에 떨어진다
       new Array(12).fill(0.5),
@@ -152,9 +236,11 @@ describe("등급 줄기 — 한 주에 하나", () => {
     const r = run(
       [rule({ id: "EVT_R", tier: "rare", oncePolicy: "once_per_season" })],
       ctx({ tierCounts: { rare: CAP_RARE, unique: 99, hidden: 99 } }),
-      undefined, "고교", CAPPED_RULES,
+      undefined,
+      "고교",
+      CAPPED_RULES,
     );
-    expect(r.newMessages).toHaveLength(0);   // 노말이 뽑혔는데 노말 후보가 없다
+    expect(r.newMessages).toHaveLength(0); // 노말이 뽑혔는데 노말 후보가 없다
     expect(eventFunnelStats.tier.capBlocked.rare).toBe(1);
   });
 
@@ -164,8 +250,13 @@ describe("등급 줄기 — 한 주에 하나", () => {
     // 반대로 **레어를 뽑히게 하고 레어 후보를 0** 으로 둔다
     const c = ctx({ tierCounts: { unique: 99, hidden: 99 } });
     // 0.99 → 유니크·히든이 상한으로 0 이 된 뒤 가중 80:14 에서 뒤쪽(레어)이 뽑힌다
-    const r = run([rule({ id: "EVT_N", tier: "normal" })], c, new Array(12).fill(0.99),
-                  "고교", CAPPED_ABOVE_RARE);
+    const r = run(
+      [rule({ id: "EVT_N", tier: "normal" })],
+      c,
+      new Array(12).fill(0.99),
+      "고교",
+      CAPPED_ABOVE_RARE,
+    );
     expect(eventFunnelStats.tier.fallback).toBeGreaterThan(0);
     expect(eventFunnelStats.tier.fallbackBy["고교/rare"]).toBe(1);
     expect(r.fallbackFrom).toBe("rare");
@@ -179,9 +270,14 @@ describe("등급 줄기 — 한 주에 하나", () => {
     // 추첨은 상한을 봤는데 폴백은 안 봤다.
     const c = ctx({ tierCounts: { rare: CAP_RARE, hidden: 99 } });
     const r = run(
-      [rule({ id: "EVT_R", tier: "rare", oncePolicy: "once_per_season" }),
-       rule({ id: "EVT_N", tier: "normal" })],
-      c, new Array(12).fill(0.999), "고교", CAPPED_RULES,
+      [
+        rule({ id: "EVT_R", tier: "rare", oncePolicy: "once_per_season" }),
+        rule({ id: "EVT_N", tier: "normal" }),
+      ],
+      c,
+      new Array(12).fill(0.999),
+      "고교",
+      CAPPED_RULES,
     );
     // 레어는 상한이라 절대 안 뜬다 — 노말까지 내려가거나 아무것도 안 뜬다
     expect(r.newMessages.map((m) => m.id).join()).not.toContain("EVT_R");
@@ -204,7 +300,8 @@ describe("등급 줄기 — 한 주에 하나", () => {
     const c = ctx({ tierCounts: { normal: 0 } });
     const r = run(
       [rule({ id: "EVT_H", tier: "hidden", oncePolicy: "once_per_season" })],
-      c, new Array(12).fill(0.999),
+      c,
+      new Array(12).fill(0.999),
     );
     if (r.gradeFired === "hidden") {
       expect(r.careerUpdatedTriggers.EVT_H).toBe(10);
@@ -213,16 +310,28 @@ describe("등급 줄기 — 한 주에 하나", () => {
 
   it("숨은 조건은 평가는 받되 등급 밖으로 안 샌다", () => {
     const c = ctx({ tierCounts: { rare: 99, unique: 99, hidden: 99 } });
-    const blocked = run([rule({
-      id: "EVT_H", tier: "normal",
-      hiddenCondition: [{ type: "diligence_gte", value: 90 }],
-    })], c);
+    const blocked = run(
+      [
+        rule({
+          id: "EVT_H",
+          tier: "normal",
+          hiddenCondition: [{ type: "diligence_gte", value: 90 }],
+        }),
+      ],
+      c,
+    );
     expect(blocked.newMessages).toHaveLength(0);
 
-    const open = run([rule({
-      id: "EVT_H", tier: "normal",
-      hiddenCondition: [{ type: "diligence_gte", value: 10 }],
-    })], c);
+    const open = run(
+      [
+        rule({
+          id: "EVT_H",
+          tier: "normal",
+          hiddenCondition: [{ type: "diligence_gte", value: 10 }],
+        }),
+      ],
+      c,
+    );
     expect(open.newMessages).toHaveLength(1);
   });
 
@@ -251,20 +360,37 @@ describe("등급 규칙 파일", () => {
     expect(stageGroupOf(RULES, proto())).toBe("고교");
     expect(stageGroupOf(RULES, proto({ careerStage: "university" }))).toBe("대학");
     expect(stageGroupOf(RULES, proto({ careerStage: "independent" }))).toBe("독립");
-    expect(stageGroupOf(RULES, proto({
-      careerStage: "pro_kbl", leagueId: "LEAGUE_KBL_FARM",
-    }))).toBe("2군");
+    expect(
+      stageGroupOf(
+        RULES,
+        proto({
+          careerStage: "pro_kbl",
+          leagueId: "LEAGUE_KBL_FARM",
+        }),
+      ),
+    ).toBe("2군");
     // 🔴 복무 중에도 `careerStage` 는 소속이 남는다 — 군이 먼저여야 한다
-    expect(stageGroupOf(RULES, proto({
-      careerStage: "pro_kbl", leagueId: "LEAGUE_KBL", militaryStatus: "현역",
-    }))).toBe("군");
+    expect(
+      stageGroupOf(
+        RULES,
+        proto({
+          careerStage: "pro_kbl",
+          leagueId: "LEAGUE_KBL",
+          militaryStatus: "현역",
+        }),
+      ),
+    ).toBe("군");
   });
 
   it("🔴 프로 눈금은 `proServiceYears` 다 — 데뷔 시즌이 0(1년차)", () => {
     // B 가 이벤트에 붙인 조건(`num_lte proServiceYears 4` · `pro_year_gte 5`)과 같아야 한다
-    const pro = (y: number) => stageGroupOf(RULES, proto({ careerStage: "pro_kbl", leagueId: "LEAGUE_KBL", proServiceYears: y }));
-    expect(pro(0)).toBe("프로초반");   // 1년차
-    expect(pro(4)).toBe("프로초반");   // 5년차
+    const pro = (y: number) =>
+      stageGroupOf(
+        RULES,
+        proto({ careerStage: "pro_kbl", leagueId: "LEAGUE_KBL", proServiceYears: y }),
+      );
+    expect(pro(0)).toBe("프로초반"); // 1년차
+    expect(pro(4)).toBe("프로초반"); // 5년차
     expect(pro(5)).toBe("프로중후반"); // 6년차
     expect(pro(12)).toBe("프로중후반");
   });

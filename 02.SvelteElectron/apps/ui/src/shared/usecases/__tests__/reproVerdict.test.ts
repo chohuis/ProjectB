@@ -18,8 +18,15 @@ const { verdict } = require_(
 
 /** `probe-d-dr-worker.cjs` 의 `RESULT` 줄 모양 */
 const done = (over: Partial<Record<string, unknown>> = {}) => ({
-  run: 1, why: "완주", 지명: "6R 58P TEAM_KBL_SUWON_KNIGHTS_1", 대학합격: null,
-  독립합격: null, 병역: "미필", ovr: 75, velocity: 76, ...over,
+  run: 1,
+  why: "완주",
+  지명: "6R 58P TEAM_KBL_SUWON_KNIGHTS_1",
+  대학합격: null,
+  독립합격: null,
+  병역: "미필",
+  ovr: 75,
+  velocity: 76,
+  ...over,
 });
 
 describe("재현 검사 판정", () => {

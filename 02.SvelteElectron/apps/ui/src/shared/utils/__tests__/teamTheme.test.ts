@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  teamTokens, lightness, contrast, contrastOnWhiteText, DEFAULT_PRIMARY,
+  teamTokens,
+  lightness,
+  contrast,
+  contrastOnWhiteText,
+  DEFAULT_PRIMARY,
 } from "../teamTheme";
 
 // ⚠ **이 검사가 UI 전체의 바닥이다.** 팀 색은 172팀에서 오고, 헤더·CTA·강조가
@@ -12,7 +16,7 @@ import {
 describe("팀 토큰 파생", () => {
   it("헤더는 흰 글씨가 읽히도록 항상 어둡다", () => {
     // 실측: 238팀 주색 L* 13~83, 그중 130팀이 L* > 45라 그대로 쓰면 흰 글씨가 죽는다
-    const bright = teamTokens(["#F49530", "#123A6B"]);   // 광주 팬서스 L*70
+    const bright = teamTokens(["#F49530", "#123A6B"]); // 광주 팬서스 L*70
     expect(lightness(bright.dark)).toBeLessThan(30);
     expect(contrastOnWhiteText(bright.dark)).toBeGreaterThanOrEqual(4.5);
   });
@@ -81,17 +85,22 @@ describe("팀 토큰 파생", () => {
 // 등번호**를 얹으면서 이 짝이 182팀 전부에서 성립해야 하는 조건이 됐다.
 describe("refs.json 국내 팀 전수", () => {
   const DOMESTIC = new Set([
-    "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_KBL",
+    "LEAGUE_HIGHSCHOOL",
+    "LEAGUE_UNIVERSITY",
+    "LEAGUE_INDEPENDENT",
+    "LEAGUE_KBL",
   ]);
 
-  interface RefTeam { id: string; name: string; leagueId: string; colors?: string[] }
+  interface RefTeam {
+    id: string;
+    name: string;
+    leagueId: string;
+    colors?: string[];
+  }
 
-  const raw = readFileSync(
-    join(process.cwd(), "resource/data/master/entities/refs.json"), "utf8");
+  const raw = readFileSync(join(process.cwd(), "resource/data/master/entities/refs.json"), "utf8");
   const parsed = JSON.parse(raw) as { teams: RefTeam[] | Record<string, RefTeam> };
-  const all: RefTeam[] = Array.isArray(parsed.teams)
-    ? parsed.teams
-    : Object.values(parsed.teams);
+  const all: RefTeam[] = Array.isArray(parsed.teams) ? parsed.teams : Object.values(parsed.teams);
   const teams = all.filter((t) => DOMESTIC.has(t.leagueId));
 
   it("국내 팀이 실제로 읽혔다 — 경로가 어긋나면 0팀으로 조용히 통과한다", () => {

@@ -16,36 +16,72 @@
 
 export interface ContractTermsCopy {
   offer: {
-    subject: string; head: string; salary: string;
-    teamOption: string; playerOption: string; noTrade: string;
-    rounds: string; roundsNone: string;
+    subject: string;
+    head: string;
+    salary: string;
+    teamOption: string;
+    playerOption: string;
+    noTrade: string;
+    rounds: string;
+    roundsNone: string;
   };
   counter: {
-    subject: string; accept: string; reject: string; revise: string;
+    subject: string;
+    accept: string;
+    reject: string;
+    revise: string;
     reason: Record<"goodRating" | "poorRating" | "ownerWarm" | "ownerCold" | "roundsOut", string>;
   };
   signed: {
-    subject: string; head: string; headSafe: string; salary: string;
-    signingBonus: string; teamOption: string; playerOption: string; noTrade: string;
-    incentiveHead: string; incentiveLine: string; tail: string;
+    subject: string;
+    head: string;
+    headSafe: string;
+    salary: string;
+    signingBonus: string;
+    teamOption: string;
+    playerOption: string;
+    noTrade: string;
+    incentiveHead: string;
+    incentiveLine: string;
+    tail: string;
   };
   option: {
-    subject: string; teamExercise: string; teamDecline: string;
-    playerAsk: string; playerExercise: string; playerDecline: string;
+    subject: string;
+    teamExercise: string;
+    teamDecline: string;
+    playerAsk: string;
+    playerExercise: string;
+    playerDecline: string;
   };
   incentive: {
-    subject: string; met: string; missed: string; unmeasurable: string;
-    total: string; none: string;
+    subject: string;
+    met: string;
+    missed: string;
+    unmeasurable: string;
+    total: string;
+    none: string;
   };
   minSalary: { floor: string };
 }
 
 /** 자리표 — 파일의 `_placeholders` 와 같은 목록이다 */
-export type ContractCopyVars = Partial<Record<
-  "team" | "year" | "week" | "salary" | "years" | "bonus" | "total"
-  | "actual" | "rounds" | "minSalary" | "optYears" | "incentive",
-  string | number
->>;
+export type ContractCopyVars = Partial<
+  Record<
+    | "team"
+    | "year"
+    | "week"
+    | "salary"
+    | "years"
+    | "bonus"
+    | "total"
+    | "actual"
+    | "rounds"
+    | "minSalary"
+    | "optYears"
+    | "incentive",
+    string | number
+  >
+>;
 
 /** `{key}` 를 갈아 끼운다. **없는 자리표는 그대로 둔다** — 조용히 빈칸이 되면 못 찾는다 */
 export function fillContractCopy(tmpl: string, vars: ContractCopyVars): string {
@@ -68,28 +104,64 @@ export function parseContractTermsCopy(raw: unknown): ContractTermsCopy | null {
 
   const need = (v: unknown) => typeof v === "string" && v.length > 0;
 
-  if (!need(o.offer.subject) || !need(o.offer.head) || !need(o.offer.salary)
-      || !need(o.offer.teamOption) || !need(o.offer.playerOption) || !need(o.offer.noTrade)
-      || !need(o.offer.rounds) || !need(o.offer.roundsNone)) return null;
+  if (
+    !need(o.offer.subject) ||
+    !need(o.offer.head) ||
+    !need(o.offer.salary) ||
+    !need(o.offer.teamOption) ||
+    !need(o.offer.playerOption) ||
+    !need(o.offer.noTrade) ||
+    !need(o.offer.rounds) ||
+    !need(o.offer.roundsNone)
+  )
+    return null;
 
-  if (!need(o.counter.subject) || !need(o.counter.accept) || !need(o.counter.reject)
-      || !need(o.counter.revise) || !o.counter.reason) return null;
+  if (
+    !need(o.counter.subject) ||
+    !need(o.counter.accept) ||
+    !need(o.counter.reject) ||
+    !need(o.counter.revise) ||
+    !o.counter.reason
+  )
+    return null;
   for (const k of ["goodRating", "poorRating", "ownerWarm", "ownerCold", "roundsOut"] as const) {
     if (!need(o.counter.reason[k])) return null;
   }
 
-  if (!need(o.signed.subject) || !need(o.signed.head) || !need(o.signed.headSafe)
-      || !need(o.signed.salary) || !need(o.signed.signingBonus) || !need(o.signed.teamOption)
-      || !need(o.signed.playerOption) || !need(o.signed.noTrade) || !need(o.signed.incentiveHead)
-      || !need(o.signed.incentiveLine) || !need(o.signed.tail)) return null;
+  if (
+    !need(o.signed.subject) ||
+    !need(o.signed.head) ||
+    !need(o.signed.headSafe) ||
+    !need(o.signed.salary) ||
+    !need(o.signed.signingBonus) ||
+    !need(o.signed.teamOption) ||
+    !need(o.signed.playerOption) ||
+    !need(o.signed.noTrade) ||
+    !need(o.signed.incentiveHead) ||
+    !need(o.signed.incentiveLine) ||
+    !need(o.signed.tail)
+  )
+    return null;
 
-  if (!need(o.option.subject) || !need(o.option.teamExercise) || !need(o.option.teamDecline)
-      || !need(o.option.playerAsk) || !need(o.option.playerExercise)
-      || !need(o.option.playerDecline)) return null;
+  if (
+    !need(o.option.subject) ||
+    !need(o.option.teamExercise) ||
+    !need(o.option.teamDecline) ||
+    !need(o.option.playerAsk) ||
+    !need(o.option.playerExercise) ||
+    !need(o.option.playerDecline)
+  )
+    return null;
 
-  if (!need(o.incentive.subject) || !need(o.incentive.met) || !need(o.incentive.missed)
-      || !need(o.incentive.unmeasurable) || !need(o.incentive.total)
-      || !need(o.incentive.none)) return null;
+  if (
+    !need(o.incentive.subject) ||
+    !need(o.incentive.met) ||
+    !need(o.incentive.missed) ||
+    !need(o.incentive.unmeasurable) ||
+    !need(o.incentive.total) ||
+    !need(o.incentive.none)
+  )
+    return null;
 
   if (!need(o.minSalary.floor)) return null;
   return o;

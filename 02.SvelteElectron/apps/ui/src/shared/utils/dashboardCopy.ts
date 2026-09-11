@@ -124,7 +124,8 @@ export function parseDashboardLabels(raw: unknown): DashboardLabels | null {
  *   같아 보이고, 부르는 쪽이 기본값을 못 고른다.
  */
 export function tableLabelBlock(
-  labels: DashboardLabels | null, kind: string,
+  labels: DashboardLabels | null,
+  kind: string,
 ): TableLabelBlock | null {
   if (!labels || !kind) return null;
   const parts = kind.split(".");
@@ -285,7 +286,9 @@ export function fillVar(tmpl: string, name: string, v: string | number): string 
 
 /** 문안 덩어리를 뿌리째 찾는다 — `kind` 가 뿌리를 달고 온다 */
 function blockOf(
-  labels: DashboardLabels | null, root: keyof DashboardLabels, kind: string,
+  labels: DashboardLabels | null,
+  root: keyof DashboardLabels,
+  kind: string,
 ): TableLabelBlock | null {
   if (!labels || !kind) return null;
   const key = kind.startsWith(`${root}.`) ? kind : `${root}.${kind}`;
@@ -342,8 +345,10 @@ export function barsCopy(labels: DashboardLabels | null, kind: string): BarsCopy
   // 시험은 `columns`(과목·백분위)+`subjects`(과목 이름), 팀 분위기는 낱말이
   // 바로 붙는다 — 한 표로 모은다. 이름표가 어느 키에 적혔든 화면은 하나만 본다
   const merged = {
-    ...stringMap(b?.columns), ...stringMap(b?.subjects),
-    ...stringMap(b?.rows), ...stringMap(b?.labels),
+    ...stringMap(b?.columns),
+    ...stringMap(b?.subjects),
+    ...stringMap(b?.rows),
+    ...stringMap(b?.labels),
   };
   for (const k of ["mood", "delta", "gpa"]) {
     if (typeof b?.[k] === "string") merged[k] = b[k] as string;

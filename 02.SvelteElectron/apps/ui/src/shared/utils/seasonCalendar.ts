@@ -28,8 +28,18 @@ export const MONTH_STARTS_1 = [1, 6, 10, 14, 19, 23, 27, 32, 36, 40, 45, 49] as 
 
 /** 인덱스 0 = 3월. 10·11은 이듬해 1·2월이다 */
 export const MONTH_NAMES = [
-  "3월", "4월", "5월", "6월", "7월", "8월",
-  "9월", "10월", "11월", "12월", "1월", "2월",
+  "3월",
+  "4월",
+  "5월",
+  "6월",
+  "7월",
+  "8월",
+  "9월",
+  "10월",
+  "11월",
+  "12월",
+  "1월",
+  "2월",
 ] as const;
 
 /** 한 해의 주 수 */
@@ -87,8 +97,6 @@ export function prevMonthRange(weekInYear: number): { start: number; end: number
 export function monthWeekRange(weekInYear: number): [number, number] {
   const idx = monthIndexOf(weekInYear);
   const start = MONTH_STARTS_1[idx];
-  const end = idx + 1 < MONTH_STARTS_1.length
-    ? MONTH_STARTS_1[idx + 1] - 1
-    : WEEKS_PER_YEAR;
+  const end = idx + 1 < MONTH_STARTS_1.length ? MONTH_STARTS_1[idx + 1] - 1 : WEEKS_PER_YEAR;
   return [start, end];
 }

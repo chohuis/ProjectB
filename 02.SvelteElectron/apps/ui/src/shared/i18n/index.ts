@@ -100,7 +100,7 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "entity.grade.3": "3\ud559\ub144",
     "entity.handedness.L": "\uc88c",
     "entity.handedness.R": "\uc6b0",
-    "entity.handedness.S": "\uc591"
+    "entity.handedness.S": "\uc591",
   },
   en: {
     "nav.news": "News",
@@ -197,8 +197,8 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "entity.grade.3": "Senior",
     "entity.handedness.L": "Left",
     "entity.handedness.R": "Right",
-    "entity.handedness.S": "Switch"
-  }
+    "entity.handedness.S": "Switch",
+  },
 };
 
 // 초기 언어 결정: 저장값 우선, 없으면 브라우저 언어 기반
@@ -241,7 +241,7 @@ export const t = derived(language, ($language) => {
 // 환경설정에서 쓰는 언어 선택 목록
 export const languageOptions: Array<{ id: Language; label: string }> = [
   { id: "ko", label: "\ud55c\uad6d\uc5b4" },
-  { id: "en", label: "English" }
+  { id: "en", label: "English" },
 ];
 
 /**

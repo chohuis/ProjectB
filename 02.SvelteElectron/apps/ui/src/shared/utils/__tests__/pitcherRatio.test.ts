@@ -17,7 +17,10 @@ import { neededPositions } from "../rosterEngine";
  * 여기 또 적으면 이 검사가 일곱 번째 정본이 된다.
  */
 function rules() {
-  const p = resolve(__dirname, "../../../../../../resource/data/master/players/generation_rules.json");
+  const p = resolve(
+    __dirname,
+    "../../../../../../resource/data/master/players/generation_rules.json",
+  );
   return JSON.parse(readFileSync(p, "utf8"));
 }
 
@@ -56,7 +59,8 @@ describe("pitcherRatio 정본", () => {
     const roster = [
       ...Array.from({ length: 8 }, () => ({ playerType: "pitcher", position: "SP" })),
       ...["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "C"].map((position) => ({
-        playerType: "batter", position,
+        playerType: "batter",
+        position,
       })),
     ];
     const isPit = (p: string) => p === "SP" || p === "RP";

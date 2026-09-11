@@ -11,14 +11,14 @@ import type { TeamRef } from "../../stores/master";
  * ⚠ 팀 순위만 만든다. 선수 개인은 NPC 7,300명 × 5년 = 36,500행이라 안 만든다.
  */
 const mk = (id: string, leagueId: string, power?: number): TeamRef =>
-  ({ id, leagueId, name: id, power } as unknown as TeamRef);
+  ({ id, leagueId, name: id, power }) as unknown as TeamRef;
 
 const TEAMS = [
   mk("TEAM_KBL_A_1", "LEAGUE_KBL", 5),
   mk("TEAM_KBL_B_1", "LEAGUE_KBL", 3),
   mk("TEAM_KBL_C_1", "LEAGUE_KBL", 1),
-  mk("TEAM_KBL_A_2", "LEAGUE_KBL", 5),      // 2군 — 순위표를 안 쓴다
-  mk("TEAM_HS_X",    "LEAGUE_HIGHSCHOOL"),  // 아마 — 안 만든다
+  mk("TEAM_KBL_A_2", "LEAGUE_KBL", 5), // 2군 — 순위표를 안 쓴다
+  mk("TEAM_HS_X", "LEAGUE_HIGHSCHOOL"), // 아마 — 안 만든다
 ];
 
 describe("과거 순위 생성", () => {
@@ -67,15 +67,17 @@ describe("과거 순위 생성", () => {
 
   it("★이 같아도 해마다 흔들린다 — 5년치 복사본이 아니다", () => {
     const out = buildPastStandings(TEAMS, 20260731, 2026);
-    const pcts = [...out.values()].map((rows) =>
-      rows.find((r) => r.teamId === "TEAM_KBL_B_1")!.winPct);
+    const pcts = [...out.values()].map(
+      (rows) => rows.find((r) => r.teamId === "TEAM_KBL_B_1")!.winPct,
+    );
     expect(new Set(pcts).size, "5년 승률이 전부 같다").toBeGreaterThan(1);
   });
 
   it("득실이 승률과 같은 방향이다", () => {
     const rows = buildPastStandings(TEAMS, 20260731, 2026).get(2025)!;
     for (const r of rows) {
-      if (r.winPct > 0.5) expect(r.runsFor, `${r.teamId} 이겼는데 득점이 적다`).toBeGreaterThan(r.runsAgainst);
+      if (r.winPct > 0.5)
+        expect(r.runsFor, `${r.teamId} 이겼는데 득점이 적다`).toBeGreaterThan(r.runsAgainst);
       if (r.winPct < 0.5) expect(r.runsFor).toBeLessThan(r.runsAgainst);
     }
   });

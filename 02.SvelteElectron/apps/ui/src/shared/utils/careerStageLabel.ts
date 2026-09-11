@@ -12,14 +12,14 @@ import type { CareerStage } from "../types/save";
  * 그래야 다음에 리그가 추가돼도 라벨이 조용히 빠지지 않는다.
  */
 const LABEL: Record<CareerStage, string> = {
-  highschool:  "고교",
-  university:  "대학",
+  highschool: "고교",
+  university: "대학",
   independent: "독립리그",
-  military:    "복무 중",
-  pro:         "프로",
-  pro_kbl:     "KBL",
-  pro_abl:     "ABL",
-  pro_jbl:     "JBL",
+  military: "복무 중",
+  pro: "프로",
+  pro_kbl: "KBL",
+  pro_abl: "ABL",
+  pro_jbl: "JBL",
 };
 
 /**

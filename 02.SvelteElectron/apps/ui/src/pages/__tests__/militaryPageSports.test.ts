@@ -15,7 +15,9 @@ import { visibleNavTabs } from "../../shared/utils/navVisibility";
  */
 const PAGE = readFileSync(join(__dirname, "../military/MilitaryPage.svelte"), "utf8");
 const PANE = readFileSync(
-  join(__dirname, "../../features/military/ui/SportsUnitPane.svelte"), "utf8");
+  join(__dirname, "../../features/military/ui/SportsUnitPane.svelte"),
+  "utf8",
+);
 
 describe("병역 탭 — 상무", () => {
   it("복무 중이면 탭이 보인다 — 상무도 같은 규칙이다", () => {

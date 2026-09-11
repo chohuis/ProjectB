@@ -6,9 +6,7 @@
 
 import type { MessageItem } from "../../types/main";
 import type { SaveSeason } from "../../types/season";
-import {
-  buildRows, countByClass, previewLine, type InjuryEvent,
-} from "../../utils/injuryReport";
+import { buildRows, countByClass, previewLine, type InjuryEvent } from "../../utils/injuryReport";
 import { weekInYearOf } from "../../utils/seasonWeeks";
 import { fillReportVar, type BankPicker, type ReportCopy } from "../../utils/reportCopy";
 
@@ -64,9 +62,13 @@ export function buildInjuryNews(p: BuildInjuryNewsParams): MessageItem | null {
   const left = weeksLeftInSeason(p.season, p.weekInYear);
   // 집계는 사람 수다 — 한 달에 두 번 다친 사람을 두 번 세면 안 된다.
   // 이름 조회는 화면 몫이라 여기선 `people`이 비어도 맞다
-  const counts = countByClass(buildRows({
-    events: p.events, people: [], weeksLeftInSeason: left,
-  }));
+  const counts = countByClass(
+    buildRows({
+      events: p.events,
+      people: [],
+      weeksLeftInSeason: left,
+    }),
+  );
   const preview = previewLine(counts);
 
   // ⚠ `{month}` 뒤에 조사를 안 붙인다 — 자리표시자 뒤가 띄어쓰기 + 명사다.
@@ -74,23 +76,21 @@ export function buildInjuryNews(p: BuildInjuryNewsParams): MessageItem | null {
   const tmpl = p.subjectBank
     ? p.subjectBank.picker.pick("injury#subject", p.subjectBank.copy?.injury.subjects ?? [])
     : "";
-  const subject = tmpl
-    ? fillReportVar(tmpl, "month", p.monthLabel)
-    : `${p.monthLabel} 부상 리포트`;
+  const subject = tmpl ? fillReportVar(tmpl, "month", p.monthLabel) : `${p.monthLabel} 부상 리포트`;
 
   return {
     // 🔴 **연도+주차**다. 한 주에 한 통뿐이라 그것으로 유일하다.
     //   `Date.now()` 는 같은 세이브를 다시 열면 다른 id 를 낸다.
-    id:        `msg-injury-${p.season.seasonYear}-w${p.weekNum}`,
-    category:  "system",
-    sender:    "리그 사무국",
+    id: `msg-injury-${p.season.seasonYear}-w${p.weekNum}`,
+    category: "system",
+    sender: "리그 사무국",
     subject,
     preview,
     // 본문은 패널이 그린다. 메타데이터를 못 읽는 경로를 위한 대비책만 둔다
-    body:      preview,
+    body: preview,
     createdAt: `W${p.weekNum}`,
-    readAt:    null,
-    metadata:  {
+    readAt: null,
+    metadata: {
       type: "injury",
       week: p.weekNum,
       weeksLeftInSeason: left,

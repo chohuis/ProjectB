@@ -2,25 +2,45 @@
   import { onMount } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import {
-    signNegotiatedContract, rejectNegotiatedContract,
+    signNegotiatedContract,
+    rejectNegotiatedContract,
   } from "../../../shared/usecases/contractDecision";
   import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { slotRepo } from "../../../shared/repo/slotRepo";
   import type { PendingAction } from "../../../shared/types/season";
   import type {
-    PitcherSeasonStats, BatterSeasonStats, ProContract, ContractIncentive,
+    PitcherSeasonStats,
+    BatterSeasonStats,
+    ProContract,
+    ContractIncentive,
   } from "../../../shared/types/save";
   import { calcMarketSalary, calcSeasonRating } from "../../../shared/utils/salaryEngine";
   import { relationEffects } from "../../../shared/usecases/relationships";
   import { staffModsOf } from "../../../shared/utils/staffEffects";
   import { fillContractCopy } from "../../../shared/utils/contractCopy";
   import {
-    CLAUSE_OPTIONS, clauseById, clauseAddable, addClause, removeClause,
-    clauseTerms, incentiveCandidates, incentiveLabel, incentiveKey,
-    incentiveAddable, addIncentive, removeIncentive, incentiveTotal,
-    maxIncentives, minSalaryOf, requestedSalaryOf, contractTotalValue,
-    acceptThresholdOf, acceptProbabilityOf, counterOfferRounds, compareRows,
+    CLAUSE_OPTIONS,
+    clauseById,
+    clauseAddable,
+    addClause,
+    removeClause,
+    clauseTerms,
+    incentiveCandidates,
+    incentiveLabel,
+    incentiveKey,
+    incentiveAddable,
+    addIncentive,
+    removeIncentive,
+    incentiveTotal,
+    maxIncentives,
+    minSalaryOf,
+    requestedSalaryOf,
+    contractTotalValue,
+    acceptThresholdOf,
+    acceptProbabilityOf,
+    counterOfferRounds,
+    compareRows,
     type ClauseId,
   } from "../../../shared/utils/contractTerms";
 
@@ -59,8 +79,8 @@
   export let action: Extract<PendingAction, { type: "salaryNegotiation" }>;
 
   const CONTEXT_LABEL: Record<string, string> = {
-    initial:         "입단 계약 협상",
-    renewal:         "계약 갱신 협상",
+    initial: "입단 계약 협상",
+    renewal: "계약 갱신 협상",
     military_return: "복귀 계약 협상",
   };
 
@@ -141,10 +161,10 @@
   // ── 역제안 횟수 (§5-2) ───────────────────────────────────────
   let seasonRating = 50;
   let usedRounds = 0;
-  $: myStats = ($seasonStore.stats[$gameStore.protagonist.id] ?? null);
+  $: myStats = $seasonStore.stats[$gameStore.protagonist.id] ?? null;
   $: isPitcher = $gameStore.protagonist.playerType === "pitcher";
   $: pitcherStats = isPitcher ? (myStats as PitcherSeasonStats | null) : null;
-  $: batterStats  = !isPitcher ? (myStats as BatterSeasonStats | null) : null;
+  $: batterStats = !isPitcher ? (myStats as BatterSeasonStats | null) : null;
   $: calcSeasonRating(pitcherStats ?? batterStats).then((r) => (seasonRating = r));
 
   $: totalRounds = counterOfferRounds(seasonRating, ownerRelation);
@@ -152,7 +172,9 @@
 
   let marketSalary = 0;
   $: calcMarketSalary(
-    isPitcher ? $gameStore.protagonist.pitching?.ovr ?? 50 : $gameStore.protagonist.batting?.ovr ?? 50,
+    isPitcher
+      ? ($gameStore.protagonist.pitching?.ovr ?? 50)
+      : ($gameStore.protagonist.batting?.ovr ?? 50),
     $gameStore.protagonist.fame,
     action.leagueId,
   ).then((r) => (marketSalary = r));
@@ -163,27 +185,43 @@
   $: rows = compareRows({
     current: current
       ? {
-          salary: current.salary, years: current.durationYears,
-          signingBonus: current.signingBonus, noTrade: current.noTrade,
+          salary: current.salary,
+          years: current.durationYears,
+          signingBonus: current.signingBonus,
+          noTrade: current.noTrade,
           incentiveTotal: incentiveTotal(current.incentives ?? []),
         }
       : null,
-    offered: { salary: effectiveOffer, years: action.durationYears, signingBonus: action.signingBonus },
-    counter: {
-      salary: requestedSalary, years: selectedDuration, signingBonus: action.signingBonus,
-      clauses: pickedClauses, incentives: pickedIncentives,
+    offered: {
+      salary: effectiveOffer,
+      years: action.durationYears,
+      signingBonus: action.signingBonus,
     },
-    yes: "있음", no: "없음",
+    counter: {
+      salary: requestedSalary,
+      years: selectedDuration,
+      signingBonus: action.signingBonus,
+      clauses: pickedClauses,
+      incentives: pickedIncentives,
+    },
+    yes: "있음",
+    no: "없음",
   });
 
-  $: totalValue = contractTotalValue(requestedSalary, selectedDuration, action.signingBonus) + incTotal;
+  $: totalValue =
+    contractTotalValue(requestedSalary, selectedDuration, action.signingBonus) + incTotal;
 
   function formatSalary(v: number): string {
     if (v >= 10000) return `${(v / 10000).toFixed(1)}억`;
     return `${v.toLocaleString()}만`;
   }
 
-  function buildContract(salary: number, years: number, incentives: ContractIncentive[], clauses: ClauseId[]): ProContract {
+  function buildContract(
+    salary: number,
+    years: number,
+    incentives: ContractIncentive[],
+    clauses: ClauseId[],
+  ): ProContract {
     const t = clauseTerms(clauses);
     return {
       teamId: action.teamId,
@@ -211,7 +249,11 @@
   async function accept() {
     if (resolving) return;
     resolving = true;
-    await signNegotiatedContract(action, buildContract(action.offeredSalary, action.durationYears, [], []), teamName);
+    await signNegotiatedContract(
+      action,
+      buildContract(action.offeredSalary, action.durationYears, [], []),
+      teamName,
+    );
     resolving = false;
   }
 
@@ -224,13 +266,17 @@
     if (!withinThreshold) {
       usedRounds += 1;
       replyLine = copy
-        ? (roundsLeft - 1 <= 0 ? copy.counter.reason.roundsOut : copy.counter.reject)
+        ? roundsLeft - 1 <= 0
+          ? copy.counter.reason.roundsOut
+          : copy.counter.reject
         : "";
       return;
     }
     resolving = true;
     await signNegotiatedContract(
-      action, buildContract(requestedSalary, selectedDuration, pickedIncentives, pickedClauses), teamName,
+      action,
+      buildContract(requestedSalary, selectedDuration, pickedIncentives, pickedClauses),
+      teamName,
     );
     resolving = false;
   }
@@ -267,11 +313,18 @@
       <!-- ── 구단 제시 ── -->
       <section class="card">
         <p class="card-h">구단 제시</p>
-        <div class="row"><span class="k">연봉</span><span class="v big">{formatSalary(effectiveOffer)}원</span></div>
-        <div class="row"><span class="k">기간</span><span class="v">{action.durationYears}년</span></div>
+        <div class="row">
+          <span class="k">연봉</span><span class="v big">{formatSalary(effectiveOffer)}원</span>
+        </div>
+        <div class="row">
+          <span class="k">기간</span><span class="v">{action.durationYears}년</span>
+        </div>
         <!-- 없는 조항은 줄 자체가 없다 — 「없음」·「0년」을 안 적는다 (§6) -->
         {#if action.signingBonus > 0}
-          <div class="row"><span class="k">계약금</span><span class="v">{formatSalary(action.signingBonus)}원</span></div>
+          <div class="row">
+            <span class="k">계약금</span><span class="v">{formatSalary(action.signingBonus)}원</span
+            >
+          </div>
         {/if}
         {#if ownerMult !== 1}
           <p class="owner-line">
@@ -287,23 +340,44 @@
       <!-- ── 역제안 ── -->
       <section class="card">
         <p class="card-h">역제안</p>
-        <p class="f">연봉 <span class="pct">{salaryRatio > 0 ? "+" : ""}{Math.round(salaryRatio * 100)}%</span></p>
-        <input class="slider" type="range" min="-0.2" max="0.2" step="0.01" bind:value={salaryRatio} />
-        <div class="row"><span class="k">요구 연봉</span><span class="v">{formatSalary(requestedSalary)}원</span></div>
+        <p class="f">
+          연봉 <span class="pct">{salaryRatio > 0 ? "+" : ""}{Math.round(salaryRatio * 100)}%</span>
+        </p>
+        <input
+          class="slider"
+          type="range"
+          min="-0.2"
+          max="0.2"
+          step="0.01"
+          bind:value={salaryRatio}
+        />
+        <div class="row">
+          <span class="k">요구 연봉</span><span class="v">{formatSalary(requestedSalary)}원</span>
+        </div>
         {#if minSalary > 0}
-          <div class="row"><span class="k">최저연봉</span><span class="v" class:floor={floorHit}>{formatSalary(minSalary)}원</span></div>
+          <div class="row">
+            <span class="k">최저연봉</span><span class="v" class:floor={floorHit}
+              >{formatSalary(minSalary)}원</span
+            >
+          </div>
         {/if}
         {#if floorHit && copy}
           <!-- 문장은 contract_terms.json 에서만 온다 (B-13) -->
-          <p class="note">{fillContractCopy(copy.minSalary.floor, { minSalary: minSalary.toLocaleString() })}</p>
+          <p class="note">
+            {fillContractCopy(copy.minSalary.floor, { minSalary: minSalary.toLocaleString() })}
+          </p>
         {/if}
         {#if durationRange.length > 1}
           <p class="f">기간</p>
           <div class="seg">
             {#each durationRange as yr}
-              <button type="button" class="seg-b" class:on={selectedDuration === yr}
+              <button
+                type="button"
+                class="seg-b"
+                class:on={selectedDuration === yr}
                 aria-pressed={selectedDuration === yr}
-                on:click={() => (selectedDuration = yr)}>{yr}년</button>
+                on:click={() => (selectedDuration = yr)}>{yr}년</button
+              >
             {/each}
           </div>
         {/if}
@@ -316,14 +390,28 @@
         <div class="card-h">
           조항
           <span class="menu">
-            <button type="button" class="addbtn" on:click={(e) => toggleMenu("clause", e)}>＋ 추가</button>
+            <button type="button" class="addbtn" on:click={(e) => toggleMenu("clause", e)}
+              >＋ 추가</button
+            >
             {#if openMenu === "clause"}
               <!-- svelte-ignore a11y-no-static-element-interactions -->
-              <div class="pop" role="menu" tabindex="-1"
-                on:click={(e) => e.stopPropagation()} on:keydown={() => {}}>
+              <div
+                class="pop"
+                role="menu"
+                tabindex="-1"
+                on:click={(e) => e.stopPropagation()}
+                on:keydown={() => {}}
+              >
                 {#each CLAUSE_OPTIONS as c}
-                  <button type="button" role="menuitem" disabled={!clauseAddable(pickedClauses, c.id)}
-                    on:click={() => { pickedClauses = addClause(pickedClauses, c.id); openMenu = ""; }}>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    disabled={!clauseAddable(pickedClauses, c.id)}
+                    on:click={() => {
+                      pickedClauses = addClause(pickedClauses, c.id);
+                      openMenu = "";
+                    }}
+                  >
                     <span>{c.label}</span><span class="am">×{c.mult}</span>
                   </button>
                 {/each}
@@ -336,8 +424,12 @@
             <li>
               <span class="nm">{clauseById(id).label}</span>
               <span class="am">×{clauseById(id).mult}</span>
-              <button type="button" class="rm" aria-label="빼기"
-                on:click={() => (pickedClauses = removeClause(pickedClauses, id))}>×</button>
+              <button
+                type="button"
+                class="rm"
+                aria-label="빼기"
+                on:click={() => (pickedClauses = removeClause(pickedClauses, id))}>×</button
+              >
             </li>
           {:else}
             <li class="empty">없음</li>
@@ -352,16 +444,31 @@
             인센티브
             <span class="cnt">{pickedIncentives.length} / {maxIncentives()}</span>
             <span class="menu">
-              <button type="button" class="addbtn" on:click={(e) => toggleMenu("incentive", e)}>＋ 추가</button>
+              <button type="button" class="addbtn" on:click={(e) => toggleMenu("incentive", e)}
+                >＋ 추가</button
+              >
               {#if openMenu === "incentive"}
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div class="pop" role="menu" tabindex="-1"
-                  on:click={(e) => e.stopPropagation()} on:keydown={() => {}}>
+                <div
+                  class="pop"
+                  role="menu"
+                  tabindex="-1"
+                  on:click={(e) => e.stopPropagation()}
+                  on:keydown={() => {}}
+                >
                   {#each incCandidates as c (incentiveKey(c))}
-                    <button type="button" role="menuitem"
+                    <button
+                      type="button"
+                      role="menuitem"
                       disabled={!incentiveAddable(pickedIncentives, c, requestedSalary)}
-                      on:click={() => { pickedIncentives = addIncentive(pickedIncentives, c, requestedSalary); openMenu = ""; }}>
-                      <span>{incentiveLabel(c)}</span><span class="am">+{c.bonus.toLocaleString()}</span>
+                      on:click={() => {
+                        pickedIncentives = addIncentive(pickedIncentives, c, requestedSalary);
+                        openMenu = "";
+                      }}
+                    >
+                      <span>{incentiveLabel(c)}</span><span class="am"
+                        >+{c.bonus.toLocaleString()}</span
+                      >
                     </button>
                   {/each}
                 </div>
@@ -373,8 +480,14 @@
               <li>
                 <span class="nm">{incentiveLabel(i)}</span>
                 <span class="am">+{i.bonus.toLocaleString()}만원</span>
-                <button type="button" class="rm" aria-label="빼기"
-                  on:click={() => (pickedIncentives = removeIncentive(pickedIncentives, incentiveKey(i)))}>×</button>
+                <button
+                  type="button"
+                  class="rm"
+                  aria-label="빼기"
+                  on:click={() =>
+                    (pickedIncentives = removeIncentive(pickedIncentives, incentiveKey(i)))}
+                  >×</button
+                >
               </li>
             {:else}
               <li class="empty">없음</li>
@@ -411,16 +524,21 @@
         <i style="width:{acceptProb}%"></i>
       </div>
       <div class="row"><span class="k">추정</span><span class="v">{acceptProb}%</span></div>
-      <div class="row"><span class="k">시장가 대비</span><span class="v" class:over={marketRatioPct > 110}>{marketRatioPct}%</span></div>
+      <div class="row">
+        <span class="k">시장가 대비</span><span class="v" class:over={marketRatioPct > 110}
+          >{marketRatioPct}%</span
+        >
+      </div>
       {#if replyLine}
         <p class="note">{replyLine}</p>
       {/if}
     </section>
 
     <div class="actions">
-      <button class="btn-counter" disabled={resolving || roundsLeft <= 0} on:click={counter}>역제안</button>
-      <button class="btn-accept" disabled={resolving} on:click={accept}>
-제시 수락</button>
+      <button class="btn-counter" disabled={resolving || roundsLeft <= 0} on:click={counter}
+        >역제안</button
+      >
+      <button class="btn-accept" disabled={resolving} on:click={accept}> 제시 수락</button>
       <button class="btn-reject" disabled={resolving} on:click={reject}>거절</button>
     </div>
 
@@ -442,102 +560,383 @@
 </div>
 
 <style>
-  .overlay { position:fixed; inset:0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:220; }
-  .modal { width:min(760px,95vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:16px; padding:22px; display:grid; gap:12px; max-height:92vh; overflow-y:auto; }
-
-  header { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
-  .badge { margin:0; font-size:11px; color:var(--ink-mute); letter-spacing:.05em; }
-  h2 { margin:0; color:var(--ink); font-size:19px; }
-  .rounds { margin:0 0 0 auto; font-size:12px; color:var(--ink-mid); }
-
-  .cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  @media (max-width: 700px) { .cols { grid-template-columns:1fr; } }
-
-  .card { background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:12px; }
-  .card.wide { grid-column:1 / -1; }
-  .card-h {
-    margin:0 0 8px; font-size:12px; font-weight:700; color:var(--ink-mute);
-    border-bottom:1px solid var(--line); padding-bottom:6px;
-    display:flex; align-items:center; gap:8px;
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 18, 38, 0.52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 220;
   }
-  .cnt { color:var(--ink-mute); font-weight:400; margin-left:auto; }
-  .menu { position:relative; margin-left:auto; }
+  .modal {
+    width: min(760px, 95vw);
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: 16px;
+    padding: 22px;
+    display: grid;
+    gap: 12px;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 19px;
+  }
+  .rounds {
+    margin: 0 0 0 auto;
+    font-size: 12px;
+    color: var(--ink-mid);
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 700px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .card.wide {
+    grid-column: 1 / -1;
+  }
+  .card-h {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cnt {
+    color: var(--ink-mute);
+    font-weight: 400;
+    margin-left: auto;
+  }
+  .menu {
+    position: relative;
+    margin-left: auto;
+  }
   /* 개수 칸이 있으면 그게 auto 를 먹으므로 메뉴는 붙여 둔다 */
-  .cnt + .menu { margin-left:8px; }
+  .cnt + .menu {
+    margin-left: 8px;
+  }
 
-  .row { display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:5px 0; border-bottom:1px dashed var(--line); }
-  .row:last-child { border-bottom:0; }
-  .k { color:var(--ink-mute); font-size:12px; }
-  .v { font-weight:700; color:var(--ink); font-size:13px; }
-  .v.big { font-size:19px; }
-  .v.floor { color:var(--warn); }
-  .v.over { color:var(--bad); }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .row:last-child {
+    border-bottom: 0;
+  }
+  .k {
+    color: var(--ink-mute);
+    font-size: 12px;
+  }
+  .v {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  .v.big {
+    font-size: 19px;
+  }
+  .v.floor {
+    color: var(--warn);
+  }
+  .v.over {
+    color: var(--bad);
+  }
 
-  .f { margin:9px 0 3px; font-size:12px; color:var(--ink-mute); }
-  .pct { color:var(--ink); font-weight:700; }
-  .slider { width:100%; accent-color:var(--ink-mute); }
-  .note { margin:6px 0 0; font-size:11.5px; color:var(--warn); }
+  .f {
+    margin: 9px 0 3px;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .pct {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .slider {
+    width: 100%;
+    accent-color: var(--ink-mute);
+  }
+  .note {
+    margin: 6px 0 0;
+    font-size: 11.5px;
+    color: var(--warn);
+  }
 
-  .seg { display:flex; gap:5px; }
-  .seg-b { flex:1; padding:6px 5px; border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:var(--radius); cursor:pointer; font-size:12.5px; font-family:inherit; }
-  .seg-b.on { background:var(--line); border-color:var(--ink-mute); font-weight:700; }
+  .seg {
+    display: flex;
+    gap: 5px;
+  }
+  .seg-b {
+    flex: 1;
+    padding: 6px 5px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 12.5px;
+    font-family: inherit;
+  }
+  .seg-b.on {
+    background: var(--line);
+    border-color: var(--ink-mute);
+    font-weight: 700;
+  }
 
   .addbtn {
-    border:1px solid var(--line); background:var(--panel-sunk); color:var(--ink-mid);
-    border-radius:var(--radius); cursor:pointer; font-family:inherit; font-size:11.5px;
-    padding:2px 8px; font-weight:700;
+    border: 1px solid var(--line);
+    background: var(--panel-sunk);
+    color: var(--ink-mid);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11.5px;
+    padding: 2px 8px;
+    font-weight: 700;
   }
-  .addbtn:hover { border-color:var(--ink-mute); color:var(--ink); }
+  .addbtn:hover {
+    border-color: var(--ink-mute);
+    color: var(--ink);
+  }
 
   .pop {
-    position:absolute; right:0; top:calc(100% + 4px); z-index:5; min-width:200px;
-    background:var(--panel); border:1px solid var(--ink-mute); border-radius:var(--radius);
-    box-shadow:0 6px 18px rgba(0,0,0,.18); padding:4px;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 5;
+    min-width: 200px;
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    padding: 4px;
   }
   .pop button {
-    display:flex; width:100%; gap:10px; align-items:baseline; padding:6px 8px; border:0;
-    background:none; color:var(--ink); cursor:pointer; font-family:inherit; font-size:12.5px;
-    text-align:left; border-radius:var(--radius);
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: baseline;
+    padding: 6px 8px;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12.5px;
+    text-align: left;
+    border-radius: var(--radius);
   }
-  .pop button:hover:not(:disabled) { background:var(--panel-sunk); }
-  .pop button:disabled { opacity:.35; cursor:default; }
-  .pop .am { margin-left:auto; color:var(--ink-mute); font-size:11.5px; }
+  .pop button:hover:not(:disabled) {
+    background: var(--panel-sunk);
+  }
+  .pop button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .pop .am {
+    margin-left: auto;
+    color: var(--ink-mute);
+    font-size: 11.5px;
+  }
 
-  .picked { list-style:none; margin:0; padding:0; }
-  .picked li { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px dashed var(--line); font-size:12.5px; color:var(--ink); }
-  .picked li:last-child { border-bottom:0; }
-  .picked .nm { font-weight:700; }
-  .picked .am { margin-left:auto; color:var(--ink-mid); font-size:12px; }
-  .picked .empty { color:var(--ink-mute); }
-  .rm { border:0; background:none; color:var(--ink-mute); cursor:pointer; font-size:15px; line-height:1; padding:0 2px; font-family:inherit; }
-  .rm:hover { color:var(--bad); }
+  .picked {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .picked li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+  .picked li:last-child {
+    border-bottom: 0;
+  }
+  .picked .nm {
+    font-weight: 700;
+  }
+  .picked .am {
+    margin-left: auto;
+    color: var(--ink-mid);
+    font-size: 12px;
+  }
+  .picked .empty {
+    color: var(--ink-mute);
+  }
+  .rm {
+    border: 0;
+    background: none;
+    color: var(--ink-mute);
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    padding: 0 2px;
+    font-family: inherit;
+  }
+  .rm:hover {
+    color: var(--bad);
+  }
 
-  .cmp { width:100%; border-collapse:collapse; font-size:12.5px; }
-  .cmp th, .cmp td { padding:5px 7px; border-bottom:1px solid var(--line); text-align:right; color:var(--ink-mid); }
-  .cmp th:first-child, .cmp td:first-child { text-align:left; }
-  .cmp thead th { background:var(--panel-sunk); color:var(--ink-mute); font-size:11px; font-weight:700; }
-  .cmp tr.total td { font-weight:800; color:var(--ink); }
-  .cmp td.up { color:var(--ok); font-weight:700; }
-  .cmp td.dn { color:var(--bad); font-weight:700; }
+  .cmp {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .cmp th,
+  .cmp td {
+    padding: 5px 7px;
+    border-bottom: 1px solid var(--line);
+    text-align: right;
+    color: var(--ink-mid);
+  }
+  .cmp th:first-child,
+  .cmp td:first-child {
+    text-align: left;
+  }
+  .cmp thead th {
+    background: var(--panel-sunk);
+    color: var(--ink-mute);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .cmp tr.total td {
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .cmp td.up {
+    color: var(--ok);
+    font-weight: 700;
+  }
+  .cmp td.dn {
+    color: var(--bad);
+    font-weight: 700;
+  }
 
-  .gauge { height:8px; border-radius:999px; background:var(--panel-sunk); overflow:hidden; margin:4px 0 6px; }
-  .gauge > i { display:block; height:100%; background:var(--ok); transition:width .18s; }
-  .gauge.mid > i { background:var(--warn); }
-  .gauge.low > i { background:var(--bad); }
+  .gauge {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--panel-sunk);
+    overflow: hidden;
+    margin: 4px 0 6px;
+  }
+  .gauge > i {
+    display: block;
+    height: 100%;
+    background: var(--ok);
+    transition: width 0.18s;
+  }
+  .gauge.mid > i {
+    background: var(--warn);
+  }
+  .gauge.low > i {
+    background: var(--bad);
+  }
 
-  .actions { display:flex; gap:8px; flex-wrap:wrap; }
-  .actions button { flex:1; padding:10px 12px; border-radius:9px; cursor:pointer; font-size:13px; font-family:inherit; }
-  .btn-counter { background:var(--line); color:var(--ink); border:1px solid var(--ink-mute); font-weight:700; }
-  .btn-accept  { background:var(--panel); color:var(--ink); border:1px solid var(--line); }
-  .btn-reject  { background:var(--panel); color:var(--bad); border:1px solid var(--bad); }
-  button:disabled { opacity:.5; cursor:default; }
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .actions button {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .btn-counter {
+    background: var(--line);
+    color: var(--ink);
+    border: 1px solid var(--ink-mute);
+    font-weight: 700;
+  }
+  .btn-accept {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .btn-reject {
+    background: var(--panel);
+    color: var(--bad);
+    border: 1px solid var(--bad);
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 
-  .stats-row { margin:0; display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink); background:var(--panel-sunk); border-radius:var(--radius); padding:8px 10px; }
-  .muted { color:var(--ink-mute); }
+  .stats-row {
+    margin: 0;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+  }
+  .muted {
+    color: var(--ink-mute);
+  }
 
-  .owner-line { margin:8px 0 0; font-size:11px; color:var(--ink-mid); line-height:1.6; }
-  .owner-line strong { color:var(--ink); }
-  .owner-net { font-weight:600; }
-  .owner-net.up { color:var(--ok); }
-  .owner-net.down { color:var(--warn); }
+  .owner-line {
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+  }
+  .owner-line strong {
+    color: var(--ink);
+  }
+  .owner-net {
+    font-weight: 600;
+  }
+  .owner-net.up {
+    color: var(--ok);
+  }
+  .owner-net.down {
+    color: var(--warn);
+  }
 </style>

@@ -96,20 +96,27 @@ export function axisMeasurable(kind: ContractIncentive["kind"], role: string): b
 
 /** 축 하나의 실측값과 달성 여부. 성적이 없으면 0 취급이다 */
 function measure(
-  inc: ContractIncentive, stats: PitcherSeasonStats | undefined, awardIds: readonly string[],
+  inc: ContractIncentive,
+  stats: PitcherSeasonStats | undefined,
+  awardIds: readonly string[],
 ): { met: boolean; actual: string } {
   if (inc.kind === "award") {
     const w = wonAward(awardIds, inc.awardId ?? "");
     return { met: w, actual: w ? "1" : "0" };
   }
-  const g  = stats?.g  ?? 0;
+  const g = stats?.g ?? 0;
   const ip = stats?.ip ?? 0;
   switch (inc.kind) {
-    case "games":   return { met: g  >= inc.threshold, actual: String(g) };
-    case "innings": return { met: ip >= inc.threshold, actual: ipLabel(ip) };
-    case "wins":    return { met: (stats?.w  ?? 0) >= inc.threshold, actual: String(stats?.w  ?? 0) };
-    case "saves":   return { met: (stats?.sv ?? 0) >= inc.threshold, actual: String(stats?.sv ?? 0) };
-    case "holds":   return { met: (stats?.hd ?? 0) >= inc.threshold, actual: String(stats?.hd ?? 0) };
+    case "games":
+      return { met: g >= inc.threshold, actual: String(g) };
+    case "innings":
+      return { met: ip >= inc.threshold, actual: ipLabel(ip) };
+    case "wins":
+      return { met: (stats?.w ?? 0) >= inc.threshold, actual: String(stats?.w ?? 0) };
+    case "saves":
+      return { met: (stats?.sv ?? 0) >= inc.threshold, actual: String(stats?.sv ?? 0) };
+    case "holds":
+      return { met: (stats?.hd ?? 0) >= inc.threshold, actual: String(stats?.hd ?? 0) };
     case "era": {
       // 🔴 **한 이닝도 안 던지면 ERA 는 0 이다.** 그대로 재면 「ERA 3.00 이하」가
       //    공짜가 된다 — 안 던진 해에 보너스가 나가는 건 규칙이 아니라 결함이다.
@@ -117,7 +124,8 @@ function measure(
       const era = stats?.era ?? 0;
       return { met: era <= inc.threshold, actual: eraLabel(era) };
     }
-    default: return { met: false, actual: "0" };
+    default:
+      return { met: false, actual: "0" };
   }
 }
 
@@ -172,12 +180,15 @@ export function settleIncentives(input: IncentiveSettleInput): IncentiveSettleme
  *   제각각이라(「25등판」/「ERA 3.00 이하」) 파일이 줄 끝에 두게 짜여 있다.
  */
 export function incentiveMessageBody(
-  copy: ContractTermsCopy["incentive"], st: IncentiveSettlement,
+  copy: ContractTermsCopy["incentive"],
+  st: IncentiveSettlement,
 ): string {
   const lines: string[] = [];
   for (const r of st.rows) {
     if (r.outcome === "met") {
-      lines.push(fillContractCopy(copy.met, { incentive: r.label, actual: r.actual, bonus: r.paid }));
+      lines.push(
+        fillContractCopy(copy.met, { incentive: r.label, actual: r.actual, bonus: r.paid }),
+      );
     } else if (r.outcome === "missed") {
       lines.push(fillContractCopy(copy.missed, { incentive: r.label, actual: r.actual }));
     } else {

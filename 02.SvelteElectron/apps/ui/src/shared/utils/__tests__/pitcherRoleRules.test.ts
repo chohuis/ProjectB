@@ -2,8 +2,13 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  primePitcherRoleRules, resetPitcherRoleRulesForTest, isPitcherRoleRulesPrimed,
-  bullpenSizeForLeague, buildRecommendParams, isSeasonOut, pitcherRoleRules,
+  primePitcherRoleRules,
+  resetPitcherRoleRulesForTest,
+  isPitcherRoleRulesPrimed,
+  bullpenSizeForLeague,
+  buildRecommendParams,
+  isSeasonOut,
+  pitcherRoleRules,
 } from "../pitcherRoleRules";
 import { primeRosterOpsRules } from "../rosterEngine";
 import type { EntityRow } from "../../stores/master";
@@ -15,14 +20,38 @@ import type { EntityRow } from "../../stores/master";
 // 누가 후보에 들고 빠지는지, 구종 계열이 붙는지, 자리 수가 리그별로 맞는지.
 
 const ROOT = resolve(__dirname, "../../../../../..");
-const rulesFile = JSON.parse(readFileSync(resolve(ROOT, "resource/data/master/players/generation_rules.json"), "utf8"));
+const rulesFile = JSON.parse(
+  readFileSync(resolve(ROOT, "resource/data/master/players/generation_rules.json"), "utf8"),
+);
 
-const attrs = (v: number) => ({ ovr: v, stamina: v, velocity: v, command: v, control: v, movement: v, mentality: v, recovery: v, clutch: v, holdRunners: v });
+const attrs = (v: number) => ({
+  ovr: v,
+  stamina: v,
+  velocity: v,
+  command: v,
+  control: v,
+  movement: v,
+  mentality: v,
+  recovery: v,
+  clutch: v,
+  holdRunners: v,
+});
 
-function pitcher(id: string, teamId: string, extra: Partial<EntityRow> = {}, pl: Record<string, unknown> = {}): EntityRow {
+function pitcher(
+  id: string,
+  teamId: string,
+  extra: Partial<EntityRow> = {},
+  pl: Record<string, unknown> = {},
+): EntityRow {
   return {
-    id, teamId, role: "player", status: "active", name: id,
-    details: { player: { playerType: "pitcher", position: "SP", pitching: attrs(50), batting: {}, ...pl } },
+    id,
+    teamId,
+    role: "player",
+    status: "active",
+    name: id,
+    details: {
+      player: { playerType: "pitcher", position: "SP", pitching: attrs(50), batting: {}, ...pl },
+    },
     ...extra,
   } as unknown as EntityRow;
 }
@@ -33,9 +62,14 @@ const catalog = [
 ];
 
 const me = {
-  id: "me", teamId: "TEAM_A", leagueId: "LEAGUE_HIGHSCHOOL",
+  id: "me",
+  teamId: "TEAM_A",
+  leagueId: "LEAGUE_HIGHSCHOOL",
   pitching: attrs(60),
-  pitches: [{ id: "PITCH_FASTBALL", grade: 3 as const }, { id: "PITCH_SLIDER", grade: 2 as const }],
+  pitches: [
+    { id: "PITCH_FASTBALL", grade: 3 as const },
+    { id: "PITCH_SLIDER", grade: 2 as const },
+  ],
 };
 
 beforeEach(() => {
@@ -74,7 +108,14 @@ describe("재료 만들기", () => {
       pitcher("p3", "TEAM_B"),
       pitcher("b1", "TEAM_A", {}, { playerType: "batter" }),
     ];
-    const params = buildRecommendParams({ protagonist: me, entities, live: {}, catalog, injuries: {}, rules: rules() });
+    const params = buildRecommendParams({
+      protagonist: me,
+      entities,
+      live: {},
+      catalog,
+      injuries: {},
+      rules: rules(),
+    });
     expect(params.teammates.map((t) => t.id)).toEqual(["p1"]);
   });
   it("시즌아웃 부상은 뺀다 · 뛰면서 버티는 부상은 남긴다", () => {
@@ -83,26 +124,63 @@ describe("재료 만들기", () => {
       p1: { severity: "severe", weeksLeft: 12, isPlayingThrough: false },
       p2: { severity: "mild", weeksLeft: 1, isPlayingThrough: true },
     } as never;
-    const params = buildRecommendParams({ protagonist: me, entities, live: {}, catalog, injuries, rules: rules() });
+    const params = buildRecommendParams({
+      protagonist: me,
+      entities,
+      live: {},
+      catalog,
+      injuries,
+      rules: rules(),
+    });
     expect(params.teammates.map((t) => t.id)).toEqual(["p2"]);
     expect(isSeasonOut(undefined)).toBe(false);
   });
   it("라이브 스탯이 있으면 그걸, 없으면 생성값을 쓴다", () => {
     const entities = [pitcher("p1", "TEAM_A"), pitcher("p2", "TEAM_A")];
     const live = { p1: { pitching: attrs(77) } } as never;
-    const params = buildRecommendParams({ protagonist: me, entities, live, catalog, injuries: {}, rules: rules() });
+    const params = buildRecommendParams({
+      protagonist: me,
+      entities,
+      live,
+      catalog,
+      injuries: {},
+      rules: rules(),
+    });
     expect(params.teammates.find((t) => t.id === "p1")?.stamina).toBe(77);
     expect(params.teammates.find((t) => t.id === "p2")?.stamina).toBe(50);
   });
   it("구종에 카탈로그 계열이 붙고, 구종이 없으면 항목을 아예 안 보낸다", () => {
-    const entities = [pitcher("p1", "TEAM_A", {}, { pitches: [{ id: "PITCH_SLIDER", grade: 4 }] }), pitcher("p2", "TEAM_A")];
-    const params = buildRecommendParams({ protagonist: me, entities, live: {}, catalog, injuries: {}, rules: rules() });
-    expect(params.me.pitches).toEqual([{ grade: 3, group: "fastball" }, { grade: 2, group: "breaking" }]);
-    expect(params.teammates.find((t) => t.id === "p1")?.pitches).toEqual([{ grade: 4, group: "breaking" }]);
+    const entities = [
+      pitcher("p1", "TEAM_A", {}, { pitches: [{ id: "PITCH_SLIDER", grade: 4 }] }),
+      pitcher("p2", "TEAM_A"),
+    ];
+    const params = buildRecommendParams({
+      protagonist: me,
+      entities,
+      live: {},
+      catalog,
+      injuries: {},
+      rules: rules(),
+    });
+    expect(params.me.pitches).toEqual([
+      { grade: 3, group: "fastball" },
+      { grade: 2, group: "breaking" },
+    ]);
+    expect(params.teammates.find((t) => t.id === "p1")?.pitches).toEqual([
+      { grade: 4, group: "breaking" },
+    ]);
     expect(params.teammates.find((t) => t.id === "p2")?.pitches).toBeUndefined();
   });
   it("자리 수는 리그에서 온다 — 고교 3/4/1", () => {
-    const params = buildRecommendParams({ protagonist: me, entities: [], live: {}, catalog, injuries: {}, rules: rules(), roleOvrBias: 4 });
+    const params = buildRecommendParams({
+      protagonist: me,
+      entities: [],
+      live: {},
+      catalog,
+      injuries: {},
+      rules: rules(),
+      roleOvrBias: 4,
+    });
     expect(params.rotationSize).toBe(3);
     expect(params.bullpenSize).toBe(4);
     expect(params.closerSize).toBe(1);

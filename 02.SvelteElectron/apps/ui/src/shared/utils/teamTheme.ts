@@ -60,11 +60,27 @@ const toSrgb = (c: number) => (c <= 0.0031308 ? c * 12.92 : 1.055 * Math.pow(c, 
 
 function parse(hex: string): [number, number, number] {
   const h = hex.replace("#", "").trim();
-  const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
   return [0, 2, 4].map((i) => parseInt(full.substr(i, 2), 16) / 255) as [number, number, number];
 }
 function toHex(rgb: [number, number, number]): string {
-  return "#" + rgb.map((c) => Math.round(clamp01(c) * 255).toString(16).padStart(2, "0")).join("").toUpperCase();
+  return (
+    "#" +
+    rgb
+      .map((c) =>
+        Math.round(clamp01(c) * 255)
+          .toString(16)
+          .padStart(2, "0"),
+      )
+      .join("")
+      .toUpperCase()
+  );
 }
 function luminance(rgb: [number, number, number]): number {
   const [r, g, b] = rgb.map(toLin);
@@ -82,8 +98,10 @@ export function contrastOnWhiteText(hex: string): number {
 
 /** 두 색의 대비비. 골드가 헤더 위에서 읽히는지는 이걸로 판정한다 */
 export function contrast(a: string, b: string): number {
-  const la = luminance(parse(a)), lb = luminance(parse(b));
-  const hi = Math.max(la, lb), lo = Math.min(la, lb);
+  const la = luminance(parse(a)),
+    lb = luminance(parse(b));
+  const hi = Math.max(la, lb),
+    lo = Math.min(la, lb);
   return (hi + 0.05) / (lo + 0.05);
 }
 
@@ -99,9 +117,7 @@ function toLightness(hex: string, targetL: number): string {
   if (Math.abs(cur - targetL) < 0.5) return hex.toUpperCase();
 
   // 목표 L*을 상대휘도로 되돌린다
-  const targetY = targetL > 8
-    ? Math.pow((targetL + 16) / 116, 3)
-    : targetL / 903.3;
+  const targetY = targetL > 8 ? Math.pow((targetL + 16) / 116, 3) : targetL / 903.3;
   const curY = luminance(rgb);
   if (curY <= 0) {
     // 완전한 검정은 배율로 못 올린다 — 회색으로 올린다
@@ -127,10 +143,12 @@ function toLightness(hex: string, targetL: number): string {
     scaled.map((c) => c * (1 - mix) + 1 * mix) as [number, number, number];
 
   if (lightness(toHex(scaled)) >= targetL - 1) return toHex(scaled);
-  let lo = 0, hi = 1;
+  let lo = 0,
+    hi = 1;
   for (let i = 0; i < 12; i++) {
     const mid = (lo + hi) / 2;
-    if (lightness(toHex(at(mid))) < targetL) lo = mid; else hi = mid;
+    if (lightness(toHex(at(mid))) < targetL) lo = mid;
+    else hi = mid;
   }
   return toHex(at(hi));
 }
@@ -142,7 +160,10 @@ function toLightness(hex: string, targetL: number): string {
  * (해외 확장팩 등 데이터가 덜 찬 경우) 주색을 어둡게 해서 대신 쓴다 —
  * 화면이 깨지느니 단조로운 편이 낫다.
  */
-export function teamTokens(colors?: readonly string[] | null, tone: ThemeTone = "light"): TeamTokens {
+export function teamTokens(
+  colors?: readonly string[] | null,
+  tone: ThemeTone = "light",
+): TeamTokens {
   const primary = colors?.[0] ?? DEFAULT_PRIMARY;
   const secondary = colors?.[1];
 

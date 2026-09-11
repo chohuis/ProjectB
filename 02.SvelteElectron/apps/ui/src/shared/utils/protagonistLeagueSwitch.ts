@@ -17,9 +17,17 @@
  */
 import type { SaveSeason, ScheduleEntry, LeagueSeasonState } from "../types/season";
 
-type SwitchableSeason = Pick<SaveSeason, "leagueId" | "schedule" | "standings" | "stats" | "leagueSchedules" | "leagueState">;
+type SwitchableSeason = Pick<
+  SaveSeason,
+  "leagueId" | "schedule" | "standings" | "stats" | "leagueSchedules" | "leagueState"
+>;
 
-const EMPTY_LEAGUE: LeagueSeasonState = { standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {} };
+const EMPTY_LEAGUE: LeagueSeasonState = {
+  standings: [],
+  stats: {},
+  playerConditions: {},
+  teamRotationIndex: {},
+};
 
 function flagFor(teamId: string) {
   return (e: ScheduleEntry): ScheduleEntry => {
@@ -28,7 +36,11 @@ function flagFor(teamId: string) {
   };
 }
 
-export function switchProtagonistLeague<T extends SwitchableSeason>(s: T, toLeagueId: string, teamId: string): T {
+export function switchProtagonistLeague<T extends SwitchableSeason>(
+  s: T,
+  toLeagueId: string,
+  teamId: string,
+): T {
   const fromLeagueId = s.leagueId;
   if (fromLeagueId === toLeagueId) {
     // 같은 리그 · 팀만 바뀜 — 표시만 다시
@@ -39,7 +51,9 @@ export function switchProtagonistLeague<T extends SwitchableSeason>(s: T, toLeag
 
   const leagueSchedules: Record<string, ScheduleEntry[]> = { ...s.leagueSchedules };
   delete leagueSchedules[toLeagueId];
-  leagueSchedules[fromLeagueId] = s.schedule.map((e) => (e.isProtagonistGame ? { ...e, isProtagonistGame: false } : e));
+  leagueSchedules[fromLeagueId] = s.schedule.map((e) =>
+    e.isProtagonistGame ? { ...e, isProtagonistGame: false } : e,
+  );
 
   const fromState = s.leagueState[fromLeagueId] ?? EMPTY_LEAGUE;
   const toState = s.leagueState[toLeagueId] ?? EMPTY_LEAGUE;

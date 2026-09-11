@@ -41,21 +41,22 @@ type TeamRow = { id: string; leagueId?: string; history?: { budget?: number } };
 describe("트레이드 예산 배선", () => {
   const M = read("apps/ui/src/shared/usecases/weekPhases/market.ts");
   const refs = JSON.parse(read("resource/data/master/entities/refs.json")) as
-    | TeamRow[]
-    | { teams?: TeamRow[]; clubs?: TeamRow[] };
-  const teams: TeamRow[] = Array.isArray(refs)
-    ? refs
-    : (refs.teams ?? refs.clubs ?? []);
+    TeamRow[] | { teams?: TeamRow[]; clubs?: TeamRow[] };
+  const teams: TeamRow[] = Array.isArray(refs) ? refs : (refs.teams ?? refs.clubs ?? []);
 
   /**
    * 🔴 **이 검사가 근거다.** 박힌 30억이 왜 틀렸는지는 데이터가 말한다 —
    *   프로 1군 예산이 하나도 빠짐없이 30억보다 크다.
    */
   it("프로 1군 예산이 전부 예전 박힌 값보다 크다", () => {
-    const OLD = 300000;                       // 만원 단위 = 30억
-    const pro = teams.filter((t) =>
-      (t.leagueId === "LEAGUE_KBL" || t.leagueId === "LEAGUE_ABL" || t.leagueId === "LEAGUE_JBL")
-      && (t.history?.budget ?? 0) > 0);
+    const OLD = 300000; // 만원 단위 = 30억
+    const pro = teams.filter(
+      (t) =>
+        (t.leagueId === "LEAGUE_KBL" ||
+          t.leagueId === "LEAGUE_ABL" ||
+          t.leagueId === "LEAGUE_JBL") &&
+        (t.history?.budget ?? 0) > 0,
+    );
     expect(pro.length).toBeGreaterThan(0);
     const won = pro.map((t) => Math.round((t.history!.budget as number) / 10000));
     expect(Math.min(...won)).toBeGreaterThan(OLD);
@@ -66,7 +67,8 @@ describe("트레이드 예산 배선", () => {
     expect(M).not.toContain("salaryCap: 300000,");
     expect(M).toContain("salaryCap: budgetCapOf(team.id),");
     expect(M).toContain(
-      "salaryCap: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.salaryCap");
+      "salaryCap: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.salaryCap",
+    );
   });
 
   /**

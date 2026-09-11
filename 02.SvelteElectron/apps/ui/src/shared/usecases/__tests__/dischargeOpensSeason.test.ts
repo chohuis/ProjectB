@@ -26,7 +26,7 @@ describe("전역 → 독립은 시즌을 연다", () => {
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/^\s*\/\/.*$/gm, "");
 
-  it("독립 갈래 안에서 openProSeason(\"LEAGUE_INDEPENDENT\") 를 부른다", () => {
+  it('독립 갈래 안에서 openProSeason("LEAGUE_INDEPENDENT") 를 부른다', () => {
     const start = body.indexOf('after.careerStage === "independent"');
     expect(start, "독립 갈래가 없다").toBeGreaterThan(-1);
     // 갈래 블록 — 다음 `gameStore.addCareerEvent` 앞까지

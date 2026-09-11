@@ -8,20 +8,25 @@ import type { MilitaryMemberRole, MilitaryWeekChoice } from "../../../shared/typ
 export const RANK_LABELS: readonly string[] = ["이병", "일병", "상병", "병장"];
 
 export const MEMBER_ROLE_LABEL: Record<MilitaryMemberRole, string> = {
-  officer: "간부", senior: "선임", peer: "동기", junior: "후임",
+  officer: "간부",
+  senior: "선임",
+  peer: "동기",
+  junior: "후임",
 };
 
 /** members[].tags 의 동작 훅을 한 줄로 (§37) — 접두어 일치 */
 export function tagLabel(tag: string): string {
-  if (tag === "decides_leave")        return "휴가 결재";
+  if (tag === "decides_leave") return "휴가 결재";
   if (tag.startsWith("grades_perf:")) return "성과 판정";
-  if (tag === "ball_partner")         return "캐치볼 상대";
-  if (tag.startsWith("mentor:"))      return "선임 · 자리를 물려준다";
+  if (tag === "ball_partner") return "캐치볼 상대";
+  if (tag.startsWith("mentor:")) return "선임 · 자리를 물려준다";
   return tag;
 }
 
 export const CHOICE_LABEL: Record<MilitaryWeekChoice, string> = {
-  ball: "공을 만졌다", people: "사람과 지냈다", rest: "쉬었다",
+  ball: "공을 만졌다",
+  people: "사람과 지냈다",
+  rest: "쉬었다",
 };
 
 /** 부호를 붙인 정수 표기 — 카드는 효과를 숨기지 않는다 (§27) */

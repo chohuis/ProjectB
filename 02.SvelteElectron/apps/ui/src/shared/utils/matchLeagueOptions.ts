@@ -11,7 +11,11 @@
  *
  * ⚠ 값은 전부 규칙 파일에서 온다. 여기 숫자를 적지 않는다.
  */
-import { starterPitchLimitForLeague, starterOutsFactorForLeague, closerGateForLeague } from "./rosterEngine";
+import {
+  starterPitchLimitForLeague,
+  starterOutsFactorForLeague,
+  closerGateForLeague,
+} from "./rosterEngine";
 import { roleDepthOf } from "./pitcherRoleRules";
 
 export interface LeagueMatchOptions {

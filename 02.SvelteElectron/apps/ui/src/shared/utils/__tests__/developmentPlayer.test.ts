@@ -1,13 +1,14 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  isRegistrable, isDevelopmentPlayer, DEV_REGISTRATION_MONTH,
-} from "../developmentPlayer";
+import { isRegistrable, isDevelopmentPlayer, DEV_REGISTRATION_MONTH } from "../developmentPlayer";
 
 /** **실데이터를 읽는다.** 인라인 값으로 두면 게임과 달라져 거짓 안심을 준다 */
 function rules() {
-  const p = resolve(__dirname, "../../../../../../resource/data/master/players/generation_rules.json");
+  const p = resolve(
+    __dirname,
+    "../../../../../../resource/data/master/players/generation_rules.json",
+  );
   return JSON.parse(readFileSync(p, "utf8"));
 }
 
@@ -50,7 +51,7 @@ describe("육성선수 계약 — 규칙 파일", () => {
     const r = rules();
     const dev = r.developmentPlayerRules?.salary;
     const rookieMin = Math.min(
-      ...(r.draftRules.contract.byPick as Array<{ salary: number }>).map(b => b.salary),
+      ...(r.draftRules.contract.byPick as Array<{ salary: number }>).map((b) => b.salary),
     );
     expect(typeof dev).toBe("number");
     expect(dev).toBeLessThan(rookieMin);
@@ -70,12 +71,13 @@ describe("육성선수 계약 — 규칙 파일", () => {
     // 낮춘 `ovrMax`가 그대로 천장이 되어 **"지금은 약하지만 클 수 있다"가
     // 그냥 약한 선수**가 된다 — 육성선수가 프로가 되는 경로가 없어진다.
     // 소스를 읽는 검사다. 값만 봐선 배선이 살아 있는지 알 수 없다
-    const src = readFileSync(
-      resolve(__dirname, "../../repo/slotLifecycleV3.ts"), "utf8");
+    const src = readFileSync(resolve(__dirname, "../../repo/slotLifecycleV3.ts"), "utf8");
     // 생성 호출 단위로 쪼개서, 능력치를 낮춘 호출은 천장도 같이 넘기는지 본다
-    const calls = src.split("generateFreshmenNative").slice(1)
-      .map(b => b.slice(0, 1400));
-    const lowered = calls.filter(b => b.includes("dev.ovrMax"));
+    const calls = src
+      .split("generateFreshmenNative")
+      .slice(1)
+      .map((b) => b.slice(0, 1400));
+    const lowered = calls.filter((b) => b.includes("dev.ovrMax"));
     expect(lowered.length).toBeGreaterThan(0);
     for (const b of lowered) expect(b).toContain("potentialOvrMax");
   });
@@ -88,8 +90,9 @@ describe("육성선수 계약 — 규칙 파일", () => {
     expect(r.developmentPlayerRules.intakeMax).toBeGreaterThan(0);
     // 반대로 정식 정원만큼 받으면 2군이 육성선수로 채워져
     // 드래프트 지명의 가치가 사라진다
-    expect(r.developmentPlayerRules.intakeMax)
-      .toBeLessThan(r.rosterRules["LEAGUE_KBL_FARM"].rosterMax);
+    expect(r.developmentPlayerRules.intakeMax).toBeLessThan(
+      r.rosterRules["LEAGUE_KBL_FARM"].rosterMax,
+    );
   });
 
   it("2군 상한이 0이 아니다 — 0이면 미지명자가 갈 곳이 없다", () => {

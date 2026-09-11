@@ -10,7 +10,6 @@
   /** 가장 최근 슬롯. 없으면 이어하기가 비활성이다 */
   export let latest: SaveSlotMeta | null = null;
 
-
   // ⚠ 팀 이름은 refs에서 찾는다. 슬롯 메타에는 teamId만 있다
   $: team = latest?.preview.teamId
     ? ($teamsL10n ?? []).find((t) => t.id === latest!.preview.teamId)
@@ -114,8 +113,13 @@
     font-size: 15px;
     transition: filter 0.12s;
   }
-  .btn:hover:not(:disabled) { filter: brightness(1.08); }
-  .btn:disabled { opacity: 0.38; cursor: default; }
+  .btn:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+  .btn:disabled {
+    opacity: 0.38;
+    cursor: default;
+  }
 
   .btn.primary {
     background: var(--t-accent);
@@ -139,7 +143,9 @@
     padding: 11px 14px;
   }
 
-  .cont-main { font-size: 15px; }
+  .cont-main {
+    font-size: 15px;
+  }
 
   .cont-sub {
     font-size: 11.5px;
@@ -149,9 +155,16 @@
     gap: 5px;
     align-items: baseline;
   }
-  .cont-sub b { font-weight: 700; color: var(--ink-mid); }
-  .cont-sub :global(.tm) { margin-right: 1px; }
-  .dot { opacity: 0.5; }
+  .cont-sub b {
+    font-weight: 700;
+    color: var(--ink-mid);
+  }
+  .cont-sub :global(.tm) {
+    margin-right: 1px;
+  }
+  .dot {
+    opacity: 0.5;
+  }
 
   .hint {
     margin: 14px 0 0;

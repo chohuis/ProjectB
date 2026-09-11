@@ -3,23 +3,56 @@ import { batterBars, seasonLines, seasonStatsOf } from "../statCard";
 import type { BatterSeasonStats, PitcherSeasonStats } from "../../types/save";
 
 const bat = (o: Partial<BatterSeasonStats> = {}): BatterSeasonStats => ({
-  type: "batter", g: 40, pa: 170, ab: 150, h: 45, hr: 6, rbi: 28, sb: 3, bb: 18, k: 30,
-  avg: 0.3, obp: 0.38, slg: 0.48, ops: 0.86, ...o,
+  type: "batter",
+  g: 40,
+  pa: 170,
+  ab: 150,
+  h: 45,
+  hr: 6,
+  rbi: 28,
+  sb: 3,
+  bb: 18,
+  k: 30,
+  avg: 0.3,
+  obp: 0.38,
+  slg: 0.48,
+  ops: 0.86,
+  ...o,
 });
 
 const pit = (o: Partial<PitcherSeasonStats> = {}): PitcherSeasonStats => ({
-  type: "pitcher", g: 12, gs: 12, w: 6, l: 3, sv: 0, hd: 0,
+  type: "pitcher",
+  g: 12,
+  gs: 12,
+  w: 6,
+  l: 3,
+  sv: 0,
+  hd: 0,
   // ⚠ **저장은 실수 이닝이다**(`outs / 3`) — `74.1`은 야구 **표기**라 넣으면 안 된다.
   //   74와 1아웃이면 `74 + 1/3`이고, 화면에 `74.1`로 나온다(`ipLabel`).
-  ip: 74 + 1 / 3, er: 21, h: 62, k: 71, bb: 20, era: 2.54, whip: 1.1, ...o,
+  ip: 74 + 1 / 3,
+  er: 21,
+  h: 62,
+  k: 71,
+  bb: 20,
+  era: 2.54,
+  whip: 1.1,
+  ...o,
 });
 
 describe("타자 능력치 막대", () => {
   it("엔진이 보내던 열 개 중 타석에서 의미 있는 다섯을 쓴다", () => {
     const bars = batterBars({
-      contact: 65, power: 54, eye: 63, discipline: 58,
-      battingClutch: 71, platoon: 50, speed: 44, baseInstinct: 52,
-      fielding: 60, arm: 55,
+      contact: 65,
+      power: 54,
+      eye: 63,
+      discipline: 58,
+      battingClutch: 71,
+      platoon: 50,
+      speed: 44,
+      baseInstinct: 52,
+      fielding: 60,
+      arm: 55,
     });
     expect(bars.map((b) => b.label)).toEqual(["컨택", "파워", "선구", "클러치", "주력"]);
     expect(bars.map((b) => b.value)).toEqual([65, 54, 63, 71, 44]);

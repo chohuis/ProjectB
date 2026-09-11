@@ -56,7 +56,9 @@ describe("투수 교체 규칙 — 정본 하나", () => {
   });
 
   it("구원 등판엔 예산을 안 준다", () => {
-    expect(eng).toMatch(/let is_starter = state\.my_queue\.pitchers\.is_empty\(\) \|\| state\.my_queue\.current == 0/);
+    expect(eng).toMatch(
+      /let is_starter = state\.my_queue\.pitchers\.is_empty\(\) \|\| state\.my_queue\.current == 0/,
+    );
     expect(eng).toMatch(/if budget > 0 && state\.outs_since_entry >= budget/);
   });
 

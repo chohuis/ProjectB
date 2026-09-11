@@ -17,22 +17,19 @@ import { PENDING_ACTION_TYPES } from "../../shared/types/season";
  * ⚠ 목록을 손으로 적지 않는다 — `PENDING_ACTION_TYPES` 를 그대로 쓴다.
  *   적으면 유형이 늘 때 이 검사가 검사를 안 하게 된다.
  */
-const SRC = readFileSync(
-  resolve(__dirname, "../main/MainPage.svelte"), "utf8");
+const SRC = readFileSync(resolve(__dirname, "../main/MainPage.svelte"), "utf8");
 
-const FN = SRC.slice(
-  SRC.indexOf("function tabForPending"),
-  SRC.indexOf("$: navTabs"));
+const FN = SRC.slice(SRC.indexOf("function tabForPending"), SRC.indexOf("$: navTabs"));
 
 describe("tabForPending — 모든 pendingAction 유형을 덮는다", () => {
   it("함수를 찾았다", () => {
-    expect(FN.length, "tabForPending 을 못 잘랐다 — 검사가 헛돈다")
-      .toBeGreaterThan(200);
+    expect(FN.length, "tabForPending 을 못 잘랐다 — 검사가 헛돈다").toBeGreaterThan(200);
   });
 
   it.each([...PENDING_ACTION_TYPES])("`%s` 를 처리한다", (t) => {
-    expect(FN, `case "${t}" 가 없다 — 이 유형이 오면 currentTab 이 undefined 가 된다`)
-      .toContain(`case "${t}":`);
+    expect(FN, `case "${t}" 가 없다 — 이 유형이 오면 currentTab 이 undefined 가 된다`).toContain(
+      `case "${t}":`,
+    );
   });
 
   /**
@@ -41,8 +38,9 @@ describe("tabForPending — 모든 pendingAction 유형을 덮는다", () => {
    *    `svelte-check` 가 깨진다.
    */
   it("소진 검사가 있다", () => {
-    expect(FN, "never 대입 가드가 사라졌다 — 다음에 유형이 늘면 조용히 샌다")
-      .toMatch(/const _exhaustive: never = action;/);
+    expect(FN, "never 대입 가드가 사라졌다 — 다음에 유형이 늘면 조용히 샌다").toMatch(
+      /const _exhaustive: never = action;/,
+    );
   });
 
   /**
@@ -51,8 +49,9 @@ describe("tabForPending — 모든 pendingAction 유형을 덮는다", () => {
    */
   it("switch 바깥에도 반환이 있다 — undefined 를 낼 수 없다", () => {
     const returns = FN.match(/return "news";/g) ?? [];
-    expect(returns.length,
-      "반환이 하나뿐이다 — switch 를 비껴가면 undefined 가 흐른다")
-      .toBeGreaterThanOrEqual(2);
+    expect(
+      returns.length,
+      "반환이 하나뿐이다 — switch 를 비껴가면 undefined 가 흐른다",
+    ).toBeGreaterThanOrEqual(2);
   });
 });

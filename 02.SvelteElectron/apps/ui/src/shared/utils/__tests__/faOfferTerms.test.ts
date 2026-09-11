@@ -1,7 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { faOfferTermLines, faTotalValue, FA_TERM_LABEL, type FaOfferTermsInput } from "../faOfferTerms";
+import {
+  faOfferTermLines,
+  faTotalValue,
+  FA_TERM_LABEL,
+  type FaOfferTermsInput,
+} from "../faOfferTerms";
 
 /**
  * FA 제안 카드의 조건 줄 (PLAN_CONTRACT_TERMS §1-2 · §7 ②).
@@ -50,14 +55,21 @@ describe("있는 항목만 줄로 나온다", () => {
   });
 
   it("Rust 가 넷을 다 냈으면 다섯 줄이고 순서가 고정이다", () => {
-    const all = offer({ signingBonus: 3000, teamOptionYears: 1, playerOptionYears: 2, noTrade: true });
+    const all = offer({
+      signingBonus: 3000,
+      teamOptionYears: 1,
+      playerOptionYears: 2,
+      noTrade: true,
+    });
     expect(keysOf(all)).toEqual(["signingBonus", "teamOption", "playerOption", "noTrade", "total"]);
   });
 });
 
 describe("없는 조항은 줄 자체가 없다 — 「없음」·「0년」을 안 적는다", () => {
   it("0 이나 false 는 줄을 안 만든다", () => {
-    const lines = faOfferTermLines(offer({ signingBonus: 0, teamOptionYears: 0, playerOptionYears: 0, noTrade: false }));
+    const lines = faOfferTermLines(
+      offer({ signingBonus: 0, teamOptionYears: 0, playerOptionYears: 0, noTrade: false }),
+    );
     for (const key of ["signingBonus", "teamOption", "playerOption", "noTrade"] as const) {
       expect(lines.some((l) => l.key === key)).toBe(false);
     }
@@ -69,7 +81,9 @@ describe("없는 조항은 줄 자체가 없다 — 「없음」·「0년」을 
   });
 
   it("「없음」·「0년」 같은 값이 어느 줄에도 없다", () => {
-    const lines = faOfferTermLines(offer({ signingBonus: 3000, teamOptionYears: 1, noTrade: true }));
+    const lines = faOfferTermLines(
+      offer({ signingBonus: 3000, teamOptionYears: 1, noTrade: true }),
+    );
     for (const l of lines) {
       expect(l.value.includes("없음")).toBe(false);
       expect(l.value.includes("0년")).toBe(false);
@@ -97,14 +111,19 @@ describe("값과 표기", () => {
   });
 
   it("총액은 연봉 × 기간 + 계약금이다 — 협상 화면과 같은 식", () => {
-    expect(faTotalValue(offer({ salary: 12000, durationYears: 3, signingBonus: 3000 }))).toBe(39000);
+    expect(faTotalValue(offer({ salary: 12000, durationYears: 3, signingBonus: 3000 }))).toBe(
+      39000,
+    );
     const line = faOfferTermLines(offer({ signingBonus: 3000 })).find((l) => l.key === "total")!;
     expect(line.value).toBe(`${(39000).toLocaleString()}만원`);
   });
 
   it("1년 · 계약금 없음이면 총액이 연봉과 같아 줄을 안 적는다", () => {
     expect(keysOf(offer({ durationYears: 1, signingBonus: 0 }))).toEqual([]);
-    expect(keysOf(offer({ durationYears: 1, signingBonus: 500 }))).toEqual(["signingBonus", "total"]);
+    expect(keysOf(offer({ durationYears: 1, signingBonus: 500 }))).toEqual([
+      "signingBonus",
+      "total",
+    ]);
   });
 
   /**
@@ -133,10 +152,15 @@ describe("값과 표기", () => {
 });
 
 describe("카드 배선 — 화면이 이 함수를 쓴다", () => {
-  const SRC = readFileSync(resolve(__dirname, "../../../features/contract/ui/FaMarketModal.svelte"), "utf8");
+  const SRC = readFileSync(
+    resolve(__dirname, "../../../features/contract/ui/FaMarketModal.svelte"),
+    "utf8",
+  );
 
   it("제안 카드가 `faOfferTermLines(offer)` 를 돈다", () => {
-    expect(SRC.includes('import { faOfferTermLines } from "../../../shared/utils/faOfferTerms"')).toBe(true);
+    expect(
+      SRC.includes('import { faOfferTermLines } from "../../../shared/utils/faOfferTerms"'),
+    ).toBe(true);
     expect(SRC.includes("{#each faOfferTermLines(offer) as term (term.key)}")).toBe(true);
     expect(SRC.includes("{term.label}")).toBe(true);
     expect(SRC.includes("{term.value}")).toBe(true);

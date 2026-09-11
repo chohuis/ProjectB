@@ -34,36 +34,51 @@ const NAV: Record<MainTabId, (p: Ctx) => boolean> = {
   //   근거는 `careerStage` 하나다 — 다른 플래그를 두면 한쪽만 바뀐 채 남는다.
   //   상무(체육부대)도 careerStage 가 "military" 라 같은 규칙 · 안의 내용만 다르다.
   military: (p) => p.careerStage === "military",
-  news:     ALWAYS,
-  me:       ALWAYS,
-  team:     ALWAYS,
-  league:   ALWAYS,
-  people:   ALWAYS,
+  news: ALWAYS,
+  me: ALWAYS,
+  team: ALWAYS,
+  league: ALWAYS,
+  people: ALWAYS,
   schedule: ALWAYS,
 };
 
 /** 사이드바에서 "나"와 "세계"를 가르는 자리 — 이 다음부터 세계 쪽이다 */
 // 복무 중엔 병역이 "나" 그룹보다 앞이다 — "지금 내 생활"이 먼저고 나머지가 "밖의 세상"이다 (§22)
-export const NAV_ORDER: MainTabId[] = ["military", "news", "me", "team", "league", "people", "schedule"];
+export const NAV_ORDER: MainTabId[] = [
+  "military",
+  "news",
+  "me",
+  "team",
+  "league",
+  "people",
+  "schedule",
+];
 export const NAV_GROUP_BREAK_AFTER: MainTabId = "me";
 
 const ME: Record<MeTabId, (p: Ctx) => boolean> = {
-  status:       ALWAYS,
+  status: ALWAYS,
   // 은퇴하면 더 클 일이 없다 · 복무 중엔 병역 > 일과가 대신한다 (§22 — 현역은 능력치를 안 건드린다)
-  training:     (p) => !p.retirement && p.careerStage !== "military",
+  training: (p) => !p.retirement && p.careerStage !== "military",
   // 재학 중에만. 예전 `showAcademicsTab`와 같은 조건이고 정본을 여기로 옮겼다
-  academics:    (p) => p.careerStage === "highschool" || p.careerStage === "university",
+  academics: (p) => p.careerStage === "highschool" || p.careerStage === "university",
   // ⚠ 재정은 아마추어도 연다. `FinancePage`가 "학생·독립 무대에는 스폰서가
   // 붙지 않습니다"를 직접 말하고 용돈·구독은 단계와 무관하다 — 숨기면 안 된다
-  finance:      ALWAYS,
+  finance: ALWAYS,
   achievements: ALWAYS,
   // 🔴 **헌액자가 생겨야 보인다.** 늘 열어 두면 커리어 내내 빈 탭이다 —
   //   은퇴자가 나와야 채워지므로 초반 몇 시즌은 반드시 비어 있다.
   //   ⚠ 결번만 있고 헌액자가 없는 경우도 연다(구단 역사는 그것도 기록이다).
-  hallOfFame:   (p) => (p.hallOfFameCount ?? 0) > 0 || (p.retiredNumberCount ?? 0) > 0,
+  hallOfFame: (p) => (p.hallOfFameCount ?? 0) > 0 || (p.retiredNumberCount ?? 0) > 0,
 };
 
-export const ME_ORDER: MeTabId[] = ["status", "training", "academics", "finance", "achievements", "hallOfFame"];
+export const ME_ORDER: MeTabId[] = [
+  "status",
+  "training",
+  "academics",
+  "finance",
+  "achievements",
+  "hallOfFame",
+];
 
 export function visibleNavTabs(p: Ctx): MainTabId[] {
   return NAV_ORDER.filter((id) => NAV[id](p));

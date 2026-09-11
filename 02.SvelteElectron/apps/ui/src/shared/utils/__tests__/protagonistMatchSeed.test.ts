@@ -16,7 +16,7 @@ import { isMeasureMode } from "../measureMode";
  *   `npm run check:measurerepro` 다(판당 수 분이라 여기 못 넣는다).
  */
 
-const UI = join(__dirname, "../../..");   // apps/ui/src
+const UI = join(__dirname, "../../.."); // apps/ui/src
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
@@ -33,10 +33,14 @@ function callsOf(src: string, marker: string): string[] {
   const out: string[] = [];
   let i = src.indexOf(marker);
   while (i >= 0) {
-    let depth = 0, j = i + marker.length - 1;
+    let depth = 0,
+      j = i + marker.length - 1;
     for (; j < src.length; j++) {
       if (src[j] === "(") depth++;
-      else if (src[j] === ")") { depth--; if (depth === 0) break; }
+      else if (src[j] === ")") {
+        depth--;
+        if (depth === 0) break;
+      }
     }
     out.push(src.slice(i, j + 1));
     i = src.indexOf(marker, j);
@@ -44,7 +48,9 @@ function callsOf(src: string, marker: string): string[] {
   return out;
 }
 
-afterEach(() => { delete (globalThis as { __PB_MEASURE__?: boolean }).__PB_MEASURE__; });
+afterEach(() => {
+  delete (globalThis as { __PB_MEASURE__?: boolean }).__PB_MEASURE__;
+});
 
 describe("주인공 경기 씨앗", () => {
   it("계측 모드가 아니면 씨앗을 안 준다 — 실제 플레이는 예전 그대로", () => {
@@ -63,7 +69,7 @@ describe("주인공 경기 씨앗", () => {
   it("씨앗·시즌·주차·일정이 다르면 씨앗도 다르다", () => {
     (globalThis as { __PB_MEASURE__?: boolean }).__PB_MEASURE__ = true;
     const base = protagonistMatchSeed(20260802, 2026, 12, "SCH_1");
-    expect(protagonistMatchSeed(777,      2026, 12, "SCH_1")).not.toBe(base);
+    expect(protagonistMatchSeed(777, 2026, 12, "SCH_1")).not.toBe(base);
     expect(protagonistMatchSeed(20260802, 2027, 12, "SCH_1")).not.toBe(base);
     expect(protagonistMatchSeed(20260802, 2026, 13, "SCH_1")).not.toBe(base);
     // 같은 주에 두 경기(더블헤더·대회)면 일정 id 가 갈라 준다

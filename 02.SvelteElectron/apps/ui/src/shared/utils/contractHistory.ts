@@ -70,9 +70,11 @@ export function shiftContract(
  *    다른 계약으로 보인다.
  */
 export function sameContract(a: ProContract, b: ProContract): boolean {
-  return a.teamId === b.teamId
-    && a.salary === b.salary
-    && a.durationYears === b.durationYears
-    && a.signingBonus === b.signingBonus
-    && (a.signedYear ?? null) === (b.signedYear ?? null);
+  return (
+    a.teamId === b.teamId &&
+    a.salary === b.salary &&
+    a.durationYears === b.durationYears &&
+    a.signingBonus === b.signingBonus &&
+    (a.signedYear ?? null) === (b.signedYear ?? null)
+  );
 }

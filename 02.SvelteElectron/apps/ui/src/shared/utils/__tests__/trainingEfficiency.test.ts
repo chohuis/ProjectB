@@ -1,9 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  trainingEfficiency, trainingEfficiencyDelta, trainingSlotMults,
-} from "../growthEngine";
+import { trainingEfficiency, trainingEfficiencyDelta, trainingSlotMults } from "../growthEngine";
 
 /**
  * 🔴 **여기는 이제 「사본이 없다」를 지키는 자리다** (2026-09-07 · A 단위 5).
@@ -23,8 +21,7 @@ import {
 
 const ROOT = resolve(__dirname, "../../../../../..");
 const TS = readFileSync(resolve(__dirname, "../growthEngine.ts"), "utf8");
-const RUST = readFileSync(
-  resolve(ROOT, "packages/engine-native/src/growth_engine.rs"), "utf8");
+const RUST = readFileSync(resolve(ROOT, "packages/engine-native/src/growth_engine.rs"), "utf8");
 
 describe("① TS 에 계수 사본이 없다", () => {
   /**
@@ -105,8 +102,12 @@ describe("② Rust 가 계수를 한 자리에서 만든다", () => {
 describe("③ 엔진 없이는 null 이다 — 값을 지어 내면 그게 사본이다", () => {
   it("엔진이 없으면 null", async () => {
     expect(await trainingEfficiency({ condition: 100, fatigue: 0, diligence: 50 })).toBeNull();
-    expect(await trainingEfficiencyDelta(
-      { condition: 80, fatigue: 30, diligence: 60 }, { fatigueDelta: -8 })).toBeNull();
+    expect(
+      await trainingEfficiencyDelta(
+        { condition: 80, fatigue: 30, diligence: 60 },
+        { fatigueDelta: -8 },
+      ),
+    ).toBeNull();
     expect(await trainingSlotMults()).toEqual([]);
   });
 });
@@ -122,19 +123,27 @@ describe("③ 엔진 없이는 null 이다 — 값을 지어 내면 그게 사�
 describe("화면이 쓰는 한 숫자 — 엔진 응답을 어떻게 읽나", () => {
   const calls: unknown[] = [];
   /** 곱을 그대로 실어 준다 — 계수는 이 파일이 만들지 않는다 */
-  const fake = (totals: number[]) => vi.fn(async (fn: string, payload: string) => {
-    calls.push([fn, JSON.parse(payload)]);
-    const qs = (JSON.parse(payload) as { queries: unknown[] }).queries;
-    return JSON.stringify({
-      entries: qs.map((_, i) => ({
-        condition: 1, fatigue: 1, diligence: totals[i], total: totals[i],
-      })),
-      slotMults: [9.1, 9.2, 9.3],
+  const fake = (totals: number[]) =>
+    vi.fn(async (fn: string, payload: string) => {
+      calls.push([fn, JSON.parse(payload)]);
+      const qs = (JSON.parse(payload) as { queries: unknown[] }).queries;
+      return JSON.stringify({
+        entries: qs.map((_, i) => ({
+          condition: 1,
+          fatigue: 1,
+          diligence: totals[i],
+          total: totals[i],
+        })),
+        slotMults: [9.1, 9.2, 9.3],
+      });
     });
-  });
 
-  beforeEach(() => { calls.length = 0; });
-  afterEach(() => { delete (globalThis as Record<string, unknown>).window; });
+  beforeEach(() => {
+    calls.length = 0;
+  });
+  afterEach(() => {
+    delete (globalThis as Record<string, unknown>).window;
+  });
 
   const install = (fn: ReturnType<typeof fake>) => {
     (globalThis as Record<string, unknown>).window = { projectB: { engine: fn } };
@@ -142,11 +151,15 @@ describe("화면이 쓰는 한 숫자 — 엔진 응답을 어떻게 읽나", ()
 
   it("곱을 백분율로 바꾼다 — 1.0 이 0%", async () => {
     install(fake([1.0]));
-    expect((await trainingEfficiency({ condition: 100, fatigue: 0, diligence: 49.5 }))!.pct).toBe(0);
+    expect((await trainingEfficiency({ condition: 100, fatigue: 0, diligence: 49.5 }))!.pct).toBe(
+      0,
+    );
     install(fake([1.12]));
     expect((await trainingEfficiency({ condition: 90, fatigue: 10, diligence: 70 }))!.pct).toBe(12);
     install(fake([0.77]));
-    expect((await trainingEfficiency({ condition: 90, fatigue: 88, diligence: 60 }))!.pct).toBe(-23);
+    expect((await trainingEfficiency({ condition: 90, fatigue: 88, diligence: 60 }))!.pct).toBe(
+      -23,
+    );
   });
 
   /** 🔴 **왕복은 한 번이다** — 앞뒤를 따로 물으면 선택지마다 왕복이 배가 된다 */
@@ -154,7 +167,9 @@ describe("화면이 쓰는 한 숫자 — 엔진 응답을 어떻게 읽나", ()
     const fn = fake([1.0, 1.23]);
     install(fn);
     const d = await trainingEfficiencyDelta(
-      { condition: 80, fatigue: 74, diligence: 60 }, { fatigueDelta: -8 });
+      { condition: 80, fatigue: 74, diligence: 60 },
+      { fatigueDelta: -8 },
+    );
     expect(d).toBe(23);
     expect(fn).toHaveBeenCalledTimes(1);
     const [, payload] = calls[0] as [string, { queries: { fatigue: number }[] }];
@@ -166,26 +181,37 @@ describe("화면이 쓰는 한 숫자 — 엔진 응답을 어떻게 읽나", ()
   it("움직이는 값이 없으면 묻지도 않는다", async () => {
     const fn = fake([1]);
     install(fn);
-    expect(await trainingEfficiencyDelta({ condition: 80, fatigue: 30, diligence: 60 }, {})).toBeNull();
+    expect(
+      await trainingEfficiencyDelta({ condition: 80, fatigue: 30, diligence: 60 }, {}),
+    ).toBeNull();
     expect(fn).not.toHaveBeenCalled();
   });
 
   it("0% 는 null 이다 — 「효과 없음」과 「해당 없음」이 같아 보인다", async () => {
     install(fake([1.0, 1.001]));
-    expect(await trainingEfficiencyDelta(
-      { condition: 80, fatigue: 30, diligence: 60 }, { fatigueDelta: -1 })).toBeNull();
+    expect(
+      await trainingEfficiencyDelta(
+        { condition: 80, fatigue: 30, diligence: 60 },
+        { fatigueDelta: -1 },
+      ),
+    ).toBeNull();
   });
 
   it("컨디션은 100 까지다 — 1~99 로 자르지 않는다", async () => {
     install(fake([1.0, 1.0]));
-    await trainingEfficiencyDelta({ condition: 96, fatigue: 30, diligence: 60 }, { conditionDelta: 4 });
+    await trainingEfficiencyDelta(
+      { condition: 96, fatigue: 30, diligence: 60 },
+      { conditionDelta: 4 },
+    );
     const [, payload] = calls[0] as [string, { queries: { condition: number }[] }];
     expect(payload.queries[1].condition).toBe(100);
     // 나머지 둘은 1~99 로 잘린다
     calls.length = 0;
     install(fake([1.0, 1.0]));
-    await trainingEfficiencyDelta({ condition: 50, fatigue: 95, diligence: 95 },
-      { fatigueDelta: 20, diligenceDelta: 20 });
+    await trainingEfficiencyDelta(
+      { condition: 50, fatigue: 95, diligence: 95 },
+      { fatigueDelta: 20, diligenceDelta: 20 },
+    );
     const [, p2] = calls[0] as [string, { queries: { fatigue: number; diligence: number }[] }];
     expect(p2.queries[1].fatigue).toBe(99);
     expect(p2.queries[1].diligence).toBe(99);

@@ -21,7 +21,12 @@
 //    자체가 뜻이라 화면이 반올림하면 안 된다(`dashboardView.cellText` 머리말).
 
 import type {
-  BarsMetadata, CardsMetadata, RankListMetadata, TableCell, TableColumn, TableMetadata,
+  BarsMetadata,
+  CardsMetadata,
+  RankListMetadata,
+  TableCell,
+  TableColumn,
+  TableMetadata,
   TimelineMetadata,
 } from "../types/main";
 import type { ContractIncentive, PitcherSeasonStats } from "../types/save";
@@ -91,7 +96,10 @@ export function standingsTableMeta(input: StandingsTableInput): TableMetadata {
     if (anyStreak) row.streak = r.streak ?? "";
     const prev = input.prevRankOf?.(r.teamId);
     // 순위는 작을수록 좋다 — 「오른 칸 수」로 부호를 맞춰 보낸다(`deltaMark`)
-    if (prev != null && Number.isFinite(prev)) { row.delta = prev - rank; anyDelta = true; }
+    if (prev != null && Number.isFinite(prev)) {
+      row.delta = prev - rank;
+      anyDelta = true;
+    }
     if (r.teamId === input.myTeamId) row.myTeam = true;
     return row;
   });
@@ -126,15 +134,24 @@ export function pitcherSeasonTableMeta(
 
   const val = (s: PitcherSeasonStats, key: string): TableCell => {
     switch (key) {
-      case "w":    return s.w ?? 0;
-      case "l":    return s.l ?? 0;
-      case "sv":   return s.sv ?? 0;
-      case "hd":   return s.hd ?? 0;
-      case "ip":   return ipLabel(s.ip ?? 0);
-      case "era":  return eraLabel(s.era);
-      case "whip": return eraLabel(s.whip);
-      case "k":    return s.k ?? 0;
-      default:     return "";
+      case "w":
+        return s.w ?? 0;
+      case "l":
+        return s.l ?? 0;
+      case "sv":
+        return s.sv ?? 0;
+      case "hd":
+        return s.hd ?? 0;
+      case "ip":
+        return ipLabel(s.ip ?? 0);
+      case "era":
+        return eraLabel(s.era);
+      case "whip":
+        return eraLabel(s.whip);
+      case "k":
+        return s.k ?? 0;
+      default:
+        return "";
     }
   };
 
@@ -169,9 +186,11 @@ export interface ContractTableInput {
  */
 function clauseText(i: ContractTableInput): string {
   const parts: string[] = [];
-  if ((i.teamOptionYears ?? 0) > 0)   parts.push(`${FA_TERM_LABEL.teamOption} ${i.teamOptionYears}년`);
-  if ((i.playerOptionYears ?? 0) > 0) parts.push(`${FA_TERM_LABEL.playerOption} ${i.playerOptionYears}년`);
-  if (i.noTrade === true)             parts.push(FA_TERM_LABEL.noTrade);
+  if ((i.teamOptionYears ?? 0) > 0)
+    parts.push(`${FA_TERM_LABEL.teamOption} ${i.teamOptionYears}년`);
+  if ((i.playerOptionYears ?? 0) > 0)
+    parts.push(`${FA_TERM_LABEL.playerOption} ${i.playerOptionYears}년`);
+  if (i.noTrade === true) parts.push(FA_TERM_LABEL.noTrade);
   return parts.join(" · ");
 }
 
@@ -190,7 +209,7 @@ export function contractTableMeta(kind: string, i: ContractTableInput): TableMet
   const rows: Record<string, TableCell>[] = [
     { item: "teamId", value: i.teamName },
     { item: "salary", value: manwon(i.salary) },
-    { item: "years",  value: `${i.years}년` },
+    { item: "years", value: `${i.years}년` },
   ];
   if (i.signingBonus > 0) rows.push({ item: "bonus", value: manwon(i.signingBonus) });
   const clauses = clauseText(i);
@@ -330,9 +349,9 @@ export interface MyGameLineInput {
 export function myGameTableMeta(kind: string, line: MyGameLineInput): TableMetadata {
   const rows: Record<string, TableCell>[] = [
     { item: "ip", value: ipLabel(line.ip) },
-    { item: "h",  value: line.h },
+    { item: "h", value: line.h },
     { item: "er", value: line.er },
-    { item: "k",  value: line.k },
+    { item: "k", value: line.k },
     { item: "bb", value: line.bb },
   ];
   if (line.pitches != null) rows.push({ item: "pitches", value: line.pitches });
@@ -372,7 +391,9 @@ export function tradeTableMeta(
  * @param note 행마다 붙는 비고 (등록말소의 재등록 불가 기간). 문안에서 온다
  */
 export function playerListTableMeta(
-  kind: string, names: readonly string[], note?: string,
+  kind: string,
+  names: readonly string[],
+  note?: string,
 ): TableMetadata {
   return {
     type: "table",
@@ -395,7 +416,8 @@ export function playerListTableMeta(
  * ⚠ 못 읽으면 `undefined` 다 — 비고 칸을 통째로 안 그린다.
  */
 export function lockNoteOf(
-  labels: import("./dashboardCopy").DashboardLabels | null, weeks: number,
+  labels: import("./dashboardCopy").DashboardLabels | null,
+  weeks: number,
 ): string | undefined {
   const tmpl = tableLabelBlock(labels, "demote")?.lockNote;
   if (typeof tmpl !== "string" || tmpl === "") return undefined;
@@ -424,9 +446,7 @@ export interface BracketRowInput {
  * ⚠ **부전승은 안 싣는다.** 상대가 없는 짝이라 「홈 — 원정」 중 한 칸이 비고,
  *   빈 칸이 `—` 로 그려지면 「상대를 모른다」로 읽힌다. 부르는 쪽이 건다.
  */
-export function bracketTableMeta(
-  kind: string, rows: readonly BracketRowInput[],
-): TableMetadata {
+export function bracketTableMeta(kind: string, rows: readonly BracketRowInput[]): TableMetadata {
   return {
     type: "table",
     kind,
@@ -469,9 +489,7 @@ export interface RankEntryInput {
  *   `buildRankList` 가 아직 그걸 안 읽는다 — 실어 보내면 말이 세이브에
  *   굳는다. C 가 문안을 입힐 때까지 소식 제목이 그 이름이다.
  */
-export function rankListMeta(
-  kind: string, entries: readonly RankEntryInput[],
-): RankListMetadata {
+export function rankListMeta(kind: string, entries: readonly RankEntryInput[]): RankListMetadata {
   return {
     type: "rankList",
     kind,
@@ -499,7 +517,8 @@ export function pctSub(winPct: number): string {
  *   차례를 정해 넘긴다.
  */
 export function timelineMeta(
-  kind: string, entries: readonly { when: string; label: string; detail?: string }[],
+  kind: string,
+  entries: readonly { when: string; label: string; detail?: string }[],
 ): TimelineMetadata {
   return {
     type: "timeline",
@@ -524,9 +543,11 @@ export function timelineMeta(
  *   (`noPlayer`)이 있는데 화면이 그 자리를 안 읽는다 — 없는 값을 빈 칸으로
  *   두면 `—` 가 뜨고, 그건 「모른다」다. 보상금만인 건은 금액 행이 그 뜻을 든다.
  */
-export function faCompTableMeta(
-  i: { grade: string; money: number; playerName?: string | null },
-): TableMetadata {
+export function faCompTableMeta(i: {
+  grade: string;
+  money: number;
+  playerName?: string | null;
+}): TableMetadata {
   const rows: Record<string, TableCell>[] = [{ item: "grade", value: i.grade }];
   if (i.money > 0) rows.push({ item: "money", value: manwon(i.money) });
   if (i.playerName) rows.push({ item: "playerId", value: i.playerName });
@@ -573,9 +594,7 @@ export function rowsTableMeta(
  * ⚠ **불신 0명이어도 줄을 남긴다.** 「불신 이상 0명」은 값이다 — 줄을 빼면
  *   「없다」와 「안 셌다」가 같아 보인다.
  */
-export function teamMoodTableMeta(
-  total: number, cold: number, hostile: number,
-): TableMetadata {
+export function teamMoodTableMeta(total: number, cold: number, hostile: number): TableMetadata {
   return {
     type: "table",
     kind: "bars.teamMood",
@@ -622,9 +641,12 @@ export function militaryAnnualTableMeta(
  * ⚠ **「받은 제안」이 아니다** (B-35). 내가 받은 제안은 다른 소식이다.
  * ⚠ 미계약 0명이면 그 줄을 안 만든다 — 본문도 그때 그 줄을 안 적는다.
  */
-export function faMarketTableMeta(
-  i: { total: number; moved: number; stayed: number; unsigned: number },
-): TableMetadata {
+export function faMarketTableMeta(i: {
+  total: number;
+  moved: number;
+  stayed: number;
+  unsigned: number;
+}): TableMetadata {
   const rows: Record<string, TableCell>[] = [
     { item: "total", value: i.total },
     { item: "moved", value: i.moved },
@@ -704,9 +726,7 @@ export function cardsMeta(
  * ⚠ **과목 이름을 안 싣는다.** 키(`kor`·`eng`…)만 보내고 문안의
  *   `bars.exam.subjects` 가 이름을 붙인다.
  */
-export function examBarsMeta(
-  scores: Record<string, { percentile: number }>,
-): BarsMetadata {
+export function examBarsMeta(scores: Record<string, { percentile: number }>): BarsMetadata {
   return {
     type: "bars",
     kind: "bars.exam",
@@ -744,7 +764,11 @@ export function semesterBarsMeta(gpa: number, cumulative?: number): BarsMetadata
 export function militaryRecordTimelineMeta(
   perf: readonly { week: number; note: string }[],
 ): TimelineMetadata {
-  return timelineMeta("timeline.milRecord",
-    perf.slice().sort((a, b) => a.week - b.week)
-      .map((x) => ({ when: `W${x.week}`, label: x.note })));
+  return timelineMeta(
+    "timeline.milRecord",
+    perf
+      .slice()
+      .sort((a, b) => a.week - b.week)
+      .map((x) => ({ when: `W${x.week}`, label: x.note })),
+  );
 }

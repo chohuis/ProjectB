@@ -144,14 +144,14 @@ export interface MatchStartRequestDto {
   entryTrigger?: EntryTriggerDto;
 
   // pitchers
-  pitcher?: PitcherStatsDto;           // legacy alias for protagonistPitcher
+  pitcher?: PitcherStatsDto; // legacy alias for protagonistPitcher
   protagonistPitcher?: PitcherStatsDto;
   opponentPitcher?: PitcherStatsDto;
   npcStarterPitcher?: PitcherStatsDto;
 
   // lineups
   batterMean?: number;
-  opponentLineup?: BatterStatsDto[];   // legacy alias
+  opponentLineup?: BatterStatsDto[]; // legacy alias
   myTeamLineup?: BatterStatsDto[];
   homeLineup?: BatterStatsDto[];
   awayLineup?: BatterStatsDto[];
@@ -186,11 +186,38 @@ export interface PitchOutcomeDto {
   quality: number;
   comment: string;
   animationCues?: Array<
-    | { type: "ball_pitch"; from: { x: number; y: number }; to: { x: number; y: number }; duration: number }
-    | { type: "ball_batted"; from: { x: number; y: number }; to: { x: number; y: number }; arc: number; hitType: "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt"; duration: number }
-    | { type: "fielder_move"; position: "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF"; to: { x: number; y: number }; duration: number }
-    | { type: "ball_throw"; from: { x: number; y: number }; to: { x: number; y: number }; duration: number }
-    | { type: "runner_advance"; runnerId: "first" | "second" | "third" | "batter"; toBase: "1B" | "2B" | "3B" | "home"; duration: number }
+    | {
+        type: "ball_pitch";
+        from: { x: number; y: number };
+        to: { x: number; y: number };
+        duration: number;
+      }
+    | {
+        type: "ball_batted";
+        from: { x: number; y: number };
+        to: { x: number; y: number };
+        arc: number;
+        hitType: "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt";
+        duration: number;
+      }
+    | {
+        type: "fielder_move";
+        position: "P" | "C" | "1B" | "2B" | "3B" | "SS" | "LF" | "CF" | "RF";
+        to: { x: number; y: number };
+        duration: number;
+      }
+    | {
+        type: "ball_throw";
+        from: { x: number; y: number };
+        to: { x: number; y: number };
+        duration: number;
+      }
+    | {
+        type: "runner_advance";
+        runnerId: "first" | "second" | "third" | "batter";
+        toBase: "1B" | "2B" | "3B" | "home";
+        duration: number;
+      }
     | { type: "show_result"; text: string; tone: "good" | "bad" | "neutral"; x: number; y: number }
   >;
 }

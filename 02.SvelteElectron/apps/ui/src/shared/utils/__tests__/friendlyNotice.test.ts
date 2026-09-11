@@ -19,24 +19,64 @@ import type { OpponentBrief } from "../matchLineupBuilder";
 const plan = {
   monthLabel: "3월",
   entries: [
-    { gameDate: "2026-03-18", awayTeamId: "TEAM_B", homeTeamId: "PLY_HERO", week: 12, isFriendly: true },
-    { gameDate: "2026-03-11", awayTeamId: "TEAM_A", homeTeamId: "PLY_HERO", week: 11, isFriendly: true },
+    {
+      gameDate: "2026-03-18",
+      awayTeamId: "TEAM_B",
+      homeTeamId: "PLY_HERO",
+      week: 12,
+      isFriendly: true,
+    },
+    {
+      gameDate: "2026-03-11",
+      awayTeamId: "TEAM_A",
+      homeTeamId: "PLY_HERO",
+      week: 11,
+      isFriendly: true,
+    },
   ],
 } as unknown as Parameters<typeof buildMonthlyNoticeMessage>[0];
 
 const official = [
-  { gameDate: "2026-03-24", awayTeamId: "PLY_HERO", homeTeamId: "TEAM_C", week: 13, isFriendly: false },
+  {
+    gameDate: "2026-03-24",
+    awayTeamId: "PLY_HERO",
+    homeTeamId: "TEAM_C",
+    week: 13,
+    isFriendly: false,
+  },
 ] as unknown as Parameters<typeof buildMonthlyNoticeMessage>[1];
 
 const BRIEFS: Record<string, OpponentBrief> = {
-  TEAM_A: { teamId: "TEAM_A", rank: 12, total: 16, record: "8승 14패", teamOvr: 54,
-            starter: { name: "최성원", position: "RP", ovr: 58 } },
-  TEAM_B: { teamId: "TEAM_B", rank: 6, total: 16, record: "11승 11패", teamOvr: 59,
-            starter: { name: "장수훈", position: "SP", ovr: 66 } },
-  TEAM_C: { teamId: "TEAM_C", rank: 3, total: 16, record: "15승 7패", teamOvr: 63,
-            starter: { name: "류도기", position: "SP", ovr: 71 } },
+  TEAM_A: {
+    teamId: "TEAM_A",
+    rank: 12,
+    total: 16,
+    record: "8승 14패",
+    teamOvr: 54,
+    starter: { name: "최성원", position: "RP", ovr: 58 },
+  },
+  TEAM_B: {
+    teamId: "TEAM_B",
+    rank: 6,
+    total: 16,
+    record: "11승 11패",
+    teamOvr: 59,
+    starter: { name: "장수훈", position: "SP", ovr: 66 },
+  },
+  TEAM_C: {
+    teamId: "TEAM_C",
+    rank: 3,
+    total: 16,
+    record: "15승 7패",
+    teamOvr: 63,
+    starter: { name: "류도기", position: "SP", ovr: 71 },
+  },
 };
-const teamMap = new Map([["TEAM_A", "무심고"], ["TEAM_B", "승주고"], ["TEAM_C", "은평고"]]);
+const teamMap = new Map([
+  ["TEAM_A", "무심고"],
+  ["TEAM_B", "승주고"],
+  ["TEAM_C", "은평고"],
+]);
 const briefOf = (id: string) => BRIEFS[id] ?? null;
 
 describe("월간 경기 편성 소식", () => {
@@ -81,13 +121,19 @@ describe("월간 경기 편성 소식", () => {
   it("날짜순으로 나온다", () => {
     const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
     const b = m.body;
-    expect(b.indexOf("무심고")).toBeLessThan(b.indexOf("승주고"));   // 03/11 < 03/18
-    expect(b.indexOf("승주고")).toBeLessThan(b.indexOf("은평고"));   // 03/18 < 03/24
+    expect(b.indexOf("무심고")).toBeLessThan(b.indexOf("승주고")); // 03/11 < 03/18
+    expect(b.indexOf("승주고")).toBeLessThan(b.indexOf("은평고")); // 03/18 < 03/24
   });
 
   it("없는 값은 지어내지 않는다", () => {
-    const thin = (id: string): OpponentBrief =>
-      ({ teamId: id, rank: null, total: null, record: null, teamOvr: null, starter: null });
+    const thin = (id: string): OpponentBrief => ({
+      teamId: id,
+      rank: null,
+      total: null,
+      record: null,
+      teamOvr: null,
+      starter: null,
+    });
     const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, thin)!;
     expect(m.body).not.toContain("null");
     expect(m.body).not.toContain("위 / ");
@@ -97,7 +143,7 @@ describe("월간 경기 편성 소식", () => {
   it("미리보기가 이번 달 최대 고비를 짚는다", () => {
     // "친선 2회 편성되었습니다"는 목록에서 열어볼 이유가 안 된다
     const m = buildMonthlyNoticeMessage(plan, official, 10, 2026, teamMap, briefOf)!;
-    expect(m.preview).toContain("은평고");   // 팀 OVR 63 이 최고
+    expect(m.preview).toContain("은평고"); // 팀 OVR 63 이 최고
   });
 });
 
@@ -105,8 +151,7 @@ describe("호출부 배선", () => {
   it("advanceWeek 가 briefOf 를 넘긴다", () => {
     // ⚠ 안 넘겨도 소식은 나온다 — 에러가 아니라 "상세가 없음"으로 나타난다.
     // 이 프로젝트가 반복해 겪은 형태라 배선 자체를 고정한다
-    const src = readFileSync(
-      resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+    const src = readFileSync(resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
     const i = src.indexOf("buildMonthlyNoticeMessage(");
     expect(i).toBeGreaterThan(-1);
     expect(src.slice(i, i + 200)).toContain("briefOf");

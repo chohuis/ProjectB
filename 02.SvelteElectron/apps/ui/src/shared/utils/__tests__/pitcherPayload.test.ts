@@ -26,18 +26,28 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 /** 엔진이 받는 투수 능력치 — 이 여덟이 정본이다 */
 const STATS = [
-  "command", "velocity", "staminaCap", "mentalResil",
-  "control", "movement", "clutch", "holdRunners",
+  "command",
+  "velocity",
+  "staminaCap",
+  "mentalResil",
+  "control",
+  "movement",
+  "clutch",
+  "holdRunners",
 ] as const;
 
 /** `pitcher: { … }` 블록을 통째로 뽑는다 (중첩 없는 한 겹) */
 function pitcherBlocks(src: string): string[] {
   const out: string[] = [];
   for (const m of src.matchAll(/pitcher:\s*\{/g)) {
-    let depth = 0, i = m.index! + m[0].length - 1;
+    let depth = 0,
+      i = m.index! + m[0].length - 1;
     for (; i < src.length; i++) {
       if (src[i] === "{") depth++;
-      else if (src[i] === "}") { depth--; if (depth === 0) break; }
+      else if (src[i] === "}") {
+        depth--;
+        if (depth === 0) break;
+      }
     }
     out.push(src.slice(m.index!, i + 1));
   }

@@ -1,28 +1,49 @@
 import { describe, it, expect } from "vitest";
 import {
-  tournamentsOfLeague, roundLabel, bracketRounds, tournamentPhase,
-  championOf, teamRun, runSummary, PHASE_LABEL,
+  tournamentsOfLeague,
+  roundLabel,
+  bracketRounds,
+  tournamentPhase,
+  championOf,
+  teamRun,
+  runSummary,
+  PHASE_LABEL,
 } from "../tournamentView";
 import type { TournamentBracket, BracketMatch, GroupStage } from "../tournament";
 import { TOURNAMENTS } from "../tournament";
 
 const m = (
-  round: number, slot: number,
-  home: string | null, away: string | null,
+  round: number,
+  slot: number,
+  home: string | null,
+  away: string | null,
   winner: string | null = null,
   isBye = false,
 ): BracketMatch => ({
-  id: `M${round}-${slot}`, round, slot, week: 2, gameDate: "2026-03-10",
-  homeTeamId: home, awayTeamId: away, isBye,
-  winnerTeamId: winner, isProtagonistGame: false,
+  id: `M${round}-${slot}`,
+  round,
+  slot,
+  week: 2,
+  gameDate: "2026-03-10",
+  homeTeamId: home,
+  awayTeamId: away,
+  isBye,
+  winnerTeamId: winner,
+  isProtagonistGame: false,
 });
 
 /** 4팀 대회 — 4강 2경기 + 결승 1경기 (totalRounds 2) */
-function bracket4(opts: { semiWinners?: [string, string]; finalWinner?: string } = {}): TournamentBracket {
+function bracket4(
+  opts: { semiWinners?: [string, string]; finalWinner?: string } = {},
+): TournamentBracket {
   const [w1, w2] = opts.semiWinners ?? [null as unknown as string, null as unknown as string];
   return {
-    tournamentId: "TOUR_TEST", leagueId: "LEAGUE_HIGHSCHOOL", seasonYear: 2026,
-    bracketSize: 4, totalRounds: 2, byeCount: 0,
+    tournamentId: "TOUR_TEST",
+    leagueId: "LEAGUE_HIGHSCHOOL",
+    seasonYear: 2026,
+    bracketSize: 4,
+    totalRounds: 2,
+    byeCount: 0,
     matches: [
       m(0, 0, "A", "B", w1 ?? null),
       m(0, 1, "C", "D", w2 ?? null),
@@ -44,7 +65,9 @@ describe("대회 목록", () => {
     for (const t of tournamentsOfLeague("LEAGUE_HIGHSCHOOL")) {
       expect(t.leagueId).toBe("LEAGUE_HIGHSCHOOL");
     }
-    expect(tournamentsOfLeague("LEAGUE_UNIVERSITY").every((t) => t.leagueId === "LEAGUE_UNIVERSITY")).toBe(true);
+    expect(
+      tournamentsOfLeague("LEAGUE_UNIVERSITY").every((t) => t.leagueId === "LEAGUE_UNIVERSITY"),
+    ).toBe(true);
   });
 
   it("대회가 없는 리그는 빈 목록 — 프로엔 이 대회가 없다", () => {
@@ -86,7 +109,7 @@ describe("라운드 묶기", () => {
 
   it("라운드 안에서 slot 순으로 정렬한다 — 대진표 위아래가 뒤집히면 안 된다", () => {
     const b = bracket4();
-    b.matches = [b.matches[1], b.matches[0], b.matches[2]];   // 일부러 뒤섞는다
+    b.matches = [b.matches[1], b.matches[0], b.matches[2]]; // 일부러 뒤섞는다
     expect(bracketRounds(b)[0].matches.map((x) => x.slot)).toEqual([0, 1]);
   });
 
@@ -112,7 +135,9 @@ describe("단계 판정", () => {
   });
 
   it("결승이 끝났으면 종료", () => {
-    expect(tournamentPhase(def, 3, bracket4({ semiWinners: ["A", "C"], finalWinner: "A" }), null)).toBe("done");
+    expect(
+      tournamentPhase(def, 3, bracket4({ semiWinners: ["A", "C"], finalWinner: "A" }), null),
+    ).toBe("done");
   });
 
   it("⚠ 주차가 지나도 대진이 있으면 상태가 우선이다", () => {
@@ -174,10 +199,14 @@ describe("우승·성적", () => {
 
   it("⚠ 부전승은 이긴 게 아니다 — 경기를 안 치렀는데 승리로 세면 안 된다", () => {
     const b: TournamentBracket = {
-      tournamentId: "T", leagueId: "L", seasonYear: 2026,
-      bracketSize: 4, totalRounds: 2, byeCount: 1,
+      tournamentId: "T",
+      leagueId: "L",
+      seasonYear: 2026,
+      bracketSize: 4,
+      totalRounds: 2,
+      byeCount: 1,
       matches: [
-        m(0, 0, "A", null, "A", true),      // 부전승
+        m(0, 0, "A", null, "A", true), // 부전승
         m(0, 1, "C", "D", "C"),
         m(1, 0, "A", "C", null),
       ],

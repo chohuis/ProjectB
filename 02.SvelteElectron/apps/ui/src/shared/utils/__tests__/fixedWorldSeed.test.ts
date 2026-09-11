@@ -13,8 +13,7 @@ import { resolve } from "node:path";
  */
 
 const ROOT = resolve(__dirname, "../../../../../..");
-const SRC = readFileSync(
-  resolve(ROOT, "apps/ui/src/pages/new-game/NewGamePage.svelte"), "utf8");
+const SRC = readFileSync(resolve(ROOT, "apps/ui/src/pages/new-game/NewGamePage.svelte"), "utf8");
 
 describe("새 게임 세계 씨앗", () => {
   it("상수다 — 시각·난수에서 만들지 않는다", () => {
@@ -28,7 +27,8 @@ describe("새 게임 세계 씨앗", () => {
   it("씨앗을 만드는 자리에 Date.now나 Math.random이 없다", () => {
     const near = SRC.slice(
       Math.max(0, SRC.indexOf("const worldSeed") - 400),
-      SRC.indexOf("const worldSeed") + 200);
+      SRC.indexOf("const worldSeed") + 200,
+    );
     expect(near).not.toMatch(/worldSeed[^;]*Date\.now/);
     expect(near).not.toMatch(/worldSeed[^;]*Math\.random/);
   });
@@ -36,7 +36,9 @@ describe("새 게임 세계 씨앗", () => {
   it("미리보기와 실제 생성이 같은 씨앗을 쓴다 — 예고가 사실이어야 한다", () => {
     // `previewTeamRoster(..., worldSeed, ...)`와 부팅이 같은 변수를 넘긴다
     const uses = (SRC.match(/\bworldSeed\b/g) ?? []).length;
-    expect(uses, "worldSeed를 한 번밖에 안 쓴다 — 미리보기나 생성 중 하나가 빠졌다")
-      .toBeGreaterThanOrEqual(3);
+    expect(
+      uses,
+      "worldSeed를 한 번밖에 안 쓴다 — 미리보기나 생성 중 하나가 빠졌다",
+    ).toBeGreaterThanOrEqual(3);
   });
 });

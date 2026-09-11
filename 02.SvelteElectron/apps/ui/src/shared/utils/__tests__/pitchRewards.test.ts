@@ -13,14 +13,24 @@
  */
 import { describe, it, expect, vi } from "vitest";
 import { evaluateCondition } from "../conditionEvaluator";
-import { PITCH_REWARD_KEYS, PITCH_REWARD_GRADES, pitchRewardsOf, gatePitchRewards } from "../pitchRewards";
+import {
+  PITCH_REWARD_KEYS,
+  PITCH_REWARD_GRADES,
+  pitchRewardsOf,
+  gatePitchRewards,
+} from "../pitchRewards";
 import type { EventContext } from "../../types/event";
 import type { ProtagonistSave } from "../../types/save";
 
-const ctx = (learning: { id: string; progress: number } | undefined): EventContext => ({
-  protagonist: { id: "P", trainingPitchState: learning } as unknown as ProtagonistSave,
-  currentWeek: 5, seasonPhase: "season", standings: [], stats: {}, triggeredEvents: {},
-} as unknown as EventContext);
+const ctx = (learning: { id: string; progress: number } | undefined): EventContext =>
+  ({
+    protagonist: { id: "P", trainingPitchState: learning } as unknown as ProtagonistSave,
+    currentWeek: 5,
+    seasonPhase: "season",
+    standings: [],
+    stats: {},
+    triggeredEvents: {},
+  }) as unknown as EventContext;
 
 describe("`pitch_learning` — 배우는 중인가", () => {
   it("배우는 중이면 true 쪽이 열린다", () => {
@@ -36,7 +46,12 @@ describe("`pitch_learning` — 배우는 중인가", () => {
   });
 
   it("🔴 진행도 0 도 배우는 중이다 — 막 시작한 주에 새 구종을 얹으면 시작한 것이 지워진다", () => {
-    expect(evaluateCondition({ type: "pitch_learning", value: true }, ctx({ id: "PITCH_CURVE", progress: 0 }))).toBe(true);
+    expect(
+      evaluateCondition(
+        { type: "pitch_learning", value: true },
+        ctx({ id: "PITCH_CURVE", progress: 0 }),
+      ),
+    ).toBe(true);
   });
 
   it("두 갈래는 배타다 — 어느 쪽도 안 열리는 주가 없다", () => {
@@ -51,7 +66,11 @@ describe("`pitch_learning` — 배우는 중인가", () => {
 
 describe("구종 보상 등급 문지기", () => {
   it("열쇠 셋 · 먹는 등급 둘", () => {
-    expect([...PITCH_REWARD_KEYS].sort()).toEqual(["pitchGradeUp", "pitchGrant", "pitchProgressJump"]);
+    expect([...PITCH_REWARD_KEYS].sort()).toEqual([
+      "pitchGradeUp",
+      "pitchGrant",
+      "pitchProgressJump",
+    ]);
     expect([...PITCH_REWARD_GRADES]).toEqual(["unique", "hidden"]);
   });
 
@@ -64,7 +83,10 @@ describe("구종 보상 등급 문지기", () => {
   it("🔴 노말·레어면 구종만 떼어 낸다 — 나머지 보상은 그대로다", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     for (const g of ["normal", "rare"] as const) {
-      const out = gatePitchRewards({ pitchGrant: { id: "X" }, pitchGradeUp: { id: "Y" }, moraleDelta: 3, xp: { command: 2 } }, g);
+      const out = gatePitchRewards(
+        { pitchGrant: { id: "X" }, pitchGradeUp: { id: "Y" }, moraleDelta: 3, xp: { command: 2 } },
+        g,
+      );
       expect(pitchRewardsOf(out)).toEqual([]);
       expect(out.moraleDelta).toBe(3);
       expect(out.xp).toEqual({ command: 2 });
@@ -76,7 +98,9 @@ describe("구종 보상 등급 문지기", () => {
 
   it("등급을 모르면 안 먹인다 — 등급 없는 자리에서 구종이 나오면 출처를 모른다", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    expect(pitchRewardsOf(gatePitchRewards({ pitchProgressJump: { pct: 40 } }, undefined))).toEqual([]);
+    expect(pitchRewardsOf(gatePitchRewards({ pitchProgressJump: { pct: 40 } }, undefined))).toEqual(
+      [],
+    );
     warn.mockRestore();
   });
 

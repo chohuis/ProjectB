@@ -22,8 +22,12 @@ describe("타구 포물선", () => {
 
   it("엔진이 타구 종류별로 다른 arc를 준다", () => {
     // 팝업이 제일 높고 땅볼이 제일 낮다
-    expect(rust.includes("BallHitType::Popup      => 0.85, BallHitType::FlyBall    => 0.60,")).toBe(true);
-    expect(rust.includes("BallHitType::LineDrive  => 0.15, BallHitType::GroundBall => 0.05,")).toBe(true);
+    expect(rust.includes("BallHitType::Popup      => 0.85, BallHitType::FlyBall    => 0.60,")).toBe(
+      true,
+    );
+    expect(rust.includes("BallHitType::LineDrive  => 0.15, BallHitType::GroundBall => 0.05,")).toBe(
+      true,
+    );
   });
 
   it("🔴 화면이 그 arc를 쓴다", () => {
@@ -44,16 +48,20 @@ describe("타구 포물선", () => {
 
   it("🔴 송구는 직선이다 — arc를 안 넘긴다", () => {
     // 송구가 포물선을 그리면 야수가 띄워 던지는 꼴이다
-    expect(page.includes(
-      '      } else if (cue.type === "ball_throw") {\n' +
-      "        const svgTo = enginePosToSvg(cue.to);\n" +
-      "        await tweenBall(svgTo, ms(cue.duration));"
-    )).toBe(true);
+    expect(
+      page.includes(
+        '      } else if (cue.type === "ball_throw") {\n' +
+          "        const svgTo = enginePosToSvg(cue.to);\n" +
+          "        await tweenBall(svgTo, ms(cue.duration));",
+      ),
+    ).toBe(true);
   });
 
   it("arc를 안 넘기면 예전과 같은 직선이다", () => {
     // 기본값 0 — 투구도 이 갈래로 돈다
-    expect(page.includes("async function tweenBall(to: FieldPoint, duration: number, arc = 0) {")).toBe(true);
+    expect(
+      page.includes("async function tweenBall(to: FieldPoint, duration: number, arc = 0) {"),
+    ).toBe(true);
   });
 });
 
@@ -62,8 +70,12 @@ describe("병살 연출", () => {
 
   it("🔴 병살은 송구가 두 번이다", () => {
     // 예전엔 한 번뿐이라 **병살과 평범한 땅볼이 똑같이 보였다**
-    expect(rust.includes("if code == PitchResultCode::DoublePlay && threw_to != FieldPosition::B1 {")).toBe(true);
-    expect(rust.includes("                    from: relay_from, to: relay_to, duration: 220,")).toBe(true);
+    expect(
+      rust.includes("if code == PitchResultCode::DoublePlay && threw_to != FieldPosition::B1 {"),
+    ).toBe(true);
+    expect(
+      rust.includes("                    from: relay_from, to: relay_to, duration: 220,"),
+    ).toBe(true);
   });
 
   it("첫 송구가 1루면 두 번째가 없다", () => {

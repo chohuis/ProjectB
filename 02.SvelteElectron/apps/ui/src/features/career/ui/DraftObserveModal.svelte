@@ -48,23 +48,21 @@
 </script>
 
 {#if phase === "board"}
-  <DraftBoardModal
-    viewOnly={true}
-    on:completed={handleBoardDone}
-    on:close={handleBoardDone}
-  />
+  <DraftBoardModal viewOnly={true} on:completed={handleBoardDone} on:close={handleBoardDone} />
 {:else}
   <div class="overlay">
     <section class="modal">
       <header>
         <h2>{$seasonStore.seasonYear} 드래프트</h2>
       </header>
-      <p class="desc">KBL 드래프트가 진행됩니다.<br>드래프트를 참관하시겠습니까?</p>
+      <p class="desc">KBL 드래프트가 진행됩니다.<br />드래프트를 참관하시겠습니까?</p>
       {#if errorMessage}
         <p class="error">{errorMessage}</p>
       {/if}
       <div class="actions">
-        <button class="btn-primary" on:click={handleObserve} disabled={phase === "running"}>참관</button>
+        <button class="btn-primary" on:click={handleObserve} disabled={phase === "running"}
+          >참관</button
+        >
         <button class="btn-secondary" on:click={handleSkip} disabled={phase === "running"}>
           {phase === "running" ? "처리 중..." : "스킵"}
         </button>

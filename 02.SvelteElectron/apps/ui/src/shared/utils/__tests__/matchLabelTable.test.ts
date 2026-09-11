@@ -50,8 +50,9 @@ const IPC_PATH = "apps/desktop/ipc/match.cjs";
 describe("엔진 코드를 두 표가 다 안다", () => {
   it("엔진에서 코드를 읽었다", () => {
     const codes = engineCodes();
-    expect(codes.length, "Rust 에서 코드를 못 읽었다 — 정규식이 소스와 어긋났다")
-      .toBeGreaterThan(15);
+    expect(codes.length, "Rust 에서 코드를 못 읽었다 — 정규식이 소스와 어긋났다").toBeGreaterThan(
+      15,
+    );
     expect(codes).toContain("STRIKEOUT_SWING");
   });
 
@@ -69,8 +70,10 @@ describe("엔진 코드를 두 표가 다 안다", () => {
 
   it("타입 유니온(`PitchResultCode`)도 다 안다", () => {
     const src = read(UI_PATH);
-    const uni = src.slice(src.indexOf("export type PitchResultCode ="),
-                          src.indexOf("export type BallHitType"));
+    const uni = src.slice(
+      src.indexOf("export type PitchResultCode ="),
+      src.indexOf("export type BallHitType"),
+    );
     const declared = [...uni.matchAll(/"([A-Z_]+)"/g)].map((m) => m[1]);
     const missing = engineCodes().filter((c) => !declared.includes(c));
     expect(missing, `유니온에 없는 코드: ${missing.join(", ")}`).toEqual([]);
@@ -97,15 +100,15 @@ describe("엔진 코드를 두 표가 다 안다", () => {
 describe("폴백이 원문이 아니다", () => {
   it("화면 쪽", () => {
     const src = read(UI_PATH);
-    expect(src, "FLASH_LABEL[code] ?? code — 원문이 샌다")
-      .not.toMatch(/FLASH_LABEL\[code\]\s*\?\?\s*code/);
+    expect(src, "FLASH_LABEL[code] ?? code — 원문이 샌다").not.toMatch(
+      /FLASH_LABEL\[code\]\s*\?\?\s*code/,
+    );
     expect(src).toContain("[?${code}]");
   });
 
   it("IPC 쪽", () => {
     const src = read(IPC_PATH);
-    expect(src, "?? ab.resultCode — 원문이 샌다")
-      .not.toMatch(/\?\?\s*ab\.resultCode/);
+    expect(src, "?? ab.resultCode — 원문이 샌다").not.toMatch(/\?\?\s*ab\.resultCode/);
     expect(src).toContain("[?${code}]");
   });
 });

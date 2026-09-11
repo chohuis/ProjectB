@@ -8,19 +8,25 @@
    */
   import { createEventDispatcher } from "svelte";
   import { t, language, setLanguage, languageOptions } from "../../../shared/i18n";
-  import { settingsStore, WINDOW_SIZES, type ThemeSetting, type EffectSpeed, type WindowSize } from "../../../shared/stores/settings";
+  import {
+    settingsStore,
+    WINDOW_SIZES,
+    type ThemeSetting,
+    type EffectSpeed,
+    type WindowSize,
+  } from "../../../shared/stores/settings";
   import { hasPlayer } from "../../../shared/utils/sound";
 
   const THEMES: ThemeSetting[] = ["light", "dark", "system"];
   const SPEEDS: EffectSpeed[] = ["fast", "normal", "off"];
-    // 표를 여기 또 적지 않는다 — 정본은 settings.ts의 WINDOW_SIZES다
+  // 표를 여기 또 적지 않는다 — 정본은 settings.ts의 WINDOW_SIZES다
   const SIZES: WindowSize[] = WINDOW_SIZES;
 
   /** 볼륨 세 줄. 키를 문자열로 두면 `Settings` 색인이 안 잡힌다 */
   const VOLUMES: Array<{ key: "volumeMaster" | "volumeSfx" | "volumeBgm"; label: string }> = [
     { key: "volumeMaster", label: "settings.sound.master" },
-    { key: "volumeSfx",    label: "settings.sound.sfx" },
-    { key: "volumeBgm",    label: "settings.sound.bgm" },
+    { key: "volumeSfx", label: "settings.sound.sfx" },
+    { key: "volumeBgm", label: "settings.sound.bgm" },
   ];
 
   /**
@@ -61,7 +67,12 @@
     >
       <div class="u-modal__head">
         <h2 class="u-modal__title">{$t("settings.title")}</h2>
-        <button class="u-modal__close" type="button" on:click={close} aria-label={$t("settings.close")}>×</button>
+        <button
+          class="u-modal__close"
+          type="button"
+          on:click={close}
+          aria-label={$t("settings.close")}>×</button
+        >
       </div>
 
       <div class="u-modal__body">
@@ -80,7 +91,8 @@
                   aria-checked={$settingsStore.theme === th}
                   class:on={$settingsStore.theme === th}
                   on:click={() => settingsStore.patch("theme", th)}
-                >{$t(`settings.theme.${th}`)}</button>
+                  >{$t(`settings.theme.${th}`)}</button
+                >
               {/each}
             </div>
           </div>
@@ -96,8 +108,8 @@
                   role="radio"
                   aria-checked={$language === option.id}
                   class:on={$language === option.id}
-                  on:click={() => setLanguage(option.id)}
-                >{option.label}</button>
+                  on:click={() => setLanguage(option.id)}>{option.label}</button
+                >
               {/each}
             </div>
           </div>
@@ -112,8 +124,8 @@
                   role="radio"
                   aria-checked={$settingsStore.windowSize === sz}
                   class:on={$settingsStore.windowSize === sz}
-                  on:click={() => setWindowSize(sz)}
-                >{sizeLabel(sz)}</button>
+                  on:click={() => setWindowSize(sz)}>{sizeLabel(sz)}</button
+                >
               {/each}
             </div>
           </div>
@@ -135,7 +147,8 @@
                   aria-checked={$settingsStore.effectSpeed === sp}
                   class:on={$settingsStore.effectSpeed === sp}
                   on:click={() => settingsStore.patch("effectSpeed", sp)}
-                >{$t(`settings.effectSpeed.${sp}`)}</button>
+                  >{$t(`settings.effectSpeed.${sp}`)}</button
+                >
               {/each}
             </div>
           </div>
@@ -152,7 +165,8 @@
               aria-checked={$settingsStore.reduceMotion}
               aria-label={$t("settings.reduceMotion")}
               on:click={() => settingsStore.patch("reduceMotion", !$settingsStore.reduceMotion)}
-            ><span class="knob"></span></button>
+              ><span class="knob"></span></button
+            >
           </div>
         </section>
 
@@ -175,8 +189,7 @@
                   step="5"
                   aria-label={$t(vol.label)}
                   value={$settingsStore[vol.key]}
-                  on:input={(e) =>
-                    settingsStore.patch(vol.key, Number(e.currentTarget.value))}
+                  on:input={(e) => settingsStore.patch(vol.key, Number(e.currentTarget.value))}
                 />
                 <span class="vol-num">{$settingsStore[vol.key]}</span>
               </div>
@@ -189,7 +202,9 @@
 {/if}
 
 <style>
-  .settings-modal { width: min(520px, 94vw); }
+  .settings-modal {
+    width: min(520px, 94vw);
+  }
 
   .row {
     display: grid;
@@ -198,10 +213,23 @@
     gap: 12px;
     padding: 10px 0;
   }
-  .row + .row { border-top: 1px solid var(--line); }
-  .row-head { min-width: 0; }
-  .row-name { font-size: 13.5px; color: var(--ink); font-weight: 600; }
-  .row-hint { margin: 2px 0 0; font-size: 11.5px; color: var(--ink-mute); line-height: 1.4; }
+  .row + .row {
+    border-top: 1px solid var(--line);
+  }
+  .row-head {
+    min-width: 0;
+  }
+  .row-name {
+    font-size: 13.5px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .row-hint {
+    margin: 2px 0 0;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    line-height: 1.4;
+  }
 
   /* 아직 소리가 없다는 걸 숨기지 않는다 */
   .pending {
@@ -213,8 +241,16 @@
     padding: 6px 9px;
   }
 
-  .vol { display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
-  .vol input { width: 150px; accent-color: var(--t-dark); }
+  .vol {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex: 0 0 auto;
+  }
+  .vol input {
+    width: 150px;
+    accent-color: var(--t-dark);
+  }
   .vol-num {
     width: 26px;
     text-align: right;
@@ -236,7 +272,11 @@
     display: flex;
     justify-content: flex-start;
   }
-  .toggle[aria-checked="true"] { background: var(--t-dark); border-color: var(--t-dark); justify-content: flex-end; }
+  .toggle[aria-checked="true"] {
+    background: var(--t-dark);
+    border-color: var(--t-dark);
+    justify-content: flex-end;
+  }
   .knob {
     display: block;
     width: 18px;
@@ -245,7 +285,9 @@
     background: var(--panel);
     box-shadow: 0 1px 3px -1px rgba(8, 16, 36, 0.5);
   }
-  .toggle[aria-checked="true"] .knob { background: var(--ink-on-dark); }
+  .toggle[aria-checked="true"] .knob {
+    background: var(--ink-on-dark);
+  }
 
   /* 셋 중 하나임을 모양으로 말한다 — 테두리를 나눠 쓴다 */
   .seg {
@@ -264,11 +306,22 @@
     padding: 6px 14px;
     cursor: pointer;
   }
-  .seg button + button { border-left: 1px solid var(--line-strong); }
+  .seg button + button {
+    border-left: 1px solid var(--line-strong);
+  }
   /* 창 크기는 다섯 개라 한 줄에 안 들어간다 */
-  .seg.wrap { flex-wrap: wrap; max-width: 260px; }
-  .seg.wrap button { flex: 0 0 auto; padding: 6px 10px; font-size: 11.5px; }
-  .seg button:hover { background: var(--panel-sunk); }
+  .seg.wrap {
+    flex-wrap: wrap;
+    max-width: 260px;
+  }
+  .seg.wrap button {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    font-size: 11.5px;
+  }
+  .seg button:hover {
+    background: var(--panel-sunk);
+  }
   .seg button.on {
     background: var(--t-dark);
     color: var(--ink-on-dark);

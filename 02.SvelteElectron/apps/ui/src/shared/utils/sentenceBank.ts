@@ -68,6 +68,8 @@ export function findUndersizedBanks<T extends { id: string; bodies?: string[] }>
   templates: readonly T[],
 ): { id: string; size: number }[] {
   return templates
-    .filter((t) => Array.isArray(t.bodies) && t.bodies.length > 0 && t.bodies.length < MIN_BANK_SIZE)
+    .filter(
+      (t) => Array.isArray(t.bodies) && t.bodies.length > 0 && t.bodies.length < MIN_BANK_SIZE,
+    )
     .map((t) => ({ id: t.id, size: t.bodies!.length }));
 }

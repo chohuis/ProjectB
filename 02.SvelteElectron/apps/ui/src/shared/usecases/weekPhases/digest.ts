@@ -7,10 +7,10 @@ import { standingsTableMeta } from "../../utils/dashboardMeta";
 
 // ── 리그 표시명 ───────────────────────────────────────────────
 export const LEAGUE_NAMES: Record<string, string> = {
-  LEAGUE_HIGHSCHOOL:  "고교 리그",
-  LEAGUE_KBL:         "KBL",
-  LEAGUE_ABL:         "ABL",
-  LEAGUE_UNIVERSITY:  "대학 리그",
+  LEAGUE_HIGHSCHOOL: "고교 리그",
+  LEAGUE_KBL: "KBL",
+  LEAGUE_ABL: "ABL",
+  LEAGUE_UNIVERSITY: "대학 리그",
   LEAGUE_INDEPENDENT: "독립 리그",
 };
 
@@ -20,22 +20,30 @@ export const LEAGUE_NAMES: Record<string, string> = {
  * 순위표가 아무 데도 안 나왔다.
  */
 export const OTHER_STAGE_LEAGUES = [
-  "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+  "LEAGUE_KBL",
+  "LEAGUE_ABL",
+  "LEAGUE_JBL",
+  "LEAGUE_UNIVERSITY",
+  "LEAGUE_INDEPENDENT",
 ] as const;
 const OTHER_STAGE_LEAGUE_NAMES: Record<string, string> = {
-  LEAGUE_KBL:         "KBL",
-  LEAGUE_ABL:         "ABL",
-  LEAGUE_JBL:         "JBL",
-  LEAGUE_UNIVERSITY:  "대학",
+  LEAGUE_KBL: "KBL",
+  LEAGUE_ABL: "ABL",
+  LEAGUE_JBL: "JBL",
+  LEAGUE_UNIVERSITY: "대학",
   LEAGUE_INDEPENDENT: "독립",
 };
 
 // 순위·승률 기반 한 줄 코멘트
 function teamComment(rank: number, total: number, winPct: number): string {
-  if (rank === 1)     return winPct >= 0.65 ? "압도적 선두 — 드래프트 투자 여력 충분" : "선두 경쟁 중 — 전력 보강에 적극적";
-  if (rank === total) return winPct <  0.35 ? "재건 모드 — 젊은 자원 선호"           : "최하위권 고전 — 마운드 보강 시급";
+  if (rank === 1)
+    return winPct >= 0.65
+      ? "압도적 선두 — 드래프트 투자 여력 충분"
+      : "선두 경쟁 중 — 전력 보강에 적극적";
+  if (rank === total)
+    return winPct < 0.35 ? "재건 모드 — 젊은 자원 선호" : "최하위권 고전 — 마운드 보강 시급";
   if (winPct >= 0.55) return "상위권 경쟁 — 포스트시즌 진출 의지";
-  if (winPct <= 0.40) return "하위권 — 내년 재건 준비 중";
+  if (winPct <= 0.4) return "하위권 — 내년 재건 준비 중";
   return "중위권 경쟁 중";
 }
 
@@ -78,23 +86,26 @@ export type DigestTier = "hs1" | "hs23" | "amateur" | "pro";
  * 조건을 조립 코드 여기저기에 흩으면 "고교엔 나오는데 대학엔 안 나온다"가
  * 어디서 갈렸는지 추적이 안 된다. 이 프로젝트가 반복해 겪은 형태다.
  */
-export const DIGEST_SECTIONS: Record<DigestTier, {
-  /** [내 자리] 내 순위 — 고교는 권역+전국, 그 외는 리그 안 순위 */
-  mine: boolean;
-  /** [내 무대] 내가 뛰는 판의 순위표 */
-  stage: boolean;
-  /** [다른 무대] 타 리그 선두 한 줄씩 */
-  others: boolean;
-  /** [나를 보는 눈] 스카우트 관심 구단 */
-  scout: boolean;
-}> = {
+export const DIGEST_SECTIONS: Record<
+  DigestTier,
+  {
+    /** [내 자리] 내 순위 — 고교는 권역+전국, 그 외는 리그 안 순위 */
+    mine: boolean;
+    /** [내 무대] 내가 뛰는 판의 순위표 */
+    stage: boolean;
+    /** [다른 무대] 타 리그 선두 한 줄씩 */
+    others: boolean;
+    /** [나를 보는 눈] 스카우트 관심 구단 */
+    scout: boolean;
+  }
+> = {
   // 고교 1학년에게 프로 순위표는 잡음이다 — 진로가 아직 안 걸렸다.
   // (기존 `buildHsLeagueDigest`가 grade>=2로 걸러온 판단을 그대로 잇는다)
-  hs1:     { mine: true, stage: true, others: false, scout: false },
-  hs23:    { mine: true, stage: true, others: true,  scout: true  },
-  amateur: { mine: true, stage: true, others: true,  scout: true  },
+  hs1: { mine: true, stage: true, others: false, scout: false },
+  hs23: { mine: true, stage: true, others: true, scout: true },
+  amateur: { mine: true, stage: true, others: true, scout: true },
   // 프로에게 스카우트 관심 구단은 의미가 없다 — 이미 소속이 있다
-  pro:     { mine: true, stage: true, others: true,  scout: false },
+  pro: { mine: true, stage: true, others: true, scout: false },
 };
 
 /** `careerStage`(+고교 학년)를 구간으로 접는다 */
@@ -165,8 +176,7 @@ const sortStandings = (rows: Standing[]) =>
   [...rows].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
 /** 경기를 한 번이라도 치른 리그인가 — 시즌 초엔 전부 0-0이라 소식이 안 된다 */
-const hasPlayed = (rows: Standing[]) =>
-  rows.some((s) => s.wins + s.losses + s.draws > 0);
+const hasPlayed = (rows: Standing[]) => rows.some((s) => s.wins + s.losses + s.draws > 0);
 
 const recordOf = (s: Standing | undefined) =>
   s ? `${s.wins}승 ${s.losses}패${s.draws ? ` ${s.draws}무` : ""} ${pctStr(s.winPct)}` : "-";
@@ -188,11 +198,12 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
   let table: TableMetadata | null = null;
 
   /** 지난 순위 찾기 — **지금 표와 같은 자**로 잰다 (권역 / 리그) */
-  const prevRankLookup = (teamIds: string[] | null): ((teamId: string) => number | undefined) | undefined => {
+  const prevRankLookup = (
+    teamIds: string[] | null,
+  ): ((teamId: string) => number | undefined) | undefined => {
     const prev = input.prevStandings;
     if (!prev || prev.length === 0) return undefined;
-    const order = teamIds
-      ?? sortStandings(prev).map((s) => s.teamId);
+    const order = teamIds ?? sortStandings(prev).map((s) => s.teamId);
     const rankOf = new Map<string, number>();
     order.forEach((tid, i) => rankOf.set(tid, i + 1));
     return (teamId: string) => rankOf.get(teamId);
@@ -208,10 +219,10 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
         headline = `${regionName(r.regionId)} ${r.regionRank}위 · 전국 ${r.nationalRank}위`;
         sections.push(
           `[내 자리]\n` +
-          `  ${input.teamName(input.myTeamId)}\n` +
-          `  ${regionName(r.regionId)}   ${r.regionRank}위 / ${r.regionTotal}팀\n` +
-          `  전국          ${r.nationalRank}위 / ${r.nationalTotal}팀  (상위 ${topPct}%)\n` +
-          `  성적          ${recordOf(mine)}`,
+            `  ${input.teamName(input.myTeamId)}\n` +
+            `  ${regionName(r.regionId)}   ${r.regionRank}위 / ${r.regionTotal}팀\n` +
+            `  전국          ${r.nationalRank}위 / ${r.nationalTotal}팀  (상위 ${topPct}%)\n` +
+            `  성적          ${recordOf(mine)}`,
         );
       }
     } else {
@@ -221,9 +232,9 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
         headline = `${LEAGUE_NAMES[input.myLeagueId] ?? input.myLeagueId} ${idx + 1}위`;
         sections.push(
           `[내 자리]\n` +
-          `  ${input.teamName(input.myTeamId)}\n` +
-          `  ${LEAGUE_NAMES[input.myLeagueId] ?? input.myLeagueId}   ${idx + 1}위 / ${rows.length}팀\n` +
-          `  성적          ${recordOf(rows[idx])}`,
+            `  ${input.teamName(input.myTeamId)}\n` +
+            `  ${LEAGUE_NAMES[input.myLeagueId] ?? input.myLeagueId}   ${idx + 1}위 / ${rows.length}팀\n` +
+            `  성적          ${recordOf(rows[idx])}`,
         );
       }
     }
@@ -252,9 +263,13 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
           rows: mine.rankedTeams.map((tid) => {
             const st = byTeam.get(tid);
             return {
-              teamId: tid, teamName: input.teamName(tid),
-              wins: st?.wins ?? 0, losses: st?.losses ?? 0, draws: st?.draws ?? 0,
-              winPct: st?.winPct ?? 0, streak: st?.streak ?? "",
+              teamId: tid,
+              teamName: input.teamName(tid),
+              wins: st?.wins ?? 0,
+              losses: st?.losses ?? 0,
+              draws: st?.draws ?? 0,
+              winPct: st?.winPct ?? 0,
+              streak: st?.streak ?? "",
             };
           }),
           myTeamId: input.myTeamId,
@@ -273,9 +288,13 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
         );
         table = standingsTableMeta({
           rows: rows.map((s) => ({
-            teamId: s.teamId, teamName: input.teamName(s.teamId),
-            wins: s.wins, losses: s.losses, draws: s.draws,
-            winPct: s.winPct, streak: s.streak ?? "",
+            teamId: s.teamId,
+            teamName: input.teamName(s.teamId),
+            wins: s.wins,
+            losses: s.losses,
+            draws: s.draws,
+            winPct: s.winPct,
+            streak: s.streak ?? "",
           })),
           myTeamId: input.myTeamId,
           prevRankOf: prevRankLookup(null),
@@ -296,7 +315,7 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
       const top = rows[0];
       lines.push(
         `  ${(OTHER_STAGE_LEAGUE_NAMES[lid] ?? lid).padEnd(4)}  ` +
-        `${input.teamName(top.teamId)} 선두 (${pctStr(top.winPct)})`,
+          `${input.teamName(top.teamId)} 선두 (${pctStr(top.winPct)})`,
       );
     }
     if (lines.length > 0) sections.push(`[다른 무대]\n${lines.join("\n")}`);
@@ -306,9 +325,13 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
   if (on.scout) {
     const kbl = sortStandings(input.leagueState["LEAGUE_KBL"]?.standings ?? []);
     if (hasPlayed(kbl)) {
-      const count = input.scoutScore >= 80 ? 4 : input.scoutScore >= 60 ? 3 : input.scoutScore >= 40 ? 2 : 1;
-      const lines = kbl.slice(0, count).map((s, i) =>
-        `  ${input.teamName(s.teamId)}   "${teamComment(i + 1, kbl.length, s.winPct)}"`);
+      const count =
+        input.scoutScore >= 80 ? 4 : input.scoutScore >= 60 ? 3 : input.scoutScore >= 40 ? 2 : 1;
+      const lines = kbl
+        .slice(0, count)
+        .map(
+          (s, i) => `  ${input.teamName(s.teamId)}   "${teamComment(i + 1, kbl.length, s.winPct)}"`,
+        );
       if (lines.length > 0) {
         sections.push(`[나를 보는 눈]\n${lines.join("\n")}\n  ※ 스카우트 평가 ${input.scoutScore}`);
       }
@@ -327,16 +350,16 @@ export function buildLeagueDigest(input: DigestInput): MessageItem | null {
     // ⚠ **표시용 라벨(월 이름)은 넣지 않는다.** `msg-digest-3월-w13`으로
     // 뒀더니 종류 키가 달마다 쪼개져(`messageKindOf`가 한글 라벨은 못 벗긴다)
     // 계측에서 한 종류가 11갈래로 흩어졌다. 월은 제목과 본문에 있으면 된다.
-    id:        `msg-digest-${input.seasonYear}-w${input.weekNum}`,
-    category:  "system",
-    sender:    "리그 사무국",
-    subject:   `야구계 소식 — ${input.monthLabel}`,
+    id: `msg-digest-${input.seasonYear}-w${input.weekNum}`,
+    category: "system",
+    sender: "리그 사무국",
+    subject: `야구계 소식 — ${input.monthLabel}`,
     // ⚠ 미리보기는 **내 위치**여야 한다. 예전 다이제스트는 `parts[0]`이라
     // 남의 리그가 먼저 떴다 — 목록에서 열어볼 이유가 안 보였다
-    preview:   headline || sections[0].split("\n")[0],
-    body:      `[야구계 소식 — ${input.monthLabel}]\n\n${sections.join("\n\n")}\n\n→ 세부 순위는 [기록] 탭`,
+    preview: headline || sections[0].split("\n")[0],
+    body: `[야구계 소식 — ${input.monthLabel}]\n\n${sections.join("\n\n")}\n\n→ 세부 순위는 [기록] 탭`,
     createdAt: `W${input.weekNum}`,
-    readAt:    null,
+    readAt: null,
     // 순위표를 **값으로도** 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 1).
     // 본문은 위 그대로다 — 표를 못 그리는 자리에서 텍스트가 폴백이다
     ...(table ? { metadata: table } : {}),

@@ -9,20 +9,24 @@ import { writable } from "svelte/store";
  * 스토어에 넣는 값의 타입이므로 스토어가 갖는 게 맞다.
  */
 export type TxCategory = "all" | "trade" | "fa" | "draft" | "military" | "retirement";
-export type LeagueTab  = "standings" | "leaderboard" | "tournaments" | "postseason"
-                       | "transactions"
-                       // 연혁 — 다른 탭이 전부 "한 해를 골라" 보는 것과 달리
-                       // 여러 해를 가로지른다 (우승 계보 · 통산 수상)
-                       | "history";
+export type LeagueTab =
+  | "standings"
+  | "leaderboard"
+  | "tournaments"
+  | "postseason"
+  | "transactions"
+  // 연혁 — 다른 탭이 전부 "한 해를 골라" 보는 것과 달리
+  // 여러 해를 가로지른다 (우승 계보 · 통산 수상)
+  | "history";
 
 export const leagueUiState = writable<{
   selectedYear: number;
-  tab:          LeagueTab;
-  txCategory:   TxCategory;
-  txLeagueId:   string;
+  tab: LeagueTab;
+  txCategory: TxCategory;
+  txLeagueId: string;
 }>({
   selectedYear: 0,
-  tab:          "standings",
-  txCategory:   "all",
-  txLeagueId:   "",
+  tab: "standings",
+  txCategory: "all",
+  txLeagueId: "",
 });

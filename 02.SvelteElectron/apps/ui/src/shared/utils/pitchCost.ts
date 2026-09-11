@@ -25,7 +25,10 @@ export interface PitchCostRules {
 let _rules: PitchCostRules | null = null;
 
 export function primePitchCost(tuning: Partial<PitchCostRules> | null | undefined): void {
-  if (!tuning || typeof tuning.staminaBase !== "number") { _rules = null; return; }
+  if (!tuning || typeof tuning.staminaBase !== "number") {
+    _rules = null;
+    return;
+  }
   _rules = {
     staminaBase: tuning.staminaBase,
     staminaAggressiveBonus: tuning.staminaAggressiveBonus ?? 0,
@@ -58,23 +61,31 @@ export function staminaCostOf(
   power: CostPower,
 ): number | null {
   if (!_rules) return null;
-  return _rules.staminaBase
-    + (strategy === "aggressive" ? _rules.staminaAggressiveBonus : 0)
-    + (isFastball ? _rules.staminaFastballBonus : 0)
-    + _rules.staminaPowerCost[power];
+  return (
+    _rules.staminaBase +
+    (strategy === "aggressive" ? _rules.staminaAggressiveBonus : 0) +
+    (isFastball ? _rules.staminaFastballBonus : 0) +
+    _rules.staminaPowerCost[power]
+  );
 }
 
 /** 이 선택지 하나를 골랐을 때 늘어나는 소모. 버튼 옆에 붙일 값 */
 export function deltaOf(kind: "fastball" | CostStrategy | CostPower): number | null {
   if (!_rules) return null;
   switch (kind) {
-    case "fastball":   return _rules.staminaFastballBonus;
-    case "aggressive": return _rules.staminaAggressiveBonus;
+    case "fastball":
+      return _rules.staminaFastballBonus;
+    case "aggressive":
+      return _rules.staminaAggressiveBonus;
     case "balanced":
-    case "safe":       return 0;
-    case "low":        return _rules.staminaPowerCost.low;
-    case "normal":     return _rules.staminaPowerCost.normal;
-    case "high":       return _rules.staminaPowerCost.high;
+    case "safe":
+      return 0;
+    case "low":
+      return _rules.staminaPowerCost.low;
+    case "normal":
+      return _rules.staminaPowerCost.normal;
+    case "high":
+      return _rules.staminaPowerCost.high;
   }
 }
 

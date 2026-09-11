@@ -56,8 +56,7 @@ describe("성실 범위", () => {
    *   이 검사가 검사를 안 하게 된다.
    */
   const DECAY = (() => {
-    const src = readFileSync(
-      resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+    const src = readFileSync(resolve(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
     const m = src.match(/PB_DIL_DECAY\) \|\| ([\d.]+)\)/);
     if (!m) throw new Error("DILIGENCE_WEEKLY_DECAY를 못 읽었다 — 정규식이 소스와 어긋났다");
     return Number(m[1]);
@@ -69,10 +68,11 @@ describe("성실 범위", () => {
 
   it("성실을 내리는 보상이 거의 없다 — 데이터만으로는 여전히 그렇다", () => {
     let down = 0;
-    for (const d of DEC) for (const o of d.options ?? []) {
-      const v = diligenceOf(o.effects);
-      if (v !== null && v < 0) down += v;
-    }
+    for (const d of DEC)
+      for (const o of d.options ?? []) {
+        const v = diligenceOf(o.effects);
+        if (v !== null && v < 0) down += v;
+      }
     // 전부 한 번씩 다 고른다는 가장 후한 가정에서의 바닥
     const floor = START + down;
     expect(floor).toBeGreaterThan(30);
@@ -84,10 +84,11 @@ describe("성실 범위", () => {
    */
   it("diligence_lte 조건선이 도달 가능한 값이다", () => {
     let down = 0;
-    for (const d of DEC) for (const o of d.options ?? []) {
-      const v = diligenceOf(o.effects);
-      if (v !== null && v < 0) down += v;
-    }
+    for (const d of DEC)
+      for (const o of d.options ?? []) {
+        const v = diligenceOf(o.effects);
+        if (v !== null && v < 0) down += v;
+      }
     const floor = START + down;
 
     const rules = JSON.parse(readFileSync(join(MASTER, "_manifest.json"), "utf8"));
@@ -108,7 +109,8 @@ describe("성실 범위", () => {
       for (const f of walk(dir)) {
         const r = JSON.parse(readFileSync(f, "utf8"));
         for (const c of r.conditions ?? []) {
-          if (c.type === "diligence_lte" && c.value < floor) unreachable.push(`${r.id} (${c.value} < ${floor})`);
+          if (c.type === "diligence_lte" && c.value < floor)
+            unreachable.push(`${r.id} (${c.value} < ${floor})`);
         }
       }
     }

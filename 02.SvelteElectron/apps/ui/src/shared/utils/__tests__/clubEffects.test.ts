@@ -2,7 +2,10 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  medicalRecoveryMult, medicalRecoveryWeeks, campConditionBonus, qualityGrade,
+  medicalRecoveryMult,
+  medicalRecoveryWeeks,
+  campConditionBonus,
+  qualityGrade,
 } from "../clubEffects";
 
 /**
@@ -14,9 +17,7 @@ import {
  */
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-const rules = JSON.parse(
-  read("resource/data/master/players/generation_rules.json"),
-) as {
+const rules = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
   medicalRules?: { recoverySpan?: number; minWeeks?: number };
   campRules?: { conditionBonus?: number };
 };
@@ -38,8 +39,10 @@ describe("구단 효과 계산", () => {
     //   0.775배라 1주가 0으로 안 내려간다. 그래서 **큰 span 으로 확인한다**:
     //   규칙 값을 키웠을 때 하한이 실제로 막는지가 이 검사의 요점이다.
     //   (실측: 지금 값으로만 재면 하한을 지워도 통과한다 — 변이로 확인했다)
-    expect(medicalRecoveryWeeks(1, 99, 0.9, minW),
-      "큰 span 에서 0주가 되면 안 된다").toBeGreaterThanOrEqual(minW);
+    expect(
+      medicalRecoveryWeeks(1, 99, 0.9, minW),
+      "큰 span 에서 0주가 되면 안 된다",
+    ).toBeGreaterThanOrEqual(minW);
     expect(medicalRecoveryWeeks(8, 95, span, minW)).toBeLessThan(8);
     expect(medicalRecoveryWeeks(8, 5, span, minW)).toBeGreaterThan(8);
   });
@@ -58,9 +61,11 @@ describe("구단 효과 계산", () => {
 });
 
 describe("식이 두 벌이 아니다", () => {
-  const strip = (s: string) => s
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  const strip = (s: string) =>
+    s
+      .replace(/<!--[\s\S]*?-->/g, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/^\s*\/\/.*$/gm, "");
   const inj = strip(read("apps/ui/src/shared/usecases/weekPhases/injuries.ts"));
   const adv = strip(read("apps/ui/src/shared/usecases/advanceWeek.ts"));
   const modal = strip(read("apps/ui/src/features/team/ui/TeamDetailModal.svelte"));
@@ -74,7 +79,11 @@ describe("식이 두 벌이 아니다", () => {
 
   it("🔴 어디에도 식을 다시 적지 않는다", () => {
     // `1 - ((q - 50) / 50) * span` 같은 게 남아 있으면 두 벌이다
-    for (const [name, src] of [["injuries", inj], ["advanceWeek", adv], ["modal", modal]] as const) {
+    for (const [name, src] of [
+      ["injuries", inj],
+      ["advanceWeek", adv],
+      ["modal", modal],
+    ] as const) {
       expect(src.includes("- 50) / 50) *"), `${name} 에 의료 식이 남았다`).toBe(false);
       expect(src.includes("* (inv / 50)"), `${name} 에 전훈 식이 남았다`).toBe(false);
     }
@@ -83,7 +92,9 @@ describe("식이 두 벌이 아니다", () => {
 
 describe("팀 상세 표시", () => {
   const modal = readFileSync(
-    resolve(ROOT, "apps/ui/src/features/team/ui/TeamDetailModal.svelte"), "utf8");
+    resolve(ROOT, "apps/ui/src/features/team/ui/TeamDetailModal.svelte"),
+    "utf8",
+  );
 
   it("네 항목을 보인다", () => {
     expect(modal.includes("의료팀")).toBe(true);

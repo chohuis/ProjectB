@@ -26,7 +26,9 @@ describe("투수 보직 배정 — live를 읽는다", () => {
 
   it("고교 포지션 배정이 live를 쓴다", () => {
     expect(src).toMatch(/const teamPitcherOvrs = entities[\s\S]{0,300}livePitcherOvr\(e, live\)/);
-    expect(src).not.toMatch(/const teamPitcherOvrs = entities[\s\S]{0,300}\(e\.details as any\)\?\.player\?\.pitching\?\.ovr \?\? 0\)/);
+    expect(src).not.toMatch(
+      /const teamPitcherOvrs = entities[\s\S]{0,300}\(e\.details as any\)\?\.player\?\.pitching\?\.ovr \?\? 0\)/,
+    );
   });
 
   it("프로 역할 배정도 live를 쓴다", () => {
@@ -36,7 +38,9 @@ describe("투수 보직 배정 — live를 읽는다", () => {
   it("헬퍼가 live → 생성값 순으로 본다 — 갓 생성된 동료가 0이 되면 안 된다", () => {
     // 폴백을 빼면 live가 아직 없는 팀 동료가 전부 0이 되고, "나보다 나은
     // 투수가 0명"이 되어 **주인공이 무조건 선발**이 된다
-    expect(src).toMatch(/live\[e\.id\]\?\.pitching\?\.ovr\s*\n?\s*\?\?\s*\(e\.details as any\)\?\.player\?\.pitching\?\.ovr/);
+    expect(src).toMatch(
+      /live\[e\.id\]\?\.pitching\?\.ovr\s*\n?\s*\?\?\s*\(e\.details as any\)\?\.player\?\.pitching\?\.ovr/,
+    );
   });
 
   // ── 로테이션 자리 수 (PLAN_ROLE_RECOMMEND §1 발견 a) ──────────────
@@ -53,7 +57,7 @@ describe("투수 보직 배정 — live를 읽는다", () => {
   it("Rust 가 그 자리 수로 선발 한계를 정한다 — 리터럴 5 가 아니다", () => {
     const rust = read("packages/engine-native/src/player_engine.rs");
     expect(rust.includes("pub rotation_size: Option<usize>,")).toBe(true);
-    expect(rust.includes("if rank <= seats { format!(\"{}선발\", rank) }")).toBe(true);
+    expect(rust.includes('if rank <= seats { format!("{}선발", rank) }')).toBe(true);
     expect(rust.includes("if rank <= 5 {")).toBe(false);
   });
 

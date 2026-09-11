@@ -23,10 +23,23 @@
 
 export type ParkTier = "pro" | "university" | "highschool";
 
-export interface ParkPoint { x: number; y: number }
-export interface ParkDefender { pos: string; x: number; y: number }
+export interface ParkPoint {
+  x: number;
+  y: number;
+}
+export interface ParkDefender {
+  pos: string;
+  x: number;
+  y: number;
+}
 export interface ParkCoords {
-  field: { home: ParkPoint; first: ParkPoint; second: ParkPoint; third: ParkPoint; mound: ParkPoint };
+  field: {
+    home: ParkPoint;
+    first: ParkPoint;
+    second: ParkPoint;
+    third: ParkPoint;
+    mound: ParkPoint;
+  };
   defense: readonly ParkDefender[];
 }
 
@@ -37,17 +50,20 @@ export const PARK_VIEWBOX = { width: 1000, height: 920 } as const;
 export const PARK_SPRITE_OFFSETS = {
   batter: { dx: 34, dy: -22 },
   runner: {
-    first:  { dx: 14, dy: -18 },
+    first: { dx: 14, dy: -18 },
     second: { dx: 0, dy: -20 },
-    third:  { dx: -14, dy: -18 },
+    third: { dx: -14, dy: -18 },
   },
 } as const;
 
 export const PARK_COORDS: Record<ParkTier, ParkCoords> = {
   pro: {
     field: {
-      home: { x: 497, y: 800 }, first: { x: 720, y: 622 }, second: { x: 497, y: 514 },
-      third: { x: 275, y: 622 }, mound: { x: 498, y: 617 },
+      home: { x: 497, y: 800 },
+      first: { x: 720, y: 622 },
+      second: { x: 497, y: 514 },
+      third: { x: 275, y: 622 },
+      mound: { x: 498, y: 617 },
     },
     defense: [
       { pos: "P", x: 498, y: 617 },
@@ -63,8 +79,11 @@ export const PARK_COORDS: Record<ParkTier, ParkCoords> = {
   },
   university: {
     field: {
-      home: { x: 501, y: 825 }, first: { x: 710, y: 663 }, second: { x: 501, y: 562 },
-      third: { x: 293, y: 663 }, mound: { x: 501, y: 659 },
+      home: { x: 501, y: 825 },
+      first: { x: 710, y: 663 },
+      second: { x: 501, y: 562 },
+      third: { x: 293, y: 663 },
+      mound: { x: 501, y: 659 },
     },
     defense: [
       { pos: "P", x: 501, y: 659 },
@@ -80,8 +99,11 @@ export const PARK_COORDS: Record<ParkTier, ParkCoords> = {
   },
   highschool: {
     field: {
-      home: { x: 499, y: 799 }, first: { x: 711, y: 611 }, second: { x: 499, y: 476 },
-      third: { x: 288, y: 611 }, mound: { x: 499, y: 594 },
+      home: { x: 499, y: 799 },
+      first: { x: 711, y: 611 },
+      second: { x: 499, y: 476 },
+      third: { x: 288, y: 611 },
+      mound: { x: 499, y: 594 },
     },
     defense: [
       { pos: "P", x: 499, y: 594 },

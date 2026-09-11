@@ -67,9 +67,11 @@ describe("자책점은 엔진이 준다", () => {
     //   나오는지만 셌는데, 정식 갈래 하나에 이미 두 번 나와서 **연습 갈래를
     //   역산으로 되돌려도 통과**했다(변이 검증에서 걸렸다).
     //   두 갈래가 각자 엔진 값을 쓰는 꼴을 그대로 찾는다.
-    const useEngine = "typeof outcome.earnedRuns === \"number\"";
-    expect(apply.split(useEngine).length - 1,
-      "자책점을 엔진에서 받는 갈래가 둘이어야 한다(연습·정식)").toBe(2);
+    const useEngine = 'typeof outcome.earnedRuns === "number"';
+    expect(
+      apply.split(useEngine).length - 1,
+      "자책점을 엔진에서 받는 갈래가 둘이어야 한다(연습·정식)",
+    ).toBe(2);
     // 경기 화면 — **쓰는 자리**를 본다. `myLine.er`은 조건절에도 나오므로
     // 그것만 찾으면 값을 도로 역산으로 바꿔도 통과한다(변이 검증에서 걸렸다).
     expect(match.includes("Math.max(0, Math.round(myLine.er))")).toBe(true);
@@ -83,13 +85,14 @@ describe("자책점은 엔진이 준다", () => {
 
 describe("승패 판정은 규칙이 하나다", () => {
   const APPLY = read("apps/ui/src/shared/usecases/applyGameOutcome.ts");
-  const NPC   = read("packages/engine-native/src/npc_sim.rs");
+  const NPC = read("packages/engine-native/src/npc_sim.rs");
 
   /** 🔴 규칙이 Rust에 자유 함수로 있어야 TS가 부를 수 있다 */
   it("Rust가 규칙을 내보낸다", () => {
     expect(NPC.includes("pub fn decide_pitcher(")).toBe(true);
-    expect(read("packages/engine-native/src/lib.rs")
-      .includes("pub fn calc_pitcher_decision_native")).toBe(true);
+    expect(
+      read("packages/engine-native/src/lib.rs").includes("pub fn calc_pitcher_decision_native"),
+    ).toBe(true);
   });
 
   it("TS가 그 규칙을 부른다", () => {
@@ -188,7 +191,7 @@ describe("난수는 Rust가 굴린다", () => {
 
 describe("유망주 점수는 Rust가 낸다", () => {
   const TOP10 = read("apps/ui/src/shared/utils/top10Engine.ts");
-  const PE    = read("packages/engine-native/src/player_engine.rs");
+  const PE = read("packages/engine-native/src/player_engine.rs");
 
   /**
    * 🔴 **점수 계산 셋이 TS에 있었다** (2026-08-28에 옮겼다):
@@ -210,8 +213,9 @@ describe("유망주 점수는 Rust가 낸다", () => {
     expect(PE.includes("fn sim_npc_scout(")).toBe(true);
     expect(PE.includes("fn hero_prospect_score(")).toBe(true);
     expect(PE.includes("pub fn calc_prospect_rank(")).toBe(true);
-    expect(read("packages/engine-native/src/lib.rs")
-      .includes("pub fn calc_prospect_rank_native")).toBe(true);
+    expect(
+      read("packages/engine-native/src/lib.rs").includes("pub fn calc_prospect_rank_native"),
+    ).toBe(true);
   });
 
   it("TS가 그 함수를 부른다", () => {
@@ -241,7 +245,7 @@ describe("유망주 점수는 Rust가 낸다", () => {
    */
   it("후보 풀을 컬럼마다 다시 만들지 않는다", () => {
     const n = TOP10.split("buildNpcPayload(").length - 1;
-    expect(n).toBe(3);   // 정의 1 + generateTop10 1 + buildTop10Metadata 1
+    expect(n).toBe(3); // 정의 1 + generateTop10 1 + buildTop10Metadata 1
   });
 });
 
@@ -257,7 +261,7 @@ describe("유망주 점수는 Rust가 낸다", () => {
  */
 describe("학업 산식은 Rust가 낸다", () => {
   const ACA = read("apps/ui/src/shared/utils/academicsEngine.ts");
-  const WE  = read("packages/engine-native/src/week_engine.rs");
+  const WE = read("packages/engine-native/src/week_engine.rs");
 
   /**
    * 🔴 **옛 문자열만 보면 안 된다.** 변이 검증에서 걸렸다 — 같은 산식을
@@ -271,23 +275,29 @@ describe("학업 산식은 Rust가 낸다", () => {
     // ⚠ **주석은 세지 않는다.** 인자 JSDoc의 `/**`와 줄끝 `//`가 전부
     //   나눗셈으로 잡혔다 (변이 검증에서 두 번 걸렸다)
     let inBlock = false;
-    return src.slice(at, end).split("\n").map((l) => {
-      let line = l;
-      if (inBlock) {
-        const close = line.indexOf("*/");
-        if (close < 0) return "";
-        inBlock = false;
-        line = line.slice(close + 2);
-      }
-      const open = line.indexOf("/*");
-      if (open >= 0) {
-        const close = line.indexOf("*/", open + 2);
-        if (close < 0) { inBlock = true; line = line.slice(0, open); }
-        else line = line.slice(0, open) + line.slice(close + 2);
-      }
-      const slash = line.indexOf("//");
-      return slash >= 0 ? line.slice(0, slash) : line;
-    }).join("\n");
+    return src
+      .slice(at, end)
+      .split("\n")
+      .map((l) => {
+        let line = l;
+        if (inBlock) {
+          const close = line.indexOf("*/");
+          if (close < 0) return "";
+          inBlock = false;
+          line = line.slice(close + 2);
+        }
+        const open = line.indexOf("/*");
+        if (open >= 0) {
+          const close = line.indexOf("*/", open + 2);
+          if (close < 0) {
+            inBlock = true;
+            line = line.slice(0, open);
+          } else line = line.slice(0, open) + line.slice(close + 2);
+        }
+        const slash = line.indexOf("//");
+        return slash >= 0 ? line.slice(0, slash) : line;
+      })
+      .join("\n");
   };
 
   it("TS 주간 학업 몸통에 산술이 없다", () => {
@@ -351,8 +361,9 @@ describe("학업 산식은 Rust가 낸다", () => {
     // ⚠ **주석을 세지 않는다** — 지운 이유가 주석에 적혀 있어서 이름만 세면
     //   거짓 실패한다. 정의와 호출을 본다
     expect(ACA.includes("export function getUniversityExamGainMult")).toBe(false);
-    expect(read("apps/ui/src/shared/usecases/advanceWeek.ts")
-      .includes("getUniversityExamGainMult(")).toBe(false);
+    expect(
+      read("apps/ui/src/shared/usecases/advanceWeek.ts").includes("getUniversityExamGainMult("),
+    ).toBe(false);
     // 배수 인자 자체가 사라졌다 — 시그니처가 학교 상태 하나다
     expect(ACA.includes("applyWeeklyStudy(school: SchoolState)")).toBe(true);
   });

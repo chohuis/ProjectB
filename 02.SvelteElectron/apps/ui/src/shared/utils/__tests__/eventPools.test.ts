@@ -14,15 +14,22 @@ import { resolve, join } from "node:path";
  * 서로 어긋나지 않는 것**을 지킨다.
  */
 const MASTER = resolve(__dirname, "../../../../../../resource/data/master");
-const manifest = JSON.parse(readFileSync(join(MASTER, "_manifest.json"), "utf8")) as { pools?: string[] };
+const manifest = JSON.parse(readFileSync(join(MASTER, "_manifest.json"), "utf8")) as {
+  pools?: string[];
+};
 
 type Pool = { id?: string; baseRoll?: { value: number }; maxPicksPerWeek?: number };
 
 const poolFiles = readdirSync(join(MASTER, "events/pools"))
   .filter((f) => f.endsWith(".json"))
-  .map((f) => ({ name: f.replace(/\.json$/, ""), json: JSON.parse(readFileSync(join(MASTER, "events/pools", f), "utf8")) as Pool }));
+  .map((f) => ({
+    name: f.replace(/\.json$/, ""),
+    json: JSON.parse(readFileSync(join(MASTER, "events/pools", f), "utf8")) as Pool,
+  }));
 /** ⚠ `military_*`는 모양이 다르다 — 군 이벤트 표지 추첨 풀이 아니다 */
-const drawPools = poolFiles.filter((p) => typeof p.json.id === "string" && p.json.id.startsWith("POOL_") && p.json.baseRoll);
+const drawPools = poolFiles.filter(
+  (p) => typeof p.json.id === "string" && p.json.id.startsWith("POOL_") && p.json.baseRoll,
+);
 
 function walk(dir: string): string[] {
   const { statSync } = require("node:fs") as typeof import("node:fs");
@@ -31,8 +38,9 @@ function walk(dir: string): string[] {
     return statSync(p).isDirectory() ? walk(p) : p.endsWith(".json") ? [p] : [];
   });
 }
-const RANDOM = walk(join(MASTER, "events/random"))
-  .map((f) => JSON.parse(readFileSync(f, "utf8")) as { id: string; poolId?: string });
+const RANDOM = walk(join(MASTER, "events/random")).map(
+  (f) => JSON.parse(readFileSync(f, "utf8")) as { id: string; poolId?: string },
+);
 
 describe("추첨 풀", () => {
   it("매니페스트가 추첨 풀을 전부 싣는다", () => {
@@ -43,12 +51,16 @@ describe("추첨 풀", () => {
   /** 🔴 규칙이 없는 풀을 가리키면 그 이벤트는 영원히 안 뜬다 */
   it("규칙이 가리키는 풀이 전부 존재한다", () => {
     const known = new Set(drawPools.map((p) => p.json.id));
-    const orphans = RANDOM.filter((r) => r.poolId && !known.has(r.poolId)).map((r) => `${r.id} → ${r.poolId}`);
+    const orphans = RANDOM.filter((r) => r.poolId && !known.has(r.poolId)).map(
+      (r) => `${r.id} → ${r.poolId}`,
+    );
     expect(orphans).toEqual([]);
   });
 
   it("빈 풀이 없다 — 추첨률만 먹고 아무것도 안 뽑는 풀", () => {
-    const empty = drawPools.filter((p) => !RANDOM.some((r) => r.poolId === p.json.id)).map((p) => p.json.id);
+    const empty = drawPools
+      .filter((p) => !RANDOM.some((r) => r.poolId === p.json.id))
+      .map((p) => p.json.id);
     expect(empty).toEqual([]);
   });
 
@@ -62,7 +74,11 @@ describe("추첨 풀", () => {
    * 따로 있다. 랜덤을 무한정 올리면 이야기가 알림에 밀린다.
    */
   it("주당 기대 랜덤 소식이 1.2건을 넘지 않는다", () => {
-    const total = drawPools.reduce((a, p) => a + (p.json.baseRoll?.value ?? 0) * (p.json.maxPicksPerWeek ?? 1), 0) / 100;
+    const total =
+      drawPools.reduce(
+        (a, p) => a + (p.json.baseRoll?.value ?? 0) * (p.json.maxPicksPerWeek ?? 1),
+        0,
+      ) / 100;
     expect(total).toBeLessThanOrEqual(1.2);
   });
 });

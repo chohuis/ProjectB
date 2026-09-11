@@ -3,11 +3,27 @@ import { careerSummaryOf, inningsToOuts } from "../careerSummary";
 import type { CareerSeasonRecord } from "../../types/save";
 
 const rec = (year: number, ip: number, er: number, w: number, l: number): CareerSeasonRecord => ({
-  year, leagueId: "LEAGUE_KBL", teamId: "TEAM_KBL_DAEJEON_PHANTOMS_1",
-  statLine: "", ovr: 80, awards: [],
+  year,
+  leagueId: "LEAGUE_KBL",
+  teamId: "TEAM_KBL_DAEJEON_PHANTOMS_1",
+  statLine: "",
+  ovr: 80,
+  awards: [],
   stats: {
-    type: "pitcher", g: 20, gs: 20, w, l, sv: 0, hd: 0,
-    ip, er, h: 0, k: 0, bb: 0, era: 0, whip: 0,
+    type: "pitcher",
+    g: 20,
+    gs: 20,
+    w,
+    l,
+    sv: 0,
+    hd: 0,
+    ip,
+    er,
+    h: 0,
+    k: 0,
+    bb: 0,
+    era: 0,
+    whip: 0,
   },
 });
 
@@ -18,7 +34,7 @@ describe("이닝 → 아웃", () => {
     expect(inningsToOuts(6.2)).toBe(20);
   });
   it("부동소수 오차를 흡수한다", () => {
-    expect(inningsToOuts(92.19999999)).toBe(278);   // 92 + 2/3
+    expect(inningsToOuts(92.19999999)).toBe(278); // 92 + 2/3
   });
   it("소수부 3 이상은 무시한다 (야구 표기가 아니다)", () => {
     expect(inningsToOuts(6.5)).toBe(18);
@@ -56,8 +72,22 @@ describe("통산 요약", () => {
   it("타자 기록은 세지 않는다", () => {
     const batter = {
       ...rec(2030, 0, 0, 0, 0),
-      stats: { type: "batter", g: 1, pa: 4, ab: 4, h: 1, hr: 0, rbi: 0, sb: 0,
-               bb: 0, k: 1, avg: 0.25, obp: 0.25, slg: 0.25, ops: 0.5 },
+      stats: {
+        type: "batter",
+        g: 1,
+        pa: 4,
+        ab: 4,
+        h: 1,
+        hr: 0,
+        rbi: 0,
+        sb: 0,
+        bb: 0,
+        k: 1,
+        avg: 0.25,
+        obp: 0.25,
+        slg: 0.25,
+        ops: 0.5,
+      },
     } as unknown as CareerSeasonRecord;
     expect(careerSummaryOf([batter]).seasons).toBe(0);
   });
@@ -66,40 +96,98 @@ describe("통산 요약", () => {
 // ── 은퇴 결산 (U9-d) ──────────────────────────────────────────────
 
 import {
-  careerTotalsOf, careerHighsOf, teamStintsOf, awardTallyOf, titleCountOf, outsToInnings,
+  careerTotalsOf,
+  careerHighsOf,
+  teamStintsOf,
+  awardTallyOf,
+  titleCountOf,
+  outsToInnings,
 } from "../careerSummary";
 import type { CareerAward } from "../../types/save";
 
 /** 투수 시즌 한 줄 */
 const P = (
   year: number,
-  o: Partial<{ ip: number; er: number; w: number; l: number; sv: number; hd: number;
-               k: number; bb: number; h: number; g: number; gs: number; era: number;
-               ovr: number; teamId: string; awards: CareerAward[];
-               psResult: CareerSeasonRecord["psResult"] }> = {},
+  o: Partial<{
+    ip: number;
+    er: number;
+    w: number;
+    l: number;
+    sv: number;
+    hd: number;
+    k: number;
+    bb: number;
+    h: number;
+    g: number;
+    gs: number;
+    era: number;
+    ovr: number;
+    teamId: string;
+    awards: CareerAward[];
+    psResult: CareerSeasonRecord["psResult"];
+  }> = {},
 ): CareerSeasonRecord => ({
-  year, leagueId: "LEAGUE_KBL", teamId: o.teamId ?? "TEAM_KBL_A_1",
-  statLine: "", ovr: o.ovr ?? 80, awards: o.awards ?? [],
+  year,
+  leagueId: "LEAGUE_KBL",
+  teamId: o.teamId ?? "TEAM_KBL_A_1",
+  statLine: "",
+  ovr: o.ovr ?? 80,
+  awards: o.awards ?? [],
   ...(o.psResult ? { psResult: o.psResult } : {}),
   stats: {
-    type: "pitcher", g: o.g ?? 25, gs: o.gs ?? 25, w: o.w ?? 0, l: o.l ?? 0,
-    sv: o.sv ?? 0, hd: o.hd ?? 0, ip: o.ip ?? 0, er: o.er ?? 0,
-    h: o.h ?? 0, k: o.k ?? 0, bb: o.bb ?? 0, era: o.era ?? 0, whip: 0,
+    type: "pitcher",
+    g: o.g ?? 25,
+    gs: o.gs ?? 25,
+    w: o.w ?? 0,
+    l: o.l ?? 0,
+    sv: o.sv ?? 0,
+    hd: o.hd ?? 0,
+    ip: o.ip ?? 0,
+    er: o.er ?? 0,
+    h: o.h ?? 0,
+    k: o.k ?? 0,
+    bb: o.bb ?? 0,
+    era: o.era ?? 0,
+    whip: 0,
   },
 });
 
 /** 타자 시즌 한 줄 */
 const B = (
   year: number,
-  o: Partial<{ ab: number; h: number; hr: number; rbi: number; pa: number;
-               bb: number; slg: number; avg: number; teamId: string }> = {},
+  o: Partial<{
+    ab: number;
+    h: number;
+    hr: number;
+    rbi: number;
+    pa: number;
+    bb: number;
+    slg: number;
+    avg: number;
+    teamId: string;
+  }> = {},
 ): CareerSeasonRecord => ({
-  year, leagueId: "LEAGUE_KBL", teamId: o.teamId ?? "TEAM_KBL_A_1",
-  statLine: "", ovr: 80, awards: [],
+  year,
+  leagueId: "LEAGUE_KBL",
+  teamId: o.teamId ?? "TEAM_KBL_A_1",
+  statLine: "",
+  ovr: 80,
+  awards: [],
   stats: {
-    type: "batter", g: 100, pa: o.pa ?? 0, ab: o.ab ?? 0, h: o.h ?? 0,
-    hr: o.hr ?? 0, rbi: o.rbi ?? 0, sb: 0, bb: o.bb ?? 0, k: 0,
-    avg: o.avg ?? 0, obp: 0, slg: o.slg ?? 0, ops: 0,
+    type: "batter",
+    g: 100,
+    pa: o.pa ?? 0,
+    ab: o.ab ?? 0,
+    h: o.h ?? 0,
+    hr: o.hr ?? 0,
+    rbi: o.rbi ?? 0,
+    sb: 0,
+    bb: o.bb ?? 0,
+    k: 0,
+    avg: o.avg ?? 0,
+    obp: 0,
+    slg: o.slg ?? 0,
+    ops: 0,
   },
 });
 
@@ -140,10 +228,7 @@ describe("통산 합산", () => {
   it("장타율은 타수로 가중된다 — 시즌 SLG의 평균이 아니다", () => {
     // 400타수 .500(200루타) + 20타수 1.000(20루타) = 220/420 = .524.
     // 단순 평균이면 .750이 된다
-    const t = careerTotalsOf([
-      B(2030, { ab: 400, slg: 0.5 }),
-      B(2031, { ab: 20,  slg: 1.0 }),
-    ]);
+    const t = careerTotalsOf([B(2030, { ab: 400, slg: 0.5 }), B(2031, { ab: 20, slg: 1.0 })]);
     expect(t.batting!.slg).toBe(".524");
   });
 
@@ -195,18 +280,15 @@ describe("커리어 하이", () => {
 
   it("ERA는 이닝이 충분한 시즌만 본다 — 3이닝 무실점이 커리어 하이가 되면 안 된다", () => {
     const hs = careerHighsOf([
-      P(2030, { ip: 3,   er: 0,  era: 0.0 }),
-      P(2031, { ip: 180, er: 44, era: 2.20 }),
+      P(2030, { ip: 3, er: 0, era: 0.0 }),
+      P(2031, { ip: 180, er: 44, era: 2.2 }),
     ]);
     expect(key(hs, "era")!.value).toBe("2.20");
     expect(key(hs, "era")!.year).toBe(2031);
   });
 
   it("타율도 타수가 충분한 시즌만 본다", () => {
-    const hs = careerHighsOf([
-      B(2030, { ab: 10,  avg: 0.600 }),
-      B(2031, { ab: 500, avg: 0.312 }),
-    ]);
+    const hs = careerHighsOf([B(2030, { ab: 10, avg: 0.6 }), B(2031, { ab: 500, avg: 0.312 })]);
     expect(key(hs, "avg")!.value).toBe(".312");
   });
 
@@ -236,7 +318,9 @@ describe("커리어 하이", () => {
 describe("팀 이력", () => {
   it("연속으로 뛴 해를 한 구간으로 묶는다", () => {
     const s = teamStintsOf([
-      P(2030, { teamId: "TEAM_A" }), P(2031, { teamId: "TEAM_A" }), P(2032, { teamId: "TEAM_A" }),
+      P(2030, { teamId: "TEAM_A" }),
+      P(2031, { teamId: "TEAM_A" }),
+      P(2032, { teamId: "TEAM_A" }),
     ]);
     expect(s).toHaveLength(1);
     expect(s[0]).toMatchObject({ teamId: "TEAM_A", fromYear: 2030, toYear: 2032, seasons: 3 });
@@ -244,14 +328,18 @@ describe("팀 이력", () => {
 
   it("같은 팀에 두 번 갔다 오면 구간이 둘이다 — 합치면 그 사이 이적이 사라진다", () => {
     const s = teamStintsOf([
-      P(2030, { teamId: "TEAM_A" }), P(2031, { teamId: "TEAM_B" }), P(2032, { teamId: "TEAM_A" }),
+      P(2030, { teamId: "TEAM_A" }),
+      P(2031, { teamId: "TEAM_B" }),
+      P(2032, { teamId: "TEAM_A" }),
     ]);
     expect(s.map((x) => x.teamId)).toEqual(["TEAM_A", "TEAM_B", "TEAM_A"]);
   });
 
   it("입력 순서가 뒤죽박죽이어도 연도순으로 묶는다", () => {
     const s = teamStintsOf([
-      P(2032, { teamId: "TEAM_B" }), P(2030, { teamId: "TEAM_A" }), P(2031, { teamId: "TEAM_A" }),
+      P(2032, { teamId: "TEAM_B" }),
+      P(2030, { teamId: "TEAM_A" }),
+      P(2031, { teamId: "TEAM_A" }),
     ]);
     expect(s.map((x) => x.teamId)).toEqual(["TEAM_A", "TEAM_B"]);
     expect(s[0].seasons).toBe(2);
@@ -269,7 +357,9 @@ describe("수상 · 우승", () => {
 
   it("같은 상은 묶고 횟수를 센다", () => {
     const t = awardTallyOf([
-      P(2030, { awards: [mvp] }), P(2031, { awards: [mvp, gg] }), P(2032, { awards: [mvp] }),
+      P(2030, { awards: [mvp] }),
+      P(2031, { awards: [mvp, gg] }),
+      P(2032, { awards: [mvp] }),
     ]);
     expect(t[0]).toMatchObject({ id: "MVP", count: 3 });
     expect(t[0].years).toEqual([2030, 2031, 2032]);

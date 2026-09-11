@@ -2,11 +2,19 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  primeTraitDisplay, traitDisplayRules,
-  growthRoom, growthGrade, gradeTone, scoutedGrade,
-  personalityTags, militaryHistory, foreignBadge,
-  rispSplit, rispTone,
-  type TraitGrade, type PersonalityAxis,
+  primeTraitDisplay,
+  traitDisplayRules,
+  growthRoom,
+  growthGrade,
+  gradeTone,
+  scoutedGrade,
+  personalityTags,
+  militaryHistory,
+  foreignBadge,
+  rispSplit,
+  rispTone,
+  type TraitGrade,
+  type PersonalityAxis,
 } from "../playerTraits";
 import { primeForeignRules } from "../foreignSlots";
 

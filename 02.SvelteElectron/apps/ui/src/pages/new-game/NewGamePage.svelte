@@ -9,7 +9,12 @@
   import { inkFor } from "../../shared/utils/stoneMark";
   import { startNewGameV3 } from "../../shared/repo/slotLifecycleV3";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
-  import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
+  import type {
+    Handedness,
+    PitchEntry,
+    PitchingForm,
+    ProtagonistSave,
+  } from "../../shared/types/save";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
   import { seasonLabel } from "../../shared/utils/baseballFormat";
 
@@ -25,7 +30,7 @@
 
   // 생일 (년도 2010 고정)
   let birthMonth = 4;
-  let birthDay   = 1;
+  let birthDay = 1;
   const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   $: maxDay = DAYS_IN_MONTH[birthMonth - 1];
   $: if (birthDay > maxDay) birthDay = maxDay;
@@ -37,33 +42,39 @@
   ];
 
   const formOptions: { value: PitchingForm; label: string; desc: string }[] = [
-    { value: "overhand",     label: "오버핸드",  desc: "표준 릴리스. 낙차 있는 직구와 커브에 유리" },
-    { value: "sidearm",      label: "사이드암",  desc: "횡방향 무브먼트 특화. 동일 손 타자 봉쇄" },
-    { value: "underhand",    label: "언더스로",  desc: "타이밍 파괴형. 구위 손실, 무브먼트 극대화" },
+    { value: "overhand", label: "오버핸드", desc: "표준 릴리스. 낙차 있는 직구와 커브에 유리" },
+    { value: "sidearm", label: "사이드암", desc: "횡방향 무브먼트 특화. 동일 손 타자 봉쇄" },
+    { value: "underhand", label: "언더스로", desc: "타이밍 파괴형. 구위 손실, 무브먼트 극대화" },
   ];
 
   // ── Step 2 상태 ────────────────────────────────────────────────
   let selectedTeamId = "";
 
-
   // 전체 고교팀 (16개) — 리그 구성용
   $: hsAllTeams = $teamsL10n.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
   // ⚠ 주석이 "8개"라고 적혀 있었는데 `HS_SELECTABLE_TEAMS`는 **102개**다.
   //    낡은 주석을 믿고 화면을 잘못 설계할 뻔했다.
-  const DIFFICULTY_ORDER: Record<string, number> = { "최상": 5, "상": 4, "중": 3, "하": 2, "최하": 1 };
+  const DIFFICULTY_ORDER: Record<string, number> = { 최상: 5, 상: 4, 중: 3, 하: 2, 최하: 1 };
 
   // 권역별로 묶는다 (사용자 확정). 고교는 8권역 주말리그라 **어느 지역에서
   // 시작하느냐가 라이벌·일정을 정한다** — 102개를 한 줄로 늘어놓으면 그 구조가
   // 안 보이고 고르기도 어렵다.
-  $: teamsByRegion = sortRegions(Object.keys(HS_REGIONS)).map((rid) => ({
-    id: rid,
-    meta: hsRegionMeta(rid),
-    teams: hsTeams.filter((t) =>
-      ((HS_REGIONS as Record<string, readonly string[]>)[rid] ?? []).includes(t.id)),
-  })).filter((r) => r.teams.length > 0);
+  $: teamsByRegion = sortRegions(Object.keys(HS_REGIONS))
+    .map((rid) => ({
+      id: rid,
+      meta: hsRegionMeta(rid),
+      teams: hsTeams.filter((t) =>
+        ((HS_REGIONS as Record<string, readonly string[]>)[rid] ?? []).includes(t.id),
+      ),
+    }))
+    .filter((r) => r.teams.length > 0);
   $: hsTeams = hsAllTeams
     .filter((t) => HS_SELECTABLE_TEAMS.includes(t.id))
-    .sort((a, b) => (DIFFICULTY_ORDER[b.profile?.difficulty ?? ""] ?? 0) - (DIFFICULTY_ORDER[a.profile?.difficulty ?? ""] ?? 0));
+    .sort(
+      (a, b) =>
+        (DIFFICULTY_ORDER[b.profile?.difficulty ?? ""] ?? 0) -
+        (DIFFICULTY_ORDER[a.profile?.difficulty ?? ""] ?? 0),
+    );
   $: selectedTeam = hsTeams.find((t) => t.id === selectedTeamId) ?? null;
   // 확인 카드가 입을 팀 색. **전역 --t-*는 안 건드린다** — 아직 소속 확정 전이라
   // 전역을 바꾸면 이전 단계로 돌아갔을 때 화면이 어긋난다
@@ -82,11 +93,11 @@
   /** 카드에 그릴 능력치 — 경기에 쓰이는 순서대로 */
   function statRows(p: ProtagonistSave["pitching"]) {
     return [
-      { ko: "구위",     v: p.velocity },
-      { ko: "커맨드",   v: p.command },
-      { ko: "제구",     v: p.control },
+      { ko: "구위", v: p.velocity },
+      { ko: "커맨드", v: p.command },
+      { ko: "제구", v: p.control },
       { ko: "무브먼트", v: p.movement },
-      { ko: "멘탈",     v: p.mentality },
+      { ko: "멘탈", v: p.mentality },
       { ko: "스태미나", v: p.stamina },
     ];
   }
@@ -124,8 +135,18 @@
 
   let previewTeamId = "";
   let previewLoading = false;
-  let previewNpcs: { name?: string; position?: string; grade?: number; abilities?: { pitching?: { ovr?: number }; batting?: { ovr?: number } } }[] = [];
-  let previewStaff: { role?: string; name?: string; age?: number; stats?: Record<string, unknown> }[] = [];
+  let previewNpcs: {
+    name?: string;
+    position?: string;
+    grade?: number;
+    abilities?: { pitching?: { ovr?: number }; batting?: { ovr?: number } };
+  }[] = [];
+  let previewStaff: {
+    role?: string;
+    name?: string;
+    age?: number;
+    stats?: Record<string, unknown>;
+  }[] = [];
 
   /** 팀이 바뀌면 그 팀 로스터를 뽑는다. 1ms 안쪽이라 클릭마다 돌려도 된다 */
   $: void loadPreview(selectedTeamId);
@@ -151,14 +172,16 @@
   }
 
   const STAFF_LABEL: Record<string, string> = {
-    manager: "감독", coach: "코치", owner: "구단주", scout: "스카우트", trainer: "트레이너",
+    manager: "감독",
+    coach: "코치",
+    owner: "구단주",
+    scout: "스카우트",
+    trainer: "트레이너",
   };
   $: previewManager = previewStaff.find((s) => s.role === "manager") ?? null;
   $: previewCoaches = previewStaff.filter((s) => s.role === "coach");
   /** OVR 높은 순 — "이 팀의 기둥이 누구인가"가 고르는 근거다 */
-  $: previewTop = [...previewNpcs]
-    .sort((a, b) => npcOvr(b) - npcOvr(a))
-    .slice(0, 6);
+  $: previewTop = [...previewNpcs].sort((a, b) => npcOvr(b) - npcOvr(a)).slice(0, 6);
 
   function npcOvr(n: (typeof previewNpcs)[number]): number {
     return n.abilities?.pitching?.ovr ?? n.abilities?.batting?.ovr ?? 0;
@@ -171,7 +194,7 @@
 
   /** 이 팀이 뛸 구장 — ID가 아니라 이름으로 (팀 상세에서 같은 결함을 이미 고쳤다) */
   $: selectedStadium = selectedTeam?.stadium
-    ? ($masterStore.stadiums ?? []).find((s) => s.id === selectedTeam!.stadium) ?? null
+    ? (($masterStore.stadiums ?? []).find((s) => s.id === selectedTeam!.stadium) ?? null)
     : null;
 
   /** 같은 권역 라이벌 — refs의 history.rivals에서 */
@@ -185,7 +208,13 @@
 
   const PRESETS: Record<
     PresetKey,
-    { label: string; desc: string; tags: string[]; pitching: ProtagonistSave["pitching"]; pitches: PitchEntry[] }
+    {
+      label: string;
+      desc: string;
+      tags: string[];
+      pitching: ProtagonistSave["pitching"];
+      pitches: PitchEntry[];
+    }
   > = {
     balanced: {
       label: "균형형",
@@ -196,7 +225,18 @@
       //   특화형이 균형형보다 뾰족해야 한다는 규칙도 깨진다
       //   (가 그걸 잡았다).
       //   제구 68→73 · 무브먼트 66→71. 편차가 12→10으로 **더 고르게** 된다.
-      pitching: { ovr: 61, velocity: 61, command: 61, control: 64, movement: 62, mentality: 59, stamina: 59, recovery: 57, clutch: 54, holdRunners: 55 },
+      pitching: {
+        ovr: 61,
+        velocity: 61,
+        command: 61,
+        control: 64,
+        movement: 62,
+        mentality: 59,
+        stamina: 59,
+        recovery: 57,
+        clutch: 54,
+        holdRunners: 55,
+      },
       // 🔴 **구종 하나로 시작한다** (사용자 확정 2026-08-26).
       //   둘째 구종을 배우는 것이 첫 목표가 된다.
       //
@@ -214,7 +254,18 @@
       label: "파워피처",
       desc: "속도 하나로 승부. 제구는 미완성이지만 잠재력은 최상",
       tags: ["급성장", "파워피처"],
-      pitching: { ovr: 59, velocity: 69, command: 55, control: 51, movement: 57, mentality: 59, stamina: 61, recovery: 54, clutch: 58, holdRunners: 57 },
+      pitching: {
+        ovr: 59,
+        velocity: 69,
+        command: 55,
+        control: 51,
+        movement: 57,
+        mentality: 59,
+        stamina: 61,
+        recovery: 54,
+        clutch: 58,
+        holdRunners: 57,
+      },
       // 🔴 **Lv2 하나로 간다** (사용자 확정). 등급이 높아 손해가 작다 —
       //   실측 OVR68에서 Lv2 하나 6.34 대 Lv2+Lv1 둘 5.72다.
       //   ⚠ 그래서 **스탯 보정을 안 준다** — 균형·체력형과 사정이 다르다.
@@ -224,8 +275,22 @@
       label: "제구형",
       desc: "커맨드와 제구로 타자를 요리. 체인지업으로 타이밍을 뺏기 시작",
       tags: ["멘탈관리", "제구형"],
-      pitching: { ovr: 59, velocity: 56, command: 64, control: 66, movement: 57, mentality: 59, stamina: 53, recovery: 56, clutch: 56, holdRunners: 53 },
-      pitches: [{ id: "PITCH_FASTBALL", grade: 1 }, { id: "PITCH_CHANGEUP", grade: 1 }],
+      pitching: {
+        ovr: 59,
+        velocity: 56,
+        command: 64,
+        control: 66,
+        movement: 57,
+        mentality: 59,
+        stamina: 53,
+        recovery: 56,
+        clutch: 56,
+        holdRunners: 53,
+      },
+      pitches: [
+        { id: "PITCH_FASTBALL", grade: 1 },
+        { id: "PITCH_CHANGEUP", grade: 1 },
+      ],
     },
     stamina: {
       label: "체력형",
@@ -235,7 +300,18 @@
       //   스태미나·회복은 이미 78이라 +5면 83 — **잠재력 하한 80을 넘어**
       //   시작부터 성장 여지가 사라진다(`startPresets.test.ts`가 그걸 잡는다).
       //   대신 제구 63→67 · 무브먼트 62→66. 한 쌍은 더 둘기 쉬워진다.
-      pitching: { ovr: 60, velocity: 58, command: 56, control: 58, movement: 57, mentality: 68, stamina: 69, recovery: 69, clutch: 52, holdRunners: 52 },
+      pitching: {
+        ovr: 60,
+        velocity: 58,
+        command: 56,
+        control: 58,
+        movement: 57,
+        mentality: 68,
+        stamina: 69,
+        recovery: 69,
+        clutch: 52,
+        holdRunners: 52,
+      },
       // 구종 하나 — 근거는 균형형 쪽에 적었다
       pitches: [{ id: "PITCH_FASTBALL", grade: 1 }],
     },
@@ -256,7 +332,7 @@
   }
 
   // ── 게임 시작 ──────────────────────────────────────────────────
-  let starting = false;  // 이중 클릭 가드 (중복 createSlot 방지)
+  let starting = false; // 이중 클릭 가드 (중복 createSlot 방지)
 
   async function startGame() {
     if (starting) return;
@@ -265,7 +341,7 @@
       await doStartGame();
     } catch (e) {
       console.error("[NewGamePage] 새 게임 생성 실패:", e);
-      starting = false;  // 실패 시 재시도 허용
+      starting = false; // 실패 시 재시도 허용
       throw e;
     }
   }
@@ -304,28 +380,41 @@
     // ⚠ Rust를 못 부르면(Vite 단독) 규칙 파일의 **중앙값**을 쓴다 —
     //   여기서 난수를 다시 만들지 않는다.
     const { loadRosterRules } = await import("../../shared/repo/newGameV3");
-    const pRules = (await loadRosterRules() as {
-      protagonistRules?: {
-        potentialMin?: number; potentialMax?: number;
-        devRateMin?: number; devRateMax?: number;
-      };
-    }).protagonistRules ?? {};
-    const pMin = pRules.potentialMin ?? 80, pMax = pRules.potentialMax ?? 99;
-    const dMin = pRules.devRateMin   ?? 73, dMax = pRules.devRateMax   ?? 88;
+    const pRules =
+      (
+        (await loadRosterRules()) as {
+          protagonistRules?: {
+            potentialMin?: number;
+            potentialMax?: number;
+            devRateMin?: number;
+            devRateMax?: number;
+          };
+        }
+      ).protagonistRules ?? {};
+    const pMin = pRules.potentialMin ?? 80,
+      pMax = pRules.potentialMax ?? 99;
+    const dMin = pRules.devRateMin ?? 73,
+      dMax = pRules.devRateMax ?? 88;
     let potentialHidden = Math.round((pMin + pMax) / 2);
     let developmentRate = Math.round((dMin + dMax) / 2);
     try {
-      const hidden = JSON.parse(await window.projectB!.engine(
-        "genProtagonistHiddenNative",
-        JSON.stringify({
-          seed: worldSeed >>> 0,
-          potentialMin: pMin, potentialMax: pMax,
-          devRateMin: dMin, devRateMax: dMax,
-        }),
-      )) as { potentialHidden?: number; developmentRate?: number };
+      const hidden = JSON.parse(
+        await window.projectB!.engine(
+          "genProtagonistHiddenNative",
+          JSON.stringify({
+            seed: worldSeed >>> 0,
+            potentialMin: pMin,
+            potentialMax: pMax,
+            devRateMin: dMin,
+            devRateMax: dMax,
+          }),
+        ),
+      ) as { potentialHidden?: number; developmentRate?: number };
       if (typeof hidden.potentialHidden === "number") potentialHidden = hidden.potentialHidden;
       if (typeof hidden.developmentRate === "number") developmentRate = hidden.developmentRate;
-    } catch { /* 폴백은 위 중앙값이다 */ }
+    } catch {
+      /* 폴백은 위 중앙값이다 */
+    }
 
     const protagonist: ProtagonistSave = {
       id: "PLY_HERO",
@@ -337,7 +426,10 @@
       grade: 1,
       age: 17,
       playerType: "pitcher",
-      position: await assignHighschoolPosition({ teamId: selectedTeamId, pitching: preset.pitching }, get(masterStore).entities),
+      position: await assignHighschoolPosition(
+        { teamId: selectedTeamId, pitching: preset.pitching },
+        get(masterStore).entities,
+      ),
       handedness,
       pitchingForm,
       jerseyNumber: 18,
@@ -346,9 +438,18 @@
       morale: 70,
       pitching: preset.pitching,
       batting: {
-        ovr: 30, contact: 30, power: 25, eye: 28, discipline: 28,
-        speed: 48, baseInstinct: 48, bunting: 45, platoon: 50,
-        fielding: 40, arm: 50, battingClutch: 25,
+        ovr: 30,
+        contact: 30,
+        power: 25,
+        eye: 28,
+        discipline: 28,
+        speed: 48,
+        baseInstinct: 48,
+        bunting: 45,
+        platoon: 50,
+        fielding: 40,
+        arm: 50,
+        battingClutch: 25,
       },
       primaryPosition: "SP",
       positionRatings: { SP: preset.pitching.ovr },
@@ -415,10 +516,16 @@
   }
 
   const PITCH_NAMES: Record<string, string> = {
-    PITCH_FASTBALL: "패스트볼", PITCH_SINKER: "싱커", PITCH_CUTTER: "커터",
-    PITCH_SLIDER: "슬라이더", PITCH_CURVE: "커브", PITCH_CHANGEUP: "체인지업",
-    PITCH_SPLITTER: "스플리터", PITCH_FORKBALL: "포크볼",
-    PITCH_SCREWBALL: "스크루볼", PITCH_KNUCKLEBALL: "너클볼",
+    PITCH_FASTBALL: "패스트볼",
+    PITCH_SINKER: "싱커",
+    PITCH_CUTTER: "커터",
+    PITCH_SLIDER: "슬라이더",
+    PITCH_CURVE: "커브",
+    PITCH_CHANGEUP: "체인지업",
+    PITCH_SPLITTER: "스플리터",
+    PITCH_FORKBALL: "포크볼",
+    PITCH_SCREWBALL: "스크루볼",
+    PITCH_KNUCKLEBALL: "너클볼",
   };
 
   // ── 팀 이름 표시 ───────────────────────────────────────────────
@@ -426,7 +533,10 @@
 
   const handednessLabel: Record<Handedness, string> = { R: "우투", L: "좌투", S: "양투" };
   const formLabel: Record<PitchingForm, string> = {
-    overhand: "오버핸드", threeQuarter: "스리쿼터", sidearm: "사이드암", underhand: "언더스로",
+    overhand: "오버핸드",
+    threeQuarter: "스리쿼터",
+    sidearm: "사이드암",
+    underhand: "언더스로",
   };
 
   // ── Step 2 헬퍼 ────────────────────────────────────────────────
@@ -438,10 +548,11 @@
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  function teamListStyle(team: typeof hsTeams[number], selected: boolean): string {
+  function teamListStyle(team: (typeof hsTeams)[number], selected: boolean): string {
     const c = team.colors?.[0];
     if (!c) return "";
-    if (selected) return `border-color:${c};background:linear-gradient(90deg,${hexToRgba(c,0.18)} 0%,${hexToRgba(c,0.06)} 60%,transparent 100%);`;
+    if (selected)
+      return `border-color:${c};background:linear-gradient(90deg,${hexToRgba(c, 0.18)} 0%,${hexToRgba(c, 0.06)} 60%,transparent 100%);`;
     return `border-left-color:${c};`;
   }
 
@@ -452,7 +563,8 @@
   }
 
   function colorBarStyle(team: typeof selectedTeam): string {
-    const c0 = team?.colors?.[0], c1 = team?.colors?.[1];
+    const c0 = team?.colors?.[0],
+      c1 = team?.colors?.[1];
     if (!c0) return "background:#1E3050;";
     return `background:linear-gradient(90deg,${c0} 0%,${c1 ?? c0} 100%);`;
   }
@@ -460,29 +572,38 @@
   function styleBadgeStyle(team: typeof selectedTeam): string {
     const c = team?.colors?.[0];
     if (!c) return "";
-    return `background:${hexToRgba(c,0.18)};border-color:${hexToRgba(c,0.5)};color:${c};`;
+    return `background:${hexToRgba(c, 0.18)};border-color:${hexToRgba(c, 0.5)};color:${c};`;
   }
 
   // ── Step 3 레이더 헬퍼 ────────────────────────────────────────────
   const PRESET_COLORS: Record<PresetKey, string> = {
-    balanced: "#1F5FA8", power: "#B3311F", control: "#1F7A47", stamina: "#9A6510",
+    balanced: "#1F5FA8",
+    power: "#B3311F",
+    control: "#1F7A47",
+    stamina: "#9A6510",
   };
 
   const RADAR_LABELS = ["구위", "커맨드", "제구", "무브먼트", "멘탈", "스태미나"];
   const RADAR_MAX = 70;
-  const RADAR_R   = 46;
-  const RADAR_CX  = 70;
-  const RADAR_CY  = 70;
+  const RADAR_R = 46;
+  const RADAR_CX = 70;
+  const RADAR_CY = 70;
 
   const RADAR_AXES = Array.from({ length: 6 }, (_, i) => {
     const a = (Math.PI / 180) * (-90 + i * 60);
-    return { x: +(RADAR_CX + RADAR_R * Math.cos(a)).toFixed(1), y: +(RADAR_CY + RADAR_R * Math.sin(a)).toFixed(1) };
+    return {
+      x: +(RADAR_CX + RADAR_R * Math.cos(a)).toFixed(1),
+      y: +(RADAR_CY + RADAR_R * Math.sin(a)).toFixed(1),
+    };
   });
 
   const RADAR_LPOS = Array.from({ length: 6 }, (_, i) => {
     const a = (Math.PI / 180) * (-90 + i * 60);
     const r = RADAR_R + 14;
-    return { x: +(RADAR_CX + r * Math.cos(a)).toFixed(1), y: +(RADAR_CY + r * Math.sin(a)).toFixed(1) };
+    return {
+      x: +(RADAR_CX + r * Math.cos(a)).toFixed(1),
+      y: +(RADAR_CY + r * Math.sin(a)).toFixed(1),
+    };
   });
 
   function gridPts(ratio: number): string {
@@ -492,15 +613,16 @@
     }).join(" ");
   }
 
-  function radarPts(p: typeof PRESETS[PresetKey]["pitching"]): string {
+  function radarPts(p: (typeof PRESETS)[PresetKey]["pitching"]): string {
     const vals = [p.velocity, p.command, p.control, p.movement, p.mentality, p.stamina];
-    return vals.map((v, i) => {
-      const a = (Math.PI / 180) * (-90 + i * 60);
-      const ratio = Math.min(v / RADAR_MAX, 1);
-      return `${(RADAR_CX + RADAR_R * ratio * Math.cos(a)).toFixed(1)},${(RADAR_CY + RADAR_R * ratio * Math.sin(a)).toFixed(1)}`;
-    }).join(" ");
+    return vals
+      .map((v, i) => {
+        const a = (Math.PI / 180) * (-90 + i * 60);
+        const ratio = Math.min(v / RADAR_MAX, 1);
+        return `${(RADAR_CX + RADAR_R * ratio * Math.cos(a)).toFixed(1)},${(RADAR_CY + RADAR_R * ratio * Math.sin(a)).toFixed(1)}`;
+      })
+      .join(" ");
   }
-
 </script>
 
 <div class="page">
@@ -517,7 +639,6 @@
 
   <!-- 컨텐츠 -->
   <main class="content">
-
     <!-- Step 1 -->
     {#if step === 1}
       <section class="step-body">
@@ -542,12 +663,12 @@
           <div class="birthday-row" role="group" aria-labelledby="lbl-birthday">
             <span class="birth-year">2010년</span>
             <select bind:value={birthMonth} class="birth-select">
-              {#each Array.from({length: 12}, (_, i) => i + 1) as m}
+              {#each Array.from({ length: 12 }, (_, i) => i + 1) as m}
                 <option value={m}>{m}월</option>
               {/each}
             </select>
             <select bind:value={birthDay} class="birth-select">
-              {#each Array.from({length: maxDay}, (_, i) => i + 1) as d}
+              {#each Array.from({ length: maxDay }, (_, i) => i + 1) as d}
                 <option value={d}>{d}일</option>
               {/each}
             </select>
@@ -590,7 +711,7 @@
         </div>
       </section>
 
-    <!-- Step 2 -->
+      <!-- Step 2 -->
     {:else if step === 2}
       <section class="step2-layout">
         <!-- 왼쪽: 제목 + 팀 목록 1열 -->
@@ -623,7 +744,7 @@
               </div>
 
               <div class="team-list" role="listbox" aria-label="학교">
-                {#each (activeRegion?.teams ?? []) as team (team.id)}
+                {#each activeRegion?.teams ?? [] as team (team.id)}
                   <button
                     class="team-list-item"
                     class:selected={selectedTeamId === team.id}
@@ -658,7 +779,9 @@
                 {#if selectedTeam.profile}
                   <div class="ti-header">
                     <div class="ti-badge-row">
-                      <span class="style-badge" style={styleBadgeStyle(selectedTeam)}>{selectedTeam.profile.style}</span>
+                      <span class="style-badge" style={styleBadgeStyle(selectedTeam)}
+                        >{selectedTeam.profile.style}</span
+                      >
                     </div>
                     <p class="team-desc">{selectedTeam.profile.desc}</p>
                     <div class="tag-row">
@@ -683,7 +806,9 @@
                 {#if selectedTeam.history}
                   {@const h = selectedTeam.history}
                   {@const wins = (h.titles ?? []).filter((t) => t.result === "우승")}
-                  {@const ranks = [...(h.seasonRanks ?? [])].sort((a, b) => b.season.localeCompare(a.season))}
+                  {@const ranks = [...(h.seasonRanks ?? [])].sort((a, b) =>
+                    b.season.localeCompare(a.season),
+                  )}
                   <div class="history-stats">
                     {#if h.foundedYear}
                       <div class="hs-item"><span>창단</span><strong>{h.foundedYear}년</strong></div>
@@ -710,8 +835,17 @@
                             .filter((t) => t.season === sr.season && t.result === "우승")
                             .map((t) => t.competition.replace(/^(고교|대학|프로|독립)\s*/, ""))}
                           <div class="record-row">
-                            <span class="rec-year">{seasonLabel(sr.season, previewSeasonYear)}</span>
-                            <span class="rec-nat rec-{sr.rank === 1 ? "gold" : sr.rank <= 3 ? "silver" : sr.rank <= 6 ? "bronze" : "dim"}">{sr.rank}위</span>
+                            <span class="rec-year">{seasonLabel(sr.season, previewSeasonYear)}</span
+                            >
+                            <span
+                              class="rec-nat rec-{sr.rank === 1
+                                ? 'gold'
+                                : sr.rank <= 3
+                                  ? 'silver'
+                                  : sr.rank <= 6
+                                    ? 'bronze'
+                                    : 'dim'}">{sr.rank}위</span
+                            >
                             <span class="rec-reg">{won.join(" · ")}</span>
                             <span class="rec-note"></span>
                           </div>
@@ -735,22 +869,38 @@
                 <div class="section-label">이 팀에서 뛴다면</div>
                 <dl class="fact-list">
                   {#if selectedTeam.city}
-                    <div class="fact"><dt>연고</dt><dd>{selectedTeam.city}</dd></div>
+                    <div class="fact">
+                      <dt>연고</dt>
+                      <dd>{selectedTeam.city}</dd>
+                    </div>
                   {/if}
                   {#if selectedStadium}
                     <div class="fact">
                       <dt>구장</dt>
-                      <dd>{selectedStadium.name}{#if selectedStadium.parkFactor}<span class="fact-note"> · {selectedStadium.parkFactor}</span>{/if}</dd>
+                      <dd>
+                        {selectedStadium.name}{#if selectedStadium.parkFactor}<span
+                            class="fact-note"
+                          >
+                            · {selectedStadium.parkFactor}</span
+                          >{/if}
+                      </dd>
                     </div>
                   {/if}
                   {#if activeRegion}
                     <div class="fact">
                       <dt>권역</dt>
-                      <dd>{activeRegion.meta.label}<span class="fact-note"> · {activeRegion.teams.length}팀</span></dd>
+                      <dd>
+                        {activeRegion.meta.label}<span class="fact-note">
+                          · {activeRegion.teams.length}팀</span
+                        >
+                      </dd>
                     </div>
                   {/if}
                   {#if selectedTeam.profile?.difficulty}
-                    <div class="fact"><dt>난이도</dt><dd>{selectedTeam.profile.difficulty}</dd></div>
+                    <div class="fact">
+                      <dt>난이도</dt>
+                      <dd>{selectedTeam.profile.difficulty}</dd>
+                    </div>
                   {/if}
                 </dl>
 
@@ -789,7 +939,9 @@
 
                 <div class="section-label">
                   주요 선수
-                  {#if previewNpcs.length}<span class="sl-count">{previewNpcs.length}명 중 상위 {previewTop.length}</span>{/if}
+                  {#if previewNpcs.length}<span class="sl-count"
+                      >{previewNpcs.length}명 중 상위 {previewTop.length}</span
+                    >{/if}
                 </div>
                 {#if previewLoading}
                   <p class="roster-note">불러오는 중…</p>
@@ -809,17 +961,17 @@
                 {:else}
                   <p class="roster-note">선수 정보를 불러오지 못했다.</p>
                 {/if}
-              </div><!-- /.roster-col -->
-            </div><!-- /.detail-inner -->
-          {:else}
-            <div class="detail-placeholder">
-              팀을 선택하면 상세 정보가 표시됩니다
+              </div>
+              <!-- /.roster-col -->
             </div>
+            <!-- /.detail-inner -->
+          {:else}
+            <div class="detail-placeholder">팀을 선택하면 상세 정보가 표시됩니다</div>
           {/if}
         </div>
       </section>
 
-    <!-- Step 3 -->
+      <!-- Step 3 -->
     {:else if step === 3}
       <section class="step3-layout">
         <div class="step3-top">
@@ -847,38 +999,58 @@
               </ul>
               <div class="preset-pitches">
                 {#each preset.pitches as pitch}
-                  <span class="preset-pitch"
-                    style="color:{accent};border-color:{hexToRgba(accent,0.45)};background:{hexToRgba(accent,0.1)};"
-                    class:lv2={pitch.grade >= 2}
-                  >{PITCH_NAMES[pitch.id]} Lv.{pitch.grade}</span>
+                  <span
+                    class="preset-pitch"
+                    style="color:{accent};border-color:{hexToRgba(
+                      accent,
+                      0.45,
+                    )};background:{hexToRgba(accent, 0.1)};"
+                    class:lv2={pitch.grade >= 2}>{PITCH_NAMES[pitch.id]} Lv.{pitch.grade}</span
+                  >
                 {/each}
               </div>
               <div class="radar-wrap">
-              <svg viewBox="0 0 140 140" class="radar-svg">
-                {#each [0.33, 0.66, 1] as ratio}
-                  <polygon points={gridPts(ratio)} fill="none" stroke="var(--line)" stroke-width="0.8"/>
-                {/each}
-                {#each RADAR_AXES as ax, i}
-                  <line x1={RADAR_CX} y1={RADAR_CY} x2={ax.x} y2={ax.y} stroke="var(--line)" stroke-width="0.8"/>
-                  <text x={RADAR_LPOS[i].x} y={RADAR_LPOS[i].y}
-                        text-anchor="middle" dominant-baseline="middle"
-                        font-size="7" fill="var(--ink-mute)">{RADAR_LABELS[i]}</text>
-                {/each}
-                <polygon
-                  points={radarPts(preset.pitching)}
-                  fill={hexToRgba(accent, 0.22)}
-                  stroke={accent}
-                  stroke-width="1.5"
-                />
-              </svg>
+                <svg viewBox="0 0 140 140" class="radar-svg">
+                  {#each [0.33, 0.66, 1] as ratio}
+                    <polygon
+                      points={gridPts(ratio)}
+                      fill="none"
+                      stroke="var(--line)"
+                      stroke-width="0.8"
+                    />
+                  {/each}
+                  {#each RADAR_AXES as ax, i}
+                    <line
+                      x1={RADAR_CX}
+                      y1={RADAR_CY}
+                      x2={ax.x}
+                      y2={ax.y}
+                      stroke="var(--line)"
+                      stroke-width="0.8"
+                    />
+                    <text
+                      x={RADAR_LPOS[i].x}
+                      y={RADAR_LPOS[i].y}
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-size="7"
+                      fill="var(--ink-mute)">{RADAR_LABELS[i]}</text
+                    >
+                  {/each}
+                  <polygon
+                    points={radarPts(preset.pitching)}
+                    fill={hexToRgba(accent, 0.22)}
+                    stroke={accent}
+                    stroke-width="1.5"
+                  />
+                </svg>
               </div>
             </button>
           {/each}
         </div>
       </section>
 
-    <!-- Step 4 -->
-
+      <!-- Step 4 -->
     {:else if step === 4}
       <section class="step4-layout">
         <div class="step4-top">
@@ -887,7 +1059,10 @@
         </div>
 
         <!-- 선수 카드 — 팀 색을 입는다. 이 순간부터 그 팀 소속이다 -->
-        <div class="pcard" style="--c-dark:{cardTokens.dark};--c-acc:{cardTokens.accent};--c-gold:{cardTokens.gold};--c-stripe:{cardTokens.stripe};--c-ink:{cardInk};--c-ink-acc:{cardInkAcc}">
+        <div
+          class="pcard"
+          style="--c-dark:{cardTokens.dark};--c-acc:{cardTokens.accent};--c-gold:{cardTokens.gold};--c-stripe:{cardTokens.stripe};--c-ink:{cardInk};--c-ink-acc:{cardInkAcc}"
+        >
           <div class="pcard-head">
             <div class="pc-id">
               <span class="pc-team">{selectedTeamName}</span>
@@ -1216,7 +1391,11 @@
     min-height: 0;
   }
 
-  .step2-top h2 { margin: 0 0 4px; font-size: 24px; color: var(--ink); }
+  .step2-top h2 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    color: var(--ink);
+  }
 
   /* ── 2단 고르기: 권역 → 학교 ──
      102개를 한 줄로 늘어놓으면 스크롤이 길어 어디까지 봤는지 잃는다.
@@ -1251,15 +1430,28 @@
     cursor: pointer;
     text-align: left;
   }
-  .region-item:hover { background: var(--panel-sunk); }
+  .region-item:hover {
+    background: var(--panel-sunk);
+  }
   .region-item.on {
     background: var(--panel-sunk);
     border-left-color: var(--t-accent);
   }
-  .ri-name  { grid-area: name; font-size: 12px; font-weight: 800; color: var(--ink); }
-  .ri-area  { grid-area: area; font-size: 10px; color: var(--ink-mute); }
+  .ri-name {
+    grid-area: name;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .ri-area {
+    grid-area: area;
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
   .ri-count {
-    grid-area: count; font-size: 10px; color: var(--ink-mute);
+    grid-area: count;
+    font-size: 10px;
+    color: var(--ink-mute);
     font-variant-numeric: tabular-nums;
   }
 
@@ -1269,8 +1461,15 @@
     gap: 5px;
     overflow-y: auto;
   }
-  .tli-city { font-size: 10.5px; opacity: 0.6; margin-left: auto; white-space: nowrap; }
-  .tli-main strong { white-space: nowrap; }
+  .tli-city {
+    font-size: 10.5px;
+    opacity: 0.6;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .tli-main strong {
+    white-space: nowrap;
+  }
 
   .team-list-item {
     display: flex;
@@ -1284,7 +1483,9 @@
     color: var(--ink);
     cursor: pointer;
     text-align: left;
-    transition: background 0.15s, border-color 0.15s;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
   }
 
   .team-list-item:hover:not(.selected) {
@@ -1306,8 +1507,6 @@
     font-size: 13px;
   }
 
-
-
   .team-color-bar {
     height: 4px;
     margin: -16px -16px 10px;
@@ -1317,7 +1516,6 @@
   .roster-col .team-color-bar {
     margin: -14px -14px 8px;
   }
-
 
   .loading-msg {
     color: var(--ink-mute);
@@ -1352,9 +1550,18 @@
     overflow-y: auto;
   }
 
-  .ti-header { display: flex; flex-direction: column; gap: 8px; }
+  .ti-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-  .ti-badge-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .ti-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
 
   /* ── 역사 통계 ── */
   .history-stats {
@@ -1375,11 +1582,22 @@
     text-align: center;
   }
 
-  .hs-item span { font-size: 10px; color: var(--ink-mute); }
-  .hs-item strong { font-size: 13px; color: var(--ink); font-weight: 700; }
+  .hs-item span {
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
+  .hs-item strong {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 700;
+  }
 
   /* ── 최근 성적 테이블 ── */
-  .record-section { display: flex; flex-direction: column; gap: 6px; }
+  .record-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
   .record-title {
     font-size: 11px;
@@ -1389,9 +1607,14 @@
     letter-spacing: 0.5px;
   }
 
-  .record-table { display: flex; flex-direction: column; gap: 3px; }
+  .record-table {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
 
-  .record-head, .record-row {
+  .record-head,
+  .record-row {
     display: grid;
     grid-template-columns: 44px 90px 60px minmax(0, 1fr);
     gap: 6px;
@@ -1412,14 +1635,36 @@
     padding: 5px 8px;
   }
 
-  .rec-year { color: var(--ink-mid); font-weight: 600; }
-  .rec-nat  { font-weight: 700; font-size: 12px; }
-  .rec-gold   { color: var(--warn); }
-  .rec-silver { color: var(--ink); }
-  .rec-bronze { color: var(--warn); }
-  .rec-dim    { color: var(--ink-mute); }
-  .rec-reg { color: var(--ink-mid); }
-  .rec-note { color: var(--ink-mute); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rec-year {
+    color: var(--ink-mid);
+    font-weight: 600;
+  }
+  .rec-nat {
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .rec-gold {
+    color: var(--warn);
+  }
+  .rec-silver {
+    color: var(--ink);
+  }
+  .rec-bronze {
+    color: var(--warn);
+  }
+  .rec-dim {
+    color: var(--ink-mute);
+  }
+  .rec-reg {
+    color: var(--ink-mid);
+  }
+  .rec-note {
+    color: var(--ink-mute);
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   /* ── 프로필 열 (삭제 안 하고 유지 - 다른 곳에서 사용 가능) ── */
 
@@ -1456,7 +1701,6 @@
     font-size: 11px;
     color: var(--ink-mid);
   }
-
 
   .section-label {
     font-size: 11px;
@@ -1497,54 +1741,125 @@
   }
 
   /* ── 팀 사실 목록 ── */
-  .fact-list { margin: 0; display: grid; gap: 4px; }
-  .fact { display: flex; align-items: baseline; gap: 8px; }
-  .fact dt {
-    font-size: 11px; color: var(--ink-mute);
-    min-width: 42px; flex: 0 0 auto;
+  .fact-list {
+    margin: 0;
+    display: grid;
+    gap: 4px;
   }
-  .fact dd { margin: 0; font-size: 13px; color: var(--ink); }
-  .fact-note { font-size: 11px; color: var(--ink-mute); }
+  .fact {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .fact dt {
+    font-size: 11px;
+    color: var(--ink-mute);
+    min-width: 42px;
+    flex: 0 0 auto;
+  }
+  .fact dd {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .fact-note {
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
 
-  .rival-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .rival-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
   .rival-chip {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 12px; color: var(--ink);
-    background: var(--panel); border: 1px solid var(--line);
-    border-radius: 20px; padding: 3px 10px 3px 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 3px 10px 3px 6px;
   }
 
   /* ── 로스터 미리보기 (실제 생성분) ── */
-  .staff-row { display: flex; flex-wrap: wrap; gap: 6px; }
-  .staff-chip {
-    display: inline-flex; align-items: baseline; gap: 5px;
-    font-size: 12px; color: var(--ink);
-    background: var(--panel); border: 1px solid var(--line);
-    border-radius: 20px; padding: 3px 10px;
+  .staff-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
   }
-  .staff-chip.mgr { border-color: var(--line-strong); }
-  .staff-role { font-size: 10px; color: var(--ink-mute); }
+  .staff-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+  .staff-chip.mgr {
+    border-color: var(--line-strong);
+  }
+  .staff-role {
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
 
-  .sl-count { font-size: 10px; font-weight: 400; color: var(--ink-mute); margin-left: 6px; }
+  .sl-count {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--ink-mute);
+    margin-left: 6px;
+  }
 
-  .pv-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+  .pv-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 3px;
+  }
   .pv-list li {
-    display: flex; align-items: baseline; gap: 7px;
-    background: var(--panel); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 5px 9px;
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 5px 9px;
   }
   .pv-pos {
-    font-size: 10px; font-weight: 800; color: var(--ink-mute);
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--ink-mute);
     min-width: 22px;
   }
-  .pv-name { font-size: 13px; color: var(--ink); flex: 1; }
-  .pv-grade { font-size: 10.5px; color: var(--ink-mute); }
+  .pv-name {
+    font-size: 13px;
+    color: var(--ink);
+    flex: 1;
+  }
+  .pv-grade {
+    font-size: 10.5px;
+    color: var(--ink-mute);
+  }
   .pv-ovr {
-    font-size: 13px; color: var(--ok);
-    font-variant-numeric: tabular-nums; min-width: 22px; text-align: right;
+    font-size: 13px;
+    color: var(--ok);
+    font-variant-numeric: tabular-nums;
+    min-width: 22px;
+    text-align: right;
   }
 
-  .roster-note { margin: 0; font-size: 11px; color: var(--ink-mute); }
+  .roster-note {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
 
   /* ── Step 3 전용 레이아웃 ── */
   .step3-layout {
@@ -1556,8 +1871,14 @@
     gap: 10px;
   }
 
-  .step3-top h2  { margin: 0 0 2px; font-size: 24px; color: var(--ink); }
-  .step3-top .sub { margin: 0; }
+  .step3-top h2 {
+    margin: 0 0 2px;
+    font-size: 24px;
+    color: var(--ink);
+  }
+  .step3-top .sub {
+    margin: 0;
+  }
 
   /* ── 프리셋 그리드 ── */
   .preset-grid {
@@ -1656,10 +1977,6 @@
 
   /* ── 요약 카드 ── */
 
-
-
-
-
   /* ── 하단 네비 ── */
   .nav {
     display: flex;
@@ -1716,16 +2033,22 @@
     background: var(--ok);
   }
 
-
-
   /* ══ 4단계 확인 — 선수 카드 ══ */
-  .step4-layout { display: flex; flex-direction: column; gap: 18px; align-items: center; }
-  .step4-top { text-align: center; }
+  .step4-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+  }
+  .step4-top {
+    text-align: center;
+  }
 
   /* 팀 색은 카드 안에서만 산다 — 여기 토큰이 전역 --t-*를 덮지 않는다.
      아직 소속이 확정 전이라 전역을 바꾸면 이전 단계로 돌아갔을 때 어긋난다 */
   .pcard {
-    width: 560px; max-width: 100%;
+    width: 560px;
+    max-width: 100%;
     background: #fff;
     border-radius: 4px;
     overflow: hidden;
@@ -1735,54 +2058,130 @@
   .pcard-head {
     background: var(--c-dark);
     padding: 16px 20px;
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
   }
-  .pc-team { display: block; font-size: 11px; letter-spacing: 0.14em; color: var(--c-gold); font-weight: 700; }
+  .pc-team {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--c-gold);
+    font-weight: 700;
+  }
   .pc-name {
-    display: block; margin: 5px 0 4px;
-    font-size: 27px; font-weight: 800; font-style: italic;
-    letter-spacing: -0.03em; color: var(--c-ink); line-height: 1.1;   /* 팀 색 위 — 밝기로 고른다 */
+    display: block;
+    margin: 5px 0 4px;
+    font-size: 27px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -0.03em;
+    color: var(--c-ink);
+    line-height: 1.1; /* 팀 색 위 — 밝기로 고른다 */
   }
   /* 🔴 **흰색이 박혀 있었다.** 바탕이 팀 색(`--c-dark`)이라 밝은 팀에서 묻힌다.
      `--c-ink`는 `inkFor`가 바탕 밝기를 보고 고른 값이다(흰색 또는 검정).
      ⚠ 투명도로 흐리게 만든다 — 색 자체를 바꾸면 대비 계산이 무너진다. */
-  .pc-meta { font-size: 11.5px; color: var(--c-ink); opacity: 0.78; }
-  .pc-preset { flex: none; }
+  .pc-meta {
+    font-size: 11.5px;
+    color: var(--c-ink);
+    opacity: 0.78;
+  }
+  .pc-preset {
+    flex: none;
+  }
   .pc-preset-label {
-    display: inline-block; background: var(--c-acc); color: var(--c-ink-acc);
-    font-size: 11.5px; font-weight: 750; padding: 5px 11px;
+    display: inline-block;
+    background: var(--c-acc);
+    color: var(--c-ink-acc);
+    font-size: 11.5px;
+    font-weight: 750;
+    padding: 5px 11px;
   }
 
   .pcard-body {
-    display: grid; grid-template-columns: 1fr 170px; gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 170px;
+    gap: 20px;
     padding: 18px 20px;
-    background-image: repeating-linear-gradient(90deg, transparent 0 11px, var(--c-stripe) 11px 13px);
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent 0 11px,
+      var(--c-stripe) 11px 13px
+    );
   }
 
-  .pc-stats { display: flex; flex-direction: column; gap: 7px; }
-  .pc-stat { display: grid; grid-template-columns: 54px 1fr 26px; gap: 9px; align-items: center; }
-  .pc-stat-k { font-size: 11.5px; color: var(--ink-mute); }
+  .pc-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .pc-stat {
+    display: grid;
+    grid-template-columns: 54px 1fr 26px;
+    gap: 9px;
+    align-items: center;
+  }
+  .pc-stat-k {
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
   /* 🔴 **`--panel-sunk`를 글자색으로 쓰고 있었다** (2026-08-26).
      그건 표 머리 **배경색**(#EEF2F8)이라 흰 카드 위에서 **대비 1.1:1** —
      숫자가 사실상 안 보였다. 능력치는 이 화면에서 가장 중요한 정보다. */
-  .pc-stat-v { font-size: 12px; font-weight: 750; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
-  .pc-bar { display: block; height: 6px; background: var(--ink); }
-  .pc-bar i { display: block; height: 100%; background: var(--c-dark); }
-
-  .pc-side { border-left: 1px solid var(--ink); padding-left: 16px; }
-  .pc-side-h {
-    margin: 0 0 6px; font-size: 9.5px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--ink-mute); font-weight: 700;
+  .pc-stat-v {
+    font-size: 12px;
+    font-weight: 750;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
   }
-  .pc-side-h:not(:first-child) { margin-top: 14px; }
+  .pc-bar {
+    display: block;
+    height: 6px;
+    background: var(--ink);
+  }
+  .pc-bar i {
+    display: block;
+    height: 100%;
+    background: var(--c-dark);
+  }
+
+  .pc-side {
+    border-left: 1px solid var(--ink);
+    padding-left: 16px;
+  }
+  .pc-side-h {
+    margin: 0 0 6px;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 700;
+  }
+  .pc-side-h:not(:first-child) {
+    margin-top: 14px;
+  }
   /* 🔴 예전엔 `--panel-sunk`(#EEF2F8 · 패널 배경색)를 글자색에 썼다 —
      흰 패널 위에서 안 보였다. 배경 토큰을 글자색에 쓰지 않는다. */
-  .pc-side-v { margin: 0; font-size: 12px; color: var(--ink); }
-  .pc-pitches { display: flex; flex-wrap: wrap; gap: 4px; }
-  .pc-pitch {
-    font-size: 10.5px; padding: 3px 7px;
-    border: 1px solid var(--c-dark); color: var(--c-dark);
+  .pc-side-v {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink);
   }
-  .pc-pitch b { font-weight: 800; }
-
+  .pc-pitches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .pc-pitch {
+    font-size: 10.5px;
+    padding: 3px 7px;
+    border: 1px solid var(--c-dark);
+    color: var(--c-dark);
+  }
+  .pc-pitch b {
+    font-weight: 800;
+  }
 </style>

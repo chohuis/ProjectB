@@ -2,7 +2,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  universityGradeOf, universityWeekOnEnroll, UNIVERSITY_FINAL_GRADE,
+  universityGradeOf,
+  universityWeekOnEnroll,
+  UNIVERSITY_FINAL_GRADE,
 } from "../careerTransition";
 import { WEEKS_PER_SEASON, CAREER_RESULT_WEEK, UNIV_CAREER_HUB_WEEK } from "../seasonWeeks";
 
@@ -35,13 +37,13 @@ import { WEEKS_PER_SEASON, CAREER_RESULT_WEEK, UNIV_CAREER_HUB_WEEK } from "../s
 /** 진학 주차 `e`에서 출발해 `weeks`주 뒤의 `universityWeek` */
 function uwAfter(enrollWeekInYear: number, weeks: number): number {
   let uw = universityWeekOnEnroll(enrollWeekInYear);
-  for (let i = 0; i < weeks; i++) uw += 1;   // advanceWeek이 매주 +1 한다
+  for (let i = 0; i < weeks; i++) uw += 1; // advanceWeek이 매주 +1 한다
   return uw;
 }
 
 /** 진학한 시즌의 `e`주차에서 그 뒤 `n`번째 시즌 `w`주차까지의 주 수 */
 const weeksTo = (e: number, n: number, w: number) =>
-  (WEEKS_PER_SEASON - e) + (n - 1) * WEEKS_PER_SEASON + w;
+  WEEKS_PER_SEASON - e + (n - 1) * WEEKS_PER_SEASON + w;
 
 describe("축 — 진학 주차가 어디든 다음 시즌 W1이 1학년 1주차다", () => {
   // 진로 결과는 W32이고 대학 진로허브는 W29다. 캘린더가 바뀌어도 버티도록
@@ -79,8 +81,7 @@ describe("축 — 진학 주차가 어디든 다음 시즌 W1이 1학년 1주차
 
   it("4학년까지 간다 — 4년째가 마지막이다", () => {
     const e = CAREER_RESULT_WEEK;
-    expect(universityGradeOf(undefined, uwAfter(e, weeksTo(e, 4, 1))))
-      .toBe(UNIVERSITY_FINAL_GRADE);
+    expect(universityGradeOf(undefined, uwAfter(e, weeksTo(e, 4, 1)))).toBe(UNIVERSITY_FINAL_GRADE);
   });
 });
 
@@ -138,11 +139,15 @@ describe("데이터 — 대학 이벤트의 주차 × 창 조합이 실제로 �
     const e = CAREER_RESULT_WEEK;
     const grade = universityGradeOf(undefined, p.gte ?? 1);
     const uw = uwAfter(e, weeksTo(e, grade, p.week));
-    expect(uw, `${_id}: ${grade}학년 W${p.week}에 uw ${uw} — 창 ${p.gte}~${p.lte ?? "∞"} 밖이다`)
-      .toBeGreaterThanOrEqual(p.gte ?? Number.NEGATIVE_INFINITY);
+    expect(
+      uw,
+      `${_id}: ${grade}학년 W${p.week}에 uw ${uw} — 창 ${p.gte}~${p.lte ?? "∞"} 밖이다`,
+    ).toBeGreaterThanOrEqual(p.gte ?? Number.NEGATIVE_INFINITY);
     if (p.lte != null) {
-      expect(uw, `${_id}: ${grade}학년 W${p.week}에 uw ${uw} — 창 ${p.gte}~${p.lte} 밖이다`)
-        .toBeLessThanOrEqual(p.lte);
+      expect(
+        uw,
+        `${_id}: ${grade}학년 W${p.week}에 uw ${uw} — 창 ${p.gte}~${p.lte} 밖이다`,
+      ).toBeLessThanOrEqual(p.lte);
     }
   });
 
@@ -151,9 +156,14 @@ describe("데이터 — 대학 이벤트의 주차 × 창 조합이 실제로 �
    * 데려간다). 그 뒤 주차를 거는 4학년 이벤트는 축과 무관하게 못 뜬다.
    */
   it("4학년 이벤트가 시즌이 끝난 뒤 주차를 걸지 않는다", () => {
-    const late = pinned.filter((p) =>
-      universityGradeOf(undefined, p.gte ?? 1) === UNIVERSITY_FINAL_GRADE
-      && p.week > CAREER_RESULT_WEEK);
-    expect(late.map((p) => `${p.id}(W${p.week})`), "4학년은 W32에 끝난다").toEqual([]);
+    const late = pinned.filter(
+      (p) =>
+        universityGradeOf(undefined, p.gte ?? 1) === UNIVERSITY_FINAL_GRADE &&
+        p.week > CAREER_RESULT_WEEK,
+    );
+    expect(
+      late.map((p) => `${p.id}(W${p.week})`),
+      "4학년은 W32에 끝난다",
+    ).toEqual([]);
   });
 });

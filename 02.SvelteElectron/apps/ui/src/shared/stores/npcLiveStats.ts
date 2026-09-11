@@ -26,10 +26,7 @@ export function liveOvrOf(
   live: Record<string, NpcLiveStat>,
 ): number {
   const l = live[n.npcId];
-  return Math.max(
-    l?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
-    l?.batting?.ovr  ?? n.batting?.ovr  ?? 0,
-  );
+  return Math.max(l?.pitching?.ovr ?? n.pitching?.ovr ?? 0, l?.batting?.ovr ?? n.batting?.ovr ?? 0);
 }
 
 /** 투수 OVR만 — 또래 비교처럼 포지션이 이미 걸러진 자리에서 쓴다 */

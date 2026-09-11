@@ -52,6 +52,6 @@ describe("removeTag", () => {
 
   it("addTag는 그대로 동작한다 — 기존 경로를 안 깼다", () => {
     expect(applyTags(["가"], ["나"])).toEqual(["가", "나"]);
-    expect(applyTags(["가"], ["가"])).toEqual(["가"]);   // 중복 무시
+    expect(applyTags(["가"], ["가"])).toEqual(["가"]); // 중복 무시
   });
 });

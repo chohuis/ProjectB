@@ -30,14 +30,21 @@ let _defs: readonly TraitDef[] = [];
  */
 export function primeProtagonistTraits(raw: unknown): void {
   const list = (raw as { traits?: unknown })?.traits;
-  if (!Array.isArray(list)) { _defs = []; return; }
+  if (!Array.isArray(list)) {
+    _defs = [];
+    return;
+  }
   _defs = list
-    .filter((t): t is TraitDef =>
-      !!t && typeof t.id === "string" && !!t.mods && typeof t.mods === "object")
+    .filter(
+      (t): t is TraitDef =>
+        !!t && typeof t.id === "string" && !!t.mods && typeof t.mods === "object",
+    )
     .map((t) => ({ id: t.id, name: String(t.name ?? t.id), desc: t.desc, mods: t.mods }));
 }
 
-export function traitDefs(): readonly TraitDef[] { return _defs; }
+export function traitDefs(): readonly TraitDef[] {
+  return _defs;
+}
 
 export function traitDefOf(id: string): TraitDef | undefined {
   return _defs.find((t) => t.id === id);

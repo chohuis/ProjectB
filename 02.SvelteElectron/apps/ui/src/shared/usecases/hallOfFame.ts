@@ -27,8 +27,8 @@ export interface HofRules {
 interface AwardLabels {
   mvp: string;
   rookie: string;
-  golden: string;      // 접두사 ("골든글러브 (포수) (.312)")
-  titles: string[];    // 부문 label 들 ("다승왕" 등)
+  golden: string; // 접두사 ("골든글러브 (포수) (.312)")
+  titles: string[]; // 부문 label 들 ("다승왕" 등)
   allstar: string;
 }
 
@@ -91,7 +91,9 @@ export interface HofResult {
  */
 export function evaluateHof(
   player: {
-    npcId: string; name: string; jerseyNumber?: number;
+    npcId: string;
+    name: string;
+    jerseyNumber?: number;
     careerHistory?: { teamId?: string; highlights?: string[] }[];
   },
   r: HofRules,
@@ -129,8 +131,7 @@ export function evaluateHof(
  *   매년 같은 사람을 세면 결번이 무한히 쌓인다.
  */
 export async function inductHallOfFame(seasonYear: number): Promise<string[]> {
-  const rulesFile = await loadRosterRules() as unknown as
-    { hallOfFameRules?: HofRules };
+  const rulesFile = (await loadRosterRules()) as unknown as { hallOfFameRules?: HofRules };
   const r = rulesFile.hallOfFameRules;
   if (!r) return [];
   const L = awardLabelsFrom(rulesFile);
@@ -138,7 +139,8 @@ export async function inductHallOfFame(seasonYear: number): Promise<string[]> {
   const g = get(gameStore);
   const already = new Set(Object.keys(g.hallOfFame ?? {}));
   const logs: string[] = [];
-  const inducted: Record<string, { year: number; score: number; teams: string[]; num: number }> = {};
+  const inducted: Record<string, { year: number; score: number; teams: string[]; num: number }> =
+    {};
   const retired: Record<string, number[]> = {};
 
   for (const n of g.npcs ?? []) {
@@ -152,7 +154,8 @@ export async function inductHallOfFame(seasonYear: number): Promise<string[]> {
     const pro = r.leagues ?? [];
     if (pro.length > 0) {
       const everPro = (n.careerHistory ?? []).some((e) =>
-        pro.includes(String((e as { leagueId?: string }).leagueId ?? "")));
+        pro.includes(String((e as { leagueId?: string }).leagueId ?? "")),
+      );
       if (!everPro) continue;
     }
     // 은퇴 연도 — `inductDelayYears` 가 0이면 그 해 바로 본다
@@ -163,16 +166,21 @@ export async function inductHallOfFame(seasonYear: number): Promise<string[]> {
     if (!res) continue;
 
     inducted[res.playerId] = {
-      year: seasonYear, score: res.score,
-      teams: res.retiredNumberTeams, num: res.jerseyNumber,
+      year: seasonYear,
+      score: res.score,
+      teams: res.retiredNumberTeams,
+      num: res.jerseyNumber,
     };
     for (const tid of res.retiredNumberTeams) {
       if (res.jerseyNumber <= 0) continue;
       (retired[tid] ??= []).push(res.jerseyNumber);
     }
-    logs.push(`[명예의 전당] ${res.name} 헌액 (${res.score}점)`
-      + (res.retiredNumberTeams.length
-        ? ` · ${res.jerseyNumber}번 영구결번 ${res.retiredNumberTeams.length}구단` : ""));
+    logs.push(
+      `[명예의 전당] ${res.name} 헌액 (${res.score}점)` +
+        (res.retiredNumberTeams.length
+          ? ` · ${res.jerseyNumber}번 영구결번 ${res.retiredNumberTeams.length}구단`
+          : ""),
+    );
   }
 
   if (Object.keys(inducted).length > 0) gameStore.addHallOfFame(inducted, retired);

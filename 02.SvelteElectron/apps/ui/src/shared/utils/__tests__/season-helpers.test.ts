@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { updateStreak, updateLast10, updateStandings, accumulateStats, migrateLeagueState } from "../season-helpers";
+import {
+  updateStreak,
+  updateLast10,
+  updateStandings,
+  accumulateStats,
+  migrateLeagueState,
+} from "../season-helpers";
 import type { Standing, MatchResult } from "../../types/season";
 
 // ── updateStreak ──────────────────────────────────────────────
@@ -66,7 +72,14 @@ describe("accumulateStats", () => {
     const after2 = accumulateStats(after1, [
       { role: "pitcher", playerId: "P1", ip: 9, er: 3, h: 7, k: 9, bb: 2, decision: "L" },
     ]);
-    const s = after2["P1"] as { type: string; g: number; w: number; l: number; ip: number; era: number };
+    const s = after2["P1"] as {
+      type: string;
+      g: number;
+      w: number;
+      l: number;
+      ip: number;
+      era: number;
+    };
     expect(s.g).toBe(2);
     expect(s.w).toBe(1);
     expect(s.l).toBe(1);
@@ -109,7 +122,7 @@ describe("accumulateStats", () => {
     for (const [k, v] of Object.entries(s)) {
       if (typeof v === "number") expect(Number.isFinite(v), `${k} = ${v}`).toBe(true);
     }
-    expect(s.g).toBe(1);   // 타자 누계를 얹지 않고 새로 시작한다
+    expect(s.g).toBe(1); // 타자 누계를 얹지 않고 새로 시작한다
     expect(s.gs).toBe(1);
     expect(s.w).toBe(1);
     // JSON 을 거쳐도 null 이 안 생긴다 — 세이브에 들어가는 모양이 이것이다
@@ -149,21 +162,36 @@ describe("accumulateStats", () => {
 // ── updateStandings ───────────────────────────────────────────
 
 function makeStanding(teamId: string): Standing {
-  return { teamId, wins: 0, losses: 0, draws: 0, winPct: 0, runsFor: 0, runsAgainst: 0, streak: "", last10: "" };
+  return {
+    teamId,
+    wins: 0,
+    losses: 0,
+    draws: 0,
+    winPct: 0,
+    runsFor: 0,
+    runsAgainst: 0,
+    streak: "",
+    last10: "",
+  };
 }
 
-function makeResult(winnerId: string, loserId: string | null, home: number, away: number): MatchResult {
+function makeResult(
+  winnerId: string,
+  loserId: string | null,
+  home: number,
+  away: number,
+): MatchResult {
   return { homeScore: home, awayScore: away, winnerId, loserId, playerLines: [], events: [] };
 }
 
 describe("updateStandings", () => {
   it("홈팀 승리 — 승/득실 업데이트", () => {
     const standings = [makeStanding("HOME"), makeStanding("AWAY")];
-    const result    = makeResult("HOME", "AWAY", 5, 2);
-    const updated   = updateStandings(standings, result, "HOME", "AWAY");
+    const result = makeResult("HOME", "AWAY", 5, 2);
+    const updated = updateStandings(standings, result, "HOME", "AWAY");
 
-    const home = updated.find(s => s.teamId === "HOME")!;
-    const away = updated.find(s => s.teamId === "AWAY")!;
+    const home = updated.find((s) => s.teamId === "HOME")!;
+    const away = updated.find((s) => s.teamId === "AWAY")!;
 
     expect(home.wins).toBe(1);
     expect(home.losses).toBe(0);
@@ -180,11 +208,11 @@ describe("updateStandings", () => {
 
   it("무승부 — 홈·어웨이 양팀 모두 draws 업데이트", () => {
     const standings = [makeStanding("A"), makeStanding("B")];
-    const result    = makeResult("A", null, 3, 3);
-    const updated   = updateStandings(standings, result, "A", "B");
+    const result = makeResult("A", null, 3, 3);
+    const updated = updateStandings(standings, result, "A", "B");
 
-    const a = updated.find(s => s.teamId === "A")!;
-    const b = updated.find(s => s.teamId === "B")!;
+    const a = updated.find((s) => s.teamId === "A")!;
+    const b = updated.find((s) => s.teamId === "B")!;
 
     expect(a.draws).toBe(1);
     expect(a.wins).toBe(0);
@@ -196,9 +224,9 @@ describe("updateStandings", () => {
 
   it("관계없는 팀은 변경 없음", () => {
     const standings = [makeStanding("HOME"), makeStanding("AWAY"), makeStanding("OTHER")];
-    const result    = makeResult("HOME", "AWAY", 5, 2);
-    const updated   = updateStandings(standings, result, "HOME", "AWAY");
-    const other     = updated.find(s => s.teamId === "OTHER")!;
+    const result = makeResult("HOME", "AWAY", 5, 2);
+    const updated = updateStandings(standings, result, "HOME", "AWAY");
+    const other = updated.find((s) => s.teamId === "OTHER")!;
 
     expect(other.wins).toBe(0);
     expect(other.losses).toBe(0);
@@ -218,7 +246,19 @@ describe("migrateLeagueState", () => {
   });
 
   it("부분 입력 → 나머지 기본값으로 채움", () => {
-    const standings = [{ teamId: "A", wins: 5, losses: 2, draws: 0, winPct: 0.714, runsFor: 30, runsAgainst: 20, streak: "W3", last10: "WWWWWLL" }];
+    const standings = [
+      {
+        teamId: "A",
+        wins: 5,
+        losses: 2,
+        draws: 0,
+        winPct: 0.714,
+        runsFor: 30,
+        runsAgainst: 20,
+        streak: "W3",
+        last10: "WWWWWLL",
+      },
+    ];
     const result = migrateLeagueState({ standings });
     expect(result.standings).toBe(standings);
     expect(result.stats).toEqual({});
@@ -228,7 +268,24 @@ describe("migrateLeagueState", () => {
   it("완전한 입력 → 그대로 반환", () => {
     const full = {
       standings: [],
-      stats: { P1: { type: "pitcher" as const, g: 10, gs: 8, w: 5, l: 3, sv: 0, hd: 0, ip: 60, er: 20, h: 55, k: 70, bb: 15, era: 3.0, whip: 1.17 } },
+      stats: {
+        P1: {
+          type: "pitcher" as const,
+          g: 10,
+          gs: 8,
+          w: 5,
+          l: 3,
+          sv: 0,
+          hd: 0,
+          ip: 60,
+          er: 20,
+          h: 55,
+          k: 70,
+          bb: 15,
+          era: 3.0,
+          whip: 1.17,
+        },
+      },
       playerConditions: { P1: { fatigue: 40, stamina: 80, lastPitchedWeek: 0, pitchOutsLast: 0 } },
       teamRotationIndex: { TEAM_A: 2 },
     };

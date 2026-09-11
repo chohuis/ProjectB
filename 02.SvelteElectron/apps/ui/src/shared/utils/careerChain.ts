@@ -2,11 +2,11 @@ import type { CareerStage } from "../types/save";
 
 export type CareerStep =
   | { type: "initial" }
-  | { type: "draftResult";  success: boolean }
-  | { type: "univResult";   success: boolean; source: "direct" | "afterDraft" }
+  | { type: "draftResult"; success: boolean }
+  | { type: "univResult"; success: boolean; source: "direct" | "afterDraft" }
   | { type: "univFailRoute" }
-  | { type: "indieResult";  success: boolean }
-  | { type: "resolved";     stage: CareerStage };
+  | { type: "indieResult"; success: boolean }
+  | { type: "resolved"; stage: CareerStage };
 
 export interface CareerOption {
   id: string;
@@ -32,10 +32,26 @@ export function getStepView(step: CareerStep): StepView {
         body: "고등학교 3학년을 마쳤습니다. 이제 앞으로의 진로를 결정해야 합니다.\n어떤 길을 선택하시겠습니까?",
         isResultScreen: false,
         options: [
-          { id: "draft",      label: "드래프트 참가",  desc: "프로 구단의 지명을 노립니다. OVR이 높을수록 성공 확률이 높습니다." },
-          { id: "university", label: "대학 진학",      desc: "대학 야구부에 진학합니다. 성적이 좋을수록 입학 확률이 높습니다." },
-          { id: "indie",      label: "독립리그 지원",  desc: "독립리그에 입단해 실력을 키웁니다. 비교적 낮은 문턱으로 도전할 수 있습니다." },
-          { id: "military",   label: "군입대",         desc: "군 복무를 선택합니다. 약 18개월 복무 후 복귀할 수 있습니다." },
+          {
+            id: "draft",
+            label: "드래프트 참가",
+            desc: "프로 구단의 지명을 노립니다. OVR이 높을수록 성공 확률이 높습니다.",
+          },
+          {
+            id: "university",
+            label: "대학 진학",
+            desc: "대학 야구부에 진학합니다. 성적이 좋을수록 입학 확률이 높습니다.",
+          },
+          {
+            id: "indie",
+            label: "독립리그 지원",
+            desc: "독립리그에 입단해 실력을 키웁니다. 비교적 낮은 문턱으로 도전할 수 있습니다.",
+          },
+          {
+            id: "military",
+            label: "군입대",
+            desc: "군 복무를 선택합니다. 약 18개월 복무 후 복귀할 수 있습니다.",
+          },
         ],
       };
     case "draftResult":
@@ -58,12 +74,17 @@ export function getStepView(step: CareerStep): StepView {
             : "아쉽게도 대학 입학이 어렵게 되었습니다.\n다음 진로를 선택해주세요.",
         isResultScreen: step.success || step.source === "afterDraft",
         resultSuccess: step.success,
-        options: step.success || step.source === "afterDraft"
-          ? [{ id: "ok", label: "확인", desc: "" }]
-          : [
-              { id: "indie",    label: "독립리그 지원", desc: "독립리그에서 새로운 기회를 찾습니다." },
-              { id: "military", label: "군입대",        desc: "군 복무를 선택합니다." },
-            ],
+        options:
+          step.success || step.source === "afterDraft"
+            ? [{ id: "ok", label: "확인", desc: "" }]
+            : [
+                {
+                  id: "indie",
+                  label: "독립리그 지원",
+                  desc: "독립리그에서 새로운 기회를 찾습니다.",
+                },
+                { id: "military", label: "군입대", desc: "군 복무를 선택합니다." },
+              ],
       };
     case "univFailRoute":
       return {
@@ -71,8 +92,8 @@ export function getStepView(step: CareerStep): StepView {
         body: "대학 진학이 불발되었습니다. 다음 중 선택해주세요.",
         isResultScreen: false,
         options: [
-          { id: "indie",    label: "독립리그 지원", desc: "독립리그에서 새로운 기회를 찾습니다." },
-          { id: "military", label: "군입대",        desc: "군 복무를 선택합니다." },
+          { id: "indie", label: "독립리그 지원", desc: "독립리그에서 새로운 기회를 찾습니다." },
+          { id: "military", label: "군입대", desc: "군 복무를 선택합니다." },
         ],
       };
     case "indieResult":
@@ -98,11 +119,16 @@ export function getStepView(step: CareerStep): StepView {
 
 function stageLabel(stage: CareerStage): string {
   switch (stage) {
-    case "pro":         return "프로 선수의 길이 시작됩니다. 드래프트 지명을 받고 프로 구단에 입단했습니다.";
-    case "university":  return "대학 야구부에서 새로운 도전이 시작됩니다.";
-    case "independent": return "독립리그에서 실력을 쌓으며 더 큰 무대를 꿈꿉니다.";
-    case "military":    return "군 복무를 시작합니다. 복무 후 새로운 출발을 준비하세요.";
-    default:            return "";
+    case "pro":
+      return "프로 선수의 길이 시작됩니다. 드래프트 지명을 받고 프로 구단에 입단했습니다.";
+    case "university":
+      return "대학 야구부에서 새로운 도전이 시작됩니다.";
+    case "independent":
+      return "독립리그에서 실력을 쌓으며 더 큰 무대를 꿈꿉니다.";
+    case "military":
+      return "군 복무를 시작합니다. 복무 후 새로운 출발을 준비하세요.";
+    default:
+      return "";
   }
 }
 
@@ -115,8 +141,6 @@ export async function resolveChoice(
   avgGrade: number,
 ): Promise<CareerStep> {
   return JSON.parse(
-    await window.projectB!.careerResolveChoice(
-      JSON.stringify({ step, choiceId, ovr, avgGrade })
-    )
+    await window.projectB!.careerResolveChoice(JSON.stringify({ step, choiceId, ovr, avgGrade })),
   ) as CareerStep;
 }

@@ -64,10 +64,15 @@ describe("화면 배선 — RoleChoicePanel", () => {
 });
 
 describe("기획 문서가 같은 것을 적고 있다", () => {
-  const DOC = readFileSync(resolve(__dirname, "../../../../../../docs/PLAN_ROLE_RECOMMEND.md"), "utf8");
+  const DOC = readFileSync(
+    resolve(__dirname, "../../../../../../docs/PLAN_ROLE_RECOMMEND.md"),
+    "utf8",
+  );
 
   it("§4 가 추천은 바로 확정이라고 적는다", () => {
-    expect(DOC.includes("### 확인 단계 — **추천이 아닌 버튼에만** 뜬다 (사용자 요구 3)")).toBe(true);
+    expect(DOC.includes("### 확인 단계 — **추천이 아닌 버튼에만** 뜬다 (사용자 요구 3)")).toBe(
+      true,
+    );
     expect(DOC.includes("needsRoleConfirm()")).toBe(true);
   });
 

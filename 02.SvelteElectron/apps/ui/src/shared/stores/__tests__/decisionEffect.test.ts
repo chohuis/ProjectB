@@ -17,18 +17,45 @@ import type { DecisionEffect } from "../../types/main";
  * 그래서 `DecisionEffect`의 **동기 필드 전부**가 실제로 주인공에 닿는지를 본다.
  */
 
-const base = (): ProtagonistSave => ({
-  condition: 50, fatigue: 50, morale: 50, money: 1000,
-  fame: 50, popularity: 50, diligence: 50, tags: ["기존"],
-  battingXP: {}, batting: {
-    ovr: 30, contact: 35, power: 28, eye: 30, discipline: 30, speed: 50,
-    baseInstinct: 50, bunting: 45, platoon: 50, fielding: 45, arm: 55, battingClutch: 30,
-  },
-  pitchingXP: {}, pitching: {
-    ovr: 60, stamina: 60, velocity: 60, command: 60, control: 60,
-    movement: 60, mentality: 60, recovery: 60, clutch: 60, holdRunners: 60,
-  },
-} as unknown as ProtagonistSave);
+const base = (): ProtagonistSave =>
+  ({
+    condition: 50,
+    fatigue: 50,
+    morale: 50,
+    money: 1000,
+    fame: 50,
+    popularity: 50,
+    diligence: 50,
+    tags: ["기존"],
+    battingXP: {},
+    batting: {
+      ovr: 30,
+      contact: 35,
+      power: 28,
+      eye: 30,
+      discipline: 30,
+      speed: 50,
+      baseInstinct: 50,
+      bunting: 45,
+      platoon: 50,
+      fielding: 45,
+      arm: 55,
+      battingClutch: 30,
+    },
+    pitchingXP: {},
+    pitching: {
+      ovr: 60,
+      stamina: 60,
+      velocity: 60,
+      command: 60,
+      control: 60,
+      movement: 60,
+      mentality: 60,
+      recovery: 60,
+      clutch: 60,
+      holdRunners: 60,
+    },
+  }) as unknown as ProtagonistSave;
 
 /**
  * `DecisionEffect`의 동기 필드 → [효과, 그 필드가 닿았는지 보는 함수].
@@ -37,16 +64,16 @@ const base = (): ProtagonistSave => ({
  * 왕복이라 store 동기 패처가 못 하고 `applySideEffects`가 맡는다.
  */
 const SYNC_FIELDS: Array<[string, DecisionEffect, (p: ProtagonistSave) => boolean]> = [
-  ["conditionDelta",  { conditionDelta: 10 },  (p) => p.condition === 60],
-  ["fatigueDelta",    { fatigueDelta: 10 },    (p) => p.fatigue === 60],
-  ["moraleDelta",     { moraleDelta: 10 },     (p) => p.morale === 60],
-  ["moneyDelta",      { moneyDelta: -100 },    (p) => p.money === 900],
-  ["fameDelta",       { fameDelta: 10 },       (p) => p.fame === 60],
+  ["conditionDelta", { conditionDelta: 10 }, (p) => p.condition === 60],
+  ["fatigueDelta", { fatigueDelta: 10 }, (p) => p.fatigue === 60],
+  ["moraleDelta", { moraleDelta: 10 }, (p) => p.morale === 60],
+  ["moneyDelta", { moneyDelta: -100 }, (p) => p.money === 900],
+  ["fameDelta", { fameDelta: 10 }, (p) => p.fame === 60],
   ["popularityDelta", { popularityDelta: 10 }, (p) => p.popularity === 60],
-  ["diligenceDelta",  { diligenceDelta: 10 },  (p) => p.diligence === 60],
-  ["addTag",          { addTag: ["새태그"] },   (p) => p.tags.includes("새태그")],
-  ["xp",              { xp: { command: 5 } },  (p) => p.pitchingXP.command === 5],
-  ["statDelta",       { statDelta: { control: 5 } }, (p) => p.pitching.control === 65],
+  ["diligenceDelta", { diligenceDelta: 10 }, (p) => p.diligence === 60],
+  ["addTag", { addTag: ["새태그"] }, (p) => p.tags.includes("새태그")],
+  ["xp", { xp: { command: 5 } }, (p) => p.pitchingXP.command === 5],
+  ["statDelta", { statDelta: { control: 5 } }, (p) => p.pitching.control === 65],
 ];
 
 describe("applyEffectToProtagonist", () => {
@@ -65,7 +92,9 @@ describe("applyEffectToProtagonist", () => {
 
   it("범위를 넘지 않는다", () => {
     const hi = applyEffectToProtagonist(base(), {
-      conditionDelta: 999, fameDelta: 999, diligenceDelta: 999,
+      conditionDelta: 999,
+      fameDelta: 999,
+      diligenceDelta: 999,
     });
     expect(hi.condition).toBe(100);
     expect(hi.fame).toBe(200);

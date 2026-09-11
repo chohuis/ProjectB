@@ -18,19 +18,19 @@ import { WEEKS_PER_SEASON } from "./seasonWeeks";
  * 이 표가 아니라 저장된 값을 그대로 되돌리는 별도 경로다.
  */
 const ALLOWED: Record<CareerStage, CareerStage[]> = {
-  highschool:  ["university", "independent", "pro", "pro_kbl", "pro_abl", "pro_jbl", "military"],
+  highschool: ["university", "independent", "pro", "pro_kbl", "pro_abl", "pro_jbl", "military"],
   // 대학은 1~4학년 매년 드래프트 신청 가능. 미지명 시 독립으로 갈 수 있다.
   // **대학은 없다** — 두 번 입학 불가.
-  university:  ["independent", "pro", "pro_kbl", "pro_abl", "pro_jbl", "military"],
+  university: ["independent", "pro", "pro_kbl", "pro_abl", "pro_jbl", "military"],
   // 독립은 매년 재지원. 학교로는 돌아가지 않는다.
   independent: ["pro", "pro_kbl", "pro_abl", "pro_jbl", "military"],
   // 프로끼리는 이적·해외 진출로 자유롭게 오간다. 학교로는 못 돌아간다.
-  pro:         ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
-  pro_kbl:     ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
-  pro_abl:     ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
-  pro_jbl:     ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
+  pro: ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
+  pro_kbl: ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
+  pro_abl: ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
+  pro_jbl: ["pro", "pro_kbl", "pro_abl", "pro_jbl", "independent", "military"],
   // 전역은 militaryHiatusStage 복원 전용 — 이 표를 거치지 않는다
-  military:    [],
+  military: [],
 };
 
 /** 같은 단계 유지(재계약·팀 내 이동)는 전이가 아니다 */
@@ -39,7 +39,7 @@ export function isSameStage(from: CareerStage, to: CareerStage): boolean {
 }
 
 export function canTransition(from: CareerStage, to: CareerStage): boolean {
-  if (from === to) return true;                 // 재계약·팀 이동
+  if (from === to) return true; // 재계약·팀 이동
   return (ALLOWED[from] ?? []).includes(to);
 }
 
@@ -122,7 +122,9 @@ export function universityGradeOf(
 ): number {
   if (typeof universityWeek === "number" && universityWeek >= 1) {
     return Math.min(
-      Math.floor((universityWeek - 1) / WEEKS_PER_SEASON) + 1, UNIVERSITY_FINAL_GRADE);
+      Math.floor((universityWeek - 1) / WEEKS_PER_SEASON) + 1,
+      UNIVERSITY_FINAL_GRADE,
+    );
   }
   if (typeof grade === "number" && grade >= 1) return Math.min(grade, UNIVERSITY_FINAL_GRADE);
   return 1;

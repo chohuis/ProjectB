@@ -19,10 +19,7 @@ type XY = [number, number];
 type Tier = { field: Record<string, XY>; defense: Record<string, XY> };
 
 const tiers = anchors.tiers as unknown as Record<string, Tier>;
-const measured = anchors._measured as unknown as Record<
-  string,
-  { bases: Record<string, XY> }
->;
+const measured = anchors._measured as unknown as Record<string, { bases: Record<string, XY> }>;
 
 const TIERS = ["pro", "university", "highschool"] as const;
 
@@ -39,25 +36,34 @@ describe("구장 앵커가 그림과 같은 모양인가", () => {
   // 실제 구장과 3px쯤 어긋난다. 04가 실제 9장을 재서 잡은 값이 정본이다.
   // **오차를 늘려 덮지 않는다** — 늘리면 진짜 어긋남도 같이 통과한다
   it.each(TIERS.filter((t) => t !== "university"))(
-      "%s — 베이스 넷이 그림에서 잰 자리에 있다", (tier) => {
-    const f = tiers[tier].field;
-    const m = measured[tier].bases;
-    const pairs: Array<[string, string]> = [
-      ["HOME", "HOME"], ["B1", "B1"], ["B2", "B2"], ["B3", "B3"],
-    ];
-    for (const [k, mk] of pairs) {
-      const d = Math.hypot(f[k][0] - m[mk][0], f[k][1] - m[mk][1]);
-      expect(d, `${tier}.${k} 앵커 ${f[k]} vs 그림 ${m[mk]} — ${d.toFixed(1)}px 떨어져 있다`)
-        .toBeLessThanOrEqual(BASE_TOLERANCE);
-    }
-  });
+    "%s — 베이스 넷이 그림에서 잰 자리에 있다",
+    (tier) => {
+      const f = tiers[tier].field;
+      const m = measured[tier].bases;
+      const pairs: Array<[string, string]> = [
+        ["HOME", "HOME"],
+        ["B1", "B1"],
+        ["B2", "B2"],
+        ["B3", "B3"],
+      ];
+      for (const [k, mk] of pairs) {
+        const d = Math.hypot(f[k][0] - m[mk][0], f[k][1] - m[mk][1]);
+        expect(
+          d,
+          `${tier}.${k} 앵커 ${f[k]} vs 그림 ${m[mk]} — ${d.toFixed(1)}px 떨어져 있다`,
+        ).toBeLessThanOrEqual(BASE_TOLERANCE);
+      }
+    },
+  );
 
   it.each(TIERS)("%s — 마운드가 홈→2루의 64% 지점이다", (tier) => {
     const f = tiers[tier].field;
     const span = f.HOME[1] - f.B2[1];
     const ratio = (f.HOME[1] - f.P[1]) / span;
-    expect(ratio, `${tier} 마운드가 ${(ratio * 100).toFixed(0)}% 지점이다`)
-      .toBeCloseTo(MOUND_RATIO, 1);
+    expect(ratio, `${tier} 마운드가 ${(ratio * 100).toFixed(0)}% 지점이다`).toBeCloseTo(
+      MOUND_RATIO,
+      1,
+    );
     expect(Math.abs(ratio - MOUND_RATIO)).toBeLessThanOrEqual(MOUND_RATIO_TOLERANCE);
   });
 
@@ -66,10 +72,12 @@ describe("구장 앵커가 그림과 같은 모양인가", () => {
     const d = tiers[tier].defense;
     // 수비수는 베이스보다 안쪽(홈 쪽)에 서지만 멀리 떨어지지 않는다.
     // 옛 값은 42px 위 잔디에 떠 있었다
-    for (const [pos, base] of [["1B", "B1"], ["3B", "B3"]] as const) {
+    for (const [pos, base] of [
+      ["1B", "B1"],
+      ["3B", "B3"],
+    ] as const) {
       const dy = d[pos][1] - f[base][1];
-      expect(dy, `${tier} ${pos}가 ${base}보다 ${-dy}px 위에 있다`)
-        .toBeGreaterThan(-20);
+      expect(dy, `${tier} ${pos}가 ${base}보다 ${-dy}px 위에 있다`).toBeGreaterThan(-20);
       expect(dy).toBeLessThan(30);
     }
   });

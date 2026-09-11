@@ -25,8 +25,16 @@ const T1 = "TEAM_KBL_BUSAN_WAVES_1";
 const T2 = "TEAM_KBL_BUSAN_WAVES_2";
 
 const entry = (id: string, leagueId: string, home: string): ScheduleEntry =>
-  ({ id, leagueId, week: 3, gameDate: "2029-05-01", homeTeamId: home, awayTeamId: "X",
-     isProtagonistGame: false, phase: "season" } as unknown as ScheduleEntry);
+  ({
+    id,
+    leagueId,
+    week: 3,
+    gameDate: "2029-05-01",
+    homeTeamId: home,
+    awayTeamId: "X",
+    isProtagonistGame: false,
+    phase: "season",
+  }) as unknown as ScheduleEntry;
 
 beforeEach(() => {
   // 팀 → 리그 표. 이게 없으면 `leagueOfTeam` 이 접두사 폴백으로 떨어진다
@@ -64,7 +72,7 @@ describe("강등 통지 — 고르면 세계가 움직인다", () => {
 
   it("🔴 갈래가 통지가 아니면 **안 움직인다** — 주사위가 부른 것은 상태를 못 바꾼다", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    await applySideEffects({ rosterMove: "demote" });   // 갈래 없음 = 이벤트
+    await applySideEffects({ rosterMove: "demote" }); // 갈래 없음 = 이벤트
 
     expect(get(gameStore).protagonist.teamId).toBe(T1);
     expect(get(seasonStore).leagueId).toBe("LEAGUE_KBL");

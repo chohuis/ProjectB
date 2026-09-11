@@ -12,7 +12,9 @@
     "name": "engine-native",
     "triples": {
       "defaults": false,
-      "additional": ["x86_64-pc-windows-msvc"]
+      "additional": [
+        "x86_64-pc-windows-msvc"
+      ]
     }
   },
   "devDependencies": {

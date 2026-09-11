@@ -93,8 +93,8 @@ export interface GameEvent {
 export interface MatchResult {
   homeScore: number;
   awayScore: number;
-  winnerId: string;   // 승리팀 ID
-  loserId: string | null;  // null = 무승부
+  winnerId: string; // 승리팀 ID
+  loserId: string | null; // null = 무승부
   playerLines: PlayerGameLine[];
   events: GameEvent[];
 }
@@ -104,36 +104,37 @@ export type SeasonPhase = "preseason" | "season" | "postseason" | "offseason";
 
 // ── 시즌 일정 항목 ─────────────────────────────────────────────
 export interface ScheduleEntry {
-  id: string;               // "SCH_W01_G1"
-  week: number;             // 1–N (시즌 주차)
-  gameDate: string;         // "2026-04-15" — 실제 경기 날짜
-  leagueId?: string;        // 소속 리그 (멀티리그용)
+  id: string; // "SCH_W01_G1"
+  week: number; // 1–N (시즌 주차)
+  gameDate: string; // "2026-04-15" — 실제 경기 날짜
+  leagueId?: string; // 소속 리그 (멀티리그용)
   homeTeamId: string;
   awayTeamId: string;
-  isProtagonistGame: boolean;  // 주인공 팀 경기 여부
-  phase: SeasonPhase;       // 해당 경기의 시즌 페이즈
-  result?: MatchResult;     // 경기 완료 후 채워짐
-  isFriendly?: boolean;     // 친선경기 여부 (공식 기록 미집계)
-  isTournament?: boolean;   // 전국대회 — 개인 기록은 집계, 리그 순위는 미반영 (Phase 5-4)
-  friendlyStats?: {         // 친선경기 주인공 개인 성적 (isFriendly=true일 때만)
-    ip:     number;
-    er:     number;
-    k:      number;
-    bb:     number;
-    rating: 1 | 2 | 3 | 4 | 5;  // 코치 평가 별점
+  isProtagonistGame: boolean; // 주인공 팀 경기 여부
+  phase: SeasonPhase; // 해당 경기의 시즌 페이즈
+  result?: MatchResult; // 경기 완료 후 채워짐
+  isFriendly?: boolean; // 친선경기 여부 (공식 기록 미집계)
+  isTournament?: boolean; // 전국대회 — 개인 기록은 집계, 리그 순위는 미반영 (Phase 5-4)
+  friendlyStats?: {
+    // 친선경기 주인공 개인 성적 (isFriendly=true일 때만)
+    ip: number;
+    er: number;
+    k: number;
+    bb: number;
+    rating: 1 | 2 | 3 | 4 | 5; // 코치 평가 별점
   };
 }
 
 // ── 친선경기 성적 로그 (applyFriendlyResult 전달용 — 저장은 ScheduleEntry.friendlyStats로) ──
 export interface FriendlyPerformanceLog {
-  scheduleId:     string;
-  week:           number;
+  scheduleId: string;
+  week: number;
   opponentTeamId: string;
-  ip:             number;
-  er:             number;
-  k:              number;
-  bb:             number;
-  rating:         1 | 2 | 3 | 4 | 5;  // 코치 평가 별점
+  ip: number;
+  er: number;
+  k: number;
+  bb: number;
+  rating: 1 | 2 | 3 | 4 | 5; // 코치 평가 별점
 }
 
 // ── 팀 순위표 항목 ─────────────────────────────────────────────
@@ -142,27 +143,31 @@ export interface Standing {
   wins: number;
   losses: number;
   draws: number;
-  winPct: number;       // wins / (wins + losses), draws 제외
-  runsFor: number;      // 시즌 누적 득점
-  runsAgainst: number;  // 시즌 누적 실점
-  streak: string;       // "W3" | "L2" | "D1"
-  last10: string;       // "7W2L1D" 형태
+  winPct: number; // wins / (wins + losses), draws 제외
+  runsFor: number; // 시즌 누적 득점
+  runsAgainst: number; // 시즌 누적 실점
+  streak: string; // "W3" | "L2" | "D1"
+  last10: string; // "7W2L1D" 형태
 }
 
 // ── 인게임 이벤트 선택지 ──────────────────────────────────────
 export interface EventChoice {
   id: string;
   label: string;
-  effectHint?: string;       // 표시용 효과 설명 (예: "+컨디션 10")
-  effects?: DecisionEffect;  // 실제 적용 효과
+  effectHint?: string; // 표시용 효과 설명 (예: "+컨디션 10")
+  effects?: DecisionEffect; // 실제 적용 효과
 }
 
 // ── 주 진행 정지 조건 ──────────────────────────────────────────
 export type PendingAction =
-  | { type: "game";            scheduleId: string }
-  | { type: "message";         messageId: string }
+  | { type: "game"; scheduleId: string }
+  | { type: "message"; messageId: string }
   | {
-      type: "event"; eventId: string; title: string; description: string; choices?: EventChoice[];
+      type: "event";
+      eventId: string;
+      title: string;
+      description: string;
+      choices?: EventChoice[];
       // ── 등급 표시 (2026-09-08 · PLAN_EVENT_TIERS §9 · C 4-5) ──
       //
       // 🔴 **지금 이 셋을 채워 보내는 자리는 없다**(2026-09-08 실측). 등급 줄기가
@@ -229,9 +234,9 @@ export type PendingAction =
       receivedOvr: number;
       receivedPosition: string;
       receivedSalary: number;
-      tradeReason: string;           // "position_surplus"|"injury_cover"|"seller_mode"|"buyer_mode"|"expiring_contract"|"player_ambition"
+      tradeReason: string; // "position_surplus"|"injury_cover"|"seller_mode"|"buyer_mode"|"expiring_contract"|"player_ambition"
       receivedMedicalConcern: number; // 0~1 (받는 선수 우려도)
-      receivedMedicalNote?: string;  // "현재 부상 중 (회복 4주)" 등 표시용
+      receivedMedicalNote?: string; // "현재 부상 중 (회복 4주)" 등 표시용
     }
   | { type: "sportsUnitApplication" }
   | { type: "militaryEnlistAsk"; reason: "rejected" | "overdue" }
@@ -281,26 +286,37 @@ export type PendingAction =
  * 사라진다 — 정본이 둘이 되는 그 형태다. 컴파일 에러로 잡는다.
  */
 export const PENDING_ACTION_TYPES = [
-  "game", "message", "event",
-  "careerChoiceHub", "careerResults", "careerChoice",
-  "draftObserve", "draftNotification", "salaryNegotiation", "faMarket",
-  "trade", "optionClause",
-  "sportsUnitApplication", "militaryEnlistAsk", "retirementAsk",
-  "injuryTreatment", "conditionWarning",
+  "game",
+  "message",
+  "event",
+  "careerChoiceHub",
+  "careerResults",
+  "careerChoice",
+  "draftObserve",
+  "draftNotification",
+  "salaryNegotiation",
+  "faMarket",
+  "trade",
+  "optionClause",
+  "sportsUnitApplication",
+  "militaryEnlistAsk",
+  "retirementAsk",
+  "injuryTreatment",
+  "conditionWarning",
 ] as const;
 
 /** 타입에 있는데 위 배열에 없으면 여기서 컴파일이 깨진다 */
-type _MissingPendingType = Exclude<PendingAction["type"], typeof PENDING_ACTION_TYPES[number]>;
+type _MissingPendingType = Exclude<PendingAction["type"], (typeof PENDING_ACTION_TYPES)[number]>;
 const _assertNoMissingPendingType: [_MissingPendingType] extends [never] ? true : never = true;
 void _assertNoMissingPendingType;
 
 // ── 주 진행 결과 (advanceWeek 반환값) ──────────────────────────
 export interface WeekAdvanceResult {
   processedWeek: number;
-  logs: string[];                       // 해당 주 발생 로그
-  newMessages: string[];                // 새로 생긴 메시지 ID들
-  matchResults: MatchResult[];          // 시뮬된 경기 결과들
-  stoppedBy: PendingAction | null;      // null = 주 완료, non-null = 중단됨
+  logs: string[]; // 해당 주 발생 로그
+  newMessages: string[]; // 새로 생긴 메시지 ID들
+  matchResults: MatchResult[]; // 시뮬된 경기 결과들
+  stoppedBy: PendingAction | null; // null = 주 완료, non-null = 중단됨
 }
 
 export interface InteractiveMatchContext {
@@ -386,25 +402,25 @@ export interface UnifiedGameOutcome {
 
 // ── 포스트시즌 시리즈 ──────────────────────────────────────────
 export interface PostseasonSeries {
-  id: string;           // "KBL_WC" | "KBL_PREP" | "ABL_EDS" 등
+  id: string; // "KBL_WC" | "KBL_PREP" | "ABL_EDS" 등
   leagueId: string;
-  round: string;        // 표시용: "와일드카드" | "준플레이오프" 등
-  homeTeamId: string;   // "" = 아직 미결정 (이전 시리즈 대기)
+  round: string; // 표시용: "와일드카드" | "준플레이오프" 등
+  homeTeamId: string; // "" = 아직 미결정 (이전 시리즈 대기)
   awayTeamId: string;
   bestOf: 1 | 3 | 5 | 7;
   homeWins: number;
   awayWins: number;
   winner: string | null;
-  homeFrom: string | null;             // 홈팀 공급 시리즈 ID
-  awayFrom: string | null;             // 원정팀 공급 시리즈 ID
-  nextSeriesId: string | null;         // 승자가 진출하는 다음 시리즈 ID
+  homeFrom: string | null; // 홈팀 공급 시리즈 ID
+  awayFrom: string | null; // 원정팀 공급 시리즈 ID
+  nextSeriesId: string | null; // 승자가 진출하는 다음 시리즈 ID
   nextSeriesSlot: "home" | "away" | null;
 }
 
 // ── 선수 경기간 컨디션 ────────────────────────────────────────
 export interface PlayerCondition {
-  fatigue: number;          // 0~100, 100 = 완전 회복
-  lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판) — 구 경로, 호환용
+  fatigue: number; // 0~100, 100 = 완전 회복
+  lastPitchedWeek: number; // 마지막 등판 주차 (0 = 미등판) — 구 경로, 호환용
   /**
    * 마지막 등판 날짜 "YYYY-MM-DD" (Phase 5-8).
    *
@@ -414,18 +430,18 @@ export interface PlayerCondition {
   lastPitchedDate?: string;
   /** 그날 던진 투구 수 — 휴식일 산출의 입력 */
   lastPitchCount?: number;
-  pitchOutsLast: number;    // 직전 경기 던진 아웃 수
-  lastStartGameCount?: number;       // SP: 마지막 선발 시점의 teamRotationIndex
-  lastAppearanceGameCount?: number;  // RP/CP: 마지막 출전 시점의 teamRotationIndex
-  consecutiveAppearances?: number;   // RP/CP: 현재 연속 출전 수 (쉬면 0 리셋)
+  pitchOutsLast: number; // 직전 경기 던진 아웃 수
+  lastStartGameCount?: number; // SP: 마지막 선발 시점의 teamRotationIndex
+  lastAppearanceGameCount?: number; // RP/CP: 마지막 출전 시점의 teamRotationIndex
+  consecutiveAppearances?: number; // RP/CP: 현재 연속 출전 수 (쉬면 0 리셋)
 }
 
 // ── 리그별 순위·스탯 ─────────────────────────────────────────
 export interface LeagueSeasonState {
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;
-  playerConditions: Record<string, PlayerCondition>;  // 투수 피로도·컨디션
-  teamRotationIndex: Record<string, number>;           // teamId → 다음 선발 로테이션 슬롯
+  playerConditions: Record<string, PlayerCondition>; // 투수 피로도·컨디션
+  teamRotationIndex: Record<string, number>; // teamId → 다음 선발 로테이션 슬롯
 }
 
 // ── NPC 라이브 스탯 (월간 성장/하락 반영, npcLiveStats에 저장) ──
@@ -451,18 +467,18 @@ export interface NpcLiveStat {
 
 // ── save_season.json 전체 구조 ─────────────────────────────────
 export interface SaveSeason {
-  version: number;      // 저장 포맷 버전
-  savedAt: string;      // ISO 8601 timestamp
-  leagueId: string;     // 현재 진행 리그 (예: "LEAGUE_HIGHSCHOOL")
-  seasonYear: number;   // 시즌 연도
-  currentWeek: number;  // 현재 주차 (1부터)
-  currentDate: string;  // "2026-04-15" — 현재 게임내 날짜
-  totalWeeks: number;   // 전체 주차 수
-  pendingActions: PendingAction[];        // 미처리 정지 조건 (순서 중요)
+  version: number; // 저장 포맷 버전
+  savedAt: string; // ISO 8601 timestamp
+  leagueId: string; // 현재 진행 리그 (예: "LEAGUE_HIGHSCHOOL")
+  seasonYear: number; // 시즌 연도
+  currentWeek: number; // 현재 주차 (1부터)
+  currentDate: string; // "2026-04-15" — 현재 게임내 날짜
+  totalWeeks: number; // 전체 주차 수
+  pendingActions: PendingAction[]; // 미처리 정지 조건 (순서 중요)
   schedule: ScheduleEntry[];
   standings: Standing[];
-  stats: Record<string, PlayerSeasonStats>;  // playerId → 누적 스탯
-  triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
+  stats: Record<string, PlayerSeasonStats>; // playerId → 누적 스탯
+  triggeredEvents: Record<string, number>; // eventId → 마지막 발생 주차
   /**
    * 문장 뱅크의 직전 선택 (Phase 7-6). `templateId#body → index`.
    * 시즌이 바뀌어도 안 지운다 — 시즌 경계에서 같은 문장이 반복되면 그게 더 티난다
@@ -486,8 +502,8 @@ export interface SaveSeason {
    */
   eventStarve?: Record<string, number>;
   // L1: 멀티리그 지원
-  leagueSchedules: Record<string, ScheduleEntry[]>;      // leagueId → 경기 일정
-  leagueState: Record<string, LeagueSeasonState>;        // leagueId → 순위·스탯
+  leagueSchedules: Record<string, ScheduleEntry[]>; // leagueId → 경기 일정
+  leagueState: Record<string, LeagueSeasonState>; // leagueId → 순위·스탯
   // 포스트시즌 브라켓 (leagueId → 시리즈 목록)
   postseasonBrackets: Record<string, PostseasonSeries[]>;
   // ABL 컨퍼런스 배정 (시즌 시작 시 랜덤)
@@ -614,7 +630,7 @@ export function makeEmptySeason(
 // ── 스탯 계산 헬퍼 ─────────────────────────────────────────────
 export function calcEra(er: number, ip: number): number {
   if (!ip || isNaN(ip)) return 0;
-  return Math.round((er * 9) / ip * 100) / 100;
+  return Math.round(((er * 9) / ip) * 100) / 100;
 }
 
 export function calcWhip(bb: number, h: number, ip: number): number {

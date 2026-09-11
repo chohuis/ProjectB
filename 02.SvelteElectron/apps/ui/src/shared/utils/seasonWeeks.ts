@@ -140,15 +140,15 @@ export function weekInYearOf(weekNum: number): number {
 // ⚠ 값이 개막 주 상수와 어긋나면 `roleAskWeek.test.ts` 가 깨진다. 캘린더를
 // 바꾸면 여기도 같이 바꾼다 — 안 바꾸면 **오류 없이 그 시즌만 안 묻는다.**
 export const ROLE_ASK_WEEK: Record<string, number> = {
-  LEAGUE_HIGHSCHOOL:  1,
-  LEAGUE_UNIVERSITY:  4,
+  LEAGUE_HIGHSCHOOL: 1,
+  LEAGUE_UNIVERSITY: 4,
   LEAGUE_INDEPENDENT: 9,
-  LEAGUE_KBL:         1,
-  LEAGUE_ABL:         1,
-  LEAGUE_JBL:         1,
-  LEAGUE_KBL_FARM:    4,
-  LEAGUE_ABL_FARM:    4,
-  LEAGUE_JBL_FARM:    4,
+  LEAGUE_KBL: 1,
+  LEAGUE_ABL: 1,
+  LEAGUE_JBL: 1,
+  LEAGUE_KBL_FARM: 4,
+  LEAGUE_ABL_FARM: 4,
+  LEAGUE_JBL_FARM: 4,
 };
 
 /** 표에 없는 리그 — 정규 개막(W5) 앞 주 */

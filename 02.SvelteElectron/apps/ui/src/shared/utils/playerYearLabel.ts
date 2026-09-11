@@ -18,13 +18,13 @@ import { universityGradeOf } from "./careerTransition";
 type YearKind = "grade" | "proYears" | "military" | "none";
 
 const KIND: Record<CareerStage, YearKind> = {
-  highschool:  "grade",
-  university:  "grade",
-  pro:         "proYears",
-  pro_kbl:     "proYears",
-  pro_abl:     "proYears",
-  pro_jbl:     "proYears",
-  military:    "military",
+  highschool: "grade",
+  university: "grade",
+  pro: "proYears",
+  pro_kbl: "proYears",
+  pro_abl: "proYears",
+  pro_jbl: "proYears",
+  military: "military",
   independent: "none",
 };
 

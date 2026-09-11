@@ -38,13 +38,29 @@ const native = require_(resolve(ROOT, "packages/engine-native/index.js")) as {
 /** `npc` 테이블 한 행 — 은퇴자 좁은 읽기가 실제로 돌려주는 모양 그대로 */
 function retiredRow(): Record<string, unknown> {
   const all: Record<string, unknown> = {
-    npc_id: "PLY_HS26_HS_AEWOL_005", name: "김민수", name_en: null, is_named: 0,
-    player_type: "pitcher", position: "SP", handedness: "R", jersey_number: 5,
-    age: 20, grade: null, school_id: "", graduation_year: 2027, nationality: "KOR",
-    career_status: "retired", current_league: "LEAGUE_RETIRED", current_team: "",
-    pro_service_years: 0, salary: 0, contract_years: 0,
-    military_status: "미필", military_json: null,
-    development_rate: 61, potential_hidden: 80,
+    npc_id: "PLY_HS26_HS_AEWOL_005",
+    name: "김민수",
+    name_en: null,
+    is_named: 0,
+    player_type: "pitcher",
+    position: "SP",
+    handedness: "R",
+    jersey_number: 5,
+    age: 20,
+    grade: null,
+    school_id: "",
+    graduation_year: 2027,
+    nationality: "KOR",
+    career_status: "retired",
+    current_league: "LEAGUE_RETIRED",
+    current_team: "",
+    pro_service_years: 0,
+    salary: 0,
+    contract_years: 0,
+    military_status: "미필",
+    military_json: null,
+    development_rate: 61,
+    potential_hidden: 80,
   };
   // **SELECT 목록에 있는 칼럼만** 남긴다 — 목록에서 빠지면 여기서도 사라진다
   const row: Record<string, unknown> = {};
@@ -73,7 +89,10 @@ describe("은퇴자 좁은 읽기 ↔ Rust NpcSaveState 계약", () => {
 
   it("`militaryStatus`가 빠진 옛 세이브도 Rust가 받아 준다", () => {
     // 이미 나간 세이브에는 이 값이 없다 — 여기서 죽으면 그 세이브는 못 연다
-    const npc = repoNpcToSaveState(slotdb.mapNpcRow(retiredRow())) as unknown as Record<string, unknown>;
+    const npc = repoNpcToSaveState(slotdb.mapNpcRow(retiredRow())) as unknown as Record<
+      string,
+      unknown
+    >;
     delete npc.militaryStatus;
     delete npc.developmentRate;
     const out = JSON.parse(

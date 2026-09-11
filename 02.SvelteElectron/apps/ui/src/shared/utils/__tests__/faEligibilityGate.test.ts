@@ -22,15 +22,15 @@ import type { ProtagonistSave } from "../../types/save";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
-const MODAL  = read("apps/ui/src/features/contract/ui/FaMarketModal.svelte");
+const MODAL = read("apps/ui/src/features/contract/ui/FaMarketModal.svelte");
 const DECIDE = read("apps/ui/src/shared/usecases/contractDecision.ts");
-const PROBE  = read("scripts/perf/perfEntry.ts");
-const RULES  = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
+const PROBE = read("scripts/perf/perfEntry.ts");
+const RULES = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
   faRules?: { eligibleYears?: Record<string, number> };
 };
 
 const hero = (leagueId: string, years: number): ProtagonistSave =>
-  ({ leagueId, proServiceYears: years } as unknown as ProtagonistSave);
+  ({ leagueId, proServiceYears: years }) as unknown as ProtagonistSave;
 
 describe("FA 자격 문", () => {
   it("연차가 모자라면 FA가 아니다", () => {
@@ -54,12 +54,14 @@ describe("FA 자격 문", () => {
     const ev = [{ year: 2030, eventType: "fa_signed" }];
     expect(canReacquireFa(ev, 2030 + FA_REACQUIRE_YEARS - 1)).toBe(false);
     expect(canReacquireFa(ev, 2030 + FA_REACQUIRE_YEARS)).toBe(true);
-    expect(canReacquireFa([], 2030)).toBe(true);   // 첫 취득
+    expect(canReacquireFa([], 2030)).toBe(true); // 첫 취득
   });
 
   /** 🔴 시장 자체가 자격을 지나야 열린다 */
   it("자격을 지나야 FA 시장이 열린다", () => {
-    expect(DECIDE.includes("isFaEligible(g.protagonist, g.schoolState.attendsUniversity) ? \"faMarket\"")).toBe(true);
+    expect(
+      DECIDE.includes('isFaEligible(g.protagonist, g.schoolState.attendsUniversity) ? "faMarket"'),
+    ).toBe(true);
   });
 
   /** ⚠ 화면도 잠근다 — 시장이 열린 뒤 자격이 사라질 수 있다 */

@@ -40,13 +40,18 @@ describe("① 자해를 안 한다", () => {
   });
 
   it("컨디션이 깎이는 것도 몸값이다", () => {
-    expect(v({ xp: { command: 4 }, conditionDelta: -12 }))
-      .toBeLessThan(v({ xp: { command: 4 }, conditionDelta: 0 }));
+    expect(v({ xp: { command: 4 }, conditionDelta: -12 })).toBeLessThan(
+      v({ xp: { command: 4 }, conditionDelta: 0 }),
+    );
   });
 
   it("🔴 꼬리를 막는다 — 몸값 35짜리는 XP 8 로는 못 산다", () => {
     // 수술을 만든 것은 평균이 아니라 이런 갈래다(피로 +15 · 부상위험 +20)
-    const 꼬리: DecisionEffect = { xp: { command: 8 }, fatigueDelta: 15, injuryRiskMod: { pct: 20, weeks: 4 } };
+    const 꼬리: DecisionEffect = {
+      xp: { command: 8 },
+      fatigueDelta: 15,
+      injuryRiskMod: { pct: 20, weeks: 4 },
+    };
     expect(bodyCost(꼬리)).toBeGreaterThanOrEqual(35);
     expect(v(꼬리)).toBeLessThan(v({ xp: { command: 2 } }));
   });
@@ -54,12 +59,18 @@ describe("① 자해를 안 한다", () => {
 
 describe("② 성향이 안 무너진다 — 여전히 밀어붙인다", () => {
   it("🔴 스탯이 걸리면 몸값 35 도 산다", () => {
-    const 값하는것: DecisionEffect = { statDelta: { command: 1 }, fatigueDelta: 15, injuryRiskMod: { pct: 20, weeks: 4 } };
+    const 값하는것: DecisionEffect = {
+      statDelta: { command: 1 },
+      fatigueDelta: 15,
+      injuryRiskMod: { pct: 20, weeks: 4 },
+    };
     expect(v(값하는것)).toBeGreaterThan(v({ moraleDelta: 3, fatigueDelta: -5 }));
   });
 
   it("구종·잠재력도 몸값을 이긴다 — 이 게임의 축이다", () => {
-    expect(v({ pitchGrant: { id: "X" }, fatigueDelta: 12 })).toBeGreaterThan(v({ fatigueDelta: 0 }));
+    expect(v({ pitchGrant: { id: "X" }, fatigueDelta: 12 })).toBeGreaterThan(
+      v({ fatigueDelta: 0 }),
+    );
     expect(v({ potentialDelta: 1, fatigueDelta: 12 })).toBeGreaterThan(v({ fatigueDelta: 0 }));
   });
 
@@ -67,7 +78,7 @@ describe("② 성향이 안 무너진다 — 여전히 밀어붙인다", () => {
     // 안전형은 몸값만 본다 — 스탯이 걸려도 편한 쪽을 고른다
     const 험하고값진: DecisionEffect = { statDelta: { command: 1 }, fatigueDelta: 12 };
     const 편하고빈: DecisionEffect = { fatigueDelta: -2 };
-    expect(v(험하고값진)).toBeGreaterThan(v(편하고빈));          // 성장형은 값진 쪽
+    expect(v(험하고값진)).toBeGreaterThan(v(편하고빈)); // 성장형은 값진 쪽
     expect(bodyCost(편하고빈)).toBeLessThan(bodyCost(험하고값진)); // 안전형은 편한 쪽
   });
 });

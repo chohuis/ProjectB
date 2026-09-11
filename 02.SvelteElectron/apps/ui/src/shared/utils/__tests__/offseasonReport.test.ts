@@ -1,14 +1,27 @@
 import { describe, it, expect } from "vitest";
 import {
-  buildRows, countByGroup, sortRows, previewLine, relationTag,
-  type OffseasonEvent, type PersonLookup,
+  buildRows,
+  countByGroup,
+  sortRows,
+  previewLine,
+  relationTag,
+  type OffseasonEvent,
+  type PersonLookup,
 } from "../offseasonReport";
 
-const ev = (kind: string, npcId: string, fromTeamId?: string, detail?: string): OffseasonEvent =>
-  ({ kind, npcId, fromTeamId, detail });
+const ev = (kind: string, npcId: string, fromTeamId?: string, detail?: string): OffseasonEvent => ({
+  kind,
+  npcId,
+  fromTeamId,
+  detail,
+});
 
-const who = (npcId: string, name: string, age = 25, position = "SS"): PersonLookup =>
-  ({ npcId, name, age, position });
+const who = (npcId: string, name: string, age = 25, position = "SS"): PersonLookup => ({
+  npcId,
+  name,
+  age,
+  position,
+});
 
 describe("사람 단위 병합", () => {
   it("⚠ 한 사람의 두 사건이 두 줄로 나오지 않는다", () => {
@@ -17,7 +30,7 @@ describe("사람 단위 병합", () => {
     const rows = buildRows({
       events: [
         ev("demote_fielder", "N1", "TEAM_KBL_SEOUL_ROYALS_1"),
-        ev("release_score",  "N1", "TEAM_KBL_SEOUL_ROYALS_2", "65"),
+        ev("release_score", "N1", "TEAM_KBL_SEOUL_ROYALS_2", "65"),
       ],
       people: [who("N1", "류혁식")],
     });
@@ -45,15 +58,12 @@ describe("사람 단위 병합", () => {
       events: [ev("demote_roster", "N1", "T_1"), ev("demote_fielder", "N1", "T_1")],
       people: [who("N1", "가")],
     });
-    expect(rows[0].reason).toBe("2군 (야수 자리)");   // "2군 → 2군"이 아니다
+    expect(rows[0].reason).toBe("2군 (야수 자리)"); // "2군 → 2군"이 아니다
   });
 
   it("팀은 마지막 사건의 소속 — 방출된 자리가 맞다", () => {
     const rows = buildRows({
-      events: [
-        ev("demote_fielder", "N1", "TEAM_A_1"),
-        ev("release_score",  "N1", "TEAM_A_2", "65"),
-      ],
+      events: [ev("demote_fielder", "N1", "TEAM_A_1"), ev("release_score", "N1", "TEAM_A_2", "65")],
       people: [who("N1", "가")],
     });
     expect(rows[0].teamId).toBe("TEAM_A_2");
@@ -115,13 +125,16 @@ describe("내 팀 판정", () => {
 
 describe("집계와 정렬", () => {
   it("헤드라인은 사건이 아니라 사람 수다", () => {
-    const counts = countByGroup(buildRows({
-      events: [
-        ev("demote_fielder", "N1", "T_1"), ev("release_score", "N1", "T_2", "65"),
-        ev("retire_age", "N2", "T_1"),
-      ],
-      people: [who("N1", "가"), who("N2", "나")],
-    }));
+    const counts = countByGroup(
+      buildRows({
+        events: [
+          ev("demote_fielder", "N1", "T_1"),
+          ev("release_score", "N1", "T_2", "65"),
+          ev("retire_age", "N2", "T_1"),
+        ],
+        people: [who("N1", "가"), who("N2", "나")],
+      }),
+    );
     expect(counts).toEqual({ retire: 1, release: 1, move: 0, fa: 0 });
   });
 
@@ -140,10 +153,10 @@ describe("집계와 정렬", () => {
   });
 
   it("preview가 규모를 말한다 — 예전엔 logs[0]이라 'FA 미계약 2명'만 떴다", () => {
-    expect(previewLine({ retire: 852, release: 81, move: 17, fa: 2 }))
-      .toBe("은퇴 852 · 방출 81 · 승격·강등 17 · FA 미계약 2");
-    expect(previewLine({ retire: 0, release: 0, move: 0, fa: 0 }))
-      .toBe("특별한 이동이 없었다");
+    expect(previewLine({ retire: 852, release: 81, move: 17, fa: 2 })).toBe(
+      "은퇴 852 · 방출 81 · 승격·강등 17 · FA 미계약 2",
+    );
+    expect(previewLine({ retire: 0, release: 0, move: 0, fa: 0 })).toBe("특별한 이동이 없었다");
   });
 });
 
@@ -161,8 +174,12 @@ describe("인연 라벨", () => {
 });
 
 describe("FA 계약 — 간 곳이 있는 사건", () => {
-  const evTo = (npcId: string, from: string | undefined, to: string, detail?: string): OffseasonEvent =>
-    ({ kind: "fa_contract", npcId, fromTeamId: from, toTeamId: to, detail });
+  const evTo = (
+    npcId: string,
+    from: string | undefined,
+    to: string,
+    detail?: string,
+  ): OffseasonEvent => ({ kind: "fa_contract", npcId, fromTeamId: from, toTeamId: to, detail });
 
   it("🔴 fa_contract가 알려진 종류다 — 매핑이 없으면 화면이 조용히 걸러낸다", () => {
     // Rust가 사건을 남기기 시작했는데 여기 KIND에 없어서,

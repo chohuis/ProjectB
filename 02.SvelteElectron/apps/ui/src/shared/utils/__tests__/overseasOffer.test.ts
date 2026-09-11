@@ -11,10 +11,10 @@ import { firstTeamIdOf, farmTeamId } from "../ids";
 describe("해외 2군 제안", () => {
   // 실측 분포 그대로 — ★2:2 · ★3:7 · ★4:12 · ★5:7
   const farms = [
-    ...Array.from({ length: 2 },  (_, i) => ({ id: `TEAM_ABL_P2_${i}_2`, parentPower: 2 })),
-    ...Array.from({ length: 7 },  (_, i) => ({ id: `TEAM_ABL_P3_${i}_2`, parentPower: 3 })),
+    ...Array.from({ length: 2 }, (_, i) => ({ id: `TEAM_ABL_P2_${i}_2`, parentPower: 2 })),
+    ...Array.from({ length: 7 }, (_, i) => ({ id: `TEAM_ABL_P3_${i}_2`, parentPower: 3 })),
     ...Array.from({ length: 12 }, (_, i) => ({ id: `TEAM_JBL_P4_${i}_2`, parentPower: 4 })),
-    ...Array.from({ length: 7 },  (_, i) => ({ id: `TEAM_JBL_P5_${i}_2`, parentPower: 5 })),
+    ...Array.from({ length: 7 }, (_, i) => ({ id: `TEAM_JBL_P5_${i}_2`, parentPower: 5 })),
   ];
   // 개인 점수를 넉넉히 줘서 OVR 축만 본다 (문턱 +4 면제 규칙과 무관하게)
   const SCORE = 100;

@@ -17,7 +17,10 @@ const RETIRED = ["1280x800", "1440x900"];
 
 function mainSizes(): string[] {
   const src = readFileSync(resolve(process.cwd(), "apps/desktop/ipc/window.cjs"), "utf8");
-  const block = src.slice(src.indexOf("const SIZES = {"), src.indexOf("};", src.indexOf("const SIZES = {")));
+  const block = src.slice(
+    src.indexOf("const SIZES = {"),
+    src.indexOf("};", src.indexOf("const SIZES = {")),
+  );
   return [...block.matchAll(/"([^"]+)":\s*\{/g)].map((m) => m[1]);
 }
 
@@ -25,7 +28,7 @@ describe("창 크기 목록", () => {
   it("UI가 아는 값은 fullscreen 말고 전부 main도 안다", () => {
     const main = mainSizes();
     for (const s of UI_SIZES) {
-      if (s === "fullscreen") continue;   // 크기가 아니라 모드다
+      if (s === "fullscreen") continue; // 크기가 아니라 모드다
       expect(main).toContain(s);
     }
   });

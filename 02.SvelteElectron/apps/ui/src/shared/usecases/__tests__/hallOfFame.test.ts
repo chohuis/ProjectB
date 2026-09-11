@@ -20,7 +20,9 @@ const R = rulesFile.hallOfFameRules;
 const L = awardLabelsFrom(rulesFile);
 
 const player = (highlights: string[][], teams: string[]) => ({
-  npcId: "P1", name: "테스트", jerseyNumber: 7,
+  npcId: "P1",
+  name: "테스트",
+  jerseyNumber: 7,
   careerHistory: highlights.map((h, i) => ({ teamId: teams[i], highlights: h })),
 });
 
@@ -59,8 +61,7 @@ describe("명예의 전당", () => {
     for (const a of all) {
       for (const b of all) {
         if (a === b) continue;
-        expect(b.startsWith(a), `"${b}" 가 "${a}" 로 시작한다 — 점수가 갈린다`)
-          .toBe(false);
+        expect(b.startsWith(a), `"${b}" 가 "${a}" 로 시작한다 — 점수가 갈린다`).toBe(false);
       }
     }
   });
@@ -95,8 +96,7 @@ describe("명예의 전당", () => {
 
 describe("명예의 전당 배선", () => {
   const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
-  const strip = (s: string) => s
-    .replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  const strip = (s: string) => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 
   const rollover = strip(read("apps/ui/src/shared/usecases/seasonRollover.ts"));
   const store = strip(read("apps/ui/src/shared/stores/game.ts"));
@@ -150,8 +150,7 @@ describe("헌액 대상 리그", () => {
 
   it("경력으로 거른다 — 현재 소속이 아니라", () => {
     // 은퇴하면 소속이 비거나 마지막 팀이 남는다
-    const src = readFileSync(
-      resolve(ROOT, "apps/ui/src/shared/usecases/hallOfFame.ts"), "utf8");
+    const src = readFileSync(resolve(ROOT, "apps/ui/src/shared/usecases/hallOfFame.ts"), "utf8");
     expect(src.includes("careerHistory ?? []).some(")).toBe(true);
     expect(src.includes("if (!everPro) continue;")).toBe(true);
   });

@@ -26,7 +26,13 @@ export async function runDraftBoardBackground(
   await gameStore.save();
 
   // 이미 그 해 드래프트가 끝났으면(중복 호출) null이 온다
-  return { picks: (result?.picks ?? []).map((p) => ({
-    pickNo: p.pick, round: p.round, teamId: p.teamId, candidateId: p.npcId, isUser: false,
-  })) };
+  return {
+    picks: (result?.picks ?? []).map((p) => ({
+      pickNo: p.pick,
+      round: p.round,
+      teamId: p.teamId,
+      candidateId: p.npcId,
+      isUser: false,
+    })),
+  };
 }

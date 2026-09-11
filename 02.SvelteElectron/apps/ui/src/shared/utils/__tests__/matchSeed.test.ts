@@ -23,14 +23,23 @@ const engine = require_(ENGINE) as {
 
 function play(seed: number | null) {
   const opts: Record<string, unknown> = {
-    leagueId: "LEAGUE_KBL", protagonistSide: "home", role: "SP",
-    inningLimit: 9, batterMean: 55, initialStamina: 82, initialMental: 74,
+    leagueId: "LEAGUE_KBL",
+    protagonistSide: "home",
+    role: "SP",
+    inningLimit: 9,
+    batterMean: 55,
+    initialStamina: 82,
+    initialMental: 74,
   };
   if (seed !== null) opts.seed = seed;
   const st = engine.startMatchNative(JSON.stringify(opts));
   const fin = JSON.parse(engine.simToGameEnd(st));
-  return { home: fin.score.home as number, away: fin.score.away as number,
-    pitches: fin.pitchCount as number, seedLeft: fin.rngSeed as number };
+  return {
+    home: fin.score.home as number,
+    away: fin.score.away as number,
+    pitches: fin.pitchCount as number,
+    seedLeft: fin.rngSeed as number,
+  };
 }
 
 describe("리그 경기 재현성", () => {
@@ -57,8 +66,7 @@ describe("리그 경기 재현성", () => {
       const r = play(null);
       seen.add(`${r.home}-${r.away}-${r.pitches}`);
     }
-    expect(seen.size, "씨앗 없이도 결과가 고정됐다 — 기본 갈래가 바뀌었다")
-      .toBeGreaterThan(3);
+    expect(seen.size, "씨앗 없이도 결과가 고정됐다 — 기본 갈래가 바뀌었다").toBeGreaterThan(3);
   });
 
   it("씨앗을 안 주면 상태에 씨앗이 안 남는다 — 0이 '없음'이다", () => {

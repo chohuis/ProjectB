@@ -90,8 +90,10 @@ describe("타자 주인공 계약", () => {
     expect(P).toContain("pub batting_ovr: Option<f64>,");
     expect(P).toContain("let ovr = params.batting_ovr.unwrap_or(params.pitching_ovr);");
     const S = read("apps/ui/src/shared/utils/salaryEngine.ts");
-    expect(S).toContain("const isBatter = protagonist.playerType !== \"pitcher\";");
-    expect(S).toContain("battingOvr:    isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,");
+    expect(S).toContain('const isBatter = protagonist.playerType !== "pitcher";');
+    expect(S).toContain(
+      "battingOvr:    isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,",
+    );
   });
 
   /** TS 시그니처가 좁으면 호출부가 캐스팅으로 우회하고 결함이 되살아난다 */

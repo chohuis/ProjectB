@@ -20,7 +20,7 @@ import { FA_INTEREST_MIN } from "../faEngine";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
-const TS    = read("apps/ui/src/shared/utils/faEngine.ts");
+const TS = read("apps/ui/src/shared/utils/faEngine.ts");
 const RULES = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
   faRules?: { bidInterestMin?: number };
   foreignRules?: { leagues?: string[]; perTeam?: number; maxPitchers?: number };
@@ -71,6 +71,6 @@ describe("주인공 FA 후보 문지기", () => {
    */
   it("규칙 파일을 한 번만 읽는다", () => {
     const n = TS.split("loadRosterRules").length - 1;
-    expect(n).toBe(2);   // import 한 번 + 호출 한 번
+    expect(n).toBe(2); // import 한 번 + 호출 한 번
   });
 });

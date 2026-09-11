@@ -47,7 +47,7 @@ describe("calcAvg", () => {
 
 describe("calcOps", () => {
   it("OBP + SLG 합산 후 3자리 반올림", () => {
-    expect(calcOps(0.350, 0.500)).toBe(0.85);
+    expect(calcOps(0.35, 0.5)).toBe(0.85);
     expect(calcOps(0.333, 0.444)).toBe(0.777);
   });
 

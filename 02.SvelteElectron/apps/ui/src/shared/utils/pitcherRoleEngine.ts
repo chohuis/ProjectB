@@ -15,10 +15,11 @@ import { rotationSizeForLeague } from "./rosterEngine";
  * `player_engine.rs`가 `나보다 나은 팀 투수가 3명 이상이면 RP`로 가른다.
  * 비교 대상이 낡으면 그 문턱이 통째로 어긋난다.
  */
-function livePitcherOvr(e: EntityRow, live: Record<string, { pitching?: { ovr?: number } }>): number {
-  return live[e.id]?.pitching?.ovr
-    ?? (e.details as any)?.player?.pitching?.ovr
-    ?? 0;
+function livePitcherOvr(
+  e: EntityRow,
+  live: Record<string, { pitching?: { ovr?: number } }>,
+): number {
+  return live[e.id]?.pitching?.ovr ?? (e.details as any)?.player?.pitching?.ovr ?? 0;
 }
 
 // ── 고교 투수 포지션 배정 ─────────────────────────────────────
@@ -40,8 +41,8 @@ export async function assignHighschoolPosition(
 
   const result = JSON.parse(
     await window.projectB!.pitcherAssignHighschoolPosition(
-      JSON.stringify({ myOvr, teamPitcherOvrs })
-    )
+      JSON.stringify({ myOvr, teamPitcherOvrs }),
+    ),
   );
   return result.position as "SP" | "RP";
 }
@@ -74,13 +75,16 @@ export async function assignProtagonistRole(
   const result = JSON.parse(
     await window.projectB!.pitcherAssignRole(
       JSON.stringify({
-        position: protagonist.position, ovr: myOvr, teamSpOvrs, roleOvrBias,
+        position: protagonist.position,
+        ovr: myOvr,
+        teamSpOvrs,
+        roleOvrBias,
         // 🔴 자리 수는 리그가 정한다. 예전엔 Rust 가 어디서나 `rank <= 5` 라
         //   로테이션 3자리인 대학·고교에서 **그 팀에 없는 「4선발」·「5선발」**이 나왔다
         //   (PLAN_ROLE_RECOMMEND §1 발견 a). 정본은 `rosterOpsRules.rotationSize` 하나다
         rotationSize: rotationSizeForLeague(protagonist.leagueId),
-      })
-    )
+      }),
+    ),
   );
   return result.role as PitcherRole;
 }
@@ -105,13 +109,16 @@ export async function relieverWouldPitch(
   const result = JSON.parse(
     await window.projectB!.pitcherRelieverWouldPitch(
       JSON.stringify({
-        role, pitchOutsLast, lastPitchedWeek, currentWeek,
+        role,
+        pitchOutsLast,
+        lastPitchedWeek,
+        currentWeek,
         lastPitchedDate: rest?.lastPitchedDate ?? "",
-        lastPitchCount:  rest?.lastPitchCount ?? 0,
-        gameDate:        rest?.gameDate ?? "",
+        lastPitchCount: rest?.lastPitchCount ?? 0,
+        gameDate: rest?.gameDate ?? "",
         ...(depth ?? {}),
-      })
-    )
+      }),
+    ),
   );
   return result.wouldPitch as boolean;
 }
@@ -129,8 +136,9 @@ export async function starterWouldStart(
   const api = window.projectB?.engine;
   if (!api) return true;
   try {
-    const r = JSON.parse(await api("starterWouldStartNative",
-      JSON.stringify({ seed, ...depth }))) as { wouldStart?: boolean; error?: string };
+    const r = JSON.parse(
+      await api("starterWouldStartNative", JSON.stringify({ seed, ...depth })),
+    ) as { wouldStart?: boolean; error?: string };
     return r.error ? true : (r.wouldStart ?? true);
   } catch {
     return true;
@@ -143,8 +151,10 @@ export async function checkPitcherRest(
   lastPitchCount: number,
   gameDate: string,
 ): Promise<{ available: boolean; requiredRestDays: number; actualRestDays: number }> {
-  const raw = await window.projectB!.engine("checkPitcherRestNative",
-    JSON.stringify({ lastPitchedDate, lastPitchCount, gameDate }));
+  const raw = await window.projectB!.engine(
+    "checkPitcherRestNative",
+    JSON.stringify({ lastPitchedDate, lastPitchCount, gameDate }),
+  );
   const p = JSON.parse(raw);
   if (p && typeof p === "object" && "error" in p) {
     console.error("[pitcherRoleEngine] checkPitcherRest 오류:", p.error);
@@ -164,18 +174,18 @@ export async function leaguePitchLimit(leagueId: string): Promise<{ hard: number
 // ── 순수 유틸 (TS 유지) ───────────────────────────────────────
 
 export const ROLE_DESCRIPTION: Record<PitcherRole, string> = {
-  "1선발":    "팀 에이스. 시리즈 1차전 선발 고정.",
-  "2선발":    "로테이션 2번째 자리. 시리즈 2차전 선발.",
-  "3선발":    "로테이션 3번째 자리.",
-  "4선발":    "로테이션 4번째 자리.",
-  "5선발":    "로테이션 마지막 자리.",
-  "스윙맨":   "선발·불펜 겸용. 필요에 따라 기용.",
-  "오프너":   "이닝 초반 짧게 등판 후 롱릴리프에 연결.",
-  "롱릴리프": "선발 조기 강판 시 긴 이닝 소화.",
-  "중간계투": "중반 이닝 담당 불펜.",
-  "셋업맨":   "마무리 앞 1~2이닝 담당 핵심 불펜.",
-  "마무리":   "팀 클로저. 승리 상황 마지막 이닝 전담.",
-  "패전처리": "열세 상황 이닝 소화 담당.",
+  "1선발": "팀 에이스. 시리즈 1차전 선발 고정.",
+  "2선발": "로테이션 2번째 자리. 시리즈 2차전 선발.",
+  "3선발": "로테이션 3번째 자리.",
+  "4선발": "로테이션 4번째 자리.",
+  "5선발": "로테이션 마지막 자리.",
+  스윙맨: "선발·불펜 겸용. 필요에 따라 기용.",
+  오프너: "이닝 초반 짧게 등판 후 롱릴리프에 연결.",
+  롱릴리프: "선발 조기 강판 시 긴 이닝 소화.",
+  중간계투: "중반 이닝 담당 불펜.",
+  셋업맨: "마무리 앞 1~2이닝 담당 핵심 불펜.",
+  마무리: "팀 클로저. 승리 상황 마지막 이닝 전담.",
+  패전처리: "열세 상황 이닝 소화 담당.",
 };
 
 export function isStarterRole(role: PitcherRole): boolean {

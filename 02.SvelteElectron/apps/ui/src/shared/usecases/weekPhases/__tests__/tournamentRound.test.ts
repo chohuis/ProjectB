@@ -13,28 +13,42 @@ import { buildRoundProgressMessage } from "../tournamentNews";
  * 겹치지 않는가 ③우리 권역 팀을 짚는가 셋이다.
  */
 
-const def = { id: "TOUR_X", name: "국화기", flower: "국화", leagueId: "LEAGUE_HIGHSCHOOL" } as never;
+const def = {
+  id: "TOUR_X",
+  name: "국화기",
+  flower: "국화",
+  leagueId: "LEAGUE_HIGHSCHOOL",
+} as never;
 const tName = (id: string) => id.replace("TEAM_", "");
 
 /** round 경기 n개를 만든다. 홈이 이긴다 */
 const matches = (round: number, pairs: [string, string][]) =>
   pairs.map(([h, a], i) => ({
-    id: `M${round}_${i}`, round, isBye: false,
-    homeTeamId: h, awayTeamId: a, winnerTeamId: h,
+    id: `M${round}_${i}`,
+    round,
+    isBye: false,
+    homeTeamId: h,
+    awayTeamId: a,
+    winnerTeamId: h,
   }));
 
 const bracketOf = (totalRounds: number, round: number, pairs: [string, string][]) =>
-  ({ tournamentId: "TOUR_X", seasonYear: 2027, totalRounds, matches: matches(round, pairs) }) as never;
+  ({
+    tournamentId: "TOUR_X",
+    seasonYear: 2027,
+    totalRounds,
+    matches: matches(round, pairs),
+  }) as never;
 
 describe("라운드 진행 소식", () => {
   it("32강보다 앞은 안 보낸다", () => {
     // 102팀 대회면 1회전만 51경기다 — 명단이 소식이 안 된다
-    const b = bracketOf(7, 1, [["TEAM_A", "TEAM_B"]]);   // fromEnd 6
+    const b = bracketOf(7, 1, [["TEAM_A", "TEAM_B"]]); // fromEnd 6
     expect(buildRoundProgressMessage(def, b, 1, "TEAM_ME", tName, 31)).toBeNull();
   });
 
   it("32강부터는 보낸다", () => {
-    const b = bracketOf(7, 3, [["TEAM_A", "TEAM_B"]]);   // fromEnd 4 = 32강
+    const b = bracketOf(7, 3, [["TEAM_A", "TEAM_B"]]); // fromEnd 4 = 32강
     expect(buildRoundProgressMessage(def, b, 3, "TEAM_ME", tName, 31)).not.toBeNull();
   });
 
@@ -45,19 +59,26 @@ describe("라운드 진행 소식", () => {
 
   it("내 팀이 그 라운드에 있으면 안 보낸다 (내 경기 소식과 겹친다)", () => {
     // ⚠ 둘 다 보내면 같은 라운드가 두 통이 된다
-    const b = bracketOf(5, 3, [["TEAM_ME", "TEAM_B"], ["TEAM_C", "TEAM_D"]]);
+    const b = bracketOf(5, 3, [
+      ["TEAM_ME", "TEAM_B"],
+      ["TEAM_C", "TEAM_D"],
+    ]);
     expect(buildRoundProgressMessage(def, b, 3, "TEAM_ME", tName, 20)).toBeNull();
   });
 
   it("아직 안 끝난 라운드는 안 보낸다", () => {
-    const b = bracketOf(5, 3, [["TEAM_A", "TEAM_B"]]) as unknown as
-      { matches: { winnerTeamId?: string }[] };
+    const b = bracketOf(5, 3, [["TEAM_A", "TEAM_B"]]) as unknown as {
+      matches: { winnerTeamId?: string }[];
+    };
     b.matches[0].winnerTeamId = undefined;
     expect(buildRoundProgressMessage(def, b as never, 3, "TEAM_ME", tName, 20)).toBeNull();
   });
 
   it("진출 팀 명단이 실린다", () => {
-    const b = bracketOf(5, 3, [["TEAM_A", "TEAM_B"], ["TEAM_C", "TEAM_D"]]);
+    const b = bracketOf(5, 3, [
+      ["TEAM_A", "TEAM_B"],
+      ["TEAM_C", "TEAM_D"],
+    ]);
     const m = buildRoundProgressMessage(def, b, 3, "TEAM_ME", tName, 20)!;
     expect(m.body).toContain("A");
     expect(m.body).toContain("C");
@@ -66,12 +87,15 @@ describe("라운드 진행 소식", () => {
 
   it("우리 권역 팀을 짚어준다", () => {
     // 없으면 남의 대회 명단은 모르는 이름 나열이라 읽을 이유가 없다
-    const b = bracketOf(5, 3, [["TEAM_A", "TEAM_B"], ["TEAM_C", "TEAM_D"]]);
+    const b = bracketOf(5, 3, [
+      ["TEAM_A", "TEAM_B"],
+      ["TEAM_C", "TEAM_D"],
+    ]);
     const region = new Set(["TEAM_A", "TEAM_D", "TEAM_ME"]);
     const m = buildRoundProgressMessage(def, b, 3, "TEAM_ME", tName, 20, region)!;
     expect(m.body).toContain("우리 권역");
-    expect(m.preview).toContain("A");        // 진출
-    expect(m.body).toContain("D");           // 탈락도 짚는다
+    expect(m.preview).toContain("A"); // 진출
+    expect(m.body).toContain("D"); // 탈락도 짚는다
   });
 
   it("권역을 안 넘기면 명단만 낸다", () => {

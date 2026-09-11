@@ -43,8 +43,8 @@ export function standingsGroupsOf(
     const out = Object.entries(groups).map(([stadiumId, teamIds]) => ({
       label: isUniv
         ? (univGroupLabel(stadiumId) ?? stadiumName(stadiumId))
-        // "한라구장" → "한라권역". 뒤에 붙는 말이 달라야 순위표에서 안 헷갈린다
-        : `${stadiumName(stadiumId).replace(/구장$/, "")}권역`,
+        : // "한라구장" → "한라권역". 뒤에 붙는 말이 달라야 순위표에서 안 헷갈린다
+          `${stadiumName(stadiumId).replace(/구장$/, "")}권역`,
       teamIds: new Set(teamIds),
     }));
     // 큰 권역부터 — 팀 수가 6~20으로 차이가 커서 작은 권역이 위에 오면
@@ -68,7 +68,7 @@ export function standingsGroupsOf(
     ];
   }
 
-  return null;  // 프로 1군·2군·독립 — 10팀이라 통짜가 낫다
+  return null; // 프로 1군·2군·독립 — 10팀이라 통짜가 낫다
 }
 
 /**

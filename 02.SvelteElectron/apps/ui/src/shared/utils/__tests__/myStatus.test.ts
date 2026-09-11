@@ -3,20 +3,37 @@ import { nextProtagonistGame, teamRank, gaugeTone, recentResults } from "../mySt
 import { playerYearLabel } from "../playerYearLabel";
 import type { ScheduleEntry, Standing } from "../../types/season";
 
-function game(id: string, date: string, week: number, home: string, away: string,
-              done = false): ScheduleEntry {
+function game(
+  id: string,
+  date: string,
+  week: number,
+  home: string,
+  away: string,
+  done = false,
+): ScheduleEntry {
   return {
-    id, week, gameDate: date, homeTeamId: home, awayTeamId: away,
-    isProtagonistGame: true, phase: "season",
+    id,
+    week,
+    gameDate: date,
+    homeTeamId: home,
+    awayTeamId: away,
+    isProtagonistGame: true,
+    phase: "season",
     ...(done ? { result: { homeScore: 1, awayScore: 0 } as ScheduleEntry["result"] } : {}),
   };
 }
 
 function standing(teamId: string, w: number, l: number, d = 0, streak = ""): Standing {
   return {
-    teamId, wins: w, losses: l, draws: d,
+    teamId,
+    wins: w,
+    losses: l,
+    draws: d,
     winPct: w + l === 0 ? 0 : w / (w + l),
-    runsFor: 0, runsAgainst: 0, streak, last10: "",
+    runsFor: 0,
+    runsAgainst: 0,
+    streak,
+    last10: "",
   };
 }
 
@@ -42,12 +59,20 @@ describe("nextProtagonistGame", () => {
   });
 
   it("남은 날짜를 센다 — 달을 넘어도 맞아야 한다", () => {
-    const n = nextProtagonistGame([game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")], "TEAM_A", "2031-04-28");
+    const n = nextProtagonistGame(
+      [game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")],
+      "TEAM_A",
+      "2031-04-28",
+    );
     expect(n?.daysAway).toBe(4);
   });
 
   it("오늘 경기는 0일이다", () => {
-    const n = nextProtagonistGame([game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")], "TEAM_A", "2031-05-02");
+    const n = nextProtagonistGame(
+      [game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")],
+      "TEAM_A",
+      "2031-05-02",
+    );
     expect(n?.daysAway).toBe(0);
   });
 
@@ -58,22 +83,38 @@ describe("nextProtagonistGame", () => {
   });
 
   it("남의 팀 경기만 있으면 null", () => {
-    expect(nextProtagonistGame([game("g", "2031-05-02", 6, "X", "Y")], "TEAM_A", "2031-05-01")).toBeNull();
+    expect(
+      nextProtagonistGame([game("g", "2031-05-02", 6, "X", "Y")], "TEAM_A", "2031-05-01"),
+    ).toBeNull();
   });
 
   it("소속팀이 없으면(상무 등) null", () => {
-    expect(nextProtagonistGame([game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")], "", "2031-05-01")).toBeNull();
+    expect(
+      nextProtagonistGame([game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")], "", "2031-05-01"),
+    ).toBeNull();
   });
 });
 
 describe("recentResults", () => {
   const ME = "TEAM_A";
 
-  function played(id: string, date: string, week: number, home: string, away: string,
-                  hs: number, as: number): ScheduleEntry {
+  function played(
+    id: string,
+    date: string,
+    week: number,
+    home: string,
+    away: string,
+    hs: number,
+    as: number,
+  ): ScheduleEntry {
     return {
-      id, week, gameDate: date, homeTeamId: home, awayTeamId: away,
-      isProtagonistGame: true, phase: "season",
+      id,
+      week,
+      gameDate: date,
+      homeTeamId: home,
+      awayTeamId: away,
+      isProtagonistGame: true,
+      phase: "season",
       result: { homeScore: hs, awayScore: as } as ScheduleEntry["result"],
     };
   }
@@ -110,7 +151,8 @@ describe("recentResults", () => {
 
   it("limit만큼만 준다", () => {
     const s = Array.from({ length: 9 }, (_, i) =>
-      played(`g${i}`, `2031-05-0${i + 1}`, i + 1, ME, "B", i, 0));
+      played(`g${i}`, `2031-05-0${i + 1}`, i + 1, ME, "B", i, 0),
+    );
     expect(recentResults(s, ME, 5)).toHaveLength(5);
   });
 });
@@ -160,13 +202,19 @@ describe("playerYearLabel", () => {
   });
 
   it("신인은 0년차가 아니라 1년차다", () => {
-    expect(playerYearLabel({ ...base, careerStage: "pro_kbl", proServiceYears: 0 })).toBe("프로 1년차");
-    expect(playerYearLabel({ ...base, careerStage: "pro_kbl", proServiceYears: 3 })).toBe("프로 4년차");
+    expect(playerYearLabel({ ...base, careerStage: "pro_kbl", proServiceYears: 0 })).toBe(
+      "프로 1년차",
+    );
+    expect(playerYearLabel({ ...base, careerStage: "pro_kbl", proServiceYears: 3 })).toBe(
+      "프로 4년차",
+    );
   });
 
   it("프로 리그가 뭐든 연차로 센다 — 예전엔 프로에서 '-'만 나왔다", () => {
     for (const stage of ["pro", "pro_kbl", "pro_abl", "pro_jbl"] as const) {
-      expect(playerYearLabel({ ...base, careerStage: stage, proServiceYears: 1 })).toBe("프로 2년차");
+      expect(playerYearLabel({ ...base, careerStage: stage, proServiceYears: 1 })).toBe(
+        "프로 2년차",
+      );
     }
   });
 

@@ -4,7 +4,12 @@ import { join } from "node:path";
 import { parkViewOf, parkViewForHomeTeam, defaultParkView } from "../parkView";
 import { PARK_COORDS, PARK_TIER_OF, PARK_IMAGES, type ParkTier } from "../parkAnchors";
 
-interface RefTeam { id: string; name: string; leagueId: string; stadium?: string }
+interface RefTeam {
+  id: string;
+  name: string;
+  leagueId: string;
+  stadium?: string;
+}
 const refs = JSON.parse(
   readFileSync(join(process.cwd(), "resource/data/master/entities/refs.json"), "utf8"),
 ) as { teams: RefTeam[]; stadiums: { id: string; name: string }[] };
@@ -127,7 +132,10 @@ describe("홈 팀 → 구장", () => {
 describe("데이터 정합 — 표본이 아니라 전수", () => {
   it("국내 팀 전부가 그림 있는 구장에 배정돼 있다", () => {
     const DOMESTIC = new Set([
-      "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_KBL",
+      "LEAGUE_HIGHSCHOOL",
+      "LEAGUE_UNIVERSITY",
+      "LEAGUE_INDEPENDENT",
+      "LEAGUE_KBL",
     ]);
     const bad: string[] = [];
     for (const t of refs.teams) {

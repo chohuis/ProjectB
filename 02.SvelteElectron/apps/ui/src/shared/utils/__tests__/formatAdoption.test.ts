@@ -36,8 +36,12 @@ describe("야구 표기 함수 채택", () => {
    *   모른다. 세계 생성이 과거 5시즌을 상대 표기로 적어 둔 것이지 표시용이 아니다.
    */
   it("상대 시즌 표기를 그대로 찍는 화면이 없다", () => {
-    const bad = FILES.filter((f) =>
-      f.src.includes("{sr.season}") || f.src.includes("{r.season}") || f.src.includes("{s.season}"));
+    const bad = FILES.filter(
+      (f) =>
+        f.src.includes("{sr.season}") ||
+        f.src.includes("{r.season}") ||
+        f.src.includes("{s.season}"),
+    );
     expect(bad.map((f) => rel(f.path))).toEqual([]);
   });
 
@@ -48,8 +52,12 @@ describe("야구 표기 함수 채택", () => {
   it("이닝을 함수 없이 찍는 화면이 없다", () => {
     const bad = FILES.filter((f) => {
       // `<td>{...ip...}</td>` 꼴로 그대로 찍는 자리
-      return f.src.includes("{g.ip ?? ") || f.src.includes("{st.ip}")
-          || f.src.includes("{line.ip}") || f.src.includes("{stats.ip}");
+      return (
+        f.src.includes("{g.ip ?? ") ||
+        f.src.includes("{st.ip}") ||
+        f.src.includes("{line.ip}") ||
+        f.src.includes("{stats.ip}")
+      );
     });
     expect(bad.map((f) => rel(f.path))).toEqual([]);
   });
@@ -78,9 +86,12 @@ describe("야구 표기 함수 채택", () => {
     //   테두리에 배경 톤을 쓰는 건 정당하다. 실제로 두 자리가 걸렸다.
     const bad = FILES.filter((f) =>
       f.src
-        .split("border-color: var(--panel-sunk)").join("")
-        .split("background-color: var(--panel-sunk)").join("")
-        .includes("color: var(--panel-sunk)"));
+        .split("border-color: var(--panel-sunk)")
+        .join("")
+        .split("background-color: var(--panel-sunk)")
+        .join("")
+        .includes("color: var(--panel-sunk)"),
+    );
     expect(bad.map((f) => rel(f.path))).toEqual([]);
   });
 });

@@ -1,10 +1,16 @@
 <script lang="ts">
-  import type { MilitaryCalendarEntry, MilitaryLifeRules } from "../../../shared/types/militaryLife";
+  import type {
+    MilitaryCalendarEntry,
+    MilitaryLifeRules,
+  } from "../../../shared/types/militaryLife";
   import { rankBandOf } from "../../../shared/types/militaryLife";
   import type { MessageItem } from "../../../shared/types/main";
   import type { MilitarySportsCopy } from "../../../shared/utils/militarySportsCopy";
   import {
-    fillSportsCopy, sportsCalendar, militaryNews, dischargeWeekOf,
+    fillSportsCopy,
+    sportsCalendar,
+    militaryNews,
+    dischargeWeekOf,
   } from "../../../shared/utils/militarySportsCopy";
   import { gaugeLabel } from "../../../shared/utils/baseballFormat";
   import { RANK_LABELS } from "./militaryLabels";
@@ -100,14 +106,29 @@
         </div>
       {/if}
     </div>
-    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={week}
-         aria-label="{copy.discharge.title} {pct}%">
+    <div
+      class="bar"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax={total}
+      aria-valuenow={week}
+      aria-label="{copy.discharge.title} {pct}%"
+    >
       <i style="width:{pct}%"></i>
     </div>
     <dl class="gauges">
-      <div><dt>컨디션</dt><dd>{gaugeLabel(condition)}</dd></div>
-      <div><dt>피로도</dt><dd>{gaugeLabel(fatigue)}</dd></div>
-      <div><dt>사기</dt><dd>{gaugeLabel(morale)}</dd></div>
+      <div>
+        <dt>컨디션</dt>
+        <dd>{gaugeLabel(condition)}</dd>
+      </div>
+      <div>
+        <dt>피로도</dt>
+        <dd>{gaugeLabel(fatigue)}</dd>
+      </div>
+      <div>
+        <dt>사기</dt>
+        <dd>{gaugeLabel(morale)}</dd>
+      </div>
     </dl>
   </header>
 
@@ -132,7 +153,11 @@
               {#each past as c (c.event + c.week)}
                 <li>
                   <span class="w">W{c.week}</span>
-                  <span>{c.label}{c.leaveDays ? ` — ${fillSportsCopy(copy.calendar.leave, { days: c.leaveDays })}` : ""}</span>
+                  <span
+                    >{c.label}{c.leaveDays
+                      ? ` — ${fillSportsCopy(copy.calendar.leave, { days: c.leaveDays })}`
+                      : ""}</span
+                  >
                 </li>
               {/each}
             </ul>
@@ -148,8 +173,12 @@
                 <li class:next={i === 0}>
                   <span class="w">W{c.week}</span>
                   <span>
-                    {c.label}{c.leaveDays ? ` — ${fillSportsCopy(copy.calendar.leave, { days: c.leaveDays })}` : ""}
-                    <span class="ahead"> · {fillSportsCopy(copy.calendar.ahead, { n: c.week - week })}</span>
+                    {c.label}{c.leaveDays
+                      ? ` — ${fillSportsCopy(copy.calendar.leave, { days: c.leaveDays })}`
+                      : ""}
+                    <span class="ahead">
+                      · {fillSportsCopy(copy.calendar.ahead, { n: c.week - week })}</span
+                    >
                   </span>
                 </li>
               {/each}
@@ -181,50 +210,234 @@
 </section>
 
 <style>
-  .sports { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-  .head {
-    background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--mil, #4B5A3A);
-    border-radius: var(--radius); padding: 12px 14px;
-    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; align-items: center; color: var(--ink);
+  .sports {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
   }
-  .who { min-width: 0; }
-  h1 { margin: 0; font-size: 16px; font-weight: 800; color: var(--t-dark); letter-spacing: -.01em; }
-  .sub { color: var(--ink-mid); font-size: 12.5px; margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
-  .chip { display: inline-block; background: var(--panel-sunk); color: var(--ink-mid); border-radius: var(--radius); padding: 1px 7px; font-weight: 700; font-size: 11.5px; }
-  .meta { color: var(--ink-mute); font-size: 11.5px; }
-  .svc { text-align: right; font-variant-numeric: tabular-nums; }
-  .svc .cap { font-size: 11px; color: var(--ink-mute); font-weight: 700; letter-spacing: .04em; }
-  .svc .big { font-size: 22px; font-weight: 800; color: var(--t-dark); line-height: 1.15; }
-  .svc .big.done { font-size: 14px; color: var(--ok); }
-  .svc .big small { font-size: 12px; color: var(--ink-mute); font-weight: 600; margin-left: 2px; }
-  .svc .of { color: var(--ink-mute); font-size: 11.5px; }
-  .bar { height: 6px; background: var(--panel-sunk); border-radius: 3px; overflow: hidden; grid-column: 1 / -1; }
-  .bar i { display: block; height: 100%; background: var(--ok); }
-  .gauges { grid-column: 1 / -1; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; }
-  .gauges div { display: flex; gap: 6px; align-items: baseline; }
-  .gauges dt { color: var(--ink-mute); font-size: 11.5px; }
-  .gauges dd { margin: 0; color: var(--ink); font-size: 12px; font-weight: 700; }
+  .head {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--mil, #4b5a3a);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 16px;
+    align-items: center;
+    color: var(--ink);
+  }
+  .who {
+    min-width: 0;
+  }
+  h1 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--t-dark);
+    letter-spacing: -0.01em;
+  }
+  .sub {
+    color: var(--ink-mid);
+    font-size: 12.5px;
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+  .chip {
+    display: inline-block;
+    background: var(--panel-sunk);
+    color: var(--ink-mid);
+    border-radius: var(--radius);
+    padding: 1px 7px;
+    font-weight: 700;
+    font-size: 11.5px;
+  }
+  .meta {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+  }
+  .svc {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .svc .cap {
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .svc .big {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--t-dark);
+    line-height: 1.15;
+  }
+  .svc .big.done {
+    font-size: 14px;
+    color: var(--ok);
+  }
+  .svc .big small {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+  .svc .of {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+  }
+  .bar {
+    height: 6px;
+    background: var(--panel-sunk);
+    border-radius: 3px;
+    overflow: hidden;
+    grid-column: 1 / -1;
+  }
+  .bar i {
+    display: block;
+    height: 100%;
+    background: var(--ok);
+  }
+  .gauges {
+    grid-column: 1 / -1;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px 10px;
+  }
+  .gauges div {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+  .gauges dt {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+  }
+  .gauges dd {
+    margin: 0;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+  }
 
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; min-width: 0; color: var(--ink); }
-  .card.nogame { border-left: 4px solid var(--warn); }
-  h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-mute); font-weight: 700; }
-  h2 span { text-transform: none; letter-spacing: 0; font-weight: 500; }
-  h3 { margin: 0 0 4px; font-size: 11.5px; color: var(--ink-mid); font-weight: 700; }
-  .card p { margin: 0; font-size: 12.5px; line-height: 1.6; }
-  .card p.note { margin-top: 6px; color: var(--ink-mute); font-size: 12px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
-  .log, .news { font-size: 12px; margin: 0; padding-left: 0; list-style: none; }
-  .log li { display: grid; grid-template-columns: 44px 1fr; gap: 8px; padding: 4px 0; border-bottom: 1px dashed var(--line); font-variant-numeric: tabular-nums; }
-  .log li:last-child { border-bottom: 0; }
-  .log li.next { font-weight: 800; color: var(--t-dark); }
-  .w { color: var(--warn); font-weight: 700; }
-  .ahead { color: var(--ink-mute); }
-  .news li { display: grid; grid-template-columns: 44px 1fr; gap: 8px; padding: 5px 0; border-bottom: 1px dashed var(--line); }
-  .news li:last-child { border-bottom: 0; }
-  .news .txt { min-width: 0; }
-  .news b { font-weight: 700; color: var(--ink); }
-  .news li.unread b { color: var(--t-dark); }
-  .news small { display: block; color: var(--ink-mute); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .empty { color: var(--ink-mute); font-size: 12px; margin: 0; }
-  @media (max-width: 720px) { .head { grid-template-columns: 1fr; } .svc { text-align: left; } }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    min-width: 0;
+    color: var(--ink);
+  }
+  .card.nogame {
+    border-left: 4px solid var(--warn);
+  }
+  h2 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    font-weight: 700;
+  }
+  h2 span {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  h3 {
+    margin: 0 0 4px;
+    font-size: 11.5px;
+    color: var(--ink-mid);
+    font-weight: 700;
+  }
+  .card p {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  .card p.note {
+    margin-top: 6px;
+    color: var(--ink-mute);
+    font-size: 12px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  .log,
+  .news {
+    font-size: 12px;
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  .log li {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  .log li:last-child {
+    border-bottom: 0;
+  }
+  .log li.next {
+    font-weight: 800;
+    color: var(--t-dark);
+  }
+  .w {
+    color: var(--warn);
+    font-weight: 700;
+  }
+  .ahead {
+    color: var(--ink-mute);
+  }
+  .news li {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 8px;
+    padding: 5px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .news li:last-child {
+    border-bottom: 0;
+  }
+  .news .txt {
+    min-width: 0;
+  }
+  .news b {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .news li.unread b {
+    color: var(--t-dark);
+  }
+  .news small {
+    display: block;
+    color: var(--ink-mute);
+    font-size: 11.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .empty {
+    color: var(--ink-mute);
+    font-size: 12px;
+    margin: 0;
+  }
+  @media (max-width: 720px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+    .svc {
+      text-align: left;
+    }
+  }
 </style>

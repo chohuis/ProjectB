@@ -12,13 +12,23 @@ import type { MessageItem, TableMetadata } from "../../types/main";
 
 const msg = (n: number, rows: number): MessageItem => ({
   id: `msg-tour-round-T${n}-r2-2028-w22`,
-  category: "news", sender: "고교야구연맹",
-  subject: `대회${n} 4강 진출 4팀`, preview: "p",
+  category: "news",
+  sender: "고교야구연맹",
+  subject: `대회${n} 4강 진출 4팀`,
+  preview: "p",
   body: `대회${n} 8강 종료\n\n■ 4강 진출 4팀`,
-  createdAt: "W22", readAt: null,
+  createdAt: "W22",
+  readAt: null,
   metadata: {
-    type: "table", kind: "tourRound", columns: [],
-    rows: Array.from({ length: rows }, (_, i) => ({ round: 3, home: `H${n}${i}`, away: `A${n}${i}`, date: "" })),
+    type: "table",
+    kind: "tourRound",
+    columns: [],
+    rows: Array.from({ length: rows }, (_, i) => ({
+      round: 3,
+      home: `H${n}${i}`,
+      away: `A${n}${i}`,
+      date: "",
+    })),
   } as TableMetadata,
 });
 
@@ -52,7 +62,11 @@ describe("진출 명단 묶기", () => {
 
   it("표가 없는 소식만 있으면 표를 안 만든다", () => {
     const noMeta = { ...msg(1, 0), metadata: undefined };
-    const b = bundleRoundProgressMessages([noMeta, { ...msg(2, 0), metadata: undefined }], 2028, 22)!;
+    const b = bundleRoundProgressMessages(
+      [noMeta, { ...msg(2, 0), metadata: undefined }],
+      2028,
+      22,
+    )!;
     expect(b.metadata).toBeUndefined();
   });
 });

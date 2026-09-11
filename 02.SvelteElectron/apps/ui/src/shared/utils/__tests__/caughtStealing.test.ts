@@ -25,12 +25,16 @@ describe("도루자 배선", () => {
 
   it("① 주인공 경기가 잡힌 주자를 돌려준다", () => {
     // 예전엔 성공(`stole`)만 넘겼다
-    expect(me.includes("    -> (MatchRunners, u8, Vec<String>, Vec<String>, Vec<String>)")).toBe(true);
+    expect(me.includes("    -> (MatchRunners, u8, Vec<String>, Vec<String>, Vec<String>)")).toBe(
+      true,
+    );
     expect(me.includes("let mut caught: Vec<String> = vec![];")).toBe(true);
   });
 
   it("② 주인공 경기가 센다", () => {
-    expect(me.includes("if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.cs += 1; }")).toBe(true);
+    expect(
+      me.includes("if let Some(b) = lines.iter_mut().find(|x| &x.player_id == id) { b.cs += 1; }"),
+    ).toBe(true);
   });
 
   it("③ 배경 리그도 센다 — 두 경로가 같아야 한다", () => {
@@ -46,7 +50,9 @@ describe("도루자 배선", () => {
   it("🔴 ⑤ TS가 합산한다 — 이걸 빠뜨려 처음 실측이 0건이었다", () => {
     expect(helpers.includes("const cs  = (prev.cs ?? 0) + (line.cs ?? 0);")).toBe(true);
     // ⚠ 3단계에서 포일(pb)을 같은 줄에 더했다 — 순서가 바뀌었다
-    expect(helpers.includes("type:\"batter\", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,")).toBe(true);
+    expect(
+      helpers.includes('type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,'),
+    ).toBe(true);
   });
 
   it("구 세이브 호환 — 없으면 0이다", () => {

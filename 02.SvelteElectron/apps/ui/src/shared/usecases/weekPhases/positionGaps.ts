@@ -45,9 +45,12 @@ export async function processPositionGaps(seasonYear: number): Promise<string[]>
 
   const badTeams = new Set<string>();
   for (const [teamId, rows] of byTeam) {
-    if (rows.length < FIELD.length) continue;   // 돌려도 소용없다
+    if (rows.length < FIELD.length) continue; // 돌려도 소용없다
     for (const pos of FIELD) {
-      if (!rows.some((r) => r.pos === pos)) { badTeams.add(teamId); break; }
+      if (!rows.some((r) => r.pos === pos)) {
+        badTeams.add(teamId);
+        break;
+      }
     }
   }
   // ⚠ **실측(237팀 전수)에서 시즌 중 공백은 0팀이었다.** 공백은 오프시즌
@@ -57,13 +60,16 @@ export async function processPositionGaps(seasonYear: number): Promise<string[]>
   if (badTeams.size === 0) return [];
 
   // 공백 팀의 야수·투수를 모두 보낸다 — Rust가 팀 단위로 세므로 일부만 보내면 오판한다
-  const payload = g.npcs.filter((n) =>
-    n.careerStatus === "active" && badTeams.has(n.currentTeam ?? ""));
+  const payload = g.npcs.filter(
+    (n) => n.careerStatus === "active" && badTeams.has(n.currentTeam ?? ""),
+  );
 
   let changes: Array<{ npcId: string; teamId: string; from: string; to: string }> = [];
   try {
     const raw = await window.projectB!.engine(
-      "fixPositionGapsNative", JSON.stringify({ npcs: payload, seasonYear }));
+      "fixPositionGapsNative",
+      JSON.stringify({ npcs: payload, seasonYear }),
+    );
     changes = (JSON.parse(raw)?.changes ?? []) as typeof changes;
   } catch (e) {
     // ⚠ **조용히 삼키지 않는다.** 이 프로젝트가 반복해서 당한 형태다 —
@@ -75,9 +81,11 @@ export async function processPositionGaps(seasonYear: number): Promise<string[]>
   if (changes.length === 0) return [];
 
   const posOf = new Map(changes.map((c) => [c.npcId, c.to]));
-  gameStore.updateNpcs(g.npcs.map((n) =>
-    posOf.has(n.npcId) ? { ...n, position: posOf.get(n.npcId)! } : n));
+  gameStore.updateNpcs(
+    g.npcs.map((n) => (posOf.has(n.npcId) ? { ...n, position: posOf.get(n.npcId)! } : n)),
+  );
 
-  return changes.map((c) =>
-    `[포지션] ${c.teamId.replace(/^TEAM_[A-Z]+_/, "")}: ${c.from} → ${c.to} 전환`);
+  return changes.map(
+    (c) => `[포지션] ${c.teamId.replace(/^TEAM_[A-Z]+_/, "")}: ${c.from} → ${c.to} 전환`,
+  );
 }

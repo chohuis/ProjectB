@@ -36,12 +36,7 @@ const DOMESTIC_LEAGUES = new Set([
  * 있어도 해외가 반경 1이므로 `driftBackgroundLeagues`는 이제 빈 목록을
  * 받는다 — 죽은 장치를 남기지 않으려면 따로 정리해야 한다.
  */
-const FOREIGN_LEAGUES = new Set([
-  "LEAGUE_ABL",
-  "LEAGUE_JBL",
-  "LEAGUE_ABL_FARM",
-  "LEAGUE_JBL_FARM",
-]);
+const FOREIGN_LEAGUES = new Set(["LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]);
 
 /**
  * 반경 게이트가 적용되는 리그.

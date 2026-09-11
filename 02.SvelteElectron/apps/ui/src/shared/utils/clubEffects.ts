@@ -17,7 +17,10 @@ export function medicalRecoveryMult(quality: number, span: number): number {
  * ⚠ **0주가 되면 부상이 없는 것과 같다.** 하한이 그걸 막는다.
  */
 export function medicalRecoveryWeeks(
-  weeks: number, quality: number, span: number, minWeeks: number,
+  weeks: number,
+  quality: number,
+  span: number,
+  minWeeks: number,
 ): number {
   return Math.max(minWeeks, Math.round(weeks * medicalRecoveryMult(quality, span)));
 }

@@ -4,9 +4,7 @@ import { resolve } from "node:path";
 import { runEventEngine, resetEventFunnelStats } from "../eventEngine";
 import { parseTierRules } from "../tierRules";
 import RAW_TIER_RULES from "../../../../../../resource/data/master/events/tier_rules.json";
-import type {
-  DecisionTemplate, EventContext, EventRule, MessageTemplate,
-} from "../../types/event";
+import type { DecisionTemplate, EventContext, EventRule, MessageTemplate } from "../../types/event";
 import type { ProtagonistSave } from "../../types/save";
 
 /**
@@ -30,54 +28,107 @@ const MASTER = resolve(__dirname, "../../../../../../resource/data/master");
 const read = (p: string) => readFileSync(resolve(MASTER, p), "utf8");
 
 const REUNION_DIR = resolve(MASTER, "events/conditional");
-const reunionFiles = readdirSync(REUNION_DIR)
-  .filter((f) => f.startsWith("EVT_MILREUNION_") && f.endsWith(".json"));
+const reunionFiles = readdirSync(REUNION_DIR).filter(
+  (f) => f.startsWith("EVT_MILREUNION_") && f.endsWith(".json"),
+);
 
 // ⚠ 규칙 파일을 그대로 쓴다. `masterStore.parseEventRule` 은 내보내지 않는데, 이
 //   열둘은 새 꼴(`conditions` 배열)이라 옮겨 담을 게 없다 — 모양 검사는
 //   `eventConditionShape.test.ts` 가 따로 본다.
-const rules: EventRule[] = reunionFiles.map((f) =>
-  JSON.parse(readFileSync(resolve(REUNION_DIR, f), "utf8")) as EventRule);
+const rules: EventRule[] = reunionFiles.map(
+  (f) => JSON.parse(readFileSync(resolve(REUNION_DIR, f), "utf8")) as EventRule,
+);
 
 const msgTmpls = new Map<string, MessageTemplate>(
-  (JSON.parse(read("messages/templates.json")) as { templates: MessageTemplate[] }).templates
-    .map((t) => [t.id, t]),
+  (JSON.parse(read("messages/templates.json")) as { templates: MessageTemplate[] }).templates.map(
+    (t) => [t.id, t],
+  ),
 );
 const decTmpls = new Map<string, DecisionTemplate>(
-  (JSON.parse(read("messages/decision_templates.json")) as { decisions: DecisionTemplate[] }).decisions
-    .map((t) => [t.id, t]),
+  (
+    JSON.parse(read("messages/decision_templates.json")) as { decisions: DecisionTemplate[] }
+  ).decisions.map((t) => [t.id, t]),
 );
 
 /** 전역한 지 `weeks` 주 된 주인공. 나머지는 이 검사가 안 보는 값이다 */
-const discharged = (weeks: number, over: Partial<ProtagonistSave> = {}): ProtagonistSave => ({
-  id: "PLY_HERO", name: "검사", careerStage: "independent",
-  leagueId: "LEAGUE_INDEPENDENT", teamId: "TEAM_IND_A", age: 23,
-  playerType: "pitcher", position: "SP", handedness: "R", pitchingForm: "overhand",
-  jerseyNumber: 18, condition: 80, fatigue: 10, morale: 60,
-  pitching: { ovr: 60, stamina: 60, velocity: 60, command: 60, control: 60,
-    movement: 60, mentality: 60, recovery: 60, clutch: 60, holdRunners: 60 },
-  batting: { ovr: 30 }, primaryPosition: "SP", positionRatings: { SP: 60 },
-  diligence: 60, popularity: 10, developmentRate: 1, potentialHidden: 70,
-  growthPoints: 0, tags: [], pitchingXP: {}, battingXP: {}, pitches: [],
-  money: 1000, fame: 50, scoutScore: 0, proServiceYears: 0,
-  militaryStatus: "군필", militaryServedUnit: "general",
-  dischargedSeason: 2030, dischargedWeek: 10 - weeks,
-  militaryRecord: {
-    unitId: "UNIT_A", unitName: "1대대", roleId: "mortar", roleLabel: "박격포",
-    arcLabel: "사수", finalBallSense: 60, leaveDays: 20,
-    awards: [], penalties: [], perf: [], senseCurve: [],
-    topRelations: [{ memberId: "M1", name: "김상병", value: 45 }],
-    conversion: { statDelta: -1, velocityDelta: 0, recoveryWeeks: 6 },
-  },
-  ...over,
-} as unknown as ProtagonistSave);
+const discharged = (weeks: number, over: Partial<ProtagonistSave> = {}): ProtagonistSave =>
+  ({
+    id: "PLY_HERO",
+    name: "검사",
+    careerStage: "independent",
+    leagueId: "LEAGUE_INDEPENDENT",
+    teamId: "TEAM_IND_A",
+    age: 23,
+    playerType: "pitcher",
+    position: "SP",
+    handedness: "R",
+    pitchingForm: "overhand",
+    jerseyNumber: 18,
+    condition: 80,
+    fatigue: 10,
+    morale: 60,
+    pitching: {
+      ovr: 60,
+      stamina: 60,
+      velocity: 60,
+      command: 60,
+      control: 60,
+      movement: 60,
+      mentality: 60,
+      recovery: 60,
+      clutch: 60,
+      holdRunners: 60,
+    },
+    batting: { ovr: 30 },
+    primaryPosition: "SP",
+    positionRatings: { SP: 60 },
+    diligence: 60,
+    popularity: 10,
+    developmentRate: 1,
+    potentialHidden: 70,
+    growthPoints: 0,
+    tags: [],
+    pitchingXP: {},
+    battingXP: {},
+    pitches: [],
+    money: 1000,
+    fame: 50,
+    scoutScore: 0,
+    proServiceYears: 0,
+    militaryStatus: "군필",
+    militaryServedUnit: "general",
+    dischargedSeason: 2030,
+    dischargedWeek: 10 - weeks,
+    militaryRecord: {
+      unitId: "UNIT_A",
+      unitName: "1대대",
+      roleId: "mortar",
+      roleLabel: "박격포",
+      arcLabel: "사수",
+      finalBallSense: 60,
+      leaveDays: 20,
+      awards: [],
+      penalties: [],
+      perf: [],
+      senseCurve: [],
+      topRelations: [{ memberId: "M1", name: "김상병", value: 45 }],
+      conversion: { statDelta: -1, velocityDelta: 0, recoveryWeeks: 6 },
+    },
+    ...over,
+  }) as unknown as ProtagonistSave;
 
 const ctxOf = (
-  weeks: number, over: Partial<ProtagonistSave> = {}, currentWeek = 10,
+  weeks: number,
+  over: Partial<ProtagonistSave> = {},
+  currentWeek = 10,
 ): EventContext => ({
   protagonist: discharged(weeks, over),
-  currentWeek, seasonYear: 2030, seasonPhase: "season",
-  standings: [], stats: {}, triggeredEvents: {},
+  currentWeek,
+  seasonYear: 2030,
+  seasonPhase: "season",
+  standings: [],
+  stats: {},
+  triggeredEvents: {},
 });
 
 /**
@@ -96,8 +147,18 @@ const TIER_RULES = parseTierRules(RAW_TIER_RULES);
 /** 한 주를 돌린다. 난수는 고정 — 씨앗이 결과를 가르면 검사가 아니다 */
 const runWeek = (ctx: EventContext) => {
   resetEventFunnelStats();
-  return runEventEngine(rules, [], msgTmpls, decTmpls, ctx, 2030, 1,
-    [0.5, 0.5, 0.5, 0.5, 0.5, 0.5], TIER_RULES, "공용");
+  return runEventEngine(
+    rules,
+    [],
+    msgTmpls,
+    decTmpls,
+    ctx,
+    2030,
+    1,
+    [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+    TIER_RULES,
+    "공용",
+  );
 };
 
 describe("병영 재회 — 전역 뒤 도달", () => {
@@ -127,9 +188,12 @@ describe("병영 재회 — 전역 뒤 도달", () => {
   it("현역을 안 다녀왔으면 한 통도 안 온다", () => {
     const sports = runWeek(ctxOf(5, { militaryServedUnit: "sports" } as Partial<ProtagonistSave>));
     expect(sports.newMessages).toHaveLength(0);
-    const none = runWeek(ctxOf(5, {
-      militaryStatus: "미필", militaryServedUnit: null,
-    } as unknown as Partial<ProtagonistSave>));
+    const none = runWeek(
+      ctxOf(5, {
+        militaryStatus: "미필",
+        militaryServedUnit: null,
+      } as unknown as Partial<ProtagonistSave>),
+    );
     expect(none.newMessages).toHaveLength(0);
   });
 
@@ -142,7 +206,8 @@ describe("병영 재회 — 전역 뒤 도달", () => {
    *   것은 「조건이 열리는 주가 있는가」다.
    */
   it.each(reunionFiles.map((f) => f.replace(/.json$/, "")))(
-    "%s — 전역 뒤 어느 주에는 열린다", (id) => {
+    "%s — 전역 뒤 어느 주에는 열린다",
+    (id) => {
       const only = rules.filter((r) => r.id === id);
       let open = 0;
       for (const stage of STAGES) {
@@ -150,15 +215,25 @@ describe("병영 재회 — 전역 뒤 도달", () => {
           for (const cw of [4, 10, 20, 30]) {
             resetEventFunnelStats();
             for (const morale of [45, 60]) {
-              const ctx = ctxOf(w,
-                { careerStage: stage, morale } as Partial<ProtagonistSave>, cw);
-              const out = runEventEngine(only, [], msgTmpls, decTmpls, ctx, 2030, 1,
-                [0.5, 0.5, 0.5, 0.5, 0.5, 0.5], TIER_RULES, "공용");
+              const ctx = ctxOf(w, { careerStage: stage, morale } as Partial<ProtagonistSave>, cw);
+              const out = runEventEngine(
+                only,
+                [],
+                msgTmpls,
+                decTmpls,
+                ctx,
+                2030,
+                1,
+                [0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+                TIER_RULES,
+                "공용",
+              );
               if (out.newMessages.length > 0) open++;
             }
           }
         }
       }
       expect(open, "열리는 주가 없다 — 조건이 서로를 막는다").toBeGreaterThan(0);
-    });
+    },
+  );
 });

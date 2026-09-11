@@ -135,8 +135,8 @@ function teamProfileOf(teamId: string): unknown {
 
 /** 그 팀 총연봉 */
 function payrollOf(teamId: string): number {
-  return get(gameStore).npcs
-    .filter((n) => n.currentTeam === teamId && n.careerStatus === "active")
+  return get(gameStore)
+    .npcs.filter((n) => n.currentTeam === teamId && n.careerStatus === "active")
     .reduce((sum, n) => sum + (n.currentSalary ?? 0), 0);
 }
 
@@ -157,8 +157,8 @@ function salaryCapOf(teamId: string): number {
  */
 function rosterNeedsOf(teamId: string, position: string): string[] {
   const atPos = get(gameStore).npcs.filter(
-    (n) => n.currentTeam === teamId && n.careerStatus === "active"
-      && n.position === position).length;
+    (n) => n.currentTeam === teamId && n.careerStatus === "active" && n.position === position,
+  ).length;
   return atPos <= 1 ? [position] : [];
 }
 
@@ -170,9 +170,10 @@ function rosterNeedsOf(teamId: string, position: string): string[] {
  */
 function teamPitcherOvrsOf(teamId: string): number[] {
   const live = get(npcLiveStatsStore);
-  return get(gameStore).npcs
-    .filter((n) => n.currentTeam === teamId && n.careerStatus === "active"
-      && n.playerType === "pitcher")
+  return get(gameStore)
+    .npcs.filter(
+      (n) => n.currentTeam === teamId && n.careerStatus === "active" && n.playerType === "pitcher",
+    )
     .map((n) => livePitchingOvrOf(n, live));
 }
 
@@ -183,13 +184,14 @@ function awardCountOf(p: ProtagonistSave): number {
 
 /** 그 팀 활성 인원 */
 function activeCountOf(teamId: string): number {
-  return get(gameStore).npcs.filter(
-    (n) => n.currentTeam === teamId && n.careerStatus === "active").length;
+  return get(gameStore).npcs.filter((n) => n.currentTeam === teamId && n.careerStatus === "active")
+    .length;
 }
 
 /** 그 팀이 보유한 외국인 — (총원, 투수) */
 function foreignHeldOf(teamId: string, leagueId: string): [number, number] {
-  let held = 0, pit = 0;
+  let held = 0,
+    pit = 0;
   for (const n of get(gameStore).npcs) {
     if (n.currentTeam !== teamId || n.careerStatus !== "active") continue;
     if (!isForeignPlayer(leagueId, n.nationality)) continue;
@@ -266,12 +268,14 @@ export async function generateFaOffers(
   const rules = await (async () => {
     try {
       const { loadRosterRules } = await import("../repo/newGameV3");
-      return await loadRosterRules() as {
+      return (await loadRosterRules()) as {
         rosterRules?: Record<string, { rosterMax?: number }>;
         salaryRules?: { leagueMult?: Record<string, number> };
         faRules?: { bidInterestMin?: number };
       };
-    } catch { return {}; }
+    } catch {
+      return {};
+    }
   })();
   const rosterMaxOf = (leagueId: string) => rules.rosterRules?.[leagueId]?.rosterMax ?? 34;
 
@@ -290,7 +294,7 @@ export async function generateFaOffers(
   // ⚠ **국내는 아직 안 거른다.** 5단계에서 모든 리그를 같이 고친다 —
   //   지금 국내까지 건드리면 기존 밸런스가 흔들려 해외 쪽 실측이 오염된다.
   const pool = poolAll.filter((t) => {
-    if (t.leagueId === protagonist.leagueId) return true;   // 국내(=자기 리그)
+    if (t.leagueId === protagonist.leagueId) return true; // 국내(=자기 리그)
     // 🔴 **리그별 바닥** — Rust `OVERSEAS_ROUTES`가 갖고 있던 것을 여기로 옮겼다.
     //   그 루트는 후보 풀과 별개로 해외 팀을 무작위로 더 얹는 **두 번째 문**이라
     //   정원·외국인 한도·관심도 판정을 전부 우회했다. 문은 하나여야 한다.
@@ -301,18 +305,18 @@ export async function generateFaOffers(
     }
     const interest = postingInterest({
       teamPitcherOvrs: teamPitcherOvrsOf(t.id),
-      pitchingOvr:     protagonist.pitching.ovr,
-      scoutScore:      protagonist.scoutScore ?? 0,
-      fame:            protagonist.fame ?? 0,
+      pitchingOvr: protagonist.pitching.ovr,
+      scoutScore: protagonist.scoutScore ?? 0,
+      fame: protagonist.fame ?? 0,
       proServiceYears: protagonist.proServiceYears ?? 0,
-      awardCount:      awardCountOf(protagonist),
-      recentEra:       recentEraOf(protagonist),
+      awardCount: awardCountOf(protagonist),
+      recentEra: recentEraOf(protagonist),
     });
     return interest >= POSTING_INTEREST_MIN;
   });
 
   const params = {
-    pitchingOvr:     protagonist.pitching.ovr,
+    pitchingOvr: protagonist.pitching.ovr,
     // 🔴 **연기 대가를 여기서 낸다** (2026-09-10 · 사용자 확정 ③).
     //
     //   `militaryDeferPenalty` 는 `advanceWeek` 이 26세 +3 · 27세+ +5 로 쌓는데
@@ -327,29 +331,30 @@ export async function generateFaOffers(
     //   전부 따라 움직여 어디서 빠졌는지 못 가린다. **이 계산에만** 뺀다.
     // ⚠ 값은 **제안값**이다(`BALANCE_BACKLOG`) — 1pt 를 명성 1로 본다.
     //   5단계에서 D 가 계수를 잰다.
-    fame:            Math.max(0, (protagonist.fame ?? 0) - (protagonist.militaryDeferPenalty ?? 0)),
-    leagueId:        protagonist.leagueId,
-    teamId:          protagonist.teamId,
+    fame: Math.max(0, (protagonist.fame ?? 0) - (protagonist.militaryDeferPenalty ?? 0)),
+    leagueId: protagonist.leagueId,
+    teamId: protagonist.teamId,
     faUnsignedWeeks: protagonist.faUnsignedWeeks ?? 0,
     // 🔴 **팀별 관심도 판정에 쓴다** (5단계). 예전엔 무작위 3~5팀이었다 —
     //   OVR 60이든 90이든 제안이 같은 수였고, 팀이 필요해서 부르는 게 아니었다.
     //   NPC는 이미 `eval_fa_bid`로 도는데 **주인공만 안 탔다.**
-    age:             protagonist.age ?? 27,
+    age: protagonist.age ?? 27,
     proServiceYears: protagonist.proServiceYears ?? 0,
-    position:        protagonist.position ?? "SP",
+    position: protagonist.position ?? "SP",
     /**
      * 관심도 임계값 — **NPC FA와 같은 값을 같은 파일에서 읽는다**(`faRules.bidInterestMin`).
      *
      * ⚠ 상수는 규칙 파일을 못 읽었을 때만 쓴다. 여기 숫자를 적으면 표가 둘이 된다.
      * ⚠ 0이면 **예전 동작**(무작위 3~5팀)으로 떨어진다.
      */
-    interestMin:     rules.faRules?.bidInterestMin ?? FA_INTEREST_MIN,
+    interestMin: rules.faRules?.bidInterestMin ?? FA_INTEREST_MIN,
     // 🔴 **팀 사정을 같이 넘긴다** (2026-08-27). 예전엔 `id`와 `leagueId`뿐이라
     //   Rust가 성향·예산·정원을 **전부 기본값으로** 봤다 — 그러면 모든 팀이
     //   같은 관심도를 받아 문턱이 전부/전무로 갈린다.
     //   실측: 문턱 40 → 평균 16.9개(전부) · 45 → 1.1개(KBL 0). 그 사이가 없었다.
-    teams:           pool.map((t) => ({
-      id: t.id, leagueId: t.leagueId,
+    teams: pool.map((t) => ({
+      id: t.id,
+      leagueId: t.leagueId,
       profile: teamProfileOf(t.id),
       currentPayroll: payrollOf(t.id),
       salaryCap: salaryCapOf(t.id),
@@ -357,11 +362,9 @@ export async function generateFaOffers(
       rosterNeeds: rosterNeedsOf(t.id, protagonist.position ?? "SP"),
     })),
     // 리그 배수는 규칙 파일이 정본이다 — Rust에 표를 두 번 두지 않는다
-    leagueMult:      rules.salaryRules?.leagueMult ?? {},
+    leagueMult: rules.salaryRules?.leagueMult ?? {},
   };
-  return JSON.parse(
-    await window.projectB!.faGenerateOffers(JSON.stringify(params))
-  ) as FaOffer[];
+  return JSON.parse(await window.projectB!.faGenerateOffers(JSON.stringify(params))) as FaOffer[];
 }
 
 // ── TS 유지 ───────────────────────────────────────────────────
@@ -373,15 +376,15 @@ export function isFaEligible(protagonist: ProtagonistSave, _attendsUniversity: b
 
 export function toContract(offer: FaOffer): ProContract {
   return {
-    teamId:             offer.teamId,
-    leagueId:           offer.leagueId,
-    salary:             offer.salary,
-    durationYears:      offer.durationYears,
-    remainingYears:     offer.durationYears,
-    signingBonus:       offer.signingBonus,
-    teamOptionYears:    offer.teamOptionYears,
-    playerOptionYears:  offer.playerOptionYears,
-    noTrade:            offer.noTrade,
-    status:             "active",
+    teamId: offer.teamId,
+    leagueId: offer.leagueId,
+    salary: offer.salary,
+    durationYears: offer.durationYears,
+    remainingYears: offer.durationYears,
+    signingBonus: offer.signingBonus,
+    teamOptionYears: offer.teamOptionYears,
+    playerOptionYears: offer.playerOptionYears,
+    noTrade: offer.noTrade,
+    status: "active",
   };
 }

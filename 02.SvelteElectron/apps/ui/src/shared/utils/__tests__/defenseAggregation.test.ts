@@ -19,7 +19,18 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 const line = (o: Partial<Record<string, number>>): PlayerGameLine =>
-  ({ role: "batter", playerId: "P1", ab: 4, h: 1, hr: 0, rbi: 0, bb: 0, k: 1, sb: 0, ...o } as PlayerGameLine);
+  ({
+    role: "batter",
+    playerId: "P1",
+    ab: 4,
+    h: 1,
+    hr: 0,
+    rbi: 0,
+    bb: 0,
+    k: 1,
+    sb: 0,
+    ...o,
+  }) as PlayerGameLine;
 
 describe("수비 기록 집계", () => {
   it("수비율 식", () => {
@@ -50,9 +61,26 @@ describe("수비 기록 집계", () => {
   /** ⚠ 파생값이라 저장된 값을 안 믿는다 — era·whip 과 같은 취급 */
   it("로드에서 수비율을 다시 만든다", () => {
     const dirty = {
-      P1: { type: "batter", g: 10, pa: 40, ab: 36, h: 10, hr: 1, rbi: 5, sb: 0,
-            bb: 4, k: 8, avg: 0, obp: 0, slg: 0, ops: 0,
-            e: 2, a: 10, po: 20, fpct: 0.999 } as BatterSeasonStats,
+      P1: {
+        type: "batter",
+        g: 10,
+        pa: 40,
+        ab: 36,
+        h: 10,
+        hr: 1,
+        rbi: 5,
+        sb: 0,
+        bb: 4,
+        k: 8,
+        avg: 0,
+        obp: 0,
+        slg: 0,
+        ops: 0,
+        e: 2,
+        a: 10,
+        po: 20,
+        fpct: 0.999,
+      } as BatterSeasonStats,
     };
     const clean = sanitizeStatsRecord(dirty) as Record<string, BatterSeasonStats>;
     expect(clean.P1.fpct).toBe(fpctOf(20, 10, 2));
@@ -70,8 +98,7 @@ describe("수비 기록 저장 (v13)", () => {
 
   /** 🔴 v13을 v12 앞에 넣으면 버전이 덮여 영원히 다시 돈다 */
   it("v13이 v12 뒤에 온다", () => {
-    expect(DB.indexOf("currentVersion < 13"))
-      .toBeGreaterThan(DB.indexOf("currentVersion < 12"));
+    expect(DB.indexOf("currentVersion < 13")).toBeGreaterThan(DB.indexOf("currentVersion < 12"));
   });
 
   it("INSERT 자리표시자가 맞는다", () => {
@@ -95,8 +122,10 @@ describe("수비 기록 저장 (v13)", () => {
   });
 
   it("화면이 표시한다", () => {
-    for (const f of ["apps/ui/src/pages/status/StatusPage.svelte",
-                     "apps/ui/src/features/player/ui/PlayerDetailModal.svelte"]) {
+    for (const f of [
+      "apps/ui/src/pages/status/StatusPage.svelte",
+      "apps/ui/src/features/player/ui/PlayerDetailModal.svelte",
+    ]) {
       expect(read(f), f).toContain('"FPCT"');
     }
   });

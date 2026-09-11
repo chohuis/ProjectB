@@ -1,9 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import {
-  gradeChip, hidesNumbers, isCrisis, kindOnlyHint, costKindHint,
-} from "../eventTierCopy";
+import { gradeChip, hidesNumbers, isCrisis, kindOnlyHint, costKindHint } from "../eventTierCopy";
 import type { DecisionEffect } from "../../types/main";
 
 /**
@@ -67,8 +65,11 @@ describe("숫자를 감추는 등급 (§2)", () => {
 describe("종류만 힌트", () => {
   /** 실제 데이터 — `EVT_HS_COMMON_RETIRE_GIFT` 의 첫 갈래 (2026-09-08 실측) */
   const retireGift: DecisionEffect = {
-    moraleDelta: 5, diligenceDelta: 2, moneyDelta: -15,
-    relationDelta: { kind: "teammate", delta: 8 }, statDelta: { stamina: 1 },
+    moraleDelta: 5,
+    diligenceDelta: 2,
+    moneyDelta: -15,
+    relationDelta: { kind: "teammate", delta: 8 },
+    statDelta: { stamina: 1 },
   };
 
   it("🔴 숫자가 한 글자도 없다", () => {
@@ -81,8 +82,9 @@ describe("종류만 힌트", () => {
   });
 
   it("피로는 부호가 뒤집힌다 — 피로가 오르는 것이 내주는 쪽이다", () => {
-    expect(kindOnlyHint({ statDelta: { clutch: 1 }, fatigueDelta: 8 }))
-      .toBe("큰 것을 얻는다 · 몸을 갈아 넣는다");
+    expect(kindOnlyHint({ statDelta: { clutch: 1 }, fatigueDelta: 8 })).toBe(
+      "큰 것을 얻는다 · 몸을 갈아 넣는다",
+    );
     expect(kindOnlyHint({ fatigueDelta: -8 })).toBe("몸이 편해진다");
   });
 
@@ -91,8 +93,9 @@ describe("종류만 힌트", () => {
   });
 
   it("같은 종류가 양쪽에 서면 내주는 쪽만 남긴다 — 「얻고 잃는다」는 아무 말도 아니다", () => {
-    expect(kindOnlyHint({ moneyDelta: -10, luxurySpend: { cost: 10, onTeammate: false } }))
-      .toBe("돈을 내준다");
+    expect(kindOnlyHint({ moneyDelta: -10, luxurySpend: { cost: 10, onTeammate: false } })).toBe(
+      "돈을 내준다",
+    );
   });
 
   it("종류를 못 세우면 빈 문자열이다 — 「무언가 일어난다」로 메우지 않는다", () => {
@@ -102,8 +105,12 @@ describe("종류만 힌트", () => {
 
   it("세 종류를 넘기지 않는다 — 힌트가 본문만큼 길면 종류가 안 읽힌다", () => {
     const wide: DecisionEffect = {
-      statDelta: { control: 1 }, xp: { velocity: 3 }, moneyDelta: 5,
-      fameDelta: 2, moraleDelta: 4, relationDelta: { kind: "coach", delta: 3 },
+      statDelta: { control: 1 },
+      xp: { velocity: 3 },
+      moneyDelta: 5,
+      fameDelta: 2,
+      moraleDelta: 4,
+      relationDelta: { kind: "coach", delta: 3 },
     };
     expect(kindOnlyHint(wide).split(" · ").length).toBeLessThanOrEqual(3);
   });
@@ -111,8 +118,9 @@ describe("종류만 힌트", () => {
 
 describe("대가 종류 (§4)", () => {
   it("이벤트에 붙은 대가는 늘 내주는 말로 적는다", () => {
-    expect(costKindHint([{ relationDelta: { kind: "teammate", delta: -6 } }]))
-      .toBe("관계를 내준다");
+    expect(costKindHint([{ relationDelta: { kind: "teammate", delta: -6 } }])).toBe(
+      "관계를 내준다",
+    );
   });
   it("데이터가 `+` 로 적어 둔 대가(피로 +10)도 내주는 쪽이다", () => {
     expect(costKindHint([{ fatigueDelta: 10 }])).toBe("몸을 갈아 넣는다");
@@ -122,8 +130,9 @@ describe("대가 종류 (§4)", () => {
     expect(costKindHint([])).toBe("");
   });
   it("🔴 대가에도 숫자가 없다", () => {
-    expect(costKindHint([{ moneyDelta: -300, relationDelta: { kind: "manager", delta: -5 } }]))
-      .not.toMatch(/\d/);
+    expect(
+      costKindHint([{ moneyDelta: -300, relationDelta: { kind: "manager", delta: -5 } }]),
+    ).not.toMatch(/\d/);
   });
 });
 
@@ -136,8 +145,7 @@ describe("대가 종류 (§4)", () => {
  *   전부 초록이다 — 유니크의 숫자가 다시 새는데 아무도 모른다.
  */
 describe("화면이 가림 규칙을 실제로 쓰는가 (소스 문자열)", () => {
-  const src = (p: string) =>
-    readFileSync(resolve(__dirname, "../../../", p), "utf8");
+  const src = (p: string) => readFileSync(resolve(__dirname, "../../../", p), "utf8");
 
   it("소식함이 `hidesNumbers` 로 판정하고 `kindOnlyHint` 로 다시 짓는다", () => {
     const s = src("pages/news/NewsPage.svelte");

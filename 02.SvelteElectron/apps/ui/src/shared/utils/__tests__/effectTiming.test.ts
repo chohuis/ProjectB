@@ -1,7 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  scaleMs, showsOverlay, overlayMs, reducesMotion, OVERLAY_BASE_MS,
-} from "../effectTiming";
+import { scaleMs, showsOverlay, overlayMs, reducesMotion, OVERLAY_BASE_MS } from "../effectTiming";
 
 describe("연출 시간", () => {
   it("보통은 원래 시간 그대로", () => {

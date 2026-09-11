@@ -29,9 +29,9 @@ export interface TournamentRound {
 
 /** 그 리그의 대회를 주차 순으로 */
 export function tournamentsOfLeague(leagueId: string): TournamentDef[] {
-  return TOURNAMENTS
-    .filter((t) => t.leagueId === leagueId)
-    .sort((a, b) => a.startWeek - b.startWeek || a.order - b.order);
+  return TOURNAMENTS.filter((t) => t.leagueId === leagueId).sort(
+    (a, b) => a.startWeek - b.startWeek || a.order - b.order,
+  );
 }
 
 /**
@@ -110,7 +110,7 @@ export function championOf(bracket: TournamentBracket | null | undefined): strin
   if (!bracket || bracket.matches.length === 0) return null;
   const fin = finalMatches(bracket);
   // 마지막 라운드에 경기가 둘 이상이면 결승이 아니다 — 우승자를 만들지 않는다
-  return fin.length === 1 ? fin[0].winnerTeamId ?? null : null;
+  return fin.length === 1 ? (fin[0].winnerTeamId ?? null) : null;
 }
 
 export interface TeamRun {
@@ -133,9 +133,7 @@ export function teamRun(
   teamId: string,
 ): TeamRun | null {
   if (!bracket || !teamId) return null;
-  const mine = bracket.matches.filter(
-    (m) => m.homeTeamId === teamId || m.awayTeamId === teamId,
-  );
+  const mine = bracket.matches.filter((m) => m.homeTeamId === teamId || m.awayTeamId === teamId);
   if (mine.length === 0) return null;
 
   const deepest = mine.reduce((a, b) => (b.round > a.round ? b : a));

@@ -59,13 +59,14 @@ describe("소식 id에 주차만 넣지 않는다", () => {
       // `id: \`msg-...\`` 한 줄짜리 템플릿만 본다 (id 조립은 전부 이 형태다)
       for (const m of s.matchAll(/\bid:\s*`(msg-[^`]*)`/g)) {
         const idTpl = m[1];
-        if (!WEEK_ONLY.test(idTpl)) continue;   // 주차를 안 쓰면 대상 아님
-        if (HAS_YEAR.test(idTpl)) continue;     // 해가 들어 있으면 안전
+        if (!WEEK_ONLY.test(idTpl)) continue; // 주차를 안 쓰면 대상 아님
+        if (HAS_YEAR.test(idTpl)) continue; // 해가 들어 있으면 안전
         bad.push(`${f.slice(ROOT.length + 1)}  ${idTpl}`);
       }
     }
-    expect(bad, `주차만 쓴 소식 id — 다음 시즌 같은 주차에 겹친다:\n  ${bad.join("\n  ")}`)
-      .toEqual([]);
+    expect(bad, `주차만 쓴 소식 id — 다음 시즌 같은 주차에 겹친다:\n  ${bad.join("\n  ")}`).toEqual(
+      [],
+    );
   });
 
   // ── 시계로 만든 id는 재현이 안 된다 ────────────────────────────
@@ -86,7 +87,9 @@ describe("소식 id에 주차만 넣지 않는다", () => {
         if (m[1].includes("Date.now()")) bad.push(`${f.slice(ROOT.length + 1)}  ${m[1]}`);
       }
     }
-    expect(bad, `시계로 만든 소식 id — 재현이 안 되고 같은 순간 둘이면 겹친다:\n  ${bad.join("\n  ")}`)
-      .toEqual([]);
+    expect(
+      bad,
+      `시계로 만든 소식 id — 재현이 안 되고 같은 순간 둘이면 겹친다:\n  ${bad.join("\n  ")}`,
+    ).toEqual([]);
   });
 });

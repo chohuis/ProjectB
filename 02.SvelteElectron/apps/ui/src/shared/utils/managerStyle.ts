@@ -34,8 +34,15 @@ export interface ManagerStyleEffect {
 }
 
 export const NEUTRAL_STYLE: ManagerStyleEffect = {
-  power: 0, speed: 0, defense: 0, age: 0, noise: 0,
-  buntMult: 1, stealMult: 1, bullpenBonus: 0, moraleBonus: 0,
+  power: 0,
+  speed: 0,
+  defense: 0,
+  age: 0,
+  noise: 0,
+  buntMult: 1,
+  stealMult: 1,
+  bullpenBonus: 0,
+  moraleBonus: 0,
 };
 
 interface StyleRules {
@@ -66,12 +73,17 @@ export function managerStyleRules(): StyleRules | null {
  *
  * ⚠ 규칙이 없거나 꺼져 있으면 **중립**이다 — 예전과 똑같이 돈다.
  */
-export function managerEffect(m: {
-  style?: string | null;
-  tacticalIQ?: number | null;
-  offenseMind?: number | null;
-  riskTolerance?: number | null;
-} | null | undefined): ManagerStyleEffect {
+export function managerEffect(
+  m:
+    | {
+        style?: string | null;
+        tacticalIQ?: number | null;
+        offenseMind?: number | null;
+        riskTolerance?: number | null;
+      }
+    | null
+    | undefined,
+): ManagerStyleEffect {
   const r = RULES;
   if (!r?.enabled) return NEUTRAL_STYLE;
 
@@ -96,7 +108,7 @@ export function managerEffect(m: {
   const rt = m?.riskTolerance ?? 50;
   const k = ((rt - 50) / 50) * (r.riskSpan ?? 0);
   out.stealMult *= 1 + k;
-  out.buntMult  *= 1 - k;
+  out.buntMult *= 1 - k;
   if (out.buntMult < 0) out.buntMult = 0;
   if (out.stealMult < 0) out.stealMult = 0;
 
@@ -118,5 +130,5 @@ export function styleNoiseOf(playerId: string, teamId: string, span: number): nu
       h = Math.imul(h, 16777619) >>> 0;
     }
   }
-  return (((h % 2000) / 1000) - 1) * span;
+  return ((h % 2000) / 1000 - 1) * span;
 }

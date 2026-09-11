@@ -4,9 +4,7 @@ import { resolve } from "node:path";
 import type { ContractIncentive, PitcherSeasonStats } from "../../types/save";
 import { primeContractRules } from "../contractTerms";
 import { parseContractTermsCopy } from "../contractCopy";
-import {
-  settleIncentives, axisMeasurable, incentiveMessageBody,
-} from "../incentiveEngine";
+import { settleIncentives, axisMeasurable, incentiveMessageBody } from "../incentiveEngine";
 
 /**
  * 인센티브 시즌 끝 정산 (A 단위 4 · PLAN_CONTRACT_TERMS §5 · §5-3 · §7 ⑤⑥).
@@ -24,13 +22,16 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(p, "utf8");
 const MASTER = resolve(ROOT, "resource/data/master");
 
-const rulesFile = JSON.parse(read(resolve(MASTER, "players/generation_rules.json"))) as Record<string, never>;
-const copyFile  = JSON.parse(read(resolve(MASTER, "messages/contract_terms.json"))) as unknown;
+const rulesFile = JSON.parse(read(resolve(MASTER, "players/generation_rules.json"))) as Record<
+  string,
+  never
+>;
+const copyFile = JSON.parse(read(resolve(MASTER, "messages/contract_terms.json"))) as unknown;
 
-const SRC_ENGINE   = resolve(__dirname, "../incentiveEngine.ts");
-const SRC_USECASE  = resolve(__dirname, "../../usecases/incentiveSettlement.ts");
+const SRC_ENGINE = resolve(__dirname, "../incentiveEngine.ts");
+const SRC_USECASE = resolve(__dirname, "../../usecases/incentiveSettlement.ts");
 const SRC_ROLLOVER = resolve(__dirname, "../../usecases/seasonRollover.ts");
-const SRC_STORE    = resolve(__dirname, "../../stores/game.ts");
+const SRC_STORE = resolve(__dirname, "../../stores/game.ts");
 
 beforeAll(() => {
   // 게임과 **같은 파일**을 싣는다 — 폴백을 재면 규칙 파일이 안 걸린다
@@ -38,13 +39,29 @@ beforeAll(() => {
 });
 
 // ── 재료 ──────────────────────────────────────────────────────
-const stats = (o: Partial<PitcherSeasonStats>): PitcherSeasonStats => ({
-  type: "pitcher", g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, ip: 0, er: 0, h: 0,
-  bb: 0, k: 0, hb: 0, era: 0, whip: 0, ...o,
-} as PitcherSeasonStats);
+const stats = (o: Partial<PitcherSeasonStats>): PitcherSeasonStats =>
+  ({
+    type: "pitcher",
+    g: 0,
+    gs: 0,
+    w: 0,
+    l: 0,
+    sv: 0,
+    hd: 0,
+    ip: 0,
+    er: 0,
+    h: 0,
+    bb: 0,
+    k: 0,
+    hb: 0,
+    era: 0,
+    whip: 0,
+    ...o,
+  }) as PitcherSeasonStats;
 
-const inc = (o: Partial<ContractIncentive> & Pick<ContractIncentive, "kind">): ContractIncentive =>
-  ({ threshold: 1, bonus: 1000, ...o });
+const inc = (
+  o: Partial<ContractIncentive> & Pick<ContractIncentive, "kind">,
+): ContractIncentive => ({ threshold: 1, bonus: 1000, ...o });
 
 // ── ① 축이 보직을 탄다 (§5-3) ─────────────────────────────────
 describe("보직별 축", () => {
@@ -71,9 +88,13 @@ describe("보직별 축", () => {
 describe("달성", () => {
   it("문턱 이상이면 달성이고 그만큼 지급한다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [],
-      incentives: [inc({ kind: "games", threshold: 25, bonus: 800 }),
-                   inc({ kind: "wins", threshold: 10, bonus: 1200 })],
+      seasonYear: 2030,
+      role: "SP",
+      awardIds: [],
+      incentives: [
+        inc({ kind: "games", threshold: 25, bonus: 800 }),
+        inc({ kind: "wins", threshold: 10, bonus: 1200 }),
+      ],
       stats: stats({ g: 30, w: 12, ip: 180 }),
     });
     expect(st.rows.map((r) => r.outcome)).toEqual(["met", "met"]);
@@ -83,7 +104,10 @@ describe("달성", () => {
 
   it("문턱과 같으면 달성이다 — 경계는 이상이다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [], stats: stats({ g: 25 }),
+      seasonYear: 2030,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ g: 25 }),
       incentives: [inc({ kind: "games", threshold: 25, bonus: 500 })],
     });
     expect(st.rows[0].outcome).toBe("met");
@@ -92,7 +116,10 @@ describe("달성", () => {
 
   it("ERA 만 「이하」다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [], stats: stats({ ip: 150, era: 2.75 }),
+      seasonYear: 2030,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ ip: 150, era: 2.75 }),
       incentives: [inc({ kind: "era", threshold: 3, bonus: 1500 })],
     });
     expect(st.rows[0].outcome).toBe("met");
@@ -101,7 +128,10 @@ describe("달성", () => {
 
   it("한 이닝도 안 던지면 ERA 축은 공짜가 아니다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [], stats: stats({ ip: 0, era: 0 }),
+      seasonYear: 2030,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ ip: 0, era: 0 }),
       incentives: [inc({ kind: "era", threshold: 3, bonus: 1500 })],
     });
     expect(st.rows[0].outcome).toBe("missed");
@@ -110,7 +140,9 @@ describe("달성", () => {
 
   it("골든글러브는 부문이 붙은 id 로 남는다 — 접두로 맞춘다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", stats: stats({ ip: 100 }),
+      seasonYear: 2030,
+      role: "SP",
+      stats: stats({ ip: 100 }),
       awardIds: ["golden_골든글러브 (투수)"],
       incentives: [inc({ kind: "award", awardId: "golden", bonus: 2000 })],
     });
@@ -120,7 +152,10 @@ describe("달성", () => {
 
   it("MVP 는 id 가 그대로다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "CP", stats: stats({}), awardIds: ["mvp"],
+      seasonYear: 2030,
+      role: "CP",
+      stats: stats({}),
+      awardIds: ["mvp"],
       incentives: [inc({ kind: "award", awardId: "mvp", bonus: 3000 })],
     });
     expect(st.rows[0].outcome).toBe("met");
@@ -131,7 +166,10 @@ describe("달성", () => {
 describe("미달", () => {
   it("문턱에 못 미치면 돈이 안 나간다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "CP", awardIds: [], stats: stats({ g: 40, sv: 18 }),
+      seasonYear: 2030,
+      role: "CP",
+      awardIds: [],
+      stats: stats({ g: 40, sv: 18 }),
       incentives: [inc({ kind: "saves", threshold: 25, bonus: 1200 })],
     });
     expect(st.rows[0].outcome).toBe("missed");
@@ -141,9 +179,14 @@ describe("미달", () => {
 
   it("성적이 통째로 없는 해도 죽지 않는다 — 전부 미달이다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "RP", awardIds: [], stats: undefined,
-      incentives: [inc({ kind: "holds", threshold: 20, bonus: 900 }),
-                   inc({ kind: "games", threshold: 50, bonus: 700 })],
+      seasonYear: 2030,
+      role: "RP",
+      awardIds: [],
+      stats: undefined,
+      incentives: [
+        inc({ kind: "holds", threshold: 20, bonus: 900 }),
+        inc({ kind: "games", threshold: 50, bonus: 700 }),
+      ],
     });
     expect(st.rows.every((r) => r.outcome === "missed")).toBe(true);
     expect(st.total).toBe(0);
@@ -151,7 +194,10 @@ describe("미달", () => {
 
   it("수상을 못 받으면 미달이다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", stats: stats({ ip: 200 }), awardIds: ["rookie"],
+      seasonYear: 2030,
+      role: "SP",
+      stats: stats({ ip: 200 }),
+      awardIds: ["rookie"],
       incentives: [inc({ kind: "award", awardId: "mvp", bonus: 3000 })],
     });
     expect(st.rows[0].outcome).toBe("missed");
@@ -163,9 +209,14 @@ describe("보직이 바뀐 해의 못 잴 축", () => {
   it("선발로 건 이닝 축은 마무리 해에 unmeasurable 이고 돈이 안 나간다", () => {
     const st = settleIncentives({
       // 마무리로 100이닝을 던질 리 없지만, **문턱을 넘겨도** 안 준다는 걸 본다
-      seasonYear: 2031, role: "CP", awardIds: [], stats: stats({ ip: 200, g: 60, sv: 30 }),
-      incentives: [inc({ kind: "innings", threshold: 150, bonus: 1500 }),
-                   inc({ kind: "saves", threshold: 25, bonus: 1200 })],
+      seasonYear: 2031,
+      role: "CP",
+      awardIds: [],
+      stats: stats({ ip: 200, g: 60, sv: 30 }),
+      incentives: [
+        inc({ kind: "innings", threshold: 150, bonus: 1500 }),
+        inc({ kind: "saves", threshold: 25, bonus: 1200 }),
+      ],
     });
     expect(st.rows[0].outcome).toBe("unmeasurable");
     expect(st.rows[0].paid).toBe(0);
@@ -177,7 +228,10 @@ describe("보직이 바뀐 해의 못 잴 축", () => {
 
   it("못 잰 줄도 정산은 한 것이다 — 자물쇠를 찍는다", () => {
     const st = settleIncentives({
-      seasonYear: 2031, role: "CP", awardIds: [], stats: stats({}),
+      seasonYear: 2031,
+      role: "CP",
+      awardIds: [],
+      stats: stats({}),
       incentives: [inc({ kind: "innings", threshold: 150, bonus: 1500 })],
     });
     expect(st.settledKeys).toHaveLength(1);
@@ -189,7 +243,10 @@ describe("중복 지급 방지", () => {
   it("그 해가 이미 찍혀 있으면 줄 자체가 안 나온다", () => {
     const paid = inc({ kind: "games", threshold: 25, bonus: 800, paidSeasons: [2030] });
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [], stats: stats({ g: 30 }),
+      seasonYear: 2030,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ g: 30 }),
       incentives: [paid],
     });
     expect(st.rows).toHaveLength(0);
@@ -200,7 +257,10 @@ describe("중복 지급 방지", () => {
   it("다른 해는 다시 잰다 — 다년 계약이 한 번만 주는 게 아니다", () => {
     const paid = inc({ kind: "games", threshold: 25, bonus: 800, paidSeasons: [2030] });
     const st = settleIncentives({
-      seasonYear: 2031, role: "SP", awardIds: [], stats: stats({ g: 30 }),
+      seasonYear: 2031,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ g: 30 }),
       incentives: [paid],
     });
     expect(st.rows[0].outcome).toBe("met");
@@ -218,7 +278,10 @@ describe("중복 지급 방지", () => {
 describe("구 세이브", () => {
   it("incentives 가 없으면 아무 일도 안 일어난다", () => {
     const st = settleIncentives({
-      seasonYear: 2030, role: "SP", awardIds: [], stats: stats({ g: 30 }),
+      seasonYear: 2030,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ g: 30 }),
       incentives: undefined,
     });
     expect(st.rows).toHaveLength(0);
@@ -245,10 +308,15 @@ describe("정산 소식", () => {
   it("달성·미달·못 잰 축이 한 통에 같이 들어가고 합계가 붙는다", () => {
     const copy = parseContractTermsCopy(copyFile)!;
     const st = settleIncentives({
-      seasonYear: 2031, role: "CP", awardIds: [], stats: stats({ g: 60, sv: 30, ip: 65, era: 2.4 }),
-      incentives: [inc({ kind: "saves", threshold: 25, bonus: 1200 }),
-                   inc({ kind: "games", threshold: 70, bonus: 800 }),
-                   inc({ kind: "innings", threshold: 150, bonus: 1500 })],
+      seasonYear: 2031,
+      role: "CP",
+      awardIds: [],
+      stats: stats({ g: 60, sv: 30, ip: 65, era: 2.4 }),
+      incentives: [
+        inc({ kind: "saves", threshold: 25, bonus: 1200 }),
+        inc({ kind: "games", threshold: 70, bonus: 800 }),
+        inc({ kind: "innings", threshold: 150, bonus: 1500 }),
+      ],
     });
     const body = incentiveMessageBody(copy.incentive, st);
     expect(body.includes("달성")).toBe(true);
@@ -262,7 +330,10 @@ describe("정산 소식", () => {
   it("하나도 못 채운 해는 none 한 줄이 붙는다", () => {
     const copy = parseContractTermsCopy(copyFile)!;
     const st = settleIncentives({
-      seasonYear: 2031, role: "SP", awardIds: [], stats: stats({ g: 5 }),
+      seasonYear: 2031,
+      role: "SP",
+      awardIds: [],
+      stats: stats({ g: 5 }),
       incentives: [inc({ kind: "games", threshold: 25, bonus: 800 })],
     });
     const body = incentiveMessageBody(copy.incentive, st);
@@ -273,11 +344,14 @@ describe("정산 소식", () => {
   it("코드가 정산 문장을 따로 갖고 있지 않다", () => {
     // ⚠ 주석 줄은 뺀다 — 머리말이 문안 모양을 표로 적어 두었다.
     //   정규식을 안 쓴다(CLAUDE.md) — 줄 앞 글자로 가른다
-    const codeOnly = (p: string) => read(p).split("\n")
-      .filter((l) => {
-        const t = l.trim();
-        return !(t.startsWith("//") || t.startsWith("*") || t.startsWith("/*"));
-      }).join("\n");
+    const codeOnly = (p: string) =>
+      read(p)
+        .split("\n")
+        .filter((l) => {
+          const t = l.trim();
+          return !(t.startsWith("//") || t.startsWith("*") || t.startsWith("/*"));
+        })
+        .join("\n");
     const src = codeOnly(SRC_ENGINE) + codeOnly(SRC_USECASE);
     for (const word of ["달성 (", "미달 (", "합계 +"]) {
       expect(src.includes(word)).toBe(false);

@@ -22,71 +22,168 @@ import { WEEKS_PER_SEASON } from "./seasonWeeks";
 
 // ── 키 묶음 (정본은 types/save.ts) ─────────────────────────────
 const PITCHING = [
-  "ovr", "stamina", "velocity", "command", "control",
-  "movement", "mentality", "recovery", "clutch", "holdRunners",
+  "ovr",
+  "stamina",
+  "velocity",
+  "command",
+  "control",
+  "movement",
+  "mentality",
+  "recovery",
+  "clutch",
+  "holdRunners",
 ] as const;
 
 const BATTING = [
-  "ovr", "contact", "power", "eye", "discipline", "speed",
-  "baseInstinct", "bunting", "platoon", "fielding", "arm", "battingClutch",
+  "ovr",
+  "contact",
+  "power",
+  "eye",
+  "discipline",
+  "speed",
+  "baseInstinct",
+  "bunting",
+  "platoon",
+  "fielding",
+  "arm",
+  "battingClutch",
 ] as const;
 
 /** 투수 시즌 기록. `type`은 판별자라 뺀다 */
 const PITCHER_STATS = [
-  "g", "gs", "w", "l", "sv", "hd", "ip", "er", "h", "k", "bb",
-  "era", "whip", "rispAb", "rispH",
+  "g",
+  "gs",
+  "w",
+  "l",
+  "sv",
+  "hd",
+  "ip",
+  "er",
+  "h",
+  "k",
+  "bb",
+  "era",
+  "whip",
+  "rispAb",
+  "rispH",
 ] as const;
 
 /** 타자 시즌 기록 */
 const BATTER_STATS = [
-  "g", "pa", "ab", "h", "hr", "rbi", "sb", "bb", "k",
-  "avg", "obp", "slg", "ops", "rispAb", "rispH",
+  "g",
+  "pa",
+  "ab",
+  "h",
+  "hr",
+  "rbi",
+  "sb",
+  "bb",
+  "k",
+  "avg",
+  "obp",
+  "slg",
+  "ops",
+  "rispAb",
+  "rispH",
 ] as const;
 
 const STANDING = ["wins", "losses", "draws", "winPct", "runsFor", "runsAgainst"] as const;
 
 const CONTRACT_NUM = [
-  "salary", "durationYears", "remainingYears", "signingBonus",
-  "teamOptionYears", "playerOptionYears",
+  "salary",
+  "durationYears",
+  "remainingYears",
+  "signingBonus",
+  "teamOptionYears",
+  "playerOptionYears",
 ] as const;
 
-const SEASON_HEALTH = ["lowConditionWeeks", "highFatigueWeeks", "injuryCount", "totalWeeks"] as const;
+const SEASON_HEALTH = [
+  "lowConditionWeeks",
+  "highFatigueWeeks",
+  "injuryCount",
+  "totalWeeks",
+] as const;
 
 const INJURY_NUM = ["recoveryWeeksLeft", "totalRecoveryWeeks", "rehabPhase"] as const;
 
 const SCHOOL_NUM = [
-  "examAccumScore", "warningCount", "universityWeek", "universityGpa",
-  "semesterQualityAccum", "semesterWeeks", "repeatedYears", "academicWarningLevel",
+  "examAccumScore",
+  "warningCount",
+  "universityWeek",
+  "universityGpa",
+  "semesterQualityAccum",
+  "semesterWeeks",
+  "repeatedYears",
+  "academicWarningLevel",
 ] as const;
 
 /** 주인공 최상위 숫자 필드 */
 const PROTA_NUM = [
-  "age", "grade", "jerseyNumber", "condition", "fatigue", "morale",
-  "diligence", "popularity", "developmentRate", "potentialHidden", "growthPoints",
-  "money", "fame", "scoutScore", "proServiceYears",
-  "militaryServiceWeeks", "militaryRecoveryWeeks", "militaryDeferPenalty",
-  "tradeAdaptationWeeks", "faNegotiationRound", "faUnsignedWeeks",
+  "age",
+  "grade",
+  "jerseyNumber",
+  "condition",
+  "fatigue",
+  "morale",
+  "diligence",
+  "popularity",
+  "developmentRate",
+  "potentialHidden",
+  "growthPoints",
+  "money",
+  "fame",
+  "scoutScore",
+  "proServiceYears",
+  "militaryServiceWeeks",
+  "militaryRecoveryWeeks",
+  "militaryDeferPenalty",
+  "tradeAdaptationWeeks",
+  "faNegotiationRound",
+  "faUnsignedWeeks",
 ] as const;
 
 /** 주인공 최상위 문자열·열거 필드 (`eq` 전용) */
 const PROTA_EQ = [
-  "careerStage", "leagueId", "teamId", "schoolId", "playerType", "position",
-  "primaryPosition", "handedness", "pitchingForm", "currentRole", "militaryStatus",
-  "militaryUnit", "militaryServedUnit", "militaryHiatusStage",
+  "careerStage",
+  "leagueId",
+  "teamId",
+  "schoolId",
+  "playerType",
+  "position",
+  "primaryPosition",
+  "handedness",
+  "pitchingForm",
+  "currentRole",
+  "militaryStatus",
+  "militaryUnit",
+  "militaryServedUnit",
+  "militaryHiatusStage",
 ] as const;
 
 /** 불리언 (`eq`로 true/false를 본다) */
 const BOOL_PATHS = [
-  "sportsUnitSelected", "sportsUnitApplied",
-  "contract.noTrade", "injury.permanentPenaltyApplied", "injury.steroidUsed",
-  "school.attendsUniversity", "school.eligibilityBlocked", "school.majorSelected",
-  "school.graduated", "school.draftTriggered", "school.careerChoiceConfirmed",
+  "sportsUnitSelected",
+  "sportsUnitApplied",
+  "contract.noTrade",
+  "injury.permanentPenaltyApplied",
+  "injury.steroidUsed",
+  "school.attendsUniversity",
+  "school.eligibilityBlocked",
+  "school.majorSelected",
+  "school.graduated",
+  "school.draftTriggered",
+  "school.careerChoiceConfirmed",
 ] as const;
 
 /** 배열 길이 — "부상 이력 3회 이상" 같은 것 */
 const COUNT_PATHS = [
-  "injuryHistory.count", "careerRecords.count", "careerEvents.count",
-  "pitches.count", "tags.count", "relations.count",
+  "injuryHistory.count",
+  "careerRecords.count",
+  "careerEvents.count",
+  "pitches.count",
+  "tags.count",
+  "relations.count",
 ] as const;
 
 const join = (prefix: string, keys: readonly string[]) => keys.map((k) => `${prefix}.${k}`);
@@ -108,7 +205,8 @@ export const NUM_PATHS: ReadonlySet<string> = new Set([
   ...join("injury", INJURY_NUM),
   ...join("school", SCHOOL_NUM),
   ...COUNT_PATHS,
-  "week", "seasonYear",
+  "week",
+  "seasonYear",
   // **지금 리그에서 몇 년째인가** (2026-08-24). 해외 진출 서사의 축이다.
   //
   // 총 프로 연차(`proServiceYears`)로는 "낯선 리그 첫해"를 못 쓴다 —
@@ -138,8 +236,13 @@ export const NUM_PATHS: ReadonlySet<string> = new Set([
 export const EQ_PATHS: ReadonlySet<string> = new Set([
   ...PROTA_EQ,
   ...BOOL_PATHS,
-  "contract.status", "injury.type", "injury.severity", "injury.source",
-  "injury.treatmentChoice", "school.weeklyStudyMode", "school.universityMajor",
+  "contract.status",
+  "injury.type",
+  "injury.severity",
+  "injury.source",
+  "injury.treatmentChoice",
+  "school.weeklyStudyMode",
+  "school.universityMajor",
   "seasonPhase",
   // 군 보직 — 통신병이었나 박격포반이었나로 재회 문안이 갈린다 (B-20)
   "militaryRecord.roleId",
@@ -159,8 +262,8 @@ function weeksSinceDischargeOf(ctx: EventContext): number | undefined {
   const p = ctx.protagonist;
   if (p.dischargedSeason === undefined || p.dischargedWeek === undefined) return undefined;
   if (ctx.seasonYear === undefined) return undefined;
-  const weeks = (ctx.seasonYear - p.dischargedSeason) * WEEKS_PER_SEASON
-    + (ctx.currentWeek - p.dischargedWeek);
+  const weeks =
+    (ctx.seasonYear - p.dischargedSeason) * WEEKS_PER_SEASON + (ctx.currentWeek - p.dischargedWeek);
   // 음수는 재는 기준이 어긋난 것이다 — 지어 맞추지 않고 못 잰 것으로 본다
   return weeks >= 0 ? weeks : undefined;
 }
@@ -177,7 +280,7 @@ function weeksSinceDischargeOf(ctx: EventContext): number | undefined {
 function leagueYearsOf(ctx: EventContext): number {
   const now = ctx.protagonist.leagueId;
   const recs = ctx.protagonist.careerRecords ?? [];
-  let n = 1;                                   // 이번 시즌
+  let n = 1; // 이번 시즌
   for (let i = recs.length - 1; i >= 0; i--) {
     if (recs[i].leagueId !== now) break;
     n++;
@@ -223,26 +326,36 @@ export function resolvePath(ctx: EventContext, path: string): unknown {
   const rest = path.slice(dot + 1);
 
   switch (head) {
-    case "pitching":    return p.pitching[rest as keyof typeof p.pitching];
-    case "batting":     return p.batting[rest as keyof typeof p.batting];
+    case "pitching":
+      return p.pitching[rest as keyof typeof p.pitching];
+    case "batting":
+      return p.batting[rest as keyof typeof p.batting];
     case "seasonStart": {
       const d2 = rest.indexOf(".");
-      const which = rest.slice(0, d2), key = rest.slice(d2 + 1);
+      const which = rest.slice(0, d2),
+        key = rest.slice(d2 + 1);
       const src = which === "pitching" ? p.seasonStartPitching : p.seasonStartBatting;
       return src ? (src as unknown as Record<string, number>)[key] : undefined;
     }
     case "xp": {
       const d2 = rest.indexOf(".");
-      const which = rest.slice(0, d2), key = rest.slice(d2 + 1);
+      const which = rest.slice(0, d2),
+        key = rest.slice(d2 + 1);
       const src = which === "pitching" ? p.pitchingXP : p.battingXP;
       return (src as Record<string, number> | undefined)?.[key] ?? 0;
     }
-    case "stats":       return (seasonStatsOf(ctx) as unknown as Record<string, unknown> | undefined)?.[rest];
-    case "standing":    return (standingOf(ctx) as unknown as Record<string, unknown> | undefined)?.[rest];
-    case "contract":    return (p.contract as unknown as Record<string, unknown> | undefined)?.[rest];
-    case "seasonHealth":return (p.seasonHealth as unknown as Record<string, unknown> | undefined)?.[rest];
-    case "injury":      return (p.injury as unknown as Record<string, unknown> | undefined)?.[rest];
-    case "school":      return (ctx.schoolState as unknown as Record<string, unknown> | undefined)?.[rest];
+    case "stats":
+      return (seasonStatsOf(ctx) as unknown as Record<string, unknown> | undefined)?.[rest];
+    case "standing":
+      return (standingOf(ctx) as unknown as Record<string, unknown> | undefined)?.[rest];
+    case "contract":
+      return (p.contract as unknown as Record<string, unknown> | undefined)?.[rest];
+    case "seasonHealth":
+      return (p.seasonHealth as unknown as Record<string, unknown> | undefined)?.[rest];
+    case "injury":
+      return (p.injury as unknown as Record<string, unknown> | undefined)?.[rest];
+    case "school":
+      return (ctx.schoolState as unknown as Record<string, unknown> | undefined)?.[rest];
     // 군 경력 한 장 (B-20 재회). **없으면 `undefined`** — 상무 출신·미필·구 세이브가
     // 그렇고, 그때 조건이 false 가 되는 게 맞다. 경로가 틀린 것과는 다르다
     case "militaryRecord": {
@@ -258,12 +371,18 @@ export function resolvePath(ctx: EventContext, path: string): unknown {
       }
       return (rec as unknown as Record<string, unknown>)[rest];
     }
-    case "injuryHistory":  return (p.injuryHistory ?? []).length;
-    case "careerRecords":  return (p.careerRecords ?? []).length;
-    case "careerEvents":   return (p.careerEvents ?? []).length;
-    case "pitches":        return (p.pitches ?? []).length;
-    case "tags":           return (p.tags ?? []).length;
-    case "relations":      return (ctx.relations ?? []).length;
+    case "injuryHistory":
+      return (p.injuryHistory ?? []).length;
+    case "careerRecords":
+      return (p.careerRecords ?? []).length;
+    case "careerEvents":
+      return (p.careerEvents ?? []).length;
+    case "pitches":
+      return (p.pitches ?? []).length;
+    case "tags":
+      return (p.tags ?? []).length;
+    case "relations":
+      return (ctx.relations ?? []).length;
     default:
       throw new Error(`[eventPaths] 경로 뿌리를 모른다: "${head}" (${path})`);
   }

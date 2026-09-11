@@ -12,12 +12,24 @@
 //    한쪽만 고쳐진 채 남는다 — 이 저장소가 여러 번 겪은 형태다.
 
 import type {
-  BarsMetadata, CardsMetadata, RankListMetadata, TableCell, TableColumn,
-  TableMetadata, TimelineMetadata, Top10Metadata,
+  BarsMetadata,
+  CardsMetadata,
+  RankListMetadata,
+  TableCell,
+  TableColumn,
+  TableMetadata,
+  TimelineMetadata,
+  Top10Metadata,
 } from "../types/main";
 import {
-  fillCount, fillVar, rankText as rankTextOf,
-  type BarsCopy, type CardsCopy, type RankCopy, type TableCopy, type TimelineCopy,
+  fillCount,
+  fillVar,
+  rankText as rankTextOf,
+  type BarsCopy,
+  type CardsCopy,
+  type RankCopy,
+  type TableCopy,
+  type TimelineCopy,
 } from "./dashboardCopy";
 
 /**
@@ -45,8 +57,12 @@ export interface NameLookup {
  *   §1 의 규격이 이미 통일해 뒀다(`teamId` · `npcId` · `playerId`).
  */
 export const ID_COLUMN_KIND: Readonly<Record<string, "team" | "person">> = {
-  teamId: "team", fromTeamId: "team", toTeamId: "team", myTeamId: "team",
-  npcId: "person", playerId: "person",
+  teamId: "team",
+  fromTeamId: "team",
+  toTeamId: "team",
+  myTeamId: "team",
+  npcId: "person",
+  playerId: "person",
 };
 
 /**
@@ -141,10 +157,14 @@ export interface TableRowView {
  *   `—` 로 채운다(칸 수가 어긋나면 표가 통째로 밀린다).
  */
 export function buildTableRows(
-  md: TableMetadata, cols?: TableColumnView[], copy?: TableCopy, names?: NameLookup,
+  md: TableMetadata,
+  cols?: TableColumnView[],
+  copy?: TableCopy,
+  names?: NameLookup,
 ): TableRowView[] {
-  const columns: TableColumnView[] = cols
-    ?? (md.columns ?? []).map((c, ci) => ({ key: c.key, label: c.label, align: cellAlign(c, ci) }));
+  const columns: TableColumnView[] =
+    cols ??
+    (md.columns ?? []).map((c, ci) => ({ key: c.key, label: c.label, align: cellAlign(c, ci) }));
   const empty = copy?.emptyCell;
   const rowLabels = copy && Object.keys(copy.rows).length > 0 ? copy.rows : null;
   return (md.rows ?? []).map((row, ri) => ({
@@ -155,18 +175,31 @@ export function buildTableRows(
       let text: string;
       if (listKind && Array.isArray(raw)) {
         // 배열이 오면 id 마다 이름을 찾아 잇는다. 문자열이면 아래 기본으로 간다
-        text = (raw as unknown[])
-          .map((v) => (typeof v === "string" ? (names?.[listKind]?.(v) ?? v) : cellText(v as TableCell, empty)))
-          .join(LIST_JOIN) || cellText(null, empty);
-      } else if ((c.key === "item" || c.key === "name") && rowLabels
-                 && typeof raw === "string" && rowLabels[raw] !== undefined) {
+        text =
+          (raw as unknown[])
+            .map((v) =>
+              typeof v === "string"
+                ? (names?.[listKind]?.(v) ?? v)
+                : cellText(v as TableCell, empty),
+            )
+            .join(LIST_JOIN) || cellText(null, empty);
+      } else if (
+        (c.key === "item" || c.key === "name") &&
+        rowLabels &&
+        typeof raw === "string" &&
+        rowLabels[raw] !== undefined
+      ) {
         // 항목 열의 값은 metadata 키다 — 「salary」 가 아니라 「연봉」 으로 그린다.
         // ⚠ 열 이름이 `name` 인 표도 있다(코치 리포트) — 거기도 값이 키다.
         // ⚠ **문안에 없는 값은 그대로 둔다** — 인센티브 표의 `name` 은 이미
         //   말이라(`incentiveLabel`) 여기서 갈아치우면 안 된다
         text = rowLabels[raw];
-      } else if (c.key === "kind" && copy && typeof raw === "string"
-                 && copy.kindLabel[raw] !== undefined) {
+      } else if (
+        c.key === "kind" &&
+        copy &&
+        typeof raw === "string" &&
+        copy.kindLabel[raw] !== undefined
+      ) {
         // 구분 열의 값도 키다 — 「sports」 가 아니라 「체육부대 입대」 로 그린다
         // (문안의 `kindLabel`). 생산부가 낱말을 실으면 그 말이 세이브에 굳는다
         text = copy.kindLabel[raw];
@@ -179,8 +212,13 @@ export function buildTableRows(
       } else if (c.key === "note" && copy?.lockNote && isNumericCell(raw) && raw !== "") {
         // 말소 비고 — 생산부는 주 수만 싣고 문장은 문안이 갖는다
         text = fillVar(copy.lockNote, "weeks", raw as number);
-      } else if (c.key === "outcome" && typeof raw === "string" && raw !== ""
-                 && copy && Object.keys(copy.outcomeLabel).length > 0) {
+      } else if (
+        c.key === "outcome" &&
+        typeof raw === "string" &&
+        raw !== "" &&
+        copy &&
+        Object.keys(copy.outcomeLabel).length > 0
+      ) {
         // 결말은 낱말로 온다 — 「달성」·「미달」은 문안이 갖는다 (인센티브 정산)
         text = copy.outcomeLabel[raw] ?? raw;
       } else {
@@ -245,7 +283,9 @@ export interface RankListView {
  *   `0` 으로 채우면 「변동 없음」과 「모름」이 같아 보인다.
  */
 export function buildRankList(
-  md: Top10Metadata | RankListMetadata, copy?: RankCopy, names?: NameLookup,
+  md: Top10Metadata | RankListMetadata,
+  copy?: RankCopy,
+  names?: NameLookup,
 ): RankListView {
   if (md.type === "top10") {
     const typeKr = md.playerType === "pitcher" ? "투수" : "타자";
@@ -281,22 +321,24 @@ export function buildRankList(
      */
     subtitle: copy?.title || md.title || "",
     empty: copy?.empty ?? "",
-    columns: [{
-      label: "",
-      heroRank: null,
-      entries: (md.items ?? []).map((it) => ({
-        // 상세를 열려면 id 가 있어야 한다 — 팀 순위엔 사람이 없어 빈 문자열이다
-        id: it.labelId ?? "",
-        rank: it.rank,
-        rankText: copy ? rankTextOf(it.rank, copy) : String(it.rank),
-        // 🔴 **id 를 이름으로 바꾸는 자리가 화면이다.** 만드는 쪽이 한글
-        //    이름을 굳혀 실으면 표시 언어를 바꿔도 그 줄만 한글로 남는다
-        name: lookupName(it.labelId, names) ?? it.label ?? it.labelId ?? "",
-        sub: lookupName(it.subId, names) ?? it.sub ?? it.subId ?? "",
-        isMe: it.isMe === true,
-        delta: deltaMark(it.delta),
-      })),
-    }],
+    columns: [
+      {
+        label: "",
+        heroRank: null,
+        entries: (md.items ?? []).map((it) => ({
+          // 상세를 열려면 id 가 있어야 한다 — 팀 순위엔 사람이 없어 빈 문자열이다
+          id: it.labelId ?? "",
+          rank: it.rank,
+          rankText: copy ? rankTextOf(it.rank, copy) : String(it.rank),
+          // 🔴 **id 를 이름으로 바꾸는 자리가 화면이다.** 만드는 쪽이 한글
+          //    이름을 굳혀 실으면 표시 언어를 바꿔도 그 줄만 한글로 남는다
+          name: lookupName(it.labelId, names) ?? it.label ?? it.labelId ?? "",
+          sub: lookupName(it.subId, names) ?? it.sub ?? it.subId ?? "",
+          isMe: it.isMe === true,
+          delta: deltaMark(it.delta),
+        })),
+      },
+    ],
   };
 }
 
@@ -320,7 +362,6 @@ function lookupName(id: string | undefined, names?: NameLookup): string | undefi
 //
 // ⚠ **문안이 없으면 키를 그대로 쓴다.** 「승」 을 여기 한 벌 더 두면 데이터와
 //   두 벌이 되고 한쪽만 고쳐진 채 남는다.
-
 
 export interface TableColumnView {
   key: string;
@@ -384,7 +425,8 @@ function declaredLabel(key: string, copy: TableCopy): string {
  * ⚠ 값이 하나도 없으면 `null` 이다. 그때는 부르는 쪽의 기본(첫 열만 왼쪽)이 남는다.
  */
 export function inferAlign(
-  key: string, rows: TableMetadata["rows"],
+  key: string,
+  rows: TableMetadata["rows"],
 ): "left" | "right" | "center" | null {
   // id 열은 화면에서 이름으로 바뀐다 — 값만 보면 숫자 id 가 오른쪽에 선다
   if (ID_COLUMN_KIND[key] || ID_LIST_COLUMN_KIND[key]) return "left";
@@ -423,9 +465,11 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
       key: c.key,
       // 생산부가 이름을 실어 보내면 그것이 이기고, 안 보내면 문안이 채운다
       label: c.label || declaredLabel(c.key, copy),
-      align: c.align
-             ?? (sentenceColumn(c.key, copy) ? "left" : null)
-             ?? inferAlign(c.key, md.rows) ?? cellAlign(c, i),
+      align:
+        c.align ??
+        (sentenceColumn(c.key, copy) ? "left" : null) ??
+        inferAlign(c.key, md.rows) ??
+        cellAlign(c, i),
     }));
   }
 
@@ -467,8 +511,10 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
   return keys.map((k, i) => ({
     key: k,
     label: declaredLabel(k, copy),
-    align: (sentenceColumn(k, copy) ? "left" : null)
-           ?? inferAlign(k, md.rows) ?? ((i === 0 ? "left" : "right") as "left" | "right"),
+    align:
+      (sentenceColumn(k, copy) ? "left" : null) ??
+      inferAlign(k, md.rows) ??
+      ((i === 0 ? "left" : "right") as "left" | "right"),
   }));
 }
 
@@ -483,7 +529,10 @@ export function resolveColumns(md: TableMetadata, copy: TableCopy): TableColumnV
  *   이름이라 위에 한 줄 더 두면 부제가 된다.
  */
 export function buildTableView(
-  md: TableMetadata, copy: TableCopy, withTitle = false, names?: NameLookup,
+  md: TableMetadata,
+  copy: TableCopy,
+  withTitle = false,
+  names?: NameLookup,
 ): TableView {
   const cols = resolveColumns(md, copy);
   const rows = buildTableRows(md, cols, copy, names);
@@ -492,7 +541,7 @@ export function buildTableView(
     title: withTitle ? copy.title : "",
     columns: cols,
     rows,
-    deltaLabel: md.deltaKey ? (copy.deltaLabel || copy.optionalColumns.delta || "") : null,
+    deltaLabel: md.deltaKey ? copy.deltaLabel || copy.optionalColumns.delta || "" : null,
     empty: copy.empty,
     footnote: md.footnote ?? fillFootnote(copy.footnote, md.footnoteVars),
   };
@@ -554,7 +603,7 @@ export function buildBars(md: BarsMetadata, copy: BarsCopy): BarsView {
     title: copy.title,
     bars: (md.bars ?? []).map((b) => ({
       // 이름이 값인 자리(과목명)는 소식이 싣고, 정해진 자리(분위기)는 문안이 준다
-      label: b.label ?? (b.key ? copy.labels[b.key] ?? b.key : ""),
+      label: b.label ?? (b.key ? (copy.labels[b.key] ?? b.key) : ""),
       pct: span > 0 ? clampPct(((b.value - copy.min) / span) * 100) : 0,
       value: b.value,
       delta: deltaMark(b.delta),
@@ -668,7 +717,7 @@ export function buildTimeline(md: TimelineMetadata, copy: TimelineCopy): Timelin
     entries: (md.entries ?? []).map((e) => ({
       when: e.when,
       // 이름표는 문안이 준다 — 「부대」를 소식에 굳히면 지난 소식만 옛 말로 남는다
-      label: e.label ?? (e.key ? copy.labels[e.key] ?? e.key : ""),
+      label: e.label ?? (e.key ? (copy.labels[e.key] ?? e.key) : ""),
       detail: e.detail ?? "",
     })),
     empty: copy.empty,

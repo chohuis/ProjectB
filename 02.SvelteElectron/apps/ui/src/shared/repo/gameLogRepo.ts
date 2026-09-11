@@ -59,7 +59,7 @@ export async function getRecentGames(
   try {
     rows = JSON.parse(raw) as RawRow[] | { error?: string };
   } catch {
-    return [];   // 깨진 응답으로 화면을 죽이지 않는다
+    return []; // 깨진 응답으로 화면을 죽이지 않는다
   }
   if (!Array.isArray(rows)) {
     console.warn("[gameLogRepo] 최근 경기 조회 실패:", (rows as { error?: string }).error);
@@ -104,13 +104,30 @@ export function isPitcherLine(
 export function summarize(games: RecentGame[]): {
   kind: "pitcher" | "batter" | null;
   g: number;
-  ip: number; er: number; k: number; bb: number; era: number | null;
-  ab: number; h: number; hr: number; rbi: number; avg: number | null;
+  ip: number;
+  er: number;
+  k: number;
+  bb: number;
+  era: number | null;
+  ab: number;
+  h: number;
+  hr: number;
+  rbi: number;
+  avg: number | null;
 } {
   const out = {
     kind: null as "pitcher" | "batter" | null,
-    g: 0, ip: 0, er: 0, k: 0, bb: 0, era: null as number | null,
-    ab: 0, h: 0, hr: 0, rbi: 0, avg: null as number | null,
+    g: 0,
+    ip: 0,
+    er: 0,
+    k: 0,
+    bb: 0,
+    era: null as number | null,
+    ab: 0,
+    h: 0,
+    hr: 0,
+    rbi: 0,
+    avg: null as number | null,
   };
   for (const gm of games) {
     const l = gm.line;
@@ -118,13 +135,18 @@ export function summarize(games: RecentGame[]): {
     out.g++;
     if (isPitcherLine(l)) {
       out.kind ??= "pitcher";
-      out.ip += l.ip ?? 0; out.er += l.er ?? 0;
-      out.k += l.k ?? 0;   out.bb += l.bb ?? 0;
+      out.ip += l.ip ?? 0;
+      out.er += l.er ?? 0;
+      out.k += l.k ?? 0;
+      out.bb += l.bb ?? 0;
     } else {
       out.kind ??= "batter";
-      out.ab += l.ab ?? 0; out.h += l.h ?? 0;
-      out.hr += l.hr ?? 0; out.rbi += l.rbi ?? 0;
-      out.k += l.k ?? 0;   out.bb += l.bb ?? 0;
+      out.ab += l.ab ?? 0;
+      out.h += l.h ?? 0;
+      out.hr += l.hr ?? 0;
+      out.rbi += l.rbi ?? 0;
+      out.k += l.k ?? 0;
+      out.bb += l.bb ?? 0;
     }
   }
   if (out.kind === "pitcher" && out.ip > 0) out.era = (out.er * 9) / out.ip;
@@ -184,7 +206,9 @@ export async function recordGameLogs(
     .map((l) => {
       const mine = teamOf(l.playerId);
       return {
-        npcId: l.playerId, role: l.role, statJson: JSON.stringify(l),
+        npcId: l.playerId,
+        role: l.role,
+        statJson: JSON.stringify(l),
         gameDate: meta.gameDate ?? "",
         teamId: mine,
         opponentTeamId: mine ? (mine === home ? away : home) : "",

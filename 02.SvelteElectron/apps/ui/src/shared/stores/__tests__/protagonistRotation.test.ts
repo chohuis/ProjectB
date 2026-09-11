@@ -49,25 +49,36 @@ import type { MatchResult } from "../../types/season";
 const ROOT = resolve(__dirname, "../../../../../..");
 const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
-const emptyResult = (): MatchResult => ({
-  homeScore: 3, awayScore: 1,
-  winnerId: "TEAM_A", loserId: "TEAM_B",
-  playerLines: [], events: [],
-} as unknown as MatchResult);
+const emptyResult = (): MatchResult =>
+  ({
+    homeScore: 3,
+    awayScore: 1,
+    winnerId: "TEAM_A",
+    loserId: "TEAM_B",
+    playerLines: [],
+    events: [],
+  }) as unknown as MatchResult;
 
-const stateWith = (rot: Record<string, number>): SeasonStoreState => ({
-  leagueState: {
-    LEAGUE_KBL: {
-      standings: [], stats: {}, playerConditions: {}, teamRotationIndex: rot,
+const stateWith = (rot: Record<string, number>): SeasonStoreState =>
+  ({
+    leagueState: {
+      LEAGUE_KBL: {
+        standings: [],
+        stats: {},
+        playerConditions: {},
+        teamRotationIndex: rot,
+      },
     },
-  },
-} as unknown as SeasonStoreState);
+  }) as unknown as SeasonStoreState;
 
 describe("주인공 팀 로테이션", () => {
   it("정규 경기 결과가 양 팀 로테이션을 한 칸씩 올린다", () => {
     const next = syncProtagonistLeagueUpdate(
-      stateWith({ TEAM_A: 5, TEAM_B: 9 }), "LEAGUE_KBL",
-      emptyResult(), "TEAM_A", "TEAM_B",
+      stateWith({ TEAM_A: 5, TEAM_B: 9 }),
+      "LEAGUE_KBL",
+      emptyResult(),
+      "TEAM_A",
+      "TEAM_B",
     );
     const idx = next.leagueState.LEAGUE_KBL.teamRotationIndex;
     expect(idx.TEAM_A).toBe(6);
@@ -77,7 +88,11 @@ describe("주인공 팀 로테이션", () => {
   /** 값이 없던 팀도 0에서 시작해 올라야 한다 — 첫 경기가 그렇다 */
   it("기록이 없던 팀은 0에서 1이 된다", () => {
     const next = syncProtagonistLeagueUpdate(
-      stateWith({}), "LEAGUE_KBL", emptyResult(), "TEAM_A", "TEAM_B",
+      stateWith({}),
+      "LEAGUE_KBL",
+      emptyResult(),
+      "TEAM_A",
+      "TEAM_B",
     );
     const idx = next.leagueState.LEAGUE_KBL.teamRotationIndex;
     expect(idx.TEAM_A).toBe(1);
@@ -94,7 +109,9 @@ describe("주인공 팀 로테이션", () => {
     // 이 한 줄이 정규 분기다 — 인자가 둘뿐이어야 한다
     expect(S).toContain("seasonStore.applyMatchResult(outcome.scheduleId, matchResult);");
     // 그리고 리그 상태는 바로 다음 줄이 맡는다
-    expect(S).toContain("seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult,");
+    expect(S).toContain(
+      "seasonStore.syncProtagonistLeagueResult(protagonist.leagueId, matchResult,",
+    );
   });
 
   /** 배경·친선이 올리는 자리는 그대로여야 한다 — 한쪽만 고치면 또 어긋난다 */

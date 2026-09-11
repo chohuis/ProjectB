@@ -16,14 +16,16 @@ import { parseEffectsArray } from "../../stores/master";
  */
 describe("문자열형 보상 키", () => {
   it("예전부터 되던 것", () => {
-    expect(parseEffectsArray(["condition:-4", "fatigue:+5", "morale:+8"]))
-      .toEqual({ conditionDelta: -4, fatigueDelta: 5, moraleDelta: 8 });
+    expect(parseEffectsArray(["condition:-4", "fatigue:+5", "morale:+8"])).toEqual({
+      conditionDelta: -4,
+      fatigueDelta: 5,
+      moraleDelta: 8,
+    });
     expect(parseEffectsArray(["xp.command:+2"])).toEqual({ xp: { command: 2 } });
   });
 
   it("타격 XP — 접두사가 대상을 가른다", () => {
-    expect(parseEffectsArray(["xp.batting.contact:+2"]))
-      .toEqual({ xp: { "batting.contact": 2 } });
+    expect(parseEffectsArray(["xp.batting.contact:+2"])).toEqual({ xp: { "batting.contact": 2 } });
   });
 
   it("돈 — 단위는 만원이다", () => {
@@ -32,10 +34,12 @@ describe("문자열형 보상 키", () => {
   });
 
   it("관계 — 다섯 종류만 받는다", () => {
-    expect(parseEffectsArray(["relation.manager:+8"]))
-      .toEqual({ relationDelta: { kind: "manager", delta: 8 } });
-    expect(parseEffectsArray(["relation.teammate:-3"]))
-      .toEqual({ relationDelta: { kind: "teammate", delta: -3 } });
+    expect(parseEffectsArray(["relation.manager:+8"])).toEqual({
+      relationDelta: { kind: "manager", delta: 8 },
+    });
+    expect(parseEffectsArray(["relation.teammate:-3"])).toEqual({
+      relationDelta: { kind: "teammate", delta: -3 },
+    });
   });
 
   /** 🔴 오타 하나면 관계가 **조용히** 안 움직인다. 아는 종류만 받는다 */
@@ -45,10 +49,12 @@ describe("문자열형 보상 키", () => {
   });
 
   it("사치품 — 자기 소비와 동료 소비가 갈린다", () => {
-    expect(parseEffectsArray(["luxury:400"]))
-      .toEqual({ luxurySpend: { cost: 400, onTeammate: false } });
-    expect(parseEffectsArray(["luxury.teammate:150"]))
-      .toEqual({ luxurySpend: { cost: 150, onTeammate: true } });
+    expect(parseEffectsArray(["luxury:400"])).toEqual({
+      luxurySpend: { cost: 400, onTeammate: false },
+    });
+    expect(parseEffectsArray(["luxury.teammate:150"])).toEqual({
+      luxurySpend: { cost: 150, onTeammate: true },
+    });
   });
 
   /**
@@ -58,7 +64,7 @@ describe("문자열형 보상 키", () => {
   it("사치품과 돈을 같이 적으면 둘 다 실린다 — 저작에서 막을 것", () => {
     const fx = parseEffectsArray(["luxury:400", "money:-400"]);
     expect(fx.luxurySpend).toBeDefined();
-    expect(fx.moneyDelta).toBe(-400);   // 이러면 800이 빠진다
+    expect(fx.moneyDelta).toBe(-400); // 이러면 800이 빠진다
   });
 
   it("모르는 키는 조용히 버린다 — 그래서 check:effectkeys가 있다", () => {

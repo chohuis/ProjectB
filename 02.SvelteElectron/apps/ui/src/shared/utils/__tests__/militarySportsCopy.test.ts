@@ -2,7 +2,11 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import {
-  parseMilitarySportsCopy, fillSportsCopy, sportsCalendar, militaryNews, dischargeWeekOf,
+  parseMilitarySportsCopy,
+  fillSportsCopy,
+  sportsCalendar,
+  militaryNews,
+  dischargeWeekOf,
   MILITARY_MSG_PREFIX,
 } from "../militarySportsCopy";
 import type { MilitaryCalendarEntry } from "../../types/militaryLife";
@@ -26,8 +30,7 @@ const CALENDAR = JSON.parse(
   readFileSync(join(MASTER, "military/calendar.json"), "utf8"),
 ) as MilitaryCalendarEntry[];
 /** 소식 id 를 만드는 자리 — 규칙이 바뀌면 목록이 조용히 0건이 된다 */
-const ADVANCE_WEEK = readFileSync(
-  join(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+const ADVANCE_WEEK = readFileSync(join(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
 
 describe("체육부대 문안 데이터", () => {
   it("로더가 실제 파일을 통과시킨다", () => {
@@ -84,12 +87,15 @@ describe("상무 부대 일정", () => {
 
   it("주차 오름차순이다", () => {
     const got = sportsCalendar(CALENDAR, ids);
-    for (let i = 1; i < got.length; i++) expect(got[i].week).toBeGreaterThanOrEqual(got[i - 1].week);
+    for (let i = 1; i < got.length; i++)
+      expect(got[i].week).toBeGreaterThanOrEqual(got[i - 1].week);
   });
 
   it("입소부터 전역까지 이어진다", () => {
     const got = sportsCalendar(CALENDAR, ids);
-    const last = CALENDAR.slice().sort((a, b) => a.week - b.week).at(-1)!;
+    const last = CALENDAR.slice()
+      .sort((a, b) => a.week - b.week)
+      .at(-1)!;
     expect(got[0].week).toBe(1);
     expect(got.at(-1)!.event).toBe(last.event);
   });

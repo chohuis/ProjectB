@@ -16,9 +16,12 @@ export const LEAGUE_ORDER = [
   "LEAGUE_HIGHSCHOOL",
   "LEAGUE_UNIVERSITY",
   "LEAGUE_INDEPENDENT",
-  "LEAGUE_KBL",     "LEAGUE_KBL_FARM",
-  "LEAGUE_ABL",     "LEAGUE_ABL_FARM",
-  "LEAGUE_JBL",     "LEAGUE_JBL_FARM",
+  "LEAGUE_KBL",
+  "LEAGUE_KBL_FARM",
+  "LEAGUE_ABL",
+  "LEAGUE_ABL_FARM",
+  "LEAGUE_JBL",
+  "LEAGUE_JBL_FARM",
 ];
 
 export interface VisibilityInput {
@@ -37,11 +40,13 @@ export interface VisibilityInput {
  */
 export function visibleLeagueIds(inp: VisibilityInput): string[] {
   const locked = inp.locked ?? new Set<string>();
-  const keys = new Set([...Object.keys(inp.leagueState).filter(Boolean), inp.myLeagueId].filter(Boolean));
+  const keys = new Set(
+    [...Object.keys(inp.leagueState).filter(Boolean), inp.myLeagueId].filter(Boolean),
+  );
   const ok = (lid: string) => isLeagueInScope(lid) && !locked.has(lid);
 
   const ordered = LEAGUE_ORDER.filter((lid) => keys.has(lid) && ok(lid));
-  const extra   = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && ok(lid));
+  const extra = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && ok(lid));
   const lockedV = [...keys].filter((lid) => locked.has(lid));
   return [...ordered, ...extra, ...lockedV];
 }

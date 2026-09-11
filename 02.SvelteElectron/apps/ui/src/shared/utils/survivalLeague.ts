@@ -70,10 +70,15 @@ export async function generateStageSchedule(
   return call<ScheduleEntry[]>(
     "generateSurvivalStageNative",
     {
-      leagueId: def.leagueId, teams, stage: def.stage,
+      leagueId: def.leagueId,
+      teams,
+      stage: def.stage,
       targetGames: def.targetGames,
-      startWeek: def.startWeek, endWeek: def.endWeek,
-      protagonistTeamId, seasonYear, dayOffsets: [],
+      startWeek: def.startWeek,
+      endWeek: def.endWeek,
+      protagonistTeamId,
+      seasonYear,
+      dayOffsets: [],
     },
     [],
   );
@@ -114,23 +119,47 @@ export function stageComplete(stage: number, schedule: ScheduleEntry[]): boolean
  * 생존팀끼리 새로 라운드로빈 — 매 스테이지가 사실상 새 시즌처럼 리셋". 누적을 쓰면
  * 1차에서 벌어놓은 승수로 3차 순위가 정해져 "매 단계 새 승부"가 무의미해진다.
  */
-export function stageStandings(stage: number, teams: string[], schedule: ScheduleEntry[]): Standing[] {
+export function stageStandings(
+  stage: number,
+  teams: string[],
+  schedule: ScheduleEntry[],
+): Standing[] {
   const acc = new Map<string, Standing>(
-    teams.map((t) => [t, {
-      teamId: t, wins: 0, losses: 0, draws: 0, winPct: 0,
-      runsFor: 0, runsAgainst: 0, streak: "", last10: "",
-    }]),
+    teams.map((t) => [
+      t,
+      {
+        teamId: t,
+        wins: 0,
+        losses: 0,
+        draws: 0,
+        winPct: 0,
+        runsFor: 0,
+        runsAgainst: 0,
+        streak: "",
+        last10: "",
+      },
+    ]),
   );
   for (const e of schedule) {
     if (!e.result || !e.id.startsWith(`INDS${stage}_`)) continue;
-    const h = acc.get(e.homeTeamId), a = acc.get(e.awayTeamId);
+    const h = acc.get(e.homeTeamId),
+      a = acc.get(e.awayTeamId);
     if (!h || !a) continue;
     const { homeScore, awayScore } = e.result;
-    h.runsFor += homeScore; h.runsAgainst += awayScore;
-    a.runsFor += awayScore; a.runsAgainst += homeScore;
-    if (homeScore > awayScore) { h.wins++; a.losses++; }
-    else if (homeScore < awayScore) { a.wins++; h.losses++; }
-    else { h.draws++; a.draws++; }
+    h.runsFor += homeScore;
+    h.runsAgainst += awayScore;
+    a.runsFor += awayScore;
+    a.runsAgainst += homeScore;
+    if (homeScore > awayScore) {
+      h.wins++;
+      a.losses++;
+    } else if (homeScore < awayScore) {
+      a.wins++;
+      h.losses++;
+    } else {
+      h.draws++;
+      a.draws++;
+    }
   }
   for (const s of acc.values()) {
     const played = s.wins + s.losses + s.draws;

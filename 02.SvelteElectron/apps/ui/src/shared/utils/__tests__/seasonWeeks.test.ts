@@ -49,17 +49,21 @@ describe("리그 기간과 어긋나지 않는가", () => {
 
   it("진로허브가 각 무대 종료 뒤다", () => {
     // 고교 — 주말리그(W26)와 마지막 대회가 다 끝나야 진로를 정한다
-    const hsLast = TOURNAMENTS.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
-      .reduce((a, b) => (a.endWeek > b.endWeek ? a : b));
-    expect(W.HS_CAREER_HUB_WEEK, `고교 대회 종료 W${hsLast.endWeek}`)
-      .toBeGreaterThan(hsLast.endWeek);
+    const hsLast = TOURNAMENTS.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL").reduce((a, b) =>
+      a.endWeek > b.endWeek ? a : b,
+    );
+    expect(W.HS_CAREER_HUB_WEEK, `고교 대회 종료 W${hsLast.endWeek}`).toBeGreaterThan(
+      hsLast.endWeek,
+    );
     expect(W.HS_CAREER_HUB_WEEK).toBeGreaterThan(HS_END_WEEK);
 
     // 대학 — 여명기가 마지막이다
-    const univLast = TOURNAMENTS.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY")
-      .reduce((a, b) => (a.endWeek > b.endWeek ? a : b));
-    expect(W.UNIV_CAREER_HUB_WEEK, `대학 대회 종료 W${univLast.endWeek}`)
-      .toBeGreaterThan(univLast.endWeek);
+    const univLast = TOURNAMENTS.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY").reduce((a, b) =>
+      a.endWeek > b.endWeek ? a : b,
+    );
+    expect(W.UNIV_CAREER_HUB_WEEK, `대학 대회 종료 W${univLast.endWeek}`).toBeGreaterThan(
+      univLast.endWeek,
+    );
   });
 
   it("모든 이벤트가 1~52 안에 있다", () => {
@@ -75,8 +79,11 @@ describe("겨울에 시즌 일이 남지 않는가", () => {
   it("병역·스토브리그를 뺀 이벤트가 W35 전에 끝난다", () => {
     // 오프시즌 전용 이벤트만 W35 이후여야 한다
     const inSeason = [
-      W.TRADE_DEADLINE_WEEK, W.HS_CAREER_HUB_WEEK, W.UNIV_CAREER_HUB_WEEK,
-      W.INDIE_CAREER_HUB_WEEK, W.INDIE_SEASON_REVIEW_WEEK,
+      W.TRADE_DEADLINE_WEEK,
+      W.HS_CAREER_HUB_WEEK,
+      W.UNIV_CAREER_HUB_WEEK,
+      W.INDIE_CAREER_HUB_WEEK,
+      W.INDIE_SEASON_REVIEW_WEEK,
       W.CAREER_RESULT_WEEK,
     ];
     for (const w of inSeason) expect(w).toBeLessThanOrEqual(W.OFFSEASON_START_WEEK);

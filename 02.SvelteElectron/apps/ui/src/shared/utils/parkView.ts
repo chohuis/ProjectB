@@ -9,13 +9,16 @@
  * 그림 세 장이 각각 따로 그려졌기 때문이다.
  */
 import {
-  PARK_COORDS, PARK_TIER_OF, PARK_IMAGES,
-  type ParkTier, type ParkCoords,
+  PARK_COORDS,
+  PARK_TIER_OF,
+  PARK_IMAGES,
+  type ParkTier,
+  type ParkCoords,
 } from "./parkAnchors";
 
 /** 그림이 없는 구장이 걸렸을 때 쓰는 티어 기본 그림 (원본 GIF) */
 const TIER_FALLBACK_IMAGE: Record<ParkTier, string> = {
-  pro:        "/park/probaseball.gif",
+  pro: "/park/probaseball.gif",
   university: "/park/universitybaseball.gif",
   highschool: "/park/highschoolbaseball.gif",
 };

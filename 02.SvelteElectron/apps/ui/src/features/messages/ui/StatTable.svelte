@@ -40,7 +40,7 @@
    *    바꾸는 자리는 화면 하나다.
    */
   $: names = {
-    team:   (id: string) => $teamMap.get(id)?.name,
+    team: (id: string) => $teamMap.get(id)?.name,
     person: (id: string) => $entityMap.get(id)?.name,
   };
   /**
@@ -76,7 +76,9 @@
             {#each r.cells as cell, ci (cell.key)}
               <td class="a-{cell.align}" class:u-num={cell.numeric}>{cell.text}</td>
               {#if ci === 0 && view.deltaLabel !== null}
-                <td class="a-right c-delta d-{r.delta?.dir ?? 'none'}">{deltaText(r.delta, copy)}</td>
+                <td class="a-right c-delta d-{r.delta?.dir ?? 'none'}"
+                  >{deltaText(r.delta, copy)}</td
+                >
               {/if}
             {/each}
           </tr>
@@ -105,43 +107,98 @@
 </div>
 
 <style>
-  .st { display: flex; flex-direction: column; gap: 4px; }
-  .scroll { overflow-x: auto; }
+  .st {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .scroll {
+    overflow-x: auto;
+  }
 
-  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
 
   th {
-    font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
-    color: var(--ink-mute); background: var(--panel-sunk);
-    padding: 5px 7px; border-bottom: 1px solid var(--line);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    background: var(--panel-sunk);
+    padding: 5px 7px;
+    border-bottom: 1px solid var(--line);
     white-space: nowrap;
   }
   td {
-    padding: 5px 7px; border-bottom: 1px solid var(--line);
-    color: var(--ink-mid); white-space: nowrap;
+    padding: 5px 7px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-mid);
+    white-space: nowrap;
   }
   /* 첫 열은 이름이라 길면 줄인다 — 숫자 열을 밀어내면 표가 못 읽힌다 */
-  td:first-child { color: var(--ink); max-width: 12em; overflow: hidden; text-overflow: ellipsis; }
+  td:first-child {
+    color: var(--ink);
+    max-width: 12em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-  .a-left { text-align: left; }
-  .a-right { text-align: right; }
-  .a-center { text-align: center; }
-  .u-num { font-variant-numeric: tabular-nums; }
+  .a-left {
+    text-align: left;
+  }
+  .a-right {
+    text-align: right;
+  }
+  .a-center {
+    text-align: center;
+  }
+  .u-num {
+    font-variant-numeric: tabular-nums;
+  }
 
-  tbody tr:hover { background: var(--panel-sunk); }
+  tbody tr:hover {
+    background: var(--panel-sunk);
+  }
   /* 내 행은 팀 색으로 반전한다 — `.u-table tr.is-me` 와 같은 규칙이다 */
-  tr.is-me td { background: var(--t-wash); font-weight: 800; color: var(--ink); }
+  tr.is-me td {
+    background: var(--t-wash);
+    font-weight: 800;
+    color: var(--ink);
+  }
 
-  .c-delta { width: 3.4em; font-variant-numeric: tabular-nums; }
-  .d-up { color: var(--ok); }
-  .d-down { color: var(--bad); }
-  .d-flat { color: var(--ink-mute); }
+  .c-delta {
+    width: 3.4em;
+    font-variant-numeric: tabular-nums;
+  }
+  .d-up {
+    color: var(--ok);
+  }
+  .d-down {
+    color: var(--bad);
+  }
+  .d-flat {
+    color: var(--ink-mute);
+  }
 
   /* 표가 둘일 때만 뜨는 이름 한 줄 — 부제가 아니라 표의 이름이다 */
   .cap {
-    margin: 4px 0 0; font-size: 11px; font-weight: 800;
-    letter-spacing: 0.04em; color: var(--ink-mid);
+    margin: 4px 0 0;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--ink-mid);
   }
-  .empty { color: var(--ink-mute); text-align: center; padding: 10px; }
-  .foot { margin: 0; font-size: 11px; color: var(--ink-mute); }
+  .empty {
+    color: var(--ink-mute);
+    text-align: center;
+    padding: 10px;
+  }
+  .foot {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
 </style>

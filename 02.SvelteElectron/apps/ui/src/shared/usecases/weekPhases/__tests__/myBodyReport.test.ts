@@ -17,14 +17,26 @@ import type { MyBodyEvent, MyBodyMetadata } from "../../../types/main";
 const teamName = (id: string) => id.replace("TEAM_", "");
 
 const ABSENCE_INJ: MyBodyEvent = {
-  week: 15, kind: "absence", reason: "injury", opponentTeamId: "TEAM_A",
+  week: 15,
+  kind: "absence",
+  reason: "injury",
+  opponentTeamId: "TEAM_A",
 };
 const ABSENCE_COND: MyBodyEvent = {
-  week: 16, kind: "absence", reason: "condition", condition: 32, opponentTeamId: "TEAM_B",
+  week: 16,
+  kind: "absence",
+  reason: "condition",
+  condition: 32,
+  opponentTeamId: "TEAM_B",
 };
 const WARNING: MyBodyEvent = { week: 13, kind: "warning", fatigue: 79, riskPct: 34 };
 
-const SNAP = { injuryType: "좌측 어깨 염좌", severity: "moderate", recoveryWeeksLeft: 3, sinceWeek: 14 };
+const SNAP = {
+  injuryType: "좌측 어깨 염좌",
+  severity: "moderate",
+  recoveryWeeksLeft: 3,
+  sinceWeek: 14,
+};
 
 describe("몸 상태 월간 리포트", () => {
   it("담을 게 없으면 null이다", () => {
@@ -40,7 +52,14 @@ describe("몸 상태 월간 리포트", () => {
   });
 
   it("결장과 경고가 한 통에 다 실린다", () => {
-    const m = buildMyBodyReport([WARNING, ABSENCE_INJ, ABSENCE_COND], SNAP, 17, 2027, "4월", teamName)!;
+    const m = buildMyBodyReport(
+      [WARNING, ABSENCE_INJ, ABSENCE_COND],
+      SNAP,
+      17,
+      2027,
+      "4월",
+      teamName,
+    )!;
     expect(m.body).toContain("W15");
     expect(m.body).toContain("W16");
     expect(m.body).toContain("W13");
@@ -104,8 +123,14 @@ describe("부상 이름은 ID가 아니라 한글이다", () => {
   // ⚠ 2026-08-08 UI 순회가 화면에서 "SHOULDER_INFLAM 4주 남음"을 잡았다.
   // 다른 화면은 전부 INJURY_LABEL을 거치는데 이 리포트만 원문을 그대로 냈다.
   const injured = () =>
-    buildMyBodyReport([], { injuryType: "SHOULDER_INFLAM", severity: "moderate", recoveryWeeksLeft: 4, sinceWeek: 10 },
-      12, 2026, "5월", () => "팀")!;
+    buildMyBodyReport(
+      [],
+      { injuryType: "SHOULDER_INFLAM", severity: "moderate", recoveryWeeksLeft: 4, sinceWeek: 10 },
+      12,
+      2026,
+      "5월",
+      () => "팀",
+    )!;
 
   it("본문에 원문 ID가 안 남는다", () => {
     const m = injured();

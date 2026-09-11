@@ -11,10 +11,7 @@ export const SANGMU_TEAM_ID = "TEAM_IND_SANGMU_PHOENIX";
 export const SANGMU_LEAGUE_ID = "LEAGUE_INDEPENDENT";
 
 /** 구 ID 포함 — 구 세이브·구 코드 경로를 걸러낼 때 쓴다 */
-export const SANGMU_TEAM_IDS: ReadonlySet<string> = new Set([
-  SANGMU_TEAM_ID,
-  "TEAM_SPORTS_UNIT",
-]);
+export const SANGMU_TEAM_IDS: ReadonlySet<string> = new Set([SANGMU_TEAM_ID, "TEAM_SPORTS_UNIT"]);
 
 // ── ID 규칙 정본 (DESIGN.md §8.2 원칙 6) ─────────────────────
 // 리그/팀/구단 ID의 유일한 출처는 refs.json이며, 파생 규칙은 이 모듈에만 둔다.
@@ -22,9 +19,7 @@ export const SANGMU_TEAM_IDS: ReadonlySet<string> = new Set([
 
 /** 구단 ID → 1군 팀 ID (CLUB_KBL_X → TEAM_KBL_X_1) */
 export function clubToFirstTeam(clubId: string): string {
-  return clubId.startsWith("CLUB_")
-    ? `TEAM_${clubId.slice("CLUB_".length)}_1`
-    : clubId;
+  return clubId.startsWith("CLUB_") ? `TEAM_${clubId.slice("CLUB_".length)}_1` : clubId;
 }
 
 /** 1군 팀 ID → 팜(2군) 팀 ID (TEAM_X_1 → TEAM_X_2), 규칙 불일치 시 null */
@@ -86,7 +81,7 @@ export function hsRegionTeams(
   regions: Record<string, readonly string[]>,
 ): readonly string[] {
   const rid = hsRegionOfTeam(teamId);
-  return rid ? regions[rid] ?? [] : [];
+  return rid ? (regions[rid] ?? []) : [];
 }
 
 // ── 팀 → 리그 파생 ───────────────────────────────────────────────
@@ -132,14 +127,21 @@ export function leagueOfTeam(teamId: string): string | null {
   const farm = teamId.endsWith("_2");
   const m = /^TEAM_([A-Z]+)_/.exec(teamId);
   if (!m) return null;
-  const base = ({
-    HS: "LEAGUE_HIGHSCHOOL", UNIV: "LEAGUE_UNIVERSITY", IND: "LEAGUE_INDEPENDENT",
-    KBL: "LEAGUE_KBL", ABL: "LEAGUE_ABL", JBL: "LEAGUE_JBL",
-  } as Record<string, string>)[m[1]];
+  const base = (
+    {
+      HS: "LEAGUE_HIGHSCHOOL",
+      UNIV: "LEAGUE_UNIVERSITY",
+      IND: "LEAGUE_INDEPENDENT",
+      KBL: "LEAGUE_KBL",
+      ABL: "LEAGUE_ABL",
+      JBL: "LEAGUE_JBL",
+    } as Record<string, string>
+  )[m[1]];
   if (!base) return null;
   // 고교·대학·독립엔 팜이 없다
   return farm && (base === "LEAGUE_KBL" || base === "LEAGUE_ABL" || base === "LEAGUE_JBL")
-    ? `${base}_FARM` : base;
+    ? `${base}_FARM`
+    : base;
 }
 
 /**
@@ -152,13 +154,19 @@ export function leagueOfTeam(teamId: string): string | null {
  */
 export function facilityTierOf(leagueId: string): string {
   switch (leagueId) {
-    case "LEAGUE_HIGHSCHOOL":  return "고교";
-    case "LEAGUE_UNIVERSITY":  return "대학";
-    case "LEAGUE_KBL":         return "1군";
-    case "LEAGUE_KBL_FARM":    return "2군";
+    case "LEAGUE_HIGHSCHOOL":
+      return "고교";
+    case "LEAGUE_UNIVERSITY":
+      return "대학";
+    case "LEAGUE_KBL":
+      return "1군";
+    case "LEAGUE_KBL_FARM":
+      return "2군";
     case "LEAGUE_ABL":
-    case "LEAGUE_JBL":         return "1군";
-    default:                   return "독립";
+    case "LEAGUE_JBL":
+      return "1군";
+    default:
+      return "독립";
   }
 }
 
@@ -202,8 +210,9 @@ let _facFactors: Record<string, number> | null = null;
 
 export async function loadFacilityFactors(): Promise<Record<string, number>> {
   if (_facFactors) return _facFactors;
-  const raw = await window.projectB!.masterFetch("players/generation_rules.json") as
-    { growthRules?: { facilityFactor?: Record<string, number> } } | null;
+  const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as {
+    growthRules?: { facilityFactor?: Record<string, number> };
+  } | null;
   const t = raw?.growthRules?.facilityFactor;
   if (!t) throw new Error("[ids] generation_rules.json growthRules.facilityFactor 없음");
   _facFactors = t;
@@ -232,8 +241,9 @@ let _xpRules: GrowthXpRules | null = null;
 
 export async function loadGrowthXpRules(): Promise<GrowthXpRules> {
   if (_xpRules) return _xpRules;
-  const raw = await window.projectB!.masterFetch("players/generation_rules.json") as
-    { growthRules?: { xp?: GrowthXpRules } } | null;
+  const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as {
+    growthRules?: { xp?: GrowthXpRules };
+  } | null;
   const t = raw?.growthRules?.xp;
   if (!t) throw new Error("[ids] generation_rules.json growthRules.xp 없음");
   if (!Array.isArray(t.ageBands) || t.ageBands.length === 0) {

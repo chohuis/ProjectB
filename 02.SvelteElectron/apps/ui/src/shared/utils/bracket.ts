@@ -76,7 +76,7 @@ export function toRounds(series: readonly PostseasonSeries[]): BracketRound[] {
   }
 
   return [...groups.entries()]
-    .sort((a, b) => b[0] - a[0])          // 깊은 쪽(=먼저 하는 경기)이 왼쪽
+    .sort((a, b) => b[0] - a[0]) // 깊은 쪽(=먼저 하는 경기)이 왼쪽
     .map(([depth, list]) => ({
       depth,
       label: list[0].round,

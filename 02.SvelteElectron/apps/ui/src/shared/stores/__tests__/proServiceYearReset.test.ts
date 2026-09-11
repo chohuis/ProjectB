@@ -17,14 +17,13 @@ import { resolve } from "node:path";
  * ⚠ 통합 실행으로는 재현이 어렵다. 주인공이 프로에 가서 이적까지 하는 전개가
  * 실행마다 갈린다(시즌 진행 비결정성). 그래서 소스로 고정한다.
  */
-const SRC = readFileSync(
-  resolve(__dirname, "../game.ts"), "utf8",
-);
+const SRC = readFileSync(resolve(__dirname, "../game.ts"), "utf8");
 
 describe("프로 연차 리셋 방지", () => {
   it("🔴 팀이 바뀌었다고 연차를 0으로 되돌리지 않는다", () => {
-    expect(SRC, "proServiceYears를 isNewTeam으로 0으로 되돌리는 코드가 살아 있다")
-      .not.toMatch(/proServiceYears:\s*isNewTeam\s*\?\s*0/);
+    expect(SRC, "proServiceYears를 isNewTeam으로 0으로 되돌리는 코드가 살아 있다").not.toMatch(
+      /proServiceYears:\s*isNewTeam\s*\?\s*0/,
+    );
   });
 
   it("계약 서명이 기존 연차를 그대로 넘긴다", () => {
@@ -34,7 +33,6 @@ describe("프로 연차 리셋 방지", () => {
   });
 
   it("⚠ 죽은 변수를 남기지 않는다 — isNewTeam은 더 쓰지 않는다", () => {
-    expect(SRC, "isNewTeam 선언이 남아 있다(쓰이지 않는다)")
-      .not.toMatch(/const isNewTeam\s*=/);
+    expect(SRC, "isNewTeam 선언이 남아 있다(쓰이지 않는다)").not.toMatch(/const isNewTeam\s*=/);
   });
 });

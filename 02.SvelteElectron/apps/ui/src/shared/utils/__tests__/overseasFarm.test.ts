@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { overseasFarmCutOfPower, passesOverseasFarm,
-  indieCutOfPower } from "../universityUtils";
+import { overseasFarmCutOfPower, passesOverseasFarm, indieCutOfPower } from "../universityUtils";
 
 /**
  * 아마추어 → 해외 2군 직행 (실플 ②, 사용자 확정 2026-08-27).

@@ -1,5 +1,5 @@
 "use strict";
-const fs   = require("node:fs");
+const fs = require("node:fs");
 const path = require("node:path");
 
 const SMOKE_GAMES = 20;
@@ -33,15 +33,25 @@ function randomDecision() {
 }
 
 function simulateGames(core, games) {
-  let totalAway = 0, totalHome = 0, totalPitches = 0;
-  let totalWalks = 0, totalK = 0, totalHR = 0, totalResults = 0;
+  let totalAway = 0,
+    totalHome = 0,
+    totalPitches = 0;
+  let totalWalks = 0,
+    totalK = 0,
+    totalHR = 0,
+    totalResults = 0;
   const pitchCounts = [];
 
   for (let i = 0; i < games; i += 1) {
     let state = core.startMatch({
-      role: "SP", protagonistSide: "home",
-      inningLimit: 9, initialStamina: 82, initialMental: 74,
-      batterMean: 50, weather: "sunny", park: "neutral",
+      role: "SP",
+      protagonistSide: "home",
+      inningLimit: 9,
+      initialStamina: 82,
+      initialMental: 74,
+      batterMean: 50,
+      weather: "sunny",
+      park: "neutral",
     });
     let guard = 0;
     while (!state.isFinished && guard++ < 2000) {
@@ -99,7 +109,8 @@ function validateBySchema(value, schema, pathLabel = "root", errors = []) {
   if (!schema || typeof schema !== "object") return errors;
   if (schema.type === "object") {
     if (!value || typeof value !== "object" || Array.isArray(value)) {
-      errors.push(`${pathLabel} must be object`); return errors;
+      errors.push(`${pathLabel} must be object`);
+      return errors;
     }
     const props = schema.properties ?? {};
     const required = schema.required ?? [];
@@ -118,7 +129,8 @@ function validateBySchema(value, schema, pathLabel = "root", errors = []) {
   }
   if (schema.type === "number") {
     if (typeof value !== "number" || Number.isNaN(value)) {
-      errors.push(`${pathLabel} must be number`); return errors;
+      errors.push(`${pathLabel} must be number`);
+      return errors;
     }
     if (typeof schema.minimum === "number" && value < schema.minimum)
       errors.push(`${pathLabel} < minimum(${schema.minimum})`);

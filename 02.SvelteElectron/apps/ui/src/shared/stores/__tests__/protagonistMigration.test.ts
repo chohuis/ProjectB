@@ -46,11 +46,30 @@ import type { ProtagonistSave } from "../../types/save";
  */
 const KNOWN_MISSING: string[] = [
   // 새 게임 때부터 있던 기본 신원·상태 — 옛 세이브에도 있다
-  "id", "name", "age", "grade", "handedness", "playerType", "position",
-  "careerStage", "leagueId", "teamId", "schoolId", "jerseyNumber",
-  "condition", "fatigue", "morale", "money", "fame", "scoutScore",
-  "growthPoints", "potentialHidden", "developmentRate", "pitchingXP",
-  "tags", "careerTriggeredEvents",
+  "id",
+  "name",
+  "age",
+  "grade",
+  "handedness",
+  "playerType",
+  "position",
+  "careerStage",
+  "leagueId",
+  "teamId",
+  "schoolId",
+  "jerseyNumber",
+  "condition",
+  "fatigue",
+  "morale",
+  "money",
+  "fame",
+  "scoutScore",
+  "growthPoints",
+  "potentialHidden",
+  "developmentRate",
+  "pitchingXP",
+  "tags",
+  "careerTriggeredEvents",
   // 🔴 병역·프로 묶음은 **2026-09-02 에 목록에서 뺐다** — 이제 복원된다.
   //   "미필이면 기본값이 의미가 없다"가 틀렸다. C 가 실제 세이브에서
   //   `militaryStatus` 가 빠진 걸 확인했고, 그러면 `=== "미필"` 이 어디서도
@@ -128,7 +147,7 @@ describe("주인공 마이그레이션 — 옛 세이브의 빈 칸을 채우는
   /** OVR 은 저장값을 믿지 않고 **다시 센다** — 가중치가 바뀌면 옛 값이 틀리다 */
   it("OVR 을 저장값이 아니라 능력치에서 다시 센다", () => {
     const base = structuredClone(DEFAULT_PROTAGONIST);
-    base.pitching.ovr = 1;      // 말도 안 되는 값을 넣는다
+    base.pitching.ovr = 1; // 말도 안 되는 값을 넣는다
     base.batting.ovr = 1;
     const out = migrateProtagonist(base);
     expect(out.pitching.ovr, "저장된 ovr 을 그대로 썼다").toBeGreaterThan(1);

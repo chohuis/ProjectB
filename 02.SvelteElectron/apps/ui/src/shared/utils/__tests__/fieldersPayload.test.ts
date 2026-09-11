@@ -36,7 +36,9 @@ describe("경기 수비 배선", () => {
   it("MatchPage가 상대 팀이 아니라 자기 팀을 넘긴다", () => {
     const s = read("apps/ui/src/pages/match/MatchPage.svelte");
     expect(s).toMatch(/const fielders = myTeamId \? buildOpponentFielders\(myTeamId\)/);
-    expect(s).not.toMatch(/const fielders = opponentTeamId \? buildOpponentFielders\(opponentTeamId\)/);
+    expect(s).not.toMatch(
+      /const fielders = opponentTeamId \? buildOpponentFielders\(opponentTeamId\)/,
+    );
   });
 
   it("IPC 선언이 fielders를 받는다 — 타입이 좁으면 호출부가 막힌다", () => {

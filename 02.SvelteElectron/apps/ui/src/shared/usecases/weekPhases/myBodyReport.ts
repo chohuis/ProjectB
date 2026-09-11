@@ -25,7 +25,10 @@ export interface MyBodySnapshot {
 }
 
 const SEVERITY_KO: Record<string, string> = {
-  light: "경미", moderate: "중등도", severe: "중증", surgery: "수술",
+  light: "경미",
+  moderate: "중등도",
+  severe: "중증",
+  surgery: "수술",
 };
 
 /**
@@ -36,8 +39,7 @@ const SEVERITY_KO: Record<string, string> = {
  * 거치는데 이 리포트만 안 거쳤다 — ID를 이름으로 바꾸는 층을 한 겹 빠뜨리면
  * 조용히 원문이 샌다.
  */
-const injuryKo = (t: string) =>
-  (INJURY_LABEL as Record<string, string>)[t] ?? t;
+const injuryKo = (t: string) => (INJURY_LABEL as Record<string, string>)[t] ?? t;
 
 /**
  * 담을 게 하나도 없으면 `null`. **빈 리포트를 보내면 "왔는데 아무것도 없다"가 된다.**
@@ -94,7 +96,9 @@ export function buildMyBodyReport(
   if (warnings.length > 0) {
     lines.push("  경고");
     for (const w of warnings) {
-      lines.push(`          W${w.week}  피로 ${w.fatigue ?? "?"} — 다음 주 부상 위험 ${w.riskPct ?? "?"}%`);
+      lines.push(
+        `          W${w.week}  피로 ${w.fatigue ?? "?"} — 다음 주 부상 위험 ${w.riskPct ?? "?"}%`,
+      );
     }
     lines.push("");
   }
@@ -103,8 +107,8 @@ export function buildMyBodyReport(
 
   // 미리보기는 **제일 나쁜 것**을 짚는다. 부상 > 결장 > 경고 순이다
   const preview = injured
-    ? `${injuryKo(snapshot!.injuryType!)} ${snapshot!.recoveryWeeksLeft}주 남음`
-      + (absences.length ? ` · 결장 ${absences.length}경기` : "")
+    ? `${injuryKo(snapshot!.injuryType!)} ${snapshot!.recoveryWeeksLeft}주 남음` +
+      (absences.length ? ` · 결장 ${absences.length}경기` : "")
     : absences.length > 0
       ? `결장 ${absences.length}경기` + (warnings.length ? ` · 피로 경고 ${warnings.length}회` : "")
       : `피로 경고 ${warnings.length}회`;
@@ -117,15 +121,15 @@ export function buildMyBodyReport(
   const bankSubject = copyIn
     ? copyIn.picker.pick("mybody#subject", copyIn.copy?.myBody.subjects ?? [])
     : "";
-  const lead = copyIn
-    ? copyIn.picker.pick("mybody#lead", copyIn.copy?.myBody.leads ?? [])
-    : "";
+  const lead = copyIn ? copyIn.picker.pick("mybody#lead", copyIn.copy?.myBody.leads ?? []) : "";
 
-  const subject = bankSubject || (injured
-    ? `${monthLabel} 몸 상태 — 부상 회복 중`
-    : absences.length > 0
-      ? `${monthLabel} 몸 상태 — 결장 ${absences.length}경기`
-      : `${monthLabel} 몸 상태 — 피로 경고`);
+  const subject =
+    bankSubject ||
+    (injured
+      ? `${monthLabel} 몸 상태 — 부상 회복 중`
+      : absences.length > 0
+        ? `${monthLabel} 몸 상태 — 결장 ${absences.length}경기`
+        : `${monthLabel} 몸 상태 — 피로 경고`);
 
   const metadata: MyBodyMetadata = {
     type: "myBody",
@@ -146,15 +150,15 @@ export function buildMyBodyReport(
     // 같은 id가 다시 생기고, 소식 목록이 `(msg.id)`로 키를 잡아 죽는다
     // (2026-08-08 다이제스트에서 실제로 세이브가 안 열렸다).
     // ⚠ **표시용 라벨(월 이름)은 안 넣는다** — 계측이 종류를 뽑을 때 쪼개진다.
-    id:        `msg-mybody-${seasonYear}-w${weekNum}`,
-    category:  "coach",
-    sender:    "코칭스태프",
+    id: `msg-mybody-${seasonYear}-w${weekNum}`,
+    category: "coach",
+    sender: "코칭스태프",
     subject,
     preview,
     // 🔴 은행 한 줄이 있으면 그것뿐이다 — 값은 패널이 든다(위 머리말)
-    body:      lead || lines.join("\n"),
+    body: lead || lines.join("\n"),
     createdAt: `W${weekNum}`,
-    readAt:    null,
+    readAt: null,
     metadata,
   };
 }
