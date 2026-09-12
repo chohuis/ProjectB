@@ -195,14 +195,17 @@ for (const r of rows) {
 const seasonsOf = (st) => (stageWeeks[st] ?? 0) / 52;
 
 const stages = Object.keys(stageWeeks).sort((a, b) => stageWeeks[b] - stageWeeks[a]);
-log("  무대별 등급 빈도 (시즌당) — §2 범위와 맞춘다");
+log("  무대별 등급 빈도 (시즌당) — §2 범위와 맞춘다 (무대별 예외는 `seasonFreqByStage` 가 정본)");
 log("  무대          주수   시즌  " + GRADES.map((g) => g.padStart(9)).join(""));
 const outOfRange = [];
 for (const st of stages) {
   const seasons = seasonsOf(st);
   const cells = GRADES.map((g) => {
     const per = seasons > 0 ? (stageEmit[st]?.[g] ?? 0) / seasons : 0;
-    const f = RULES.seasonFreq?.[g];
+    // ⚠ 무대별 예외(지금은 「군」의 normal 24~30)가 있으면 그걸 먼저 본다 —
+    //   없으면 전 무대 공통 `seasonFreq` 로 떨어진다. 정본은 `tier_rules.json`
+    //   `seasonFreqByStage` 하나다(`_freqByStageDoc`) — 여기 숫자를 다시 적지 않는다.
+    const f = RULES.seasonFreqByStage?.[st]?.[g] ?? RULES.seasonFreq?.[g];
     // ⚠ 표본이 반 시즌도 안 되는 무대는 범위를 안 잰다 — 「한 주 스쳤다」로
     //   빈도를 말하면 그건 숫자가 아니라 잡음이다
     if (f && seasons >= 0.5 && (per < f.min || per > f.max)) outOfRange.push([st, g, per.toFixed(1), `${f.min}~${f.max}`]);
