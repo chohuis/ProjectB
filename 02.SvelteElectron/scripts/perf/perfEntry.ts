@@ -49,6 +49,9 @@ import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEve
 import { applyDecision } from "../../apps/ui/src/shared/usecases/decisions";
 import { foreignRules, isForeignPlayer } from "../../apps/ui/src/shared/utils/foreignSlots";
 import { enlistProtagonist } from "../../apps/ui/src/shared/usecases/militaryDecision";
+// 성향의 뜻은 여기 하나가 갖는다 — 진로 차례도 같은 자리다
+import { careerRoutePriority } from "../../apps/ui/src/shared/usecases/simPersona";
+import type { SimCareerRoute, SimPersona } from "../../apps/ui/src/shared/usecases/simPersona";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
   chooseSchoolOrIndependent, acceptDraftOffer, rejectDraftOffer, continueCurrentStage,
@@ -549,6 +552,11 @@ export function setPersona(v: "growth" | "safe" | "lazy"): void {
 export function currentPersona(): string {
   return String((globalThis as Record<string, unknown>).__PB_PERSONA__ ?? "growth");
 }
+/** 위와 같은 값을 **타입으로** 준다 — 진로 차례가 이걸 읽는다. 모르는 값이면 `growth` */
+function persona(): SimPersona {
+  const v = currentPersona();
+  return v === "safe" || v === "lazy" ? v : "growth";
+}
 export function npcCount(): number { return get(gameStore).npcs.length; }
 export function entityCount(): number { return get(masterStore).entities.length; }
 
@@ -776,12 +784,29 @@ export async function pushCareerForward(): Promise<string | null> {
       //
       // ⚠ 대학·독립도 같은 규칙으로 건다 — 셋 중 하나만 정책을 안 보면
       //   그 갈래로 다시 샌다.
-      const ovs = _policy.overseas    ? r?.overseasPassed?.[0]    : undefined;
-      const uni = _policy.university  ? r?.universityPassed?.[0]  : undefined;
-      const ind = _policy.independent ? r?.independentPassed?.[0] : undefined;
-      if (ovs) { await chooseSchoolOrIndependent("overseas", ovs); return "careerChoice(overseas)"; }
-      if (uni) { await chooseSchoolOrIndependent("university", uni); return "careerChoice(university)"; }
-      if (ind) { await chooseSchoolOrIndependent("independent", ind); return "careerChoice(independent)"; }
+      //
+      // 🔴 **차례를 성향이 정한다** (2026-09-12 · 1.0.2 0단계 뒤). 여기 박아 둔
+      //   `해외 > 대학 > 독립` 이 **독립을 구조적으로 0 으로 만들고 있었다** —
+      //   드라이버가 고르는 대학은 전력★ 최하위 셋이라 입시가 사실상 없고
+      //   (위 「약팀부터 고른다」), 미지명이 나는 즉시 예외 없이 대학으로 샜다.
+      //   12판 독립 0 · 성향 3판도 0 (`docs/SIM_102_STAGE0_2026-09-12.md`).
+      //   **한 갈래가 구조적으로 0 인 것은 계측이 아니라 편향이다.**
+      //   뜻은 `usecases/simPersona.careerRoutePriority` 하나가 갖는다.
+      // ⚠ 씨앗은 **세계 씨앗 + 나이**다 — 판마다 고정이고, 같은 판에서 해가
+      //   바뀌면 대충형이 다시 굴린다(사람이 해마다 다시 생각하는 것과 같다).
+      const sCC = get(seasonStore);
+      const routeSeed = (sCC.worldSeed ?? 0) + sCC.seasonYear * 7;
+      const passed: Record<SimCareerRoute, string | undefined> = {
+        overseas:     _policy.overseas    ? r?.overseasPassed?.[0]    : undefined,
+        university:   _policy.university  ? r?.universityPassed?.[0]  : undefined,
+        independent:  _policy.independent ? r?.independentPassed?.[0] : undefined,
+      };
+      for (const route of careerRoutePriority(persona(), routeSeed)) {
+        const target = passed[route];
+        if (!target) continue;
+        await chooseSchoolOrIndependent(route, target);
+        return `careerChoice(${route})`;
+      }
 
       // 갈 곳이 없으면 지금 무대를 계속한다 — 화면의 "독립리그 계속" /
       // "다음 학년 진급"과 같은 버튼이다. 이게 없으면 미지명 선수가

@@ -223,6 +223,33 @@ export function toLifeEvent(e: {
   };
 }
 
+/**
+ * **현역(일반병) 주간 이벤트 후보 풀 — 세 풀을 여기서 한 번에 합친다.**
+ *
+ * 🔴 **같은 결함이 두 번 났다.** `runMilitaryLifeWeek` 안에서 배열을 직접
+ *   이어 붙이다 보니 2026-09-08 에 `military_general`(20종)을,
+ *   2026-09-12 에 `military_common`(18종)을 빠뜨린 채로 굴렀다.
+ *   빠진 풀은 **아무 소리도 안 낸다** — 게임은 돌고 이야기만 사라진다.
+ *
+ *   그래서 합치는 자리를 **함수 하나로** 꺼냈다. 풀이 늘면 여기만 고치고,
+ *   `militaryLifePools.test.ts` 가 실제 JSON 을 읽어 **셋이 다 들었는지**를
+ *   센다(셋째 자리가 안 생기게).
+ *
+ * ⚠ 상무(체육부대)는 이 경로로 안 온다 — 옛 갈래가 `common`+`sports` 를
+ *   원래대로 읽는다.
+ * ⚠ 캘린더 이벤트는 이 풀에서 뽑지 않는다 — 부르는 쪽이 `calEvent` 로 가른다.
+ */
+export function lifeCandidatePool(m: {
+  militaryLifeEvents: readonly MilitaryLifeEvent[];
+  militaryGeneralEvents: readonly Parameters<typeof toLifeEvent>[0][];
+  militaryCommonEvents: readonly Parameters<typeof toLifeEvent>[0][];
+}): MilitaryLifeEvent[] {
+  const legacy = [...m.militaryGeneralEvents, ...m.militaryCommonEvents]
+    .map(toLifeEvent)
+    .filter((e): e is MilitaryLifeEvent => e !== null);
+  return [...m.militaryLifeEvents, ...legacy];
+}
+
 export function weightOf(e: MilitaryLifeEvent): number {
   return e.weight !== undefined && e.weight > 0 ? e.weight : 1;
 }

@@ -31,7 +31,7 @@ import {
   roleFromSeed,
   senseStartFor,
   weightOf,
-  toLifeEvent,
+  lifeCandidatePool,
 } from "../utils/militaryLifeRules";
 
 /** 입대 주에 만든다 — 현역만. 데이터가 없으면 null (옛 갈래로 간다 · check:militarydata 가 알린다) */
@@ -197,12 +197,17 @@ export async function runMilitaryLifeWeek(args: {
   //   여기가 `militaryLifeEvents` 만 읽어서 그 20종이 **한 번도 안 떴다.**
   //   두 풀은 id 가 하나도 안 겹친다(실측 0/20) — 다른 이야기가 통째로 죽어 있었다.
   //   ⚠ 뜻이 갈리는 칸(`relationDelta`)이 있어 그냥 못 섞는다 — `toLifeEvent` 머리말.
-  const legacyGeneral = m.militaryGeneralEvents
-    .map(toLifeEvent)
-    .filter((e): e is MilitaryLifeEvent => e !== null);
-  const candidates = calEvent
-    ? []
-    : eligibleEvents([...m.militaryLifeEvents, ...legacyGeneral], ctx);
+  //
+  // 🔴 **같은 결함의 둘째 자리다** (2026-09-12 · D 0단계 실측). 위 20종을
+  //   이었을 때 **바로 옆의 `military_common`(18종)을 안 봤다.** master.ts 가
+  //   로드는 하는데(`militaryCommonEvents`) 이 새 경로 어디서도 안 읽어서,
+  //   새 게임 일반병은 가족 면회·부대 소식·위문·전역 편지를 **한 번도 못 본다.**
+  //   id 교집합 0/18 로 여기도 통째로 다른 이야기다.
+  //   ⚠ 상무는 옛 갈래에서 이 풀을 원래대로 읽는다 — 거기는 안 건드린다.
+  //   후보 66 → **84** 종.
+  //   합치는 자리는 **`lifeCandidatePool` 하나**다 — 여기서 배열을 직접
+  //   이어 붙이다가 두 번 빠뜨렸다. 검사가 그 함수를 본다.
+  const candidates = calEvent ? [] : eligibleEvents(lifeCandidatePool(m), ctx);
   const payload = {
     seed: seedOf(worldSeed, args.seasonYear, args.nextWeek, "military-life"),
     dutyIntensity: role?.dutyIntensity ?? 5,

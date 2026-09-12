@@ -247,16 +247,64 @@ const COMMANDS = {
           const injury = document.querySelector(".option-card");
           if (injury) { injury.click(); return "INJURY"; }
 
-          // 진로 허브 — 지원할 곳을 하나 켠 뒤 신청 완료.
-          // `.danger`(즉시 입대)는 절대 안 누른다
+          // ── 진로 신청 하위 모달(대학·독립 팀 고르기) — 허브보다 먼저 끝낸다 ──
+          //
+          // 🔴 **허브가 드래프트만 신청하고 있었다** (2026-09-12 · C 제보).
+          //   아래 허브 갈래가 「첫 `.opt-btn`」을 눌렀는데 그게 **드래프트**라,
+          //   켜지자마자 `신청 완료` 가 열려 **대학·독립은 신청조차 안 했다.**
+          //   화면으로 보던 판이 늘 드래프트로 간 이유다 — 헤드리스 계측이
+          //   대학으로만 가던 것과 **정반대 방향의 같은 편향**이다.
+          //   대학·독립은 버튼이 **하위 모달을 열 뿐**이라 거기서 팀을 골라야
+          //   ✓ 가 붙는다. 그 모달을 먼저 끝낸다.
+          const applyFooter = document.querySelector("footer.actions button.ghost");
+          if (applyFooter) {
+            const ok = [...document.querySelectorAll("footer.actions button")]
+              .find((b) => b.innerText.trim() === "확인");
+            if (ok && !ok.disabled) { ok.click(); return "APPLY_OK"; }
+            const pick = document.querySelector("button.pick-btn:not([disabled])");
+            if (pick) { pick.click(); return "APPLY_PICK"; }
+            // 아직 아무 팀도 안 열었다 — 목록 첫 줄을 연다
+            const row = document.querySelector(".rows button:not([disabled])");
+            if (row) { row.click(); return "APPLY_ROW"; }
+            // 고를 팀이 없다(자격 미달 등) — 취소하고 허브로 돌아간다
+            applyFooter.click(); return "APPLY_CANCEL";
+          }
+
+          // 진로 허브 — **셋 다 신청하고** 신청 완료.
+          // `.danger`(즉시 입대)는 절대 안 누른다.
+          // ⚠ ✓ 가 붙은 것은 다시 안 누른다 — 드래프트는 토글이라 두 번 누르면 꺼진다.
           const hubSubmit = document.querySelector("button.submit");
           if (hubSubmit) {
-            if (hubSubmit.disabled) {
-              const toggle = [...document.querySelectorAll("button.opt-btn")]
-                .find((b) => !b.classList.contains("danger"));
-              if (toggle) { toggle.click(); return "HUB_TOGGLE"; }
-            } else { hubSubmit.click(); return "HUB_SUBMIT"; }
+            const todo = [...document.querySelectorAll("button.opt-btn")]
+              .filter((b) => !b.classList.contains("danger") && !b.innerText.includes("✓"));
+            if (todo.length) { todo[0].click(); return "HUB_TOGGLE"; }
+            if (!hubSubmit.disabled) { hubSubmit.click(); return "HUB_SUBMIT"; }
           }
+
+          // 드래프트 참관 — 스킵한다(참관은 중계를 끝까지 본다 · 드라이버는 결과만 필요하다)
+          const draftSkip = document.querySelector(".btn-secondary:not([disabled])");
+          if (draftSkip) { draftSkip.click(); return "DRAFT_SKIP"; }
+
+          // 진로 결과 — 「결과 확인 →」·「드래프트 보드 확인 →」을 다 펴야
+          // 아래 「진로 선택으로 →」가 열린다(`canProceed`)
+          const reveal = document.querySelector("button.reveal-btn:not([disabled])");
+          if (reveal) { reveal.click(); return "REVEAL"; }
+          // 다 폈으면 「진로 선택으로 →」 — 클래스가 없어 글자로 짚는다
+          const toPick = [...document.querySelectorAll(".actions button")]
+            .find((b) => !b.disabled && b.innerText.includes("진로 선택으로"));
+          if (toPick) { toPick.click(); return "TO_PICK"; }
+
+          // 체육부대 지원 — **신청한다.** 붙으면 야구를 계속하므로 누구에게나 낫다
+          //   (헤드리스 `runAutoAdvance` 와 같은 규칙 — 정본이 둘이 되면 안 된다)
+          const sportsApply = document.querySelector("button.btn-apply:not([disabled])");
+          if (sportsApply) { sportsApply.click(); return "SPORTS_APPLY"; }
+          // 탈락 뒤 「현역 입대 / 다음 시즌으로」 — **미룬다**(화면을 계속 보려고)
+          const decline = document.querySelector("button.btn-decline:not([disabled])");
+          if (decline) { decline.click(); return "DECLINE"; }
+
+          // 시즌 결산 — 「새 시즌 시작」. 이 모달의 출구는 이것 하나뿐이다
+          const newSeason = document.querySelector("button.btn-next:not([disabled])");
+          if (newSeason) { newSeason.click(); return "NEW_SEASON"; }
 
           // 계약 협상 — 팀 제시를 그대로 받는다 (역제안·거부는 안 고른다)
           const acceptOffer = document.querySelector("button.btn-accept:not([disabled])");
