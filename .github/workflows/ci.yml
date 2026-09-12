@@ -7,7 +7,15 @@ name: CI
 on:
   push:
     branches: [main, extract-modals]
+    # 문서만 바뀐 push 는 건너뛴다 — 2026-09-12 에 문서 커밋 여섯이 각각 10분짜리 전체 빌드를 돌려 러너가 밀렸다.
+    #   ⚠ 코드와 문서를 한 커밋에 섞으면 돈다(paths-ignore 는 「전부 문서일 때만」 건너뛴다).
+    paths-ignore:
+      - "**/*.md"
+      - "02.SvelteElectron/docs/**"
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "02.SvelteElectron/docs/**"
   workflow_dispatch:
 
 defaults:
