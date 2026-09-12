@@ -115,7 +115,7 @@
 | `AUDIT_2026-07.md` · `PHASE8_PLAN.md` · `PLAN_PHASE9_12.md` · `QA_TEST_BRIEF.md` · `TRAINING_ANALYSIS.md` | 7~8월 | Phase 체계는 끝났다 |
 | `data-architecture-proposal.md` · `event-system-plan.md` · `EVENT_DATA_OPERATION_GUIDE.md` · `ROADMAP_M1_M2_M3.md` · `PROJECT_STATUS.md` · `TEST_SCENARIOS.md` · `UNIVERSITY_FLOW_QA.md` | 4~6월 (일부 영어) | 첫 석 달의 것 |
 
-→ 이 절의 문서는 `docs/archive/` 로 옮길 후보다. 옮기기 전에 **다른 문서가 이름으로 가리키는지** 훑는다(`PROGRESS_TREE`·`CLAUDE.md` 가 옛 문서를 참조한다).
+→ **옮기지 않는다** (2026-09-12 판단). 훑어 보니 이 절의 문서를 이름으로 가리키는 곳이 **서른 곳 넘고**, 그중엔 코드 주석도 있다(`slotdb.cjs`·`scripts/test-migration.cjs` 가 `AUDIT_2026-07.md` 를 가리킨다 · `CLAUDE.md` 가 `RESUME.md`·`PHASE8_PLAN.md` 를 가리킨다). 옮기면 그 포인터가 전부 죽고, 고치는 값이 옮기는 값보다 작다. **「옛 것」이라는 표시는 이 색인이 한다** — 파일 위치가 아니라.
 
 ## 8. 하위 폴더
 
