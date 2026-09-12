@@ -31,27 +31,25 @@ resource/logs/shots/
 resource/logs/uiwalk/
 
 # 계측 덤프 (probe-npc-dump.cjs 가 남기는 생성물 — DATA_POLICY §1 ③파생)
-resource/logs/d-regress/
 # 계측 판 보고서 (2026-09-09 · `npm run probe:a:simrun`). 30판 × 12시즌이면
 # 판마다 한 장씩 쌓인다 — **산출물이지 소스가 아니다.** 보고할 것은
 # `summary.md` 의 표이고 그건 보고서에 붙인다
-resource/logs/runs/
 
 # D 세이브 산출물(probe-make-c9b-save.cjs 등) — slot.db 사본이라 판마다 수백 MB.
 # C 눈확인용이라 절대경로로 전달하지 커밋하지 않는다
-resource/logs/d-saves/
 resource/master.db
 resource/master.db-shm
 resource/master.db-wal
-resource/logs/runs_before_2026-09-10/
 
 # D 5단계 밸런스 계측 원본(probe:a:simrun 산출물 사본) — 판마다 JSON.
 # 보고할 것은 docs/BALANCE_PROPOSAL_101.md 표이고 원본은 산출물이라 안 올린다
-resource/logs/d-balance101-before/
-resource/logs/d-balance101-after/
-resource/logs/d-balance101-combined/
-resource/logs/d-balance101-final/
-resource/logs/d-balance101-before-report.txt
 
 # 커버리지 산출물 (개선 6) — 관문이 아니라 숫자를 볼 때만 낸다
 coverage/
+
+
+# 계측 판·보고서 산출물은 이름을 가리지 않고 전부 무시한다 (2026-09-12 — 이름으로 하나씩 적었더니 새 폴더가 새어 올라갔다)
+resource/logs/runs*/
+resource/logs/d-*/
+resource/logs/d-*.txt
+resource/logs/*-report.txt
