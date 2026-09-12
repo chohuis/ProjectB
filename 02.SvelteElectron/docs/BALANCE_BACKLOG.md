@@ -1086,3 +1086,28 @@ stamina 79→**88** 로 올랐는데 **control 만 80 → 80** 이다. 부상도
 목표는 노말 30~52 · 레어 3~6 · 유니크 1~2 다. 군 시즌은 야구를 덜 하니 내려가는
 것이 자연스럽지만 **22시즌을 재고도 목표선 밖**이라 적어 둔다.
 **콘텐츠 쪽(B)과 같이 봐야 한다** — 여기서 안 고친다.
+
+### ↳ 후속 (2026-09-12 · D 0단계 + 사용자 확정) — 콘텐츠가 아니라 확률 상한이었다
+
+`docs/SIM_102_STAGE0_2026-09-12.md` §③: 노말 부족 원인은 종수가 아니라
+`military/rules.json` `event.weeklyChance=0.40`(주당 1건 상한) — 이론 상한이
+시즌당 ≈27.6건이라 종수를 아무리 늘려도 공통 목표(30~52)엔 구조적으로
+못 닿는다. 사용자 확정(`PLAN_102_2026-09-12.md` §「사용자 확정 (오후)」):
+**값은 안 건드리고 군의 목표만 노말 24~30으로 낮춘다.** 정본은
+`tier_rules.json` `seasonFreqByStage.군`(`BALANCE_PROPOSAL_102.md` ②) —
+`check-tiercoverage.cjs`·`report-simruns.cjs` 둘 다 여기를 읽는다. 레어·유니크는
+`military_common.json` 배선(A, 종수 66→84) 뒤 재측 전까지 미정이다.
+
+---
+
+## 대학 D등급 문턱 — 제안값 (2026-09-12 · D · `BALANCE_PROPOSAL_102.md` ①)
+
+지금 D등급(`minAcademicGrade:9 · minBaseballScore:0`, `universityUtils.ts:50`)은
+사실상 무조건 합격이라 미지명이면 전원 대학으로 새고 독립이 갈래가 안 된다.
+**제안값(미적용): `minAcademicGrade:7 · minBaseballScore:18`** — 씨앗 3개
+(`3001·3002·3003`, `PF_YEARS=3` 짧은 판) 표본에서 기대 「대학 불가」율 37.3%
+(목표 20~35%의 상단 근접). ⚠ **표본이 얇다**(baseballScore 값이 0·15 둘뿐 ·
+academicGrade는 드라이버 학습모드 고정으로 전부 1) — `minAcademicGrade`는
+검증 안 된 안전 마진이고, `minBaseballScore`도 15~19 사이를 못 갈랐다.
+고졸 직행 33.3%엔 영향 경로가 없다(이 문턱은 미지명 확정 뒤에만 쓰인다).
+적용은 A, 재측정은 4단계 재계측 때 같이.

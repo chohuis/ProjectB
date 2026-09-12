@@ -13,12 +13,26 @@ const path = require("node:path");
 
 const DIR = path.resolve(process.cwd(), process.env.PB_RUNS_DIR || "resource/logs/runs");
 
+// 등급 빈도(노말·레어·유니크·히든) 목표는 여기서 다시 안 적는다 — 정본은
+// `resource/data/master/events/tier_rules.json` `seasonFreq`(전 무대 공통) ·
+// `seasonFreqByStage`(무대별 예외, 지금은 「군」 normal 24~30) 하나다.
+// 숫자를 코드에 두 번 적으면 한쪽만 고쳐진 채 남는다(CLAUDE.md).
+const TIER_RULES = JSON.parse(fs.readFileSync(
+  path.resolve(process.cwd(), "resource/data/master/events/tier_rules.json"), "utf8"));
+const freqOf = (grade, stage) =>
+  (stage && TIER_RULES.seasonFreqByStage?.[stage]?.[grade]) ?? TIER_RULES.seasonFreq[grade];
+
 /** 지금 아는 목표 — 서식 정본 「목표를 벗어난 칸은 빨강으로」 */
 const GOAL = {
-  고졸직행: [0.30, 0.40],     // 사용자 확정
-  레어: [3, 6], 유니크: [1, 2], 노말: [30, 52], 히든: [0, 1],
+  고졸직행: [0.30, 0.40],     // 사용자 확정 — 등급 빈도가 아니라 진로 갈림 비율이라 여기 남는다
+  레어: [freqOf("rare").min, freqOf("rare").max],
+  유니크: [freqOf("unique").min, freqOf("unique").max],
+  노말: [freqOf("normal").min, freqOf("normal").max],
+  히든: [freqOf("hidden").min, freqOf("hidden").max],
   폴백: [0, 0], 예외: [0, 0],
 };
+/** 무대별 목표 — 지금은 「군」만 다르다(normal 24~30). `mark`와 같은 (v,[lo,hi]) 짝을 낸다 */
+const goalRangeOf = (grade, stage) => { const f = freqOf(grade, stage); return [f.min, f.max]; };
 const mark = (v, [lo, hi]) => (v < lo || v > hi ? `🔴 ${v}` : `${v}`);
 const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0);
 const med = (xs) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : 0);
@@ -321,7 +335,12 @@ if (폴백합) {
 // ── ③ 등급 빈도 (무대별 · 시즌당) ────────────────────────────
 log("## 등급 빈도 — 시즌당 (무대별)");
 log("");
-log("목표: 노말 30~52 · 레어 **3~6** · 유니크 **1~2** · 히든 0~1");
+log("목표(전 무대 공통): 노말 " + GOAL.노말.join("~") + " · 레어 **" + GOAL.레어.join("~")
+  + "** · 유니크 **" + GOAL.유니크.join("~") + "** · 히든 " + GOAL.히든.join("~"));
+log("⚠ 군은 다르다 — 노말 " + goalRangeOf("normal", "군").join("~")
+  + " (엔진이 다르다. tier_rules.json seasonFreqByStage · SIM_102_STAGE0_2026-09-12.md 3장)."
+  + " 레어·유니크·히든은 아직 전 무대 공통값으로 잰다"
+  + " (제안은 BALANCE_PROPOSAL_102.md 2장).");
 log("");
 // 🔴 **못 접은 해는 빼고 센다** (2026-09-09 실측으로 잡았다).
 //   그 줄은 등급이 전부 0 인데 **분모에는 든다** — 대학 노말이 54.7 에서 28.3 으로
@@ -330,7 +349,12 @@ log("");
 const byStage = {};
 for (const x of rows) for (const y of x.ys) {
   if (y.불완전) continue;
-  const k = String(y.무대);
+  // ⚠ `y.무대`는 원시 careerStage 문자열이다("military"). `tier_rules.json`의
+  //   `seasonFreqByStage`(무대별 목표 예외) 키는 `stageGroupOf`가 내는 한글 id("군")다 —
+  //   여기서 안 맞추면 goalRangeOf 조회가 늘 전 무대 공통값으로 떨어져 군 목표가
+  //   적용 안 된다(2026-09-12 D 실측으로 잡았다). 다른 무대 라벨은 그대로 둔다 —
+  //   전부 공통 목표를 쓰므로 표기가 달라도 비교에 영향이 없다.
+  const k = y.무대 === "military" ? "군" : String(y.무대);
   (byStage[k] ??= { n: 0, normal: 0, rare: 0, unique: 0, hidden: 0, notice: 0 });
   byStage[k].n++; byStage[k].normal += y.노말; byStage[k].rare += y.레어;
   byStage[k].unique += y.유니크; byStage[k].hidden += y.히든; byStage[k].notice += y.통지;
@@ -339,8 +363,9 @@ log("| 무대 | 시즌 | 노말 | 레어 | 유니크 | 히든 | 통지 |");
 log("|---|---|---|---|---|---|---|");
 const r1 = (v, n) => Math.round((v / Math.max(1, n)) * 10) / 10;
 for (const [k, v] of Object.entries(byStage).sort((a, b) => b[1].n - a[1].n)) {
-  log(`| ${k} | ${v.n} | ${mark(r1(v.normal, v.n), GOAL.노말)} | ${mark(r1(v.rare, v.n), GOAL.레어)} `
-    + `| ${mark(r1(v.unique, v.n), GOAL.유니크)} | ${mark(r1(v.hidden, v.n), GOAL.히든)} | ${r1(v.notice, v.n)} |`);
+  // ⚠ 무대별 예외(지금은 「군」)가 있으면 그 목표로 비교한다 — 나머지는 위 GOAL(전 무대 공통).
+  log(`| ${k} | ${v.n} | ${mark(r1(v.normal, v.n), goalRangeOf("normal", k))} | ${mark(r1(v.rare, v.n), goalRangeOf("rare", k))} `
+    + `| ${mark(r1(v.unique, v.n), goalRangeOf("unique", k))} | ${mark(r1(v.hidden, v.n), goalRangeOf("hidden", k))} | ${r1(v.notice, v.n)} |`);
 }
 log("");
 
