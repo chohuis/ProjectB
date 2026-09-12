@@ -164,3 +164,45 @@ export function seededIndex(seed: number, n: number): number {
   x >>>= 0;
   return x % n;
 }
+
+/** 미지명 뒤에 갈 수 있는 갈래 셋 — 지명은 늘 이것들보다 위다 */
+export type SimCareerRoute = "overseas" | "university" | "independent";
+
+/**
+ * **성향이 진로도 고른다** (2026-09-12 · 1.0.2 0단계 뒤).
+ *
+ * 🔴 **왜 고쳤나.** 계측 드라이버가 `overseas > university > independent` 를
+ *   **박아 두고** 있었고, 드라이버가 고르는 대학은 전력★이 가장 낮은 셋이라
+ *   (`perfEntry` 「약팀부터 고른다」) 입시가 사실상 없는 것과 같다. 그래서
+ *   미지명이 나는 즉시 예외 없이 대학으로 샜고 — **12판에서 독립 0, 성향 셋을
+ *   따로 돌린 3판에서도 0** 이었다(D 0단계 · `SIM_102_STAGE0_2026-09-12.md`).
+ *   한 갈래가 구조적으로 0 인 것은 계측이 아니라 **편향**이다.
+ *
+ * ⚠ **게임 결함이 아니다.** 화면(`CareerResultModal`)은 붙은 곳을 나란히
+ *   보여 주고 사람이 고른다 — 강제하는 자리가 없다. 고칠 자리는 계기뿐이다.
+ *
+ * | 성향 | 차례 | 왜 |
+ * |---|---|---|
+ * | `growth` | 해외 → **독립** → 대학 | 즉시 실전이 곧 성장이다. 대학 4년은 **던지는 해를 미루는** 선택이라 제일 뒤 |
+ * | `safe` | **대학** → 해외 → 독립 | 4년이 보장되고 재지명 기회가 네 번 더 생긴다. 옛 차례와 같다 — **기준선이 안 흔들린다** |
+ * | `lazy` | 씨앗 고정 무작위 | 군 결정과 같은 방식이다. 순열 여섯 중 하나를 씨앗으로 고른다 |
+ *
+ * ⚠ **해외는 성장·안전 둘 다 맨 앞이다.** 해외 2군은 프로 계약이라 다른 둘과
+ *   결이 다르고, 문턱이 높아(★3 = OVR 78) 실제로 뜨는 판이 드물다 —
+ *   여기서 차례를 흔들면 「독립이 뽑히나」를 재는 데 잡음만 는다.
+ * ⚠ **계측 전용이다.** 실제 플레이는 사람이 고른다.
+ */
+export function careerRoutePriority(persona: SimPersona, seed: number): readonly SimCareerRoute[] {
+  if (persona === "growth") return ["overseas", "independent", "university"];
+  if (persona === "safe") return ["university", "overseas", "independent"];
+  // lazy — 순열 여섯 중 하나. 씨앗이 같으면 늘 같은 차례다
+  const perms: readonly (readonly SimCareerRoute[])[] = [
+    ["overseas", "university", "independent"],
+    ["overseas", "independent", "university"],
+    ["university", "overseas", "independent"],
+    ["university", "independent", "overseas"],
+    ["independent", "overseas", "university"],
+    ["independent", "university", "overseas"],
+  ];
+  return perms[seededIndex(seed, perms.length)];
+}
