@@ -1230,7 +1230,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const subjects = Object.values(gDraft.schoolState.subjectScores);
     const avgPct = subjects.length ? subjects.reduce((a, s2) => a + s2.percentile, 0) / subjects.length : 50;
 
-    const { requirementOfPower, calcHsBaseballScore, indieCutOfPower, isApplicableIndependent } =
+    const { requirementOfPower, calcHsBaseballScore, indieCutOfPower, isApplicableIndependent, pctToGrade } =
       await import("../utils/universityUtils");
     const hsBaseballScore = calcHsBaseballScore(gDraft.protagonist.careerRecords ?? []);
     // 요건은 팀의 전력★에서 나온다 — 예전엔 하드코딩 표를 뒤졌고, 거기 없는
@@ -1306,6 +1306,19 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // 세이브에 넣을 값은 아니다 (`__lastOffseasonSummary`와 같은 자리)
     (globalThis as Record<string, unknown>).__lastDraftBreakdown =
       (draftOutcome as { breakdown?: unknown }).breakdown ?? null;
+
+    // 계측 전용 — 대학 입학 분포를 재려면 판정에 실제로 들어간 avgPct·academicGrade·
+    // hsBaseballScore가 필요한데, 결과가 저장된 뒤엔(`careerResults`) 합격 팀 수만
+    // 남고 이 원시값은 사라진다. `BALANCE_PROPOSAL_102.md` ① 문턱 제안을 위한
+    // 분포 재기 전용 로그 — 게임 로직·저장값에는 영향 없다 (`__PB_CAREER_LOG` 게이트).
+    if (typeof globalThis !== "undefined" && (globalThis as Record<string, unknown>).__PB_CAREER_LOG) {
+      console.log("[진로점수] year=" + get(seasonStore).seasonYear + " stage=" + p.careerStage
+        + " grade=" + p.grade + " avgPct=" + avgPct.toFixed(1) + " academicGrade=" + pctToGrade(avgPct)
+        + " hsBaseballScore=" + hsBaseballScore + " ovr=" + p.pitching.ovr
+        + " drafted=" + draftOutcome.drafted
+        + " univPassed=" + admissionsCalc.univPassed.length
+        + " indiePassed=" + admissionsCalc.indiePassed.length);
+    }
 
     // ── 해외 2군 직행 판정 (실플 ②) ─────────────────────────
     //
