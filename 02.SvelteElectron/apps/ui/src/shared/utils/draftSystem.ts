@@ -317,6 +317,32 @@ export function placementRulesFrom(
   };
 }
 
+/**
+ * **신인이 2군에서 시작하는가** — NPC 와 주인공이 **같은 규칙**을 탄다
+ * (2026-09-12 · 사용자 확정).
+ *
+ * 🔴 **주인공만 규칙 밖이었다.** NPC 는 `npc_sim.rs apply_draft` 가
+ *   `pick.round <= first_team_rounds` 로 1군/2군을 갈라 왔는데
+ *   (`market.ts` 주석: 「드래프트가 매년 110명을 2군에 넣는데」),
+ *   주인공은 `careerDecision.acceptDraftOffer` 가 **늘 1군으로 열었다.**
+ *   그래서 12판에서 2군 도달이 3/12 뿐이었고(D 0단계 §②), 2군 콘텐츠 87종이
+ *   거의 안 돌았다. 정본이 둘이었던 것이다 — 이제 여기 하나가 뜻을 갖는다.
+ *
+ * ⚠ **문턱 값은 데이터다** — `generation_rules.json draftRules.firstTeamRounds`.
+ *   Rust 도 TS 도 그 값을 받아서 이 판정만 한다. 코드에 숫자를 안 적는다.
+ * ⚠ 계약은 **지명 구단(1군)** 과 맺고 배치만 2군이다 — NPC 쪽과 같다
+ *   (`apply_draft`: 「계약금은 지명 구단의 예산 지수로 정한다」).
+ * ⚠ 라운드를 모르면(`null`) 1군으로 둔다 — 옛 세이브·모르는 경로에서
+ *   조용히 2군으로 떨어뜨리지 않는다.
+ */
+export function rookieStartsInFarm(
+  round: number | null | undefined,
+  firstTeamRounds: number,
+): boolean {
+  if (round == null) return false;
+  return round > firstTeamRounds;
+}
+
 export interface ApplyDraftOptions {
   /** 신인 계약 표 (draftRules.contract). 없으면 신인이 연봉 0으로 시작한다 */
   contract?: import("./draftSalaryTable").DraftContractRules;
