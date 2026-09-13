@@ -19,6 +19,9 @@ import { masterStore } from "../stores/master";
 import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity, isUniversityFinalYear } from "../utils/careerTransition";
+// 신인 배치 규칙 — NPC 쪽(npc_sim.rs apply_draft)과 같은 자리에서 온다
+import { rookieStartsInFarm } from "../utils/draftSystem";
+import { farmTeamId } from "../utils/ids";
 import { weekInYearOf } from "../utils/seasonWeeks";
 import { loadAcademicsRules, canGraduate, majorEffects } from "../utils/academicsEngine";
 import { openProSeason } from "./proSeason";
@@ -288,7 +291,25 @@ export async function acceptDraftOffer(action: {
   salary: number;
   durationYears: number;
   signingBonus: number;
+  /**
+   * 지명 라운드 — **2군에서 시작할지를 여기서 가른다**(2026-09-12 · 사용자 확정).
+   * `draftNotification` pending 이 이미 들고 있다(`chooseDraft` 가 넣는다).
+   * ⚠ 안 넘기면 진로 결과에서 읽고, 그것도 없으면 1군이다 — 옛 세이브·
+   *   모르는 경로에서 조용히 2군으로 떨어뜨리지 않는다.
+   */
+  round?: number | null;
 }): Promise<void> {
+  // 🔴 **신인 배치는 NPC 와 같은 규칙을 탄다** (2026-09-12 · 사용자 확정).
+  //   NPC 는 `npc_sim.rs apply_draft` 가 `round <= firstTeamRounds` 로 갈라
+  //   왔는데 **주인공만 늘 1군으로 열렸다** — 정본이 둘이었다. 판정은
+  //   `draftSystem.rookieStartsInFarm` 하나가 한다.
+  //   라운드는 **맨 앞에서** 집는다 — 이 함수 끝의 `clearCareerResults` 가 지운다.
+  const draftRound = action.round ?? get(gameStore).schoolState.careerResults?.draftRound ?? null;
+  const firstTeamRounds = (await loadRosterRules()).draftRules?.firstTeamRounds ?? 0;
+  const farmTeam = rookieStartsInFarm(draftRound, firstTeamRounds)
+    ? farmTeamId(action.teamId)
+    : null;
+
   gameStore.signContract(
     {
       teamId: action.teamId,
@@ -320,7 +341,16 @@ export async function acceptDraftOffer(action: {
 
   // 프로 시즌 열기는 `proSeason`이 정본이다 — 예전엔 여기·재계약 모달·
   // 시즌 롤오버 셋이 각자 리그 분기를 적고 있었다
-  await openProSeason(action.leagueId, action.teamId);
+  // ⚠ **계약은 지명 구단(1군)과 맺고 배치만 2군이다** — NPC 쪽과 같다.
+  //   `signContract` 가 `teamId` 를 1군으로 박아 뒀으니 여기서 팜으로 옮긴다.
+  //   `openProSeason` 에 팜 리그를 넘겨야 순위표·일정이 2군 것으로 열린다.
+  if (farmTeam) {
+    const farmLeague = `${action.leagueId}_FARM`;
+    gameStore.setProtagonistTeam(farmTeam, farmLeague);
+    await openProSeason(farmLeague, farmTeam);
+  } else {
+    await openProSeason(action.leagueId, action.teamId);
+  }
 
   gameStore.clearCareerResults();
   gameStore.setCareerApplicationsSubmitted(false);

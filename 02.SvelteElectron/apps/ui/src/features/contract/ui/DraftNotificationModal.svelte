@@ -29,6 +29,7 @@
       salary: action.salary,
       durationYears: action.durationYears,
       signingBonus: action.signingBonus,
+      round: action.round,
     });
     resolving = false;
   }

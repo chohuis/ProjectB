@@ -881,6 +881,8 @@ export async function pushCareerForward(): Promise<string | null> {
       await acceptDraftOffer({
         teamId: pa.teamId, leagueId: pa.leagueId,
         salary: pa.salary, durationYears: pa.durationYears, signingBonus: pa.signingBonus,
+        // 라운드를 넘긴다 — 2군 출발 판정이 이걸 본다
+        round: pa.round,
       });
       return "draftNotification";
     }
