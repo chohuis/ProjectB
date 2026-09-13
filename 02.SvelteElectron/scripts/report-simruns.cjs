@@ -177,7 +177,7 @@ log("");
 {
   const 씨앗들 = [...new Set(rows.map((x) => x.씨앗))];
   const 성향들 = [...new Set(rows.map((x) => x.성향))];
-  if (씨앗들.length === 1 && 성향들.length >= 2) {
+  if (성향들.length >= 2) {
     log("## 🔴 짝 — 프리셋마다 성향 셋 (씨앗 하나)");
     log("");
     log(`씨앗 **${씨앗들[0]}** 하나로 돈 판이다. 같은 세계·같은 선수라 `
@@ -187,14 +187,23 @@ log("");
       + "볼 것은 프리셋 넷이 어떻게 갈리는지와 각 프리셋 안에서 성향 셋이 어떻게 갈리는지다.");
     log("");
     const 순서 = { growth: 0, safe: 1, lazy: 2 };
-    const 프리셋들 = [...new Set(rows.map((x) => x.프리셋))];
+    // 🔴 **씨앗이 여럿이면 칸은 「프리셋 × 씨앗」이다** (2026-09-13).
+    //   예전엔 씨앗 하나일 때만 이 절을 냈다 — 씨앗을 늘리자 표가 통째로
+    //   사라졌다. 성향 셋을 붙여 세우는 것이 이 표의 일이고, 그건 씨앗이
+    //   몇이든 「같은 세계·같은 프리셋 안에서」 하면 된다.
+    const 칸들 = [];
+    for (const preset of [...new Set(rows.map((x) => x.프리셋))]) {
+      for (const seed of [...new Set(rows.filter((x) => x.프리셋 === preset).map((x) => x.씨앗))]) {
+        칸들.push({ preset, seed });
+      }
+    }
     log("| 프리셋 | 성향 | 진로 | 프로시즌 | 2군시즌 | 콜업 | 통산승 | 통산G | 통산IP | 최고OVR | 최고연봉 | 부상 | 수술 | 군시즌 | 끊김 |");
     log("|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|");
-    for (const preset of 프리셋들) {
-      const g = rows.filter((x) => x.프리셋 === preset)
+    for (const { preset, seed } of 칸들) {
+      const g = rows.filter((x) => x.프리셋 === preset && x.씨앗 === seed)
         .sort((a, b) => (순서[a.성향] ?? 9) - (순서[b.성향] ?? 9));
       for (const x of g) {
-        log(`| ${preset} | **${x.성향}** | ${x.진로} | ${x.프로시즌} | ${x.farm시즌} | ${x.콜업} `
+        log(`| ${preset}/${seed} | **${x.성향}** | ${x.진로} | ${x.프로시즌} | ${x.farm시즌} | ${x.콜업} `
           + `| ${x.통산승} | ${x.통산G} | ${x.통산IP} `
           + `| ${x.최고OVR} | ${x.최고연봉} | ${x.부상} | ${x.수술 ? `🔴 ${x.수술}` : 0} | ${x.군시즌} `
           + `| ${x.정지 ? "🔴 정지" : "—"} |`);
@@ -206,19 +215,19 @@ log("");
     // 칸마다 「성장이 안전을 이겼나」
     log("### 칸마다 — 성장이 안전을 이겼나");
     log("");
-    log("| 프리셋 | 통산승 성장:안전 | 프로시즌 | 최고OVR | 판정 |");
+    log("| 프리셋/씨앗 | 통산승 성장:안전 | 프로시즌 | 최고OVR | 판정 |");
     log("|---|---|---|---|---|");
     let 성장승 = 0, 안전승 = 0;
-    for (const preset of 프리셋들) {
-      const gr = rows.find((x) => x.프리셋 === preset && x.성향 === "growth");
-      const sf = rows.find((x) => x.프리셋 === preset && x.성향 === "safe");
+    for (const { preset, seed } of 칸들) {
+      const gr = rows.find((x) => x.프리셋 === preset && x.씨앗 === seed && x.성향 === "growth");
+      const sf = rows.find((x) => x.프리셋 === preset && x.씨앗 === seed && x.성향 === "safe");
       if (!gr || !sf) continue;
       // 셋 중 둘 이상을 이기면 이긴 것으로 본다 — 한 칸만 보면 운이 섞인다
       const 점 = [gr.통산승 > sf.통산승, gr.프로시즌 > sf.프로시즌, gr.최고OVR > sf.최고OVR]
         .filter(Boolean).length;
       const 판정 = 점 >= 2 ? "성장 ✅" : 점 === 0 ? "🔴 안전" : "안전";
       if (점 >= 2) 성장승++; else 안전승++;
-      log(`| ${preset} | ${gr.통산승} : ${sf.통산승} | ${gr.프로시즌} : ${sf.프로시즌} `
+      log(`| ${preset}/${seed} | ${gr.통산승} : ${sf.통산승} | ${gr.프로시즌} : ${sf.프로시즌} `
         + `| ${gr.최고OVR} : ${sf.최고OVR} | ${판정} |`);
     }
     log("");
@@ -234,12 +243,12 @@ log("");
     log("옛 30판에서 체력형이 뒤졌다(성장형 프로시즌 중앙 **4** · 최고OVR **79** · "
       + "균형·파워는 7 / 81). 그게 프리셋이 약해서인지 몸값을 안 보던 도구 탓인지가 물음이다.");
     log("");
-    log("| 프리셋 | 진로 | 프로시즌 | 통산승 | 통산IP | 최고OVR | 최고연봉 | 부상 | 수술 |");
+    log("| 프리셋/씨앗 | 진로 | 프로시즌 | 통산승 | 통산IP | 최고OVR | 최고연봉 | 부상 | 수술 |");
     log("|---|---|---|---|---|---|---|---|---|");
-    for (const preset of 프리셋들) {
-      const x = rows.find((y) => y.프리셋 === preset && y.성향 === "growth");
+    for (const { preset, seed } of 칸들) {
+      const x = rows.find((y) => y.프리셋 === preset && y.씨앗 === seed && y.성향 === "growth");
       if (!x) continue;
-      log(`| ${preset} | ${x.진로} | ${x.프로시즌} | ${x.통산승} | ${x.통산IP} | ${x.최고OVR} `
+      log(`| ${preset}/${seed} | ${x.진로} | ${x.프로시즌} | ${x.통산승} | ${x.통산IP} | ${x.최고OVR} `
         + `| ${x.최고연봉} | ${x.부상} | ${x.수술 ? `🔴 ${x.수술}` : 0} |`);
     }
     log("");

@@ -73,10 +73,16 @@ function buildPlan() {
       .map((persona, i) => ({ n: i + 1, persona, preset: "balanced", seed: SEEDS_ALL[0] }));
   }
   if (process.env.PB_PLAN === "pair") {
-    // 프리셋을 바깥에 둔다 — 표에서 **한 프리셋의 성향 셋이 붙어 있어야** 읽힌다
+    // 씨앗 → 프리셋 → 성향 순으로 쌓는다. **성향 셋이 늘 붙어 있어야** 표가 읽힌다.
+    // ⚠ `PB_PAIR_SEEDS` 로 씨앗 수를 늘린다(기본 1 · 2 면 24판 = 4묶음).
+    //   씨앗을 늘리는 이유는 하나다 — 대충형의 무작위와 안전형의 갈림길은
+    //   **한 씨앗 안에서는 안 보인다**(2026-09-13 · 12판에서 실측).
+    const seedN = Math.max(1, Math.min(SEEDS_ALL.length, Number(process.env.PB_PAIR_SEEDS || 1)));
     const jobs = [];
-    for (const preset of PRESETS_ALL) {
-      for (const persona of ["growth", "safe", "lazy"]) jobs.push({ persona, preset, seed: SEEDS_ALL[0] });
+    for (const seed of SEEDS_ALL.slice(0, seedN)) {
+      for (const preset of PRESETS_ALL) {
+        for (const persona of ["growth", "safe", "lazy"]) jobs.push({ persona, preset, seed });
+      }
     }
     return jobs.map((j, i) => ({ n: i + 1, ...j }));
   }
