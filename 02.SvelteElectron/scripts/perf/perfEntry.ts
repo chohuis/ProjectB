@@ -50,7 +50,12 @@ import { applyDecision } from "../../apps/ui/src/shared/usecases/decisions";
 import { foreignRules, isForeignPlayer } from "../../apps/ui/src/shared/utils/foreignSlots";
 import { enlistProtagonist } from "../../apps/ui/src/shared/usecases/militaryDecision";
 // 성향의 뜻은 여기 하나가 갖는다 — 진로 차례도 같은 자리다
-import { careerRoutePriority } from "../../apps/ui/src/shared/usecases/simPersona";
+import { careerRoutePriority, schoolPicksFor } from "../../apps/ui/src/shared/usecases/simPersona";
+// 대학 지원 자격 — 성향이 등급을 고를 때 자기 점수를 본다
+import {
+  calcHsBaseballScore,
+  checkUniversityEligibility,
+} from "../../apps/ui/src/shared/utils/universityUtils";
 import type { SimCareerRoute, SimPersona } from "../../apps/ui/src/shared/usecases/simPersona";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
@@ -702,9 +707,38 @@ export async function pushCareerForward(): Promise<string | null> {
           .sort((a, b) => ((a as { power?: number }).power ?? 0) - ((b as { power?: number }).power ?? 0)
             || a.id.localeCompare(b.id))
           .map((t) => t.id).slice(0, 3);
+      // 🔴 **대학은 성향이 등급을 고른다** (2026-09-13 · 사용자 확정).
+      //   위 `pick` 은 전력★ **오름차순 셋**이라 대학 50팀 중 **★1 네 팀 가운데
+      //   셋**에만 늘 원서를 냈다 — C~S 에는 한 번도 안 가서 **사다리를 올려도
+      //   실측이 불가능**했다(D 실측). 독립이 0/12 이던 것과 같은 종류의 편향이다.
+      //   뜻은 `simPersona.schoolPicksFor` 하나가 갖는다.
+      // ⚠ 자기 점수(학점·야구점수)를 보고 고르는 것이 「공략을 아는 플레이어」다.
+      // ⚠ 독립·해외는 그대로 둔다 — 거기는 등급 사다리가 없다.
+      const gU = get(gameStore);
+      const subj = Object.values(gU.schoolState.subjectScores ?? {});
+      const avgPctU = subj.length
+        ? subj.reduce((a, x) => a + (x as { percentile: number }).percentile, 0) / subj.length
+        : 50;
+      const myScoreU = calcHsBaseballScore(gU.protagonist.careerRecords ?? []);
+      const univOptions = teams
+        .filter((t) => t.leagueId === "LEAGUE_UNIVERSITY")
+        .map((t) => {
+          const power = (t as { power?: number }).power ?? 0;
+          return {
+            id: t.id,
+            power,
+            eligible: checkUniversityEligibility(power, avgPctU, myScoreU).eligible,
+          };
+        });
+      const sU = get(seasonStore);
+      const univPicks = schoolPicksFor(
+        persona(),
+        univOptions,
+        (sU.worldSeed ?? 0) + sU.seasonYear * 13,
+      );
       await submitCareerApplications({
         draft: _policy.draft,
-        universityChoices: _policy.university ? pick("LEAGUE_UNIVERSITY") : [],
+        universityChoices: _policy.university ? univPicks : [],
         independentChoices: _policy.independent ? pick("LEAGUE_INDEPENDENT") : [],
         // 해외 2군은 두 리그에서 고른다 — 한 리그만 보면 절반을 못 잰다
         overseasChoices: _policy.overseas

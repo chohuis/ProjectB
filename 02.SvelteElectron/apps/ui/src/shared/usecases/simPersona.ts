@@ -206,3 +206,72 @@ export function careerRoutePriority(persona: SimPersona, seed: number): readonly
   ];
   return perms[seededIndex(seed, perms.length)];
 }
+
+/** 지원 후보 한 곳 — 계측 드라이버가 대학·독립을 고를 때 쓴다 */
+export interface SimSchoolOption {
+  id: string;
+  /** 전력★ — 클수록 좋은 학교이고 문턱도 높다(`universityUtils.requirementOfPower`) */
+  power: number;
+  /** 내 학점·야구점수로 지금 붙을 수 있나(`checkUniversityEligibility`) */
+  eligible: boolean;
+}
+
+/**
+ * **성향이 어느 등급 대학에 지원할지도 고른다** (2026-09-13 · 사용자 확정).
+ *
+ * 🔴 **드라이버가 D등급에만 지원하고 있었다** (D 실측). `perfEntry` 가 전력★
+ *   **오름차순 세 곳**을 고정으로 골라, 대학 50팀 중 **★1 네 팀 가운데 셋**에만
+ *   늘 원서를 냈다. C~S 에는 한 번도 안 갔으니 **사다리를 올려도 실측이
+ *   불가능**했다 — 진로 우선순위가 박혀 독립이 0/12 이던 것과 같은 편향이다.
+ *
+ * ⚠ **게임 결함이 아니다.** 화면은 50팀을 다 보여 주고 사람이 고른다.
+ *   고칠 자리는 계기뿐이고, 뜻은 여기 하나가 갖는다.
+ *
+ * | 성향 | 무엇을 고르나 | 왜 |
+ * |---|---|---|
+ * | `growth` | **붙을 수 있는 것 중 가장 높은 셋** · 모자라면 한 단계 위로 도전 | 좋은 학교가 드래프트 평가(스카우트 보너스 S +15)에 그대로 얹힌다 |
+ * | `safe` | 붙을 수 있는 것에서 **낮은·가운데·높은 하나씩** | 한 곳이라도 붙는 것이 목적이다. 전부 상향이면 전원 탈락한다 |
+ * | `lazy` | **씨앗 고정 무작위 셋** | 군·진로 차례와 같은 방식이다 |
+ *
+ * ⚠ **붙을 곳이 셋이 안 되면 셋 다 채운다** — 빈 자리를 남기면 「지원을 덜 했다」가
+ *   「못 붙었다」로 섞여 불합격률이 거짓이 된다. 채우는 순서만 성향이 정한다.
+ * ⚠ 독립·해외에는 안 쓴다 — 거기는 등급 사다리가 없다.
+ * ⚠ **계측 전용이다.** 실제 플레이는 사람이 고른다.
+ */
+export function schoolPicksFor(
+  persona: SimPersona,
+  schools: readonly SimSchoolOption[],
+  seed: number,
+  max = 3,
+): string[] {
+  if (schools.length === 0) return [];
+  const byPowerAsc = [...schools].sort((a, b) => a.power - b.power || a.id.localeCompare(b.id));
+  const ok = byPowerAsc.filter((s) => s.eligible);
+  const no = byPowerAsc.filter((s) => !s.eligible);
+  const take = (xs: readonly SimSchoolOption[]): string[] => xs.slice(0, max).map((s) => s.id);
+
+  if (persona === "lazy") {
+    // 씨앗 고정 섞기 — 같은 씨앗이면 늘 같은 셋이다
+    const pool = [...byPowerAsc];
+    const out: SimSchoolOption[] = [];
+    for (let i = 0; out.length < max && pool.length > 0; i++) {
+      out.push(pool.splice(seededIndex(seed + i * 7919, pool.length), 1)[0]);
+    }
+    return take(out);
+  }
+
+  if (persona === "growth") {
+    // 붙는 것 중 높은 순 → 모자라면 **바로 위**(못 붙는 것 중 낮은 순)로 도전
+    return take([...ok].reverse().concat(no));
+  }
+
+  // safe — 낮은·가운데·높은 하나씩. 한 곳은 반드시 안전하게 잡는다
+  const spread: SimSchoolOption[] = [];
+  if (ok.length <= max) spread.push(...ok);
+  else {
+    const idx = [0, Math.floor((ok.length - 1) / 2), ok.length - 1];
+    for (const i of idx) if (!spread.includes(ok[i])) spread.push(ok[i]);
+  }
+  // 모자라면 **낮은 쪽부터** 채운다 — 안전형은 위로 안 뻗는다
+  return take(spread.concat(no));
+}

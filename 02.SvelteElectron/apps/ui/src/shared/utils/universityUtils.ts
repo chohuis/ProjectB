@@ -42,11 +42,15 @@ export const TIER_REQUIREMENTS: Record<
     minBaseballScore: number;
   }
 > = {
-  S: { minAcademicGrade: 4, minBaseballScore: 40 },
-  A: { minAcademicGrade: 5, minBaseballScore: 25 },
-  B: { minAcademicGrade: 6, minBaseballScore: 12 },
-  // ⚠ C를 0이 아니라 4로 뒀다. 50팀 중 23팀이 C라 0이면 **절반이 무조건 합격**이다
-  C: { minAcademicGrade: 7, minBaseballScore: 4 },
+  // 🔴 **사다리를 D 위로 다시 세웠다** (2026-09-13 · 사용자 확정 「C~S 를 D 위로」 ·
+  //   `BALANCE_PROPOSAL_102.md` §①-2 후보 A). 앞 판에서 D 만 `7/18` 로 올려
+  //   **★1 이 ★2 보다 들어가기 어려운** 뒤집힌 표가 됐다 — 그 자리를 되돌린다.
+  //   이제 전력★이 오를수록 학점도 야구점수도 **단조로 빡빡해진다**.
+  // ⚠ 제안값이다 — 24판 뒤 조정한다(`BALANCE_BACKLOG` 「대학 입학 문턱」).
+  S: { minAcademicGrade: 3, minBaseballScore: 70 },
+  A: { minAcademicGrade: 4, minBaseballScore: 45 },
+  B: { minAcademicGrade: 5, minBaseballScore: 30 },
+  C: { minAcademicGrade: 6, minBaseballScore: 25 },
   // 🔴 **D 는 입학 사정이 없는 것과 같았다** (2026-09-12 · 사용자 확정 · D 제안).
   //   `grade 9 · score 0` 은 `academicGrade`(1~9)·`hsBaseballScore`(0 이상)가
   //   **항상 통과**하는 값이라, Rust 확률 게이트(70~92%)만 남았고 3곳 지원이면
@@ -55,13 +59,8 @@ export const TIER_REQUIREMENTS: Record<
   //   그래서 미지명이 나면 예외 없이 대학으로 샜고 독립이 0/12 였다.
   //   기대 「대학 3곳 전부 불합격」 37.3% (표본 n=3 · 목표 20~35% 상단).
   //
-  // 🔴 **이 값은 C 보다 빡빡하다 — 등급 차례가 뒤집혀 있다.**
-  //   D 는 ★1(제일 약한 학교)인데 `score 18` 이라 `score 4` 인 C(★2)보다
-  //   들어가기 어렵다. 사람이 보면 결함으로 읽히는 자리다.
-  //   ⚠ **사용자가 확정한 값이라 그대로 적용하고 여기 적어만 둔다** —
-  //   고치는 길은 둘이다: ⓐ C~S 를 같이 올려 차례를 되살리거나
-  //   ⓑ D 를 C 와 B 사이(예: score 8)로 낮춘다. 4단계 재계측 뒤에 정한다.
-  //   `BALANCE_BACKLOG` 「대학 입학 문턱」 절에 같은 말을 적어 뒀다.
+  // ⚠ **한동안 이 값만 올라가 있어 ★1 이 ★2 보다 어려웠다**(2026-09-12~13).
+  //   위 사다리(C~S)를 같이 올려 차례를 되살렸다 — ⓐ 를 골랐다.
   D: { minAcademicGrade: 7, minBaseballScore: 18 },
 };
 
