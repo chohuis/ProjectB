@@ -135,6 +135,182 @@ C등급(6)과는 구분을 남기고 지금 표본이 못 가른 학점 축에 �
 
 ---
 
+## ①-2 대학 등급 사다리 — C~S를 D 위로 (2026-09-13 · D 세션, `track/measure`)
+
+> 근거: A가 §①의 `grade7·score18`을 적용한 뒤(`63e15ec85`) 4단계 12판에서
+> 독립 0→5/12로 살아났다(`docs/SIM_REPORT_2026-09-13_stage4.md`). 그런데
+> `universityUtils.ts:38 TIER_REQUIREMENTS`는 D(★1)=`score18`인데
+> C(★2)=`score4`라 **가장 낮은 대학이 가장 어렵다** — C~S가 실질 무조건
+> 합격이라 D에서 떨어지면 바로 C로 샌다. 사용자 확정
+> (`PLAN_102_2026-09-12.md` 09-13 표): 「C~S를 D 위로 같이 올린다」— D=18을
+> 바닥으로 C>D, B>C, A>B, S>A 사다리, 불합격 37% 유지. **여기서도 값을
+> 적용하지 않는다** — 제안만, 적용은 A.
+
+### 1. 지금 값 (`universityUtils.ts:38-66 TIER_REQUIREMENTS`)
+
+| 등급 | minAcademicGrade | minBaseballScore | 학교 수 (`tierOfPower`, `refs.json` 실측) |
+|---|---|---|---|
+| S (★5) | 4 | 40 | 1 |
+| A (★4) | 5 | 25 | 7 |
+| B (★3) | 6 | 12 | 15 |
+| C (★2) | **7** | **4** | 23 |
+| D (★1) | **7** | **18** | 4 |
+
+(`minAcademicGrade`는 낮을수록 빡빡하다 — `grade <= minAcademicGrade`라야
+통과, `pctToGrade`가 1=최고·9=최저로 낸다.) 학교 수는
+`resource/data/master/entities/refs.json`의 `LEAGUE_UNIVERSITY` 50팀을
+`power`로 세어 재확인했다 — 2026-08-06 실측(주석)과 **정확히 같다**
+(`{1:4, 2:23, 3:15, 4:7, 5:1}`).
+
+D 문턱이 C보다 `minBaseballScore`에서만 뒤집혀 있다(18 > 4) — 학점 축(7=7)은
+동률이라 뒤집힘이 아니다.
+
+### 2. 분포 — §①이 잰 것 + 이번에 더한 프로브
+
+§①의 표본(씨앗 `3001·3002·3003`, `PF_YEARS=3`, `draft:false·university:true`)은
+`hsBaseballScore ∈ {0, 15}`·`academicGrade = 1`(전부 최고, `PB_STUDY_MODE`가
+`normal` 고정이라 학점 축은 안 갈린다) 셋뿐이었다. 15~40 구간을 채우려고
+**전경에서 4개를 더 돌렸다**(`PF_SEED=4001·4002·8377·777777`, 나머지 정책
+동일, 판당 9~10분):
+
+```
+[진로점수] year=2028 stage=highschool grade=3 avgPct=1.0 academicGrade=1 hsBaseballScore=15 ovr=71 drafted=false univPassed=1 indiePassed=0   (seed 4001)
+[진로점수] year=2028 stage=highschool grade=3 avgPct=1.0 academicGrade=1 hsBaseballScore=15 ovr=70 drafted=false univPassed=2 indiePassed=0   (seed 4002)
+[진로점수] year=2028 stage=highschool grade=3 avgPct=1.0 academicGrade=1 hsBaseballScore=15 ovr=68 drafted=false univPassed=2 indiePassed=0   (seed 8377)
+[진로점수] year=2028 stage=highschool grade=3 avgPct=1.0 academicGrade=1 hsBaseballScore=15 ovr=68 drafted=false univPassed=0 indiePassed=0   (seed 777777)
+```
+
+🔴 **넷 다 정확히 15다.** 15~40 사이를 못 채웠다 — 씨앗이 얇아서가 아니라
+**구조적**으로 보인다: `calcHsBaseballScore`(`universityUtils.ts:188`)는
+`champion100·runnerUp60·semiFinal30·notQualified10·perAward15`의 합인데,
+관측값 0·15는 매년 `psResult`가 넷 중 어디에도 안 걸려(팀이 그 해 대회
+본선에 아예 못 들었거나 기록이 안 남는 해) 팀 성적 항이 0으로 떨어지고,
+남는 건 수상 개수(0개=0점, 1개=15점)뿐이라는 뜻으로 읽힌다 — 이 프로브
+정책(정책 고정 `study=normal`·기본 팀 배정)에서는 **씨앗을 더 돌려도 팀
+성적 항이 안 갈린다.** 총 7건(§①의 3 + 이번 4) 전부 `{0, 15}` 안에
+갇혔다. 다른 시작 팀 전력이나 더 긴 판(`PF_YEARS`↑)으로 바꿔야 15~40이
+드러날 수 있는데 이번 턴 예산 안에서는 못 했다(아래 「못 잰 것」).
+
+**그래서 이 절의 사다리 후보는 실측 중간값이 아니라 `careerScoreRules`
+점수표(`resource/data/master/players/generation_rules.json:1108-1115`,
+`universityUtils.ts:147-165`와 동일 값)의 **자연 분기점**(한 해 팀 성적 +
+수상 개수의 정수 조합)에 맞춰 골랐다** — §①의 D=18도 같은 이유로
+"관측된 15와 다음 분기점 사이의 안전 마진"이었지 실측 중앙값이 아니었다.
+
+| 자연 분기점 | 구성 |
+|---|---|
+| 10 | notQualified만 |
+| 15 | 수상 1개만 (팀 성적 무기록) |
+| 25 | notQualified + 수상 1개 |
+| 30 | semiFinal만, 또는 수상 2개 |
+| 40 | semiFinal + 수상 1개, 또는 notQualified + 수상 2개 |
+| 45 | semiFinal + 수상 1개(오타 정정: 30+15) |
+| 60 | runnerUp만 |
+| 70 | runnerUp + 수상 1개에 조금 못 미침 |
+| 75 | runnerUp + 수상 1개 |
+| 100 | champion만 |
+
+### 3. 제안 사다리 — 후보 둘
+
+D는 고정(`grade7·score18`). 둘 다 학점은 S→D로 갈수록 완화(`4→7`, 옛
+값과 같은 폭), 야구점수는 위 분기점에 걸쳐 D 위로 단조 증가시켰다.
+
+**후보 A — 분기점 정합(권장)**
+
+| 등급 | minAcademicGrade | minBaseballScore | 근거 |
+|---|---|---|---|
+| S | 3 | 70 | runnerUp급(수상 근접) — 1개교뿐이라 배타적으로 |
+| A | 4 | 45 | semiFinal+수상 1개 |
+| B | 5 | 30 | semiFinal 단독 |
+| C | 6 | 25 | notQualified+수상 1개 — D보다 한 단계만 위 |
+| D | 7 | 18 | (고정) |
+
+**후보 B — 균등 계단**
+
+| 등급 | minAcademicGrade | minBaseballScore | 근거 |
+|---|---|---|---|
+| S | 3 | 58 | +14 (1개교라 문턱을 더 세게) |
+| A | 4 | 44 | +10 |
+| B | 5 | 34 | +8 |
+| C | 6 | 26 | +8, D보다 한 단계만 위 |
+| D | 7 | 18 | (고정) |
+
+두 후보 모두 `minAcademicGrade`는 C를 `7→6`으로 한 칸 조여 D와도
+갈리게 했다(옛 값은 C=D=7 동률이라 학점 축에서 C·D가 안 갈렸다) — B·A·S는
+옛 값(6·5·4)에서 한 칸씩(5·4·3) 당겼다. **이 축은 §①과 같은 이유로
+검증되지 않았다** — 표본 7건 전부 `academicGrade=1`이라 학점 게이트가
+한 번도 안 걸렸다(아래 「못 잰 것」).
+
+### 4. D 불합격 ~37% 유지 확인
+
+D의 문턱(`grade7·score18`)과 판정식(`week_engine.rs:580-597`)을 안 건드렸으니
+**계산상 자명하게 유지된다** — 그래도 이번 표본(§①의 3건 + 이번 4건,
+7건 전부 `academicGrade=1·hsBaseballScore∈{0,15}`)에 다시 대입해 확인했다:
+
+- `academicGrade=1 ≤ 7` → `meets_academic=true` (7건 전부)
+- `hsBaseballScore ∈ {0,15} < 18` → `meets_baseball=false` (7건 전부)
+- `(true,false)` 조합 확률 = **28%/교**, 드라이버가 매번 3곳에 지원
+  (`perfEntry.ts:691-696`, 이번엔 전력★ 오름차순이라 **D-tier 3개교에만
+  지원한다** — 아래 참고)
+- 3곳 전부 불합격 기대값 = `(1-0.28)^3 = 0.72^3 = 37.3%` — **7건 전부
+  동일한 category라 §①의 37.3%와 그대로 같다.** C~S 값을 얼마로 바꿔도
+  D 자체의 계산에는 안 들어간다(등급별 판정이 서로 독립이라 자명하지만
+  확인해 뒀다).
+
+### 5. 등급별 미지명자 도달 비율 — 못 쟀다 (구조적 이유)
+
+`pushCareerForward`(`perfEntry.ts:696-698`)가 대학 지망을
+`teams.filter(...).sort(power 오름차순).slice(0,3)`로 고른다 — **전력이
+가장 낮은 3개교만 골라 지원한다.** 대학이 D 4팀·C 23팀이라 **D-tier
+4개교 중 3개가 항상 뽑힌다** — 이 계측 드라이버는 구조적으로 **C~S에
+한 번도 지원하지 않는다.** 그래서 "미지명자가 어느 등급까지 가나"
+분포를 이 드라이버로는 **직접 못 쟀다** — 실측 대신 같은 판정식을
+관측된 두 점수(0, 15)에 후보 A 문턱을 대입한 이론값만 낸다:
+
+| hsBaseballScore | D(18) | C(25) | B(30) | A(45) | S(70) |
+|---|---|---|---|---|---|
+| 0 | 28%(불합격 쪽) | 28% | 28% | 28% | 28% |
+| 15 | 28% | 28% | 28% | 28% | 28% |
+
+두 값 다 모든 등급의 `minBaseballScore`보다 낮아 **어느 등급에 지원해도
+`meets_baseball=false`로 같은 28% 게이트**가 걸린다 — 즉 이 낮은 점수대
+(OVR 68~71)의 선수에게는 등급 사다리를 어떻게 세워도 결과가 같다. 이건
+후보값이 틀렸다는 뜻이 아니라 **이 표본이 애초에 D 근처 선수들뿐**이라는
+뜻이다 — 실제로 C~S가 갈리려면 점수 25 이상인 선수(성적이 더 좋은
+미지명자)가 필요한데, 이 드라이버 정책으로는 그런 선수도 안 나오고(§2)
+나온다 해도 지원 자체를 안 한다(위 필터). **드라이버를 고치기 전까지는
+C~S 도달률을 실측할 수 없다** — 다음 세션 몫으로 아래에 남긴다.
+
+### 못 잰 것 (①-2)
+
+- **C~S 실제 도달 비율** — `pushCareerForward`의 지망 선택이 전력 오름차순
+  고정이라 구조적으로 D-tier만 지원한다. 도달률을 재려면 드라이버가
+  성적에 맞는 등급을 고르게(또는 등급별로 강제 지원하게) 먼저 고쳐야
+  한다 — 이건 이 세션 범위 밖(코드 변경이라 A/드라이버 담당)이다.
+- **hsBaseballScore 15~40 구간** — 씨앗 4개(4001·4002·8377·777777)를
+  더 돌려도 전부 15로 갇혔다. 팀 성적 항이 왜 하나도 안 걸리는지(항상
+  `notQualified`도 아니고 아예 무기록인지)는 `calcHsBaseballScore` 호출
+  주변을 더 파야 한다 — 이번 턴 예산 밖.
+- **academicGrade 축** — §①과 동일하게 `PB_STUDY_MODE` 교차 확인
+  (`rest/focus/alternate`)을 안 돌렸다. C를 `7→6`으로 조인 것이 실제로
+  갈리는지 못 검증했다.
+- **후보 A vs B의 실제 24판 재계측** — 아직 안 돌렸다. 적용(A)과 4단계
+  재계측 순서를 따른다.
+
+### 권장
+
+**후보 A** (`S: grade3·score70` · `A: grade4·score45` · `B: grade5·score30` ·
+`C: grade6·score25` · `D: grade7·score18`(고정)) — 근거:
+`universityUtils.ts:38 TIER_REQUIREMENTS`(적용 지점) ·
+`generation_rules.json:1108-1115`(점수표 자연 분기점, 근거 자리) ·
+`week_engine.rs:580-597`(판정식) · `perfEntry.ts:691-698`(드라이버가 D만
+지원하는 구조적 한계, 위 §5). 균등 계단(후보 B)보다 실제로 달성 가능한
+성적 조합(수상·대회 성적의 정수 합)에 걸쳐 있어 "이 점수를 받으면 이
+등급"이 사람이 읽기에도 설명된다. ⚠ 적용은 A가 한다 — 여기 값도
+제안값이다.
+
+---
+
 ## ② 군 목표표 — 정본 자리
 
 ### 어디에 목표표가 있었나 (2026-09-12 훑어본 결과)
@@ -254,3 +430,22 @@ C등급(6)과는 구분을 남기고 지금 표본이 못 가른 학점 축에 �
   같은 표가 나온다)
 - `tier_rules.json`·`check-tiercoverage.cjs`·`report-simruns.cjs`·
   `advanceWeek.ts` 변경은 이미 별도 커밋 셋으로 들어갔다(단위마다 커밋)
+
+## 해시 (①-2, 2026-09-13 · D 세션)
+
+- 기준 커밋: `621615a44`(`extract-modals`을 `track/measure`에 fast-forward
+  merge, `docs(102): 4단계 결과와 확정 둘 — 대학 등급 사다리 · 24판으로
+  마감`) — 이 워크트리에서 `npm ci`·`build:native`·`check:native` 확인 뒤
+  시작했다(도장 통과, 소스 36개).
+  `63e15ec85`가 §①의 `grade7·score18`을 이미 적용해 두었다
+  (`universityUtils.ts:65`).
+- 이 절에서는 **코드를 고치지 않았다** — `TIER_REQUIREMENTS`는 그대로다.
+  새로 만든 건 이 문서 갱신뿐(커밋 예정).
+- 새 계측 로그 4건(`PF_SEED=4001·4002·8377·777777`, `PF_YEARS=3`,
+  `--path univ`, 전경 실행, 판당 9~10분): 위 §2 본문에 원문 그대로 인용.
+  로그 파일 자체는 배경 태스크 임시 출력(`…/tasks/*.output`)에만 있고
+  git에 안 올린다 — 재현하려면 같은 시드로 같은 명령을 다시 돌리면 된다
+  (`PF_SEED=<seed> PF_YEARS=3 npm run probe:paths -- --path univ`).
+- `refs.json` 등급별 학교 수는 `node -e "..."`로 직접 세어 재확인했다
+  (`resource/data/master/entities/refs.json`, `LEAGUE_UNIVERSITY` 50팀,
+  결과 `{1:4,2:23,3:15,4:7,5:1}` — 2026-08-06 실측과 동일).
