@@ -1312,12 +1312,32 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // 남고 이 원시값은 사라진다. `BALANCE_PROPOSAL_102.md` ① 문턱 제안을 위한
     // 분포 재기 전용 로그 — 게임 로직·저장값에는 영향 없다 (`__PB_CAREER_LOG` 게이트).
     if (typeof globalThis !== "undefined" && (globalThis as Record<string, unknown>).__PB_CAREER_LOG) {
+      // ⚠ **지망마다 어느 분기로 떨어지는지까지 적는다** (2026-09-18).
+      //   Rust `calc_hs_admissions` 는 문턱 미달도 22~28% 로 붙이므로
+      //   (`SIM_102_YARDSTICK_2026-09-18.md` ⓐ) 합격 수만 봐서는 「전부 충족
+      //   (70~92%)」에 든 지원이 하나라도 있었는지 못 가린다. 판정에 들어간
+      //   값과 같은 함수(`requirementOfPower`)로 여기서 다시 낸다 —
+      //   **표를 새로 만들지 않는다.**
+      const aGrade = pctToGrade(avgPct);
+      const 지망 = univChoices.map((teamId) => {
+        const req = requirementOfPower(teamsNow.find((t) => t.id === teamId)?.power);
+        const a = aGrade <= req.minAcademicGrade ? "A" : "-";
+        const b = hsBaseballScore >= req.minBaseballScore ? "B" : "-";
+        return `${teamId}/${req.tier}/${req.minBaseballScore}/${a}${b}`;
+      }).join(",");
+      // 고교 시즌마다의 팀 성적 항 — 배선이 끊겨 있으면 전부 `-` 다
+      const 고교성적 = (gDraft.protagonist.careerRecords ?? [])
+        .filter((r) => r.leagueId === "LEAGUE_HIGHSCHOOL")
+        .map((r) => `${r.year}:${r.psResult ?? "-"}:${(r.awards ?? []).length}`).join(",");
       console.log("[진로점수] year=" + get(seasonStore).seasonYear + " stage=" + p.careerStage
-        + " grade=" + p.grade + " avgPct=" + avgPct.toFixed(1) + " academicGrade=" + pctToGrade(avgPct)
+        + " grade=" + p.grade + " avgPct=" + avgPct.toFixed(1) + " academicGrade=" + aGrade
         + " hsBaseballScore=" + hsBaseballScore + " ovr=" + p.pitching.ovr
         + " drafted=" + draftOutcome.drafted
         + " univPassed=" + admissionsCalc.univPassed.length
-        + " indiePassed=" + admissionsCalc.indiePassed.length);
+        + " indiePassed=" + admissionsCalc.indiePassed.length
+        + " 고교성적=[" + 고교성적 + "]"
+        + " 지망=[" + 지망 + "]"
+        + " 합격=[" + admissionsCalc.univPassed.join(",") + "]");
     }
 
     // ── 해외 2군 직행 판정 (실플 ②) ─────────────────────────

@@ -16,6 +16,7 @@
  */
 import type { TournamentBracket, BracketMatch, GroupStage, TournamentDef } from "./tournament";
 import { TOURNAMENTS } from "./tournament";
+import type { CareerSeasonRecord } from "../types/save";
 
 export type TournamentPhase = "upcoming" | "qualifying" | "live" | "done";
 
@@ -173,4 +174,77 @@ export function finalistsOf(
   if (!m.winnerTeamId) return null;
   const loser = m.winnerTeamId === m.homeTeamId ? m.awayTeamId : m.homeTeamId;
   return { champion: m.winnerTeamId, runnerUp: loser ?? "" };
+}
+
+// ── 경력 기록에 남길 한 칸 (2026-09-18) ────────────────────────────
+
+/** `CareerSeasonRecord.psResult` 와 같은 칸이다 — 표를 새로 만들지 않는다 */
+export type SeasonResult = NonNullable<CareerSeasonRecord["psResult"]>;
+
+/** 미진출 0 < 4강 1 < 준우승 2 < 우승 3. 「더 멀리 갔나」를 가르는 데만 쓴다 */
+const RESULT_RANK: Record<SeasonResult, number> = {
+  notQualified: 0,
+  semiFinal: 1,
+  runnerUp: 2,
+  champion: 3,
+};
+
+/**
+ * 이 대회에서 그 팀이 어디까지 갔나 — **경력 기록의 `psResult` 한 칸으로.**
+ *
+ * `teamRun` 과 겹치는 것처럼 보이지만 답이 다르다. 그쪽은 화면에 쓸
+ * 「8강 탈락」같은 **말**이고, 이쪽은 진학 점수·드래프트 입력이 읽는
+ * **네 칸짜리 값**이다(`universityUtils.calcHsBaseballScore` ·
+ * `draftSystem.hsDraftInputsOf`). 말을 다시 파싱해 값을 얻게 두지 않는다.
+ *
+ * ⚠ **`totalRounds` 를 안 믿는다** — 이 파일의 나머지와 같은 이유다
+ *   (`roundLabel` 주석). 마지막 라운드는 **실제로 있는 가장 큰 round** 다.
+ * ⚠ **출전 안 했든 1회전에서 졌든 `notQualified` 다.** 진학 점수표가 그 칸을
+ *   「미진출」로 부르고 `hsDraftInputsOf` 도 「미진출·기록없음」으로 센다 —
+ *   둘을 가르는 값이 애초에 없다.
+ */
+export function tournamentResultOf(
+  bracket: TournamentBracket | null | undefined,
+  teamId: string,
+): SeasonResult {
+  if (!bracket || bracket.matches.length === 0 || !teamId) return "notQualified";
+  const last = Math.max(...bracket.matches.map((m) => m.round));
+  const played = (round: number) =>
+    bracket.matches.some(
+      (m) => m.round === round && (m.homeTeamId === teamId || m.awayTeamId === teamId),
+    );
+  const fin = bracket.matches.filter((m) => m.round === last);
+  // 마지막 라운드에 경기가 둘 이상이면 결승이 아니다 (`championOf` 와 같은 잣대)
+  if (fin.length === 1 && fin[0].winnerTeamId && played(last)) {
+    return fin[0].winnerTeamId === teamId ? "champion" : "runnerUp";
+  }
+  if (played(last - 1)) return "semiFinal";
+  return "notQualified";
+}
+
+/**
+ * 그 해 그 리그 대회들 중 **제일 멀리 간 것 하나.** 합산이 아니다.
+ *
+ * 근거는 `04.GodotOnePitch/sim/postseason.gd:250` `result_for` 다(읽기만) —
+ * 「학교는 그 해 대회 중 제일 멀리 간 것을 남긴다 — 대회가 여럿이라 마지막
+ * 것만 보면 우승한 해가 미진출로 적힌다」. 고교는 한 시즌에 대회가 다섯이고
+ * (`TOURNAMENTS`) 시즌 사이의 합산은 `calcHsBaseballScore` 가 따로 한다.
+ *
+ * ⚠ **`seasonYear` 로 거르지 않는다.** 대회 브래킷은 시즌 상태에 들어 있고
+ *   `makeEmptySeason` 이 해마다 비운다 — 지난해 것이 남을 자리가 없다.
+ *   해를 한 번 더 거르면, 엔진이 넣는 `seasonYear` 가 언젠가 어긋났을 때
+ *   **아무 말 없이 다시 전부 미진출**이 된다. 그 조용한 실패가 이 결함이었다.
+ */
+export function bestTournamentResultOf(
+  brackets: Record<string, TournamentBracket> | null | undefined,
+  leagueId: string,
+  teamId: string,
+): SeasonResult {
+  let best: SeasonResult = "notQualified";
+  for (const b of Object.values(brackets ?? {})) {
+    if (b.leagueId !== leagueId) continue;
+    const r = tournamentResultOf(b, teamId);
+    if (RESULT_RANK[r] > RESULT_RANK[best]) best = r;
+  }
+  return best;
 }

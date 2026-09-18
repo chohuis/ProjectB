@@ -29,6 +29,8 @@ import type {
   PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats,
 } from "../types/save";
 import type { PitcherGameLine, ScheduleEntry } from "../types/season";
+import type { TournamentBracket } from "../utils/tournament";
+import { bestTournamentResultOf, tournamentsOfLeague } from "../utils/tournamentView";
 
 const pct = rateLabel;   // 표기 정본은 utils/baseballFormat.ts
 
@@ -45,23 +47,46 @@ export function statLineOf(st: PlayerSeasonStats | undefined): string {
   return "";
 }
 
-/** 포스트시즌에서 어디까지 갔나 — 결승 결과가 없으면 아직 모른다 */
+/**
+ * 그 해 그 팀이 어디까지 갔나 — **프로·독립은 포스트시즌, 학교는 대회를 본다.**
+ *
+ * 🔴 **학교 갈래가 없어서 `psResult` 가 한 번도 안 붙었다** (2026-09-18 · 고쳤다).
+ *   여기가 `psResult` 를 채우는 유일한 자리인데 `phase === "postseason"` 인
+ *   일정만 봤다. 그런데 그 일정을 만드는 `injectLeaguePostseason`
+ *   (`advanceWeek.ts`)이 **고교·대학을 명시적으로 제외한다** — 학교 성적은
+ *   포스트시즌이 아니라 대회(`TOUR_HS_*`·`TOUR_UNIV_*`)로 나기 때문이다.
+ *   그래서 학교 기록의 `psResult` 는 늘 `undefined` 였고, 그걸 읽는 셋이
+ *   전부 팀 성적을 0 으로 봤다:
+ *     · `universityUtils.calcHsBaseballScore` — 우승 100·준우승 60·4강 30·
+ *       미진출 10 이 한 번도 안 붙어 **수상 항(×15)만 남았다**
+ *     · `draftSystem.hsDraftInputsOf` — 전 시즌이 「미진출 10」이었다
+ *     · 경력 표·은퇴 결산의 성적 칸 — 고교 줄이 늘 비었다
+ *   `04.GodotOnePitch/sim/season_history.gd:170` 이 같은 자리에 같은 말을
+ *   적어 뒀다(읽기만) — 「채우는 자리가 없어서 전원이 미진출이었다」.
+ *
+ * ⚠ **어느 리그가 대회로 결산되는지는 `TOURNAMENTS` 하나가 정한다** —
+ *   리그 id 목록을 여기 다시 적지 않는다.
+ * ⚠ 포스트시즌 갈래에서 결승 결과가 아직 없으면 `null` 이다(아직 모른다).
+ */
 export function postseasonResultOf(
-  schedule: ScheduleEntry[],
+  s: { schedule: ScheduleEntry[]; tournaments?: Record<string, TournamentBracket> },
   myTeamId: string,
-): { champion: string; runnerUp: string; myResult: NonNullable<CareerSeasonRecord["psResult"]> } | null {
-  const ps = schedule.filter((e) => e.phase === "postseason");
+  leagueId: string,
+): NonNullable<CareerSeasonRecord["psResult"]> | null {
+  if (tournamentsOfLeague(leagueId).length > 0) {
+    return bestTournamentResultOf(s.tournaments, leagueId, myTeamId);
+  }
+  const ps = s.schedule.filter((e) => e.phase === "postseason");
   if (ps.length === 0) return null;
   const finalEntry = ps.find((e) => e.id.startsWith("PS_FINAL_"));
   if (!finalEntry?.result) return null;
   const champion = finalEntry.result.winnerId;
   const runnerUp = finalEntry.result.loserId ?? "";
-  let myResult: NonNullable<CareerSeasonRecord["psResult"]> = "notQualified";
-  if (champion === myTeamId) myResult = "champion";
-  else if (runnerUp === myTeamId) myResult = "runnerUp";
-  else if (ps.some((e) => e.id.startsWith("PS_SEMI")
-    && (e.homeTeamId === myTeamId || e.awayTeamId === myTeamId))) myResult = "semiFinal";
-  return { champion, runnerUp, myResult };
+  if (champion === myTeamId) return "champion";
+  if (runnerUp === myTeamId) return "runnerUp";
+  if (ps.some((e) => e.id.startsWith("PS_SEMI")
+    && (e.homeTeamId === myTeamId || e.awayTeamId === myTeamId))) return "semiFinal";
+  return "notQualified";
 }
 
 /**
@@ -114,7 +139,10 @@ export function applyProtagonistSeasonRecord(seasonYear: number): void {
     })
     .filter((g): g is CareerGameLogEntry => g != null);
 
-  const ps = postseasonResultOf(s.schedule, myTeamId);
+  // ⚠ **리그를 같이 넘긴다** — 학교면 대회를, 프로면 포스트시즌을 본다.
+  //   기록에 적는 `leagueId` 와 같은 값이어야 `calcHsBaseballScore` 의
+  //   `leagueId === "LEAGUE_HIGHSCHOOL"` 필터와 어긋나지 않는다
+  const psResult = postseasonResultOf(s, myTeamId, p.leagueId);
 
   gameStore.appendCareerRecord({
     year: seasonYear,
@@ -128,7 +156,7 @@ export function applyProtagonistSeasonRecord(seasonYear: number): void {
     statLine: statLineOf(st),
     ovr: p.pitching.ovr,
     awards: [],
-    psResult: ps?.myResult,
+    psResult: psResult ?? undefined,
     gameLog,
   }, st ?? undefined);
 }

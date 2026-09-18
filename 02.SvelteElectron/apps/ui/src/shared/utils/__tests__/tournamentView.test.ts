@@ -8,6 +8,8 @@ import {
   teamRun,
   runSummary,
   PHASE_LABEL,
+  tournamentResultOf,
+  bestTournamentResultOf,
 } from "../tournamentView";
 import type { TournamentBracket, BracketMatch, GroupStage } from "../tournament";
 import { TOURNAMENTS } from "../tournament";
@@ -214,5 +216,89 @@ describe("우승·성적", () => {
     const r = teamRun(b, "A")!;
     expect(r.reached).toBe("결승");
     expect(r.lostAt).toBeNull();
+  });
+});
+
+/**
+ * 경력 기록 `psResult` 한 칸 (2026-09-18).
+ *
+ * 🔴 여기까지 오는 배선이 없어서 학교 기록의 `psResult` 가 한 번도 안 붙었고,
+ *   진학 야구점수의 팀 성적 항이 늘 0 이었다 — `seasonCareerRecord.ts` 머리말.
+ */
+describe("경력 기록에 남길 성적", () => {
+  it("우승·준우승", () => {
+    const b = bracket4({ semiWinners: ["A", "C"], finalWinner: "A" });
+    expect(tournamentResultOf(b, "A")).toBe("champion");
+    expect(tournamentResultOf(b, "C")).toBe("runnerUp");
+  });
+
+  it("4강에서 진 팀은 4강", () => {
+    const b = bracket4({ semiWinners: ["A", "C"], finalWinner: "A" });
+    expect(tournamentResultOf(b, "B")).toBe("semiFinal");
+    expect(tournamentResultOf(b, "D")).toBe("semiFinal");
+  });
+
+  it("출전 안 했으면 미진출 — 빈 대진도 마찬가지", () => {
+    expect(tournamentResultOf(bracket4({ semiWinners: ["A", "C"] }), "없는팀")).toBe(
+      "notQualified",
+    );
+    expect(tournamentResultOf(null, "A")).toBe("notQualified");
+    expect(tournamentResultOf({ ...bracket4(), matches: [] }, "A")).toBe("notQualified");
+  });
+
+  it("결승이 안 끝났으면 거기까지만 — 「결승 진출」 칸은 없다", () => {
+    // 우승·준우승을 미리 적으면 거짓이 된다. 확정된 것(4강)만 남긴다
+    expect(tournamentResultOf(bracket4({ semiWinners: ["A", "C"] }), "A")).toBe("semiFinal");
+  });
+
+  it("⚠ 엔진이 주는 1-based 라운드에서도 같다 — `totalRounds` 를 안 믿는다", () => {
+    // 실제 `generate_tournament_bracket` 은 `round: round + 1` 로 낸다
+    const b: TournamentBracket = {
+      tournamentId: "T",
+      leagueId: "LEAGUE_HIGHSCHOOL",
+      seasonYear: 2026,
+      bracketSize: 4,
+      totalRounds: 2,
+      byeCount: 0,
+      matches: [m(1, 0, "A", "B", "A"), m(1, 1, "C", "D", "C"), m(2, 0, "A", "C", "A")],
+    };
+    expect(tournamentResultOf(b, "A")).toBe("champion");
+    expect(tournamentResultOf(b, "C")).toBe("runnerUp");
+    expect(tournamentResultOf(b, "B")).toBe("semiFinal");
+  });
+
+  it("🔴 그 해 제일 멀리 간 대회 하나 — 합산이 아니다", () => {
+    // 04.GodotOnePitch `postseason.gd:250` 근거. 대회가 다섯이라 마지막 것만
+    // 보면 우승한 해가 미진출로 적힌다
+    const brackets: Record<string, TournamentBracket> = {
+      TOUR_HS_GAENARI: {
+        ...bracket4({ semiWinners: ["A", "C"], finalWinner: "A" }),
+        tournamentId: "TOUR_HS_GAENARI",
+      },
+      TOUR_HS_JANGMI: {
+        ...bracket4({ semiWinners: ["X", "Y"], finalWinner: "X" }),
+        tournamentId: "TOUR_HS_JANGMI",
+      },
+    };
+    expect(bestTournamentResultOf(brackets, "LEAGUE_HIGHSCHOOL", "A")).toBe("champion");
+    // 개나리기 4강 + 장미기 미출전 → 4강
+    expect(bestTournamentResultOf(brackets, "LEAGUE_HIGHSCHOOL", "B")).toBe("semiFinal");
+  });
+
+  it("다른 리그 대회는 안 센다", () => {
+    const brackets: Record<string, TournamentBracket> = {
+      TOUR_UNIV_WANGJUNGWANG: {
+        ...bracket4({ semiWinners: ["A", "C"], finalWinner: "A" }),
+        tournamentId: "TOUR_UNIV_WANGJUNGWANG",
+        leagueId: "LEAGUE_UNIVERSITY",
+      },
+    };
+    expect(bestTournamentResultOf(brackets, "LEAGUE_HIGHSCHOOL", "A")).toBe("notQualified");
+    expect(bestTournamentResultOf(brackets, "LEAGUE_UNIVERSITY", "A")).toBe("champion");
+  });
+
+  it("대회가 하나도 없으면 미진출", () => {
+    expect(bestTournamentResultOf({}, "LEAGUE_HIGHSCHOOL", "A")).toBe("notQualified");
+    expect(bestTournamentResultOf(undefined, "LEAGUE_HIGHSCHOOL", "A")).toBe("notQualified");
   });
 });
