@@ -383,6 +383,21 @@ log("⚠ 군은 다르다 — 노말 " + goalRangeOf("normal", "군").join("~")
   + " 레어·유니크·히든은 아직 전 무대 공통값으로 잰다"
   + " (제안은 BALANCE_PROPOSAL_102.md 2장).");
 log("");
+// 🔴 **군의 「노말」은 아래 표에서만 다른 정의다** (2026-09-18 · D ·
+//   `docs/SIM_102_YARDSTICK_2026-09-18.md` ⓑ). 군 복무 주는 `tierCounters`
+//   (eventFunnel)를 애초에 안 타서 노말/레어/유니크/히든 자체가 개념이 없다
+//   — 그래서 군 줄의 「노말」 칸은 `militaryLifeCounters`(계측 전용 훅 ·
+//   `apps/ui/src/shared/usecases/militaryLife.ts`)가 센 **캘린더 히트 + 40%
+//   뽑기 성공**을 쓴다. 목표(24~30)의 근거(STAGE0 3장 「캘린더 22건/100주 ≈
+//   11.4/시즌 + 비캘린더 40.6주×40%≈16.2 → 합계 27.6/시즌」)가 잰 것도
+//   정확히 이 둘의 합이라 **같은 정의로 비교된다.**
+// ⚠ **「군 시즌 하나」는 다른 무대와 같은 단위(52주 · 연도 줄 하나)다** — 군
+//   복무 자체는 100주(≈두 「시즌」)지만, 이 표의 분모(`byStage.군.n`)는
+//   군 복무 주만 따로 센 것이 아니라 **연도 줄 수**(다른 무대와 같은 잣대)다.
+//   위 STAGE0 이론값도 52주 단위로 환산해 냈으므로 잣대가 맞는다.
+log("(군 「노말」 = 계측 전용 계수기 `militaryLifeCounters` — 캘린더 히트 + 40% 뽑기 성공. "
+  + "다른 무대의 노말(tierCounters)과 다른 정의다. 군 시즌 하나 = 52주 연도 줄, STAGE0 이론값과 같은 단위.)");
+log("");
 // 🔴 **못 접은 해는 빼고 센다** (2026-09-09 실측으로 잡았다).
 //   그 줄은 등급이 전부 0 인데 **분모에는 든다** — 대학 노말이 54.7 에서 28.3 으로
 //   반토막 나 보인 것이 그 때문이었다(빈 줄 34개). 안 뺐으면 「대학이 목표를
@@ -396,16 +411,22 @@ for (const x of rows) for (const y of x.ys) {
   //   적용 안 된다(2026-09-12 D 실측으로 잡았다). 다른 무대 라벨은 그대로 둔다 —
   //   전부 공통 목표를 쓰므로 표기가 달라도 비교에 영향이 없다.
   const k = y.무대 === "military" ? "군" : String(y.무대);
-  (byStage[k] ??= { n: 0, normal: 0, rare: 0, unique: 0, hidden: 0, notice: 0 });
+  (byStage[k] ??= { n: 0, normal: 0, rare: 0, unique: 0, hidden: 0, notice: 0, milCal: 0, milDice: 0 });
   byStage[k].n++; byStage[k].normal += y.노말; byStage[k].rare += y.레어;
   byStage[k].unique += y.유니크; byStage[k].hidden += y.히든; byStage[k].notice += y.통지;
+  // 옛 판(이 계수기 전에 돈 판)엔 이 칸이 없다 — 없으면 0
+  byStage[k].milCal += y.군캘린더 ?? 0; byStage[k].milDice += y.군뽑기 ?? 0;
 }
 log("| 무대 | 시즌 | 노말 | 레어 | 유니크 | 히든 | 통지 |");
 log("|---|---|---|---|---|---|---|");
 const r1 = (v, n) => Math.round((v / Math.max(1, n)) * 10) / 10;
 for (const [k, v] of Object.entries(byStage).sort((a, b) => b[1].n - a[1].n)) {
   // ⚠ 무대별 예외(지금은 「군」)가 있으면 그 목표로 비교한다 — 나머지는 위 GOAL(전 무대 공통).
-  log(`| ${k} | ${v.n} | ${mark(r1(v.normal, v.n), goalRangeOf("normal", k))} | ${mark(r1(v.rare, v.n), goalRangeOf("rare", k))} `
+  // 🔴 **군은 「노말」 칸이 다른 정의다** — 위 머리말 참고. `militaryLifeCounters`
+  //   (캘린더 히트 + 40% 뽑기)의 시즌당 합을 `tierCounters` 노말 자리에 넣어
+  //   같은 목표(24~30)와 비교한다.
+  const 노말표시 = k === "군" ? r1(v.milCal + v.milDice, v.n) : r1(v.normal, v.n);
+  log(`| ${k} | ${v.n} | ${mark(노말표시, goalRangeOf("normal", k))}${k === "군" ? ` (캘린더${r1(v.milCal, v.n)}+뽑기${r1(v.milDice, v.n)})` : ""} | ${mark(r1(v.rare, v.n), goalRangeOf("rare", k))} `
     + `| ${mark(r1(v.unique, v.n), goalRangeOf("unique", k))} | ${mark(r1(v.hidden, v.n), goalRangeOf("hidden", k))} | ${r1(v.notice, v.n)} |`);
 }
 log("");

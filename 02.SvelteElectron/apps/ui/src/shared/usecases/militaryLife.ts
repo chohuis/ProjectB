@@ -14,6 +14,7 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { seedOf } from "../utils/seedOf";
+import { isMeasureMode } from "../utils/measureMode";
 import type { DecisionEffect, MessageItem } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import type { MilitaryLifeEvent, MilitaryLifeState, MilitaryMember } from "../types/militaryLife";
@@ -65,6 +66,18 @@ interface RustResult {
 }
 
 const CHOICE_LABEL = { ball: "공을 만졌다", people: "사람과 지냈다", rest: "쉬었다" } as const;
+
+// ── 계측 전용 계수기 (2026-09-18 · D) ────────────────────────────────
+// 군 복무 주는 등급 시스템(eventEngine)을 안 타서 tierCounters 가 못 본다
+// (docs/SIM_102_YARDSTICK_2026-09-18.md ⓑ — 노말/레어/유니크/히든 개념 자체가
+// 이 루프엔 없다). 여기 발동 자체(캘린더 히트 · 40% 뽑기 성공)를 따로 센다.
+// `isMeasureMode()` 가드 하나로 늘린다 — 실제 플레이는 이 객체를 아예 안
+// 건드리므로 결정성 정책(계측만 재현) 밖으로 안 나간다.
+export const militaryLifeCounters = { 캘린더: 0, 뽑기: 0 };
+export function resetMilitaryLifeCounters(): void {
+  militaryLifeCounters.캘린더 = 0;
+  militaryLifeCounters.뽑기 = 0;
+}
 
 export async function runMilitaryLifeWeek(args: {
   nextWeek: number;
@@ -266,9 +279,11 @@ export async function runMilitaryLifeWeek(args: {
   if (calEvent && !state.calendarDone.includes(calEvent.id)) {
     state.calendarDone.push(calEvent.id);
     fired = calEvent;
+    if (isMeasureMode()) militaryLifeCounters.캘린더++;
   } else if (!calEvent && res.eventIndex !== null && candidates[res.eventIndex]) {
     fired = candidates[res.eventIndex];
     state.cooldown[fired.id] = week;
+    if (isMeasureMode()) militaryLifeCounters.뽑기++;
   }
   if (fired) {
     let tier: number | undefined;
