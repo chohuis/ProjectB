@@ -14,6 +14,10 @@ import {
   mailboxDupStats, resetMailboxDupStats,
 } from "../../apps/ui/src/shared/stores/game";
 import { eventFunnelStats, resetEventFunnelStats } from "../../apps/ui/src/shared/utils/eventEngine";
+import {
+  militaryLifeCounters,
+  resetMilitaryLifeCounters,
+} from "../../apps/ui/src/shared/usecases/militaryLife";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { toEngineArsenal } from "../../apps/ui/src/shared/utils/arsenal";
 import { getTeamLineup } from "../../apps/ui/src/shared/utils/rosterEngine";
@@ -430,6 +434,9 @@ export interface SimYearRow {
   연도: number; 나이: number; 무대: string; 소속: string; 연봉: number;
   G: number; IP: number; ERA: number; 승: number; 패: number; OVR: number;
   노말: number; 레어: number; 유니크: number; 히든: number; 통지: number;
+  // 군 전용(2026-09-18) — 노말/레어/유니크/히든과 같은 칸이 아니다(등급 개념이
+  // 군 루프엔 없다). 군 무대가 아닌 해는 항상 0.
+  군캘린더: number; 군뽑기: number;
   일: string[];
 }
 
@@ -452,6 +459,7 @@ export function simYearRow(
   tierDelta: Record<string, number>,
   noticeDelta: number,
   at?: { 무대: string; 소속: string; 나이: number },
+  milDelta?: { 캘린더: number; 뽑기: number },
 ): SimYearRow {
   const g = get(gameStore);
   const s = get(seasonStore);
@@ -475,6 +483,7 @@ export function simYearRow(
     노말: tierDelta.normal ?? 0, 레어: tierDelta.rare ?? 0,
     유니크: tierDelta.unique ?? 0, 히든: tierDelta.hidden ?? 0,
     통지: noticeDelta,
+    군캘린더: milDelta?.캘린더 ?? 0, 군뽑기: milDelta?.뽑기 ?? 0,
     일,
   };
 }
@@ -8340,6 +8349,18 @@ export function eventFunnelProbe(): Record<string, unknown> {
 
 /** 회차 사이에 섞이지 않게 — 재기 직전에 부른다 */
 export function resetEventFunnel(): void { resetEventFunnelStats(); }
+
+/**
+ * **군 전용 계수기** (2026-09-18 · D). 군 복무 주는 `eventFunnel`을 안 타서
+ * 위 `tierCounters`로는 못 본다(`docs/SIM_102_YARDSTICK_2026-09-18.md` ⓑ).
+ * 누계를 그대로 돌려준다 — 해마다 차를 내는 건 `tierCounters`와 같은 방식으로
+ * 호출부(`probe-a-simrun-worker.cjs`)가 한다.
+ */
+export function militaryCounters(): { 캘린더: number; 뽑기: number } {
+  return { ...militaryLifeCounters };
+}
+/** 회차 사이에 섞이지 않게 — 재기 직전에 부른다(`resetEventFunnel`과 짝) */
+export function resetMilitaryCounters(): void { resetMilitaryLifeCounters(); }
 
 /**
  * **이 규칙 하나가 어떻게 됐나** — 연계를 만들었을 때 "실제로 도는가"를 묻는 도구.
