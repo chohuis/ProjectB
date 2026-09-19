@@ -34,7 +34,8 @@ import { buildMyBodyReport } from "./weekPhases/myBodyReport";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
 import { enlistProtagonist, dischargeProtagonist } from "./militaryDecision";
-import { runMilitaryLifeWeek } from "./militaryLife";
+import { runMilitaryLifeWeek, militaryLifeCounters } from "./militaryLife";
+import { isMeasureMode } from "../utils/measureMode";
 import {
   isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
   loadRetirementRules, surgeryRetireChance,
@@ -2791,6 +2792,20 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
                    : eligibleCommon;
         const evt = pool[milCalc.eventIndex];
         if (evt) {
+          // ── 계측 전용 계수기 — **체육부대가 통째로 안 세지고 있었다**
+          //    (2026-09-19 · A). `militaryLifeCounters` 는 `runMilitaryLifeWeek`
+          //    (일반병 병영생활) 안에서만 늘었는데, 체육부대는 그 갈래를 안 탄다
+          //    (`militaryLife` 가 `unit === "general"` 일 때만 만들어진다 ·
+          //    `militaryDecision.enlistProtagonist`). 그래서 24판 재계측에서
+          //    성장형 일곱 판이 **군 계수기 0** 이었다 — 결함이 아니라 잣대가
+          //    일반병만 세고 있었던 것이다(`SIM_102_UNIV_MIL_2026-09-19.md` ②).
+          //
+          // ⚠ **같은 칸(`뽑기`)에 넣는다.** 뜻이 같아서다 — 일반병 쪽 `뽑기` 도
+          //   Rust 의 40% 게이트를 통과해 실제로 뜬 사건 수이고
+          //   (`week_engine.rs` `calc_military_life_week`), 이쪽도 같은 40%
+          //   게이트다(`calc_military_week`). 체육부대에는 캘린더(확률 밖 고정
+          //   일정)라는 개념 자체가 없어 `캘린더` 는 일반병 전용으로 남는다.
+          if (isMeasureMode()) militaryLifeCounters.뽑기++;
           // ⚠ **필드를 손으로 옮겨 적지 않는다.** 예전엔 네 개(morale·fatigue·
           // xp·statDelta)만 복사해서, 데이터에 성실도·명성을 넣어도 여기서
           // 조용히 잘렸다. 선택지에서 표시용 두 개만 떼고 나머지는 통째로

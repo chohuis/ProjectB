@@ -165,6 +165,59 @@ export function seededIndex(seed: number, n: number): number {
   return x % n;
 }
 
+/**
+ * **지금 입대할까** — 성향이 고른다 (2026-09-10 · 사용자 확정 ②).
+ *
+ * 화면 모달(`MilitaryEnlistAskModal`)은 갈래가 둘이다(입대 · 연기). 자동 진행은
+ * **늘 연기**를 골랐고 그래서 12시즌 30판에서 군을 한 판도 안 밟았다.
+ *
+ *   성장형  미룬다  — 프로에서 뛸 해를 안 버린다
+ *   안전형  간다    — 미루면 `militaryDeferPenalty` 가 쌓인다
+ *   대충    무작위  — 씨앗 고정(재현된다)
+ *
+ * 🔴 **안전형이 대학을 한 학년도 못 다니고 있었다** (2026-09-19 · A 실측 ·
+ *   `docs/SIM_102_UNIV_MIL_2026-09-19.md` ①).
+ *
+ * 24판 재계측에서 안전형 세 판(#8 #14 #20)이 `대학 17주` 뒤 곧장 입대했다.
+ * 사슬은 이랬다 — 진학해서 무대가 `university` 로 바뀌는 순간 `advanceWeek` 의
+ * `isMilUnresolved`(미필 · 고교 아님)가 **그해에 바로** 참이 되고, W46 체육부대
+ * 공개 → 자동 진행이 신청 → W50 탈락 → `militaryEnlistAsk(rejected)` →
+ * 여기서 안전형이 **무조건 참**을 내 19세 1학년이 입대했다. 전역자는 학교로
+ * 안 돌아가므로(게임 규칙 · `stores/game.ts completeMilitaryService`) 대학은
+ * 그걸로 끝이다.
+ *
+ * **성향의 뜻이 자기모순이었다.** 바로 위 `careerRoutePriority` 가 안전형이
+ * 대학을 1순위로 두는 이유를 "4년이 보장되고 재지명 기회가 네 번 더 생긴다"고
+ * 적어 뒀는데, 그 4년을 이 결정이 첫해에 지웠다 — **대학 성향을 잰다면서
+ * 대학을 안 다니는 표본**을 냈다.
+ *
+ * ⚠ **미루는 값이 0 이다.** `militaryDeferPenalty` 는 26세부터만 쌓이고
+ *   (`advanceWeek` 의 `weekInYear === 1 && p.age >= 26`), 체육부대 신청 자격도
+ *   27세까지다. 19~22세 대학생에게 "미루면 대가가 쌓인다"는 성립하지 않는다.
+ * ⚠ **게임 로직이 아니다.** 화면은 갈래 둘을 그대로 보여 주고 사람이 고른다.
+ *   실제 플레이의 기본값은 `growth`(미룬다)라 한 줄도 안 바뀐다.
+ * ⚠ 대충형은 그대로 둔다 — 무작위가 그 성향의 정의다(바닥 확인).
+ */
+export function militaryEnlistPick(
+  persona: SimPersona,
+  ctx: {
+    /** 지금 무대 */
+    stage: CareerStage;
+    /** 대학 최종 학년인가 — 판정은 `careerTransition.isUniversityFinalYear` 하나가 갖는다 */
+    universityFinalYear: boolean;
+    /** 대충형이 굴릴 씨앗 */
+    seed: number;
+  },
+): boolean {
+  if (persona === "growth") return false;
+  if (persona === "safe") {
+    // 학업이 남아 있으면 안 간다 — 안전형이 대학을 고른 이유가 그 4년이다
+    if (ctx.stage === "university" && !ctx.universityFinalYear) return false;
+    return true;
+  }
+  return seededIndex(ctx.seed, 2) === 1;
+}
+
 /** 미지명 뒤에 갈 수 있는 갈래 셋 — 지명은 늘 이것들보다 위다 */
 export type SimCareerRoute = "overseas" | "university" | "independent";
 

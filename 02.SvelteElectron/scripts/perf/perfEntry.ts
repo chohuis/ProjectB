@@ -503,6 +503,18 @@ export function tierCounters(): { 등급: Record<string, number>; 통지: number
 }
 
 /**
+ * 다녀온(또는 지금 있는) 부대 — `sports` | `general` | null.
+ *
+ * 복무 중이면 `militaryUnit`, 전역했으면 `militaryServedUnit` 이다
+ * (`completeMilitaryService` 가 `militaryUnit` 을 null 로 지우면서 그 값을
+ * `militaryServedUnit` 으로 옮겨 적는다 — 그 자리 주석이 "다녀온 부대는
+ * 남긴다"라고 적어 뒀다). **읽기만 한다.**
+ */
+function 복무부대(p: ProtagonistSave): "sports" | "general" | null {
+  return p.militaryUnit ?? p.militaryServedUnit ?? null;
+}
+
+/**
  * **판 보고서 한 장** — `runs/#NN.json` 에 그대로 쓴다.
  *
  * 머리(씨앗·프리셋·성향…) · 해마다 한 줄 · 꼬리(진로·예외·폴백…).
@@ -544,7 +556,23 @@ export function simRunReport(head: {
       //   줄을 못 접는데(무대가 바뀌며 새 시즌이 직접 열린다) 하필 그 해에
       //   지명·진학이 일어난다 — 「고졸 직행 지명」을 줄로 세면 놓친다.
       //   `careerEvents` 는 연도까지 온전하므로 여기 통째로 싣는다.
-      커리어이벤트: (p.careerEvents ?? []).map((e) => `${e.year}:${e.eventType}`),
+      //
+      // 🔴 **입대 줄에는 부대를 같이 찍는다** (2026-09-19 · A). 24판 재계측에서
+      //   성장형 일곱 판이 군 계수기 0 이었는데, 표만 봐서는 「군 사건이 안
+      //   난다」인지 「잣대가 그 부대를 안 센다」인지 못 갈랐다 —
+      //   `military_enlist` 만으로는 상무인지 일반병인지 알 수가 없다.
+      //   부대는 이미 세이브에 있다(`militaryServedUnit` · 전역 때 `militaryUnit`
+      //   에서 옮겨 적고 지우지 않는다 · `stores/game.ts completeMilitaryService`).
+      //   **꺼내는 자리만 없었다** — 게임 로직은 한 줄도 안 건드린다.
+      // ⚠ 한 커리어에 입대는 한 번뿐이다(`enlistMilitary` 가 「미필만 입대」로
+      //   막는다) — 그래서 주인공 한 명의 부대 하나면 모든 입대 줄에 맞는다.
+      커리어이벤트: (p.careerEvents ?? []).map((e) =>
+        e.eventType === "military_enlist" && 복무부대(p)
+          ? `${e.year}:${e.eventType}(${복무부대(p)})`
+          : `${e.year}:${e.eventType}`,
+      ),
+      // 다녀온 부대 — 위 입대 줄과 같은 값이고, 입대가 없으면 null 이다
+      군부대: 복무부대(p),
       // 무대별 주 수 — 폴백 비율을 무대마다 내려면 분모가 있어야 한다
       무대주수: { ...((eventFunnelProbe().tier as { weeksByStage?: Record<string, number> }).weeksByStage ?? {}) },
       폴백: f.fallback ?? 0,
