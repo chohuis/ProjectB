@@ -17,9 +17,14 @@ const RUN_NO = Number(process.env.PB_RUN_NO || 1);
   // 표를 새로 만들지 않고 기존 `#NN.json`에 얹는다(24판 재계측 2026-09-19).
   globalThis.__PB_CAREER_LOG = true;
   const 진로로그 = [];
+  // ⚠ **머리표가 둘이다** (2026-09-19 · A). `[진로점수]` 는 대학 지원 분기고,
+  //   `[군결정]` 은 `runAutoAdvance` 의 입대 여부(누가 정했나)다 — 안전형이
+  //   대학 1학년에 입대한 것을 「드라이버인가 게임 로직인가」로 가르려고 넓혔다.
+  //   둘 다 같은 `__PB_CAREER_LOG` 게이트라 실제 플레이는 안 지난다.
+  const 로그머리 = ["[진로점수]", "[군결정]"];
   const rawLog = console.log.bind(console);
   console.log = (...args) => {
-    if (typeof args[0] === "string" && args[0].startsWith("[진로점수]")) 진로로그.push(args.join(" "));
+    if (typeof args[0] === "string" && 로그머리.some((h) => args[0].startsWith(h))) 진로로그.push(args.join(" "));
     else rawLog(...args);
   };
   const { app, tmp } = await headless.boot(`simrun-${SEED}-${PERSONA}`);

@@ -8,6 +8,7 @@ import { applyMilitaryEventChoice } from "./militaryLife";
 import { buildMilitaryResultMessage } from "../utils/militaryResultMessage";
 import { applyRoleChoice, roleChoicePolicyPick } from "./pitcherRole";
 import { enlistProtagonist } from "./militaryDecision";
+import { isUniversityFinalYear } from "../utils/careerTransition";
 import type { RoleChoiceMetadata, DecisionEffect } from "../types/main";
 import type { ProtagonistSave } from "../types/save";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
@@ -19,7 +20,8 @@ import { buildBatterLineup, buildStarterStats, buildFielders, rotIdxOf } from ".
 import { leagueMatchOptions } from "../utils/matchLeagueOptions";
 import { protagonistMatchSeed } from "../utils/protagonistMatchSeed";
 import {
-  SIM_PERSONAS, primaryStatsFor, bodyCost, growthValue, seededIndex, type SimPersona,
+  SIM_PERSONAS, primaryStatsFor, bodyCost, growthValue, seededIndex,
+  militaryEnlistPick, type SimPersona,
 } from "./simPersona";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
@@ -98,22 +100,25 @@ function persona(): SimPersona {
 }
 
 /**
- * **지금 입대할까** — 성향이 고른다 (2026-09-10 · 사용자 확정 ②).
+ * **지금 입대할까** — 뜻은 `simPersona.militaryEnlistPick` 하나가 갖는다
+ * (진로 차례 · 대학 등급과 같은 자리 · 2026-09-19). 여기는 상태를 읽어 넘기는
+ * 얇은 껍데기다 — 성향 규칙을 두 곳에 적으면 한쪽만 고쳐진 채 남는다.
  *
- * 화면 모달은 갈래가 둘이다(입대 · 연기). 자동 진행은 **늘 연기**를 골랐고
- * 그래서 12시즌 30판에서 군을 한 판도 안 밟았다.
- *
- *   성장형  미룬다  — 프로에서 뛸 해를 안 버린다
- *   안전형  간다    — 미루면 `militaryDeferPenalty` 가 쌓인다
- *   대충    무작위  — 씨앗 고정(재현된다)
+ * ⚠ 대학 최종 학년 판정은 `careerTransition.isUniversityFinalYear` 를 쓴다 —
+ *   자동 진행의 「다음 학년 진급」(`careerDecision.continueCurrentStage`)이
+ *   보는 것과 **같은 함수**다.
  */
-function militaryEnlistPick(): boolean {
-  const mode = persona();
-  if (mode === "safe") return true;
-  if (mode === "growth") return false;
+function militaryEnlistPickHere(): boolean {
+  const g = get(gameStore);
   const s = get(seasonStore);
-  const seed = (s.worldSeed ?? 0) + s.seasonYear * 101 + s.currentWeek;
-  return seededIndex(seed, 2) === 1;
+  return militaryEnlistPick(persona(), {
+    stage: g.protagonist.careerStage,
+    universityFinalYear: isUniversityFinalYear(
+      g.protagonist.grade,
+      g.schoolState.universityWeek,
+    ),
+    seed: (s.worldSeed ?? 0) + s.seasonYear * 101 + s.currentWeek,
+  });
 }
 
 /**
@@ -694,7 +699,20 @@ export async function runAutoAdvance(): Promise<void> {
         //     안전형  일찍 간다 — 미루면 대가가 쌓인다(`militaryDeferPenalty`)
         //     대충    씨앗 고정 무작위
         case "militaryEnlistAsk": {
-          if (militaryEnlistPick()) {
+          const 간다 = militaryEnlistPickHere();
+          // 계측 전용 자취 — **누가 입대를 정했나**를 판 JSON 에 남긴다
+          // (2026-09-19 · A). 24판 재계측에서 안전형이 대학 1학년에 입대한 것을
+          // 보고 「드라이버인가 게임 로직인가」를 코드만으로 갈라야 했다.
+          // `advanceWeek` 의 `[진로점수]` 와 같은 규약이다 — `__PB_CAREER_LOG`
+          // 게이트라 실제 플레이는 안 지난다. 게임 로직·저장값은 안 바뀐다.
+          if ((globalThis as Record<string, unknown>).__PB_CAREER_LOG) {
+            const gL = get(gameStore), sL = get(seasonStore);
+            console.log(`[군결정] year=${sL.seasonYear} w=${sL.currentWeek}`
+              + ` persona=${persona()} reason=${pa.reason} stage=${gL.protagonist.careerStage}`
+              + ` age=${gL.protagonist.age} univWeek=${gL.schoolState.universityWeek ?? 0}`
+              + ` 답=${간다 ? "입대" : "연기"} 정한곳=runAutoAdvance.militaryEnlistPick`);
+          }
+          if (간다) {
             // 화면의 「입대」와 같은 함수다 — 사본을 만들지 않는다
             await enlistProtagonist("general");
           }
