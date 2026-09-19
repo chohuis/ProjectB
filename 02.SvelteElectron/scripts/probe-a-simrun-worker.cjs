@@ -11,6 +11,17 @@ const PRESET = process.env.PB_START_PRESET || "balanced";
 const RUN_NO = Number(process.env.PB_RUN_NO || 1);
 
 (async () => {
+  // 계측 전용 — 대학 지원 분기(「전부 충족」 vs 뽑기 통과)를 `advanceWeek.ts`의
+  // `__PB_CAREER_LOG` 게이트가 console.log("[진로점수] ...")로 찍는다. 게임
+  // 로직·저장값엔 영향 없다(주석 확인). 여기서 그 줄만 걸러 리포트에 싣는다 —
+  // 표를 새로 만들지 않고 기존 `#NN.json`에 얹는다(24판 재계측 2026-09-19).
+  globalThis.__PB_CAREER_LOG = true;
+  const 진로로그 = [];
+  const rawLog = console.log.bind(console);
+  console.log = (...args) => {
+    if (typeof args[0] === "string" && args[0].startsWith("[진로점수]")) 진로로그.push(args.join(" "));
+    else rawLog(...args);
+  };
   const { app, tmp } = await headless.boot(`simrun-${SEED}-${PERSONA}`);
   const years = [];
   try {
@@ -108,6 +119,7 @@ const RUN_NO = Number(process.env.PB_RUN_NO || 1);
     console.error("[simrun] 예외", e && e.stack || e);
   }
   const report = app.simRunReport({ 번호: RUN_NO, 씨앗: SEED, 프리셋: PRESET }, years);
+  report.진로로그 = 진로로그;
   await headless.cleanup(tmp);
   console.log("SIMRUN_JSON " + JSON.stringify(report));
 })();
