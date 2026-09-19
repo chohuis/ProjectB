@@ -73,6 +73,13 @@ const CHOICE_LABEL = { ball: "공을 만졌다", people: "사람과 지냈다", 
 // 이 루프엔 없다). 여기 발동 자체(캘린더 히트 · 40% 뽑기 성공)를 따로 센다.
 // `isMeasureMode()` 가드 하나로 늘린다 — 실제 플레이는 이 객체를 아예 안
 // 건드리므로 결정성 정책(계측만 재현) 밖으로 안 나간다.
+//
+// ⚠ **늘리는 자리가 둘이다** (2026-09-19 · A). 이 파일(일반병 병영생활)과
+//   `advanceWeek.ts` 의 군 주간 갈래(체육부대·옛 세이브). 체육부대는
+//   `runMilitaryLifeWeek` 를 아예 안 타서(입대 때 `militaryLife` 가 일반병에만
+//   생긴다) 여기서만 세면 **성장형 판이 통째로 0** 이었다 — 실측으로 잡았다
+//   (`docs/SIM_102_UNIV_MIL_2026-09-19.md` ②).
+// ⚠ `캘린더` 는 일반병 전용이다 — 체육부대에는 확률 밖 고정 일정이 없다.
 export const militaryLifeCounters = { 캘린더: 0, 뽑기: 0 };
 export function resetMilitaryLifeCounters(): void {
   militaryLifeCounters.캘린더 = 0;
