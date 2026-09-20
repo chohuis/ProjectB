@@ -22,6 +22,8 @@ export function gradeBelow(g: EventGrade): EventGrade | null {
 export interface StageGroup {
   id: string;
   militaryStatus?: string[];
+  /** 군 부대(현역만 뜻이 있다) — `stageGroups` 「군_일반병」·「군_체육부대」를 가른다(2026-09-20) */
+  militaryUnit?: ("sports" | "general")[];
   leagueIds?: string[];
   careerStages?: string[];
   /** 프로를 연차로 가를 때 쓴다 — 지금 데이터엔 없다(§ stageGroups 주석) */
@@ -117,6 +119,7 @@ export function parseTierRules(raw: unknown): TierRules {
     return {
       id: g.id,
       militaryStatus: g.militaryStatus as string[] | undefined,
+      militaryUnit: g.militaryUnit as ("sports" | "general")[] | undefined,
       leagueIds: g.leagueIds as string[] | undefined,
       careerStages: g.careerStages as string[] | undefined,
       proYearGte: isNum(g.proYearGte) ? g.proYearGte : undefined,
@@ -148,13 +151,21 @@ export function parseTierRules(raw: unknown): TierRules {
  * 지금 주인공이 선 무대. **배열 순서대로 처음 맞는 것**이다.
  *
  * ⚠ 군이 맨 위인 이유는 데이터 쪽 주석에 적었다 — 복무 중에도 `careerStage`
- *   가 소속을 들고 있어 그냥 두면 프로로 읽힌다.
+ *   가 소속을 들고 있어 그냥 두면 프로로 읽힌다. 군은 부대별로 「군_일반병」·
+ *   「군_체육부대」둘로 갈린다(2026-09-20 · 사용자 확정 — 일반병만 캘린더가
+ *   있고 등급 목표가 달라진다, `SIM_102_MILITARY_COUNTER_2026-09-18.md`).
+ *   ⚠ **이 갈래는 지금 실전에서 안 불린다** — `advanceWeek.ts` 의 군 주간
+ *   블록이 `careerStage === "military"` 를 처리 전에 항상 반환해 이 함수
+ *   자체를 안 태운다(등급 시스템이 군을 안 타는 것과 같은 이유). 계측
+ *   도구·미래 배선을 위해 규칙은 정확히 둔다.
  * ⚠ 어디에도 안 맞으면 `"공용"` 이다 — 무대를 못 가르는 것과 무대가 없는 것을
  *   가른다(0 으로 접으면 검사 표에서 그 판이 통째로 사라진다).
  */
 export function stageGroupOf(rules: TierRules, p: ProtagonistSave): string {
   for (const g of rules.stageGroups) {
     if (g.militaryStatus && !g.militaryStatus.includes(p.militaryStatus)) continue;
+    if (g.militaryUnit && !g.militaryUnit.includes(p.militaryUnit as "sports" | "general"))
+      continue;
     if (g.leagueIds && !g.leagueIds.includes(p.leagueId)) continue;
     if (g.careerStages && !g.careerStages.includes(p.careerStage)) continue;
     if (g.proYearGte !== undefined && (p.proServiceYears ?? 0) < g.proYearGte) continue;

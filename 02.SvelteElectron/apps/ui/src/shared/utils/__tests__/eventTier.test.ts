@@ -370,6 +370,8 @@ describe("등급 규칙 파일", () => {
       ),
     ).toBe("2군");
     // 🔴 복무 중에도 `careerStage` 는 소속이 남는다 — 군이 먼저여야 한다
+    // ⚠ 군은 부대별로 갈린다(2026-09-20) — `militaryUnit` 이 없으면(구 세이브
+    //   호환 · 옛 데이터) 어느 부대에도 안 걸려 「공용」으로 떨어진다.
     expect(
       stageGroupOf(
         RULES,
@@ -377,9 +379,21 @@ describe("등급 규칙 파일", () => {
           careerStage: "pro_kbl",
           leagueId: "LEAGUE_KBL",
           militaryStatus: "현역",
+          militaryUnit: "general",
         }),
       ),
-    ).toBe("군");
+    ).toBe("군_일반병");
+    expect(
+      stageGroupOf(
+        RULES,
+        proto({
+          careerStage: "pro_kbl",
+          leagueId: "LEAGUE_KBL",
+          militaryStatus: "현역",
+          militaryUnit: "sports",
+        }),
+      ),
+    ).toBe("군_체육부대");
   });
 
   it("🔴 프로 눈금은 `proServiceYears` 다 — 데뷔 시즌이 0(1년차)", () => {

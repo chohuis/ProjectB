@@ -15,7 +15,8 @@ const DIR = path.resolve(process.cwd(), process.env.PB_RUNS_DIR || "resource/log
 
 // 등급 빈도(노말·레어·유니크·히든) 목표는 여기서 다시 안 적는다 — 정본은
 // `resource/data/master/events/tier_rules.json` `seasonFreq`(전 무대 공통) ·
-// `seasonFreqByStage`(무대별 예외, 지금은 「군」 normal 24~30) 하나다.
+// `seasonFreqByStage`(무대별 예외, 지금은 「군_일반병」·「군_체육부대」 둘 —
+// 2026-09-20 사용자 확정으로 군 하나였던 키를 부대별로 갈랐다) 하나다.
 // 숫자를 코드에 두 번 적으면 한쪽만 고쳐진 채 남는다(CLAUDE.md).
 const TIER_RULES = JSON.parse(fs.readFileSync(
   path.resolve(process.cwd(), "resource/data/master/events/tier_rules.json"), "utf8"));
@@ -31,7 +32,7 @@ const GOAL = {
   히든: [freqOf("hidden").min, freqOf("hidden").max],
   폴백: [0, 0], 예외: [0, 0],
 };
-/** 무대별 목표 — 지금은 「군」만 다르다(normal 24~30). `mark`와 같은 (v,[lo,hi]) 짝을 낸다 */
+/** 무대별 목표 — 지금은 「군_일반병」·「군_체육부대」만 다르다. `mark`와 같은 (v,[lo,hi]) 짝을 낸다 */
 const goalRangeOf = (grade, stage) => { const f = freqOf(grade, stage); return [f.min, f.max]; };
 const mark = (v, [lo, hi]) => (v < lo || v > hi ? `🔴 ${v}` : `${v}`);
 const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0);
@@ -145,6 +146,9 @@ const rows = runs.map((r, i) => {
     통산IP: Math.round(ys.reduce((a2, y) => a2 + y.IP, 0)),
     은퇴: r.머리.은퇴나이,
     군시즌: ys.filter((y) => String(y.무대) === "military").length,
+    // 부대(sports|general|null) — 「등급 빈도」 표가 군을 부대별로 가르는 열쇠다
+    // (2026-09-20 · 사용자 확정). 한 커리어에 입대는 한 번뿐이라 판 하나에 부대 하나.
+    군부대: r.꼬리.군부대 ?? null,
     // 🔴 **2군·콜업을 센다** (2026-09-12 · 신인 2군 출발 확정).
     //   무대(`careerStage`)로는 1군·2군이 안 갈린다 — 둘 다 `pro_*` 다.
     //   가르는 것은 **소속 팀 id** 뿐이다(팜은 `_2` 로 끝난다).
@@ -354,7 +358,9 @@ for (const r of runs) {
     if (st === "highschool") k = "고교";
     else if (st === "university") k = "대학";
     else if (st === "independent") k = "독립";
-    else if (st === "military") k = "군";
+    // ⚠ 군은 부대별로 가른다(위 byStage 와 같은 규약) — 폴백은 군에서 안 나지만
+    //   (등급 시스템을 아예 안 탄다) 이름표는 맞춰 둔다.
+    else if (st === "military") k = r.꼬리.군부대 === "sports" ? "군_체육부대" : r.꼬리.군부대 === "general" ? "군_일반병" : "군_모름";
     else if (st.startsWith("pro_")) { proN++; k = farm ? "2군" : (proN <= 3 ? "프로초반" : "프로중후반"); }
     if (k) 무대주[k] = (무대주[k] ?? 0) + 52;
   }
@@ -389,8 +395,14 @@ log("## 등급 빈도 — 시즌당 (무대별)");
 log("");
 log("목표(전 무대 공통): 노말 " + GOAL.노말.join("~") + " · 레어 **" + GOAL.레어.join("~")
   + "** · 유니크 **" + GOAL.유니크.join("~") + "** · 히든 " + GOAL.히든.join("~"));
-log("⚠ 군은 다르다 — 노말 " + goalRangeOf("normal", "군").join("~")
-  + " (엔진이 다르다. tier_rules.json seasonFreqByStage · SIM_102_STAGE0_2026-09-12.md 3장)."
+// ⚠ **군은 부대별로 목표가 다르다** (2026-09-20 · 사용자 확정). 일반병은
+//   캘린더 + 40% 뽑기, 체육부대는 40% 뽑기만이라 이론 상한 자체가 다르다
+//   (`SIM_102_MILITARY_COUNTER_2026-09-18.md` 「체육부대 목표 제안」 절).
+//   `seasonFreqByStage` 키도 `군_일반병`·`군_체육부대` 둘로 갈랐다 —
+//   `tier_rules.json`에 「군」 하나만 있던 옛 키는 더 없다.
+log("⚠ 군은 부대마다 다르다 — 일반병 노말 " + goalRangeOf("normal", "군_일반병").join("~")
+  + " · 체육부대 노말 " + goalRangeOf("normal", "군_체육부대").join("~")
+  + " (엔진이 다르다. tier_rules.json seasonFreqByStage · SIM_102_MILITARY_COUNTER_2026-09-18.md)."
   + " 레어·유니크·히든은 아직 전 무대 공통값으로 잰다"
   + " (제안은 BALANCE_PROPOSAL_102.md 2장).");
 log("");
@@ -426,11 +438,18 @@ const byStage = {};
 for (const x of rows) for (const y of x.ys) {
   if (y.불완전) continue;
   // ⚠ `y.무대`는 원시 careerStage 문자열이다("military"). `tier_rules.json`의
-  //   `seasonFreqByStage`(무대별 목표 예외) 키는 `stageGroupOf`가 내는 한글 id("군")다 —
+  //   `seasonFreqByStage`(무대별 목표 예외) 키는 `stageGroupOf`가 내는 한글 id다 —
   //   여기서 안 맞추면 goalRangeOf 조회가 늘 전 무대 공통값으로 떨어져 군 목표가
   //   적용 안 된다(2026-09-12 D 실측으로 잡았다). 다른 무대 라벨은 그대로 둔다 —
   //   전부 공통 목표를 쓰므로 표기가 달라도 비교에 영향이 없다.
-  const k = y.무대 === "military" ? "군" : String(y.무대);
+  // 🔴 **군은 부대별로 두 줄로 가른다** (2026-09-20 · 사용자 확정). `y`(해마다
+  //   한 줄)엔 부대가 없다 — 판 하나(`x`)에 부대 하나뿐이라 `x.군부대`로 가른다.
+  //   부대를 못 적은 옛 판(2026-09-19 이전)은 `군_모름`으로 떨어진다 —
+  //   `goalRangeOf`가 그 키를 못 찾아 전 무대 공통값(30~52)으로 비교되므로
+  //   표에서 바로 티가 난다(안 잰 것이 초록으로 안 보인다).
+  const k = y.무대 === "military"
+    ? (x.군부대 === "sports" ? "군_체육부대" : x.군부대 === "general" ? "군_일반병" : "군_모름")
+    : String(y.무대);
   (byStage[k] ??= { n: 0, normal: 0, rare: 0, unique: 0, hidden: 0, notice: 0, milCal: 0, milDice: 0 });
   byStage[k].n++; byStage[k].normal += y.노말; byStage[k].rare += y.레어;
   byStage[k].unique += y.유니크; byStage[k].hidden += y.히든; byStage[k].notice += y.통지;
@@ -440,13 +459,15 @@ for (const x of rows) for (const y of x.ys) {
 log("| 무대 | 시즌 | 노말 | 레어 | 유니크 | 히든 | 통지 |");
 log("|---|---|---|---|---|---|---|");
 const r1 = (v, n) => Math.round((v / Math.max(1, n)) * 10) / 10;
+const isMil = (k) => k === "군_일반병" || k === "군_체육부대" || k === "군_모름";
 for (const [k, v] of Object.entries(byStage).sort((a, b) => b[1].n - a[1].n)) {
-  // ⚠ 무대별 예외(지금은 「군」)가 있으면 그 목표로 비교한다 — 나머지는 위 GOAL(전 무대 공통).
+  // ⚠ 무대별 예외(군 둘)가 있으면 그 목표로 비교한다 — 나머지는 위 GOAL(전 무대 공통).
+  //   `군_모름`은 정의된 목표가 없어 `goalRangeOf`가 전 무대 공통(30~52)으로 떨어진다.
   // 🔴 **군은 「노말」 칸이 다른 정의다** — 위 머리말 참고. `militaryLifeCounters`
   //   (캘린더 히트 + 40% 뽑기)의 시즌당 합을 `tierCounters` 노말 자리에 넣어
-  //   같은 목표(24~30)와 비교한다.
-  const 노말표시 = k === "군" ? r1(v.milCal + v.milDice, v.n) : r1(v.normal, v.n);
-  log(`| ${k} | ${v.n} | ${mark(노말표시, goalRangeOf("normal", k))}${k === "군" ? ` (캘린더${r1(v.milCal, v.n)}+뽑기${r1(v.milDice, v.n)})` : ""} | ${mark(r1(v.rare, v.n), goalRangeOf("rare", k))} `
+  //   부대별 목표와 비교한다. 체육부대는 캘린더가 없어 뽑기만 합에 들어간다.
+  const 노말표시 = isMil(k) ? r1(v.milCal + v.milDice, v.n) : r1(v.normal, v.n);
+  log(`| ${k} | ${v.n} | ${mark(노말표시, goalRangeOf("normal", k))}${isMil(k) ? ` (캘린더${r1(v.milCal, v.n)}+뽑기${r1(v.milDice, v.n)})` : ""} | ${mark(r1(v.rare, v.n), goalRangeOf("rare", k))} `
     + `| ${mark(r1(v.unique, v.n), goalRangeOf("unique", k))} | ${mark(r1(v.hidden, v.n), goalRangeOf("hidden", k))} | ${r1(v.notice, v.n)} |`);
 }
 log("");
