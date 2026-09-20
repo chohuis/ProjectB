@@ -82,7 +82,9 @@ function openDatabase(dbPath) {
       military_enlist_week           INTEGER,
       sports_unit_selected           INTEGER NOT NULL DEFAULT 0,
       military_hiatus_stage          TEXT,
-      military_hiatus_university_week INTEGER,
+      -- military_hiatus_university_week 는 뺐다 (2026-09-20) — 대학 복학을 안
+      -- 넣기로 확정해 ProtagonistSave 에서 지운 필드다. 옛 game.db 에 남은
+      -- 칸은 아무도 안 읽으니 그대로 둔다.
       military_defer_penalty         INTEGER NOT NULL DEFAULT 0,
       trade_adaptation_weeks         INTEGER NOT NULL DEFAULT 0,
       fa_negotiation_round           INTEGER NOT NULL DEFAULT 0,
@@ -591,7 +593,7 @@ function applySchemaPatches(db) {
         ["military_enlist_week",            "INTEGER"],
         ["sports_unit_selected",            "INTEGER NOT NULL DEFAULT 0"],
         ["military_hiatus_stage",           "TEXT"],
-        ["military_hiatus_university_week", "INTEGER"],
+        // military_hiatus_university_week: 위 CREATE TABLE 과 같이 뺐다 (2026-09-20)
         ["military_defer_penalty",          "INTEGER NOT NULL DEFAULT 0"],
         ["trade_adaptation_weeks",          "INTEGER NOT NULL DEFAULT 0"],
         ["fa_negotiation_round",            "INTEGER NOT NULL DEFAULT 0"],

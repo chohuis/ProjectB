@@ -491,7 +491,6 @@
       sportsUnitSelected: false,
       sportsUnitApplied: false,
       militaryHiatusStage: null,
-      militaryHiatusUniversityWeek: null,
       militaryDeferPenalty: 0,
       consecutiveLowMoraleWeeks: 0,
       consecutiveHighFatigueWeeks: 0,

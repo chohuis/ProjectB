@@ -358,8 +358,16 @@ export interface ProtagonistSave {
   militaryDischargeYear: number | null;
   militaryEnlistWeek: number | null;
   sportsUnitSelected: boolean;
+  /**
+   * 입대 전 단계 — 전역 때 되돌릴 자리. 학생(고교·대학)은 안 되돌린다
+   * (`completeMilitaryService` 주석 · 전이표에 학교로 가는 화살표가 없다).
+   *
+   * ⚠ 옆에 `militaryHiatusUniversityWeek`(복학 주차)가 있었는데 **쓰고 지우기만
+   * 하고 읽는 데가 없었다**(2026-09-19 전수 확인). 대학 복학을 안 넣기로
+   * 확정(사용자 2026-09-20)해서 지웠다 — 죽은 갈래를 두지 않는다.
+   * 옛 세이브의 남은 키는 읽는 데가 없으니 그냥 무시된다(마이그레이션 없음).
+   */
   militaryHiatusStage: CareerStage | null;
-  militaryHiatusUniversityWeek: number | null;
   militaryDeferPenalty: number;
   /**
    * 현역 군 생활 상태 (2026-09-02 · PLAN_MILITARY_LIFE 4부 §24).

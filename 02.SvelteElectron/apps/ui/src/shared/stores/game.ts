@@ -214,7 +214,6 @@ export const DEFAULT_PROTAGONIST: ProtagonistSave = {
   militaryEnlistWeek: null,
   sportsUnitSelected: false,
   militaryHiatusStage: null,
-  militaryHiatusUniversityWeek: null,
   militaryDeferPenalty: 0,
   militaryLife: null,
   militaryRecord: null,
@@ -635,7 +634,6 @@ export function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: stri
     militaryEnlistYear:           p.militaryEnlistYear           ?? def.militaryEnlistYear,
     militaryDischargeYear:        p.militaryDischargeYear        ?? def.militaryDischargeYear,
     militaryHiatusStage:          p.militaryHiatusStage          ?? def.militaryHiatusStage,
-    militaryHiatusUniversityWeek: p.militaryHiatusUniversityWeek ?? def.militaryHiatusUniversityWeek,
     sportsUnitApplied:            p.sportsUnitApplied            ?? def.sportsUnitApplied,
     sportsUnitSelected:           p.sportsUnitSelected           ?? def.sportsUnitSelected,
     proServiceYears:              p.proServiceYears              ?? def.proServiceYears,
@@ -2676,8 +2674,6 @@ function createGameStore() {
           militaryEnlistYear: enlistYear ?? null,
           militaryDischargeYear: enlistYear != null ? enlistYear + 2 : null,
           militaryHiatusStage: now.careerStage,
-          militaryHiatusUniversityWeek:
-            now.careerStage === "university" ? s.schoolState.universityWeek ?? 0 : null,
           sportsUnitSelected,
           contract: extendedContract,
         };
@@ -2779,7 +2775,6 @@ function createGameStore() {
           dischargedSeason: at?.season ?? p.dischargedSeason,
           dischargedWeek:   at?.week   ?? p.dischargedWeek,
           militaryHiatusStage: null,
-          militaryHiatusUniversityWeek: null,
           // 학년은 학생일 때만 의미가 있다. 전역자는 학교로 안 돌아가므로
           // 지운다 — 안 그러면 독립리그 선수가 `grade: 3`을 달고 다니고
           // 시즌 종료 화면 헤더가 그걸 먼저 읽어 "3학년"이 찍힌다
