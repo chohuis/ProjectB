@@ -2,6 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore, teamsL10n } from "../../../shared/stores/master";
+  import { MILITARY_RESULT_WEEK } from "../../../shared/utils/seasonWeeks";
 
   let resolving = false;
 
@@ -43,9 +44,18 @@
     <header>
       <p class="chip">병역</p>
       <h2>체육부대 입대 신청</h2>
+      <!--
+        ⚠ **선발되면 확인 없이 그 주에 입대한다** (사용자 확정 2026-09-20 ⑵).
+        `advanceWeek` 의 `MILITARY_RESULT_WEEK` 블록은 선발 통보를 띄우고 곧장
+        `enlistProtagonist("sports", …)` 다 — 다시 묻지 않는다. 학적(대학 1학년)도
+        같다. 동작은 그대로 두고 **신청 전에 그 사실이 읽히게** 문안을 고쳤다.
+
+        주차는 상수에서 읽는다 — 예전엔 「W52」가 글자로 박혀 있었고
+        `MILITARY_RESULT_WEEK` 가 50 으로 옮겨진 뒤에도 그대로였다.
+      -->
       <p class="sub">
-        이번 시즌 체육부대 후보 30인이 거론되고 있습니다.<br />신청하면 W52에 최종 선발 결과가
-        발표됩니다.
+        이번 시즌 체육부대 후보 30인이 거론되고 있습니다.<br />신청하면 W{MILITARY_RESULT_WEEK}에
+        최종 선발 결과가 발표되고, 선발되면 그 주에 곧바로 입대합니다.
       </p>
     </header>
 

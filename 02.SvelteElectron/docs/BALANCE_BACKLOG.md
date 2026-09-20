@@ -1356,12 +1356,18 @@ C(25)·B(30)·A(45)·S(70)는 수상을 2·2·3·5회 받아야 닿는다 — �
 
 ⚠ 실제 플레이는 안 바뀐다 — 기본 성향이 `growth` 이고 화면은 갈래 둘을 사람이 고른다.
 
-## 게임 로직 — 물어보지 않고 입대시키는 자리 하나 (2026-09-19 · 제안 · **안 고쳤다**)
+## 게임 로직 — 물어보지 않고 입대시키는 자리 하나 (2026-09-19 제안 → **2026-09-20 사용자 확정 · 둘 다 처리했다**)
 
-| 무엇 | 자리 | 지금 실측 | 제안 |
+| 무엇 | 자리 | 지금 실측 | 사용자 확정 (2026-09-20) |
 |---|---|---|---|
-| **대학 1학년이 체육부대에 선발되면 확인 없이 바로 입대한다** | `advanceWeek.ts` W50 `MILITARY_RESULT_WEEK` 블록 — `selResult.protagonistSelected` 면 곧장 `enlistProtagonist("sports", …)` | 계측에서는 19세 OVR 70 이라 늘 탈락해 안 밟혔다. 밟히는 판을 아직 못 만들었다 — **안 잰 것은 초록이 아니다** | 선발 통보에도 갈래 둘(입대·포기)을 두거나, 학적(`careerStage === "university"` · 최종 학년 아님)이면 신청 자체를 안 뜨게 한다. **어느 쪽이든 사용자가 정한다** |
-| **`militaryHiatusUniversityWeek` 은 쓰고 지우는데 읽는 데가 없다** | `stores/game.ts` `enlistMilitary`(쓴다) · `completeMilitaryService`(지운다) | 전수 확인 — 읽는 코드 0. 대학 복학 자리를 비워 둔 것으로 보인다 | 대학 복학을 넣으면 이 값이 그 자리다. 안 넣기로 하면 **필드를 지운다**(죽은 갈래를 두지 않는다 · `CLAUDE.md`). 사용자가 정한다 |
+| **대학 1학년이 체육부대에 선발되면 확인 없이 바로 입대한다** | `advanceWeek.ts` `MILITARY_RESULT_WEEK` 블록 — `selResult.protagonistSelected` 면 곧장 `enlistProtagonist("sports", …)` | 계측에서는 19세 OVR 70 이라 늘 탈락해 안 밟혔다. 밟히는 판을 아직 못 만들었다 — **안 잰 것은 초록이 아니다** | **동작은 그대로 둔다.** 갈래를 더 두지도, 학적이면 신청을 막지도 않는다. 대신 **문안만** 「선발되면 그 주에 곧바로 입대한다」를 말하게 했다 — 고친 곳은 신청 모달(`SportsUnitApplicationModal.svelte`) 한 줄. 선발 통보(`msg-sports-selected-*`) 쪽은 이미 「합격하였습니다 / 입대합니다」라 그대로 뒀다 |
+| **`militaryHiatusUniversityWeek` 은 쓰고 지우는데 읽는 데가 없다** | `stores/game.ts` `enlistMilitary`(쓴다) · `completeMilitaryService`(지운다) | 전수 확인 — 읽는 코드 0. 대학 복학 자리를 비워 둔 것으로 보인다 | **지운다.** 대학 복학을 안 넣기로 확정 — 죽은 갈래를 두지 않는다. 타입·기본값·`fromSaveGame`·새 게임·perf 진입점·`db.cjs` 칸까지 전부 걷었다. **마이그레이션은 필요 없다** — 주인공은 slot.db 에 JSON 한 덩이로 앉고(`slotdb` `protagonist.json`) 읽는 쪽이 키를 골라 읽으므로, 옛 세이브에 남은 키는 아무도 안 본다. Rust 쪽에도 대응 필드가 없다 |
+
+⚠ **신청 모달의 주차가 뒤처져 있었다** — 문안이 「W52에 최종 선발 결과」라고
+적었는데 `MILITARY_RESULT_WEEK` 는 50 이다. 같이 고치면서 상수에서 읽게 했다.
+**같은 형태가 한 자리 더 있다**(안 고쳤다 · 사용자 판단 대기):
+`advanceWeek` 의 28세 입영 만료 경고 문안이 「이번 시즌 W52 주차에 입영 절차」라고
+말하는데 그 블록도 `MILITARY_RESULT_WEEK`(50)에서 돈다.
 
 ⚠ **전역 뒤 학교로 안 돌아가는 것 자체는 규칙이다**(결함 아님) —
 `completeMilitaryService` 주석 · `careerTransition` 전이표 ·
