@@ -1457,3 +1457,36 @@ B 가 대학 학년 조건을 쓰는 이벤트를 하나라도 쓰면 **그날 �
 
 ⚠ **밸런스 값이 아니다.** 학년이 바뀌면 대학 이벤트 창이 움직일 수 있으니
 고치는 날 `check:eventconditions` · `universityAxis.test.ts` 를 같이 본다.
+
+---
+
+## `manual_clamp` 아홉 자리 — **식은 안 건드린다** (2026-09-21 · 사용자 확정)
+
+clippy 62 → 0 작업에서 `.max(a).min(b)` 를 `.clamp(a, b)` 로 바꾸라는 경고가
+아홉 건 나왔다. **하나도 안 바꿨다.** 자리마다 `#[allow(clippy::manual_clamp)]`
+와 이유 한 줄을 달아 뒀다.
+
+| 파일 | 자리 | 무엇을 정하는 식인가 |
+|---|---|---|
+| `npc_sim.rs` | `clamp_stat` | NPC 능력치 하한·상한 (1~99) — 성장·감퇴가 전부 여기를 지난다 |
+| `npc_sim.rs` | `calc_npc_pitching_ovr` | 투수 OVR 가중합 |
+| `npc_sim.rs` | `calc_npc_batting_ovr` | 야수 OVR 가중합 |
+| `player_engine.rs` | `calc_draft_success` | 드래프트 지명 확률 (5~70%) |
+| `player_engine.rs` | `calc_indie_success` | 독립리그 입단 확률 (35~80%) |
+| `player_engine.rs` | 성적 평점 넷 | OPS·ERA·WHIP·K9 점수 — 재계약·방출이 이 값을 본다 |
+
+**왜 안 바꾸나 — 둘이다.**
+
+1. **NaN 에서 동작이 갈린다.** `x.max(lo).min(hi)` 와 `x.clamp(lo, hi)` 는
+   `x` 가 NaN 일 때 같은 값을 내지 않는다. 위 식들은 나눗셈(`k / ip` ·
+   `ovr / potential`)이 위에 있어 NaN 이 **못 온다고 말할 수 없다.**
+2. **TS 검사가 이 글자를 못박고 있다.** 같은 산식이 TS 쪽에도 있고
+   (`market.ts` 의 `calcNpcPerfScore` 등) 검사가 두 쪽을 대조한다.
+
+⚠ **밸런스 동결이 풀릴 때 같이 본다.** 그때 할 일은 「`clamp` 로 바꾸기」가
+아니라 **「NaN 이 여기 올 수 있는가」를 먼저 재는 것**이다. 못 온다는 것이
+확인되면 그때 아홉 자리를 한꺼번에 바꾸고 `allow` 를 지운다. 못 재면
+그대로 둔다 — 지금 바꾸면 **두 변수를 같이 움직이는 것**이다.
+
+재는 법: 아홉 자리의 입력에 NaN 을 넣는 Rust 단위 검사 하나 + 전후로
+`clippy_freeze_tests`(`npc_sim.rs` · 경기 한 판 JSON 통째) 동일.
