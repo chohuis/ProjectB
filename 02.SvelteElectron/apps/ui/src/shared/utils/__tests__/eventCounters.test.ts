@@ -188,13 +188,54 @@ describe("compare — 주인공 대 지정 NPC", () => {
     );
   });
 
-  it("`role` 만 적으면 false 다 — `storyNpcs` 등록부가 아직 없다(§12)", () => {
+  /**
+   * 🔴 죽은 칸 5 (2026-09-21). NPC 는 런타임 생성이라 데이터에 적을 수 있는
+   *   `npcId` 가 없다 — 그래서 `compare` 가 749종 중 한 자리도 안 쓰였다.
+   *   이름표(`role`)가 등록부를 거쳐 사람을 댄다.
+   */
+  const byRole: Condition = { type: "compare", role: "rival", stat: "pitching.ovr", op: "gte" };
+
+  it("`role` 이 등록부를 거쳐 사람을 댄다", () => {
     expect(
       evaluateCondition(
-        { type: "compare", role: "rival", stat: "pitching.ovr", op: "gte" },
-        ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 1 } } }),
+        byRole,
+        ctx({
+          storyNpcRoles: { rival: "PLY_RIVAL" },
+          storyNpcs: { PLY_RIVAL: { "pitching.ovr": 55 } },
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      evaluateCondition(
+        byRole,
+        ctx({
+          storyNpcRoles: { rival: "PLY_RIVAL" },
+          storyNpcs: { PLY_RIVAL: { "pitching.ovr": 70 } },
+        }),
       ),
     ).toBe(false);
+  });
+
+  it("이름표가 아직 안 찼으면 false 다 — 「그 사람이 아직 없다」와 같은 뜻이다", () => {
+    expect(
+      evaluateCondition(byRole, ctx({ storyNpcs: { PLY_RIVAL: { "pitching.ovr": 1 } } })),
+    ).toBe(false);
+  });
+
+  it("🔴 이름표가 찼는데 그 사람 스탯이 안 실리면 false 다 — 배선을 빼면 여기가 빨강이다", () => {
+    expect(evaluateCondition(byRole, ctx({ storyNpcRoles: { rival: "PLY_RIVAL" } }))).toBe(false);
+  });
+
+  it("둘 다 적으면 `npcId` 가 이긴다 — 옛 길을 안 막는다", () => {
+    expect(
+      evaluateCondition(
+        { ...byRole, npcId: "PLY_RIVAL" } as Condition,
+        ctx({
+          storyNpcRoles: { rival: "PLY_OTHER" },
+          storyNpcs: { PLY_RIVAL: { "pitching.ovr": 55 }, PLY_OTHER: { "pitching.ovr": 99 } },
+        }),
+      ),
+    ).toBe(true);
   });
 });
 
@@ -294,6 +335,16 @@ describe("배선 — 넷이 실제로 실린다", () => {
   it("직전 등판과 비교 대상 NPC 를 컨텍스트에 싣는다", () => {
     expect(src).toContain("lastGame: lastGameOf(s.schedule");
     expect(src).toContain("storyNpcs: compareNpcStats");
+    // 이름표도 같이 실어야 `role` 이 풀린다 (죽은 칸 5)
+    expect(src).toContain("storyNpcRoles,");
+    // 그리고 **이름표를 푼 뒤** 그 사람 스탯을 모아야 한다 — 안 풀면 조용히 false
+    expect(src).toContain("const id = storyNpcIdOf(storyNpcRoles, c);");
+  });
+
+  /** 🔴 채우는 자리가 없으면 등록부가 영원히 빈다 — 이름표를 써도 아무 일이 없다 */
+  it("등록부를 채우는 자리가 advanceWeek 에 있다", () => {
+    expect(src).toContain("nextStoryNpcs(gRel.protagonist.storyNpcs");
+    expect(src).toContain("gameStore.setStoryNpcs(nextRegistry)");
   });
   it("갱신한 연속 주 수를 세이브에 되돌린다 — 안 되돌리면 매주 0 에서 다시 센다", () => {
     expect(src).toContain("growth.protagonistPatch.streaks = nextStreaks");

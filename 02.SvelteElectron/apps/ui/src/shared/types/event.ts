@@ -221,8 +221,11 @@ export type Condition =
   /**
    * 주인공 대 지정 NPC 스탯 비교 (라이벌·후배).
    *
-   * ⚠ `storyNpcs` 등록부는 아직 없다 — 지금은 `npcId` 를 직접 적는다(§12).
-   *   등록부가 생기면 `role` 로도 가리킬 수 있게 여기만 넓힌다.
+   * ⚠ **`role` 을 쓴다** (2026-09-21 · 죽은 칸 5). NPC 는 런타임 생성이라
+   *   데이터에 적을 수 있는 `npcId` 가 없다 — 그래서 이름표(`rival`·`mentee`)를
+   *   적고 `protagonist.storyNpcs` 등록부가 사람을 댄다. 정본은
+   *   `utils/storyNpcRegistry.STORY_NPC_ROLES` 이고 모르는 이름표는 **로드에서 던진다.**
+   *   `npcId` 직접도 그대로 산다(둘 다 있으면 `npcId` 가 이긴다).
    * ⚠ 상대를 못 찾으면 **false** 다. 「이겼다」로 읽으면 없는 라이벌을 이긴 게 된다.
    */
   | {
@@ -542,4 +545,10 @@ export interface EventContext {
    * 키는 NPC id, 값은 비교할 수 있는 숫자 몇이다(`ovr` · `pitching.*`).
    */
   storyNpcs?: Record<string, Record<string, number>>;
+  /**
+   * 이름표 → npcId (`protagonist.storyNpcs` 그대로). `compare` 가 `role` 로
+   * 가리킬 때 이걸 거쳐 위 `storyNpcs` 의 키를 찾는다. 정본은
+   * `utils/storyNpcRegistry.STORY_NPC_ROLES`.
+   */
+  storyNpcRoles?: Record<string, string>;
 }

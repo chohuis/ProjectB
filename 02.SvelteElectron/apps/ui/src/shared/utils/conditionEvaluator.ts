@@ -1,6 +1,7 @@
 import type { Condition, EventContext } from "../types/event";
 import { resolveNumber, resolvePath } from "./eventPaths";
 import { streakKeyOf } from "./eventCounters";
+import { storyNpcIdOf } from "./storyNpcRegistry";
 import type { PitcherSeasonStats } from "../types/save";
 import { GROUPS_BY_LEAGUE } from "./leagueTeams.generated";
 
@@ -374,9 +375,11 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     }
 
     case "compare": {
-      // ⚠ `storyNpcs` 등록부가 아직 없다 — `npcId` 직접이 지금의 유일한 길이다(§12).
-      //   `role` 은 등록부가 생기면 잇는다. 지금 `role` 만 적으면 **false** 다.
-      const id = cond.npcId;
+      // 이름표(`role`)가 등록부(`ctx.storyNpcRoles`)를 거쳐 사람을 댄다
+      // (2026-09-21 · 죽은 칸 5). `npcId` 직접도 그대로 산다 — 둘 다면 `npcId` 다.
+      // ⚠ 이름표가 아직 안 찼으면 `undefined` 고 조건은 false 다.
+      //   「그 사람이 아직 안 정해졌다」와 같은 뜻이라 맞다.
+      const id = storyNpcIdOf(ctx.storyNpcRoles, cond);
       if (!id) return false;
       const npc = ctx.storyNpcs?.[id];
       if (!npc) return false;

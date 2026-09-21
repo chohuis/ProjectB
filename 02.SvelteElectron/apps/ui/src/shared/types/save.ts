@@ -492,6 +492,19 @@ export interface ProtagonistSave {
   streaks?: Record<string, number>;
   /** 누적 카운터. 이름 표는 `utils/eventCounters.COUNTERS` 가 정본이다 */
   counters?: Record<string, number>;
+  /**
+   * **이야기 인물 등록부** — 이름표(`rival`·`mentee`) → npcId (2026-09-21 · 죽은 칸 5).
+   *
+   * `compare` 조건이 「그 사람」을 가리키는 유일한 수단이다. NPC 는 런타임
+   * 생성이라 판마다 id 가 달라, 데이터에는 **이름표만** 적고 사람은 여기서 만난다.
+   * 채우는 자리는 `utils/storyNpcRegistry.nextStoryNpcs` 하나 · 이름표 정본은
+   * 같은 파일의 `STORY_NPC_ROLES`.
+   *
+   * ⚠ 구 세이브엔 없다(`undefined`). 그때 `role` 을 쓴 `compare` 는 false 이고,
+   *   「아직 그 사람이 안 정해졌다」와 같은 뜻이라 맞다.
+   * ⚠ **한 번 찬 칸은 안 덮는다** — 라이벌이 매주 바뀌면 이야기가 아니다.
+   */
+  storyNpcs?: Record<string, string>;
   /** 같은 팀 해 세기의 기준 — 작년에 어디였나. `sameTeamYears` 를 올릴지 되돌릴지 정한다 */
   lastSeasonTeamId?: string;
   /** 같은 포수 경기 세기의 기준 — 직전 등판의 포수 */

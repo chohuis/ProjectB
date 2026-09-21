@@ -13,6 +13,7 @@ import {
 } from "../utils/leagueScheduler";
 import { HS_REGIONS } from "../utils/leagueTeams.generated";
 import { buildMarkIndex } from "../utils/teamMark";
+import { isStoryNpcRole } from "../utils/storyNpcRegistry";
 import { primeForeignRules } from "../utils/foreignSlots";
 import { primeCareerScoreRules } from "../utils/universityUtils";
 import { primeAcademicsHsRules, primeAcademicsUnivRules } from "../utils/academicsEngine";
@@ -793,7 +794,17 @@ function assertConditions(ruleId: string, conditions: any[]): void {
     if (type === "compare" && c.npcId === undefined && c.role === undefined) {
       throw new Error(
         `[master] ${ruleId}: compare 에 npcId도 role도 없다 — 비교할 상대가 없다. ` +
-        `storyNpcs 등록부가 아직 없으므로 지금은 npcId 를 직접 적는다 (§12)`
+        `이름표는 utils/storyNpcRegistry.ts 의 STORY_NPC_ROLES 가 정본이다`
+      );
+    }
+    // 🔴 **모르는 이름표는 영원히 false 다** (2026-09-21 · 죽은 칸 5).
+    //   등록부에 채우는 갈래가 없는 이름표를 적으면 조건이 한 번도 안 참이 되고
+    //   아무 소리도 안 난다 — 위 `streak`·`count` 와 같은 이유로 **로드에서** 잡는다.
+    if (type === "compare" && typeof c.role === "string" && !isStoryNpcRole(c.role)) {
+      throw new Error(
+        `[master] ${ruleId}: compare 의 모르는 이름표 "${c.role}" — ` +
+        `utils/storyNpcRegistry.ts 의 STORY_NPC_ROLES 에 없다. ` +
+        `채우는 갈래가 없는 이름표는 **영원히 false다**`
       );
     }
 

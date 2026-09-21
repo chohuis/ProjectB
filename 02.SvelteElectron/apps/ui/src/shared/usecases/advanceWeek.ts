@@ -74,6 +74,7 @@ import { runEventEngine } from "./weekPhases/events";
 import { EVENT_LANE_RANDS } from "../utils/eventEngine";
 import { stageGroupOf } from "../utils/tierRules";
 import { collectStreakKeys, tickStreaks, lastGameOf } from "../utils/eventCounters";
+import { nextStoryNpcs, storyNpcIdOf } from "../utils/storyNpcRegistry";
 import { applyTraitMods } from "../utils/protagonistTraits";
 import { applySideEffects } from "./decisions";
 import {
@@ -819,13 +820,23 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // ⚠ **데이터가 실제로 쓰는 것만 준비한다.** 「쓸지도 모르니 다 세자」로 두면
   //   세이브가 축마다 커지고 어느 칸이 읽히는지도 모르게 된다.
   const streakKeys = collectStreakKeys(m.eventRules);
-  /** `compare` 가 가리키는 NPC 들의 비교값. 데이터에 적힌 id 만 훑는다 */
+  /**
+   * `compare` 가 가리키는 NPC 들의 비교값. 데이터에 적힌 id 만 훑는다.
+   *
+   * ⚠ **이름표(`role`)도 여기서 편다** (2026-09-21 · 죽은 칸 5). 데이터가 적는 건
+   *   `rival`·`mentee` 같은 이름표이고, 그게 가리키는 npcId 는 등록부
+   *   (`protagonist.storyNpcs`)에만 있다. 여기서 안 풀면 아래 `storyNpcs` 에
+   *   그 사람의 스탯이 안 실려 **조건이 조용히 false** 가 된다.
+   */
+  const storyNpcRoles = afterP.storyNpcs;
   const compareNpcStats: Record<string, Record<string, number>> = {};
   {
     const wanted = new Set<string>();
     for (const r of m.eventRules) {
       for (const c of [...(r.conditions ?? []), ...(r.hiddenCondition ?? [])]) {
-        if (c.type === "compare" && c.npcId) wanted.add(c.npcId);
+        if (c.type !== "compare") continue;
+        const id = storyNpcIdOf(storyNpcRoles, c);
+        if (id) wanted.add(id);
       }
     }
     if (wanted.size > 0) {
@@ -885,6 +896,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     // `compare` 조건(§12)이 볼 NPC 들. **미리 실어 준다** — 평가기는 동기다.
     // ⚠ 데이터가 가리키는 id 만 싣는다. 엔티티 전부를 접으면 매주 수천 명을 훑는다
     storyNpcs: compareNpcStats,
+    // 이름표 → npcId. 평가기가 `role` 을 풀 때 본다 (죽은 칸 5)
+    storyNpcRoles,
   };
   // 🔴 **연속 주 수는 이벤트를 돌리기 전에 갱신한다** (§12). 나중에 하면
   //    「이번 주도 성실 90 이었다」가 이번 주 이벤트에 안 잡혀 한 주씩 밀린다.
@@ -1710,6 +1723,24 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
               .slice(0, 1)      // 상대 선발 1명 — 불펜까지 라이벌로 잡으면 관계가 폭증한다
               .map((l) => l.playerId)
           : [];
+
+        // ── 이야기 인물 등록부 (2026-09-21 · 죽은 칸 5) ──────────────
+        //
+        // 🔴 **여기가 유일한 채우는 자리다.** 데이터가 `compare` 에 적는 건
+        //   이름표(`rival`·`mentee`)뿐이고, 그게 누구인지는 판이 굴러가며 정해진다.
+        //   재료를 새로 세지 않는다 — 바로 위 `facedRivals`(관계도가 이미
+        //   「라이벌」로 부르는 사람)와 기존 카운터 `menteeCount` 를 그대로 쓴다.
+        // ⚠ 한 번 찬 칸은 안 덮는다(`nextStoryNpcs`). 안 바뀌면 `null` 이라
+        //   store 를 안 건드린다 — 매주 같은 값을 다시 쓰면 세이브만 더러워진다.
+        const nextRegistry = nextStoryNpcs(gRel.protagonist.storyNpcs, {
+          facedRivalId: facedRivals[0] ?? null,
+          menteeCount: gRel.protagonist.counters?.menteeCount,
+          teammates: gRel.npcs
+            .filter((n) => n.currentTeam === gRel.protagonist.teamId && n.npcId !== gRel.protagonist.id)
+            .map((n) => ({ npcId: n.npcId, age: n.age })),
+          myAge: gRel.protagonist.age,
+        });
+        if (nextRegistry) gameStore.setStoryNpcs(nextRegistry);
 
         const deltas = await applyWeeklyRelations({
           slotId,

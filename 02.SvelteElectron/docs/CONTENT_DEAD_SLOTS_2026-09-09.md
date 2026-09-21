@@ -17,7 +17,7 @@
 | 2 | `startGuarantee` | `main.ts` · `stateEffects.ts` · `check:rewards` | 열쇠·적용·검사가 다 있는데 **주는 데이터가 0** 이다. L4 에서 사용자 확정으로 감독 관계로 바꿨다 | 「자리를 준다」가 필요한 통지가 생기면 그날 쓴다. **지금 비어 있는 게 맞다** | — (비워 둔다) |
 | 3 | `removeTag` | `game.ts:1090` · `master.ts:571` | 파서·적용이 있는데 **쓰는 데이터가 0**. 주석은 「`addTag` 만 있고 닫을 수단이 없었다」고 적혀 있는데 **여는 쪽만 쓰고 있다** | 태그 연계가 닫힌다. 지금은 한 번 붙은 태그가 평생 남아 그 갈래가 계속 후보로 선다 | 1.0.1 |
 | 4 | 태그 `유리몸` | 붙이는 자리 있음 · **읽는 조건 0** | 붙기만 하고 아무 이벤트도 `has_tag: 유리몸` 을 안 본다 | 잘 다치는 선수의 후속 장면이 열린다. 지금은 **붙는 순간 사라지는 표식**이다 | 1.0.1 |
-| 5 | `compare` 조건 | `conditionEvaluator:334` | `storyNpcs` 등록부가 없어 **`npcId` 를 직접 적어야 하는데 그럴 id 가 없다.** 지금 쓰면 영원히 false | 히든 「라이벌의 편지」·「후배가 넘어선 날」이 살아난다(§8 초안에서 못 만든 둘) | 1.0.2 |
+| 5 | ~~`compare` 조건~~ | — | ✅ **2026-09-21 A 가 열었다** — 이름표(`role`)를 적고 등록부(`protagonist.storyNpcs`)가 사람을 댄다. `rival`(처음 맞붙은 상대 선발) · `mentee`(`menteeCount` 뒤 가장 어린 팀 동료). 정본 `utils/storyNpcRegistry.ts` · 모르는 이름표는 로드에서 던진다. 데이터는 B(`HANDOFF_A_TO_B.md` §0.26~0.29) | — | 끝 |
 | 6 | 히든 구종 **등급 두 단계** | 보상안 §1 | `pitchGradeUp` 이 한 번에 +1 이고 효과 객체에 같은 키를 둘 둘 수 없다. **지어 넣으면 한 단계만 먹고 조용히 넘어간다** | 히든이 유니크와 크기로 갈린다. 지금은 종류가 같다 | 1.0.1(A 가 `steps` 를 붙이면) |
 | 7 | ~~군 풀 `relationTarget`~~ | — | ✅ **2026-09-21 A 가 열었다** — 타입 `MilitaryLifeChoice.relationTarget` · `toLifeEvent` · 옮기는 자리 · `check:militarydata`(예약어 셋 + 부대원 id + 「`relationDelta` 없이 혼자 있으면 실패」). 데이터는 B(`HANDOFF_A_TO_B.md` §0.23) | — | 끝 |
 | 8 | `bars.teamMood` 의 `mood`·`delta` 이름표 | `dashboard_labels.json` | 화면이 안 읽는다(A 6차 인계에 그대로 적혀 있다) | 팀 분위기 표에 이름이 붙는다 | 1.0.2 |

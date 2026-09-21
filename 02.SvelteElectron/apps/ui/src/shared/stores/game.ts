@@ -1951,6 +1951,14 @@ function createGameStore() {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, position: pos } }));
     },
 
+    /**
+     * 이야기 인물 등록부 (죽은 칸 5 · 2026-09-21). 정하는 규칙은
+     * `utils/storyNpcRegistry.nextStoryNpcs` 하나 — 여기는 얇은 패처다.
+     */
+    setStoryNpcs(reg: Record<string, string>) {
+      update((s) => ({ ...s, protagonist: { ...s.protagonist, storyNpcs: reg } }));
+    },
+
     /** 고른 자리에서의 내 깊이 (PLAN_ROLE_RECOMMEND §5 · 1.1 A④) */
     setRoleFit(fit: import("../types/save").ProtagonistSave["roleFit"]) {
       update((s) => ({ ...s, protagonist: { ...s.protagonist, roleFit: fit } }));
