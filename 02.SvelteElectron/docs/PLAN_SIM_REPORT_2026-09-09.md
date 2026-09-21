@@ -10,6 +10,15 @@
 `연도 · 나이 · 무대 · 소속 · 연봉 · G · IP · ERA · W-L · OVR · 노말 · 레어 · 유니크 · 히든 · 통지 · 그해 있었던 일`
 
 - **등급은 넷**(노말·레어·유니크·히든). **에픽은 없다.** **통지**는 등급 밖이라 추첨에 안 걸리지만 **해마다 몇 번인지 같이 적는다** — 세계가 그 선수에 대해 결정을 내린 횟수라 굴곡이 그대로 보인다.
+- **무대 갈림 해**(2026-09-21 고침). 드래프트·진학·독립·입대처럼 진로가
+  갈리는 해는 `isSeasonEnded()` 를 안 거치고 새 시즌이 바로 열려 그 해가
+  통째로 안 접힐 뻔한다 — 그 해도 **한 줄**로 낸다. 「무대」 칸에
+  `highschool→pro_kbl` 처럼 **시작 무대→끝 무대**를 적고, 성적은 리셋되기
+  전에 미리 잰 값(대개 0)을 쓴다. 연도 라벨은 엔진의 `seasonYear` 를 그대로
+  안 믿는다 — 군 전역처럼 `isSeasonEnded()` 가 두 번 참이 되는데
+  `seasonYear` 가 그 사이 안 늘어 같은 라벨이 두 번 찍히는 자리가 있었다
+  (24판·2026-09-20 실측 · 못 접은 해 51건·중복 라벨 5건). 지금은 라벨이
+  **접은 줄 수**로 매겨져 이 둘 다 안 난다(`probe-a-simrun-worker.cjs`).
 - 「그해 있었던 일」의 정본은 **`recentOutcomes`**(A 가 통지 레인에서 만든 칸 — callup·demote·eliminated·champion·drafted·undrafted·award)와 **`careerEvents`**(draft_picked·fa_signed·foreign_signing·graduation·military_enlist·military_discharge·military_exempt·release·trade·retirement). **따로 정의하지 않는다** — 통지의 정의가 곧 「중요 포인트」다.
 - 머리에: 씨앗 · 프리셋 · 학교 · 계측 성향 · 최고 OVR · 통산 승 · 은퇴 나이.
 - 꼬리에: 진로 갈래 · 1군 정착 나이 · 최고 연봉 · 부상으로 날린 주 · 구종 개수와 평균 등급 · 🔴 **예외 횟수** · 폴백.

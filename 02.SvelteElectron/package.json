@@ -152,6 +152,7 @@
     "probe:d:e2": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-e2-runall.cjs",
     "probe:d:dr": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-dr-draft.cjs",
     "check:measurerepro": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-measure-repro.cjs",
+    "check:simyearlabels": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-simyearlabels.cjs",
     "probe:a:slotmult": "node scripts/probe-a-slotmult.cjs",
     "probe:d:loc": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-loc-mode.cjs",
     "probe:d:mor": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-d-mor-morale.cjs",
