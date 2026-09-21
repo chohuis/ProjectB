@@ -57,7 +57,9 @@ const REQUIRED_CALENDAR = [
   "MIL_CAL_FIRST_LEAVE", "MIL_CAL_PROMOTE_2", "MIL_CAL_WINTER", "MIL_CAL_SECOND_LEAVE", "MIL_CAL_PROMOTE_3",
   "MIL_CAL_RANGER", "MIL_CAL_INSPECTION_2", "MIL_CAL_D30", "MIL_CAL_DISCHARGE",
 ];
-const CHOICE_EFFECT_KEYS = ["relationDelta", "fatigueDelta", "moraleDelta", "ballDelta", "award", "penalty", "leaveDays", "perfTierDelta"];
+const CHOICE_EFFECT_KEYS = ["relationDelta", "fatigueDelta", "moraleDelta", "ballDelta", "award", "penalty", "leaveDays", "perfTierDelta", "relationTarget"];
+// relationTarget 예약어 — types/militaryLife.ts 의 MILITARY_RELATION_TARGETS 와 같아야 한다 (아래가 둘을 묶는다)
+const RELATION_TARGETS = ["all", "subunit", "junior"];
 
 // ── 타입 파일과 어휘가 같은가 (문자열 포함 검사 · 정규식 없음) ──
 {
@@ -66,6 +68,9 @@ const CHOICE_EFFECT_KEYS = ["relationDelta", "fatigueDelta", "moraleDelta", "bal
     const src = fs.readFileSync(typesPath, "utf8");
     for (const t of CONDITION_TYPES) {
       if (!src.includes(`"${t}"`)) fail(`조건 어휘 "${t}" 가 types/militaryLife.ts 에 없다 — 검사와 타입이 갈렸다`);
+    }
+    for (const t of RELATION_TARGETS) {
+      if (!src.includes(`"${t}"`)) fail(`relationTarget 예약어 "${t}" 가 types/militaryLife.ts 에 없다 — 검사와 타입이 갈렸다`);
     }
   }
 }
@@ -140,6 +145,12 @@ if (lifePool) {
         for (const k of Object.keys(c)) {
           if (["id", "label", "effectHint"].includes(k)) continue;
           if (!CHOICE_EFFECT_KEYS.includes(k)) fail(`${e.id}/${c.id}: 선택지 필드 "${k}" 를 모른다 (statDelta 는 현역에 없다)`);
+        }
+        // relationTarget — 예약어 셋이거나 members.json 의 id 여야 한다. 오타면 아무에게도 안 간다
+        if (c.relationTarget !== undefined) {
+          if (typeof c.relationTarget !== "string" || !c.relationTarget) fail(`${e.id}/${c.id}: relationTarget 은 문자열`);
+          else if (!RELATION_TARGETS.includes(c.relationTarget) && !memberIds.has(c.relationTarget)) fail(`${e.id}/${c.id}: relationTarget "${c.relationTarget}" — all|subunit|junior 나 members.json 의 id`);
+          if (c.relationDelta === undefined) fail(`${e.id}/${c.id}: relationTarget 만 있고 relationDelta 가 없다 — 아무 일도 안 일어난다`);
         }
       }
       if (e.cooldownWeeks !== undefined && !(Number.isInteger(e.cooldownWeeks) && e.cooldownWeeks >= 1)) fail(`${e.id}: cooldownWeeks ≥ 1`);

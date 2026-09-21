@@ -1,3 +1,68 @@
+# A → B 인계 10차 (2026-09-21) — 군 풀 `relationTarget` 이 열렸다 (죽은 칸 7)
+
+> 아래 9차 이하는 그대로 둔다.
+
+## 0.23 「후임을 챙긴다」와 「소단위를 챙긴다」가 이제 다른 사람에게 간다
+
+네가 `military_life.json` 의 `_rewardNote`(MIL_CAL_PROMOTE_3)에 적어 둔 자리다 —
+`relationTarget` 을 붙이려다 `check:militarydata` 가 「선택지 필드를 모른다」로
+막았던 것. **맞는 막음이었다. 배선이 없었다.** 지금은 있다.
+
+평가기(`militaryLifeRules.applyChoiceToState`)와 `DecisionEffect.relationTarget` 은
+처음부터 있었는데 **풀 스키마와 옮기는 자리** 둘이 빠져 있었다. 층마다 맞는데 잇는
+선이 없던 자리다.
+
+```jsonc
+{
+  "id": "junior",
+  "label": "후임을 챙긴다",
+  "effectHint": "후임 관계 +4",
+  "relationDelta": 4,
+  "relationTarget": "junior"     // ← 이제 받는다
+},
+{
+  "id": "squad",
+  "label": "소단위를 챙긴다",
+  "effectHint": "같은 소단위 전원 +2",
+  "relationDelta": 2,
+  "relationTarget": "subunit"
+}
+```
+
+**받는 값 — 예약어 셋이나 부대원 id 하나.**
+
+| 값 | 누가 받나 |
+|---|---|
+| `"all"` | 그 주 재적 중인 부대원 전원 |
+| `"subunit"` | 주인공 보직의 소단위(`HQ`·`PLT1`·`SQ1`)에 있는 사람만 |
+| `"junior"` | `role: "junior"` 인 사람만 — **`joinWeek` 이 36·62 라 초반엔 대상이 0 이다** |
+| `MEM_…` | 그 한 사람. `members.json` 에 있는 id 여야 한다 |
+
+**안 적으면 옛 동작 그대로다** — 이벤트의 `member` → 그것도 없으면 `"all"`.
+있는 66종은 손 안 대도 된다.
+
+## 0.24 틀리면 검사가 막는다 (`npm run check:militarydata`)
+
+셋 다 실제로 빨강이 나는지 깨진 사본으로 확인했다:
+
+- `relationTarget: "juniorr"` (오타) → `all|subunit|junior 나 members.json 의 id`
+- `relationTarget: "MEM_NOPE"` (없는 부대원) → 같은 문구
+- `relationTarget` 만 있고 `relationDelta` 가 없다 → `아무 일도 안 일어난다`
+
+⚠ **`"junior"` 를 초반 주차 이벤트에 적으면 조용히 0 명에게 간다.** 검사는 이걸
+  못 잡는다(주차는 이벤트 조건 쪽이라). 후임 대상은 `minRank: 2` 이상이나
+  `week_between` 36+ 와 같이 적어라.
+⚠ **예약어를 늘리고 싶으면 나에게 말해라.** 정본은 `types/militaryLife.ts` 의
+  `MILITARY_RELATION_TARGETS` 하나이고, 검사·타입·평가기 셋이 같이 움직인다.
+
+## 0.25 옛 풀(`military_general`·`military_common`)은?
+
+`toLifeEvent` 가 옮길 때 `relationTarget` 도 첫 칸으로 꺼내게 했다. 다만 옛 풀
+이벤트는 `applyMilitaryEventChoice` 가 `militaryLifeEvents` 에서 못 찾아 **병영생활
+몫을 아예 안 적는다**(예전부터 그랬다 · 이번에 안 바꿨다). 부대원 관계를 움직이고
+싶으면 `military_life.json` 에 써라.
+
+---
 # A → B 인계 9차 (2026-09-09) — `pitchGradeUp.steps` 를 붙였다 · 자리를 채워라
 
 > 커밋 `472b8e75e`. 아래 8차 이하는 그대로 둔다.

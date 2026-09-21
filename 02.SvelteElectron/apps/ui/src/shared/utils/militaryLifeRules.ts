@@ -200,6 +200,9 @@ export function toLifeEvent(e: {
         penalty,
         leaveDays,
         perfTierDelta,
+        // 병영생활 칸이 된 뒤로 여기서도 꺼낸다 — 안 꺼내면 `extraEffects` 에 남아
+        //   옮기는 자리에서 `relationTarget: undefined` 에 덮인다(죽은 칸 7 · 09-21)
+        relationTarget,
         ...rest
       } = c as Record<string, unknown> & { id: string; label: string; effectHint?: string };
       return {
@@ -213,6 +216,7 @@ export function toLifeEvent(e: {
         penalty: penalty as string | undefined,
         leaveDays: leaveDays as number | undefined,
         perfTierDelta: perfTierDelta as number | undefined,
+        relationTarget: relationTarget as string | undefined,
         // 나머지(관계도 객체 · 돈 · XP · 성실 · 컨디션)는 그대로 둔다 —
         // `applyEventEffect`·`applySideEffects` 가 읽는 이름 그대로다
         ...(Object.keys(rest).length > 0

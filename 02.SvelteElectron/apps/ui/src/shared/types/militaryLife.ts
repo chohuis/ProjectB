@@ -92,12 +92,32 @@ export interface MilitaryCondition {
   member?: string;
 }
 
+/**
+ * `relationDelta` 가 가는 **사람 묶음** — 부대원 id 를 쓸 수도 있으니 타입은 `string` 이고
+ * 이 셋은 **예약어**다. 평가기는 `militaryLifeRules.applyChoiceToState` 하나.
+ *
+ * ⚠ 예약어를 늘릴 때 표 둘을 같이 — 여기와 `applyChoiceToState` 의 갈래.
+ *   `scripts/check-militarydata.cjs` 가 이 파일에서 문자열로 셋을 찾아 둘이 갈리면 막는다.
+ */
+export const MILITARY_RELATION_TARGETS = ["all", "subunit", "junior"] as const;
+export type MilitaryRelationTargetKeyword = (typeof MILITARY_RELATION_TARGETS)[number];
+
 /** 선택지 효과 — 전부 선택 · 능력치(statDelta)는 현역에서 **없다** (§28) */
 export interface MilitaryLifeChoice {
   id: string;
   label: string;
   effectHint?: string;
   relationDelta?: number;
+  /**
+   * `relationDelta` 를 **누가 받나** — 부대원 id · `"all"` · `"subunit"` · `"junior"`.
+   * 없으면 이벤트의 `member` → 그것도 없으면 `"all"`(옛 동작 그대로).
+   *
+   * 🔴 왜 뒤늦게 생겼나(2026-09-21 · 죽은 칸 7): 평가기(`applyChoiceToState`)와
+   *   `DecisionEffect.relationTarget` 은 처음부터 있었는데 **풀 스키마와 옮기는 자리**가
+   *   빠져 있었다. 그래서 「후임을 챙긴다」와 「소단위를 챙긴다」가 같은 사람에게 갔다.
+   *   층마다 맞는데 잇는 선이 없던 자리다(CLAUDE.md §함정).
+   */
+  relationTarget?: string;
   fatigueDelta?: number;
   moraleDelta?: number;
   ballDelta?: number;

@@ -48,6 +48,7 @@ export interface DecisionEffect {
   // ⚠ 이름이 `memberRelationDelta` 인 이유: 아래 `relationDelta`(코치·동료 관계도 · {kind, delta})가 이미 있다.
   //   이벤트 JSON 의 선택지 필드는 `relationDelta`(§28)이고, 루프가 pending 으로 옮길 때 이 이름으로 바꾼다.
   memberRelationDelta?: number; // 부대원 관계 ± (대상은 relationTarget)
+  // 예약어 정본은 `types/militaryLife.ts` 의 `MILITARY_RELATION_TARGETS` 하나 — 늘릴 때 거기부터
   relationTarget?: string; // 부대원 id · "all" · "subunit" · "junior" (없으면 이벤트의 member → 없으면 all)
   ballDelta?: number; // 야구 감각 ±
   award?: string; // 표창 id

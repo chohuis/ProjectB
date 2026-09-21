@@ -329,6 +329,9 @@ export async function runMilitaryLifeWeek(args: {
           fatigueDelta: c.fatigueDelta,
           moraleDelta: c.moraleDelta,
           memberRelationDelta: c.relationDelta,
+          // 받는 사람 — 없으면 `applyChoiceToState` 가 이벤트 `member` → `"all"` 로 떨어진다.
+          //   여기를 빼먹어서 풀의 `relationTarget` 이 한 번도 안 넘어갔다(죽은 칸 7 · 09-21)
+          relationTarget: c.relationTarget,
           ballDelta: c.ballDelta,
           award: c.award,
           penalty: c.penalty,

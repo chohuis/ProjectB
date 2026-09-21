@@ -14,8 +14,13 @@ import {
   presentMembers,
   roleFromSeed,
   senseStartFor,
+  toLifeEvent,
 } from "../militaryLifeRules";
-import { emptyMilitaryLife, MILITARY_CONDITION_TYPES } from "../../types/militaryLife";
+import {
+  emptyMilitaryLife,
+  MILITARY_CONDITION_TYPES,
+  MILITARY_RELATION_TARGETS,
+} from "../../types/militaryLife";
 import type {
   MilitaryLifeEvent,
   MilitaryLifeRules,
@@ -141,6 +146,9 @@ describe("이벤트 후보 거르기 (§28)", () => {
   it("조건 어휘 목록은 검사 스크립트와 같다", () => {
     const src = readFileSync(resolve(ROOT, "scripts/check-militarydata.cjs"), "utf8");
     for (const t of MILITARY_CONDITION_TYPES) expect(src).toContain(`"${t}"`);
+    // relationTarget 예약어도 같은 방식으로 묶는다 — 한쪽만 늘면 데이터가 조용히 막히거나 샌다
+    for (const t of MILITARY_RELATION_TARGETS) expect(src).toContain(`"${t}"`);
+    expect(src).toContain(`"relationTarget"`);
   });
 
   it("eligibleEvents 는 순서를 지킨다 (가중 인덱스가 Rust 와 맞물린다)", () => {
@@ -184,6 +192,53 @@ describe("선택지 효과 → 상태 (§28)", () => {
     );
     expect(c.relations.MEM_SQ_LDR).toBe(3);
     expect(c.relations.MEM_CO).toBe(0);
+  });
+
+  /**
+   * 🔴 죽은 칸 7 (2026-09-21). 「후임을 챙긴다」와 「소단위를 챙긴다」가 **같은 사람에게**
+   *   갔던 자리다 — 평가기는 갈랐는데 풀 스키마·옮기는 자리가 없어 `relationTarget` 이
+   *   한 번도 안 왔다. 여기서 **셋이 서로 다른 묶음**인지 센다(배선을 빼면 이게 빨강).
+   */
+  it("🔴 relationTarget — junior · subunit · 부대원 id 가 서로 다른 묶음에 간다", () => {
+    // 후임은 joinWeek 이 늦다(members.json) — W70 에 잰다. W10 엔 junior 가 하나도 없다
+    const present = presentMembers(members, 70);
+    const s = emptyMilitaryLife("U", 60);
+    for (const m of present) s.relations[m.id] = 0;
+    const ctx = { week: 70, event: null, present, mySubunit: "SQ1", ballCap: 80 } as const;
+    const j = applyChoiceToState(s, { memberRelationDelta: 4, relationTarget: "junior" }, ctx);
+    const q = applyChoiceToState(s, { memberRelationDelta: 4, relationTarget: "subunit" }, ctx);
+    const jIds = Object.keys(j.relations).filter((k) => j.relations[k] !== 0);
+    const qIds = Object.keys(q.relations).filter((k) => q.relations[k] !== 0);
+    expect(jIds.length).toBeGreaterThan(0);
+    expect(qIds.length).toBeGreaterThan(0);
+    // 같은 묶음이면 갈래 둘을 고를 뜻이 없다
+    expect(jIds.join(",")).not.toBe(qIds.join(","));
+    for (const id of jIds) expect(present.find((m) => m.id === id)!.role).toBe("junior");
+    for (const id of qIds) expect(present.find((m) => m.id === id)!.subunit).toBe("SQ1");
+
+    // 부대원 id 한 명만
+    const one = applyChoiceToState(s, { memberRelationDelta: 7, relationTarget: "MEM_CO" }, ctx);
+    expect(one.relations.MEM_CO).toBe(7);
+    expect(Object.values(one.relations).filter((v) => v !== 0).length).toBe(1);
+
+    // 없는 id 는 조용히 아무에게도 안 간다 — check:militarydata 가 데이터에서 막는다
+    const none = applyChoiceToState(s, { memberRelationDelta: 9, relationTarget: "NOPE" }, ctx);
+    expect(Object.values(none.relations).every((v) => v === 0)).toBe(true);
+  });
+
+  /**
+   * 옛 풀(`military_general`)을 옮기는 `toLifeEvent` 가 `relationTarget` 을 **첫 칸**으로
+   * 꺼내는지. 안 꺼내면 `extraEffects` 에 남고, 옮기는 자리에서 `undefined` 에 덮인다.
+   */
+  it("toLifeEvent 는 relationTarget 을 extraEffects 가 아니라 선택지 칸으로 꺼낸다", () => {
+    const moved = toLifeEvent({
+      id: "L",
+      title: "t",
+      description: "d",
+      choices: [{ id: "c", label: "l", relationTarget: "junior", moneyDelta: -10 } as never],
+    })!;
+    expect(moved.choices[0].relationTarget).toBe("junior");
+    expect(moved.choices[0].extraEffects?.relationTarget).toBeUndefined();
   });
 
   it("ballDelta 는 상한을 넘지 않고 · 상벌·휴가는 쌓이고 · perfTierDelta 는 그 이벤트의 마지막 성과에만", () => {
