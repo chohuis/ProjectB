@@ -8,6 +8,8 @@ use crate::growth_engine::{calc_npc_fame_delta, CalcNpcFameDeltaParams, NpcPerfE
 // ── 유틸 ─────────────────────────────────────────────────────────────────────
 
 fn clamp_f(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
+// NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+#[allow(clippy::manual_clamp)]
 fn clamp_stat(v: f64) -> f64 { v.max(1.0).min(99.0).round() }
 
 // ── 시드 기반 LCG (TS makeRand와 동일 알고리즘) ──────────────────────────────
@@ -85,12 +87,35 @@ enum NpcPitchResult { Ball, StrikeLook, StrikeSwing, Foul, Out, Single, Double, 
 // 타석 결과 (투구 루프 종료 후 반환)
 enum AbResult { K, BB, Hbp, SacBunt, SacFly, Out, DoublePlay, Single, Double, Triple, HR }
 
+/// 그 순간의 **실효** 투수 구위 — 스태미나·컨디션·위기 보정을 **이미 곱한** 값이다.
+///
+/// 네 칸을 따로 넘기던 것을 묶었다(2026-09-21 · `too_many_arguments`).
+/// 값은 한 칸도 안 바뀐다 — `clippy_freeze_tests` 가 타석 2만 번으로 본다.
+#[derive(Clone, Copy)]
+struct Stuff {
+    vel: f64,
+    cmd: f64,
+    ctl: f64,
+    mov: f64,
+}
+
+/// 타석에 선 타자의 넷. 투수 구위와 짝으로 다닌다.
+#[derive(Clone, Copy)]
+struct BatEye {
+    contact: f64,
+    eye: f64,
+    discipline: f64,
+    power: f64,
+}
+
 fn npc_sim_one_pitch(
-    vel: f64, cmd: f64, ctl: f64, mov: f64,
-    contact: f64, eye: f64, discipline: f64, power: f64,
+    s: Stuff,
+    b: BatEye,
     balls: u8, strikes: u8,
     rng: &mut impl Rng,
 ) -> NpcPitchResult {
+    let (vel, cmd, ctl, mov) = (s.vel, s.cmd, s.ctl, s.mov);
+    let (contact, eye, discipline, power) = (b.contact, b.eye, b.discipline, b.power);
     // 3-0 카운트: 타자가 거의 지켜봄 (선구안 높을수록 더 적극적으로 기다림)
     if balls == 3 && strikes == 0 {
         let take_prob = clamp_f(0.80 + (discipline - 50.0) * 0.003, 0.65, 0.95);
@@ -141,12 +166,13 @@ fn npc_sim_one_pitch(
 
 // 투구 루프로 타석 1개 처리 → (결과, 투구수)
 fn sim_at_bat(
-    vel: f64, cmd: f64, ctl: f64, mov: f64,
-    contact: f64, eye: f64, discipline: f64, power: f64,
+    s: Stuff,
+    b: BatEye,
     bunting: f64,
     bases: &[bool; 3], outs: i32,
     rng: &mut impl Rng,
 ) -> (AbResult, u32) {
+    let cmd = s.cmd;
     // 🔴 **희생번트** — 무사/1사 + 주자 있음. `bunting`이 성공을 가른다.
     //   ⚠ 접전 조건은 여기서 못 본다(점수차가 안 넘어온다) — 주인공 경기보다
     //     느슨하다. 그래서 시도 확률을 절반으로 낮춘다.
@@ -164,7 +190,7 @@ fn sim_at_bat(
     let mut strikes = 0u8;
     let mut pc = 0u32;
     loop {
-        let r = npc_sim_one_pitch(vel, cmd, ctl, mov, contact, eye, discipline, power, balls, strikes, rng);
+        let r = npc_sim_one_pitch(s, b, balls, strikes, rng);
         pc += 1;
         match r {
             NpcPitchResult::Ball => {
@@ -291,14 +317,16 @@ fn apply_ab_result(
         }
         AbResult::Triple => {
             let mut runs = 0;
-            for i in 0..3 { if let Some(x) = bases[i] { runs += 1; scored.push(x); bases[i] = None; } }
+            // ⚠ **1루 → 3루 순서를 지킨다.** `scored` 의 순서가 개인 득점(R)을
+            //   적는 순서이고, `check:roundtrip` 이 그 배열을 글자로 본다.
+            for b in bases.iter_mut() { if let Some(x) = b.take() { runs += 1; scored.push(x); } }
             bases[2] = Some(batter_idx);
             (0, runs, true, false)
         }
         AbResult::HR => {
             let mut runs = 1;
             scored.push(batter_idx);   // 타자 본인도 홈을 밟는다
-            for i in 0..3 { if let Some(x) = bases[i] { runs += 1; scored.push(x); bases[i] = None; } }
+            for b in bases.iter_mut() { if let Some(x) = b.take() { runs += 1; scored.push(x); } }
             (0, runs, true, true)
         }
     }
@@ -339,18 +367,36 @@ fn npc_clutch_mod(
     clamp_f(1.0 - pressure, T::NPC_CLUTCH_MIN, T::NPC_CLUTCH_MAX)
 }
 
-fn sim_half_inning_pitch(
-    lineup: &[SimBatter],
-    // 수비 팀 라인업 — **포수를 찾는 데만 쓴다**(도루 저지)
-    def_lineup: &[SimBatter],
-    lineup_pos: usize,
-    pit: &SimPitcher,
-    pit_stamina: f64,
-    pit_outs: i32,
+/// 반이닝 하나의 **판** — 이닝 안에서 안 바뀌는 것들.
+///
+/// 인자 열둘을 묶은 것이다(2026-09-21 · `too_many_arguments`).
+/// ⚠ 묶은 진짜 이유는 개수가 아니다 — `lineup` 과 `def_lineup` 이 **같은 타입**이라
+///   호출측에서 서로 바꿔 넘겨도 컴파일러가 못 잡았다. 칸 이름이 붙으면 눈에 띈다.
+///   값이 안 바뀌는지는 `clippy_freeze_tests` 의 `경기_시뮬이_고치기_전과_같다` 가 본다.
+struct HalfInning<'a> {
+    /// 공격 팀 라인업
+    lineup: &'a [SimBatter],
+    /// 수비 팀 라인업 — **포수를 찾는 데만 쓴다**(도루 저지)
+    def_lineup: &'a [SimBatter],
+    pit: &'a SimPitcher,
     start_cond_mod: f64,
     // 위기 보정 입력 — 이 둘이 없으면 후반 접전을 못 본다
     inning: i32,
     score_diff: i32,
+}
+
+/// 이닝을 넘어 **이어지는 상태**. 반환값의 뒤 셋과 같은 셋이다 —
+/// 들어간 것이 그대로 나온다.
+#[derive(Clone, Copy)]
+struct HalfInningCarry {
+    lineup_pos: usize,
+    pit_stamina: f64,
+    pit_outs: i32,
+}
+
+fn sim_half_inning_pitch(
+    g: HalfInning,
+    carry: HalfInningCarry,
     // 🔴 **`BTreeMap` 이다.** 이 두 맵을 그대로 훑어 `player_lines` 를 만들고,
     //   그 배열 순서가 JS 쪽 `weekPhases/injuries.ts` 의 `players[]` 순서가 된다
     //   — 부상 판정이 그 순서대로 난수를 소비하므로 **다치는 사람이 바뀐다.**
@@ -360,6 +406,8 @@ fn sim_half_inning_pitch(
     bat_map: &mut BTreeMap<String, BatAccum>,
     rng: &mut impl Rng,
 ) -> (i32, usize, i32, f64) {  // (runs, new_lineup_pos, new_pit_outs, new_stamina)
+    let HalfInning { lineup, def_lineup, pit, start_cond_mod, inning, score_diff } = g;
+    let HalfInningCarry { lineup_pos, pit_stamina, pit_outs } = carry;
     let mut bases: Bases = [None; 3];
     let mut outs         = 0i32;
     let mut runs         = 0i32;
@@ -451,16 +499,22 @@ fn sim_half_inning_pitch(
         // 득점권 = 2·3루 주자. **`npc_clutch_mod`의 판정과 같은 정의여야 한다** —
         // 보정을 받은 타석과 기록에 남는 타석이 다르면 스플릿이 보정을 못 보여준다
         let risp = bases[1].is_some() || bases[2].is_some();
-        let q   = quality(stamina) * start_cond_mod * cm;
-        let vel = pit.velocity * q;
-        let cmd = pit.command  * q;
-        let ctl = pit.control  * q;
-        let mov = pit.movement * q;
+        let q     = quality(stamina) * start_cond_mod * cm;
+        let stuff = Stuff {
+            vel: pit.velocity * q,
+            cmd: pit.command  * q,
+            ctl: pit.control  * q,
+            mov: pit.movement * q,
+        };
+        let bat_eye = BatEye {
+            contact:    batter.contact,
+            eye:        batter.eye,
+            discipline: batter.discipline,
+            power:      batter.power,
+        };
 
         let (ab_result, pc) = sim_at_bat(
-            vel, cmd, ctl, mov,
-            batter.contact, batter.eye, batter.discipline, batter.power,
-            batter.bunting,
+            stuff, bat_eye, batter.bunting,
             &occupied(&bases), outs, rng,
         );
         stamina = (stamina - stamina_loss * pc as f64).max(0.0);
@@ -718,8 +772,12 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
         // 원정 공격 (상반기)
         let (top_runs, new_away_lpos, new_h_outs, new_h_stamina) = sim_half_inning_pitch(
-            &params.away_lineup, &params.home_lineup, away_lpos, h_pit, h_stamina, h_pit_outs, h_cond,
-            inning, home_score - away_score,
+            HalfInning {
+                lineup: &params.away_lineup, def_lineup: &params.home_lineup,
+                pit: h_pit, start_cond_mod: h_cond,
+                inning, score_diff: home_score - away_score,
+            },
+            HalfInningCarry { lineup_pos: away_lpos, pit_stamina: h_stamina, pit_outs: h_pit_outs },
             &mut pit_map, &mut bat_map, &mut rng,
         );
         away_score  += top_runs;
@@ -749,8 +807,12 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
         // 홈 공격 (하반기)
         let (bot_runs, new_home_lpos, new_a_outs, new_a_stamina) = sim_half_inning_pitch(
-            &params.home_lineup, &params.away_lineup, home_lpos, a_pit, a_stamina, a_pit_outs, a_cond,
-            inning, home_score - away_score,
+            HalfInning {
+                lineup: &params.home_lineup, def_lineup: &params.away_lineup,
+                pit: a_pit, start_cond_mod: a_cond,
+                inning, score_diff: home_score - away_score,
+            },
+            HalfInningCarry { lineup_pos: home_lpos, pit_stamina: a_stamina, pit_outs: a_pit_outs },
             &mut pit_map, &mut bat_map, &mut rng,
         );
         home_score  += bot_runs;
@@ -770,8 +832,13 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 let ex_h_cond = cond_start_mod(&ex_h.id, &params.conditions);
                 let ex_h_st = *pit_stamina_map.get(&ex_h.id).unwrap_or(&ex_h.stamina);
                 let (t, new_al, _, new_ex_h_st) = sim_half_inning_pitch(
-                    &params.away_lineup, &params.home_lineup, away_lpos, ex_h, ex_h_st, 27, ex_h_cond,
-                    ex_inning, home_score - away_score,
+                    HalfInning {
+                        lineup: &params.away_lineup, def_lineup: &params.home_lineup,
+                        pit: ex_h, start_cond_mod: ex_h_cond,
+                        inning: ex_inning, score_diff: home_score - away_score,
+                    },
+                    // 연장은 아웃카운트를 안 이어 간다 — 27 은 「더 못 던진다」는 뜻이다
+                    HalfInningCarry { lineup_pos: away_lpos, pit_stamina: ex_h_st, pit_outs: 27 },
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
                 away_score += t;
@@ -782,8 +849,12 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 let ex_a_cond = cond_start_mod(&ex_a.id, &params.conditions);
                 let ex_a_st = *pit_stamina_map.get(&ex_a.id).unwrap_or(&ex_a.stamina);
                 let (b, new_hl, _, new_ex_a_st) = sim_half_inning_pitch(
-                    &params.home_lineup, &params.away_lineup, home_lpos, ex_a, ex_a_st, 27, ex_a_cond,
-                    ex_inning, home_score - away_score,
+                    HalfInning {
+                        lineup: &params.home_lineup, def_lineup: &params.away_lineup,
+                        pit: ex_a, start_cond_mod: ex_a_cond,
+                        inning: ex_inning, score_diff: home_score - away_score,
+                    },
+                    HalfInningCarry { lineup_pos: home_lpos, pit_stamina: ex_a_st, pit_outs: 27 },
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
                 home_score += b;
@@ -965,22 +1036,31 @@ fn roster_rule(league_id: &str, limits: &HashMap<String, RosterLimit>) -> Option
 
 // ── 은퇴 판정 + 로스터 캡 정규화 ────────────────────────────────────────────
 
-fn normalize_offseason_npcs(
-    npcs: Vec<NpcSaveState>,
+/// 11단계가 **읽기만 하는 것들**. 인자 아홉을 묶었다(2026-09-21 ·
+/// `too_many_arguments`) — 쓰는 쪽(`summary` · `events` · `rng`)은 그대로 뒀다.
+/// 읽는 것과 쓰는 것이 인자 목록에서 갈리면 어느 쪽이 상태를 바꾸는지 보인다.
+#[derive(Clone, Copy)]
+struct NormalizeCtx<'a> {
     season_year: i32,
-    summary: &mut SeasonEndSummary,
-    events: &mut Vec<OffseasonEvent>,
-    rng: &mut impl Rng,
-    limits: &HashMap<String, RosterLimit>,
+    limits: &'a HashMap<String, RosterLimit>,
     // 12단계 진로 배정이 돌 수 있는가. false면 방출 대신 바로 은퇴시킨다 —
     // 소속 없는 현역이 떠다니면 화면과 시뮬이 다 깨진다
     can_place: bool,
     // 외국인 판정. 이들은 **2군으로 못 내린다**(1군 전용) —
     // 정원 초과는 내국인 안에서 푼다
-    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
+    is_foreign: &'a dyn Fn(&NpcSaveState) -> bool,
     // 리그가 바뀌면 연봉도 오르내린다 — 없으면 예전대로 그대로 들고 간다
-    salary_rules_ref: Option<&SalaryRules>,
+    salary_rules_ref: Option<&'a SalaryRules>,
+}
+
+fn normalize_offseason_npcs(
+    npcs: Vec<NpcSaveState>,
+    ctx: NormalizeCtx,
+    summary: &mut SeasonEndSummary,
+    events: &mut Vec<OffseasonEvent>,
+    rng: &mut impl Rng,
 ) -> Vec<NpcSaveState> {
+    let NormalizeCtx { season_year, limits, can_place, is_foreign, salary_rules_ref } = ctx;
     let mut next = npcs;
 
     // 은퇴 판정
@@ -1183,22 +1263,33 @@ fn normalize_offseason_npcs(
 ///
 /// 방출자는 소속만 비워두고 진로 배정(12단계)이 독립·은퇴를 정한다 —
 /// 미지명자·FA 미계약자와 **같은 로직**이다.
-fn release_second_stage(
-    npcs: &mut [NpcSaveState],
+/// 방출 두 갈래(점수 방출 11-b · 예산 방출 11-b2)가 **같이 보는 것**.
+///
+/// 둘이 같은 다섯 칸을 따로 받고 있었다 — 한쪽에만 칸을 더하면 두 방출이
+/// 다른 잣대를 쓰게 된다. 묶어서 그게 안 되게 했다(2026-09-21 ·
+/// `too_many_arguments`). 읽기만 한다.
+#[derive(Clone, Copy)]
+struct ReleaseCtx<'a> {
     // 방출을 선수 경력에도 남기려면 해가 있어야 한다 (B-29 D-1)
     season_year: i32,
-    rules: &crate::free_agency::ReleaseRules,
-    limits: &HashMap<String, RosterLimit>,
-    events: &mut Vec<OffseasonEvent>,
-    // 그해 성적 평점 (npcId → 0~100). 비면 능력치로 떨어진다
-    perf: &HashMap<String, f64>,
+    limits: &'a HashMap<String, RosterLimit>,
     // 구단 성향 (teamId → 12축). 비면 default()
-    profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
+    profiles: &'a HashMap<String, crate::sim_types::ProTeamProfile>,
+    // 그해 성적 평점 (npcId → 0~100). 비면 능력치로 떨어진다
+    perf: &'a HashMap<String, f64>,
     // 외국인은 이 경로를 타지 않는다. 방출자는 소속만 비고 진로 배정이
     // 독립 입단·은퇴를 정하는데, 용병이 국내 독립리그로 가는 건 말이 안 된다.
     // 외국인 교체는 재계약 판정 + 새 영입이 짝이다 (F-4·F-5)
-    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
+    is_foreign: &'a dyn Fn(&NpcSaveState) -> bool,
+}
+
+fn release_second_stage(
+    npcs: &mut [NpcSaveState],
+    ctx: ReleaseCtx,
+    rules: &crate::free_agency::ReleaseRules,
+    events: &mut Vec<OffseasonEvent>,
 ) -> usize {
+    let ReleaseCtx { season_year, limits, profiles, perf, is_foreign } = ctx;
     use crate::team_engine::{eval_release_priority, EvalReleaseParams};
 
     // 팀별 포지션 뎁스 — 같은 자리에 사람이 많으면 방출 압력이 올라간다
@@ -1320,15 +1411,11 @@ fn release_second_stage(
 /// ⚠ 예산이 없는 팀(상무·아마추어)은 건너뛴다.
 fn release_over_budget(
     npcs: &mut [NpcSaveState],
-    // 방출을 선수 경력에도 남기려면 해가 있어야 한다 (B-29 D-1)
-    season_year: i32,
+    ctx: ReleaseCtx,
     budgets: &HashMap<String, i64>,
-    limits: &HashMap<String, RosterLimit>,
-    profiles: &HashMap<String, crate::sim_types::ProTeamProfile>,
-    perf: &HashMap<String, f64>,
-    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
     events: &mut Vec<OffseasonEvent>,
 ) -> i32 {
+    let ReleaseCtx { season_year, limits, profiles, perf, is_foreign } = ctx;
     use crate::team_engine::{eval_release_priority, EvalReleaseParams};
     if budgets.is_empty() { return 0; }
 
@@ -2697,9 +2784,15 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 11. 은퇴 판정 + 로스터 캡
     let can_place = !params.independent_team_ids.is_empty();
     let mut after_normalize = normalize_offseason_npcs(
-        processed, season_year, &mut summary, &mut events, &mut rng,
-        &params.roster_limits, can_place, &is_foreign,
-        params.salary_rules.as_ref(),
+        processed,
+        NormalizeCtx {
+            season_year,
+            limits: &params.roster_limits,
+            can_place,
+            is_foreign: &is_foreign,
+            salary_rules_ref: params.salary_rules.as_ref(),
+        },
+        &mut summary, &mut events, &mut rng,
     );
 
     // 12. 소속을 잃은 사람들의 진로 — 방출자와 FA 미계약자.
@@ -2714,10 +2807,17 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     renew_independent_salaries(&mut after_normalize, &params.perf_scores,
         &params.salary_rules.as_ref().map(|r| r.league_mult.clone()).unwrap_or_default());
 
+    // 방출 두 갈래가 **같은 잣대**를 쓰게 한 칸이다 — 한 번 만들어 둘이 나눠 쓴다
+    let release_ctx = ReleaseCtx {
+        season_year,
+        limits: &params.roster_limits,
+        profiles: &params.team_profiles,
+        perf: &params.perf_scores,
+        is_foreign: &is_foreign,
+    };
+
     if let Some(rr) = params.release_rules.as_ref() {
-        release_second_stage(
-            &mut after_normalize, season_year, rr, &params.roster_limits, &mut events,
-            &params.perf_scores, &params.team_profiles, &is_foreign);
+        release_second_stage(&mut after_normalize, release_ctx, rr, &mut events);
     }
 
     // 11-b2. **웨이버 공시.** 방금 방출된 사람을 다른 구단이 데려간다.
@@ -2727,8 +2827,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 🔴 **예산 초과 방출** — 웨이버 **앞**에 둔다. 여기서 나온 사람도
     //   다른 구단이 데려갈 수 있어야 한다 — 방출 절차의 일부다.
     let _budget_released = release_over_budget(
-        &mut after_normalize, season_year, &params.team_budgets, &params.roster_limits,
-        &params.team_profiles, &params.perf_scores, &is_foreign, &mut events);
+        &mut after_normalize, release_ctx, &params.team_budgets, &mut events);
 
     if let Some(wr) = params.waiver_rules.as_ref() {
         if wr.enabled {
@@ -4258,16 +4357,24 @@ fn pitch_progress_per_week(current_grade: u8) -> f64 {
     }
 }
 
-fn decide_pitch_training(
+/// 구종 훈련 판정의 입력 — 한 투수의 지금 상태다.
+/// 인자 여덟을 묶었다(2026-09-21 · `too_many_arguments`). 전부 읽기만 한다.
+struct PitchTrainingInput<'a> {
     age: i32,
-    pitches: &[crate::sim_types::NpcPitchEntry],
-    role: &str,
+    pitches: &'a [crate::sim_types::NpcPitchEntry],
+    role: &'a str,
     velocity: f64,
     ovr: f64,
     potential: f64,
-    catalog_ids: &[String],
-    npc_id: &str,
+    catalog_ids: &'a [String],
+    npc_id: &'a str,
+}
+
+fn decide_pitch_training(
+    input: PitchTrainingInput,
 ) -> Option<crate::sim_types::NpcPitchTraining> {
+    let PitchTrainingInput { age, pitches, role, velocity, ovr, potential, catalog_ids, npc_id } =
+        input;
     if age >= 33 { return None; }
     if potential > 0.0 && ovr / potential < 0.70 { return None; }
 
@@ -4369,6 +4476,8 @@ fn set_npc_batting_stat(b: &mut NpcBattingAttrs, stat: &str, val: f64) {
     }
 }
 
+// NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+#[allow(clippy::manual_clamp)]
 fn calc_npc_pitching_ovr(p: &NpcPitchingAttrs) -> f64 {
     let w = p.velocity * 2.5 + p.command * 2.5 + p.control * 2.0
           + p.movement * 1.5 + p.stamina * 1.5 + p.mentality * 1.0
@@ -4376,6 +4485,8 @@ fn calc_npc_pitching_ovr(p: &NpcPitchingAttrs) -> f64 {
     (w / 12.0).round().max(1.0).min(99.0)
 }
 
+// NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+#[allow(clippy::manual_clamp)]
 fn calc_npc_batting_ovr(b: &NpcBattingAttrs) -> f64 {
     let w = b.contact * 2.0 + b.power * 1.8 + b.eye * 1.5
           + b.discipline * 1.2 + b.speed * 1.3 + b.base_instinct * 0.7
@@ -4575,16 +4686,16 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
             if npc.pitch_in_training.is_none() && phase == "offseason" {
                 let velocity  = npc.pitching.as_ref().map(|p| p.velocity).unwrap_or(50.0);
                 let ovr       = npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(50.0);
-                npc.pitch_in_training = decide_pitch_training(
-                    npc.age,
-                    &npc.pitches,
-                    &npc.pitcher_role,
+                npc.pitch_in_training = decide_pitch_training(PitchTrainingInput {
+                    age: npc.age,
+                    pitches: &npc.pitches,
+                    role: &npc.pitcher_role,
                     velocity,
                     ovr,
                     potential,
-                    &params.pitch_catalog_ids,
-                    &npc.npc_id,
-                );
+                    catalog_ids: &params.pitch_catalog_ids,
+                    npc_id: &npc.npc_id,
+                });
             }
         } else {
             if let Some(ref mut bat) = npc.batting {
@@ -4747,11 +4858,13 @@ mod clutch_tests {
 
         let (mut ab, mut hits, mut bb) = (0usize, 0usize, 0usize);
         for _ in 0..n {
-            let (r, _) = sim_at_bat(v * cm, c * cm, ct * cm, m * cm,
-                                    contact, eye, disc, power,
-                                    // 번트는 이 검사의 관심이 아니다 — 중립으로 둔다.
-                                    // ⚠ 주자가 없으므로(bases 전부 false) 번트 갈래는 안 탄다
-                                    50.0, &bases, 0, &mut rng);
+            let (r, _) = sim_at_bat(
+                Stuff { vel: v * cm, cmd: c * cm, ctl: ct * cm, mov: m * cm },
+                BatEye { contact, eye, discipline: disc, power },
+                // 번트는 이 검사의 관심이 아니다 — 중립으로 둔다.
+                // ⚠ 주자가 없으므로(bases 전부 false) 번트 갈래는 안 탄다
+                50.0, &bases, 0, &mut rng,
+            );
             match r {
                 AbResult::BB => bb += 1,
                 AbResult::Single | AbResult::Double | AbResult::Triple | AbResult::HR => {
@@ -5672,11 +5785,13 @@ mod contract_years_tests {
     /// **제일 엄한 칸이 이긴다** — 규칙 파일의 줄 순서에 동작이 매달리면 안 된다
     #[test]
     fn 겹치는_칸은_엄한_쪽이_이긴다() {
-        let mut r = SalaryRules::default();
-        r.contract_years_max_by_age = vec![
-            ContractYearsCap { from_age: 36, max_years: 1 },
-            ContractYearsCap { from_age: 33, max_years: 2 },
-        ];
+        let r = SalaryRules {
+            contract_years_max_by_age: vec![
+                ContractYearsCap { from_age: 36, max_years: 1 },
+                ContractYearsCap { from_age: 33, max_years: 2 },
+            ],
+            ..Default::default()
+        };
         assert_eq!(cap_contract_years(&r, 37, 5), 1);
         assert_eq!(cap_contract_years(&r, 34, 5), 2);
     }
@@ -5692,8 +5807,10 @@ mod contract_years_tests {
     /// 0년 계약은 계약이 아니다
     #[test]
     fn 하한은_한_해다() {
-        let mut r = SalaryRules::default();
-        r.contract_years_max_by_age = vec![ContractYearsCap { from_age: 30, max_years: 0 }];
+        let r = SalaryRules {
+            contract_years_max_by_age: vec![ContractYearsCap { from_age: 30, max_years: 0 }],
+            ..Default::default()
+        };
         assert_eq!(cap_contract_years(&r, 40, 3), 1);
     }
 
@@ -5764,8 +5881,8 @@ mod clippy_freeze_tests {
         let mut pitches = 0u64;
         for _ in 0..20_000 {
             let (r, pc) = sim_at_bat(
-                72.0, 68.0, 64.0, 70.0,
-                66.0, 58.0, 61.0, 74.0,
+                Stuff { vel: 72.0, cmd: 68.0, ctl: 64.0, mov: 70.0 },
+                BatEye { contact: 66.0, eye: 58.0, discipline: 61.0, power: 74.0 },
                 52.0, &bases, 1, &mut rng,
             );
             let code = ab_code(&r);
@@ -5822,6 +5939,76 @@ mod clippy_freeze_tests {
             }
         }
         s
+    }
+
+    fn pit(id: &str, ovr: f64) -> SimPitcher {
+        SimPitcher {
+            id: id.into(), velocity: ovr, movement: ovr, command: ovr, control: ovr,
+            stamina: ovr, stamina_cap: 100.0, clutch: 50.0, mentality: 50.0,
+            hold_runners: 50.0,
+        }
+    }
+
+    fn lineup(prefix: &str, ovr: f64) -> Vec<SimBatter> {
+        (0..9)
+            .map(|i| SimBatter {
+                id: format!("{prefix}B{i}"),
+                contact: ovr, power: ovr, eye: ovr, discipline: ovr,
+                batting_clutch: 50.0,
+                speed: 71.0 + (i as f64) * 3.0,
+                base_instinct: 75.0,
+                position: if i == 2 { "C".into() } else { String::new() },
+                arm: 55.0,
+                bunting: 50.0,
+            })
+            .collect()
+    }
+
+    /// 경기 **전체**를 씨앗 고정으로 돌리고 결과 JSON 을 통째로 본다.
+    ///
+    /// `sim_half_inning_pitch` 의 인자 묶기(`too_many_arguments`)가 여기를 탄다 —
+    /// 라인업·수비 라인업처럼 **같은 타입 인자를 서로 바꿔 넘기는** 실수는
+    /// 컴파일러가 못 잡는다. 그래서 값으로 본다.
+    fn 경기_원문() -> String {
+        let mut s = String::new();
+        for w in 1..=6i32 {
+            let bullpen = |p: &str| {
+                let mut v = vec![pit(&format!("{p}CP"), 75.0)];
+                v.extend((0..4).map(|i| pit(&format!("{p}RP{i}"), 58.0)));
+                v
+            };
+            let r = sim_game(&SimGameParams {
+                world_seed: 20_260_921,
+                schedule_id: format!("SCH_FREEZE_{w}"),
+                home_rotation: vec![pit("HSP", 66.0)],
+                away_rotation: vec![pit("ASP", 61.0)],
+                home_bullpen: bullpen("H"),
+                away_bullpen: bullpen("A"),
+                home_closer: Some(pit("HCP", 75.0)),
+                away_closer: Some(pit("ACP", 75.0)),
+                home_lineup: lineup("H", 63.0),
+                away_lineup: lineup("A", 58.0),
+                home_rot_idx: 0,
+                away_rot_idx: 0,
+                conditions: HashMap::new(),
+                week: w,
+                home_team_id: "TEAM_H".into(),
+                away_team_id: "TEAM_A".into(),
+            });
+            s.push_str(&serde_json::to_string(&r).expect("직렬화가 안 된다"));
+            s.push('\n');
+        }
+        s
+    }
+
+    #[test]
+    fn 경기_시뮬이_고치기_전과_같다() {
+        let raw = 경기_원문();
+        let h = fnv(&raw);
+        println!("  경기 6판 해시 {h}");
+        // 2026-09-21 clippy 정리 **직전** 트리의 값이다.
+        // 어긋나면 어느 칸인지 보려고 `--nocapture` 로 원문을 찍는다.
+        assert_eq!(h, 2_997_511_016_497_049_938, "sim_game 결과가 달라졌다");
     }
 
     #[test]

@@ -377,12 +377,6 @@ const PITCH_BREAKING: [&str; 4] = ["PITCH_SLIDER", "PITCH_CURVE", "PITCH_CUTTER"
 const PITCH_OFFSPEED: [&str; 4] = ["PITCH_CHANGEUP", "PITCH_SPLITTER", "PITCH_FORKBALL", "PITCH_SCREWBALL"];
 const PITCH_SPECIAL:  &str = "PITCH_KNUCKLEBALL";
 
-/// 투수 한 명의 구종 세트.
-///
-/// - **패스트볼은 항상 있다.** 그게 없는 투수는 없다
-/// - 보유 수는 목표치에 성숙도(나이·OVR)를 곱한다 — 신인은 덜 갖추고 시작한다
-/// - 변화구·오프스피드를 섞는다. 한 계열만 갖는 투수가 나오지 않게
-/// - 너클볼은 특수구다. 낮은 확률로만, 그리고 **주무기로만** 준다
 /// 나이를 **27세 근처가 가장 두꺼운 피라미드**로 뽑는다 (삼각분포).
 ///
 /// 🔴 **예전엔 균등이었다.** `age_min..=age_max`가 20~37이라 30세 이상이
@@ -407,6 +401,17 @@ fn pick_age(min: i32, max: i32, rng: &mut LcgRand) -> i32 {
     min + (t * span).round() as i32
 }
 
+/// 투수 한 명의 구종 세트.
+///
+/// - **패스트볼은 항상 있다.** 그게 없는 투수는 없다
+/// - 보유 수는 목표치에 성숙도(나이·OVR)를 곱한다 — 신인은 덜 갖추고 시작한다
+/// - 변화구·오프스피드를 섞는다. 한 계열만 갖는 투수가 나오지 않게
+/// - 너클볼은 특수구다. 낮은 확률로만, 그리고 **주무기로만** 준다
+///
+/// ⚠ 이 주석은 한동안 **`pick_age` 위에 붙어 있었다.** 사이에 빈 줄이 없어
+///   두 함수의 설명이 한 덩어리로 붙었고, `pick_age` 가 구종 설명을 달고
+///   있었다. clippy `doc_list_item_without_indentation` 이 그걸 짚었다
+///   (2026-09-21). 목록 뒤에는 빈 `///` 줄을 둔다.
 fn gen_pitches(
     position: &str,
     velocity: f64,
@@ -906,7 +911,9 @@ pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRoste
             let is_pitcher = i < req.pitchers;
             // 투수는 선발 우선(용병 투수는 선발로 쓴다), 야수는 중심타선 자리
             let position = if is_pitcher {
-                if i == 0 { "SP" } else if i == 1 { "SP" } else { "RP" }
+                // 앞 둘이 선발, 나머지가 불펜. 예전엔 `i == 0` · `i == 1` 을
+                // 따로 적었는데 두 갈래가 같은 값을 내고 있었다(`if_same_then_else`)
+                if i < 2 { "SP" } else { "RP" }
             } else {
                 // 외야·1루 — 용병 타자가 실제로 서는 자리다
                 ["LF", "1B", "RF", "3B"][(i - req.pitchers) % 4]

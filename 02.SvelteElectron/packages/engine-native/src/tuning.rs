@@ -1374,6 +1374,11 @@ mod talent_tests {
 
 #[cfg(test)]
 mod steal_catcher_tests {
+    // 이 모듈의 단언은 **밸런스 상수가 실측 범위 안에 있는지**를 본다. 양변이
+    // 상수라 컴파일 때 접히고 clippy 가 `assertions_on_constants` 로 짚는데,
+    // 접히는 것이 이 검사의 목적이다 — 기준점을 손대면 여기가 빨강이 된다.
+    // 2026-09-21 사용자 확정: 지우지 않고 allow 로 둔다.
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     /// 포수 송구가 도루 성공률을 실제로 가르는가.

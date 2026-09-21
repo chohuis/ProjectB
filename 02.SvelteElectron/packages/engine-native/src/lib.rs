@@ -33,7 +33,41 @@
 //
 //   ⚠ **동작은 한 줄도 안 바뀌었다** — `check:measurerepro` 2회가 고치기 전과
 //   **같은 값**을 냈다(대학합격3 · 3년차 OVR 70 · 구속 72 · 완주).
-#![warn(clippy::all)]
+//
+// ── **62 → 0 · `deny` 복원** (2026-09-21 · A-7) ─────────────────────────────
+//
+//   위에 적힌 「0 으로 내린 뒤 `deny` 로 되돌린다」를 지금 한다.
+//   CI 의 clippy 단계에도 `-D warnings` 를 붙였다 — 이제 관문이다.
+//
+//   처리:
+//     38  `assertions_on_constants`  **지우지 않았다.** 전부 밸런스 상수가
+//                                    실측 범위 안에 있는지 보는 검사다. 양변이
+//                                    상수라 접히는 것이 목적이라 검사 모듈 여덟에
+//                                    `#![allow]` + 이유를 달았다(사용자 확정)
+//      9  `manual_clamp`             **식은 한 글자도 안 바꿨다.** NaN 에서
+//                                    `clamp` 와 동작이 갈리고 TS 검사가 그 글자를
+//                                    못박는다 — 자리마다 `#[allow]` + 이유(사용자 확정)
+//      7  `too_many_arguments`       **전부 내부 함수라 구조체로 묶었다** —
+//                                    `Stuff`/`BatEye` · `HalfInning`/`HalfInningCarry` ·
+//                                    `NormalizeCtx` · `ReleaseCtx` · `PitchTrainingInput`.
+//                                    napi 경계 함수는 하나도 안 건드렸다
+//      8  그 밖                      범위 루프 2 · `Default` 뒤 필드대입 2 ·
+//                                    `ptr_arg` · `nonminimal_bool` · `if_same_then_else` ·
+//                                    문서 목록 들여쓰기
+//
+//   🔴 **문서 경고 하나가 진짜 결함이었다.** `doc_list_item_without_indentation`
+//   이 짚은 자리는 `roster_gen.rs` 에서 **`gen_pitches` 의 설명이 `pick_age` 위에
+//   붙어 있던 것**이다. 사이 빈 줄이 없어 두 함수의 주석이 한 덩어리가 됐고,
+//   `pick_age` 가 구종 설명을 달고 있었다. 서식 잔소리처럼 보이던 줄이 **잘못
+//   붙은 문서**를 가리키고 있었다.
+//
+//   ⚠ **동작은 한 줄도 안 바뀌었다** — 이번엔 `check:measurerepro` 를 못 썼다
+//   (D 가 24판을 6병렬로 돌리는 중이라 electron 안전선이 꽉 찼다).
+//   대신 **고치기 전 트리에서 먼저** 씨앗 고정 검사 여덟을 써서 값을 박고
+//   (`clippy_freeze_tests` — `npc_sim` · `group_stage` · `roster_gen` ·
+//   `team_engine`) 고친 뒤 같은 값이 나오는지 봤다. 경기 한 판 JSON 통째 ·
+//   타석 2만 번 분포 · 루상 처리 88칸 · 추첨 · 용병 생성 · 강등 자격 표 32칸.
+#![deny(clippy::all)]
 
 //! ## 「안 읽는 칸」 — `#[allow(dead_code)] // payload 미러` 가 붙은 구조체들
 //!

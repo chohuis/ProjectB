@@ -26,6 +26,8 @@ pub struct ResolveChoiceParams {
 }
 
 fn calc_draft_success(ovr: f64, rng: &mut impl Rng) -> bool {
+    // NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+    #[allow(clippy::manual_clamp)]
     let pct = ((ovr - 40.0) * 1.375 + 15.0).max(5.0).min(70.0);
     rng.gen::<f64>() * 100.0 < pct
 }
@@ -39,6 +41,8 @@ fn calc_univ_success(avg_grade: f64, rng: &mut impl Rng) -> bool {
 }
 
 fn calc_indie_success(ovr: f64, rng: &mut impl Rng) -> bool {
+    // NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+    #[allow(clippy::manual_clamp)]
     let pct = ((ovr - 30.0) * 0.9 + 40.0).max(35.0).min(80.0);
     rng.gen::<f64>() * 100.0 < pct
 }
@@ -334,13 +338,19 @@ fn calc_season_rating_inner(s: &SeasonStats) -> f64 {
     //   움직인다(밸런스). 타자만 없던 것을 채운다.
     if s.ip <= 0.0 {
         if s.ab < 30.0 { return 50.0; }        // 표본이 얇으면 중립
+        // NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+        #[allow(clippy::manual_clamp)]
         let ops_pts   = (50.0 + (s.ops - 0.700) * 180.0).max(10.0).min(95.0);
         let games_pts = ((s.g / 130.0) * 15.0).min(15.0);
         return ops_pts * 0.85 + games_pts * 0.15;
     }
+    // 아래 셋: NaN 에서 `clamp` 와 동작이 갈리고 TS 검사가 이 글자를 못 박는다 · 밸런스 산식 · 2026-09-21 사용자 확정
+    #[allow(clippy::manual_clamp)]
     let era_score  = (100.0 - (s.era  - 2.0) * 18.0).max(20.0).min(100.0);
+    #[allow(clippy::manual_clamp)]
     let whip_score = (100.0 - (s.whip - 1.0) * 55.0).max(20.0).min(100.0);
     let k9         = if s.ip > 0.0 { (s.k / s.ip) * 9.0 } else { 0.0 };
+    #[allow(clippy::manual_clamp)]
     let k_score    = (40.0 + k9 * 6.0).max(20.0).min(100.0);
     era_score * 0.45 + whip_score * 0.3 + k_score * 0.25
 }

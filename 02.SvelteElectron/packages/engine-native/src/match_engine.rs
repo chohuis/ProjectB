@@ -3973,6 +3973,11 @@ mod 삼중살 {
 
 #[cfg(test)]
 mod 보크 {
+    // 이 모듈의 단언은 **밸런스 상수가 실측 범위 안에 있는지**를 본다. 양변이
+    // 상수라 컴파일 때 접히고 clippy 가 `assertions_on_constants` 로 짚는데,
+    // 접히는 것이 이 검사의 목적이다 — `tuning.rs` 값을 손대면 여기가 빨강이
+    // 된다. 지우면 그 감시가 사라진다. 2026-09-21 사용자 확정: allow 로 둔다.
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     /// ⚠ 보크는 **투구 전** 사건이라 `step_pitch_core` 안에서 난다.
@@ -4054,6 +4059,8 @@ mod 삼진_코드 {
 
 #[cfg(test)]
 mod 폭투_포일 {
+    // 밸런스 상수의 범위 감시다 — 접히는 것이 목적이다 (`보크` 모듈 주석 참고)
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     /// 🔴 **책임이 갈린다** — 존 밖으로 멀리 가면 투수(WP), 존 근처면 포수(PB).
@@ -4173,6 +4180,8 @@ mod 타구물리 {
 
 #[cfg(test)]
 mod 펜스 {
+    // 밸런스 상수의 범위 감시다 — 접히는 것이 목적이다 (`보크` 모듈 주석 참고)
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     /// 🔴 **담장 대비 비율로 가른다.** 절대 거리로 하면 구장마다 같은
@@ -4259,6 +4268,8 @@ mod 펜스 {
 
 #[cfg(test)]
 mod 시프트 {
+    // 밸런스 상수의 범위 감시다 — 접히는 것이 목적이다 (`보크` 모듈 주석 참고)
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
     use rand::SeedableRng;
 
@@ -4318,6 +4329,8 @@ mod 시프트 {
 
 #[cfg(test)]
 mod 낫아웃_태그업 {
+    // 밸런스 상수의 범위 감시다 — 접히는 것이 목적이다 (`보크` 모듈 주석 참고)
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     /// 🔴 **삼진은 모수가 크다**(타석의 20% 안팎). 확률을 높이면 출루가
@@ -4362,6 +4375,8 @@ mod 낫아웃_태그업 {
 
 #[cfg(test)]
 mod 방해 {
+    // 밸런스 상수의 범위 감시다 — 접히는 것이 목적이다 (`보크` 모듈 주석 참고)
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     /// ⚠ **둘은 다른 사건이다.** 수비 방해는 타석이고 주루 방해는 주자다.
@@ -4672,6 +4687,8 @@ mod 방해 {
 
 #[cfg(test)]
 mod 완급과코스 {
+    // 밸런스 상수의 범위 감시다 — 접히는 것이 목적이다 (`보크` 모듈 주석 참고)
+    #![allow(clippy::assertions_on_constants)]
     use super::*;
 
     // ── 결정 ⑧ 완급 조절 ────────────────────────────────────

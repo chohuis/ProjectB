@@ -503,9 +503,12 @@ fn calldown_eligible(
     is_pitcher: bool,
     is_starter: bool,
 ) -> bool {
-    (!batters_locked || is_pitcher)
-        && (!pitchers_locked || !is_pitcher)
-        && !(starters_locked && is_starter)
+    // 드모르간으로 뒤집은 꼴이다(`nonminimal_bool`) — 「막는 조건이 하나라도
+    // 걸리면 후보가 아니다」로 읽힌다. 뒤집기 전 식과 같은 표를 내는지는
+    // `clippy_freeze_tests` 가 입력 32가지로 본다.
+    !(batters_locked && !is_pitcher
+        || is_pitcher && pitchers_locked
+        || starters_locked && is_starter)
 }
 
 pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {

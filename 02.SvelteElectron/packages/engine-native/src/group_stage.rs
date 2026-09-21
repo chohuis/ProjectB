@@ -35,7 +35,7 @@ fn hash_str(s: &str) -> u64 {
 }
 
 /// Fisher-Yates. 결정적이고, 입력 순서와 무관하게 seed만으로 결과가 정해진다.
-fn shuffle(items: &mut Vec<String>, seed: u64) {
+fn shuffle(items: &mut [String], seed: u64) {
     let mut st = seed;
     for i in (1..items.len()).rev() {
         let j = (splitmix64(&mut st) % (i as u64 + 1)) as usize;

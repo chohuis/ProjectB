@@ -87,15 +87,16 @@ jobs:
       # 🔴 **오늘 처음 돈다** (2026-09-11 · 개선 5). `#![deny(clippy::all)]` 이
       #   `lib.rs` 맨 위에 있었는데 `cargo build` 는 clippy 를 안 봐서 **한 번도
       #   안 돌았다** — CI 가 GitHub 안 읽는 폴더에 있던 것과 같은 모양이다.
-      # ⚠ 아직 `-D warnings` 를 안 붙인다. 0 이 된 뒤에 붙이고
-      #   `lib.rs` 의 `warn` 도 `deny` 로 되돌린다. 지금 관문으로 걸면
-      #   첫날부터 빨강이라 아무도 안 본다.
       # ✅ **2026-09-21 · A-6: 113 → 62** (lib 62 → 22). `--fix` 배치를 막고 있던
       #   `E0502` 두 자리에 `#[allow]` 를 달아 40건이 한 번에 들어갔다.
-      #   남은 62 는 손으로 봐야 한다 — 사유별 내역은 `lib.rs` 머리말.
-      #   그중 9 는 **밸런스 식**(`manual_clamp`)이라 동결이 풀릴 때 같이 본다.
-      - name: cargo clippy (수를 본다 · 관문 아님)
-        run: cargo clippy --release --all-targets
+      # ✅ **2026-09-21 · A-7: 62 → 0 · 관문이 됐다.** `lib.rs` 도 `deny` 로
+      #   되돌렸다. 남길 것은 자리마다 `#[allow]` + 이유가 붙어 있다
+      #   (밸런스 식 `manual_clamp` 9 · 상수 범위 검사 `assertions_on_constants` 38).
+      #   사유별 내역은 `lib.rs` 머리말.
+      # ⚠ 이제부터 **경고 하나가 CI 빨강**이다. 새 경고는 고치거나,
+      #   못 고치면 `#[allow]` 에 **왜 못 고치는지**를 적는다.
+      - name: cargo clippy (관문)
+        run: cargo clippy --release --all-targets -- -D warnings
         working-directory: 02.SvelteElectron/packages/engine-native
 
       - name: 데이터 위생 검사
