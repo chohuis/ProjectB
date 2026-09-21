@@ -1,0 +1,35 @@
+{
+  "id": "EVT_PRO_EARLY_FIRST_ROAD",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "people",
+  "category": "team_life",
+  "priority": 645,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    },
+    {
+      "type": "week_lte",
+      "value": 12
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_EARLY_FIRST_ROAD",
+  "decisionTemplateId": "DEC_PRO_EARLY_FIRST_ROAD",
+  "_windowNote": "창 W6~12 — 개막 뒤 첫 원정이다. 시즌 성적(season_ip 20 이상)이 차기 전까지를 덮는다."
+}

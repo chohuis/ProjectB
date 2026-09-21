@@ -1,0 +1,35 @@
+{
+  "id": "EVT_PRO_CAMP_ARRIVE",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "team",
+  "category": "team_life",
+  "priority": 615,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "week_gte",
+      "value": 1
+    },
+    {
+      "type": "week_lte",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_CAMP_ARRIVE",
+  "decisionTemplateId": "DEC_PRO_CAMP_ARRIVE",
+  "_windowNote": "창 W1~4 — 프로 시범경기 구간이다(leagueScheduler.PRESEASON_START_WEEK~END_WEEK). 정규시즌이 W5 에 열리므로 캠프 장면은 여기까지다."
+}

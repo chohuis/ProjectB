@@ -1,0 +1,35 @@
+{
+  "id": "EVT_PRO_OPENING_ROSTER",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "career",
+  "category": "season",
+  "priority": 625,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stages": [
+        "pro_kbl",
+        "pro_abl",
+        "pro_jbl"
+      ]
+    },
+    {
+      "type": "num_lte",
+      "path": "proServiceYears",
+      "value": 4
+    },
+    {
+      "type": "week_gte",
+      "value": 4
+    },
+    {
+      "type": "week_lte",
+      "value": 9
+    }
+  ],
+  "messageTemplateId": "MSG_PRO_OPENING_ROSTER",
+  "decisionTemplateId": "DEC_PRO_OPENING_ROSTER",
+  "_windowNote": "창 W4~9 — 개막(W5) 직전 주부터다. 엔트리는 개막 전에 붙고, 그 뒤 몇 주는 아직 시즌 성적이 안 쌓여 레어 후보가 얇은 구간이다."
+}

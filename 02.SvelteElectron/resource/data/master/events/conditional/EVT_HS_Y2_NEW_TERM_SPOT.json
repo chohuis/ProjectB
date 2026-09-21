@@ -1,0 +1,30 @@
+{
+  "id": "EVT_HS_Y2_NEW_TERM_SPOT",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "team",
+  "category": "hs_life",
+  "priority": 68,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "grade",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 3
+    },
+    {
+      "type": "week_lte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y2_NEW_TERM_SPOT",
+  "decisionTemplateId": "DEC_HS_Y2_NEW_TERM_SPOT",
+  "_windowNote": "창 W3~10 — 2학년 개막 언저리다. W7~W9 의 레어 후보가 4~5종이던 자리를 메운다(2026-09-21 · 폴백 자리 「고교/rare」)."
+}
