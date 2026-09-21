@@ -1,0 +1,30 @@
+{
+  "id": "EVT_HS_Y3_JUNIOR_TEACH",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "people",
+  "category": "hs_life",
+  "priority": 66,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "week_lte",
+      "value": 27
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_JUNIOR_TEACH",
+  "decisionTemplateId": "DEC_HS_Y3_JUNIOR_TEACH",
+  "_windowNote": "창 W10~27 — 3학년 후반이다. 상한 27 은 진로 허브(W28) 앞이다."
+}

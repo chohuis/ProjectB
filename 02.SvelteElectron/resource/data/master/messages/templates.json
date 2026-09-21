@@ -6020,6 +6020,55 @@
         "같은 데를 세 번 다친 선수가 오래 던진 예가 있습니다.\n\n다들 몸을 바꾼 사람들입니다.",
         "지금 방식으로는 네 번째가 옵니다.\n\n바꿀지 버틸지 정해야 합니다."
       ]
+    },
+    {
+      "id": "MSG_PRO_CAMP_ARRIVE",
+      "category": "team_life",
+      "subject": "캠프 첫날 짐 정리",
+      "body": "스프링캠프 숙소에 짐을 풀었습니다. 방을 누구와 쓰는지가 먼저 정해집니다.\n\n첫 주를 어떻게 쓸지는 아직 제 몫입니다.",
+      "decisionTemplateId": "DEC_PRO_CAMP_ARRIVE"
+    },
+    {
+      "id": "MSG_PRO_OPENING_ROSTER",
+      "category": "career",
+      "subject": "개막 엔트리 발표",
+      "body": "개막 엔트리가 붙었습니다. 줄을 따라 이름을 세 번 읽었습니다.\n\n올해 첫 한 달이 여기서 정해집니다.",
+      "decisionTemplateId": "DEC_PRO_OPENING_ROSTER"
+    },
+    {
+      "id": "MSG_PRO_EARLY_FIRST_ROAD",
+      "category": "team_life",
+      "subject": "시즌 첫 원정 버스",
+      "body": "첫 원정 버스에서 자리가 애매했습니다. 뒷자리는 오래 뛴 사람들 것이었습니다.\n\n긴 이동이 시작됩니다.",
+      "decisionTemplateId": "DEC_PRO_EARLY_FIRST_ROAD"
+    },
+    {
+      "id": "MSG_HS_Y3_LAST_TERM_OATH",
+      "category": "system",
+      "subject": "마지막 학년 첫 훈련",
+      "body": "3학년 첫 훈련이다. 올해가 지나면 이 운동장에 없다.\n\n무엇을 남길지 정할 때다.",
+      "decisionTemplateId": "DEC_HS_Y3_LAST_TERM_OATH"
+    },
+    {
+      "id": "MSG_HS_Y3_CAPTAIN_BAND",
+      "category": "coach",
+      "subject": "주장 완장",
+      "body": "감독이 주장 완장을 내밀었다. 대답을 기다리는 눈치다.\n\n맡으면 시간이 줄고, 안 맡으면 말이 남는다.",
+      "decisionTemplateId": "DEC_HS_Y3_CAPTAIN_BAND"
+    },
+    {
+      "id": "MSG_HS_Y3_JUNIOR_TEACH",
+      "category": "system",
+      "subject": "후배의 그립 질문",
+      "body": "1학년이 변화구 그립을 물어왔다. 몇 주째 같은 질문이다.\n\n가르치는 데도 시간이 든다.",
+      "decisionTemplateId": "DEC_HS_Y3_JUNIOR_TEACH"
+    },
+    {
+      "id": "MSG_HS_Y2_NEW_TERM_SPOT",
+      "category": "system",
+      "subject": "새 학년 자리 다툼",
+      "body": "2학년이 되니 등판 순서가 다시 짜인다. 위에 셋, 아래에 둘이 있다.\n\n올해 어디에 설지는 지금 정해진다.",
+      "decisionTemplateId": "DEC_HS_Y2_NEW_TERM_SPOT"
     }
   ]
 }

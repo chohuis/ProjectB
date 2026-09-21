@@ -1,0 +1,30 @@
+{
+  "id": "EVT_HS_Y3_LAST_TERM_OATH",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "story",
+  "category": "hs_life",
+  "priority": 62,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 2
+    },
+    {
+      "type": "week_lte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_LAST_TERM_OATH",
+  "decisionTemplateId": "DEC_HS_Y3_LAST_TERM_OATH",
+  "_windowNote": "창 W2~10 — 고교는 W7 에 개막하므로(leagueScheduler.HS_START_WEEK) 실제로 뽑히는 것은 W7 부터다. 3학년 첫 구간의 레어 후보가 2종뿐이던 자리를 메운다(2026-09-21 · 폴백 자리 「고교/rare」)."
+}

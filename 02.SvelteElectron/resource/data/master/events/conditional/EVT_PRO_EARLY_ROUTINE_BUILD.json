@@ -22,9 +22,10 @@
     },
     {
       "type": "week_gte",
-      "value": 8
+      "value": 2
     }
   ],
   "messageTemplateId": "MSG_PRO_EARLY_ROUTINE_BUILD",
-  "decisionTemplateId": "DEC_PRO_EARLY_ROUTINE_BUILD"
+  "decisionTemplateId": "DEC_PRO_EARLY_ROUTINE_BUILD",
+  "_windowNote": "주차 창 8 → 2 (2026-09-21 · 폴백 자리 「프로초반/rare」). 프로 1~7주는 시즌 성적이 전부 0 이라 레어 스물일곱 중 아홉이 조건으로 죽고, 남는 것도 OVR·명성·사기를 보는 것뿐이라 **상태 조건 없는 후보가 0** 이었다. 루틴을 잡는 장면은 캠프 주간이 더 맞다 — 효과·문안은 그대로다"
 }

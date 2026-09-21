@@ -16941,6 +16941,205 @@
           }
         }
       ]
+    },
+    {
+      "id": "DEC_PRO_CAMP_ARRIVE",
+      "prompt": "캠프 첫 주를 어떻게 쓰겠습니까?",
+      "options": [
+        {
+          "id": "senior",
+          "label": "선배 방에 붙는다",
+          "effectHint": "동료 관계 +7, 사기 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 7
+            },
+            "moraleDelta": 4
+          }
+        },
+        {
+          "id": "alone",
+          "label": "혼자 몸을 만든다",
+          "effectHint": "컨디션 +7, 성실 +4",
+          "effects": {
+            "conditionDelta": 7,
+            "diligenceDelta": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_OPENING_ROSTER",
+      "prompt": "엔트리가 붙었습니다. 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "bullpen",
+          "label": "곧장 불펜에 간다",
+          "effectHint": "커맨드 경험치 +4, 피로 +6",
+          "effects": {
+            "xp": {
+              "command": 4
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "video",
+          "label": "영상부터 본다",
+          "effectHint": "멘탈 경험치 +3, 컨디션 +5",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            },
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_PRO_EARLY_FIRST_ROAD",
+      "prompt": "원정 버스에서 어디에 앉겠습니까?",
+      "options": [
+        {
+          "id": "front",
+          "label": "앞자리에 앉는다",
+          "effectHint": "멘탈 경험치 +3, 컨디션 +6",
+          "effects": {
+            "xp": {
+              "mentality": 3
+            },
+            "conditionDelta": 6
+          }
+        },
+        {
+          "id": "back",
+          "label": "뒤로 가 인사한다",
+          "effectHint": "동료 관계 +8, 피로 +3",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            },
+            "fatigueDelta": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_LAST_TERM_OATH",
+      "prompt": "마지막 학년을 어떻게 시작하겠습니까?",
+      "options": [
+        {
+          "id": "record",
+          "label": "기록을 노린다",
+          "effectHint": "구속 경험치 +4, 피로 +10",
+          "effects": {
+            "xp": {
+              "velocity": 4
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "team",
+          "label": "팀을 먼저 챙긴다",
+          "effectHint": "동료 관계 +8, 사기 +5",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            },
+            "moraleDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_CAPTAIN_BAND",
+      "prompt": "주장 완장을 맡겠습니까?",
+      "options": [
+        {
+          "id": "take",
+          "label": "완장을 받는다",
+          "effectHint": "감독 관계 +8, 피로 +6",
+          "effects": {
+            "relationDelta": {
+              "kind": "manager",
+              "delta": 8
+            },
+            "fatigueDelta": 6
+          }
+        },
+        {
+          "id": "decline",
+          "label": "내 공에 집중한다",
+          "effectHint": "제구 경험치 +4, 컨디션 +5",
+          "effects": {
+            "xp": {
+              "control": 4
+            },
+            "conditionDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y3_JUNIOR_TEACH",
+      "prompt": "후배에게 어떻게 하겠습니까?",
+      "options": [
+        {
+          "id": "teach",
+          "label": "붙잡고 가르친다",
+          "effectHint": "동료 관계 +8, 피로 +4",
+          "effects": {
+            "relationDelta": {
+              "kind": "teammate",
+              "delta": 8
+            },
+            "fatigueDelta": 4
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 답하고 돌아선다",
+          "effectHint": "커맨드 경험치 +3, 성실 +5",
+          "effects": {
+            "xp": {
+              "command": 3
+            },
+            "diligenceDelta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "DEC_HS_Y2_NEW_TERM_SPOT",
+      "prompt": "올해 어디를 노리겠습니까?",
+      "options": [
+        {
+          "id": "starter",
+          "label": "선발 자리를 노린다",
+          "effectHint": "스태미너 경험치 +4, 피로 +10",
+          "effects": {
+            "xp": {
+              "stamina": 4
+            },
+            "fatigueDelta": 10
+          }
+        },
+        {
+          "id": "short",
+          "label": "짧게 던져 살아남는다",
+          "effectHint": "커맨드 경험치 +3, 컨디션 +6",
+          "effects": {
+            "xp": {
+              "command": 3
+            },
+            "conditionDelta": 6
+          }
+        }
+      ]
     }
   ]
 }

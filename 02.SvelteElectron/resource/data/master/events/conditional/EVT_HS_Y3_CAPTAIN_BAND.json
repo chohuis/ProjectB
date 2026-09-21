@@ -1,0 +1,30 @@
+{
+  "id": "EVT_HS_Y3_CAPTAIN_BAND",
+  "type": "conditional",
+  "tier": "rare",
+  "theme": "people",
+  "category": "hs_life",
+  "priority": 64,
+  "oncePolicy": "once_per_stage_year",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "highschool"
+    },
+    {
+      "type": "grade",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    },
+    {
+      "type": "week_lte",
+      "value": 16
+    }
+  ],
+  "messageTemplateId": "MSG_HS_Y3_CAPTAIN_BAND",
+  "decisionTemplateId": "DEC_HS_Y3_CAPTAIN_BAND",
+  "_windowNote": "창 W6~16 — 3학년 한가운데다. 3학년은 진로 허브(W28)에서 끝나므로 창을 그 안에 둔다(weekRange.test 가 본다)."
+}
