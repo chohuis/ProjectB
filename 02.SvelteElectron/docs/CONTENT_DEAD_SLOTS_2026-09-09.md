@@ -20,7 +20,7 @@
 | 5 | `compare` 조건 | `conditionEvaluator:334` | `storyNpcs` 등록부가 없어 **`npcId` 를 직접 적어야 하는데 그럴 id 가 없다.** 지금 쓰면 영원히 false | 히든 「라이벌의 편지」·「후배가 넘어선 날」이 살아난다(§8 초안에서 못 만든 둘) | 1.0.2 |
 | 6 | 히든 구종 **등급 두 단계** | 보상안 §1 | `pitchGradeUp` 이 한 번에 +1 이고 효과 객체에 같은 키를 둘 둘 수 없다. **지어 넣으면 한 단계만 먹고 조용히 넘어간다** | 히든이 유니크와 크기로 갈린다. 지금은 종류가 같다 | 1.0.1(A 가 `steps` 를 붙이면) |
 | 7 | 군 풀 `relationTarget` | `militaryLife.ts` 타입엔 있고 **풀 스키마엔 없다** | `check:militarydata` 가 「모르는 선택지 필드」로 막는다(맞다 · 배선이 없다). 그래서 「후임을 챙긴다」와 「소단위를 챙긴다」가 **같은 사람에게 간다** | 병영 관계가 사람별로 갈린다 | 1.0.2 |
-| 8 | `bars.teamMood` 의 `mood`·`delta` 이름표 | `dashboard_labels.json` | 화면이 안 읽는다(A 6차 인계에 그대로 적혀 있다) | 팀 분위기 표에 이름이 붙는다 | 1.0.2 |
+| 8 | ~~`bars.teamMood` 의 `mood`·`delta` 이름표~~ | `dashboard_labels.json` | ✅ **2026-09-21 닫았다 (C-2).** 「막대 아래 한 줄」을 쓸 자리가 이 소식엔 **영영 없다** — 0~100 눈금이 없어 표로 간 칸이다. 그래서 그 둘은 지우고, **정작 빠져 있던 열 이름**(`columns`)을 채웠다: 사람 수를 세는 표인데 머리글이 공용 「항목·값」으로 떨어져 무엇의 값인지 안 읽혔다 | 팀 분위기 표에 이름이 붙는다 — 「구분 · 인원」 | ✅ 1.0.2 |
 | 9 | 조건 여덟 종 | `conditionEvaluator` | 엔진엔 있고 **데이터가 0** — `pitch_learned`·`pitch_training`·`injury_severity`·`injury_weeks_gte`·`diligence_lte`·`popularity_lte`·`relation_lte`·`season_games_lte` | 「특정 구종을 배웠나」·「크게 다쳤나」·「관계가 나쁜가」로 장면을 가를 수 있다 | 1.0.2 |
 
 ## 2. 판단

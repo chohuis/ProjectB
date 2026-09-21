@@ -272,6 +272,39 @@ describe("막대 — 눈금을 화면이 짐작하지 않는다", () => {
     expect(view.rows.map((r) => r.cells[1].text)).toEqual(["12", "4", "1"]);
   });
 
+  /**
+   * C-2 (2026-09-21 · 죽은 칸 8) — **열 이름을 이 칸이 직접 든다.**
+   *
+   * 🔴 그 전엔 `columns` 가 없어 `common.itemValue`(「항목」·「값」)로 떨어졌다.
+   *   사람 수를 세는 표인데 머리글이 「값」이라 무엇의 값인지 안 읽혔고,
+   *   `unit`(「명」)도 붙일 자리가 없었다. 「인원」 한 낱말이 그 둘을 합친다.
+   *
+   * ⚠ 여기서 낱말을 못 박지 않는다 — 문안이 정본이라 **문안이 준 값과 같은지**만
+   *   본다. 코드에 「구분」을 적는 순간 이름표가 둘이 된다.
+   */
+  it("팀 분위기 표의 열 이름은 문안이 준다 — 「항목·값」으로 안 떨어진다", () => {
+    const copyT = tableCopy(LABELS, "bars.teamMood");
+    const declared = LABELS!.bars.teamMood.columns as Record<string, string>;
+    expect(Object.keys(declared)).toEqual(["item", "value"]);
+    const view = buildTableView(teamMoodTableMeta(12, 4, 1), copyT);
+    expect(view.columns.map((c) => c.label)).toEqual([declared.item, declared.value]);
+    // 공용 이름표로 안 떨어졌다는 것이 요점이다
+    expect(view.columns.map((c) => c.label)).not.toEqual([
+      LABELS!.common.itemValue.item,
+      LABELS!.common.itemValue.value,
+    ]);
+  });
+
+  /**
+   * ⚠ 쓸 자리가 없는 이름표를 남기지 않는다 — 다음 사람이 「화면이 안 읽는다」를
+   *   또 결함으로 적는다. 0~100 축이 생기면 그때 다시 적는다.
+   */
+  it("막대 아래 한 줄의 이름표는 막대가 있는 칸에만 있다", () => {
+    expect(LABELS!.bars.teamMood.mood, "팀 분위기엔 막대가 없다").toBeUndefined();
+    expect(LABELS!.bars.teamMood.delta).toBeUndefined();
+    expect(typeof LABELS!.bars.exam.gpa, "시험 결과엔 있다").toBe("string");
+  });
+
   /** ⚠ 이름표가 없으면 키를 그대로 쓴다 — 값은 이미 실려 왔으니 줄을 지우지 않는다 */
   it("모르는 키도 막대를 지우지 않는다", () => {
     const v = buildBars({ type: "bars", kind: "exam", bars: [{ key: "zzz", value: 5 }] }, copy);
