@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { weekPathSrc, weekPathFlat } from "./weekPathSrc";
 import {
   MILITARY_RESULT_WEEK,
   SPORTS_UNIT_CANDIDATES_WEEK,
@@ -23,7 +24,9 @@ import {
  * 검사에 정규식을 쓰지 않는다 — 문자열 비교만. `advanceWeek.ts` 는 `.prettierignore`
  * 안이라 서식이 바뀌어 이 문자열이 흔들리지 않는다.
  */
-const SRC = readFileSync(resolve(__dirname, "../advanceWeek.ts"), "utf8");
+// ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — A-4 로 군 블록이
+//   `weekPhases/military.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또 빨개진다.
+const SRC = weekPathSrc();
 
 describe("소식 문안의 주차는 상수에서 읽는다", () => {
   it("옛 주차를 글자로 적은 자리가 없다", () => {
@@ -44,11 +47,10 @@ describe("소식 문안의 주차는 상수에서 읽는다", () => {
    *   `MILITARY_RESULT_WEEK` 에서 밀린다 — 문안이 가리켜야 할 건 뒤쪽이다.
    */
   it("입영 만료 경고가 가리키는 주가 pending 을 미는 주다", () => {
-    const guard = "p.age >= 28 && p.militaryAskedYear !== s.seasonYear";
-    const at = SRC.indexOf(guard);
-    expect(at).toBeGreaterThan(-1);
-    const line = SRC.slice(SRC.lastIndexOf("\n", at) + 1, SRC.indexOf("\n", at));
-    expect(line.includes("weekInYear === MILITARY_RESULT_WEEK")).toBe(true);
+    // ⚠ 띄어쓰기를 눌러서 본다 — prettier 가 이 조건을 여러 줄로 접어도 안 깨진다
+    expect(weekPathFlat()).toContain(
+      "weekInYear === MILITARY_RESULT_WEEK && p.age >= 28 && p.militaryAskedYear !== s.seasonYear",
+    );
   });
 
   it("상수 셋은 서로 다르다 — 같으면 이 검사가 아무것도 안 본다", () => {

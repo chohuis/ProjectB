@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { weekPathSrc } from "../../../shared/usecases/__tests__/weekPathSrc";
 
 /**
  * 진로 결과 화면에 **체육부대가 있으면 안 된다.** (2026-09-01)
@@ -46,7 +47,9 @@ describe("진로 결과 — 체육부대 갈래는 없다", () => {
  *    체육부대가 게임에서 통째로 사라진다.
  */
 describe("진짜 체육부대 경로는 그대로다", () => {
-  const ADVANCE = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+  // ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — A-4 로 군 블록이
+  //   `weekPhases/military.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또 빨개진다.
+  const ADVANCE = weekPathSrc();
 
   it("`sportsUnitApplied` 로 W50 결과를 처리한다", () => {
     expect(ADVANCE, "체육부대 결과 처리가 사라졌다").toMatch(

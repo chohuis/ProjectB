@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { weekPathSrc } from "./weekPathSrc";
 
 // ── 정수형 페이로드에 소수를 넘기지 않는다 ──────────────────────
 //
@@ -22,7 +23,9 @@ const read = (p: string) => readFileSync(resolve(ROOT, p), "utf8");
 
 describe("군 복무 주간 계산 페이로드", () => {
   it("스탯을 정수로 반올림해서 넘긴다", () => {
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    // ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — A-4 로 군 블록이
+    //   `weekPhases/military.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또 빨개진다.
+    const s = weekPathSrc();
     const call = s.slice(s.indexOf("weekCalcMilitary("), s.indexOf("weekCalcMilitary(") + 900);
     for (const f of [
       "stamina",
@@ -38,7 +41,7 @@ describe("군 복무 주간 계산 페이로드", () => {
   });
 
   it("결과의 오류를 삼키지 않는다", () => {
-    const s = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+    const s = weekPathSrc();
     expect(s).toMatch(/\[군 복무\] 주간 계산 실패/);
   });
 

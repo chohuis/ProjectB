@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { applyEffectToProtagonist } from "../game";
 import type { ProtagonistSave } from "../../types/save";
 import type { DecisionEffect } from "../../types/main";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 
 /**
  * 선택지 효과 적용.
@@ -130,7 +131,9 @@ describe("효과 적용 경로가 하나인가", () => {
   it("병역 이벤트 선택지가 효과 필드를 손으로 옮겨 적지 않는다", () => {
     // `advanceWeek`가 네 필드만 복사하고 있었다 — 데이터에 성실도를 넣어도
     // 거기서 잘렸다. 구조분해로 통째 전달해야 한다
-    const src = read("../../usecases/advanceWeek.ts");
+    // ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — A-4 로 군 블록이
+    //   `weekPhases/military.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또 빨개진다.
+    const src = weekPathSrc();
     const i = src.indexOf("const choices = evt.choices");
     expect(i).toBeGreaterThan(-1);
     const stmt = src.slice(i, i + 400);

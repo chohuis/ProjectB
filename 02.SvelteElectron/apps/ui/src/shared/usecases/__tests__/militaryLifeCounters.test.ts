@@ -16,9 +16,13 @@ import { resolve } from "node:path";
  *   ③ 계측 워커가 그 프로브를 실제로 부른다(초기화 + 해마다 델타) — 안 부르면
  *      ①②가 다 맞아도 판 JSON에는 안 실린다
  */
+import { weekPathSrc } from "./weekPathSrc";
+
 const ROOT = resolve(__dirname, "../../../../../..");
 const MIL_SRC = readFileSync(resolve(__dirname, "../militaryLife.ts"), "utf8");
-const WEEK_SRC = readFileSync(resolve(__dirname, "../advanceWeek.ts"), "utf8");
+// ⚠ 주간 진행 경로 **전체**다 — A-4 로 군 주간 갈래가 `weekPhases/military.ts` 로 갔다.
+//   파일 이름을 적으면 다음 쪼개기 때 또 빨개진다(동작은 하나도 안 바뀌었는데도).
+const WEEK_SRC = weekPathSrc();
 const PERF_SRC = readFileSync(resolve(ROOT, "scripts/perf/perfEntry.ts"), "utf8");
 const WORKER_SRC = readFileSync(resolve(ROOT, "scripts/probe-a-simrun-worker.cjs"), "utf8");
 
@@ -73,7 +77,7 @@ describe("군 전용 계수기 — 계측 모드 배선", () => {
  *   결함이 아니라 **잣대가 한쪽 부대만 세고 있었던 것**이다.
  */
 describe("군 전용 계수기 — 체육부대 갈래", () => {
-  it("advanceWeek 의 군 주간 갈래도 같은 칸을 늘린다", () => {
+  it("군 주간 갈래(weekPhases/military)도 같은 칸을 늘린다", () => {
     expect(WEEK_SRC).toContain("if (isMeasureMode()) militaryLifeCounters.뽑기++;");
   });
 
@@ -84,7 +88,7 @@ describe("군 전용 계수기 — 체육부대 갈래", () => {
     expect(WEEK_SRC).toContain('import { isMeasureMode } from "../utils/measureMode";');
   });
 
-  it("대조군 — advanceWeek 에도 가드 없이 늘어나는 자리가 없다", () => {
+  it("대조군 — 주간 진행 경로에도 가드 없이 늘어나는 자리가 없다", () => {
     // ⚠ 정규식을 안 쓴다(CLAUDE.md) — 줄 단위로 훑는다
     const lines = WEEK_SRC.split("\n").filter((l) => l.includes("militaryLifeCounters."));
     expect(lines.length, "늘리는 자리가 없다 — 훅이 빠졌다").toBeGreaterThan(0);

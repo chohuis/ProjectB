@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { sportsVacatingPositions, sportsVacatingFromNpcs } from "../militaryRules";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 
 /**
  * **체육부대 선발 배선 — 호출부가 둘이다.**
@@ -23,7 +24,9 @@ const ROOT = resolve(__dirname, "../../../../../..");
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");
 
 const GAME = read("apps/ui/src/shared/stores/game.ts");
-const WEEK = read("apps/ui/src/shared/usecases/advanceWeek.ts");
+// ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — A-4 로 군 블록이
+//   `weekPhases/military.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또 빨개진다.
+const WEEK = weekPathSrc();
 const RULES = JSON.parse(read("resource/data/master/players/generation_rules.json")) as {
   militaryRules?: {
     rosterSize?: number;

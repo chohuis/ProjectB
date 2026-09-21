@@ -10,6 +10,7 @@ import {
   MILITARY_MSG_PREFIX,
 } from "../militarySportsCopy";
 import type { MilitaryCalendarEntry } from "../../types/militaryLife";
+import { weekPathSrc } from "../../usecases/__tests__/weekPathSrc";
 
 /**
  * 체육부대 병역 탭 (§39) — **정본은 데이터다**(`messages/military_sports.json`).
@@ -30,7 +31,9 @@ const CALENDAR = JSON.parse(
   readFileSync(join(MASTER, "military/calendar.json"), "utf8"),
 ) as MilitaryCalendarEntry[];
 /** 소식 id 를 만드는 자리 — 규칙이 바뀌면 목록이 조용히 0건이 된다 */
-const ADVANCE_WEEK = readFileSync(join(__dirname, "../../usecases/advanceWeek.ts"), "utf8");
+// ⚠ 주간 진행 경로 **전체**를 읽는다(`weekPathSrc`) — A-4 로 군 블록이
+//   `weekPhases/military.ts` 로 갔다. 파일 이름을 적으면 다음 쪼개기 때 또 빨개진다.
+const ADVANCE_WEEK = weekPathSrc();
 
 describe("체육부대 문안 데이터", () => {
   it("로더가 실제 파일을 통과시킨다", () => {
