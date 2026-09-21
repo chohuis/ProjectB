@@ -63,9 +63,9 @@ export function scheduledIdSet(season: ScheduleSource): Set<string> {
  *   통째로 굳었다. 대회는 그 라운드에서 죽는다(R2 는 7경기를 치르고도
  *   반영이 안 됐다).
  */
-export function knockoutMatchIds(
-  season: { tournaments?: Record<string, { matches?: readonly { id: string }[] }> | null },
-): Set<string> {
+export function knockoutMatchIds(season: {
+  tournaments?: Record<string, { matches?: readonly { id: string }[] }> | null;
+}): Set<string> {
   const out = new Set<string>();
   for (const b of Object.values(season.tournaments ?? {})) {
     for (const m of b?.matches ?? []) out.add(m.id);

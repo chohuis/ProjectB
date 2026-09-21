@@ -15,19 +15,19 @@ import { INJURY_LABEL } from "../../types/save";
 
 export function getPermanentPenalty(inj: InjuryState): Partial<Record<string, number>> {
   if (inj.type === "YIPS") {
-    if (inj.treatmentChoice === "self")       return { control: -3, command: -3 };
+    if (inj.treatmentChoice === "self") return { control: -3, command: -3 };
     if (inj.treatmentChoice === "counseling") return { control: -1, command: -1 };
     return { control: -2, command: -2 };
   }
   type PenaltyMap = Partial<Record<InjuryType, Partial<Record<string, number>>>>;
   const table: PenaltyMap = {
-    ELBOW_INFLAM:     { velocity: -1 },
-    SHOULDER_INFLAM:  inj.treatmentChoice === "steroid" ? { velocity: -1 } : {},
-    UCL_PARTIAL:      { velocity: -3, command: -2 },
-    ROTATOR_STRAIN:   { velocity: -4, movement: -2 },
-    BACK_HERNIATION:  { stamina: -3 },
-    UCL_FULL:         { velocity: -4, stamina: -3 },
-    ROTATOR_FULL:     { velocity: -6, movement: -5 },
+    ELBOW_INFLAM: { velocity: -1 },
+    SHOULDER_INFLAM: inj.treatmentChoice === "steroid" ? { velocity: -1 } : {},
+    UCL_PARTIAL: { velocity: -3, command: -2 },
+    ROTATOR_STRAIN: { velocity: -4, movement: -2 },
+    BACK_HERNIATION: { stamina: -3 },
+    UCL_FULL: { velocity: -4, stamina: -3 },
+    ROTATOR_FULL: { velocity: -6, movement: -5 },
     SHOULDER_SURGERY: { velocity: -2, stamina: -2 },
   };
   return table[inj.type] ?? {};
@@ -35,13 +35,13 @@ export function getPermanentPenalty(inj: InjuryState): Partial<Record<string, nu
 
 // NPC 수술 부상 회복 후 OVR 영구 손실 테이블
 const NPC_INJURY_OVR_PENALTY: Partial<Record<InjuryType, number>> = {
-  UCL_FULL:         -5,
-  ROTATOR_FULL:     -8,
+  UCL_FULL: -5,
+  ROTATOR_FULL: -8,
   SHOULDER_SURGERY: -4,
-  UCL_PARTIAL:      -3,
-  ROTATOR_STRAIN:   -4,
-  BACK_HERNIATION:  -3,
-  YIPS:             -2,
+  UCL_PARTIAL: -3,
+  ROTATOR_STRAIN: -4,
+  BACK_HERNIATION: -3,
+  YIPS: -2,
 };
 
 // 은퇴 확률 계산
@@ -51,10 +51,10 @@ const NPC_INJURY_OVR_PENALTY: Partial<Record<InjuryType, number>> = {
 
 // 부상 계산용 출전 이력 증분 캐시 — 매 시즌 시작 또는 슬롯 변경 시 자동 리셋
 const _injuryAppCache = {
-  seasonYear:      -1,
-  slotId:          "",
+  seasonYear: -1,
+  slotId: "",
   lastScannedWeek: -1,
-  playerData:      new Map<string, { role: "pitcher" | "batter"; weeks: Set<number> }>(),
+  playerData: new Map<string, { role: "pitcher" | "batter"; weeks: Set<number> }>(),
 };
 
 export async function processNpcInjuries(weekNum: number): Promise<void> {
@@ -76,9 +76,7 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   // 드래프트 후보·성장에서 통째로 제외됐고, 시즌 종료에 초기화되면서
   // "인원이 롤오버마다 2배가 된다"처럼 보였다.
   // 완치자가 없는 주가 대부분이다 — 5,600건 Map을 그때마다 만들지 않는다
-  const npcById = healed.length > 0
-    ? new Map(g.npcs.map((n) => [n.npcId, n]))
-    : null;
+  const npcById = healed.length > 0 ? new Map(g.npcs.map((n) => [n.npcId, n])) : null;
   for (const { playerId, entry } of healed) {
     // 은퇴한 선수는 되돌리지 않는다 — 수술 부상 은퇴가 여기로 오면 안 된다
     if (npcById?.get(playerId)?.careerStatus === "injured") {
@@ -93,8 +91,8 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   // 시즌 또는 슬롯 변경 시 캐시 리셋
   const currentSlotId = g.currentSlotId ?? "";
   if (_injuryAppCache.seasonYear !== s.seasonYear || _injuryAppCache.slotId !== currentSlotId) {
-    _injuryAppCache.seasonYear      = s.seasonYear;
-    _injuryAppCache.slotId          = currentSlotId;
+    _injuryAppCache.seasonYear = s.seasonYear;
+    _injuryAppCache.slotId = currentSlotId;
     _injuryAppCache.lastScannedWeek = -1;
     _injuryAppCache.playerData.clear();
   }
@@ -132,8 +130,14 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
       for (const line of entry.result.playerLines) {
         if (line.playerId === protagonistId) continue;
         const ex = _injuryAppCache.playerData.get(line.playerId);
-        if (ex) { ex.weeks.add(entry.week); }
-        else     { _injuryAppCache.playerData.set(line.playerId, { role: line.role as "pitcher" | "batter", weeks: new Set([entry.week]) }); }
+        if (ex) {
+          ex.weeks.add(entry.week);
+        } else {
+          _injuryAppCache.playerData.set(line.playerId, {
+            role: line.role as "pitcher" | "batter",
+            weeks: new Set([entry.week]),
+          });
+        }
       }
     }
   }
@@ -162,14 +166,22 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     return val;
   };
 
-  type NpcEntry = { playerId: string; role: string; age: number; consecutiveApp: number; hasPriorInjury: boolean; isPlayingThrough: boolean; playingThroughSeverity: string | null };
+  type NpcEntry = {
+    playerId: string;
+    role: string;
+    age: number;
+    consecutiveApp: number;
+    hasPriorInjury: boolean;
+    isPlayingThrough: boolean;
+    playingThroughSeverity: string | null;
+  };
   const players: NpcEntry[] = [];
   const retired = new Set(s.npcRetired ?? []);
 
   for (const [playerId, data] of playerData) {
     if (retired.has(playerId)) continue;
     const entity = entityMap.get(playerId);
-    const age = ((entity?.details as { player?: { age?: number } } | undefined)?.player?.age) ?? 25;
+    const age = (entity?.details as { player?: { age?: number } } | undefined)?.player?.age ?? 25;
     const existing = s.npcInjuries[playerId];
     if (existing) continue; // 이미 부상 중인 선수는 신규 부상 판정 제외
 
@@ -177,18 +189,24 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     let consecutiveApp = 0;
     let expected = weekNum - 1;
     for (const w of weeksSorted) {
-      if (w === expected) { consecutiveApp++; expected--; }
-      else break;
+      if (w === expected) {
+        consecutiveApp++;
+        expected--;
+      } else break;
     }
 
     let role = data.role === "batter" ? "batter" : "RP";
     if (data.role === "pitcher" && entity) {
-      const pos = ((entity.details as { player?: { position?: string } } | undefined)?.player?.position);
+      const pos = (entity.details as { player?: { position?: string } } | undefined)?.player
+        ?.position;
       if (pos === "SP" || pos === "RP" || pos === "CP") role = pos;
     }
 
     players.push({
-      playerId, role, age, consecutiveApp,
+      playerId,
+      role,
+      age,
+      consecutiveApp,
       hasPriorInjury: false,
       isPlayingThrough: false,
       playingThroughSeverity: null,
@@ -200,16 +218,24 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   const [retireRollsRaw, resultRaw, retireRules] = await Promise.all([
     // 씨앗 — 안 넘기면 같은 세이브도 실행마다 다른 사람이 다치고 은퇴한다.
     // 주차·연도를 섞어 주마다 다른 수열이 되게 한다
-    window.projectB!.weekRollRandomBatch(players.length, seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "retire")),
-    window.projectB!.weekCalcNpcInjuries(JSON.stringify({
-      players, seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "injury"),
-    })),
+    window.projectB!.weekRollRandomBatch(
+      players.length,
+      seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "retire"),
+    ),
+    window.projectB!.weekCalcNpcInjuries(
+      JSON.stringify({
+        players,
+        seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekNum, "injury"),
+      }),
+    ),
     loadRetirementRules(),
   ]);
   // 의료팀 규칙 — 없으면 안 돈다(예전 동작)
   const rulesFile = await loadRosterRules();
   const retireRolls = JSON.parse(retireRollsRaw) as number[];
-  const result = JSON.parse(resultRaw) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
+  const result = JSON.parse(resultRaw) as {
+    occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[];
+  };
 
   // ── 의료팀 (4단계) ─────────────────────────────────────
   //
@@ -221,8 +247,14 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   // ⚠ **Rust 로 안 내렸다.** 이미 계산된 주 수에 팀 계수를 곱하는 것이라
   //   산식도 난수도 아니다 — `rosterEngine`(5단계)과 같은 갈래다.
   {
-    const med = (rulesFile as { medicalRules?: {
-      recoverySpan?: number; minWeeks?: number } }).medicalRules;
+    const med = (
+      rulesFile as {
+        medicalRules?: {
+          recoverySpan?: number;
+          minWeeks?: number;
+        };
+      }
+    ).medicalRules;
     if (med?.recoverySpan) {
       const span = med.recoverySpan;
       const minW = med.minWeeks ?? 1;
@@ -243,27 +275,32 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   // 🔴 **군 복무 중인지 볼 수 있어야 한다** — 아래에서 신분을 안 덮으려면
   //   그 값이 필요하다. 부상자가 없는 주가 대부분이라 발생했을 때만 만든다
   //   (위 완치 갈래가 같은 이유로 `healed.length > 0` 을 본다).
-  const npcStatusById = result.occurred.length > 0
-    ? new Map(g.npcs.map((n) => [n.npcId, n.careerStatus]))
-    : null;
+  const npcStatusById =
+    result.occurred.length > 0 ? new Map(g.npcs.map((n) => [n.npcId, n.careerStatus])) : null;
 
   for (const occ of result.occurred) {
     const entity = entityMap.get(occ.playerId);
     const injuryMgmt = injuryMgmtOf(entity?.teamId ?? "");
-    const age = ((entity?.details as { player?: { age?: number } } | undefined)?.player?.age) ?? 25;
+    const age = (entity?.details as { player?: { age?: number } } | undefined)?.player?.age ?? 25;
     const isSurgery = occ.severity === "surgery";
     const entityName = entity?.name ?? occ.playerId;
     const injuryLabel = INJURY_LABEL[occ.injuryType as InjuryType] ?? occ.injuryType;
 
     const playerDetails = entity?.details?.player;
     const teamName = m.teams.find((t) => t.id === entity?.teamId)?.name ?? "-";
-    const position  = playerDetails?.position ?? "-";
-    const handStr   = playerDetails
+    const position = playerDetails?.position ?? "-";
+    const handStr = playerDetails
       ? playerDetails.playerType === "pitcher"
-        ? (playerDetails.handedness === "L" ? "좌투" : "우투")
+        ? playerDetails.handedness === "L"
+          ? "좌투"
+          : "우투"
         : playerDetails.playerType === "batter"
-        ? (playerDetails.handedness === "L" ? "좌타" : "우타")
-        : (playerDetails.handedness === "L" ? "좌투좌타" : "우투우타")
+          ? playerDetails.handedness === "L"
+            ? "좌타"
+            : "우타"
+          : playerDetails.handedness === "L"
+            ? "좌투좌타"
+            : "우투우타"
       : "-";
     const playerInfoBlock = `\n\n▸ 소속팀:  ${teamName}\n▸ 포지션:  ${position} (${handStr})\n▸ 나이:    ${entity?.age ?? age}세`;
 
@@ -287,27 +324,35 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
         const retLeague = entity?.leagueId ?? "";
         autoLog(`[부상은퇴] ${entityName} (${retLeague}, ${age}세, ${injuryLabel})`);
         if (g.currentSlotId) {
-          window.projectB?.leagueAddTransactions(JSON.stringify({
-            slotId: g.currentSlotId,
-            rows: [{
-              seasonYear: s.seasonYear,
-              week: weekNum,
-              category: "retirement",
-              playerId: occ.playerId,
-              playerName: entityName,
-              fromTeamId: entity?.teamId ?? "",
-              fromLeagueId: retLeague,
-              // 🔴 **조사를 붙이지 않는다** (B-28 — 부상명이 받침이면 「으로」다)
-              detail: `${injuryLabel} 은퇴`,
-            }],
-          }));
+          window.projectB?.leagueAddTransactions(
+            JSON.stringify({
+              slotId: g.currentSlotId,
+              rows: [
+                {
+                  seasonYear: s.seasonYear,
+                  week: weekNum,
+                  category: "retirement",
+                  playerId: occ.playerId,
+                  playerName: entityName,
+                  fromTeamId: entity?.teamId ?? "",
+                  fromLeagueId: retLeague,
+                  // 🔴 **조사를 붙이지 않는다** (B-28 — 부상명이 받침이면 「으로」다)
+                  detail: `${injuryLabel} 은퇴`,
+                },
+              ],
+            }),
+          );
         }
         // ⚠ 개별 메시지를 안 보낸다 — 월간 부상 소식의 **맨 위 등급**으로 간다.
         // 예전엔 부상 소식·은퇴 소식이 사람 수만큼 따로 날아왔다
         seasonStore.pushInjuryNews({
-          npcId: occ.playerId, injuryType: occ.injuryType, severity: occ.severity,
-          weeks: occ.recoveryWeeks, retired: true,
-          teamId: entity?.teamId ?? "", week: weekNum,
+          npcId: occ.playerId,
+          injuryType: occ.injuryType,
+          severity: occ.severity,
+          weeks: occ.recoveryWeeks,
+          retired: true,
+          teamId: entity?.teamId ?? "",
+          week: weekNum,
         });
         continue; // 은퇴하면 부상 상태 등록 불필요
       }
@@ -316,15 +361,15 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     // ── 부상 상태 등록 ────────────────────────────────────────
     let isPlayingThrough = false;
     if (!isSurgery) {
-      if (occ.severity === "light")    isPlayingThrough = injuryMgmt < 70;
+      if (occ.severity === "light") isPlayingThrough = injuryMgmt < 70;
       if (occ.severity === "moderate") isPlayingThrough = injuryMgmt < 40;
     }
 
     seasonStore.setNpcInjury(occ.playerId, {
-      type:                   occ.injuryType as InjuryType,
-      severity:               occ.severity as InjurySeverity,
-      weeksLeft:              occ.recoveryWeeks,
-      totalWeeks:             occ.recoveryWeeks,
+      type: occ.injuryType as InjuryType,
+      severity: occ.severity as InjurySeverity,
+      weeksLeft: occ.recoveryWeeks,
+      totalWeeks: occ.recoveryWeeks,
       isPlayingThrough,
       permanentPenaltyApplied: false,
     });
@@ -349,8 +394,12 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     // "이번 달 부상 몇 건"을 말할 수 없다 — 심한 것만 세면 분모가 없다.
     // 등급 분류와 표시 여부는 화면이 정한다(`injuryReport.ts`).
     seasonStore.pushInjuryNews({
-      npcId: occ.playerId, injuryType: occ.injuryType, severity: occ.severity,
-      weeks: occ.recoveryWeeks, teamId: entity?.teamId ?? "", week: weekNum,
+      npcId: occ.playerId,
+      injuryType: occ.injuryType,
+      severity: occ.severity,
+      weeks: occ.recoveryWeeks,
+      teamId: entity?.teamId ?? "",
+      week: weekNum,
     });
   }
 }

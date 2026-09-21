@@ -19,28 +19,28 @@ function rose(prevLabel: string, label: string): boolean {
 }
 
 const KIND_TITLE: Record<RelationKind, string> = {
-  manager:  "감독",
-  coach:    "코치",
-  owner:    "구단주",
+  manager: "감독",
+  coach: "코치",
+  owner: "구단주",
   teammate: "팀 동료",
-  rival:    "라이벌",
+  rival: "라이벌",
 };
 
 /** 오른 쪽 / 내린 쪽으로 각각 무슨 일이 따라오는지 — 플레이어가 알아야 할 실효 */
 const EFFECT_UP: Record<RelationKind, string> = {
-  manager:  "출전 기회와 보직 배정에서 우선순위가 올라갑니다.",
-  coach:    "담당 영역 훈련 효율이 오릅니다.",
-  owner:    "재계약 협상에서 여유를 두고 봅니다.",
+  manager: "출전 기회와 보직 배정에서 우선순위가 올라갑니다.",
+  coach: "담당 영역 훈련 효율이 오릅니다.",
+  owner: "재계약 협상에서 여유를 두고 봅니다.",
   teammate: "팀 분위기와 동료 관련 이벤트에 반영됩니다.",
-  rival:    "서로를 인정하는 관계가 됐습니다.",
+  rival: "서로를 인정하는 관계가 됐습니다.",
 };
 
 const EFFECT_DOWN: Record<RelationKind, string> = {
-  manager:  "출전 기회 배정에서 뒤로 밀릴 수 있습니다.",
-  coach:    "담당 영역 훈련 효율이 떨어집니다.",
-  owner:    "재계약·방출 판정이 냉정해집니다.",
+  manager: "출전 기회 배정에서 뒤로 밀릴 수 있습니다.",
+  coach: "담당 영역 훈련 효율이 떨어집니다.",
+  owner: "재계약·방출 판정이 냉정해집니다.",
   teammate: "팀 분위기에 부담이 됩니다.",
-  rival:    "적대감이 짙어졌습니다.",
+  rival: "적대감이 짙어졌습니다.",
 };
 
 // ── 라벨 진입 장면 (Phase 7-6c) ────────────────────────────────
@@ -81,7 +81,7 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
       body: [
         "훈련이 끝나고 감독이 손짓했다.",
         "",
-        "\"네 투구를 눈여겨봐왔다. 요란하진 않은데 꾸준하더군.\"",
+        '"네 투구를 눈여겨봐왔다. 요란하진 않은데 꾸준하더군."',
         "",
         "그 말이 전부였다. 하지만 이 사람이 그런 말을 아무에게나 하지 않는다는 건 안다.",
       ],
@@ -92,7 +92,7 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
       body: [
         "감독이 로테이션 표를 내밀었다. 내 이름이 맨 위에 있었다.",
         "",
-        "\"올해는 네가 첫 번째다. 상대 에이스와 붙는다는 뜻이야.\"",
+        '"올해는 네가 첫 번째다. 상대 에이스와 붙는다는 뜻이야."',
         "",
         "부담이라는 말은 하지 않았다. 이미 알고 있을 거라 여긴 것이다.",
       ],
@@ -103,7 +103,7 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
       body: [
         "감독이 훈련 뒤 남으라고 했다. 목소리가 평소보다 낮았다.",
         "",
-        "\"실력 얘기가 아니다. 태도 얘기다. 지금 이대로면 곤란해.\"",
+        '"실력 얘기가 아니다. 태도 얘기다. 지금 이대로면 곤란해."',
         "",
         "무슨 답을 하느냐가 다음을 정할 것이다.",
       ],
@@ -142,7 +142,7 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
       body: [
         "코치가 공을 던져주며 물었다.",
         "",
-        "\"방과 후 30분, 시간 되면 봐줄게. 붙잡고 싶은 게 있어.\"",
+        '"방과 후 30분, 시간 되면 봐줄게. 붙잡고 싶은 게 있어."',
         "",
         "정규 훈련 밖의 시간이다. 그만큼 몸에는 남는다.",
       ],
@@ -171,7 +171,7 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
       body: [
         "코치가 아무도 없는 불펜으로 데려갔다.",
         "",
-        "\"이건 내가 현역 때 쓰던 거다. 아무한테나 안 알려줘.\"",
+        '"이건 내가 현역 때 쓰던 거다. 아무한테나 안 알려줘."',
         "",
         "그립을 잡는 손이 조금 떨렸다. 이 사람은 지금 자기 것을 넘겨주고 있다.",
       ],
@@ -203,7 +203,7 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
       body: [
         "훈련 뒤 동료가 어깨를 툭 쳤다.",
         "",
-        "\"밥 한번 같이 먹자. 얘기할 것도 있고.\"",
+        '"밥 한번 같이 먹자. 얘기할 것도 있고."',
         "",
         "특별한 용건은 없어 보인다. 그게 이 관계가 온 자리다.",
       ],
@@ -244,11 +244,19 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
  * 검사 쪽이 라벨을 손으로 적으면 그게 두 번째 표가 되고, 여기가 바뀔 때
  * 조용히 어긋난다 (실제로 그렇게 헛 실패가 났다). 목록은 여기서만 나온다.
  */
-export function relationSceneCatalog(): { kind: RelationKind; label: string; hasOptions: boolean }[] {
+export function relationSceneCatalog(): {
+  kind: RelationKind;
+  label: string;
+  hasOptions: boolean;
+}[] {
   const out: { kind: RelationKind; label: string; hasOptions: boolean }[] = [];
   for (const [kind, scenes] of Object.entries(SCENES)) {
     for (const sc of scenes ?? []) {
-      out.push({ kind: kind as RelationKind, label: sc.label, hasOptions: (sc.options?.length ?? 0) > 0 });
+      out.push({
+        kind: kind as RelationKind,
+        label: sc.label,
+        hasOptions: (sc.options?.length ?? 0) > 0,
+      });
     }
   }
   return out;
@@ -315,7 +323,13 @@ export function buildRelationMessages(
 
     out.push({
       id: `msg-rel-${d.personId}-${seasonYear}-w${week}`,
-      category: scene ? (kind === "coach" ? "coach" : kind === "manager" ? "manager" : "system") : "system",
+      category: scene
+        ? kind === "coach"
+          ? "coach"
+          : kind === "manager"
+            ? "manager"
+            : "system"
+        : "system",
       sender: scene ? name : "관계 변화",
       subject: scene ? scene.subject : `${name} — ${d.prevLabel} → ${d.label}`,
       preview: up ? `${title}와의 관계가 나아졌습니다.` : `${title}와의 관계가 나빠졌습니다.`,
@@ -369,7 +383,7 @@ export function buildTeamMoodMessage(
   seasonYear = 0,
 ): MessageItem | null {
   if (teammateValues.length < 3) return null;
-  const cold = teammateValues.filter((v) => v <= -11).length;   // 서먹 이하
+  const cold = teammateValues.filter((v) => v <= -11).length; // 서먹 이하
   const hostile = teammateValues.filter((v) => v <= -31).length; // 불신 이하
   if (cold === 0) return null;
 

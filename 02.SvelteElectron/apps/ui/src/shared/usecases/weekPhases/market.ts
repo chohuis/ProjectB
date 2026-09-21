@@ -8,8 +8,12 @@ import { getFaThreshold, canReacquireFa } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
 import {
-  SANGMU_TEAM_IDS, leagueOfTeam, activeProLeagues, activeProLeaguesWithFarm,
-  farmTeamId, firstTeamIdOf,
+  SANGMU_TEAM_IDS,
+  leagueOfTeam,
+  activeProLeagues,
+  activeProLeaguesWithFarm,
+  farmTeamId,
+  firstTeamIdOf,
 } from "../../utils/ids";
 import { isForeignPlayer, isForeignInQuotaLeague } from "../../utils/foreignSlots";
 import { isRegistrable } from "../../utils/developmentPlayer";
@@ -19,7 +23,11 @@ import { finiteOr } from "../../utils/payloadNum";
 import { leagueStandingsOf } from "../../utils/season-helpers";
 // 소식에 실을 표 (PLAN_MESSAGE_DASHBOARDS §1-1) — 본문은 그대로 두고 값만 더한다
 import {
-  tradeTableMeta, playerListTableMeta, lockNoteOf, faCompTableMeta, faMarketTableMeta,
+  tradeTableMeta,
+  playerListTableMeta,
+  lockNoteOf,
+  faCompTableMeta,
+  faMarketTableMeta,
 } from "../../utils/dashboardMeta";
 
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
@@ -29,13 +37,20 @@ function updateNpcsAndSync(npcs: import("../../types/save").NpcSaveState[]): voi
 
 // ── 프로팀 엔진 헬퍼 ──────────────────────────────────────────
 
-type EntityDetails  = import("../../stores/master").EntityDetails;
+type EntityDetails = import("../../stores/master").EntityDetails;
 type ProTeamProfile = import("../../stores/master").ProTeamProfile;
 
-function npcOvr(entity: import("../../stores/master").EntityRow, liveStats: import("../../stores/master").NpcLiveStats): number {
+function npcOvr(
+  entity: import("../../stores/master").EntityRow,
+  liveStats: import("../../stores/master").NpcLiveStats,
+): number {
   const live = liveStats[entity.id];
-  const p    = (entity.details as EntityDetails)?.player;
-  return (live?.pitching?.ovr ?? p?.pitching?.ovr ?? live?.batting?.ovr ?? p?.batting?.ovr ?? 60) as number;
+  const p = (entity.details as EntityDetails)?.player;
+  return (live?.pitching?.ovr ??
+    p?.pitching?.ovr ??
+    live?.batting?.ovr ??
+    p?.batting?.ovr ??
+    60) as number;
 }
 
 /**
@@ -57,7 +72,12 @@ function seasonPerfOf(
     // 멈췄고, 그 예외가 주간 루프를 끊어 뒤따르는 처리까지 안 돌았다.
     // `buildRosterRef`에는 같은 방어가 있었는데 perf만 빠져 있었다.
     return st.type === "pitcher"
-      ? { games: finiteOr(st.g), innings: finiteOr(st.ip), era: finiteOr(st.era), whip: finiteOr(st.whip) }
+      ? {
+          games: finiteOr(st.g),
+          innings: finiteOr(st.ip),
+          era: finiteOr(st.era),
+          whip: finiteOr(st.whip),
+        }
       : { games: finiteOr(st.g), plateAppearances: finiteOr(st.pa), ops: finiteOr(st.ops) };
   }
   return undefined;
@@ -97,24 +117,22 @@ function buildRosterRef(
 ): RosterRef {
   const p = (entity.details as EntityDetails)?.player;
   const ref = {
-    id:               entity.id,
-    position:         p?.position ?? "",
-    age:              entity.age,
-    ovr:              npcOvr(entity, liveStats),
-    salary:           (savedNpc as any)?.currentSalary ?? 0,
-    remainingYears:   (savedNpc as any)?.contractYears ?? 1,
-    proServiceYears:  savedNpc?.proServiceYears ?? 0,
-    isProspect:       entity.teamId?.endsWith("_2") ?? false,
-    personality:      entity.personality ?? null,
-    fame:             savedNpc?.fame ?? 0,
+    id: entity.id,
+    position: p?.position ?? "",
+    age: entity.age,
+    ovr: npcOvr(entity, liveStats),
+    salary: (savedNpc as any)?.currentSalary ?? 0,
+    remainingYears: (savedNpc as any)?.contractYears ?? 1,
+    proServiceYears: savedNpc?.proServiceYears ?? 0,
+    isProspect: entity.teamId?.endsWith("_2") ?? false,
+    personality: entity.personality ?? null,
+    fame: savedNpc?.fame ?? 0,
     // 외국인은 1군 전용 — 승강 판정이 이 값으로 강등·교체 후보에서 뺀다.
     // 국적만으로 판정하면 ABL(USA)·JBL(JPN) 로스터 전원이 외국인이 된다
-    isForeign:        isForeignPlayer(entity.leagueId ?? "", entity.nationality),
+    isForeign: isForeignPlayer(entity.leagueId ?? "", entity.nationality),
     // 육성선수는 입단 연도 5월까지 1군 등록이 안 된다 (KBO 규정).
     // ⚠ 후보에서만 빠지고 2군 정원에는 그대로 센다 — `developmentPlayer.ts`
-    registrable:      now
-      ? isRegistrable(savedNpc?.developmentSince, now.seasonYear, now.month)
-      : true,
+    registrable: now ? isRegistrable(savedNpc?.developmentSince, now.seasonYear, now.month) : true,
     // 성적이 없으면 undefined — Rust가 그때는 능력치만 본다
     ...(perf ? { perf } : {}),
   };
@@ -128,23 +146,36 @@ function buildRosterRef(
     if (typeof v !== "number" || !Number.isFinite(v)) {
       throw new Error(
         `[로스터ref] ${entity.id}(${entity.name}) ${k}=${JSON.stringify(v)} ` +
-        `— team=${entity.teamId} league=${entity.leagueId} status=${entity.status} named=${!!savedNpc}`,
+          `— team=${entity.teamId} league=${entity.leagueId} status=${entity.status} named=${!!savedNpc}`,
       );
     }
   }
   return ref;
 }
 
-function getTeamProfile(teamId: string, g: import("../../stores/game").GameStoreState, m: import("../../stores/master").MasterState): ProTeamProfile | null {
-  return g.proTeamProfiles[teamId] ?? m.teams.find(t => t.id === teamId)?.proTeamProfile ?? null;
+function getTeamProfile(
+  teamId: string,
+  g: import("../../stores/game").GameStoreState,
+  m: import("../../stores/master").MasterState,
+): ProTeamProfile | null {
+  return g.proTeamProfiles[teamId] ?? m.teams.find((t) => t.id === teamId)?.proTeamProfile ?? null;
 }
 
 /** 프로필이 없는 팀의 기본값 — **정본은 여기 하나다.**
  *  시즌 갱신(`seasonRollover.updateProTeamProfiles`)도 이걸 출발점으로 쓴다. */
 export const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
-  ownerSpendingWillingness: 50, stability: 50, developmentFocus: 50,
-  discipline: 50, ownerPatience: 50, winNowPressure: 50, scoutingQuality: 50,
-  prestige: 50, marketAppeal: 50, clubhouseCulture: 50, medicalQuality: 50, farmInvestment: 50,
+  ownerSpendingWillingness: 50,
+  stability: 50,
+  developmentFocus: 50,
+  discipline: 50,
+  ownerPatience: 50,
+  winNowPressure: 50,
+  scoutingQuality: 50,
+  prestige: 50,
+  marketAppeal: 50,
+  clubhouseCulture: 50,
+  medicalQuality: 50,
+  farmInvestment: 50,
 };
 
 // 투수: ERA 2.50=80pt·4.00=50pt·6.00=10pt / 타자: OPS .900=85pt·.700=50pt·.550=20pt
@@ -165,12 +196,12 @@ export function calcNpcPerfScore(stats: PlayerSeasonStats): number {
   if (stats.type === "pitcher") {
     const ip = finiteOr(stats.ip);
     if (ip < 5) return 50;
-    const eraPts   = Math.max(10, Math.min(95, 80 - (finiteOr(stats.era, 4.5) - 2.5) * 15));
+    const eraPts = Math.max(10, Math.min(95, 80 - (finiteOr(stats.era, 4.5) - 2.5) * 15));
     const gamesPts = Math.min(15, (finiteOr(stats.g) / 55) * 15);
     return Math.round(eraPts * 0.85 + gamesPts * 0.15);
   }
   if (finiteOr(stats.ab) < 30) return 50;
-  const opsPts   = Math.max(10, Math.min(95, 50 + (finiteOr(stats.ops, 0.7) - 0.700) * 180));
+  const opsPts = Math.max(10, Math.min(95, 50 + (finiteOr(stats.ops, 0.7) - 0.7) * 180));
   const gamesPts = Math.min(15, (finiteOr(stats.g) / 130) * 15);
   return Math.round(opsPts * 0.85 + gamesPts * 0.15);
 }
@@ -179,36 +210,34 @@ export function calcNpcPerfScore(stats: PlayerSeasonStats): number {
 function detectPerfSwing(curr: PlayerSeasonStats, prev: PlayerSeasonStats): number {
   if (curr.type !== prev.type) return 0;
   if (curr.type === "pitcher" && prev.type === "pitcher") {
-    const eraDelta  = prev.era - curr.era;   // 낮을수록 좋음 → 개선이면 양수
+    const eraDelta = prev.era - curr.era; // 낮을수록 좋음 → 개선이면 양수
     const gamesDrop = prev.g - curr.g;
-    if (Math.abs(eraDelta) >= 1.5 || gamesDrop >= 20)
-      return eraDelta >= 0 ? 1 : -1;
+    if (Math.abs(eraDelta) >= 1.5 || gamesDrop >= 20) return eraDelta >= 0 ? 1 : -1;
   } else if (curr.type === "batter" && prev.type === "batter") {
-    const opsDelta  = curr.ops - prev.ops;   // 높을수록 좋음 → 개선이면 양수
+    const opsDelta = curr.ops - prev.ops; // 높을수록 좋음 → 개선이면 양수
     const gamesDrop = prev.g - curr.g;
-    if (Math.abs(opsDelta) >= 0.100 || gamesDrop >= 30)
-      return opsDelta >= 0 ? 1 : -1;
+    if (Math.abs(opsDelta) >= 0.1 || gamesDrop >= 30) return opsDelta >= 0 ? 1 : -1;
   }
   return 0;
 }
 
 /** 트레이드 사유 표시명 — **정본은 여기 하나다.** 모달·usecase가 같이 쓴다 */
 export const TRADE_REASON_LABEL: Record<string, string> = {
-  position_surplus:   "포지션 보강",
-  injury_cover:       "부상 대체",
-  seller_mode:        "전력 재편",
-  buyer_mode:         "즉시전력 강화",
-  expiring_contract:  "계약 만료 선점",
-  player_ambition:    "선수 이적 요청",
+  position_surplus: "포지션 보강",
+  injury_cover: "부상 대체",
+  seller_mode: "전력 재편",
+  buyer_mode: "즉시전력 강화",
+  expiring_contract: "계약 만료 선점",
+  player_ambition: "선수 이적 요청",
 };
 
 const MEDICAL_SEVERITY_LABEL: Record<string, string> = {
-  active_surgery:   "수술 부상",
-  active_severe:    "중증 부상",
-  active_moderate:  "중상 중",
-  injury_history:   "부상 이력 다수",
-  age_risk:         "고령 + 부상 이력",
-  steroid_history:  "스테로이드 사용 이력",
+  active_surgery: "수술 부상",
+  active_severe: "중증 부상",
+  active_moderate: "중상 중",
+  injury_history: "부상 이력 다수",
+  age_risk: "고령 + 부상 이력",
+  steroid_history: "스테로이드 사용 이력",
 };
 
 export async function processTradeWindow(weekInYear: number, leagueId: string): Promise<void> {
@@ -235,7 +264,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   autoLog(`[트레이드윈도우] ${leagueId} W${weekInYear} 시작`);
   const _t0Trade = Date.now();
   const _npcRaw = JSON.parse(
-    await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId }))
+    await window.projectB!.npcGetByLeague(JSON.stringify({ slotId, leagueId })),
   );
   if (!Array.isArray(_npcRaw)) {
     const errDetail = JSON.stringify(_npcRaw).slice(0, 120);
@@ -244,9 +273,16 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   }
   autoLog(`[트레이드윈도우] ${leagueId} npcRows=${_npcRaw.length}`);
   type NpcTradeRow = {
-    npcId: string; position: string; currentTeam: string; currentLeague: string;
-    currentSalary: number; contractYears: number; proServiceYears: number;
-    pitchOvr: number | null; batOvr: number | null; age: number;
+    npcId: string;
+    position: string;
+    currentTeam: string;
+    currentLeague: string;
+    currentSalary: number;
+    contractYears: number;
+    proServiceYears: number;
+    pitchOvr: number | null;
+    batOvr: number | null;
+    age: number;
     nationality?: string;
   };
   // npc_runtime 미초기화(새 게임 첫 시즌 saveSlot 전) 시 gameStore.npcs 메모리 폴백
@@ -254,21 +290,21 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   if (_npcRaw.length === 0) {
     const liveStats = get(npcLiveStatsStore);
     npcRows = g.npcs
-      .filter(n => n.careerStatus === "active" && n.currentLeague === leagueId)
-      .map(n => {
+      .filter((n) => n.careerStatus === "active" && n.currentLeague === leagueId)
+      .map((n) => {
         const ls = liveStats[n.npcId];
         return {
-          npcId:          n.npcId,
-          position:       n.position ?? "",
-          currentTeam:    n.currentTeam ?? "",
-          currentLeague:  leagueId,
-          currentSalary:  (n as any).currentSalary ?? 2000,
-          contractYears:  (n as any).contractYears ?? 2,
+          npcId: n.npcId,
+          position: n.position ?? "",
+          currentTeam: n.currentTeam ?? "",
+          currentLeague: leagueId,
+          currentSalary: (n as any).currentSalary ?? 2000,
+          contractYears: (n as any).contractYears ?? 2,
           proServiceYears: n.proServiceYears ?? 0,
-          pitchOvr:       ls?.pitching?.ovr ?? null,
-          batOvr:         ls?.batting?.ovr  ?? null,
-          age:            n.age ?? 25,
-          nationality:    n.nationality,
+          pitchOvr: ls?.pitching?.ovr ?? null,
+          batOvr: ls?.batting?.ovr ?? null,
+          age: n.age ?? 25,
+          nationality: n.nationality,
         };
       });
     autoLog(`[트레이드윈도우] npc_runtime 미초기화 → 메모리 폴백 ${npcRows.length}명`);
@@ -310,9 +346,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   // 나면 그 전제가 깨진 것이다 — `check:amateurworld`가 리그 교차를 본다.
   const tradableRows = npcRows.filter((n) => !isForeignPlayer(leagueId, n.nationality));
 
-  const proTeams = m.teams.filter(
-    (t) => t.leagueId === leagueId && t.id.endsWith("_1")
-  );
+  const proTeams = m.teams.filter((t) => t.leagueId === leagueId && t.id.endsWith("_1"));
   /**
    * 🔴 **트레이드 상한을 실제 구단 예산으로 준다** (2026-09-01).
    *
@@ -345,7 +379,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     const saved = g.clubBudgets?.[teamId];
     if (saved != null && saved > 0) return Math.round(saved);
     const raw = m.teams.find((t) => t.id === teamId)?.history?.budget ?? 0;
-    const won = Math.round(raw / 10000);   // 원 → 만원 (연봉과 같은 단위)
+    const won = Math.round(raw / 10000); // 원 → 만원 (연봉과 같은 단위)
     return won > 0 ? won : FALLBACK_SALARY_CAP;
   };
 
@@ -358,18 +392,18 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   const teamWithRosters = proTeams.map((team) => {
     const roster = tradableRows.filter((n) => n.currentTeam === team.id);
     const st = standings.find((st) => st.teamId === team.id);
-    const winPct = st ? (st.wins / Math.max(1, st.wins + st.losses)) : 0.5;
+    const winPct = st ? st.wins / Math.max(1, st.wins + st.losses) : 0.5;
 
     const injuredPositions = roster
       .filter((n) => {
         const inj = s.npcInjuries[n.npcId];
-        return inj && (inj.severity === "severe" || inj.severity === "surgery" || inj.weeksLeft > 6);
+        return (
+          inj && (inj.severity === "severe" || inj.severity === "surgery" || inj.weeksLeft > 6)
+        );
       })
       .map((n) => n.position);
 
-    const expiringContractIds = roster
-      .filter((n) => n.contractYears <= 1)
-      .map((n) => n.npcId);
+    const expiringContractIds = roster.filter((n) => n.contractYears <= 1).map((n) => n.npcId);
 
     const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
     const currentPayroll = npcRows
@@ -394,7 +428,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
 
   // ③ TradeAsset 빌드 (NPC 전체 + 주인공)
   const _tradeliveSt = get(npcLiveStatsStore);
-  const buildNpcAsset = (n: typeof tradableRows[number]) => {
+  const buildNpcAsset = (n: (typeof tradableRows)[number]) => {
     const named = namedMap.get(n.npcId);
     const inj = s.npcInjuries[n.npcId];
     // pitch_ovr/bat_ovr가 DB에 NULL인 경우(deprecated 필드) npcLiveStats로 폴백
@@ -412,20 +446,22 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       salary: n.currentSalary,
       remainingYears: n.contractYears,
       isProspect: n.proServiceYears <= 2,
-      personality: named?.personality ?? (() => {
-        const h = n.npcId.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-        return {
-          loyalty:             40 + (h % 40),
-          ambition:            30 + ((h * 7) % 65),
-          greed:               25 + ((h * 3) % 55),
-          competitiveDrive:    40 + ((h * 11) % 45),
-          stabilityPreference: 25 + ((h * 13) % 60),
-          professionalism:     50 + ((h * 5) % 30),
-          overseasAmbition:     5 + ((h * 17) % 45),
-          marketPreference:    35 + ((h * 19) % 45),
-          homeTeamId:          null,
-        };
-      })(),
+      personality:
+        named?.personality ??
+        (() => {
+          const h = n.npcId.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+          return {
+            loyalty: 40 + (h % 40),
+            ambition: 30 + ((h * 7) % 65),
+            greed: 25 + ((h * 3) % 55),
+            competitiveDrive: 40 + ((h * 11) % 45),
+            stabilityPreference: 25 + ((h * 13) % 60),
+            professionalism: 50 + ((h * 5) % 30),
+            overseasAmbition: 5 + ((h * 17) % 45),
+            marketPreference: 35 + ((h * 19) % 45),
+            homeTeamId: null,
+          };
+        })(),
       injurySeverity: inj ? inj.severity : null,
       injuryWeeksLeft: inj?.weeksLeft ?? 0,
       careerInjuryCount,
@@ -451,57 +487,73 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     injurySeverity: proInjury?.severity ?? null,
     injuryWeeksLeft: proInjury?.recoveryWeeksLeft ?? 0,
     careerInjuryCount: proHistory.length,
-    hasSteroidHistory: proInjury?.steroidUsed === true ||
-      proHistory.some((h) => h.treatmentChoice === "steroid"),
+    hasSteroidHistory:
+      proInjury?.steroidUsed === true || proHistory.some((h) => h.treatmentChoice === "steroid"),
   };
 
-  const allAssets = isMyLeague
-    ? [...allNpcAssets, protagonistAsset]
-    : [...allNpcAssets];
+  const allAssets = isMyLeague ? [...allNpcAssets, protagonistAsset] : [...allNpcAssets];
 
   // ④ generateTradeProposals 호출
   const seasonStanding: Record<string, number> = {};
-  sortedStandings.forEach((st, idx) => { seasonStanding[st.teamId] = idx + 1; });
+  sortedStandings.forEach((st, idx) => {
+    seasonStanding[st.teamId] = idx + 1;
+  });
 
   const genResult = JSON.parse(
-    await window.projectB!.generateTradeProposalsNative(JSON.stringify({
-      teams: teamWithRosters,
-      allPlayers: allAssets,
-      seasonStanding,
-      totalTeams: proTeams.length,
-      maxProposals: 8,
-    }))
-  ) as { proposals: Array<{
-    proposingTeamId: string; receivingTeamId: string;
-    offeringIds: string[]; requestingIds: string[];
-    cash: number; mutualBenefitScore: number; reason: string;
-  }> };
+    await window.projectB!.generateTradeProposalsNative(
+      JSON.stringify({
+        teams: teamWithRosters,
+        allPlayers: allAssets,
+        seasonStanding,
+        totalTeams: proTeams.length,
+        maxProposals: 8,
+      }),
+    ),
+  ) as {
+    proposals: Array<{
+      proposingTeamId: string;
+      receivingTeamId: string;
+      offeringIds: string[];
+      requestingIds: string[];
+      cash: number;
+      mutualBenefitScore: number;
+      reason: string;
+    }>;
+  };
 
-  const rosterSizes = teamWithRosters.map(t => `${t.teamId}:${t.activeRoster.length}`).join(", ");
+  const rosterSizes = teamWithRosters.map((t) => `${t.teamId}:${t.activeRoster.length}`).join(", ");
   autoLog(`[트레이드] 팀로스터: ${rosterSizes}`);
   autoLog(`[트레이드] 제안 생성: ${genResult.proposals.length}건 | 자산풀: ${allAssets.length}명`);
 
   // ⑤ 각 proposal 처리
-  let _tradeSuccess = 0, _tradeRejectValue = 0, _tradeRejectMedical = 0;
+  let _tradeSuccess = 0,
+    _tradeRejectValue = 0,
+    _tradeRejectMedical = 0;
   const _tradeEventPlayers: PlayerEventEntry[] = [];
   const MAX_TRADES_PER_WINDOW = 5;
 
   // 이번 시즌 이미 트레이드된 선수 ID 수집 (시즌당 1회 제한)
   const _seasonTxRaw = JSON.parse(
-    await window.projectB!.leagueGetTransactions(JSON.stringify({
-      slotId, seasonYear: s.seasonYear, category: "trade", leagueId, limit: 500,
-    }))
+    await window.projectB!.leagueGetTransactions(
+      JSON.stringify({
+        slotId,
+        seasonYear: s.seasonYear,
+        category: "trade",
+        leagueId,
+        limit: 500,
+      }),
+    ),
   ) as { playerId: string }[];
   const _tradedPlayerIds = new Set<string>(_seasonTxRaw.map((r) => r.playerId));
 
   for (const proposal of genResult.proposals) {
     if (_tradeSuccess >= MAX_TRADES_PER_WINDOW) break;
-    const offeredId   = proposal.offeringIds[0];
+    const offeredId = proposal.offeringIds[0];
     const requestedId = proposal.requestingIds[0];
     if (!offeredId || !requestedId) continue;
     if (_tradedPlayerIds.has(offeredId) || _tradedPlayerIds.has(requestedId)) continue;
 
-    const offeredAsset  = allAssets.find((a) => a.playerId === offeredId);
+    const offeredAsset = allAssets.find((a) => a.playerId === offeredId);
     const requestedAsset = allAssets.find((a) => a.playerId === requestedId);
     if (!offeredAsset || !requestedAsset) continue;
 
@@ -509,39 +561,64 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
 
     // STEP A: 수신 팀 가치 평가
     const tradeEval = JSON.parse(
-      await window.projectB!.evalTradeValueNative(JSON.stringify({
-        teamProfile: receivingProfile,
-        giving: [requestedAsset],
-        receiving: [offeredAsset],
-        cashAmount: proposal.cash,
-        rosterNeeds: [],
-        // ⚠ **두 곳이 같은 팀의 같은 값을 봐야 한다.** 위 `teamWithRosters`
-        //   가 이미 담고 있으니 거기서 꺼낸다 — 여기서 다시 계산하면
-        //   한쪽만 고쳐진 채로 남는다(이 파일에서 이미 그렇게 됐었다).
-        salaryCap: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.salaryCap
-                   ?? budgetCapOf(proposal.receivingTeamId),
-        currentPayroll: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.currentPayroll ?? 150000,
-      }))
+      await window.projectB!.evalTradeValueNative(
+        JSON.stringify({
+          teamProfile: receivingProfile,
+          giving: [requestedAsset],
+          receiving: [offeredAsset],
+          cashAmount: proposal.cash,
+          rosterNeeds: [],
+          // ⚠ **두 곳이 같은 팀의 같은 값을 봐야 한다.** 위 `teamWithRosters`
+          //   가 이미 담고 있으니 거기서 꺼낸다 — 여기서 다시 계산하면
+          //   한쪽만 고쳐진 채로 남는다(이 파일에서 이미 그렇게 됐었다).
+          salaryCap:
+            teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.salaryCap ??
+            budgetCapOf(proposal.receivingTeamId),
+          currentPayroll:
+            teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.currentPayroll ??
+            150000,
+        }),
+      ),
     ) as { netValue: number; acceptProbability: number };
-    if (tradeEval.acceptProbability < 0.35) { _tradeRejectValue++; continue; }
+    if (tradeEval.acceptProbability < 0.35) {
+      _tradeRejectValue++;
+      continue;
+    }
 
     // STEP B: 메디컬 테스트 (제공 선수를 수신 팀이 검사)
     const medicalOffer = JSON.parse(
-      await window.projectB!.evalMedicalTestNative(JSON.stringify({
-        playerPosition: offeredAsset.position,
-        playerAge: offeredAsset.age,
-        injurySeverity: offeredAsset.injurySeverity,
-        injuryWeeksLeft: offeredAsset.injuryWeeksLeft,
-        careerInjuryCount: offeredAsset.careerInjuryCount,
-        hasSteroidHistory: offeredAsset.hasSteroidHistory,
-        receivingTeamMedicalQuality: receivingProfile.medicalQuality,
-        // 씨앗 — 안 넘기면 Rust 가 `thread_rng` 라 같은 세이브도 판마다
-        // 다른 트레이드가 성사된다(트레이드 넷 중 메디컬만 빠져 있었다)
-        seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, offeredAsset.playerId ?? "", proposal.receivingTeamId, "medical"),
-      }))
-    ) as { pass: boolean; concernLevel: number; rejectionProbability: number; rejectionReason: string | null };
+      await window.projectB!.evalMedicalTestNative(
+        JSON.stringify({
+          playerPosition: offeredAsset.position,
+          playerAge: offeredAsset.age,
+          injurySeverity: offeredAsset.injurySeverity,
+          injuryWeeksLeft: offeredAsset.injuryWeeksLeft,
+          careerInjuryCount: offeredAsset.careerInjuryCount,
+          hasSteroidHistory: offeredAsset.hasSteroidHistory,
+          receivingTeamMedicalQuality: receivingProfile.medicalQuality,
+          // 씨앗 — 안 넘기면 Rust 가 `thread_rng` 라 같은 세이브도 판마다
+          // 다른 트레이드가 성사된다(트레이드 넷 중 메디컬만 빠져 있었다)
+          seed: seedOf(
+            s.worldSeed ?? 0,
+            s.seasonYear,
+            weekInYear,
+            offeredAsset.playerId ?? "",
+            proposal.receivingTeamId,
+            "medical",
+          ),
+        }),
+      ),
+    ) as {
+      pass: boolean;
+      concernLevel: number;
+      rejectionProbability: number;
+      rejectionReason: string | null;
+    };
 
-    if (!medicalOffer.pass) { _tradeRejectMedical++; continue; }
+    if (!medicalOffer.pass) {
+      _tradeRejectMedical++;
+      continue;
+    }
 
     // STEP C: 선수 거부 (noTrade 또는 personality 있는 선수)
     if (offeredAsset.personality) {
@@ -549,51 +626,73 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       // noTrade: 현재 NpcSaveState에 contract 필드 없으므로 personality만으로 판단
       const hasNoTrade = false;
       if (hasNoTrade) {
-        const recvStanding = sortedStandings.findIndex((st) => st.teamId === proposal.receivingTeamId) + 1;
+        const recvStanding =
+          sortedStandings.findIndex((st) => st.teamId === proposal.receivingTeamId) + 1;
         const playerResp = JSON.parse(
-          await window.projectB!.playerEvalTradeResponseNative(JSON.stringify({
-            // 선수·상대팀·주차를 섞는다 — 같은 제안이면 같은 답, 다른 팀이면 다른 답
-            seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, offeredAsset.playerId ?? "", proposal.receivingTeamId),
-            personality: offeredAsset.personality,
-            currentTeamId: offeredAsset.teamId,
-            destinationTeamProfile: receivingProfile,
-            destinationTeamId: proposal.receivingTeamId,
-            destinationStanding: recvStanding,
-            totalTeams: proTeams.length,
-            expectedPlayingTime: 0.7,
-            hasNoTradeClause: true,
-            currentSalary: offeredAsset.salary,
-            newSalary: offeredAsset.salary,
-            age: offeredAsset.age,
-          }))
+          await window.projectB!.playerEvalTradeResponseNative(
+            JSON.stringify({
+              // 선수·상대팀·주차를 섞는다 — 같은 제안이면 같은 답, 다른 팀이면 다른 답
+              seed: seedOf(
+                s.worldSeed ?? 0,
+                s.seasonYear,
+                weekInYear,
+                offeredAsset.playerId ?? "",
+                proposal.receivingTeamId,
+              ),
+              personality: offeredAsset.personality,
+              currentTeamId: offeredAsset.teamId,
+              destinationTeamProfile: receivingProfile,
+              destinationTeamId: proposal.receivingTeamId,
+              destinationStanding: recvStanding,
+              totalTeams: proTeams.length,
+              expectedPlayingTime: 0.7,
+              hasNoTradeClause: true,
+              currentSalary: offeredAsset.salary,
+              newSalary: offeredAsset.salary,
+              age: offeredAsset.age,
+            }),
+          ),
         ) as { accept: boolean; blockProbability: number };
         if (!playerResp.accept) continue;
       }
     }
 
     // STEP D: 주인공 포함 여부 분기
-    const protagonistIsOffered  = offeredId   === g.protagonist.id;
+    const protagonistIsOffered = offeredId === g.protagonist.id;
     const protagonistIsReceived = requestedId === g.protagonist.id;
 
     if (protagonistIsOffered || protagonistIsReceived) {
       // 주인공이 제공되는 경우: 수신 팀이 주인공 메디컬 검사
       if (protagonistIsOffered) {
         const proMedical = JSON.parse(
-          await window.projectB!.evalMedicalTestNative(JSON.stringify({
-            playerPosition: protagonistAsset.position,
-            playerAge: protagonistAsset.age,
-            injurySeverity: protagonistAsset.injurySeverity,
-            injuryWeeksLeft: protagonistAsset.injuryWeeksLeft,
-            careerInjuryCount: protagonistAsset.careerInjuryCount,
-            hasSteroidHistory: protagonistAsset.hasSteroidHistory,
-            receivingTeamMedicalQuality: receivingProfile.medicalQuality,
-            seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, protagonistAsset.playerId ?? "", proposal.receivingTeamId, "medical"),
-          }))
+          await window.projectB!.evalMedicalTestNative(
+            JSON.stringify({
+              playerPosition: protagonistAsset.position,
+              playerAge: protagonistAsset.age,
+              injurySeverity: protagonistAsset.injurySeverity,
+              injuryWeeksLeft: protagonistAsset.injuryWeeksLeft,
+              careerInjuryCount: protagonistAsset.careerInjuryCount,
+              hasSteroidHistory: protagonistAsset.hasSteroidHistory,
+              receivingTeamMedicalQuality: receivingProfile.medicalQuality,
+              seed: seedOf(
+                s.worldSeed ?? 0,
+                s.seasonYear,
+                weekInYear,
+                protagonistAsset.playerId ?? "",
+                proposal.receivingTeamId,
+                "medical",
+              ),
+            }),
+          ),
         ) as { pass: boolean; rejectionReason: string | null };
 
         if (!proMedical.pass) {
-          const teamName = m.teams.find((t) => t.id === proposal.receivingTeamId)?.name ?? proposal.receivingTeamId;
-          const reasonText = proMedical.rejectionReason ? MEDICAL_SEVERITY_LABEL[proMedical.rejectionReason] ?? proMedical.rejectionReason : "이상 소견";
+          const teamName =
+            m.teams.find((t) => t.id === proposal.receivingTeamId)?.name ??
+            proposal.receivingTeamId;
+          const reasonText = proMedical.rejectionReason
+            ? (MEDICAL_SEVERITY_LABEL[proMedical.rejectionReason] ?? proMedical.rejectionReason)
+            : "이상 소견";
           gameStore.addMessage({
             id: `msg-trade-medical-fail-${s.seasonYear}-${weekInYear}`,
             category: "system",
@@ -612,32 +711,43 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       const receivedAsset = protagonistIsOffered ? requestedAsset : offeredAsset;
       const receivedInj = s.npcInjuries[receivedAsset.playerId];
       const receivedMedical = JSON.parse(
-        await window.projectB!.evalMedicalTestNative(JSON.stringify({
-          playerPosition: receivedAsset.position,
-          playerAge: receivedAsset.age,
-          injurySeverity: receivedAsset.injurySeverity,
-          injuryWeeksLeft: receivedAsset.injuryWeeksLeft,
-          careerInjuryCount: receivedAsset.careerInjuryCount,
-          hasSteroidHistory: receivedAsset.hasSteroidHistory,
-          receivingTeamMedicalQuality:
-            getTeamProfile(g.protagonist.teamId, g, m)?.medicalQuality ?? 50,
-          seed: seedOf(s.worldSeed ?? 0, s.seasonYear, weekInYear, receivedAsset.playerId ?? "", g.protagonist.teamId, "medical"),
-        }))
+        await window.projectB!.evalMedicalTestNative(
+          JSON.stringify({
+            playerPosition: receivedAsset.position,
+            playerAge: receivedAsset.age,
+            injurySeverity: receivedAsset.injurySeverity,
+            injuryWeeksLeft: receivedAsset.injuryWeeksLeft,
+            careerInjuryCount: receivedAsset.careerInjuryCount,
+            hasSteroidHistory: receivedAsset.hasSteroidHistory,
+            receivingTeamMedicalQuality:
+              getTeamProfile(g.protagonist.teamId, g, m)?.medicalQuality ?? 50,
+            seed: seedOf(
+              s.worldSeed ?? 0,
+              s.seasonYear,
+              weekInYear,
+              receivedAsset.playerId ?? "",
+              g.protagonist.teamId,
+              "medical",
+            ),
+          }),
+        ),
       ) as { concernLevel: number; rejectionReason: string | null };
 
-      const receivedName = namedMap.get(receivedAsset.playerId)?.name
-        ?? m.entities.find((e) => e.id === receivedAsset.playerId)?.name
-        ?? receivedAsset.playerId;
+      const receivedName =
+        namedMap.get(receivedAsset.playerId)?.name ??
+        m.entities.find((e) => e.id === receivedAsset.playerId)?.name ??
+        receivedAsset.playerId;
 
       let receivedMedicalNote: string | undefined;
       if (receivedMedical.concernLevel > 0.3 && receivedMedical.rejectionReason) {
         const weeksNote = receivedInj ? ` (회복 ${receivedInj.weeksLeft}주 남음)` : "";
-        receivedMedicalNote = (MEDICAL_SEVERITY_LABEL[receivedMedical.rejectionReason] ?? "부상 이력") + weeksNote;
+        receivedMedicalNote =
+          (MEDICAL_SEVERITY_LABEL[receivedMedical.rejectionReason] ?? "부상 이력") + weeksNote;
       }
 
-      const fromTeamId   = protagonistIsOffered ? g.protagonist.teamId : proposal.proposingTeamId;
-      const toTeamId     = protagonistIsOffered ? proposal.receivingTeamId : proposal.proposingTeamId;
-      const toLeagueId   = m.teams.find(t => t.id === toTeamId)?.leagueId ?? g.protagonist.leagueId;
+      const fromTeamId = protagonistIsOffered ? g.protagonist.teamId : proposal.proposingTeamId;
+      const toTeamId = protagonistIsOffered ? proposal.receivingTeamId : proposal.proposingTeamId;
+      const toLeagueId = m.teams.find((t) => t.id === toTeamId)?.leagueId ?? g.protagonist.leagueId;
 
       seasonStore.pushPendingAction({
         type: "event",
@@ -651,12 +761,12 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
         fromTeamId,
         toTeamId,
         toLeagueId,
-        receivedNpcId:         receivedAsset.playerId,
-        receivedNpcName:       receivedName,
-        receivedOvr:           Math.round(receivedAsset.ovr),
-        receivedPosition:      receivedAsset.position,
-        receivedSalary:        receivedAsset.salary,
-        tradeReason:           proposal.reason,
+        receivedNpcId: receivedAsset.playerId,
+        receivedNpcName: receivedName,
+        receivedOvr: Math.round(receivedAsset.ovr),
+        receivedPosition: receivedAsset.position,
+        receivedSalary: receivedAsset.salary,
+        tradeReason: proposal.reason,
         receivedMedicalConcern: receivedMedical.concernLevel,
         receivedMedicalNote,
       });
@@ -664,11 +774,15 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     }
 
     // STEP E: NPC-NPC 자동 실행
-    await window.projectB!.npcSwapTeams(JSON.stringify({
-      slotId,
-      npcId1: offeredId,   teamId1: proposal.receivingTeamId,
-      npcId2: requestedId, teamId2: proposal.proposingTeamId,
-    }));
+    await window.projectB!.npcSwapTeams(
+      JSON.stringify({
+        slotId,
+        npcId1: offeredId,
+        teamId1: proposal.receivingTeamId,
+        npcId2: requestedId,
+        teamId2: proposal.proposingTeamId,
+      }),
+    );
     // gameStore.npcs 팀 갱신 (모든 NPC는 Named NPC)
     {
       // ⚠ 예전엔 `currentTeam`만 갈았다. 같은 리그 안 거래라 국내에선 안
@@ -696,24 +810,28 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       ) => ({
         year: s.seasonYear,
         eventType: "trade" as const,
-        fromTeamId:   from?.currentTeam ?? "",
+        fromTeamId: from?.currentTeam ?? "",
         fromLeagueId: from?.currentLeague ?? leagueId,
         toTeamId,
-        toLeagueId:   leagueOfTeam(toTeamId) ?? leagueId,
+        toLeagueId: leagueOfTeam(toTeamId) ?? leagueId,
         detail: TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason,
       });
-      const updatedNpcs = get(gameStore).npcs.map(n => {
+      const updatedNpcs = get(gameStore).npcs.map((n) => {
         if (n.npcId === offeredId) {
           const t = proposal.receivingTeamId;
           return {
-            ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague,
+            ...n,
+            currentTeam: t,
+            currentLeague: leagueOfTeam(t) ?? n.currentLeague,
             careerEvents: [...(n.careerEvents ?? []), tradeEvOf(t, n)],
           };
         }
         if (n.npcId === requestedId) {
           const t = proposal.proposingTeamId;
           return {
-            ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague,
+            ...n,
+            currentTeam: t,
+            currentLeague: leagueOfTeam(t) ?? n.currentLeague,
             careerEvents: [...(n.careerEvents ?? []), tradeEvOf(t, n)],
           };
         }
@@ -724,27 +842,49 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     _tradedPlayerIds.add(offeredId);
     _tradedPlayerIds.add(requestedId);
     _tradeSuccess++;
-    const _p1Name = namedMap.get(offeredId)?.name   ?? m.entities.find(e => e.id === offeredId)?.name   ?? offeredId;
-    const _p2Name = namedMap.get(requestedId)?.name ?? m.entities.find(e => e.id === requestedId)?.name ?? requestedId;
-    autoLog(`[트레이드성사] ${leagueId} W${weekInYear}: ${_p1Name} ↔ ${_p2Name} | 수락확률 ${tradeEval.acceptProbability.toFixed(2)} | ${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason}`);
+    const _p1Name =
+      namedMap.get(offeredId)?.name ??
+      m.entities.find((e) => e.id === offeredId)?.name ??
+      offeredId;
+    const _p2Name =
+      namedMap.get(requestedId)?.name ??
+      m.entities.find((e) => e.id === requestedId)?.name ??
+      requestedId;
+    autoLog(
+      `[트레이드성사] ${leagueId} W${weekInYear}: ${_p1Name} ↔ ${_p2Name} | 수락확률 ${tradeEval.acceptProbability.toFixed(2)} | ${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason}`,
+    );
     _tradeEventPlayers.push({
-      npcId: offeredId, name: _p1Name,
-      fromTeamId: proposal.proposingTeamId, toTeamId: proposal.receivingTeamId,
-      fromLeagueId: leagueId, toLeagueId: leagueId,
+      npcId: offeredId,
+      name: _p1Name,
+      fromTeamId: proposal.proposingTeamId,
+      toTeamId: proposal.receivingTeamId,
+      fromLeagueId: leagueId,
+      toLeagueId: leagueId,
       detail: `OVR:${Math.round(offeredAsset.ovr)} ${offeredAsset.position} ${offeredAsset.age}세 | 수락확률 ${tradeEval.acceptProbability.toFixed(2)}`,
     });
     _tradeEventPlayers.push({
-      npcId: requestedId, name: _p2Name,
-      fromTeamId: proposal.receivingTeamId, toTeamId: proposal.proposingTeamId,
-      fromLeagueId: leagueId, toLeagueId: leagueId,
+      npcId: requestedId,
+      name: _p2Name,
+      fromTeamId: proposal.receivingTeamId,
+      toTeamId: proposal.proposingTeamId,
+      fromLeagueId: leagueId,
+      toLeagueId: leagueId,
       detail: `OVR:${Math.round(requestedAsset.ovr)} ${requestedAsset.position} ${requestedAsset.age}세 | ${TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason}`,
     });
 
     // 트레이드 결과 메시지 (뉴스 형식)
-    const team1Name = m.teams.find((t) => t.id === proposal.proposingTeamId)?.name ?? proposal.proposingTeamId;
-    const team2Name = m.teams.find((t) => t.id === proposal.receivingTeamId)?.name ?? proposal.receivingTeamId;
-    const p1Name = namedMap.get(offeredId)?.name ?? m.entities.find((e) => e.id === offeredId)?.name ?? offeredId;
-    const p2Name = namedMap.get(requestedId)?.name ?? m.entities.find((e) => e.id === requestedId)?.name ?? requestedId;
+    const team1Name =
+      m.teams.find((t) => t.id === proposal.proposingTeamId)?.name ?? proposal.proposingTeamId;
+    const team2Name =
+      m.teams.find((t) => t.id === proposal.receivingTeamId)?.name ?? proposal.receivingTeamId;
+    const p1Name =
+      namedMap.get(offeredId)?.name ??
+      m.entities.find((e) => e.id === offeredId)?.name ??
+      offeredId;
+    const p2Name =
+      namedMap.get(requestedId)?.name ??
+      m.entities.find((e) => e.id === requestedId)?.name ??
+      requestedId;
     gameStore.addMessage({
       id: `msg-npc-trade-${offeredId}-${requestedId}-${s.seasonYear}-w${weekInYear}`,
       category: "system",
@@ -769,25 +909,39 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     // 리그 거래 기록
     const tradeGroupId = `trade-${offeredId}-${requestedId}-${s.seasonYear}-${weekInYear}`;
     const reasonDetail = TRADE_REASON_LABEL[proposal.reason] ?? proposal.reason;
-    await window.projectB!.leagueAddTransactions(JSON.stringify({
-      slotId,
-      rows: [
-        {
-          seasonYear: s.seasonYear, week: weekInYear, category: "trade",
-          playerId: offeredId, playerName: p1Name,
-          fromTeamId: proposal.proposingTeamId, fromLeagueId: leagueId,
-          toTeamId: proposal.receivingTeamId,   toLeagueId: leagueId,
-          detail: reasonDetail, groupId: tradeGroupId,
-        },
-        {
-          seasonYear: s.seasonYear, week: weekInYear, category: "trade",
-          playerId: requestedId, playerName: p2Name,
-          fromTeamId: proposal.receivingTeamId, fromLeagueId: leagueId,
-          toTeamId: proposal.proposingTeamId,   toLeagueId: leagueId,
-          detail: reasonDetail, groupId: tradeGroupId,
-        },
-      ],
-    }));
+    await window.projectB!.leagueAddTransactions(
+      JSON.stringify({
+        slotId,
+        rows: [
+          {
+            seasonYear: s.seasonYear,
+            week: weekInYear,
+            category: "trade",
+            playerId: offeredId,
+            playerName: p1Name,
+            fromTeamId: proposal.proposingTeamId,
+            fromLeagueId: leagueId,
+            toTeamId: proposal.receivingTeamId,
+            toLeagueId: leagueId,
+            detail: reasonDetail,
+            groupId: tradeGroupId,
+          },
+          {
+            seasonYear: s.seasonYear,
+            week: weekInYear,
+            category: "trade",
+            playerId: requestedId,
+            playerName: p2Name,
+            fromTeamId: proposal.receivingTeamId,
+            fromLeagueId: leagueId,
+            toTeamId: proposal.proposingTeamId,
+            toLeagueId: leagueId,
+            detail: reasonDetail,
+            groupId: tradeGroupId,
+          },
+        ],
+      }),
+    );
   }
 
   logEvent({
@@ -801,9 +955,9 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     leagueId,
     players: _tradeEventPlayers,
     counts: {
-      input:     genResult.proposals.length,
+      input: genResult.proposals.length,
       processed: _tradeSuccess,
-      saved:     _tradeSuccess * 2,
+      saved: _tradeSuccess * 2,
     },
     dbOk: _tradeSuccess > 0,
     durationMs: Date.now() - _t0Trade,
@@ -821,9 +975,12 @@ function getTeamEntityRefs(
   leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {},
   now?: { seasonYear: number; month: number },
 ) {
-  const build = (teamId: string) => entities
-    .filter(e => e.role === "player" && e.teamId === teamId)
-    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id), seasonPerfOf(e.id, leagueStats), now));
+  const build = (teamId: string) =>
+    entities
+      .filter((e) => e.role === "player" && e.teamId === teamId)
+      .map((e) =>
+        buildRosterRef(e, liveStats, namedMap.get(e.id), seasonPerfOf(e.id, leagueStats), now),
+      );
   return { active: build(teamId1), farm: build(teamId2) };
 }
 
@@ -859,7 +1016,7 @@ export function applyProtagonistTierMove(
   //   `roleAskReasonOf` 도 같은 자를 쓴다(둘이 갈리면 「강등됐는데 콜업이라고
   //   묻는다」가 된다)
   const wasFarm = fromLeague.endsWith("_FARM");
-  const isFarm  = toLeague.endsWith("_FARM");
+  const isFarm = toLeague.endsWith("_FARM");
   const dir: "callup" | "demote" | "stageMove" =
     wasFarm && !isFarm ? "callup" : !wasFarm && isFarm ? "demote" : "stageMove";
 
@@ -867,7 +1024,9 @@ export function applyProtagonistTierMove(
   seasonStore.switchProtagonistLeague(toLeague, toTeamId);
   if (dir !== "stageMove") {
     gameStore.recordOutcome({
-      kind: dir, year: s.seasonYear, week: weekNum,
+      kind: dir,
+      year: s.seasonYear,
+      week: weekNum,
       detail: toTeamId,
     });
   }
@@ -941,11 +1100,12 @@ export async function processProTeamCallupCalldown(
   const m = get(masterStore);
   const logs: string[] = [];
 
-  const namedMap = new Map(g.npcs.map(n => [n.npcId, n]));
+  const namedMap = new Map(g.npcs.map((n) => [n.npcId, n]));
   // `MONTH_STARTS_1`은 `as const` 튜플이라 `indexOf`가 리터럴만 받는다.
   // 찾는 값은 런타임 주차라 읽기 전용으로 넓힌다 — 데이터는 그대로다.
-  const monthIndex = (MONTH_STARTS_1 as readonly number[])
-    .indexOf(s.schedule.find(e => e.week === weekNum)?.week ?? 0);
+  const monthIndex = (MONTH_STARTS_1 as readonly number[]).indexOf(
+    s.schedule.find((e) => e.week === weekNum)?.week ?? 0,
+  );
   const currentMonth = monthIndex >= 0 ? monthIndex + 1 : 6;
 
   // 로스터 상한은 규칙 파일이 정본이다 — 예전엔 여기 35가 박혀 있었고
@@ -953,15 +1113,12 @@ export async function processProTeamCallupCalldown(
   const rulesFile = await loadRosterRules();
   // ⚠ **모든 리그에 KBL 상한을 쓰고 있었다.** JBL은 32인데 34로 재면 두 명이
   // 영영 안 잘린다. 팀의 리그에서 읽는다 — 규칙 파일이 정본이다.
-  const rosterMaxOf = (leagueId: string) =>
-    rulesFile.rosterRules[leagueId]?.rosterMax ?? 34;
-  const rosterMinOf = (leagueId: string) =>
-    rulesFile.rosterRules[leagueId]?.rosterMin ?? 26;
+  const rosterMaxOf = (leagueId: string) => rulesFile.rosterRules[leagueId]?.rosterMax ?? 34;
+  const rosterMinOf = (leagueId: string) => rulesFile.rosterRules[leagueId]?.rosterMin ?? 26;
   // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
   const promotionRules = rulesFile.promotionRules;
   // 등록말소 기간(주). 0이면 예전 동작이다 — 규칙 파일이 정본
-  const lockWeeks = (promotionRules as { demotionLockWeeks?: number })
-    ?.demotionLockWeeks ?? 0;
+  const lockWeeks = (promotionRules as { demotionLockWeeks?: number })?.demotionLockWeeks ?? 0;
   const demotionWeek = g.demotionWeek ?? {};
 
   // 1군·2군 시즌 기록. 없으면 판정이 능력치만 보게 된다
@@ -975,7 +1132,7 @@ export async function processProTeamCallupCalldown(
   // 오프시즌)는 있는데 **정리하는 경로가 없는 리그**가 된다 — 실측에서 1군이
   // 팀당 41·46명(상한 34·32)까지 부풀었다. Rust 캡은 정상이다(14 → 26).
   const proLeagueIds = activeProLeagues();
-  const proTeams1 = m.teams.filter(t => proLeagueIds.includes(t.leagueId) && t.id.endsWith("_1"));
+  const proTeams1 = m.teams.filter((t) => proLeagueIds.includes(t.leagueId) && t.id.endsWith("_1"));
 
   // 국가대표 차출자는 **부상자와 같은 목록으로** 넘긴다 (사용자 확정) —
   // 따로 처리하면 대회 기간에 1군이 빈 채로 돈다
@@ -993,7 +1150,9 @@ export async function processProTeamCallupCalldown(
 
   const _demotedIds: string[] = [];
   const label = urgentOnly ? "상시콜업" : "월간승강";
-  autoLog(`[${label}] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
+  autoLog(
+    `[${label}] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`,
+  );
 
   for (const team of proTeams1) {
     const teamId1 = team.id;
@@ -1001,7 +1160,7 @@ export async function processProTeamCallupCalldown(
     const maxRosterSize = rosterMaxOf(team.leagueId);
     const minRosterSize = rosterMinOf(team.leagueId);
     const teamId2 = teamId1.replace(/_1$/, "_2");
-    const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     // ── 부상자 명단(IL) ─────────────────────────────────────
     //
@@ -1013,8 +1172,14 @@ export async function processProTeamCallupCalldown(
     // ⚠ 심각도 `mild` 는 안 넣는다 — 며칠 쉬는 것까지 명단에 올리면
     //   로스터가 매주 출렁인다. `injuredIds` 가 이미 그 기준이다.
     const { active, farm } = getTeamEntityRefs(
-      teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats,
-      { seasonYear: s.seasonYear, month: currentMonth });
+      teamId1,
+      teamId2,
+      m.entities,
+      get(npcLiveStatsStore),
+      namedMap,
+      leagueStats,
+      { seasonYear: s.seasonYear, month: currentMonth },
+    );
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
     // IL 등재자 — 이 팀 1군에서 부상·차출로 못 뛰는 사람
     const ilSet = new Set(injuredIds);
@@ -1045,23 +1210,33 @@ export async function processProTeamCallupCalldown(
 
     // 콜업 — **락 걸린 선수는 후보에서 뺀다.** 엔진이 뽑은 뒤에 거르면
     //   "뽑았는데 못 올림"이 되어 그 주 콜업이 통째로 빈다
-    const farmOk = lockedIds.size > 0
-      ? farm.filter((f) => !lockedIds.has(f.id))
-      : farm;
+    const farmOk = lockedIds.size > 0 ? farm.filter((f) => !lockedIds.has(f.id)) : farm;
     if (farmOk.length > 0 && active.length > 0) {
       const callupRes = JSON.parse(
-        await window.projectB!.evalCallupCandidatesNative(JSON.stringify({
-          teamProfile: profile, farmPlayers: farmOk, activePlayers: active,
-          injuredPlayerIds: injuredIds, currentMonth, promotionRules, callupMod,
-        }))
-      ) as { candidates?: Array<{ playerId: string; replacesPlayerId: string; reason: string }>; error?: string };
+        await window.projectB!.evalCallupCandidatesNative(
+          JSON.stringify({
+            teamProfile: profile,
+            farmPlayers: farmOk,
+            activePlayers: active,
+            injuredPlayerIds: injuredIds,
+            currentMonth,
+            promotionRules,
+            callupMod,
+          }),
+        ),
+      ) as {
+        candidates?: Array<{ playerId: string; replacesPlayerId: string; reason: string }>;
+        error?: string;
+      };
 
       // ⚠ 엔진이 역직렬화에 실패하면 `{error}`만 온다. 예전엔 그대로
       // `candidates.slice(...)`를 불러 **TypeError로 그 주 전체가 죽었다** —
       // 승강 뒤에 오는 성장·메시지·순위가 통째로 안 돌고, 원인은 어디에도
       // 안 남는다. 실측: 프로 3년차 W14부터 시즌 끝까지 40주 연속.
       if (callupRes.error || !callupRes.candidates) {
-        throw new Error(`[승강] 콜업 판정 실패 ${teamId1}: ${callupRes.error ?? "candidates 없음"}`);
+        throw new Error(
+          `[승강] 콜업 판정 실패 ${teamId1}: ${callupRes.error ?? "candidates 없음"}`,
+        );
       }
 
       // 상시 경로는 **빈 자리 메우기만** — 부상·장기 부진으로 생긴 자리에
@@ -1073,26 +1248,39 @@ export async function processProTeamCallupCalldown(
       //   부상 3명이면 그 주에 최대 3명까지 올린다.
       //   ⚠ 정원(IL 제외)이 상한을 넘으면 안 올린다 — 순증이 무한하면
       //     IL 이 로스터 상한을 통째로 무력화한다.
-      const urgentSlots = activeCount >= maxRosterSize
-        ? 0
-        : Math.max(1, Math.min(ilCount, maxRosterSize - activeCount));
+      const urgentSlots =
+        activeCount >= maxRosterSize
+          ? 0
+          : Math.max(1, Math.min(ilCount, maxRosterSize - activeCount));
       const picked = urgentOnly
         ? callupRes.candidates
-            .filter(c => c.reason === "injury_replacement"
-                      || c.reason === "slump_replacement"
-                      || c.reason === "position_gap")
+            .filter(
+              (c) =>
+                c.reason === "injury_replacement" ||
+                c.reason === "slump_replacement" ||
+                c.reason === "position_gap",
+            )
             .slice(0, urgentSlots)
         : callupRes.candidates.slice(0, 2);
 
       for (const c of picked) {
-        allMoves.push({ id: c.playerId,         teamId: teamId1 });
+        allMoves.push({ id: c.playerId, teamId: teamId1 });
         allMoves.push({ id: c.replacesPlayerId, teamId: teamId2 });
         _demotedIds.push(c.replacesPlayerId);
-        const upName   = m.entities.find(e => e.id === c.playerId)?.name         ?? c.playerId;
-        const downName = m.entities.find(e => e.id === c.replacesPlayerId)?.name ?? c.replacesPlayerId;
-        const upOvr    = Math.round(farmOk.find(f => f.id === c.playerId)?.ovr ?? 0);
-        autoLog(`[콜업] ${teamShort}: ${upName}(2군→1군,OVR:${upOvr}) ↑ | ${downName}(1군→2군) ↓ | 사유: ${c.reason}`);
-        _callupEntries.push({ npcId: c.playerId, name: upName, fromTeamId: teamId2, toTeamId: teamId1, detail: `OVR:${upOvr} | ${c.reason}` });
+        const upName = m.entities.find((e) => e.id === c.playerId)?.name ?? c.playerId;
+        const downName =
+          m.entities.find((e) => e.id === c.replacesPlayerId)?.name ?? c.replacesPlayerId;
+        const upOvr = Math.round(farmOk.find((f) => f.id === c.playerId)?.ovr ?? 0);
+        autoLog(
+          `[콜업] ${teamShort}: ${upName}(2군→1군,OVR:${upOvr}) ↑ | ${downName}(1군→2군) ↓ | 사유: ${c.reason}`,
+        );
+        _callupEntries.push({
+          npcId: c.playerId,
+          name: upName,
+          fromTeamId: teamId2,
+          toTeamId: teamId1,
+          detail: `OVR:${upOvr} | ${c.reason}`,
+        });
         if (teamId1 === g.protagonist.teamId) logs.push(`[W${weekNum}] 팀 콜업: ${upName}`);
       }
     }
@@ -1112,29 +1300,41 @@ export async function processProTeamCallupCalldown(
     const overCap = activeCount > maxRosterSize;
     if ((!urgentOnly || overCap) && activeCount > minRosterSize) {
       const calldownRes = JSON.parse(
-        await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
-          teamProfile: profile, activePlayers: active,
-          currentRosterSize: activeCount, maxRosterSize, promotionRules, callupMod,
-        }))
+        await window.projectB!.evalCalldownCandidatesNative(
+          JSON.stringify({
+            teamProfile: profile,
+            activePlayers: active,
+            currentRosterSize: activeCount,
+            maxRosterSize,
+            promotionRules,
+            callupMod,
+          }),
+        ),
       ) as { candidates?: Array<{ playerId: string }>; error?: string };
 
       if (calldownRes.error || !calldownRes.candidates) {
-        throw new Error(`[승강] 콜다운 판정 실패 ${teamId1}: ${calldownRes.error ?? "candidates 없음"}`);
+        throw new Error(
+          `[승강] 콜다운 판정 실패 ${teamId1}: ${calldownRes.error ?? "candidates 없음"}`,
+        );
       }
 
       // 초과분만큼 내린다. 2명 고정이면 크게 넘친 팀이 여러 주 걸린다
-      const cutN = overCap
-        ? Math.max(2, activeCount - maxRosterSize)
-        : 2;
+      const cutN = overCap ? Math.max(2, activeCount - maxRosterSize) : 2;
       for (const c of calldownRes.candidates.slice(0, cutN)) {
         // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어
         // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
         _demotedIds.push(c.playerId);
-        const cdName = m.entities.find(e => e.id === c.playerId)?.name ?? c.playerId;
-        const cdOvr  = Math.round(active.find(a => a.id === c.playerId)?.ovr ?? 0);
+        const cdName = m.entities.find((e) => e.id === c.playerId)?.name ?? c.playerId;
+        const cdOvr = Math.round(active.find((a) => a.id === c.playerId)?.ovr ?? 0);
         autoLog(`[콜다운] ${teamShort}: ${cdName}(1군→2군,OVR:${cdOvr}) ↓`);
-        _calldownEntries.push({ npcId: c.playerId, name: cdName, fromTeamId: teamId1, toTeamId: teamId2, detail: `OVR:${cdOvr} | 로스터 조정` });
+        _calldownEntries.push({
+          npcId: c.playerId,
+          name: cdName,
+          fromTeamId: teamId1,
+          toTeamId: teamId2,
+          detail: `OVR:${cdOvr} | 로스터 조정`,
+        });
         if (teamId1 === g.protagonist.teamId) logs.push(`[W${weekNum}] 팀 콜다운: ${cdName}`);
       }
     }
@@ -1149,12 +1349,13 @@ export async function processProTeamCallupCalldown(
   // ⚠ 기간(`lockWeeks`)을 문장에 넣는다 — 규칙 파일 값이 바뀌면 문장도 바뀐다.
   {
     const myTeam = g.protagonist.teamId;
-    const mine = _demotedIds.filter((id) =>
-      id === g.protagonist.id
-      || (namedMap.get(id)?.currentTeam ?? "") === myTeam);
+    const mine = _demotedIds.filter(
+      (id) => id === g.protagonist.id || (namedMap.get(id)?.currentTeam ?? "") === myTeam,
+    );
     if (mine.length > 0 && lockWeeks > 0) {
-      const names = mine.map((id) =>
-        namedMap.get(id)?.name ?? m.entities.find((e) => e.id === id)?.name ?? id);
+      const names = mine.map(
+        (id) => namedMap.get(id)?.name ?? m.entities.find((e) => e.id === id)?.name ?? id,
+      );
       gameStore.addMessage({
         id: `msg-demote-${s.seasonYear}-w${weekNum}-${mine[0]}`,
         category: "system",
@@ -1183,10 +1384,10 @@ export async function processProTeamCallupCalldown(
     // 선수가 계속 `LEAGUE_KBL` 소속으로 집계됐다 — 2군 리그 순위·경기에 안 잡히고
     // 1군 로스터 상한에는 계속 포함된다. 오프시즌 강등에서도 같은 결함이
     // 프로 소속을 800명까지 부풀렸다 (Phase 7-1 D-3a).
-    const moveMap = new Map(allMoves.map(mv => [mv.id, mv.teamId]));
-    const movedNpcs = get(gameStore).npcs
-      .filter(n => moveMap.has(n.npcId))
-      .map(n => {
+    const moveMap = new Map(allMoves.map((mv) => [mv.id, mv.teamId]));
+    const movedNpcs = get(gameStore)
+      .npcs.filter((n) => moveMap.has(n.npcId))
+      .map((n) => {
         const toTeam = moveMap.get(n.npcId)!;
         const toLeague = leagueOfTeam(toTeam) ?? n.currentLeague;
         return {
@@ -1214,25 +1415,49 @@ export async function processProTeamCallupCalldown(
       //   `rosterMove` 효과가 같은 이동을 해야 하는데, 두 벌이 되면 한쪽만
       //   고쳐진 채 남는다 — 보직을 `applyRoleChoice` 하나로 모은 이유다
       const moved = applyProtagonistTierMove(protoTo, weekNum);
-      logs.push(moved === "demote"
-        ? `[W${weekNum}] 2군 강등 통보를 받았다.`
-        : `[W${weekNum}] 1군 승격 통보를 받았다.`);
+      logs.push(
+        moved === "demote"
+          ? `[W${weekNum}] 2군 강등 통보를 받았다.`
+          : `[W${weekNum}] 1군 승격 통보를 받았다.`,
+      );
     }
   }
 
   if (_callupEntries.length > 0) {
-    logEvent({ id: `callup-W${weekNum}`, type: "callup", seasonYear: s.seasonYear, week: weekNum,
+    logEvent({
+      id: `callup-W${weekNum}`,
+      type: "callup",
+      seasonYear: s.seasonYear,
+      week: weekNum,
       players: _callupEntries,
-      counts: { input: proTeams1.length, processed: _callupEntries.length, saved: _callupEntries.length },
-      dbOk: _callupDbOk, durationMs: Date.now() - _t0Callup });
+      counts: {
+        input: proTeams1.length,
+        processed: _callupEntries.length,
+        saved: _callupEntries.length,
+      },
+      dbOk: _callupDbOk,
+      durationMs: Date.now() - _t0Callup,
+    });
   }
   if (_calldownEntries.length > 0) {
-    logEvent({ id: `calldown-W${weekNum}`, type: "calldown", seasonYear: s.seasonYear, week: weekNum,
+    logEvent({
+      id: `calldown-W${weekNum}`,
+      type: "calldown",
+      seasonYear: s.seasonYear,
+      week: weekNum,
       players: _calldownEntries,
-      counts: { input: proTeams1.length, processed: _calldownEntries.length, saved: _calldownEntries.length },
-      dbOk: _callupDbOk, durationMs: Date.now() - _t0Callup });
+      counts: {
+        input: proTeams1.length,
+        processed: _calldownEntries.length,
+        saved: _calldownEntries.length,
+      },
+      dbOk: _callupDbOk,
+      durationMs: Date.now() - _t0Callup,
+    });
   }
-  autoLog(`[${label}] W${weekNum} 완료 | 콜업 ${_callupEntries.length}건 / 콜다운 ${_calldownEntries.length}건 | ${Date.now() - _t0Callup}ms`);
+  autoLog(
+    `[${label}] W${weekNum} 완료 | 콜업 ${_callupEntries.length}건 / 콜다운 ${_calldownEntries.length}건 | ${Date.now() - _t0Callup}ms`,
+  );
 
   return logs;
 }
@@ -1244,26 +1469,30 @@ export async function processWinNowPressureUpdate(weekNum: number): Promise<void
   const m = get(masterStore);
 
   const proLeagues = activeProLeagues();
-  const proTeams = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
+  const proTeams = m.teams.filter((t) => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
     const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     // 각 팀의 소속 리그 순위 조회 (주인공 리그가 아닐 수 있으므로 leagueState 우선)
     const leagueStandings = s.leagueState[team.leagueId]?.standings ?? s.standings;
-    const rank = [...leagueStandings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins)
-      .findIndex(r => r.teamId === team.id) + 1;
-    const totalTeams = proTeams.filter(t => t.leagueId === team.leagueId).length || 8;
+    const rank =
+      [...leagueStandings]
+        .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins)
+        .findIndex((r) => r.teamId === team.id) + 1;
+    const totalTeams = proTeams.filter((t) => t.leagueId === team.leagueId).length || 8;
 
     const res = JSON.parse(
-      await window.projectB!.calcWinNowPressureUpdateNative(JSON.stringify({
-        currentPressure: profile.winNowPressure,
-        ownerPatience:   profile.ownerPatience,
-        finalStanding:   rank || Math.ceil(totalTeams / 2),
-        totalTeams,
-        consecutiveMissedPlayoffs: 0,
-        wonChampionship: false,
-      }))
+      await window.projectB!.calcWinNowPressureUpdateNative(
+        JSON.stringify({
+          currentPressure: profile.winNowPressure,
+          ownerPatience: profile.ownerPatience,
+          finalStanding: rank || Math.ceil(totalTeams / 2),
+          totalTeams,
+          consecutiveMissedPlayoffs: 0,
+          wonChampionship: false,
+        }),
+      ),
     ) as { newPressure: number };
 
     gameStore.patchProTeamProfile(team.id, { ...profile, winNowPressure: res.newPressure });
@@ -1287,11 +1516,13 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   // 연봉이 통째로 무너진다
   const leagueMultMap: Record<string, number> = await (async () => {
     try {
-      const r = await loadRosterRules() as {
+      const r = (await loadRosterRules()) as {
         salaryRules?: { leagueMult?: Record<string, number> };
       };
       return r.salaryRules?.leagueMult ?? {};
-    } catch { return {}; }
+    } catch {
+      return {};
+    }
   })();
   const g = get(gameStore);
   const s = get(seasonStore);
@@ -1300,69 +1531,96 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   const slotId = g.currentSlotId;
 
   const proLeagues = new Set(activeProLeagues());
-  const proNpcCount = g.npcs.filter(n => n.careerStatus === "active" && n.currentLeague && proLeagues.has(n.currentLeague)).length;
+  const proNpcCount = g.npcs.filter(
+    (n) => n.careerStatus === "active" && n.currentLeague && proLeagues.has(n.currentLeague),
+  ).length;
   const _t0Offseason = Date.now();
-  autoLog(`[W43오프시즌] 은퇴/FA 결정 시작 (프로NPC ${proNpcCount}명, careerStage=${g.protagonist.careerStage})`);
+  autoLog(
+    `[W43오프시즌] 은퇴/FA 결정 시작 (프로NPC ${proNpcCount}명, careerStage=${g.protagonist.careerStage})`,
+  );
 
-  const _retireEntries:  PlayerEventEntry[] = [];
+  const _retireEntries: PlayerEventEntry[] = [];
   const _faApplyEntries: PlayerEventEntry[] = [];
   const _renewalEntries: PlayerEventEntry[] = [];
-  const _adjustEntries:  PlayerEventEntry[] = [];
-  let _faApplyCount = 0, _faDeclineCount = 0;
+  const _adjustEntries: PlayerEventEntry[] = [];
+  let _faApplyCount = 0,
+    _faDeclineCount = 0;
 
   // ── 프로 NPC 처리 (save state 업데이트) ──────────────────────
-  const namedNpcs = g.npcs.filter(n =>
-    n.careerStatus === "active" && n.currentLeague &&
-    proLeagues.has(n.currentLeague)
+  const namedNpcs = g.npcs.filter(
+    (n) => n.careerStatus === "active" && n.currentLeague && proLeagues.has(n.currentLeague),
   );
 
   const updatedNpcs = [...g.npcs];
   const namedRetirementRows: object[] = [];
 
   for (const npc of namedNpcs) {
-    const entity = m.entities.find(e => e.id === npc.npcId);
+    const entity = m.entities.find((e) => e.id === npc.npcId);
     if (!entity) continue;
     const liveOvr = npcOvr(entity, get(npcLiveStatsStore));
-    const profile  = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
+    const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     // 은퇴 제안
     const retSuggest = JSON.parse(
-      await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
-        teamProfile: profile,
-        player: buildRosterRef(entity, get(npcLiveStatsStore), npc),
-        ovrTrend: (get(npcLiveStatsStore)[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
-        prospectOvrAtPosition: 65,
-        currentSalary: (npc as any).currentSalary ?? 0,
-        marketValue:   (npc as any).currentSalary ?? 1000,
-      }))
+      await window.projectB!.evalRetirementSuggestionNative(
+        JSON.stringify({
+          teamProfile: profile,
+          player: buildRosterRef(entity, get(npcLiveStatsStore), npc),
+          ovrTrend: (get(npcLiveStatsStore)[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
+          prospectOvrAtPosition: 65,
+          currentSalary: (npc as any).currentSalary ?? 0,
+          marketValue: (npc as any).currentSalary ?? 1000,
+        }),
+      ),
     ) as { suggest: boolean; urgency: number };
 
     const npcPersonality = npc.personality ?? {
-      loyalty: 50, ambition: 50, greed: 40, competitiveDrive: 50,
-      stabilityPreference: 50, professionalism: 60, overseasAmbition: 30,
-      marketPreference: 50, homeTeamId: null,
+      loyalty: 50,
+      ambition: 50,
+      greed: 40,
+      competitiveDrive: 50,
+      stabilityPreference: 50,
+      professionalism: 60,
+      overseasAmbition: 30,
+      marketPreference: 50,
+      homeTeamId: null,
     };
     if (retSuggest.suggest) {
       const retResp = JSON.parse(
-        await window.projectB!.playerEvalRetirementResponseNative(JSON.stringify({
-          personality: npcPersonality,
-          age: npc.age, ovr: liveOvr,
-          ovrTrend: (get(npcLiveStatsStore)[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
-          proServiceYears: npc.proServiceYears ?? 0,
-          otherTeamInterest: false,
-        }))
+        await window.projectB!.playerEvalRetirementResponseNative(
+          JSON.stringify({
+            personality: npcPersonality,
+            age: npc.age,
+            ovr: liveOvr,
+            ovrTrend: (get(npcLiveStatsStore)[npc.npcId]?.peakOvr ?? liveOvr) - liveOvr,
+            proServiceYears: npc.proServiceYears ?? 0,
+            otherTeamInterest: false,
+          }),
+        ),
       ) as { accept: boolean; seekOtherTeam: boolean };
 
       if (retResp.accept) {
-        const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
+        const idx = updatedNpcs.findIndex((n) => n.npcId === npc.npcId);
         if (idx >= 0) updatedNpcs[idx] = { ...updatedNpcs[idx], careerStatus: "retired" };
         logs.push(`[W${weekNum}] ${npc.name} 은퇴`);
-        autoLog(`[은퇴] ${npc.name} | ${npc.currentLeague?.replace("LEAGUE_", "")} | ${npc.age}세 | OVR:${Math.round(liveOvr)} | ${npc.proServiceYears ?? 0}년 | urgency:${retSuggest.urgency.toFixed(2)}`);
-        _retireEntries.push({ npcId: npc.npcId, name: npc.name, fromTeamId: npc.currentTeam, fromLeagueId: npc.currentLeague ?? "", detail: `${npc.age}세 OVR:${Math.round(liveOvr)} | ${npc.proServiceYears ?? 0}년 통산` });
+        autoLog(
+          `[은퇴] ${npc.name} | ${npc.currentLeague?.replace("LEAGUE_", "")} | ${npc.age}세 | OVR:${Math.round(liveOvr)} | ${npc.proServiceYears ?? 0}년 | urgency:${retSuggest.urgency.toFixed(2)}`,
+        );
+        _retireEntries.push({
+          npcId: npc.npcId,
+          name: npc.name,
+          fromTeamId: npc.currentTeam,
+          fromLeagueId: npc.currentLeague ?? "",
+          detail: `${npc.age}세 OVR:${Math.round(liveOvr)} | ${npc.proServiceYears ?? 0}년 통산`,
+        });
         namedRetirementRows.push({
-          seasonYear: s.seasonYear, week: weekNum, category: "retirement",
-          playerId: npc.npcId, playerName: npc.name,
-          fromTeamId: npc.currentTeam, fromLeagueId: npc.currentLeague,
+          seasonYear: s.seasonYear,
+          week: weekNum,
+          category: "retirement",
+          playerId: npc.npcId,
+          playerName: npc.name,
+          fromTeamId: npc.currentTeam,
+          fromLeagueId: npc.currentLeague,
           detail: "오프시즌 은퇴",
         });
       }
@@ -1389,62 +1647,79 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     //    자세한 건 `faEngine.ts`의 `FA_REACQUIRE_YEARS` 주석에 있다.
     if (!canReacquireFa(npc.careerEvents, s.seasonYear)) continue;
 
-    const leagueStd  = getLeagueStandings(league, s);
+    const leagueStd = getLeagueStandings(league, s);
     const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-    const teamRank = teamStandings.findIndex(r => r.teamId === npc.currentTeam) + 1;
+    const teamRank = teamStandings.findIndex((r) => r.teamId === npc.currentTeam) + 1;
 
     const faRes = JSON.parse(
-      await window.projectB!.playerEvalFaDecisionNative(JSON.stringify({
-        // 선수·연도만 — 어느 팀이 물어도 그 선수의 판단은 같아야 한다
-        seed: seedOf(s.worldSeed ?? 0, s.seasonYear, npc.npcId),
-        personality: npcPersonality,
-        age: npc.age, ovr: liveOvr,
-        proServiceYears: npc.proServiceYears ?? 0,
-        currentSalary:   (npc as any).currentSalary ?? 2000,
-        marketValue:     (npc as any).currentSalary ?? 2000,
-        teamStanding:    teamRank || 4,
-        totalTeams:      teamStandings.length || 8,
-        expectedPlayingTime: 0.7,
-        leagueId:        league,
-        fame:            npc.fame ?? 0,
-      }))
+      await window.projectB!.playerEvalFaDecisionNative(
+        JSON.stringify({
+          // 선수·연도만 — 어느 팀이 물어도 그 선수의 판단은 같아야 한다
+          seed: seedOf(s.worldSeed ?? 0, s.seasonYear, npc.npcId),
+          personality: npcPersonality,
+          age: npc.age,
+          ovr: liveOvr,
+          proServiceYears: npc.proServiceYears ?? 0,
+          currentSalary: (npc as any).currentSalary ?? 2000,
+          marketValue: (npc as any).currentSalary ?? 2000,
+          teamStanding: teamRank || 4,
+          totalTeams: teamStandings.length || 8,
+          expectedPlayingTime: 0.7,
+          leagueId: league,
+          fame: npc.fame ?? 0,
+        }),
+      ),
     ) as { applyFa: boolean };
 
     if (faRes.applyFa) {
-      const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
+      const idx = updatedNpcs.findIndex((n) => n.npcId === npc.npcId);
       if (idx >= 0) {
         const cur = updatedNpcs[idx];
         // LEAGUE_FREE_AGENT로 전환해야 Rust run_offseason step 8에서 리그별 재배치됨
         updatedNpcs[idx] = {
           ...cur,
-          careerStatus:    "free_agent",
+          careerStatus: "free_agent",
           originalLeagueId: cur.currentLeague,
-          originalTeamId:   cur.currentTeam,
-          currentLeague:   "LEAGUE_FREE_AGENT",
-          currentTeam:     "",
+          originalTeamId: cur.currentTeam,
+          currentLeague: "LEAGUE_FREE_AGENT",
+          currentTeam: "",
           careerEvents: [
             ...(cur.careerEvents ?? []),
-            { year: s.seasonYear, eventType: "fa_signed" as const,
-              fromTeamId: cur.currentTeam, fromLeagueId: cur.currentLeague },
+            {
+              year: s.seasonYear,
+              eventType: "fa_signed" as const,
+              fromTeamId: cur.currentTeam,
+              fromLeagueId: cur.currentLeague,
+            },
           ],
         };
       }
       _faApplyCount++;
       logs.push(`[W${weekNum}] ${npc.name} FA 신청`);
-      autoLog(`[FA신청] ${npc.name} | ${league.replace("LEAGUE_", "")} | ${npc.proServiceYears}년 | OVR:${Math.round(liveOvr)} | loyalty:${npc.personality?.loyalty ?? "?"} greed:${npc.personality?.greed ?? "?"}`);
-      _faApplyEntries.push({ npcId: npc.npcId, name: npc.name, fromTeamId: npc.currentTeam, fromLeagueId: league, detail: `${npc.proServiceYears}년 OVR:${Math.round(liveOvr)} | loyalty:${npc.personality?.loyalty ?? "?"} greed:${npc.personality?.greed ?? "?"}` });
+      autoLog(
+        `[FA신청] ${npc.name} | ${league.replace("LEAGUE_", "")} | ${npc.proServiceYears}년 | OVR:${Math.round(liveOvr)} | loyalty:${npc.personality?.loyalty ?? "?"} greed:${npc.personality?.greed ?? "?"}`,
+      );
+      _faApplyEntries.push({
+        npcId: npc.npcId,
+        name: npc.name,
+        fromTeamId: npc.currentTeam,
+        fromLeagueId: league,
+        detail: `${npc.proServiceYears}년 OVR:${Math.round(liveOvr)} | loyalty:${npc.personality?.loyalty ?? "?"} greed:${npc.personality?.greed ?? "?"}`,
+      });
     } else {
       _faDeclineCount++;
       // FA 미신청 = 팀에 재계약 의사 → loyalty 증가
       const newLoyalty = JSON.parse(
-        await window.projectB!.updatePlayerLoyaltyNative(JSON.stringify({
-          currentLoyalty:      npcPersonality.loyalty,
-          eventType:           "contract_honor",
-          eventMagnitude:      1.0,
-          stabilityPreference: npcPersonality.stabilityPreference,
-        }))
+        await window.projectB!.updatePlayerLoyaltyNative(
+          JSON.stringify({
+            currentLoyalty: npcPersonality.loyalty,
+            eventType: "contract_honor",
+            eventMagnitude: 1.0,
+            stabilityPreference: npcPersonality.stabilityPreference,
+          }),
+        ),
       ) as number;
-      const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
+      const idx = updatedNpcs.findIndex((n) => n.npcId === npc.npcId);
       if (idx >= 0) {
         updatedNpcs[idx] = {
           ...updatedNpcs[idx],
@@ -1457,101 +1732,141 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   // ── 명명 NPC 계약 연수 갱신 + 성적 기반 재계약/중간조정 ─────────
   {
     const npcContractUpdates: Array<{
-      npcId: string; currentSalary: number; contractYears: number; proServiceYears: number;
+      npcId: string;
+      currentSalary: number;
+      contractYears: number;
+      proServiceYears: number;
     }> = [];
-    const liveStats  = get(npcLiveStatsStore);
+    const liveStats = get(npcLiveStatsStore);
     const defaultPers = {
-      loyalty: 50, ambition: 50, greed: 40, competitiveDrive: 50,
-      stabilityPreference: 50, professionalism: 60, overseasAmbition: 30,
-      marketPreference: 50, homeTeamId: null as null,
+      loyalty: 50,
+      ambition: 50,
+      greed: 40,
+      competitiveDrive: 50,
+      stabilityPreference: 50,
+      professionalism: 60,
+      overseasAmbition: 30,
+      marketPreference: 50,
+      homeTeamId: null as null,
     };
 
     for (const npc of namedNpcs) {
-      const cur = updatedNpcs.find(n => n.npcId === npc.npcId);
+      const cur = updatedNpcs.find((n) => n.npcId === npc.npcId);
       if (!cur) continue;
       if (cur.careerStatus === "retired" || cur.careerStatus === "free_agent") continue;
 
-      const newProSY       = (npc.proServiceYears ?? 0) + 1;
+      const newProSY = (npc.proServiceYears ?? 0) + 1;
       const oldContractYrs = npc.contractYears ?? 1;
       const newContractYrs = Math.max(0, oldContractYrs - 1);
-      let   newSalary      = npc.currentSalary ?? 0;
-      let   finalYears     = newContractYrs;
+      let newSalary = npc.currentSalary ?? 0;
+      let finalYears = newContractYrs;
 
       // 성적 데이터 — 올해(leagueState) vs 작년(careerHistory 마지막)
       const currStats = s.leagueState[npc.currentLeague ?? ""]?.stats[npc.npcId];
       const prevStats = npc.careerHistory.at(-1)?.stats;
       const perfScore = currStats ? calcNpcPerfScore(currStats) : 50;
 
-      const entity  = m.entities.find(e => e.id === npc.npcId);
+      const entity = m.entities.find((e) => e.id === npc.npcId);
       const liveOvr = entity ? npcOvr(entity, liveStats) : 60;
-      const pers    = npc.personality ?? defaultPers;
+      const pers = npc.personality ?? defaultPers;
 
       if (newContractYrs <= 0) {
         // 계약 만료 → 실제 성적 반영 자동 갱신
         const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
         const [salaryRaw, yearsRaw] = await Promise.all([
-          window.projectB!.calcNpcRenewalSalaryNative(JSON.stringify({
-            ovr: liveOvr, age: npc.age,
-            leagueId:         npc.currentLeague ?? "",
-            currentSalary:    newSalary,
-            performanceScore: perfScore,
-            greed:            pers.greed,
-            leagueMult:       leagueMultMap,
-            // 🔴 **구단주 성향을 넘긴다** (2026-09-01 · C-3).
-            //   바로 아래 `calcNpcContractYearsNative` 에는 성향 둘을 이미
-            //   넘기는데 **연봉 쪽에만 안 넘기고 있었다.** 그래서 12축 중
-            //   이 축 하나만 아무 데서도 안 읽혔다.
-            ownerSpendingWillingness: profile.ownerSpendingWillingness,
-          })),
-          window.projectB!.calcNpcContractYearsNative(JSON.stringify({
-            age:                 npc.age,
-            developmentFocus:    profile.developmentFocus,
-            winNowPressure:      profile.winNowPressure,
-            stabilityPreference: pers.stabilityPreference,
-          })),
+          window.projectB!.calcNpcRenewalSalaryNative(
+            JSON.stringify({
+              ovr: liveOvr,
+              age: npc.age,
+              leagueId: npc.currentLeague ?? "",
+              currentSalary: newSalary,
+              performanceScore: perfScore,
+              greed: pers.greed,
+              leagueMult: leagueMultMap,
+              // 🔴 **구단주 성향을 넘긴다** (2026-09-01 · C-3).
+              //   바로 아래 `calcNpcContractYearsNative` 에는 성향 둘을 이미
+              //   넘기는데 **연봉 쪽에만 안 넘기고 있었다.** 그래서 12축 중
+              //   이 축 하나만 아무 데서도 안 읽혔다.
+              ownerSpendingWillingness: profile.ownerSpendingWillingness,
+            }),
+          ),
+          window.projectB!.calcNpcContractYearsNative(
+            JSON.stringify({
+              age: npc.age,
+              developmentFocus: profile.developmentFocus,
+              winNowPressure: profile.winNowPressure,
+              stabilityPreference: pers.stabilityPreference,
+            }),
+          ),
         ]);
-        newSalary  = JSON.parse(salaryRaw) as number;
+        newSalary = JSON.parse(salaryRaw) as number;
         finalYears = JSON.parse(yearsRaw) as number;
-        autoLog(`[재계약] ${npc.name} | ${npc.currentLeague?.replace("LEAGUE_", "")} | OVR:${Math.round(liveOvr)} | 성적:${perfScore} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만 / ${finalYears}년`);
-        _renewalEntries.push({ npcId: npc.npcId, name: npc.name, fromTeamId: npc.currentTeam, fromLeagueId: npc.currentLeague ?? "", detail: `OVR:${Math.round(liveOvr)} 성적:${perfScore} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만/${finalYears}년` });
+        autoLog(
+          `[재계약] ${npc.name} | ${npc.currentLeague?.replace("LEAGUE_", "")} | OVR:${Math.round(liveOvr)} | 성적:${perfScore} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만 / ${finalYears}년`,
+        );
+        _renewalEntries.push({
+          npcId: npc.npcId,
+          name: npc.name,
+          fromTeamId: npc.currentTeam,
+          fromLeagueId: npc.currentLeague ?? "",
+          detail: `OVR:${Math.round(liveOvr)} 성적:${perfScore} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만/${finalYears}년`,
+        });
       } else if (currStats && prevStats) {
         // 계약 기간 중 성적 급변 → 연봉만 조정 (기간 유지)
         const swing = detectPerfSwing(currStats, prevStats);
         if (swing !== 0) {
-          const salaryRaw = await window.projectB!.calcNpcRenewalSalaryNative(JSON.stringify({
-            ovr: liveOvr, age: npc.age,
-            leagueId:         npc.currentLeague ?? "",
-            currentSalary:    newSalary,
-            performanceScore: perfScore,
-            greed:            pers.greed,
-            leagueMult:       leagueMultMap,
-          }));
+          const salaryRaw = await window.projectB!.calcNpcRenewalSalaryNative(
+            JSON.stringify({
+              ovr: liveOvr,
+              age: npc.age,
+              leagueId: npc.currentLeague ?? "",
+              currentSalary: newSalary,
+              performanceScore: perfScore,
+              greed: pers.greed,
+              leagueMult: leagueMultMap,
+            }),
+          );
           const adjSalary = JSON.parse(salaryRaw) as number;
           // 10% 이상 차이날 때만 중간 조정
-          if (Math.abs(adjSalary - newSalary) / Math.max(newSalary, 1) >= 0.10) {
+          if (Math.abs(adjSalary - newSalary) / Math.max(newSalary, 1) >= 0.1) {
             newSalary = adjSalary;
-            autoLog(`[중간조정] ${npc.name} | 성적 ${swing > 0 ? "급등▲" : "급락▼"} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만 (${swing > 0 ? "+" : ""}${Math.round((newSalary - (npc.currentSalary ?? 0)) / Math.max(1, npc.currentSalary ?? 1) * 100)}%) | 잔여 ${finalYears}년`);
-            _adjustEntries.push({ npcId: npc.npcId, name: npc.name, fromTeamId: npc.currentTeam, fromLeagueId: npc.currentLeague ?? "", detail: `성적 ${swing > 0 ? "급등▲" : "급락▼"} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만 (잔여 ${finalYears}년)` });
+            autoLog(
+              `[중간조정] ${npc.name} | 성적 ${swing > 0 ? "급등▲" : "급락▼"} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만 (${swing > 0 ? "+" : ""}${Math.round(((newSalary - (npc.currentSalary ?? 0)) / Math.max(1, npc.currentSalary ?? 1)) * 100)}%) | 잔여 ${finalYears}년`,
+            );
+            _adjustEntries.push({
+              npcId: npc.npcId,
+              name: npc.name,
+              fromTeamId: npc.currentTeam,
+              fromLeagueId: npc.currentLeague ?? "",
+              detail: `성적 ${swing > 0 ? "급등▲" : "급락▼"} | ${(npc.currentSalary ?? 0).toLocaleString()}만→${newSalary.toLocaleString()}만 (잔여 ${finalYears}년)`,
+            });
           }
         }
       }
 
-      const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
+      const idx = updatedNpcs.findIndex((n) => n.npcId === npc.npcId);
       if (idx >= 0) {
         updatedNpcs[idx] = {
           ...updatedNpcs[idx],
           // proServiceYears는 Rust run_offseason이 +1 처리 — 여기서 증가시키면 double-increment 발생
-          currentSalary:   newSalary,
-          contractYears:   finalYears,
+          currentSalary: newSalary,
+          contractYears: finalYears,
         };
       }
       // master_overlay.db 표시용으로는 +1 전달 (NpcSaveState는 Rust 결과로 덮어씀)
-      npcContractUpdates.push({ npcId: npc.npcId, currentSalary: newSalary, contractYears: finalYears, proServiceYears: newProSY });
+      npcContractUpdates.push({
+        npcId: npc.npcId,
+        currentSalary: newSalary,
+        contractYears: finalYears,
+        proServiceYears: newProSY,
+      });
     }
 
     if (slotId && npcContractUpdates.length > 0) {
       const res = JSON.parse(
-        await window.projectB!.npcUpdateContracts(JSON.stringify({ slotId, updates: npcContractUpdates }))
+        await window.projectB!.npcUpdateContracts(
+          JSON.stringify({ slotId, updates: npcContractUpdates }),
+        ),
       ) as { ok?: boolean; error?: string };
       if (res.error) autoLog(`[계약갱신오류] ${res.error}`);
       else autoLog(`[계약갱신] 명명 NPC ${npcContractUpdates.length}명 갱신 완료`);
@@ -1577,14 +1892,15 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     // 반대 방향(한국 선수 → ABL·JBL)은 막지 않는다. 그쪽엔 보유 한도가 없고,
     // 그게 이번에 열려는 "해외 진출" 그 자체다.
     const faApplicants = updatedNpcs.filter(
-      (n) => n.careerStatus === "free_agent"
-        && n.currentLeague === "LEAGUE_FREE_AGENT"
-        && proLeagues.has(n.originalLeagueId ?? "")
+      (n) =>
+        n.careerStatus === "free_agent" &&
+        n.currentLeague === "LEAGUE_FREE_AGENT" &&
+        proLeagues.has(n.originalLeagueId ?? "") &&
         // ⚠ **`isForeignPlayer(원소속, 국적)`으로 걸러선 안 된다.** 그 함수는
         // "그 리그에서 외국인인가"를 묻는데, ABL 선수는 ABL에서 내국인이라
         // **false가 돌아와 그대로 통과했다** — 처음 이렇게 짰다가 팀당 14명이
         // 17명으로 늘었다. 물어야 할 건 **목적지에서 외국인인가**다.
-        && !isForeignInQuotaLeague(n.nationality),
+        !isForeignInQuotaLeague(n.nationality),
     );
 
     if (faApplicants.length > 0) {
@@ -1592,8 +1908,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       const faRules = (rulesFile as unknown as { faRules?: unknown }).faRules;
       // 로스터 상한은 규칙 파일이 정본이다 — 코드에 두 번 적으면 그게 드리프트다
       // 리그마다 다르다 — 팀에서 파생한다 (JBL 32, KBL·ABL 34)
-      const faMaxRosterOf = (leagueId: string) =>
-        rulesFile.rosterRules[leagueId]?.rosterMax ?? 34;
+      const faMaxRosterOf = (leagueId: string) => rulesFile.rosterRules[leagueId]?.rosterMax ?? 34;
       const liveStats2 = get(npcLiveStatsStore);
       const ovrOf = (npcId: string): number => {
         const e = m.entities.find((x) => x.id === npcId);
@@ -1607,7 +1922,8 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       // 없었다.** 확장팩을 열어도 32팀이 관전 대상일 뿐이었다.
       const faLeagueIds = activeProLeagues();
       const proFirstTeams = m.teams.filter(
-        (t) => faLeagueIds.includes(t.leagueId) && t.id.endsWith("_1") && !SANGMU_TEAM_IDS.has(t.id),
+        (t) =>
+          faLeagueIds.includes(t.leagueId) && t.id.endsWith("_1") && !SANGMU_TEAM_IDS.has(t.id),
       );
       const activeOf = (teamId: string) =>
         updatedNpcs.filter((n) => n.currentTeam === teamId && n.careerStatus === "active");
@@ -1683,28 +1999,38 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
 
       try {
         const market = JSON.parse(
-          await window.projectB!.engine("resolveFaMarketNative", JSON.stringify({
-            players: faApplicants.map((n) => ({
-              npcId: n.npcId, name: n.name,
-              fromTeamId: n.originalTeamId ?? "",
-              position: n.position ?? "SP",
-              ovr: ovrOf(n.npcId),
-              age: n.age,
-              salary: n.currentSalary ?? 0,
-              form: 0,
-            })),
-            teams: faTeams,
-            rules: faRules,
-            leagueSalaries,
-            seasonYear: s.seasonYear,
-            worldSeed: (s.worldSeed ?? 0) >>> 0,
-          }))
+          await window.projectB!.engine(
+            "resolveFaMarketNative",
+            JSON.stringify({
+              players: faApplicants.map((n) => ({
+                npcId: n.npcId,
+                name: n.name,
+                fromTeamId: n.originalTeamId ?? "",
+                position: n.position ?? "SP",
+                ovr: ovrOf(n.npcId),
+                age: n.age,
+                salary: n.currentSalary ?? 0,
+                form: 0,
+              })),
+              teams: faTeams,
+              rules: faRules,
+              leagueSalaries,
+              seasonYear: s.seasonYear,
+              worldSeed: (s.worldSeed ?? 0) >>> 0,
+            }),
+          ),
         ) as {
           error?: string;
           signings: Array<{
-            npcId: string; name: string; fromTeamId: string; toTeamId: string;
-            grade: string; salary: number; years: number;
-            compensationNpcId: string | null; compensationMoney: number;
+            npcId: string;
+            name: string;
+            fromTeamId: string;
+            toTeamId: string;
+            grade: string;
+            salary: number;
+            years: number;
+            compensationNpcId: string | null;
+            compensationMoney: number;
           }>;
           unsigned: string[];
         };
@@ -1751,17 +2077,25 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                 careerEvents: [
                   ...(comp.careerEvents ?? []),
                   {
-                    year: s.seasonYear, eventType: "trade" as const,
-                    fromTeamId: comp.currentTeam, fromLeagueId: comp.currentLeague,
-                    toTeamId: sg.fromTeamId, toLeagueId: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
+                    year: s.seasonYear,
+                    eventType: "trade" as const,
+                    fromTeamId: comp.currentTeam,
+                    fromLeagueId: comp.currentLeague,
+                    toTeamId: sg.fromTeamId,
+                    toLeagueId: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
                   },
                 ],
               };
               faMarketRows.push({
-                seasonYear: s.seasonYear, week: weekNum, category: "trade",
-                playerId: comp.npcId, playerName: comp.name,
-                fromTeamId: comp.currentTeam, fromLeagueId: comp.currentLeague,
-                toTeamId: sg.fromTeamId, toLeagueId: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
+                seasonYear: s.seasonYear,
+                week: weekNum,
+                category: "trade",
+                playerId: comp.npcId,
+                playerName: comp.name,
+                fromTeamId: comp.currentTeam,
+                fromLeagueId: comp.currentLeague,
+                toTeamId: sg.fromTeamId,
+                toLeagueId: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
                 detail: `${sg.grade}등급 FA ${sg.name} 보상선수`,
               });
             }
@@ -1769,23 +2103,27 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
 
           const detail = stayed
             ? `${sg.grade}등급 원소속 잔류 | ${sg.salary.toLocaleString()}만/${sg.years}년`
-            : `${sg.grade}등급 이적 | ${sg.salary.toLocaleString()}만/${sg.years}년`
-              + (sg.compensationMoney > 0 ? ` | 보상금 ${sg.compensationMoney.toLocaleString()}만` : "");
+            : `${sg.grade}등급 이적 | ${sg.salary.toLocaleString()}만/${sg.years}년` +
+              (sg.compensationMoney > 0
+                ? ` | 보상금 ${sg.compensationMoney.toLocaleString()}만`
+                : "");
 
-          autoLog(`[FA계약] ${sg.name} | ${stayed ? "잔류" : "이적"} → ${sg.toTeamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "")} | ${detail}`);
+          autoLog(
+            `[FA계약] ${sg.name} | ${stayed ? "잔류" : "이적"} → ${sg.toTeamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "")} | ${detail}`,
+          );
 
           // 보상선수·보상금 소식 — **우리 팀이 주거나 받을 때만.**
           // ⚠ 리그 전체 FA 계약은 한 해 수십 건이다. 보상이 오간 것만,
           //   그중에서도 우리 팀이 걸린 것만 보낸다.
           {
             const myT = g.protagonist.teamId;
-            const gave = sg.fromTeamId === myT;   // 우리가 내준다
-            const got  = sg.toTeamId === myT;     // 우리가 데려온다
+            const gave = sg.fromTeamId === myT; // 우리가 내준다
+            const got = sg.toTeamId === myT; // 우리가 데려온다
             const hasComp = !!sg.compensationNpcId || sg.compensationMoney > 0;
             if (!stayed && hasComp && (gave || got)) {
               const compName = sg.compensationNpcId
-                ? (m.entities.find((e) => e.id === sg.compensationNpcId)?.name
-                   ?? sg.compensationNpcId)
+                ? (m.entities.find((e) => e.id === sg.compensationNpcId)?.name ??
+                  sg.compensationNpcId)
                 : null;
               // 보상선수·보상금은 **표가 든다**(`table.faComp`) — 본문은 누가
               // 어디로 갔는지 한 줄이다 (OP ⑤)
@@ -1794,31 +2132,39 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                 id: `msg-facomp-${s.seasonYear}-${sg.npcId}`,
                 category: "system",
                 sender: "리그 사무국",
-                subject: gave
-                  ? `FA 보상 — ${sg.name} 이적`
-                  : `FA 보상 — ${sg.name} 영입`,
+                subject: gave ? `FA 보상 — ${sg.name} 이적` : `FA 보상 — ${sg.name} 영입`,
                 preview: compName ? `보상선수 ${compName}` : "보상금 지급",
                 body: lines.join(String.fromCharCode(10)),
                 createdAt: `W${s.currentWeek}`,
                 readAt: null,
                 // 누가 어디로 갔는지는 **제목이 든다** — 표는 보상 조건만이다
                 metadata: faCompTableMeta({
-                  grade: sg.grade, money: sg.compensationMoney, playerName: compName,
+                  grade: sg.grade,
+                  money: sg.compensationMoney,
+                  playerName: compName,
                 }),
               });
             }
           }
           _faSignEntries.push({
-            npcId: sg.npcId, name: sg.name,
-            fromTeamId: sg.fromTeamId, fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
-            toTeamId: sg.toTeamId, toLeagueId: toLeague,
+            npcId: sg.npcId,
+            name: sg.name,
+            fromTeamId: sg.fromTeamId,
+            fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
+            toTeamId: sg.toTeamId,
+            toLeagueId: toLeague,
             detail,
           });
           faMarketRows.push({
-            seasonYear: s.seasonYear, week: weekNum, category: "fa",
-            playerId: sg.npcId, playerName: sg.name,
-            fromTeamId: sg.fromTeamId, fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
-            toTeamId: sg.toTeamId, toLeagueId: toLeague,
+            seasonYear: s.seasonYear,
+            week: weekNum,
+            category: "fa",
+            playerId: sg.npcId,
+            playerName: sg.name,
+            fromTeamId: sg.fromTeamId,
+            fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
+            toTeamId: sg.toTeamId,
+            toLeagueId: toLeague,
             detail,
           });
         }
@@ -1840,14 +2186,26 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
         // 7-4·F-4까지는 **로그로만** 있었다. 자동진행 로그는 개발용이라
         // 플레이어는 리그의 겨울에 무슨 일이 있었는지 볼 수 없었다.
         if (market.signings.length > 0) {
-          emitFaMarketNews(market.signings, market.unsigned.length, weekNum, s.seasonYear, m, g.protagonist.teamId);
+          emitFaMarketNews(
+            market.signings,
+            market.unsigned.length,
+            weekNum,
+            s.seasonYear,
+            m,
+            g.protagonist.teamId,
+          );
         }
 
         if (slotId && faMarketRows.length > 0) {
           const res = JSON.parse(
-            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faMarketRows }))
+            await window.projectB!.leagueAddTransactions(
+              JSON.stringify({ slotId, rows: faMarketRows }),
+            ),
           ) as { error?: string };
-          if (res.error) { autoLog(`[FA기록오류] ${res.error}`); _faMarketDbOk = false; }
+          if (res.error) {
+            autoLog(`[FA기록오류] ${res.error}`);
+            _faMarketDbOk = false;
+          }
         }
       } catch (e) {
         // FA 시장이 못 돌아도 오프시즌 자체는 멈추지 않는다 —
@@ -1864,54 +2222,122 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   if (slotId && namedRetirementRows.length > 0) {
     autoLog(`[은퇴기록] NPC 은퇴 ${namedRetirementRows.length}명 DB 저장`);
     const res = JSON.parse(
-      await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: namedRetirementRows }))
+      await window.projectB!.leagueAddTransactions(
+        JSON.stringify({ slotId, rows: namedRetirementRows }),
+      ),
     );
-    if (res.error) { autoLog(`[은퇴기록오류] ${res.error}`); _retireDbOk = false; }
+    if (res.error) {
+      autoLog(`[은퇴기록오류] ${res.error}`);
+      _retireDbOk = false;
+    }
   }
 
   // 이벤트 로그 발행
   const _elapsed = Date.now() - _t0Offseason;
   if (_retireEntries.length > 0)
-    logEvent({ id: `retire-W${weekNum}-${s.seasonYear}`, type: "retire", seasonYear: s.seasonYear, week: weekNum,
-      players: _retireEntries, counts: { input: namedNpcs.length, processed: _retireEntries.length, saved: namedRetirementRows.length },
-      dbOk: _retireDbOk, durationMs: _elapsed });
+    logEvent({
+      id: `retire-W${weekNum}-${s.seasonYear}`,
+      type: "retire",
+      seasonYear: s.seasonYear,
+      week: weekNum,
+      players: _retireEntries,
+      counts: {
+        input: namedNpcs.length,
+        processed: _retireEntries.length,
+        saved: namedRetirementRows.length,
+      },
+      dbOk: _retireDbOk,
+      durationMs: _elapsed,
+    });
 
   if (_faApplyEntries.length > 0)
-    logEvent({ id: `fa-apply-W${weekNum}-${s.seasonYear}`, type: "fa_apply", seasonYear: s.seasonYear, week: weekNum,
+    logEvent({
+      id: `fa-apply-W${weekNum}-${s.seasonYear}`,
+      type: "fa_apply",
+      seasonYear: s.seasonYear,
+      week: weekNum,
       players: _faApplyEntries,
       counts: { input: namedNpcs.length, processed: _faApplyCount, saved: _faApplyCount },
-      dbOk: true, durationMs: _elapsed,
-      extra: `신청 ${_faApplyCount} / 재계약의사 ${_faDeclineCount}` });
+      dbOk: true,
+      durationMs: _elapsed,
+      extra: `신청 ${_faApplyCount} / 재계약의사 ${_faDeclineCount}`,
+    });
 
   if (_faSignEntries.length > 0)
-    logEvent({ id: `fa-market-W${weekNum}-${s.seasonYear}`, type: "fa_result", seasonYear: s.seasonYear, week: weekNum,
+    logEvent({
+      id: `fa-market-W${weekNum}-${s.seasonYear}`,
+      type: "fa_result",
+      seasonYear: s.seasonYear,
+      week: weekNum,
       players: _faSignEntries,
-      counts: { input: _faApplyCount, processed: _faSignEntries.length, saved: faMarketRows.length },
-      dbOk: _faMarketDbOk, durationMs: Date.now() - _t0Offseason,
-      extra: `계약 ${_faSignEntries.length} / 신청 ${_faApplyCount}` });
+      counts: {
+        input: _faApplyCount,
+        processed: _faSignEntries.length,
+        saved: faMarketRows.length,
+      },
+      dbOk: _faMarketDbOk,
+      durationMs: Date.now() - _t0Offseason,
+      extra: `계약 ${_faSignEntries.length} / 신청 ${_faApplyCount}`,
+    });
 
   if (_renewalEntries.length > 0)
-    logEvent({ id: `renewal-W${weekNum}-${s.seasonYear}`, type: "renewal", seasonYear: s.seasonYear, week: weekNum,
-      players: _renewalEntries, counts: { input: namedNpcs.length, processed: _renewalEntries.length, saved: _renewalEntries.length },
-      dbOk: true, durationMs: _elapsed });
+    logEvent({
+      id: `renewal-W${weekNum}-${s.seasonYear}`,
+      type: "renewal",
+      seasonYear: s.seasonYear,
+      week: weekNum,
+      players: _renewalEntries,
+      counts: {
+        input: namedNpcs.length,
+        processed: _renewalEntries.length,
+        saved: _renewalEntries.length,
+      },
+      dbOk: true,
+      durationMs: _elapsed,
+    });
 
   if (_adjustEntries.length > 0)
-    logEvent({ id: `adjust-W${weekNum}-${s.seasonYear}`, type: "adjustment", seasonYear: s.seasonYear, week: weekNum,
-      players: _adjustEntries, counts: { input: namedNpcs.length, processed: _adjustEntries.length, saved: _adjustEntries.length },
-      dbOk: true, durationMs: _elapsed });
+    logEvent({
+      id: `adjust-W${weekNum}-${s.seasonYear}`,
+      type: "adjustment",
+      seasonYear: s.seasonYear,
+      week: weekNum,
+      players: _adjustEntries,
+      counts: {
+        input: namedNpcs.length,
+        processed: _adjustEntries.length,
+        saved: _adjustEntries.length,
+      },
+      dbOk: true,
+      durationMs: _elapsed,
+    });
 
   // 상태 일관성 검증
   const _gAfter = get(gameStore);
   const _mAfter = get(masterStore);
-  const _proEntities = _mAfter.entities.filter(e => e.role === "player" && proLeagues.has(e.leagueId ?? ""));
-  const _proNpcs     = _gAfter.npcs.filter(n => proLeagues.has(n.currentLeague ?? "") || proLeagues.has(n.originalLeagueId ?? ""));
+  const _proEntities = _mAfter.entities.filter(
+    (e) => e.role === "player" && proLeagues.has(e.leagueId ?? ""),
+  );
+  const _proNpcs = _gAfter.npcs.filter(
+    (n) => proLeagues.has(n.currentLeague ?? "") || proLeagues.has(n.originalLeagueId ?? ""),
+  );
   logVerify(`W${weekNum} 오프시즌 NPC 처리 완료 (${_elapsed}ms)`, [
     { name: `은퇴 ${_retireEntries.length}명 DB저장`, ok: _retireDbOk },
     { name: `FA신청 ${_faApplyCount} / 재계약의사 ${_faDeclineCount}`, ok: true },
-    { name: `FA계약 ${_faSignEntries.length}명 (등급·보상선수 반영)`, ok: _faMarketDbOk,
-      detail: _faSignEntries.length === 0 && _faApplyCount > 0 ? "신청자는 있는데 계약이 0 — 시장이 안 돌았다" : undefined },
+    {
+      name: `FA계약 ${_faSignEntries.length}명 (등급·보상선수 반영)`,
+      ok: _faMarketDbOk,
+      detail:
+        _faSignEntries.length === 0 && _faApplyCount > 0
+          ? "신청자는 있는데 계약이 0 — 시장이 안 돌았다"
+          : undefined,
+    },
     { name: `재계약 ${_renewalEntries.length} / 중간조정 ${_adjustEntries.length}`, ok: true },
-    { name: `gameStore.npcs 프로 ${_proNpcs.length}명`, ok: _proNpcs.length > 0, detail: `entities 프로 ${_proEntities.length}명` },
+    {
+      name: `gameStore.npcs 프로 ${_proNpcs.length}명`,
+      ok: _proNpcs.length > 0,
+      detail: `entities 프로 ${_proEntities.length}명`,
+    },
   ]);
 
   return logs;
@@ -1923,18 +2349,20 @@ export async function processScoutingImprovement(): Promise<void> {
   const m = get(masterStore);
 
   const proLeagues = activeProLeagues();
-  const proTeams = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
+  const proTeams = m.teams.filter((t) => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
     const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     const res = JSON.parse(
-      await window.projectB!.calcScoutingImprovementNative(JSON.stringify({
-        currentQuality:         profile.scoutingQuality,
-        scoutBudgetRatio:       profile.farmInvestment / 100.0 * 0.5,
-        hiredScoutQuality:      null,
-        consecutivePlayoffYears: 0,
-      }))
+      await window.projectB!.calcScoutingImprovementNative(
+        JSON.stringify({
+          currentQuality: profile.scoutingQuality,
+          scoutBudgetRatio: (profile.farmInvestment / 100.0) * 0.5,
+          hiredScoutQuality: null,
+          consecutivePlayoffYears: 0,
+        }),
+      ),
     ) as { newQuality: number };
 
     gameStore.patchProTeamProfile(team.id, { ...profile, scoutingQuality: res.newQuality });
@@ -1950,9 +2378,15 @@ export { getTeamProfile };
 // 겨울의 큰 사건 몇 개만 남기고 나머지는 숫자로 요약한다.
 function emitFaMarketNews(
   signings: Array<{
-    npcId: string; name: string; fromTeamId: string; toTeamId: string;
-    grade: string; salary: number; years: number;
-    compensationNpcId: string | null; compensationMoney: number;
+    npcId: string;
+    name: string;
+    fromTeamId: string;
+    toTeamId: string;
+    grade: string;
+    salary: number;
+    years: number;
+    compensationNpcId: string | null;
+    compensationMoney: number;
   }>,
   unsignedCount: number,
   weekNum: number,
@@ -1962,7 +2396,8 @@ function emitFaMarketNews(
 ): void {
   const teamName = (id: string) =>
     m.teams.find((t) => t.id === id)?.name ?? id.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-  const won = (v: number) => (v >= 10000 ? `${(v / 10000).toFixed(1)}억` : `${v.toLocaleString()}만`);
+  const won = (v: number) =>
+    v >= 10000 ? `${(v / 10000).toFixed(1)}억` : `${v.toLocaleString()}만`;
 
   const moved = signings.filter((x) => x.toTeamId !== x.fromTeamId);
   const stayed = signings.filter((x) => x.toTeamId === x.fromTeamId);
@@ -1972,11 +2407,12 @@ function emitFaMarketNews(
   const mine = signings.filter((x) => x.toTeamId === myTeamId || x.fromTeamId === myTeamId);
   const mineLines = mine.map((x) =>
     x.toTeamId === myTeamId
-      ? (x.fromTeamId === myTeamId
-          ? `  · ${x.name} 잔류 (${x.grade}등급 · ${won(x.salary)}/년 ${x.years}년)`
-          : `  · ${x.name} 영입 ← ${teamName(x.fromTeamId)} (${x.grade}등급 · ${won(x.salary)}/년)`)
+      ? x.fromTeamId === myTeamId
+        ? `  · ${x.name} 잔류 (${x.grade}등급 · ${won(x.salary)}/년 ${x.years}년)`
+        : `  · ${x.name} 영입 ← ${teamName(x.fromTeamId)} (${x.grade}등급 · ${won(x.salary)}/년)`
       : `  · ${x.name} 이적 → ${teamName(x.toTeamId)}` +
-        (x.compensationNpcId ? " (보상선수 발생)" : ""));
+        (x.compensationNpcId ? " (보상선수 발생)" : ""),
+  );
 
   gameStore.addMessage({
     id: `msg-fa-market-${seasonYear}-w${weekNum}`,
@@ -1994,10 +2430,12 @@ function emitFaMarketNews(
         (unsignedCount > 0 ? ` · 미계약 ${unsignedCount}명` : ""),
       "",
       "■ 대형 계약",
-      ...top.map((x) =>
-        `  · ${x.name} (${x.grade}등급) ${teamName(x.fromTeamId)}` +
-        `${x.toTeamId === x.fromTeamId ? " 잔류" : ` → ${teamName(x.toTeamId)}`}` +
-        ` · ${won(x.salary)}/년 ${x.years}년 (총 ${won(x.salary * x.years)})`),
+      ...top.map(
+        (x) =>
+          `  · ${x.name} (${x.grade}등급) ${teamName(x.fromTeamId)}` +
+          `${x.toTeamId === x.fromTeamId ? " 잔류" : ` → ${teamName(x.toTeamId)}`}` +
+          ` · ${won(x.salary)}/년 ${x.years}년 (총 ${won(x.salary * x.years)})`,
+      ),
       ...(mineLines.length > 0 ? ["", "■ 우리 팀", ...mineLines] : []),
       ...(unsignedCount > 0
         ? ["", `계약을 찾지 못한 ${unsignedCount}명은 독립리그행 또는 은퇴를 택하게 됩니다.`]
@@ -2007,8 +2445,10 @@ function emitFaMarketNews(
     readAt: null,
     // 리그 마감 요약 — 「받은 제안」이 아니다 (B-35 · table.faMarket)
     metadata: faMarketTableMeta({
-      total: signings.length, moved: moved.length,
-      stayed: stayed.length, unsigned: unsignedCount,
+      total: signings.length,
+      moved: moved.length,
+      stayed: stayed.length,
+      unsigned: unsignedCount,
     }),
   });
 }

@@ -51,24 +51,29 @@ export interface SimWorkerResponse {
 // 씨앗은 배선해 둔다. **지울지는 따로 판단한다.**
 self.onmessage = async (e: MessageEvent<SimWorkerRequest>) => {
   const { reqId, games, entities, worldSeed } = e.data;
-  const results = await Promise.all(games.map(async (g) => {
-    const sim: SimGameResult = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
-      conditions:  g.conditions,
-      homeRotIdx:  g.homeRotIdx ?? 0,
-      awayRotIdx:  g.awayRotIdx ?? 0,
-      phase:       g.phase,
-      knockout:    g.knockout ?? false,
-      week:        g.week ?? 0,
-      worldSeed,
-      scheduleId:  g.id,
-    });
-    return {
-      id:                 g.id,
-      result:             sim.result,
-      nextHomeRotIdx:     sim.nextHomeRotIdx,
-      nextAwayRotIdx:     sim.nextAwayRotIdx,
-      pitcherConditions:  sim.pitcherConditions,
-    };
-  }));
-  (self as unknown as { postMessage: (data: SimWorkerResponse) => void }).postMessage({ reqId, results });
+  const results = await Promise.all(
+    games.map(async (g) => {
+      const sim: SimGameResult = await simulateGame(g.homeTeamId, g.awayTeamId, entities, {
+        conditions: g.conditions,
+        homeRotIdx: g.homeRotIdx ?? 0,
+        awayRotIdx: g.awayRotIdx ?? 0,
+        phase: g.phase,
+        knockout: g.knockout ?? false,
+        week: g.week ?? 0,
+        worldSeed,
+        scheduleId: g.id,
+      });
+      return {
+        id: g.id,
+        result: sim.result,
+        nextHomeRotIdx: sim.nextHomeRotIdx,
+        nextAwayRotIdx: sim.nextAwayRotIdx,
+        pitcherConditions: sim.pitcherConditions,
+      };
+    }),
+  );
+  (self as unknown as { postMessage: (data: SimWorkerResponse) => void }).postMessage({
+    reqId,
+    results,
+  });
 };

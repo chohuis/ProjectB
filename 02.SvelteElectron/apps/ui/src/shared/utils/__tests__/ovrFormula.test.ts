@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pitchingOvrOf, battingOvrOf } from "../ovr";
 import type { PitchingAttributes, BattingAttributes } from "../../types/save";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * **OVR 은 파생값이다** — 능력치가 바뀌면 같이 바뀌어야 한다.
@@ -94,9 +95,10 @@ describe("OVR 식", () => {
     const GE = read("packages/engine-native/src/growth_engine.rs");
     expect(GE).toContain("(weighted / 12.0).round()");
     expect(GE).toContain("(weighted / 11.8).round()");
-    const TS = read("apps/ui/src/shared/utils/ovr.ts");
-    expect(TS).toContain(") / 12.0);");
-    expect(TS).toContain(") / 11.8);");
+    const TS = flattenSrc(read("apps/ui/src/shared/utils/ovr.ts"));
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
+    expect(TS).toContain(") / 12.0,");
+    expect(TS).toContain(") / 11.8,");
   });
 
   it("Rust 와 계수가 같다", () => {

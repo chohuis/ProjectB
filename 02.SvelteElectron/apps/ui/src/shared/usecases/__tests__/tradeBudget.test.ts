@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "../../utils/__tests__/flattenSrc";
 
 /**
  * **트레이드가 실제 구단 예산을 본다** (2026-09-01 · C-2).
@@ -66,7 +67,8 @@ describe("트레이드 예산 배선", () => {
   it("두 호출부에서 박힌 상한이 사라졌다", () => {
     expect(M).not.toContain("salaryCap: 300000,");
     expect(M).toContain("salaryCap: budgetCapOf(team.id),");
-    expect(M).toContain(
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
+    expect(flattenSrc(M)).toContain(
       "salaryCap: teamWithRosters.find((t) => t.teamId === proposal.receivingTeamId)?.salaryCap",
     );
   });

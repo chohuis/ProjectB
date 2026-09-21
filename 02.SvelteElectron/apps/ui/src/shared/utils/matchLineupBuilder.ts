@@ -7,8 +7,14 @@ import { getTeamRotation, rotationSizeForLeague, starterOfRotation } from "./ros
 
 export interface StarterStats {
   name?: string;
-  command: number; velocity: number; staminaCap: number; mentalResil: number;
-  control: number; movement: number; clutch: number; holdRunners: number;
+  command: number;
+  velocity: number;
+  staminaCap: number;
+  mentalResil: number;
+  control: number;
+  movement: number;
+  clutch: number;
+  holdRunners: number;
   /** 보유 구종 — 안 넘기면 엔진이 패스트볼 하나로 던진다 */
   arsenal: import("./arsenal").EngineArsenalPitch[];
 }
@@ -23,15 +29,17 @@ function playerOf(e: EntityRow) {
 // ── 타자 라인업 9명 빌드 ──────────────────────────────────────
 export function buildBatterLineup(teamId: string, entities: EntityRow[]): MatchBatterStats[] {
   const inTeam = entities.filter(
-    (e) => e.teamId === teamId && e.role === "player" &&
+    (e) =>
+      e.teamId === teamId &&
+      e.role === "player" &&
       !PITCHER_POS.includes(String(playerOf(e).position ?? "")),
   );
-  const pool = inTeam.length >= 9
-    ? inTeam
-    : entities.filter(
-        (e) => e.role === "player" &&
-          !PITCHER_POS.includes(String(playerOf(e).position ?? "")),
-      );
+  const pool =
+    inTeam.length >= 9
+      ? inTeam
+      : entities.filter(
+          (e) => e.role === "player" && !PITCHER_POS.includes(String(playerOf(e).position ?? "")),
+        );
   if (pool.length < 9) return [];
 
   const sorted = [...pool].sort(
@@ -41,23 +49,35 @@ export function buildBatterLineup(teamId: string, entities: EntityRow[]): MatchB
   const used = new Set<string>();
   for (const pos of FIELD_ORDER) {
     const found = sorted.find((e) => !used.has(e.id) && playerOf(e).position === pos);
-    if (found) { used.add(found.id); picked.push(found); }
+    if (found) {
+      used.add(found.id);
+      picked.push(found);
+    }
   }
   for (const e of sorted) {
     if (picked.length >= 9) break;
-    if (!used.has(e.id)) { used.add(e.id); picked.push(e); }
+    if (!used.has(e.id)) {
+      used.add(e.id);
+      picked.push(e);
+    }
   }
   return picked.slice(0, 9).map((e) => {
     const bat = playerOf(e).batting ?? {};
     return {
-      id: e.id, name: e.name ?? undefined,
-      contact: bat.contact ?? 50, power: bat.power ?? 50,
-      eye: bat.eye ?? 50, discipline: bat.discipline ?? 50,
-      battingClutch: bat.battingClutch ?? 50, platoon: bat.platoon ?? 50,
-      speed: bat.speed ?? 50, baseInstinct: bat.baseInstinct ?? 50,
+      id: e.id,
+      name: e.name ?? undefined,
+      contact: bat.contact ?? 50,
+      power: bat.power ?? 50,
+      eye: bat.eye ?? 50,
+      discipline: bat.discipline ?? 50,
+      battingClutch: bat.battingClutch ?? 50,
+      platoon: bat.platoon ?? 50,
+      speed: bat.speed ?? 50,
+      baseInstinct: bat.baseInstinct ?? 50,
       // 🔴 번트를 안 넘기면 희생번트가 다시 죽는다 — 성장 엔진에만 있던 값이다
       bunting: bat.bunting ?? 50,
-      fielding: bat.fielding ?? 50, arm: bat.arm ?? 50,
+      fielding: bat.fielding ?? 50,
+      arm: bat.arm ?? 50,
     };
   });
 }
@@ -97,7 +117,9 @@ export function buildOpponentBrief(
   teamId: string,
   entities: EntityRow[],
   opts: {
-    rank?: number | null; total?: number | null; record?: string | null;
+    rank?: number | null;
+    total?: number | null;
+    record?: string | null;
     conditions?: Record<string, PlayerCondition>;
     /** 그 팀의 로테이션 슬롯 — `rotIdxOf()`로 꺼낸다 */
     rotIdx?: number;
@@ -108,31 +130,42 @@ export function buildOpponentBrief(
   // 타선 OVR 평균 — `MatchBatterStats`엔 ovr이 없어서 엔티티에서 직접 낸다.
   // 상위 9명을 쓴다(라인업과 같은 기준)
   const batters = entities
-    .filter((e) => e.teamId === teamId && e.role === "player"
-      && !PITCHER_POS.includes(String(playerOf(e).position ?? "")))
+    .filter(
+      (e) =>
+        e.teamId === teamId &&
+        e.role === "player" &&
+        !PITCHER_POS.includes(String(playerOf(e).position ?? "")),
+    )
     .map((e) => Number(playerOf(e).batting?.ovr ?? 0))
     .sort((a, b) => b - a)
     .slice(0, 9);
-  const teamOvr = batters.length > 0
-    ? Math.round(batters.reduce((s, v) => s + v, 0) / batters.length)
-    : null;
+  const teamOvr =
+    batters.length > 0 ? Math.round(batters.reduce((s, v) => s + v, 0) / batters.length) : null;
 
-  const sp = pickStarterEntity(teamId, entities, opts.conditions, opts.rotIdx ?? 0, opts.leagueId ?? "", opts.npcInjuries);
+  const sp = pickStarterEntity(
+    teamId,
+    entities,
+    opts.conditions,
+    opts.rotIdx ?? 0,
+    opts.leagueId ?? "",
+    opts.npcInjuries,
+  );
   const p = sp ? playerOf(sp) : null;
 
   return {
     teamId,
-    rank:   opts.rank   ?? null,
-    total:  opts.total  ?? null,
+    rank: opts.rank ?? null,
+    total: opts.total ?? null,
     record: opts.record ?? null,
     teamOvr,
-    starter: sp && p
-      ? {
-          name: String(sp.name ?? p.name ?? sp.id),
-          position: String(p.position ?? "SP"),
-          ovr: Number(p.pitching?.ovr ?? 0),
-        }
-      : null,
+    starter:
+      sp && p
+        ? {
+            name: String(sp.name ?? p.name ?? sp.id),
+            position: String(p.position ?? "SP"),
+            ovr: Number(p.pitching?.ovr ?? 0),
+          }
+        : null,
   };
 }
 
@@ -183,8 +216,13 @@ export function pickStarterEntity(
   //   매 경기 다시 뽑으면 로테이션 5명이 계속 바뀌어 표본이 흩어진다(그쪽
   //   주석 참고). 고친 곳이 둘인데 한 곳만 고쳐져 있었다.
   const rotation = getTeamRotation(
-    teamId, entities, npcInjuries, rotationSizeForLeague(leagueId),
-    conditions, 0, leagueId,
+    teamId,
+    entities,
+    npcInjuries,
+    rotationSizeForLeague(leagueId),
+    conditions,
+    0,
+    leagueId,
   );
   const id = starterOfRotation(rotation, rotIdx);
   return id ? entities.find((e) => e.id === id) : undefined;
@@ -203,44 +241,66 @@ export function buildStarterStats(
   if (!candidate) return undefined;
   const pit = playerOf(candidate).pitching ?? {};
   return {
-    name:        candidate.name ?? undefined,
-    command:     pit.command    ?? 50,
-    velocity:    pit.velocity   ?? 50,
-    staminaCap:  pit.stamina    ?? 50,
-    mentalResil: pit.mentality  ?? 50,
-    control:     pit.control    ?? 50,
-    movement:    pit.movement   ?? 50,
-    clutch:      pit.clutch     ?? 50,
+    name: candidate.name ?? undefined,
+    command: pit.command ?? 50,
+    velocity: pit.velocity ?? 50,
+    staminaCap: pit.stamina ?? 50,
+    mentalResil: pit.mentality ?? 50,
+    control: pit.control ?? 50,
+    movement: pit.movement ?? 50,
+    clutch: pit.clutch ?? 50,
     holdRunners: pit.holdRunners ?? 50,
     // ⚠ NPC 투수도 구종을 갖고 있다(roster_gen이 만든다). 안 넘기면 상대
     // 에이스가 전부 패스트볼만 던지는 세계가 된다
-    arsenal:     toEngineArsenal(playerOf(candidate).pitches),
+    arsenal: toEngineArsenal(playerOf(candidate).pitches),
   };
 }
 
 // ── 수비진 빌드 ──────────────────────────────────────────────
 const FIELDER_POSITIONS = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"] as const;
 const FIELDER_XY: Record<string, { x: number; y: number }> = {
-  P: { x: 50, y: 62 }, C: { x: 50, y: 90 }, "1B": { x: 78, y: 70 },
-  "2B": { x: 63, y: 55 }, "3B": { x: 22, y: 70 }, SS: { x: 37, y: 55 },
-  LF: { x: 18, y: 28 }, CF: { x: 50, y: 16 }, RF: { x: 82, y: 28 },
+  P: { x: 50, y: 62 },
+  C: { x: 50, y: 90 },
+  "1B": { x: 78, y: 70 },
+  "2B": { x: 63, y: 55 },
+  "3B": { x: 22, y: 70 },
+  SS: { x: 37, y: 55 },
+  LF: { x: 18, y: 28 },
+  CF: { x: 50, y: 16 },
+  RF: { x: 82, y: 28 },
 };
 
 // ── 경기 전 날씨·구장 결정 (scheduleId·homeTeamId 해시 기반, 저장 불필요) ──
 export type PreGameWeather = "sunny" | "cloudy" | "rainy" | "windy_in" | "windy_out";
-export type PreGamePark    = "neutral" | "pitcher_park" | "hitter_park" | "dome";
+export type PreGamePark = "neutral" | "pitcher_park" | "hitter_park" | "dome";
 
 function strHash(s: string): number {
   return [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) & 0x7fffffff, 0);
 }
 
 export function derivePreGameWeather(scheduleId: string): PreGameWeather {
-  const pool: PreGameWeather[] = ["sunny", "sunny", "sunny", "cloudy", "cloudy", "rainy", "windy_in", "windy_out"];
+  const pool: PreGameWeather[] = [
+    "sunny",
+    "sunny",
+    "sunny",
+    "cloudy",
+    "cloudy",
+    "rainy",
+    "windy_in",
+    "windy_out",
+  ];
   return pool[strHash(scheduleId) % pool.length];
 }
 
 export function derivePreGamePark(homeTeamId: string): PreGamePark {
-  const pool: PreGamePark[] = ["neutral", "neutral", "neutral", "pitcher_park", "hitter_park", "dome"];
+  const pool: PreGamePark[] = [
+    "neutral",
+    "neutral",
+    "neutral",
+    "pitcher_park",
+    "hitter_park",
+    "dome",
+  ];
   return pool[strHash(homeTeamId) % pool.length];
 }
 

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { logLabel, logClass, isOutInPlay } from "../matchResult";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * 삼중살 — 2단계 (2026-08-30).
@@ -73,7 +74,8 @@ describe("삼중살 화면", () => {
   it("큰 글자 이름이 있다", () => {
     // ⚠ `FLASH_LABEL` 은 내보내지 않는 상수라 소스로 확인한다 —
     //   `Record<PitchResultCode, string>` 이라 빠지면 tsc 가 먼저 잡는다
-    const src = read("apps/ui/src/shared/utils/matchResult.ts");
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접거나 정렬 칸을 줄여도 안 깨진다 (A-6)
+    const src = flattenSrc(read("apps/ui/src/shared/utils/matchResult.ts"));
     expect(src.includes('DOUBLE_PLAY: "병살!", TRIPLE_PLAY: "삼중살!!",')).toBe(true);
   });
 

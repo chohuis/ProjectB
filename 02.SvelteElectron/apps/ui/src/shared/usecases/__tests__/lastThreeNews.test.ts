@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "../../utils/__tests__/flattenSrc";
 
 /**
  * 남은 3건 — 보상선수 · 독립리그 재도전 · 스카우팅 표시.
@@ -24,8 +25,10 @@ describe("보상선수 소식", () => {
   });
 
   it("우리 팀이 주거나 받을 때만", () => {
-    expect(src.includes("const gave = sg.fromTeamId === myT")).toBe(true);
-    expect(src.includes("const got  = sg.toTeamId === myT")).toBe(true);
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
+    const flat = flattenSrc(src);
+    expect(flat.includes("const gave = sg.fromTeamId === myT")).toBe(true);
+    expect(flat.includes("const got = sg.toTeamId === myT")).toBe(true);
     expect(src.includes("(gave || got)")).toBe(true);
   });
 

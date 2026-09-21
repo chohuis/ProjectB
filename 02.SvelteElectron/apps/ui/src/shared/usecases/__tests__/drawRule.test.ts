@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "../../utils/__tests__/flattenSrc";
 
 /**
  * **무승부 규칙** (2026-08-29 · 사용자 확정).
@@ -53,7 +54,8 @@ describe("무승부 규칙", () => {
   /** 🔴 한 층이라도 phase 를 안 실으면 그 경로만 무승부가 안 난다 */
   it("모든 경로가 phase 를 싣는다", () => {
     expect(GS).toContain("extraInningLimit: params.extraInningLimit ?? 0");
-    expect(read("apps/ui/src/shared/workers/simWorker.ts")).toContain("phase:       g.phase");
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — 정렬 칸이 줄어도 안 깨진다 (A-6)
+    expect(flattenSrc(read("apps/ui/src/shared/workers/simWorker.ts"))).toContain("phase: g.phase");
     expect(read("apps/ui/src/shared/stores/backgroundLeague.ts")).toContain(
       "phase:                g.phase",
     );
@@ -92,8 +94,8 @@ describe("무승부 규칙", () => {
     expect(read("apps/ui/src/shared/usecases/simulateSkippedGame.ts")).toContain(
       "knockout: knockoutMatchIds(s).has(entry.id)",
     );
-    expect(read("apps/ui/src/shared/workers/simWorker.ts")).toContain(
-      "knockout:    g.knockout ?? false",
+    expect(flattenSrc(read("apps/ui/src/shared/workers/simWorker.ts"))).toContain(
+      "knockout: g.knockout ?? false",
     );
   });
 

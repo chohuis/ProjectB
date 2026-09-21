@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "./flattenSrc";
 
 // ── 드래프트는 상대평가다 ────────────────────────────────────────
 //
@@ -123,7 +124,8 @@ describe("주인공 드래프트 산식", () => {
 
   it("MVP와 부문상을 구분해 센다", () => {
     const d = read("apps/ui/src/shared/utils/draftSystem.ts");
-    expect(d).toMatch(/a\.id === "mvp"\) mvps\+\+; else titles\+\+/);
+    // ⚠ 눌러서 본다 — prettier 가 `else` 를 다음 줄로 내렸다 (A-6)
+    expect(flattenSrc(d)).toContain('if (a.id === "mvp") mvps++; else titles++;');
   });
 
   it("산식 내역을 결과에 싣는다 — 합만 보면 어느 항이 미는지 못 고친다", () => {

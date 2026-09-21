@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * **타자 주인공의 계약 평가가 숫자가 아니었다** (2026-09-01 · 트랙 C 가 잡았다).
@@ -81,18 +82,22 @@ describe("타자 주인공 계약", () => {
     expect(P).toContain("ops_pts * 0.85 + games_pts * 0.15");
     // NPC 쪽 정본이 바뀌면 여기도 바꿔야 한다 — 그걸 알아채게 묶어 둔다
     const M = read("apps/ui/src/shared/usecases/weekPhases/market.ts");
-    expect(M).toContain("50 + (finiteOr(stats.ops, 0.7) - 0.700) * 180");
-    expect(M).toContain("Math.round(opsPts * 0.85 + gamesPts * 0.15)");
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
+    const flatM = flattenSrc(M);
+    // ⚠ TS 쪽은 `0.7` 이다 — prettier 가 `0.700` 의 꼬리 0 을 지운다(값은 같다 · A-6)
+    expect(flatM).toContain("50 + (finiteOr(stats.ops, 0.7) - 0.7) * 180");
+    expect(flatM).toContain("Math.round(opsPts * 0.85 + gamesPts * 0.15)");
   });
 
   /** 타자에게 투수 OVR 을 넘기면 제시액이 통째로 어긋난다 */
   it("타자면 타격 OVR 을 넘긴다", () => {
     expect(P).toContain("pub batting_ovr: Option<f64>,");
     expect(P).toContain("let ovr = params.batting_ovr.unwrap_or(params.pitching_ovr);");
-    const S = read("apps/ui/src/shared/utils/salaryEngine.ts");
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접거나 정렬 칸을 줄여도 안 깨진다 (A-6)
+    const S = flattenSrc(read("apps/ui/src/shared/utils/salaryEngine.ts"));
     expect(S).toContain('const isBatter = protagonist.playerType !== "pitcher";');
     expect(S).toContain(
-      "battingOvr:    isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,",
+      "battingOvr: isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,",
     );
   });
 

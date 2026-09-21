@@ -48,10 +48,15 @@ export interface SportsUnitLimits {
  * 세므로 **캡이 아예 안 걸린다.** 연간 입대 인원이 유일한 제어다.
  */
 export async function sportsUnitLimits(): Promise<SportsUnitLimits> {
-  const mil = (await loadRosterRules()).militaryRules as {
-    rosterSize?: number; serviceMonths?: number; maxPerTeam?: number; phase1Ratio?: number;
-    salary?: number;
-  } | undefined;
+  const mil = (await loadRosterRules()).militaryRules as
+    | {
+        rosterSize?: number;
+        serviceMonths?: number;
+        maxPerTeam?: number;
+        phase1Ratio?: number;
+        salary?: number;
+      }
+    | undefined;
   const serviceYears = Math.max(1, Math.round((mil?.serviceMonths ?? 24) / 12));
   const annualIntake = Math.max(1, Math.round((mil?.rosterSize ?? 26) / serviceYears));
   return {
@@ -80,7 +85,9 @@ export async function sportsUnitLimits(): Promise<SportsUnitLimits> {
  *   같은 함수의 다음 인자에서 같은 일이 또 일어났다.
  */
 export function sportsVacatingPositions(
-  discharging: ReadonlyArray<{ details?: { player?: { militaryUnit?: string; position?: string } } }>,
+  discharging: ReadonlyArray<{
+    details?: { player?: { militaryUnit?: string; position?: string } };
+  }>,
 ): string[] {
   return discharging
     .filter((e) => e.details?.player?.militaryUnit === "sports")
@@ -101,15 +108,20 @@ export function sportsVacatingPositions(
  */
 export function sportsVacatingFromNpcs(
   npcs: ReadonlyArray<{
-    militaryStatus?: string; militaryUnit?: string;
-    militaryDischargeYear?: number | null; position?: string;
+    militaryStatus?: string;
+    militaryUnit?: string;
+    militaryDischargeYear?: number | null;
+    position?: string;
   }>,
   seasonYear: number,
 ): string[] {
   return npcs
-    .filter((n) => n.militaryUnit === "sports"
-      && n.militaryStatus === "현역"
-      && n.militaryDischargeYear === seasonYear)
+    .filter(
+      (n) =>
+        n.militaryUnit === "sports" &&
+        n.militaryStatus === "현역" &&
+        n.militaryDischargeYear === seasonYear,
+    )
     .map((n) => n.position ?? "")
     .filter((pos) => pos !== "");
 }

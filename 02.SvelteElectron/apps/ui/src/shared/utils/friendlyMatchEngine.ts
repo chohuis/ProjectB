@@ -48,19 +48,19 @@ function findFreeOpponent(
 
 // ── 월간 친선경기 플래너 ──────────────────────────────────────
 export interface FriendlyPlan {
-  entries:       ScheduleEntry[];
-  monthLabel:    string;
+  entries: ScheduleEntry[];
+  monthLabel: string;
 }
 
 export function planMonthlyFriendlies(
   weekInYear: number,
-  absoluteWeek: number,   // 시즌 전체 절대 주차
-  myTeamId:    string,
-  leagueId:    string,
-  seasonYear:  number,
-  schedule:    ScheduleEntry[], // 현재 시즌 전체 스케줄
+  absoluteWeek: number, // 시즌 전체 절대 주차
+  myTeamId: string,
+  leagueId: string,
+  seasonYear: number,
+  schedule: ScheduleEntry[], // 현재 시즌 전체 스케줄
   leagueTeamIds: string[],
-  seasonPhaseEnd: number,       // 이 주차 이후는 오프시즌
+  seasonPhaseEnd: number, // 이 주차 이후는 오프시즌
 ): FriendlyPlan {
   const [rangeStart, rangeEnd] = monthWeekRange(weekInYear);
   const label = monthName(weekInYear);
@@ -69,11 +69,14 @@ export function planMonthlyFriendlies(
   // 이달 내 짝수 주차만 친선 배정 (격주)
   const evenWeeksInRange = [...Array(weeksInRange)]
     .map((_, i) => absoluteWeek + i)
-    .filter(w => w % 2 === 0).length;
+    .filter((w) => w % 2 === 0).length;
 
   const alreadyFriendly = schedule.filter(
-    (e) => e.isFriendly && !e.id.startsWith("PRESN_") &&
-           e.week >= absoluteWeek && e.week < absoluteWeek + weeksInRange,
+    (e) =>
+      e.isFriendly &&
+      !e.id.startsWith("PRESN_") &&
+      e.week >= absoluteWeek &&
+      e.week < absoluteWeek + weeksInRange,
   ).length;
 
   const needed = Math.max(0, evenWeeksInRange - alreadyFriendly);
@@ -99,15 +102,15 @@ export function planMonthlyFriendlies(
     const gameDate = friendlyDateForWeek(weekNum, seasonYear);
 
     entries.push({
-      id:                `FRIENDLY_W${weekNum}_${myTeamId}`,
-      week:              weekNum,
+      id: `FRIENDLY_W${weekNum}_${myTeamId}`,
+      week: weekNum,
       gameDate,
       leagueId,
-      homeTeamId:        myTeamId,
-      awayTeamId:        opponent,
+      homeTeamId: myTeamId,
+      awayTeamId: opponent,
       isProtagonistGame: true,
-      phase:             "season",
-      isFriendly:        true,
+      phase: "season",
+      isFriendly: true,
     });
   }
 
@@ -141,7 +144,9 @@ function oppLines(b: import("./matchLineupBuilder").OpponentBrief | null): strin
   if (b.teamOvr != null) bits.push(`팀 OVR ${b.teamOvr}`);
   if (bits.length) out.push(`              ${bits.join(" · ")}`);
   if (b.starter) {
-    out.push(`              선발 예상  ${b.starter.name} (${b.starter.position} · OVR ${b.starter.ovr})`);
+    out.push(
+      `              선발 예상  ${b.starter.name} (${b.starter.position} · OVR ${b.starter.ovr})`,
+    );
   }
   return out;
 }
@@ -173,29 +178,23 @@ export function buildMonthlyNoticeMessage(
   const blocks: Block[] = [];
 
   for (const e of plan.entries) {
-    const opp  = teamShort(e.awayTeamId, teamMap);
+    const opp = teamShort(e.awayTeamId, teamMap);
     const date = e.gameDate.slice(5).replace("-", "/"); // "06/11"
-    const dow  = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
+    const dow = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
     blocks.push({
       date: e.gameDate,
-      lines: [
-        `  ${date} (${dow})  친선  vs ${opp}`,
-        ...oppLines(briefOf?.(e.awayTeamId) ?? null),
-      ],
+      lines: [`  ${date} (${dow})  친선  vs ${opp}`, ...oppLines(briefOf?.(e.awayTeamId) ?? null)],
     });
   }
 
   for (const e of officialEntries.filter((x) => !x.isFriendly)) {
     const oppId = e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId;
-    const opp   = teamShort(oppId, teamMap);
-    const date  = e.gameDate.slice(5).replace("-", "/");
-    const dow   = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
+    const opp = teamShort(oppId, teamMap);
+    const date = e.gameDate.slice(5).replace("-", "/");
+    const dow = KO_DAYS[new Date(e.gameDate + "T00:00:00").getDay()] ?? "";
     blocks.push({
       date: e.gameDate,
-      lines: [
-        `  ${date} (${dow})  공식  vs ${opp}`,
-        ...oppLines(briefOf?.(oppId) ?? null),
-      ],
+      lines: [`  ${date} (${dow})  공식  vs ${opp}`, ...oppLines(briefOf?.(oppId) ?? null)],
     });
   }
 
@@ -218,51 +217,63 @@ export function buildMonthlyNoticeMessage(
   // 미리보기는 **이번 달 최대 고비**를 짚는다. 팀 OVR이 제일 높은 상대다 —
   // "친선 2회 편성되었습니다"는 목록에서 열어볼 이유가 안 된다
   const officialCount = officialEntries.filter((x) => !x.isFriendly).length;
-  const toughest = blocks.length > 0
-    ? plan.entries.concat(officialEntries.filter((x) => !x.isFriendly))
-        .map((e) => {
-          const oppId = e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId;
-          return { oppId, b: briefOf?.(oppId) ?? null };
-        })
-        .filter((x) => x.b?.teamOvr != null)
-        .sort((a, b) => (b.b!.teamOvr ?? 0) - (a.b!.teamOvr ?? 0))[0]
-    : undefined;
+  const toughest =
+    blocks.length > 0
+      ? plan.entries
+          .concat(officialEntries.filter((x) => !x.isFriendly))
+          .map((e) => {
+            const oppId = e.awayTeamId === "PLY_HERO" ? e.homeTeamId : e.awayTeamId;
+            return { oppId, b: briefOf?.(oppId) ?? null };
+          })
+          .filter((x) => x.b?.teamOvr != null)
+          .sort((a, b) => (b.b!.teamOvr ?? 0) - (a.b!.teamOvr ?? 0))[0]
+      : undefined;
 
-  const countText = officialCount > 0
-    ? `친선 ${plan.entries.length} · 공식 ${officialCount}`
-    : `친선경기 ${plan.entries.length}회 편성`;
+  const countText =
+    officialCount > 0
+      ? `친선 ${plan.entries.length} · 공식 ${officialCount}`
+      : `친선경기 ${plan.entries.length}회 편성`;
 
   return {
     // 🔴 **연도+주차**다. 월간 편성은 그 주에 한 통뿐이다. 연도는 첫
     //   경기 날짜에서 온다 — `plan` 이 연도를 안 들고 있다
-    id:        `msg-friendly-plan-${seasonYear}-w${weekNum}`,
-    category:  "manager",
-    sender:    "감독",
-    subject:   `${plan.monthLabel} 경기 편성 — ${countText}`,
-    preview:   toughest
+    id: `msg-friendly-plan-${seasonYear}-w${weekNum}`,
+    category: "manager",
+    sender: "감독",
+    subject: `${plan.monthLabel} 경기 편성 — ${countText}`,
+    preview: toughest
       ? `${teamShort(toughest.oppId, teamMap)}(팀 OVR ${toughest.b!.teamOvr})가 이번 달 최대 고비`
       : `이번 달 친선경기 ${plan.entries.length}회가 편성되었습니다.`,
     body,
     createdAt: `W${weekNum}`,
-    readAt:    null,
+    readAt: null,
     // 편성 한 줄이 카드 하나 — 큰 글씨가 상대, 작은 글씨가 주차다.
     // ⚠ 본문에는 상대 요약·선발 예상이 더 있다. 카드는 「언제 누구와」만
     //   든다 — 본문은 그대로 뜬다(표시부가 둘 다 그린다 · C 49c337788)
-    metadata: cardsMeta("cards.friendlyPlan", plan.entries.map((e) => ({
-      key: "opp", value: teamShort(e.awayTeamId, teamMap), caption: `W${e.week}`,
-    }))),
+    metadata: cardsMeta(
+      "cards.friendlyPlan",
+      plan.entries.map((e) => ({
+        key: "opp",
+        value: teamShort(e.awayTeamId, teamMap),
+        caption: `W${e.week}`,
+      })),
+    ),
   };
 }
 
 // ── 친선경기 자동 시뮬 결과 메시지 ──────────────────────────
 export type PitcherRole = "SP" | "RP" | "CP";
 
-export function ratePerformance(ip: number, er: number, role: PitcherRole = "SP"): 1 | 2 | 3 | 4 | 5 {
+export function ratePerformance(
+  ip: number,
+  er: number,
+  role: PitcherRole = "SP",
+): 1 | 2 | 3 | 4 | 5 {
   if (role === "RP") {
     if (ip < 0.1) return 1;
-    if (ip >= 2 && er === 0) return 5;    // 멀티이닝 완벽 홀드
-    if (ip >= 1 && er === 0) return 5;    // 1이닝 무실점
-    if (ip >= 1 && er <= 1) return 4;    // 1이닝 소폭 실점
+    if (ip >= 2 && er === 0) return 5; // 멀티이닝 완벽 홀드
+    if (ip >= 1 && er === 0) return 5; // 1이닝 무실점
+    if (ip >= 1 && er <= 1) return 4; // 1이닝 소폭 실점
     if (ip >= 0.2 && er === 0) return 4; // 부분 이닝 무실점
     if (ip >= 1 && er <= 2) return 3;
     if (ip >= 0.2 && er <= 1) return 3;
@@ -271,29 +282,44 @@ export function ratePerformance(ip: number, er: number, role: PitcherRole = "SP"
   }
   if (role === "CP") {
     if (ip < 0.1) return 1;
-    if (ip >= 1 && er === 0) return 5;   // 완벽 세이브
-    if (ip >= 1 && er <= 1) return 4;   // 1이닝 소폭 실점
+    if (ip >= 1 && er === 0) return 5; // 완벽 세이브
+    if (ip >= 1 && er <= 1) return 4; // 1이닝 소폭 실점
     if (ip >= 0.2 && er === 0) return 3; // 이닝 미완, 무실점
-    if (er >= 2) return 2;               // 블론 세이브
+    if (er >= 2) return 2; // 블론 세이브
     return 2;
   }
   // SP
   const era = ip > 0 ? (er / ip) * 9 : 99;
   if (ip < 1) return 1;
-  if (era < 2.00) return 5;
-  if (era < 3.50) return 4;
-  if (era < 5.00) return 3;
-  if (era < 7.00) return 2;
+  if (era < 2.0) return 5;
+  if (era < 3.5) return 4;
+  if (era < 5.0) return 3;
+  if (era < 7.0) return 2;
   return 1;
 }
 
-function getCoachComment(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean, role: PitcherRole = "SP"): string {
+function getCoachComment(
+  ip: number,
+  er: number,
+  k: number,
+  bb: number,
+  rating: 1 | 2 | 3 | 4 | 5,
+  won: boolean,
+  role: PitcherRole = "SP",
+): string {
   if (role === "RP") return getCoachCommentRP(ip, er, k, bb, rating, won);
   if (role === "CP") return getCoachCommentCP(ip, er, k, bb, rating, won);
   return getCoachCommentSP(ip, er, k, bb, rating, won);
 }
 
-function getCoachCommentSP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
+function getCoachCommentSP(
+  ip: number,
+  er: number,
+  k: number,
+  bb: number,
+  rating: 1 | 2 | 3 | 4 | 5,
+  won: boolean,
+): string {
   const ipStr = ipLabel(ip);
 
   // 1. 무실점 완투급
@@ -364,7 +390,14 @@ function getCoachCommentSP(ip: number, er: number, k: number, bb: number, rating
   return "구위도 제구도 모두 실망스러웠다. 지금 당장 뭐가 문제인지 스스로 찾아야 한다. 이 상태로 공식전은 안 된다.";
 }
 
-function getCoachCommentRP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
+function getCoachCommentRP(
+  ip: number,
+  er: number,
+  k: number,
+  bb: number,
+  rating: 1 | 2 | 3 | 4 | 5,
+  won: boolean,
+): string {
   const ipStr = ipLabel(ip);
 
   // [1] 멀티이닝 완벽 홀드
@@ -388,8 +421,7 @@ function getCoachCommentRP(ip: number, er: number, k: number, bb: number, rating
     return "볼넷 없이 깔끔하게 막았다. 이런 제구가 중계 투수에게 가장 중요한 덕목이다.";
 
   // [6] rating 4 fallback
-  if (rating === 4)
-    return "안정적인 홀드였다. 크게 흔들리지 않았다. 이 꾸준함이 팀에 힘이 된다.";
+  if (rating === 4) return "안정적인 홀드였다. 크게 흔들리지 않았다. 이 꾸준함이 팀에 힘이 된다.";
 
   // [7] 짧은 이닝 볼넷 경고
   if (rating === 3 && bb >= 2)
@@ -407,7 +439,14 @@ function getCoachCommentRP(ip: number, er: number, k: number, bb: number, rating
   return "오늘은 역할을 다하지 못했다. 중계 투수에게 실점은 팀 전체에 영향을 준다. 더 단단해져야 한다.";
 }
 
-function getCoachCommentCP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
+function getCoachCommentCP(
+  ip: number,
+  er: number,
+  k: number,
+  bb: number,
+  rating: 1 | 2 | 3 | 4 | 5,
+  won: boolean,
+): string {
   const ipStr = ipLabel(ip);
 
   // [1] 삼진 세이브
@@ -462,16 +501,16 @@ export function buildFriendlyResultMessage(
   teamMap?: Map<string, string>,
   role: PitcherRole = "SP",
 ): { message: MessageItem } {
-  const myScore   = homeScore;
-  const oppScore  = awayScore;
+  const myScore = homeScore;
+  const oppScore = awayScore;
   const oppTeamId = scheduleEntry.awayTeamId;
-  const oppName   = teamShort(oppTeamId, teamMap);
-  const won       = myScore > oppScore;
+  const oppName = teamShort(oppTeamId, teamMap);
+  const won = myScore > oppScore;
   const resultStr = won ? "승" : myScore === oppScore ? "무" : "패";
-  const era       = ip > 0 ? Math.round((er / ip) * 9 * 100) / 100 : 99;
-  const rating    = ratePerformance(ip, er, role);
-  const stars     = "★".repeat(rating) + "☆".repeat(5 - rating);
-  const comment   = getCoachComment(ip, er, k, bb, rating, won, role);
+  const era = ip > 0 ? Math.round((er / ip) * 9 * 100) / 100 : 99;
+  const rating = ratePerformance(ip, er, role);
+  const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+  const comment = getCoachComment(ip, er, k, bb, rating, won, role);
 
   const body = [
     `친선경기  vs ${oppName}`,
@@ -490,14 +529,14 @@ export function buildFriendlyResultMessage(
     message: {
       // 🔴 **경기 하나에 한 통**이다 — 한 주에 친선이 둘일 수 있어 주차만으로는
       //   겹친다. 일정 id 가 대상이고, 날짜가 연도를 들고 있다
-      id:        `msg-friendly-result-${scheduleEntry.gameDate}-${scheduleEntry.id}`,
-      category:  "system",
-      sender:    "감독",
-      subject:   `친선경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
-      preview:   `${ipLabel(ip)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
+      id: `msg-friendly-result-${scheduleEntry.gameDate}-${scheduleEntry.id}`,
+      category: "system",
+      sender: "감독",
+      subject: `친선경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
+      preview: `${ipLabel(ip)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
       body,
       createdAt: `W${scheduleEntry.week}`,
-      readAt:    null,
+      readAt: null,
       // ⚠ **투구수를 안 넘긴다.** 연습경기 조립은 그 값을 아예 안 받는다 —
       //   0 으로 채우면 「0구를 던졌다」가 된다
       metadata: myGameTableMeta("friendlyResult", { ip, h, er, k, bb, dec: resultStr }),
@@ -624,7 +663,14 @@ function getOfficialCoachCommentSP(
   return "최악의 등판이었다. 구위도 제구도 멘탈도 모두 흔들렸다. 오늘 경기 영상을 반드시 다시 봐라. 이대로면 2군 이야기가 나올 수밖에 없다.";
 }
 
-function getOfficialCoachCommentRP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
+function getOfficialCoachCommentRP(
+  ip: number,
+  er: number,
+  k: number,
+  bb: number,
+  rating: 1 | 2 | 3 | 4 | 5,
+  won: boolean,
+): string {
   const ipStr = ipLabel(ip);
 
   // [1] 멀티이닝 완벽 홀드
@@ -667,7 +713,14 @@ function getOfficialCoachCommentRP(ip: number, er: number, k: number, bb: number
   return "역할을 다하지 못했다. 공식전에서 이 내용이 반복되면 로스터에서 밀려날 수 있다. 각오하고 준비해라.";
 }
 
-function getOfficialCoachCommentCP(ip: number, er: number, k: number, bb: number, rating: 1 | 2 | 3 | 4 | 5, won: boolean): string {
+function getOfficialCoachCommentCP(
+  ip: number,
+  er: number,
+  k: number,
+  bb: number,
+  rating: 1 | 2 | 3 | 4 | 5,
+  won: boolean,
+): string {
   const ipStr = ipLabel(ip);
 
   // [1] 삼진 세이브
@@ -736,15 +789,15 @@ export function buildOfficialResultMessage(
   role: PitcherRole = "SP",
 ): MessageItem {
   const isProtHome = scheduleEntry.homeTeamId === myTeamId;
-  const myScore    = isProtHome ? homeScore : awayScore;
-  const oppScore   = isProtHome ? awayScore : homeScore;
-  const oppTeamId  = isProtHome ? scheduleEntry.awayTeamId : scheduleEntry.homeTeamId;
-  const oppName    = teamShort(oppTeamId, teamMap);
-  const resultStr  = won ? "승" : isDraw ? "무" : "패";
-  const era        = ip > 0 ? Math.round((er / ip) * 9 * 100) / 100 : 99;
-  const rating     = ratePerformance(ip, er, role);
-  const stars      = "★".repeat(rating) + "☆".repeat(5 - rating);
-  const comment    = getOfficialCoachComment(ip, er, k, bb, rating, won, role);
+  const myScore = isProtHome ? homeScore : awayScore;
+  const oppScore = isProtHome ? awayScore : homeScore;
+  const oppTeamId = isProtHome ? scheduleEntry.awayTeamId : scheduleEntry.homeTeamId;
+  const oppName = teamShort(oppTeamId, teamMap);
+  const resultStr = won ? "승" : isDraw ? "무" : "패";
+  const era = ip > 0 ? Math.round((er / ip) * 9 * 100) / 100 : 99;
+  const rating = ratePerformance(ip, er, role);
+  const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+  const comment = getOfficialCoachComment(ip, er, k, bb, rating, won, role);
 
   const body = [
     `공식경기  vs ${oppName}`,
@@ -759,18 +812,24 @@ export function buildOfficialResultMessage(
 
   return {
     // 🔴 **경기 하나에 한 통**이다 (위 친선과 같은 이유)
-    id:        `msg-official-result-${scheduleEntry.gameDate}-${scheduleEntry.id}`,
-    category:  "manager",
-    sender:    "감독",
-    subject:   `공식경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
-    preview:   `${ipLabel(ip)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
+    id: `msg-official-result-${scheduleEntry.gameDate}-${scheduleEntry.id}`,
+    category: "manager",
+    sender: "감독",
+    subject: `공식경기 결과 — vs ${oppName} (${resultStr} ${myScore}:${oppScore})`,
+    preview: `${ipLabel(ip)}IP ${k}K ERA ${era.toFixed(2)} — ${stars}`,
     body,
     createdAt: `W${scheduleEntry.week}`,
-    readAt:    null,
+    readAt: null,
     // 내 기록을 칸으로 갈라 싣는다 (PLAN_MESSAGE_DASHBOARDS §1-1 · 묶음 2).
     // 본문의 「▶ 내 기록」 한 줄은 그대로 둔다 — 표를 못 그리면 그게 폴백이다
     metadata: myGameTableMeta("officialResult", {
-      ip, h, er, k, bb, pitches: pitchCount, dec: resultStr,
+      ip,
+      h,
+      er,
+      k,
+      bb,
+      pitches: pitchCount,
+      dec: resultStr,
     }),
   };
 }

@@ -47,9 +47,13 @@ let cached: StaffRulesFile | null = null;
 
 export async function loadStaffRules(): Promise<StaffRulesFile> {
   if (cached) return cached;
-  const raw = (await window.projectB!.masterFetch("players/staff_rules.json")) as StaffRulesFile | null;
+  const raw = (await window.projectB!.masterFetch(
+    "players/staff_rules.json",
+  )) as StaffRulesFile | null;
   if (!raw?.rules || !raw.namePools) {
-    throw new Error("[staffGen] staff_rules.json 없음 — python scripts/build_refs_from_seeds.py 실행 필요");
+    throw new Error(
+      "[staffGen] staff_rules.json 없음 — python scripts/build_refs_from_seeds.py 실행 필요",
+    );
   }
   // 15종 효과 계수를 소비처(staffEffects)에 한 번 주입한다.
   // 규칙 파일을 두 번 읽지 않게 여기서만 넘긴다
@@ -138,7 +142,16 @@ const EMPTY_PLAYER = {
   handedness: "R" as const,
   position: "SP",
   jerseyNumber: 0,
-  pitching: { ovr: 50, stamina: 50, velocity: 50, command: 50, control: 50, movement: 50, mentality: 50, recovery: 50 },
+  pitching: {
+    ovr: 50,
+    stamina: 50,
+    velocity: 50,
+    command: 50,
+    control: 50,
+    movement: 50,
+    mentality: 50,
+    recovery: 50,
+  },
   batting: { ovr: 50, contact: 50, power: 50, eye: 50, speed: 50, fielding: 50, arm: 50 },
   developmentRate: 50,
   potentialHidden: 50,
@@ -163,49 +176,58 @@ export function staffRowToEntityRow(st: StaffRow): EntityRow {
       // 스태프는 선수 능력치가 없다. 화면이 details.player를 무조건 읽는 곳이 있어
       // 빈 껍데기를 준다 — 구 JSON도 같은 이유로 50을 채워뒀었다.
       player: EMPTY_PLAYER as EntityRow["details"]["player"],
-      manager: st.role === "manager" ? {
-        style: st.style,
-        experienceYears: st.years,
-        // Rust ManagerStats와 같은 키 — `staff_rules.json manager.stats`가 정본이다.
-        // 구 JSON은 tactics/decision/..., 화면은 handlePressure/strategy/... 라
-        // 세 이름이 돌아다녔고 그래서 값이 아무 데도 도달하지 않았다.
-        stats: {
-          tacticalIQ:     s.tacticalIQ ?? 50,
-          bullpenRead:    s.bullpenRead ?? 50,
-          offenseMind:    s.offenseMind ?? 50,
-          motivator:      s.motivator ?? 50,
-          clutchDecision: s.clutchDecision ?? 50,
-        },
-        gamePlanBias: "",
-        riskTolerance: st.riskTolerance,
-      } as NonNullable<EntityRow["details"]["manager"]> : null,
-      coach: st.role === "coach" ? {
-        specialty: st.style as NonNullable<EntityRow["details"]["coach"]>["specialty"],
-        experienceYears: st.years,
-        // 5종 전부 넘긴다. 예전엔 teaching/analysis만 통과시키고
-        // communication·discipline·leadership 3종을 여기서 버렸다 —
-        // 생성은 하는데 아무도 볼 수 없는 값이었다
-        stats: {
-          teaching:      s.teaching      ?? 50,
-          analysis:      s.analysis      ?? 50,
-          communication: s.communication ?? 50,
-          discipline:    s.discipline    ?? 50,
-          leadership:    s.leadership    ?? 50,
-          experience: Math.max(1, Math.min(5, Math.round(st.years / 5))),
-        },
-        trainingBuffs: st.trainingBuff,
-      } as NonNullable<EntityRow["details"]["coach"]> : null,
-      owner: st.role === "owner" ? {
-        ownershipStyle: st.style,
-        tenureYears: st.years,
-        stats: {
-          budgetSupport:      s.budgetSupport ?? 50,
-          patience:           s.patience ?? 50,
-          prInfluence:        s.prInfluence ?? 50,
-          facilityInvestment: s.facilityInvestment ?? 50,
-          staffTrust:         s.staffTrust ?? 50,
-        },
-      } : null,
+      manager:
+        st.role === "manager"
+          ? ({
+              style: st.style,
+              experienceYears: st.years,
+              // Rust ManagerStats와 같은 키 — `staff_rules.json manager.stats`가 정본이다.
+              // 구 JSON은 tactics/decision/..., 화면은 handlePressure/strategy/... 라
+              // 세 이름이 돌아다녔고 그래서 값이 아무 데도 도달하지 않았다.
+              stats: {
+                tacticalIQ: s.tacticalIQ ?? 50,
+                bullpenRead: s.bullpenRead ?? 50,
+                offenseMind: s.offenseMind ?? 50,
+                motivator: s.motivator ?? 50,
+                clutchDecision: s.clutchDecision ?? 50,
+              },
+              gamePlanBias: "",
+              riskTolerance: st.riskTolerance,
+            } as NonNullable<EntityRow["details"]["manager"]>)
+          : null,
+      coach:
+        st.role === "coach"
+          ? ({
+              specialty: st.style as NonNullable<EntityRow["details"]["coach"]>["specialty"],
+              experienceYears: st.years,
+              // 5종 전부 넘긴다. 예전엔 teaching/analysis만 통과시키고
+              // communication·discipline·leadership 3종을 여기서 버렸다 —
+              // 생성은 하는데 아무도 볼 수 없는 값이었다
+              stats: {
+                teaching: s.teaching ?? 50,
+                analysis: s.analysis ?? 50,
+                communication: s.communication ?? 50,
+                discipline: s.discipline ?? 50,
+                leadership: s.leadership ?? 50,
+                experience: Math.max(1, Math.min(5, Math.round(st.years / 5))),
+              },
+              trainingBuffs: st.trainingBuff,
+            } as NonNullable<EntityRow["details"]["coach"]>)
+          : null,
+      owner:
+        st.role === "owner"
+          ? {
+              ownershipStyle: st.style,
+              tenureYears: st.years,
+              stats: {
+                budgetSupport: s.budgetSupport ?? 50,
+                patience: s.patience ?? 50,
+                prInfluence: s.prInfluence ?? 50,
+                facilityInvestment: s.facilityInvestment ?? 50,
+                staffTrust: s.staffTrust ?? 50,
+              },
+            }
+          : null,
     },
   } as EntityRow;
 }

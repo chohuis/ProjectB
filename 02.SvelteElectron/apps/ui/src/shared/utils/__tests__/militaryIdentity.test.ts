@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * **상무가 26 → 44명으로 부풀고 투수만 쌓이던 것** (2026-08-31).
@@ -59,7 +60,8 @@ describe("군 신분 — 부상이 지우지 않는다", () => {
   it("복무 중이면 careerStatus 를 안 덮는다", () => {
     expect(INJ).toContain('if (npcStatusById?.get(occ.playerId) !== "military") {');
     // 상태를 볼 수 있어야 한다 — 맵이 없으면 위 조건이 늘 참이 된다
-    expect(INJ).toContain("const npcStatusById = result.occurred.length > 0");
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
+    expect(flattenSrc(INJ)).toContain("const npcStatusById = result.occurred.length > 0");
   });
 
   /**

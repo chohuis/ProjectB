@@ -51,10 +51,7 @@ export interface NpcGameSim {
  * 반환도 결과만 주던 것을 전체로 바꿨다 — 호출부가 로테이션 인덱스와
  * 피로를 스토어에 얹어야 다음 경기가 이어진다.
  */
-export async function simulateNpcGame(
-  homeTeamId: string,
-  awayTeamId: string,
-): Promise<NpcGameSim> {
+export async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<NpcGameSim> {
   const entities = get(masterStore).entities;
   const s = get(seasonStore);
   const leagueId = get(gameStore).protagonist.leagueId;
@@ -65,7 +62,8 @@ export async function simulateNpcGame(
   if (entities.length > 0) {
     const sim = await simulateGame(homeTeamId, awayTeamId, entities, {
       conditions: lState?.playerConditions ?? {},
-      homeRotIdx, awayRotIdx,
+      homeRotIdx,
+      awayRotIdx,
       week: s.currentWeek,
       npcInjuries: s.npcInjuries,
       rotationSize: rotationSizeForLeague(leagueId),
@@ -82,10 +80,14 @@ export async function simulateNpcGame(
     // 여덟이라 각자 부르게 하면 반드시 빠뜨린다.
     await recordGameLogs(
       get(gameStore).currentSlotId ?? "",
-      s.seasonYear, s.currentWeek, sim.result.playerLines,
+      s.seasonYear,
+      s.currentWeek,
+      sim.result.playerLines,
       {
         gameDate: dateOfGame(homeTeamId, awayTeamId, s.currentWeek),
-        homeTeamId, awayTeamId, teamOf: teamLookup(entities),
+        homeTeamId,
+        awayTeamId,
+        teamOf: teamLookup(entities),
       },
     );
 
@@ -98,13 +100,32 @@ export async function simulateNpcGame(
   }
 
   autoLog(`[폴백SIM] 주인공리그 엔티티없음: ${homeTeamId} vs ${awayTeamId}`);
-  const fb = JSON.parse(await window.projectB!.weekCalcNpcFallback(
-    // ⚠ 경기마다 다른 씨앗 — 팀·주차를 섞는다
-    JSON.stringify({ homeTeamId, awayTeamId,
-      seed: seedOf(s.worldSeed ?? 0, s.seasonYear, s.currentWeek, "fallback", homeTeamId, awayTeamId) })
-  )) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
+  const fb = JSON.parse(
+    await window.projectB!.weekCalcNpcFallback(
+      // ⚠ 경기마다 다른 씨앗 — 팀·주차를 섞는다
+      JSON.stringify({
+        homeTeamId,
+        awayTeamId,
+        seed: seedOf(
+          s.worldSeed ?? 0,
+          s.seasonYear,
+          s.currentWeek,
+          "fallback",
+          homeTeamId,
+          awayTeamId,
+        ),
+      }),
+    ),
+  ) as { homeScore: number; awayScore: number; winnerId: string; loserId: string };
   return {
-    result: { homeScore: fb.homeScore, awayScore: fb.awayScore, winnerId: fb.winnerId, loserId: fb.loserId, playerLines: [], events: [] },
+    result: {
+      homeScore: fb.homeScore,
+      awayScore: fb.awayScore,
+      winnerId: fb.winnerId,
+      loserId: fb.loserId,
+      playerLines: [],
+      events: [],
+    },
     // 폴백엔 투수 개념이 없다 — 인덱스를 밀면 아무도 안 던졌는데 로테이션이 돈다
     nextHomeRotIdx: homeRotIdx,
     nextAwayRotIdx: awayRotIdx,
@@ -128,10 +149,13 @@ export async function logGameLines(
   const s = get(seasonStore);
   await recordGameLogs(
     get(gameStore).currentSlotId ?? "",
-    s.seasonYear, s.currentWeek, result.playerLines,
+    s.seasonYear,
+    s.currentWeek,
+    result.playerLines,
     {
       gameDate: dateOfGame(homeTeamId, awayTeamId, s.currentWeek),
-      homeTeamId, awayTeamId,
+      homeTeamId,
+      awayTeamId,
       teamOf: teamLookup(get(masterStore).entities),
     },
   );

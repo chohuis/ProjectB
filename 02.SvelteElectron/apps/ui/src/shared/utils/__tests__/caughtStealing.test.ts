@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * 도루자(`cs`) 기록 — 1단계 ① (2026-08-30).
@@ -21,7 +22,8 @@ describe("도루자 배선", () => {
   const me = read("packages/engine-native/src/match_engine.rs");
   const npc = read("packages/engine-native/src/npc_sim.rs");
   const st = read("packages/engine-native/src/sim_types.rs");
-  const helpers = read("apps/ui/src/shared/utils/season-helpers.ts");
+  // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — 정렬 칸이 줄어도 안 깨진다 (A-6)
+  const helpers = flattenSrc(read("apps/ui/src/shared/utils/season-helpers.ts"));
 
   it("① 주인공 경기가 잡힌 주자를 돌려준다", () => {
     // 예전엔 성공(`stole`)만 넘겼다
@@ -48,10 +50,12 @@ describe("도루자 배선", () => {
   });
 
   it("🔴 ⑤ TS가 합산한다 — 이걸 빠뜨려 처음 실측이 0건이었다", () => {
-    expect(helpers.includes("const cs  = (prev.cs ?? 0) + (line.cs ?? 0);")).toBe(true);
+    expect(helpers.includes("const cs = (prev.cs ?? 0) + (line.cs ?? 0);")).toBe(true);
     // ⚠ 3단계에서 포일(pb)을 같은 줄에 더했다 — 순서가 바뀌었다
+    // ⚠ 기대값도 prettier 가 적는 꼴로 적는다 — 띄어쓰기는 눌려 있다(A-6).
+    //   보는 것은 「이 칸들이 이 순서로 합쳐지는가」이지 서식이 아니다
     expect(
-      helpers.includes('type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,'),
+      helpers.includes('type: "batter", g: prev.g + 1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,'),
     ).toBe(true);
   });
 
@@ -64,7 +68,7 @@ describe("도루자 배선", () => {
 describe("도루자 화면", () => {
   const modal = read("apps/ui/src/features/player/ui/PlayerDetailModal.svelte");
   const career = read("apps/ui/src/features/retirement/ui/CareerEndScreen.svelte");
-  const summary = read("apps/ui/src/shared/utils/careerSummary.ts");
+  const summary = flattenSrc(read("apps/ui/src/shared/utils/careerSummary.ts"));
 
   it("선수 상세 요약에 CS가 있다", () => {
     expect(modal.includes('["CS", modalStats.cs ?? 0]')).toBe(true);

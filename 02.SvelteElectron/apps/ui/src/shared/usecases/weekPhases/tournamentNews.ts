@@ -25,7 +25,10 @@
 import type { BracketMatch, TournamentBracket, TournamentDef } from "../../utils/tournament";
 import type { MessageItem, TableMetadata } from "../../types/main";
 import {
-  bracketTableMeta, rankListMeta, rowsTableMeta, type BracketRowInput,
+  bracketTableMeta,
+  rankListMeta,
+  rowsTableMeta,
+  type BracketRowInput,
 } from "../../utils/dashboardMeta";
 
 /** 라운드 번호 → 이름. 마지막 라운드가 결승이므로 뒤에서부터 센다 */
@@ -120,7 +123,9 @@ export function buildOpenMessage(
     subject: `${seasonYear} ${def.name} 개막 — ${entrantIds.length}팀 참가`,
     preview: !onMyStage
       ? `${stageWord} 무대 대회가 열린다.`
-      : joined ? "우리 팀도 출전한다." : "우리 팀은 출전하지 못했다.",
+      : joined
+        ? "우리 팀도 출전한다."
+        : "우리 팀은 출전하지 못했다.",
     body: [
       `${def.name}(${def.flower}) 대회가 시작됩니다.`,
       "",
@@ -150,8 +155,8 @@ export function buildMyRoundMessage(
   weekNum: number,
 ): MessageItem | null {
   const mine = bracket.matches.find(
-    (m) => m.round === round && !m.isBye
-      && (m.homeTeamId === myTeamId || m.awayTeamId === myTeamId),
+    (m) =>
+      m.round === round && !m.isBye && (m.homeTeamId === myTeamId || m.awayTeamId === myTeamId),
   );
   if (!mine || !mine.winnerTeamId) return null;
 
@@ -160,9 +165,7 @@ export function buildMyRoundMessage(
   const rn = roundName(round, bracket.totalRounds);
   const isFinal = round === bracket.totalRounds;
 
-  const head = won
-    ? (isFinal ? `${def.name} 우승` : `${rn} 통과`)
-    : `${rn} 탈락`;
+  const head = won ? (isFinal ? `${def.name} 우승` : `${rn} 통과`) : `${rn} 탈락`;
 
   return {
     id: `msg-tour-my-${def.id}-r${round}-${bracket.seasonYear}-w${weekNum}`,
@@ -177,11 +180,11 @@ export function buildMyRoundMessage(
       `결과   ${won ? "승리" : "패배"}`,
       "",
       won
-        // 🔴 **조사를 붙이지 않는다** (B-28 — 꽃 이름 일곱 중 둘이 받침이라
-        //    「를」이 틀렸다: 왕중왕·여명). 자리표시자를 문장 끝에 둔다
-        ? (isFinal
-            ? `${def.flower}. 우승입니다.`
-            : `${roundName(round + 1, bracket.totalRounds)}에 오른다.`)
+        ? // 🔴 **조사를 붙이지 않는다** (B-28 — 꽃 이름 일곱 중 둘이 받침이라
+          //    「를」이 틀렸다: 왕중왕·여명). 자리표시자를 문장 끝에 둔다
+          isFinal
+          ? `${def.flower}. 우승입니다.`
+          : `${roundName(round + 1, bracket.totalRounds)}에 오른다.`
         : "여기서 대회를 마친다.",
     ].join("\n"),
     createdAt: `W${weekNum}`,
@@ -223,8 +226,8 @@ export function buildRoundProgressMessage(
   myRegionTeams?: Set<string>,
 ): MessageItem | null {
   const fromEnd = bracket.totalRounds - round;
-  if (fromEnd > 4) return null;              // 32강(fromEnd 4)보다 앞은 안 보낸다
-  if (round === bracket.totalRounds) return null;  // 결승은 우승 소식이 맡는다
+  if (fromEnd > 4) return null; // 32강(fromEnd 4)보다 앞은 안 보낸다
+  if (round === bracket.totalRounds) return null; // 결승은 우승 소식이 맡는다
 
   const played = bracket.matches.filter((m) => m.round === round && !m.isBye);
   if (played.length === 0 || played.some((m) => !m.winnerTeamId)) return null;
@@ -236,9 +239,7 @@ export function buildRoundProgressMessage(
   if (winners.length === 0) return null;
 
   const nextName = roundName(round + 1, bracket.totalRounds);
-  const known = myRegionTeams
-    ? winners.filter((id) => myRegionTeams.has(id))
-    : [];
+  const known = myRegionTeams ? winners.filter((id) => myRegionTeams.has(id)) : [];
   const fallen = myRegionTeams
     ? played
         .filter((m) => {
@@ -264,18 +265,17 @@ export function buildRoundProgressMessage(
   //
   // ⚠ 본문의 「우리 권역」 표시는 표에 안 담긴다 — 권역 열이 문안에 없다
   //   (`table.tourRound.columns` 는 라운드·두 팀·일정 넷).
-  const nextRows = bracketRows(
-    bracket.matches, round + 1, bracket.totalRounds, myTeamId, teamName,
-  );
+  const nextRows = bracketRows(bracket.matches, round + 1, bracket.totalRounds, myTeamId, teamName);
 
   return {
     id: `msg-tour-round-${def.id}-r${round}-${bracket.seasonYear}-w${weekNum}`,
     category: "news",
     sender: def.leagueId === "LEAGUE_UNIVERSITY" ? "대학야구연맹" : "고교야구연맹",
     subject: `${def.name} ${nextName} 진출 ${winners.length}팀`,
-    preview: known.length > 0
-      ? `우리 권역 ${known.map(teamName).join(", ")} 진출`
-      : `${teamName(winners[0])} 외 ${Math.max(0, winners.length - 1)}팀`,
+    preview:
+      known.length > 0
+        ? `우리 권역 ${known.map(teamName).join(", ")} 진출`
+        : `${teamName(winners[0])} 외 ${Math.max(0, winners.length - 1)}팀`,
     body: lines.join("\n"),
     createdAt: `W${weekNum}`,
     readAt: null,
@@ -367,7 +367,10 @@ export function bundleRoundProgressMessages(
     // 여러 연맹이 섞일 수 있다 — 한 통이 되면 어느 한쪽 이름을 붙일 수 없다
     sender: "대회 본부",
     subject: `이번 주 대회 진출 명단 ${msgs.length}건`,
-    preview: msgs.map((m) => m.subject).join(" · ").slice(0, 60),
+    preview: msgs
+      .map((m) => m.subject)
+      .join(" · ")
+      .slice(0, 60),
     body,
     createdAt: `W${weekNum}`,
     readAt: null,

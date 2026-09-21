@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * 폭투 · 포일 — 2단계 (2026-08-30).
@@ -82,10 +83,11 @@ describe("폭투·포일 배선", () => {
   it("🔴 TS 가 합산한다 — 이걸 빠뜨리면 리그 집계가 0이다", () => {
     // 🔴 **같은 자리에서 세 번째다** — `gs` · 도루자 · 이번.
     //   엔진은 세는데 `accumulateStats` 가 안 합쳐 실측이 전부 0이었다.
-    const h = read("apps/ui/src/shared/utils/season-helpers.ts");
-    expect(h.includes("const wp  = (prev.wp ?? 0) + (line.wp ?? 0);")).toBe(true);
-    expect(h.includes("const bk  = (prev.bk ?? 0) + (line.bk ?? 0);")).toBe(true);
-    expect(h.includes("const pb  = (prev.pb ?? 0) + (line.pb ?? 0);")).toBe(true);
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 정렬 칸을 줄이거나 식을 접어도 안 깨진다 (A-6)
+    const h = flattenSrc(read("apps/ui/src/shared/utils/season-helpers.ts"));
+    expect(h.includes("const wp = (prev.wp ?? 0) + (line.wp ?? 0);")).toBe(true);
+    expect(h.includes("const bk = (prev.bk ?? 0) + (line.bk ?? 0);")).toBe(true);
+    expect(h.includes("const pb = (prev.pb ?? 0) + (line.pb ?? 0);")).toBe(true);
     expect(h.includes("hd, ip, er, h, k, bb, wp, bk,")).toBe(true);
     expect(h.includes("rbi, sb, cs, pb, bb, k,")).toBe(true);
   });

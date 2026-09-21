@@ -1,8 +1,6 @@
 import type { MessageItem } from "../types/main";
 import type { NpcSaveState } from "../types/save";
-import {
-  buildRows, countByGroup, previewLine, type OffseasonEvent,
-} from "./offseasonReport";
+import { buildRows, countByGroup, previewLine, type OffseasonEvent } from "./offseasonReport";
 import { SANGMU_TEAM_IDS } from "./ids";
 
 // ── 시즌 종료 요약 ────────────────────────────────────────────
@@ -33,7 +31,10 @@ export interface SeasonEndSummary {
  * 달랐다 (KBL 상한 65 vs 생성 인원 30). 그 65가 1군·2군 합산에 걸리는 바람에
  * 프로 소속이 700명까지 부풀었다.
  */
-export interface RosterLimit { rosterMin?: number; rosterMax: number }
+export interface RosterLimit {
+  rosterMin?: number;
+  rosterMax: number;
+}
 
 export function rosterLimitsFrom(
   rosterRules: Record<string, { rosterMin?: number; rosterMax?: number }>,
@@ -72,9 +73,11 @@ export function foreignParamsFrom(rulesFile: {
     foreignLeagues: rulesFile.foreignRules?.leagues ?? [],
     homeNationality,
     ...(rulesFile.foreignRules?.perTeam !== undefined
-      ? { foreignPerTeam: rulesFile.foreignRules.perTeam } : {}),
+      ? { foreignPerTeam: rulesFile.foreignRules.perTeam }
+      : {}),
     ...(rulesFile.foreignRules?.maxPitchers !== undefined
-      ? { foreignMaxPitchers: rulesFile.foreignRules.maxPitchers } : {}),
+      ? { foreignMaxPitchers: rulesFile.foreignRules.maxPitchers }
+      : {}),
   };
 }
 
@@ -86,11 +89,13 @@ export function clampStat(v: number): number {
 // 호출하는 데도 없었다. **지금 OVR이 필요하면 `liveOvrOf`**(stores/npcLiveStats)를 쓴다
 
 // ── IPC 헬퍼 ─────────────────────────────────────────────────
-const api = () => (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
+const api = () =>
+  (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
 
 function parseResult<T>(json: string): T {
   const v = JSON.parse(json) as { error?: string } & T;
-  if (v && typeof v === "object" && "error" in v) throw new Error(String((v as { error: string }).error));
+  if (v && typeof v === "object" && "error" in v)
+    throw new Error(String((v as { error: string }).error));
   return v as T;
 }
 
@@ -181,8 +186,13 @@ export async function runOffseasonProcessing(
    * 🔴 안 넘기면 FA 재배치가 **예전대로 아무 팀에나** 간다 — 구단이 원하는지
    * 얼마를 줄지가 없어 미계약이 0건이었다(실측 5시즌).
    */
-  fa?: { teamPayrollCap: Record<string, number>; bidInterestMin: number; perfSpan?: number;
-         renewPerfSpan?: number; bidFloorRatio?: number },
+  fa?: {
+    teamPayrollCap: Record<string, number>;
+    bidInterestMin: number;
+    perfSpan?: number;
+    renewPerfSpan?: number;
+    bidFloorRatio?: number;
+  },
   /**
    * 팀별 연간 예산(만원) — 총연봉이 넘으면 **방출한다**
    * (사용자 확정 2026-08-31).
@@ -197,7 +207,7 @@ export async function runOffseasonProcessing(
    */
   teamBudgets?: Record<string, number>,
 ): Promise<OffseasonResult> {
-  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
+  const namedFlags = new Map(npcs.map((n) => [n.npcId, n.isNamed] as const));
   // ⚠ **엔진에 넘길 때만 합치고 돌아올 때 되돌린다.** 결과가 `s.npcs`를
   // 통째로 덮으므로, 안 되돌리면 "성장은 live에만 쌓인다"는 전제가 조용히
   // 깨진다. 그 전제는 `liveOvrOf`가 `Math.max(live, npcs)`로 읽는 근거다.
@@ -210,20 +220,25 @@ export async function runOffseasonProcessing(
         return {
           ...n,
           pitching: (l.pitching ?? n.pitching) as typeof n.pitching,
-          batting:  (l.batting  ?? n.batting)  as typeof n.batting,
+          batting: (l.batting ?? n.batting) as typeof n.batting,
         };
       })
     : npcs;
   const paramsJson = JSON.stringify({
-    npcs: withLive, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [],
+    npcs: withLive,
+    pendingDraft,
+    seasonYear,
+    namedNpcIds: namedNpcIds ?? [],
     rosterLimits: rosterLimits ?? {},
     ...(salaryRules ? { salaryRules } : {}),
-    ...(placement ? {
-      universityTeamIds: placement.universityTeamIds,
-      independentTeamIds: placement.independentTeamIds,
-      farmTeamIds: placement.farmTeamIds ?? [],
-      placement: placement.rules,
-    } : {}),
+    ...(placement
+      ? {
+          universityTeamIds: placement.universityTeamIds,
+          independentTeamIds: placement.independentTeamIds,
+          farmTeamIds: placement.farmTeamIds ?? [],
+          placement: placement.rules,
+        }
+      : {}),
     ...(releaseRules ? { releaseRules } : {}),
     ...(waiverRules ? { waiverRules } : {}),
     // 🔴 **군팀은 웨이버 청구 대상이 아니다** (2026-08-31).
@@ -240,18 +255,26 @@ export async function runOffseasonProcessing(
     teamBudgets: teamBudgets ?? {},
     ...(faIndependentAgeMax != null ? { faIndependentAgeMax } : {}),
     worldSeed: (worldSeed ?? 0) >>> 0,
-    ...(fa ? { teamPayrollCap: fa.teamPayrollCap, faBidInterestMin: fa.bidInterestMin,
-               faPerfSpan: fa.perfSpan ?? 0,
-               renewPerfSpan: fa.renewPerfSpan ?? 0,
-               faBidFloorRatio: fa.bidFloorRatio ?? 0 } : {}),
-    ...(perfScores   ? { perfScores }   : {}),
+    ...(fa
+      ? {
+          teamPayrollCap: fa.teamPayrollCap,
+          faBidInterestMin: fa.bidInterestMin,
+          faPerfSpan: fa.perfSpan ?? 0,
+          renewPerfSpan: fa.renewPerfSpan ?? 0,
+          faBidFloorRatio: fa.bidFloorRatio ?? 0,
+        }
+      : {}),
+    ...(perfScores ? { perfScores } : {}),
     ...(teamProfiles ? { teamProfiles } : {}),
     ...(foreign ?? {}),
   });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{
-    npcs: NpcSaveState[]; pendingDraft: NpcSaveState[];
-    summary: SeasonEndSummary; logs: string[]; events?: OffseasonEvent[];
+    npcs: NpcSaveState[];
+    pendingDraft: NpcSaveState[];
+    summary: SeasonEndSummary;
+    logs: string[];
+    events?: OffseasonEvent[];
   }>(json);
   const rehydrate = (n: NpcSaveState): NpcSaveState => {
     // 넘길 때 합친 live 능력치를 원래대로 돌린다. **새로 생긴 사람은 건드리지
@@ -259,9 +282,13 @@ export async function runOffseasonProcessing(
     const back = frozen.get(n.npcId);
     return {
       ...n,
-      ...(back ? { pitching: back.pitching as NpcSaveState["pitching"],
-                   batting:  back.batting  as NpcSaveState["batting"] } : {}),
-      isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
+      ...(back
+        ? {
+            pitching: back.pitching as NpcSaveState["pitching"],
+            batting: back.batting as NpcSaveState["batting"],
+          }
+        : {}),
+      isNamed: n.isNamed ?? namedFlags.get(n.npcId),
       potentialHidden: n.potentialHidden ?? 75,
     };
   };
@@ -272,35 +299,34 @@ export async function runOffseasonProcessing(
   // 집계는 사람 수다. 이름 조회는 화면 몫이라 여기선 `people`이 비어도 맞다
   const counts = countByGroup(buildRows({ events, people: [] }));
 
-  const mailboxEntry: MessageItem | null = events.length > 0
-    ? {
-        // 🔴 **연도 하나로 유일하다** — 오프시즌 결산은 시즌당 한 통이다
-        id: `msg-offseason-${seasonYear}`,
-        category: "news",
-        sender: "연감",
-        subject: "오프시즌 결산",
-        // 예전엔 `logs[0]`이라 "FA 미계약 2명"만 떴다 — 852명이 은퇴한
-        // 시즌인지 목록에서 구분이 안 됐다
-        preview: previewLine(counts),
-        // 본문은 패널이 그린다. 메타데이터를 못 읽는 경로를 위한 대비책만 둔다
-        body: previewLine(counts),
-        createdAt: `Y${seasonYear}`,
-        readAt: null,
-        metadata: { type: "offseason", seasonYear, events },
-      }
-    : null;
+  const mailboxEntry: MessageItem | null =
+    events.length > 0
+      ? {
+          // 🔴 **연도 하나로 유일하다** — 오프시즌 결산은 시즌당 한 통이다
+          id: `msg-offseason-${seasonYear}`,
+          category: "news",
+          sender: "연감",
+          subject: "오프시즌 결산",
+          // 예전엔 `logs[0]`이라 "FA 미계약 2명"만 떴다 — 852명이 은퇴한
+          // 시즌인지 목록에서 구분이 안 됐다
+          preview: previewLine(counts),
+          // 본문은 패널이 그린다. 메타데이터를 못 읽는 경로를 위한 대비책만 둔다
+          body: previewLine(counts),
+          createdAt: `Y${seasonYear}`,
+          readAt: null,
+          metadata: { type: "offseason", seasonYear, events },
+        }
+      : null;
 
   return {
-    npcs:        raw.npcs.map(rehydrate),
+    npcs: raw.npcs.map(rehydrate),
     pendingDraft: raw.pendingDraft.map(rehydrate),
-    summary:     raw.summary,
+    summary: raw.summary,
     // 최근 활동 로그(30칸)에 들어가는 건 **이 한 줄뿐이다.** 예전엔 개별 사건
     // 213줄이 그대로 부어져 시즌 마지막 주 기록을 통째로 밀어냈다.
     // ⚠ 화면 카드와 **같은 집계**를 쓴다 — Rust가 따로 세면 사건 수와 사람 수가
     // 어긋나 활동 로그엔 "방출 1170", 화면엔 "방출 45"가 뜬다
-    logs:        events.length > 0
-      ? [`오프시즌: ${previewLine(counts)}`, ...raw.logs]
-      : raw.logs,
+    logs: events.length > 0 ? [`오프시즌: ${previewLine(counts)}`, ...raw.logs] : raw.logs,
     mailboxEntry,
   };
 }

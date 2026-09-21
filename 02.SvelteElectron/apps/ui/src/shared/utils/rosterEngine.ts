@@ -1,5 +1,8 @@
 import {
-  type ManagerStyleEffect, NEUTRAL_STYLE, styleNoiseOf, managerEffect,
+  type ManagerStyleEffect,
+  NEUTRAL_STYLE,
+  styleNoiseOf,
+  managerEffect,
 } from "./managerStyle";
 import { managerProfileOf } from "./staffEffects";
 import { SANGMU_TEAM_IDS } from "./ids";
@@ -8,10 +11,10 @@ import type { NpcInjuryEntry } from "../types/save";
 import type { PlayerCondition } from "../types/season";
 
 export interface TeamRoster {
-  rotation: string[];   // SP ID 순서 (리그별 최대 2~5명)
-  bullpen: string[];    // RP/CP ID 목록
-  closer: string;       // CP ID
-  lineup: string[];     // 타자 출전 순서 (1번~9번)
+  rotation: string[]; // SP ID 순서 (리그별 최대 2~5명)
+  bullpen: string[]; // RP/CP ID 목록
+  closer: string; // CP ID
+  lineup: string[]; // 타자 출전 순서 (1번~9번)
   /**
    * 벤치 — 대타·대주자 후보.
    *
@@ -54,21 +57,50 @@ export function starterOfRotation(rotation: string[], rotIdx: number): string | 
 //   **경기마다 도는 자리다.** 숫자만 올리고 조회는 여기 뒀다 —
 //   `academicsEngine`과 같은 갈래다(`docs/ENGINE_OWNERSHIP.md`).
 
-interface FatigueTable { tiers: { atLeast: number; mult: number }[]; floor: number }
+interface FatigueTable {
+  tiers: { atLeast: number; mult: number }[];
+  floor: number;
+}
 
 /** 규칙 파일을 못 읽었을 때. **0으로 두면 로스터가 통째로 멈춘다** */
 const OPS_FALLBACK = {
-  rotationSize: { LEAGUE_HIGHSCHOOL: 3, LEAGUE_UNIVERSITY: 3, LEAGUE_INDEPENDENT: 4, default: 5 } as Record<string, number>,
-  restGames:    { LEAGUE_HIGHSCHOOL: 2, LEAGUE_UNIVERSITY: 2, LEAGUE_INDEPENDENT: 2, default: 4 } as Record<string, number>,
-  pitcherFatigue: { tiers: [{ atLeast: 70, mult: 1.0 }, { atLeast: 50, mult: 0.9 }, { atLeast: 30, mult: 0.8 }], floor: 0.65 } as FatigueTable,
-  batterFatigue:  { tiers: [{ atLeast: 70, mult: 1.0 }, { atLeast: 50, mult: 0.9 }], floor: 0.78 } as FatigueTable,
+  rotationSize: {
+    LEAGUE_HIGHSCHOOL: 3,
+    LEAGUE_UNIVERSITY: 3,
+    LEAGUE_INDEPENDENT: 4,
+    default: 5,
+  } as Record<string, number>,
+  restGames: {
+    LEAGUE_HIGHSCHOOL: 2,
+    LEAGUE_UNIVERSITY: 2,
+    LEAGUE_INDEPENDENT: 2,
+    default: 4,
+  } as Record<string, number>,
+  pitcherFatigue: {
+    tiers: [
+      { atLeast: 70, mult: 1.0 },
+      { atLeast: 50, mult: 0.9 },
+      { atLeast: 30, mult: 0.8 },
+    ],
+    floor: 0.65,
+  } as FatigueTable,
+  batterFatigue: {
+    tiers: [
+      { atLeast: 70, mult: 1.0 },
+      { atLeast: 50, mult: 0.9 },
+    ],
+    floor: 0.78,
+  } as FatigueTable,
   pitcherRest: { weeks2: 1.0, weeks1: 0.85, weeks0: 0.55 },
   freshnessWeight: 0.3,
-  playThroughOvrMult: { light: 0.88, moderate: 0.70 } as Record<string, number>,
+  playThroughOvrMult: { light: 0.88, moderate: 0.7 } as Record<string, number>,
   // 1.1 A② §6-1 — 리그별 선발 투구수 상한 · 선발 아웃 계수 · 마무리 문. 규칙 파일이 정본, 이건 못 읽었을 때
   starterPitchLimit: { LEAGUE_HIGHSCHOOL: 105, default: 120 } as Record<string, number>,
   starterOutsFactor: { default: 1.0 } as Record<string, number>,
-  closerGate: {} as Record<string, { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number }>,
+  closerGate: {} as Record<
+    string,
+    { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number }
+  >,
 };
 let _ops = OPS_FALLBACK;
 
@@ -83,20 +115,29 @@ export function primeRosterOpsRules(rulesFile: {
   if (!o) return;
   _ops = {
     rotationSize: { ...OPS_FALLBACK.rotationSize, ...(o.rotationSize ?? {}) },
-    restGames:    { ...OPS_FALLBACK.restGames,    ...(o.restGames ?? {}) },
+    restGames: { ...OPS_FALLBACK.restGames, ...(o.restGames ?? {}) },
     pitcherFatigue: o.pitcherFatigue ?? OPS_FALLBACK.pitcherFatigue,
-    batterFatigue:  o.batterFatigue  ?? OPS_FALLBACK.batterFatigue,
-    pitcherRest:    o.pitcherRest    ?? OPS_FALLBACK.pitcherRest,
+    batterFatigue: o.batterFatigue ?? OPS_FALLBACK.batterFatigue,
+    pitcherRest: o.pitcherRest ?? OPS_FALLBACK.pitcherRest,
     freshnessWeight: o.freshnessWeight ?? OPS_FALLBACK.freshnessWeight,
     playThroughOvrMult: { ...OPS_FALLBACK.playThroughOvrMult, ...(o.playThroughOvrMult ?? {}) },
-    starterPitchLimit: stripNotes({ ...OPS_FALLBACK.starterPitchLimit, ...(o.starterPitchLimit ?? {}) }),
-    starterOutsFactor: stripNotes({ ...OPS_FALLBACK.starterOutsFactor, ...(o.starterOutsFactor ?? {}) }),
+    starterPitchLimit: stripNotes({
+      ...OPS_FALLBACK.starterPitchLimit,
+      ...(o.starterPitchLimit ?? {}),
+    }),
+    starterOutsFactor: stripNotes({
+      ...OPS_FALLBACK.starterOutsFactor,
+      ...(o.starterOutsFactor ?? {}),
+    }),
     closerGate: stripNotes({ ...OPS_FALLBACK.closerGate, ...(o.closerGate ?? {}) }),
   };
 }
 /** 규칙 파일의 `_note` 같은 설명 키를 뺀다 — 리그 id 로만 읽는다 */
 function stripNotes<T>(o: Record<string, T>): Record<string, T> {
-  return Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_"))) as Record<string, T>;
+  return Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith("_"))) as Record<
+    string,
+    T
+  >;
 }
 // ── 1.1 A② §6-1 — 리그별 선발 투구수 상한 · 아웃 계수 · 마무리 문 ─────────────
 export function starterPitchLimitForLeague(leagueId: string): number {
@@ -105,7 +146,9 @@ export function starterPitchLimitForLeague(leagueId: string): number {
 export function starterOutsFactorForLeague(leagueId: string): number {
   return _ops.starterOutsFactor[leagueId] ?? _ops.starterOutsFactor.default ?? 1.0;
 }
-export function closerGateForLeague(leagueId: string): { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number } | undefined {
+export function closerGateForLeague(
+  leagueId: string,
+): { inningThreshold: number; maxLeadDiff: number; minLeadDiff: number } | undefined {
   return _ops.closerGate[leagueId];
 }
 
@@ -132,12 +175,14 @@ function calcEffectiveOvr(
   const fatF = fatigueMult(_ops.pitcherFatigue, condition.fatigue);
 
   // 마지막 등판 이후 경과 주 수
-  const weeksRested = condition.lastPitchedWeek > 0
-    ? currentWeek - condition.lastPitchedWeek : 99;
+  const weeksRested = condition.lastPitchedWeek > 0 ? currentWeek - condition.lastPitchedWeek : 99;
   // 직전 주 등판이면 로테이션 후순위로 밀린다
-  const restF = weeksRested >= 2 ? _ops.pitcherRest.weeks2
-              : weeksRested === 1 ? _ops.pitcherRest.weeks1
-              : _ops.pitcherRest.weeks0;
+  const restF =
+    weeksRested >= 2
+      ? _ops.pitcherRest.weeks2
+      : weeksRested === 1
+        ? _ops.pitcherRest.weeks1
+        : _ops.pitcherRest.weeks0;
 
   return Math.round(baseOvr * fatF * restF);
 }
@@ -153,16 +198,16 @@ function freshnessBonus(
   teamGameCount: number,
   rotationSense: number,
 ): number {
-  const gamesSince = lastAppearanceGameCount !== undefined
-    ? teamGameCount - lastAppearanceGameCount
-    : 99;  // 한 번도 안 나온 선수 → 가장 신선
+  const gamesSince =
+    lastAppearanceGameCount !== undefined ? teamGameCount - lastAppearanceGameCount : 99; // 한 번도 안 나온 선수 → 가장 신선
   return gamesSince * (rotationSense - 50) * _ops.freshnessWeight;
 }
 
 // 리그(careerStage)별 로테이션 크기
 /** 단계 이름 → 리그 id. 표를 두 벌 두지 않으려는 것이다 */
 const STAGE_LEAGUE: Record<string, string> = {
-  highschool: "LEAGUE_HIGHSCHOOL", university: "LEAGUE_UNIVERSITY",
+  highschool: "LEAGUE_HIGHSCHOOL",
+  university: "LEAGUE_UNIVERSITY",
   independent: "LEAGUE_INDEPENDENT",
 };
 export function rotationSizeForStage(careerStage: string): number {
@@ -177,7 +222,10 @@ export function rotationSizeForLeague(leagueId: string): number {
 // 부상을 안고 뛸 때의 OVR 배수 — 정본은 규칙 파일이다
 
 // ── 부상 필터링 + OVR 패널티 적용 ─────────────────────────────
-function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, NpcInjuryEntry>): EntityRow[] {
+function applyNpcInjuries(
+  entities: EntityRow[],
+  npcInjuries: Record<string, NpcInjuryEntry>,
+): EntityRow[] {
   return entities.flatMap((e) => {
     const inj = npcInjuries[e.id];
     if (!inj) return [e];
@@ -188,20 +236,32 @@ function applyNpcInjuries(entities: EntityRow[], npcInjuries: Record<string, Npc
     if (!pd) return [e];
     const patchedPlayer: EntityPlayerDetails = {
       ...pd,
-      pitching: pd.pitching ? { ...pd.pitching, ovr: Math.round((pd.pitching.ovr ?? 50) * mult) } : pd.pitching,
-      batting:  pd.batting  ? { ...pd.batting,  ovr: Math.round((pd.batting.ovr  ?? 50) * mult) } : pd.batting,
+      pitching: pd.pitching
+        ? { ...pd.pitching, ovr: Math.round((pd.pitching.ovr ?? 50) * mult) }
+        : pd.pitching,
+      batting: pd.batting
+        ? { ...pd.batting, ovr: Math.round((pd.batting.ovr ?? 50) * mult) }
+        : pd.batting,
     };
     return [{ ...e, details: { ...e.details, player: patchedPlayer } }];
   });
 }
 
 // ── 팀 엔티티 분류 ────────────────────────────────────────────
-function getTeamPlayers(teamId: string, entities: EntityRow[], npcInjuries?: Record<string, NpcInjuryEntry>, npcRetired?: string[]): EntityRow[] {
+function getTeamPlayers(
+  teamId: string,
+  entities: EntityRow[],
+  npcInjuries?: Record<string, NpcInjuryEntry>,
+  npcRetired?: string[],
+): EntityRow[] {
   const retiredSet = new Set(npcRetired ?? []);
   const active = entities.filter(
-    (e) => e.role === "player" && e.teamId === teamId && !retiredSet.has(e.id)
+    (e) =>
+      e.role === "player" &&
+      e.teamId === teamId &&
+      !retiredSet.has(e.id) &&
       // 복무 중인 선수는 소속 팀 로스터에 안 뜬다 — 상무 로스터에서만 보인다
-      && (e.status === "active" || (e.status === "military" && SANGMU_TEAM_IDS.has(teamId))),
+      (e.status === "active" || (e.status === "military" && SANGMU_TEAM_IDS.has(teamId))),
   );
   return npcInjuries ? applyNpcInjuries(active, npcInjuries) : active;
 }
@@ -305,7 +365,7 @@ export function getTeamBullpen(
   // RP: consecutiveAppearances >= 2 → 의무 휴식
   const availableRp = reliefs.filter((e) => {
     const pos = playerDetails(e).position;
-    if (pos === "CP") return true;  // CP는 별도 처리
+    if (pos === "CP") return true; // CP는 별도 처리
     const consec = conditions?.[e.id]?.consecutiveAppearances ?? 0;
     return consec < 2;
   });
@@ -321,7 +381,10 @@ export function getTeamBullpen(
   // 선택 점수 = effectiveOvr + freshnessBonus
   const score = (e: EntityRow) => {
     const ovr = playerDetails(e).pitching?.ovr ?? 0;
-    return ovr + freshnessBonus(conditions?.[e.id]?.lastAppearanceGameCount, teamGameCount, rotationSense);
+    return (
+      ovr +
+      freshnessBonus(conditions?.[e.id]?.lastAppearanceGameCount, teamGameCount, rotationSense)
+    );
   };
 
   // CP: 가용 CP 중 점수 최고, 없으면 전체 CP 중 최고 (fallback)
@@ -333,12 +396,13 @@ export function getTeamBullpen(
   //
   // 생성은 고쳤지만(팀당 CP 1명) 트레이드·부상·은퇴로 시즌 중에 비면 같은 일이
   // 다시 난다. **CP가 없으면 제일 좋은 불펜을 마무리로 쓴다** — 실제 구단도 그렇다.
-  const cpPool = availableCp.length > 0 ? availableCp
-    : reliefs.filter((e) => playerDetails(e).position === "CP");
+  const cpPool =
+    availableCp.length > 0
+      ? availableCp
+      : reliefs.filter((e) => playerDetails(e).position === "CP");
   const cpSorted = [...cpPool].sort((a, b) => score(b) - score(a));
-  const closer = cpSorted[0]?.id
-    ?? [...availableRp].sort((a, b) => score(b) - score(a))[0]?.id
-    ?? "";
+  const closer =
+    cpSorted[0]?.id ?? [...availableRp].sort((a, b) => score(b) - score(a))[0]?.id ?? "";
 
   // RP 불펜: 가용 RP + 가용 CP → 점수 내림차순 (CP는 마무리 제외 후 포함 가능)
   const bullpenPool = [
@@ -408,13 +472,16 @@ export function neededPositions(
   const cnt: Record<string, number> = {};
   let pitchers = 0;
   for (const p of roster) {
-    if (p.playerType === "pitcher") { pitchers++; continue; }
+    if (p.playerType === "pitcher") {
+      pitchers++;
+      continue;
+    }
     const pos = p.position ?? "";
     cnt[pos] = (cnt[pos] ?? 0) + 1;
   }
 
   const batters = roster.length - pitchers;
-  const empty  = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 0);
+  const empty = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 0);
   const backup = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 1);
   const pitShort = Math.max(0, minPitchers - pitchers);
 
@@ -441,12 +508,13 @@ export function neededPositions(
   // 둘 다 조금씩 채우고, 남으면 백업(④)으로 간다.
   const remain = Math.max(0, count - empty.length);
   const need = batShort + pitShort;
-  const batQuota = need === 0 ? 0
-    : Math.min(batShort, Math.round((remain * batShort) / need));
+  const batQuota = need === 0 ? 0 : Math.min(batShort, Math.round((remain * batShort) / need));
   const pitQuota = Math.min(pitShort, Math.max(0, remain - batQuota));
 
   const out: string[] = [];
-  const push = (v: string) => { if (out.length < count) out.push(v); };
+  const push = (v: string) => {
+    if (out.length < count) out.push(v);
+  };
 
   for (const pos of empty) push(pos);
   // 총원이 모자라면 **제일 얇은 자리부터** 채운다 — 한 자리에 몰아주지 않는다
@@ -454,7 +522,7 @@ export function neededPositions(
   for (let i = 0; i < batQuota; i++) push(thin[i % thin.length]);
   // 투수는 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
   // 선발 비중대로 섞는다 — 앞에서부터 spShare만큼 선발
-  const spOf = (idx: number, n: number) => idx < Math.round(n * spShare) ? "SP" : "RP";
+  const spOf = (idx: number, n: number) => (idx < Math.round(n * spShare) ? "SP" : "RP");
   for (let i = 0; i < pitQuota; i++) push(spOf(i, pitQuota));
 
   // ── 남은 칸: 비율을 **여기서 직접 지킨다** ─────────────────────
@@ -475,7 +543,10 @@ export function neededPositions(
   const restPit = Math.round(rest * pitcherRatio);
   let bi = 0;
   for (let i = 0; i < rest; i++) {
-    if (i < restPit) { push(spOf(i, restPit)); continue; }
+    if (i < restPit) {
+      push(spOf(i, restPit));
+      continue;
+    }
     // 백업 없는 자리 → 그것도 다 차면 제일 얇은 자리
     push(backup[bi] ?? thin[bi % thin.length]);
     bi++;
@@ -503,8 +574,7 @@ export function getTeamBench(
       const t = playerDetails(e).playerType;
       return (t === "batter" || t === "twoWay") && !inLineup.has(e.id);
     })
-    .sort((a, b) =>
-      (playerDetails(b).batting?.ovr ?? 0) - (playerDetails(a).batting?.ovr ?? 0))
+    .sort((a, b) => (playerDetails(b).batting?.ovr ?? 0) - (playerDetails(a).batting?.ovr ?? 0))
     .slice(0, 4)
     .map((e) => e.id);
 }
@@ -523,9 +593,7 @@ export function getTeamLineup(
 ): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
   let batters = players.filter(
-    (e) =>
-      playerDetails(e).playerType === "batter" ||
-      playerDetails(e).playerType === "twoWay",
+    (e) => playerDetails(e).playerType === "batter" || playerDetails(e).playerType === "twoWay",
   );
   // ⚠ **9명을 못 채우면 남은 타자의 타석이 부푼다.**
   //
@@ -556,9 +624,9 @@ export function getTeamLineup(
     .map((e) => Number((e as unknown as { age?: number }).age ?? 0))
     .filter((v) => v > 0);
   const selAgeMid = selAges.length
-    ? selAges.slice().sort((a, b) => a - b)[Math.floor(selAges.length / 2)] : 0;
-  const selAgeSpan = selAges.length
-    ? Math.max(1, Math.max(...selAges) - Math.min(...selAges)) : 1;
+    ? selAges.slice().sort((a, b) => a - b)[Math.floor(selAges.length / 2)]
+    : 0;
+  const selAgeSpan = selAges.length ? Math.max(1, Math.max(...selAges) - Math.min(...selAges)) : 1;
 
   // 타자 선택 점수: 피로 반영 OVR + freshnessBonus + 감독 취향
   const batScore = (e: EntityRow) => {
@@ -572,15 +640,17 @@ export function getTeamLineup(
     const age = Number((e as unknown as { age?: number }).age ?? selAgeMid);
     // ⚠ 세기는 타순의 **절반**이다. 여기서 세게 걸면 감독 취향이 OVR을
     //   눌러 리그 전체 수준이 내려간다 — 누굴 쓸지는 실력이 먼저다.
-    const mgrAdj = selEff.age === 0 && selEff.power === 0
-        && selEff.defense === 0 && selEff.speed === 0
-      ? 0
-      : (((age - selAgeMid) / selAgeSpan) * selEff.age
-         + ((b?.power ?? 50) - 50) / 50 * selEff.power
-         + ((b?.fielding ?? 50) - 50) / 50 * selEff.defense
-         + ((b?.speed ?? 50) - 50) / 50 * selEff.speed) * 0.5;
-    return effOvr + mgrAdj
-      + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
+    const mgrAdj =
+      selEff.age === 0 && selEff.power === 0 && selEff.defense === 0 && selEff.speed === 0
+        ? 0
+        : (((age - selAgeMid) / selAgeSpan) * selEff.age +
+            (((b?.power ?? 50) - 50) / 50) * selEff.power +
+            (((b?.fielding ?? 50) - 50) / 50) * selEff.defense +
+            (((b?.speed ?? 50) - 50) / 50) * selEff.speed) *
+          0.5;
+    return (
+      effOvr + mgrAdj + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense)
+    );
   };
 
   // 포지션별 1명씩 최고 점수 선택
@@ -645,14 +715,12 @@ function sortBattingOrder(
   // 🔴 **팀 안 상대 나이로 잰다.** 절대 나이(25 기준)는 리그마다 안 맞아서,
   //   고교(전원 16~18세)에선 "육성 우선"과 "노장 중용"이 **같은 타순**을
   //   냈다(실측). 이러면 규칙에 값을 적어도 죽은 갈래가 된다.
-  const ages = ids.map((id) =>
-    Number((map.get(id) as unknown as { age?: number } | undefined)?.age ?? 0))
+  const ages = ids
+    .map((id) => Number((map.get(id) as unknown as { age?: number } | undefined)?.age ?? 0))
     .filter((v) => v > 0);
-  const ageMid = ages.length
-    ? ages.slice().sort((a, b) => a - b)[Math.floor(ages.length / 2)] : 0;
+  const ageMid = ages.length ? ages.slice().sort((a, b) => a - b)[Math.floor(ages.length / 2)] : 0;
   // 그 명단의 나이 폭 — 좁으면 나이 가중이 무의미하므로 최소 1로 둔다
-  const ageSpan = ages.length
-    ? Math.max(1, Math.max(...ages) - Math.min(...ages)) : 1;
+  const ageSpan = ages.length ? Math.max(1, Math.max(...ages) - Math.min(...ages)) : 1;
   const scored = ids.map((id) => {
     const e = map.get(id);
     if (!e) return { id, lead: 0, power: 0, contact: 0 };
@@ -666,8 +734,8 @@ function sortBattingOrder(
     //   나이대가 달라도 같은 세기로 듣는다.
     const ageAdj = ((age - ageMid) / ageSpan) * eff.age;
     const def = (b?.fielding ?? 50) * (eff.defense / 100);
-    const lead    = (b?.eye ?? 50) + (b?.speed ?? 50) + eff.speed + ageAdj + def + nz;
-    const power   = (b?.power ?? 50) + (b?.contact ?? 50) + eff.power + ageAdj + def + nz;
+    const lead = (b?.eye ?? 50) + (b?.speed ?? 50) + eff.speed + ageAdj + def + nz;
+    const power = (b?.power ?? 50) + (b?.contact ?? 50) + eff.power + ageAdj + def + nz;
     const contact = (b?.contact ?? 50) + nz;
     return { id, lead, power, contact };
   });
@@ -678,7 +746,7 @@ function sortBattingOrder(
   scored.sort((a, b) => b.lead - a.lead);
   const leadoff = scored.shift()!;
   scored.sort((a, b) => b.power - a.power);
-  const cleanup = [scored.shift(), scored.shift()].filter((s): s is typeof scored[0] => !!s);
+  const cleanup = [scored.shift(), scored.shift()].filter((s): s is (typeof scored)[0] => !!s);
   const rest = scored.map((s) => s.id);
 
   return [leadoff.id, rest[0] ?? "", ...cleanup.map((c) => c.id), ...rest.slice(1)].filter(Boolean);
@@ -720,14 +788,27 @@ export interface BuildRosterParams {
 
 export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
   const {
-    teamId, entities, npcInjuries, maxRotation = 5, conditions,
-    currentWeek = 0, teamGameCount = 0,
-    leagueId = "", rotationSense = 50, npcRetired,
+    teamId,
+    entities,
+    npcInjuries,
+    maxRotation = 5,
+    conditions,
+    currentWeek = 0,
+    teamGameCount = 0,
+    leagueId = "",
+    rotationSense = 50,
+    npcRetired,
   } = p;
 
   const base = getTeamRotation(
-    teamId, entities, npcInjuries, maxRotation, conditions, currentWeek,
-    leagueId, npcRetired,
+    teamId,
+    entities,
+    npcInjuries,
+    maxRotation,
+    conditions,
+    currentWeek,
+    leagueId,
+    npcRetired,
   );
 
   // 🔴 **여기서 돌리지 않는다** (2026-08-28). 예전엔 이 자리에서 명단을
@@ -749,12 +830,31 @@ export function buildTeamRoster(p: BuildRosterParams): TeamRoster {
   //   표본이 얇아져 ERA가 능력치를 못 따라간다.
   const rotation = base;
 
-  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, rotationSense, npcRetired);
+  const { bullpen, closer } = getTeamBullpen(
+    teamId,
+    entities,
+    rotation,
+    npcInjuries,
+    conditions,
+    teamGameCount,
+    rotationSense,
+    npcRetired,
+  );
   // 감독 효과 — **여기서 한 번 뽑아 넘긴다.** 안 넘기면 중립이라
   // 스타일이 다시 죽은 값이 된다.
   const mgrProfile = managerProfileOf(teamId, entities);
   const mgrEff = managerEffect(mgrProfile);
-  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired, mgrEff);
+  const lineup = getTeamLineup(
+    teamId,
+    entities,
+    npcInjuries,
+    conditions,
+    currentWeek,
+    teamGameCount,
+    rotationSense,
+    npcRetired,
+    mgrEff,
+  );
   const bench = getTeamBench(teamId, entities, lineup, npcInjuries, npcRetired);
   return { rotation, bullpen, closer, lineup, bench };
 }

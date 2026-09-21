@@ -14,14 +14,13 @@ async function leagueMultOf(): Promise<Record<string, number>> {
   try {
     const { loadRosterRules } = await import("../repo/newGameV3");
     const rules = await loadRosterRules();
-    const m = (rules as { salaryRules?: { leagueMult?: Record<string, number> } })
-      .salaryRules?.leagueMult;
+    const m = (rules as { salaryRules?: { leagueMult?: Record<string, number> } }).salaryRules
+      ?.leagueMult;
     return m && Object.keys(m).length ? m : {};
   } catch {
     return {};
   }
 }
-
 
 /**
  * 시즌 평점 0~100. **투수·타자 둘 다 받는다** (2026-09-01 · 트랙 C 가 잡았다).
@@ -35,14 +34,18 @@ export async function calcSeasonRating(
   stats: PitcherSeasonStats | BatterSeasonStats | null,
 ): Promise<number> {
   const raw = await window.projectB!.salaryCalcSeasonRating(
-    JSON.stringify({ stats: stats ?? null })
+    JSON.stringify({ stats: stats ?? null }),
   );
   return JSON.parse(raw) as number;
 }
 
-export async function calcMarketSalary(ovr: number, fame: number, leagueId: string): Promise<number> {
+export async function calcMarketSalary(
+  ovr: number,
+  fame: number,
+  leagueId: string,
+): Promise<number> {
   const raw = await window.projectB!.salaryCalcMarketSalary(
-    JSON.stringify({ ovr, fame, leagueId, leagueMult: await leagueMultOf() })
+    JSON.stringify({ ovr, fame, leagueId, leagueMult: await leagueMultOf() }),
   );
   return JSON.parse(raw) as number;
 }
@@ -53,7 +56,7 @@ export async function calcOfferedSalary(
   marketSalary: number,
 ): Promise<number> {
   const raw = await window.projectB!.salaryCalcOfferedSalary(
-    JSON.stringify({ currentSalary, rating, marketSalary })
+    JSON.stringify({ currentSalary, rating, marketSalary }),
   );
   return JSON.parse(raw) as number;
 }
@@ -69,17 +72,15 @@ export async function calcOfferedSalaryForProtagonist(
   //   타자에게 그 값은 뜻이 없고, 제시액이 그만큼 어긋났다.
   const isBatter = protagonist.playerType !== "pitcher";
   const params = {
-    pitchingOvr:   protagonist.pitching.ovr,
-    battingOvr:    isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,
-    fame:          protagonist.fame,
-    leagueId:      protagonist.leagueId,
+    pitchingOvr: protagonist.pitching.ovr,
+    battingOvr: isBatter ? (protagonist.batting?.ovr ?? undefined) : undefined,
+    fame: protagonist.fame,
+    leagueId: protagonist.leagueId,
     currentSalary: protagonist.contract?.salary ?? null,
-    stats:         seasonStats ?? null,
+    stats: seasonStats ?? null,
     budgetMod,
-    leagueMult:    await leagueMultOf(),
+    leagueMult: await leagueMultOf(),
   };
-  const raw = await window.projectB!.salaryCalcOfferedSalaryForProtagonist(
-    JSON.stringify(params)
-  );
+  const raw = await window.projectB!.salaryCalcOfferedSalaryForProtagonist(JSON.stringify(params));
   return JSON.parse(raw) as number;
 }

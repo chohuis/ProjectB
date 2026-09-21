@@ -13,17 +13,32 @@
  */
 
 export type PitchResultCode =
-  | "STRIKE_SWING" | "STRIKE_LOOK" | "BALL" | "FOUL"
+  | "STRIKE_SWING"
+  | "STRIKE_LOOK"
+  | "BALL"
+  | "FOUL"
   // 삼진 — **타자가 물러났다.** 스트라이크 하나(`STRIKE_*`)와 다른 일이다.
   // 🔴 예전엔 이게 없어서 3스트라이크째에도 "루킹"이라고만 떴다.
-  | "STRIKEOUT_SWING" | "STRIKEOUT_LOOK"
-  | "INPLAY_OUT" | "GROUND_OUT" | "FLY_OUT" | "LINE_OUT" | "DOUBLE_PLAY" | "TRIPLE_PLAY"
+  | "STRIKEOUT_SWING"
+  | "STRIKEOUT_LOOK"
+  | "INPLAY_OUT"
+  | "GROUND_OUT"
+  | "FLY_OUT"
+  | "LINE_OUT"
+  | "DOUBLE_PLAY"
+  | "TRIPLE_PLAY"
   | "FIELDING_ERROR"
-  | "HIT_SINGLE" | "HIT_DOUBLE" | "HIT_TRIPLE" | "HOME_RUN"
+  | "HIT_SINGLE"
+  | "HIT_DOUBLE"
+  | "HIT_TRIPLE"
+  | "HOME_RUN"
   | "WALK"
   // 사구·희생번트·희생플라이 (2026-08-28). **셋 다 타수가 아니다** —
   // 기록에서 볼넷·아웃과 다르게 잡힌다
-  | "HIT_BY_PITCH" | "INTERFERENCE" | "SAC_BUNT" | "SAC_FLY"
+  | "HIT_BY_PITCH"
+  | "INTERFERENCE"
+  | "SAC_BUNT"
+  | "SAC_FLY"
   // 🔴 **스퀴즈가 유니온에 없었다** (2026-09-01). 엔진은 `SqueezeBunt => "SQUEEZE"`
   //   로 내는데(`match_engine.rs:1463`) 타입도 표도 몰라서 화면에 영문이 샜다.
   //   희생번트와 다른 일이다 — 3루 주자를 홈에 넣으려고 대는 것이다.
@@ -43,12 +58,15 @@ export interface BallInPlay {
  * 옛 세이브나 로컬 폴백이 낼 수 있어 남겨 둔다.
  */
 const OUT_IN_PLAY = new Set<PitchResultCode>([
-  "INPLAY_OUT", "GROUND_OUT", "FLY_OUT", "LINE_OUT", "DOUBLE_PLAY", "TRIPLE_PLAY",
+  "INPLAY_OUT",
+  "GROUND_OUT",
+  "FLY_OUT",
+  "LINE_OUT",
+  "DOUBLE_PLAY",
+  "TRIPLE_PLAY",
 ]);
 
-const HITS = new Set<PitchResultCode>([
-  "HIT_SINGLE", "HIT_DOUBLE", "HIT_TRIPLE", "HOME_RUN",
-]);
+const HITS = new Set<PitchResultCode>(["HIT_SINGLE", "HIT_DOUBLE", "HIT_TRIPLE", "HOME_RUN"]);
 
 /**
  * 스트라이크로 세는 것 — **삼진도 스트라이크다.**
@@ -58,44 +76,80 @@ const HITS = new Set<PitchResultCode>([
  *   쪼갤 때 `INPLAY_OUT`을 집합에 남겨 둔 것과 같은 이유다.
  */
 const STRIKES = new Set<PitchResultCode>([
-  "STRIKE_SWING", "STRIKE_LOOK", "STRIKEOUT_SWING", "STRIKEOUT_LOOK",
+  "STRIKE_SWING",
+  "STRIKE_LOOK",
+  "STRIKEOUT_SWING",
+  "STRIKEOUT_LOOK",
 ]);
 
 /** 삼진인가 — 타자가 물러났다 */
 const STRIKEOUTS = new Set<PitchResultCode>(["STRIKEOUT_SWING", "STRIKEOUT_LOOK"]);
 
 export const isOutInPlay = (c: PitchResultCode): boolean => OUT_IN_PLAY.has(c);
-export const isHit       = (c: PitchResultCode): boolean => HITS.has(c);
-export const isStrike    = (c: PitchResultCode): boolean => STRIKES.has(c);
+export const isHit = (c: PitchResultCode): boolean => HITS.has(c);
+export const isStrike = (c: PitchResultCode): boolean => STRIKES.has(c);
 export const isStrikeout = (c: PitchResultCode): boolean => STRIKEOUTS.has(c);
 
 /** 타석이 끝났나 — 다음 타자로 넘어가는 결과 */
 export function isAtBatOver(c: PitchResultCode): boolean {
   // ⚠ 사구·희생타도 **타석이 끝난다.** 빠뜨리면 다음 타자로 안 넘어간다
-  return isOutInPlay(c) || isHit(c) || c === "WALK" || c === "FIELDING_ERROR"
-      || c === "HIT_BY_PITCH" || c === "SAC_BUNT" || c === "SAC_FLY";
+  return (
+    isOutInPlay(c) ||
+    isHit(c) ||
+    c === "WALK" ||
+    c === "FIELDING_ERROR" ||
+    c === "HIT_BY_PITCH" ||
+    c === "SAC_BUNT" ||
+    c === "SAC_FLY"
+  );
 }
 
 /** 수비 위치 → 사람이 부르는 이름 */
 const POSITION_LABEL: Record<string, string> = {
-  P: "투수", C: "포수", "1B": "1루수", "2B": "2루수", "3B": "3루수",
-  SS: "유격수", LF: "좌익수", CF: "중견수", RF: "우익수",
+  P: "투수",
+  C: "포수",
+  "1B": "1루수",
+  "2B": "2루수",
+  "3B": "3루수",
+  SS: "유격수",
+  LF: "좌익수",
+  CF: "중견수",
+  RF: "우익수",
 };
 
 const HIT_TYPE_LABEL: Record<BallHitType, string> = {
-  groundBall: "땅볼", flyBall: "뜬공", lineDrive: "직선타",
-  popup: "뜬공", bunt: "번트",
+  groundBall: "땅볼",
+  flyBall: "뜬공",
+  lineDrive: "직선타",
+  popup: "뜬공",
+  bunt: "번트",
 };
 
 /** 큰 글자용 — 1.4초 스쳐 지나가므로 짧게 */
 const FLASH_LABEL: Record<PitchResultCode, string> = {
-  STRIKE_SWING: "헛스윙", STRIKE_LOOK: "루킹", BALL: "볼", FOUL: "파울",
-  STRIKEOUT_SWING: "삼진 아웃", STRIKEOUT_LOOK: "삼진 아웃",
-  INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
-  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살!", TRIPLE_PLAY: "삼중살!!",
-  FIELDING_ERROR: "실책", WALK: "볼넷",
-  HIT_BY_PITCH: "몸에 맞는 공", INTERFERENCE: "수비 방해", SAC_BUNT: "희생번트", SAC_FLY: "희생플라이", SQUEEZE: "스퀴즈 번트",
-  HIT_SINGLE: "안타", HIT_DOUBLE: "2루타", HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
+  STRIKE_SWING: "헛스윙",
+  STRIKE_LOOK: "루킹",
+  BALL: "볼",
+  FOUL: "파울",
+  STRIKEOUT_SWING: "삼진 아웃",
+  STRIKEOUT_LOOK: "삼진 아웃",
+  INPLAY_OUT: "아웃",
+  GROUND_OUT: "땅볼 아웃",
+  FLY_OUT: "뜬공 아웃",
+  LINE_OUT: "직선타 아웃",
+  DOUBLE_PLAY: "병살!",
+  TRIPLE_PLAY: "삼중살!!",
+  FIELDING_ERROR: "실책",
+  WALK: "볼넷",
+  HIT_BY_PITCH: "몸에 맞는 공",
+  INTERFERENCE: "수비 방해",
+  SAC_BUNT: "희생번트",
+  SAC_FLY: "희생플라이",
+  SQUEEZE: "스퀴즈 번트",
+  HIT_SINGLE: "안타",
+  HIT_DOUBLE: "2루타",
+  HIT_TRIPLE: "3루타",
+  HOME_RUN: "홈런",
   GAME_OVER: "경기 종료",
 };
 

@@ -31,32 +31,34 @@ import type { PitchingAttributes, BattingAttributes } from "../types/save";
 
 /** 투구 OVR — 가중합 ÷ 12.0 */
 export function pitchingOvrOf(p: PitchingAttributes): number {
-  return Math.round((
-    p.velocity    * 2.5 +
-    p.command     * 2.5 +
-    p.control     * 2.0 +
-    p.movement    * 1.5 +
-    p.stamina     * 1.5 +
-    p.mentality   * 1.0 +
-    p.recovery    * 0.5 +
-    (p.clutch      ?? 50) * 0.3 +
-    (p.holdRunners ?? 50) * 0.2
-  ) / 12.0);
+  return Math.round(
+    (p.velocity * 2.5 +
+      p.command * 2.5 +
+      p.control * 2.0 +
+      p.movement * 1.5 +
+      p.stamina * 1.5 +
+      p.mentality * 1.0 +
+      p.recovery * 0.5 +
+      (p.clutch ?? 50) * 0.3 +
+      (p.holdRunners ?? 50) * 0.2) /
+      12.0,
+  );
 }
 
 /** 타격 OVR — 가중합 ÷ 11.8 */
 export function battingOvrOf(b: BattingAttributes): number {
-  return Math.round((
-    b.contact       * 2.0 +
-    b.power         * 1.8 +
-    b.eye           * 1.5 +
-    b.discipline    * 1.2 +
-    b.speed         * 1.3 +
-    (b.baseInstinct ?? 50) * 0.7 +
-    (b.bunting      ?? 45) * 0.3 +
-    (b.platoon      ?? 50) * 0.3 +
-    b.fielding      * 1.3 +
-    b.arm           * 0.8 +
-    b.battingClutch * 0.6
-  ) / 11.8);
+  return Math.round(
+    (b.contact * 2.0 +
+      b.power * 1.8 +
+      b.eye * 1.5 +
+      b.discipline * 1.2 +
+      b.speed * 1.3 +
+      (b.baseInstinct ?? 50) * 0.7 +
+      (b.bunting ?? 45) * 0.3 +
+      (b.platoon ?? 50) * 0.3 +
+      b.fielding * 1.3 +
+      b.arm * 0.8 +
+      b.battingClutch * 0.6) /
+      11.8,
+  );
 }

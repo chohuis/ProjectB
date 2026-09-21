@@ -32,6 +32,7 @@ import {
   buildRoundProgressMessage,
 } from "../../usecases/weekPhases/tournamentNews";
 import type { RankListMetadata, TableMetadata } from "../../types/main";
+import { flattenSrc } from "./flattenSrc";
 
 /**
  * 소식 생산부 배열화 — **묶음 3·4** (A 단위 5 · PLAN_MESSAGE_DASHBOARDS §1·§3).
@@ -566,7 +567,8 @@ describe("§0.6 다섯", () => {
     expect(read(SRC_WEEK).includes("semesterBarsMeta(")).toBe(true);
     expect(read(SRC_WEEK).includes('cardsMeta("cards.seasonBrief"')).toBe(true);
     expect(read(NATL).includes('cardsMeta("cards.natlSquad"')).toBe(true);
-    expect(read(FRIENDLY).includes('cardsMeta("cards.friendlyPlan"')).toBe(true);
+    // ⚠ 눌러서 본다 — prettier 가 인자를 다음 줄로 접었다 (A-6)
+    expect(flattenSrc(read(FRIENDLY)).includes('cardsMeta( "cards.friendlyPlan"')).toBe(true);
     expect(read(MIL).includes("militaryRecordTimelineMeta(")).toBe(true);
   });
 });

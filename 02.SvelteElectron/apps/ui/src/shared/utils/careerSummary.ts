@@ -24,7 +24,11 @@ export interface CareerSummary {
  * 환산해 더한 뒤 되돌린다 — `92.2 + 0.2`는 `92.4`가 아니라 `93.1`이다.
  */
 export function careerSummaryOf(records: readonly CareerSeasonRecord[]): CareerSummary {
-  let w = 0, l = 0, outs = 0, er = 0, seasons = 0;
+  let w = 0,
+    l = 0,
+    outs = 0,
+    er = 0,
+    seasons = 0;
 
   for (const r of records) {
     const st = r.stats;
@@ -38,8 +42,10 @@ export function careerSummaryOf(records: readonly CareerSeasonRecord[]): CareerS
 
   const ip = outs / 3;
   return {
-    w, l, seasons,
-    era: ip > 0 ? (Math.round((er * 9 / ip) * 100) / 100).toFixed(2) : "",
+    w,
+    l,
+    seasons,
+    era: ip > 0 ? (Math.round(((er * 9) / ip) * 100) / 100).toFixed(2) : "",
   };
 }
 
@@ -69,20 +75,46 @@ export interface CareerTotals {
   firstYear: number | null;
   lastYear: number | null;
   pitching: {
-    g: number; gs: number; w: number; l: number; sv: number; hd: number;
+    g: number;
+    gs: number;
+    w: number;
+    l: number;
+    sv: number;
+    hd: number;
     /** 야구식 표기 (93.1 = 93과 1/3) */
     ip: number;
-    er: number; h: number; k: number; bb: number;
+    er: number;
+    h: number;
+    k: number;
+    bb: number;
     /** ⚠ 구 세이브엔 없다 — `undefined`면 화면이 `—`를 찍는다. 0이면 거짓이다 */
-    hr?: number; hbp?: number;
-    era: string; whip: string;
+    hr?: number;
+    hbp?: number;
+    era: string;
+    whip: string;
   } | null;
   batting: {
-    g: number; pa: number; ab: number; h: number; hr: number;
-    rbi: number; sb: number; cs: number; bb: number; k: number;
+    g: number;
+    pa: number;
+    ab: number;
+    h: number;
+    hr: number;
+    rbi: number;
+    sb: number;
+    cs: number;
+    bb: number;
+    k: number;
     /** ⚠ 구 세이브엔 없다 */
-    b2?: number; b3?: number; r?: number; hbp?: number; sac?: number; sf?: number;
-    avg: string; obp: string; slg: string; ops: string;
+    b2?: number;
+    b3?: number;
+    r?: number;
+    hbp?: number;
+    sac?: number;
+    sf?: number;
+    avg: string;
+    obp: string;
+    slg: string;
+    ops: string;
   } | null;
 }
 
@@ -99,40 +131,100 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
     if (lastYear == null || r.year > lastYear) lastYear = r.year;
   }
 
-  const p = { g: 0, gs: 0, w: 0, l: 0, sv: 0, hd: 0, outs: 0, er: 0, h: 0, k: 0, bb: 0, hr: 0, hbp: 0 };
-  const b = { g: 0, pa: 0, ab: 0, h: 0, hr: 0, rbi: 0, sb: 0, cs: 0, bb: 0, k: 0, tb: 0,
-              b2: 0, b3: 0, r: 0, hbp: 0, sac: 0, sf: 0 };
+  const p = {
+    g: 0,
+    gs: 0,
+    w: 0,
+    l: 0,
+    sv: 0,
+    hd: 0,
+    outs: 0,
+    er: 0,
+    h: 0,
+    k: 0,
+    bb: 0,
+    hr: 0,
+    hbp: 0,
+  };
+  const b = {
+    g: 0,
+    pa: 0,
+    ab: 0,
+    h: 0,
+    hr: 0,
+    rbi: 0,
+    sb: 0,
+    cs: 0,
+    bb: 0,
+    k: 0,
+    tb: 0,
+    b2: 0,
+    b3: 0,
+    r: 0,
+    hbp: 0,
+    sac: 0,
+    sf: 0,
+  };
   // ⚠ **없는 것과 0을 가른다.** 구 세이브엔 이 칸이 없다 — 0으로 합치면
   //   "통산 피홈런 0개인 투수"가 되어 기록이 거짓이 된다
-  let pHrKnown = false, pHbpKnown = false;
-  let bXbKnown = false, bScKnown = false, bRKnown = false;
-  let anyP = false, anyB = false;
+  let pHrKnown = false,
+    pHbpKnown = false;
+  let bXbKnown = false,
+    bScKnown = false,
+    bRKnown = false;
+  let anyP = false,
+    anyB = false;
 
   for (const r of records) {
     const st = r.stats;
     if (!st) continue;
     if (st.type === "pitcher") {
       anyP = true;
-      p.g += st.g ?? 0; p.gs += st.gs ?? 0;
-      p.w += st.w ?? 0; p.l += st.l ?? 0;
-      p.sv += st.sv ?? 0; p.hd += st.hd ?? 0;
+      p.g += st.g ?? 0;
+      p.gs += st.gs ?? 0;
+      p.w += st.w ?? 0;
+      p.l += st.l ?? 0;
+      p.sv += st.sv ?? 0;
+      p.hd += st.hd ?? 0;
       p.outs += inningsToOuts(st.ip ?? 0);
-      p.er += st.er ?? 0; p.h += st.h ?? 0;
-      p.k += st.k ?? 0; p.bb += st.bb ?? 0;
-      if (st.hr  !== undefined) { pHrKnown  = true; p.hr  += st.hr;  }
-      if (st.hbp !== undefined) { pHbpKnown = true; p.hbp += st.hbp; }
+      p.er += st.er ?? 0;
+      p.h += st.h ?? 0;
+      p.k += st.k ?? 0;
+      p.bb += st.bb ?? 0;
+      if (st.hr !== undefined) {
+        pHrKnown = true;
+        p.hr += st.hr;
+      }
+      if (st.hbp !== undefined) {
+        pHbpKnown = true;
+        p.hbp += st.hbp;
+      }
     } else if (st.type === "batter") {
       anyB = true;
-      b.g += st.g ?? 0; b.pa += st.pa ?? 0; b.ab += st.ab ?? 0;
-      b.h += st.h ?? 0; b.hr += st.hr ?? 0; b.rbi += st.rbi ?? 0;
-      b.sb += st.sb ?? 0; b.cs += st.cs ?? 0; b.bb += st.bb ?? 0; b.k += st.k ?? 0;
+      b.g += st.g ?? 0;
+      b.pa += st.pa ?? 0;
+      b.ab += st.ab ?? 0;
+      b.h += st.h ?? 0;
+      b.hr += st.hr ?? 0;
+      b.rbi += st.rbi ?? 0;
+      b.sb += st.sb ?? 0;
+      b.cs += st.cs ?? 0;
+      b.bb += st.bb ?? 0;
+      b.k += st.k ?? 0;
       if (st.b2 !== undefined || st.b3 !== undefined) {
-        bXbKnown = true; b.b2 += st.b2 ?? 0; b.b3 += st.b3 ?? 0;
+        bXbKnown = true;
+        b.b2 += st.b2 ?? 0;
+        b.b3 += st.b3 ?? 0;
       }
-      if (st.r !== undefined) { bRKnown = true; b.r += st.r; }
+      if (st.r !== undefined) {
+        bRKnown = true;
+        b.r += st.r;
+      }
       if (st.hbp !== undefined || st.sac !== undefined || st.sf !== undefined) {
         bScKnown = true;
-        b.hbp += st.hbp ?? 0; b.sac += st.sac ?? 0; b.sf += st.sf ?? 0;
+        b.hbp += st.hbp ?? 0;
+        b.sac += st.sac ?? 0;
+        b.sf += st.sf ?? 0;
       }
       // 시즌 장타율에서 루타를 되살린다 — 통산 SLG를 시즌 SLG의 평균으로
       // 내면 타석 수가 무시된다(400타석 시즌과 20타석 시즌이 같은 무게)
@@ -145,32 +237,53 @@ export function careerTotalsOf(records: readonly CareerSeasonRecord[]): CareerTo
   const obpDen = bScKnown ? b.ab + b.bb + b.hbp + b.sf : b.ab + b.bb;
   return {
     seasons: records.length,
-    firstYear, lastYear,
-    pitching: anyP ? {
-      g: p.g, gs: p.gs, w: p.w, l: p.l, sv: p.sv, hd: p.hd,
-      ip: outsToInnings(p.outs),
-      er: p.er, h: p.h, k: p.k, bb: p.bb,
-      ...(pHrKnown  ? { hr:  p.hr  } : {}),
-      ...(pHbpKnown ? { hbp: p.hbp } : {}),
-      era:  ipReal > 0 ? (Math.round((p.er * 9 / ipReal) * 100) / 100).toFixed(2) : "-",
-      whip: ipReal > 0 ? (Math.round(((p.bb + p.h) / ipReal) * 100) / 100).toFixed(2) : "-",
-    } : null,
-    batting: anyB ? {
-      g: b.g, pa: b.pa, ab: b.ab, h: b.h, hr: b.hr,
-      rbi: b.rbi, sb: b.sb, cs: b.cs, bb: b.bb, k: b.k,
-      ...(bXbKnown ? { b2: b.b2, b3: b.b3 } : {}),
-      ...(bRKnown  ? { r: b.r } : {}),
-      ...(bScKnown ? { hbp: b.hbp, sac: b.sac, sf: b.sf } : {}),
-      avg: b.ab > 0 ? fmt3(b.h / b.ab) : "-",
-      // 🔴 **출루율 식이 시즌 식과 달랐다** (2026-08-28).
-      //   분자에 사구가 없고, 분모가 `pa`라 **희생번트가 들어갔다** —
-      //   `accumulateStats`는 PA = AB+BB+HBP+SAC+SF로 만든다.
-      //   야구 규칙(OBP 분모 = AB+BB+HBP+SF)과도 어긋났다.
-      //   ⚠ 구 세이브엔 사구·희생타가 없어 옛 식(AB+BB)으로 떨어진다.
-      obp: obpDen > 0 ? fmt3((b.h + b.bb + b.hbp) / obpDen) : "-",
-      slg: b.ab > 0 ? fmt3(b.tb / b.ab) : "-",
-      ops: b.ab > 0 && obpDen > 0 ? fmt3((b.h + b.bb + b.hbp) / obpDen + b.tb / b.ab) : "-",
-    } : null,
+    firstYear,
+    lastYear,
+    pitching: anyP
+      ? {
+          g: p.g,
+          gs: p.gs,
+          w: p.w,
+          l: p.l,
+          sv: p.sv,
+          hd: p.hd,
+          ip: outsToInnings(p.outs),
+          er: p.er,
+          h: p.h,
+          k: p.k,
+          bb: p.bb,
+          ...(pHrKnown ? { hr: p.hr } : {}),
+          ...(pHbpKnown ? { hbp: p.hbp } : {}),
+          era: ipReal > 0 ? (Math.round(((p.er * 9) / ipReal) * 100) / 100).toFixed(2) : "-",
+          whip: ipReal > 0 ? (Math.round(((p.bb + p.h) / ipReal) * 100) / 100).toFixed(2) : "-",
+        }
+      : null,
+    batting: anyB
+      ? {
+          g: b.g,
+          pa: b.pa,
+          ab: b.ab,
+          h: b.h,
+          hr: b.hr,
+          rbi: b.rbi,
+          sb: b.sb,
+          cs: b.cs,
+          bb: b.bb,
+          k: b.k,
+          ...(bXbKnown ? { b2: b.b2, b3: b.b3 } : {}),
+          ...(bRKnown ? { r: b.r } : {}),
+          ...(bScKnown ? { hbp: b.hbp, sac: b.sac, sf: b.sf } : {}),
+          avg: b.ab > 0 ? fmt3(b.h / b.ab) : "-",
+          // 🔴 **출루율 식이 시즌 식과 달랐다** (2026-08-28).
+          //   분자에 사구가 없고, 분모가 `pa`라 **희생번트가 들어갔다** —
+          //   `accumulateStats`는 PA = AB+BB+HBP+SAC+SF로 만든다.
+          //   야구 규칙(OBP 분모 = AB+BB+HBP+SF)과도 어긋났다.
+          //   ⚠ 구 세이브엔 사구·희생타가 없어 옛 식(AB+BB)으로 떨어진다.
+          obp: obpDen > 0 ? fmt3((b.h + b.bb + b.hbp) / obpDen) : "-",
+          slg: b.ab > 0 ? fmt3(b.tb / b.ab) : "-",
+          ops: b.ab > 0 && obpDen > 0 ? fmt3((b.h + b.bb + b.hbp) / obpDen + b.tb / b.ab) : "-",
+        }
+      : null,
   };
 }
 
@@ -225,30 +338,74 @@ const batterOf = (r: CareerSeasonRecord) => {
 };
 
 const HIGHS: readonly HighSpec[] = [
-  { key: "w",   label: "최다 승",     floor: 1, format: (v) => `${v}승`,
-    pick: (r) => pitcherOf(r)?.w ?? null },
-  { key: "k",   label: "최다 탈삼진", floor: 1, format: (v) => `${v}K`,
-    pick: (r) => pitcherOf(r)?.k ?? null },
-  { key: "sv",  label: "최다 세이브", floor: 1, format: (v) => `${v}SV`,
-    pick: (r) => pitcherOf(r)?.sv ?? null },
-  { key: "ip",  label: "최다 이닝",   floor: 1, format: (v) => `${v.toFixed(1)}이닝`,
-    pick: (r) => pitcherOf(r)?.ip ?? null },
-  { key: "era", label: "최저 ERA",    lowerIsBetter: true, format: (v) => v.toFixed(2),
+  {
+    key: "w",
+    label: "최다 승",
+    floor: 1,
+    format: (v) => `${v}승`,
+    pick: (r) => pitcherOf(r)?.w ?? null,
+  },
+  {
+    key: "k",
+    label: "최다 탈삼진",
+    floor: 1,
+    format: (v) => `${v}K`,
+    pick: (r) => pitcherOf(r)?.k ?? null,
+  },
+  {
+    key: "sv",
+    label: "최다 세이브",
+    floor: 1,
+    format: (v) => `${v}SV`,
+    pick: (r) => pitcherOf(r)?.sv ?? null,
+  },
+  {
+    key: "ip",
+    label: "최다 이닝",
+    floor: 1,
+    format: (v) => `${v.toFixed(1)}이닝`,
+    pick: (r) => pitcherOf(r)?.ip ?? null,
+  },
+  {
+    key: "era",
+    label: "최저 ERA",
+    lowerIsBetter: true,
+    format: (v) => v.toFixed(2),
     pick: (r) => {
       const s = pitcherOf(r);
-      return s && (s.ip ?? 0) >= MIN_IP_FOR_RATE ? s.era ?? null : null;
-    } },
-  { key: "hr",  label: "최다 홈런",   floor: 1, format: (v) => `${v}홈런`,
-    pick: (r) => batterOf(r)?.hr ?? null },
-  { key: "rbi", label: "최다 타점",   floor: 1, format: (v) => `${v}타점`,
-    pick: (r) => batterOf(r)?.rbi ?? null },
-  { key: "avg", label: "최고 타율",   format: (v) => fmt3(v),
+      return s && (s.ip ?? 0) >= MIN_IP_FOR_RATE ? (s.era ?? null) : null;
+    },
+  },
+  {
+    key: "hr",
+    label: "최다 홈런",
+    floor: 1,
+    format: (v) => `${v}홈런`,
+    pick: (r) => batterOf(r)?.hr ?? null,
+  },
+  {
+    key: "rbi",
+    label: "최다 타점",
+    floor: 1,
+    format: (v) => `${v}타점`,
+    pick: (r) => batterOf(r)?.rbi ?? null,
+  },
+  {
+    key: "avg",
+    label: "최고 타율",
+    format: (v) => fmt3(v),
     pick: (r) => {
       const s = batterOf(r);
-      return s && (s.ab ?? 0) >= MIN_AB_FOR_RATE ? s.avg ?? null : null;
-    } },
-  { key: "ovr", label: "최고 OVR",    floor: 1, format: (v) => String(v),
-    pick: (r) => (typeof r.ovr === "number" && r.ovr > 0 ? r.ovr : null) },
+      return s && (s.ab ?? 0) >= MIN_AB_FOR_RATE ? (s.avg ?? null) : null;
+    },
+  },
+  {
+    key: "ovr",
+    label: "최고 OVR",
+    floor: 1,
+    format: (v) => String(v),
+    pick: (r) => (typeof r.ovr === "number" && r.ovr > 0 ? r.ovr : null),
+  },
 ];
 
 export function careerHighsOf(records: readonly CareerSeasonRecord[]): CareerHigh[] {
@@ -318,8 +475,10 @@ export function awardTallyOf(records: readonly CareerSeasonRecord[]): AwardTally
   for (const r of [...records].sort((a, b) => a.year - b.year)) {
     for (const a of r.awards ?? []) {
       const cur = byId.get(a.id);
-      if (cur) { cur.count++; cur.years.push(r.year); }
-      else byId.set(a.id, { id: a.id, label: a.label, count: 1, years: [r.year] });
+      if (cur) {
+        cur.count++;
+        cur.years.push(r.year);
+      } else byId.set(a.id, { id: a.id, label: a.label, count: 1, years: [r.year] });
     }
   }
   return [...byId.values()].sort((x, y) => y.count - x.count || x.label.localeCompare(y.label));
@@ -327,13 +486,18 @@ export function awardTallyOf(records: readonly CareerSeasonRecord[]): AwardTally
 
 /** 우승·준우승 횟수 */
 export function titleCountOf(records: readonly CareerSeasonRecord[]): {
-  champion: number; runnerUp: number; championYears: number[];
+  champion: number;
+  runnerUp: number;
+  championYears: number[];
 } {
-  let champion = 0, runnerUp = 0;
+  let champion = 0,
+    runnerUp = 0;
   const championYears: number[] = [];
   for (const r of [...records].sort((a, b) => a.year - b.year)) {
-    if (r.psResult === "champion") { champion++; championYears.push(r.year); }
-    else if (r.psResult === "runnerUp") runnerUp++;
+    if (r.psResult === "champion") {
+      champion++;
+      championYears.push(r.year);
+    } else if (r.psResult === "runnerUp") runnerUp++;
   }
   return { champion, runnerUp, championYears };
 }

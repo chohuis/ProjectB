@@ -75,9 +75,11 @@ export function pickInRound(
  * 예전 필터는 `t.id !== "TEAM_SPORTS_UNIT"`이었는데 그건 refs에 없는 v1 ID라
  * 아무것도 걸러내지 못했다 (ids.ts 주석 참고).
  */
-export function draftDestinationTeams(
-  teams: readonly { id: string; leagueId: string }[],
-): { univIds: string[]; indIds: string[]; farmIds: string[] } {
+export function draftDestinationTeams(teams: readonly { id: string; leagueId: string }[]): {
+  univIds: string[];
+  indIds: string[];
+  farmIds: string[];
+} {
   // ⚠ **아마추어 전용이다** — 이름에 그걸 적는다 (2026-09-01).
   //   프로 리그는 1군·2군이 **같은 `leagueId`** 라 이렇게 거르면 20팀이
   //   된다(`seasonRollover` 에서 실제로 그 결함이 있었다). 대학·독립은
@@ -90,16 +92,20 @@ export function draftDestinationTeams(
     indIds: pickAmateurLeague("LEAGUE_INDEPENDENT"),
     // ⚠ refs는 1군·팜을 **같은 leagueId**로 담는다 — `_2` 접미사로 가른다
     // (`roster_gen.rs`의 plan과 같은 규칙)
-    farmIds: teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2")).map((t) => t.id),
+    farmIds: teams
+      .filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2"))
+      .map((t) => t.id),
   };
 }
 
 // ── IPC 헬퍼 ─────────────────────────────────────────────────
-const api = () => (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
+const api = () =>
+  (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
 
 function parseResult<T>(json: string): T {
   const v = JSON.parse(json) as { error?: string } & T;
-  if (v && typeof v === "object" && "error" in v) throw new Error(String((v as { error: string }).error));
+  if (v && typeof v === "object" && "error" in v)
+    throw new Error(String((v as { error: string }).error));
   return v as T;
 }
 
@@ -110,7 +116,7 @@ function parseResult<T>(json: string): T {
 // ── 후보 선정 (Rust DLL 위임 — Phase 7-1 D-2) ────────────────
 /** 후보가 어디서 왔나. `universityEarly`·`independent`는 **소속을 유지한 신청자**다 */
 export type DraftRoute =
-  | "highschoolGraduate" | "universityGraduate" | "universityEarly" | "independent";
+  "highschoolGraduate" | "universityGraduate" | "universityEarly" | "independent";
 
 export interface DraftCandidateRow {
   npcId: string;
@@ -141,9 +147,15 @@ export async function selectDraftCandidates(
   universityGradeMax = 4,
   highschoolGradeMax = 3,
 ): Promise<DraftCandidatesResult> {
-  const json = await window.projectB!.engine("selectDraftCandidatesNative", JSON.stringify({
-    npcs, rules: draftRules, universityGradeMax, highschoolGradeMax,
-  }));
+  const json = await window.projectB!.engine(
+    "selectDraftCandidatesNative",
+    JSON.stringify({
+      npcs,
+      rules: draftRules,
+      universityGradeMax,
+      highschoolGradeMax,
+    }),
+  );
   return parseResult<DraftCandidatesResult>(json);
 }
 
@@ -155,8 +167,8 @@ export function routeNeedsPlacement(route: DraftRoute): boolean {
 export const DRAFT_ROUTE_LABELS: Record<DraftRoute, string> = {
   highschoolGraduate: "고졸",
   universityGraduate: "대졸",
-  universityEarly:    "대학 재학",
-  independent:        "독립",
+  universityEarly: "대학 재학",
+  independent: "독립",
 };
 
 // ── NPC 드래프트 시뮬 (Rust DLL 위임) ────────────────────────
@@ -171,19 +183,26 @@ export const DRAFT_ROUTE_LABELS: Record<DraftRoute, string> = {
  * 조직 전체로 봐야 한다 — 1군만 보면 2군이 비어도 안 걸린다.
  */
 export function teamNeedsOf(
-  npcs: ReadonlyArray<{ currentTeam?: string; currentLeague?: string; playerType?: string; careerStatus?: string }>,
+  npcs: ReadonlyArray<{
+    currentTeam?: string;
+    currentLeague?: string;
+    playerType?: string;
+    careerStatus?: string;
+  }>,
   teamIds: readonly string[],
   rosterRules: Record<string, { rosterMin?: number; pitcherRatio?: number }>,
 ): Record<string, { pitchers: number; batters: number }> {
   const out: Record<string, { pitchers: number; batters: number }> = {};
   for (const teamId of teamIds) {
     const base = teamId.replace(/_1$/, "");
-    let pit = 0, bat = 0;
+    let pit = 0,
+      bat = 0;
     for (const n of npcs) {
       if (n.careerStatus !== "active" || !n.currentTeam) continue;
       // 1군(_1)과 2군(_2)을 합친다
       if (n.currentTeam !== base + "_1" && n.currentTeam !== base + "_2") continue;
-      if (n.playerType === "pitcher") pit++; else bat++;
+      if (n.playerType === "pitcher") pit++;
+      else bat++;
     }
     // 🔴 **절대 하한이 아니라 목표 비율로 본다.**
     //
@@ -194,12 +213,13 @@ export function teamNeedsOf(
     // 총원 대비 보직 비율을 본다. 총원이 고정이므로 **둘 중 정확히 하나만
     // 양수**가 된다 — 팀마다 투수가 모자라거나 야수가 모자라거나 둘 중 하나다.
     // 하한 표가 아예 필요 없고 `pitcherRatio` 하나만 쓴다.
-    const one = rosterRules[(npcs.find((n) => n.currentTeam === base + "_1")?.currentLeague) ?? ""] ?? {};
+    const one =
+      rosterRules[npcs.find((n) => n.currentTeam === base + "_1")?.currentLeague ?? ""] ?? {};
     const ratio = one.pitcherRatio ?? 0.45;
     const total = pit + bat;
     out[teamId] = {
       pitchers: Math.max(0, Math.round(total * ratio) - pit),
-      batters:  Math.max(0, Math.round(total * (1 - ratio)) - bat),
+      batters: Math.max(0, Math.round(total * (1 - ratio)) - bat),
     };
   }
   return out;
@@ -234,7 +254,7 @@ export async function runDraftSimulation(
 ): Promise<DraftSimResult> {
   const params = {
     candidates,
-    namedMetas: namedMetas.map(m => ({ npcId: m.npcId, proPotentialTier: m.proPotentialTier })),
+    namedMetas: namedMetas.map((m) => ({ npcId: m.npcId, proPotentialTier: m.proPotentialTier })),
     year,
     rounds,
     teamIds: [...teamIds],
@@ -291,7 +311,10 @@ export interface PlacementRules {
 }
 
 export function placementRulesFrom(
-  rosterRules: Record<string, { rosterMax?: number; ageMax?: number; rosterSize?: number; gradeMax?: number }>,
+  rosterRules: Record<
+    string,
+    { rosterMax?: number; ageMax?: number; rosterSize?: number; gradeMax?: number }
+  >,
   devSalary?: number,
   devMax?: number,
 ): PlacementRules {
@@ -377,19 +400,24 @@ export async function applyDraftToNpcs(
   independentTeamIds: string[] = [],
   opts: ApplyDraftOptions = {},
 ): Promise<NpcSaveState[]> {
-  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
-  const json = await api().npcApplyDraft(JSON.stringify({
-    npcs, result, universityTeamIds, independentTeamIds,
-    farmTeamIds: opts.farmTeamIds ?? [],
-    ...(opts.contract ? { contract: opts.contract } : {}),
-    ...(opts.placement ? { placement: opts.placement } : {}),
-    ...(opts.salaryRules ? { salaryRules: opts.salaryRules } : {}),
-    firstTeamRounds: opts.firstTeamRounds ?? 0,
-    teamIndex: opts.teamIndex ?? {},
-  }));
-  const updated = parseResult<NpcSaveState[]>(json).map(n => ({
+  const namedFlags = new Map(npcs.map((n) => [n.npcId, n.isNamed] as const));
+  const json = await api().npcApplyDraft(
+    JSON.stringify({
+      npcs,
+      result,
+      universityTeamIds,
+      independentTeamIds,
+      farmTeamIds: opts.farmTeamIds ?? [],
+      ...(opts.contract ? { contract: opts.contract } : {}),
+      ...(opts.placement ? { placement: opts.placement } : {}),
+      ...(opts.salaryRules ? { salaryRules: opts.salaryRules } : {}),
+      firstTeamRounds: opts.firstTeamRounds ?? 0,
+      teamIndex: opts.teamIndex ?? {},
+    }),
+  );
+  const updated = parseResult<NpcSaveState[]>(json).map((n) => ({
     ...n,
-    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
+    isNamed: n.isNamed ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   }));
 
@@ -464,18 +492,23 @@ export function draftOrderOf(
  * 시즌 수로 나눠야 "3년 중 한 번 우승"과 "1년만 뛰고 우승"이 구분된다.
  */
 export function hsDraftInputsOf(records: readonly CareerSeasonRecord[]): {
-  tournamentScore: number; awardTitles: number; awardMvps: number;
+  tournamentScore: number;
+  awardTitles: number;
+  awardMvps: number;
 } {
   const hs = records.filter((r) => r.leagueId === "LEAGUE_HIGHSCHOOL");
   if (hs.length === 0) return { tournamentScore: 20, awardTitles: 0, awardMvps: 0 };
-  let tour = 0, titles = 0, mvps = 0;
+  let tour = 0,
+    titles = 0,
+    mvps = 0;
   for (const r of hs) {
-    if (r.psResult === "champion")        tour += 100;
-    else if (r.psResult === "runnerUp")   tour += 60;
-    else if (r.psResult === "semiFinal")  tour += 30;
-    else                                  tour += 10;   // 미진출·기록없음
+    if (r.psResult === "champion") tour += 100;
+    else if (r.psResult === "runnerUp") tour += 60;
+    else if (r.psResult === "semiFinal") tour += 30;
+    else tour += 10; // 미진출·기록없음
     for (const a of r.awards ?? []) {
-      if (a.id === "mvp") mvps++; else titles++;
+      if (a.id === "mvp") mvps++;
+      else titles++;
     }
   }
   return { tournamentScore: tour / hs.length, awardTitles: titles, awardMvps: mvps };
@@ -501,15 +534,19 @@ export function draftInjuryCounts(
   const from = seasonYear - (DRAFT_INJURY_WINDOW_SEASONS - 1);
   const recent = history.filter((h) => h.year >= from);
   const n = (sev: string) => recent.filter((h) => h.severity === sev).length;
-  return { moderateInjuries: n("moderate"), severeInjuries: n("severe"), surgeryInjuries: n("surgery") };
+  return {
+    moderateInjuries: n("moderate"),
+    severeInjuries: n("severe"),
+    surgeryInjuries: n("surgery"),
+  };
 }
 
 export async function determineProtagonistDraft(
-  scoutScore:  number,
+  scoutScore: number,
   pitchingOvr: number,
-  year:        number,
-  ctx:         DraftContext,
-  teamIds:     readonly string[] = KBL_TEAM_IDS,
+  year: number,
+  ctx: DraftContext,
+  teamIds: readonly string[] = KBL_TEAM_IDS,
 ): Promise<ProtagonistDraftOutcome> {
   const params = { scoutScore, pitchingOvr, year, teamIds: [...teamIds], ...ctx };
   const json = await api().npcDetermineProtagonistDraft(JSON.stringify(params));
@@ -520,7 +557,6 @@ export async function determineProtagonistDraft(
 export function canRetryDraft(faUnsignedWeeks: number): boolean {
   return faUnsignedWeeks === 0;
 }
-
 
 // 타입 re-export
 export type { DraftPick, DraftSimResult, ProtagonistDraftOutcome };

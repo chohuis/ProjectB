@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "../../utils/__tests__/flattenSrc";
 
 /**
  * **구단주 성향이 재계약 제시액을 탄다** (2026-09-01 · 감사 C-3).
@@ -60,7 +61,8 @@ describe("구단주 성향 배선", () => {
     expect(M).toContain(
       "const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;",
     );
-    expect(M).toContain("developmentFocus:    profile.developmentFocus,");
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접어도 안 깨진다 (A-6)
+    expect(flattenSrc(M)).toContain("developmentFocus: profile.developmentFocus,");
   });
 
   /** Rust 쪽이 필드를 실제로 받는지 — 한쪽만 있으면 조용히 무시된다 */

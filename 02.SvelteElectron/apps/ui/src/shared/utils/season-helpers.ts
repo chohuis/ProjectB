@@ -24,13 +24,13 @@ export function winPctOf(w: number, l: number): number {
 
 export function migrateLeagueState(ls: Partial<LeagueSeasonState>): LeagueSeasonState {
   return {
-    standings:         ls.standings         ?? [],
+    standings: ls.standings ?? [],
     // ⚠ **여기서 정리하지 않는다.** 이 함수는 **경기마다** 돈다
     //   (`backgroundLeague`가 경기당 한 번). 전 리그 성적을 매번 훑으면
     //   주 진행이 그만큼 느려진다 — 정리는 **로드 때 한 번**이다
     //   (`seasonStore.hydrateFromSlot`).
-    stats:             ls.stats             ?? {},
-    playerConditions:  ls.playerConditions  ?? {},
+    stats: ls.stats ?? {},
+    playerConditions: ls.playerConditions ?? {},
     teamRotationIndex: ls.teamRotationIndex ?? {},
   };
 }
@@ -42,14 +42,23 @@ export function sanitizeStatsRecord(
   const out: Record<string, PlayerSeasonStats> = {};
   for (const [pid, st] of Object.entries(stats)) {
     if ((st as PitcherSeasonStats).type === "pitcher") {
-      const s  = st as PitcherSeasonStats;
+      const s = st as PitcherSeasonStats;
       const ip = safeN(s.ip);
       out[pid] = {
         ...s,
-        g: safeN(s.g), gs: safeN(s.gs), w: safeN(s.w), l: safeN(s.l),
-        sv: safeN(s.sv), hd: safeN(s.hd), ip,
-        er: safeN(s.er), h: safeN(s.h), k: safeN(s.k), bb: safeN(s.bb),
-        era: calcEra(safeN(s.er), ip), whip: calcWhip(safeN(s.bb), safeN(s.h), ip),
+        g: safeN(s.g),
+        gs: safeN(s.gs),
+        w: safeN(s.w),
+        l: safeN(s.l),
+        sv: safeN(s.sv),
+        hd: safeN(s.hd),
+        ip,
+        er: safeN(s.er),
+        h: safeN(s.h),
+        k: safeN(s.k),
+        bb: safeN(s.bb),
+        era: calcEra(safeN(s.er), ip),
+        whip: calcWhip(safeN(s.bb), safeN(s.h), ip),
         // ⚠ 파생값이라 저장된 걸 안 믿는다 — 승·패에서 매번 다시 만든다
         winPct: winPctOf(safeN(s.w), safeN(s.l)),
       };
@@ -60,8 +69,11 @@ export function sanitizeStatsRecord(
       //
       // 파생값은 저장된 값을 믿지 않고 **누적 counter에서 다시 만든다** —
       // 그러면 구 세이브도 로드 시점에 정상으로 돌아온다.
-      const b  = st as BatterSeasonStats;
-      const ab = safeN(b.ab), h = safeN(b.h), bb = safeN(b.bb), hr = safeN(b.hr);
+      const b = st as BatterSeasonStats;
+      const ab = safeN(b.ab),
+        h = safeN(b.h),
+        bb = safeN(b.bb),
+        hr = safeN(b.hr);
       // ⚠ **없는 것과 0을 가른다.** 구 세이브엔 장타 수가 없다 —
       //   0으로 읽으면 장타가 전부 단타로 잡혀 SLG가 떨어진다
       const xbKnown = b.b2 !== undefined || b.b3 !== undefined;
@@ -76,7 +88,7 @@ export function sanitizeStatsRecord(
       const scKnown = b.hbp !== undefined || b.sac !== undefined || b.sf !== undefined;
       const hbp = scKnown ? safeN(b.hbp) : 0;
       const sac = scKnown ? safeN(b.sac) : 0;
-      const sf  = scKnown ? safeN(b.sf)  : 0;
+      const sf = scKnown ? safeN(b.sf) : 0;
       const pa = ab + bb + hbp + sac + sf;
       const obpDen = ab + bb + hbp + sf;
       const obp = obpDen > 0 ? Math.round(((h + bb + hbp) / obpDen) * 1000) / 1000 : 0;
@@ -92,16 +104,28 @@ export function sanitizeStatsRecord(
       //   죽은 갈래를 두지 않는다.
       // ⚠ OPS가 승강 판정(`batterOpsBaseline`)·국가대표 form·트레이드 가치에
       //   물려 있다. 값이 움직이면 그쪽이 같이 움직인다.
-      const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
+      const tb = h - (b2 ?? 0) - (b3 ?? 0) - hr + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       out[pid] = {
         ...b,
-        g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb), cs: safeN(b.cs),
-        bb, k: safeN(b.k),
+        g: safeN(b.g),
+        pa,
+        ab,
+        h,
+        hr,
+        rbi: safeN(b.rbi),
+        sb: safeN(b.sb),
+        cs: safeN(b.cs),
+        bb,
+        k: safeN(b.k),
         // ⚠ 파생값이라 저장된 걸 안 믿는다 — 실책·보살·자살에서 다시 만든다
         ...(b.e !== undefined || b.a !== undefined || b.po !== undefined
-          ? { fpct: fpctOf(safeN(b.po), safeN(b.a), safeN(b.e)) } : {}),
-        avg: calcAvg(h, ab), obp, slg, ops: calcOps(obp, slg),
+          ? { fpct: fpctOf(safeN(b.po), safeN(b.a), safeN(b.e)) }
+          : {}),
+        avg: calcAvg(h, ab),
+        obp,
+        slg,
+        ops: calcOps(obp, slg),
       };
     }
   }
@@ -157,19 +181,19 @@ export function updateStandings(
 
     const isWinner = s.teamId === result.winnerId;
 
-    const wins   = s.wins   + (isWinner && !isDraw ? 1 : 0);
+    const wins = s.wins + (isWinner && !isDraw ? 1 : 0);
     const losses = s.losses + (!isWinner && !isDraw ? 1 : 0);
-    const draws  = s.draws  + (isDraw ? 1 : 0);
-    const total  = wins + losses;
+    const draws = s.draws + (isDraw ? 1 : 0);
+    const total = wins + losses;
     const winPct = total > 0 ? Math.round((wins / total) * 1000) / 1000 : 0;
 
     const isHome = s.teamId === homeTeamId;
-    const runsFor     = s.runsFor     + (isHome ? result.homeScore : result.awayScore);
+    const runsFor = s.runsFor + (isHome ? result.homeScore : result.awayScore);
     const runsAgainst = s.runsAgainst + (isHome ? result.awayScore : result.homeScore);
 
     const streakChar = isDraw ? "D" : isWinner ? "W" : "L";
-    const streak     = updateStreak(s.streak, streakChar);
-    const last10     = updateLast10(s.last10, streakChar);
+    const streak = updateStreak(s.streak, streakChar);
+    const last10 = updateLast10(s.last10, streakChar);
 
     return { ...s, wins, losses, draws, winPct, runsFor, runsAgainst, streak, last10 };
   });
@@ -178,13 +202,15 @@ export function updateStandings(
 export function updateStreak(current: string, result: "W" | "L" | "D"): string {
   if (!current) return `${result}1`;
   const char = current[0];
-  const n    = parseInt(current.slice(1), 10);
+  const n = parseInt(current.slice(1), 10);
   return char === result ? `${result}${n + 1}` : `${result}1`;
 }
 
 export function updateLast10(current: string, result: "W" | "L" | "D"): string {
   // 구 압축 포맷 "W3L2" → 확장 "WWWLL" 변환
-  const expanded = current.replace(/([WLD])(\d+)/g, (_, c: string, n: string) => c.repeat(parseInt(n)));
+  const expanded = current.replace(/([WLD])(\d+)/g, (_, c: string, n: string) =>
+    c.repeat(parseInt(n)),
+  );
   const chars = [...expanded.replace(/[^WLD]/g, ""), result];
   return chars.slice(-10).join("");
 }
@@ -214,43 +240,69 @@ export function accumulateStats(
         (prevAny as PitcherSeasonStats | undefined)?.type === "pitcher"
           ? (prevAny as PitcherSeasonStats)
           : {
-              type: "pitcher", g:0, gs:0, w:0, l:0, sv:0, hd:0, ip:0, er:0,
-              h:0, k:0, bb:0, era:0, whip:0,
+              type: "pitcher",
+              g: 0,
+              gs: 0,
+              w: 0,
+              l: 0,
+              sv: 0,
+              hd: 0,
+              ip: 0,
+              er: 0,
+              h: 0,
+              k: 0,
+              bb: 0,
+              era: 0,
+              whip: 0,
             };
       const safeNum = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
-      const ip  = safeNum(prev.ip)  + safeNum(line.ip);
-      const er  = safeNum(prev.er)  + safeNum(line.er);
-      const h   = safeNum(prev.h)   + safeNum(line.h);
+      const ip = safeNum(prev.ip) + safeNum(line.ip);
+      const er = safeNum(prev.er) + safeNum(line.er);
+      const h = safeNum(prev.h) + safeNum(line.h);
       // 🔴 **피홈런.** 엔진은 처음부터 홈런을 따로 만드는데 안 세고 있었다.
       // ⚠ 구 세이브는 둘 다 `undefined`다 — 그때는 필드를 안 만든다.
       //   0으로 채우면 "피홈런 0개인 투수"가 되어 기록이 거짓이 된다.
       const hrKnown = prev.hr !== undefined || line.hr !== undefined;
-      const hr  = hrKnown ? safeNum(prev.hr) + safeNum(line.hr) : undefined;
-      const k   = safeNum(prev.k)   + safeNum(line.k);
-      const bb  = safeNum(prev.bb)  + safeNum(line.bb);
+      const hr = hrKnown ? safeNum(prev.hr) + safeNum(line.hr) : undefined;
+      const k = safeNum(prev.k) + safeNum(line.k);
+      const bb = safeNum(prev.bb) + safeNum(line.bb);
       // 사구 — 볼넷과 다른 사건이다. 구 세이브는 필드를 안 만든다
       const hbpKnown = prev.hbp !== undefined || line.hbp !== undefined;
       const pHbp = hbpKnown ? safeNum(prev.hbp) + safeNum(line.hbp) : undefined;
-      const w   = prev.w   + (line.decision === "W"  ? 1 : 0);
-      const l   = prev.l   + (line.decision === "L"  ? 1 : 0);
-      const sv  = prev.sv  + (line.decision === "SV" ? 1 : 0);
-      const hd  = prev.hd  + (line.decision === "HD" ? 1 : 0);
+      const w = prev.w + (line.decision === "W" ? 1 : 0);
+      const l = prev.l + (line.decision === "L" ? 1 : 0);
+      const sv = prev.sv + (line.decision === "SV" ? 1 : 0);
+      const hd = prev.hd + (line.decision === "HD" ? 1 : 0);
       // 🔴 **엔진이 세는데 여기서 합산을 안 해 리그 폭투·보크가 0이었다** —
       //   `gs` · 도루자에 이어 **같은 자리에서 세 번째**다.
-      const wp  = (prev.wp ?? 0) + (line.wp ?? 0);
-      const bk  = (prev.bk ?? 0) + (line.bk ?? 0);
+      const wp = (prev.wp ?? 0) + (line.wp ?? 0);
+      const bk = (prev.bk ?? 0) + (line.bk ?? 0);
       next[line.playerId] = {
         // 🔴 `gs: prev.gs`였다 — **올리는 코드가 아무 데도 없어** 전원 0이었다.
         //   화면 넷이 이걸 표시한다(PlayerDetailModal · CareerEndScreen ·
         //   SeasonEndModal · LeaguePage). 엔진이 `gs`를 보낸다
-        type:"pitcher", g: prev.g+1, gs: prev.gs + (line.gs ? 1 : 0), w, l, sv, hd, ip, er, h, k, bb, wp, bk,
+        type: "pitcher",
+        g: prev.g + 1,
+        gs: prev.gs + (line.gs ? 1 : 0),
+        w,
+        l,
+        sv,
+        hd,
+        ip,
+        er,
+        h,
+        k,
+        bb,
+        wp,
+        bk,
         ...(hr !== undefined ? { hr } : {}),
         ...(pHbp !== undefined ? { hbp: pHbp } : {}),
-        era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
+        era: calcEra(er, ip),
+        whip: calcWhip(bb, h, ip),
         winPct: winPctOf(w, l),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: safeNum(prev.rispAb) + safeNum(line.rispAb),
-        rispH:  safeNum(prev.rispH)  + safeNum(line.rispH),
+        rispH: safeNum(prev.rispH) + safeNum(line.rispH),
       };
     } else {
       // 반대 방향도 같다 — 투수 기록을 타자로 읽으면 `pa`·`ab`가 undefined 라
@@ -260,35 +312,56 @@ export function accumulateStats(
         (prevAny as PitcherSeasonStats | undefined)?.type !== "pitcher" && prevAny
           ? (prevAny as BatterSeasonStats)
           : {
-              type:"batter", g:0, pa:0, ab:0, h:0, hr:0, rbi:0, sb:0, cs:0,
-              pb:0, bb:0, k:0, avg:0, obp:0, slg:0, ops:0,
+              type: "batter",
+              g: 0,
+              pa: 0,
+              ab: 0,
+              h: 0,
+              hr: 0,
+              rbi: 0,
+              sb: 0,
+              cs: 0,
+              pb: 0,
+              bb: 0,
+              k: 0,
+              avg: 0,
+              obp: 0,
+              slg: 0,
+              ops: 0,
             };
-      const ab  = prev.ab  + (line.ab  ?? 0);
-      const h   = prev.h   + (line.h   ?? 0);
-      const hr  = prev.hr  + (line.hr  ?? 0);
+      const ab = prev.ab + (line.ab ?? 0);
+      const h = prev.h + (line.h ?? 0);
+      const hr = prev.hr + (line.hr ?? 0);
       // 🔴 **장타를 갈라 센다.** 없으면 SLG가 옛 근사로 떨어진다(아래 참고).
       // ⚠ 구 세이브는 `undefined`다 — 0으로 채우면 "2루타 0개"가 되어 거짓이다.
-      const xbKnown = prev.b2 !== undefined || line.b2 !== undefined
-                   || prev.b3 !== undefined || line.b3 !== undefined;
-      const b2  = xbKnown ? (prev.b2 ?? 0) + (line.b2 ?? 0) : undefined;
-      const b3  = xbKnown ? (prev.b3 ?? 0) + (line.b3 ?? 0) : undefined;
+      const xbKnown =
+        prev.b2 !== undefined ||
+        line.b2 !== undefined ||
+        prev.b3 !== undefined ||
+        line.b3 !== undefined;
+      const b2 = xbKnown ? (prev.b2 ?? 0) + (line.b2 ?? 0) : undefined;
+      const b3 = xbKnown ? (prev.b3 ?? 0) + (line.b3 ?? 0) : undefined;
       const rKnown = prev.r !== undefined || line.r !== undefined;
-      const r   = rKnown ? (prev.r ?? 0) + (line.r ?? 0) : undefined;
+      const r = rKnown ? (prev.r ?? 0) + (line.r ?? 0) : undefined;
       // 🔴 **셋 다 타수가 아니다** — 타석·출루율 식이 이 값들을 본다
-      const scKnown = prev.hbp !== undefined || line.hbp !== undefined
-                   || prev.sac !== undefined || line.sac !== undefined
-                   || prev.sf  !== undefined || line.sf  !== undefined;
+      const scKnown =
+        prev.hbp !== undefined ||
+        line.hbp !== undefined ||
+        prev.sac !== undefined ||
+        line.sac !== undefined ||
+        prev.sf !== undefined ||
+        line.sf !== undefined;
       const hbp = scKnown ? (prev.hbp ?? 0) + (line.hbp ?? 0) : undefined;
       const sac = scKnown ? (prev.sac ?? 0) + (line.sac ?? 0) : undefined;
-      const sf  = scKnown ? (prev.sf  ?? 0) + (line.sf  ?? 0) : undefined;
+      const sf = scKnown ? (prev.sf ?? 0) + (line.sf ?? 0) : undefined;
       const rbi = prev.rbi + (line.rbi ?? 0);
-      const bb  = prev.bb  + (line.bb  ?? 0);
-      const k   = prev.k   + (line.k   ?? 0);
-      const sb  = prev.sb  + (line.sb  ?? 0);
+      const bb = prev.bb + (line.bb ?? 0);
+      const k = prev.k + (line.k ?? 0);
+      const sb = prev.sb + (line.sb ?? 0);
       // 🔴 **엔진이 세는데 여기서 합산을 안 해서 리그 도루자가 0이었다**
-      const cs  = (prev.cs ?? 0) + (line.cs ?? 0);
+      const cs = (prev.cs ?? 0) + (line.cs ?? 0);
       // ⚠ **포일은 포수 것이다.** 타자 줄에 실려 오지만 그 이닝 포수의 기록이다.
-      const pb  = (prev.pb ?? 0) + (line.pb ?? 0);
+      const pb = (prev.pb ?? 0) + (line.pb ?? 0);
       // ⚠ **타석은 누적하지 않고 파생한다.**
       //
       // 예전엔 `prev.pa + ab + bb`였는데 `ab`·`bb`가 **이미 누적 합계**라
@@ -317,7 +390,7 @@ export function accumulateStats(
       //   ⚠ **희생번트(SAC)는 출루율 분모에 안 들어간다.** 야구 규칙이 그렇다 —
       //     번트는 작전이라 타자에게 책임을 안 묻는다. 희생플라이는 들어간다.
       //   ⚠ 구 세이브는 그 값이 없다 — 옛 식(AB + BB)으로 떨어진다.
-      const pa  = ab + bb + (hbp ?? 0) + (sac ?? 0) + (sf ?? 0);
+      const pa = ab + bb + (hbp ?? 0) + (sac ?? 0) + (sf ?? 0);
       const avg = calcAvg(h, ab);
       const obpDen = ab + bb + (hbp ?? 0) + (sf ?? 0);
       const obp = obpDen > 0 ? Math.round(((h + bb + (hbp ?? 0)) / obpDen) * 1000) / 1000 : 0;
@@ -329,29 +402,47 @@ export function accumulateStats(
       // ⚠ **없는 것과 0을 가른다.** 구 세이브 로그엔 수비 칸이 없다 —
       //   0으로 채우면 "실책 0인 수비수"가 되어 기록이 거짓이 된다
       const lineDef = line as unknown as { e?: number; a?: number; po?: number };
-      const defKnown = prev.e !== undefined || lineDef.e !== undefined
-                    || prev.a !== undefined || lineDef.a !== undefined
-                    || prev.po !== undefined || lineDef.po !== undefined;
+      const defKnown =
+        prev.e !== undefined ||
+        lineDef.e !== undefined ||
+        prev.a !== undefined ||
+        lineDef.a !== undefined ||
+        prev.po !== undefined ||
+        lineDef.po !== undefined;
       // ⚠ `safeNum`은 투수 갈래 안에만 있다 — 여기서 따로 만든다
       const nz = (v: unknown) => (typeof v === "number" && !isNaN(v) ? v : 0);
-      const defE  = nz(prev.e)  + nz(lineDef.e);
-      const defA  = nz(prev.a)  + nz(lineDef.a);
+      const defE = nz(prev.e) + nz(lineDef.e);
+      const defA = nz(prev.a) + nz(lineDef.a);
       const defPo = nz(prev.po) + nz(lineDef.po);
-      const tb = (h - (b2 ?? 0) - (b3 ?? 0) - hr) + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
+      const tb = h - (b2 ?? 0) - (b3 ?? 0) - hr + (b2 ?? 0) * 2 + (b3 ?? 0) * 3 + hr * 4;
       const slg = ab > 0 ? Math.round((tb / ab) * 1000) / 1000 : 0;
       next[line.playerId] = {
-        type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, cs, pb, bb, k,
+        type: "batter",
+        g: prev.g + 1,
+        pa,
+        ab,
+        h,
+        hr,
+        rbi,
+        sb,
+        cs,
+        pb,
+        bb,
+        k,
         ...(b2 !== undefined ? { b2 } : {}),
         ...(b3 !== undefined ? { b3 } : {}),
-        ...(r  !== undefined ? { r }  : {}),
+        ...(r !== undefined ? { r } : {}),
         ...(hbp !== undefined ? { hbp } : {}),
         ...(sac !== undefined ? { sac } : {}),
-        ...(sf  !== undefined ? { sf }  : {}),
+        ...(sf !== undefined ? { sf } : {}),
         ...(defKnown ? { e: defE, a: defA, po: defPo, fpct: fpctOf(defPo, defA, defE) } : {}),
-        avg, obp, slg, ops: calcOps(obp, slg),
+        avg,
+        obp,
+        slg,
+        ops: calcOps(obp, slg),
         // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
         rispAb: (prev.rispAb ?? 0) + (line.rispAb ?? 0),
-        rispH:  (prev.rispH  ?? 0) + (line.rispH  ?? 0),
+        rispH: (prev.rispH ?? 0) + (line.rispH ?? 0),
       };
     }
   }

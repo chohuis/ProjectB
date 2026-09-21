@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { flattenSrc } from "./flattenSrc";
 import {
   managerEffect,
   primeManagerStyleRules,
@@ -241,12 +242,15 @@ describe("누굴 쓸지 · 언제 바꿀지", () => {
     // 예전엔 타순만 감독이 짜고 **누굴 쓸지는 OVR×컨디션만** 봤다 —
     // 육성 우선 감독이 유망주를 안 올렸다
     expect(roster.includes("const selEff = managerEff ?? NEUTRAL_STYLE;")).toBe(true);
-    expect(roster.includes("return effOvr + mgrAdj")).toBe(true);
+    expect(flattenSrc(roster).includes("return ( effOvr + mgrAdj")).toBe(true);
   });
 
   it("선택은 타순보다 약하게 건다", () => {
     // 세게 걸면 감독 취향이 OVR을 눌러 리그 수준이 내려간다
-    expect(roster.includes("+ ((b?.speed ?? 50) - 50) / 50 * selEff.speed) * 0.5;")).toBe(true);
+    // ⚠ 띄어쓰기를 눌러서 본다(`flattenSrc`) — prettier 가 접거나 정렬 칸을 줄여도 안 깨진다 (A-6)
+    expect(
+      flattenSrc(roster).includes("+ (((b?.speed ?? 50) - 50) / 50) * selEff.speed) * 0.5;"),
+    ).toBe(true);
   });
 
   it("🔴 NPC 투수 교체가 감독을 본다", () => {
