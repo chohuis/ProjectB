@@ -374,8 +374,14 @@
               >
                 <div class="item-head">
                   <span class="cat">{cat.label}</span>
-                  <!-- 등급 칩 — 노말은 아무것도 안 그린다(§9). 목록은 폭이 좁아 `small` -->
-                  <EventTierChip grade={msg.eventGrade} theme={msg.eventTheme} small />
+                  <!-- 등급 칩 — 노말은 아무것도 안 그린다(§9). 목록은 폭이 좁아 `small`.
+                       `lane` 은 통지 칩(C-1) — 등급과 배타라 둘이 같이 서지 않는다 -->
+                  <EventTierChip
+                    grade={msg.eventGrade}
+                    theme={msg.eventTheme}
+                    lane={msg.lane}
+                    small
+                  />
                   <span class="sender">{msg.sender}</span>
                   <span class="grow"></span>
                   {#if isPending}<span class="tag-pending">선택 대기</span>
@@ -416,7 +422,7 @@
         <header class="m-head" style="--cat:{cat.accent}">
           <button class="m-back" type="button" on:click={close} aria-label="목록으로">‹ 목록</button>
           <span class="m-cat">{cat.label}</span>
-          <EventTierChip grade={selected.eventGrade} theme={selected.eventTheme} />
+          <EventTierChip grade={selected.eventGrade} theme={selected.eventTheme} lane={selected.lane} />
           <p class="m-title">{selected.subject}</p>
         </header>
         <p class="m-meta">{selected.sender} · {selected.createdAt}</p>

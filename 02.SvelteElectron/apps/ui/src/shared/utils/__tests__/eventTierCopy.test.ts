@@ -1,7 +1,15 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { gradeChip, hidesNumbers, isCrisis, kindOnlyHint, costKindHint } from "../eventTierCopy";
+import {
+  gradeChip,
+  hidesNumbers,
+  isCrisis,
+  isNotice,
+  kindOnlyHint,
+  costKindHint,
+  NOTICE_LABEL,
+} from "../eventTierCopy";
 import type { DecisionEffect } from "../../types/main";
 
 /**
@@ -32,6 +40,37 @@ describe("등급 칩", () => {
       expect(c.accentDark).toMatch(/^#[0-9A-Fa-f]{6}$/);
       expect(c.accent).not.toBe(c.accentDark);
     }
+  });
+});
+
+/**
+ * 통지 표시 (C-1 · 2026-09-21 · `PLAN_MESSAGE_LANES_2026-09-08.md`).
+ *
+ * 🔴 **여기가 지키는 것은 「통지가 등급으로 안 읽힌다」 하나다.** 통지에 네
+ *   번째 색을 주는 순간 플레이어는 「레어보다 위인가」를 묻게 되는데, 통지는
+ *   그 사다리에 없다 — 주사위가 아니라 세계가 부른다.
+ */
+describe("통지 칩 (L3)", () => {
+  it("갈래가 `notice` 일 때만 통지다", () => {
+    expect(isNotice("notice")).toBe(true);
+    expect(isNotice(undefined)).toBe(false);
+    expect(isNotice(null)).toBe(false);
+    // 갈래가 없으면 이벤트다 — 데이터의 옛 이름(`urgent`)은 엔진이 `notice` 로
+    // 바꿔 실으므로(`eventEngine.noticeOf`) 화면까지 오지 않는다
+    expect(isNotice("urgent")).toBe(false);
+  });
+
+  it("이름표는 하나다 — 등급 이름 셋과 안 겹친다", () => {
+    expect(NOTICE_LABEL).toBe("통지");
+    for (const g of ["rare", "unique", "hidden"] as const) {
+      expect(gradeChip(g)!.label).not.toBe(NOTICE_LABEL);
+    }
+  });
+
+  it("통지는 색을 안 가진다 — 등급 칩만 hex 를 든다", () => {
+    // 🔴 `GRADE_CHIP` 에 `notice` 를 넣지 않는다. 넣는 순간 등급 넷을 도는
+    //   코드(`gradeChip`)가 통지를 등급으로 세기 시작한다
+    expect(gradeChip("notice" as never)).toBeNull();
   });
 });
 
@@ -169,6 +208,23 @@ describe("화면이 가림 규칙을 실제로 쓰는가 (소스 문자열)", ()
     ]) {
       expect(src(p)).toContain("EventTierChip");
     }
+  });
+
+  /**
+   * C-1 — 통지 칩이 **등급 칩이 서는 자리 전부**에 같이 선다.
+   *
+   * ⚠ 한 자리만 빠지면 목록에선 통지가 보이고 상세에선 사라진다(또는 반대).
+   *   등급 칩이 「세 자리가 각자 그리면」으로 먼저 밟은 자리라 같은 잣대로 센다.
+   */
+  it("통지 칩은 등급 칩이 서는 자리마다 `lane` 을 받는다", () => {
+    const s = src("pages/news/NewsPage.svelte");
+    expect(s).toContain("lane={msg.lane}");
+    expect(s).toContain("lane={selected.lane}");
+    expect(src("features/events/ui/EventPendingModal.svelte")).toContain("lane={action.lane}");
+    // 그리는 자리는 여전히 컴포넌트 하나다
+    const chip = src("features/events/ui/EventTierChip.svelte");
+    expect(chip).toContain("isNotice");
+    expect(chip).toContain("NOTICE_LABEL");
   });
 
   it("대가 한 줄은 두 자리 다 있다", () => {
