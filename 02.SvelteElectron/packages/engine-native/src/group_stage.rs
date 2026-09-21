@@ -183,7 +183,7 @@ fn single_round_robin(teams: &[String]) -> Vec<Vec<(String, String)>> {
         return vec![];
     }
     let mut list: Vec<String> = teams.to_vec();
-    let odd = n % 2 != 0;
+    let odd = !n.is_multiple_of(2);
     if odd {
         list.push("__BYE__".to_string());
     }

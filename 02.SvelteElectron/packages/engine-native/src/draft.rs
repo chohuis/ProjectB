@@ -491,7 +491,7 @@ impl<'a> Placer<'a> {
                     if !want_pitcher && ratio < 0.55 { continue; }
                 }
                 let slots = max - total;
-                if best.as_ref().map_or(true, |(_, s)| slots > *s) {
+                if best.as_ref().is_none_or(|(_, s)| slots > *s) {
                     best = Some((tid.clone(), slots));
                 }
             }

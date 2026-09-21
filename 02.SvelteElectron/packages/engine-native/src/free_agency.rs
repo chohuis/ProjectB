@@ -214,7 +214,7 @@ pub fn resolve_market(params: FaMarketParams) -> FaMarketResult {
             let home_bonus = if t.team_id == p.from_team_id { 0.15 } else { 0.0 };
             let bid = t.budget_index * (1.0 + t.win_now_pressure / 200.0)
                 * (0.85 + rng.next() * 0.3) + home_bonus;
-            if best.as_ref().map_or(true, |(_, b)| bid > *b) {
+            if best.as_ref().is_none_or(|(_, b)| bid > *b) {
                 best = Some((t.team_id.clone(), bid));
             }
         }

@@ -627,6 +627,17 @@ pub fn label_table() -> Vec<LabelBand> {
     }).collect()
 }
 
+impl Default for WeeklyContext {
+    fn default() -> Self {
+        WeeklyContext {
+            pitched: false, won: false, era: 0.0, complete_shutout: false,
+            team_won: false, team_played: false, ovr_delta: 0.0,
+            training_done: false, training_skipped: false,
+            training_area: String::new(), faced_rivals: Vec::new(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -924,16 +935,5 @@ mod tests {
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }
         assert_eq!(value as i32, 100, "상한을 넘거나 못 도달했다: {value}");
-    }
-}
-
-impl Default for WeeklyContext {
-    fn default() -> Self {
-        WeeklyContext {
-            pitched: false, won: false, era: 0.0, complete_shutout: false,
-            team_won: false, team_played: false, ovr_delta: 0.0,
-            training_done: false, training_skipped: false,
-            training_area: String::new(), faced_rivals: Vec::new(),
-        }
     }
 }

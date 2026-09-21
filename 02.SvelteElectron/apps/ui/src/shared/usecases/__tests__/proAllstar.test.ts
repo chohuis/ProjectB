@@ -100,6 +100,7 @@ describe("FA 미계약 → 독립 재도전", () => {
     expect(NS).toContain('npc.current_league = "LEAGUE_INDEPENDENT".to_string();');
     expect(NS).toContain('events.push(ev("fa_independent", npc, Some(team), None));');
     // 정원과 나이를 둘 다 본다
-    expect(NS).toContain("let age_ok = independent_age_max.map_or(false, |m| npc.age <= m);");
+    // ⚠ clippy 가 `map_or(false, …)` 을 `is_some_and` 로 바꿨다 — 뜻은 같다 (A-6)
+    expect(NS).toContain("let age_ok = independent_age_max.is_some_and(|m| npc.age <= m);");
   });
 });

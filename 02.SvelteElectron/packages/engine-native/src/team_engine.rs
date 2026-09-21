@@ -1229,8 +1229,7 @@ const TRADE_FLEX_FLOOR: f64 = 0.05;
 
 pub fn eval_trade_value(p: EvalTradeValueParams) -> TradeEvalResult {
     let profile = &p.team_profile;
-    let flex = (((p.salary_cap - p.current_payroll) as f64 / p.salary_cap as f64)
-        as f64).max(TRADE_FLEX_FLOOR);
+    let flex = ((p.salary_cap - p.current_payroll) as f64 / p.salary_cap as f64).max(TRADE_FLEX_FLOOR);
 
     let value_asset = |asset: &TradeAsset| -> f64 {
         let mut v = asset.ovr * 1.5;

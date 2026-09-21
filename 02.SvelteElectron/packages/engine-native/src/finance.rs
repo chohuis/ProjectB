@@ -666,7 +666,7 @@ mod tests {
             career_stage: "pro".into(), pr_mod: 1.0, signed_category_ids: vec![],
         });
         assert_eq!(at(0.0).offers.len(), 0, "무명에게 스폰서가 붙었다");
-        assert!(at(15.0).offers.len() >= 1);
+        assert!(!at(15.0).offers.is_empty());
         assert!(at(90.0).offers.len() > at(15.0).offers.len(), "명성이 카테고리를 안 연다");
         // 같은 카테고리 안에서도 명성이 높으면 더 받는다 — 계단이 아니라 경사여야 한다
         let low  = at(11.0).offers[0].annual;

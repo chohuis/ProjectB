@@ -26,7 +26,8 @@ describe("선수별 수비 기록", () => {
 
   it("양 팀 수비진이 있다", () => {
     expect(TY).toContain("pub opponent_fielders: Vec<FielderStats>");
-    expect(ME).toContain("fn fielding_side<'a>(state: &'a MatchState) -> &'a [FielderStats]");
+    // ⚠ clippy 가 생략 가능한 수명(`'a`)을 뺐다 — 뜻은 같다 (2026-09-21 · A-6)
+    expect(ME).toContain("fn fielding_side(state: &MatchState) -> &[FielderStats]");
     // 반에 따라 고른다 — 예전엔 state.fielders 하나만 봤다
     expect(ME).toContain("resolve_fielding_result(ball, fielding_side(&pre_state), rng)");
   });

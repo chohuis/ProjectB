@@ -407,7 +407,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
             PitcherRole::RP => {
                 let min_inning = if bullpen_read >= 70.0 { 5 } else if bullpen_read >= 40.0 { 6 } else { 7 };
                 EntryTrigger::MidInning {
-                    inning: (min_inning as i32 + depth).clamp(1, 9) as u8,
+                    inning: (min_inning + depth).clamp(1, 9) as u8,
                     max_outs: 3,
                     // 지는 경기에만 나온다 — 깊이 한 칸당 2점씩 좁힌다. 0 밑으로는 안 내린다
                     score_diff_cap: (6 - 2 * depth).max(0),
@@ -423,7 +423,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
                 EntryTrigger::CloseGame {
                     inning_threshold: (base_inning as i32 + depth).clamp(1, 9) as u8,
                     // 여유 있는 상황만 — 깊이 한 칸당 한 점씩 좁힌다. 최소 리드 밑으로는 안 내린다
-                    max_lead_diff: (max_lead as i32 - depth).max(min_lead as i32),
+                    max_lead_diff: (max_lead - depth).max(min_lead),
                     min_lead_diff: min_lead,
                 }
             }
@@ -1123,7 +1123,7 @@ fn calc_error_prob(ball: &BallInPlay, fielder: &FielderStats) -> f64 {
 /// 🔴 예전엔 반과 무관하게 `state.fielders` 하나만 봤다 — 홈(또는 주인공)
 ///   팀 9명이 **양 팀 이닝을 다 지켰다.** 원정 수비가 존재하지 않았다.
 /// ⚠ `opponent_fielders`가 비면 예전 동작으로 떨어진다(구 세이브 호환).
-fn fielding_side<'a>(state: &'a MatchState) -> &'a [FielderStats] {
+fn fielding_side(state: &MatchState) -> &[FielderStats] {
     if state.opponent_fielders.is_empty() { return &state.fielders; }
     let my_is_home = state.protagonist_side == "home";
     // 초면 홈이 수비, 말이면 원정이 수비다
@@ -1465,16 +1465,14 @@ fn apply_hit_upgrade(code: PitchResultCode, power: f64, weather: WeatherType, rn
     let power_factor = (power - 50.0) / 50.0;
     let wind_bonus   = T::weather_power_modifier(weather);
     let mut result = code;
-    if result == PitchResultCode::HitSingle {
-        if rng.gen::<f64>() < (T::HIT_UPGRADE_SINGLE_TO_DOUBLE_BASE + power_factor * 0.10 + wind_bonus).max(0.0) {
+    if result == PitchResultCode::HitSingle
+        && rng.gen::<f64>() < (T::HIT_UPGRADE_SINGLE_TO_DOUBLE_BASE + power_factor * 0.10 + wind_bonus).max(0.0) {
             result = PitchResultCode::HitDouble;
         }
-    }
-    if result == PitchResultCode::HitDouble {
-        if rng.gen::<f64>() < (T::HIT_UPGRADE_DOUBLE_TO_HR_BASE + power_factor * 0.08 + wind_bonus).max(0.0) {
+    if result == PitchResultCode::HitDouble
+        && rng.gen::<f64>() < (T::HIT_UPGRADE_DOUBLE_TO_HR_BASE + power_factor * 0.08 + wind_bonus).max(0.0) {
             result = PitchResultCode::HomeRun;
         }
-    }
     result
 }
 
@@ -2443,11 +2441,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 result_code = PitchResultCode::GroundOut;
             }
             // 헛쳤다 — 주자가 뛰다 잡힌다. 타자는 스트라이크만 먹는다
-            PitchResultCode::StrikeSwing | PitchResultCode::StrikeoutSwing => {
-                if rng.gen::<f64>() < T::HIT_AND_RUN_CAUGHT_PROB {
+            PitchResultCode::StrikeSwing | PitchResultCode::StrikeoutSwing
+                if rng.gen::<f64>() < T::HIT_AND_RUN_CAUGHT_PROB => {
                     hnr_runner_out = true;
                 }
-            }
             _ => {}
         }
     }
@@ -2876,9 +2873,8 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 }
             }
         }
-        PitchResultCode::Foul => {
-            if next_count.strikes < 2 { next_count.strikes += 1; }
-        }
+        PitchResultCode::Foul
+            if next_count.strikes < 2 => { next_count.strikes += 1; }
         PitchResultCode::InplayOut => {
             next_outs += 1;
             next_count = MatchCount { balls: 0, strikes: 0 };
@@ -2973,7 +2969,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         && next_half == HalfInning::Bottom
         && { let d = (next_score.home - next_score.away).unsigned_abs() as u8;
              (next_inning >= 5 && d >= 10) || (next_inning >= 7 && d >= 7) };
-    let cold_game_completed_inning = next_inning as u8;
+    let cold_game_completed_inning = next_inning;
 
     // 🔴 **히트앱런 주자가 잡혔다.** 위에서 판정만 하고 여기서
     //   반영한다 — 진루 처리가 끝난 뒤여야 주자를 다시 안 넣는다.
@@ -2981,7 +2977,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     if hnr_runner_out && next_runners.first.is_some() {
         next_runners.first = None;
         next_outs += 1;
-        running_logs.push(format!("히트앤런 실패 — 주자 아웃"));
+        running_logs.push("히트앤런 실패 — 주자 아웃".to_string());
     }
 
     // 3아웃 → half 전환
@@ -3122,10 +3118,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     let pitch_log = build_pitch_log(&pre_state, decision, lr.landing, result_code, quality);
     // ⚠ 대타 줄이 맨 앞이다 — 그 타석 결과보다 먼저 일어난 일이다
     let narrative_logs: Vec<String> = pinch_log.into_iter()
-        .chain(pinch_run_log.into_iter())
-        .chain(steal_logs.into_iter())
-        .chain(lr.miss_log.into_iter())
-        .chain(running_logs.into_iter())
+        .chain(pinch_run_log)
+        .chain(steal_logs)
+        .chain(lr.miss_log)
+        .chain(running_logs)
         .collect();
     let all_new_logs: Vec<String> = std::iter::once(pitch_log)
         .chain(narrative_logs.iter().cloned())
@@ -4131,12 +4127,12 @@ mod 타구물리 {
     #[test]
     fn 홈런_대역이_현실적이다() {
         let top = flight_distance(5, T::FLIGHT_BEST_ANGLE, 90.0);
-        assert!(top >= 120.0 && top <= 150.0, "최대 비거리 {}m", top);
+        assert!((120.0..=150.0).contains(&top), "최대 비거리 {}m", top);
         // ⚠ **평범한 타자(파워 50)의 hardness 4 는 담장을 못 넘어야 한다.**
         //   넘으면 장타가 전부 홈런이 된다(첫 값에서 OPS .904 → .989 로 올랐다).
         //   중립 구장 중앙이 122m 이다.
         let mid = flight_distance(4, T::FLIGHT_BEST_ANGLE, 50.0);
-        assert!(mid >= 90.0 && mid < 118.0, "보통 장타 {}m", mid);
+        assert!((90.0..118.0).contains(&mid), "보통 장타 {}m", mid);
     }
 
     /// ⚠ 좌우 비대칭 구장에서 방향이 담장을 가른다

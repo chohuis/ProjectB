@@ -37,7 +37,7 @@ pub struct PostseasonSeries {
 }
 
 fn wins_needed(best_of: u32) -> u32 {
-    (best_of + 1) / 2
+    best_of.div_ceil(2)
 }
 
 fn sort_teams(standings: &[Standing]) -> Vec<String> {

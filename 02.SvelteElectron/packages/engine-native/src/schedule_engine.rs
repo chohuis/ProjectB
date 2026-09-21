@@ -23,7 +23,7 @@ pub struct ScheduleEntry {
 // ── Date helper ───────────────────────────────────────────────
 
 fn is_leap(y: u32) -> bool {
-    y % 4 == 0 && (y % 100 != 0 || y % 400 == 0)
+    y.is_multiple_of(4) && (!y.is_multiple_of(100) || y.is_multiple_of(400))
 }
 
 fn feb_days(y: u32) -> u32 {
@@ -56,7 +56,7 @@ pub fn to_game_date(season_year: u32, week: u32, day_offset: u32) -> String {
 // ── Round-robin (circle/rotation method — scheduleGen style) ──
 
 fn round_robin_pairs(teams: &[String]) -> Vec<Vec<(String, String)>> {
-    let mut ts: Vec<String> = if teams.len() % 2 == 0 {
+    let mut ts: Vec<String> = if teams.len().is_multiple_of(2) {
         teams.to_vec()
     } else {
         let mut v = teams.to_vec();
@@ -92,9 +92,9 @@ fn get_phase(week: u32, season_start: u32, season_end: u32, postseason_end: u32)
 // ── Berger-table round-robin (leagueScheduler style) ──────────
 
 fn build_round_robin(teams: &[String]) -> Vec<Vec<(String, String)>> {
-    let n = if teams.len() % 2 == 0 { teams.len() } else { teams.len() + 1 };
+    let n = if teams.len().is_multiple_of(2) { teams.len() } else { teams.len() + 1 };
     let mut list: Vec<String> = teams.to_vec();
-    if list.len() % 2 != 0 { list.push("BYE".to_string()); }
+    if !list.len().is_multiple_of(2) { list.push("BYE".to_string()); }
 
     let fixed = list[n - 1].clone();
     let rotating: Vec<String> = list[..n - 1].to_vec();
@@ -410,7 +410,7 @@ pub fn build_rounds_targeted(teams: &[String], target_games: u32) -> Vec<Vec<(St
     let mut all: Vec<Vec<(String, String)>> = Vec::new();
     let mut lap = 0usize;
     while all.len() < target_games as usize {
-        if lap % 2 == 0 {
+        if lap.is_multiple_of(2) {
             all.extend(base.clone());
         } else {
             all.extend(

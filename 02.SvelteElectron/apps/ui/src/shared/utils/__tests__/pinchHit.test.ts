@@ -169,7 +169,8 @@ describe("대타 — 다섯 층이 이어져 있다", () => {
     expect(ME).toContain("let mut pinch_run_log: Option<String> = None;");
     expect(ME).toContain("used + 1 < bench.len()");
     // 대주자 로그도 같은 채널로 나간다
-    expect(ME).toContain(".chain(pinch_run_log.into_iter())");
+    // ⚠ clippy 가 `IntoIterator` 인자의 `.into_iter()` 를 뺐다 — 뜻은 같다 (A-6)
+    expect(ME).toContain(".chain(pinch_run_log)");
   });
 
   /**

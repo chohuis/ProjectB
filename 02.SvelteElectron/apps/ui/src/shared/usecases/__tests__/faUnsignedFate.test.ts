@@ -55,7 +55,9 @@ describe("FA 미계약자 진로", () => {
    *   안 보면 FA가 캡을 통과한다(`open`이 막던 것과 같은 함정).
    */
   it("재계약도 정원을 본다", () => {
-    expect(NPC.includes("roster_max.map_or(true, |m| n < m)")).toBe(true);
+    // ⚠ 문안이 아니라 **배선**을 본다. clippy 가 `map_or(true, …)` 을
+    //   `is_none_or` 로 바꿨다(2026-09-21 · A-6) — 뜻은 같다
+    expect(NPC.includes("roster_max.is_none_or(|m| n < m)")).toBe(true);
   });
 
   /**

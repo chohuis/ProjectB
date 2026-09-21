@@ -1342,7 +1342,7 @@ fn release_over_budget(
     }
 
     let mut over: Vec<String> = payroll.iter()
-        .filter(|(t, p)| budgets.get(*t).map_or(false, |b| *b > 0 && **p > *b))
+        .filter(|(t, p)| budgets.get(*t).is_some_and(|b| *b > 0 && **p > *b))
         .map(|(t, _)| t.clone()).collect();
     over.sort();                       // 결정성 — HashMap 순회에 기대지 않는다
     if over.is_empty() { return 0; }
@@ -1857,7 +1857,7 @@ fn fa_fallback(
     let home = npc.original_team_id.clone().filter(|t| !t.is_empty());
     let has_room = home.as_ref().is_some_and(|t| {
         let n = team_active_count.get(t).copied().unwrap_or(0) as i32;
-        roster_max.map_or(true, |m| n < m)
+        roster_max.is_none_or(|m| n < m)
     });
 
     if let (Some(team), true) = (home, has_room) {
@@ -1892,12 +1892,12 @@ fn fa_fallback(
     // ⚠ **나이 상한이 있다.** 30대 후반이 독립에서 재도전하는 건 드물다.
     //   값은 규칙 파일(`faRules.independentAgeMax`)이 정본이다.
     // ⚠ 목록이 비면 이 갈래는 **통째로 꺼진다** — 예전 동작으로 돌아간다.
-    let age_ok = independent_age_max.map_or(false, |m| npc.age <= m);
+    let age_ok = independent_age_max.is_some_and(|m| npc.age <= m);
     if age_ok && !independent_team_ids.is_empty() {
         // 정원에 여유가 제일 많은 팀 — 한 팀에 몰리지 않게
         let pick = independent_team_ids.iter()
             .map(|t| (t, team_active_count.get(t).copied().unwrap_or(0)))
-            .filter(|(_, n)| independent_max.map_or(true, |m| (*n as i32) < m))
+            .filter(|(_, n)| independent_max.is_none_or(|m| (*n as i32) < m))
             .min_by_key(|(t, n)| (*n, (*t).clone()))
             .map(|(t, _)| t.clone());
         if let Some(team) = pick {
@@ -2162,6 +2162,16 @@ pub(crate) fn fix_position_gaps(npcs: &mut [NpcSaveState], season_year: i32) {
 
 // ── 오프시즌 전체 처리 ────────────────────────────────────────────────────────
 
+// 🔴 `unnecessary_to_owned` 을 여기서만 끈다 (2026-09-21 · A-6).
+//   `origin_league` 는 `npc.original_league_id` 를 **빌린** `&str` 이다.
+//   clippy 는 `fa_fallback(npc, …, origin_league.to_string(), …)` 의
+//   `.to_string()` 을 빼라고 하는데, 빼면 그 빌림이 `fa_fallback(npc, …)` 의
+//   **mutable 빌림까지 살아 있어 `E0502`** 다 — `cargo clippy --fix` 가 실제로
+//   고쳐 보고 두 자리에서 터졌다(실측 2517 · 2621).
+//   `.to_string()` 이 바로 그 빌림을 끊는 자리라 **여기서는 이 꼴이 맞다.**
+// ⚠ 이 `allow` 하나가 `--fix` 배치 전체를 되돌리고 있었다 — 한 자리가 깨지면
+//   cargo 는 **그 배치의 모든 수정을 되돌린다.**
+#[allow(clippy::unnecessary_to_owned)]
 pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let salary_rules = params.salary_rules.clone().unwrap_or_default();
     // 외국인 슬롯 판정 — `params.npcs`가 아래에서 move되므로 표만 먼저 떼어 둔다.
@@ -2172,7 +2182,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let foreign_leagues = params.foreign_leagues.clone();
     let home_nationality = params.home_nationality.clone();
     let is_foreign = |n: &NpcSaveState| -> bool {
-        if !foreign_leagues.iter().any(|l| *l == n.current_league) { return false; }
+        if !foreign_leagues.contains(&n.current_league) { return false; }
         let home = home_nationality.get(&n.current_league).map(|s| s.as_str()).unwrap_or("KOR");
         n.nationality.as_deref().unwrap_or("KOR") != home
     };
@@ -2262,7 +2272,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 .filter(|e| e.event_type == "fa_signed")
                 .map(|e| e.year)
                 .max();
-            let reacquire_ok = last_fa.map_or(true, |y| season_year - y >= FA_REACQUIRE_YEARS);
+            let reacquire_ok = last_fa.is_none_or(|y| season_year - y >= FA_REACQUIRE_YEARS);
 
             if n.pro_service_years.unwrap_or(0) >= fa_threshold
                 && reacquire_ok
@@ -2496,7 +2506,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let open: Vec<&String> = league_teams.get(origin_league)
             .map(|teams| teams.iter().filter(|t| {
                 let n = team_active_count.get(*t).copied().unwrap_or(0) as i32;
-                if !max.map_or(true, |m| n < m) { return false; }
+                if max.is_some_and(|m| n >= m) { return false; }
                 if !fgn { return true; }
                 let (held, pit) = team_foreign.get(*t).copied().unwrap_or((0, 0));
                 if let Some(cap) = params.foreign_per_team { if held >= cap { return false; } }
@@ -2602,7 +2612,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                     });
                     if bid.interest_level < params.fa_bid_interest_min { continue; }
                     // 1차는 최고 제시액으로 간다 — 선수의 선택은 2차다
-                    if best.as_ref().map_or(true, |(_, s)| bid.bid_salary > *s) {
+                    if best.as_ref().is_none_or(|(_, s)| bid.bid_salary > *s) {
                         best = Some(((*tid).clone(), bid.bid_salary));
                     }
                 }
@@ -2926,6 +2936,15 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
 // 학년이 안 오르고 졸업도 안 됐다** — 나이만 매 시즌 +1 되어 20~21세
 // 고교생이 쌓였다. 완치돼도 부상 상태가 안 풀리던 결함(시즌 중 고교의
 // 47%가 injured)과 겹쳐 대량으로 샜다. 자리를 비우는 건 은퇴뿐이다.
+//
+// 🔴 `unnecessary_unwrap` 을 여기서만 끈다 (2026-09-21 · A-6).
+//   clippy 가 `is_some()` + `unwrap()` 을 `if let Some(grade) = npc.grade` 로
+//   바꾸라고 하는데, **그 자리가 `npc` 를 그 뒤에 mutable 로 빌린다** —
+//   `cargo clippy --fix` 가 실제로 고쳐 보고 `E0502` 로 터졌다(실측).
+//   조건 셋이 한 `if` 에 묶여 있어 `if let` 으로는 그 모양이 안 나온다.
+//   `grade` 는 `Option<u8>`(Copy)라 `unwrap()` 이 값을 복사하고, 바로 위
+//   조건이 `Some` 을 보장한다 — 여기서는 이 꼴이 맞다.
+#[allow(clippy::unnecessary_unwrap)]
 pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
     let mut updated        = Vec::new();
     let mut hs_graduated   = Vec::new();
@@ -3757,7 +3776,7 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     for (idx, _) in undrafted_idx {
         // 마지막 경력이 고교면 대학 진학 가능. 대학·독립 출신은 안 된다
         let from_highschool = result_npcs[idx].career_history.last()
-            .map_or(true, |e| e.league_id == "LEAGUE_HIGHSCHOOL");
+            .is_none_or(|e| e.league_id == "LEAGUE_HIGHSCHOOL");
         placer.place(
             &mut result_npcs[idx], params.result.year,
             "draft_undrafted", "미지명", from_highschool,
@@ -4964,7 +4983,7 @@ mod closer_tests {
                 away_lineup: lineup("A", 65.0),
                 home_rot_idx: 0, away_rot_idx: 0,
                 conditions: HashMap::new(),
-                week: w as i32 + 1,
+                week: w + 1,
                 home_team_id: "TEAM_H".into(), away_team_id: "TEAM_A".into(),
             };
             let r = sim_game(&params);
@@ -5423,7 +5442,7 @@ mod sports_unit_phase_tests {
     ///   전역자 포지션이 1 → 17 → 21 → 13 → 13건이고 정원은 13이었다.
     #[test]
     fn 상한이_없으면_phase1이_정원을_다_먹는다() {
-        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let vac: Vec<String> = std::iter::repeat_n("SP".to_string(), 20).collect();
         let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, None);
         assert_eq!(sel.len(), 13);
         // 전원이 SP다 — Phase 2(팀당 상한)가 한 번도 안 돌았다는 뜻
@@ -5434,7 +5453,7 @@ mod sports_unit_phase_tests {
     /// 🔴 **상한을 두면 나머지를 Phase 2가 채운다.**
     #[test]
     fn 상한이_있으면_phase2가_나머지를_채운다() {
-        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let vac: Vec<String> = std::iter::repeat_n("SP".to_string(), 20).collect();
         let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
         assert_eq!(sel.len(), 13, "정원을 못 채웠다");
         let rp = sel.iter().filter(|id| !id.starts_with('A') && !id.starts_with('B')).count();
@@ -5445,7 +5464,7 @@ mod sports_unit_phase_tests {
     ///   Phase 1이 정원을 다 먹으면 그 가드가 통째로 죽는다.
     #[test]
     fn 상한이_있으면_팀당_제한이_산다() {
-        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let vac: Vec<String> = std::iter::repeat_n("SP".to_string(), 20).collect();
         let no_cap = select_sports_unit_ids(&pool(), &vac, 13, 3, None);
         let cap    = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
         let a_of = |s: &std::collections::HashSet<String>|
@@ -5470,7 +5489,7 @@ mod sports_unit_phase_tests {
     /// ⚠ **상한이 정원보다 크면 정원이 이긴다**
     #[test]
     fn 상한이_정원보다_크면_정원이_이긴다() {
-        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let vac: Vec<String> = std::iter::repeat_n("SP".to_string(), 20).collect();
         let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(999));
         assert_eq!(sel.len(), 13);
     }
@@ -5496,7 +5515,7 @@ mod sports_unit_team_cap_tests {
     ///   3명을 **더** 가져갔다 — 실측 한 팀 9명(상한 3).
     #[test]
     fn phase2가_phase1_인원을_함께_센다() {
-        let vac: Vec<String> = std::iter::repeat("SP".to_string()).take(20).collect();
+        let vac: Vec<String> = std::iter::repeat_n("SP".to_string(), 20).collect();
         let sel = select_sports_unit_ids(&pool(), &vac, 13, 3, Some(6));
         let a = sel.iter().filter(|id| id.starts_with('A')).count();
         assert_eq!(a, 6, "TEAM_A가 {a}명 — Phase 1 몫(6)에 Phase 2가 더 얹었다");

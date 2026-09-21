@@ -1226,7 +1226,7 @@ mod tests {
         )).expect("generation_rules.json 없음");
         let v: serde_json::Value = serde_json::from_str(&src).expect("파싱 실패");
         let r = &v["rosterRules"];
-        let num = |lid: &str, k: &str| r[lid][k].as_i64().expect(&format!("{lid}.{k} 없음"));
+        let num = |lid: &str, k: &str| r[lid][k].as_i64().unwrap_or_else(|| panic!("{lid}.{k} 없음"));
 
         // 학년제: age = ageBase + grade
         let hs_base = num("LEAGUE_HIGHSCHOOL", "ageBase");

@@ -249,7 +249,7 @@ pub fn generate_career_history(p: GenerateCareerHistoryParams) -> GenerateCareer
             let w = &p.rules.reason_weights;
             // FA는 자격 연차 전엔 안 나온다 — 그 몫을 트레이드가 가져간다
             let fa_ok = years_in >= p.rules.fa_eligible_years
-                && last_fa.map_or(true, |ly| year - ly >= p.rules.fa_interval_years);
+                && last_fa.is_none_or(|ly| year - ly >= p.rules.fa_interval_years);
             let (fa_w, trade_w, rel_w) = if fa_ok {
                 (w.fa, w.trade, w.release)
             } else {
