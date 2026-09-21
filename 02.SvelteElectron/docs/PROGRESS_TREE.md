@@ -1048,4 +1048,15 @@ A 가 1묶음(6/24) 뒤 한도로 끊겼지만 판은 끝까지 돌았다(09-13 
 🔴 **잣대 열다섯째(D 가 잡음)**: 첫 집계가 고졸 직행 87.5% · 정지 7 로 튀었다 — `report-simruns` 가 새 워커의 「A→B」 접힌 줄을 무대 문자열 정확 일치로 놓쳤다. 헬퍼 셋으로 고침 · 옛 폴더에 돌려도 41.7% 그대로(하위 호환).
 **clippy 62 → 0**: `assertions_on_constants` 38 → 모듈 여덟 `allow`(양변 상수가 목적인 검사) · `manual_clamp` 9 → `allow`+이유(식 불변) · `too_many_arguments` 7 → 구조체(napi 경계 0 · `index.d.ts` diff 0) · 나머지 8 고침. 고치기 전 골든 검사 여덟(`70a56d201`)으로 전후 동일 증명 · cargo 373. 덤: `roster_gen.rs` 주석이 옆 함수에 붙어 있던 것.
 **1.0.3 으로**: 프로초반/rare 폴백(레어 일곱이 실제 뽑혔는지 id 계측 칸이 없어 못 잼) · 고교/hidden 폴백 · 독립·대학 등급 빈도 표본 작음 · `EVT_HS_SLUMP_NO_K` 3학년 · `protagonist.grade` 대학 한 해 뒤처짐 · prettierignore 39 · B-7 · B 큐(B-2·B-3·B-4·B-6).
-**지금**: D 포장(1.0.2 테스터 빌드 · 트렁크 `b7c53edbf` 이후) → 사용자에게 zip·SHA.
+~~**지금**: D 포장~~ → 아래.
+
+### ✅ 1.0.2 테스터 빌드 (D · 09-22 · `a909cc7b4` 버전 · `a106d90e2` 패치 노트 → 트렁크)
+| | |
+|---|---|
+| zip | `ProjectB-measure/02.SvelteElectron/release/OnePitch-1.0.2-test.zip` · 186,574,178 B · SHA256 `ae4d035c…1023e3` |
+| exe | `win-unpacked/OnePitch.exe` · SHA256 `89d0e2bd…268c65` |
+| 디포 | 1,123 파일 · 355.4 MB (1.0.1 대비 +7 파일 · +0.1 MB) · `dist-steam.cjs` OK · `smoke:dist` 새 게임 1~5주 OK |
+| 옛 세이브 | 테스터 세이브 사본을 1.0.2 엔진으로 `bootContinue` → true · NPC 8,427 · 2028 W18 · 예외 0 (09-20 A 실측과 동일) |
+| 패치 노트 | `docs/PATCH_NOTES_v1.0.2.md` (플레이어 말) |
+| 빌드 커밋의 회귀 | 트렁크 `b7c53edbf` 에서 OP 가 돌림: build:native `f11ba6cab6ca` · clippy `-D warnings` 0 · tsc 0 · vitest 2,831 · svelte-check 0 · 데이터 검사 초록. 버전 문자열 커밋 뒤엔 CI 가 본다 |
+**지금**: ❓ 사용자 — `v1.0.2` 태그를 지금 찍을지(테스터 미룸이면 1.0.1 때처럼 지금) · 테스터에게 zip 을 줄지. 그 뒤는 1.0.3(`PLAN_102 §3` + 09-21 절 목록) 또는 B 큐(B 기기).
