@@ -24,6 +24,8 @@ import { getTeamLineup } from "../../apps/ui/src/shared/utils/rosterEngine";
 import { managerProfileOf } from "../../apps/ui/src/shared/utils/staffEffects";
 import { managerEffect } from "../../apps/ui/src/shared/utils/managerStyle";
 import { leagueStatsOf } from "../../apps/ui/src/shared/utils/season-helpers";
+// 구장 담장 — **화면·엔진과 같은 함수**다. 계측이 표를 새로 짓지 않는다
+import { parkDimsForHomeTeam } from "../../apps/ui/src/shared/utils/parkDims";
 import { npcLiveStatsStore, livePitchingOvrOf, liveOvrOf } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3, getFarmDevLog, loadGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
@@ -2747,6 +2749,97 @@ export function sangmuProbe(): Record<string, unknown> {
       return c;
     })(),
   };
+}
+
+/**
+ * 0단계 실측 — 해외 구단의 성향·구장·팀별 성적을 **한 장으로** 낸다
+ * (`docs/SIM_OVERSEAS_CLUBS_STAGE0_2026-09-22.md`).
+ *
+ * 1단계(구장 치수·성향을 채운다) **전후를 같은 잣대로** 재려고 만든다.
+ * 고친 뒤 같은 씨앗으로 다시 돌려 이 표를 비교한다.
+ *
+ * ⚠ **관중은 여기서 못 낸다.** `calcClubRevenueNative` 가 `attendanceTotal`
+ *   을 내지만 그걸 읽는 코드가 0건이라 상태에 안 남는다(실측 2026-09-22).
+ *   대신 그 네 입력(수용 인원 · 승률 · marketAppeal · prestige)을 적는다 —
+ *   넷이 같으면 관중도 같다.
+ * ⚠ 성향 출처는 **마스터에 적혀 있나**로 가른다. `profilesFromMaster` 가
+ *   ①적힌 값 ②예산 지수 파생 ③둘 다 없으면 없음 순으로 채운다.
+ * ⚠ 1군(`_1`)만 센다 — 2군은 1군 성향을 물려받고 순위표도 따로다.
+ */
+export function overseasClubBaseline(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const s = get(seasonStore);
+  const PROFILE_KEYS = [
+    "ownerSpendingWillingness", "stability", "developmentFocus", "discipline",
+    "ownerPatience", "winNowPressure", "scoutingQuality", "prestige",
+    "marketAppeal", "clubhouseCulture", "medicalQuality", "farmInvestment",
+  ] as const;
+
+  // FA 계약으로 들어온 인원 — **`toTeamId` 가 있는 것만**이 계약이다
+  // (`faIntakeTally` 머리말: `fa_signed` 는 신청에도 쓰인다).
+  const faIn = new Map<string, { n: number; ovrSum: number }>();
+  for (const n of g.npcs) {
+    for (const e of n.careerEvents ?? []) {
+      if (e.eventType !== "fa_signed" || !e.toTeamId) continue;
+      const slot = faIn.get(e.toTeamId) ?? { n: 0, ovrSum: 0 };
+      slot.n += 1;
+      slot.ovrSum += liveOvrOf(n, get(npcLiveStatsStore));
+      faIn.set(e.toTeamId, slot);
+    }
+  }
+
+  const teamOfNpc = new Map(g.npcs.map((n) => [n.npcId, n.currentTeam ?? ""]));
+  const rows: Record<string, unknown>[] = [];
+
+  for (const leagueId of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+    const ls = s.leagueState?.[leagueId];
+    const standings = ls?.standings ?? [];
+    // 팀별 홈런·자책점·이닝 — 선수 기록을 소속으로 접는다
+    const agg = new Map<string, { hr: number; er: number; ip: number }>();
+    for (const [pid, st] of Object.entries(ls?.stats ?? {})) {
+      const tid = teamOfNpc.get(pid) ?? "";
+      if (!tid) continue;
+      const a = agg.get(tid) ?? { hr: 0, er: 0, ip: 0 };
+      if (st.type === "batter") a.hr += st.hr ?? 0;
+      else { a.er += st.er ?? 0; a.ip += st.ip ?? 0; }
+      agg.set(tid, a);
+    }
+
+    for (const t of m.teams.filter((x) => x.leagueId === leagueId && x.id.endsWith("_1"))) {
+      const prof = g.proTeamProfiles?.[t.id];
+      const stadium = m.stadiums.find((x) => x.id === t.stadium);
+      const dims = parkDimsForHomeTeam(t.id, m.teams, m.stadiums);
+      const st = standings.find((x) => x.teamId === t.id);
+      const games = st ? st.wins + st.losses + st.draws : 0;
+      const a = agg.get(t.id) ?? { hr: 0, er: 0, ip: 0 };
+      const fa = faIn.get(t.id) ?? { n: 0, ovrSum: 0 };
+      const row: Record<string, unknown> = {
+        리그: leagueId.replace("LEAGUE_", ""),
+        팀: t.id.replace("TEAM_", ""),
+        전력: t.power ?? 0,
+        예산억: Math.round((t.history?.budget ?? 0) / 1e8),
+        성향출처: t.proTeamProfile ? "손수" : prof ? "예산파생" : "없음",
+        성향있나: !!t.traits,
+        구장문자열: t.stadium ?? "",
+        // 🔴 구장 표에서 찾았나 — 못 찾으면 `NEUTRAL_DIMS` 다(전 팀이 같은 구장)
+        구장표에있나: !!stadium,
+        lf: dims.lf, cf: dims.cf, rf: dims.rf, fence: dims.fence,
+        경기: games,
+        승률: st ? Math.round(st.winPct * 1000) / 1000 : 0,
+        홈런: a.hr,
+        "홈런/경기": games > 0 ? Math.round((a.hr / games) * 1000) / 1000 : 0,
+        ERA: a.ip > 0 ? Math.round((a.er * 9 / a.ip) * 100) / 100 : 0,
+        // 관중의 네 입력 — 관중 자체는 상태에 안 남는다(머리말)
+        수용인원: (t.capacity && t.capacity > 0 ? t.capacity : stadium?.capacity) ?? 0,
+        FA영입: fa.n,
+        FA평균OVR: fa.n > 0 ? Math.round(fa.ovrSum / fa.n) : 0,
+      };
+      for (const k of PROFILE_KEYS) row[k] = prof?.[k] ?? null;
+      rows.push(row);
+    }
+  }
+  return { 시즌: s.seasonYear, 주차: s.currentWeek, 팀: rows };
 }
 
 export function overseasProbe(): Record<string, unknown> {

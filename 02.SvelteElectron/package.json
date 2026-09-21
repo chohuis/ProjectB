@@ -189,7 +189,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "simple-git-hooks",
-    "coverage": "vitest run --coverage.enabled --coverage.provider=v8 --coverage.reporter=json-summary --coverage.reporter=text-summary --coverage.reportsDirectory=coverage --coverage.include=apps/ui/src/** --coverage.exclude=**/__tests__/**"
+    "coverage": "vitest run --coverage.enabled --coverage.provider=v8 --coverage.reporter=json-summary --coverage.reporter=text-summary --coverage.reportsDirectory=coverage --coverage.include=apps/ui/src/** --coverage.exclude=**/__tests__/**",
+    "probe:overseas": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/probe-overseas-baseline.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",
