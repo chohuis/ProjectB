@@ -5704,3 +5704,134 @@ mod contract_years_tests {
         assert_eq!(cap_contract_years(&r, 40, 5), 5);
     }
 }
+
+// ── clippy 정리(2026-09-21) 전후 동일 증명 ──────────────────────────────────
+//
+// 이 모듈은 **값이 옳은지**를 묻지 않는다. 옆 모듈들이 그걸 본다.
+// 여기는 clippy 를 0 으로 만들면서 손댄 자리 — `sim_at_bat`(`too_many_arguments`)
+// 과 `apply_ab_result`(`needless_range_loop`) — 의 출력을 **고치기 전에 먼저**
+// 못 박은 것이다. 고친 뒤 같은 숫자가 나와야 한다.
+//
+// ⚠ `check:measurerepro` 로는 이걸 못 증명한다. 그건 electron 을 띄우고
+//   D 가 24판을 6병렬로 돌리는 중이라 안전선이 꽉 찼다(2026-09-21).
+//   그래서 엔진 동일성을 Rust 단위 검사로 가져왔다 — 씨앗 고정 `StdRng` 다.
+#[cfg(test)]
+mod clippy_freeze_tests {
+    use super::*;
+    use rand::SeedableRng;
+
+    /// FNV-1a. 긴 원문을 한 줄로 줄여 비교하고, 어긋나면 원문을 찍는다.
+    fn fnv(s: &str) -> u64 {
+        let mut h = 0xCBF2_9CE4_8422_2325u64;
+        for b in s.as_bytes() {
+            h ^= *b as u64;
+            h = h.wrapping_mul(0x100_0000_01B3);
+        }
+        h
+    }
+
+    fn ab_code(r: &AbResult) -> &'static str {
+        match r {
+            AbResult::K => "K",
+            AbResult::BB => "BB",
+            AbResult::Hbp => "HBP",
+            AbResult::SacBunt => "SH",
+            AbResult::SacFly => "SF",
+            AbResult::Out => "OUT",
+            AbResult::DoublePlay => "DP",
+            AbResult::Single => "1B",
+            AbResult::Double => "2B",
+            AbResult::Triple => "3B",
+            AbResult::HR => "HR",
+        }
+    }
+
+    const AB_ALL: [AbResult; 11] = [
+        AbResult::K, AbResult::BB, AbResult::Hbp, AbResult::SacBunt,
+        AbResult::SacFly, AbResult::Out, AbResult::DoublePlay,
+        AbResult::Single, AbResult::Double, AbResult::Triple, AbResult::HR,
+    ];
+
+    /// 타석 2만 번 — 결과별 횟수와 투구 수 합.
+    ///
+    /// 분포를 박는 이유: 난수 소비 순서가 한 번이라도 어긋나면 그 뒤가 전부
+    /// 밀려서 칸이 통째로 달라진다. 합계 하나보다 훨씬 예민하다.
+    fn 타석_집계() -> ([usize; 11], u64) {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(20_260_921);
+        // 1루에만 주자 · 1아웃 — 번트 갈래도 지나가는 상태다
+        let bases = [true, false, false];
+        let mut tally = [0usize; 11];
+        let mut pitches = 0u64;
+        for _ in 0..20_000 {
+            let (r, pc) = sim_at_bat(
+                72.0, 68.0, 64.0, 70.0,
+                66.0, 58.0, 61.0, 74.0,
+                52.0, &bases, 1, &mut rng,
+            );
+            let code = ab_code(&r);
+            let i = AB_ALL.iter().position(|x| ab_code(x) == code).expect("코드가 없다");
+            tally[i] += 1;
+            pitches += pc as u64;
+        }
+        (tally, pitches)
+    }
+
+    #[test]
+    fn 타석_시뮬이_고치기_전과_같다() {
+        let (tally, pitches) = 타석_집계();
+        assert_eq!(tally.iter().sum::<usize>(), 20_000, "타석 수가 안 맞는다");
+        println!("  타석 분포 {tally:?}  투구 {pitches}");
+        // 2026-09-21 clippy 정리 **직전** 트리에서 뽑은 값이다.
+        // 칸 순서는 `AB_ALL` — K · BB · HBP · SH · SF · OUT · DP · 1B · 2B · 3B · HR.
+        // ⚠ SF 가 0 인 것은 결함이 아니다 — `sim_at_bat` 은 희생플라이를 따로
+        //   내지 않고 뜬공 아웃으로 센다. 여기서는 **그 사실까지 못 박는다.**
+        assert_eq!(
+            tally,
+            [4553, 1368, 125, 532, 0, 8506, 1129, 2328, 740, 145, 574],
+            "sim_at_bat 결과 분포가 달라졌다"
+        );
+        assert_eq!(pitches, 61_798, "sim_at_bat 투구 수 합이 달라졌다");
+    }
+
+    /// 주자 8가지 × 결과 11가지 = 88칸을 전부 지나간다.
+    ///
+    /// `apply_ab_result` 의 3루타·홈런 갈래(`needless_range_loop` 가 걸린 자리)가
+    /// 여기서 모든 주자 배치로 돈다.
+    fn 루상_처리_원문() -> String {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(20_260_922);
+        let mut s = String::new();
+        for start in 0..8u8 {
+            for r in AB_ALL.iter() {
+                let mut bases: Bases = [
+                    if start & 1 != 0 { Some(3) } else { None },
+                    if start & 2 != 0 { Some(4) } else { None },
+                    if start & 4 != 0 { Some(5) } else { None },
+                ];
+                let mut scored: Vec<usize> = Vec::new();
+                let (outs, runs, is_hit, is_hr) =
+                    apply_ab_result(r, &mut bases, 7, &mut rng, &mut scored);
+                s.push_str(&format!(
+                    "{start}{} o{outs} r{runs} h{} x{} b[{},{},{}] s{scored:?}\n",
+                    ab_code(r),
+                    i32::from(is_hit),
+                    i32::from(is_hr),
+                    bases[0].map_or(-1, |v| v as i32),
+                    bases[1].map_or(-1, |v| v as i32),
+                    bases[2].map_or(-1, |v| v as i32),
+                ));
+            }
+        }
+        s
+    }
+
+    #[test]
+    fn 루상_처리가_고치기_전과_같다() {
+        let raw = 루상_처리_원문();
+        // 2026-09-21 clippy 정리 **직전** 트리의 88칸 원문 해시다
+        assert_eq!(
+            fnv(&raw),
+            227_221_243_165_681_750,
+            "apply_ab_result 가 달라졌다 — 원문:\n{raw}"
+        );
+    }
+}

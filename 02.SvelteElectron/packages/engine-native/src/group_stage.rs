@@ -309,3 +309,80 @@ pub fn group_stage_qualifiers(stage: &GroupStage) -> QualifiersResult {
     }
     QualifiersResult { qualified, group_ranks }
 }
+
+// ── clippy 정리(2026-09-21) 전후 동일 증명 ──────────────────────────────────
+//
+// `shuffle` 의 첫 인자가 `&mut Vec<String>` → `&mut [String]` 로 바뀐다(`ptr_arg`).
+// 타입만 바뀌고 추첨 결과는 한 글자도 안 바뀌어야 한다 — 그걸 여기서 못 박는다.
+#[cfg(test)]
+mod clippy_freeze_tests {
+    use super::*;
+
+    /// 씨앗 다섯 개 × 16팀. `shuffle` 은 결정적이므로 순서가 그대로 값이다.
+    fn 추첨_원문() -> String {
+        let mut s = String::new();
+        for seed in [0u64, 1, 7, 0xDEAD_BEEF, u64::MAX] {
+            let mut pool: Vec<String> = (0..16).map(|i| format!("T{i:02}")).collect();
+            shuffle(&mut pool, seed);
+            s.push_str(&format!("{seed}:{}\n", pool.join(",")));
+        }
+        s
+    }
+
+    #[test]
+    fn 추첨_순서가_고치기_전과_같다() {
+        let raw = 추첨_원문();
+        // 2026-09-21 clippy 정리 **직전** 트리의 값이다
+        assert_eq!(
+            raw,
+            concat!(
+                "0:T02,T10,T14,T11,T06,T01,T05,T13,T08,T03,T04,T07,T12,T09,T00,T15\n",
+                "1:T02,T11,T10,T06,T07,T13,T14,T00,T12,T05,T15,T09,T03,T08,T04,T01\n",
+                "7:T14,T06,T04,T02,T05,T11,T13,T01,T03,T12,T15,T10,T08,T00,T09,T07\n",
+                "3735928559:T10,T13,T02,T08,T04,T12,T06,T05,T09,T07,T03,T00,T01,T15,T14,T11\n",
+                "18446744073709551615:T10,T12,T14,T11,T08,T01,T03,T04,T02,T05,T15,T06,T13,T07,T09,T00\n",
+            ),
+            "shuffle 결과가 달라졌다"
+        );
+    }
+
+    /// 공개 입구까지 같이 본다 — 조 배분·조 라벨·일정이 추첨에 매달려 있다.
+    fn 조편성_원문() -> String {
+        let g = build_group_stage(BuildGroupStageParams {
+            tournament_id: "TRN_FREEZE".into(),
+            league_id: "LG_HS".into(),
+            seeded_teams: (0..16).map(|i| format!("TEAM_{i:02}")).collect(),
+            group_count: 4,
+            advance_per_group: 2,
+            start_week: 10,
+            end_week: 14,
+            protagonist_team_id: "TEAM_00".into(),
+            season_year: Some(2026),
+            world_seed: Some(777),
+            day_offsets: Vec::new(),
+        });
+        let mut s = String::new();
+        for grp in g.groups.iter() {
+            s.push_str(&format!("{}:{}\n", grp.label, grp.teams.join(",")));
+        }
+        s.push_str(&format!("matches:{}\n", g.matches.len()));
+        s
+    }
+
+    #[test]
+    fn 조편성이_고치기_전과_같다() {
+        let raw = 조편성_원문();
+        // 2026-09-21 clippy 정리 **직전** 트리의 값이다
+        assert_eq!(
+            raw,
+            concat!(
+                "A:TEAM_02,TEAM_04,TEAM_09,TEAM_13\n",
+                "B:TEAM_07,TEAM_08,TEAM_11,TEAM_12\n",
+                "C:TEAM_00,TEAM_01,TEAM_03,TEAM_10\n",
+                "D:TEAM_05,TEAM_06,TEAM_14,TEAM_15\n",
+                "matches:24\n",
+            ),
+            "build_group_stage 가 달라졌다"
+        );
+    }
+}

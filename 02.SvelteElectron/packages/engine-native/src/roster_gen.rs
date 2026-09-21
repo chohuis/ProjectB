@@ -1531,3 +1531,92 @@ pub fn gen_protagonist_hidden(p: ProtagonistHiddenParams) -> ProtagonistHiddenRe
     let development_rate = pick(p.dev_rate_min, p.dev_rate_max);
     ProtagonistHiddenResult { potential_hidden, development_rate }
 }
+
+// ── clippy 정리(2026-09-21) 전후 동일 증명 ──────────────────────────────────
+//
+// `generate_foreign_players` 의 보직 배정이 `if i == 0 {"SP"} else if i == 1 {"SP"}
+// else {"RP"}` → `if i < 2 {"SP"} else {"RP"}` 로 바뀐다(`if_same_then_else`).
+// 같은 뜻이지만 **같은 뜻인지를 말로 하지 않고 값으로 본다.**
+#[cfg(test)]
+mod clippy_freeze_tests {
+    use super::*;
+
+    fn slots() -> ForeignSlots {
+        ForeignSlots {
+            per_team: 3,
+            max_pitchers: 2,
+            ovr_min: 62.0,
+            ovr_max: 84.0,
+            nationality: "USA".into(),
+            dev_rate_min: 0.8,
+            dev_rate_max: 1.2,
+            age_min: 24,
+            age_max: 34,
+            name_pool: None,
+        }
+    }
+
+    /// 투수 0~3 · 야수 0~4 를 전부 돌린다 — 보직 갈래가 다 지나간다.
+    fn 용병_원문() -> String {
+        let mut s = String::new();
+        for p in 0..4usize {
+            for b in 0..5usize {
+                let r = generate_foreign_players(GenerateForeignParams {
+                    league_id: "LG_KBL".into(),
+                    season_year: 2026,
+                    world_seed: 20_260_921,
+                    requests: vec![ForeignRequest {
+                        team_id: "TEAM_FREEZE".into(),
+                        pitchers: p,
+                        batters: b,
+                        salary_index: None,
+                    }],
+                    foreign: slots(),
+                    salary_rules: None,
+                    id_offset: 0,
+                    talent: None,
+                });
+                let line: Vec<String> = r
+                    .npcs
+                    .iter()
+                    .map(|n| format!("{}/{}/{}", n.position, n.age, n.player_type))
+                    .collect();
+                s.push_str(&format!("{p}-{b}:{}\n", line.join(",")));
+            }
+        }
+        s
+    }
+
+    #[test]
+    fn 용병_생성이_고치기_전과_같다() {
+        let raw = 용병_원문();
+        // 2026-09-21 clippy 정리 **직전** 트리의 값이다.
+        // `3-0` 줄이 `SP,SP,RP` 인 것이 이 검사의 핵심이다 — 갈래 셋이 다 걸린다.
+        assert_eq!(
+            raw,
+            concat!(
+                "0-0:\n",
+                "0-1:LF/32/batter\n",
+                "0-2:LF/32/batter,1B/33/batter\n",
+                "0-3:LF/32/batter,1B/33/batter,RF/33/batter\n",
+                "0-4:LF/32/batter,1B/33/batter,RF/33/batter,3B/27/batter\n",
+                "1-0:SP/32/pitcher\n",
+                "1-1:SP/32/pitcher,LF/29/batter\n",
+                "1-2:SP/32/pitcher,LF/29/batter,1B/27/batter\n",
+                "1-3:SP/32/pitcher,LF/29/batter,1B/27/batter,RF/33/batter\n",
+                "1-4:SP/32/pitcher,LF/29/batter,1B/27/batter,RF/33/batter,3B/30/batter\n",
+                "2-0:SP/32/pitcher,SP/29/pitcher\n",
+                "2-1:SP/32/pitcher,SP/29/pitcher,LF/27/batter\n",
+                "2-2:SP/32/pitcher,SP/29/pitcher,LF/27/batter,1B/28/batter\n",
+                "2-3:SP/32/pitcher,SP/29/pitcher,LF/27/batter,1B/28/batter,RF/32/batter\n",
+                "2-4:SP/32/pitcher,SP/29/pitcher,LF/27/batter,1B/28/batter,RF/32/batter,3B/26/batter\n",
+                "3-0:SP/32/pitcher,SP/29/pitcher,RP/27/pitcher\n",
+                "3-1:SP/32/pitcher,SP/29/pitcher,RP/27/pitcher,LF/32/batter\n",
+                "3-2:SP/32/pitcher,SP/29/pitcher,RP/27/pitcher,LF/32/batter,1B/31/batter\n",
+                "3-3:SP/32/pitcher,SP/29/pitcher,RP/27/pitcher,LF/32/batter,1B/31/batter,RF/27/batter\n",
+                "3-4:SP/32/pitcher,SP/29/pitcher,RP/27/pitcher,LF/32/batter,1B/31/batter,RF/27/batter,3B/27/batter\n",
+            ),
+            "generate_foreign_players 가 달라졌다"
+        );
+    }
+}

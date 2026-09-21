@@ -486,6 +486,28 @@ pub struct EvalCalldownResult {
     pub candidates: Vec<CalldownCandidate>,
 }
 
+/// 강등 후보로 **고를 수 있는 사람인가**.
+///
+/// `eval_calldown_candidates` 안의 `filter` 에서 떼어낸 것이다(2026-09-21).
+/// 떼어낸 이유는 둘이다 — 하나는 clippy `nonminimal_bool` 이 걸린 자리라
+/// 식을 손대야 했고, 다른 하나는 **말로 검사할 수 없는 모양**이었기 때문이다.
+/// 이제 `clippy_freeze_tests` 가 입력 32가지를 전부 표로 못박는다.
+///
+/// - 야수가 하한이면 야수는 못 내린다
+/// - 투수가 하한이면 투수는 못 내린다
+/// - 선발이 하한이면 선발은 안 내린다 — 불펜·야수에서 고른다
+fn calldown_eligible(
+    batters_locked: bool,
+    pitchers_locked: bool,
+    starters_locked: bool,
+    is_pitcher: bool,
+    is_starter: bool,
+) -> bool {
+    (!batters_locked || is_pitcher)
+        && (!pitchers_locked || !is_pitcher)
+        && !(starters_locked && is_starter)
+}
+
 pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
     let mut rules = p.promotion_rules.clone().unwrap_or_default();
     rules.form_weight *= p.callup_mod.unwrap_or(1.0).clamp(0.70, 1.30);
@@ -529,10 +551,13 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
     let mut scored: Vec<(String, f64)> = p.active_players.iter()
         .filter(|pl| !pl.is_foreign)
         .filter(|pl| {
-            let pit = is_pitcher(pl.position.as_str());
-            (!batters_locked || pit) && (!pitchers_locked || !pit)
-                // 선발이 하한이면 선발은 안 내린다 — 불펜·야수에서 고른다
-                && !(starters_locked && pl.position == "SP")
+            calldown_eligible(
+                batters_locked,
+                pitchers_locked,
+                starters_locked,
+                is_pitcher(pl.position.as_str()),
+                pl.position == "SP",
+            )
         })
         .map(|pl| {
         // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이
@@ -1973,5 +1998,67 @@ mod tests {
         assert!(rich.net_value > tight.net_value,
             "여유가 많은 쪽이 비싼 선수를 더 받아들여야 한다: 부유 {} / 빠듯 {}",
             rich.net_value, tight.net_value);
+    }
+}
+
+// ── clippy 정리(2026-09-21) 전후 동일 증명 ──────────────────────────────────
+#[cfg(test)]
+mod clippy_freeze_tests {
+    use super::*;
+
+    /// 입력 다섯 개 × 2 = **32가지를 전부** 본다.
+    ///
+    /// `calldown_eligible` 의 식이 `nonminimal_bool` 때문에 드모르간으로
+    /// 뒤집힌다. 뒤집은 식이 같은 식인지는 **표로만 확인할 수 있다** —
+    /// 비트 하나가 어긋나면 1군에서 엉뚱한 사람이 내려간다.
+    ///
+    /// 비트 i 의 자리: `bit0=야수하한 · bit1=투수하한 · bit2=선발하한 ·
+    /// bit3=투수인가 · bit4=선발인가`.
+    fn 표() -> u32 {
+        let mut mask = 0u32;
+        for i in 0..32u32 {
+            let ok = calldown_eligible(
+                i & 1 != 0,
+                i & 2 != 0,
+                i & 4 != 0,
+                i & 8 != 0,
+                i & 16 != 0,
+            );
+            if ok {
+                mask |= 1 << i;
+            }
+        }
+        mask
+    }
+
+    #[test]
+    fn 강등_자격_표가_고치기_전과_같다() {
+        let m = 표();
+        println!("  강등 자격 표 0b{m:032b}");
+        // 2026-09-21 clippy 정리 **직전** 트리의 표다
+        assert_eq!(
+            m, 0b0000_0011_0000_0101_0011_0011_0101_0101,
+            "calldown_eligible 이 달라졌다"
+        );
+    }
+
+    /// 표만 박아 두면 **무엇이 참인지 사람이 못 읽는다.** 뜻도 같이 박는다.
+    #[test]
+    fn 하한에_걸린_쪽은_못_내린다() {
+        // 아무 하한도 없으면 누구든 후보다
+        assert!(calldown_eligible(false, false, false, false, false));
+        assert!(calldown_eligible(false, false, false, true, true));
+        // 야수 하한 → 야수는 빠지고 투수만 남는다
+        assert!(!calldown_eligible(true, false, false, false, false));
+        assert!(calldown_eligible(true, false, false, true, false));
+        // 투수 하한 → 투수는 빠지고 야수만 남는다
+        assert!(!calldown_eligible(false, true, false, true, false));
+        assert!(calldown_eligible(false, true, false, false, false));
+        // 선발 하한 → 선발만 빠진다. 불펜은 남는다
+        assert!(!calldown_eligible(false, false, true, true, true));
+        assert!(calldown_eligible(false, false, true, true, false));
+        // 양쪽 하한이면 아무도 못 내린다
+        assert!(!calldown_eligible(true, true, false, true, false));
+        assert!(!calldown_eligible(true, true, false, false, false));
     }
 }
