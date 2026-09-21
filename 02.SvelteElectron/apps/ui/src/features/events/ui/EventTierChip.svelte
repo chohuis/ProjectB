@@ -2,7 +2,9 @@
   import {
     gradeChip,
     isCrisis,
+    isNotice,
     CRISIS_LABEL,
+    NOTICE_LABEL,
     type EventTheme,
   } from "../../../shared/utils/eventTierCopy";
   import type { EventGrade } from "../../../shared/utils/tierRules";
@@ -16,18 +18,30 @@
    *
    * ⚠ **노말이면 아무것도 안 그린다.** 늘 오는 것에 이름표를 붙이면 이름표가
    *   배경이 되어 레어·유니크가 안 보인다(§9 「노말은 칩 없음」).
+   *
+   * ## 통지도 여기서 그린다 (C-1 · 2026-09-21)
+   *
+   * 🔴 **통지는 등급이 아니다** — 그래서 이름·색이 아니라 **꼴**로 가른다
+   *   (채운 칩 · 색조 없음 · `eventTierCopy.NOTICE_LABEL` 머리말). 소식 목록·
+   *   상세·이벤트 모달 셋이 같은 컴포넌트를 쓰므로 여기 한 자리만 늘린다 —
+   *   자리마다 그리면 통지가 화면마다 다른 것이 된다(등급 칩이 처음에 피한 형태).
    */
   export let grade: EventGrade | undefined | null = null;
   /** 결(§4). 레어·유니크 중 `body` 면 칩 옆에 「위기」가 붙는다(§9) */
   export let theme: EventTheme | string | undefined | null = null;
+  /** 소식이 탄 갈래(L3). `"notice"` 면 등급 대신 통지 칩이 선다 */
+  export let lane: string | undefined | null = null;
   /** 목록처럼 좁은 자리에서 한 단 작게 */
   export let small = false;
 
   $: chip = gradeChip(grade);
   $: crisis = isCrisis(grade, theme);
+  $: notice = isNotice(lane);
 </script>
 
-{#if chip}
+{#if notice}
+  <span class="notice" class:small>{NOTICE_LABEL}</span>
+{:else if chip}
   <span class="tier" class:small style="--tier-l:{chip.accent}; --tier-d:{chip.accentDark}">
     <span class="g">{chip.label}</span>
     {#if crisis}<span class="crisis">{CRISIS_LABEL}</span>{/if}
@@ -58,6 +72,26 @@
     --tier: var(--tier-d);
   }
   .tier.small {
+    font-size: 9.5px;
+    padding: 0 6px;
+  }
+  /* 통지 — **등급 사다리 밖이라 색조를 안 준다.** 지면색을 뒤집어 채운다:
+     등급은 테두리 꼴 · 분류는 맨 글자 · 통지는 채운 꼴이라 셋이 모양으로
+     갈리고, 흑백·색각 이상에서도 같은 순서로 선다.
+     모서리도 알약이 아니라 각이다 — 알약은 등급 칩의 꼴이다 */
+  .notice {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--surface);
+    background: var(--ink);
+    border-radius: 3px;
+    padding: 1px 7px;
+    white-space: nowrap;
+  }
+  .notice.small {
     font-size: 9.5px;
     padding: 0 6px;
   }

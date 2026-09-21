@@ -350,7 +350,12 @@ export function barsCopy(labels: DashboardLabels | null, kind: string): BarsCopy
     ...stringMap(b?.rows),
     ...stringMap(b?.labels),
   };
-  for (const k of ["mood", "delta", "gpa"]) {
+  // ⚠ **`mood`·`delta` 를 뺐다** (2026-09-21 · C-2). 그 둘을 적어 둔 칸은
+  //   `bars.teamMood` 하나였는데 거기는 **막대가 아니라 표**로 간다(0~100
+  //   눈금이 없다) — 이 경로로 한 번도 안 왔다. 남은 `gpa` 는 시험 결과의
+  //   「막대 아래 한 줄」이라 실제로 온다. 안 부르는 이름을 세 개씩 도는
+  //   줄로 두면 「화면이 읽는다」로 오해된다
+  for (const k of ["gpa"]) {
     if (typeof b?.[k] === "string") merged[k] = b[k] as string;
   }
   return {

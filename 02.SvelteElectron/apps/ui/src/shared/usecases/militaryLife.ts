@@ -142,17 +142,29 @@ export async function runMilitaryLifeWeek(args: {
         msg(
           `msg-mil-unit-leave-${mem.id}-${args.seasonYear}-w${args.nextWeek}`,
           `${mem.name || mem.rank} 전역`,
-          `${mem.name || mem.rank}(${mem.rank})이 전역했다. 관계는 그대로 남는다 — 전역 뒤 다시 만날 수 있다.`,
+          // 들어올 때와 같은 자리다 — 사람이 나가는 장면에서 성격을 한 번 더
+          // 말한다. 「누가 나갔나」가 계급으로만 남으면 관계가 남는다는 말이 빈다
+          [
+            `${mem.name || mem.rank}(${mem.rank})이 전역했다.`,
+            ...(mem.trait ? [`${mem.trait}.`] : []),
+            "관계는 그대로 남는다 — 전역 뒤 다시 만날 수 있다.",
+          ].join("\n"),
         ),
       );
     }
     if (mem.joinWeek === week && mem.joinWeek > 0 && state.relations[mem.id] === undefined) {
       state.relations[mem.id] = mem.relationStart;
+      // 🔴 **성격을 처음 보는 자리다** (C-3 · 2026-09-21). 사람이 들어오는
+      //   장면인데 계급과 소단위만 말하고 있었다 — 15명이 이름표로만 남던
+      //   자리(죽은 칸 1). 성격은 **제 줄**로 둔다: 「…다」로 끝나는 단문이라
+      //   앞 문장에 이어 붙이면 어미를 지어내야 하고, 그러면 이 파일이
+      //   문안을 갖게 된다. 성격 문장 자체는 데이터가 든다
+      const arrive = `${mem.name || mem.rank}(${mem.rank})이 ${mem.subunit}에 왔다.`;
       messages.push(
         msg(
           `msg-mil-unit-join-${mem.id}-${args.seasonYear}-w${args.nextWeek}`,
           `후임 도착 — ${mem.name || mem.rank}`,
-          `${mem.name || mem.rank}(${mem.rank})이 ${mem.subunit}에 왔다.`,
+          mem.trait ? `${arrive}\n${mem.trait}.` : arrive,
         ),
       );
     }
@@ -305,11 +317,29 @@ export async function runMilitaryLifeWeek(args: {
       state.perf.push({ week, id: fired.id, tier, note: `${fired.title} ${tier}등급` });
     }
     const memberOf = fired.member ? members.find((x) => x.id === fired!.member) : null;
+    // ── 치환 키 (C-3 · 2026-09-21) ──────────────────────────────
+    //
+    // 🔴 **`member.trait` 를 연다** (죽은 칸 1). 부대원 15명은 `members.json` 에
+    //   성격을 하나씩 갖고 장면 배정도 그걸 타는데(`grades_perf`·`mentor`·
+    //   `ball_partner` 태그) **문안이 읽을 길이 없었다** — 성격은 부대원 탭
+    //   카드 한 줄에만 떴다. 열쇠가 없으면 B 가 성격을 쓰는 문안을 아예 못 쓴다.
+    //
+    // ⚠ **성격은 「…다」로 끝나는 평서체 단문이다**(「말이 짧다」·「잘 챙긴다」).
+    //   그래서 뒤에 `-는`·`-고` 같은 **어미**가 받침과 무관하게 붙는다
+    //   (「잘 챙긴다는 사람입니다」) — 15명 전부 같은 꼴이라 굴절표가 필요 없다.
+    //   🔴 **조사(이/가·은/는)는 붙이지 마라.** `{member.name}` 이 이미 그걸로
+    //   「포반장 하사이」를 낸 자리다(`MILITARY_COPY_REVIEW_2026-09-03.md` §2) —
+    //   게이트 `check:josa` 가 본다.
+    //
+    // ⚠ 성격이 빈 칸인 부대원이면 **키를 안 싣는다**(`undefined`). `fillText` 가
+    //   자리표를 그대로 남기므로 문안이 깨진 것이 화면에 보인다 — 빈 문자열로
+    //   채우면 「성격이 없다」와 「문안이 틀렸다」가 같아 보인다.
     const vars = {
       "unit.name": unit.name,
       "unit.location": unit.location,
       "role.label": role?.label ?? "",
       "member.name": memberOf?.name || memberOf?.rank,
+      "member.trait": memberOf?.trait || undefined,
       tier,
     };
     const description = fillText(fired.description, vars);

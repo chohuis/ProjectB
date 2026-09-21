@@ -51,7 +51,8 @@
     <header>
       <div class="chips">
         <p class="chip">이벤트</p>
-        <EventTierChip grade={action.grade} theme={action.theme} />
+        <!-- 통지도 이 모달로 올 수 있다(`lane` · L3) — 등급과 배타다 -->
+        <EventTierChip grade={action.grade} theme={action.theme} lane={action.lane} />
       </div>
       <h2 id="ev-title">{action.title}</h2>
     </header>
