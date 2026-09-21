@@ -1,0 +1,66 @@
+# C64 눈확인 — 통지 칩 (C-1 · 2026-09-21)
+#
+#   DEV_PORT=5179 DRIVE_USER_DATA=1 VITE_DEV_SERVER_URL=http://localhost:5179 \
+#     SCREENSHOT_DIR=docs/screens node scripts/drive.mjs scripts/c64-notice.txt
+#
+# ⚠ **새 게임**으로 본다(오염된 세이브는 없는 결함을 만든다).
+#
+# 🔴 **새 판으로는 통지를 못 만난다.** 통지 13종 중 제일 이른 것이
+#   `EVT_HS_Y3_ELIMINATED`(고교 3학년 대회 탈락)이고, 나머지는 프로·2군·
+#   독립·대학이다 — 고교 1학년으로 시작하면 **2년 넘게 밀어야** 한 건이 뜬다.
+#   실측(2026-09-21): 새 판 W19 까지 `lane="notice"` 소식 0건 · 등급 칩은 1건.
+#
+#   그래서 칩의 **생김새**는 `NewsPage` 의 `lane` 을 한 줄 임시로 바꿔
+#   (`msg.lane ?? (msg.category === "news" ? "notice" : null)`) 찍고 되돌렸다.
+#   ⚠ 그 임시 줄은 **커밋하지 않는다** — 여기 적어 두는 것은 다음 사람이
+#     같은 자리를 다시 찾지 않게 하기 위해서다.
+#
+# 본 것 (1440×900 · 밝은 지면 · W12):
+#   목록   「뉴스 ■통지■ 대회 본부 W12 이번 주 대회 진출 명단 2건」
+#          바로 위 줄의 「시스템 (유니크) …」과 **꼴이 다르다** — 유니크는
+#          보라 테두리 알약, 통지는 채운 각진 칩(반지름 3px · 테두리 0)
+#   상세   「뉴스 ■통지■ 이번 주 대회 진출 명단 2건」 — 같은 칩이 한 단 크게
+#   계산값 color rgb(246,248,251) / background rgb(15,29,61) — `--surface` 를
+#          `--ink` 위에 뒤집은 값. 등급색(파랑·보라·금) 어디와도 안 겹친다
+#
+# 🔴 **경기 막을 먼저 치워야 소식 목록이 보인다.** `pendingGameEntry` 가 있으면
+#   소식 탭 위에 경기 모달이 덮여 스크린샷이 통째로 경기 화면이 된다
+#   (첫 판 두 장을 그렇게 날렸다). 아래 `btn-auto`→`exit-btn`→`confirm-btn`
+#   순서가 그것을 치운다.
+launch
+resize 1440x900
+sleep 3000
+click-text 새 게임
+sleep 1500
+wait .slot-info
+click .slot-info
+sleep 3000
+fill .field input|통지칩
+sleep 800
+click .btn.next
+sleep 4000
+wait .region-item
+click .region-item
+sleep 2000
+wait .team-list-item
+click .team-list-item
+sleep 2000
+click .btn.next
+sleep 2500
+click .btn.next
+sleep 2500
+click .btn.start
+sleep 25000
+advance 12 --auto
+sleep 2000
+eval (()=>{const vis=el=>!!el&&!el.disabled&&el.offsetParent!==null;const a=document.querySelector('button.btn-auto');if(vis(a)){a.click();return 'SIM';}const x=document.querySelector('.exit-btn');if(vis(x)){x.click();return 'EXIT';}return 'NONE';})()
+sleep 6000
+eval (()=>{const vis=el=>!!el&&!el.disabled&&el.offsetParent!==null;const x=document.querySelector('.exit-btn');if(vis(x)){x.click();return 'EXIT';}const c=document.querySelector('button.confirm-btn');if(vis(c)){c.click();return 'CONFIRM';}return 'NONE';})()
+sleep 4000
+eval (()=>'modal='+!!document.querySelector('.scoreboard-wrap, .retro-field')+' items='+document.querySelectorAll('.item').length+' notice='+document.querySelectorAll('.item-head .notice').length+' tier='+document.querySelectorAll('.item-head .tier').length)()
+ss c64-01-list
+eval (()=>{const n=document.querySelector('.item-head .notice');if(!n)return 'NO_NOTICE';const li=n.closest('.item');if(li)li.click();return 'OPENED';})()
+sleep 1500
+ss c64-02-detail
+eval (()=>{const h=document.querySelector('.m-head');return h?h.innerText.replace(/\s+/g,' ').slice(0,120):'NO_HEAD';})()
+quit
