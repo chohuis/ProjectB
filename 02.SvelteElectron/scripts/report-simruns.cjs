@@ -38,6 +38,17 @@ const mark = (v, [lo, hi]) => (v < lo || v > hi ? `🔴 ${v}` : `${v}`);
 const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0);
 const med = (xs) => (xs.length ? [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)] : 0);
 
+// 🔴 **무대 갈림 해는 "A→B" 한 줄로 찍힌다** (2026-09-21 워커 고침 ·
+//   `cef688b5a`). 이 파일의 옛 무대 판정(`===` · `.has()` · `startsWith`)은
+//   워커가 무대 하나를 그대로 한 줄에 찍던 시절 것이라 "university→pro_kbl"
+//   같은 접힌 줄을 통째로 놓친다 — 09-21 24판 첫 집계에서 대학 7→2 ·
+//   독립 8→1 · 고졸직행 41.7%→87.5% 로 튀어 잣대부터 의심했더니 이거였다
+//   (드라이버·엔진은 안 건드렸다). 무대 문자열을 "→" 로 쪼개 그 안에
+//   찾는 무대가 있는지로 본다 — 안 갈린 줄은 쪼개도 원소 하나라 그대로다.
+const stagesOf = (st) => String(st).split("→");
+const hasStage = (st, name) => stagesOf(st).includes(name);
+const isProStage = (st) => stagesOf(st).some((s) => s.startsWith("pro_"));
+
 const files = fs.readdirSync(DIR).filter((f) => /^#\d+\.json$/.test(f))
   .sort((a, b) => parseInt(a.slice(1), 10) - parseInt(b.slice(1), 10));
 if (files.length === 0) throw new Error(`[report] ${DIR} 에 판이 없다`);
@@ -85,10 +96,10 @@ const rows = runs.map((r, i) => {
   //   **"같은 해"는 전부 재도전이지 직행이 아니다 — 세는 방식은
   //   이미 맞았다.** 바꾸지 않는다.
   const ev = r.꼬리.커리어이벤트 ?? null;
-  const 대학해 = ys.filter((y) => y.무대 === "university").map((y) => y.연도);
-  const 독립해 = ys.filter((y) => y.무대 === "independent").map((y) => y.연도);
+  const 대학해 = ys.filter((y) => hasStage(y.무대, "university")).map((y) => y.연도);
+  const 독립해 = ys.filter((y) => hasStage(y.무대, "independent")).map((y) => y.연도);
   const 첫대학독립 = Math.min(...[...대학해, ...독립해, Infinity]);
-  const 첫프로 = Math.min(...[...ys.filter((y) => String(y.무대).startsWith("pro_")).map((y) => y.연도), Infinity]);
+  const 첫프로 = Math.min(...[...ys.filter((y) => isProStage(y.무대)).map((y) => y.연도), Infinity]);
   let 고졸직행, 추정 = false;
   if (ev) {
     // 정본 — `careerEvents` 는 연도까지 온전하다
@@ -103,7 +114,7 @@ const rows = runs.map((r, i) => {
     추정 = true;
   }
   const 불완전 = ys.filter((y) => y.불완전).length;
-  const 프로시즌 = ys.filter((y) => String(y.무대).startsWith("pro_")).length;
+  const 프로시즌 = ys.filter((y) => isProStage(y.무대)).length;
   // 🔴 **워커가 한 해 한 줄로 고쳐졌다** (2026-09-21 · `probe-a-simrun-worker.cjs`).
   //   진로가 갈리는 해도 이제 줄 하나(무대 「A→B」)로 나오고, 군 전역 뒤
   //   같은 라벨이 두 번 찍히는 것도 없다 — 그래서 `연도폭`이 그냥
@@ -130,7 +141,7 @@ const rows = runs.map((r, i) => {
     통산G: ys.reduce((a2, y) => a2 + y.G, 0),
     통산IP: Math.round(ys.reduce((a2, y) => a2 + y.IP, 0)),
     은퇴: r.머리.은퇴나이,
-    군시즌: ys.filter((y) => String(y.무대) === "military").length,
+    군시즌: ys.filter((y) => hasStage(y.무대, "military")).length,
     // 부대(sports|general|null) — 「등급 빈도」 표가 군을 부대별로 가르는 열쇠다
     // (2026-09-20 · 사용자 확정). 한 커리어에 입대는 한 번뿐이라 판 하나에 부대 하나.
     군부대: r.꼬리.군부대 ?? null,
@@ -140,7 +151,7 @@ const rows = runs.map((r, i) => {
     //   콜업 = 프로 안에서 `_2` → `_2` 아닌 해로 넘어간 횟수.
     farm시즌: ys.filter((y) => String(y.소속).endsWith("_2")).length,
     콜업: (() => {
-      const pro = ys.filter((y) => String(y.무대).startsWith("pro_"));
+      const pro = ys.filter((y) => isProStage(y.무대));
       let n = 0;
       for (let i = 1; i < pro.length; i++) {
         if (String(pro[i - 1].소속).endsWith("_2") && !String(pro[i].소속).endsWith("_2")) n++;
@@ -339,6 +350,9 @@ for (const r of runs) {
   주추정 = true;
   let proN = 0;
   for (const y of r.해마다) {
+    // ⚠ 이 추정 갈래는 `꼬리.무대주수`가 없는 옛 판에서만 돈다(2026-09-21
+    //   24판 전부 있어 여긴 안 탔다) — "A→B" 접힌 줄을 한쪽에만 몰아 주는
+    //   근사라 손 안 댔다. 새 판인데 여기로 떨어지면 그 자체가 이상 신호다.
     const st = String(y.무대), farm = String(y.소속).endsWith("_2");
     let k = null;
     if (st === "highschool") k = "고교";
@@ -433,9 +447,15 @@ for (const x of rows) for (const y of x.ys) {
   //   부대를 못 적은 옛 판(2026-09-19 이전)은 `군_모름`으로 떨어진다 —
   //   `goalRangeOf`가 그 키를 못 찾아 전 무대 공통값(30~52)으로 비교되므로
   //   표에서 바로 티가 난다(안 잰 것이 초록으로 안 보인다).
-  const k = y.무대 === "military"
+  // 🔴 **"A→B" 접힌 줄은 A(원 무대) 쪽으로 센다** (2026-09-21). 그 줄의
+  //   등급·G·IP 는 전이 직전 스냅샷(`cef688b5a`) — 즉 실제로 A 에 있는
+  //   동안 쌓인 값이다(`꼬리.무대주수`도 이 해 52주를 A 앞자리에 통째로
+  //   준다 — #08 실측: `university→pro_kbl` 2029 → 대학주 52). B 로
+  //   세면 있지도 않은 자리(프로 첫날 등급)에 값을 붙이는 것이다.
+  const 원무대 = stagesOf(y.무대)[0];
+  const k = 원무대 === "military"
     ? (x.군부대 === "sports" ? "군_체육부대" : x.군부대 === "general" ? "군_일반병" : "군_모름")
-    : String(y.무대);
+    : 원무대;
   (byStage[k] ??= { n: 0, normal: 0, rare: 0, unique: 0, hidden: 0, notice: 0, milCal: 0, milDice: 0 });
   byStage[k].n++; byStage[k].normal += y.노말; byStage[k].rare += y.레어;
   byStage[k].unique += y.유니크; byStage[k].hidden += y.히든; byStage[k].notice += y.통지;
@@ -463,9 +483,10 @@ log(`## 무대 도달 — ${SEASONS_ASKED}시즌이면 밟히는가`);
 log("");
 const reach = { 고교: 0, 대학: 0, 독립: 0, "2군": 0, "프로 1군": 0, 군: 0, "프로 중후반(4년+)": 0 };
 for (const x of rows) {
-  const st = new Set(x.ys.map((y) => String(y.무대)));
+  // "A→B" 접힌 줄은 양쪽 다 밟은 것으로 센다 — `hasStage` 가 "→" 로 쪼갠다
+  const st = new Set(x.ys.flatMap((y) => stagesOf(y.무대)));
   const farm = x.ys.some((y) => String(y.소속).endsWith("_2"));
-  const pro1 = x.ys.some((y) => String(y.무대).startsWith("pro_") && !String(y.소속).endsWith("_2"));
+  const pro1 = x.ys.some((y) => isProStage(y.무대) && !String(y.소속).endsWith("_2"));
   if (st.has("highschool")) reach.고교++;
   if (st.has("university")) reach.대학++;
   if (st.has("independent")) reach.독립++;
