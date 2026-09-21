@@ -54,7 +54,12 @@ function walk(dir, out = []) {
 
 function scanString(s) {
   const hits = [];
-  const re = /\{(\w+)\}([가-힣]+)/g;
+  // 🔴 **점이 든 열쇠도 본다** (2026-09-21 · C-3). `\w` 는 `.` 을 안 먹어서
+  //   군 문안의 `{member.name}`·`{unit.name}` 꼴이 통째로 이 스캔 밖이었다 —
+  //   이 게이트가 잡으라고 만들어진 바로 그 결함(「포반장 하사이」·
+  //   `MILITARY_COPY_REVIEW_2026-09-03.md` §2)을 **사람이 눈으로 찾았다.**
+  //   지금은 0건이고, `{member.trait}` 가 열리면서 그 꼴이 늘 자리라 넓힌다.
+  const re = /\{([\w.]+)\}([가-힣]+)/g;
   let m;
   while ((m = re.exec(s))) {
     const [, key, tail] = m;
