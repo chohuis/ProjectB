@@ -5,6 +5,7 @@ import {
   OFFSEASON_START_WEEK, STOVE_LEAGUE_WEEK,
   FA_RETRY_START_WEEK, FA_RETRY_END_WEEK,
   SPORTS_UNIT_CANDIDATES_WEEK, MILITARY_RESULT_WEEK, MILITARY_AGE_WARNING_WEEK,
+  WEEKS_PER_SEASON,
   weekInYearOf,
 } from "../utils/seasonWeeks";
 import { get } from "svelte/store";
@@ -1476,8 +1477,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           `${sOff.seasonYear} 시즌이 종료되었습니다.`,
           `시즌 성적: ${statSummary}`,
           "",
-          "W43부터 연봉협상 및 FA 시장이 열립니다.",
-          "W50 체육부대 신청, W52 새 시즌 시작.",
+          // 같은 형태 — 주차를 글자로 적어 상수가 옮겨진 뒤 문안만 옛 값에 남아 있었다
+          // (W43 → STOVE_LEAGUE_WEEK 39 · W50 → SPORTS_UNIT_CANDIDATES_WEEK 46)
+          `W${STOVE_LEAGUE_WEEK}부터 연봉협상 및 FA 시장이 열립니다.`,
+          `W${SPORTS_UNIT_CANDIDATES_WEEK} 체육부대 신청, W${WEEKS_PER_SEASON} 새 시즌 시작.`,
         ].join("\n"),
         createdAt: `W${weekNum}`, readAt: null,
         // 한 줄에 여섯 값이 뭉쳐 있던 자리를 표로 갈라 싣는다
@@ -2921,13 +2924,20 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
     if (isMilUnresolved && !hasAnyMilPending) {
       // 28세 입영 기간 만료 경고
+      //
+      // ⚠ 주차를 **글자로 적지 않는다.** 이 문안은 옛 52 주차를 말했는데
+      // 정작 입영 pending 을 미는 블록(아래 `reason: "overdue"`)은
+      // `MILITARY_RESULT_WEEK`(50)에서 돈다 — 주차 상수가 옛 52 에서 옮겨질 때
+      // 문안만 남았다. 신청 모달에서 같은 형태를 09-20 에 고쳤고 여기가 마지막
+      // 한 자리였다(BALANCE_BACKLOG 09-20 절). 상수에서 읽으면 다시 안 갈린다.
       if (p.age === 28 && weekInYear === MILITARY_AGE_WARNING_WEEK) {
+        const enlistNotice = `이번 시즌 W${MILITARY_RESULT_WEEK} 주차에 입영 절차가 진행됩니다.`;
         gameStore.addMessage({
           id: `msg-military-warning-${s.seasonYear}`,
           category: "system", sender: "병무청",
           subject: "입영 기간 만료 통지",
-          preview: "이번 시즌 W52에 입영 절차가 진행됩니다.",
-          body: "병역 의무 이행 기간이 만료되었습니다.\n이번 시즌 W52 주차에 입영 절차가 진행됩니다.",
+          preview: enlistNotice,
+          body: `병역 의무 이행 기간이 만료되었습니다.\n${enlistNotice}`,
           createdAt: `W${weekNum}`, readAt: null,
         });
       }
@@ -3109,7 +3119,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         }
       }
 
-      // W52: 입영 기간 만료 (28세 이상, 미신청)
+      // `MILITARY_RESULT_WEEK`: 입영 기간 만료 (28세 이상, 미신청). 옛 W52
       //
       // ⚠ `militaryAskedYear` 가드 필수 — W50 체육부대 공개와 **같은 결함**이다.
       // 주를 안 넘기고 pending만 밀어넣는데 모달의 "연기"는 상태를 안 바꾸므로
