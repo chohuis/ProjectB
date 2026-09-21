@@ -1424,3 +1424,36 @@ C(25)·B(30)·A(45)·S(70)는 수상을 2·2·3·5회 받아야 닿는다 — �
 확정 전까지 `tier_rules.json`에는 이 제안값이 이미 들어 있다 — 비워 두면
 `goalRangeOf`가 전 무대 공통(30~52)으로 떨어져 이론상 못 닿는 목표로
 체육부대를 매번 빨갛게 찍는, 이번에 고친 것과 같은 잣대 오류가 재발한다.
+
+---
+
+## 게임 로직 — `protagonist.grade` 가 대학에서 한 해 뒤처진다 (2026-09-21 · A · **안 고쳤다 · 사용자 판단 대기**)
+
+24판 #6·#12 의 대학 100주+ 걸침을 추적하다 나왔다(정본
+`docs/SIM_102_UNIV_MIL_2026-09-19.md` §③ 끝 절). **100주 걸침 자체는
+상황이었고**(단일 등록 · 2학년까지 다닌 것) 이건 그 옆에서 나온 별개다.
+
+| 무엇 | 자리 | 실측 |
+|---|---|---|
+| 대학생의 `p.grade` 가 **직전 시즌의 학년**을 들고 있다 | `stores/game.ts` `processSeasonEnd` 의 「③ 주인공 학년 진급」 — `grade = universityGradeOf(undefined, s.schoolState.universityWeek)` | 판 #6·#12 의 `[진로점수]` 줄이 2029·2030 **둘 다 `grade=1`**. 2030 의 진짜 학년은 2 다(`universityWeek` 84) |
+
+**원인.** 그 블록은 시즌 **끝**에 돈다. 그때 `universityWeek` 은 정확히 52 이고
+(`universityAxis.test.ts` 「1년째 W52 에 uw 52 · 아직 1학년」이 그걸 못박는다)
+`universityGradeOf(52)` 는 1 이다. 블록의 뜻은 「다음 시즌 학년으로 올린다」인데
+**직전 시즌의 학년**을 적는다. 고교 갈래는 `advanceProtagonistGrade` 로 +1 해서
+안 겪는다.
+
+**지금 새는 데는 없다** — 이벤트 데이터에 `grade` 조건 **0건**(전수 확인) ·
+`toPlayerCompat` 의 `year`(=`"N학년"`)를 읽는 화면 없음. 그래서 **급하지 않다.**
+다만 `conditionEvaluator` 의 `case "grade"` 는 `p.grade` 를 그대로 보므로,
+B 가 대학 학년 조건을 쓰는 이벤트를 하나라도 쓰면 **그날 한 해 어긋난다.**
+
+**제안 둘 (값이 아니라 구조라 사용자가 하나 고르면 된다)**
+
+| | 어떻게 | 크기 | 걸리는 것 |
+|---|---|---|---|
+| ㉮ | 시즌 끝 블록이 **다음 주**의 학년을 적는다 — `universityGradeOf(undefined, universityWeek + 1)` | 한 줄 | 「+1」이 또 하나의 축이 된다. 왜 +1 인지 주석이 필요하다 |
+| ㉯ | **`p.grade` 를 대학에서 안 쓴다** — 읽는 자리(`conditionEvaluator` `case "grade"` · `toPlayerCompat`)가 `universityGradeOf(p.grade, schoolState.universityWeek)` 를 부른다. `careerTransition.ts` 주석이 말하는 **「`universityWeek` 이 정본」에 맞는 쪽** | 중 (읽는 자리 둘 + `toPlayerCompat` 이 `schoolState` 를 못 받는 문제) | 정본이 하나가 된다 — 이 저장소가 제일 많이 밟은 형태를 닫는다 |
+
+⚠ **밸런스 값이 아니다.** 학년이 바뀌면 대학 이벤트 창이 움직일 수 있으니
+고치는 날 `check:eventconditions` · `universityAxis.test.ts` 를 같이 본다.
