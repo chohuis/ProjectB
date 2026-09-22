@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { makeSaveGame, type SaveGame } from "../../types/save";
+import { deriveProfileFromBudgetIndex } from "../game";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -70,6 +71,39 @@ describe("구단 성향 저장", () => {
       {},
     ) as SaveGame;
     expect(save.proTeamProfiles).toBeUndefined();
+  });
+
+  /**
+   * 🔴 **파생된 기질 셋도 왕복을 타야 한다** (2026-09-22). 철학·자원에서
+   *   나온 값이라 "다시 구하면 되지"로 보이지만, 시즌마다
+   *   `updateProTeamProfiles` 가 갱신하므로 **파생값은 시작점일 뿐**이다.
+   *   안 실리면 껐다 켤 때마다 그 갱신이 사라진다.
+   */
+  it("성향에서 나온 기질 셋이 왕복을 탄다", () => {
+    const derived = deriveProfileFromBudgetIndex(1.0, {
+      philosophy: "스파르타(혹독훈련)",
+      resource: "알뜰",
+    });
+    // 대조군 — 셋이 50이면 "왕복했다"를 기본값과 못 가른다
+    expect(derived.stability).not.toBe(50);
+    expect(derived.discipline).not.toBe(50);
+    expect(derived.clubhouseCulture).not.toBe(50);
+
+    const save = makeSaveGame(
+      P as never,
+      [],
+      {} as never,
+      {} as never,
+      [],
+      {} as never,
+      [],
+      [],
+      [],
+      undefined,
+      { proTeamProfiles: { TEAM_KBL_A_1: derived } },
+    ) as SaveGame;
+    const back = (save.proTeamProfiles as Record<string, typeof derived>).TEAM_KBL_A_1;
+    expect(back).toEqual(derived);
   });
 
   it("복원 경로가 저장된 값을 읽는다 — 소스 확인", () => {
