@@ -86,6 +86,7 @@
 | `PARK_CLIP_2026-08-29.md` | 경기 화면 구장 잘림 — 원인 분석 | 닫힘 |
 | `USER_TEST_CHECKLIST_2026-09-04.md` | v1.0.0 직접 테스트 확인 목록 | 1.0.0 |
 | `EYECHECK.md` · `TRACK_C_EYECHECK.md` | 눈확인 목록 | C 절차 |
+| `SIM_OVERSEAS_CLUBS_STAGE0_2026-09-22.md` · **`SIM_OVERSEAS_CLUBS_STAGE3_2026-09-22.md`** | 해외 구단(ABL·JBL) 성향·구장 전후 — 파크팩터 그라디언트 생김 · FA 자원 상관 약하게 · 관중이 KBL 급으로 시장을 탐 | 정본(3단계) |
 
 ## 5. 출시
 
