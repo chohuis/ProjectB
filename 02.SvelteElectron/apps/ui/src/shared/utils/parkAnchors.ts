@@ -119,7 +119,13 @@ export const PARK_COORDS: Record<ParkTier, ParkCoords> = {
   },
 };
 
-/** 구장 → 티어. 여기 없는 구장(해외 등)은 프로 기본값으로 떨어진다 */
+/**
+ * 구장 → 티어. **손으로 적는 것은 국내 27개뿐이다.**
+ *
+ * 해외는 여기 안 적는다 — `PARK_TIER_PREFIX` 가 받는다. 56개를 손으로
+ * 적으면 구장이 늘 때마다 두 곳을 고쳐야 하고, 한쪽만 고쳐진 채 남는다.
+ * 읽을 때는 이 표가 아니라 `parkTierOf()` 를 쓴다.
+ */
 export const PARK_TIER_OF: Record<string, ParkTier> = {
   STADIUM_SEOUL_GUARDIANS: "pro",
   STADIUM_SUWON_KNIGHTS: "pro",
@@ -150,7 +156,46 @@ export const PARK_TIER_OF: Record<string, ParkTier> = {
   STADIUM_HALLA: "highschool",
 };
 
-/** 그림이 있는 구장 목록 — 없으면 티어 기본 그림을 쓴다 */
+/**
+ * 표에 없는 구장의 티어 — **id 접두로 정한다.**
+ *
+ * 🔴 해외(ABL·JBL) 구장은 프로 리그 구장이므로 티어가 `pro` 다. 그림은
+ *   안 그린다(사용자 확정 ⓑ · 2026-09-22) — 티어만 있으면 프로 기본 GIF 와
+ *   프로 좌표를 쓴다. 그래서 `PARK_IMAGES` 와 갈리는 것이 **정상이다.**
+ *
+ * ⚠ **접두 밖 id 는 여전히 티어가 없다.** 접두를 넓게 잡으면 한글 이름
+ *   문자열(「엠파이어 스타디움」)이나 오타 난 id 까지 조용히 프로가 되어
+ *   "데이터가 비었다"를 화면이 못 알려 준다.
+ * ⚠ id 규약은 `STADIUM_ABL_<팀>` · `STADIUM_JBL_<팀>` 이고 2군은 1군 구장
+ *   id 를 그대로 쓴다.
+ */
+export const PARK_TIER_PREFIX: ReadonlyArray<readonly [string, ParkTier]> = [
+  ["STADIUM_ABL_", "pro"],
+  ["STADIUM_JBL_", "pro"],
+];
+
+/**
+ * 구장의 티어 — **읽는 정본이 여기다.** 표를 먼저 보고, 없으면 접두 규칙.
+ *
+ * 못 찾으면 `undefined` 다 — 지어내지 않는다(호출부가 기본값으로 떨어진다).
+ */
+export function parkTierOf(stadiumId: string | undefined | null): ParkTier | undefined {
+  if (!stadiumId) return undefined;
+  const named = PARK_TIER_OF[stadiumId];
+  if (named) return named;
+  for (const [prefix, tier] of PARK_TIER_PREFIX) {
+    if (stadiumId.startsWith(prefix)) return tier;
+  }
+  return undefined;
+}
+
+/**
+ * 그림이 있는 구장 목록 — 없으면 티어 기본 그림을 쓴다.
+ *
+ * ⚠ **티어표와 같을 필요가 없다**(2026-09-22). 「티어는 있는데 전용 그림은
+ *   없다」가 해외 구장의 상태다 — 검사도 `⊆` 로 본다. 같음을 요구하면 구장을
+ *   늘릴 때마다 PNG 를 같이 그려야 하고, 그건 결정 ⓑ 와 정면으로 어긋난다.
+ */
 export const PARK_IMAGES: ReadonlySet<string> = new Set([
   "STADIUM_SEOUL_GUARDIANS",
   "STADIUM_SUWON_KNIGHTS",

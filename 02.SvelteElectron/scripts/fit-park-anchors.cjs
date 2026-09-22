@@ -320,6 +320,9 @@ ${["pro", "university", "highschool"].map(tierBlock).join("\n")}
 };
 
 /** 구장 → 티어. 여기 없는 구장(해외 등)은 프로 기본값으로 떨어진다 */
+// ⚠ **이 틀은 낡았다.** \`parkAnchors.ts\` 는 지금 손으로 고치고 있고
+//   \`parkTierOf()\` · \`PARK_TIER_PREFIX\` 가 거기 붙어 있다 — 이 스크립트를
+//   돌리면 그 둘이 통째로 사라진다(그 파일 머리말이 "돌리지 말 것"이라 적는다).
 export const PARK_TIER_OF: Record<string, ParkTier> = {
 ${stadiums.map((s) => `  ${s.id}: "${TIER_KEY[s.tier]}",`).join("\n")}
 };

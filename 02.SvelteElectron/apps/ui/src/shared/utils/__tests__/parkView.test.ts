@@ -2,7 +2,14 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parkViewOf, parkViewForHomeTeam, defaultParkView } from "../parkView";
-import { PARK_COORDS, PARK_TIER_OF, PARK_IMAGES, type ParkTier } from "../parkAnchors";
+import {
+  PARK_COORDS,
+  PARK_TIER_OF,
+  PARK_TIER_PREFIX,
+  PARK_IMAGES,
+  parkTierOf,
+  type ParkTier,
+} from "../parkAnchors";
 
 interface RefTeam {
   id: string;
@@ -146,13 +153,55 @@ describe("데이터 정합 — 표본이 아니라 전수", () => {
     expect(bad, `그림 없는 구장에 배정된 팀: ${bad.slice(0, 8).join(" ")}`).toEqual([]);
   });
 
-  it("refs의 구장 정의 27개가 전부 티어를 갖는다", () => {
-    const missing = refs.stadiums.filter((s) => !PARK_TIER_OF[s.id]).map((s) => s.id);
+  /**
+   * ⚠ **`PARK_TIER_OF` 를 직접 보지 않는다**(2026-09-22). 해외 구장 56개는
+   *   표에 안 적고 id 접두로 받는다 — 정본은 `parkTierOf` 다.
+   */
+  it("refs의 구장 정의가 전부 티어를 갖는다", () => {
+    const missing = refs.stadiums.filter((s) => !parkTierOf(s.id)).map((s) => s.id);
     expect(missing, `티어 없는 구장: ${missing.join(" ")}`).toEqual([]);
   });
 
-  it("티어표와 그림표의 구장 목록이 같다", () => {
-    expect([...PARK_IMAGES].sort()).toEqual(Object.keys(PARK_TIER_OF).sort());
+  /**
+   * 🔴 **예전엔 `≡` 였다.** 그래서 구장을 늘리면 PNG 를 같이 그려야 했고,
+   *   「그림은 안 그린다」(사용자 확정 ⓑ)를 코드가 표현 못 했다.
+   *   `parkViewOf` 는 이미 `hasOwnImage` 로 둘을 나눠 쓴다 — 검사만 낡았다.
+   *
+   * ⚠ 반대 방향(`⊆`)은 여전히 필수다. 티어 없는 구장의 PNG 는 좌표가
+   *   없어서 못 띄운다.
+   */
+  it("그림표는 티어표의 부분집합이다 — 그림만 있고 티어가 없으면 안 된다", () => {
+    const orphan = [...PARK_IMAGES].filter((id) => !parkTierOf(id));
+    expect(orphan, `티어 없는 그림: ${orphan.join(" ")}`).toEqual([]);
+    // 지금은 그림이 국내 27개뿐이다 — 해외가 티어만 갖는 것이 정상이다
+    expect(PARK_IMAGES.size).toBe(Object.keys(PARK_TIER_OF).length);
+  });
+
+  /**
+   * 대조군 — **접두 규칙 밖 id 는 여전히 빨강이다.** 접두를 넓게 잡으면
+   * 오타 난 id 도 조용히 프로가 되어 "데이터가 비었다"를 못 알아챈다.
+   */
+  it("대조군: 접두 규칙 밖 id 는 티어가 없다", () => {
+    for (const id of ["엠파이어 스타디움", "도쿄돔", "STADIUM_MLB_YANKEES", "ABL_EMPIRE", ""]) {
+      expect(parkTierOf(id), id).toBeUndefined();
+    }
+    expect(parkTierOf(null)).toBeUndefined();
+    expect(parkTierOf(undefined)).toBeUndefined();
+  });
+
+  it("접두 규칙은 해외 둘뿐이고 전부 pro 다", () => {
+    expect(PARK_TIER_PREFIX.map(([p]) => p)).toEqual(["STADIUM_ABL_", "STADIUM_JBL_"]);
+    for (const [prefix, tier] of PARK_TIER_PREFIX) {
+      expect(tier).toBe("pro");
+      // 접두만으로 티어가 붙고, 그림은 안 붙는다(결정 ⓑ)
+      const v = parkViewOf(`${prefix}TESTCLUB`);
+      expect(v.tier).toBe("pro");
+      expect(v.hasOwnImage).toBe(false);
+      expect(v.imageUrl).toBe("/park/probaseball.gif");
+      expect(v.coords).toBe(PARK_COORDS.pro);
+      // 🔴 기본값과 달리 **구장 id 는 남는다** — 화면이 어느 구장인지 안다
+      expect(v.stadiumId).toBe(`${prefix}TESTCLUB`);
+    }
   });
 
   it("고교 구장은 전부 highschool 티어다 — 잔디 섞이면 안 된다", () => {
